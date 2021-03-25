@@ -1,59 +1,40 @@
+.node_div { line-height:10px !important;}
+
 .node_normal
 {
-    /* height:16px;
-    line-height:16px; */
-    height: 19px;    
-    line-height:21px;
-    color:#000;    
-    padding-left: 3px;    
-    font-size:9pt;
-    vertical-align:top;
-    cursor:pointer;
-    background-image:none;
-    background-attachment:scroll;
-    background-repeat:repeat;
-    background-position-x: 0%;
-    background-position-y: 0%;
-    background-color: transparent;
-    display : inline-block;
+    font-size: 13px;
+    height: 30px;
+    line-height: 30px;
+    color: #393939;
+    display: inline-block;
+    padding: 0px 0px 0px 5px;
+    font-family: Malgun Gothic, Gulim;
+    cursor: pointer;
+    width: 76%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    box-sizing: border-box;
 }
 .node_selected
-{    
-    /* height: 16px;
-    line-height:16px; */    
-    height: 19px;    
-    line-height:21px;
-    color: #000;    
-    padding-left: 3px;
-    font-size: 9pt;
-    font-weight: bold;
-    vertical-align: top;
-    cursor: pointer;
-    background-image: none;
-    background-attachment: scroll;
-    background-repeat: repeat;
-    background-position-x: 0%;
-    background-position-y: 0%;
-    background-color: transparent;    
-    display : inline-block;
-}
-.node_hover
 {
-    /* height: 16px;
-    line-height:16px; */
-    height: 19px;    
-    line-height:21px;
-    color: #9b9b9b;    
-    padding-left: 3px;
-    font-size: 9pt;
-    font-weight: normal;
-    vertical-align: top;
+    font-size: 13px;
+    height: 30px;
+    line-height: 30px;
+    color: #0470e4;
+    display: inline-block;
+    padding: 0px 0px 0px 5px;
+    font-family: Malgun Gothic, Gulim;
     cursor: pointer;
-    background-image: none;
-    background-attachment: scroll;
-    background-repeat: repeat;
-    background-position-x: 0%;
-    background-position-y: 0%;
-    background-color: transparent;
-    display : inline-block;
+    width: 76%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    box-sizing: border-box;
+    font-weight: bold;
 }
+.node_normal:hover
+{
+    color:#0470e4; 
+    font-weight:bold;
+} 

@@ -25,8 +25,8 @@
 		    var Resultxml = createXmlDom();
 		    var g_TemplateSN = "";
 		    var g_TemplateName = "";
-		    var type = "${type}";
-		    var approvalFlag = "${approvalFlag}";
+		    var type = "<c:out value ='${type}'/>";
+		    var approvalFlag = "<c:out value ='${approvalFlag}'/>";
 		    
 		    function btn_SaveAprLineTempletName_onclick() {
 		        var p_AprLineTempletName = document.getElementById("TxtAprLineTempletName").value;

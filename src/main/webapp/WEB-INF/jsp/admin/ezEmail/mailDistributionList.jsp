@@ -43,10 +43,16 @@
 		        else {
 		            company_change();
 		        }
+		        
+		        var searchInput = $("#searchInputWrap input");
+		        var searchBtn = $("#searchInputWrap .imgbtn");
+		        var searchInputW = $("#searchInputWrap").width() - searchBtn.outerWidth() - 11;
+		        searchInput.width(searchInputW + "px");
 		    }
 		    function company_change() {
 		    	companyId = document.all("ListCompany") == null ? companyId : document.all("ListCompany").value;
-		        document.getElementById("DIV_Member").innerHTML = "";
+		    	document.getElementsByClassName("shared_boxesTable")[0].style.display = "none";
+		
 		        var xmlDom = createXmlDom();
 		        var xmlHTTP = createXMLHttpRequest();
 		
@@ -112,56 +118,41 @@
 		
 		    function getDistributionMember_after()
 		    {
-		        document.getElementById("DIV_Member").innerHTML = "";
-		
 		        if (xmlHTTP == null || xmlHTTP.readyState != 4) return;
 				
 		        var mailNode = SelectNodes(xmlHTTP.responseXML, "DATA/MAIL")[0];
 		        var mail = getNodeText(mailNode);
 		        
-		        var infoDiv = document.createElement("DIV");
-		        infoDiv.setAttribute("style", "margin-bottom:20px;");
-		        
-		        var infoP = document.createElement("P");
-		        infoP.setAttribute("style", "color:#000; font-weight:bold; margin-top:0px; margin-bottom:5px;");
-		        setNodeText(infoP, "▒ " + strLangLHM21);
-		        infoDiv.appendChild(infoP);
-		        
-		        var mailDiv = document.createElement("DIV");
-		        mailDiv.setAttribute("style", "color:#000; display:inline-block; margin-left:5px; margin-bottom:5px;");
-		        setNodeText(mailDiv, "<spring:message code='ezOrgan.t91' /> : " + mail);
-		        infoDiv.appendChild(mailDiv);
-		        
-		        var DIV_GroupMember = document.createElement("DIV");
-		        var P = document.createElement("P");
-		        var BR = document.createElement("BR");
-		        P.setAttribute("style", "color:#000; font-weight:bold; margin-top:0px; margin-bottom:5px;");
-		        setNodeText(P, "▒ <spring:message code='ezEmail.t659' />");
-		        DIV_GroupMember.appendChild(P);
-		        
+		        document.getElementById("distributionTitleTH").getElementsByTagName("th")[0].innerHTML = "▒ " + strLangLHM21;
+		        document.getElementById("distributionTitleTB").getElementsByTagName("span")[0].innerHTML= "<spring:message code='ezOrgan.t91' /> : " + mail;
+		        document.getElementById("distributionListTB").innerHTML = "";
+
 		        for (var i = 0; i < SelectNodes(xmlHTTP.responseXML, "DATA/ROW").length; i++) {
-		            var DIV = document.createElement("DIV");
-		            DIV.setAttribute("style", "color:#000; display:inline-block; margin-left:5px; margin-bottom:5px;");
+		            var TR = document.createElement("TR");
+		            var TD = document.createElement("TD");
+		            var SPAN = document.createElement("SPAN");
+		            SPAN.setAttribute("class","shared_boxesText");
 		            
 		            if (CrossYN()) {
 		                if ("${useOcs}" == "YES")
-		                    DIV.innerHTML = "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'  onload='PresenceControl(\"" + SelectNodes(xmlHTTP.responseXML, "MAIL").item(i).textContent + "\",this);'/></span><span style='margin-top:50px; cursor:pointer' id=" + SelectNodes(xmlHTTP.responseXML, "CN").item(i).textContent + " onclick='show_member(this)'>" + SelectNodes(xmlHTTP.responseXML, "DISPLAYNAME").item(i).textContent + " (" + SelectNodes(xmlHTTP.responseXML, "DEPT").item(i).textContent + ")</span>";
+		                	SPAN.innerHTML = "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'  onload='PresenceControl(\"" + SelectNodes(xmlHTTP.responseXML, "MAIL").item(i).textContent + "\",this);'/></span><span style='margin-top:50px; cursor:pointer' id=" + SelectNodes(xmlHTTP.responseXML, "CN").item(i).textContent + " onclick='show_member(this)'>" + SelectNodes(xmlHTTP.responseXML, "DISPLAYNAME").item(i).textContent + " (" + SelectNodes(xmlHTTP.responseXML, "DEPT").item(i).textContent + ")</span>";
 		                else
-		                    DIV.innerHTML = SelectNodes(xmlHTTP.responseXML, "DISPLAYNAME").item(i).textContent + " (" + SelectNodes(xmlHTTP.responseXML, "DEPT").item(i).textContent + ")";
+		                	SPAN.innerHTML = SelectNodes(xmlHTTP.responseXML, "DISPLAYNAME").item(i).textContent 
+		                    + " (" + SelectNodes(xmlHTTP.responseXML, "DEPT").item(i).textContent + ")";
 		            }
 		            else {
 		                if ("${useOcs}" == "YES")
-		                    DIV.innerHTML = "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'  onload='PresenceControl(\"" + SelectNodes(xmlHTTP.responseXML, "MAIL").item(i).text + "\",this);'/></span><span style='margin-top:50px; ; cursor:pointer' id=" + SelectNodes(xmlHTTP.responseXML, "CN").item(i).text + " onclick='show_member(this)'>" + SelectNodes(xmlHTTP.responseXML, "DISPLAYNAME").item(i).text + " (" + SelectNodes(xmlHTTP.responseXML, "DEPT").item(i).text + ")</span>";
+		                	SPAN.innerHTML = "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'  onload='PresenceControl(\"" + SelectNodes(xmlHTTP.responseXML, "MAIL").item(i).text + "\",this);'/></span><span style='margin-top:50px; ; cursor:pointer' id=" + SelectNodes(xmlHTTP.responseXML, "CN").item(i).text + " onclick='show_member(this)'>" + SelectNodes(xmlHTTP.responseXML, "DISPLAYNAME").item(i).text + " (" + SelectNodes(xmlHTTP.responseXML, "DEPT").item(i).text + ")</span>";
 		                else
-		                    DIV.innerHTML = SelectNodes(xmlHTTP.responseXML, "DISPLAYNAME").item(i).text + " (" + SelectNodes(xmlHTTP.responseXML, "DEPT").item(i).text + ")";
+		                	SPAN.innerHTML = SelectNodes(xmlHTTP.responseXML, "DISPLAYNAME").item(i).text 
+		                    + " (" + SelectNodes(xmlHTTP.responseXML, "DEPT").item(i).text + ")";
 		            }
-		            DIV_GroupMember.appendChild(DIV);
-		            var BR = document.createElement("BR");
-		            DIV_GroupMember.appendChild(BR);
+		            TD.appendChild(SPAN);
+		            TR.appendChild(TD);
+		            document.getElementById("distributionListTB").appendChild(TR);
 		        }
 		        
-		        document.getElementById("DIV_Member").appendChild(infoDiv);
-		        document.getElementById("DIV_Member").appendChild(DIV_GroupMember);
+		        document.getElementsByClassName("shared_boxesTable")[0].style.display = "table";
 		    }
 		
 		    function show_member(obj) {
@@ -226,8 +217,12 @@
 		        }
 		    }
 		    function add_dl_Complete(rtnValue) {
-		        if (typeof (rtnValue) != "undefined")
+		        if (typeof (rtnValue) != "undefined") {
 		            company_change();
+			        $("#searchValue").val("");
+			        $("#searchType option:first-child").attr("selected","selected");
+
+		        }
 		    }
 		    function mod_dl() {
 		
@@ -241,13 +236,13 @@
 		        }
 		        var DeptID = selnode[0].getAttribute("DATA1");
 		
-		        var feature = "dialogHeight:670px; dialogWidth:970px; scroll:no;status:no; help:no; edge:sunken";
-		        feature = feature + GetShowModalPosition(970, 670);
+		        var feature = "dialogHeight:690px; dialogWidth:970px; scroll:no;status:no; help:no; edge:sunken";
+		        feature = feature + GetShowModalPosition(970, 690);
 		        if (CrossYN()) {
 		            mail_add_distributionlist_cross_dialogArguments = new Array();
 		            mail_add_distributionlist_cross_dialogArguments[0] = companyId;
 		            mail_add_distributionlist_cross_dialogArguments[1] = mod_dl_Complete;
-		            var OpenWin = window.open("/admin/ezEmail/mailAddDistributionList.do?cn=" + DeptID + "&name=" + encodeURIComponent(selnode[0].innerText) + "&companyId=" + companyId, "", GetOpenWindowfeature(970, 670));
+		            var OpenWin = window.open("/admin/ezEmail/mailAddDistributionList.do?cn=" + DeptID + "&name=" + encodeURIComponent(selnode[0].innerText) + "&companyId=" + companyId, "", GetOpenWindowfeature(970, 690));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
@@ -270,7 +265,7 @@
 
 		    	if (searchValue == "") {
 		    		alert("<spring:message code='ezEmail.t10' />");
-		    		return;
+		    		// return;
 		    	}
 		    	
 		        var xmlDom = createXmlDom();
@@ -294,6 +289,8 @@
 		        if (xmlHTTP.status != 200 || stateVlaue == "ERROR")
 		            alert("<spring:message code='ezEmail.t50' />");
 		        else {
+		        	document.getElementsByClassName("shared_boxesTable")[0].style.display = "none";
+		        	
 		            var headerData = createXmlDom();
 		            headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
 		
@@ -339,6 +336,20 @@
 		    		tr_select(reListTR_, "lvUserList", View_dl);
 		    	}
 		    }
+		    
+		    function mail_manage(){
+		    	var listview = new ListView();
+		        listview.LoadFromID("lvUserList");
+		        
+		        if (listview.GetSelectedRows().length == 0) {
+					alert("<spring:message code='ezEmail.t55' />");
+					return;
+				}
+
+		        var selectId = GetAttribute(listview.GetSelectedRows()[0],"DATA1");
+		        var url = "/admin/ezOrgan/configEmail.do?id=" + selectId + "&type=ml" + "&companyId=" + companyId;
+			    window.open(url , "", "height=315px,width=462px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(462, 315));
+			}
 		</script>
 	</head>
 	<body class="mainbody">
@@ -353,18 +364,22 @@
 	  </LISTVIEWDATA>
 	</xml>
 	<form id="Form1" method="post">
-		<h1><spring:message code='ezEmail.t58' /></h1>
-		<div id="mainmenu">
-			<span style="display:none;"><b> <spring:message code='ezEmail.t59' /></b></span>
-			<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-bottom:10px; display:none;">
+		<h1>
+			<spring:message code='ezEmail.t58' />
+			<span class="title_bar"><img src="/images/name_bar.gif"></span>
+			
+			<select name="ListCompany" id="ListCompany" class="companySelect" onchange="company_change()" style="margin-bottom:10px;">
 				<c:forEach var="item" items="${list}">
 	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 	            	</c:forEach>	      		
 	      	</select>
+		</h1>
+		<div id="mainmenu">
 			<ul>
-				<li><span onClick="add_dl()"><spring:message code='ezEmail.t60' /></span></li>
+				<li class="important"><span onClick="add_dl()"><spring:message code='ezEmail.t60' /></span></li>
 		    	<li><span onClick="mod_dl()"><spring:message code='ezEmail.t61' /></span></li>
-		      	<li><span onClick="del_dl()"><spring:message code='ezEmail.t62' /></span></li>
+		      	<li><span class="icon16 icon16_delete" onClick="del_dl()"></span></li>
+		      	<li><span onClick="mail_manage()"><spring:message code='ezOrgan.t91' /></span></li>
 		    </ul>
 	  </div>
 	  <script type="text/javascript">
@@ -372,7 +387,7 @@
 	</script>
 		<div style="width:825px;">
 		<!-- 검색 -->
-		<div style="border: 1px solid #e8e8e8; WIDTH:100%; border-bottom: 0px; height: 30px; box-sizing: border-box; line-height: 30px;">
+		<div style="border: 1px solid #e8e8e8; WIDTH:100%; height: 34px; box-sizing: border-box; line-height: 33px; margin-bottom:3px;">
 			<div id="jobTotalInfoRayer" style="line-height: 30px; display: inline-block;">
 				<span>&nbsp;[<spring:message code='main.t252'/> <span style="color:#017BEC; font-weight:bold;" id="listCount"></span> <spring:message code='ezSystem.kyj2'/>]</span>
 			</div>
@@ -385,9 +400,11 @@
 					<option value="memberID"><spring:message code='ezEmail.ksaDistribution02' /></option> <!-- 구성원아이디 -->
 				</select>
 				</div>
-				<div style="display: inline-block;box-sizing: border-box; padding-right: 2px;width: 519px;padding-left: 5px;">
-					<input id="searchValue" onkeypress="if(event.keyCode==13) {search_click(); return false;}" autocomplete="off" style="height: 26px; border: 1px solid #cbcbcb; margin-top:2px; width:89%">
-					<a class="imgbtn" style="vertical-align:middle"><span onclick="search_click()"><spring:message code="ezStatistics.t36" /></span></a>
+				<div id="searchInputWrap" style="display: inline-block;box-sizing: border-box; padding-right: 2px;width: 519px;padding-left: 5px;">
+					<input id="searchValue" onkeypress="if(event.keyCode==13) {search_click(); return false;}" autocomplete="off" style="height: 26px; border: 1px solid #cbcbcb; margin-top:2px;">
+					<a class="imgbtn" style="vertical-align:middle; height: 25.5px; box-sizing: border-box; margin-top: -1px; ">
+						<span onclick="search_click()" style="height: 100%; line-height: 2em;"><spring:message code="ezStatistics.t36" /></span>
+					</a>
 				</div>
 			</div>
 		</div>
@@ -403,7 +420,29 @@
 	                </div>
 	            </td>
 	            <td style="vertical-align:top; border-bottom:none">
-	                <div id="DIV_Member" style="padding-top:10px; padding-left:5px; height: 390px; margin-bottom: 5px; margin-left: 5px; border-top-color: #dbdbda; border-right-color: #dbdbda; border-bottom-color: #dbdbda; border-left-color: #dbdbda; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; overflow-y: auto;"></div>      
+	            	<div style="box-sizing: border-box; padding-left: 5px;">
+		                <div id="DIV_Member" style="width: 100%; height: 400px; border-top-color: #dbdbda; border-right-color: #dbdbda; border-bottom-color: #dbdbda; border-left-color: #dbdbda; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; overflow-y: auto; box-sizing: border-box;">
+		                	<table class="shared_boxesTable public_distribution" style="display:none">
+		                		<thead id="distributionTitleTH">
+		                			<tr>
+		                				<th></th>
+		                			</tr>
+		                		</thead>
+					            <tbody id="distributionTitleTB">
+					            	<tr>
+					            		<td><span class="shared_boxesText" id="distriTitSpan"></span></td>
+					            	</tr>
+					            </tbody>
+					            <thead id="distributionListTH">
+					            	<tr>
+						                <th>▒ <spring:message code='ezEmail.t659' /></th>
+						            </tr>
+					            </thead>
+					            <tbody id="distributionListTB">
+					            </tbody>
+					        </table>
+		                </div>  
+	                </div>    
 	            </td>
 	        </tr>
 	    </table>

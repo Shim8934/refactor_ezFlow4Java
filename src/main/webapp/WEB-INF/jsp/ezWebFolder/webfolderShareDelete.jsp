@@ -12,9 +12,9 @@
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
-			var type = "${type}";
-			var files = "${fileList}".split(",");
-			var folders = "${folderList}".split(",");
+			var type = "<c:out value='${type}'/>";
+			var files = "<c:out value='${fileList}'/>".split(",");
+			var folders = "<c:out value='${folderList}'/>".split(",");
 			
 			window.onload = function () {
 				var popupMsg = messages.strLang32;

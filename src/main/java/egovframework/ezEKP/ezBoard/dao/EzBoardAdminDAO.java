@@ -323,12 +323,6 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	public void saveBoardProperty3(Map<String, Object> map) throws Exception {		
 		update("EzBoardAdminDAO.saveBoardProperty3", map);
 	}
-
-	/* 2018-10-17 홍승비 - 모든 회사ID, 이름(다국어)을 리스트로 받아오는 쿼리 추가 */
-	@SuppressWarnings("unchecked")
-	public List<BoardPropertyVO> getCompanyList(Map<String, Object> map) throws Exception {
-		return (List<BoardPropertyVO>) list("EzBoardAdminDAO.getCompanyList", map);
-	}
 	
 	/* 2019-05-29 홍승비 - 하위부서 허용/불가여부 체크하여 게시판그룹의 관리자 권한 가져오는 쿼리 추가 */
 	public String checkIfBoardGroupAdmin2(Map<String, Object> map) throws Exception {
@@ -345,8 +339,36 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		insert("EzBoardAdminDAO.saveACLIncludeUppderBoard2", map);
 	}
 	
+	/* 2019-10-11 홍승비 - 공지사항 게시판 레코드 삭제 쿼리 */
+	public void deleteNoticeBoard(Map<String, Object> map) throws Exception {
+		delete("EzBoardAdminDAO.deleteNoticeBoard", map);
+	}
+
+	/* 2019-10-11 홍승비 - 공지사항 게시판 레코드 삽입 쿼리 */
+	public void insertNoticeBoard(Map<String, Object> map) throws Exception {
+		insert("EzBoardAdminDAO.insertNoticeBoard", map);
+	}
+	
 	/* 2020-01-16 홍승비 - 전달된 값으로 BOARDGROUPID를 업데이트하는 메서드 */
 	public void updateBoardGroupID(Map<String, Object> map) throws Exception {
 		update("EzBoardAdminDAO.updateBoardGroupID", map);
+	}
+
+	/* 2020-12-03 박기범 - 탭게시판 레코드 삭제 쿼리 */
+	public void deleteTabBoard(Map<String, Object> map) throws Exception {
+		delete("EzBoardAdminDAO.deleteTabBoard", map);
+	}
+
+	/* 2020-12-03 박기범 - 탭게시판 레코드 삽입 쿼리 */
+	public void insertTabBoard(Map<String, Object> map) throws Exception {
+		insert("EzBoardAdminDAO.insertTabBoard", map);
+	}
+
+	/* 2020-12-30 박기범 - 탭게시판 레코드 일괄삭제 쿼리 */
+	public void deleteAllComTabBoard(Map<String, Object> map) throws Exception {
+		delete("EzBoardAdminDAO.deleteAllComTabBoard", map);
+	}
+	public void deleteAllTabBoard(Map<String, Object> map) throws Exception {
+		delete("EzBoardAdminDAO.deleteAllTabBoard", map);
 	}
 }

@@ -23,7 +23,7 @@
 	<script>
 	
 		var CurPage = ""	;					// 현재 페이지			
-		var circularID = "${circularID}";	// 회람글 ID
+		var circularID = "<c:out value='${circularID}'/>";	// 회람글 ID
 	    var perCount = 10;					// 페이지당 확인자 수
 	    var BlockSize = 10;					// 페이지 표시 갯수
 	    var totalPage = "";					// 전체 페이지 수

@@ -33,6 +33,7 @@
 			var strActType6  = "<spring:message code='ezWebFolder.t287'/>";
 			var strActType7  = "<spring:message code='ezWebFolder.t121'/>";
 			var strActType8  = "<spring:message code='ezWebFolder.t122'/>";
+			var strActType9  = "<spring:message code='ezWebFolder.t506'/>";
 			var strNoData    = "<spring:message code='ezWebFolder.t144'/>";
 			var startDateStr = "";
 			var endDateStr   = "";
@@ -41,6 +42,11 @@
 			var userNameStr  = "";
 			var actTypeStr   = "";
 			var tableView    = new TableView();
+			var exportingExcel = false;
+			var _selectedCell = null;
+			var _cellInfo        = {};
+			var sortColumn = null;
+			var sortType = null;
 			
 			window.onload = function () {
 				closeAllPopup();
@@ -58,7 +64,7 @@
 					changeYear: true,
 					autoSize: true,
 					showOn: "both",
-					buttonImage: "/images/ImgIcon/calendar-month.gif",
+					buttonImage: "/images/ImgIcon/calendar-month.png",
 					buttonImageOnly: true,
 					dateFormat: "yy-mm-dd"
 				});
@@ -68,7 +74,7 @@
 					changeYear: true,
 					autoSize: true,
 					showOn: "both",
-					buttonImage: "/images/ImgIcon/calendar-month.gif",
+					buttonImage: "/images/ImgIcon/calendar-month.png",
 					buttonImageOnly: true,
 					dateFormat: "yy-mm-dd"
 				});
@@ -139,6 +145,13 @@
 				});
 				scroll();
 				
+				var listHeader = document.getElementsByClassName("headListClick");
+				for(var i = 0 ; i <listHeader.length; i++) {
+					listHeader[i].addEventListener("click", function(event) {
+						sortByHeader(this);
+					});
+				}
+				
 			});
 			
 			function preProcessing() {
@@ -205,7 +218,9 @@
 						"order"       : orderInf.ord ? orderInf.ord : "",
 						"fileType"    : document.getElementById("fileTypeSelect").value,
 						"listCntSize" : listCnt,
-						"companyId"   : document.getElementById("companyList").value
+						"companyId"   : document.getElementById("companyList").value,
+						"sortType"	  : sortType,
+						"sortColumn"  : sortColumn
 					},
 					dataType: "JSON",
 					async: true,
@@ -218,7 +233,7 @@
 								var result  = data.fileLogList;
 								totalRows   = data.totalRows;
 								totalPages  = data.totalPages;
-								currentPage = pPage;
+								currentPage = data.currPage;
 								
 								makePageSelPage();
 								renderData(result);
@@ -247,6 +262,39 @@
 				scroll();
 			}
 			
+			function sortByHeader(cell) {
+				var column = cell.getAttribute("data-column");
+				
+				if (!column) {return;}
+				
+				if (_selectedCell != null) {
+					var orderOption = cell.getAttribute("orderoption") == "DESC" ? "ASC" : "DESC";
+					cell.setAttribute("orderoption", orderOption);
+					
+					if (cell.cellIndex != _selectedCell) {
+						var lastSelectedCell = document.getElementById("BoardList_THEAD").rows[0].cells[_selectedCell];
+						lastSelectedCell.removeChild(lastSelectedCell.lastElementChild);
+						var spanElmt = document.createElement("span");
+						cell.appendChild(spanElmt);
+					}
+					
+					var spanImg       = cell.lastElementChild;
+					spanImg.className = orderOption == "DESC" ? "spanDown" : "spanUp";
+				} else {
+					cell.setAttribute("orderoption", "DESC");
+					var spanElmt       = document.createElement("span");
+					spanElmt.className = "spanDown";
+					cell.appendChild(spanElmt);
+				}
+				
+				_selectedCell = cell.cellIndex;
+				
+				var order     = cell.getAttribute("orderoption");
+				this.sortType = order;
+				this.sortColumn = column;
+				search_Set(currentPage);
+			}
+			
 			function startSearch() {
 				var sDateVal    = document.getElementById("Sdatepicker").value;
 				var eDateVal    = document.getElementById("Edatepicker").value;
@@ -256,10 +304,10 @@
 				var fileTypeIdx = document.getElementById("fileTypeVal").selectedIndex;
 				var actTypeVal  = document.getElementById("actionType").value;
 				
-				/* if (!sDateVal && !eDateVal && !fileExtVal && !fileNameVal && !userNameVal) {
+				if (!sDateVal && !eDateVal && !fileExtVal && !fileNameVal && !userNameVal) {
 					alert("<spring:message code='ezWebFolder.t163'/>");
 					return;
-				} */
+				} 
 				
 				if (sDateVal != "" && eDateVal == "") {
 					alert("<spring:message code='ezWebFolder.t308' />");
@@ -273,7 +321,7 @@
 				
 				if (sDateVal && eDateVal) {
 					if (sDateVal > eDateVal) {
-						alert("<spring:message code='ezWebFolder.t164'/>");
+						alert("<spring:message code='ezWebFolder.t309'/>");
 						return;
 					}
 				}
@@ -329,7 +377,13 @@
 			}
 			
 			function excelExport() {
+				if (exportingExcel) {
+					return;
+				}
+				
 				var orderInf = tableView.getOrderInfo();
+				showProgress();
+				exportingExcel = true;
 				
 				$.ajax({
 					type: "POST",
@@ -344,7 +398,9 @@
 						"column"      : orderInf.col ? orderInf.col : "",
 						"order"       : orderInf.ord ? orderInf.ord : "",
 						"fileType"    : document.getElementById("fileTypeSelect").value,
-						"companyId"   : document.getElementById("companyList").value
+						"companyId"   : document.getElementById("companyList").value,
+						"sortType"	  : sortType,
+						"sortColumn"  : sortColumn
 					},
 					dataType: "JSON",
 					async: true,
@@ -353,7 +409,7 @@
 						
 						switch(code) {
 							case 0: 
-								var url = "/admin/ezWebFolder/downloadExcel.do?fileName=" + data.path;
+								var url = "/admin/ezWebFolder/downloadExcel.do?fileName=" + encodeURIComponent(data.path);
 								AttachDownFrame.location.href = url;
 								break;
 							case 1:
@@ -370,29 +426,29 @@
 					error : function(error) {
 						alert("<spring:message code='ezWebFolder.t134'/>" + error);
 					}
+				}).complete(function() {
+					hideProgress();
+					exportingExcel = false;
 				});
 			}
-
+/*
 			function optionHidden() {
-		 	    document.getElementById("layer_Viewpopup").style.display = "none";
+				document.getElementById("layer_Viewpopup").style.display = "none";
 		 	    document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
-		 	    document.getElementById("webfolderlistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
+				document.getElementById("webfolderlistoptiondiv").setAttribute("class", "icon16 btn_arrow_down");
 		 	}
 			function optionView(obj) {
 		   		 if (obj.getAttribute("mode") == "off") {
 		   	        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
-//		    	        if(pAdminType == "y")
-		   	            document.getElementById("layer_Viewpopup").style.top = "130px";
-//		    	        else
-//		    	            document.getElementById("layer_Viewpopup").style.top = "100px";
+	   	            document.getElementById("layer_Viewpopup").style.top = "130px";
 		   	        document.getElementById("layer_Viewpopup").style.display = "";
-		   	        obj.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
+		   	     	obj.setAttribute("class", "icon16 btn_onarrow_down");
 		   	        obj.setAttribute("mode", "on");
 		   	    } else {
 		   	        optionHidden();
 		   	    }
 		   	}
-		   	
+*/		   	
 			function scroll() {
 				var BoardList_BODYHeight = document.getElementById("dragDropArea").clientHeight;
 				var BoardListDivHeight = document.getElementById("tblFileList").clientHeight;
@@ -435,10 +491,10 @@
 			</select>
 		</div>
 		
-		<div id="mainmenu2" style="position: relative; margin-left: 5px;">
+		<div id="mainmenu" style="position: relative; margin-left: 5px;">
 			<ul>
-				<li id=""><a id="btnSearch"  style="margin-top: 3px;" onClick="openSearchPanel();"><span><spring:message code='ezWebFolder.t123' /></span></a></li>
-				<li id=""><a id="btnRefresh" style="margin-top: 3px;" onClick="refreshView();"    ><span><spring:message code='ezWebFolder.t139' /></span></a></li>
+				<li id="SearchOption" mode="off" onclick="openSearchPanel()"><span class="icon16 icon16_search"></span></li>
+				<li><span class="icon16 icon16_refresh" onclick="refreshView()"></span></li>
 				<li id=""><a id="btnSave"    style="margin-top: 3px;" onClick="excelExport();"    ><span><spring:message code='ezStatistics.t1003'/></span></a></li>
 				<li id="">
 					<select id="fileTypeSelect" onchange="search_Set('1');">
@@ -451,15 +507,20 @@
 						<option value="7"         ><spring:message code='ezWebFolder.t311'/></option>
 					</select>
 				</li>
-				<li style="float:right;"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv" /></li>
+				<div class="sub_frameIcon" style="float:right">
+					<div class="sub_frameIconUL02">
+					  	<p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="webfolderlistoptiondiv"></span></p>  
+					</div>
+				</div>
 			</ul>
 		</div>
 		
 		<script type="text/javascript">
-			selToggleList(document.getElementById("mainmenu2"), "ul", "li", "0");
+			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
 		
-		<div id="searchPanel" class="popup wfSearchPanel" style="display: none;">
+		<div id="searchPanel" class="wfSearchPanel" style="display: none; overflow: hidden;">
+		<div class="popup" style="margin: 0; padding: 5px 10px 10px;">
 			<h1><spring:message code='ezWebFolder.t24'/></h1> 
 			<div class="wfClose" onclick="openSearchPanel();"><ul><li><span></span></li></ul></div>
 			<div style="margin: 10px 0px 15px;">
@@ -514,8 +575,9 @@
 			</div>
 			<div class="wfdivBttn">
 				<a class="webfolderBttn"><span onclick="startSearch();"    ><spring:message code='ezWebFolder.t123'/></span></a>
-				<a class="webfolderBttn"><span onclick="openSearchPanel();"><spring:message code='ezWebFolder.t112'/></span></a>
+				<a class="webfolderBttn" style="display:none"><span onclick="openSearchPanel();"><spring:message code='ezWebFolder.t112'/></span></a>
 			</div>
+		</div>
 		</div>
 		
 		<div style="width:100%;"id ="tblFileList1_div">
@@ -523,12 +585,12 @@
 				<table class="mainlist" style="width:100%"  id="tblFileList1">
 					<thead id ="BoardList_THEAD">
 						<tr>
-							<th headers="ft" class="wfFileType" style="text-align: center;"><spring:message code='ezWebFolder.t188'/></th>
-							<th headers="fn" class="wfFileLogName"><spring:message code='ezWebFolder.t156'/></th>
-							<th headers="fs" class="wfFileFavoriteSize"><spring:message code='ezWebFolder.t157'/></th>
-							<th headers="un" class="wfFileLogMember" ><spring:message code='ezWebFolder.t339'/></th>
-							<th headers="at" class="wfActive" ><spring:message code='ezWebFolder.t158'/></th>
-							<th headers="ad" class="wfFileLogDate" style="text-align: center;"><spring:message code='ezWebFolder.t159'/></th>
+							<th headers="ft" class="wfFileType			headListClick" data-column="FILE_TYPE" style="text-align: center;"><spring:message code='ezWebFolder.t188'/></th>
+							<th headers="fn" class="wfFileLogName		headListClick" data-column="FILE_NAME"><spring:message code='ezWebFolder.t156'/></th>
+							<th headers="fs" class="wfFileFavoriteSize	headListClick" data-column="FILE_SIZE"><spring:message code='ezWebFolder.t157'/></th>
+							<th headers="un" class="wfFileLogMember		headListClick" data-column="CREATE_NAME1" ><spring:message code='ezWebFolder.t339'/></th>
+							<th headers="at" class="wfActive			headListClick" data-column="LOG_TYPE" ><spring:message code='ezWebFolder.t158'/></th>
+							<th headers="ad" class="wfFileLogDate		headListClick" data-column="CREATE_DATE" style="text-align: center;"><spring:message code='ezWebFolder.t159'/></th>
 						</tr>
 					</thead>
 				</table>

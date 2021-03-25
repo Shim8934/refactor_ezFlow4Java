@@ -107,13 +107,13 @@
 							&nbsp;<spring:message code="ezCircular.t23" /> : 
 	     					<select id="previewListValue" name="pPreviewHList" style="width: 50px;" onchange="HChange(this);">	     						
 	     						<c:forEach var="item" begin="39" end="64">
-	           						<option value='${item}' ${item == circularListConfig.previewListValue ? 'selected' : '' }>${item}</option>
+	           						<option value='${item}' ${item == circularListConfig.previewListValue ? 'selected' : '' }><c:out value='${item}'/></option>
 	       						</c:forEach>                                                 
 							</select>							
 	         				&nbsp;<spring:message code="ezCircular.t24" /> :	         					 
 							<select id="previewContentValue" name="pPreviewHContent" style="width: 50px;" onchange="HChange(this);">
 								<c:forEach var="item" begin="36" end="61">
-		   							<option value='${item}' ${item == circularListConfig.previewContentValue ? 'selected' : '' }>${item}</option>
+		   							<option value='${item}' ${item == circularListConfig.previewContentValue ? 'selected' : '' }><c:out value='${item}'/></option>
 								</c:forEach>
 							</select>		
 						</span>

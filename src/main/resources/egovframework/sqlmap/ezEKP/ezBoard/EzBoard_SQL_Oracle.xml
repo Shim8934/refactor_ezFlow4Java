@@ -81,7 +81,9 @@
         <result property="docNo" 					column="DOCNO" 					columnIndex="32"/>
 		<result property="writerDeptID"				column="WRITERDEPTID"				columnIndex="33"/>
         <result property="writerCompanyID" 		column="WRITERCOMPANYID" 		columnIndex="34"/>
-		<result property="oneLineReply" 		column="ONELINEREPLY" 		columnIndex="35"/>
+        <result property="userImageFile" 		column="USERIMAGEFILE" 		columnIndex="35"/>
+		<result property="likeCount" 		column="LIKECOUNT" 		columnIndex="36"/>
+		<result property="oneLineReply" 		column="ONELINEREPLY" 		columnIndex="37"/>
 	</resultMap>
 	
 	<resultMap id="getBrdGetItemInfoTemp" class="BoardListVO">
@@ -116,7 +118,9 @@
         <result property="docNo" 					column="DOCNO" 					columnIndex="29"/>
 		<result property="writerDeptID"				column="WRITERDEPTID"				columnIndex="30"/>
 		<result property="writerCompanyID" 		column="WRITERCOMPANYID" 		columnIndex="31"/>
-		<result property="isReserved" 		column="ISRESERVED" 		columnIndex="32"/>
+		<result property="guBun" 					column="GUBUN" 					columnIndex="32"/>
+		<result property="userImageFile" 		column="USERIMAGEFILE" 		columnIndex="33"/>
+		<result property="isReserved" 		column="ISRESERVED" 		columnIndex="34"/>
 	</resultMap>
 	
 	<!-- baonk added -->
@@ -542,17 +546,10 @@
                	  FROM 
 					(SELECT 
                	  		IMAGEID,
-						ITEMID,
-						BOARDID,
-						WRITERID,
-						WRITERNAME,
-						WRITERDEPTID,
 						FILEPATH,
-						WRITEDATE,
 						FILECONTENT,
-						IMAGENAME,
 						MAIN_FLAG FLAG,
-						TENANT_ID
+						IMAGENAME
                	  	  FROM
                	  		TBL_Photo_ImageItem 
                   	  WHERE  
@@ -912,6 +909,7 @@
 		</isNotEmpty>
 	</select>
 	
+	<!-- 2021-01-18 겸직일 경우 mysql과 groupby가 달라서 생기는 문제 fix, 겸직일경우 본 부서가 우선적으로 출력되도록 수정 -->
 	<select id="EzBoardDAO.getReaderList" parameterClass="Map" resultClass="BoardReadVO">
 		<![CDATA[
 			SELECT 
@@ -926,7 +924,7 @@
 							USERCOMPANYNAME$lang$ AS USERCOMPANYNAME, 
 							NVL(USERTITLE$lang$, '') AS USERTITLE, 
 							TO_CHAR(READDATE, 'YYYY-MM-DD HH24:MI:SS') as READDATE,
-							DEPTID
+							TRIM(MIN(DEPTID)) AS DEPTID
 					   	FROM 
 					   		TBL_Board_Item_Read A
 						INNER JOIN
@@ -935,7 +933,8 @@
 					    		ROW_NUMBER() OVER (PARTITION BY T.CN ORDER BY ROWNUM) CNT
 					    	FROM
 						    	((SELECT
-									D.CN, D.DEPARTMENT as DEPTID,
+									D.CN, 
+									' '||D.DEPARTMENT as DEPTID,
 									D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
 									D.TENANT_ID
 								FROM
@@ -987,6 +986,8 @@
 					   							TENANT_ID = #tenantID#
 					   						AND
 					   							ITEMID = #itemID# )
+					GROUP BY
+						USERID, USERNAME$lang$, USERDEPTNAME$lang$, USERCOMPANYNAME$lang$, NVL(USERTITLE$lang$, ''),	READDATE
 				   	ORDER BY
 				   		ReadDate DESC
 				)A
@@ -1074,7 +1075,7 @@
                       AND 
                       	ITEMID <> #v_PITEMID#
                       AND 
-                      	TO_CHAR(UPPERITEMIDTREE) NOT LIKE CONCAT(#v_PUPPERITEMIDTREE#, '%')
+                      	TO_CHAR(UPPERITEMIDTREE) NOT LIKE #v_PUPPERITEMIDTREE# || '%'
                       AND 
                       	STARTDATE <= #nowDate#
                       AND 
@@ -1108,7 +1109,7 @@
                       AND 
                       	ITEMID <> #v_PITEMID#
                       AND 
-                      	TO_CHAR(UPPERITEMIDTREE) NOT LIKE CONCAT(#v_PUPPERITEMIDTREE#, '%')
+                      	TO_CHAR(UPPERITEMIDTREE) NOT LIKE #v_PUPPERITEMIDTREE# || '%'
                       AND 
                       	STARTDATE <= #nowDate#
                       AND 
@@ -1164,7 +1165,8 @@
 	      					A.DOCNO,
 	      					'' AS NOTICE,
 	      					P.GUBUN,
-	      					A.MAINCONTENT
+	      					A.MAINCONTENT,
+	      					P.BOARDGROUPID
 	      			  	FROM 
 	      			  		TBL_BOARD_ITEM A 
 	      			  	INNER JOIN 
@@ -1263,14 +1265,6 @@
 		   				A.WRITERNAME2,
 		   				A.WRITERDEPTNAME2,
 		   				A.WRITERCOMPANYNAME2,
-		   				(SELECT 
-		                	COUNT(*)  
-	     				FROM 
-	     					TBL_Board_OneLineReply 
-	    				WHERE  
-	    					TENANT_ID = A.TENANT_ID
-	    				AND
-	    					ITEMID = A.ItemID) ONELINECNT,
 		   				A.UPPERITEMIDTREE,
 		   				A.DOCNO,
 		   			    '' AS NOTICE,
@@ -1287,7 +1281,8 @@
 	                      WHERE
 	                          B.TENANT_ID = #v_TENANTID#
 	                      AND 
-	                          B.BOARDID = A.BOARDID ) as GUBUN
+	                          B.BOARDID = A.BOARDID ) as GUBUN,
+						NVL(LIKECOUNT, 0) as LIKECOUNT
 	   				  FROM 
 	   				  	TBL_BOARD_ITEM A 
 	   				  LEFT OUTER JOIN 
@@ -1309,6 +1304,21 @@
 	   				  	A.TENANT_ID = D.TENANT_ID
 	   				  AND
 	   				  	A.ITEMID = D.ITEMID
+					LEFT OUTER JOIN
+						(SELECT
+                            COUNT(ITEMID) as LIKECOUNT,
+                            ITEMID,
+                            TENANT_ID
+                        FROM
+                            TBL_BOARD_LIKE
+                        WHERE 
+                            TENANT_ID = #v_TENANTID#
+						GROUP BY
+							ITEMID, TENANT_ID ) L
+						ON
+							A.TENANT_ID = L.TENANT_ID
+                        AND
+                            A.ITEMID = L.ITEMID
 	   				  WHERE
 	   				  	A.TENANT_ID = #v_TENANTID#
 	   				  AND 
@@ -1394,7 +1404,8 @@
 		   				A.EXTENSIONATTRIBUTE7,
 		   				A.EXTENSIONATTRIBUTE8,
 		   				A.EXTENSIONATTRIBUTE9,
-		   				A.EXTENSIONATTRIBUTE10 
+		   				A.EXTENSIONATTRIBUTE10,
+		  				NVL(LIKECOUNT, 0) as LIKECOUNT
 	   				FROM 
 	   					TBL_BOARD_ITEM A 
 	   				LEFT OUTER JOIN 
@@ -1416,6 +1427,21 @@
 	   					A.TENANT_ID = D.TENANT_ID
 	   				AND
 	   					A.ITEMID = D.ITEMID
+	   				LEFT OUTER JOIN
+						(SELECT
+                            COUNT(ITEMID) as LIKECOUNT,
+                            ITEMID,
+                            TENANT_ID
+                        FROM
+                            TBL_BOARD_LIKE
+                        WHERE 
+                            TENANT_ID = #v_TENANTID#
+						GROUP BY
+							ITEMID, TENANT_ID ) L
+						ON
+							A.TENANT_ID = L.TENANT_ID
+                        AND
+                            A.ITEMID = L.ITEMID
 	   				WHERE
 	   					A.TENANT_ID = #v_TENANTID#
 	   				AND 
@@ -1518,7 +1544,15 @@
 	                      WHERE
 	                          B.TENANT_ID = #v_TENANTID#
 	                      AND 
-	                          B.BOARDID = A.BOARDID ) as GUBUN
+	                          B.BOARDID = A.BOARDID ) as GUBUN,
+						(SELECT 
+		                	NVL(COUNT(*), 0)  
+		    			FROM 
+		    				TBL_Board_Like
+		   				WHERE  
+		   					TENANT_ID = A.TENANT_ID
+		   				AND
+		   					ITEMID = A.ItemID) as LIKECOUNT
 		              FROM 
 		              	TBL_Board_Item A
 		              WHERE  
@@ -2012,7 +2046,8 @@
 		   				A.DOCNO,
 		   				A.MAINCONTENT,
 		   				B.FILEPATH,
-		   				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG
+		   				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
+		   				NVL(LIKECOUNT, 0) as LIKECOUNT
 	   				  FROM 
 	   				  	TBL_BOARD_ITEM A 
 	   				  INNER JOIN 
@@ -2041,6 +2076,21 @@
 	   				  	A.TENANT_ID = D.TENANT_ID
 	   				  AND 
 	   				  	A.ITEMID = D.ITEMID
+					LEFT OUTER JOIN
+						(SELECT
+                            COUNT(ITEMID) as LIKECOUNT,
+                            ITEMID,
+                            TENANT_ID
+                        FROM
+                            TBL_BOARD_LIKE
+                        WHERE 
+                            TENANT_ID = #v_TENANTID#
+						GROUP BY
+							ITEMID, TENANT_ID ) L
+						ON
+							A.TENANT_ID = L.TENANT_ID
+                        AND
+                            A.ITEMID = L.ITEMID
 	   				WHERE 
 	   					A.TENANT_ID = #v_TENANTID#
 	   				AND
@@ -2108,7 +2158,8 @@
 		   				A.DOCNO,
 		   				A.MAINCONTENT,
 		   				B.FILEPATH,
-		   				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG
+		   				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
+		   				NVL(LIKECOUNT, 0) as LIKECOUNT
 		   			  FROM 
 		   			  	TBL_BOARD_ITEM A 
 		   			  INNER JOIN 
@@ -2137,6 +2188,21 @@
 		   			  	A.TENANT_ID = D.TENANT_ID
 		   			  AND
 		   			  	A.ITEMID = D.ITEMID
+		   			  LEFT OUTER JOIN
+						(SELECT
+                            COUNT(ITEMID) as LIKECOUNT,
+                            ITEMID,
+                            TENANT_ID
+                        FROM
+                            TBL_BOARD_LIKE
+                        WHERE 
+                            TENANT_ID = #v_TENANTID#
+						GROUP BY
+							ITEMID, TENANT_ID ) L
+						ON
+							A.TENANT_ID = L.TENANT_ID
+                        AND
+                            A.ITEMID = L.ITEMID
 		   			  WHERE  
 		   			  	A.TENANT_ID = #v_TENANTID#
 		   			  AND
@@ -2265,7 +2331,8 @@
        					A.EXTENSIONATTRIBUTE9, 
        					A.EXTENSIONATTRIBUTE10,
 	   			    	CASE WHEN (I.BOARDNAME$lang$ = '' OR I.BOARDNAME$lang$ IS NULL) THEN I.BOARDNAME ELSE I.BOARDNAME$lang$ END BOARDNAME,
-	   				  	I.GUBUN
+	   				  	I.GUBUN,
+	   				  	NVL(LIKECOUNT, 0) as LIKECOUNT
 	   				  FROM 
 	   				  	TBL_BOARD_ITEM A 
 	   				  LEFT OUTER JOIN 
@@ -2286,6 +2353,21 @@
 	   				  	A.TENANT_ID = D.TENANT_ID
 	   				  AND
 	   				  	A.ITEMID = D.ITEMID
+	   				  LEFT OUTER JOIN
+						(SELECT
+                            COUNT(ITEMID) as LIKECOUNT,
+                            ITEMID,
+                            TENANT_ID
+                        FROM
+                            TBL_BOARD_LIKE
+                        WHERE 
+                            TENANT_ID = #v_TENANTID#
+						GROUP BY
+							ITEMID, TENANT_ID ) L
+						ON
+							A.TENANT_ID = L.TENANT_ID
+                        AND
+                            A.ITEMID = L.ITEMID
 	   				  INNER JOIN 
 	   				  	TBL_BOARD_BOARDINFO I  
 	   				  ON 
@@ -2478,7 +2560,7 @@
 	   					A.TENANT_ID = I.TENANT_ID
 	   				 AND 
 	   					A.BOARDID = I.BOARDID 
-	   				 AND
+	   				 WHERE
 	   					A.TENANT_ID = #v_TENANTID#
 					 AND
   						(A.WritercompanyID = #v_COMPANYID# OR TRIM(I.COMPANYID) = '' OR I.COMPANYID IS NULL)
@@ -2674,6 +2756,15 @@
 	            EXTENSIONATTRIBUTE10 ,
 	            A.BOARDID,
 	            A.DOCNO,
+	            (SELECT extensionattribute2 FROM TBL_USERMASTER F WHERE A.WRITERID = F.CN AND A.TENANT_ID = F.TENANT_ID) AS USERIMAGEFILE,
+	            (SELECT 
+                	NVL(COUNT(*), 0)  
+    			FROM 
+    				TBL_Board_Like
+   				WHERE  
+   					TENANT_ID = A.TENANT_ID
+   				AND
+   					ITEMID = A.ItemID) as LIKECOUNT,
 	            B.ONELINEREPLY
 	        FROM 
 	        	TBL_Board_Item A
@@ -2718,12 +2809,14 @@
 	            EXTENSIONATTRIBUTE4 ,
 	            EXTENSIONATTRIBUTE5 ,
 	            MAINCONTENT ,
+	            B.GUBUN ,
 	            EXTENSIONATTRIBUTE6 ,
 	            EXTENSIONATTRIBUTE7 ,
 	            EXTENSIONATTRIBUTE8 ,
 	            EXTENSIONATTRIBUTE9 ,
 	            EXTENSIONATTRIBUTE10,
 	            DOCNO,
+	            (SELECT extensionattribute2 FROM TBL_USERMASTER F WHERE A.WRITERID = F.CN AND A.TENANT_ID = F.TENANT_ID) AS USERIMAGEFILE,
 				CASE
 					WHEN
 						STARTDATE < #nowDate#
@@ -2733,9 +2826,15 @@
 						'true'
 					END AS ISRESERVED
 	        FROM 
-	        	TBL_Board_Item_temp 
+	        	TBL_Board_Item_temp A
+	        JOIN
+	        	TBL_Board_BoardInfo B
+            ON
+            	A.TENANT_ID = B.TENANT_ID
+            AND
+            	A.BoardID = B.BoardID
        		WHERE
-       			TENANT_ID = #v_TENANTID#
+       			A.TENANT_ID = #v_TENANTID#
        		AND  
        			ItemID = #v_pItemID#
 		]]>
@@ -2944,7 +3043,7 @@
        		WHERE  
        			tenant_id = #v_TENANTID#
        		AND
-       			TO_CHAR(UpperItemIDTree) LIKE CONCAT(CONCAT('%', #v_pItemID#), '%')
+       			TO_CHAR(UpperItemIDTree) LIKE '%' || #v_pItemID# || '%'
             AND 
             	ItemID <> #v_pItemID#
 		]]>
@@ -3686,7 +3785,7 @@
 	       	AND
 	       		itemid = #itemID#
 	       	ORDER BY
-	       		GUID
+	       		TO_NUMBER(GUID)
        	]]>
 	</select>
 	
@@ -3704,7 +3803,7 @@
             AND 
             	parentwritedate = #v_PPARENTWRITEDATE#
             AND 
-            	TO_CHAR(upperitemidtree) LIKE CONCAT(#v_PUPPERITEMIDTREE#, '%')
+            	TO_CHAR(upperitemidtree) LIKE #v_PUPPERITEMIDTREE# || '%'
             AND 
             	startdate <= #nowDate#
             AND 
@@ -4148,7 +4247,7 @@
 			AND 
 				BoardID = #boardID# 
 			AND 
-				ItemID like CONCAT(#itemTreeID#, '%')
+				ItemID like #itemTreeID# || '%'
 		]]>
 	</select>
 	
@@ -4267,7 +4366,7 @@
 		WHERE
        		tenant_id = #v_TENANTID#
        	AND  
-       		imageID = #v_IMAGEID#
+       		TRIM(imageID) = #v_IMAGEID#
        	AND
        		ItemID = #v_ITEMID#
 	</select>
@@ -4618,7 +4717,7 @@
 			UPDATE TBL_Photo_ImageItem
         	SET 
         		main_Flag = CASE
-        					WHEN imageID = #v_IMAGEID# THEN 'Y'
+        					WHEN TRIM(imageID) = #v_IMAGEID# THEN 'Y'
         					ELSE 'N'
         					END
         	WHERE
@@ -4714,9 +4813,9 @@
        			WHERE
        				tenant_id = #v_TENANTID#
        			AND  
-       				ImageID = #v_ImageID#
+       				TRIM(ImageID) = #v_ImageID#
         		AND 
-        			BoardID = #v_BoardID#
+        			TRIM(BoardID) = #v_BoardID#
 			]]>
 		</isNotEmpty>
 		<isEmpty property="v_FilePath">
@@ -4727,9 +4826,9 @@
        			WHERE  
        				tenant_id = #v_TENANTID#
        			AND
-       				ImageID = #v_ImageID#
+       				TRIM(ImageID) = #v_ImageID#
         		AND 
-        			BoardID = #v_BoardID#
+        			TRIM(BoardID) = #v_BoardID#
 			]]>
 		</isEmpty>
 	</update>
@@ -4785,6 +4884,7 @@
 	          	Attachments = #hasAttach#,
 	          	WriterName = #writerName#,
 	          	WriterName2 = #writerName2#,
+				WRITERID = #writerID#,
 	          	WRITERDEPTID = #writerDeptID#,
 	          	WRITERDEPTNAME = #writerDeptName#,
 	          	WRITERDEPTNAME2 = #writerDeptName2#,
@@ -4911,7 +5011,7 @@
         	WHERE  
         		TENANT_ID = #v_TENANTID#
         	AND
-        		ImageID = #v_ImageID#
+        		TRIM(ImageID) = #v_ImageID#
         	AND 
         		BoardID = #v_BoardID#
 		]]>
@@ -4988,7 +5088,7 @@
 			WHERE  
 				TENANT_ID = #v_TENANTID#
 			AND
-				IMAGEID = #v_pIMAGEID#
+				TRIM(IMAGEID) = #v_pIMAGEID#
 		]]>
 	</delete>	
 	
@@ -5308,6 +5408,24 @@
 	  	]]>
   </select>
   
+	<!-- 2021-01-06 홍승비 - 현재 사용자가 읽은 게시물 카운트를 셀렉트하는 쿼리 추가 -->
+	<select id="EzBoardDAO.getReaderListCount2" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(USERID) AS TOTALCOUNT
+			FROM 
+				TBL_BOARD_ITEM_READ
+			WHERE 
+				TENANT_ID = #v_TENANTID#
+			AND
+				USERID = #v_PUSERID# 
+			AND 
+				BOARDID = #v_PBOARDID#
+			AND
+				ITEMID = #v_ITEMID#
+		]]>
+	</select>
+  
   <update id="EzBoardDAO.updateMoveOneLineReply" parameterClass="Map">
 		<![CDATA[
 			UPDATE TBL_BOARD_ONELINEREPLY
@@ -5534,6 +5652,57 @@
 		]]>
 	</update>
 	
+	<select id="EzBoardDAO.getlikeCount" parameterClass="Map" resultClass="int">
+		<![CDATA[
+			SELECT
+				NVL(COUNT(*), 0)
+			FROM
+				TBL_Board_Like
+			WHERE
+	       		TENANT_ID = #v_tenantID#
+	       	AND
+	       		ITEMID = #v_itemID#
+       	]]>
+	</select>
+	
+	<select id="EzBoardDAO.likeCheck" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				USERID
+			FROM
+				TBL_Board_Like
+			WHERE
+	       		TENANT_ID = #v_tenantID#
+	       	AND  
+	       		USERID = #v_userID#
+	       	AND
+	       		ITEMID = #v_itemID#
+       	]]>
+	</select>
+	
+	<delete id="EzBoardDAO.likeDelete" parameterClass="Map">
+  		<![CDATA[
+  			DELETE FROM TBL_Board_Like
+  			WHERE
+  				TENANT_ID = #v_tenantID#
+  			AND
+  				USERID = #v_userID#
+  			AND
+  				ITEMID = #v_itemID#
+		]]>
+  </delete>
+  
+	<insert id="EzBoardDAO.likeInsert" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_Board_Like ( 
+				ITEMID, USERID, LIKEDATE, TENANT_ID
+			)
+        	VALUES ( 
+        		#v_itemID#, #v_userID#, #v_likeDate#, #v_tenantID#
+        	)
+		]]>
+	</insert>
+	
 	<select id="EzBoardDAO.getPDOAddJobDeptID" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
@@ -5561,7 +5730,7 @@
 		]]>
 	</select>
 	
-		<select id="EzBoardDAO.getUpperDeptID" parameterClass="Map" resultClass="String">
+	<select id="EzBoardDAO.getUpperDeptID" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
 				EXTENSIONATTRIBUTE1
@@ -5574,7 +5743,364 @@
 		]]>
 	</select>
 	
-	<select id="EzBoardDAO.getAllSubBoardProperty" parameterClass="Map" resultClass="BoardPropertyVO">
+	<!-- 2019-09-18 홍승비 - 사용자의 직위와 직책 ID를 리턴하는 쿼리 -->
+	<select id="EzBoardDAO.getUserJJID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				TBL_USER_JOBMASTER.JOBID
+			FROM 
+				TBL_USER_JOBMASTER
+			INNER JOIN
+				TBL_USERMASTER
+			ON
+				(TBL_USERMASTER.EXTENSIONATTRIBUTE7 = TBL_USER_JOBMASTER.JOBID
+				OR
+				TBL_USERMASTER.EXTENSIONATTRIBUTE8 = TBL_USER_JOBMASTER.JOBID)
+			AND 
+				TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = TBL_USER_JOBMASTER.COMPANYID 
+			AND 
+				TBL_USERMASTER.TENANT_ID = TBL_USER_JOBMASTER.TENANT_ID
+			WHERE
+				TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+			AND
+				TBL_USERMASTER.TENANT_ID = #v_TENANTID#
+			AND
+				TBL_USERMASTER.CN = #v_USERID#
+
+			UNION
+			
+			SELECT
+				TBL_USER_JOBMASTER.JOBID
+			FROM
+				TBL_USER_JOBMASTER
+			INNER JOIN 
+				TBL_ADDJOBMASTER
+			ON
+				TBL_USER_JOBMASTER.JOBID = TBL_ADDJOBMASTER.JOBID
+			AND
+				TBL_USER_JOBMASTER.TENANT_ID = TBL_ADDJOBMASTER.TENANT_ID
+			INNER JOIN
+				TBL_USERMASTER
+			ON
+				TBL_USERMASTER.CN = TBL_ADDJOBMASTER.CN
+			AND
+				TBL_USERMASTER.TENANT_ID = TBL_ADDJOBMASTER.TENANT_ID
+			INNER JOIN
+				TBL_DEPTMASTER
+			ON
+				TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID
+			AND
+				TBL_DEPTMASTER.TENANT_ID = TBL_USERMASTER.TENANT_ID
+			WHERE
+				TBL_USER_JOBMASTER.COMPANYID = #v_COMPANYID#
+			AND
+				TBL_USERMASTER.TENANT_ID = #v_TENANTID#
+			AND
+				TBL_USERMASTER.CN = #v_USERID#
+		]]>
+	</select>
+	
+	<!-- 2019-09-24 홍승비 - 그룹권한을 포함하여 ACCESSID에 대한 권한정보를 리스트로 리턴하는 쿼리 -->
+	<!-- 리스트로 리턴된 권한은 서버단에서 '허용' 기준으로 취합됨(sumBoardACL) -->
+	<select id="EzBoardDAO.getACLListNew"  parameterClass="Map" resultClass="BoardPropertyVO">
+		<![CDATA[
+			(SELECT 
+				boardid,
+	            accessid ,
+	            accessname ,
+	            accessname2 ,
+	            accesslevel ,
+	            access_ ,
+	            parentboardid ,
+	            boardadmin_fg ,
+	            listview_fg ,
+	            read_fg ,
+	            write_fg ,
+	            reply_fg ,
+	            delete_fg ,
+	            inherit_fg ,
+	            postnotice ,
+	            boardgroupacl
+	       FROM 
+	        	TBL_BOARD_BOARDMANAGE 
+	       WHERE  
+	       		TENANT_ID = #tenantID#
+	       AND
+	       		boardid = #pBoardID# 
+	       AND 
+	       		accessid = #accessID#
+	       	AND
+				(TYPE <> 'GROUP' OR TYPE IS NULL)
+		]]>
+		<isEqual property="v_ISDEPT" compareValue="1">
+			<isEqual property="v_ISEQUALDEPT" compareValue="0">
+	 			AND
+	 				boardgroupacl = 'Y'
+			</isEqual>
+		</isEqual>
+			)
+		<![CDATA[
+			UNION
+			
+			(SELECT 
+				boardid,
+	            accessid ,
+	            accessname ,
+	            accessname2 ,
+	            accesslevel ,
+	            access_ ,
+	            parentboardid ,
+	            boardadmin_fg ,
+	            listview_fg ,
+	            read_fg ,
+	            write_fg ,
+	            reply_fg ,
+	            delete_fg ,
+	            inherit_fg ,
+	            postnotice ,
+	            PGI.SUB_DEPT_YN AS boardgroupacl
+			FROM 
+	        	TBL_BOARD_BOARDMANAGE TBB
+	        	
+			INNER JOIN
+				TBL_PERMISSIONGROUPLIST PGL
+			ON
+				TBB.TENANT_ID = PGL.TENANT_ID
+			AND
+				TBB.ACCESSID = PGL.GROUP_ID
+			INNER JOIN
+				TBL_PERMISSIONGROUPINFO PGI
+			ON
+				PGL.TENANT_ID = PGI.TENANT_ID
+			AND
+				PGL.GROUP_ID = PGI.GROUP_ID
+				
+			WHERE  
+	       		TBB.TENANT_ID = #tenantID#
+	       AND
+	       		boardid = #pBoardID# 
+	       AND 
+	       		PGI.MEMBER_ID = #accessID#
+	       	AND
+				TBB.TYPE = 'GROUP'
+		]]>
+		<isEqual property="v_ISDEPT" compareValue="1">
+			<isEqual property="v_ISEQUALDEPT" compareValue="0">
+	 			AND
+	 				PGI.SUB_DEPT_YN = 'Y'
+			</isEqual>
+		</isEqual>
+			)
+	</select>	
+	
+	<!-- 2019-09-18 홍승비 - 그룹권한을 포함하여 ACCESSID에 대한 게시판 그룹의 관리자 권한을 리스트로 리턴하는 쿼리 -->
+	<!-- 리스트로 리턴된 권한은 서버단에서 'OK' 기준으로 취합됨(contains) -->
+	<select id="EzBoardDAO.checkIfBoardGroupAdminNew" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			(SELECT
+				CASE 
+				WHEN 
+				(BoardAdmin_FG = 'true')
+				THEN 'OK'
+				ELSE 'NO'
+				END 
+        	FROM 
+        		TBL_Board_BoardManage
+        	WHERE 
+        		TENANT_ID = #v_TENANTID#
+            AND 
+            	AccessID = #v_pAccessID#
+            AND
+				(TYPE <> 'GROUP' OR TYPE IS NULL)
+            AND 
+		]]>
+		<isEqual property="isBoardGroup" compareValue="true">
+		<![CDATA[
+			BoardID = #v_pBoardID#
+		]]>
+		</isEqual>
+		<isNotEqual property="isBoardGroup" compareValue="true">
+		<![CDATA[
+			BoardID = 
+				(SELECT 
+					BoardGroupID 
+				FROM 
+					TBL_Board_BoardInfo 
+				WHERE  
+					TENANT_ID = #v_TENANTID#
+				AND 
+					BoardID = #v_pBoardID#)
+		]]>
+		</isNotEqual>
+		<isEqual property="v_ISDEPT" compareValue="1">
+			<isEqual property="v_ISEQUALDEPT" compareValue="0">
+				<![CDATA[
+					AND
+						BoardGroupACL = 'Y'
+				]]>
+			</isEqual>
+		</isEqual>
+		)
+		
+<!-- 2019-09-20 홍승비 - 권한그룹 체크 추가 -->		
+		UNION
+
+		<![CDATA[
+			(SELECT
+				CASE 
+				WHEN 
+				(BoardAdmin_FG = 'true')
+				THEN 'OK'
+				ELSE 'NO'
+				END 
+        	FROM 
+        		TBL_Board_BoardManage TBB
+
+			INNER JOIN
+				TBL_PERMISSIONGROUPLIST PGL
+			ON
+				TBB.TENANT_ID = PGL.TENANT_ID 
+			AND
+				TBB.ACCESSID = PGL.GROUP_ID
+			INNER JOIN
+				TBL_PERMISSIONGROUPINFO PGI
+			ON
+				PGL.TENANT_ID = PGI.TENANT_ID
+			AND
+				PGL.GROUP_ID = PGI.GROUP_ID
+                
+        	WHERE 
+        		TBB.TENANT_ID = #v_TENANTID#
+            AND 
+            	PGI.MEMBER_ID = #v_pAccessID#
+            AND
+            	TBB.TYPE = 'GROUP'
+            AND 
+		]]>
+		<isEqual property="isBoardGroup" compareValue="true">
+		<![CDATA[
+			TBB.BoardID = #v_pBoardID#
+		]]>
+		</isEqual>
+		<isNotEqual property="isBoardGroup" compareValue="true">
+		<![CDATA[
+			TBB.BoardID = 
+				(SELECT 
+					BoardGroupID 
+				FROM 
+					TBL_Board_BoardInfo 
+				WHERE  
+					TENANT_ID = #v_TENANTID#
+				AND 
+					BoardID = #v_pBoardID#)
+		]]>
+		</isNotEqual>
+		<isEqual property="v_ISDEPT" compareValue="1">
+			<isEqual property="v_ISEQUALDEPT" compareValue="0">
+				<![CDATA[
+					AND
+						PGI.SUB_DEPT_YN = 'Y'
+				]]>
+			</isEqual>
+		</isEqual>
+		)
+	</select>
+	
+	<!-- 2019-09-24 홍승비 - 권한그룹의 읽기권한까지 체크하는 쿼리 -->
+	<select id="EzBoardDAO.getCheckItemIDNew" parameterClass="Map" resultClass="String" remapResults="true">
+		<isNotEqual property="v_BOARDTYPE" compareValue="TEMP">
+			<![CDATA[
+				(SELECT
+					READ_FG
+				FROM 
+					TBL_Board_BoardManage 
+				WHERE
+					TENANT_ID = #v_TENANTID#
+				AND 
+					ACCESSID = #v_ACCESSID#
+				AND
+					(TYPE <> 'GROUP' OR TYPE IS NULL)
+				AND 
+					BOARDID = ( SELECT 
+									BOARDID
+								FROM 
+									TBL_Board_Item 
+								WHERE
+									TENANT_ID = #v_TENANTID#
+								AND  
+									ITEMID = #v_ITEMID# )
+			]]>
+			<isEqual property="v_ISDEPT" compareValue="1">
+				<isEqual property="v_ISEQUALDEPT" compareValue="0">
+					AND
+						BoardGroupACL = 'Y'
+				</isEqual>
+			</isEqual>
+			)
+			
+			UNION
+			<![CDATA[
+				(SELECT
+					READ_FG
+				FROM 
+					TBL_Board_BoardManage TBB
+					
+				INNER JOIN
+					TBL_PERMISSIONGROUPLIST PGL
+				ON
+					TBB.TENANT_ID = PGL.TENANT_ID
+				AND
+					TBB.ACCESSID = PGL.GROUP_ID
+				INNER JOIN
+					TBL_PERMISSIONGROUPINFO PGI
+				ON
+					PGL.TENANT_ID = PGI.TENANT_ID
+				AND
+					PGL.GROUP_ID = PGI.GROUP_ID
+					
+				WHERE
+					TBB.TENANT_ID = #v_TENANTID#
+				AND 
+					PGI.MEMBER_ID = #v_ACCESSID#
+				AND
+            		TBB.TYPE = 'GROUP'
+				AND 
+					BOARDID = ( SELECT 
+									BOARDID
+								FROM 
+									TBL_Board_Item 
+								WHERE
+									TENANT_ID = #v_TENANTID#
+								AND  
+									ITEMID = #v_ITEMID# )
+			]]>
+			<isEqual property="v_ISDEPT" compareValue="1">
+				<isEqual property="v_ISEQUALDEPT" compareValue="0">
+					AND
+						PGI.SUB_DEPT_YN = 'Y'
+				</isEqual>
+			</isEqual>
+				)
+			
+		</isNotEqual>
+		<!-- 임시저장된 게시물용 분기(수정 불필요) -->
+		<isEqual property="v_BOARDTYPE" compareValue="TEMP">
+			<![CDATA[
+				SELECT 
+					COUNT(BOARDID) cnt
+              	FROM 
+              		TBL_Board_Item_temp 
+              	WHERE
+              		TENANT_ID = #v_TENANTID#
+              	AND  
+              		ITEMID = #v_ITEMID#
+                AND 
+                	WRITERID = #v_ACCESSID#
+			]]>
+		</isEqual>
+	</select>
+	
+		<select id="EzBoardDAO.getAllSubBoardProperty" parameterClass="Map" resultClass="BoardPropertyVO">
 		<![CDATA[
 			SELECT 
 				*
@@ -5621,6 +6147,36 @@
 		]]>
 	</insert>
 	
+	<select id="EzBoardDAO.getIsMyBoardExist" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(BOARDID)
+            FROM 
+            	TBL_BOARD_MYBOARDS
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				(TRIM(COMPANYID) = #v_COMPANYID# OR TRIM(COMPANYID) = '*')
+            AND
+            	USERID = #v_USERID#
+            AND
+            	BOARDID = #v_BOARDID#
+		]]>
+	</select>
+	
+	<select id="EzBoardDAO.getCompanyNoticeBoardID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				NVL(BOARDID, ' ')
+			FROM
+				TBL_BOARD_NOTICEBOARD
+			WHERE
+				COMPANYID = #v_COMPANYID#
+			AND
+				TENANT_ID = #v_TENANTID#
+		]]>
+	</select>
+	
 	<select id="EzBoardDAO.getMyBoardCount" parameterClass="Map" resultClass="Integer">
 	  	<![CDATA[
 			SELECT  
@@ -5638,6 +6194,37 @@
 			AND
 				COMPANYID = #v_COMPANYID#
 	  	]]>
+	</select>
+
+	<select id="EzBoardDAO.getCompanyTabBoardIDList" parameterClass="Map" resultClass="HashMap">
+		<![CDATA[
+			SELECT
+				TABID,
+				BOARDID,
+				BOARDNAME,
+				BOARDNAME2
+			FROM
+				TBL_BOARD_TABBOARD
+			WHERE
+				(COMPANYID = #v_COMPANYID#
+			OR
+				TRIM(COMPANYID) IS NULL)
+			AND
+				TENANT_ID = #v_TENANTID#
+		]]>
+	</select>
+	
+	<select id="EzBoardDAO.getOneLineCNT" parameterClass="Map" resultClass="int">
+		<![CDATA[
+			SELECT 
+				COUNT(*) 
+			FROM 
+				TBL_Board_OneLineReply 
+			WHERE 
+				ITEMID = #v_itemID# 
+			AND 
+				TENANT_ID = #v_TENANTID# 
+		]]>
 	</select>
 	
 </sqlMap>

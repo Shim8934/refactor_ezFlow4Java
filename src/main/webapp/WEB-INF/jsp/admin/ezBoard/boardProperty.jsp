@@ -14,7 +14,6 @@
 		<script type="text/javascript" language="javascript">
 			var BoardID = "<c:out value='${model.boardID}'/>";
 	        var brd_color = "<c:out value='${model.boardColor}'/>";
-	        var portlet =  $.trim("<c:out value='${model.portlet}'/>");
 	        var background = $.trim("<c:out value='${model.backGround}'/>");
 	        var pAdminType = $.trim("<c:out value='${adminType}'/>");
 	        var FormFlag =  $.trim("<c:out value='${model.formFlag}'/>");
@@ -24,12 +23,18 @@
 	        var parentBoardID =  "<c:out value='${model.parentBoardID}'/>";
 	        var primary = "<c:out value='${primary}'/>";
 	        var isAllGroupBoard = "<c:out value='${isAllGroupBoard}'/>";
+	        var useBoardLike = "<c:out value='${model.likeFlag}'/>";
+	        var noticeBoardID = $.trim("<c:out value='${noticeBoardID}'/>"); // 공지사항 게시판ID(없다면 ""으로 전달됨)
 	        var xmlhttp = createXMLHttpRequest();
 	        var ApprUserList = "";
 	        var selectTargetListXML = "";
 			var selecttarget_cross_dialogArguments = new Array();
 			var manycolor_dialogArguments = new Array();
 			var BoardExtension_dialogArguments = new Array();
+			// 2020-12-04 박기범 - 탭게시판 ID추가
+			var tabBoardID1 = $.trim("<c:out value='${tabBoardID1}'/>");
+			var tabBoardID2 = $.trim("<c:out value='${tabBoardID2}'/>");
+			var tabBoardID3 = $.trim("<c:out value='${tabBoardID3}'/>");
 			
 	        document.onselectstart = function (){
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -40,17 +45,16 @@
 	            }
 	    	};
         
-			$(document).ready(function(){
-				$("#trPortlet").css("display","none");
-
-	            if (portlet == "Y") {
-	                $("#chkPortletBoard").prop("checked",true);
-	            }
+			$(document).ready(function() {
 	            if (background == "Y") {
 	                $("#chkbackgroundimage").prop("checked",true);
 	            }
-	            if(FormFlag == "Y") {
+	            if (FormFlag == "Y") {
 	                $("#chkform").prop("checked",true);
+	            }
+	            /* 2019-04-04 홍승비 - 게시판에 좋아요 기능 추가 */
+				if (useBoardLike == "Y") {
+					$("#chkBoardLike").prop("checked", true);
 	            }
 	            if (pAdminType == "y") {
 	                parent.document.getElementsByTagName("h1")[0].innerHTML = "<spring:message code='ezBoard.t60' />";
@@ -74,6 +78,22 @@
 	            	APPRFLAG = "N";
 	            }
 	            
+	            /* 2019-10-11 홍승비 - 공지사항 게시판 사용여부 추가 */
+	            if (noticeBoardID == BoardID) { // 공지사항 게시판과 현재 게시판의 ID가 동일
+	            	$("#chkNoticeBoard").prop("checked", true);
+	            }
+	            
+	            // 2020-12-01 박기범 - 탭게시판 사용여부 추가
+	            if (tabBoardID1 == BoardID) { 
+	            	$("#chktabBoard1").prop("checked", true);
+	            }
+	            if (tabBoardID2 == BoardID) { 
+	            	$("#chktabBoard2").prop("checked", true);
+	            }
+	            if (tabBoardID3 == BoardID) { 
+	            	$("#chktabBoard3").prop("checked", true);
+	            }
+	            
 	            if ($("#chkQnABoard").is(":checked") || $("#chkAnonyBoard").is(":checked")) {
 	                if ($("#chkApprBoard").is(":checked")) {
 	                	$("#chkApprBoard").prop("checked",false);	                    
@@ -84,33 +104,48 @@
 	                }
 	            }
 
-	            /* 2018-07-11 홍승비 - 포토, 썸네일, 익명, URL 게시판 선택 시 답변메일발송 tr 보이지 않도록 수정 */
+	            /* 2019-04-26 홍승비 - 게시판 설정으로 통합된 TR들을 체크박스 disabled 설정으로 변경 */
+	            /* 2018-07-11 홍승비 - 포토, 썸네일, 익명, URL, 동영상 게시판 선택 시 답변메일발송 tr 보이지 않도록 수정 */
 	            //추가항목
 	            if ("${style}" == "") {
-	                if ($("#chkPhotoBoard").is(":checked") || $("#chkThumbBoard").is(":checked")) {
+	                if ($("#chkPhotoBoard").is(":checked") || $("#chkThumbBoard").is(":checked") || $("#chkMovieBoard").is(":checked")) {
 	                    document.getElementById("trAttribute").style.display = "none";
-	                    document.getElementById("chkNotifyTr").style.display = "none";
-	                    document.getElementById("tr1").style.display = "none";
-	                    document.getElementById("tr2").style.display = "none";
+	                    $("#chkNotify").prop("disabled", true);
+	                    $("#chkbackgroundimage").prop("disabled", true);
+	                    $("#chkform").prop("disabled", true);
+	                    
+	                    $("#chkNotify").prop("checked", false);
+	                    $("#chkbackgroundimage").prop("checked", false);
+	                    $("#chkform").prop("checked", false);
 	                }
 	                else if ($("#chkAnonyBoard").is(":checked")) {
-	                	document.getElementById("chkNotifyTr").style.display = "none";
+	                	$("#chkNotify").prop("disabled", true);
+	                	$("#chkNotify").prop("checked", false);
 	                }
-	                else if ($("#chkPortletBoard").is(":checked")) {
-	                	document.getElementById("trAttribute").style.display = "none";
-	                }
-	                /* 2018-07-13 홍승비 - URL게시판 구분 추가 */
+	                /* 2018-07-13 홍승비 - 일반설정 화면 온로드 시 URL게시판 구분 추가 */
 	                else if ($("#chkURLBoard").is(":checked")) {
 		            	document.getElementById("txtURL").style.display = "";
 		            	document.getElementById("trAttribute").style.display = "none";
-	                    document.getElementById("chkNotifyTr").style.display = "none";
-	                    document.getElementById("tr1").style.display = "none";
-	                    document.getElementById("tr2").style.display = "none";
-	                    document.getElementById("tr3").style.display = "none";
 	                    document.getElementById("expireTr").style.display = "none";
 	                    document.getElementById("deleteAfterTr").style.display = "none";
 	                    document.getElementById("attachLimitTr").style.display = "none";
-	                    document.getElementById("oneLineTr").style.display = "none";
+	                    
+	                    $("#chkNotify").prop("disabled", true);
+	                    $("#chkbackgroundimage").prop("disabled", true);
+	                    $("#chkform").prop("disabled", true);
+	                    $("#chkApprBoard").prop("disabled", true);
+	                    $("#chkBoardLike").prop("disabled", true);
+	                    
+	                    $("#chkNotify").prop("checked", false);
+	                    $("#chkbackgroundimage").prop("checked", false);
+	                    $("#chkform").prop("checked", false);
+	                    $("#chkApprBoard").prop("checked", false);
+	                    $("#chkBoardLike").prop("checked", false);
+	                    
+						/* 2020-05-27 홍승비 - URL 게시판인 경우, 댓글 disabled 처리 */
+						$("#chkOneLineBottom").prop("disabled", true);
+						$("#chkOneLineLayer").prop("disabled", true);
+						$("#chkOneLineNone").prop("disabled", true);
 	                }
 	                
 	                if (!$("#chkURLBoard").is(":checked")) {
@@ -164,6 +199,8 @@
 	                gubun = "5";
 	            } else if ($("#chkURLBoard").is(":checked")) {
 	                gubun = "0";
+	            } else if ($("#chkMovieBoard").is(":checked")) {
+	            	gubun = "7";
 	            }
 	            
 	            if ($("#chkbackgroundimage").is(":checked")) {
@@ -176,6 +213,12 @@
 	                FormFlag = "Y";
 	            } else {
 	                FormFlag = "N";
+				}
+	            
+	            if ($("#chkBoardLike").is(":checked")) {
+	            	useBoardLike = "Y";
+	            } else {
+	            	useBoardLike = "N";
 				}
 	            
 	            // 게시만료일 /* 2019-03-04 홍승비 - 게시판그룹인 경우 게시만료일 체크 분기 타지 않도록 수정 */
@@ -216,12 +259,6 @@
 	            	url = "http://" + url;
 	            }
 	             
-				if ($("#chkPortletBoard").is(":checked") && url == "") {
-					portlet = "Y";
-				} else {
-					portlet = "N";
-				}
-
 	            if (orgAPPRFLAG != APPRFLAG) {
 	                if (orgAPPRFLAG == "N") {
 	                    if (!confirm("<spring:message code='ezBoard.t999013'/>")) {
@@ -259,6 +296,42 @@
 	            	oneLineReply = 0;
 	            }
 	            
+	            /* 2019-04-26 홍승비 - 쓰임이 없는 포틀릿 옵션의 사용 여부를 "N"으로 고정 */
+	            /* 2019-10-11 홍승비 - 공지사항 게시판 설정에 변경이 있는지 확인 */
+	            var pNoticeBoardMod = "";
+	            if (noticeBoardID != BoardID && $("#chkNoticeBoard").is(":checked") == true) {
+	            	pNoticeBoardMod = "UPDATE"; // 기존의 공지사항 게시판 레코드를 전부 삭제하고 새로운 레코드를 삽입한다.
+	            }
+	            else if (noticeBoardID == BoardID && $("#chkNoticeBoard").is(":checked") == false) {
+	            	pNoticeBoardMod = "DELETE"; // 기존의 공지사항 게시판 레코드를 전부 삭제한다.
+	            }
+	            
+	            // 2020-12-04 박기범 - 탭게시판 갱신내용 적용
+	            var ptabBoardMod1 = "";
+	            var ptabBoardMod2 = "";
+	            var ptabBoardMod3 = "";
+
+				if (tabBoardID1 != BoardID && $("#chktabBoard1").is(":checked") == true) {
+					ptabBoardMod1 = "UPDATE"; 
+	            }
+	            else if (tabBoardID1 == BoardID && $("#chktabBoard1").is(":checked") == false) {
+	            	ptabBoardMod1 = "DELETE"; 
+	            }
+
+				if (tabBoardID2 != BoardID && $("#chktabBoard2").is(":checked") == true) {
+					ptabBoardMod2 = "UPDATE"; 
+	            }
+	            else if (tabBoardID2 == BoardID && $("#chktabBoard2").is(":checked") == false) {
+	            	ptabBoardMod2 = "DELETE"; 
+	            }
+
+				if (tabBoardID3 != BoardID && $("#chktabBoard3").is(":checked") == true) {
+					ptabBoardMod3 = "UPDATE"; 
+	            }
+	            else if (tabBoardID3 == BoardID && $("#chktabBoard3").is(":checked") == false) {
+	            	ptabBoardMod3 = "DELETE"; 
+	            }
+
 	            /* 2018-10-18 홍승비 - 게시판'그룹' 이름변경 시 하위게시판처럼 데이터가 업데이트되는 부분 수정 */
 	            $.ajax({
 	            	type : "POST",
@@ -269,15 +342,17 @@
 	            		boardName:$("#txtBoardName").val(), boardName2:$("#txtBoardName2").val(),
 	            		boardID:BoardID, attachSizeLimit:AttachMax, boardDescription:Description,
 	            		itemExpires:Expires, url:url, guBun:gubun, replyNotify:replynotify, deleteAfter:iDeleteAfter,
-	            		boardColor:brd_color, portlet:portlet, backGround:background,
+	            		boardColor:brd_color, portlet:"N", backGround:background,
 	            		formFlag:FormFlag, oneLineReply:oneLineReply, apprFlag:APPRFLAG, orgApprFlag:orgAPPRFLAG,
-	            		apprUserList:ApprUserList, apprMailFlag:APPRMAILFLAG, parentBoardID : parentBoardID
+	            		apprUserList:ApprUserList, apprMailFlag:APPRMAILFLAG, parentBoardID : parentBoardID,
+	            		likeFlag:useBoardLike, noticeBoardMod:pNoticeBoardMod,
+						tabBoardMod1:ptabBoardMod1,tabBoardMod2:ptabBoardMod2,tabBoardMod3:ptabBoardMod3
 	            	},
 	            	success : function(){
 	            		alert("<spring:message code='ezBoard.t79'/>");
 	            		
-	            		if ("${adminType}" == "y") {
-	            			parent.parent.board_menu.location = "/admin/ezBoard/boardLeft.do?boardID=" + BoardID;
+	            		if ("<c:out value='${adminType}'/>" == "y") {
+	            			parent.parent.board_menu.location = "/admin/ezBoard/boardLeft.do?boardID=" + encodeURIComponent(BoardID);
 	            			return;	            			
 	            		} else {
 	            			parent.frames.location = parent.frames.location;
@@ -330,6 +405,7 @@
 	                chkThumbBoard.checked = false;
 	                chkQnABoard.checked = false;
 	                chkURLBoard.checked = false;
+	                chkMovieBoard.checked = false;
 	            }
 	        /*     if (event.srcElement.id == "chkGroupBoard" && event.srcElement.checked) {
 	                chkGeneralBoard.checked = false;
@@ -346,20 +422,7 @@
 	                chkThumbBoard.checked = false;
 	                chkQnABoard.checked = false;
 	                chkURLBoard.checked = false;
-
-	                if (chkQnABoard.checked || chkAnonyBoard.checked) {
-	                    if (chkApprBoard.checked) {
-	                        chkApprBoard.checked = false;
-	                        checkApprBoard();
-	                      	chkApprBoard.disabled = true;
-	                    }
-	                }
-	            } else {
-	                if (chkQnABoard.checked || chkAnonyBoard.checked) {
-	                    chkApprBoard.disabled = true;
-	                } else {
-	                    chkApprBoard.disabled = false;
-	                }
+	                chkMovieBoard.checked = false;
 	            }
 	            if (event.srcElement.id == "chkPhotoBoard" && event.srcElement.checked) {
 	                chkGeneralBoard.checked = false;
@@ -368,12 +431,24 @@
 	                chkThumbBoard.checked = false;
 	                chkQnABoard.checked = false;
 	                chkURLBoard.checked = false;
+	                chkMovieBoard.checked = false;
 	            }
 	            if (event.srcElement.id == "chkThumbBoard" && event.srcElement.checked) {
 	                chkGeneralBoard.checked = false;
 	            //    chkGroupBoard.checked = false;
 	                chkAnonyBoard.checked = false;
 	                chkPhotoBoard.checked = false;
+	                chkQnABoard.checked = false;
+	                chkURLBoard.checked = false;
+	                chkMovieBoard.checked = false;
+	            }
+	            /* 2018-11-05 홍승비 - 동영상게시판 구분 추가 */
+	            if (event.srcElement.id == "chkMovieBoard" && event.srcElement.checked) {
+	                chkGeneralBoard.checked = false;
+	            //    chkGroupBoard.checked = false;
+	                chkAnonyBoard.checked = false;
+	                chkPhotoBoard.checked = false;
+	                chkThumbBoard.checked = false;
 	                chkQnABoard.checked = false;
 	                chkURLBoard.checked = false;
 	            }
@@ -384,21 +459,7 @@
 	                chkPhotoBoard.checked = false;
 	                chkThumbBoard.checked = false;
 	                chkURLBoard.checked = false;
-
-	                if (chkQnABoard.checked || chkAnonyBoard.checked) {
-	                    if (chkApprBoard.checked) {
-	                        chkApprBoard.checked = false;
-	                        checkApprBoard();
-	                        chkApprBoard.disabled = true;
-	                    }
-	                }
-	            } else { 
-	                if (chkQnABoard.checked || chkAnonyBoard.checked) {
-	                    chkApprBoard.disabled = true;
-	                }
-	                else {
-	                    chkApprBoard.disabled = false;
-	                }
+	                chkMovieBoard.checked = false;
 	            }
 	            /* 2018-07-13 홍승비 - URL게시판 구분 추가 */
                 if (event.srcElement.id == "chkURLBoard" && event.srcElement.checked) {
@@ -408,20 +469,27 @@
 	                chkPhotoBoard.checked = false;
 	                chkThumbBoard.checked = false;
 	                chkQnABoard.checked = false;
+	                chkMovieBoard.checked = false;
 	            }
 	            
+	            // URL 게시판이 체크된 경우, 옵션과 댓글의 사용여부를 전부 disabled 처리한다. (댓글은 '사용안함' 고정) 
 	             if (chkURLBoard.checked == true) {
                     document.getElementById("txtURL").style.display = "";
-                    document.getElementById("tr1").style.display = "none";
-                    document.getElementById("tr2").style.display = "none";
-                    document.getElementById("tr3").style.display = "none";
                     document.getElementById("expireTr").style.display = "none";
                     document.getElementById("deleteAfterTr").style.display = "none";
                     document.getElementById("attachLimitTr").style.display = "none";
-                    document.getElementById("oneLineTr").style.display = "none";
                     document.getElementById("trAttribute").style.display = "none";
-                    document.getElementById("chkNotifyTr").style.display = "none";
                     
+					$("#chkNotify").prop("disabled", true);
+					$("#chkbackgroundimage").prop("disabled", true);
+					$("#chkform").prop("disabled", true);
+					$("#chkApprBoard").prop("disabled", true);
+					$("#chkBoardLike").prop("disabled", true);
+					/* 2020-05-27 홍승비 - URL 게시판인 경우, 댓글 사용안함 고정 + disabled 처리 */
+					$("#chkOneLineBottom").prop("disabled", true);
+					$("#chkOneLineLayer").prop("disabled", true);
+					$("#chkOneLineNone").prop("disabled", true);
+					
                     document.getElementById("chkApprBoard").checked = false;
                     checkApprBoard();                   
                     document.getElementById("chkExpires").checked = false;
@@ -430,69 +498,62 @@
                     document.getElementById("chkbackgroundimage").checked = false;
                     document.getElementById("chkform").checked = false;
                     document.getElementById("chkNotify").checked = false;
+                    document.getElementById("chkBoardLike").checked = false;
                    // document.getElementById("chkOneLine").checked = false;
                     document.getElementById("chkOneLineBottom").checked = false;
                     document.getElementById("chkOneLineLayer").checked = false;
                     document.getElementById("chkOneLineNone").checked = true; // 댓글옵션  '사용안함' 체크
-	            } else {
+	            } 
+	             else { // URL 게시판이 아닌 경우
 					document.getElementById("txtURL").style.display = "none";
-                    document.getElementById("tr1").style.display = "";
-                    document.getElementById("tr2").style.display = "";
-                    document.getElementById("tr3").style.display = "";
                     document.getElementById("expireTr").style.display = "";
                     document.getElementById("deleteAfterTr").style.display = "";
                     document.getElementById("attachLimitTr").style.display = "";
-                    document.getElementById("oneLineTr").style.display = "";
                     document.getElementById("trAttribute").style.display = "";
-                    document.getElementById("chkNotifyTr").style.display = "";
+                    
+                    $("#chkNotify").prop("disabled", false);
+					$("#chkbackgroundimage").prop("disabled", false);
+					$("#chkform").prop("disabled", false);
+					
+					/* 2019-04-29 홍승비 - 승인여부를 사용하지 않는 익명, QNA게시판 동작 조정 */
+	            	 if (chkQnABoard.checked == true || chkAnonyBoard.checked == true) {
+						$("#chkApprBoard").prop("checked", false);
+						checkApprBoard();
+						$("#chkApprBoard").prop("disabled", true);
+	                } else {
+	                    $("#chkApprBoard").prop("disabled", false);
+					}
+					
+					$("#chkBoardLike").prop("disabled", false);
+					/* 2020-05-27 홍승비 - URL 게시판이 아닌 경우, 댓글 disabled 해제 */
+					$("#chkOneLineBottom").prop("disabled", false);
+					$("#chkOneLineLayer").prop("disabled", false);
+					$("#chkOneLineNone").prop("disabled", false);
 	            }
 
-	            /* 2018-07-11 홍승비 - 포토, 썸네일, 익명게시판 선택 시 답변메일발송 tr 보이지 않도록 수정 */
-	             if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true || chkAnonyBoard.checked == true) {
-	                document.getElementById("chkNotifyTr").style.display = "none";
+	            /* 2019-04-29 홍승비 - 포토, 썸네일, 익명, 동영상게시판 선택 시 답변메일발송 disabled 처리 */
+	             if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true || chkAnonyBoard.checked == true || chkMovieBoard.checked == true) {
+	                $("#chkNotify").prop("disabled", true);
 	                document.getElementById("chkNotify").checked = false;
 	            } else if (chkURLBoard.checked == false) {
-	                document.getElementById("chkNotifyTr").style.display = "";
+	                $("#chkNotify").prop("disabled", false);
 	            }
 	            
-	            if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true || chkPortletBoard.checked == true) {
+	            if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true || chkMovieBoard.checked == true) {
 	                document.getElementById("trAttribute").style.display = "none";
 	            } else if (chkURLBoard.checked == false) {
 	                document.getElementById("trAttribute").style.display = "";
 	            }
 	            
-	            if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true) {
-	            	document.getElementById("tr1").style.display = "none";
-	            	document.getElementById("tr2").style.display = "none";
+	            if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true || chkMovieBoard.checked == true) {
+	            	$("#chkbackgroundimage").prop("disabled", true);
+					$("#chkform").prop("disabled", true);
 	                document.getElementById("chkbackgroundimage").checked = false;
 	                document.getElementById("chkform").checked = false;
 	            } else if (chkURLBoard.checked == false) {
-	            	document.getElementById("tr1").style.display = "";
-	            	document.getElementById("tr2").style.display = "";
+	            	$("#chkbackgroundimage").prop("disabled", false);
+	            	$("#chkform").prop("disabled", false);
 	            }
-	            
-	            /*
-	            // chkNotify, chkform 등의 TR 표출을 상단에서 제어하도록 수정했으므로 주석처리
-	            if (chkNotify.checked && (chkPhotoBoard.checked || chkThumbBoard.checked)) {
-	                alert("<spring:message code='ezBoard.t150'/>");
-	                event.srcElement.checked = false;
-	                return;
-	            }
-	            if (chkbackgroundimage.checked && (chkPhotoBoard.checked || chkThumbBoard.checked)) {
-	                alert("<spring:message code='ezBoard.t6000'/>");
-	                event.srcElement.checked = false;
-	                return;
-	            }
-	            if (chkform.checked && (chkPhotoBoard.checked || chkThumbBoard.checked)) {
-	                alert("<spring:message code='ezBoard.t6001'/>");
-	                event.srcElement.checked = false;
-	                return;
-	            }
-	             if (chkNotify.checked && chkAnonyBoard.checked) {
-	                alert("<spring:message code='ezBoard.t151'/>");
-	                event.srcElement.checked = false;
-	                return;
-	            } */
 			}
 			
 			function checkApprBoard() {
@@ -563,7 +624,7 @@
 			            }
 			        }
 			    }
-			}			
+			}
 			function getApprUserList() {
 				$.ajax({
 					type : "POST",
@@ -647,7 +708,7 @@
 			        document.getElementById("colorID").innerText = color;
 			        brd_color = color;
 			    }
-			}			
+			}
 		    function ExtensionAttribute_onClick() {
 		     /*    if (chkGroupBoard.checked) {
 		            gubun = "1"
@@ -661,6 +722,8 @@
 		            gubun = "0";
 		        } else if (chkQnABoard.checked) {
 		            gubun = "5";
+		        } else if (chkMovieBoard.checked) {
+		        	gubun = "7";
 		        }
 
 		        var para = new Array();
@@ -735,7 +798,7 @@
 		<body class="mainbody"><h1><spring:message code="ezBoard.t60"/></h1>
 	</c:if>	
 	<c:if test="${adminType == 'y'}">
-		<body class="tabbody" style="margin-top:10px; overflow-y:auto;">
+		<body class="tabbody" style="margin-top:10px; margin-bottom: 15px; overflow-y:auto;">
 	</c:if>		
 		<xml id="listviewheader" style ="display:none"></xml>
 		<div style="max-width: 800px;">
@@ -794,7 +857,7 @@
 	        <%-- 2018-11-22 홍승비 - 그룹사게시판 옵션 사용 여부 표기 --%>
 	        <c:if test="${isAllGroupBoard == 'Y'}">
 		        <tr style="${style2}">
-		        	<th style="border-left:none; border-bottom:none;"><spring:message code ="ezCircular.t118" /> <spring:message code ="ezBoard.hsb05" /></th>
+		        	<th style="border-left:none; border-bottom:none;"><spring:message code ="ezCircular.t118" /> <spring:message code ="ezBoard.hsb05_1" /></th>
 					<td style="border-top:1px solid #dedede; vertical-align: bottom;"><input type="checkbox" name="allGroupBoard" id="allGroupBoard" disabled checked><spring:message code ="ezBoard.hsb03" /> <spring:message code ="ezBoard.hsb04" /></td>
 		        </tr>
 	        </c:if>
@@ -892,6 +955,15 @@
 	                	<input type="checkbox" id="chkThumbBoard" onclick="checkboardtype()" />
 	                	<spring:message code="ezBoard.t3000"/>
 	                </c:if>
+	                <%-- 2018-11-05 홍승비 - 동영상게시판 구분 추가 --%>
+	                 <c:if test="${model.guBun == '7'}">
+	                	<input type="checkbox" id="chkMovieBoard" onclick="checkboardtype()" checked />
+	                	<spring:message code="ezQuestion.t180"/><spring:message code="ezBoard.t185"/>
+	                </c:if>
+	                 <c:if test="${model.guBun != '7'}">
+	                	<input type="checkbox" id="chkMovieBoard" onclick="checkboardtype()" />
+	                	<spring:message code="ezQuestion.t180"/><spring:message code="ezBoard.t185"/>
+	                </c:if>
 	                
 	                <br>
 	                <c:if test="${model.guBun == '5'}">	                   
@@ -911,15 +983,29 @@
 	                	<input type="checkbox" id="chkURLBoard" onclick="checkboardtype()" />
 	                	URL<spring:message code="ezBoard.t0006"/>
 	                </c:if>
+	                 <%-- URL 필드를 게시판 구분 필드로 이동 --%>
 	                 <input type="text" id="txtURL" style="width: 73%;margin-left: 1.5px;margin-bottom: 1px;" value="<c:out value='${model.url}' />" />                
 	            </td>
 	        </tr>
-	        <tr id="tr3" style="${style}">
-	            <th><spring:message code="ezBoard.t999020" /></th>
-	            <td>
-	                <input type="checkbox" id="chkApprBoard" onclick="checkApprBoard()"><spring:message code="ezBoard.t162" />
-	            </td>
+	        
+	        <%-- 2019-04-26 홍승비 - 게시판 옵션들을 모아놓은 게시판 설정 TR 추가 --%>
+	        <tr id="boardOptionTR" style="${style}">
+	        	<th><spring:message code="ezBoard.hsbPR01" /></th>
+	        	<td>
+	        		<span style="display:inline-block;"><input type="checkbox" id="chkApprBoard" onclick="checkApprBoard()"><spring:message code="ezBoard.t999020" />&nbsp;</span>
+	        		<span style="display:inline-block;"><input type="checkbox" id="chkBoardLike"><spring:message code="ezBoard.hsb10" />&nbsp;</span>
+	        		<span style="display:inline-block;"><input type="checkbox" id="chkbackgroundimage" onclick="checkboardtype()" /><spring:message code="ezBoard.t5011_1" />&nbsp;</span>
+	        		<span style="display:inline-block;"><input type="checkbox" id="chkform" onclick="checkboardtype()" /><spring:message code="ezBoard.t999027" />&nbsp;</span>
+	        		<c:if test="${model.replyNotify == '1'}">	            	
+	                	<span style="display:inline-block;"><input type="checkbox" id="chkNotify" onclick="checkboardtype()" checked /><spring:message code="ezBoard.t168" />&nbsp;</span>
+	                </c:if>
+	                <c:if test="${model.replyNotify != '1'}">	                   
+	                	<span style="display:inline-block;"><input type="checkbox" id="chkNotify" onclick="checkboardtype()" /><spring:message code="ezBoard.t168" />&nbsp;</span>
+	                </c:if>
+	        	</td>
 	        </tr>
+	        
+	        <%-- 승인여부 체크 시 나타나는 승인메일옵션과 승인자 리스트 --%>
 	        <tr id="chkApprListMail" style="display:none;">
 	            <th><spring:message code="ezBoard.t999019" /></th>
 	            <td>
@@ -935,70 +1021,11 @@
 	                <div class="listview" style="height:100px;overflow-y:auto;overflow-x:hidden;" id="AccessList"></div>
 	            </td>
 	        </tr>
-	        <tr id="trPortlet" style="${style}">
-	            <th><spring:message code="ezBoard.t481" /></th>
-	            <td>
-	                <input type="checkbox" id="chkPortletBoard" onclick="checkboardtype()" />
-	                <spring:message code="ezBoard.t162" />
-	            </td>
-	        </tr>
-	        <tr id="tr1" style="${style}">
-	            <th><spring:message code="ezBoard.t5011" /></th>
-	            <td>
-	                <input type="checkbox" id="chkbackgroundimage" onclick="checkboardtype()" />
-	                <spring:message code="ezBoard.t162" />
-	            </td>
-	        </tr>
-	        <tr id="tr2" style="${style}">
-	            <th><spring:message code="ezBoard.t999027" /></th>
-	            <td>
-	                <input type="checkbox" id="chkform" onclick="checkboardtype()" />
-	                <spring:message code="ezBoard.t162" />
-	            </td>
-	        </tr>
-	        <tr id="attachLimitTr" style="${style}">
-	            <th><spring:message code="ezBoard.t167" /></th>
-	            <td>
-	                <input type="text" id="txtAttachLimit" style="width: 33px" onkeydown="onlyNumber()" onkeyup="removeChar()" value="<c:out value='${model.attachSizeLimit}'/>" maxlength="4"/>&nbsp;MB
-	            </td>
-	        </tr>
 	        
-	        <%-- URL 필드를 게시판 구분 필드로 이동 --%>
-	   <%--      
-	        <tr style="${style}">
-	            <th>URL</th>
-	            <td>
-	                <input type="text" id="txtURL" style="width: 100%" value="<c:out value='${model.url}' />" />
-	            </td>
-	        </tr>
-	         --%>
-	        
-	        <tr id="chkNotifyTr" style="${style}">
-	            <th><spring:message code="ezBoard.t168" /></th>
-	            <td>
-	            	<c:if test="${model.replyNotify == '1'}">	            	
-	                	<input type="checkbox" id="chkNotify" onclick="checkboardtype()" checked />
-	                	<spring:message code="ezBoard.t95" />
-	                </c:if>
-	                <c:if test="${model.replyNotify != '1'}">	                   
-	                	<input type="checkbox" id="chkNotify" onclick="checkboardtype()" />
-	                	<spring:message code="ezBoard.t95" />
-	                </c:if>		                 
-	            </td>
-	        </tr>
-	        <%-- 2019-11-05 홍승비 - 댓글의 옵션처리 추가 --%>
-	        <%--2011-04 : 한줄 답변 옵션화 처리.--%>
+			<%-- 2019-11-05 홍승비 - 댓글의 옵션처리 추가 --%>
 	        <tr id="oneLineTr" style="${style}">
-	            <th><spring:message code="ezBoard.t81" /></th>
+				<th><spring:message code="ezBoard.t81" /></th>
 	            <td>
-<%-- 	            	<c:if test="${model.oneLineReply == '1'}">	                
-	                	<input type="checkbox" id="chkOneLine" onclick="checkboardtype()" checked />
-	                	<spring:message code="ezBoard.t496" />
-	                </c:if>
-	                <c:if test="${model.oneLineReply != '1'}">	                  
-	                	<input type="checkbox" id="chkOneLine" onclick="checkboardtype()" />
-	                	<spring:message code="ezBoard.t496" />
-	                </c:if> --%>
 	                <c:if test="${model.oneLineReply == '2'}">	                
 	                	<input type="checkbox" id="chkOneLineBottom" onclick="checkboardtype();checkReplyType(this);" checked/>
 	                	<spring:message code="ezBoard.hsbRp02" />
@@ -1024,13 +1051,44 @@
 	                	<spring:message code="ezBoard.hsbRp03" />
 	                </c:if>
 	            </td>
-	        </tr>	
+	        </tr>
+	        
+			<%-- 2019-10-11 홍승비 - 특정 게시판을 회사별 공지게시판으로 설정하는 기능 추가 --%>
+			<tr id="trNoticeBoard" style="${style}">
+	            <th><spring:message code="ezBoard.hsbNt01" /></th>
+	            <td>
+	                <input type="checkbox" id="chkNoticeBoard"/>
+	                <spring:message code="ezBoard.t162" /><spring:message code="ezBoard.hsbNt02" />
+	            </td>
+	        </tr>
+			
+			<%-- 2020-12-04 박기범 - 특정 게시판을 탭게시판으로 설정하는 기능 추가 --%>
+			<tr id="trTabBoard" style="${style}">
+	            <th><spring:message code="ezBoard.pgb01" /></th>
+	            <td>
+					<input type="checkbox" id="chktabBoard1"/><spring:message code="ezBoard.pgb02" />
+					<input type="checkbox" id="chktabBoard2"/><spring:message code="ezBoard.pgb03" />
+					<input type="checkbox" id="chktabBoard3"/><spring:message code="ezBoard.pgb04" />
+					<spring:message code="ezBoard.pgb05" />
+				</td>
+			</tr>
+			
+	        <%-- 첨부크기제한 --%>
+	        <tr id="attachLimitTr" style="${style}">
+	            <th><spring:message code="ezBoard.t167" /></th>
+	            <td>
+	                <input type="text" id="txtAttachLimit" style="width: 33px" onkeydown="onlyNumber()" onkeyup="removeChar()" value="<c:out value='${model.attachSizeLimit}'/>" maxlength="4"/>&nbsp;MB
+	            </td>
+	        </tr>
+	        
+	        <%-- 확장칼럼 --%>
 	        <tr id="trAttribute" style="${style}">
 	            <th><spring:message code="ezBoard.t999028" /></th>
 	            <td>
 	            	<a class="imgbtn imgbck"><span onClick="ExtensionAttribute_onClick()"><spring:message code="ezBoard.t999029" /></span></a>
 	            </td>
 	        </tr>	
+	        
 	        <tr style="${style}">
 	            <th><spring:message code="ezBoard.t169" /></th>
 	            <td style="height: 100%">

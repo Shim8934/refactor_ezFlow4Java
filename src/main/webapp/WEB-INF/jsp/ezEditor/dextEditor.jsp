@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
@@ -8,9 +9,9 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezEditor/dext5Editor/js/dext5editor.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
-			var type = "${type}";
-			var height = "${height}";
-			var id = "${id}";
+			var type = "<c:out value='${type}'/>";
+			var height = "<c:out value='${height}'/>";
+			var id = "<c:out value='${id}'/>";
 			var editorLoadFlag = false;
 			
 			function dext_editor_loaded_event(editor) {
@@ -334,9 +335,14 @@
 	</head>
 	<body id="dextbody" style="margin: 0px; padding: 0px;">
 	    <script type="text/javascript">
-	    	var useHTMLMode = "${useHTMLMode}";
-	    	var defaultFontFamily = "${defaultFontFamily}";
-			var defaultFontSize = "${defaultFontSize}";
+	    	var useHTMLMode = "<c:out value='${useHTMLMode}'/>";
+	    	var defaultFontFamily = "<c:out value='${defaultFontFamily}'/>";
+			var defaultFontSize = "<c:out value='${defaultFontSize}'/>";
+			
+			// visible 상관 없이 로드
+			DEXT5.util.DEXT5_CheckEditorVisible = function() {
+				return 1;
+			}
 			
 	        DEXT5.config.DialogWindow = parent.window;
 	        DEXT5.config.RemoveItem = "about";

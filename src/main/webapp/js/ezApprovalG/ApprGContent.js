@@ -1,0 +1,76 @@
+/**
+ * 전자결재 div_content HTML 공통 이벤트 
+ */
+
+function SelectOnchange() { 
+	var options = event.target.options;
+	var i, len;
+	
+	for (i = 0, len = options.length; i < len; i++) {
+		if (options[i].selected) {
+			options[i].setAttribute("selected", "selected");
+		} else {
+			options[i].removeAttribute("selected");
+		}
+	}
+}
+function CheckBoxOnclick() {
+	var input = event.target;
+	
+	if(input.checked) {
+		input.setAttribute("checked", "checked");
+	} else {
+		input.removeAttribute("checked");
+	}
+}
+function CheckBoxOnDblclick() { // IE에서 더블클릭을 클릭으로 인식하는 이슈때문에 작성
+	if(isIE()) {
+		var input = event.target;
+		
+		if(input.checked) {
+			input.removeAttribute("checked"); 
+			input.checked = false;
+		} else {
+			input.setAttribute("checked", "checked"); 
+			input.checked = true;
+		}
+	}
+}
+function RadioOnClick() {
+	var radio = event.target;
+	if(radio.name) {
+		var radioObj = document.getElementsByName(radio.name);
+		var i, len;
+		
+		for(i = 0, len = radioObj.length; i < len; i++) {
+			if(radioObj[i].checked) {
+				radioObj[i].setAttribute("checked", "checked");
+			} else {
+				radioObj[i].removeAttribute("checked");
+			}
+		}
+	} else {
+		radio.setAttribute("checked", "checked");
+	}
+}
+
+function onInputTextarea(event) {
+	var textarea = event.target;
+	var value = textarea.value;
+	
+	if (textarea.oldValue === value) {
+		return;
+	}
+	
+	var selectionStart = textarea.selectionStart;
+	textarea.oldValue = value;
+	textarea.setAttribute("value", value);
+	textarea.defaultValue = value;
+	textarea.selectionStart = selectionStart;
+	textarea.selectionEnd = selectionStart;
+	
+	if (textarea.hasAttribute("auto-height")) {
+		textarea.style.height = "0px";
+		textarea.style.height = textarea.scrollHeight + "px";
+	}
+}

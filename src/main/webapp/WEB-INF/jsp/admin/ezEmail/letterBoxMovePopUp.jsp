@@ -74,15 +74,19 @@
 			// 편지지함 이동(저장)
 			function letterBoxSave() {
 				var letterBoxNo = selectNode.node.id;
-				var letterBox = ${letterBox};
-				var letterNo = ${letterNo};
-				var letterId = '${letterId}';
-				var query = "/admin/ezEmail/updateLetterMove.do?letterBox=" + letterBox + "&letterNo=" + letterNo + "&parentLetterBoxNo=" + letterBoxNo +"&letterId=" + letterId;
+				var letterBox = '<c:out value="${letterBox}"/>';
+				var letterNo = '<c:out value="${letterNo}"/>';
+				var letterId = '<c:out value="${letterId}"/>';
+				var query = "/admin/ezEmail/updateLetterMove.do";
 				 
 				$.ajax({
 					type : "POST",
 					url : query,
 					datatype : 'text',
+					data : {"letterBox" : letterBox ,
+							"letterNo" : letterNo , 
+							"parentLetterBoxNo" : letterBoxNo,
+							"letterId" : letterId},
 					error : function(data) {
 						alert("error");
 					},

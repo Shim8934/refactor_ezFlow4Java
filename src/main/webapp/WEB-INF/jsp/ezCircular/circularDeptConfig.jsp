@@ -15,13 +15,15 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		
 		<script type="text/javascript">
+			var lang = "${userInfo.lang}";
+			
 			$(function() {
 				getCircularDeptList();
 			});
 			
 			function getCircularDeptList() {
 				$.ajax({
-					type : "POST",
+					type : "GET",
 					url : "/ezCircular/getcircularDeptList.do",
 					dataType : "json",
 					data : {
@@ -30,7 +32,11 @@
 					success : function(result) {
 						var list = result.circularDeptList;
 						
-						circularDeptList = "<colgroup><col width='7%' /><col width='47%' /><col width='18%' /><col width='15%' /><col width='13%' /></colgroup>";
+						if(lang == "2") {
+							circularDeptList = "<colgroup><col width='7%' /><col width='40%' /><col width='18%' /><col width='18%' /><col width='17%' /></colgroup>";
+						} else {
+							circularDeptList = "<colgroup><col width='7%' /><col width='47%' /><col width='18%' /><col width='15%' /><col width='13%' /></colgroup>";
+						}
 						
 						// 2018-02-13 주홍선 String replaceAll function 선언
 						String.prototype.replaceAll = function (search, replacement) {
@@ -55,7 +61,7 @@
 								circularDeptList += "<td style='color:gray;'>" + vo.memberName + "</td>";
 								circularDeptList += "<td id='pop'><a href='javascript:memberList();' style='color:gray;'>[<spring:message code='ezCircular.t82' />]</a></td>";
 							} else {
-								circularDeptList += "<td style='color:gray;'>" + vo.memberName + "&nbsp;<spring:message code='ezCircular.t50' />" + vo.memberNameCount + "<spring:message code='ezCircular.t51' /></td>"
+								circularDeptList += "<td style='color:gray;'>" + vo.memberName + "&nbsp;<spring:message code='ezCircular.t50' />&nbsp;" + vo.memberNameCount + "<spring:message code='ezCircular.t51' /></td>"
 								circularDeptList += "<td id='pop'><a href='javascript:memberList();' style='color:gray;'>[<spring:message code='ezCircular.t82' />]</a></td>";
 							}
 								
@@ -85,7 +91,7 @@
 						$(obj).css("backgroundColor", "#FFFFFF");
 					} else {
 						$(obj).find("input").prop("checked", true);
-						$(obj).css("backgroundColor", "#edf4fd");
+						$(obj).css("backgroundColor", "#f1f8ff");
 					}
 				} else {
 					if (_RowObject != null) {
@@ -95,7 +101,7 @@
 
 					_RowObject = obj;
 					$(obj).find("input").prop("checked", true);
-					$(obj).css("backgroundColor", "#edf4fd");
+					$(obj).css("backgroundColor", "#f1f8ff");
 				}
         	}
 
@@ -178,7 +184,7 @@
 				// 전체 체크박스 선택, 해제
 				if ($("#checkboxAll").prop("checked") == true) {
 					$(".myCheckbox").prop("checked", true);
-					$("#circularDeptList tr").css("background", "#edf4fd");
+					$("#circularDeptList tr").css("background", "#f1f8ff");
 				} else {
 					$(".myCheckbox").prop("checked", false);
 					$("#circularDeptList tr").css("background", "#FFFFFF");
@@ -192,7 +198,7 @@
 					$(obj).parent().parent("tr[id = '" + num + "']").css("backgroundColor", "#FFFFFF");
 				} else {
 					$(obj).prop("checked", true);
-					$(obj).parent().parent("tr[id = '" + num + "']").css("backgroundColor", "#edf4fd");
+					$(obj).parent().parent("tr[id = '" + num + "']").css("backgroundColor", "#f1f8ff");
 				}
 
 				event.stopPropagation();
@@ -205,8 +211,8 @@
 			<br />
 			<div id="mainmenu" style="width: 750px;">
 			    <ul>
-			        <li style=><span onClick="add_circularDept()"><spring:message code='ezCircular.t77' /></span></li>
-			        <li style=><span onClick="delete_circularDept()"><spring:message code='ezCircular.t30' /></span></li>
+			        <li class="important"><span onClick="add_circularDept()"><spring:message code='ezCircular.t77' /></span></li>
+			        <li><span class="icon16 icon16_delete" onClick="delete_circularDept()"></span></li>
 			    </ul>
 			</div>
 			<table style="width: 750px; height: 385px;" border="0">
@@ -214,8 +220,12 @@
 		            <td>
 		                <div style="border: 1px solid #dbdbda; border-top:0px; width: 750px; height: 385px; display: inline-table;">
 		                    <table class="mainlist" style="width: 100%;">
+		                    <c:if test="${userInfo.lang ne 2}">
 		                    	<colgroup><col width='7%' /><col width='47%' /><col width='18%' /><col width='15%' /><col width='13%' /></colgroup>
-		                    	
+		                    </c:if>
+		                    <c:if test="${userInfo.lang eq 2}">
+		                    	<colgroup><col width='7%' /><col width='40%' /><col width='18%' /><col width='18%' /><col width='17%' /></colgroup>
+		                    </c:if>
 		                    	<!-- 18-05-24 김민성 - 회람판 > 즐겨찾기 단어 수정 -->
 		                        <tr>
 									<th><input id="checkboxAll" type="checkbox" onclick="selectAll()"></th>

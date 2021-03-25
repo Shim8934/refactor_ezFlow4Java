@@ -52,7 +52,7 @@
     <align>center</align>
   </column>
   <column>
-    <heading>readDate</heading>
+    <heading>Reading time</heading>
     <type>date</type>
     <propname>readdt</propname>
     <prop>http://schemas.microsoft.com/exchange/date-iso</prop>

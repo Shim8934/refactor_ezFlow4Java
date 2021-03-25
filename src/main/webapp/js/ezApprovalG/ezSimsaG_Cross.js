@@ -197,7 +197,7 @@ function makeXML(newDocID) {
 	    var Nodes = eNodes.getElementsByTagName("title");
 	    field = message.GetListItem(fields, "doctitle");
 	    if (field) {
-	        setNodeText(Nodes.item(0), getNodeText(field));
+	    	setNodeText(Nodes.item(0), MakeXMLString(getNodeText(field)));
 	    }
 	    else {
 	        setNodeText(Nodes.item(0), "");
@@ -223,6 +223,8 @@ function makeXML(newDocID) {
 	        if (field.fontSize !== null) {
 	            defaultFontSize = field.fontSize;
 	        }
+	        
+	        styleToAttribute(field);
 
 	        var strBody = Document_Encode(field.innerHTML, defaultFontFamily, defaultFontSize);
 
@@ -510,28 +512,30 @@ function makeXML(newDocID) {
 	    field = message.GetListItem(fields, "symbol");
 	    if (field) {
 	        if (field.childNodes.length > 0) {
-	            if (field.childNodes.item(0).tagName == "IMG") {
+	            if (field.getElementsByTagName("img").length > 0) {
+	            	var symbolImg = field.getElementsByTagName("img")[0];
 	                var tempNode2;
 	                tempNode2 = createNodeAndAppandNodeText(sihangXML, Nodes.item(0), tempNode2, "symbol", "");
 
 	                var tempNode3;
 	                tempNode3 = createNodeAndAppandNodeText(sihangXML, tempNode2, tempNode3, "img", "");
 
-	                symbolPath = GetAttribute(field.childNodes.item(0),"src");
+	                symbolPath = GetAttribute(symbolImg,"src");
 	                var len = symbolPath.lastIndexOf("/");
 	                symbolName = symbolPath.substr(len + 1, symbolPath.length);
-	                tempNode3.setAttribute("src", symbolName)
-	                tempNode3.setAttribute("alt", strLang180)
-	                tempNode3.setAttribute("height", Conversion(field.childNodes.item(0).height).toString() + "mm")
-	                tempNode3.setAttribute("width", Conversion(field.childNodes.item(0).width).toString() + "mm")
+	                tempNode3.setAttribute("src", symbolName);
+	                tempNode3.setAttribute("alt", strLang180);
+	                tempNode3.setAttribute("height", Conversion(symbolImg.height).toString() + "mm");
+	                tempNode3.setAttribute("width", Conversion(symbolImg.width).toString() + "mm");
 	            }
 	        }
 	    }
 	    field = message.GetListItem(fields, "logo");
 	    if (field) {
 	        if (field.childNodes.length > 0) {
-	            if (field.childNodes.item(0).tagName == "IMG") {
-	                logoPath = GetAttribute(field.childNodes.item(0),"src");
+	            if (field.getElementsByTagName("img").length > 0) {
+	            	var logoImg = field.getElementsByTagName("img")[0];
+	            	logoPath = GetAttribute(logoImg,"src");
 	                if (logoPath) {
 	                    var tempNode2;
 	                    tempNode2 = createNodeAndAppandNodeText(sihangXML, Nodes.item(0), tempNode2, "logo", "");
@@ -541,10 +545,10 @@ function makeXML(newDocID) {
 
 	                    var len = logoPath.lastIndexOf("/");
 	                    logoName = logoPath.substr(len + 1, logoPath.length);
-	                    tempNode3.setAttribute("src", logoName)
-	                    tempNode3.setAttribute("alt", strLang181)
-	                    tempNode3.setAttribute("height", Conversion(field.childNodes.item(0).height).toString() + "mm")
-	                    tempNode3.setAttribute("width", Conversion(field.childNodes.item(0).width).toString() + "mm")
+	                    tempNode3.setAttribute("src", logoName);
+	                    tempNode3.setAttribute("alt", strLang181);
+	                    tempNode3.setAttribute("height", Conversion(logoImg.height).toString() + "mm");
+	                    tempNode3.setAttribute("width", Conversion(logoImg.width).toString() + "mm");
 	                }
 	            }
 	        }
@@ -633,6 +637,8 @@ function SizeConvert(size) {
 }
 
 function covBody(pbody) {
+	pbody = removeTags(pbody, '<caption><img><i><b><u><sub><sup><br><p><span><ul><ol><li><table><tbody><tr><td>');
+	
     var compSTR, subcompSTR, compChar, startIdx, findIdx, nextIdx, endIdx;
     var i, strgt, startflag;
     startflag = false;
@@ -706,17 +712,48 @@ function covBody(pbody) {
         }
     }
     var re = /&nbsp;/g;
-    var BodyStr = "<content>" + newSTR.replace(re, "&amp;nbsp;") + "</content>";
+    var BodyStr = "<content>" + newSTR.replace(re, "&amp;nbsp;").replace(/&lt;/g, "&amp;lt;").replace(/&gt;/g, "&amp;gt;") + "</content>";
 
     BodyStr = BodyStr.replace(/: '/g, ":");
     BodyStr = BodyStr.replace(/'' /g, "' ");
     BodyStr = BodyStr.replace(/''>/g, "'>");
     BodyStr = BodyStr.replace(/'; /g, "; ");
-    BodyStr = BodyStr.replace(/<br>/g, "");
+    BodyStr = BodyStr.replace(/''font-size:'/g, "'font-size:");
+    
+    BodyStr = BodyStr.replace(/''margin-bottom:'/g, "'margin-bottom:");
+    BodyStr = BodyStr.replace(/='>/g, "=''>");
+    BodyStr = BodyStr.replace(/=''/g, "='");
+    BodyStr = BodyStr.replace(/:'  '/g, ":");
+    BodyStr = BodyStr.replace(/:'  /g, ":");
+    BodyStr = BodyStr.replace(/';'/g, ";'");
+
+    BodyStr = BodyStr.replace(/(\?(\w)*?\w=)((')(\w*?)['])/ig, "$1$5$4");
+    BodyStr = BodyStr.replace(/\n|\r|\t/g, "");
     
     var xmlpara = loadXMLString(BodyStr);
     var bodyNodes = xmlpara.documentElement;
     return bodyNodes;
+}
+
+function removeTags(input, allowed) {
+    allowed = (((allowed || "") + "").toLowerCase().match(/<[a-z][a-z0-9]*>/g) || []).join('');
+    var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi, commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
+    return input.replace(commentsAndPhpTags, '').replace(tags, function ($0, $1) {
+        return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
+    });
+}
+
+function styleToAttribute(bodyElem) {
+	var pElem = bodyElem.getElementsByTagName("p");
+	for (var i = 0; i < pElem.length; i++) {
+		if (pElem[i].style && pElem[i].style.textAlign) {
+			pElem[i].align = pElem[i].style.removeProperty("text-align");
+		}
+		
+		if (pElem[i].getAttribute("style") == "") {
+			pElem[i].removeAttribute("style");
+		}
+	}
 }
 
 function FileUpload(pFileName, pURL, localPath)
@@ -958,7 +995,8 @@ function sendExtDoc(ExtXML) {
 			url : "/ezApprovalG/sendMsg.do",
 			data : {
 				extXML : getXmlString(ExtXML),
-				xmlPath : pDocID + i + "pack.xml"
+				xmlPath : pDocID + i + "pack.xml",
+				docID : pOrgDocID
 			},
 			success: function(xml){
 				result = xml;
@@ -1331,8 +1369,8 @@ return str_temp;
 function setMenuDisable(id, flag) {
     if (document.getElementById(id) != null) {
         if (flag)
-            document.getElementById(id).disabled = true;
+            document.getElementById(id).style.display = "";
         else
-            document.getElementById(id).disabled = false;
+            document.getElementById(id).style.display = "none";
     }
 }

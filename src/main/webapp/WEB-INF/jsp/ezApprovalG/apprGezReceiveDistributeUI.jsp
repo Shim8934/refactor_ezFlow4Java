@@ -30,21 +30,21 @@
 	        var pAprSate;
 	        var arr_userinfo = new Array();
 	        arr_userinfo[0] = "user";
-	        arr_userinfo[1] = "${userInfo.id}";
-	        arr_userinfo[2] = "${userInfo.displayName}";
-	        arr_userinfo[3] = "${userInfo.title}";
-	        arr_userinfo[4] = "${userInfo.deptID}";
-	        arr_userinfo[5] = "${userInfo.deptName}";
-	        arr_userinfo[6] = "${userInfo.jikChek}";
-	        arr_userinfo[8] = "${userInfo.email}";
+	        arr_userinfo[1] = "<c:out value ='${userInfo.id}'/>";
+	        arr_userinfo[2] = "<c:out value ='${userInfo.displayName}'/>";
+	        arr_userinfo[3] = "<c:out value ='${userInfo.title}'/>";
+	        arr_userinfo[4] = "<c:out value ='${userInfo.deptID}'/>";
+	        arr_userinfo[5] = "<c:out value ='${userInfo.deptName}'/>";
+	        arr_userinfo[6] = "<c:out value ='${userInfo.jikChek}'/>";
+	        arr_userinfo[8] = "<c:out value ='${userInfo.email}'/>";
 	        arr_userinfo[9] = "";
-	        arr_userinfo[10] = "${susinAdmin}";
-	        arr_userinfo[11] = "${userInfo.displayName1}";
-	        arr_userinfo[12] = "${userInfo.displayName2}";
-	        arr_userinfo[13] = "${userInfo.title1}";
-	        arr_userinfo[14] = "${userInfo.title2}";
-	        arr_userinfo[15] = "${userInfo.deptName1}";
-	        arr_userinfo[16] = "${userInfo.deptName2}";
+	        arr_userinfo[10] = "<c:out value ='${susinAdmin}'/>";
+	        arr_userinfo[11] = "<c:out value ='${userInfo.displayName1}'/>";
+	        arr_userinfo[12] = "<c:out value ='${userInfo.displayName2}'/>";
+	        arr_userinfo[13] = "<c:out value ='${userInfo.title1}'/>";
+	        arr_userinfo[14] = "<c:out value ='${userInfo.title2}'/>";
+	        arr_userinfo[15] = "<c:out value ='${userInfo.deptName1}'/>";
+	        arr_userinfo[16] = "<c:out value ='${userInfo.deptName2}'/>";
 	        var pUserID = arr_userinfo[1];
 	        var RetValue;
 	        var ReturnFunction;
@@ -78,8 +78,8 @@
 	        var Docalt2 = "<spring:message code='ezApprovalG.t288'/>";
 	        var Docalt3 = "<spring:message code='ezApprovalG.t289'/>";
 	        var Docalt4 = "<spring:message code='ezApprovalG.t10030'/>";
-	        var CompanyID = "${userInfo.companyID}";
-			var approvalFlag = "${approvalFlag}";
+	        var CompanyID = "<c:out value ='${userInfo.companyID}'/>";
+			var approvalFlag = "<c:out value ='${approvalFlag}'/>";
 			var isReDraft;
 			var pDocState;
 			var orgCompanyID;
@@ -149,7 +149,7 @@
 	        }
 	        function initTreeInfo() {
 	            try {
-	                TreeViewinitialize(InitTreeVal, "${userInfo.companyID}", "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "");
+	                TreeViewinitialize(InitTreeVal, "<c:out value ='${userInfo.companyID}'/>", "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "");
 	            } catch (ErrMsg) {
 	                alert(ErrMsg.description);
 	            }
@@ -269,7 +269,7 @@
 	                custData = createNodeAndAppandNodeText(xmlpara, objRow, custData, "RECEIVEDEPTNAME", MakeXMLString(SelRow.getAttribute("DATA4")));
 	                custData = createNodeAndAppandNodeText(xmlpara, objRow, custData, "RECEIVEDEPTNAME2", MakeXMLString(SelRow.getAttribute("DATA5")));
 	            }
-	            if ("${mode}" == "add") 
+	            if ("<c:out value ='${mode}'/>" == "add") 
 	                xmlhttp.open("POST", "/ezApprovalG/addBebu.do", false);
 	            else
 	                xmlhttp.open("POST", "/ezApprovalG/setBebu.do", false);
@@ -614,7 +614,7 @@
 	
 	        try {
 	
-	            if (innserdeptid == arr_userinfo[4] && "${USE_SELFDISTRIBUTE}" == "N") {
+	            if (innserdeptid == arr_userinfo[4] && "<c:out value ='${USE_SELFDISTRIBUTE}'/>" == "N") {
 	                selfInsert = true;
 	            }
 	
@@ -1306,7 +1306,7 @@
 	                for (var i = 0; i < objRows.length; i++) {
 	                    if (GetAttribute(objRows[i], "DATA1").toLowerCase() == getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[1], "DATA1").toLowerCase()) {
 	                        chkDuplflag = true;
-	                        if (getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[1], "DATA1").toLowerCase() == arr_userinfo[4].toLowerCase() && "${USE_SELFDISTRIBUTE}" == "N") {
+	                        if (getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[1], "DATA1").toLowerCase() == arr_userinfo[4].toLowerCase() && "<c:out value ='${USE_SELFDISTRIBUTE}'/>" == "N") {
 	                            chkDuplflag = true;
 	                        }
 	                    }
@@ -1389,6 +1389,47 @@
 	    	    return false;
 	    	else
 	    	    return true;
+	    }
+		
+		//배부창에서 참조할 수 없는 함수를 호출하고 있어서 추가. 2020-05-18 홍대표.
+	    function checkOuterReceiver() {
+	    	var listview = new ListView();
+	    	listview.LoadFromID("lvRECEPTLIST");
+	    	
+	    	var cnt = listview.GetRowCount();
+	    	var row = listview.GetDataRows();
+
+	    	if (cnt > 0) {
+	    		var checkOuter = row[0].getAttribute("DATA3");
+	    		var checkAddress = row[0].getAttribute("DATA1");
+	    		
+	    		if (cnt > 8 && checkOuter == "Y" && checkAddress.indexOf("Address") == -1) {
+	    	        document.getElementById("inputSummaryOuterReceiverList").focus();
+	    	        document.getElementById("trSummaryOuterReceiverList").style.display = "";
+	    	        document.getElementById("btnaddress").style.display = "none";
+	    	        document.getElementById("btnaddressChange").style.display = "none";
+	    		} else if (cnt <= 8 && checkOuter == "Y" && checkAddress.indexOf("Address") == -1) {
+	    	        document.getElementById("trSummaryOuterReceiverList").style.display = "none";
+	    	        document.getElementById("btnaddress").style.display = "";
+	    	        if (useReceiveInfoName == '1') {
+//	                	document.getElementById("btnaddressChange").style.display = "";
+	                } else {
+	                	document.getElementById("btnaddressChange").style.display = "";
+	                }
+	    		} else if (checkOuter == "Y" && checkAddress.indexOf("Address") != -1) {
+	    			document.getElementById("trSummaryOuterReceiverList").style.display = "none";
+	    	        document.getElementById("btnaddress").style.display = "";
+	    	        if (useReceiveInfoName == '1') {
+//	                	document.getElementById("btnaddressChange").style.display = "";
+	                } else {
+	                	document.getElementById("btnaddressChange").style.display = "";
+	                }
+	    		} else {
+	    			document.getElementById("trSummaryOuterReceiverList").style.display = "none";
+	    	        document.getElementById("btnaddress").style.display = "";
+	    	        document.getElementById("btnaddressChange").style.display = "none";
+	    		}
+	    	}
 	    }
 	    </script>
 	    <style>

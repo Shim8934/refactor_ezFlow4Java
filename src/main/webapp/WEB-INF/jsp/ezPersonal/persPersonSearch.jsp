@@ -41,7 +41,9 @@
 	    	var strLang2 = "<spring:message code='ezPersonal.t1003'/>";
 	    	var strLang39 = "<spring:message code='ezPersonal.t10000'/>";
 	    	var strLang40 = "<spring:message code='ezPersonal.t10001'/>";
-	    	var strSearch = "${searchString}";
+	    	
+	    	/* 2020-11-09 홍승비 - XSS 처리를 위한 c:out과 역 인코딩 추가 */
+	    	var strSearch = ConvMakeXMLString("<c:out value='${searchString}'/>");
 
 	    	var CurPage = "1";
 
@@ -67,8 +69,17 @@
 	            	var xmlHTTP = createXMLHttpRequest();
 	            	var objNode;
 	            	createNodeInsert(xmlpara, objNode, "DATA");
-	            	createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${userInfo.deptID}");
-	            	createNodeAndInsertText(xmlpara, objNode, "TOPID", "${userInfo.companyID}");
+	            	createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${userInfo.deptID}");	            	
+	            	
+	                <c:choose>
+	                <c:when test="${useShowAllCompanies eq 'YES'}">
+	                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top/organ");
+	                </c:when>
+	                <c:otherwise>
+	                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
+	                </c:otherwise>
+	                </c:choose>
+	            	
 	            	createNodeAndInsertText(xmlpara, objNode, "PROP", "");
 	            	xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	            	xmlHTTP.send(xmlpara);
@@ -134,7 +145,7 @@
 	    	    var treeView = new TreeView();
 	        	treeView.LoadFromID("FromTreeView");
 	        	var nodeIdx = treeView.GetSelectNode();
-        		document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top;padding-right:3px;\" >" 
+        		document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" 
 	        		+ "<span id='spn_deptName' title='" + MakeXMLString(nodeIdx.GetNodeData("VALUE")) + "'>" + MakeXMLString(nodeIdx.GetNodeData("VALUE")) + "</span>"
 	        		+ "<span id='countInfo'></span>";
 	        	SelectDeptNM.setAttribute("countinfo","")
@@ -154,7 +165,7 @@
 	  				data : {
 	  					deptID : tempDeptID ,
 	  					cell : "company;description;displayName;title;telephoneNumber",
-	  					prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department",
+	  					prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;userType",
 	  					page : CurPage ,
 	  					type : "user"
 	  				} ,
@@ -186,9 +197,9 @@
 							var strIsLeaf = $("div#" + id + "").attr("isleaf");
 							
 							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
-			        			document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang1 + "</span>/<spring:message code='ezAddress.t362' /> <span class='countColor'>" + result.totalCount2 + strLang1 + "</span>]";
+			        			document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span> / <span class='countColor'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
 							} else {
-								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang1 + "</span>]";
+								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span>";
 							}
 							//2018-08-01 김보미 - 부서명 [사원수] 가 넘치는지 확인하는 함수
 							deptNameLong(result.containLow, strIsLeaf);
@@ -211,7 +222,7 @@
                 	makePageSelPage();
 		        } 
 		    } 
-		    var m_strColorSelect = "#edf4fd";
+		    var m_strColorSelect = "#f1f8ff";
 	    	var m_strColorOver = "#f4f5f5";
 	    	var m_strColorDefault = "#ffffff";
 	    	var p_ListOrderObject = null;
@@ -293,7 +304,7 @@
 	            	document.getElementById("txtlist_table").style.display = "none";
 	            	document.getElementById("Search_txtlist_table").style.display = "none";
 	            	if (pSeach) {
-	                	document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top;padding-right:3px;\" >" + strLang2 + "" + "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang1 + "</span>]";
+	                	document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<span id='spn_deptName'>"  + strLang2 + "</span>" + "<span id='countInfo' style='color:#017BEC;'>&nbsp;&nbsp;<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span></span>";
 	                	SelectDeptNM.setAttribute("countinfo", "1")
 	            	}
 	        	} else {
@@ -305,7 +316,7 @@
 	            	} else {
 	                	document.getElementById("Search_txtlist_table").style.display = "";
 	                	document.getElementById("txtlist_table").style.display = "none";
-	                	document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top;padding-right:3px;\" >" + strLang2 + "" + "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang1 + "</span>]";
+	                	document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<span id='spn_deptName'>" + strLang2 + "</span>" + "<span id='countInfo' style='color:#017BEC;'>&nbsp;&nbsp;<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span></span>";
 	                	SelectDeptNM.setAttribute("countinfo", "1")
 	            	}
 	        	}
@@ -371,6 +382,12 @@
 	    	            Sub_TD1.style.textAlign = "left";
 	        	        Sub_TD1.setAttribute("class", "name");
 	            	    var pDisplayName = "";
+	            	    
+	            	    if( !pSeach && $(M_TR).attr("_DATA11" ) == "addJob"){
+		            		pDisplayName += "<spring:message code='ezOrgan.psb03'/> ";
+		            	} else if( pSeach && $(M_TR).attr("_DATA10") == "addJob" ){
+		            		pDisplayName += "<spring:message code='ezOrgan.psb03'/> ";
+		            	}
 		                
 	                	pDisplayName += M_TR.getAttribute("_DATA4") == "" ? "" : M_TR.getAttribute("_DATA4");
 	                	pDisplayName += M_TR.getAttribute("_DATA6") == "" ? "" : "[" + M_TR.getAttribute("_DATA6") + "]";
@@ -450,7 +467,14 @@
 	                        M_TR_TD2.innerHTML = M_TR.getAttribute("_DATA4");
 
 	                    	var M_TR_TD3 = document.createElement("TD");
-							M_TR_TD3.innerHTML = M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+	                    	
+	                    	var jobName = "";
+	                        if($(M_TR).attr("_DATA10") == "addJob"){
+			            		jobName += "<spring:message code='ezOrgan.psb03'/> ";
+			            	}	      
+	                        
+	                        jobName += M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+	                        M_TR_TD3.innerHTML = jobName;
 	                    	M_TR_TD3.style.width = "80px";
 
 		                    var M_TR_TD4 = document.createElement("TD");
@@ -472,7 +496,14 @@
 
 		                    var M_TR_TD2 = document.createElement("TD");
 	    	                M_TR_TD2.style.width = "80px";
-	        	            M_TR_TD2.innerHTML = M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+
+	                    	var jobName = "";
+	                        if($(M_TR).attr("_DATA11") == "addJob"){
+			            		jobName += "<spring:message code='ezOrgan.psb03'/> ";
+			            	}	      
+	                        
+	                        jobName += M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+	                        M_TR_TD2.innerHTML = jobName;
 
 	            	        var M_TR_TD3 = document.createElement("TD");
 	                	    M_TR_TD3.innerHTML = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");
@@ -528,8 +559,11 @@
 					data : {
 						search : document.getElementById("search_type").value + "::" + keyword.value,
 						cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value,
-						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
+						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;userType",
 						page : CurPage ,
+		                <c:if test="${useShowAllCompanies eq 'YES'}">
+	        			company : "",
+		                </c:if>		        			
 						type : "user"
 					} ,
    					success : function(xml) {
@@ -588,7 +622,13 @@
 					method : 'POST',
 					dataType : "text",
 					async : false,
-					data : {search : "displayname::" + document.all("deptkeyword").value, cell : "extensionAttribute3;displayname;extensionAttribute9;", prop : "", type : 'group'}, 
+					data : {search : "displayname::" + document.all("deptkeyword").value, 
+					    cell : "extensionAttribute3;displayname;extensionAttribute9;", 
+					    prop : "", 
+		        	    <c:if test="${useShowAllCompanies eq 'YES'}">
+		        	    company : "", 
+		        	    </c:if>		        	     
+					    type : 'group'}, 
    					success : function(result) {
    						xmlDOM = loadXMLString(result);
    						var row = SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW");
@@ -607,10 +647,20 @@
 	            	bSearch = true;
 	            	g_xmlHTTP = createXMLHttpRequest();
 
-	            	if(CrossYN())
-		                var strQuery = "<DATA><DEPTID>" + SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW/DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
-	            	else
-	                	var strQuery = "<DATA><DEPTID>" + SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW/DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+	            	var strQuery;
+	            	
+	            	if (CrossYN()) {
+		                <c:choose>
+		                <c:when test="${useShowAllCompanies eq 'YES'}">
+		                strQuery = "<DATA><DEPTID>" + SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW/DATA2").item(0).textContent + "</DEPTID><TOPID>Top/organ</TOPID><PROP></PROP></DATA>";
+		                </c:when>
+		                <c:otherwise>
+		                strQuery = "<DATA><DEPTID>" + SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW/DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+		                </c:otherwise>
+		                </c:choose>	                    	                    	            	    
+	            	} else {
+	                	strQuery = "<DATA><DEPTID>" + SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW/DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+	            	}
 
 	            	g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 	            	g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
@@ -644,8 +694,17 @@
 	    	function deptsearch_click_Complete() {
 		        if (rgParams["deptid"] != "") {
 		            bSearch = true;
-	    	        g_xmlHTTP = createXMLHttpRequest();
-	            	var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+	    	        g_xmlHTTP = createXMLHttpRequest();	            	
+	            	
+	                <c:choose>
+	                <c:when test="${useShowAllCompanies eq 'YES'}">
+	                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top/organ</TOPID><PROP>mail</PROP></DATA>";
+	                </c:when>
+	                <c:otherwise>
+	                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+	                </c:otherwise>
+	                </c:choose>
+	            	
 	            	g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 	            	g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 	            	g_xmlHTTP.send(strQuery);
@@ -938,6 +997,18 @@
 				
 				$("#spn_deptName").css("width", deptNameWidth);
 			}
+	        
+			/* 2020-11-09 홍승비 - 검색어 역 인코딩 처리 */
+			function ConvMakeXMLString(str) {
+			    str = ReplaceText(str, "&lt;", "<");
+			    str = ReplaceText(str, "&gt;", ">");
+			    str = ReplaceText(str, "&#039;", "'");
+			    str = ReplaceText(str, "&#034;", "\"");
+			    str = ReplaceText(str, "&amp;", "&");	    
+				str = ReplaceText(str, "&#92;", "\\");
+			    return str;
+			}
+			
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden;">
@@ -978,6 +1049,10 @@
                             			<option value="HomePhone" usedefault="0"><spring:message code='ezPersonal.t70'/></option>
                             			<option value="facsimileTelephoneNumber" usedefault="0"><spring:message code='ezPersonal.t179'/></option>
                             			<option value="mail" usedefault="0"><spring:message code='ezPersonal.t75'/></option>
+                            			<c:if test="${primaryLang eq '3' }">
+                                        <option value="extensionPhone" usedefault="0"><spring:message code='main.ksa02' /></option>
+                                        <option value="officeMobile" usedefault="0"><spring:message code='main.ksa03' /></option>
+                                        </c:if>
                             			<option value="streetAddress" usedefault="0"><spring:message code='ezPersonal.t180'/></option>
                             		</select>
                             		<input id="keyword" value="" onKeyPress="search_press(event)" onmousedown="keyword_Clear();" style="width:120px;margin:0px;height: 22px;">

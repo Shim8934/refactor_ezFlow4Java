@@ -20,9 +20,9 @@
         var test = [];
         var parent = "";
 		var folderId = "";
-		var folderType = "${folderType}";
-		var checkedfileList = "${fileList}";
-		var checkedfolderList = "${folderList}";
+		var folderType = "<c:out value='${folderType}'/>";
+		var checkedfileList = "<c:out value='${fileList}'/>";
+		var checkedfolderList = "<c:out value='${folderList}'/>";
 		var treeData;
 
         window.onload = function () {
@@ -61,7 +61,7 @@
 						},
 						"types" : {
 							"default": {
-								"icon" :"/images/webfolder/fldr.png" 
+								"icon" :"/images/OrganTree_cross/fldr.gif" 
 							}
 						},
 						"grid": {
@@ -96,7 +96,8 @@
                 return;
             }
            	
-            if ( parent =='#' && checkedfileList.length > 0) {
+            // 회사폴더일 경우에만 최상위폴더에 파일을 이동할 수 없도록 수정. 2020-03-24 홍대표.
+            if ( folderType == 'C' && parent =='#' && checkedfileList.length > 0) {
 	            alert("<spring:message code='ezWebFolder.t293'/>");
 	            return;
             }
@@ -122,9 +123,17 @@
             			alert(data.reason);
             		} else if (data.code == 2) {
 	            		alert("<spring:message code='ezWebFolder.t285'/>");
-					}else if (data.code == 3) {
+					} else if (data.code == 3) {
 						alert("<spring:message code='ezWebFolder.t28'/>");
-					} 
+					} else if (data.code == 8) {
+						opener.duplicateFile.process({
+							workType: "trashMove",
+							infoArray: data.duplicateInfoArray,
+							folderId: folderId
+						}, true);
+					} else if(data.code == 4 && data.status == "error") {
+						alert("<spring:message code='ezWebFolder.t250'/>");
+					}
             	},
             	error : function(error) {
             		alert(messages.strLang7 + error);

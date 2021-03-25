@@ -131,7 +131,7 @@
 	                    </select>&nbsp;<spring:message code = 'ezPersonal.t291' />
 	                </td>
 	                <td rowspan="3" style="width:100px; text-align:center">	                     
-						<a href="#" class="imgbtn imgbck"><span onclick="btnAdd_click();"><spring:message code = 'ezPersonal.t00006' /></span></a>
+						<a class="imgbtn imgbck"><span onclick="btnAdd_click();"><spring:message code = 'ezPersonal.t00006' /></span></a>
 	                </td>
 	            </tr>        
 	            <tr>
@@ -147,7 +147,7 @@
 	        </table>
 	    </div>
 	    <div class="btnpositionNew">
-	        <a href="#" class="imgbtn"><span onclick="btnSave_click();"><spring:message code = 'ezPersonal.t34' /></span></a>
+	        <a class="imgbtn"><span onclick="btnSave_click();"><spring:message code = 'ezPersonal.t34' /></span></a>
 	    </div>
 	</body>
 </html>

@@ -40,8 +40,8 @@
 		<script>
 			var g_szAuthor = "";
 			var g_szExchange = "exchange";
-			var g_cmd = "${cmd}";
-		    var Org_cmd = "${cmd}";
+			var g_cmd = '<c:out value="${cmd}"/>';
+		    var Org_cmd = '<c:out value="${cmd}"/>';
 			var g_servername = "${serverName}";
 			var g_myemail = "${userInfo.mail}";
 			var g_from = "${userInfo.mail}";
@@ -89,7 +89,8 @@
 			var charsetControlFlag = "${userLang}";
 			var userTimezone = "${userTimeset}";
 			var isPrimary = "${userPrimary}";
-		    var gg_cmd = "${cmdOwn}";
+			var initFlag = false;
+	    	var gg_cmd = '<c:out value="${cmdOwn}"/>';
 		    var gg_url = "${urlOwn}";
 		    var g_newid = "${newwindowid}";
 		    var FileUploadtype = "${fileUploadType}";
@@ -102,7 +103,7 @@
 		    var docHref = "${docHref}";
 		    var pTime= "${pReservedSaveTime}";
 		    var isReserve = "YES";
-		    var pCDOMessageId = "${pCDOMessageID}";
+		    var pCDOMessageId = '<c:out value="${pCDOMessageID}"/>';
 		    var pUse_Editor = "${useEditor}";
 		    var GroupplusImg ="/images/ImgIcon/groupplus.gif";
 		    var GroupminImg ="/images/ImgIcon/groupmin.gif";
@@ -122,6 +123,8 @@
 		    var receiverCount = 0;
 	        var groupAddressCountMap = {};
 	        var mailMaxReceiverCount = parseInt("${mailMaxReceiverCount}");
+	        var g_useAdditionalInfo = ${useAdditionalInfo};
+	        var previewChk = false; // 메일 미리보기
 	        
 			function window_onload() {
 	            if (!CrossYN()) {
@@ -1087,6 +1090,41 @@
 					.appendTo(ul);
 				};
 			})
+			
+			/*
+			   20190807 김수아 : 메일 작성 창의 미리보기 버튼 클릭 시
+			*/
+			function mailWritePreview() { // pCDOMessageId
+				if (MailStatus == "SEND" && !previewChk) { // 저장 중
+					setTimeout(function() {
+						mailWritePreview();
+			        }, 1000);
+				} else if (!previewChk){
+					previewChk = true;
+					Save_onClick('preview');
+				}
+			}
+			
+			function delDrafts(del_uid) {
+		    	var delDraftsURL = g_url;
+		    	var delDraftsFiledate = filedate;
+		    	
+		    	if (typeof del_uid != "undefined"){
+		    		delDraftsURL = del_uid;
+		    		delDraftsFiledate = "";
+		    	}
+		    	
+		        var xmlhttp = createXMLHttpRequest();
+		        var requestUrl = "/ezEmail/delDrafts.do?itemid=" + encodeURIComponent(delDraftsURL) + "&delid=" + delDraftsFiledate;
+		    	if (typeof(shareId) != "undefined" && shareId != "") {
+		    		requestUrl += "&shareId=" + encodeURIComponent(shareId);
+		    	}
+		        
+		        xmlhttp.open("GET", requestUrl, false);
+		        xmlhttp.send();
+		        xmlhttp = null;
+		        isDelted = true;
+		    }
 		    
 		</script>
         <c:if test="${isCrossBrowser != true}">
@@ -1115,6 +1153,7 @@
 		            <li style="display:none;"><span onClick="LoadFormat_onClick()"><spring:message code='ezEmail.t824' /></span></li>
 		            <li style="display:none;"><span onClick="NameCertify_onClick()"><spring:message code='ezEmail.t331' /></span></li>
 		              <li><span onClick="Option_onClick('M')" id="Span1"><spring:message code='ezEmail.t353' /></span></li>
+		            <li><span onclick="mailWritePreview()"><spring:message code='ezEmail.t487' /></span></li>
 		            <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;">
 		                 <img src="/images/pbar.gif" align="absmiddle"></li> 
 					<li id="menuTable" class="sel" style="background:none; border:none; margin:0; vertical-align:top;">
@@ -1174,13 +1213,13 @@
                	  </c:if>
 		          <tr id="MsgTo_TR">
 		            <th rowspan="2">
-		            	<a href="#" class="imgbtn"><span onClick="SelectReceiver_onClick('To')" style="width:50px; text-align: center;"><spring:message code='ezEmail.t66' /></span></a>
+		            	<a class="imgbtn"><span onClick="SelectReceiver_onClick('To')" style="width:50px; text-align: center;"><spring:message code='ezEmail.t66' /></span></a>
 		                <div style="font-weight:normal; "><INPUT id="toMe" onclick="MailToMe_Onclick();" value="" type="checkbox" name="toMe"/>
 		                <label for="toMe" style="margin-left:-3px; cursor:pointer" ><spring:message code='ezEmail.t99000010' /></label></div>
 		            </th>
 		            <td style="width:76%"><input type="text" name="MsgTo" id="MsgTo" class="width100percent" onkeypress="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" TABINDEX="1" style="WIDTH:99%;ime-mode:active;"></td>
 		            <td style="width:100px;BORDER-LEFT: #ffffff 1px solid;">
-		                <select id="SelectToAddress" style="WIDTH:100px" onchange="simple_select('TO',this)">
+		                <select id="SelectToAddress" style="WIDTH:106px" onchange="simple_select('TO',this)">
 		                </select>
 		            </td>
 		            <td style="width:200px;BORDER-LEFT: #ffffff 1px solid;" ><a class="imgbtn imgbck"><span onClick="new_Address()"><spring:message code='ezEmail.t832' /></span></a></td>
@@ -1189,12 +1228,12 @@
 		            <td colspan="3"><div id="MsgToGot" style="OVERFLOW-Y: auto; HEIGHT: 17px" class="viewtxt"></div></td>
 		          </tr>
 		          <tr id="MsgCC_TR">
-		            <th rowspan="2"  ><a href="#" class="imgbtn"><span onClick="SelectReceiver_onClick('CC')" style="width:50px; text-align: center;"><spring:message code='ezEmail.t594' /></span></a>
+		            <th rowspan="2"  ><a class="imgbtn"><span onClick="SelectReceiver_onClick('CC')" style="width:50px; text-align: center;"><spring:message code='ezEmail.t594' /></span></a>
 		                <div onclick="MailBCCView(this);" style="cursor:pointer;" status="off" id="BccViewer"><img src="/images/ImgIcon/groupplus.gif" align="absmiddle"/><span><spring:message code='ezEmail.t562' /></span></div>
 		            </th>
 		            <td style="width:76%"><input type="text" name="MsgCC" id="MsgCC" class="width100percent" onkeypress="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" TABINDEX="2" style="WIDTH:99%"></td>
 		            <td style="width:100px;BORDER-LEFT: #ffffff 1px solid;">
-		                <select id="SelectCcAddress" style="WIDTH:100px" onchange="simple_select('CC',this)">
+		                <select id="SelectCcAddress" style="WIDTH:106px" onchange="simple_select('CC',this)">
 		                </select>
 		            </td>
 		            <td style="width:200px;BORDER-LEFT: #ffffff 1px solid;" ><a class="imgbtn imgbck"><span onClick="new_Address()"><spring:message code='ezEmail.t832' /></span></a></td>
@@ -1203,10 +1242,10 @@
 		            <td colspan="3"><div id="MsgCCGot" style="OVERFLOW-Y: auto; HEIGHT: 17px" class="viewtxt"></div></td>
 		          </tr>
 		          <tr id="MsgBCC_TR" style="display:none;">
-		            <th rowspan="2" ><a href="#" class="imgbtn"><span onClick="SelectReceiver_onClick('BCC')"><spring:message code='ezEmail.t562' /></span></a></th>
+		            <th rowspan="2" ><a class="imgbtn"><span onClick="SelectReceiver_onClick('BCC')"><spring:message code='ezEmail.t562' /></span></a></th>
 		            <td style="width:76%"><input type="text" name="MsgBCC" id="MsgBCC" class="width100percent" onkeypress="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" TABINDEX="3" style="WIDTH:99%"></td>
 		            <td style="width:100px;BORDER-LEFT: #ffffff 1px solid;">
-		                <select id="SelectBCCAddress" style="WIDTH:100px" onchange="simple_select('BCC',this)">
+		                <select id="SelectBCCAddress" style="WIDTH:106px" onchange="simple_select('BCC',this)">
 		                </select>
 		            </td>
 		            <td style="width:200px;BORDER-LEFT: #ffffff 1px solid;" ><a class="imgbtn imgbck"><span onClick="new_Address()"><spring:message code='ezEmail.t832' /></span></a></td>
@@ -1289,11 +1328,11 @@
                                     <script type="text/javascript">EzHTTPTrans_ActiveX2("EzHTTPTrans","100%", "20");</script>                                
                                 </td>
                                 <td class="pos2">
-                                    <a href="#" class="imgbtn imgbck"><span id="btn_AttachAdd" onclick="attach_Add()"><spring:message code='ezEmail.t677' /></span></a>
+                                    <a class="imgbtn imgbck"><span id="btn_AttachAdd" onclick="attach_Add()"><spring:message code='ezEmail.t677' /></span></a>
                                     <br>
-                                    <a href="#" class="imgbtn imgbck"><span id="btn_bigAttachAdd" onclick="bigattach_Add()"><spring:message code='ezEmail.t663' /></span></a>
+                                    <a class="imgbtn imgbck"><span id="btn_bigAttachAdd" onclick="bigattach_Add()"><spring:message code='ezEmail.t663' /></span></a>
                                     <br>                                    
-                                    <a href="#" class="imgbtn imgbck"><span id="btn_AttachDel" onclick="attach_Delete()"><spring:message code='ezEmail.t678' /></span></a></td>
+                                    <a class="imgbtn imgbck"><span id="btn_AttachDel" onclick="attach_Delete()"><spring:message code='ezEmail.t678' /></span></a></td>
                             </tr>
                         </table>
                     </td>

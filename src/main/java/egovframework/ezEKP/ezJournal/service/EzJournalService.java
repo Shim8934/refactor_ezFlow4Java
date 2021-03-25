@@ -272,10 +272,11 @@ public interface EzJournalService {
 	 * @param userId 
 	 * @param tenantId
 	 * @param offset 
+	 * @param pPreviewShow_HOW 
 	 * @return
 	 * @throws Exception
 	 */
-	public JournalVO getJournal(String journalId, String userId, int tenantId,String lang, String offset) throws Exception;
+	public JournalVO getJournal(String journalId, String userId, int tenantId,String lang, String offset, String pPreviewShow_HOW) throws Exception;
 
 	/**
 	 * 일지 저장하기

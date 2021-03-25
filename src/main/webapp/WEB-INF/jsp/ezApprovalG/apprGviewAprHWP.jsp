@@ -21,14 +21,14 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		
 	    <script type="text/javascript">
-	        var docID = "${docID}";
-	        var docHref = "${docHref}";
-	        var opinionFlag = "${opinionFlag}";
-	        var listTypeValue = "${listTypeValue}";
-	        var listSusin = "${listSusin}";
-	        var pDocState = "${docState}";
-	        var pOrgDocID = "${orgDocID}";
-	        var isOpinion = "${showOpinion}";
+	        var docID = "<c:out value='${docID}'/>";
+	        var docHref = "<c:out value='${docHref}'/>";
+	        var opinionFlag = "<c:out value='${opinionFlag}'/>";
+	        var listTypeValue = "<c:out value='${listTypeValue}'/>";
+	        var listSusin = "<c:out value='${listSusin}'/>";
+	        var pDocState = "<c:out value='${docState}'/>";
+	        var pOrgDocID = "<c:out value='${orgDocID}'/>";
+	        var isOpinion = "<c:out value='${showOpinion}'/>";
 	        var pDocID;
 	        var pDocHref;
 	        var pOpinionFlag;
@@ -44,31 +44,33 @@
 	
 	        var arr_userinfo = new Array();
 	        arr_userinfo[0]  = "user";
-		    arr_userinfo[1]  = "${userInfo.id}";
-		    arr_userinfo[2]  = "${userInfo.displayName}";
-		    arr_userinfo[3]  = "${userInfo.title}";
-		    arr_userinfo[4]  = "${userInfo.deptID}";
-		    arr_userinfo[5]  = "${userInfo.deptName}";
-		    arr_userinfo[6]  = "${userInfo.jikChek}";
+		    arr_userinfo[1]  = "<c:out value='${userInfo.id}'/>";
+		    arr_userinfo[2]  = "<c:out value='${userInfo.displayName}'/>";
+		    arr_userinfo[3]  = "<c:out value='${userInfo.title}'/>";
+		    arr_userinfo[4]  = "<c:out value='${userInfo.deptID}'/>";
+		    arr_userinfo[5]  = "<c:out value='${userInfo.deptName}'/>";
+		    arr_userinfo[6]  = "<c:out value='${userInfo.jikChek}'/>";
 		    arr_userinfo[7]  = "N";
-		    arr_userinfo[8]  = "${userInfo.email}";
+		    arr_userinfo[8]  = "<c:out value='${userInfo.email}'/>";
 		    arr_userinfo[9]  = "";
-		    arr_userinfo[10] = "${susinAdmin}";
-		    var pCompanyID = "${userInfo.companyID}";
-		    arr_userinfo[11]  = "${userInfo.displayName1}";
-		    arr_userinfo[12]  = "${userInfo.displayName2}";
-		    arr_userinfo[13]  = "${userInfo.title1}";
-		    arr_userinfo[14]  = "${userInfo.title2}";
-		    arr_userinfo[15]  = "${userInfo.deptName1}";
-		    arr_userinfo[16]  = "${userInfo.deptName2}";
+		    arr_userinfo[10] = "<c:out value='${susinAdmin}'/>";
+		    var pCompanyID = "<c:out value='${userInfo.companyID}'/>";
+		    arr_userinfo[11]  = "<c:out value='${userInfo.displayName1}'/>";
+		    arr_userinfo[12]  = "<c:out value='${userInfo.displayName2}'/>";
+		    arr_userinfo[13]  = "<c:out value='${userInfo.title1}'/>";
+		    arr_userinfo[14]  = "<c:out value='${userInfo.title2}'/>";
+		    arr_userinfo[15]  = "<c:out value='${userInfo.deptName1}'/>";
+		    arr_userinfo[16]  = "<c:out value='${userInfo.deptName2}'/>";
 		    
 	        pUserID = arr_userinfo[1];
 	
-	        var pHasOpinion = "${hasOpinionYN}";
+	        var pHasOpinion = "<c:out value='${hasOpinionYN}'/>";
 			var pOpinionType = "Show";
-			var pUse_Editor = "${useEditor}";
-			var approvalFlag = "${approvalFlag}";
+			var pUse_Editor = "<c:out value='${useEditor}'/>";
+			var approvalFlag = "<c:out value='${approvalFlag}'/>";
 			var orgCompanyID = "<c:out value='${orgCompanyID}'/>";
+			
+			var useExternalMailServer = "<c:out value='${useExternalMailServer}'/>";
 			
 			function btnOpinion_onclick() {
 			    //openOpinionViewUI();
@@ -93,7 +95,7 @@
 				    return;
 				}
 			
-			    if (pDocState == "015" && pOrgDocID.length >= 20 && "${listTypeValue}" == "99") {
+			    if (pDocState == "015" && pOrgDocID.length >= 20 && "<c:out value='${listTypeValue}'/>" == "99") {
 			        btnGongRam.style.display = "";
 			        pOpinionType = "";
 			    }
@@ -138,6 +140,10 @@
 			    HwpCtrl.ChangeMode(3);
 			    HwpCtrl.SetFieldFocus("doctitle");
 			    HwpCtrl.ezSetScrollPosInfo(0);
+			    
+			    if(useExternalMailServer == "NO") {
+			    	$("#btnMail").css("display","");
+			    }
 			}
 	
 	
@@ -146,6 +152,11 @@
 			}
 			
 			function btnClose_onclick() {
+				//2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
+		        if (parent.opener != null && parent.opener.getApprovalList != undefined) {
+		        	parent.opener.getApprovalList("draft");
+		        }
+			
 			    window.close();
 			}
 	
@@ -210,7 +221,7 @@
 	
 			function btnDocInfo_onclick() {
 			    var url = "/ezApprovalG/ezDocInfoView.do?docID=" + docID + "&ingFlag=APR";
-			    var feature = "status:no;dialogWidth:420px;dialogHeight:495px;help:no;scroll:no;edge:sunken;";
+			    var feature = "status:no;dialogWidth:420px;dialogHeight:540px;help:no;scroll:no;edge:sunken;";
 			    var RtnVal = window.showModalDialog(url, "", feature);
 			}
 	    </script>
@@ -222,7 +233,7 @@
 	                <div id="menu">
 	                    <ul>
 	                        <li id="btnGongRam" style="display: none"><span onclick="btnGongRam_onclick()"><spring:message code='ezApprovalG.t1442'/></span></li>
-	                        <li id="btnMail"><span onclick="return btnMail_onclick()"><spring:message code='ezApprovalG.t62'/></span></li>
+	                        <li id="btnMail" style="display:none"><span onclick="return btnMail_onclick()"><spring:message code='ezApprovalG.t62'/></span></li>
 	                        <li id="btnOpinion"><span onclick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
 	                        <li id="btnPrint"><span onclick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li>
 	                        <li id="btnDocInfo"><span onclick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>
@@ -243,19 +254,26 @@
 	        <tr>
 	            <td style="padding-bottom: 10px">
 	                <div style="height: 100%">
-	                    <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "3", "0", "${hwpToolbar}", "");</script>
+	                    <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "3", "0", "<c:out value='${hwpToolbar}'/>", "");</script>
 	                </div>
 	            </td>
 	        </tr>
 	        <tr>
 	            <td height="20">
-	                <table class="file" style="height: 70px;">
+	                <table class="file" style="height:80px;">
 	                    <tr>
 	                        <th id="btn_Attach"><spring:message code='ezApprovalG.t65'/></th>
-	                        <td>
-	                            <div id="lstAttachLink" style="height: 65px;"></div>
+	                        <td style="width:62%; border-right:1px solid #d5d5d5;">
+	                            <div id="lstAttachLink" style="height:70px;"></div>
 	                            <iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0" style="display: none;"></iframe>
 	                        </td>
+	                        <td style="width:30%;">
+								<div id="lstAttachLinkDoc" style="height:70px;"></div>
+	                        </td>
+							<td class="pos2" style="display:none;width:8%; background:#fffcfa;">
+								<a class="imgbtn imgbck" style="width:60px;"><span style="height:24px;" onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
+								<a class="imgbtn imgbck" style="width:60px;"><span style="height:24px;" onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a><br/>
+							</td>
 	                    </tr>
 	                </table>
 	            </td>

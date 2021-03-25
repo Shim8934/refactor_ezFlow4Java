@@ -43,28 +43,28 @@
 	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SelectSubTitles_Cross.js')}"></script>
 	    <script type="text/javascript">
 		    var pDocID;
-		    var approvalFlag = "${approvalFlag}";
+		    var approvalFlag = "<c:out value ='${approvalFlag}'/>";
 		    var OrderCell = "";
-		    var pUserID = "${userInfo.id}";
+		    var pUserID = "<c:out value ='${userInfo.id}'/>";
 		    var DeptID;
 		    var pGongRamDocID;
 		    var arr_userinfo = new Array();
 		    arr_userinfo[0] = "user";
-		    arr_userinfo[1] = "${userInfo.id}";
-		    arr_userinfo[2] = "${userInfo.displayName}";
-		    arr_userinfo[3] = "${userInfo.title}";
-		    arr_userinfo[4] = "${userInfo.deptID}";
-		    arr_userinfo[5] = "${userInfo.deptName}";
-		    arr_userinfo[6] = "${userInfo.jikChek}";
-		    arr_userinfo[8] = "${userInfo.email}";
-		    arr_userinfo[11] = "${userInfo.displayName1}";
-		    arr_userinfo[12] = "${userInfo.displayName2}";
-		    arr_userinfo[13] = "${userInfo.title1}";
-		    arr_userinfo[14] = "${userInfo.title2}";
-		    arr_userinfo[15] = "${userInfo.deptName1}";
-		    arr_userinfo[16] = "${userInfo.deptName2}";
-		    var companyID = "${userInfo.companyID}";
-		    var type = "${type}";
+		    arr_userinfo[1] = "<c:out value ='${userInfo.id}'/>";
+		    arr_userinfo[2] = "<c:out value ='${userInfo.displayName}'/>";
+		    arr_userinfo[3] = "<c:out value ='${userInfo.title}'/>";
+		    arr_userinfo[4] = "<c:out value ='${userInfo.deptID}'/>";
+		    arr_userinfo[5] = "<c:out value ='${userInfo.deptName}'/>";
+		    arr_userinfo[6] = "<c:out value ='${userInfo.jikChek}'/>";
+		    arr_userinfo[8] = "<c:out value ='${userInfo.email}'/>";
+		    arr_userinfo[11] = "<c:out value ='${userInfo.displayName1}'/>";
+		    arr_userinfo[12] = "<c:out value ='${userInfo.displayName2}'/>";
+		    arr_userinfo[13] = "<c:out value ='${userInfo.title1}'/>";
+		    arr_userinfo[14] = "<c:out value ='${userInfo.title2}'/>";
+		    arr_userinfo[15] = "<c:out value ='${userInfo.deptName1}'/>";
+		    arr_userinfo[16] = "<c:out value ='${userInfo.deptName2}'/>";
+		    var companyID = "<c:out value ='${userInfo.companyID}'/>";
+		    var type = "<c:out value ='${type}'/>";
 		    var RetValue;
 		    var ReturnFunction;
 	        var listveiwHeader1 = "<LISTVIEWDATA><HEADERS><HEADER><NAME><spring:message code='ezApprovalG.t401'/></NAME><WIDTH>50</WIDTH></HEADER><HEADER><NAME><spring:message code='ezApprovalG.t249'/></NAME><WIDTH>80</WIDTH></HEADER><HEADER><NAME><spring:message code='ezApprovalG.t402'/></NAME><WIDTH>60</WIDTH></HEADER><HEADER><NAME><spring:message code='ezApprovalG.t231'/></NAME><WIDTH>100</WIDTH></HEADER></HEADERS><ROWS></ROWS></LISTVIEWDATA>";
@@ -85,7 +85,7 @@
 	        var linealt14 = "<spring:message code='ezApprovalG.t322'/>";
 	        var linealt15 = "<spring:message code='ezApprovalG.t323'/>";
 	        var linealt16 = "<spring:message code='ezApprovalG.t999933'/>";
-	        var linealt17 = "<spring:message code='ezApprovalG.t1178'/>";
+			var linealt17 = "<spring:message code='ezApprovalG.t1178'/>";
 	        var Cabinet1 = "<spring:message code='ezApprovalG.t379'/>";
 	        var Cabinet2 = "<spring:message code='ezApprovalG.t572'/>";
 	        var Cabinet3 = "<spring:message code='ezApprovalG.t573'/>";
@@ -96,6 +96,8 @@
 	        var Docalt2 = "<spring:message code='ezApprovalG.t288'/>";
 	        var Docalt3 = "<spring:message code='ezApprovalG.t289'/>";
 	        var Docalt4 = "<spring:message code='ezApprovalG.t10030'/>";
+			var linealt18S = "<spring:message code='ezApprovalG.kbh01'/>";
+			var linealt18G = "<spring:message code='ezApprovalG.kbh02'/>";
 	   		window.onload = function () {
 	        	try {
 		            var ua = navigator.userAgent;
@@ -122,7 +124,7 @@
 		
 		            Tree_setconfig();
 		
-		            TreeViewinitialize(InitDeptID, "${userInfo.companyID}", "extensionAttribute2;extensionAttribute3", "${serverName}");
+		            TreeViewinitialize(InitDeptID, "<c:out value ='${userInfo.companyID}'/>", "extensionAttribute2;extensionAttribute3", "<c:out value ='${serverName}'/>");
 		
 		            var treeView = new TreeView();
 		            treeView.LoadFromID("FromTreeView");
@@ -558,7 +560,29 @@
 		        }
 		    }
 		    function btn_AprDeptTempletAdd_onclick() {
-		        try {
+		        try { 
+					var aprLineList = new ListView(); 
+					aprLineList.LoadFromID("pAPRLINE");
+
+					var allWaitFlag = aprLineList.GetDataRows()
+						.filter(function(row) {
+							return row.id.indexOf("noItems") === -1;
+						})
+						.every(function(row) {
+							return GetAttribute(row, "DATA12") === "001";
+						});
+
+					if(!allWaitFlag) {
+						if(approvalFlag === "S") {
+							var pAlertContent = linealt18S;
+						} else if(approvalFlag === "G") {
+							var pAlertContent = linealt18G;
+						}
+						OpenAlertUI(pAlertContent);
+
+						return;
+					}
+
 		            var p_CheckAprDeptTempletSN;
 		            var pAPRTemplist = new ListView();
 		            pAPRTemplist.LoadFromID("lvRecSaveList");
@@ -805,7 +829,13 @@
 		                strRows += "</CELL><CELL>";
 		                strRows += "<VALUE>" + MakeXMLString(preDeptName) + "</VALUE>";
 		                strRows += "</CELL><CELL>";
-		                strRows += "<VALUE>" + strLangAprType17 + "</VALUE>";
+		                
+		                if(approvalFlag == "G"){
+		                	strRows += "<VALUE>" + strLangDocState15 + "</VALUE>";
+		                } else {
+		                	strRows += "<VALUE>" + strLangAprType17 + "</VALUE>";
+		                }
+		                
 		                strRows += "</CELL><CELL>";
 		                strRows += "<VALUE>" + strLang72 + "</VALUE>";
 		                strRows += "</CELL><CELL><VALUE></VALUE></CELL></ROW>";
@@ -1177,7 +1207,8 @@
 	                	<table style="width:100%;table-layout: fixed">
 	                    	<tr>
 	                            <td style="text-align: left; height: 30px;">
-	                            	<input id="textUser" style="height:22px" name="textUser" onkeypress="return textUser_onkeypress()" tabindex="1">&nbsp;<a class="imgbtn imgbck" style="vertical-align: middle;"><span id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()"><spring:message code='ezApprovalG.t234'/></span></a>
+									<input id="textUser" style="height:22px" name="textUser" onkeypress="return textUser_onkeypress()" tabindex="1">&nbsp;<a class="imgbtn imgbck" style="vertical-align: middle;"><span id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()"><spring:message code='ezApprovalG.t234'/></span></a>
+									<a class="imgbtn imgbck" style="vertical-align: middle;"><span onclick="return btnAprLineSearchDept_onClick()" ><spring:message code='ezApprovalG.t250'/></span></a>
 	                            	<a class="imgbtn imgbck" style="vertical-align: middle;"><span id="btn_addDept" onclick="return btn_addDepartment()"><spring:message code='ezApproval.t1101'/></span></a>
 	                            </td>
 	                        </tr>
@@ -1245,7 +1276,7 @@
 	                            <img src="/images/ImgIcon/next.gif" height="16" alt="<spring:message code='ezApprovalG.pjj29'/>" style="vertical-align: middle" /></span></a>
 	                	</div>
 	                </h2>
-	                <div class="listview" style="margin-top: 7px; margin-left: 1px">
+	                <div class="listview" style="margin-top: 11px; margin-left: 1px">
 	                <c:if test="${approvalFlag == 'S'}">
 	                    <div id="APRLINE" style="overflow: auto; border: 0px solid #ddd; width: 730px; height: 550px; background-color: #ffffff;"></div>
 	                </c:if>
@@ -1253,7 +1284,7 @@
 	                    <div id="APRLINE" style="overflow: auto; border: 0px solid #ddd; width: 750px; height: 550px; background-color: #ffffff;"></div>
 	                </c:if>
 	                </div>
-	                <div style="text-align: right;">
+	                <div style="text-align: right; padding:4px 0px 0px 0px">
 	                	<a class="imgbtn imgbck" style="padding-right: 5px; margin-top: 5px;">
 	                    	<span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')">
 	                    		<c:if test="${approvalFlag == 'G'}">

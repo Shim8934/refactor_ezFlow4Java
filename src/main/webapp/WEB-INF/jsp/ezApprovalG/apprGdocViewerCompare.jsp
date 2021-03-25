@@ -158,7 +158,7 @@
 							<li id="showBeforeLI"><span onclick="btnShowBefore_onclick()"><spring:message code='ezApprovalG.hsbCo02'/></span></li>
 	                        <li id="showAfterLI"><span onclick="btnShowAfter_onclick()"><spring:message code='ezApprovalG.hsbCo03'/></span></li>
 	                        <li id="saveLI" style="display:none;"><span onclick="btnSave_onclick()"><spring:message code='ezApprovalG.t59'/></span></li>
-	                        <li id="printLI" style="display:none;"><span onclick="btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span> </li>
+	                        <li id="printLI" style="display:none;"><span class="icon16 popup_icon16_print" onclick="btnPrint_onclick()"></span> </li>
 	                    </ul>
 	                </div>
 	                <div id="close">

@@ -27,17 +27,17 @@
 			 border-top: 1px solid #e8e8e8;
 			 border-left: 1px solid #e8e8e8;
 			 border-right: 1px solid #e8e8e8;
-			 background-color: #fcfcfc;
+			 background-color: #f8f8fa;
 		}
 		#t2 {
 			 border-left: 1px solid #e8e8e8;
 			 border-right: 1px solid #e8e8e8;
-			 background-color: #fcfcfc;
+			 background-color: #f8f8fa;
 		}
 		#t3 {
 			 border: 1px solid #e8e8e8;
 			 border-top: 1px dotted #eee;
-			 background-color: #fcfcfc;
+			 background-color: #f8f8fa;
 		}
 		.mainlist tr th {
 			border-top:0px;
@@ -60,7 +60,7 @@
 	    var text1 = "<spring:message code='ezStatistics.t1008'/>";
 	    var text2 = "<spring:message code='ezApproval.t345'/>";
 	    var deleteTimes = 0;		    
-	    var pUse_Editor = "${useEditor}";
+	    var pUse_Editor = "<c:out value='${useEditor}'/>";
 	    
 	    var CurPage = "";
 		var totalPage = "";
@@ -81,6 +81,8 @@
 		//2018-10-16 김보미 - 프로그래스바
 		var startTime = "";
 		var endTime = "";
+		var pSourceCompanyID = "";
+		var pTargetCompanyID = "";
 		
 	    function window_onload() {
 	   	
@@ -181,7 +183,7 @@
 	    		changeYear: true,
 	    		autoSize: true,
 	    		showOn: "both",
-	    		buttonImage: "/images/ImgIcon/calendar-month.gif",
+	    		buttonImage: "/images/ImgIcon/calendar-month.png",
 	    		buttonImageOnly: true,
 	    		maxDate: 0,
 	    		onSelect: function(selected) {
@@ -195,7 +197,7 @@
 	    		changeYear: true,
 	    		autoSize: true,
 	    		showOn: "both",
-	    		buttonImage: "/images/ImgIcon/calendar-month.gif",
+	    		buttonImage: "/images/ImgIcon/calendar-month.png",
 	    		buttonImageOnly: true,
 	    		maxDate: 0,
 	    		onSelect: function(selected) {
@@ -274,8 +276,7 @@
 			var strtext;
 			var PagingHTML = "";
 			$("#tblpageRayer").html("");
-			$("#listInfo").html(" &nbsp;[<spring:message code='main.t252'/><span style='color:#017BEC;'> "
-					+ totalCount + " </span><spring:message code='ezSystem.kyj2'/>]")
+			$("#listInfo").html("&nbsp;&nbsp;<span style='color:#017BEC;'>" + totalCount + " </span>");
 			strtext = "<div class='pagenavi'>";
 			PagingHTML += strtext;
 			var pageNum = CurPage;
@@ -460,7 +461,7 @@
 	        }
 
 	        selectelem = elem;
-	        elem.style.backgroundColor = "#edf4fd";
+	        elem.style.backgroundColor = "#f1f8ff";
 	        $("input[id='" + $(elem).attr("id") + "']").prop("checked", true);
 
 	        // 목록화면 나오고 처음 선택할 때 strMoveListIDInfo 값 셋팅
@@ -478,7 +479,7 @@
 					strMoveListIDInfo = "";
 
 					$(":checkbox[name=myCheckbox]").prop("checked", true);
-					$(".row_body").css("background", "#edf4fd");
+					$(".row_body").css("background", "#f1f8ff");
 
 					$(":checkbox[name=myCheckbox]:checked").each(function(){
 						deleteListID.push($(this).attr("id") + ";")
@@ -596,10 +597,12 @@
 	            if (typeof (retVal) != "undefined") {
 	                document.getElementsByName("SDeptName")[0].id = retVal[0];
 	                document.getElementsByName("SDeptName")[0].value = retVal[1];
+	                pSourceCompanyID = retVal[2]; // 보낼부서의 회사ID를 설정
 	                pChackYN == "FALSE"
 	                if(document.getElementsByName("SDeptName")[0].id == ""){
 	                	document.getElementsByName("drafterdept")[0].id = "";
 		                document.getElementsByName("drafterdept")[0].value = "";
+		                pSourceCompanyID = "";
 	                }
 	            }
 	            Flag = "SDeptName";
@@ -612,6 +615,7 @@
 	            	if(retVal[0] != "" && retVal[1] !="") {
  	            		document.getElementsByName("SDeptName")[0].id = "";
  		                document.getElementsByName("SDeptName")[0].value = "";
+						pSourceCompanyID = "";
 	            		alert("<spring:message code='ezApprovalG.t1788'/>");
 	            	}
 	            	//$('#DocCompleteListBody').empty().append("<tr><td colspan='11' style='text-align:center;'>"+text1+"</td></tr>");
@@ -670,6 +674,7 @@
 	        	 if (CrossYN()) {
 	        		 	approval_admin_popup_choicedept_dialogArguments[0] = "one";
 		                approval_admin_popup_choicedept_dialogArguments[1] = bt_OK_onclick_Complete;
+		                approval_admin_popup_choicedept_dialogArguments[2] = pSourceCompanyID;
 		                var OpenWin = window.open("/admin/ezApprovalG/approvGAdminPopupChoiceDept.do", "approvalGAdminPopupChoiceDept", GetOpenWindowfeature(500, 180));
 		                try { OpenWin.focus(); } catch (e) { }
 		            } else {
@@ -722,6 +727,7 @@
 	        	 if (CrossYN()) {
 	        		 	approval_admin_popup_choicedept_dialogArguments[0] = "all";
 		                approval_admin_popup_choicedept_dialogArguments[1] = bt_All_onclick_Complete;
+		                approval_admin_popup_choicedept_dialogArguments[2] = pSourceCompanyID;
 		                var OpenWin = window.open("/admin/ezApprovalG/approvGAdminPopupChoiceDept.do", "approvalGAdminPopupChoiceDept", GetOpenWindowfeature(500, 180));
 		                try { OpenWin.focus(); } catch (e) { }
 		            } else {
@@ -806,7 +812,7 @@
 		        }
 
 		        selectelem = elem;
-		        elem.style.backgroundColor = "#edf4fd";
+		        elem.style.backgroundColor = "#f1f8ff";
 		        $("input[id='" + $(elem).attr("id") + "']").prop("checked", true);
 
 		        // 목록화면 나오고 처음 선택할 때 strMoveListIDInfo 값 셋팅
@@ -859,13 +865,28 @@
 		        $('#DocCompleteListBody').empty().append("<tr><td colspan='10' style='text-align:center;'>"+text1+"</td></tr>");
 		        makePageSelPage();
 		    }
+			
+			function selectCompanyID() {
+				if (P_CompanyID != document.getElementById("ListCompany").value) {
+					P_CompanyID = document.getElementById("ListCompany").value;
+					all_keyword_Clear();
+				}
+			}
 	    </script>
 	</head>
 	
 	<body class="mainbody" onLoad="javascript:window_onload()">
-		<h1><spring:message code='ezApprovalG.t1678'/><span id="listInfo"></span></h1>
+		<h1><spring:message code='ezApprovalG.t1678'/><span id="listInfo"></span>
+			<%-- 2020-10-20 홍승비 - 회사선택 셀렉트박스 추가 --%>
+			<span class="title_bar"><img src="/images/name_bar.gif"></span>
+			<select class="companySelect" id="ListCompany" onChange="selectCompanyID()">
+				<c:forEach var="item" items="${list}">
+					<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+				</c:forEach>
+			</select>
+		</h1>
 		<span style="float:right; margin-top: -20px;"><spring:message code='ezApproval.psb01'/></span>
-		<input type="hidden" id="ListCompany" value="${userInfo.companyID }" >
+<%-- 		<input type="hidden" id="ListCompany" value="${userInfo.companyID }" > --%>
 		<!-- 2018-08-02 김보미 - 검색테이블 ui 수정 -->	
 		<!-- <table style="width:100%;">		
 			<tr>
@@ -1018,7 +1039,7 @@
 			</tr>
 		</table>
 		
-		<div id="contentlist" style="width: 100%; height: 610px; overflow: auto;">
+		<div id="contentlist" style="width: 100%; height: 610px; overflow: auto; margin-top:5px">
 			<table class="mainlist" style="width:100%;">
 				<thead>
 					<tr id = "doclist">
@@ -1046,7 +1067,7 @@
 			</table>
 		</div>
 		
-		<div id="tblPageRayer" style="padding-top: 10px;"></div>
+		<div id="tblPageRayer"></div>
 		
 	    <!-- 2018-10-16 김보미 - 프로그레스바 -->
 	    <div style="width:100%;height:100%;position:absolute;top:0;left:0;display:none;z-index:5000;" id="mailPanel" >&nbsp;</div>

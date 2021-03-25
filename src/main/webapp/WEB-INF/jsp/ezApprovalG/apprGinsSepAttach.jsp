@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -26,8 +27,8 @@
 		    var g_CabinetID;
 		    var g_InitFlag="";
 		    var g_TaskCode;
-		    var CompanyID = "${userInfo.companyID}";
-		    var UserLang = "${userInfo.lang}";
+		    var CompanyID = "<c:out value = '${userInfo.companyID}'/>";
+		    var UserLang = "<c:out value = '${userInfo.lang}'/>";
 		    var RetValue;
 		    var ReturnFunction;
 		    var ext = "";
@@ -153,14 +154,15 @@
 		
 		        var url = "/ezApprovalG/regSepAttach.do";
 		
-		        if (CrossYN() && ext != "hwp") {
+				// 한글기안이 아닌 경우, 추가/변경 > 철변경 시의 레이어 팝업 UI가 깨지지 않도록 높이 조절
+		        if (CrossYN()) {
 		            regsepattach_cross_dialogArguments[0] = para;
 		            regsepattach_cross_dialogArguments[1] = btnAddList_onclick_Complete;
 		            
 		            DivPopUpShow(880, 615, url);
 		        }
 		        else {
-		            var feature = "dialogWidth:830px;dialogHeight:615px;scroll:no;resizable:no;status:no; help:no;edge:sunken;";
+		            var feature = "dialogWidth:830px;dialogHeight:500px;scroll:no;resizable:no;status:no; help:no;edge:sunken;";
 		            //한글기안에서 분리첨부>추가창이 잘리는현상때문에 주석처리 2018-07-27 강민수92
 // 		            feature = feature + GetShowModalPosition(410, 555);
 					
@@ -290,7 +292,7 @@
 		        
 		        var Data = SelectSingleNodeValue(InfoXml.documentElement, "NUMOFPAGE");
 		        if (Data == "")
-		            objRow.cells[4].innerHTML = " ";
+		            objRow.cells[4].innerHTML = "";
 		        else
 		            objRow.cells[4].innerHTML = Data;
 		
@@ -324,14 +326,15 @@
 		
 		            var url = "/ezApprovalG/regSepAttach.do";
 		
-		            if (CrossYN() && ext != "hwp") {
+		            // 한글기안이 아닌 경우, 추가/변경 > 철변경 시의 레이어 팝업 UI가 깨지지 않도록 높이 조절
+		            if (CrossYN()) {
 		                regsepattach_cross_dialogArguments[0] = para;
 		                regsepattach_cross_dialogArguments[1] = btnModList_onclick_Complete;
 		
 		                DivPopUpShow(880, 615, url);
 		            }
 		            else {
-		                var feature = "dialogWidth:840px;dialogHeight:580px;scroll:no;resizable:no;status:no; help:no ";
+		                var feature = "dialogWidth:840px;dialogHeight:500px;scroll:no;resizable:no;status:no; help:no ";
 // 		                feature = feature + GetShowModalPosition(410, 555);
 		
 		                if (url != "")
@@ -450,7 +453,7 @@
 		            createNodeAndAppandNodeText(InfoXml, Cell, node, "DATA3", GetAttribute(selRow, "DATA3"));
 		
 		            Cell = createNodeAndAppandNode(InfoXml, Row, Cell, "CELL");
-		            createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", ReplaceText(selRow.cells[1].innerHTML, "&nbsp;", ""));
+		            createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", ReplaceText(selRow.cells[1].innerHTML, "&nbsp;", " "));
 		
 		            Cell = createNodeAndAppandNode(InfoXml, Row, Cell, "CELL");
 		            createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", selRow.cells[2].innerHTML);
@@ -566,7 +569,7 @@
 			  <li id="btnDelList"><span style="padding-top:1px" onClick="return btnDelList_onclick()"><spring:message code='ezApprovalG.t266'/></span></li>
 	        </ul>
 			<ul id="trChangeCabinet" style="display:none">
-	          <li id="btnSelectCabinet"><span onClick="return btnSelectCabinet_onclick()"><spring:message code='ezApprovalG.t941'/></span></li>
+	          <li id="btnSelectCabinet"><span onClick="return btnSelectCabinet_onclick()"><spring:message code='ezApprovalG.kmsg03'/></span></li>
 	        </ul>
 		</div>
 		<div id="close">

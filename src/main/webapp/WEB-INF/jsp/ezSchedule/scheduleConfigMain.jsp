@@ -11,6 +11,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>		
 	    <script type="text/javascript">
+	    	var flag = "<c:out value='${flag}' />";
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -20,7 +21,12 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
-		        document.getElementById("1tab1").onclick();
+		        if(flag === "schedule") {
+		        	document.getElementById("1tab1").onclick();	
+		        } else {
+		        	document.getElementById("1tab3").onclick();
+		        }
+		        
 		        //ChangeTab(document.getElementById("1tab1"));
 		        window_resize();	
 		    }
@@ -74,6 +80,7 @@
 	
 		        switch (pSelectTab) {
 		            case "scheduleTab": schedule_ini(); break;
+		            case "scheduleMailNotiTab": schedule_noti(); break;
 		            case "taskTab": task_ini(); break;
 		            case "taskGeneral": task_general(); break;
 		            case "addressTab": address_ini(); break;
@@ -100,19 +107,36 @@
 		    function Google_ini() {
 	            document.getElementById("mainframe").src = "schedule_google.aspx";
 		    }
+		    
+		    function schedule_noti() {
+	            document.getElementById("mainframe").src = "/ezSchedule/scheduleMailNotiConfig.do";
+		    }
 		</script>
 	</head>
 	<body class="mainbody">
-		<h1><spring:message code='ezSchedule.t00010' /></h1>
+		<c:choose>
+       		<c:when test="${flag eq 'schedule'}">
+       			<h1><spring:message code='ezPersonal.t999900007' /></h1>		
+       		</c:when>
+       		<c:otherwise>
+       			<h1><spring:message code='ezTask.hyh001' /></h1>	
+       		</c:otherwise>
+       	</c:choose>
    		<div class="portlet_tabpart01" style="margin-top:3px;text-align:right">
        		<div class="portlet_tabpart01_top" id="tab1">
-           		<p><span id="1tab1" divname="scheduleTab"><spring:message code='ezSchedule.t133' /></span></p>
+       			<c:choose>
+       				<c:when test="${flag eq 'schedule'}">
+       					<p><span id="1tab1" divname="scheduleTab"><spring:message code='ezPersonal.yej01' /></span></p>		
+						<p><span id="1tab4" divname="scheduleMailNotiTab"><spring:message code='ezPersonal.t402' /></span></p>
+       				</c:when>
+       				<c:otherwise>
+       					<p><span id="1tab3" divname="taskTab"><spring:message code='ezPersonal.yej01' /></span></p>	
+       				</c:otherwise>
+       			</c:choose>
            		<%-- 구글캘린더 --%>
            		<%-- <%if(pUseGoogleCalrendar == "YES"){ %>
            				<p><span id="1tab2" divname="googleTab"><%=RM.GetString("t401")%></span></p><%
            		} %> --%>
-
-           		<p><span id="1tab3" divname="taskTab"><spring:message code='ezSchedule.t1005' /></span></p>
            		<%-- <p><span id="1tab4" divname="taskGeneral"><spring:message code='ezTask.jsh12' /></span></p> --%>
        		</div>
    		</div>    

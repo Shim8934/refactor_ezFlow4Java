@@ -28,7 +28,11 @@
 		</div>
 		
 		<div class="box" style="WIDTH: 400px">
-			<iframe src="/ezCommunity/pollETCTable.do?questionID=<c:out value = '${questionID }' />&etc=<c:out value = '${etc }' />" scrolling="auto" frameborder="0" id="etc" style="HEIGHT: 255px; WIDTH: 400px;" ></iframe>
+			<c:url value="/ezCommunity/pollETCTable.do" var="url">
+				<c:param name="questionID" value='${questionID}'></c:param>
+				<c:param name="etc" value='${etc}'></c:param>
+			</c:url>
+			<iframe src="${url}" scrolling="auto" frameborder="0" id="etc" style="HEIGHT: 255px; WIDTH: 400px;" ></iframe>
 		</div>
 		
 		<div class="btnposition btnpositionNew">

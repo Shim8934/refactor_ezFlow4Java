@@ -19,35 +19,36 @@
 		<script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
 		
 	    <script type="text/javascript">
-	        var pDocID = "${docID}";
-	        var pDocHref = "${docHref}";
-	        var pUserID = "${userInfo.id}";
+	        var pDocID = "<c:out value ='${docID}'/>";
+	        var pDocHref = "<c:out value ='${docHref}'/>";
+	        var pUserID = "<c:out value ='${userInfo.id}'/>";
 	        var flag = false;
 	        var flag2 = false;
 	        var newDocID = "";
 	        var stampFlag = false;
 	        var NostampFlag = false;
 	        var modeflag = false;
-	        var companyID = "${userinfo.companyID}"
+	        var companyID = "<c:out value ='${userInfo.companyID}'/>";
 			var arr_userinfo = new Array();
 			var maxwidth = 659;
+			var orgCompanyID = "<c:out value ='${userInfo.companyID}'/>";
 			
 			var arr_userinfo = new Array();
 		    arr_userinfo[0] = "user";
-		    arr_userinfo[1]  = "${userInfo.id}";
-		    arr_userinfo[2]  = "<c:out value = '${userInfo.displayName} '/>";
-		    arr_userinfo[3]  = "<c:out value = '${userInfo.title} '/>";
-		    arr_userinfo[4]  = "<c:out value = '${userInfo.deptID} '/>";
-		    arr_userinfo[5]  = "<c:out value = '${userInfo.deptName} '/>";
-		    arr_userinfo[6]  = "<c:out value = '${userInfo.jikChek} '/>";
-		    arr_userinfo[8]  = "<c:out value = '${userInfo.email} '/>";
+		    arr_userinfo[1]  = "<c:out value ='${userInfo.id}'/>";
+		    arr_userinfo[2]  = "<c:out value = '${userInfo.displayName}'/>";
+		    arr_userinfo[3]  = "<c:out value = '${userInfo.title}'/>";
+		    arr_userinfo[4]  = "<c:out value = '${userInfo.deptID}'/>";
+		    arr_userinfo[5]  = "<c:out value = '${userInfo.deptName}'/>";
+		    arr_userinfo[6]  = "<c:out value = '${userInfo.jikChek}'/>";
+		    arr_userinfo[8]  = "<c:out value = '${userInfo.email}'/>";
 	        arr_userinfo[9] = companyID;
-	        arr_userinfo[11]  = "<c:out value = '${userInfo.displayName1} '/>";
-		    arr_userinfo[12]  = "<c:out value = '${userInfo.displayName2} '/>";
-		    arr_userinfo[13]  = "<c:out value = '${userInfo.title1} '/>";
-		    arr_userinfo[14]  = "<c:out value = '${userInfo.title2} '/>";
-		    arr_userinfo[15]  = "<c:out value = '${userInfo.deptName1} '/>";
-		    arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2} '/>";
+	        arr_userinfo[11]  = "<c:out value = '${userInfo.displayName1}'/>";
+		    arr_userinfo[12]  = "<c:out value = '${userInfo.displayName2}'/>";
+		    arr_userinfo[13]  = "<c:out value = '${userInfo.title1}'/>";
+		    arr_userinfo[14]  = "<c:out value = '${userInfo.title2}'/>";
+		    arr_userinfo[15]  = "<c:out value = '${userInfo.deptName1}'/>";
+		    arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2}'/>";
 	
 	        var is_Enc = "NONE";
 	        var isExternal = false;
@@ -599,16 +600,26 @@
 	        <tr>
 	            <td class="pad1">
 	                <div style="height: 100%">
-	                    <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "3", "0", "${hwpToolbar}", "1");</script>
+	                    <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "3", "0", "<c:out value ='${hwpToolbar}'/>", "1");</script>
 	                </div>
 	            </td>
 	        </tr>
 	        <tr>
 	            <td height="20">
-	                <table class="file">
+	                <table class="file" style="height:80px;">
 	                    <tr>
-	                        <th><spring:message code='ezApprovalG.t65'/></th>
-	                        <td><div id="lstAttachLink"></div></td>
+	                        <th id="btn_Attach"><spring:message code='ezApprovalG.t65'/></th>
+	                        <td style="width:62%; border-right:1px solid #d5d5d5;">
+	                            <div id="lstAttachLink" style="height:70px;"></div>
+	                            <iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0" style="display: none;"></iframe>
+	                        </td>
+	                        <td style="width:30%;">
+								<div id="lstAttachLinkDoc" style="height:70px;"></div>
+	                        </td>
+							<td class="pos2" style="display:none;width:8%; background:#fffcfa;">
+								<a class="imgbtn imgbck" style="width:60px;"><span style="height:24px;" onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
+								<a class="imgbtn imgbck" style="width:60px;"><span style="height:24px;" onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a><br/>
+							</td>
 	                    </tr>
 	                </table>
 	            </td>

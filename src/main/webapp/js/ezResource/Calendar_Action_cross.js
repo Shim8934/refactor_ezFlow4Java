@@ -387,7 +387,11 @@ function tableListControl_Week()
                     var holidayName = "";
                     var holidayName2 = "";
                     
-                    for (var k = 0; k < memorial.length; k++) {      
+                    for (var k = 0; k < memorial.length; k++) {    
+                    	// 윤달일 때 기념일 안나타나도록 수정
+                        if(LunarDate.leapMonth == 1 && memorial[k].solarLunar == 2) {
+                        	continue;
+                        }
                     	if(k == memorial.length-1) {
                         	holidayName += memorial[k].name;
                         }
@@ -400,6 +404,10 @@ function tableListControl_Week()
                     }
                     
                     for (var k = 0; k < yearmemorial.length; k++) {
+                    	// 윤달일 때 기념일 안나타나도록 수정
+                        if(LunarDate.leapMonth == 1 && yearmemorial[k].solarLunar == 2) {
+                        	continue;
+                        }
                     	if(k == yearmemorial.length-1) {
                         	holidayName2 += yearmemorial[k].name;
                         }
@@ -494,7 +502,12 @@ function tableListControl_Week()
                     var holidayName = "";
                     var holidayName2 = "";
                     
-                    for (var k = 0; k < memorial.length; k++) {      
+                    for (var k = 0; k < memorial.length; k++) {  
+                    	// 윤달일 때 기념일 안나타나도록 수정
+                        if(LunarDate.leapMonth == 1 && memorial[k].solarLunar == 2) {
+                        	continue;
+                        }
+                        
                     	if(k == memorial.length-1) {
                         	holidayName += memorial[k].name;
                         }
@@ -507,6 +520,11 @@ function tableListControl_Week()
                     }
                     
                     for (var k = 0; k < yearmemorial.length; k++) {
+                    	// 윤달일 때 기념일 안나타나도록 수정
+                        if(LunarDate.leapMonth == 1 && yearmemorial[k].solarLunar == 2) {
+                        	continue;
+                        }
+                        
                     	if(k == yearmemorial.length-1) {
                         	holidayName2 += yearmemorial[k].name;
                         }
@@ -572,20 +590,22 @@ function tableListControl_Week()
             _mtd.setAttribute("class", "weektd_01");
             _mtd.setAttribute("DATA1", title_name[k].split("/")[0]);
             _mtd.setAttribute("DATA2", title_name[k].split("/")[1]);
-            _mtd.setAttribute("title", _mtd.getAttribute("DATA2"));
+            _mtd.setAttribute("title", _mtd.getAttribute("DATA2").replace(/&#40;/gi, "\(").replace(/&#41;/gi, "\)"));
             _mtd.align = "left";
             _mtd.style.height = "60px";
             //_mtd.onselectstart = "return false";
             _mtd.onselectstart = function () { return false; };
+            _mtd.setAttribute("onclick", "newSchedule_onclick(event)");
             _mtd.setAttribute("ondblclick", "newSchedule_onclick(event)");
             //_mtd.ondblclick = new Function("newSchedule_onclick(event);");
             if(k == 0) {
             	_mtd.style.borderTop = "0px";
             }
-            if(title_name[k].split("/")[2] == "1")
-                _mtd.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/calendar/icon_resource_ok.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1];
+            if(title_name[k].split("/")[2].substring(0,1) == "1")
+                //_mtd.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/calendar/icon_resource_ok.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1];
+            	_mtd.innerHTML = "<span class='sub_iconLNB tree_resource_ok' style='margin-top:0px' onclick='showRes(" + title_name[k].split("/")[0] + ")'></span>&nbsp;" + title_name[k].split("/")[1];
             else
-                _mtd.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/OrganTree_cross/ic-Item.gif'  style='vertical-align:bottom;margin-right:3px'>" + title_name[k].split("/")[1];
+                _mtd.innerHTML = "<span class='sub_iconLNB tree_resource_standard' style='margin-top:0px' onclick='showRes(" + title_name[k].split("/")[0] + ")'></span>&nbsp;" + title_name[k].split("/")[1];
             _mtr2.appendChild(_mtd);
             
             if (DefaultView == 0) { //일요일시작
@@ -672,8 +692,10 @@ function tableListControl_Week()
                 var approveflag_name = "";
                 if (getNodeText(xmldom.getElementsByTagName("approveFlag")[j]) == 1)
                     approveflag_name = "icon_02";
-                else
+                else if (getNodeText(xmldom.getElementsByTagName("approveFlag")[j]) == 0)
                     approveflag_name = "icon_01";
+                else 
+                	approveflag_name = "icon_03";
 
                 var Content_Sp_Start = getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[1].split(":");
                 var Content_Sp_End = getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[1].split(":");
@@ -683,15 +705,18 @@ function tableListControl_Week()
                 var _tr = document.createElement("TR");
                 var _td = document.createElement("TD");
                 var _span = document.createElement("SPAN");
+                var _span2 = document.createElement("SPAN");
 
                 _table.setAttribute("style", "width:100%;text-align:left;table-layout:fixed;margin-bottom:5px; white-space:nowrap; overflow:hidden;");
 
                 _td.rowSpan = "2";
-                var tdwidth = 3;
+                var tdwidth = 22;
                 if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1)
                     tdwidth = 18;
                 _td.style.width = tdwidth + "px";
-                _td.setAttribute("class", approveflag_name);
+                _td.style.verticalAlign = "top";
+                _span2.setAttribute("class", approveflag_name);
+                _td.appendChild(_span2);
                 _tr.appendChild(_td);
 
                 _td = document.createElement("TD");
@@ -821,8 +846,10 @@ function makeTable(xmldom, pNum, dayType) {
     var approveflag_name = "";
     if (getNodeText(xmldom.getElementsByTagName("approveFlag")[pNum]) == 1)
         approveflag_name = "icon_02";
-    else
+    else if (getNodeText(xmldom.getElementsByTagName("approveFlag")[pNum]) == 0)
         approveflag_name = "icon_01";
+    else
+    	approveflag_name = "icon_03";
 
     var Content_Sp_Start = getNodeText(xmldom.getElementsByTagName("dtstart")[pNum]).split("T")[1].split(":");
     var Content_Sp_End = getNodeText(xmldom.getElementsByTagName("dtend")[pNum]).split("T")[1].split(":");
@@ -831,15 +858,18 @@ function makeTable(xmldom, pNum, dayType) {
     var _tr = document.createElement("TR");
     var _td = document.createElement("TD");
     var _span = document.createElement("SPAN");
+    var _span2 = document.createElement("SPAN");
 
     _table.setAttribute("style", "width:100%;text-align:left;table-layout:fixed;margin:0; white-space:nowrap; overflow:hidden;");
 
     _td.rowSpan = "2";
-    var tdwidth = 3;
+    var tdwidth = 22;
     if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1)
         tdwidth = 18;
     _td.style.width = tdwidth + "px";
-    _td.setAttribute("class", approveflag_name);
+    _td.style.verticalAlign = "top";
+    _span2.setAttribute("class", approveflag_name);
+    _td.appendChild(_span2);
     _tr.appendChild(_td);
 
     _td = document.createElement("TD");
@@ -1018,12 +1048,7 @@ function tableListControl_today() {
         var TodayDatename = datanameweek(sz_Year, sz_Month + 1, sz_Date, "YES");
 
         var current_day = new Date(TodayDatename);
-        if (current_day.getDay() == "6")
-            document.getElementById("divViewHeader").style.color = "rgb(0, 72, 149)";
-        else if (current_day.getDay() == "0")
-            document.getElementById("divViewHeader").style.color = "#ee1c25";
-        else
-            document.getElementById("divViewHeader").style.color = "";
+        
 
        //baonk added    
         if (current_day.getFullYear() > 1800 && current_day.getFullYear() <= 2101) {               	                                             
@@ -1035,23 +1060,35 @@ function tableListControl_today() {
             var yearmemorial = yearmemorialDayCheck(current_day, LunarDate);                   
 
             var isholiday = false;
-            for (var k = 0; k < memorial.length; k++) {                    	
-                if (memorial[k].holiday) {
-                    isholiday = true;                    
-                }
-            }
-            for (var k = 0; k < yearmemorial.length; k++) {
-                if (yearmemorial[k].holiday) {
-                    isholiday = true;                    
-                }
-            }
-            if (isholiday) {            	
+	            for (var k = 0; k < memorial.length; k++) {      
+	            	// 윤달일 때 기념일 안나타나도록 수정
+	                if(LunarDate.leapMonth == 1 && memorial[k].solarLunar == 2) {
+	                	continue;
+	                }
+	                if (memorial[k].holiday) {
+	                    isholiday = true;                    
+	                }
+	            }
+	            for (var k = 0; k < yearmemorial.length; k++) {
+	            	// 윤달일 때 기념일 안나타나도록 수정
+	                if(LunarDate.leapMonth == 1 && yearmemorial[k].solarLunar == 2) {
+	                	continue;
+	                }
+	                if (yearmemorial[k].holiday) {
+	                    isholiday = true;                    
+	                }
+	            }
+            if (current_day.getDay() == "0" || isholiday)
             	document.getElementById("divViewHeader").style.color = "#ee1c25";
-            }
+            	//document.getElementById("divViewHeader").style.color = "";
+            else if (current_day.getDay() == "6")
+            	document.getElementById("divViewHeader").style.color = "rgb(0, 72, 149)";
+            	//document.getElementById("divViewHeader").style.color = "";
+            else
+                document.getElementById("divViewHeader").style.color = "black";
         }                
         //end
         
-
         setNodeText(document.getElementById("divViewHeader"),datanameweek(sz_Year, sz_Month + 1, sz_Date, "HEARDER"));
         var _Table = document.createElement("TABLE");
         _Table.setAttribute("class", "table_layout");
@@ -1086,15 +1123,18 @@ function tableListControl_today() {
             _TD.setAttribute("DATA1", title_name[k].split("/")[0]);
             _TD.setAttribute("DATA2", title_name[k].split("/")[1]);
             _TD.setAttribute("title", _TD.getAttribute("DATA2"));
+            _TD.setAttribute("onclick", "newSchedule_onclick(event)");
             _TD.setAttribute("ondblclick", "newSchedule_onclick(event)");
             
             _TD.align = "left";
             _TD.onselectstart = function () { return false; };
 
             if (title_name[k].split("/")[2] == "1")
-                _TD.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/calendar/icon_resource_ok.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1];
+                //_TD.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/calendar/icon_resource_ok.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1];
+            	_TD.innerHTML = "<span class='sub_iconLNB tree_resource_ok' style='margin-top:0px' onclick='showRes(" + title_name[k].split("/")[0] + ")'></span>&nbsp;" + title_name[k].split("/")[1];
             else
-                _TD.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/OrganTree_cross/ic-Item.gif' style='vertical-align:bottom;margin-right:3px'>" + title_name[k].split("/")[1];
+                //_TD.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/OrganTree_cross/ic-Item.gif' style='vertical-align:bottom;margin-right:3px'>" + title_name[k].split("/")[1];
+            	_TD.innerHTML = "<span class='sub_iconLNB tree_resource_standard' style='margin-top:0px' onclick='showRes(" + title_name[k].split("/")[0] + ")'></span>&nbsp;" + title_name[k].split("/")[1];
             
             _TD.style.verticalAlign = "middle";
             _Tr2.appendChild(_TD);
@@ -1287,9 +1327,11 @@ function tableListControl_today() {
                         _TD.onselectstart = function () { return false; };
 
                         if (title_name[k].split("/")[2] == "1")
-                            _TD.innerHTML = "<img src='/images/calendar/icon_resource_no.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1] + "[ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + " ]";
+                            //_TD.innerHTML = "<img src='/images/calendar/icon_resource_no.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1] + "[ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + " ]";
+                        	_TD.innerHTML = "<span class='sub_iconLNB tree_resource_no' style='margin-top:0px'></span>&nbsp;" + title_name[k].split("/")[1] + "[ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + " ]";
                         else
-                            _TD.innerHTML = "<img src='/images/OrganTree_cross/ic-Item.gif' style='vertical-align:bottom;margin-right:3px'>" + title_name[k].split("/")[1] + "[ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + " ]";
+                            //_TD.innerHTML = "<img src='/images/OrganTree_cross/ic-Item.gif' style='vertical-align:bottom;margin-right:3px'>" + title_name[k].split("/")[1] + "[ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + " ]";
+                        	_TD.innerHTML = "<span class='sub_iconLNB tree_resource_ok' style='margin-top:0px'></span>&nbsp;" + title_name[k].split("/")[1] + "[ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + " ]";
                         
                         _TD.style.verticalAlign = "middle";
                         _Tr2.appendChild(_TD);
@@ -1566,7 +1608,7 @@ function showTooltip_MouseOver(obj, e) {
     tTable.setAttribute("border", "0");
     tTable.setAttribute("width", "100%");
     tTh.setAttribute("scope", "col");
-    tTh.style.background = "#edf4fd";
+    tTh.style.background = "#f1f8ff";
     tTh.style.border = "1px solid #d1ddec";
     setNodeText(tTh,GetAttribute(obj,"subject").split("&apos;").join("'"));
     tTr.appendChild(tTh);
@@ -1591,19 +1633,34 @@ function showTooltip_MouseOver(obj, e) {
     sTd.className = "individual";
 
     var sSpan = document.createElement("SPAN");
-    var _img = document.createElement("IMG");
+    //var _img = document.createElement("IMG");
     if (GetAttribute(obj,"approveFlag") == "1") {
-        _img.src = "/images/calendar/icon_resource_ok.png"
-        _img.style.verticalAlign = "bottom";
-        sSpan.appendChild(_img);
+        //_img.src = "/images/calendar/icon_resource_ok.png"
+        //_img.style.verticalAlign = "bottom";
+    	//sSpan.appendChild(_img);
+    	sSpan.className = "sub_iconLNB tree_resource_ok";
+    	sSpan.style.marginTop = "0px";
+    	sSpan.style.marginRight = "3px";
         sTd.appendChild(sSpan);
-        sTd.innerHTML += strLang307;
+        sTd.innerHTML += strLang323;
+    } else if (GetAttribute(obj,"approveFlag") == "0") {
+        //_img.src = "/images/calendar/icon_resource_no.png"
+        //_img.style.verticalAlign = "bottm";
+        //sSpan.appendChild(_img);
+    	sSpan.className = "sub_iconLNB tree_resource_no";
+    	sSpan.style.marginTop = "0px";
+    	sSpan.style.marginRight = "3px";
+        sTd.appendChild(sSpan);
+        sTd.innerHTML += strLang321;
     } else {
-        _img.src = "/images/calendar/icon_resource_no.png"
-        _img.style.verticalAlign = "bottm";
-        sSpan.appendChild(_img);
+    	 //_img.src = "/images/calendar/icon_resource_no.png"
+        //_img.style.verticalAlign = "bottm";
+        //sSpan.appendChild(_img);
+    	sSpan.className = "sub_iconLNB tree_resource_refuse";
+    	sSpan.style.marginTop = "0px";
+    	sSpan.style.marginRight = "3px";
         sTd.appendChild(sSpan);
-        sTd.innerHTML += strLang308;
+        sTd.innerHTML += strLang322;
     }
     sTr.appendChild(sTd);
     sTable.appendChild(sTr);

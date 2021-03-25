@@ -100,7 +100,7 @@
 		        var filename = "";
 		        var filepath = "";
 	
-		        xmlhttp.open("POST", "/ezCommunity/getItemAttachments.do?itemID=" + strItemID, false);
+		        xmlhttp.open("GET", "/ezCommunity/getItemAttachments.do?itemID=" + encodeURIComponent(strItemID), false);
 		        xmlhttp.send();
 	
 		        xmldom.async = false;
@@ -148,7 +148,7 @@
 		    function SaveItem() {
 		    	var strArray = document.getElementById('txtPhotoFile').value.split('.'); 
 		    	var mimeType = strArray[strArray.length-1].toLowerCase();
-		    	if (mimeType != "gif" && mimeType != "jpg" && mimeType != "png" && mimeType != "jpeg") {
+		    	if (mimeType != "gif" && mimeType != "jpg" && mimeType != "png" && mimeType != "jpeg" && mimeType != "bmp") {
 		    		alert(strLang85);
 		    		return;
 		    	} 

@@ -28,9 +28,14 @@
 		</style>
 		
 		<script type="text/javascript">
+			var primaryLang = "${primaryLang}";
 			window.onload = function () {
 				if (MACSAFARIYN()) {
 					window.resizeTo(420, 480);
+				}
+				
+				if (primaryLang == '3') {
+					window.resizeTo(500, 645);
 				}
 			}
 			
@@ -90,7 +95,7 @@
 	<body class = "popup" id = "mainbody">
 		<form method = "POST">
 			<div id="normalScreen">
-			    <div id="menu">
+			    <div id="menu" style="margin-top:7px;margin-bottom:19px;">
 					<ul>
 			        	<li><span onClick="window.print()"><spring:message code='main.t73' /></span></li>
 					</ul>
@@ -118,9 +123,15 @@
 									<th nowrap style="height:26px"><spring:message code='main.t75' /></th>
 							  		<td>${LiteralDept }</td>
 								</tr>
+								<c:if test="${primaryLang eq '3'}">
+								<tr>
+									<th nowrap style="height:26px"><spring:message code='main.ksa01' /></th>
+							  		<td>${LiteralFurigana }</td>
+								</tr>
+								</c:if>
 								<tr>
 									<th nowrap style="height:26px"><spring:message code='main.t76' /></th>
-									<td id="username">${LiteralDisplayName }</td>
+									<td id="username"><c:out value='${LiteralDisplayName}'/></td>
 								</tr>
 								<tr>
 									<th nowrap style="height:26px"><spring:message code='main.t77' /></th>
@@ -128,7 +139,7 @@
 								</tr>
 								<tr>
 									<th nowrap style="height:27px" ><spring:message code='main.t78' /></th>
-									<td ><span id="email" style="cursor:pointer" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'" onClick="email_onclick()">${LiteralEmail }</span></td>
+									<td ><span id="email" style="cursor:pointer" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'" onClick="email_onclick()"><c:out value='${LiteralEmail}'/></span></td>
 						        </tr>
 						    </table>
 						    
@@ -157,6 +168,16 @@
 					  	<th><spring:message code='main.t83' /></th>
 					  	<td colspan="2">${LiteralFax }</td>
 					</tr>
+					<c:if test="${primaryLang  eq '3'}">
+					<tr>
+					  	<th><spring:message code='main.ksa02' /></td>
+					  	<td colspan="2">${LiteralExtensionPhone }</td>
+					</tr>
+					<tr>
+					  	<th><spring:message code='main.ksa03' /></td>
+					  	<td colspan="2">${LiteralOfficeMobile }</td>
+					</tr>
+					</c:if>
 					<tr style="display:none">
 						<th rowspan="2" ><spring:message code='main.t84' /></th>
 					  	<td colspan="2" height="25">${LiteralPostal }</td>

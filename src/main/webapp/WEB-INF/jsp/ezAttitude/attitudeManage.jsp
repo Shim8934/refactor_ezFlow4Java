@@ -19,7 +19,8 @@
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
-	    
+		<!-- date Format -->		
+		<script type="text/javascript" src="${util.addVer('/js/ezAttitude/moment.min.js')}"></script>
 	    <style>
 	    	.portlet_tabpart01{position:relative; margin:15px 0px 0px 0px; clear: both; z-index: 0;}
 	    	.portlet_tabpart01_top p .tabover{position: relative; border:1px solid #999; border-bottom:1px solid #eee; background:white; color:#333; z-index: 0;}
@@ -83,7 +84,7 @@
 					changeYear : true,
 					autoSize : true,
 					showOn : "both",
-					buttonImage : "/images/ImgIcon/calendar-month.gif",
+					buttonImage : "/images/ImgIcon/calendar-month.png",
 					buttonImageOnly : true
 				});
 				
@@ -92,7 +93,7 @@
 					changeYear : true,
 					autoSize : true,
 					showOn : "both",
-					buttonImage : "/images/ImgIcon/calendar-month.gif",
+					buttonImage : "/images/ImgIcon/calendar-month.png",
 					buttonImageOnly : true
 				});
 
@@ -136,7 +137,7 @@
 			        changeYear: true,
 			        autoSize: true,
 			        showOn: "both",
-			        buttonImage: "/images/ImgIcon/calendar-month.gif",
+			        buttonImage: "/images/ImgIcon/calendar-month.png",
 			        buttonImageOnly: true
 			    });
 			    $("#Edatepicker").datepicker({
@@ -144,7 +145,7 @@
 			        changeYear: true,
 			        autoSize: true,
 			        showOn: "both",
-			        buttonImage: "/images/ImgIcon/calendar-month.gif",
+			        buttonImage: "/images/ImgIcon/calendar-month.png",
 			        buttonImageOnly: true
 			    });
 			});
@@ -216,7 +217,7 @@
 	        
 	        function windowResize() {
 	        	var height = document.documentElement.clientHeight - 92 - document.getElementById("mainmenu").clientHeight;
-	        	document.getElementById("contentlist").style.height = (height - 100) + "px";
+	        	document.getElementById("contentlist").style.height = (height - 118) + "px";
 	        	document.getElementById("contentlist").style.overflow = "auto";
 	        }
 	        
@@ -376,6 +377,9 @@
 	   					orderCell : orderCell,
 	   					orderOption : orderOption
     				},
+    				beforeSend : function() {
+    					ShowMailProgress();
+    				},
 	    			success : function(result){
 	    				totalCount = result.totalCount;
 	    				totalPage = parseInt(totalCount / listSize) + (totalCount % listSize != 0 ? 1 : 0);
@@ -383,6 +387,9 @@
 	    			},
 	    			error : function() {
 	    				alert("<spring:message code='ezAttitude.t59'/>");
+	    			},
+	    			complete : function() {
+	    				HiddenMailProgress();
 	    			}
 	    		});
 	    	}
@@ -401,7 +408,13 @@
 	    			resultHtml += "<td style='width: 24%;'>" + vo.deptName + "</td>";
 	    						
 	    			if (vo.endDate == null || vo.endDate == "") {
-	    				resultHtml += "<td style='width: 30%;'>" + vo.startDate.substring(0,16) + "</td>";
+	    				if(vo.typeId == "A25") {
+	    					var date = new Date(vo.startDate.substring(0,4), Number(vo.startDate.substring(5,7))-1 , Number(vo.startDate.substring(8,10)));
+							date.setDate(date.getDate()+1);	    					
+		    				resultHtml += "<td style='width: 30%;'>" + moment(date).format('YYYY-MM-DD') + " " + vo.startDate.substring(11,16) + "</td>";
+	    				} else {
+		    				resultHtml += "<td style='width: 30%;'>" + vo.startDate.substring(0,16) + "</td>";
+	    				}
 	    			} else {
 	    				if (vo.dateType == 4) {
 	    					resultHtml += "<td style='width: 30%;'>" + vo.startDate.substring(0,11) + " ~ " + vo.endDate.substring(0,11) + "</td>";
@@ -460,10 +473,16 @@
 	   					orderOption : orderOption,
 	   					duplicated : "duplicated"
 					},
+					beforeSend : function() {
+						ShowMailProgress();
+					},
 					success : function(result) {
 						totalCount = result.totalCount;
 	    				totalPage = parseInt(totalCount / listSize) + (totalCount % listSize != 0 ? 1 : 0);
 						getAttitudeAbsentedList_after(result.list);
+					},
+					complete : function() {
+						HiddenMailProgress();
 					}
 				});
 	    	}
@@ -519,7 +538,7 @@
 	    		layerHidden();
 	    		
 	    		$.ajax({
-	    			data : "GET",
+	    			type : "POST",
 	    			dataType : "json",
 	    			async : false,
 	    			url : "/ezAttitude/attitudeHistoryList.do",
@@ -535,6 +554,9 @@
 	   					orderCell : orderCell,
 	   					orderOption : orderOption
     				},
+    				beforeSend : function() {
+    					ShowMailProgress();
+    				},
 	    			success : function(result){
 	    				totalCount = result.totalCount;
 	    				totalPage = parseInt(totalCount / listSize) + (totalCount % listSize != 0 ? 1 : 0);
@@ -542,6 +564,9 @@
 	    			},
 	    			error : function() {
 	    				alert("<spring:message code='ezAttitude.t59'/>");
+	    			},
+	    			complete : function() {
+	    				HiddenMailProgress();
 	    			}
 	    		});
 	    	}
@@ -683,6 +708,20 @@
 	        	
 	        	$("#searchPopup").modal();
 	        }
+	    	
+	    	function ShowMailProgress() {
+				var CurrenWidth = window.innerWidth;
+	        	
+			    document.getElementById("mailPanel").style.display = "";
+			    document.getElementById("MailProgress").style.top = "330px";
+			    document.getElementById("MailProgress").style.left = (CurrenWidth / 2) - 100 + "px";
+			    document.getElementById("MailProgress").style.display = "";
+			}
+	    	
+	    	function HiddenMailProgress() {
+			    document.getElementById("mailPanel").style.display = "none";
+			    document.getElementById("MailProgress").style.display = "none";
+			}
 	        
 	        function layerHidden() {
 		        $.modal.close();
@@ -728,11 +767,11 @@
 				var date = today;
 				
 				if (CrossYN()) {
-                    var OpenWin = window.open("/ezAttitude/attAdminNewItem2.do?date=" + date + "&mode=admin&userid=" + userid, "attitudeNewItem", GetOpenWindowfeature(672, 640));
+                    var OpenWin = window.open("/ezAttitude/attAdminNewItemTwo.do?date=" + date + "&mode=admin&userid=" + userid, "attitudeNewItem", GetOpenWindowfeature(672, 640));
                     
                     try { OpenWin.focus(); } catch (e) { }
 	            } else {
-                	rtnValue = window.showModalDialog("/ezAttitude/attAdminNewItem2.do?date=" + date + "&mode=admin&userid=" + userid, "",
+                	rtnValue = window.showModalDialog("/ezAttitude/attAdminNewItemTwo.do?date=" + date + "&mode=admin&userid=" + userid, "",
                         "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
 	                
 	                if (typeof (rtnValue) != "undefined") {
@@ -784,15 +823,15 @@
 	    			break;
 	    		}
 				
-		    	exportExcelframe.location.href=url + "?companyId=" + companyId 
-		    			+ "&userName=" + searchUserName 
-		    			+ "&title=" + searchTitle 
-		    			+ "&deptId="+ $('#ListDept').val()
-		    			+ "&startDate=" + searchStartDate 
-		    			+ "&endDate=" + searchEndDate 
-		    			+ "&orderCell=" + orderCell 
-		    			+ "&orderOption=" + orderOption 
-		    			+ "&attitudeType=" + searchAttitudeType
+		    	exportExcelframe.location.href=url + "?companyId=" + encodeURIComponent(companyId) 
+		    			+ "&userName=" + encodeURIComponent(searchUserName) 
+		    			+ "&title=" + encodeURIComponent(searchTitle) 
+		    			+ "&deptId="+ encodeURIComponent($('#ListDept').val())
+		    			+ "&startDate=" + encodeURIComponent(searchStartDate) 
+		    			+ "&endDate=" + encodeURIComponent(searchEndDate) 
+		    			+ "&orderCell=" + encodeURIComponent(orderCell) 
+		    			+ "&orderOption=" + encodeURIComponent(orderOption)
+		    			+ "&attitudeType=" + encodeURIComponent(searchAttitudeType)
 		    			+ "&duplicated=duplicated";
 		    	exportExcelframe.target="_blank";
 			}
@@ -839,21 +878,20 @@
 	</head>
 	<body class="mainbody">
 		<h1><p style="padding-left:5px"><spring:message code='ezAttitude.t73'/></p></h1>
-	    <div class="portlet_tabpart01" style="margin-bottom:16px;">
-	        <div class="portlet_tabpart01_top" id="tab1">
-	            <p><span id="modify" style="width:100px; text-align: center;"><spring:message code='ezAttitude.t5'/></span></p>
-	            <p><span id="absent" style="width:100px; text-align: center;"><spring:message code='ezAttitude.t6'/></span></p>
-	            <p><span id="history" style="width:100px; text-align: center;"><spring:message code='ezAttitude.t57'/></span></p>
+	    <div class="portlet_tabnew01" style="margin-bottom:16px;">
+	        <div class="portlet_tabnew01_top" id="tab1">
+	            <p><span id="modify" <c:if test="${useLang == '2'}"></c:if><c:if test="${useLang != '2'}">style="width:100px;</c:if> text-align: center;"><spring:message code='ezAttitude.t5'/></span></p>
+	            <p><span id="absent" <c:if test="${useLang == '2'}"></c:if><c:if test="${useLang != '2'}">style="width:100px;</c:if> text-align: center;"><spring:message code='ezAttitude.t6'/></span></p>
+	            <p><span id="history" <c:if test="${useLang == '2'}"></c:if><c:if test="${useLang != '2'}">style="width:100px;</c:if> text-align: center;"><spring:message code='ezAttitude.t57'/></span></p>
 	        </div>
 	    </div>
 	    <div>
 	    	<div id="mainmenu">
 				<ul>
-					<li><span onclick="addAtt();"><spring:message code='ezAttitude.t51'/></span></li>
+					<li class="important"><span onclick="addAtt();"><spring:message code='ezAttitude.t51'/></span></li>
 		      		<li><span onclick="exportExcel();"><spring:message code='ezAttitude.t145' /></span></li>
-					<li><span onclick="refresh();"><spring:message code='ezAttitude.t122'/></span></li>
-		      		<li><span onclick="searchPopup();"><spring:message code='ezAttitude.t121'/></span></li>
-					<!-- <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
+		      		<li><span class="icon16 icon16_search" onclick="searchPopup();"></span></li>
+					<li onclick="refresh();"><span class="icon16 icon16_refresh"></span></li>
 					<li>						
 		      			<select name="ListDept" id="ListDept" onchange="dept_change()" style="padding-right:40px; width:100%; height:28px;">
 		      				<option value="ALL" selected><spring:message code='ezAttitude.t124'/></option>
@@ -868,7 +906,7 @@
 		      	<div id="miniTitle" style="margin-bottom:10px;padding-left:2px;margin-top:15px"><spring:message code='ezAttitude.t74'/></div>
 		  	</div>
 	    </div>
-	    <div id="contentlist" style="width:100%; overflow:auto; height:660px;">
+	    <div id="contentlist" style="width:100%; overflow:auto; height:642px;">
 			<table class="mainlist" style="width:100%;">
 				<thead></thead>
 				<tbody></tbody>
@@ -915,7 +953,9 @@
 							<select name="searchAttitudeType" id="searchAttitudeType" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px">
 								<option value="ALL" selected><spring:message code='ezAttitude.t124'/></option>
 								<c:forEach var = "type" items="${typeList}">
-									<option value="<c:out value='${type.typeId }'/>">${type.typeName }</option>
+									<c:if test="${type.typeId ne 'A25'}">
+										<option value="<c:out value='${type.typeId }'/>">${type.typeName }</option>
+									</c:if>
 								</c:forEach>
 							</select>
 						</td>
@@ -928,6 +968,11 @@
 			</div>
 		</div>
 		<iframe name="exportExcelframe" src="about:blank" style="width:0px; height:0px; display:none;"></iframe>
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id="mailPanel"></div>
+	    <div style="width: 200px; height: 110px; border-radius: 8px; text-align: center; vertical-align: middle; z-index: 9000; position: absolute; top: 400px; left: 726.5px; display: none;" id="MailProgress">
+            <img src="/images/email/progress_img.gif" style="padding-top:20px;">
+            <div id="progressNum" style="padding-top:10px;vertical-align: middle; font-weight: bold; font-size: 1.2em;"></div>
+        </div>
 	</body>
 	<script type="text/javascript">
 	    Tab1_NewTabIni("tab1");

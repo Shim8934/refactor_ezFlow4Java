@@ -9,4 +9,4 @@
 		document.location.href="<c:url value='/user/login/login.do'/>";
 	}
 </script> 
-	<!-- <script type="text/javaScript">document.location.href="<c:url value='/ezPortal/portalMain.do'/>"</script> --> 
+	<!-- <script type="text/javaScript">document.location.href="<c:url value='/ezNewPortal/newPortalMain.do'/>"</script> --> 

@@ -40,6 +40,17 @@ public class MCommonVO {
 	
 	/** 2018-07-04 홍승비 - 사용자 전화번호 추가 */
 	private String phone;
+	
+	/** 2018-11-02 박종균 - 최종 로그인 시간 추가 */
+	private String lastLogin;
+	
+	public String getLastLogin() {
+		return lastLogin;
+	}
+
+	public void setLastLogin(String lastLogin) {
+		this.lastLogin = lastLogin;
+	}
 
 	public int getTenantId() {
 		return tenantId;

@@ -30,7 +30,7 @@
 	
 			function schedule_get_lunaruse() {			    
 			    $.ajax({
-		    		type : "POST",
+		    		type : "GET",
 		    		dataType : "text",
 		    		async : true,
 		    		url : "/ezSchedule/scheduleGetLunarUse.do",

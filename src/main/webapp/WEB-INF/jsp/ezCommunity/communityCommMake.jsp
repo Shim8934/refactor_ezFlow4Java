@@ -14,7 +14,18 @@
 		<script type="text/javascript" src="${util.addVer('ezCommunity.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
+			var lang = "<c:out value='${lang}'/>";
 		
+			/* 2019-11-15 홍승비 - 일본어 환경에서 '공통' 카테고리가 기본으로 선택되도록 수정 */
+			window.onload = function () {
+				if (lang == "3") {
+					var selectCateA = $("select[name='cCateA']");
+					if (selectCateA.length > 0) {
+						selectCateA.val("AA").prop("selected", true);
+					}
+				}
+			};
+			
 			/* 2018-05-15 홍승비 - 커뮤니티 만들기 팝업창으로 수정 */
 			function check() {
 		        var newID = "{" + GetGUID().toUpperCase() + "}";
@@ -51,7 +62,8 @@
 	            selB = parseInt(document.make.cCateB[document.make.cCateB.selectedIndex].value);
 	            selC = parseInt(document.make.cCateC[document.make.cCateC.selectedIndex].value);
 
-	            if (selA == 0 && selB == 0 && selC == 0) {
+	            //if (selA == 0 && selB == 0 && selC == 0) {
+	            if (selA == 0) {
 	                alert("<spring:message code='ezCommunity.t4' />");
 	                make.cCateA.focus();
 	                return;
@@ -95,93 +107,52 @@
 	            }
 	        }
 	        
-	        <c:if test="${isCrossBrowser == true}">
-		        function btn_AttachAdd_onclick(file) {
-		            var fileid = file.id;
-		            var fileval = document.getElementById(fileid).value;
-		            var printspanid = "";
-		            if (fileid == "file1"){
-		                printspanid = "filename";
-		            }else if (fileid == "file2"){
-		                printspanid = "filename2";
-		            }
-		            if (fileval != "") {
-		                var filename = fileval.substring(fileval.lastIndexOf("\\") + 1, fileval.length);
-		                var extension = fileval.split(".");
-		                var filterExtension = new Array("jpe", "jpg", "jpeg", "gif", "png", "bmp", "ico", "svg", "svgz", "tif", "tiff", "ai", "drw", "pct", "psp", "xcf", "psd", "raw");
-		                var bool = false;
-		                for (var i = 0; i < filterExtension.length; i++) {
-		                    if (extension[1].toLowerCase() == filterExtension[i]) {
-		                        bool = true;
-		                        break;
-		                    }
-		                }
-		                
-		                if (!bool) {
-		                    alert(filename + strLang40);
-		                    document.getElementById(fileid).value = "";
-		                    return;
-		                }
-		                
-		                document.getElementById(printspanid).innerText = filename;
-		            }else {
-		            	document.getElementById(printspanid).innerText = "";
-		            }
-		        }
-			</c:if>
-	        
-			<c:if test="${isCrossBrowser == false}">
-				var filesize = "";
-		        function btn_AttachAdd_onclick(num) {
-		            var mode = "";
-		            var ezUtil = new ActiveXObject("ezUtil.MiscFunc");
-		            var filepath = ezUtil.OpenLoadDlg("Image Files\0*.jpg;*.gif;*.bmp;*.jpe;*.png;*.emf;*.wmf;*.jpeg;*.jfif;*.dib;*.rle;*.bmz;*.gfa;*.emz;*.pcx;\0All Files (*.*)\0*.*\0\0", "");
-		            
-		            if (filepath == "") return;
-	
-		            var strBase64 = ezUtil.DownloadToBase64(filepath);
-		            filesize = ezUtil.getFileSize(filepath)
-		            ezUtil = null;
-	
-		            var ezUtil = new ActiveXObject("ezUtil.ImageFunc");
-		            var temp = ezUtil.GetImageSize(filepath);
-		            ezUtil = null;
-	
-		            imageWidth = temp.split("*")[0];
-		            imageHeight = temp.split("*")[1];
-	
-		            fileName = filepath.substr(filepath.lastIndexOf("\\") + 1);
-	
-		            
-		            if (num == 1) {
-		                mode = "logo";
-		                document.getElementById("filename").innerText = fileName;
-		            }
-		            else if(num == 2){
-		                mode = "thumb";
-		                document.getElementById("filename2").innerText = fileName;
-		            }
-		            
-		            $.ajax({
-		            	type : "POST",
-		            	url : "/ezCommunity/commMakeUpload.do",
-		            	async : false,
-		            	data : {mode : mode,
-		            		fileName : fileName,
-		            		fileData : strBase64
-		            	},
-		            	dataType : "json",
-		            	success : function(result) {
-		            		
-		            	}
-		            });
-		        }
-			</c:if>
+	        /* 2020-06-10 홍승비 - 커뮤니티 만들기 시 이미지 확장자 체크 부분 수정, 미사용 c:if 분기 제거 */
+	        function btn_AttachAdd_onclick(file) {
+	            var fileid = file.id;
+	            var fileval = document.getElementById(fileid).value;
+	            var printspanid = "";
+	            
+	            if (fileid == "file1") {
+	                printspanid = "filename";
+	            } else if (fileid == "file2") {
+	                printspanid = "filename2";
+	            }
+	            if (fileval != "") {
+	                var filename = fileval.substring(fileval.lastIndexOf("\\") + 1, fileval.length);
+	                var extension = fileval.split(".");
+	                var check = "false";
+	                check = compareExtension(check, extension[extension.length - 1]);
 	                
+	                if (check == "false") {
+	                    alert(filename + strLang40);
+	                    document.getElementById(fileid).value = "";
+	                    document.getElementById(printspanid).innerText = "";
+	                    return;
+	                }
+	                
+	                document.getElementById(printspanid).innerText = filename;
+	            } else {
+	            	document.getElementById(printspanid).innerText = "";
+	            }
+	        }
+	        
+		    function compareExtension(check, extension) {
+		        var filterExtension = new Array("jpe", "jpg", "jpeg", "gif", "png", "bmp", "ico", "svg", "svgz", "tif", "tiff", "ai", "drw", "pct", "psp", "xcf", "psd", "raw");
+		        
+		        for (var i = 0; i < filterExtension.length; i++) {
+		            if (extension.toLowerCase() == filterExtension[i]) {
+		                check = "true";
+		                break;
+		            }
+		        }
+		    	return check;
+		    }
+		    
 		</script>
 	</head>
 	<body class="popup">
-	    <div id="menu" style="margin-bottom:10px">
+	    <div id="menu" style="margin-top:7px;">
 	        <ul>
 	            <li><span id="btnDraft" onclick="check()"><spring:message code='ezCommunity.t1011' /></span></li>
 	        </ul>
@@ -201,7 +172,7 @@
             <input type="hidden" name="sNewID">
             <input type="hidden" name="sNewSubID">
             
-	    	<table class="content" style="width:100%; margin-top:16px;">
+	    	<table class="content" style="width:100%; margin-top:19px;">
 	            <tr>
 	                <th><spring:message code='ezCommunity.t1012' /></th>
 	                <td colspan="2">
@@ -231,8 +202,8 @@
 	                <th style="height:40px;"><spring:message code='ezCommunity.t11' /></th>
 	                <td style="white-space:nowrap;border-right:0px"><span id="idSpan">${idSpanValue }</span></td>
 	                <td style="padding: 5px;padding-right:25px;white-space:nowrap;border-left:0px">
-	                	<div><spring:message code='ezCommunity.t1013' /></div>
-	                	<div style="margin-top:7px"><spring:message code='ezCommunity.t1014' /></div>
+	                	<%-- <div><spring:message code='ezCommunity.t1013' /></div> --%>
+	                	<div><spring:message code='ezCommunity.t1014' /></div>
 	                </td>
 	            </tr>
 	            <tr style="height:60px">
@@ -272,20 +243,11 @@
 	            <tr>
 	                <th><spring:message code='ezCommunity.jjh03' /></th>
 	                <td style="border-right:0px;padding-left:5px">
-	                	<c:if test="${isCrossBrowser == true}">
-		                    <span style="vertical-align:middle">
-		                        <a class="imgbtn imgbck"><span id="btn_AttachAdd_logo" onclick="return btn_AttachSelect_onclick(1)"><spring:message code='ezCommunity.t1177' /></span></a>
-		                        <span id="filename" style="vertical-align:middle; padding:3px;display: inline-block;"></span>
-		                        <input type="file" id="file1" name="logo" onchange="btn_AttachAdd_onclick(this)" style="display:none">
-		                    </span>
-		                </c:if>
-		                
-		                <c:if test="${isCrossBrowser == false}">
-		                	<div style="display:inline-block;font-size:15px;vertical-align:middle">
-		                        <a class="imgbtn imgbck" style="padding:3px;" onclick="return btn_AttachAdd_onclick(1)"><span id="btn_AttachAdd_logo"><spring:message code='ezCommunity.t1177' /></span></a>
-		                        <span id ="filename"></span>
-		                    </div>
-		                </c:if>
+	                    <span style="vertical-align:middle">
+	                        <a class="imgbtn imgbck"><span id="btn_AttachAdd_logo" onclick="return btn_AttachSelect_onclick(1)"><spring:message code='ezCommunity.t1177' /></span></a>
+	                        <span id="filename" style="vertical-align:middle; padding-left:3px; min-height:16px; display: inline-block;"></span>
+	                        <input type="file" id="file1" name="logo" accept="image/*" onchange="btn_AttachAdd_onclick(this)" style="display:none">
+	                    </span>
 	                </td>
 	                <td style="padding: 5px;white-space:nowrap;border-left:0px">
 	                	★ <spring:message code='ezCommunity.jjh03' /> : 894px * 100px
@@ -294,20 +256,11 @@
 	            <tr>
 	                <th><spring:message code='ezCommunity.jjh02' /></th>
 	                <td style="border-right:0px;padding-left:5px">
-	                	<c:if test="${isCrossBrowser == true}">
-		                    <span style="vertical-align:middle">
-		                        <a class="imgbtn imgbck"><span id="btn_AttachAdd_banner" onclick="return btn_AttachSelect_onclick(2)"><spring:message code='ezCommunity.t1177' /></span></a>
-		                        <span id="filename2" style="vertical-align:middle; padding:3px; display:inline-block;"></span>
-		                        <input type="file" id="file2" name="thumb" onchange="btn_AttachAdd_onclick(this)" style="display:none;">
-		                    </span>
-		                </c:if>
-		                
-		                <c:if test="${isCrossBrowser == false}">
-		                	<div style="display:inline-block;font-size:15px;vertical-align:middle">
-		                        <a class="imgbtn imgbck" style="padding:3px;" onclick="return btn_AttachAdd_onclick(2)"><span id="btn_AttachAdd_banner"><spring:message code='ezCommunity.t1177' /></span></a>
-		                        <span id ="filename2"></span>
-		                    </div>
-		                </c:if>
+	                    <span style="vertical-align:middle">
+	                        <a class="imgbtn imgbck"><span id="btn_AttachAdd_banner" onclick="return btn_AttachSelect_onclick(2)"><spring:message code='ezCommunity.t1177' /></span></a>
+	                        <span id="filename2" style="vertical-align:middle; padding-left:3px; min-height:16px; display:inline-block;"></span>
+	                        <input type="file" id="file2" accept="image/*" name="thumb" onchange="btn_AttachAdd_onclick(this)" style="display:none;">
+	                    </span>
 	                </td>
 	                <td style="padding: 5px;white-space:nowrap;border-left:0px">
 	                	★ <spring:message code='ezCommunity.jjh02' /> : 198px * 140px

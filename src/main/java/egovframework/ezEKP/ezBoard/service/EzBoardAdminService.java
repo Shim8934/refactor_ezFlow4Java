@@ -133,4 +133,16 @@ public interface EzBoardAdminService {
 	
 	/* 2020-01-16 홍승비 - 전달된 값으로 BOARDGROUPID를 업데이트하는 메서드 */
 	public void updateBoardGroupID(String boardID, String newBoardGroupID, int tenantID) throws Exception;
+	
+	/* 2019-10-11 홍승비 - 공지사항 게시판 레코드 삭제 */
+	public void deleteNoticeBoard(int tenantId, String companyID) throws Exception;
+
+	/* 2019-10-11 홍승비 - 공지사항 게시판 레코드 갱신 */
+	public void updateNoticeBoard(String boardID, int tenantId, String companyID) throws Exception;
+	
+	/* 2020-12-03 박기범 - 탭게시판 레코드 삭제 */
+	public void deleteTabBoard(int tabId, int tenantId, String companyID) throws Exception;
+
+	/* 2020-12-03 박기범 - 탭게시판 레코드 갱신 */
+	public void updateTabBoard(int tabId, String boardID, int tenantId, String companyID, String boardName, String boardName2) throws Exception;
 }

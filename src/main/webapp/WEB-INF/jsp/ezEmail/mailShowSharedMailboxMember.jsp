@@ -43,7 +43,7 @@
 	                <li><span onclick="Window_Close()"></span></li>
 	            </ul>
 	        </div>
-			<div class="box" id="maillist" style="overflow-y:auto; overflow-x:hidden; width:100%; height:400px;border:0px">
+			<div class="box" id="maillist" style="overflow-y:auto; overflow-x:hidden; width:100%; height:400px;border:0px;padding: 0px;">
 			  <table style="width:100%;table-layout:fixed;" class="popuplist" id="checkboxtable">
 			    <tr>
 			      <th style="text-align:center;"><spring:message code='ezEmail.t712' /></th>

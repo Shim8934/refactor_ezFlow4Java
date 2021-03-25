@@ -21,8 +21,8 @@
     var OrderCell = "";
     var g_RecID, g_SepAttNo, g_DeptCode;
     var rtnVal = new Array();
-    var CompanyID = "${userInfo.companyID}";
-    var UserLang = "${userInfo.lang}";
+    var CompanyID = "<c:out value='${userInfo.companyID}'/>";
+    var UserLang = "<c:out value='${userInfo.lang}'/>";
     var RetValue;
     var ReturnFunction;
     window.onload = function () {
@@ -393,7 +393,7 @@
         	dataType : "text",
         	url : "/ezOrgan/getSearchList.do",
         	async : false,
-        	data : {search : selSearchType.value+ "::" +txtKeyword.value, cell : "displayName;title;description;company", prop : "department", type : "user"},
+        	data : {search : selSearchType.value+ "::" +txtKeyword.value, cell : "displayName;title;description;company", prop : "Department;Description;DisplayName;Title", type : "user"},
         	success : function(result){	
         		xmlDOM = loadXMLString(result);
                 adCount = xmlDOM.getElementsByTagName("ROW").length;
@@ -534,7 +534,7 @@
 		<td style="vertical-align:top">
 		<h2 class="h2_dot" style="font-weight: normal; margin-top: 0px;">
 			<spring:message code='ezApprovalG.t1166'/>
-			<span style="margin-left:145px;">
+			<span style="margin-left:136px;">
 				<select id="selSearchType" style="height:22px;">
 					<option selected value="displayname"><spring:message code='ezApprovalG.t379'/></option>
 					<option value="description"><spring:message code='ezApprovalG.t108'/></option>
@@ -557,7 +557,7 @@
 		</td>
 
 		<td style="width:25px;text-align:center">
-			<a href="#">
+			<a>
 				<img id="RecvAdd" border="0" src="/images/arr_right.gif" width="16" height="16" onClick="return AddUser_onclick()">
 				<img id="RecvDel" border="0" src="/images/arr_left.gif" width="16" height="16" onClick="return DelUser_onclick()">
 			</a>

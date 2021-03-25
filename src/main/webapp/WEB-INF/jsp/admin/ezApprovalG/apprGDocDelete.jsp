@@ -46,7 +46,7 @@
 		    var ListIdx;
 		    var text1 = "<spring:message code='ezStatistics.t1008'/>";
 		    var deleteTimes = 0;		    
-		    var pUse_Editor = "${useEditor}";
+		    var pUse_Editor = "<c:out value='${useEditor}'/>";
 		    
 		    var CurPage = "";
 			var totalPage = "";
@@ -182,7 +182,7 @@
 		    		changeYear: true,
 		    		autoSize: true,
 		    		showOn: "both",
-		    		buttonImage: "/images/ImgIcon/calendar-month.gif",
+		    		buttonImage: "/images/ImgIcon/calendar-month.png",
 		    		buttonImageOnly: true,
 		    		maxDate: 0,
 		    		onSelect: function(selected) {
@@ -196,7 +196,7 @@
 		    		changeYear: true,
 		    		autoSize: true,
 		    		showOn: "both",
-		    		buttonImage: "/images/ImgIcon/calendar-month.gif",
+		    		buttonImage: "/images/ImgIcon/calendar-month.png",
 		    		buttonImageOnly: true,
 		    		maxDate: 0,
 		    		onSelect: function(selected) {
@@ -275,8 +275,7 @@
 				var strtext;
 				var PagingHTML = "";
 				$("#tblpageRayer").html("");
-				$("#listInfo").html(" &nbsp;[<spring:message code='main.t252'/><span style='color:#017BEC;'> "
-						+ totalCount + " </span><spring:message code='ezSystem.kyj2'/>]")
+				$("#listInfo").html("&nbsp;&nbsp;<span style='color:#017BEC;'>" + totalCount + " </span>")
 				strtext = "<div class='pagenavi'>";
 				PagingHTML += strtext;
 				var pageNum = CurPage;
@@ -574,7 +573,7 @@
 		        }
 
 		        selectelem = elem;
-		        elem.style.backgroundColor = "#edf4fd";
+		        elem.style.backgroundColor = "#f1f8ff";
 		        $("input[id='" + $(elem).attr("id") + "']").prop("checked", true);
 		    }
 			
@@ -898,12 +897,21 @@
 				    document.getElementById("mailPanel").style.display = "none";
 				    document.getElementById("MailProgress").style.display = "none";
 				}
+				
 		</script>
 	</head>
 	
 	<body class="mainbody" onLoad="javascript:window_onload()">
-		<h1><spring:message code='ezApprovalG.t1569'/><span id="listInfo"></span></h1>
-		<input type="hidden" id="ListCompany" value="${userInfo.companyID }" >
+		<h1><spring:message code='ezApprovalG.t1569'/><span id="listInfo"></span>
+			<%-- 2020-10-20 홍승비 - 회사선택 셀렉트박스 추가 --%>
+			<span class="title_bar"><img src="/images/name_bar.gif"></span>
+			<select class="companySelect" id="ListCompany" onChange="changeCompID()">
+				<c:forEach var="item" items="${list}">
+					<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+				</c:forEach>
+			</select>
+		</h1>
+		<%-- <input type="hidden" id="ListCompany" value="${userInfo.companyID }" > --%>
 		<div class="portlet_tabpart01" style="margin-top:3px;text-align:right;">
 		    <div class="portlet_tabpart01_top" id="tab1">
 		        <p><span id="1tab1" divname="completedoclist"><spring:message code='ezApprovalG.kes01' /></span></p>
@@ -969,7 +977,7 @@
 				</table>
 			</tr>
 		</table>  -->
-		<table style="width:100%; background-color: #fcfcfc; border-right: 1px solid #e8e8e8; border-left: 1px solid #e8e8e8; border-bottom:1px solid #e8e8e8">
+		<table style="width:100%; background-color: #f8f8fa; border-right: 1px solid #e8e8e8; border-left: 1px solid #e8e8e8; border-bottom:1px solid #e8e8e8">
 			<tr>
 				<td style="width:6%;">
 					<spring:message code='ezApproval.t434'/> 
@@ -1023,7 +1031,7 @@
 			</tr>
 		</table>
 		
-		<div id="contentlist" style="width: 100%; overflow: auto;">
+		<div id="contentlist" style="width: 100%; overflow: auto; margin-top:5px">
 			<table class="mainlist" style="width:100%;">
 				<thead>
 					<tr id ="doclist">
@@ -1044,7 +1052,7 @@
 			</table>
 		</div>
 		
-		<div id="tblPageRayer" style="padding-top: 10px;"></div>
+		<div id="tblPageRayer"></div>
 	</body>
 	<script type="text/javascript">
 	    Tab1_NewTabIni("tab1");

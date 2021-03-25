@@ -1,4 +1,4 @@
-﻿﻿var lastKyulName, lastKyuljiwee, LastSignSN, pAprLineB4type;
+﻿var lastKyulName, lastKyuljiwee, LastSignSN, pAprLineB4type;
 var pOrgAttach;
 var bbtnApprove = "";
 var bbtnReject = "";
@@ -500,7 +500,7 @@ function ApprovMappingSign(ret) {
     	//approvalFlag == "S" && pAprLineType == strAprType4인 경우는 없음(위에서 처리하였음)
     	if (approvalFlag == "S") {
     		if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4) {
-    			for (i = 1; i < 20; i++) {
+    			for (i = 1; i <= 20; i++) {
     				if (pDraftFlag == "SUSIN" || (pDraftFlag == "B_GAMSA" && ConvertYN == "N"))
     					signID = pSusinSN + "sign" + i
     					else
@@ -768,14 +768,15 @@ function UndoSignInfo(signInfo) {
         }
     }
 }
+
 function AprLineSNCount(pAprLineType, objNodes, pTmpAprLineType) {
     var objNodesLen = objNodes.length;
     var pAprLineSN = 0;
-
+    
     for (i = (objNodesLen - 1) ; i >= 0; i--) {
         var pCurrentAprState = getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[12]);
         var pCurrentAprType = getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[11]);
-        if (pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12) {
+        if (pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12) { // 개인순차/병렬협조, 부서순차/병렬협조
             if (pCurrentAprType == strAprType8 || pCurrentAprType == strAprType9 || pCurrentAprType == strAprType11 || pCurrentAprType == strAprType12) {
                 if ((getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[4]).toLowerCase() == pUserID.toLowerCase()) && ((pCurrentAprState == strAprState2) || (pCurrentAprState == strAprState5))) {
                     pAprLineSN = pAprLineSN + 1;
@@ -786,8 +787,9 @@ function AprLineSNCount(pAprLineType, objNodes, pTmpAprLineType) {
             }
         }
         else {
-            if (pCurrentAprType == strAprType18 || pCurrentAprType == strAprType19 || pCurrentAprType == strAprType1 || pCurrentAprType == strAprType16 || pCurrentAprType == strAprType4) {
-                if ((getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[4]).toLowerCase() == pUserID.toLowerCase()) && ((pCurrentAprState == strAprState2) || (pCurrentAprState == strAprState5))) {
+        	/* 2021-02-03 홍승비 - 결재선 카운트에 감사 유형 추가 (기안, 검토, 결재, 대결, 전결, 감사) */
+            if (pCurrentAprType == strAprType18 || pCurrentAprType == strAprType19 || pCurrentAprType == strAprType1 || pCurrentAprType == strAprType16 || pCurrentAprType == strAprType4 || pCurrentAprType == strAprType5) {
+                if ((getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[4]).toLowerCase() == pUserID.toLowerCase()) && ((pCurrentAprState == strAprState2) || (pCurrentAprState == strAprState5))) { // 진행, 보류
                     pAprLineSN = pAprLineSN + 1;
                     break;
                 } else {
@@ -918,6 +920,11 @@ function openOpinionUI_New_Complete(ret) {
 		DivPopUpHidden();
 		if (ret == "Clear") {
 			pHasOpinionYN = "N";
+			var fields = message.GetFieldsList();
+		    var field = message.GetListItem(fields, "opinions");
+		    if (field) {
+		    	field.innerHTML = " ";
+		    }
 		} else if (ret == "cancel") {
 			//do_nothing
 		} else {
@@ -939,40 +946,31 @@ function openOpinionUI_New_Complete(ret) {
 }
 
 function makeOpinionList(OpinionXML) {
-
-    var fields = message.GetFieldsList();
+	var fields = message.GetFieldsList();
     var field = message.GetListItem(fields, "opinions");
     if (!field) return;
-    var firstFlag = true;
+
     var NodeList = SelectNodes(OpinionXML, "LISTVIEWDATA/ROWS/ROW");
+    field.innerHTML = " ";
     if (NodeList.length > 0) {
-        var strOpinion = " ";
         for (i = NodeList.length - 1; i >= 0; i--) {
-            if (getNodeText(GetChildNodes(NodeList[i])[9]) == "001") {
-                if (firstFlag) {
-                    strOpinion = "<P>[" + strLang27 + "</P>";
-                    firstFlag = false;
-                }
-                if (getNodeText(GetChildNodes(NodeList[i])[2]) != "")
-                    strOpinion = strOpinion + "<P>" + getNodeText(GetChildNodes(NodeList[i])[2]) + "&nbsp;&nbsp;&nbsp;";
-                else
-                    strOpinion = strOpinion + "<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-
-                strOpinion = strOpinion + getNodeText(GetChildNodes(NodeList[i])[1]) + "&nbsp;&nbsp;&nbsp;";
-                strOpinion = strOpinion + getNodeText(GetChildNodes(NodeList[i])[6]) + "</P>";
-            }
+    		var opinionsTable = '<p style="margin-top: 10px;margin-left: 3px;margin-bottom: 3px;">▶ ' + getNodeText(NodeList[i].childNodes[3]) + ' - ' + getNodeText(NodeList[i].childNodes[2]) + ' - ' + getNodeText(NodeList[i].childNodes[1]) + '</p><p style="margin-top: 0px;margin-left: 10px;margin-bottom: 0px;">' + getNodeText(NodeList[i].childNodes[6]) + '</p>';
+    		$(field).append(opinionsTable);
         }
-        field.innerHTML = strOpinion;
-
-        if (OpinionAction == "ADD" || OpinionAction == "DEL")
-            SaveFile();
-
-        OpinionAction = "";
     }
-    else {
-        field.innerHTML = " ";
-    }
+    SaveFile();
 }
+
+// 반송용으로 추가
+function makeOpinionList4Bansong(OpinionXML) { 
+	var fields = message.GetFieldsList();
+    var field = message.GetListItem(fields, "opinions");
+    if (!field) return;
+
+    field.innerHTML = " ";
+	SaveFile();   
+}
+
 var aprattach_cross_dialogArguments = new Array();
 function openFileAttachUI() {
     var parameter = pDocID;
@@ -981,7 +979,7 @@ function openFileAttachUI() {
     aprattach_cross_dialogArguments[0] = parameter;
     aprattach_cross_dialogArguments[1] = openFileAttachUI_Complete;
 
-    DivPopUpShow(535, 415, url);
+    DivPopUpShow(800, 610, url);
 }
 
 function openFileAttachUI_Complete(ret) {
@@ -1103,6 +1101,8 @@ function chkBtnConfirm(para) {
 
         if (document.getElementById("btnMail").style.display == "")
             bbtnMail = "1";
+        else 
+        	bbtnMail = "";
 
         if (document.getElementById("btnSetTaskCode").style.display == "")
             bbtnSetTaskCode = "1";
@@ -1230,6 +1230,14 @@ function getDocInfo() {
             TaskCode = getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[31]);
             tempSecurityDate = getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[36]);
             */
+
+            if (useOpenGov == "YES") {
+                basis = SelectSingleNodeValueNew(result, "DATA/BASIS");
+                reason = SelectSingleNodeValueNew(result, "DATA/REASON");
+                listOpenFlag = SelectSingleNodeValueNew(result, "DATA/LISTOPENFLAG");
+                fileOpenFlagList = SelectSingleNodeValueNew(result, "DATA/FILEOPENFLAGLIST");
+                limitDate = SelectSingleNodeValueNew(result, "DATA/LIMITDATE");
+            }
         }
     } catch (e) {
         alert("getDocInfo :: " + e.description);
@@ -1374,7 +1382,7 @@ function getApprovInfo() {
             case "B_GAMSA":
             	approvalType = "B_GAMSA";
                 setMenuBar("btnApprove", true);
-                setMenuBar("btnReject", false);
+                setMenuBar("btnReject", true);  // 부서감사 유형 감사부서에서 반송 가능하도록 수정. 2020-02-28 홍대표
                 setMenuBar("btnStay", false);
                 setMenuBar("btnJunKyul", false);
                 setMenuBar("btnModAprLine", false);
@@ -1461,8 +1469,13 @@ function getCurApproverAprLine(type) {
     //최종 결재에 개인 합의 추가 하기 위해 결재선에 표시된 전체 개수
     LastTotalKyulSN = getLastTotalSignSN(objNodes);
     LastSignSN = objNodes.length;
-
-    for (var i = 0; i < objNodes.length; i++) {
+    
+    for (var i = objNodes.length - 1; i < objNodes.length; i--) {
+    	// i가 음수값을 가지지 않도록 임시 수정
+    	if (i < 0) {
+    		break;
+    	}
+    	
         var params = new Array();
         params[0] = "0";
         var dataNodes = GetLastChildNodes(objNodes[i], params);
@@ -1501,6 +1514,27 @@ function getCurApproverAprLine(type) {
             }
         }
     }
+    
+    var auditSignCnt = 0;
+    // auditSign set
+    for(var i=0; i<objNodes.length; i++) {
+    	var apprType = objNodes[i].getElementsByTagName("CELL")[0].getElementsByTagName("DATA11")[0].textContent;
+    	
+    	if(apprType == "005") {
+    		auditSignCnt++;
+    	}
+    }
+    if(auditSignCnt > 1) {
+    	for(var i=0; i<objNodes.length; i++) {
+        	var apprType = objNodes[i].getElementsByTagName("CELL")[0].getElementsByTagName("DATA11")[0].textContent;
+        	var userId = objNodes[i].getElementsByTagName("CELL")[0].getElementsByTagName("DATA4")[0].textContent;
+        	
+        	if(apprType == "005") {
+        		auditSignId = userId;
+        		break;
+        	}
+        }
+    }
     if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType2)
         setMenuBar("btnJunKyul", false);
 }
@@ -1509,6 +1543,7 @@ function getCurApproverAprLine(type) {
  * pApproveFlag 1 : 결재, 2 : 반송, 3 : 보류
  * */
 function SaveApproveInfo(pApproveFlag) {
+	var fields = message.GetFieldsList();
     var rtnVal = SaveFile();
 
     if(rtnVal.toUpperCase() != "TRUE") {
@@ -1516,9 +1551,6 @@ function SaveApproveInfo(pApproveFlag) {
     }
 
     SignSave();
-
-    var fields = message.GetFieldsList();
-    var field;
 
     var objNodes = GetChildNodes(GetChildNodes(document.getElementById('DOCINFO').dataSource.childNodes[0])[0]);
 
@@ -1541,6 +1573,11 @@ function SaveApproveInfo(pApproveFlag) {
     // 경우에 따른 DOCNO 설정.
     
     if (pApproveFlag == "2") {
+        field = message.GetListItem(fields, "opinions");
+        if (field) {
+        	field.innerHTML = " ";
+        }
+        
     	if (approvalFlag == 'G' && pDraftFlag == "SUSIN" && useReceiveDocNo == 'NO') {
     		if (field) {
     			var forTest = getfieldValue(field).slice(-1);
@@ -1699,6 +1736,11 @@ function SaveApproveInfo(pApproveFlag) {
    	 createNodeAndInsertText(xmlpara, objNode, "CURDOCNUM", curDocNum);
    }
     
+    //반송일때, 반송문서를 부서문서함(반송함)에 보관할 부서ID를 가져온다.
+    if (pApproveFlag == "2") {
+    	createNodeAndInsertText(xmlpara, objNode, "BANSONGDEPTID", getBansongDeptID());
+    }
+    
     if (nonElecRec == "Y") {
 		var NonElecXML = createXmlDom();
 		NonElecXML = loadXMLString(nonElecRecInfoXml);
@@ -1816,6 +1858,30 @@ function SaveApproveInfo(pApproveFlag) {
    }
 }
 
+/*
+ * 반송함에 들어갈 부서를 반환함
+ * - 기안결재중 반송은 기안부서
+ * - 접수결재중 반송은 접수부서
+ * */
+function getBansongDeptID() {
+	var rtnDeptID = "";
+	
+	try {
+		var oRows = SelectNodes(document.getElementById("APRLINEINFO").dataSource, "LISTVIEWDATA/ROWS/ROW");
+		var oRowsLeng = oRows.length;
+		if (oRowsLeng > 0) {
+			rtnDeptID = SelectSingleNodeValue(GetChildNodes(oRows[oRowsLeng - 1])[0], "DATA6");
+		} else {
+			rtnDeptID = draftDeptID;
+		}
+	} catch (e) {
+		console.error(e.description);
+		rtnDeptID = draftDeptID;
+	}
+	
+	return rtnDeptID;
+}
+
 function getfieldValue(pfield) {
     var rtnVal = "";
     if (pfield) {
@@ -1840,17 +1906,20 @@ function SaveFile() {
 	EmbedContentIntoXML(mhtBody);
 	mhtBody = ConvertHTMLtoMHT(mhtBody);
 	
+	var data = {
+		docID : pDocID,
+		html  : mhtBody,
+		formId : pFormID,
+		orgCompanyID : orgCompanyID
+	}
+	
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/saveFile.do",
-		data : {
-			docID : pDocID,
-            formId : pFormID,
-			html  : mhtBody,
-			orgCompanyID : orgCompanyID
-		},
+		contentType : "application/json",
+		data : JSON.stringify(data),
 		success: function(text){
 			result = text;
 		}        			
@@ -1886,18 +1955,21 @@ function SaveOrgFile() {
 
     mhtBody = HTML.outerHTML;
     mhtBody = ConvertHTMLtoMHT(mhtBody);
+	
+	var data = {
+		docID : pDocID,
+        formId : pFormID,
+		html  : mhtBody,
+		orgCompanyID : orgCompanyID
+	}
 
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/saveFile.do",
-		data : {
-			docID : pDocID,
-            formId : pFormID,
-			html  : mhtBody,
-			orgCompanyID : orgCompanyID
-		},
+		contentType : "application/json",
+		data : JSON.stringify(data),
 		success: function(text){
 			result = text;
 		}        			
@@ -2027,7 +2099,8 @@ function SReAprLineSingMapping(ret) {
     if (typeof ret == "object") {
     	xmlKuljea = ret[1];
     	xmlReDraft = ret[5];
-    	DrawAutoAprLine(ret[1], pDraftFlag);
+    	//DrawAutoAprLine(ret[1], pDraftFlag);
+    	New_DrawAutoLine(ret[1], pDraftFlag);
     } else {
     	reMappingSign = true;
     	xmlKuljea = ret;
@@ -2120,12 +2193,12 @@ function SReAprLineSingMapping(ret) {
     var startIdx = 0;
     var IngFlag = false;
     for (i = 1; i < OrderStat.length; i++) {
-        if (OrderStat[i] == strAprState1 && IngFlag) {
+        if ((OrderStat[i] == strAprState1 || OrderStat[i] == strAprState1 == "") && IngFlag) {
             startIdx = startIdx;
             break;
         }
         else {
-            if (OrderStat[i] == strAprState2 || OrderStat[i] == strAprState5) {
+            if ((OrderStat[i] == strAprState2 && OrderType[i] != strAprType7) || OrderStat[i] == strAprState5) {
                 startIdx = startIdx + 1;
                 IngFlag = true;
             }
@@ -2162,7 +2235,7 @@ function SReAprLineSingMapping(ret) {
         susinSN = pSusinSN
     }
 
-    for (i = startIdx; i < 20; i++) {
+    for (i = startIdx; i <= 20; i++) {
         fieldname = susinSN + "jikwe" + i
         field = message.GetListItem(fields, fieldname);
         if (field) {
@@ -2241,7 +2314,7 @@ function SReAprLineSingMapping(ret) {
     var hidx = hapyuiCnt;
     var startOrder = 1;
     for (i = 1; i < OrderStat.length; i++) {
-        if (OrderStat[i] == strAprState2 || OrderStat[i] == strAprState5)
+        if ((OrderStat[i] == strAprState2 && OrderType[i] != strAprType7) || OrderStat[i] == strAprState5)
             break;
         else
             startOrder = startOrder + 1;
@@ -2264,7 +2337,7 @@ function SReAprLineSingMapping(ret) {
                     cnt = OrderType.length;
 
 
-                for (k = 1; k < cnt; k++) {
+                for (k = 1; k <= cnt; k++) {
                     if (pDraftFlag == "SUSIN" || (pDraftFlag == "B_GAMSA" && ConvertYN == "N"))
                         signID = pSusinSN + "sign" + k
                     else
@@ -2328,10 +2401,28 @@ function SReAprLineSingMapping(ret) {
                     setNodeText(field , OrderJobtitle[i]);
             }
 
+            /* 2020-07-27 홍승비 - 서명필드만 존재하는 경우, 서명+결재자명 필드가 함께 존재하는 경우, 슬래시 이미지의 표출분기 수정 */
             fieldname = susinSN + "sign" + idx;
             field = message.GetListItem(fields, fieldname);
             if (field) {
-                field.innerHTML = OrderName[i];
+            	// 서명필드만 존재
+            	if (message.GetListItem(fields, (susinSN + "sign" + idx)) != null && message.GetListItem(fields, (susinSN + "seumyung" + idx)) == null) {
+            		setNodeText(field , OrderName[i]);
+            	}
+            	// 서명필드 + 결재자명 필드가 함께 존재
+            	else if (message.GetListItem(fields, (susinSN + "sign" + idx)) != null && message.GetListItem(fields, (susinSN + "seumyung" + idx)) != null) {
+            		field.innerHTML = "[NOSLASH]";
+            	}
+            	// 그 외의 경우, 아무런 값이 부여되지 않으므로 슬래시 이미지를 표출
+            	else {
+            		//field.innerHTML = OrderName[i];
+            	}
+            }
+            
+            fieldname = susinSN + "seumyung" + idx;
+            field = message.GetListItem(fields, fieldname);
+            if (field) {
+            	field.innerHTML = OrderName[i];
             }
             
             fieldname = susinSN + "approdept" + idx;
@@ -2342,8 +2433,46 @@ function SReAprLineSingMapping(ret) {
             idx = idx + 1;
         }
 
-        if (OrderType[i] == strAprType8 || OrderType[i] == strAprType9 || OrderType[i] == strAprType11 || OrderType[i] == strAprType12) {
+        if (OrderType[i] == strAprType8 || OrderType[i] == strAprType9) { // 개인순차합의, 개인병렬합의
             fieldname = susinSN + "habyui" + hidx;
+            field = message.GetListItem(fields, fieldname);
+            if (field) {
+                setNodeText(field , OrderDept[i]);
+            }
+
+            /* 2020-07-27 홍승비 - 합의자명 필드가 존재하지 않는 경우, 합의자 사인 필드에 이름 표출하도록 수정 */
+            fieldname = susinSN + "habyuisign" + hidx;
+            field = message.GetListItem(fields, fieldname);
+            if (field) {
+            	// 합의자 사인 필드만 존재, 합의자명 필드 없음
+            	if (message.GetListItem(fields, ("habyuisign" + hapyuiCnt)) != null && message.GetListItem(fields, ("habyuija" + hapyuiCnt)) == null) {
+            		setNodeText(field , OrderName[i]);
+            	}
+                //setNodeText(field , OrderName[i]);
+            }
+            
+            fieldname = susinSN + "habyuija" + hidx;
+            field = message.GetListItem(fields, fieldname);
+            if (field) {
+            	setNodeText(field , OrderName[i]);
+            }
+
+            fieldname = susinSN + "habyuipositon" + hidx;
+            field = message.GetListItem(fields, fieldname);
+            if (field) {
+                setNodeText(field , OrderJobtitle[i]);
+            }
+            
+            fieldname = susinSN + "habyuiapprodept" + hidx;
+            field = message.GetListItem(fields, fieldname);
+            if (field) {
+            	setNodeText(field , OrderDept[i]);
+            }
+            hidx = hidx + 1;
+        }
+        
+        if (OrderType[i] == strAprType11 || OrderType[i] == strAprType12) { // 부서순차합의, 부서병렬합의
+        	fieldname = susinSN + "habyui" + hidx;
             field = message.GetListItem(fields, fieldname);
             if (field) {
                 setNodeText(field , OrderDept[i]);
@@ -2352,7 +2481,8 @@ function SReAprLineSingMapping(ret) {
             fieldname = susinSN + "habyuisign" + hidx;
             field = message.GetListItem(fields, fieldname);
             if (field) {
-                setNodeText(field , OrderName[i]);
+                //setNodeText(field , OrderName[i]);
+            	setNodeText(field , OrderDept[i]);
             }
 
             fieldname = susinSN + "habyuipositon" + hidx;
@@ -2397,10 +2527,12 @@ function ReAprLineSingMapping(ret) {
     if (ret[5] == undefined) {
         xmlKuljea = ret[0];
         xmlReDraft = ret[2];
+        New_DrawAutoLine(ret[0], pDraftFlag);
     }
     else {
         xmlKuljea = ret[1];
         xmlReDraft = ret[5];
+        New_DrawAutoLine(ret[1], pDraftFlag);
     }
 
     var xmldom = createXmlDom();
@@ -2491,11 +2623,12 @@ function ReAprLineSingMapping(ret) {
             break;
         }
         else {
-            if (OrderStat[i] == strAprState2 || OrderStat[i] == strAprState5)
+        	// 정주환 결재라인 변경 startidx 수정
+            if ((OrderStat[i] == strAprState2 && OrderType[i] != strAprType7) || OrderStat[i] == strAprState5)
                 startIdx = startIdx + 1;
-            else if (OrderType[i] != strAprType2 && OrderType[i] != strAprType7 && OrderType[i] != strAprType9 & OrderType[i] != strAprType11 && OrderType[i] != strAprType12)
+            else if (OrderType[i] != strAprType2 && OrderType[i] != strAprType7 && OrderType[i] != strAprType8 && OrderType[i] != strAprType9 && OrderType[i] != strAprType11 && OrderType[i] != strAprType12)
                 startIdx = startIdx + 1;
-            else if (OrderType[i] == strAprType9 || OrderType[i] == strAprType11 || OrderType[i] == strAprType12)
+            else if (OrderType[i] == strAprType8 ||OrderType[i] == strAprType9 || OrderType[i] == strAprType11 || OrderType[i] == strAprType12)
                 hapyuiCnt = hapyuiCnt + 1;
         }
     }
@@ -2594,7 +2727,7 @@ function ReAprLineSingMapping(ret) {
     var hidx = hapyuiCnt;
     var startOrder = 1;
     for (i = 1; i < OrderStat.length; i++) {
-        if (OrderStat[i] == strAprState2 || OrderStat[i] == strAprState5)
+        if ((OrderStat[i] == strAprState2 && OrderType[i] != strAprType7) || OrderStat[i] == strAprState5)
             break;
         else
             startOrder = startOrder + 1;
@@ -2678,7 +2811,7 @@ function ReAprLineSingMapping(ret) {
             idx = idx + 1;
         }
 
-        if (OrderType[i] == strAprType9 || OrderType[i] == strAprType11 || OrderType[i] == strAprType12) {
+        if (OrderType[i] == strAprType8 ||OrderType[i] == strAprType9 || OrderType[i] == strAprType11 || OrderType[i] == strAprType12) {
             fieldname = susinSN + "habyui" + hidx;
             field = message.GetListItem(fields, fieldname);
             if (field) {
@@ -2702,8 +2835,11 @@ function ReAprLineSingMapping(ret) {
             hidx = hidx + 1;
         }
     }
-
-    if (field == message.GetListItem(fields, "lineapr")) {
+    
+    // 정주환 결재라인수정시 오류 수정 lineapr
+    var field = message.GetListItem(fields, "lineapr");
+//    if (field == message.GetListItem(fields, "lineapr")) {
+    if(field){
         if (idx > 5) {
             message.GetListItem(fields, "lineapr").style.display = "";
             for (i = 0; i < message.GetListItem(fields, "lineapr").childNodes.length; i++) {
@@ -2719,8 +2855,10 @@ function ReAprLineSingMapping(ret) {
             }
         }
     }
-
-    if (field == message.GetListItem(fields, "linehab")) {
+    
+    field = message.GetListItem(fields, "linehab");
+//    if (field == message.GetListItem(fields, "linehab")) {
+    if(field){
         if (hidx > 5) {
             message.GetListItem(fields, "linehab").style.display = "";
             for (i = 0; i < message.GetListItem(fields, "linehab").childNodes.length; i++) {
@@ -2911,7 +3049,8 @@ function getLastSignSN(pNodes) {
 
         var pCurrentAprType = getNodeText(dataNodes[11]);
         
-        	if (pCurrentAprType == strAprType18 || pCurrentAprType == strAprType19 || pCurrentAprType == strAprType1 || pCurrentAprType == strAprType4 || pCurrentAprType == strAprType16 || pCurrentAprType == strAprType3 || pCurrentAprType == strAprType40 ) {
+        /* 2021-02-03 홍승비 - 결재선 카운트에 감사 유형 추가 (기안, 검토, 결재, 전결, 대결, 결재안함, 후결, 감사) */
+        	if (pCurrentAprType == strAprType18 || pCurrentAprType == strAprType19 || pCurrentAprType == strAprType1 || pCurrentAprType == strAprType4 || pCurrentAprType == strAprType16 || pCurrentAprType == strAprType3 || pCurrentAprType == strAprType40 || pCurrentAprType == strAprType5) {
                 if (pCurrentAprType == strAprType4) junkyulflag = true;
 
                 switch (pCurrentAprType) {
@@ -2940,6 +3079,10 @@ function getLastSignSN(pNodes) {
                         break;
                     //후결
                     case strAprType40:
+                        lastaprlineSN = lastaprlineSN + 1;
+                        break;
+                    // 감사
+                    case strAprType5:
                         lastaprlineSN = lastaprlineSN + 1;
                         break;
                 }
@@ -3027,7 +3170,7 @@ var ezapropinion_cross_dialogArguments = new Array();
 function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
-    if (CrossYN() && ext != 'hwp') {
+    if (CrossYN()) {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;
@@ -3170,7 +3313,7 @@ function openAaprDocAttachUI() {
         aprcabinetattach_cross_dialogArguments[1] = openAaprDocAttachUI_Complete;
         
         if(approvalFlag == "G") {
-        	DivPopUpShow(1050, 500, "/ezApprovalG/aprCabinetAttach.do");
+        	DivPopUpShow(1050, 520, "/ezApprovalG/aprCabinetAttach.do");
         } else {
         	DivPopUpShow(1050, 560, "/ezApprovalG/aprDocAttach.do?orgCompanyID=" + orgCompanyID+"&pDocID="+pDocID);
         }
@@ -3509,7 +3652,7 @@ function UpdateDocHistory(pHtml, isBeforeDoc, beforeDocURL) {
     
     xmlhttp2.open("POST", "/ezApprovalG/uploadDocHistory.do", false);
     xmlhttp2.send(xmlpara);
-
+    
     var URL = xmlhttp2.responseText;
     var returnURL = "";
     if (URL.length < 255 && URL != "FALSE") {
@@ -3523,10 +3666,10 @@ function UpdateDocHistory(pHtml, isBeforeDoc, beforeDocURL) {
         createNodeAndInsertText(xmlpara, objNode, "pUserName", arr_userinfo[11]);
         createNodeAndInsertText(xmlpara, objNode, "pUserJobTitle", arr_userinfo[13]);
         createNodeAndInsertText(xmlpara, objNode, "pUserDeptID", arr_userinfo[4]);
-        createNodeAndInsertText(xmlpara, objNode, "pUserDeptName", arr_userinfo[15]);
+        createNodeAndInsertText(xmlpara, objNode, "pUserDeptName", ConvMakeXMLString(arr_userinfo[15]));
         createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", arr_userinfo[12]);
         createNodeAndInsertText(xmlpara, objNode, "PUSERJOBTITLE2", arr_userinfo[14]);
-        createNodeAndInsertText(xmlpara, objNode, "PUSERDEPTNAME2", arr_userinfo[16]);
+        createNodeAndInsertText(xmlpara, objNode, "PUSERDEPTNAME2", ConvMakeXMLString(arr_userinfo[16]));
         createNodeAndInsertText(xmlpara, objNode, "ORGCOMPANYID", orgCompanyID);
         createNodeAndInsertText(xmlpara, objNode, "ISBEFOREDOC", isBeforeDoc);
         createNodeAndInsertText(xmlpara, objNode, "BEFOREDOCURL", beforeDocURL);
@@ -3555,6 +3698,7 @@ function UpdateDocHistory(pHtml, isBeforeDoc, beforeDocURL) {
 function UpdateLineHistory() {
 	var result = "";
     
+	/* 2020-05-22 홍승비 - 사용자 부서에 특수문자 허용 + arr_userinfo[] 배열의 값은 c:out 태그로 저장하므로, DB 저장 시 역으로 특수문자 인코딩 진행 */
     $.ajax({
 		type : "POST",
 		dataType : "text",
@@ -3566,11 +3710,11 @@ function UpdateLineHistory() {
 			userName : arr_userinfo[11],
 			userJobTitle : arr_userinfo[13],
 			userDeptID : arr_userinfo[4],
-			userDeptName : arr_userinfo[15],
+			userDeptName : ConvMakeXMLString(arr_userinfo[15]),
 			chkFlag : "CHECK",
 			userName2 : arr_userinfo[12],
 			userJobTitle2 : arr_userinfo[14],
-			userDeptName2 : arr_userinfo[16],
+			userDeptName2 : ConvMakeXMLString(arr_userinfo[16]),
 			orgCompanyID : orgCompanyID
 		},
 		success: function(xml){
@@ -3974,6 +4118,7 @@ function setDocNumFormat(pPrefix) {
     var fieldValue = message.DocumentBodyGetAttribute("orgdocnum", 0);
 
     Arr_Header = fieldValue.split("-");
+    org_Header = field.split("-");
     
     Arr_Header.forEach(function(item, index) {
     	if (!item.indexOf('@')) {
@@ -3990,12 +4135,13 @@ function setDocNumFormat(pPrefix) {
                     break;
 
                 case "YY":
-                    numHeader += d.getFullYear();
+                    var tempYear = d.getFullYear();
+                    numHeader += (org_Header[index] == tempYear ? tempYear : org_Header[index]);
                     break;
                     
                 case "yy":
-                    var yyear = d.getFullYear();
-                    numHeader += yyear.toString().substr(2);
+                    var tempYear = d.getFullYear().substr(2);
+                    numHeader += (org_Header[index] == tempYear ? tempYear : org_Header[index]);
                     break;
 
                 case "MM":
@@ -4027,8 +4173,8 @@ function setDocNumFormat(pPrefix) {
                 	break;
                 	
                 case "YM":
-                	var yyear = d.getFullYear();
-                    numHeader += yyear.toString().substr(2);
+                    var tempYear = d.getFullYear().substr(2);
+                    numHeader += (org_Header[index] == tempYear ? tempYear : org_Header[index]);
                     
                 	var mmonth = d.getMonth() + 1;
                     if (parseInt(mmonth) < 10) mmonth = "0" + mmonth;
@@ -4103,4 +4249,50 @@ function setDocNumFormat(pPrefix) {
     field.textContent = numHeader;
     if (numHeader.indexOf(strLang107) > 0)
         message.DocumentBodySetAttribute("docnum", numHeader);
+}
+
+/* 2020-03-06 홍승비 - 부서에 특수문자를 허용하므로, DB 저장 시 역인코딩을 위한 함수 추가 */
+function ConvMakeXMLString(str) {
+    str = ReplaceText(str, "&lt;", "<");
+    str = ReplaceText(str, "&gt;", ">");
+    str = ReplaceText(str, "&#039;", "'");
+    str = ReplaceText(str, "&#034;", "\"");
+	str = ReplaceText(str, "&amp;", "&");	    
+	str = ReplaceText(str, "&#92;", "\\");
+    return str;
+}
+
+//2020-05-08 : 결재정보/문서정보 저장
+function setApprDocInfo(){
+    var objNodes = GetChildNodes(GetChildNodes(document.getElementById('DOCINFO').dataSource.childNodes[0])[0]);
+
+    var xmlpara = createXmlDom();
+
+    var objNode;
+    createNodeInsert(xmlpara, objNode, "PARAMETER");  
+    createNodeAndInsertText(xmlpara, objNode, "DOCID", getNodeText(objNodes[0])); 
+    createNodeAndInsertText(xmlpara, objNode, "PUBLICATION", tempPublic); 
+    createNodeAndInsertText(xmlpara, objNode, "SECURITY", tempSecurity);
+    createNodeAndInsertText(xmlpara, objNode, "URGENTAPPROVAL", tempUrgent);
+    createNodeAndInsertText(xmlpara, objNode, "KEYWORD", tempKeyword); 
+    createNodeAndInsertText(xmlpara, objNode, "SPECIALRECORDCODE", pSpecialRecordCode);
+    createNodeAndInsertText(xmlpara, objNode, "PUBLICITYCODE", pPublicityCode);
+    createNodeAndInsertText(xmlpara, objNode, "PUBLICITYYN", pPublicityYN);
+    createNodeAndInsertText(xmlpara, objNode, "LIMITRANGE", pLimitRange);
+    createNodeAndInsertText(xmlpara, objNode, "PAGENUM", pPageNum);   
+    createNodeAndInsertText(xmlpara, objNode, "SUMMARY", pSummery);
+    createNodeAndInsertText(xmlpara, objNode, "SECURITYAPPROVAL", tempSecurityDate);
+
+    xmlhttp.open("POST", "/ezApprovalG/setApprDocInfo.do", false);
+    xmlhttp.send(xmlpara);
+
+    return xmlhttp.responseText;
+}
+
+//결재 세부옵션처리
+function setFormAprOption(){  
+    if(formAprOption.indexOf("_a2_"))  //파일첨부
+        setMenuBar("btnFileAttach", false);	
+    if(formAprOption.indexOf("_a3_"))  //문서첨부
+        setMenuBar("btnAprDocAttach", false);	
 }

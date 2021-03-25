@@ -17,32 +17,44 @@
 
 package egovframework.let.utl.fcc.service;
 
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.math.BigInteger;
 import java.net.URI;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.text.Normalizer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -55,12 +67,16 @@ import javax.servlet.http.HttpSession;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -71,18 +87,25 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
+import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.util.WebUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
+import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
+import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -130,11 +153,17 @@ public class CommonUtil {
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
 	
+	@Resource(name="EzSystemAdminService")
+	private EzSystemAdminService ezSystemAdminService;
+	
     @Resource(name="egovMessageSource")
     private EgovMessageSource egovMessageSource;    
 	
 	@Resource(name = "jspw")
     private String jspw;
+
+	@Resource(name = "EzNewPortalService")
+	private EzNewPortalService ezNewPortalService;
 	
 	/* File separator 공통 함수 */
 	public String separator = "/";
@@ -144,11 +173,14 @@ public class CommonUtil {
 	private static final Logger logger = LoggerFactory.getLogger(CommonUtil.class);
 	private static CommonUtil commonUtilInstance;
 	
+//	private static Map<String, String> loginUsers;
+	
     @PostConstruct
 	public void init() throws Exception {
     	logger.debug("init started.");
 
     	commonUtilInstance = this;
+//    	loginUsers = new ConcurrentHashMap<String, String>();
     	
     	logger.debug("init ended.");
     }
@@ -165,7 +197,7 @@ public class CommonUtil {
 	    	String parentFolder1 = "../";
 	    	String parentFolder2 = "..\\";
 	    	
-	    	if (filePath.contains(parentFolder1) || filePath.contains(parentFolder2)) {
+	    	if (filePath.contains(parentFolder1) || filePath.contains(parentFolder2) || filePath.toUpperCase().contains("WEB-INF")) {
 	    		logger.debug("PathTraversal detected. filePath=" + filePath);
 	    		
 	    		throw new Exception("PathTraversal detected.");
@@ -187,19 +219,29 @@ public class CommonUtil {
 	}
     
     public String stripScriptTagsAndFunctions(String src) {
-        Pattern p = Pattern.compile("<(object|applet|script).*?>|</(object|applet|script).*?>|alert\\(.*\\)|confirm\\(.*\\)|prompt\\(.*\\)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-        Matcher m = p.matcher(src);
-        src = m.replaceAll("");
+    	if (src != null && !src.isEmpty()) {
+	        Pattern p = Pattern.compile("<(object|applet|script).*?>|</(object|applet|script).*?>|alert([ ]*?/\\*.*?\\*/[ ]*?)?\\(.*?\\)|confirm([ ]*?/\\*.*?\\*/[ ]*?)?\\(.*?\\)|prompt([ ]*?/\\*.*?\\*/[ ]*?)?\\(.*?\\)|window.*?location",
+	        				Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+	        Matcher m = p.matcher(src);
+	        src = m.replaceAll("");
+    	}
 
         return src;
     }
 
+	public String stripTagSymbols(String src) {
+		if (src != null && !src.isEmpty()) {
+			src = src.replaceAll("<", "").replaceAll(">", "");
+		}
+
+		return src;
+	}
+    
 	public LoginVO userInfo(String loginCookie){
 		try{
 			String decData = egovFileScrty.decryptAES(loginCookie);
 
 			String[] decDataArray = decData.split("///");
-			
 			String serverName = decDataArray[0];
 			String userID = decDataArray[1];
 			String locale = decDataArray[5];
@@ -311,7 +353,7 @@ public class CommonUtil {
 			for (int k = 0; k < cookie.length; k++) {
 				switch (cookie[k].getName()) {
 				case "APRUI0":
-					user.setDeptID(cookie[k].getValue());
+					user.setDeptID(URLDecoder.decode(cookie[k].getValue(), "utf-8"));
 					break;
 				case "APRUI1":
 					user.setDeptName1(URLDecoder.decode(cookie[k].getValue(), "utf-8"));
@@ -332,7 +374,7 @@ public class CommonUtil {
 					user.setTitle2(URLDecoder.decode(cookie[k].getValue(), "utf-8"));
 					break;
 				case "APRUI7":
-					user.setCompanyID(cookie[k].getValue());
+					user.setCompanyID(URLDecoder.decode(cookie[k].getValue(), "utf-8"));
 					break;
 				}
 			}
@@ -423,7 +465,7 @@ public class CommonUtil {
 			// in case of IE & Edge
 			// the filename needs to be UTF-8 and URL-encoded.
 			// URI class is more appropriate than URLEncoder class for this purpose.
-			if (userAgentValue.contains("Trident") || userAgentValue.contains("Edge")) {
+			if (userAgentValue.contains("Trident") || userAgentValue.contains("Edge") || userAgentValue.contains("Chrome")) {
 			    // "자동회신:"과 같이 :이 제목에 포함되어 있는 경우 메일 저장하기 시, 한글파일명 깨지는 문제가 있어
 			    // :를 %3A로 변경한 후 URI 인코딩을 수행함. 
 				filename = filename.replaceAll(":", "%3A");
@@ -431,6 +473,10 @@ public class CommonUtil {
 				filename = uri.toASCIIString();
 				// %3A에서 %가 %25로 인코딩되므로 다시 %3A로 변경함.
 				filename = filename.replaceAll("%253A", "%3A");
+				
+                if (userAgentValue.contains("Chrome")) {
+                    filename = filename + "\"" + "; filename*=UTF-8''\"" + filename;
+                }				
 			}
 			// in case of Chrome, Safari
 			// the filename consists of UTF-8 encoded bytes.
@@ -517,86 +563,82 @@ public class CommonUtil {
 	}
 	
 	public boolean isLoginCookieExists(HttpServletRequest request, HttpServletResponse response) {
-        boolean isCookie = false;     
-        Cookie[] cookies = request.getCookies();
-        
-        String serverName = request.getServerName();
+		boolean usingSession = false;
 
-        int tenantID;
+		try {
+			String serverName = request.getServerName();
+			int tenantID = loginService.getTenantId(serverName);
+			String useSessionConfig = ezCommonService.getTenantConfig("useSession", tenantID);
 
-        String useSession = null;
-        try {
-			tenantID = loginService.getTenantId(serverName);
-			
-			useSession = ezCommonService.getTenantConfig("useSession", tenantID);
-		} catch (Exception e1) {
-			e1.printStackTrace();
+			// 세션 콘피그가 0 이거나 비어있으면 세션 로그인 사용 안 함
+			usingSession = !useSessionConfig.isEmpty() && !useSessionConfig.equals("0");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return false;
 		}
-		
-		// 2018.10.22 이석화 변경 - 세션 0이면 세션 사용 안 함
-		// 2019.09.10 127.0.0.1 일 때는 세션 확인 안 함 (인사연동)
-		if (!useSession.equals("") && !useSession.equals("0") && !request.getRemoteAddr().equals("127.0.0.1")) {
-			/* session time을 위한 처리 주석 */	
-			/* 세션 사용 위해 주석 해제*/
-			HttpSession session = request.getSession(false);
-			
-			if (session != null) {
-		        if (cookies != null) {
-		            for (Cookie cookie : cookies) {
-		                if("loginCookie".equals(cookie.getName())){
-		                    //접속한 클라이언트 IP
-		                    String ip = ClientUtil.getClientIP(request);
-		                    String cValue = "";
-		                    try {
-		                        //쿠기에 저장되어 있는 IP
-		                        cValue = egovFileScrty.decryptAES(cookie.getValue());
-		
-		                        if(cValue.split("///")[3].equals(ip)){                  
-		                            isCookie = true;
-		                        }
-		                    } catch (Exception e) {
-		                        //e.printStackTrace();
-		                    }
-		                }
-		            }
-		        }
-	        } else {
-	        	if (cookies != null) {
-	        		for (Cookie cookie : cookies) {
-	        			if(!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*")){
-	        				cookie.setMaxAge(0);
-	        				cookie.setPath("/");
-	        				response.addCookie(cookie);
-	        				
-	        				request.getSession().invalidate();
-	        			}
-	        	    }
-	        	}
-	        } 
-		} else {
-			if (cookies != null) {
-				for (Cookie cookie : cookies) {
-					if("loginCookie".equals(cookie.getName())){
-						//접속한 클라이언트 IP
-						String ip = ClientUtil.getClientIP(request);
-						String cValue = "";
-						try {
-							//쿠기에 저장되어 있는 IP
-							cValue = egovFileScrty.decryptAES(cookie.getValue());
-							
-							if(cValue.split("///")[3].equals(ip) && checkDeptId(cValue)){                  
-								isCookie = true;
-							}
-						} catch (Exception e) {
-							//e.printStackTrace();
-						}
-					}
-				}
+
+		// 세션 콘피그를 무시하고 로그인 쿠키만으로 사용할 수 있도록 해줌
+		boolean usingAsAPI = "yes".equalsIgnoreCase(request.getHeader("Use-As-API"));
+		// request 아이피가 127.0.0.1 일 때는 세션 콘피그 무시함 (인사연동)
+		boolean isLoopbackRequest = request.getRemoteAddr().equals("127.0.0.1");
+
+		if (!usingSession || usingAsAPI || isLoopbackRequest) {
+			return validLoginCookie(request);
+		}
+
+		return validSessionLoginCookie(request, response);
+	}
+
+	private boolean validLoginCookie(HttpServletRequest request) {
+		Cookie loginCookie = WebUtils.getCookie(request, "loginCookie");
+
+		if (loginCookie == null) {
+			return false;
+		}
+
+		try {
+			String ip = ClientUtil.getClientIP(request);
+			String decryptedLoginCookie = egovFileScrty.decryptAES(loginCookie.getValue());
+
+			// 복호화된 로그인 쿠키는 "///" 구분자로 여러 정보가 담겨있으며 그 중 4번째가 클라이언트의 IP이다.
+			return decryptedLoginCookie.split("///")[3].equals(ip) && checkDeptId(decryptedLoginCookie);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return false;
+	}
+
+	private boolean validSessionLoginCookie(HttpServletRequest request, HttpServletResponse response) {
+		HttpSession session = request.getSession(false);
+
+		if (session == null) {
+			clearAllCookies(request, response);
+
+			return false;
+		}
+
+		return validLoginCookie(request);
+	}
+
+	private void clearAllCookies(HttpServletRequest request, HttpServletResponse response) {
+		Cookie[] cookies = request.getCookies();
+
+		if (cookies == null) {
+			return;
+		}
+
+		for (Cookie cookie : cookies) {
+			if (!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*")) {
+				cookie.setMaxAge(0);
+				cookie.setPath("/");
+				response.addCookie(cookie);
+
+				request.getSession().invalidate();
 			}
 		}
-        return isCookie;
 	}
-	
+
 	public boolean checkDeptId(String cValue){
 		String[] decDataArray = cValue.split("///");
 		
@@ -610,11 +652,20 @@ public class CommonUtil {
         if(decDataArray.length >= 10) {
         	deptID = decDataArray[9];
         }
+        
+        // ezSyncServer에서 ezFlow를 호출하는 경우에는 쿠키안에 부서 아이디가 포함되어 있지 않으므로
+        // 이 경우엔 true를 반환한다.
+        if ("".equals(deptID)) {
+        	return true;
+        }
+        
 		int isDept = ezCommonService.checkDeptId(userID, deptID, tenantId);
 		
 		if(isDept>0){
 			return true;
 		} else {
+			logger.debug("checkDeptId isDept=" + isDept + ",userID=" + userID + ",deptID=" + deptID);
+			
 			return false;
 		}
 	}
@@ -622,6 +673,8 @@ public class CommonUtil {
 	public Document convertStringToDocument(String xmlStr) {
 		String replaceData = xmlStr.trim().replaceFirst("^([\\W]+)<","<");
 		replaceData = replaceData.replace("&shy;", "");
+		replaceData = replaceData.replace("\uffff", "");
+		replaceData = replaceData.replaceAll("[\\u0000-\\u0008\\u000B-\\u000C\\u000E-\\u001F]", "");
 		
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();  
         DocumentBuilder builder;
@@ -789,7 +842,8 @@ public class CommonUtil {
 	
 	public String cleanScriptValue(String htmlCode, String type) {
         if("clean".equals(type)){
-        	htmlCode = htmlCode.replaceAll("</?script>", "&lt;sciprt&gt;");
+        	//htmlCode = htmlCode.replaceAll("</?script>", "&lt;sciprt&gt;");
+        	htmlCode = stripScriptTagsAndFunctions(htmlCode);
         }
 		
 		return htmlCode;
@@ -902,7 +956,9 @@ public class CommonUtil {
 		} else if (dateStr.length() == 21) {
 			if (dateStr.indexOf("/") > -1) {
 				pattern = "yyyy/MM/dd aa h:mm:ss";
-			} else {
+			} else if (dateStr.indexOf(".") > -1) {
+				pattern = "yyyy-MM-dd HH:mm:ss";
+			} else{
 				pattern = "yyyy-MM-dd aa h:mm:ss";
 			}
 		} else {
@@ -1107,12 +1163,37 @@ public class CommonUtil {
 					packageType = items[2];					
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 				logger.debug("License Key Decryption failed.");
 			}			
 		}
 		
 		logger.debug("packageType=" + packageType);
 		
+		return packageType;
+	}
+	
+	// yy tenantID로 db에 있는것만 복호화하는게 아니고 요청된 licenseKey를 복호화하는 기능
+	public String licenseKeyDEC(String licenseKey) throws Exception {
+		String packageType = "";
+		
+		if (!licenseKey.equals("")) {
+			try {
+				// 라이센스키를 복호화한다.
+				licenseKey = egovFileScrty.decryptAES(licenseKey);
+				
+				logger.debug("Decrypted licenseKey=" + licenseKey);
+				
+				String items[] = licenseKey.split(":");
+
+				if (items.length >= 3) {
+					packageType = items[2];					
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				logger.debug("License Key Decryption failed.");
+			}			
+		}
 		return packageType;
 	}
 	
@@ -1265,54 +1346,70 @@ public class CommonUtil {
 	 */
 	public JSONObject getJsonFromRestApi(String restUrl, Map<String, Object> param, HttpServletRequest request, String methodType, JSONObject jsonParam){
 		logger.debug("getJsonFromRestApi started");
-		String gwServerUrl = config.getProperty("config.journalGWServerURL");
-		String url = gwServerUrl + restUrl ;
-		
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		
-		HttpEntity<?> entity = new HttpEntity<>(jsonParam, headers);
-
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
-		
-		if (param != null) {
-			for(String key : param.keySet()){
-				builder.queryParam(key, param.get(key));
-			}
-		}
-		
-		RestTemplate rest = new RestTemplate();
-		
-		HttpMethod method = null;
-		switch (methodType) {
-		case "get":
-			method = HttpMethod.GET;
-			break;
-		case "put":
-			method = HttpMethod.PUT;
-			break;
-		case "post":
-			method = HttpMethod.POST;
-			break;
-		case "delete":
-			method = HttpMethod.DELETE;
-			break;
-		default:
-			method = HttpMethod.GET;
-			break;
-		}
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), method, entity, String.class);
-		
-		JSONParser jp = new JSONParser();
-		
 		JSONObject resultBody = null;
 		
-		try {
-			resultBody = (JSONObject) jp.parse(result.getBody());
-		} catch (org.json.simple.parser.ParseException e) {
+		try{
+			String gwServerUrl = config.getProperty("config.journalGWServerURL");
+			String url = gwServerUrl + restUrl ;
+			
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+			headers.set("x-user-host", request.getServerName());
+			
+			HttpEntity<?> entity = new HttpEntity<>(jsonParam, headers);
+
+			UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+			
+			if (param != null) {
+				for(String key : param.keySet()){
+					builder.queryParam(key, param.get(key));
+				}
+			}
+			
+			RestTemplate rest = null;
+			
+			if (methodType.equals("patch")) {
+				ClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+				rest = new RestTemplate(httpRequestFactory);
+			} else {
+				rest = new RestTemplate();
+			}
+			
+			HttpMethod method = null;
+			switch (methodType) {
+			case "get":
+				method = HttpMethod.GET;
+				break;
+			case "put":
+				method = HttpMethod.PUT;
+				break;
+			case "post":
+				method = HttpMethod.POST;
+				break;
+			case "delete":
+				method = HttpMethod.DELETE;
+				break;
+			case "patch":
+				method = HttpMethod.PATCH;
+				break;
+			default:
+				method = HttpMethod.GET;
+				break;
+			}
+			ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), method, entity, String.class);
+			
+			JSONParser jp = new JSONParser();
+			
+			
+			try {
+				resultBody = (JSONObject) jp.parse(result.getBody());
+			} catch (org.json.simple.parser.ParseException e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		logger.debug("getJsonFromRestApi ended");
 		return resultBody;
 	}
@@ -1379,6 +1476,7 @@ public class CommonUtil {
 			String userLang = ezCommonService.selectUserGetLang(userId, tenantId);
 			String timeZone = ezCommonService.selectUserGetTimeZone(userId, tenantId);
 			user.setOffset(timeZone);
+			user.setLang(userLang);
 			
 			if (userLang != null) {
 				if (user.getPrimary().equals(userLang)) {
@@ -1458,6 +1556,11 @@ public class CommonUtil {
 		return resultBody;
 	}
 	
+	public String getMailPassword() {
+		String pass = jspw;
+		return pass;
+	}
+	
 	/**
 	 * 레스트 API에서 제이슨 오브젝트 넘겨 받는 메서드
 	 * @param resteUrl
@@ -1465,6 +1568,70 @@ public class CommonUtil {
 	 * @param request
 	 * @return
 	 */
+	public JSONObject getJsonFromRestApi(String gwServerUrl, String restUrl, Map<String, Object> param, HttpServletRequest request, String methodType, JSONObject jsonParam){
+		logger.debug("getJsonFromRestApi started.");
+		String url = gwServerUrl + restUrl ;
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(jsonParam, headers);
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		
+		if (param != null) {
+			for(String key : param.keySet()){
+				builder.queryParam(key, param.get(key));
+			}
+		}
+		
+		RestTemplate rest = null;
+		
+		if (methodType.equals("patch")) {
+			ClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+			rest = new RestTemplate(httpRequestFactory);
+		} else {
+			rest = new RestTemplate();
+		}
+		
+		HttpMethod method = null;
+		switch (methodType) {
+		case "get":
+			method = HttpMethod.GET;
+			break;
+		case "put":
+			method = HttpMethod.PUT;
+			break;
+		case "post":
+			method = HttpMethod.POST;
+			break;
+		case "delete":
+			method = HttpMethod.DELETE;
+			break;
+		case "patch":
+			method = HttpMethod.PATCH;
+			break;
+		default:
+			method = HttpMethod.GET;
+			break;
+		}
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), method, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = null;
+		
+		try {
+			resultBody = (JSONObject) jp.parse(result.getBody());
+		} catch (org.json.simple.parser.ParseException e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("getJsonFromRestApi ended.");
+		return resultBody;
+	}
+	
 	public JSONObject getJsonFromMemoRestApi(String restUrl, Map<String, Object> param, HttpServletRequest request, String methodType, JSONObject jsonParam){
 		logger.debug("getJsonFromMemoRestApi started");
 		String gwServerUrl = config.getProperty("config.memoGwServerURL");
@@ -1515,10 +1682,10 @@ public class CommonUtil {
 		} catch (org.json.simple.parser.ParseException e) {
 			e.printStackTrace();
 		}
-		logger.debug("getJsonFromMemoRestApi ended");
+		logger.debug("getJsonFromMemoRestApi ended.");
 		return resultBody;
 	}
-
+	
 	public String getWildcardEscapedString(String s, int dbName) {
 		if (dbName == ORACLE) {
 			if ((s.indexOf('%') == -1) && (s.indexOf('_') == -1) && (s.indexOf('\\') == -1)) {
@@ -1557,6 +1724,33 @@ public class CommonUtil {
 		return sb.toString();
 	}
 	
+	public Map<String, Object> transBean2Map(Object obj) {
+	    Map<String, Object> map = new HashMap<>();
+	    
+	    if (obj == null) {
+	        return map;
+	    }
+	    
+	    try {
+	        BeanInfo beanInfo = Introspector.getBeanInfo(obj.getClass());
+	        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+	        
+	        for (PropertyDescriptor property : propertyDescriptors) {
+	            String key = property.getName();
+	            
+	            if (!key.equals("class")) {
+	                Method getter = property.getReadMethod();
+	                Object value = getter.invoke(obj);
+	                map.put(key, value);
+	            }
+	        }
+	    } catch (Exception e) {
+	        logger.error("transBean2Map Error " + e);
+	    }
+	    
+	    return map;
+	}
+	
 	/**
 	 * returns a string containing size with a size unit(MB or KB or B) 
 	 */
@@ -1572,6 +1766,64 @@ public class CommonUtil {
 		}
 
 		return strSize;
+	}
+	
+	public void setLoginUsers(int tenantID, String userID, String loginTime) throws Exception {
+		ezCommonService.setMultiLoginUser(tenantID, userID, loginTime);
+	}
+	
+	public boolean checkMultiLogin(HttpServletRequest request, HttpServletResponse response) {
+		boolean result = true;
+		
+		Cookie [] cookies = request.getCookies();
+		Cookie loginCookie = null;
+		Cookie multiLoginCookie = null;
+		String useMultiLogin = "YES";
+		
+		try {
+			if(!request.getRequestURI().equals("/user/login/actionLogout.do") && cookies != null) {
+				for(Cookie cookie : cookies) {
+					if(cookie.getName().equals("loginCookie")) {
+						loginCookie = cookie;
+					} else if(cookie.getName().equals("multiLoginCookie")) {
+						multiLoginCookie = cookie;
+					}
+				}
+				
+				if(loginCookie != null) {
+					String [] cookieInfo = egovFileScrty.decryptAES(loginCookie.getValue()).split("///");
+					
+					if(cookieInfo.length <  11) {
+						return result;
+					}
+					
+					String userID = cookieInfo[1];
+					String companyID = cookieInfo[10];
+					int tenantID = Integer.parseInt(cookieInfo[8]);
+					
+					logger.debug("MultiLogin::: userID = " + userID + ", companyID = " + companyID + ", tenantID = " + tenantID);
+					
+					if(companyID.equals("")) { 
+						return result;
+					}
+					
+					useMultiLogin = ezCommonService.getCompanyConfig(tenantID, companyID, "useMultiLogin");
+					
+					if(useMultiLogin.equalsIgnoreCase("NO")) {
+						result = ezCommonService.matchMultiLoginTime(tenantID, userID, multiLoginCookie.getValue());
+					} 
+				} else {
+					if(multiLoginCookie != null) {
+						result = false;
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.debug("multilogin fail::: loginCookie = " + loginCookie);
+		}
+		
+		return result;
 	}
 	
 	/** 
@@ -1598,4 +1850,529 @@ public class CommonUtil {
 		
 		return String.format("<DIV id=\"msgBody\" style=\"font-size: %s; font-family: %s;\" name=\"urn:schemas:httpmail:textdescription\">%s</DIV>", fontSize, fontFamily, content);
 	}
+	
+	public List<CountryVO> getCountryInfo(String ip) throws Exception {
+		List<CountryVO> countryInfo = new ArrayList<CountryVO>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		try {
+    		String[] iparr = ip.split("\\.");
+    		
+    		long changeIp = (long) Math.pow(256, 3) * Integer.parseInt(iparr[0])
+    				+ (long) Math.pow(256, 2) * Integer.parseInt(iparr[1])
+    				+ (long) Math.pow(256, 1) * Integer.parseInt(iparr[2])
+    				+ (long) Math.pow(256, 0) * Integer.parseInt(iparr[3]);
+    		
+    		logger.debug("changeIp=" + changeIp);
+    		map.put("changeIp", changeIp);
+    		
+    		countryInfo = ezCommonService.getCountryInfo(map);
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return countryInfo;
+	}
+	
+	public Boolean checkLocalIP (String ip) {
+		Boolean result = false;
+		
+		if (ip.startsWith("10.") || ip.startsWith("127.") || ip.startsWith("192.168.") || ip.startsWith("169.254.") || ip.startsWith("0:")) {
+			result = true;
+		} else {
+			String[] iparr = ip.split("\\.");
+			long changeIp = 0;
+			
+			// 172.16.0.0 ~ 172.31.255.255
+			changeIp = (long) Math.pow(256, 3) * Integer.parseInt(iparr[0])
+    				+ (long) Math.pow(256, 2) * Integer.parseInt(iparr[1])
+    				+ (long) Math.pow(256, 1) * Integer.parseInt(iparr[2])
+    				+ (long) Math.pow(256, 0) * Integer.parseInt(iparr[3]);
+			if (changeIp >= 2886729728L && changeIp <= 2887778303L) {
+				result = true;
+			}
+		}
+		
+		return result;
+	}
+	
+	// 암호 정책관리 체크
+	@SuppressWarnings("unchecked")
+	public Boolean checkPwPolicy (String pwStr, String companyId, int tenantId) throws Exception {
+		logger.debug("commonUtil. checkPwPolicy Started.");
+		logger.debug("companyId=" + companyId + ", tenantId=" + tenantId + ", pwStr=" + pwStr);
+		
+		Boolean bResult = false;
+		
+		// 1. 암호 정책관리 사용 여부 확인
+		String usePasswordPatternPolicy = ezCommonService.getCompanyConfig(tenantId, companyId, "UsePasswordPatternPolicy");
+		if (!usePasswordPatternPolicy.equals("YES")) {
+			logger.debug("commonUtil. checkPwPolicy ended. usePasswordPatternPolicy config is 'NO'");
+			return true;
+		}
+		
+		Map<String, Object> pwMap = ezSystemAdminService.getPwPolicy(tenantId, companyId);
+		if (pwMap != null) {
+			logger.debug("pwMap=" + pwMap.toString());
+			
+			Boolean bEngCapitalLetter = false; // 대문자 포함시 true(대소문자 구분 안할 경우 bEngSmallLetter는 무조건 false로 하고 bEngCapitalLetter 만 사용)
+			Boolean bEngSmallLetter = false;   // 소문자 포함시 true(대소문자 구분 안할 경우 bEngSmallLetter는 무조건 false)
+			Boolean bNumber = false;           // 숫자 포함시 true
+			Boolean bSpecialChar = false;      // 특수문자 포함시 true
+			
+			Map<String, String> pwPolicyMap = (Map<String, String>) pwMap.get("pwPolicy");
+			List<Map<String, Object>> pwPolicyPattern = (List<Map<String, Object>>) pwMap.get("pwPolicyPattern");
+			
+			String engCharType = pwPolicyMap.get("ENG_CHAR_TYPE"); // 영문 (대소문자)  :: Y or N
+			String useEngCapitalLetter = pwPolicyMap.get("USE_ENG_CAPITAL_LETTER"); // 대문자 사용여부  :: Y or N
+			String useEngSmallLetter = pwPolicyMap.get("USE_ENG_SMALL_LETTER"); // 소문자 사용여부  :: Y or N
+			String useNumber = pwPolicyMap.get("USE_NUMBER"); // 숫자 사용여부  :: Y or N
+			String useSpecial = pwPolicyMap.get("USE_SPECIAL_CHAR"); // 특수문자 사용여부  :: Y or N
+			logger.debug("engCharType=" + engCharType + ", useEngCapitalLetter=" + useEngCapitalLetter + ", useEngSmallLetter=" + useEngSmallLetter
+					+ ", useNumber=" + useNumber + ", useSpecial=" + useSpecial);
+			
+		    // 2. 영문 대소문자 구분 사용 여부 (
+			if (engCharType != null) {
+				if (engCharType.equalsIgnoreCase("Y")) {
+					// 영문 대문자 사용
+                	bEngCapitalLetter = Pattern.compile("[A-Z]").matcher(pwStr).find();
+	                if (useEngCapitalLetter != null && useEngCapitalLetter.equalsIgnoreCase("N")) {
+	                    if (bEngCapitalLetter) {
+	            			logger.debug("commonUtil. checkPwPolicy ended. (useEngCapitalLetter)");
+	                        return false;
+	                    }
+	                }
+
+	                // 영문 소문자 사용
+	                bEngSmallLetter = Pattern.compile("[a-z]").matcher(pwStr).find();
+	                if (useEngSmallLetter != null && useEngSmallLetter.equalsIgnoreCase("N")) {
+	                    if (bEngSmallLetter) {
+	            			logger.debug("commonUtil. checkPwPolicy ended. (useEngSmallLetter)");
+	                        return false;
+	                    }
+	                }
+				} else {
+					bEngCapitalLetter = Pattern.compile("[a-zA-Z]").matcher(pwStr).find();
+        			logger.debug("!!!!! =" + bEngCapitalLetter);
+				}
+			}
+			
+            // 3. 숫자 사용
+            bNumber = Pattern.compile("[1-9]").matcher(pwStr).find();
+            if (useNumber != null && useNumber.equalsIgnoreCase("N")) {
+                if (bNumber) {
+        			logger.debug("commonUtil. checkPwPolicy ended. (useNumber)");
+                    return false;
+                }
+            }
+
+            // 4. 특수문자 사용
+            bSpecialChar = Pattern.compile("[~!@#$%^&*()=+|\\/:;?\"<>']").matcher(pwStr).find();
+            if (useSpecial != null && useSpecial.equalsIgnoreCase("N")) {
+                if (bSpecialChar){
+        			logger.debug("commonUtil. checkPwPolicy ended. (useSpecial)");
+                    return false;
+                }
+            }
+            
+            int iPatternCnt = 0;
+			logger.debug("bEngCapitalLetter=" + bEngCapitalLetter + ", bEngSmallLetter=" + bEngSmallLetter + 
+					", bNumber=" + bNumber + ", bSpecialChar=" + bSpecialChar);
+            if (bEngCapitalLetter){ iPatternCnt++;} 
+            if (bEngSmallLetter){ iPatternCnt++;} 
+            if (bNumber){ iPatternCnt++;} 
+            if (bSpecialChar){ iPatternCnt++;} 
+			
+            // 5. 패턴 사용 수, 글자수 확인
+            if (pwPolicyPattern != null && pwPolicyPattern.size() > 0) {
+            	Boolean patternChk = true;
+            	
+            	for (Map<String, Object> pwPattern : pwPolicyPattern) {
+            		
+            		int patternCnt = Integer.parseInt(String.valueOf(pwPattern.get("USE_PATTERN_COUNT")));
+            		int numberOfChar = Integer.parseInt(String.valueOf(pwPattern.get("NUMBER_OF_CHAR")));
+            		logger.debug("patternCnt=" + patternCnt + ",iPatternCnt=" + iPatternCnt + ", numberOfChar=" + numberOfChar);
+
+            		if (patternCnt == iPatternCnt) {
+            			 if (numberOfChar == 0) { // 사용불가
+            				 patternChk = false;
+                         } else if (numberOfChar > pwStr.length()){
+                        	 patternChk = false;
+                         } else {
+                        	 patternChk = true;
+                         }
+            		}
+            	} // for end.
+            	bResult = patternChk;
+            } else {
+        		logger.debug("!!!! ");
+            	bResult = true;
+            } // if end
+		} else {
+            // 비밀번호 정책이 사용되지 않은 경우 무조선 통과
+            bResult = true;
+		}
+		
+		logger.debug("commonUtil. checkPwPolicy ended. result=" + bResult);
+		return bResult;
+	}
+	
+	// 암호 정책 패턴 설명 문구
+	@SuppressWarnings("unchecked")
+	public String getPwPolicyExplain (String companyId, int tenantId, Locale locale) throws Exception {
+		logger.debug("commonUtil. getPwPolicyExplain Started.");
+		logger.debug("companyId=" + companyId + ", tenantId=" + tenantId);
+		
+		String sResult = "";
+		String patternContent = "";
+		int patternCount = 0;
+		String patternContentTemp = "<p>▒ " + egovMessageSource.getMessage("ezSystem.ksaPwPolicy36", locale) + " : ${str}</p>";
+		String patternContentTemp2 = "<br/> <span>&nbsp;&nbsp;&nbsp; > ${str}</span>";
+		
+		// 1. 암호 정책관리 사용 여부 확인
+		String usePasswordPatternPolicy = ezCommonService.getCompanyConfig(tenantId, companyId, "UsePasswordPatternPolicy");
+		if (!usePasswordPatternPolicy.equals("YES")) {
+			logger.debug("commonUtil. getPwPolicyExplain ended. usePasswordPatternPolicy config is 'NO'");
+			return "";
+		}
+		
+		Map<String, Object> pwMap = ezSystemAdminService.getPwPolicy(tenantId, companyId);
+		if (pwMap != null) {
+			logger.debug("pwMap=" + pwMap.toString());
+
+			Map<String, String> pwPolicyMap = (Map<String, String>) pwMap.get("pwPolicy");
+			List<Map<String, Object>> pwPolicyPattern = (List<Map<String, Object>>) pwMap.get("pwPolicyPattern");
+			
+			String engCharType = pwPolicyMap.get("ENG_CHAR_TYPE"); // 영문 (대소문자)  :: Y or N
+			String useEngCapitalLetter = pwPolicyMap.get("USE_ENG_CAPITAL_LETTER"); // 대문자 사용여부  :: Y or N
+			String useEngSmallLetter = pwPolicyMap.get("USE_ENG_SMALL_LETTER"); // 소문자 사용여부  :: Y or N
+			String useNumber = pwPolicyMap.get("USE_NUMBER"); // 숫자 사용여부  :: Y or N
+			String useSpecial = pwPolicyMap.get("USE_SPECIAL_CHAR"); // 특수문자 사용여부  :: Y or N
+			logger.debug("engCharType=" + engCharType + ", useEngCapitalLetter=" + useEngCapitalLetter + ", useEngSmallLetter=" + useEngSmallLetter
+					+ ", useNumber=" + useNumber + ", useSpecial=" + useSpecial);
+			
+		    // 2. 영문 대소문자 구분 사용 여부 (
+			if (engCharType != null) {
+				if (engCharType.equalsIgnoreCase("Y")) {
+					// 영문 대문자 사용
+	                if (useEngCapitalLetter != null && useEngCapitalLetter.equalsIgnoreCase("Y")) {
+	                    patternContent = (patternCount + 1) + ". " + egovMessageSource.getMessage("ezSystem.ksaPwPolicy27", locale);
+	                    patternCount += 1;
+	                }
+
+	                // 영문 소문자 사용
+	                if (useEngSmallLetter != null && useEngSmallLetter.equalsIgnoreCase("Y")) {
+	                	if (!patternContent.equals("")) {
+	                		patternContent += ", ";
+	                    }
+	                    patternContent += (patternCount + 1) + ". " + egovMessageSource.getMessage("ezSystem.ksaPwPolicy28", locale);
+	                    patternCount += 1;
+	                }
+				} else {
+					patternContent = (patternCount + 1) + ". " + egovMessageSource.getMessage("ezSystem.ksaPwPolicy16", locale);
+		            patternCount += 1;
+				}
+			}
+			
+            // 3. 숫자 사용
+            if (useNumber != null && useNumber.equalsIgnoreCase("Y")) {
+            	if (!patternContent.equals("")) {
+            		patternContent += ", ";
+                }
+            	patternContent += (patternCount + 1) + ". " + egovMessageSource.getMessage("ezSystem.ksaPwPolicy17", locale);
+            	patternCount += 1;
+            }
+
+            // 4. 특수문자 사용
+            if (useSpecial != null && useSpecial.equalsIgnoreCase("Y")) {
+            	if (!patternContent.equals("")) {
+            		patternContent += ", ";
+                }
+            	patternContent += (patternCount + 1) + ". " + egovMessageSource.getMessage("ezSystem.ksaPwPolicy18", locale);
+            	patternCount += 1;
+            }
+            
+            // 5. 패턴 사용 수, 글자수 확인
+            if (pwPolicyPattern != null && pwPolicyPattern.size() > 0) {
+        		String patternMsg1 = egovMessageSource.getMessage("ezSystem.ksaPwPolicy19", locale);
+            	for (Map<String, Object> pwPattern : pwPolicyPattern) {
+            		int patternCnt = Integer.parseInt(String.valueOf(pwPattern.get("USE_PATTERN_COUNT")));
+            		int numberOfChar = Integer.parseInt(String.valueOf(pwPattern.get("NUMBER_OF_CHAR")));
+
+            		String patternMsgTemp = patternMsg1.replace("{0}", Integer.toString(patternCnt)) + " ";
+            		
+            		if (numberOfChar <= 0) {
+            			patternMsgTemp += egovMessageSource.getMessage("ezSystem.ksaPwPolicy21", locale);
+            		} else {
+            			patternMsgTemp += numberOfChar + egovMessageSource.getMessage("ezSystem.ksaPwPolicy26", locale);
+            		}
+            		
+            		patternContent += patternContentTemp2.replace("${str}", patternMsgTemp);
+            	} // for end.
+            }
+            
+            if (!patternContent.equals("")) {
+            	sResult = patternContentTemp.replace("${str}", patternContent);
+            }
+		}
+		
+		logger.debug("commonUtil. checkPwPolicy ended. result=" + sResult);
+		return sResult;
+	}
+	
+	//2020-01-22 유은정 메뉴코드로 메뉴 권한 체크
+	public Map<String, Boolean> checkMenuAccess(List<String> menuCodeList, String companyId, int tenantId, String lang, String userId, String deptId) {
+		logger.debug("checkMenuAccess started.");
+		logger.debug("[checkMenuAccess param] menuCodeList : " + menuCodeList.toString() + ", companyId : " + companyId + ", tenantId : " + tenantId + ", lang : " + lang + ", userId : " + userId + ", deptId : " + deptId);
+		Map<String, Boolean> menuAccessList = new LinkedHashMap<String, Boolean>();
+		
+		try {
+			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, lang, userId, deptId);
+			
+			menuCodeList.forEach(menuCode -> {
+				boolean menuAccess = false;
+				
+				try {
+    				if (menuCode.equals("workspace")) {//협업
+						String useEzWorkspace = ezNewPortalService.isUseEzWorkspace(companyId, tenantId, userId, deptId);
+						List<MenuInfoVO> menuFilter = menuList.stream().filter(menuInfo -> menuInfo.getMenuUrl().contains("ezWorkspace"))
+								.collect(Collectors.toList());
+						
+						if (useEzWorkspace.equals("NO")) {
+							menuAccess = false;
+						} else {
+							if (menuFilter.size() > 0) {
+								menuAccess = true;
+							}
+						}
+    				} else if(menuCode.equals("mail") || menuCode.equals("address")) {		// 메일, 주소록
+						String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId);
+						menuAccess = useExternalMailServer.equals("NO");
+    				} else if (menuCode.equals("board")) {//게시판
+						String useBoard = ezCommonService.getTenantConfig("useBoard", tenantId);
+						menuAccess = useBoard.equals("YES");
+    				} else if (menuCode.equals("schedule")) {//일정
+						String useSchedule = ezCommonService.getTenantConfig("useSchedule", tenantId);
+						menuAccess = useSchedule.equals("YES");
+    				} else if (menuCode.equals("resource")) {//자원
+						String useResource = ezCommonService.getTenantConfig("useResource", tenantId);
+						menuAccess = useResource.equals("YES");
+    				} else if (menuCode.equals("community")) {
+                        String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
+                        menuAccess = useCommunity.equals("YES");
+    				} else if (menuCode.equals("circular")) {
+                        String useCircular = ezCommonService.getTenantConfig("USE_CIRCULAR", tenantId);
+                        menuAccess = useCircular.equals("YES");
+                    } else if (menuCode.equals("memo")) {
+                        String useMemo = ezCommonService.getTenantConfig("useMemo", tenantId);
+                        menuAccess = useMemo.equals("YES");
+                    } else if (menuCode.equals("survey")) {
+                        String useSurvey = ezCommonService.getTenantConfig("useSurvey", tenantId);
+                        menuAccess = useSurvey.equals("YES");
+                    } else if (menuCode.equals("webfolder")) {
+                        String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", tenantId);
+                        menuAccess = useWebfolder.equals("YES");
+                    } else if (menuCode.equals("journal")) {
+                        String useJournal = ezCommonService.getTenantConfig("USE_JOURNAL", tenantId);
+                        menuAccess = useJournal.equals("YES");
+                    } else if (menuCode.equals("attitude")) {
+                        String useAttitude = ezCommonService.getTenantConfig("USE_ATTITUDE", tenantId);
+                        menuAccess = useAttitude.equals("YES");
+                    } else if (menuCode.equals("task")) {
+                        String useToDo = ezCommonService.getTenantConfig("useToDo", tenantId);
+                        menuAccess = useToDo.equals("YES");
+                    } else if (menuCode.equals("vote")) {
+                        String useBallotSystem = ezCommonService.getTenantConfig("useBallotSystem", tenantId);
+                        menuAccess = useBallotSystem.equals("YES");
+                    } else if (menuCode.equals("ladder")) {
+                        String useLadder = ezCommonService.getTenantConfig("useLadder", tenantId);
+                        menuAccess = useLadder.equals("YES");
+                    } else if (menuCode.equals("pms")) {
+                        String usePms = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
+                        menuAccess = usePms.equals("YES");
+                    } else if (menuCode.equals("cabinet")) {
+                        String useCabinet = ezCommonService.getTenantConfig("useCabinet", tenantId);
+                        menuAccess = useCabinet.equals("YES");
+                    } else if (menuCode.equals("question")) {
+                        String useQuestion = ezCommonService.getTenantConfig("useQuestion", tenantId);
+                        menuAccess = useQuestion.equals("YES");
+                    } else {
+                        menuAccess = true;
+                    }
+				} catch (Exception e) {
+				    e.printStackTrace();
+                }
+				
+				List<MenuInfoVO> menuFilter = menuList.stream().filter(menuInfo -> menuInfo.getMenuCode() != null && menuInfo.getMenuCode().equals(menuCode))
+											.collect(Collectors.toList());
+				
+				menuAccess = menuAccess && menuFilter.size() > 0;
+				
+				logger.debug("checkMenuAccess : " + menuCode + " -> " + menuAccess);
+				
+				menuAccessList.put(menuCode, menuAccess);
+			});
+			
+			logger.debug("menuAccessList : " + menuAccessList.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("checkMenuAccess ended.");
+		return menuAccessList;
+	}
+
+	public String getDayAfter(String date) throws Exception {
+		logger.debug("getDayAfter started");
+		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		
+		if(date == null || date.equals("")){
+			throw new Exception("formatter error");
+		}else {
+			LocalDate dayAfter = LocalDate.parse(date, formatter); 
+			dayAfter = dayAfter.plusDays(1);
+			
+			logger.debug("getDayAfter ended");
+			return dayAfter.toString();
+		}
+	}
+
+	public String getDayBefore(String date) throws Exception {
+		logger.debug("getDayBefore started");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		
+		if(date == null || date.equals("")){
+			throw new Exception("formatter error");
+		}else {
+			LocalDate dayBefore = LocalDate.parse(date, formatter); 
+			dayBefore = dayBefore.minusDays(1);
+			
+			logger.debug("getDayBefore ended");
+			return dayBefore.toString();
+		}
+	}
+	
+	// 2020-07-23 김정언 - 두 날짜의 시간 차이 구하는 메소드
+	public long getTimeDifference(String startDate, String endDate) {
+		logger.debug("getTimeDifference started");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		LocalDateTime sd = LocalDateTime.parse(startDate, formatter);
+		LocalDateTime ed = LocalDateTime.parse(endDate, formatter);
+		
+		long minutes = ChronoUnit.MINUTES.between(sd, ed);
+		logger.info("##minutes=" + minutes);
+		logger.debug("getTimeDifference ended");
+		return minutes;
+	}
+	
+	public boolean isIntNumber(String number) {
+	    if (!NumberUtils.isNumber(number)) {
+	        return false;
+	    }
+	    
+	    BigInteger minNum = BigInteger.valueOf(Integer.MIN_VALUE);
+	    BigInteger maxNum = BigInteger.valueOf(Integer.MAX_VALUE);
+	    BigInteger num = new BigInteger(number);
+	    
+	    if (num.compareTo(minNum) > 0 && num.compareTo(maxNum) < 0) {
+	        return true;
+	    } else {
+	        return false;
+	    }
+	}
+	
+	public int isIntNumber(String number, int defaultValue) {
+	    return isIntNumber(number) ? Integer.parseInt(number) : defaultValue;
+	}
+
+	/**
+	 * jangsewon
+	 * 2020.11.13
+	 * listview xml form 으로 변환
+	 * @param jo : DB에서 조회된 list + cnt (key:totalCnt,rows)
+	 * @param ja : DB에서 조회된 list
+	 * @param jaAttr : html tag에 들어갈 속성
+	 * @param jaProp : td에 들어갈 text
+	 * @return
+	 * @throws Exception
+	 */
+	public String makeListViewData(int tatalCnt, JSONArray ja, JSONArray jaAttr, JSONArray jaProp, String value) throws Exception {
+		
+		StringBuilder result = new StringBuilder("<LISTVIEWDATA>");
+		
+		result.append("<ROWS>");
+		result.append("<TOTALCNT>");
+		result.append(tatalCnt);
+		result.append("</TOTALCNT>");
+        
+        for (int i = 0; i < ja.size(); i++) {
+        	Map<String, Object> map = new HashMap<String, Object>();
+        	
+        	map = (Map<String, Object>)ja.get(i);
+        	
+            result.append("<ROW>");
+        	result.append("<CELL>");
+        	 // 첫번째 td value
+    		for(Entry<String, Object> entry : map.entrySet()) {
+    			if(((String)entry.getKey()).equals(value.toUpperCase())) {
+    				result.append("<VALUE>" + cleanValue(map.get(entry.getKey()).toString()) + "</VALUE>");
+    			}
+    		}
+            // 첫번째 td 속성
+        	for(int j=0; j<jaAttr.size(); j++) {
+        		for(Entry<String, Object> entry : map.entrySet()) {
+        			if(((String)jaAttr.get(j)).toUpperCase().equals(entry.getKey())) {
+        	            result.append("<" + jaAttr.get(j) + ">" + cleanValue(map.get(entry.getKey()).toString()) + "</" + jaAttr.get(j) + ">");
+        			}
+        		}
+    		}
+            result.append("</CELL>");
+            
+            // 나머지 td
+        	for(int j=0; j<jaProp.size(); j++) {
+        		for(Entry<String, Object> entry : map.entrySet()) {
+        			if(((String)jaProp.get(j)).toUpperCase().equals(entry.getKey())) {
+        				result.append("<CELL>");
+        	            result.append("<VALUE>" + cleanValue(map.get(entry.getKey()).toString()) + "</VALUE>");
+        	            result.append("</CELL>");
+        			}
+        		}
+    		}
+            result.append("</ROW>");
+        }
+        result.append("</ROWS>");
+        result.append("</LISTVIEWDATA>");
+        
+        return result.toString();
+	}
+	
+    public String convertXsltToHtml(String xslStr, String xmlStr) throws Exception {
+        return convertXsltToHtml(xslStr, xmlStr, true);
+    }
+    public String convertXsltToHtml(String xslStr, String xmlStr, boolean isEncodingStr) throws Exception {
+        logger.debug("convertXsltToHtml started");
+        
+        if(isEncodingStr) {
+            xslStr = htmlUnescape(xslStr);
+        }
+        
+        String outputHtml = "";
+        
+        TransformerFactory tfFactory = TransformerFactory.newInstance();
+        
+        StringWriter htmlWriter = new StringWriter();
+        
+        Source xslSource = new StreamSource(new ByteArrayInputStream(xslStr.getBytes(StandardCharsets.UTF_8))); 
+        Source xmlSource = new StreamSource(new ByteArrayInputStream(xmlStr.getBytes(StandardCharsets.UTF_8)));
+    
+        Transformer transformer = tfFactory.newTransformer(xslSource);
+        transformer.transform(xmlSource, new StreamResult(htmlWriter));
+        
+        outputHtml = htmlWriter.toString();
+        
+        logger.debug("convertXsltToHtml ended");
+        
+        return outputHtml;
+    }
 }

@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.TimeZone;
 import java.util.UUID;
 
@@ -59,9 +58,6 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 	
 	@Autowired
 	private CommonUtil commonUtil;
-	
-	@Autowired
-	private Properties globals;
 
 	public String useThemeInfo(String pUID, int tenantID, String companyID) {
 		logger.debug("useThemeInfo started");
@@ -569,7 +565,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		boolean bExist = true;
 		int fileCount = 0;
 		
-		File file = new File(dirPath + fileName); 
+		File file = new File(commonUtil.detectPathTraversal(dirPath + fileName)); 
 		
 		while (bExist) {
 			if (file.exists()) {

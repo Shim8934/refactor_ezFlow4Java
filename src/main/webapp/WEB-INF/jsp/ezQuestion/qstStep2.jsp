@@ -211,8 +211,14 @@
     		}
     		function fun_QuesAdd() {
         		if (!WinRef || WinRef.closed) {
-            		 WinRef = GetOpenWindow("qstStep2QuestionAdd.do?brdID=5" + "&itemID=" + encodeURIComponent('${qstStep1VO.itemID}') , "addques", 700, 440); 
-		        } else {
+            		WinRef = window.open("", "addques", "width=700,height=430,location=no" + GetOpenPosition(700, 430));
+            		
+            		document.QstEdit.DataXML.value = "";
+            		document.QstEdit.method="post";
+            		document.QstEdit.action = "qstStep2QuestionAdd.do?brdID=5" + "&itemID=" + encodeURIComponent('${qstStep1VO.itemID}');
+             		document.QstEdit.target="addques";
+             		document.QstEdit.submit();
+        		} else {
             		WinRef.focus();
             		return;
         		}		    
@@ -514,6 +520,7 @@
         		oTable.setAttribute("style", "margin-top:10px");
 		        for (var i = 0; i < QuestionNode.childNodes.length; i++) {
         		    var oTr = document.createElement("tr");
+        		    oTr.setAttribute("style", "border-bottom:2px solid #ececec");
             		var oTh = document.createElement("th");
             		var oTd, oInput, oImg, oFileTable, pFileName;
             		oTh.innerHTML = "<spring:message code = 'ezQuestion.t333' />" + (i + 1) + ":" + getNodeText(QuestionNode.childNodes[i].getElementsByTagName("QUESTIONCONTENT")[0]);
@@ -640,6 +647,7 @@
             		}
             		if (getNodeText(QuestionNode.childNodes[i].getElementsByTagName("ANSWERTYPE")[0]) == "2") {
                 		oTr = document.createElement("tr");
+            		    oTr.setAttribute("style", "border-bottom:2px solid #ececec");
                 		oTd = document.createElement("td");
                 		oTd.setAttribute("style", "word-break:break-all;padding:10px;");
 		                var oTextarea = document.createElement("textarea");
@@ -687,6 +695,7 @@
             		}
             		if (getNodeText(QuestionNode.childNodes[i].getElementsByTagName("ANSWERTYPE")[0]) == "4") {
                 		oTr = document.createElement("tr");
+            		    oTr.setAttribute("style", "border-bottom:2px solid #ececec");
                 		oTd = document.createElement("td");
                 		oTd.setAttribute("style", "word-break:break-all;padding:10px");
                 		oInput = document.createElement("input");
@@ -765,6 +774,7 @@
             		}
             		if (getNodeText(QuestionNode.childNodes[i].getElementsByTagName("ANSWERTYPE")[0]) == "5") {
                 		oTr = document.createElement("tr");
+            		    oTr.setAttribute("style", "border-bottom:2px solid #ececec");
                 		oTd = document.createElement("td");
                 		oTd.setAttribute("style", "overflow: auto;");
                 		var ooTable = document.createElement("table");

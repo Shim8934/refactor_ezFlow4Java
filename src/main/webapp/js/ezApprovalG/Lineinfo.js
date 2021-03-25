@@ -1,12 +1,11 @@
-﻿﻿﻿
-//#############################################################################################################################################사용자리스트 원클릭 이벤트 list2_onSel_Click()
+﻿﻿//#############################################################################################################################################사용자리스트 원클릭 이벤트 list2_onSel_Click()
 function list2_onSel_Click() {
 }
 //#############################################################################################################################################사용자리스트 더블클릭 이벤트 list2_onSel_DBclick()
 function list2_onSel_DBclick() {
     var pUserList = new ListView();      
     pUserList.LoadFromID("pUserList");
-    
+
 	var selnode = pUserList.GetSelectedRows();
 	var RtnVal = CheckSignCellValue();  
     
@@ -20,14 +19,17 @@ function list2_onSel_DBclick() {
     	if (approvalFlag == "S") {
     		var lineArea = CheckLineArea_BeforeAdd();
     		if (!lineArea) {return;}
-    		
-    		SAPRLINEATTENDADDFunction(selnode, "PERSON");
-            initJunGyul();
+			
+			for(var i = selnode.length-1 ; i >= 0 ; i--){
+				SAPRLINEATTENDADDFunction(selnode[i], "PERSON");
+				initJunGyul();
+			}
     	} else {
     		if (selnode.length != 0) {
-    			aprlinecount = 0;
-    			
-    			APRLINEATTENDADDFunction(selnode, "PERSON");
+				aprlinecount = 0;
+
+    			for(var i = selnode.length-1 ; i >= 0 ; i--)
+    				APRLINEATTENDADDFunction(selnode[i], "PERSON");
     		}
     	}
     }
@@ -67,6 +69,57 @@ function AprlineDel_onclickCC() {
 
 //############################################################################################################################################# 결재선 삭제 함수
 function AprlineDel_onclick() {
+	
+	var pAPRLINE = new ListView();      //// ListView 선언
+	pAPRLINE.LoadFromID("lvAPRLINE");
+	var pRows = pAPRLINE.GetDataRows();
+	var pSelectedRow = pAPRLINE.GetSelectedRows();
+	var isAuditApproval = false;
+	var lastAuditRow = null;
+	
+	if($(pSelectedRow).attr("DATA11") == "005" && $(pSelectedRow).attr("DATA12") == "001") {
+		for(var i=0; i<pRows.length; i++) {
+			if($(pRows[i]).attr("DATA11") == "005" && $(pRows[i]).attr("DATA12") == "003") {
+				isAuditApproval = true;
+			}
+			if($(pRows[i]).attr("DATA11") == "005" && $(pRows[i]).attr("DATA12") == "001" && lastAuditRow == null) {
+				lastAuditRow = pRows[i];
+			}
+		}
+		
+		if(isAuditApproval) {
+			if(pSelectedRow[0] == lastAuditRow) {
+				OpenAlertUI(strLang954);
+				return;
+			} else {
+				AprLineDel_onclick_action();
+			}
+		} else {
+			for(var i=0; i<pRows.length; i++) {
+				if($(pRows[i]).attr("DATA11") == "005" && $(pRows[i]).attr("DATA12") == "001") {
+					$(pRows[i]).trigger("click");
+					AprLineDel_onclick_action();
+				}
+			}
+			$("input[name=auditApprLine]").prop("checked", false);
+		}
+		
+	} else if($(pSelectedRow).attr("DATA11") == "020" || $(pSelectedRow).attr("DATA11") == "021") {
+		for(var i=0; i<pRows.length; i++) {
+			if(($(pRows[i]).attr("DATA11") == "020" || $(pRows[i]).attr("DATA11") == "021") && $(pRows[i]).attr("DATA12") == "001") {
+				$(pRows[i]).trigger("click");
+				AprLineDel_onclick_action();
+			}
+		}
+		$("input[name=apprBilingual]").attr("isChecked", "N");
+		$("input[name=apprBilingual][value=01]").attr("isChecked", "Y");
+		$("input[name=apprBilingual][value=01]").prop("checked", true);
+	} else {
+		AprLineDel_onclick_action();
+	}
+}
+
+function AprLineDel_onclick_action() {
 	if (approvalFlag == "S") {
 	    if (!CrossYN()) {
 	        var Event_ID = window.event.srcElement.id;
@@ -103,7 +156,12 @@ function AprlineDel_onclick() {
 			var Event_ID = "";
 		}
 		else {
-			var Event_ID = window.event.srcElement.id;
+			var Event_ID = "";
+			if (typeof(window.event) != "undefined") {
+				Event_ID = window.event.srcElement.id;
+			} else {
+				return;
+			}
 		}
 		if (Event_ID.indexOf("lvAPRLINE_TR_") == -1) {
 			if (nodelUser())
@@ -752,13 +810,18 @@ function APRLINESNDownFunction() {
     		var pAPRLINE = new ListView();
             pAPRLINE.LoadFromID("lvAPRLINE");
             var pSelectedRow = pAPRLINE.GetSelectedRows();
+            
+            if ($("input:checkbox[id='passAprLine']").is(":checked") && (GetAttribute(pSelectedRow[0], "DATA12") == "004" || GetAttribute(pSelectedRow[0], "DATA12") == "003" || GetAttribute(pSelectedRow[0], "DATA12") == "002")) {
+            	OpenAlertUI("기결재통과시 기결재자의 결재선은 변경할 수 없습니다.");
+            	return;
+            }
 
             if (pSelectedRow[0] == undefined) {
                 OpenAlertUI(strLangS574);
                 return;
             }
 
-            if ((GetAttribute(pSelectedRow[0], "DATA4") != null ? GetAttribute(pSelectedRow[0], "DATA4").toLowerCase() : "") == pUserID.toLowerCase() && pSelectedRow[0].childNodes[0].innerHTML == "1") {
+            if ($("input:checkbox[id='passAprLine']").is(":checked") && (GetAttribute(pSelectedRow[0], "DATA4") != null ? GetAttribute(pSelectedRow[0], "DATA4").toLowerCase() : "") == pUserID.toLowerCase() && pSelectedRow[0].childNodes[0].innerHTML == "1") {
                 OpenAlertUI(strLangS575);
                 return;
             }
@@ -767,6 +830,18 @@ function APRLINESNDownFunction() {
             if (pSelectedRow.length != 0) {
                 var p_NextSelRow = pAPRLINE.GetDataRows()[Number(pAPRLINE.GetSelectedIndexes().split(',')[0]) + 1];
 
+                // 기안자를 선택 후 아래로 이동시킬 때, 오류 발생하여 수정. 2020-10-16 홍대표.
+                if (!p_NextSelRow) {
+                	OpenAlertUI(strLangS575);
+					return;
+                }
+
+                if (p_NextSelRow.getAttribute("data12") != null && (p_NextSelRow.getAttribute("data12") == "003" || p_NextSelRow.getAttribute("data12") == "004")) {
+                	OpenAlertUI(strLangS576);
+                	return;
+                }
+
+                
                 if ((GetAttribute(p_NextSelRow, "DATA4") != null ? GetAttribute(p_NextSelRow, "DATA4").toLowerCase() : "") == pUserID.toLowerCase() && p_NextSelRow.childNodes[0].innerHTML == "1") {
                     OpenAlertUI(strLangS576);
                     return;
@@ -847,6 +922,11 @@ function APRLINESNDownFunction() {
     		pAPRLINE.LoadFromID("lvAPRLINE");
     		var pSelectedRow = pAPRLINE.GetSelectedRows();
     		
+    		if ($("input:checkbox[id='passAprLine']").is(":checked") && (GetAttribute(pSelectedRow[0], "DATA12") == "004" || GetAttribute(pSelectedRow[0], "DATA12") == "003" || GetAttribute(pSelectedRow[0], "DATA12") == "002")) {
+				OpenAlertUI("기결재통과시 기결재자의 결재선은 변경할 수 없습니다.");
+				return;
+    		}
+    		
     		if(pSelectedRow[0] == undefined){
     			OpenAlertUI(strLangS574);
     			return;            
@@ -862,6 +942,11 @@ function APRLINESNDownFunction() {
     		var pSelAprLineState = pSelectedRow[0].getAttribute("DATA12");
     		if (pSelectedRow.length != 0) {
     			var p_NextSelRow = pAPRLINE.GetDataRows()[Number(pAPRLINE.GetSelectedIndexes().split(',')[0]) + 1];
+    			
+    			if ($("input:checkbox[id='passAprLine']").is(":checked") && p_NextSelRow.getAttribute("data12") != null && (p_NextSelRow.getAttribute("data12") == "003" || p_NextSelRow.getAttribute("data12") == "004")) {
+    				OpenAlertUI(strLangS576);
+    				return;
+    			}
     			
     			if(p_NextSelRow == undefined || p_NextSelRow.getAttribute("DATA4").toLowerCase() == pUserID.toLowerCase() && p_NextSelRow.childNodes[0].innerHTML == "1") {
     				OpenAlertUI(strLangS576);
@@ -1080,6 +1165,11 @@ function APRLINESNUPPERFunction() {
     		var pAPRLINE = new ListView();
             pAPRLINE.LoadFromID("lvAPRLINE");
             var pSelectedRows = pAPRLINE.GetSelectedRows();
+            
+            if ($("input:checkbox[id='passAprLine']").is(":checked") && (GetAttribute(pSelectedRows[0], "DATA12") == "003" || GetAttribute(pSelectedRows[0], "DATA12") == "002")) {
+            	OpenAlertUI("기결재통과시 기결재자의 결재선은 변경할 수 없습니다.");
+            	return;
+            }
 
             if (pSelectedRows[0] == undefined) {
                 OpenAlertUI(strLangS574);
@@ -1165,6 +1255,16 @@ function APRLINESNUPPERFunction() {
     		var pAPRLINE = new ListView();
     		pAPRLINE.LoadFromID("lvAPRLINE");
     		var pSelectedRows = pAPRLINE.GetSelectedRows();
+    		
+    		if ($("input:checkbox[id='passAprLine']").is(":checked") && (GetAttribute(pSelectedRows[0], "DATA12") == "004" || GetAttribute(pSelectedRows[0], "DATA12") == "003" || GetAttribute(pSelectedRows[0], "DATA12") == "002")) {
+    			OpenAlertUI("기결재통과시 기결재자의 결재선은 변경할 수 없습니다.");
+    			return;
+    		}
+    		
+    		if(pSelectedRows[0] == undefined){
+    			OpenAlertUI(strLangS574);
+    			return;            
+    		}
     		
     		if (pSelectedRows.length != 0) {
     			if (pSelectedRows[0].childNodes[0].innerHTML.replace("★","").replace("⊙","") == 1) {
@@ -1303,6 +1403,9 @@ function AprLineChangeType() {
         var pTmpAprLineStateName = strLangAprState1;
 
         for (i = 0; i < pTotalRowsLen - 1; i++) {
+        	if ($("input:checkbox[id='passAprLine']").is(":checked") && ($(pTotalRows[i]).attr("DATA12") == "004" || $(pTotalRows[i]).attr("DATA12") == "003" || $(pTotalRows[i]).attr("DATA12") == "002")) {
+        		continue;
+        	}
             SetAttribute(pTotalRows[i], "DATA12", pTmpAprLineState);
             pTotalRows[i].cells[5].innerHTML = pTmpAprLineStateName;
             if(GetAttribute(pTotalRows[i], "DATA11", pTmpAprLineState) == strAprType14){
@@ -1395,7 +1498,7 @@ function AprLineDupulicationChecking(Mode, selnode, pSelectedRow) {
             }
         }
         else {
-            if (GetAttribute(totalRow[i], "DATA4") == GetAttribute(pSelectedRow[0], "DATA2")) {
+            if (GetAttribute(totalRow[i], "DATA4") == GetAttribute(pSelectedRow, "DATA2")) {
                 if (GetAttribute(totalRow[i], "DATA4") == optGamsabu) {
                     if (totalRow[i].cells[4].innerText == strLangS51) {
                         chkDuplflag = true;
@@ -1416,6 +1519,7 @@ var temppSelectedRow;
 var tempMode;
 var AprLineAddUser_pSelectedRow;
 var AprLineAddUser_Mode;
+var chkDuplflag;
 function AprLineAddUser(Mode, tr, pSelectedRow) {
 	if (approvalFlag == "S") {
 		AprLineAddUser_pSelectedRow = pSelectedRow;
@@ -1481,7 +1585,7 @@ function AprLineAddUser(Mode, tr, pSelectedRow) {
 		{
 			var pparsingXML;
 			var i
-			var chkDuplflag = false;
+			chkDuplflag = false;
 			
 			var treeView = new TreeView(); //treeview 선언 
 			treeView.LoadFromID("FromTreeView"); //treeview 로드
@@ -1515,7 +1619,7 @@ function AprLineAddUser(Mode, tr, pSelectedRow) {
 					return; 
 				}
 			}
-			
+
 			var pAPRLINE = new ListView();      //// ListView 선언
 			pAPRLINE.LoadFromID("lvAPRLINE"); 
 			
@@ -1532,7 +1636,7 @@ function AprLineAddUser(Mode, tr, pSelectedRow) {
 				}
 				else
 				{
-					if(GetAttribute(totalRow[i],"DATA4") == GetAttribute(pSelectedRow[0],"DATA2"))
+					if(GetAttribute(totalRow[i],"DATA4") == GetAttribute(pSelectedRow,"DATA2"))
 					{
 						if(GetAttribute(totalRow[i],"DATA4") == optGamsabu) 
 						{					    
@@ -1550,20 +1654,51 @@ function AprLineAddUser(Mode, tr, pSelectedRow) {
 					}
 				}
 			}
+			
 			temppSelectedRow = pSelectedRow;
 			tempMode = Mode;
-			if (chkDuplflag) {
-				var pInformationContent = "" + strLang296 + "<br>" + strLang297 + "";
-				var ans = OpenInformationUI(pInformationContent, AprLineAddUser_Complete);
-				
-				if(ans) {
+			if($(pSelectedRow).attr("ABSENCE") != "" && $(pSelectedRow).attr("ABSENCE") != undefined) {
+				var pInformationContent = "" + strLang1039 + "";
+				OpenInformationUI(pInformationContent, OpenInformationUI_Result);
+			} else {
+				if($(pSelectedRow).attr("APPRLINETYPE") == "audit_add" || $(pSelectedRow).attr("JUNBUBYN") == "Y"
+					|| $(pSelectedRow).attr("APPRLINETYPE") == "020" || $(pSelectedRow).attr("APPRLINETYPE") == "021") {
+					chkDuplflag = false;
+				}
+				if (chkDuplflag) {
+					var pInformationContent = "" + strLang296 + "<br>" + strLang297 + "";
+					var ans = OpenInformationUI(pInformationContent, AprLineAddUser_Complete);
+					
+					if(ans) {
+						AprLineAddUser_Complete(true);
+					}
+				}
+				else {
 					AprLineAddUser_Complete(true);
 				}
 			}
-			else {
-				AprLineAddUser_Complete(true);
-			}
 		}
+	}
+}
+
+function OpenInformationUI_Result(Ans) {
+	DivPopUpHidden();
+	if (Ans) {
+    }
+    else {
+        return;
+    }
+	
+	if (chkDuplflag) {
+		var pInformationContent = "" + strLang296 + "<br>" + strLang297 + "";
+		var ans = OpenInformationUI(pInformationContent, AprLineAddUser_Complete);
+		
+		if(ans) {
+			AprLineAddUser_Complete(true);
+		}
+	}
+	else {
+		AprLineAddUser_Complete(true);
 	}
 }
 
@@ -1649,7 +1784,19 @@ function AprLineAddUser_Complete(Ans) {
             }
         }
         else {
-            var objTr = pAPRLINE.NewAddRow(0, "lvAPRLINE" + "_TR_" + eval(MaxID + 1));
+        	var rowIndex = 0;
+        	var objTr = null;
+        	
+        	if (tempMode == "PERSON") {
+        		if(Resultxml.getElementsByTagName("APPRLINETYPE")[0].textContent == "audit_add"
+            		|| Resultxml.getElementsByTagName("JUNBUBYN")[0].textContent == "Y") {
+            		if(InitTr.length > 1) {
+            			rowIndex = 1;
+            		}
+            	}
+        	}
+        	
+            objTr = pAPRLINE.NewAddRow(rowIndex, "lvAPRLINE" + "_TR_" + eval(MaxID + 1));
             pAPRLINE.AddDataRow(objTr, Resultxml);
         }
 
@@ -1765,9 +1912,9 @@ function AprLineUserAdd(AprLineAddIndex, AprLineRow, pSelectedRow, selnode)
     pparsingXML = pparsingXML + "<DATA1>" + "" + "</DATA1>";
     pparsingXML = pparsingXML + "<DATA2>" + "" + "</DATA2>";
     pparsingXML = pparsingXML + "<DATA3>" + pDocID + "</DATA3>";
-    pparsingXML = pparsingXML + "<DATA4>" + MakeXMLString(GetAttribute(pSelectedRow[0], "DATA2")) + "</DATA4>";
+    pparsingXML = pparsingXML + "<DATA4>" + MakeXMLString(GetAttribute(pSelectedRow, "DATA2")) + "</DATA4>";
     pparsingXML = pparsingXML + "<DATA5>" + "N" + "</DATA5>";
-    pparsingXML = pparsingXML + "<DATA6>" + MakeXMLString(GetAttribute(pSelectedRow[0], "DATA3")) + "</DATA6>";
+    pparsingXML = pparsingXML + "<DATA6>" + MakeXMLString(GetAttribute(pSelectedRow, "DATA3")) + "</DATA6>";
     pparsingXML = pparsingXML + "<DATA7>" + "" + "</DATA7>";
     pparsingXML = pparsingXML + "<DATA8>" + "N" + "</DATA8>";
     pparsingXML = pparsingXML + "<DATA9>" + "N" + "</DATA9>";
@@ -1804,18 +1951,24 @@ function AprLineUserAdd(AprLineAddIndex, AprLineRow, pSelectedRow, selnode)
     }
     pparsingXML = pparsingXML + "<DATA12>" + strAprState1 + "</DATA12>";
 
-    pparsingXML = pparsingXML + "<DATA13>" + MakeXMLString(GetAttribute(pSelectedRow[0], "DATA7")) + "</DATA13>";
-    pparsingXML = pparsingXML + "<DATA14>" + MakeXMLString(GetAttribute(pSelectedRow[0], "DATA8")) + "</DATA14>";
-    pparsingXML = pparsingXML + "<DATA15>" + MakeXMLString(GetAttribute(pSelectedRow[0], "DATA9")) + "</DATA15>";
-    pparsingXML = pparsingXML + "<DATA16>" + MakeXMLString(GetAttribute(pSelectedRow[0], "DATA10")) + "</DATA16>";
-    pparsingXML = pparsingXML + "<DATA17>" + MakeXMLString(GetAttribute(pSelectedRow[0], "DATA11")) + "</DATA17>";
-    pparsingXML = pparsingXML + "<DATA18>" + MakeXMLString(GetAttribute(pSelectedRow[0], "DATA12")) + "</DATA18>";
+    pparsingXML = pparsingXML + "<DATA13>" + MakeXMLString(GetAttribute(pSelectedRow, "DATA7")) + "</DATA13>";
+    pparsingXML = pparsingXML + "<DATA14>" + MakeXMLString(GetAttribute(pSelectedRow, "DATA8")) + "</DATA14>";
+    pparsingXML = pparsingXML + "<DATA15>" + MakeXMLString(GetAttribute(pSelectedRow, "DATA9")) + "</DATA15>";
+    pparsingXML = pparsingXML + "<DATA16>" + MakeXMLString(GetAttribute(pSelectedRow, "DATA10")) + "</DATA16>";
+    pparsingXML = pparsingXML + "<DATA17>" + MakeXMLString(GetAttribute(pSelectedRow, "DATA11")) + "</DATA17>";
+    pparsingXML = pparsingXML + "<DATA18>" + MakeXMLString(GetAttribute(pSelectedRow, "DATA12")) + "</DATA18>";
+    pparsingXML = pparsingXML + "<ABSENCE>" + MakeXMLString(GetAttribute(pSelectedRow, "ABSENCE")) + "</ABSENCE>";
+	pparsingXML = pparsingXML + "<JUNBUBYN>" + MakeXMLString(GetAttribute(pSelectedRow, "JUNBUBYN")) + "</JUNBUBYN>";
+	pparsingXML = pparsingXML + "<APPRLINETYPE>" + MakeXMLString(GetAttribute(pSelectedRow, "APPRLINETYPE")) + "</APPRLINETYPE>";
     pparsingXML = pparsingXML + "</CELL><CELL>";
-    pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(pSelectedRow[0].cells[0].innerText) + "</VALUE>";
+	//pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(pSelectedRow[0].cells[0].innerText) + "</VALUE>";
+	pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(GetAttribute(pSelectedRow, "DATA4")) + "</VALUE>";
     pparsingXML = pparsingXML + "</CELL><CELL>";
-    pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(pSelectedRow[0].cells[2].innerText) + "</VALUE>";
+	//pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(pSelectedRow[0].cells[2].innerText) + "</VALUE>";
+	pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(GetAttribute(pSelectedRow, "DATA6")) + "</VALUE>";
     pparsingXML = pparsingXML + "</CELL><CELL>";
-    pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(pSelectedRow[0].cells[1].innerText) + "</VALUE>";
+	//pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(pSelectedRow[0].cells[1].innerText) + "</VALUE>";
+	pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(GetAttribute(pSelectedRow, "DATA5")) + "</VALUE>";
     pparsingXML = pparsingXML + "</CELL><CELL>";
 
     if (AprLineAddIndex > 1) {
@@ -2021,6 +2174,14 @@ function APRLINEATTENDERDELFunction()
 	  if (approvalFlag == "S") {
 		  var pAPRLINE = new ListView();
 	        pAPRLINE.LoadFromID("lvAPRLINE");
+	        
+	        var aprState = $(pAPRLINE.GetSelectedRows()).attr("DATA12");
+	        
+	        if ($("input:checkbox[id='passAprLine']").is(":checked") && (aprState == "004" || aprState == "003" || aprState == "004")) {
+	        	OpenAlertUI("기결재통과시 기결재자의 결재선은 변경할 수 없습니다.")
+	        	return;
+	        }
+
 	        var pSelectedRow = pAPRLINE.GetSelectedRows();
 
 	        pSelAprLineState = GetAttribute(pSelectedRow[0], "DATA12");
@@ -2053,7 +2214,7 @@ function APRLINEATTENDERDELFunction()
 	                if (pReDraftAprLineFlag) {
 	                    var TmpAprLineState = GetAttribute(pSelectedRow[0], "DATA12");
 	                    var tempcellvalue = getNodeText(pSelectedRow[0].cells[0]);
-	                    if ((TmpAprLineState == "002" || TmpAprLineState == "005") && GetAttribute(pSelectedRow[0], "DATA4") == pUserID || tempcellvalue == "1") {
+	                    if ((TmpAprLineState == "002" || TmpAprLineState == "005") || tempcellvalue == "1") {
 	                        var pAlertContent = strLangS249;
 	                        OpenAlertUI(pAlertContent);
 	                        return;
@@ -2070,6 +2231,13 @@ function APRLINEATTENDERDELFunction()
 		  var pAPRLINE = new ListView();      //// ListView 선언
 		  pAPRLINE.LoadFromID("lvAPRLINE");
 		  var pSelectedRow = pAPRLINE.GetSelectedRows();
+		  
+		  var aprState = $(pAPRLINE.GetSelectedRows()).attr("DATA12");
+	        
+		if ($("input:checkbox[id='passAprLine']").is(":checked") && (aprState == "004" || aprState == "003" || aprState == "004")) {
+			OpenAlertUI("기결재통과시 기결재자의 결재선은 변경할 수 없습니다.")
+			return;
+		}
 		  
 		  //var pSelectedRow = APRLINE.multiselects;
 		  //if(pSelectedRow.length != 0 && pSelectedRow != null && pSelectedRow.item(0).index != -1)
@@ -2347,8 +2515,13 @@ function SAPRLINETEMPLETXMLParsing() {
             }
 
         if (pReDraftFlag == "REDRAFT") {
-            GetXml = GetXml + "<DATA name='ProcessDate'></DATA>";
-            GetXml = GetXml + "<DATA name='ReceivedDate'></DATA>";
+        	if ($(tr).attr("DATA12") == "002" || ($(tr).attr("DATA12") == "003") && $("input:checkbox[id='passAprLine']").is(":checked")) {
+				GetXml = GetXml + "<DATA name='ProcessDate'>" + MakeXMLString(GetAttribute(tr, "DATA1")) + "</DATA>";
+				GetXml = GetXml + "<DATA name='ReceivedDate'>" + MakeXMLString(GetAttribute(tr, "DATA2")) + "</DATA>";
+			} else {
+				GetXml = GetXml + "<DATA name='ProcessDate'></DATA>";
+				GetXml = GetXml + "<DATA name='ReceivedDate'></DATA>";
+			}
         }
         else {
             GetXml = GetXml + "<DATA name='ProcessDate'>" + GetAttribute(tr, "DATA1") + "</DATA>";
@@ -2653,7 +2826,7 @@ function ApplyJunGyulFunction(pCurSelIndex, pTmpAprLineTypeCode, pTmpAprLineType
 			return flag;
 		}
 
-		else if(parseInt(pAprLineRow[i].cells[0].innerText) > parseInt(pCurSelIndex) && GetAttribute(pAprLineRow[i],"DATA11") == strAprType8 || GetAttribute(pAprLineRow[i],"DATA11") == strAprType9)
+		else if(parseInt(pAprLineRow[i].cells[0].innerText) > parseInt(pCurSelIndex) && (GetAttribute(pAprLineRow[i],"DATA11") == strAprType8 || GetAttribute(pAprLineRow[i],"DATA11") == strAprType9))
 		{
 			flag = "check";
 			var pAlertContent = strLangS506 + "<br>"+ strLang287;
@@ -2906,10 +3079,9 @@ function CheckLineArea()
 
 	    var pAprTypeFlag = "040";
 	    pCurAprilban = pCurAprilban + getAprLineGyulJeLen(AprLineRow , NodeListLen , pAprTypeFlag);
-
-	    if(pCurAprilban > pSignCount)  
-	    { 
-		    pAlertContent = pAlertContent + strLangS276 + pSignCount + strLangS277 + "<br>";
+	    
+	    if (pCurAprilban > pSignCount) { 
+	    	pAlertContent = pAlertContent + strLangS276 + pSignCount + strLangS277 + "<br>";
 	    }
     }
     
@@ -3359,16 +3531,16 @@ function chkLastKyuljea(AprLineRow) {
 	
 	for(i=0;i < AprLineRow.length - 1; i++) {
 		aprtype = GetAttribute(AprLineRow[i],"DATA11");
-		
+
 		if (addLastKyulJeYN == "1") {
-			if (aprtype == strAprType1 || aprtype == strAprType4 || aprtype == strAprType15 || aprtype == strLangS264) break;
+			if (aprtype == strAprType1 || aprtype == strAprType4 || aprtype == strAprType8 || aprtype == strAprType15 || aprtype == strLangS264) break;
 			if (aprtype == strAprType9 || aprtype == strAprType12 || aprtype == strAprType11) {
 				rtnVal = false;
 				break;
 			}
 
 		} else if (addLastKyulJeYN == "2") {
-			if (aprtype == strAprType1 || aprtype == strAprType4 || aprtype == strAprType15 || aprtype == strLangS264) break;
+			if (aprtype == strAprType1 || aprtype == strAprType4 || aprtype == strAprType8 || aprtype == strAprType15 || aprtype == strLangS264) break;
 			if (aprtype == strAprType9 || (GetAttribute(AprLineRow[0],"DATA11") != strAprType11 && GetAttribute(AprLineRow[0],"DATA11") != strAprType8 && aprtype == strAprType12)) {
 				rtnVal = false;
 				break;
@@ -4074,6 +4246,128 @@ function OnSelChangeDoEvent(pSelectedRow)
   }
 }
 
+function btnAddEtcDept_onclick(pType) {
+    try {
+        var pAPRLINE = new ListView();
+        pAPRLINE.LoadFromID("lvAPRLINE");
+        var AprLineRow = pAPRLINE.GetDataRows();
+        AprLineAddIndex = AprLineRow.length;
+        AprLineAddIndex = AprLineAddIndex + 1;
+
+        //불필요한 결재선 체크 로직 수정. 결재선에 결재 유형만 있을 때, 에러 발생. 2020-03-09 홍대표
+//        if (AprLineRow.length == 1) {
+//            if (GetAttribute(AprLineRow[0], "DATA11") == strAprType1 || GetAttribute(AprLineRow[0], "DATA11") == strAprType4 || GetAttribute(AprLineRow[0], "DATA11") == strAprType16) {
+//                var pAlertContent = "" + strLang298 + "<br>" + strLang299 + "";
+//                OpenAlertUI(pAlertContent);
+//                return;
+//            }
+//        }
+        
+
+        var tr = pAPRLINE.GetSelectedRows();
+        if (tr.length > 0 && InsertMode != "Add") {
+            AprLineAddIndex = parseInt(getNodeText(tr[0].cells[0]));
+        }
+
+        var Resultxml;
+        var pDeptID = "", pDeptName = "", pDeptName2 = "", pEx2 = "";
+       
+        if (SelectNodes(GamsaYesanInfoXML, "DATA/ROW").length > 0) {
+            for (i = 0; i < SelectNodes(GamsaYesanInfoXML, "DATA/ROW").length; i++) {
+
+                if (SelectSingleNodeValue(SelectNodes(GamsaYesanInfoXML, "DATA/ROW")[i], "APRTYPE") == pType) {
+                    pDeptID = SelectSingleNodeValue(SelectNodes(GamsaYesanInfoXML, "DATA/ROW")[i], "CN");
+                    pDeptName = SelectSingleNodeValue(SelectNodes(GamsaYesanInfoXML, "DATA/ROW")[i], "DISPLAYNAME");
+                    pDeptName2 = SelectSingleNodeValue(SelectNodes(GamsaYesanInfoXML, "DATA/ROW")[i], "DISPLAYNAME2");
+                    pEx2 = SelectSingleNodeValue(SelectNodes(GamsaYesanInfoXML, "DATA/ROW")[i], "EXTENSIONATTRIBUTE2");
+                    Resultxml = AprLineEtcDeptAdd(AprLineAddIndex, pType, pDeptID, pDeptName, pDeptName2, pEx2);
+
+                    break;
+                }
+            }
+        }
+        else {
+            OpenAlertUI("해당부서 정보가 존재하지 않습니다.");
+            return false;
+        }
+
+
+        var InitTr = pAPRLINE.GetDataRows();
+        var MaxID = 0;
+
+        for (var j = 0; j < InitTr.length; j++) {
+            var curnum = Number(pAPRLINE.GetSelectedRowID(j).substring(pAPRLINE.GetSelectedRowID(j).lastIndexOf('_') + 1), pAPRLINE.GetSelectedRowID(j).length);
+            if (MaxID < curnum)
+                MaxID = curnum;
+        }
+
+
+        if (InitTr.length == 0) {
+            //첫번째 row는 기안자가 꼭 있어야함.           
+            OpenAlertUI("기안자가 등록되지 않았습니다.");
+            return false;
+        }
+        else {
+            var objTr = pAPRLINE.NewAddRow(0, "lvAPRLINE" + "_TR_" + eval(MaxID + 1));
+            pAPRLINE.AddDataRow(objTr, Resultxml);
+        }
+
+        AprLineAddIndex = AprLineAddIndex + 1;
+
+
+        setRep_Suggester();
+        aprlinecount = 0;
+        LineAprTyepSetAll();
+    }
+    catch (e) {
+    	OpenAlertUI(e.description);
+    }
+}
+
+function AprLineEtcDeptAdd(AprLineAddIndex, nAprType, pDeptID, pDeptName, pDeptName2, pEx2) {
+    var pparsingXML = "<LISTVIEWDATA><HEADERS>";
+    pparsingXML = pparsingXML + "<HEADER><NAME></NAME><WIDTH>30</WIDTH></HEADER>";
+    pparsingXML = pparsingXML + "<HEADER><NAME></NAME><WIDTH>50</WIDTH></HEADER>";
+    pparsingXML = pparsingXML + "<HEADER><NAME></NAME><WIDTH>60</WIDTH></HEADER>";
+    pparsingXML = pparsingXML + "<HEADER><NAME></NAME><WIDTH>80</WIDTH></HEADER>";
+    pparsingXML = pparsingXML + "<HEADER><NAME></NAME><WIDTH>80</WIDTH></HEADER>";
+    pparsingXML = pparsingXML + "<HEADER><NAME></NAME><WIDTH>80</WIDTH></HEADER>";
+    pparsingXML = pparsingXML + "<HEADER><NAME></NAME><WIDTH>80</WIDTH></HEADER>";
+    pparsingXML = pparsingXML + "</HEADERS><ROWS><ROW><CELL><STYLE><![CDATA[overflow: hidden; text-overflow: ellipsis; white-space: nowrap;]]></STYLE>";
+    pparsingXML = pparsingXML + "<VALUE>" + AprLineAddIndex + "</VALUE>";
+    pparsingXML = pparsingXML + "<DATA1>" + "" + "</DATA1>";
+    pparsingXML = pparsingXML + "<DATA2>" + "" + "</DATA2>";
+    pparsingXML = pparsingXML + "<DATA3>" + pDocID + "</DATA3>";
+    pparsingXML = pparsingXML + "<DATA4>" + MakeXMLString(pDeptID) + "</DATA4>";
+    pparsingXML = pparsingXML + "<DATA5>" + "Y" + "</DATA5>";
+    pparsingXML = pparsingXML + "<DATA6>" + MakeXMLString(pDeptID) + "</DATA6>";
+    pparsingXML = pparsingXML + "<DATA7>" + "" + "</DATA7>";
+    pparsingXML = pparsingXML + "<DATA8>" + "N" + "</DATA8>";
+    pparsingXML = pparsingXML + "<DATA9>" + "N" + "</DATA9>";
+    pparsingXML = pparsingXML + "<DATA10>" + MakeXMLString(pEx2) + "</DATA10>";
+    pparsingXML = pparsingXML + "<DATA11>" + nAprType + "</DATA11>";
+    pparsingXML = pparsingXML + "<DATA12>" + strAprState1 + "</DATA12>";
+    pparsingXML = pparsingXML + "<DATA13>-</DATA13>";
+    pparsingXML = pparsingXML + "<DATA14>-</DATA14>";
+    pparsingXML = pparsingXML + "<DATA15>" + MakeXMLString(pDeptName) + "</DATA15>";
+    pparsingXML = pparsingXML + "<DATA16>" + MakeXMLString(pDeptName2) + "</DATA16>";
+    pparsingXML = pparsingXML + "<DATA17>-</DATA17>";
+    pparsingXML = pparsingXML + "<DATA18>-</DATA18>";
+    pparsingXML = pparsingXML + "</CELL><CELL><STYLE><![CDATA[overflow: hidden; text-overflow: ellipsis; white-space: nowrap;]]></STYLE>";
+    pparsingXML = pparsingXML + "<VALUE>-</VALUE>";
+    pparsingXML = pparsingXML + "</CELL><CELL><STYLE><![CDATA[overflow: hidden; text-overflow: ellipsis; white-space: nowrap;]]></STYLE>";
+    pparsingXML = pparsingXML + "<VALUE>-</VALUE>";
+    pparsingXML = pparsingXML + "</CELL><CELL><STYLE><![CDATA[overflow: hidden; text-overflow: ellipsis; white-space: nowrap;]]></STYLE>";
+    pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(pDeptName) + "</VALUE>";
+    pparsingXML = pparsingXML + "</CELL><CELL><STYLE><![CDATA[overflow: hidden; text-overflow: ellipsis; white-space: nowrap;]]></STYLE>";
+    pparsingXML = pparsingXML + "<VALUE>" + AprTypeToName(nAprType) + "</VALUE>";
+    pparsingXML = pparsingXML + "</CELL><CELL><STYLE><![CDATA[overflow: hidden; text-overflow: ellipsis; white-space: nowrap;]]></STYLE>";
+    pparsingXML = pparsingXML + "<VALUE>" + strLangAprState1 + "</VALUE>";
+    pparsingXML = pparsingXML + "</CELL><CELL><STYLE><![CDATA[overflow: hidden; text-overflow: ellipsis; white-space: nowrap;]]></STYLE><VALUE></VALUE></CELL></ROW></ROWS></LISTVIEWDATA>";
+
+    return loadXMLString(pparsingXML);
+}
+
 //회람
 function APRLINEXMLParsingCC() {
     try {
@@ -4125,5 +4419,148 @@ function APRLINEXMLParsingCC() {
         return strXML;
     } catch (e) {
         alert("APRLINEXMLParsing :: " + e.description);
+    }
+}
+
+//2020-04-28 : 결재선 부서검색
+function btnAprLineSearchDept_onClick() {
+	try{
+        var tmpDeptName = document.getElementById("textUser").value;
+        if (tmpDeptName.length == 0) {
+            var pAlertContent = strLang240;
+            document.getElementById("textUser").focus();
+            OpenAlertUI(pAlertContent);
+            return;
+        }
+
+		$.ajax({
+			type : "POST",
+			dataType : "text",
+			async : false,
+			url : "/ezOrgan/getSearchList.do",
+			data : {
+				search : "EXACT_EXTENSIONATTRIBUTE2::" + CompanyID + ";;displayname::" + tmpDeptName,
+				cell   : "extensionAttribute3;displayname;extensionAttribute9;",
+				prop   : "",
+				type   : "group"
+			},
+			success: function(xml){
+				document.getElementById("textUser").focus();
+                xmlDOM = loadXMLString(xml);
+                adCount = xmlDOM.getElementsByTagName("ROW").length;
+			},
+	    	error : function(error){
+	    		document.getElementById("textUser").focus();
+                alert(strLang241 + error.responseText);
+	    	}
+		});
+		
+        if (adCount == 0) {
+            var pAlertContent = strLang242;
+            OpenAlertUI(pAlertContent);
+            return;
+        }
+        else if (adCount == 1) {
+            g_xmlHTTP = createXMLHttpRequest();
+
+            var strQuery = "<DATA><DEPTID>" + getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]) +
+					"</DEPTID><TOPID>" + CompanyID + "</TOPID><PROP>extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName</PROP></DATA>";
+            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
+            g_xmlHTTP.onreadystatechange = event_getAprLineDeptFullTree;
+            g_xmlHTTP.send(strQuery);
+        }
+        else {
+            var rgParams = new Array();
+            rgParams["addrBook"] = xmlDOM;
+            rgParams["deptid"] = "";
+            if (CrossYN() && ext !='hwp') {
+                checkname2_cross_dialogArguments[0] = rgParams;
+                checkname2_cross_dialogArguments[1] = btnAprLineSearchDept_onClick_Complete2;
+
+                DivPopUpShow(609, 372, "/ezPersonal/checkName2.do");
+            }
+            else {
+                window.showModalDialog("/ezPersonal/checkName2.do", rgParams, "dialogHeight:372px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken");
+
+                if (rgParams["deptid"] != "") {
+                    g_xmlHTTP = createXMLHttpRequest();
+                    var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + CompanyID + "</TOPID><PROP>extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName</PROP></DATA>";
+                    g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
+                    g_xmlHTTP.onreadystatechange = event_getAprLineDeptFullTree;
+                    g_xmlHTTP.send(strQuery);
+                }
+            }
+        }
+
+	}catch(e){}
+}
+
+function btnAprLineSearchDept_onClick_Complete2(rgParams) {
+    DivPopUpHidden();
+    if (rgParams["deptid"] != "") {
+        g_xmlHTTP = createXMLHttpRequest();
+        var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + CompanyID + "</TOPID><PROP>extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName</PROP></DATA>";
+        g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
+        g_xmlHTTP.onreadystatechange = event_getAprLineDeptFullTree;
+        g_xmlHTTP.send(strQuery);
+    }
+}
+
+function event_getAprLineDeptFullTree() {
+    if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
+        if (g_xmlHTTP.statusText == "OK") {
+        	document.getElementById('TreeView').innerHTML = "";
+        	var treeView = new TreeView();
+        	treeView.SetID("FromTreeView");
+        	treeView.SetUseAgency(true);
+        	treeView.SetRequestData("RequestData");
+        	treeView.SetNodeClick("TreeViewNodeClick");
+        	treeView.DataSource(loadXMLString(g_xmlHTTP.responseText));
+			treeView.DataBind("TreeView");
+
+            treeViewScrollTo("FromTreeView");   //2020-04-24 : 선택된 노드로 트리뷰 커서 이동
+        }
+        else {
+            alert(strLang249 + g_xmlHTTP.statusText);
+            g_xmlHTTP = null;
+        }
+    }
+}
+
+function list2_onSel_DBclick_audit(table_id) {
+	var pUserList = new ListView();      
+    pUserList.LoadFromID(table_id);
+
+	//var selnode = pUserList.GetSelectedRows();
+    var rows = pUserList.GetDataRows();
+	var RtnVal = CheckSignCellValue();  
+    
+    InsertMode = "Add";	
+    
+    var pAPRLINE = new ListView();      
+    pAPRLINE.LoadFromID("lvAPRLINE");
+    
+    for(var i=0; i<rows.length; i++) {
+    	var selnode = new Array();
+    	selnode.push(rows[i]);
+    	
+    	if (RtnVal) {
+        	if (approvalFlag == "S") {
+        		var lineArea = CheckLineArea_BeforeAdd();
+        		if (!lineArea) {return;}
+    			
+    			for(var j = selnode.length-1 ; j >= 0 ; j--){
+    				SAPRLINEATTENDADDFunction(selnode[j], "PERSON");
+    				initJunGyul();
+    			}
+        	} else {
+        		if (selnode.length != 0) {
+    				aprlinecount = 0;
+
+        			for(var j = selnode.length-1 ; j >= 0 ; j--)
+        				APRLINEATTENDADDFunction(selnode[j], "PERSON");
+        		}
+        	}
+        }
     }
 }

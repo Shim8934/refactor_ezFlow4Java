@@ -195,14 +195,31 @@ function GetDocSearch() {
         createNodeAndInsertText(xmlpara, objNode, "PageNum", curpage);
         createNodeAndInsertText(xmlpara, objNode, "PageSize", PageSize);
         createNodeAndInsertText(xmlpara, objNode, "DocState", "");
+        
+        /* 2021-02-01 홍승비 - 개인문서함 > 문서함검색의 경우 '상태'값이 없으므로 undefined & null 처리 추가 */
         var searchStatus = $("#sel_status option:selected").val();
+        if (typeof(searchStatus) == "undefined" || searchStatus == null) {
+        	searchStatus = "ALL";
+        }
         createNodeAndInsertText(xmlpara, objNode, "searchStatus", searchStatus);
         
         createNodeAndInsertText(xmlpara, objNode, "orderCell", OrderCell);
         createNodeAndInsertText(xmlpara, objNode, "orderOption", OrderOption);
+
+        // 2021-03-16 박기범 - 키워드 추가
+        // if (typeof (condition[24]) != "undefined" && (condition[24].indexOf("KAPR;") === 0 || condition[24].indexOf("KEND;") === 0)) {
+        //     if (condition[24].indexOf("KAPR;") === 0) {
+        //         SQLPARADATA = SQLPARADATA.substring(0, SQLPARADATA.indexOf("<TYPE>")+6) + "KAPR;" + SQLPARADATA.substring(SQLPARADATA.indexOf("<TYPE>")+6);
+        //     } else if (condition[24].indexOf("KEND;") === 0) {
+        //         SQLPARADATA = SQLPARADATA.substring(0, SQLPARADATA.indexOf("<TYPE>")+6) + "KEND;" + SQLPARADATA.substring(SQLPARADATA.indexOf("<TYPE>")+6);
+        //     }
+        //     SQLPARADATA = SQLPARADATA.substring(0, SQLPARADATA.indexOf("<DATA>")+6) + "<KEYWORD>" + condition[24].substring(5) + "</KEYWORD>" + SQLPARADATA.substring(SQLPARADATA.indexOf("<DATA>")+6);
+        // }
+
         createNodeAndInsertText(xmlpara, objNode, "pSubQuery", subCondition);
         
         createNodeAndInsertText(xmlpara, objNode, "SearchQuery", SQLPARADATA);
+        createNodeAndInsertText(xmlpara, objNode, "shareDeptId", shareDeptId);
         
 	    if (GamSaFlag){
 	    	xmlhttp.open("POST", "/ezApprovalG/getGamSaSearchDocList.do", false);
@@ -247,6 +264,8 @@ function GetDocSearch() {
 	    }
 	    xmlhttp.onreadystatechange = getsearchDocList_after;		
 	    xmlhttp.send(xmlpara);
+		
+			listLoading(false);
 	}
 
     //ShowMailProgress();
@@ -611,10 +630,6 @@ function selFirstRow(Resultxml) {
                 document.getElementById("tenforce").style.display = "none";
                 document.getElementById("tresend").style.display = "none";
             }
-            else {
-                document.getElementById("tenforce").style.display = "";
-                document.getElementById("tresend").style.display = "";
-            }
 
             if (DocState != strDocState1) {
 	        	document.getElementById("tsendCir").style.display = "none";
@@ -647,8 +662,13 @@ function selFirstRow(Resultxml) {
 
         document.getElementById("tSearchCondi").style.display = "";
         document.getElementById("tViewDoc").style.display = "";
-        document.getElementById("tbtnExcel").style.display = "";
-        document.getElementById("tbtnExcelAll").style.display = "";
+        if(share || share == 'share'){
+        	document.getElementById("tbtnExcel").style.display = "none";
+        	document.getElementById("tbtnExcelAll").style.display = "none";
+        	document.getElementById("tbtnRegUserCont").style.display = "none";
+        	document.getElementById("tenforce").style.display = "none";
+            document.getElementById("tresend").style.display = "none";
+        }
 
         if (approvalFlag == "G") {
 	        if (tr.getAttribute("DATA5").trim() != "")
@@ -695,6 +715,22 @@ function selFirstRow(Resultxml) {
 
 function getDataInfo() {
 	var pUrl = "";
+
+    var DocList = new ListView();
+    DocList.LoadFromID("DocList");
+
+    var selectedRows = DocList.GetSelectedRows();
+    
+    if(selectedRows.length > 0) {
+    	var tr = selectedRows[0];
+
+        if (tr.getAttribute("DATA10") != "" && tr.getAttribute("DATA10") >= GetTodayDate()) {
+            if (CheckAprLine(tr.getAttribute("DATA1")) != "TRUE") {
+                getdoclistSub_after("NOTPERMISSION");
+                return;
+            }
+        }
+    }
 	
     switch (jobState) {
         case "ATTACH":
@@ -717,6 +753,7 @@ function getDataInfo() {
         	pUrl = "/ezApprovalG/getCirculationinfo.do";
         	break;
     }
+
     $.ajax({
 		type : "POST",
 		dataType : "text",
@@ -853,6 +890,11 @@ function lvtDoclist_SelChange() {
             	Circulation_onclick();
             	break;
         }
+    }
+    /* 2021-03-24 홍승비 - 제목 클릭 시 원클릭 이벤트로 전자결재 읽기, 결재 팝업창을 표출 */
+    var headerNameTD = $(event.target).attr("headerName");
+    if (headerNameTD != null && typeof(headerNameTD) != "undefined" && headerNameTD == "DOCTITLE") {
+    	lvtDoclist_onSel_DBclick();
     }
 }
 
@@ -1222,6 +1264,11 @@ function check_presence2() {
         if (typeof (condition[16]) != "undefined" && condition[16] != "") {
             TYPE += condition[16];
             DATA += condition[17];
+        }
+
+        if (typeof (condition[24]) != "undefined" && condition[24] != "") {
+            TYPE += condition[24].slice(0,5);
+            DATA += "<KEYWORD>" + condition[24].slice(5) + "</KEYWORD>";
         }
 
         SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";

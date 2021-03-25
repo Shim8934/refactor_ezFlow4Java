@@ -3,19 +3,14 @@ package egovframework.ezEKP.ezPoll.service.impl;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
-import javax.mail.Message.RecipientType;
 import javax.mail.internet.InternetAddress;
 
-import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -523,12 +518,10 @@ public class EzPollServiceImpl implements EzPollService{
 			set.addAll(listOfQuestion);
 			
 			//Get all question which this user is creator
-			List<PollQuestionVO> listOfQuestion2 = new ArrayList<PollQuestionVO>();
-			listOfQuestion2 = getOwnQuestions(userID, tenantID, searchStr, primary, mode, companyID);		
+			List<PollQuestionVO> listOfQuestion2 = getOwnQuestions(userID, tenantID, searchStr, primary, mode, companyID);		
 			set.addAll(listOfQuestion2);
 			
-			List<PollQuestionVO> listOfQuestion3 = new ArrayList<PollQuestionVO>();
-			listOfQuestion3 = ezPollDAO.getOpenToAllQuestion(map);
+			List<PollQuestionVO> listOfQuestion3 = ezPollDAO.getOpenToAllQuestion(map);
 			set.addAll(listOfQuestion3);
 			
 		}
@@ -638,11 +631,8 @@ public class EzPollServiceImpl implements EzPollService{
 				//다른 qstId에서 파일을 사용하고 있는지 체크
 				fileUsingCheck = checkQstUsingFile(tenantId, qstId, qstFileName);
 				if(fileUsingCheck < 1 && qstFileName != null){
-					if(qstFileName != null){
-						qstFileName= qstFileName.split("/")[0];
-					}
-					
-					String absoluteFilePath = pDirPath + "uploadFile/" + qstFileName;
+					qstFileName= qstFileName.split("/")[0];
+					String absoluteFilePath = pDirPath + "uploadFile/" + commonUtil.detectPathTraversal(qstFileName);
 					
 					try {
 						File file = new File(absoluteFilePath);
@@ -668,11 +658,8 @@ public class EzPollServiceImpl implements EzPollService{
 			ansFileName = ansFilesList.get(i);
 			fileUsingCheck = checkUsingFile(tenantId, ansFileName);
 			if(fileUsingCheck <= 1 && ansFileName != null){
-				if(ansFileName != null){
-					ansFileName= ansFileName.split("/")[0];
-				}
-				
-				String absoluteFilePath = pDirPath + "uploadFile/" + ansFileName;
+				ansFileName= ansFileName.split("/")[0];
+				String absoluteFilePath = pDirPath + "uploadFile/" + commonUtil.detectPathTraversal(ansFileName);
 				
 				try {
 					File file = new File(absoluteFilePath);
@@ -699,7 +686,7 @@ public class EzPollServiceImpl implements EzPollService{
 				//댓글은 재사용하지 않기 때문에 파일 사용유무 체크하지 않음.
 				if(cmtFileName != null){
 					String pDirPath = (String)map.get("pDirPath");
-					String absoluteFilePath = pDirPath + "uploadFile/" + cmtFileName;
+					String absoluteFilePath = pDirPath + "uploadFile/" + commonUtil.detectPathTraversal(cmtFileName);
 					
 					try {
 						File file = new File(absoluteFilePath);
@@ -724,7 +711,7 @@ public class EzPollServiceImpl implements EzPollService{
 					}*/
 					
 					String realPath = (String)map.get("realPath");
-					String absoluteFilePath = realPath + cmtFileName;
+					String absoluteFilePath = realPath + commonUtil.detectPathTraversal(cmtFileName);
 					
 					try {
 						File file = new File(absoluteFilePath);
@@ -843,7 +830,7 @@ public class EzPollServiceImpl implements EzPollService{
 		List<PollUserVO> pollUser = getAllUsersForQst(tenantId, qstId);
 		List<String> userList = new ArrayList<String>();
 		List<String> deptUserList = new ArrayList<String>();
-		String companyUser = new String();
+		String companyUser = "";
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		
 		Iterator<PollUserVO> iter = pollUser.iterator();

@@ -8,6 +8,7 @@
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezWebFolder.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/popup.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -101,10 +102,14 @@
 				
 				var imgElmt2 = document.createElement("img");
 				imgElmt2.setAttribute("class", "webfolderImg");
-				imgElmt2.src = "/images/webfolder/fldr.png";
+				imgElmt2.src = "/images/OrganTree_cross/fldr.gif";
 				
 				var spanFolderName = document.createElement("span");
-				spanFolderName.textContent = primary == "1" ? list["folderName"] : list["folderName2"];
+				if (list["folderLevel"] == 0) {
+					spanFolderName.textContent = primary == "1" ? list["folderName"]+"(" + list["ownerId"]+")" : list["folderName2"]+"(" + list["ownerId"]+")";
+				} else {
+					spanFolderName.textContent = primary == "1" ? list["folderName"] : list["folderName2"];
+				}
 				spanFolderName.setAttribute("class", "spanName");
 				spanFolderName.setAttribute("name", list["folderId"]);
 				spanFolderName.setAttribute("level", list["folderLevel"]);
@@ -415,6 +420,9 @@
 							case 3:
 								alert("<spring:message code='ezWebFolder.t300' />");
 								break;
+							case 8:
+								alert(messages.resultErrDuplicateCreate);
+								break;
 						}
 					},
 					error: function (xhr, status, e){
@@ -466,6 +474,11 @@
 				var folderUsers = getJsonData(document.getElementById("rangeStr").value);
 				var target      = document.getElementById("newTargetDiv").innerHTML;
 				
+				if (isValidName(folderName) || isValidName(folderName2)) {
+					alert('<spring:message code="ezWebFolder.t211"/>');
+					return;
+				}
+
 				if (!folderName.replace(/\s/g,'')) {
 					alert("<spring:message code='ezWebFolder.t201'/>");
 					document.getElementById("fldName").value = "";
@@ -479,12 +492,12 @@
 					document.getElementById("fldName2").focus;
 					return;
 				}
-				
+				/* 조직도에 아무도 선택하지 않고 저장할 수 있도록 주석처리
 				if (!target.replace(/\s/g,'')) {
 					alert("<spring:message code='ezWebFolder.t202'/>");
 					return;
 				}
-				
+				*/
 				$.ajax({
 					type: "POST",
 					url: "/admin/ezWebFolder/changeCompanyFolder.do",
@@ -512,6 +525,9 @@
 								break;
 							case 3:
 								alert("<spring:message code='ezWebFolder.t300' />");
+								break;
+							case 8:
+								alert(messages.resultErrDuplicateRename);
 								break;
 						}
 					},
@@ -629,7 +645,7 @@
 										<td>
 											<div style="margin: 20px 20px 5px 20px;">
 												<img src="/images/kr/left/left_dot02.gif" />
-												<span><spring:message code='ezWebFolder.t226'/></span>
+												<span style="display:inline-block; width:110px;"><spring:message code='ezWebFolder.t226'/></span>
 												<input id="fldName" type="text" maxlength="50" style="height: 25px; border-radius: 3px; border: 1px solid #ddd; width: 200px; margin-left: 2px; padding-left: 5px;">
 											</div>
 										</td>
@@ -638,7 +654,7 @@
 										<td>
 											<div style="margin: 5px 20px 10px 20px;">
 												<img src="/images/kr/left/left_dot02.gif" />
-												<span><spring:message code='ezWebFolder.t227'/></span>
+												<span style="display:inline-block; width:110px;"><spring:message code='ezWebFolder.t227'/></span>
 												<input id="fldName2" type="text" maxlength="50" style="height: 25px; border-radius: 3px; border: 1px solid #ddd; width: 200px; margin-left: 2px; padding-left: 5px;">
 											</div>
 										</td>
@@ -646,7 +662,7 @@
 									<tr>
 										<td>
 											<div style="margin: 20px 20px 5px; min-height: 36px;">
-												<div style="display: inline-block; width: 52px;" id= "displayUsers">
+												<div style="display: inline-block; width: 70px;" id= "displayUsers">
 													<img src="/images/kr/left/left_dot02.gif" />
 													<span id=""><spring:message code='ezWebFolder.t204'/></span>&nbsp;
 												</div>

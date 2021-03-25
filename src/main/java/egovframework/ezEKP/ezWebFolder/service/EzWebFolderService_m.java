@@ -16,9 +16,11 @@ import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzWebFolderService_m {
 
-	List<ShareVO> getSharingList(String subSearchFlag, String userId, String primary, String offset, int startPoint, int pageSize, SearchVO searchInfo, int tenantId) throws Exception;
+	List<ShareVO> getSharingList(String subSearchFlag, String userId, String primary, String offset, int startPoint, int pageSize, 
+			SearchVO searchInfo, int tenantId, String sortColumn, String sortType) throws Exception;
 	
-	List<ShareVO> getSharedList(String isSubSearching, String userId, String  deptId, String compId, String primary, String offset, int startPoint, int pageSize, SearchVO searchInfo, int tenantId) throws Exception;
+	List<ShareVO> getSharedList(String isSubSearching, String userId, String  deptId, String compId, String primary, String offset, 
+			int startPoint, int pageSize, SearchVO searchInfo, int tenantId, String sortColumn, String sortType) throws Exception;
 	
 	Map<String, Long> getSharingCount(String subSearchFlag, String userId, String primary, String offset, int pageSize, SearchVO searchInfo, int tenantId) throws Exception;
 	
@@ -40,7 +42,8 @@ public interface EzWebFolderService_m {
 	
 	void deleteShareWithSub(String folderFileId, String folderFileType, int tenantId) throws Exception;
 	
-	List<ShareVO> getHiddenSharedList(String userId, String deptId, String compId, String primary, String offset, int startPoint, int pageSize, int tenantId) throws Exception;
+	List<ShareVO> getHiddenSharedList(String userId, String deptId, String compId, String primary, String offset, int startPoint, 
+			int pageSize, int tenantId, String sortType, String sortColumn) throws Exception;
 
 	Map<String, Long> getHiddenSharedCount(String userId, String deptId, String compId, String primary, String offset, int pageSize, int tenantId) throws Exception;
 	
@@ -48,25 +51,28 @@ public interface EzWebFolderService_m {
 
 	void showShare(String folderFileId, String folderFileType, String userId, String deptId, String compId, String offset, int tenantId) throws Exception;
 	
-	JSONObject getTrashCanList(String realColmn, String order, String userId, String offset, int tenantId, int pStart, int pEnd, String searchExt, String searchFileName, String searchFileType, String searchCreateName, String enrollStartDate, String enrollEndDate, String delStartDate, String delEndDate, String mode) throws Exception;
+	JSONObject getTrashCanList(String realColmn, String order, String userId, String offset, int tenantId, int pStart, int pEnd, String searchExt, 
+			String searchFileName, String searchFileType, String searchCreateName, String enrollStartDate, String enrollEndDate, String delStartDate, 
+			String delEndDate, String mode, String sortType, String sortColumn) throws Exception;
 
 	String getFolderPath(String folderId, int tenantId) throws Exception;
 
-	void permanetDeleteSelectedFiles(String[] fileIDList,String[] folderIDList ,LoginVO userInfo, String realPath) throws Exception;
+	void permanetDeleteSelectedFiles(String[] fileIDList,String[] folderIDList ,LoginVO userInfo, String realPath, String flag) throws Exception;
 
 	int realFileDelete(FileVO fileVO, String realPath, LoginVO userInfo, String userName1, String userName2) throws Exception;
 	
-	int deleteFile(String fileId, int tenantId) throws Exception;
+	int deleteFile(String fileId, int tenantId, String Flag) throws Exception;
 
-	int deleteFolder(FolderVO folderVO) throws Exception;
+	int deleteFolder(FolderVO folderVO, String Flag) throws Exception;
 	
-	void deleteAllFilesInFolder(FolderVO folderVO, String companyId ,String realPath, LoginVO userInfo, String offset, int tenantId, String userId, String userName1, String userName2) throws Exception;
+	void deleteAllFilesInFolder(FolderVO folderVO, String companyId ,String realPath, LoginVO userInfo, String offset, int tenantId, String userId, String userName1, String userName2, String flag) throws Exception;
 
 	List<TrashCanVO> getFileByFolderId(String folderId, int tenantId, String userId) throws Exception;
 
 	List<TrashCanVO> getFolderByFolderPath(String folderPath, int tenantId, String companyId) throws Exception;
 	
-	List<FavoriteVO> getFavorites(String userId, String primary, String offset, int tenantId, SearchVO searchInfo, int startIndex, int listCount) throws Exception;
+	List<FavoriteVO> getFavorites(String userId, String primary, String offset, int tenantId, SearchVO searchInfo, 
+			int startIndex, int listCount, String sortType, String sortColumn) throws Exception;
 	
 	/**
 	 * @return key : value<br>
@@ -89,19 +95,27 @@ public interface EzWebFolderService_m {
 	 **/
 	int deleteFavoritesInFolder(String folderId, int tenantId) throws Exception;
 	
-	int restoreFile (FileVO fileVO, int tenantId, String userId, String timeUTC, String companyId, String offset, String userName1, String userName2) throws Exception;
+	boolean restoreFile (FileVO fileVO, int tenantId, String userId, String timeUTC, String companyId, String offset, String userName1, String userName2) throws Exception;
 	
-	int restoreFolder (String folderId, int tenantId, String userId, String timeUTC) throws Exception;
+	boolean restoreFolder (String folderId, int tenantId, String userId, String timeUTC) throws Exception;
 	
-	int restoreTrashCan (String[] fileIDList, String[] folderIDList, int tenantId, String userId, String offset, String companyId, String timeUTC, String userName1, String userName2) throws Exception;
+	Map<String, Object> restoreTrashCan (String[] fileIDList, String[] folderIDList, int tenantId, String userId, String offset, String companyId, String timeUTC, String userName1, String userName2) throws Exception;
 	
-	int restoreFileInFolder (String folderId, int tenantId, String userId, String timeUTC, String companyId, String offset, String userName1, String userName2) throws Exception;
+	boolean restoreFileInFolder (String folderId, int tenantId, String userId, String timeUTC, String companyId, String offset, String userName1, String userName2) throws Exception;
 
-	void moveTrashCan (String[] fileIDList, String[] folderIDList,String folderId, int tenantId, String userId, String offset, String companyId, String userName1, String userName2, String timeUTC) throws Exception;
+	Map<String, Object> moveTrashCan (String[] fileIDList, String[] folderIDList,String folderId, String timeUTC, LoginVO userInfo) throws Exception;
+
+	Map<String, Object> moveTrashCan(String[] fileIDList, String[] folderIDList, String[] fileNameList, String folderId, String timeUTC, LoginVO userInfo, boolean overwritable) throws Exception;
 
 	void moveFolder (FolderVO folderVO, FolderVO destFoldeVO, String userId, String offset, int tenantId, String timeUTC) throws Exception;
 
 	void moveFile (String fileId, String folderId, int tenantId, String timeUTC) throws Exception;
+	
+	void moveRenameFile(String fileId, String newName, String folderId, int tenantId, String timeUTC) throws Exception;
 
-	List<String> getAllFolderIdNotInFolder(String folderPath, String folderId) throws Exception;
+	List<String> getAllFolderIdNotInFolder(String folderPath, String folderId, String flag) throws Exception;
+	
+	List<Map<String, String>> subFolders(String folderId, String folderOwner, int tenantId ) throws Exception;
+	
+	String subFolderRealDeleteRecursive(List<Map<String, String>> subFolders, int tenantId, Map<String, Object> map, LoginVO userInfo, String flag) throws Exception;
 }

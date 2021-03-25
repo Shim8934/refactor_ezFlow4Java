@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿var ListTypeFlag;
+﻿var ListTypeFlag;
 var g_SelCabXml = "";
 var g_TransFlag = "0";
 var g_szParamXml = "";
@@ -32,7 +32,7 @@ function ChkCabRoleInfo(selRow) {
     var ConfirmFlag;
     var CabClassNo;
     var MenuType;
-    
+
     if (selRow != null) {
         if (ListTypeFlag == "2" || ListTypeFlag == "3") {
             MenuCtl_Trans();
@@ -60,8 +60,13 @@ function ChkCabRoleInfo(selRow) {
                 g_bConfirm = true;
             else
                 g_bConfirm = false;
-
-            g_bCabCharger = ISCabCharger(CabClassNo, UserID);
+            
+            if (MenuType == "1" && g_bDeptCharger) {
+            	g_bCabCharger = true;
+            } else {
+            	g_bCabCharger = ISCabCharger(CabClassNo, UserID);
+            }
+            
             ezCabMunuCtl(MenuType, selRow);
         }
     }
@@ -94,49 +99,46 @@ function ezCabMunuCtl(MenuType, selRow) {
                 document.getElementById("tdModifyCab").style.display = pMenuFlag;
             }
 
-            if (GetAttribute(selRow, "DATA5") === arr_userinfo[4]) {
-                if (selRow.getAttribute("DATA6") == "0") {
-                    if (typeof (tdbtnEndProduce) != "undefined" && typeof (tdbtnEndProduce) != "unknown") {
-                        if ((GetCabChargerRight() == "true" || g_bDeptCharger) && g_sFlag != "m09") {                    	
-                            document.getElementById("tdbtnEndProduce").style.display = "";
-                            //SwapImage(btnEndProduce, "");
-                        }
-                        else {
-                            document.getElementById("tdbtnEndProduce").style.display = "none";
-                            //SwapImage(btnEndProduce, "dis");
-                        }
-                    }
-    
-                    if (typeof (tdbtnCancelEndProd) != "undefined" && typeof (tdbtnCancelEndProd) != "unknown") {
-                        document.getElementById("tdbtnCancelEndProd").style.display = "none";
-                        //SwapImage(btnCancelEndProd, "dis");
-                    }
-                }
-                else {
-                    if (typeof (tdbtnEndProduce) != "undefined" && typeof (tdbtnEndProduce) != "unknown") {
-                        document.getElementById("tdbtnEndProduce").style.display = "none";
-                        //SwapImage(btnEndProduce, "dis");
-                    }
-    
-                    if (typeof (tdbtnCancelEndProd) != "undefined" && typeof (tdbtnCancelEndProd) != "unknown") {
-                        if (GetCabChargerRight() == "true" && g_sFlag != "m09") {                    	
-                            document.getElementById("tdbtnCancelEndProd").style.display = "";
-                            //SwapImage(btnCancelEndProd, "");
-                        }
-                        else {
-                            document.getElementById("tdbtnCancelEndProd").style.display = "none";
-                            //SwapImage(btnCancelEndProd, "dis");
-                        }
-                    }
-                }
+            // 20200824 김보혜 기록물철 관련 버튼들 전체적으로 수정 (한사대) 
+            if (g_bDeptCharger || g_bRecAdmin || AdminYN == "TRUE") {
+                document.getElementById("tdBtnCabDel").style.display = "";    
+            }
 
-                if (g_bDeptCharger || g_bRecAdmin || AdminYN == "TRUE") {
-                    document.getElementById("tdBtnCabDel").style.display = "";    
+            // 20201215 강승구 '종료연기승인', '편철확정' 오류수정
+            var endProBtn = document.getElementById("tdbtnEndProduce");
+            var endCancelProBtn = document.getElementById("tdbtnCancelEndProd");
+
+            if(endProBtn && endCancelProBtn) {
+                if (ListTypeFlag == "8" && GetCabChargerRight() === "true" && g_sFlag != "m09") {
+                    if (selRow.getAttribute("DATA6") == "0") {
+                        document.getElementById("tdbtnEndProduce").style.display = "";
+                        document.getElementById("tdbtnCancelEndProd").style.display = "none";
+                    } else {
+                        document.getElementById("tdbtnEndProduce").style.display = "none";
+                        document.getElementById("tdbtnCancelEndProd").style.display = "";
+                    }
+                    document.getElementById("tdNewVol").style.display = "";
+                } else if(ListTypeFlag == "10" && GetCabChargerRight() === "true" && g_sFlag == "m07"){			// 2020-09-14 김민성 - 종료연기신청, 정리대상목록 권호수추가 버튼 추가
+                    document.getElementById("tdbtnEndProduce").style.display = "";
+                    document.getElementById("tdbtnCancelEndProd").style.display = "none";
+                    document.getElementById("tdNewVol").style.display = "";
+                } else {
+                    document.getElementById("tdbtnEndProduce").style.display = "none";
+                    document.getElementById("tdbtnCancelEndProd").style.display = "none";
                 }
-            } else {
-                document.getElementById("tdbtnEndProduce").style.display = "none";
-                document.getElementById("tdbtnCancelEndProd").style.display = "none";
-                document.getElementById("tdBtnCabDel").style.display = "none";
+            }
+
+            /**
+             * 연기신청에 따른 버튼 활성화비활성화
+             */
+            if (ListTypeFlag == "10" && GetCabChargerRight() === "true") {
+                if (selRow.getAttribute("DATA8") == "Y") {
+                    document.getElementById("tdReqDelayEndY").style.display = "none";
+                    document.getElementById("tdCancelDelayEndY").style.display = "";
+                } else {
+                    document.getElementById("tdReqDelayEndY").style.display = "";
+                    document.getElementById("tdCancelDelayEndY").style.display = "none";
+                }
             }
 
             if (typeof (tdViewCabHist) != "undefined" && typeof (tdViewCabHist) != "unknown") {
@@ -183,27 +185,6 @@ function ezCabMunuCtl(MenuType, selRow) {
 
             if (typeof (tdModifyRec) != "undefined" && typeof (tdModifyRec) != "unknown")
                 document.getElementById("tdModifyRec").style.display = pMenuFlag;
-
-            if (typeof (ichange_Rec) != "undefined" && typeof (ichange_Rec) != "unknown") {
-                if (selRow.getAttribute("DATA8") == "00") {
-                    if (IsUserDeptRec() == "true" && document.getElementById("tdichange_Rec").style.display == "") {
-                        document.getElementById("ichange_Rec").style.display = "";
-                        document.getElementById("tdichange_Rec").style.display = "";
-                        //SwapImage(ichange_Rec, "");
-                    }
-                    else {
-                        document.getElementById("ichange_Rec").style.display = "none";
-                        document.getElementById("tdichange_Rec").style.display = "none";
-                        //SwapImage(ichange_Rec, "dis");
-                    }
-                }
-                else {
-                    document.getElementById("ichange_Rec").style.display = "none";
-                    document.getElementById("tdichange_Rec").style.display = "none";
-                    //SwapImage(ichange_Rec, "dis");
-                }
-            }
-
             
             if (g_bRecAdmin || AdminYN == "TRUE") {
                 if (typeof (tdVeiwRecHist) != "undefined" && typeof (tdVeiwRecHist) != "unknown") {
@@ -287,18 +268,27 @@ function ezCabMunuCtl(MenuType, selRow) {
                 }
             }
 
-            if (typeof (tdichange_Rec) != "undefined" && typeof (tdichange_Rec) != "unknown") {
-                if (selRow.getAttribute("DATA8") == "00" && selRow.getAttribute("DATA13") == "0") {
-                    document.getElementById("ichange_Rec").style.display = "";
-                    document.getElementById("tdichange_Rec").style.display = "";
-                    //SwapImage(ichange_Rec, "");
-                }
-                else {
-                    document.getElementById("ichange_Rec").style.display = "none";
-                    document.getElementById("tdichange_Rec").style.display = "none";
-                    //SwapImage(ichange_Rec, "dis");
+            if (document.getElementById("tdGongRam")) {
+//                if ((GetAttribute(selRow, "DATA15") == "011" || GetAttribute(selRow, "DATA15") == "001") && arr_userinfo[1] == GetAttribute(selRow, "DATA3") && GetAttribute(selRow, "DATA8") === "00")
+				// 2020-01-08 정주환 공람발송 기안자는 항상 on
+               	if (arr_userinfo[1] == GetAttribute(selRow, "DATA3") && GetAttribute(selRow, "DATA8") === "00")
+                    document.getElementById("tdGongRam").style.display = "";
+                else
+                    document.getElementById("tdGongRam").style.display = "none";
+            }
+
+            if (document.querySelector("#tdichange_Rec") && document.querySelector("#tdichangeS_Rec")) {
+                var seperateAttachNo = GetAttribute(selRow, "DATA8");
+                var rejectFlag = GetAttribute(selRow, "DATA13");
+                if (isDrafter(WriterID, WriterDeptID) && seperateAttachNo === "00" && rejectFlag === "0") {
+                    SendOfferCheckBtn(GetAttribute(selRow, "DATA1"), arr_userinfo[1]);
+                } else {
+                    SetMenuBtn("tdichange_Rec", "none");
+                    SetMenuBtn("tdichangeS_Rec", "none");
+                    SetMenuBtn("tdReSend", "none");
                 }
             }
+            
             break;
     }
 
@@ -314,6 +304,9 @@ function ezCabMunuCtl(MenuType, selRow) {
 function SetMenuBtn(sbtnname, sbtnstyle) {
     if (document.getElementById(sbtnname) != null)
         document.getElementById(sbtnname).style.display = sbtnstyle;
+}
+function isDrafter(writerID, writerDeptID) {
+    return writerID === arr_userinfo[1] && writerDeptID === arr_userinfo[4];
 }
 
 function IsUserDeptRec() {
@@ -396,7 +389,7 @@ function InitGlobals(ListFlag, ListType, MenuType) {
         try {
             if (trSubInfoTab) {
                 document.getElementById("trSubInfoTab").style.display = "none";
-                document.getElementById("divList").style.height = "385";
+                document.getElementById("divList").style.height = "730px";
 
                 //PageSize = 10;
                 Block_Size = 10;
@@ -409,7 +402,7 @@ function InitGlobals(ListFlag, ListType, MenuType) {
         try {
             if (trSubInfoTab) {
                 document.getElementById("trSubInfoTab").style.display = "";
-                document.getElementById("divList").style.height = "310";
+                document.getElementById("divList").style.height = "375px";
                 //PageSize = 10;
                 Block_Size = 10;
             }
@@ -512,6 +505,7 @@ function GetDistList() {
 }
 
 function GetCaninetList() {
+	listLoading(true); //20201211 조진호 - 리스트 출력 시 시간이 오래 걸릴 수 있어 로딩바 추가
     if (isPeriodYear && g_CabSearchParamXml == "") {
         var nowyear = new Date().getFullYear();
         var nowmonth = new Date().getMonth() + 1;
@@ -543,6 +537,7 @@ function GetCaninetList() {
         default:
             GetCaninetListXml();
     }
+    listLoading(false);	// 20201211 조진호 로딩바 display:none
 }
 
 function GetRecordList() {
@@ -557,7 +552,12 @@ function GetRecordList() {
         if (nowday < 10)
             nowday = "0" + nowday;
 
-        g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00.001</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
+        var tempDeptID = DeptID;
+        if (checkRecordAll()) {
+            tempDeptID = "ALL";
+        }
+
+        g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00.001</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
     } else if (g_isSearching) {
     	var searchParamXml = loadXMLString(g_RecSearchParamXml);
         var startDate = SelectSingleNodeValue(searchParamXml.firstChild, "SREGDATE");
@@ -740,7 +740,7 @@ function InsertToCabListView(Resultxml) {
         DocList.SetRowOnDblClick("lvtDoclist_onSel_DBclick");      
         DocList.SetOrderbyCol("COLNAME");
         DocList.SetTitleIdx(0);
-
+        DocList.SetTitle("Title");
         DocList.DataSource(xmlDoc);                             
         DocList.DataBind("lvtDoclist");                          
         DocList = null;
@@ -749,6 +749,7 @@ function InsertToCabListView(Resultxml) {
         DisplayLineCnt_ezCab(NodeListLen);
 
         selFirstRow(Resultxml);
+        listLoading(false);	// 20201211 조진호 로딩바 display:none
     } catch (e) { }
 }
 
@@ -842,13 +843,17 @@ function InsertToRecListView(Resultxml) {
         DocList.SetRowOnDblClick("lvtDoclist_onSel_DBclick");      
         DocList.SetOrderbyCol("COLNAME");
         DocList.SetTitleIdx(0);                                 
+        DocList.SetTitle("RecTitle");
         DocList.SetSecurityFlag(true);
+        DocList.SetSecurityIdx(13);
         DocList.DataSource(xmlDoc);                             
         DocList.DataBind("lvtDoclist");                          
         DocList = null;
-        
+
         if (typeof diffPaging != 'undefined' && diffPaging == "attachDoc") {
-        	orgmakePageSelPage(NodeListLen);
+            //orgmakePageSelPage(NodeListLen);
+            totalPage = parseInt(NodeListLen / PageSize);
+            makePageSelPageCA(NodeListLen);
         } else {
         	makePageSelPage(NodeListLen);
         }
@@ -1116,6 +1121,11 @@ function DocListPrinter_onclick() {
 
     para[11] = NodeListLen;
 
+    if (!NodeListLen) {
+        OpenAlertUI("목록이 불러와진 후 시도해주세요.");
+        return;
+    }
+
     var url = "/ezApprovalG/docListView.do";
 
     doclistview_cross_dialogArguments[0] = para;
@@ -1245,18 +1255,26 @@ function ViewDoc_onclick_Complete(Rtn) {
             }
             
             if (tempUrl.substr(tempUrl.length - 3, tempUrl.length).toLowerCase() == "hwp") {
-            	if (isIE()) {
-                	if (g_uFlag == "m03") {
-                		openLocation = "/ezApprovalG/ezViewEnd_HWP.do?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=&orgDocID=";
+            	if(useWebHWP == "NO") {
+	            	if (isIE()) {
+	                	if (g_uFlag == "m03") {
+	                		openLocation = "/ezApprovalG/ezViewEnd_HWP.do?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=&orgDocID=";
+	                	} else {
+	                		openLocation = "/ezApprovalG/ezViewEnd_HWP.do?docID=" + escape(DocID) + "&docHref=" + escape(pURL) + "&formID=" + escape(selRow.getAttribute("DATA5")) + "&orgDocID=";
+	                	}
+	                } else {
+	                	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+	                	alert(pAlertContent);
+	                    
+	                    return;
+	                }
+            	} else {
+            		if (g_uFlag == "m03") {
+                		openLocation = "/ezApprovalG/ezViewEnd_WHWP.do?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=&orgDocID=";
                 	} else {
-                		openLocation = "/ezApprovalG/ezViewEnd_HWP.do?docID=" + escape(DocID) + "&docHref=" + escape(pURL) + "&formID=" + escape(selRow.getAttribute("DATA5")) + "&orgDocID=";
+                		openLocation = "/ezApprovalG/ezViewEnd_WHWP.do?docID=" + escape(DocID) + "&docHref=" + escape(pURL) + "&formID=" + escape(selRow.getAttribute("DATA5")) + "&orgDocID=";
                 	}
-                } else {
-                	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-                	alert(pAlertContent);
-                    
-                    return;
-                }
+            	}
             } else {
 	            if (g_uFlag == "m03") {
 	                openLocation = "/ezApprovalG/contDocView.do";
@@ -1433,6 +1451,8 @@ function btnSearchRec_onclick(opnOption,opentype) {
 
     if (typeof (opnOption) == "undefined") opnOption = "0";
     para[3] = opnOption;	
+    para[4] = g_sFlag;	
+    para[5] = szRoleInfo;	
 
     var url = "/ezApprovalG/searchRec.do";
 
@@ -1612,6 +1632,7 @@ function SearchCabinet_Complete(rtnVal) {
 
 
 function openergetDocInfo() {
+	listLoading(true); //20201211 조진호 - 리스트 출력 시 시간이 오래 걸릴 수 있어 로딩바 추가
     if (DocList_Flag == "CABINET") {
         GetCaninetList();
     }
@@ -1638,27 +1659,35 @@ function makePageSelPage(pTotalCnt) {
     		var startDate = g_searchDate.startDate;
     		var endDate = g_searchDate.endDate;
     		
-    		period = startDate.getFullYear() + strLang1028 + " " + (startDate.getMonth() + 1) + strLang1029 + " " + startDate.getDate() + strLang1030 + " ~ ";
-    		period += endDate.getFullYear() + strLang1028 + " " + (endDate.getMonth() + 1) + strLang1029 + " " + endDate.getDate() + strLang1030;
+    		period = getDatePeriod(UserLang, startDate.getFullYear(), (startDate.getMonth() + 1), startDate.getDate(), endDate.getFullYear(), (endDate.getMonth() + 1), endDate.getDate());
     	} else if (GetSelectVal("rec_year") == "ALL" && GetSelectVal("cab_year") == "ALL" && GetSelectVal("del_year") == "ALL") {
             var nowyear = new Date().getFullYear();
             var nowmonth = new Date().getMonth() + 1;
             var nowday = new Date().getDate();
-            period = (nowyear - 1) + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030 + " ~ " + nowyear + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030;
+            period = getDatePeriod(UserLang, (nowyear - 1), nowmonth, nowday, nowyear, nowmonth, nowday);
         }
         else {
-            if (GetSelectVal("rec_year") != "ALL")
-                period = document.getElementById("rec_year").value + strLang1028 + " 1" + strLang1029 + " 1" + strLang1030 + " ~ " + document.getElementById("rec_year").value + strLang1028 + " 12" + strLang1029 + " 31" + strLang1030;
-            else if (GetSelectVal("cab_year") != "ALL")
-                period = document.getElementById("cab_year").value + strLang1028 + " 1" + strLang1029 + " 1" + strLang1030 + " ~ " + document.getElementById("cab_year").value + strLang1028 + " 12" + strLang1029 + " 31" + strLang1030;
-            else
-                period = document.getElementById("del_year").value + strLang1028 + " 1" + strLang1029 + " 1" + strLang1030 + " ~ " + document.getElementById("del_year").value + strLang1028 + " 12" + strLang1029 + " 31" + strLang1030;
+            if (GetSelectVal("rec_year") != "ALL"){
+            	period = getDatePeriod(UserLang, document.getElementById("rec_year").value, 1, 1, document.getElementById("rec_year").value, 12, 31);
+            	//period = document.getElementById("rec_year").value + strLang1028 + " 1" + strLang1029 + " 1" + strLang1030 + " ~ " + document.getElementById("rec_year").value + strLang1028 + " 12" + strLang1029 + " 31" + strLang1030;
+            } else if (GetSelectVal("cab_year") != "ALL") {
+            	period = getDatePeriod(UserLang, document.getElementById("cab_year").value, 1, 1, document.getElementById("cab_year").value, 12, 31);
+            	//period = document.getElementById("cab_year").value + strLang1028 + " 1" + strLang1029 + " 1" + strLang1030 + " ~ " + document.getElementById("cab_year").value + strLang1028 + " 12" + strLang1029 + " 31" + strLang1030;
+            } else {
+            	period = getDatePeriod(UserLang, document.getElementById("del_year").value, 1, 1, document.getElementById("del_year").value, 12, 31);
+            	//period = document.getElementById("del_year").value + strLang1028 + " 1" + strLang1029 + " 1" + strLang1030 + " ~ " + document.getElementById("del_year").value + strLang1028 + " 12" + strLang1029 + " 31" + strLang1030;
+            	
+            }
         }
 
         if (!isPeriodYear)
-            document.getElementById("TitleInfo").innerHTML = "&nbsp;[" + strLang942 + "<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>" + strLang943 + "]";
+            document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;font-weight:bold;'>" + pTotalCnt + "</span>";
         else
-            document.getElementById("TitleInfo").innerHTML = "&nbsp;[" + strLang942 + "<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>" + strLang943 + " - " + period + "]";
+            document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;font-weight:bold;'>" + pTotalCnt + "</span>&nbsp;/ " + period;
+
+        if (g_sFlag === "UNTREATED") {
+            parent.frames["left"].document.getElementById("countUntreated").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
+        }
     }
 
     strtext = "<div class='pagenavi'>";
@@ -1745,6 +1774,9 @@ function makePageSelPage(pTotalCnt) {
         PagingHTML += strtext;
     }
     PagingHTML += "</div>";
+    
+    listLoading(false);	// 20201211 조진호 로딩바 display:none
+    
     td_Create1(PagingHTML);
 }
 function goToPageByNum(Value) {
@@ -1868,5 +1900,64 @@ function orgmakePageSelPage(pTotalCnt) {
 
     td_pTotalCount.textContent = totalPage;
     txt_PageInputNum.value = curpage;
+    
+    listLoading(false);	// 20201211 조진호 로딩바 display:none
     return;
+}
+
+function getEngMonth(month) {
+	var engMonthStr = "";
+	
+	switch(Number(month)) {
+		case 1 :
+			engMonthStr = "Jan";
+			break;
+		case 2 :
+			engMonthStr = "Feb";
+			break;
+		case 3 :
+			engMonthStr = "Mar";
+			break;
+		case 4 :
+			engMonthStr = "Apr";
+			break;
+		case 5 :
+			engMonthStr = "May";
+			break;
+		case 6 :
+			engMonthStr = "Jun";
+			break;
+		case 7 :
+			engMonthStr = "Jul";
+			break;
+		case 8 :
+			engMonthStr = "Aug";
+			break;
+		case 9 :
+			engMonthStr = "Sep";
+			break;
+		case 10 :
+			engMonthStr = "Oct";
+			break;
+		case 11 :
+			engMonthStr = "Nov";
+			break;
+		case 12 :
+			engMonthStr = "Dec";
+			break;
+	}
+	
+	return engMonthStr;
+}
+
+function getDatePeriod(userLang, startYear, startMonth, startDate, endYear, endMonth, endDate) {
+	return getDateStrByLang(userLang, startYear, startMonth, startDate) + " ~ " + getDateStrByLang(userLang, endYear, endMonth, endDate);
+}
+
+function getDateStrByLang(userLang, year, month, date) {
+	if (userLang == "2") {
+		return getEngMonth(month) + " " + date + ", " + year;
+	} else {
+		return year + strLang1028 + " " + month + strLang1029 + " " + date + strLang1030
+	}
 }

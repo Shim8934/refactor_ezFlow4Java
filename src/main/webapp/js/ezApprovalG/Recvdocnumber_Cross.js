@@ -198,7 +198,7 @@ function getRecvDocNumber(pDeptID, docNumZeroCnt) {
 	        name = "receiptnumber";
 	        var field = message.GetListItem(fields, name);
 	        
-	        if (LastSignSN == 1 || useReceiveDocNo != 'NO' || pDraftFlag == "HAPYUI") {
+	        if (LastSignSN == 1 || useReceiveDocNo != 'NO' || (pDraftFlag == "HAPYUI" || pDraftFlag == "GAMSABU")) {
 	        	//전결,편철 or config값에 따라 접수시 채번
 	        	$.ajax({
 	        		type : "POST",
@@ -302,13 +302,13 @@ function getRecvDocNumber(pDeptID, docNumZeroCnt) {
         		return true;
 	        }
         } else {
-        	var rtnVal = setDocNumFormat();
-        	
-        	if (!rtnVal) {
-        		return true;
-        	}
-        	
-        	fractionsymbol = field.textContent;
+            var rtnVal = setDocNumFormat();
+
+            if (!rtnVal) {
+                return true;
+            }
+
+            fractionsymbol = field.textContent;
         }
         
     } catch (e) {
@@ -325,50 +325,49 @@ function getRecvDocNumber(pDeptID, docNumZeroCnt) {
 }
 function rollbackDocNumber(pDeptID, pDocID) {
     try {
-        var fields = message.GetFieldsList();
         var name, docnumber;
-        var rtnval;
-
-        name = "receiptnumber";
-        var field = message.GetListItem(fields, name);
-        if (!field) return true;
-
-        docnumber = field.textContent;
-        if (fractionsymbol == "") {
-            var tempList = docnumber.split("-");
-            fractionsymbol = tempList[0] + "-";
-        }
+		var rtnval;
+		name = "receiptnumber";
+        
+		var fields = message.GetFieldsList();
+		var field = message.GetListItem(fields, name);
+		if (!field) return true;
+		
+		docnumber = field.textContent;
         docnumber = docnumber.replace(fractionsymbol, "");
 
-        var xmlpara = createXmlDom();
-
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "PARAMETER");
-        createNodeAndInsertText(xmlpara, objNode, "DATA", pDeptID);
-        createNodeAndInsertText(xmlpara, objNode, "DATA", docnumber);
-        createNodeAndInsertText(xmlpara, objNode, "DATA", pDocID);
-
-        xmlhttp.open("Post", "../docnum/aspx/rollbackCabinetSN.aspx", false);
-        xmlhttp.send(xmlpara);
-
-        rtnval = getNodeText(GetChildNodes(xmlhttp.responseXML)[0]);
-        field.textContent = "";
+    	var result = "";
+    	
+    	$.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezApprovalG/rollbackCabinetSN.do",
+    		data : {
+    			docID : pDocID,
+    			deptID : pDeptID,
+    			docNumber : docnumber
+    		},
+    		success: function(xml){
+    			result = xml;
+    		}
+    	});
+    	
+        var dataNodes = GetChildNodes(loadXMLString(result));
+        rtnval = getNodeText(dataNodes[0]);
+        
+		field.textContent = fractionsymbol;
 
         if (rtnval == "FALSE") {
-            pDocNumCode = "";
-            pDocNo = "";
-        }
-        else {
-            SaveFile();
-            pDocNumCode = "";
-            pDocNo = "";
+            DocNumCode = "";
+        } else {
+            DocNumCode = "";
         }
     } catch (e) {
-        field.textContent = "";
-        pDocNumCode = "";
-        pDocNo = "";
+		field.textContent = fractionsymbol;
     }
 }
+
 function SaveFile() {
     try {
     	var result = "";
@@ -377,17 +376,20 @@ function SaveFile() {
     	EmbedContentIntoXML(mhtBody);
     	mhtBody = ConvertHTMLtoMHT(mhtBody);
     	
+    	var data = {
+			docID : pDocID,
+            // formId : pFormID,
+			html  : mhtBody,
+			orgCompanyID : orgCompanyID
+    	}
+    	
         $.ajax({
     		type : "POST",
     		dataType : "text",
     		async : false,
     		url : "/ezApprovalG/saveFile.do",
-    		data : {
-    			docID : pDocID,
-                // formId : pFormID,
-    			html  : mhtBody,
-    			orgCompanyID : orgCompanyID
-    		},
+    		contentType : "application/json",
+    		data : JSON.stringify(data),
     		success: function(text){
     			result = text;
     		}        			

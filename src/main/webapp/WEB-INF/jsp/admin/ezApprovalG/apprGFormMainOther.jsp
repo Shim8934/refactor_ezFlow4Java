@@ -34,10 +34,10 @@
 			var linealt2 = "<spring:message code='ezApprovalG.t228'/>";
 			var linealt3 = "<spring:message code='ezApprovalG.t226'/>";
 			var linealt4 = "<spring:message code='ezApprovalG.t227'/>";
-			var companyID = "${companyID}";
-		    var contID = "${contID}";
-		    var formID = "${formID}";
-		    var isInsUp = "${tCheck}";
+			var companyID = "<c:out value='${companyID}'/>";
+		    var contID = "<c:out value='${contID}'/>";
+		    var formID = "<c:out value='${formID}'/>";
+		    var isInsUp = "<c:out value='${tCheck}'/>";
 		    var TreeIdx;
 		    var treeNode;
 		    var listview;
@@ -51,16 +51,28 @@
 		    var strResx436 = "<spring:message code='ezApprovalG.t445'/>";
 		    var pDocType = "";
 		    var thisSelGUID = ""; 
-		    var FormProcSpelling = "${formProcSpelling}";
+		    var FormProcSpelling = "<c:out value='${formProcSpelling}'/>";
 		    var htmlData = "";
 		    var ConnData = "";
 		    var WorkData = "";
-		    var useEditor = "${useEditor}";
+		    var useEditor = "<c:out value='${useEditor}'/>";
 		    var approvalFlag = "<c:out value = '${approvalFlag}' />";
 		    var realPath = "<c:out value = '${realPath}' />";
 		    //박대리 ext 넘기는부분없어서 걍 내가만듬 
-		    var ext = "${ext}";
+		    var ext = "<c:out value='${ext}'/>";
 		    var locale = "<c:out value = '${locale}' />";
+		    // FormBuilder
+		    var useReform = "${useReform}" === "true";
+		    var reformUrl = "${reformUrl}";
+		    // FormBuilder end
+		    <%-- 2021-01-21 심기영 오피스결재 여부 변수 추가 --%>
+		    var useOfficeApproval = "<c:out value = '${useOfficeApproval}'/>";
+		    var useOpenGov = "<c:out value = '${useOpenGov}'/>";
+		    var openGovFlag = "<c:out value = '${openGovFlag}'/>";
+		    
+		    var usePassAprLine = "<c:out value = '${usePassAprLine}'/>";
+			var passAprLineFlag = "<c:out value='${passAprLineFlag}'/>";
+			var receptGubunYN = "<c:out value='${receptGubunYN}'/>";
 		
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -93,12 +105,17 @@
 					$(".approvalS").hide();
 					$(".approvalG").show();
 				}
-		        
+				
+				if (approvalFlag === "G" && receptGubunYN === "Y") {
+					if (document.querySelector("#selFormKind").value === "001") {
+						document.querySelector("#selSihangType").style.display = "";
+					}
+				}
 		        document.getElementById("1tab1").setAttribute("class", "tabon");
 		        Tab1_SelectID = "1tab1";
 		        ChangeTab(document.getElementById("1tab1"));
 
-		        getDeptFullTree("${companyID}");
+		        getDeptFullTree("<c:out value='${companyID}'/>");
 
 		        getFormRecv();
 		        AprTypeXML = loadXMLString(bodyForm.hidAprTypeXml.value);
@@ -106,15 +123,15 @@
 		        MakeListXML(pDocType);
 		        
 		        if (approvalFlag == "G") {
-			        TreeViewinitialize("", companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "${serverName}", "aprG", null, true);
+			        TreeViewinitialize("", companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "<c:out value='${serverName}'/>", "aprG", null, true);
 		        } else {
-			        TreeViewinitialize("", companyID+"/other", "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "${serverName}", true);
+			        TreeViewinitialize("", companyID+"/other", "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "<c:out value='${serverName}'/>", true);
 		        }
 		        $("#tr_setAutoItemCode").hide();
 		        
 		        if (formID != "") {
 		            get_FormInfo();
-		            if (useEditor != "HWP") {
+		            if (!(useEditor == "HWP" || useEditor == "WebHWP")) {
 		                var tempXML = createXmlDom();
 // 		                var XmlBodyATT = createXmlDom();
 		                var XmlBodyDATA = createXmlDom();
@@ -138,23 +155,21 @@
 		
 		                    /* 2020-07-17 홍승비 - 저장한 연동정보의 개행과 탭이 제대로 표출되지 않는 오류 수정 */
 		                    if (TagID == "CONN") {
-		                        ConnData = Doc_ContentHtml.children[i].innerHTML.replace('<CONNINFO>', '').replace('</CONNINFO>', '').replace('<conninfo>', '').replace('</conninfo>', '')
-		                        .replace(/>\t/g, '>\n\t').replace(/<\/?conn[ |>]/g, function($1) {
-									return '\n' + $1;
-								});
+		                        ConnData = Doc_ContentHtml.children[i].innerHTML;
 								
-		                        if (ConnData != "") {
-		                            setNodeText(txt_OpinionContent, ReplaceText(ConnData, "<BR>", "\n"));
+		                        if (ConnData) {
+		                            setNodeText(txt_OpinionContent, ConnData.replace(/<[/]?connroot>/g, "").replace(/conn><conn/g, "conn>\n<conn"));
 		                        }
 		                    }
 		                    else if (TagID == "WORKFLOW") {
-		                        WorkData = GetChildNodes(Doc_ContentHtml)[i].innerHTML.toUpperCase();
-		                        if (WorkData != "") {
-		                            var VALIDATIONS = WorkData.slice(WorkData.indexOf("<VALIDATION>"), WorkData.indexOf("</VALIDATIONS>"));
-		                            setNodeText(txt_OpinionContent1, ReplaceText(VALIDATIONS, "<BR>", "\n"));
+		                        WorkData = Doc_ContentHtml.children[i].innerHTML;
+		                        if (WorkData) {
+									WorkData = Doc_ContentHtml.children[i];
+		                            var VALIDATIONS = GetElementsByTagName(WorkData, "validations")[0].innerHTML;
+		                            setNodeText(txt_OpinionContent1, VALIDATIONS.replace(/><VALIDATION/g, ">\n<VALIDATION"));
 		
-		                            var STATUS = WorkData.slice(WorkData.indexOf("<CHECK>"), WorkData.indexOf("</STATUS>"));
-		                            setNodeText(txt_OpinionContent2, ReplaceText(STATUS, "<BR>", "\n"));
+		                            var STATUS = GetElementsByTagName(WorkData, "aprlines")[0].innerHTML;
+		                            setNodeText(txt_OpinionContent2, STATUS.replace(/><APRLINE/g, ">\n<APRLINE"));
 		                        }
 		                    }
 		                    else if (TagID == "BODYCONTENT") {
@@ -164,15 +179,34 @@
 		                        htmlData += GetChildNodes(Doc_ContentHtml)[i].outerHTML;
 		                    }
 		                }
-		            } else {
+		            } else if(useEditor == "HWP"){
 						setTimeout(function() {
 							Editor_Complete();
 						}, 200);
 		            }
+		        } else {
+		        	// 웹 한글 기안기 최초 작성시 한글 파일 추가 기능으로 사용함
+		        	if(useEditor == "WebHWP") {
+		        		document.getElementById("ApvForm_sub2").style.display = "none";
+		        		document.getElementById("ApvForm_sub3").style.display = "none";
+		        		document.getElementById("ApvForm_sub4").style.display = "none";
+		        	}
 		        }
 		        
+	        	// IE scroll enable
+	        	if (document.body.scroll === "") {
+	        		document.body.scroll = "yes";
+	        	}
 		    });
 		
+		        
+		    window.onload = function () {
+		    	<c:if test="${useEditor eq 'WebHWP'}">
+		            var mHeight = document.documentElement.clientHeight - 200 - document.getElementById("message").offsetTop + "px";
+		            message.Resize(mHeight);            
+		        </c:if>
+		    }
+		        
 		    function Editor_Complete() {
 	            if (formURL != "") {
 	                if (useEditor == "HWP") {
@@ -195,6 +229,9 @@
 	                            }
 	                        }
 	                    }
+	                } else if (useEditor == "WebHWP") {
+	                	var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(formURL);
+	                	message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
 	                } else {
 	                    document.getElementById("ApvForm_sub4").style.display = "";
 	                    //위임전결
@@ -203,7 +240,7 @@
 	                    message.SetEditorContent(htmlData);
 	                }
 	            } else {
-	                if (useEditor != "HWP") {
+	                if (useEditor != "HWP" && useEditor != "WebHWP") {
 	                    document.getElementById("ApvForm_sub4").style.display = "";
 	                    //위임전결
 // 		                    document.getElementById("ApvForm_sub6").style.display = "";
@@ -220,6 +257,23 @@
 		        	document.getElementById("ApvForm_sub3").style.display = "none";
 		        	document.getElementById("ApvForm_sub4").style.display = "none";
 		        }
+		    }
+		    
+		    function FieldsAvailable(isTrue) {
+		    	 try {                
+		             if (isTrue) {
+						 message.EditMode(1);	// 0:읽기 전용, 1:일반 편집모드, 2:양식 모드, 16:배포용 문서
+						 var docElemInfo = message.WHWP_GetDocumentElement();
+						 txt_OpinionContent.value = docElemInfo[0];
+						 txt_OpinionContent1.value = docElemInfo[1];
+						 txt_OpinionContent2.value = docElemInfo[2];
+		                //  if (document.getElementById("setConnFlag").checked) {
+		                //      //ConnInfoXmlRead();
+		                //  }
+		              }
+		         } catch (e) {
+		             alert("FieldsAvailable() :: " + e);
+		         }
 		    }
 		
 		    function Attribute_Write(value) {
@@ -253,6 +307,10 @@
 			                    document.getElementById("setConnFlag").checked = true;
 			                }
 			                
+		        			if(result.vo.officeFlag == "Y") {
+		        				document.getElementById("officeFlag").checked = true;
+		        			}
+		        			
 			                if (approvalFlag == 'S') {
 				                if (result.vo.useFlag == "Y") {
 				                    setAutoItemCode.checked = true;
@@ -264,8 +322,53 @@
 				                    document.getElementById("keepperiod").value = result.vo.keepPeriodCode;
 				                    document.getElementById("securitylevel").value = result.vo.securityLevel;
 			                	}
-			                }
+			                } else {
+								if (useOpenGov == "YES" && result.vo.openGovFlag == "Y") {
+									document.getElementById("setOpenGovFlag").checked = true;	
+								}
+							}
+
+							var formXslt = result.vo.formXslt;
+							if(formXslt) {
+								formXslt = ConvertEntityReferenceToChar(formXslt);
+
+								document.querySelector("#setBodyXslt").checked = true;
+								document.querySelector("#BodyXslt").value = formXslt;
+							}
+							
+			                /* 2020-05-14 홍승비 - 양식세부옵션 null 체크 추가 */
+							//양식세부옵션
+							if (result.vo.aprOption != null) {
+								var OptArr = result.vo.aprOption.split(",");
+								for (var i = 0; i < OptArr.length; i++) {
+									if (document.getElementById(OptArr[i]) != null) {
+										document.getElementById(OptArr[i]).checked = true;
+									}
+								}
+							}
+
+							if (result.vo.sihangType) {
+								document.querySelector("#selSihangType").value = result.vo.sihangType;
+							} else {
+								document.querySelector("#selSihangType").value = "inner";
+							}
+							if (approvalFlag === "G" && receptGubunYN === "Y") {
+								if (document.querySelector("#selFormKind").value === "001") {
+									document.querySelector("#selSihangType").style.display = "";
+								} else {
+									document.querySelector("#selSihangType").style.display = "none";
+								}
+							}
 			            }
+						
+						if (usePassAprLine == "YES" && result.vo.passAprLineFlag == "Y") {
+							document.getElementById("setPassAprLineFlag").checked = true;
+						}
+						
+						<c:if test="${isReform}">
+							document.getElementById("reform-checkbox").checked = true;
+							onReformCheckboxClickEvent();
+						</c:if>
 		        	}
 		        });
 		    }
@@ -307,7 +410,7 @@
 		            var objNode;
 		            createNodeInsert(xmlpara, objNode, "DATA");
 		            createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptid);
-		            createNodeAndInsertText(xmlpara, objNode, "TOPID", "${companyID}");
+		            createNodeAndInsertText(xmlpara, objNode, "TOPID", "<c:out value='${companyID}'/>");
 		            createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;displayName1;displayName2");
 		            createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true");
 		            
@@ -672,7 +775,7 @@
 		        FormConnInfo_dialogarguments[0] = "";
 		        FormConnInfo_dialogarguments[1] = FormConnInfo_onclick_Complete;
 		        var url = "/admin/ezApprovalG/formConnInfo.do?companyID=" + encodeURIComponent(companyID);
-		        GetOpenWindow(url, "FormConnInfo", 440, 480, "NO");
+		        GetOpenWindow(url, "FormConnInfo", 440, 500, "NO");
 		    }
 		
 		    function FormConnInfo_onclick_Complete(retVal) {
@@ -859,18 +962,26 @@
 		    }
 		
 		    function btnClose_onclick() {
+		    	btnfiledel();
 		    	window.opener.GetFormInfo(contID, "000", "", "");
 		        window.close();
 		    }
 		
 		    function btn_OpinionAdd1_onclick() {
-		        var SampleXML = "\n <VALIDATION>\n      <FIELD></FIELD>\n       <CLASS></CLASS>\n       <DESC></DESC>\n </VALIDATION>";
-		        txt_OpinionContent1.value = txt_OpinionContent1.value + SampleXML;
+				var SampleXML = "<VALIDATION>\n\t<FIELD></FIELD>\n\t<CLASS></CLASS>\n\t<DESC></DESC>\n</VALIDATION>";
+				if (txt_OpinionContent1.value) {
+					txt_OpinionContent1.value += "\n";
+				}
+		        txt_OpinionContent1.value += SampleXML;
 		    }
 		
 		    function btn_OpinionAdd2_onclick() {
-		        var SampleXML = "\n<CHECK>\n	<CASES>\n		<CASE>\n			<FIELD></FIELD>\n			<VALUE></VALUE>\n			<TYPE></TYPE>\n		</CASE>\n	</CASES>\n		<APRLINES>\n	    <APRLINE>\n			<APRTYPE></APRTYPE>\n			<CLASS></CLASS>\n			<VALUE></VALUE>\n			<DESC></DESC>\n		</APRLINE>\n	</APRLINES>\n</CHECK>";
-		        txt_OpinionContent2.value = txt_OpinionContent2.value + SampleXML;
+		        // var SampleXML = "<CHECK>\n	<CASES>\n		<CASE>\n			<FIELD></FIELD>\n			<VALUE></VALUE>\n			<TYPE></TYPE>\n		</CASE>\n	</CASES>\n		<APRLINES>\n	    <APRLINE>\n			<APRTYPE></APRTYPE>\n			<CLASS></CLASS>\n			<VALUE></VALUE>\n			<DESC></DESC>\n		</APRLINE>\n	</APRLINES>\n</CHECK>";
+				var SampleXML = "<APRLINE>\n\t<APRTYPE></APRTYPE>\n\t<CLASS></CLASS>\n\t<VALUE></VALUE>\n\t<DESC></DESC>\n</APRLINE>";
+				if (txt_OpinionContent2.value) {
+					txt_OpinionContent2.value += "\n";
+				}
+		        txt_OpinionContent2.value += SampleXML;
 		    }
 		    
 		    function btn_FormConnSave_onclick() {
@@ -902,8 +1013,8 @@
 		        }
 		        
 		        OpenInformationUI_Complete();
-		    }
-		    
+			}
+
 		    function GetEntryInfo(_DEPTID) {
 		        var ReceiveDocument = "";
 
@@ -985,14 +1096,162 @@
 		        }
 		    }
 		    
+		    /* 2020-07-24 홍승비 - 연동양식, 기결재통과 옵션 사용 시 다른 옵션 disabled 처리 함수 추가 (NeoJavaRel 참고) */
+		    // 일괄기안의 경우, 2020-07-24 기준으로 표준 기능이 아니므로 주석처리
+		    function changeConnFlag() {
+		    	if ($("input:checkbox[id='setConnFlag']").is(":checked")) {
+			    	$("input:checkbox[id='setPassAprLineFlag']").attr("checked", false);
+			    	$("input:checkbox[id='setPassAprLineFlag']").attr("disabled", true);
+/* 			    	if(useDraftAll == "YES") {
+				    	$("input:checkbox[id='setDraftAllFlag']").attr("checked", false);
+				    	$("input:checkbox[id='setDraftAllFlag']").attr("disabled", true);
+			    	} */
+		    	} else {
+		    		$("input:checkbox[id='setPassAprLineFlag']").attr("disabled", false);
+/* 		    		if(useDraftAll == "YES") {
+		    			$("input:checkbox[id='setDraftAllFlag']").attr("disabled", false);
+		    		} */
+		    	}
+		    }
+		    
+		    // 기존의 changePassAprFlag()함수와 관련있음
+		    function changeDraftAllFlag() {
+		    	if ($("input:checkbox[id='setDraftAllFlag']").is(":checked")) {
+			    	$("input:checkbox[id='setPassAprLineFlag']").attr("checked", false);
+			    	$("input:checkbox[id='setPassAprLineFlag']").attr("disabled", true);
+			    	$("input:checkbox[id='setConnFlag']").attr("checked", false);
+			    	$("input:checkbox[id='setConnFlag']").attr("disabled", true);
+		    	} else {
+		    		$("input:checkbox[id='setPassAprLineFlag']").attr("disabled", false);
+		    		$("input:checkbox[id='setConnFlag']").attr("disabled", false);
+		    	}
+		    }
+		    
+		    function changePassAprLineFlag() {
+		    	if ($("input:checkbox[id='setPassAprLineFlag']").is(":checked")) {
+/* 		    		if(useDraftAll == "YES") {
+			    		$("input:checkbox[id='setDraftAllFlag']").attr("checked", false);
+				    	$("input:checkbox[id='setDraftAllFlag']").attr("disabled", true);
+		    		} */
+			    	$("input:checkbox[id='setConnFlag']").attr("checked", false);
+			    	$("input:checkbox[id='setConnFlag']").attr("disabled", true);
+		    	} else {
+/* 		    		if(useDraftAll == "YES") {
+			    		$("input:checkbox[id='setDraftAllFlag']").attr("disabled", false);
+		    		} */
+		    		$("input:checkbox[id='setConnFlag']").attr("disabled", false);
+		    	}
+		    }
+		    
 		    function changeSelFormKind(value) {
 		        if (!(value == "003" || value == "004")) {
 					$("#ApvForm_sub5").hide();		        
 		        } else {
 		        	$("#ApvForm_sub5").show();
+				}
+				
+				if (approvalFlag === "G" && receptGubunYN === "Y" && value === "001") {
+					document.querySelector("#selSihangType").style.display = "";
+				} else {
+					document.querySelector("#selSihangType").style.display = "none";
+				}
+			}
+			
+			//양식 세부설정 기본값 설정
+			var aprtypeCheckBoxInt = new Array("_a1_", "_a2_", "_a3_");
+			function btnintAprType_onclick() {
+				$("input[name=aprOption_a]").each(function () {
+					$(this).prop("checked", false);
+				});
+
+				$(aprtypeCheckBoxInt).each(function () {
+					$("#" + this).prop("checked", true);
+				});
+			}		
+		    
+		    //G버전 연동양식 및 일괄기안 체크박스 있을때 쓰는놈
+		    /* function changePassAprFlag() {
+				if ($("input:checkbox[id='setConnFlag']").is(":checked") || $("input:checkbox[id='setDraftAllFlag']").is(":checked")) {
+					$("input:checkbox[id='setPassAprLineFlag']").attr("checked", false);
+					$("input:checkbox[id='setPassAprLineFlag']").attr("disabled", true);
+				} else {
+					$("input:checkbox[id='setPassAprLineFlag']").attr("disabled", false);
+				}
+			} */
+			
+			function btnfileup() { document.getElementById("hwpFile").click(); }
+			
+	        var xhr = new XMLHttpRequest();
+			function btn_AttachAdd_onclick() {
+				var extension = document.getElementById("hwpFile").value;
+	            extension = extension.substring(extension.lastIndexOf(".") + 1, extension.length);
+		        
+		        // 첨부파일 확장자 체크(hwp만 가능)
+		        if (extension.toLowerCase() != "hwp") {
+		        	document.getElementById("hwpFile").files[0] = "";
+		        	alert("한글 파일만 가능합니다.");
+		        	return;
 		        }
-		    }
+		        
+		        var filelist = document.getElementById("hwpFile").files;
+		       
+	            var fd = new FormData();
+	            
+	            if(document.getElementById("hidfileNM").value != "") {
+					btnfiledel();
+				}
+		        
+	            fd.append("fileToUpload", filelist[0]);
+	            
+	            xhr.addEventListener("load", uploadComplete, false);
+	            xhr.open("POST", "/ezApprovalG/uploadAttachForHwp.do");
+	            xhr.send(fd); 
+			}
+			
+			function uploadComplete() {
+                document.getElementById("hwpFile").type = "text";
+                document.getElementById("hwpFile").type = "file";
+	            var xml = loadXMLString(xhr.responseText);
+
+	            document.getElementById("tbFilename").value = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA1")[0]);
+	            document.getElementById("hidfileNM").value = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]);
+			}
+			
+			function btnfiledel() {
+				var file = document.getElementById("hidfileNM").value;
+				
+				if(file !=  "") {
+					$.ajax({
+						async : false,
+						url : '/ezApprovalG/tempUploadFileDelete.do',
+		                type : 'POST',
+		                dataType : 'text',
+		                data : {
+							fileName : file
+		                },
+		                success: function() {
+		                	document.getElementById("hidfileNM").value = "";
+		                }
+					});
+				}
+			}
 		</script>
+		<!-- FormBuilder -->
+		<c:if test="${useReform}">
+		<script>
+			function onReformCheckboxClickEvent() {
+				if (document.getElementById("reform-checkbox").checked) {
+					document.getElementById("ApvForm_sub7").style.display = "";
+					document.getElementById("ApvForm_sub8").style.display = "";
+				} else {
+					document.getElementById("ApvForm_sub7").style.display = "none";
+					document.getElementById("ApvForm_sub8").style.display = "none";
+				}
+			}
+		</script>
+		</c:if>
+		<!-- FormBuilder - end -->
+		
 		<style>
 			#mainmenu ul li {float:right !important}
 			#mainmenu ul li span {height:13px !important; background: none !important; margin-top:2px !important}
@@ -1011,12 +1270,20 @@
         </div>
         <div class="portlet_tabpart01">
 	        <div class="portlet_tabpart01_top" id="tab1">
-                <p id = "ApvForm_sub1"><span divname="ApvForm_div1" id="1tab1"><spring:message code='ezApprovalG.t00004'/></span></p>
+				<p id = "ApvForm_sub1"><span divname="ApvForm_div1" id="1tab1"><spring:message code='ezApprovalG.t00004'/></span></p>
+				<p id = "ApvForm_sub9" style="display:none"><span divname="ApvForm_div9" id="1tab9"><spring:message code='ezApprovalG.t900008'/></span></p>
                 <p id = "ApvForm_sub2"><span divname="ApvForm_div2" id="1tab2"><spring:message code='ezApprovalG.t1456'/></span></p>
                 <p id = "ApvForm_sub3"><span divname="ApvForm_div3" id="1tab3"><spring:message code='ezApprovalG.t00005'/></span></p>
                 <p id = "ApvForm_sub4"><span divname="ApvForm_div4" id="1tab4">WORKFLOW</span></p>
                 <p id = "ApvForm_sub5"><span divname="ApvForm_div5" id="1tab5"><spring:message code='ezApprovalG.t1629'/></span></p>
                 <p id = "ApvForm_sub6" style = 'display:none;'><span divname="ApvForm_div6" id="1tab6"><spring:message code='ezApproval.t990012'/></span></p>
+				<!-- FormBuilder -->
+				<c:if test="${useReform}">
+					<p id = "ApvForm_sub7" style="display:none;"><span divname="ApvForm_div7" id="1tab7"><spring:message code='reform.menuitem.editor'/></span></p>
+					<p id = "ApvForm_sub8" style="display:none;"><span divname="ApvForm_div8" id="1tab8"><spring:message code='reform.menuitem.function'/></span></p>
+				</c:if>
+				<!-- FormBuilder - end -->
+				<p id = "ApvForm_sub10"><span divname="ApvForm_div10" id="1tab10">XSLT</span></p>
 	        </div>
         </div>
         
@@ -1044,12 +1311,50 @@
                     </td>
                     <th style="width:100px; text-align:center"><spring:message code='ezApproval.t758'/></th>
                     <td style="width:40%;" colspan="5">
-                        <select id="selFormKind" name="selFormKind" style="width: 100%;" onchange="changeSelFormKind(this.value)">${docType}</select>
+						<div style="width: 100%; display: flex; justify-content: space-between;">
+							<select id="selFormKind" name="selFormKind" style="flex: 2;" onchange="changeSelFormKind(this.value)">${docType}</select>
+							<select id="selSihangType" name="selSihangType" style="flex: 1; margin-left: 2px; display:none;">
+								<option value="inner" selected>내부</option>
+								<option value="outer">외부</option>
+							</select>
+						</div>
                     </td>
                 </tr>
+                <c:if test="${useEditor == 'WebHWP' && formID eq null}">
+                <tr>
+                    <th style="width:100px; text-align:center">한글파일</th>
+                    <td style="width:40%;" colspan="7">
+                    	<input type="text" readonly="" id="tbFilename" name="tbFilename" style="width: 350px;">
+                    	<a class="imgbtn imgbck" style="margin-top:1px;">
+        					<span onclick="btnfileup()">본문첨부</span>
+        				</a>
+                    </td>
+                </tr>
+                <input type="file" id="fileBtn" multiple="multiple" class="hiddenBttn">
+                </c:if>
                 <tr>
 					<td colspan="8" style="width:10%; text-align:center;">
-						<input type="checkbox" id="setConnFlag" /><spring:message code = 'ezApprovalG.t1665' />
+						<input type="checkbox" id="setConnFlag" onclick="changeConnFlag()"/><spring:message code = 'ezApprovalG.t1665' />
+						<!-- FormBuilder -->
+						<c:if test="${useReform}">
+							<input type="checkbox" id="reform-checkbox" name="reform-checkbox" onchange="onReformCheckboxClickEvent()"/>
+							<label for="reform-checkbox"><span><spring:message code='reform.using'/></span></label>
+						</c:if>
+						<!-- FormBuilder - end -->
+						
+						<%-- 2021-01-21  심기영 오피스 결재 추가 여부용  --%>
+						<c:if test="${useOfficeApproval == 'YES' && approvalFlag == 'G'}">
+							<input type="checkbox" id="officeFlag" name="officeFlag">
+							<label for="officeFlag"><span><spring:message code='ezApproval.t933'/></span></label>
+						</c:if>
+						<%-- 2021-01-21  심기영 오피스 결재 추가 여부용  --%>
+						<c:if test="${useOfficeApproval == 'YES' && approvalFlag == 'S'}">
+							<input type="checkbox" id="officeFlag" name="officeFlag">
+							<label for="officeFlag"><span><spring:message code='ezApproval.t933'/></span></label>
+						</c:if>
+                        <span style="<c:if test="${useOpenGov != 'YES' || approvalFlag != 'G'}">display:none;</c:if>"><input type="checkbox" id="setOpenGovFlag" /> 원문정보공개</span>
+<%--                         <span style="<c:if test="${useDraftAll != 'YES' && approvalFlag != 'G'}">display:none;</c:if>"><input type="checkbox" id="setDraftAllFlag" onclick="changeDraftAllFlag()" /> 일괄기안</span> --%>
+						<span style="<c:if test="${usePassAprLine != 'YES'}">display:none;</c:if>"><input type="checkbox" id="setPassAprLineFlag" onclick="changePassAprLineFlag()"/> <spring:message code='ezApprovalG.garm09'/></span>
 					</td>
 				</tr>
 			</table>
@@ -1085,11 +1390,34 @@
                     </td>
                 </tr>
             </table>
-        </div>
+		</div>
+		<!--양식 세부설정-->
+		<div id="ApvForm_content9" style="width:100%;height:90%; padding-top:10px; display:none">
+			<h2 id="form" class="receiver_tltype01" style="margin-bottom:5px;">
+				<span style="min-width: 45px;" id="formstr" name="aprOption" code="a" ><spring:message code='ezApprovalG.t900003'/></span>&nbsp;&nbsp;&nbsp;<a class="imgbtn"><span onclick="btnintAprType_onclick()"><spring:message code='ezApprovalG.t900004'/></span></a>
+			</h2>
+			<table class="content" style="width:100%;">
+				<tr><!--의견-->
+					<th style="width:10%"><spring:message code='ezApprovalG.F0013'/></th>
+					<td style="width:10%"><input type="checkbox" id="_a1_" name="aprOption_a"><label for="_a1_"><spring:message code='ezApprovalG.t900009'/></label></td>
+					<td><spring:message code='ezApprovalG.t900005'/></td>
+				</tr>
+				<tr><!--파일첨부-->
+					<th style="width:10%"><spring:message code='ezApprovalG.t264'/></th>
+					<td style="width:10%"><input type="checkbox" id="_a2_" name="aprOption_a"><label for="_a2_"><spring:message code='ezApprovalG.t900009'/></label></td>
+					<td><spring:message code='ezApprovalG.t900006'/></td>
+				</tr>
+				<tr><!--문서첨부-->
+					<th style="width:10%"><spring:message code='ezApprovalG.t57'/></th>
+					<td style="width:10%"><input type="checkbox" id="_a3_" name="aprOption_a"><label for="_a3_"><spring:message code='ezApprovalG.t900009'/></label></td>
+					<td><spring:message code='ezApprovalG.t900007'/></td>
+				</tr>								
+			</table>
+		</div>
 		
         <div id="ApvForm_content2" style="width:100%;display:none; padding-top:10px;">
             <h2 id="H1" class="receiver_tltype01" style="margin-bottom:5px;">
-            <span style="min-width: 45px;" id="Span1"><spring:message code='ezApproval.t00007'/></span>
+			<span style="min-width: 45px;" id="Span1"><spring:message code='ezApproval.t00007'/></span>
             </h2>
 			<div id="editor_content" style="padding-top:5px;">
 				<div id="mainmenu">
@@ -1100,19 +1428,22 @@
                 <script type="text/javascript">
                     selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
                 </script>
-				<table id="TForm" style="height:770px; width:1030px;">
+				<table id="TForm" style="height:770px; width: 100%;">
 					<tr>
                         <td style="height:770px; vertical-align:top">
                         	<c:choose>
                         		<c:when test="${useEditor == 'HWP'}">
 	                                <iframe id="message" class="viewbox" src="/admin/ezApprovalG/HWPEditor.do?type=ADMIN" name="message" frameborder="0" style="padding: 0; height: 99%; width: 1030px; overflow: auto;"></iframe>
                         		</c:when>
+                        		<c:when test="${useEditor == 'WebHWP'}">
+	                                <iframe id="message" class="viewbox" src="/admin/ezApprovalG/WHWPEditor.do?type=ADMIN" name="message" frameborder="0" style="padding: 0; height: 99%; width: 1030px; overflow: auto;"></iframe>
+                        		</c:when>
                         		<c:otherwise>
-	                                <iframe id="message" class="viewbox" src="/admin/ezEditor/selectApprovalEditor.do?type=ADMIN&height=770&formID=${formID}" name="message" frameborder="0" style="padding: 0; height: 99%; width: 800px; overflow: auto;"></iframe>
+	                                <iframe id="message" class="viewbox" src="/admin/ezEditor/selectApprovalEditor.do?type=ADMIN&height=770&formID=${formID}" name="message" frameborder="0" style="padding: 0; height: 99%; width: 100%; min-width:800px; overflow: auto;"></iframe>
                         		</c:otherwise>
                         	</c:choose>
                         </td>
-                        <td id="rootTD" name="rootTD" style="width:100%; vertical-align:top; text-align:left; padding-left:10px; display:none"></td>
+                        <td id="rootTD" name="rootTD" style="width:280px; vertical-align:top; text-align:left; padding-left:10px; display:none"></td>
                     </tr>
                 </table>
 			</div>
@@ -1151,9 +1482,9 @@
 	                    &lt;VALIDATIONS&gt;<br>
 	                    <textarea name="txt_OpinionContent1" style="FONT-SIZE:9pt; WIDTH:98.5%; HEIGHT:350px" id="txt_OpinionContent1"></textarea>
 	                    <br> &lt;/VALIDATIONS&gt;<br>
-	                    &lt;STATUS&gt;<br>
+	                    &lt;APRLINES&gt;<br>
 	                    <textarea name="txt_OpinionContent2" style="FONT-SIZE:9pt; WIDTH:98.5%; HEIGHT:350px" id="txt_OpinionContent2"></textarea>
-	                    <br> &lt;/STATUS&gt;<br>
+	                    <br> &lt;/APRLINES&gt;<br>
 	                    &lt;/WORKFLOW&gt;<br>
 	                    &lt;/xml&gt;
 	                </td>
@@ -1354,11 +1685,82 @@
 	            </table>
         	</div>
         </div>
+        
+        <!-- FormBuilder -->
+        <c:if test="${useReform}">
+		    <div id="ApvForm_content7" style="width:100%; height:900px; display:none; padding-top:10px;">
+		        <h2 id="H4" class="receiver_tltype01" style="margin-bottom:5px;">
+		        	<span style="min-width: 45px;" id="Span4"><spring:message code='reform.menuitem.editor'/></span>
+		        </h2>
+		        <iframe id="iframe_ApvReForm" class="viewbox" src="/admin/ezApprovalG/reformDesignProcessor.do?height=880&id=editor2" name="iframe_ApvReForm" frameborder="0" style="padding: 0; height: 100%; width: 100%; min-width:1080px;  overflow: auto; border:none"></iframe>
+		    </div>
+		    <div id="ApvForm_content8" style="width:100%;height:90%;display:none; padding-top:10px;">
+		        <h2 id="H8" class="receiver_tltype01" style="margin-bottom:5px;">
+		        	<span style="min-width: 45px;" id="Span8"><spring:message code='reform.menuitem.editor'/></span>
+		        </h2>
+		        <table class="content">
+		            <tr>
+		                <td>
+		                    <textarea class="textarea" id="txt_reformFunction" onkeydown="if (event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'    '+v.substring(e);this.selectionStart=this.selectionEnd=s+4;return false;}" style="font-size:12pt; width:820px; height:790px; ime-mode: inactive;"><c:if test="${!empty reformFunction}"><c:out value='${reformFunction}'/></c:if></textarea>
+		                </td>
+		            </tr>
+		        </table>
+		    </div>  
+       	</c:if>
+       	<!-- FormBuilder - end -->
+		<%-- XSLT --%>
+		<div id="ApvForm_content10" style="width: 100%; height: 828px; padding-top: 10px; overflow-y: auto; display: none;">                          
+            <ul class="contentlayout">
+            	<li class="contentlayout_none">
+                	<h2 class="receiver_tltype01" style="margin-bottom:5px;">
+		            	<span style="min-width: 45px;">XSLT</span>
+		            </h2>
+                    <span><input type="checkbox" style="margin-left: 0; vertical-align: middle;" id="setBodyXslt" name="setBodyXslt"><label for="setBodyXslt">XSLT를 등록하려면 체크하세요.</label></span>
+                    <table class="content" style="width:100%; margin-top: 2px;">
+                        <tbody>
+	                        <tr id="tr_setXslt">
+	                            <th style="width:5%; text-align:center">XSLT</th>
+	                            <td style="width:45%;">                                
+	                                <textarea id="BodyXslt" rows="15" style="resize: none; box-sizing: border-box; margin-top: 3px;"></textarea>
+	                            </td>
+	                            <th style="width:5%; text-align:center">XML</th>
+	                            <td style="width:45%;">                                
+	                                <textarea id="BodyXml" rows="15" style="resize: none; box-sizing: border-box; margin-top: 3px;"></textarea>  
+	                            </td>
+	                        </tr>                        
+	                    </tbody>
+	            	</table>
+                </li>
+                <br/> 
+                <li class="contentlayout_none">
+                	<h2 class="receiver_tltype01" style="margin-bottom:5px;">
+		            	<span style="min-width: 45px;">HTML Sample</span>
+		            </h2>
+                    <a class="imgbtn">
+                    	<span onclick="ViewHTML()" style="font-weight: bold;">HTML변환</span>   
+                    </a>                                                      
+                    <table class="content" style="width:100%; margin-top: 5px;">
+                        <tbody>
+                        	<tr id="tr_htmlView">
+	                            <td> 
+	                                <iframe name="iframeView" id="iframeView" style="height:400px;width:100%;overflow-y:auto" frameborder="0"></iframe>
+	                            </td>
+	                        </tr>
+	                    </tbody>
+	            	</table>
+                </li>
+            </ul>            
+        </div>
+		<%-- XSLT end --%>
 		
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background:none rgba(0,0,0,0.5); display:none;" id="mailPanel">&nbsp;</div>
 	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 		    <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 	    </div>
+	    <form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezApprovalG/uploadHwpForm.do" style="display:none">
+			<input type="file" name="file" id="hwpFile" onchange="btn_AttachAdd_onclick()" style="display:none" accept=".hwp"/>
+  		</form>
+        <input type="hidden" id="hidfileNM" name="hidfileNM" value="">
         <form id="bodyForm">
         	<input type="hidden" id="hidCompanyID" value="${companyID}">
         	<input type="hidden" id="hidFormID" value="${formID}">
@@ -1369,6 +1771,49 @@
         </form>
         <script type="text/javascript">
             Tab1_NewTabIni("tab1");
+
+			function ViewHTML() {
+				var pAlertContent = ""
+
+				var xsltCode = document.querySelector("#BodyXslt").value.trim();
+				var xmlCode = document.querySelector("#BodyXml").value.trim();
+
+				if(!xsltCode) {
+					pAlertContent = "XSLT 코드를 입력하세요.";
+		    		OpenAlertUI(pAlertContent);
+		    		return;
+				}
+
+				if(!xmlCode) {
+					pAlertContent = "XML 코드를 입력하세요.";
+		    		OpenAlertUI(pAlertContent);
+		    		return;
+				}
+
+				var xhr = new XMLHttpRequest();
+				xhr.open("POST", "/admin/ezApprovalG/convertXmltoHtml.do");
+				xhr.setRequestHeader("Content-Type", "application/json");
+				xhr.onreadystatechange = function() {
+					if(xhr.readyState === XMLHttpRequest.DONE) {
+						if(xhr.status === 200) {
+							var htmlCode = xhr.responseText;
+
+							if(htmlCode) {
+								iframeView.document.body.innerHTML = htmlCode;
+							}
+						} else if(xhr.status === 409) {
+							var pAlertContent = "변환에 실패했습니다.";
+							OpenAlertUI(pAlertContent);
+							return;
+						}
+					}
+				}
+
+				xhr.send(JSON.stringify({
+					xsltCode: xsltCode,
+					xmlCode: xmlCode
+				}));
+			}
         </script>
         <xml id="userlist_h" style="display: none">
             <LISTVIEWDATA>

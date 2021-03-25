@@ -35,11 +35,11 @@
 		    var orgfilter = "_OrgFilter";
 		    var pUse_Editor = "Use_Editor";
 		    var pSearchType = "pSearchType";
-		    var primary = "${userInfo.primary}";
-		    var delayColor = "${delayColor}";
-		    var completeColor = "${completeColor}"
+		    var primary = "<c:out value='${userInfo.primary}'/>";
+		    var delayColor = "<c:out value='${delayColor}'/>";
+		    var completeColor = "<c:out value='${completeColor}'/>"
 		    var selectelem = null;
-		    var useTodoMemo = "${useTodoMemo }";
+		    var useTodoMemo = "<c:out value='${useTodoMemo }'/>";
 		    
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
@@ -110,7 +110,7 @@
 		        }
 
 		        selectelem = elem;
-		        elem.style.backgroundColor = "#edf4fd";
+		        elem.style.backgroundColor = "#f1f8ff";
 		        $("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked", true);
 		    }
 		    
@@ -119,7 +119,7 @@
 
 				if ($("#checkboxAll").is(":checked")) {
 					$(":checkbox[name=myCheckbox]").prop("checked", true);
-					$(".row_body td").css("background", "#edf4fd");
+					$(".row_body td").css("background", "#f1f8ff");
 				} else {
 					$(":checkbox[name=myCheckbox]").prop("checked", false);
 					$(".row_body td").css("background", "");
@@ -132,7 +132,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        $("#Edatepicker").datepicker({
@@ -140,7 +140,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        var SDate;
@@ -234,7 +234,7 @@
 				var chkValue = $("#search_field").val();
 
 				$.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "text",
 					async : false,
 					url : "/ezTask/taskGetList.do",
@@ -360,15 +360,15 @@
 			        switch (SelectSingleNodeValue(node, "TASKTYPE")) {
 			            case "1":
 			            case "4":	
-			                div.style.background = "url(/images/icon/section_Individualbg.gif)";
+			                div.style.background = "url(/images/icon/section_Individualbg.png)";
 			                break;
 			            case "2":
 			            case "5":
-			                div.style.background = "url(/images/icon/section_orderbg.gif)";
+			                div.style.background = "url(/images/icon/section_orderbg.png)";
 			                break;
 			            case "3":
 			            case "6":
-			                div.style.background = "url(/images/icon/section_Cooperativebg.gif)";
+			                div.style.background = "url(/images/icon/section_Cooperativebg.png)";
 			                break;
 			        }
 
@@ -470,18 +470,19 @@
 				return ( orgStr.replace( re, replaceStr ) );
 			}
 
+			/* 2021-03-24 홍승비 - 원클릭으로 업무관리 읽기팝업창 표출 */
 			function ReadTask(obj)
 			{
 				var taskid = $(obj).closest("tr").attr("taskid");
 				var feature = "";
-				var startD = obj.parentElement.getAttribute("startdate");				
+				var startD = obj.parentElement.getAttribute("startdate");
 
- 				feature = GetOpenPosition(750, 740);
+				feature = GetOpenPosition(790, 820);
 	        	
 	        	if (CrossYN() || pNoneActiveX == "YES") {
-		            window.open("/ezTask/taskRead.do?taskID=" + taskid + "&date=" + startD + "&mode=search", "", "height = 740px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
+		            window.open("/ezTask/taskRead.do?taskID=" + taskid + "&date=" + startD + "&mode=search", "", "height = 822px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
 		        } else {
-	                window.open("/ezTask/taskRead.do?taskID=" + taskid + "&date=" + startD + "&mode=search", "", "height = 740px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
+	                window.open("/ezTask/taskRead.do?taskID=" + taskid + "&date=" + startD + "&mode=search", "", "height = 822px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
 		        }
 			}
 
@@ -627,18 +628,18 @@
 			</tr>
 			</tbody>
 			<!-- 18-05-24 김민성 - 중요도 이미지로 수정 -->
-			<tr class="row_body" id="row_body" style="display:none;" repeatcount="0" startdate="" onclick="select_row(this)">
-				<td class="tr_Read" style ="white-space:nowrap;cursor:pointer;text-align:center;" ondblclick="ReadTask(this)"></td>
-				<td class="tr_Read" style ="white-space:nowrap;cursor:pointer;text-align:center;" ondblclick="ReadTask(this)"></td>
-				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-                <td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" ondblclick="ReadTask(this)"></td>
-				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" ondblclick="ReadTask(this)"></td>
-				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" ondblclick="ReadTask(this)"></td>
-				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" ondblclick="ReadTask(this)"></td>
+			<tr class="row_body" id="row_body" style="display:none;" repeatcount="0" startdate="" onclick="select_row(this);">
+				<td class="tr_Read" style ="white-space:nowrap;cursor:pointer;text-align:center;" ondblclick="ReadTask(this);"></td>
+				<td class="tr_Read" style ="white-space:nowrap;cursor:pointer;text-align:center;" ondblclick="ReadTask(this);"></td>
+				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this);"></td>
+				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this);"></td>
+                <td class="tr_Read" style="cursor:pointer;white-space:nowrap;" onclick="ReadTask(this);"></td>
+				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this);"></td>
+				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this);"></td>
+				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" ondblclick="ReadTask(this);"></td>
+				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" ondblclick="ReadTask(this);"></td>
+				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" ondblclick="ReadTask(this);"></td>
+				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" ondblclick="ReadTask(this);"></td>
 			</tr>
 		</table>
 		<div id="todo_BODY" style="height:300px; overflow-y:auto;">

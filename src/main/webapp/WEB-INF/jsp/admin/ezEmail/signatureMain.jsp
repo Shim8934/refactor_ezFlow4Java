@@ -34,8 +34,9 @@
 	        	
 	        	$.ajax({
 	        		type : "POST",
-	        		url : "/admin/ezEmail/readSignList.do?companyId=" + companyID,
+	        		url : "/admin/ezEmail/readSignList.do",
 	        		datatype : 'json',
+	        		data : {"companyId" : companyID},
 	        		error : function(data) {
 	        			alert("error");
 	        			console.log(data);
@@ -133,8 +134,9 @@
 	        	if (deleteConfirm) {
 	        		$.ajax({
 		        		type : "POST",
-		        		url : "/admin/ezEmail/deleteSignTemplate.do?signNo=" + signNo,
+		        		url : "/admin/ezEmail/deleteSignTemplate.do",
 		        		datatype : 'json',
+		        		data : {"signNo" : signNo},
 		        		error : function(data) {
 		        			alert("error");
 		        			console.log(data);
@@ -183,7 +185,7 @@
 	        	
 				var popUpType = "";
 				var url = "/admin/ezEmail/signEditPopUp.do?type=" + type + "&paramSignNo=" + signno +"&companyId=" + companyID;
-				var signPopUp = window.open(url, "signPopUp", GetOpenWindowfeature(1000, 686));
+				var signPopUp = window.open(url, "signPopUp", GetOpenWindowfeature(1000, 690));
 			}
 	        
 	        // 검색 리스트 가져오기
@@ -192,13 +194,15 @@
 	        	
 	        	if (search == '' || search.length == 0 || search.trim().length == 0 || search.trim().length ==0) {
 	        		alert("<spring:message code='ezEmail.t10'/>");
+	        		signatureTemplateView();
 	        		return;
 	        	}
 	        	
 	        	$.ajax({
 	        		type : "POST",
-	        		url : "/admin/ezEmail/searchSignList.do?companyId=" + companyID + "&search=" + encodeURIComponent(search),
+	        		url : "/admin/ezEmail/searchSignList.do",
 	        		datatype : 'json',
+	        		data : {"companyId" : companyID, "search" : encodeURIComponent(search)},
 	        		error : function(data) {
 	        			alert("error");
 	        			console.log(data);
@@ -244,8 +248,9 @@
 	        function signPreview(signno) {
 	        	$.ajax({
 	        		type : "POST",
-	        		url : "/admin/ezEmail/signaturePreview.do?signNo=" + signno,
+	        		url : "/admin/ezEmail/signaturePreview.do",
 	        		datatype : 'json',
+	        		data : {"signNo" : signno},
 	        		error : function(data) {
 	        			alert("error");
 	        			console.log(data);

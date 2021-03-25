@@ -28,25 +28,40 @@
 		<link rel="stylesheet"  href="${util.addVer('/js/jquery/jquery.modal.css')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
 		<style>
-		#layer_Viewpopup { 
-			z-index:1000; 
-			margin:0px; 
-			padding:0px;
-		}
+			#layer_Viewpopup { 
+				z-index:1000; 
+				margin:0px; 
+				padding:0px;
+			}
+			
+			#layer_Viewpopup .btn_area { border-top:1px solid #e5e5e5; margin:10px 0px 0px 0px; padding:10px 0px 0px;}
+			
+			#layer_Viewpopup .popupwrap3 {
+				position:relative;
+				padding:10px;
+				background:url("../images/kr/cm/popup_layerbg.gif") repeat-x;
+			}
+			#layer_Viewpopup .popupwrap3 h1 {
+				font-size:13px;margin:0px 0px 10px 0px;height:24px; line-height:15px; padding:0px;color:#fff; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;
+			}
 		
-		#layer_Viewpopup .btn_area { border-top:1px solid #e5e5e5; margin:10px 0px 0px 0px; padding:10px 0px 0px;}
-		
-		#layer_Viewpopup .popupwrap3 {
-			position:relative;
-			padding:10px;
-			background:url("../images/kr/cm/popup_layerbg.gif") repeat-x;
-		}
-		#layer_Viewpopup .popupwrap3 h1 {
-			font-size:13px;margin:0px 0px 10px 0px;height:24px; line-height:15px; padding:0px;color:#fff; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;
-		}
+			<%-- 2020-06-15 홍승비 - 즐겨찾기 아이콘 스타일 추가 --%>
+			.no_yellowStar {
+				background:url(../images/ImgIcon/view-flag.gif) no-repeat;
+				background-color: transparent;
+				vertical-align: top;
+				overflow: hidden;
+				width:18px;
+				height:16px;
+				display:inline-block;
+				margin: 6px 0px 0px 0px;
+				cursor:pointer;
+				margin-left: 3px;
+				margin-right: 3px;
+			}
 		</style>
 		<script type="text/javascript">
-			var pBoardID = "${boardID}";
+			var pBoardID = "<c:out value='${boardID}'/>";
 	    	var SSUserID = "${userInfo.id}";
 		    var SSUserName = "${userInfo.name}";
 		    var CurPage = "${boardInfo.page}";
@@ -61,7 +76,7 @@
 		    var Delete_FG = "${boardInfo.delete_FG}";
 		    var BrdName = "${boardName}";
 		    var BoardGroupAdmin_FG = "${boardInfo.boardGroupAdmin_FG}";
-		    var pSortBy = "${boardInfo.sortBy}";
+		    var pSortBy = "<c:out value='${boardInfo.sortBy}'/>";
 		    var url = "${boardInfo.url}";
 		    var ShowAdjacent = "";
 		    var gubun = "${boardInfo.guBun}";
@@ -69,12 +84,12 @@
 			var lang = "${userInfo.lang}";
 		    var OrderOption = "";
 		    var OrderCell = "";
-		    var pBoardType = "${boardInfo.boardType}";
+		    var pBoardType = "<c:out value='${boardInfo.boardType}'/>";
 		    var USE_OCS = "${use_ocs}";
 		    var useRunTime = "${useRunTime}"
 		    var SQLPARADATA = "";
 		    var Use_OneLineCount = "${use_oneLineCount}";
-		    var pAdminType = "${boardInfo.adminType}";
+		    var pAdminType = "<c:out value='${boardInfo.adminType}'/>";
 		    if (url != "")
 		        window.location.href = url;
 		
@@ -106,6 +121,10 @@
 		    var starttime;
 		    var endtime;
 		    var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
+		    var likeFlag = "${boardInfo.likeFlag}";
+		    var useNotReadCnt = "${useNotReadCnt}";
+		    var BoardGroupID = "${boardInfo.boardGroupID}";
+		    
 		    window.onresize = Window_resize;
 		    document.onselectstart = function () { return false; };
 		
@@ -236,7 +255,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        $("#Edatepicker").datepicker({
@@ -244,7 +263,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		
@@ -307,7 +326,8 @@
 							 orderCell 	 : OrderCell, 
 							 orderOption : OrderOption,
 							 searchQuery : SQLPARADATA,
-							 type 		 : type
+							 type 		 : type,
+							 likeFlag : likeFlag
 							},
 					success: function(xml){
 						getBoardList_after(loadXMLString(xml));
@@ -543,7 +563,7 @@
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - 720) / 2;
 		        var pLeft = (pwidth - 765) / 2;
-		        window.open("/ezBoard/newBoardItemPhoto.do?boardID=" + pBoardID + "&mode=new", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+		        window.open("/ezBoard/newBoardItemPhoto.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 		        
 		    }
 		    
@@ -561,7 +581,7 @@
 		        var pheight = window.screen.availHeight;
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - 789) / 2;
-		        var pLeft = (pwidth - 764) / 2;
+		        var pLeft = (pwidth - 790) / 2;
 	    	    if (navigator.userAgent.toLowerCase().indexOf("chrome") != -1) {
 	    	    	var height = 789;
 	    	    } else {
@@ -574,7 +594,7 @@
 		        }	
 		        // if (tr != null && oArrRows.length > 0) {
 		
-		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1") + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
+		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=790,top=" + pTop + ",left=" + pLeft, "");
 		        //}       
 		    }
 		    /*  2019-04-12 홍승비 - 사용되지 않는 함수 주석처리 */
@@ -590,9 +610,9 @@
 		        var pheight = window.screen.availHeight;
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - 720) / 2;
-		        var pLeft = (pwidth - 765) / 2;
+		        var pLeft = (pwidth - 790) / 2;
 		
-		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + pItemID + "&boardID=" + pItemBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=780,width=765,top=" + pTop + ",left=" + pLeft, "");
+		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=780,width=790,top=" + pTop + ",left=" + pLeft, "");
 		
 		    } */
 		    
@@ -638,7 +658,7 @@
 		        }
 		        else {
 		            var xmlhttp = createXMLHttpRequest();
-		            xmlhttp.open("POST", "/ezBoard/deleteItem.do?mode=PHOTO&boardID=" + pBoardID + "&itemList=" + strItemList[0] + ";", false);
+		            xmlhttp.open("POST", "/ezBoard/deleteItem.do?mode=PHOTO&boardID=" + encodeURIComponent(pBoardID) + "&itemList=" + encodeURIComponent(strItemList[0]) + ";", false);
 		            xmlhttp.send();
 		
 		            if (xmlhttp.responseText == "NO") {
@@ -671,7 +691,7 @@
             }
 		    function CheckIfHasReplies() {
 		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/ezBoard/checkIfHasReply.do?itemList=" + strListInfo, false);
+		        xmlhttp.open("POST", "/ezBoard/checkIfHasReply.do?itemList=" + encodeURIComponent(strListInfo), false);
 		        xmlhttp.send();
 		        if (xmlhttp.responseText == "FALSE") {
 		            xmlhttp = null;
@@ -682,7 +702,7 @@
 		    }
 		    function DeleteItem() {
 		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/ezBoard/deleteItem.do?mode=PHOTO&boardID=" + pBoardID + "&itemList=" + strListInfo, false);
+		        xmlhttp.open("POST", "/ezBoard/deleteItem.do?mode=PHOTO&boardID=" + encodeURIComponent(pBoardID) + "&itemList=" + encodeURIComponent(strListInfo), false);
 		        xmlhttp.send();
 		
 		        if (xmlhttp.responseText == "NO") {
@@ -738,21 +758,27 @@
 		    }
 		
 		    function refresh_onclick() {
-		        window.location.href = window.location.href = "/ezBoard/boardItemListPhoto.do?page=" + CurPage.toString() + "&boardID=" + pBoardID + "&sortBy=&boardType=" + pBoardType + "&adminType=" + pAdminType;
+		        window.location.href = window.location.href = "/ezBoard/boardItemListPhoto.do?page=" + CurPage.toString() + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=&boardType=" + pBoardType + "&adminType=" + pAdminType;
 		    }
 		
 		    function AddToMyBoards() {
-		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/ezBoard/addToMyBoards.do?boardID=" + pBoardID, false);
+				var xmlhttp = createXMLHttpRequest();
+		        xmlhttp.open("POST", "/ezBoard/addToMyBoards.do?boardID=" + encodeURIComponent(pBoardID), false);
 		        xmlhttp.send();
 		
 		        if (xmlhttp.responseText.indexOf("OK") > -1) {
 		            alert("<spring:message code='ezBoard.t269'/>");
 				} else {
-					alert("<spring:message code='ezBoard.t270'/>");
+		            var ret = confirm("<spring:message code='ezBoard.t270' />\n<spring:message code='ezBoard.hsbFv01' />");
+		        	if (ret) { // 이미 즐겨찾기된 경우, 즐겨찾기 해제
+		        		deleteMyBoards();
+		        	}
 				}
-		        xmlhttp = null;
-		    }            
+				xmlhttp = null;
+				
+				// 즐겨찾기 동작 이후 별모양 아이콘 갱신
+		        changeMyboardIcon();
+			}            
 /* 		
 		    function CopyItem_onclick() {
 		        if (Read_FG != "true") {
@@ -787,7 +813,7 @@
 		        pheigth = pheigth - 200;
 		        pwidth = pwidth - 127;
 		
-		        window.open("/ezBoard/copyBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID + "&mode=COPY", "", "height=600px,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth, "");
+		        window.open("/ezBoard/copyBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID) + "&mode=COPY", "", "height=600px,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth, "");
 		
 		    } */
 		    
@@ -819,7 +845,7 @@
 		        arrList = null;
 		        if (CrossYN()) {
 		            moveboarditem_cross_dialogArguments[1] = MoveItem_onclick_Complete;
-		            var OpenWin = window.open("/ezBoard/moveBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID + "&guBun=" + gubun, "MoveBoardItem", GetOpenWindowfeature(355, 600));
+		            var OpenWin = window.open("/ezBoard/moveBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID) + "&guBun=" + gubun, "MoveBoardItem", GetOpenWindowfeature(355, 600));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
@@ -829,7 +855,7 @@
 		            pwidth = parseInt(pwidth) / 2;
 		            pheigth = pheigth - 200;
 		            pwidth = pwidth - 127;
-		            var ret = window.showModalDialog("/ezBoard/moveBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID + "&guBun=" + gubun, "", "DialogHeight:600px;DialogWidth:355px;status:no;help:no;edge:sunken;scroll:no");
+		            var ret = window.showModalDialog("/ezBoard/moveBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID) + "&guBun=" + gubun, "", "DialogHeight:600px;DialogWidth:355px;status:no;help:no;edge:sunken;scroll:no");
 		
 		            if (typeof (ret) != "undefined") {
 		                if (ret == "OK") {
@@ -869,12 +895,29 @@
 				    }
 				    arrList = null;
 				    var xmlhttp = createXMLHttpRequest();
-				    xmlhttp.open("POST", "/ezBoard/setRead.do?boardID=" + pBoardID + "&itemIDList=" + strItemList, false);
+				    xmlhttp.open("POST", "/ezBoard/setRead.do?boardID=" + encodeURIComponent(pBoardID) + "&itemIDList=" + encodeURIComponent(strItemList), false);
 				    xmlhttp.send();
 				    xmlhttp = null;
 				    getBoardList();
+				    
+				     /* 2019-07-03 홍승비 - 게시물 읽음표시 할 경우 좌측메뉴의 미독건수 갱신하도록 수정 */
+		            if (useNotReadCnt == "YES") {
+			            var boardLeftFrame;
+			            
+			            if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1) { // 즐겨찾기에서 읽기창 진입
+							boardLeftFrame = window.parent.parent.frames["left"];
+						} else { // 해당 게시판 내부에서 읽기창 진입
+			        		boardLeftFrame = window.parent.frames["left"];
+			        	}
+			            
+			            if (boardLeftFrame != null && boardLeftFrame != undefined && boardLeftFrame.location.href.indexOf("/ezBoard/boardLeft.do")> -1) {
+			     			boardLeftFrame.getBoardNotReadCountByID(BoardGroupID, "", "GROUP");
+			     			boardLeftFrame.getBoardNotReadCountByID(pBoardID, gubun, "SUB");
+				    	}
+		            }
 				}
 			}
+		    
 		    /* 2018-06-29 홍승비 - 게시물 미리보기 > 게시자 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정 */
 			function MemberInfo_onclick(pUserID, pDeptID) {
 			    var heigth = window.screen.availHeight;
@@ -884,12 +927,12 @@
 			    window.open("/ezCommon/showPersonInfo.do?id=" + pUserID + "&dept=" + pDeptID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 			}
 			function ReservationItem_onclick() {
-			    var OrgBoardParameters = "page=" + CurPage + "&boardID=" + pBoardID + "&sortBy=&boardType=" + pBoardType;
+			    var OrgBoardParameters = "page=" + CurPage + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=&boardType=" + pBoardType;
 			    window.location.href = "/ezBoard/boardReservedItemList.do?orgBoardParameters=" + escape(OrgBoardParameters) + "&boardType=" + pBoardType;
 			}
 			function search_onclick() {
-			    var OrgBoardParameters = "page=" + CurPage + "&boardID=" + pBoardID + "&sortBy=&boardType=" + pBoardType;
-			    window.location.href = "/ezBoard/searchBoardItem.do?boardID=" + pBoardID + "&boardType=" + pBoardType + "&orgBoardParameters=" + escape(OrgBoardParameters);
+			    var OrgBoardParameters = "page=" + CurPage + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=&boardType=" + pBoardType;
+			    window.location.href = "/ezBoard/searchBoardItem.do?boardID=" + encodeURIComponent(pBoardID) + "&boardType=" + pBoardType + "&orgBoardParameters=" + escape(OrgBoardParameters);
 			}
 		
 			function window_reload() {
@@ -1061,13 +1104,34 @@
 		            search("quick");
 		    }
 		
+		    /* 2020-11-05 홍승비 - 크롬 브라우저에서 부모창의 XMLHTTPRequest를 호출한 자식창이 닫히는 경우, send() 이후가 동작하지 않는 오류 수정(지원종료) */
+		    var configmyboard_dialogArguments = new Array();
 		    function SaveMyBoard() {
+		    	configmyboard_dialogArguments[0] = "";
+		    	
 		        if (CrossYN()) {
-		            var OpenWin = GetOpenWindow("/ezBoard/myBoardConfig.do?type=ADD&boardID=" + pBoardID, "MyBoardConfig", 525, 418);
-		            try { OpenWin.focus(); } catch (e) { }
+		            var OpenWin = GetOpenWindow("/ezBoard/myBoardConfig.do?type=ADD&boardID=" + encodeURIComponent(pBoardID), "MyBoardConfig", 525, 418);
+		            try { 
+		            	OpenWin.focus();
+		            	
+			            var parentHref = window.parent.location.href;
+						var winTimer = window.setInterval(function() {
+				            if (OpenWin.closed !== false) {
+				                window.clearInterval(winTimer);
+				                if (configmyboard_dialogArguments[0] == "Y") {
+				                	if (parentHref.indexOf("admin/ezBoard") < 0 && parentHref.indexOf("boardItemList_favorite") < 0) { // 일반 게시판에서 접근
+				                		window.parent.frames["left"].ShowMyBoardItemNew();
+				                	}
+				                	else if (parentHref.indexOf("admin/ezBoard") < 0 && parentHref.indexOf("boardItemList_favorite") > -1) { // 새게시물 탭에서 접근
+				                		window.parent.parent.frames["left"].ShowMyBoardItemNew();
+				                	}
+						    	}
+				            }
+				        }, 500);
+					} catch (e) { }
 		        }
 		        else
-		            showModalDialog("/ezBoard/myBoardConfig.do?type=ADD&boardID=" + pBoardID, null, "dialogHeight:418px; dialogWidth:525px; status:no; help:no; scroll:no; edge:sunken");
+		            showModalDialog("/ezBoard/myBoardConfig.do?type=ADD&boardID=" + encodeURIComponent(pBoardID), null, "dialogHeight:418px; dialogWidth:525px; status:no; help:no; scroll:no; edge:sunken");
 		    }
 		
 		    function SetBoardAcl() {
@@ -1077,15 +1141,54 @@
 		
 		        if (xmlhttp.status == 200) {
 		            if (parent.window.document.getElementsByTagName("h1").length == 0)
-		                location.href = "/admin/ezBoard/boardACL.do?adminType=y&parentNeed=Y&boardID=" + pBoardID + "&parentBoardID=" + getNodeText(xmlhttp.responseText) + "&boardType=" + pBoardType + "&boardName=" + encodeURI(BrdName);
+		                location.href = "/admin/ezBoard/boardACL.do?adminType=y&parentNeed=Y&boardID=" + encodeURIComponent(pBoardID) + "&parentBoardID=" + encodeURIComponent(getNodeText(xmlhttp.responseText)) + "&boardType=" + pBoardType + "&boardName=" + encodeURI(BrdName);
 		            else
-		                location.href = "/admin/ezBoard/boardACL.do?adminType=y&parentNeed=N&boardID=" + pBoardID + "&parentBoardID=" + getNodeText(xmlhttp.responseText) + "&boardType=" + pBoardType + "&boardName=" + encodeURI(BrdName);
+		                location.href = "/admin/ezBoard/boardACL.do?adminType=y&parentNeed=N&boardID=" + encodeURIComponent(pBoardID) + "&parentBoardID=" + encodeURIComponent(getNodeText(xmlhttp.responseText)) + "&boardType=" + pBoardType + "&boardName=" + encodeURI(BrdName);
 		        }
 		        else {
 		            alert("ERROR");
 		        }
 		    }
-		
+		    
+	    	/* 2020-06-15 홍승비 - 게시판 즐겨찾기 여부에 따라 별모양 아이콘 스타일 변경 */
+	    	function changeMyboardIcon() {
+				$.ajax({
+					type : "GET",
+					dataType : "text",
+					async : true,
+					url : "/ezBoard/getIsMyBoard.do",
+					data : {
+						boardID : pBoardID
+					},
+					success: function(result){
+						if (result == "YES") { // 즐겨찾기된 게시판
+							document.getElementById("myBoardIconSpan").className = "icon16 icon16_star";
+						} else {
+							document.getElementById("myBoardIconSpan").className = "no_yellowStar";
+						}
+					}
+				});
+	    	}
+	    	
+	    	/* 2020-06-15 홍승비 - 즐겨찾기 아이콘 클릭으로 즐겨찾기 해제 가능 */
+	    	function deleteMyBoards() {
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezBoard/deleteMyBoards.do",
+					data : {
+						boardID : pBoardID
+					},
+					success: function(result){
+			            if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1) {
+							boardLeftFrame = window.parent.parent.frames["left"];
+							boardLeftFrame.favoriteList();
+						}
+					}
+				});
+	    	}
+	    	
 		</script>
 	</head>
 	<c:choose>
@@ -1103,14 +1206,14 @@
 		<c:choose>
 			<c:when test="${boardInfo.adminType != 'y'}">
 				<h1>${boardName}<span id="mailBoxInfo"></span>
-				      <span style="float:right;font-weight:normal;color:black;">
-				          <select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
+					<span class="searchForm">
+				    	<select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
 				    		<option selected value="rad_Subject"><spring:message code='ezBoard.t208'/></option>
 				    		<option value="rad_Writer"><spring:message code='ezBoard.t223'/></option>
 				    	</select>
-						  <input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-				          <a href="#" style="float:right"><img src="../../images/bsearch_new.gif" border="0" onClick="search('quick')"></a>
-				        </span>
+						<input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+				        <a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onClick="search('quick')"></a>
+				    </span>
 				</h1>
 			</c:when>
 			<c:otherwise>
@@ -1118,36 +1221,55 @@
 			        parent.document.getElementsByTagName("h1")[0].innerHTML = "${boardName}" +"<span id='mailBoxInfo'></span>";
 			    </script>
 			    <br />
-			    <span style="display:none; float:right;font-weight:normal;color:black;">
+			    <span class="searchForm" style="display:none;">
 					<select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
 						<option selected value="rad_Subject"><spring:message code='ezBoard.t208'/></option>
 			    		<option value="rad_Writer"><spring:message code='ezBoard.t223'/></option>
 			    	</select>
-					  <input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-			          <a href="#" style="float:right"><img src="../../images/bsearch_new.gif" border="0" onClick="search('quick')"></a>
+					<input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+			        <a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onClick="search('quick')"></a>
 		        </span>
 			</c:otherwise>
 		</c:choose>
 	<c:if test="${boardInfo.buttonHidden == 'N'}">
 		<div id="mainmenu">
 		  <ul>
-		        <li><span onClick="NewItem_onclick()"><spring:message code='ezBoard.t321'/></span></li>
+		        <li class="important"><span onClick="NewItem_onclick()"><spring:message code='ezBoard.hsbJP02'/></span></li>
 		        <li><span onclick="SetRead_onclick()"><spring:message code='ezBoard.t204'/></span></li>
-			    <!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
-		        <li><span onClick="DeleteItem_onclick()"><spring:message code='ezBoard.t89'/></span></li>
+		        <li><span onClick="SaveMyBoard()"><spring:message code='ezBoard.t10052'/></span></li>
+			    <!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->		        
 			    <!-- <li id="Li1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" align="absmiddle"></li> -->
-		        <li><span onClick="refresh_onclick()"><spring:message code='ezBoard.t205'/></span></li>
-		        <li><span id="SearchOption" mode="off" onClick="doLayerPopup(this)"><spring:message code='ezBoard.t188'/></span></li>
-		        <li><span onClick="AddToMyBoards()"><spring:message code='ezBoard.t10051'/></span></li>
-		        <li><span onClick="SaveMyBoard()"><spring:message code='ezBoard.t10052'/></span></li> 
-		        <li id="right">
+			    <c:if test="${boardInfo.boardAdmin_FG == 'true'}">
+			    	<li id="btn_acl"><span onClick="SetBoardAcl()"><spring:message code='ezBoard.t63'/></span></li> 
+		        </c:if>
+		        
+				<%-- 2020-06-15 홍승비 - 즐겨찾기 여부에 따라 별모양 아이콘 스타일 수정 --%>
+		        <c:choose>
+					<c:when test="${isMyBoard == 'YES'}">
+			        	<li><span class="icon16 icon16_star" id="myBoardIconSpan" onClick="AddToMyBoards()"></span></li>
+					</c:when>
+					<c:otherwise>
+			        	<li><span class="no_yellowStar" id="myBoardIconSpan" onClick="AddToMyBoards()"></span></li>
+			        </c:otherwise>
+		        </c:choose>
+		        
+		        <li onClick="doLayerPopup(this)"><span class="icon16 icon16_search" id="SearchOption" mode="off"></span></li>
+		        <li onClick="DeleteItem_onclick()"><span class="icon16 icon16_delete"></span></li>
+		        <li onClick="refresh_onclick()"><span class="icon16 icon16_refresh"></span></li> 
+		        <!-- <li id="right">
 	            	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
 					<img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onclick="PreviewRayerChange('H')">
 					<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" />
-				</li>
-		        <c:if test="${boardInfo.boardAdmin_FG == 'true'}">
-			      <li id="btn_acl"><span onClick="SetBoardAcl()"><spring:message code='ezBoard.t63'/></span></li> 
-		        </c:if>
+				</li> -->
+		        <div id="right" class="sub_frameIcon" style="float:right">	
+					<div class="sub_frameIconUL" style="width:57px !important">
+					   	<p class="frameIconLI"><span class="icon16 btn_noframe" id="PreViewNone" onclick="PreviewRayerChange('NONE')"></span></p>
+					    <p class="frameIconLI"><span class="icon16 btn_leftframe" id="PreViewleft" onclick="PreviewRayerChange('H')"></span></p>
+					</div>
+					<div class="sub_frameIconUL02">
+					  	<p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="maillistoptiondiv" onclick="MailOptionView(this);"></span></p>  
+					</div>
+				 </div>
 		  </ul>
 		</div>
 		<script type="text/javascript">
@@ -1205,58 +1327,52 @@
         <div id="tblPageRayer" style="text-align:center"></div>
     </span>
 
-    <span id="PreviewRayerH" style="border:0px solid red; width:500px; height:100%; overflow:hidden; vertical-align:top; display:none; margin-left:-5px;">
-        <span class="previewmail_bar_h" display: inline-block;">
+     <div id="PreviewRayerH" style="border:0px; width:500px; height:100%; overflow:hidden; vertical-align:top; display:none; margin-left:-5px;">
+        <div class="previewmail_bar_h" onmousedown="PreviewH_onMouserDown(event);" style="cursor: w-resize; display: inline-block;">
             <p class="hbar_dotted">
                 <img src="/images/prevview_hbar_dotted.gif">
             </p>
-        </span>
-        <span id="PreContent_RayerH" style="position: absolute; border: 0px solid blue;">
-            <span style="width: 100%; height: 100px; display: block;">
-                <span class="previewmail_info" style="display: block; width: 100%;">
-                    <div id="Preview_HeaderH" style="border-bottom: solid 1px #e8e8e8; width: 100%; display: none;">
-                        <p class="mail_title" style="margin-left: 0px;">
-                            <span class="icon_btn"><span onclick="MailReadOpen();" style="cursor: pointer; padding-right: 5px;">
-                                <img src="/images/kr/cm/btn_newpopup.gif" title="<spring:message code='ezEmail.t99000001' />" alt="" border="0"></span></span><span id="PreH_subject"><span id="PreH_sub_subject" class="title_blodtxt"></span></span>
-                        </p>
-                        <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreH_date"><span id="PreH_sub_date" style="display: none;"></span></span></span>
-                        <dl class="mail_item">
-                            <dt><spring:message code='ezBoard.t223'/>:
-                                <span id="PreH_MailReceiver" style="display: inline-block"></span>
-                            </dt>
-                        </dl>
-                    </div>
-                </span>
+        </div>
+        <div id="PreContent_RayerH" style="position: absolute; border: 0px; margin-left:7px;">
+            <div class="previewmail">
+                <div class="previewmail_info">
+                	<dl class="previewmailDL" id="Preview_HeaderH" style="display:none;">
+						<dt class="prepic"><img id="userImgH" src="/images/kr/main/bestEmployee_pic_none.png" width="55px" height="55px"></dt>
+						<dd class="pretext">
+							<ul class="pretextUL">
+								<li class="preSubject"><span class="popup_open" onclick="MailReadOpen();"><img src="/images/kr/cm/btn_newpopup.gif" title="<spring:message code='ezEmail.t99000001' />" alt="<spring:message code="ezEmail.t99000001" />"></span><span class="subjectText" id="PreH_subject" style="max-width:570px;"><span class="subjectText" id="PreH_sub_subject"></span></span></li>
+								<li class="preT_list"><span class="t_left"><span class="cblack"><spring:message code="ezBoard.t223" /></span> : <span id="PreH_MailReceiver"></span></span><span class="t_right"><span class="cblack"><spring:message code="ezBoard.t224" /> : </span><span id="PreH_date"><span id="PreH_sub_date" style="display:none;"></span></span></span></li>
+								
+							</ul>
+						</dd>
+					</dl>
+                </div>
                 <iframe id="ifrmPreViewH_photo" name="ifrmPreViewH_photo" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe>
-            </span>
-        </span>
-    </span>
-
-
-    <span id="PreviewRayerW" style="border: 0px solid red; width: 100%; height: 300px; overflow: hidden; display: none;">
-        <span onmousedown="PreviewW_onMouserDown(event);" style="cursor: s-resize; width: 100%; display: list-item;" class="previewmail_bar" name="PreviewBar" id="PreviewBar">
+            </div>
+        </div>
+    </div>
+ 	<div id="PreviewRayerW" style="border: 0px; width: 100%; height: 300px; overflow: hidden; display: none;">
+        <div onmousedown="PreviewW_onMouserDown(event);" style="cursor: s-resize; width: 100%; display: list-item;" class="previewmail_bar" name="PreviewBar" id="PreviewBar">
             <img src="/images/prevview_bar_dotted.gif">
-        </span>
-        <span id="PreContent_RayerW" style="display: block;">
-            <span style="width: 100%; height: 100px; display: block;">
-                <span class="previewmail_info" style="display: block; width: 100%;">
-                    <div id="Preview_HeaderW" style="border-bottom: solid 1px #e8e8e8; display: none;">
-                        <p class="mail_title">
-                            <span class="icon_btn"><span onclick="MailReadOpen();" style="cursor: pointer; padding-right: 5px;">
-                                <img src="/images/kr/cm/btn_newpopup.gif" title="<spring:message code='ezEmail.t99000001' />" alt="" border="0"></span></span><span id="PreW_subject"><span id="PreW_sub_subject" class="title_blodtxt"></span></span>
-                        </p>
-                        <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreW_date"><span id="PreW_sub_date"></span></span></span>
-                        <dl class="mail_item">
-                            <dt><spring:message code='ezBoard.t223'/>:</dt>
-                            <dd style="padding-left:44px; margin-top:-20px;"><span id="PreW_MailReceiver" style="display: inline-block"></span>
-                            </dd>
-                        </dl>
-                    </div>
-                </span>
+        </div>
+        <div id="PreContent_RayerW" style="display: block;">
+            <div class="previewmail">
+                <div class="previewmail_info" style="display: block; width: 100%;">
+                	<dl class="previewmailDL" id="Preview_HeaderW" style="display:none;">
+						<dt class="prepic"><img id="userImgW" src="/images/kr/main/bestEmployee_pic_none.png" width="55px" height="55px"></dt>
+						<dd class="pretext">
+							<ul class="pretextUL">
+								<li class="preSubject"><span class="popup_open" onclick="MailReadOpen();"><img src="/images/kr/cm/btn_newpopup.gif" title="<spring:message code='ezEmail.t99000001' />" alt="<spring:message code="ezEmail.t99000001" />"></span><span class="subjectText" id="PreW_subject"><span class="subjectText" id="PreW_sub_subject"></span></span></li>
+								<li class="preT_list"><span class="t_left"><span class="cblack"><spring:message code="ezBoard.t223" /></span> : <span id="PreW_MailReceiver"></span></span><span class="t_right"><span class="cblack"><spring:message code="ezBoard.t224" /> : </span><span id="PreW_date"><span id="PreW_sub_date" style="display:none;"></span></span></span></li>
+								
+							</ul>
+						</dd>
+					</dl>
+                </div>
                 <iframe id="ifrmPreViewW_photo" name="ifrmPreViewW_photo" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0;"></iframe>
-            </span>
-        </span>
-    </span>
+            </div>
+        </div>
+    </div>
 	
 	    
 	<div id="ListInfo" style="display:none"></div>

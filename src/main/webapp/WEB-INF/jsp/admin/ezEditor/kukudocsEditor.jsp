@@ -1,17 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 	<head>
 		<title></title>
 	    <link rel="stylesheet" href="${util.addVer('/js/ezEditor/kukudocsEditor/stylesheets/style.css')}" />
-		<script type="text/javascript" src="${util.addVer('/js/ezEditor/kukudocsEditor/externalLib/jquery-1.9.1.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEditor/kukudocsEditor/externalLib/jquery-3.5.1.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezEditor/kukudocsEditor/externalLib/jquery-ui-1.11.4.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezEditor/kukudocsEditor/javascripts/build/Editor.bundle.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<style> html, body {height: 100%; margin: 0; padding: 0;} </style>
 		<script type="text/javascript">
-			var type = "${type}";
-			var height = "${height}";
+			var type = "<c:out value='${type}'/>";
+			var height = "<c:out value='${height}'/>";
 			
 			function Editor_Complete() {
 				parent.Editor_Complete();
@@ -336,7 +337,7 @@
 			var customAlignMenu = ['about','print','undo','redo','text_paste','textFormatCopy','textFormatPaste','link','unlink','image','symbol','horizontal','numbered_list','bullet_list','outdent','indent',
 								   'table','table_insert_left','table_insert_right','table_insert_top','table_insert_bottom','table_remove_col','table_remove_row','table_remove_table',
 								   'table_merge','table_split_col','table_split_row','cell_horizontal_size','cell_vertical_size','table_background_color','table_border_style','align_left','align_center','align_right','align_justify','paragraph_margin',
-								   'template','heading','fontFamily','fontSize','line_height','bold','italic','underline','strike_through','remove_format','color','backgroundColor', 'border_visualize',
+								   'template','heading','fontFamily','fontSize','line_height','bold','italic','underline','strikeThrough','remove_format','color','backgroundColor', 'border_visualize',
 								   'cell_lock', 'table_lock'];
 			
 			// 이미지 업로드 URL 설정
@@ -405,6 +406,7 @@
 		    };
 			
 			var kukudocsEditor = new KuKudocsEditor('editor1', {
+				licPathURL: '/js/ezEditor/kukudocsEditor/kukudocs.lic',
 				minHeight : 0,
 	            maxHeight : 0,
 	            width : '100%',

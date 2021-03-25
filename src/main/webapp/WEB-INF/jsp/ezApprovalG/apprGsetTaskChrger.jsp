@@ -19,7 +19,7 @@
 <script type="text/javascript" ID="clientEventHandlersJS">
     var g_InitFlag = "0";
     var OrderCell = "";
-    var CompanyID = "${userInfo.companyID}";
+    var CompanyID = "<c:out value='${userInfo.companyID}'/>";
     var g_CabClassNo, g_DeptCode;
     var rtnVal = new Array();
     window.onload= window_onload;
@@ -66,7 +66,7 @@
     }
     function DisplayOrganSearchList_Cross(pSearchList, pCellList, pPropList, pClass) {
 
-        var rtnXml = OrganSearch(pSearchList, pCellList, pPropList, pClass);
+        var rtnXml = OrganSearch_new(pSearchList, pCellList, pPropList, pClass, "Y");
 
         document.getElementById("OrgListView").innerHTML = "";
         var listview = new ListView();
@@ -366,6 +366,28 @@
         if (!(x = d[n]) && d.all) x = d.all[n]; for (i = 0; !x && i < d.forms.length; i++) x = d.forms[i][n];
         for (i = 0; !x && d.layers && i < d.layers.length; i++) x = MM_findObj(n, d.layers[i].document);
         if (!x && d.getElementById) x = d.getElementById(n); return x;
+    }
+    function OrganSearch_new(pSearchList, pCellList, pPropList, pClass, pNoAddJob) {
+    	var result = "";
+    	
+    	$.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezOrgan/getSearchList.do",
+    		data : {
+    			search : pSearchList,
+    			cell   : pCellList,
+    			prop   : pPropList,
+    			type   : pClass,
+    			noAddJob : pNoAddJob
+    		},
+    		success: function(xml){
+    			result = xml;
+    		}        			
+    	});
+    	
+        return loadXMLString(result);
     }
 </script>
 <style>

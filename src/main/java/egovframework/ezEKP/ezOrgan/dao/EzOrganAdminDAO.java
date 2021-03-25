@@ -32,12 +32,14 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezOrgan.util.ADConnection;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganGroupVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
-import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
+@SuppressWarnings("unused")
 @Repository("EzOrganAdminDAO")
 public class EzOrganAdminDAO extends EgovAbstractDAO {
 
@@ -128,7 +130,8 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         return (List<OrganUserVO>) list("EzOrganAdminDAO.userCnList", tenantID);
     }
     
-    public List<OrganUserVO> getAllUserCnList(int tenantID) throws Exception {
+    @SuppressWarnings("unchecked")
+	public List<OrganUserVO> getAllUserCnList(int tenantID) throws Exception {
     	return (List<OrganUserVO>) list("EzOrganAdminDAO.allUserList", tenantID);
     }
     
@@ -1337,6 +1340,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	insert("EzOrganAdminDAO.insertCompanyInfo_I11", map);
     }
     
+    public void insertCompanyInfo_I12_separate(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I12_separate", map);
+    }
+    
     public void insertCompanyInfo_I12(Map<String, Object> map) throws Exception {
     	insert("EzOrganAdminDAO.insertCompanyInfo_I12", map);
     }
@@ -1376,6 +1383,50 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     }
     public void insertCompanyInfo_I22(Map<String, Object> map) throws Exception {
     	insert("EzOrganAdminDAO.insertCompanyInfo_I22", map);
+    }
+    
+    public void insertCompanyInfo_I23(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I23", map);
+    }
+    
+    public void insertCompanyInfo_I24(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I24", map);
+    }
+    
+    public void insertCompanyInfo_I25(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I25", map);
+    }
+    
+    public void insertCompanyInfo_I26(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I26", map);
+    }
+    
+    public void insertCompanyInfo_I27(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I27", map);
+    }
+    
+    public void insertCompanyInfo_I28(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I28", map);
+    }
+    
+    public void insertCompanyInfo_I29(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I29", map);
+    }
+    
+    public void insertCompanyInfo_I30(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I30", map);
+    }
+
+	public void insertCompanyInfo_I31(Map<String, Object> map) {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I31", map);
+	}
+
+	public void insertCompanyInfo_I32(Map<String, Object> map) {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I32", map);
+	}
+    
+    public void insertCompanyInfo_IJHS1(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_IJHS1", map);
     }
     
     public void insertCompanyInfo_IKMS(Map<String, Object> map) throws Exception {
@@ -2155,9 +2206,110 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public int getTitleCnt(Map<String, Object> map) throws Exception {
 		return (int) select("EzOrganAdminDAO.selectTitleCnt", map);
 	}
+
+	public int getAddJobCount(Map<String, Object> map) throws Exception{
+		return (int) select("EzOrganAdminDAO.getAddJobCount", map);
+	}
 	
+	public void setAddJobCount(Map<String, Object> map) throws Exception{
+		update("EzOrganAdminDAO.getAddJobCount", map);
+	}
+
+	public String getCompanyName(Map<String, Object> map) throws Exception {
+		return (String) select ("EzOrganAdminDAO.getCompanyName", map);
+	}
+
 	@SuppressWarnings("unchecked")
 	public List<OrganUserVO> getDeptAddJobUserList(Map<String, Object> map) throws Exception {
 		return (List<OrganUserVO>) list("EzOrganAdminDAO.getDeptAddJobUserList", map);
 	}
+	
+	public void setPermissionGroupList(Map<String, Object> map) throws Exception {
+		insert("EzOrganAdminDAO.setPermissionGroupList", map);
+	}
+	
+	public void updatePermissionGroupList(Map<String, Object> map) throws Exception {
+		update("EzOrganAdminDAO.updatePermissionGroupList", map);
+	}
+	
+	public void setPermissionGroupInfo(Map<String, Object> map) throws Exception {
+		insert("EzOrganAdminDAO.setPermissionGroupInfo", map);
+	}
+	
+	public void deletePermissionGroupList(Map<String, Object> map) throws Exception {
+        delete("EzOrganAdminDAO.deletePermissionGroupList", map);
+    }
+	
+	public void deletePermissionGroupInfo(Map<String, Object> map) throws Exception {
+        delete("EzOrganAdminDAO.deletePermissionGroupInfo", map);
+    }
+	
+	public int getPermissionGroupListCount(Map<String, Object> map) throws Exception {
+        return (int)select("EzOrganAdminDAO.getPermissionGroupListCount", map);
+    }
+	
+	@SuppressWarnings("unchecked")
+	public List<OrganGroupVO> getPermissionGroupList(Map<String, Object> map) throws Exception {
+        return (List<OrganGroupVO>) list("EzOrganAdminDAO.getPermissionGroupList", map);
+    }
+	
+	@SuppressWarnings("unchecked")
+	public List<OrganGroupVO> getPermissionGroupInfo(Map<String, Object> map) throws Exception {
+        return (List<OrganGroupVO>) list("EzOrganAdminDAO.getPermissionGroupInfo", map);
+    }
+	
+	@SuppressWarnings("unchecked")
+	public List<OrganGroupVO> getGroupList(Map<String, Object> map) throws Exception {
+        return (List<OrganGroupVO>) list("EzOrganAdminDAO.getGroupList", map);
+    }
+	
+	@SuppressWarnings("unchecked")
+	public List<OrganJobVO> getTitleList_group(Map<String, Object> map) throws Exception {
+		return (List<OrganJobVO>) list("EzOrganAdminDAO.selectTitleList_group", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<OrganGroupVO> getGroupListBoard(Map<String, Object> map) throws Exception {
+        return (List<OrganGroupVO>) list("EzOrganAdminDAO.getGroupListBoard", map);
+    }
+	
+	@SuppressWarnings("unchecked")
+	public List<OrganLoginStopUserVO> getLoginStopUserList(Map<String, Object> map) throws Exception {
+		return (List<OrganLoginStopUserVO>) list("EzOrganAdminDAO.getLoginStopUserList", map);
+	}
+	
+    public int getLoginStopUserListCount(Map<String, Object> map) throws Exception {
+    	return (int) select("EzOrganAdminDAO.getLoginStopUserListCount", map);        
+    }
+    
+    public void insertStopUser(Map<String, Object> map) throws Exception {
+    	insert ("EzOrganAdminDAO.insertStopUser", map);
+    }
+    
+    public void deleteStopUser(Map<String, Object> map) throws Exception {
+    	delete ("EzOrganAdminDAO.deleteStopUser", map);
+    }
+    
+    public int checkStopUser(Map<String, Object> map) throws Exception {
+    	return (int) select ("EzOrganAdminDAO.checkStopUser", map);
+    }
+
+    public void setDeptPrimaryMail (Map<String, Object> map) throws Exception {
+		update("EzOrganAdminDAO.setDeptMail", map);
+	}
+	
+	public void deleteCompanyConfig(Map<String, Object> map) throws Exception {
+		delete("EzOrganAdminDAO.deleteCompanyConfig", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<String> getNotUseMobileUserList(int tenantId) {
+		return (List<String>) list("EzOrganAdminDAO.getNotUseMobileUserList", tenantId);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> getAutoDeleteOfRetireUserList(Map<String, Object> map) throws Exception {
+		return (List<String>) list("EzOrganAdminDAO.getAutoDeleteOfRetireUserList", map);
+	}
+
 }

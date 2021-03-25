@@ -25,13 +25,13 @@
 			<%-- var g_DD = "<%=Request.QueryString["dd"]%>";
 	    	var g_MM = "<%=Request.QueryString["mm"]%>";
 	    	var g_YY = "<%=Request.QueryString["yy"]%>"; --%>
-	    	var dayView = "${dayView}";
+	    	var dayView = "<c:out value='${dayView}'/>";
 	    	if (!dayView) {
 	    		dayView = 0;
 	    	}
 	    	var reFlag; 
 	    	var importanceVal;
-	    	var g_fromStr		= "${fromStr}";
+	    	var g_fromStr		= "<c:out value='${fromStr}'/>";
 	    	var s_userID		= "${userInfo.id}";
 	    	var ss_companyID	= "${userInfo.companyID}";
 	    	var ss_deptNM		= "";
@@ -53,10 +53,10 @@
 	    	var org_ownerID		= "${ownerID}";
 	    	var pnumVal			= "${pNum}";
 	    	var writerIDVal		= "${writerID}";
-	    	var cmd				= "${cmdStr}";
+	    	var cmd				= "<c:out value='${cmdStr}'/>";
 	    	var typeVal			= "${typeVal}";
-	    	var startDateVal	= "${startDateVal}";
-	    	var endDateVal		= "${endDateVal}";
+	    	var startDateVal	= "<c:out value='${startDateVal}'/>";
+	    	var endDateVal		= "<c:out value='${endDateVal}'/>";
 	    	var gFlagVal		= "${gresFlag}";
 	    	var uploadPath		= "${scheduleFilePath}";
 	    	var org_companyID	= ss_companyID;
@@ -105,9 +105,9 @@
 		            }        
 	    	    } 
 	        	if (cmd == "mod") {
-	        		document.getElementById("displayNM").innerHTML = "<a href=# onClick=MemberInfo_onClick('" + writerIDVal + "','" +deptID + "')>" + org_ownerNM + "</a> (" + org_deptNM + ")";	
+	        		document.getElementById("displayNM").innerHTML = "<a onClick=MemberInfo_onClick('" + writerIDVal + "','" +deptID + "')>" + org_ownerNM + "</a> (" + org_deptNM + ")";	
 	        	} else {
-	        	document.getElementById("displayNM").innerHTML = "<a href=# onClick=MemberInfo_onClick('" + s_userID + "','" + deptID + "')>" + ss_ownerNM + "</a> (" + ss_deptNM + ")";
+	        	document.getElementById("displayNM").innerHTML = "<a onClick=MemberInfo_onClick('" + s_userID + "','" + deptID + "')>" + ss_ownerNM + "</a> (" + ss_deptNM + ")";
 	        	}
 	            
 	        	if (cmd == "mod") {
@@ -232,7 +232,7 @@
 	            	changeYear: true,
 	            	autoSize: true,
 	            	showOn: "both",
-	            	buttonImage: "/images/ImgIcon/calendar-month.gif",
+	            	buttonImage: "/images/ImgIcon/calendar-month.png",
 	            	buttonImageOnly: true,
 	            	onSelect : function(dateText, inst) {
 		            	var startD = new Date(inst.lastVal);
@@ -251,7 +251,7 @@
 	            	changeYear: true,
 	            	autoSize: true,
 	            	showOn: "both",
-	            	buttonImage: "/images/ImgIcon/calendar-month.gif",
+	            	buttonImage: "/images/ImgIcon/calendar-month.png",
 	            	buttonImageOnly: true
 	        	});
 
@@ -583,15 +583,25 @@
 	    	function window_onUnload() {
 	        	if (m_Arguments == undefined) {
 		            if (window.opener != null && g_fromStr == "schedule" && trim(s_userID) != "") {
-		                window.opener.btnRefresh_onclick();
+		            	try {
+			                window.opener.btnRefresh_onclick();
+		            	} catch (e) {}
 	    	        } else if (window.opener != null && g_fromStr == "schedule2" && trim(s_userID) != "") {
-	                	window.opener.parent.main.document.location.reload();
+		            	try {
+		                	window.opener.parent.main.document.location.reload();
+		            	} catch (e) {}
 	            	} else if (window.opener != null && g_fromStr == "frame" && trim(s_userID) != "") {
-	                	window.opener.document.all.iframeWin2.document.location.reload();
+		            	try {
+		                	window.opener.document.all.iframeWin2.document.location.reload();
+		            	} catch (e) {}
 	            	} else if (window.opener != null && g_fromStr == "frame2" && trim(s_userID) != "") {
-	                	window.opener.document.all.iframeWin.document.location.reload();
+		            	try {
+		                	window.opener.document.all.iframeWin.document.location.reload();
+		            	} catch (e) {}
 	            	} else if (window.opener != null && g_fromStr == "todaySchedule" && trim(s_userID) != "") {
-	                	window.opener.location.reload();
+		            	try {
+		                	window.opener.location.reload();
+		            	} catch (e) {}
 	            	}
 	        	}
 	    	}
@@ -654,26 +664,25 @@
         					<c:choose>
         						<c:when test="${typeVal ne 'Readonly'}">
         							<div id="menuTable1" >
-        							<!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezResource.t185 => t114 -->
-          							<li><span onClick="btn_Save()"> <spring:message code="ezResource.t114"/></span></li>
-          							<li><span onClick="print_onClick( false )"> <spring:message code="ezResource.t186"/></span></li>
-          							<li id="deletebtbn"><span onClick="delSchedule_onClick('${num}','${ownerID}')"> <spring:message code="ezResource.t65"/></span></li>
-          							
-       								<c:if test="${typeVal ne 'Instance' && typeVal ne 'Readonly'}" >
-       									<li><span id="Span2" name="ScheRep" id="ScheRep" name="ScheRep" onClick="Schedule_Repetition_onclick()"> <spring:message code="ezResource.t195"/></span></li>
-       								</c:if>
-
-       								<c:if test="${approveFlag eq '1' && adminFg eq 'Y' && cmdStr eq 'mod'}" >
-       									<c:choose>
-       										<c:when test="${saveApproveFlag eq '1'}">
-				    							<li><span  onClick="SetApproval_onClick('${cmdStr}', '0')"><spring:message code="ezResource.t190"/></span></li>
-       										</c:when>
-       										<c:otherwise>
-				    							<li><span  onClick="SetApproval_onClick('${cmdStr}', '1')"><spring:message code="ezResource.t191"/></span></li>
-       										</c:otherwise>
-       									</c:choose>
-        					 		</c:if> 
-          							
+	        							<!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezResource.t185 => t114 -->
+	          							<li><span onClick="btn_Save()"> <spring:message code="ezResource.t114"/></span></li>
+	          							<li id="deletebtbn" style="display:none"><span class="icon16 popup_icon16_delete" onClick="delSchedule_onClick('${num}','${ownerID}')"></span></li>
+	          							
+	       								<c:if test="${typeVal ne 'Instance' && typeVal ne 'Readonly'}" >
+	       									<li><span id="Span2" name="ScheRep" id="ScheRep" name="ScheRep" onClick="Schedule_Repetition_onclick()"> <spring:message code="ezResource.t195"/></span></li>
+	       								</c:if>
+	
+	       								<c:if test="${approveFlag eq '1' && adminFg eq 'Y' && cmdStr eq 'mod'}" >
+	       									<c:choose>
+	       										<c:when test="${saveApproveFlag eq '1'}">
+					    							<li><span  onClick="SetApproval_onClick('${cmdStr}', '0')"><spring:message code="ezResource.t190"/></span></li>
+	       										</c:when>
+	       										<c:otherwise>
+					    							<li><span  onClick="SetApproval_onClick('${cmdStr}', '1')"><spring:message code="ezResource.t191"/></span></li>
+	       										</c:otherwise>
+	       									</c:choose>
+	        					 		</c:if>
+	        					 		<li><span class="icon16 popup_icon16_print" onClick="print_onClick( false )"></span></li>
 	          						</div>          
 	          						<div id="menuTable2" style='display:none'>								
 	          							<li><span  onClick="btn_Save()"> <spring:message code="ezResource.t185"/></span></li>
@@ -776,7 +785,7 @@
 	         				<th> <spring:message code="ezResource.t224"/></th>
 	         				<td colspan="3"><input type="text" id="title" name="title" maxlength="100"  style="width: 100%" />          </td>		<!-- 2018-07-13 김민성 - 자원예약 이름 글자수 제한 25->100자로 변경 -->
 	       				</tr>
-	       				<c:if test="${cmdStr eq 'add'}">
+	       				<c:if test="${useSchedule && cmdStr eq 'add'}">
 	       				<tr>
 	         				<th><spring:message code="ezSchedule.t214"/></th>
 	         				<td colspan="3"><input type="checkbox" id="useSchedule" name="useSchedule">          </td>

@@ -10,7 +10,7 @@ var GetList_HTTP;
 var GetList_HTTP_SUB;
 var GetListInfo_HeaderObject;
 var GetListInfo_ContentObject;
-var m_strColorSelect = "#edf4fd";
+var m_strColorSelect = "#f1f8ff";
 var m_strColorOver = "#f4f5f5";
 var m_strColorDefault = "#ffffff";
 var m_strColorOpened = "#fafafa";
@@ -184,23 +184,20 @@ function MakeHeaderHTML_SUB(HeaderObject) {
 }
 
 function drag(ev) {
-    var szItemID = "";
-
-    for (var i = 0; i < listContentArry.length; i++) {
-        szItemID += GetAttribute(document.getElementById(listContentArry[i]), "_href") + ",";
-    }
-
-    if (szItemID != "") {
-        ev.dataTransfer.setData("text", szItemID);
-    }
-    else {
-        if (typeof (ev.target) == "undefined") {
-            ev.dataTransfer.setData("text", GetAttribute(ev.srcElement, "_href") + ",");
-        }
-        else {
-            ev.dataTransfer.setData("text", GetAttribute(ev.target, "_href") + ",");
-        }
-    }
+	var eventTarget = ev.srcElement || ev.target;
+	var listContentLength = listContentArry.length;
+	
+	if (listContentLength > 1 && listContentArry.indexOf(eventTarget.id) > -1) {
+		var szItemID = "";
+		
+		for (var i = 0; i < listContentArry.length; i++) {
+			szItemID += GetAttribute(document.getElementById(listContentArry[i]), "_href") + ",";
+		}
+		
+		ev.dataTransfer.setData("text", szItemID);
+	} else {
+		ev.dataTransfer.setData("text", GetAttribute(eventTarget, "_href") + ",");
+	}
 }
 
 var xmlhttp_MailReceiverList = null;
@@ -241,6 +238,9 @@ function MakeListInfoHTML(ConentObject) {
                 var p_Group = SelectSingleNodeValue(XmlRows[Cnt], "group");
                 var p_RecipientCount = SelectSingleNodeValue(XmlRows[Cnt], "recipientCount");
                 var p_countryCode = SelectSingleNodeValue(XmlRows[Cnt], "countryCode");
+                var p_mailIP = SelectSingleNodeValue(XmlRows[Cnt], "mailIP");
+                var p_countryName = SelectSingleNodeValue(XmlRows[Cnt], "countryName");
+                var p_mailConfirm = SelectSingleNodeValue(XmlRows[Cnt], "mailConfirm");
                 var recipients = [];
             	var recipientsLen = 1;
                 
@@ -263,6 +263,10 @@ function MakeListInfoHTML(ConentObject) {
                 	_TR.setAttribute("draggable", true);
                 	_TR.ondragstart = function () { drag(event) };
                 }
+
+                // 2020-08-19 김은실 -우클릭 시 currentFixingId가 다르게 찍히는 현상: _TD에서=>_TR로 선택&마우스효과 변경
+                _TR.onmouseover = function () { event_listMover(this); };
+                _TR.onmouseout = function () { event_listMout(this); };
             
                 var _TDCheckBox = document.createElement("TD");
                 _TDCheckBox.style.width = "22px";
@@ -344,8 +348,6 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.setAttribute("data-name", p_Sender);
                             //_TDColum.onclick = function (event) { useMailWriteSenderClick == "NO" ? event_listclick(this, event) : new_mail_onclick(this); };
                             _TDColum.onclick = function (event) { event_listclick(this, event); };
-                            _TDColum.onmouseover = function () { event_listMover(this.parentElement); };
-                            _TDColum.onmouseout = function () { event_listMout(this.parentElement); };
                             _TDColum.ondblclick = function () { event_listDBClick(this.parentElement); };
                             _TDColum.onselectstart = function () { return false; };
                             break;
@@ -373,9 +375,13 @@ function MakeListInfoHTML(ConentObject) {
                             
                             _TDColum.innerHTML = p_Subject;
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
-                            _TDColum.onclick = function (event) { event_listclick(this, event); };
-                            _TDColum.onmouseover = function () { event_listMover(this.parentElement); };
-                            _TDColum.onmouseout = function () { event_listMout(this.parentElement); };
+                            _TDColum.onclick = function (event) {
+                                event_listclick(this, event);
+
+                                if (pPreviewShow_HOW == "OFF") {
+                                    event_listDBClick(this.parentElement);
+                                }
+                            };
                             _TDColum.ondblclick = function () { event_listDBClick(this.parentElement); };
                             _TDColum.onselectstart = function () { return false; };
                             break;
@@ -390,8 +396,6 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.innerHTML = p_ReceiveDT;
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
                             _TDColum.onclick = function (event) { event_listclick(this, event); };
-                            _TDColum.onmouseover = function () { event_listMover(this.parentElement); };
-                            _TDColum.onmouseout = function () { event_listMout(this.parentElement); };
                             _TDColum.ondblclick = function () { event_listDBClick(this.parentElement); };
                             _TDColum.onselectstart = function () { return false; };
                             break;
@@ -402,8 +406,6 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.innerHTML = FormatSize(p_Size);
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
                             _TDColum.onclick = function (event) { event_listclick(this, event); };
-                            _TDColum.onmouseover = function () { event_listMover(this.parentElement); };
-                            _TDColum.onmouseout = function () { event_listMout(this.parentElement); };
                             _TDColum.ondblclick = function () { event_listDBClick(this.parentElement); };
                             _TDColum.onselectstart = function () { return false; };
                             break;
@@ -442,6 +444,15 @@ function MakeListInfoHTML(ConentObject) {
                     	var _TDColumSpan = document.createElement("span");
                     	_TDColumSpan.style.padding = "7px 3px";
                     	_TDColumSpan.innerHTML = innerHTML;
+                    	var countryTitle = "";
+                    	
+                    	if (useCountryIP == "YES") {
+                    		countryTitle = p_countryName;
+                    		if (p_mailIP != "") {
+                    			countryTitle += "( " + p_mailIP + " )";
+                    		}
+                    		_TDColumSpan.title = countryTitle;
+                    	}
                     	
                     	if (useMailWriteSenderClick == "YES") {
                     		if (shareId == "" || (shareId != "" && sendPermission == "Y")) {
@@ -460,35 +471,37 @@ function MakeListInfoHTML(ConentObject) {
             				if (useShowSystemCountry == "YES") {
             					
             					var _img = document.createElement("img");
-            					_img.style.width = "18px";
-            					_img.style.height = "18px";
-            					_img.style.verticalAlign = "bottom";
-            					_img.style.padding = "0px 0px 1px 0px";
+            					_img.style.verticalAlign = "middle";
+            					_img.style.padding = "0px 0px 3px 0px";
             					
             					if (p_countryCode == "unknown") {
             						p_countryCode = "qm";
             					}
             					
             					_img.src = "/images/countryIcon/" + p_countryCode + ".png";
+            					_img.title = countryTitle;
             					_TR.lastChild.appendChild(_img);
             				} else {
-            					// 본인국가 표시 안함 
+            					// 본인국가 표시 안함 p_mailIP p_countryName
             					if ( p_countryCode != systemCountryCode.toLowerCase() ) {
             						var _img = document.createElement("img");
-            						_img.style.width = "18px";
-            						_img.style.height = "18px";
-            						_img.style.verticalAlign = "bottom";
-            						_img.style.padding = "0px 0px 1px 0px";
+            						_img.style.verticalAlign = "middle";
+            						_img.style.padding = "0px 0px 3px 0px";
             						
             						if (p_countryCode == "unknown") {
             							p_countryCode = "qm";
             						}
             						
             						_img.src = "/images/countryIcon/" + p_countryCode + ".png";
+            						_img.title = countryTitle;
             						_TR.lastChild.appendChild(_img);
             					}
             				}
-                    	} 
+                    	}
+                    	
+                    	if (useMailConfirm == "YES" && p_mailConfirm == "true") {
+                            _TR.setAttribute("class", "mail_confirm");
+                    	}
                     	
                     	_TR.lastChild.appendChild(_TDColumSpan);
                     }
@@ -616,6 +629,8 @@ function makeReceiverList(parentId) {
         } else {
         	TR.style.backgroundColor = m_strColorOpened;
         }
+        // 2020-08-19 김은실 -우클릭 시 currentFixingId가 다르게 찍히는 현상: 세부목록에도 currentMoverId 적용
+        TR.onmouseover = function () { currentMoverId = parentId; };
         
         var TD1 = document.createElement("TD");
         TD1.style.width = "22px;";
@@ -892,8 +907,37 @@ function GetListInfo(HeaderObject, ContentObject) {
     createNodeAndInsertText(xmlpara, objNode, "FOLDERID", g_moveUrl);
     createNodeAndInsertText(xmlpara, objNode, "SORTTYPE", pOrderyOption);
     pOldSearchKeyword = SearchKeyword;
+    if (mailsearchDetail == "N" && document.getElementsByName('keyword').item(0) == ""){
+    	searchKArray = [];
+    	searchCArray = [];
+    }
+    for (var i = 0 ; i < searchCArray.length; i++ ){
+    	searchKArray[i] = ReplaceText(searchKArray[i], "&", "&amp;");
+    	searchKArray[i] = ReplaceText(searchKArray[i], "<", "&lt;");
+    	searchKArray[i] = ReplaceText(searchKArray[i], ">", "&gt;");
+    	searchKArray[i] = ReplaceText(searchKArray[i], "'", "''");
+    	createNodeAndInsertText(xmlpara, objNode, "KEYWORD", searchKArray[i]);
+    	createNodeAndInsertText(xmlpara, objNode, "CATEGORY", searchCArray[i]);
+    }
     createNodeAndInsertText(xmlpara, objNode, "SEARCH", SearchKeyword);
     createNodeAndInsertText(xmlpara, objNode, "START", pStart);
+    var attachStatus = "all";
+	var andorStatus = "and";
+	if(mailsearchDetail == "Y"){
+		if(document.querySelector("input[name=attachment]:checked").value != null ){
+			attachStatus = document.querySelector("input[name=attachment]:checked").value;
+		} 
+		
+		if(document.querySelector("input[name=andor]:checked").value != null ){
+			andorStatus = document.querySelector("input[name=andor]:checked").value;
+		}
+	}
+	
+	createNodeAndInsertText(xmlpara, objNode, "STARTDATE", startDate);
+	createNodeAndInsertText(xmlpara, objNode, "ENDDATE", endDate);
+	createNodeAndInsertText(xmlpara, objNode, "ATTACHSTATUS", attachStatus);
+	createNodeAndInsertText(xmlpara, objNode, "ANDORSTATUS", andorStatus);
+    
     
     if (p_ListorderValue == "GROUPSUBLIST") {
     	createNodeAndInsertText(xmlpara, objNode, "END", "ALL");
@@ -901,7 +945,7 @@ function GetListInfo(HeaderObject, ContentObject) {
     	createNodeAndInsertText(xmlpara, objNode, "END", pEnd);
     }
     
-    createNodeAndInsertText(xmlpara, objNode, "VIEWSELECTINDEX", select.selectedIndex);
+    createNodeAndInsertText(xmlpara, objNode, "VIEWSELECTINDEX", document.getElementById("select").selectedIndex);
     
     var _url = "/ezEmail/mailGetList.do";
     
@@ -956,11 +1000,49 @@ function GetListInfo_SUB(HeaderObject, ContentObject) {
     createNodeInsert(xmlpara, objNode, "DATA");
     createNodeAndInsertText(xmlpara, objNode, "FOLDERID", g_moveUrl);
     createNodeAndInsertText(xmlpara, objNode, "SORTTYPE", pOrderyOption);
+    
+    pOldSearchKeyword = SearchKeyword;
+    if (mailsearchDetail == "N" && document.getElementsByName('keyword').item(0) == ""){
+    	searchKArray = [];
+    	searchCArray = [];
+    }
+    
+    for (var i = 0 ; i < searchCArray.length; i++ ){
+    	searchKArray[i] = ReplaceText(searchKArray[i], "&", "&amp;");
+    	searchKArray[i] = ReplaceText(searchKArray[i], "<", "&lt;");
+    	searchKArray[i] = ReplaceText(searchKArray[i], ">", "&gt;");
+    	searchKArray[i] = ReplaceText(searchKArray[i], "'", "''");
+    	createNodeAndInsertText(xmlpara, objNode, "KEYWORD", searchKArray[i]);
+    	createNodeAndInsertText(xmlpara, objNode, "CATEGORY", searchCArray[i]);
+    }
     createNodeAndInsertText(xmlpara, objNode, "SEARCH", SearchKeyword);
     createNodeAndInsertText(xmlpara, objNode, "START", pStart);
-    createNodeAndInsertText(xmlpara, objNode, "END", "ALL");
     
-    createNodeAndInsertText(xmlpara, objNode, "VIEWSELECTINDEX", select.selectedIndex);
+    var attachStatus = "all";
+	var andorStatus = "and";
+	if(mailsearchDetail == "Y"){
+		if(document.querySelector("input[name=attachment]:checked").value != null ){
+			attachStatus = document.querySelector("input[name=attachment]:checked").value;
+		} 
+		
+		if(document.querySelector("input[name=andor]:checked").value != null ){
+			andorStatus = document.querySelector("input[name=andor]:checked").value;
+		}
+	}
+	
+	createNodeAndInsertText(xmlpara, objNode, "STARTDATE", startDate);
+	createNodeAndInsertText(xmlpara, objNode, "ENDDATE", endDate);
+	createNodeAndInsertText(xmlpara, objNode, "ATTACHSTATUS", attachStatus);
+	createNodeAndInsertText(xmlpara, objNode, "ANDORSTATUS", andorStatus);
+    
+    
+    if (p_ListorderValue == "GROUPSUBLIST") {
+    	createNodeAndInsertText(xmlpara, objNode, "END", "ALL");
+    } else {
+    	createNodeAndInsertText(xmlpara, objNode, "END", pEnd);
+    }
+    
+    createNodeAndInsertText(xmlpara, objNode, "VIEWSELECTINDEX", document.getElementById("select").selectedIndex);
     
     var url = "/ezEmail/mailGetList.do";
     
@@ -1169,7 +1251,7 @@ function MailListRefreshByTimeout() {
 
 function MailListRefresh() {
 	ContextMenuHidden();
-	
+
 	if (typeof(shareId) != "undefined" && shareId != "") {
 		parent.frames["left"].detailView(shareId);
 	} else {
@@ -1177,7 +1259,14 @@ function MailListRefresh() {
 	}
     
     if (p_ListorderValue != "SENT" && p_ListorderValue != "SUBJECT") {
-        goToPageByNum(MailList.getAttribute("curPage"));
+    	// 20200428 조진호 - 메일 리스트에서 체크박스를 이용한 행위 뒤 체크박스가 풀리도록 추가
+        if (listContentArry.length > 0) {
+            for (var i = 1; i <= listContentArry.length; i++) {
+                document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
+            }
+        }
+    	
+    	goToPageByNum(MailList.getAttribute("curPage"));
     }
     else {
         if (listSubContentArry.length > 0) {
@@ -1207,6 +1296,14 @@ function MailListRefresh() {
             pGroupListClickObject.childNodes.item(0).childNodes.item(0).src = GroupminImg;
             var HeaderObject = document.getElementById("GroupSubHeader");
             var ContentObject = document.getElementById("GroupSubList");
+            
+            // 20200428 조진호 - 메일 리스트에서 체크박스를 이용한 행위 뒤 체크박스가 풀리도록 추가
+            if (listContentArry.length > 0) {
+                for (var i = 1; i <= listContentArry.length; i++) {
+                    document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
+                }
+            }
+            
             listSubContentArry = new Array();
             listContentArry = new Array();
             HeaderIni_SUB(HeaderObject);
@@ -1218,7 +1315,7 @@ function MailListRefresh() {
     }
     
     refreshUnreadCount();
-    
+
     // commented out to maintain the current preview content when the mail list is refreshed : dhlee
 //    prevShow_Clear();
 }
@@ -1289,9 +1386,9 @@ function makePageSelPage() {
     var pageNum = parseInt(document.getElementById("MailList").getAttribute("curPage"));
     
     if (searchMode) {
-    	document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang156 + "<span id='pSearchListCount' style='color:#017BEC;'> " + pSearchListCount + " </span>" + strLang157 + "]";
+    	document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span id='pSearchListCount' style='color:#017BEC;'>" + pSearchListCount + "</span>";
     } else {
-    	document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang255 + "<span id='folderUnreadCount' style='color:#017BEC;'> " + pFolderUnReadCount + " </span>" + strLang257 + " / " + strLang256 + "<span id='folderTotalCount' style='color:#017BEC;'> " + pFolderTotalCount + " </span>" + strLang257 + "</b>]";
+    	document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span id='folderUnreadCount' style='color:#017BEC;'>" + pFolderUnReadCount + " </span> / <span id='folderTotalCount'>" + pFolderTotalCount + " </span></b>";
     }
     
     if (totalPage > 1 && pageNum != 1) {
@@ -1374,33 +1471,37 @@ function event_listContextMenu(event) {
 
     var listsizeheight = document.documentElement.clientHeight;
     var listsizewidth = document.documentElement.clientWidth;
-    var EventDivSize = EventMouseY + 400;
-    if (listsizeheight < EventDivSize) {
-        var Div_ = EventDivSize - listsizeheight;
-        EventMouseY = EventMouseY - Div_;
-    }
-
-    EventDivSize = EventMouseX + 140;
-    if (listsizewidth < EventDivSize) {
-        var Div_ = EventDivSize - listsizewidth;
-        EventMouseX = EventMouseX - Div_;
-    }
+//  var EventDivSize = EventMouseY + 400;   // 2020-08-19 김은실 -컨텍스트메뉴 밑 안보임 현상: 메뉴의 최종 길이를 기준으로, 맥시멈 사이즈를 정하기 위해 밑으로 이동
     if (g_foldertype == "draft") {
-    	$("#ContextMenuDiv tbody :nth-child(3)").css("display","none");
+    	$("#ContextMenuDiv tbody #replyMenu").css("display","none");
     }
     
     var target = event.target ? event.target : event.srcElement;
     var targetTag = target.tagName;
 
     if (targetTag == 'SPAN'){ 
-		$("#ContextMenuDiv tbody :nth-child(9)").css("display","");
-		$("#ContextMenuDiv tbody :nth-child(10)").css("display","");
-		$("#ContextMenuDiv tbody :nth-child(11)").css("display","");
+		$("#ContextMenuDiv tbody #searchName, #searchInThisBoxByName, #searchAllBoxByName").css("display","");
 	} else {
-		$("#ContextMenuDiv tbody :nth-child(9)").css("display","none");
-	    $("#ContextMenuDiv tbody :nth-child(10)").css("display","none");
-	    $("#ContextMenuDiv tbody :nth-child(11)").css("display","none"); 	
+		$("#ContextMenuDiv tbody #searchName, #searchInThisBoxByName, #searchAllBoxByName").css("display","none");
 	}
+
+	// 2020-08-19 김은실 -컨텍스트메뉴 밑 안보임 현상:
+	// 1) JQuery: $().height(): Chrome,IE 모두 테스트 완료.
+	var EventDivSize = EventMouseY + $("#ContextMenuDiv").height() + 70;
+	// 2) JQuery를 사용할 수 없다면, 이 방식으로 할수 있음.
+	// document.getElementById("ContextMenuDiv").style.display = "block";   
+	// var EventDivSize = EventMouseY + document.getElementById("ContextMenuDiv").offsetHeight + 70;   
+	// document.getElementById("ContextMenuDiv").style.display = "none";
+    if (listsizeheight < EventDivSize) {
+    	var Div_ = EventDivSize - listsizeheight;
+    	EventMouseY = EventMouseY - Div_;
+    }
+    
+    EventDivSize = EventMouseX + 140;
+    if (listsizewidth < EventDivSize) {
+    	var Div_ = EventDivSize - listsizewidth;
+    	EventMouseX = EventMouseX - Div_;
+    }
 //    document.getElementById("mailPanel").style.display = "";
     document.getElementById("ContextMenuDiv").style.left = EventMouseX + "px";
     document.getElementById("ContextMenuDiv").style.top = EventMouseY + "px";
@@ -1588,7 +1689,7 @@ var PressShiftKey = false;
 var PressCtrlKey = false;
 function event_listOnkeyUp(event) {
 	
-	if (event.target.className == "Mail_Input") {
+	if (event.target.className == "Mail_Input" || event.target.name == "keyword" || event.target.name == "prekeyword") {
 		return;
 	}
 	

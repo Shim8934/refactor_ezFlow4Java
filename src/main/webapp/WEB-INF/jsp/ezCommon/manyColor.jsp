@@ -4,13 +4,13 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code="ezBoard.t176" /></title>
+		<title><spring:message code="ezEmail.t408" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">    
 	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css" />    
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript">
 		    var ReturnFunction;
-		    var type = "${type}";
+		    var type = "<c:out value='${type}'/>";
 		    window.onload = function()
 		    {
 		        try {

@@ -4,6 +4,6 @@
 <html>
 	<frameset cols="220,*" frameborder="0" border="0" frameSpacing="0">
 		<frame src="/ezApprovalG/apprGLeft.do?listType=${listType}" name="left" marginwidth="0"	marginheight="0" scrolling="auto" frameborder="0" noresize>
-		<frame src="<spring:message code='main.kms4' />" name="right" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0">
+		<frame src="" name="right" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0">
 	</frameset>
 </html>

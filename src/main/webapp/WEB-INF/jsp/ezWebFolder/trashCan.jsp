@@ -29,6 +29,8 @@
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/adminTable.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/popup.js')}"></script>
+	<!-- module -->
+	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/duplicate-file.js')}"></script>
 	<link href="${util.addVer('/js/jquery/jquery.modal.css')}" rel="stylesheet" type="text/css" />
     <script type="text/javascript">
    		var lang = ${userInfo.lang};
@@ -57,6 +59,10 @@
         var searchFileName = "";
         var searchCreateName = "";
         var tableView = new TableView();
+        var _selectedCell = null;
+    	var _cellInfo        = {};
+    	var sortColumn = null;
+    	var sortType = null;
 		
 		window.onresize = function () {
 			var reheight = document.documentElement.clientHeight - 210;
@@ -103,6 +109,13 @@
 				optionView(event.target);
 			});
 			
+			var listHeader = document.getElementsByClassName("headListClick");
+			for(var i = 0 ; i <listHeader.length; i++) {
+				listHeader[i].addEventListener("click", function(event) {
+					sortByHeader(this);
+				});
+			}
+			
 			document.getElementById("listcount").addEventListener("change", function(event) {
 				optionHidden();
 				blockSize = this.value;
@@ -115,7 +128,7 @@
 	            changeYear: true,
 	            autoSize: true,
 	            showOn: "both",
-	            buttonImage: "/images/ImgIcon/calendar-month.gif",
+	            buttonImage: "/images/ImgIcon/calendar-month.png",
 	            buttonImageOnly: true
 	        });
 	
@@ -149,6 +162,39 @@
 	        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 		}
 	    
+		function sortByHeader(cell) {
+			var column = cell.getAttribute("data-column");
+			
+			if (!column) {return;}
+			
+			if (_selectedCell != null) {
+				var orderOption = cell.getAttribute("orderoption") == "DESC" ? "ASC" : "DESC";
+				cell.setAttribute("orderoption", orderOption);
+				
+				if (cell.cellIndex != _selectedCell) {
+					var lastSelectedCell = document.getElementById("BoardList_THEAD").rows[0].cells[_selectedCell];
+					lastSelectedCell.removeChild(lastSelectedCell.lastElementChild);
+					var spanElmt = document.createElement("span");
+					cell.appendChild(spanElmt);
+				}
+				
+				var spanImg       = cell.lastElementChild;
+				spanImg.className = orderOption == "DESC" ? "spanDown" : "spanUp";
+			} else {
+				cell.setAttribute("orderoption", "DESC");
+				var spanElmt       = document.createElement("span");
+				spanElmt.className = "spanDown";
+				cell.appendChild(spanElmt);
+			}
+			
+			_selectedCell = cell.cellIndex;
+			
+			var order     = cell.getAttribute("orderoption");
+			sortType = order;
+			sortColumn = column;
+			renderFileList();
+		}
+		
 	    function changeValue(value) {
 	    	   searchFileType = value;
 	    	   currentPage = 1;
@@ -176,7 +222,9 @@
 					"searchFileType" : searchFileType,
 					"column"         : orderInf.col ? orderInf.col : "",
 					"order"          : orderInf.ord ? orderInf.ord : "",
-					"listCount" : blockSize
+					"listCount" 	 : blockSize,
+					"sortType"		 : sortType,
+					"sortColumn"	 : sortColumn
 				},
 				success : function (data) {
 					result = data.data;
@@ -199,8 +247,10 @@
 					$('#tblFileList tr td').remove();
 					renderFileListElement(trashCanList);
 					makePageSelPage();
-					document.getElementById("mailBoxInfo").innerHTML = " - [ 폴더 " + "<span style='color:#017BEC;'>" 
-					+ folderCnt +" </span>"+ strLang42 +" / 파일 " + "<span style='color:#017BEC;'>" + fileCnt +" </span>" + strLang42 + "]";
+					
+					document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp; " + messages.strLang15 + " <span style='color:#017BEC;'>" + folderCnt +" </span>"
+					 + " / " + messages.strLang16 + " <span style='color:#017BEC;'> " 
+						+ fileCnt +" </span>";
 					hideProgress();
 				},
 				error : function(error) {
@@ -316,27 +366,26 @@
 	        document.getElementById("SearchOption").setAttribute("mode", "off");
 	    }
    	   
-		function optionView(obj){
-			if (obj.getAttribute("mode") == "off") {
-			    document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
-				document.getElementById("layer_Viewpopup").style.top = "100px";
-				document.getElementById("layer_Viewpopup").style.display = "";
-				obj.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
-				obj.setAttribute("mode", "on");
-			} else {
-				optionHidden();
-			}
-		}
-   	   
+		function optionView(obj) {
+	   		 if (obj.getAttribute("mode") == "off") {
+	   	        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
+ 	            document.getElementById("layer_Viewpopup").style.top = "100px";
+	   	        document.getElementById("layer_Viewpopup").style.display = "";
+	   	        obj.setAttribute("class", "icon16 btn_onarrow_down");
+	   	        obj.setAttribute("mode", "on");
+	   	    } else {
+	   	        optionHidden();
+	   	    }
+	   	}
+ 	   
 	 	function optionHidden() {
-			document.getElementById("layer_Viewpopup").style.display = "none";
-			document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
-			document.getElementById("webfolderlistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");    
+	 	    document.getElementById("layer_Viewpopup").style.display = "none";
+	 	    document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
+	 	    document.getElementById("webfolderlistoptiondiv").setAttribute("class", "icon16 btn_arrow_down");
 	 	}
          
 		function refreshView() {
 			renderFileList();
-			window.parent.frames["left"].drawVolume();
 		}
        
 		function filePermanentDelete() {
@@ -360,7 +409,7 @@
 				}
 			}
 			
-			showPanel(450, 250, "/ezWebFolder/permanentDeleteConfirm.do?fileList=" + filesList.toString() + "&folderList=" + folderList.toString());
+			showPanel(450, 200, "/ezWebFolder/permanentDeleteConfirm.do?fileList=" + filesList.toString() + "&folderList=" + folderList.toString());
 			refreshView();
 		}
 
@@ -432,8 +481,19 @@
 					   alert("<spring:message code = 'ezWebFolder.t292'/>");
 					} else if (data.code == 3) {
 						alert("<spring:message code = 'ezWebFolder.t28'/>");
-					} else if (data.code == 4) {
-						alert("<spring:message code = 'ezWebFolder.t290'/>");
+					} else {
+						if (data.code == 4) {
+							alert("<spring:message code = 'ezWebFolder.t290'/>");
+						}
+						
+						// 중복된 정보가 존재한다면 알림
+						if (data.duplicateInfoArray && data.duplicateInfoArray.length > 0) {
+							alert("<spring:message code = 'webfolder.duplicate.restore.error'/>");
+						}
+						
+						if (data.hasExceededCapacities) {
+							alert("<spring:message code = 'webfolder.trash.restore.error.capacity'/>");
+						}
 					}
 				},
 				error : function(error) {
@@ -488,11 +548,27 @@
 						
 				}
 			}
-			 
 			/*var lastTh = $("#BoardList_TH th").last();
 			if (lastTh.attr("id") == null) {
 				lastTh.css("display", "none");
 			}*/
+		}
+		
+		function openLeftPanel() {
+			var leftFrame = window.parent.frames["left"].document;
+			var blockLeft = leftFrame.getElementById("bnkBlockLeft");
+			var height    = Math.max(leftFrame.documentElement.clientHeight, leftFrame.documentElement.scrollHeight);
+			leftFrame.body.style.overflow = "hidden";
+			blockLeft.style.height        = height + "px";
+			blockLeft.style.display       = "";
+		}
+
+		function closeLeftPanel() {
+			var leftFrame = window.parent.frames["left"].document;
+			var blockLeft = leftFrame.getElementById("bnkBlockLeft");
+			leftFrame.body.style.overflow = "auto";
+			blockLeft.style.height        = "100%";
+			blockLeft.style.display       = "none";
 		}
     </script>
 </head>
@@ -503,10 +579,14 @@
 			<li><span onClick="restoreTrashCan()"><spring:message code='ezWebFolder.t287'/></span></li>
 			<li><span onClick="moveTraschCan()"><spring:message code='ezWebFolder.t282'/></span></li>
 			<li><span onClick="filePermanentDelete()"><spring:message code='ezWebFolder.t19'/></span></li>
-			<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123'/></span></li>
-			<li id="right" style="float:right;"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"></li>
-			<!-- <li><img src="/images/i_bar.gif"></li> -->
-			<li id="right" style="float:left; height: 28px;">
+			<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><span class="icon16 icon16_search"></span></li>
+			<!-- <li id="right" style="float:right;"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"></li> -->
+			<div class="sub_frameIcon" style="float:right">
+				<div class="sub_frameIconUL02">
+				  	<p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="webfolderlistoptiondiv"></span></p>  
+				</div>
+			</div>
+			<li>
 				<select class="select" id="idSelect" onchange="changeValue(this.value);">
 					<option value=""><spring:message code='ezWebFolder.t191'/></option>
 					<option value="document"><spring:message code='ezWebFolder.t192'/></option>
@@ -564,16 +644,16 @@
 				<thead id ="BoardList_THEAD">
 					<tr>
 						<th class = "wfFilecheck"><input type="checkbox"></th>
-						<th headers="ft" class = "wfFileType" style="text-align: center; "><spring:message code='ezWebFolder.t188'/></th>
-						<th headers="fn" class = "wfFileName" ><spring:message code='ezWebFolder.t156'/></th>
-						<th headers="fs" class = "wfFileSize" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap; text-align: center; word-wrap: normal;" ><spring:message code='ezWebFolder.t157'/></th>
-						<th headers="un" class = "wfFileCreator" ><spring:message code='ezWebFolder.t189'/></th>
-						<th headers="cd" class = "wfFileFavoriteDate" ><spring:message code='ezWebFolder.t190'/></th>
-						<th headers="dd" class = "wfFileFavoriteDate" ><spring:message code='ezWebFolder.t288'/></th>
-						<th              class = "wfFilePath"><spring:message code='ezWebFolder.t199'/></th>
-					</tr>
-				</thead>
-			</table>
+						<th headers="ft" class = "wfFileType		 headListClick" data-column="TRASHCAN_ICON_URL" style="text-align: center; "><spring:message code='ezWebFolder.t188'/></th>
+						<th headers="fn" class = "wfFileName		 headListClick" data-column="TRASHCAN_NAME" ><spring:message code='ezWebFolder.t156'/></th>
+						<th headers="fs" class = "wfFileSize		 headListClick" data-column="TRASHCAN_SIZE" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap; text-align: center; word-wrap: normal;" ><spring:message code='ezWebFolder.t157'/></th>
+						<th headers="un" class = "wfFileCreator		 headListClick" data-column="CREATE_NAME1" ><spring:message code='ezWebFolder.t189'/></th>
+						<th headers="cd" class = "wfFileFavoriteDate headListClick" data-column="CREATE_DATE" ><spring:message code='ezWebFolder.t190'/></th>
+						<th headers="dd" class = "wfFileFavoriteDate headListClick" data-column="UPDATE_DATE" ><spring:message code='ezWebFolder.t288'/></th>
+						<th              class = "wfFilePath		 " data-column="TRASHCAN_PATH"><spring:message code='ezWebFolder.t199'/></th>
+					</tr>                                           
+				</thead>                                            
+			</table>                                                
 			<div id="dragDropArea"  style="overflow-y:auto;white-space:nowrap;" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)">
 				<table class="mainlist" style="width: 100%;margin:0px 0px 0px !important; white-space:nowrap;" id="tblFileList">
 			
@@ -619,7 +699,7 @@
 		            <td><input type="text" id="searchFileName" style="width:99%" value="" name="searchFileName"></td>
 		        </tr>  
 		         <tr>
-		            <th style="text-align:center"><spring:message code='ezWebFolder.t154' /></th><!-- 작성자 -->
+		            <th style="text-align:center"><spring:message code='ezWebFolder.t154' /></th><!-- 생성자 -->
 		            <td><input type="text" id="searchCreateName" style="width:99%" value="" name="searchCreateName"></td>
 		        </tr>    
 			</table>

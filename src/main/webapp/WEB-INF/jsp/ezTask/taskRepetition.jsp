@@ -28,7 +28,7 @@
 		
 		    var ReturnFunction;
 		    var m_dialogArguments;
-		    var lang = "${userInfo.lang}";
+		    var lang = "<c:out value='${userInfo.lang}'/>";
 		    window.onload = function () {
 		        try {
 		            m_dialogArguments = parent.task_repetition_cross_dialogArguments[0];
@@ -586,7 +586,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        $("#Edatepicker").datepicker({
@@ -594,7 +594,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");

@@ -38,7 +38,7 @@ var strLang80 = "上一页"
 var strLang81 = "下一页"
 var strLang82 = "总 "
 var strLang83 = "个"
-var strLang535 = "沒有數據。";
+var strLang535 = "\"沒有數據\"";
 var strLang5351 = "名";
 
 /* 2017-11-01 장진혁 */

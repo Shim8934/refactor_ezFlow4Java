@@ -48,7 +48,7 @@ function setButtons(mode) {
 		changeYear: true,
 		autoSize: true,
 		showOn: "both",
-		buttonImage: "/images/ImgIcon/calendar-month.gif",
+		buttonImage: "/images/ImgIcon/calendar-month.png",
 		buttonImageOnly: true,
 		dateFormat: "yy-mm-dd"
 	});
@@ -58,7 +58,7 @@ function setButtons(mode) {
 		changeYear: true,
 		autoSize: true,
 		showOn: "both",
-		buttonImage: "/images/ImgIcon/calendar-month.gif",
+		buttonImage: "/images/ImgIcon/calendar-month.png",
 		buttonImageOnly: true,
 		dateFormat: "yy-mm-dd"
 	});
@@ -66,25 +66,28 @@ function setButtons(mode) {
 	var companySelectbox      = document.getElementById("companyList");
 	companySelectbox.onchange = mode == 'dept' ? function() {changeCompanyForDeptFile();} : function() {changeCompanyForCompFile();};
 	
-	var libttns = document.getElementById("mainmenu2").firstElementChild.children;
-	libttns[0].firstElementChild.onclick  = function() {fileDownload();};
-	if (folderLevel != '0') {
-		libttns[1].firstElementChild.onclick  = function() {fileUpload();};
-		libttns[2].firstElementChild.onclick  = function() {fileDelete();};
-		libttns[3].firstElementChild.onclick  = function() {fileRename();};
-		libttns[4].firstElementChild.onclick  = function() {fileMove();};
-		libttns[5].firstElementChild.onclick  = function() {openSearchPanel();};
-		libttns[6].firstElementChild.onclick  = function() {refreshView();};
-		libttns[7].firstElementChild.onchange = function() {search_Set("1");};
-	}
-	else {
-		libttns[1].firstElementChild.onclick  = function() {fileDelete();};
-		libttns[2].firstElementChild.onclick  = function() {fileRename();};
-		libttns[3].firstElementChild.onclick  = function() {fileMove();};
-		libttns[4].firstElementChild.onclick  = function() {openSearchPanel();};
-		libttns[5].firstElementChild.onclick  = function() {refreshView();};
-		libttns[6].firstElementChild.onchange = function() {search_Set("1");};
-	}
+	var libttns = document.getElementById("mainmenu").firstElementChild.children;
+//  아래 내용 inline으로 추가함.
+//	libttns[0].firstElementChild.onclick  = function() {fileDownload();};
+	// root에서 업로드 못하게 하려면 아래 주석을 풀면됨
+//	if (folderLevel != '0') {
+//	if (libttns.length === 9) {
+//		libttns[1].firstElementChild.onclick  = function() {fileUpload();};
+//		libttns[2].firstElementChild.onclick  = function() {fileDelete();};
+//		libttns[3].firstElementChild.onclick  = function() {fileRename();};
+//		libttns[4].firstElementChild.onclick  = function() {fileMove();};
+//		libttns[5].firstElementChild.onclick  = function() {openSearchPanel();};
+//		libttns[6].firstElementChild.onclick  = function() {refreshView();};
+//		libttns[7].firstElementChild.onchange = function() {search_Set("1");};
+//	}
+//	else {
+//		libttns[1].firstElementChild.onclick  = function() {fileDelete();};
+//		libttns[2].firstElementChild.onclick  = function() {fileRename();};
+//		libttns[3].firstElementChild.onclick  = function() {fileMove();};
+//		libttns[4].firstElementChild.onclick  = function() {openSearchPanel();};
+//		libttns[5].firstElementChild.onclick  = function() {refreshView();};
+//		libttns[6].firstElementChild.onchange = function() {search_Set("1");};
+//	}
 	
 	var listCountElmt = document.getElementById("listCount");
 	listCountElmt.onchange = function() {search_Set("1");};
@@ -100,7 +103,16 @@ function setButtons(mode) {
 	fileUpElmt.onclick      = function() {this.value = null;};
 	
 	var mailPanelElmt       = document.getElementById("mailPanel");
-	mailPanelElmt.onclick   = function() {closeAllPopups();};
+	mailPanelElmt.onclick   = function() {
+		if (window.duplicateFile && duplicateFile.isProcessing()) {
+			duplicateFile.onClosePopup({
+				code: "SKIP",
+				looping: false
+			});
+		}
+		
+		closeAllPopups();
+	};
 	
 	toggleUploadBttn(folderLevel);
 }
@@ -171,7 +183,9 @@ function search_Set(pPage) {
 			"column"      : orderInf.col ? orderInf.col : "",
 			"order"       : orderInf.ord ? orderInf.ord : "",
 			"listCntSize" : listCnt,
-			"folderId"    : folderId
+			"folderId"    : folderId,
+			"sortType"	  : sortType,
+			"sortColumn"  : sortColumn
 		},
 		dataType: "JSON",
 		async: false,
@@ -188,6 +202,10 @@ function search_Set(pPage) {
 					currentPage = (currentPage == 0 && totalPages > 0)  ? 1          : currentPage;
 					makePageSelPage();
 					renderData(result);
+					
+					if (window.capacity) {
+						capacity.load();
+					}
 					break;
 				case 1:
 					alert(resultErr1);
@@ -223,9 +241,9 @@ function startSearch() {
 	
 	if (!sDateVal && !eDateVal && !fileExtVal && !fileNameVal && !userNameVal) { alert(strLang36); return;}
 	
-	if ((!sDateVal && eDateVal) || (sDateVal && !eDateVal)) {alert(strLang34); return;}
+	if ((!sDateVal && eDateVal) || (sDateVal && !eDateVal)) {alert(strLang43); return;}
 	
-	if (sDateVal && eDateVal) {if (sDateVal > eDateVal) {alert(strLang35); return;}}
+	if (sDateVal && eDateVal) {if (sDateVal > eDateVal) {alert(strLang43); return;}}
 	
 	startDateStr = sDateVal;
 	endDateStr   = eDateVal;
@@ -308,7 +326,7 @@ function fileDelete() {
 	if (filesList == null) {alert(strLang38); return;}
 	
 	openLeftPanel();
-	DivPopUpShow(450, 250, "/ezWebFolder/deleteConfirm.do?fileList=" + filesList.toString());
+	DivPopUpShow(450, 200, "/ezWebFolder/deleteConfirm.do?fileList=" + filesList.toString());
 }
 
 function fileRename() {
@@ -319,7 +337,7 @@ function fileRename() {
 	
 	var fileId = filesList[0];
 	openLeftPanel();
-	DivPopUpShow(450, 250, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
+	DivPopUpShow(450, 200, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
 }
 
 function fileMove() {
@@ -350,14 +368,7 @@ function refreshView() {
 function toggleUploadBttn(levelValue) {
 	var dragDropAreaElmt = document.getElementById("dragDropArea");
 	
-	if (levelValue == '0') {
-		dragDropAreaElmt.ondragenter = null;
-		dragDropAreaElmt.ondragover  = null;
-		dragDropAreaElmt.ondragover  = null;
-	}
-	else {
-		dragDropAreaElmt.ondragenter = function(e) {onDragEnter(e)};
-		dragDropAreaElmt.ondragover  = function(e) {onDragOver(e)};
-		dragDropAreaElmt.ondrop      = function(e) {onDrop(e)};
-	}
+	dragDropAreaElmt.ondragenter = function(e) {onDragEnter(e)};
+	dragDropAreaElmt.ondragover  = function(e) {onDragOver(e)};
+	dragDropAreaElmt.ondrop      = function(e) {onDrop(e)};
 }

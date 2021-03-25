@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -28,8 +29,8 @@
 		    var g_SepAttachXml;
 		    var g_RegType="";
 		    var g_AVType="";
-		    var CompanyID = "${userInfo.companyID}";
-		    var UserLang = "${userInfo.lang}";
+		    var CompanyID = "<c:out value='${userInfo.companyID}'/>";
+		    var UserLang = "<c:out value='${userInfo.lang}'/>";
 		    var RetValue;
 		    var ReturnFunction;
 		    var nonElecRec = "";
@@ -86,7 +87,7 @@
 		
 		        g_RecTypeCode = SelectSingleNodeValueNew(objCabInfoXml, "RESULT/RECTYPE");
 		        
-		        if("${userInfo.lang}" =="1") {
+		        if("<c:out value='${userInfo.lang}'/>" =="1") {
 		        	tdCabinetName.innerHTML = SelectSingleNodeValueNew(objCabInfoXml, "RESULT/TITLE");
 		        } else {
 		        	tdCabinetName.innerHTML = SelectSingleNodeValueNew(objCabInfoXml, "RESULT/TITLE2");

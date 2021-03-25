@@ -33,19 +33,18 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CheckLines_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/showModalDialog.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezDraft_HWP.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
 	    <script type="text/javascript">
-	        var FormHref = "${formURL}";
-	        var DraftFlag = "${draftFlag}";
-	        var DocType = "${formDocType}";
-	        var SusinSN = "${susinSN}";
-	        var DocState = "${docState}";
-	        var ListType = "${listType}";
-	        var AprState = "${aprState}";
-	        var pEndDocHref = "${dirPath}";
-	        var _connkey_ = "${connkey}";
+	        var FormHref = "<c:out value ='${formURL}'/>";
+	        var DraftFlag = "<c:out value ='${draftFlag}'/>";
+	        var DocType = "<c:out value ='${formDocType}'/>";
+	        var SusinSN = "<c:out value ='${susinSN}'/>";
+	        var DocState = "<c:out value ='${docState}'/>";
+	        var ListType = "<c:out value ='${listType}'/>";
+	        var AprState = "<c:out value ='${aprState}'/>";
+	        var pEndDocHref = "<c:out value ='${dirPath}'/>";
+	        var _connkey_ = "<c:out value ='${connkey}'/>";
 	        var pFormHref = new String();
 	        var pFormID = new String();
 	        var pDocID = new String();
@@ -83,7 +82,7 @@
 	        var pDocTitle;
 	        var pMaxFileSize = '5';
 	        var isExtDoc = "N";
-	        var isTmpDocID = "${isTmpDoc}";
+	        var isTmpDocID = "<c:out value ='${isTmpDoc}'/>";
 	        var gPublic = "";
 	        var draftFlag = false;
 	        var btnSendDraftEnable = "false"
@@ -98,29 +97,29 @@
 	        var pLCasn, pMCasn, pPer, pLClsn, pMClsn;
 	        var arr_userinfo = new Array();
 	        arr_userinfo[0] = "user";
-	        arr_userinfo[1] = "${userInfo.id}";
-	        arr_userinfo[2] = "${userInfo.displayName}";
-	        arr_userinfo[3] = "${userInfo.title}";
-	        arr_userinfo[4] = "${userInfo.deptID}";
-	        arr_userinfo[5] = "${userInfo.deptName}";
-	        arr_userinfo[6] = "${userInfo.jikChek}";
+	        arr_userinfo[1] = "<c:out value ='${userInfo.id}'/>";
+	        arr_userinfo[2] = "<c:out value ='${userInfo.displayName}'/>";
+	        arr_userinfo[3] = "<c:out value ='${userInfo.title}'/>";
+	        arr_userinfo[4] = "<c:out value ='${userInfo.deptID}'/>";
+	        arr_userinfo[5] = "<c:out value ='${userInfo.deptName}'/>";
+	        arr_userinfo[6] = "<c:out value ='${userInfo.jikChek}'/>";
 	        arr_userinfo[7] = "N";
-	        arr_userinfo[8] = "${userInfo.email}";
+	        arr_userinfo[8] = "<c:out value ='${userInfo.email}'/>";
 	        arr_userinfo[9] = "";
-	        arr_userinfo[10] = "${susinAdmin}";
-	        arr_userinfo[11] = "${userInfo.displayName1}";
-	        arr_userinfo[12] = "${userInfo.displayName2}";
-	        arr_userinfo[13] = "${userInfo.title1}";
-	        arr_userinfo[14] = "${userInfo.title2}";
-	        arr_userinfo[15] = "${userInfo.deptName1}";
-	        arr_userinfo[16] = "${userInfo.deptName2}";
-	        var pCompanyID = "${userInfo.companyID}";
+	        arr_userinfo[10] = "<c:out value ='${susinAdmin}'/>";
+	        arr_userinfo[11] = "<c:out value ='${userInfo.displayName1}'/>";
+	        arr_userinfo[12] = "<c:out value ='${userInfo.displayName2}'/>";
+	        arr_userinfo[13] = "<c:out value ='${userInfo.title1}'/>";
+	        arr_userinfo[14] = "<c:out value ='${userInfo.title2}'/>";
+	        arr_userinfo[15] = "<c:out value ='${userInfo.deptName1}'/>";
+	        arr_userinfo[16] = "<c:out value ='${userInfo.deptName2}'/>";
+	        var pCompanyID = "<c:out value ='${userInfo.companyID}'/>";
 	        var pUserID = arr_userinfo[1];
 	        var KuyjeType = "002";
-	        var signDateFormat = "${optSignDateFormat}";
-	        var isSplit = "${optIsSplit}";
-	        var SplitKind = "${optSplitKind}";
-	        var sihangURL = "${sihangURL}";
+	        var signDateFormat = "<c:out value ='${optSignDateFormat}'/>";
+	        var isSplit = "<c:out value ='${optIsSplit}'/>";
+	        var SplitKind = "<c:out value ='${optSplitKind}'/>";
+	        var sihangURL = "<c:out value ='${sihangURL}'/>";
 	        var CurAprType = "";
 	        var NextAprType = "";
 		    var pSummery = "", pSpecialRecordCode = "", pPublicityCode = "", pPublicityYN = "";
@@ -136,10 +135,10 @@
 	        var CheckGubun = "1";
 	        var HapyuiArea = 0;
 	        var AprLineArea = 0;
-	        var DocSN = "${docSN}";
+	        var DocSN = "<c:out value ='${docSN}'/>";
 	        var AutoSave = "save";
 	        var Saveflag = false;
-	        var pUse_Editor = "${useEditor}";
+	        var pUse_Editor = "<c:out value ='${useEditor}'/>";
 	        var tempSecurity = "";
 	        var tempKeep = "";
 	        var tempUrgent = "N";
@@ -152,17 +151,31 @@
 	        var tempItemName2 = "";
 	        var SummaryOuterReceiverList = "";
 	        var g_szUserID = arr_userinfo[8];
-	        var g_senderinfo = "${userInfo.companyName}" + ", " + "${userInfo.deptName}" + ", " + "${userInfo.title}";
-	        var approvalFlag = "${approvalFlag}";
-	        var isHWP = "${isHWP}";
+	        var g_senderinfo = "<c:out value ='${userInfo.companyName}'/>" + ", " + "<c:out value ='${userInfo.deptName}'/>" + ", " + "<c:out value ='${userInfo.title}'/>";
+	        var approvalFlag = "<c:out value ='${approvalFlag}'/>";
+	        var isHWP = "<c:out value ='${isHWP}'/>";
 	        var isUsed = "";
 	        var ext = "hwp";
-	        var nonElecRec = "${nonElecRec}";
+	        var nonElecRec = "<c:out value ='${nonElecRec}'/>";
 	        var nonElecRecInfoXml = "", nonSepAttachLVXml = "", sepAttachCheckYN = "";
-	        var useReceiveDocNo = "${useReceiveDocNo}";
+	        var useReceiveDocNo = "<c:out value ='${useReceiveDocNo}'/>";
 	        var orgCompanyID = "<c:out value='${userInfo.companyID}'/>";
-	        var docNumZeroCnt = "${docNumZeroCnt}";
+	        var docNumZeroCnt = "<c:out value ='${docNumZeroCnt}'/>";
+			var isUsed = "<c:out value ='${isUsed}'/>";
+			var beforeDocID = "<c:out value ='${beforeDocID}'/>";
+			var beforeUrl = "<c:out value ='${beforeUrl}'/>";
+			var apprReuseConfig = "<c:out value='${apprReuseConfig}' />";
+			//원문정보공개
+			var useOpenGov = "<c:out value='${useOpenGov}' />";
+			var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate="";
+			var newpDocID = "";
 	        var useRedraftOpinionKeep = "<c:out value='${useRedraftOpinionKeep}'/>";
+	        var formAprOption = "<c:out value='${formAprOption}'/>";
+	        var passAprLine = "";
+	        
+	        var gpGubun;
+			//부서감사 관련 2020-01-14 홍대표
+			var deptgamsaCount = 0;
 	        
 	        window.onload = function () {
 	            try {
@@ -257,6 +270,22 @@
 	                    window.focus();
 	                    HwpCtrl.focus();
 	
+
+						var targetText = GetDocumentElement(HwpCtrl, "CONNROOT", true);
+
+						if (targetText != null && targetText.length > 0 ) {
+
+							  var xmlData = loadXMLString(targetText);
+    	
+    						  var connNodes = GetChildNodes(xmlData.documentElement);
+
+							  if(connNodes.length > 0) {
+								  document.getElementById('btnSaveServer').style.display = 'none';		
+							  }
+
+							
+						} 
+	
 	                    if (pFormHref == "") {
 	                        hideProgress();
 	                        getExtInfo();
@@ -324,35 +353,29 @@
 	        }
 	
 			function GetFormType(pFormID) {
-			    try {
-			        var Result = "";
-			        var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
-			        var xmlhttp = createXMLHttpRequest();
-			        var objNode;
-			        createNodeInsert(xmlpara, objNode, "PARAMETER");
-			        createNodeAndInsertText(xmlpara, objNode, "FORMID", pFormID);
-			        createNodeAndInsertText(xmlpara, objNode, "COMPANYID", pCompanyID);
-			
-			        xmlhttp.open("Post", "aspx/GetFormDetail.aspx", false);
-			        xmlhttp.send(xmlpara);
-			
-			        if (xmlhttp.statusText == "OK") {
-			            if (loadXMLString(xmlhttp.responseText).getElementsByTagName("FORMDOCTYPE").length > 0) {
-			                Result = getNodeText(loadXMLString(xmlhttp.responseText).getElementsByTagName("FORMDOCTYPE").item(0));
+		        var Result = "";
+		        $.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		data : {
+		    			formID : pFormID,
+		    			companyID : pCompanyID
+		    		},
+		    		url : "/ezApprovalG/getFormDetail.do",
+		    		success: function(xml){
+		    			xml = loadXMLString(xml);
+			            if (xml.getElementsByTagName("FORMDOCTYPE").length > 0) {
+			                Result = xml.getElementsByTagName("FORMDOCTYPE").item(0).text;
 			            }
-			        }
-			
-			        xmlpara = null;
-			        xmlhttp = null;
-			        return Result;
-			
-			    } catch (e) {
-			        alert("ezdraftui_hwp.GetFormType()::" + e.description);
-			    }
+		    		}        			
+		    	});
+
+		        return Result;
 			}
 	
 			function openForm() {
-			    openFormUI();
+			    openFormUIHwp();
 			}
 	
 			function process_AfterOpen() {
@@ -468,7 +491,7 @@
 			}
 	
 			function btnSelForm_onclick() {
-			    var check = Form_check();
+			    var check = Form_checkHwp();
 			    if (check == "OK")
 			        openForm();
 			}
@@ -587,6 +610,20 @@
 	                        }
 	                    }
 		            }
+
+					var FieldLists = HwpCtrl.GetFieldList();
+					var Fields = FieldLists.split(";");
+					var tempFields = FieldLists.split(";");
+
+					tempFields = Fields.reduce(function(tempArr,curr,index) {
+						tempArr.indexOf(curr) > -1 ? tempArr : tempArr.push(curr);
+						return tempArr;
+					},[]);
+
+					if (Fields.length !== tempFields.length) {
+						OpenAlertUI("동일한 Field가 존재합니다. 문서를 다시 확인해주세요.");
+						return;
+					}
 		
 		            if (HwpCtrl.CheckFieldExist("doctitle"))
 		                pDocTitle = trim(HwpCtrl.GetFieldText("doctitle"));
@@ -781,6 +818,12 @@
 	                            pAlertContent = "<spring:message code='ezApprovalG.t146'/>";
 	                            OpenAlertUI(pAlertContent);
 	                            draftFlag = true;
+	                          
+	              		        //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
+	              		        if (parent.opener != null && parent.opener.getApprovalList != undefined) { 
+	              		        	parent.opener.getApprovalList("reject");
+	              		        }
+	                            
 	                            window.close();
 	                        } else {
 	                            UndoSignInfo(rtnSignInfo);
@@ -961,13 +1004,18 @@
 			    } catch (e) { }
 			
 			    try {
-			        if (bAttachProcess == false)
-			            window.opener.Refresh_Window();
+// 			        if (bAttachProcess == false)
+			        	//Refresh_Window() 사용안함으로 주석처리
+			            //window.opener.Refresh_Window();
 			    } catch (e) { }
 			
 			    try {
 			        bAttachProcess = true;
 			    } catch (e) { }
+			    
+		        try {
+		            window.opener.getApprGraph("appr");
+		        } catch (e) { }
 			}
 	
 			function btn_Attach_onclick() {
@@ -977,38 +1025,7 @@
 			function btnMail_onclick() {
 			    window.open("/ezEmail/mailWrite.do?cmd=docsend&docID=" + pDocID + "&docHref=" + pFormHref, '', 'height=700,width=690,resizable=yes,scrollbars=no' + GetOpenPosition(690, 700));
 			}
-	
-			function btnDocInfo_onclick() {
-			    try {
-			        var parameter = new Array();
-			        parameter[0] = tempSecurity;
-			        parameter[1] = tempUrgent;
-			        parameter[2] = pSummery;
-			        parameter[3] = pSpecialRecordCode;
-			        parameter[4] = pPublicityCode;
-			        parameter[5] = pLimitRange;
-			        parameter[6] = pPageNum;
-			        parameter[7] = tempSecurityDate;
-			
-			        var url = "/myoffice/ezApprovalG/ezDocInfo/ezDocInfoG.aspx";
-			        var feature = "status:no;dialogWidth:430px;dialogHeight:605px;help:no;scroll:no;edge:sunken;";
-			        var RtnVal = window.showModalDialog(url, parameter, feature);
-			
-			        tempSecurity = RtnVal[0];
-			        tempUrgent = RtnVal[1];
-			        pSummery = RtnVal[2];
-			        pSpecialRecordCode = RtnVal[3];
-			        pPublicityCode = RtnVal[4];
-			        pLimitRange = RtnVal[5];
-			        pPageNum = RtnVal[6];
-			        tempSecurityDate = RtnVal[7];
-			        setPublicFlag();
-			        SummaryFlag = true;
-			    } catch (e) {
-			        alert("ezdraftui_hwp.btnDocInfo_onclick()::" + e.description);
-			    }
-			}
-			
+				
 			/*PublicType, PublicLevel 기존의 공개여부 2018-04-04 김은석 수정*/
 			function setPublicFlag() {
 			    try {
@@ -1079,28 +1096,6 @@
 			        return strRtn;
 			    } catch (e) {
 			        alert("ezdraftui_hwp.getPublicLevel()::" + e.description);
-			    }
-			}
-	
-			function btnSetTaskCode_onclick() {
-			    try {
-			        var para = new Array();
-			        para[0] = cabinetID;
-			        var url = "/myoffice/ezApprovalG/ezCabinet/SelectCabinet.aspx?initFlag=1";
-			        var feature = "dialogWidth:850px;dialogHeight:455px;scroll:no;resizable:no;status:no;help:no;edge:sunken";
-			
-			        if (url != "")
-			            var rtn = window.showModalDialog(url, para, feature);
-			
-			        if (rtn[0] == "TRUE") {
-			            var g_SelCabXml = rtn[1];
-			            var xmlCab = new ActiveXObject("Microsoft.XMLDOM");
-			            xmlCab.loadXML(g_SelCabXml);
-			            cabinetID = getNodeText(xmlCab.selectSingleNode("CABINETINFO/CABINET/CABINETID"));
-			            TaskCode = getNodeText(xmlCab.selectSingleNode("CABINETINFO/CABINET/TASKCODE"));
-			        }
-			    } catch (e) {
-			        alert("ezdraftui_hwp.btnSetTaskCode_onclick()::" + e.description);
 			    }
 			}
 	
@@ -1189,7 +1184,12 @@
 			function btnhistory_onclick() {
 			    getHistory();
 			}
+			
+			var ezapprovalinfo_dialogArguments = new Array();
 			function btnApprovalInfo(pGubun) {
+				
+				gpGubun = pGubun;
+				
 				var deptCheckFlag = checkDeptAndCabinetId();
 				
 				if (deptCheckFlag == "3") {
@@ -1242,47 +1242,80 @@
 				        parameter[49] = nonSepAttachLVXml;
 				        parameter[51] = sepAttachCheckYN;
 			        }
+
+			        if (useOpenGov == "YES") {
+                        parameter[52] = basis;
+                        parameter[53] = reason;
+                        parameter[54] = listOpenFlag;
+                        parameter[55] = fileOpenFlagList;
+                        parameter[56] = limitDate;
+					}
+
+			        
+			        parameter[43] = deptgamsaCount;
 			        
 			        if (tempItemCode != "")
 			            tempdocnumcode = tempItemCode;
 			
-			        if (pGubun == undefined)
-			            pGubun = CheckGubun;
-			
-			        var url = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&docType=" + pDocType + "&ext=" + "hwp";
-			        var feature = "status:no;dialogWidth:1140px;dialogHeight:750px;help:no;scroll:no;edge:sunken;";
-			        var ret = window.showModalDialog(url, parameter, feature);
+			        parameter[60] = passAprLine;
+					
+			        ezapprovalinfo_dialogArguments[0] = parameter;
+			        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
+			        
+					if(DraftFlag == "REDRAFT" && SusinSN == "1" && DocState == "011" && AprState == "004") {
+						gpGubun = "11";
+					}
+					
+			        var OpenUrl = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + gpGubun +"&docType=" + pDocType + "&ext=" + "hwp";
+			        
+			        if (ListType == "21") {
+			            OpenUrl += "&docSN=" + DocSN;
+					}
+			        if (isUsed == "reuse") {
+			        	OpenUrl +=  "&isUsed=" + isUsed + "&beforeDocID=" +beforeDocID
+			        }
+			        var OpenWin = window.open(OpenUrl , "ezApprovalInfo", GetOpenWindowfeature(1144, 750));
+			        
+			        try { OpenWin.focus(); } catch (e) { }
+			        
+			        
+			    } catch (e) {
+			        alert("ezdraftui_hwp.btnApprovalInfo()::" + e.description);
+			    } 
+			}
+	
+			    function btnApprovalInfo_Complete(ret) {
 
 			        if (ret != undefined && ret[0] == "OK") {
 			            if (ret[1] != false) {
-			            	$.ajax({
-	                    		type : "POST",
-	                    		dataType : "text",
-	                    		async : false,
-	                    		url : "/ezApprovalG/aprLineSave.do",
-	                    		data : {
-	                    				ret : ret[1]
-	                    				},
-	                    		success : function(text){
-	                    		}
-	                    	});
-			
+			                $.ajax({
+			                    type : "POST",
+			                    dataType : "text",
+			                    async : false,
+			                    url : "/ezApprovalG/aprLineSave.do",
+			                    data : {
+			                            ret : ret[1]
+			                            },
+			                    success : function(text){
+			                    }
+			                });
+
 			                IsSkipDrafter = "FALSE";
 			                btnSendDraftEnable = "true";
 			                GetDraftAprLineInfo(ret);
 			            }
 			            
 			            if (pSuSinFlag == "Y" && typeof (ret[2]) == "string") {
-			            	$.ajax({
-	                    		type : "POST",
-	                    		dataType : "text",
-	                    		async : false,
-	                    		url : "/ezApprovalG/aprDeptSave.do",
-	                    		data : {
-	                    				aprDeptInfo : ret[2]
-	                    		}
-	                    	});
-			            	
+			                $.ajax({
+			                    type : "POST",
+			                    dataType : "text",
+			                    async : false,
+			                    url : "/ezApprovalG/aprDeptSave.do",
+			                    data : {
+			                            aprDeptInfo : ret[2]
+			                    }
+			                });
+			                
 			                btnReceivLineEnable = false;
 			                SummaryOuterReceiverList = ret[15];
 			                setRecevInfo(ret[3]);
@@ -1290,15 +1323,16 @@
 			                DeleteDeptInfo();
 			                setRecevInfo("");
 			            }
-			
-			            if (pGubun != "5" && pGubun != "6" && pGubun != "7" && pGubun != "8" && pGubun != "9" && pGubun != "10") {
+
+			            if (gpGubun != "5" && gpGubun != "6" && gpGubun != "7" && gpGubun != "8" && gpGubun != "9" && gpGubun != "10") {
 			                var g_SelCabXml = ret[4];
 			                var xmlCab = new ActiveXObject("Microsoft.XMLDOM");
 			                xmlCab = loadXMLString(g_SelCabXml);
 			                cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
 			                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
 			            }
-			            
+
+						tempKeyword = ret[6]; 				//2021-03-10 박기범 - 키워드 추가
 			            tempSecurity = ret[7];
 			            tempUrgent = ret[8];
 			            pSummery = ret[9];
@@ -1309,23 +1343,46 @@
 			            pPageNum = ret[13];
 			            tempSecurityDate = ret[14];
 			            if (ret[21].substring(0,1) == "N") {
-		                	tempPublic = "N";
-		                }
+			                tempPublic = "N";
+			            }
 			            setPublicFlag();
 			            SummaryFlag = true;
 			            
 			            if (nonElecRec == "Y") {
-			            	nonElecRecInfoXml = ret[23];
-			            	nonSepAttachLVXml = ret[24];
-			            	sepAttachCheckYN = ret[26];
-			            	setNonElecRecInfo(nonElecRecInfoXml);
+			                nonElecRecInfoXml = ret[23];
+			                nonSepAttachLVXml = ret[24];
+			                sepAttachCheckYN = ret[26];
+			                setNonElecRecInfo(nonElecRecInfoXml);
+			            }
+
+			            if (useOpenGov == "YES") {
+			                $.ajax({
+			                    type : "POST",
+			                    dataType : "text",
+			                    async : false,
+			                    url : "/ezApprovalG/openGovInfoSave.do",
+			                    data : {
+			                        openGovListFlag : ret[27],
+			                        fileOpenFlagList : ret[28],
+			                        basis : ret[29],
+			                        reason : ret[30],
+			                        publicity : ret[11],
+			                        docID : pDocID,
+			                        limitDate : ret[31]
+			                    }
+			                });
+
+			                listOpenFlag = ret[27];
+			                fileOpenFlagList = ret[28];
+			                basis = ret[29];
+			                reason = ret[30];
+			                limitDate = ret[31];
+			                // passAprLine = ret[32];
 			            }
 			        }
-			    } catch (e) {
-			        alert("ezdraftui_hwp.btnApprovalInfo()::" + e.description);
+			  
 			    }
-			}
-	
+			    
 			function btnSaveServer_onclick(AutoSave) {
 			    try {
 			        if (pDraftFlag == "REDRAFT") {
@@ -1371,6 +1428,10 @@
 // 			        if (ListType == "21" && DraftFlag == "REDRAFT") {
 // 			            RemoveTmpDoc(DocSN);
 // 			        }
+			        
+			        if(Saveflag) {
+		        		newpDocID = createNewDoc();
+		        	}
 			
 			        var rtnVal = SaveTMPFile();
 			        if (rtnVal == "TRUE") {
@@ -1380,7 +1441,7 @@
 			                    var pAlertContent = "<spring:message code='ezApprovalG.t1581'/>";
 			                    OpenAlertUI(pAlertContent);
 			                    Saveflag = true;
-			                    window.close();
+			                    //window.close();
 			                } else {
 			                    Saveflag = true;
 			                }
@@ -1512,8 +1573,8 @@
 	                        <li id="btnHelper" style="display: none"><span onclick="return btnHelper_onclick()"><spring:message code='ezApprovalG.t157'/></span></li>
 	                    </ul>
 	                    <ul style="display: none;">
-	                        <li id="btnDocInfo"><span onclick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>
-	                        <li id="btnSetTaskCode"><span onclick="btnSetTaskCode_onclick()"><spring:message code='ezApprovalG.t9994'/></span></li>
+	                    <li id="btnDocInfo"><span><spring:message code='ezApprovalG.t54'/></span></li>
+	                        <li id="btnSetTaskCode"><span><spring:message code='ezApprovalG.t9994'/></span></li>
 	                        <li id="btnSetReceivLine"><span onclick="return btnSetReceivLine_onclick()"><spring:message code='ezApprovalG.t154'/></span></li>
 	                        <li id="btnSetAprLine"><span onclick="return btnSetAprLine_onclick()"><spring:message code='ezApprovalG.t153'/></span></li>
 	                    </ul>
@@ -1531,19 +1592,22 @@
 	        </tr>
 	        <tr>
 	            <td style="padding-bottom: 10px">
-	                <div style="height: 100%">
-	                    <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "2", "1", "${hwpToolbar}", "1");</script>
+	                <div style="height: 100%;">
+	                    <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "2", "1", "<c:out value ='${hwpToolbar}'/>", "1");</script>
 	                </div>
 	            </td>
 	        </tr>
 	        <tr>
 	            <td height="20">
-	                <table class="file" style="height: 70px;">
+	                <table class="file" style="height:80px;">
 	                    <tr>
 	                        <th id="btn_Attach"><spring:message code='ezApprovalG.t65'/></th>
-	                        <td>
-	                            <div id="lstAttachLink" style="height: 65px;"></div>
+	                        <td style="width:62%; border-right:1px solid #d5d5d5;">
+	                            <div id="lstAttachLink" style="height:70px;"></div>
 	                            <iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0" style="display: none;"></iframe>
+	                        </td>
+	                        <td style="width:30%;">
+								<div id="lstAttachLinkDoc" style="height:70px;"></div>
 	                        </td>
 	                    </tr>
 	                </table>

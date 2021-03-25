@@ -8,6 +8,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
     <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+    <style>
+    	.node_normal, .node_selected { width :auto;}
+    	.node_div img { margin-bottom: 5px; }
+    </style>
 	<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
     <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/email_tree.js')}"></script>
     <script type="text/javascript" src="${util.addVer('/js/ezEmail/Controls_cross/treeview.htc.js')}"></script>
@@ -22,7 +26,7 @@
         var CancelFunction;
         var isDivPopUp = false;
         var isFolderManager = false;
-        var shareId = "${shareId}";
+        var shareId = "<c:out value='${shareId}'/>";
         
         if ("${isFolderManager}" == "1") {
         	isFolderManager = true;
@@ -76,10 +80,17 @@
                 window.close();
         }
         function btn_Copy_onclick() {
-            if (PostTreeView.selectedIndex == -1) {
+            var postTreeSelectIndex = PostTreeView.selectedIndex();
+        	if (postTreeSelectIndex == -1) {
                 alert("<spring:message code='ezEmail.t536' />");
                 return;
             }
+            
+        	if (isFolderManager && getFolderDeptLevel(postTreeSelectIndex) > 5) {
+            	alert("<spring:message code='ezEmail.ksaMailBox01' />");
+            	return;
+            }
+            
             var retVal = new Array();
             retVal["cmd"] = "COPY";
             retVal["url"] = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
@@ -101,9 +112,15 @@
             }
         }
         function btn_Move_onclick() {
-            if (PostTreeView.selectedIndex == -1) {
+        	var postTreeSelectIndex = PostTreeView.selectedIndex();
+            if (postTreeSelectIndex == -1) {
                 alert("<spring:message code='ezEmail.t537' />");
                 return;
+            }
+            
+            if (isFolderManager && getFolderDeptLevel(postTreeSelectIndex) > 5) {
+            	alert("<spring:message code='ezEmail.ksaMailBox01' />");
+            	return;
             }
 
             var retVal = new Array();
@@ -174,6 +191,13 @@
             var childxml = get_childXML(PostTreeView.getvalue(nodeIdx, "href"), false, false, isFolderManager)
             PostTreeView.putchildxml(nodeIdx, childxml);
         }
+        
+	     // 폴더 뎁스 레벨
+		function getFolderDeptLevel(nodeIdx) {
+			var folderUrl = PostTreeView.getvalue(nodeIdx, "href");
+			return folderUrl.split(".").length;
+		}
+        
     </script>
 </head>
 <body scroll="no" class="popup" onload="javascript:window_onload()">

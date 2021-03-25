@@ -30,9 +30,10 @@ public interface EzBoardService {
 	/* 2018-06-27 홍승비 - 즐겨찾기 탭 표출 시 companyID 조건 추가 */
 	public List<BoardMyFavoriteVO> get_favoriteList(String userID, String pMode, String companyID, int tenantID) throws Exception;
 
-	public List<BoardListHeaderVO> getListHeader(BoardVO ezBoardVO) throws Exception;
+	/* 2019-04-05 홍승비 - DB에 존재하지 않는 헤더 임의로 추가하는 경우 다국어 지원을 위해 userInfo 추가 */
+	public List<BoardListHeaderVO> getListHeader(LoginVO userInfo, BoardVO ezBoardVO) throws Exception;
 	
-	public List<BoardListHeaderVO> getListHeaderBoardID(BoardVO ezBoardVO) throws Exception;
+	public List<BoardListHeaderVO> getListHeaderBoardID(LoginVO userInfo, BoardVO ezBoardVO) throws Exception;
 	
 	public List<BoardAttachVO> brdGetItemAttachmentInfo(String pItemID, int tenantID) throws Exception;
 	
@@ -312,6 +313,15 @@ public interface EzBoardService {
 	/* 2019-01-15 홍승비 - 수정일(updateDate)만을 업데이트하는 쿼리 추가 */
 	public void modUpdateDate(String updateDate, String itemID, int tenantID) throws Exception;
 	
+	/* 2019-04-05 홍승비 - 좋아요 삽입 */
+	public void likeInsert(String userID, String itemID, int tenantID) throws Exception;
+	/* 2019-04-05 홍승비 - 좋아요 삭제 */
+	public void likeDelete(String userID, String itemID, int tenantID) throws Exception;
+	/* 2019-04-05 홍승비 - 좋아요 여부 체크 */
+	public String likeCheck(String userID, String itemID, int tenantID) throws Exception;
+	/* 2019-04-05 홍승비 - 좋아요 갯수 가져오기 */
+	public int getLikeCount(String itemID, int tenantID) throws Exception;
+	
 	/* 2019-04-10 홍승비 - 사용자가 원회사이고 사내겸직이 존재하면 사내겸직부서ID를 리턴 */
 	public List<String> getPDOAddJobDeptID(String userID, String companyID, int tenantID) throws Exception;
 	
@@ -329,5 +339,34 @@ public interface EzBoardService {
 
 	/* 2020-07-14 홍승비 - 선택한 마이게시판 분류 하위에 해당 게시판이 존재하는지 리턴 */
 	public String isMyBoardExist(String treeID, String boardID, String userID, int tenantID, String companyID) throws Exception;
+	
+	/* 2019-09-18 홍승비 - 사용자의 직위와 직책 ID를 전부 문자열로 이어붙여 리턴하는 메서드 (사내겸직 포함) */
+	public String getUserJJID(String userID, String companyID, int tenantID) throws Exception;
+	
+	/* 2019-09-18 홍승비 - 그룹권한을 포함하여 ACCESSID에 대한 권한정보를 리스트로 리턴하는 메서드 */
+	public List<BoardPropertyVO> getACLListNew(String pBoardID, String accessID, int tenantID, int isDept, int isEqualDept) throws Exception;
+	
+	/* 2019-09-18 홍승비 - 그룹권한을 포함하여 ACCESSID에 대한 게시판 그룹의 관리자 권한을 리스트로 리턴하는 메서드 */
+	public List<String> checkIfBoardGroupAdminNew(String pRootBoardID, String accessID, int tenantID, int isDept, int isEqualDept, boolean isBoardGroup) throws Exception;
+
+	/* 2019-09-24 홍승비 - 그룹권한을 포함하여 ACCESSID에 대한 게시판 읽기권한을 리스트로 리턴하는 메서드 */
+	public List<String> getCheckItemIDNew(String itemID, String boardType, String userDeptPath, int tenantID, int isDept, int isEqualDept) throws Exception;
+
+	/* 2020-06-15 홍승비 - 주어진 게시판ID에 대하여 즐겨찾기 여부를 판단하는 메서드 */
+	public int getIsMyBoardExist(String boardID, String userID, int tenantID, String companyID) throws Exception;
+
+	/* 2020-06-15 홍승비 - 즐겨찾기 게시판 단일 삭제 메서드 */
+	public void deleteMyBoards(String boardID, String userID, int tenantID, String companyID) throws Exception;
+	
+	/* 2019-10-11 홍승비 - 회사별 공지사항 게시판ID를 리턴하는 메서드 */
+	public String getCompanyNoticeBoardID( String companyID, int tenantID) throws Exception;
+	
+	/* 2020-12-03 박기범 - 회사별 탭게시판에 등록된 탭ID,boardid, boardname을 리턴하는 메서드 */
+	public List<HashMap<String, Object>> getCompanyTabBoardIDList(String companyID, int tenantID) throws Exception;
+	
+	public int getOneLineCNT(String itemID, int tenantID) throws Exception;
+
+	/* 2021-01-06 홍승비 - 게시물의 읽음여부 판별 시, 현재 사용자가 읽은 게시물을 셀렉트하도록 수정 */
+	public int getReaderListCount2(String boardID, String itemID, String userID, int tenantID) throws Exception;
 	
 }

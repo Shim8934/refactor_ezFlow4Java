@@ -2,13 +2,10 @@ package egovframework.ezEKP.ezOrgan.service;
 
 import java.util.List;
 
-
-
-
-
-
-
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganGroupVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 
@@ -16,7 +13,7 @@ public interface EzOrganAdminService {
 	
 	public List<OrganDeptVO> getCompanyList(String lang, int tenantID) throws Exception;
 	
-	public List<OrganUserVO> getAddJobList(String companyID, String strLang, int tenantID) throws Exception;
+	public List<OrganUserVO> getAddJobList(String companyID, String strLang, int tenantID, int totalCount, int pageSize, int startRow, int endRow) throws Exception;
 	
 	public List<OrganUserVO> getUserAddJobList(String cn, String strLang, int tenantID) throws Exception;
 	
@@ -85,7 +82,8 @@ public interface EzOrganAdminService {
 	
 	public void syncWithBizmekaTalkAccounts(int tenantID) throws Exception;
 	
-	public List<OrganUserVO> getUserList(int tenantID, int startPage, int maxItemPerPage, String keycode,String keyword,String companyId) throws Exception;
+	public List<OrganUserVO> getUserList(int tenantID, int startPage, int maxItemPerPage, String keycode,String keyword,
+			String companyId, String sortColumn, String sortType) throws Exception;
 	
 	public int getUserCount(int tenantID,String keycode,String keyword,String companyId) throws Exception;
 	
@@ -99,7 +97,7 @@ public interface EzOrganAdminService {
 
 	public String updateTitle(String type, String jobID, String displayName, String displayName2, String useFlag, int sort, String companyID, int tenantID) throws Exception;
 	
-	public String deleteTitle(String type, String jobID, String companyID, int tenantID) throws Exception;
+	public String deleteTitle(String type, String jobIDList, String companyID, int tenantID) throws Exception;
 	
 	public String getTitleUserList(String type, String jobID, String pageSize, String pageNum, String searchType, String searchValue, String primary, String companyID, int tenantID) throws Exception;
 	
@@ -110,6 +108,48 @@ public interface EzOrganAdminService {
 	public int getTitleCnt(String type, String jobID, String mode, String displayName, String displayName2, String companyID, int tenantID) throws Exception;
 	
 	public String getJobOptionInfo(String type, String companyID, int tenantID) throws Exception;
-	
+
+	public void updateDBData_user_new(List<OrganUserVO> vo) throws Exception;
+
+	public int getAddJobCount(String companyID, int tenantId, String strLang) throws Exception;
+
 	public List<OrganUserVO> getAllUserCnList(int tenantID) throws Exception;
+
+	public String getCompanyName(String displayName, int tenantID) throws Exception;
+	
+	public String insertPermissionGroup(String groupID, String groupName, String createID, String companyID, int tenantID, List<String> groupMemberList) throws Exception;
+	
+	public String updatePermissionGroup(String groupID, String groupName, String updateID, String companyID, int tenantID, List<String> groupMemberList) throws Exception;
+	
+	public void deletePermissionGroup(String groupList, String companyID, int tenantID) throws Exception;
+	
+	public int getPermissionGroupListCount(int tenantID, String searchKeycode, String searchKeyword, String companyID) throws Exception;
+	
+	public List<OrganGroupVO> getPermissionGroupList(int pPage, int pPageRow, int tenantID, String offset, String searchField, String searchValue, String searchCompanyID) throws Exception;
+	
+	public List<OrganGroupVO> getPermissionGroupInfo(String groupID, int tenantID, String companyID) throws Exception;
+	
+	public List<OrganGroupVO> getGroupList(int tenantID, String companyID) throws Exception;
+
+	public List<OrganGroupVO> getGroupListBoard(int tenantID, String companyID, String isAllGroupBoard) throws Exception;
+	
+	public String getTitleList_group(String type, String companyID, int tenantID, String lang) throws Exception;
+	
+	public OrganJobVO getTitleInfo_group(String type, String jobID, String companyID, int tenantID) throws Exception;
+
+	public String getTitleListBoard(String type, String companyID, int tenantID, String lang) throws Exception;
+	
+	public List<OrganLoginStopUserVO> getLoginStopUserList(int tenantID, int startPage, int maxItemPerPage, String keycode, String keyword, String stopFlag, String offset, String companyId) throws Exception;
+		
+	public int getLoginStopUserListCount(int tenantID, String keycode, String keyword, String stopFlag, String companyId) throws Exception;
+	
+	public String insertStopUser(String[] cnArr, String companyID, int tenantID) throws Exception;
+	
+	public String deleteStopUser(String[] cnArr, String companyID, int tenantID) throws Exception;
+	
+	public int checkStopUser(String userID, int tenantID) throws Exception;
+
+	List<String> getNotUseMobileUserList(int tenantId) throws Exception;
+	
+	public List<String> getAutoDeleteOfRetireUserList(int tenantId, int days) throws Exception;
 }

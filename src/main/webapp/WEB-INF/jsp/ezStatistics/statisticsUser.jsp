@@ -37,7 +37,7 @@
 	                changeYear: true,
 	                autoSize: true,
 	                showOn: "both",
-	                buttonImage: "/images/ImgIcon/calendar-month.gif",
+	                buttonImage: "/images/ImgIcon/calendar-month.png",
 	                buttonImageOnly: true
 	            });
 	            $("#Sdatepicker2").datepicker({
@@ -45,7 +45,7 @@
 	                changeYear: true,
 	                autoSize: true,
 	                showOn: "both",
-	                buttonImage: "/images/ImgIcon/calendar-month.gif",
+	                buttonImage: "/images/ImgIcon/calendar-month.png",
 	                buttonImageOnly: true
 	            });
 	            var NowDate = new Date();
@@ -674,7 +674,7 @@
 	                </div>
 	                <div id="seluser" class="statistics_select" style="margin: 0 auto">
 	                    <dl class="statistics_txt">
-	                        <dt><spring:message code='ezStatistics.t1019'/></dt>
+	                        <dt><spring:message code='ezStatistics.hsbUs01'/></dt>
 	                        <dd><spring:message code='ezStatistics.t1020'/><br>
 	                            <spring:message code='ezStatistics.t1021'/></dd>
 	                    </dl>

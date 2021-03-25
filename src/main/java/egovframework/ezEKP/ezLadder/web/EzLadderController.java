@@ -69,10 +69,32 @@ public class EzLadderController {
 	private SimpMessagingTemplate template;
 	
 	/**
+	 * 사다리게임 메인 화면 호출 함수
+	 */
+	@RequestMapping(value="/ezLadder/ladderMainPage.do", method=RequestMethod.GET)
+	public String qstMain() throws Exception{
+		logger.debug("ladderMainPage Start");
+		
+		logger.debug("ladderMainPage End");
+		return "/ezLadder/ladderMainPage";
+	}
+	
+	/**
+	 * 사다리게임 레프트 메뉴 화면 호출 함수
+	 */
+	@RequestMapping(value="/ezLadder/ladderLeft.do", method=RequestMethod.GET)
+	public String qstLeft() throws Exception{
+		logger.debug("ladderLeft Start");
+		
+		logger.debug("ladderLeft End");
+		return "/ezLadder/ladderLeft";
+	}
+	
+	/**
 	 * 사다리 게임 호출
 	 * */
-	@RequestMapping(value = "/ezLadder/ladderMain.do")
-	public String ladderMain(String mode, String currPage, String searchSelect, String searchInput, String sort, String sortFlag, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
+	@RequestMapping(value = "/ezLadder/ladderMain.do", method=RequestMethod.GET)
+	public String ladderMain(String mode, String currPage, String searchSelect, String searchInput, String sort, String sortFlag, String searching, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("ladderMain started.");
 		
 		String brdID = "7";
@@ -82,8 +104,9 @@ public class EzLadderController {
 		}
 		mode = mode != null ? mode : "all";
 		currPage = currPage != null ? currPage : "1";
-		searchSelect = searchSelect != null ? searchSelect : "";
+		searchSelect = searchSelect != null ? commonUtil.stripScriptTagsAndFunctions(searchSelect) : "";
 		searchInput = searchInput != null ? searchInput : "";
+		searching = searching != null ? searching : "";
 		sort = sort != null ? sort : "basic";
 		sortFlag = sortFlag != null ? sortFlag : "desc";
 	
@@ -135,6 +158,7 @@ public class EzLadderController {
 			model.addAttribute("mode", mode);
 			model.addAttribute("searchSelect", searchSelect);
 			model.addAttribute("searchInput", searchInput);
+			model.addAttribute("searching", searching);
 			model.addAttribute("sort", sort);
 			model.addAttribute("sortFlag", sortFlag);
 			model.addAttribute("brdID", brdID);
@@ -161,7 +185,7 @@ public class EzLadderController {
 	/**
 	 * 사다리 게임 종류 선택
 	 * */
-	@RequestMapping(value = "/ezLadder/selectLadderType.do")
+	@RequestMapping(value = "/ezLadder/selectLadderType.do", method=RequestMethod.GET)
 	public String ladderTypeView() {
 		logger.debug("selectLadderType started.");
 		logger.debug("selectLadderType ended.");
@@ -176,7 +200,7 @@ public class EzLadderController {
 	public String setLadderView(String type, String ladderId, Model model) throws Exception {
 		logger.debug("setLadder started.");
 		
-		model.addAttribute("ladType", type);
+		model.addAttribute("ladType", commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(type)));
 		model.addAttribute("ladderId", ladderId);
 		
 		logger.debug("setLadder ended.");
@@ -187,17 +211,19 @@ public class EzLadderController {
 	/** 
 	 * 참여자 추가 (조직도 호출)
 	 * */
-	@RequestMapping(value = "/ezLadder/setLadderAttendantPopUp.do")
+	@RequestMapping(value = "/ezLadder/setLadderAttendantPopUp.do", method=RequestMethod.GET)
 	public String setLadderAttendantPopUp(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
 		logger.debug("setLadderAttendantPopUp started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
 		model.addAttribute("userID", userInfo.getId());
 		model.addAttribute("deptID", userInfo.getDeptID());
 		model.addAttribute("companyID", userInfo.getCompanyID());
 		model.addAttribute("domainName", domainName);
+		model.addAttribute("primaryLang", primaryLang);
 		
 		logger.debug("setLadderAttendantPopUp ended.");
 		
@@ -208,7 +234,7 @@ public class EzLadderController {
 	 * 사다리 게이머 바로 추가
 	 * @throws ParseException 
 	 * */
-	@RequestMapping(value = "/ezLadder/setLadderAttendant.do")
+	@RequestMapping(value = "/ezLadder/setLadderAttendant.do", method=RequestMethod.POST)
 	public String setLadderAttendant(@CookieValue("loginCookie") String loginCookie, String [] searchUserName, HttpServletRequest request, Model model) throws ParseException {
 		logger.debug("setLadderAttendant started.");
 		
@@ -303,14 +329,14 @@ public class EzLadderController {
 		
 		logger.debug("setLadder ended.");
 		
-		return "forward:/ezLadder/ladderMain.do?brdID=7";
+		return "redirect:/ezLadder/ladderMain.do?brdID=7";
 	}
 	
 	/**
 	 * 즐겨찾기 조회
 	 * @throws Exception 
 	 * */
-	@RequestMapping(value = "/ezLadder/getLadderBM.do")
+	@RequestMapping(value = "/ezLadder/getLadderBM.do", method=RequestMethod.GET)
 	public String getLadderBM(@CookieValue("loginCookie") String loginCookie, String ladderBmId, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getLadderBM started.");
 		
@@ -362,7 +388,7 @@ public class EzLadderController {
 	/**
 	 * 확인 팝업창들
 	 * */
-	@RequestMapping(value = "/ezLadder/ladderPopup.do")
+	@RequestMapping(value = "/ezLadder/ladderPopup.do", method=RequestMethod.GET)
 	public String ladderPopup(String popupType, Model model) {
 		logger.debug("ladderPopup started.");
 		
@@ -402,18 +428,20 @@ public class EzLadderController {
 		
 		RestTemplate rest = new RestTemplate();
 		
+		Object obj = BMUserVO.getUserIds();
+		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("tenant_id", userInfo.getTenantId())
 				.queryParam("bmName", BMVO.getBmName())
 				.queryParam("writerId", userInfo.getId())
-				.queryParam("userIds", BMUserVO.getUserIds())
-				.queryParam("userNames", BMUserVO.getUserNames())
-				.queryParam("userName2s", BMUserVO.getUserName2s())
+				.queryParam("userIds", obj)
+				.queryParam("userNames", (Object[]) BMUserVO.getUserNames())
+				.queryParam("userName2s", (Object[]) BMUserVO.getUserName2s())
 				.queryParam("lang", userInfo.getLang())
 				.queryParam("offset", userInfo.getOffset())
 				.queryParam("companyID", userInfo.getCompanyID())
-				.queryParam("descriptions", BMUserVO.getDescriptions())
-				.queryParam("descriptions2", BMUserVO.getDescriptions2());
+				.queryParam("descriptions", (Object[]) BMUserVO.getDescriptions())
+				.queryParam("descriptions2", (Object[]) BMUserVO.getDescriptions2());
 		
 		ResponseEntity<String> result = null;
 		
@@ -445,7 +473,7 @@ public class EzLadderController {
 	 * 추가, 수정 한 댓글 조회
 	 * @throws Exception 
 	 * */
-	@RequestMapping(value = "/ezLadder/getLadderComment.do")
+	@RequestMapping(value = "/ezLadder/getLadderComment.do", method=RequestMethod.GET)
 	public String getLadderComment(@CookieValue("loginCookie") String loginCookie, String ladderId, String commentId, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getLadderComment started.");
 		
@@ -558,7 +586,7 @@ public class EzLadderController {
 	 * 이전 사다리 목록 순서 바꾸기
 	 * @throws Exception 
 	 * */
-	@RequestMapping(value = "/ezLadder/setListOrder.do")
+	@RequestMapping(value = "/ezLadder/setListOrder.do", method=RequestMethod.POST)
 	public String setListOrder(@CookieValue("loginCookie") String loginCookie, LadderOrderVO ladOrderVO, String mode, String currPage, String searchSelect, String searchInput, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("setListOrder started.");
 		
@@ -577,8 +605,8 @@ public class EzLadderController {
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("tenant_id", userInfo.getTenantId())
-				.queryParam("ladderIds", ladOrderVO.getLadderIds())
-				.queryParam("changeLadderIds", ladOrderVO.getChangeLadderIds())
+				.queryParam("ladderIds", (Object[]) ladOrderVO.getLadderIds())
+				.queryParam("changeLadderIds", (Object[]) ladOrderVO.getChangeLadderIds())
 				.queryParam("mode", mode)
 				.queryParam("currPage", currPage)
 				.queryParam("searchSelect", searchSelect)
@@ -685,7 +713,8 @@ public class EzLadderController {
 	 * @throws Exception
 	 *
 	 */
-	@RequestMapping(value = "/ezLadder/deleteLadder.do")
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/ezLadder/deleteLadder.do", method=RequestMethod.GET)
 	public String deleteLadderList(@RequestParam(value="allData") List<String> allData, @CookieValue("loginCookie") String loginCookie, String ladderId, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("deleteLadder started.");
 
@@ -737,7 +766,8 @@ public class EzLadderController {
 	 * @throws Exception
 	 * 
 	 */
-	@RequestMapping(value = "/ezLadder/serUserOrder.do")
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/ezLadder/serUserOrder.do", method=RequestMethod.POST)
 	public String setUserOrder(@CookieValue("loginCookie") String loginCookie, String ladderId, String firstUser, String firstUserOrder, String secondUser, 
 			String secondUserOrder, String firstItem, String secondItem, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("serUserOrder started.");
@@ -773,6 +803,7 @@ public class EzLadderController {
 		JSONParser jp = new JSONParser();
 		JSONObject jsonResult = (JSONObject) jp.parse(result.getBody());
 		String status = jsonResult.get("status").toString();
+		@SuppressWarnings("unused")
 		JSONArray lines = new JSONArray();
 		if (status.equals("ok")) {
 			
@@ -798,6 +829,7 @@ public class EzLadderController {
 	 * 사다리 게임 시작
 	 * @throws Exception
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezLadder/setLadderStart.do", method = RequestMethod.POST)
 	public String setLadderStart(@CookieValue("loginCookie") String loginCookie,  String[] allData, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("setLadderStart started.");

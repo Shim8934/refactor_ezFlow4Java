@@ -12,8 +12,8 @@
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript">
 	        var ImageCount = "${imageCount}";
-	        var BoardID = "${boardID}";
-			var ItemID = "${itemID}";
+	        var BoardID = "<c:out value='${boardID}'/>";
+			var ItemID = "<c:out value='${itemID}'/>";
 	        var ImageID = "";
 	        var DelCount = 0;
 	        var ImageFilePath = "";

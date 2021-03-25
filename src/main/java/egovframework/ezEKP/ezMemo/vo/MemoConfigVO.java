@@ -32,6 +32,19 @@ public class MemoConfigVO {
 	/** 레이어 창 전체화면 모드 */
 	private int full_mode;
 	
+	/*큰 메모 left*/
+	private int b_memo_left;
+	/*큰 메모 top*/
+	private int b_memo_top;
+	/*큰 메모 width*/
+	private int b_memo_width;
+	/*큰 메모 height*/
+	private int b_memo_height;
+	/*큰 메모 오픈 상태*/
+	private int b_memo_status;
+	/*가장 최근에 큰 메모로 오픈한 메모 아이디*/
+	private int memo_id;
+	
 	public String getUser_id() {
 		return user_id;
 	}
@@ -115,5 +128,41 @@ public class MemoConfigVO {
 	}
 	public void setFull_mode(int full_mode) {
 		this.full_mode = full_mode;
+	}
+	public int getB_memo_left() {
+		return b_memo_left;
+	}
+	public void setB_memo_left(int b_memo_left) {
+		this.b_memo_left = b_memo_left;
+	}
+	public int getB_memo_top() {
+		return b_memo_top;
+	}
+	public void setB_memo_top(int b_memo_top) {
+		this.b_memo_top = b_memo_top;
+	}
+	public int getB_memo_width() {
+		return b_memo_width;
+	}
+	public void setB_memo_width(int b_memo_width) {
+		this.b_memo_width = b_memo_width;
+	}
+	public int getB_memo_height() {
+		return b_memo_height;
+	}
+	public void setB_memo_height(int b_memo_height) {
+		this.b_memo_height = b_memo_height;
+	}
+	public int getB_memo_status() {
+		return b_memo_status;
+	}
+	public void setB_memo_status(int b_memo_status) {
+		this.b_memo_status = b_memo_status;
+	}
+	public int getMemo_id() {
+		return memo_id;
+	}
+	public void setMemo_id(int memo_id) {
+		this.memo_id = memo_id;
 	}
 }

@@ -84,14 +84,22 @@ function mouseOver_Sub2()
 {
 	if( prevSelMenu2 != this )
 	{
-		this.className = "on";
+		if (this.className == "important") {			
+			this.className = "important on";
+		} else {
+			this.className = "on";
+		}
 	}
 }
 function mouseOut_Sub2()
 {
 	if( prevSelMenu2 != this )
 	{
-		this.className = "off";
+		if (this.className == "important") {
+			this.className = "important off";
+		} else {
+			this.className = "off";
+		}
 	}
 }
 ////////////////////////////////////////////////////////////////////////
@@ -216,7 +224,11 @@ function mouseOver_Sub()
 {	
 	if( prevSelMenu != this )
 	{
-		this.className = "on ing";
+		if (this.className.indexOf("important") > -1) {
+			this.className = "important on ing";
+		} else {
+			this.className = "on ing";
+		}
 	}
 }
 
@@ -224,7 +236,11 @@ function mouseOut_Sub()
 {
 	if( prevSelMenu != this )
 	{
-		this.className = "off";
+		if (this.className.indexOf("important") > -1) {
+			this.className = "important off";
+		} else {
+			this.className = "off";
+		}
 	}
 }
 
@@ -329,7 +345,43 @@ function specialChk(val){
 	return rVal;
 }
 
-function CheckPassword(str){
+function loginCheckPassword(str, chkCompanyId) {
+	var test = "";
+	
+	$.ajax({
+		type:"post",
+		data:{"pw":str, "chkCompanyId":chkCompanyId},
+		async:false,
+		url : "/user/login/checkPasswordPolicy.do",
+		success : function(data) {
+			test = (data!="OK") ? "NON" : data;
+		}, error : function (err) {
+			test = "ERROR";
+		}
+	});
+	
+	return test;
+}
+
+function CheckPassword(str, chkCompanyId) {
+	var test = "";
+	
+	$.ajax({
+		type:"post",
+		data:{"pw":str, "chkCompanyId":chkCompanyId},
+		async:false,
+		url : "/ezOrgan/checkPasswordPolicy.do",
+		success : function(data) {
+			test = (data!="OK") ? "NON" : data;
+		}, error : function (err) {
+			test = "ERROR";
+		}
+	});
+	
+	return test;
+}
+
+function sharedMailCheckPassword(str) {
 	var pw = str;
 	var num = pw.search(/[0-9]/g);
 	var eng = pw.search(/[a-z]/ig);

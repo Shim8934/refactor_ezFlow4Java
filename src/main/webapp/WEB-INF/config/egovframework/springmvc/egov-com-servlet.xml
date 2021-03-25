@@ -11,10 +11,8 @@
                 http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket-4.1.xsd">
 
     <!-- 패키지 내 Controller, Service, Repository 클래스의 auto detect를 위한 mvc 설정 -->
-    <context:component-scan base-package="egovframework">
+    <context:component-scan base-package="egovframework" use-default-filters="false">
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
-        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
-        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
     </context:component-scan>
 
     <!-- 서블릿컨네이너상의 exception에 대한 오류 페이지를 연결하는 mvc 설정-->
@@ -53,6 +51,9 @@
             <mvc:exclude-mapping path="/user/login/actionLogoutWithRedirectUri.do"/>            
             <mvc:exclude-mapping path="/user/login/login.do"/>
             <mvc:exclude-mapping path="/user/login/changeExPassword.do"/>
+            <mvc:exclude-mapping path="/user/login/sendFindPwd.do"/>  
+            <mvc:exclude-mapping path="/user/login/checkCertification.do"/>  
+            <mvc:exclude-mapping path="/user/login/changePasswordByCertification.do"/>  
             <mvc:exclude-mapping path="/ezApprovalG/excelExportOut.do"/>
             <mvc:exclude-mapping path="/ezEmail/downloadAttachCommon.do"/>
             <mvc:exclude-mapping path="/ezEmail/downloadInlineDotNet.do"/>
@@ -69,6 +70,9 @@
             <mvc:exclude-mapping path="/ezTalkGate/**"/>
             <mvc:exclude-mapping path="/ezConn/**"/>
             <mvc:exclude-mapping path="/ezUCMessenger/**"/>  
+            <mvc:exclude-mapping path="/user/login/checkPasswordPolicy.do"/>  
+            <mvc:exclude-mapping path="/ezSchedule/workspaceScheduleGetList.do"/>
+            <mvc:exclude-mapping path="/ezApprovalG/downloadAttachForHwp.do"/>
 		    <bean class="egovframework.com.cmm.interceptor.AuthenticInterceptor" />
         </mvc:interceptor>
         
@@ -76,14 +80,24 @@
             <mvc:mapping path="/mobile/**"/>
             <mvc:mapping path="/rest/**"/>
             <mvc:exclude-mapping path="/rest/ezwebfolder/**"/>
+            <mvc:exclude-mapping path="/rest/ezwebfolderadmin/**"/>
 		    <bean class="egovframework.com.cmm.interceptor.MAuthenticInterceptor" />
         </mvc:interceptor>    
 
         <mvc:interceptor>            
             <mvc:mapping path="/rest/ezwebfolder/**"/>
+            <mvc:mapping path="/rest/ezwebfolderadmin/**"/>
             <mvc:exclude-mapping path="/rest/ezwebfolder/login"/>
 		    <bean class="egovframework.com.cmm.interceptor.WebfolderAuthenticInterceptor" />
-        </mvc:interceptor>    
+        </mvc:interceptor>
+
+		<mvc:interceptor>
+			<mvc:mapping path="/" />
+			<mvc:mapping path="/ezNewPortal/**" />
+			<mvc:mapping path="/user/login/email.do" />
+			<!-- <mvc:exclude-mapping path="/rest/ezwebfolder/**" /> -->
+			<bean class="egovframework.com.cmm.interceptor.UserEmailInterceptor" />
+		</mvc:interceptor>
 	</mvc:interceptors>
 
     <!-- Annotation 을 사용하지 않는 경우에 대한 MVC 처리 설정 -->
@@ -107,11 +121,6 @@
 	    <websocket:stomp-endpoint path="/hello" >  	    	 	
 			<websocket:sockjs />
 	    </websocket:stomp-endpoint>
-	    <websocket:stomp-endpoint path="/websocket" allowed-origins="/*">
-			<websocket:handshake-interceptors>
-				<bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor"></bean>
-			</websocket:handshake-interceptors>
-		</websocket:stomp-endpoint>
 	    <websocket:simple-broker prefix="/reply, /topic, /message, /lad"/>
 	</websocket:message-broker>
 		

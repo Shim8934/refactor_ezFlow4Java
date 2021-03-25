@@ -42,6 +42,7 @@
 		    var pListType = "TXT";
 		    var pListXML_Info = null;
 		    var CurPage = "1";
+		    var lang = "<c:out value='${userInfo.primary}'/>";
 	        		  	
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -218,7 +219,7 @@
 	            var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
 	            var nodeIdx = treeView.GetSelectNode();
-	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top; padding-right:3px; \" >"
+	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px; \" >"
 	            	+ "<span id='spn_deptName' title='" + ReplaceText(nodeIdx.GetNodeData("VALUE"), "&", "&amp;") + "'>" + ReplaceText(nodeIdx.GetNodeData("VALUE"), "&", "&amp;") + "</span>"
 	            	+ "<span id='countInfo'></span>";
 	            SelectDeptNM.setAttribute("countinfo", "")
@@ -269,9 +270,9 @@
 							var strIsLeaf = $("div#" + id + "").attr("isleaf");
 							
 							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
-								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang256 + "</span>/<spring:message code='ezAddress.t362' /> <span class='countColor'>" + result.totalCount2 + strLang256 + "</span>]";
+								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span> / <span class='countColor'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
 							} else {
-								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang256 + "</span>]";
+								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span>";
 							}
 							//2018-08-01 김보미 - 부서명 [사원수] 가 넘치는지 확인하는 함수
 							deptNameLong(result.containLow, strIsLeaf);
@@ -331,7 +332,7 @@
 		            document.getElementById("Search_txtlist_table").style.display = "none";
 		            
 		            if (pSeach) {
-		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top;padding-right:3px;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + totalCount + strLang256 + "</span>]";
+		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<span id='spn_deptName'>" + strLang257 + "</span>" + "<span id='countInfo' style='color:#017BEC;'>&nbsp;&nbsp;<span style='color:#017BEC;'>" + totalCount + "</span></span>";
 		                SelectDeptNM.setAttribute("countinfo", "1");
 		            }
 		        } else {
@@ -344,7 +345,7 @@
 	                } else {
 	                    document.getElementById("Search_txtlist_table").style.display = "";
 	                    document.getElementById("txtlist_table").style.display = "none";
-	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top;padding-right:3px;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + totalCount + strLang256 + "</span>]";
+	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<span id='spn_deptName'>" + strLang257 + "</span>" + "<span id='countInfo' style='color:#017BEC;'>&nbsp;&nbsp;<span style='color:#017BEC;'>" + totalCount + "</span></span>";
 	                    SelectDeptNM.setAttribute("countinfo", "1")
 	                }
 	            }
@@ -639,7 +640,7 @@
 		        InsertReceiver("MsgToList");
 		    }
 
-		    var m_strColorSelect = "#edf4fd";
+		    var m_strColorSelect = "#f1f8ff";
 		    var m_strColorOver = "#f4f5f5";
 		    var m_strColorDefault = "#ffffff";
 		    var p_ListOrderObject = null;
@@ -767,8 +768,14 @@
 		        for (var i = 0; i < totalLen; i++) {		        	
 		        	var data = new Object();
                     data.memberID = GetAttribute(totalRows[i], "DATA1");
-                    data.memberName1 = GetAttribute(totalRows[i], "DATA2");
-                    data.memberName2 = GetAttribute(totalRows[i], "DATA3");                    
+                    if(lang == "1") {
+                    	data.memberName1 = GetAttribute(totalRows[i], "DATA2");
+                    	data.memberName2 = GetAttribute(totalRows[i], "DATA3");
+                    }
+                    else {
+                    	data.memberName1 = GetAttribute(totalRows[i], "DATA3");
+                    	data.memberName2 = GetAttribute(totalRows[i], "DATA2");
+                    }                     
                     
                     memberList.push(data);		            
 		        }
@@ -923,7 +930,7 @@
 		                var strName = document.getElementById(listContentArry[i]).getAttribute("_data4");
 		                var strDeptNM = document.getElementById(listContentArry[i]).getAttribute("_data5");
 		                var strEmail = document.getElementById(listContentArry[i]).getAttribute("_data3");
-		                var strName2 = document.getElementById(listContentArry[i]).getAttribute("_data11");
+		                var strName2 = document.getElementById(listContentArry[i]).getAttribute("_data12");
 		                var strDeptNM2 = document.getElementById(listContentArry[i]).getAttribute("_data13");
 		                var jickwe = document.getElementById(listContentArry[i]).getAttribute("_data14");
 		                var phone = document.getElementById(listContentArry[i]).getAttribute("_data8");
@@ -961,7 +968,10 @@
 
 		                    Resultxml = loadXMLString(pparsingXML2); */
 
-	                        pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
+		                    if(lang == "1")
+		                    	pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
+		                    else
+		                    	pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName2 + "]]></VALUE></CELL></ROW>";
 	                        pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                        Resultxml = loadXMLString(pparsingXML2);
 		                    
@@ -1108,7 +1118,7 @@
 		        
 		        $.ajax({
 					url : '/ezSchedule/getDeptUserList.do',
-					method : 'POST',
+					method : 'GET',
 					async : false,
 					dataType : "xml",
 					data : {
@@ -1386,7 +1396,7 @@
 			    </tr> 
 			</table> 
 			<br/>
-			<table style="width:100%;margin-top: -12px;">
+			<table style="width:100%;margin-top: -6px;">
 				<tr>
 			    	<td>
 			        	<table id="TreeViewTD">
@@ -1417,8 +1427,8 @@
 		                                                <div style="float: right; margin-right: 5px;">
 		                                                    <%-- 2018-05-07 천성준 - 하위부서포함 체크박스 주석처리 (하위부서 쿼리 에러 관련 주석처리) --%>
 		                                                    <%-- <input type="checkbox" id="chk_subTree" /><span style="vertical-align:top; padding-top:3px;display:inline-block"><spring:message code='ezSchedule.t39' /></span> --%>
-		                                                    <a href="#" class="imgbtn"><span onclick="Add_Dept()"><spring:message code='ezSchedule.t00004' /></span></a>
-		                                                    <a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezSchedule.t1052' /></span></a>
+		                                                    <a class="imgbtn"><span onclick="Add_Dept()"><spring:message code='ezSchedule.t00004' /></span></a>
+		                                                    <a class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezSchedule.t1052' /></span></a>
 		                                                </div>
 		                                            </td>
 		                                        </tr>
@@ -1428,7 +1438,7 @@
 		                            <table style="margin-top: 3px;">
 		                                <tr>
 		                                    <td class="box" style="border-right:0px;">		                                    			                                    	
-		                                        <div style="width: 220px; height: 460px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
+		                                        <div style="width: 220px; height: 467px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
 		                                    </td>
 		                                    <td></td>
 		                                    <td class="listview" style="width: 426px" id="orglistView">
@@ -1475,7 +1485,7 @@
 		                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezSchedule.t00001' /></span>
 		                            </h2>
 		                            <div class="receiver_borderbox">
-		                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 267px; Height: 479px; overflow-x: auto; overflow-y: auto;"  ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
+		                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 267px; Height: 478px; overflow-x: auto; overflow-y: auto;"  ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
 		                            </div>
 		                        </td>
 		                    </tr>

@@ -7,9 +7,16 @@
 		<title></title>		
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<link rel="stylesheet" href="${util.addVer('main.e15', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
+		<style>
+			#mCSB_1_container {
+				margin-right: 0px;
+			} 
+		</style>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
 		<script type="text/javascript">
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -84,71 +91,123 @@
 						//채번 관리
 						url = "/admin/ezApprovalG/docNumZeroCnt.do";
 						break;
+                    case 16:
+                        //원문공개문서함
+                        url = "/admin/ezApprovalG/openGovForDoc.do?type=admin";
+                        break;
+                    case 17:
+                    	// 기록물철 인계 2019-06-18 임민석
+                    	url = "/admin/ezApprovalG/cabTransfer.do";
+                    	break;
+                    case 20:
+    				    url = "/admin/ezApprovalG/apprGeneralAuditingStatistics.do";
+    					break;
+					case "enforce":
+						//시행문변환 - 관인등록
+						url = "/admin/ezApprovalG/enforceSihangSeal.do";
+						break;
 					/* 2020-05-14 홍승비 - 전자결재 첨부파일 개수제한 설정메뉴 */
-					case 16:
+					case "attachLimit":
 						url = "/admin/ezApprovalG/manageAttachLimit.do";
+						break;
+					case "share":
+						//문서함공유
+						url = "/admin/ezApprovalG/docDirShareManage.do";
+						break;
+					case "sendout":
+						//문서유통 발송현황
+						url = "/admin/ezApprovalG/sendOut.do";
+						break;	
+					case "auditApprLineManage":
+						//감사결재선관리
+						url = "/admin/ezApprovalG/auditApprLineManage.do";
 						break;
 				}
 				
 				window.open(url,"right");
 			}
+		    
+		    $(document).ready(function() {
+				leftResize();
+		        $(".adminListBox").mCustomScrollbar({
+		    		theme : "dark"
+		    	});
+			});
+	        
+	        function leftResize(){
+	        	$(".adminListBox").height(window.innerHeight-58);
+	        }
+	        
+	        $( window ).resize(function() {
+	        	leftResize();
+	    	});
 		</script>
 	</head>
-	<body class="leftbody" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
-		<div id="left" style="overflow-x:hidden">
-			<div class="left_admin" title="<spring:message code='main.t10'/>"><img src="/images/admin/first.png" width="13px" height="13px"/>&nbsp;<spring:message code='main.t25'/></div>
+	<body class="newLeft">
+		<div id="left" class="lnb" style="overflow: auto">
+			<div class="admin_left_title" title="<spring:message code='main.t10'/>"><spring:message code='main.t25'/></div>
 			
-	        	<h2><span style="display:inline-block;width:100%;" onClick="goPage(1)"><spring:message code='main.t10'/></span><ul></ul></h2>
-				<h2><span style="display:inline-block;width:100%;" onClick="goPage(15)"><spring:message code='ezApprovalG.csj02'/></span><ul></ul></h2>
-				<h2><span style="display:inline-block;width:100%;" onClick="goPage(2)"><spring:message code='main.t36'/></span><ul></ul></h2>
+			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
+	        	<h2><span style="display:inline-block;width:100%;" onClick="goPage(1)"><spring:message code='main.t10'/></span></h2>
+				<h2><span style="display:inline-block;width:100%;" onClick="goPage(15)"><spring:message code='ezApprovalG.csj02'/></span></h2>
+				<h2><span style="display:inline-block;width:100%;" onClick="goPage(2)"><spring:message code='main.t36'/></span></h2>
 				
 				<c:if test="${approvalFlag == 'S' }">
-					<h2><span style="display:inline-block;width:100%;" onClick="goPage(3)"><spring:message code='main.t37'/></span><ul></ul></h2>
-					<h2><span style="display:inline-block;width:100%;" onClick="goPage(4)"><spring:message code='main.t38'/></span><ul></ul></h2>
+					<h2><span style="display:inline-block;width:100%;" onClick="goPage(3)"><spring:message code='main.t37'/></span></h2>
+					<h2><span style="display:inline-block;width:100%;" onClick="goPage(4)"><spring:message code='main.t38'/></span></h2>
+					<c:if test="${useEnforceSihang == 'YES'}"><!-- 시행문변환 관인등록 옵션 -->
+						<h2><span style="display:inline-block;width:100%;" onClick="goPage('enforce')"><spring:message code='main.t41'/></span></h2>
+					</c:if>
 				</c:if>
 				
-				<h2><span style="display:inline-block;width:100%;" onClick="goPage(5)"><spring:message code='main.t39'/></span><ul></ul></h2>
+				<h2><span style="display:inline-block;width:100%;" onClick="goPage(5)"><spring:message code='main.t39'/></span></h2>
 				
 				<c:choose>
 					<c:when test="${approvalFlag == 'S' }">
-						<h2><span style="display:inline-block;width:100%;" onClick="goPage(6)"><spring:message code='main.t40'/></span><ul></ul></h2>	
+						<h2><span style="display:inline-block;width:100%;" onClick="goPage(6)"><spring:message code='main.t40'/></span></h2>	
 					</c:when>
 					<c:otherwise>
-						<h2><span style="display:inline-block;width:100%;" onClick="goPage(6)"><spring:message code='main.t46'/></span><ul></ul></h2>	
-						<h2><span style="display:inline-block;width:100%;" onClick="goPage(7)"><spring:message code='main.t47'/></span><ul></ul></h2>
+						<h2><span style="display:inline-block;width:100%;" onClick="goPage(6)"><spring:message code='main.t46'/></span></h2>	
+						<h2><span style="display:inline-block;width:100%;" onClick="goPage(7)"><spring:message code='main.t47'/></span></h2>
 					</c:otherwise>
 				</c:choose>
 				
 				<c:choose>
-					<c:when test="${approvalFlag == 'S' }">
-						
-					</c:when>
+					<c:when test="${approvalFlag == 'S' }"></c:when>
 					<c:otherwise>
-						<h2><span style="display:inline-block;width:100%;" onClick="goPage(8)"><spring:message code='main.t41'/></span><ul></ul></h2>
+						<h2><span style="display:inline-block;width:100%;" onClick="goPage(8)"><spring:message code='main.t41'/></span></h2>
 					</c:otherwise>
 				</c:choose>
 				
 				<c:choose>
-					<c:when test="${approvalFlag == 'S' }">
-					</c:when>
+					<c:when test="${approvalFlag == 'S' }"></c:when>
 					<c:otherwise>
-						<h2><span style="display:inline-block;width:100%;" onClick="goPage(9)"><spring:message code='main.t48'/></span><ul></ul></h2>
-						<h2><span style="display:inline-block;width:100%;" onClick="goPage(10)"><spring:message code='main.t49'/></span><ul></ul></h2>
+						<h2><span style="display:inline-block;width:100%;" onClick="goPage(9)"><spring:message code='main.t48'/></span></h2>
+						<h2><span style="display:inline-block;width:100%;" onClick="goPage(10)"><spring:message code='main.t49'/></span></h2>
 					</c:otherwise>
 				</c:choose>
 				<c:if test="${useAdminBujae == 'YES'}">
-				<h2><span style="display:inline-block;width:100%;" onClick="goPage(14)"><spring:message code='main.t0628'/></span><ul></ul></h2>				
+					<h2><span style="display:inline-block;width:100%;" onClick="goPage(14)"><spring:message code='main.t0628'/></span></h2>				
 				</c:if>
-				<h2><span style="display:inline-block;width:100%;" onClick="goPage(11)"><spring:message code='main.t42'/></span><ul></ul></h2>	
-				<h2><span style="display:inline-block;width:100%;" onClick="goPage(12)"><spring:message code='main.t50'/></span><ul></ul></h2>	
-				<h2><span style="display:inline-block;width:100%;" onClick="goPage(13)"><spring:message code='main.t51'/></span><ul></ul></h2>	
-				
+				<h2><span style="display:inline-block;width:100%;" onClick="goPage('share')">문서함공유</span></h2>	<!-- 2019-10-11 김민성 - 구문서함 전체 조회 추가 -->
+				<h2><span style="display:inline-block;width:100%;" onClick="goPage(11)"><spring:message code='main.t42'/></span></h2>	
+				<h2><span style="display:inline-block;width:100%;" onClick="goPage(12)"><spring:message code='main.t50'/></span></h2>	
+				<h2><span style="display:inline-block;width:100%;" onClick="goPage(13)"><spring:message code='main.t51'/></span></h2>	
+				<c:if test="${approvalFlag == 'G'}">
+					<h2><span style="display:inline-block;width:100%;" onClick="goPage(17)"><spring:message code='ezApprovalG.t560'/></span></h2>
+				</c:if>
+				<h2 style="display:none;"><span style="display:inline-block;width:100%;" onClick="goPage('sendout')">발송현황</span></h2>	
+				<c:if test="${useOpenGov == 'YES'}">
+					<h2><span style="display:inline-block;width:100%;" onClick="goPage(16)">원문공개문서함</span></h2>				
+				</c:if>
 				<%-- 2020-05-14 홍승비 - 전자결재 첨부파일 개수제한 설정메뉴 추가 --%>
-				<h2><span style="display:inline-block;width:100%;" onClick="goPage(16)"><spring:message code='ezApprovalG.hsbAL01'/></span><ul></ul></h2>
+				<h2><span style="display:inline-block;width:100%;" onClick="goPage('attachLimit')"><spring:message code='ezApprovalG.hsbAL01'/></span><ul></ul></h2>
+				<%-- <h2><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage('auditApprLineManage')">
+						<spring:message code='ezAdmin.auditApprLine.01'/></span>
+					<ul></ul>
+				</h2>
+				<h2><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage(20)"><spring:message code='main.t98'/></span></h2> --%>
 			</div>
-			
-		<script type="text/javascript">
-			initToggleList(document.getElementById("left"), "h2", "ul", "li");
-		</script>
+		</div>
 	</body>
 </html>

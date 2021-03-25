@@ -1,0 +1,5315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezPMS">
+
+	<typeAlias	alias="ProjectInfoVO"						type="egovframework.ezEKP.ezPMS.vo.ProjectInfoVO"/>
+	<typeAlias	alias="ProjectGroupVO"						type="egovframework.ezEKP.ezPMS.vo.ProjectGroupVO"/>
+	<typeAlias	alias="ProjectGroupMemberVO"				type="egovframework.ezEKP.ezPMS.vo.ProjectGroupMemberVO"/>
+	<typeAlias	alias="ProjectMainSettingVO"				type="egovframework.ezEKP.ezPMS.vo.ProjectMainSettingVO"/>
+	<typeAlias	alias="ProjectMemberScheduleVO"				type="egovframework.ezEKP.ezPMS.vo.ProjectMemberScheduleVO"/>
+	<typeAlias	alias="ProjectMemberVO"						type="egovframework.ezEKP.ezPMS.vo.ProjectMemberVO"/>
+	<typeAlias	alias="ProjectTaskVO"						type="egovframework.ezEKP.ezPMS.vo.ProjectTaskVO"/>
+	<typeAlias	alias="ProjectSearchVO"						type="egovframework.ezEKP.ezPMS.vo.SearchVO"/>
+	<typeAlias	alias="ProjectTaskLogListVO"				type="egovframework.ezEKP.ezPMS.vo.TaskLogListVO"/>
+	<typeAlias	alias="ProjectTaskTreeVO"					type="egovframework.ezEKP.ezPMS.vo.ProjectTaskTreeVO"/>
+	<typeAlias 	alias="ProjectUserVO" 						type="egovframework.ezEKP.ezPMS.vo.ProjectUserVO" />
+	<typeAlias 	alias="ProjectDeptViewVO" 					type="egovframework.ezEKP.ezPMS.vo.DeptViewVO" />
+	<typeAlias 	alias="ProjectDeptInfoVO" 					type="egovframework.ezEKP.ezPMS.vo.DeptInfoVO" />
+	<typeAlias 	alias="ProjectCompanyVO" 					type="egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO" />
+	<typeAlias 	alias="ProjectUserInfoVO" 					type="egovframework.ezEKP.ezPMS.vo.ProjectMemberVO"/>
+	<typeAlias 	alias="ProjectTaskMemberVO" 				type="egovframework.ezEKP.ezPMS.vo.TaskMemberVO"/>
+	<typeAlias 	alias="ProjectBoardVO" 						type="egovframework.ezEKP.ezPMS.vo.ProjectBoardVO"/>
+	<typeAlias 	alias="FileVO" 								type="egovframework.ezEKP.ezPMS.vo.FileVO"/>
+	<typeAlias 	alias="BoardViewerVO" 						type="egovframework.ezEKP.ezPMS.vo.BoardViewerVO"/>
+	<typeAlias 	alias="CommentVO" 							type="egovframework.ezEKP.ezPMS.vo.CommentVO"/>
+	<typeAlias 	alias="ProjectHolidayVO" 					type="egovframework.ezEKP.ezPMS.vo.ProjectHolidayVO"/>
+	<typeAlias	alias="ProjectBoardFolderVO"					type="egovframework.ezEKP.ezPMS.vo.ProjectBoardFolderVO"/>
+	
+    <resultMap id="projectInfoVO" class="ProjectInfoVO">
+    	<result property="projectId"						column="PROJECT_ID"					columnIndex="1"/>
+    	<result property="tenantId"							column="TENANT_ID"					columnIndex="2"/>
+    	<result property="projectName"						column="PROJECT_NAME"				columnIndex="3"/>
+    	<result property="planStartDate"					column="PLAN_START_DATE"			columnIndex="4"/>
+    	<result property="planEndDate"						column="PLAN_END_DATE"				columnIndex="5"/>
+    	<result property="realStartDate"					column="REAL_START_DATE"			columnIndex="6"/>
+    	<result property="realEndDate"						column="REAL_END_DATE"				columnIndex="7"/>
+    	<result property="headManagerId"					column="HEAD_MANAGER_ID"			columnIndex="8"/>
+    	<result property="headManagerName"					column="HEAD_MANAGER_NAME"			columnIndex="9"/>
+    	<result property="headManagerDeptname"				column="HEAD_MANAGER_DEPTNAME"		columnIndex="10"/>
+    	<result property="status"							column="STATUS"						columnIndex="11"/>
+    	<result property="progress"							column="PROGRESS"					columnIndex="12"/>
+    	<result property="overview"							column="OVERVIEW"					columnIndex="13"/>
+    	<result property="weightInput"						column="WEIGHT_INPUT"				columnIndex="14"/>
+    	<result property="creatorId"						column="CREATOR_ID"					columnIndex="15"/>
+    	<result property="createDate"						column="CREATE_DATE"				columnIndex="16"/>
+    	<result property="creatorName"						column="CREATOR_NAME"				columnIndex="17"/>
+    	<result property="creatorDeptname"					column="CREATOR_DEPTNAME"			columnIndex="18"/>
+    	<result property="workingday"						column="WORKINGDAY"					columnIndex="19"/>
+    	<result property="restDueday"						column="REST_DUEDAY"				columnIndex="20"/>
+    	<result property="alamMailStatus"					column="ALAM_MAIL_STATUS"			columnIndex="21"/>
+    	<result property="isFavorite"						column="ISFAVORITE"					columnIndex="22"/>
+    	<result property="groupId"							column="GROUP_ID"					columnIndex="23"/>
+    	<result property="mailRepeat"						column="MAIL_REPEAT"				columnIndex="24"/>
+    </resultMap>
+    
+    <resultMap id="projectGroupVO" class="ProjectGroupVO">
+    	<result property="groupId"							column="GROUP_ID"					columnIndex="1"/>
+    	<result property="tenantId"							column="TENANT_ID"					columnIndex="2"/>
+    	<result property="projectId"						column="PROJECT_ID"					columnIndex="3"/>
+    	<result property="groupName"						column="GROUP_NAME"					columnIndex="4"/>
+    	<result property="upperGroupId"						column="UPPER_GROUP_ID"				columnIndex="5"/>
+    	<result property="planStartDate"					column="PLAN_START_DATE"			columnIndex="6"/>
+    	<result property="planEndDate"						column="PLAN_END_DATE"				columnIndex="7"/>
+    	<result property="realStartDate"					column="REAL_START_DATE"			columnIndex="8"/>
+    	<result property="realEndDate"						column="REAL_END_DATE"				columnIndex="9"/>
+    	<result property="realProgress"						column="REAL_PROGRESS"				columnIndex="10"/>
+    	<result property="overview"							column="OVERVIEW"					columnIndex="11"/>
+    	<result property="memberCount"						column="MEMBER_COUNT"				columnIndex="12"/>
+    	<result property="headManagerId"					column="HEAD_MANAGER_ID"			columnIndex="13"/>
+    	<result property="headManagerName"					column="HEAD_MANAGER_NAME"			columnIndex="14"/>
+    	<result property="headManagerDeptname"				column="HEAD_MANAGER_DEPTNAME"		columnIndex="15"/>
+    	<result property="creatorId"						column="CREATOR_ID"					columnIndex="16"/>
+    	<result property="createDate"						column="CREATE_DATE"				columnIndex="17"/>
+    	<result property="creatorName"						column="CREATOR_NAME"				columnIndex="18"/>
+    	<result property="creatorDeptname"					column="CREATOR_DEPTNAME"			columnIndex="19"/>
+    	<result property="treeDepth"						column="TREE_DEPTH"					columnIndex="20"/>
+    	<result property="ancesterGroup"					column="ANCESTER_GROUP"				columnIndex="21"/>
+    	<result property="sortOrder"						column="SORT_ORDER"					columnIndex="22"/>
+    	<result property="delStatus"						column="DEL_STATUS"					columnIndex="23"/>
+    	<result property="workingday"						column="WORKINGDAY"					columnIndex="24"/>
+    	<result property="restDueday"						column="REST_DUEDAY"				columnIndex="25"/>
+    	<result property="projectName"						column="PROJECT_NAME"				columnIndex="26"/>
+    	<result property="upperGroupName"					column="UPPER_GROUP_NAME"			columnIndex="27"/>
+    	<result property="weight"							column="WEIGHT"						columnIndex="28"/>
+    	<result property="taskCount"						column="TASKLISTCOUNT"				columnIndex="29"/>
+    	<result property="latePercent"						column="LATEPERCENT"				columnIndex="30"/>
+    </resultMap>
+    
+    <resultMap id="projectGroupVO2" class="ProjectGroupVO">
+    	<result property="groupId"							column="GROUP_ID"					columnIndex="1"/>
+    	<result property="tenantId"							column="TENANT_ID"					columnIndex="2"/>
+    	<result property="projectId"						column="PROJECT_ID"					columnIndex="3"/>
+    	<result property="groupName"						column="GROUP_NAME"					columnIndex="4"/>
+    	<result property="upperGroupId"						column="UPPER_GROUP_ID"				columnIndex="5"/>
+    	<result property="planStartDate"					column="PLAN_START_DATE"			columnIndex="6"/>
+    	<result property="planEndDate"						column="PLAN_END_DATE"				columnIndex="7"/>
+    	<result property="realStartDate"					column="REAL_START_DATE"			columnIndex="8"/>
+    	<result property="realEndDate"						column="REAL_END_DATE"				columnIndex="9"/>
+    	<result property="realProgress"						column="REAL_PROGRESS"				columnIndex="10"/>
+    	<result property="overview"							column="OVERVIEW"					columnIndex="11"/>
+    	<result property="memberCount"						column="MEMBER_COUNT"				columnIndex="12"/>
+    	<result property="headManagerId"					column="HEAD_MANAGER_ID"			columnIndex="13"/>
+    	<result property="headManagerName"					column="HEAD_MANAGER_NAME"			columnIndex="14"/>
+    	<result property="headManagerDeptname"				column="HEAD_MANAGER_DEPTNAME"		columnIndex="15"/>
+    	<result property="creatorId"						column="CREATOR_ID"					columnIndex="16"/>
+    	<result property="createDate"						column="CREATE_DATE"				columnIndex="17"/>
+    	<result property="creatorName"						column="CREATOR_NAME"				columnIndex="18"/>
+    	<result property="creatorDeptname"					column="CREATOR_DEPTNAME"			columnIndex="19"/>
+    	<result property="treeDepth"						column="TREE_DEPTH"					columnIndex="20"/>
+    	<result property="ancesterGroup"					column="ANCESTER_GROUP"				columnIndex="21"/>
+    	<result property="sortOrder"						column="SORT_ORDER"					columnIndex="22"/>
+    	<result property="delStatus"						column="DEL_STATUS"					columnIndex="23"/>
+    	<result property="workingday"						column="WORKINGDAY"					columnIndex="24"/>
+    	<result property="restDueday"						column="REST_DUEDAY"				columnIndex="25"/>
+    	<result property="projectName"						column="PROJECT_NAME"				columnIndex="26"/>
+    	<result property="upperGroupName"					column="UPPER_GROUP_NAME"			columnIndex="27"/>
+    	<result property="weight"							column="WEIGHT"						columnIndex="28"/>
+    	<result property="taskCount"						column="TASKLISTCOUNT"				columnIndex="29"/>
+    	<result property="latePercent"						column="LATEPERCENT"				columnIndex="30"/>
+    	<result property="realStartEndDiff"					column="REALSTARTENDDIFF"			columnIndex="30"/>
+    </resultMap>
+    
+    <resultMap id="projectGroupVOForDetail" class="ProjectGroupVO">
+    	<result property="groupId"							column="GROUP_ID"					columnIndex="1"/>
+    	<result property="tenantId"							column="TENANT_ID"					columnIndex="2"/>
+    	<result property="projectId"						column="PROJECT_ID"					columnIndex="3"/>
+    	<result property="groupName"						column="GROUP_NAME"					columnIndex="4"/>
+    	<result property="upperGroupId"						column="UPPER_GROUP_ID"				columnIndex="5"/>
+    	<result property="planStartDate"					column="PLAN_START_DATE"			columnIndex="6"/>
+    	<result property="planEndDate"						column="PLAN_END_DATE"				columnIndex="7"/>
+    	<result property="realStartDate"					column="REAL_START_DATE"			columnIndex="8"/>
+    	<result property="realEndDate"						column="REAL_END_DATE"				columnIndex="9"/>
+    	<result property="realProgress"						column="REAL_PROGRESS"				columnIndex="10"/>
+    	<result property="overview"							column="OVERVIEW"					columnIndex="11"/>
+    	<result property="memberCount"						column="MEMBER_COUNT"				columnIndex="12"/>
+    	<result property="headManagerId"					column="HEAD_MANAGER_ID"			columnIndex="13"/>
+    	<result property="headManagerName"					column="HEAD_MANAGER_NAME"			columnIndex="14"/>
+    	<result property="headManagerDeptname"				column="HEAD_MANAGER_DEPTNAME"		columnIndex="15"/>
+    	<result property="creatorId"						column="CREATOR_ID"					columnIndex="16"/>
+    	<result property="createDate"						column="CREATE_DATE"				columnIndex="17"/>
+    	<result property="creatorName"						column="CREATOR_NAME"				columnIndex="18"/>
+    	<result property="creatorDeptname"					column="CREATOR_DEPTNAME"			columnIndex="19"/>
+    	<result property="treeDepth"						column="TREE_DEPTH"					columnIndex="20"/>
+    	<result property="ancesterGroup"					column="ANCESTER_GROUP"				columnIndex="21"/>
+    	<result property="sortOrder"						column="SORT_ORDER"					columnIndex="22"/>
+    	<result property="delStatus"						column="DEL_STATUS"					columnIndex="23"/>
+    	<result property="workingday"						column="WORKINGDAY"					columnIndex="24"/>
+    	<result property="restDueday"						column="REST_DUEDAY"				columnIndex="25"/>
+    	<result property="projectName"						column="PROJECT_NAME"				columnIndex="26"/>
+    	<result property="upperGroupName"					column="UPPER_GROUP_NAME"			columnIndex="27"/>
+    	<result property="upperTreeDepth"					column="UPPER_TREE_DEPTH"			columnIndex="28"/>
+    </resultMap>
+    
+    <resultMap class="ProjectGroupVO" id="groupScheduleVO">
+    	<result property="planStartDate"					column="PLAN_START_DATE"			columnIndex="6"/>
+    	<result property="planEndDate"						column="PLAN_END_DATE"				columnIndex="7"/>
+    </resultMap>
+    
+    <resultMap id="projectMainSettingVO" class="ProjectMainSettingVO">
+    	<result property="settingId"						column="SETTING_ID"					columnIndex="1"/>
+    	<result property="tenantId"							column="TENANT_ID"					columnIndex="2"/>
+    	<result property="userId"							column="USER_ID"					columnIndex="3"/>
+    	<result property="viewType"							column="VIEW_TYPE"					columnIndex="4"/>
+    	<result property="progressColor"					column="PROGRESS_COLOR"				columnIndex="5"/>
+    	<result property="completeColor"					column="COMPLETE_COLOR"				columnIndex="6"/>
+    	<result property="overdueColor"						column="OVERDUE_COLOR"				columnIndex="7"/>
+    	<result property="holdColor"						column="HOLD_COLOR"					columnIndex="8"/>
+    	<result property="projectSort"						column="PROJECT_SORT"				columnIndex="9"/>
+    	<result property="listNumber"						column="LIST_NUMBER"				columnIndex="10"/>
+    	<result property="listProjectStatus"				column="LIST_PROJECT_STATUS"		columnIndex="11"/>
+    	<result property="userMail"							column="user_mail"					columnIndex="12"/>
+    	<result property="userName"							column="user_name"					columnIndex="13"/>
+    	<result property="userName2"						column="user_name2"					columnIndex="14"/>
+    </resultMap>
+    
+    <resultMap id="projectMemberVO" class="ProjectMemberVO">
+    	<result property="userId"							column="USER_ID"					columnIndex="1"/>
+    	<result property="userName"							column="USER_NAME"					columnIndex="2"/>
+    	<result property="userDeptname"						column="USER_DEPTNAME"				columnIndex="3"/>
+    	<result property="userPosition"						column="USER_POSITION"				columnIndex="4"/>
+    	<result property="memberRoleId"						column="MEMBER_ROLE_ID"				columnIndex="5"/>
+    	<result property="userIdType"						column="USER_ID_TYPE"				columnIndex="6"/>
+    	<result property="tenantId"							column="TENANT_ID"					columnIndex="7"/>
+    	<result property="userMail"							column="USER_MAIL"					columnIndex="8"/>
+    </resultMap>
+    
+    <resultMap id="projectTaskVOForDetail" class="ProjectTaskVO">
+    	<result property="taskId"							column="TASK_ID"					columnIndex="1"/>
+    	<result property="tenantId"							column="TENANT_ID"					columnIndex="2"/>
+    	<result property="projectId"						column="PROJECT_ID"					columnIndex="3"/>
+    	<result property="groupId"							column="GROUP_ID"					columnIndex="4"/>
+    	<result property="taskName"							column="TASK_NAME"					columnIndex="5"/>
+    	<result property="status"							column="STATUS"						columnIndex="6"/>
+    	<result property="planStartDate"					column="PLAN_START_DATE"			columnIndex="7"/>
+    	<result property="planEndDate"						column="PLAN_END_DATE"				columnIndex="8"/>
+    	<result property="realStartDate"					column="REAL_START_DATE"			columnIndex="9"/>
+    	<result property="realEndDate"						column="REAL_END_DATE"				columnIndex="10"/>
+    	<result property="realProgress"						column="REAL_PROGRESS"				columnIndex="11"/>
+    	<result property="weight"							column="WEIGHT"						columnIndex="12"/>
+    	<result property="overview"							column="OVERVIEW"					columnIndex="13"/>
+    	<result property="memberCount"						column="MEMBER_COUNT"				columnIndex="14"/>
+    	<result property="headManagerId"					column="HEAD_MANAGER_ID"			columnIndex="15"/>
+    	<result property="headManagerName"					column="HEAD_MANAGER_NAME"			columnIndex="16"/>
+    	<result property="headManagerDeptname"				column="HEAD_MANAGER_DEPTNAME"		columnIndex="17"/>
+    	<result property="writerId"							column="WRITER_ID"					columnIndex="18"/>
+    	<result property="writeDate"						column="WRITE_DATE"					columnIndex="19"/>
+    	<result property="writerName"						column="WRITER_NAME"				columnIndex="20"/>
+    	<result property="writerDeptname"					column="WRITER_DEPTNAME"			columnIndex="21"/>    	
+    	<result property="treeDepth"						column="TREE_DEPTH"					columnIndex="22"/>
+    	<result property="ancesterGroup"					column="ANCESTER_GROUP"				columnIndex="23"/>
+    	<result property="sortOrder"						column="SORT_ORDER"					columnIndex="24"/>
+    	<result property="workingday"						column="WORKINGDAY"					columnIndex="25"/>
+    	<result property="restDueday"						column="REST_DUEDAY"				columnIndex="26"/>
+    	<result property="linkTaskId"						column="LINK_TASK_ID"				columnIndex="27"/>
+    	<result property="delStatus"						column="DEL_STATUS"					columnIndex="28"/>
+    	<result property="groupName"						column="UPPER_GROUP_NAME"			columnIndex="29"/>
+    	<result property="projectName"						column="PROJECT_NAME"				columnIndex="30"/>
+    	<result property="realWorkingday"					column="REAL_WORKINGDAY"			columnIndex="31"/>
+    	<result property="pretask"							column="PRETASK"					columnIndex="32"/>
+    	<result property="upperTreeDepth" 					column="UPPER_TREE_DEPTH"			columnIndex="33"/>
+    </resultMap>
+    
+     <resultMap id="projectTaskVOForList" class="ProjectTaskVO">
+    	<result property="taskId"							column="TASK_ID"					columnIndex="1"/>
+    	<result property="tenantId"							column="TENANT_ID"					columnIndex="2"/>
+    	<result property="projectId"						column="PROJECT_ID"					columnIndex="3"/>
+    	<result property="groupId"							column="GROUP_ID"					columnIndex="4"/>
+    	<result property="taskName"							column="TASK_NAME"					columnIndex="5"/>
+    	<result property="status"							column="STATUS"						columnIndex="6"/>
+    	<result property="planStartDate"					column="PLAN_START_DATE"			columnIndex="7"/>
+    	<result property="planEndDate"						column="PLAN_END_DATE"				columnIndex="8"/>
+    	<result property="realStartDate"					column="REAL_START_DATE"			columnIndex="9"/>
+    	<result property="realEndDate"						column="REAL_END_DATE"				columnIndex="10"/>
+    	<result property="realProgress"						column="REAL_PROGRESS"				columnIndex="11"/>
+    	<result property="weight"							column="WEIGHT"						columnIndex="12"/>
+    	<result property="overview"							column="OVERVIEW"					columnIndex="13"/>
+    	<result property="memberCount"						column="MEMBER_COUNT"				columnIndex="14"/>
+    	<result property="headManagerId"					column="HEAD_MANAGER_ID"			columnIndex="15"/>
+    	<result property="headManagerName"					column="HEAD_MANAGER_NAME"			columnIndex="16"/>
+    	<result property="headManagerDeptname"				column="HEAD_MANAGER_DEPTNAME"		columnIndex="17"/>
+    	<result property="writerId"							column="WRITER_ID"					columnIndex="18"/>
+    	<result property="writeDate"						column="WRITE_DATE"					columnIndex="19"/>
+    	<result property="writerName"						column="WRITER_NAME"				columnIndex="20"/>
+    	<result property="writerDeptname"					column="WRITER_DEPTNAME"			columnIndex="21"/>    	
+    	<result property="treeDepth"						column="TREE_DEPTH"					columnIndex="22"/>
+    	<result property="ancesterGroup"					column="ANCESTER_GROUP"				columnIndex="23"/>
+    	<result property="sortOrder"						column="SORT_ORDER"					columnIndex="24"/>
+    	<result property="workingday"						column="WORKINGDAY"					columnIndex="25"/>
+    	<result property="restDueday"						column="REST_DUEDAY"				columnIndex="26"/>
+    	<result property="linkTaskId"						column="LINK_TASK_ID"				columnIndex="27"/>
+    	<result property="delStatus"						column="DEL_STATUS"					columnIndex="28"/>
+    	<result property="groupName"						column="UPPER_GROUP_NAME"			columnIndex="29"/>
+    	<result property="projectName"						column="PROJECT_NAME"				columnIndex="30"/>
+    	<result property="realWorkingday"					column="REAL_WORKINGDAY"			columnIndex="31"/>
+    	<result property="pretask"							column="PRETASK"					columnIndex="32"/>
+    </resultMap>
+    
+     <resultMap id="projectTaskVOForList2" class="ProjectTaskVO">
+    	<result property="taskId"							column="TASK_ID"					columnIndex="1"/>
+    	<result property="tenantId"							column="TENANT_ID"					columnIndex="2"/>
+    	<result property="projectId"						column="PROJECT_ID"					columnIndex="3"/>
+    	<result property="groupId"							column="GROUP_ID"					columnIndex="4"/>
+    	<result property="taskName"							column="TASK_NAME"					columnIndex="5"/>
+    	<result property="status"							column="STATUS"						columnIndex="6"/>
+    	<result property="planStartDate"					column="PLAN_START_DATE"			columnIndex="7"/>
+    	<result property="planEndDate"						column="PLAN_END_DATE"				columnIndex="8"/>
+    	<result property="realStartDate"					column="REAL_START_DATE"			columnIndex="9"/>
+    	<result property="realEndDate"						column="REAL_END_DATE"				columnIndex="10"/>
+    	<result property="realProgress"						column="REAL_PROGRESS"				columnIndex="11"/>
+    	<result property="weight"							column="WEIGHT"						columnIndex="12"/>
+    	<result property="overview"							column="OVERVIEW"					columnIndex="13"/>
+    	<result property="memberCount"						column="MEMBER_COUNT"				columnIndex="14"/>
+    	<result property="headManagerId"					column="HEAD_MANAGER_ID"			columnIndex="15"/>
+    	<result property="headManagerName"					column="HEAD_MANAGER_NAME"			columnIndex="16"/>
+    	<result property="headManagerDeptname"				column="HEAD_MANAGER_DEPTNAME"		columnIndex="17"/>
+    	<result property="writerId"							column="WRITER_ID"					columnIndex="18"/>
+    	<result property="writeDate"						column="WRITE_DATE"					columnIndex="19"/>
+    	<result property="writerName"						column="WRITER_NAME"				columnIndex="20"/>
+    	<result property="writerDeptname"					column="WRITER_DEPTNAME"			columnIndex="21"/>    	
+    	<result property="treeDepth"						column="TREE_DEPTH"					columnIndex="22"/>
+    	<result property="ancesterGroup"					column="ANCESTER_GROUP"				columnIndex="23"/>
+    	<result property="sortOrder"						column="SORT_ORDER"					columnIndex="24"/>
+    	<result property="workingday"						column="WORKINGDAY"					columnIndex="25"/>
+    	<result property="restDueday"						column="REST_DUEDAY"				columnIndex="26"/>
+    	<result property="linkTaskId"						column="LINK_TASK_ID"				columnIndex="27"/>
+    	<result property="delStatus"						column="DEL_STATUS"					columnIndex="28"/>
+    	<result property="groupName"						column="UPPER_GROUP_NAME"			columnIndex="29"/>
+    	<result property="projectName"						column="PROJECT_NAME"				columnIndex="30"/>
+    	<result property="realWorkingday"					column="REAL_WORKINGDAY"			columnIndex="31"/>
+    	<result property="pretask"							column="PRETASK"					columnIndex="32"/>
+    	<result property="planProgress"						column="PLAN_PROGRESS"				columnIndex="33"/>
+    	<result property="realStartEndDiff"					column="REALSTARTENDDIFF"			columnIndex="34"/>
+    </resultMap>
+    
+    <resultMap class="ProjectTaskVO" id="taskScheduleVO">
+    	<result property="planStartDate"					column="PLAN_START_DATE"			columnIndex="7"/>
+    	<result property="planEndDate"						column="PLAN_END_DATE"				columnIndex="8"/>
+    </resultMap>
+    
+    <resultMap id="projectTaskMemberVO" class="ProjectTaskMemberVO">
+    	<result property="taskMemberId"						column="TASK_MEMBER_ID"				columnIndex="1"/>
+    	<result property="tenantId"							column="TENANT_ID"					columnIndex="2"/>
+    	<result property="taskId"							column="TASK_ID"					columnIndex="3"/>
+    	<result property="userId"							column="USER_ID"					columnIndex="4"/>
+    	<result property="userName"							column="USER_NAME"					columnIndex="5"/>
+    	<result property="userDeptname"						column="USER_DEPTNAME"				columnIndex="6"/>
+    	<result property="pctinput"							column="PCTINPUT"					columnIndex="7"/>
+    	<result property="userMail"							column="USER_MAIL"					columnIndex="8"/>
+    </resultMap>
+    
+    <resultMap id="projectTaskMemberVOForSchedule" class="ProjectTaskMemberVO">
+    	<result property="taskId"							column="TASK_ID"/>
+    	<result property="userId"							column="USER_ID"/>
+    	<result property="planStartDate"					column="PLAN_START_DATE"/>
+    	<result property="planEndDate"						column="PLAN_END_DATE"/>
+    	<result property="userName"							column="USER_NAME"/>
+    	<result property="userDeptname"						column="USER_DEPTNAME"/>
+    </resultMap>
+   
+    <resultMap id="projectMemberScheduleVO" class="ProjectMemberScheduleVO">
+    	<result property="userId"							column="USER_ID"					columnIndex="1"/>
+    	<result property="userName"							column="USER_NAME"					columnIndex="2"/>
+    	<result property="deptName"							column="DEPT_NAME"					columnIndex="3"/>
+    	<result property="assignedDate"						column="ASSIGNED_DATE"				columnIndex="4"/>
+    	<result property="projectId"						column="PROJECT_ID"					columnIndex="5"/>
+    	<result property="tenantId"							column="TENANT_ID"					columnIndex="6"/>
+    </resultMap>
+    
+    <resultMap id="ProjectTaskLogListVO" class="ProjectTaskLogListVO">
+    	<result property="logId"							column="LOG_ID"						columnIndex="1"/>
+    	<result property="tenantId"							column="TENANT_ID"					columnIndex="2"/>
+    	<result property="projectId"						column="PROJECT_ID"					columnIndex="3"/>
+    	<result property="groupId"							column="GROUP_ID"					columnIndex="4"/>
+    	<result property="taskId"							column="TASK_ID"					columnIndex="5"/>
+    	<result property="logDate"							column="LOG_DATE"					columnIndex="6"/>
+    	<result property="logStatus"						column="LOG_STATUS"					columnIndex="7"/>
+    	<result property="userId"							column="USER_ID"					columnIndex="8"/>
+    	<result property="userName"							column="USER_NAME"					columnIndex="9"/>
+    	<result property="userDeptname"						column="USER_DEPTNAME"				columnIndex="10"/>
+   		<result property="logContent" 						column="LOG_CONTENT"				columnIndex="11"/>
+   		<result property="taskName" 						column="TASK_NAME"					columnIndex="12"/>
+   		<result property="groupName" 						column="GROUP_NAME"					columnIndex="130"/>
+    </resultMap>
+    
+    <resultMap id="projectTaskTreeVO" class="ProjectTaskTreeVO">
+    	<result property="id"							column="ID"						columnIndex="1"/>
+    	<result property="parent"						column="PARENT"					columnIndex="2"/>
+    	<result property="text"							column="TEXT"					columnIndex="3"/>
+    	<result property="sort"							column="SORT"					columnIndex="4"/>
+    	<result property="projectId"					column="PROJECT_ID"				columnIndex="5"/>
+    	<result property="groupId"						column="GROUP_ID"				columnIndex="6"/>
+    	<result property="taskId"						column="TASK_ID"				columnIndex="7"/>
+    </resultMap>
+    
+    <resultMap class="ProjectdeptViewVO" id="projectDeptViewMap">
+		<result property="id" 				column="id" />
+		<result property="parent" 			column="parent" />
+		<result property="companyId" 		column="companyId" />
+		<result property="text" 			column="text" />
+		<result property="isComp" 			column="isComp" />
+		<result property="myDept" 			column="myDept" />
+	</resultMap>
+
+	<resultMap class="ProjectUserVO" id="projectAuthorMap">
+		<result property="userName" 		column="user_name" />
+		<result property="userId" 			column="user_id" />
+		<result property="jikwi" 			column="jikwi" />
+		<result property="deptName" 		column="dept_name" />
+		<result property="authDept" 		column="auth_dept" />
+	</resultMap>
+
+	<resultMap class="ProjectUserVO" id="projectUserMap">
+		<result property="userName"			column="user_name" />
+		<result property="userId" 			column="user_id" />
+		<result property="jikwi" 			column="jikwi" />
+		<result property="mail" 			column="mail" />
+		<result property="deptName" 		column="dept_name" />
+		<result property="userImg" 			column="user_img" />
+	</resultMap>
+
+	<resultMap class="ProjectUserVO" id="projectDeptMap">
+		<result property="deptName" 		column="dept_name" />
+		<result property="deptId" 			column="dept_id" />
+		<result property="mine" 			column="mine" />
+	</resultMap>
+	
+	<resultMap class="ProjectDeptInfoVO" id="projectDeptInfoVO">
+		<result property="deptId" 			column="dept_id" />
+		<result property="deptName" 		column="dept_name" />
+	</resultMap>
+	
+	<resultMap id="projectUserInfoVO" class="ProjectUserInfoVO">
+		<result property="userId" 					column="userId"/>
+		<result property="userName" 				column="userName"/>
+		<result property="userName2" 				column="userName2"/>
+		<result property="userPosition"				column="userPosition"/>
+		<result property="userPosition2"			column="userPosition2"/>
+		<result property="userDeptname" 			column="userDeptname"/>
+		<result property="userDeptname2" 			column="userDeptname2"/>
+	</resultMap>
+	
+	<resultMap class="ProjectBoardVO" id="projectBoardVOForDetail">
+		<result property="itemId"					column="item_id"/>
+		<result property="writerId"					column="writer_id"/>
+		<result property="title" 					column="title"/>
+		<result property="writeOverview" 			column="write_overview"/>
+		<result property="writeType" 				column="write_type"/>
+		<result property="writeContent" 			column="write_content"/>
+		<result property="writeDate" 				column="write_date"/>
+		<result property="writeUpdateDate" 			column="write_update_date"/>
+		<result property="readCount" 				column="read_count"/>
+		<result property="writerName" 				column="writer_name"/>
+		<result property="writerDeptName" 			column="writer_deptname"/>
+		<result property="writerPosition" 			column="writer_position"/>
+		<result property="mobileNumber" 			column="mobile"/>
+		<result property="rootItemId"				column="root_item_id"/>
+		<result property="itemLevel"				column="item_level"/>
+		<result property="folderId"					column="FOLDER_ID"/>
+		<result property="folderName"				column="FOLDER_NAME"/>
+		<result property="projectId"				column="PROJECT_ID"/>
+		<result property="upperDocNoTree"			column="upper_doc_no_tree"/>
+	</resultMap>
+	
+	<resultMap class="ProjectBoardVO" id="projectBoardVOForList">
+		<result property="itemId" 					column="item_id"/>
+		<result property="title" 					column="title"/>
+		<result property="writeOverview" 			column="write_overview"/>
+		<result property="writeType" 				column="write_type"/>
+		<result property="writeDate" 				column="write_date"/>
+		<result property="writeUpdateDate" 			column="write_update_date"/>
+		<result property="readCount" 				column="read_count"/>
+		<result property="writerName" 				column="writer_name"/>
+		<result property="writerDeptName" 			column="writer_deptname"/>
+		<result property="fileCNT"					column="file_cnt"/>
+		<result property="writeContent"				column="WRITE_CONTENT"/>
+		<result property="rootItemId"				column="root_item_id"/>
+		<result property="itemLevel"				column="item_level"/>
+		<result property="docNo"					column="doc_no"/>
+		<result property="folderId"					column="FOLDER_ID"/>
+		<result property="folderName"				column="FOLDER_NAME"/>
+	</resultMap>
+	
+	<resultMap class="FileVO" id="fileVO">
+		<result property="filePath"					column="file_path"/>
+		<result property="fileSize"					column="file_size"/>
+		<result property="fileName"					column="file_name"/>
+	</resultMap>
+	
+	<resultMap class="java.util.HashMap" id="StatusCount">
+		<result property="status"	column="STATUS"/>
+		<result property="count"	column="COUNT"/>
+	</resultMap>
+	
+	<resultMap id="projectGroupMemberVO" class="ProjectGroupMemberVO">
+    	<result property="memberId"							column="GROUP_MEMBER_ID"			columnIndex="1"/>
+    	<result property="userId"							column="USER_ID"					columnIndex="2"/>
+    	<result property="userName"							column="USER_NAME"					columnIndex="3"/>
+    	<result property="userName2"						column="USER_NAME2"					columnIndex="4"/>
+    	<result property="userDeptname"						column="USER_DEPTNAME"				columnIndex="5"/>
+    	<result property="userDeptname2"					column="USER_DEPTNAME2"				columnIndex="6"/>
+    	<result property="memberRoleId"						column="MEMBER_ROLE_ID"				columnIndex="7"/>
+    	<result property="tenantId"							column="TENANT_ID"					columnIndex="8"/>
+    	<result property="groupId"							column="GROUP_ID"					columnIndex="9"/>
+    </resultMap>
+    
+    <resultMap class="BoardViewerVO" id="boardViewerVO">
+    	<result property="userId"							column="user_id"/>
+    	<result property="userName"							column="user_name"/>
+    	<result property="position"							column="position"/>
+    	<result property="userDeptName"						column="user_deptname"/>
+    	<result property="readDate"							column="read_date"/>
+    </resultMap>
+    
+    <resultMap class="CommentVO" id="commentVO">
+    	<result property="commentId"						column="comment_id"/>
+    	<result property="updateDate"						column="update_date"/>
+    	<result property="commentContent"					column="comment_content"/>
+    	<result property="writerId"							column="writer_id"/>
+    	<result property="writeDate"						column="write_date"/>
+    	<result property="writerName"						column="writer_name"/>
+    	<result property="writerDeptName"					column="writer_deptname"/>
+    	<result property="taskName"							column="task_name"/>
+    	<result property="taskId"							column="task_id"/>
+    	<result property="groupId"							column="group_id"/>
+    	<result property="groupName"						column="group_name"/>
+    </resultMap>
+    
+    <resultMap class="ProjectTaskVO" id="taskListByGroupId">
+    	<result property="taskId"							column="TASK_ID"/>
+    	<result property="planStartDate"					column="plan_start_date"/>
+    	<result property="planEndDate"						column="plan_end_date"/>
+    	<result property="realStartDate" 					column="real_start_date"/>
+    	<result property="realEndDate" 						column="real_end_date"/>
+    	<result property="status" 							column="status"/>
+    </resultMap>
+    
+    <resultMap id="projectHolidayVO" class="ProjectHolidayVO">
+    	<result property="holidayName"						column="HOLIDAY_NAME"/>
+    	<result property="holiday"							column="HOLIDAY"/>
+    	<result property="isSolar"							column="ISSOLAR"/>
+    	<result property="isRepeat"							column="ISREPEAT"/>
+    </resultMap>
+    
+    <resultMap class="ProjectBoardFolderVO" id="projectBoardFolderVO">
+    	<result property="id"						column="FOLDER_ID"/>
+    	<result property="text"						column="FOLDER_NAME"/>
+    	<result property="text2"					column="FOLDER_NAME2"/>
+    	<result property="sort"						column="FOLDER_ORDER"/>
+    	<result property="projectId"				column="PROJECT_ID"/>
+    	<result property="creatorId"				column="CREATOR_ID"/>
+    	<result property="projectName"				column="PROJECT_NAME"/>
+    </resultMap>
+    
+    <!-- 조직도 만들기 위한 쿼리 -->
+	<select id="EzPMSDAO.selectDeptList" parameterClass="map" resultMap="projectDeptViewMap">
+		select 
+			d.CN as id,
+			IF(d.extensionattribute1=null
+			<isNotEmpty property="companyId">
+			or d.CN=#companyId#
+			</isNotEmpty>
+			,'##',d.EXTENSIONATTRIBUTE1) as parent,
+			d.extensionattribute2 as companyId,
+			d.DISPLAYNAME$lang$ as text,
+			case d.CN
+				when d.extensionattribute2 then 'comp'
+				else 'dept'
+			end as isComp,
+			case d.CN
+				when u.DEPARTMENT then 'yes'
+				else 'no'
+			end as myDept
+		from
+			tbl_deptmaster d 
+		left join 
+			tbl_usermaster u 
+		on 
+			d.tenant_id = u.TENANT_ID
+		where 
+			d.tenant_id = #tenantId#
+		and 
+		 u.CN = #userId#
+		and
+			u.tenant_id = #tenantId#
+		and 
+			(
+				((substr(u.EXTENSIONATTRIBUTE1, 3, 1) = 0 
+			and 
+				d.extensionattribute2 = u.PHYSICALDELIVERYOFFICENAME))
+			or
+				(substr(u.EXTENSIONATTRIBUTE1, 3, 1) = 1)
+			)
+			<isNotEmpty property="companyId">
+			and 
+				d.EXTENSIONATTRIBUTE2 = #companyId#
+			</isNotEmpty>
+		ORDER BY lpad(ifnull(d.EXTENSIONATTRIBUTE15, 0), 6, 0), d.DISPLAYNAME$lang$
+	</select>
+
+	<!-- 회사 리스트를 가져오는 쿼리 -->
+	<select id="EzPMSDAO.selectCompanyList" resultClass="projectCompanyVO" parameterClass="map">
+		select 
+			d.CN as companyId,
+			d.DISPLAYNAME$lang$ as companyName,
+			case d.CN
+				when #companyId# then 'selected'
+				else 'no'
+			end as selected
+		from 
+			jmocha.tbl_deptmaster d
+		left join
+			jmocha.tbl_usermaster u on d.tenant_id = u.TENANT_ID
+		where
+			d.TENANT_ID = #tenantId#
+		and 
+			u.CN = #userId#
+		and 
+			u.TENANT_ID = #tenantId#
+		and
+			(
+				((substr(u.EXTENSIONATTRIBUTE1, 3, 1) = 0 
+			and
+				d.extensionattribute2 = u.PHYSICALDELIVERYOFFICENAME))
+			or
+				(substr(u.EXTENSIONATTRIBUTE1, 3, 1) = 1)
+			)
+		and 
+			d.extensionattribute2 = d.CN
+		order by lpad(ifnull(d.EXTENSIONATTRIBUTE15, 0), 6, 0), d.DISPLAYNAME$lang$
+	</select>
+	
+	
+	<!-- 해당부서의 사원리스트 -->
+	<select id="EzPMSDAO.selectUserList" parameterClass="Map" resultMap="projectUserMap" remapResults="true">
+		select
+			DISPLAYNAME$lang$ as user_name,
+			CN as user_id,
+			TITLE$lang$ as jikwi,
+			MAIL as mail,
+			DESCRIPTION$lang$ as dept_name,
+			EXTENSIONATTRIBUTE2 as user_img
+		from 
+			tbl_usermaster
+		where
+			TENANT_ID = #tenantId#
+		<isNotEqual property="key" compareValue="DEPARTMENT">
+			<isEqual property="key" compareValue="CN">
+			and
+				$key$ = #value#
+			</isEqual>
+			<isNotEqual property="key" compareValue="CN">
+				and 
+				$key$ like concat('%',#value#,'%')
+		
+			</isNotEqual>
+		</isNotEqual>
+		<isEqual property="key" compareValue="DEPARTMENT">
+			and 
+				$key$ = #value#
+		</isEqual>
+		order by 
+			lpad(ifnull(EXTENSIONATTRIBUTE15,0),6,0) ,DISPLAYNAME$lang$
+	</select>
+	
+    <insert id="EzPMSDAO.addNewProject" parameterClass="Map">
+    	<![CDATA[
+    		INSERT INTO tbl_pms_project(
+    			tenant_id, 				project_name, 			plan_start_date, 			plan_end_date,
+    			head_manager_id, 		head_manager_name,		head_manager_name2, 		head_manager_deptname, 	head_manager_deptname2, 
+    			status, 				progress, 				overview, 					weight_input, 			creator_id, 
+    			creator_name, 			creator_name2, 			creator_deptname, 			creator_deptname2, 		workingday, 
+    			rest_dueday, 			alam_mail_status,		create_date,				mail_repeat
+    		) 
+    		VALUES ( 
+    			#tenantId#,				#projectName#,			#planStartDate#,			#planEndDate#,
+    			#headManagerId#,		#headManagerName#,		#headManagerName2#,			#headManagerDeptname#,	#headManagerDeptname2#,	
+    			#status#,				#progress#,				#overview#,					#weightInput#,			#creatorId#, 
+    			#creatorName#,			#creatorName2#,			#creatorDeptname#,			#creatorDeptname2#,		#workingDay#,
+    			#restDueday#,			#endAlamStatus#,        #createDate#,				#mailRepeat#
+    		)
+    	]]>
+    	<selectKey keyProperty="id" resultClass="Long">
+    		SELECT
+    			last_insert_id()
+    	</selectKey>
+    </insert>
+    
+    <select id="EzPMSDAO.getProjectGroupTree" parameterClass="Map" resultMap="projectTaskTreeVO">
+			<![CDATA[
+				SELECT
+					GROUP_ID AS id,
+					UPPER_GROUP_ID AS parent,
+					GROUP_NAME AS text,
+					SORT_ORDER AS sort,
+					PROJECT_ID,
+					GROUP_ID,
+					0 AS TASK_ID
+				FROM TBL_PMS_GROUP
+				WHERE
+					PROJECT_ID = #project_Id#
+				AND
+					DEL_STATUS = 0
+			]]>
+			<isNotEqual property="location" compareValue="board">
+			<isNotEqual property="location" compareValue="taskLog">
+				AND
+					ISSUEYN = 'N'
+			</isNotEqual>
+			</isNotEqual>
+				ORDER BY
+					ISSUEYN DESC, SORT_ORDER
+	</select>
+	
+	<select id="EzPMSDAO.getProjectTaskTree" parameterClass="Map" resultMap="projectTaskTreeVO">
+			<![CDATA[
+				SELECT
+					CONCAT('t',TASK_ID) AS id,
+					GROUP_ID AS parent,
+					TASK_NAME AS text,
+					SORT_ORDER AS sort,
+					PROJECT_ID,
+					GROUP_ID,
+					TASK_ID
+				FROM 
+					TBL_PMS_TASK
+				WHERE
+					PROJECT_ID = #project_Id#
+				AND
+					DEL_STATUS = 0
+				ORDER BY
+					GROUP_ID, SORT_ORDER
+			]]>
+	</select>
+	
+	<select id="EzPMSDAO.getProjectMember" parameterClass="Map" resultMap="projectMemberVO" remapResults="true">
+		<isNotEqual property="roleId" compareValue="5">
+			SELECT
+				M.USER_ID AS USER_ID,
+				M.USER_NAME$lang$ AS USER_NAME,
+				M.USER_DEPTNAME$lang$ AS USER_DEPTNAME,
+				M.USER_POSITION$lang$ AS USER_POSITION,
+				M.MEMBER_ROLE_ID,
+				M.USER_ID_TYPE,
+				M.TENANT_ID,
+				IFNULL(U.MAIL, D.MAIL) AS USER_MAIL
+			FROM 
+				TBL_PMS_MEMBER M
+			LEFT JOIN
+				TBL_USERMASTER U
+			ON
+				U.CN = M.USER_ID
+			AND
+				U.TENANT_ID = M.TENANT_ID
+			LEFT JOIN
+				TBL_DEPTMASTER D
+			ON
+				D.CN = M.USER_ID
+			AND
+				D.TENANT_ID = M.TENANT_ID
+			WHERE
+				M.PROJECT_ID = #projectId#
+			AND
+			<isNotEqual property="roleId" compareValue="4">
+				M.MEMBER_ROLE_ID = #roleId#
+			</isNotEqual>
+			<isEqual property="roleId" compareValue="4">
+				M.MEMBER_ROLE_ID IN (1,2,3)
+			</isEqual>
+			AND
+				M.TENANT_ID = #tenantId#
+			<isEqual property="isGantt" compareValue="0">
+			AND
+				M.USER_ID_TYPE = 'user'
+			UNION
+				SELECT 
+					CN AS USER_ID,
+					DISPLAYNAME$lang$ AS USER_NAME,
+					DESCRIPTION$lang$ AS USER_DEPTNAME,
+					TITLE AS USER_POSITION,
+					C.MEMBER_ROLE_ID AS MEMBER_ROLE_ID,
+					C.USER_ID_TYPE AS USER_ID_TYPE,
+					C.TENANT_ID AS TENANT_ID,
+					D.MAIL AS USER_MAIL
+				FROM TBL_USERMASTER D 
+				JOIN
+				(SELECT DISTINCT 
+					B.CN AS DEPARTMENT,
+					A.MEMBER_ROLE_ID AS MEMBER_ROLE_ID,
+					A.USER_ID_TYPE AS USER_ID_TYPE,
+					A.TENANT_ID AS TENANT_ID,
+					B.MAIL AS USER_MAIL
+				FROM
+					TBL_PMS_MEMBER A JOIN TBL_DEPTMASTER B
+				ON
+					B.DEPT_CD_PATH LIKE CONCAT('%',A.USER_ID,'%')
+				AND
+					A.TENANT_ID = B.TENANT_ID
+				WHERE
+					A.PROJECT_ID = #projectId#
+				AND
+					A.USER_ID_TYPE = 'dept'
+				AND
+				<isNotEqual property="roleId" compareValue="4">
+					MEMBER_ROLE_ID = #roleId#
+				</isNotEqual>
+				<isEqual property="roleId" compareValue="4">
+					MEMBER_ROLE_ID IN (1,2,3)
+				</isEqual>
+				AND
+					A.TENANT_ID = #tenantId#) C
+				ON
+					D.DEPARTMENT = C.DEPARTMENT
+				WHERE
+					D.TENANT_ID = #tenantId#
+			</isEqual>
+		</isNotEqual>
+		<isEqual property="roleId" compareValue="5">
+			SELECT
+				M.USER_ID AS USER_ID,
+				M.USER_NAME$lang$ AS USER_NAME,
+				M.USER_DEPTNAME$lang$ AS USER_DEPTNAME,
+				M.USER_POSITION$lang$ AS USER_POSITION,
+				0 AS MEMBER_ROLE_ID,
+				"" AS USER_ID_TYPE,
+				M.TENANT_ID,
+				IFNULL(U.MAIL, D.MAIL) AS USER_MAIL
+			FROM 
+				TBL_PMS_MEMBER M
+			LEFT JOIN
+				TBL_USERMASTER U
+			ON
+				U.CN = M.USER_ID
+			AND
+				U.TENANT_ID = M.TENANT_ID
+			LEFT JOIN
+				TBL_DEPTMASTER D
+			ON
+				D.CN = M.USER_ID
+			AND
+				D.TENANT_ID = M.TENANT_ID
+			WHERE
+				M.PROJECT_ID = #projectId#
+			AND
+			<isNotEqual property="roleId" compareValue="4">
+				M.MEMBER_ROLE_ID IN (1,2)
+			</isNotEqual>
+			<isEqual property="roleId" compareValue="4">
+				M.MEMBER_ROLE_ID IN (1,2,3)
+			</isEqual>
+			AND
+				M.TENANT_ID = #tenantId#
+			<isEqual property="isGantt" compareValue="0">
+			AND
+				M.USER_ID_TYPE = 'user'
+			UNION
+				SELECT 
+					CN AS USER_ID,
+					DISPLAYNAME$lang$ AS USER_NAME,
+					DESCRIPTION$lang$ AS USER_DEPTNAME,
+					TITLE AS USER_POSITION,
+					0 AS MEMBER_ROLE_ID,
+					"" AS USER_ID_TYPE,
+					C.TENANT_ID AS TENANT_ID,
+					D.MAIL AS USER_MAIL
+				FROM TBL_USERMASTER D JOIN
+				(SELECT DISTINCT 
+					B.CN AS DEPARTMENT,
+					A.MEMBER_ROLE_ID AS MEMBER_ROLE_ID,
+					A.USER_ID_TYPE AS USER_ID_TYPE,
+					A.TENANT_ID AS TENANT_ID
+				FROM
+					TBL_PMS_MEMBER A JOIN TBL_DEPTMASTER B
+				ON
+					B.DEPT_CD_PATH LIKE CONCAT('%',A.USER_ID,'%')
+				AND
+					A.TENANT_ID = B.TENANT_ID
+				WHERE
+					A.PROJECT_ID = #projectId#
+				AND
+					A.USER_ID_TYPE = 'dept'
+				AND
+				<isNotEqual property="roleId" compareValue="4">
+					MEMBER_ROLE_ID IN (1,2)
+				</isNotEqual>
+				<isEqual property="roleId" compareValue="4">
+					MEMBER_ROLE_ID IN (1,2,3)
+				</isEqual>
+				AND
+					A.TENANT_ID = #tenantId#) C
+				ON
+					D.DEPARTMENT = C.DEPARTMENT
+				WHERE
+					D.TENANT_ID = #tenantId#
+			</isEqual>
+		</isEqual>
+	</select>
+	
+	<!-- <select id="EzPMSDAO.getGroupMember" parameterClass="Map" resultMap="projectMemberVO">
+		<![CDATA[
+			SELECT
+				G.USER_ID AS USER_ID,
+				G.USER_NAME$lang$ AS USER_NAME,
+				G.USER_DEPTNAME$lang$ AS USER_DEPTNAME,
+				U.TITLE$lang$ AS USER_POSITION,
+				G.MEMBER_ROLE_ID,
+				"" AS USER_ID_TYPE,
+				G.TENANT_ID
+			FROM 
+				TBL_PMS_GROUPMEMBER G
+			JOIN
+				TBL_USERMASTER U
+			ON
+				G.user_id = U.CN
+			AND
+				G.tenant_id = U.tenant_id
+			WHERE
+				GROUP_ID = #groupId#
+			AND 
+				TENANT_ID = #tenantId#
+		]]>
+	</select> -->
+	
+	<select id="EzPMSDAO.getUserInfo" parameterClass="Map" resultMap="projectUserInfoVO">
+		<isEqual property="userIdType" compareValue="user">
+			<![CDATA[
+			SELECT 
+				*
+			FROM 
+            (select
+				A.CN AS userId, 
+				A.DISPLAYNAME AS userName, 
+				A.DISPLAYNAME2 AS userName2,
+				A.TITLE AS userPosition,
+				A.TITLE2 AS userPosition2, 
+				B.DISPLAYNAME AS userDeptname, 
+				B.DISPLAYNAME2 AS userDeptname2 
+			FROM
+				tbl_usermaster A
+			LEFT JOIN 
+				tbl_deptmaster B 
+			ON 
+				A.department = B.CN
+			AND 
+				A.tenant_id = B.tenant_id 
+			WHERE 
+				A.tenant_id = #tenantId#
+			UNION
+				SELECT R.CN, R.DISPLAYNAME, R.DISPLAYNAME2, R.TITLE, R.TITLE2, B2.DISPLAYNAME, B2.DISPLAYNAME2
+				FROM TBL_usermaster_retire R
+                LEFT JOIN
+					TBL_DEPTMASTER B2
+				ON
+					R.department = B2.cn
+				AND
+					R.tenant_id = B2.tenant_id
+				WHERE
+					R.TENANT_ID = #tenantId#
+			UNION
+				SELECT D.CN, D.DISPLAYNAME, D.DISPLAYNAME2, D.TITLE, D.TITLE2, B3.DISPLAYNAME, B3.DISPLAYNAME2
+				FROM TBL_usermaster_delete D
+                LEFT JOIN
+					TBL_DEPTMASTER B3
+				ON
+					D.department = B3.cn
+				AND
+					D.tenant_id = B3.tenant_id
+				WHERE
+					D.TENANT_ID = #tenantId#) as U
+			WHERE
+				U.userId = #userId#;
+			]]>
+		</isEqual>
+		<isNotEqual property="userIdType" compareValue="user">
+		<![CDATA[
+			SELECT 
+				CN AS userId,
+				DISPLAYNAME	AS userName,
+				DISPLAYNAME2 AS userName2,
+				" "	AS userPosition,
+				" "	As userPosition2,
+				DISPLAYNAME AS userDeptname, 
+				DISPLAYNAME2 AS userDeptname2 
+			FROM
+				tbl_deptmaster 
+			WHERE 
+				tenant_id = #tenantId# 
+			AND
+				CN = #userId#
+			]]>
+		</isNotEqual>
+		
+	</select>
+	
+	<insert id="EzPMSDAO.addProjectMember" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO tbl_pms_member (
+				tenant_id,			project_id,			member_role_id,		user_id,		user_name,
+				user_name2,			user_deptname,		user_deptname2,		user_position,	user_position2, user_id_type
+			) VALUES (
+				#tenantId#,			#projectId#,		#memberRoleId#,		#userId#,		#userName#,
+				#userName2#,		#userDeptname#,		#userDeptname2#,	#userPosition#,	#userPosition2#,	#userIdType#
+			)
+		]]>
+	</insert>
+	
+	<select id="EzPMSDAO.getRemainingWeight" parameterClass="map" resultClass="java.util.HashMap">
+		<![CDATA[
+			SELECT
+				remainingWeight, 
+				plan_start_date AS projectStartDate, 
+				plan_end_date AS projectEndDate, 
+				status AS projectStatus,
+				weight_input AS weightInput
+			FROM
+				tbl_pms_project
+			JOIN
+				(SELECT 100 - IFNULL(SUM(weight), 0) AS remainingWeight
+				FROM 
+					tbl_pms_task
+				WHERE 
+					project_id = #projectId#
+				AND
+					tenant_id = #tenantId#
+				AND
+					DEL_STATUS = 0
+				) a
+			WHERE 
+				project_id = #projectId#
+			AND
+				tenant_id = #tenantId#
+			AND
+				DEL_STATUS = 0
+		]]>
+	</select>
+	
+	<select id="EzPMSDAO.getProjectMainSetting" parameterClass="Map" resultMap="projectMainSettingVO">
+		<![CDATA[
+			SELECT 
+				p.setting_id as SETTING_ID,
+				u.tenant_id as TENANT_ID,
+				p.user_id as USER_ID,
+				IFNULL(p.view_type,0) as VIEW_TYPE,
+				IFNULL(p.progress_color,'##438ddd') as PROGRESS_COLOR,
+				IFNULL(p.complete_color,'##63c449') as COMPLETE_COLOR,
+				IFNULL(p.overdue_color,'##dd7238') as OVERDUE_COLOR,
+				IFNULL(p.hold_color,'##57c7b6') as HOLD_COLOR,
+				IFNULL(p.project_sort,0) as PROJECT_SORT,
+				IFNULL(p.list_number,10) as LIST_NUMBER,
+				IFNULL(p.list_project_status, "P") as LIST_PROJECT_STATUS,
+				u.mail as USER_MAIL,
+				u.displayname as USER_NAME,
+				u.displayname2 as USER_NAME2
+		]]>
+		<isEqual property="userIdType" compareValue="user">
+			FROM 
+				tbl_usermaster u
+			LEFT JOIN 
+				tbl_pms_setting p
+			ON (
+				u.CN = p.user_id 
+				AND 
+				u.tenant_id = p.tenant_id
+			)
+		</isEqual>
+		<isNotEqual property="userIdType" compareValue="user">
+			FROM 
+				tbl_deptmaster u
+			LEFT JOIN 
+				tbl_pms_setting p
+			ON (
+				u.CN = p.user_id 
+				AND 
+				u.tenant_id = p.tenant_id
+			)
+		</isNotEqual>
+		 WHERE 
+				u.CN = #userId# 
+			AND	
+				u.tenant_id = #tenantId#
+		UNION
+		<![CDATA[
+			SELECT 
+				P1.setting_id as SETTING_ID,
+				R.tenant_id as TENANT_ID,
+				P1.user_id as USER_ID,
+				IFNULL(P1.view_type,0) as VIEW_TYPE,
+				IFNULL(P1.progress_color,'##438ddd') as PROGRESS_COLOR,
+				IFNULL(P1.complete_color,'##63c449') as COMPLETE_COLOR,
+				IFNULL(P1.overdue_color,'##dd7238') as OVERDUE_COLOR,
+				IFNULL(P1.hold_color,'##57c7b6') as HOLD_COLOR,
+				IFNULL(P1.project_sort,0) as PROJECT_SORT,
+				IFNULL(P1.list_number,10) as LIST_NUMBER,
+				IFNULL(P1.list_project_status, "P") as LIST_PROJECT_STATUS,
+				R.mail as USER_MAIL,
+				R.displayname as USER_NAME,
+				R.displayname2 as USER_NAME2
+		]]>
+		<isEqual property="userIdType" compareValue="user">
+			FROM 
+				tbl_usermaster_retire R
+			LEFT JOIN 
+				tbl_pms_setting P1
+			ON (
+				R.CN = P1.user_id 
+				AND 
+				R.tenant_id = P1.tenant_id
+			)
+		</isEqual>
+		<isNotEqual property="userIdType" compareValue="user">
+			FROM 
+				tbl_deptmaster R
+			LEFT JOIN 
+				tbl_pms_setting P1
+			ON (
+				R.CN = P1.user_id 
+				AND 
+				R.tenant_id = P1.tenant_id
+			)
+		</isNotEqual>
+		 WHERE 
+				R.CN = #userId# 
+			AND	
+				R.tenant_id = #tenantId#
+		UNION
+			<![CDATA[
+			SELECT 
+				P2.setting_id as SETTING_ID,
+				D.tenant_id as TENANT_ID,
+				P2.user_id as USER_ID,
+				IFNULL(P2.view_type,0) as VIEW_TYPE,
+				IFNULL(P2.progress_color,'##438ddd') as PROGRESS_COLOR,
+				IFNULL(P2.complete_color,'##63c449') as COMPLETE_COLOR,
+				IFNULL(P2.overdue_color,'##dd7238') as OVERDUE_COLOR,
+				IFNULL(P2.hold_color,'##57c7b6') as HOLD_COLOR,
+				IFNULL(P2.project_sort,0) as PROJECT_SORT,
+				IFNULL(P2.list_number,10) as LIST_NUMBER,
+				IFNULL(P2.list_project_status, "P") as LIST_PROJECT_STATUS,
+				D.mail as USER_MAIL,
+				D.displayname as USER_NAME,
+				D.displayname2 as USER_NAME2
+		]]>
+		<isEqual property="userIdType" compareValue="user">
+			FROM 
+				tbl_usermaster_delete D
+			LEFT JOIN 
+				tbl_pms_setting P2
+			ON (
+				D.CN = P2.user_id 
+				AND 
+				D.tenant_id = P2.tenant_id
+			)
+		</isEqual>
+		<isNotEqual property="userIdType" compareValue="user">
+			FROM 
+				tbl_deptmaster D
+			LEFT JOIN 
+				tbl_pms_setting P2
+			ON (
+				D.CN = P2.user_id 
+				AND 
+				D.tenant_id = P2.tenant_id
+			)
+		</isNotEqual>
+		 WHERE 
+				D.CN = #userId# 
+			AND	
+				D.tenant_id = #tenantId#
+	</select>
+	
+	
+	<select id="EzPMSDAO.getProjectList" parameterClass="Map" resultMap="projectInfoVO">
+		<![CDATA[
+			SELECT DISTINCT
+				A.PROJECT_ID AS PROJECT_ID, 
+				A.TENANT_ID AS TENANT_ID,
+				A.PROJECT_NAME AS PROJECT_NAME, 
+				A.PLAN_START_DATE AS PLAN_START_DATE,
+				A.PLAN_END_DATE AS PLAN_END_DATE, 
+				A.REAL_START_DATE AS REAL_START_DATE, 
+				A.REAL_END_DATE AS REAL_END_DATE,
+				A.HEAD_MANAGER_ID AS HEAD_MANAGER_ID, 
+				A.HEAD_MANAGER_NAME$lang$ AS HEAD_MANAGER_NAME, 
+				A.HEAD_MANAGER_DEPTNAME$lang$ AS HEAD_MANAGER_DEPTNAME, 
+				A.STATUS AS STATUS, 
+				A.PROGRESS AS PROGRESS, 
+				A.OVERVIEW AS OVERVIEW,  
+				A.WEIGHT_INPUT AS WEIGHT_INPUT, 
+				A.CREATOR_ID AS CREATOR_ID, 
+				A.CREATE_DATE AS CREATE_DATE, 
+				A.CREATOR_NAME$lang$ AS CREATOR_NAME, 
+				A.CREATOR_DEPTNAME$lang$ AS CREATOR_DEPTNAME,
+				A.WORKINGDAY AS WORKINGDAY, 
+				A.REST_DUEDAY AS REST_DUEDAY, 
+				A.ALAM_MAIL_STATUS AS ALAM_MAIL_STATUS,
+				IFNULL(F.FAVORITE_ID, 0) AS ISFAVORITE,
+				IFNULL(G.GROUP_ID, 0) AS GROUP_ID,
+				A.MAIL_REPEAT AS MAIL_REPEAT
+			FROM 
+				tbl_pms_project A
+			JOIN 
+				tbl_pms_member B
+			ON
+				A.PROJECT_ID = B.PROJECT_ID
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			LEFT JOIN	
+				TBL_PMS_GROUP G
+			ON
+				A.PROJECT_ID = G.PROJECT_ID
+			AND
+				G.UPPER_GROUP_ID = 0
+			AND	
+				ISSUEYN = 'N'
+			LEFT JOIN
+				TBL_PMS_MEMBER M
+			ON
+				A.PROJECT_ID = M.PROJECT_ID
+			AND
+				A.TENANT_ID = M.TENANT_ID
+		]]> 
+		<isNotEqual property="listProjectStatus" compareValue="F">
+			LEFT JOIN 
+				tbl_pms_favorite F 
+			ON
+				A.PROJECT_ID = F.PROJECT_ID 
+			AND
+				A.TENANT_ID = F.TENANT_ID	
+			AND 
+				F.USER_ID = #userId#
+		</isNotEqual>
+		<isEqual property="listProjectStatus" compareValue="F">
+			JOIN 
+				tbl_pms_favorite F 
+			ON
+				A.PROJECT_ID = F.PROJECT_ID 
+			AND
+				A.TENANT_ID = F.TENANT_ID
+			AND 
+				F.USER_ID = #userId#
+		</isEqual>	
+			WHERE	
+		<isNotEmpty property="searchByUser">
+				B.USER_NAME$lang$ LIKE CONCAT('%',#searchByUser#,'%')
+			AND
+		</isNotEmpty>
+		<isNotEmpty property="userId">
+				( M.USER_ID = #userId# 
+				OR 
+				  M.USER_ID = #deptId# 
+				)
+			AND 
+		</isNotEmpty>
+		
+				A.TENANT_ID = #tenantId#
+			AND 
+				A.DEL_STATUS = 0
+		<isNotEqual property="listProjectStatus" compareValue="F">
+			<isNotEqual property="listProjectStatus" compareValue="A">
+				<isNotEqual property="listProjectStatus" compareValue="P">
+				AND  
+					A.STATUS = #listProjectStatus#
+				</isNotEqual>
+				<isEqual property="listProjectStatus" compareValue="P">
+				AND  
+					(A.STATUS = #listProjectStatus#
+						OR
+					A.STATUS = 'L')
+				</isEqual>
+			</isNotEqual> 
+		</isNotEqual>
+		<isNotEmpty property="searchByName">
+			AND
+				A.PROJECT_NAME LIKE CONCAT('%',#searchByName#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByStartDate">
+			<![CDATA[
+			AND
+				A.PLAN_START_DATE >= STR_TO_DATE(#searchByStartDate#, '%Y-%m-%d')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="searchByEndDate">
+			<![CDATA[
+			AND
+				A.PLAN_END_DATE <= STR_TO_DATE(#searchByEndDate#, '%Y-%m-%d')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="searchByOverview">
+			AND
+				A.OVERVIEW LIKE CONCAT('%',#searchByOverview#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="position">
+			AND
+				M.MEMBER_ROLE_ID = 1
+		</isNotEmpty>
+		<isNotEqual property="orderWhat" compareValue="init">
+			ORDER BY	
+				$orderWhat$ $orderHow$
+		</isNotEqual>
+		<isEqual property="orderWhat" compareValue="init">
+			ORDER BY 
+				$projectSort$
+		</isEqual>
+		<isNotEmpty property="startCount">
+			limit 
+				#startCount#, #listNumber# 
+		</isNotEmpty>
+	</select>
+	
+	<insert id="EzPMSDAO.addTask" parameterClass="ProjectTaskVO">
+		<![CDATA[
+    		INSERT INTO tbl_pms_task(
+    			tenant_id, 				project_id, 			group_id, 		task_name,			status,			plan_start_date,			plan_end_date, 
+    			real_progress,			weight,					overview	,		member_count,
+    			head_manager_id, 		head_manager_name,		head_manager_name2, 		head_manager_deptname, 	head_manager_deptname2, 
+    			writer_id,				write_date, 			writer_name, 			writer_name2, 			writer_deptname, 		writer_deptname2, 
+    			sort_order, 			workingday,				tree_depth,		real_workingday
+    		) 
+    		VALUES ( 
+    			#tenantId#, 			#projectId#, 			#groupId#, 				#taskName#,				#status#,			#planStartDate#,			#planEndDate#, 
+    			#realProgress#,			#weight#,				#overview#,				#memberCount#,
+    			#headManagerId#, 		#headManagerName#,		#headManagerName2#, 	#headManagerDeptname#,	#headManagerDeptname2#, 
+    			#writerId#,				#writeDate#, 			#writerName#, 			#writerName2#, 			#writerDeptname#, 		#writerDeptname2#, 
+    			#sortOrder#, 			#workingday#,			#treeDepth#,	#realWorkingday#
+    		)
+    	]]>
+    	<selectKey keyProperty="taskId" resultClass="long">
+    		SELECT
+    			last_insert_id() as id
+    	</selectKey>
+	</insert>
+	
+	<insert id="EzPMSDAO.addTaskMember" parameterClass="list">
+		<![CDATA[
+			INSERT INTO tbl_pms_taskmember (
+				tenant_id,			task_id,			user_id,		user_name,
+				user_name2,			user_deptname,		user_deptname2,		pctinput
+			) VALUES
+		]]>
+		<iterate conjunction=", ">
+   		<![CDATA[
+   		(
+   			#[].tenantId#, 		#[].taskId#, 		#[].userId#, 				#[].userName#, 
+   			#[].userName2#, 	#[].userDeptname#, 	#[].userDeptname2#, 		#[].pctinput#
+   		)
+   		]]>
+		</iterate>
+	</insert>
+	
+	<update id="EzPMSDAO.updateProjectWorkingdaySum" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				tbl_pms_project
+			SET
+				workingday_sum = workingday_sum + #realWorkingday#
+			WHERE
+				project_id = #projectId#
+			AND
+				tenant_id = #tenantId#
+		]]>
+	</update>
+	
+	<update id="EzPMSDAO.updateProjectWorkingdaySum2" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				tbl_pms_project
+			SET
+				workingday_sum = (
+					SELECT 
+						SUM(real_workingday)
+					FROM
+						tbl_pms_task
+					WHERE
+						project_id = #projectId#
+					AND
+						tenant_id = #tenantId#
+					AND
+						del_status = 0
+				)
+			WHERE
+				project_id = #projectId#
+			AND
+				tenant_id = #tenantId#
+		]]>
+	</update>
+	
+	<select id="EzPMSDAO.getProjectWorkingdaySum" parameterClass="ProjectTaskVO" resultClass="int">
+		SELECT
+			workingday_sum
+		FROM
+			tbl_pms_project
+		WHERE
+			project_id = #projectId#
+		AND
+			tenant_id = #tenantId#
+	</select>
+	
+	<update id="EzPMSDAO.updateTaskWDNW" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				tbl_pms_task
+			SET
+				workingday = #workingday#,
+				weight = #weight#
+			WHERE
+				task_id = #taskId#		
+			AND
+				TENANT_ID = #tenantId#	
+		]]>
+	</update>
+	
+	<select id="EzPMSDAO.getSortOrder" parameterClass="String" resultClass="int">
+		SELECT
+			IFNULL(MAX(a.sort_order) + 1, 0)
+		FROM
+			(SELECT
+				sort_order
+			FROM
+				tbl_pms_task
+			WHERE
+				group_id = #groupId#
+			UNION
+			SELECT
+				sort_order
+			FROM
+				tbl_pms_group
+			WHERE
+				upper_group_id = #groupId#) a
+	</select>
+	
+	<select id="EzPMSDAO.getProjectListCount" parameterClass="map" resultClass="Integer">
+		SELECT
+				COUNT( DISTINCT A.project_id)
+			FROM 
+				tbl_pms_project A
+			JOIN 
+				tbl_pms_member B
+			ON
+				A.PROJECT_ID = B.PROJECT_ID
+			AND
+				A.TENANT_ID = B.TENANT_ID 
+		<isEqual property="status" compareValue="F">
+			JOIN 
+				tbl_pms_favorite F 
+			ON
+				A.PROJECT_ID = F.PROJECT_ID 
+			AND
+				A.TENANT_ID = F.TENANT_ID
+			AND 
+				F.USER_ID = #userId#
+		</isEqual> 
+		<isNotEmpty property="searchByUser">
+			JOIN	
+				tbl_pms_member M
+			ON
+				A.PROJECT_ID = M.PROJECT_ID
+			AND 
+				A.TENANT_ID = M.TENANT_ID
+			WHERE	
+				M.USER_NAME$lang$ LIKE CONCAT('%',#searchByUser#,'%')
+			AND
+		</isNotEmpty>
+		<isEmpty property="searchByUser">
+			WHERE
+		</isEmpty>
+		<isNotEmpty property="userId">
+				( B.USER_ID = #userId# 
+				OR 
+				  B.USER_ID = #deptId# 
+				)
+			AND 
+		</isNotEmpty>
+				A.TENANT_ID = #tenantId#
+			AND 
+				A.DEL_STATUS = 0
+		<isNotEqual property="status" compareValue="F">
+			<isNotEqual property="status" compareValue="A">
+				<isNotEqual property="status" compareValue="P">
+				AND  
+					A.STATUS = #status#
+				</isNotEqual>
+				<isEqual property="status" compareValue="P">
+				AND  
+					(A.STATUS = #status#
+						OR
+					A.STATUS = 'L')
+				</isEqual>
+			</isNotEqual> 
+		</isNotEqual>
+		<isNotEmpty property="position">
+				AND
+					B.MEMBER_ROLE_ID = 1
+		</isNotEmpty>
+		<isNotEmpty property="searchByName">
+			AND
+				A.PROJECT_NAME LIKE CONCAT('%',#searchByName#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByStartDate">
+			<![CDATA[
+			AND
+				A.PLAN_START_DATE >= STR_TO_DATE(#searchByStartDate#, '%Y-%m-%d')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="searchByEndDate">
+			<![CDATA[
+			AND
+				A.PLAN_END_DATE <= STR_TO_DATE(#searchByEndDate#, '%Y-%m-%d')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="searchByOverview">
+			AND
+				A.OVERVIEW LIKE CONCAT('%',#searchByOverview#,'%')
+		</isNotEmpty>
+	</select>
+	
+	<insert id="EzPMSDAO.insertMainSetting" parameterClass="map">
+		<![CDATA[
+			INSERT INTO 
+				tbl_pms_setting (
+					TENANT_ID, 		USER_ID, 		VIEW_TYPE, 		PROGRESS_COLOR, 		COMPLETE_COLOR, 	OVERDUE_COLOR, 
+					HOLD_COLOR, 	PROJECT_SORT, 	LIST_NUMBER, 	LIST_PROJECT_STATUS
+				) 
+			VALUES (
+					#tenantId#, 	#userId#, 		#viewType#, 	#progressColor#, 		#completeColor#, 	#overdueColor#,
+					#holdColor#, 	#projectSort#, 	#listNumber#, 	#listProjectStatus#
+				)
+		]]>
+	</insert>
+	
+	<update id="EzPMSDAO.updateMainSetting" parameterClass="map">
+	<![CDATA[
+		UPDATE 
+			tbl_pms_setting 
+		SET
+			VIEW_TYPE = #viewType#,
+			PROGRESS_COLOR = #progressColor#, 
+			COMPLETE_COLOR = #completeColor#,
+			OVERDUE_COLOR = #overdueColor#,
+			HOLD_COLOR = #holdColor#,
+			PROJECT_SORT = #projectSort#, 
+			LIST_NUMBER = #listNumber#
+	]]>
+	<isNotEmpty property="listProjectStatus">
+			, LIST_PROJECT_STATUS = #listProjectStatus#
+	</isNotEmpty>
+	<![CDATA[
+		WHERE
+			USER_ID = #userId# 
+		AND
+			TENANT_ID = #tenantId#
+	]]>
+	</update>
+	
+	<select id="EzPMSDAO.getProjectDetails" parameterClass="Map" resultMap="projectInfoVO">
+	<![CDATA[
+		SELECT DISTINCT 
+			A.PROJECT_ID, 
+			A.TENANT_ID,
+			A.PROJECT_NAME, 
+			A.PLAN_START_DATE,
+			A.PLAN_END_DATE, 
+			A.REAL_START_DATE, 
+			A.REAL_END_DATE,
+			A.HEAD_MANAGER_ID, 
+			A.HEAD_MANAGER_NAME$lang$ AS HEAD_MANAGER_NAME,
+			A.HEAD_MANAGER_DEPTNAME$lang$ AS HEAD_MANAGER_DEPTNAME, 
+			A.STATUS, 
+			A.PROGRESS, 
+			A.OVERVIEW,  
+			A.WEIGHT_INPUT, 
+			A.CREATOR_ID, 
+			A.CREATE_DATE, 
+			A.CREATOR_NAME$lang$ AS CREATOR_NAME, 
+			A.CREATOR_DEPTNAME$lang$ AS CREATOR_DEPTNAME,
+			A.WORKINGDAY, 
+			A.REST_DUEDAY, 
+			A.ALAM_MAIL_STATUS,
+			IFNULL(F.FAVORITE_ID, 0) AS ISFAVORITE,
+			IFNULL(G.GROUP_ID, 0) AS GROUP_ID,
+			A.MAIL_REPEAT AS MAIL_REPEAT
+		FROM 
+			tbl_pms_project	A
+		JOIN 
+			tbl_pms_member M	
+		ON	
+			A.PROJECT_ID = M.PROJECT_ID	
+		AND	
+			A.TENANT_ID = M.TENANT_ID
+		LEFT JOIN 
+			tbl_pms_favorite F 
+		ON
+			A.PROJECT_ID = F.PROJECT_ID 
+		AND
+			A.TENANT_ID = F.TENANT_ID
+		AND 
+			F.USER_ID = #userId#
+		LEFT JOIN	
+			TBL_PMS_GROUP G
+		ON
+			A.PROJECT_ID = G.PROJECT_ID
+		AND
+			G.UPPER_GROUP_ID = 0
+		AND	
+			ISSUEYN = 'N'
+		WHERE 
+			A.TENANT_ID = #tenantId#
+		AND
+			A.PROJECT_ID = #projectId#
+	]]>
+		<isNotEmpty property="userId">
+		AND	
+			(M.USER_ID = #userId#	
+			OR	
+			M.USER_ID = #deptId#
+			)
+		</isNotEmpty>	
+	</select>
+	
+	<select id="EzPMSDAO.getTaskList" parameterClass="Map" resultMap="projectTaskVOForList">
+		<![CDATA[
+			SELECT DISTINCT
+				A.TASK_ID,
+				A.TENANT_ID,
+				A.PROJECT_ID,
+				A.GROUP_ID,
+				A.TASK_NAME,
+				A.STATUS,
+				A.PLAN_START_DATE,
+				A.PLAN_END_DATE,
+				A.REAL_START_DATE,
+				A.REAL_END_DATE,
+				A.REAL_PROGRESS,
+				A.WEIGHT,
+				A.OVERVIEW,
+				A.MEMBER_COUNT,
+				A.HEAD_MANAGER_ID,
+				A.HEAD_MANAGER_NAME$lang$ AS HEAD_MANAGER_NAME,
+				A.HEAD_MANAGER_DEPTNAME$lang$ AS HEAD_MANAGER_DEPTNAME,
+				A.WRITER_ID,
+				A.WRITE_DATE,
+				A.WRITER_NAME$lang$ AS WRITER_NAME,
+				A.WRITER_DEPTNAME$lang$ AS WRITER_DEPTNAME,
+				A.TREE_DEPTH,
+				A.ANCESTER_GROUP,
+				A.SORT_ORDER,
+				A.WORKINGDAY,
+				IFNULL(A.REST_DUEDAY, 0) AS REST_DUEDAY,
+				IFNULL(A.LINK_TASK_ID, 0) AS LINK_TASK_ID,
+				A.DEL_STATUS,
+				D.GROUP_NAME AS UPPER_GROUP_NAME,
+				B.PROJECT_NAME,
+				A.REAL_WORKINGDAY,
+				R.PRETASK
+			FROM 
+				tbl_pms_task A
+			JOIN 
+				tbl_pms_project B
+			ON
+				A.PROJECT_ID = B.PROJECT_ID
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			JOIN
+				tbl_pms_member C
+			ON	
+				A.PROJECT_ID = C.PROJECT_ID
+			JOIN
+				tbl_pms_group D
+			ON
+				A.GROUP_ID = D.GROUP_ID
+			JOIN	
+				tbl_pms_taskmember E
+			ON
+				A.TASK_ID = E.TASK_ID
+			LEFT JOIN
+				(	
+					SELECT task_id, group_concat(pretask separator ',') AS pretask
+					FROM tbl_pms_pretaskrel
+					GROUP BY task_id
+				) R
+			ON
+				A.TASK_ID = R.TASK_ID
+			WHERE
+				A.TENANT_ID = #tenantId#
+			AND
+				A.DEL_STATUS = 0
+		]]>
+		<isNotEqual property="roleId" compareValue="3">
+			AND
+				(C.USER_ID = #userId#
+				OR
+				C.USER_ID = #deptId#
+				)
+		</isNotEqual>
+		<isNotEqual property="projectId" compareValue="0">
+			AND  
+				A.PROJECT_ID = #projectId#
+		</isNotEqual>
+		<isEqual property="isMyTask" compareValue="M">
+			AND
+				E.USER_ID = #userId#
+		</isEqual>
+		<isNotNull property="status">
+			<isNotEqual property="status" compareValue="A">
+				AND
+				A.STATUS LIKE CONCAT('%',#status#,'%')
+			</isNotEqual>
+		</isNotNull>
+		<isNotEmpty property="taskName">
+			AND
+				A.TASK_NAME LIKE CONCAT('%',#taskName#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="upperGroupName">
+			AND
+                D.GROUP_NAME LIKE CONCAT('%',#upperGroupName#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searhByStartDate">
+		<![CDATA[
+			AND
+				A.PLAN_START_DATE >= #searhByStartDate#
+		]]>
+		</isNotEmpty>
+		<isNotEmpty property="searchByUser">
+			AND
+				E.USER_NAME LIKE CONCAT('%',#searchByUser#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByOverview">
+			AND
+				A.OVERVIEW LIKE CONCAT('%',#searchByOverview#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByProjectName">
+			AND
+				B.PROJECT_NAME LIKE CONCAT('%',#searchByProjectName#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByEndDate">
+		<![CDATA[
+			AND
+				A.PLAN_END_DATE <= #searchByEndDate#
+		]]>
+		</isNotEmpty>
+		<isNotEmpty property="groupId">
+			<isNotEqual property="groupId" compareValue="0">
+			AND 
+				(A.GROUP_ID = #groupId# 
+				OR D.UPPER_GROUP_ID = #groupId#
+				OR D.UPPER_GROUP_ID IN (
+							SELECT GROUP_ID FROM TBL_PMS_GROUP WHERE UPPER_GROUP_ID = #groupId#
+				)
+			)
+			</isNotEqual>
+		</isNotEmpty>
+		<isNotEqual property="orderWhat" compareValue="init">
+			ORDER BY
+				$orderWhat$ $orderHow$
+		</isNotEqual>
+		<isEqual property="orderWhat" compareValue="init">
+		<isEmpty property="location">
+			ORDER BY 
+				PLAN_END_DATE
+		</isEmpty>
+		<isNotEmpty property="location">
+		<isEqual property="location" compareValue="gantt">
+			ORDER BY
+				GROUP_ID, SORT_ORDER
+		</isEqual>
+		<isNotEqual property="location" compareValue="gantt">
+			ORDER BY(
+				CASE A.STATUS
+				WHEN 'P' THEN 1
+				WHEN 'W' THEN 2
+				WHEN 'L' THEN 3
+				WHEN 'S' THEN 4
+				WHEN 'C' THEN 5
+				END
+			), PLAN_END_DATE
+		</isNotEqual>
+		</isNotEmpty>
+		</isEqual>
+		<isNotEqual property="limit" compareValue="0">
+			LIMIT 
+				#startRow#, #limit#
+		</isNotEqual>
+	</select>
+	
+	<select id="EzPMSDAO.getTaskListForGantt" parameterClass="Map" resultMap="projectTaskVOForList2">
+		<![CDATA[
+			SELECT DISTINCT
+				A.TASK_ID,
+				A.TENANT_ID,
+				A.PROJECT_ID,
+				A.GROUP_ID,
+				A.TASK_NAME,
+				A.STATUS,
+				A.PLAN_START_DATE,
+				A.PLAN_END_DATE,
+				A.REAL_START_DATE,
+				A.REAL_END_DATE,
+				A.REAL_PROGRESS,
+				A.WEIGHT,
+				A.OVERVIEW,
+				A.MEMBER_COUNT,
+				A.HEAD_MANAGER_ID,
+				A.HEAD_MANAGER_NAME$lang$ AS HEAD_MANAGER_NAME,
+				A.HEAD_MANAGER_DEPTNAME$lang$ AS HEAD_MANAGER_DEPTNAME,
+				A.WRITER_ID,
+				A.WRITE_DATE,
+				A.WRITER_NAME$lang$ AS WRITER_NAME,
+				A.WRITER_DEPTNAME$lang$ AS WRITER_DEPTNAME,
+				A.TREE_DEPTH,
+				A.ANCESTER_GROUP,
+				A.SORT_ORDER,
+				IFNULL(A.REST_DUEDAY, 0) AS REST_DUEDAY,
+				IFNULL(A.LINK_TASK_ID, 0) AS LINK_TASK_ID,
+				A.DEL_STATUS,
+				D.GROUP_NAME AS UPPER_GROUP_NAME,
+				B.PROJECT_NAME,
+				A.REAL_WORKINGDAY,
+				R.PRETASK,
+				A.WORKINGDAY,
+				TW.REALSTARTENDDIFF,
+				(
+				CASE
+				WHEN A.PLAN_START_DATE <= CURDATE() && TW.RESTDUEDAY > 0
+				THEN (TW.WORKINGDAY - TW.RESTDUEDAY) / TW.WORKINGDAY * 100
+				WHEN A.PLAN_START_DATE > CURDATE()
+				THEN 0
+				ELSE 100
+				END
+				) AS PLAN_PROGRESS
+			FROM 
+				tbl_pms_task A
+			JOIN 
+				tbl_pms_project B
+			ON
+				A.PROJECT_ID = B.PROJECT_ID
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			JOIN
+				tbl_pms_member C
+			ON	
+				A.PROJECT_ID = C.PROJECT_ID
+			JOIN
+				tbl_pms_group D
+			ON
+				A.GROUP_ID = D.GROUP_ID
+			JOIN	
+				tbl_pms_taskmember E
+			ON
+				A.TASK_ID = E.TASK_ID
+			LEFT JOIN
+				(	
+					SELECT task_id, group_concat(pretask separator ',') AS pretask
+					FROM tbl_pms_pretaskrel
+					GROUP BY task_id
+				) R
+			ON
+				A.TASK_ID = R.TASK_ID
+		]]>
+		<isEmpty property="holidayList">
+			JOIN
+			(
+				SELECT
+					TASK_ID,
+					(LENGTH(REPLACE(RPAD(SUBSTR('~23456~', DAYOFWEEK(plan_start_date)), DATEDIFF(plan_end_date, plan_start_date) + 1, '~23456~'), '~', ''))) AS WORKINGDAY,
+					(LENGTH(REPLACE(RPAD(SUBSTR('~23456~', DAYOFWEEK(ADDDATE(CURDATE(), 1))), DATEDIFF(plan_end_date, ADDDATE(CURDATE(), 1)) + 1, '~23456~'), '~', ''))) AS RESTDUEDAY,
+					(
+					CASE
+					WHEN REAL_PROGRESS = 100 AND REAL_START_DATE IS NOT NULL AND REAL_END_DATE IS NOT NULL
+					THEN (LENGTH(REPLACE(RPAD(SUBSTR('~23456~', DAYOFWEEK(real_start_date)), DATEDIFF(real_end_date, real_start_date) + 1, '~23456~'), '~', '')))
+					ELSE 0
+					END
+					) AS REALSTARTENDDIFF
+				FROM
+					TBL_PMS_TASK
+				WHERE
+					project_id = #projectId#
+			) TW
+			ON
+				A.TASK_ID = TW.TASK_ID
+		</isEmpty>
+		<isNotEmpty property="holidayList">
+			JOIN
+			(
+				SELECT
+					TASK_ID,
+					(
+						IFNULL((
+						(LENGTH(REPLACE(RPAD(SUBSTR('~23456~', DAYOFWEEK(plan_start_date)), DATEDIFF(plan_end_date, plan_start_date) + 1, '~23456~'), '~', '')))
+						-
+						(SELECT
+							COUNT(a.holiday) 
+						FROM 
+							(
+							<iterate property="holidayList" conjunction="union all">
+							select #holidayList[]# holiday from dual 
+							</iterate>  
+							) a 
+						WHERE 
+							DAYOFWEEK(a.holiday) NOT IN (1,7) 
+						AND 
+							a.holiday BETWEEN plan_start_date AND plan_end_date
+						)
+						), 0)
+					) AS WORKINGDAY,
+					(
+						IFNULL((
+						(LENGTH(REPLACE(RPAD(SUBSTR('~23456~', DAYOFWEEK(ADDDATE(CURDATE(), 1))), DATEDIFF(plan_end_date, ADDDATE(CURDATE(), 1)) + 1, '~23456~'), '~', '')))
+						-
+						(SELECT
+							COUNT(a.holiday) 
+						FROM 
+							(
+							<iterate property="holidayList" conjunction="union all">
+							select #holidayList[]# holiday from dual 
+							</iterate>  
+							) a 
+						WHERE 
+							DAYOFWEEK(a.holiday) NOT IN (1,7) 
+						AND 
+							a.holiday BETWEEN ADDDATE(CURDATE(), 1) AND plan_end_date
+						)
+						), 0)
+					) AS RESTDUEDAY,
+					(
+						CASE
+						WHEN STATUS = 'C'
+						THEN
+							(LENGTH(REPLACE(RPAD(SUBSTR('~23456~', DAYOFWEEK(real_start_date)), DATEDIFF(real_end_date, real_start_date) + 1, '~23456~'), '~', '')))
+							-
+							(SELECT
+								COUNT(a.holiday) 
+							FROM 
+								(
+								<iterate property="holidayList" conjunction="union all">
+								select #holidayList[]# holiday from dual 
+								</iterate>  
+								) a 
+							WHERE 
+								DAYOFWEEK(a.holiday) NOT IN (1,7) 
+							AND 
+								a.holiday BETWEEN real_start_date AND real_end_date
+							)
+						ELSE 0
+						END
+					) AS REALSTARTENDDIFF
+				FROM
+					TBL_PMS_TASK
+				WHERE
+					project_id = #projectId#
+			) TW
+			ON
+				A.TASK_ID = TW.TASK_ID
+		</isNotEmpty>
+		<![CDATA[
+			WHERE
+				A.TENANT_ID = #tenantId#
+			AND
+				A.DEL_STATUS = 0
+		]]>
+		<isNotEqual property="roleId" compareValue="3">
+			AND
+				(C.USER_ID = #userId#
+				OR
+				C.USER_ID = #deptId#
+				)
+		</isNotEqual>
+		<isNotEqual property="projectId" compareValue="0">
+			AND  
+				A.PROJECT_ID = #projectId#
+		</isNotEqual>
+		<isEqual property="isMyTask" compareValue="M">
+			AND
+				E.USER_ID = #userId#
+		</isEqual>
+		<isNotNull property="status">
+			<isNotEqual property="status" compareValue="A">
+				AND
+				A.STATUS LIKE CONCAT('%',#status#,'%')
+			</isNotEqual>
+		</isNotNull>
+		<isNotEmpty property="taskName">
+			AND
+				A.TASK_NAME LIKE CONCAT('%',#taskName#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="upperGroupName">
+			AND
+                D.GROUP_NAME LIKE CONCAT('%',#upperGroupName#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="headManagerName">
+			AND
+				A.HEAD_MANAGER_NAME LIKE CONCAT('%',#headManagerName#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searhByStartDate">
+		<![CDATA[
+			AND
+				A.PLAN_START_DATE >= #searhByStartDate#
+		]]>
+		</isNotEmpty>
+		<isNotEmpty property="searchByUser">
+			AND
+				E.USER_NAME LIKE CONCAT('%',#searchByUser#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByOverview">
+			AND
+				A.OVERVIEW LIKE CONCAT('%',#searchByOverview#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByProjectName">
+			AND
+				B.PROJECT_NAME LIKE CONCAT('%',#searchByProjectName#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByEndDate">
+		<![CDATA[
+			AND
+				A.PLAN_END_DATE <= #searchByEndDate#
+		]]>
+		</isNotEmpty>
+		<isNotEmpty property="groupId">
+			<isNotEqual property="groupId" compareValue="0">
+			AND 
+				(A.GROUP_ID = #groupId# 
+				OR D.UPPER_GROUP_ID = #groupId#
+				OR D.UPPER_GROUP_ID IN (
+							SELECT GROUP_ID FROM TBL_PMS_GROUP WHERE UPPER_GROUP_ID = #groupId#
+				)
+			)
+			</isNotEqual>
+		</isNotEmpty>
+		<isNotEqual property="orderWhat" compareValue="init">
+			ORDER BY
+				$orderWhat$ $orderHow$
+		</isNotEqual>
+		<isEqual property="orderWhat" compareValue="init">
+		<isEmpty property="location">
+			ORDER BY 
+				PLAN_END_DATE
+		</isEmpty>
+		<isNotEmpty property="location">
+		<isEqual property="location" compareValue="gantt">
+			ORDER BY
+				GROUP_ID, SORT_ORDER
+		</isEqual>
+		<isNotEqual property="location" compareValue="gantt">
+			ORDER BY(
+				CASE A.STATUS
+				WHEN 'P' THEN 1
+				WHEN 'W' THEN 2
+				WHEN 'L' THEN 3
+				WHEN 'S' THEN 4
+				WHEN 'C' THEN 5
+				END
+			), PLAN_END_DATE
+		</isNotEqual>
+		</isNotEmpty>
+		</isEqual>
+		<isNotEqual property="limit" compareValue="0">
+			LIMIT 
+				#startRow#, #limit#
+		</isNotEqual>
+	</select>
+	
+	<select id="EzPMSDAO.getUserProjectRole"  parameterClass="map" resultClass="Integer">
+	<![CDATA[
+		SELECT 
+			MIN(MEMBER_ROLE_ID) 
+		FROM 
+			TBL_PMS_MEMBER 
+		WHERE  
+			(
+			 USER_ID = #userId#
+			 OR 
+			 USER_ID = #deptId# 
+			 ) 
+		AND 
+			PROJECT_ID = #projectId# 
+		AND
+			TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
+	<update id="EzPMSDAO.updateProjectStatus" parameterClass="map">
+	<![CDATA[
+			UPDATE
+				tbl_pms_project
+			SET
+				STATUS = #status#
+			WHERE
+				PROJECT_ID = #projectId# 
+			AND
+				TENANT_ID = #tenantId#			
+		]]>
+	</update>
+	
+	<update id="EzPMSDAO.deleteProject" parameterClass="map">
+		<![CDATA[
+			UPDATE
+				tbl_pms_project
+			SET
+				DEL_STATUS = 1
+			WHERE
+				PROJECT_ID = #projectId# 
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
+	<insert id="EzPMSDAO.addFavoriteProject" parameterClass="map">
+		<![CDATA[
+			INSERT INTO 
+				tbl_pms_favorite 
+				(TENANT_ID,		PROJECT_ID,		USER_ID) 
+			SELECT
+				#tenantId#,		#projectId#,	#userId# 
+			FROM DUAL
+			WHERE NOT EXISTS (SELECT TENANT_ID, PROJECT_ID, USER_ID 
+								FROM TBL_PMS_FAVORITE 
+								WHERE PROJECT_ID = #projectId# 
+									AND TENANT_ID = #tenantId# 
+									AND USER_ID = #userId#)
+			
+		]]>
+	</insert>
+	
+	<delete id="EzPMSDAO.deleteFavoriteProject" parameterClass="map">
+		<![CDATA[
+			DELETE FROM 
+				tbl_pms_favorite 
+			WHERE	
+				USER_ID = #userId#
+			AND	
+				PROJECT_ID = #projectId#
+			AND 
+				TENANT_ID = #tenantId#
+		]]>
+	</delete>
+	
+	<select id="EzPMSDAO.getFavoriteProject" parameterClass="map" resultClass="Long">
+		<![CDATA[
+			SELECT 
+				PROJECT_ID
+			FROM	
+				tbl_pms_favorite	
+			WHERE	
+				USER_ID = #userId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
+	<select id="EzPMSDAO.getTaskMemberList" parameterClass="map" resultMap="projectTaskMemberVO">
+		<![CDATA[
+			SELECT 
+				T.TASK_MEMBER_ID,
+				T.TENANT_ID,
+				T.TASK_ID,
+				T.USER_ID,
+				T.USER_NAME$lang$ AS USER_NAME,
+				T.USER_DEPTNAME$lang$ AS USER_DEPTNAME,
+				T.PCTINPUT,
+				U.MAIL AS USER_MAIL
+			FROM	
+				tbl_pms_taskmember T
+			LEFT JOIN
+				TBL_USERMASTER U
+			ON
+				U.CN = T.USER_ID
+			AND
+				U.TENANT_ID = T.TENANT_ID
+			WHERE	
+				T.TENANT_ID = #tenantId#
+		]]>
+		<isNotEmpty property="taskId">
+			AND
+				TASK_ID = #taskId#
+		</isNotEmpty>
+	</select>
+	
+	<select id="EzPMSDAO.getTaskMemberListForGantt" parameterClass="map" resultMap="projectTaskMemberVO">
+		<![CDATA[
+			SELECT 
+				T.TASK_MEMBER_ID,
+				T.TENANT_ID,
+				T.TASK_ID,
+				T.USER_ID,
+				T.USER_NAME$lang$ AS USER_NAME,
+				T.USER_DEPTNAME$lang$ AS USER_DEPTNAME,
+				T.PCTINPUT,
+				U.MAIL AS USER_MAIL
+			FROM	
+				tbl_pms_taskmember T
+			LEFT JOIN
+				TBL_USERMASTER U
+			ON
+				U.CN = T.USER_ID
+			JOIN
+				TBL_PMS_TASK A
+			ON
+				T.TASK_ID = A.TASK_ID
+			AND
+				A.PROJECT_ID = #projectId#
+			AND
+				A.DEL_STATUS = 0
+			AND
+				U.TENANT_ID = T.TENANT_ID
+			WHERE	
+				T.TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
+	<delete id="EzPMSDAO.deleteProjectMember" parameterClass="map">
+		<![CDATA[
+			DELETE	FROM
+				tbl_pms_member	
+			WHERE	
+				PROJECT_ID = #projectId# 
+			AND	
+				TENANT_ID = #tenantId#
+		]]>
+	</delete>
+	
+	<delete id="EzPMSDAO.deleteTaskMember" parameterClass="map">
+		<![CDATA[
+			DELETE	FROM
+				tbl_pms_taskmember	
+			WHERE	
+				TASK_ID = #taskId# 
+			AND	
+				TENANT_ID = #tenantId#
+		]]>
+	</delete>
+	
+	<update id="EzPMSDAO.updateProjectInfo" parameterClass="map">
+			UPDATE 
+				tbl_pms_project	
+			SET	
+		<isNotEmpty property="projectName">
+				PROJECT_NAME = #projectName#,
+		</isNotEmpty>
+		<isNotEmpty property="weightInput">
+				WEIGHT_INPUT = #weightInput#,
+		</isNotEmpty>
+		<isNotEmpty property="planStartDate">
+				PLAN_START_DATE = #planStartDate#,
+		</isNotEmpty>
+		<isNotEmpty property="overview">
+				OVERVIEW = #overview#,
+		</isNotEmpty>
+		<isNotEmpty property="alamMailStatus">
+				ALAM_MAIL_STATUS = #alamMailStatus#,
+		</isNotEmpty>
+		<isNotEmpty property="headManagerId">
+				HEAD_MANAGER_ID = #headManagerId#,
+		</isNotEmpty>
+		<isNotEmpty property="restDueday">
+				REST_DUEDAY = #restDueday#,
+		</isNotEmpty>
+		<isNotEmpty property="workingday">
+				WORKINGDAY = #workingday#,
+		</isNotEmpty>
+		<isNotEmpty property="headManagerDeptname">
+				HEAD_MANAGER_DEPTNAME = #headManagerDeptname#,
+		</isNotEmpty>
+		<isNotEmpty property="headManagerDeptname2">
+				HEAD_MANAGER_DEPTNAME2 = #headManagerDeptname2#,
+		</isNotEmpty>
+		<isNotEmpty property="headManagerName">
+				HEAD_MANAGER_NAME = #headManagerName#,
+		</isNotEmpty>
+		<isNotEmpty property="headManagerName2">
+				HEAD_MANAGER_NAME2 = #headManagerName2#,
+		</isNotEmpty>
+		<isNotEmpty property="mailRepeat">
+				MAIL_REPEAT = #mailRepeat#,
+		</isNotEmpty>
+		<isNotEmpty property="planEndDate">
+				PLAN_END_DATE = #planEndDate#
+		</isNotEmpty>
+			WHERE
+				PROJECT_ID = #projectId#
+			AND	
+				TENANT_ID = #tenantId#
+	</update>
+	
+	<update id="EzPMS.updateProjectRealDate" parameterClass="map">
+			UPDATE	
+				tbl_pms_project	
+			SET
+		<isEqual property="status" compareValue="P">
+			<![CDATA[
+				REAL_START_DATE = #changeDate#
+			]]>
+		</isEqual>
+		<isNotEqual property="status" compareValue="P">
+		<isEqual property="status" compareValue="C">
+			<![CDATA[
+				REAL_START_DATE = IFNULL(REAL_START_DATE, #changeDate#),
+				REAL_END_DATE = #changeDate#,
+				PROGRESS = #progress#,
+				REST_DUEDAY = #restDueday#
+			]]>
+		</isEqual>
+		</isNotEqual>
+			<![CDATA[
+			WHERE	
+				PROJECT_ID = #projectId#
+			AND
+				TENANT_ID = #tenantId#
+			]]>
+	</update>
+	
+	<select id="EzPMSDAO.getKanbanOrder" parameterClass="map" resultClass="String">
+		<![CDATA[
+			SELECT	
+				KANBAN_ORDER	
+			FROM 
+				TBL_PMS_MAINLIST	
+			WHERE 
+				USER_ID = #userId#
+			AND
+				PROJECT_ID = #projectId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
+	<insert id="EzPMSDAO.addTaskGroup" parameterClass="map">
+		<selectKey keyProperty="groupId" resultClass="long">
+		<![CDATA[
+		SELECT IFNULL(MAX(group_id) , 0) + 1 FROM TBL_PMS_GROUP
+		]]>
+		</selectKey>
+		<![CDATA[
+			INSERT INTO	TBL_PMS_GROUP (
+				TENANT_ID,			PROJECT_ID,			GROUP_NAME,				UPPER_GROUP_ID,	
+				PLAN_START_DATE,	PLAN_END_DATE,		CREATE_DATE,			CREATOR_NAME,
+				CREATOR_NAME2,		CREATOR_ID,			CREATOR_DEPTNAME,		CREATOR_DEPTNAME2,
+				REAL_PROGRESS,		OVERVIEW,			MEMBER_COUNT,			HEAD_MANAGER_ID,
+				HEAD_MANAGER_NAME,	HEAD_MANAGER_NAME2,	HEAD_MANAGER_DEPTNAME,	HEAD_MANAGER_DEPTNAME2,	
+				TREE_DEPTH,			ANCESTER_GROUP,		SORT_ORDER,				DEL_STATUS,			
+				WORKINGDAY,			REST_DUEDAY,		ISSUEYN
+			)
+			SELECT
+				#tenantId#,			#projectId#,		#groupName#,			#upperGroupId#,
+				#planStartDate#,	#planEndDate#,		#createDate#,			#creatorName#,
+				#creatorName2#,		#creatorId#,		#creatorDeptname#,		#creatorDeptname2#,
+				#progress#,			#overview#,			#memberCount#,			#headManagerId#,
+				#headManagerName#,	#headManagerName2#,	#headManagerDeptname#,	#headManagerDeptname2#,
+				#treeDepth#,
+		]]>
+		<isNotEqual property="upperGroupId" compareValue="0">
+				CONCAT((SELECT ANCESTER_GROUP FROM TBL_PMS_GROUP AA WHERE group_id=#upperGroupId# AND TENANT_ID=#tenantId#),',',#groupId#),
+		</isNotEqual>
+		<isEqual property="upperGroupId" compareValue="0">
+				#groupId#,
+		</isEqual>
+		<isEmpty property="sortOrder">
+			(SELECT IFNULL(MAX(sort_order) , 0) + 1 FROM TBL_PMS_GROUP WHERE PROJECT_ID = #projectId#),
+		</isEmpty>
+		<isNotEmpty property="sortOrder">
+				#sortOrder#,
+		</isNotEmpty>
+				#delStatus#,	#workingDay#,		#restDueday#,		#isIssue#
+			
+	</insert>
+	
+	
+	<insert id="EzPMSDAO.addBoard" parameterClass="ProjectBoardVO">
+		<![CDATA[
+			INSERT INTO tbl_pms_item_list (
+				tenant_id,			writer_id,			title,					write_overview,			write_type,
+				write_content,		write_date,			write_update_date,		read_count,				folder_id,
+				writer_name,		writer_name2,		writer_deptname,		writer_deptname2,
+				writer_position,	writer_position2,	doc_no,					ROOT_ITEM_ID,			upper_doc_no_tree
+			)
+			VALUES (
+				#tenantId#,			#writerId#,			#title#,				#writeOverview#,		#writeType#,
+				#writeContent#,		#writeDate#,		#writeUpdateDate#,		#readCount#,			#folderId#,
+				#writerName#,		#writerName2#,		#writerDeptName#,		#writerDeptName2#,
+				#writerPosition#,	#writerPosition2#,	#docNo#,				#rootItemId#,			#upperDocNoTree#
+			)
+		]]>
+		<selectKey keyProperty="itemId" resultClass="Integer">
+    		SELECT LAST_INSERT_ID()
+    	</selectKey>
+	</insert>
+	
+	<select id="EzPMSDAO.getMaxDocNo" parameterClass="map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				IFNULL(max(B.doc_no), 0) 
+			FROM 
+				tbl_pms_item_list B
+			JOIN 
+				TBL_PMS_BOARD_FOLDER F
+			ON 
+				F.FOLDER_ID = B.FOLDER_ID
+			WHERE 
+				B.FOLDER_ID = #folderId#
+			AND
+				B.tenant_id = #tenantId#
+		]]>
+	</select>
+	
+	<update id="EzPMSDAO.updateRootItemId" parameterClass="Integer">
+		<![CDATA[
+			UPDATE tbl_pms_item_list 
+			SET root_item_id = #docNo# 
+			WHERE item_id = #itemId#
+		]]>
+	</update>
+	
+	<insert id="EzPMSDAO.addBoardReply" parameterClass="ProjectBoardVO">
+		<![CDATA[
+			INSERT INTO tbl_pms_item_list (
+				tenant_id,			writer_id,			title,				write_overview,			write_type,
+				write_content,		write_date,			write_update_date,	read_count,				folder_id,
+				writer_name,		writer_name2,		writer_deptname,		writer_deptname2,
+				writer_position,	writer_position2,	root_item_id,		item_level,				doc_no,
+				upper_item_id,		upper_doc_no_tree
+			)
+			VALUES (
+				#tenantId#,			#writerId#,			#title#,			#writeOverview#,		#writeType#,
+				#writeContent#,		#writeDate#,		#writeUpdateDate#,	#readCount#,			#folderId#,
+				#writerName#,		#writerName2#,		#writerDeptName#,	#writerDeptName2#,
+				#writerPosition#,	#writerPosition2#,	#rootItemId#,		#itemLevel#,			#docNo#,
+				#upperItemId#,		#upperDocNoTree#
+			)
+		]]>
+		<selectKey keyProperty="itemId" resultClass="Integer">
+    		SELECT LAST_INSERT_ID()
+    	</selectKey>
+	</insert>
+	
+	<update id="EzPMSDAO.updateBoard" parameterClass="map">
+		<![CDATA[
+			UPDATE tbl_pms_item_list 
+			SET 
+				title = #title#, 					write_overview = #writeOverview#, 					write_type = #writeType#, 
+				write_content = #writeContent#,		write_update_date = #writeUpdateDate#,				folder_id = #folderId#
+			WHERE 
+				item_id = #itemId#
+			AND
+				tenant_id = #tenantId#
+		]]>
+	</update>
+	
+	<update id="EzPMSDAO.updateBoardReplyToGeneral" parameterClass="map">
+		<![CDATA[
+			UPDATE tbl_pms_item_list 
+			SET 
+				root_item_id = #rootItemId#,	upper_item_id = null,	item_level = 0
+			WHERE 
+				item_id = #itemId#
+			AND
+				tenant_id = #tenantId#
+		]]>
+	</update>
+	
+	<update id="EzPMSDAO.moveBoard" parameterClass="map">
+		<![CDATA[
+			UPDATE tbl_pms_item_list 
+			SET 
+				folder_id = #folderId#,
+				doc_no = #docNo#,
+				write_date = #writeDate#,
+				root_item_id = #rootItemId#,
+				upper_doc_no_tree = #upperDocNoTree#
+			WHERE 
+				item_id = #itemId#
+			AND
+				tenant_id = #tenantId#
+		]]>
+	</update>
+	
+	<update id="EzPMSDAO.deleteBoard" parameterClass="map">
+		<![CDATA[
+			UPDATE tbl_pms_item_list
+			SET del_status = 1
+			WHERE
+				item_id = #itemId#
+			AND
+				tenant_id = #tenantId#
+		]]>
+	</update>
+	
+	<insert id="EzPMSDAO.insertProjectAttach" parameterClass="map">
+		<![CDATA[
+			INSERT INTO tbl_pms_item_attachment (
+				tenant_id, 		item_id, 			file_path, 		file_size, 		file_name
+			)
+			VALUES (
+				#tenantId#, 	#last_insert_id#, 	#filePath#, 	#fileSize#, 	#fileName#
+			)
+		]]>
+	</insert>
+	
+	<delete id="EzPMSDAO.deleteProjectAttach" parameterClass="map">
+		<![CDATA[
+			DELETE FROM tbl_pms_item_attachment
+			WHERE
+				item_id = #itemId#
+			AND
+				tenant_id = #tenantId#
+		]]>
+	</delete>
+	
+	<select id="EzPMSDAO.getBoardAttach" parameterClass="map" resultMap="fileVO">
+		<![CDATA[
+			SELECT 
+				file_path, 		file_size, 		file_name
+			FROM tbl_pms_item_attachment
+			WHERE 
+				item_id = #itemId#
+			AND
+				tenant_id = #tenantId#
+		]]>
+	</select>
+	
+	<select id="EzPMSDAO.getBoardList" parameterClass="map" resultMap="projectBoardVOForList">
+		<![CDATA[
+			SELECT 
+				B.item_id, 			B.title,					B.write_overview,		B.write_type,		
+				B.write_date,		B.write_update_date,		B.read_count,			B.writer_name$lang$ AS writer_name,		
+				B.writer_deptname$lang$ AS writer_deptname,				
+				IFNULL(A.file_cnt, 0) AS FILE_CNT,				B.write_content,		B.folder_id,
+				B.root_item_id,		B.item_level,				B.doc_no,				F.FOLDER_NAME$lang$ AS FOLDER_NAME
+			FROM 
+				tbl_pms_item_list B
+			JOIN 
+				tbl_pms_board_folder F
+			ON 
+				B.folder_id = F.folder_id
+			LEFT JOIN 
+				(SELECT count(file_id) AS file_cnt, item_id 
+					FROM tbl_pms_item_attachment 
+					GROUP BY item_id) A
+			ON B.item_id = A.item_id
+			WHERE
+			 	F.PROJECT_ID = #projectId#
+			AND 
+				B.tenant_id = #tenantId#
+			AND 
+				B.del_status = 0
+		]]>	
+		<isNotEqual property="folderId" compareValue="0">
+			AND
+				F.FOLDER_ID = #folderId#
+		</isNotEqual>
+		<isNotEmpty property="searchByUser">
+			AND B.writer_name$lang$ LIKE CONCAT('%',#searchByUser#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByTitle">
+			AND B.title LIKE CONCAT('%',#searchByTitle#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByOverview">
+			AND B.write_overview LIKE CONCAT('%',#searchByOverview#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByStartDate">
+			<![CDATA[
+				AND B.write_date >= #searchByStartDate#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="searchByEndDate">
+			<![CDATA[
+				AND B.write_date <= #searchByEndDate#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="searchByContent">
+			AND B.write_content LIKE CONCAT('%',#searchByContent#,'%')
+		</isNotEmpty>
+		
+			ORDER BY 
+		<isNotEmpty property="orderWhat">  
+			$orderWhat$ $orderHow$,
+		</isNotEmpty>
+		<isEqual property="folderId" compareValue="0">
+			B.WRITE_DATE DESC
+		</isEqual>
+		<isNotEqual property="folderId" compareValue="0">
+			B.root_item_id DESC, 
+			B.UPPER_DOC_NO_TREE ASC
+		</isNotEqual>
+		LIMIT #startRow#, #listCnt#
+	</select>
+	
+	<select id="EzPMSDAO.getBoardNoticeList" parameterClass="map" resultMap="projectBoardVOForList">
+		<![CDATA[
+			SELECT 
+				B.item_id, 			B.title,					B.write_overview,		B.write_type,		
+				B.write_date,		B.write_update_date,		B.read_count,			B.writer_name$lang$ AS writer_name,		
+				B.writer_deptname$lang$ AS writer_deptname,	
+				IFNULL(A.file_cnt, 0) AS FILE_CNT,				B.write_content,		B.folder_id,
+				B.root_item_id,				B.item_level,			B.doc_no,			F.FOLDER_NAME$lang$ AS FOLDER_NAME
+			FROM 
+				tbl_pms_item_list B
+			JOIN 
+				tbl_pms_board_folder F
+			ON 
+				B.folder_id = F.folder_id
+			LEFT JOIN (SELECT count(file_id) AS file_cnt, item_id 
+					   FROM tbl_pms_item_attachment 
+					   GROUP BY item_id) A
+			ON B.item_id = A.item_id
+			WHERE
+				F.PROJECT_ID = #projectId#
+			AND 
+				B.tenant_id = #tenantId#
+			AND 
+				F.FOLDER_ID = #folderId#
+			AND 
+				B.del_status = 0
+			AND 
+				B.write_type in (1, 2)
+			ORDER BY 
+				B.DOC_NO DESC
+		
+			LIMIT #startRow#, #listCnt#
+		]]>
+	</select>
+	
+	<select id="EzPMSDAO.getBoardListCount" parameterClass="map" resultClass="Integer">
+		<![CDATA[
+			SELECT COUNT(item_id)
+			FROM 
+				tbl_pms_item_list B
+			JOIN 
+				tbl_pms_board_folder F
+			ON 
+				B.folder_id = F.folder_id
+			WHERE
+				F.PROJECT_ID = #projectId#
+		]]>
+			AND B.tenant_id = #tenantId#
+			AND B.del_status = 0
+		<isNotEqual property="folderId" compareValue="0">
+			AND
+				F.FOLDER_ID = #folderId#
+		</isNotEqual>
+		<isNotEmpty property="searchByUser">
+			AND B.writer_name LIKE CONCAT('%',#searchByUser#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByTitle">
+			AND B.title LIKE CONCAT('%',#searchByTitle#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByOverview">
+			AND B.write_overview LIKE CONCAT('%',#searchByOverview#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByStartDate">
+			<![CDATA[
+				AND B.write_date >= #searchByStartDate#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="searchByEndDate">
+			<![CDATA[
+				AND B.write_date <= #searchByEndDate#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="searchByContent">
+			AND B.write_content LIKE CONCAT('%',#searchByContent#,'%')
+		</isNotEmpty>
+	</select>
+	
+	<select id="EzPMSDAO.getBoardNoticeListCount" parameterClass="map" resultClass="Integer">
+		<![CDATA[
+			SELECT COUNT(item_id)
+			FROM tbl_pms_item_list B
+			JOIN tbl_pms_board_folder F
+			ON B.folder_id = F.folder_id
+			WHERE
+				F.PROJECT_ID = #projectId#
+			AND 
+				F.FOLDER_ID = #folderId#
+		]]>
+			AND B.tenant_id = #tenantId#
+			AND B.del_status = 0
+			AND B.write_type in (1, 2)
+	</select>
+
+	<select id="EzPMSDAO.getBoardDetail" parameterClass="map" resultMap="projectBoardVOForDetail">
+		<![CDATA[
+			SELECT 
+				B.item_id,				B.writer_id, 			B.title,				B.write_overview,		B.write_type,		
+				B.write_content,		B.write_date,			B.write_update_date,	B.read_count,		
+				B.writer_name$lang$ AS writer_name,				B.writer_deptname$lang$ AS writer_deptname,		
+				B.writer_position$lang$ AS writer_position,		M.mobile,
+				B.folder_id,			B.root_item_id,			B.item_level,			F.FOLDER_NAME$lang$ AS FOLDER_NAME,				
+				F.PROJECT_ID,			B.upper_doc_no_tree
+			FROM 
+				tbl_pms_item_list B
+			JOIN 
+				tbl_pms_board_folder F
+			ON 
+				B.folder_id = F.folder_id
+			LEFT JOIN 
+				tbl_usermaster M
+			on 
+				B.writer_id = M.cn and B.tenant_id = M.tenant_id
+			WHERE 
+				B.item_id = #itemId#
+			AND 
+				B.tenant_id = #tenantId#
+			AND 
+				B.del_status = 0
+			AND	
+				F.PROJECT_ID = #projectId#
+		]]>	
+	</select>
+	
+	<update id="EzPMSDAO.updateBoardReadCount" parameterClass="Integer">
+		<![CDATA[
+			UPDATE 
+				tbl_pms_item_list
+			SET 
+				read_count = read_count + 1
+			WHERE 
+				item_id = #itemId#
+		]]>
+	</update>
+	
+	<insert id="EzPMSDAO.insertReadBoardLog" parameterClass="map">
+		<![CDATA[
+			INSERT INTO tbl_pms_item_read (
+				tenant_id, 		project_id, 		item_id, 			read_date, 			user_id,
+				user_name, 		user_name2,			user_deptname,		user_deptname2
+			)
+			VALUES (
+				#tenantId#, 	#projectId#, 		#itemId#, 			now(),				#userId#,
+				#userName#,		#userName2#,		#userDeptName#,		#userDeptName2#
+			)
+		]]>
+	</insert>
+	
+	<select id="EzPMSDAO.getBoardViewerCount" parameterClass="map" resultClass="Integer">
+		<![CDATA[
+			SELECT COUNT(read_id) FROM tbl_pms_item_read
+			WHERE 
+				item_id = #itemId#
+			AND 
+				tenant_id = #tenantId#
+			AND 
+				user_id != #writerId#
+		]]>
+	</select>
+	
+	<select id="EzPMSDAO.getBoardViewerList" parameterClass="map" resultMap="boardViewerVO">
+		<![CDATA[
+			SELECT 
+				R.read_date,			R.user_name$lang$ AS user_name,  	R.user_deptname$lang$ AS user_deptname,	
+				U.title AS position, 	R.user_id
+			FROM tbl_pms_item_read R
+			LEFT JOIN tbl_usermaster U
+			ON
+				U.CN = R.USER_ID
+			AND R.tenant_id = U.tenant_id
+			WHERE 
+				item_id = #itemId#
+			AND 
+				R.tenant_id = #tenantId#
+			AND 
+				user_id != #writerId#
+			LIMIT #startRow#, #limit#
+		]]>
+	</select>
+	
+	<insert id="EzPMSDAO.addKanbanOrder" parameterClass="map">
+		<![CDATA[
+			INSERT INTO TBL_PMS_MAINLIST (
+				TENANT_ID,	USER_ID,	PROJECT_ID,		KANBAN_ORDER
+			)
+			VALUES (
+				#tenantId#,	#userId#,	#projectId#,	#orderStatus#
+			)
+		]]>
+	</insert>
+	
+	<update id="EzPMSDAO.changeKanbanOrder" parameterClass="map">
+		<![CDATA[
+			UPDATE 
+				TBL_PMS_MAINLIST	
+			SET	
+				KANBAN_ORDER = #orderStatus#
+			WHERE
+				USER_ID = #userId#
+			AND
+				PROJECT_ID = #projectId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
+	<update id="EzPMSDAO.updateTask" parameterClass="map">
+		<![CDATA[
+			UPDATE 
+				tbl_pms_task
+			SET	
+				GROUP_ID = #groupId#,
+				TASK_NAME = #taskName#,			
+				STATUS = #status#,
+				PLAN_START_DATE = #planStartDate#,
+				PLAN_END_DATE = #planEndDate#,
+				REAL_PROGRESS = #realProgress#,
+				WEIGHT = #weight#,
+				OVERVIEW = #overview#,
+				MEMBER_COUNT = #memberCount#,
+    			HEAD_MANAGER_ID = #headManagerId#,
+    			HEAD_MANAGER_NAME = #headManagerName#,
+    			HEAD_MANAGER_NAME2 = #headManagerName2#,
+    			HEAD_MANAGER_DEPTNAME = #headManagerDeptname#,
+    			HEAD_MANAGER_DEPTNAME2 = #headManagerDeptname2#, 
+    			WRITER_ID = #writerId#,
+    			WRITE_DATE = #writeDate#,
+    			WRITER_NAME = #writerName#,
+    			WRITER_NAME2 = #writerName2#,
+    			WRITER_DEPTNAME = #writerDeptname#,
+    			WRITER_DEPTNAME2 = #writerDeptname2#, 
+    			SORT_ORDER = #sortOrder#,
+    			WORKINGDAY = #workingday#
+   			WHERE
+   				TASK_ID = #taskId#
+   			AND
+   				TENANT_ID = #tenantId#
+ 		]]>
+	</update>
+
+	<update id="EzPMSDAO.completeAllTasks" parameterClass="map">
+		<![CDATA[
+			UPDATE	
+				TBL_PMS_TASK 
+			SET	
+				STATUS = #status#,
+				REAL_END_DATE = IFNULL(REAL_END_DATE, #realEndDate#),
+				REAL_START_DATE = IFNULL(REAL_START_DATE, #realEndDate#),
+				REAL_PROGRESS = #progress#
+			WHERE	
+				PROJECT_ID = #projectId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
+	<select id="EzPMSDAO.getGroupList" parameterClass="map" resultMap="projectGroupVO">
+		<![CDATA[
+			SELECT DISTINCT
+				A.GROUP_ID,
+				A.TENANT_ID,
+				A.PROJECT_ID,
+				A.GROUP_NAME,
+				A.UPPER_GROUP_ID,
+				A.PLAN_START_DATE,
+				A.PLAN_END_DATE,
+				A.REAL_START_DATE,
+				A.REAL_END_DATE,
+				A.REAL_PROGRESS,
+				A.OVERVIEW,
+				A.MEMBER_COUNT,
+				A.HEAD_MANAGER_ID,
+				A.HEAD_MANAGER_NAME$lang$ AS HEAD_MANAGER_NAME,
+				A.HEAD_MANAGER_DEPTNAME$lang$ AS HEAD_MANAGER_DEPTNAME,
+				A.CREATOR_ID,
+				A.CREATE_DATE,
+				A.CREATOR_NAME$lang$ AS CREATOR_NAME,
+				A.CREATOR_DEPTNAME$lang$ AS CREATOR_DEPTNAME,
+				A.TREE_DEPTH,
+				A.ANCESTER_GROUP,
+				A.SORT_ORDER,
+				A.DEL_STATUS,
+				A.WORKINGDAY,
+				A.REST_DUEDAY,
+				P.PROJECT_NAME,
+				B.GROUP_NAME AS UPPER_GROUP_NAME,
+				(
+					SELECT
+						IFNULL(SUM(WEIGHT), 0)
+					FROM
+						TBL_PMS_TASK
+					WHERE
+						TENANT_ID = #tenantId#
+					AND
+						DEL_STATUS = 0
+					AND
+						GROUP_ID IN (
+							SELECT 
+								GROUP_ID
+							FROM 
+								TBL_PMS_GROUP
+							WHERE
+								TENANT_ID = #tenantId#
+							AND
+								DEL_STATUS = 0
+							AND
+								GROUP_ID = A.GROUP_ID OR ANCESTER_GROUP LIKE CONCAT('%\,',A.GROUP_ID,',%') OR ANCESTER_GROUP LIKE CONCAT(A.GROUP_ID,',%') 
+					)
+				) AS WEIGHT,
+				(
+					SELECT
+						COUNT(TASK_ID)
+					FROM
+						TBL_PMS_TASK
+					WHERE
+						TENANT_ID = #tenantId#
+					AND
+						DEL_STATUS = 0
+					AND
+						GROUP_ID IN (
+							SELECT 
+								GROUP_ID
+							FROM 
+								TBL_PMS_GROUP
+							WHERE
+								TENANT_ID = #tenantId#
+							AND
+								DEL_STATUS = 0
+							AND
+								GROUP_ID = A.GROUP_ID OR ANCESTER_GROUP LIKE CONCAT('%\,',A.GROUP_ID,',%') OR ANCESTER_GROUP LIKE CONCAT(A.GROUP_ID,',%') 
+					)
+				) AS TASKLISTCOUNT,
+				(
+					SELECT
+						IFNULL(SUM((100 - REAL_PROGRESS) * (WEIGHT / 100)), 0)
+					FROM
+						TBL_PMS_TASK
+					WHERE
+						TENANT_ID = #tenantId#
+					AND
+						DEL_STATUS = 0
+					AND
+						STATUS = 'L'
+					AND
+						GROUP_ID IN (
+							SELECT 
+								GROUP_ID
+							FROM 
+								TBL_PMS_GROUP
+							WHERE
+								TENANT_ID = #tenantId#
+							AND
+								DEL_STATUS = 0
+							AND
+								GROUP_ID = A.GROUP_ID OR ANCESTER_GROUP LIKE CONCAT('%\,',A.GROUP_ID,',%') OR ANCESTER_GROUP LIKE CONCAT(A.GROUP_ID,',%') 
+					)
+				) AS LATEPERCENT
+			FROM
+				TBL_PMS_GROUP A
+			JOIN	
+				TBL_PMS_PROJECT P
+			ON	
+				A.PROJECT_ID = P.PROJECT_ID
+			LEFT JOIN
+				TBL_PMS_GROUP B
+			ON
+				A.UPPER_GROUP_ID = B.GROUP_ID
+		]]>
+			<isEqual property="location" compareValue="general">
+			JOIN
+				TBL_PMS_GROUPMEMBER M
+			ON
+				A.GROUP_ID = M.GROUP_ID
+			AND
+				M.MEMBER_ROLE_ID = 1
+			LEFT JOIN
+				TBL_PMS_GROUPMEMBER M2
+			ON
+				A.GROUP_ID = M2.GROUP_ID
+			AND
+			
+				A.TENANT_ID = M2.TENANT_ID
+			</isEqual>
+			WHERE 
+				A.TENANT_ID = #tenantId#
+			AND 
+				A.DEL_STATUS = 0
+			<isEqual property="projectId" compareValue="0">
+			AND
+				M.USER_ID = #userId#
+			<isEmpty property="searchByUser">
+			AND 
+				M2.USER_ID = #userId#	
+			</isEmpty>
+			</isEqual>
+			<isNotEqual property="projectId" compareValue="0">
+			AND
+				A.PROJECT_ID = #projectId#
+			</isNotEqual>
+			<isNotEmpty property="searchByGroupName">
+				AND 
+					A.GROUP_NAME LIKE CONCAT('%', #searchByGroupName#, '%')	
+			</isNotEmpty>
+			<isNotEmpty property="searchByUpperGroupName">
+				AND 
+					B.GROUP_NAME LIKE CONCAT('%', #searchByUpperGroupName#, '%')	
+			</isNotEmpty>
+			<isNotEmpty property="searchByUser">
+				AND 
+					M2.USER_NAME LIKE CONCAT('%', #searchByUser#, '%')	
+			</isNotEmpty>
+			<isNotEmpty property="searchByProjectName">
+				AND 
+					P.PROJECT_NAME LIKE CONCAT('%', #searchByProjectName#, '%')	
+			</isNotEmpty>
+			<isNotEmpty property="searchByOverview">
+				AND 
+					A.OVERVIEW LIKE CONCAT('%', #searchByOverview#, '%')	
+			</isNotEmpty>
+			<isNotEmpty property="searchByStartDate">
+			<![CDATA[
+				AND 
+					A.PLAN_START_DATE >= #searchByStartDate#	
+			]]>
+			</isNotEmpty>
+			<isNotEmpty property="searchByEndDate">
+			<![CDATA[
+				AND 
+					A.PLAN_END_DATE <= #searchByEndDate#	
+			]]>
+			</isNotEmpty>
+			<isEqual property="orderWhat" compareValue="init">
+				ORDER BY
+					A.SORT_ORDER
+			</isEqual>
+			<isNotEqual property="orderWhat" compareValue="init">
+				ORDER BY
+					$orderWhat$ $orderHow$
+			</isNotEqual>
+			<isNotEqual property="limit" compareValue="-1">
+				limit
+					#startRow#, #limit#
+			</isNotEqual>
+		</select>
+		
+	<select id="EzPMSDAO.getGroupListForGantt" parameterClass="map" resultMap="projectGroupVO2">
+		<![CDATA[
+			SELECT DISTINCT
+				A.GROUP_ID,
+				A.TENANT_ID,
+				A.PROJECT_ID,
+				A.GROUP_NAME,
+				A.UPPER_GROUP_ID,
+				A.PLAN_START_DATE,
+				A.PLAN_END_DATE,
+				A.REAL_START_DATE,
+				A.REAL_END_DATE,
+				A.REAL_PROGRESS,
+				A.OVERVIEW,
+				A.MEMBER_COUNT,
+				A.HEAD_MANAGER_ID,
+				A.HEAD_MANAGER_NAME$lang$ AS HEAD_MANAGER_NAME,
+				A.HEAD_MANAGER_DEPTNAME$lang$ AS HEAD_MANAGER_DEPTNAME,
+				A.CREATOR_ID,
+				A.CREATE_DATE,
+				A.CREATOR_NAME$lang$ AS CREATOR_NAME,
+				A.CREATOR_DEPTNAME$lang$ AS CREATOR_DEPTNAME,
+				A.TREE_DEPTH,
+				A.ANCESTER_GROUP,
+				A.SORT_ORDER,
+				A.DEL_STATUS,
+				A.WORKINGDAY,
+				A.REST_DUEDAY,
+				P.PROJECT_NAME,
+				B.GROUP_NAME AS UPPER_GROUP_NAME,
+				TW.REALSTARTENDDIFF,
+				(
+					SELECT
+						IFNULL(SUM(WEIGHT), 0)
+					FROM
+						TBL_PMS_TASK
+					WHERE
+						TENANT_ID = #tenantId#
+					AND
+						DEL_STATUS = 0
+					AND
+						GROUP_ID IN (
+							SELECT 
+								GROUP_ID
+							FROM 
+								TBL_PMS_GROUP
+							WHERE
+								TENANT_ID = #tenantId#
+							AND
+								DEL_STATUS = 0
+							AND
+								GROUP_ID = A.GROUP_ID OR ANCESTER_GROUP LIKE CONCAT('%\,',A.GROUP_ID,',%') OR ANCESTER_GROUP LIKE CONCAT(A.GROUP_ID,',%') 
+					)
+				) AS WEIGHT,
+				(
+					SELECT
+						COUNT(TASK_ID)
+					FROM
+						TBL_PMS_TASK
+					WHERE
+						TENANT_ID = #tenantId#
+					AND
+						DEL_STATUS = 0
+					AND
+						GROUP_ID IN (
+							SELECT 
+								GROUP_ID
+							FROM 
+								TBL_PMS_GROUP
+							WHERE
+								TENANT_ID = #tenantId#
+							AND
+								DEL_STATUS = 0
+							AND
+								GROUP_ID = A.GROUP_ID OR ANCESTER_GROUP LIKE CONCAT('%\,',A.GROUP_ID,',%') OR ANCESTER_GROUP LIKE CONCAT(A.GROUP_ID,',%') 
+					)
+				) AS TASKLISTCOUNT,
+				(
+					SELECT
+						IFNULL(SUM((100 - REAL_PROGRESS) * (WEIGHT / 100)), 0)
+					FROM
+						TBL_PMS_TASK
+					WHERE
+						TENANT_ID = #tenantId#
+					AND
+						DEL_STATUS = 0
+					AND
+						STATUS = 'L'
+					AND
+						GROUP_ID IN (
+							SELECT 
+								GROUP_ID
+							FROM 
+								TBL_PMS_GROUP
+							WHERE
+								TENANT_ID = #tenantId#
+							AND
+								DEL_STATUS = 0
+							AND
+								GROUP_ID = A.GROUP_ID OR ANCESTER_GROUP LIKE CONCAT('%\,',A.GROUP_ID,',%') OR ANCESTER_GROUP LIKE CONCAT(A.GROUP_ID,',%') 
+					)
+				) AS LATEPERCENT
+			FROM
+				TBL_PMS_GROUP A
+			JOIN	
+				TBL_PMS_PROJECT P
+			ON	
+				A.PROJECT_ID = P.PROJECT_ID
+			LEFT JOIN
+				TBL_PMS_GROUP B
+			ON
+				A.UPPER_GROUP_ID = B.GROUP_ID
+		]]>
+			<isEqual property="location" compareValue="general">
+			JOIN
+				TBL_PMS_GROUPMEMBER M
+			ON
+				A.GROUP_ID = M.GROUP_ID
+			AND
+				M.MEMBER_ROLE_ID = 1
+			LEFT JOIN
+				TBL_PMS_GROUPMEMBER M2
+			ON
+				A.GROUP_ID = M2.GROUP_ID
+			AND
+			
+				A.TENANT_ID = M2.TENANT_ID
+			</isEqual>
+			<isEmpty property="holidayList">
+			JOIN
+			(
+				SELECT
+					GROUP_ID,
+					(
+					CASE
+					WHEN REAL_PROGRESS = 100 AND REAL_START_DATE IS NOT NULL AND REAL_END_DATE IS NOT NULL
+					THEN (LENGTH(REPLACE(RPAD(SUBSTR('~23456~', DAYOFWEEK(real_start_date)), DATEDIFF(real_end_date, real_start_date) + 1, '~23456~'), '~', '')))
+					ELSE 0
+					END
+					) AS REALSTARTENDDIFF
+				FROM
+					TBL_PMS_GROUP
+				WHERE
+					project_id = #projectId#
+			) TW
+			ON
+				A.GROUP_ID = TW.GROUP_ID
+			</isEmpty>
+			<isNotEmpty property="holidayList">
+			JOIN
+			(
+				SELECT
+					GROUP_ID,
+					(
+						CASE
+						WHEN REAL_PROGRESS = 100 AND REAL_START_DATE IS NOT NULL AND REAL_END_DATE IS NOT NULL
+						THEN
+							(LENGTH(REPLACE(RPAD(SUBSTR('~23456~', DAYOFWEEK(real_start_date)), DATEDIFF(real_end_date, real_start_date) + 1, '~23456~'), '~', '')))
+							-
+							(SELECT
+								COUNT(a.holiday) 
+							FROM 
+								(
+								<iterate property="holidayList" conjunction="union all">
+								select #holidayList[]# holiday from dual 
+								</iterate>  
+								) a 
+							WHERE 
+								DAYOFWEEK(a.holiday) NOT IN (1,7) 
+							AND 
+								a.holiday BETWEEN real_start_date AND real_end_date
+							)
+						ELSE 0
+						END
+					) AS REALSTARTENDDIFF
+				FROM
+					TBL_PMS_GROUP
+				WHERE
+					project_id = #projectId#
+			) TW
+			ON
+				A.GROUP_ID = TW.GROUP_ID
+			</isNotEmpty>
+			WHERE 
+				A.TENANT_ID = #tenantId#
+			AND 
+				A.DEL_STATUS = 0
+			<isEqual property="projectId" compareValue="0">
+			AND
+				M.USER_ID = #userId#
+			<isEmpty property="searchByUser">
+			AND 
+				M2.USER_ID = #userId#	
+			</isEmpty>
+			</isEqual>
+			<isNotEqual property="projectId" compareValue="0">
+			AND
+				A.PROJECT_ID = #projectId#
+			</isNotEqual>
+			<isNotEmpty property="searchByGroupName">
+				AND 
+					A.GROUP_NAME LIKE CONCAT('%', #searchByGroupName#, '%')	
+			</isNotEmpty>
+			<isNotEmpty property="searchByUpperGroupName">
+				AND 
+					B.GROUP_NAME LIKE CONCAT('%', #searchByUpperGroupName#, '%')	
+			</isNotEmpty>
+			<isNotEmpty property="searchByUser">
+				AND 
+					M2.USER_NAME LIKE CONCAT('%', #searchByUser#, '%')	
+			</isNotEmpty>
+			<isNotEmpty property="searchByProjectName">
+				AND 
+					P.PROJECT_NAME LIKE CONCAT('%', #searchByProjectName#, '%')	
+			</isNotEmpty>
+			<isNotEmpty property="searchByOverview">
+				AND 
+					A.OVERVIEW LIKE CONCAT('%', #searchByOverview#, '%')	
+			</isNotEmpty>
+			<isNotEmpty property="searchByStartDate">
+			<![CDATA[
+				AND 
+					A.PLAN_START_DATE >= #searchByStartDate#	
+			]]>
+			</isNotEmpty>
+			<isNotEmpty property="searchByEndDate">
+			<![CDATA[
+				AND 
+					A.PLAN_END_DATE <= #searchByEndDate#	
+			]]>
+			</isNotEmpty>
+			<isEqual property="orderWhat" compareValue="init">
+				ORDER BY
+					A.SORT_ORDER
+			</isEqual>
+			<isNotEqual property="orderWhat" compareValue="init">
+				ORDER BY
+					$orderWhat$ $orderHow$
+			</isNotEqual>
+			<isNotEqual property="limit" compareValue="-1">
+				limit
+					#startRow#, #limit#
+			</isNotEqual>
+	</select>
+	
+	<select id="EzPMSDAO.getTaskDetails" parameterClass="map" resultMap="projectTaskVOForDetail">
+		<![CDATA[
+			SELECT DISTINCT
+				A.TASK_ID,
+				A.TENANT_ID,
+				A.PROJECT_ID,
+				A.GROUP_ID,
+				A.TASK_NAME,
+				A.STATUS,
+				A.PLAN_START_DATE,
+				A.PLAN_END_DATE,
+				A.REAL_START_DATE,
+				A.REAL_END_DATE,
+				A.REAL_PROGRESS,
+				A.WEIGHT,
+				A.OVERVIEW,
+				A.MEMBER_COUNT,
+				A.HEAD_MANAGER_ID,
+				A.HEAD_MANAGER_NAME$lang$ AS HEAD_MANAGER_NAME,
+				A.HEAD_MANAGER_DEPTNAME$lang$ AS HEAD_MANAGER_DEPTNAME,
+				A.WRITER_ID,
+				A.WRITE_DATE,
+				A.WRITER_NAME$lang$ AS WRITER_NAME,
+				A.WRITER_DEPTNAME$lang$ AS WRITER_DEPTNAME,
+				A.TREE_DEPTH,
+				B.ANCESTER_GROUP,
+				A.SORT_ORDER,
+				A.WORKINGDAY,
+				IFNULL(A.REST_DUEDAY, 0) AS REST_DUEDAY,
+				IFNULL(A.LINK_TASK_ID, 0) AS LINK_TASK_ID,
+				A.DEL_STATUS,
+				B.GROUP_NAME AS UPPER_GROUP_NAME,
+				P.PROJECT_NAME,
+				A.REAL_WORKINGDAY,
+				R.PRETASK,
+				B.TREE_DEPTH AS UPPER_TREE_DEPTH
+			FROM 
+				tbl_pms_task A
+			JOIN
+				tbl_pms_group B
+			ON
+				A.GROUP_ID = B.GROUP_ID
+			JOIN	
+				TBL_PMS_PROJECT P
+			ON	
+				A.PROJECT_ID = P.PROJECT_ID
+			LEFT JOIN
+				(	
+					SELECT task_id, group_concat(pretask separator ',') AS pretask
+					FROM tbl_pms_pretaskrel
+					GROUP BY task_id
+				) R
+			ON
+				A.TASK_ID = R.TASK_ID
+			WHERE
+				A.TASK_ID = #taskId#
+			AND
+				A.TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
+	<select id="EzPMSDAO.getTaskListCount" parameterClass="map" resultClass="Integer">
+	<![CDATA[
+		SELECT	
+			COUNT(DISTINCT A.TASK_ID)	
+		FROM
+				tbl_pms_task A
+			JOIN 
+				tbl_pms_project B
+			ON
+				A.PROJECT_ID = B.PROJECT_ID
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			JOIN
+				tbl_pms_member C
+			ON	
+				A.PROJECT_ID = C.PROJECT_ID
+			JOIN
+				tbl_pms_group D
+			ON
+				A.GROUP_ID = D.GROUP_ID
+			JOIN	
+				tbl_pms_taskmember E
+			ON
+				A.TASK_ID = E.TASK_ID
+			WHERE 
+				A.TENANT_ID = #tenantId#
+			AND	
+				A.DEL_STATUS = 0
+		]]>
+		<isNotEqual property="roleId" compareValue="3">
+			AND
+				(C.USER_ID = #userId#
+				OR
+				C.USER_ID = #deptId#
+				)
+		</isNotEqual>
+		<isNotEqual property="projectId" compareValue="0">
+			AND  
+				A.PROJECT_ID = #projectId#
+		</isNotEqual>
+		<isEqual property="isMyTask" compareValue="M">
+			AND
+           	 E.USER_ID = #userId#
+        </isEqual>
+		<isNotNull property="status">
+			<isNotEqual property="status" compareValue="A">
+				AND
+					A.STATUS = #status#
+			</isNotEqual>
+			</isNotNull>
+		<isNotEmpty property="upperGroupName">
+			AND
+               D.GROUP_NAME LIKE CONCAT('%',#upperGroupName#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="taskName">
+			AND
+				A.TASK_NAME LIKE CONCAT('%',#taskName#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByUser">
+			AND
+				E.USER_NAME LIKE CONCAT('%',#searchByUser#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByOverview">
+			AND
+				A.OVERVIEW LIKE CONCAT('%',#searchByOverview#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByProjectName">
+			AND
+				B.PROJECT_NAME LIKE CONCAT('%',#searchByProjectName#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searhByStartDate">
+		<![CDATA[
+			AND
+				A.PLAN_START_DATE >= #searhByStartDate#
+		]]>
+		</isNotEmpty>
+		<isNotEmpty property="searchByEndDate">
+		<![CDATA[
+			AND
+				A.PLAN_END_DATE <= #searchByEndDate#
+		]]>
+		</isNotEmpty>
+		<isNotNull property="groupId">
+			<isNotEqual property="groupId" compareValue="0">
+			AND 
+				(A.GROUP_ID = #groupId# 
+				OR D.UPPER_GROUP_ID = #groupId#
+				OR D.UPPER_GROUP_ID IN (
+							SELECT GROUP_ID FROM TBL_PMS_GROUP WHERE UPPER_GROUP_ID = #groupId#
+				)
+			)
+			</isNotEqual>
+		</isNotNull>
+	</select>
+	
+	<insert id="EzPMSDAO.addTaskLog" parameterClass="map">
+		INSERT INTO	TBL_PMS_LOG (
+			TENANT_ID,			PROJECT_ID,			GROUP_ID,		TASK_ID,
+			LOG_DATE,			LOG_STATUS,			USER_NAME,		USER_NAME2,
+			USER_DEPTNAME,		USER_DEPTNAME2,		LOG_CONTENT,	USER_ID
+		) VALUES (
+			#tenantId#,			#projectId#,		#groupId#,		#taskId#,
+			#logDate#,			#logStatus#,		#userName#,		#userName2#,
+			#userDeptname#,		#userDeptname2#,	#logContent#,	#userId#
+		)
+	</insert>
+	
+	<select id="EzPMSDAO.getTaskLogListCount" parameterClass="map" resultClass="Integer">
+		SELECT	
+			COUNT(L.LOG_ID)
+		FROM
+			TBL_PMS_LOG L
+		JOIN	
+			TBL_PMS_PROJECT P
+		ON	
+			L.PROJECT_ID = P.PROJECT_ID
+		LEFT JOIN 
+			TBL_PMS_GROUP G
+		ON 
+			L.GROUP_ID = G.GROUP_ID
+		LEFT JOIN
+			TBL_PMS_TASK T
+		ON 
+			L.TASK_ID = T.TASK_ID
+		<isEqual property="taskId" compareValue="0">
+		WHERE 
+			(L.GROUP_ID = #groupId# 
+				OR G.UPPER_GROUP_ID = #groupId#
+				OR G.UPPER_GROUP_ID IN (
+							SELECT GROUP_ID FROM TBL_PMS_GROUP WHERE UPPER_GROUP_ID = #groupId#
+				)
+			)
+		</isEqual>
+		<isNotEqual property="taskId" compareValue="0">
+		WHERE 
+			L.task_id = #taskId#
+		</isNotEqual>
+		<isNotEmpty property="searchByContent">
+		AND
+			L.LOG_CONTENT LIKE CONCAT('%',#searchByContent#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByStatus">
+			<isNotEqual property="searchByStatus" compareValue="0">
+			AND
+				L.LOG_STATUS = #searchByStatus#
+			</isNotEqual>
+		</isNotEmpty>
+		AND
+			L.PROJECT_ID = #projectId#
+		AND
+			L.TENANT_ID = #tenantId#
+	</select>
+	
+	<select id="EzPMSDAO.getTaskLogList" parameterClass="map" resultMap="ProjectTaskLogListVO">
+		SELECT 
+			L.LOG_ID AS LOG_ID,
+			L.TENANT_ID AS TENANT_ID,
+			L.PROJECT_ID AS PROJECT_ID,
+			L.GROUP_ID AS GROUP_ID,
+			L.TASK_ID AS TASK_ID,
+			DATE_ADD(DATE_FORMAT(LOG_DATE, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as LOG_DATE,
+			L.LOG_STATUS AS LOG_STATUS,
+			L.USER_ID AS USER_ID,
+			L.USER_NAME$lang$ AS USER_NAME,
+			L.USER_DEPTNAME$lang$ AS USER_DEPTNAME,
+			L.LOG_CONTENT AS LOG_CONTENT,
+			G.GROUP_NAME AS GROUP_NAME,
+			T.TASK_NAME AS TASK_NAME
+		FROM
+			TBL_PMS_LOG L
+		JOIN	
+			TBL_PMS_PROJECT P
+		ON	
+			L.PROJECT_ID = P.PROJECT_ID
+		LEFT JOIN 
+			TBL_PMS_GROUP G
+		ON 
+			L.GROUP_ID = G.GROUP_ID
+		LEFT JOIN
+			TBL_PMS_TASK T
+		ON 
+			L.TASK_ID = T.TASK_ID
+		WHERE
+			L.PROJECT_ID = #projectId#
+		AND
+			L.TENANT_ID = #tenantId#
+		<isNotEqual property="location" compareValue="overview">
+		<isNotEmpty property="groupId">
+		<isEqual property="taskId" compareValue="0">
+		AND 
+			(L.GROUP_ID = #groupId# 
+				OR G.UPPER_GROUP_ID = #groupId#
+				OR G.UPPER_GROUP_ID IN (
+							SELECT GROUP_ID FROM TBL_PMS_GROUP WHERE UPPER_GROUP_ID = #groupId#
+				)
+			)
+		</isEqual>
+		<isNotEqual property="taskId" compareValue="0">
+		AND 
+			L.task_id = #taskId#
+		</isNotEqual>
+		<isNotEmpty property="searchByContent">
+		AND
+			L.LOG_CONTENT LIKE CONCAT('%',#searchByContent#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByStatus">
+			<isNotEqual property="searchByStatus" compareValue="0">
+			AND
+				L.LOG_STATUS = #searchByStatus#
+			</isNotEqual>
+		</isNotEmpty>
+		</isNotEmpty>
+		</isNotEqual>
+		<isNotEqual property="orderWhat" compareValue="init">
+		ORDER BY	
+			$orderWhat$ $orderHow$
+		</isNotEqual>
+		<isEqual property="orderWhat" compareValue="init">
+		ORDER BY 
+			LOG_ID DESC
+		</isEqual>
+		<![CDATA[
+			limit 
+				#startCount#, #listNumber# 
+		]]>
+	</select>
+	
+	<select id="EzPMSDAO.checkReadBoardOrNot" parameterClass="map" resultClass="Integer">
+		SELECT 1 
+		FROM 
+			tbl_pms_item_read
+		WHERE 
+			item_id = #itemId#
+		AND
+			user_id = #userId#
+	</select>
+
+	<select id="EzPMSDAO.getProgressProject" parameterClass="Map" resultMap="projectInfoVO">
+		SELECT
+			PROJECT_ID, 
+			TENANT_ID,
+			PROJECT_NAME, 
+			PLAN_START_DATE,
+			PLAN_END_DATE, 
+			REAL_START_DATE, 
+			REAL_END_DATE,
+			HEAD_MANAGER_ID, 
+			HEAD_MANAGER_NAME$lang$ AS HEAD_MANAGER_NAME, 
+			HEAD_MANAGER_DEPTNAME$lang$ AS HEAD_MANAGER_DEPTNAME, 
+			STATUS, 
+			PROGRESS, 
+			OVERVIEW,  
+			WEIGHT_INPUT, 
+			CREATOR_ID, 
+			CREATE_DATE, 
+			CREATOR_NAME$lang$ AS CREATOR_NAME, 
+			CREATOR_DEPTNAME$lang$ AS CREATOR_DEPTNAME,
+			WORKINGDAY, 
+			REST_DUEDAY, 
+			ALAM_MAIL_STATUS,
+			0 AS ISFAVORITE,
+			0 AS GROUP_ID,
+			MAIL_REPEAT
+		FROM
+			TBL_PMS_PROJECT
+		WHERE
+			DEL_STATUS = 0
+		<isEqual property="mode" compareValue="P">
+		AND
+			STATUS = #status#
+		</isEqual>
+		<isNotEqual property="mode" compareValue="P">
+		AND
+			STATUS != 'C'
+		</isNotEqual>
+	</select>
+	
+	<select id="EzPMSDAO.getStatusCount" parameterClass="Map" resultMap="StatusCount">
+		select 
+			A.status,
+   			count(*) as count
+		from
+			tbl_pms_task A
+		JOIN
+			tbl_PMS_PROJECT B
+		ON
+			A.PROJECT_ID = B.PROJECT_ID
+		AND
+			A.TENANT_ID = B.TENANT_ID
+		WHERE
+			A.PROJECT_ID = #projectId#
+		AND
+			A.TENANT_ID = #tenantId#
+		AND
+			A.DEL_STATUS = 0
+		GROUP BY 
+			A.STATUS
+	</select>
+	
+	<select id="EzPMSDAO.getUserTaskRole" parameterClass="Map" resultClass="String">
+		<![CDATA[
+		SELECT 
+			TASK_MEMBER_ID 
+		FROM 
+			TBL_PMS_TASKMEMBER 
+		WHERE 
+			 USER_ID = #userId#
+		AND	
+			TASK_ID = #taskId#
+		AND
+			TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
+	<update id="EzPMSDAO.deleteTask" parameterClass="Map">
+	<![CDATA[
+		UPDATE
+			tbl_pms_task
+		SET
+			DEL_STATUS = 1
+		WHERE
+			PROJECT_ID = #projectId#
+		AND
+			TASK_ID = #taskId# 
+		AND
+			TENANT_ID = #tenantId#
+	]]>	
+	</update>
+	
+	<select id="EzPMSDAO.getFilePath" parameterClass="Map" resultClass="java.util.HashMap">
+	<![CDATA[
+		SELECT	
+			FILE_PATH AS filePath,
+			FILE_NAME AS fileName
+		FROM 
+			TBL_PMS_ITEM_ATTACHMENT
+		WHERE
+			ITEM_ID = #itemId#
+		AND
+			TENANT_ID = #tenantId#
+	]]>
+	</select>
+	
+	<update id="EzPMSDAO.updateTaskInfo" parameterClass="ProjectTaskVO">
+	<![CDATA[
+		UPDATE 
+			tbl_pms_task
+		SET	
+			GROUP_ID = #groupId#,
+			TASK_NAME = #taskName#,			
+			WEIGHT = #weight#,
+			OVERVIEW = #overview#,
+			MEMBER_COUNT = #memberCount#,
+   			HEAD_MANAGER_ID = #headManagerId#,
+   			HEAD_MANAGER_NAME = #headManagerName#,
+   			HEAD_MANAGER_NAME2 = #headManagerName2#,
+   			HEAD_MANAGER_DEPTNAME = #headManagerDeptname#,
+   			HEAD_MANAGER_DEPTNAME2 = #headManagerDeptname2#,
+   			PLAN_START_DATE = #planStartDate#,
+   			PLAN_END_DATE = #planEndDate#,
+   			TREE_DEPTH = #treeDepth#
+  			WHERE
+  				TASK_ID = #taskId#
+  			AND
+  				TENANT_ID = #tenantId#
+	]]>
+	</update>
+	
+	<select id="EzPMSDAO.getGroupCount" parameterClass="map" resultClass="Integer">
+	<![CDATA[
+		SELECT DISTINCT
+			COUNT(A.GROUP_ID)
+		FROM
+			TBL_PMS_GROUP A
+		JOIN	
+			TBL_PMS_PROJECT P
+		ON	
+			A.PROJECT_ID = P.PROJECT_ID
+		LEFT JOIN
+			TBL_PMS_GROUP B
+		ON
+			A.UPPER_GROUP_ID = B.GROUP_ID
+		JOIN
+			TBL_PMS_GROUPMEMBER M
+		ON
+			A.GROUP_ID = M.GROUP_ID
+		AND
+			M.MEMBER_ROLE_ID = 1
+		LEFT JOIN
+			TBL_PMS_GROUPMEMBER M2
+		ON
+			A.GROUP_ID = M2.GROUP_ID
+		AND
+			A.TENANT_ID = M2.TENANT_ID
+		WHERE
+			M.USER_ID = #userId#
+		AND
+			A.TENANT_ID = #tenantId#
+		AND
+			A.DEL_STATUS = 0
+	]]>
+	<isNotEmpty property="searchByGroupName">
+		AND 
+			A.GROUP_NAME LIKE CONCAT('%', #searchByGroupName#, '%')	
+	</isNotEmpty>
+	<isNotEmpty property="searchByUpperGroupName">
+		AND 
+			B.GROUP_NAME LIKE CONCAT('%', #searchByUpperGroupName#, '%')	
+	</isNotEmpty>
+	<isNotEmpty property="searchByUser">
+		AND 
+			M2.USER_NAME LIKE CONCAT('%', #searchByUser#, '%')	
+	</isNotEmpty>
+	<isEmpty property="searchByUser">
+		AND 
+			M2.USER_ID = #userId#
+	</isEmpty>
+	<isNotEmpty property="searchByProjectName">
+		AND 
+			P.PROJECT_NAME LIKE CONCAT('%', #searchByProjectName#, '%')	
+	</isNotEmpty>
+	<isNotEmpty property="searchByOverview">
+		AND 
+			A.OVERVIEW LIKE CONCAT('%', #searchByOverview#, '%')	
+	</isNotEmpty>
+	<isNotEmpty property="searchByStartDate">
+	<![CDATA[
+		AND 
+			A.PLAN_START_DATE >= #searchByStartDate#	
+	]]>
+	</isNotEmpty>
+	<isNotEmpty property="searchByEndDate">
+	<![CDATA[
+		AND 
+			A.PLAN_END_DATE <= #searchByEndDate#	
+	]]>
+	</isNotEmpty>
+	</select>
+
+	<update id="EzPMSDAO.updateTaskStatus" parameterClass="ProjectTaskVO">
+	<![CDATA[
+		UPDATE 
+			tbl_pms_task
+		SET	
+			PLAN_START_DATE = #planStartDate#,
+			PLAN_END_DATE = #planEndDate#,
+			REAL_WORKINGDAY = #realWorkingday#,
+	]]>
+	<isNotEmpty property="status">
+			STATUS = #status#,
+	</isNotEmpty>
+	<isNotEmpty property="realStartDate">
+			REAL_START_DATE = #realStartDate#,
+	</isNotEmpty>
+	<isNotNull property="realEndDate">
+		<isNotEmpty property="realEndDate">
+			REAL_END_DATE = #realEndDate#,
+		</isNotEmpty>
+		<isEmpty property="realEndDate">
+			REAL_END_DATE = null,
+		</isEmpty>
+	</isNotNull>
+	<![CDATA[
+			REAL_PROGRESS = #realProgress#
+		WHERE
+			TASK_ID = #taskId#
+		AND
+			TENANT_ID = #tenantId#
+	]]>
+	</update>
+	
+	<insert id="EzPMSDAO.addTaskGroupMember" parameterClass="list">
+    	<![CDATA[
+    		INSERT INTO tbl_pms_groupmember(
+    			TENANT_ID, 				GROUP_ID, 				USER_ID, 					USER_NAME, 
+    			USER_NAME2, 			USER_DEPTNAME, 			USER_DEPTNAME2, 			MEMBER_ROLE_ID
+    		) 
+    		VALUES
+    	]]>
+		<iterate conjunction=", ">
+   		<![CDATA[
+   		(
+   			#[].tenantId#, 		#[].groupId#, 		#[].userId#, 				#[].userName#, 
+   			#[].userName2#, 	#[].userDeptname#, 	#[].userDeptname2#, 		#[].memberRoleId#
+   		)
+   		]]>
+		</iterate>
+    </insert>
+    
+    <select id="EzPMSDAO.getUserInfoForGroup" parameterClass="Map" resultClass="ProjectGroupMemberVO">
+			<![CDATA[
+			SELECT 
+				0 AS memberId,
+				A.CN AS userId, 
+				A.DISPLAYNAME AS userName, 
+				A.DISPLAYNAME2 AS userName2,
+				B.DISPLAYNAME AS userDeptname, 
+				B.DISPLAYNAME2 AS userDeptname2,
+				A.tenant_id AS tenantId,
+				$groupId$ AS groupId,
+				$memberRoleId$ AS memberRoleId
+			FROM 
+				tbl_usermaster A 
+			LEFT JOIN 
+				tbl_deptmaster B 
+			ON 
+				A.department = B.CN
+			AND 
+				A.tenant_id = B.tenant_id 
+			WHERE 
+				A.tenant_id = #tenantId# 
+			AND 
+				A.CN IN (
+			]]>
+				<iterate property="userId" conjunction=",">
+				#userId[]#
+				</iterate>
+				)
+	</select>
+	
+	<select id="EzPMSDAO.getUserGroupRole" parameterClass="map" resultClass="Integer">
+		SELECT 
+			IFNULL(MIN(A.MEMBER_ROLE_ID), 2)
+		FROM
+			TBL_PMS_GROUPMEMBER A
+		JOIN 
+			TBL_PMS_GROUP B
+		ON
+			A.GROUP_ID = B.GROUP_ID
+		WHERE
+			A.USER_ID = #userId#
+		AND
+			A.GROUP_ID = #groupId#
+		AND
+			A.TENANT_ID = #tenantId#
+		AND
+			B.PROJECT_ID = #projectId#
+	</select>
+	
+	<update id="EzPMSDAO.deleteGroup" parameterClass="map">
+		UPDATE
+			TBL_PMS_GROUP
+		SET
+			DEL_STATUS = 1
+		WHERE
+			PROJECT_ID = #projectId#
+		AND
+			GROUP_ID = #groupId#
+		AND
+			TENANT_ID = #tenantId#
+	</update>
+	
+	<insert id="EzPMSDAO.addPreTaskRel" parameterClass="map">
+	<![CDATA[
+		INSERT INTO TBL_PMS_PRETASKREL (
+	]]>
+	<isEqual property="type" compareValue="task2task">
+		PRETASK, TASK_ID, 
+	</isEqual>
+	<isEqual property="type" compareValue="group2task">
+		PREGROUP, TASK_ID, 
+	</isEqual>
+	<isEqual property="type" compareValue="task2group">
+		PRETASK, GROUP_ID, 
+	</isEqual>
+	<isEqual property="type" compareValue="group2group">
+		PREGROUP, GROUP_ID, 
+	</isEqual>
+			
+	<![CDATA[
+			TENANT_ID, PROJECT_ID
+		) VALUES (
+			#pretaskId#, #taskId#, #tenantId#, #projectId#
+		)				
+	]]>
+	</insert>
+	
+	<update id="EzPMSDAO.updatePreTaskRel" parameterClass="map">
+	<![CDATA[
+		UPDATE TBL_PMS_PRETASKREL 
+		SET
+	]]>
+		<isEqual property="type" compareValue="task2task">
+			PRETASK = #pretaskId#, PREGROUP = null
+		WHERE TASK_ID = #taskId#
+		</isEqual>
+		<isEqual property="type" compareValue="group2task">
+			PRETASK = null, PREGROUP = #pretaskId#
+		WHERE TASK_ID = #taskId#
+		</isEqual>
+		<isEqual property="type" compareValue="task2group">
+			PRETASK = #pretaskId#, PREGROUP = null
+		WHERE GROUP_ID = #taskId#
+		</isEqual>
+		<isEqual property="type" compareValue="group2group">
+			PRETASK = null, PREGROUP = #pretaskId#
+		WHERE GROUP_ID = #taskId#
+		</isEqual>		
+	<![CDATA[
+		AND tenant_id = #tenantId#		
+	]]>
+	</update>
+
+	<select id="EzPMSDAO.checkIfHasPreTaskRel" parameterClass="map" resultClass="Integer">
+	<![CDATA[
+		SELECT 
+			COUNT(*)
+		FROM 
+			TBL_PMS_PRETASKREL 
+		WHERE
+	]]>
+		<isEqual property="type" compareValue="task2task">
+			TASK_ID = #taskId#
+		</isEqual>
+		<isEqual property="type" compareValue="group2task">
+			TASK_ID = #taskId#
+		</isEqual>
+		<isEqual property="type" compareValue="task2group">
+			GROUP_ID = #groupId#
+		</isEqual>
+		<isEqual property="type" compareValue="group2group">
+			GROUP_ID = #groupId#
+		</isEqual>	
+	<![CDATA[	
+		AND 
+			tenant_id = #tenantId#		
+	]]>
+	</select>
+	
+	<!-- <select id="EzPMSDAO.checkIfPreTaskRelExist" parameterClass="map" resultClass="Integer">
+	<![CDATA[
+		SELECT 
+			COUNT(*)
+		FROM 
+			TBL_PMS_PRETASKREL 
+		WHERE
+	]]>
+		<isEqual property="type" compareValue="task">
+			pretask = #pretaskId#
+		</isEqual>
+		<isEqual property="type" compareValue="group">
+			pregroup = #pretaskId#
+		</isEqual>
+	<![CDATA[	
+		AND 
+			tenant_id = #tenantId#		
+	]]>
+	</select> -->
+	
+	<!-- <select id="EzPMSDAO.getLaggingAncestorGroupIds" parameterClass="map" resultClass="String">
+	<![CDATA[
+		SELECT 
+			G.ancester_group
+		FROM 
+			tbl_pms_pretaskrel PT
+		LEFT JOIN 
+			tbl_pms_task T
+		ON 
+			PT.task_id = T.task_id
+		LEFT JOIN 
+			tbl_pms_group G
+		ON 
+			IFNULL(PT.group_id, T.group_id) = G.group_id
+	]]>
+		<isEqual property="type" compareValue="task">
+			<iterate prepend="WHERE pretask in" property="pretaskId" open="(" conjunction="," close=")">
+				#pretaskId[]#
+			</iterate>
+		</isEqual>
+		<isEqual property="type" compareValue="group">
+			<iterate prepend="WHERE pregroup in" property="pretaskId" open="(" conjunction="," close=")">
+				#pretaskId[]#
+			</iterate>
+		</isEqual>
+	<![CDATA[	
+		AND 
+			tenant_id = #tenantId#		
+	]]>
+	</select> -->
+	
+	<delete id="EzPMSDAO.deletePreTaskRelInTask" parameterClass="map">
+	<![CDATA[
+		DELETE FROM TBL_PMS_PRETASKREL 
+		WHERE
+			TASK_ID = #taskId#
+	]]>
+		<isNotEmpty property="pretaskId">
+		AND
+			pretask = #pretaskId#
+		</isNotEmpty>
+	<![CDATA[	
+		AND 
+			tenant_id = #tenantId#
+		AND 
+			pretaskrel_id > 0	
+	]]>
+	</delete>
+	
+	<delete id="EzPMSDAO.deletePreTaskRelInGroup" parameterClass="map">
+	<![CDATA[
+		DELETE FROM TBL_PMS_PRETASKREL 
+		WHERE
+			GROUP_ID = #taskId#
+		AND 
+			tenant_id = #tenantId#
+		AND 
+			pretaskrel_id > 0	
+	]]>
+	</delete>
+	
+	<select id="EzPMSDAO.getPreTaskRel" parameterClass="map" resultClass="Long">
+		SELECT
+			TASK_ID
+		FROM 
+			TBL_PMS_PRETASKREL
+		WHERE
+			PRETASK = #rowIndex#
+		AND
+			PROJECT_ID = #projectId#
+		AND
+			TENANT_ID = #tenantId#
+	</select>
+	
+	<select id="EzPMSDAO.getCommentList" parameterClass="map" resultMap="commentVO">
+		<![CDATA[
+			SELECT 
+				C.comment_id, 		C.update_date, 		C.comment_content,		C.writer_id,			C.write_date,		
+				C.writer_name$lang$ AS writer_name,		C.writer_deptname$lang$ AS writer_deptname,		T.task_name,			
+				C.task_id,			C.group_id,			G.group_name
+    		FROM tbl_pms_comment C
+    		LEFT JOIN tbl_pms_task T
+			ON C.task_id = T.task_id
+			JOIN tbl_pms_group G
+			ON C.group_id = G.group_id
+    		WHERE
+		]]>
+		<isNotEmpty property="taskId">
+			C.task_id = #taskId#
+		</isNotEmpty>
+		<isEmpty property="taskId">
+			(C.group_id = #groupId# 
+			 OR G.upper_group_id = #groupId#
+			 OR G.upper_group_id IN (select group_id from tbl_pms_group where upper_group_id = #groupId#))
+		</isEmpty>
+		AND
+			C.tenant_id = #tenantId#
+		AND 
+			C.del_status = 0
+		<isNotEmpty property="searchByUser">
+			AND C.writer_name$lang$ LIKE CONCAT('%',#searchByUser#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByStartDate">
+			<![CDATA[
+				AND C.write_date >= #searchByStartDate#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="searchByEndDate">
+			<![CDATA[
+				AND C.write_date <= #searchByEndDate#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="searchByContent">
+			AND C.comment_content LIKE CONCAT('%',#searchByContent#,'%')
+		</isNotEmpty>
+		
+			ORDER BY 
+		<isNotEmpty property="orderWhat"> 
+			<isNotEqual property="orderWhat" compareValue="init">
+			 $orderWhat$ $orderHow$,
+			</isNotEqual> 
+		</isNotEmpty>
+			C.comment_id DESC
+			
+			LIMIT #startRow#, #limit#
+	</select>
+	
+	<select id="EzPMSDAO.getCommentListCount" parameterClass="map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				count(comment_id) 		
+    		FROM tbl_pms_comment C
+    		JOIN tbl_pms_group G
+			ON C.group_id = G.group_id
+    		WHERE
+		]]>
+		<isNotEmpty property="taskId">
+			<isNotEqual property="taskId" compareValue="0">
+			C.task_id = #taskId#
+			</isNotEqual>
+		</isNotEmpty>
+		<isEmpty property="taskId">
+			(C.group_id = #groupId# 
+			 OR G.upper_group_id = #groupId#
+			 OR G.upper_group_id IN (select group_id from tbl_pms_group where upper_group_id = #groupId#))
+		</isEmpty>
+		<isEqual property="taskId" compareValue="0">
+			(C.group_id = #groupId# 
+			 OR G.upper_group_id = #groupId#
+			 OR G.upper_group_id IN (select group_id from tbl_pms_group where upper_group_id = #groupId#))
+		</isEqual>
+		AND
+			C.tenant_id = #tenantId#
+		AND 
+			C.del_status = 0
+		<isNotEmpty property="searchByUser">
+			AND C.writer_name$lang$ LIKE CONCAT('%',#searchByUser#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByStartDate">
+			<![CDATA[
+				AND C.write_date >= #searchByStartDate#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="searchByEndDate">
+			<![CDATA[
+				AND C.write_date <= #searchByEndDate#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="searchByContent">
+			AND C.comment_content LIKE CONCAT('%',#searchByContent#,'%')
+		</isNotEmpty>
+	</select>
+	
+	<insert id="EzPMSDAO.addComment" parameterClass="CommentVO">
+		<![CDATA[
+			INSERT INTO tbl_pms_comment (
+				tenant_id,			task_id,			group_id,			update_date,			comment_content,		
+				writer_id,			write_date,			writer_name,		writer_name2,			writer_deptname,		
+				writer_deptname2
+			)
+			VALUES (
+				#tenantId#,			#taskId#,			#groupId#,			#updateDate#,			#commentContent#,		
+				#writerId#,			#writeDate#,		#writerName#,		#writerName2#,			#writerDeptName#,		
+				#writerDeptName2#
+			)
+		]]>
+	</insert>
+	
+	<update id="EzPMSDAO.deleteComment" parameterClass="map">
+		<![CDATA[
+			UPDATE tbl_pms_comment
+			SET del_status = 1
+			WHERE
+				comment_id = #commentId#
+			AND
+				tenant_id = #tenantId#
+		]]>
+	</update>
+	
+	<update id="EzPMSDAO.updateComment" parameterClass="map">
+		<![CDATA[
+			UPDATE tbl_pms_comment
+			SET 
+				update_date = now(),
+				comment_content = #commentContent#
+			WHERE
+				comment_id = #commentId#
+			AND
+				tenant_id = #tenantId#
+		]]>
+	</update>
+	
+	<select id="EzPMSDAO.getGroupMemberList" parameterClass="map" resultMap="projectGroupMemberVO">
+		<![CDATA[
+			SELECT
+				gm.GROUP_MEMBER_ID,
+				gm.USER_ID,
+				gm.USER_NAME,
+				gm.USER_NAME2,
+				gm.USER_DEPTNAME,
+				gm.USER_DEPTNAME2,
+				gm.MEMBER_ROLE_ID,
+				gm.TENANT_ID,
+				gm.GROUP_ID
+			FROM
+				TBL_PMS_GROUPMEMBER gm
+			JOIN
+				TBL_PMS_GROUP g
+			ON
+				gm.GROUP_ID = g.GROUP_ID
+			AND
+				gm.TENANT_ID = #tenantId#
+			WHERE
+				g.PROJECT_ID = #projectId#
+		]]>
+		<isNotEmpty property="groupId">
+			AND
+				gm.GROUP_ID = #groupId#
+		</isNotEmpty>
+	</select>
+	
+	<update id="EzPMSDAO.updateGroupSort" parameterClass="map">
+		<![CDATA[
+			UPDATE 
+				TBL_PMS_GROUP
+			SET
+				SORT_ORDER = #sortOrder#
+			WHERE
+				PROJECT_ID = #projectId#
+			AND
+				GROUP_ID = #groupId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
+	<update id="EzPMSDAO.updateTaskSort" parameterClass="map">
+		<![CDATA[
+			UPDATE 
+				TBL_PMS_TASK
+			SET
+				SORT_ORDER = #sortOrder#
+			WHERE
+				GROUP_ID = #groupId#
+			AND
+				TASK_ID = #taskId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
+	<!-- <update id="EzPMSDAO.updatePreTaskRel" parameterClass="map">
+		<![CDATA[
+			UPDATE 
+				TBL_PMS_PRETASKREL
+			SET
+				PRETASK = #preTaskIndex#
+			WHERE
+				TASK_ID = #taskId#
+			AND
+				PROJECT_ID = #projectId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update> -->
+	
+	<select id="EzPMSDAO.getGroupDetails" parameterClass="map" resultMap="projectGroupVOForDetail">
+	<![CDATA[
+		SELECT	
+				A.GROUP_ID,
+				A.TENANT_ID,
+				A.PROJECT_ID,
+				A.GROUP_NAME,
+				A.UPPER_GROUP_ID,
+				A.PLAN_START_DATE,
+				A.PLAN_END_DATE,
+				A.REAL_START_DATE,
+				A.REAL_END_DATE,
+				A.REAL_PROGRESS,
+				A.OVERVIEW,
+				A.MEMBER_COUNT,
+				A.HEAD_MANAGER_ID,
+				A.HEAD_MANAGER_NAME$lang$ AS HEAD_MANAGER_NAME,
+				A.HEAD_MANAGER_DEPTNAME$lang$ AS HEAD_MANAGER_DEPTNAME,
+				A.CREATOR_ID,
+				A.CREATE_DATE,
+				A.CREATOR_NAME$lang$ AS CREATOR_NAME,
+				A.CREATOR_DEPTNAME$lang$ AS CREATOR_DEPTNAME,
+				A.TREE_DEPTH,
+				A.ANCESTER_GROUP,
+				A.SORT_ORDER,
+				A.DEL_STATUS,
+				A.WORKINGDAY,
+				A.REST_DUEDAY,
+				P.PROJECT_NAME,
+				B.GROUP_NAME AS UPPER_GROUP_NAME,
+				IFNULL(B.TREE_DEPTH, -1) AS UPPER_TREE_DEPTH
+			FROM
+				TBL_PMS_GROUP A
+			JOIN	
+				TBL_PMS_PROJECT P
+			ON	
+				A.PROJECT_ID = P.PROJECT_ID
+			LEFT JOIN
+				TBL_PMS_GROUP B
+			ON
+				A.UPPER_GROUP_ID = B.GROUP_ID
+			WHERE
+				A.TENANT_ID = #tenantId#
+			AND
+				A.PROJECT_ID = #projectId#
+			AND
+				A.GROUP_ID = #groupId#
+	]]>
+	</select>
+
+	<select id="EzPMSDAO.getGroupWeight" parameterClass="map" resultClass="float">
+		<![CDATA[
+			SELECT
+				sum(weight)
+			FROM
+				tbl_pms_task a
+			JOIN
+				(
+					SELECT group_id
+					FROM TBL_PMS_GROUP
+					where
+						tenant_id = #tenantId#
+					and
+						del_status = 0
+					and
+						group_id = #groupId# or ancester_group like concat('%\,',#groupId#,',%') or ancester_group like concat(#groupId#,',%')
+				) b
+			on
+				a.group_id = b.group_id
+			and
+				a.tenant_id = #tenantId#
+			AND
+				a.DEL_STATUS = 0
+		]]>
+	</select>
+	
+	<update id="EzPMSDAO.updateGroupInfo" parameterClass="ProjectGroupVO">
+	<![CDATA[
+		UPDATE
+			TBL_PMS_GROUP
+		SET
+			GROUP_NAME = #groupName#,
+			OVERVIEW = #overview#,
+			HEAD_MANAGER_ID = #headManagerId#,
+			HEAD_MANAGER_NAME = #headManagerName#,
+			HEAD_MANAGER_NAME2 = #headManagerName2#,
+			HEAD_MANAGER_DEPTNAME = #headManagerDeptname#,
+			HEAD_MANAGER_DEPTNAME2 = #headManagerDeptname2#,
+			UPPER_GROUP_ID = #upperGroupId#
+		WHERE
+			GROUP_ID = #groupId#
+		AND
+			PROJECT_ID = #projectId#
+		AND
+			TENANT_ID = #tenantId#                       
+	]]>
+	</update>
+	
+	<update id="EzPMSDAO.updateTaskWeight" parameterClass="ProjectTaskVO">
+		<![CDATA[
+			UPDATE
+				TBL_PMS_TASK
+			SET
+				WEIGHT = #weight#
+			WHERE
+				TASK_ID = #taskId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
+	<update id="EzPMSDAO.updateTaskGroupId" parameterClass="map">
+		<![CDATA[
+			UPDATE
+				TBL_PMS_TASK
+			SET
+				GROUP_ID = #toGroupId#,
+				TREE_DEPTH = #treeDepth#
+			WHERE
+				TASK_ID = #targetTaskId#
+			AND
+				TENANT_ID = #tenantId#
+			AND
+				PROJECT_ID = #projectId#
+		]]>
+	</update>
+	
+	<select id="EzPMSDAO.getProjectWeight" parameterClass="map" resultClass="float">
+		<![CDATA[
+			SELECT
+				sum(weight)
+			FROM
+				tbl_pms_task a
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				project_id = #projectId#
+			AND
+				DEL_STATUS = 0
+		]]>
+	</select>
+	
+	<update id="EzPMSDAO.updateGroupDate" parameterClass="map">
+		<![CDATA[
+			UPDATE
+				TBL_PMS_GROUP
+			SET
+				PLAN_START_DATE = #planStartDate#,
+				PLAN_END_DATE = #planEndDate#,
+				WORKINGDAY = #workingday#
+			WHERE
+				GROUP_ID = #groupId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
+	<select id="EzPMSDAO.getGroupBoundaryDate" parameterClass="map" resultClass="ProjectGroupVO">
+		<![CDATA[
+			select 
+				min(aa.plan_start_date) as planStartDate, 
+			    max(aa.plan_end_date) as planEndDate
+			from
+			(
+				select 
+					a.plan_start_date, 
+					a.plan_end_date
+				from
+					tbl_pms_task a
+				join
+					(
+						select 
+							group_id
+						from
+							tbl_pms_group
+						where
+							group_id IN ( select group_id from tbl_pms_group where group_id = #groupId# OR ancester_group like concat('%,',#groupId#,',%') OR ancester_group like concat(#groupId#,',%') )
+						and
+							tenant_id = #tenantId#
+						and
+							del_status = 0
+					) b
+				on
+					a.group_id = b.group_id
+				and
+					a.tenant_id = #tenantId#
+				and
+					a.del_status = 0
+			) aa
+				
+		]]>
+	</select>
+	
+	<update id="EzPMSDAO.updateTaskProgress" parameterClass="ProjectTaskVO">
+		<![CDATA[
+			UPDATE
+				TBL_PMS_TASK
+			SET
+				REAL_PROGRESS = #realProgress#,
+		]]>
+		<isNotEmpty property="realEndDate">
+		<![CDATA[
+				REAL_END_DATE = #realEndDate#,
+		]]>
+		</isNotEmpty>
+		<isEmpty property="realEndDate">
+		<![CDATA[
+				REAL_END_DATE = null,
+		]]>
+		</isEmpty>
+		<![CDATA[
+				STATUS = #status#
+			WHERE
+				TASK_ID = #taskId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
+	<update id="EzPMSDAO.updateGroupProgress" parameterClass="map">
+		<![CDATA[
+			UPDATE
+				TBL_PMS_GROUP
+			SET
+				REAL_PROGRESS 
+				
+				= IFNULL((
+							SELECT 
+								SUM(a.REAL_PROGRESS * a.WEIGHT) / SUM(a.WEIGHT)
+							FROM
+								TBL_PMS_TASK a
+							JOIN
+								(
+									SELECT 
+										GROUP_ID
+									FROM
+										TBL_PMS_GROUP
+									WHERE
+										GROUP_ID IN ( SELECT GROUP_ID FROM TBL_PMS_GROUP WHERE GROUP_ID = #groupId# OR ancester_group like concat('%,',#groupId#,',%') OR ancester_group like concat(#groupId#,',%') )
+									AND
+										TENANT_ID = #tenantId#
+									AND
+										DEL_STATUS = 0
+								) b
+							on
+								a.GROUP_ID = b.GROUP_ID
+							AND
+								a.TENANT_ID = #tenantId#
+							AND
+								a.DEL_STATUS = 0
+		
+						), 0)
+			WHERE
+				GROUP_ID = #groupId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
+	<select id="EzPMSDAO.getAncesterGroup" parameterClass="map" resultClass="string">
+		<![CDATA[
+			SELECT
+				ANCESTER_GROUP
+			FROM
+				TBL_PMS_GROUP
+			WHERE
+				GROUP_ID = #groupId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
+	<update id="EzPMSDAO.updateProjectProgress" parameterClass="ProjectTaskVO">
+		<![CDATA[
+			UPDATE
+				TBL_PMS_PROJECT
+			SET
+				PROGRESS = (
+								SELECT 
+									IFNULL(aa.PROGRESS, 0)
+								FROM	
+									(
+										SELECT 
+											SUM(a.REAL_PROGRESS * a.WEIGHT / 100) AS PROGRESS
+										FROM
+											TBL_PMS_TASK a
+										JOIN
+											TBL_PMS_PROJECT b
+										on
+											a.PROJECT_ID = b.PROJECT_ID
+										AND
+											a.TENANT_ID = #tenantId#
+										AND
+											a.PROJECT_ID = #projectId#
+										AND
+											a.DEL_STATUS = 0
+									) aa
+				
+							)
+			WHERE
+				PROJECT_ID = #projectId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
+	<select id="EzPMSDAO.getProjectBoundaryDate" parameterClass="map" resultClass="ProjectInfoVO">
+		<![CDATA[
+			select 
+				min(aa.plan_start_date) as planStartDate, 
+			    max(aa.plan_end_date) as planEndDate
+			from
+			(
+				SELECT 
+					plan_start_date, 
+				    plan_end_date
+				from
+					tbl_pms_task
+				WHERE
+					TENANT_ID = #tenantId#
+				AND
+					PROJECT_ID = #projectId#
+				AND
+					DEL_STATUS = 0
+			) aa
+			
+				
+		]]>
+	</select>
+	
+	<update id="EzPMSDAO.updateProjectDate" parameterClass="map">
+		<![CDATA[
+			UPDATE
+				TBL_PMS_PROJECT
+			SET
+				PLAN_START_DATE = #planStartDate#,
+				PLAN_END_DATE = #planEndDate#,
+				WORKINGDAY = #workingday#
+			WHERE
+				PROJECT_ID = #projectId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
+	<select id="EzPMSDAO.getProjectProgress" parameterClass="ProjectTaskVO" resultClass="float">
+		<![CDATA[
+			SELECT 
+				PROGRESS
+			FROM
+				TBL_PMS_PROJECT
+			WHERE
+				PROJECT_ID = #projectId#
+			AND
+				TENANT_ID = #tenantId#
+		 ]]>
+	</select>
+	
+	<select id="EzPMSDAO.getMemberSchedule" parameterClass="map" resultMap="projectTaskMemberVOForSchedule">
+		SELECT
+			M.task_id, 			M.user_id, 			T.plan_start_date, 			T.plan_end_date, 		M.USER_NAME$lang$, 
+			M.user_deptname$lang$ 
+		FROM tbl_pms_task T
+		JOIN tbl_pms_taskmember M
+		ON T.task_id = M.task_id
+		WHERE
+			T.PROJECT_ID = #projectId#
+		AND	
+			T.TENANT_ID	= #tenantId#
+		AND
+			T.DEL_STATUS = 0
+		ORDER BY
+			M.USER_ID
+	</select>
+	
+	<select id="EzPMSDAO.getTaskListByGroupId" resultMap="taskListByGroupId">
+	<![CDATA[
+		SELECT 
+			task_id, plan_start_date, plan_end_date, real_start_date, real_end_date, status
+		FROM tbl_pms_task
+		WHERE 
+			group_id = #groupId#
+		AND
+			tenant_id = #tenantId#
+		AND 
+			del_status = 0
+	]]>
+	</select>
+	
+	<select id="EzPMSDAO.getDateTaskList" parameterClass="map" resultClass="String">
+	<![CDATA[
+		SELECT DISTINCT 
+			TASK_NAME
+		FROM 
+			TBL_PMS_TASK T
+		JOIN
+			TBL_PMS_TASKMEMBER M
+		ON
+			T.TASK_ID = M.TASK_ID
+		WHERE
+			T.PROJECT_ID = #projectId#
+		AND
+			T.TENANT_ID = #tenantId#
+		AND
+			M.USER_ID = #selUserId#
+		AND
+			T.PLAN_START_DATE <= #date#
+		AND
+			T.PLAN_END_DATE >= #date#
+	]]>
+	</select>
+	
+	<select id="EzPMSDAO.checkIfBoardHasReplies" parameterClass="map" resultClass="Integer">
+	<![CDATA[
+		SELECT COUNT(item_id)
+		FROM tbl_pms_item_list
+	]]>
+		<iterate property="itemIds" prepend="WHERE upper_item_id IN" open="(" close=")" conjunction=",">
+			#itemIds[]#
+		</iterate>
+	<![CDATA[
+		AND 
+			tenant_id = #tenantId#
+		AND
+			del_status = 0
+	]]>
+	</select>
+	
+	<select id="EzPMSDAO.getUpperGroupDate" parameterClass="map" resultClass="ProjectGroupVO">
+	<![CDATA[
+		SELECT 
+			a.PLAN_START_DATE as planStartDate, 
+			a.PLAN_END_DATE as planEndDate
+		FROM 
+			TBL_PMS_GROUP a
+		JOIN
+			TBL_PMS_GROUP b
+		ON
+			a.GROUP_ID = b.UPPER_GROUP_ID
+		WHERE
+			b.GROUP_ID = #groupId#
+		AND
+			b.TENANT_ID = #tenantId#
+	]]>
+	</select>
+	
+	<select id="EzPMSDAO.getUpperGroupId" parameterClass="map" resultClass="long">
+	<![CDATA[
+		SELECT
+			UPPER_GROUP_ID
+		FROM
+			TBL_PMS_GROUP 
+		WHERE
+			GROUP_ID = #groupId#
+		AND
+			PROJECT_ID = #projectId#
+		AND
+			TENANT_ID = #tenantId#
+	]]>
+	</select>
+	
+	<select id="EzPMSDAO.getTaskSchedule" parameterClass="map" resultMap="taskScheduleVO">
+	<![CDATA[
+		SELECT
+			PLAN_START_DATE, PLAN_END_DATE
+		FROM
+			TBL_PMS_TASK
+		WHERE
+			task_id = #taskId#
+		AND
+			tenant_id = #tenantId#
+	]]>
+	</select>
+	
+	<select id="EzPMSDAO.getGroupSchedule" parameterClass="map">
+	<![CDATA[
+		SELECT
+			PLAN_START_DATE, PLAN_END_DATE
+		FROM
+			TBL_PMS_GROUP
+		WHERE
+			group_id = #groupId#
+		AND
+			tenant_id = #tenantId#
+	]]>
+	</select>
+	
+<!-- 	<delete id="EzPMSDAO.deleteTaskMember" parameterClass="map"> -->
+<!-- 	<![CDATA[ -->
+<!-- 		DELETE	FROM -->
+<!-- 			tbl_pms_groupmember	 -->
+<!-- 		WHERE	 -->
+<!-- 			TASK_ID = #taskId#  -->
+<!-- 		AND	 -->
+<!-- 			TENANT_ID = #tenantId# -->
+<!-- 	]]> -->
+<!-- 	</delete> -->
+	
+	<select id="EzPMSDAO.getTaskMemberListInGroup" parameterClass="map" resultMap="projectTaskMemberVO">
+	<![CDATA[
+		SELECT
+			tm.TASK_MEMBER_ID,
+			tm.TENANT_ID,
+			tm.TASK_ID,
+			tm.USER_ID,
+			tm.USER_NAME$lang$ AS USER_NAME,
+			tm.USER_DEPTNAME$lang$ AS USER_DEPTNAME,
+			tm.PCTINPUT,
+			U.MAIL AS USER_MAIL
+		FROM
+			TBL_PMS_TASKMEMBER tm
+		LEFT JOIN
+			TBL_USERMASTER U
+		ON
+			U.CN = tm.USER_ID
+		AND
+			U.TENANT_ID = tm.TENANT_ID
+		JOIN
+			TBL_PMS_TASK t
+		ON
+			tm.TASK_ID = t.TASK_ID
+		AND
+			tm.TENANT_ID = #tenantId#
+		AND
+			t.DEL_STATUS = 0
+		JOIN
+			(
+				SELECT 
+					GROUP_ID
+				FROM 
+					TBL_PMS_GROUP
+			    WHERE 
+			    	(GROUP_ID = #groupId# OR ANCESTER_GROUP LIKE CONCAT('%,', #groupId#, ',%') OR ANCESTER_GROUP LIKE CONCAT(#groupId#, ',%'))
+			    AND 
+			    	TENANT_ID = #tenantId#
+		    ) g
+		ON
+			t.GROUP_ID = g.GROUP_ID;
+	]]>
+	</select>
+	
+	<delete id="EzPMSDAO.deleteGroupMember">
+		<![CDATA[
+			DELETE FROM 
+				TBL_PMS_GROUPMEMBER 
+			WHERE	
+				GROUP_ID = #groupId#
+			AND 
+				TENANT_ID = #tenantId#
+		]]>
+	</delete>
+	
+	<update id="EzPMSDAO.updateAllTaskDatesInPrj">
+	<![CDATA[
+		UPDATE 
+			tbl_pms_task
+		SET
+			plan_start_date = CASE
+	]]>
+		<iterate property="taskSchedules" conjunction=" ">
+			WHEN task_id = #taskSchedules[].taskId# THEN #taskSchedules[].start#
+		</iterate>
+	<![CDATA[
+		END,
+			plan_end_date = CASE
+	]]>
+		<iterate property="taskSchedules" conjunction=" ">
+			WHEN task_id = #taskSchedules[].taskId# THEN #taskSchedules[].end#
+		</iterate>
+	<![CDATA[
+		END,
+			real_workingday = CASE
+	]]>
+		<iterate property="taskSchedules" conjunction=" ">
+			WHEN task_id = #taskSchedules[].taskId# THEN #taskSchedules[].duration#
+		</iterate>	
+	<![CDATA[
+		END
+	]]>
+		<iterate prepend="WHERE task_id in" property="taskSchedules" open="(" conjunction="," close=")">
+			#taskSchedules[].taskId#
+		</iterate>
+	<![CDATA[
+		AND tenant_id = #tenantId#
+	]]>	
+	</update>
+	
+	<update id="EzPMSDAO.updateAllGroupDatesInPrj">
+	<![CDATA[
+		UPDATE 
+			tbl_pms_group
+		SET
+			plan_start_date = CASE
+	]]>
+		<iterate property="groupSchedules" conjunction=" ">
+			WHEN group_id = #groupSchedules[].groupId# THEN #groupSchedules[].start#
+		</iterate>
+	<![CDATA[
+		END,
+			plan_end_date = CASE
+	]]>
+		<iterate property="groupSchedules" conjunction=" ">
+			WHEN group_id = #groupSchedules[].groupId# THEN #groupSchedules[].end#
+		</iterate>
+	<![CDATA[
+		END,
+			workingday = CASE
+	]]>
+		<iterate property="groupSchedules" conjunction=" ">
+			WHEN group_id = #groupSchedules[].groupId# THEN #groupSchedules[].duration#
+		</iterate>
+	<![CDATA[
+		END
+	]]>
+		<iterate prepend="WHERE group_id in" property="groupSchedules" open="(" conjunction="," close=")">
+			#groupSchedules[].groupId#
+		</iterate>
+	<![CDATA[
+		AND tenant_id = #tenantId#
+	]]>	
+	</update>
+	
+	<update id="EzPMSDAO.updateProjectStatusScheduler">
+	<![CDATA[
+		UPDATE 
+			tbl_pms_project
+		SET
+			status = 'L'
+		WHERE
+			status = 'P'
+		AND
+			del_status = 0
+		AND
+			plan_end_date < CURDATE();
+	
+	]]>	
+	</update>
+	
+	<update id="EzPMSDAO.updateTaskStatusScheduler">
+	<![CDATA[
+		UPDATE 
+			tbl_pms_task
+		SET
+			status = 'L'
+		WHERE
+			status = 'P'
+		AND
+			del_status = 0
+		AND
+			plan_end_date < CURDATE();
+	
+	]]>	
+	</update>
+	
+	<update id="EzPMSDAO.updateProjectGroupEndDate" parameterClass="map">
+	<![CDATA[
+		UPDATE
+			TBL_PMS_GROUP
+		SET
+			PLAN_END_DATE = #planEndDate#
+		WHERE
+			GROUP_ID = #groupId#
+		AND
+			PROJECT_ID = #projectId#
+		AND
+			TENANT_ID = #tenantId#
+	]]>
+	</update>
+	
+	<update id="EzPMSDAO.updateAllTaskWeight" parameterClass="Map">
+	<![CDATA[
+		UPDATE
+			tbl_pms_task
+		SET
+			WEIGHT = ( REAL_WORKINGDAY / #workingdaySum# ) * 100
+		WHERE
+			PROJECT_ID = #projectId#
+		AND
+			TENANT_ID = #tenantId#
+		AND
+			DEL_STATUS = 0
+	]]>
+	</update>
+	
+	<select id="EzPMSDAO.getProjectWeightInput" parameterClass="map" resultClass="int">
+	<![CDATA[
+		SELECT
+			WEIGHT_INPUT
+		FROM
+			TBL_PMS_PROJECT
+		WHERE
+			PROJECT_ID = #projectId#
+		AND
+			TENANT_ID = #tenantId#
+		AND
+			DEL_STATUS = 0
+	]]>
+	</select>
+	
+	<select id="EzPMSDAO.getDateTaskCount" parameterClass="map" resultClass="Integer">
+	<![CDATA[
+		SELECT
+			COUNT(T.TASK_ID)
+		FROM
+			TBL_PMS_TASK T
+		JOIN
+			TBL_PMS_TASKMEMBER M
+		ON
+			M.TASK_ID = T.TASK_ID
+		AND
+			M.TENANT_ID = T.TENANT_ID
+		WHERE
+			T.PLAN_START_DATE <= #searchDate#
+		AND
+			T.PLAN_END_DATE >= #searchDate#
+		AND
+			M.USER_ID = #memberId#
+		AND
+			T.PROJECT_ID = #projectId#
+		AND
+			T.TENANT_ID = #tenantId#
+		AND 
+			T.DEL_STATUS = 0
+	]]>
+	</select>
+	
+	<select id="EzPMSDAO.getCustomHoliday" parameterClass="map" resultMap="projectHolidayVO">
+		<![CDATA[
+			SELECT
+				(CASE WHEN ISREPEAT = 1
+						THEN date_format(HOLIDAYDATE, '%m-%d')
+    					ELSE date_format(HOLIDAYDATE, '%Y-%m-%d')
+    				END
+    			) AS HOLIDAY,
+				ISSOLAR,
+				ISREPEAT,
+				HOLIDAYNAME$lang$ AS HOLIDAY_NAME
+			FROM
+				TBL_HOLIDAYLIST
+			WHERE
+				((HOLIDAYDATE >= #planStartDate# AND HOLIDAYDATE <= #planEndDate#)
+    				OR
+				 (ISREPEAT = 1))
+    		 	AND
+					ISREST = 1
+				AND
+					ISUSE = 1
+				AND
+					USECOMPANY = #companyId#
+				AND
+					TENANT_ID = #tenantId#
+			UNION
+				SELECT
+					HOLIDAY,
+					SOLARLUNAR AS ISSOLAR,
+					1 AS ISREPEAT,
+					HOLIDAY_NAME$lang$ AS HOLIDAY_NAME
+				FROM
+					TBL_PMS_FIXEDHOLIDAY
+				WHERE
+					COUNTRY = #country#
+		]]>
+	</select>
+	
+	<select id="EzPMSDAO.getBoardFolderList" parameterClass="map" resultMap="projectBoardFolderVO">
+		SELECT
+			F.FOLDER_ID,
+			F.FOLDER_NAME$lang$ AS FOLDER_NAME,
+			F.FOLDER_NAME$lang$ AS FOLDER_NAME2,
+			F.FOLDER_ORDER,
+			F.PROJECT_ID,
+			F.CREATOR_ID,
+			P.PROJECT_NAME
+		FROM
+			TBL_PMS_BOARD_FOLDER F
+		JOIN 
+			TBL_PMS_PROJECT P
+		ON
+			F.PROJECT_ID = P.PROJECT_ID
+		AND
+			F.TENANT_ID = P.TENANT_ID
+		WHERE
+			F.TENANT_ID = #tenantId#
+		AND
+			F.PROJECT_ID = #projectId#
+		AND
+			F.DEL_STATUS = 0
+	</select>
+	
+	<select id="EzPMSDAO.getBoardFolder" parameterClass="map" resultMap="projectBoardFolderVO">
+		SELECT
+			F.FOLDER_ID,
+			F.FOLDER_NAME$lang$ AS FOLDER_NAME,
+			F.FOLDER_NAME2 AS FOLDER_NAME2,
+			F.FOLDER_ORDER,
+			F.PROJECT_ID,
+			F.CREATOR_ID,
+			P.PROJECT_NAME
+		FROM
+			TBL_PMS_BOARD_FOLDER F
+		JOIN 
+			TBL_PMS_PROJECT P
+		ON
+			F.PROJECT_ID = P.PROJECT_ID
+		AND
+			F.TENANT_ID = P.TENANT_ID
+		WHERE
+			F.TENANT_ID = #tenantId#
+		AND
+			F.PROJECT_ID = #projectId#
+		AND
+			F.FOLDER_ID = #folderId#
+	</select>
+	
+	<insert id="EzPMSDAO.addBoardFolder" parameterClass="map">
+		INSERT INTO TBL_PMS_BOARD_FOLDER (
+			TENANT_ID,		FOLDER_NAME,		FOLDER_NAME2,		PROJECT_ID,
+			CREATOR_ID,		FOLDER_ORDER
+		) VALUES (
+			#tenantId#,		#folderName#,		#folderName2#,		#projectId#,
+			#creatorId#,	#folderOrder#
+		)
+	</insert>
+	
+	<update id="EzPMSDAO.updateBoardFolder" parameterClass="map">
+		UPDATE 
+			TBL_PMS_BOARD_FOLDER
+		SET
+			FOLDER_NAME = #folderName#,
+			FOLDER_NAME2 = #folderName2#
+		WHERE
+			PROJECT_ID = #projectId#
+		AND
+			FOLDER_ID = #folderId#
+		AND
+			TENANT_ID = #tenantId#
+	</update>
+	
+	<update id="EzPMSDAO.deleteBoardFolder" parameterClass="map">
+		UPDATE 
+			TBL_PMS_BOARD_FOLDER
+		SET
+			DEL_STATUS = 1
+		WHERE
+			PROJECT_ID = #projectId#
+		AND
+			FOLDER_ID = #folderId#
+		AND
+			TENANT_ID = #tenantId#
+	</update>
+
+	<update id="EzPMSDAO.updateTaskName" parameterClass="map">
+		<![CDATA[
+			UPDATE
+				TBL_PMS_TASK
+			SET
+				TASK_NAME = #taskName#
+			WHERE
+				PROJECT_ID = #projectId#
+			AND
+				TASK_ID = #taskId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
+	<update id="EzPMSDAO.updateGroupName" parameterClass="map">
+		<![CDATA[
+			UPDATE
+				TBL_PMS_GROUP
+			SET
+				GROUP_NAME = #groupName#
+			WHERE
+				PROJECT_ID = #projectId#
+			AND
+				GROUP_ID = #groupId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
+	<update id="EzPMSDAO.updateProjectName" parameterClass="map">
+		<![CDATA[
+			UPDATE
+				TBL_PMS_PROJECT
+			SET
+				PROJECT_NAME = #projectName#
+			WHERE
+				PROJECT_ID = #projectId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
+	<update id="EzPMSDAO.updateTaskEndDate" parameterClass="map">
+		<![CDATA[
+			UPDATE
+				TBL_PMS_TASK
+			SET
+				REAL_END_DATE = #realEndDate#
+			WHERE
+				TASK_ID = #taskId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
+	<select id="EzPMSDAO.getTaskOverProjectDate" parameterClass="map" resultClass="Integer">
+		<![CDATA[
+		SELECT	
+			COUNT(DISTINCT A.TASK_ID)	
+		FROM
+			tbl_pms_task A
+		JOIN 
+			tbl_pms_project B
+		ON
+			A.PROJECT_ID = B.PROJECT_ID
+		AND
+			A.TENANT_ID = B.TENANT_ID
+		JOIN
+			tbl_pms_member C
+		ON	
+			A.PROJECT_ID = C.PROJECT_ID
+		JOIN
+			tbl_pms_group D
+		ON
+			A.GROUP_ID = D.GROUP_ID
+		JOIN	
+			tbl_pms_taskmember E
+		ON
+			A.TASK_ID = E.TASK_ID
+		WHERE 
+			A.TENANT_ID = #tenantId#
+		AND	
+			A.DEL_STATUS = 0
+		AND
+			A.PROJECT_ID = #projectId#
+		AND
+			(A.PLAN_END_DATE > #planEndDate#
+			OR
+			A.PLAN_START_DATE < #planStartDate#
+			)
+		]]>
+	</select>
+	
+	<select id="EzPMSDAO.getMinMaxGroupRealDate" parameterClass="map" resultClass="java.util.HashMap">
+		<![CDATA[
+			SELECT 
+				MIN(real_start_date) AS realStartDate, 
+				max(real_end_date) AS realEndDate
+			FROM tbl_pms_task
+			WHERE 
+				group_id in (select group_id
+							 from tbl_pms_group 
+							 where (group_id = #groupId#
+							 OR upper_group_id = #groupId#
+							 OR UPPER_GROUP_ID IN (SELECT GROUP_ID FROM TBL_PMS_GROUP WHERE UPPER_GROUP_ID = #groupId#)))
+			AND 
+				del_status = 0
+			AND
+				tenant_id = #tenantId#
+		]]>
+	</select>
+	
+	<update id="EzPMSDAO.updateGroupRealDate" parameterClass="map">
+		<![CDATA[
+			UPDATE
+				TBL_PMS_GROUP
+			SET
+		]]>
+			<isNotEmpty property="realStartDate">
+				REAL_START_DATE = #realStartDate#
+			</isNotEmpty>
+			<isEmpty property="realStartDate">
+				REAL_START_DATE = null
+			</isEmpty>
+			<isNotEmpty property="realEndDate">
+				, REAL_END_DATE = #realEndDate#
+			</isNotEmpty>
+			<isEmpty property="realEndDate">
+				, REAL_END_DATE = null
+			</isEmpty>
+		<![CDATA[
+			WHERE
+				GROUP_ID = #groupId#
+			AND
+				TENANT_ID = #tenantId#
+			AND
+				DEL_STATUS = 0
+		]]>
+	</update>
+	
+	<select id="EzPMSDAO.getProjectRealProgress" parameterClass="map" resultClass="Float">
+	<![CDATA[
+		select
+			progress 
+		from 
+			tbl_pms_project
+		where 
+			project_id = #projectId#
+		AND 
+			TENANT_ID = #tenantId#
+		AND 
+			del_status = 0
+	]]>
+	</select>
+	
+	<update id="EzPMSDAO.updateProjectRestDueday" parameterClass="map">
+	<![CDATA[
+		UPDATE
+			TBL_PMS_PROJECT
+		SET
+			REST_DUEDAY = #restDueday#
+		WHERE
+			PROJECT_ID = #projectId#
+		AND
+			TENANT_ID = #tenantId#
+	]]>
+	</update>
+	
+	<select id="EzPMSDAO.getUserCompanyId" parameterClass="map" resultClass="String">
+	<![CDATA[
+		SELECT
+			PHYSICALDELIVERYOFFICENAME
+		FROM 
+			TBL_USERMASTER
+		WHERE
+			CN = #userId#
+		AND
+			TENANT_ID = #tenantId#
+		
+		UNION 
+		SELECT
+			PHYSICALDELIVERYOFFICENAME
+		FROM 
+			TBL_USERMASTER_DELETE
+		WHERE
+			CN = #userId#
+		AND
+			TENANT_ID = #tenantId#
+			
+		UNION 
+		SELECT
+			PHYSICALDELIVERYOFFICENAME
+		FROM 
+			TBL_USERMASTER_RETIRE
+		WHERE
+			CN = #userId#
+		AND
+			TENANT_ID = #tenantId#
+	]]>
+	</select>
+	
+	<select id="EzPMSDAO.getGroupTaskNoneList" parameterClass="map" resultClass="Long">
+	<![CDATA[
+		SELECT
+           A.GROUP_ID
+		FROM
+			TBL_PMS_GROUP A
+		LEFT JOIN
+			TBL_PMS_TASK B
+		ON
+			A.GROUP_ID = B.GROUP_ID
+		AND
+			A.TENANT_ID = B.TENANT_ID
+		AND	
+			B.DEL_STATUS = 0
+        JOIN
+			tbl_pms_group D
+		ON
+			A.GROUP_ID = D.GROUP_ID
+		WHERE
+			A.PROJECT_ID = #projectId#
+		AND
+			(A.GROUP_ID = #groupId# 
+				OR D.UPPER_GROUP_ID = #groupId#
+				OR D.UPPER_GROUP_ID IN (
+							SELECT GROUP_ID FROM TBL_PMS_GROUP WHERE UPPER_GROUP_ID = #groupId#
+				))
+		AND
+			A.TENANT_ID = #tenantId#
+		GROUP BY
+			A.GROUP_ID
+		HAVING
+			COUNT(B.TASK_ID) = 0;
+	]]>
+	</select>
+</sqlMap>

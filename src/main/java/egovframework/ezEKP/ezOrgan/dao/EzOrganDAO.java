@@ -196,6 +196,7 @@ public class EzOrganDAO extends EgovAbstractDAO {
 		return (int) select("EzOrganDAO.getMemberListCount2", map);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<String> getChildCompany(Map<String, Object> map) throws Exception {
 		return (List<String>) list("EzOrganDAO.getChildCompany", map);
 	}
@@ -397,6 +398,10 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<OrganUserVO> getSharedMailboxSearchList(Map<String, Object> map) {
 		return (List<OrganUserVO>) list("EzOrganDAO.getSharedMailboxSearchList", map);
+	}
+
+	public String getDeptMasterName(Map<String, Object> map) {
+		return (String) select("EzOrganDAO.getDeptMasterName", map);
 	}
 	
 	public String getUserOrgDeptId(Map<String, Object> map) throws Exception {

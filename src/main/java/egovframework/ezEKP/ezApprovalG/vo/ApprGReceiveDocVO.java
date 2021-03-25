@@ -22,7 +22,7 @@ public class ApprGReceiveDocVO {
 	/** 결재상태*/
 	private String aprState;
 	/** 보낸부서아이디*/
-	private String sendDeptID;
+	private String sentDeptID;
 	/** 보낸부서이름*/
 	private String sentDeptName;
 	/** 보낸부서이름(다국어)*/
@@ -55,6 +55,10 @@ public class ApprGReceiveDocVO {
 	private String aprCount;
 	
 	private String companyID;
+	/** 기안자*/
+	private String writerName;
+	/** 기안자(다국어)*/
+	private String writerName2;
 	
 	public String getCompanyID() {
 		return companyID;
@@ -212,11 +216,23 @@ public class ApprGReceiveDocVO {
 	public void setAprCount(String aprCount) {
 		this.aprCount = aprCount;
 	}
-	public String getSendDeptID() {
-		return sendDeptID;
+	public String getSentDeptID() {
+		return sentDeptID;
 	}
-	public void setSendDeptID(String sendDeptID) {
-		this.sendDeptID = sendDeptID;
+	public void setSentDeptID(String sentDeptID) {
+		this.sentDeptID = sentDeptID;
+	}
+	public String getWriterName() {
+		return writerName;
+	}
+	public void setWriterName(String writerName) {
+		this.writerName = writerName;
+	}
+	public String getWriterName2() {
+		return writerName2;
+	}
+	public void setWriterName2(String writerName2) {
+		this.writerName2 = writerName2;
 	}
 	
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
+import egovframework.ezEKP.ezSystem.vo.PasswordPolicyVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -28,11 +29,19 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 	public List<ConnectionInfoVO> getLoginHist(Map<String, Object> map) throws Exception {
 		return (List<ConnectionInfoVO>) list("EzSystemAdminDAO.getLoginHist", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<ConnectionInfoVO> getLoginHistNotAdmin(Map<String, Object> map) throws Exception {
+		return (List<ConnectionInfoVO>) list("EzSystemAdminDAO.getLoginHistNotAdmin", map);
+	}
 	
 	public int getLoginHistCount(Map<String, Object> map) throws Exception {
 		return (int) select("EzSystemAdminDAO.getLoginHistCount", map); 
 	}
 
+	public int getLoginHistCountNotAdmin(Map<String, Object> map) throws Exception {
+		return (int) select("EzSystemAdminDAO.getLoginHistCountNotAdmin", map); 
+	}
 	
 	public void deleteLoginHist(Map<String, Object> map) throws Exception {
         delete("EzSystemAdminDAO.deleteLoginHist", map);
@@ -98,5 +107,67 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 		paramMap.put("notTableNames", notTableNames);
 		
 		return (long) select("EzSystemAdminDAO.selectModuleSize", paramMap);
+	}
+	
+	public void deleteWebfolderLog(Map<String, Object> map) throws Exception {
+        delete("EzSystemAdminDAO.deleteWebfolderLog", map);
+    }
+
+	public void insertMultiLogintype(Map<String, Object> paramMap) throws Exception {
+		insert("EzSystemAdminDAO.insertMultiLoginType", paramMap);
+	}
+	
+	public void updateMultiLogintype(Map<String, Object> paramMap) throws Exception {
+		insert("EzSystemAdminDAO.updateMultiLoginType", paramMap);
+	}
+	
+	public void updateMenuChange(Map<String, Object> paramMap) throws Exception {
+		update("EzSystemAdminDAO.updateMenuChange", paramMap);
+	}
+	
+	public String getAccessCountryList(Map<String, Object> paramMap) throws Exception {
+		return (String) select("EzSystemAdminDAO.getAccessCountryList", paramMap);
+	}
+		
+	public void setAccessCountry(Map<String, Object> paramMap) throws Exception {
+		insert("EzSystemAdminDAO.setAccessCountry", paramMap);
+	}
+	
+	public int updateAccessCountry(Map<String, Object> paramMap) throws Exception {
+		return update("EzSystemAdminDAO.updateAccessCountry", paramMap);
+	}
+
+	@SuppressWarnings("unchecked")
+	public Map<String, String> getPwPolicy(Map<String, Object> paramMap) throws Exception {
+		return (Map<String, String>) select("EzSystemAdminDAO.getPwPolicy", paramMap);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Map<String, Object>> getPwPolicyPattern(Map<String, Object> paramMap) throws Exception {
+		return (List<Map<String, Object>>) list("EzSystemAdminDAO.getPwPolicyPattern", paramMap);
+	}
+
+	public int insertPwPolicy(PasswordPolicyVO pwPolicyVo) throws Exception {
+		return update("EzSystemAdminDAO.insertPwPolicy", pwPolicyVo);
+	}
+
+	public int insertPwPolicyPattern(Map<String, Object> paramMap) throws Exception {
+		return update("EzSystemAdminDAO.insertPwPolicyPattern", paramMap);
+	}
+
+	public int updatePwPolicy(PasswordPolicyVO pwPolicyVo) throws Exception {
+		return update("EzSystemAdminDAO.updatePwPolicy", pwPolicyVo);
+	}
+	
+	public int deletePwPolicyPattern(Map<String, Object> paramMap) throws Exception {
+		return update("EzSystemAdminDAO.deletePwPolicyPattern", paramMap);
+	}
+	
+	public int updateCompanyConfigParam(SysParamVO sysParamVO) throws Exception {
+		return update("EzSystemAdminDAO.updateCompanyConfigParam", sysParamVO);
+	}
+
+	public int insertCompanyConfigParam(SysParamVO sysParamVO) throws Exception {
+		return update("EzSystemAdminDAO.insertCompanyConfigParam", sysParamVO);
 	}
 }

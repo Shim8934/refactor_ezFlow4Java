@@ -101,7 +101,7 @@ public class ApprGRecordVO {
 	private String recordType;
 	/**쪽수*/
 	private String numOfPage;
-	
+
 	/**기록물 권한*/
 	/**사용자id*/
 	private String userId;
@@ -149,6 +149,15 @@ public class ApprGRecordVO {
 	private String user_Id;
 	private String publicityYn;
 	
+	/**원기안자*/
+	private String orgUserId;
+	
+	public String getOrgUserId() {
+		return orgUserId;
+	}
+	public void setOrgUserId(String orgUserId) {
+		this.orgUserId = orgUserId;
+	}
 	public String getPublicityYn() {
 		return publicityYn;
 	}

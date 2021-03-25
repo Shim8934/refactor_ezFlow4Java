@@ -7,161 +7,113 @@
 <!-- 		{CALL EZSP_ASP_CLOSE_COM_GET1(#v_KEYWORD#, #v_S_RADIO#, #v_S#, #v_USERINFO_LANG#, #v_SORT1#, #v_SORT2#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzCommunityAdminDAO.aspCloseGet1Select1"				parameterClass="Map"		resultClass="CommunityCComCloseVO">
-		<isEqual property="v_S" compareValue="">
+		<![CDATA[
+			SELECT
+				DISTINCT A.C_CLUBNO,
+				C_NAME,
+				CLOSESTATE,
+				D.C_CLUBNAME$v_USERINFO_LANG$ AS C_CLUBNAME,
+				C_CLUBCONFIRMTYPE,
+				C_CLUBGUBUN,
+				B.DISPLAYNAME$v_USERINFO_LANG$ AS USERNAME,
+				A.C_SYSOPID,
+				DATE_ADD(DATE_FORMAT(APPLICATIONDATE, '%Y-%m-%d %H:%i:%s'), INTERVAL +#v_OFFSETMIN# minute) as APPLICATIONDATE
+			FROM
+				TBL_C_COMCLOSE A
+			INNER JOIN
+				TBL_USERMASTER B
+			ON
+				RTRIM(A.C_SYSOPID) = RTRIM(B.CN)
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			INNER JOIN
+				TBL_C_CLUB D
+			ON
+				A.C_CLUBNO = D.C_CLUBNO
+			AND
+				A.TENANT_ID = D.TENANT_ID
+			INNER JOIN
+				TBL_C_CATEGORY E
+			ON
+				D.C_CATE_A = E.C_CODE
+			AND
+				D.TENANT_ID = E.TENANT_ID
+			WHERE
+				E.C_CAT = 'a'
+		]]>
+		<isEqual property="v_SEARCHTYPE2" compareValue="C_ClubName">
 			<![CDATA[
-				SELECT
-					DISTINCT A.c_clubno,
-					closestate,
-					D.c_clubname$v_USERINFO_LANG$ AS c_clubname,
-					B.DISPLAYNAME$v_USERINFO_LANG$ AS username,
-					A.c_sysopid,
-					applicationdate
-				FROM
-					TBL_C_COMCLOSE A
-				INNER JOIN
-					TBL_USERMASTER B
-				ON
-					RTRIM(A.c_sysopid) = RTRIM(B.CN)
 				AND
-					A.tenant_id = B.tenant_id
-				INNER JOIN
-					TBL_C_CLUB D
-				ON
-					A.c_clubno = D.c_clubno
-				AND
-					A.tenant_id = D.tenant_id
-				WHERE
-			]]>
-			<isEqual property="v_S_RADIO" compareValue="USERNAME">
-				<![CDATA[
-					B.DISPLAYNAME$v_USERINFO_LANG$ LIKE CONCAT('%', #v_KEYWORD#, '%')
-				]]>
-			</isEqual>
-			<isNotEqual property="v_S_RADIO" compareValue="USERNAME">
-				<![CDATA[
-					D.$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
-				]]>
-			</isNotEqual>
-			<![CDATA[
-				AND
-					D.companyid = #companyID#
-				AND
-					A.tenant_id = #tenantID#
-				ORDER BY
-					applicationdate DESC
+					D.C_CLUBNAME$v_USERINFO_LANG$ LIKE CONCAT('%', #v_KEYWORD#, '%')
 			]]>
 		</isEqual>
-		
-		<isNotEqual property="v_S" compareValue="">
-			<![CDATA[
-				SELECT
-					DISTINCT A.c_clubno,
-					closestate,
-					D.c_clubname$v_USERINFO_LANG$ AS c_clubname,
-					B.DISPLAYNAME$v_USERINFO_LANG$ AS username,
-					A.c_sysopid,
-					applicationdate
-				FROM
-					TBL_C_COMCLOSE A
-				INNER JOIN
-					TBL_USERMASTER B
-				ON
-					RTRIM(A.c_sysopid) = RTRIM(B.CN)
-				AND
-					A.tenant_id = B.tenant_id
-				INNER JOIN
-					TBL_C_CLUB D
-				ON
-					A.c_clubno = D.c_clubno
-				AND
-					A.tenant_id = D.tenant_id
-				WHERE
-				]]>
-				<isEqual property="v_S_RADIO" compareValue="USERNAME">
-					<![CDATA[
-						B.DISPLAYNAME$v_USERINFO_LANG$ LIKE CONCAT('%', #v_KEYWORD#, '%')
-					]]>
-				</isEqual>
-				<isNotEqual property="v_S_RADIO" compareValue="USERNAME">
-					<![CDATA[
-						D.$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
-					]]>
-				</isNotEqual>
+		<isEqual property="v_SEARCHTYPE2" compareValue="C_CloseReason">
 			<![CDATA[
 				AND
-					D.companyid = #companyID#
+					A.CLOSEREASON LIKE CONCAT('%', #v_KEYWORD#, '%')
+			]]>
+		</isEqual>
+		<isNotEqual property="v_S_RADIO" compareValue="0">
+			<![CDATA[
 				AND
-					A.tenant_id = #tenantID#
-				ORDER BY
-					$v_SORT1$ $v_SORT2$
+					E.C_CODE = #v_S_RADIO#
 			]]>
 		</isNotEqual>
+		<![CDATA[
+			AND
+				D.COMPANYID = #companyID#
+			AND
+				A.TENANT_ID = #tenantID#
+			ORDER BY
+				APPLICATIONDATE DESC
+			LIMIT
+				#v_STARTROW#, 10
+		]]>
 	</select>
 	
 	<select id="EzCommunityAdminDAO.aspCloseGet1Select2"				parameterClass="Map"		resultClass="CommunityCComCloseVO">
-		<isEqual property="v_S" compareValue="">
-			<![CDATA[
-				SELECT
-					DISTINCT A.c_clubno,
-					closestate,
-					D.c_clubname$v_USERINFO_LANG$ AS c_clubname,
-					B.DISPLAYNAME$v_USERINFO_LANG$ AS username,
-					A.c_sysopid,
-					applicationdate
-				FROM
-					TBL_C_COMCLOSE A
-				INNER JOIN
-					TBL_USERMASTER B
-				ON
-					RTRIM(A.c_sysopid) = RTRIM(B.CN)
-				AND
-					A.tenant_id = B.tenant_id
-				INNER JOIN
-					TBL_C_CLUB D
-				ON
-					A.c_clubno = D.c_clubno
-				AND
-					A.tenant_id = D.tenant_id
-				WHERE
-					D.companyid = #companyID#
-				AND
-					A.tenant_id = #tenantID#
-				ORDER BY
-					applicationdate DESC
-			]]>
-		</isEqual>
-		
-		<isNotEqual property="v_S" compareValue="">
-			<![CDATA[
-				SELECT
-					DISTINCT A.c_clubno,
-					closestate,
-					D.c_clubname$v_USERINFO_LANG$ AS c_clubname,
-					B.DISPLAYNAME$v_USERINFO_LANG$ AS username,
-					A.c_sysopid,
-					applicationdate
-				FROM
-					TBL_C_COMCLOSE A
-				INNER JOIN
-					TBL_USERMASTER B
-				ON
-					RTRIM(A.c_sysopid) = RTRIM(B.CN)
-				AND
-					A.tenant_id = B.tenant_id
-				INNER JOIN
-					TBL_C_CLUB D
-				ON
-					A.c_clubno = D.c_clubno
-				AND
-					A.tenant_id = D.tenant_id
-				WHERE
-					D.companyid = #companyID#
-				AND
-					A.tenant_id = #tenantID#
-				ORDER BY
-					$v_SORT1$ $v_SORT2$
-			]]>
-		</isNotEqual>
+		<![CDATA[
+			SELECT
+				DISTINCT A.c_clubno,
+				c_name,
+				closestate,
+				D.c_clubname$v_USERINFO_LANG$ AS c_clubname,
+				c_clubConfirmType,
+				c_clubGubun,
+				B.DISPLAYNAME$v_USERINFO_LANG$ AS username,
+				A.c_sysopid,
+				DATE_ADD(DATE_FORMAT(applicationdate, '%Y-%m-%d %H:%i:%s'), INTERVAL +#v_OFFSETMIN# minute) as applicationdate
+			FROM
+				TBL_C_COMCLOSE A
+			INNER JOIN
+				TBL_USERMASTER B
+			ON
+				RTRIM(A.c_sysopid) = RTRIM(B.CN)
+			AND
+				A.tenant_id = B.tenant_id
+			INNER JOIN
+				TBL_C_CLUB D
+			ON
+				A.c_clubno = D.c_clubno
+			AND
+				A.tenant_id = D.tenant_id
+			INNER JOIN
+				TBL_C_CATEGORY E
+			ON
+				D.c_cate_a = E.c_code
+			AND
+				D.tenant_id = E.tenant_id
+			WHERE
+				E.c_cat = 'a'
+			AND
+				D.companyid = #companyID#
+			AND
+				A.tenant_id = #tenantID#
+			ORDER BY
+				applicationdate DESC
+			LIMIT
+				#v_STARTROW#, 10
+		]]>
 	</select>
 	
 <!-- 	<procedure id="EzCommunityAdminDAO.aspCloseComGet2"					parameterClass="Map"			resultClass="String"> -->
@@ -170,36 +122,51 @@
 	<select id="EzCommunityAdminDAO.aspCloseComGet2Select1"				parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			SELECT
-				IFNULL(COUNT(DISTINCT C1.c_clubno), 0)
+				IFNULL(COUNT(DISTINCT C1.C_CLUBNO), 0)
 			FROM
 				TBL_C_COMCLOSE as C1
 			INNER JOIN
 				TBL_USERMASTER B
 			ON
-				RTRIM(C1.c_sysopid) = RTRIM(B.CN)
+				RTRIM(C1.C_SYSOPID) = RTRIM(B.CN)
 			AND
-				C1.tenant_id = B.tenant_id
+				C1.TENANT_ID = B.TENANT_ID
 			INNER JOIN
 				TBL_C_CLUB
 			ON
-				TBL_C_CLUB.c_clubno = C1.c_clubno
+				TBL_C_CLUB.C_CLUBNO = C1.C_CLUBNO
+			INNER JOIN
+				TBL_C_CATEGORY D
+			ON
+				TBL_C_CLUB.C_CATE_A = D.C_CODE
+			AND
+				TBL_C_CLUB.TENANT_ID = D.TENANT_ID
 			WHERE
+				D.C_CAT = 'a'
+		]]>
+		<isEqual property="v_SEARCHTYPE2" compareValue="C_ClubName">
+			<![CDATA[
+				AND
+					C1.C_CLUBNAME$v_USERINFO_LANG$ LIKE CONCAT('%', #v_KEYWORD#, '%')
 			]]>
-			<isEqual property="v_S_RADIO" compareValue="USERNAME">
-				<![CDATA[
-					B.DISPLAYNAME LIKE CONCAT('%', #v_KEYWORD#, '%')
-				]]>
-			</isEqual>
-			<isNotEqual property="v_S_RADIO" compareValue="USERNAME">
-				<![CDATA[
-					C1.$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
-				]]>
-			</isNotEqual>
+		</isEqual>
+		<isEqual property="v_SEARCHTYPE2" compareValue="C_CloseReason">
+			<![CDATA[
+				AND
+					C1.CLOSEREASON LIKE CONCAT('%', #v_KEYWORD#, '%')
+			]]>
+		</isEqual>
+		<isNotEqual property="v_S_RADIO" compareValue="0">
+			<![CDATA[
+				AND
+					D.C_CODE = #v_S_RADIO#
+			]]>
+		</isNotEqual>
 		<![CDATA[
 			AND
-				TBL_C_CLUB.companyid = #companyID#
+				TBL_C_CLUB.COMPANYID = #companyID#
 			AND
-				C1.tenant_id = #tenantID#
+				C1.TENANT_ID = #tenantID#
 		]]>
 	</select>
 	
@@ -222,143 +189,115 @@
 <!-- 		{CALL EZSP_ASP_ADMIT_COM_GET1(#v_KEYWORD#, #v_S_RADIO#, #v_S#, #v_USERINFO_LANG#, #v_SORT1#, #v_SORT2#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzCommunityAdminDAO.aspAdmitComGet1Select1"				parameterClass="Map"		resultClass="CommunityClubVO">
-		<isEqual property="v_S" compareValue="">
+		<![CDATA[
+			SELECT
+				DISTINCT C_CLUBNO,
+				C_NAME,
+				C_CLUBNAME$v_USERINFO_LANG$ AS C_CLUBNAME,
+				C_CLUBCONFIRMTYPE,
+				C_CLUBGUBUN,
+				IFNULL(C.DISPLAYNAME$v_USERINFO_LANG$, B.USERNAME$v_USERINFO_LANG$) AS USERNAME,
+				C_SYSOPID,
+				DATE_ADD(DATE_FORMAT(C_REGDATE, '%Y-%m-%d %H:%i:%s'), INTERVAL +#v_OFFSETMIN# minute) as C_REGDATE
+			FROM
+				TBL_C_CLUB A
+			INNER JOIN
+				TBL_C_MEMBERINFO B
+			ON
+				RTRIM(A.C_SYSOPID) = RTRIM(B.USERID)
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			LEFT OUTER JOIN
+				TBL_USERMASTER C
+			ON
+				RTRIM(A.C_SYSOPID) = C.CN
+			AND
+				A.TENANT_ID = C.TENANT_ID
+			INNER JOIN
+				TBL_C_CATEGORY D
+			ON
+				A.C_CATE_A = D.C_CODE
+			AND
+				A.TENANT_ID = D.TENANT_ID
+			WHERE
+				D.C_CAT = 'a'
+		]]>
+		<isEqual property="v_SEARCHTYPE2" compareValue="C_ClubName">
 			<![CDATA[
-				SELECT
-					DISTINCT c_clubno,
-					c_clubname$v_USERINFO_LANG$ AS c_clubname,
-					IFNULL(C.DISPLAYNAME$v_USERINFO_LANG$, B.USERNAME$v_USERINFO_LANG$) AS username,
-					c_sysopid,
-					c_regdate
-				FROM
-					TBL_C_CLUB A
-				INNER JOIN
-					TBL_C_MEMBERINFO B
-				ON
-					RTRIM(A.c_sysopid) = RTRIM(B.userid)
 				AND
-					A.tenant_id = B.tenant_id
-				LEFT OUTER JOIN
-					TBL_USERMASTER C
-				ON
-					A.c_sysopid = C.CN
-				AND
-					A.tenant_id = C.tenant_id
-				WHERE
-					$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
-				AND
-					A.c_adminconfirm = 'N'
-				AND
-					A.companyid = #companyID#
-				AND
-					A.tenant_id = #tenantID#
-				ORDER BY
-					A.c_regdate DESC
+					C_CLUBNAME$v_USERINFO_LANG$ LIKE CONCAT('%', #v_KEYWORD#, '%')
 			]]>
 		</isEqual>
-		
-		<isNotEqual property="v_S" compareValue="">
+		<isEqual property="v_SEARCHTYPE2" compareValue="C_ClubDesc">
 			<![CDATA[
-				SELECT
-					DISTINCT c_clubno,
-					c_clubname$v_USERINFO_LANG$ c_clubname,
-					IFNULL(C.DISPLAYNAME$v_USERINFO_LANG$, B.USERNAME$v_USERINFO_LANG$) AS username,
-					c_sysopid,
-					c_regdate
-				FROM
-					TBL_C_CLUB A
-				INNER JOIN
-					TBL_C_MEMBERINFO B
-				ON
-					RTRIM(A.c_sysopid) = RTRIM(B.userid)
 				AND
-					A.tenant_id = B.tenant_id
-				LEFT OUTER JOIN
-					TBL_USERMASTER C
-				ON
-					A.c_sysopid = C.CN
+					C_CLUBDESC LIKE CONCAT('%', #v_KEYWORD#, '%')
+			]]>
+		</isEqual>
+		<isNotEqual property="v_S_RADIO" compareValue="0">
+			<![CDATA[
 				AND
-					A.tenant_id = C.tenant_id
-				WHERE
-					$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
-				AND
-					A.c_adminconfirm = 'N'
-				AND
-					A.companyid = #companyID#
-				AND
-					A.tenant_id = #tenantID#
-				ORDER BY
-					$v_SORT1$ $v_SORT2$
+					D.C_CODE = #v_S_RADIO#
 			]]>
 		</isNotEqual>
+			<![CDATA[
+				AND
+					C_ADMINCONFIRM = 'N'
+				AND
+					A.COMPANYID = #companyID#
+				AND
+					A.TENANT_ID = #tenantID#
+				ORDER BY
+					A.C_REGDATE DESC
+				LIMIT
+					#v_STARTROW#, 10
+			]]>
 	</select>
 	
 	<select id="EzCommunityAdminDAO.aspAdmitComGet1Select2"				parameterClass="Map"		resultClass="CommunityClubVO">
-		<isEqual property="v_S" compareValue="">
-			<![CDATA[
-				SELECT
-					DISTINCT c_clubno,
-					c_clubname$v_USERINFO_LANG$ AS c_clubname,
-					IFNULL(C.DISPLAYNAME$v_USERINFO_LANG$, B.USERNAME$v_USERINFO_LANG$) AS username,
-					c_sysopid,
-					c_regdate
-				FROM
-					TBL_C_CLUB A
-				INNER JOIN
-					TBL_C_MEMBERINFO B
-				ON
-					RTRIM(A.c_sysopid) = B.userid
-				AND
-					A.c_adminconfirm = 'N'
-				AND
-					A.tenant_id = B.tenant_id
-				LEFT OUTER JOIN
-					TBL_USERMASTER C
-				ON
-					A.c_sysopid = C.CN
-				AND
-					A.tenant_id = C.tenant_id
-				WHERE
-					A.companyID = #companyID#
-				AND
-					A.tenant_id = #tenantID#
-				ORDER BY
-					A.c_regdate DESC
-			]]>
-		</isEqual>
-		
-		<isNotEqual property="v_S" compareValue="">
-			<![CDATA[
-				SELECT
-					c_clubno,
-					c_clubname$v_USERINFO_LANG$ AS c_clubname,
-					IFNULL(C.DISPLAYNAME$v_USERINFO_LANG$, B.USERNAME$v_USERINFO_LANG$) AS username,
-					c_sysopid,
-					c_regdate
-				FROM
-					TBL_C_CLUB A
-				INNER JOIN
-					TBL_C_MEMBERINFO B
-				ON
-					RTRIM(A.c_sysopid) = RTRIM(B.userid)
-				AND
-					A.c_adminconfirm = 'N'
-				AND
-					A.tenant_id = B.tenant_id
-				LEFT OUTER JOIN
-					TBL_USERMASTER C
-				ON
-					A.c_sysopid = C.CN
-				AND
-					A.tenant_id = C.tenant_id
-				WHERE
-					A.companyID = #companyID#
-				AND
-					A.tenant_id = #tenantID#
-				ORDER BY
-					$v_SORT1$ $v_SORT2$
-			]]>
-		</isNotEqual>
+		<![CDATA[
+			SELECT
+				DISTINCT c_clubno,
+				c_name,
+				c_clubname$v_USERINFO_LANG$ AS c_clubname,
+				c_clubConfirmType,
+				c_clubGubun,
+				IFNULL(C.DISPLAYNAME$v_USERINFO_LANG$, B.USERNAME$v_USERINFO_LANG$) AS username,
+				c_sysopid,
+				DATE_ADD(DATE_FORMAT(c_regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL +#v_OFFSETMIN# minute) as c_regdate
+			FROM
+				TBL_C_CLUB A
+			INNER JOIN
+				TBL_C_MEMBERINFO B
+			ON
+				RTRIM(A.c_sysopid) = B.userid
+			AND
+				A.c_adminconfirm = 'N'
+			AND
+				A.tenant_id = B.tenant_id
+			LEFT OUTER JOIN
+				TBL_USERMASTER C
+			ON
+				RTRIM(A.c_sysopid) = C.CN
+			AND
+				A.tenant_id = C.tenant_id
+			INNER JOIN
+				TBL_C_CATEGORY D
+			ON
+				A.c_cate_a = D.c_code
+			AND
+				A.tenant_id = D.tenant_id
+			WHERE
+				D.c_cat = 'a'
+			AND
+				A.companyID = #companyID#
+			AND
+				A.tenant_id = #tenantID#
+			ORDER BY
+				A.c_regdate DESC
+			LIMIT
+				#v_STARTROW#, 10
+		]]>
 	</select>
 	
 <!-- 	<procedure id="EzCommunityAdminDAO.aspAdmitComGet2"					parameterClass="Map"			resultClass="String"> -->
@@ -368,29 +307,55 @@
 	<select id="EzCommunityAdminDAO.aspAdmitComGet2Select1"				parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			SELECT
-				IFNULL(COUNT(DISTINCT c_clubno), 0) 
+				IFNULL(COUNT(DISTINCT C_CLUBNO), 0) 
 			FROM
 				TBL_C_CLUB A
 			INNER JOIN
 				TBL_C_MEMBERINFO B
 			ON
-				A.c_sysopid = B.userID
+				TRIM(A.C_SYSOPID) = TRIM(B.USERID)
 			AND
-				A.tenant_id = B.tenant_id
+				A.TENANT_ID = B.TENANT_ID
 			LEFT OUTER JOIN
 				TBL_USERMASTER C
 			ON
-				A.c_sysopid = C.CN
+				TRIM(A.C_SYSOPID) = C.CN
 			AND
-				A.tenant_id = C.tenant_id
+				A.TENANT_ID = C.TENANT_ID
+			INNER JOIN
+				TBL_C_CATEGORY D
+			ON
+				A.C_CATE_A = D.C_CODE
+			AND
+				A.TENANT_ID = D.TENANT_ID
 			WHERE
-				$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
+				D.C_CAT = 'a'
+		]]>
+		<isEqual property="v_SEARCHTYPE2" compareValue="C_ClubName">
+			<![CDATA[
+				AND
+					C_CLUBNAME$v_USERINFO_LANG$ LIKE CONCAT('%', #v_KEYWORD#, '%')
+			]]>
+		</isEqual>
+		<isEqual property="v_SEARCHTYPE2" compareValue="C_ClubDesc">
+			<![CDATA[
+				AND
+					C_CLUBDESC LIKE CONCAT('%', #v_KEYWORD#, '%')
+			]]>
+		</isEqual>
+		<isNotEqual property="v_S_RADIO" compareValue="0">
+			<![CDATA[
+				AND
+					D.C_CODE = #v_S_RADIO#
+			]]>
+		</isNotEqual>
+		<![CDATA[
 			AND
-				c_adminconfirm = 'N'
+				C_ADMINCONFIRM = 'N'
 			AND
-				A.companyid = #companyID#
+				A.COMPANYID = #companyID#
 			AND
-				A.tenant_id = #tenantID#
+				A.TENANT_ID = #tenantID#
 		]]>
 	</select>
 	
@@ -415,126 +380,96 @@
 	<select id="EzCommunityAdminDAO.aspSearchKeyGet1"					parameterClass="Map"		resultClass="CommunityClubVO">
 		<![CDATA[
 			SELECT
-				*
+				C_CLUBNO,
+				C_MEMBERCNT,
+				C_NAME,
+				CASE #primary# WHEN '1' THEN C_CLUBNAME ELSE C_CLUBNAME2 END AS C_CLUBNAME,
+				C_CLUBCONFIRMTYPE,
+				C_CLUBGUBUN,
+				C_SYSOPID,
+				DATE_ADD(DATE_FORMAT(c_regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL +#v_OFFSETMIN# minute) AS C_REGDATE,
+				DEPTID
 			FROM
-				(SELECT
-					c_clubno,
-					CASE #primary# WHEN '1' THEN c_clubname ELSE c_clubname2 END AS c_clubname,
-					c_sysopid,
-					c_clubdesc,
-					c_regdate,
-					DEPTID
+				TBL_C_CLUB A
+			INNER JOIN
+			   ((SELECT
+					D.CN, D.DEPARTMENT AS DEPTID,
+					D.PHYSICALDELIVERYOFFICENAME AS COMPANYID,
+					D.TENANT_ID
 				FROM
-					TBL_C_CLUB A
-				INNER JOIN
-				   ((SELECT
-						D.CN, D.DEPARTMENT as DEPTID,
-						D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
-						D.TENANT_ID
-					FROM
-						TBL_USERMASTER D
-					WHERE
-						D.TENANT_ID = #tenantID#
-					AND
-						D.PHYSICALDELIVERYOFFICENAME = #companyID#)
-						
-					UNION ALL
-					
-					(SELECT
-						B.cn, A2.DEPTID,
-						C.EXTENSIONATTRIBUTE2 as COMPANYID,
-						A2.TENANT_ID
-					FROM
-						TBL_USERMASTER B
-					INNER JOIN
-						TBL_ADDJOBMASTER A2
-					ON
-						A2.CN = B.CN
-					AND
-						A2.TENANT_ID = B.TENANT_ID
-					RIGHT JOIN
-						TBL_DEPTMASTER C
-					ON
-						A2.DEPTID = C.CN
-					AND
-						B.TENANT_ID = C.TENANT_ID)) T
-				ON
-					A.C_SYSOPID = T.CN
-				AND
-					A.TENANT_ID = T.TENANT_ID
-				AND
-					A.COMPANYID = T.COMPANYID
-		]]>
-		
-		<isEqual property="v_STRSELECT" compareValue="PCOMMUINTYDESC">
-			<![CDATA[
+					TBL_USERMASTER D
 				WHERE
-					c_clubno IN (SELECT
-									c_clubno
-								FROM
-									TBL_C_CLUB
-								WHERE
-									c_clubdesc LIKE CONCAT('%', #v_STRQUERY#, '%')
-								AND
-									companyid = #companyID#
-								AND
-									tenant_id = #tenantID#)
+					D.TENANT_ID = #tenantID#
 				AND
-					c_adminconfirm = 'Y'
+					D.PHYSICALDELIVERYOFFICENAME = #companyID#)
+					
+				UNION ALL
+				
+				(SELECT
+					B.cn, A2.DEPTID,
+					C.EXTENSIONATTRIBUTE2 AS COMPANYID,
+					A2.TENANT_ID
+				FROM
+					TBL_USERMASTER B
+				INNER JOIN
+					TBL_ADDJOBMASTER A2
+				ON
+					A2.CN = B.CN
 				AND
-					A.companyid = #companyID#
+					A2.TENANT_ID = B.TENANT_ID
+				RIGHT JOIN
+					TBL_DEPTMASTER C
+				ON
+					A2.DEPTID = C.CN
 				AND
-					A.tenant_id = #tenantID#
+					B.TENANT_ID = C.TENANT_ID)) T
+			ON
+				A.C_SYSOPID = T.CN
+			AND
+				A.TENANT_ID = T.TENANT_ID
+			AND
+				A.COMPANYID = T.COMPANYID
+			INNER JOIN
+				TBL_C_CATEGORY E
+			ON
+				A.C_CATE_A = E.C_CODE
+			AND
+				A.TENANT_ID = E.TENANT_ID
+			WHERE
+				E.C_CAT = 'a'
+		]]>
+		<isEqual property="v_STRSELECT2" compareValue="pCommunityName">
+			<![CDATA[
+				AND
+					CASE #primary# WHEN '1' THEN C_CLUBNAME ELSE C_CLUBNAME2 END LIKE CONCAT('%', #v_STRQUERY#, '%')
 			]]>
 		</isEqual>
-		
-		<isNotEqual property="v_STRSELECT" compareValue="PCOMMUINTYDESC">
-			<isEqual property="v_STRSELECT" compareValue="PCOMMUNITYNAME">
-				<![CDATA[
-					 WHERE
-					 	c_clubno IN (SELECT
-					 					c_clubno
-									FROM
-										TBL_C_CLUB
-									WHERE
-										CASE #primary# WHEN '1' THEN c_clubname ELSE c_clubname2 END LIKE CONCAT('%', #v_STRQUERY#, '%')
-									AND
-										companyid = #companyID#
-									AND
-										tenant_id = #tenantID#)
-					AND
-						c_adminconfirm = 'Y'
-					AND
-						A.companyid = #companyID#
-					AND
-						A.tenant_id = #tenantID#
-				]]>
-			</isEqual>
-			
-			<isNotEqual property="v_STRSELECT" compareValue="PCOMMUNITYNAME">
-				<![CDATA[
-					WHERE
-						c_adminconfirm = 'Y'
-					AND
-						A.companyid = #companyID#
-					AND
-						A.tenant_id = #tenantID#
-				]]>
-			</isNotEqual>
+		<isEqual property="v_STRSELECT2" compareValue="pCommuintyDesc">
+			<![CDATA[
+				AND
+					C_CLUBDESC LIKE CONCAT('%', #v_STRQUERY#, '%')
+			]]>
+		</isEqual>
+		<isNotEqual property="v_STRSELECT" compareValue="0">
+			<![CDATA[
+				AND
+					E.C_CODE = #v_STRSELECT#
+			]]>
 		</isNotEqual>
-		
-		<![CDATA[
-					GROUP BY
-						C_CLUBNO, C_SYSOPID
-					ORDER BY
-						c_regdate ASC
-					LIMIT
-						#v_IQUERYCOUNT#) T2
+			<![CDATA[
+				AND
+					C_ADMINCONFIRM = 'Y'
+				AND
+					A.COMPANYID = #companyID#
+				AND
+					A.TENANT_ID = #tenantID#
+				GROUP BY
+					C_CLUBNO, C_SYSOPID
 				ORDER BY
-					c_regdate DESC
+					C_REGDATE DESC
 				LIMIT
-					10
-		]]>
+					#v_STARTROW# ,10
+			]]>
 	</select>
 	
 <!-- 	<procedure id="EzCommunityAdminDAO.aspSearchKeyGet2"				parameterClass="Map"			resultClass="Integer"> -->
@@ -543,69 +478,50 @@
 	<select id="EzCommunityAdminDAO.aspSearchKeyGet2"					parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			SELECT
-				IFNULL(COUNT(c_clubno), 0) 
+				IFNULL(COUNT(C_CLUBNO), 0) 
 			FROM
 				TBL_C_CLUB A
 			INNER JOIN
-				TBL_USERMASTER B
+				TBL_C_CATEGORY B
 			ON
-				RTRIM(A.c_sysopid) = RTRIM(B.CN)
+				A.C_CATE_A = B.C_CODE
 			AND
-				A.tenant_id = B.tenant_id
+				A.TENANT_ID = B.TENANT_ID
+			INNER JOIN
+				TBL_USERMASTER C
+			ON
+				RTRIM(A.C_SYSOPID) = RTRIM(C.CN)
+			AND
+				A.TENANT_ID = C.TENANT_ID
+			WHERE
+				B.C_CAT = 'a'
 		]]>
-		
-		<isEqual property="v_STRSELECT" compareValue="PCOMMUINTYDESC">
+		<isEqual property="v_STRSELECT2" compareValue="pCommunityName">
 			<![CDATA[
-				 WHERE
-				 	c_clubno IN (SELECT
-									c_clubno
-								FROM
-									TBL_C_CLUB
-								WHERE
-									c_clubdesc LIKE CONCAT('%', #v_STRQUERY#, '%')
-								AND
-									tenant_id = #tenantID#)
 				AND
-					c_adminconfirm = 'Y'
-				AND
-					A.companyid = #companyID#
-				AND
-					A.tenant_id = #tenantID#
+					C_CLUBNAME$v_USERINFO_LANG$ LIKE CONCAT('%', #v_STRQUERY#, '%')
 			]]>
 		</isEqual>
-		
-		<isNotEqual property="v_STRSELECT" compareValue="PCOMMUINTYDESC">
-			<isEqual property="v_STRSELECT" compareValue="PCOMMUNITYNAME">
-				<![CDATA[
-					WHERE
-						c_clubno IN (SELECT
-										c_clubno
-									FROM
-										TBL_C_CLUB
-									WHERE
-										c_clubname$v_USERINFO_LANG$ LIKE CONCAT('%', #v_STRQUERY#, '%')
-									AND
-										tenant_id = #tenantID#)
-					AND
-						c_adminconfirm = 'Y'
-					AND
-						A.companyid = #companyID#
-					AND
-						A.tenant_id = #tenantID#
-				]]>
-			</isEqual>
-			
-			<isNotEqual property="v_STRSELECT" compareValue="PCOMMUNITYNAME">
-				<![CDATA[
-					WHERE
-						c_adminconfirm = 'Y'
-					AND
-						A.companyid = #companyID#
-					AND
-						A.tenant_id = #tenantID#
-				]]>
-			</isNotEqual>
+		<isEqual property="v_STRSELECT2" compareValue="pCommuintyDesc">
+			<![CDATA[
+				AND
+					C_CLUBDESC LIKE CONCAT('%', #v_STRQUERY#, '%')
+			]]>
+		</isEqual>
+		<isNotEqual property="v_STRSELECT" compareValue="0">
+			<![CDATA[
+				AND
+					B.C_CODE = #v_STRSELECT#
+			]]>
 		</isNotEqual>
+		<![CDATA[
+			AND
+				C_ADMINCONFIRM = 'Y'
+			AND
+				A.COMPANYID = #companyID#
+			AND
+				A.TENANT_ID = #tenantID#
+		]]>
 	</select>
 	
 <!-- 	<procedure id="EzCommunityAdminDAO.admCommunityInfoEdit"			parameterClass="Map"			resultClass="CommunityClubVO"> -->
@@ -644,6 +560,7 @@
 				c_cate_b = #v_C_CATE_B#,
 				c_cate_c = #v_C_CATE_C#,
 				c_clubname$v_USERINFO_LANG$ = #v_C_CLUBNAME#,
+				c_clubdesc = #v_C_CLUBDESC#,
 				isin = 2
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
@@ -908,4 +825,104 @@
 		]]>
 	</select>
 	
+	<select id="EzCommunityAdminDAO.getClosedCommuListCount"			parameterClass="Map"		resultClass="Integer">
+		<![CDATA[
+			SELECT
+				IFNULL(COUNT(C_CLUBNO), 0)
+			FROM
+				TBL_C_COMCLOSE
+			WHERE
+				CLOSESTATE = #v_PCLOSESTATE#
+		]]>
+		<isEqual property="v_SEARCHTYPE2" compareValue="pCommunityName">
+			<![CDATA[
+				AND
+					C_CLUBNAME$v_USERINFO_LANG$ LIKE CONCAT('%', #v_STRQUERY#, '%')
+			]]>
+		</isEqual>
+		<isEqual property="v_SEARCHTYPE2" compareValue="pCommCloseReason">
+			<![CDATA[
+				AND
+					CLOSEREASON LIKE CONCAT('%', #v_STRQUERY#, '%')
+			]]>
+		</isEqual>
+		<![CDATA[
+			AND
+				COMPANYID = #companyId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
+	<select id="EzCommunityAdminDAO.getClosedCommuList"					parameterClass="Map"		resultClass="CommunityCComCloseVO">
+		<![CDATA[
+			SELECT
+				C_CLUBNO,
+				CASE #primary# WHEN '1' THEN C_CLUBNAME ELSE C_CLUBNAME2 END AS C_CLUBNAME,
+				C_SYSOPID,
+				DATE_ADD(DATE_FORMAT(APPLICATIONDATE, '%Y-%m-%d %H:%i:%s'), INTERVAL +#v_OFFSETMIN# minute) as APPLICATIONDATE,
+				CLOSEREASON
+			FROM
+				TBL_C_COMCLOSE
+			WHERE
+				CLOSESTATE = #v_PCLOSESTATE#
+		]]>
+		<isEqual property="v_SEARCHTYPE2" compareValue="pCommunityName">
+			<![CDATA[
+				AND
+					CASE #primary# WHEN '1' THEN C_CLUBNAME ELSE C_CLUBNAME2 END LIKE CONCAT('%', #v_STRQUERY#, '%')
+			]]>
+		</isEqual>
+		<isEqual property="v_SEARCHTYPE2" compareValue="pCommCloseReason">
+			<![CDATA[
+				AND
+					CLOSEREASON LIKE CONCAT('%', #v_STRQUERY#, '%')
+			]]>
+		</isEqual>
+		<![CDATA[
+			AND
+				COMPANYID = #companyId#
+			AND
+				TENANT_ID = #tenantId#
+			ORDER BY
+				APPLICATIONDATE DESC
+			LIMIT
+				#v_STARTROW#, 10
+		]]>
+	</select>
+	
+	<select id="EzCommunityAdminDAO.closeCommunityInfo"				parameterClass="Map"		resultClass="CommunityCComCloseVO">
+		<![CDATA[
+			SELECT
+				c_clubno,
+				c_clubname$v_USERINFO_LANG$ AS c_clubname,
+				c_sysopid,
+				DATE_ADD(DATE_FORMAT(applicationdate, '%Y-%m-%d %H:%i:%s'), INTERVAL +#v_OFFSETMIN# minute) as applicationdate,
+				closereason
+			FROM
+				TBL_C_COMCLOSE
+			WHERE
+				c_clubno = #v_CODE#
+			AND
+				companyid = #companyId#
+			AND
+				tenant_id = #tenantId#
+			ORDER BY
+				applicationdate DESC
+		]]>
+	</select>
+	
+	<update id="EzCommunityAdminDAO.aspAdminCommCloseAllUpdate"				parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_C_COMCLOSE
+			SET
+				closestate = #v_PCLOSESTATE#,
+				closereason = #v_REASON#
+			WHERE
+				RTRIM(c_clubno) = #v_CODE#
+			AND
+				tenant_id = #tenantID#
+		]]>
+	</update>
 </sqlMap>

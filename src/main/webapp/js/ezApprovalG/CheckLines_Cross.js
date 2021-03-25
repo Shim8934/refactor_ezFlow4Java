@@ -14,7 +14,7 @@ function setDeptLinesXML(tempXML) {
 }
 
 function checkLines() {
-    if (CheckAprLinesXML != "") {
+    if (CheckAprLinesXML && CheckAprLinesXML != "") {
         var xmlHTTP = createXMLHttpRequest();
         xmlHTTP.open("POST", "/ezApprovalG/checkAprLines.do", false);
         xmlHTTP.setRequestHeader('Content-Type','text/html;charset=utf-8');
@@ -29,16 +29,16 @@ function checkLines() {
         }
     }
 
-    if (CheckDeptLinesXML != "") {
+    if (CheckDeptLinesXML && CheckDeptLinesXML != "") {
         var xmlHTTP2 = createXMLHttpRequest();
         xmlHTTP2.open("POST", "/ezApprovalG/checkDeptLines.do", false);
         xmlHTTP2.send(CheckDeptLinesXML);
 
-        var dataNodes = GetChildNodes(xmlHTTP2.responseXML, OpenAlertUILong_Complete2);
+        var dataNodes = GetChildNodes(xmlHTTP2.responseXML);
         var rtnVal = getNodeText(dataNodes[0]);
 
         if (rtnVal != "") {
-            OpenAlertUILong(rtnVal);
+            OpenAlertUI(rtnVal, OpenAlertUILong_Complete2);
             return false;
         }
     }

@@ -106,7 +106,7 @@
     display: block;
     float: left;    
     height: 28px;   
-    font: 12px gulim;
+    font: 12px malgun gothic;
     letter-spacing: -1;
     padding-top: 3px;
     list-style-type: disc;
@@ -165,7 +165,7 @@ input[type=text]::-ms-clear{ display:none;}
 #bnkbtn{ white-space: nowrap; display: inline-block;}
 #columnsbnk li input{ width:85%; display:inline-block; border: none; height: 28px; line-height:30px; margin:-2px 0px 0px 0px; padding:0px 7px 0px 7px;}
 #columnsbnk li input:focus { outline-width: 0;}
-.bnkbtn span { display: inline-block; background: url(/images/kr/cm/btn_middle_right.gif) top right; background-repeat: no-repeat; height: 20px; padding-right: 12px; font: 12px gulim; letter-spacing: -1; vertical-align: top; line-height: 20px; text-decoration: none; clear: both;}
+.bnkbtn span { display: inline-block; background: url(/images/kr/cm/btn_middle_right.gif) top right; background-repeat: no-repeat; height: 20px; padding-right: 12px; font: 12px malgun gothic; letter-spacing: -1; vertical-align: top; line-height: 20px; text-decoration: none; clear: both;}
 #columnsbnk li span{ display:inline-block; height:100%; line-height:30px; margin:0px; padding:0px 0px; background:#f9f9f9; border-right:1px solid #DDD; text-align: center; width: 28px;}
 #columnsbnk li img{	display:inline-block; padding: 5px 5px 0px 0px; float:right; border: 0px; height: 20px;	width:20px;}
 
@@ -180,10 +180,10 @@ input[type=text]::-ms-clear{ display:none;}
 .pollAddFile{height:45px; line-height:45px; background:#f9f9f9; border-bottom:1px solid #DDD; padding:0px 10px 0px 10px; color:#818181;}
 
 .pollImgbtn{ white-space:nowrap; display:inline-block; cursor: pointer;	height:25px; vertical-align:top; cursor:pointer; margin-bottom:2px; }
-.pollImgbtn span{ display:inline-block; border:1px solid #d0d0d0; border-radius:3px; padding:0px 10px; height:25px;	font:12px gulim; letter-spacing:-1; vertical-align:top;	line-height:25px;}
+.pollImgbtn span{ display:inline-block; border:1px solid #d0d0d0; border-radius:3px; padding:0px 10px; height:25px;	font:12px malgun gothic; letter-spacing:-1; vertical-align:top;	line-height:25px;}
 
 .pollImgbtn1{ white-space:nowrap; display:inline-block; cursor: pointer; height:20px; vertical-align:top; cursor:pointer; margin-top: 4px;}
-.pollImgbtn1 span{ display:inline-block; border:1px solid #d0d0d0; border-radius:3px; padding:0px 10px; height:20px; font:12px gulim; letter-spacing:-1; vertical-align:top; line-height:20px;}
+.pollImgbtn1 span{ display:inline-block; border:1px solid #d0d0d0; border-radius:3px; padding:0px 10px; height:20px; font:12px malgun gothic; letter-spacing:-1; vertical-align:top; line-height:20px;}
 
 /* 20171129 showSeenUserInfo */
 .voteSeenTbl th{height:40px; background:#edf5ff; color:#304d7f; border:1px solid #c4d3e6;}

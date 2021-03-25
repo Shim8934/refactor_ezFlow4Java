@@ -1,10 +1,8 @@
 package egovframework.ezEKP.ezStatistics.web;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -13,11 +11,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.CellRangeAddress;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,9 +57,6 @@ public class EzStatisticsApprController {
 	@Autowired
 	private CommonUtil commonUtil;
 	
-	@Autowired
-	private Properties config;
-	
 	@Resource(name = "EzOrganService")
 	private EzOrganService ezOrganService;
 	
@@ -78,7 +74,7 @@ public class EzStatisticsApprController {
 	/**
 		결재 통계 현황 호출
 	 */
-	@RequestMapping(value = "/ezStatistics/statisticsApprMain.do")
+	@RequestMapping(value = "/ezStatistics/statisticsApprMain.do", method = RequestMethod.GET)
 	public String statisticsApprMain(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("statisticsApprMain started");
 
@@ -112,7 +108,7 @@ public class EzStatisticsApprController {
 	/**
 	 * 액셀저장
 	 */
-	@RequestMapping(value = "/ezStatistics/excelExportOut.do")
+	@RequestMapping(value = "/ezStatistics/excelExportOut.do", method = RequestMethod.POST)
 	public void excelExportOut(@CookieValue("loginCookie") String loginCookie, HttpServletResponse response, HttpServletRequest request) throws IOException {
 		logger.debug("excelExportOut started");
 
@@ -260,7 +256,7 @@ row = sheet.createRow(0);
 	/**
 	 * 결재 통계 현황 표출
 	 */
-	@RequestMapping(value = "/ezStatistics/getStatisticsAprMain.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezStatistics/getStatisticsAprMain.do", method=RequestMethod.POST, produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getStatisticsAprMain(@CookieValue("loginCookie") String loginCookie, StatApprVO statApprVO) {
 		logger.debug("getStatisticsAprMain started");
@@ -279,7 +275,7 @@ row = sheet.createRow(0);
 	/**
 	 * 양식별 통계 현황 호출
 	 */
-	@RequestMapping(value = "/ezStatistics/statisticsMonForm.do")
+	@RequestMapping(value = "/ezStatistics/statisticsMonForm.do", method = RequestMethod.GET)
 	public String statisticsMonForm(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("statisticsMonForm started");
 
@@ -313,7 +309,7 @@ row = sheet.createRow(0);
 	/**
 	 * 양식별 통계 현황 표출
 	 */
-	@RequestMapping(value = "/ezStatistics/getStatisticsAprMon.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezStatistics/getStatisticsAprMon.do", method=RequestMethod.POST, produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getStatisticsAprMon(@CookieValue("loginCookie") String loginCookie, StatApprVO statApprVO) {
 		logger.debug("getStatisticsAprMon started");
@@ -332,7 +328,7 @@ row = sheet.createRow(0);
 	/**
 	 * 양식 관련 통계 현황 표출
 	 */
-	@RequestMapping(value = "/ezStatistics/getFormInfo.do", produces ="text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezStatistics/getFormInfo.do", method=RequestMethod.POST, produces ="text/xml;charset=utf-8")
 	@ResponseBody
 	public String getFormInfo(@CookieValue("loginCookie") String loginCookie, StatApprVO statApprVO) {
 		logger.debug("getFormInfo started");
@@ -354,7 +350,7 @@ row = sheet.createRow(0);
 	/**
 	 * 부서별 결재처리시간 호출
 	 */
-	@RequestMapping(value = "/ezStatistics/statisticsTimeDept.do")
+	@RequestMapping(value = "/ezStatistics/statisticsTimeDept.do", method = RequestMethod.GET)
 	public String statisticsTimeDept(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("statisticsTimeDept started");
 
@@ -396,7 +392,7 @@ row = sheet.createRow(0);
 	/**
 	 * 부서별 통계 현황 호출
 	 */
-	@RequestMapping(value = "/ezStatistics/statisticsMonDept.do")
+	@RequestMapping(value = "/ezStatistics/statisticsMonDept.do", method = RequestMethod.GET)
 	public String statisticsMonDept(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("statisticsMonDept started");
 
@@ -438,7 +434,7 @@ row = sheet.createRow(0);
 	/**
 	 * 결재처리시간 표출
 	 */
-	@RequestMapping(value = "/ezStatistics/getStatisticsAprTime.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezStatistics/getStatisticsAprTime.do", method=RequestMethod.POST, produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getStatisticsAprTime(@CookieValue("loginCookie") String loginCookie, StatApprVO statApprVO) {
 		logger.debug("getStatisticsAprTime started");
@@ -457,7 +453,7 @@ row = sheet.createRow(0);
 	/**
 	 * 이름중복체크 호출
 	 */
-	@RequestMapping(value = "/ezStatistics/checkName2.do")
+	@RequestMapping(value = "/ezStatistics/checkName2.do", method = RequestMethod.GET)
 	public String checkName2() {
 		logger.debug("checkName2 started");
 
@@ -469,7 +465,7 @@ row = sheet.createRow(0);
 	/**
 	 * 개인별 통계 현황 호출
 	 */
-	@RequestMapping(value = "/ezStatistics/statisticsMonUser.do")
+	@RequestMapping(value = "/ezStatistics/statisticsMonUser.do", method = RequestMethod.GET)
 	public String statisticsMonUser(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("statisticsMonUser started");
 
@@ -511,7 +507,7 @@ row = sheet.createRow(0);
 	/**
 	 * 양식별 통계 현황 호출
 	 */
-	@RequestMapping(value = "/ezStatistics/statisticsTimeForm.do")
+	@RequestMapping(value = "/ezStatistics/statisticsTimeForm.do", method = RequestMethod.GET)
 	public String statisticsTimeForm(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("statisticsTimeForm started");
 		
@@ -545,7 +541,7 @@ row = sheet.createRow(0);
 	/**
 	 * 개인별 결재처리 시간 호출
 	 */
-	@RequestMapping(value = "/ezStatistics/statisticsTimeUser.do")
+	@RequestMapping(value = "/ezStatistics/statisticsTimeUser.do", method = RequestMethod.GET)
 	public String statisticsTimeUser(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("statisticsTimeUser started");
 		
@@ -587,7 +583,7 @@ row = sheet.createRow(0);
 	/**
 	 * 양식별 통계 호출
 	 */
-	@RequestMapping(value = "/ezStatistics/statisticsForm.do")
+	@RequestMapping(value = "/ezStatistics/statisticsForm.do", method = RequestMethod.GET)
 	public String statisticsForm(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("statisticsForm started");
 
@@ -621,7 +617,7 @@ row = sheet.createRow(0);
 	/**
 	 * 통계 표출
 	 */
-	@RequestMapping(value = "/ezStatistics/getStatisticsAprSearch.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezStatistics/getStatisticsAprSearch.do", method = RequestMethod.POST, produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getStatisticsAprSearch(@CookieValue("loginCookie") String loginCookie, StatApprVO statApprVO) {
 		logger.debug("getStatisticsAprSearch started");
@@ -640,7 +636,7 @@ row = sheet.createRow(0);
 	/**
 	 * 부서별 통계 호출
 	 */
-	@RequestMapping(value = "/ezStatistics/statisticsDept.do")
+	@RequestMapping(value = "/ezStatistics/statisticsDept.do", method = RequestMethod.GET)
 	public String statisticsDept(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("statisticsDept started");
 
@@ -682,7 +678,7 @@ row = sheet.createRow(0);
 	/**
 	 * 개인별 통계 호출
 	 */
-	@RequestMapping(value = "/ezStatistics/statisticsUser.do")
+	@RequestMapping(value = "/ezStatistics/statisticsUser.do", method = RequestMethod.GET)
 	public String statisticsUser(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("statisticsUser started");
 
@@ -734,5 +730,29 @@ row = sheet.createRow(0);
 		logger.debug("customApprStatisticsBatch ended");
 		
 		return "success";
+	}
+
+	/**
+	 * 2021-02-23 박기범 : chartportlet용 통계 호출
+	 */
+	@RequestMapping(value = "/ezStatistics/getYearlyDocCount.do", method = RequestMethod.GET, produces = "text/xml;charset=utf-8")
+	public String getYearlyDocCount(@CookieValue("loginCookie") String loginCookie, Model model) {
+		logger.debug("getYearlyDocCount.do started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		JSONObject resultList = ezStatisticsAdminService.getYearlyDocCount(userInfo.getTenantId(), userInfo.getCompanyID());
+		String result = resultList.get("result").toString();
+
+		if (result.equals("true")) {
+			model.addAttribute("result", "true");
+			resultList.remove("result");
+			model.addAttribute("data", resultList);
+		} else {
+			model.addAttribute("result", "false");
+		}
+
+		logger.debug("getYearlyDocCount,do ended");
+
+		return "json";
 	}
 }

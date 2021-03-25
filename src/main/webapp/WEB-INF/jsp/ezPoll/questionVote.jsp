@@ -73,7 +73,7 @@
             iframeStyle += "BLOCKQUOTE  { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px;}";
             iframeStyle += "</style>";          
             //투표 내용이 언어에 따라 폰트가 변하도록 수정. 2019-10-25 홍대표.
-            iframeStyle += "<link rel='stylesheet' href=\"${util.addVer('ezPoll.i1', 'msg')}\" type='text/css'>";
+            //iframeStyle += "<link rel='stylesheet' href=\"${util.addVer('ezPoll.i1', 'msg')}\" type='text/css'>";
             
     		window.onunload = function() {
     		    if (stompClient !== null) {
@@ -86,7 +86,7 @@
 					commentCheck();				
 				}
  				getConnect();
- 				stompDisConnProcess()
+ 				stompDisConnProcess();
  				
 	            var doc = document.getElementById("message_test").contentWindow.document;	        
 				doc.open();
@@ -3130,7 +3130,7 @@
 		  			}else if(stompClient.connected === false && rightFrames == null){
 		  				window.location.reload();
 		  			}
-		  		}, 1000);
+		  		}, 10000);
 		  	}
 		  	
 		  	//목록 버튼 눌렀을 때 리스트로 이동.
@@ -3386,7 +3386,11 @@
 					<div class="pad1" style="vertical-align: top; padding-top:10px; width: 100%; border: none; display:inline-block; min-height: 150px;" id="messagetd">
 		               <iframe onload="resizeFrame()" id="message_test" style="border: none; overflow: hidden; width: 100%; background-color: #FFF;"></iframe>   	                                 
 		       	 	</div>				
-				</div>			
+				</div>
+
+				<c:if test="${question.status eq '1'}">
+				<span style="color: rgb(224, 67, 67); font-weight: bold;font-size: 15px; display: block; padding-bottom: 5px;">※ <spring:message code='ezPoll.kbh1' /></span>
+				</c:if>
 	
 		        <c:if test="${numOfFile != 0}">
 		        	<div id="attachedFile" class="vote_attachedFile" style="position:relative; overflow: hidden;display:inline-block; width: 100%; border-top:1px solid #e1ebf7; border-left:1px solid #e1ebf7; border-right:1px solid #e1ebf7; margin:0px 0px 20px 0px;">
@@ -3418,6 +3422,7 @@
 				</div>
 		        </c:if>	
 				<table class="content" style="width:100%; min-width:800px; table-layout:fixed; height:32px; line-height:30px; border:1px solid #DDD; margin-bottom:20px" id="_content1">
+                    <c:set var="fileFlag" value="false" />
 	                <c:forEach var="optList" items="${listOptions}" varStatus="loop">
 	                	<c:if test="${optList.filePath ne null }">
 		               	 	<c:set var="fileFlag" value="true" />

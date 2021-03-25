@@ -1165,7 +1165,7 @@ function SaveDraftDocInfo_ilban()
 	createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
 	createNodeAndInsertText(xmlpara, objNode, "FORMID", pFormID);
 
-	if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI") {
+	if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI" || pDraftFlag == "GAMSABU") {
 	    createNodeAndInsertText(xmlpara, objNode, "ORGDOCID", pOrgDocID);
 	    createNodeAndInsertText(xmlpara, objNode, "DOCTYPE", pDocType);
 	    createNodeAndInsertText(xmlpara, objNode, "DOCSTATE", pDocState);
@@ -1203,7 +1203,7 @@ function SaveDraftDocInfo_ilban()
 	createNodeAndInsertText(xmlpara, objNode, "DOCNO", field);
 
 	//부서순차합의 일경우 접수번호를 통해 가져온 DOCNO 를 가져오도록 수정. 2019-02-21 홍대표
-	if(pDraftFlag == "HAPYUI" && approvalFlag == "G") {
+	if((pDraftFlag == "HAPYUI" || pDraftFlag == "GAMSABU") && approvalFlag == "G") {
 		xmlpara.getElementsByTagName("DOCNO")[0].textContent = pDocNo;
 	}
 
@@ -1937,16 +1937,19 @@ function SaveFile()
 
     var result = "";
 
+	var data = {
+		docID : pDocID,
+		html  : HwpCtrl.GetCloneData("", "HWP"),
+		orgCompanyID : orgCompanyID
+	}
+
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/saveFileHWP.do",
-		data : {
-			docID : pDocID,
-			html  : HwpCtrl.GetCloneData("", "HWP"),
-			orgCompanyID : orgCompanyID
-		},
+		contentType : "application/json",
+		data : JSON.stringify(data),
 		success: function(text){
 			result = text;
 		}        			
@@ -1959,16 +1962,19 @@ function SaveOrgFile()
 {
 	var result = "";
 	
+	var data = {
+		docID : pDocID,
+		html  : pOrgHtml,
+		orgCompanyID : orgCompanyID
+	}
+	
 	$.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/saveFileHWP.do",
-		data : {
-			docID : pDocID,
-			html  : pOrgHtml,
-			orgCompanyID : orgCompanyID
-		},
+		contentType : "application/json",
+		data : JSON.stringify(data),
 		success: function(text){
 			result = text;
 		}        			

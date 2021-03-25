@@ -6,6 +6,8 @@
 	<typeAlias alias="ConnectionInfoVO" type="egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO"/>
 	<typeAlias alias="IPBandVO" type="egovframework.ezEKP.ezSystem.vo.IPBandVO"/>
 	<typeAlias alias="AccessIdVO" type="egovframework.ezEKP.ezSystem.vo.AccessIdVO"/>
+	<typeAlias alias="CountryVO" type="egovframework.ezEKP.ezSystem.vo.CountryVO"/>
+	<typeAlias alias="PasswordPolicyVO" type="egovframework.ezEKP.ezSystem.vo.PasswordPolicyVO"/>
 	
 	<select id="EzSystemAdminDAO.getSysParam" parameterClass="Integer" resultClass="SysParamVO">
 		<![CDATA[
@@ -87,7 +89,8 @@
 					C.CONNECTOS,
 					C.COMPANYID,
 					C.COMPANYNM,
-					C.COMPANYNM2
+					C.COMPANYNM2,
+					C.USERID
 			FROM 
 					TBL_CONNECTION_INFO C INNER JOIN TBL_USERLOCALINFO U
 			ON 
@@ -96,6 +99,39 @@
 					C.TENANT_ID=#v_tenantID# AND U.TENANT_ID=#v_tenantID# 
 					<isNotEqual property="companyId" compareValue="Top/organ">
 						AND C.COMPANYID=#companyId#
+					</isNotEqual>
+					<include refid="EzSystemAdminDAO.searchQuery"/>
+					<isEqual property="search_keycode" compareValue="6">
+						AND C.USERID LIKE CONCAT('%', #search_keyword#,'%')
+					</isEqual>
+			ORDER BY 
+					SEQUENCE DESC
+		<isNotEqual property="v_start" compareValue="-1">
+			LIMIT
+				    #v_start#, #pageCount#
+		</isNotEqual>
+	</select>
+
+	<select id="EzSystemAdminDAO.getLoginHistNotAdmin" parameterClass="map" resultClass="ConnectionInfoVO">
+			SELECT  DATE_ADD(DATE_FORMAT(C.CONNECTTIME, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE) AS CONNECTTIME,
+					C.SEQUENCE,
+					C.USERNM,
+					C.USERNM2,
+					C.DEPTNM,
+					C.DEPTNM2,
+					C.CONNECTIP,
+					C.CONNECTBROWSER,
+					C.CONNECTOS,
+					C.COMPANYID,
+					C.USERID
+			FROM 
+					TBL_CONNECTION_INFO C INNER JOIN TBL_USERLOCALINFO U
+			ON 
+					C.USERID = U.USERID
+			WHERE 
+					C.TENANT_ID=#v_tenantID# AND U.TENANT_ID=#v_tenantID# AND C.USERID=#userId# 
+					<isNotEqual property="companyId" compareValue="Top/organ">
+						AND C.COMPANYID=#companyId# 
 					</isNotEqual>
 					<include refid="EzSystemAdminDAO.searchQuery"/>
 			ORDER BY 
@@ -110,6 +146,19 @@
 		SELECT 	COUNT(SEQUENCE) 
 		FROM   	TBL_CONNECTION_INFO
 		WHERE	TENANT_ID = #v_tenantID# 
+		<isNotEqual property="companyId" compareValue="Top/organ">
+			AND COMPANYID = #companyId#
+		</isNotEqual>	
+		<include refid="EzSystemAdminDAO.searchQuery"/>
+		<isEqual property="search_keycode" compareValue="6">
+			AND USERID LIKE CONCAT('%', #search_keyword#,'%')
+		</isEqual>
+	</select>
+	
+	<select id="EzSystemAdminDAO.getLoginHistCountNotAdmin" parameterClass="map" resultClass="int">
+		SELECT 	COUNT(SEQUENCE) 
+		FROM   	TBL_CONNECTION_INFO
+		WHERE	TENANT_ID = #v_tenantID#  AND USERID=#userId# 
 		<isNotEqual property="companyId" compareValue="Top/organ">
 			AND COMPANYID = #companyId#
 		</isNotEqual>	
@@ -286,5 +335,170 @@
 				TABLE_NAME NOT REGEXP #notTableNames#
 		</isNotEmpty>
 	</select>
+	
+	<delete id="EzSystemAdminDAO.deleteWebfolderLog" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_WEBFOLDER_LOG
+            WHERE
+            	TENANT_ID = #v_TENANT_ID#	
+            AND
+            	CREATE_DATE < SUBDATE(DATE(NOW()), #v_KEEP_LOG_PERIOD#)
+		]]>
+	</delete>
 		
+	<insert id="EzSystemAdminDAO.insertMultiLoginType" parameterClass="java.util.Map">
+		INSERT INTO
+			TBL_COMPANY_CONFIG (TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE)
+		VALUES
+			(#tenantID#, #companyID#, 'useMultiLogin', #multiLoginType#)
+	</insert>
+	
+	<update id="EzSystemAdminDAO.updateMultiLoginType" parameterClass="java.util.Map">
+		UPDATE
+			TBL_COMPANY_CONFIG
+		SET
+			PROPERTY_VALUE = #multiLoginType#
+		WHERE
+			TENANT_ID = #tenantID#
+		AND
+			COMPANY_ID = #companyID#
+		AND
+			PROPERTY_NAME = 'useMultiLogin'
+	</update>
+
+	<update id="EzSystemAdminDAO.updateMenuChange" parameterClass="java.util.Map">
+		UPDATE 
+			TBL_PORTAL_MENU_COMP 
+		SET 
+			MENU_USED = #menuUse#
+		WHERE 
+			COMPANY_ID = #companyID# 
+		AND 
+			TENANT_ID = #tenantID#
+		<isNotEqual property="flagType" compareValue="all" >
+			<isNotEqual property="packageType" compareValue="standard" prepend="and">
+				MENU_ID IN 
+				<iterate property="menuId" open="(" close=")" conjunction=",">
+					#menuId[]#
+				</iterate>
+			</isNotEqual>
+		</isNotEqual>
+	</update>
+	
+	<select id="EzSystemAdminDAO.getAccessCountryList" parameterClass="Map" resultClass="String">
+		<![CDATA[
+		SELECT 
+			COUNTRY_CODE COUNTRYCODE
+		FROM 
+			TBL_ACCESS_COUNTRY 
+		WHERE 
+			TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
+	<insert id="EzSystemAdminDAO.setAccessCountry" parameterClass="Map">
+		<![CDATA[
+		INSERT INTO 
+			TBL_ACCESS_COUNTRY (TENANT_ID, COUNTRY_CODE) 
+			VALUES (#tenantId#, #countryCode#)
+		]]>
+	</insert>
+	
+	<update id="EzSystemAdminDAO.updateAccessCountry" parameterClass="Map">
+		<![CDATA[
+		UPDATE
+			TBL_ACCESS_COUNTRY
+		SET 
+			COUNTRY_CODE = #countryCode#
+		WHERE 
+			TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
+	<insert id="EzSystemAdminDAO.insertCompanyConfigParam" parameterClass="SysParamVO">
+		<![CDATA[
+			INSERT INTO 
+				TBL_COMPANY_CONFIG 
+				(TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE)
+			VALUES (#tenantID#, #companyID#, #name#, #value# )
+		]]>
+	</insert>
+	
+	<update id="EzSystemAdminDAO.updateCompanyConfigParam" parameterClass="SysParamVO">
+		<![CDATA[
+			UPDATE 
+				TBL_COMPANY_CONFIG 
+			SET 
+				PROPERTY_VALUE=#value# 
+			WHERE 
+				PROPERTY_NAME=#name#
+			AND
+				TENANT_ID=#tenantID#
+			AND
+				COMPANY_ID=#companyID#
+		]]>
+	</update>
+	
+	<select id="EzSystemAdminDAO.getPwPolicy" parameterClass="Map" resultClass="HashMap">
+		<![CDATA[
+		SELECT
+			TENANT_ID, COMPANY_ID, ENG_CHAR_TYPE, USE_ENG_CAPITAL_LETTER, USE_ENG_SMALL_LETTER, USE_NUMBER, USE_SPECIAL_CHAR
+		FROM
+			TBL_PASSWORD_POLICY
+		WHERE 
+			TENANT_ID = #tenantId# AND COMPANY_ID = #companyId#
+		]]>
+	</select>
+	
+	<select id="EzSystemAdminDAO.getPwPolicyPattern" parameterClass="Map" resultClass="HashMap">
+		<![CDATA[
+		SELECT
+			TENANT_ID, COMPANY_ID, USE_PATTERN_COUNT, NUMBER_OF_CHAR
+		FROM
+			TBL_PASSWORD_POLICY_PATTERN
+		WHERE 
+			TENANT_ID = #tenantId# AND COMPANY_ID = #companyId#
+		]]>
+	</select>
+	
+	<insert id="EzSystemAdminDAO.insertPwPolicy" parameterClass="PasswordPolicyVO">
+		<![CDATA[
+		INSERT INTO 
+			TBL_PASSWORD_POLICY
+				(TENANT_ID, COMPANY_ID, ENG_CHAR_TYPE, USE_ENG_CAPITAL_LETTER, USE_ENG_SMALL_LETTER, USE_NUMBER, USE_SPECIAL_CHAR) 
+			VALUES (#tenantId#, #companyId#, #engCharType#, #useCapitalLetter#, #useSmallLetter#, #useNumber#, #useSpecial#)
+		]]>
+	</insert>
+	
+	<insert id="EzSystemAdminDAO.insertPwPolicyPattern" parameterClass="Map">
+		<![CDATA[
+		INSERT INTO 
+			TBL_PASSWORD_POLICY_PATTERN
+				(TENANT_ID, COMPANY_ID, USE_PATTERN_COUNT, NUMBER_OF_CHAR) 
+			VALUES (#tenantId#, #companyId#, #settingCnt#, #settingNumber#)
+		]]>
+	</insert>
+	
+	<update id="EzSystemAdminDAO.updatePwPolicy" parameterClass="PasswordPolicyVO">
+		<![CDATA[
+		UPDATE 
+			TBL_PASSWORD_POLICY
+		SET 
+			ENG_CHAR_TYPE=#engCharType#, USE_ENG_CAPITAL_LETTER=#useCapitalLetter#, USE_ENG_SMALL_LETTER=#useSmallLetter#,
+			USE_NUMBER=#useNumber#, USE_SPECIAL_CHAR=#useSpecial#
+		WHERE 
+			TENANT_ID=#tenantId# AND COMPANY_ID=#companyId#
+		]]>
+	</update>
+	
+	<delete id="EzSystemAdminDAO.deletePwPolicyPattern" parameterClass="Map">
+		<![CDATA[
+		DELETE 
+		FROM 
+			TBL_PASSWORD_POLICY_PATTERN
+		WHERE TENANT_ID = #tenantId# AND COMPANY_ID=#companyId#
+		]]>
+	</delete>
+ 	
 </sqlMap>

@@ -8,7 +8,6 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.StringJoiner;
 
 import javax.annotation.Resource;
@@ -41,9 +40,6 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	
 	@Resource(name="EzBoardAdminDAO")
 	private EzBoardAdminDAO ezBoardAdminDAO;
-	
-	@Autowired
-	private Properties globals;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -158,16 +154,17 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		String dbPath = "";
 		
 		try {			
-			String docPath = commonUtil.getUploadPath("upload_board.FORM", tenantID) + commonUtil.separator;	
-			String fullPath = realPath + docPath;
-			File doc = new File(fullPath);		
+			String docPath = commonUtil.getUploadPath("upload_board.FORM", tenantID) + commonUtil.separator;
+			String fullPath = realPath + commonUtil.detectPathTraversal(docPath);
+			File doc = new File(fullPath);
 			
+			/* 2020-01-09 홍승비 - 파일경로 폴더 생성 방식 수정 (존재하지 않는 상위폴더를 전부 생성하도록 수정) */
 			if (!doc.exists() || !doc.isDirectory()) {
-				doc.mkdir();
+				doc.mkdirs();
 			}
 			
 			dbPath = docPath + boardID + ".mht";
-			mhtFilePath = realPath + dbPath;
+			mhtFilePath = realPath + commonUtil.detectPathTraversal(dbPath);
 			File mht = new File(mhtFilePath);
 			
 			if (mht.exists()) {
@@ -242,6 +239,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_ISDEPT", isDept);
 		map.put("v_ISEQUALDEPT", isEqualDept);
 		
+		//logger.debug("map in getBoardTree_Get2    ::   " + map.toString());
 		logger.debug("getBoardTree_Get2 ended");
 		return ezBoardAdminDAO.getBoardTree_Get2(map);
 	}
@@ -270,8 +268,8 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		/* 2019-06-04 홍승비 - 게시판그룹에 관리자권한 존재하는 경우, 해당 게시판그룹의 하위게시판 전부 가져오도록 수정 */
 		map.put("v_boardGroupAdmin_FG", boardGroupAdmin_FG);
 		
+		//logger.debug("brdBoardTree map   ::  " + map.toString());
 		logger.debug("brdBoardTree ended");
-		logger.debug("map.toString() : " + map.toString());
 		return ezBoardAdminDAO.brdBoardTree(map);
 	}
 
@@ -507,9 +505,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 
 	public String getBoardTreePath(String boardID, int tenantID) throws Exception {
 		logger.debug("getBoardTreePath started");
-
-		String tempString = "";
-		
+		StringBuilder tempStr = new StringBuilder();
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("boardID", boardID);
@@ -522,20 +518,20 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 				map.put("parentBoardID", parentBoardID);
 				
 				String tempBoardID = ezBoardAdminDAO.getBoardID(map);
-				tempString += tempBoardID;
+				tempStr.append(tempBoardID);
 				
 				map.put("boardID", tempBoardID);
 				
 				parentBoardID = ezBoardAdminDAO.getParentBoardID(map);
 				
 				if (!parentBoardID.equals("top")) {
-					tempString += ",";
+					tempStr.append(",");
 				}
 			}
 		}
 
 		logger.debug("getBoardTreePath ended");
-		return tempString;
+		return tempStr.toString();
 	}
 
 	@Override
@@ -575,6 +571,8 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		ezBoardAdminDAO.deleteBoardInfo(map);
 		// 해당 게시판의 정보 즐겨찾기에서 전부 삭제
 		ezBoardAdminDAO.deleteBoardMyBoard(map);
+		// 2021-01-04 박기범 : 탭게시판포틀릿 정보에서 전부 삭제
+		ezBoardAdminDAO.deleteAllTabBoard(map);
 		// 삭제 예정 테이블에 해당 게시판 삽입 -> 게시판 스케줄러가 이후 해당 테이블의 레코드를 삭제함
 		ezBoardAdminDAO.insertDeleteReservedBoard(map);
 		
@@ -684,6 +682,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_PFORM", boardPropertyVO.getFormFlag());
 		map.put("v_PAPPRFLAG", boardPropertyVO.getApprFlag());
 		map.put("v_PAPPRMAILFLAG", boardPropertyVO.getApprMailFlag());
+		map.put("v_LIKEFLAG", boardPropertyVO.getLikeFlag());
 		map.put("v_TENANTID", boardPropertyVO.getTenantID());
 		
 		/* 2018-10-18 홍승비 - 게시판'그룹' 이름변경 시 하위게시판처럼 데이터가 업데이트되는 부분 수정 */
@@ -1017,6 +1016,8 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_COMPANYID", vo.getCompanyID());
 		map.put("v_TENANTID", vo.getTenantID());
 		map.put("isAllGroupBoard", vo.getIsAllGroupBoard());
+		/* 2019-09-19 홍승비 - 권한의 TYPE값 추가 */
+		map.put("v_TYPE", vo.getType());
 		
 		// 해당 userID가 여러 회사의 레코드를 가지고 있을 수 있으므로, companyID 조건이 필요하다.
 		int tempCount = ezBoardAdminDAO.getBoardManage(map);
@@ -1028,9 +1029,6 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 			ezBoardAdminDAO.setUnderBoardIDAcl_I(map);
 		}
 		
-		/* 2018-10-10 홍승비 - 권한전파 시 기존 트리캐시 제거하도록 수정 */
-		trunkBoard(vo.getTenantID());
-
 		logger.debug("setUnderBoardIDAcl ended");
 	}
 
@@ -1053,9 +1051,6 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		// 권한삽입 시 companyID 필드 추가함
 		ezBoardAdminDAO.setUnderBoardIDAcl2(map);
 		
-		/* 2018-10-10 홍승비 - 권한전파 시 기존 트리캐시 제거하도록 수정 */
-		trunkBoard(tenantID);
-
 		logger.debug("setUnderBoardIDAcl2 ended");
 	}
 
@@ -1070,12 +1065,13 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 			String copyList = doc.getElementsByTagName("COPYLIST").item(0).getTextContent();
 			String[] copyListArray = copyList.split(",");
 			int copyListSize = copyListArray.length;
-			String tempCopyList = "";
+			StringBuilder  buf = new StringBuilder ();
 			
 			for (String k : copyListArray) {
-				tempCopyList += "'" + k + "',";
+				buf.append("'" + k + "',");
 			}
 			
+			String tempCopyList = buf.toString();
 			tempCopyList = tempCopyList.substring(0, tempCopyList.length() - 1);
 			
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -1206,7 +1202,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_ISDEPT", isDept);
 		map.put("v_ISEQUALDEPT", isEqualDept);
 		
-		logger.debug("map in getACL  ::  " + map.toString());
+		//logger.debug("map in getACL  ::  " + map.toString());
 		logger.debug("getACL ended");
 		return ezBoardAdminDAO.getACL(map);
 	}
@@ -1216,7 +1212,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		logger.debug("checkIfBoardGroupAdmin2 started");
 		
 		if (pRootBoardID.equalsIgnoreCase("top") || pRootBoardID.equalsIgnoreCase("all")) {
-			logger.debug("checkIfBoardGroupAdmin2 : pRootBoardID is '" + pRootBoardID + "', return empty String");
+			//logger.debug("checkIfBoardGroupAdmin2 : pRootBoardID is '" + pRootBoardID + "', return empty String");
 			return "";
 		}
 
@@ -1230,7 +1226,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_ISEQUALDEPT", isEqualDept);
 		map.put("isBoardGroup", isBoardGroup);
 
-		logger.debug("map in checkIfBoardGroupAdmin2  ::  " + map.toString());
+		//logger.debug("map in checkIfBoardGroupAdmin2  ::  " + map.toString());
 		result = ezBoardAdminDAO.checkIfBoardGroupAdmin2(map);
 		
 		if (result == null) {
@@ -1298,5 +1294,74 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		
 		ezBoardAdminDAO.updateBoardGroupID(map);
 		logger.debug("updateBoardGroupID ended");
+	}
+	
+	/* 2019-10-11 홍승비 - 공지사항 게시판 레코드 삭제 */
+	@Override
+	public void deleteNoticeBoard(int tenantId, String companyID) throws Exception {
+		logger.debug("deleteNoticeBoard started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
+		
+		ezBoardAdminDAO.deleteNoticeBoard(map);
+		
+		logger.debug("deleteNoticeBoard ended");
+	}
+
+	/* 2019-10-11 홍승비 - 공지사항 게시판 레코드 갱신 */
+	@Override
+	public void updateNoticeBoard(String boardID, int tenantId, String companyID) throws Exception {
+		logger.debug("updateNoticeBoard started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PBOARDID", boardID);
+		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
+		
+		ezBoardAdminDAO.deleteNoticeBoard(map); // 기존 공지사항 게시판 삭제 후 새로운 레코드 삽입
+		ezBoardAdminDAO.insertNoticeBoard(map);
+		
+		logger.debug("updateNoticeBoard ended");
+	}
+	
+	/* 2020-12-03 박기범 - 탭게시판 레코드 삭제 */
+	@Override
+	public void deleteTabBoard(int tabId, int tenantId, String companyID) throws Exception {
+		logger.debug("deleteTabBoard started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TABID", tabId);
+		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
+		
+		ezBoardAdminDAO.deleteTabBoard(map);
+		
+		logger.debug("deleteTabBoard ended");
+	}
+
+	/* 2020-12-03 박기범 - 탭게시판 레코드 갱신 */
+	@Override
+	public void updateTabBoard(int tabId, String boardID, int tenantId, String companyID, String boardName, String boardName2) throws Exception {
+		logger.debug("updateTabBoard started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TABID", tabId);
+		map.put("v_PBOARDID", boardID);
+		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_BOARDNAME", boardName);
+		map.put("v_BOARDNAME2", boardName2);
+
+		// 그룹사 게시판일 경우 일괄 삭제
+		if ( companyID == " " ) {
+			ezBoardAdminDAO.deleteAllComTabBoard(map);
+		}
+		
+		ezBoardAdminDAO.deleteTabBoard(map); // 기존 탭게시판 삭제 후 새로운 레코드 삽입
+		ezBoardAdminDAO.insertTabBoard(map);
+		
+		logger.debug("updateTabBoard ended");
 	}
 }

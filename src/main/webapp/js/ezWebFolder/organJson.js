@@ -794,6 +794,11 @@ function addSelectedDept(obj) {
 	var selectedDeptList = document.getElementById("selectedDepts");
 	var listDivTags      = selectedDeptList.childNodes;
 	
+	if (selectedDept == userDept) {
+		alert(strOwnDept);
+		return ;
+	}
+	
 	for (var i = 0; i < listDivTags.length; i++) {
 		if (listDivTags[i].getAttribute("nodeId") == deptId) {
 			check = 1;

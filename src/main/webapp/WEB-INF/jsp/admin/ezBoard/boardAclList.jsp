@@ -7,7 +7,7 @@
 		<title><spring:message code="ezBoard.t609" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css" />
-	    <link rel="stylesheet" href="${util.addVer('/css/email_tree.css')}" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css" />
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>    
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/TreeView.js')}"></script>
@@ -46,7 +46,7 @@
 		    
 		    function DisplayTopBoard(){
 				$.ajax({
-					data : "POST",
+					type : "POST",
 					dataType : "text",
 					async : false,
 					url : "/ezBoard/getSubBoards.do",

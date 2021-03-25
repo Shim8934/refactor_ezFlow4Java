@@ -21,9 +21,10 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/TreeView.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/ListView_list.js')}"></script>
 		<script type="text/javascript">
-		    var type = "${type}";
+		    var type = "<c:out value='${type}'/>";
+		    var selectedCompanyID = "<c:out value='${selectedCompanyID}'/>";
 		    var ReturnFunction;
-		    var userID = "${userInfo.id}";
+		    var userID = "<c:out value='${userInfo.id}'/>";
 		    window.onload = function () {
 		        try {
 		            ReturnFunction = parent.selectperson_cross_dialogArguments1[1];
@@ -50,16 +51,21 @@
 		            var xmlHTTP = createXMLHttpRequest();
 		            var objNode;
 		
+		            /* 2020-10-22 홍승비 - 현재 선택한 회사의 조직도를 표출하도록 수정 */
 		            if (type == "Proxy") {
 		                createNodeInsert(xmlpara, objNode, "DATA");
-		                createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${userInfo.deptID}");
-		                createNodeAndInsertText(xmlpara, objNode, "TOPID", "${userInfo.deptID}");
+		                //createNodeAndInsertText(xmlpara, objNode, "DEPTID", "<c:out value='${userInfo.deptID}'/>");
+		              //  createNodeAndInsertText(xmlpara, objNode, "TOPID", "<c:out value='${userInfo.deptID}'/>");
+						createNodeAndInsertText(xmlpara, objNode, "DEPTID", "");
+		                createNodeAndInsertText(xmlpara, objNode, "TOPID", selectedCompanyID + "/organ");
 		                createNodeAndInsertText(xmlpara, objNode, "PROP", "");
 		            }
 		            else {
 		                createNodeInsert(xmlpara, objNode, "DATA");
-		                createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${userInfo.deptID}");
-		                createNodeAndInsertText(xmlpara, objNode, "TOPID", "${userInfo.companyID}");
+		                //createNodeAndInsertText(xmlpara, objNode, "DEPTID", "<c:out value='${userInfo.deptID}'/>");
+		              //  createNodeAndInsertText(xmlpara, objNode, "TOPID", "<c:out value='${userInfo.companyID}'/>");
+						createNodeAndInsertText(xmlpara, objNode, "DEPTID", "");
+		                createNodeAndInsertText(xmlpara, objNode, "TOPID", selectedCompanyID + "/organ");
 		                createNodeAndInsertText(xmlpara, objNode, "PROP", "");
 		            }
 		            
@@ -356,7 +362,7 @@
 		        var buJaeId = selRow.getAttribute("DATA2");
 		        
 		        if (type == "Proxy") {
-		            if ("${userInfo.deptID}" != selRow.getAttribute("DATA3")) {
+		            if ("<c:out value='${userInfo.deptID}'/>" != selRow.getAttribute("DATA3")) {
 		                alert("<spring:message code='ezPersonal.t400'/>");
 		                return;
 		            }
@@ -412,6 +418,9 @@
 				<h1> <spring:message code='ezPersonal.t299'/></h1>
 			</c:when>
 			<c:otherwise>
+				<h1><spring:message code='ezPersonal.gha01'/></h1>
+			</c:otherwise>
+			<%-- <c:otherwise>
 				<h1>
 					<c:choose>
 						<c:when test="${type != 'Proxy'}">
@@ -422,7 +431,7 @@
 						</c:otherwise>
 					</c:choose> 
 				</h1>
-			</c:otherwise>
+			</c:otherwise> --%>
 		</c:choose>
 		<div id="close">
 			<ul>
@@ -435,12 +444,12 @@
 		<table>
 			<tr style="height:33px; background-color: #f8f8fa; margin-bottom : 3px; padding: 0px; border: 1px solid #eaeaea;">
 			    <td style="padding-right:5px">
-			    <div style="padding-top: 3px;">
+			    	<div style="padding-top: 3px;">
 			    	<c:if test="${type != 'Proxy'}">
-					    <input type="text" id="deptkeyword" onKeyPress="deptsearch_press(event)" style="WIDTH:115px; height:22px; margin-left:5px;" maxLength="50">
+					    <input type="text" id="deptkeyword" onKeyPress="deptsearch_press(event)" style="WIDTH:120px; height:22px; margin-left:5px;" maxLength="50">
 					    <a class="imgbtn" style="margin-right:5px;"><span onclick="deptsearch_click()"><spring:message code='ezPersonal.t71'/></span></a>
 			    	</c:if>
-			    </div>
+			    	</div>
 			    </td>
 			    <td align="right">
 			    	<div style="padding-top:3px;">
@@ -458,17 +467,17 @@
 				        </select>
 				        <input type="text" id="keyword" onKeyPress="search_press(event)" style="WIDTH:130px; height:22px;" maxLength="50">
 				        <a class="imgbtn" style="margin-right:5px;"><span onClick="search_click()"><spring:message code='ezPersonal.t77'/></span></a>
-			    	</c:if>
-			    	</div>		    	
+			    	</c:if>			    	
+			    	</div>
 			    </td>
 		  	</tr>
 			<tr>
 		  		<td colspan="2" style="padding:2px;"/>
 		  	</tr>
 		  	<tr>
-			    <td style="padding-right:5px"><div class="box" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:235px; HEIGHT:340px;" id="TreeView" ></div></td>
+			    <td style="padding-right:5px"><div class="box" style="overflow:auto; WIDTH:235px; HEIGHT:380px;" id="TreeView" ></div></td>
 			    <td class="listview">
-			        <div id="OrganListView" style="border:0;OVERFLOW: auto; WIDTH: 485px; HEIGHT: 340px; BACKGROUND-COLOR: white"></div>
+			        <div id="OrganListView" style="border:0;OVERFLOW: auto; WIDTH: 495px; HEIGHT: 380px; BACKGROUND-COLOR: white"></div>
 				</td>
 		  	</tr>
 		</table>

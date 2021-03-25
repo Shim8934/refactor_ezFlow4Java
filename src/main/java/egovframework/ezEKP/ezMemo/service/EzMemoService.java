@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezMemo.service;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import egovframework.ezEKP.ezMemo.vo.MemoFolderVO;
@@ -102,7 +103,7 @@ public interface EzMemoService {
 	 * @param MemoFolderVO
 	 * @throws Exception
 	 */
-	public void setDefualtMemoFolder(MemoFolderVO memoFolderVO) throws Exception;
+	public void setDefualtMemoFolder(MemoFolderVO memoFolderVO, Locale locale) throws Exception;
 	
 	/**
 	 * User가 가진 기본메모함의 folderID 정보를 가져온다.
@@ -202,7 +203,6 @@ public interface EzMemoService {
 	 */
 	public void setGadgetConfig(MemoConfigVO memoConfigVO) throws Exception;
 
-	
 	/**
 	 * 메모 레이어 창모드,전체모드 플래그 저장
 	 * @param memoConfigVO
@@ -210,11 +210,31 @@ public interface EzMemoService {
 	 */
 	public void setMemoLayerMode(MemoConfigVO memoConfigVO) throws Exception;
 	
-	
 	/**
 	 * 메모 레이어의 넓이를 저장
 	 * @param memoConfigVO
 	 * @throws Exception
 	 */
 	public void setMemoLayerArea(MemoConfigVO memoConfigVO) throws Exception;
+	
+	/**
+	 * 큰 메모의 넓이 저장
+	 * @param memoConfigVO
+	 * @throws Exception
+	 */
+	public void setDetailMemoArea(MemoConfigVO memoConfig);
+	
+	/**
+	 * 큰 메모의 left와 top 저장
+	 * @param memoConfigVO
+	 * @throws Exception
+	 */
+	public void setDetailMemoPosition(MemoConfigVO memoConfig);
+	
+	/**
+	 * 큰 메모의 오픈 상태 저장
+	 * @param memoConfigVO
+	 * @throws Exception
+	 */
+	public void setDetailMemoStatus(MemoConfigVO memoConfig);
 }

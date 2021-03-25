@@ -18,10 +18,10 @@
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/encode_component.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script>
-	        var lang = "${userinfo.lang}";
+	        var lang = "<c:out value='${userinfo.lang}'/>";
 	        var PostTreeView = null;
 	        var treeconfig = "";
-	        var oldFolderId = "${folderId}";
+	        var oldFolderId = "<c:out value='${folderId}'/>";
 	        
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -50,8 +50,8 @@
 	        function btn_Move_onclick() {
 	        	if (confirm("<spring:message code='ezApprovalG.hyj06' /><spring:message code='ezResource.t90' />")) {
 		        	var folderId = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
-		        	var circularIdList = "${circularIdList}";
-					var originLoc = "${originLoc}";
+		        	var circularIdList = "<c:out value='${circularIdList}'/>";
+					var originLoc = "<c:out value='${originLoc}'/>";
 	
 					if (folderId == oldFolderId) {
 						alert("<spring:message code='ezCircular.t109' />");

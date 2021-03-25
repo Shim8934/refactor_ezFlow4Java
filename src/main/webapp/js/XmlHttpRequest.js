@@ -519,6 +519,13 @@ function SetAttribute(node, name, value) {
     if (node != null) node.setAttribute(name, value);
 }
 
+//노드 속성을 제거합니다.
+function RemoveAttribute(node, name) {
+    if (node) {
+        node.removeAttribute(name);
+    }
+}
+
  //documentElement에서 xmlString을 가져옵니다.
 function getXmlString(xmlDoc) {
 
@@ -711,7 +718,6 @@ function ConvertHTMLtoMHT(pContent) {
 
 function ConvertHTMLtoMHT(pContent, pType) {
 	var rtnVal = '';
-    pContent = pContent.replace(/&quot;/g, "\'");
 	$.ajax({
 		type : "POST",
 		dataType : "text",
@@ -769,7 +775,7 @@ function GetBODY(iframePage) {
 function GetListItem(pList, str) {
 	var index = -1;
     for (i = 0; i < pList.length; i++) {
-        if (pList[i].id == str) {
+        if (pList[i].id.toUpperCase() == str.toUpperCase()) {
         	index = i;
         	break;
         }
@@ -884,7 +890,8 @@ function GetbrowserLanguage() {
 }
 
 function GetCKEditerHeader() {
-    return "<HEAD><META content=\"text/html; charset=utf-8\" http-equiv=\"Content-Type\"><STYLE title=\"ezform_style_1\">P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} </STYLE></HEAD>";
+    //return "<HEAD><META content=\"text/html; charset=utf-8\" http-equiv=\"Content-Type\"><STYLE title=\"ezform_style_1\">P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} </STYLE></HEAD>";
+    return "<HEAD><META content=\"text/html; charset=utf-8\" http-equiv=\"Content-Type\"><STYLE title=\"ezform_style_1\">P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;} </STYLE></HEAD>";
 }
     // 사파리 버그 수정용 함수 2012.09.07
 function KeEventControl(obj) {
@@ -935,8 +942,9 @@ function GetOpenWindowJun(popUpW, popUpH) {
     return feature;
 }
 
-function GetOpenWindowfeature(popUpW, popUpH) {
+function GetOpenWindowfeature(popUpW, popUpH, resizable) {
 
+	var resiableAttr = !!resizable ? ',resizable=yes' : ',resizable=no';
 	var heigth = window.screen.availHeight;
 	var width = window.screen.availWidth;
 	var left = 0;
@@ -947,7 +955,7 @@ function GetOpenWindowfeature(popUpW, popUpH) {
 	width = parseInt(width) - pleftpos;
 	left = pleftpos / 2;
 	top = heigth / 2;
-	var feature = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=no, scrollbars=yes";
+	var feature = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, scrollbars=yes" + resiableAttr;
 	return feature;
 }
 function GetOpenWindow(url, target, popUpW, popUpH, resizeFlag) {
@@ -1029,13 +1037,25 @@ function DivPopUpShow(popUpW, popUpH, URL) {
         document.getElementById("iFramePanel").style.height = popUpH + "px";
         document.getElementById("iFrameLayer").style.width = popUpW + "px";
         document.getElementById("iFrameLayer").style.height = popUpH + "px";
+        //2020-05-06 : right frame 리스트에서 divPopup 사용 시 left frame 영역도 적용
+        try{
+            if(typeof(window.parent.frames.left) == "object")
+                window.parent.frames.left.document.getElementById("mailPanel_left").style.display = "";
+        }catch(e){}
         document.getElementById("mailPanel").style.display = "";
         document.getElementById("iFramePanel").style.display = "";
     } catch (e) {}
+
+    return document.getElementById("iFrameLayer");
 }
 
 function DivPopUpHidden() {
     try {
+        //2020-05-06 : right frame 리스트에서 divPopup 사용 시 left frame 영역도 적용
+        try{
+            if(typeof(window.parent.frames.left) == "object")
+                window.parent.frames.left.document.getElementById("mailPanel_left").style.display = "none";
+        }catch(e){}        
         document.getElementById("mailPanel").style.display = "none";
         document.getElementById("iFramePanel").style.display = "none";
         document.getElementById("iFrameLayer").src = "/blank.htm";
@@ -1681,9 +1701,9 @@ function makePageSelPageBrd() {
     var PagingHTML = "";
     document.getElementById("tblPageRayer").innerHTML = "";
     if (pAdminType != "y")
-        document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + pTotalCnt + " </span>" + strLang42 + "]";
+        document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + pTotalCnt + " </span>";
     else
-        parent.document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + pTotalCnt + " </span>" + strLang42 + "]";
+        parent.document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + pTotalCnt + " </span>";
     strtext = "<div class='pagenavi'>";
     PagingHTML += strtext;
     var pageNum = CurPage;
@@ -1873,6 +1893,79 @@ function sortNode(xmlRows, colName, exception, orderby) {
 	    	return xmlRows;
 		}
 		
+	}	
+}
+
+//<c:out>를 통해 변환된 값을 원복시킨다 2019-04-05 임민석
+function replaceEntityCodeToStr(str) {
+	return str.replace(/&amp;/g, "&")
+			  .replace(/&lt;/g, "<")
+			  .replace(/&gt;/g, ">")
+			  .replace(/&#039;/g, "\'")
+			  .replace(/&#034;/g, "\"");
+}
+
+function ReplaceHTML(str) {
+    str = ReplaceAll(str, "&#39;", "'");
+    str = ReplaceAll(str, "&amp;", "&");
+    str = ReplaceAll(str, "&lt;", "<");
+    str = ReplaceAll(str, "&gt;", ">");
+    str = ReplaceAll(str, "&apos;", "'");
+    str = ReplaceAll(str, "&quot;", "\"");
+    return str;
+}
+
+function ReplaceAll(pStrContent, pStrOrg, pStrRep) {
+    return pStrContent.split(pStrOrg).join(pStrRep);
+}
+
+
+//리스트 로딩
+function listLoading(pType){
+    try{
+        if(pType){
+            if(document.getElementById("listload_div") == null){
+                var divEle = document.createElement("DIV");
+                divEle.setAttribute("class", "loadingBox2");
+                divEle.setAttribute("id", "listload_div");
+
+                var loadHtml = "<div class=\"loader loader-3\">";
+                loadHtml += "<div class=\"dot dot1\"></div>";
+                loadHtml += "<div class=\"dot dot2\"></div>";
+                loadHtml += "<div class=\"dot dot3\"></div>";
+                loadHtml += "<div class=\"dot dot4\"></div>";
+                loadHtml += "</div>";
+
+                divEle.innerHTML = loadHtml;
+
+                if(document.getElementsByTagName("body").length > 0){
+                    document.getElementsByTagName("body").item(0).appendChild(divEle);
+                }
+            }else{
+                document.getElementById("listload_div").style.display = "";
+            }
+        }else{
+            if(document.getElementById("listload_div") != null)
+                document.getElementById("listload_div").style.display = "none";
+        }
+    }catch(e){}
+}
+
+function getControlList() {
+	var controls = [];
+
+	var controlListElem = document.getElementById("__reform_control_list");
+	if (controlListElem) {
+		var controlIdStr = controlListElem.getAttribute("value");
+		if (controlIdStr) {
+			controlIds = JSON.parse(controlIdStr);
+            controls = controlIds.filter(function(id) {
+                return document.getElementById(id) != null;
+            }).map(function(id) {
+                return document.getElementById(id);
+            });
+		}
 	}
-	
+
+	return controls;
 }

@@ -25,7 +25,7 @@ function openOpinionUI_New(pOpinionType, CompleteFunction) {
 		parameter[0] = pDocID;		//DOCID
 		parameter[1] = pOpinionType;//OPINIONTYPE NAME
 		parameter[2] = "";			//DRAFTFLAG 
-		parameter[3] = "";			//DOCSTATE
+		parameter[3] = pDocState;	//DOCSTATE
 		parameter[4] = orgCompanyID;//ORGCOMPANYID
 		parameter[99] = ext;		//EXT
 		
@@ -171,4 +171,204 @@ function getHistory() {
 
 function getHistory_Complete() {
     DivPopUpHidden();
+}
+
+function checkDeptAndCabinetId() {
+    var result;
+    $.ajax({
+        type : "POST",
+        dataType : "text",
+        async : false,
+        url : "/ezApprovalG/checkDeptAndCabinetId.do",
+        data : {
+                orgDeptId : arr_userinfo[4],
+                orgCabinetId : ""
+        },
+        success : function(text){
+            result = text;
+        }
+    });
+    return result;
+}
+function checkAprState() {
+    var result = "";
+    
+    if (approvalFlag == "S") {
+        $.ajax({
+            type : "POST",
+            dataType : "text",
+            async : false,
+            url : "/ezApprovalG/checkAprState.do",
+            data : {
+                docID : pDocID,
+                docState : pDocState,
+                userID : '',
+                aprMemberSN : "1",
+                orgCompanyID : orgCompanyID
+            },
+            success : function(text) {
+                result = text;
+            }
+        });
+    }
+    
+    return result == "FALSE" ? true : false;
+}
+function getDocRecevState() {
+    try {
+        var result = "FALSE";
+        
+        $.ajax({
+            type : "POST",
+            dataType : "text",
+            async : false,
+            url : "/ezApprovalG/getDocState.do",
+            data : {
+                docID : pDocID,
+                deptID: arr_userinfo[4]
+            },
+            success: function(text){
+                result = text;
+            }
+        });
+        
+        return result;
+    } catch (e) {
+        alert("getDocRecevState :: " + e.description);
+    }
+}
+function setCabinetHeSong(pDocSN) {
+    try {
+        $.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezApprovalG/setCabinetHesong.do",
+    		data : {
+    			docID : pDocID,
+    			deptID  : arr_userinfo[4],
+    			deptName : arr_userinfo[15],
+    			deptName2 : arr_userinfo[16],
+    			userName : arr_userinfo[11],
+    			userName2 : arr_userinfo[12],
+    			docSN     : pDocSN
+    		},
+    		success: function(xml){
+    			result = xml;
+    		}, error: function() {
+                return false;
+    		}			
+    	});
+        
+        if (result == "TRUE")
+            return true;
+        else
+            return false;
+    }
+    catch (e) {
+        alert("setCabinetHeSong :: " + e.description);
+        return false;
+    }
+}
+function setHeSongDocInfo() {
+    try {
+        var result = "";
+        
+        if (pDocState === "012") {
+            var objRoot;
+            var objNode;
+            
+            var xmlpara = createXmlDom();
+            var xmlhttp = createXMLHttpRequest();
+            createNodeInsert(xmlpara, objNode, "ASSIGN");
+            
+            createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
+            createNodeAndInsertText(xmlpara, objNode, "pAprMemberDeptID", arr_userinfo[4]);
+            createNodeAndInsertText(xmlpara, objNode, "pAprMemberID", pUserID);
+            
+            //receivesn 받아올 곳 찾기 전까진 1로 고정.
+            createNodeAndInsertText(xmlpara, objNode, "pReceiveSN", "1");
+
+            xmlhttp.open("POST", "/ezApprovalG/setHeSongHapyuiDocInfo.do", false);
+            xmlhttp.send(xmlpara);
+            
+            if (xmlhttp != null && xmlhttp.readyState == 4) {
+                if (xmlhttp.statusText == "OK") {
+                    var pAlertContent = strLang878;
+                    OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
+                    return true;
+                } else {
+                    var pAlertContent = strLang740;
+                    OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
+                    return false;
+                }
+            }
+        } else {
+            var docState = "RECEIVE";
+            // if (pAprState == strAprState15) {
+            // 	docState = "REACK";
+            // } else {
+            // 	docState = "RECEIVE";
+            // }
+            
+            $.ajax({
+                type : "POST",
+                dataType : "text",
+                async : false,
+                url : "/ezApprovalG/setHeSongDocInfo.do",
+                data : {
+                    docID : pDocID,
+                    receiveSN : "1",
+                    deptID  : arr_userinfo[4],
+                    docState : pDocState,
+                    userID : pUserID,
+                    userName : arr_userinfo[11],
+                    userName2 : arr_userinfo[12]
+                },
+                success: function(xml){
+                    result = loadXMLString(xml);
+                }, error: function() {
+                    var pAlertContent = strLang740;
+                    OpenAlertUI(pAlertContent);
+                    return false;
+                }			
+            });
+    
+            var RtnVal = getNodeText(result.documentElement);
+            
+            if (RtnVal == "TRUE") {
+                   var pAlertContent = strLang741;
+                   OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
+                   
+                   //2019-05-02 김보미 : 근태관리 연동양식일 경우 추가 - 회송
+                    if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {       	
+                        $.ajax({
+                            type : 'POST',
+                            dataType : 'json',
+                            async : true,
+                            url : '/ezAttitude/approvalGConn.do',
+                            data : {
+                                status : 'delete',
+                                docId : pOrgDocID,
+                                type : 'hesong'
+                            },
+                            success : function(result) {
+                            },
+                            error : function() {
+                            }
+                        });				
+                    }
+                   
+                   return true;
+            }
+        }
+    }
+    catch (e) {
+        alert("setHeSongDocInfo :: " + e.description);
+        return false;
+    }
+}
+
+function OpenAlertUI_Close_Complete() {
+    btnClose_onclick();
 }

@@ -1,5 +1,10 @@
 package egovframework.ezEKP.ezSchedule.service;
 
+import java.util.List;
+
+import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupVO;
+
 public interface EzScheduleAdminService {
 	
 	public String scheduleGetShareManage(String lang, int tenantId, String companyID) throws Exception;
@@ -12,9 +17,9 @@ public interface EzScheduleAdminService {
 
 	public void scheduleChangeHolidayUse(String holidayID, String isUse, int tenantId) throws Exception;
 
-	public void scheduleSaveHoliday(String holidayName, String holidayName2, String holidayDate, String isSolar, String isRepeat, String isRest, String companyID, int tenantId) throws Exception;
+	public String scheduleSaveHoliday(String holidayName, String holidayName2, String holidayFlag, String holidayDate, String holidayRepeat, String isSolar, String isRepeat, String isRest, String companyID, int tenantId) throws Exception;
 
-	public void scheduleUpdateHoliday(String holidayName, String holidayName2, String holidayDate, String isSolar, String isRepeat, String isRest, String companyID, int tenantId, String holidayID) throws Exception;
+	public void scheduleUpdateHoliday(String holidayName, String holidayName2, String holidayFlag, String holidayDate, String holidayRepeat, String isSolar, String isRepeat, String isRest, String companyID, int tenantId, String holidayID) throws Exception;
 
 	public void scheduleInsertLunarUse(String companyID, String lunarUse, int tenantId) throws Exception;
 
@@ -25,5 +30,10 @@ public interface EzScheduleAdminService {
 	public void scheduleUpdateRegi(String companyID, String regi, int tenantId) throws Exception;
 
 	public int scheduleShareCheck(String userID, String deptID, int tenantId, String companyID) throws Exception;
+
+	public List<ScheduleGroupListVO> getMyGroupList(String offset, String userId, int tenantId ,String companyID, String searchType2, String searchValue, String startDate, String endDate) throws Exception;
 	
+	public List<ScheduleGroupVO> getMyGroupList2 (String offset, String userId, int tenantId ,String companyID, String searchType2, String searchValue, String startDate, String endDate, int startRow, int maxItemPerPage) throws Exception;
+	
+	public int getMyGroupMemberListCnt(String groupId, String lang, int tenantId ,String companyID) throws Exception;
 }

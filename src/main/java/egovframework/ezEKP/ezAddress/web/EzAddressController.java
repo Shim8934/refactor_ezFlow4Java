@@ -25,6 +25,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -37,9 +38,9 @@ import com.opencsv.CSVWriter;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
 import egovframework.ezEKP.ezAddress.vo.AddressFolderVO;
-import egovframework.ezEKP.ezAddress.vo.AddressOldZipCodeVO;
 import egovframework.ezEKP.ezAddress.vo.AddressVO;
 import egovframework.ezEKP.ezAddress.vo.AddressZipCodeVO;
+import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
@@ -77,6 +78,9 @@ public class EzAddressController{
 	@Resource(name = "EzCommonService")
     private EzCommonService ezCommonService;
 	
+	@Resource(name="EzCabinetAdminService")
+	private EzCabinetAdminService cabinetAdminService;
+	
 	/**
 	 * 도로명 주소 팝업창 호출 함수 (Open API)
 	 */
@@ -90,13 +94,13 @@ public class EzAddressController{
 		
 		logger.debug("addressZipCodePopupOpen ended.");
 		
-		return "ezAddress/addressZipCodePopUpOpen";
+		return "ezAddress/addressZipSelectInternet";
 	}
 	
 	/**
 	 * 도로명 주소 팝업창 호출 함수 (Local)
 	 */
-	@RequestMapping(value = "/ezAddress/addressZipCodePopUp.do")
+	@RequestMapping(value = "/ezAddress/addressZipCodePopUp.do", method = RequestMethod.GET)
 	public String addressZipCodePopup(Model model) throws Exception {
 		return "ezAddress/addressZipSelect";
 	}
@@ -104,7 +108,7 @@ public class EzAddressController{
 	/**
 	 * 도로명 주소 검색 실행 함수 (Local)
 	 */
-	@RequestMapping(value = "/ezAddress/addressZipCodeList.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value = "/ezAddress/addressZipCodeList.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String addressZipCodeList(HttpServletRequest request) throws Exception {
 		Document xmldom = commonUtil.convertRequestToDocument(request);
@@ -139,7 +143,7 @@ public class EzAddressController{
 	/**
 	 * 주소록 서브 폴더 정보 호출 함수
 	 */
-	@RequestMapping(value = "/ezAddress/addressGetSubTree.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value = "/ezAddress/addressGetSubTree.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String addressGetSubTree(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Model model) throws Exception {		
 		logger.debug("addressGetSubTree started.");
@@ -175,7 +179,7 @@ public class EzAddressController{
 	/**
 	 * 주소록 메인화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezAddress/addressMainList.do")
+	@RequestMapping(value = "/ezAddress/addressMainList.do", method = RequestMethod.GET)
 	public String addressMainList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {		
 		logger.debug("addressMainList started.");
 		logger.debug("folderid=" + request.getParameter("folderid") + ",type=" + request.getParameter("type"));
@@ -187,7 +191,7 @@ public class EzAddressController{
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String noneActiveX = "YES";
 		
-		String pFolderId = request.getParameter("folderid") == null ? "" : request.getParameter("folderid");
+		String pFolderId = request.getParameter("folderid") == null ? "normal" : request.getParameter("folderid");
 		String pFolderType = request.getParameter("type") == null ? "" : request.getParameter("type");
 		
 		boolean gyumJikChk = true;
@@ -245,7 +249,7 @@ public class EzAddressController{
 	/**
 	 * 주소록 리스트 정보 호출 함수
 	 */
-	@RequestMapping(value = "/ezAddress/addressList.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value = "/ezAddress/addressList.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String addressList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {		
 		logger.debug("addressList started.");
@@ -264,7 +268,7 @@ public class EzAddressController{
 			Document xmldom = commonUtil.convertRequestToDocument(request);
 			String pFolderID = xmldom.getElementsByTagName("FOLDERID").item(0).getTextContent();
 			String pOwnerID = xmldom.getElementsByTagName("OWNERID").item(0).getTextContent();
-			String pFolderType = xmldom.getElementsByTagName("FOLDERTYPE").item(0).getTextContent();
+			// String pFolderType = xmldom.getElementsByTagName("FOLDERTYPE").item(0).getTextContent();
 			String pFolderName = ""; //TODO: folderName setting 안해도 되나?
 			
 			String pOrderOption = "";
@@ -334,7 +338,7 @@ public class EzAddressController{
 	/**
 	 * 주소록 추가/수정 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezAddress/addressWrite.do")
+	@RequestMapping(value = "/ezAddress/addressWrite.do", method = RequestMethod.GET)
 	public String addressWrite(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {		
 		logger.debug("addressWrite started.");
 		logger.debug("addressid=" + request.getParameter("addressid") + ",folderid=" + request.getParameter("folderid")
@@ -419,6 +423,9 @@ public class EzAddressController{
 			useZipCodeSearch = "YES";
 		}
 		
+		String useAnyoneEdit = ezCommonService.getTenantConfig("UseAnyoneEdit", userInfo.getTenantId());
+		boolean useOnlyInnerMail = "yes".equalsIgnoreCase(ezCommonService.getTenantConfig("UseOnlyInnerMail", userInfo.getTenantId()));
+		
 		model.addAttribute("addressId", addressId);
 		model.addAttribute("folderId", folderId);
 		model.addAttribute("folderType", folderType);
@@ -435,6 +442,8 @@ public class EzAddressController{
 		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("deptAdmin", deptAdmin);
 		model.addAttribute("compAdmin", compAdmin);
+		model.addAttribute("useAnyoneEdit", useAnyoneEdit);
+		model.addAttribute("useOnlyInnerMail", useOnlyInnerMail);
 		
 		logger.debug("addressWrite ended.");
 		logger.debug("addressId=" + addressId + ",folderId=" + folderId + ",folderType=" + folderType + ",ownerId=" + ownerId
@@ -448,7 +457,7 @@ public class EzAddressController{
 	/**
 	 * 주소록 중복검사 실행 함수
 	 */
-	@RequestMapping(value = "/ezAddress/addressGetSearchCnt.do")
+	@RequestMapping(value = "/ezAddress/addressGetSearchCnt.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String addressGetSearchCnt(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Model model) throws Exception {		
 		logger.debug("addressGetSearchCnt started.");
@@ -497,7 +506,7 @@ public class EzAddressController{
 	/**
 	 * 주소록 추가/수정 실행 함수
 	 */
-	@RequestMapping(value = "/ezAddress/addressSave.do")
+	@RequestMapping(value = "/ezAddress/addressSave.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String addressSave(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Model model) throws Exception {		
 		logger.debug("addressSave started.");
@@ -512,7 +521,7 @@ public class EzAddressController{
 			String folderType = xmldom.getElementsByTagName("TYPE").item(0).getTextContent();
 			String ownerId = xmldom.getElementsByTagName("OWNERID").item(0).getTextContent();
 			String addressId = xmldom.getElementsByTagName("ADDRESSID").item(0).getTextContent();
-			String photoPath = xmldom.getElementsByTagName("PHOTOPATH").item(0).getTextContent();
+			// String photoPath = xmldom.getElementsByTagName("PHOTOPATH").item(0).getTextContent();
 			String sName = xmldom.getElementsByTagName("SNAME").item(0).getTextContent();
 			String sCompany = xmldom.getElementsByTagName("SCOMPANY").item(0).getTextContent();
 			String sDept = xmldom.getElementsByTagName("SDEPT").item(0).getTextContent();
@@ -528,8 +537,9 @@ public class EzAddressController{
 			String sHomeAddr = xmldom.getElementsByTagName("SHOMEADDR").item(0).getTextContent();
 			String sMemo = xmldom.getElementsByTagName("SMEMO").item(0).getTextContent();
 			String sType = xmldom.getElementsByTagName("STYPE").item(0).getTextContent();
-			String sUserNM = xmldom.getElementsByTagName("USERNM").item(0).getTextContent();
-			String sUserNM2 = xmldom.getElementsByTagName("USERNM2").item(0).getTextContent();
+			// String sUserNM = xmldom.getElementsByTagName("USERNM").item(0).getTextContent();
+			// String sUserNM2 = xmldom.getElementsByTagName("USERNM2").item(0).getTextContent();
+			String sFurigana = xmldom.getElementsByTagName("FURIGANA").item(0).getTextContent();
 			
 			// ownerId가 없으면 디비에서 구하기.
 			if (ownerId.trim().equals("")) {
@@ -568,7 +578,7 @@ public class EzAddressController{
 				ezAddressService.insertAddress(userInfo.getTenantId(), ownerId, folderId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), 
 						sName, sEmail, sCompany, sDept, sTitle, 
 						sCompanyPhone, sFax, sMobile, sHomePage, 
-						sCompanyZip, sCompanyAddr, sHomeZip, sHomeAddr, sMemo, sType);
+						sCompanyZip, sCompanyAddr, sHomeZip, sHomeAddr, sMemo, sType, sFurigana);
 			} else { //주소록 수정
 				AddressVO addressInfo = ezAddressService.getAddressInfo(userInfo.getTenantId(), userInfo.getPrimary(), addressId);
 				
@@ -588,7 +598,7 @@ public class EzAddressController{
 				ezAddressService.updateAddress(userInfo.getTenantId(), addressId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(),
 						sName, sEmail, sCompany, sDept, sTitle, 
 						sCompanyPhone, sFax, sMobile, sHomePage, 
-						sCompanyZip, sCompanyAddr, sHomeZip, sHomeAddr, sMemo);
+						sCompanyZip, sCompanyAddr, sHomeZip, sHomeAddr, sMemo, sFurigana);
 			}
 		} catch (Exception e) {
 			returnVaule = "ERROR";
@@ -602,7 +612,7 @@ public class EzAddressController{
 	/**
 	 * 주소록 상세보기 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezAddress/addressRead.do")
+	@RequestMapping(value = "/ezAddress/addressRead.do", method = RequestMethod.GET)
 	public String addressRead(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {		
 		logger.debug("addressRead started.");
 		logger.debug("addressid=" + request.getParameter("addressid") + ",folderid=" + request.getParameter("folderid")
@@ -615,9 +625,16 @@ public class EzAddressController{
 		String compAdmin = "";
 		String deptAdmin = "";
 		
+		//baonk 추가 2018-08-08
+		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
+		if (use_cabinet.equals("YES")) {
+			use_cabinet = cabinetAdminService.checkModuleActive("addrs", userInfo);
+		}
+		
 		String pAddressId = request.getParameter("addressid") == null ? "" : request.getParameter("addressid");
 		String pFolderId = request.getParameter("folderid") == null ? "" : request.getParameter("folderid");
 		String pFolderType = request.getParameter("type") == null ? "" : request.getParameter("type");
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
 		boolean gyumJikChk = true;
 		if (userInfo.getGyumJik() != null) {
@@ -663,11 +680,13 @@ public class EzAddressController{
 		model.addAttribute("pFolderId", pFolderId);
 		model.addAttribute("pFolderType", pFolderType);
 		model.addAttribute("getsMemo", replaceMemo);
+		model.addAttribute("useCabinet", use_cabinet); // 캐비넷 추가 baonk 2018-08-08
+		model.addAttribute("primaryLang", primaryLang);
 		
 		logger.debug("addressRead ended.");
 		logger.debug("useEditor=" + useEditor + ",noneActiveX=" + noneActiveX + ",userInfo=" + userInfo
 				 + ",addressInfo=" + addressInfo + ",compAdmin=" + compAdmin + ",deptAdmin=" + deptAdmin + ",pAddressId=" + pAddressId
-				 + ",pFolderId=" + pFolderId + ",pFolderType=" + pFolderType);
+				 + ",pFolderId=" + pFolderId + ",pFolderType=" + pFolderType + ",primaryLang=" + primaryLang);
 		
 		return "ezAddress/addressRead";
 	}
@@ -675,7 +694,7 @@ public class EzAddressController{
 	/**
 	 * 그룹주소록 추가/수정 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezAddress/addressWriteGroup.do")
+	@RequestMapping(value = "/ezAddress/addressWriteGroup.do", method = RequestMethod.GET)
 	public String addressWriteGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {		
 		logger.debug("addressWriteGroup started.");
 		logger.debug("addressid=" + request.getParameter("addressid") + ",folderid=" + request.getParameter("folderid")
@@ -692,6 +711,7 @@ public class EzAddressController{
 		String userNM2 = userInfo.getDisplayName2();
 		String useOcs = config.getProperty("config.USE_OCS");
 		String mailMaxReceiverCount = ezCommonService.getTenantConfig("mailMaxReceiverCount", userInfo.getTenantId());
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
 		if (mailMaxReceiverCount.equals("")) {
 			mailMaxReceiverCount = "200";
@@ -731,6 +751,10 @@ public class EzAddressController{
 		model.addAttribute("useOcs", useOcs);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("mailMaxReceiverCount", mailMaxReceiverCount);
+		model.addAttribute("primaryLang", primaryLang);
+		
+		String useShowAllCompanies = ezCommonService.getTenantConfig("useShowAllCompanies", userInfo.getTenantId());
+		model.addAttribute("useShowAllCompanies", useShowAllCompanies);
 		
 		logger.debug("addressWriteGroup ended.");
 		logger.debug("addressId=" + addressId + ",folderId=" + folderId + ",ownerId=" + ownerId + ",folderType=" + folderType
@@ -743,7 +767,7 @@ public class EzAddressController{
 	/**
 	 * 그룹주소록 추가/수정 실행 함수
 	 */
-	@RequestMapping(value = "/ezAddress/addressGroupSave.do")
+	@RequestMapping(value = "/ezAddress/addressGroupSave.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String addressGroupSave(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Locale locale, Model model) throws Exception {		
 		logger.debug("addressGroupSave started.");
@@ -799,7 +823,7 @@ public class EzAddressController{
 				ezAddressService.insertAddress(userInfo.getTenantId(), ownerId, folderId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(),
 						sGroupName, sEmail, "", "", "", 
 						"", "", "", "", 
-						"", "", "", "", sMemo, sType);
+						"", "", "", "", sMemo, sType, "");
 			} else { //주소록 수정
 				AddressVO addressInfo = ezAddressService.getAddressInfo(userInfo.getTenantId(), userInfo.getPrimary(), addressId);
 				
@@ -819,7 +843,7 @@ public class EzAddressController{
 				ezAddressService.updateAddress(userInfo.getTenantId(), addressId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), 
 						sGroupName, sEmail, "", "", "", 
 						"", "", "", "", 
-						"", "", "", "", sMemo);
+						"", "", "", "", sMemo, "");
 			}
 			
 		} catch (Exception e) {
@@ -835,7 +859,7 @@ public class EzAddressController{
 	/**
 	 * 그룹주소록 상세보기 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezAddress/addressReadGroup.do")
+	@RequestMapping(value = "/ezAddress/addressReadGroup.do", method = RequestMethod.GET)
 	public String addressReadGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {		
 		logger.debug("addressReadGroup started.");
 		logger.debug("type=" + request.getParameter("type") + ",addressid=" + request.getParameter("addressid"));
@@ -848,6 +872,12 @@ public class EzAddressController{
 		String deptAdmin = "";
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String noneActiveX = "YES";
+		
+		//baonk 추가 2018-08-08
+		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
+		if (use_cabinet.equals("YES")) {
+			use_cabinet = cabinetAdminService.checkModuleActive("addrs", userInfo);
+		}
 		
 		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
 			compAdmin = "Y";
@@ -894,6 +924,7 @@ public class EzAddressController{
 		model.addAttribute("useAnyoneEdit", useAnyoneEdit);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("noneActiveX", noneActiveX);
+		model.addAttribute("useCabinet", use_cabinet); // 캐비넷 추가 baonk 2018-08-08
 		
 		logger.debug("addressReadGroup ended.");
 		logger.debug("pFolderType=" + pFolderType + ",pAddressId=" + pAddressId + ",userInfo=" + userInfo + ",addressInfo=" + addressInfo
@@ -906,7 +937,7 @@ public class EzAddressController{
 	/**
 	 * 주소록 삭제 실행 함수
 	 */
-	@RequestMapping(value = "/ezAddress/addressDelete.do")
+	@RequestMapping(value = "/ezAddress/addressDelete.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String addressDelete(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Model model) throws Exception {		
 		logger.debug("addressDelete started.");
@@ -936,7 +967,7 @@ public class EzAddressController{
 	/**
 	 * 주소록 이동/복사 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezAddress/addressMoveCopy.do")
+	@RequestMapping(value = "/ezAddress/addressMoveCopy.do", method = RequestMethod.GET)
 	public String addressMoveCopy(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model) throws Exception {		
 		logger.debug("addressMoveCopy started.");
 		
@@ -1002,7 +1033,7 @@ public class EzAddressController{
 	/**
 	 * 주소록 이동/복사 저장 실행 함수
 	 */
-	@RequestMapping(value = "/ezAddress/addressSaveMoveCopy.do")
+	@RequestMapping(value = "/ezAddress/addressSaveMoveCopy.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String addressSaveMoveCopy(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Model model) throws Exception {		
 		logger.debug("addressSaveMoveCopy started.");
@@ -1044,7 +1075,7 @@ public class EzAddressController{
 	/**
 	 * 주소록 환경설정 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezAddress/addressConfig.do")
+	@RequestMapping(value = "/ezAddress/addressConfig.do", method = RequestMethod.GET)
 	public String addressConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model) throws Exception {		
 		logger.debug("addressConfig started.");
 		
@@ -1073,7 +1104,7 @@ public class EzAddressController{
 	/**
 	 * 주소록 환경설정 저장 실행 함수
 	 */
-	@RequestMapping(value = "/ezAddress/addressSaveConfig.do")
+	@RequestMapping(value = "/ezAddress/addressSaveConfig.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String addressSaveConfig(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Model model) throws Exception {		
 		logger.debug("addressSaveConfig started.");
@@ -1106,7 +1137,7 @@ public class EzAddressController{
 	/**
 	 * 그룹주소록 정보 호출 함수(그룹주소록 수정)
 	 */
-	@RequestMapping(value = "/ezAddress/addressGetCurrentData.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value = "/ezAddress/addressGetCurrentData.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String addressGetCurrentData(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Model model) throws Exception {		
 		logger.debug("addressGetCurrentData started.");
@@ -1117,8 +1148,8 @@ public class EzAddressController{
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 			
 			Document xmldom = commonUtil.convertStringToDocument(bodyData);
-			String folderId = xmldom.getElementsByTagName("FOLDERID").item(0).getTextContent();
-			String ownerId = xmldom.getElementsByTagName("OWNERID").item(0).getTextContent();
+			// String folderId = xmldom.getElementsByTagName("FOLDERID").item(0).getTextContent();
+			// String ownerId = xmldom.getElementsByTagName("OWNERID").item(0).getTextContent();
 			String addressId = xmldom.getElementsByTagName("ADDRESSID").item(0).getTextContent();
 			String folderType = xmldom.getElementsByTagName("FOLDERTYPE").item(0).getTextContent();
 			
@@ -1163,7 +1194,7 @@ public class EzAddressController{
 	/**
 	 * 그룹주소록 정보 호출 함수 (그룹메일 쓰기)
 	 */
-	@RequestMapping(value = "/ezAddress/addressGetGroupEmail.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value = "/ezAddress/addressGetGroupEmail.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String addressGetGroupEmail(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Model model) throws Exception {		
 		logger.debug("addressGetGroupEmail started.");
@@ -1214,7 +1245,7 @@ public class EzAddressController{
 	/**
 	 * 그룹주소록 정보 호출 함수 (메일 쓰기)
 	 */
-	@RequestMapping(value = "/ezAddress/addressGetGroupEmailList.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value = "/ezAddress/addressGetGroupEmailList.do", method = RequestMethod.GET, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String addressGetGroupEmailList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {		
 		logger.debug("addressGetGroupEmailList started.");
@@ -1257,7 +1288,7 @@ public class EzAddressController{
 	/**
 	 * 그룹주소 멤버 수 구하기
 	 */
-	@RequestMapping(value = "/ezAddress/getGroupAddressMemberCount.do", produces="text/plain; charset=utf-8")
+	@RequestMapping(value = "/ezAddress/getGroupAddressMemberCount.do", method = RequestMethod.GET, produces="text/plain; charset=utf-8")
 	@ResponseBody
 	public String getGroupAddressMemberCount(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {		
 		logger.debug("getGroupAddressMemberCount started.");
@@ -1290,7 +1321,7 @@ public class EzAddressController{
 	/**
 	 * 주소함관리 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezAddress/addressFolderManage.do")
+	@RequestMapping(value = "/ezAddress/addressFolderManage.do", method = RequestMethod.GET)
 	public String addressFolderManage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model) throws Exception {		
 		logger.debug("addressFolderManage started. mode=" + request.getParameter("mode"));
 		
@@ -1373,7 +1404,7 @@ public class EzAddressController{
 	/**
 	 * 최상위 주소록 정보 호출 함수
 	 */
-	@RequestMapping(value = "/ezAddress/getRootAddressXML.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value = "/ezAddress/getRootAddressXML.do", method = RequestMethod.GET, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String getRootAddressXML(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale) throws Exception {		
 		logger.debug("getRootAddressXML started.");
@@ -1416,7 +1447,7 @@ public class EzAddressController{
 	/**
 	 * 주소함 추가/수정 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezAddress/addressInputNameDlg.do")
+	@RequestMapping(value = "/ezAddress/addressInputNameDlg.do", method = RequestMethod.GET)
 	public String addressInputNameDlg(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model) throws Exception {		
 		return "ezAddress/addressInputNameDlg";
 	}
@@ -1424,7 +1455,7 @@ public class EzAddressController{
 	/**
 	 * 주소함 추가 실행 함수
 	 */
-	@RequestMapping(value = "/ezAddress/addressAddFolder.do")
+	@RequestMapping(value = "/ezAddress/addressAddFolder.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String addressAddFolder(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Model model) throws Exception {		
 		logger.debug("addressAddFolder started.");
@@ -1455,7 +1486,7 @@ public class EzAddressController{
 	/**
 	 * 주소함 수정 실행 함수
 	 */
-	@RequestMapping(value = "/ezAddress/addressModFolder.do")
+	@RequestMapping(value = "/ezAddress/addressModFolder.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String addressModFolder(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Model model) throws Exception {		
 		logger.debug("addressModFolder started.");
@@ -1483,7 +1514,7 @@ public class EzAddressController{
 	/**
 	 * 주소함 삭제 실행 함수
 	 */
-	@RequestMapping(value = "/ezAddress/addressDelFolder.do")
+	@RequestMapping(value = "/ezAddress/addressDelFolder.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String addressDelFolder(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Model model) throws Exception {		
 		logger.debug("addressDelFolder started.");
@@ -1510,7 +1541,7 @@ public class EzAddressController{
 	/**
 	 * 주소함 이동/복사 실행 함수
 	 */
-	@RequestMapping(value = "/ezAddress/addressMoveCopyFolder.do")
+	@RequestMapping(value = "/ezAddress/addressMoveCopyFolder.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String addressMoveCopyFolder(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Model model) throws Exception {		
 		logger.debug("addressMoveCopyFolder started.");
@@ -1547,7 +1578,7 @@ public class EzAddressController{
 	/**
 	 * 주소록 검색 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezAddress/addressMainSearch.do")
+	@RequestMapping(value = "/ezAddress/addressMainSearch.do", method = RequestMethod.GET)
 	public String addressMainSearch(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model) throws Exception {		
 		logger.debug("addressMainSearch started.");
 		logger.debug("orderby=" + request.getParameter("orderby") + ",filter=" + request.getParameter("filter"));
@@ -1614,7 +1645,7 @@ public class EzAddressController{
 	/**
 	 * 주소록 리스트 정보 호출 함수
 	 */
-	@RequestMapping(value = "/ezAddress/addressGetSearchList.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value = "/ezAddress/addressGetSearchList.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String addressGetSearchList(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Model model) throws Exception {		
 		logger.debug("addressGetSearchList started.");
@@ -1724,7 +1755,7 @@ public class EzAddressController{
 	/**
 	 * root 주소함 정보 호출 함수
 	 */
-	@RequestMapping(value = "/ezAddress/addressGetFullTree.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value = "/ezAddress/addressGetFullTree.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String addressGetFullTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model) throws Exception {		
 		logger.debug("addressGetFullTree started.");
@@ -1803,7 +1834,7 @@ public class EzAddressController{
 	/**
 	 * 주소록 정보 호출 함수 (수신자 설정)
 	 */
-	@RequestMapping(value = "/ezAddress/addressGetListMailCall.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value = "/ezAddress/addressGetListMailCall.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String addressGetListMailCall(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Locale locale, Model model) throws Exception {		
 		logger.debug("addressGetListMailCall started.");
@@ -1815,9 +1846,9 @@ public class EzAddressController{
 			Document xmldom = commonUtil.convertStringToDocument(bodyData);
 			String folderId = xmldom.getElementsByTagName("FOLDERID").item(0).getTextContent();
 			String ownerId = xmldom.getElementsByTagName("OWNERID").item(0).getTextContent();
-			String field = xmldom.getElementsByTagName("FIELD").item(0).getTextContent();
+			// String field = xmldom.getElementsByTagName("FIELD").item(0).getTextContent();
 			int pageSize = Integer.parseInt(xmldom.getElementsByTagName("PAGESIZE").item(0).getTextContent());
-			String filter = xmldom.getElementsByTagName("FILTER").item(0).getTextContent();
+			// String filter = xmldom.getElementsByTagName("FILTER").item(0).getTextContent();
 			int currentPage = Integer.parseInt(xmldom.getElementsByTagName("PAGE").item(0).getTextContent());
 			String searchGubun = xmldom.getElementsByTagName("SEARCHGUBUN").item(0).getTextContent();
 			String folderType = xmldom.getElementsByTagName("FOLDERTYPE").item(0).getTextContent();
@@ -1885,7 +1916,7 @@ public class EzAddressController{
 	/**
 	 * 주소록 구성원 보기 및 선택 화면 호출 함수 (수신자 설정)
 	 */
-	@RequestMapping(value = "/ezAddress/addressSelectGroupMailList.do")
+	@RequestMapping(value = "/ezAddress/addressSelectGroupMailList.do", method = RequestMethod.GET)
 	public String addressSelectGroupMailList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model) throws Exception {		
 		logger.debug("addressSelectGroupMailList started. id=" + request.getParameter("id"));
 		
@@ -1915,7 +1946,7 @@ public class EzAddressController{
 	/**
 	 * 주소록 검색 정보 호출 함수 (수신자 설정)
 	 */
-	@RequestMapping(value = "/ezAddress/addressGetListMailSearchCall.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value = "/ezAddress/addressGetListMailSearchCall.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String addressGetListMailSearchCall(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Locale locale, Model model) throws Exception {		
 		logger.debug("addressGetListMailSearchCall started.");
@@ -1998,7 +2029,7 @@ public class EzAddressController{
 	/**
 	 * 주소록 내보내기 실행 함수
 	 */
-	@RequestMapping(value = "/ezAddress/excelExport.do")
+	@RequestMapping(value = "/ezAddress/excelExport.do", method = RequestMethod.GET)
 	public void addressExport(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model, HttpServletResponse response) throws Exception {		
 		logger.debug("addressExport started.");
 		
@@ -2133,7 +2164,7 @@ public class EzAddressController{
 	/**
 	 * 주소록 가져오기 실행 함수
 	 */
-	@RequestMapping(value = "/ezAddress/excelImport.do")
+	@RequestMapping(value = "/ezAddress/excelImport.do", method = RequestMethod.POST)
 	public String addressImport(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Locale locale, Model model) throws Exception {		
 		logger.debug("addressImport started.");
 		
@@ -2325,12 +2356,12 @@ public class EzAddressController{
         			ezAddressService.insertAddress(userInfo.getTenantId(), ownerId, folderId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(),
         					sName, csvBody[8], csvBody[2], csvBody[3], csvBody[4], 
         					csvBody[5], csvBody[6], csvBody[7], csvBody[9], 
-        					csvBody[10], csvBody[11], csvBody[12], csvBody[13], csvBody[14], "G");
+        					csvBody[10], csvBody[11], csvBody[12], csvBody[13], csvBody[14], "G", "");
         		} else {
         			ezAddressService.insertAddress(userInfo.getTenantId(), ownerId, folderId, userInfo.getId(), userInfo.getDisplayName(), userInfo.getDisplayName2(),
         					sName, csvBody[8], csvBody[2], csvBody[3], csvBody[4], 
         					csvBody[5], csvBody[6], csvBody[7], csvBody[9], 
-        					csvBody[10], csvBody[11], csvBody[12], csvBody[13], csvBody[14], "P");
+        					csvBody[10], csvBody[11], csvBody[12], csvBody[13], csvBody[14], "P", "");
         		}
         	} catch (Exception e) {
         		result = "ERROR";
@@ -2378,13 +2409,17 @@ public class EzAddressController{
 	/**
 	 * 주소록 양식 다운로드 함수
 	 */
-	@RequestMapping(value = "/ezAddress/addressFormatDownload.do")
+	@RequestMapping(value = "/ezAddress/addressFormatDownload.do", method = RequestMethod.GET)
 	public void addressFormatDownload(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model, HttpServletResponse response) throws Exception {		
 		logger.debug("addressFormatDownload started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String format = request.getParameter("format");
         logger.debug("format=" + format);
+        
+        if (format == null) {
+        	return;
+        }
         
         String fileName = null;
         

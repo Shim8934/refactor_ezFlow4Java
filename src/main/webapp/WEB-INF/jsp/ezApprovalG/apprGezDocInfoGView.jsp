@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -22,9 +23,9 @@
 	            }
 	        }
 	        var vdocdisplay, vPublicFlag;
-	        vdocdisplay = "${specialRecordCode}";			//특수기록물 5자리
-	        vPublicFlag = "${publicityCode}";			//공개여부 9자리
-	        var summary = "${summary}"; // 요약전
+	        vdocdisplay = "<c:out value ='${specialRecordCode}'/>";			//특수기록물 5자리
+	        vPublicFlag = "<c:out value ='${publicityCode}'/>";			//공개여부 9자리
+	        var summary = "<c:out value ='${summary}'/>"; // 요약전
 	
 	        document.getElementById("selSecLevel").value = "${securityCode}";
 	        document.getElementById("selSecLevel").style.display = "none";

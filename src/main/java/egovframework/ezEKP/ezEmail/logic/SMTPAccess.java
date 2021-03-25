@@ -1,6 +1,5 @@
 package egovframework.ezEKP.ezEmail.logic;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
@@ -11,50 +10,71 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.MimeMessage;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.sun.mail.util.MailSSLSocketFactory;
 
 public class SMTPAccess {
-	
-	private static final Logger logger = LoggerFactory.getLogger(IMAPAccess.class);
 	
 	private String host;
 	private String port;
 	private String userName;
 	private String password;
+	private boolean usingAuth = true;
 	private Session session;
 	private final int TIMEOUT = 20000;
 	
-	private SMTPAccess(String host, String port, String userName, String password){
+	private SMTPAccess(String host, String port, String userName, String password, boolean usingAuth) {
 		this.host = host;
 		this.port = port;
 		this.userName = userName;
 		this.password = password;
+		this.usingAuth = usingAuth;
 	}
 	
-	public static SMTPAccess getInstance(String host, String port, String username, String password){
-		return new SMTPAccess(host, port, username, password);
+	public static SMTPAccess getNotAuthInstance(String host, String port, String username, String password) {
+		return new SMTPAccess(host, port, username, password, false);
+	}
+	
+	public static SMTPAccess getInstance(String host, String port, String username, String password) {
+		return new SMTPAccess(host, port, username, password, true);
 	}
 	
 	private Session getSession(){
-		if(session != null){
+		if (session != null) {
 			return session;
 		}
+
 		Properties props = new Properties();
-	    props.put("mail.smtp.auth", "true");
-	    props.put("mail.smtp.starttls.enable", "false");
-	    props.put("mail.smtp.host", host);
-	    props.put("mail.smtp.port", port);
-	    
-	    props.put("mail.smtp.connectiontimeout", TIMEOUT);
-	    props.put("mail.smtp.writetimeout", TIMEOUT);
-	    
-	    Session session = Session.getInstance(props, new javax.mail.Authenticator() {
-	    	protected PasswordAuthentication getPasswordAuthentication() {
-	    		return new PasswordAuthentication(userName, password);
-	    	}
-	    });
-	    return session;
+		try {
+		    props.put("mail.smtp.starttls.enable", "false");
+		    props.put("mail.smtp.host", host);
+		    props.put("mail.smtp.port", port);
+		    
+		    if (port.equals("465")) {
+		    	MailSSLSocketFactory sf = new MailSSLSocketFactory();
+		    	sf.setTrustAllHosts(true);
+		    	
+		    	props.put("mail.smtp.ssl.enable", "true");
+		    	props.put("mail.smtp.ssl.trust", "*");
+		    	props.put("mail.smtp.ssl.socketFactory", sf);
+		    }
+		    
+		    props.put("mail.smtp.connectiontimeout", TIMEOUT);
+		    props.put("mail.smtp.writetimeout", TIMEOUT);
+	
+			if (usingAuth) {
+				props.put("mail.smtp.auth", "true");
+	
+				return Session.getInstance(props, new javax.mail.Authenticator() {
+					protected PasswordAuthentication getPasswordAuthentication() {
+						return new PasswordAuthentication(userName, password);
+					}
+				});
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return Session.getInstance(props);
 	}
 	
 	public MimeMessage createMimeMessage(){

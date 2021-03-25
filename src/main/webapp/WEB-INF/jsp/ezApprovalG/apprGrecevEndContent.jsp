@@ -6,6 +6,7 @@
 	    <title></title>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Office.js')}"></script>
 	    <style>
 	    	#div_Content table {
 		     	word-break : break-word;   
@@ -28,6 +29,29 @@
 	            try {
 	            	$('#div_Content #body').css('overflow', 'auto');
 	                $('#div_Content #doctitle').css('word-wrap', 'break-word');
+	            } catch (e)
+	            { }
+	            
+	            try {
+			        if (document.getElementById('attitude_annual_conn')) { //근태관리 연동양식
+			    		$("select[id^=control]").each(function() {
+			    			$(this).val($(this).attr("attitudetype"));
+			    			$(this).children("option[value=" +$(this).attr("attitudetype") + "]").attr("selected","");
+			    		});
+			        	
+			    		$("input[type=button][id^=control]").each(function() {
+			    			$(this).css("display","none");
+			    		});
+			    		
+			    		$("select[id^=control]").each(function() {
+			    			$(this).css("top","7px");
+			    		});
+			    		
+			    		$('#mobile').css('display',"none");
+			    	    $('#p_mobile').css('display',"");
+			    	    $('#mobile2').css('display',"none");
+			    	    $('#p_mobile2').css('display',"");
+			        }
 	            } catch (e)
 	            { }
 	            
@@ -175,6 +199,10 @@
 	                        FieldCount++;
 	                    }
 	                }
+
+					var controls = getControlList();
+					FieldsList = FieldsList.concat(controls);
+					
 	                return FieldsList;
 	            } catch (e) { return FieldsList; }
 	        }
@@ -353,6 +381,20 @@
 	        function Conn_BodyFieldWrite(FieldName, FieldValue) {
 	            document.getElementById(FieldName).textContent = FieldValue;
 	        }
+
+			function GetDocumentInfo() {
+				var xmlInfo = document.querySelectorAll("#div_Content xml");
+
+				var xmlDom = createXmlDom();
+				var dataRoot = createNodeInsert(xmlDom, null, "DATA");
+				for (var i = 0, ilen = xmlInfo.length; i < ilen; i++) {
+					var info = xmlInfo[i].firstElementChild;
+					var infoName = info.tagName;
+					createNodeAndAppandNodeText(xmlDom, dataRoot, null, infoName, info.outerHTML);
+				}				
+				
+				return xmlDom;
+			}
 	    </script>
 	</head>
 	<body>

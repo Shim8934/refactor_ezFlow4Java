@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezEmail.service;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Email Server의 User Account를 관리할 수 있는 기능을 제공한다.
@@ -142,5 +143,9 @@ public interface EzEmailUserAdminService {
 	public int saveMailCopyright(String copyrightText, String useCopyright, int tenantId, String companyId) throws Exception;
 	
 	public String getCopyrightText(int tenantId, String companyId) throws Exception;
+
+	public int deleteAllUserDistributionForMember(String targetEmail, String domain) throws Exception;
+
+	public void setMailCancelSend(int tenantId, String primary, String pMessageId, String pUserId, String pSubject, List<String> pInnerAddresses, Locale locale) throws Exception;
 
 }

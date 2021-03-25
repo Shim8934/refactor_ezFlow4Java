@@ -1,13 +1,10 @@
 package egovframework.ezEKP.ezOrgan.service;
 
 import java.util.List;
-import java.util.Map;
 
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
-import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
-import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzOrganService {
 	
@@ -30,6 +27,8 @@ public interface EzOrganService {
 	public String getSearchList(String searchlist, String celllist,	String proplist, String listtype, int i, String lang, int tenantID, String adminOrgan) throws Exception;
 
 	public String getDeptSubTreeInfo(String deptID, String propList, String primary, int tenantID) throws Exception;
+
+	public String getDeptSubTreeInfo(String deptID, String propList, String primary, int tenantID, boolean displayTrashDept) throws Exception;
 	
 	public String convertAddandConvert(String pClass, String pProvValue) throws Exception;
 	
@@ -104,4 +103,7 @@ public interface EzOrganService {
 	public String getAddJobProxy(String id, String dept, int tenantId) throws Exception;
 
 	public OrganUserVO getUserInfo(String id, String lang, int tenantId) throws Exception;
+	
+	/* 2020-10-22 홍승비 - 전달한 필드(칼럼)에 대응하는 값을 TBL_DEPTMASTER 테이블에서 가져오는 메서드 */
+	public String getPropertyValueForDept(String fieldName, String deptID, int tenantID) throws Exception;
 }

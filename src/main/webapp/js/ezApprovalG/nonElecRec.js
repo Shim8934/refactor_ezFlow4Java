@@ -282,7 +282,7 @@ function nonElecRecInfoInit() {
 function setNonElecRecInfo(ret) {
 	if (isIE()) {
 		var objNodes, count;
-		var title = "비전자문서";
+		var title = "";
 		var xmldom = new ActiveXObject("Microsoft.XMLDOM");
 		xmldom.async = false;
 		xmldom.loadXML(ret);
@@ -336,6 +336,62 @@ function setNonElecRecInfo(ret) {
 		return
 	}
 }
+
+// 웹한글기안기 전용
+function setNonElecRecInfo_whwp(ret) {
+	var objNodes, count;
+	var title = "";
+	var xmldom = createXmlDom();
+	xmldom.async = false;
+	xmldom = loadXMLString(ret);
+	
+	if( xmldom.xml == "" ) return;
+	if( xmldom.documentElement.childNodes.length == 0 ) return;
+	
+	if (message.FieldExist("nonElecRec_RegType"))
+		message.PutFieldText("nonElecRec_RegType", "");
+	
+	if (message.FieldExist("nonElecRec_Title"))
+		message.PutFieldText("nonElecRec_Title", "");
+	
+	if (message.FieldExist("nonElecRec_RegDate"))
+		message.PutFieldText("nonElecRec_RegDate", "");
+	
+	if (message.FieldExist("nonElecRec_ExeDate"))
+		message.PutFieldText("nonElecRec_ExeDate", "");
+	
+	if (message.FieldExist("nonElecRec_SepAttachYN"))
+		message.PutFieldText("nonElecRec_SepAttachYN", "");
+	
+	if (message.FieldExist("doctitle"))
+		message.PutFieldText("doctitle", "");
+	
+	if (message.FieldExist("docnumber"))
+		message.PutFieldText("docnumber", "");
+	
+	if (message.FieldExist("nonElecRec_sendingDept"))
+		message.PutFieldText("nonElecRec_sendingDept", "");
+		
+	objNodes = SelectNodes(xmldom, "NONELECRECINFO/NONELECREC");
+	
+	message.PutFieldText("nonElecRec_Title", getNodeText(objNodes[0].childNodes[6]));				//기록물제목
+	message.PutFieldText("nonElecRec_RegDate", getNodeText(objNodes[0].childNodes[4]));			//등록일자
+	message.PutFieldText("nonElecRec_ExeDate", getNodeText(objNodes[0].childNodes[11]));			//시행일자
+	message.PutFieldText("nonElecRec_RegType", regTypePicker(getNodeText(objNodes[0].childNodes[3]))); //등록구분
+	message.PutFieldText("doctitle", getNodeText(objNodes[0].childNodes[6]) + " " + title);		//문서제목
+	message.PutFieldText("docnumber", getNodeText(objNodes[0].childNodes[16]));			//문서번호
+	message.PutFieldText("nonElecRec_sendingDept", getNodeText(objNodes[0].childNodes[12]));		//발신기관
+	
+	//분리첨부 건수
+	objNodes = SelectNodes(xmldom, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/ROWS/ROW");
+	count = objNodes.length;
+	if (count > 0) {
+		message.PutFieldText("nonElecRec_SepAttachYN", count + " 건");
+	} else {
+		message.PutFieldText("nonElecRec_SepAttachYN", "X");
+	}
+}
+
 /*
  * 등록 타입에 맞게 데이터 맵핑
  * */

@@ -1,15 +1,10 @@
 package egovframework.ezEKP.ezStatistics.web;
 
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Properties;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,18 +24,13 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezStatistics.service.EzStatisticsAdminService;
 import egovframework.ezEKP.ezStatistics.vo.StatApprVO;
-import egovframework.ezEKP.ezStatistics.vo.StatConnVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 @Controller
 public class EzStatisticsPersonalController {
 	@Autowired
 	private CommonUtil commonUtil;
-	
-	@Autowired
-	private Properties config;
 	
 	@Resource(name = "EzOrganService")
 	private EzOrganService ezOrganService;
@@ -56,7 +46,7 @@ public class EzStatisticsPersonalController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzStatisticsPersonalController.class);
 	
-	@RequestMapping(value="/ezStatistics/statisticsPerSonalMain.do")
+	@RequestMapping(value="/ezStatistics/statisticsPerSonalMain.do", method = RequestMethod.GET)
 	public String statisticsPersonalMain(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
 		//관리자 권한체크
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
@@ -88,7 +78,6 @@ public class EzStatisticsPersonalController {
 		return "ezStatistics/statisticsPersonalMain";
 	}
 	
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezStatistics/getPersonalMain.do",method=RequestMethod.POST,
 			produces="text/xml; charset=utf-8")
 	@ResponseBody
@@ -115,7 +104,7 @@ public class EzStatisticsPersonalController {
 		return ezStatisticsAdminService.getConnInfo(statApprVO);
 	}
 	
-	@RequestMapping(value="/ezStatistics/statisticsConnBrowser.do")
+	@RequestMapping(value="/ezStatistics/statisticsConnBrowser.do", method = RequestMethod.GET)
 	public String statisticsConnBrowserMain(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
 		//관리자 권한체크
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
@@ -147,7 +136,6 @@ public class EzStatisticsPersonalController {
 		return "ezStatistics/statisticsConnBrowserMain";
 	}
 	
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezStatistics/getStatConnBrowser.do",method=RequestMethod.POST,
 			produces="text/xml; charset=utf-8")
 	@ResponseBody
@@ -175,7 +163,7 @@ public class EzStatisticsPersonalController {
 		return ezStatisticsAdminService.getStatConnBrowser(statApprVO);
 	}
 	
-	@RequestMapping(value="/ezStatistics/statisticsConnOS.do")
+	@RequestMapping(value="/ezStatistics/statisticsConnOS.do", method = RequestMethod.GET)
 	public String statisticsConnOSMain(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
 		//관리자 권한체크
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
@@ -207,7 +195,6 @@ public class EzStatisticsPersonalController {
 		return "ezStatistics/statisticsConnOSMain";
 	}
 	
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezStatistics/getStatConnOS.do",method=RequestMethod.POST,
 			produces="text/xml; charset=utf-8")
 	@ResponseBody

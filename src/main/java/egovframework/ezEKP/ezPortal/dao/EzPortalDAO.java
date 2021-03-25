@@ -485,6 +485,10 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		update("EzPortalDAO.ezCkAdminACL2_U1", map);
 	}
 	
+	public String getWorkspaceUID(Map<String, Object> map) {
+		return (String) select("EzPortalDAO.getWorkspaceUID", map);
+	}
+	
 	public String getMainMenuItemUID(Map<String, Object>map) {
 		return (String) select("EzPortalDAO.getMainMenuItemUID", map);
 	}
@@ -497,5 +501,9 @@ public class EzPortalDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<PortalTopOtherCompanyAddJobVO> getAllCompanyList(Map<String, Object> map) {
 		return (List<PortalTopOtherCompanyAddJobVO>) list("EzPortalDAO.getAllCompanyList", map);
+	}
+	
+	public String chkBoardReadAuthor(Map<String, Object> param) {
+		return (String) select("EzPortalDAO.chkBoardReadAuthor", param);
 	}
 }

@@ -8,6 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/font-awesome-4.7.0/css/font-awesome.min.css')}" type="text/css"/>
 		<style>
 			#div_AprLine .mainlist tr th {
 				border-top:0px;
@@ -17,13 +18,14 @@
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_obj.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>		
 		<script type="text/javascript">
 			var labelcolor = "gray";
 			var OrderCell = "";
 			var xmlhttp = createXMLHttpRequest();
 			var xmldoc = createXmlDom();
-			var DocID, pURL, FormID, DocTitle, OrgDocid;
+			var DocID, pURL, FormID, DocTitle, OrgDocid, DelFlag;
 			var jobState = "APPROVAL" ;
 			var pChackYN = "FALSE";
 			var g_tagSelectsub = "1";
@@ -34,6 +36,9 @@
 			var SearchCond = new Array();
 			var approvalFlag = "<c:out value = '${approvalFlag}' />";
 			var type = "<c:out value = '${type}' />";
+			var nowDate = "<c:out value = '${nowDateUTC}'/>";
+			var pOpenYear = "<c:out value = '${openYear}'/>";
+			var useWebHWP = "<c:out value = '${useWebHWP}'/>";
 			
 			document.onselectstart = function () {
 				if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -59,12 +64,19 @@
 					document.getElementById("SCompID").value = pCompanyID;
 				}
 				
+				var toDayYear = parseInt(nowDate.substring(0,4));
+	            var minusYear = parseInt(nowDate.substring(0,4)) - parseInt(pOpenYear);
+	            for (var i = toDayYear; i >= toDayYear - minusYear ; i--)
+	                AddOption(sel_year, i, i);
+                
+                pChackYN = "INIT";
+				
 				GetDocList();
 			});
 			
 			var _draftUser = "";
 			function lvtDoclist_SelChange() {
-				var SelList = new ListView();
+				var SelList = new ListConstr();
 				SelList.LoadFromID("DocList");
 				var oArrRows = SelList.GetSelectedRows();
 				
@@ -76,7 +88,14 @@
 	                FormID = GetAttribute(tr, "DATA6");
 	                OrgDocid = GetAttribute(tr, "DATA5");
 	                _draftUser = GetAttribute(tr, "DATA3");
-				
+				    DelFlag = GetAttribute(tr, "DELFLAG");
+	                
+	                if(DelFlag == "Y") {
+                		$("#btnDelete").text("<spring:message code='ezApprovalG.kms0002'/>");
+                	}else{
+                		$("#btnDelete").text("<spring:message code='ezApprovalG.kms0001'/>");
+                	}
+	                
 				    switch (jobState) {
 				        case "ATTACH":
 				            Attach_onclick();
@@ -95,6 +114,12 @@
 				            break;
 				    }
 				}
+				
+	            /* 2021-03-24 홍승비 - 제목 클릭 시 원클릭 이벤트로 전자결재 읽기, 결재 팝업창을 표출 */
+	            var headerNameTD = $(event.target).attr("headerName");
+	            if (headerNameTD != null && typeof(headerNameTD) != "undefined" && headerNameTD == "DOCTITLE") {
+	            	lvtDoclist_onSel_DBclick();
+	            }
 			}
 			
 			function GetDocList() {
@@ -105,11 +130,29 @@
 				        SearchCond[i] = "";
 				    }
 				} else if (pChackYN == "SEARCH") {
+					
+				} else if (pChackYN == "INIT") {
+					 for (var i = 0; i < 20; i++) {
+					        SearchCond[i] = "";
+					 }
+					 
+					var nowyear = nowDate.substring(0,4);
+			        var nowmonth = nowDate.substring(5,7);
+			        var nowday = nowDate.substring(8,10);
+			        
+					SearchCond[3] = nowyear-1;
+	            	SearchCond[4] = nowmonth;
+	            	SearchCond[5] = nowday;
+	            	SearchCond[6] = nowyear
+	            	SearchCond[7] = nowmonth;
+	                SearchCond[8] = nowday;
+					 
+	                pChackYN == "FALSE";
 				}
 				
 				$.ajax({
 	            	type : "POST",
-	            	url : "/admin/ezApprovalG/getStatSearchDocList.do",
+	            	url : "/ezApprGJson/getStatSearchDocList.do",
 	            	async : true,
 	            	dataType : "text",
 	            	data : {
@@ -129,7 +172,8 @@
 	            		apprToYear : SearchCond[12],
 	            		apprToMonth : SearchCond[13],
 	            		apprToDay : SearchCond[14],
-	            		formID : SearchCond[15],
+						formID : SearchCond[15],
+						formName : SearchCond[16],
 	            		deptName1 : SearchCond[17],
 	            		deptName2 : SearchCond[17],
 	            		pageNum : pageNum,
@@ -141,7 +185,8 @@
 	            		approvUser : SearchCond[19],
 	            		companyID : pCompanyID
 	            	},
-	            	success : function(result) {
+	            	success : function(resultXml) {
+	            		var result = JSON.parse(resultXml);
 	            		getDocList_after(result);
 	            	}
 	            });
@@ -149,16 +194,9 @@
 			
 			function getDocList_after(result) {
 				try {
-				    Resultxml = loadXMLString(result);
 				
-				    var listNode = SelectSingleNodeNew(Resultxml, "DOCLIST/LISTVIEWDATA");
-				    var cntNode = SelectSingleNodeNew(Resultxml, "DOCLIST/TOTALCNT");
-				    
-				    if (listNode == null) {
-				    	return;
-				    }
-				    
-				    var lstCnt = getNodeText(cntNode);
+
+				    var lstCnt = result.totalCount;
 	                if (lstCnt == "") {
 	                    lstCnt = 0;
 	                }
@@ -168,24 +206,19 @@
 				    pTotalCnt = lstCnt;
 				    makePageSelPage();
 				
-				    var xmlDoc;
-				    xmlDoc = createXmlDom();
-	                xmlDoc.appendChild(listNode);
-	                
-				    if (document.getElementById("lvtDoclist").innerHTML != "") {
-				        document.getElementById("lvtDoclist").innerHTML = "";
-				    }
-				
-				    var DocList = new ListView();
-				    DocList.SetID("DocList");
-				    DocList.SetMulSelectable(false);
-				    DocList.SetRowOnClick("lvtDoclist_SelChange");
-				    DocList.SetRowOnDblClick("lvtDoclist_onSel_DBclick");
-				    DocList.SetUrgentFlag(true);
-				    DocList.SetSecurityFlag(false);
-				    DocList.DataSource(xmlDoc);
-				    DocList.DataBind("lvtDoclist");
-				    DocList = null;
+				    result['tableId'] = 'DocList';
+				    result['multiSelectable'] = false;
+				    result['rowOnClick'] = 'lvtDoclist_SelChange';
+				    result['rowOnDblClick'] = 'lvtDoclist_onSel_DBclick';
+				    result['urgentFlag'] = true;
+				    result['securityFlag'] = false;
+				    result['bindId'] = 'lvtDoclist';
+				    result['delFlag'] = true;
+				    
+				    
+				    console.log(result);
+				    
+				    var DocList = new ListConstr(result);
 				}
 				catch (e) {
 				}
@@ -194,7 +227,7 @@
 			}
 			
 			function selFirstRow() {
-	            var DocList = new ListView();
+	            var DocList = new ListConstr();
 	            DocList.LoadFromID("DocList");
 	            var oArrRows = DocList.GetSelectedRows();
 	            var tr = oArrRows[0];
@@ -203,6 +236,15 @@
 	                DocID = GetAttribute(tr, "DATA1");
 	                pURL = GetAttribute(tr, "DATA2");
 	                _draftUser = GetAttribute(tr, "DATA3");
+	                
+				    DelFlag = GetAttribute(tr, "DELFLAG");
+	                
+	                if(DelFlag == "Y") {
+                		$("#btnDelete").text("<spring:message code='ezApprovalG.kms0002'/>");
+                	}else{
+                		$("#btnDelete").text("<spring:message code='ezApprovalG.kms0001'/>");
+                	}
+	                
 	            }
 	            else {
 	                DocID = "";
@@ -222,7 +264,7 @@
 				var strtext;
 				var PagingHTML = "";
 				document.getElementById("tblPageRayer").innerHTML = "";
-				document.getElementById("mailBoxInfo").innerHTML = " &nbsp;[" + strLang942 + "<span style='color:#017BEC;'> " + pTotalCnt + " </span>" + strLang943 + "]";
+				document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + pTotalCnt + "</span>";
 				strtext = "<div class='pagenavi'>";
 				PagingHTML += strtext;
 				
@@ -473,14 +515,18 @@
 			        
 			        // 2018.08.01 (KLIB) - ezd 확장자 처리
 			        if (ext == "hwp" || ext == "ezd") { //한글기안
-			        	if (isIE()) {
-				            openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
-		                } else {
-		                	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-		                	alert(pAlertContent);
-		                    
-		                    return;
-		                }
+			        	if(useWebHWP == "NO") {
+				        	if (isIE()) {
+					            openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
+			                } else {
+			                	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+			                	alert(pAlertContent);
+			                    
+			                    return;
+			                }
+			        	} else {
+			        		openLocation = "/ezApprovalG/ezViewEnd_WHWP.do";
+			        	}
 			        } else {
 		                openLocation = "/ezApprovalG/contDocView.do";
 			        }
@@ -612,12 +658,16 @@
 	                                    var openLocation;
 	                                    
 	                                    if (AttachUrlA2 == ".hwp" || AttachUrlA2 == ".ezd") {
-	                                    	if (isIE()) {
-	                                    		openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
+	                                    	if(useWebHWP == "NO") {
+		                                    	if (isIE()) {
+		                                    		openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
+		                                    	} else {
+		                                    		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+		                		                	alert(pAlertContent);
+		                		                	return;
+		                                    	}
 	                                    	} else {
-	                                    		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-	                		                	alert(pAlertContent);
-	                		                	return;
+	                                    		openLocation = "/ezApprovalG/ezViewEnd_WHWP.do";
 	                                    	}
 	                                    } else {
 	                                    	openLocation = "/ezApprovalG/contDocView.do";
@@ -637,8 +687,8 @@
 			}
 			
 			function selectCompanyID() {
-				if (pCompanyID != document.getElementById("SCompID").value) {
-				    pCompanyID = document.getElementById("SCompID").value;
+				if (pCompanyID != document.getElementById("ListCompany").value) {
+				    pCompanyID = document.getElementById("ListCompany").value;
 				    pChackYN = "FALSE";
 				
 				    GetDocList();
@@ -649,17 +699,31 @@
 			function SearchCondi_onclick() {
 				var para;
 				
+				flag = "END";
+				$('#sel_year').val("ALL");
+				
 				if (CrossYN()) {
 				    ezStatisticsSearch_Cross_dialogArguments[0] = para;
 				    ezStatisticsSearch_Cross_dialogArguments[1] = SearchCondi_onclick_Complete;
-				
-				    var ezStatisticsSearch_Cross = window.open("/admin/ezApprovalG/search.do?ingFlag=END", "ezStatisticsSearch", GetOpenWindowfeature(510, 350));
+				    var ezStatisticsSearch_Cross;
+				    if (approvalFlag == "S") {
+					    ezStatisticsSearch_Cross = window.open("/admin/ezApprovalG/search.do?ingFlag=END", "ezStatisticsSearch", GetOpenWindowfeature(510, 314));
+				    } else {
+					    ezStatisticsSearch_Cross = window.open("/admin/ezApprovalG/search.do?ingFlag=END", "ezStatisticsSearch", GetOpenWindowfeature(510, 404));
+				    }
 
 				    try { ezStatisticsSearch_Cross.focus(); } catch (e) {
 				    }
 				} else {
 				    var url = "ezStatisticsSearch_Cross.aspx?INGFLAG=END";
-				    var feature = "dialogWidth:500px;dialogHeight:340px;status:no;scroll:no;edge:sunken";
+				    var feature = "";
+				    
+				    if (approvalFlag == "S") {
+					    feature = "dialogWidth:500px;dialogHeight:260px;status:no;scroll:no;edge:sunken";
+				    } else {
+					    feature = "dialogWidth:500px;dialogHeight:340px;status:no;scroll:no;edge:sunken";
+				    }
+				    
 				    var condition = window.showModalDialog(url, para, feature);
 				    
 				    if (condition) {
@@ -680,7 +744,11 @@
 				    pChackYN = "SEARCH";
 				    
 				    for (var i = 0; i < 20; i++) {
-				        SearchCond[i] = condition[i];
+				    	if (condition[i] == null) {
+				    		condition[i] = "";
+				    	}
+				    	
+				        SearchCond[i] = replaceCond(condition[i]);
 				    }
 				
 				    pageNum = 1;
@@ -780,10 +848,13 @@
 			        }
 			
 			        if (selectSearch.item(0).selected) {
-			            SearchCond[1] = document.getElementById("txt_keyword").value;
+			            SearchCond[1] = replaceCond(document.getElementById("txt_keyword").value);
 			        } else if (selectSearch.item(1).selected) {
-			            SearchCond[2] = document.getElementById("txt_keyword").value;
-			        }
+			            SearchCond[2] = replaceCond(document.getElementById("txt_keyword").value);
+			        } else if (selectSearch.item(2).selected) {
+			        	SearchCond[17] = replaceCond(document.getElementById("txt_keyword").value);
+			        } //2019.12.30 김정언 - 기안부서 검색 추가
+			        
 			    } else {
 			        alert(strLang1106);
 			        return;
@@ -791,6 +862,13 @@
 			    
 			    pageNum = 1;
 			    GetDocList();
+  
+			    $('#sel_year').val("ALL");
+			}
+			
+			//2018-10-01 김보미 - 년도가 string값이 아니라 발생하는 버그 수정
+			function replaceCond(condStr){//검색조건 수정(% _ ' 추가)
+				return condStr.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/%/g, "\\%").replace(/'/g, "\\'").replace(/_/g, "\\_");
 			}
 			
 			var Tab1_SelectID = "";
@@ -843,6 +921,50 @@
 		            }
 		        }
 		    }
+		    
+	        function onSelect_Year() {
+	            pChackYN = "SEARCH";
+	            pageNum = 1;
+	            
+	            if (GetSelectVal("sel_year") != "ALL") {
+	            	SearchCond[3] = GetSelectVal("sel_year");
+	            	SearchCond[4] = "01";
+	            	SearchCond[5] = "01";
+	            	SearchCond[6] = GetSelectVal("sel_year");
+	            	SearchCond[7] = "12";
+	                SearchCond[8] = "31";
+	            }
+	            else {
+	            	var nowyear = nowDate.substring(0,4);
+			        var nowmonth = nowDate.substring(5,7);
+			        var nowday = nowDate.substring(8,10);
+	            	SearchCond[3] = nowyear-1;
+	            	SearchCond[4] = nowmonth;
+	            	SearchCond[5] = nowday;
+	            	SearchCond[6] = nowyear
+	            	SearchCond[7] = nowmonth;
+	                SearchCond[8] = nowday;
+                }
+	            
+	            GetDocList();
+	        }
+	        
+	        
+		    function btnDelete_onclick() {
+		    	PopupCenter("/admin/ezApprovalG/statisticsDelDocInfo.do?DocID=" + escape(DocID) ,"",520,350)
+		    }
+		    function popupCallback(obj) {
+				if(obj.flag == true) {
+					GetDocList();
+				}
+			}
+		    function PopupCenter(pageURL, title,w,h) 
+			{
+				  var left = (screen.width/2)-(w/2);
+				  var top = (screen.height/2)-(h/2);
+				  var targetWin = window.open (pageURL, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
+				  return targetWin;
+			} 
 		</script>
 	</head>
 	<body class="mainbody">
@@ -858,13 +980,14 @@
 		</xml>
 		
 	    <h1><spring:message code = 'ezApprovalG.t1324' /><span id="mailBoxInfo"></span>
-	        <span style="float:right;font-weight:normal;color:black;">
+	        <span class="searchForm">
 	        	<select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
 		    		<option selected value="rad_Subject"><spring:message code='ezApprovalG.t106'/></option>
 		    		<option value="rad_Writer"><spring:message code='ezApprovalG.t445'/></option>
+		    		<option value="rad_Department"><spring:message code='ezApproval.t437'/></option>
 		    	</select>
-			  	<input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-	          	<a href="#" style="float:right"><img src="/images/bsearch_new.gif" border="0" onClick="search()"></a>
+			  	<input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+	          	<a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onClick="search()"></a>
 	        </span>
 	    </h1>
 	    <div id="mainmenu">
@@ -872,14 +995,29 @@
 	    		<input type="hidden" id="SCompID" value="${userInfo.companyID }" >
 			</c:if>
 	        <ul>
+				<li>
+        			<select id="ListCompany" onChange="selectCompanyID()">
+			        	<c:forEach var="item" items="${list}">
+		            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+		            	</c:forEach>
+				    </select>
+        		</li>
 	            <li id="GetEDMSXML" style="display:none"><span onclick="return SendEDM_onclick()"><spring:message code = 'ezApprovalG.t522' /></span></li>
 	            <!-- 폐기버튼 숨김처리 -->
-<%-- 	            <li id="SearchCondi" class = "approvalG"><span onclick="return DisuseItem_onclick()"><spring:message code = 'ezApprovalG.t523' /></span></li>	             --%>
-	            <li id="SearchCondi"><span onclick="return SearchCondi_onclick()"><spring:message code = 'ezApprovalG.t111' /></span></li>
+	            <%-- <li id="SearchCondi" class = "approvalG"><span onclick="return DisuseItem_onclick()"><spring:message code = 'ezApprovalG.t523' /></span></li> --%>	            
+	            <li id="SearchCondi"><span class="icon16 icon16_search" onclick="return SearchCondi_onclick()"></span></li>
+
+	      	 	<!-- 전체 문서 조회 년도별 select box 추가 -->
+	      	 	<li style="vertical-align: middle; float:right">
+	            	<select id="sel_year" name="sel_year" style="height:29px;" onchange="onSelect_Year(this);">
+		            	<option value="ALL"><spring:message code ='ezApprovalG.kmsg01'/></option>
+		        	</select>
+		        </li>
+		        <li id="tbtnDelete"><span id="btnDelete" onclick="return btnDelete_onclick(1)"><spring:message code='ezApprovalG.t266'/></span></li>
 	        </ul>
 	    </div>
 	
-		<div class="div_scroll" style="width:100%;HEIGHT:360px; overflow:AUTO" id="divList">
+		<div class="div_scroll" style="width:100%;HEIGHT:375px; overflow:AUTO" id="divList">
 	  		<div id="lvtDoclist" ></div>
 		</div>
 	 	<div id="tblPageRayer"></div>

@@ -14,10 +14,10 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezCircular/circularComment.js')}"></script>
 		
 		<script type="text/javascript">
-			var circularID = "${vo.circularID}";
-			var circularUserID = "${vo.circularUserID}";
-			var circularCommentID = "${vo.circularCommentID}";
-			var userInfoID = "${userInfo.id}";
+			var circularID = "<c:out value='${vo.circularID}'/>";
+			var circularUserID = "<c:out value='${vo.circularUserID}'/>";
+			var circularCommentID = "<c:out value='${vo.circularCommentID}'/>";
+			var userInfoID = "<c:out value='${userInfo.id}'/>";
 			
 			$(document).ready(function(){
 				getCommentShareUser();

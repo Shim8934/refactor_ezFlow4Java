@@ -22,7 +22,7 @@
 	
 			function getCommu() {
 	        	$.ajax({
-					type : "POST",
+					type : "GET",
 					url : "/ezCommunity/getLeftCommunity.do",
 					dataType : "json",
 					success : function(result) {
@@ -87,7 +87,7 @@
 	                }
 	            }
 	            
-	            xmlhttp.open("POST", "/ezCommunity/getMyCoummunityBoardList.do", true);
+	            xmlhttp.open("GET", "/ezCommunity/getMyCoummunityBoardList.do", true);
 	            xmlhttp.onreadystatechange = getCommList_after;
 	            xmlhttp.send(xmlpara);
 	        }
@@ -135,20 +135,20 @@
 	
 	            if (gubun == "3") {
 	                if (CrossYN())
-	                    window.open("/ezCommunity/boardItemViewPhoto.do?showAdjacent=" + 1 + "&itemID=" + pItemID + "&boardID=" + pItemBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+	                    window.open("/ezCommunity/boardItemViewPhoto.do?showAdjacent=" + 1 + "&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 	                else
-	                    window.open("/ezCommunity/boardItemViewPhoto.do?showAdjacent=" + 1 + "&itemID=" + pItemID + "&boardID=" + pItemBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+	                    window.open("/ezCommunity/boardItemViewPhoto.do?showAdjacent=" + 1 + "&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 	            }
 	            else {
 	                if (CrossYN())
-	                    window.open("/ezCommunity/boardItemView.do?itemID=" + pItemID + "&boardID=" + pItemBoardID + "&code=" + copno + "&showAdjacent=" + 1, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=790,width=765,top=" + pTop + ",left=" + pLeft, "");
+	                    window.open("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + copno + "&showAdjacent=" + 1, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=790,width=765,top=" + pTop + ",left=" + pLeft, "");
 	                else
-	                    window.open("/ezCommunity/boardItemView.do?itemID=" + pItemID + "&boardID=" + pItemBoardID + "&code=" + copno + "&showAdjacent=" + 1, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=790,width=765,top=" + pTop + ",left=" + pLeft, "");
+	                    window.open("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + copno + "&showAdjacent=" + 1, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=790,width=765,top=" + pTop + ",left=" + pLeft, "");
 	            }
 	        }
 	        function GetBoardList() {
 	            $.ajax({
-					type : "POST",
+					type : "GET",
 					url : "/ezCommunity/getLeftBoardList.do",
 					dataType : "json",
 					success : function(result) {
@@ -170,7 +170,7 @@
                 listHTML += "</ul></div></div></div>";
 
                 $.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "text",
 					async : true,
 					url : "/ezCommunity/getBestNewCommunity.do",
@@ -233,7 +233,7 @@
 	            createNodeAndInsertText(xmldom, objNode, "CID", idx);
 	            createNodeAndInsertText(xmldom, objNode, "UID", "${userInfo.id}");
 	
-	            xmlhttp.open("POST", "/ezCommunity/getACL.do", false);
+	            xmlhttp.open("GET", "/ezCommunity/getACL.do", false);
 	            xmlhttp.send(xmldom);
 	            if (xmlhttp.responseText == "ERR" | clubgubun == "1") {
 	                var rtn = OpenInformationUI(strLang5 + "<BR>" + strLang6);
@@ -245,7 +245,7 @@
 	
 	                    createNodeInsert(xmldom, objNode, "DATA");
 	                    createNodeAndInsertText(xmldom, objNode, "CODE", idx);
-	                    xmlhttp.open("POST", "/ezCommunity/getIsJoin.do", false);
+	                    xmlhttp.open("GET", "/ezCommunity/getIsJoin.do", false);
 	                    xmlhttp.send(xmldom);
 	
 	                    if (xmlhttp.responseText == "FALSE") {
@@ -321,7 +321,7 @@
 	        
 	        function get_newCommunity() {
 	        	$.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "text",
 					async : true,
 					url : "/ezCommunity/getBestNewCommunity.do",

@@ -16,7 +16,9 @@
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/ezAddress/address_tree_Cross.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
-	    <script type="text/javascript" src="${util.addVer('/js/ezAddress/Controls/treeview.htc.js')}"></script>
+	    <%-- <script type="text/javascript" src="${util.addVer('/js/ezAddress/Controls/treeview.htc.js')}"></script> --%>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/Controls_cross/treeview.htc.js')}"></script>
+	    
 	    <script>
 	        var companyadmin = "${companyAdmin}";
 	        var deptadmin = "${deptAdmin}";
@@ -440,7 +442,7 @@
 	    <table class="content" style="width: 100%;">
 	        <tr>
 	            <td class="pos1" style="padding-right: 8px; width: 100%;">
-	                <div class="tree" style="border: 0; margin-left: 5px; width: 100%; height: 370px; overflow: auto" id="AddressTreeView"></div>
+	                <div class="tree" style="border: 0; margin-left: 5px; height: 370px; overflow: auto" id="AddressTreeView"></div>
 	            </td>
 	        </tr>
 	    </table>

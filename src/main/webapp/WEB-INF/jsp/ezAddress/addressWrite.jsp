@@ -11,21 +11,22 @@
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<style>.txtClass{box-sizing : border-box; -moz-box-sizing:border-box;}</style>
 		<script type="text/javascript">
-			var addressid = "${addressId}";
-			var folderid = "${folderId}";
-			var foldertype = "${folderType}";
-			var ownerid = "${ownerId}";
-			var changekey = "${changeKey}";
-			var photourl = "${photoUrl}";
+			var addressid = "<c:out value='${addressId}'/>";
+			var folderid = "<c:out value='${folderId}'/>";
+			var foldertype = "<c:out value='${folderType}'/>";
+			var ownerid = "<c:out value='${ownerId}'/>";
+			var changekey = "<c:out value='${changeKey}'/>";
+			var photourl = "<c:out value='${photoUrl}'/>";
 			var g_AddressAttachLimit= 20;
-			var textEmail= "${textEmail}";
-		    var usernm = "${userNM}";
-		    var usernm2 = "${userNM2}";
-		    var useAddressOpenAPI = "${useAddressOpenAPI}";
+			var textEmail= "<c:out value='${textEmail}'/>";
+		    var usernm = "<c:out value='${userNM}'/>";
+		    var usernm2 = "<c:out value='${userNM2}'/>";
+		    var useAddressOpenAPI = "<c:out value='${useAddressOpenAPI}'/>";
 		    var deptAdmin = "${deptAdmin}";
 		    var compAdmin = "${compAdmin}";
 		    var xmlHttpAddressTree;
 		    var closeAlertMsg = "<spring:message code='ezAddress.t337' />";
+		    var useAnyoneEdit = "<c:out value='${useAnyoneEdit}'/>";
 		    window.onload = function () {
 				if(addressid == "")
 				{
@@ -40,6 +41,10 @@
 		            document.getElementById("selectfolder").style.display = "";
 		            changetype();
 		        }
+		        
+		        var name = '<c:out value="${addressInfo.sName}"/>'
+		        name = replaceEntityCodeToStr(name);
+		        document.getElementById("TextName").value = name;
 		        
 		        var getMemo = document.getElementById("TextMemo").value;
 		        getMemo = getMemo.replace(/\\\\/gi, "\\");
@@ -211,12 +216,14 @@
 		            return;
 		        }
 		        
-		        if (foldertype == "D" && deptAdmin != "Y") {
-		        	alert("<spring:message code='ezAddress.t999900003' />");
-		        	return;
-		        } else if (foldertype == "C" && compAdmin != "Y") {
-		        	alert("<spring:message code='ezAddress.t999900004' />");
-		        	return;
+		        if (useAnyoneEdit != "YES") {
+		        	if (foldertype == "D" && deptAdmin != "Y") {
+			        	alert("<spring:message code='ezAddress.t999900003' />");
+			        	return;
+			        } else if (foldertype == "C" && compAdmin != "Y") {
+			        	alert("<spring:message code='ezAddress.t999900004' />");
+			        	return;
+			        }	
 		        }
 		        
 		        if (!check_length(document.getElementById("TextCompanyPhone").value, 20, "<spring:message code='ezAddress.t222' />")) return;
@@ -273,6 +280,7 @@
 		        createNodeAndInsertText(xmlDom, objNode, "STYPE", "P");
 		        createNodeAndInsertCDataText(xmlDom, objNode, "USERNM", usernm);
 		        createNodeAndInsertCDataText(xmlDom, objNode, "USERNM2", usernm2);
+		        createNodeAndInsertCDataText(xmlDom, objNode, "FURIGANA", document.getElementById("TextFurigana").value);
 		        objRow = createNodeAndAppandNode(xmlDom, objNode, objRow, "ATTACHLIST");
 		        
 		        /* if(foldertype=="P")
@@ -314,7 +322,13 @@
 		            }
 		            
 		            try {
-		                window.opener.Get_AddressList();
+		            	var windowOpen = window.opener;
+		            	var open_searchFlag = windowOpen.searchFlag;
+		            	if (open_searchFlag) {
+		            		windowOpen.search_start();            		
+		            	} else {
+		            		windowOpen.Get_AddressList();
+		            	}
 		            }
 		            catch (e) { }
 		
@@ -365,6 +379,7 @@
 		        if(document.getElementById("TextComAddr").value != "") return false;
 		        if(document.getElementById("TextHomeAddr").value != "") return false;
 		        if (document.getElementById("TextEmail").value != "") return false;
+		        if (document.getElementById("TextFurigana").value != "") return false;
 		        
 		        return true;
 		    }
@@ -455,11 +470,23 @@
 			    folderid = document.getElementById("selectfolder").options[selectedindex].value;
 			    ownerid = document.getElementById("selectfolder").options[selectedindex].getAttribute("ownerid");
 			}
+			// 모바일과 함께 적용되어있는 사항 때문에  XmlHttpRequest.js와 다르게 &#34 형태로 적용
+			function replaceEntityCodeToStr(str) {
+				return str.replace(/&amp;/g, "&")
+						  .replace(/&lt;/g, "<")
+						  .replace(/&gt;/g, ">")
+						  .replace(/&quot;/g, '\"')
+						  .replace(/&#40;/g, "\(")
+						  .replace(/&#41;/g, "\)")
+						  .replace(/&#39;/g, "'")
+						  .replace(/&#34;/g, '\"')
+						  .replace(/&amp;/g, "&");
+			}
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden">
-		<form method="post" runat="server">
-		  <div id="menu">
+		<form method="post">
+		  <div id="menu" style="margin-bottom:19px;">
 		    <ul>
 		      <!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezAddress.t339 => t300 -->
 		      <li><span onClick="insert_address()"><spring:message code='ezAddress.t300' /></span></li>
@@ -477,10 +504,14 @@
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
 		  </script>
 		  <table class="content">
+		  	<tr style=<c:out value="${primaryLang eq '3' ? 'display:table-row' : 'display:none' }"/>>
+	        	<th style="width: 71px;"><spring:message code='main.ksa01' /></th>
+	            <td style="width: 240px"><input id="TextFurigana" style="width: 100%;" maxlength="20" value="<c:out value='${addressInfo.sFurigana}' />"></td>
+	        </tr>
 		    <tr>
 		      <!-- <th rowspan="4" align="center" ><span id="LiteralPhoto" width="119"></span></th> -->
 		      <th><spring:message code='ezAddress.t124' /></th>
-		      <td><input type="text" id="TextName" name="TextName" style="width:100%" maxlength="24" class="txtClass" value="<c:out value="${addressInfo.sName}"/>"></td>
+		      <td><input type="text" id="TextName" name="TextName" style="width:100%" maxlength="24" class="txtClass"></td>
 		    </tr>
 		    <tr>
 		      <th><spring:message code='ezAddress.t51' /></th>
@@ -516,11 +547,11 @@
 		      <th rowSpan="2"><spring:message code='ezAddress.t295' /></th>
 		      <td colSpan="3">
               <c:if test="${primaryLang == '1' && userLang == '1'}">
-              	<c:if test="${useZipCodeSearch == 'YES'}">
+              	<c:if test="${useZipCodeSearch == 'YES' && not useOnlyInnerMail}">
               	<input type="text" id="TextComZip" name="TextComZip" style="width:70px" readonly="readonly" class="txtClass" style="margin-top:2px;" value="<c:out value="${addressInfo.sCompanyZip}"/>">
-              	<a href="#" class="imgbtn imgbck" style="margin-top:1px"><span  onClick="zip_find(0);" style="vertical-align:middle;"><spring:message code='ezAddress.t26' /></span></a>
+              	<a class="imgbtn imgbck" style="margin-top:1px"><span  onClick="zip_find(0);" style="vertical-align:middle;"><spring:message code='ezAddress.t26' /></span></a>
               	</c:if>
-              	<c:if test="${useZipCodeSearch == 'NO'}">
+              	<c:if test="${useZipCodeSearch == 'NO' || useOnlyInnerMail}">
               		<input type="text" id="TextComZip" name="TextComZip" style="width:70px" class="txtClass" style="margin-top:2px;" value="<c:out value="${addressInfo.sCompanyZip}"/>">&nbsp;
               		<span style="vertical-align:middle;"><spring:message code='ezAddress.t26' /></span>
               	</c:if>
@@ -537,11 +568,11 @@
 		      <th rowSpan="2"><spring:message code='ezAddress.t296' /></th>
 		      <td colSpan="3">
               <c:if test="${primaryLang == '1' && userLang == '1'}">
-              	<c:if test="${useZipCodeSearch == 'YES'}">
+              	<c:if test="${useZipCodeSearch == 'YES' && not useOnlyInnerMail}">
               		<input type="text" id="TextHomeZip" name="TextHomeZip" style="width:70px" readonly="readonly" class="txtClass" style="margin-top:2px;" value="<c:out value="${addressInfo.sHomeZip}"/>">
-              		<a href="#" class="imgbtn imgbck" style="margin-top:1px"><span  onClick="zip_find(1);" style="vertical-align:middle;"><spring:message code='ezAddress.t26' /></span></a>
+              		<a class="imgbtn imgbck" style="margin-top:1px"><span  onClick="zip_find(1);" style="vertical-align:middle;"><spring:message code='ezAddress.t26' /></span></a>
               	</c:if>
-              	<c:if test="${useZipCodeSearch == 'NO'}">
+              	<c:if test="${useZipCodeSearch == 'NO' || useOnlyInnerMail}">
               		<input type="text" id="TextHomeZip" name="TextHomeZip" style="width:70px" class="txtClass" style="margin-top:2px;" value="<c:out value="${addressInfo.sHomeZip}"/>">&nbsp;
               		<span style="vertical-align:middle;"><spring:message code='ezAddress.t26' /></span>
               	</c:if>
@@ -565,8 +596,8 @@
 		          <tr>
 		            <td class="pos1"><div id="attachedfileDIV" class="file2"></div></td>
 		            <td class="pos2">
-		                <a href="#" class="imgbtn"><span id="btn_AttachAdd" onClick="attach_Add()"><spring:message code='ezAddress.t342' /></span></a><br>
-		                <a href="#" class="imgbtn"><span id="btn_AttachDel" onClick="attach_Delete()"><spring:message code='ezAddress.t343' /></span></a></td>
+		                <a class="imgbtn"><span id="btn_AttachAdd" onClick="attach_Add()"><spring:message code='ezAddress.t342' /></span></a><br>
+		                <a class="imgbtn"><span id="btn_AttachDel" onClick="attach_Delete()"><spring:message code='ezAddress.t343' /></span></a></td>
 		          </tr>
 		        </table>
 		      </td>

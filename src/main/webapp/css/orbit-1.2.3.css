@@ -17,8 +17,15 @@
 #featured>div,
 #featured>a { display: none; }
 
-
-
+/* 슬라이드 포틀릿 부분 */ 
+#roll_featured { 
+	width: 467px;
+	height: 200px;
+	background: url('/images/WebPartSliderCI/loading.gif') no-repeat center center;
+	overflow: hidden; }
+#roll_featured>img,  
+#roll_featured>div,
+#roll_featured>a { display: none; }
 
 /* CONTAINER
    ================================================== */
@@ -144,7 +151,7 @@ span.pause.active {
    ================================================== */
 
 div.slider-nav {
-    display: block }
+    display: none }
 
 div.slider-nav span {
     width: 24px;
@@ -157,11 +164,11 @@ div.slider-nav span {
     cursor: pointer; }
 
 div.slider-nav span.right {
-    background: url(/images/WebPartSliderCI/right-arrow.png);
+    /* background: url(/images/WebPartSliderCI/right-arrow.png); */
     right: 0; }
 
 div.slider-nav span.left {
-    background: url(/images/WebPartSliderCI/left-arrow.png);
+    /* background: url(/images/WebPartSliderCI/left-arrow.png); */
     left: 0; }
 
 /* BULLET NAV

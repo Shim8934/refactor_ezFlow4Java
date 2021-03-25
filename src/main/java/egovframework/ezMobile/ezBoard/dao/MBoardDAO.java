@@ -1,12 +1,10 @@
 package egovframework.ezMobile.ezBoard.dao;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
-import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardAttachVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardFavoriteVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
@@ -220,8 +218,24 @@ public class MBoardDAO extends EgovAbstractDAO {
 	}
 	
 	/* 2019-06-12 홍승비 - 해당 부서ID로 상위부서ID(회사포함) 가져오기*/
-	public String getUpperDeptID(Map<String, Object> map) throws Exception{
+	public String getUpperDeptID(Map<String, Object> map) throws Exception {
 		return (String) select("MBoardDAO.getUpperDeptID", map);
 	}
+
+	/* 2019-09-25 홍승비 - 그룹권한을 포함하여 ACCESSID에 대한 권한정보를 리스트로 리턴하는 쿼리  */
+	@SuppressWarnings("unchecked")
+	public List<MBoardInfoVO> getACLListNew(Map<String, Object> map) throws Exception {
+		return (List<MBoardInfoVO>) list("MBoardDAO.getACLListNew", map);
+	}
+
+	/* 2020-04-13 홍승비 - QNA게시판 게시물 카운트 추가 */
+	public int getQNABoardItemListCount(Map<String, Object> map) throws Exception {
+		return (int) select("MBoardDAO.getQNABoardItemListCount", map);
+	}
 	
+	/* 2020-04-13 홍승비- QNA게시판 게시물 리스트 추가  */
+	@SuppressWarnings("unchecked")
+	public List<MBoardItemVO> getQNABoardItemList(Map<String, Object> map) throws Exception {
+		return (List<MBoardItemVO>) list("MBoardDAO.getQNABoardItemList", map);
+	}
 }

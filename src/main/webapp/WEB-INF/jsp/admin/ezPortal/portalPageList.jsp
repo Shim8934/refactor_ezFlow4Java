@@ -25,8 +25,8 @@
 			var g_UID = "";
 			var g_GubunFlag = "";
 			var g_UseFlag = "";
-			var g_SearchString = "${pSearchString}";
-			var g_PortalGubun = "${portalGubun}";
+			var g_SearchString = "<c:out value = '${pSearchString}' />";
+			var g_PortalGubun = "<c:out value = '${portalGubun}' />";
 			var g_intPage  = "${intPage}";
 			var g_totalPage= "${totalPage}";
 			var BlockSize = 10;
@@ -53,12 +53,12 @@
 				// 선택된 개체가 없는 경우
 				if( g_SelectedObj == null )
 				{
-				    pObj.style.backgroundColor = "#edf4fd";
+				    pObj.style.backgroundColor = "#e4e8ec";
 					g_SelectedObj = pObj;
 				}
 				else
 				{
-				    pObj.style.backgroundColor = "#edf4fd";
+				    pObj.style.backgroundColor = "#e4e8ec";
 					
 					if (pObj != g_SelectedObj) g_SelectedObj.style.backgroundColor = "#FFFFFF";
 					g_SelectedObj = pObj;

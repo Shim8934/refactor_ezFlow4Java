@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -26,30 +28,30 @@
 		    var g_CodeInfoXml;
 		    var rtnVal = new Array();
 		    var AdminYN="FALSE";
-		    var szRoleInfo="${userInfo.rollInfo}";
+		    var szRoleInfo="<c:out value='${userInfo.rollInfo}'/>";
 		    var g_bRecAdmin=false;
 		    var g_bDeptCharger=false;
 		    var xmlhttp = createXmlDom();
-		    var pUserID = "${userInfo.id}";
-		    var CompanyID = "${userInfo.companyID}";
+		    var pUserID = "<c:out value='${userInfo.id}'/>";
+		    var CompanyID = "<c:out value='${userInfo.companyID}'/>";
 		    var arr_userinfo = new Array();
 		    arr_userinfo[0]  = "user";								
-		    arr_userinfo[1]  = "${userInfo.id}";              
-		    arr_userinfo[2]  = "${userInfo.displayName}";         
-		    arr_userinfo[3]  = "${userInfo.title}";               
-		    arr_userinfo[4]  = "${userInfo.deptID}";              
-		    arr_userinfo[5]  = "${userInfo.deptName}";            
-		    arr_userinfo[6]  = "${userInfo.jikChek}";                         
-		    arr_userinfo[8]  = "${userInfo.email}";               
+		    arr_userinfo[1]  = "<c:out value='${userInfo.id}'/>";              
+		    arr_userinfo[2]  = "<c:out value='${userInfo.displayName}'/>";         
+		    arr_userinfo[3]  = "<c:out value='${userInfo.title}'/>";               
+		    arr_userinfo[4]  = "<c:out value='${userInfo.deptID}'/>";              
+		    arr_userinfo[5]  = "<c:out value='${userInfo.deptName}'/>";            
+		    arr_userinfo[6]  = "<c:out value='${userInfo.jikChek}'/>";                         
+		    arr_userinfo[8]  = "<c:out value='${userInfo.email}'/>";               
 		    arr_userinfo[9]  = CompanyID;
-		    arr_userinfo[11]  = "${userInfo.displayName1}";		
-		    arr_userinfo[12]  = "${userInfo.displayName2}";		
-		    arr_userinfo[13]  = "${userInfo.title1}";				
-		    arr_userinfo[14]  = "${userInfo.title2}";				
-		    arr_userinfo[15]  = "${userInfo.deptName1}";			
-		    arr_userinfo[16]  = "${userInfo.deptName2}";			
+		    arr_userinfo[11]  = "<c:out value='${userInfo.displayName1}'/>";		
+		    arr_userinfo[12]  = "<c:out value='${userInfo.displayName2}'/>";		
+		    arr_userinfo[13]  = "<c:out value='${userInfo.title1}'/>";				
+		    arr_userinfo[14]  = "<c:out value='${userInfo.title2}'/>";				
+		    arr_userinfo[15]  = "<c:out value='${userInfo.deptName1}'/>";			
+		    arr_userinfo[16]  = "<c:out value='${userInfo.deptName2}'/>";			
 		    var g_SelCabID="";
-		    var UserLang = "${userInfo.lang}";
+		    var UserLang = "<c:out value='${userInfo.lang}'/>";
 		    var ReturnFunction;
 		    var CancelFunction;
 		    window.onload = function () {
@@ -145,7 +147,7 @@
 		
 		        pCbList.AddDataRow(row, oList);
 		
-		        if("${userInfo.lang}" == "1") { 
+		        if("<c:out value='${userInfo.lang}'/>" == "1") { 
 		        	row.cells[0].innerHTML = SelectSingleNodeValueNew(objCabInfoXml, "RESULT/TITLE");
 		        } else { 
 		        	row.cells[0].innerHTML = SelectSingleNodeValueNew(objCabInfoXml, "RESULT/TITLE2");
@@ -535,7 +537,7 @@
 		    }
 		</script>
 	</head>
-	<body class="popup" style="margin-left:0px;margin-top:0px">
+	<body class="popup" style="margin-left:10px;margin-top:8px">
 		<%-- <h1><spring:message code='ezApprovalG.t711'/></h1> --%> <!-- 기록물철 선택 -->
 		<div id="menu">
 			<ul id="trCreateCab" style="display: none">

@@ -30,9 +30,9 @@
 			var CurPage = "${pPage}";
 			var totalPage = "${totalPage}";
 			var strListInfo = "";
-			var code = "${code}"
-			var pBoardID = "${boardInfo.boardID}";
-			var pSortBy = "${pSortBy}";
+			var code = '<c:out value="${code}"/>';
+			var pBoardID = '<c:out value="${boardInfo.boardID}"/>';
+			var pSortBy = '<c:out value="${pSortBy}"/>';
 			var totalCount = "${totalCount}";
 			var ListInfo = "";
 // 			var pUse_Editor = "${ Use_Editor }";
@@ -79,7 +79,7 @@
 				var pTop = (pheight - 720) / 2;
 				var pLeft = (pwidth - 765) / 2;
 				
-			    window.open("/ezCommunity/newBoardItem.do?boardID=" + pItemBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=true", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+			    window.open("/ezCommunity/newBoardItem.do?boardID=" + encodeURIComponent(pItemBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&mode=modify" + "&reservedItem=true", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 			}
 
 			function checkBox_checked(pItemID, e) {
@@ -119,7 +119,7 @@
 
 			function DeleteItem() {
 			    var xmlhttp = createXMLHttpRequest();
-				xmlhttp.open("POST", "/ezCommunity/deleteItem.do?itemList=" + strListInfo, false);
+				xmlhttp.open("POST", "/ezCommunity/deleteItem.do?itemList=" + encodeURIComponent(strListInfo), false);
 				xmlhttp.send();
 				xmlhttp = null;
 				window.location.reload();
@@ -143,7 +143,7 @@
 			    var strtext;
 			    var PagingHTML = "";
 			    document.getElementById("tblPageRayer").innerHTML = "";
-			    document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang82 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang83 + "]";
+			    document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + totalCount + "</span>";
 			    strtext = "<div class='pagenavi'>";
 			    PagingHTML += strtext;
 			    var pageNum = CurPage;
@@ -301,8 +301,8 @@
 		<div id="mainmenu">
 			<ul>
 				<li><span onClick="BoardItemList()"><spring:message code='ezCommunity.t987' /></span></li>
-			    <li><span onClick="DeleteItem_onclick()"><spring:message code='ezCommunity.t208' /></span></li>
-			    <li><span onClick="refresh_onclick()"><spring:message code='ezCommunity.t912' /></span></li>		    
+			    <li><span class="icon16 icon16_delete" onClick="DeleteItem_onclick()"></span></li>
+			    <li><span class="icon16 icon16_refresh" onClick="refresh_onclick()"></span></li>
 			</ul>
 		</div>
 		

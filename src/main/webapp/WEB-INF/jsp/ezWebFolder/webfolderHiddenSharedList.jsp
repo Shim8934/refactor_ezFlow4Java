@@ -21,7 +21,13 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/search.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/selectUsers.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/popup.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/buttons.js')}"></script>
 		<script type="text/javascript">
+			var folderType = "";
+			var _selectedCell = null;
+			var _cellInfo        = {};
+			var sortColumn = null;
+			var sortType = null;
 			// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 			window.onresize = function () {
 				var reheight = document.documentElement.clientHeight - 240;
@@ -60,6 +66,13 @@
 				document.addEventListener("mouseup", listOptionHidden, true);
 				parent.frames["left"].document.addEventListener("mouseup", listOptionHidden, true);
 				parent.parent.document.getElementById("topFrame").contentWindow.document.addEventListener("mouseup", listOptionHidden, true);
+				
+				var listHeader = document.getElementsByClassName("headListClick");
+				for(var i = 0 ; i <listHeader.length; i++) {
+					listHeader[i].addEventListener("click", function(event) {
+						sortByHeader(this);
+					});
+				}
 				
 				// listoption 클릭 이벤트
 				dom.listoptiondiv.addEventListener("click", function(event) {
@@ -100,8 +113,10 @@
 					type: "POST",
 					url: "/ezWebFolder/getHiddenSharedList.do",
 					data: {
-						"pageNum"           : pagination.currentPage(),
-						"pageSize"          : pagination.listSize(),
+						"pageNum"    : pagination.currentPage(),
+						"pageSize"   : pagination.listSize(),
+						"sortType"   : sortType,
+						"sortColumn" : sortColumn
 					},
 					dataType: "JSON",
 					async: true,
@@ -130,8 +145,41 @@
 				});
 			}
 			
+			function sortByHeader(cell) {
+				var column = cell.getAttribute("headers");
+				
+				if (!column) {return;}
+				
+				if (_selectedCell != null) {
+					var orderOption = cell.getAttribute("orderoption") == "DESC" ? "ASC" : "DESC";
+					cell.setAttribute("orderoption", orderOption);
+					
+					if (cell.cellIndex != _selectedCell) {
+						var lastSelectedCell = document.getElementById("BoardList_THEAD").rows[0].cells[_selectedCell];
+						lastSelectedCell.removeChild(lastSelectedCell.lastElementChild);
+						var spanElmt = document.createElement("span");
+						cell.appendChild(spanElmt);
+					}
+					
+					var spanImg       = cell.lastElementChild;
+					spanImg.className = orderOption == "DESC" ? "spanDown" : "spanUp";
+				} else {
+					cell.setAttribute("orderoption", "DESC");
+					var spanElmt       = document.createElement("span");
+					spanElmt.className = "spanDown";
+					cell.appendChild(spanElmt);
+				}
+				
+				_selectedCell = cell.cellIndex;
+				
+				var order     = cell.getAttribute("orderoption");
+				this.sortType = order;
+				this.sortColumn = column;
+				getFileList();
+			}
+			
 			function setMailBoxInfo(folderCount, fileCount) {
-				dom.mailBoxInfo.innerHTML = " - [" + messages.strLang15 + " <span style='color:#017BEC;'>" + folderCount + " </span>" + messages.strLang11 + " / " + messages.strLang16 + " <span style='color:#017BEC;'> " + fileCount + " </span>" + messages.strLang11 + "]";
+				dom.mailBoxInfo.innerHTML = "&nbsp;&nbsp; " + messages.strLang15 + " <span style='color:#017BEC;'>" + folderCount + " </span> / " + messages.strLang16 + " <span style='color:#017BEC;'> " + fileCount + " </span>";
 				$("#listcount").val(pagination.listSize()).prop("selected", true);
 			}
 			
@@ -220,6 +268,19 @@
 					row.setAttribute("class", "bnkWebFolder");
 					row.setAttribute("targetId", resultJson["fileId"]);
 					row.setAttribute("targetType", resultJson["folderFileType"]);
+					row.setAttribute("targetPath", result[i]["folderPath"]);
+					
+					var functionType = ""
+					if (result[i]["folderType"]) {
+						row.setAttribute("targetFunction", result[i]["folderType"]);
+					}
+					
+					var creator = ""
+					if (!result[i]["creatorId"]) {
+						row.setAttribute("targetCreater", result[i]["createId"]);
+					} else {
+						row.setAttribute("targetCreater", result[i]["creatorId"]);
+					}
 					row.addEventListener("click", function(event) {rowContext.onRowClick(event, this);});
 					
 					inputElement = document.createElement("input");
@@ -321,24 +382,6 @@
 		        getFileList();
 		    }
 			
-			function optionView(obj){
-		   		 if (obj.getAttribute("mode") == "off") {
-		   	        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
-		   	        document.getElementById("layer_Viewpopup").style.top = "130px";
-		   	        document.getElementById("layer_Viewpopup").style.display = "";
-		   	        obj.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
-		   	        obj.setAttribute("mode", "on");
-		   	    } else {
-		   	        optionHidden();
-		   	    }
-		   	}
-	       
-			function optionHidden() {
-		 	    document.getElementById("layer_Viewpopup").style.display = "none";
-		 	    document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
-		 	    document.getElementById("webfolderlistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
-		 	}
-			
 			function refreshView() {
 				getFileList();
 			}
@@ -348,7 +391,7 @@
 				var selectedLength = selectedRows.length;
 				
 				if (selectedLength <= 0) {
-					alert(messages.strLang5);
+					alert(messages.strLang38);
 					return undefined;
 				}
 				
@@ -387,17 +430,22 @@
 			<!-- pagenation이 namePath로 움직이지 않도록 설정 -->
 			<div id="originalPathWrapper" style="height: 40px;">
 				<span style="font-size: 24px; font-weight: bold; font-weight: bold; display: block; float: left;" id="originalPath">
-					<span class="aName" style="font-size:15px;" onClick="getFileList();">공유숨김목록</span>
+					<span class="aName" style="font-size:15px;" onClick="getFileList();"><spring:message code='ezWebFolder.t318'/></span><!-- 공유숨김목록 -->
 				</span>
 			</div>
 			
 			<div id="mainmenu">
 				<ul>
-					<li><a onClick="showSharedList()" style="margin-top: 3px;"><span>돌아가기</span></a></li>
-					<li><a onClick="shareContext.showShare()" style="margin-top: 3px;"><span>숨김취소</span></a></li>
-					<li id="right" style="float:right;">
+					<li><a onClick="showSharedList()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t518'/></span></a></li><!-- 돌아가기 -->
+					<li><a onClick="shareContext.showShare()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t519'/></span></a></li><!-- 숨김취소 -->
+					<!-- <li id="right" style="float:right;">
 						<img src ="/images/kr/cm/btn_arrow_down.gif" mode="off" id="webfolderlistoptiondiv">
-					</li>
+					</li> -->
+					<div class="sub_frameIcon" style="float:right">
+						<div class="sub_frameIconUL02">
+						  	<p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="webfolderlistoptiondiv"></span></p>  
+						</div>
+					</div>
 				</ul>
 			</div>
 			
@@ -445,18 +493,18 @@
 					<table class="mainlist" style="width:100%"  id="tblFileList1">
 						<thead id ="BoardList_THEAD">
 							<tr>
-								<th class="wfFilecheck" style="text-align: center;"><input type="checkbox" onchange="rowContext.selectAll(this.checked)" id="checkAll"></th>
-								<th class="wfFileFavorite" style=" text-align: center;"><img class="none-drag" src='/images/ImgIcon/icon-flag.gif'/></th><!-- 즐겨찾기 -->
-								<th class="wfFileType" style="text-align: center;"><spring:message code='ezWebFolder.t188'/></th><!-- 유형 -->
-								<th class="wfFileName" style=""><spring:message code='ezWebFolder.t156'/></th><!-- 이름 -->
-								<th class="wfFileSize" style=" text-align: center;"><spring:message code='ezWebFolder.t157'/></th><!-- 파일크기 -->
-								<th class="wfFileShareMember" style=""><spring:message code='ezWebFolder.t189'/></th><!-- 게시자 -->
-								<th class="wfFileShareDate" style=""><spring:message code='ezWebFolder.t190'/></th><!-- 등록일 -->
-								<th class="wfFileShareDate" id="updateDateHeader" style="display:none;">갱신일</th><!-- 갱신일 -->
-								<th class="wfFileShareMember" id="sharerHeader" style="">공유자</th><!-- 공유자 -->
-								<th class="wfFileShareDate" id="shareDateHeader" style="">공유받은날짜</th><!-- 공유받은날짜 -->
-								<th class="wfFilePath" style=""><spring:message code='ezWebFolder.t199'/></th><!-- 위치 -->
-								<th class="wfFileShare" style="margin:0px 0px 0px !important; text-align: center;">공유</th><!-- 공유 -->
+								<th class="wfFilecheck			headListClick" style="text-align: center;"><input type="checkbox" onchange="rowContext.selectAll(this.checked)" id="checkAll"></th>
+								<th class="wfFileFavorite		headListClick" headers="FAVORITE_STATUS" style=" text-align: center;"><img class="none-drag" src='/images/ImgIcon/icon-flag.gif'/></th><!-- 즐겨찾기 -->
+								<th class="wfFileType			headListClick" headers="TYPE_ICON" style="text-align: center;"><spring:message code='ezWebFolder.t188'/></th><!-- 유형 -->
+								<th class="wfFileName			headListClick" headers="FILE_NAME" style=""><spring:message code='ezWebFolder.t156'/></th><!-- 이름 -->
+								<th class="wfFileSize			headListClick" headers="FILE_SIZE" style=" text-align: center;"><spring:message code='ezWebFolder.t157'/></th><!-- 파일크기 -->
+								<th class="wfFileShareMember 	headListClick" headers="CREATE_NAME" style=""><spring:message code='ezWebFolder.t189'/></th><!-- 게시자 -->
+								<th class="wfFileShareDate		headListClick" headers="CREATE_DATE" style=""><spring:message code='ezWebFolder.t190'/></th><!-- 등록일 -->
+								<th class="wfFileShareDate		headListClick" headers="UPDATE_DATE" id="updateDateHeader" style="display:none;"><spring:message code='ezWebFolder.t198'/></th><!-- 갱신일 -->
+								<th class="wfFileShareMember	headListClick" headers="SHARER_NAME" id="sharerHeader" style=""><spring:message code='ezWebFolder.t319'/></th><!-- 공유자 -->
+								<th class="wfFileShareDate		headListClick" headers="SHARE_DATE" id="shareDateHeader" style=""><spring:message code='ezWebFolder.t321'/></th><!-- 공유받은날짜 -->
+								<th class="wfFilePath			" headers="FOLDER_PATH" style=""><spring:message code='ezWebFolder.t199'/></th><!-- 위치 -->
+								<th class="wfFileShare			headListClick" headers="SHARE_STATUS" style="margin:0px 0px 0px !important; text-align: center;"><spring:message code='ezWebFolder.t254'/></th><!-- 공유 -->
 							</tr>
 						</thead>
 					</table>

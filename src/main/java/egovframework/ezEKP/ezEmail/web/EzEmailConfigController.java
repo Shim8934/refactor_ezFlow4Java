@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
@@ -45,6 +46,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -60,10 +62,15 @@ import egovframework.ezEKP.ezEmail.logic.POP3Access;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
+import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailPOP3VO;
+import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureTemplateVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -108,25 +115,65 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	@Resource(name="crypto") 
 	private EgovFileScrty egovFileScrty;
 	
+	@Autowired
+	private EzOrganService ezOrganService;
+	
 	/**
 	 * 메일 기본 환경설정 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailConfig.do")
+	@RequestMapping(value="/ezEmail/mailConfig.do", method = RequestMethod.GET)
 	public String mailConfig(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailConfig started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		String useUserDefinedDL = ezCommonService.getTenantConfig("useUserDefinedDL", userInfo.getTenantId());
+		
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 4, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailConfig ended.");
+					
+					return "ezCommon/error";
+				} else {
+					MailSharedMailboxVO shareInfo = ezEmailService.getSharedMailboxInfo(shareId, userInfo.getTenantId());
+					
+					model.addAttribute("shareId", shareId);
+					model.addAttribute("shareName", shareInfo.getShareName());
+				}
+			}
+		}
+		
+		if (useUserDefinedDL == null || useUserDefinedDL.trim().equals("")) {
+			useUserDefinedDL = "NO";
+		}
 		
 		String userEditor = "";
 		String noneActiveX = "YES";
+		String flag = request.getParameter("flag");
 		String dotnetFlag = request.getParameter("dotnetFlag");
 		
 		userEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-
+		String useEncryptZipForEmail = ezCommonService.getTenantConfig("UseEncryptZipForEmail", userInfo.getTenantId());
+		if (useEncryptZipForEmail.equals("")) {
+			useEncryptZipForEmail = "NO";
+		}
+		
+		model.addAttribute("userId", userInfo.getId());
+		model.addAttribute("useEncryptZipForEmail", useEncryptZipForEmail);
 		model.addAttribute("userEditor", userEditor);
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("useOnlyInnerMail", ezCommonService.getTenantConfig("UseOnlyInnerMail", userInfo.getTenantId()));
+		model.addAttribute("flag", flag);
 		model.addAttribute("dotnetFlag", dotnetFlag);
+		model.addAttribute("userEditor", userEditor);
+		model.addAttribute("useUserDefinedDL", useUserDefinedDL);
 		
 		logger.debug("mailConfig ended.");
 		return "ezEmail/mailConfig";
@@ -135,7 +182,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 기본 환경설정 내부 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailGeneral.do")
+	@RequestMapping(value="/ezEmail/mailGeneral.do", method = RequestMethod.GET)
 	public String mailGeneral(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailGeneral started.");
 		
@@ -154,7 +201,12 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String previewSubtree = mailGeneralVO.getPreviewSubTree() == null ? "" : mailGeneralVO.getPreviewSubTree();
 		String textOption = mailGeneralVO.getTextOption();
 		String mailSendObject = "";
+		String previewMailImage = mailGeneralVO.getPreviewMailImage() == null ? "Y" : mailGeneralVO.getPreviewMailImage();
 		String dotnetFlag = request.getParameter("dotnetFlag");
+		
+		if (dotnetFlag != null) {
+			dotnetFlag = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(dotnetFlag));
+		}
 		
 		if (keepDeleteLength.equals("30")) {
 			keepDeleteLength = "60";
@@ -182,7 +234,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				 + ",previewHContentSize=" + previewHContentSize + ",previewWListSize=" + previewWListSize + ",previewWContentSize=" + previewWContentSize
 				 + ",refreshInterval=" + refreshInterval + ",keepDeleteLength=" + keepDeleteLength + ",mailSendObject=" + mailSendObject
 				 + ",previewSubtree=" + previewSubtree + ",useOnlyInnerMail=" + useOnlyInnerMail + ",usePreviewSubTree=" + usePreviewSubTree
-				 + ",textOption=" + textOption);
+				 + ",previewMailImage=" + previewMailImage + ",textOption=" + textOption);
 		
 		model.addAttribute("listCount", listCount);
 		model.addAttribute("previewMode", previewMode);
@@ -196,6 +248,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("useOnlyInnerMail", useOnlyInnerMail);
 		model.addAttribute("previewSubTree", previewSubtree);
 		model.addAttribute("usePreviewSubTree", usePreviewSubTree);
+		model.addAttribute("previewMailImage", previewMailImage);
 		model.addAttribute("textOption", textOption);
 		model.addAttribute("dotnetFlag", dotnetFlag);
 		
@@ -207,7 +260,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 보내는 사람이름을 수정하는 팝업 
 	 */
-	@RequestMapping(value="/ezEmail/mailExtSenderNM.do")
+	@RequestMapping(value="/ezEmail/mailExtSenderNM.do", method = RequestMethod.GET)
 	public String mailExtSenderNM(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception{
 		return "ezEmail/mailExtSenderNM";
 	}
@@ -232,13 +285,49 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 
 		String listCount = doc.getElementsByTagName("LISTCOUNT").item(0).getTextContent();
+		
+		if (!commonUtil.isIntNumber(listCount)) {
+			return "";
+		}
+		
 		String refreshInterval = doc.getElementsByTagName("REFRESHINTERVAL").item(0).getTextContent();
+		
+		if (!commonUtil.isIntNumber(refreshInterval)) {
+			return "";
+		}
+		
 		String keepDeleteLength = doc.getElementsByTagName("KEEPDELETELENGTH").item(0).getTextContent();
+		
+		if (!commonUtil.isIntNumber(keepDeleteLength)) {
+			return "";
+		}
+		
 		String previewMode = doc.getElementsByTagName("PREVIEWMODE").item(0).getTextContent();
 		String previewWList = doc.getElementsByTagName("PREVIEWWLIST").item(0).getTextContent();
+
+		if (!commonUtil.isIntNumber(previewWList)) {
+			return "";
+		}
+		
 		String previewWContent = doc.getElementsByTagName("PREVIEWWCONTENT").item(0).getTextContent();
+		
+		if (!commonUtil.isIntNumber(previewWContent)) {
+			return "";
+		}
+		
 		String previewHList = doc.getElementsByTagName("PREVIEWHLIST").item(0).getTextContent();
+
+		if (!commonUtil.isIntNumber(previewHList)) {
+			return "";
+		}
+		
 		String previewHContent = doc.getElementsByTagName("PREVIEWHCONTENT").item(0).getTextContent();
+		
+		if (!commonUtil.isIntNumber(previewHContent)) {
+			return "";
+		}
+		
+		String previewMailImage = doc.getElementsByTagName("PREVIEWMAILIMAGE").item(0).getTextContent();
 		String textOption = doc.getElementsByTagName("TEXTOPTION").item(0).getTextContent();
 		String mailSenderNm = "";
 		String previewSubTree = "";
@@ -258,7 +347,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				+ ",previewWList=" + previewWList + ",previewWContent=" + previewWContent
 				+ ",previewHList=" + previewHList + ",previewHContent=" + previewHContent
 				+ ",mailSenderNm=" + mailSenderNm + ",previewSubTree=" + previewSubTree
-				+ ",textOption=" + textOption
+				+ ",previewMailImage=" + previewMailImage + ",textOption=" + textOption
 				);
 
 		String rtnValue= "OK";
@@ -276,6 +365,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			mailGeneral.setPreviewHContent(previewHContent);	
 			mailGeneral.setMailSenderNm(mailSenderNm);
 			mailGeneral.setPreviewSubTree(previewSubTree);
+			mailGeneral.setPreviewMailImage(previewMailImage);
 			mailGeneral.setTextOption(textOption);
 			
 			ezEmailService.setMailGeneral(userInfo.getTenantId(), userInfo.getId(), mailGeneral, mode);
@@ -292,7 +382,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 기본 환경설정 내부 화면(용량) 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailGetUse.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailGetUse.do", method=RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailGetUse(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailGetUse started.");
@@ -380,7 +470,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 자동 전달 설정 화면 표시 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailAutoForward.do")
+	@RequestMapping(value="/ezEmail/mailAutoForward.do", method=RequestMethod.GET)
 	public String mailAutoForward(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailAutoForward stated.");
 		
@@ -404,7 +494,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 자동 전달 설정 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailAutoForwardSave.do",method=RequestMethod.POST,
+	@RequestMapping(value="/ezEmail/mailAutoForwardSave.do", method=RequestMethod.POST,
 			produces="text/xml; charset=utf-8")
 	@ResponseBody	
 	public String mailAutoForwardSave(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Locale locale, Model model) throws Exception {
@@ -449,7 +539,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 자동 전달 설정 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailAutoForwardDelete.do",method=RequestMethod.POST,
+	@RequestMapping(value="/ezEmail/mailAutoForwardDelete.do", method=RequestMethod.POST,
 			produces="text/xml; charset=utf-8")
 	@ResponseBody	
 	public String mailAutoForwardDelete(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception {
@@ -585,7 +675,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 서명관리 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailSignature.do")
+	@RequestMapping(value="/ezEmail/mailSignature.do", method=RequestMethod.GET)
 	public String mailSignature(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailSignature started.");
 		
@@ -597,7 +687,30 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(userInfo.getTenantId(), userInfo.getId());
+		String userId = userInfo.getId();
+		
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null) {
+				// 관리권한 체크 = 4
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 4, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					logger.debug("the user cannot access the shareId.");
+
+					return "ezCommon/error";
+				} else {
+					userId = shareId;
+					logger.debug("userId=" + userId);
+					
+					model.addAttribute("shareId", shareId);
+				}
+			}
+		}
+		
+		MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(userInfo.getTenantId(), userId);
 		
 		String defaultFontAndSize = "style='font-size:13px;font-family:" + egovMessageSource.getMessage("main.t246", locale) + "'";
 		
@@ -685,7 +798,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 서명관리 저장 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailSignSave.do")
+	@RequestMapping(value="/ezEmail/mailSignSave.do", method=RequestMethod.POST)
 	@ResponseBody
 	public String mailSignSave(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception{
 		logger.debug("mailSignSave started.");
@@ -701,6 +814,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String pContent1 = "";
 		String pContent2 = "";
 		String pContent3 = "";
+		String shareId = "";
 
 		if (root.getElementsByTagName("USEFLAG") != null) {
 			tempNode = root.getElementsByTagName("USEFLAG").item(0);
@@ -726,10 +840,22 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				pContent3 = tempNode.getTextContent();
 			}
 		}
+		if (root.getElementsByTagName("SHAREID") != null) {
+			tempNode = root.getElementsByTagName("SHAREID").item(0);
+			if (tempNode != null && !tempNode.getTextContent().equals("")) {
+				shareId = tempNode.getTextContent();
+			}
+		}
 		
 		try {
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
-			ezEmailService.setMailSignature(userInfo.getTenantId(), userInfo.getId(), pUseFlag, pContent1, pContent2, pContent3);
+			String userId = userInfo.getId();
+			
+			if (shareId != null && !shareId.equals("")) {
+				userId = shareId;
+			}
+			
+			ezEmailService.setMailSignature(userInfo.getTenantId(), userId, pUseFlag, pContent1, pContent2, pContent3);
 		} catch (Exception e) {
 			rtnValue = "ERROR : " + e.getMessage();
 			logger.error("rtnValue=" + rtnValue);
@@ -743,13 +869,34 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 자동삭제 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailAutoDelete.do")
+	@RequestMapping(value="/ezEmail/mailAutoDelete.do", method=RequestMethod.GET)
 	public String mailAutoDelete(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailAutoDelete started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+
+		String userId = userInfo.getId();
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId='" + shareId + "'");
+			
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 4, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailConfig ended.");
+					
+					return "ezCommon/error";
+				} else {
+					userId = shareId;
+					model.addAttribute("shareId", shareId);
+				}
+			} 			
+		}
 		
-		List<MailDeleteVO> list = ezEmailService.getMailDelete(userInfo.getTenantId(), userInfo.getId());
+		List<MailDeleteVO> list = ezEmailService.getMailDelete(userInfo.getTenantId(), userId);
 		
 		for (MailDeleteVO vo : list) {
 			if (vo.getDeleteUnread().trim().equals("1")) {
@@ -767,16 +914,41 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 편지함선택 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailSelectFolder.do")
+	@RequestMapping(value="/ezEmail/mailSelectFolder.do", method=RequestMethod.GET)
 	public String mailSelectFolder(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailSelectFolder started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 4, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailSelectFolder ended.");
+					
+					return "ezCommon/error";
+				} else {
+					model.addAttribute("shareId", shareId);
+				}
+			}
+		}
+		
+		logger.debug("mailSelectFolder ended.");
 		return "ezEmail/mailSelectFolder";
 	}
 
 	/**
 	 * 메일 자동삭제 조건추가 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailAutoDeleteAdd.do")
-	public String mailAutoDeleteAdd(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	@RequestMapping(value="/ezEmail/mailAutoDeleteAdd.do", method=RequestMethod.GET)
+	public String mailAutoDeleteAdd(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, 
+			HttpServletResponse response, RedirectAttributes redirectAttribute) throws Exception{
 		logger.debug("mailAutoDeleteAdd started.");
 		
 		String path = request.getParameter("path") == null ? "" : request.getParameter("path");
@@ -785,12 +957,36 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String deleteUnreadStr = request.getParameter("unread") == null ? "" : request.getParameter("unread");
 		int deleteUnread = deleteUnreadStr.equals("") ? 0 : Integer.parseInt(deleteUnreadStr);
 		String folderName = request.getParameter("foldername") == null ? "" : request.getParameter("foldername");
-		
+				
 		logger.debug("path=" + path + ",expireTime=" + expireTime
 				 + ",deleteUnread=" + deleteUnread + ",folderName=" + folderName);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		ezEmailService.setMailDelete(userInfo.getTenantId(), userInfo.getId(), path, expireTime, deleteUnread, folderName);
+		
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		String userId = userInfo.getId();
+		
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null && !shareId.equals("")) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 4, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailInboxRule ended.");
+					
+					return "ezCommon/error";
+					
+				} else {
+					userId = shareId;
+					redirectAttribute.addAttribute("shareId", shareId);
+				}
+			} 
+		}
+		
+		ezEmailService.setMailDelete(userInfo.getTenantId(), userId, path, expireTime, deleteUnread, folderName);
 		
 		logger.debug("mailAutoDeleteAdd ended. redirect to /ezEmail/mailAutoDelete.do");
 		return "redirect:/ezEmail/mailAutoDelete.do";
@@ -799,15 +995,39 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 자동삭제 조건삭제 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailAutoDeleteDelete.do")
-	public String mailAutoDeleteDelete(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	@RequestMapping(value="/ezEmail/mailAutoDeleteDelete.do", method=RequestMethod.GET)
+	public String mailAutoDeleteDelete(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, 
+			HttpServletResponse response, RedirectAttributes redirectAttribute) throws Exception{
 		logger.debug("mailAutoDeleteDelete started.");
 		
 		String folderPath = request.getParameter("folderPath");
 		logger.debug("folderPath=" + folderPath);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		ezEmailService.deleteMailDelete(userInfo.getTenantId(), userInfo.getId(), folderPath);
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		String userId = userInfo.getId();
+		
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null && !shareId.equals("")) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 4, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailInboxRule ended.");
+					
+					return "ezCommon/error";
+					
+				} else {
+					userId = shareId;
+					redirectAttribute.addAttribute("shareId", shareId);
+				}
+			}
+		}
+		
+		ezEmailService.deleteMailDelete(userInfo.getTenantId(), userId, folderPath);
 		
 		logger.debug("mailAutoDeleteDelete ended. redirect to /ezEmail/mailAutoDelete.do");
 		return "redirect:/ezEmail/mailAutoDelete.do";
@@ -816,23 +1036,74 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 자동분류 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailInboxRule.do")
+	@RequestMapping(value="/ezEmail/mailInboxRule.do", method=RequestMethod.GET)
 	public String mailInboxRule(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailInboxRule started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 4, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailInboxRule ended.");
+					
+					return "ezCommon/error";
+				} else {
+					model.addAttribute("shareId", shareId);
+				}
+			}
+		}
+		
+		logger.debug("mailInboxRule ended.");
 		return "ezEmail/mailInboxRule";
 	}
 
 	/**
 	 * 메일 자동분류 룰 추가 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailNewInboxRule.do")
+	@RequestMapping(value="/ezEmail/mailNewInboxRule.do", method=RequestMethod.GET)
 	public String mailNewInboxRule(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailNewInboxRule started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 4, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailNewInboxRule ended.");
+					
+					return "ezCommon/error";
+				} else {
+					MailSharedMailboxVO shareInfo = ezEmailService.getSharedMailboxInfo(shareId, userInfo.getTenantId());
+					
+					model.addAttribute("shareId", shareId);
+					model.addAttribute("shareName", shareInfo.getShareName());
+				}
+			}
+		}
+		
+		logger.debug("mailNewInboxRule ended.");
 		return "ezEmail/mailNewInboxRule";
 	}
 
 	/**
 	 * 메일 자동분류 룰 추가/수정 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailSetInboxRule.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailSetInboxRule.do", method=RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailSetInboxRule(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailSetInboxRule started.");
@@ -847,8 +1118,27 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
-		String userId = userInfo.getId() + "@" + domainName;
-		sb.append("&userId=" + URLEncoder.encode(userId, "UTF-8"));
+		String userAccount = userInfo.getId() + "@" + domainName;
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 4, userInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailSetInboxRule ended.");
+					
+					return "";
+				} else {
+					userAccount = shareId + "@" + domainName;
+				}
+			}
+		}
+		
+		logger.debug("userAccount=" + userAccount);
+		sb.append("&userId=" + URLEncoder.encode(userAccount, "UTF-8"));
 
 		//condition
 		Node condition = doc.getElementsByTagName("CONDITION").item(0);
@@ -962,7 +1252,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 자동분류 룰 리스트 추출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailGetInboxRule.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailGetInboxRule.do", method=RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailGetInboxRule(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailGetInboxRule started.");
@@ -971,7 +1261,27 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
-		String userId = userInfo.getId() + "@" + domainName;
+		String userAccount = userInfo.getId() + "@" + domainName;
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 4, userInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailGetInboxRule ended.");
+					
+					return "";
+				} else {
+					userAccount = shareId + "@" + domainName;
+				}
+			}
+		}
+		
+		logger.debug("userAccount=" + userAccount);
+		
 		String sortType = request.getParameter("sortType");
 		
 		if (sortType == null || sortType.equals("") || sortType.equals("undefined") || sortType.equals("PRIORITY")) {
@@ -980,7 +1290,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			sortType = " ORDER BY RULE_NAME " + sortType;
 		}
 		
-		String inputParams = "userId=" + URLEncoder.encode(userId, "UTF-8") + "&sortType=" + URLEncoder.encode(sortType, "UTF-8");
+		String inputParams = "userId=" + URLEncoder.encode(userAccount, "UTF-8") + "&sortType=" + URLEncoder.encode(sortType, "UTF-8");
 		logger.debug("inputParams=" + inputParams);
 		
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/getInboxRule", inputParams);
@@ -1143,7 +1453,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 자동분류 룰 삭제 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailDeleteInboxRule.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailDeleteInboxRule.do", method=RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailDeleteInboxRule(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailDeleteInboxRule started.");
@@ -1174,7 +1484,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 자동분류 룰 우선순위 변경 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailSetRulePriority.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailSetRulePriority.do", method=RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailSetRulePriority(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailSetRulePriority started.");
@@ -1211,7 +1521,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 자동분류 룰 사용여부 변경 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailSetRuleStatus.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailSetRuleStatus.do", method=RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailSetRuleStatus(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailSetRuleStatus started.");
@@ -1244,15 +1554,42 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 자동분류 룰 자세히보기 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailDetailInboxRule.do")
-	public String mailDetailInboxRule(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception{
+	@RequestMapping(value="/ezEmail/mailDetailInboxRule.do", method=RequestMethod.GET)
+	public String mailDetailInboxRule(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailDetailInboxRule started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 4, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailDetailInboxRule ended.");
+					
+					return "ezCommon/error";
+				} else {
+					MailSharedMailboxVO shareInfo = ezEmailService.getSharedMailboxInfo(shareId, userInfo.getTenantId());
+					
+					model.addAttribute("shareId", shareId);
+					model.addAttribute("shareName", shareInfo.getShareName());
+				}
+			}
+		}
+		
+		logger.debug("mailDetailInboxRule ended.");
 		return "ezEmail/mailDetailInboxRule";
 	}
 
 	/**
 	 * 메일 부재중 설정 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailOutOfOffice.do")
+	@RequestMapping(value="/ezEmail/mailOutOfOffice.do", method=RequestMethod.GET)
 	public String mailOutOfOffice(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception{
 		logger.debug("mailOutOfOffice started.");
 		
@@ -1337,7 +1674,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 부재중 설정 저장 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailOutOfOfficeSave.do")
+	@RequestMapping(value="/ezEmail/mailOutOfOfficeSave.do", method=RequestMethod.POST)
 	@ResponseBody
 	public String mailOutOfOfficeSave(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailOutOfOfficeSave started.");
@@ -1392,7 +1729,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 외부메일 설정 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailPop3.do")
+	@RequestMapping(value="/ezEmail/mailPop3.do", method=RequestMethod.GET)
 	public String mailPop3(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailPop3 started.");
 
@@ -1404,6 +1741,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userLang = userInfo.getLang();
 		List<MailPOP3VO> pop3VoList = ezEmailService.getMailPOP3(userInfo.getTenantId(), userInfo.getId());
 		
 		StringBuilder sb = new StringBuilder();
@@ -1440,11 +1778,26 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("publicModulus", publicModulus);
 		model.addAttribute("publicExponent", publicExponent);
 		model.addAttribute("primaryLang", primaryLang);
+		model.addAttribute("userLang", userLang);
+		
+		int pop3MaxFetchSize;
+		
+		try {
+			String pop3MaxFetchSizeStr = ezCommonService.getTenantConfig("Pop3MaxFetchSize", userInfo.getTenantId());
+			pop3MaxFetchSize = Optional.ofNullable(pop3MaxFetchSizeStr).map(Integer::parseInt).orElse(40);
+		} catch (Exception ex) {
+			pop3MaxFetchSize = 40;
+		}
+		
+		String pop3MaxFetchSizeMessage = egovMessageSource.getMessageExtend("ezEmail.t500", new Object[] { pop3MaxFetchSize }, locale);
+		
+		model.addAttribute("pop3MaxFetchSizeMessage", pop3MaxFetchSizeMessage);
 		
 		logger.debug("infoXML=" + infoXML);
 		logger.debug("publicModulus=" + publicModulus);
 		logger.debug("publicExponent=" + publicExponent);
 		logger.debug("primaryLang=" + primaryLang);
+		logger.debug("userLang={}", userLang);
 		logger.debug("mailPop3 ended.");
 		
 		return "ezEmail/mailPop3";
@@ -1453,7 +1806,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 외부메일 설정 저장 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailPop3Save.do")
+	@RequestMapping(value="/ezEmail/mailPop3Save.do", method=RequestMethod.POST)
 	@ResponseBody
 	public String mailPop3Save(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String ret) throws Exception{
 		logger.debug("mailPop3Save started.");
@@ -1476,7 +1829,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 외부메일 설정 접속확인 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailPop3Connect.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailPop3Connect.do", method=RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailPop3Connect(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception{
 		logger.debug("mailPop3Connect started.");
@@ -1521,7 +1874,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 외부메일 확인 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailGetPop3.do")
+	@RequestMapping(value="/ezEmail/mailGetPop3.do", method=RequestMethod.GET)
 	public void mailGetPop3(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletResponse response) throws Exception{
 		logger.debug("mailGetPop3 started.");
 		
@@ -1549,6 +1902,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				+ "<script type='text/javascript'>"
 				/*+ "selToggleList(document.getElementById('close'), 'ul', 'li', '0');"*/
 				+ "</script>"
+				+ "<a  class='imgbtn'><span onClick='location.reload()'>" + egovMessageSource.getMessage("ezEmail.ldh05", locale) + "</span></a>"				
 				+ "<div class='nobox' id='status_view' style='background-color:#FFFFFF; border-style:solid; border-width:1px; border-color:#ddd; overflow-y:auto; height:265px; overflow-x:auto; width:98%; padding-top:5px; padding-left:5px; padding-right:3px; margin-top:7px;'>");
 		out.write(egovMessageSource.getMessage("ezEmail.t491", locale));
 		out.flush();
@@ -1652,6 +2006,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 						List<String> messageIdList = ezEmailService.getMailPOP3List(loginInfo.getTenantId(), loginInfo.getId(), host, id);
 						
 						final Set<String> messageIds = new HashSet<String>(messageIdList);
+						@SuppressWarnings("serial")
 						SearchTerm searchTerm= new SearchTerm() {
 							@Override
 							public boolean match(Message message) {
@@ -1678,13 +2033,23 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 						logger.debug("<BR>" + egovMessageSource.getMessage("ezEmail.t498", locale) + mailCount 
 								+ "<BR>" + egovMessageSource.getMessage("ezEmail.t499", locale) + newCount);
 						
-						if (newCount > 40) {
-							out.write("<BR>" + egovMessageSource.getMessage("ezEmail.t500", locale));
+						int pop3MaxFetchSize;
+						
+						try {
+							String pop3MaxFetchSizeStr = ezCommonService.getTenantConfig("Pop3MaxFetchSize", loginInfo.getTenantId());
+							pop3MaxFetchSize = Optional.ofNullable(pop3MaxFetchSizeStr).map(Integer::parseInt).orElse(40);
+						} catch (Exception ex) {
+							pop3MaxFetchSize = 40;
+						}
+						
+						if (newCount > pop3MaxFetchSize) {
+							String message = "<BR>" + egovMessageSource.getMessageExtend("ezEmail.t500", new Object[] { pop3MaxFetchSize }, locale);
+							out.write(message);
 							out.flush();
 							
-							logger.debug("<BR>" + egovMessageSource.getMessage("ezEmail.t500", locale));
+							logger.debug(message);
 							
-							messages = Arrays.copyOfRange(messages, 0, 40);
+							messages = Arrays.copyOfRange(messages, 0, pop3MaxFetchSize);
 						}
 						
 						Folder innerFolder = null;
@@ -1785,6 +2150,726 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		out.close();
 		
 		logger.debug("mailGetPop3 ended.");
+	}
+	
+	
+	/**
+	 * 수신자 자동완성 및 이름 확인의 주소 순서 설정 화면 호출 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailAddressSearchOrder.do")
+	public String mailAddressSearchOrder(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailAddressSearchOrder started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String mailAddressSearchOrder =  ezCommonService.getUserConfigInfo(userInfo.getTenantId(), userInfo.getId(), "mailAddressSearchOrder");
+		logger.debug("mailAddressSearchOrder = " + mailAddressSearchOrder);
+		if (mailAddressSearchOrder.equals("")) {
+			
+			String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+			mailAddressSearchOrder = "organ;address;dl";
+			if (useSharedMailbox.equalsIgnoreCase("yes")) {
+				mailAddressSearchOrder = "organ;address;dl;shared";
+			}
+			
+			ezCommonService.insertUserConfigInfo(userInfo.getTenantId(), userInfo.getId(), "mailAddressSearchOrder", mailAddressSearchOrder);
+		}
+		
+		model.addAttribute("mailAddressSearchOrder", mailAddressSearchOrder);
+		
+		logger.debug("mailAddressSearchOrder ended.");
+		
+		return "ezEmail/mailAddressSearchOrder";
+	}
+	
+	
+	/**
+	 * 수신자 자동완성 및 이름 확인의 주소 순서 수정
+	 */
+	@RequestMapping(value = "/ezEmail/setMailAddressSearchOrder.do", produces = "text/xml; charset=utf-8")
+	public String setMailAddressSearchOrder(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model,
+			HttpServletRequest request) throws Exception {
+		logger.debug("setMailAddressSearchOrder started.");
+
+		String mailAddressSearchOrder = request.getParameter("mailAddressSearchOrder");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		logger.debug("mailAddressSearchOrder = " + mailAddressSearchOrder);
+		try {
+			if (mailAddressSearchOrder.equals("")) {
+				model.addAttribute("data", "FAIL");
+			} else {
+				ezCommonService.updateUserConfigInfo(userInfo.getTenantId(), userInfo.getId(), "mailAddressSearchOrder", mailAddressSearchOrder);
+				model.addAttribute("data", "OK");
+			}
+		} catch (Exception e) {
+			model.addAttribute("data", "FAIL");
+		}
+
+		logger.debug("setMailAddressSearchOrder ended.");
+		return "json";
+	}
+	
+	/**
+	 * 사용자 정의 공용배포그룹  화면 호출
+	 */
+	@RequestMapping(value="/ezEmail/mailUserDistribution.do")
+	public String mailUserDistribution(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailUserDistribution started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		model.addAttribute("userId", userInfo.getId());
+		
+		logger.debug("mailUserDistribution ended.");
+		
+		return "ezEmail/mailUserDistributionMain";
+	}
+	
+	/**
+	 * 사용자 정의 공용배포그룹 
+	 * - 소유 공용배포그룹
+	 */
+	@RequestMapping(value="/ezEmail/mailUserDistributionOwner.do")
+	public String mailUserDistributionOwner(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailUserDistributionOwner started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		model.addAttribute("userId", userInfo.getId());
+		model.addAttribute("companyId", userInfo.getCompanyID());
+		
+		logger.debug("mailUserDistributionOwner ended.");
+		return "ezEmail/mailUserDistributionOwner";
+	}
+
+	/**
+	 * 사용자 정의 공용배포그룹 
+	 * - 소속 공용배포그룹
+	 */
+	@RequestMapping(value="/ezEmail/mailUserDistributionInclude.do")
+	public String mailUserDistributionInclude(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailUserDistributionInclude started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		model.addAttribute("userId", userInfo.getId());
+		model.addAttribute("companyId", userInfo.getCompanyID());
+		logger.debug("mailUserDistributionInclude ended.");
+		
+		return "ezEmail/mailUserDistributionInclude";
+	}
+
+	/**
+	 * 사용자 정의 공용배포그룹 
+	 * - 검색
+	 */
+	@RequestMapping(value="/ezEmail/mailUserDistributionSearch.do")
+	public String mailUserDistributionSearch(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailUserDistributionSearch started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		model.addAttribute("userId", userInfo.getId());
+		model.addAttribute("companyId", userInfo.getCompanyID());
+		logger.debug("mailUserDistributionSearch ended.");
+		
+		return "ezEmail/mailUserDistributionSearch";
+	}
+
+	/**
+	 * 사용자 정의 공용배포그룹 
+	 * - 공용배포그룹 멤버 리스트 팝업 화면
+	 */
+	@RequestMapping(value="/ezEmail/mailDistributionMemberListPop.do")
+	public String mailDistributionMemberListPop(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailDistributionMemberListPop started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantId = userInfo.getTenantId();
+		String tenantDomain = ezCommonService.getTenantConfig("DomainName", tenantId);
+		
+		String cn = request.getParameter("cn") == null ? "" : request.getParameter("cn");
+		
+		MailDistributionVO dlVo = ezEmailService.getUserDistributionInfo(cn, tenantId);
+		String dlCn = dlVo.getId();
+		String dlName = dlVo.getName();
+		String dlComp = dlVo.getCompanyId();
+		String dlPolicy = dlVo.getDisclosurePolicy();
+		String dlOwnerId = dlVo.getOwnerId();
+		boolean ownerChk = dlOwnerId.equals(userInfo.getId()) ? true : false;
+		logger.debug("dlCn=" + dlCn + ", dlName=" + dlName + ", dlComp=" + dlComp + ", dlPolicy=" + dlPolicy + ", dlOwnerId=" + dlOwnerId + ", ownerChk=" + ownerChk);
+		
+		int inCludedChk = ezEmailService.checkUserDistributionInCludedMember(tenantDomain, dlCn, userInfo.getId()); // 0:소속dl, -1:소속dl 아님
+		if ((dlPolicy.equals("member") && inCludedChk == 0) || (dlPolicy.equals("private") && ownerChk)) {
+			dlPolicy = "all";
+		}
+		
+		int appliedChk = ezEmailService.checkUserDistributionApply(dlCn, tenantDomain, userInfo.getId()); // 0:가입신청, -1:가입신청 안함
+		logger.debug("inCludedChk=" + inCludedChk + ", dlPolicy=" + dlPolicy + ", appliedChk=" + appliedChk);
+		 
+		Map<String, Object> memListInfo = createUserDistributionMemberListXML(dlCn, tenantDomain, dlComp, tenantId, userInfo.getPrimary(), dlPolicy, locale);
+		
+		model.addAttribute("cn", dlCn);
+		model.addAttribute("dlName", dlName);
+		model.addAttribute("dlCompanyId", dlComp);
+		model.addAttribute("dlPolicy", dlPolicy);
+		model.addAttribute("inCludedChk", inCludedChk);
+		model.addAttribute("appliedChk", appliedChk);
+		model.addAttribute("ownerChk", ownerChk);
+		model.addAttribute("userId", userInfo.getId());
+		model.addAttribute("memberListXML", memListInfo.get("returnData"));
+		model.addAttribute("memberListCnt", memListInfo.get("returnMemCnt"));
+		logger.debug("mailDistributionMemberListPop ended.");
+		return "ezEmail/mailDistributionMemberListPopUp";
+	}
+	
+	/**
+	 * 사용자 정의 공용배포그룹 
+	 * - 소유 공용배포그룹 리스트 출력
+	 */
+	@RequestMapping(value = "/ezEmail/mailGetUserDistribution.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String mailGetUserDistribution(
+			@CookieValue("loginCookie") String loginCookie, Locale locale,
+			Model model, HttpServletRequest request) throws Exception {
+		logger.debug("mailGetUserDistribution started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantId = userInfo.getTenantId();
+		String lang = userInfo.getPrimary();
+		
+		String returnData = "";
+		
+		String userId = request.getParameter("userId") == null ? userInfo.getId() : request.getParameter("userId");
+		String companyId = request.getParameter("companyId") == null ? userInfo.getCompanyID() : request.getParameter("companyId"); 
+		String userDLListType = request.getParameter("type") == null ? "owner" : request.getParameter("type");  // owner or include
+		String showDLListType = request.getParameter("listType") == null ? "setting" : request.getParameter("listType");  // 메일환경설정, 수신자설정
+		logger.debug("userId=" + userId + ", companyId=" + companyId + ", userDlListType=" + userDLListType);
+		
+		try {
+			List<MailDistributionVO> dlList = new ArrayList<MailDistributionVO>();
+			if (userDLListType.equals("owner")) {
+				dlList = ezEmailService.getUserOwnerDistributionList(companyId, userInfo.getTenantId(), userId);
+			} else {
+				dlList = ezEmailService.getUserIncludedDistributionList(companyId, userInfo.getTenantId(), userId);
+			}
+
+			StringBuilder sb = new StringBuilder();
+			sb.append("<LISTVIEWDATA><ROWS>");
+			if (dlList != null && dlList.size() > 0) {
+				for (MailDistributionVO dlVo : dlList) {
+					OrganUserVO ownerInfo = ezOrganService.getUserInfo(dlVo.getOwnerId(), lang, tenantId);
+					String ownerChk = dlVo.getOwnerId().equals(userId) ? "ownerChk_Y" : "ownerChk_N";
+					String policy = dlVo.getDisclosurePolicy();
+					String policyStr = policy.equals("all") ? "ezEmail.userDL21" : policy.equals("member") ? "ezEmail.userDL22" : "ezEmail.userDL23";
+					policyStr = egovMessageSource.getMessage(policyStr, locale);
+					
+					String dlId = commonUtil.cleanValue(dlVo.getId());
+					String dlName = commonUtil.cleanValue(dlVo.getName());
+					String dlExplaination = commonUtil.cleanValue(dlVo.getExplaination());
+					String dlMail = commonUtil.cleanValue(dlVo.getMail());
+					String dlOwnerName = commonUtil.cleanValue(ownerInfo.getDisplayName());
+					
+					// commonUtil.cleanValue()
+					if (showDLListType.equals("setting")) { // 메일 환경설정
+						sb.append("<ROW>");
+						sb.append("<CELL>");
+							sb.append("<VALUE>" + dlId + "</VALUE>");
+							sb.append("<DATA1>" + dlId + "</DATA1>");
+							sb.append("<DATA2>" + dlName + "</DATA2>");
+							sb.append("<DATA3>" + policy + "</DATA3>");
+							sb.append("<DATA4>" + dlExplaination + "</DATA4>");
+							sb.append("<DATA5>" + dlVo.getEndDate() + "</DATA5>");
+							sb.append("<DATA6>" + ownerChk + "</DATA6>");
+						sb.append("</CELL>");
+						sb.append("<CELL><VALUE>" + dlName + "</VALUE></CELL>");
+						if (!userDLListType.equals("owner")) { // 소속 dl일 경우 소유자 표시
+							sb.append("<CELL><VALUE>" + dlOwnerName + "</VALUE></CELL>");
+						}
+						sb.append("<CELL><VALUE>" + policyStr + "</VALUE></CELL>");
+						sb.append("<CELL><VALUE>" + dlExplaination + "</VALUE></CELL>");
+						sb.append("<CELL><VALUE>" + dlVo.getEndDate() + "</VALUE></CELL>");
+						sb.append("</ROW>");
+					} else { // 수신자 설정 공용배포그룹
+						sb.append("<ROW>");
+						sb.append("<CELL>");
+							sb.append("<VALUE>" + dlName + "</VALUE>");
+							sb.append("<DATA1>" + dlId + "</DATA1>");
+							sb.append("<DATA2>" + dlMail + "</DATA2>");
+							sb.append("<DATA3>" + dlVo.getDisclosurePolicy() + "</DATA3>");
+							sb.append("<DATA4>" + dlExplaination + "</DATA4>");
+							sb.append("<DATA5>" + dlVo.getEndDate() + "</DATA5>");
+							sb.append("<DATA6>" + ownerChk + "</DATA6>");
+						sb.append("</CELL>");
+						sb.append("</ROW>");
+					}
+				}
+			} 
+			sb.append("</ROWS></LISTVIEWDATA>");
+			returnData = sb.toString();
+			
+		} catch (Exception e) {
+			returnData = "ERROR";
+			e.printStackTrace();
+		}
+		
+		logger.debug("mailGetUserDistribution ended.");
+		return returnData;
+	}
+	
+	/**
+	 * 사용자 정의 공용배포그룹 
+	 * - 소유자 변경 조직도 화면
+	 */
+	@RequestMapping(value="/ezEmail/mailUserDistributionSelectOwner.do")
+	public String mailUserDistributionSelectOwner(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailUserDistributionSelectOwner started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String cChk = "0";
+		if (userInfo.getRollInfo().indexOf("c=1") != -1) { // 전체 관리자
+			cChk = "1";
+		}
+
+		model.addAttribute("userId", userInfo.getId());
+		model.addAttribute("companyId", userInfo.getCompanyID());
+		model.addAttribute("deptId", userInfo.getDeptID());
+		model.addAttribute("cChk", cChk);
+		logger.debug("mailUserDistributionSelectOwner ended.");
+		
+		return "ezEmail/mailUserDistributionSelectOwner";
+	}
+	
+	
+	/**
+	 * 사용자 정의 공용배포그룹 
+	 * - 가입신청 리스트
+	 */
+	@RequestMapping(value = "/ezEmail/mailUserDistributionApplyList.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String mailUserDistributionApplyList(
+			@CookieValue("loginCookie") String loginCookie, Locale locale,
+			Model model, @RequestBody String bodyData) throws Exception {
+		logger.debug("mailUserDistributionApplyList started.");
+		logger.debug("bodyData=" + bodyData);
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		int tenantId = userInfo.getTenantId();
+		String lang = userInfo.getPrimary();
+		String returnData = "";
+
+		try {
+			Document doc = commonUtil.convertStringToDocument(bodyData);
+			String cn = doc.getElementsByTagName("CN").item(0).getTextContent() == null ? "" 
+					: doc.getElementsByTagName("CN").item(0).getTextContent();
+			logger.debug("cn=" + cn);
+
+			JSONArray userDlApplyJSONArr = ezEmailService.getUserDistributionApplyList(cn, tenantId);
+			
+			if (userDlApplyJSONArr != null && userDlApplyJSONArr.size() > 0) {
+				StringBuilder sb = new StringBuilder();
+				sb.append("<LISTVIEWDATA><ROWS>");
+				
+				for (int i = 0; i < userDlApplyJSONArr.size(); i++) {
+					JSONObject userObject = (JSONObject) userDlApplyJSONArr.get(i);
+					
+					String objId = (String) userObject.get("applicantId");
+					String applicantDate = (String) userObject.get("applicantDate");
+					logger.debug("objId=" + objId + ", applicantDate=" + applicantDate);
+					
+					OrganUserVO userVo = ezOrganService.getUserInfo(objId, lang, tenantId);
+					String objName = commonUtil.cleanValue(userVo.getDisplayName());
+					String objMail = commonUtil.cleanValue(userVo.getMail());
+					
+					OrganDeptVO deptVo = ezOrganService.getDeptInfo(userVo.getDepartment(), lang, tenantId);
+					String objDept = commonUtil.cleanValue(deptVo.getDisplayName());
+					logger.debug("objName=" + objName + ", objMail=" + objMail + ", objDept=" + objDept);
+					
+					sb.append("<ROW>");
+					sb.append("<CELL>");
+						sb.append("<VALUE>" + objName + "</VALUE>");
+						sb.append("<DATA1>" + objId + "</DATA1>");
+						sb.append("<DATA2>" + objName + "</DATA2>");
+						sb.append("<DATA3>" + objMail + "</DATA3>");
+						sb.append("<DATA4>" + objDept + "</DATA4>");
+						sb.append("<DATA5>" + applicantDate + "</DATA5>");
+					sb.append("</CELL>");
+					sb.append("<CELL><VALUE>" + objMail + "</VALUE></CELL>");
+					sb.append("<CELL><VALUE>" + objDept + "</VALUE></CELL>");
+					sb.append("<CELL><VALUE>" + applicantDate + "</VALUE></CELL>");
+					sb.append("</ROW>");
+				}
+				
+				sb.append("</ROWS></LISTVIEWDATA>");
+				returnData = sb.toString();
+			}
+			
+		} catch (Exception e) {
+			returnData = "ERROR";
+			e.printStackTrace();
+		}
+
+		logger.debug("returnData=" + returnData);
+		logger.debug("mailUserDistributionApplyList ended.");
+
+		return returnData;
+	}
+	
+	/**
+	 * 사용자 정의 공용배포그룹 
+	 * - 가입신청 반려
+	 */
+	@RequestMapping(value = "/ezEmail/refuseToApplyDL.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String refuseToApplyDL(
+			@CookieValue("loginCookie") String loginCookie, Locale locale,
+			Model model, HttpServletRequest request) throws Exception {
+		logger.debug("refuseToApplyDL started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String returnStr = "OK";
+		int reasonCode = 0;
+		
+		String userId = request.getParameter("userId") == null ? userInfo.getId() : request.getParameter("userId");
+		String cn = request.getParameter("cn") == null ? "" : request.getParameter("cn");
+		
+		try {
+			reasonCode = ezEmailService.setUserDistributionApply(cn, userInfo.getTenantId(), userId, "del");
+			logger.debug("reasonCode=" + reasonCode);
+			
+			if (reasonCode != 0) {
+				returnStr = "ERROR";
+			} else {
+				List<String> toArr = new ArrayList<String>();
+				toArr.add(userId);
+				
+				ezEmailService.sendUserDLMail(loginCookie, cn, "refuse", toArr);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("refuseToApplyDL ended.");
+		return returnStr;
+	}
+	
+	/**
+	 * 사용자 공용배포그룹 - 소속 공용배포그룹 탈퇴
+	 */
+	@RequestMapping(value = "/ezEmail/secessionDistribution.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String secessionDistribution(
+			@CookieValue("loginCookie") String loginCookie, Locale locale,
+			Model model, HttpServletRequest request) throws Exception {
+		logger.debug("secessionDistribution started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String returnStr = "OK";
+		int reasonCode = 0;
+		
+		String userId = request.getParameter("userId") == null ? userInfo.getId() : request.getParameter("userId");
+		String cn = request.getParameter("cn") == null ? "" : request.getParameter("cn");
+		
+		try {
+			reasonCode = ezEmailService.secessionDistribution(userInfo.getTenantId(), cn, userId);
+			logger.debug("reasonCode=" + reasonCode);
+			
+			if (reasonCode == -1) {
+				returnStr = "EMPTY";
+			} else if (reasonCode == -2) {
+				returnStr = "NOT INCLUDE";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("secessionDistribution ended.");
+		return returnStr;
+	}
+	
+	private Map<String, Object> createUserDistributionMemberListXML(String cn, String domain, String companyId, int tenantId, String primaryLang, String policy, Locale locale) throws Exception {
+		logger.debug("cn=" + cn + ", domain=" + domain + ", companyId=" + companyId + ", tenantId=" + tenantId
+				+ ", primaryLang=" + primaryLang + ", policy=" + policy);
+		
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		int returnMemCnt = 0;
+		String returnData = "";
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("<LISTVIEWDATA><ROWS>");
+		
+		// all, member, private
+		if (!policy.equals("all")) {
+			String msg = policy.equals("private") ? "ezEmail.userDL31" : "ezEmail.userDL32";
+			
+			sb.append("<ROW>");
+			sb.append("<CELL>");
+				sb.append("<VALUE>" + egovMessageSource.getMessage(msg, locale) + "</VALUE>");
+			sb.append("</CELL>");
+			sb.append("</ROW>");
+		} else { // all
+			JSONArray resultArray = ezEmailService.getUserDistributionMemberList(domain, cn);
+			returnMemCnt = resultArray.size();
+			
+			for (int i = 0; i < returnMemCnt; i++) {
+				JSONObject address = (JSONObject) resultArray.get(i);
+				String pCn = (String) address.get("cn");
+				String pCnDomain = pCn.substring(pCn.indexOf("@") + 1, pCn.length());
+				String pClass = (String) address.get("class");
+				String displayName = (String) address.get("displayName");
+				String regDate = (String) address.get("regDate");
+				
+				if (domain.equals(pCnDomain)) {
+					pCn = pCn.substring(0, pCn.indexOf("@"));
+				} else {
+					pClass = "distributionSub";
+				}
+				logger.debug("pCn=" + pCn + ", pClass=" + pClass + ", displayName=" + displayName + ", regDate=" + regDate);
+				
+				String dlName = displayName;
+				String dlCn = pCn;
+				String dlMail = pCn;
+				String dlPClass = pClass;
+				String dlDeptName = "";
+				
+				if (pClass.equals("group")) {
+					OrganDeptVO dept = ezOrganService.getDeptInfo(pCn, primaryLang, tenantId);
+					
+					if (dept != null) { // 부서
+						dlCn = dept.getCn();
+						dlMail = dept.getMail();
+						dlMail = dlMail.equals("") ? dlCn + "@" + pCnDomain : dlMail ;
+						dlDeptName = "";
+					} else { // 공용배포그룹
+						MailDistributionVO dlVo = ezEmailService.getDistributionInfo(dlCn, tenantId);
+						dlMail = dlVo.getMail();
+						dlPClass = "distribution";
+					}
+				} else if (pClass.equals("user")) {
+					OrganUserVO user = ezOrganService.getUserInfo(pCn, primaryLang, tenantId);
+					
+					if (user != null) {
+						OrganDeptVO dept = ezOrganService.getDeptInfo(user.getDepartment(), primaryLang, tenantId);
+						
+						dlName = user.getDisplayName();
+						dlMail = user.getMail();
+						dlDeptName = dept.getDisplayName();
+					} 
+				} else {//distribution_sub에서 가져오기(주소록, 직접입력)
+					MailDistributionVO distributionSubVO = ezEmailService.getDistributionSub(cn, pCn, companyId, tenantId);
+					
+					if (distributionSubVO != null) {
+						dlName = distributionSubVO.getName();
+						dlMail = distributionSubVO.getMail();
+					} 
+				}
+				
+				sb.append("<ROW>");
+				sb.append("<CELL>");
+					sb.append("<VALUE>" + commonUtil.cleanValue(dlName) + "</VALUE>");
+					sb.append("<DATA1>" + commonUtil.cleanValue(dlCn) + "</DATA1>");
+					sb.append("<DATA2>" + commonUtil.cleanValue(dlMail) + "</DATA2>");
+					sb.append("<DATA3>" + commonUtil.cleanValue(dlPClass) + "</DATA3>");
+				sb.append("</CELL>");
+				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(dlMail) + "</VALUE></CELL>");
+				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(dlDeptName) + "</VALUE></CELL>");
+				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(regDate) + "</VALUE></CELL>");
+				sb.append("</ROW>");
+			}
+		}
+
+		sb.append("</ROWS></LISTVIEWDATA>");
+		returnData = sb.toString();
+
+		returnMap.put("returnData", returnData);
+		returnMap.put("returnMemCnt", returnMemCnt);
+		
+		logger.debug("returnData=" + returnData);
+		return returnMap;
+	}
+	
+	/**
+	 * 사용자 정의 공용배포그룹 
+	 * - 검색
+	 */
+	@RequestMapping(value = "/ezEmail/searchUserDistribution.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String searchUserDistribution(
+			@CookieValue("loginCookie") String loginCookie, Locale locale,
+			Model model, HttpServletRequest request) throws Exception {
+		logger.debug("searchUserDistribution started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantId = userInfo.getTenantId();
+		String lang = userInfo.getPrimary();
+		
+		String returnData = "";
+		
+		String userId = request.getParameter("userId") == null ? userInfo.getId() : request.getParameter("userId");
+		String searchValue = request.getParameter("searchValue");
+		String searchRange = request.getParameter("searchRange") == null ? "" : request.getParameter("searchRange"); // 소유(owner), 소속(include), 전체(search)
+		String showDLListType = request.getParameter("listType") == null ? "setting" : request.getParameter("listType");  // 메일환경설정(setting), 수신자설정(mailUser)
+		logger.debug("userId=" + userId + ", searchValue=" + searchValue + ", searchRange=" + searchRange + ", showDLListType=" + showDLListType);
+		
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());	
+		
+		try {
+			List<MailDistributionVO> dlList = ezEmailService.userDistributionListSearch(domainName, searchRange, searchValue, userId);
+
+			StringBuilder sb = new StringBuilder();
+			sb.append("<LISTVIEWDATA><ROWS>");
+			if (dlList != null && dlList.size() > 0) {
+				for (MailDistributionVO dlVo : dlList) {
+					OrganUserVO ownerInfo = ezOrganService.getUserInfo(dlVo.getOwnerId(), lang, tenantId);
+					String ownerChk = dlVo.getOwnerId().equals(userId) ? "ownerChk_Y" : "ownerChk_N";
+					String policy = dlVo.getDisclosurePolicy();
+					String policyStr = policy.equals("all") ? "ezEmail.userDL21" : policy.equals("member") ? "ezEmail.userDL22" : "ezEmail.userDL23";
+					policyStr = egovMessageSource.getMessage(policyStr, locale);
+					
+					String dlId = commonUtil.cleanValue(dlVo.getId());
+					String dlName = commonUtil.cleanValue(dlVo.getName());
+					String dlExplaination = commonUtil.cleanValue(dlVo.getExplaination());
+					String dlMail = commonUtil.cleanValue(dlVo.getMail());
+					String dlOwnerName = commonUtil.cleanValue(ownerInfo.getDisplayName());
+					
+					// commonUtil.cleanValue()
+					if (showDLListType.equals("setting")) { // 메일 환경설정
+						sb.append("<ROW>");
+						sb.append("<CELL>");
+							sb.append("<VALUE>" + dlId + "</VALUE>");
+							sb.append("<DATA1>" + dlId + "</DATA1>");
+							sb.append("<DATA2>" + dlName + "</DATA2>");
+							sb.append("<DATA3>" + policy + "</DATA3>");
+							sb.append("<DATA4>" + dlExplaination + "</DATA4>");
+							sb.append("<DATA5>" + dlVo.getEndDate() + "</DATA5>");
+							sb.append("<DATA6>" + ownerChk + "</DATA6>");
+						sb.append("</CELL>");
+						sb.append("<CELL><VALUE>" + dlName + "</VALUE></CELL>");
+						sb.append("<CELL><VALUE>" + dlOwnerName + "</VALUE></CELL>");
+						sb.append("<CELL><VALUE>" + policyStr + "</VALUE></CELL>");
+						sb.append("<CELL><VALUE>" + dlExplaination + "</VALUE></CELL>");
+						sb.append("<CELL><VALUE>" + dlVo.getEndDate() + "</VALUE></CELL>");
+						sb.append("</ROW>");
+					} else { // 수신자 설정 공용배포그룹
+						sb.append("<ROW>");
+						sb.append("<CELL>");
+							sb.append("<VALUE>" + dlName + "</VALUE>");
+							sb.append("<DATA1>" + dlId + "</DATA1>");
+							sb.append("<DATA2>" + dlMail + "</DATA2>");
+							sb.append("<DATA3>" + dlVo.getDisclosurePolicy() + "</DATA3>");
+							sb.append("<DATA4>" + dlExplaination + "</DATA4>");
+							sb.append("<DATA5>" + dlVo.getEndDate() + "</DATA5>");
+							sb.append("<DATA6>" + ownerChk + "</DATA6>");
+						sb.append("</CELL>");
+						sb.append("</ROW>");
+					}
+				}
+			} 
+			sb.append("</ROWS></LISTVIEWDATA>");
+			returnData = sb.toString();
+			
+		} catch (Exception e) {
+			returnData = "ERROR";
+			e.printStackTrace();
+		}
+		
+		logger.debug("searchUserDistribution ended.");
+		return returnData;
+	}
+	
+	/**
+	 * 사용자 정의 공용배포그룹 
+	 * - 가입신청 
+	 */
+	@RequestMapping(value = "/ezEmail/mailUserDistributionApply.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String mailUserDistributionApply(@CookieValue("loginCookie") String loginCookie, Locale locale,
+			Model model, HttpServletRequest request) throws Exception {
+		logger.debug("mailUserDistributionApply started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String returnStr = "OK";
+		int reasonCode = 0;
+		
+		String userId = request.getParameter("userId") == null ? userInfo.getId() : request.getParameter("userId");
+		String cn = request.getParameter("cn") == null ? "" : request.getParameter("cn");
+		String type = request.getParameter("type") == null ? "add" : request.getParameter("type");
+		
+		try {
+			reasonCode = ezEmailService.setUserDistributionApply(cn, userInfo.getTenantId(), userId, type);
+			logger.debug("reasonCode=" + reasonCode);
+			
+			if (reasonCode != 0) {
+				returnStr = "ERROR";
+			} else {
+				returnStr = type.equals("add") ? "ADD" : "DELETE";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("mailUserDistributionApply ended. returnStr=" + returnStr);
+		return returnStr;
+	}
+	/**
+	 * 환경설정 > 편지함 관리
+	 */
+	@RequestMapping(value="/ezEmail/folderQuotaAndManage.do")
+	public String folderQuotaAndManage(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("folderQuotaAndManage started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String shareId = request.getParameter("shareId") == null ? "" : request.getParameter("shareId");
+		
+		String pDeleteBoxID = ezEmailUtil.getTrashFolderId(locale);
+		String pDeleteBoxName = ezEmailUtil.getTrashFolderId(locale);
+		String useEncryptZipForEmail = ezCommonService.getTenantConfig("UseEncryptZipForEmail", userInfo.getTenantId());
+		if (useEncryptZipForEmail.equals("")) {
+			useEncryptZipForEmail = "NO";
+		}
+		
+		model.addAttribute("shareId", shareId);
+		model.addAttribute("userId", userInfo.getId());
+		model.addAttribute("useEncryptZipForEmail", useEncryptZipForEmail);
+		model.addAttribute("pDeleteBoxID", pDeleteBoxID);
+		model.addAttribute("pDeleteBoxName", pDeleteBoxName);
+		
+		logger.debug("folderQuotaAndManage ended.");
+		
+		return "ezEmail/mailFolderQuotaAndManage";
+	}
+	
+	/**
+	 * 환경설정 > 편지함 관리 -- 리스트 출력
+	 */
+	@RequestMapping(value="/ezEmail/folderQuotaList.do",
+			method=RequestMethod.GET,
+			produces="text/xml; charset=utf-8" )
+	@ResponseBody	
+	public String folderQuotaList(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("folderQuotaList started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String shareId = request.getParameter("shareId") == null ? "" : request.getParameter("shareId");
+		String email = userInfo.getId() + "@" + userInfo.getEmail().split("@")[1];
+		logger.debug("userId:'" + userInfo.getId() + "',shareId:'" + shareId + "'");
+		
+		if(shareId == null || !shareId.equals("")) {
+			email = shareId + "@" + userInfo.getEmail().split("@")[1];
+		}
+		logger.debug("email:" + email);
+		
+		JSONArray returnJsonArr = new JSONArray();
+		returnJsonArr = ezEmailService.getFolderQuota(email, locale);
+		
+		logger.debug("jsonArr" , returnJsonArr);
+		logger.debug("folderQuotaList ended.");
+		return returnJsonArr.toString();
 	}
 	
 }

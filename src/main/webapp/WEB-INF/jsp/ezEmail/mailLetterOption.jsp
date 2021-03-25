@@ -26,7 +26,7 @@
 	
 			var offsetMin = "${offsetMin}";
 			var individualMailUser = parseInt("${individualMailUser}");
-			var shareId = "${shareId}";
+			var shareId = '<c:out value="${shareId}"/>';
 			
 		    var RetValue;
 		    var ReturnFunction;
@@ -39,7 +39,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        var NowDate = utcDate2(offsetMin);
@@ -390,8 +390,8 @@
 				<td>
 					<input type="checkbox" value="1" id="deliverySend" onclick="ReservedSend(this);">
 					<span style="vertical-align:middle;"> <spring:message code='ezEmail.t374' /> </span>
-					<input type="text" id="Sdatepicker" style="width:80px;text-align:center">
-					<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
+					<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
+					<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;"/>
 				</td>
 			</tr>
 		</table>

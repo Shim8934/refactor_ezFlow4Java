@@ -147,7 +147,7 @@
 	</head>
   <body class="mainbody">  
     <h1><spring:message code='ezEmail.t73' /></h1>   
-    <span class="txt">* <spring:message code='ezEmail.t74' /></span><p>
+    <span class="txt" style="margin-top:30px;display: block">* <spring:message code='ezEmail.t74' /></span><p>
     <div style="width:310px;">
 	    <div style="border: 1px solid #dbdbda;">
 		    <table class="mainlist" id="SaveTBL" style="width:100%">
@@ -174,7 +174,7 @@
 		    </table>
 	    </div>
 	    <div class="btnpositionJsp">
-		    <a href="#" class="imgbtn"><span onClick="Save('')"><spring:message code='main.sp09' /></span></a>
+		    <a class="imgbtn"><span onClick="Save('')"><spring:message code='main.sp09' /></span></a>
 	    </div>
     </div>
   </body>

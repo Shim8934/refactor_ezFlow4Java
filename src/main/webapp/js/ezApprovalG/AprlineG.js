@@ -600,9 +600,13 @@ function APRLINEXMLParsing()
 		switch(pReDraftFlag)
 		{
 			case "REDRAFT":
-				
-				GetXml = GetXml + "<DATA name='ProcessDate'></DATA>";
-				GetXml = GetXml + "<DATA name='ReceivedDate'></DATA>";
+				if ($(AprLineRow[i]).attr("DATA12") == "002" || ($(AprLineRow[i]).attr("DATA12") == "003") && $("input:checkbox[id='passAprLine']").is(":checked")) {
+					GetXml = GetXml + "<DATA name='ProcessDate'>" + MakeXMLString(GetAttribute(AprLineRow[i],"DATA1")) + "</DATA>";
+					GetXml = GetXml + "<DATA name='ReceivedDate'>" + MakeXMLString(GetAttribute(AprLineRow[i],"DATA2")) + "</DATA>";
+				} else {
+					GetXml = GetXml + "<DATA name='ProcessDate'></DATA>";
+					GetXml = GetXml + "<DATA name='ReceivedDate'></DATA>";
+				}
        			break;
 			
 			default :
@@ -1143,17 +1147,20 @@ function CheckSignCellValueLast() {
         return false;
     }
 
-    if (pCurSign >= 3) {
-        var pInformationContent = "" + strLang365 + " " + strLang366 + "";
-        var rtnval = confirm(pInformationContent);
-        CheckSignCellValueLast_Complete(rtnval);
-        return rtnval;
-    }
-    else {
-        CheckSignCellValueLast_Complete(true);
-        return true;
-    }
-
+    //검토자 수 체크로직 주석처리.(닷넷 동일) 문서유통 접수 시 사인카운트 오류 관련. 2019-12-03 홍대표.
+//    if (pCurSign >= 3) {
+//        var pInformationContent = "" + strLang365 + " " + strLang366 + "";
+//        var rtnval = confirm(pInformationContent);
+//        CheckSignCellValueLast_Complete(rtnval);
+//        return rtnval;
+//    }
+//    else {
+//        CheckSignCellValueLast_Complete(true);
+//        return true;
+//    }
+    
+    CheckSignCellValueLast_Complete(true);
+    return true;
 }
 
 function CheckSignCellValueLast_Complete(Ans) {
@@ -1724,7 +1731,7 @@ function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
 
-    if (CrossYN() && ext != 'hwp') {
+    if (CrossYN()) {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;
@@ -1741,6 +1748,34 @@ function OpenInformationUI(pInformationContent, CompleteFunction) {
 
 function OpenInformationUI_Complete() {
     DivPopUpHidden();
+}
+
+var confirmInfo;
+function OpenConfirmUI(pInformationContent, confirmFunction) {
+    var parameter = pInformationContent;
+    var url = "/ezApprovalG/confirmPopup.do";
+    confirmInfo = new Array();
+    
+    if (CrossYN()) {
+    	confirmInfo[0] = parameter;     
+    	confirmInfo[1] = OpenConfirmUI_Complete;
+    	confirmInfo[2] = confirmFunction;
+        DivPopUpShow(330, 205, url);
+    } else {
+        var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+        feature = feature + GetShowModalPosition(330, 205);
+        var RtnVal = window.showModalDialog(url, parameter, feature);
+    }
+	return RtnVal;
+}
+
+function OpenConfirmUI_Complete(confirmFlag) {
+    DivPopUpHidden();
+    
+    if(confirmFlag) {
+    	var confirmFunction = confirmInfo[2];
+    	confirmFunction();
+    }
 }
 
 var ezapralert_cross_dialogArguments = new Array();

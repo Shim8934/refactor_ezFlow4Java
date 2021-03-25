@@ -276,14 +276,13 @@
 	   				url:"/admin/ezJournal/authorDeptList.do",
 	   				data:{"userId":$(elem).attr("id")},
 	   				success: function(result){
-	   					console.log(result);
 	   					lpDepts = [];
 	   					lpDeptNames = [];
 	   					$("#authorDeptList").html(result);
 	   					var deptList = $("#authorDeptList tr").length;
 	   					var mineList = $("tr[mine]").length;
 	   					if(deptList - mineList == 0) {
-	   						$(".mainlist_free").append('<tr><td align="center" style="width:250px;"><spring:message code="ezJournal.t222"/></td></tr>');
+	   						$(".mainlist_free").append('<tr><td align="center" style="width:250px;"><spring:message code="ezJournal.t125"/></td></tr>');
 		   					$("#authorDeptList tr").each(function(){
 		   						if($(this).attr("mine") == 'Y'){
 		   							userDeptId = $(this).attr("targetId");
@@ -371,7 +370,7 @@
 			tr.hover:hover{background:#eee; color:#fff;}
 			
 			.selectTR{
-				background-color: #edf4fd;
+				background-color: #f1f8ff;
 			}
 		</style>
 	</head>
@@ -392,7 +391,7 @@
 	                                <td>
 	                                </td>
 	                                <td>
-	                                    <div style="float:right; margin-right:5px;">
+	                                    <div style="float:left; margin-left:5px;">
 	                                        <select id="search_type" style="height:22px;">
 	                                            <option selected value="displayname"><spring:message code='ezJournal.t38'/></option>
 					                            <option value="cn"><spring:message code='ezJournal.t210'/></option>
@@ -417,7 +416,7 @@
 					<table style="margin-top: 4px;">
 			            <tr>
 			                <td class="box" style="border-right: 0px; height: 465px;">
-			                    <div style="width: 250px; height: 470px; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
+			                    <div style="width: 250px; height: 481px; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
 			                </td>
 			                <td></td>
 			                <td class="listview" style="width: 426px" id="orglistView">
@@ -425,7 +424,7 @@
 			            </tr>
 			        </table>
 				</td>
-				<td style="vertical-align:top; padding-top:5px; padding-left:4px;">
+				<td style="vertical-align:top; padding-top:5px; padding-left:8px;">
 	                <table>
 						<tbody>
 							<tr>
@@ -434,7 +433,7 @@
 										<span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezJournal.t41'/> </span>
 									</h2>
 									<div class="receiver_borderbox">
-										<div id="authorDeptList" style="width: 250px; Height: 472px; overflow-x: auto; overflow-y: auto;">
+										<div id="authorDeptList" style="width: 250px; Height: 481px; overflow-x: auto; overflow-y: auto;">
 										</div>
 									</div>
 								</td>

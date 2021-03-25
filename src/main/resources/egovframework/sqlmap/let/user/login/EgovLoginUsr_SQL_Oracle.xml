@@ -5,6 +5,8 @@
 
 	<typeAlias  alias="egovMap" 				type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
 	<typeAlias  alias="loginVO" 				type="egovframework.let.user.login.vo.LoginVO"/>
+	<typeAlias 	alias="CountryVO" 				type="egovframework.ezEKP.ezSystem.vo.CountryVO"/>
+	<typeAlias 	alias="findPwdInfo" 			type="egovframework.let.user.login.vo.FindPwdInfoVO"/>
 
 	<!-- 로그인 처리를 위한 resultMap -->
 	<resultMap id="login" class="egovframework.let.user.login.vo.LoginVO">
@@ -33,12 +35,22 @@
         <result property="userFileUrl"          column="userFileUrl"                columnIndex="23"/>
         <result property="sabun"              	column="sabun"                		columnIndex="24"/>
 		<result property="password_updatedt"    column="password_updatedt"			columnIndex="25"/>
+		<result property="extensionattribute5"	column="extensionattribute5"		columnIndex="26"/>
 	</resultMap>	
 	
     <resultMap id="tenantServerName" class="egovframework.let.user.login.vo.TenantServerNameVO">
         <result property="serverName"           column="SERVER_NAME"                columnIndex="1"/>    
         <result property="tenantId"             column="TENANT_ID"                  columnIndex="2"/>
-    </resultMap>    
+    </resultMap>   
+    
+    <resultMap id="CountryVO" class="CountryVO">
+        <result property="startIP"           		column="START_IP" />    
+        <result property="endIP"             		column="END_IP"   />
+        <result property="startIPNumber"           	column="START_IP_NUMBER" />    
+        <result property="endIPNumber"             	column="END_IP_NUMBER"   />
+        <result property="countryCode"           	column="COUNTRY_CODE" />    
+        <result property="countryName"             	column="COUNTRY_NAME"   />
+    </resultMap> 
  
 	<!-- 일반 로그인 -->
 	<select id="loginDAO.selectUser" resultMap="login">
@@ -70,7 +82,8 @@
 	                extensionattribute4 as gyumJik,
 	                extensionattribute2 as userFileUrl,
 	                extensionattribute14 as sabun,
-	                password_updatedt
+	                password_updatedt,
+	                extensionattribute5
 			  	FROM 
 			  		TBL_USERMASTER a
 			 	WHERE 
@@ -124,7 +137,8 @@
 					u.extensionattribute4 as gyumJik,
 					u.extensionattribute2 as userFileUrl,
 					u.extensionattribute14 as sabun,
-					u.password_updatedt
+					u.password_updatedt,
+					u.extensionattribute5
 				FROM 
 					TBL_USERMASTER u
 				inner join
@@ -169,7 +183,8 @@
 	                extensionattribute4 as gyumJik,
 	                extensionattribute2 as userFileUrl,
 	                extensionattribute14 as sabun,
-	                password_updatedt
+	                password_updatedt,
+	                extensionattribute5
 	            FROM 
 	                TBL_USERMASTER a
 	            WHERE 
@@ -223,7 +238,8 @@
 					u.extensionattribute4 as gyumJik,
 					u.extensionattribute2 as userFileUrl,
 					u.extensionattribute14 as sabun,
-					u.password_updatedt
+					u.password_updatedt,
+					u.extensionattribute5
 				FROM 
 					TBL_USERMASTER u
 				inner join
@@ -330,7 +346,8 @@
                 extensionattribute4 as gyumJik,
                 extensionattribute2 as userFileUrl,
                 extensionattribute14 as sabun,
-                password_updatedt
+                password_updatedt,
+                extensionattribute5
             FROM 
                 TBL_USERMASTER a
             WHERE 
@@ -370,7 +387,8 @@
                 extensionattribute4 as gyumJik,
                 extensionattribute2 as userFileUrl,
                 extensionattribute14 as sabun,
-                password_updatedt
+                password_updatedt,
+                extensionattribute5
             FROM 
                 TBL_USERMASTER a
             WHERE 
@@ -409,7 +427,8 @@
                 extensionattribute4 as gyumJik,
                 extensionattribute2 as userFileUrl,
                 extensionattribute14 as sabun,
-                password_updatedt
+                password_updatedt,
+                extensionattribute5
             FROM 
                 TBL_USERMASTER a
             WHERE 
@@ -420,4 +439,114 @@
 				tenant_id = #tenantId#
         ]]>
     </select>
+    
+   <select id="loginDAO.getLoginIPCountry" parameterClass="Map" resultMap="CountryVO">
+		SELECT 
+			START_IP, END_IP, START_IP_NUMBER, END_IP_NUMBER, 
+			COUNTRY_CODE, COUNTRY_NAME
+		FROM 
+			JMOCHA_MAIL_COUNTRYIP
+		WHERE 
+			#loginIP# BETWEEN START_IP_NUMBER AND END_IP_NUMBER;
+	</select>
+	
+	<!-- 비밀번호 초기화 기능 사용자 확인 -->
+	<select id="loginDAO.selectUserForChangePwd" resultMap="login">
+		<!-- 일반회원 -->
+		<![CDATA[
+			SELECT 
+				a.cn,
+				a.password,				
+			 	a.displayname,
+			 	a.displayname2,
+			 	a.department,			     
+			 	a.description,
+			 	a.description2,
+			 	a.title,
+			 	a.title2,
+			 	a.physicaldeliveryofficename as companyid,
+			 	a.company,
+			 	a.company2,
+			 	a.updatedt,
+			 	a.extensionattribute1 as rollinfo,
+			 	a.mobile,
+			 	a.mail,
+			 	a.extensionattribute10 as jikchek,
+			    a.tenant_id,
+			    (SELECT 'top,Top,' || dept_cd_path FROM	TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenantId#) AS deptPathCode,
+			    (SELECT property_value FROM TBL_TENANT_CONFIG	WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS primary,
+			    a.loginCnt,
+			    a.extensionattribute4 as gyumJik,
+			    a.extensionattribute2 as userFileUrl,
+			    a.extensionattribute14 as sabun,
+			    password_updatedt,
+			    extensionattribute5
+			FROM 
+				TBL_USERMASTER a
+			LEFT JOIN
+				TBL_USERMASTER_RETIRE b
+			ON 
+				a.CN = b.CN 
+			AND 
+				a.TENANT_ID = b.TENANT_ID 
+			WHERE 
+				(a.cn = #id# OR LOWER(a.extensionattribute14) = #id#) AND a.tenant_id = #tenantId#
+			AND
+				b.cn IS NULL
+   			]]> 
+        <isNotEqual prepend="AND" property="dn" compareValue="NOPASSWORD" >         
+            password = #password#
+        </isNotEqual>
+	</select>
+	
+	<insert id="loginDAO.insertTblFindPwd" parameterClass="Map">
+		INSERT INTO TBL_FIND_PWD(SABUN,REQ_DATE,CERTIFICATION_NUM,CERTIFICATION,PHONE_NUM)
+		VALUES(#sabun#, #nowDate#, #certificationNum#, #certification#, #phoneNum#)
+	</insert>
+	
+	<update id="loginDAO.updateTblFindPwd" parameterClass="Map">
+		UPDATE 
+			TBL_FIND_PWD
+		SET
+			CERTIFICATION = #certification#
+		WHERE
+			SABUN = #sabun#
+		AND
+			CERTIFICATION_NUM = #certificationNum#
+	</update>
+	
+	<select id="loginDAO.getFindPwdInfo" parameterClass="Map" resultClass="findPwdInfo">
+		SELECT
+		 	sabun                 ,
+			reqDate               ,
+			certificationNum      ,
+			certification         ,
+			phoneNum               
+		FROM 
+			(SELECT 
+				ROW_NUMBER() OVER(ORDER BY REQ_DATE DESC) AS RNUM, 
+				A.SABUN                 as sabun                 ,
+				A.REQ_DATE              as reqDate               ,
+				A.CERTIFICATION_NUM     as certificationNum      ,
+				A.CERTIFICATION         as certification         ,
+				A.PHONE_NUM             as phoneNum
+			FROM
+				TBL_FIND_PWD A
+			WHERE
+				SABUN = #sabun#
+			)
+		WHERE
+			RNUM = 1
+	</select>
+	
+	<update id="loginDAO.updateLogincnt" parameterClass="loginVO">
+		<![CDATA[
+			UPDATE TBL_USERMASTER
+			SET
+				logincnt = logincnt + 1
+			WHERE
+				cn = #id# AND tenant_id = #tenantId#
+		]]>
+	</update>
+	
 </sqlMap>

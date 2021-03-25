@@ -45,6 +45,18 @@ public class AttitudeVO {
 	private String writerName;
 	/** 작성자부서명*/
 	private String writerDeptName;
+	/** 결재상태*/
+	private String annualApprStatus;
+	/** 결재상태2*/
+	private String docApprStatus;
+	/** 출근 타입*/
+	private String attendType;
+	/** 위도*/
+	private double latitude;
+	/** 경도*/
+	private double longitude;
+	/** 근무상태*/
+	private String workStatus;
 	
 	public String getWriterName() {
 		return writerName;
@@ -179,5 +191,50 @@ public class AttitudeVO {
 	}
 	public void setWriterDeptName(String writerDeptName) {
 		this.writerDeptName = writerDeptName;
+	}
+	public String getAnnualApprStatus() {
+		return annualApprStatus;
+	}
+	public void setAnnualApprStatus(String annualApprStatus) {
+		this.annualApprStatus = annualApprStatus;
+	}
+	public String getDocApprStatus() {
+		return docApprStatus;
+	}
+	public void setDocApprStatus(String docApprStatus) {
+		this.docApprStatus = docApprStatus;
+	}
+	public String getAttendType() {
+		return attendType;
+	}
+	public void setAttendType(String attendType) {
+		this.attendType = attendType;
+	}
+	public double getLatitude() {
+		return latitude;
+	}
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+	public double getLongitude() {
+		return longitude;
+	}
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
+	}	
+	public String getWorkStatus() {
+		return workStatus;
+	}
+	public void setWorkStatus(String workStatus) {
+		this.workStatus = workStatus;
+	}
+	@Override
+	public String toString() {
+		return "AttitudeVO [attitudeId=" + attitudeId + ", companyId="
+				+ companyId + ", tenantId=" + tenantId + ", writerId="
+				+ writerId + ", deptId=" + deptId + ", startDate=" + startDate
+				+ ", startTime=" + startTime + ", modAppl=" + modAppl 
+				+ ", typeId=" + typeId + ", typeName=" + typeName
+				+ ", workStatus=" + workStatus + "]";
 	}
 }

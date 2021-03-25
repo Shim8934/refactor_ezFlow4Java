@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -12,11 +13,12 @@
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
 		<script type="text/javascript">
-		    var pDocID = "${docID}";
+		    var pDocID = "<c:out value ='${docID}'/>";
 		    var listview = new ListView();
 		    var OrderCell = "";
 		    var RtnVal = "";
-		    var ext = "${ext}";
+		    var ext = "<c:out value ='${ext}'/>";
+		    var mode = "<c:out value ='${mode}'/>";
 		    window.onload = function () {
 		        try {
 		            $.ajax({
@@ -26,7 +28,7 @@
 		        		url : "/ezApprovalG/getReceiptinfo.do",
 		        		data : {
 		        				docID : pDocID,
-		        				mode  : "APR"
+		        				mode  : mode
 		        				},
 		        		success: function(xml){
 		        			 RtnVal = loadXMLString(xml);
@@ -48,7 +50,7 @@
 		        var RtnVal = window.showModalDialog(url, parameter, feature);
 		    }
 		    function window_close() {
-		        if (CrossYN() && ext != "hwp") {
+		        if (CrossYN()) {
 		            parent.DivPopUpHidden();
 		        } else {
 		            window.close();

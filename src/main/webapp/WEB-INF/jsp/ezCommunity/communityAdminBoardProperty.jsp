@@ -13,10 +13,10 @@
 		
 		<script type="text/javascript">
 		var BoardID = "${boardID}";
-		var ParentBoardID = "${parentBoardID}";
-		var BoardGroupID = "${boardGroupID}";
+		var ParentBoardID = '<c:out value="${parentBoardID}"/>';
+		var BoardGroupID = '<c:out value="${boardGroupID}"/>';
 		var brd_color = "${boardProp.boardColor}";
-		var code = "${code}";
+		var code = '<c:out value="${code}"/>';
 		var versionuse = "${boardProp.versionUse}";
 		var checkUse = "${boardProp.checkUse}";
 		var iMenuNum = 1;
@@ -234,7 +234,7 @@
         				
         				if (CrossYN()) {
         				    parent.window.frames.left.location.reload();
-        				    parent.window.frames.right.location.href = "/ezCommunity/adminBasic.do?code=${code}";
+        				    parent.window.frames.right.location.href = "/ezCommunity/adminBasic.do?code=" + '<c:out value="${code}"/>';
         				} else {
         				    window.parent.frames.item(0).location.reload();
         					location.href = location.href;

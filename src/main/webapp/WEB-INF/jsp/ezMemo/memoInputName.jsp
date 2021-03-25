@@ -18,6 +18,7 @@
 	        var InputValue;
             var FolderId="";
             var folderNameList = "<c:out value='${folderNameList}' />";
+            var submit = true;
 	        
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -82,24 +83,29 @@
 	            	method = "put";
 	            }
 	            
-				$.ajax({
-					method : "POST",
-					dataType : "text",
-					async : false,
-					url : url,
-					data : {
-						"folder_name" : folderName,
-						"methodType" : method
-					},
-					success : function() {
-						opener.parent.parent.parent.parent.memoFoldersInfo(method);
-						window.close();
-					},
-					error : function() {
-						alert("<spring:message code='ezMemo.t0037' />");	
-					}
-				});
-				opener.memoFoldersInfo();
+	            if(submit) {
+					$.ajax({
+						method : "POST",
+						dataType : "text",
+						async : false,
+						url : url,
+						data : {
+							"folder_name" : folderName,
+							"methodType" : method
+						},
+						success : function() {
+							submit = false;
+							window.close();
+							opener.parent.parent.parent.parent.memoFoldersInfo(method);
+						},
+						error : function() {
+							submit = true;
+							alert("<spring:message code='ezMemo.t0037' />");	
+						}
+					});
+					opener.memoFoldersInfo();
+					window.opener.parent.parent.frames["left"].memoFolderList();
+	            }
 	        }
 	        
 	        function btn_cancel_onclick() {
@@ -119,7 +125,7 @@
                 <li><span onclick="btn_cancel_onclick()"></span></li>
             </ul>
         </div>
-	    <div class="txt">▒&nbsp;<spring:message code='ezMemo.t0031' /></div>
+	    <div class="txt">&nbsp;<spring:message code='ezMemo.t0031' /></div>
 	    <div class="nobox" style="margin-top:10px">
 	        <input id="txt_FolderName" type="text" onkeydown="folderName_onkeydown()" style="width: 100%;height:25px;border:1px solid #ccc" maxlength="20">
 	    </div>

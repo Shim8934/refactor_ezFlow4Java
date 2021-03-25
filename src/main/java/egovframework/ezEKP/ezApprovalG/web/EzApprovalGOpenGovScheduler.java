@@ -13,7 +13,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
@@ -40,9 +41,7 @@ public class EzApprovalGOpenGovScheduler {
     @Autowired
     EzApprovalGOpenGovService ezApprovalGOpenGovService;
 
-    //매일 0시 5분에 실행
-    // 1분마다 테스트
-//	@Scheduled(cron = "0 0/1 * * * *")
+//    @Scheduled(cron = "0 0/1 * * * *")
     @Scheduled(cron = "0 5 0 * * *")
     public void makeOpenGovCSV() throws Exception {
         logger.debug("makeOpenGovCSV started.");
@@ -64,7 +63,7 @@ public class EzApprovalGOpenGovScheduler {
             dirFile.mkdirs();
         }
 
-        BufferedWriter bw = new BufferedWriter(new FileWriter(csvFilePath.toFile()));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(csvFilePath.toFile()), "euc-kr"));
 
         List<String> csvList = ezApprovalGOpenGovService.getOpenGovCsv();
         List<String> resendCSVList = ezApprovalGOpenGovService.getOpenGovResendCsv();
@@ -73,6 +72,7 @@ public class EzApprovalGOpenGovScheduler {
             logger.debug("makeOpenGovCSV ended csv Size : 0");
             logger.debug("makeOpenGovCSV ended");
 
+            bw.close();
             return;
         }
 

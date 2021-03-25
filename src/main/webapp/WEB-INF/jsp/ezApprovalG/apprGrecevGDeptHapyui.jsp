@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE HTML>
 <html style="height:97%">
 	<head>
@@ -116,13 +118,26 @@
 			var isHWP = "";
 			
 			var isReDraft = '${isReDraft}';
-			
+
+            var useOpenGov = "<c:out value='${useOpenGov}' />";
+			var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate="";
 			//부서순차합의를 위해 아래 파라미터 추가. 2019-02-08 홍대표
 			//최종결재시 채번
 			var useReceiveDocNo = "${useReceiveDocNo}";
 			var nonElecRec = "${nonElecRec}";
 			
+			//부서감사 관련 2020-01-14 홍대표
+			var deptgamsaCount = 0;
+			
+			var useWebHWP = "<c:out value='${useWebHWP}'/>";
+	        // 대용량첨부 관련
+	        var bigAttachDownloadPeriod = "<c:out value ='${bigAttachDownloadPeriod}'/>";
+	        var bigAttachDownloadDay = "<c:out value ='${bigAttachDownloadDay}'/>";
+	        var bigSizeAttachDownloadLimitCount = "<c:out value ='${bigSizeAttachDownloadLimitCount}'/>";
+			
 			window.onload = function () {
+				// 일반첨부, 대용량첨부파일 관련 가이드 메세지 추가
+				setAttachGuideText();
 			};
 			
 			//양식HTML내용
@@ -228,15 +243,6 @@
 				getDraftUserInfo();
 				//자동입력
 				SetAutoPropertyValue();
-			
-				//INIT ======================================================================================
-				var rtnVal = ExcuteInfo("INIT","");
-				if(!rtnVal)
-				{
-					var pAlertContent = "[<spring:message code='ezApprovalG.t7'/>";
-					OpenAlertUI(pAlertContent);
-					return;				
-				}  
 			  }catch(e){  
 			    alert("setAutoProperty : " +e.description);    
 			  }	  
@@ -348,6 +354,14 @@
 			        if (message.GetListItem(fields, "lastKyulName"))
 			            message.GetListItem(fields, "lastKyulName").textContent = lastKyulName;
 			    }
+
+				var xmlInfo = message2.getConnInfoXml();
+				if (xmlInfo) {
+					var wrapper = document.createDocumentFragment();
+					wrapper.appendChild(xmlInfo);
+					message.setXmlInfo(wrapper);
+				}
+				
 			    process_AfterOpen();
 			}
 			
@@ -380,6 +394,7 @@
 			function DocumentComplete2()
 			{
 			    message2.Set_EditorContentURL(pFormHref);
+				connInit();
 			}
 			
 			//웹에디터 교체 -> 기존 : pzFormProc2_FieldsAvailable
@@ -484,10 +499,8 @@
 		            var pAlertContent;
 		            RtnVal = "true";
 		            if (RtnVal == "true") {
-		                RtnVal = ExcuteInfo("SUSIN_DRAFTSAVE_BEFORE", "");
+		                RtnVal = ExcuteInfo("DRAFTSAVE_BEFORE");
 		                if (!RtnVal) {
-		                    pAlertContent = "[<spring:message code='ezApprovalG.t7'/>";
-		                    OpenAlertUI(pAlertContent);
 		                    return;
 		                }
 		                if (RtnVal) 
@@ -495,23 +508,21 @@
 		                
 		                if (RtnVal == "TRUE") {
 		                    RtnVal = setSusinUpdataDocID();
-		                    RtnVal = ExcuteInfo("SUSIN_DRAFTSAVE_AFTER", "");
+		                    RtnVal = ExcuteInfo("DRAFTSAVE_AFTER");
 		                    if (!RtnVal) {
-		                        pAlertContent = "[<spring:message code='ezApprovalG.t7'/>";
-		                        OpenAlertUI(pAlertContent);
 		                        return;
 		                    }
 		                    if (LastSignSN == 1 || DraftLastFlag) {
-		                        RtnVal = ExcuteInfo("SUSIN_DOCNUM_END", "");
+		                        RtnVal = ExcuteInfo("DOCNUM_END");
 		                        if (!RtnVal) {
-		                            pAlertContent = "[<spring:message code='ezApprovalG.t7'/>";
-		                            OpenAlertUI(pAlertContent);
+									RollbackNum();
 		                            return;
 		                        }
 		
-		                        if (pDraftFlag == "HAPYUI") {
-		                        	LastHapyui();
-		                        }
+		                        //불필요한 로직 주석처리. 닷넷 동일. 2020-02-05 홍대표.
+// 		                        if (pDraftFlag == "HAPYUI") {
+// 		                        	LastHapyui();
+// 		                        }
 		
 		                    }
 		                    else {
@@ -523,11 +534,10 @@
 		                }
 		                else {
 		                    UndoSignInfo(rtnSignInfo);
+							RollbackNum();
 		                    if (LastSignSN == 1 || DraftLastFlag) {
-		                        RtnVal = ExcuteInfo("END_FAIL", "");
+		                        RtnVal = ExcuteInfo("END_FAIL");
 		                        if (!RtnVal) {
-		                            pAlertContent = "[<spring:message code='ezApprovalG.t781'/>";
-		                            OpenAlertUI(pAlertContent);
 		                            return;
 		                        }
 		                    }
@@ -538,11 +548,10 @@
 		            }
 		            else {
 		                UndoSignInfo(rtnSignInfo);
+						RollbackNum();
 		                if (LastSignSN == 1 || DraftLastFlag) {
-		                    RtnVal = ExcuteInfo("END_FAIL", "");
+		                    RtnVal = ExcuteInfo("END_FAIL");
 		                    if (!RtnVal) {
-		                        pAlertContent = "[<spring:message code='ezApprovalG.t781'/>";
-		                        OpenAlertUI(pAlertContent);
 		                        return;
 		                    }
 		                }
@@ -555,28 +564,22 @@
 		            }
 		        }
 		        else {
-		            var RtnVal = ExcuteInfo("DRAFTSAVE_BEFORE", "");
+		            var RtnVal = ExcuteInfo("DRAFTSAVE_BEFORE");
 		            var pAlertContent;
 		            if (!RtnVal) {
-		                pAlertContent = "[<spring:message code='ezApprovalG.t7'/>";
-		                OpenAlertUI(pAlertContent);
 		                RollbackNum();
 		                return;
 		            }
 		            RtnVal = SaveDraftDocInfo();
 		            if (RtnVal == "TRUE") {
-		                RtnVal = ExcuteInfo("DRAFTSAVE_AFTER", "");
+		                RtnVal = ExcuteInfo("DRAFTSAVE_AFTER");
 		                if (!RtnVal) {
-		                    pAlertContent = "[<spring:message code='ezApprovalG.t7'/>";
-		                    OpenAlertUI(pAlertContent);
 		                    RollbackNum();
 		                    return;
 		                }
 		                if (LastSignSN == 1 || DraftLastFlag) {
-		                    RtnVal = ExcuteInfo("DOCNUM_END", "");
+		                    RtnVal = ExcuteInfo("DOCNUM_END");
 		                    if (!RtnVal) {
-		                        pAlertContent = "[<spring:message code='ezApprovalG.t7'/>";
-		                        OpenAlertUI(pAlertContent);
 		                        RollbackNum();
 		                        return;
 		                    }
@@ -591,10 +594,8 @@
 		            else {
 		                UndoSignInfo(rtnSignInfo);
 		                if (LastSignSN == 1 || DraftLastFlag) {
-		                    RtnVal = ExcuteInfo("END_FAIL", "");
+		                    RtnVal = ExcuteInfo("END_FAIL");
 		                    if (!RtnVal) {
-		                        pAlertContent = "[<spring:message code='ezApprovalG.t7'/>";
-		                        OpenAlertUI(pAlertContent);
 		                        return;
 		                    }
 		                }
@@ -616,10 +617,8 @@
 		        pOrgHtml = ConvertHTMLtoMHT(message.Get_EditorBodyHTML());
 		        if (LastSignSN == 1 || DraftLastFlag) {
 		            var rtnVal;
-		            rtnVal = ExcuteInfo("DOCNUM_BEFORE", "");
+		            rtnVal = ExcuteInfo("DOCNUM_BEFORE");
 		            if (!rtnVal) {
-		                var pAlertContent = "[<spring:message code='ezApprovalG.t7'/>";
-		                OpenAlertUI(pAlertContent);
 		                return;
 		            }
 		        }
@@ -657,10 +656,8 @@
 		
 		        if (LastSignSN == 1 || DraftLastFlag) {
 		            var rtnVal;
-		            rtnVal = ExcuteInfo("DOCNUM_AFTER", "");
+		            rtnVal = ExcuteInfo("DOCNUM_AFTER");
 		            if (!rtnVal) {
-		                var pAlertContent = "[<spring:message code='ezApprovalG.t781'/>";
-		                OpenAlertUI(pAlertContent);
 		                RollbackNum();   
 		                return;
 		            }
@@ -786,7 +783,7 @@
 				parameter[8]  = tempItemName;			// tempItemName
 				
 				var url			= "../ezDocInfo/ezDocInfo.aspx?arr1=" + escape(tempKeep) + "&arr2="+escape(tempSecurity);
-				var feature	= "status:no;dialogWidth:370px;dialogHeight:535px;help:no;scroll:no;edge:sunken";
+				var feature	= "status:no;dialogWidth:370px;dialogHeight:555px;help:no;scroll:no;edge:sunken";
 					 	
 				feature =  feature + GetShowModalPosition(370, 535);
 				var ret = window.showModalDialog(url,parameter,feature);
@@ -903,12 +900,21 @@
 		        parameter[39] = SummaryFlag;
 		        parameter[41] = tempItemName;
 		        parameter[42] = tempItemName2;
+		        parameter[43] = deptgamsaCount;
 		        
-		        if(pDocState == "012") {
+		        if(pDocState == "012" || pDocState == "014") {
 		        	parameter[45] = "";
 		        	parameter[46] = "";
 		        }
-		
+		        
+		        if (useOpenGov == "YES") {
+			        parameter[52] = basis;
+			        parameter[53] = reason;
+			        parameter[54] = listOpenFlag;
+			        parameter[55] = fileOpenFlagList;
+    		        parameter[56] = limitDate;
+		        }
+
 		        if (tempItemCode != "")
 		            tempdocnumcode = tempItemCode;
 		
@@ -958,7 +964,8 @@
 		                cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
 		                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
 	                }
-	            	
+
+					tempKeyword = ret[6]; 				//2021-03-10 박기범 - 키워드 추가
 		            tempSecurity = ret[7];
 	                tempUrgent = ret[8];
 	                pSummery = ret[9];
@@ -981,8 +988,32 @@
 		            	sepAttachCheckYN = ret[26];
 		            	setNonElecRecInfo(nonElecRecInfoXml);
 		            }
-		            
+
+		            if (useOpenGov == "YES") {
+                        $.ajax({
+                            type : "POST",
+                            dataType : "text",
+                            async : false,
+                            url : "/ezApprovalG/openGovInfoSave.do",
+                            data : {
+                                openGovListFlag : ret[27],
+                                fileOpenFlagList : ret[28],
+                                basis : ret[29],
+                                reason : ret[30],
+                                publicity : ret[11],
+                                docID : pDocID,
+                                limitDate : ret[31]
+                            }
+                        });
+
+                        listOpenFlag = ret[27];
+                        fileOpenFlagList = ret[28];
+                        basis = ret[29];
+                        reason = ret[30];
+                        limitDate = ret[31];
+					}
 		        }
+
 		        SummaryFlag = true;
 		        
 		        savexmlhttp = null;
@@ -1037,22 +1068,41 @@
 		    }
 		    function btnReturn_onclick_Complete(ret) {
 		        DivPopUpHidden();
-		        if (isReDraft == "Y" && checkAprState()) {
-		    		alert("<spring:message code='ezApprovalG.bhs23'/>");
-	    			window.close();
-	    			return;
-		    	}
 		        var hesongok = true;
 		        if (ret != "cancel") {
+					if (checkAprState()) {
+						alert("<spring:message code='ezApprovalG.bhs23'/>");
+						window.close();
+						return;
+					}
+
+					var rtnVal = ExcuteInfo("HESONG_BEFORE");
+					if (!rtnVal) {
+						return;
+					}
+
 		            setButtonReceiveTrue();
 		
-		            if (temppDocSN != "")
+		            if (temppDocSN != "") {
 		                hesongok = setCabinetHeSong(temppDocSN);
-		
-		            if (hesongok) {
-		            	 SendMailToDrafter_Hesong();
-		                hesongok = setHeSongDocInfo();
-		            }
+					}
+
+					if (hesongok) {
+						var docInfo = document.getElementById("DOCINFO").dataSource;
+						var writerID = SelectSingleNodeValueNew(docInfo, "DOCINFO/DATA/WRITERID");
+						var writerName = SelectSingleNodeValueNew(docInfo, "DOCINFO/DATA/WRITERNAME");
+						var docTitle = SelectSingleNodeValueNew(docInfo, "DOCINFO/DATA/DOCTITLE");
+						SendMailToDrafter_Hesong(writerID, writerName, docTitle);
+						hesongok = setHeSongDocInfo();
+
+						if (hesongok) {
+							ExcuteInfo("HESONG_AFTER");
+						} else {
+							ExcuteInfo("HESONG_FAIL");
+						}
+					} else {
+						ExcuteInfo("HESONG_FAIL");
+					}
 		        }
 		    }
 		
@@ -1138,6 +1188,70 @@
 		            alert("getDocRecevState :: " + e.description);
 		        }
 		    }
+		    
+	    	// 일반첨부, 대용량첨부파일 관련 가이드 메세지 추가
+	    	function setAttachGuideText() {
+	    		// 대용량첨부의 자동삭제 기능, 저장만료기한 사용하지 않음
+                var attachGuideText =  "<td align='left' style='width:50%; font-size:11px; font-weight:normal; color:#666666; padding-left:10px; padding-top:0px; padding-bottom:0px; margin:0px; border-bottom:1px solid #dadada;border-left:1px solid #dadada; border-right:none; border-top: none; background:#fffcfa; height:20px; line-height:20px;'>";
+                
+                if(bigSizeAttachDownloadLimitCount > 0) {
+                	attachGuideText += strLangHSBAt06 + " <span style='color:#FF0000 ;'>" + bigSizeAttachDownloadLimitCount + strLangHSBAt09 + "</span> " + strLangHSBAt10;
+                }
+                
+                attachGuideText += "<td align='right' style='width:50%; font-size:11px; font-weight:normal; color:#666666; padding-right:10px; padding-top:0px; padding-bottom:0px; margin:0px; border-bottom:1px solid #dadada;border-right:1px solid #dadada; border-left:none; border-top: none; background:#fffcfa; height:20px; line-height:20px;'>";
+                attachGuideText += "</td>";
+/*                 
+                var attachGuideText =  "<td align='left' style='width:50%; font-size:11px; font-weight:normal; color:#666666; padding-left:10px; padding-top:0px; padding-bottom:0px; margin:0px; border-bottom:1px solid #dadada;border-left:1px solid #dadada; border-right:none; border-top: none; background:#fffcfa; height:20px; line-height:20px;'>";
+                attachGuideText += strLangHSBAt05 + "<span style='color:#FF0000 ;'>" + bigAttachDownloadPeriod + "</span></td>";
+                attachGuideText += "<td align='right' style='width:50%; font-size:11px; font-weight:normal; color:#666666; padding-right:10px; padding-top:0px; padding-bottom:0px; margin:0px; border-bottom:1px solid #dadada;border-right:1px solid #dadada; border-left:none; border-top: none; background:#fffcfa; height:20px; line-height:20px;'>";
+                attachGuideText += strLangHSBAt06 + "<span style='color:#FF0000 ;'>" + bigAttachDownloadDay + strLangHSBAt07 + "</span>" + strLangHSBAt08;
+                 */
+                 
+                 if (bigSizeAttachDownloadLimitCount > 0) {
+                	 document.getElementById("apprAttachGuideTR").innerHTML = attachGuideText;
+                 }
+                 else {
+                	 document.getElementById("apprAttachGuideTR").style.display = "none";
+                 }
+	    	}
+
+	    	function connInit() {
+				var connRootText = GetDocumentElement("CONNROOT");
+				if (connRootText) {
+					if (DraftFlag === "REDRAFT") {
+						OpenAlertUI("연동문서는 다시 접수할 수 없습니다.<br/>문서보기 창으로 이동합니다.", function() {
+							var url = "/ezApprovalG/aprDocView.do" +
+								"?docID=" + pDocID +
+								"&docHref=" + pFormHref +
+								"&opinionFlag=" + pHasOpinionYN +
+								"&docState=" + pDocState +
+								"&listSusin=" + arr_userinfo[1] +
+								"&oDoc=" + pOrgDocID +
+								"&isOpinion=OPINION_SHOW" +
+								"&listType=1" +
+								"&CallBackType=" +
+								"&ext=mht" +
+								"&orgCompanyID=" + orgCompanyID;
+
+							window.open(url, "_self");
+						});
+						return;
+					}
+
+					if (ConnExist(["conn;processidx;INIT", "conn;processtime;HAPYUI", "query;qtype;UA"]) || ConnExist(["conn;processidx;INIT", "conn;processtime;HAPYUI", "query;qtype;UA_EX"])) {
+						document.querySelector("#btnConn").style.display = "";
+					}
+
+					setTimeout(function() {
+						ExcuteInfo("INIT");
+					}, 0);
+				}
+			}
+
+			function btnConn_onclick() {
+				ExcuteInfo("INIT");
+			}
+	    	
 		</script>
 	</head>
 	<body class="popup" style="height:100%">
@@ -1152,6 +1266,7 @@
 		          <span style ="display:none" ><li id="btnDocInfo" style="display:none;"> <span onclick="return btnDocInfo_onclick()"  ><spring:message code='ezApprovalG.t54'/></span></li></span>
 		          <li id="btnOpinion"> <span onclick="return btnOpinion_onclick()" ><spring:message code='ezApprovalG.t55'/></span></li>
 		          <li id="btnServerSave" style="display:none;"> <span onclick="return btnServerSave_onclick()" ><spring:message code='ezApprovalG.t59'/></span></li>
+				  <li id="btnConn" style="display:none"><span  onClick="return btnConn_onclick()"  ><spring:message code='ezApprovalG.t157'/></span></li>
 		          <li id="btnPrint"> <span onclick="return btnPrint_onclick()" ><spring:message code='ezApprovalG.t60'/></span></li>
 		          <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 		        </ul>
@@ -1176,7 +1291,7 @@
 		            </tr>
 		            <tr>
 		                <td style="vertical-align: top;">
-		                    <iframe id="message2" name="message2" src="recevContent2.do" style="background-color: White; height: 0px; width: 0px; border: none"></iframe>
+		                    <iframe id="message2" name="message2" src="recevContentTwo.do" style="background-color: White; height: 0px; width: 0px; border: none"></iframe>
 		                </td>
 		            </tr>
 		        </table>
@@ -1184,12 +1299,26 @@
 		  </tr>
 		  <tr>
 		    <td style="height:20px">
-		        <table class="file">
-		            <tr>
-		              <th id="btn_Attach"><spring:message code='ezApprovalG.t65'/></th>
-		              <td ><div id="lstAttachLink"></div></td>
-		            </tr>
-		        </table>
+	                <table class="file" style="height:80px;">
+	                    <tr>
+	                        <th id="btn_Attach"><spring:message code='ezApprovalG.t65'/></th>
+	                        <td style=" width:62%; border-right:1px solid #d5d5d5;">
+	                            <div id="lstAttachLink" style="height:70px;"></div>
+	                        </td>
+	                        <td style=" width:30%;">
+								<div id="lstAttachLinkDoc" style="height:70px;"></div>
+							</td>
+							<td class="pos2" style="width:8%; background:#fffcfa;">
+								<a class="imgbtn imgbck" style="width:60px;"><span style="height:24px;" onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
+								<a class="imgbtn imgbck" style="width:60px;"><span style="height:24px;" onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a><br/>
+							</td>
+	                    </tr>
+	                </table>
+	                
+					<%-- 대용량첨부 가이드 메세지 영역 --%>
+	                <table class="file" style="height: 20px;">
+	                    <tr id="apprAttachGuideTR"></tr>
+	                </table>
 		    </td>
 		  </tr>
 			<input type="file" id="pFile" style="display:none;" />	

@@ -77,7 +77,7 @@
 	                <li><span onclick="Window_Close()"></span></li>
 	            </ul>
 	        </div>
-			<div class="box" id="maillist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:100%; HEIGHT:320px;border:0px">
+			<div id="maillist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:100%; height:350px;">
 			  <table style="width:100%;" class="popuplist" style="TABLE-LAYOUT:fixed" id="checkboxtable">
 			    <tr>
 			      <th style="width:50px;text-align:center;"><spring:message code='ezEmail.t488' /></th>
@@ -87,17 +87,25 @@
 			      <th style="width:80px;text-align:center;"><spring:message code='ezEmail.t28' /></th>
 			    </tr>
 			    
-			    <c:forEach var="item" items="${list}">
-			    
-			    <tr>
-			      <td style="text-align:center;"><input type='checkbox' name="goruplistinput" _email="${item.mail}" _name="${item.displayName}" checked ></td>
-			      <td style="text-align:center;">${item.displayName}</td>
-			      <td style="text-align:center;">&nbsp;${item.company} </td>
-			      <td style="text-align:center;">${item.dept}</td>
-			      <td style="text-align:center;">${item.title}</td>
-			    </tr>
-			    
-			    </c:forEach>
+			    <c:choose>
+			    	<c:when test="${list eq null && dlPolicy eq 'member'}">
+			    		<td colspan="5" style="text-align:center;"><spring:message code='ezEmail.userDL32' /></td>
+			    	</c:when>
+			    	<c:when test="${list eq null && dlPolicy eq 'private'}">
+			    		<td colspan="5" style="text-align:center;"><spring:message code='ezEmail.userDL31' /></td>
+			    	</c:when>
+			    	<c:otherwise>
+			    		<c:forEach var="item" items="${list}">
+					    <tr>
+					      <td style="text-align:center;"><input type='checkbox' name="goruplistinput" _email="${item.mail}" _name="${item.displayName}" checked ></td>
+					      <td style="text-align:center;">${item.displayName}</td>
+					      <td style="text-align:center;">&nbsp;${item.company} </td>
+					      <td style="text-align:center;">${item.dept}</td>
+					      <td style="text-align:center;">${item.title}</td>
+					    </tr>
+					    </c:forEach>
+			    	</c:otherwise>
+			    </c:choose>
 			    
 			  </table>
 			</div>

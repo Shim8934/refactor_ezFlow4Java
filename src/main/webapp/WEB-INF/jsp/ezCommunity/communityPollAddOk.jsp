@@ -50,12 +50,12 @@
 			function fun_Prev() {
 				var stringHTML = "";
 				stringHTML += '<form id="poll_add_prev" action="/ezCommunity/pollAdd.do?state=PREV" method="POST" >';			
-				stringHTML += '<INPUT type="hidden" name="code" value="${code}">';
-				stringHTML += '<INPUT type="hidden" name="selType" value="${selType}">';
-				stringHTML += '<INPUT type="hidden" name="selRes1" value="${selRes1}">';
-				stringHTML += '<INPUT type="hidden" name="selRes2" value="${selRes2}">';
-				stringHTML += '<INPUT type="hidden" name="startDate" value="${startDate}">';
-				stringHTML += '<INPUT type="hidden" name="endDate" value="${endDate}">';	
+				stringHTML += '<INPUT type="hidden" name="code" value="' + '<c:out value="${code}"/>' + '">';
+				stringHTML += '<INPUT type="hidden" name="selType" value="' + '<c:out value="${selType}"/>' + '">';
+				stringHTML += '<INPUT type="hidden" name="selRes1" value="' + '<c:out value="${selRes1}"/>' + '">';
+				stringHTML += '<INPUT type="hidden" name="selRes2" value="' + '<c:out value="${selRes2}"/>' + '">';
+				stringHTML += '<INPUT type="hidden" name="startDate" value="' + '<c:out value="${startDate}"/>' + '">';
+				stringHTML += '<INPUT type="hidden" name="endDate" value="' + '<c:out value="${endDate}"/>' + '">';	
 				stringHTML += '<INPUT type="hidden" name="subject" value="' + document.getElementById("pollSubject").value + '" >';
 				stringHTML += '</form>';			
 					

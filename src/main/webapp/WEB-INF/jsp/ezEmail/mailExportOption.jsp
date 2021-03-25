@@ -28,7 +28,7 @@
 			var ReturnFunction;
 			var CancelFunction;
 			var isDivPopUp = false;
-			var exportType = "${exportType}";
+			var exportType = '<c:out value="${exportType}"/>';
 			var pwdcheck = "NO";
 			
 			window.onload = function(){

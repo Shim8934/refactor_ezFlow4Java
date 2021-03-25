@@ -65,13 +65,13 @@
 		</style>
 		
 		<script type="text/javascript">
-			var pItemID = "${boardItemVo.itemID}";
+			var pItemID = "<c:out value='${boardItemVo.itemID}'/>";
 			var pBoardID = "${boardItemVo.boardID}";
 			var userInfoID = "${userInfo.id}";
 			var commentType = "totalComment";
 			var gubun = "${gubun}";
-			var Reply_FG = "${Reply_FG}";
-			var OneLineReplyFlag = "${OneLineReplyFlag}";
+			var Reply_FG = "<c:out value='${Reply_FG}'/>";
+			var OneLineReplyFlag = "<c:out value='${OneLineReplyFlag}'/>";
 			var BoardAdmin_FG = "${boardInfo.boardAdmin_FG}";
 			var BoardGroupAdmin_FG = "${boardInfo.boardGroupAdmin_FG}";
 			var checkpassword_dialogArguments = new Array();
@@ -81,21 +81,21 @@
 			$(document).ready(function(){
 				rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
 				getBoardComment();
+				autoResize();
 			});
 			
-			// iframe resize
-			function autoResize(i)
-			{
-			    var iframeHeight=
-			    (i).contentWindow.document.body.scrollHeight;
-			    (i).height=iframeHeight + 20;
+			/* 2020-12-07 홍승비 - 제대로 높이를 가지고 오지 못해서 수정, 현재 페이지의 iframe에 리사이즈 적용할 필요 없으므로 댓글영역에만 적용 */
+			function autoResize() {
+				var commentDiv = document.getElementById("commentDiv");
+				var commentDivH = window.parent.document.getElementById("iFrameLayer").style.height.replace("px", "");
+			    commentDiv.style.height = commentDivH - 70 + "px";
 			}
 		</script>
 		
 	</head>
 	<body class="popup">
 		<div class="layerpopup"  style="z-index: 1000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer" onload="autoResize(this)"></iframe>
+			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 		<h1><spring:message code='ezBoard.t81'/><span id="headTitle" style="font-size: 14px">[${totalCommentCount}]</span></h1>
 		<div id="close">
@@ -104,7 +104,15 @@
 			</ul>
 		</div>
 		
-		<div style='height:570px;overflow-y:auto;'>
+	<%-- 2018-11-07 홍승비 - 동영상게시판 구분 추가 --%>
+	<c:choose>
+		<c:when test="${gubun == 7}">
+			<div id="commentDiv" style='height:540px;overflow-y:auto;'>
+		</c:when>
+		<c:otherwise>
+			<div id="commentDiv" style='height:570px;overflow-y:auto;'>
+		</c:otherwise>
+	</c:choose>
 			<table class="mainlist" style="width:99.5%" >
 				<c:choose>
 					<c:when test="${gubun == 2}">

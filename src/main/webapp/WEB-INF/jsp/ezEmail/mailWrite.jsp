@@ -67,8 +67,8 @@
 	    <script type="text/javascript">
 	    var g_szAuthor = "";
 	    var g_szExchange = "exchange";
-	    var g_cmd = "${_cmd}";
-	    var Org_cmd = "${_cmd}";
+	    var g_cmd = '<c:out value="${_cmd}"/>';
+	    var Org_cmd = '<c:out value="${_cmd}"/>';
 	    var g_servername = "${serverName}";
 	    var g_myname = "${userInfo.displayName}";
 	    var g_myemail = "${userInfo.mail}";
@@ -103,6 +103,8 @@
 	    var g_showEnglishDisplay = "";
 	    var g_charsetCheck = "${charsetCheck}";
 	    var g_ReSendFlag = "${reSendFlag}";
+	    var BigSizeAttachLimitCount = "${bigSizeAttachLimitCount}";
+	    var BigSizeAttachDownloadLimitCount = "${bigSizeAttachDownloadLimitCount}";
 	    var BigSizeAttachMBSize = "${bigSizeMailAttachLimit}";
 	    var totBigSizeAttachMBSize = "${totBigSizeMailAttachLimit}";
 	    var totSizeAttachMBSize = "${mailAttachLimit}";
@@ -117,14 +119,14 @@
 	    var userTimezone = "${userTimeset}";
 	    var isPrimary = "${userPrimary}";
 	    var initFlag = false;
-	    var gg_cmd = "${cmdOwn}";
-	    var gg_url = "${urlOwn}";        
+	    var gg_cmd = '<c:out value="${cmdOwn}"/>';
+	    var gg_url = '<c:out value="${urlOwn}"/>';        
 	    var g_newid = "${newWindowId}";
 	    var FileUploadtype = "${fileUploadType}";
 	    var iseachMail = "${isEach}";
 	    var individualmailuser = "${individualMailUser}";
 	    var pSecurity = "${pSecurity}";
-	    var docHref = "${docHref}";
+	    var docHref = '<c:out value="${docHref}"/>';
 	    var isReserve = "NO";
 	    var pCDOMessageId = "";
 	    var Add_xmlhttp = "";
@@ -146,8 +148,8 @@
 	    var inMailColor = "${inMailColor}";
 	    var outMailColor = "${outMailColor}";
 	    var pUse_Editor = "${useEditor}";
-	    var pDocID = "${docID}";
-	    var orgCompanyID = "${orgCompanyID}";
+	    var pDocID = '<c:out value="${docID}"/>';
+	    var orgCompanyID = '<c:out value="${orgCompanyID}"/>';
 	    var uploadCommonPath = "${uploadCommonPath}";
 	    var uploadCommunityPath = "${uploadCommunityPath}";
 	    var defaultFontAndSize = "${defaultFontAndSize}";
@@ -161,16 +163,32 @@
 	    var folderPath = "${drafts}";
 
 	    //업무일지 아이디
-	    var journalId = "${journalId}";
+	    var journalId = '<c:out value="${journalId}"/>';
 	    //근태관리 아이디
-	    var attitudeId = "${attitudeId}";
-	    var attitudeIncludeMe = false; 
-	    var searchStartDate = "${searchStartDate}";
-	    var searchEndDate = "${searchEndDate}";
-	    var shareId = "${shareId}";
+	    var attitudeId = '<c:out value="${attitudeId}"/>';
+	    var attitudeIncludeMe = false;
+	    var searchStartDate = '<c:out value="${searchStartDate}"/>';
+	    var searchEndDate = '<c:out value="${searchEndDate}"/>';
+	    var shareId = '<c:out value="${shareId}"/>';
+	    // ezPMS 프로젝트 아이디
+	    var ezPMSProjectId = "${ezPMSProjectId}";
+	    // ezPMS 게시판 아이디
+	    var ezPMSBoardId = "${ezPMSBoardId}";
+	    var ezPMSRoleId = "${pmsRoleId}";
+	    var ezPMSType = "${pmsType}";
+	    var ezPMSToUserId = "${pmsToUserId}";
+	    var ezPMSUserIdType = "${pmsUserIdType}";
+	    var ezPMSTaskId = "${pmsTaskId}";
+	    var isMailToMe = "<c:out value='${isMailToMe}'/>";
 	    var receiverCount = 0;
         var groupAddressCountMap = {};
         var mailMaxReceiverCount = parseInt("${mailMaxReceiverCount}");
+        var preview_g_url = "";
+        var preview_g_url_delete = "";
+        var preview_g_url_forRead = "";
+        var previewChk = false;
+        var ReadMailOpenNewWin;
+        var g_useAdditionalInfo = Boolean(${useAdditionalInfo});
         
 	    window.onload = function () {
 	        if (!CrossYN()) {
@@ -213,21 +231,35 @@
 	        
 	        if (moduleType == "attitudeAbsented") {
 	        	getAttitudeAbsentedList("distinct");
+	        } else if (moduleType == "ezPMS") {
+	        	getPMSMemberList(ezPMSType);
 	        }
 	        
 	        if (xmpTo.innerHTML != "") {
+	            var xmpToValue = xmpTo.innerHTML;
+                xmpToValue = ReplaceText(xmpToValue, "&amp;", "&");
+                xmpToValue = ReplaceText(xmpToValue, "&lt;", "<");
+                xmpToValue = ReplaceText(xmpToValue, "&gt;", ">");
+                xmpToValue = ReplaceText(xmpToValue, "&#034;", "\"");
+                // 세미콜론이 빠져있는 경우가 발견되어 추가함
+                xmpToValue = ReplaceText(xmpToValue, "&#034", "\"");
+                xmpToValue = ReplaceText(xmpToValue, "&#039;", "'");
+                // 세미콜론이 빠져있는 경우가 발견되어 추가함
+                xmpToValue = ReplaceText(xmpToValue, "&#039", "'");
 	        	var moduleType = "<c:out value='${moduleType}'/>";
 
 	        	if (moduleType == "attitudeAbsented") {
 		        	getAttitudeAbsentedList("distinct");
+		        } else if (moduleType == "ezPMS") {
+		        	getPMSMemberList(ezPMSType);
 		        }
 	        	
 	        	if (moduleType && moduleType == "poll") {
 	        		var pollSendType = "<c:out value='${pollSendType}'/>";       		
-		            var addrArr = getEmailAddressList2(xmpTo.innerHTML, pollSendType);
+		            var addrArr = getEmailAddressList2(xmpToValue, pollSendType);
 		            addReceiverFromList(0, addrArr);
 	        	} else {
-		            var splitAddr = getEmailAddressList(xmpTo.innerHTML);
+		            var splitAddr = getEmailAddressList(xmpToValue);
 		            addReceiverFromList(0, splitAddr);
 	        	}
 	        }
@@ -467,15 +499,22 @@
 	            window.close();
 	    }
 	    var isDelted = false;
-	    function delDrafts() {
+	    function delDrafts(del_uid) {
+	    	var delDraftsURL = g_url;
+	    	var delDraftsFiledate = filedate;
+	    	
+	    	if (typeof del_uid != "undefined"){
+	    		delDraftsURL = del_uid;
+	    		delDraftsFiledate = "";
+	    	}
+	    	
 	        var xmlhttp = createXMLHttpRequest();
-	        var requestUrl = "/ezEmail/delDrafts.do?itemid=" + encodeURIComponent(g_url) + "&delid=" + filedate;
-	        
+	        var requestUrl = "/ezEmail/delDrafts.do?itemid=" + encodeURIComponent(delDraftsURL) + "&delid=" + delDraftsFiledate;
 	    	if (typeof(shareId) != "undefined" && shareId != "") {
 	    		requestUrl += "&shareId=" + encodeURIComponent(shareId);
 	    	}
 	        
-	        xmlhttp.open("GET", requestUrl, false);
+	        xmlhttp.open("GET", requestUrl, true);
 	        xmlhttp.send();
 	        xmlhttp = null;
 	        isDelted = true;
@@ -987,34 +1026,53 @@
 	    function Editor_Complete() {
 	        if (initFlag == false) {
 	            if (Org_cmd == "board") {
-	                GetBoardItemInfo_New("${boardID}", "${itemID}", "${retransType}", g_font);
+	                GetBoardItemInfo_New('<c:out value="${boardID}"/>', '<c:out value="${itemID}"/>', '<c:out value="${retransType}"/>', g_font);
 	            }
 	            else if (Org_cmd == "Community") {
-	                GetBoardItemInfo_New3("${boardID}", "${itemID}", g_font);
+	                GetBoardItemInfo_New3('<c:out value="${boardID}"/>', '<c:out value="${itemID}"/>', g_font);
 	            }
+	            
+	            else if (Org_cmd == "report") {
+	                GetUpmooItemInfo_New('<c:out value="${itemID}"/>', '<c:out value="${docHref}"/>');
+	            }
+
 	            else if (Org_cmd == "docsend" || Org_cmd == "docsenddoc") {
-	                GetDocumentInfo(pDocID, docHref, "${docImagCnt}", "${docTarget}");
+	                GetDocumentInfo(pDocID, docHref, '<c:out value="${docImagCnt}"/>', '<c:out value="${docTarget}"/>');
 	            }
 	            else if (Org_cmd == "docsendDotNet") {
-	                GetDocumentInfo_DotNet(pDocID, docHref, "${docImagCnt}", "${docTarget}");
+	                GetDocumentInfo_DotNet(pDocID, docHref, '<c:out value="${docImagCnt}"/>', '<c:out value="${docTarget}"/>');
 	            }
 	            else if (Org_cmd == "boardDotNet") {
-	                GetBoardItemInfo_DotNet("${boardID}", "${itemID}", "${retransType}");
+	                GetBoardItemInfo_DotNet('<c:out value="${boardID}"/>', '<c:out value="${itemID}"/>', '<c:out value="${retransType}"/>');
 	            }
 	            else if (Org_cmd == "CommunityDotNet") {
-	                GetBoardItemInfo_New3_DotNet("${boardID}", "${itemID}");
+	                GetBoardItemInfo_New3_DotNet('<c:out value="${boardID}"/>', '<c:out value="${itemID}"/>');
 	            }	
 	            //업무일지면...
 	            else if (Org_cmd == "journal") {
 	            	getJournalToMail();
+	            	setOnclickFunction();
+	            	return;
+	            }
+	            // ezPMS 게시판
+	            else if (Org_cmd == "ezPMSBoard") {
+	            	getEzPMSBoardToMail();
+	            	setOnclickFunction();
+	            	return;
+	            }
+	            else if (Org_cmd == "ezPMS") {
+	            	getPMSMemberList(ezPMSType);
+	            	setOnclickFunction();
 	            	return;
 	            }
 	            else if (Org_cmd == "attitude") {
 	            	getAttitudeToMail();
+	            	setOnclickFunction();
 	            	return;
 	            }
 	            else if (Org_cmd == "attitudeAbsented") {
 	            	getAttitudeAbsentedList("duplicated");
+	            	setOnclickFunction();
 	            	return;
 	            }
 	            
@@ -1026,6 +1084,16 @@
 	        
 	        g_originalHTML = message.GetEditorContent();
 	        g_originalPlainText = document.getElementById("plainTextArea").value;
+	        
+	        setOnclickFunction();
+	    }
+	    
+	    /* 2020-09-11 홍승비 - 버튼에서 온클릭 이벤트를 분리하여 업무일지, ezPMS 등의 발송버튼 활성화되지 않는 오류 수정 */
+	    function setOnclickFunction() {
+	        return setTimeout(function () {
+	        	document.getElementById("spanT674").setAttribute("onclick", "Send_onClick()");
+	        	document.getElementById("spanT48").setAttribute("onclick", "Save_onClick('tempsave')");
+	        }, 20);
 	    }
 		
 	    function removeHTMLTag(html) {
@@ -1142,6 +1210,89 @@
 			});
 	    }
 	    
+	    function getEzPMSBoardToMail(){
+	    	var journal;
+	    	$.ajax ({
+				type : "POST",
+				async : false,
+				url : "/ezPMS/boardDetailJSON.do",
+				data : {
+					projectId : ezPMSProjectId,
+					itemId : ezPMSBoardId
+				},
+				success : function(result) {
+					$("#eSubject").val("<spring:message code='ezBoard.t342' /><spring:message code='ezEmail.t674' /> : " + result.title);
+					var boardContent = "<p></p><p></p><hr>";
+					boardContent += "<p><b>" + "<spring:message code='ezPMS.t210' /> " + "</b>" + result.writeDate.substring(0, result.writeDate.length - 2) + "<br/>";
+					boardContent += "<b>" + "<spring:message code='ezPMS.t211' /> " + "</b>" + result.writerName + "<br/>";
+					boardContent += "<b>" + "<spring:message code='ezPMS.t212' /> " + "</b>" + MakeXMLString(result.title) + "</p>";
+					boardContent += "<p></p>";
+					boardContent += (result.boardContent).replace(/&#39;/gi, "\'");
+					
+					message.SetEditorContent(boardContent);
+					
+					var fileList = result.fileList;
+					
+					var pstrXML = "";
+
+					//첨부파일이 있을 경우
+			        if (fileList.length > 0) {
+			            pstrXML += "<LISTVIEWDATA><HEADERS>";
+			            pstrXML += "<HEADER><NAME>" + strLang1 + "</NAME><WIDTH>100</WIDTH></HEADER>";
+			            pstrXML += "<HEADER><NAME>" + strLang3 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+			            pstrXML += "</HEADERS><ROWS>";
+			        }
+			        for (var i = 0; i < fileList.length; i++) {
+			            var filepath = fileList[i].filePath;
+			            var filenameTemp = filepath.split('/')[filepath.split('/').length - 1];
+			            var filename = fileList[i].fileName;
+			            var filesize = fileList[i].fileSize;
+
+			            pstrXML += "<ROW><CELL><VALUE><![CDATA[" + filename + "]]></VALUE>";
+			            pstrXML += "<DATA1><![CDATA[" + filename + "]]></DATA1>";
+			            pstrXML += "<DATA2><![CDATA[" + filepath + "]]></DATA2>";
+			            pstrXML += "<DATA3></DATA3>";
+			            pstrXML += "<DATA4>BOARD</DATA4>";
+			            pstrXML += "<DATA5>N</DATA5>";
+			            pstrXML += "<DATA6>" + filesize + "</DATA6>";
+			            if(filesize > BigSizeAttachSize )
+			                pstrXML += "<DATA7>Y</DATA7>";
+			            else
+			                pstrXML += "<DATA7>N</DATA7>";
+			            pstrXML += "</CELL><CELL>";
+			            pstrXML += "<VALUE>" + filesize + " Bytes" + "</VALUE>";
+			            pstrXML += "</CELL></ROW>";
+			        }
+			        if (pstrXML != "") {
+			            pstrXML += "</ROWS></LISTVIEWDATA>";
+			            objXML = loadXMLString(pstrXML);
+			            if (pAttachListXml == "") {
+			                pAttachListXml = objXML;
+			            }
+			            else {
+			                if (typeof (pAttachListXml) == "string")
+			                    Rtnxml = loadXMLString(pAttachListXml);
+			                else
+			                    Rtnxml = loadXMLString(getXmlString(pAttachListXml));
+
+			                for (var i = 0; i < SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW").length; i++) {
+			                    var objNewAttachNodes = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW")[i];
+//			                    if (CrossYN())
+//			                        var Node = Rtnxml.importNode(objNewAttachNodes, true);
+//			                    else
+			                        GetChildNodes(GetChildNodes(Rtnxml)[0])[1].appendChild(objNewAttachNodes);
+			                }
+			                pAttachListXml = Rtnxml;
+			            }
+			            if (DragDropAttachObjetLoading) {
+//			            	AppendFileAttachInfo(pAttachListXml);
+			            	dadiframe.fileupload2(pAttachListXml,"/ezEmail/mailInterUploadCopyXCKFromJournal.do");
+			            }
+			        }
+				}
+			});
+	    }
+	    
 	    function btn_AttachSelect_onclick() {
 	        document.getElementById('mode').value = "ATT";
 	        document.form.file1.click();
@@ -1183,6 +1334,9 @@
 		        	document.getElementById("SelMailSign").disabled = true;
 		        	dadiframe.document.getElementById("btnBigFileUpload").style.display = "none";
 		        	document.getElementById("SelMailSign").classList.add("disabled"); // plainTextDisable style
+		        	
+		        	// 대용량 첨부파일 없애기
+		        	dadiframe.btnfiledel('big');
 	        	} else {
 	        		document.getElementById("bodyType").options[0].selected = true;
 	        	}
@@ -1623,11 +1777,11 @@
 				async : false,
 				url : "/admin/ezAttitude/getAttitudeAbsentedList.do",
 				data : {
-					companyId : "${companyId}",
-   					userName : "${searchUserName}",
-   					deptName : "${searchDeptName}",
-   					title : "${searchTitle}",
-   					deptId : "${searchDeptId}",
+					companyId : '<c:out value="${companyId}"/>',
+   					userName : '<c:out value="${searchUserName}"/>',
+   					deptName : '<c:out value="${searchDeptName}"/>',
+   					title : '<c:out value="${searchTitle}"/>',
+   					deptId : '<c:out value="${searchDeptId}"/>',
    					startDate : searchStartDate,
    					endDate : searchEndDate,
    					pageNum : "",
@@ -1652,13 +1806,13 @@
 						//2018-10-04 배현상, 근태관리 미입력자 메일 안내문구 삭제
 						var resultHtml = "<hr>";
 						
-						resultHtml += "<p></p><p><span style='font-size:18px;'><strong>&nbsp;근태미입력자</strong></span></p><p></p>";
+						resultHtml += "<p></p><p><span style='font-size:18px;'><strong>&nbsp;<spring:message code='ezAttitude.t75' /></strong></span></p><p></p>";
 						resultHtml += "<table style='border-collapse:collapse; width:800px;'>";
 						resultHtml += "<thead><tr>";
-						resultHtml += "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'>날짜</th>" ;
-						resultHtml += "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'>이름</th>";
-						resultHtml += "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'>직위</th>";
-						resultHtml += "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'>부서</th>";
+						resultHtml += "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'><spring:message code='ezAttitude.t133' /></th>" ;
+						resultHtml += "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'><spring:message code='ezAttitude.t10' /></th>";
+						resultHtml += "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'><spring:message code='ezAttitude.t11' /></th>";
+						resultHtml += "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'><spring:message code='ezAttitude.t9' /></th>";
 						resultHtml += "</thead><tbody>";
 						
 						result.list.forEach(function(vo, index) {
@@ -1670,7 +1824,7 @@
 						
 						resultHtml += "</tbody></table>";
 						
-						$("#eSubject").val("[근태미입력공지] " + searchStartDate + " ~ " + searchEndDate);
+						$("#eSubject").val("[<spring:message code='ezAttitude.t313'/>] " + searchStartDate + " ~ " + searchEndDate);
 						
 						switch (mailsel) {
 		                case "0": 
@@ -1692,6 +1846,53 @@
 					}
 				}
 			});
+	    }
+	    
+	    function getPMSMemberList(type) {
+	    	var data = {
+				projectId : ezPMSProjectId,
+				roleId : ezPMSRoleId,
+				type : ezPMSType,
+				toUserId : ezPMSToUserId,
+				userIdType : ezPMSUserIdType,
+				taskId : ezPMSTaskId
+	    	}
+	    	
+	    	$.ajax ({
+	    		type : "post",
+				dastaType : "json",
+   				contentType: "application/json; charset=UTF-8",
+				async : false,
+				url : "/ezPMS/sendMail.do",
+				data : JSON.stringify(data),
+				success : function(result) {
+					$("#eSubject").val("[" + result.project.projectName + "]");
+
+					var resultHtml = "";
+					
+					if (ezPMSType == "group") {
+						var memberList = result.list;
+						var headManagerId = result.project.headManagerId;
+						
+						for (var i = 0; i < memberList.length; i++) {
+							var userId = memberList[i].userId;
+							
+							if (headManagerId != userId) {
+					    		resultHtml += "\"" + memberList[i].userName + "\"";
+					    		resultHtml += " <" + memberList[i].userMail + ">, ";	
+							}
+						}
+						
+						resultHtml = resultHtml.slice(0, -2);
+					} else if (ezPMSType == "one") {
+						resultHtml += "\"" + result.list.userName + "\"";
+						resultHtml += " <" + result.list.userMail + ">";
+					}
+					
+					console.log(resultHtml);
+					xmpTo.innerHTML = resultHtml;
+				}
+	    	});
 	    }
 	    
 	    function getAttitudeToMail() {
@@ -1842,7 +2043,8 @@
 								url : "/ezEmail/autoCompleteList.do",
 								dataType : "json",
 								data : {
-									value : request.term
+									value : request.term,
+									company : ''
 								},
 								success : function(data) {
 									var susinList = data.susinList;
@@ -1918,7 +2120,8 @@
 								url : "/ezEmail/autoCompleteList.do",
 								dataType : "json",
 								data : {
-									value : request.term
+									value : request.term,
+									company : ''
 								},
 								success : function(data) {
 									var susinList = data.susinList;
@@ -1995,7 +2198,9 @@
 								url : "/ezEmail/autoCompleteList.do",
 								dataType : "json",
 								data : {
-									value : request.term
+									value : request.term,
+									// useShowAllCompanies config가 YES일 경우 그룹사 전체 조직도를 대상으로 검색하기 위해 추가함.
+									company : ''
 								},
 								success : function(data) {
 									var susinList = data.susinList;
@@ -2064,11 +2269,27 @@
 				.appendTo(ul);
 			};
 		})
+		
 		function bodydragover(evt) {
 				evt.dataTransfer.dropEffect = "none";
 				evt.stopPropagation();
 				evt.preventDefault();
 		}
+		
+		/*
+		   20190807 김수아 : 메일 작성 창의 미리보기 버튼 클릭 시
+		*/
+		function mailWritePreview() {
+			if (Save_onClick_Complete.savemode == "tempsave" && MailStatus == "SEND" && !previewChk) { // 저장 중
+				setTimeout(function() {
+					mailWritePreview();
+		        }, 1000);
+			} else if (!previewChk){
+				previewChk = true;
+				Save_onClick('preview');
+			}
+		}
+		
 	    </script>
         <c:if test="${isCrossBrowser != true}">
         <script language="javascript" for="EzHTTPTrans" event="AttachAddFile(filename)">  
@@ -2086,8 +2307,8 @@
 	            <td style="">
 	                <div id="menu">
 	                    <ul>
-	                        <li><span onclick="Send_onClick()"><spring:message code='ezEmail.t674' /></span></li>
-	                        <li><span onclick="Save_onClick('tempsave')"><spring:message code='ezEmail.t48' /></span></li>
+	                        <li><span id="spanT674"><spring:message code='ezEmail.t674' /></span></li>
+	                        <li><span id="spanT48"><spring:message code='ezEmail.t48' /></span></li>
 	                        <!-- 재은 수정(편지지) -->
 	                        <c:if test="${useLetter == 'YES'}">
 	                        <li><span onclick="Letter_onClick()"><spring:message code='ezEmail.t824' /></span></li>
@@ -2100,6 +2321,8 @@
 	                            <spring:message code='ezEmail.t331' /></span></li>
 	                        <li><span onclick="Option_onClick()" id="Span1">
 	                            <spring:message code='ezEmail.t353' /></span></li>
+	                        <li><span onclick="mailWritePreview()">
+	                            <spring:message code='ezEmail.t487' /></span></li>
 	                    </ul>
 	                    <ul style="float:right;margin-right:50px">
 	                    	<li class="sel securemail" style="background:none; border:none; padding:0px; padding-top:4px; display:none;">
@@ -2196,7 +2419,7 @@
 	                	</c:if>
 	                    <tr id="MsgTo_TR">
 	                        <th rowspan="2" style="width:1%">
-	                            <a href="#" class="imgbtn"><span onclick="SelectReceiver_onClick('To')" style="width: 50px; text-align: center;">
+	                            <a class="imgbtn"><span onclick="SelectReceiver_onClick('To')" style="width: 50px; text-align: center;">
 	                                <spring:message code='ezEmail.t66' /></span></a>
 	                            <div style="font-weight:normal; "><INPUT id="toMe" onclick="MailToMe_Onclick();" value="" type="checkbox" name="toMe" style="vertical-align: middle"/>
 	                            <label for="toMe" style="margin-left:-3px;margin-top:1px; cursor:pointer" ><spring:message code='ezEmail.t99000010' /></label></div>
@@ -2223,7 +2446,7 @@
 	                    </tr>
 	                    <tr id="MsgCC_TR">
 	                        <th rowspan="2">
-	                            <a href="#" class="imgbtn"><span onclick="SelectReceiver_onClick('CC')" style="width: 50px; text-align: center;"> 
+	                            <a class="imgbtn"><span onclick="SelectReceiver_onClick('CC')" style="width: 50px; text-align: center;"> 
 	                                <spring:message code='ezEmail.t594' /></span></a>
 	                            <div onclick="MailBCCView(this);" style="cursor:pointer;" status="off" id="BccViewer">
 	                            <img src="/images/ImgIcon/groupplus.gif" align="absmiddle"/><span><spring:message code='ezEmail.t562' /></span>
@@ -2250,7 +2473,7 @@
 	                    </tr>
 	                    <tr id="MsgBCC_TR"  style="display:none;">
 	                        <th rowspan="2">
-	                            <a href="#" class="imgbtn"><span onclick="SelectReceiver_onClick('BCC')" style="width: 50px; text-align: center;">
+	                            <a class="imgbtn"><span onclick="SelectReceiver_onClick('BCC')" style="width: 50px; text-align: center;">
 	                                <spring:message code='ezEmail.t562' /></span></a>
 	                        </th>
 	                        <td>
@@ -2282,7 +2505,7 @@
 	                    </tr>
 	                </table>
 	                
-	                <xmp id="xmpTo" style="display: none">${to}</xmp>
+	                <xmp id="xmpTo" style="display: none"><c:out value='${to}'/></xmp>
 	                <xmp id="xmpCc" style="display: none">${cc}</xmp>
 	                <xmp id="xmpBcc" style="display: none">${bcc}</xmp>
 	                <xmp id="xmpSubject" style="display: none">${subject}</xmp>
@@ -2331,7 +2554,7 @@
 	                <img src="/images/i_notice.gif" style="vertical-align: middle;padding-left:1px" /><span style="color:#3a76c3;height:18px;display:inline-block;margin-left:5px">${pAttachWarning}</span>
 	                <c:choose>
 	                	<c:when test="${shareId != null and shareId != ''}">
-	                		<iframe id="dadiframe" name="dadiframe" style="width:100%;border:0px" src="/ezEmail/dragAndDrop.do?shareId=${shareId}"></iframe>
+	                		<iframe id="dadiframe" name="dadiframe" style="width:100%;border:0px" src="/ezEmail/dragAndDrop.do?shareId=<c:out value='${shareId}'/>"></iframe>
 	                	</c:when>
 	                	<c:otherwise>
 	                		<iframe id="dadiframe" name="dadiframe" style="width:100%;border:0px" src="/ezEmail/dragAndDrop.do"></iframe>
@@ -2352,11 +2575,11 @@
                                 <script type="text/javascript">EzHTTPTrans_ActiveX2("EzHTTPTrans","100%", "20");</script>                                
                             </td>
                             <td class="pos2">
-                                <a href="#" class="imgbtn"><span id="btn_AttachAdd" onclick="attach_Add()"><spring:message code='ezEmail.t677' /></span></a>
+                                <a class="imgbtn"><span id="btn_AttachAdd" onclick="attach_Add()"><spring:message code='ezEmail.t677' /></span></a>
                                 <br>
-                                <a href="#" class="imgbtn"><span id="btn_bigAttachAdd" onclick="bigattach_Add()"><spring:message code='ezEmail.t663' /></span></a>
+                                <a class="imgbtn"><span id="btn_bigAttachAdd" onclick="bigattach_Add()"><spring:message code='ezEmail.t663' /></span></a>
                                 <br>
-                                <a href="#" class="imgbtn"><span id="btn_AttachDel" onclick="attach_Delete()"><spring:message code='ezEmail.t678' /></span></a></td>
+                                <a class="imgbtn"><span id="btn_AttachDel" onclick="attach_Delete()"><spring:message code='ezEmail.t678' /></span></a></td>
                         </tr>
                     </table>
                 </td>
@@ -2407,6 +2630,12 @@
 	    	} else {
 	    		document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - $('#infoTable').height() - 160 + "PX";
 	    	}
+	    	
+	    	 // 내게쓰기 버튼 클릭시  checkobx checked 
+	    	if (isMailToMe == 'YES') {
+	         	document.getElementById('toMe').checked = 'checked';
+	  	        MailToMe_Onclick();
+         	}
 	    </script>
 	</body>
 	<xmp id="AttachXmlList" style="display:none;">

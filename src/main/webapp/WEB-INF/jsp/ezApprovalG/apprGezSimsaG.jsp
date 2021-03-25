@@ -1,9 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html style="height:97%;">
 	<head>
-		<title><spring:message code='ezApprovalG.t257'/></title>
+		<c:choose>
+			<c:when test="${isConvSihang}">
+				<title>시행문변환</title>
+			</c:when>
+			<c:otherwise>
+				<title><spring:message code='ezApprovalG.t257'/></title>
+			</c:otherwise>
+		</c:choose>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>	
@@ -17,35 +25,36 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/conn_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendOffer_Cross.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
-		    var pDocID = "${docID}";
-		    var pDocHref = "${docHref}";
-		    var pOrgDocID = "${orgDocID}";
+		    var pDocID = "<c:out value = '${docID}'/>";
+		    var pDocHref = "<c:out value = '${docHref}'/>";
+		    var pOrgDocID = "<c:out value = '${orgDocID}'/>";
 		    var pUserID;
 		    var flag = false;
 		    var flag2 = false;
 		    var stampFlag = false;
 		    var NostampFlag = false;
 		    var modeflag = false;
-		    var companyID = "${userInfo.companyID}";
-		    var companyName = "${userInfo.companyName}";
+		    var companyID = "<c:out value = '${userInfo.companyID}'/>";
+		    var companyName = "<c:out value = '${userInfo.companyName}'/>";
 		    var maxwidth = 659;
 		    var arr_userinfo = new Array();
 		    arr_userinfo[0]  = "user";
-		    arr_userinfo[1]  = "${userInfo.id}";
-		    arr_userinfo[2]  = "${userInfo.displayName}";
-		    arr_userinfo[3]  = "${userInfo.title}";
-		    arr_userinfo[4]  = "${userInfo.deptID}";
-		    arr_userinfo[5]  = "${userInfo.deptName}";
-		    arr_userinfo[6]  = "${userInfo.jikChek}";
-		    arr_userinfo[8]  = "${userInfo.email}";
+		    arr_userinfo[1]  = "<c:out value = '${userInfo.id}'/>";
+		    arr_userinfo[2]  = "<c:out value = '${userInfo.displayName}'/>";
+		    arr_userinfo[3]  = "<c:out value = '${userInfo.title}'/>";
+		    arr_userinfo[4]  = "<c:out value = '${userInfo.deptID}'/>";
+		    arr_userinfo[5]  = "<c:out value = '${userInfo.deptName}'/>";
+		    arr_userinfo[6]  = "<c:out value = '${userInfo.jikChek}'/>";
+		    arr_userinfo[8]  = "<c:out value = '${userInfo.email}'/>";
 		    arr_userinfo[9]  = companyID;
-		    arr_userinfo[11]  = "${userInfo.displayName}";
-		    arr_userinfo[12]  = "${userInfo.displayName2}";
-		    arr_userinfo[13]  = "${userInfo.title1}";
-		    arr_userinfo[14]  = "${userInfo.title2}";
-		    arr_userinfo[15]  = "${userInfo.deptName1}";
-		    arr_userinfo[16]  = "${userInfo.deptName2}";
+		    arr_userinfo[11]  = "<c:out value = '${userInfo.displayName}'/>";
+		    arr_userinfo[12]  = "<c:out value = '${userInfo.displayName2}'/>";
+		    arr_userinfo[13]  = "<c:out value = '${userInfo.title1}'/>";
+		    arr_userinfo[14]  = "<c:out value = '${userInfo.title2}'/>";
+		    arr_userinfo[15]  = "<c:out value = '${userInfo.deptName1}'/>";
+		    arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2}'/>";
 		    pUserID = arr_userinfo[1];
 		    var is_Enc = "NONE";
 		    var isExternal = false;
@@ -82,34 +91,53 @@
 		    arrDelFiles[0] = "c:\\" + pDocID + ".xml";
 		    arrDelFiles[1] = "c:\\" + pOrgDocID + ".xml";
 		    var flag = false;
-		    var pUse_Editor = "${useEditor}";
+		    var pUse_Editor = "<c:out value = '${useEditor}'/>";
 		    var PrtBodyContent;
 		    var orgCompanyID = "";
 		    var ext = "mht";
 		    var docTitle = "";
+		    var isConvSihang = ${isConvSihang};
+		    var useWebHWP = "<c:out value ='${useWebHWP}'/>";
 		    
+	        // 대용량첨부 관련
+	        var bigAttachDownloadPeriod = "<c:out value ='${bigAttachDownloadPeriod}'/>";
+	        var bigAttachDownloadDay = "<c:out value ='${bigAttachDownloadDay}'/>";
+	        var bigSizeAttachDownloadLimitCount = "<c:out value ='${bigSizeAttachDownloadLimitCount}'/>";
+	        
 		    function btnPrint_onclick() {
 		        PrintClick("Cross", pDocID, "");
 		    }
 		    function DocumentComplete() {
 		        if (flag == false) {
-		            flag = true;
+					flag = true;
+					
+					if (isConvSihang) {
+						setMenuDisable("btnOpinion", true);
+					} else {
+						setMenuDisable("btnReject", true);
+					}
 		
 		            if ("${pass}" != "<RESULT>TRUE</RESULT>") {
 		                QuitWindow();
-		            }
-		            else {
+		            } else {
 		                if (pDocHref != "") {
 		                    message.Set_EditorContentURL(pDocHref);
 		                }
 		            }
 		        }
+		        
+				// 일반첨부, 대용량첨부파일 관련 가이드 메세지 추가
+				setAttachGuideText();
 		    }
 		    var noFieldsAvailable = false;
 		    function FieldsAvailable() {
 		        var fields = message.GetFieldsList();
-		        ObjGPKI.ServerName = "ldap.gcc.go.kr";
-		        setAttachInfo(pOrgDocID, "END", lstAttachLink);
+				ObjGPKI.ServerName = "ldap.gcc.go.kr";
+				if (isConvSihang) {
+					setAttachInfo(pDocID, "END", lstAttachLink);
+				} else {
+					setAttachInfo(pOrgDocID, "END", lstAttachLink);
+				}
 		        setArrAttachInfo();
 		        GetAprDeptXML();
 		        GetExchInfo();
@@ -194,9 +222,9 @@
 		
 		
 		    var ezapropinion_cross_dialogArguments = new Array();
-		    function OpenInformationUI(pInformationContent, CompleteFunction) {
+		    function OpenInformationUI(pInformationContent, CompleteFunction, pType) {
 		        var parameter = pInformationContent;
-		        var url = "/ezApprovalG/ezAprOpinion.do";
+		        var url = "/ezApprovalG/ezAprOpinion.do?type=" + pType;
 		
 		        if (CrossYN()) {
 		            ezapropinion_cross_dialogArguments[0] = parameter;
@@ -274,16 +302,23 @@
 		        }
 		    }
 		    function btnSetReceivLine_onclick() {
-		        DivPopUpShow(720, 240, "/ezApprovalG/ezReceiptInfo.do?docID=" + pDocID + "&ext=" + ext);
+				var convSihangParam = isConvSihang ? "&mode=END" : "";
+		        DivPopUpShow(720, 240, "/ezApprovalG/ezReceiptInfo.do?docID=" + pDocID + "&ext=" + ext + convSihangParam);
 		    }
+		    var aprendopinion_dialogArgument = [];
 		    function btnOpinion_onclick() {
-		        var parameter = new Array();
-		        parameter[0] = pOrgDocID;
+		        var parameter = [];
+		        parameter[0] = pDocID;
 		        parameter[1] = "Show";
-		        var url = "/ezApprovalG/aprEndOpinion.do";
-		        var feature = "status:no;dialogWidth:387px;dialogHeight:304px;scroll:no;edge:sunken";
-		        feature = feature + GetShowModalPosition(387, 304);
-		        var ret = window.showModalDialog(url, parameter, feature);
+		        parameter[2] = orgCompanyID;
+		
+		        aprendopinion_dialogArgument[0] = parameter;
+		        aprendopinion_dialogArgument[1] = btnOpinion_onclick_Complete;
+
+		        DivPopUpShow(530, 520, "/ezApprovalG/aprEndOpinion.do");
+		    }
+		    function btnOpinion_onclick_Complete() {
+		        DivPopUpHidden();
 		    }
 		    function btnSend_onclick() {
 		        if (!stampFlag && !NostampFlag) {
@@ -326,12 +361,12 @@
 		    }
 		
 		    function btnSend_onclick_Complete() {
-		        SaveFile();
+				SaveFile();
+				
 		        var rtnVal = "FALSE";
 		        if (isExternal) {
 		            if (isAddress) {
 		                rtnVal = SetContainer();
-		                
 				        if (rtnVal == "TRUE") {
 				            var pAlertContent = "<spring:message code='ezApprovalG.t206'/>";
 				            OpenAlertUI(pAlertContent);
@@ -429,7 +464,7 @@
 		                alert(strLang1031);
 		            }
 		            else {
-		                window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + pDocHref, '', "top=" + pTop.toString() + ", left=" + pLeft.toString() + ',height=870,width=765,scrollbars=no');
+		                window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + pDocHref, '', "top=" + pTop.toString() + ", left=" + pLeft.toString() + ',height=870,width=765,scrollbars=no');
 		            }
 		        }
 		    }
@@ -566,6 +601,31 @@
 		        }
 		    }
 		    function SetContainer() {
+				var docID = pDocID;
+				var orgDocID = pOrgDocID;
+
+				if (isConvSihang) {
+					var simsaUserInfo = [];
+					simsaUserInfo[0] = "OK";
+					simsaUserInfo[1] = arr_userinfo[1];
+					simsaUserInfo[2] = arr_userinfo[11];
+					simsaUserInfo[3] = arr_userinfo[13];
+					simsaUserInfo[4] = arr_userinfo[4];
+					simsaUserInfo[5] = arr_userinfo[15];
+					simsaUserInfo[6] = arr_userinfo[12];
+					simsaUserInfo[7] = arr_userinfo[16];
+					simsaUserInfo[8] = arr_userinfo[14];
+
+					var rtnJson = SendOfferForConvSihang(simsaUserInfo, pDocID, pDocHref, arr_userinfo[1]);
+					if (!rtnJson.state) {
+						OpenAlertUI(rtnJson.msg);
+						return;
+					}
+
+					docID = rtnJson.newDocID;
+					orgDocID = pDocID;
+				}
+
 		    	var result = "";
 		    	
 	    		$.ajax({
@@ -574,22 +634,27 @@
 		    		async : false,
 		    		url : "/ezApprovalG/sendOfferAprove.do",
 		    		data : {
-		    			docID : pDocID,
-		    			orgDocID  : pOrgDocID,
+		    			docID : docID,
+		    			orgDocID  : orgDocID,
 		    			userID : pUserID,
 		    			userName : arr_userinfo[11],
 		    			deptID   : arr_userinfo[4],
 		    			userName2: arr_userinfo[12]
 		    		},
 		    		success: function(xml){
-		    			result = loadXMLString(xml);
+						var ResultXML = loadXMLString(xml);
+						result = getNodeText(GetChildNodes(ResultXML)[0]);
 		    		} , error: function() {
-		    			return "FALSE";
+		    			result = "FALSE";
 		    		}     			
-		    	});
-		    	 
-		        var ResultXML = result;
-		        return getNodeText(GetChildNodes(ResultXML)[0]);
+				});
+				
+				if (isConvSihang && result !== "TRUE") {
+					UndoCreateDoc(docID);
+					UndoUpdateProcessYN(orgDocID);
+				}
+
+				return result;
 		    }
 		    
 		    function setBtnDisable() {
@@ -605,44 +670,65 @@
 		    }
 		    
 		    function SaveFile() {
+				var result = null;
 		        var mhtBody = "";
 		        mhtBody = message.Get_EditorBodyHTML();
 		        mhtBody = "<HTML>" + GetCKEditerHeader() + mhtBody + "</HTML>";
-		        mhtBody = ConvertHTMLtoMHT(mhtBody);
+				mhtBody = ConvertHTMLtoMHT(mhtBody);
+				
+				if (isConvSihang) {
+					result = saveEndFile(pDocID, mhtBody);
+				} else {
+					result = saveEndFile(pOrgDocID, mhtBody);
+					result = saveIngFile(pDocID, mhtBody, orgCompanyID);
+				}
 		        
+		        return result;
+			}
+			
+			function saveEndFile(pDocID, pMhtBody) {
+				var result = null;
+		    	var reqData = {
+	    			docID : pDocID,
+	    			html  : pMhtBody
+		    	}
+				
 		        $.ajax({
 		    		type : "POST",
 		    		dataType : "text",
 		    		async : false,
 		    		url : "/ezApprovalG/saveEndFile.do",
-		    		data : {
-		    			docID : pOrgDocID,
-                        // formId : pFormID,
-		    			html  : mhtBody
-		    		},
+		    		contentType : "application/json",
+		    		data : JSON.stringify(reqData),
 		    		success: function(xml){
 		    			result = xml;
 		    		}        			
-		    	});
+				});
+				
+				return result;
+			}
+			function saveIngFile(pDocID, pMhtBody, pOrgCompnyID) {
+				var result = null;
+		    	var reqData = {
+	    			docID : pDocID,
+	    			html  : pMhtBody,
+	    			orgCompanyID : pOrgCompnyID
+		    	}
 		        
 		        $.ajax({
 		    		type : "POST",
 		    		dataType : "text",
 		    		async : false,
 		    		url : "/ezApprovalG/saveFile.do",
-		    		data : {
-		    			docID : pDocID,
-						// formId : pFormID,
-		    			html  : mhtBody,
-		    			orgCompanyID : orgCompanyID
-		    		},
+		    		contentType : "application/json",
+		    		data : JSON.stringify(reqData),
 		    		success: function(text){
 		    			result = text;
 		    		}        			
-		    	});
-		        
-		        return result;
-		    }
+				});
+				
+				return result;
+			}
 		    
 		    function GetSealInfo() {
 				var result = "";
@@ -687,8 +773,8 @@
 				    /* 2020-02-19 홍승비 - 회사관인과 부서관인의 존재여부 체크 로직 수정(GetChildNodes -> SelectNodes) */
 		            // 회사관인과 부서관인이 모두 존재하는 경우
 		            if (SelectNodes(DeptSealXML, "ROWS/ROW").length > 0 && SelectNodes(CompSealXML, "ROWS/ROW").length > 0) {
-		                var pInformationContent = "<spring:message code='ezApprovalG.t192'/>" + "<BR>" + "<spring:message code='ezApprovalG.t193'/>";
-		                OpenInformationUI(pInformationContent, Stamp_OpenUI);
+		                var pInformationContent = "관인을 선택하세요.";
+		                OpenInformationUI(pInformationContent, Stamp_OpenUI, "seal");
 		                tempDeptSealXML = DeptSealXML;
 		                tempCompSealXML = CompSealXML;
 		                
@@ -1007,7 +1093,7 @@
 		    		data : {
 		    			fontFamily : pDefaultFontFamily,
 		    			fontSize : pDefaultFontSize,
-		    			content : text
+		    			content : text.replace(/"/g,'\\\"')
 		    		},
 		    		success: function(xml){
 		    			result = loadXMLString(xml);
@@ -1393,8 +1479,11 @@
 	                        break;
 	                }
 	            }
+	            
+	            // 한글기안기에서 접수 할 때, table 태그에 align이 있어도 적용되지 않고 align 속성을 가진 p태그로 감싸져 있어야 해서 처리. 2020-05-20 홍대표.
+	            coverTableWithP(Content);
 
-	            var rtnVal = Content.innerHTML.replace(/width_kaoni/g, "width").replace(/height_kaoni/g, "height").replace(/<p><\/p>/g, "</p>");
+	            var rtnVal = Content.innerHTML.replace(/width_kaoni/g, "width").replace(/height_kaoni/g, "height");
 	            rtnVal = rtnVal.replace(/\r/g, "").replace(/\n/g, "").replace(/&nbsp; /g, "&nbsp;&nbsp;");
 
 	            // COL TAG의 닫는 태그가 없는 경우가 있어 강제 변환처리.
@@ -1773,6 +1862,47 @@
 					return false;
 				}
 			}
+		    
+		    function coverTableWithP(bodyContent){
+	            var tableElementArray = bodyContent.getElementsByTagName("table");
+	            for (var i = 0; i < tableElementArray.length; i++) {
+	            	var tableElement = tableElementArray[i];
+	            	if (tableElement.parentElement.tagName.toLowerCase() != "p" && tableElement.getAttribute("align")) {
+	            		var pElem = document.createElement("p");
+	            		pElem.innerHTML = tableElement.outerHTML;
+	            		pElem.setAttribute("align", tableElement.getAttribute("align"));
+	            		tableElement.parentNode.insertBefore(pElem, tableElement);
+	            		tableElement.remove();
+	            	}
+	            }
+		    }
+		    
+	    	// 일반첨부, 대용량첨부파일 관련 가이드 메세지 추가
+	    	function setAttachGuideText() {
+	    		// 대용량첨부의 자동삭제 기능, 저장만료기한 사용하지 않음
+	            var attachGuideText =  "<td align='left' style='width:50%; font-size:11px; font-weight:normal; color:#666666; padding-left:10px; padding-top:0px; padding-bottom:0px; margin:0px; border-bottom:1px solid #dadada;border-left:1px solid #dadada; border-right:none; border-top: none; background:#fffcfa; height:20px; line-height:20px;'>";
+	            
+	            if(bigSizeAttachDownloadLimitCount > 0) {
+	            	attachGuideText += strLangHSBAt06 + " <span style='color:#FF0000 ;'>" + bigSizeAttachDownloadLimitCount + strLangHSBAt09 + "</span> " + strLangHSBAt10;
+	            }
+	            
+	            attachGuideText += "<td align='right' style='width:50%; font-size:11px; font-weight:normal; color:#666666; padding-right:10px; padding-top:0px; padding-bottom:0px; margin:0px; border-bottom:1px solid #dadada;border-right:1px solid #dadada; border-left:none; border-top: none; background:#fffcfa; height:20px; line-height:20px;'>";
+	            attachGuideText += "</td>";
+	/*                 
+	            var attachGuideText =  "<td align='left' style='width:50%; font-size:11px; font-weight:normal; color:#666666; padding-left:10px; padding-top:0px; padding-bottom:0px; margin:0px; border-bottom:1px solid #dadada;border-left:1px solid #dadada; border-right:none; border-top: none; background:#fffcfa; height:20px; line-height:20px;'>";
+	            attachGuideText += strLangHSBAt05 + "<span style='color:#FF0000 ;'>" + bigAttachDownloadPeriod + "</span></td>";
+	            attachGuideText += "<td align='right' style='width:50%; font-size:11px; font-weight:normal; color:#666666; padding-right:10px; padding-top:0px; padding-bottom:0px; margin:0px; border-bottom:1px solid #dadada;border-right:1px solid #dadada; border-left:none; border-top: none; background:#fffcfa; height:20px; line-height:20px;'>";
+	            attachGuideText += strLangHSBAt06 + "<span style='color:#FF0000 ;'>" + bigAttachDownloadDay + strLangHSBAt07 + "</span>" + strLangHSBAt08;
+	             */
+	             
+	             if (bigSizeAttachDownloadLimitCount > 0) {
+	            	 document.getElementById("apprAttachGuideTR").innerHTML = attachGuideText;
+	             }
+	             else {
+	            	 document.getElementById("apprAttachGuideTR").style.display = "none";
+	             }
+	    	}
+	    	
 		</script>
 	</head>
 	<body class="popup"  style="overflow:hidden;height:100%;">
@@ -1788,8 +1918,8 @@
 				    <li id=btnNoStamp><span onClick="return btnNoStamp_onclick()"  ><spring:message code='ezApprovalG.t222'/></span></li> 
 				    <li id=btnSend><span onClick="return btnSend_onclick()"  ><spring:message code='ezApprovalG.t214'/></span></li> 
 				    <li id=btnBoard><span onClick="return btnBoard_onclick()"  ><spring:message code='ezApprovalG.t215'/></span></li> 
-				    <li id=btnReject><span onClick="return btnReject_onclick()"  ><spring:message code='ezApprovalG.t49'/></span></li> 
-				    <li id=btnPrint><span onClick="return btnPrint_onclick()" ><spring:message code='ezApprovalG.t60'/></span></li>
+				    <li id=btnReject style="display:none"><span onClick="return btnReject_onclick()"  ><spring:message code='ezApprovalG.t49'/></span></li> 
+				    <li id=btnPrint><span class='icon16 popup_icon16_print' onClick="return btnPrint_onclick()" ></span></li>
 				</ul>
 				</div>
 				<div id="close">
@@ -1805,12 +1935,28 @@
 		    </td>
 		  </tr>
 			<tr> 
-				<td style="height:20px;"><table class="file">
-		        <tr>
-		          <th><spring:message code='ezApprovalG.t65'/></th>
-		          <td><div id="lstAttachLink"></div></td>
-		        </tr>
-		      </table> 
+				<td style="height:20px;">
+	                <table class="file" style="height:80px;">
+	                    <tr>
+	                        <th><spring:message code='ezApprovalG.t65'/></th>
+	                        <td style=" width:62%; border-right:1px solid #d5d5d5;">
+	                            <div id="lstAttachLink" style="height:70px;"></div>
+	                            <iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0" style="display: none;"></iframe>
+	                        </td>
+	                        <td style=" width:30%;">
+								<div id="lstAttachLinkDoc" style="height:70px;"></div>
+							</td>
+							<td class="pos2" style="width:8%; background:#fffcfa;">
+								<a class="imgbtn imgbck" style="width:60px;"><span style="height:24px;" onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
+								<a class="imgbtn imgbck" style="width:60px;"><span style="height:24px;" onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a><br/>
+							</td>
+	                    </tr>
+	                </table>
+	                
+					<%-- 대용량첨부 가이드 메세지 영역 --%>
+	                <table class="file" style="height: 20px;">
+	                    <tr id="apprAttachGuideTR"></tr>
+	                </table>
 				</td>
 			</tr>
 		</table>

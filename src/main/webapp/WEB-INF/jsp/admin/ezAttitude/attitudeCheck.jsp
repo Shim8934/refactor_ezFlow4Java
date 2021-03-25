@@ -16,6 +16,8 @@
 	    <!-- data picker-->		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+		<!-- date Format -->		
+		<script type="text/javascript" src="${util.addVer('/js/ezAttitude/moment.min.js')}"></script>
 	    <style>
 	    	#contentlist table.mainlist tr:not(.tr_noItems) td {
 	    		overflow : hidden;
@@ -24,12 +26,10 @@
 	    		cursor : pointer;
 	    	}
 	    	tr.hover:hover {background:#eee; color:#fff;}
-			.selectTR {background-color: #edf4fd;}
+			.selectTR {background-color: #f1f8ff;}
 			#searchTable {
-				border-top: 1px solid #e8e8e8;
-				border-left: 1px solid #e8e8e8;
-				border-right: 1px solid #e8e8e8;
-				background-color: #fcfcfc;
+				border: 1px solid #e8e8e8;
+				background-color: #f8f8fa;
 			}
 			#searchTable td {padding: 8px 5px;}
 	    </style>
@@ -106,7 +106,7 @@
 			        changeYear: true,
 			        autoSize: true,
 			        showOn: "both",
-			        buttonImage: "/images/ImgIcon/calendar-month.gif",
+			        buttonImage: "/images/ImgIcon/calendar-month.png",
 			        buttonImageOnly: true
 			    });
 			    $("#Edatepicker").datepicker({
@@ -114,7 +114,7 @@
 			        changeYear: true,
 			        autoSize: true,
 			        showOn: "both",
-			        buttonImage: "/images/ImgIcon/calendar-month.gif",
+			        buttonImage: "/images/ImgIcon/calendar-month.png",
 			        buttonImageOnly: true
 			    });
 			});
@@ -164,6 +164,20 @@
 	    		getAttitudeCheckList();
 	    	}
 	    	
+	    	function ShowMailProgress() {
+				var CurrenWidth = window.innerWidth;
+	        	
+			    document.getElementById("mailPanel").style.display = "";
+			    document.getElementById("MailProgress").style.top = "330px";
+			    document.getElementById("MailProgress").style.left = (CurrenWidth / 2) - 100 + "px";
+			    document.getElementById("MailProgress").style.display = "";
+			}
+	    	
+	    	function HiddenMailProgress() {
+			    document.getElementById("mailPanel").style.display = "none";
+			    document.getElementById("MailProgress").style.display = "none";
+			}
+	    	
 	    	function getAttitudeCheckList(){
     			searchStartDate = $("#Sdatepicker").val();
     			searchEndDate = $("#Edatepicker").val();
@@ -174,7 +188,7 @@
 				}
 	    		
 	    		$.ajax({
-	    			data : "GET",
+	    			type : "GET",
 	    			dataType : "json",
 	    			async : false,
 	    			url : "/admin/ezAttitude/attitudeCheckList.do",
@@ -191,6 +205,9 @@
 	   					orderCell : orderCell,
 	   					orderOption : orderOption
     				},
+    				beforeSend : function(){
+    					ShowMailProgress();
+    				},
 	    			success : function(result){
 	    				totalCount = result.totalCount;
 	    				totalPage = parseInt(totalCount / listSize) + (totalCount % listSize != 0 ? 1 : 0);
@@ -200,6 +217,9 @@
 	    			},
 	    			error : function() {
 	    				alert("<spring:message code='ezAttitude.t59'/>");
+	    			},
+	    			complete : function() {
+	    				HiddenMailProgress();
 	    			}
 	    		});
 	    	}
@@ -236,7 +256,13 @@
 	    			resultHtml += "<td>" + vo.deptName + "</td>";
 	    			
 	    			if (vo.endDate == null || vo.endDate == "") {
-	    				resultHtml += "<td>" + vo.startDate.substring(0,16) + "</td>";
+	    				if(vo.typeId == "A25") {
+	    					var date = new Date(vo.startDate.substring(0,4), Number(vo.startDate.substring(5,7))-1 , Number(vo.startDate.substring(8,10)));
+							date.setDate(date.getDate()+1);	    					
+		    				resultHtml += "<td style='width: 30%;'>" + moment(date).format('YYYY-MM-DD') + " " + vo.startDate.substring(11,16) + "</td>";
+	    				} else {
+		    				resultHtml += "<td style='width: 30%;'>" + vo.startDate.substring(0,16) + "</td>";
+	    				}
 	    			} else {
 	    				if (vo.dateType == 4) {
 	    					resultHtml += "<td>" + vo.startDate.substring(0,11) + " ~ " + vo.endDate.substring(0,11) + "</td>";
@@ -314,7 +340,7 @@
 					return;
 				}
 				
-		    	exportExcelframe.location.href="/ezAttitude/excelAttitudeListExport.do?companyId=" + pCompanyId + "&userName=" + searchUserName + "&deptName=" + searchDeptName + "&title=" + searchTitle + "&startDate=" + searchStartDate + "&endDate=" + searchEndDate + "&attitudeType=" + searchAttitudeType + "&orderCell=" + orderCell + "&orderOption=" + orderOption;
+		    	exportExcelframe.location.href="/ezAttitude/excelAttitudeListExport.do?companyId=" + encodeURIComponent(pCompanyId) + "&userName=" + encodeURIComponent(searchUserName) + "&deptName=" + encodeURIComponent(searchDeptName) + "&title=" + encodeURIComponent(searchTitle) + "&startDate=" + encodeURIComponent(searchStartDate) + "&endDate=" + encodeURIComponent(searchEndDate) + "&attitudeType=" + encodeURIComponent(searchAttitudeType) + "&orderCell=" + encodeURIComponent(orderCell) + "&orderOption=" + encodeURIComponent(orderOption);
 		    	exportExcelframe.target="_blank";
 			}
 			
@@ -381,11 +407,11 @@
 				var date = today;
 				
 				if (CrossYN()) {
-                    var OpenWin = window.open("/ezAttitude/attAdminNewItem2.do?date=" + date + "&mode=admin&userid="  + "&companyID=" + pCompanyId, "attitudeNewItem", GetOpenWindowfeature(672, 640));
+                    var OpenWin = window.open("/ezAttitude/attAdminNewItemTwo.do?date=" + date + "&mode=admin&userid="  + "&companyID=" + pCompanyId, "attitudeNewItem", GetOpenWindowfeature(672, 640));
                     
                     try { OpenWin.focus(); } catch (e) { }
 	            } else {
-                	rtnValue = window.showModalDialog("/ezAttitude/attAdminNewItem2.do?date=" + date + "&mode=admin&userid=" + "&companyID=" + pCompanyId, "",
+                	rtnValue = window.showModalDialog("/ezAttitude/attAdminNewItemTwo.do?date=" + date + "&mode=admin&userid=" + "&companyID=" + pCompanyId, "",
                         "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
 	                
 	                if (typeof (rtnValue) != "undefined") {
@@ -393,18 +419,35 @@
 	                }
 	            }
 			}
+			
+			/**
+			* [근태입력관리] 일근무/반근무 세팅 스케줄러 동작
+			*/
+			function attScheduler() {
+				$.ajax({
+					type : "POST",
+					async : true,
+					url : "/admin/ezAttitude/setDailyWork.do",
+					success : function(result) {
+						if(result != "success"){
+							alert("<spring:message code='ezCommunity.t47'/>");
+						}
+					}
+				});
+			}
 	    </script>
 	</head>
 	<body class="mainbody">
-	    <h1><spring:message code = 'ezAttitude.t5' /><span id="mailBoxInfo"></span></h1>
-		<div id="mainmenu">
-        	<span style="border: none;"><b><spring:message code='ezAttitude.t15' /> : </b></span>
-			<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-top:4px; padding-right:40px;">
+	    <h1>
+	    	<spring:message code = 'ezAttitude.t5' /><span id="mailBoxInfo"></span>
+		    <span class="title_bar"><img src="/images/name_bar.gif"></span>
+	    	<select class="companySelect" name="ListCompany" id="ListCompany" onchange="company_change()">
 				<c:forEach var = "companyItem" items="${list }">
 					<option value="<c:out value = '${companyItem.cn }' />"><c:out value = '${companyItem.displayName }'/></option>
 				</c:forEach>
       		</select>
-	  	</div>
+	    </h1>
+		<div id="mainmenu"></div>
 	  	
 	  	<table id="searchTable" style="width:100%;">
 			<tbody>
@@ -418,8 +461,10 @@
 						<select name="searchAttitudeType" id="searchAttitudeType" style="padding-right:50px;height:24px">
 							<option value="ALL" selected><spring:message code='ezAttitude.t124'/></option>
 							<c:forEach var = "type" items="${typeList}">
-								<option value="<c:out value='${type.typeId }'/>">${type.typeName }</option>
-							</c:forEach>
+								<c:if test="${type.typeId ne 'A25'}">
+									<option value="<c:out value='${type.typeId }'/>">${type.typeName }</option>
+								</c:if>
+							</c:forEach>							
 						</select>
 					</td>
 				</tr>
@@ -436,13 +481,13 @@
 						<a class="imgbtn"><span onclick="searchAttitudeCheckList('refresh');"><spring:message code='ezAttitude.t122' /></span></a>
 						<a class="imgbtn"><span onclick="exportExcel();"><spring:message code='ezAttitude.t145' /></span></a>
 						<a class="imgbtn"><span onclick="addAtt();"><spring:message code='ezAttitude.t51' /></span></a>
-						
+						<a class="imgbtn"><span onclick="attScheduler();"><spring:message code='ezAttitude.kje31' /></span></a>
 					</td>
 				</tr>
 			</tbody>
 		</table>
 		
-	  	<div id="contentlist" style="width:100%; height:610px;">
+	  	<div id="contentlist" style="width:100%; height:610px;margin-top:5px">
 			<table class="mainlist" style="width:100%;">
 				<thead>
 					<tr>
@@ -458,9 +503,13 @@
 				</tbody>
 			</table>
 	  	</div>
-	  	
-	  	<div style="color: #666; padding-top: 10px"></div>
+	  		  	
 		<div id="tblPageRayer"></div>
 		<iframe name="exportExcelframe" src="about:blank" style="width:0px; height:0px; display:none;"></iframe>
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id="mailPanel"></div>
+	    <div style="width: 200px; height: 110px; border-radius: 8px; text-align: center; vertical-align: middle; z-index: 9000; position: absolute; top: 400px; left: 726.5px; display: none;" id="MailProgress">
+            <img src="/images/email/progress_img.gif" style="padding-top:20px;">
+            <div id="progressNum" style="padding-top:10px;vertical-align: middle; font-weight: bold; font-size: 1.2em;"></div>
+        </div>
 	</body>
 </html>

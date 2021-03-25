@@ -13,7 +13,6 @@
 		
 		<script type="text/javascript">
 	        var PresentCompanyID = "<c:out value = '${userInfo.companyID}' />";
-	        var encodeInfoPath = "<c:out value = '${encodeInfoPath}' />";
 	
 			document.onselectstart = function () {
 	        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -23,8 +22,8 @@
 			};
 			
 			$(document).ready(function(){
-	            document.getElementById("SCompID").value = PresentCompanyID;
-	            GetOptionInfo(document.getElementById("SCompID").value);
+	            document.getElementById("ListCompany").value = PresentCompanyID;
+	            GetOptionInfo(document.getElementById("ListCompany").value);
 	        });
 			
 			var ezapralert_cross_dialogArguments = new Array();
@@ -113,26 +112,34 @@
 			        option3 = "N";
 			    }
 			
-			    SaveOptionInfo(SCompID.value, option1, option2, option3);
+			    SaveOptionInfo(ListCompany.value, option1, option2, option3);
 			}
 			
 			function selectCompanyID() {
-			    GetOptionInfo(document.getElementById("SCompID").value);
+			    GetOptionInfo(document.getElementById("ListCompany").value);
 			}
 		</script>
 		
 	</head>
 	<body class="mainbody">
-	    <h1><spring:message code = 'ezApprovalG.t1582' /></h1>
+	    <h1>
+	    	<spring:message code = 'ezApprovalG.t1582' />
+	    	<span class="title_bar"><img src="/images/name_bar.gif"></span>
+	    	<select id="ListCompany" name="SCompID" class="companySelect" onchange="selectCompanyID()">
+	    		<c:forEach var="item" items="${list}">
+            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+            	</c:forEach>
+            </select>
+	    </h1>
 	    <div id="mainmenu">
-		  	<ul>	    
+		  	<%-- <ul>	    
 		        <b><spring:message code='ezApprovalG.t1276'/></b>
 		    	<select id="SCompID" name="SCompID" onchange="selectCompanyID()">
 		    		<c:forEach var="item" items="${list}">
 	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 	            	</c:forEach>
 	            </select>
-	        </ul>    
+	        </ul> --%>    
 	    </div>
 	
 	    <table class="content" style="margin-top: 10px">

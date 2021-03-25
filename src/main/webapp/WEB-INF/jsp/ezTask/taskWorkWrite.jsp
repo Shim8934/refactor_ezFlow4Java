@@ -17,13 +17,13 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezTask/AttachMain_CK.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
-			var userid = "${userInfo.id }";
-	        var username = "${userInfo.displayName }";
-	        var username2 = "${userInfo.displayName1 }";
-	        var deptname = "${userInfo.deptName }";
-	        var deptname2 = "${userInfo.deptName1 }";
-	        var taskid = "${taskInfoVO.taskID }";
-	        var hasattach = "${taskInfoVO.personAttach }";
+			var userid = "<c:out value='${userInfo.id }'/>";
+	        var username = "<c:out value='${userInfo.displayName }'/>";
+	        var username2 = "<c:out value='${userInfo.displayName1 }'/>";
+	        var deptname = "<c:out value='${userInfo.deptName }'/>";
+	        var deptname2 = "<c:out value='${userInfo.deptName1 }'/>";
+	        var taskid = "<c:out value='${taskInfoVO.taskID }'/>";
+	        var hasattach = "<c:out value='${taskInfoVO.personAttach }'/>";
 	        var personContentpath = "${taskInfoVO.personContentPath }";
 	        var AttachLimit = 1024;
 	        var defaultFont = "<spring:message code='main.t246' />";

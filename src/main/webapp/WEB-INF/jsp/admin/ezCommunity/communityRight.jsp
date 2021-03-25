@@ -12,7 +12,7 @@
 		<c:choose>
 			<c:when test="${cID == '' }">
 		   <!-- <frame src="/admin/ezCommunity/bbsList.do?bName=tbl_c_board&type=board" name="comm_main" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0"> --><!-- 알림마당 사용안함 -->
-				<frame src="/admin/ezCommunity/searchKey.do?sRadio=C_ClubName&keyword=&key&pDivi=admin" name="comm_main" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0">
+				<frame src="/admin/ezCommunity/searchKey.do" name="comm_main" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0">
 			</c:when>
 			
 			<c:otherwise>

@@ -20,24 +20,25 @@
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" />
 		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
 		<script type="text/javascript">
-			var deptid = "${deptID}";
-			var userid = "${userID}";
-			var startdate = "${startDate}";
-			var enddate = "${endDate}";
-			var orguserid = "${userInfo.id}";
-			var BReason = "${bReason}";
+			var deptid = "<c:out value='${deptID}'/>";
+			var userid = "<c:out value='${userID}'/>";
+			var startdate = "<c:out value='${startDate}'/>";
+			var enddate = "<c:out value='${endDate}'/>";
+			var orguserid = "<c:out value='${userInfo.id}'/>";
+			var BReason = "<c:out value='${bReason}'/>";
 			var gIsAppoint = "1";
 			var gIsProxyUser = false;
-			var proxydeptid = "${proxyDeptID}";
-			var proxyuserid = "${proxyUserID}";
+			var proxydeptid = "<c:out value='${proxyDeptID}'/>";
+			var proxyuserid = "<c:out value='${proxyUserID}'/>";
 			var proxystartdate = "";
 		    var proxyenddate = "";
-		    var Roll = "${userInfo.rollInfo}";
-		    var approvalFlag = "${approvalFlag}";
+		    var Roll = "<c:out value='${userInfo.rollInfo}'/>";
+		    var approvalFlag = "<c:out value='${approvalFlag}'/>";
 		    var buJaeId = "";
 		    var buJaedeptid = "";
 		    var proxybuJaeId = "";
 		    var proxybuJaedeptid = "";
+		    var P_CompanyID = "";
 		
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
@@ -73,6 +74,9 @@
 		        }
 		
 		        Sel_Change();
+		        
+		        // 초기 회사ID 설정
+		        P_CompanyID = document.getElementById("ListCompany").value;
 		    };
 			
 		    $(function () {
@@ -81,7 +85,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        $("#Edatepicker").datepicker({
@@ -89,11 +93,11 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        
-		    	var uploadSDate = "${startDate}";
+		    	var uploadSDate = "<c:out value='${startDate}'/>";
 
 	        	var sYear = uploadSDate.substring(0, 4);
 				var sMonth = uploadSDate.substring(5, 7);
@@ -101,7 +105,7 @@
 				var sHour = uploadSDate.substring(11, 13);
 				var sMin = uploadSDate.substring(14, 16);
 
-				var uploadEDate = "${endDate}";
+				var uploadEDate = "<c:out value='${endDate}'/>";
 				var eYear = uploadEDate.substring(0, 4);
 				var eMonth = uploadEDate.substring(5, 7);
 				var eDay = uploadEDate.substring(8, 10);
@@ -190,6 +194,10 @@
 			var type_Complete;
 			var NoneActiveX = "YES";
 			function select_person(type) {
+				if (document.getElementById("deptList") != null && document.getElementById("deptList") != "undefined" && document.getElementById("deptList").value != "") {
+					buJaedeptid = document.getElementById("deptList").value;
+				}
+				
 				if(document.getElementById('TextName1').value=='' || document.getElementById('TextName1').value == undefined){
 					//2018-08-10 구해안 추후에 resource 추가
 					alert("<spring:message code='main.t0630'/>");
@@ -221,11 +229,11 @@
 			    type_Complete = type;
 			    if (CrossYN() || NoneActiveX == "YES") {
 			        selectperson_cross_dialogArguments1[1] = select_person_Complete1;
-			        var OpenWin = window.open("/admin/ezApprovalG/selectPerson.do?type=" + type, "SelectPerson_cross", GetOpenWindowfeature(760, 535));
+			        var OpenWin = window.open("/admin/ezApprovalG/selectPerson.do?type=" + type + "&selectedCompanyID=" + P_CompanyID, "SelectPerson_cross", GetOpenWindowfeature(760, 535));
 			        try { OpenWin.focus(); } catch (e) { }
 			    }
 			    else {
-			        var rtnValue = window.showModalDialog("/admin/ezApprovalG/selectPerson.do?type=" + type, "",
+			        var rtnValue = window.showModalDialog("/admin/ezApprovalG/selectPerson.do?type=" + type + "&selectedCompanyID=" + P_CompanyID, "",
 		                "dialogHeight:535px;dialogwidth:760px;dialogleft:100px;dialogtop:100px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(760, 535));
 		
 			        if (typeof (rtnValue) != "undefined" && type == "") {
@@ -286,6 +294,8 @@
 								$("#deptList").append("<option value='" + result.AddJobList[i].department + "'>" +
 										result.AddJobList[i].description);
 							}
+			            } else {
+			            	buJaedeptid = result.AddJobList[0].department;
 			            }
 		    			
 				        document.getElementById("TextName").value = result.textName;
@@ -329,15 +339,17 @@
 	    					proxydeptid = result.proxyDeptID;
     					} */
     					
-						if(!result.bReasonFlag){
-							document.getElementById("absentreason").style.display = "";
-							document.getElementById("TR_Appoint").style.display = "";
-							document.getElementById("absentreason").value = "";
-	    				}else{
-	    					document.getElementById("absentreason").style.display = "";
-	    					document.getElementById("absentreason").value = result.bReason;
-	    					document.getElementById("TR_Appoint").style.display = "none";
-    					}
+						if (approvalFlag == "G") {
+							if(!result.bReasonFlag){
+								document.getElementById("absentreason").style.display = "";
+								document.getElementById("TR_Appoint").style.display = "";
+								document.getElementById("absentreason").value = "";
+							}else{
+								document.getElementById("absentreason").style.display = "";
+								document.getElementById("absentreason").value = result.bReason;
+								document.getElementById("TR_Appoint").style.display = "none";
+							}
+						}
 		    		}		    		
 		    	});
 			}
@@ -346,7 +358,7 @@
 		    function check_enddate() {
 		        if (!gIsAppoint && document.getElementById("TextName").value == "")
 		            return false;
-		        var initdate = "${initDate}";
+		        var initdate = "<c:out value='${initDate}'/>";
 		        var strCurrDate = initdate.substr(0, 10);
 		        var strStartDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 		        var strEndDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
@@ -397,10 +409,17 @@
 		
 		        if (gIsAppoint != '2') {
 		        	/* document.getElementById("absentreason").value != "<spring:message code='ezPersonal.t35'/>"*/
-		            if (document.getElementById("TextName").value != "" && document.getElementById("absentreason").value != "") {
-		                alert("<spring:message code='ezPersonal.t36'/>");
-		                return;
-		            }
+		        	if (approvalFlag == "G") {
+			            if (document.getElementById("TextName").value != "" && document.getElementById("absentreason").value != "") {
+			                alert("<spring:message code='ezPersonal.t36'/>");
+			                return;
+			            }
+		        	} else {
+			            if (document.getElementById("TextName").value != "" && document.getElementById("absentreason").value != "<spring:message code='ezPersonal.t35'/>") {
+			                alert("<spring:message code='ezPersonal.t36'/>");
+			                return;
+			            }
+		        	}
 		        }
 				var pProxy = "";
 				var pBujae = "";
@@ -493,7 +512,7 @@
 		
 		    function Sel_Change()
 		    {
-		        if (document.getElementById("absentreason").value == "<spring:message code='ezPersonal.t35'/>") {
+		        if (document.getElementById("absentreason").value == "<spring:message code='ezPersonal.t35'/>" || document.getElementById("absentreason").value == "") {
 		            document.getElementById("TR_Appoint").style.display = "";
 		        }
 		        else {
@@ -559,10 +578,37 @@
 		    		}
 		        });
 		    }
+		    
+		    // 회사선택 후 부재자 정보 등 초기화 진행
+			function selectCompanyID() {
+				if (P_CompanyID != document.getElementById("ListCompany").value) {
+					P_CompanyID = document.getElementById("ListCompany").value;
+					
+					 var nowDate = new Date();
+					$("#Sdatepicker").datepicker('setDate', nowDate);
+					$("#Edatepicker").datepicker('setDate', nowDate);
+					
+					document.getElementById("TextName1").value = "";
+					document.getElementById("deptList").value = "";
+					document.getElementById("TextName").value = "";
+					
+					$("select#deptList option").remove();
+	    			$("#AddJobDept").hide();
+				}
+			}
+			
 		</script>
 	</head>
 	<body class="mainbody" marginwidth="0" marginheight="0">
-		<h1><spring:message code='main.t0628'/></h1>
+		<h1><spring:message code='main.t0628'/>
+			<%-- 2020-10-20 홍승비 - 회사선택 셀렉트박스 추가 --%>
+			<span class="title_bar"><img src="/images/name_bar.gif"></span>
+			<select class="companySelect" id="ListCompany" onChange="selectCompanyID()">
+				<c:forEach var="item" items="${list}">
+					<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+				</c:forEach>
+			</select>
+		</h1>
 		<form id="ManageBujae" method="post">
 			<br/>
 			<div class="txt">

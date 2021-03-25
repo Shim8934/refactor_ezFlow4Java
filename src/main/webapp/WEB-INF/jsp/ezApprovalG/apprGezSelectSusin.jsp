@@ -40,7 +40,7 @@
 			arr_userinfo[6]  = "<c:out value = '${userInfo.jikChek}'/>";            // 사용자 직책            
 			arr_userinfo[8]  = "<c:out value = '${userInfo.email}'/>";             // E-Mail Address 
 			arr_userinfo[9]  = " ";
-			arr_userinfo[10] = "${susinAdmin}";                  // 수신 접수담당자
+			arr_userinfo[10] = "<c:out value = '${susinAdmin}'/>";                  // 수신 접수담당자
 			// 2010.08.11 다국어
 			arr_userinfo[11]  = "<c:out value ='${userInfo.displayName1}'/>";		// 사용자명(P)
 			arr_userinfo[12]  = "<c:out value ='${userInfo.displayName2}'/>";		// 사용자명(S)
@@ -48,7 +48,7 @@
 			arr_userinfo[14]  = "<c:out value ='${userInfo.title2}'/>";				// 사용자 직위(S)
 			arr_userinfo[15]  = "<c:out value ='${userInfo.deptName1}'/>";			// 사용자 부서 이름(P)
 			arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2}'/>";			// 사용자 부서 이름(S)
-			var p_CompanyID = "${userInfo.companyID}";
+			var p_CompanyID = "<c:out value = '${userInfo.companyID}'/>";
 			// pUserID = arr_userinfo[1];
 			var RetValue;
 			var ReturnFunction;
@@ -237,7 +237,7 @@
 				var isCurretnCompany = "N";
 				
 				Resultxml.async=false;
-				Resultxml = loadXMLFile("${susinXML}");
+				Resultxml = loadXMLFile("<c:out value = '${susinXML}'/>");
 				
 				var listview = new ListView();                          // ListView 선언
 			    listview.LoadFromID("divAPRDEPT");                              // ID 지정
@@ -697,19 +697,21 @@
 			}
 			
 			function event_displayUserList(result)
-			{    
-					if (result.getElementsByTagName("ROW").length > 0)
-					{
-					    var pUserList = new ListView();      //// ListView 선언
-			            pUserList.LoadFromID("pUserList");            
-						pUserList.SetSelectFlag(false);			
-			            pUserList.DataSource(result);                             // DataSource 지정
-			            pUserList.RowDataBind("UserList");                          // ListView DataBind
-			        }			
-					else
-						alert("<spring:message code='ezApprovalG.t247'/>")
-			
-					result = null;
+			{
+				if (result.getElementsByTagName("ROW").length > 0)
+				{
+				    var pUserList = new ListView();      //// ListView 선언
+		            pUserList.LoadFromID("pUserList");
+					pUserList.SetSelectFlag(false);
+		            pUserList.DataSource(result);                             // DataSource 지정
+		            pUserList.RowDataBind("UserList");                          // ListView DataBind
+		        }
+				else {
+					// 부서검색 결과가 없는 경우, 데이터가 없다는 메세지 표출
+					//alert("<spring:message code='ezApprovalG.t247'/>")
+					$("#pUserList").find("tbody").html("<tr id='pUserList_TR_noItems'><td align='center' colspan='1'>" + strLang944 + "</td></tr>");
+				}
+				result = null;
 			}
 			
 			function list2_onSel_DBclick()
@@ -727,6 +729,14 @@
 				if (CurSelRow.length > 0)
 				{
 					var DuplicateFlag = DuplicateAprDeptCheck(APRDEPT, CurSelRow[0].getAttribute("DATA2"));
+					
+					/* 2020-12-22 홍승비 - 재발송 시 부서 검색하여 추가하는 경우에도 결재문서 수신여부 체크 */
+					if (GetEntryInfo(CurSelRow[0].getAttribute("DATA2")) == "N") {
+						var pAlertContent = strLang1105;
+						OpenAlertUI(pAlertContent);
+						return;
+					}
+					 
 					if(DuplicateFlag)
 					{
 						AprLineAddDept2(CurSelRow);  

@@ -18,9 +18,9 @@
 		<script type="text/javascript">
 			var portlet_type = "${prop.portlet_Type}";
 			var view_type = "${prop.showTitleBar}";
-			var uid = "${uID}";
-			var menuindex = "${menuIndex}";
-			var pmode = "${mode}";
+			var uid = "<c:out value = '${uID}' />";
+			var menuindex = "<c:out value = '${menuIndex}' />";
+			var pmode = "<c:out value = '${mode}' />";
 			var pDocPath = "${pDocPath}";
 			var image_type = "${pImageType}";
 			var pImagePath = "${pImagePath}";

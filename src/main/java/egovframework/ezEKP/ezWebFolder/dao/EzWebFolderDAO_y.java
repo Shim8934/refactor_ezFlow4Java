@@ -53,7 +53,7 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 	}
 	
 	public List<FileVO> searchFileList2(Map<String, Object> map) {
-		return  (List<FileVO>) list("EzWebFolderDAO_y.searchFileList",map);
+		return  (List<FileVO>) list("EzWebFolderDAO_y.searchFileList2",map);
 	}
 	
 	public List<FileVO> searchFileListR(Map<String, Object> map) {
@@ -78,6 +78,10 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 	
 	public int searchFileToTalCount (Map<String, Object> map) {
 		return (int) select("EzWebFolderDAO_y.searchFileToTalCount",map);
+	}
+
+	public int searchFileToTalCount2 (Map<String, Object> map) {
+		return (int) select("EzWebFolderDAO_y.searchFileToTalCount2",map);
 	}
 	
 	public int searchFileToTalCountR (Map<String, Object> map) {
@@ -183,5 +187,10 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 	// 위와는 다르게 userid와 tenantid만 가지고 있는지만 판단
 	public int existsUserIdTokenCheck (Map<String, Object> map) {
 		return (int) select("EzWebFolderDAO_y.existsUserIdTokenCheck", map);
+	}
+	
+	// userId 로 필요한 folderType별 folderId 출력 
+	public String folderIdByUserIdAndFolderType (Map<String, Object> map) {
+		return (String) select("EzWebFolderDAO_y.folderIdByUserIdAndFolderType", map);
 	}
 }

@@ -54,7 +54,7 @@ public class EzStatisticsQuantityUserController {
 	/**
 	 * 개인별 사서함 용량 사용 현황 표시 함수
 	 */
-	@RequestMapping(value="/ezStatistics/statisticsQuantityUser.do")
+	@RequestMapping(value="/ezStatistics/statisticsQuantityUser.do", method = RequestMethod.GET)
 	public String statisticsQuantityUser(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
 		//관리자 권한체크
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);

@@ -268,7 +268,7 @@
 		        var selnode = treeView.GetSelectNode(); 
 		    
 		        DeptID = selnode.GetNodeData("CN");
-		        document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top;padding-right:3px;\" >" 
+		        document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" 
 	        		+ "<span id='spn_deptName' title='" + selnode.GetNodeData("VALUE") + "'>" + selnode.GetNodeData("VALUE") + "</span>"
 	        		+ "<span id='countInfo'></span>";
 		        SelectDeptNM.setAttribute("countinfo","")
@@ -286,7 +286,7 @@
   					data : {
   						deptID : tempDeptID ,
   						cell : "company;description;displayName;title;telephoneNumber",
-  						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
+  						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department",
   						page : CurPage ,
   						type : "user"
   					} ,
@@ -314,9 +314,9 @@
 							var strIsLeaf = $("div#" + id + "").attr("isleaf");
 							
 							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
-			        			document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang400 + "</span>/<spring:message code='ezAddress.t362' /> <span class='countColor'>" + result.totalCount2 + strLang400 + "</span>]";
+			        			document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span> / <span class='countColor'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
 							} else {
-								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang400 + "</span>]";
+								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span>";
 							}
 							//2018-08-01 김보미 - 부서명 [사원수] 가 넘치는지 확인하는 함수
 							deptNameLong(result.containLow, strIsLeaf);
@@ -391,7 +391,7 @@
 					data : {
 						search : document.getElementById("search_type").value + "::" + keyword.value,
 						cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value,
-						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
+						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department",
 						page : CurPage ,
 						type : "user"
 					} ,
@@ -443,7 +443,10 @@
 					method : 'POST',
 					dataType : "xml",
 					async : false,
-					data : {search : "displayname::" + document.all("deptkeyword").value, cell : "extensionAttribute3;displayname;extensionAttribute9;", prop : "", type : 'group'}, 
+					data : {search : "displayname::" + document.all("deptkeyword").value, 
+						cell : "extensionAttribute3;displayname;extensionAttribute9", 
+						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department",
+						type : 'group'}, 
    					success : function(result) {
    						xmlDOM = result
    						var row = SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW");
@@ -623,7 +626,7 @@
 		            document.getElementById("txtlist_table").style.display = "none";
 		            document.getElementById("Search_txtlist_table").style.display = "none";
 		            if (pSeach) {
-		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang401 + "" + "-[<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + strLang400 + "</span>]";
+		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<span id='spn_deptName'>"+ strLang401 + "</span>" + "<span id='countInfo' style='color:#017BEC;'>&nbsp;&nbsp;<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + "</span></span>";
 		                SelectDeptNM.setAttribute("countinfo", "1")
 		            }
 		        } else {
@@ -635,7 +638,7 @@
 		            } else {
 		                document.getElementById("Search_txtlist_table").style.display = "";
 		                document.getElementById("txtlist_table").style.display = "none";
-		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang401 + "" + "-[<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + strLang400 + "</span>]";
+		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<span id='spn_deptName'>"+ strLang401 + "</span>" + "<span id='countInfo' style='color:#017BEC;'>&nbsp;&nbsp;<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + "</span></span>";
 		                SelectDeptNM.setAttribute("countinfo", "1")
 		            }
 		        }
@@ -827,7 +830,7 @@
 		            }
 		        }
 		    }
-		    var m_strColorSelect = "#edf4fd";
+		    var m_strColorSelect = "#f1f8ff";
 		    var m_strColorOver = "#f4f5f5";
 		    var m_strColorDefault = "#ffffff";
 		    var p_ListOrderObject = null;
@@ -1184,7 +1187,7 @@
 	        			var currOwner = $("#OwnerList_TR_0").attr("data1");
 	        			var IsInsert = CheckMailReceiver(userId, "3");
 	        			var flag;
-	        			var dept = $(".node_selected").parent()[0].getAttribute("cn");
+	        			var dept = p_ListOrderObject.getAttribute("_data10");
 	        			/* if (userId == currOwner) {		// 선택한 유저가 이미 부관리자에 추가된 경우
 	        				alert("<spring:message code='ezQuestion.t18'/>");
 		   				} */
@@ -1233,12 +1236,12 @@
         	                var strDeptName2;
 
         	                strId = p_ListOrderObject.getAttribute("_data2");
-        	                strName = p_ListOrderObject.getAttribute("_data10");
+        	                strName = p_ListOrderObject.getAttribute("_data4");
         	                strName1 = p_ListOrderObject.getAttribute("_data6");
         	                strDeptName1 = p_ListOrderObject.getAttribute("_data5");
 
         	                pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
-        	                pparsingXML = pparsingXML + "<DATA2><![CDATA[" + DeptID + "]]></DATA2>";
+        	                pparsingXML = pparsingXML + "<DATA2><![CDATA[" + dept + "]]></DATA2>";
         	                pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strName + "]]></DATA3>";
         	                pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strName1 + "]]></DATA4>";
         	                pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptName1 + "]]></DATA5>";
@@ -1479,17 +1482,17 @@
 			          		<div style="vertical-align:top;height:340px;overflow:auto;width:425px;" id="txtlist_Layer">
 			          			<table style="width:100%;border:1px solid #ddd;display:none;" id="txtlist_table" class="mainlist" > 
 			              			<tr>
-			                  			<td style="width:170px;font-weight:bold;font-weight: normal" class="td_gray"><spring:message code="ezResource.t9"/></td>
-			                  			<td style="width:150px;font-weight:bold;font-weight: normal" class="td_gray"><spring:message code="ezResource.t10"/></td>
-			                  			<td class="td_gray" style="font-weight:bold;font-weight: normal"><spring:message code="ezResource.t11"/></td>
+			                  			<td style="width:170px;font-weight: normal" class="td_gray"><spring:message code="ezResource.t9"/></td>
+			                  			<td style="width:150px;font-weight: normal" class="td_gray"><spring:message code="ezResource.t10"/></td>
+			                  			<td class="td_gray" style="font-weight: normal"><spring:message code="ezResource.t11"/></td>
 			              			</tr>
 			          			</table>
 			          			<table style="width:100%;border:1px solid #ddd;display:none;" id="Search_txtlist_table" class="mainlist" > 
 			              			<tr>
-			                  			<td style="width:130px;font-weight:bold;" class="td_gray"><spring:message code="ezResource.t132"/></td>
-			                  			<td style="width:90px;font-weight:bold;" class="td_gray"><spring:message code="ezResource.t9"/></td>
-			                  			<td style="width:90px;font-weight:bold;" class="td_gray"><spring:message code="ezResource.t10"/></td>
-			                  			<td class="td_gray" style="font-weight:bold;"><spring:message code="ezResource.t11"/></td>
+			                  			<td style="width:130px;font-weight:normal;" class="td_gray"><spring:message code="ezResource.t132"/></td>
+			                  			<td style="width:90px;font-weight:normal;" class="td_gray"><spring:message code="ezResource.t9"/></td>
+			                  			<td style="width:90px;font-weight:normal;" class="td_gray"><spring:message code="ezResource.t10"/></td>
+			                  			<td class="td_gray" style="font-weight:normal;"><spring:message code="ezResource.t11"/></td>
 			              			</tr>
 			          			</table>
 			          		</div>

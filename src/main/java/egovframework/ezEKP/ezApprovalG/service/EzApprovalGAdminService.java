@@ -1,16 +1,26 @@
 package egovframework.ezEKP.ezApprovalG.service;
 
-import java.util.List;
-import java.util.Locale;
-
-import org.w3c.dom.Document;
-
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormConnInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
+import egovframework.ezEKP.ezApprovalG.vo.KEDAuthorUserInfo;
+import egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.let.user.login.vo.LoginVO;
+
+import org.springframework.ui.Model;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.ModelAndView;
+import org.w3c.dom.Document;
+
+import java.util.List;
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 public interface EzApprovalGAdminService {
 
@@ -101,7 +111,7 @@ public interface EzApprovalGAdminService {
 			String draftFromMonth, String draftFromDay, String draftToYear,
 			String draftToMonth, String draftToDay, String apprFromYear,
 			String apprFromMonth, String apprFromDay, String apprToYear,
-			String apprToMonth, String apprToDay, String formID,
+			String apprToMonth, String apprToDay, String formID, String formName,
 			String draftDeptName, String draftDeptName2, String pageNum,
 			String pageSize, String docState, String subQuery,
 			String orderCell, String orderOption, String companyID, String primary, String approvUser, String offset, int tenantID) throws Exception;
@@ -118,11 +128,11 @@ public interface EzApprovalGAdminService {
 	
 	public ApprGFormVO getFormContent(String formID, String lang, String companyID,int tenantID, String approvalFlag) throws Exception;
 	
-	public String delForm(String formID, String companyID, String realPath, int tenantID) throws Exception;
+	public String delForm(String formID, String companyID, String realPath, int tenantID, String officeFlag) throws Exception;
 	
 	public String getFormRecvAdmin(String formID, String lang, String companyID, int tenantID, String approvalFlag, String useReceiveInfoName) throws Exception;
 
-	public String saveFormInfo(String contID, String formID, String formInfo, String formConnInfo, String formWorkFlow, String formRecevGroup, String formMhtInfo, String formAutoRule, String formAutoRuleLine, String companyID, String realPath, LoginVO userInfo, String approvalFlag) throws Exception;
+	public String saveFormInfo(String contID, String formID, String formInfo, String formConnInfo, String formWorkFlow, String formRecevGroup, String formMhtInfo, String formAutoRule, String formAutoRuleLine, String companyID, String realPath, LoginVO userInfo, String approvalFlag, String reformMht, String reformHtml, String reformFunction) throws Exception;
 
 	public String setContainerIDForDoc1(String deptID, String containerType, String companyID, int tenantID) throws Exception;
 	
@@ -183,11 +193,70 @@ public interface EzApprovalGAdminService {
 	public List<ApprGDocListVO> getDeleteDocList_json(String userID, String subQuery, int startRow, int pageSize, String pageNum, int totalcnt, String companyID, int tenantID, String offset, String lang, Locale locale) throws Exception;
 	
 	public String getExAttribute(String buJaeId, int tenantID) throws Exception;
+	
+	public List<ApprGAttachInfoVO> getAdminTotalDownload(String docIdList, String mode, String companyID, int tenantID) throws Exception;
 
+	public List<ApprGAttachInfoVO> getAdminTotalDownloadCnt(String docIdList, String mode, String companyID, int tenantID) throws Exception;
+
+	public void resendOpenGov(String resendStartTime, String resendEndTime, int tenantId, String companyID) throws Exception;
+
+	public String getModifyOpenGovHistory(String docID, String lang, int tenantId, String companyID, String offset) throws Exception;
+
+	public String getModifyOpenGovHistoryReason(String docID, String sn, int tenantId, String companyID) throws Exception;
+	
 	/* 2020-05-15 홍승비 - 첨부파일 개수제한 관련 메서드 */
 	public int getAttachLimit(String companyID, int tenantId) throws Exception;
 	
 	public void saveAttachLimit(String attachLimit, String companyID, int tenantId) throws Exception;
 	
 	public void deleteAttachLimit(String companyID, int tenantId) throws Exception;
+
+	public List<KEDSharedUserInfo> getDocDirShareList(String ownerId, int tenantId) throws Exception;
+	
+	public List<KEDAuthorUserInfo> getDocDirOwnerList(String companyId, int tenantId) throws Exception;
+
+	public String insertShareDocDir(String ownerId, String ownerType, List<KEDSharedUserInfo> shareList, int tenantId) throws Exception;
+
+	String deleteShareDocDir(String ownerId, int tenantId) throws Exception;
+	
+	public String getSendOutDocList(String userID, String deptID, String mode, String pageSize, String pageNum, String sortHeader, String sortOption, String companyID, String userLang, int tenantID, String offset, String searchQuery) throws Exception;
+
+	public String getAdminSearchDocList(
+			String formID,
+			String formName,
+			String docNumber,
+			String docTitle, 
+			String drafter, 
+			String approvUser, 
+			String draftDeptName, 
+			String draftfrom, 
+			String draftto, 
+			String apprfrom,
+			String apprto, 
+			String pageSize, 
+			String pageNum, 
+			String orderCell, 
+			String orderOption, 
+			String companyID,  
+			int tenantID, 
+			String lang, 
+			String offSet, 
+			String approvalFlag,
+			String keyword,
+			Locale locale
+			) throws Exception;
+
+	public String auditApprLineManage(String loginCookie, HttpServletRequest request, HttpServletResponse response, ModelAndView model) throws Exception;
+
+	public String getAuditApprLineList(String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception;
+
+	public String auditApprLineManagePop(String loginCookie, HttpServletRequest request, HttpServletResponse response, ModelAndView model) throws Exception;
+
+	public Object getAuditApprLineListPrc(String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception;
+	
+	public Object getAuditStatisticsDocList(String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception;
+
+	public String xlsSetGroupWithExcel(String loginCookie, MultipartHttpServletRequest request) throws Exception;
+
+	public String xlsxSetGroupWithExcel(String loginCookie, MultipartHttpServletRequest request) throws Exception;
 }

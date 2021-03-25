@@ -25,7 +25,8 @@
       <result property="rollInfo"          	column="rollinfo"                       	columnIndex="15"/>
       <result property="userFileUrl"       	column="userFileUrl"   						columnIndex="16"/>
       <result property="email"       		column="email"   							columnIndex="17"/>
-      <result property="phone"       		column="telephonenumber"   							columnIndex="18"/>
+      <result property="phone"       		column="telephonenumber"   					columnIndex="18"/>
+      <result property="lastLogin"     		column="lastLogin"      					columnIndex="19"/>
     </resultMap>
     
     <resultMap class="MOptionVO" id="MOptionVO">
@@ -58,7 +59,8 @@
                 b.extensionattribute1 as rollinfo,
                 b.extensionattribute2 as userFileUrl,
                 b.mail as email,
-                b.telephonenumber
+                b.telephonenumber,
+                DATE_FORMAT(b.lastlogin, '%Y-%c-%d %T') as lastLogin
 			FROM
 				TBL_USERMOBILEINFO a right join TBL_USERMASTER b ON a.userid = b.cn AND a.tenant_id = b.tenant_id
 			WHERE
@@ -88,6 +90,7 @@
   	</select>
   	
   	<select id="EzOptionDAO.getTimeLineList" parameterClass="Map" resultClass="MPortalTimeLineVO">
+  		<isEqual property="approvalAccess" compareValue="true" >
    		<![CDATA[
    			(SELECT 
 				DOCTITLE as title,
@@ -196,9 +199,17 @@
    				APRMEMBERSN <> 1
    			AND
 				STARTDATE < #sessionDate#)
-			
-			UNION
-			
+		]]>		 
+  		</isEqual>
+  		<isEqual property="approvalAccess" compareValue="true">
+  			<isEqual property="boardAccess" compareValue="true">
+			<![CDATA[
+				UNION
+			]]>
+  			</isEqual>
+  		</isEqual>
+  		<isEqual property="boardAccess" compareValue="true">
+		<![CDATA[
 			( SELECT 
 				A.TITLE,	
 				DATE_ADD(DATE_FORMAT(A.STARTDATE,'%Y-%m-%d %H:%i'), INTERVAL #offset# MINUTE) STARTDATE,
@@ -267,6 +278,9 @@
 		                  S.USERID = #userID# 
 		                 AND 
 		                  S.READDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY))))
+		]]>
+  		</isEqual>
+		<![CDATA[
 			ORDER BY
 				startdate desc
 			LIMIT 
@@ -294,7 +308,8 @@
                 b.extensionattribute1 as rollinfo,
                 b.extensionattribute2 as userFileUrl,
                 b.mail as email,
-                b.telephonenumber
+                b.telephonenumber,
+                DATE_FORMAT(b.lastlogin, '%Y-%c-%d %T') as lastLogin
 			FROM
 				TBL_USERLOCALINFO a right join TBL_USERMASTER b ON a.userid = b.cn AND a.tenant_id = b.tenant_id
 			WHERE

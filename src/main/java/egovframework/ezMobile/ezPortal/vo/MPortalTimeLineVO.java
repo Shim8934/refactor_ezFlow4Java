@@ -31,6 +31,8 @@ public class MPortalTimeLineVO {
 	private String endDate;
 	/**	전자결재 참조 진행 완료 여부*/
 	private String mode;
+	/** 일정 반복카운트*/
+	private int repeatCount;
 	
 	public String getTitle() {
 		return title;
@@ -121,6 +123,12 @@ public class MPortalTimeLineVO {
 	}
 	public void setMode(String mode) {
 		this.mode = mode;
+	}
+	public int getRepeatCount() {
+		return repeatCount;
+	}
+	public void setRepeatCount(int repeatCount) {
+		this.repeatCount = repeatCount;
 	}
 }
 

@@ -1750,5 +1750,108 @@
 	<delete id="EzStatisticsAdminDAO.deleteCustomFormBatch" >
 		DELETE FROM TBL_DAILYFORMCOUNTLOG
 	</delete>
-	
+
+	<insert id="EzStatisticsAdminDAO.insertYearlyDocCount" parameterClass="StatApprVO">
+		<![CDATA[
+		INSERT INTO TBL_YEARLYDOCCOUNT (DOC_COUNT,
+										MONTH_TYPE,
+										DOC_TYPE,
+										CREATE_ID,
+										TENANT_ID,
+										COMPANYID)
+			SELECT
+				COUNT(DOCID)  AS DOC_COUNT,
+				CASE DATE_FORMAT(DATE_ADD(ENDDATE, INTERVAL 9 HOUR), '%Y')
+					WHEN DATE_FORMAT(now(), '%Y')
+						THEN DATE_FORMAT(DATE_ADD(ENDDATE, INTERVAL 9 HOUR), '%c')
+					ELSE DATE_FORMAT(DATE_ADD(ENDDATE, INTERVAL 9 HOUR), '%c') -12
+					END as MONTH_TYPE,
+				'OUTRECEIVE'  AS DOC_TYPE,
+				'masteradmin' AS CREATE_ID,
+				0             AS TENANT_ID,
+				'Top'         AS COMPANYID
+			FROM TBL_ENDAPRDOCINFO
+			WHERE DOCSTATE = '011'
+				AND FORMID = '9999999999'
+				AND DATE_FORMAT(DATE_ADD(ENDDATE, INTERVAL 9 HOUR), '%Y%m') >= DATE_FORMAT(DATE_ADD(now(), INTERVAL -11 MONTH), '%Y%m')
+			GROUP BY
+				CASE DATE_FORMAT(DATE_ADD(ENDDATE, INTERVAL 9 HOUR), '%Y')
+				WHEN DATE_FORMAT(now(), '%Y')
+					THEN DATE_FORMAT(DATE_ADD(ENDDATE, INTERVAL 9 HOUR), '%c')
+				ELSE DATE_FORMAT(DATE_ADD(ENDDATE, INTERVAL 9 HOUR), '%c') -12 END
+			UNION ALL
+			SELECT
+				COUNT(A.DOCID)  AS DOC_COUNT,
+				CASE DATE_FORMAT(DATE_ADD(A.ENDDATE, INTERVAL 9 HOUR), '%Y')
+					WHEN DATE_FORMAT(now(), '%Y')
+						THEN DATE_FORMAT(DATE_ADD(A.ENDDATE, INTERVAL 9 HOUR), '%c')
+					ELSE DATE_FORMAT(DATE_ADD(A.ENDDATE, INTERVAL 9 HOUR), '%c') -12
+					END as MONTH_TYPE,
+				'OUTSEND'		AS DOC_TYPE,
+				'masteradmin' 	AS CREATE_ID,
+				0             	AS TENANT_ID,
+				'Top'         	AS COMPANYID
+			FROM TBL_ENDAPRDOCINFO A
+					 INNER JOIN TBL_ENDRECEIPTPOINTINFO R on A.DOCID = R.DOCID
+			WHERE R.RECEIPTPOINTID NOT LIKE 'ADDRESS%'
+				AND R.EXTRECEPTYN = 'Y'
+				AND R.PROCESSYN IN ('A', 'E', 'H', 'I', 'R', 'S', 'T', 'V', 'Y')
+				AND DATE_FORMAT(DATE_ADD(A.ENDDATE, INTERVAL 9 HOUR), '%Y%m') >= DATE_FORMAT(DATE_ADD(now(), INTERVAL -11 MONTH), '%Y%m')
+			GROUP BY
+				CASE DATE_FORMAT(DATE_ADD(A.ENDDATE, INTERVAL 9 HOUR), '%Y')
+					WHEN DATE_FORMAT(now(), '%Y')
+						THEN DATE_FORMAT(DATE_ADD(A.ENDDATE, INTERVAL 9 HOUR), '%c')
+					ELSE DATE_FORMAT(DATE_ADD(A.ENDDATE, INTERVAL 9 HOUR), '%c') -12 END
+			UNION ALL
+			SELECT
+				COUNT(DOCID)  AS DOC_COUNT,
+				CASE DATE_FORMAT(DATE_ADD(ENDDATE, INTERVAL 9 HOUR), '%Y')
+					WHEN DATE_FORMAT(now(), '%Y')
+						THEN DATE_FORMAT(DATE_ADD(ENDDATE, INTERVAL 9 HOUR), '%c')
+					ELSE DATE_FORMAT(DATE_ADD(ENDDATE, INTERVAL 9 HOUR), '%c') -12
+					END as MONTH_TYPE,
+				'INSEND'      AS DOC_TYPE,
+				'masteradmin' AS CREATE_ID,
+				0             AS TENANT_ID,
+				'Top'         AS COMPANYID
+			FROM TBL_ENDAPRDOCINFO
+			WHERE FORMID NOT IN (
+				SELECT FORMID
+				FROM tbl_forminfo
+				WHERE FORMNAME
+						  NOT IN (
+								  '기안(원외)',
+								  '기안(유통원외)',
+								  '감사(원외)',
+								  '감사(유통원외)',
+								  '서면결의서',
+								  '회의록'
+						  )
+			)
+				AND DATE_FORMAT(DATE_ADD(ENDDATE, INTERVAL 9 HOUR), '%Y%m') >= DATE_FORMAT(DATE_ADD(now(), INTERVAL -11 MONTH), '%Y%m')
+			GROUP BY
+				CASE DATE_FORMAT(DATE_ADD(ENDDATE, INTERVAL 9 HOUR), '%Y')
+					WHEN DATE_FORMAT(now(), '%Y')
+						THEN DATE_FORMAT(DATE_ADD(ENDDATE, INTERVAL 9 HOUR), '%c')
+					ELSE DATE_FORMAT(DATE_ADD(ENDDATE, INTERVAL 9 HOUR), '%c') -12 END
+		]]>
+	</insert>
+
+	<delete id="EzStatisticsAdminDAO.deleteYearlyDocCount">
+		DELETE
+		FROM TBL_YEARLYDOCCOUNT
+	</delete>
+
+	<select id="EzStatisticsAdminDAO.getYearlyDocCount" parameterClass="Map" resultClass="HashMap">
+		SELECT
+			DOC_COUNT,
+			DOC_TYPE,
+			MONTH_TYPE
+		FROM
+			TBL_YEARLYDOCCOUNT
+		WHERE
+			TENANT_ID = #tenantID#
+		  AND
+			COMPANYID = #companyID#
+	</select>
 </sqlMap>

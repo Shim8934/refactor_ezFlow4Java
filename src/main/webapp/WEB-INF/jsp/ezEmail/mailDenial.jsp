@@ -36,6 +36,7 @@
 	                        objTr.setAttribute("valign", "top");
 	                        var objTdcheck = document.createElement("TD");
 	                        objTdcheck.setAttribute('id', "TDID");
+	                        objTdcheck.style.padding = "5px";
 	                        var objIn = document.createElement("INPUT");
 	                        objIn.setAttribute('type', "checkbox");
 	                        objIn.setAttribute('id', "addr");

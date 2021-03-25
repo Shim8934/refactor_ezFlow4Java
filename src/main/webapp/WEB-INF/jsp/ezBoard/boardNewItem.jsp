@@ -53,10 +53,10 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
 	    <script type="text/javascript">
 		    var pUploadFilePath = "${uploadFilePath}";
-		    var pBoardID = "${boardID}";
+		    var pBoardID = "<c:out value='${boardID}'/>";
 		    var pBoardName = "${boardInfo.boardName}";
-		    var pMode = "${mode}";
-		    var orgMode = "${mode}";
+		    var pMode = "<c:out value='${mode}'/>";
+		    var orgMode = "<c:out value='${mode}'/>";
 		    var pModeOld = "";
 		    var MHTLoadComplete = "";
 		    var SSUserID = "${userInfo.id}";
@@ -70,7 +70,7 @@
 		    var SSCompanyName2 = "${userInfo.companyName2}";
 		    var strItemID = "${itemID}";
 		    var strWriterID = "${boardListVO.writerID}";
-		    var strWriterName = "${boardListVO.writerName}";
+		    var strWriterName = ConvMakeXMLString("<c:out value='${boardListVO.writerName}'/>"); // 익명게시판의 게시자명 특문처리 대응
 		    var strWriterDeptName = "${boardListVO.writerDeptName}";
 		    var strWriterCompanyName = "${boardListVO.writerCompanyName}";
 		    var strWriteDate = "${boardListVO.writeDate}";
@@ -83,10 +83,10 @@
 		    var strUpperItemIDTree = "${boardListVO.upperItemIDTree}";
 		    var strItemLevel = "${boardListVO.itemLevel}";
 		    var strWriterTitle = "${boardListVO.extensionAttribute3}";
-		    var strWriterFakeName = "${strWriterFakeName}";
+		    var strWriterFakeName = ConvMakeXMLString("<c:out value='${strWriterFakeName}'/>"); // 익명게시판의 게시자명 특문처리 대응
 		    var pAttachListXml = "";
 		    var AttachLimit = "${boardInfo.attachSizeLimit}";
-			var pReservedItem = "${reservedItem}";
+			var pReservedItem = "<c:out value='${reservedItem}'/>";
 		    var strUserRank = "${userInfo.title1}";
 		    var strUserRank2 = "${userInfo.title2}";
 		    var strUserPhone = "${userInfo.phone}";
@@ -224,6 +224,10 @@
 			    }
 			    if (pMode == "reply") {
 			    	document.getElementById("txtTitle").value = ConvMakeXMLString("<c:out value='${boardListVO.title}'/>");
+			    	
+			    	 if (gubun == "2") { // 익명게시물 답변 시에도 게시자명 특문처리 추가
+						document.getElementById("txtNickName").value = ConvMakeXMLString(strWriterFakeName);
+					}
 				}
 			    if (pReservedItem != "true") {
 			        //var nowDate = new Date();
@@ -294,7 +298,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        var settime = "${startDateTime}";
@@ -312,7 +316,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
        			
@@ -656,24 +660,49 @@
 	            	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ATTACHMENTS", AttachFileList2());
 		        }
 
+		        /* 2021-02-16 홍승비 - 익명게시판에 TOPWRITERID 저장하지 않도록 수정 */
 		        if (pMode == "new" || pMode == "new1" || pMode == "boardContent" || pMode == "boardAttach" || pUrl != "" || orgMode == "temp") {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "UPPERITEMIDTREE", newID);
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "TOPWRITERID", SSUserID);
+		            
+		            if (gubun == "2") {
+		            	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "TOPWRITERID", "");
+		            } else {
+		            	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "TOPWRITERID", SSUserID);
+		            }
+		            
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "PARENTWRITEDATE", "");
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ITEMLEVEL", "1");
 		        } else if ((pMode == "modify" || pMode == "temp") && pReservedItem == "") {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "UPPERITEMIDTREE", strUpperItemIDTree);
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "TOPWRITERID", strWriterID);
+		            
+		            if (gubun == "2") {
+		            	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "TOPWRITERID", "");
+		            } else {
+		            	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "TOPWRITERID", strWriterID);
+		            }
+		            
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "PARENTWRITEDATE", strParentWriteDate);
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ITEMLEVEL", strItemLevel);
 		        } else if ((pMode == "modify" || pMode == "temp") && pReservedItem == "true") {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "UPPERITEMIDTREE", strUpperItemIDTree);
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "TOPWRITERID", strWriterID);
+		            
+		            if (gubun == "2") {
+		            	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "TOPWRITERID", "");
+		            } else {
+		            	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "TOPWRITERID", strWriterID);
+		            }
+		            
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "PARENTWRITEDATE", pStartDate);
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ITEMLEVEL", strItemLevel);
 		        } else {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "UPPERITEMIDTREE", strUpperItemIDTree);
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "TOPWRITERID", strWriterID);
+		            
+		            if (gubun == "2") {
+		            	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "TOPWRITERID", "");
+		            } else {
+		            	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "TOPWRITERID", strWriterID);
+		            }
+		            
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "PARENTWRITEDATE", strParentWriteDate);
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ITEMLEVEL", strItemLevel);
 		        }
@@ -817,13 +846,13 @@
 		                if (document.getElementById("chk_reservation").checked == false) {
 		                    if (strItemID == "") {
 		                        xmlhttp = createXMLHttpRequest();
-		                        xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + pBoardID + "&itemID=" + newID, false);
+		                        xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID), false);
 		                        xmlhttp.send();
 		                        xmlhttp = null;
 		                    }
 		                    if (pMode == "reply") {
 		                        xmlhttp = createXMLHttpRequest();
-		                        xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + pBoardID + "&itemID=" + newID + "&itemTreeID=" + strUpperItemIDTree, false);
+		                        xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID) + "&itemTreeID=" + strUpperItemIDTree, false);
 		                        xmlhttp.send();
 		                        xmlhttp = null;
 		                    }
@@ -835,7 +864,7 @@
 		                /* 2019-05-07 홍승비 - 이미 승인된 게시물을 수정하는 경우, 승인요청 알림메일 발송하지 않도록 수정 */
 		                if (("${boardInfo.apprMail_FG}" == "Y") && (pMode != "modify")) {
 		                    xmlhttp = createXMLHttpRequest();
-		                    xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + pBoardID + "&itemID=" + newID, false);
+		                    xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID), false);
 		                    xmlhttp.send();
 		                    xmlhttp = null;
 		                }
@@ -907,7 +936,35 @@
 			            }
 					} catch (e) {
 					}
-
+					try {
+						if (parent.opener != null && parent.opener.getNoticePortletList != undefined) {
+							parent.opener.getNoticePortletList();
+						}
+						
+						// 게시판 포틀릿 리스트 업데이트 되도록 수정
+			            if (parent.opener != null && parent.opener.getBoardPortletInfo != undefined) {
+			            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
+			            	var customBoardCount = customBoardList.length;
+			            	
+			            	for (var i = 0; i < customBoardCount; i++) {
+			            		var boardId = customBoardList[i].querySelector(".portletPlus").getAttribute("data1");
+			            		
+			            		if (boardId == pBoardID) {
+			            			var portletId = customBoardList[i].parentElement.id;
+			            			portletId = portletId.substring(0, portletId.indexOf("P"));
+			            			parent.opener.getBoardPortletInfo(portletId);
+			            		}
+			            	}
+			            }
+						
+						if (parent.opener != null && parent.opener.getBoardList_NewBoardSTD != undefined) {
+							parent.opener.getBoardList_NewBoardSTD();
+						}
+					} catch (e) {
+						
+					}
+					
+					
 		            window.close();
 		        } else {
 		            if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "XSS")
@@ -940,7 +997,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        var settime = "${startDateTime}";
@@ -975,7 +1032,7 @@
 		                            changeYear: true,
 		                            autoSize: true,
 		                            showOn: "both",
-		                            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		                            buttonImage: "/images/ImgIcon/calendar-month.png",
 		                            buttonImageOnly: true
 		                        });
 		                        var NowDate2 = new Date();
@@ -1006,14 +1063,14 @@
 		        var pTop = (pheight - 720) / 2;
 		        var pLeft = (pwidth - 765) / 2;
 		        if (gubun != "2")
-		            window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + pBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=720,width=744,top=" + pTop + ",left=" + pLeft, "");
+		            window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + encodeURIComponent(pBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=720,width=744,top=" + pTop + ",left=" + pLeft, "");
 		        else {
 		            var ua = navigator.userAgent;
 		            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-		                window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + pBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=640,width=744,top=" + pTop + ",left=" + pLeft, "");
+		                window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + encodeURIComponent(pBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=640,width=744,top=" + pTop + ",left=" + pLeft, "");
 		            }
 		            else {
-		                window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + pBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=690,width=744,top=" + pTop + ",left=" + pLeft, "");
+		                window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + encodeURIComponent(pBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=690,width=744,top=" + pTop + ",left=" + pLeft, "");
 		            }
 		        }
 		    }
@@ -1046,10 +1103,10 @@
 		        var FileName = "";
 		        var FileURL = "";
 		        var ItemID = "";
-		        var requestUrl = "/ezEmail/mailReadBoard.do";
+		        var requestUrl = "/ezEmail/mailReadBoard.do?itemType=board";
 		        
 		        if (typeof(mailShareId) != "undefined" && mailShareId != "") {
-            		requestUrl += "?shareId=" + encodeURIComponent(mailShareId);
+            		requestUrl += "&shareId=" + encodeURIComponent(mailShareId);
 				}
 		        
 		        MailxmlHTTP.open("POST", requestUrl, false);
@@ -1312,9 +1369,9 @@
 		                for (i = 0; i < nodes.length; i++) {
 		                    var filepath = getNodeText(GetChildNodes(nodes[i])[0]).replace(/\\/gi, "").replace(/\//gi, "").replace(/:/gi, "").replace(/\?/gi, "").replace(/\"/gi, "").replace(/\*/gi, "").replace(/</gi, "").replace(/>/gi, "").replace(/|/gi, "");
 		                    // 2018.07.05 (KLIB) - ezd 확장자 붙이기
-		                    if (getNodeText(GetChildNodes(nodes[i])[4]).indexOf(".ezd") > -1) {
-		                    	filepath = filepath + ".ezd";
-		                    }
+		                    //if (getNodeText(GetChildNodes(nodes[i])[4]).indexOf(".ezd") > -1) {
+		                    //	filepath = filepath + ".ezd";
+		                    //}
 		                    
 		                    strRet += "tempUploadFile/" + filepath + "|";
 		                }
@@ -1366,7 +1423,7 @@
 		    }
 		    function GetBoardInfo() {
 		        var xmlhttp_boardinfo = createXMLHttpRequest();
-		        xmlhttp_boardinfo.open("POST", "/ezBoard/getBoardInfo.do?boardID=" + pBoardID, false);
+		        xmlhttp_boardinfo.open("POST", "/ezBoard/getBoardInfo.do?boardID=" + encodeURIComponent(pBoardID), false);
 		        xmlhttp_boardinfo.send();
 		        if (xmlhttp_boardinfo.status == 200) {
 		            pBoardName = getNodeText(SelectNodes(loadXMLString(xmlhttp_boardinfo.responseText), "BOARDNAME")[0]);
@@ -1485,25 +1542,26 @@
 		                        var htmlData = message.GetEditorContentURL(fullPath);
 		                        htmlData = ReplaceText(htmlData, "class=&quot;FIELD&quot;", "");
 		                        htmlData = ReplaceText(htmlData, "class=FIELD", "");
-		                        htmlData = ReplaceText(htmlData, "&amp;", "&");
+		                        /* 2020-11-30 홍승비 - 본문의 내용 내부 특수문자 치환할 필요 없으므로 주석처리, 이스케이프 문자 처리 추가 */
+/* 		                        htmlData = ReplaceText(htmlData, "&amp;", "&");
 		                        htmlData = ReplaceText(htmlData, "&lt;", "<");
-		                        htmlData = ReplaceText(htmlData, "&gt;", ">");
-		                        
+		                        htmlData = ReplaceText(htmlData, "&gt;", ">"); */
 		                        htmlData = "<body free>" + htmlData + "</body>";
-		                        if (gubun != "2"){
+		                        
+		                        if (gubun != "2") {
 		                        	var replyHeader = "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
 		                        	replyHeader += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;<spring:message code='ezBoard.t423' /></B>-----</p>";
 		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t424' /></B>" + strWriteDate + "</p>";
 		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t425' /></B>" + strWriterName + "(" + strWriterTitle + "," + strWriterDeptName + "," + strWriterCompanyName + ")</p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t413' /></B><c:out value = '${boardListVO.title}' /></p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t413' /></B>" + ReplaceText("<c:out value = '${boardListVO.title}' />", "&amp;#92;", "\\") + "</p>";
 		                        	replyHeader += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
 		                        	htmlData = replyHeader + htmlData;
-		                        }else{
+		                        } else {
 		                        	var replyHeader = "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
 		                        	replyHeader += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;<spring:message code='ezBoard.t423' /></B>-----</p>";
 		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t424' /></B>" + strWriteDate + "</p>";
 		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t425' /></B>" + strWriterFakeName + "</p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t413' /></B><c:out value = '${boardListVO.title}' /></p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t413' /></B>" + ReplaceText("<c:out value = '${boardListVO.title}' />", "&amp;#92;", "\\") + "</p>";
 		                        	replyHeader += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
 		                        	htmlData = replyHeader + htmlData;
 		                        }
@@ -1674,7 +1732,7 @@
 		                    if (!confirm("<spring:message code='ezBoard.t10053' />"))
 		                        return;
 		                    else {
-		                        document.location.href = "/ezBoard/newBoardItemPhoto.do?boardID=" + ret[0] + "&mode=new&bType=SELECT";
+		                        document.location.href = "/ezBoard/newBoardItemPhoto.do?boardID=" + encodeURIComponent(ret[0]) + "&mode=new&bType=SELECT";
 		                        return;
 		                    }
 		                }
@@ -1682,7 +1740,7 @@
 		                    if (!confirm("<spring:message code='ezBoard.t10054' />"))
 		                        return;
 		                    else {
-		                        document.location.href = "/ezBoard/newBoardItem.do?boardID=" + ret[0] + "&mode=new&boardNM=" + ret[1] + "&bType=SELECT";
+		                        document.location.href = "/ezBoard/newBoardItem.do?boardID=" + encodeURIComponent(ret[0]) + "&mode=new&boardNM=" + ret[1] + "&bType=SELECT";
 		                        return;
 		                    }
 		                }
@@ -1735,7 +1793,7 @@
 	                    if (!confirm("<spring:message code='ezBoard.t10053' />"))
 	                        return;
 	                    else {
-	                        document.location.href = "/ezBoard/newBoardItemPhoto.do?boardID=" + ret[0] + "&mode=new&bType=SELECT";
+	                        document.location.href = "/ezBoard/newBoardItemPhoto.do?boardID=" + encodeURIComponent(ret[0]) + "&mode=new&bType=SELECT";
 	                        return;
 	                    }
 	                }
@@ -1743,7 +1801,7 @@
 	                    if (!confirm("<spring:message code='ezBoard.t10054' />"))
 	                        return;
 	                    else {
-	                        document.location.href = "/ezBoard/NewBoardItem.do?boardID=" + ret[0] + "&mode=new&boardName=" + ret[1] + "&bType=SELECT";
+	                        document.location.href = "/ezBoard/NewBoardItem.do?boardID=" + encodeURIComponent(ret[0]) + "&mode=new&boardName=" + ret[1] + "&bType=SELECT";
 	                        return;
 	                    }
 	                }
@@ -2102,7 +2160,7 @@
 			                        <li><span onclick="SaveItem('save');"><spring:message code='ezBoard.t98' /></span></li>
 	                    		</c:when>
 	                    		<c:otherwise>
-			                        <li><span onclick="SaveItem('${mode}');"><spring:message code='ezBoard.t98' /></span></li>
+			                        <li><span onclick="SaveItem('<c:out value="${mode}"/>');"><spring:message code='ezBoard.t98' /></span></li>
 	                    		</c:otherwise>
 	                    	</c:choose>
 	                    	<c:if test="${boardInfo.guBun != '3'}">
@@ -2129,8 +2187,8 @@
 	            <td>
 	                <div class="portlet_tabpart03" style="margin:0px;border-top:0px;padding:0px;margin-bottom:4px">
 	                    <div class="portlet_tabpart03_top" id="tab1">
-	                        <p id="MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezBoard.t321' /></span></p>
-	                        <p id="MailEnv_sub3"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezBoard.t60' /></span></p>
+	                        <p id="MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezBoard.hsbJP02' /></span></p>
+	                        <p id="MailEnv_sub3"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezBoard.hsbJP01' /></span></p>
 	                    </div>
 	                </div>
 	            </td>
@@ -2310,7 +2368,7 @@
 		                    <tr>
 		                        <th><spring:message code='ezBoard.t436' /></th>
 		                        <td>
-		                            <input type="text" id="txtNickName" style="WIDTH: 150px" maxlength="15" value="${boardListVO.writerName}">&nbsp;&nbsp;(<spring:message code='ezBoard.t437' /></td>
+		                            <input type="text" id="txtNickName" style="WIDTH: 150px" maxlength="15" value="<c:out value='${boardListVO.writerName}'/>">&nbsp;&nbsp;(<spring:message code='ezBoard.t437' /></td>
 		                    </tr>
 	                    </c:if>
 	                    <tr>
@@ -2411,7 +2469,7 @@
 		                    <tr style="display: none">
 		                        <th><spring:message code='ezBoard.t436' /></th>
 		                        <td style="vertical-align: middle" colspan="2">
-		                            <input type="text" id="txtNickName" style="WIDTH: 100px" maxlength="15" value="${boardListVO.writerName}">
+		                            <input type="text" id="txtNickName" style="WIDTH: 100px" maxlength="15" value="<c:out value='${boardListVO.writerName}'/>">
 		                            &nbsp;&nbsp;(<spring:message code='ezBoard.t437' /></td>
 		                    </tr>
 		                    <tr style="display: none">

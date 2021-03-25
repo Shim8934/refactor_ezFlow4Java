@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
@@ -80,7 +81,8 @@
 		    
 		    // 제목에 태그 입력 후 예약발송 > 예약발송관리에서 확인 시 태그 적용되어 나타나는 현상 수정
 		    function removeTag(subject, uid) {
-		    	document.getElementById(uid).innerText = subject;
+		    	document.getElementById(uid).innerHTML = subject;
+		    	document.getElementById(uid).parentNode.title = subject;
 		    }
 		    
 		</script>
@@ -88,11 +90,14 @@
 	
 	<body scroll="no" class="popup"> 
 		<form method="post">
-		<h1><spring:message code='ezEmail.t605' /></h1>
+		<h1 style="margin-bottom: 0px;"><spring:message code='ezEmail.t605' /></h1>
 		<div id="close">
 		  <ul>
 		    <li><span onClick="window.returnValue=0;window.close()"></span></li>
 		  </ul>
+		</div>
+		<div style="margin-bottom: 7px;">
+			<span><spring:message code='ezEmail.ksaReservation01' /></span>
 		</div>
 		<div class="box" id="maillist" style="overflow:auto; height:250px;margin:0px;padding:0px;border-top:0px;border-right:1px solid #ddd">
 			<table class="mainlist" style="table-layout:fixed;width:100%;">
@@ -103,10 +108,10 @@
 				</tr>
 				<c:forEach var="item" items="${list}">
 					<tr>
-						<td  title="${item.subject}" style="text-overflow:ellipsis; overflow:hidden;white-space:nowrap;"><span id="${item.messageId}" style="cursor:pointer;" onClick="View_ReservationMail('${item.messageId}', '${item.sendDate}')">
-							<script>removeTag('${item.subject}', '${item.messageId}')</script></span></td>
+						<td  title="" style="text-overflow:ellipsis; overflow:hidden;white-space:nowrap;"><span id="${item.messageId}" style="cursor:pointer;" onClick="View_ReservationMail('${item.messageId}', '${item.sendDate}')">
+							<script>removeTag('<c:out value="${item.subject}" />', '${item.messageId}')</script></span></td>
 						<td style="width:150px;white-space:nowrap;text-align:center;">${item.sendDate}</td>
-						<td style="text-align:center;width:100px;white-space:nowrap;"><a href="#" class="imgbtn imgbtn_h imgbck"><span  onClick="cancel_mail('${item.messageId}', this)"><spring:message code='ezEmail.t39' /></span></a></td>
+						<td style="text-align:center;width:100px;white-space:nowrap;"><a class="imgbtn imgbtn_h imgbck"><span  onClick="cancel_mail('${item.messageId}', this)"><spring:message code='ezEmail.t39' /></span></a></td>
 					</tr>
 				</c:forEach>
 			</table>

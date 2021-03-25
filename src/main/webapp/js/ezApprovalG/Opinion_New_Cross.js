@@ -120,8 +120,8 @@ function getDocMode() {
 
 /*
  * 의견팝업 오픈 타입
- * parameter : 공백, BanSong, BoRyu, HeSong (String)
- * return : 001, 002, 003, 004 (String)
+ * parameter : 공백, BanSong, BoRyu, HeSong, ReBebu (String)
+ * return : 001, 002, 003, 004, 008 (String)
  * default : 001
  */
 function getOpinionType(para) {
@@ -136,6 +136,8 @@ function getOpinionType(para) {
 		rtnVal = strOpinionType3;	//보류의견
 	} else if (pParameter == "HESONG") {
 		rtnVal = strOpinionType4;	//회송의견
+	} else if (pParameter == "REBEBU") {
+		rtnVal = strOpinionType8;	//재배부요청의견
 	}
 	
 	return rtnVal;
@@ -599,8 +601,8 @@ function getOpinionListInfo() {
 
 /*
  * 의견 타입 이름
- * parameter : 001, 002, 003, 004 (String)
- * retrun : 일반의견, 반송의견, 보류의견, 회송의견 (String)
+ * parameter : 001, 002, 003, 004, 008 (String)
+ * retrun : 일반의견, 반송의견, 보류의견, 회송의견, 재배부요청 (String)
  */
 function getOpinionTypeName(strOType) {
 	switch (strOType) {
@@ -615,6 +617,9 @@ function getOpinionTypeName(strOType) {
 			break;
 		case strOpinionType1:
 			return strLangOpinionType1;	//일반
+			break;
+		case strOpinionType8:
+			return strLangOpinionType8;	//재배부요청
 			break;
 		default:
 			return strLangOpinionType1;	//일반

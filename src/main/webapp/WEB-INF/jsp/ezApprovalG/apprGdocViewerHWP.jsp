@@ -12,7 +12,7 @@
     <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
     <script type="text/javascript">
-        var pDocHref = "${docHref}";
+        var pDocHref = "<c:out value ='${docHref}'/>";
         window.onload = function () {
         	try {
         			HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");

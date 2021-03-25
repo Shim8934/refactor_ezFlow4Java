@@ -673,7 +673,7 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<HashMap<String, Object>> CheckBoardManage(Map<String, Object> map) throws Exception{
+	public List<HashMap<String, Object>> checkBoardManage(Map<String, Object> map) throws Exception{
 		return (List<HashMap<String, Object>>) list("EzBoardDAO.CheckBoardManage", map);
 	}
 
@@ -715,6 +715,26 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		update("EzBoardDAO.modUpdateDate", map);
 	}
 	
+	/* 2019-04-05 홍승비 - 좋아요 삽입 */
+	public void likeInsert(Map<String, Object> map) throws Exception {
+		insert("EzBoardDAO.likeInsert", map);
+	}
+	
+	/* 2019-04-05 홍승비 - 좋아요 삭제 */
+	public void likeDelete(Map<String, Object> map) throws Exception {
+		delete("EzBoardDAO.likeDelete", map);
+	}
+	
+	/* 2019-04-05 홍승비 - 좋아요 여부 체크 */
+	public String likeCheck(Map<String, Object> map) throws Exception {
+		return (String) select("EzBoardDAO.likeCheck", map);
+	}
+	
+	/* 2019-04-05 홍승비 - 좋아요 갯수 가져오기 */
+	public int getlikeCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzBoardDAO.getlikeCount", map);
+	}
+	
 	/* 2019-04-10 홍승비 - 사용자가 원회사이고 사내겸직이 존재하면 사내겸직부서ID를 리턴하는 쿼리 */
 	@SuppressWarnings("unchecked")
 	public List<String> getPDOAddJobDeptID(Map<String, Object> map) throws Exception {
@@ -724,6 +744,30 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	/* 2019-05-15 홍승비 - 해당 부서ID로 상위부서ID(회사포함) 가져오기*/
 	public String getUpperDeptID(Map<String, Object> map) throws Exception {
 		return (String) select("EzBoardDAO.getUpperDeptID", map);
+	}
+	
+	/* 2019-09-18 홍승비 - 사용자의 직위와 직책 ID를 리턴하는 쿼리 (사내겸직 포함) */
+	@SuppressWarnings("unchecked")
+	public List<String> getUserJJID(Map<String, Object> map) throws Exception {
+		return (List<String>) list("EzBoardDAO.getUserJJID", map);
+	}
+	
+	/* 2019-09-18 홍승비 - 그룹권한을 포함하여 ACCESSID에 대한 권한정보를 리스트로 리턴하는 쿼리 */
+	@SuppressWarnings("unchecked")
+	public List<BoardPropertyVO> getACLListNew(Map<String, Object> map) throws Exception {
+		return (List<BoardPropertyVO>) list("EzBoardDAO.getACLListNew", map);
+	}
+
+	/* 2019-09-18 홍승비 - 그룹권한을 포함하여 ACCESSID에 대한 게시판 그룹의 관리자 권한을 리스트로 리턴하는 쿼리 */
+	@SuppressWarnings("unchecked")
+	public List<String> checkIfBoardGroupAdminNew(Map<String, Object> map) throws Exception {
+		return (List<String>) list("EzBoardDAO.checkIfBoardGroupAdminNew", map);
+	}
+
+	/* 2019-09-24 홍승비 - 그룹권한을 포함하여 ACCESSID에 대한 게시판 읽기권한을 리스트로 리턴하는 쿼리 */
+	@SuppressWarnings("unchecked")
+	public List<String> getCheckItemIDNew(Map<String, Object> map) throws Exception {
+		return (List<String>) list("EzBoardDAO.getCheckItemIDNew", map);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -740,9 +784,34 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public void insertBoardItemReadForCopy(Map<String, Object> map) throws Exception {
 		insert("EzBoardDAO.insertBoardItemReadForCopy", map);
 	}
-
+	
+	/* 2020-06-15 홍승비 - 주어진 게시판ID에 대하여 즐겨찾기 여부를 판단하는 쿼리 */
+	public int getIsMyBoardExist(Map<String, Object> map) throws Exception {
+		return (int) select("EzBoardDAO.getIsMyBoardExist", map);
+	}
+	
+	/* 2019-10-11 홍승비 - 회사별 공지사항 게시판ID를 리턴하는 쿼리 */
+	public String getCompanyNoticeBoardID(Map<String, Object> map) throws Exception {
+		return (String) select("EzBoardDAO.getCompanyNoticeBoardID", map);
+	}
+	
 	/* 2020-07-14 홍승비 - 선택한 마이게시판 분류 하위의 해당 게시판 카운트 리턴 */
 	public int getMyBoardCount(Map<String, Object> map) throws Exception {
 		return (int) select("EzBoardDAO.getMyBoardCount", map);
+	}
+
+	/* 2020-12-03 박기범 - 탭 공지 게시판 조회 쿼리 추가 */
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getCompanyTabBoardIDList(Map<String, Object> map) throws Exception {
+		return (List<HashMap<String, Object>>) list("EzBoardDAO.getCompanyTabBoardIDList", map);
+	}
+	
+	public int getOneLineCNT(Map<String, Object> map) throws Exception {
+		return (int) select("EzBoardDAO.getOneLineCNT", map);
+	}
+
+	/* 2021-01-06 홍승비 - 게시물의 읽음여부 판별 시, 현재 사용자가 읽은 게시물을 셀렉트하도록 수정 */
+	public int getReaderListCount2(Map<String, Object> map) throws Exception {
+		return (int) select("EzBoardDAO.getReaderListCount2", map);
 	}
 }

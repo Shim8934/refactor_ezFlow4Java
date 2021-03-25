@@ -3,11 +3,9 @@ package egovframework.ezEKP.ezEmail.web;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -30,6 +28,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 
@@ -40,13 +39,13 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailCancelVO;
 import egovframework.ezEKP.ezEmail.vo.MailReadVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
-import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -94,12 +93,17 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 	
 	@Resource(name="crypto") 
     private EgovFileScrty egovFileScrty;
+
+	@Resource(name="EzEmailUserAdminService")
+	private EzEmailUserAdminService ezEmailUserAdminService;
 	
 	/**
 	 * 메일 수신확인/회수 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailReaderList.do")
-	public String mailConfig(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+	@RequestMapping(value="/ezEmail/mailReaderList.do", method = RequestMethod.GET)
+	public String mailReaderList(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailReaderList started.");
+		
 		String url = request.getParameter("url") == null ? "" : request.getParameter("url");
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
 		String isReadDelete = ezCommonService.getTenantConfig("IS_READ_DELETE", loginInfo.getTenantId());
@@ -111,7 +115,12 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 			
 			if (shareId != null) {
 				if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, 2, loginInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
 					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailReaderList ended.");
+					
+					return "ezCommon/error";
 				} else {
 					model.addAttribute("shareId", shareId);
 				}
@@ -121,13 +130,14 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		model.addAttribute("isReadDelete", isReadDelete);
 		model.addAttribute("url", url);
 		
+		logger.debug("mailReaderList ended.");
 		return "ezEmail/mailReaderList";
 	}
 	
 	/**
 	 * 메일 수신확인 리스트 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailGetReceiveList.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailGetReceiveList.do", produces="text/xml; charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String mailGetReceiveList(
 			@CookieValue("loginCookie") String loginCookie,
@@ -399,7 +409,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 	/**
 	 * 메일 회수 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailCancelSend.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailCancelSend.do", produces = "text/xml; charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String mailCancelSend(
 			@CookieValue("loginCookie") String loginCookie, 
@@ -541,7 +551,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 			String messageId = ((MimeMessage)message).getMessageID();
 			String subject = message.getSubject();
 			
-			ezEmailService.setMailCancelSend(loginInfo.getTenantId(), loginInfo.getPrimary(), messageId, mailId, subject, innerAddresses, locale);
+			ezEmailUserAdminService.setMailCancelSend(loginInfo.getTenantId(), loginInfo.getPrimary(), messageId, mailId, subject, innerAddresses, locale);
 			
 			folder.close(true);
 			
@@ -558,7 +568,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		return "OK";
 	}
 	
-	@RequestMapping(value="/ezEmail/readExternalRecipient.do")
+	@RequestMapping(value="/ezEmail/readExternalRecipient.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String readExternalRecipient(Model model, HttpServletRequest request) throws Exception {
 		logger.debug("readExternalRecipient started.");

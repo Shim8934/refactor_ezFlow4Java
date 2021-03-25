@@ -3,14 +3,9 @@ package egovframework.ezEKP.ezPersonal.dao;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezPersonal.vo.PersonalApprovMailVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO;
@@ -26,14 +21,6 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 @Repository("EzPersonalDAO")
 public class EzPersonalDAO extends EgovAbstractDAO {
 	
-    private static final Logger logger = LoggerFactory.getLogger(EzPersonalDAO.class);
-    
-    @Autowired
-    private Properties config;
-
-    @Autowired
-    private EzEmailUtil ezEmailUtil;
-    
 	@SuppressWarnings("unchecked")
 	public List<PersonalSliderImageVO> getSilderList (Map<String, Object> map) {
 		return (List<PersonalSliderImageVO>) list("EzPersonalDAO.getSliderList", map);
@@ -52,6 +39,11 @@ public class EzPersonalDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<PersonalApprovMailVO> getApprovNotiConfig_S3(Map<String, Object> map) throws Exception{
 		return (List<PersonalApprovMailVO>) list("EzPersonalDAO.getApprovNotiConfig_S3", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PersonalApprovMailVO> getApprovNotiConfig_S4(Map<String, Object> map) throws Exception{
+		return (List<PersonalApprovMailVO>) list("EzPersonalDAO.getApprovNotiConfig_S4", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -198,5 +190,26 @@ public class EzPersonalDAO extends EgovAbstractDAO {
 	
 	public void deleteShareApproval(Map<String, Object> map) throws Exception {
 		delete("EzPersonalDAO.deleteShareApproval", map);
+	}
+
+	public boolean getPopupPermitYN(Map<String, Object> map) throws Exception {
+		int permit = (int) select("EzPersonalDAO.getpopupPermitYN", map);
+		
+		if (permit > 0) {
+			return true;
+		} else {
+			permit = (int) select("EzPersonalDAO.getpopupPermitSubDeptYN", map);
+			
+			if (permit > 0) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> getPopupUserGroupList(Map<String, Object> map) throws Exception {
+		return (List<String>) list("EzPersonalDAO.getPopupUserGroupList", map);
 	}
 }

@@ -136,4 +136,16 @@ public class EzMemoDAO extends EgovAbstractDAO {
 	public void setMemoLayerArea(Map<String, Object> map) {
 		update("EzMemoDAO.setMemoLayerArea", map);
 	}
+
+	public void setDetailMemoArea(Map<String, Object> map) {
+		update("EzMemoDAO.setDetailMemoArea", map);
+	}
+
+	public void setDetailMemoPostion(Map<String, Object> map) {
+		update("EzMemoDAO.setDetailMemoPostion", map);
+	}
+
+	public void setDetailMemoStatus(Map<String, Object> map) {
+		update("EzMemoDAO.setDetailMemoStatus", map);
+	}
 }

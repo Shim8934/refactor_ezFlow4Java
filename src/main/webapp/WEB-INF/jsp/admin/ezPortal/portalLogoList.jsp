@@ -19,7 +19,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript">
-			var pageid = "${pageID}";
+			var pageid = "<c:out value = '${pageID}' />";
 			var LogoAreaExist = "${logoAreaExist}";
 			var g_SelectedObj = null;
 			var g_UID = "";
@@ -37,7 +37,7 @@
 			{
 				g_UID = pUID;
 							            
-				pObj.style.backgroundColor = "#edf4fd";
+				pObj.style.backgroundColor = "#e4e8ec";
 				logo_URL = GetAttribute(pObj, "imageurl");
 	
 				if (g_SelectedObj != null) {

@@ -22,11 +22,11 @@
 		<script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
 	    <script type="text/javascript">
-	        var pDocID = "${docID}";
-	        var DraftFlag = "${draftFlag}";
+	        var pDocID = "<c:out value ='${docID}'/>";
+	        var DraftFlag = "<c:out value ='${draftFlag}'/>";
 	        var pFormHref = new String("");
 	        var pFormID = new String();
-	        var pUserID = "${userInfo.id}";
+	        var pUserID = "<c:out value ='${userInfo.id}'/>";
 			var pHasAttachYN = new String("N");
 			var pHasOpinionYN = new String("N");
 			var CurrentDate
@@ -63,38 +63,38 @@
 			var RootURL = document.location.protocol + "//" + document.location.hostname;
 			var arr_userinfo = new Array();
 			arr_userinfo[0] = "user";
-		    arr_userinfo[1]  = "${userInfo.id}";
-		    arr_userinfo[2]  = "${userInfo.displayName}";
-		    arr_userinfo[3]  = "${userInfo.title}";
-		    arr_userinfo[4]  = "${userInfo.deptID}";
-		    arr_userinfo[5]  = "${userInfo.deptName}";
-		    arr_userinfo[6]  = "${userInfo.jikChek}";
-		    arr_userinfo[8]  = "${userInfo.email}";
+		    arr_userinfo[1]  = "<c:out value ='${userInfo.id}'/>";
+		    arr_userinfo[2]  = "<c:out value ='${userInfo.displayName}'/>";
+		    arr_userinfo[3]  = "<c:out value ='${userInfo.title}'/>";
+		    arr_userinfo[4]  = "<c:out value ='${userInfo.deptID}'/>";
+		    arr_userinfo[5]  = "<c:out value ='${userInfo.deptName}'/>";
+		    arr_userinfo[6]  = "<c:out value ='${userInfo.jikChek}'/>";
+		    arr_userinfo[8]  = "<c:out value ='${userInfo.email}'/>";
 	        arr_userinfo[9] = "";
-	        arr_userinfo[10] = "${susinAdmin}";
-		    arr_userinfo[11]  = "${userInfo.displayName1}";
-		    arr_userinfo[12]  = "${userInfo.displayName2}";
-		    arr_userinfo[13]  = "${userInfo.title1}";
-		    arr_userinfo[14]  = "${userInfo.title2}";
-		    arr_userinfo[15]  = "${userInfo.deptName1}";
-		    arr_userinfo[16]  = "${userInfo.deptName2}";
+	        arr_userinfo[10] = "<c:out value ='${susinAdmin}'/>";
+		    arr_userinfo[11]  = "<c:out value ='${userInfo.displayName1}'/>";
+		    arr_userinfo[12]  = "<c:out value ='${userInfo.displayName2}'/>";
+		    arr_userinfo[13]  = "<c:out value ='${userInfo.title1}'/>";
+		    arr_userinfo[14]  = "<c:out value ='${userInfo.title2}'/>";
+		    arr_userinfo[15]  = "<c:out value ='${userInfo.deptName1}'/>";
+		    arr_userinfo[16]  = "<c:out value ='${userInfo.deptName2}'/>";
 	
 	        var SignType = new Array();
 	        var SignName = new Array();
 	        var SignContent = new Array();
 	        var KuyjeType = "002";
-	        var signDateFormat = "${optSignDateFormat}";
-			var isSplit = "${optIsSplit}";
-	        var SplitKind = "${optSplitKind}";
-	        var _opinionYN = "${opinionYN}";
-	        var _opinionGamsaYN = "${opinionGamsaYN}";
-	        var _usepassword = "${usePassword}";
+	        var signDateFormat = "<c:out value ='${optSignDateFormat}'/>";
+			var isSplit = "<c:out value ='${optIsSplit}'/>";
+	        var SplitKind = "<c:out value ='${optSplitKind}'/>";
+	        var _opinionYN = "<c:out value ='${opinionYN}'/>";
+	        var _opinionGamsaYN = "<c:out value ='${opinionGamsaYN}'/>";
+	        var _usepassword = "<c:out value ='${usePassword}'/>";
 	        var pDocSN = "1";
-	        var pUse_Editor = "${useEditor}";
+	        var pUse_Editor = "<c:out value ='${useEditor}'/>";
 			var DocNumCode = "";
 			var ext = "hwp";
-			var isHWP = "${isHWP}";
-			var dirPath = "${dirPath}";
+			var isHWP = "<c:out value ='${isHWP}'/>";
+			var dirPath = "<c:out value ='${dirPath}'/>";
 			
 			var orgCompanyID = "${userInfo.companyID}";
 			var _USE_DirectSign = "<c:out value='${useDirectSign}' />"
@@ -109,7 +109,12 @@
 			var SummaryFlag = true;
 			var pDocNumCode = "";
 			
+			//부서감사 관련 2020-01-14 홍대표
+			var deptgamsaCount = 0;
+			
 			var strLang12 = "";
+			
+			var gpGubun = "";
 			
 			function process_AfterOpen() {
 			    try {
@@ -733,93 +738,104 @@
 			    }
 			}
 	
+			var ezapprovalinfo_dialogArguments = new Array();
 			function btnApprovalInfo(pGubun) {
-			    var onlydocinfiview = false;
-			    var parameter = new Array();
-			    parameter[0] = pDocID;
-			    parameter[1] = "9999999999";;
-			    parameter[2] = SignCount;
-			    parameter[3] = SignInfo;
-			    parameter[4] = hapyuiCount;
-			    parameter[5] = DraftFlag;
-			    parameter[6] = pSuSinFlag;
-			    parameter[7] = pChamJoFlag;
-			    parameter[8] = gongramCount;
-			    parameter[9] = false;
-			    parameter[10] = pDocType;
-			    parameter[11] = "";
-			    parameter[12] = "";
-			    parameter[13] = DraftFlag;
-			    parameter[28] = onlydocinfiview
-			    parameter[30] = cabinetID;
-			    parameter[31] = tempSecurity;
-			    parameter[32] = tempUrgent;
-			    parameter[33] = pSummery;
-			    parameter[34] = pSpecialRecordCode;
-			    parameter[35] = pPublicityCode;
-			    parameter[36] = pLimitRange;
-			    parameter[37] = pPageNum;
-			    parameter[38] = tempSecurityDate;
-		        parameter[39] = SummaryFlag;
-		        parameter[41] = tempItemName;
-		        parameter[42] = tempItemName2;
-		        
-		        if(pDocState == "012") {
-		        	parameter[45] = "";
-		        	parameter[46] = "";
-		        }
-			
-			    if (tempItemCode != "")
-			        tempdocnumcode = tempItemCode;
-			    
-			    var url =  "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType + "&ext=" + "hwp";
-		        var feature = "status:no;dialogWidth:1140px;dialogHeight:750px;help:no;scroll:no;edge:sunken;";
-			    var ret = window.showModalDialog(url, parameter, feature);
-			
-			    if (ret != undefined && ret[0] == "OK") {
-			        try {
-			            var savexmlhttp = createXMLHttpRequest();
-			
-			            if (ret[1] != false) {
-			            	$.ajax({
-	                    		type : "POST",
-	                    		dataType : "text",
-	                    		async : false,
-	                    		url : "/ezApprovalG/aprLineSave.do",
-	                    		data : {
-	                    				ret    : ret[1]
-	                    				},
-	                    		success : function(result){
-	                    		}
-	                    	});
-			
-			                IsSkipDrafter = "FALSE";
-			                btnSendDraftEnable = "true";
-			                GetDraftAprLineInfo(ret);
-			
-			                if (ret[4] != undefined) {
-				                var g_SelCabXml = ret[4];
-				                var xmlCab = createXmlDom();
-				                xmlCab = loadXMLString(g_SelCabXml);
-				                cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
-				                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
-			                }
-			            	
-				            tempSecurity = ret[7];
-			                tempUrgent = ret[8];
-			                pSummery = ret[9];
-			                tempSecurityDate = ret[14];
-			                pPublicityCode = ret[11];
-			                pPublicityYN = ret[21];
-		                	pPageNum = ret[13];
-		                	pLimitRange = ret[12];
-		                	pSpecialRecordCode = ret[10];
+			                gpGubun = pGubun; 
+			                var onlydocinfiview = false;
+						    var parameter = new Array();
+						    parameter[0] = pDocID;
+						    parameter[1] = "9999999999";;
+						    parameter[2] = SignCount;
+						    parameter[3] = SignInfo;
+						    parameter[4] = hapyuiCount;
+						    parameter[5] = DraftFlag;
+						    parameter[6] = pSuSinFlag;
+						    parameter[7] = pChamJoFlag;
+						    parameter[8] = gongramCount;
+						    parameter[9] = false;
+						    parameter[10] = pDocType;
+						    parameter[11] = "";
+						    parameter[12] = "";
+						    parameter[13] = DraftFlag;
+						    parameter[28] = onlydocinfiview
+						    parameter[30] = cabinetID;
+						    parameter[31] = tempSecurity;
+						    parameter[32] = tempUrgent;
+						    parameter[33] = pSummery;
+						    parameter[34] = pSpecialRecordCode;
+						    parameter[35] = pPublicityCode;
+						    parameter[36] = pLimitRange;
+						    parameter[37] = pPageNum;
+						    parameter[38] = tempSecurityDate;
+					        parameter[39] = SummaryFlag;
+					        parameter[41] = tempItemName;
+					        parameter[42] = tempItemName2;
+					        parameter[43] = deptgamsaCount;
+					        
+					        if(pDocState == "012" || pDocState == "014") {
+					        	parameter[45] = "";
+					        	parameter[46] = "";
+					        }
+						
+						    if (tempItemCode != "")
+						        tempdocnumcode = tempItemCode;
+						    
+					        ezapprovalinfo_dialogArguments[0] = parameter;
+					        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
+						    
+					       	var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + gpGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType + "&ext=" + "hwp", "ezApprovalInfo", GetOpenWindowfeature(1144, 750));
+					       	try { OpenWin.focus(); } catch (e) { }
+
 			            }
-			        } catch (e) {
-			            alert("저장시 오류 발생");
-			        }
-			    }
-			}
+
+					    function btnApprovalInfo_Complete(ret) {
+			 			    if (ret != undefined && ret[0] == "OK") {
+						        try {
+						            var savexmlhttp = createXMLHttpRequest();
+						
+						            if (ret[1] != false) {
+						            	$.ajax({
+				                    		type : "POST",
+				                    		dataType : "text",
+				                    		async : false,
+				                    		url : "/ezApprovalG/aprLineSave.do",
+				                    		data : {
+				                    				ret    : ret[1]
+				                    				},
+				                    		success : function(result){
+				                    		}
+				                    	});
+						
+						                IsSkipDrafter = "FALSE";
+						                btnSendDraftEnable = "true";
+						                GetDraftAprLineInfo(ret);
+						
+						                if (ret[4] != undefined) {
+							                var g_SelCabXml = ret[4];
+							                var xmlCab = createXmlDom();
+							                xmlCab = loadXMLString(g_SelCabXml);
+							                cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
+							                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
+						                }
+
+										tempKeyword = ret[6]; 				//2021-03-10 박기범 - 키워드 추가
+							            tempSecurity = ret[7];
+						                tempUrgent = ret[8];
+						                pSummery = ret[9];
+						                tempSecurityDate = ret[14];
+						                pPublicityCode = ret[11];
+						                pPublicityYN = ret[21];
+					                	pPageNum = ret[13];
+					                	pLimitRange = ret[12];
+					                	pSpecialRecordCode = ret[10];
+						            }
+						        } catch (e) {
+						            alert("저장시 오류 발생");
+						        }
+						    }           
+			            }
+
+
 			
 		    function getDocRecevState() {
 		        try {
@@ -880,13 +896,13 @@
 	                <table width="100%" height="100%">
 	                    <tr>
 	                        <td valign="center" id="form1">
-	                            <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "3", "0", "${hwpToolbar}", "1");</script>
+	                            <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "3", "0", "<c:out value ='${hwpToolbar}'/>", "1");</script>
 	                            <img src="../img/bbs_hr01.gif" width="1" height="10">
 	                        </td>
 	                    </tr>
 	                    <tr id="form2">
 	                        <td valign="center" height="1">
-	                            <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl2", "3", "0", "${hwpToolbar}", "1");</script>
+	                            <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl2", "3", "0", "<c:out value ='${hwpToolbar}'/>", "1");</script>
 	                        </td>
 	                    </tr>
 	                </table>
@@ -894,12 +910,20 @@
 	        </tr>
 	        <tr>
 	            <td height="20">
-	                <table class="file">
+	                <table class="file" style="height:80px;">
 	                    <tr>
 	                        <th id="btn_Attach"><spring:message code='ezApprovalG.t65'/></th>
-	                        <td>
-	                            <div id="lstAttachLink"></div>
+	                        <td style="width:62%; border-right:1px solid #d5d5d5;">
+	                            <div id="lstAttachLink" style="height:70px;"></div>
+	                            <iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0" style="display: none;"></iframe>
 	                        </td>
+	                        <td style="width:30%;">
+								<div id="lstAttachLinkDoc" style="height:70px;"></div>
+	                        </td>
+							<td class="pos2" style="display:none;width:8%; background:#fffcfa;">
+								<a class="imgbtn imgbck" style="width:60px;"><span style="height:24px;" onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
+								<a class="imgbtn imgbck" style="width:60px;"><span style="height:24px;" onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a><br/>
+							</td>
 	                    </tr>
 	                </table>
 	            </td>

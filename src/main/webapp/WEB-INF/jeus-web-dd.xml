@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jeus-web-dd xmlns="http://www.tmaxsoft.com/xml/ns/jeus">
-        <context-path>/sht</context-path>
-        <auto-reload>
-            <enable-reload>true</enable-reload>
-            <check-on-demand>true</check-on-demand>
-        </auto-reload>
+<jeus-web-dd xmlns="http://www.tmaxsoft.com/xml/ns/jeus" version="7.0">
+    <context-path>/</context-path>
+    <library-ref>
+        <library-name>spring-support</library-name>
+        <specification-version>
+            <value>4.2.0.RELEASE</value>
+        </specification-version>
+    </library-ref>
+    <websocket/>
 </jeus-web-dd>

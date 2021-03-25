@@ -2,6 +2,11 @@ package egovframework.ezEKP.ezPersonal.service;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.ui.Model;
+
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO;
@@ -22,7 +27,7 @@ public interface EzPersonalService {
 	
 	public List<PersonalLightPollVO> getPollResult (int pItemSeq, int tenantID) throws Exception;
 	
-	public List<PersonalGetPopUpListUserVO> getPopUpListUser (String pComapnyID, int tenantID) throws Exception;
+	public List<PersonalGetPopUpListUserVO> getPopUpListUser (String pComapnyID, int tenantID, String Offset) throws Exception;
 	
 	public List<PersonalGetWebPartGroupVO> getWebPartGroup (String pCompanyID, String pMode, int tenantID) throws Exception;
 	
@@ -36,7 +41,7 @@ public interface EzPersonalService {
 	
 	public PersonalGetEmpOfMonthVO getEmpOfMonth (String pTerm, LoginVO userInfo) throws Exception;
 	
-	public PersonalLightPollVO getCurrentPoll (String pUserID, String pCompanyID, int tenantID) throws Exception;
+	public PersonalLightPollVO getCurrentPoll (String pUserID, String pCompanyID, int tenantID, String offset) throws Exception;
 	
 	public PersonalLightPollVO getPollInfo (int pItemSeq, int tenantID) throws Exception;
 	
@@ -44,7 +49,7 @@ public interface EzPersonalService {
 
 	public String getApprovNotiConfig(String userID, String currentID, int tenantID) throws Exception;
 
-	public String setApprovNotiMail(String userID, String alert, String complete, String bansong, String callBack, String hesong, String saveMailFlag, int tenantID) throws Exception;
+	public String setApprovNotiMail(String userID, String alert, String complete, String bansong, String callBack, String hesong, String saveMailFlag, int tenantID, String linePass) throws Exception;
 	
 	public List<OrganUserVO> getBirthUserList(String companyId, int tenantId, int month, String lang) throws Exception;
 	
@@ -61,5 +66,8 @@ public interface EzPersonalService {
 	public String deleteShareApproval (String userID, String shareUserID, String companyID, int tenantID) throws Exception;
 	
 	public String getCheckDuplShareUser (String userID, String shareUserID, String companyID, int tenantID) throws Exception;
-	
+
+	List<PersonalGetPopUpListUserVO> getPopUpListUserWithAuth(String pComapnyID, int tenantID, String offset, String userId, String deptId) throws Exception;
+
+	public Object saveBujaeUser(String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception;
 }

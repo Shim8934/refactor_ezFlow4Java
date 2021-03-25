@@ -110,12 +110,12 @@ function SwapDisplayInfo(strValue) {
 function SwapSpecialInfo(strValue) {
     if (strValue == "1")
     {
-        tdSpecialFlag.innerHTML = strLang619;
+        tdSpecialFlag.innerHTML = strLang227;
         btnAddSC.style.display = "";
     }
     else {
         if (strValue == "2")
-            tdSpecialFlag.innerHTML = strLang621;
+            tdSpecialFlag.innerHTML = strLang561;
         else
             tdSpecialFlag.innerHTML = strLang622;
 

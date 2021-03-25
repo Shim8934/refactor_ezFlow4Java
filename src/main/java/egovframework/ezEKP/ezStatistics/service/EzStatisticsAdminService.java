@@ -4,6 +4,7 @@ package egovframework.ezEKP.ezStatistics.service;
 import java.util.Map;
 
 import egovframework.ezEKP.ezStatistics.vo.StatApprVO;
+import org.json.simple.JSONObject;
 
 
 public interface EzStatisticsAdminService {
@@ -33,4 +34,7 @@ public interface EzStatisticsAdminService {
 	public Map<String, Object> getMailLogList(String tenantId, String pageNo, String pageSize, String mailLogType, String searchStartTime,
 				String searchEndTime, String searchField, String searchValue, String isPrimaryLang, String companyId) throws Exception;
 
+	public void yearlyDocCount(StatApprVO statApprVO) throws Exception;
+
+	public JSONObject getYearlyDocCount(int tenantID, String companyID);
 }

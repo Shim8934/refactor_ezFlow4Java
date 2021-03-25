@@ -25,10 +25,8 @@
 	    	tr.hover:hover {background:#eee; color:#fff;}
 			.selectTR  {background-color: #FFFFFF;}
 			#searchTable {
-				border-top: 1px solid #e8e8e8;
-				border-left: 1px solid #e8e8e8;
-				border-right: 1px solid #e8e8e8;
-				background-color: #fcfcfc;
+				border: 1px solid #e8e8e8;
+				background-color: #f8f8fa;
 			}
 			#searchTable td {padding: 8px 5px;}
 	    </style>
@@ -133,6 +131,20 @@
 	    		getUserConfList();
 	    	}
 	    	
+	    	function ShowMailProgress() {
+				var CurrenWidth = window.innerWidth;
+	        	
+			    document.getElementById("mailPanel").style.display = "";
+			    document.getElementById("MailProgress").style.top = "330px";
+			    document.getElementById("MailProgress").style.left = (CurrenWidth / 2) - 100 + "px";
+			    document.getElementById("MailProgress").style.display = "";
+			}
+	    	
+	    	function HiddenMailProgress() {
+			    document.getElementById("mailPanel").style.display = "none";
+			    document.getElementById("MailProgress").style.display = "none";
+			}
+	    	
 	    	function getUserConfList() {
 	    		if (!checkPattern()) {
 	    			alert("<spring:message code= 'ezAttitude.t117' />")
@@ -145,7 +157,7 @@
 				}
 	    		
 	    		$.ajax({
-	    			data : "POST",
+	    			type : "post",
 	    			dataType : "json",
 	    			async : false,
 	    			url : "/admin/ezAttitude/attitudeUserConfList.do",
@@ -162,6 +174,9 @@
 	   					orderCell : orderCell,
 	   					orderOption : orderOption
 	   				},
+					beforeSend : function() {
+	   					ShowMailProgress();
+					},
 	   				success : function(result){
 	    				totalCount = result.totalCount;
 	    				totalPage = parseInt(totalCount / listSize) + (totalCount % listSize != 0 ? 1 : 0);
@@ -173,6 +188,10 @@
 	    				}
 	    				
 	    				$("#HeaderAllCheckBox").prop("checked",false);
+	    				
+	    			},
+	    			complete : function() {
+	    				HiddenMailProgress();
 	    			}
 	    		});
 	    	}
@@ -342,15 +361,16 @@
 	</head>
 	
 	<body class="mainbody">
-	    <h1><spring:message code = 'ezAttitude.t4' /><span id="mailBoxInfo"></span></h1>
-		<div id="mainmenu">
-			<span style="border: none;"><b><spring:message code='ezAttitude.t15'/> : </b></span>
-			<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-top:4px; padding-right:40px;">
+	    <h1>
+	    	<spring:message code = 'ezAttitude.t4' /><span id="mailBoxInfo"></span>
+		    <span class="title_bar"><img src="/images/name_bar.gif"></span>
+	    	<select class="companySelect" name="ListCompany" id="ListCompany" onchange="company_change()">
 				<c:forEach var = "companyItem" items="${list }">
 					<option value="<c:out value = '${companyItem.cn }' />"><c:out value = '${companyItem.displayName }'/></option>
 				</c:forEach>
      		</select>
-	  	</div>
+	    </h1>
+		<div id="mainmenu"></div>
 	  	
 	  	<table id="searchTable" style="width:100%;">
 			<tbody>
@@ -385,7 +405,7 @@
 			</tbody>
 		</table>
 		
-		<div id="contentlist" style="width:100%; height:590px;">
+		<div id="contentlist" style="width:100%; height:590px;margin-top:5px">
 			<table class="mainlist" style="width:100%;">
 				<thead>
 					<tr>
@@ -402,7 +422,12 @@
 			</table>
 		</div>
 		
-		<div style="color: #666; padding-top: 10px"></div>
+		
 		<div id="tblPageRayer"></div>
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id="mailPanel"></div>
+	    <div style="width: 200px; height: 110px; border-radius: 8px; text-align: center; vertical-align: middle; z-index: 9000; position: absolute; top: 400px; left: 726.5px; display: none;" id="MailProgress">
+            <img src="/images/email/progress_img.gif" style="padding-top:20px;">
+            <div id="progressNum" style="padding-top:10px;vertical-align: middle; font-weight: bold; font-size: 1.2em;"></div>
+        </div>
 	</body>
 </html>

@@ -7,7 +7,7 @@ function Receptinfo_ini() {
         
         if (approvalFlag == "G") {
         	if (receptGubunYN == "Y") {
-        		if (pDocType == "001") { //시행문
+                if (pDocType == "001" && isOuterForm) { //시행문
         			ChangeReceptTab(document.getElementById("3tab4"));
         			initReceptListView();
         			document.getElementById("3tab4").onclick();
@@ -28,6 +28,8 @@ function Receptinfo_ini() {
         	initReceptListView();
         	document.getElementById("3tab1").onclick();
         }
+
+        treeViewScrollTo("tvTreeView2");   //2020-04-24 : 선택된 노드로 트리뷰 커서 이동
     }
 }
 //#############################################################################################################################################수신처 내부 버튼 클릭 이벤트
@@ -269,7 +271,7 @@ function RdisplayUserList(DeptID) {
 		url : "/ezOrgan/getDeptMemberList.do",
 		data : {
 				deptID   : DeptID, 
-				cell 	 : "displayName;description;title;telephoneNumber",
+				cell 	 : "displayName;description;title;telephoneNumber;extensionattribute5",
 				prop     : "department;displayName;description;title;physicalDeliveryOfficeName",
 				type 	 : "user"
 				},
@@ -790,7 +792,7 @@ function searchUserList2(search) {
     			url : "/ezOrgan/getSearchList.do",
     			data : {
     				search : "displayname::" + strSearch + ";;PhysicalDeliveryOfficeName::" + companyID,
-    				cell   : "displayname;description;title;telephonenumber",
+    				cell   : "displayname;description;title;telephonenumber;extensionattribute5",
     				prop   : "department;displayName;description;title;physicalDeliveryOfficeName",
     				type   : "user"
     			},
@@ -826,7 +828,7 @@ function searchUserList3(search) {
 			url : "/ezOrgan/getSearchList.do",
 			data : {
 				search : "displayname::" + strSearch + ";;PhysicalDeliveryOfficeName::" + companyID,
-				cell   : "displayname;description;title;telephonenumber",
+				cell   : "displayname;description;title;telephonenumber;extensionattribute5",
 				prop   : "department;displayName;description;title;physicalDeliveryOfficeName",
 				type   : "user"
 			},
@@ -955,9 +957,10 @@ function btnSearchDept_onClick() {
             document.getElementById("txtOuterDeptName").focus();
             return;
         }
+        
         if (CrossYN()) {
             searchorganglist_dialogArguments[0] = g_progresswin;
-            searchorganglist_dialogArguments[1] = btnSearchDept_onClick_Complete;
+            searchorganglist_dialogArguments[1] = btnSearchDept_onClick_Complete_New;
 
             DivPopUpShow(600, 600, "/ezApprovalG/searchOrganGList.do?keyword=" + encodeURIComponent(tmpDeptName));
         }
@@ -966,341 +969,8 @@ function btnSearchDept_onClick() {
             feature = feature + GetShowModalPosition(600, 600);
             reParam = window.showModalDialog("/ezApprovalG/searchOrganGList.do?keyword=" + encodeURIComponent(tmpDeptName), g_progresswin, feature);
             document.getElementById("txtOuterDeptName").focus();
-
-            if (reParam["ret"] == "OK") {
-                if (isExistDept(false)) {
-                    var pAlertContent = strLang244 + "<br>" + strLang245;
-                    OpenAlertUI(pAlertContent);
-                    return;
-                }
-
-                var DuplicateFlag = DuplicateAprDeptCheckG(RECEPTLIST, reParam["ouCode"]);
-                if (DuplicateFlag) {
-                    Resultxml.async = false;
-                    if(approvalFlag == "G") {
-                    	Resultxml = loadXMLFile(strLangEtcFile1);
-                    } else {
-                    	Resultxml = loadXMLFile(strLangEtcFileliban1);
-                    }
-
-                    var listview = new ListView();
-                    listview.LoadFromID("lvRECEPTLIST");
-
-                    DeptAddIndex = listview.GetRowCount();
-
-                    if (DeptAddIndex == "1") {
-                        var tr = listview.GetDataRows();
-                        if (tr[0].id.indexOf("noItems") > 0)
-                            DeptAddIndex = 0;
-                    }
-
-                    DeptAddIndex = DeptAddIndex + 1;
-
-                    var rtnNodes = getExtLdapInfo(reParam["ouCode"]);
-                    if (rtnNodes == null)
-                        return false;
-                    if (rtnNodes.childNodes.length <= 0)
-                        return false;
-
-                    var OutDeptList = "";
-                    // getNodeText(GetChildNodes(rtnNodes)[0]) : 기관코드(ouCode)
-                    // getNodeText(GetChildNodes(rtnNodes)[1]) : BaseDN
-                    // getNodeText(GetChildNodes(rtnNodes)[2]) : 기관명(ou)
-                    // getNodeText(GetChildNodes(rtnNodes)[3]) : 전체조직명(ucOrgFullName)
-                    // getNodeText(GetChildNodes(rtnNodes)[4]) : 최상위기관코드(topOUCode)
-                    // getNodeText(GetChildNodes(rtnNodes)[5]) : 차상위기관코드(parentOUCode)
-                    // getNodeText(GetChildNodes(rtnNodes)[8]) : 발신명의(ucChiefTitle)
-
-                    if (getNodeText(GetChildNodes(rtnNodes)[0]) == getNodeText(GetChildNodes(rtnNodes)[4])) {
-                        if (getNodeText(GetChildNodes(rtnNodes)[8]) == "")
-                            OutDeptList = getNodeText(GetChildNodes(rtnNodes)[2]) + strLang93;
-                        else
-                            OutDeptList = getNodeText(GetChildNodes(rtnNodes)[8]);
-                    } else {
-
-                        var tempRtnNodes = getExtLdapInfo(getNodeText(GetChildNodes(rtnNodes)[4]));
-                        if (tempRtnNodes == null) return false;
-
-                        // 최상위 기관이 없을때 
-                        if (tempRtnNodes.childNodes.length <= 0) {
-                            if (getNodeText(GetChildNodes(rtnNodes)[8]) == "")
-                                OutDeptList = getNodeText(GetChildNodes(rtnNodes)[2]) + strLang93;
-                            else
-                                OutDeptList = getNodeText(GetChildNodes(rtnNodes)[8]);
-                        } else {
-                            // 최상위 기관이 있을때
-                            // FullName이 Null 인 경우 
-                            if (getNodeText(GetChildNodes(rtnNodes)[3]) == "") {
-                                if (getNodeText(GetChildNodes(rtnNodes)[8]) == "")
-                                    OutDeptList = getNodeText(GetChildNodes(rtnNodes)[2]) + strLang93;
-                                else
-                                    OutDeptList = getNodeText(GetChildNodes(rtnNodes)[8]);
-                            } else {
-                                // FullName이 Null이 아닌 경우
-                                if (getNodeText(GetChildNodes(rtnNodes)[8]) == "") {
-                                    var namelength = getNodeText(GetChildNodes(rtnNodes)[3]).length - 1;
-                                    var location = getNodeText(GetChildNodes(rtnNodes)[3]).indexOf(strLang93);
-                                    if (namelength == location)
-                                        OutDeptList = getNodeText(GetChildNodes(rtnNodes)[3]);
-                                    else
-                                        OutDeptList = getNodeText(GetChildNodes(rtnNodes)[3]) + strLang93;
-                                } else {
-                                    if (getNodeText(GetChildNodes(rtnNodes)[0]) == getNodeText(GetChildNodes(rtnNodes)[4]))
-                                        OutDeptList = getNodeText(GetChildNodes(rtnNodes)[8]);
-                                    else
-                                        OutDeptList = getNodeText(GetChildNodes(rtnNodes)[3]).replace(getNodeText(GetChildNodes(rtnNodes)[2]), '') + "(" + getNodeText(GetChildNodes(rtnNodes)[8]) + ")";
-                                }
-                            }
-                        }
-                    }
-
-                    var pDeptNm = OutDeptList;
-                    var objNodes = SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW/CELL");
-                    setNodeText(GetChildNodes(objNodes[0])[0], DeptAddIndex);
-                    setNodeText(GetChildNodes(objNodes[0])[1], reParam["ouCode"]);
-                    setNodeText(GetChildNodes(objNodes[0])[2], pDocID);
-                    setNodeText(GetChildNodes(objNodes[0])[3], "Y");
-                    setNodeText(GetChildNodes(objNodes[0])[4], "N");
-                    setNodeText(GetChildNodes(objNodes[0])[5], "N");
-                    setNodeText(GetChildNodes(objNodes[0])[6], "");
-                    setNodeText(GetChildNodes(objNodes[0])[7], "");
-                    setNodeText(GetChildNodes(objNodes[0])[8], "");
-                    setNodeText(GetChildNodes(objNodes[0])[9], "");
-                    setNodeText(GetChildNodes(objNodes[1])[0], pDeptNm);
-                    setNodeText(GetChildNodes(objNodes[0])[10], pDeptNm);
-                    setNodeText(GetChildNodes(objNodes[0])[11], pDeptNm);
-                    setNodeText(GetChildNodes(objNodes[0])[12], "");
-                    setNodeText(GetChildNodes(objNodes[0])[13], "");
-
-                    var tr = listview.GetSelectedRows();
-                    var InitTr = listview.GetDataRows();
-
-                    var MaxID = 0;
-                    for (var j = 0  ; j < InitTr.length  ; j++) {
-                        var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
-                        if (MaxID < curnum)
-                            MaxID = curnum;
-                    }
-
-                    if (tr.length == 0) {
-                        if (InitTr.length == 0) {
-                            document.getElementById('RECEPTLIST').innerHTML = "";
-                            var listview = new ListView();
-                            listview.SetID("lvRECEPTLIST");
-                            listview.SetMulSelectable(false);
-                            listview.SetHeightFree(true);
-                            listview.SetRowOnDblClick("AprDeptDel_onclick");
-                            listview.DataSource(Resultxml);
-                            listview.DataBind("RECEPTLIST");
-                            listview.SetSelectFlag(false);
-                        }
-                        else {
-                            var objTr = listview.AddRow(0);
-                            SetAttribute(objTr, "id", "lvRECEPTLIST" + "_TR_" + eval(MaxID + 1));
-                            listview.AddDataRow(objTr, Resultxml.documentElement.getElementsByTagName("ROW")[0]);
-                        }
-                    }
-                    else {
-                        var objTr = listview.AddRow(Number(listview.GetSelectedIndexes().split(',')[0]));
-                        SetAttribute(objTr, "id", "lvRECEPTLIST" + "_TR_" + eval(MaxID + 1));
-                        listview.AddDataRow(objTr, Resultxml.documentElement.getElementsByTagName("ROW")[0]);
-
-                        ReSetAprLineDept(listview);
-                    }
-
-                    DeptAddIndex = DeptAddIndex + 1;
-
-                    /* 2015-06-30 표준모듈:추가(외부수신자요약) - KSK */
-                    if (InitTr.length > 8) {
-                        document.getElementById("inputSummaryOuterReceiverList").focus();
-                        document.getElementById("trSummaryOuterReceiverList").style.display = "";
-                        document.getElementById("btnaddress").style.display = "none";
-                        document.getElementById("btnaddressChange").style.display = "none";
-                    } else {
-                        document.getElementById("trSummaryOuterReceiverList").style.display = "none";
-                        document.getElementById("inputSummaryOuterReceiverList").value = "";
-                        document.getElementById("btnaddress").style.display = "";
-                        if (useReceiveInfoName == '1') {
-//                        	document.getElementById("btnaddressChange").style.display = "";
-                        } else {
-                        	document.getElementById("btnaddressChange").style.display = "";
-                        }
-                        
-                    }
-
-                } else {
-                    var pAlertContent = strLang247 + "<br>  " + strLang248;
-                    OpenAlertUI(pAlertContent);
-                }
-
-
-            } else if (reParam["ret"] == "MULTISELECT") {
-                /* 2015-06-30 표준모듈:추가(외부수신자요약, 검색된 수신자 다중 추가) - KSK */
-                var InitTr = null;
-                for (var i = 0; i < reParam["ouCode"].length; i++) {
-                    if (isExistDept(false)) {
-                        var pAlertContent = strLang244 + "<br>" + strLang245;
-                        OpenAlertUI(pAlertContent);
-                        return;
-                    }
-
-                    var DuplicateFlag = DuplicateAprDeptCheckG(RECEPTLIST, reParam["ouCode"][i]);
-                    if (DuplicateFlag) {
-                        Resultxml.async = false;
-                        if(approvalFlag == "G") {
-                        	Resultxml = loadXMLFile(strLangEtcFile1);
-                        } else {
-                        	Resultxml = loadXMLFile(strLangEtcFileliban1);
-                        }
-
-                        var listview = new ListView();
-                        listview.LoadFromID("lvRECEPTLIST");
-
-                        DeptAddIndex = listview.GetRowCount();
-
-                        if (DeptAddIndex == "1") {
-                            var tr = listview.GetDataRows();
-                            if (tr[0].id.indexOf("noItems") > 0)
-                                DeptAddIndex = 0;
-                        }
-
-                        DeptAddIndex = DeptAddIndex + 1;
-
-                        var rtnNodes = getExtLdapInfo(reParam["ouCode"][i]);
-                        if (rtnNodes == null)
-                            return false;
-                        if (rtnNodes.childNodes.length <= 0)
-                            return false;
-
-                        var OutDeptList = "";
-                        // getNodeText(GetChildNodes(rtnNodes)[0]) : 기관코드(ouCode)
-                        // getNodeText(GetChildNodes(rtnNodes)[1]) : BaseDN
-                        // getNodeText(GetChildNodes(rtnNodes)[2]) : 기관명(ou)
-                        // getNodeText(GetChildNodes(rtnNodes)[3]) : 전체조직명(ucOrgFullName)
-                        // getNodeText(GetChildNodes(rtnNodes)[4]) : 최상위기관코드(topOUCode)
-                        // getNodeText(GetChildNodes(rtnNodes)[5]) : 차상위기관코드(parentOUCode)
-                        // getNodeText(GetChildNodes(rtnNodes)[8]) : 발신명의(ucChiefTitle)
-
-                        if (getNodeText(GetChildNodes(rtnNodes)[0]) == getNodeText(GetChildNodes(rtnNodes)[4])) {
-                            if (getNodeText(GetChildNodes(rtnNodes)[8]) == "")
-                                OutDeptList = getNodeText(GetChildNodes(rtnNodes)[2]) + strLang93;
-                            else
-                                OutDeptList = getNodeText(GetChildNodes(rtnNodes)[8]);
-                        } else {
-
-                            var tempRtnNodes = getExtLdapInfo(getNodeText(GetChildNodes(rtnNodes)[4]));
-                            if (tempRtnNodes == null) return false;
-
-                            // 최상위 기관이 없을때 
-                            if (tempRtnNodes.childNodes.length <= 0) {
-                                if (getNodeText(GetChildNodes(rtnNodes)[8]) == "")
-                                    OutDeptList = getNodeText(GetChildNodes(rtnNodes)[2]) + strLang93;
-                                else
-                                    OutDeptList = getNodeText(GetChildNodes(rtnNodes)[8]);
-                            } else {
-                                // 최상위 기관이 있을때
-                                // FullName이 Null 인 경우 
-                                if (getNodeText(GetChildNodes(rtnNodes)[3]) == "") {
-                                    if (getNodeText(GetChildNodes(rtnNodes)[8]) == "")
-                                        OutDeptList = getNodeText(GetChildNodes(rtnNodes)[2]) + strLang93;
-                                    else
-                                        OutDeptList = getNodeText(GetChildNodes(rtnNodes)[8]);
-                                } else {
-                                    // FullName이 Null이 아닌 경우
-                                    if (getNodeText(GetChildNodes(rtnNodes)[8]) == "") {
-                                        var namelength = getNodeText(GetChildNodes(rtnNodes)[3]).length - 1;
-                                        var location = getNodeText(GetChildNodes(rtnNodes)[3]).indexOf(strLang93);
-                                        if (namelength == location)
-                                            OutDeptList = getNodeText(GetChildNodes(rtnNodes)[3]);
-                                        else
-                                            OutDeptList = getNodeText(GetChildNodes(rtnNodes)[3]) + strLang93;
-                                    } else {
-                                        if (getNodeText(GetChildNodes(rtnNodes)[0]) == getNodeText(GetChildNodes(rtnNodes)[4]))
-                                            OutDeptList = getNodeText(GetChildNodes(rtnNodes)[8]);
-                                        else
-                                            OutDeptList = getNodeText(GetChildNodes(rtnNodes)[3]).replace(getNodeText(GetChildNodes(rtnNodes)[2]), '') + "(" + getNodeText(GetChildNodes(rtnNodes)[8]) + ")";
-                                    }
-                                }
-                            }
-                        }
-
-                        var pDeptNm = OutDeptList;
-                        var objNodes = SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW/CELL");
-                        setNodeText(GetChildNodes(objNodes[0])[0], DeptAddIndex);
-                        setNodeText(GetChildNodes(objNodes[0])[1], reParam["ouCode"][i]);
-                        setNodeText(GetChildNodes(objNodes[0])[2], pDocID);
-                        setNodeText(GetChildNodes(objNodes[0])[3], "Y");
-                        setNodeText(GetChildNodes(objNodes[0])[4], "N");
-                        setNodeText(GetChildNodes(objNodes[0])[5], "N");
-                        setNodeText(GetChildNodes(objNodes[0])[6], "");
-                        setNodeText(GetChildNodes(objNodes[0])[7], "");
-                        setNodeText(GetChildNodes(objNodes[0])[8], "");
-                        setNodeText(GetChildNodes(objNodes[0])[9], "");
-                        setNodeText(GetChildNodes(objNodes[1])[0], pDeptNm);
-                        setNodeText(GetChildNodes(objNodes[0])[10], pDeptNm);
-                        setNodeText(GetChildNodes(objNodes[0])[11], pDeptNm);
-                        setNodeText(GetChildNodes(objNodes[0])[12], "");
-                        setNodeText(GetChildNodes(objNodes[0])[13], "");
-
-                        var tr = listview.GetSelectedRows();
-                        InitTr = listview.GetDataRows();
-
-                        var MaxID = 0;
-                        for (var j = 0  ; j < InitTr.length  ; j++) {
-                            var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
-                            if (MaxID < curnum)
-                                MaxID = curnum;
-                        }
-
-                        if (tr.length == 0) {
-                            if (InitTr.length == 0) {
-                                document.getElementById('RECEPTLIST').innerHTML = "";
-                                var listview = new ListView();
-                                listview.SetID("lvRECEPTLIST");
-                                listview.SetMulSelectable(false);
-                                listview.SetHeightFree(true);
-                                listview.SetRowOnDblClick("AprDeptDel_onclick");
-                                listview.DataSource(Resultxml);
-                                listview.DataBind("RECEPTLIST");
-                                listview.SetSelectFlag(false);
-                            } else {
-                                var objTr = listview.AddRow(0);
-                                SetAttribute(objTr, "id", "lvRECEPTLIST" + "_TR_" + eval(MaxID + 1));
-                                listview.AddDataRow(objTr, Resultxml.documentElement.getElementsByTagName("ROW")[0]);
-                            }
-                        } else {
-                            var objTr = listview.AddRow(Number(listview.GetSelectedIndexes().split(',')[0]));
-                            SetAttribute(objTr, "id", "lvRECEPTLIST" + "_TR_" + eval(MaxID + 1));
-                            listview.AddDataRow(objTr, Resultxml.documentElement.getElementsByTagName("ROW")[0]);
-
-                            ReSetAprLineDept(listview);
-                        }
-
-                        DeptAddIndex = DeptAddIndex + 1;
-
-                        /* 2015-06-30 표준모듈:추가(외부수신자요약) - KSK */
-                        if (InitTr.length > 8) {
-                            document.getElementById("inputSummaryOuterReceiverList").focus();
-                            document.getElementById("trSummaryOuterReceiverList").style.display = "";
-                            document.getElementById("btnaddress").style.display = "none";
-                            document.getElementById("btnaddressChange").style.display = "none";
-                        } else {
-                            document.getElementById("trSummaryOuterReceiverList").style.display = "none";
-                            document.getElementById("inputSummaryOuterReceiverList").value = "";
-                            document.getElementById("btnaddress").style.display = "";
-                            if (useReceiveInfoName == '1') {
-//                            	document.getElementById("btnaddressChange").style.display = "";
-                            } else {
-                            	document.getElementById("btnaddressChange").style.display = "";
-                            }
-                        }
-
-                    } else {
-                        var pAlertContent = strLang247 + "<br>  " + strLang248;
-                        OpenAlertUI(pAlertContent);
-                    }
-                }
-            }
+            
+            btnSearchDept_onClick_Complete_New(reParam);
         }
     }
 }
@@ -1649,6 +1319,73 @@ function btnSearchDept_onClick_Complete(reParam) {
     }
 }
 
+function btnSearchDept_onClick_Complete_New(reParam) {
+	DivPopUpHidden();
+
+	if (typeof(reParam) == "undefined" || reParam["ret"] == "NO" || reParam["ret"] == "") {
+		return;
+	}
+	
+	if (isExistDept(false)) {
+		var pAlertContent = strLang244;
+		OpenAlertUI(pAlertContent);
+		return;
+	}
+	
+    if (reParam["ret"] == "OK") {
+    	var DuplicateFlag = DuplicateAprDeptCheck(RECEPTLIST, reParam["ouCode"]);
+    	if (DuplicateFlag) {
+    		AprLineAddDeptG_New(reParam["ouCode"]);
+    	} else {
+    		var pAlertContent = strLang247 + "<br>" + strLang248;
+    		OpenAlertUI(pAlertContent);
+    		return;
+    	}
+    } else if (reParam["ret"] == "MULTISELECT") {
+    	for (var i = 0; i < reParam["ouCode"].length; i++) {
+    		var DuplicateFlag = DuplicateAprDeptCheck(RECEPTLIST, reParam["ouCode"][i]);
+    		if (DuplicateFlag) {
+    			AprLineAddDeptG_New(reParam["ouCode"][i]);
+    		}
+    	}
+    } else if (reParam["ret"] == "SEARCH") {  //2020-04-23 : 외부 수신처 검색 후 조직도 이동
+        var rtnXml = reParam["search"];
+
+        var listview = new ListView();
+        listview.LoadFromID("lvRECEPTLIST");
+
+        var xmlRtn = createXmlDom();
+        xmlRtn = loadXMLString(rtnXml);   
+        
+        var nodes = xmlRtn.getElementsByTagName("ROW");
+
+        var nodeLevel = 1;
+
+        for(var i = nodes.length -1 ; i >= 0 ; i--){
+
+            $("#tvTreeView3").find("div[nodelevel=" + nodeLevel + "]").each(function(){
+                if($(this).attr("data1") == $(nodes.item(i)).find("SELCODE").eq(0).text()){
+
+                    var nodeID = "imgNode_" + $(this).attr("id");
+                    var nodeSpnDiv = "spn_" + $(this).attr("id");
+    
+                    if($("#" + nodeID).attr("src").indexOf("plus") > -1){
+                        $("#" + nodeID).click();
+                    }
+    
+                    if(i == 0){
+                        $("#" + nodeSpnDiv).click();
+                    }  
+                    
+                    return false;
+                }
+            });
+            nodeLevel++;
+        }
+        treeViewScrollTo("tvTreeView3");   //선택된 노드로 트리뷰 커서 이동
+   }
+}
+
 function event_getDeptFullTree() {
     if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
         if (g_xmlHTTP.statusText == "OK") {
@@ -1666,6 +1403,8 @@ function event_getDeptFullTree() {
             treeView.SetNodeDblClick("TreeViewNodeDbClick");
             treeView.DataSource(loadXMLString(g_xmlHTTP.responseText));
             treeView.DataBind("TreeView2");
+
+            treeViewScrollTo("tvTreeView2");   //2020-04-24 : 선택된 노드로 트리뷰 커서 이동
         }
         else {
             alert(strLang249 + g_xmlHTTP.statusText);
@@ -1766,7 +1505,7 @@ function AprDeptOuterAdd_onclick() {
 
     var DuplicateFlag = DuplicateAprDeptCheck(RECEPTLIST, selectnode.GetNodeData("DATA1"));
     if (DuplicateFlag) {
-        AprLineAddDeptG(selectnode.NodeID, CurSelRow);
+        AprLineAddDeptG_New(selectnode.GetNodeData("DATA1"));
     }
     else {
         var pAlertContent = strLang247;
@@ -1789,6 +1528,154 @@ function DuplicateAprDeptCheckG(APRDEPT, arrUserInfo) {
     return true;
 }
 
+function AprLineAddDeptG_New(outDeptID) {
+	var listView = new ListView();
+	listView.LoadFromID("lvRECEPTLIST");
+	
+	var oXmlDom = getExtLdapInfo_New(outDeptID);
+	if (oXmlDom != "") {
+		var ldapDeptInfo = "";
+		var oSelNode = GetChildNodes(SelectNodes(oXmlDom, "ORGAN")[0]);
+		if (oSelNode.length > 0) {
+			if ((getNodeText(oSelNode[0]) == getNodeText(oSelNode[4])) || getNodeText(oSelNode[10]) == "Y") {
+				if (getNodeText(oSelNode[8]) == "") {
+					ldapDeptInfo = getNodeText(oSelNode[2]) + strLang93;
+				} else {
+					ldapDeptInfo = getNodeText(oSelNode[8]);
+				}
+			} else {
+				var pSelNode; 
+				var tempCode = getNodeText(oSelNode[5]);
+				for (var i = 0; i < getNodeText(oSelNode[6]); i++) {
+					pSelNode = GetChildNodes(SelectNodes(getExtLdapInfo_New(tempCode), "ORGAN")[0]);
+					
+					if (pSelNode.length > 0) {
+						if (getNodeText(pSelNode[10]) == "Y") {
+							break;
+						} else {
+							tempCode = getNodeText(pSelNode[5]);
+						}
+					}
+				}
+				//상위 기관명
+				if (getNodeText(pSelNode[8]) == "") {
+					ldapDeptInfo = getNodeText(pSelNode[2]) + strLang93;
+				} else {
+					ldapDeptInfo = getNodeText(pSelNode[8]);
+				}
+				//문서를 수신받는 부서명 
+				if (getNodeText(oSelNode[8]) == "") {
+					ldapDeptInfo = ldapDeptInfo + " (" + getNodeText(oSelNode[2]) + strLang93 + ")";
+				} else {
+					ldapDeptInfo = ldapDeptInfo + " (" + getNodeText(oSelNode[8]) + ")";
+				}
+			}
+		}
+		
+		var lvIdx = listView.GetRowCount();
+		if (lvIdx > 0) {
+			if (listView.GetDataRows()[0].id.indexOf("noItems") > 0) {
+				lvIdx = 0;
+			}
+		}
+		lvIdx++;
+		
+		var ResultXml = createXmlDom();
+		var Root, Headers, Header, HData;
+		var Rows, Row, Cell, Value;
+		
+		Root = createNodeInsert(ResultXml, Root, "LISTVIEWDATA");
+		//HEADER만들기
+		Headers = createNodeAndAppandNode(ResultXml, Root, Headers, "HEADERS");
+		
+		Header = createNodeAndAppandNode(ResultXml, Headers, Header, "HEADER");
+		createNodeAndAppandNodeText(ResultXml, Header, HData, "NAME", "순번");
+		createNodeAndAppandNodeText(ResultXml, Header, HData, "WIDTH", "35");
+		
+		Header = createNodeAndAppandNode(ResultXml, Headers, Header, "HEADER");
+		createNodeAndAppandNodeText(ResultXml, Header, HData, "NAME", "수신자명");
+		createNodeAndAppandNodeText(ResultXml, Header, HData, "WIDTH", "200");
+		
+		//ROW만들기
+		Rows = createNodeAndAppandNode(ResultXml, Root, Rows, "ROWS");
+		Row = createNodeAndAppandNode(ResultXml, Rows, Row, "ROW");
+		
+		Cell = createNodeAndAppandNode(ResultXml, Row, Cell, "CELL");
+		createNodeAndAppandNodeText(ResultXml, Cell, Value, "VALUE", lvIdx);
+		createNodeAndAppandNodeText(ResultXml, Cell, Value, "DATA1", getNodeText(oSelNode[0]));
+		createNodeAndAppandNodeText(ResultXml, Cell, Value, "DATA2", pDocID);
+		createNodeAndAppandNodeText(ResultXml, Cell, Value, "DATA3", "Y");
+		createNodeAndAppandNodeText(ResultXml, Cell, Value, "DATA4", "N");
+		createNodeAndAppandNodeText(ResultXml, Cell, Value, "DATA5", "N");
+		createNodeAndAppandNodeText(ResultXml, Cell, Value, "DATA6", "");
+		createNodeAndAppandNodeText(ResultXml, Cell, Value, "DATA7", "");
+		createNodeAndAppandNodeText(ResultXml, Cell, Value, "DATA8", "");
+		createNodeAndAppandNodeText(ResultXml, Cell, Value, "DATA9", "");
+		createNodeAndAppandNodeText(ResultXml, Cell, Value, "DATA10", ldapDeptInfo);
+		createNodeAndAppandNodeText(ResultXml, Cell, Value, "DATA11", ldapDeptInfo);
+		createNodeAndAppandNodeText(ResultXml, Cell, Value, "DATA12", "");
+		createNodeAndAppandNodeText(ResultXml, Cell, Value, "DATA13", "");
+		createNodeAndAppandNodeText(ResultXml, Cell, Value, "DATA14", ldapDeptInfo);
+		createNodeAndAppandNodeText(ResultXml, Cell, Value, "DATA15", ldapDeptInfo);
+		
+		Cell = createNodeAndAppandNode(ResultXml, Row, Cell, "CELL");
+		createNodeAndAppandNodeText(ResultXml, Cell, Value, "VALUE", ldapDeptInfo);
+		
+		var InitTr = listView.GetDataRows();
+		var MaxID = 0;
+		var CurID = 0;
+		for (var j = 0; j < InitTr.length; j++) {
+			CurID = Number(listView.GetSelectedRowID(j).substring(listView.GetSelectedRowID(j).lastIndexOf('_') + 1), listView.GetSelectedRowID(j).length);
+			if (MaxID < CurID)
+				MaxID = CurID;
+		}
+		
+		if (InitTr.length > 0) {
+			if (InitTr[0].id.indexOf("noItems") <= 0) {
+				var oTr = listView.AddRow(0);
+				SetAttribute(oTr, "id", "lvRECEPTLIST" + "_TR_" + eval(MaxID + 1));
+				listView.AddDataRow(oTr, SelectNodes(ResultXml, "LISTVIEWDATA/ROWS/ROW")[0]);
+			} else {
+				document.getElementById("RECEPTLIST").innerHTML = "";
+	            var listView = new ListView();
+	            listView.SetID("lvRECEPTLIST");
+	            listView.SetMulSelectable(false);
+	            listView.SetHeightFree(true);
+	            listView.SetRowOnDblClick("AprDeptDel_onclick");
+	            listView.DataSource(ResultXml);
+	            listView.DataBind("RECEPTLIST");
+	            listView.SetSelectFlag(false);
+			}
+		} else {
+			document.getElementById("RECEPTLIST").innerHTML = "";
+            var listView = new ListView();
+            listView.SetID("lvRECEPTLIST");
+            listView.SetMulSelectable(false);
+            listView.SetHeightFree(true);
+            listView.SetRowOnDblClick("AprDeptDel_onclick");
+            listView.DataSource(ResultXml);
+            listView.DataBind("RECEPTLIST");
+            listView.SetSelectFlag(false);
+		}
+		
+		/* 2015-06-30 표준모듈:추가(외부수신자요약) - KSK */ //이건 복붙
+		if (listView.GetDataRows().length > 8) {
+			document.getElementById("inputSummaryOuterReceiverList").focus();
+			document.getElementById("trSummaryOuterReceiverList").style.display = "";
+			document.getElementById("btnaddress").style.display = "none";
+			document.getElementById("btnaddressChange").style.display = "none";
+		} else {
+			document.getElementById("trSummaryOuterReceiverList").style.display = "none";
+			document.getElementById("inputSummaryOuterReceiverList").value = "";
+			document.getElementById("btnaddress").style.display = "";
+			if (useReceiveInfoName == '1') {
+				//document.getElementById("btnaddressChange").style.display = "";
+			} else {
+				document.getElementById("btnaddressChange").style.display = "";
+			}
+		}
+	}
+}
 
 function AprLineAddDeptG(nodeIdx, tr) {
     var isCurretnCompany = "Y";
@@ -1952,7 +1839,7 @@ function isExistDept(ExtFlag) {
                 rtnVal = true;
         }
 
-        if (GetAttribute(CurSelRow[0], "DATA1") == "Address") {
+        if (GetAttribute(CurSelRow[0], "DATA1") == "Address1") {
             rtnVal = true;
         }
     }
@@ -1972,11 +1859,35 @@ function getExtLdapInfo(OrganCode) {
     			result = text;
     		}        			
     	});
-
         return loadXMLString(result).documentElement;
     } catch (e) {
         return "";
     }
+}
+
+function getExtLdapInfo_New(OrganCode) {
+	var result = "";
+	if (typeof(OrganCode) == "undefined" || OrganCode == "") {
+		return result;
+	}
+	
+	try {
+		$.ajax({
+			type : "POST",
+			dataType : "text",
+			async : false,
+			url : "/ezOrgan/getOrgInfo.do",
+			data : {
+				orgID 	: OrganCode
+			},
+			success: function(text) {
+				result = text;
+			}
+		});
+		return loadXMLString(result);
+	} catch (e) {
+		return result;
+	}
 }
 function ReSetAprLineDept(listview) {
     var Depth = null;
@@ -2407,6 +2318,12 @@ function InsertRecAll_Complete(_RESPONSE) {
     if (SelDivName == "Outer" && _RESPONSE == true) {
         if (!_RESPONSE)
             return;
+        
+        if (isExistDept(false)) {
+            var pAlertContent = strLang244 + "<br>" + strLang245;
+            OpenAlertUI(pAlertContent);
+            return;
+        }
 
         var treeView = new TreeView();
         treeView.LoadFromID("tvTreeView3");
@@ -2635,10 +2552,9 @@ function insertOuterAll(outerdeptid, outerdeptnm, outerdeptoupath, ouReceiveDocu
     var XmlDoc = null;
 
     try {
-
         var DuplicateFlag = DuplicateAprDeptCheck(RECEPTLIST, outerdeptid);
         if (DuplicateFlag && ouReceiveDocumentYN == "Y") {
-            AddOuter(outerdeptid, outerdeptnm);
+        	AprLineAddDeptG_New(outerdeptid);
         }
         
         $.ajax({

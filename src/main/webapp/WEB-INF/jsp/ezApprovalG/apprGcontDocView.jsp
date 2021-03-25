@@ -20,13 +20,14 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/html2canvas.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/sendMail_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/aprmanage_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Office.js')}"></script>
 		<script type="text/javascript" ID="clientEventHandlersJS">
-		    var pDocID = '${docID}';
-		    var pDocHref = '${docHref}';
-		    var pListSusin = '${listSusin}';
-		    var porgDocID = '${orgDocID}';
-		    var pFormID = '${formID}';
-		    var pTitle = '${docTitle}';
+		    var pDocID = "<c:out value ='${docID}'/>";
+		    var pDocHref = "<c:out value ='${docHref}'/>";
+		    var pListSusin = "<c:out value ='${listSusin}'/>";
+		    var porgDocID = "<c:out value ='${orgDocID}'/>";
+		    var pFormID = "<c:out value ='${formID}'/>";
+		    var pTitle = "<c:out value ='${docTitle}'/>";
 		    var pOpinionFlag;
 		    var pListTypeValue = 4;
 		    var flag = false;
@@ -34,42 +35,49 @@
 		    var NextOpinionFlag = true;
 		    var doctitle = "";
 		    var pOrgAttach = "";
-		    var pendDir = "${endDir}";
+		    var pendDir = "${endDir}'/>";
 		    var xmlhttp = createXMLHttpRequest();
 		    var arr_userinfo = new Array();
 		    arr_userinfo[0]  = "user";
-		    arr_userinfo[1]  = "${userInfo.id}";
-		    arr_userinfo[2]  = "${userInfo.displayName}";
-		    arr_userinfo[3]  = "${userInfo.title}";
-		    arr_userinfo[4]  = "${userInfo.deptID}";
-		    arr_userinfo[5]  = "${userInfo.deptName}";
-		    arr_userinfo[6]  = "${userInfo.jikChek}";
-		    arr_userinfo[8]  = "${userInfo.email}";
+		    arr_userinfo[1]  = "<c:out value ='${userInfo.id}'/>";
+		    arr_userinfo[2]  = "<c:out value ='${userInfo.displayName}'/>";
+		    arr_userinfo[3]  = "<c:out value ='${userInfo.title}'/>";
+		    arr_userinfo[4]  = "<c:out value ='${userInfo.deptID}'/>";
+		    arr_userinfo[5]  = "<c:out value ='${userInfo.deptName}'/>";
+		    arr_userinfo[6]  = "<c:out value ='${userInfo.jikChek}'/>";
+		    arr_userinfo[8]  = "<c:out value ='${userInfo.email}'/>";
 		    arr_userinfo[9]  = "";
-		    arr_userinfo[10] = "${susinAdmin}";
-		    arr_userinfo[11]  = "${userInfo.displayName1}";
-		    arr_userinfo[12]  = "${userInfo.displayName2}";
-		    arr_userinfo[13]  = "${userInfo.title1}";
-		    arr_userinfo[14]  = "${userInfo.title2}";
-		    arr_userinfo[15]  = "${userInfo.deptName1}";
-		    arr_userinfo[16]  = "${userInfo.deptName2}";
-		    var companyID = "${userInfo.companyID}";
+		    arr_userinfo[10] = "<c:out value ='${susinAdmin}'/>";
+		    arr_userinfo[11]  = "<c:out value ='${userInfo.displayName1}'/>";
+		    arr_userinfo[12]  = "<c:out value ='${userInfo.displayName2}'/>";
+		    arr_userinfo[13]  = "<c:out value ='${userInfo.title1}'/>";
+		    arr_userinfo[14]  = "<c:out value ='${userInfo.title2}'/>";
+		    arr_userinfo[15]  = "<c:out value ='${userInfo.deptName1}'/>";
+		    arr_userinfo[16]  = "<c:out value ='${userInfo.deptName2}'/>";
+		    var companyID = "<c:out value ='${userInfo.companyID}'/>";
 		    var pUserID = arr_userinfo[1];
-		    var SignCheckFlag = "${signCheck}";
-		    var pUse_Editor = "${editor}";
-		    var approvalFlag = "${approvalFlag}";     //전자결재 일반/공공 여부 (G : 공공 , S : 일반)
-		    var admin = "${admin}";
-		    var formDocType = "${formDocType}";
-		    var formUrl = "${formUrl}";
-		    var docState = "${docState}";
-		    var WhoKyulCNT = "${whoKyulCount}";
-		    var checkPwdFlag = "${checkPwdFlag}";
-		    var ext = "${ext}";
+		    var SignCheckFlag = "<c:out value ='${signCheck}'/>";
+		    var pUse_Editor = "<c:out value ='${editor}'/>";
+		    var approvalFlag = "<c:out value ='${approvalFlag}'/>";     //전자결재 일반/공공 여부 (G : 공공 , S : 일반)
+		    var admin = "<c:out value ='${admin}'/>";
+		    var formDocType = "<c:out value ='${formDocType}'/>";
+		    var formUrl = "<c:out value ='${formUrl}'/>";
+		    var docState = "<c:out value ='${docState}'/>";
+		    var WhoKyulCNT = "<c:out value ='${whoKyulCount}'/>";
+		    var checkPwdFlag = "<c:out value ='${checkPwdFlag}'/>";
+		    var ext = "<c:out value ='${ext}'/>";
 		    var opinionFlag;
 		    var includeOpinion = false;
-		    var signImageType = "${signImageType}";
-		    var orgCompanyID = "${orgCompanyID}";
-		    
+		    var signImageType = "<c:out value ='${signImageType}'/>";
+			var orgCompanyID = "<c:out value ='${orgCompanyID}'/>";
+			var docFormVersion = "<c:out value='${formVersion}' />";
+			var useWebHWP = "<c:out value='${useWebHWP}'/>";
+			
+	        // 대용량첨부 관련
+	        var bigAttachDownloadPeriod = "<c:out value ='${bigAttachDownloadPeriod}'/>";
+	        var bigAttachDownloadDay = "<c:out value ='${bigAttachDownloadDay}'/>";
+	        var bigSizeAttachDownloadLimitCount = "<c:out value ='${bigSizeAttachDownloadLimitCount}'/>";
+			
 		    $(function () {
 			    if ("${pass}" != "<RESULT>TRUE</RESULT>" && abtnReusedmin != 'Y') {
 		    		QuitWindow();
@@ -83,9 +91,58 @@
 	        		$(".approval").css("display","");
 	        	}
 		      	
-		      	if (docState == "012" || docState == "013") {
+		      	//감사문서도 재사용하지 못하도록 수정. 2020-03-16 홍대표.
+		      	if (docState == "012" || docState == "013" || docState == "014") {
 		      		document.getElementById("btnReuse").style.display = "none";
 		      	}
+		      	
+		      	$("#message").load(function() {
+					var selectOp = $("#selectImg option").length;
+					if(selectOp == 1){
+						$("#selectImg option").remove();
+					}
+					var val = parseInt($("#selectImg option:selected").val());
+					var divImg = $("#message").contents().find(".divImg");
+					$(divImg).children().css("zoom",100+"%");
+					var pages = $(divImg).children().length;
+					if(selectOp==1){
+						for(var i=1; i<=pages; i++){
+							if(i <= pages){
+								$("#selectImg").append("<option value='" + i + "'>" + i +" / "+pages+ " Page</option>");
+							}
+						}
+					}
+					if(pages > 1){
+						window.resizeTo(1920, 1200);
+						var sw = screen.width;
+			    		var sh = screen.height;
+			    		var cw = document.body.clientWidth;
+			    		var ch = document.body.clientHeight;
+			    		var top  = sh / 2 - ch / 2 - 100;
+			    		var left = sw / 2 - cw / 2;
+						$("#officeBtn").css("display","");
+						var selectNum = $("#message").contents().find(".divImg").find(".imgDiv").index();
+						$("#selectImg option:eq("+ selectNum +")").prop('selected', true);
+					}
+					
+					var imgMove = $("#message").contents().find(".divImg").find(".imgDiv");
+					$(imgMove).find(".office-image").css("zoom", 100+"%");
+					if(imgMove.length == 0){
+						$("#zoomIn").css("display","none");
+						$("#zoomOut").css("display","none");
+						$("#zoomReset").css("display","none");
+						$("#prev").css("display","none");
+						$("#next").css("display","none");
+						$("#prevAll").css("display","none");
+						$("#nextAll").css("display","none");
+						$("#selectImg").css("display","none");
+						$("#all").attr("src", "/images/icviewer_downsize.png");
+						
+					}
+				});
+		      	
+				// 일반첨부, 대용량첨부파일 관련 가이드 메세지 추가
+				setAttachGuideText();
 		    });
 	
 		    var aprendopinion_dialogArgument = new Array();
@@ -184,7 +241,7 @@
 		            }
 		        }
 		        
-		        if ("${uFlag}" == "m03")
+		        if ("<c:out value ='${uFlag}'/>" == "m03")
 		            setAttachInfo(pDocID, "APR", lstAttachLink);
 		        else
 		            setAttachInfo(pDocID, "END", lstAttachLink);
@@ -338,12 +395,12 @@
 		            var pwidth = window.screen.availWidth;
 		            var pTop = (pheight - 720) / 2;
 		            var pLeft = (pwidth - 765) / 2;
-		
-		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4") {
+		            
+		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || (ret[3] != "null" && ret[3] != null && ret[3] != "")) {
 		                alert(strLang1031);
 		            }
 		            else {
-		                window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + pDocHref + "&orgCompanyID=" + orgCompanyID, '', GetOpenWindowJun(765, 870));
+		                window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + pDocHref + "&orgCompanyID=" + orgCompanyID, '', GetOpenWindowJun(765, 870));
 		            }
 		        }
 		    }
@@ -369,7 +426,7 @@
 		        ezdocinfog_view_cross_dialogArguments[1] = btnDocInfo_onclick_Complete;
 		
 		        //DivPopUpShow(420, 500, "/ezApprovalG/ezDocInfoGView.do?docID=" + pDocID + "&ingFlag=END"); 문서정보 새로 구현해서 주석
-		        DivPopUpShow(420, 500, "/ezApprovalG/ezDocInfoView.do?docID=" + pDocID + "&ingFlag=END");
+		        DivPopUpShow(420, 520, "/ezApprovalG/ezDocInfoView.do?docID=" + pDocID + "&ingFlag=END");
 		    }
 		    function btnDocInfo_onclick_Complete() {
 		        DivPopUpHidden();
@@ -523,16 +580,19 @@
 			        mhtBody = message.Get_EditorBodyHTML();
 			        mhtBody = "<HTML>" + mhtBody + "</HTML>";
 			        mhtBody = ConvertHTMLtoMHT(mhtBody);
+			    	
+			    	var data = {
+		    			docID : pDocID,
+		    			html  : mhtBody
+			    	}
 			        
 			        $.ajax({
 			    		type : "POST",
 			    		dataType : "text",
 			    		async : false,
 			    		url : "/ezApprovalG/saveEndFile.do",
-			    		data : {
-			    			docID : pDocID,
-			    			html  : mhtBody
-			    		},
+			    		contentType : "application/json",
+			    		data : JSON.stringify(data),
 			    		success: function(xml){
 			    			result = xml;
 			    		}        			
@@ -576,43 +636,75 @@
 		    var getformcont_cross_dialogArguments = new Array();
 		    var editable = "";
 		    function btnReuse_onclick(type) {
-		    	editable = type;
-		    	
-		        if (true) {
-		            formURL = formUrl;
-		            formDocType = formDocType;
-		        }
-		        else {
-		            var parameter = new Array();
-		            parameter[0] = arr_userinfo[4];
-		            parameter[1] = "A01000";
+				$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		data : {
+		    			formID : pFormID,
+		    			companyID : orgCompanyID
+		    		},
+		    		url : "/ezApprovalG/getFormDetail.do",
+		    		success: function(xml){
+						xml = loadXMLString(xml);
+						
+						var form = {};
+			            if (xml.getElementsByTagName("FORMVERSION").length > 0) {
+			                form.currVersion = xml.getElementsByTagName("FORMVERSION").item(0).textContent;
+						} 
+						if (xml.getElementsByTagName("FORMCONNFLAG").length > 0) {
+			                form.connflag = xml.getElementsByTagName("FORMCONNFLAG").item(0).textContent;
+						}
 
-		            if (CrossYN()) {
-		            	getformcont_cross_dialogArguments[0] = parameter;
-		            	getformcont_cross_dialogArguments[1] = AprManage_B_Complete;
-		                var getFormCont = GetOpenWindow("/ezApprovalG/getFormCont.do", "getFormCont", 713, 570, "NO");
-		                try { getFormCont.focus(); } catch (e) {
-		                }
-		            }
-		            else {
-		                var url = "/ezApprovalG/getFormCont.do";
-		                var feature = "center:yes;status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no;";
-		                feature = feature + GetShowModalPosition(713, 570);
+						if(form.currVersion != docFormVersion) {
+							var pAlertContent = "양식 버전이 달라 재사용 할 수 없습니다.";
+							OpenAlertUI(pAlertContent);
+							return;
+						} else if(form.connflag == 'Y') {
+							var pAlertContent = "연동양식은 재사용 할 수 없습니다.";
+		                    OpenAlertUI(pAlertContent);
+							return;
+						}
 
-		                var ret;
-		                if (window.showModalDialog) {
-		                    ret = window.showModalDialog(url, parameter, feature);
-		                }
-		                else {
-		                    ret = GetOpenWindow(url, "", 713, 570, "NO");
-		                }
-		                formURL = ret[0];
-		                formDocType = ret[1];         
-		            }
-		        }
-		        if (formURL != "cancel") {
-		            openDraftUI("DRAFT", "");
-		        }
+						editable = type;
+						
+						if (true) {
+							formURL = formUrl;
+							formDocType = formDocType;
+						}
+						else {
+							var parameter = new Array();
+							parameter[0] = arr_userinfo[4];
+							parameter[1] = "A01000";
+
+							if (CrossYN()) {
+								getformcont_cross_dialogArguments[0] = parameter;
+								getformcont_cross_dialogArguments[1] = AprManage_B_Complete;
+								var getFormCont = GetOpenWindow("/ezApprovalG/getFormCont.do", "getFormCont", 713, 570, "NO");
+								try { getFormCont.focus(); } catch (e) {
+								}
+							}
+							else {
+								var url = "/ezApprovalG/getFormCont.do";
+								var feature = "center:yes;status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no;";
+								feature = feature + GetShowModalPosition(713, 570);
+
+								var ret;
+								if (window.showModalDialog) {
+									ret = window.showModalDialog(url, parameter, feature);
+								}
+								else {
+									ret = GetOpenWindow(url, "", 713, 570, "NO");
+								}
+								formURL = ret[0];
+								formDocType = ret[1];         
+							}
+						}
+						if (formURL != "cancel") {
+							openDraftUI("DRAFT", "");
+						}
+		    		}        			
+		    	});
+
 		    }
 		    
 		    function openDraftUI(pDraftFlag, pCurSelRow) {
@@ -763,6 +855,51 @@
 		    	window.opener.parent.frames["left"].getAprCountWHO();
                 window.close();
 		    }
+			
+			function addRelatedCabinet() {
+				//* moon 2018.07.26
+				window.open("/ezCabinet/cabinetAddRelated.do?module=apprv", "addRelated", getOpenWindowfeature(480, 505));
+			}
+			
+			function getOpenWindowfeature(popUpW, popUpH) {
+				var heigth   = window.screen.availHeight;
+				var width    = window.screen.availWidth;
+				var left     = 0;
+				var top      = 0;
+				var pleftpos = parseInt(width) - popUpW;
+				heigth       = parseInt(heigth) - popUpH;
+				left         = pleftpos / 2;
+				top          = heigth / 2;
+				var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes";
+				return feature;
+			}
+			
+	    	// 일반첨부, 대용량첨부파일 관련 가이드 메세지 추가
+	    	function setAttachGuideText() {
+	    		// 대용량첨부의 자동삭제 기능, 저장만료기한 사용하지 않음
+                var attachGuideText =  "<td align='left' style='width:50%; font-size:11px; font-weight:normal; color:#666666; padding-left:10px; padding-top:0px; padding-bottom:0px; margin:0px; border-bottom:1px solid #dadada;border-left:1px solid #dadada; border-right:none; border-top: none; background:#fffcfa; height:20px; line-height:20px;'>";
+                
+                if(bigSizeAttachDownloadLimitCount > 0) {
+                	attachGuideText += strLangHSBAt06 + " <span style='color:#FF0000 ;'>" + bigSizeAttachDownloadLimitCount + strLangHSBAt09 + "</span> " + strLangHSBAt10;
+                }
+                
+                attachGuideText += "<td align='right' style='width:50%; font-size:11px; font-weight:normal; color:#666666; padding-right:10px; padding-top:0px; padding-bottom:0px; margin:0px; border-bottom:1px solid #dadada;border-right:1px solid #dadada; border-left:none; border-top: none; background:#fffcfa; height:20px; line-height:20px;'>";
+                attachGuideText += "</td>";
+/*                 
+                var attachGuideText =  "<td align='left' style='width:50%; font-size:11px; font-weight:normal; color:#666666; padding-left:10px; padding-top:0px; padding-bottom:0px; margin:0px; border-bottom:1px solid #dadada;border-left:1px solid #dadada; border-right:none; border-top: none; background:#fffcfa; height:20px; line-height:20px;'>";
+                attachGuideText += strLangHSBAt05 + "<span style='color:#FF0000 ;'>" + bigAttachDownloadPeriod + "</span></td>";
+                attachGuideText += "<td align='right' style='width:50%; font-size:11px; font-weight:normal; color:#666666; padding-right:10px; padding-top:0px; padding-bottom:0px; margin:0px; border-bottom:1px solid #dadada;border-right:1px solid #dadada; border-left:none; border-top: none; background:#fffcfa; height:20px; line-height:20px;'>";
+                attachGuideText += strLangHSBAt06 + "<span style='color:#FF0000 ;'>" + bigAttachDownloadDay + strLangHSBAt07 + "</span>" + strLangHSBAt08;
+                 */
+                 
+                 if (bigSizeAttachDownloadLimitCount > 0) {
+                	 document.getElementById("apprAttachGuideTR").innerHTML = attachGuideText;
+                 }
+                 else {
+                	 document.getElementById("apprAttachGuideTR").style.display = "none";
+                 }
+	    	}
+	    	
 		</script>
 	</head>
 	<body class="popup" style="OVERFLOW:hidden;height:100%">
@@ -771,16 +908,23 @@
 		    <td style="height:20px"><div id="menu">
 		        <ul>
 		          <li id="btnWhoKyul" style="display:none"><span onClick="return btnWhoKyul_onclick()"><spring:message code='ezApproval.pjj35'/></span></li>
-		          <li id="btnMail"><span id="span_btnMail" onClick="return btnMail_onclick()"><spring:message code='ezApprovalG.t1513'/></span></li>
-		          <li id="btnBoard"><span id="span_btnBoard" onClick="return NewItem_onclick()"><spring:message code='ezApprovalG.t1514'/></span></li>
-		          <li id="btnPrint"><span id="span_btnPrint" onClick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li>
 		          <li id="btnDocInfo"><span id="span_btnDocInfo" onClick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>
+		          <li id="btnOpinion"><span id="span_btnOpinion" onClick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
 		          <li id="btnhistory"><span id="span_btnhistory" onClick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
 		          <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
-
-   				  <c:if test="${approvalFlag != 'G' and orgCompanyID eq userInfo.companyID}">
-		          <li id="btnReuse"><span onClick="return btnReuse_onclick('reuse')"><spring:message code='ezApprovalG.t990048'/></span></li>
+		          <c:if test="${useBoard == 'YES' }">
+				  <li id="btnBoard"><span id="span_btnBoard" onClick="return NewItem_onclick()"><spring:message code='ezApprovalG.t1514'/></span></li>
 				  </c:if>
+				  <c:if test="${approvalFlag != 'G' and orgCompanyID eq userInfo.companyID}">
+		          	<li id="btnReuse"><span onClick="return btnReuse_onclick('reuse')"><spring:message code='ezApprovalG.t990048'/></span></li>
+				  </c:if>
+				  <li id="btnPrint"><span class="icon16 popup_icon16_print" id="span_btnPrint" onClick="return btnPrint_onclick()"></span></li>
+				  <c:if test="${useExternalMailServer == 'NO'}">
+		          <li id="btnMail"><span class="icon16 popup_icon16_mail_gray" id="span_btnMail" onClick="return btnMail_onclick()"></span></li>
+		          </c:if>
+		          <c:if test="${useCabinet == 'YES'}">
+						<li><span onclick = "return addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
+		          </c:if>
 		        </ul>
 		      </div>
 		      <div id="close">
@@ -794,13 +938,53 @@
 		          <iframe id="message" name="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox" style="width: 100%; height:100%" src="ConDocViewContent.do" frameborder="0"></iframe>                
 		    </td>
 		  </tr>
+		   <tr>
+		  <td>
+		  <div id="officeBtn" style="display:none;">
+		  	<div style="text-align:center; background-color:rgba(0, 0, 0, 0.5); height: 50px;">
+		  		<img id="zoomIn" onclick="zoomIn()" src="/images/icviewer_plus.png" width="25" height="25" style="cursor:pointer; position: relative; top: 13px;">
+		  		<img id="zoomOut" onclick="zoomOut()" src="/images/icviewer_minus.png" width="25" height="25" style="cursor:pointer; position: relative; top: 13px;">
+		  		<img id="zoomReset" src="/images/icviewer_reset.png" width="25" height="25" onclick="zoomReset()" style="cursor:pointer; position: relative; top: 13px;">
+		  		<img id="officeBar1" src="/images/icviewer_bar.png" style="position: relative; top: 13px;">
+		  		<img id="prevAll" border="0" src="/images/icviewer_p_prev.png" width="25" height="25" onClick="prevClickAll()" style="cursor:pointer; position: relative; top: 13px;">
+		  		<img id="prev" border="0" src="/images/icviewer_prev.png" width="25" height="25" onClick="prevClick()" style="cursor:pointer; position: relative; top: 13px;">
+		  			<select id="selectImg" class="imgSelect" onchange="selectImg()">
+		  				<option value=""></option>
+		  			</select>
+		  		<img id="next" border="0" src="/images/icviewer_next.png" width="25" height="25" onClick="nextClick()" style="cursor:pointer; position: relative; top: 13px;">
+		  		<img id="nextAll" border="0" src="/images/icviewer_n_next.png" width="25" height="25" onClick="nextClickAll()" style="cursor:pointer; position: relative; top: 13px;">
+		  		<img id="officeBar2" src="/images/icviewer_bar.png" style="position: relative; top: 13px;">
+		  		<img src="/images/icviewer_expend.png" class="allImg" id="all" onclick="allImg(this)" style="cursor:pointer; position: relative; top: 13px;" width="25" height="25">
+			</div>
+		</div>
+		  </td>
+		  </tr>
 		  <tr>
-		    <td style="height:20px"><table class="file">
-		        <tr>
-		          <th><spring:message code='ezApprovalG.t65'/></th>
-		          <td><div id="lstAttachLink"></div></td>
-		        </tr>
-		      </table></td>
+		    <td style="height:20px">
+                <table class="file" style="height:80px;">
+                    <tr>
+                        <th><spring:message code='ezApprovalG.t65'/></th>
+                        <td style=" width:62%; border-right:1px solid #d5d5d5;">
+                            <div id="lstAttachLink" style="height:70px;"></div>
+                            <iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0" style="display: none;"></iframe>
+                            <iframe name="AttachDownFrame" id="AttachDownFrame" src="about:blank" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" style="display: none"></iframe>
+                        </td>
+                        <td style=" width:30%;">
+							<div id="lstAttachLinkDoc" style="height:70px;"></div>
+						</td>
+						<td class="pos2" style="width:8%; background:#fffcfa;">
+							<a class="imgbtn imgbck" style="width:60px;"><span style="height:24px;" onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
+							<a class="imgbtn imgbck" style="width:60px;"><span style="height:24px;" onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a><br/>
+						</td>
+                    </tr>
+                </table>
+
+				<%-- 대용량첨부 가이드 메세지 영역 --%>
+                <table class="file" style="height: 20px;">
+                    <tr id="apprAttachGuideTR"></tr>
+                </table>
+		      
+			</td>
 		  </tr>
 		</table>
 	

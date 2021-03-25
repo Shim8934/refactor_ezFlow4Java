@@ -16,7 +16,8 @@
 		    var Xmlhttp = null;
 		    var sortRuleNameStatNum = 0;
 		    var sortRuleNameStat = [["PRIORITY",""],["ASC","sortup"],["DESC","sortdown"]];
-		    	
+		    var shareId = "${shareId}";
+		    
 		    document.onselectstart = function () { return false; };
 		    function window_onload() {
 		        //alert(navigator.userAgent);
@@ -27,8 +28,15 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
+		        
+		        var requestUrl = "/ezEmail/mailGetInboxRule.do";
+		        
+		        if (shareId != "") {
+		        	requestUrl += "?shareId=" + encodeURIComponent(shareId);
+		        }
+		        
 		        Xmlhttp = createXMLHttpRequest();
-		        Xmlhttp.open("POST", "/ezEmail/mailGetInboxRule.do", true);
+		        Xmlhttp.open("POST", requestUrl, true);
 		        Xmlhttp.onreadystatechange = event_Get_listComplite;
 		        Xmlhttp.send("");
 		    }
@@ -38,8 +46,15 @@
 		        document.getElementById("contentlist").innerHTML = "<table class='mainlist' style='width:100%;'><tr><td style='text-align:center;'><img src='/images/email/progress_img.gif' /></td></tr></table>";
 		        _RowObject = null;
 		        document.getElementById("ContentDescription").innerHTML = "";
+		        
+				var requestUrl = "/ezEmail/mailGetInboxRule.do";
+		        
+		        if (shareId != "") {
+		        	requestUrl += "?shareId=" + encodeURIComponent(shareId);
+		        }
+		        
 		        Xmlhttp = createXMLHttpRequest();
-		        Xmlhttp.open("POST", "/ezEmail/mailGetInboxRule.do", true);
+		        Xmlhttp.open("POST", requestUrl, true);
 		        Xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		        Xmlhttp.onreadystatechange = event_Get_listComplite;
 		        Xmlhttp.send("sortType=" + type);  
@@ -324,9 +339,9 @@
 		        }
 		            
 		        _RowObject = obj;
-		        obj.childNodes.item(0).style.backgroundColor = "#edf4fd";
-		        obj.childNodes.item(1).style.backgroundColor = "#edf4fd";
-		        obj.childNodes.item(2).style.backgroundColor = "#edf4fd";
+		        obj.childNodes.item(0).style.backgroundColor = "#f1f8ff";
+		        obj.childNodes.item(1).style.backgroundColor = "#f1f8ff";
+		        obj.childNodes.item(2).style.backgroundColor = "#f1f8ff";
 		        MakeDescription();
 		    }
 		    function MakeDescription() {
@@ -490,7 +505,19 @@
 		    var mail_newinboxrule_cross_dialogArguments = new Array();
 		    function New_InboxRule() {
 		        mail_newinboxrule_cross_dialogArguments[1] = New_InboxRule_Complete;
-		        var OpenWin = window.open("/ezEmail/mailNewInboxRule.do", "mail_NewInboxRule_cross", GetOpenWindowfeature(620, 550));
+		        
+		        var requestUrl = "/ezEmail/mailNewInboxRule.do";
+		        
+		        if (shareId != "") {
+		        	requestUrl += "?shareId=" + encodeURIComponent(shareId);
+		        }
+		        
+		        /* 2020-05-07 홍승비 - 크로스브라우징 높이 조절 */
+		        var pHeight = 580;
+		        if (navigator.userAgent.indexOf("Chrome") != -1) {
+		        	pHeight = 584;
+		        }
+		        var OpenWin = window.open(requestUrl, "mail_NewInboxRule_cross", GetOpenWindowfeature(605, pHeight));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		    function New_InboxRule_Complete(newWin) {
@@ -532,7 +559,18 @@
 		        }
 		        mail_detailinboxrule_cross_dialogArguments[0] = _RowObject;
 		        mail_detailinboxrule_cross_dialogArguments[1] = Detail_InboxRule_Complete;
-		        var OpenWin = window.open("/ezEmail/mailDetailInboxRule.do", "mail_NewInboxRule_cross", GetOpenWindowfeature(620, 550));
+		        
+				var requestUrl = "/ezEmail/mailDetailInboxRule.do";
+		        
+		        if (shareId != "") {
+		        	requestUrl += "?shareId=" + encodeURIComponent(shareId);
+		        }
+		        
+		        var pHeight = 580;
+		        if (navigator.userAgent.indexOf("Chrome") != -1) {
+		        	pHeight = 584;
+		        }
+		        var OpenWin = window.open(requestUrl, "mail_NewInboxRule_cross", GetOpenWindowfeature(605, pHeight));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		    function Detail_InboxRule_Complete(newWin) {
@@ -786,10 +824,10 @@
 			<span class="txt">▒ <img src="/images/ImgIcon/prev.gif"   height="16" style="margin-top:-3px;vertical-align:middle;text-align:center;" alt="<spring:message code='ezEmail.t833' />"/><img src="/images/ImgIcon/next.gif" align="absmiddle"  height="16" style="margin-top:-3px;" alt="<spring:message code='ezEmail.t834' />" /><spring:message code='ezEmail.t807' /></span><br /><br /><br />
 		    <div id="mainmenu">
 		        <ul id="tb_Parent">
-		          <li><span onclick="New_InboxRule();"><spring:message code='ezEmail.t804' /></span></li>
+		          <li class="important"><span onclick="New_InboxRule();"><spring:message code='ezEmail.t804' /></span></li>
 		          <li><span onclick="Detail_InboxRule();"><spring:message code='ezEmail.t805' /></span></li>
-		          <li><span onclick="event_DeleteRule();"><spring:message code='ezEmail.t95' /></span></li>
-		          <li><span onclick="Rule_Reload();"><spring:message code='ezEmail.t515' /></span></li>
+		          <li onclick="event_DeleteRule();"><span class="icon16 icon16_delete"></span></li>
+		          <li onclick="Rule_Reload();"><span class="icon16 icon16_refresh"></span></li>
 		          <li class="prevLi"><span onclick="Priority_UP();"><img src="/images/ImgIcon/prev.gif"  style="margin-top:-2px;" alt="<spring:message code='ezEmail.t833' />"/></span></li>
 		          <li class="prevLi"><span onclick="Priority_DOWN();"><img src="/images/ImgIcon/next.gif"  style="margin-top:-2px;" alt="<spring:message code='ezEmail.t834' />" /></span></li>
 		          </ul>        
@@ -800,9 +838,9 @@
 						<div style="border:1px solid #dbdbda;width:435px;height:397px;">
 							<table class="mainlist" style="width:100%;">
 			                    <tr>
-			                        <td style="width:8%;background-color:#f8f8f8;border-right:1px solid #dbdbda;border-bottom:2px solid #dbdbda;"><span><spring:message code='ezEmail.t808' /></span></td>
-			                        <td onclick="sortRuleName(this)" style="width:60%;background-color:#f8f8f8;border-right:1px solid #dbdbda;border-bottom:2px solid #dbdbda;cursor:pointer"><span style="padding-left:10px;"><spring:message code='ezEmail.t809' /></span></td>
-			                        <td style="width:32%;background-color:#f8f8f8;text-align:center;border-bottom:2px solid #dbdbda;"><span><spring:message code='ezEmail.t810' /></span></td>
+			                        <td style="width:8%;background-color:#f8f8f8;border-right:1px solid #dbdbda;border-bottom:1px solid #dbdbda;"><span><spring:message code='ezEmail.t808' /></span></td>
+			                        <td onclick="sortRuleName(this)" style="width:60%;background-color:#f8f8f8;border-right:1px solid #dbdbda;border-bottom:1px solid #dbdbda;cursor:pointer"><span style="padding-left:10px;"><spring:message code='ezEmail.t809' /></span></td>
+			                        <td style="width:32%;background-color:#f8f8f8;text-align:center;border-bottom:1px solid #dbdbda;"><span><spring:message code='ezEmail.t810' /></span></td>
 			                    </tr>
 							</table>
 							<div id="contentlist" name="contentlist" style="height:365px;overflow-y:auto;">

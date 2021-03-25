@@ -33,8 +33,8 @@
 			var searchUserName = "";
 			var searchDeptName = "";
 			var searchTitle = "";
-			var searchDeptId = "${searchDeptId}";
-			var searchStartDate = "${searchStartDate}";
+			var searchDeptId = "<c:out value='${searchDeptId}'/>";
+			var searchStartDate = "<c:out value='${searchStartDate}'/>";
 			var searchEndDate = "${searchEndDate}";
 			var pageNum = 1;
 	    	var totalCount = "";
@@ -96,7 +96,7 @@
 					},
 					success : function(result) {
 						getAbsentedList_after(result.list);
-						$("#mailBoxInfo").html(" - [<spring:message code='ezAttitude.t76'/><span style='color:#017BEC;'> " + result.totalCount + " </span><spring:message code='ezAttitude.t78'/>]");
+						$("#mailBoxInfo").html("&nbsp;&nbsp;<span style='color:#017BEC;'>" + result.totalCount + "</span>");
 					}
 				});
 	    	}
@@ -186,7 +186,7 @@
 		<div id="close">
 			<ul>
 				<li>
-					<c:if test="${searchEndDate != ''}">
+					<c:if test="${searchEndDate != '' and useExternalMailServer eq 'NO' }">
 						<img style="margin-right: 5px; cursor: pointer;" src="/images/poll/sendMail01.png" onclick="btnSendMail_onclick()">
 					</c:if>
 					<span onclick="return btnClose_onclick()"></span>

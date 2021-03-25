@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html ondragover="bodydragover(event)">
 	<head>
@@ -17,8 +19,8 @@
 		<script type="text/javascript">
 		    var lstAttachLink = document.getElementById("lstAttachLink");
 		    var isfileup = false;
-		    var mode = "${mode}";
-		    var circularID = "${circularID}";
+		    var mode = "<c:out value='${mode}'/>";
+		    var circularID = "<c:out value='${circularID}'/>";
 
 		    function onDragEnter(evt) {
 		        evt.dataTransfer.dropEffect = "copy";
@@ -58,7 +60,7 @@
 		        for (var i = 0; i < filelist.length; i++) {
 		            filesize = parseInt(filesize) + parseInt(filelist[i].size);
 		            if (filesize / 1024 / 1024 > window.parent.AttachLimit) {
-		                if ("${userInfo.lang}" == "2") {
+		                if ("<c:out value='${userInfo.lang}'/>" == "2") {
 		                    alert(strLang8 + window.parent.AttachLimit + strLang9);
 		                } else {
 		                    alert(strLang8 + window.parent.AttachLimit + "MB" + strLang9);

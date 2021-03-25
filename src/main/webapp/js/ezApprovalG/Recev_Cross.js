@@ -419,7 +419,7 @@ function SGetDraftAprLineInfo(ret) {
                     if ((OrderName[i] == arr_userinfo[2]) && (i == 1)) IsSkipDrafter = "TRUE";
                     break;
 
-                case strAprType11:
+                case strAprType11: // 부서순차합의
                     if (xmlReDraft == "R") {
                         fieldname = "habyui" + hapyuiCnt;
                         field = message.GetListItem(fields, fieldname);
@@ -481,7 +481,7 @@ function SGetDraftAprLineInfo(ret) {
                     hapyuiCnt = hapyuiCnt + 1;
                     break;
 
-                case strAprType8:
+                case strAprType8: // 개인순차합의
                     if (xmlReDraft == "R") {
                         fieldname = "habyui" + hapyuiCnt;
                         field = message.GetListItem(fields, fieldname);
@@ -562,6 +562,15 @@ function SGetDraftAprLineInfo(ret) {
                 break;
         }
 
+        for (i = 1; i < 20; i++) {
+            fieldname = "sign" + i
+            field = message.GetListItem(fields, fieldname);
+            if (field)
+                setNodeText(field , " ");
+            else
+                break;
+        }
+
         var idx = 1;
         var hidx = 1;
         var Flag = "";
@@ -631,13 +640,26 @@ function SGetDraftAprLineInfo(ret) {
                 }
                 fieldname = susinSN + "jikwe" + idx;
                 field = message.GetListItem(fields, fieldname);
-                if (field)
+                if (field) {
                     setNodeText(field , OrderJobtitle[i]);
-
+                }
+                
+                /* 2020-07-27 홍승비 - 서명필드만 존재하는 경우, 서명+결재자명 필드가 함께 존재하는 경우, 슬래시 이미지의 표출분기 수정 */
                 fieldname = susinSN + "sign" + idx;
                 field = message.GetListItem(fields, fieldname);
                 if (field) {
-                    setNodeText(field , OrderName[i]);
+                	// 서명필드만 존재
+                	if (message.GetListItem(fields, (susinSN + "sign" + idx)) != null && message.GetListItem(fields, (susinSN + "seumyung" + idx)) == null) {
+                		setNodeText(field , OrderName[i]);
+                	}
+                	// 서명필드 + 결재자명 필드가 함께 존재
+                	else if (message.GetListItem(fields, (susinSN + "sign" + idx)) != null && message.GetListItem(fields, (susinSN + "seumyung" + idx)) != null) {
+                		field.innerHTML = "[NOSLASH]";
+                	}
+                	// 그 외의 경우, 아무런 값이 부여되지 않으므로 슬래시 이미지를 표출
+                	else {
+                		//setNodeText(field , OrderName[i]);
+                	}
                 }
                 
                 fieldname = susinSN + "approdept" + idx;
@@ -906,7 +928,7 @@ function SendDraftMappingSign(ret) {
 	    strimg = "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
 	    strimg = strimg + " width=" + signWidth;
 	    
-	    if (signImageType = "NAME") {
+	    if (signImageType == "NAME") { // 부서합의문 서명 이미지타입일때 이미지랑 부서아이디 같이 들어가는 버그 수정 20200313 윤상원
 	    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'> " + "<br>" + arr_userinfo[2];
 	    } else {
 	    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'> ";
@@ -1133,7 +1155,7 @@ function SetAutoPropertyValue() {
 		var field = fields[i];
 		if(!fields) return;
 		
-		if(pDraftFlag == "HAPYUI" || (pDraftFlag == "GAMSABU" && ConvertYN == "Y") || pDraftFlag == "WHOKYUL") {
+		if(pDraftFlag == "HAPYUI" || pDraftFlag == "GAMSABU" || pDraftFlag == "WHOKYUL") {
 	  		switch (field.id) {
 	  			case "bedocnumber" :
 	  				setDocNumFormat("be");
@@ -1399,16 +1421,16 @@ function SaveDraftDocInfo() {
             	createNodeAndInsertText(xmlpara, objNode, "FORMID", pFormID);
             }
             	
-            if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI")
+            if (pDraftFlag == "SUSIN" || (pDraftFlag == "HAPYUI" || pDraftFlag == "GAMSABU"))
                 createNodeAndInsertText(xmlpara, objNode, "ORGDOCID", pOrgDocID);
             else
                 createNodeAndInsertText(xmlpara, objNode, "ORGDOCID", "");
-            if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI")
+            if (pDraftFlag == "SUSIN" || (pDraftFlag == "HAPYUI" || pDraftFlag == "GAMSABU"))
                 createNodeAndInsertText(xmlpara, objNode, "DOCTYPE", pDocType);
             else
                 createNodeAndInsertText(xmlpara, objNode, "DOCTYPE", "");
 
-            if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI")
+            if (pDraftFlag == "SUSIN" || (pDraftFlag == "HAPYUI" || pDraftFlag == "GAMSABU"))
                 createNodeAndInsertText(xmlpara, objNode, "DOCSTATE", pDocState);
             else
                 createNodeAndInsertText(xmlpara, objNode, "DOCSTATE", "");
@@ -1429,7 +1451,7 @@ function SaveDraftDocInfo() {
                     createNodeAndInsertText(xmlpara, objNode, "DOCNO", "");
                 
                 	//부서순차합의 일경우 접수번호를 통해 가져온 DOCNO 를 가져오도록 수정. 2019-02-21 홍대표
-	                if(pDraftFlag == "HAPYUI" && approvalFlag == "G") {
+	                if((pDraftFlag == "HAPYUI" || pDraftFlag == "GAMSABU") && approvalFlag == "G") {
 	                	xmlpara.getElementsByTagName("DOCNO")[0].textContent = pDocNo;
 	                }
             }
@@ -2363,18 +2385,21 @@ function SaveDraftDocInfo() {
     	mhtBody = message.Get_EditorBodyHTML();
     	EmbedContentIntoXML(mhtBody);
     	mhtBody = ConvertHTMLtoMHT(mhtBody);
+    	
+    	var data = {
+			docID : pDocID,
+			formId : pFormID,
+			html  : mhtBody,
+			orgCompanyID : orgCompanyID
+    	}
         
         $.ajax({
     		type : "POST",
     		dataType : "text",
     		async : false,
     		url : "/ezApprovalG/saveFile.do",
-    		data : {
-    			docID : pDocID,
-				formId : pFormID,
-    			html  : mhtBody,
-    			orgCompanyID : orgCompanyID
-    		},
+    		contentType : "application/json",
+    		data : JSON.stringify(data),
     		success: function(text){
     			result = text;
     		}        			
@@ -2422,18 +2447,21 @@ function SaveDraftDocInfo() {
         var mhtBody = "";
         mhtBody = "<HTML>" + GetCKEditerHeader() + pOrgHtml + "</HTML>";
         mhtBody = ConvertHTMLtoMHT(mhtBody);
+    	
+    	var data = {
+			docID : pDocID,
+			formId : pFormID,
+			html  : mhtBody,
+			orgCompanyID : orgCompanyID
+    	}
 
         $.ajax({
     		type : "POST",
     		dataType : "text",
     		async : false,
     		url : "/ezApprovalG/saveFile.do",
-    		data : {
-    			docID : pDocID,
-				formId : pFormID,
-    			html  : mhtBody,
-    			orgCompanyID : orgCompanyID
-    		},
+    		contentType : "application/json",
+    		data : JSON.stringify(data),
     		success: function(text){
     			result = text;
     		}        			
@@ -2588,12 +2616,13 @@ function SaveDraftDocInfo() {
        	 if (xmlhttp.statusText == "OK") {
        		 var pAlertContent = strLang878;
              OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
+             return true;
        	 } else {
        		 var pAlertContent = strLang740;
              OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
-             return;
+             return false;
        	 }
-       } 
+       }
     }
     
     function OpenAlertUI_Close_Complete() {

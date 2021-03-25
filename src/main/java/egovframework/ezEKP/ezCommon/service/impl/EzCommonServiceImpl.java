@@ -2,15 +2,22 @@ package egovframework.ezEKP.ezCommon.service.impl;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
+import egovframework.ezEKP.ezCommon.vo.CompanyInfoVO;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
+import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.TenantServerNameVO;
 import egovframework.let.user.login.vo.TenantVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.KlibUtil;
 
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.jsoup.Jsoup;
@@ -20,6 +27,7 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DeadlockLoserDataAccessException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -34,19 +42,21 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.*;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Service("EzCommonService")
 public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonService {
 
 	@Autowired
 	private CommonUtil commonUtil;
-
+	
+	@Autowired
+	private KlibUtil klibUtil;
+	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
 
@@ -56,6 +66,12 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	@Resource(name = "EzBoardService")
 	private EzBoardService ezBoardService;
 
+	@Resource(name = "EzSystemAdminService")
+	private EzSystemAdminService ezSystemAdminService;
+
+	@Resource(name = "EzOrganAdminService")
+	private EzOrganAdminService ezOrganAdminService;
+	
 	private static final Logger logger = LoggerFactory.getLogger(EzCommonServiceImpl.class);
 
 	@Override
@@ -108,7 +124,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
         try {
 	        filePath = realPath + filePath;
-	        File file = new File(filePath);
+	        File file = new File(commonUtil.detectPathTraversal(filePath));
 	        is = new FileInputStream(file);
 
 	        IOUtils.copy(is,response.getOutputStream());
@@ -215,7 +231,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	 */
 	private String createBoundary() throws Exception{
         String strBoundary = "Boundary-=_";
-        Random Rnd = new Random();
+        SecureRandom Rnd = new SecureRandom();
 
         while (strBoundary.length() < 39) {
             int nch = Rnd.nextInt(9)+1;
@@ -349,10 +365,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         Elements elements = document.select("body[style*='background-image'], table[style*='background-image'], td[style*='background-image']");
 
         if (!elements.isEmpty()) {
+            int tempCount = 0;
             for (Element element : elements) {
                 String[] firstSplit = element.attr("style").split(":");
                 String[] secondSplit;
-                int tempCount = 0;
 
                 for (int i = 0; i < firstSplit.length; i++) {
                     secondSplit = firstSplit[i].split(";");
@@ -360,14 +376,16 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                     if (i % 2 != 0) {
                         if (secondSplit.length == 1) break;
                         if (secondSplit[1].trim().equalsIgnoreCase("background-image")) {
-                            backgroundImgSrcs.add(firstSplit[i + 1].split(";")[0].trim());
+                            String backgroundImbUrl = (firstSplit[i + 1].split(";")[0].trim()).replaceAll("^url\\([\"|']", "").replaceAll("[\"|']\\)$", "");
+                            backgroundImgSrcs.add(backgroundImbUrl);
                             logger.debug(backgroundImgSrcs.get(tempCount));
                             tempCount++;
                         }
                     } else {
                         if (i + 1 == firstSplit.length) break;
                         if (firstSplit[i].split(";")[secondSplit.length - 1].trim().equalsIgnoreCase("background-image")) {
-                            backgroundImgSrcs.add(firstSplit[i + 1].split(";")[0].trim());
+                            String backgroundImbUrl = (firstSplit[i + 1].split(";")[0].trim()).replaceAll("^url\\([\"|']", "").replaceAll("[\"|']\\)$", "");
+                            backgroundImgSrcs.add(backgroundImbUrl);
                             logger.debug(backgroundImgSrcs.get(tempCount));
                             tempCount++;
                         }
@@ -413,10 +431,19 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             String contentType = "application/octet-stream";
             String extension = ".gif"; //기존확장자가.gif로고정되어있었으므로,디폴트로사용함
 
+            InputStream tempIn = null;
             try {
-                contentType = URLConnection.guessContentTypeFromStream(Files.newInputStream(Paths.get(realPath + imgSrc)));
+            	if(imgSrc.contains("222.106.242.180")){
+            		continue;
+            	}else{
+            		contentType = URLConnection.guessContentTypeFromStream(Files.newInputStream(Paths.get(realPath + imgSrc)));
+            	}
             } catch (IOException e) {
                 //url 일 시 realPath + path 로 exception 발생 -> 위의 default값 사용하므로 따로 exception 처리 하지 않음.
+            } finally {
+                if (tempIn != null) {
+                    tempIn.close();
+                }
             }
 
             if (contentType == null) {
@@ -427,7 +454,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             }
 
             logger.debug("imgSrc = " + imgSrc);
-            Matcher matcher = Pattern.compile(imgSrc).matcher(tempHtml);
             tempHtml = Pattern.compile(imgSrc).matcher(tempHtml).replaceAll("file:///C:/IMAGE" + (imgSrcs.indexOf(imgSrc) + 1) + extension);
 
             imagesBuilder.append(commonUtil.CRLF + "Content-Type: " + contentType + commonUtil.CRLF);
@@ -523,6 +549,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                 imagesBuilder.append("--" + m_strBoundary);
             } catch (Exception e) {
                 logger.debug(e.getMessage());
+            } finally {
+                if (in != null) {
+                    in.close();
+                }
             }
         }
 
@@ -545,10 +575,16 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             String contentType = "application/octet-stream";
             String extension = ".gif"; //기존확장자가.gif로고정되어있었으므로,디폴트로사용함
 
+            InputStream tempIn = null;
             try {
-                contentType = URLConnection.guessContentTypeFromStream(Files.newInputStream(Paths.get(realPath, backgroundImgSrc)));
-            } catch (IOException e) {
+                tempIn = Files.newInputStream(Paths.get(realPath, backgroundImgSrc));
+                contentType = URLConnection.guessContentTypeFromStream(tempIn);
+            } catch (Exception e) {
                 e.printStackTrace();
+            } finally {
+                if (tempIn != null) {
+                    tempIn.close();
+                }
             }
 
             if (contentType == null) {
@@ -651,6 +687,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                 backgroundImagesBuilder.append("--" + m_strBoundary);
             } catch (Exception e) {
                 logger.debug(e.getMessage());
+            } finally {
+                if (in != null) {
+                    in.close();
+                }
             }
         }
 
@@ -719,7 +759,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		List<String> m_ListImageLocation = new ArrayList<String>();
 		List<String> m_ListImageLocalLocation = new ArrayList<String>();
 		String extension = ".gif"; // 기존 확장자가 .gif로 고정되어 있었으므로, 디폴트로 사용함
-
+		boolean isUTF8;
+		
 		strBoundary = getBoundaryText(m_strMHT);
 		logger.debug("strBoundary="+strBoundary);
 
@@ -729,7 +770,13 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			} else {
 				m_Mimechunk = m_strMHT.split(strBoundary);
 				logger.debug("m_Mimechunk="+m_Mimechunk);
-
+				
+				//문서 인코딩 방식 추출 
+                if (m_Mimechunk[0].indexOf("(UTF-8)") > -1) 
+                    isUTF8 = true; 
+                else 
+                    isUTF8 = false; 
+				
 				for (int i = 1; i < m_Mimechunk.length; i++) {
 					String[] strMimeChunk = m_Mimechunk[i].split(commonUtil.CRLF + commonUtil.CRLF);
 					String[] strMime_info_p = strMimeChunk[0].trim().split(commonUtil.CRLF);
@@ -737,7 +784,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
 					if (strMime_info_tupe[0].equals("Content-Type")) {
 						if (strMime_info_tupe[1].equals("Text/HTML")) {
-							m_strHTML = doMHTDecoding(strMimeChunk[1].trim(), m_strHTML);
+							m_strHTML = doMHTDecoding(strMimeChunk[1].trim(), m_strHTML, isUTF8);
 						}
 						/* 2018-08-14 홍승비 - mht->html 변환 시 이미지 디코딩(content-type) 수정 */
 						else if (strMime_info_tupe[1].contains("Image/") || strMime_info_tupe[1].contains("application/octet-stream")) {
@@ -789,7 +836,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		String strImageName = UUID.randomUUID() + extension;
         String SfilePath = m_strSPath + strImageName;
         String LfilePath = m_strLPath + strImageName;
-        File file = new File(m_strLPath);
+        File file = new File(commonUtil.detectPathTraversal(m_strLPath));
 
         if (!file.exists()) {
         	file.mkdir();
@@ -797,7 +844,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
         OutputStream bos = null;
         try {
-        	bos = new FileOutputStream(new File(LfilePath));
+        	bos = new FileOutputStream(new File(commonUtil.detectPathTraversal(LfilePath)));
         	bos.write(imageBytes);
 		} catch (Exception e) {
 			logger.debug("e: {}", e);
@@ -817,11 +864,15 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	/**
 	 * html -> mht 변환 mht디코딩 표출 Method
 	 */
-	private String doMHTDecoding(String strMht, String m_strHTML) {
+	private String doMHTDecoding(String strMht, String m_strHTML, boolean isUTF8) {
 		byte[] arr = Base64.getMimeDecoder().decode(strMht);
 
 		try {
-			m_strHTML = new String(arr, "utf-8");
+			//m_strHTML = new String(arr, "utf-8");
+			if(isUTF8)
+                m_strHTML = new String(arr, "utf-8");
+            else
+                m_strHTML = new String(arr, "ks_c_5601-1987");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
@@ -850,8 +901,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	@Override
 	public String loadMHTFile(String strMHTpath) throws Exception{
 		String strMhtData = "";
-		BufferedReader br = new BufferedReader(new FileReader(strMHTpath.trim()));
-	    try {
+		byte[] fileBytes = Files.readAllBytes(Paths.get(commonUtil.detectPathTraversal(strMHTpath.trim())));
+
+		// klib 복호화
+		if (strMHTpath.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+			fileBytes = klibUtil.decrypt(fileBytes);
+		}
+
+	    try (BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(fileBytes)))) {
 	        StringBuilder sb = new StringBuilder();
 	        String line = br.readLine();
 
@@ -861,8 +918,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	            line = br.readLine();
 	        }
 	        strMhtData = sb.toString();
-	    } finally {
-	        br.close();
 	    }
 
         return strMhtData.replace("&lt;", "<").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("&apos;", "\'");
@@ -1013,6 +1068,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 
 	@Override
+	public void createReformFlagColumn() throws Exception {
+		ezCommonDAO.createReformFlagColumn();
+	}
+	
+	@Override
 	public String getCompanyConfig(int tenantID, String companyID, String property) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
         map.put("property", property.toUpperCase());
@@ -1085,6 +1145,72 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
 		logger.debug("deleteCompanyConfig ended");
 	}
+	
+	@Override
+	public void setMultiLoginUser(int tenantID, String userID, String loginTime) throws Exception {
+		logger.debug("insertMultiLoginUser started");
+		
+		//멀티로그인 시간을 비교해서 이전 이용자가 없다면 인서트
+		//이전 이용자가 있다면 업데이트한다 
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("tenantID", tenantID);
+		map.put("userID", userID);
+		map.put("loginTime", loginTime);
+		
+		try {
+			ezCommonDAO.deleteMultiLoginUser(map);
+			ezCommonDAO.insertMultiLoginUser(map);
+		} catch (DeadlockLoserDataAccessException e) {
+			//데드락이 발생하면 실패한 작업 다시 실행
+			
+			Thread.sleep(1000);
+			
+			ezCommonDAO.deleteMultiLoginUser(map);
+			ezCommonDAO.insertMultiLoginUser(map);
+		}
+		
+		logger.debug("insertMultiLoginUser ended");
+	}
+	
+	@Override
+	public String selectMultiLoginTime(int tenantID, String userID) throws Exception {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("tenantID", tenantID);
+		map.put("userID", userID);
+		
+		return Optional.ofNullable(ezCommonDAO.selectMultiLoginUser(map)).orElse("");
+	}
+	
+	@Override
+	public boolean matchMultiLoginTime(int tenantID, String userID, String loginTime) throws Exception {
+		logger.debug("matchMultiLoginTime started");
+		
+		// 멀티 로그인 시간을 비교해서 새로운 로그인 유저가 없다면 true 새로운 로그인 유저가 있다면 false
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("tenantID", tenantID);
+		map.put("userID", userID);
+		
+		String pre_loginTime = Optional.ofNullable(ezCommonDAO.selectMultiLoginUser(map)).orElse("");
+		
+		logger.debug("matchMultiLoginTime ended");
+		
+		if(loginTime.equals(pre_loginTime)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	@Override
+	public void createTblUserMultiLogin() throws Exception {
+		ezCommonDAO.createTblUserMultiLogin();
+	}
 
 	@Override
 	public void addMailToJMochaDistribution() throws Exception {
@@ -1122,6 +1248,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 
 	@Override
+	public void addAddJobMasterManualFlag() throws Exception {
+		ezCommonDAO.addAddJobMasterManualFlag();
+	}
+	
+	@Override
 	public void createJMochaMailSignatureTemplate() throws Exception {
 		ezCommonDAO.createJmochaMailSignatureTemplate();
 	}
@@ -1156,14 +1287,66 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 
 	@Override
+	public void addJmochaMailGenenalPreviewMailImage() throws Exception {
+		ezCommonDAO.addJmochaMailGenenalPreviewMailImage();
+	}
+	
+	@Override
+	public void addPortalThemePortletIsFixed() throws Exception {
+		ezCommonDAO.addPortalThemePortletIsFixed();
+	}
+	
+	@Override
 	public void addUserMasterMailBoxQuota() throws Exception {
 		ezCommonDAO.addUserMasterMailBoxQuota();
 	}
 
 	@Override
+	public void addHolidayFlag() throws Exception {
+		ezCommonDAO.addHolidayFlag();
+	}
+	
+	@Override
+	public void createPortalThemePortlet() throws Exception {
+		ezCommonDAO.createPortalThemePortlet();
+	}
+	
+	@Override
+	public void addHolidayRepeat() throws Exception {
+		ezCommonDAO.addHolidayFlag();
+	}
+	
+	@Override
+	public void insertPortalThemePortletInitdata() throws Exception {
+		ezCommonDAO.insertPortalThemePortletInitdata();
+	}
+	
+	@Override
 	public void addJournalFormDelFlag() throws Exception {
 		ezCommonDAO.addJournalFormDelFlag();
 	}
+
+	@Override
+	public void updateTaskUrl() throws Exception {
+		ezCommonDAO.updateTaskUrl();
+	}
+
+	@Override
+	public void addPortalPortletUserPortletUsed() throws Exception {
+		ezCommonDAO.addPortalPortletUserPortletUsed();
+		
+	}
+
+	@Override
+	public void addPortalPortletUserThemeId() throws Exception {
+		ezCommonDAO.addPortalPortletUserThemeId();
+		
+	}
+
+	@Override
+	public void addTblPortalThemeUserIsDefault() throws Exception {
+        ezCommonDAO.addTblPortalThemeUserIsDefault();
+    }
 
 	@Override
 	public void createJmochaMailCopyright() throws Exception {
@@ -1171,13 +1354,52 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 
 	@Override
+	public void createJamesMailDeletedId() throws Exception {
+		ezCommonDAO.createJamesMailDeletedId();
+	}
+	
+	@Override
 	public void updateListOptionData() throws Exception {
 		ezCommonDAO.updateListOptionData();
 	}
 
 	@Override
+	public void createBoardLike() throws Exception{
+		ezCommonDAO.createBoardLike();
+	}
+	
+	@Override
+	public void addBoardLikeFlag() throws Exception{
+		ezCommonDAO.addBoardLikeFlag();
+	}
+	
 	public void addMsgInMailSearch() throws Exception {
 		ezCommonDAO.addMsgInMailSearch();
+	}
+
+	@Override
+	public void addQuickLinkLinkOrder() throws Exception {
+		ezCommonDAO.addQuickLinkLinkOrder();
+	}
+
+	@Override
+	public void addComCloseCompanyId() throws Exception {
+		ezCommonDAO.addComCloseCompanyId();
+	}
+
+	@Override
+	public void addWebfolderTotalLimit() throws Exception {
+		ezCommonDAO.addWebfolderTotalLimit();
+	}
+
+	@Override
+	public void addMemoExtensionColumns() throws Exception {
+		ezCommonDAO.addMemoExtensionColumns();
+	}
+	
+	@Override
+	public void addSurveyAlamColums() throws Exception {
+		ezCommonDAO.addSurveyAlamColums();
 	}
 
 	@Override
@@ -1189,6 +1411,238 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addAddJobMasterProxy() throws Exception {
 		ezCommonDAO.addAddJobMasterProxy();
 	}
+	
+	@Override
+	public void createAttitudeAnnual() throws Exception {
+		ezCommonDAO.createTblAttitudeAnnual();
+		ezCommonDAO.createTblAttitudeAnnualCanappl();
+		ezCommonDAO.createTblAttitudeAnnualConf();
+		ezCommonDAO.createTblAttitudeAnnualHistory();
+		ezCommonDAO.createTblAttitudeAprConn();
+	}
+
+	@Override
+	public void createResourcePortlet() throws Exception {
+		ezCommonDAO.createTblResourcePortlet();
+	}
+	
+	@Override
+	public void addThemeContentLang() throws Exception {
+		ezCommonDAO.addThemeContent2();
+		ezCommonDAO.addThemeContent3();
+	}
+
+	@Override
+	public void createThemeAndPortletAuth() throws Exception {
+		ezCommonDAO.createTblThemeAuth();
+		ezCommonDAO.createTblPortletAuth();
+	}
+
+	@Override
+	public void addMenuAndPortletCode() throws Exception {
+		ezCommonDAO.addMenuCode();
+		ezCommonDAO.addPortletCode();
+	}
+	
+	@Override
+	public List<CountryVO> getCountryInfo(Map<String, Object> map) throws Exception {
+		return ezCommonDAO.getCountryInfo(map);
+	}
+	
+	@Override
+	public void insertSurveyTenantConfig() throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", 0);
+		map.put("propertyName", "useSurvey");
+		map.put("propertyValue", "YES");
+		map.put("description", "YES: 사용 NO: 사용안함 (default: YES)");
+		map.put("configName", "전자설문 리뉴얼 모듈 사용여부");
+		map.put("configType", "기타모듈");
+		map.put("regdate", "2019-06-25 00:00:00");
+
+		ezCommonDAO.insertSurveyTenantConfig(map);
+	}
+
+	@Override
+	public void insertPortletInfo() throws Exception {
+		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+		int[] portletIds = {51, 70, 73};
+		
+		Map<String, Object> rsMap = new HashMap<String, Object>();
+		rsMap.put("portletId", portletIds[0]);
+		rsMap.put("menuId", 6);
+		rsMap.put("portletUrl", "/ezNewPortal/resourcePortlet.do");
+		rsMap.put("portletType", "G");
+		rsMap.put("defaultOrder", 21);
+		rsMap.put("portletUsed", 1);
+		rsMap.put("portletOrder", 21);
+		rsMap.put("boardId", null);
+		ezCommonDAO.insertPortletInfo(rsMap);
+		
+		Map<String, Object> wfMap = new HashMap<String, Object>();
+		wfMap.put("portletId", portletIds[1]);
+		wfMap.put("menuId", 10);
+		wfMap.put("portletUrl", "/ezNewPortal/webFolderPortlet.do");
+		wfMap.put("portletType", "G");
+		wfMap.put("defaultOrder", 22);
+		wfMap.put("portletUsed", 1);
+		wfMap.put("portletOrder", 22);
+		wfMap.put("boardId", null);
+		ezCommonDAO.insertPortletInfo(wfMap);
+		
+		String surveyMenuId = checkSurveyMenu();
+		int surveyMenu = 0;
+		boolean isSurveyMenuNew = false;
+		
+		if (surveyMenuId == null) {
+			logger.debug("surveyMenu doesn't exist. add survey menu data...");
+			insertSurveyMenu();
+			surveyMenu = Integer.parseInt(checkSurveyMenu());
+			isSurveyMenuNew = true;
+		} else {
+			surveyMenu = Integer.parseInt(surveyMenuId);
+		}
+		
+		Map<String, Object> svMap = new HashMap<String, Object>();
+		svMap.put("portletId", portletIds[2]);
+		svMap.put("menuId", surveyMenu);
+		svMap.put("portletUrl", "/ezNewPortal/surveyPortlet.do");
+		svMap.put("portletType", "G");
+		svMap.put("defaultOrder", 20);
+		svMap.put("portletUsed", 1);
+		svMap.put("portletOrder", 20);
+		svMap.put("boardId", null);
+		ezCommonDAO.insertPortletInfo(svMap);
+		
+		for (CompanyInfoVO company : companyList) {
+			if (company.getCompanyId() != null) {
+				rsMap.put("companyId", company.getCompanyId());
+				rsMap.put("tenantId", company.getTenantId());
+				ezCommonDAO.insertRsPortletInfo(rsMap); // 자원관리 포틀릿 유무 확인 후 insert
+				
+				wfMap.put("companyId", company.getCompanyId());
+				wfMap.put("tenantId", company.getTenantId());
+				ezCommonDAO.insertWfPortletInfo(wfMap); // 웹폴더 포틀릿 유무 확인 후 insert
+				
+				svMap.put("companyId", company.getCompanyId());
+				svMap.put("tenantId", company.getTenantId());
+				
+				if (isSurveyMenuNew) {
+					ezCommonDAO.insertSurveyMenuInfo(svMap);
+				}
+				
+				ezCommonDAO.insertSvPortletInfo(svMap); // 전자설문 포틀릿 유무 확인 후 insert
+				
+			}
+		}
+	}
+
+	private void insertSurveyMenu() {
+		logger.debug("insertSurveyMenu started");
+		ezCommonDAO.insertSurveyMenu();
+		logger.debug("insertSurveyMenu ended");
+	}
+
+	private String checkSurveyMenu() {
+		logger.debug("checkSurveyMenu started");
+		String surveyMenuId = ezCommonDAO.checkSurveyMenu();
+		logger.debug("[surveyMenuId]" + surveyMenuId);
+		return surveyMenuId;
+	}
+
+	public void createAccessCountry() throws Exception {
+		ezCommonDAO.createTblAccessCountry();
+	}
+	
+	@Override
+	public void addSnMenuAuth() throws Exception {
+		ezCommonDAO.addSnMenuAuth();
+	}
+	
+	@Override
+	public void createTblShareDocDir() throws Exception {
+		ezCommonDAO.createTblShareDocDir();
+	}
+	
+	@Override
+	public void addBoardManageTypeColumn() throws Exception {
+		ezCommonDAO.addBoardManageTypeColumn();
+	}
+
+	@Override
+	public void createPersonalPopupUser() throws Exception {
+		ezCommonDAO.createPersonalPopupUser();
+	}
+
+	@Override
+	public boolean getPermissionGroupAccessYN(String groupId, String companyId, int tenantId, String userId,
+			String deptId, boolean applySubDeptYN) throws Exception {
+		logger.debug("getPermissionGroupAccessYN started. groupId=" + groupId + ",userId=" + userId + ",deptId=" + deptId
+				+ ",applySubDeptYN=" + applySubDeptYN);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("groupId", groupId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("userId", userId);
+		map.put("deptId", deptId);
+		map.put("applySubDeptYN", applySubDeptYN);
+		
+		boolean accessYN = ezCommonDAO.getPermissionGroupAccessYN(map);
+		
+		logger.debug("getPermissionGroupAccessYN ended. accessYN=" + accessYN);
+		
+		return accessYN;
+	}
+
+	@Override
+	public void addSurveyMailSentFlagColumn() throws Exception {
+		ezCommonDAO.addSurveyMailSentFlagColumn();
+	}
+	
+	@Override
+	public List<LoginVO> getPermissionGroupMembers(String groupId, String companyId, int tenantId, boolean applySubDeptYN) throws Exception {
+		logger.debug("getPermissionGroupMembers started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("groupId", groupId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("applySubDeptYN", applySubDeptYN);
+		
+		logger.debug("getPermissionGroupMembers ended.");
+		return ezCommonDAO.getPermissionGroupMembers(map);
+	}	
+	
+	@Override
+	public void createTblNoticeBoard() throws Exception {
+		ezCommonDAO.createTblNoticeBoard();
+	}
+
+	@Override
+	public void addSnThemeAndPortletAuth() throws Exception {
+		ezCommonDAO.addSnThemeAuth();
+		ezCommonDAO.addSnPortletAuth();
+	}
+	
+	@Override
+	public void alterChamjoView() throws Exception {
+		ezCommonDAO.alterChamjoView();
+	}
+	
+	@Override
+	public void addAddressFurigana() throws Exception {
+		ezCommonDAO.addAddressFurigana();
+	}
+	
+	@Override
+	public void createOpenGovTable() throws Exception {
+		ezCommonDAO.createOpenGovTable();
+	}
+	
+	@Override
+	public void addOpenGovFlag() throws Exception {
+        ezCommonDAO.addOpenGovFlag();
+    }
 
 	@Override
 	public int checkDeptId(String userID, String deptID, String tenantId) {
@@ -1200,10 +1654,146 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		map.put("deptID", deptID);
 		map.put("userID", userID);
 		result= ezCommonDAO.checkDeptId(map);
-		logger.debug("checkDeptId started");
+		logger.debug("checkDeptId ended");
 		return result;
 	}
 
+	@Override
+	public void createRsFavoriteTable() {
+		ezCommonDAO.createRsFavoriteTable();
+	}
+
+	@Override
+	public void createUserDistributionTable() {
+		ezCommonDAO.createUserDistributionTable();
+	}
+	
+	@SuppressWarnings("serial")
+	@Override
+	public void insertTblTenantConfig(String configName) throws Exception {
+		logger.debug("insertTest started");
+		Map<String, Map<String, Object>> test = new HashMap<String,  Map<String, Object>>();
+		test.put("mailConfirm", new HashMap<String, Object>(){{
+			put("tenantID", 0);
+			put("confName","useMailConfirm"); // property_name
+			put("property_value","NO");
+			put("config_name","메일 완료/완료취소");
+			put("regdate","2020-01-28 00:00:00");
+			put("description","메일 완료/완료취소 기능 사용 여부(default: NO)");
+			put("config_type","메일");
+			put("property","USEMAILCONFIRM"); // property_name
+		}});
+		test.put("UseAutoDeleteOfRetireUser", new HashMap<String, Object>(){{
+			put("tenantID", 0);
+			put("confName","UseAutoDeleteOfRetireUser"); // property_name
+			put("property_value","NO");
+			put("config_name","퇴직자 자동삭제");
+			put("regdate","2020-09-14 00:00:00");
+			put("description","n일 이후 퇴직자 자동삭제 사용여부(default: NO)");
+			put("config_type","조직도");
+			put("property","USEAUTODELETEOFRETIREUSER"); // property_name
+		}});
+		test.put("autoDeleteOfRetireUserLimit", new HashMap<String, Object>(){{
+			put("tenantID", 0);
+			put("confName","autoDeleteOfRetireUserLimit"); // property_name
+			put("property_value","0");
+			put("config_name","퇴직자 자동삭제 ");
+			put("regdate","2020-09-14 00:00:00");
+			put("description","n일 이후 퇴직자 자동삭제 : n일 설정(default: 0, 0=사용안함)");
+			put("config_type","조직도");
+			put("property","AUTODELETEOFRETIREUSERLIMIT"); // property_name
+		}});
+		test.put("useExternalMailServerAddress", new HashMap<String, Object>(){{
+			put("tenantID", 0);
+			put("confName","useExternalMailServerAddress"); // property_name
+			put("property_value","0.0.0.0");
+			put("config_name","외부메일 서버 주소 ");
+			put("regdate","2020-09-29 00:00:00");
+			put("description","외부메일 서버 주소 (default:0.0.0.0)");
+			put("config_type","메일");
+			put("property","USEEXTERNALMAILSERVERADDRESS"); // property_name
+		}});
+		test.put("useExternalMailServerAuth", new HashMap<String, Object>(){{
+			put("tenantID", 0);
+			put("confName","useExternalMailServerAuth"); // property_name
+			put("property_value","NO");
+			put("config_name","외부메일 서버 인증 사용여부");
+			put("regdate","2020-09-29 00:00:00");
+			put("description","외부메일 서버 인증 사용여부(default: NO)");
+			put("config_type","메일");
+			put("property","USEEXTERNALMAILSERVERAUTH"); // property_name
+		}});
+		test.put("useExternalMailServerUserId", new HashMap<String, Object>(){{
+			put("tenantID", 0);
+			put("confName","useExternalMailServerUserId"); // property_name
+			put("property_value","authId");
+			put("config_name","외부메일 서버 인증 id (ex: test@test.com)");
+			put("regdate","2020-09-29 00:00:00");
+			put("description","외부메일 서버 인증 id");
+			put("config_type","메일");
+			put("property","USEEXTERNALMAILSERVERUSERID"); // property_name
+		}});
+		test.put("useExternalMailServerUserPw", new HashMap<String, Object>(){{
+			put("tenantID", 0);
+			put("confName","useExternalMailServerUserPw"); // property_name
+			put("property_value","authPw");
+			put("config_name","외부메일 서버 인증 pass");
+			put("regdate","2020-09-29 00:00:00");
+			put("description","외부메일 서버 인증 pass (ex: password123)");
+			put("config_type","메일");
+			put("property","USEEXTERNALMAILSERVERUSERPW"); // property_name
+		}});
+		test.put("useDeleteMailBlob", new HashMap<String, Object>(){{
+			put("tenantID", 0);
+			put("confName","useDeleteMailBlob"); // property_name
+			put("property_value","YES");
+			put("config_name","메일 blob 삭제 스케줄러 사용여부");
+			put("regdate","2021-02-19 00:00:00");
+			put("description","메일 blob 삭제 스케줄러 사용여부 (default:YES)");
+			put("config_type","메일");
+			put("property","USEDELETEMAILBLOB"); // property_name
+		}});
+		
+		
+		Iterator<String> keys = test.keySet().iterator();
+        while( keys.hasNext() ){
+        	try {
+				String key = keys.next();
+				ezCommonDAO.insertTblTenantConfig(test.get(key));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+           
+        }
+	}
+
+	@Override
+	public void addThemeAndPorteltAuthInit() throws Exception {
+		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		for (CompanyInfoVO company : companyList) {
+			if (company.getCompanyId() != null) {
+				map.put("companyId", company.getCompanyId());
+				map.put("tenantId", company.getTenantId());
+				ezCommonDAO.insertThemeAuthInit(map);
+				ezCommonDAO.insertPortletAuthInit(map);
+			}
+		}
+	}
+
+	@Override
+	public void createJmochaBigAttachDownloadLimit() throws Exception {
+		ezCommonDAO.createJmochaBigAttachDownloadLimit();
+	}
+	
+	@Override
+	public void insertMailBigSizeAttachLimit() throws Exception {
+		logger.debug("insertMailBigSizeAttachLimit started");
+		ezCommonDAO.insertMailBigSizeAttachLimit();
+		logger.debug("insertMailBigSizeAttachLimit ended");
+	}
+	
 	@Override
 	public void addIsBeforeDoc() throws Exception {
 		ezCommonDAO.addIsBeforeDoc();
@@ -1212,6 +1802,56 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	@Override
 	public void addBeforeDocUrl() throws Exception {
 		ezCommonDAO.addBeforeDocUrl();
+	}
+	
+	@SuppressWarnings("serial")
+	@Override
+	public void setCompanyConfigs()  throws Exception {
+		logger.debug("setCompanyConfigs started.");
+		List<Map<String, String>> list = new ArrayList<Map<String,String>>();
+		list.add(new HashMap<String, String>(){{ put("name","ExpirePassPeriod"); put("value","0"); }});
+		list.add(new HashMap<String, String>(){{ put("name","MaxAllowedCountOfLoginFail"); put("value","0"); }});
+		list.add(new HashMap<String, String>(){{ put("name","UsePasswordPatternPolicy"); put("value","NO"); }});
+		     
+		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+		
+		for (TenantVO tenantVo : tenantIdList) {
+			int tenantId = tenantVo.getTenantId();
+			logger.debug("tenantId=" + tenantId);
+
+			List<OrganDeptVO> companyList = ezOrganAdminService.getCompanyList("1", tenantId);
+			logger.debug("companyList size=" + companyList.size());
+			for (OrganDeptVO companyVo : companyList) {
+				String companyId = companyVo.getCn();
+				logger.debug("companyId=" + companyId);
+				for (Map<String, String> config : list) {
+					try {
+						String propertyName = config.get("name");
+						String propertyValue = config.get("value");
+						
+						insertCompanyConfig(tenantId, companyId, propertyName, propertyValue);
+					} catch(Exception e) {
+						logger.debug("Config already.");
+					}
+				}
+			}
+		}
+		
+		logger.debug("setCompanyConfigs ended.");
+	}
+	
+	@Override
+	public void createPwPolicyTable()  throws Exception {
+		logger.debug("createPwPolicyTable started.");
+		ezCommonDAO.createPwPolicyTable();
+		logger.debug("createPwPolicyTable ended.");
+	}
+
+	@Override
+	public void createPwPolicyPatternTable()  throws Exception {
+		logger.debug("createPwPolicyPatternTable started.");
+		ezCommonDAO.createPwPolicyPatternTable();
+		logger.debug("createPwPolicyPatternTable ended.");
 	}
 	
 	@Override
@@ -1230,6 +1870,100 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 
 	@Override
+	public void insertUseExternalMailServerConfig() throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", 0);
+		map.put("propertyName", "useExternalMailServer");
+		map.put("propertyValue", "NO");
+		map.put("description", "메일 모듈 사용 여부. YES: 외부메일 사용 NO: 내부메일 사용(default: NO)");
+		map.put("configName", "메일 모듈 사용 여부");
+		map.put("configType", "메일");
+		map.put("regdate", "2020-04-16 00:00:00");
+
+		ezCommonDAO.insertUseExternalMailServerConfig(map);
+	}
+	
+	@Override
+	public void insertReBebuOpinionCode() throws Exception {
+		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		for (CompanyInfoVO company : companyList) {
+			if (company.getCompanyId() != null) {
+				map.put("companyId", company.getCompanyId());
+				map.put("tenantId", company.getTenantId());
+				map.put("code1", "A17");
+				map.put("code2", "008");
+				map.put("name", "재배부요청");
+				map.put("isUse", "1");
+				map.put("descript", "재배부요청");
+				map.put("name2", "재배부요청");
+				map.put("name3", "재배부요청");
+				map.put("name4", "재배부요청");
+				
+				ezCommonDAO.insertReBebuOpinionCode(map);
+			}
+		}
+	}
+	
+	@Override
+	public void addFormAprOptionColumn() throws Exception {
+		ezCommonDAO.addFormAprOptionColumn();
+	}
+
+	@Override
+	public void insertAnnualScheduleTenantConfig() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", 0);
+		map.put("propertyName", "useAnnualScheduleYN");
+		map.put("propertyValue", "0");
+		map.put("description", "0:근태현황 일정관리 미연동, 1:근태현황 부서일정 연동, 2:근태현황 회사일정 연동");
+		map.put("configName", "근태현황 일정관리 연동");
+		map.put("configType", "근태관리");
+		map.put("regdate", "2020-02-24 00:00:00");
+
+		ezCommonDAO.insertAnnualScheduleTenantConfig(map);
+	}
+
+	@Override
+	public void insertHalfOffAttitudeType() {
+		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();		
+		
+		for (CompanyInfoVO company : companyList) {
+			if (company.getCompanyId() != null) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("typeId", "A21");
+				map.put("companyId", company.getCompanyId());
+				map.put("tenantId", company.getTenantId());
+				map.put("typeName", "반반차");
+				map.put("typeName2", "half off");
+				map.put("isUse", "1");
+				map.put("imgPath", "refresh");
+				map.put("parentId", "A05");
+				map.put("formId", 4);
+				map.put("isAdd", "0");
+				map.put("isDel", "0");
+				
+				ezCommonDAO.insertHalfOffAttitudeType(map);	
+			}
+		}
+	}
+
+	@Override
+	public void insertHolidayCheckTenantConfig() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", 0);
+		map.put("propertyName", "useHolidayCheckYN");
+		map.put("propertyValue", "0");
+		map.put("description", "0: 휴일 출/퇴근 체크 미사용, 1: 휴일 출/퇴근 체크 사용");
+		map.put("configName", "휴일 출/퇴근 체크 사용여부");
+		map.put("configType", "근태관리");
+		map.put("regdate", "2020-05-21 00:00:00");
+
+		ezCommonDAO.insertHolidayCheckTenantConfig(map);
+	}
+
+	@Override
 	public void createAprAttachLimit() throws Exception {
 		ezCommonDAO.createAprAttachLimit();
 	}
@@ -1244,4 +1978,287 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	    ezCommonDAO.addDocStateIntoLastDeptLines();
     }
     
+	public void insertAlternateHolidayAttitudeType() {
+		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();		
+
+		for (CompanyInfoVO company : companyList) {
+			if (company.getCompanyId() != null) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("typeId", "A24");
+				map.put("companyId", company.getCompanyId());
+				map.put("tenantId", company.getTenantId());
+				map.put("typeName", "대체휴무");
+				map.put("typeName2", "alternate holiday");
+				map.put("isUse", "1");
+				map.put("imgPath", "refresh");
+				map.put("parentId", "A05");
+				map.put("formId", 9);
+				map.put("isAdd", "0");
+				map.put("isDel", "0");
+
+				ezCommonDAO.insertAlternateHolidayAttitudeType(map);	
+			}
+		}
+	}
+
+	@Override
+	public void insertBeforeOutComeAttitudeType() {
+		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();		
+
+		for (CompanyInfoVO company : companyList) {
+			if (company.getCompanyId() != null) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("typeId", "A25");
+				map.put("companyId", company.getCompanyId());
+				map.put("tenantId", company.getTenantId());
+				map.put("typeName", "퇴근");
+				map.put("typeName2", "outCom");
+				map.put("isUse", "1");
+				map.put("imgPath", "inOut");
+				map.put("formId", 3);
+				map.put("isAdd", "0");
+				map.put("isDel", "0");
+
+				ezCommonDAO.insertBeforeOutComeAttitudeType(map);	
+			}
+		}
+	}	
+	
+	@Override
+	public void insertMobileAttitudeColumn() throws Exception {
+		logger.debug("insertMobileAttitudeColumn started");
+		
+		// 모바일 출퇴근 기능 관련 컬럼 추가(tbl_attitude -> attend_type, latitude, longitude)
+		ezCommonDAO.insertMobileAttitudeColumn();
+		
+		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+		
+		for (TenantVO tenantVo : tenantIdList) {
+			// 모바일 근태관리 테넌트 컨피그 추가
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("tenantId", tenantVo.getTenantId());
+			map.put("regdate", "2020-07-01 00:00:00");
+			map.put("configType", "기타모듈");
+
+			map.put("propertyName", "USE_MATTITUDE");
+			map.put("propertyValue", "NO");
+			map.put("description", "YES: 사용 NO: 사용안함 (default: NO)");
+			map.put("configName", "모바일 근태관리 모듈 사용여부");
+
+			try {
+				ezCommonDAO.insertMobileAttitudeConfig(map);
+			} catch (Exception e) {
+				// ignore
+			}
+			
+			// 근태관리 GPS 테넌트 컨피그 추가
+			map.put("propertyName", "attitudeMapApiKey");
+			map.put("propertyValue", "");
+			map.put("description", "근태관리 지도 api key(미사용시 빈값)");
+			map.put("configName", "근태관리 지도 api key");
+			
+			try {
+				ezCommonDAO.insertAttitudeGPSConfig(map);
+			} catch (Exception e) {
+				// ignore
+			}
+		}
+		
+		logger.debug("insertMobileAttitudeColumn ended");
+	}
+
+	@Override
+	public void insertDailyWorkAttitudeColumn() throws Exception {
+		// 일근무/반근무 기능 관련 컬럼 추가(tbl_attitude -> WORK_STATUS)
+		ezCommonDAO.insertDailyWorkAttitudeColumn();
+	}
+	
+	public void alterTblPsApprovNotiMailConf() throws Exception {
+		ezCommonDAO.alterTblPsApprovNotiMailConf();
+	}
+	
+	@Override
+	public void createMenuTenantConfig() throws Exception {
+		logger.debug("createMenuTenantConfig started");
+		
+		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+		
+		for (TenantVO tenantVo : tenantIdList) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("tenantId", tenantVo.getTenantId());
+			map.put("regdate", "2020-08-01 00:00:00");
+			map.put("propertyValue", "YES");
+			map.put("description", "YES: 사용 NO: 사용안함");
+			
+			map.put("propertyName", "useSchedule");
+			map.put("configName", "일정 모듈 사용 여부");
+			map.put("configType", "일정관리");
+			
+			try {
+				ezCommonDAO.createMenuTenantConfig(map);
+			} catch (Exception e) {
+				// ignore
+			}
+			
+			map.put("propertyName", "useBoard");
+			map.put("configName", "게시판 모듈 사용 여부");
+			map.put("configType", "게시판");
+			
+			try {
+				ezCommonDAO.createMenuTenantConfig(map);
+			} catch (Exception e) {
+				// ignore
+			}
+			
+			map.put("propertyName", "useResource");
+			map.put("configName", "자원관리 모듈 사용 여부");
+			map.put("configType", "자원관리");
+			
+			try {
+				ezCommonDAO.createMenuTenantConfig(map);
+			} catch (Exception e) {
+				// ignore
+			}
+			
+			map.put("propertyName", "useToDo");
+			map.put("configName", "업무관리 모듈 사용 여부");
+			map.put("configType", "업무관리");
+			
+			try {
+				ezCommonDAO.createMenuTenantConfig(map);
+			} catch (Exception e) {
+				// ignore
+			}
+		}
+		
+		logger.debug("createMenuTenantConfig ended");
+	}
+	
+	/* 2020-08-13 홍승비 - 양식옵션 > 기결재통과 플래그 추가 */
+	@Override
+	public void addPassAprLineFlag() throws Exception {
+		ezCommonDAO.addPassAprLineFlagColumn();
+	}
+	
+    @Override
+    public void addFormSihangTypeColumn() throws Exception {
+        ezCommonDAO.addFormSihangTypeColumn();
+    }
+    
+    @Override
+    public void insertAutoSendOfferFlag() throws Exception {
+        ezCommonDAO.insertAutoSendOfferFlag();
+    }
+
+	@Override
+	public void insertTabBoardPortlet() throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("portletCode", "tabBoard");
+		
+		if ( ezCommonDAO.checkPortletCodeString(map) > 0) {
+			return;
+		}
+		
+		logger.debug("insertTabBoardPortlet started");
+		
+		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+		map.put("portletId", ezCommonDAO.getNewPortletId());
+		map.put("portletName1", "탭게시판");
+		map.put("portletName2", "tabBoard");
+		map.put("portletName3", "タブボード");
+		map.put("menuId", 4);
+		map.put("portletUrl", "/ezNewPortal/tabBoardPortlet.do");
+		map.put("portletType", "G");
+		map.put("defaultOrder", 23);
+		map.put("portletUsed", 1);	
+		map.put("portletOrder", 23);
+		map.put("boardId", null);
+		ezCommonDAO.insertPortletWithCode(map);
+		
+		for (CompanyInfoVO company : companyList) {
+			if (company.getCompanyId() != null) {
+				map.put("companyId", company.getCompanyId());
+				map.put("tenantId", company.getTenantId());
+				ezCommonDAO.insertTabBoardPortletInfo(map); // 회사별 있는지 확인후 insert
+			}
+		}
+		
+		logger.debug("insertTabBoardPortlet ended");
+	}
+
+	@Override
+	public void createTblTabBoard() throws Exception {
+		ezCommonDAO.createTblTabBoard();
+	}
+
+	@Override
+	public void addScehdulegroup() throws Exception {
+		ezCommonDAO.addScehdulegroup();
+	}
+	
+	@Override
+	public void insertApprBigAttachInfo() throws Exception {
+		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+		
+		for (TenantVO tenantVo : tenantIdList) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("v_TENANTID", tenantVo.getTenantId());
+			
+			ezCommonDAO.insertApprBigAttachConfig(map); // 전자결재 대용량첨부 테넌트 컨피그
+		}
+		
+		ezCommonDAO.addApprBigAttachColumn(); // 전자결재 대용량첨부 관련 컬럼
+		ezCommonDAO.createApprBigAttachTable(); // 전자결재 대용량첨부 관련 테이블
+	}
+	
+	@Override
+	public void addScheduleMailNotiConfig() throws Exception {
+		ezCommonDAO.addScheduleMailNotiConfig();
+	}
+
+	@Override
+    public void createTblYearlyDocCount() throws Exception {
+	    ezCommonDAO.createTblYearlyDocCount();
+    }
+
+    @Override
+    public void insertChartPortletInfo() throws Exception {
+        if (ezCommonDAO.checkChartPortletInfo() > 0){
+            return;
+        }
+
+        logger.debug("insertChartPortletInfo started");
+
+        List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+        Map<String, Object> map = new HashMap<String, Object>();
+        int portletId = ezCommonDAO.getNewPortletId();
+        map.put("portletId", portletId);
+        map.put("portletName1", "전자문서 차트");
+        map.put("portletName2", "chart");
+        map.put("portletName3", "図表");
+        map.put("menuId", 3);
+        map.put("portletUrl", "/ezNewPortal/chartPortlet.do");
+        map.put("portletType", "G");
+        map.put("defaultOrder", 24);
+        map.put("portletUsed", 1);
+        map.put("portletOrder", 24);
+        map.put("boardId", null);
+        map.put("portletCode", "chart");
+        ezCommonDAO.insertPortletWithCode(map);
+
+        for (CompanyInfoVO company : companyList) {
+            if (company.getCompanyId() != null) {
+                map.put("companyId", company.getCompanyId());
+                map.put("tenantId", company.getTenantId());
+                ezCommonDAO.insertPortletInfoData(map); // 회사별 있는지 확인후 insert
+            }
+        }
+
+        logger.debug("insertChartPortletInfo poertletId=" + portletId + " ended");
+    }
+
+	@Override
+	public void createMailTemplateSequence() throws Exception {
+		ezCommonDAO.createMailTemplateSequence();
+	}
 }

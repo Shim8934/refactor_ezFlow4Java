@@ -20,13 +20,13 @@
 	    		padding-left:15px;
 	    	}
 	    	#left h2 {
-	    		background: url('/images/OrganTree_cross/ic-open.gif') no-repeat 6px;
+	    		background: url('/images/OrganTree_cross/ic-open.gif') no-repeat 6px 7px;
 	    	}
 	    	
 	    	#left h2.on, #TopBoards h2.on {
 	    	    font-weight: bold;
-			    background: url('/images/OrganTree_cross/ic-open.gif') no-repeat 6px;
-			    background-color: #edf4fd;
+			    background: url('/images/OrganTree_cross/ic-open.gif') no-repeat 6px 7px;
+			    background-color: #f1f8ff;
 			    color: #333333;
     			border-top: 1px solid #d1ddec;
     			border-bottom: 1px solid #d1ddec;
@@ -76,12 +76,12 @@
 	        var searchgubun = "N";
 	        var userid = "${userInfo.id}";
 	        var deptid = "${userInfo.deptID}";
-	        var companyid = "${companyID}";
+	        var companyid = "<c:out value='${companyID}'/>";
 	        var susinTo = 0;
 	        var AddressTreeView = null;
 	        var UserAgentState = navigator.userAgent.toLowerCase();
 	        var browserIE = (!CrossYN()) ? true : false;
-	        var type = "${type}";
+	        var type = "<c:out value='${type}'/>";
 	        var rulekind = "${ruleKind}";
 	        var pListType = "TXT";
 	        var pListXML_Info = null;
@@ -89,7 +89,7 @@
 	        var strSearch = "";
 	        var ua = navigator.userAgent;
 	        var tabSel = "";
-	        var deptList = JSON.parse('${deptList}');
+// 	        var deptList = '${deptList}';
 	        
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -168,15 +168,25 @@
 	                document.getElementById('TreeView').innerHTML = "";
 	                var wholeHtml = '<div id="FromTreeView" nodeclick="TreeViewNodeClick" nodedblclick="" requestdata="RequestData" selectnodeid="' + deptid + '">';
 	                wholeHtml += '<div id="left">';
-	                for (var i = 0; i < deptList.length ; i ++) {
-						if (deptList[i].authType == 'M') {
-							var html = '<h2 onclick="node_select(&quot;' + deptList[i].deptId + '&quot;, &quot;&quot;, &quot;FromTreeView&quot;, TreeViewNodeClick);" class="node_div off" id="' + deptList[i].deptId + '" nodename="' + deptList[i].deptName + '" manageflag="M" value="' + deptList[i].deptName + '" cn="'+ deptList[i].deptId +'" isleaf="TRUE" ' + 
+	                //2019-09-24 김보미 - 부서명에 특수문자(")가 있을경우에 deptList값이 잘려 부서리스트가 출력되지 않는 버그 수정
+// 	                for (var i = 0; i < deptList.length ; i ++) {
+// 						if (deptList[i].authType == 'M') {
+// 							var html = '<h2 onclick="node_select(&quot;' + deptList[i].deptId + '&quot;, &quot;&quot;, &quot;FromTreeView&quot;, TreeViewNodeClick);" class="node_div off" id="' + deptList[i].deptId + '" nodename="' + deptList[i].deptName + '" manageflag="M" value="' + deptList[i].deptName + '" cn="'+ deptList[i].deptId +'" isleaf="TRUE" ' + 
+// 							'style="padding-left:0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">';
+// 							html += '<span id="spn_' + deptList[i].deptId + '" class="node_normal" onclick="node_select(&quot;' + deptList[i].deptId + '&quot;, &quot;&quot;, &quot;FromTreeView&quot;, TreeViewNodeClick);" style="cursor: pointer; display: inline-block;">' + deptList[i].deptName + '</span>';
+// 							html += '<div id="' + deptList[i].deptId + '_sub" style="display: none;"></div></li>';
+// 							wholeHtml += html;
+// 						}
+// 					}
+					<c:forEach var="dept" items="${deptList}">
+						<c:if test="${dept.authType == 'M'}">
+							wholeHtml += '<h2 onclick="node_select(&quot;' + "<c:out value='${dept.deptId}' />" + '&quot;, &quot;&quot;, &quot;FromTreeView&quot;, TreeViewNodeClick);" class="node_div off" id="' + "<c:out value='${dept.deptId}' />" + '" nodename="' + "<c:out value='${dept.deptName}'/>" + '" manageflag="M" value="' + "<c:out value='${dept.deptName}'/>" + '" cn="'+ "<c:out value='${dept.deptId}' />" +'" isleaf="TRUE" ' + 
 							'style="padding-left:0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">';
-							html += '<span id="spn_' + deptList[i].deptId + '" class="node_normal" onclick="node_select(&quot;' + deptList[i].deptId + '&quot;, &quot;&quot;, &quot;FromTreeView&quot;, TreeViewNodeClick);" style="cursor: pointer; display: inline-block;">' + deptList[i].deptName + '</span>';
-							html += '<div id="' + deptList[i].deptId + '_sub" style="display: none;"></div></li>';
-							wholeHtml += html;
-						}
-					}
+							wholeHtml += '<span id="spn_' + "<c:out value='${dept.deptId}' />" + '" class="node_normal" onclick="node_select(&quot;' + "<c:out value='${dept.deptId}' />" + '&quot;, &quot;&quot;, &quot;FromTreeView&quot;, TreeViewNodeClick);" style="cursor: pointer; display: inline-block;">' + "<c:out value='${dept.deptName}'/>" + '</span>';
+							wholeHtml += '<div id="' + "<c:out value='${dept.deptId}' />" + '_sub" style="display: none;"></div></li>';
+							
+						</c:if>
+					</c:forEach>
 	                wholeHtml += '</div></div>';
 	                document.getElementById('TreeView').innerHTML += wholeHtml; 
 
@@ -241,7 +251,7 @@
 	            var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
 	            var nodeIdx = treeView.GetSelectNode();
-	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;margin-right:3px\" >" + nodeIdx.GetNodeData("VALUE");
+	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;margin-right:3px;margin-top:-2px;\" >" + nodeIdx.GetNodeData("VALUE");
 	            SelectDeptNM.setAttribute("countinfo", "")
 	            displayUserList(nodeIdx.GetNodeData("CN"));
 	        }
@@ -269,7 +279,7 @@
 		        });
 	        }
 	        
-		    var m_strColorSelect = "#edf4fd";
+		    var m_strColorSelect = "#f1f8ff";
 		    var m_strColorOver = "#f4f5f5";
 		    var m_strColorDefault = "#ffffff";
 		    var p_ListOrderObject = null;
@@ -443,7 +453,7 @@
 		        
 		        var UserListHTML = "";
 		        if (SelectDeptNM.getAttribute("countinfo") != "1") {
-		            SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang300 + "</span>]";
+		            SelectDeptNM.innerHTML += "&nbsp;&nbsp;<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span>";
 		            SelectDeptNM.setAttribute("countinfo", "1")
 		        }
 		        if (pListType == "IMG") {
@@ -453,7 +463,7 @@
 		            document.getElementById("txtlist_table").style.display = "none";
 		            document.getElementById("Search_txtlist_table").style.display = "none";
 		            if (pSeach) {
-		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang_2 + "" + "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang300 + "</span>]";
+		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle; margin-right:3px; margin-top:-2px;\" >" + strLang_2 + "" + "&nbsp;&nbsp;<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span>";
 		                SelectDeptNM.setAttribute("countinfo", "1")
 		            }
 		        }
@@ -468,7 +478,7 @@
 		            else {
 		                document.getElementById("Search_txtlist_table").style.display = "";
 		                document.getElementById("txtlist_table").style.display = "none";
-		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang_2 + "" + "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang300 + "</span>]";
+		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle; margin-right:3px; margin-top:-2px;\" >" + strLang_2 + "" + "&nbsp;&nbsp;<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span>";
 		                SelectDeptNM.setAttribute("countinfo", "1")
 		            }
 		        }
@@ -492,7 +502,7 @@
 		                M_TR.onmouseover = function () { event_listMover(this); };
 		                M_TR.onmouseout = function () { event_listMout(this); };
 		                M_TR.onclick = function () { event_listclick(this); };
-		                M_TR.ondblclick = function () { event_listDBclick(this); };
+		                /* M_TR.ondblclick = function () { event_listDBclick(this); }; */
 		                M_TR.onselectstart = function () { return false; };
 // 		                M_TR.setAttribute("draggable", true);
 		                if (CrossYN())
@@ -594,7 +604,7 @@
 		                M_TR.onmouseover = function () { event_listMover(this); };
 		                M_TR.onmouseout = function () { event_listMout(this); };
 		                M_TR.onclick = function () { event_listclick(this); };
-		                M_TR.ondblclick = function () { event_listDBclick(this); };
+		                /* M_TR.ondblclick = function () { event_listDBclick(this); }; */
 		                M_TR.onselectstart = function () { return false; };
 		                M_TR.setAttribute("draggable", true);
 		                if (CrossYN())
@@ -1105,6 +1115,10 @@
 	                                                        <option value="mobile" usedefault="0"><spring:message code='ezEmail.t99000046' /></option>
 	                                                        <option value="HomePhone" usedefault="0"><spring:message code='ezEmail.t29' /></option>
 	                                                        <option value="facsimileTelephoneNumber" usedefault="0"><spring:message code='ezEmail.t99000047' /></option>
+	                                                        <c:if test="${primaryLang eq '3' }">
+		                                                    <option value="extensionPhone" usedefault="0"><spring:message code='main.ksa02' /></option>
+		                                                    <option value="officeMobile" usedefault="0"><spring:message code='main.ksa03' /></option>
+		                                                    </c:if>
 	                                                        <option value="mail" usedefault="0"><spring:message code='ezEmail.t99000048' /></option>
 	                                                        <option value="streetAddress" usedefault="0"><spring:message code='ezEmail.t99000049' /></option>
 	                                                    </select>
@@ -1115,7 +1129,7 @@
 	                                            </td>
 	                                            <td>
 	                                                <div style="float: right; margin-right: 5px; position: relative;">
-	                                                    <a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezEmail.t597' /></span></a>
+	                                                    <a class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezEmail.t597' /></span></a>
 	                                                </div>
 	                                            </td>
 	                                        </tr>
@@ -1126,14 +1140,14 @@
 	                                <tr>
 	                                    <td class="box" style="border-right:0px;padding: 0px;">
 <!-- 	                                        <div style="width: 220px; height: 465px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div> -->
-	                                        <div style="width: 220px; height: 473px; overflow-x: auto; overflow-y: auto; padding: 0px;" id="TreeView"></div>
+	                                        <div style="width: 220px; height: 485px; overflow-x: auto; overflow-y: auto; padding: 0px;" id="TreeView"></div>
 	                                    </td>
 	                                    <td></td>
 	                                    <td class="listview" style="width: 432px" id="orglistView">
 	                                        <table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
 	                                            <tr>
 	                                                <th style="white-space:normal;background-color: white;border-top:1px solid #ddd;border-bottom:1px solid #eaeaea">
-	                                                    <span id="SelectDeptNM" style="font-weight: normal;margin-top:2px; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
+	                                                    <span id="SelectDeptNM" style="font-weight: normal; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: middle;"></span>
 	                                                    <span style="float:right; position: relative;">
 	                                                        <span onclick="ChangeListView_onClick('TXT');">
 	                                                            <img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist"></span>

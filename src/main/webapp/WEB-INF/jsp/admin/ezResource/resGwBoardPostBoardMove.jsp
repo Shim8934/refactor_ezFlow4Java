@@ -12,17 +12,17 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezResource/admin/gwBoardsInfo.js')}" ></script>
 		<script type="text/javascript" id="clientEventHandlersJS" >
-			var pUserID = "${userInfo.id}"
-			var pDeptID = "${userInfo.deptID}"
-			var g_BrdID = "${brdID}";
-			var L_brd_level = "${brdLevel}";
-			var L_brd_ref = "${brdRef}";
-			var pCompanyID = "${selCompanyID}";
+			var pUserID = "<c:out value='${userInfo.id}'/>";
+			var pDeptID = "<c:out value='${userInfo.deptID}'/>";
+			var g_BrdID = "<c:out value='${brdID}'/>";
+			var L_brd_level = "<c:out value='${brdLevel}'/>";
+			var L_brd_ref = "<c:out value='${brdRef}'/>";
+			var pCompanyID = "<c:out value='${selCompanyID}'/>";
 
 			var p_SrcBrdID = g_BrdID;		
 			var p_SrcBrdLevel = L_brd_level;
 			var p_SrcBrdRef = L_brd_ref;	
-			var p_SrcBrdUpper = "${brdUpper}";
+			var p_SrcBrdUpper = "<c:out value='${brdUpper}'/>";
 			var p_TBrd_Level;	
 			var p_TBrd_Ref;		
 			var p_TBrd_ID;		

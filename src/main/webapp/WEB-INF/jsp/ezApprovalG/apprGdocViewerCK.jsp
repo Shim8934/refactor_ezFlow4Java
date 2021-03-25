@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 	<head>
 	    <title><spring:message code='ezApprovalG.t367'/></title>
@@ -10,7 +11,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody_Cross.js')}"></script>
 	    <script type="text/javascript">
-	        var pDocHref = "${docID}";
+	        var pDocHref = "<c:out value ='${docID}'/>";
 	        
 	        var flag = false;
 	        window.onload = function () {

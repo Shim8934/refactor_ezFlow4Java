@@ -125,6 +125,7 @@ function GetDraftAprLineInfo(ret) {
     if (OrderType.length > 2)
 		NextAprType = OrderType[2];
     
+    var chkGamsa = false;
 	LastSignSN = OrderType.length
     
     for(i=1;i<OrderType.length;i++)
@@ -135,8 +136,15 @@ function GetDraftAprLineInfo(ret) {
 			i = OrderType.length
 		}
 		
-		else if (OrderType[i] == strAprType18 || OrderType[i] == strAprType19 || OrderType[i] == strAprType1 || OrderType[i] == strAprType3 || OrderType[i] == strAprType13)
+		else if (OrderType[i] == strAprType18 || OrderType[i] == strAprType19 || OrderType[i] == strAprType1 || OrderType[i] == strAprType3)
+		{
     		LastSignSN = i;
+		}
+		
+		else if (OrderType[i] == strAprType13)
+		{
+        	chkGamsa = true;
+	    }
     }
     
     
@@ -176,7 +184,7 @@ function GetDraftAprLineInfo(ret) {
 	for(i=1;i < OrderJobtitle.length;i ++)
 	{
 		
-		if(OrderType[i] == strAprType18 || OrderType[i] == strAprType19 || OrderType[i] == strAprType1  || OrderType[i] == strAprType16 || OrderType[i] == strAprType3 || OrderType[i] == strAprType4 || OrderType[i] ==strAprType13)
+		if(OrderType[i] == strAprType18 || OrderType[i] == strAprType19 || OrderType[i] == strAprType1  || OrderType[i] == strAprType16 || OrderType[i] == strAprType3 || OrderType[i] == strAprType4)
 		{
 			fieldname = "jikwe" + idx;
 			if (HwpCtrl.CheckFieldExist(fieldname))
@@ -213,7 +221,22 @@ function GetDraftAprLineInfo(ret) {
 					HwpCtrl.SetFieldText(fieldname, strLang76 + HwpCtrl.GetFieldText(fieldname));
 			}
 			hidx = hidx + 1;
-		}	
+		}
+		
+	    if (chkGamsa) {
+	        fieldname = "deptgamsaname";
+	        field = HwpCtrl.CheckFieldExist(fieldname);
+	        if (field) {
+	            HwpCtrl.SetFieldText(fieldname, "감    사");
+	        }
+	    }
+	    else {
+	        fieldname = "deptgamsaname";
+	        field = HwpCtrl.CheckFieldExist(fieldname);
+	        if (field) {
+	            HwpCtrl.SetFieldText(fieldname, "");
+	        }
+	    }
 	}
 	
 	
@@ -377,6 +400,24 @@ function ClearDocCellInfo()
 			HwpCtrl.SetFieldBackImage(fieldname, "");
 		}
 		
+        fieldname = "deptgamsaname";
+        if (HwpCtrl.CheckFieldExist(fieldname))
+        {
+        	HwpCtrl.SetFieldText(fieldname, "");
+        }
+
+        fieldname = "deptgamsasign";
+        if (HwpCtrl.CheckFieldExist(fieldname))
+        {
+        	HwpCtrl.SetFieldText(fieldname, "");
+			HwpCtrl.SetFieldBackImage(fieldname, "");
+        }
+
+        fieldname = "deptgamsadate";
+        if (HwpCtrl.CheckFieldExist(fieldname))
+        {
+        	HwpCtrl.SetFieldText(fieldname, "");
+        }
 		
 		fieldname = "opinions";
 		if (HwpCtrl.CheckFieldExist(fieldname))
@@ -660,122 +701,26 @@ function setDrafterAddress() {
 	SetDocumentElement(HwpCtrl, "lastKyuljikwee", lastKyuljiwee);
 }
 
-function openFormUI()
+function openFormUIHwp()
 {
-	try
-	{
+	try {
 		var parameter = new Array();
 		parameter[0] = arr_userinfo[4];
 		parameter[1] = "000";				
 
-		var url = "/ezApprovalG/getFormCont.do?fileType=hwp";
-		var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no"
-		var ret = window.showModalDialog(url,parameter,feature);
-
-		pFormHref = ret[0];
-		pDocType  = ret[1];
+		getformcont_cross_dialogArguments[0] = parameter;
+		getformcont_cross_dialogArguments[1] = openFormUI_CompleteHwp;
 		
-		if(pFormHref == "PC")
-		{
-			pReadPC = true;
-			
-			var rtnval = HwpCtrl.LoadFile("", false);
-			
-			lstAttachLink.innerHTML = "";
-			AppendFileAttach = "";
-			AppenAprDocAttachList = "";
-  			window_onbeforeunload();
-  			pFormID = ""
-  			pDocID = ""
-  			pDraftFlag = "DRAFT";
-
-			pSummery = "";
-			pSpecialRecordCode = "";
-			pPublicityCode = "";
-			pLimitRange = "";
-			pPageNum = "1";
-			cabinetID = "";
-			TaskCode = "";
-			DocNumCode = "";	  		
-			
-			tempSecurity = "";
-			tempKeep = "";
-			tempUrgent = "N";
-			tempPublic = "Y";
-			tempKeyword = "";
-			tempItemCode = "";
-			tempItemName = "";
-			tempdocnumcode = strLang107;
-			
-			tempSecurityDate = "";
-				
-			FieldsAvailable(rtnval);
-		}
-		else
-		{
-	  		if(pFormHref != "cancel")
-	  		{
-	  			HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
-	  			
-	  			var isTrue = HwpCtrl.LoadFile(document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(pFormHref), false);
-	  			
-	  			pReadPC = false;
-		  		
-	  			pFormID = ""
-	  			pDocID = ""
-	  			SetBtnStateTrue();
-		  		
-	  			lstAttachLink.innerHTML = "";
-				AppendFileAttach = "";
-				AppenAprDocAttachList = "";
-	  			window_onbeforeunload();
-	  			pFormID = ""
-	  			pDocID = ""
-	  			pDraftFlag = "DRAFT";
-
-				pSummery = "";
-				pSpecialRecordCode = "";
-				pPublicityCode = "";
-				pLimitRange = "";
-				pPageNum = "1";
-				cabinetID = "";
-				TaskCode = "";
-				DocNumCode = "";
-				
-				tempSecurity = "";
-				tempKeep = "";
-				tempUrgent = "N";
-				tempPublic = "Y";
-				tempKeyword = "";
-				tempItemCode = "";
-				tempItemName = "";
-				tempdocnumcode = strLang107;
-				
-				tempSecurityDate = "";
-				
-				FieldsAvailable(isTrue);
-	  		}
-		}	
-	}
-	catch(e)
-	{
+		var OpenUrl = "/ezApprovalG/getFormCont.do?fileType=hwp";
+		
+        var OpenWin = window.open(OpenUrl , "getFormCont", GetOpenWindowfeature(713, 570));
+        
+        try { OpenWin.focus(); } catch (e) { }
+        
+        
+	} catch (e) {
 		alert("openFormUI()" + e.description);
 	}
-}
-
-function Form_check()
-{
-  try{
-    var url = "/ezApprovalG/formCheckUI.do";
-	var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no;edge:sunken";
-	var ret = window.showModalDialog(url, "", feature);
-	var pCheck = ret;
-	
-	if(pCheck == "ok")
-		return "OK";
-  }catch(e){
-	alert("openFormUI()" + e.description);
-  }
 }
 
 function SetBtnStateFalse()
@@ -825,6 +770,9 @@ function SetBtnStateTrue()
 //		else {
 //		    setMenuBar("btnSaveServer", true);
 //		}ddd
+
+		//setFormAprOption();  //결재 세부옵션
+
 	}catch(e){
 		alert("SetBtnStateTrue()" + e.description);
 	}
@@ -1107,6 +1055,10 @@ function SetAutoPropertyValue()
 	}
 	
 	pChamJoFlag = "Y";
+	
+    if (HwpCtrl.CheckFieldExist("deptgamsasign")) {
+        deptgamsaCount = 1;
+    }
 //  }catch(e){	
 //	alert("SetAutoPropertyValue()" + e.description);
 //  }
@@ -1258,7 +1210,7 @@ function openFileAttachUI()
   try{
 	var parameter = pDocID;
 	var url = "/ezApprovalG/aprAttach.do?formID=" + pFormID + "&docID=" + pDocID + "&draftFlag=" + pDraftFlag + "&orgCompanyID=" + orgCompanyID + "&ext=" + "hwp";
-	var feature	= "status:no;dialogWidth:540px;dialogHeight:390px;edge:sunken;scroll:no"; 
+	var feature	= "status:no;dialogWidth:800px;dialogHeight:610px;edge:sunken;scroll:no"; 
 	var ret = window.showModalDialog(url, parameter, feature);
 
 	if (ret != "cancel") {
@@ -1277,7 +1229,7 @@ function openAaprDocAttachUI()
   try{
 	var parameter = pDocID;
 	var url = "/ezApprovalG/aprCabinetAttach.do?draftFlag=" + pDraftFlag;
-	var feature	= "status:no;dialogWidth:1050px;dialogHeight:500px;edge:sunken;scroll:no;help:no"; 
+	var feature	= "status:no;dialogWidth:1050px;dialogHeight:520px;edge:sunken;scroll:no;help:no"; 
 	var ret = window.showModalDialog(url,parameter,feature);
 
 	if(ret != "cancel")
@@ -1577,17 +1529,20 @@ function setDocNumFormat(pPrefix)
 //구현해야하는부분
 function SaveFile() {
 	var result = "";
+
+	var data = {
+		docID : pDocID,
+		formId : pFormID,
+		html  : HwpCtrl.GetCloneData("", "HWP")
+	}
 	
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/saveFileHWP.do",
-		data : {
-			docID : pDocID,
-			formId : pFormID,
-			html  : HwpCtrl.GetCloneData("", "HWP")
-		},
+		contentType : "application/json",
+		data : JSON.stringify(data),
 		success: function(text){
 			result = text;
 		}        			
@@ -1598,17 +1553,20 @@ function SaveFile() {
 
 function SaveOrgFile() {
 	var result = "";
+
+	var data = {
+		docID : pDocID,
+		formId : pFormID,
+		html  : pOrgHtml
+	}
 	
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/saveFileHWP.do",
-		data : {
-			docID : pDocID,
-			formId : pFormID,
-			html  : pOrgHtml
-		},
+		contentType : "application/json",
+		data : JSON.stringify(data),
 		success: function(text){
 			result = text;
 		}        			
@@ -1706,17 +1664,28 @@ function putSignXML(SignXML)
 
 function SaveTMPFile() {
     var result = "";
+
+    var docID = "";
+    if(Saveflag) {
+    	docID = newpDocID;
+    }
+    else {
+    	docID = pDocID
+    }
+    
+	var data = {
+		docID : docID,
+		formId : pFormID,
+		html  : HwpCtrl.GetCloneData("", "HWP")
+	}
     
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/saveTmpFileHWP.do",
-		data : {
-			docID : pDocID,
-			formId : pFormID,
-			html  : HwpCtrl.GetCloneData("", "HWP")
-		},
+		contentType : "application/json",
+		data : JSON.stringify(data),
 		success: function(text){
 			result = text;
 		}        			
@@ -1725,7 +1694,7 @@ function SaveTMPFile() {
     return result;
 }
 
-function SaveTMPDocInfo(AutoSave, saveflag, pState, phtml) {
+function SaveTMPDocInfo(AutoSave, Saveflag, pState, phtml) {
     try {
         var objRoot;
         var objNode;
@@ -1735,7 +1704,10 @@ function SaveTMPDocInfo(AutoSave, saveflag, pState, phtml) {
         var objNode;
         createNodeInsert(xmlpara, objNode, "PARAMETER");
 
-        createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
+        if(Saveflag) 
+        	createNodeAndInsertText(xmlpara, objNode, "DOCID", newpDocID);
+        else
+        	createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
         createNodeAndInsertText(xmlpara, objNode, "FORMID", pFormID);
         if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI")
             createNodeAndInsertText(xmlpara, objNode, "ORGDOCID", pOrgDocID);
@@ -1823,6 +1795,11 @@ function SaveTMPDocInfo(AutoSave, saveflag, pState, phtml) {
         createNodeAndInsertText(xmlpara, objNode, "WRITERDEPTNAME2", arr_userinfo[16]);
         createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", arr_userinfo[12]);
         createNodeAndInsertText(xmlpara, objNode, "ITEMNAME2", tempItemName);
+        
+        if(Saveflag) {
+        	createNodeAndInsertText(xmlpara, objNode, "saveFlag", Saveflag);
+        	createNodeAndInsertText(xmlpara, objNode, "oldDocID", pDocID);
+        }
         //수상하지만 일단 지움
 //        if (Saveflag)
 //            xmlhttp.open("POST", "/ezApprovalG/doDraftTmpHWP.do", false);
@@ -1849,4 +1826,122 @@ function OpenInformationUI(pInformationContent) {
 	var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
 	var RtnVal = window.showModalDialog(url,parameter,feature);
 	return RtnVal;
+}
+
+//결재 세부옵션처리
+function setFormAprOption(){  
+    if(formAprOption.indexOf("_a2_"))  //파일첨부
+        setMenuBar("btnFileAttach", false);	
+    if(formAprOption.indexOf("_a3_"))  //문서첨부
+        setMenuBar("btnAprDocAttach", false);	
+}
+
+
+function openFormUI_CompleteHwp(ret) {
+	pFormHref = ret[0];
+	pDocType = ret[1];
+
+	if(pFormHref == "PC")
+	{
+		pReadPC = true;
+
+		var rtnval = HwpCtrl.LoadFile("", false);
+
+		lstAttachLink.innerHTML = "";
+		AppendFileAttach = "";
+		AppenAprDocAttachList = "";
+		window_onbeforeunload();
+		pFormID = ""
+			pDocID = ""
+				pDraftFlag = "DRAFT";
+
+		pSummery = "";
+		pSpecialRecordCode = "";
+		pPublicityCode = "";
+		pLimitRange = "";
+		pPageNum = "1";
+		cabinetID = "";
+		TaskCode = "";
+		DocNumCode = "";	  		
+
+		tempSecurity = "";
+		tempKeep = "";
+		tempUrgent = "N";
+		tempPublic = "Y";
+		tempKeyword = "";
+		tempItemCode = "";
+		tempItemName = "";
+		tempdocnumcode = strLang107;
+
+		tempSecurityDate = "";
+
+		FieldsAvailable(rtnval);
+	}
+	else
+	{
+		if(pFormHref != "cancel")
+		{
+			HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
+
+			var isTrue = HwpCtrl.LoadFile(document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(pFormHref), false);
+
+			pReadPC = false;
+
+			pFormID = ""
+				pDocID = ""
+					SetBtnStateTrue();
+
+			lstAttachLink.innerHTML = "";
+			AppendFileAttach = "";
+			AppenAprDocAttachList = "";
+			window_onbeforeunload();
+			pFormID = ""
+				pDocID = ""
+					pDraftFlag = "DRAFT";
+
+			pSummery = "";
+			pSpecialRecordCode = "";
+			pPublicityCode = "";
+			pLimitRange = "";
+			pPageNum = "1";
+			cabinetID = "";
+			TaskCode = "";
+			DocNumCode = "";
+
+			tempSecurity = "";
+			tempKeep = "";
+			tempUrgent = "N";
+			tempPublic = "Y";
+			tempKeyword = "";
+			tempItemCode = "";
+			tempItemName = "";
+			tempdocnumcode = strLang107;
+
+			tempSecurityDate = "";
+
+			FieldsAvailable(isTrue);
+		}
+	}	
+}
+
+function Form_checkHwp() {
+    try {
+        form_check_ui_cross_dialogArguments[0] = "";
+        form_check_ui_cross_dialogArguments[1] = Form_check_CompleteHwp;
+        
+        var OpenUrl = "/ezApprovalG/formCheckUI.do";
+        
+        var OpenWin = window.open(OpenUrl , "formCheckUI", GetOpenWindowfeature(330, 205));
+        
+        try { OpenWin.focus(); } catch (e) { }
+
+    } catch (e) {
+        alert("openFormUI()" + e.description);
+    }
+}
+
+function Form_check_CompleteHwp(pCheck) {
+
+    if (pCheck.toUpperCase() == "OK")
+        openForm();
 }

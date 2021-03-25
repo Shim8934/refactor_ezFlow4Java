@@ -18,7 +18,7 @@ function setSignSlash(pSignKinds, pSusin) {
     var field, fieldvalue;
     var tempFieldName;
     var fields = message.GetFieldsList();
-    for (i = 1; i < 20; i++) {
+    for (i = 1; i < 21; i++) {
         fieldName = pSusin + pSignKinds + i;
         field = message.GetListItem(fields, fieldName);
         if (field) {
@@ -33,6 +33,10 @@ function setSignSlash(pSignKinds, pSusin) {
                 strimg = strimg + "' width=" + signWidth;
                 strimg = strimg + " height=" + signHeight + " imglock >";
                 field.innerHTML = strimg;
+            }
+            /* 2020-07-24 홍승비 - 전자결재 일반버전의 경우, 서명과 결재자명 필드 구분하도록 수정 */
+            else if (trim(fieldvalue) == "[NOSLASH]") {
+            	field.innerHTML = " ";
             }
         }
     }

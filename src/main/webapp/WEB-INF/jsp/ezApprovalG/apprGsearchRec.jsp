@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -26,10 +28,11 @@
 		<script type="text/javascript" ID="clientEventHandlersJS" >
 		    var OrderCell = "";
 		    var rtnVal = new Array();
-		    var g_AdminYN,g_DeptCode, g_DeptName;
+		    var g_AdminYN,g_DeptCode, g_DeptName, g_Listtype, g_Roleinfo;
 		    var g_SelChargerID="";
-		    var CompanyID = "${userInfo.companyID}";
+		    var CompanyID = "<c:out value='${userInfo.companyID}'/>";
 		    var opnOption = "0";
+			var orgDeptID;
 		    var RetValue;
 		    var ReturnFunction;
 		    var winFlag;
@@ -59,11 +62,18 @@
 		        g_DeptCode = RetValue[1];
 		        g_DeptName = RetValue[2];
 		        opnOption = RetValue[3];
+		        g_Listtype = RetValue[4];
+		        g_Roleinfo = RetValue[5];
 		        rtnVal[0] = "FALSE";
+
+				orgDeptID = g_DeptCode;
 		        
 		        InitCode();
 		        document.getElementById("txtDeptName").value = g_DeptName;
 		        if (opnOption == "1") trDept.style.display = "none";
+		        
+		      	//엔터키 눌렀을때도 검색 실행
+		        $(".text").attr("onkeyup", "enterkey(event)");
 		    };
 		
 		    $(function () {
@@ -72,7 +82,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true,
 		            onClose: function (selectedDate) {
 		            	$("#Edatepicker").datepicker("option", "minDate", selectedDate);
@@ -83,7 +93,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true,
 		            onClose: function (selectedDate) {
 		            	$("#Sdatepicker").datepicker("option", "maxDate", selectedDate);
@@ -200,11 +210,16 @@
 		    * 검색조건을 XML로 만들기
 		    */
 		    function GetCabSearchParamXml() {
+				var tempDeptID = g_DeptCode;
+				if ((g_Listtype === "m12" || g_Listtype === "m13") && g_Roleinfo.indexOf("i=1;") > -1 && g_DeptCode === orgDeptID) {
+					tempDeptID = "ALL";
+				}
+
 		        var oXml = createXmlDom();
 		        var oRoot = "";
 		        var oData = "";
 		        createNodeInsert(oXml, oRoot, "SEARCHPARAM");
-		        createNodeAndInsertText(oXml, oData, "DEPTCODE", g_DeptCode);
+		        createNodeAndInsertText(oXml, oData, "DEPTCODE", tempDeptID);
 		        createNodeAndInsertText(oXml, oData, "TITLE", document.getElementById("txtTitle").value);
 		        createNodeAndInsertText(oXml, oData, "REGTYPE", selRegisterType.value);
 		        createNodeAndInsertText(oXml, oData, "SREGDATE", GetRegSDate());
@@ -250,9 +265,22 @@
 		            window.close();
 		        }
 		    }
+		    
+		    function enterkey(e) {
+		        if (window.event) {
+		            if (window.event.keyCode == 13) {
+		            	btnSearch_onclick();
+		            }
+		        }
+		        else {
+		            if (e.which == 13) {
+		            	btnSearch_onclick();
+		            }
+		        }
+			}
 		</script>
 	</head>
-	<body class="popup" style="margin-left:0px;margin-top:0px">
+	<body class="popup">
 		<h1><spring:message code='ezApprovalG.t1104'/></h1>
 		<div id="close">
             <ul>
@@ -260,7 +288,7 @@
             </ul>
         </div>
 		<table class="content" style="width:100%" >
-		  <tr  id="trDept"> 
+		  <tr  id="trDept" style="display:none"> 		<!-- 2020-09-16 김민성 - 등록대장, 접수목록, 발송목록의 상세검색에서 처리과 탭 기본 안나타나게 수정 -->
 		    <th style="WIDTH:80px;" > <spring:message code='ezApprovalG.t1105'/></th>
 		    <td style=" WIDTH:270px" > 
 		      <input class="text" name="txtDeptName" id=txtDeptName disabled>

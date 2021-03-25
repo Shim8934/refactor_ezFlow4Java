@@ -18,7 +18,6 @@ import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
 import egovframework.ezMobile.ezPortal.vo.MPortalTimeLineVO;
-import egovframework.let.user.login.vo.LoginDeviceVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
@@ -61,6 +60,13 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 			} else {
 				info.setPrimary("2");				
 			}
+			
+			// 20210305 조진호 - 	모바일 그룹웨어를 한번도 로그인 하지 않은 사용자는 TBL_USERMOBILEINFO TABLE에 DATA가 없어서 lang과 timeZone(offset)이 Null이라 추가 해줌. 
+			//					offset이 Null 경우 mobile gateway api 호출시 데이터 반환 하지 못함
+			if (info.getOffSet() == null) {
+				info.setOffSet("235|+09:00");
+			}
+
 		}
 		
 		LOGGER.debug("commonInfo ended");
@@ -120,7 +126,7 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 	}
 
 	@Override
-	public List<MPortalTimeLineVO> getTimeLineList(MCommonVO info, String sessionDate, String listCnt) throws Exception {
+	public List<MPortalTimeLineVO> getTimeLineList(MCommonVO info, String sessionDate, String listCnt, String approvalAccess, String boardAccess) throws Exception {
 		LOGGER.debug("getTimeLineList started");
 		
 		String userIDS = "'" + info.getUserId() + "'";
@@ -141,6 +147,8 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 		map.put("tenantID", info.getTenantId());
 		map.put("companyID", info.getCompanyId());
 		map.put("primary", info.getPrimary());		
+		map.put("approvalAccess", approvalAccess);
+		map.put("boardAccess", boardAccess);
 		
 		List<MPortalTimeLineVO> mPortalTimeLineVOs = mOptionDAO.getTimeLineList(map);
 

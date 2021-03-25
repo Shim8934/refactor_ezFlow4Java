@@ -65,7 +65,7 @@
 	            	changeYear: true,
 	            	autoSize: true,
 	            	showOn: "both",
-	            	buttonImage: "/images/ImgIcon/calendar-month.gif",
+	            	buttonImage: "/images/ImgIcon/calendar-month.png",
 	            	buttonImageOnly: true
 	        	});
 	        	$("#Edatepicker").datepicker({
@@ -73,7 +73,7 @@
 		            changeYear: true,
 	    	        autoSize: true,
 	            	showOn: "both",
-	            	buttonImage: "/images/ImgIcon/calendar-month.gif",
+	            	buttonImage: "/images/ImgIcon/calendar-month.png",
 	            	buttonImageOnly: true
 	        	});
 
@@ -383,18 +383,18 @@
     			<td  style="padding:10px;height:85px"><input id="optY1" type="radio" name="optYearly" value="radiobutton" checked>
             		<label for="optY1"><spring:message code="ezResource.t297"/>&nbsp;</label>
             		<select name="select" id="list_Month" onFocus='window.document.all["optYearly"][0].checked=true;'>
-              			<option value="1">1<spring:message code="main.t00049"/></option>
-              			<option value="2">2<spring:message code="main.t00049"/></option>
-              			<option value="3">3<spring:message code="main.t00049"/></option>
-              			<option value="4">4<spring:message code="main.t00049"/></option>
-              			<option value="5">5<spring:message code="main.t00049"/></option>
-              			<option value="6">6<spring:message code="main.t00049"/></option>
-              			<option value="7">7<spring:message code="main.t00049"/></option>
-              			<option value="8">8<spring:message code="main.t00049"/></option>
-              			<option value="9">9<spring:message code="main.t00049"/></option>
-              			<option value="10">10<spring:message code="main.t00049"/></option>
-              			<option value="11">11<spring:message code="main.t00049"/></option>
-              			<option value="12">12<spring:message code="main.t00049"/></option>
+              			<option value="1"><spring:message code='ezSchedule.t382' /></option>
+						<option value="2"><spring:message code='ezSchedule.t383' /></option>
+						<option value="3"><spring:message code='ezSchedule.t384' /></option>
+						<option value="4"><spring:message code='ezSchedule.t385' /></option>
+						<option value="5"><spring:message code='ezSchedule.t386' /></option>
+						<option value="6"><spring:message code='ezSchedule.t387' /></option>
+						<option value="7"><spring:message code='ezSchedule.t388' /></option>
+						<option value="8"><spring:message code='ezSchedule.t389' /></option>
+						<option value="9"><spring:message code='ezSchedule.t390' /></option>
+						<option value="10"><spring:message code='ezSchedule.t391' /></option>
+						<option value="11"><spring:message code='ezSchedule.t392' /></option>
+						<option value="12"><spring:message code='ezSchedule.t393' /></option>
             		</select>
             		
             		<input name="Input" class="text" id="list_YearlyDays" style="Width:40px;text-align:center;" onFocus='window.document.all["optYearly"][0].checked=true;' maxlength="2">&nbsp;
@@ -404,18 +404,18 @@
 					<label for="optY2" accesskey="E"><spring:message code="ezResource.t300"/>&nbsp;</label>
 					
             		<select name="select" id="list_Month2" onFocus='window.document.all["optYearly"][1].checked=true;'>
-              			<option value="1">1<spring:message code="main.t00049"/></option>
-              			<option value="2">2<spring:message code="main.t00049"/></option>
-              			<option value="3">3<spring:message code="main.t00049"/></option>
-              			<option value="4">4<spring:message code="main.t00049"/></option>
-              			<option value="5">5<spring:message code="main.t00049"/></option>
-              			<option value="6">6<spring:message code="main.t00049"/></option>
-              			<option value="7">7<spring:message code="main.t00049"/></option>
-              			<option value="8">8<spring:message code="main.t00049"/></option>
-              			<option value="9">9<spring:message code="main.t00049"/></option>
-              			<option value="10">10<spring:message code="main.t00049"/></option>
-              			<option value="11">11<spring:message code="main.t00049"/></option>
-              			<option value="12">12<spring:message code="main.t00049"/></option>
+              			<option value="1"><spring:message code='ezSchedule.t382' /></option>
+						<option value="2"><spring:message code='ezSchedule.t383' /></option>
+						<option value="3"><spring:message code='ezSchedule.t384' /></option>
+						<option value="4"><spring:message code='ezSchedule.t385' /></option>
+						<option value="5"><spring:message code='ezSchedule.t386' /></option>
+						<option value="6"><spring:message code='ezSchedule.t387' /></option>
+						<option value="7"><spring:message code='ezSchedule.t388' /></option>
+						<option value="8"><spring:message code='ezSchedule.t389' /></option>
+						<option value="9"><spring:message code='ezSchedule.t390' /></option>
+						<option value="10"><spring:message code='ezSchedule.t391' /></option>
+						<option value="11"><spring:message code='ezSchedule.t392' /></option>
+						<option value="12"><spring:message code='ezSchedule.t393' /></option>
             		</select>
             		<select name="select" id="list_YearlyEach" onFocus='window.document.all["optYearly"][1].checked=true;'>
               			<option value="1"><spring:message code="ezResource.t301"/></option>
@@ -449,9 +449,9 @@
 		        	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly" onchange="timeChecker('sDate')"/>
 		    	</td>
 		  	</tr>
-		  	<tr>
+		  	<%-- <tr>
 		    	<td><input type="radio" name="optRangeEnd" value="radiobutton" value="-1" checked><spring:message code='ezResource.t314' /></td>
-		  	</tr>
+		  	</tr> --%>
 		  	<tr>
 		    	<td>
 		    		<input type="radio" id="Instances" name="optRangeEnd"  value="radiobutton" value="1"/><spring:message code='ezResource.t315' />
@@ -460,7 +460,7 @@
 		  	</tr>
 		  	<tr>
 		    	<td>
-		    		<input id="EndTimeSet" type="radio" name="optRangeEnd" value="radiobutton" value="0"/><spring:message code='ezResource.t317' />
+		    		<input id="EndTimeSet" type="radio" name="optRangeEnd" value="radiobutton" value="0" checked/><spring:message code='ezResource.t317' />
 		      		<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly" onchange="timeChecker('eDate')"/>
 		    	</td>
 		  	</tr>

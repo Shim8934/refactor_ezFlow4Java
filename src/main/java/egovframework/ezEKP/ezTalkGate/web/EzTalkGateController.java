@@ -3,12 +3,15 @@ package egovframework.ezEKP.ezTalkGate.web;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -31,6 +35,7 @@ import egovframework.ezEKP.ezTalkGate.util.EzTalkGateUtil;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.web.LoginController;
+import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -73,6 +78,48 @@ public class EzTalkGateController {
     @Resource(name = "EzCommonService")
     private EzCommonService ezCommonService;
     
+	@Resource(name = "EzApprovalGService")
+	private EzApprovalGService ezApprovalGService;
+
+	@RequestMapping("/ezTalkGate/getUserCn.do")
+	@ResponseBody
+	public JSONObject getUserCn(@RequestParam String userId, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getUserCn started.");
+
+		Map<String, Object> result = new HashMap<>();
+		String userCn = userId;
+		// 1 성공 2 실패
+		String value = "1";
+
+		try {
+			String serverName = request.getServerName();
+			int tenantId = loginService.getTenantId(serverName);
+			logger.debug("serverName={}, tenantId={}, uesrId={}", serverName, tenantId, userId);
+
+			LoginVO login = new LoginVO();
+			login.setId(userId);
+			login.setDn("NOPASSWORD");
+			login.setTenantId(tenantId);
+			LoginVO user = loginService.selectUser(login);
+
+			if (user == null || user.getId() == null) {
+				value = "2";
+			} else {
+				userCn = user.getId();
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			value = "2";
+		}
+
+		result.put("userCn", userCn);
+		result.put("value", value);
+
+		logger.debug("getUserCn ended. result={}", result);
+
+		return new JSONObject(result);
+	}
+
     @RequestMapping("/ezTalkGate/tokenLogin.do")
     @ResponseBody
     public String ezTalkTokenLogin(
@@ -121,6 +168,12 @@ public class EzTalkGateController {
 					if (mobileUsed > 0) {
 						logger.debug("userId=" + userId + ", no use mobile login by deviceInfo.");
 						result = "N";
+					}
+
+					if ("YES".equals(ezCommonService.getTenantConfig("useLoginStop", tenantId)) && ezOrganAdminService.checkStopUser(userId, tenantId) > 0) {
+						// 사용자 정지 리턴
+						logger.debug("userId={}, stoped user.", userId);
+						result = "S";
 					}
 				}
 			}
@@ -193,6 +246,16 @@ public class EzTalkGateController {
 						}
 					}
 				}
+				
+				// 사용자정지 여부를 체크
+				String useLoginStop = ezCommonService.getTenantConfig("useLoginStop", tenantId);
+				
+				if (useLoginStop != null && useLoginStop.equals("YES")) {
+					int flag = ezOrganAdminService.checkStopUser(userId, tenantId);
+					if(flag > 0) {
+						result = "STOPUSER";
+					}
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -224,23 +287,52 @@ public class EzTalkGateController {
         
         logger.debug("serverName=" + serverName + ",serverPort=" + serverPort + ",tenantId=" + tenantId);
 		
-		boolean isUserExists = checkIfUserExists(orgId, orgPw, tenantId);
+		boolean isUserExists = checkIfUserExists(orgId, tenantId);
 		
 		logger.debug("isUserExists=" + isUserExists);
 		
 		if (isUserExists) {
+			// 정지된 사용자는 그룹웨어로 접속할 수 없게 해야함
+			String useLoginStop = ezCommonService.getTenantConfig("useLoginStop", tenantId);
+
+			if ("YES".equals(useLoginStop)) {
+				int flag = ezOrganAdminService.checkStopUser(orgId, tenantId);
+				if (flag > 0) {
+					logger.debug("stoped user: {}", orgId);
+					logger.debug("ezTalkGateMain ended.");
+
+					return "cmm/error/stopedUserDenied";
+				}
+			}
+
 			String encryptedPw = EgovFileScrty.encryptPassword(orgPw, orgId);
 			
 			OrganUserVO userVO = ezOrganAdminService.getUserInfo(orgId, "1", tenantId);
 			String deptId = userVO.getDepartment();
 			String compId = userVO.getPhysicalDeliveryOfficeName();
 			
-			loginController.createLoginCookie(orgId, orgPw, encryptedPw, tenantId, request, response, deptId, compId);
+			// sso 접속시에도 로그인 이력 남도록 추가  
+			LoginVO setVo = new LoginVO();
+			setVo.setId(orgId);
+			setVo.setTenantId(tenantId);
+			setVo.setDn("NOPASSWORD");
 			
+			LoginVO vo = loginService.selectUser(setVo);
+			
+			vo.setIp(ClientUtil.getClientIP(request));
+			vo.setAgent(ClientUtil.getClientInfo(request, "agent"));
+			vo.setOs(ClientUtil.getClientInfo(request, "os"));
+			vo.setBrowser(ClientUtil.getClientInfo(request, "browser"));
+			vo.setTenantId(tenantId);
+			
+			loginService.insertLog(vo);
+			
+			loginController.createLoginCookie(orgId, orgPw, encryptedPw, tenantId, request, response, deptId, compId);
+						
 			logger.debug("ezTalkGateMain ended.");
 			
 			if (ezTalkSsoType.equals("mail")) {
-				return "redirect:/ezEmail/mailList.do";
+				return "redirect:/ezEmail/mailMain.do";
 			} else if (ezTalkSsoType.equals("approval")) { 
 				return "redirect:/ezApprovalG/aprManage.do?listType=1&subQuery=";
 			} else if (ezTalkSsoType.equals("portal")) { 
@@ -252,14 +344,35 @@ public class EzTalkGateController {
 			} else if (ezTalkSsoType.equals("mailWrite")) { 
 				String emailAddress = request.getParameter("emailAddress") == null ? "" : request.getParameter("emailAddress");
 				String name = request.getParameter("name") == null ? "" : request.getParameter("name");
+				String to = request.getParameter("to") == null ? "" : request.getParameter("to");
 				
+				// 단일 수신자의 경우
 				if (!emailAddress.equals("")) {
 					name = name.equals("") ? emailAddress : name;
 					String msgTo = String.format("%s <%s>", name, emailAddress);
 					
 					logger.debug("msgTo=" + msgTo);
 					
-					return "redirect:/ezEmail/mailWrite.do?cmd=NEW&msgto=" + URLEncoder.encode(msgTo, "UTF-8");
+					// 자기 자신이 수신자인 경우
+					if (emailAddress.equalsIgnoreCase(vo.getEmail())) {
+						logger.debug("isMailToMe=YES");
+						
+						return "redirect:/ezEmail/mailWrite.do?cmd=NEW&msgto=" + URLEncoder.encode(msgTo, "UTF-8") + "&isMailToMe=YES";
+					} else {					
+						return "redirect:/ezEmail/mailWrite.do?cmd=NEW&msgto=" + URLEncoder.encode(msgTo, "UTF-8");
+					}
+				// 다중 수신자의 경우
+				} else if (!to.equals("")) { 
+					logger.debug("to=" + to);
+					
+					// 수신자에 자기 자신이 포함되어 있는 경우
+					if (to.contains("<" + vo.getEmail() + ">")) {
+						logger.debug("isMailToMe=YES");
+						
+						return "redirect:/ezEmail/mailWrite.do?cmd=NEW&msgto=" + URLEncoder.encode(to, "UTF-8") + "&isMailToMe=YES";
+					} else {
+						return "redirect:/ezEmail/mailWrite.do?cmd=NEW&msgto=" + URLEncoder.encode(to, "UTF-8");
+					}
 				} else {
 					return "redirect:/ezEmail/mailWrite.do?cmd=NEW";
 				}
@@ -273,7 +386,6 @@ public class EzTalkGateController {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@RequestMapping("/ezTalkGate/noticeBoardDetailList.do")
 	public String noticeBoardDetailList(
 			@RequestParam String boardType,
@@ -295,7 +407,7 @@ public class EzTalkGateController {
 			int tenantId = loginService.getTenantId(serverName);
 			logger.debug("serverName=" + serverName + ",serverPort=" + serverPort + ",tenantId=" + tenantId);
 			
-			boolean isUserExists = checkIfUserExists(orgId, orgPw, tenantId);
+			boolean isUserExists = checkIfUserExists(orgId, tenantId);
 			logger.debug("isUserExists=" + isUserExists);
 			
 			if (isUserExists) {
@@ -304,7 +416,7 @@ public class EzTalkGateController {
 				LoginVO setVo = new LoginVO();
 				setVo.setId(orgId);
 				setVo.setTenantId(tenantId);
-				setVo.setPassword(encryptPw);
+				setVo.setDn("NOPASSWORD");
 				
 				LoginVO vo = loginService.selectUser(setVo);
 				logger.debug("id=" + orgId + ", pw=" + encryptPw + ", companyId=" + vo.getCompanyID());
@@ -317,10 +429,13 @@ public class EzTalkGateController {
 				String compId = userVO.getPhysicalDeliveryOfficeName();
 				
 				loginController.createLoginCookie(orgId, orgPw, encryptPw, tenantId, request, response, deptId, compId);
-				
-				redirectUrl = "redirect:/ezBoard/boardItemList.do?boardID=" 
-								+ URLEncoder.encode(ezTalkGateNoticeBoardId) + "&boardType=" + boardType;
-				logger.debug("redirectUrl=" + redirectUrl);
+								
+	        	if (ezTalkGateNoticeBoardId != null) {
+					redirectUrl = "redirect:/ezBoard/boardMainRedirect.do?boardID="
+									+ URLEncoder.encode(ezTalkGateNoticeBoardId, "UTF-8");
+	        	}
+
+	        	logger.debug("redirectUrl=" + redirectUrl);
 			}
 			 
 		} catch (Exception e) {
@@ -430,6 +545,9 @@ public class EzTalkGateController {
         
         boardItem.setWriteDate(writeDate);
         
+        /* 2019-09-11 홍승비 - 톡에서 공지사항 게시물 읽을 경우, 조회수 업데이트 및 조회자 정보 삽입되도록 수정 */
+        ezBoardService.setAsRead(userInfo, boardItem.getBoardID(), boardItem.getItemID());
+        
         model.addAttribute("boardItem", boardItem);
         
 		logger.debug("showNoticeBoardItem ended.");
@@ -467,20 +585,144 @@ public class EzTalkGateController {
 		return "ezTalkGate/showNoticeBoardItemContent";
 	}
 	
+	@RequestMapping("/ezTalkGate/checkBlockedByIP.do")
+	@ResponseBody
+	public String checkBlockedByIP(@RequestParam String ezTalkId, @RequestParam String ip, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("checkBlockedByIP started.");
+		// FAIL 에러발생, 0 밴 된 유저, 1 정상 유저
+		String result = "FAIL";
+
+		try {
+			String serverName = request.getServerName();
+			int tenantId = loginService.getTenantId(serverName);
+			String userId = ezTalkGateUtil.decryptEzTalkAES(ezTalkId);
+
+			logger.debug("serverName={}, tenantId={}, orgId={}, ip={}", serverName, tenantId, userId, ip);
+
+			LoginVO loginVO = new LoginVO();
+			loginVO.setId(userId);
+			loginVO.setTenantId(tenantId);
+			loginVO.setDn("NOPASSWORD");
+			loginVO = loginService.selectUser(loginVO);
+			loginVO.setIp(ip);
+
+			result = loginController.ipAccessCheck(loginVO) ? "1" : "0";
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		logger.debug("checkBlockedByIP ended. result={}", result);
+
+		return result;
+	}
+	
+	@RequestMapping("/ezTalkGate/getModuleNotice.do")
+	@ResponseBody
+	// jwseo99 리팩토링 해야됨
+	public String getModuleNotice(@RequestParam String ezTalkId, @RequestParam String type, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getModuleNotice started.");
+		String result = "FAIL";
+
+		try {
+			String serverName = request.getServerName();
+			int tenantId = loginService.getTenantId(serverName);
+			String userId = ezTalkGateUtil.decryptEzTalkAES(ezTalkId);
+
+			logger.debug("serverName={}, tenantId={}, orgId={}, type={}", serverName, tenantId, userId, type);
+
+			int mailCount = 0;
+			int approvalCount = 0;
+			boolean isMailType = type.contains("M");
+			boolean isApprovalType = type.contains("A");
+			boolean firstTypeIsMail = type.startsWith("M");
+			boolean isAll = isMailType && isApprovalType;
+
+			Map<String, Object> parameters = new HashMap<>();
+			// "{"useQuestion":"NO","useCircular":"NO","useMail":"YES","useApproval":"YES","useSchedule":"YES"}"
+			parameters.put("useQuestion", "NO");
+			parameters.put("useCircular", "NO");
+			parameters.put("useSchedule", "NO");
+			parameters.put("useMail", "YES");
+			parameters.put("useApproval", "YES");
+
+			String url = "/rest/ezPortal/settingInfo/unreadCounts/users/" + userId;
+
+			JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, parameters, request, "get", null);
+			String status = resultBody.get("status").toString();
+
+			if (status.equals("ok")) {
+				JSONObject data = (JSONObject) resultBody.get("data");
+				// data.get("pollCount");
+				// data.get("circularCount");
+				// data.get("scheduleCount");
+				mailCount = Optional.ofNullable(data.get("unreadMailCount")).map(Object::toString).map(Integer::parseInt).orElse(0);
+				approvalCount = Optional.ofNullable(data.get("approvalCount")).map(Object::toString).map(Integer::parseInt).orElse(0);
+			}
+
+			if (isAll) {
+				if (firstTypeIsMail) {
+					result = String.format("%d/%d", mailCount, approvalCount);
+				} else {
+					result = String.format("%d/%d", approvalCount, mailCount);
+				}
+			} else {
+				result = Integer.toString(Math.max(mailCount, approvalCount));
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		logger.debug("getModuleNotice ended. result={}", result);
+
+		return result;
+	}
+	
+	@RequestMapping("/ezTalkGate/getNotUseMobileUserList.do")
+	@ResponseBody
+	public String getNotUseMobileUserList(HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getNotUseMobileUserList started.");
+
+		String result = "[]";
+
+		try {
+			String serverName = request.getServerName();
+			int tenantId = loginService.getTenantId(serverName);
+			logger.debug("serverName={}, tenantId={}", serverName, tenantId);
+
+			List<String> userList = ezOrganAdminService.getNotUseMobileUserList(tenantId);
+			result = JSONArray.toJSONString(userList);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		logger.debug("getNotUseMobileUserList ended. result={}", result);
+
+		return result;
+	}
+
+	private boolean checkIfUserExists(String id, int tenantId) throws Exception {
+		return checkIfUserExists(id, null, tenantId);
+	}
+
 	private boolean checkIfUserExists(String id, String pw, int tenantId) throws Exception {
 		logger.debug("checkIfUserExists started. id=" + id + ",tenantId=" + tenantId);
 		
 		boolean isUserExists = false;
 		
-		String encryptedPw = EgovFileScrty.encryptPassword(pw, id);
-		
-		logger.debug("encryptedPw=" + encryptedPw);
-		
 		LoginVO loginVO = new LoginVO();	
 		tenantId = 0;
 		loginVO.setId(id);
-		loginVO.setPassword(encryptedPw);
 		loginVO.setTenantId(tenantId);
+
+		if (pw == null) {
+			loginVO.setDn("NOPASSWORD");
+		} else {
+			String encryptedPw = EgovFileScrty.encryptPassword(pw, id);
+
+			logger.debug("encryptedPw=" + encryptedPw);
+
+			loginVO.setPassword(encryptedPw);
+		}
 		
 		LoginVO resultVO = loginService.selectUser(loginVO);
 		

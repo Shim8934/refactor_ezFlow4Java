@@ -46,8 +46,8 @@
 		<script type="text/javascript" id="clientEventHandlersJS">
 				var OrderOption = "";
 		        var OrderCell = "";        
-		        var g_sFlag = "${sFlag}";
-		        var g_uFlag = "${sFlag}";
+		        var g_sFlag = "<c:out value ='${sFlag}'/>";
+		        var g_uFlag = "<c:out value ='${sFlag}'/>";
 		        var labelcolor = "gray";
 		        var xmlhttp = createXMLHttpRequest();
 		        var xmldoc = createXmlDom();
@@ -55,71 +55,50 @@
 		        var g_tagSelectsub = "1";
 		        var NodeList, nowblock, totalPage, block, p_page, p_nowblock, Init_Flag, DocList_Flag, DocTitle, AdminYN;
 		        var DeptAdminYN;
-			    var contFlag = "${contType}";
+			    var contFlag = "<c:out value ='${contType}'/>";
 		        var pSusinManagerFlag = "user";
 		        var pChackYN, WriterID;
 		        var docdir = "";
-			    var pEndDocHref = '${dirPath}';
+			    var pEndDocHref = "<c:out value ='${dirPath}'/>";
 		        var szRoleInfo = "<c:out value = '${userInfo.rollInfo}' />";
-		        var UserID = "${userInfo.id}";
-		        var CompanyID = "${userInfo.companyID}";
-		        var DeptID = "${userInfo.deptID}";
-		        var deptName = "${userInfo.deptName}";
+		        var UserID = "<c:out value ='${userInfo.id}'/>";
+		        var CompanyID = "<c:out value ='${userInfo.companyID}'/>";
+		        var DeptID = "<c:out value ='${userInfo.deptID}'/>";
+		        var deptName = "<c:out value ='${userInfo.deptName}'/>";
 		        var PageSize, Block_Size, curpage, ListView, NodeList2, NodeListLen;
 		        var arr_userinfo = new Array();
 		        arr_userinfo[0] = "user";
 			    arr_userinfo[0]  = "user";
-			    arr_userinfo[1]  = "${userInfo.id}";
-			    arr_userinfo[2]  = "${userInfo.displayName}";
-			    arr_userinfo[3]  = "${userInfo.title}";
-			    arr_userinfo[4]  = "${userInfo.deptID}";
-			    arr_userinfo[5]  = "${userInfo.deptName}";
-			    arr_userinfo[6]  = "${userInfo.jikChek}";
-			    arr_userinfo[8]  = "${userInfo.email}";
+			    arr_userinfo[1]  = "<c:out value ='${userInfo.id}'/>";
+			    arr_userinfo[2]  = "<c:out value ='${userInfo.displayName}'/>";
+			    arr_userinfo[3]  = "<c:out value ='${userInfo.title}'/>";
+			    arr_userinfo[4]  = "<c:out value ='${userInfo.deptID}'/>";
+			    arr_userinfo[5]  = "<c:out value ='${userInfo.deptName}'/>";
+			    arr_userinfo[6]  = "<c:out value ='${userInfo.jikChek}'/>";
+			    arr_userinfo[8]  = "<c:out value ='${userInfo.email}'/>";
 		        arr_userinfo[9] = CompanyID;
-			    arr_userinfo[10] = "${susinAdmin}";
-			    arr_userinfo[11]  = "${userInfo.displayName1}";
-			    arr_userinfo[12]  = "${userInfo.displayName2}";
-			    arr_userinfo[13]  = "${userInfo.title1}";
-			    arr_userinfo[14]  = "${userInfo.title2}";
-			    arr_userinfo[15]  = "${userInfo.deptName1}";
-			    arr_userinfo[16]  = "${userInfo.deptName2}";
-			    var CompanyID = "${userInfo.companyID}";
-		        var g_DeptInfo = "${deptInfo}";
-			    var USE_OCS = "${useOcs}";
-			    var Udomain = "${userEmail}";
-		        var UserLang = "${userInfo.lang}";
+			    arr_userinfo[10] = "<c:out value ='${susinAdmin}'/>";
+			    arr_userinfo[11]  = "<c:out value ='${userInfo.displayName1}'/>";
+			    arr_userinfo[12]  = "<c:out value ='${userInfo.displayName2}'/>";
+			    arr_userinfo[13]  = "<c:out value ='${userInfo.title1}'/>";
+			    arr_userinfo[14]  = "<c:out value ='${userInfo.title2}'/>";
+			    arr_userinfo[15]  = "<c:out value ='${userInfo.deptName1}'/>";
+			    arr_userinfo[16]  = "<c:out value ='${userInfo.deptName2}'/>";
+			    var CompanyID = "<c:out value ='${userInfo.companyID}'/>";
+		        var g_DeptInfo = "<c:out value ='${deptInfo}'/>";
+			    var USE_OCS = "<c:out value ='${useOcs}'/>";
+			    var Udomain = "<c:out value ='${userEmail}'/>";
+		        var UserLang = "<c:out value ='${userInfo.lang}'/>";
 		        var g_DeliveryXmlhttp = createXMLHttpRequest();
-			    var pOpenYaer = "${openYear}";
+			    var pOpenYaer = "<c:out value ='${openYear}'/>";
 		        var vWriterID;
 		        var ext= "";
+		        var useWebHWP = "<c:out value ='${useWebHWP}'/>";
+				var WriterID = null;
+				var WriterDeptID = null;
+		        var shareDeptId = "${shareDeptId}";
+				
 		        document.onselectstart = function () { return false; };
-		
-		        $(function () {
-		        	/* 2018-06-20 김민성 - 전자결재 selectbox 기본으로 변경 */
-		            /* $("#rec_year").selectmenu({
-		                change: function (event, data) {
-		                    onSelect_Year(data.item.value);
-		                }
-		            });
-		
-		            $("#cab_year").selectmenu({
-		                change: function (event, data) {
-		                    onSelect_Year(data.item.value);
-		                }
-		            });
-		
-		            $("#del_year").selectmenu({
-		                change: function (event, data) {
-		                    onSelect_Year(data.item.value);
-		                }
-		            }); */
-		
-		            /* $("#number")
-		              .selectmenu()
-		              .selectmenu("menuWidget")
-		                .addClass("overflow"); */
-		        });
 		
 		        window.onload = function () {
 		            var toDay = new Date();
@@ -157,14 +136,20 @@
 		            }
 		            catch (e) {
 		            }
+		            
+		            settingResize();
 		        };
+		        
 		        var isPeriodYear = true;
 		        function LoadList() {
+		        	listLoading(true); //20201211 조진호 - 리스트 출력 시 시간이 오래 걸릴 수 있어 로딩바 추가
+		        	
 		            switch (g_sFlag) {
 		                case "m01":
 		                    RecordList_onclick();
 		                    break;
 		                case "m02":
+		                	PageSize = 20;
 		                    isPeriodYear = false;
 		                    CabinetList_onclick();
 		                    break;
@@ -178,10 +163,12 @@
 		                    SendList_onclick();
 		                    break;
 		                case "m07":
+		                	PageSize = 20;
 		                    isPeriodYear = false;
 		                    DelayEndYRequest_onclick();
 		                    break;
 		                case "m08":
+		                	PageSize = 20;
 		                    isPeriodYear = false;
 		                    ArrTargetList_onclick();
 		                    break;
@@ -192,26 +179,50 @@
 		                case "m10":
 		                    ToggleAdminMenu();
 		                    break;
+		                case "UNTREATED":
+		                    untreatedList_onclick();
+		                    break;
+		                case "docShare":
+		      		        DeptID = shareDeptId;
+		                    RecordList_onclick();
+		                    break;
+		                case "m12":
+		                    OutReceiptList_onclick();
+		                    break;
+		                case "m13":
+		                    OutSendList_onclick();
+		                    break;
 		                default:
 		                    RecordList_onclick();
 		                    break;
 		            }
 		        }
+
+				function checkRecordAll() {
+					return (g_sFlag === "m12" || g_sFlag === "m13") && szRoleInfo.indexOf("i=1;") > -1 && DeptID === arr_userinfo[4];
+				}
 		
 		        var SelYearFlag = false;
 		        function onSelect_Year() {
+		        	listLoading(true); //20201211 조진호 - 리스트 출력 시 시간이 오래 걸릴 수 있어 로딩바 추가
 		            SelYearFlag = true;
+
+					var tempDeptID = DeptID;
+					if (checkRecordAll()) {
+						tempDeptID = "ALL";
+					}
+
 		            if (GetSelectVal("rec_year") != "ALL" || GetSelectVal("cab_year") != "ALL" || GetSelectVal("del_year") != "ALL") {
 		
-		                hideProgress();
-		                showProgress();
+		                //hideProgress();
+		                //showProgress();
 		
 		                if (DocList_Flag == "CABINET") {
 		                    g_CabSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE></TITLE><TASKCODE></TASKCODE><SPRODUCEY>" + GetSelectVal("cab_year") + "</SPRODUCEY><EPRODUCEY>" + GetSelectVal("cab_year") + "</EPRODUCEY><SENDY></SENDY><EENDY></EENDY><RECTYPECODE></RECTYPECODE><KEEPPERIOD></KEEPPERIOD><KEEPMETHOD></KEEPMETHOD><KEEPPLACE></KEEPPLACE><CHARGER></CHARGER><TRANSEXPIRE/><TRANSFLAG/><RECEIVEDCAB/><GIVECAB/></SEARCHPARAM>";
 		                    GetCaninetList();
 		                }
 		                else if (DocList_Flag == "RECORD") {
-		                    g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + GetSelectVal("rec_year") + "-01-01 00:00:00</SREGDATE><EREGDATE>" + GetSelectVal("rec_year") + "-12-31 23:59:59</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
+		                    g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + GetSelectVal("rec_year") + "-01-01 00:00:00</SREGDATE><EREGDATE>" + GetSelectVal("rec_year") + "-12-31 23:59:59</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
 		                    GetRecordList();
 		                }
 		                else {
@@ -240,7 +251,7 @@
 		                    GetCaninetList();
 		                }
 		                else if (DocList_Flag == "RECORD") {
-		                    g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
+		                    g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
 		                    GetRecordList();
 		                }
 		                else {
@@ -248,6 +259,8 @@
 		                    GetDocDeliveryList(g_DeliverySearchParamXml);
 		                }
 		            }
+		            
+		            //listLoading(false);	// 20201211 조진호 로딩바 display:none
 		        }
 		
 		        function btnAddJob_onclick() {
@@ -340,7 +353,7 @@
 		        try {
 		            if (trSubInfoTab) {
 		                document.getElementById("trSubInfoTab").style.display = "";
-		                document.getElementById("divList").style.height = "310";
+		                document.getElementById("divList").style.height = "375px;";
 		                //PageSize = 10;
 		                Block_Size = 10;
 		            }
@@ -362,7 +375,52 @@
 		    }
 		    function ichange_onclick() {
 		        SendOffer(UserID);
-		    }
+			}
+			function ichangeS_onclick() {
+		        var DocList = new ListView();
+				DocList.LoadFromID("DocList");
+				
+				var selRows = DocList.GetSelectedRows();
+		        if (selRows.length === 0) {
+		            var pAlertContent = "문서를 선택해주십시오.";
+		            alert(pAlertContent);
+		            return;
+				}
+
+				var selRow = selRows[0];
+				
+				var docID = GetAttribute(selRow, "DATA1");
+				var docHref = GetAttribute(selRow, "DATA2");
+				var ext = docHref.substr(docHref.lastIndexOf(".") + 1);
+
+                var url = null;
+                if (ext === "mht") {
+                    url = "/ezApprovalG/ezConvSihang.do" +
+                        "?docID=" + encodeURIComponent(docID) +
+                        "&docHref=" + encodeURIComponent(docHref) +
+                        "&orgCompanyID=" + CompanyID;
+                } else if (ext === "hwp") {
+                    if (useWebHWP === "NO") {
+                        if (!isIE()) {
+                            var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+                            alert(pAlertContent);
+                            return;
+                        }
+
+                        url = "/ezApprovalG/ezConvSihang_HWP.do" +
+                            "?docID=" + encodeURIComponent(docID) +
+                            "&docHref=" + encodeURIComponent(docHref) +
+                            "&orgCompanyID=" + CompanyID;
+                    } else {
+                        url = "/ezApprovalG/ezConvSihang_WHWP.do" +
+                            "?docID=" + encodeURIComponent(docID) +
+                            "&docHref=" + encodeURIComponent(docHref) +
+                            "&orgCompanyID=" + CompanyID;
+                    }
+                }
+					
+				window.open(url, "enforce", GetOpenWindowfeature(window.screen.availHeight - 50, window.screen.availWidth / 2));
+			}
 		    function Approval_onclick() {
 		        jobState = "APPROVAL";
 		        getDataInfo();
@@ -434,7 +492,7 @@
 		                        document.getElementById("tdNewVol").style.display = "none";
 		                    
 		                    // btnCabDel 업무관리자, 기록물관리자만 사용
-		                    document.getElementById("btnCabDel").style.display = "";
+		                    document.getElementById("tdBtnCabDel").style.display = "";
 		                }
 		                else {
 		                    document.getElementById("tdRegCabinet").style.display = "none";
@@ -470,8 +528,9 @@
 		                }
 		
 		                if (ListTypeFlag == "8" && (g_bDeptCharger || g_bRecAdmin || AdminYN == "TRUE") && g_sFlag != "m09") {
-		                    document.getElementById("tdbtnEndProduce").style.display = "";
-		                    document.getElementById("tdbtnCancelEndProd").style.display = "";
+		                	//2018-12-21 천성준 정리대상목록에 데이터가 없을 때, 편철확인 편철확인취소 버튼이 표출되는 현상 때문에 주석처리 (버튼의 표출여부는 리스트 데이터가 무엇이 선택 되었는지에 따라 표출됨.)
+// 		                    document.getElementById("tdbtnEndProduce").style.display = "";
+// 		                    document.getElementById("tdbtnCancelEndProd").style.display = "";
 		                }
 		                else {
 		                    document.getElementById("tdbtnEndProduce").style.display = "none";
@@ -508,7 +567,7 @@
 		                    document.getElementById("tdRegSepAtt").style.display = "";
 		                    
 		                    // btnCabDel 업무관리자, 기록물관리자만 사용
-		                    document.getElementById("btnCabDel").style.display = "";		                    
+		                    document.getElementById("tdBtnCabDel").style.display = "";		                    
 		                }
 		                else {
 		                    document.getElementById("tdMoveRec").style.display = "none";
@@ -593,7 +652,7 @@
 		        GetCaninetList();
 		    }
 		    function DelayEndYRequest_onclick() {
-		        document.getElementById("imgTitle").innerHTML = "<spring:message code='ezApprovalG.t524'/>";
+		        document.getElementById("imgTitle").innerHTML = "<spring:message code='ezApprovalG.t907'/>";
 		        document.getElementById("imgTitle").style.display = "";
 		        SwapSubMenuDisplay("1");
 		
@@ -619,7 +678,14 @@
 		        InitGlobals("CABINET", "0", "0");
 		
 		        GetCaninetList();
-		    }
+			}
+			function untreatedList_onclick() {
+		        document.getElementById("imgTitle").innerHTML = "미처리문서함";
+		        document.getElementById("imgTitle").style.display = "";
+		        SwapSubMenuDisplay("1");
+		        InitGlobals("RECORD", "23", "1");
+		        GetRecordList();
+			}
 		
 		    var regcabinet_cross_dialogArguments = new Array();
 		    function btnRegCabinet_onclick() {
@@ -1074,7 +1140,7 @@
 		        var parameter = pInformationContent;
 		        var url = "/ezApprovalG/ezAprOpinion.do";
 
-		        if (CrossYN() && ext != 'hwp') {
+		        if (CrossYN()) {
 		            ezapropinion_cross_dialogArguments[0] = parameter;
 		            if (CompleteFunction != undefined)
 		                ezapropinion_cross_dialogArguments[1] = CompleteFunction;
@@ -1086,8 +1152,8 @@
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
-		            var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
-		            feature = feature + GetShowModalPosition(330, 205);
+		            var feature = "status:no;dialogWidth:350px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+		            feature = feature + GetShowModalPosition(350, 205);
 		            var RtnVal = window.showModalDialog(url, parameter, feature);
 		        }
 		        return RtnVal;
@@ -1215,11 +1281,26 @@
 		        InitGlobals("RECORD", "10", "1");
 		        GetRecordList();
 		    }
-		    function SendList_onclick() {
-		        document.getElementById("imgTitle").innerHTML = "<spring:message code='ezApprovalG.t906'/>";
+			function SendList_onclick() {
+				document.getElementById("imgTitle").innerHTML = "<spring:message code='ezApprovalG.t906'/>";
+				document.getElementById("imgTitle").style.display = "";
+				SwapSubMenuDisplay("1");
+				InitGlobals("RECORD", "11", "1");
+				GetRecordList();
+			}
+		    function OutReceiptList_onclick() {
+		        document.getElementById("imgTitle").innerHTML = "<spring:message code='ezApprovalG.kbh06'/>";
 		        document.getElementById("imgTitle").style.display = "";
 		        SwapSubMenuDisplay("1");
-		        InitGlobals("RECORD", "11", "1");
+		
+		        InitGlobals("RECORD", "12", "1");
+		        GetRecordList();
+		    }
+		    function OutSendList_onclick() {
+		        document.getElementById("imgTitle").innerHTML = "<spring:message code='ezApprovalG.kbh07'/>";
+		        document.getElementById("imgTitle").style.display = "";
+		        SwapSubMenuDisplay("1");
+		        InitGlobals("RECORD", "13", "1");
 		        GetRecordList();
 		    }
 		    window.onunload = function () {
@@ -1380,11 +1461,18 @@
 		        window.open(url, "", feature);
 		    }
 		
-		    window.onresize = function () {
-		        var height = parseInt(divList.style.height.replace('px', '')) + 200;
-		        var reheight = window.innerHeight - parseInt(height);
-		        //document.getElementById('div_AprLine').style.height = reheight + "px";
+		    window.onresize = function() {
+		    	settingResize();
 		    };
+		    
+		    var settingResize = function() {
+		    	if (document.getElementById('trSubInfoTab').style.display == 'none') {
+		    		var currentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
+			        var divListHeight = document.getElementById('divList').style.height;
+			        document.getElementById('divList').style.height = (currentHeight - 69) + "px";
+		    	}
+		    }
+		    
 		    function onkeydown_start_search() {
 		        if (window.event.keyCode == "13") {
 		            search();
@@ -1406,11 +1494,16 @@
 		
 		        if (document.getElementById("trRecSubMenu").style.display == "") {
 		            var radiosearch = document.getElementById('selectType');
+
+					var tempDeptID = DeptID;
+					if (checkRecordAll()) {
+						tempDeptID = "ALL";
+					}
 		            
 		            if (radiosearch.value == "rad_Subject") {
-		                g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE>" + document.getElementById("txt_keyword").value + "</TITLE><REGTYPE></REGTYPE><SREGDATE></SREGDATE><EREGDATE></EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
+		                g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE>" + document.getElementById("txt_keyword").value + "</TITLE><REGTYPE></REGTYPE><SREGDATE></SREGDATE><EREGDATE></EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
 		            } else if (radiosearch.value == "rad_Writer") {
-		                g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE></SREGDATE><EREGDATE></EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER>" + document.getElementById("txt_keyword").value + "</DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
+		                g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE></SREGDATE><EREGDATE></EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER>" + document.getElementById("txt_keyword").value + "</DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
 		            }
 		            
 		            switch (ListTypeFlag) {
@@ -1607,93 +1700,124 @@
 							return;				    			
 			    	}
 			    }
+			    
+			    var changeOpenGovInfo_cross_dialogArguments = new Array();
+			    function btnChangeOpenGovInfo_onclick() {
+			        var DocList = new ListView();
+			        DocList.LoadFromID("DocList");
+			        var selRow = DocList.GetSelectedRows();
+			        if (selRow.length != 0) {
+			            var tr = selRow[0];
+			            var para = new Array();
+			            para[0] = tr.getAttribute("DATA6");
+			            para[1] = tr.getAttribute("DATA8");
+			            para[2] = arr_userinfo[1];
+			            para[3] = arr_userinfo[2];
+			            para[4] = g_bRecAdmin;
+			            para[5] = tr.getAttribute("DATA1");
+			
+			            var url = "/ezApprovalG/changeOpenGovInfo.do";
+			
+			            changeOpenGovInfo_cross_dialogArguments[0] = para;
+			            changeOpenGovInfo_cross_dialogArguments[1] = btnChangeOpenGovInfo_onclick_Complete;
+			
+			            var OpenWin = window.open(url, "ChangeOpenGovInfo_Cross", GetOpenWindowfeature(615, 510));
+			            try { OpenWin.focus(); } catch (e) { }
+			        }
+			        else {
+			            OpenAlertUI("<spring:message code='ezApprovalG.t632'/>");
+			        }
+			    }
+			
+			    function btnChangeOpenGovInfo_onclick_Complete(rtn) {
+			        if (rtn[0] == "TRUE") {
+			            GetRecordList();
+			        }
+			    }
 	    </script>
 	</head>
 	<body class="mainbody" style="margin-top: 0px">
-	    <h1><span id="imgTitle" style="font-size:15px"></span>&nbsp;<span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
-			<span style="float:right;font-weight:normal;color:black;">
+	    <h1><span id="imgTitle" style="font-size:17px"></span><span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
+			<span class="searchForm">
 				<select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
 					<option selected="" value="rad_Subject" id="rad1"><spring:message code='ezApprovalG.t106'/></option>
 					<option value="rad_Writer" id="rad2"><spring:message code='ezApprovalG.t445'/></option>
 				</select>
-				<input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true" onmousedown="keyword_Clear();"> 
-				<a href="#" style="float:right;"><img src="/images/bsearch_new.gif" border="0" onclick="search()"></a>
+				<input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true" onmousedown="keyword_Clear();"> 
+				<a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onclick="search()"></a>
 			</span>
 	    </h1>
 	
 	    <div id="mainmenu">
 	        <ul id="trCabSubMenu" style="Display: None;">
-	            <li id="tdReqDelayEndY" style="Display: None"><span id="ReqDelayEndY" onclick="return ReqDelayEndY_onclick()">
+	            <li class="important" id="tdReqDelayEndY" style="Display: None"><span id="ReqDelayEndY" onclick="return ReqDelayEndY_onclick()">
 	                <spring:message code='ezApprovalG.t907'/></span></li>
-	            <li id="tdCancelDelayEndY" style="Display: None"><span id="CancelDelayEndY" onclick="return CancelDelayEndY_onclick()">
-	                <spring:message code='ezApprovalG.t930'/></span></li>
-	            <li id="tdbtnEndProduce" style="Display: None"><span id="btnEndProduce" onclick="return btnEndProduce_onclick()">
+	            <li class="important" id="tdCancelDelayEndY" style="Display: None"><span id="CancelDelayEndY" onclick="return CancelDelayEndY_onclick()"><spring:message code='ezApprovalG.t930'/></span></li>
+	            <li class="important" id="tdbtnEndProduce" style="Display: None"><span id="btnEndProduce" onclick="return btnEndProduce_onclick()">
 	                <spring:message code='ezApprovalG.t931'/></span></li>
-	            <li id="tdbtnCancelEndProd" style="Display: None"><span id="btnCancelEndProd" onclick="return btnCancelEndProd_onclick()">
+	            <li class="important" id="tdbtnCancelEndProd" style="Display: None"><span id="btnCancelEndProd" onclick="return btnCancelEndProd_onclick()">
 	                <spring:message code='ezApprovalG.t932'/></span></li>
 	            <!-- <li id="tbar1" style="background: none; padding-right: 2px;">
 	                <img src="/images/i_bar.gif"></li> -->
-	            <li id="tdRegCabinet" style="Display: None"><span id="RegCabinet" onclick="return btnRegCabinet_onclick()"><spring:message code='ezApprovalG.t2002'/></span></li>
+	            <li class="important" id="tdRegCabinet" style="Display: None"><span id="RegCabinet" onclick="return btnRegCabinet_onclick()"><spring:message code='ezApprovalG.t2002'/></span></li>
 	            <li id="tdNewVol" style="Display: None"><span id="NewVol" onclick="return btnNewVolume_onclick()"><spring:message code='ezApprovalG.t894'/></span></li>
-	            <li id="tdSetCharger" style="Display: None"><span id="SetCharger" onclick="return btnSetTaskCharger_onclick()"><spring:message code='ezApprovalG.t937'/></span></li>
-	            <li id="tdbtnViewRecList"><span id="btnViewRecList" onclick="return btnViewRecList_onclick()">
-	                <spring:message code='ezApprovalG.t526'/></span></li>
 	            <li id="tdViewCabInfo"><span id="ViewCabInfo" onclick="return btnViewCabInfo_onclick()"><spring:message code='ezApprovalG.t527'/></span></li>
 	            <li id="tdViewCabHist" style="Display: None"><span id="ViewCabHist" onclick="return btnViewCabHistory_onclick()"><spring:message code='ezApprovalG.t947'/></span></li>
-	            <!-- <li id="tbar2" style="background: none; padding-right: 2px;">
-	                <img src="/images/i_bar.gif"></li> -->
 	            <li id="tdModifyCab" style="Display: None"><span id="ModifyCab" onclick="return btnChangeCabinetInfo_onclick()"><spring:message code='ezApprovalG.t269'/></span></li>
-	            <li id="tdBtnCabDel"><span id="btnCabDel" onclick="return DeleteCab();" style="Display: None"><spring:message code='ezApprovalG.t266'/></span> </li>
-	            <li id="tdSearchCab"><span id="SearchCab" onclick="return SearchCabinet('0')"><spring:message code='ezApprovalG.t111'/></span></li>
+	            <%-- <li id="tdBtnCabDel"><span id="btnCabDel" onclick="return DeleteCab();" style="Display: None"><spring:message code='ezApprovalG.t266'/></span> </li> --%>
+	            <%-- <li id="tdSearchCab"><span id="SearchCab" onclick="return SearchCabinet('0')"><spring:message code='ezApprovalG.t111'/></span></li> --%>
 	            <li id="tdDocListPrint"><span id="DocListPrintRec" onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t530'/></span></li>
-	            <!-- <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li> -->
-	            <li style="vertical-align: middle;"> <select id="cab_year" name="cab_year" style="width:75px;" onchange="onSelect_Year(this);">    
+	            <li id="tdSetCharger" style="Display: None"><span id="SetCharger" onclick="return btnSetTaskCharger_onclick()"><spring:message code='ezApprovalG.t937'/></span></li>
+	            <li id="tdSearchCab"><span class="icon16 icon16_search" id="SearchCab" onclick="return SearchCabinet('0')"></span></li>
+	            <li id="tdBtnCabDel" style="display: none;"><span class="icon16 icon16_delete" id="btnCabDel" onclick="return DeleteCab();"></span></li>
+	            <li id="tdbtnViewRecList"><span id="btnViewRecList" onclick="return btnViewRecList_onclick()"><spring:message code='ezApprovalG.t526'/></span></li>
+	            <li style="vertical-align: middle; float:right"> <select id="cab_year" name="cab_year" style="width:75px;" onchange="onSelect_Year(this);">    
 	                <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
 	            </select>  </li>
 	        </ul>
 	
 	        <ul id="trRecSubMenu" style="Display: none;">
-	            <li id="tdichange_Rec"><span id="ichange_Rec" onclick="return ichange_onclick()">
-	               <spring:message code='ezApprovalG.t939'/></span></li>
-	            <li id="tdReSend"><span id="ReSend" onclick="return btnReSend_onclick()">
-	                <spring:message code='ezApprovalG.t940'/></span></li>
+	            <li class="important" id="tdichange_Rec" style="display:none;"><span id="ichange_Rec" onclick="return ichange_onclick()"><spring:message code='ezApprovalG.t939'/></span></li>
+	            <li class="important" id="tdichangeS_Rec" style="display:none;"><span id="ichangeS_Rec" onclick="return ichangeS_onclick()"><spring:message code='ezApprovalG.t1524'/></span></li>
+	            <li class="important" id="tdReSend" style="display:none;"><span id="ReSend" onclick="return btnReSend_onclick()"><spring:message code='ezApprovalG.t940'/></span></li>
 	            <!-- <li id="tbar3" style="background: none; padding-right: 2px;">
 	                <img src="/images/i_bar.gif"></li> -->	            
-	            <li id="tdRegRecord" style="Display: None"><span id="RegRecord" onclick="return btnRegRecord_onclick()"><spring:message code='ezApprovalG.t933'/></span></li>
-	            <li id="tdRegSepAtt" style="Display: None"><span id="RegSepAtt" onclick="return btnRegAttach_onclick()"><spring:message code='ezApprovalG.t942'/></span></li>
+	            <li class="important" id="tdRegRecord" style="Display: None"><span id="RegRecord" onclick="return btnRegRecord_onclick()"><spring:message code='ezApprovalG.t933'/></span></li>
+	            <li class="important" id="tdRegSepAtt" style="Display: None"><span id="RegSepAtt" onclick="return btnRegAttach_onclick()"><spring:message code='ezApprovalG.t942'/></span></li>
+	            <li id="tdViewRecInfo"><span id="ViewRecInfo" onclick="return btnViewRecInfo_onclick()"><spring:message code='ezApprovalG.t527'/></span></li>
+	            <li id="tDocInfo"><span id="DocInfo" onclick="return GongRamDocInfo()"><spring:message code='ezApprovalG.t946'/></span></li>	            
 	            <li id="tdbtnCardSend" style="Display: None"><span id="btnCardSend" onclick="return btnCardSend_onclick()"><spring:message code='ezApprovalG.t943'/></span></li>
 	            <li id="tdbtnSetRecRole" style="Display: None"><span id="btnSetRecRole" onclick="return btnSetRecUserRole_onclick()"><spring:message code='ezApprovalG.t944'/></span></li>
 	            <li id="tdbtnViewRecReadHist" style="Display: None"><span id="btnViewRecReadHist" onclick="return btnViewRecReadHist_onclick()"><spring:message code='ezApprovalG.t945'/></span></li>
-	            <li id="tDocInfo"><span id="DocInfo" onclick="return GongRamDocInfo()"><spring:message code='ezApprovalG.t946'/></span></li>
-	            <li id="tdViewCabList" style="display:none"><span onclick="return GetEndYConfirmList()"><spring:message code='ezApprovalG.t525'/></span></li>
-	            <li id="tdViewRecInfo"><span id="ViewRecInfo" onclick="return btnViewRecInfo_onclick()"><spring:message code='ezApprovalG.t527'/></span></li>
 	            <li id="tdVeiwRecHist" style="Display: None"><span id="VeiwRecHist" onclick="return btnViewRecHistory_onclick()"><spring:message code='ezApprovalG.t947'/></span></li>
 	            <!-- <li id="tbar4" style="background: none; padding-right: 2px;">
 	                <img src="/images/i_bar.gif"></li> -->
 	            <li id="tdMoveRec" style="Display: None"><span id="MoveRec" onclick="return btnChangeRecCabinet_onclick()"><spring:message code='ezApprovalG.t948'/></span></li>
 	            <li id="tdModifyRec" style="Display: None"><span id="ModifyRec" onclick="return btnChangeRecInfo_onclick()"><spring:message code='ezApprovalG.t269'/></span></li>
-	            <li id="tdSearchRec"><span id="SearchRec" onclick="return btnSearchRec_onclick(0,'OPEN')"><spring:message code='ezApprovalG.t111'/></span></li>
-	            <li id="tdCabSelect"><span id="CabSelect" onclick="return CabinetSelect_onclick()"><spring:message code='ezApprovalG.t941'/></span></li>
-	            <li id="tdGongRam"><span id="GongRam" onclick="return btnSendAround_onclick()"><spring:message code='ezApprovalG.t1428'/></span></li>
 	            <li id="tdDocListPrint"><span id="DocListPrintRec" onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t530'/></span></li>
 	            <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
-	            <!-- <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li> -->
-	            <li style="vertical-align: middle;"> <select id="rec_year" name="rec_year" style="width:75px;" onchange="onSelect_Year(this);">    
+	            <li id="tdGongRam"><span id="GongRam" onclick="return btnSendAround_onclick()"><spring:message code='ezApprovalG.t1428'/></span></li>
+	            <li id="tdCabSelect"><span id="CabSelect" onclick="return CabinetSelect_onclick()"><spring:message code='ezApprovalG.t941'/></span></li>
+<%-- 	            <c:if test=""> 원문정보공개 사용하면 보이게 해줘야함 --%>
+<%-- 		            <li id="tdModifyOpenGov" style="<c:if test="${useOpenGov != 'YES'}">display:none;</c:if>"><span id="ModifyOpenGov" onclick="return btnChangeOpenGovInfo_onclick()">원문공개수정</span></li> --%>
+<%-- 	            </c:if> --%>
+	            <li id="tdSearchRec"><span class="icon16 icon16_search" id="SearchRec" onclick="return btnSearchRec_onclick(0,'OPEN')"></span></li>
+	            <li id="tdViewCabList" style="display:none"><span onclick="return GetEndYConfirmList()"><spring:message code='ezApprovalG.t525'/></span></li>
+	            <li style="vertical-align: middle; float:right"> <select id="rec_year" name="rec_year" style="width:75px;" onchange="onSelect_Year(this);">    
 	                <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
 	            </select>  </li>  
 	        </ul>
 	
 	        <ul id="trDeliveryMenu" style="display: none">
-	        	<li id="tbnBaeBu"><span id="Span2" onclick="return btnBaeBu_onclick()"><spring:message code='ezApprovalG.t100000'/></span></li>
-	            <li id="tbSearchDelivery"><span id="SearchDelivery" onclick="return btnSearchDelivery_onclick()"><spring:message code='ezApprovalG.t111'/></span></li>
+	        	<li class="important" id="tbnBaeBu"><span id="Span2" onclick="return btnBaeBu_onclick()"><spring:message code='ezApprovalG.t100000'/></span></li>
 	            <li id="Li1"><span id="Span1" onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t530'/></span></li>
-	            <!-- <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li> -->
-	            <li style="vertical-align: middle;"> <select id="del_year" name="del_year" style="width:75px;" onchange="onSelect_Year(this);">    
+	            <li id="tbSearchDelivery"><span class="icon16 icon16_search" id="SearchDelivery" onclick="return btnSearchDelivery_onclick()"></span></li>
+	            <li style="vertical-align: middle; float:right"> <select id="del_year" name="del_year" style="width:75px;" onchange="onSelect_Year(this);">    
 	                <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
 	            </select>    </li>
 	        </ul>
 	    </div>
-	    <div class="div_scroll" style="width: 100%; HEIGHT: 360px; overflow: AUTO" id="divList">
+	    <div id="divList" class="div_scroll" style="width: 100%; height: 375px; overflow: AUTO; margin-bottom:10px;">
 	        <div id="lvtDoclist"></div>
 	    </div>	    
 	    <div id="tblPageRayer"></div>

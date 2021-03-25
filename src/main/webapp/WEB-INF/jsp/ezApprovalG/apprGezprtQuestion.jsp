@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -12,8 +13,8 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
 		<script type="text/javascript" ID="clientEventHandlersJS">
-		    var eopinion = "${opinion}";
-		    var eAttach = "${attach}";
+		    var eopinion = "<c:out value ='${opinion}'/>";
+		    var eAttach = "<c:out value ='${attach}'/>";
 		    var rvalue = new Array();
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -35,6 +36,10 @@
 		        }
 		        if (eAttach != "true") {
 		            att.disabled = true;
+		        }
+				var pages = parent.document.getElementById("message").contentWindow.document.getElementById("body").getElementsByClassName("divImg").length;
+		        if(pages <= 0){
+		        	$("#Submit4").css("display", "none");
 		        }
 		    };
 		
@@ -141,6 +146,11 @@
 		    }
 		
 		    function only_click() {
+		    	var imgDiv = parent.document.getElementById("message").contentWindow.document.getElementById("body").getElementsByClassName("imgDiv");
+		    	var imgDiv2 = $(imgDiv).nextAll();
+				var imgDiv3 = $(imgDiv).prevAll();
+				$(imgDiv2).css("display", "");
+				$(imgDiv3).css("display", "");
 		        rvalue[0] = "N";
 		        rvalue[1] = "N";
 		        rvalue[2] = "N";
@@ -153,7 +163,28 @@
 		            window.close();
 		        }
 		    }
+			
+		    function all_pages() {
+		    	var imgDiv = parent.document.getElementById("message").contentWindow.document.getElementById("body").getElementsByClassName("imgDiv");
+		    	var imgDiv2 = $(imgDiv).nextAll();
+				var imgDiv3 = $(imgDiv).prevAll();
+				$(imgDiv2).css("display", "");
+				$(imgDiv3).css("display", "");
+		        rvalue[0] = "N";
+		        rvalue[1] = "N";
+		        rvalue[2] = "N";
 		
+		        if (ReturnFunction != null) {
+		            ReturnFunction(rvalue);
+		        }
+		        else {
+		            window.returnValue = rvalue;
+		            window.close();
+		        }
+		        $(imgDiv2).css("display", "none");
+				$(imgDiv3).css("display", "none");
+		    }
+		    
 		    function Cancel() {
 		        rvalue[0] = "0";
 		        rvalue[1] = "0";
@@ -200,6 +231,7 @@
 		    <a id="Submit1" class="imgbtn" onClick="return all_click()"><span><spring:message code='ezApprovalG.t10023'/></span></a>
 		    <a id="Submit2" class="imgbtn" onClick="return select_click()" ><span><spring:message code='ezApprovalG.t10024'/></span></a>
 		    <a id="Submit3" class="imgbtn" onClick="return only_click()" ><span><spring:message code='ezApprovalG.t10025'/></span></a>
+		    <a id="Submit4" class="imgbtn" onClick="return all_pages()" ><span>전체페이지인쇄</span></a>
 		</div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

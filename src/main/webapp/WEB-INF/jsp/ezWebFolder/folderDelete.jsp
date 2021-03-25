@@ -58,6 +58,9 @@
 					} else if (code == "4") {
 						wClose();
 						alert("<spring:message code='ezWebFolder.t401'/>");
+					} else if (code == "5") {
+						wClose();
+						alert("<spring:message code='webfolder.trash.delete.full' />");
 					} else {
 						wClose();
 						alert("<spring:message code='ezWebFolder.t114'/>");

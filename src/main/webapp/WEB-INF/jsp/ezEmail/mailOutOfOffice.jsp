@@ -32,7 +32,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        $("#Edatepicker").datepicker({
@@ -40,7 +40,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        var NowDate = utcDate2(offsetMin);
@@ -54,14 +54,19 @@
 		        $("#Edatepicker").datepicker('setDate', NowDate2);
 		        $('#Stimepicker').timepicker();
 		        $('#Stimepicker').timepicker('setTime', NowDate);
-		        $('#Stimepicker').timepicker({ 'timeFormat': 'H:i', 'disableTextInput': true});
-		        $("#Stimepicker").on("focus", function(){
-					$(this).trigger("blur");
-				});
+		        $('#Stimepicker').timepicker({
+		            'timeFormat': 'H:i',
+		            'disableTextInput': true
+		        });
 		        $('#Etimepicker').timepicker();
 		        $('#Etimepicker').timepicker('setTime', NowDate2);
-		        $('#Etimepicker').timepicker({ 'timeFormat': 'H:i', 'disableTextInput': true});
-		        $("#Etimepicker").on("focus", function(){
+		        $('#Etimepicker').timepicker({
+		            'timeFormat': 'H:i',
+		            'disableTextInput': true
+		        });
+		        
+		        //timepicker input 요소에 키보드 입력할 수 없도록 수정.
+				$("#Etimepicker, #Stimepicker").on("focus", function(){
 					$(this).trigger("blur");
 				});
 		    });
@@ -133,15 +138,22 @@
 		                $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		                $("#Sdatepicker").datepicker('setDate', StarDate);
 		                $('#Stimepicker').timepicker('setTime', StarDate);
-		                $('#Stimepicker').timepicker({ 'timeFormat': 'H:i', 'disableTextInput': true});
-		                $("#Stimepicker").on("focus", function(){
+		                $('#Stimepicker').timepicker({
+		                    'timeFormat': 'H:i',
+		                    'disableTextInput': true
+		                });
+		                 $("#Stimepicker").on("focus", function(){
 							$(this).trigger("blur");
 						});
+						
 		                $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		                $("#Edatepicker").datepicker('setDate', EndDate);
 		                $('#Etimepicker').timepicker('setTime', EndDate);
-		                $('#Etimepicker').timepicker({ 'timeFormat': 'H:i', 'disableTextInput': true});
-		                $("#Etimepicker").on("focus", function(){
+		                $('#Etimepicker').timepicker({
+		                    'timeFormat': 'H:i',
+		                    'disableTextInput': true
+		                });
+		                 $("#Etimepicker").on("focus", function(){
 							$(this).trigger("blur");
 						});
 		            } catch (e) { }
@@ -340,13 +352,13 @@
 	  <tr>
 	    <th><spring:message code='ezEmail.t209' /></th>
 	    <td>
-	        <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
+	        <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;"/>
 	     </td>
 	  </tr>
 	  <tr>
 	    <th><spring:message code='ezEmail.t217' /></th>
 	    <td>
-	        <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly><input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
+	        <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;"/>
 	    </td>
 	  </tr>
 	</table>

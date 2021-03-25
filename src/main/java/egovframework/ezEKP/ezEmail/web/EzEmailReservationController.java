@@ -24,7 +24,6 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -35,6 +34,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -105,7 +105,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 	/**
 	 * 메일 예약발송 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailReservation.do")
+	@RequestMapping(value="/ezEmail/mailReservation.do", method = RequestMethod.GET)
 	public String mailReservation(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailReservation started.");
 		
@@ -133,12 +133,13 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 	/**
 	 * 예약발송메일 삭제 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailDeleteReservedMail.do")
+	@RequestMapping(value="/ezEmail/mailDeleteReservedMail.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String mailDeleteReservedMail(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailDeleteReservedMail started.");
 		
 		String messageId = request.getParameter("messageid") == null ? "" : request.getParameter("messageid");
+		messageId = commonUtil.detectPathTraversal(messageId);
 		
 		ezEmailService.deleteMailReserved(messageId);
 		
@@ -162,7 +163,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 	/**
 	 * 예약발송메일 수정 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailEdit.do")
+	@RequestMapping(value="/ezEmail/mailEdit.do", method = RequestMethod.GET)
 	public String mailEdit(
 			@CookieValue("loginCookie") String loginCookie, 
 			Locale locale, Model model, 
@@ -213,6 +214,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		MimeMessage message = null;
 		if (request.getParameter("messageid") != null && !request.getParameter("messageid").trim().equals("")) { 
 			pCDOMessageID = request.getParameter("messageid").trim();
+			pCDOMessageID = commonUtil.detectPathTraversal(pCDOMessageID);
 			
 			pReservedSaveTime = ezEmailService.getMailReservedTime(pCDOMessageID);
 			
@@ -476,7 +478,8 @@ public class EzEmailReservationController extends EgovFileMngUtil {
     			}
     		}
 			
-			Enumeration headers = message.getAllHeaders();
+			@SuppressWarnings("unchecked")
+			Enumeration<Header> headers = message.getAllHeaders();
             while (headers.hasMoreElements()) {
               Header h = (Header) headers.nextElement();
               logger.debug("@@"+h.getName() + ": " + h.getValue());
@@ -529,7 +532,8 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 			if (useFromAddress.equals("YES")) {
 				List<String[]> fromAddressList = ezEmailService.getAliasAddress(loginInfo.getId(), loginInfo.getTenantId());
 				
-				if (fromAddressList.size() >= 2) {
+				/* 아래 내용은 료비개발 시에 추가된 내용으로 표준에는 미적용
+				 * if (fromAddressList.size() >= 2) {
 					String companyDomainName = ezCommonService.getCompanyConfig(loginInfo.getTenantId(), loginInfo.getCompanyID(), "DomainName");
 					
 					// 회사별 이메일 도메인명이 설정되어 있으면 Account 이메일 주소를 목록에서 제외한다.								
@@ -547,7 +551,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 							}
 						}
 					}
-				}
+				}*/
 				
 				if (fromAddressList.size() < 2) {
 					useFromAddress = "NO";
@@ -594,6 +598,8 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		if (mailMaxReceiverCount.equals("")) {
 			mailMaxReceiverCount = "200";
 		}
+		
+		boolean useAdditionalInfo = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useMailWriteRecipientAdditional", loginInfo.getTenantId()));
 		
 		model.addAttribute("to", to);
 		model.addAttribute("cc", cc);
@@ -658,6 +664,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		model.addAttribute("draftsFolderName", draftsFolderName);
 		model.addAttribute("useMailAddrAutoComplete", useMailAddrAutoComplete); // 20180531 조진호 추가
 		model.addAttribute("mailMaxReceiverCount", mailMaxReceiverCount);
+		model.addAttribute("useAdditionalInfo", useAdditionalInfo);
 		
         logger.debug("mailEdit ended.");
         
@@ -667,7 +674,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 	/**
 	 * 예약발송메일 DB 체크 함수
 	 */
-	@RequestMapping(value="/ezEmail/reservedMailCheck.do")
+	@RequestMapping(value="/ezEmail/reservedMailCheck.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String reservedMailCheck(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception{
 		logger.debug("reservedMailCheck started.");
@@ -703,7 +710,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 	/**
 	 * 메일 메시지 화면 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailMessage.do")
+	@RequestMapping(value="/ezEmail/mailMessage.do", method = RequestMethod.GET)
 	public String mailMessage(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailMessage started.");
 		

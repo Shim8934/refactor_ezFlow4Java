@@ -3,9 +3,11 @@ package egovframework.ezEKP.ezResource.web;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -21,7 +23,6 @@ import javax.xml.xpath.XPathFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.HandlerMapping;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -41,6 +43,7 @@ import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -112,13 +115,16 @@ public class EzResourceController extends EgovFileMngUtil {
 	@Resource(name="EzScheduleService")
 	private EzScheduleService ezScheduleService;
 	
+	@Resource(name="EzCabinetAdminService")
+	private EzCabinetAdminService cabinetAdminService;
+	
 	@Resource(name="EzResourceAdminService")
 	private EzResourceAdminService ezResourceAdminService;
 	
 	/**
 	 * 자원관리 메인 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezResource/resMain.do")
+	@RequestMapping(value = "/ezResource/resMain.do", method = RequestMethod.GET)
 	public String resMain(HttpServletRequest req, Model model) throws Exception {
 		String brdID = "";
 		String brdNm = "";
@@ -154,7 +160,7 @@ public class EzResourceController extends EgovFileMngUtil {
 	/**
 	 * 자원관리 좌측메뉴 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezResource/leftResource.do")
+	@RequestMapping(value = "/ezResource/leftResource.do", method = RequestMethod.GET)
 	public String resLeftResource(@CookieValue("loginCookie") String loginCookie,HttpServletRequest req, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String brdID = "";
@@ -308,12 +314,14 @@ public class EzResourceController extends EgovFileMngUtil {
 		String type = "";
 		String viewType = "";
 		String approveFlag = "";
+		String returnFlag = "";
 		String writerName = "";
 		String writerDept = "";
 		String gubun = "P";
 		String groupID = "";
 		String resultXML = "";
 		String resultXML1 = "";
+		String title = "";
 		int page = 0;
 		
 		if (req.getParameter("resID") != null) {
@@ -341,14 +349,22 @@ public class EzResourceController extends EgovFileMngUtil {
 				approveFlag = xmlDom.getElementsByTagName("APPROVEFLAG").item(0).getTextContent();
 				writerName = xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent();
 				writerDept = xmlDom.getElementsByTagName("WRITERDEPT").item(0).getTextContent();
+				returnFlag = xmlDom.getElementsByTagName("RETURNFLAG").item(0).getTextContent();
+				title = xmlDom.getElementsByTagName("TITLE").item(0).getTextContent();
 			}
 			
 			// 시분초 버림.
+			if(xmlDom.getElementsByTagName("STARTDATETIME").item(0).getTextContent() == null || xmlDom.getElementsByTagName("STARTDATETIME").item(0).getTextContent() == "") {
+				return "";
+			} else if(xmlDom.getElementsByTagName("ENDDATETIME").item(0).getTextContent() == null || xmlDom.getElementsByTagName("ENDDATETIME").item(0).getTextContent() == "") {
+				return "";
+			}
+			
 			xmlDom.getElementsByTagName("STARTDATETIME").item(0).setTextContent(xmlDom.getElementsByTagName("STARTDATETIME").item(0).getTextContent().substring(0, 10));
 			xmlDom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(xmlDom.getElementsByTagName("ENDDATETIME").item(0).getTextContent().substring(0, 10));
 			
 			//스케줄 정보 가져옴
-			reVal = ezResourceService.getScheduleXML(commonUtil.convertDocumentToString(xmlDom), resID, userInfo.getCompanyID(), groupID, gubun, type, writerName, writerDept, userInfo.getTenantId(), userInfo.getOffset());
+			reVal = ezResourceService.getScheduleXML(commonUtil.convertDocumentToString(xmlDom), resID, userInfo.getCompanyID(), groupID, gubun, type, title, writerName, writerDept, userInfo.getTenantId(), userInfo.getOffset());
 			logger.debug("getScheduleXML=" + reVal);
 			
 			// date타입 변경
@@ -370,7 +386,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			if (viewType.equals("list")) {
 				Document orderXML = commonUtil.convertStringToDocument(reVal);
 					
-				// 승인 or 비승인 보기
+				// 승인 or 비승인 보기 => 승인 / 승인대기 / 승인거부 / 반납 / 미반납 으로 분류하기
 				if (!approveFlag.trim().equals("")) {
 					resultXML += "<root>";
 					for (int i=0; i<orderXML.getElementsByTagName("appointment").getLength(); i++) {
@@ -395,6 +411,7 @@ public class EzResourceController extends EgovFileMngUtil {
 							resultXML += "<gubunFlag>"+orderXML.getElementsByTagName("gubunFlag").item(i).getTextContent()+"</gubunFlag>";
 							resultXML += "<importance>"+orderXML.getElementsByTagName("importance").item(i).getTextContent()+"</importance>";
 							resultXML += "<approveFlag>"+orderXML.getElementsByTagName("approveFlag").item(i).getTextContent()+"</approveFlag>";
+							resultXML += "<returnFlag>"+orderXML.getElementsByTagName("returnFlag").item(i).getTextContent()+"</returnFlag>";
 							resultXML += "<owner_nm>"+orderXML.getElementsByTagName("owner_nm").item(i).getTextContent()+"</owner_nm>";
 							resultXML += "<dept_name>"+"<![CDATA["+ orderXML.getElementsByTagName("dept_name").item(i).getTextContent()+"]]></dept_name>";
 							resultXML += "<writeDay>"+orderXML.getElementsByTagName("writeDay").item(i).getTextContent()+"</writeDay>";
@@ -406,7 +423,44 @@ public class EzResourceController extends EgovFileMngUtil {
 						} 
 					}
 					resultXML += "</root>";
-						
+				} else if(!returnFlag.trim().equals("")) {
+					resultXML += "<root>";
+					for (int i=0; i<orderXML.getElementsByTagName("appointment").getLength(); i++) {
+						if (orderXML.getElementsByTagName("returnFlag").item(i).getTextContent().equals(returnFlag)
+								&& orderXML.getElementsByTagName("approveFlag").item(i).getTextContent().equals("1")) {
+							resultXML += "<appointment>";
+							resultXML += "<number>"+orderXML.getElementsByTagName("number").item(i).getTextContent()+"</number>";
+							resultXML += "<pnumber>"+orderXML.getElementsByTagName("pnumber").item(i).getTextContent()+"</pnumber>";
+							resultXML += "<owner_id>"+orderXML.getElementsByTagName("owner_id").item(i).getTextContent()+"</owner_id>";
+							resultXML += "<writer_id>"+orderXML.getElementsByTagName("writer_id").item(i).getTextContent()+"</writer_id>";
+							resultXML += "<subject>"+"<![CDATA["+orderXML.getElementsByTagName("subject").item(i).getTextContent()+"]]></subject>";
+							resultXML += "<instancetype>"+orderXML.getElementsByTagName("instancetype").item(i).getTextContent()+"</instancetype>";
+							resultXML += "<location>"+orderXML.getElementsByTagName("location").item(i).getTextContent()+"</location>";
+							resultXML += "<dtstart>"+orderXML.getElementsByTagName("dtstart").item(i).getTextContent()+"</dtstart>";
+							resultXML += "<dtend>"+orderXML.getElementsByTagName("dtend").item(i).getTextContent()+"</dtend>";
+							resultXML += "<dstartTime>"+orderXML.getElementsByTagName("dstartTime").item(i).getTextContent()+"</dstartTime>";
+							resultXML += "<dendTime>"+orderXML.getElementsByTagName("dendTime").item(i).getTextContent()+"</dendTime>";
+							resultXML += "<dsDaytype>"+orderXML.getElementsByTagName("dsDaytype").item(i).getTextContent()+"</dsDaytype>";
+							resultXML += "<deDaytype>"+orderXML.getElementsByTagName("deDaytype").item(i).getTextContent()+"</deDaytype>";
+							resultXML += "<alldayevent>"+orderXML.getElementsByTagName("alldayevent").item(i).getTextContent()+"</alldayevent>";
+							resultXML += "<busystatus>"+orderXML.getElementsByTagName("busystatus").item(i).getTextContent()+"</busystatus>";
+							resultXML += "<groupflag>"+orderXML.getElementsByTagName("groupflag").item(i).getTextContent()+"</groupflag>";
+							resultXML += "<gubunFlag>"+orderXML.getElementsByTagName("gubunFlag").item(i).getTextContent()+"</gubunFlag>";
+							resultXML += "<importance>"+orderXML.getElementsByTagName("importance").item(i).getTextContent()+"</importance>";
+							resultXML += "<approveFlag>"+orderXML.getElementsByTagName("approveFlag").item(i).getTextContent()+"</approveFlag>";
+							resultXML += "<returnFlag>"+orderXML.getElementsByTagName("returnFlag").item(i).getTextContent()+"</returnFlag>";
+							resultXML += "<owner_nm>"+orderXML.getElementsByTagName("owner_nm").item(i).getTextContent()+"</owner_nm>";
+							resultXML += "<dept_name>"+"<![CDATA["+ orderXML.getElementsByTagName("dept_name").item(i).getTextContent()+"]]></dept_name>";
+							resultXML += "<writeDay>"+orderXML.getElementsByTagName("writeDay").item(i).getTextContent()+"</writeDay>";
+							resultXML += "<owner_nm2>"+"</owner_nm2>";
+							resultXML += "<dept_name2>"+"</dept_name2>";
+							resultXML += "<jobtitle>"+"</jobtitle>";
+							resultXML += "<jobtitle2>"+"</jobtitle2>";
+							resultXML += "</appointment>";
+						} 
+					}
+					resultXML += "</root>";
+				
 				// 전체 보기
 				} else {
 					resultXML = commonUtil.convertDocumentToString(orderXML);
@@ -479,6 +533,7 @@ public class EzResourceController extends EgovFileMngUtil {
 						resultXML1 += "<gubunFlag>"+tempXML.getElementsByTagName("gubunFlag").item(i).getTextContent()+"</gubunFlag>";
 						resultXML1 += "<importance>"+tempXML.getElementsByTagName("importance").item(i).getTextContent()+"</importance>";
 						resultXML1 += "<approveFlag>"+tempXML.getElementsByTagName("approveFlag").item(i).getTextContent()+"</approveFlag>";
+						resultXML1 += "<returnFlag>"+tempXML.getElementsByTagName("returnFlag").item(i).getTextContent()+"</returnFlag>";
 						resultXML1 += "<owner_nm>"+tempXML.getElementsByTagName("owner_nm").item(i).getTextContent()+"</owner_nm>";
 						resultXML1 += "<dept_name>"+"<![CDATA[" +tempXML.getElementsByTagName("dept_name").item(i).getTextContent()+"]]></dept_name>";
 						resultXML1 += "<writeDay>"+tempXML.getElementsByTagName("writeDay").item(i).getTextContent()+"</writeDay>";
@@ -506,14 +561,14 @@ public class EzResourceController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("scheduleGet End");
-		return reVal.toString();
+		return reVal;
 	}
 	
 	
 	/**
 	 * 자원관리 리스트2 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezResource/viewResList2.do")
+	@RequestMapping(value = "/ezResource/viewResList2.do", method = RequestMethod.GET)
 	public String viewResList2(@CookieValue("loginCookie") String loginCookie,HttpServletRequest req, Model model) throws Exception {
 		logger.debug("viewResList2 Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -540,27 +595,26 @@ public class EzResourceController extends EgovFileMngUtil {
 		logger.debug("adminFg="+adminFg);
 		
 		//brdNm = brdNm.replace("chr(38)", "&");
-		String childBrd = ezResourceService.getItemList(loginCookie,brdID);
-		logger.debug("childBrd="+childBrd);
+		StringBuilder childBrdBld = new StringBuilder();
+		childBrdBld.append(ezResourceService.getItemList(loginCookie,brdID));
+		logger.debug("childBrd=" + childBrdBld.toString());
 		 
 		List<ResGetItemListVO>	list = ezResourceService.getBrdMainList(brdID, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
-
+		
 		brdCount = list.size();
-		logger.debug("brdCount="+brdCount);
-		for (int i=0; i<brdCount; i++) {
-			childBrd += list.get(i).getBrd_ID() + "/" + list.get(i).getBrd_Nm() + "/" + list.get(i).getApproveFlag() + "|";
+		
+		logger.debug("brdCount=" + brdCount);
+		
+		for (int i = 0; i < brdCount; i++) {
+			childBrdBld.append(list.get(i).getBrd_ID() + "/" + list.get(i).getBrd_Nm() + "/" + list.get(i).getApproveFlag() + "|");
 		}
 		
 		ScheduleConfigVO scheduleConfigVO = ezScheduleService.getScheduleConfig(userInfo.getId(), userInfo.getTenantId());
-		int startDay = 0;
+		int startDay = scheduleConfigVO != null ? scheduleConfigVO.getStartDay() : 7;
 		
-		if (scheduleConfigVO != null) {
-			startDay = scheduleConfigVO.getStartDay();
-		} else {
-			startDay = 7;
-		}
+		String lunarUse = ezScheduleService.scheduleGetLunarUse(userInfo.getCompanyID(), userInfo.getTenantId());
 		
-		model.addAttribute("childBrd", childBrd);
+		model.addAttribute("childBrd", childBrdBld.toString());
 		model.addAttribute("brdID", brdID);
 		model.addAttribute("brdNm", brdNm);
 		model.addAttribute("accessCode", accessCode);
@@ -571,7 +625,8 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("brdCount", brdCount);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("startDay", startDay);
-		model.addAttribute("lang", lang);		
+		model.addAttribute("lang", lang);
+		model.addAttribute("lunarUse", lunarUse);
 		
 		logger.debug("viewResList2 End");
 		return "/ezResource/resViewResList2";
@@ -580,7 +635,7 @@ public class EzResourceController extends EgovFileMngUtil {
 	/**
 	 * 자원관리 리스트 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezResource/viewResList.do")
+	@RequestMapping(value = "/ezResource/viewResList.do", method = RequestMethod.GET)
 	public String viewResList(@CookieValue("loginCookie") String loginCookie,HttpServletRequest req, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		//String strXML = "";
@@ -689,7 +744,7 @@ public class EzResourceController extends EgovFileMngUtil {
 	/**
 	 * 자원관리 자원등록정보 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezResource/viewClsItem.do")
+	@RequestMapping(value = "/ezResource/viewClsItem.do", method = RequestMethod.GET)
 	public String viewClsItem(@CookieValue("loginCookie") String loginCookie,HttpServletRequest req, HttpServletResponse resp, Model model, Locale locale) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String brdID = "";
@@ -705,6 +760,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		String strOwnerID = "";
 		String strMakeDate = "";
 		String strApproveFlag = "";
+		String strReturnFlag = "";
 		
 		if (!req.getParameter("brdID").equals("")) {
 			brdID = req.getParameter("brdID");
@@ -735,6 +791,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		}
 		strMakeDate = resBrd.getMakeDate();
 		strApproveFlag = resBrd.getApproveFlag();
+		strReturnFlag = resBrd.getReturnFlag();
 		
 		List<String> attachList = ezResourceService.getAttachList(brdID, userInfo.getCompanyID(), userInfo.getTenantId());
 
@@ -762,6 +819,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("resLocation", strResLocation);
 		model.addAttribute("makeDate", strMakeDate);
 		model.addAttribute("approveFlag", strApproveFlag);
+		model.addAttribute("returnFlag", strReturnFlag);
 		
 		return "/ezResource/resViewClsItem";
 	}
@@ -797,7 +855,8 @@ public class EzResourceController extends EgovFileMngUtil {
 	/**
 	 * 자원관리 자원정보 수정 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezResource/modClsItem.do")
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/ezResource/modClsItem.do", method = RequestMethod.GET)
 	public String modClsItem(@CookieValue("loginCookie") String loginCookie,HttpServletRequest req, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String brdID = "";
@@ -815,6 +874,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		String strOwnerID = "";
 		String strMakeDate = "";
 		String strApproveFlag = "";
+		String strReturnFlag = "";
 		List<OrganUserVO> ownerListVO;
 		
 		if (req.getParameter("brdID") != null) {
@@ -841,14 +901,16 @@ public class EzResourceController extends EgovFileMngUtil {
 				JSONArray jArray = new JSONArray();
 
 				for (int i = 0; i < ownerListVO.size(); i++) {
-				        JSONObject data= new JSONObject();
-				        data.put("ownerId", ownerListVO.get(i).getCn());
-				        data.put("ownerDept", ownerListVO.get(i).getDepartment());
-				        data.put("ownerName", ownerListVO.get(i).getDisplayName());
-				        data.put("ownerName1", ownerListVO.get(i).getTitle());
-				        data.put("ownerDeptName", ownerListVO.get(i).getDescription());
-				        jArray.add(i, data);
-				 }
+			        JSONObject data= new JSONObject();
+			        
+			        data.put("ownerId", ownerListVO.get(i).getCn());
+			        data.put("ownerDept", ownerListVO.get(i).getDepartment());
+			        data.put("ownerName", ownerListVO.get(i).getDisplayName());
+			        data.put("ownerName1", ownerListVO.get(i).getTitle());
+			        data.put("ownerDeptName", ownerListVO.get(i).getDescription());
+			        
+			        jArray.add(i, data);
+				}
 				model.addAttribute("ownerList", jArray);
 			}
 			strBrdID = resBrd.getBrdID();
@@ -873,6 +935,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			
 			strMakeDate = resBrd.getMakeDate();
 			strApproveFlag = resBrd.getApproveFlag();
+			strReturnFlag = resBrd.getReturnFlag();
 			
 			List<String> attachList = ezResourceService.getAttachList(brdID, userInfo.getCompanyID(), userInfo.getTenantId());
 
@@ -903,6 +966,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("langSecondary", ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId()));
 		model.addAttribute("strResID", resID); 
 		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
+		model.addAttribute("returnFlag", strReturnFlag);
 		
 		return "/ezResource/resModClsItem";
 	}
@@ -966,7 +1030,7 @@ public class EzResourceController extends EgovFileMngUtil {
 	/**
 	 * 자원관리 자원 추가 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezResource/addClsItem.do")
+	@RequestMapping(value = "/ezResource/addClsItem.do", method = RequestMethod.GET)
 	public String addClsItem(@CookieValue("loginCookie") String loginCookie,HttpServletRequest req, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String brdID = "";
@@ -1076,7 +1140,7 @@ public class EzResourceController extends EgovFileMngUtil {
 	/**
 	 * 자원관리 자원 등록 조직도 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezResource/selectPerson.do") 
+	@RequestMapping(value = "/ezResource/selectPerson.do", method = RequestMethod.GET) 
 	public String selectPerson(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String useOCS = "";
@@ -1097,7 +1161,7 @@ public class EzResourceController extends EgovFileMngUtil {
 	/**
 	 * 자원관리 부서이름 체크 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezResource/checkDeptName.do")
+	@RequestMapping(value = "/ezResource/checkDeptName.do", method = RequestMethod.GET)
 	public String checkDeptName() throws Exception {
 		return "/ezResource/resCheckDeptName";
 	}
@@ -1105,7 +1169,7 @@ public class EzResourceController extends EgovFileMngUtil {
 	/**
 	 * 자원관리 메인화면 자원정보 레이어팝업 2017-12-13 장진혁
 	 */
-	@RequestMapping(value = "/ezResource/scheduleResourceData.do")
+	@RequestMapping(value = "/ezResource/scheduleResourceData.do", method = RequestMethod.GET)
 	public String scheduleResourceData(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -1135,7 +1199,7 @@ public class EzResourceController extends EgovFileMngUtil {
 	/**
 	 * 자원관리 자원 일정 메인 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezResource/scheduleMain.do")
+	@RequestMapping(value = "/ezResource/scheduleMain.do", method = RequestMethod.GET)
 	public String scheduleMain(@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
@@ -1175,6 +1239,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		String strApproveFlag = resBrd.getApproveFlag();
 		String strOwnerCall = resBrd.getOwnerCall();
 		String strBrdAccess = resBrd.getBrdAccess();
+		String strReturnFlag = resBrd.getReturnFlag();
 		String pAdminFg = ezResourceService.getACL(userInfo.getCompanyID(), resID, userInfo.getId(), "everyone", userInfo.getTenantId(), userInfo.getDeptID());
 		
 		String[] OwnerList = strOwnerID.split(",");
@@ -1183,6 +1248,7 @@ public class EzResourceController extends EgovFileMngUtil {
 				pAdminFg = "Y";
 			}
 		}
+		
 		/*if (req.getParameter("cuid") != null) {
 			cUserIDStr = req.getParameter("cuid");
 		}*/
@@ -1217,6 +1283,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("ownerDeptNm", strOwnDeptNm);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("approveFlag", strApproveFlag);
+		model.addAttribute("returnFlag", strReturnFlag);
 		model.addAttribute("brdNm", strBrdNm);
 		model.addAttribute("brdAccess", strBrdAccess);
 		model.addAttribute("displaySTime", displaySTime);
@@ -1235,10 +1302,23 @@ public class EzResourceController extends EgovFileMngUtil {
 	/**
 	 * 자원관리 자원 일정 상세정보 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezResource/scheduleRead.do")
-	public String scheduleRead(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo, HttpServletRequest req, Model model, Locale locale) throws Exception {
+	@RequestMapping(value = "/ezResource/portletResourceInfo.do", method = RequestMethod.GET)
+	public String portletResourceInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model, Locale locale) throws Exception {
+		logger.debug("portletResourceInfo Start");
+		String ownerID = req.getParameter("ownerID");
+		
+		model.addAttribute("ownerID", ownerID);
+		logger.debug("portletResourceInfo Start");
+		return "/ezResource/resPortletInfo";
+	}
+	
+	/**
+	 * 자원관리 자원 일정 상세정보 화면 호출 함수
+	 */
+	@RequestMapping(value = {"/ezResource/scheduleRead.do", "/ezResource/persPortletRead.do"}, method = RequestMethod.GET)
+	public String scheduleRead(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model, Locale locale) throws Exception {
 		logger.debug("scheduleRead Start");
-		userInfo = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String editor = config.getProperty("EDITOR");
 		String nonActiveX = "YES";
@@ -1275,6 +1355,8 @@ public class EzResourceController extends EgovFileMngUtil {
 		String startDateTimeRepeat = "";
 		String endDateTimeRepeat = "";
 		String deptID = "";
+		String brdReturnFlag = "";
+		String returnFlag = "";
 		
 		if (req.getParameter("ownerID") != null) {
 			resID = req.getParameter("ownerID");
@@ -1282,8 +1364,15 @@ public class EzResourceController extends EgovFileMngUtil {
 		if (req.getParameter("brdName") != null) {
 			brdName = req.getParameter("brdName");
 		}
+		
+		//baonk 추가 2018-08-08
+		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
+		if (use_cabinet.equals("YES")) {
+			use_cabinet = cabinetAdminService.checkModuleActive("resrc", userInfo);
+		}
 
 		String adminFg = ezResourceService.getACL(userInfo.getCompanyID(), resID, userInfo.getId(), "", userInfo.getTenantId(), userInfo.getDeptID());
+
 		String brdApproveFlag = ezResourceService.getBrdApproveFlag(Integer.parseInt(resID), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		if (req.getParameter("cmd") != null) {
@@ -1359,6 +1448,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			entryList = getSchedule.getEntryList();
 			allDay = getSchedule.getAllDay();
 			saveApproveFlag = getSchedule.getApproveFlag();
+			returnFlag = getSchedule.getReturnFlag();
 			
 			ResGetScheduleRepetitionVO repDateTimes = ezResourceService.getRepDateTimes(orgOwnerID, userInfo.getCompanyID(), Integer.parseInt(orgNum), userInfo.getTenantId());
 			if (repDateTimes != null) {
@@ -1389,13 +1479,15 @@ public class EzResourceController extends EgovFileMngUtil {
 			}
 		}
 		
-		ResBrdVO resBrdVO = ezResourceService.getBrd(Integer.valueOf(resID), userInfo.getCompanyID(), userInfo.getTenantId());
+		ResBrdVO resBrdVO = ezResourceService.getBrd(Integer.parseInt(resID), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		if (userInfo.getPrimary().equals("1")) {
 			brdName = resBrdVO.getBrdNm();
 		} else { 
 			brdName = resBrdVO.getBrdNm2();
 		}
+		
+		brdReturnFlag = resBrdVO.getReturnFlag();
 		
 		// 2019-01-15 김민성 - 자원관리 - 자원관리 예약 시간 조회 12시간->24시간제로 변경
 		//startDateTime = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd hh:mm:ss", "");
@@ -1436,9 +1528,12 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("endDateVal", endDateVal);
 		model.addAttribute("typeVal", typeVal);
 		model.addAttribute("saveApproveFlag", saveApproveFlag);
+		model.addAttribute("resReturnFlag", brdReturnFlag);
+		model.addAttribute("returnFlag", returnFlag);
 		model.addAttribute("entryList", entryList);
 		model.addAttribute("checkSDT", checkSDT);
 		model.addAttribute("checkEDT", checkEDT);
+		model.addAttribute("useCabinet", use_cabinet); // 캐비넷 추가 baonk 2018-08-08
 		model.addAttribute("deptID", deptID);
 		
 		if (reFlag.equals("1")) {
@@ -1457,15 +1552,20 @@ public class EzResourceController extends EgovFileMngUtil {
 			model.addAttribute("strIReFlagVal", reFlag);
 		}
 		
+		String requestURL = (String) req.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+		//뷰만 다르고 cs가 같은 경우여서 requestURL 사용해서 다이나믹뷰
+		requestURL = requestURL.substring(1, requestURL.length() - 3);
+		
+		if(requestURL.contains("persPortletRead"))	return "/ezResource/resPortletRead";
 		return "/ezResource/resScheduleRead";
 	}
 	
 	/**
 	 * 자원관리 자원 예약 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezResource/scheduleAdd.do")
-	public String scheduleAdd(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo, HttpServletRequest req, Model model, Locale locale) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+	@RequestMapping(value = {"/ezResource/scheduleAdd.do", "/ezResource/persPortletAdd.do" }, method = RequestMethod.GET)
+	public String scheduleAdd(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model, Locale locale) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String editor = config.getProperty("EDITOR");
 		String noneActiveX = "YES";
 		String resID = "";
@@ -1603,6 +1703,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			String selEd = "";
 			String cDate = "";
 			String cTime = "";
+			String cTime2 = "";
 			
 			if (req.getParameter("selsd") != null) {
 				selSd = req.getParameter("selsd");
@@ -1613,26 +1714,41 @@ public class EzResourceController extends EgovFileMngUtil {
 			if (selSd.equals("") || selEd.equals("")) {
 				cDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"), userInfo.getOffset(), false);
 				cTime = cDate.split(" ")[1].substring(0, 2);
+				cTime2 = cDate.split(" ")[1].substring(3, 5);
 				
 				if (req.getParameter("startDate") != null) {
 					cDate = req.getParameter("startDate");
 				}
 				cDate = cDate.substring(0, 10);
-				startDateTime = cDate + " " + cTime + ":00:00";
-				
+				if(Integer.parseInt(cTime2) < 30) {
+					startDateTime = cDate + " " + cTime + ":00:00";
+				} else {
+					startDateTime = cDate + " " + cTime + ":30:00";
+				}
+					
 				if (req.getParameter("endDate") != null) {
 					cDate = req.getParameter("endDate");
 				}
 				cDate = cDate.substring(0, 10);
-				endDateTime = cDate + " " + cTime + ":30:00";
+				if(Integer.parseInt(cTime2) < 30) {
+					endDateTime = cDate + " " + cTime + ":30:00";
+				} else {
+					endDateTime = cDate + " " + cTime + ":60:00";
+				}
 			} else {
 				if (selSd.length() == 10) {
 					cDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"), userInfo.getOffset(), false);
 					cTime = cDate.split(" ")[1].substring(0, 2);
+					cTime2 = cDate.split(" ")[1].substring(3, 5);
 					cDate = cDate.substring(0, 10);
-					startDateTime = selSd + " " + cTime + ":00:00";
-					endDateTime = selEd + " " + cTime + ":30:00";
-					allDay = "1";				// 2018-08-06 김민성 - 종일일정 클릭 시 기간 하루종일로 변경
+					if(Integer.parseInt(cTime2) < 30) {
+						startDateTime = selSd + " " + cTime + ":00:00";
+						endDateTime = selEd + " " + cTime + ":30:00";
+					} else {
+						startDateTime = selSd + " " + cTime + ":30:00";
+						endDateTime = selEd + " " + cTime + ":60:00";
+					}
+					allDay = "1"; // 2018-08-06 김민성 - 종일일정 클릭 시 기간 하루종일로 변경
 				} else {
 					startDateTime = selSd;
 					endDateTime = selEd;
@@ -1644,7 +1760,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			}
 		}
 		
-		ResBrdVO resBrdVO = ezResourceService.getBrd(Integer.valueOf(resID), userInfo.getCompanyID(), userInfo.getTenantId());
+		ResBrdVO resBrdVO = ezResourceService.getBrd(Integer.parseInt(resID), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		if (userInfo.getPrimary().equals("1")) {
 			brdName = resBrdVO.getBrdNm();
@@ -1660,6 +1776,9 @@ public class EzResourceController extends EgovFileMngUtil {
 		
 		checkSDT = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd aa h:mm:ss", "yyyy-M-d H:mm", "");
 		checkEDT = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd aa h:mm:ss", "yyyy-M-d H:mm", "");
+		
+		Map<String, Boolean> menuAccessMap = commonUtil.checkMenuAccess(Arrays.asList(new String[] {"schedule"}), userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getLang(), userInfo.getId(), userInfo.getDeptID());
+		boolean useSchedule = menuAccessMap.get("schedule");
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("editor", editor);
@@ -1698,6 +1817,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("endDateTimeRepeat", endDateTimeRepeat);
 		model.addAttribute("checkSDT", checkSDT);
 		model.addAttribute("checkEDT", checkEDT);
+		model.addAttribute("useSchedule", useSchedule);
 		
 		if (reFlag.equals("1")) {
 			model.addAttribute("strTmpReFlagVal", "2");
@@ -1715,15 +1835,21 @@ public class EzResourceController extends EgovFileMngUtil {
 			model.addAttribute("strIReFlagVal", reFlag);
 		}
 		
+		
+		String requestURL = (String) req.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+		//뷰만 다르고 cs가 같은 경우여서 requestURL 사용해서 다이나믹뷰
+		requestURL = requestURL.substring(1, requestURL.length() - 3);
+		
+		if(requestURL.contains("persPortletAdd"))	return "/ezResource/resPortletAdd";
 		return "/ezResource/resScheduleAdd";
 	}
 	
 	/**
 	 * 자원관리 자원 양식 등록 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezResource/scheduleManageForm.do")
-	public String scheduleManageForm(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo,HttpServletRequest req,Model model) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+	@RequestMapping(value = "/ezResource/scheduleManageForm.do", method = RequestMethod.GET)
+	public String scheduleManageForm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req,Model model) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String resID = "";
 		String brdName = "";
@@ -1749,9 +1875,9 @@ public class EzResourceController extends EgovFileMngUtil {
 	/**
 	 * 자원관리 자원 반복 등록 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezResource/scheduleRepetition.do")
-	public String scheduleRepetition(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+	@RequestMapping(value = "/ezResource/scheduleRepetition.do", method = RequestMethod.GET)
+	public String scheduleRepetition(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		model.addAttribute("userInfo", userInfo);
 		return "/ezResource/resScheduleRepetition";
@@ -1811,8 +1937,8 @@ public class EzResourceController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezResource/scheduleGetForm.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String scheduleGetForm(@RequestBody String xmlStr, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+	public String scheduleGetForm(@RequestBody String xmlStr, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 		
 		String resID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
@@ -1828,13 +1954,14 @@ public class EzResourceController extends EgovFileMngUtil {
 	/**
 	 * 자원관리 승인요청 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezResource/scheduleApprovList.do")
-	public String scheduleApprovList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+	@RequestMapping(value = "/ezResource/scheduleApprovList.do", method = RequestMethod.GET)
+	public String scheduleApprovList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest req) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String resID = "";
 		String brdNm = "";
 		String startDate = "";
 		String endDate = "";
+		String type = "";
 		
 		if (req.getParameter("resID") != null) {
 			resID = req.getParameter("resID");
@@ -1845,18 +1972,24 @@ public class EzResourceController extends EgovFileMngUtil {
 		if (req.getParameter("endDate") != null) {
 			endDate = req.getParameter("endDate");
 		}
+		if (req.getParameter("type") != null) {
+			type = req.getParameter("type");
+		}
 		ResBrdVO resBrd = ezResourceService.getBrd(Integer.parseInt(resID), userInfo.getCompanyID(), userInfo.getTenantId());
 		if (userInfo.getPrimary().equals("1")) {
 			brdNm = resBrd.getBrdNm();
 		} else {
 			brdNm = resBrd.getBrdNm2();
 		}
-	
+
 		model.addAttribute("userInfo",userInfo);
 		model.addAttribute("resID",resID);
 		model.addAttribute("brdNm",brdNm);
 		model.addAttribute("startDate",startDate);
 		model.addAttribute("endDate",endDate);
+		model.addAttribute("approveFlag",resBrd.getApproveFlag());
+		model.addAttribute("returnFlag",resBrd.getReturnFlag());
+		model.addAttribute("pType", type);
 		
 		return "/ezResource/resScheduleApprovList";
 	}
@@ -1864,7 +1997,7 @@ public class EzResourceController extends EgovFileMngUtil {
 	/**
 	 * 자원관리 양식등록 저장 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezResource/apropinion.do")
+	@RequestMapping(value = "/ezResource/apropinion.do", method = RequestMethod.GET)
 	public String apropinion() throws Exception {
 		
 		return "/ezResource/resApropinion";
@@ -1873,10 +2006,10 @@ public class EzResourceController extends EgovFileMngUtil {
 	/**
 	 * 자원관리 양식등록 실행  함수
 	 */
-	@RequestMapping(value = "/ezResource/scheduleSaveForm.do")
+	@RequestMapping(value = "/ezResource/scheduleSaveForm.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String scheduleSaveForm(@RequestBody String xmlStr, @CookieValue("loginCookie") String loginCookie,LoginVO userInfo) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+	public String scheduleSaveForm(@RequestBody String xmlStr, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 		String resID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
 		String brdNm = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
@@ -1893,10 +2026,10 @@ public class EzResourceController extends EgovFileMngUtil {
 	/**
 	 * 자원관리 양식삭제 실행  함수
 	 */
-	@RequestMapping(value = "/ezResource/scheduleDelForm.do")
+	@RequestMapping(value = "/ezResource/scheduleDelForm.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String scheduleDelForm(@RequestBody String xmlStr, @CookieValue("loginCookie") String loginCookie,LoginVO userInfo) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+	public String scheduleDelForm(@RequestBody String xmlStr, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 		try {
 			String delCode = xmlDom.getElementsByTagName("RESID").item(0).getTextContent();
@@ -1911,9 +2044,9 @@ public class EzResourceController extends EgovFileMngUtil {
 	/**
 	 * 자원관리 자원예약 자원선택 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezResource/scheduleAddSelect.do")
-	public String scheduleAddSelect(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+	@RequestMapping(value = {"/ezResource/scheduleAddSelect.do", "/ezResource/resPersPortlet.do"}, method = RequestMethod.GET)
+	public String scheduleAddSelect(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest req) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String brdID = "";
 		String brdNm = "";
@@ -1956,6 +2089,11 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("noneActiveX", noneActiveX);
 				
+		String requestURL = (String) req.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+		//뷰만 다르고 cs가 같은 경우여서 requestURL 사용해서 다이나믹뷰
+		requestURL = requestURL.substring(1, requestURL.length() - 3);
+		
+		if(requestURL.contains("resPersPortlet"))	return "/ezResource/resPersPortlet";
 		return "/ezResource/resScheduleAddSelect";
 	}
 	
@@ -1964,8 +2102,8 @@ public class EzResourceController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezResource/scheduleAddGetACL.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String scheduleAddGetACL(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo,Model model, HttpServletRequest req) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+	public String scheduleAddGetACL(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest req) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String brdID = "";
 		String ret = "";
 		
@@ -1980,9 +2118,9 @@ public class EzResourceController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezResource/scheduleAddOk.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String scheduleAddOk(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo,Model model, HttpServletRequest req, @RequestBody String xmlStr) throws Exception {
+	public String scheduleAddOk(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest req, @RequestBody String xmlStr) throws Exception {
 		logger.debug("scheduleAddOk Start");
-		userInfo = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String cmd = "";
 		String typeVal = "";
 		String companyID = "";
@@ -1996,7 +2134,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		}
 		companyID = userInfo.getCompanyID();
 		logger.debug("xmlStr=" + xmlStr);
-		Document dom = commonUtil.convertStringToDocument(xmlStr);
+		Document dom = commonUtil.convertStringToDocument(commonUtil.detectPathTraversal(xmlStr));
 	
 		if (cmd.equals("del")) {
 			logger.debug("del Start");
@@ -2052,15 +2190,15 @@ public class EzResourceController extends EgovFileMngUtil {
 		
 		logger.debug("ret=" + ret);
 		logger.debug("scheduleAddOk End.");
-		return ret;
+		return commonUtil.stripScriptTags(ret).replaceAll("onerror=alert", "");
 	}
 	
 	/**
 	 * 자원관리 자원예약 사용자 선택 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezResource/scheduleSelectUser.do")
-	public String scheduleSelectUser(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo,Model model, HttpServletRequest req) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+	@RequestMapping(value = "/ezResource/scheduleSelectUser.do", method = RequestMethod.GET)
+	public String scheduleSelectUser(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest req) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		model.addAttribute("userInfo", userInfo);
 		return "/ezResource/resScheduleSelectUser";
 	}
@@ -2068,20 +2206,18 @@ public class EzResourceController extends EgovFileMngUtil {
 	/**
 	 * 자원관리 자원예약 부서 선택 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezResource/scheduleSelectDept.do")
-	public String scheduleSelectDept(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo,Model model, HttpServletRequest req) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
-		
+	@RequestMapping(value = "/ezResource/scheduleSelectDept.do", method = RequestMethod.GET)
+	public String scheduleSelectDept(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest req) {
 		return "/ezResource/resScheduleSelectDept";
 	}
 	
 	/**
 	 * 자원관리 자원등록 조직도 부서 사원목록 호출 함수
 	 */
-	@RequestMapping(value = "/ezResource/getDeptMemberList.do", produces="text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezResource/getDeptMemberList.do", method = RequestMethod.GET, produces="text/xml;charset=utf-8")
 	@ResponseBody
-	public String getDeptMemberList(@RequestBody String data, HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie,LoginVO userInfo) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+	public String getDeptMemberList(@RequestBody String data, HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Document doc = commonUtil.convertStringToDocument(data);
 		
 		String deptID = doc.getElementsByTagName("deptID").item(0).getTextContent();
@@ -2097,7 +2233,7 @@ public class EzResourceController extends EgovFileMngUtil {
 	/**
 	 * 자원관리 자원반복 삭제 확인 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezResource/scheduleRepetitionDel.do")
+	@RequestMapping(value = "/ezResource/scheduleRepetitionDel.do", method = RequestMethod.GET)
 	public String scheduleRepetitionDel() throws Exception {
 		return "/ezResource/resScheduleRepetitionDel";
 	}
@@ -2105,10 +2241,10 @@ public class EzResourceController extends EgovFileMngUtil {
 	/**
 	 * 자원관리 자원사용 승인Flag 저장 실행 함수
 	 */
-	@RequestMapping(value = "/ezResource/updateApprovalFlag.do", produces="text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezResource/updateApprovalFlag.do", method = RequestMethod.POST, produces="text/xml;charset=utf-8")
 	@ResponseBody
-	public String updateApprovalFlag(@RequestBody String xmlStr, LoginVO userInfo, @CookieValue("loginCookie") String loginCookie) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+	public String updateApprovalFlag(@RequestBody String xmlStr, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Document dom = commonUtil.convertStringToDocument(xmlStr);
 		try {
 			String companyID = dom.getElementsByTagName("COMPANYID").item(0).getTextContent();
@@ -2126,14 +2262,36 @@ public class EzResourceController extends EgovFileMngUtil {
 	}
 	
 	/**
+	 * 자원관리 자원사용 반납Flag 저장 실행 함수
+	 */
+	@RequestMapping(value = "/ezResource/updateReturnFlag.do", produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String updateReturnFlag(@RequestBody String xmlStr, LoginVO userInfo, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		Document dom = commonUtil.convertStringToDocument(xmlStr);
+		try {
+			String companyID = dom.getElementsByTagName("COMPANYID").item(0).getTextContent();
+			String resID = dom.getElementsByTagName("RESID").item(0).getTextContent();
+			String num = dom.getElementsByTagName("NUM").item(0).getTextContent();
+			String returnFlag = dom.getElementsByTagName("RETURN").item(0).getTextContent();
+			
+			ezResourceService.updateSchedule2(Integer.parseInt(num), resID, companyID, returnFlag, userInfo.getTenantId());
+			
+			return "True";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "False";
+		}
+	}
+	
+	/**
 	 * 자원관리 중복체크 실행 함수
 	 */
-	@RequestMapping(value = "/ezResource/timeDupCheck.do", produces="text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezResource/timeDupCheck.do", method = RequestMethod.POST, produces="text/xml;charset=utf-8")
 	@ResponseBody
-	public String timeDupCheck(@RequestBody String xmlStr, LoginVO userInfo, @CookieValue("loginCookie") String loginCookie) throws Exception {
+	public String timeDupCheck(@RequestBody String xmlStr, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("timeDupCheck started");
-
-		userInfo = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String ret = "";
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
@@ -2212,7 +2370,7 @@ public class EzResourceController extends EgovFileMngUtil {
 	/**
 	 * 자원관리 자원반복 오픈 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezResource/scheduleRepetitionOpen.do")
+	@RequestMapping(value = "/ezResource/scheduleRepetitionOpen.do", method = RequestMethod.GET)
 	public String scheduleRepetitionOpen() throws Exception {
 		return "/ezResource/resScheduleRepetitionOpen";
 	}
@@ -2220,25 +2378,28 @@ public class EzResourceController extends EgovFileMngUtil {
 	/**
 	 * 자원관리 권한없는 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezResource/nonResList.do")
-	public String nonResList(HttpServletRequest req, Model model) throws Exception {
+	@RequestMapping(value = "/ezResource/nonResList.do", method = RequestMethod.GET)
+	public String nonResList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
 		String accMessage = "";
 		if (req.getParameter("msg") != null && !req.getParameter("msg").equals("")) {
 			accMessage = req.getParameter("msg");
 		}
-		model.addAttribute("accMessage", accMessage);
+		model.addAttribute("accMessage", commonUtil.cleanScriptValue(accMessage, "clean"));
+		model.addAttribute("userInfo", userInfo); 
 		return "/ezResource/resNonResList";
 	}
 	
 	/**
 	 * 자원관리 승인 후 알림 발송 실행 함수
 	 */
-	@RequestMapping(value = "/ezResource/sendMail.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value = "/ezResource/sendMail.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String sendMail(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, @RequestBody String xmlStr) throws Exception {
+	public String sendMail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, @RequestBody String xmlStr) throws Exception {
 		logger.debug("sendMail started");
 		
-		userInfo = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 		
@@ -2294,11 +2455,10 @@ public class EzResourceController extends EgovFileMngUtil {
 	/**
 	 * 자원관리 승인 후 알림 발송 실행 함수
 	 */
-	@RequestMapping(value = "/ezResource/sendMailToUser.do")
-	public void sendMailToUser(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, @RequestBody String xmlStr) throws Exception {
+	@RequestMapping(value = "/ezResource/sendMailToUser.do", method = RequestMethod.POST)
+	public void sendMailToUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, @RequestBody String xmlStr) throws Exception {
 		logger.debug("sendMailToUser started");
-
-		userInfo = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 		
@@ -2315,9 +2475,12 @@ public class EzResourceController extends EgovFileMngUtil {
         if (approve.equals("1")) {
         	bodyContent.append(resInfo.getOwnerNm() + egovMessageSource.getMessage("ezResource.t9900007", userInfo.getLocale()));
         	bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900008", userInfo.getLocale()) + " : " + resInfo.getBrd_Nm());
-        } else {
+        } else if (approve.equals("0")){
         	bodyContent.append(resInfo.getOwnerNm() + egovMessageSource.getMessage("ezResource.t9900009", userInfo.getLocale()));
         	bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900010", userInfo.getLocale()) + " : " + resInfo.getBrd_Nm());
+        } else {
+        	bodyContent.append(resInfo.getOwnerNm() + egovMessageSource.getMessage("ezResource.t9900015", userInfo.getLocale()));
+        	bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900016", userInfo.getLocale()) + " : " + resInfo.getBrd_Nm());
         }
         
         bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900004", userInfo.getLocale()) + " : " 
@@ -2327,9 +2490,11 @@ public class EzResourceController extends EgovFileMngUtil {
         String subject = "";
         if (approve.equals("1")) {
         	subject = "["+egovMessageSource.getMessage("ezResource.t9900011", userInfo.getLocale()) + " : " + resInfo.getBrd_Nm() + "] " + resInfo.getTitle();
-        } else {
+        } else if (approve.equals("0")){
         	subject = "["+egovMessageSource.getMessage("ezResource.t9900012", userInfo.getLocale()) + " : " + resInfo.getBrd_Nm() + "] " + resInfo.getTitle();
-        }
+        } else {
+        	subject = "["+egovMessageSource.getMessage("ezResource.t9900017", userInfo.getLocale()) + " : " + resInfo.getBrd_Nm() + "] " + resInfo.getTitle();
+        } 
         String content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
         
     	InternetAddress from = new InternetAddress();
@@ -2353,13 +2518,53 @@ public class EzResourceController extends EgovFileMngUtil {
         logger.debug("sendMailToUser ended");
 	}
 	
-	@RequestMapping(value = "/ezResource/changeResourceOrder.do", produces = "text/html;charset=UTF-8")
+
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/ezResource/getResourcePortlet.do", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	@ResponseBody
-	public void changeResourceOrder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO loginVO) throws Exception {
+	public JSONObject getResoucePortlet(@CookieValue("loginCookie") String loginCookie, String date) throws Exception {
+		logger.debug("============ getResoucePortlet started ============");
+		
+		if(date == null) {
+			JSONObject err = new JSONObject();
+			return err;
+		}
+
+		List<ResBrdVO> list = ezResourceService.getResourcePortlet(loginCookie, date);
+		JSONObject jObject = new JSONObject();
+		jObject.put("status", "ok");
+		jObject.put("list", list);
+		logger.debug("============ getResoucePortlet ended ============");
+		return jObject;
+	}
+	
+	/**
+	 * 포틀릿 자원 목록 저장
+	 * @param loginCookie
+	 * @param request
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/ezResource/saveResourcePortlet.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@ResponseBody
+	public JSONObject saveResoucePortlet(@CookieValue("loginCookie") String loginCookie, String resources) throws Exception {
+		logger.debug("============ saveResourcePortlet started ============");
+		
+		String result = ezResourceService.saveResourcePortlet(loginCookie, resources);
+
+		JSONObject jObject = new JSONObject();
+		jObject.put("status", result);
+		logger.debug("============ saveResourcePortlet ended ============");
+		return jObject;
+	}
+
+	@RequestMapping(value = "/ezResource/changeResourceOrder.do", method = RequestMethod.POST, produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public void changeResourceOrder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		
 		logger.debug("============ changeResourceOrder started ============");
 		
-		loginVO = commonUtil.userInfo(loginCookie);
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		
 		String selectedResourceId = request.getParameter("selectedResourceId");
 		String targetResourceId = request.getParameter("targetResourceId");
@@ -2369,11 +2574,11 @@ public class EzResourceController extends EgovFileMngUtil {
 		logger.debug("============ changeResourceOrder ended ============");
 	}
 	
-	@RequestMapping(value = "ezResource/resOrganToMoveResource.do")
-	public String resOrganToMoveResource(LoginVO userInfo,@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model) throws Exception {
+	@RequestMapping(value = "ezResource/resOrganToMoveResource.do", method = RequestMethod.GET)
+	public String resOrganToMoveResource(@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model) throws Exception {
 		logger.debug("============ resOrganToMoveResource ended ============");
 		
-		userInfo = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("serverName", req.getServerName());
@@ -2382,13 +2587,13 @@ public class EzResourceController extends EgovFileMngUtil {
 		return "ezResource/resOrganToMoveResource";
 	}
 	
-	@RequestMapping(value = "/ezResource/moveResourceToOtherResourceGroup.do", produces = "text/html;charset=UTF-8")
+	@RequestMapping(value = "/ezResource/moveResourceToOtherResourceGroup.do", method = RequestMethod.POST, produces = "text/html;charset=UTF-8")
 	@ResponseBody
-	public void moveResourceToOtherResourceGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO loginVO) throws Exception {
+	public void moveResourceToOtherResourceGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		
 		logger.debug("============ moveResourceToOtherResourceGroup started ============");
 		
-		loginVO = commonUtil.userInfo(loginCookie);
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		
 		String originResourceGroupId = request.getParameter("originResourceGroupId");
 		String selectedResourceGroupId = request.getParameter("selectedResourceGroupId");
@@ -2397,18 +2602,18 @@ public class EzResourceController extends EgovFileMngUtil {
 		logger.debug("============ moveResourceToOtherResourceGroup ended ============");
 	}
 	
-	@RequestMapping(value = "/ezResource/isResourceGroupManager.do", produces = "text/html;charset=UTF-8")
+	@RequestMapping(value = "/ezResource/isResourceGroupManager.do", method = RequestMethod.GET, produces = "text/html;charset=UTF-8")
 	@ResponseBody
-	public String isResourceGroupManager(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO loginVO) throws Exception {
+	public String isResourceGroupManager(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		
 		logger.debug("============ moveResourceToOtherResourceGroup started ============");
 		
-		loginVO = commonUtil.userInfo(loginCookie);
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		
 		String selectedResourceGroupId = request.getParameter("selectedResourceGroupId");
-		String[] ownerLists = request.getParameter("ownerID").split(",");	
-		
-		String isManger = ezResourceService.isResourceGroupManager(selectedResourceGroupId, loginVO.getId(),loginVO.getTenantId(), loginVO.getCompanyID());
+			
+		String[] ownerLists = request.getParameter("ownerID").split(",");			
+		String isManger = ezResourceService.isResourceGroupManager(selectedResourceGroupId, loginVO.getId(),loginVO.getTenantId(), loginVO.getCompanyID(), loginVO.getDeptID());
 		
 		// 2020-06-24 김민성 - 자원 이동시 자원관리자의 자원 권한도 체크하도록 추가
 		for(String owner : ownerLists) {
@@ -2432,9 +2637,9 @@ public class EzResourceController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezResource/callManagerDepthNodeForMoveResource.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String callManagerDepthNode(@RequestBody String xmlStr,HttpServletRequest req,Model model, LoginVO userInfo, @CookieValue("loginCookie") String loginCookie) throws Exception {
+	public String callManagerDepthNode(@RequestBody String xmlStr,HttpServletRequest req,Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("callManagerDepthNode Start");
-		userInfo = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String selectFlag = "";
 		StringBuilder strXML = new StringBuilder();

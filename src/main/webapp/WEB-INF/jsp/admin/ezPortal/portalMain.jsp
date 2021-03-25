@@ -15,8 +15,4 @@
   	</frameset>
   	<noframes>
   	</noframes>
-	<noframes>
-		<body>
-		</body>
-	</noframes>
 </html>

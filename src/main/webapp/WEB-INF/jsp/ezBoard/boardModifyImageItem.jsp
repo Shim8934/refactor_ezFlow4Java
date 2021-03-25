@@ -51,8 +51,8 @@
         <script type="text/javascript">
 	        var pListImagePath = "";
 	        var pListCount = "${listCount}";
-	        var pListImage = "${listImage}";
-	        var pBoardID = "${boardID}";
+	        var pListImage = "<c:out value='${listImage}'/>";
+	        var pBoardID = "<c:out value='${boardID}'/>";
 	        var AttachLimit = "${boardInfo.attachSizeLimit}";
 	        var ImageID = "";
 	        var DelCount = 0;
@@ -64,8 +64,8 @@
 	        var ListImages = "${listImages}";
 	        var ImgaeReturnXml = "";
 	        var pMainFg = "${mainFg}";
-	        var pItemID = "${itemID}";
-	        var pGubun = "${guBun}";
+	        var pItemID = "<c:out value='${itemID}'/>";
+	        var pGubun = "<c:out value='${guBun}'/>";
 	        var orgImagePath = "${orgImagePath}";
 	        var pNoneActiveX = "YES";
 	        function window_onload() {
@@ -82,6 +82,9 @@
 	            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
 	                document.getElementById("file1").multiple = false;
 	            }
+	            
+	            var orgImagePathEncoding = orgImagePath.replace(/{/gi,"%7B").replace(/}/gi,"%7D");
+	            document.getElementById("image1").src = orgImagePathEncoding;
 	        }
 	        
 	        function uploadComplete() {
@@ -126,7 +129,7 @@
 		            }
 		            xhr = new XMLHttpRequest();
 		            xhr.addEventListener("load", uploadComplete, false);
-		            xhr.open("POST", "/ezBoard/boardImageUpload.do?mode=PICTURE&boardID=" + pBoardID + "&fileLimit=" + AttachLimit);
+		            xhr.open("POST", "/ezBoard/boardImageUpload.do?mode=PICTURE&boardID=" + encodeURIComponent(pBoardID) + "&fileLimit=" + AttachLimit);
 		            xhr.send(fd);
 		        }
 	        }
@@ -173,7 +176,7 @@
 	                strXML += "<OFILENAME>" + orgFileName + "</OFILENAME>";
 	                strXML += "</NODE>";
 	                strXML += "</DATA>";
-	
+	                
 	                var xmlhttp = createXMLHttpRequest();
 	                var xmldom = createXmlDom();
 	
@@ -201,6 +204,11 @@
 								window.close();
 							}
 						});
+	                    
+	                     //2019.03.04 유은정 - 포토갤러리 포틀릿 리스트 업데이트 되도록 수정
+			            if (parent.opener.opener != null && parent.opener.opener.photoBoardMovePage != undefined) {
+			            	parent.opener.opener.photoBoardMovePage(null);
+			            }
 	                }
 	                else {
 	                    alert(strLang51);
@@ -411,7 +419,7 @@
 	                        var imgFileName = imagefilepath.split('/')[0];
 	                        imagefilepath = "tempUploadFile/" + imgFileName;
 
-	                        var imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUMTEMP&boardID=" + pBoardID + "&fileName=" + imgFileName;
+	                        var imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUMTEMP&boardID=" + encodeURIComponent(pBoardID) + "&fileName=" + imgFileName;
 	                        document.getElementsByTagName("IMG")[0].src = imgSrc;
 	                    }
 	                }        
@@ -453,33 +461,36 @@
 	        <tr>
 	            <td style="width:100%; height:250px; border:1px solid #ddd; padding:5px;background:#e5e5e5;" >
 	                <div class="viewbox" style="width:100%; border:0 none; padding:0; background:none;">
-	                	<c:set var="result" value="${fn:split(listImages, ';')}"/>
-	                	<c:forEach var="res" items="${result}" varStatus="vs">
+	                	<!-- <c:set var="result" value="${fn:split(listImages, ';')}"/>
+	                	<c:forEach var="res" items="${result}" varStatus="vs"> -->
 	                	<%-- 2018-06-12 홍승비 - 사진수정 시 이미지 비율 유지 --%>
 		                    <table style="width:100%; min-height:230px; ">
 		                        <tr>
 		                            <td style="text-align:center">
 		                                <span id='imagechange1' class='preView' style='display:none;' value=""></span>
-		                                <img src='${res}' id='image${vs.count}' name='zb_target_resize' style='cursor:pointer; max-height:230px; max-width:429px;'/>
+		                                <img src='' id='image1' name='zb_target_resize' style='cursor:pointer;max-height:230px;max-width:429px;'/>
+		                                <%-- <img src='${res}' id='image${vs.count}' name='zb_target_resize' style='cursor:pointer; max-height:230px; max-width:429px;'/>--%>
 		                            </td>
 		                        </tr>
 		                    </table>
-	                	</c:forEach>
+	                	<!-- </c:forEach> -->
 	                    <table style="width:100%">
 	                    	<tr>
 	                        	<td style="width:100%; padding:3px 0px 0px 0px;">
-	                                <input type="text" id='getcontent' style='width:98%; border:1px solid #bbbbbb; background:#fff; height:21px; line-height:21px; padding:0px 0px 0px 4px;' maxlength="50" value="${imageContent}" />
+	                                <textarea type="text" id='getcontent' style='height:100px;width:97%; resize:none;' >${imageContent}</textarea>
 	                            </td>
 	                        </tr>
 	                    </table>
 	                </div>
 	            </td>
 	        </tr>
+	        <%--
 	        <tr>
 	            <td style="width:100%; display:none;">
 	                <input type="text" id='getcontent' style='width:100%' maxlength="50" value="${imageContent}"/>
 	            </td>         
 	        </tr>
+	        --%>
 	        <tr>
 	    <td style="display:none;">
 	    	<c:if test="${!isCrossBrowser}">

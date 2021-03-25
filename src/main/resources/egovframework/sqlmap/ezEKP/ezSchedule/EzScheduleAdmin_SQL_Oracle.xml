@@ -3,6 +3,8 @@
 
 <sqlMap namespace="ezScheduleAdmin">
 	<typeAlias  alias="ScheduleShareVO" 	type="egovframework.ezEKP.ezSchedule.vo.ScheduleShareVO"/>
+	<typeAlias  alias="ScheduleGroupListVO" type="egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO"/>
+	<typeAlias  alias="ScheduleGroupVO" type="egovframework.ezEKP.ezSchedule.vo.ScheduleGroupVO"/>
 	
 	<resultMap class="ScheduleShareVO" id="scheduleShareVO">
 		<result property="rowIndex"			column="ROWINDEX"			columnIndex="1"/>
@@ -12,6 +14,243 @@
 		<result property="description"		column="DESCRIPTION"		columnIndex="5"/>
 		<result property="deptName"			column="DEPTNAME"			columnIndex="6"/>		
 	</resultMap>
+	
+	<resultMap class="ScheduleGroupListVO" id="scheduleGroupListVO">
+		<result property="groupId"			column="GROUPID"			columnIndex="1"/>
+		<result property="groupName"		column="GROUPNAME"			columnIndex="2"/>
+		<result property="description"		column="DESCRIPTION"		columnIndex="3"/>
+		<result property="createDate"		column="CREATEDATE"			columnIndex="4"/>
+		<result property="memberId"		column="MEMBERID"		columnIndex="5"/>
+	</resultMap>
+	
+	<resultMap class="ScheduleGroupVO" id="scheduleGroupVO">
+		<result property="groupId"			column="GROUPID"			columnIndex="1"/>
+		<result property="groupName"		column="GROUPNAME"			columnIndex="2"/>
+		<result property="description"		column="DESCRIPTION"		columnIndex="3"/>
+		<result property="createDate"		column="CREATEDATE"			columnIndex="4"/>
+		<result property="creatorid"		column="CREATORID"			columnIndex="5"/>	
+		<result property="creatorname"		column="CREATORNAME"		columnIndex="6"/>
+		<result property="precreatorid"   column="PRECREATORID"      columnIndex="11"/>
+		<result property="precreatorname"   column="PRECREATORNAME"      columnIndex="12"/>
+		<result property="modifydate"		column="MODIFYDATE"		columnIndex="10"/>
+	</resultMap>
+	
+	<select id="EzScheduleAdminDAO.getMyGroupMemberListCnt" parameterClass="map" resultClass="int">
+<!-- 			 SELECT 
+			 	COUNT(*)
+             FROM (
+	                  SELECT 
+	                  	MEMBERID,
+	                  	TENANT_ID 
+                      FROM 
+                      	TBL_SCHEDULEGROUPMEMBER 
+                      WHERE  
+                      	GROUPID = #v_GROUPID#
+                      AND
+                      	TENANT_ID = #v_TENANTID#	
+             )A JOIN TBL_USERMASTER B ON A.MemberID = B.CN AND A.TENANT_ID = B.TENANT_ID
+             WHERE
+             	B.TENANT_ID = #v_TENANTID# -->
+<![CDATA[
+	SELECT COUNT(DISTINCT MEMBERID)
+      FROM (
+      	   SELECT GROUPID,
+           	      MEMBERID,
+          		  MEMBERNAME,
+       		      MEMBERNAME2,
+       			  TENANT_ID
+             FROM TBL_SCHEDULEGROUPMEMBER 
+            WHERE TENANT_ID = #v_TENANTID#	
+           ) A JOIN (
+           			SELECT D.CN,
+           				   D.DISPLAYNAME, 
+           				   D.COMPANY, 
+           				   D.TITLE, 
+           				   D.MAIL, 
+           				   D.DESCRIPTION , 
+           				   D.DESCRIPTION2, 
+           				   D.DEPARTMENT
+					  FROM TBL_USERMASTER D 
+					 WHERE D.TENANT_ID = #v_TENANTID# 
+					   AND D.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# 
+					 UNION ALL 
+					SELECT B.CN, 
+						   B.DISPLAYNAME, 
+						   C.COMPNM2 AS COMPANY, 
+						   A.TITLE, 
+						   B.MAIL, 
+						   C.DISPLAYNAME AS DESCRIPTION, 
+						   C.DISPLAYNAME2 AS DESCRIPTION2, 
+						   A.DEPTID 
+					  FROM TBL_USERMASTER B  
+					 INNER JOIN TBL_ADDJOBMASTER A  
+						ON A.CN = B.CN  
+					   AND A.TENANT_ID = B.TENANT_ID        
+					 RIGHT JOIN TBL_DEPTMASTER C 
+						ON A.DEPTID = C.CN 
+					   AND B.TENANT_ID = C.TENANT_ID    
+					 WHERE A.TENANT_ID = #v_TENANTID# 
+					   AND C.EXTENSIONATTRIBUTE2 = #v_COMPANYID#
+			        ) BB 
+		   ON A.MEMBERID = BB.CN 
+	 WHERE A.GROUPID = #v_GROUPID#
+	   AND A.TENANT_ID = #v_TENANTID#
+	]]>
+	</select>
+	
+	<select id="EzScheduleAdminDAO.getMyGroupList" parameterClass="map" resultMap="scheduleGroupListVO">
+		<![CDATA[
+			SELECT a.groupid as groupid, b.groupname as groupname, b.description as description, b.createdate as createdate, b.creatorid as memberid
+            FROM tbl_schedulegroupmember a, tbl_schedulegroup b 
+            WHERE a.groupid = b.groupid
+            ]]>
+       
+	        <isEqual property="v_SEARCHTYPE" compareValue="groupName">
+				<![CDATA[
+
+						and b.groupname LIKE '%'||#v_SEARCHVALUE#||'%' ESCAPE '\'
+				]]>
+			</isEqual>
+			<isEqual property="v_SEARCHTYPE" compareValue="groupMembers">
+			<![CDATA[
+	
+					and a.membername = #v_SEARCHVALUE#
+			]]>
+			</isEqual>
+			<isEqual property="v_SEARCHTYPE" compareValue="creatorname">
+			<![CDATA[
+		
+					and b.creatorname = #v_SEARCHVALUE#
+			]]>
+			</isEqual>
+		  
+		<isNotEmpty property="v_STARTDATE" prepend="and">
+			<![CDATA[
+			TO_CHAR((b.createdate + #offset# / (24 * 60)),'YYYY-MM-DD') >= #v_STARTDATE# 
+			]]>
+			<!-- DATE_FORMAT(b.createdate,'%Y-%m-%d') >= #v_STARTDATE#  -->
+		</isNotEmpty>
+		<isNotEmpty property="v_ENDDATE" prepend="and">
+			<![CDATA[
+			TO_CHAR((b.createdate + #offset# / (24 * 60)),'YYYY-MM-DD') <= #v_ENDDATE#
+			]]>
+			<!-- DATE_FORMAT(b.createdate,'%Y-%m-%d') <= #v_ENDDATE#  -->
+		</isNotEmpty>
+	
+		<![CDATA[
+			
+        	and
+       			b.tenant_id = #v_TENANTID#
+       		and
+        		b.companyid = #v_COMPANYID#
+        	
+         
+            group by a.groupid, b.groupname, b.description, b.createdate,b.creatorid
+        	order by b.groupname
+		]]>
+         
+	</select>
+	
+	<select id="EzScheduleAdminDAO.getMyGroupList2" parameterClass="map" resultMap="scheduleGroupVO">
+	<![CDATA[
+		SELECT
+		 	   X.rnum, 
+			   X.MODIFYDATE,
+			   X.CREATEDATE,
+	           X.creatorid, 
+			   X.precreatorid,
+			   X.groupid, 
+			   X.groupname,
+			   X.description,
+			   X.creatorname,
+			   X.precreatorname
+	   FROM(
+	   
+					
+					SELECT
+						ROWNUM AS rnum,
+						A.modifydate,
+						A.createdate,
+						A.creatorid, 
+						A.precreatorid,
+						A.groupid, 
+						A.groupname,
+						A.description,
+						A.creatorname,
+						A.precreatorname
+					
+					FROM(
+							SELECT 
+							TO_CHAR((b.modifydate + #offset# / (24 * 60)),'YYYY-MM-DD HH24:MI:SS') AS modifydate,
+							TO_CHAR((b.createdate + #offset# / (24 * 60)),'YYYY-MM-DD HH24:MI:SS') AS createdate,
+							b.creatorid as creatorid, b.precreatorid as precreatorid,
+							a.groupid as groupid, b.groupname as groupname, b.description as description, b.creatorname as creatorname, b.precreatorname as precreatorname
+				            FROM
+				            tbl_schedulegroupmember a, tbl_schedulegroup b 
+				            WHERE 
+				            a.groupid = b.groupid
+				            ]]>
+				        
+						        <isEqual property="v_SEARCHTYPE" compareValue="groupName">
+									<![CDATA[
+								
+											and b.groupname LIKE '%'||#v_SEARCHVALUE#||'%' ESCAPE '\'
+									]]>
+								</isEqual>
+								<isEqual property="v_SEARCHTYPE" compareValue="groupMembers">
+								<![CDATA[
+								
+										and a.membername = #v_SEARCHVALUE#
+								]]>
+								</isEqual>
+								<isEqual property="v_SEARCHTYPE" compareValue="creatorname">
+								<![CDATA[
+								
+										and b.creatorname = #v_SEARCHVALUE#
+								]]>
+								</isEqual>
+							
+						
+						<isNotEmpty property="v_STARTDATE" prepend="and">
+							<![CDATA[
+							TO_CHAR((b.createdate + #offset# / (24 * 60)),'YYYY-MM-DD') >= #v_STARTDATE# 
+							]]>
+							<!-- DATE_FORMAT(b.createdate,'%Y-%m-%d') >= #v_STARTDATE#  -->
+						</isNotEmpty>
+						<isNotEmpty property="v_ENDDATE" prepend="and">
+							<![CDATA[
+							TO_CHAR((b.createdate + #offset# / (24 * 60)),'YYYY-MM-DD')  <= #v_ENDDATE#
+							]]>
+							<!-- DATE_FORMAT(b.createdate,'%Y-%m-%d') <= #v_ENDDATE#  -->
+						</isNotEmpty>
+						
+						<![CDATA[
+							
+				        	and
+				       			b.tenant_id = #v_TENANTID#
+				       		and
+				        		b.companyid = #v_COMPANYID#
+				        	
+				         
+				            group by b.modifydate, b.createdate, a.groupid, b.groupname, b.description ,b.creatorid, b.creatorname, b.precreatorname,b.precreatorid
+				        	order by b.createdate desc
+						]]>)A
+					
+					<isNotEqual property="v_STARTROW" compareValue="-1">
+						<![CDATA[
+			            	WHERE ROWNUM <= (#v_MAXITEMPERPAGE# + #v_STARTROW#)
+						]]>
+					</isNotEqual> 
+			         )X
+		<isNotEqual property="v_STARTROW" compareValue="-1">
+			<![CDATA[
+         	WHERE X.rnum >= (#v_STARTROW# + 1)
+			]]>
+		</isNotEqual>
+		
+		
+	</select>
+	
 					
 	<select id="EzScheduleAdminDAO.scheduleGetShareManage" parameterClass="map" resultMap="scheduleShareVO">
 		<![CDATA[
@@ -82,11 +321,14 @@
 	<insert id="EzScheduleAdminDAO.scheduleSaveHoliday" parameterClass="map">
 		<![CDATA[
 			INSERT INTO TBL_HOLIDAYLIST(
-				HOLIDAYNAME,		HOLIDAYNAME2, 		HOLIDAYDATE, 		ISSOLAR, 		ISREPEAT, 		ISUSE, 		ISREST, 		USECOMPANY,			TENANT_ID 
+				HOLIDAYNAME,		HOLIDAYNAME2, 		HOLIDAYFLAG,		HOLIDAYDATE, 		HOLIDAYREPEAT, 		ISSOLAR, 		ISREPEAT, 		ISUSE, 		ISREST, 		USECOMPANY,			TENANT_ID 
 			) VALUES (
-				#v_HOLIDAYNAME#,	#v_HOLIDAYNAME2#,	#v_HOLIDAYDATE#,	#v_ISSOLAR#,	#v_ISREPEAT#,	1,			#v_ISREST#, 	#v_COMPANYID#,		#v_TENANTID#		
+				#v_HOLIDAYNAME#,	#v_HOLIDAYNAME2#,	#v_HOLIDAYFLAG#,	TO_DATE(#v_HOLIDAYDATE#, 'yyyy-MM-dd'),	#v_HOLIDAYREPEAT#,	#v_ISSOLAR#,	#v_ISREPEAT#,	1,			#v_ISREST#, 	#v_COMPANYID#,		#v_TENANTID#		
 			)
 		]]>
+		<selectKey keyProperty="holidayID" resultClass="String">
+			SELECT SEQ_TBL_HOLIDAYLIST.currval FROM dual
+		</selectKey>
 	</insert>
 	
 	<insert id="EzScheduleAdminDAO.scheduleInsertLunarUse" parameterClass="map">
@@ -129,7 +371,9 @@
 			SET 
 				HOLIDAYNAME = #v_HOLIDAYNAME#,
                 HOLIDAYNAME2 = #v_HOLIDAYNAME2#,
+                HOLIDAYFLAG = #v_HOLIDAYFLAG#,
                 HOLIDAYDATE = #v_HOLIDAYDATE#,
+                HOLIDAYREPEAT = #v_HOLIDAYREPEAT#,
                 ISSOLAR = #v_ISSOLAR#,
                 ISREPEAT = #v_ISREPEAT#,
                 ISREST = #v_ISREST#,

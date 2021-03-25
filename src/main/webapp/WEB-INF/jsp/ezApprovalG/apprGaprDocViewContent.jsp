@@ -7,6 +7,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/diff.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Office.js')}"></script>
 	    <style type="text/css">
 	    	 P { margin-top: 0px;margin-bottom: 0px; }
 	        .viewbox {
@@ -45,6 +46,29 @@
 		        	$('#div_Content #doctitle').css('word-wrap', 'break-word');
 		        } catch (e)
 		        { }
+		        
+	            try {
+			        if (document.getElementById('attitude_annual_conn')) { //근태관리 연동양식
+			    		$("select[id^=control]").each(function() {
+			    			$(this).val($(this).attr("attitudetype"));
+			    			$(this).children("option[value=" +$(this).attr("attitudetype") + "]").attr("selected","");
+			    		});
+			        	
+			    		$("input[type=button][id^=control]").each(function() {
+			    			$(this).css("display","none");
+			    		});
+			    		
+			    		$("select[id^=control]").each(function() {
+			    			$(this).css("top","7px");
+			    		});
+			    		
+			    	    $('#mobile').css('display',"none");
+			    	    $('#p_mobile').css('display',"");
+			    	    $('#mobile2').css('display',"none");
+			    	    $('#p_mobile2').css('display',"");
+			        }
+	            } catch (e)
+	            { }
 	        };
 	        function BodyTagsEnabled(HtmlObject) {
 	            var SelectRows = HtmlObject.getElementsByTagName("SELECT");
@@ -70,6 +94,16 @@
 	                if (!inputRows.item(i).disabled)
 	                    inputRows.item(i).disabled = true;
 	            }
+				var textAreaElements = HtmlObject.getElementsByTagName("textarea");
+				var element;
+
+				for (var i = 0; i < textAreaElements.length; i++) {
+					element = textAreaElements[i];
+
+					if (!element.disabled) {
+						element.disabled = true;
+					}
+				}
 	            return HtmlObject;
 	        }
 	        function Set_EditorContentURL(url) {
@@ -222,6 +256,10 @@
 	                        FieldCount++;
 	                    }
 	                }
+
+					var controls = getControlList();
+					FieldsList = FieldsList.concat(controls);
+					
 	                return FieldsList;
 	            } catch (e) { return FieldsList; }
 	        }
@@ -258,7 +296,19 @@
 	            } catch (e)
 	            { return ""; }
 	        }
-	        
+			function GetDocumentInfo() {
+				var xmlInfo = document.querySelectorAll("#div_Content xml");
+
+				var xmlDom = createXmlDom();
+				var dataRoot = createNodeInsert(xmlDom, null, "DATA");
+				for (var i = 0, ilen = xmlInfo.length; i < ilen; i++) {
+					var info = xmlInfo[i].firstElementChild;
+					var infoName = info.tagName;
+					createNodeAndAppandNodeText(xmlDom, dataRoot, null, infoName, info.outerHTML);
+				}				
+				
+				return xmlDom;
+			}
 	    </script>
 	</head>
 	<body>

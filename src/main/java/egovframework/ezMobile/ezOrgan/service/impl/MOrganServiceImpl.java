@@ -43,16 +43,23 @@ public class MOrganServiceImpl implements MOrganService {
 	@Override
 	public List<MPersonListVO> getPersonList(String companyID, int tenantID, String pSearchText, String rowNum) throws Exception {
 		LOGGER.debug("getPersonList started");
-
+		
+		// oracle List Size
+		int oracleListSize = 50;
+		
+		if (rowNum != null && !rowNum.equals("")) {
+			oracleListSize += Integer.parseInt(rowNum);
+		}
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		map.put("pSearchText", pSearchText);
 		map.put("rowNum", rowNum);
 		map.put("listSize", 50);
-
-		LOGGER.debug("getPersonList ended");
+		map.put("oracleListSize", oracleListSize);
 		
+		LOGGER.debug("getPersonList ended");
 		return mOrganDAO.getPersonList(map);
 	}
 
@@ -64,19 +71,25 @@ public class MOrganServiceImpl implements MOrganService {
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		map.put("pSearchText", pSearchText);
-		
+
 		LOGGER.debug("getPersonListCount ended");
-		
 		return mOrganDAO.getPersonListCount(map);
 	}
 
 	@Override
 	public MPersonListVO getPersonInfo(String userID, int tenantID) throws Exception {
 		LOGGER.debug("getPersonInfo started");
+		return getPersonInfo(userID, tenantID, "1");
+	}
+	
+	@Override
+	public MPersonListVO getPersonInfo(String userID, int tenantID, String lang) throws Exception {
+		LOGGER.debug("getPersonInfo started lang=" + lang);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userID", userID);
 		map.put("tenantID", tenantID);
+		map.put("lang", lang);
 
 		LOGGER.debug("getPersonInfo ended");
 		
@@ -185,10 +198,27 @@ public class MOrganServiceImpl implements MOrganService {
 		map.put("tenantID", tenantId);
 		map.put("companyId", companyId);
 		
+		map.put("useShowAllCompanies", "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useShowAllCompanies", tenantId)));
+		
 		LOGGER.debug("deptId : " + deptID.replace("%", "\\%").replace("_", "\\_"));
 		LOGGER.debug("lang : " + commonUtil.getMultiData(lang, tenantId));
 		
-		List<MOrganListVO> mOrganListVOs = mOrganDAO.getDeptMemberList(map);
+		List<MOrganListVO> deptMemeberList = mOrganDAO.getDeptMemberList(map);
+		List<MOrganListVO> mOrganListVOs = new ArrayList<MOrganListVO>();
+		
+		for(MOrganListVO organM : deptMemeberList) {
+			String mType = organM.getType();
+			String mDeptId = organM.getDeptID();
+			
+			if (mDeptId != null && mType.equalsIgnoreCase("addJobUser")){
+				MOrganListVO mDeptVo = getOneDeptInfo(mDeptId, lang, tenantId);
+				LOGGER.debug("addJob :: userId= " + organM.getUserName() + " ,deptId=" + mDeptVo.getDeptID() + ",deptName=" + mDeptVo.getDeptName());
+				
+				organM.setDeptName(mDeptVo.getDeptName());
+			}
+			
+			mOrganListVOs.add(organM);
+		}
 		
 		LOGGER.debug("getDeptMemberList ended");
 		
@@ -229,5 +259,34 @@ public class MOrganServiceImpl implements MOrganService {
 		
 		return resultOrganListVOs;
 	}
-	
+
+	@Override
+	public MOrganListVO getOneDeptInfo(String deptID, String lang, int tenantId) throws Exception {
+		LOGGER.debug("getOneDeptInfo started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("deptID", deptID);
+		map.put("lang", commonUtil.getMultiData(lang, tenantId));
+		map.put("tenantID", tenantId);
+		
+		MOrganListVO resultDeptVo = mOrganDAO.getOneDeptInfo(map);
+
+		LOGGER.debug("getOneDeptInfo ended");
+		return resultDeptVo;
+	}
+
+	@Override
+	public MPersonListVO getUserAddjobInfo(String userID, String deptID, String lang, int tenantId) throws Exception {
+		LOGGER.debug("getUserAddjobInfo started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("deptID", deptID);
+		map.put("lang", lang);
+		map.put("tenantID", tenantId);
+		map.put("userID", userID);
+		
+		MPersonListVO resultDeptVo = mOrganDAO.getUserAddjobInfo(map);
+		LOGGER.debug("getUserAddjobInfo ended");
+		return resultDeptVo;
+	}	
 }

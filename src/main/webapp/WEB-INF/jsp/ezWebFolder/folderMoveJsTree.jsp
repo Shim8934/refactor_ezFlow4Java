@@ -58,9 +58,9 @@
 		function afterSuccess(code, obj) {
 			if (code == 0) {
 				if (obj == "move") {
-					alert("<spring:message code='ezWebFolder.t298'/>");
+					alert("<spring:message code='ezWebFolder.t247'/>");
 				} else if (obj == "copy") {
-					alert("<spring:message code='ezWebFolder.t299'/>");
+					alert("<spring:message code='ezWebFolder.t248'/>");
 				}
 				parent.returnFunction(folderType);
 				parent.folderList(folderType);
@@ -78,6 +78,9 @@
 				window.close();
 			} else if (code == 7) {
 				alert("<spring:message code='ezWebFolder.t250'/>");
+				window.close();
+			} else if (code == 8) {
+				alert("<spring:message code='webfolder.duplicate.foldermanage.error'/>");
 				window.close();
 			} else {
 				alert("<spring:message code='ezWebFolder.t305'/>");
@@ -126,7 +129,7 @@
 						},
 						"types": {
 							"default": {
-								"icon": "/images/webfolder/fldr.png"
+								"icon": "/images/OrganTree_cross/fldr.gif"
 							}
 						},
 						"grid": {

@@ -102,16 +102,23 @@ public class BoardTreeVO {
 	@Override
 	public boolean equals(Object obj) {
 		boolean rtnBool = false;
-		BoardTreeVO boardTreeVO = (BoardTreeVO) obj;
 		
-		if (boardId.equals(boardTreeVO.getBoardId())) {
-			rtnBool = true;
-		} else {
-			rtnBool = false;
+		if (obj instanceof BoardTreeVO) {
+			BoardTreeVO boardTreeVO = (BoardTreeVO) obj;
+			
+			if (boardId.equals(boardTreeVO.getBoardId())) {
+				rtnBool = true;
+			}
 		}
 		
 		return rtnBool;
 	}
+	
+	@Override
+	public int hashCode() {
+		return 45 + boardId.hashCode();
+	}
+	
 	@Override
 	public String toString() {
 		return "BoardTreeVO [boardId=" + boardId + ", boardName=" + boardName
@@ -121,7 +128,4 @@ public class BoardTreeVO {
 				+ expanded + ", select=" + select + ", isLeaf=" + isLeaf
 				+ ", docNO=" + docNO + ", url=" + url + "]";
 	}
-	
-	
-
 }

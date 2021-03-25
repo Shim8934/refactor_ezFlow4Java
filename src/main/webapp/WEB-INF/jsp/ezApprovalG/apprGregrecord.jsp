@@ -39,21 +39,21 @@
     var CompanyID = "<c:out value = '${userInfo.companyID}' />";
     var arr_userinfo = new Array();
     arr_userinfo[0]  = "user";								
-    arr_userinfo[1]  = "<c:out value = '${userInfo.id} '/>";            
-    arr_userinfo[2]  = "<c:out value = '${userInfo.displayName} '/>";        
-    arr_userinfo[3]  = "<c:out value = '${userInfo.title} '/>";
-    arr_userinfo[4]  = "<c:out value = '${userInfo.deptID} '/>";
-    arr_userinfo[5]  = "<c:out value = '${userInfo.deptName} '/>";
-    arr_userinfo[6]  = "<c:out value = '${userInfo.jikChek} '/>";
-    arr_userinfo[8]  = "<c:out value = '${userInfo.email} '/>";            
+    arr_userinfo[1]  = "<c:out value = '${userInfo.id}'/>";            
+    arr_userinfo[2]  = "<c:out value = '${userInfo.displayName}'/>";        
+    arr_userinfo[3]  = "<c:out value = '${userInfo.title}'/>";
+    arr_userinfo[4]  = "<c:out value = '${userInfo.deptID}'/>";
+    arr_userinfo[5]  = "<c:out value = '${userInfo.deptName}'/>";
+    arr_userinfo[6]  = "<c:out value = '${userInfo.jikChek}'/>";
+    arr_userinfo[8]  = "<c:out value = '${userInfo.email}'/>";            
     arr_userinfo[9]  = CompanyID;
-    arr_userinfo[11]  = "<c:out value = '${userInfo.displayName1} '/>";
-    arr_userinfo[12]  = "<c:out value = '${userInfo.displayName2} '/>";
-    arr_userinfo[13]  = "<c:out value = '${userInfo.title1} '/>";
-    arr_userinfo[14]  = "<c:out value = '${userInfo.title2} '/>";
-    arr_userinfo[15]  = "<c:out value = '${userInfo.deptName1} '/>";
-    arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2} '/>";		
-    var UserLang = "${userInfo.lang}";
+    arr_userinfo[11]  = "<c:out value = '${userInfo.displayName1}'/>";
+    arr_userinfo[12]  = "<c:out value = '${userInfo.displayName2}'/>";
+    arr_userinfo[13]  = "<c:out value = '${userInfo.title1}'/>";
+    arr_userinfo[14]  = "<c:out value = '${userInfo.title2}'/>";
+    arr_userinfo[15]  = "<c:out value = '${userInfo.deptName1}'/>";
+    arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2}'/>";		
+    var UserLang = "<c:out value = '${userInfo.lang}'/>";
     var pUserID			= arr_userinfo[1];
     var pUserName		= arr_userinfo[2];
     var pUserJobTitle	= arr_userinfo[3];
@@ -63,6 +63,7 @@
     var pDocSN = "0";
     var orgCompanyID = "";
     var ext = "mht";
+    var tooltipLevelFlag = "Y"
     
     window.onload = function () {
         if (window.dialogArguments != null) {
@@ -89,6 +90,8 @@
         // 등록구분에서 일반문서 접수가 디폴트로 선택 되도록 수정. 2019-09-26 홍대표
         selRegisterType.value = 2;
         selRegisterType_onchange()
+     	// 2020-11-23 등급 툴팁 추가 - 박기범
+        giveTooltipLevel();
     }
     function KeEventControl(obj) {
         useragt = navigator.userAgent.toUpperCase();
@@ -525,6 +528,20 @@
         }
     }
     
+ 	// 2020-11-23 공개등급 tooltip 추가 - 박기범
+	function giveTooltipLevel() {
+		if (tooltipLevelFlag != "Y"){
+			return;
+		}
+		document.querySelector('input[name=selSecLevel1]').nextSibling.setAttribute('title','법률 또는 명령에 의하여 비밀로 유지되거나 비공개사항으로 규정된 항목'														);
+		document.querySelector('input[name=selSecLevel2]').nextSibling.setAttribute('title','공개될 경우 국가안보,국방,통일 외교관계 등 국익을 해할 우려가 있는 정보'													);
+		document.querySelector('input[name=selSecLevel3]').nextSibling.setAttribute('title','공개될 경우 국민의 생명,신체,재산 등 공공안전 및 이익을 해할 우려가 있는 정보'													);
+		document.querySelector('input[name=selSecLevel4]').nextSibling.setAttribute('title','수사,재판,범죄예방 등의 관련정보로서 공개될 경우 직무수행이 곤란하거나 형사피고인의 공정한 재판받을 권리를 침해할 우려가 있는 정보'					);
+		document.querySelector('input[name=selSecLevel5]').nextSibling.setAttribute('title','감사,감독,검사,시험,규제,입찰계약,기술개발,인사관리,의사결정 또는 내부검토과정에\n있는 사항으로서 공개될 경우 업무수행 등에 지장을 초래할 우려가 있는 정보'	);
+		document.querySelector('input[name=selSecLevel6]').nextSibling.setAttribute('title','이름,주민등록번호 등에 의해 특정인을 식별할 수 있는 개인에 관한 정보'														);
+		document.querySelector('input[name=selSecLevel7]').nextSibling.setAttribute('title','법인,단체 또는 개인의 영업상 비밀에 관한 정보로서 공개될 경우 법인 등의 정당한 이익을 해할 우려가 있는 정보'								);
+		document.querySelector('input[name=selSecLevel8]').nextSibling.setAttribute('title','공개될 경우 부동산투기,매점매석 등으로 특정인에게 이익 보는 불이익을 줄 우려가 있는 정보'											);
+	}
 </SCRIPT>
 </head>
 <body class="popup">
@@ -545,10 +562,10 @@
 		<td style="width: 50%;">
 			<table style="width:100%; border-bottom: 0px; border-right: 0px;" class="content">
 				<tr>
-					<th style="border-bottom: 0px; padding-right:30px;"><spring:message code='ezApprovalG.t1063'/></th>
+					<th style="border-bottom: 0px; padding-right:29px;"><spring:message code='ezApprovalG.t1063'/></th>
        				<td style="border-bottom: 0px; border-right: 0px;">
-       				<span id="tdCabinetName">&nbsp;</span>
-       				<a class="imgbtn imgbck" style="position: absolute; top: 77px; left: 441px;"><span onClick="return btnChangeCabinet_onclick()"><spring:message code='ezApprovalG.t1064'/></span></a>
+       				<span id="tdCabinetName" style="display:inline-block; vertical-align:middle; width:80%;">&nbsp;</span>
+       				<a class="imgbtn imgbck" style="display:inline-block; vertical-align:middle;"><span onClick="return btnChangeCabinet_onclick()"><spring:message code='ezApprovalG.t1064'/></span></a>
        				</td>
 				</tr>
 			</table>
@@ -658,7 +675,7 @@
                     <tr>
                       <td id="tdSpecialFlag">&nbsp;</td>
                       <td style="width:70px">
-                      <a class="imgbtn imgbck" id="btnAddSC" style="position: absolute; top: 406px; left: 453px; display:none;"><span onClick="return btnAddSpecialCatalog_onclick()"><spring:message code='ezApprovalG.t268'/></span></a>
+                      <a class="imgbtn imgbck" id="btnAddSC" style="position: absolute; top: 400px; left: 453px; display:none;"><span onClick="return btnAddSpecialCatalog_onclick()"><spring:message code='ezApprovalG.t268'/></span></a>
                       <!-- <img src="/images/btn_add.gif" style="display:none;cursor:pointer;vertical-align:middle" id="btnAddSC" name="btnAddSC" onClick="return btnAddSpecialCatalog_onclick()" width="39" height="20"> -->
                       </td>
                     </tr>
@@ -760,7 +777,7 @@
 		                <th id="btn_Attach" style="font-weight: normal; text-align: left; padding-right: 58px;"><spring:message code='ezApprovalG.t65'/></th>
 		                <td style="border-right: 0px;"><div id="lstAttachLink"></div></td>
 	                    <td style="border-left: 0px;">
-                            <a href="#" class="imgbtn imgbck" style="height: 44px; margin: 0px;">
+                            <a class="imgbtn imgbck" style="height: 44px; margin: 0px;">
                                 <span onclick="return btnFileAttach_onclick()" style="line-height: 45px;"><spring:message code='ezApprovalG.t268'/></span>
                             </a>
                         </td>

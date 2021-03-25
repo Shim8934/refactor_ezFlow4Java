@@ -40,9 +40,9 @@
 			} else if (!target.value.match(/^\d+$/)) {
 				alert("<spring:message code='ezApprovalG.csj06'/>");
 			} else if (parseInt(target.value) >= 9) {
-				alert("8 <spring:message code='ezApprovalG.csj08'/>");
-			} else if (parseInt(target.value) < 2) {
-				alert("2 <spring:message code='ezApprovalG.csj07'/>");
+				alert("<spring:message code='ezApprovalG.csj08'/>");
+			} else if (parseInt(target.value) < 1) {
+				alert("<spring:message code='ezApprovalG.csj07'/>");
 			} else {
 				resultVal = true;
 			}
@@ -103,17 +103,16 @@
 	</script>
 </head>
 <body class="mainbody">
-	<h1><spring:message code='ezApprovalG.csj02'/></h1>
-	<div id="mainmenu" style="width: 350px;">
-		<span>
-			<b><spring:message code = 'ezApprovalG.t1512' /></b> 
-			<select id="ListCompany" onChange="ListChange()">
-				<c:forEach var="item" items="${list}">
-					<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-				</c:forEach>
-			</select>
-			<br/><br/>
-		</span>
+	<h1>
+		<spring:message code='ezApprovalG.csj02'/>
+		<span class="title_bar"><img src="/images/name_bar.gif"></span>
+		<select class="companySelect" id="ListCompany" onChange="ListChange()">
+			<c:forEach var="item" items="${list}">
+				<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+			</c:forEach>
+		</select>
+	</h1>
+	<div id="mainmenu" style="width: 350px;margin-top:30px">
 		<div style="margin-top:3px;">▒&nbsp;<spring:message code='ezApprovalG.csj04'/></div>
 		<div style="margin-top:3px;">▒&nbsp;<spring:message code='ezApprovalG.csj12'/></div>
 		<br/>
@@ -121,7 +120,7 @@
 			<tr>
 				<th><spring:message code='ezApprovalG.csj09'/></th>
 				<td>
-					<spring:message code='ezApprovalG.csj11'/> : 2 ,
+					<spring:message code='ezApprovalG.csj11'/> : 1 ,
 					<spring:message code='ezApprovalG.csj10'/> : 8
 				</td>
 			</tr>

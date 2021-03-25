@@ -27,9 +27,11 @@
 	        var OrderCell = "";
 	        var listview = new ListView();
 	        var pMode = "";
+			var searchInfo = null;
 	        
 	        $(document).ready(function(){
-	            document.getElementById("SCompID").value = pCompanyID;
+//	            document.getElementById("SCompID").value = pCompanyID;
+				pCompanyID = document.getElementById("ListCompany").value;
 	            document.getElementById("SYear").value = "<c:out value = '${tempPYear}' />";
 	            document.getElementById("SMonth").value = "<c:out value = '${tempPMonth}' />";
 	            document.getElementById("EYear").value = "<c:out value = '${tempYear}' />";
@@ -117,20 +119,40 @@
 	                            pUserFlag = 4;
 	                        }
 	                        
-	                        UserDocCount();
+							UserDocCount();
+							
+							searchInfo = {};
+							searchInfo.startYear = startYear;
+							searchInfo.endYear = endYear;
+							searchInfo.startMonth = startMonth;
+							searchInfo.endMonth = endMonth;
+							searchInfo.flag = "USER";
+							searchInfo.mode = pUserFlag;
 	                    } else {
 	                        alert(" <spring:message code = 'ezApprovalG.t1291' />");
 	                    }
 	                } else if (document.getElementsByName("condition")[1].checked) {
-	                    if (document.getElementsByName("Dept")[0].checked) {
-	                        DeptDocCount("SEND");
-	                    } else if (document.getElementsByName("Dept")[1].checked) {
-	                        DeptDocCount("RECV");
-	                    } else if (document.getElementsByName("Dept")[2].checked) {
-	                        DeptDocCount("BOTH");
-	                    } else {
+						var deptCheckNodes = Array.prototype.concat.apply([], document.getElementsByName("Dept"));
+						if (deptCheckNodes.some(function(inputDept) { return inputDept.checked; })) {
+							if (document.getElementsByName("Dept")[0].checked) {
+								pUserFlag = "SEND";
+							} else if (document.getElementsByName("Dept")[1].checked) {
+								pUserFlag = "RECV";
+							} else if (document.getElementsByName("Dept")[2].checked) {
+								pUserFlag = "BOTH";
+							}
+							DeptDocCount(pUserFlag);
+
+							searchInfo = {};
+							searchInfo.startYear = startYear;
+							searchInfo.endYear = endYear;
+							searchInfo.startMonth = startMonth;
+							searchInfo.endMonth = endMonth;
+							searchInfo.flag = "DEPT";
+							searchInfo.mode = pUserFlag;
+						} else {
 	                        alert("<spring:message code = 'ezApprovalG.t1292' />");
-	                    }
+						}
 			        } else {
 			            alert("<spring:message code = 'ezApprovalG.t1293' />");
 	                }
@@ -157,7 +179,8 @@
 	            document.getElementsByName("UserFlag")[0].disabled = false;
 	            document.getElementsByName("UserFlag")[1].disabled = false;
 	            document.getElementsByName("UserFlag")[2].disabled = false;
-	            document.getElementsByName("UserFlag")[3].disabled = false;
+				document.getElementsByName("UserFlag")[3].disabled = false;
+				searchInfo = null;
 	        }
 	        
 	        function UserFlag_Init() {
@@ -209,61 +232,26 @@
 	        }
 	        
 	        function btnSave_onclick() {
-	            var url = "/admin/ezApprovalG/ezStatistics/excelExportOut.do";
+				if (!searchInfo) {
+					alert("<spring:message code = 'ezApprovalG.t1294' />");
+		            return;
+				}
 
-	            if (document.getElementsByName("condition")[0].checked) {
-	                url += "?flag=USER";
-	                
-	                if (!document.getElementsByName("UserFlag")[0].checked && !document.getElementsByName("UserFlag")[1].checked && !document.getElementsByName("UserFlag")[2].checked && !document.getElementsByName("UserFlag")[3].checked) {
-	                	alert("<spring:message code = 'ezApprovalG.t1294' />");
-		            	return ;
-	                } else {
-	                	if (document.getElementsByName("UserFlag")[0].checked) {
-	                		pMode = 1;
-                        } else if (document.getElementsByName("UserFlag")[1].checked) {
-                        	pMode = 2;
-                        } else if (document.getElementsByName("UserFlag")[2].checked) {
-                        	pMode = 3;
-                        } else if (document.getElementsByName("UserFlag")[3].checked) {
-                        	pMode = 4;
-                        }
-	                	
-	                	url += "&p4=" + encodeURIComponent(pMode);
-	                }
-	            } else if (document.getElementsByName("condition")[1].checked){
-	                url += "?flag=DEPT";
-	                
-	                if(!document.getElementsByName("Dept")[0].checked && !document.getElementsByName("Dept")[1].checked && !document.getElementsByName("Dept")[2].checked) {
-	                	alert("<spring:message code = 'ezApprovalG.t1294' />");
-	                	return ;
-	                } else {
-	                	if (document.getElementsByName("Dept")[0].checked) {
-		                    pMode = "SEND";
-		                } else if (document.getElementsByName("Dept")[1].checked) {
-		                    pMode = "RECV";
-		                } else if (document.getElementsByName("Dept")[2].checked) {
-		                    pMode = "BOTH";
-		                }
-	                	url += "&p4=" + encodeURIComponent(pMode);
-	                }
-	            } else {
-	            	alert("<spring:message code = 'ezApprovalG.t1294' />");
-	            	return ;
-	            }
-	            
-	            url += "&p0=" + encodeURIComponent(document.getElementById("SYear").value);
-	            url += "&p1=" + encodeURIComponent(document.getElementById("SMonth").value);
-	            url += "&p2=" + encodeURIComponent(document.getElementById("EYear").value);
-	            url += "&p3=" + encodeURIComponent(document.getElementById("EMonth").value);
-	            
-	            url += "&p5=" + encodeURIComponent(pCompanyID);
+				var url = "/admin/ezApprovalG/ezStatistics/excelExportOut.do";
+				url += "?flag=" + searchInfo.flag;
+				url += "&p0=" + encodeURIComponent(searchInfo.startYear);
+				url += "&p1=" + encodeURIComponent(searchInfo.startMonth);
+				url += "&p2=" + encodeURIComponent(searchInfo.endYear);
+				url += "&p3=" + encodeURIComponent(searchInfo.endMonth);
+				url += "&p4=" + encodeURIComponent(searchInfo.mode);
+				url += "&p5=" + encodeURIComponent(pCompanyID);
 
 	            window.frames["saveExcel"].location.href = url;
 	        }
 	        
 	        function selectCompanyID() {
-	            if (pCompanyID != document.getElementById("SCompID").value) {
-	                pCompanyID = document.getElementById("SCompID").value;
+	            if (pCompanyID != document.getElementById("ListCompany").value) {
+	                pCompanyID = document.getElementById("ListCompany").value;
 	            }
 	        }
 	        
@@ -280,8 +268,16 @@
 		</script>
 	</head>
 	<body class="mainbody">
-	    <h1><spring:message code = 'ezApprovalG.t1297' /></h1>
-	    <input type="hidden" id="SCompID" value="${userInfo.companyID }" >
+	    <h1><spring:message code = 'ezApprovalG.t1297' />
+			<%-- 2020-10-22 홍승비 - 회사선택 셀렉트박스 추가 --%>
+			<span class="title_bar"><img src="/images/name_bar.gif"></span>
+			<select class="companySelect" id="ListCompany" onChange="selectCompanyID()">
+				<c:forEach var="item" items="${list}">
+					<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+				</c:forEach>
+			</select>
+	    </h1>
+	    <%--<input type="hidden" id="SCompID" value="${userInfo.companyID }" >--%>
 	    <table class="content" style="margin-bottom: 10px; width: 770px;">
 	        <tr>
 	            <th><spring:message code = 'ezApprovalG.t1298' /></th>

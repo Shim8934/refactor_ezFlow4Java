@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -14,10 +15,10 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
 		<script type="text/javascript" ID="clientEventHandlersJS">
-		    var pDocID = "${docID}";
+		    var pDocID = "<c:out value ='${docID}'/>";
 		    var OrderCell = "";
 		    var orgCompanyID = parent.orgCompanyID;
-		    var ext = "${ext}";
+		    var ext = "<c:out value ='${ext}'/>";
 		    var selSpan = "";
 		    
 		    window.onload = function () {
@@ -40,12 +41,12 @@
 		        var oArrRows = listview.GetSelectedRows();
 		        pUrl = oArrRows[0].getAttribute("DATA2");
 		        Arguments[0] = oArrRows[0].getAttribute("DATA2");
-		        var fileExt = pUrl.substr(pUrl.length - 3, pUrl.length).toLowerCase();
+		        var fileExt = getOriginalFileExtension(pUrl.toLowerCase());
 		        
 		        if (fileExt == "doc") {
 		            pUrl = "DocViewerWord.aspx?DocHref=" + escapenew(Arguments[0]);
 		        }
-		        else if (fileExt == "hwp" || fileExt == "ezd") {
+		        else if (fileExt == "hwp") {
 		        	//hwp사용안함
 		            if (CrossYN()) {
 // 		                pUrl = "DocViewerHWP_Cross.aspx?DocHref=" + escapenew(Arguments[0]);
@@ -72,6 +73,23 @@
 		            }
 		        }
 		        openwindow(pUrl, "", 800, 550);
+		    }
+		    
+		    function getOriginalFileExtension(filePath) {
+		    	var pathLength = filePath.length;
+		    	var lastIndexOfDot = filePath.lastIndexOf(".");
+
+		    	if (lastIndexOfDot < 0) {
+		    		return "";
+		    	}
+
+		    	var ext = trim_Cross(filePath.substr(lastIndexOfDot + 1, filePath.length).toLowerCase());
+
+		    	if (ext === "ezd") {
+		    		return getOriginalFileExtension(filePath.substr(0, lastIndexOfDot));
+		    	}
+
+		    	return ext;
 		    }
 		    
 		    function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
@@ -342,7 +360,7 @@
 		    }
 		
 		    function close_Click() {
-		        if (CrossYN() && ext != "hwp" && ext != "ezd") {
+		        if (CrossYN() && ext != "ezd") {
 		            parent.DivPopUpHidden();
 		        } else {
 		            window.close();

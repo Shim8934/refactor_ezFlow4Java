@@ -13,8 +13,8 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/ListView_list.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>	
 		<script type="text/javascript">
-			var mode = "${mode}";
-	        var pKeyCode = "${pKeyCode}";
+			var mode = "<c:out value = '${mode}' />";
+	        var pKeyCode = "<c:out value = '${pKeyCode}' />";
 	        var TopHeight = "${themeTopHeight}";
 	        var pNoneActiveX = "${noneActiveX}";
 	        var ReturnFunction;

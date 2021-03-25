@@ -103,13 +103,13 @@
 			         	<c:if test="${item.scheduleType == '1'}"><spring:message code='ezSchedule.t281' /></c:if>
 			         	<c:if test="${item.scheduleType == '2'}"><spring:message code='ezSchedule.t12' /></c:if>
 			         	<c:if test="${item.scheduleType == '3'}"><spring:message code='ezSchedule.t11' /></c:if>
-			         	<c:if test="${item.scheduleType == '4'}"><spring:message code='ezSchedule.t282' /></c:if>
+			         	<c:if test="${item.scheduleType == '4'}"><spring:message code='ezNewPortal.pjg01' /></c:if>
 			         	<c:if test="${item.scheduleType == '7'}"><spring:message code='ezSchedule.t282' /></c:if>
 			         	<c:if test="${item.scheduleType == '8'}"><spring:message code='ezSchedule.t205' /> / <spring:message code='ezSchedule.t996' /></c:if>
 			         </td>
 			         <td style="overflow-wrap: break-word; word-wrap: break-word; word-break: normal; line-break: strict; hyphens: none; -webkit-hyphens: none; -moz-hyphens: none;">			          
-				        <c:if test="${primary == '1'}">${item.ownerName}</c:if>
-						<c:if test="${primary != '1'}">${item.ownerName2}</c:if>
+				        <c:if test="${primary == '1'}"><c:out value="${item.ownerName}"/></c:if>
+						<c:if test="${primary != '1'}"><c:out value="${item.ownerName2}"/></c:if>
 			         </td>
 			         <td style="overflow-wrap: break-word; word-wrap: break-word; word-break: normal; line-break: strict; hyphens: none; -webkit-hyphens: none; -moz-hyphens: none;">
 			         	<c:out value="${item.title} " escapeXml="true" />

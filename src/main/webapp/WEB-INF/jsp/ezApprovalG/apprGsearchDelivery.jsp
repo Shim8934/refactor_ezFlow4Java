@@ -29,7 +29,7 @@
         var rtnVal = new Array();
         var g_AdminYN, g_DeptCode, g_DeptCode2, g_DeptName;
         var g_SelChargerID = "";
-        var CompanyID = "${userInfo.companyID}";
+        var CompanyID = "<c:out value='${userInfo.companyID}'/>";
         var opnOption = "0";
         var RetValue;
         var ReturnFunction;
@@ -40,7 +40,7 @@
                 changeYear: true,
                 autoSize: true,
                 showOn: "both",
-                buttonImage: "/images/calendar-month.gif",
+                buttonImage: "/images/ImgIcon/calendar-month.png",
                 buttonImageOnly: true,
 	            onClose: function (selectedDate) {
 	            	$("#Edatepicker").datepicker("option", "minDate", selectedDate);
@@ -51,7 +51,7 @@
                 changeYear: true,
                 autoSize: true,
                 showOn: "both",
-                buttonImage: "/images/calendar-month.gif",
+                buttonImage: "/images/ImgIcon/calendar-month.png",
                 buttonImageOnly: true,
 	            onClose: function (selectedDate) {
 	            	$("#Sdatepicker").datepicker("option", "maxDate", selectedDate);
@@ -114,7 +114,9 @@
         opnOption = RetValue[3];
         rtnVal[0] = "FALSE";
 
-
+      	//엔터키 눌렀을때도 검색 실행
+        $(".text").attr("onkeyup", "enterkey(event)");
+      	
         //document.getElementById("txtDeptName2").value = g_DeptName;
         //initdatepicker();
         //document.getElementById("idDatepicker").value = "";
@@ -126,8 +128,9 @@
         document.getElementById("txtDeptName").value = "";
         document.getElementById("txtDeptName2").value = "";
         document.getElementById("txtTitle").value = "";
-        document.getElementById("idDatepicker").value = "";
-        document.getElementById("Post_D2").value = "";
+        document.getElementById("Sdatepicker").value = "";
+        document.getElementById("Edatepicker").value = "";
+        document.getElementById("txtdebenturer").value = "";
         g_SelChargerID = "";
     }
     function initdatepicker() {
@@ -219,6 +222,20 @@
         rtnVal[0] = "FALSE";
         window.close();
     }
+    
+    function enterkey(e) {
+        if (window.event) {
+            if (window.event.keyCode == 13) {
+            	btnSearch_onclick();
+            }
+        }
+        else {
+            if (e.which == 13) {
+            	btnSearch_onclick();
+            }
+        }
+	}
+    
     window.onunload = function () {
         if (ReturnFunction != null)
             ReturnFunction(rtnVal);
@@ -227,7 +244,7 @@
     }
     </script>
 </head>
-<body class="popup" style="margin-left: 0px; margin-top: 0px;">
+<body class="popup">
     <h1 style="height: 33px;"><spring:message code='ezApprovalG.t1774'/></h1>
     <div id="close">
         <ul>
@@ -235,7 +252,7 @@
         </ul>
     </div>
     <table class="content" style="width: 440px; margin-top:15px;">
-        <tr>
+        <tr id="trBabuDept" style="display:none">	<!-- 2020-09-16 김민성 - 배부대장 상세검색시 배부과 탭 기본 안나타나게 수정  -->
             <th style="WIDTH: 50px"><spring:message code='ezApprovalG.t99993'/></th>
             <td style="WIDTH: 270px">
                 <input class="text" style="WIDTH: 200px" name="txtDeptName2" id="txtDeptName2" disabled>

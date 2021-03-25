@@ -24,7 +24,8 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/TreeView.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/ListView_list.js')}"></script>
 		<script type="text/javascript">
-		    var type = "${type}";
+		    var type = "<c:out value='${type}'/>";
+		    var tagName = "${tagName}";
 		    var ReturnFunction;
 		    var userID = "${userInfo.id}";
 		    window.onload = function () {
@@ -156,7 +157,7 @@
 		    		url : "/ezOrgan/getDeptMemberList.do",
 		    		data : {
 		    				deptID   : DeptID, 
-		    				cell 	 : "company;description;displayName;title;telephoneNumber",
+		    				cell 	 : "company;description;displayName;title;telephoneNumber;extensionattribute5",
 		    				prop     : "department",
 		    				type 	 : "user"
 		    				},
@@ -412,7 +413,7 @@
 		            } else if (type == "selDeptMaster") {
 		                ReturnFunction(selRow.getAttribute("DATA2"));
 		            } else {
-		                ReturnFunction(selRow.getAttribute("DATA2") + ":" + selRow.cells[2].textContent + ":" + selRow.getAttribute("DATA3"));
+		                ReturnFunction(selRow.getAttribute("DATA2") + ":" + selRow.cells[2].textContent + ":" + selRow.getAttribute("DATA3"), tagName);
 		            }
 		        }
 		        else {
@@ -454,6 +455,10 @@
 		      <HEADER>
 		        <NAME><spring:message code='ezPersonal.t70'/></NAME>
 		        <WIDTH>70</WIDTH>
+		      </HEADER>
+		      <HEADER>
+		        <NAME><spring:message code='ezPersonal.b12'/></NAME>
+		        <WIDTH>50</WIDTH>
 		      </HEADER>
 		    </HEADERS>
 		  </LISTVIEWDATA>
@@ -517,9 +522,9 @@
 		  	</tr>
 		  	<tr><td colspan="2" style="padding:2px;"></td></tr>
 		  	<tr>
-			    <td style="padding-right:4px"><div class="box" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:235px; HEIGHT:380px; margin-bottom:-1px;" id="TreeView" ></div></td>
+			    <td class="box" style="padding-right:4px"><div style="overflow: auto; WIDTH:235px; HEIGHT:380px; margin-bottom:-1px;" id="TreeView" ></div></td>
 			    <td class="listview">
-			        <div id="OrganListView" style="border:0;OVERFLOW: auto; WIDTH: 495px; HEIGHT: 380px; BACKGROUND-COLOR: white"></div>
+			        <div id="OrganListView" style="border:0;OVERFLOW: auto; WIDTH: 595px; HEIGHT: 380px; BACKGROUND-COLOR: white"></div>
 				</td>
 		  	</tr>
 		</table>

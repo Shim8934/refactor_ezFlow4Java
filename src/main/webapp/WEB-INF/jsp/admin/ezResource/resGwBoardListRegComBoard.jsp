@@ -9,10 +9,10 @@
 		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}" ></script>
 		<script type="text/javascript" id="clientEventHandlersJS" >
-			var pCompanyID	= "${selCompanyID}";
-			var pUserID		= "${userInfo.id}";
-			var pBrdID		= "${brdID}"; 
-			var sAdminfg	= '${adminFg}';
+			var pCompanyID	= "<c:out value='${selCompanyID}'/>";
+			var pUserID		= "<c:out value='${userInfo.id}'/>";
+			var pBrdID		= "<c:out value='${brdID}'/>"; 
+			var sAdminfg	= "<c:out value='${adminFg}'/>";
 
 			document.onselectstart = function () {
 				if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -22,7 +22,7 @@
 			};
 
 			window.onload = function () {
-				var pReplyMail = "${rePlyMail}";
+				var pReplyMail = "<c:out value='${rePlyMail}'/>";
 			}
 
 			function cmdOK_onclick(){

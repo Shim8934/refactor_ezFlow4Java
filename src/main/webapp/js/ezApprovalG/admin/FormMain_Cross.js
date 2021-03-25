@@ -9,6 +9,14 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("ApvForm_content6").style.display = "none";
+                document.getElementById("ApvForm_content9").style.display = "none";
+                document.getElementById("ApvForm_content10").style.display = "none";
+                
+                if (useReform) {
+                    document.getElementById("ApvForm_content7").style.display = "none";
+                    document.getElementById("ApvForm_content8").style.display = "none";
+                }
+                
                 document.getElementById("TForm").style.height = "0px";
             }
             break;
@@ -20,6 +28,14 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("ApvForm_content6").style.display = "none";
+                document.getElementById("ApvForm_content9").style.display = "none";
+                document.getElementById("ApvForm_content10").style.display = "none";
+                
+                if (useReform) {
+                    document.getElementById("ApvForm_content7").style.display = "none";
+                    document.getElementById("ApvForm_content8").style.display = "none";
+                }
+                
                 document.getElementById("TForm").style.height = "770px";
             }
             break;
@@ -31,6 +47,14 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("ApvForm_content6").style.display = "none";
+                document.getElementById("ApvForm_content9").style.display = "none";
+                document.getElementById("ApvForm_content10").style.display = "none";
+                
+                if (useReform) {
+                    document.getElementById("ApvForm_content7").style.display = "none";
+                    document.getElementById("ApvForm_content8").style.display = "none";
+                }
+                
                 document.getElementById("TForm").style.height = "0px";
             }
             break;
@@ -42,6 +66,14 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content4").style.display = "";
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("ApvForm_content6").style.display = "none";
+                document.getElementById("ApvForm_content9").style.display = "none";
+                document.getElementById("ApvForm_content10").style.display = "none";
+                
+                if (useReform) {
+                    document.getElementById("ApvForm_content7").style.display = "none";
+                    document.getElementById("ApvForm_content8").style.display = "none";
+                }
+                
                 document.getElementById("TForm").style.height = "0px";
             }
             break;
@@ -53,6 +85,14 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "";
                 document.getElementById("ApvForm_content6").style.display = "none";
+                document.getElementById("ApvForm_content9").style.display = "none";
+                document.getElementById("ApvForm_content10").style.display = "none";
+                
+                if (useReform) {
+                    document.getElementById("ApvForm_content7").style.display = "none";
+                    document.getElementById("ApvForm_content8").style.display = "none";
+                }
+                
                 document.getElementById("TForm").style.height = "0px";
             }
             break;
@@ -65,9 +105,96 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("ApvForm_content6").style.display = "";
+                document.getElementById("ApvForm_content9").style.display = "none";
+                document.getElementById("ApvForm_content10").style.display = "none";
+                
+                if (useReform) {
+                    document.getElementById("ApvForm_content7").style.display = "none";
+                    document.getElementById("ApvForm_content8").style.display = "none";
+                }
+                
                 document.getElementById("TForm").style.height = "0px";
             }
             break;
+        // FormBuilder
+        case "ApvForm_div7":
+            if (document.getElementById("ApvForm_content7").style.display == "none") {
+                document.getElementById("ApvForm_content1").style.display = "none";
+                document.getElementById("ApvForm_content2").style.display = "none";
+                document.getElementById("ApvForm_content3").style.display = "none";
+                document.getElementById("ApvForm_content4").style.display = "none";
+                document.getElementById("ApvForm_content5").style.display = "none";
+                document.getElementById("ApvForm_content6").style.display = "none";
+                document.getElementById("ApvForm_content9").style.display = "none";
+                document.getElementById("ApvForm_content10").style.display = "none";
+                
+                if (useReform) {
+                    document.getElementById("ApvForm_content7").style.display = "";
+                    document.getElementById("ApvForm_content8").style.display = "none";
+                }
+                
+                document.getElementById("TForm").style.height = "0px";
+            }
+            break;
+        case "ApvForm_div8":
+            if (document.getElementById("ApvForm_content8").style.display == "none") {
+                document.getElementById("ApvForm_content1").style.display = "none";
+                document.getElementById("ApvForm_content2").style.display = "none";
+                document.getElementById("ApvForm_content3").style.display = "none";
+                document.getElementById("ApvForm_content4").style.display = "none";
+                document.getElementById("ApvForm_content5").style.display = "none";
+                document.getElementById("ApvForm_content6").style.display = "none";
+                document.getElementById("ApvForm_content9").style.display = "none";
+                document.getElementById("ApvForm_content10").style.display = "none";
+                
+                if (useReform) {
+                    document.getElementById("ApvForm_content7").style.display = "none";
+                    document.getElementById("ApvForm_content8").style.display = "";
+                }
+                
+                document.getElementById("TForm").style.height = "0px";
+            }
+            break;           
+        // FormBuilder end
+        case "ApvForm_div9":  //양식 세부설정
+            if (document.getElementById("ApvForm_content9").style.display == "none") {
+                document.getElementById("ApvForm_content1").style.display = "none";
+                document.getElementById("ApvForm_content2").style.display = "none";
+                document.getElementById("ApvForm_content3").style.display = "none";
+                document.getElementById("ApvForm_content4").style.display = "none";
+                document.getElementById("ApvForm_content5").style.display = "none";
+                document.getElementById("ApvForm_content6").style.display = "none";
+                document.getElementById("ApvForm_content9").style.display = "";
+                document.getElementById("ApvForm_content10").style.display = "none";
+                
+                if (useReform) {
+                    document.getElementById("ApvForm_content7").style.display = "none";
+                    document.getElementById("ApvForm_content8").style.display = "none";
+                }
+                
+                document.getElementById("TForm").style.height = "0px";
+            }
+            break;            
+        case "ApvForm_div10":
+            if (document.getElementById("ApvForm_content10").style.display == "none") {
+                document.getElementById("ApvForm_content1").style.display = "none";
+                document.getElementById("ApvForm_content2").style.display = "none";
+                document.getElementById("ApvForm_content3").style.display = "none";
+                document.getElementById("ApvForm_content4").style.display = "none";
+                document.getElementById("ApvForm_content5").style.display = "none";
+                document.getElementById("ApvForm_content6").style.display = "none";
+                document.getElementById("ApvForm_content9").style.display = "none";
+                document.getElementById("ApvForm_content10").style.display = "";
+                
+                if (useReform) {
+                    document.getElementById("ApvForm_content7").style.display = "none";
+                    document.getElementById("ApvForm_content8").style.display = "none";
+                }
+
+                
+                document.getElementById("TForm").style.height = "0px";
+            }
+            break;          
     }
 }
 
@@ -231,11 +358,36 @@ function SaveFormInfo() {
     }
     
     var url = "";
+    var params = {
+		companyID: companyID,
+		formContID: contID,
+		formID: formID,
+		formInfo: formInfo,
+		formMHT: formMHT,
+		formConn: formConn,
+		formAutoRule: formAutoRule,
+		formAutoRuleLine: formAutoRuleLine,
+		formRecevGroup: formRecevGroup
+	}
     
     if(useEditor == "HWP") {
     	url = "/admin/ezApprovalG/formSaveHWP.do";
     } else {
     	url = "/admin/ezApprovalG/formSave.do";
+    	
+		// FormBuilder
+		if (document.getElementById("reform-checkbox") && document.getElementById("reform-checkbox").checked) {
+			iframe_ApvReForm.processForSaving();
+			
+			var reformBodyStr = iframe_ApvReForm.GetEditorContent();
+			reformBodyStr = "<body>" + reformBodyStr + "</body>"
+			
+			params.reformMht = ConvertHTMLtoMHT(reformBodyStr)
+			params.reformHtml = reformBodyStr;
+			params.reformFunction = document.getElementById("txt_reformFunction").value;
+			
+			iframe_ApvReForm.processAfterSaving();
+		}
     }
     
     $.ajax({
@@ -243,17 +395,103 @@ function SaveFormInfo() {
 		dataType : "text",
 		async : false,
 		url : url,
-		data : {
-			companyID  : companyID,
-			formContID : contID,
-			formID     : formID,
-			formInfo   : formInfo,
-			formMHT    : formMHT,
-			formConn   : formConn,
-			formAutoRule     : formAutoRule,
-			formAutoRuleLine : formAutoRuleLine,
-			formRecevGroup   : formRecevGroup
-		},
+		data : params,
+		success: function(text){
+			SaveFormInfo_after(text);
+		}
+	});
+}
+
+function SaveHWPFormInfo(hwpData) {
+    var xmlRtn = createXmlDom();
+    var formMHT = "";
+    
+    //양식 정보 XML
+    var arrFormInfo = MakeFormInfoXML();
+    if (arrFormInfo[0] == "TRUE") {
+        formInfo = arrFormInfo[1];
+    } else {
+        OpenAlertUI(arrFormInfo[2]);
+        document.getElementById("1tab1").click();
+        return;
+    }
+    
+    //연동정보 XML
+    var arrFormConn = "";
+    arrFormConn = MakeFormConnXML();
+    if (arrFormConn[0] == "TRUE") {
+        if (arrFormConn[1] != "") { 
+            formConn = arrFormConn[1];
+        }
+    } else {
+        OpenAlertUI(arrFormConn[2]);
+        document.getElementById("1tab3").click();
+        return;
+    }
+
+    //WorkFlow XML
+    var arrFormWorkFlow = "";
+    arrFormWorkFlow = MakeFormWorkFlow();
+    if (arrFormWorkFlow[0] == "TRUE") {
+        if (arrFormWorkFlow[1] != "") {
+            formWorkFlow = arrFormWorkFlow[1];
+        }
+    } else {
+        OpenAlertUI(arrFormWorkFlow[2]);
+        document.getElementById("1tab4").click();
+        return;
+    }
+
+    //작성양식 XML
+    if(formID != "") {
+        var arrFormMHT = MakeFormMHTXML(hwpData);
+        if (arrFormMHT[0] == "TRUE") {
+            formMHT = arrFormMHT[1];
+        } else {
+            OpenAlertUI(arrFormMHT[2]);
+            document.getElementById("1tab2").click();
+            return;
+        }
+    }
+    
+    //자동분류 XML
+    var arrFormAutoRule = MakeFormAutoRuleXML();
+    if (arrFormAutoRule[0] == "TRUE") {
+        formAutoRule = arrFormAutoRule[1];
+        formAutoRuleLine = arrFormAutoRule[2];
+    } else {
+        formAutoRule = "";
+        formAutoRuleLine = "";
+    }
+    
+    //고정수신처정보 XML
+    var arrFormRecevGroup = MakeFormRecevGroupXML();
+    if (arrFormRecevGroup[0] == "TRUE") {
+        formRecevGroup = arrFormRecevGroup[1];
+    } else {
+        OpenAlertUI(strLangCSJ02);
+        document.getElementById("1tab5").click();
+        return;
+    }
+    
+    var params = {
+		companyID: companyID,
+		formContID: contID,
+		formID: formID,
+		formInfo: formInfo,
+		formMHT: formMHT,
+		formConn: formConn,
+		formAutoRule: formAutoRule,
+		formAutoRuleLine: formAutoRuleLine,
+		formRecevGroup: formRecevGroup
+	}
+    
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/admin/ezApprovalG/formSaveHWP.do",
+		data : params,
 		success: function(text){
 			SaveFormInfo_after(text);
 		}
@@ -314,6 +552,24 @@ function MakeFormInfoXML_Detail() {
     } else {
     	createNodeAndInsertText(xmlpara, objNode, "ConnFlag", "N");
     }
+    
+    // 2021-01-21 심기영 오피스 양식 여부 체크 (null 체크 조건 추가)
+    if(document.getElementById('officeFlag') != null && document.getElementById('officeFlag').checked) {
+    	createNodeAndInsertText(xmlpara, objNode, "officeFlag", "Y");
+    } else {
+    	createNodeAndInsertText(xmlpara, objNode, "officeFlag", "N");
+    }
+    
+    if (document.getElementById('setOpenGovFlag').checked) {
+    	createNodeAndInsertText(xmlpara, objNode, "openGovFlag", "Y"); // 원문공개 체크 
+    } else {
+    	createNodeAndInsertText(xmlpara, objNode, "openGovFlag", "N");
+    }
+    if (document.getElementById("setPassAprLineFlag").checked) { //기결재통과 체크
+    	createNodeAndInsertText(xmlpara, objNode, "passAprLineFlag", "Y");
+    } else {
+    	createNodeAndInsertText(xmlpara, objNode, "passAprLineFlag", "N");
+    }
 
     createNodeAndInsertText(xmlpara, objNode, "KEEPPERIOD", getNodeText(document.getElementById("keepperiod").options[document.getElementById("keepperiod").selectedIndex]));
     createNodeAndInsertText(xmlpara, objNode, "KEEPPERIODCODE", document.getElementById("keepperiod").value);
@@ -322,62 +578,100 @@ function MakeFormInfoXML_Detail() {
     createNodeAndInsertText(xmlpara, objNode, "TBITEMCODE", document.getElementById("tbItemCode").value);
     createNodeAndInsertText(xmlpara, objNode, "TBITEMNAME", document.getElementById("tbItemName").value);
     createNodeAndInsertText(xmlpara, objNode, "TBITEMNAME2", document.getElementById("tbItemName2").value);
+    //formXslt
+    if(document.querySelector("#setBodyXslt").checked) {
+        var formXslt = document.querySelector("#BodyXslt").value.trim();
+        formXslt = ConvertCharToEntityReference(formXslt);
+
+        createNodeAndInsertText(xmlpara, objNode, "FORMXSLT", formXslt);
+    } else {
+        createNodeAndInsertText(xmlpara, objNode, "FORMXSLT", "");
+    }
+
+    //formXslt end
+    //양식 세부설정
+    var formOptArr = new Array();
+    var formOptTypeAtr = "";
+
+    for (var k = 0 ; k < document.getElementsByName("aprOption").length ; k++) {
+        var code = GetAttribute(document.getElementsByName("aprOption").item(k), "code");
+        var optionName = "aprOption_" + code;
+
+        for (var i = 0 ; i < document.getElementsByName(optionName).length ; i++) {
+            if (document.getElementsByName(optionName)[i].checked) {
+                formOptArr[formOptArr.length] = GetAttribute(document.getElementsByName(optionName)[i], "id");
+            }
+        }
+    }
+    formOptTypeAtr = formOptArr.join(",");
+
+    createNodeAndInsertText(xmlpara, objNode, "APPROPTION", formOptTypeAtr);    
+
+    if(document.getElementById("hidfileNM").value != "")
+    	createNodeAndInsertText(xmlpara, objNode, "HWPFILEPATH", document.getElementById("hidfileNM").value);
+
+    //    
+    createNodeAndInsertText(xmlpara, objNode, "SIHANGTYPE", document.querySelector("#selSihangType").value);    
     
     return getXmlString(xmlpara.childNodes[0]);
 }
 
-function MakeFormMHTXML() {
+function MakeFormMHTXML(pBodyData) {
     var retValue = new Array();
-    if (useEditor == "HWP") {
-        retValue[0] = "TRUE";
-        retValue[1] = message.HWP_GetCloneData();
-        retValue[2] = "";
-        return retValue;
-    }
+    var mustField;
   
-    if (message.FormInfoCheck("null"))
-    {
+    mustField = message.FormInfoCheck("null");
+    if (mustField) {
         retValue[0] = "FALSE";
         retValue[1] = "";
         retValue[2] = strLang1024;
-        return retValue;
     }
 
-    if (message.FormInfoCheck("body") != 0) {
-        if (message.FormInfoCheck("body") > 1) {
-            retValue[0] = "FALSE";
-            retValue[1] = "";
-            retValue[2] = strLang1012;
-            return retValue;
-        }        
-    }
-    else {
+    mustField = message.FormInfoCheck("body");
+    if (mustField === 0) {
         retValue[0] = "FALSE";
         retValue[1] = "";
         retValue[2] = strLang1013;
-        return retValue;
+    } else if (mustField > 1) {
+        retValue[0] = "FALSE";
+        retValue[1] = "";
+        retValue[2] = strLang1012;
     }
 
-    if (message.FormInfoCheck("doctitle") != 0) {
-        if (message.FormInfoCheck("doctitle") > 1) {
-            retValue[0] = "FALSE";
-            retValue[1] = "";
-            retValue[2] = strLang1014;
-            return retValue;
-        }
-    }
-    else {
-        if (message.FormInfoCheck("doctitlefield") == null || message.FormInfoCheck("doctitlefield") == "") {
+    mustField = message.FormInfoCheck("doctitle");
+    if (mustField === 0) {
+        mustField = message.FormInfoCheck("doctitlefield");
+        if (!mustField) {
             retValue[0] = "FALSE";
             retValue[1] = "";
             retValue[2] = strLang1015;
-            return retValue;
-        }        
+        }
+    } else if (mustField > 1) {
+        retValue[0] = "FALSE";
+        retValue[1] = "";
+        retValue[2] = strLang1014;
     }
-    retValue[0] = "TRUE";
-    retValue[1] = MakeFormMHTXML_Detail();
-    retValue[2] = "";
-    
+
+    if (retValue.length === 0) {
+        switch (useEditor) {
+            case "HWP":
+                retValue[0] = "TRUE";
+                retValue[1] = message.HWP_GetCloneData();
+                retValue[2] = "";
+                break;
+            case "WebHWP":
+                retValue[0] = "TRUE";
+                retValue[1] = pBodyData;
+                retValue[2] = "";
+                break;
+            default:
+                retValue[0] = "TRUE";
+                retValue[1] = MakeFormMHTXML_Detail();
+                retValue[2] = "";
+                break;
+        }
+    }
+
     return retValue;
 }
 
@@ -399,17 +693,23 @@ function MakeFormMHTXML_Detail() {
         HTML.appendChild(HEAD);
 
         var BODY = document.createElement("BODY");
-        var ConnVal = "";
-        var XMLInfo = "";
-        if (txt_OpinionContent.value != "") {
-            ConnVal = "<conninfo>\n" + txt_OpinionContent.value + "\n</conninfo>";
-            XMLInfo = "<xml id='conn' style='display:none'>" + ConnVal + "</xml>\n";
-        }
+        var connXmlStr = "", workflowXmlStr = "";
 
-        var WorkVal = "";
-        if (txt_OpinionContent1.value != "" || txt_OpinionContent2.value != "") {
-            WorkVal += "\n<WORKFLOW>\n<VALIDATIONS>\n" + txt_OpinionContent1.value + "\n</VALIDATIONS>\n<STATUS>\n" + txt_OpinionContent2.value + "\n</STATUS>\n</WORKFLOW>\n";
-            XMLInfo += "<xml id='WORKFLOW' style='display:none;'>" + WorkVal + "</xml>";
+        if (txt_OpinionContent.value) {
+            connXmlStr = txt_OpinionContent.value.replace(/\r/g, "").replace(/\n/g, "").replace(/\t/g, "");
+            connXmlStr = "<CONNROOT>" + connXmlStr + "</CONNROOT>";
+            connXmlStr = "<xml id='conn' style='display:none'>" + connXmlStr + "</xml>"
+        }
+    
+        if (txt_OpinionContent1.value || txt_OpinionContent2.value) {
+            var work1XmlStr = txt_OpinionContent1.value.replace(/\r/g, "").replace(/\n/g, "").replace(/\t/g, "");
+            var work2XmlStr = txt_OpinionContent2.value.replace(/\r/g, "").replace(/\n/g, "").replace(/\t/g, "");
+            workflowXmlStr = 
+                "<WORKFLOW>" + 
+                "<VALIDATIONS>" + work1XmlStr + "</VALIDATIONS>" + 
+                "<APRLINES>" + work2XmlStr + "</APRLINES>" + 
+                "</WORKFLOW>";
+            workflowXmlStr = "<xml id='WORKFLOW' style='display:none;'>" + workflowXmlStr + "</xml>";
         }
 
         var Div = document.createElement("DIV");
@@ -420,15 +720,46 @@ function MakeFormMHTXML_Detail() {
         	Div.innerHTML = Div.innerHTML.replace(/class=".*?FIELD.*?"/g, 'class="FIELD"');
         }
         
-        if (message.GetEditorContent().indexOf("BodyContent") > -1)
-            BODY.innerHTML = XMLInfo.replace(/\r\n/g, "").replace( /\n/g, "").replace(/\r/g, "") + Div.innerHTML;
-        else {
+        if (message.GetEditorContent().indexOf("BodyContent") === -1) {
             Div.id = "BodyContent";
-            BODY.innerHTML = XMLInfo.replace(/\r\n/g, "").replace( /\n/g, "").replace(/\r/g, "") + Div.outerHTML;
         }
+
+        if (connXmlStr) {
+            BODY.appendChild(loadXMLString(connXmlStr).documentElement);
+        }
+        if (workflowXmlStr) {
+            BODY.appendChild(loadXMLString(workflowXmlStr).documentElement);
+        }
+
+        BODY.innerHTML += Div.innerHTML;
         
         HTML.appendChild(BODY);
         return ConvertHTMLtoMHT("<HTML>" + HTML.innerHTML + "</HTML>");
+}
+
+function SaveConnWHWPXML_Detail() {
+    var connXmlStr = "", workflowXmlStr = "";
+
+    if (txt_OpinionContent.value) {
+        connXmlStr = txt_OpinionContent.value.replace(/\r/g, "").replace(/\n/g, "").replace(/\t/g, "");
+        connXmlStr = "<CONNROOT>" + connXmlStr + "</CONNROOT>";
+    }
+
+    if (txt_OpinionContent1.value || txt_OpinionContent2.value) {
+        var work1XmlStr = txt_OpinionContent1.value.replace(/\r/g, "").replace(/\n/g, "").replace(/\t/g, "");
+        var work2XmlStr = txt_OpinionContent2.value.replace(/\r/g, "").replace(/\n/g, "").replace(/\t/g, "");
+        workflowXmlStr = 
+            "<WORKFLOW>" + 
+            "<VALIDATIONS>" + work1XmlStr + "</VALIDATIONS>" + 
+            "<APRLINES>" + work2XmlStr + "</APRLINES>" + 
+            "</WORKFLOW>";
+    }
+
+    message.WHWP_SetDocumentElement(connXmlStr + workflowXmlStr);
+}
+
+function GetHTML(callback) {
+    message.GetTextFile("HWP", "", function (data) { callback(data) });
 }
 
 function MakeFormConnXML() {
@@ -613,7 +944,16 @@ function btnClose_onclick() {
 }
 
 function btnSave_onclick() {
-    SaveFormInfo();
+    if(useEditor == "WebHWP") {
+    	if(formID != "") {
+            SaveConnWHWPXML_Detail(); // 한글연동/워크플로우 정보 저장
+    		GetHTML(SaveHWPFormInfo);
+    	} else {
+    		SaveHWPFormInfo();
+    	}
+    } else {
+    	SaveFormInfo();
+    }
 }
 //고정수신처 부서 등록 시, 수발신담당자 유/무 체크
 function isReceiverChk(DeptID)

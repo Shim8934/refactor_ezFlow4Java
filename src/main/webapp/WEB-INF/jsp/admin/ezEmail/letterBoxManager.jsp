@@ -28,8 +28,8 @@
 	    <h1 style="padding: 5px"> </h1>
 	    <div id="mainmenu">
 		    <ul class="on">
-		        <li><span onclick="addLetterBox()"><spring:message code='ezEmail.letter17'/></span></li>
-		        <li><span onclick="deleteLetterBox()"><spring:message code='ezEmail.letter18'/></span></li>
+		        <li class="important"><span onclick="addLetterBox()"><spring:message code='ezEmail.letter17'/></span></li>
+		        <li><span class="icon16 icon16_delete" onclick="deleteLetterBox()"></span></li>
 		    </ul>
 		</div>
 		<div id="letterContentDiv" style="width:639px;">
@@ -53,11 +53,11 @@
 					
 					<input type="hidden" id="letterbox_no" name="letterBoxNo">
 					<input type="hidden" id="parent_letterbox_no" name="parentLetterBoxNo">
-					<input type="hidden" id="company_id" name="companyID" value="${companyId}">
+					<input type="hidden" id="company_id" name="companyID" value="<c:out value='${companyId}'/>">
 				</form>
 			</div>
 			<div class="btnpositionJsp" style="width:100%;text-align:center;float:left;margin-top:10px;padding:7px;">
-		        <a class="imgbtn" onclick="submitClick()"><span><spring:message code="ezEmail.t38"/></span></a>
+		        <a class="imgbtn" onclick="submitClick()"><span><spring:message code="ezEmail.t48"/></span></a>
 		    </div>
 		</div>
 		<script>
@@ -65,7 +65,7 @@
 		</script>
 		<script type="text/javascript">
 			var pageType = "${pageType}";
-	    	var returnCompany = '${companyId}';
+	    	var returnCompany = "<c:out value='${companyId}'/>";
 	    	var userLang = '${userLang}';
 		    var result = [];
 		    var letter_displayname;
@@ -90,6 +90,7 @@
 			var contentMsg = "<spring:message code='ezEmail.letter11'/>"; // 이름을 입력해주세요.
 			var letterBoxNameMsg = "<spring:message code='ezEmail.letter31'/>"; // 이름은
 			var letterBoxDelMsg = "<spring:message code='ezBoard.t54'/>"; // 삭제되었습니다.
+			var selectLetterboxMsg = "<spring:message code='ezEmail.letter39'/>";
 		    
 		    window.onload = window_onload;
 		    

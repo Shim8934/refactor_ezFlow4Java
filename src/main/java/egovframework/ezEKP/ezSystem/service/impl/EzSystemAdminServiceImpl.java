@@ -9,9 +9,11 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javax.annotation.Resource;
@@ -39,6 +41,7 @@ import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.DataForModulesEnum;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.ModuleSizeVO;
+import egovframework.ezEKP.ezSystem.vo.PasswordPolicyVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -77,7 +80,7 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 	}
 
 	@Override
-	public void updateSysParam(int tenantID, List<Map<String, String>> list, Locale locale) throws Exception {
+	public void updateSysParam(int tenantID, List<Map<String, String>> list, Locale locale, String companyID) throws Exception {
 		logger.debug("updateSysParam started. tenantID=" + tenantID);
 		
 		SysParamVO sysParamVO = new SysParamVO();
@@ -87,6 +90,17 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 			String paramName = list.get(i).get("name");
 			String paramValue = list.get(i).get("value");
 			
+			if (paramName.equals("LicenseKey")) {
+				String newPackageType = commonUtil.licenseKeyDEC(paramValue);
+				String oldPackageType = commonUtil.getPackageType(tenantID);
+				if (newPackageType.equals(oldPackageType)) {
+					continue;
+				} else {
+					// 바뀌었을때 새로운 packageType으로 디비 메뉴 맞춰줘야하는 것 추가
+					updateNewPortalMenuByPackageType(newPackageType, tenantID, companyID);
+				}
+			}
+
 			if (paramName.equals("useSession") || paramName.equals("useSessionMobile")) {
 				int sessionParam = Integer.parseInt(paramValue);
 				paramValue = Integer.toString(sessionParam);
@@ -202,6 +216,37 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		
 		return list;
 	}
+	
+	@Override
+	public List<ConnectionInfoVO> getLoginHistNotAdmin(int tenantID, String offset, int startPage, int maxItemPerPage, String keycode, 
+			String keyword, String lang, String startDate, String endDate, String companyId, String userId) throws Exception {
+		
+		logger.debug("getLoginHist started. tenantID : " + tenantID);
+		
+		String companyOracleStr = "";
+		if (companyId != null && !companyId.equals("Top/organ")) {
+			companyOracleStr = " AND C.COMPANYID ='" + companyId + "'";
+		}
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("v_tenantID", tenantID);
+		params.put("offset", offset);
+		params.put("v_start", startPage);
+		params.put("pageCount", maxItemPerPage);
+		params.put("search_keycode", keycode);
+		params.put("search_keyword", keyword);
+		params.put("lang", lang); // primary:기본명 / 1:영문명
+		params.put("startDate", startDate);
+		params.put("endDate", endDate);
+		params.put("companyId", companyId);
+		params.put("companyOracleStr", companyOracleStr);
+		params.put("userId", userId);
+		
+		List<ConnectionInfoVO> list = ezSystemAdminDAO.getLoginHistNotAdmin(params);
+		logger.debug("getLoginHist ended.");
+		
+		return list;
+	}
 
 	@Override
 	public int getLoginHistCount(int tenantID, String offset, String keycode, String keyword, String lang, String startDate, String endDate, String companyId) throws Exception {
@@ -227,6 +272,34 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		logger.debug("getLoginHistCount ended.");
 		
 		return ezSystemAdminDAO.getLoginHistCount(params);
+	}
+	
+	@Override
+	public int getLoginHistCountNotAdmin(int tenantID, String offset, String keycode, String keyword, String lang, 
+			String startDate, String endDate, String companyId, String userId) throws Exception {
+		
+		logger.debug("getLoginHistCount started. tenantID : " + tenantID);
+		
+		String companyOracleStr = "";
+		if (companyId != null && !companyId.equals("Top/organ")) {
+			companyOracleStr = " AND C.COMPANYID ='" + companyId + "'";
+		}
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("v_tenantID", tenantID);
+		params.put("offset", offset);
+		params.put("search_keycode", keycode);
+		params.put("search_keyword", keyword);
+		params.put("lang", lang);
+		params.put("startDate", startDate);
+		params.put("endDate", endDate);
+		params.put("companyId", companyId);
+		params.put("companyOracleStr", companyOracleStr);
+		params.put("userId", userId);
+		
+		logger.debug("getLoginHistCount ended.");
+		
+		return ezSystemAdminDAO.getLoginHistCountNotAdmin(params);
 	}
 
 	/**
@@ -574,7 +647,7 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 			for(int i = 0; i < filerootNameLen; i++) {
 				String uploadPath = commonUtil.getUploadPath(module.getFilerootName()[i], tenantId);
 				
-				Path filePath = Paths.get(realPath + uploadPath);
+				Path filePath = Paths.get((commonUtil.detectPathTraversal(realPath + uploadPath)));
 				if(filePath.toFile().exists()) {
 					Files.walkFileTree(filePath, new SimpleFileVisitor<Path>() {
 						
@@ -625,4 +698,206 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		
 		return module;
 	}
+	
+	public void deleteWebfolderLog(int keepLogPeriod, int tenantID) throws Exception {
+		logger.debug("deleteWebfolderLog started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_KEEP_LOG_PERIOD", keepLogPeriod*60);
+        map.put("v_TENANT_ID", tenantID);		
+        
+        ezSystemAdminDAO.deleteWebfolderLog(map);
+        
+		logger.debug("deleteWebfolderLog end.");
+		
+	}
+
+	@Override
+	public void setMultiLoginType(String multiLoginType, int tenantID, String companyID, String editType) throws Exception {
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("multiLoginType", multiLoginType);
+		paramMap.put("tenantID", tenantID);
+		paramMap.put("companyID", companyID);
+		
+		if(editType.equals("")) {
+			ezSystemAdminDAO.insertMultiLogintype(paramMap);
+		} else {
+			ezSystemAdminDAO.updateMultiLogintype(paramMap);
+		}
+	}
+
+	@Override
+	public void updateNewPortalMenuByPackageType(String newPackageType, int tenantID, String companyID) throws Exception {
+		logger.debug("updateNewPortalMenuByPackageType start.");
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		
+		Set<String> menuId = new HashSet<String>();
+
+		if (newPackageType.equals("mail")) {
+			System.out.println(newPackageType);
+			menuId.add("1");
+			menuId.add("13");
+		} else if (newPackageType.equals("basic")) {
+			System.out.println(newPackageType);
+			menuId.add("1");
+			menuId.add("2");
+			menuId.add("4");
+			menuId.add("13");
+		}
+		paramMap.put("menuId", menuId.toArray(new String[menuId.size()]));
+		paramMap.put("tenantID", tenantID);
+		paramMap.put("companyID", companyID);
+		paramMap.put("packageType", newPackageType);
+		paramMap.put("menuUse", 0);
+		paramMap.put("flagType", "all");
+		
+		ezSystemAdminDAO.updateMenuChange(paramMap);
+		
+		if (newPackageType.equals("") || newPackageType.equals("standard")) {
+			newPackageType = "standard";
+		} else {
+			paramMap.put("flagType", "notAll");
+		}
+		
+		paramMap.put("packageType", newPackageType);
+		paramMap.put("menuUse", 1);
+		
+		ezSystemAdminDAO.updateMenuChange(paramMap);
+		
+		logger.debug("updateNewPortalMenuByPackageType end.");
+	}
+	
+	/*
+	 * 접속 허용 국가 리스트
+	 */
+	@Override
+	public String getAccessCountryList(int tenantId)throws Exception {
+		logger.debug("getAccessCountryList started");
+		
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("tenantId", tenantId);
+		
+		String accessCountryList = ezSystemAdminDAO.getAccessCountryList(paramMap);
+		accessCountryList = accessCountryList == null ? "" : accessCountryList;
+
+		logger.debug("getAccessCountryList ended");
+		return accessCountryList;
+	}
+
+	/*
+	 * 접속 허용 국가 추가
+	 */
+	@Override
+	public void setAccessCountry(int tenantId, String countryCode) throws Exception {
+		logger.debug("setAccessCountry started");
+
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("tenantId", tenantId);
+		paramMap.put("countryCode", countryCode);
+		
+		int updateResult = ezSystemAdminDAO.updateAccessCountry(paramMap);
+		if (updateResult == 0) {
+			logger.debug("update failed. insert AccessCountry");
+			ezSystemAdminDAO.setAccessCountry(paramMap);
+		}
+		
+		logger.debug("setAccessCountry ended");
+	}
+
+	// 암호 정책 
+	@Override
+	public Map<String, Object> getPwPolicy(int tenantId, String companyId) throws Exception {
+		logger.debug("getPwPolicy started");
+
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("tenantId", tenantId); 
+		paramMap.put("companyId", companyId);
+		
+		Map<String, Object> returnMap = null;
+		
+		Map<String, String> pwPolicy = ezSystemAdminDAO.getPwPolicy(paramMap); // 암호 정책
+		List<Map<String, Object>> pwPolicyPattern = ezSystemAdminDAO.getPwPolicyPattern(paramMap); // 암호 정책 패턴
+		
+		if (pwPolicy != null && pwPolicyPattern != null) {
+			returnMap = new HashMap<String, Object>();
+			returnMap.put("pwPolicy", pwPolicy);
+			returnMap.put("pwPolicyPattern", pwPolicyPattern);
+		}
+		
+		logger.debug("getPwPolicy ended");
+		return returnMap;
+	}
+
+	// 암호 정책 저장
+	@Override
+	public int updatePwPolicy(int tenantId, String companyId, Map<String, String> patternTypeMap, 
+			List<Map<String, Object>> PwPolicyPatternList) throws Exception {
+		logger.debug("updatePwPolicy started");
+		
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("tenantId", tenantId);
+		paramMap.put("companyId", companyId);
+		
+		PasswordPolicyVO pwPolicyVO = new PasswordPolicyVO();
+		pwPolicyVO.setTenantId(tenantId);		
+		pwPolicyVO.setCompanyId(companyId);
+		pwPolicyVO.setEngCharType(patternTypeMap.get("useEngType"));
+		pwPolicyVO.setUseCapitalLetter(patternTypeMap.get("engCapitalLetter"));
+		pwPolicyVO.setUseSmallLetter(patternTypeMap.get("engSmallLetter"));
+		pwPolicyVO.setUseNumber(patternTypeMap.get("useNumber"));
+		pwPolicyVO.setUseSpecial(patternTypeMap.get("useSpecial"));
+		logger.debug("pwPolicyVO=" + pwPolicyVO.toString());
+
+		// 암호 정책 설정 저장
+		int updateChk = ezSystemAdminDAO.updatePwPolicy(pwPolicyVO);
+		if (updateChk <= 0) {
+			logger.debug("tbl_password_policy insert.");
+			ezSystemAdminDAO.insertPwPolicy(pwPolicyVO);
+		}
+
+		// 암호 패턴 설정 삭제 및 저장
+		ezSystemAdminDAO.deletePwPolicyPattern(paramMap);
+		for (Map<String, Object> patternMap : PwPolicyPatternList) {
+			patternMap.putAll(paramMap);
+			
+			logger.debug("insertPwPolicyPattern. patternMap=" + patternMap.toString());
+			ezSystemAdminDAO.insertPwPolicyPattern(patternMap);
+		}
+		
+		logger.debug("updatePwPolicy ended");
+		return 0;
+	}
+	
+	// companyConfig 저장
+	@Override
+	public void updateCompanyConfigParam(int tenantID, List<Map<String, String>> list, String companyID) throws Exception {
+		logger.debug("updateCompanyConfig started. tenantID=" + tenantID + ", companyId=" + companyID);
+		
+		SysParamVO sysParamVO = new SysParamVO();
+		sysParamVO.setTenantID(tenantID);		
+		sysParamVO.setCompanyID(companyID);
+		
+		for (int i = 0; i < list.size(); i++) {					
+			String paramName = list.get(i).get("name");
+			String paramValue = list.get(i).get("value");
+			logger.debug("paramName:" + paramName + ", paramValue:" + paramValue);
+			
+			if (paramName.equals("ExpirePassPeriod") || paramName.equals("MaxAllowedCountOfLoginFail")) {
+				int changeInt = Integer.parseInt(paramValue);
+				paramValue = Integer.toString(changeInt);
+			}
+			
+			sysParamVO.setName(paramName);
+			sysParamVO.setValue(paramValue);
+			
+			int updateChk = ezSystemAdminDAO.updateCompanyConfigParam(sysParamVO);
+			if (updateChk <= 0) {
+				logger.debug("inserst companyConfig");
+				ezSystemAdminDAO.insertCompanyConfigParam(sysParamVO);
+			}
+		}
+		logger.debug("updateCompanyConfig ended. tenantID=" + tenantID);
+	}
+	
 }

@@ -55,6 +55,15 @@
 		    var shareId = "${shareId}";
 		    var deletePermission = "${deletePermission}";
 		    var sendPermission = "${sendPermission}";
+		    var managePermission = "${managePermission}";
+		    var mailWritePreview = "${mailWritePreview}"; // 메일 작성 > 미리보기
+		    var g_uid = "${uid}";
+		    var countryName = "${countryName}";
+		    var countryIP = "${countryIP}";
+		    var countryCode = "${countryCode}";
+		    var systemCountryCode = "${systemCountryCode}";
+		    var useCountryIP = "${useCountryIP}";
+		    var useShowSystemCountry = "${useShowSystemCountry}";
 		    
 		    window.onresize = window_onresize;
 		    
@@ -103,6 +112,10 @@
 		            document.getElementById("HolderElse").style.display = "";
 		        }
 		        
+		        /* if (shareId != "" && managePermission != "Y") {
+		        	document.getElementById("btn_reject").parentNode.style.display = "none";
+		        } */
+		        
 		        if (shareId != "" && sendPermission != "Y") {
 		        	btnReply.style.display = "none";
 		        	btnAllReply.style.display = "none";
@@ -116,6 +129,18 @@
 		        	btnDelete.style.display = "none";
 		        }
 		        
+		        if (useCountryIP == "YES" && mailWritePreview != "true") {
+		        	if (useShowSystemCountry == "YES" || (useShowSystemCountry != "YES" && countryCode != systemCountryCode)) {
+			        	
+		        		if (document.getElementById("nationalFlag") != null) {
+			        		countryCode = countryCode == "unknown" ? "qm" : countryCode;
+			        		
+			        		document.getElementById("nationalFlag").src = "/images/countryIcon/" + countryCode + ".png";
+				        	document.getElementById("nationalFlag").style.display = "";
+			        	}
+		        	}
+		        } 
+		        
 		        try{
 		            if(ReadCountCheck=="N")
 		            {
@@ -123,6 +148,10 @@
 		            }
 		        } 
 			    catch (e) { }
+			    
+			    if (mailWritePreview == "true") {
+			    	$("#menu > ul:first-child").css("display","none");
+			    }
 			    
 			}
 		    function btnPrint_onClick()
@@ -193,6 +222,8 @@
 			{
 			   if(searchPage == "1" && usedMoveDel == "1")
 			        opener.callback();
+			   
+			   mailWritePreviewDel();
 			}
 			
 			function deliver()
@@ -377,11 +408,11 @@
 		                    return;
 		                }
 		
-		                if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4") {
+		                if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || ret[3] != "") {
 		                    alert(strLang337);
 		                }
 		                else {
-		                	var requestUrl = "/ezBoard/boardNewItem.do?mode=new1&boardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL);
+		                	var requestUrl = "/ezBoard/boardNewItem.do?mode=new1&boardID=" + encodeURIComponent(pBoardID) + "&url=" + encodeURIComponent(g_paramURL);
 		                	
 		                	if (typeof(shareId) != "undefined" && shareId != "") {
 		                		requestUrl += "&mailShareId=" + encodeURIComponent(shareId);
@@ -423,7 +454,7 @@
 		            	if (dotNetIntegration == "YES") {
 		            		requestUrl = "${dotNetUrl}/myoffice/ezBoardSTD/NewBoardItem.aspx?BoardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL) + "&pagetype=POPUP&javaflag=true";
 		            	} else {
-		            		requestUrl = "/ezBoard/boardNewItem.do?mode=new1&boardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL);
+		            		requestUrl = "/ezBoard/boardNewItem.do?mode=new1&boardID=" + encodeURIComponent(pBoardID) + "&url=" + encodeURIComponent(g_paramURL);
 		            	}
 	                	
 	                	if (typeof(shareId) != "undefined" && shareId != "") {
@@ -469,6 +500,24 @@
 		        newwin.focus();
 		    }
 		    
+			function addRelatedCabinet() {
+				//* moon 2018.07.26
+				window.open("/ezCabinet/cabinetAddRelated.do?module=email", "addRelated", getOpenWindowfeature(480, 505));
+			}
+			
+			function getOpenWindowfeature(popUpW, popUpH) {
+				var heigth   = window.screen.availHeight;
+				var width    = window.screen.availWidth;
+				var left     = 0;
+				var top      = 0;
+				var pleftpos = parseInt(width) - popUpW;
+				heigth       = parseInt(heigth) - popUpH;
+				left         = pleftpos / 2;
+				top          = heigth / 2;
+				var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes";
+				return feature;
+			}
+			
 		    function mailPrevSentDateChk() {
 		    	if (sentDateMsg != "") { // 전달 및 회신시 보낸시각
 		    		var sentDateHeight = $(".sentDateStr").innerHeight();
@@ -478,6 +527,56 @@
 		    		$("#message").height(messageH - sentDateHeight);
 		    	}
 		    }
+		    
+		    window.onbeforeunload = function () {
+		    	mailWritePreviewDel();
+		    }
+		    
+		    function mailWritePreviewDel() {
+		    	if (mailWritePreview != "true") {return; }
+		    	// 메일 작성 > 미리보기 메일 삭제
+				window.opener.parent.delDrafts(g_uid);
+				window.parent.opener.parent.previewChk = false;
+		    }
+		    
+		    /* 2020-08-31 홍승비 - 메일 커뮤니티 게시판에 게시 기능 추가 */
+		    // 메일읽기창에서 '커뮤니티 게시' 버튼을 누를 때 호출됨
+		    var writeCommboardselect_modal_dialogArguments = new Array();
+		    function NewItemCommu_onclick() {
+				writeCommboardselect_modal_dialogArguments[1] = NewItemCommu_onclick_Complete; // 커뮤니티 게시판 선택 완료 시의 동작
+	           
+				var OpenWin = window.open("/ezCommunity/communityBoardSelectForMail.do", "communityBoardSelectForMail", GetOpenWindowfeature(355, 600));
+				try { OpenWin.focus(); } catch (e) { }
+		    }
+		    
+		    function NewItemCommu_onclick_Complete(ret) {
+		        if (typeof (ret) != "undefined") {
+		            pBoardID = ret[0];
+		            
+		            if (pBoardID == "" || typeof (pBoardID) == "undefined") {
+		                return;
+		            }
+		            
+					var boardWidth = 765;
+					var boardHeight = 720;
+					var boardTarget = "";
+		            var pheight = window.screen.availHeight;
+		            var pwidth = window.screen.availWidth;
+		            var pTop = (pheight - boardWidth) / 2;
+		            var pLeft = (pwidth - boardHeight) / 2;
+		            	
+	            	// 커뮤니티 신규 게시물 작성창으로 연결
+	            	var requestUrl; 
+	            	requestUrl = "/ezCommunity/newBoardItem.do?mode=new1&boardID=" + encodeURIComponent(pBoardID) + "&url=" + encodeURIComponent(g_paramURL);
+                	
+                	if (typeof(shareId) != "undefined" && shareId != "") {
+                		requestUrl += "&mailShareId=" + encodeURIComponent(shareId);
+    				}
+	            	
+                	window.open(requestUrl, boardTarget, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + boardHeight + ",width=" + boardWidth + ",top=" + pTop + ",left=" + pLeft, "");
+		        }
+		    }
+		    
 		</script>
 	</head>
 
@@ -492,17 +591,25 @@
 		                    <li><span id="btnAllReply" onClick="allreply_onClick()"><spring:message code="ezEmail.t512" /></span></li>
 		                    <li><span id="btnForward" onClick="pass_onClick()"><spring:message code="ezEmail.t513" /></span></li>
 		                    <li id="liReSend" style="display: none;"><span id="btnReSend" onClick="reSend_onClick()"><spring:message code="ezEmail.kyj19" /></span></li>
-		                    <li><span id="btnPrint" onClick="btnPrint_onClick()"><spring:message code="ezEmail.t546" /></span></li>
 		                    <li><span id="btnMove" onClick="move_onClick()"><spring:message code="ezEmail.t482" /></span></li>
-		                    <li><span id="btnDelete" onClick="delete_mail()"><spring:message code="ezEmail.t95" /></span></li>
 		                    <li id="PcSave"><span id="btnSave" onClick="download_mail()">PC <spring:message code="ezEmail.t48" /></span></li>
-		                    <li id="BoardItem"><span id="btnBoard" onClick="NewItem_onclick()"><spring:message code="ezEmail.t548" /></span></li>
+		                    <c:if test="${packageType != 'mail'}">
+		                    	<li id="BoardItem"><span id="btnBoard" onClick="NewItem_onclick()"><spring:message code="ezEmail.t548" /></span></li>
+		                    	<c:if test="${useMailToCommunity == 'YES'}">
+		                    	<li id="CommunityItem"><span id="btnCommunity" onClick="NewItemCommu_onclick()"><spring:message code="ezEmail.hsbCM01" /></span></li>
+		                    	</c:if>
+		                    </c:if>
 		                    <li id="HolderSent"><span id="btnReceiveList" onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
-		                    <li><span id="btnBookmark" onClick="toggle_flag()"><spring:message code="ezEmail.t550" /></span></li>
 		                    <li id="HolderElse"><span id="btnViewWeb" onClick="view_original()"><spring:message code="ezEmail.t551" /></span></li>          
+		                    <c:if test="${useCabinet == 'YES'}">
+		                    	<li><span id="addCabinet" onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
+		                    </c:if>
 		                    <c:if test="${isSecureMail == true}">
 		                    	<li><span id="btnSecureInfo" onClick="secureInfo_onClick()"><spring:message code="ezEmail.lhm44" /></span></li>
 		                    </c:if>
+		                    <li><span class="icon16 popup_icon16_star" id="btnBookmark" onClick="toggle_flag()"></span></li>
+		                    <li><span class="icon16 popup_icon16_delete" id="btnDelete" onClick="delete_mail()"></span></li>
+		                    <li><span class="icon16 popup_icon16_print" id="btnPrint" onClick="btnPrint_onClick()"></span></li>
 		                    <c:if test="${pnFlag=='Y'}">
 			                    <li id="iprev"><span id="btnpre" onclick="get_mail('prev')" style="padding-top:0px;"><img src="/images/ImgIcon/prev.gif" alt="<spring:message code='ezEmail.t1000' />"  /></span></li>
 			                    <li id="inext" ><span id="btnnext" onclick="get_mail('next')" style="padding-top:0px;"><img src="/images/ImgIcon/next.gif" alt="<spring:message code='ezEmail.t1001' />" /></span></li>
@@ -522,7 +629,27 @@
 			                        <a onClick="show_senderprofile()">					
 			                            <span id="LabelFromName">${fromStr}</span>
 			                            <span id="LabelSenderInfo"></span>	
-			                        </a>					
+			                        </a>
+				                    <c:if test="${useCountryIP == 'YES'}">
+				                    	<span id="country" title= ${countryName}> 
+				                    	<c:set var="data" value="${useShowSystemCountry}" />
+										<c:if test="${countryName != ''}">	
+											<c:choose>
+												<c:when test="${useShowSystemCountry eq 'YES'}">
+						                        	<img id="nationalFlag" src="" style="vertical-align: middle; padding: 0px 0px 3px;display:none;">
+												</c:when>
+												<c:otherwise>
+													<c:if test="${countryIP != systemCountryCode}">
+							                        	<img id="nationalFlag" src="" style="vertical-align: middle; padding: 0px 0px 3px;display:none;">
+							                        </c:if>
+												</c:otherwise>
+											</c:choose>
+										</c:if>
+										<c:if test="${countryIP != ''}">
+											<span> ( ${countryIP} )</span>
+										</c:if>
+										</span>		
+				                    </c:if>		                    
 		                        </DIV>
 		                    </td>
 		                    <th>
@@ -539,10 +666,12 @@
 		                        </div>
 		                    </td>
 		                    <td nowrap class="pos2" id="btnInsertAddr">
-		                    	<a href="#" style="margin-right:5px;"><span onClick="func_addaddr()" id="btn_addaddr"><img title="<spring:message code='ezEmail.t554' />" src="/images/email/icon_address_add.png" style="border:0px" /></span></a>
-		                    	<c:if test="${shareId == null or shareId == ''}">
-		                    		<a href="#" style="margin-right:5px;"><span onClick="func_reject()" id="btn_reject"><img title="<spring:message code='ezEmail.t270' />" src="/images/email/icon_mail_refusal.png" style="border:0px" /></span></a>
-		                    	</c:if>
+		                    	<c:if test="${mailWritePreview != true}">
+			                    	<a style="margin-right:5px;"><span onClick="func_addaddr()" id="btn_addaddr"><img title="<spring:message code='ezEmail.t554' />" src="/images/email/icon_address_add.png" style="border:0px" /></span></a>
+		                    		<c:if test="${(shareId == null) || (shareId ne '' && managePermission eq 'Y')}">
+		                    			<a style="margin-right:5px;"><span onClick="func_reject()" id="btn_reject"><img title="<spring:message code='ezEmail.t270' />" src="/images/email/icon_mail_refusal.png" style="border:0px" /></span></a>
+			                    	</c:if>
+			                    </c:if>
 		                    </td>
 		                </tr>
 		                <tr>

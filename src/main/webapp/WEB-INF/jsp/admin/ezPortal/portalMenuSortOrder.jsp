@@ -11,8 +11,8 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript">
-			var pageid = "${pageID}";
-			var parentuid = "${parentUID}";
+			var pageid = "<c:out value = '${pageID}' />";
+			var parentuid = "<c:out value = '${parentUID}' />";
 			
 			function SaveItems() {
 				var selectobj = MENULIST;

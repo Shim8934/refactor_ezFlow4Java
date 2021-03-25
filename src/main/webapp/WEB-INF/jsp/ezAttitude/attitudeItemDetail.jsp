@@ -33,7 +33,8 @@
 			var endDate = "<c:out value='${attitudeInfo.endDate}'/>";
 			var font = "<c:out value='${font}'/>";
 			var authFlag = "<c:out value='${authFlag}'/>";
-
+			var uselang = "<c:out value='${userInfo.lang}'/>";
+			
 			window.onload = function () {
 				setHtml();
 			}
@@ -45,7 +46,14 @@
 				
 				//유형명
             	typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&amp;", "&"), "&#39;", "'"), "&lt;", "<"), "&gt;", ">"), "&quot;", '"'), "&amp;", "&");
-				
+            	
+				if (uselang != "1") {		
+					$("#writerName").siblings("th").text("<spring:message code='ezAttitude.t93'/>");
+					$("#attiTime").siblings("th").text("<spring:message code='ezAttitude.t149'/>");
+					$("#mobile").siblings("th").text("<spring:message code='ezOrgan.t285'/>");
+					$("#bizsub").siblings("th").text("<spring:message code='ezAttitude.t311'/>");
+				}
+            	
 				$("#typeName").text(" " + typeName);
 				$("#writerName").text(" " + writerName);
 				$("#region").html(" " + region);

@@ -59,7 +59,7 @@ public class EzStatisticsMailMainController {
 	/**
 	 * 통계 메일 메인 화면 표시 함수
 	 */
-	@RequestMapping(value="/ezStatistics/statisticsMailMain.do")
+	@RequestMapping(value="/ezStatistics/statisticsMailMain.do", method = RequestMethod.GET)
 	public String statisticsMailMain(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
 		//관리자 권한체크
 		LoginVO user = commonUtil.checkAdmin(loginCookie);
@@ -171,7 +171,7 @@ public class EzStatisticsMailMainController {
 	/**
 	 * 직원정보 검색 화면 호출(부서명 2개 이상일 경우)
 	 */
-	@RequestMapping(value="/ezStatistics/statisticsCheckName2.do")
+	@RequestMapping(value="/ezStatistics/statisticsCheckName2.do", method = RequestMethod.GET)
 	public String mailCheckName2(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception {
 		return "ezStatistics/statisticsCheckName2";
 	}

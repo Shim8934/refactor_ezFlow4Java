@@ -81,10 +81,14 @@ function displaySubFolder(divTree, divElmt, list, folderType) {
 	
 	var imgElmt2 = document.createElement("img");
 	imgElmt2.setAttribute("class", "webfolderImg");
-	imgElmt2.src = "/images/webfolder/fldr.png";
+	imgElmt2.src = "/images/OrganTree_cross/fldr.gif";
 	
 	var spanFolderName = document.createElement("span");
-	spanFolderName.textContent = primary == "1" ? list["folderName"] : list["folderName2"];
+	if (list["folderLevel"] == 0) {
+		spanFolderName.textContent = primary == "1" ? list["folderName"]+"(" + list["ownerId"]+")" : list["folderName2"]+"(" + list["ownerId"]+")";
+	} else {
+		spanFolderName.textContent = primary == "1" ? list["folderName"] : list["folderName2"];
+	}
 	spanFolderName.setAttribute("class", "spanName");
 	spanFolderName.setAttribute("name", list["folderId"]);
 	spanFolderName.setAttribute("level", list["folderLevel"]);
@@ -92,7 +96,7 @@ function displaySubFolder(divTree, divElmt, list, folderType) {
 	spanFolderName.onclick = function() {getSelected(this, folderType);};
 	
 	/* 2018-08-23 홍승비 - 웹폴더 폴더명 ellipsis 작업 */
-	var spanW = 167 - (18 * list["folderLevel"]);
+	var spanW = 157 - (15 * list["folderLevel"]);
 	spanFolderName.style.display = "inline-block";
 	spanFolderName.style.textOverflow = "ellipsis";
 	spanFolderName.style.overflowX = "hidden";

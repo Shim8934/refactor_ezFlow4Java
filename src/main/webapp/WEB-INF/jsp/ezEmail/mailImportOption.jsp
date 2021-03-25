@@ -21,8 +21,8 @@ var RetValue;
 var ReturnFunction;
 var CancelFunction; 
 var isDivPopUp = false;
-var tempId = "${tempId}"; 
-var userkey = "${userkey}";
+var tempId = '<c:out value="${tempId}"/>'; 
+var userkey = '<c:out value="${userkey}"/>';
 
 window.onload = function(){
 	 showMailProgressNew();

@@ -17,16 +17,16 @@
         	var xmlHttp_Depttree = createXMLHttpRequest();
         	var xmlHttp_UserList = createXMLHttpRequest();
         	var xmlHttp = createXMLHttpRequest();
-			var L_BRDID = "${brdID}"; 
-			var L_ITEMNO = "${itemNo}";
-			var pCompanyID = "${pCompanyID}";
+			var L_BRDID = "<c:out value='${brdID}'/>"; 
+			var L_ITEMNO = "<c:out value='${itemNo}'/>";
+			var pCompanyID = "<c:out value='${pCompanyID}'/>";
 			var g_aChanged = false;
 			var g_bChanged = false;
 			var g_bTreeLoad = false;
 			var bSearch = false;
         	var retArr = new Array();
-        	var langData = "${langData}";
-        	var primary = "${primary}";
+        	var langData = "<c:out value='${langData}'/>";
+        	var primary = "<c:out value='${primary}'/>";
         	var targetId = "";
         	var targetName = "";
         	
@@ -482,12 +482,7 @@
     	    		var userName = "";
     	    		var deptId = "";
     	    		
-    	    		if (primary == "1") {
-    	    			userName = arrRows2[j].getAttribute("DATA4");
-    	    		}
-    	    		else {
-    	    			userName = arrRows2[j].getAttribute("DATA5");
-    	    		}
+    	    		userName = arrRows2[j].getAttribute("DATA4");
     	    		deptId = arrRows2[j].getAttribute("DATA6");
     	    		listOfTarget += userName + ", ";
     	    	}
@@ -605,7 +600,7 @@
                 	var pVaule = "";
                 	
                 	//userInfo 부분 추가
-                	 if (langData != "2") {
+                	 if (primary == "1") {
             	        pVaule = CurrNM;
                 	} else {
 	                    pVaule = CurrNM2;
@@ -657,13 +652,13 @@
             	    var CurrNM2 = MakeUNXMLString(GetAttribute(UserRows.childNodes[i], "nm2"));
             	    var CurrDeptID = MakeUNXMLString(GetAttribute(UserRows.childNodes[i], "deptid"));
 	                //lastindex = memberlist.length;
-    	            var pVaule = "";
+    	            var pVaule = CurrNM;
     	             
-        	       if (langData != "2") {
+        	        /* if (primary == "1") {
             	        pVaule = CurrNM;
                 	} else {
 	                    pVaule = CurrNM2;
-    	            } 
+    	            } */
         	        
 	                var _listview = new ListView();
     	            _listview.LoadFromID("MListView");
@@ -777,7 +772,7 @@
     		<tr> 
         		<td valign="top">
             		<h2><spring:message code='ezPoll.t223' /></h2>
-            		<div id="TreeView" class="listview"></div>
+            		<div id="TreeView" class="listview" style="overflow-x: auto; overflow-y: auto;"></div>
         		</td>
         		<td class="middleTd">
             		<div><img class="midArrowImg" src="/images/arr_right.gif" onclick="add_dept()"></div>

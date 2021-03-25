@@ -3,8 +3,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
-<html>
-	<head>
+<html>  
+	<head> 
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
         <link rel="stylesheet" href="${util.addVer('/css/olstyle_nonIE.css')}" type="text/css" />
         <link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
@@ -75,7 +75,11 @@
 		    var publicIds = JSON.parse('${publicIds}');
 		    var LunarUse = false;		    
 		    var primaryLang = "<c:out value='${userInfo.primary}'/>";		// 2018-12-26 김민성 - 일정관리 기념일 다국어 처리
-		    select_memorialDays(uselang);
+		    
+		    /* 2020-05-18 협업-일정 연동 관련 추가 */
+		    var WorkspaceUrl = "<c:out value='${workspaceHostUrl}'/>";     // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
+		    var g_bMobileExtra = false;       // 모바일 외부 서버 여부 (내/외부 네트워크 분리 환경에서만 설정) (true: 외부서버, false: 해당 없음)
+		    /* select_memorialDays(uselang); */
 		    
 		    /* 2018-08-11 장진혁 - 레이어팝업 생성된 상태에서 backspace 누를시 왼쪽프레임 부분 딤 처리 없애기 */
 	        window.onunload = function () {
@@ -105,7 +109,7 @@
 		    
 		    function schedule_get_holiday() {		        
 		        $.ajax({
-		    		type : "POST",
+		    		type : "GET",
 		    		dataType : "text",
 		    		async : true,
 		    		url : "/ezSchedule/scheduleGetHoliday.do",
@@ -120,25 +124,37 @@
 			                if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISUSE")[0].textContent == "1") {
 			                    var issolar;
 			                    var holiday;
+			                    var holidayFlag;
 			                    
-			                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0].textContent == "1")
+			                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0].textContent == "1") {
 			                        issolar = "1";
-			                    else
+			                    } else {
 			                        issolar = "2";
-			                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREST")[0].textContent == "1")			                    	
+			                    }
+			                    
+			                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREST")[0].textContent == "1") {
 			                        holiday = true;			                    
-			                    else
+			                    } else {
 			                        holiday = false;
+			                    }
+			                    
+			                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYFLAG")[0].textContent == "Y") {
+			                        holidayFlag = "Y";			                    
+			                    } else {
+			                        holidayFlag = "D";
+			                    }
+			                    
+			                    var repetition = GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYREPEAT")[0].textContent;	                    
 			                    
 			                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREPEAT")[0].textContent == "1") {
 			                        memorialDays.push(new memorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
 			                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
-			                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday));
+			                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday, holidayFlag, repetition));
 			                    } else {                   	
 			                        yearmemorialDays.push(new yearmemorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
 			                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(0, 4),
 			                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
-			                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday));
+			                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday, holidayFlag, repetition));
 			                    }
 			                }
 			            }			            
@@ -189,7 +205,7 @@
 		    function schedule_get_lunaruse() {
 		    	if (uselang == 1) {
 				    $.ajax({
-			    		type : "POST",
+			    		type : "GET",
 			    		dataType : "text",
 			    		async : false,
 			    		url : "/ezSchedule/scheduleGetLunarUse.do",
@@ -223,16 +239,15 @@
 		            document.body.style.UserSelect = 'none';
 		        }
 		        if (pDefaultview == 2) {
-		            typeCal = 0
+		            typeCal = 0;
 		            // 2018-06-07 구해안 미니 호출 부분 주석처리
-		            parent.frames["left"].typeCal = 0
-
+		            parent.frames["left"].typeCal = 0;
 		        } else if (pDefaultview == 1) {
-		            typeCal = 1
-		            parent.frames["left"].typeCal = 1
+		            typeCal = 1;
+		            parent.frames["left"].typeCal = 1;
 		        } else if (pDefaultview == 0) {
-		            typeCal = 2
-		            parent.frames["left"].typeCal = 2
+		            typeCal = 2;
+		            parent.frames["left"].typeCal = 2;
 		        }
 
 		        if (pStartday == 1)
@@ -248,14 +263,20 @@
 		            DivPopUpShow(980,470,"/ezSchedule/scheduleReceiveAttendant.do");
 		        	
 		            $("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%'></div>").appendTo(parent.frames["left"].document.body);        	
-		        	var popupX = parent.document.body.clientWidth/2 - (730/2) - 305;
-		        	$("#iFramePanel").css("left", popupX);
+		            /* var popupX = parent.document.body.clientWidth/2 - (730/2) - 305;
+		        	$("#iFramePanel").css("left", popupX); */
 
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
 		            windowonload_Complete("empty");
 		        }
 		        
+		    }
+		    
+		    window.onresize = function(){
+		    	if($("#iFramePanel") != undefined) {
+		    		$('#iFramePanel').css({ 'left' : ($(window).width() - $('#iFramePanel').width()) / 2, 'top' : ($(window).height() - $('#iFramePanel').height()) / 2 });
+		    	}
 		    }
 
 		    // aspx.cs에 있던 함수. 2016/08/22 by kgs
@@ -283,8 +304,8 @@
 		            DivPopUpShow(730,370,"/ezSchedule/scheduleReceiveMember.do");
 		            
 		            $("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%'></div>").appendTo(parent.frames["left"].document.body);        	
-		        	var popupX = parent.document.body.clientWidth/2 - (730/2) - 220;
-		        	$("#iFramePanel").css("left", popupX);
+		        	/* var popupX = parent.document.body.clientWidth/2 - (730/2) - 220;
+		        	$("#iFramePanel").css("left", popupX); */
 		        	
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
@@ -390,6 +411,9 @@
 		        var ret = "0";
 		        if (scheduleid.indexOf("GOOGLE") > -1)
 		            date = GetAttribute(srcEl, "StartDate") + "|" + srcEl.getAttribute;
+		        
+		        if (scheduleid.indexOf("collaboration") > -1) // 협업 일정
+		    		scheduleReadUrl = getRedirectScheduleDetailUrl(encodeURIComponent(scheduleid.replace("collaboration:", "")), date, repeatcount, 10);
 
 		        if (repeatcount == "Y") {	        	
 		            schedule_read_confirm_cross_dialogArguments[0] = "";
@@ -400,8 +424,15 @@
 		            var pwidth = window.screen.availWidth;
 		            var pTop = (pheight - 670) / 2;
 		            var pLeft = (pwidth - 790) / 2;
+		            if(scheduletype == 2 || scheduletype == 3) {
+		            window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&otherid=" + encodeURIComponent(otherid) + "&repeatcount=" + repeatcount + "&date=" + date + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + ret, "",
+                                "height = 640px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
+		            } else if(scheduletype == 4) { // 협업
+		            	window.open(scheduleReadUrl, "", "height = 670px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
+		            }else {
 		            window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&otherid=" + encodeURIComponent(otherid) + "&repeatcount=" + repeatcount + "&date=" + date + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + ret, "",
                                 "height = 670px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
+		            }
 		        }
 		    }
 
@@ -419,13 +450,79 @@
 		            var pwidth = window.screen.availWidth;
 		            var pTop = (pheight - 660) / 2;
 		            var pLeft = (pwidth - 790) / 2;
+		            if(scheduletype == 2 || scheduletype == 3) {
+		            window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&otherid=" + encodeURIComponent(otherid) + "&repeatcount=" + repeatcount + "&date=" + date + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + ret, "",
+					            "height = 640px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
+		            }
+		            else {
 		            window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&otherid=" + encodeURIComponent(otherid) + "&repeatcount=" + repeatcount + "&date=" + date + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + ret, "",
 					            "height = 670px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
+		            }
 		        } else {
 		            return;
 		        }
 		    }
-			
+		    
+		    function getRedirectScheduleDetailUrl(id, date, repeatCount, callTypeId, bMobile) {
+		        if (typeof (id) == "undefined" || typeof (date) == "undefined")
+		            return;
+		        var url = getWorkspaceUrl() + getWorkspaceAppPath() + ((typeof (bMobile) == "undefined" || bMobile == false) ? "/Account/SSO" : "/Account/MobileSSO");
+		        var returnUrl = "?returnUrl=" + getWorkspaceAppPath() + "/Scheduler/Main/Detail?scheduleId=" + id;
+
+		        //// ME 스페이스
+		        //returnUrl = returnUrl + "%26GroupId=0";
+
+		        // 반복 일정의 횟수
+		        if (typeof (repeatCount) != "undefined")
+		            if (parseInt(repeatCount) >= 1)
+		                returnUrl = returnUrl + "%26repeatdate=" + date + "%26repeatcount=" + repeatCount;
+
+		        // 사이트 레이아웃 없이 단독으로 페이지만 호출되었는지 여부의 식별 값
+		        returnUrl = returnUrl + "%26singleCall=true";
+
+		        // 호출 페이지 타입
+		        if (typeof (callTypeId) != "undefined")
+		            returnUrl = returnUrl + "%26callTypeId=" + callTypeId;
+
+		        return url + returnUrl;
+		    }
+		    
+		    function getWorkspaceUrl() {
+		        var result = "";
+
+		        if (typeof (WorkspaceUrl) != "undefined")
+		            result = WorkspaceUrl;
+
+		        return result;
+		    }
+
+		    // 협업 웹응용프로그램 경로
+		    function getWorkspaceAppPath() {
+		        var result = "/ezWorkspace";    // 자바
+
+		        // 모바일 외부서버에서 접속 시 내부 서버를 통해 데이터를 처리하도록 Mobile 컨트롤러 경로를 붙여준다.
+		        if (typeof (g_bMobileExtra) != "undefined" && g_bMobileExtra === true)
+		            result = result + "/Mobile";
+
+		        return result;
+		    }
+		    
+		    // 2020-02-24 김정언 - 근태 상세보기
+		   	function ReadAttitude(divID) {
+		   		var str = divID.split(":");
+		        var ScheduleID = str[0];
+		        var ParentID = str[1];
+		        
+		        if (CrossYN()) {
+					var OpenWin = window.open("/ezAttitude/attitudeItemView.do?attitudeId=" + ScheduleID + "&typeId=" + ParentID, "", GetOpenWindowfeature(672, 640));
+					
+					try { OpenWin.focus(); } catch (e) { }
+				} else {
+					window.showModalDialog("/ezAttitude/attitudeItemView.do?attitudeId=" + ScheduleID + "&typeId=" + ParentID, "", 
+					    "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
+				}
+		   	}
+		    
 		    function WriteSchedule() {
 		        var pheight = window.screen.availHeight;
 		        var pwidth = window.screen.availWidth;
@@ -490,7 +587,13 @@
 		        if (GetAttribute(srcEl, "dispDate") == null || GetAttribute(srcEl, "dispDate") == "") {
 		            datetype = "1";
 		            sdate = GetAttribute(srcEl, "dispTime");
-		            edate = sdate.replace(":00:", ":30:");
+
+		        	// 2020-01-28 김민성 - 일보기/주보기에서 단위 시간 체크 추가
+		            var timeString = GetAttribute(srcEl, "dispTime").substring(11,16);
+		            var sdateTime = GetAttribute(srcEl, "id").split(":")[1][0];
+		            
+		            edateSplit = sdate.split(" ")[1].split(":");
+					edate = sdate.replace(sdate.split(" ")[1], edateSplit[0] + ":" + leadingZeros(edateSplit[1]*1+30, 2) + ":" + edateSplit[2]);
 		        } 
 		        // 월보기 클릭
 		        else if(GetAttribute(srcEl, "id").indexOf("ALL") < 0) {
@@ -606,6 +709,9 @@
 		                typeCal = 2;
 		                // 2018-06-08 구해안 미니달력 미사용으로 주석처리
 		                parent.frames["left"].typeCal = 2;
+		                $("#monView").attr("class","off");
+		                $("#weekView").attr("class","off");
+		                $("#dayView").attr("class","on");
 
 		                if (g_selTDID != null && g_selTDID != "") {
 		                    sDate = new Date(g_selTDID.substring(7, 11), parseInt(g_selTDID.substring(12, 14)) - 1, parseInt(g_selTDID.substring(15, 17)));
@@ -626,6 +732,9 @@
 		                typeCal = 1;
 		                // 2018-06-08 구해안 미니달력 미사용으로 주석처리
 		                parent.frames["left"].typeCal = 1;
+		                $("#monView").attr("class","off");
+		                $("#weekView").attr("class","on");
+		                $("#dayView").attr("class","off");
 
 		                if (g_selTDID != null && g_selTDID != "") {
 		                    sDate = new Date(g_selTDID.substring(7, 11), parseInt(g_selTDID.substring(12, 14)) - 1, parseInt(g_selTDID.substring(15, 17)));
@@ -646,6 +755,10 @@
 		                typeCal = 0;
 		                // 2018-06-08 구해안 미니달력 미사용으로 주석처리
 		                parent.frames["left"].typeCal = 0;
+		                $("#monView").attr("class","on");
+		                $("#weekView").attr("class","off");
+		                $("#dayView").attr("class","off");
+			            
 		                /* var ItemID = "TDMINI_" + sDate.getFullYear() + "-" + leadingZeros(sDate.getMonth() + 1, 2) + "-" + leadingZeros(sDate.getDate(), 2) + "_Day";
 
 		                var item = parent.frames["left"].document.getElementById(ItemID);
@@ -782,9 +895,9 @@
                     idlist = idtype;
                 var feature = GetOpenPosition(837, 660);
                 if (idlist == "G")
-                    window.open("/ezSchedule/schedulePrint.do?idlist=" + encodeURIComponent(idlist) + "&date=" + date + "&view=" + view + "&APP=" + idtype + "&groupid=" + groupid, "", "height = 660px, width = 837px, status = no, toolbar=no, menubar=no, location=no, resizable=0" + feature);
+                    window.open("/ezSchedule/schedulePrint.do?idlist=" + encodeURIComponent(idlist) + "&date=" + date + "&view=" + view + "&groupid=" + groupid, "", "height = 660px, width = 837px, status = no, toolbar=no, menubar=no, location=no, resizable=0" + feature);
                 else
-                    window.open("/ezSchedule/schedulePrint.do?idlist=" + encodeURIComponent(idlist) + "&date=" + date + "&view=" + view + "&APP=" + idtype, "", "height = 660px, width = 837px, status = no, toolbar=no, menubar=no, location=no, resizable=0" + feature);
+                    window.open("/ezSchedule/schedulePrint.do?idlist=" + encodeURIComponent(idlist) + "&date=" + date + "&view=" + view, "", "height = 660px, width = 837px, status = no, toolbar=no, menubar=no, location=no, resizable=0" + feature);
             }
 			
             var schedule_repetition_del_dialogArugment = new Array();
@@ -1211,45 +1324,33 @@
 	<body class="mainbody" style="overflow: auto; margin-bottom:0px">
         <h1 id="titleimg">${defaultTitle}</h1>
         <div id="mainmenu">
-            <ul>
-            	<li><span id="pn_img" onClick="WriteSchedule()"><spring:message code='ezSchedule.t214'/></span></li>
-            	<li><span onClick="PrintSchedule()"><spring:message code='ezSchedule.t217'/></span></li>
-              	<li><span onClick="RefreshView()"><spring:message code='ezSchedule.t218'/></span></li>              	
-		      	<!-- <li style="background:none; padding-right:2px; cursor:default;"><img src="/images/i_bar.gif" alt=""/></li> -->
-		      	<li><span onclick='ViewChange("DAY");'><spring:message code='ezSchedule.t140'/></span></li>
-              	<li><span onclick='ViewChange("WEEK");'><spring:message code='ezSchedule.t141'/></span></li>
-              	<li><span onclick='ViewChange("MONTH");'><spring:message code='ezSchedule.t142'/></span></li>              	
-              	<!-- 2018-06-08 구해안 상단 셀렉트박스 및 라디오버튼 미사용으로 삭제 및 bar 이미지 삭제 -->
-              	<%-- <li style="background:none; padding-right:2px; cursor:default;"><img src="/images/i_bar.gif" alt=""/></li>
-              	<li style="background:none; padding:0; cursor:default;">
-              		<select class="select" id="idSelect" onChange="IDChange()" style="width:140px">
-						<option value="T"><spring:message code='ezSchedule.t220'/></option>
-						<option value="P" selected><spring:message code='ezSchedule.t221'/></option>
-						<option value="D"><spring:message code='ezSchedule.t222'/></option>
-						<option value="C"><spring:message code='ezSchedule.t223'/></option>									            
-					</select>
-				</li>
-              	<li style="background:none; padding:0; cursor:default;">
-              		<select class="select" onChange="SecretaryChange()" id="secretarySelect" name="secretarySelect" style="width:140px">
-						<option value="" selected><spring:message code='ezSchedule.t224'/></option>
-						${shareList}
-					</select>
-				</li>
-				<li onClick="IDClick('T')" style="background:none;cursor:pointer;margin-left:7px"><span style="display:inline-block; width:11px; height:11px; border:1px solid #ccc; background:#fff; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;<spring:message code='ezSchedule.t220'/></li>
-	            <li onClick="IDClick('P')" style="background:none;cursor:pointer;margin-left:7px"><span style="display:inline-block; width:11px; height:11px; border:1px solid #017ddf; background:#018bfa; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;<spring:message code='ezSchedule.t221'/></li>
-	            <li onClick="IDClick('D')" style="background:none;cursor:pointer"><span style="display:inline-block; width:11px; height:11px; border:1px solid #049c37; background:#01b43f; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;<spring:message code='ezSchedule.t222'/></li>
-	            <li onClick="IDClick('C')" style="background:none;cursor:pointer"><span style="display:inline-block; width:11px; height:11px; border:1px solid #e01662; background:#ff1c71; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;<spring:message code='ezSchedule.t223'/></li>
-                <li style="background:none;cursor:text"><span style="display:inline-block; width:11px; height:11px; border:1px solid #ccc31f; background:#e9de13; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;<spring:message code='main.t00022'/></li>
-                 --%>
-                 <!-- 2018-10-17 김혜정  ics 파일 가져오기 기능 구현을 위해 임시로 가져오기 버튼 추가 -->
-                <c:if test="${useScheduleIcs == 'YES'}">
-                	<li><span onclick="doLayerPopup(this)">가져오기</span></li>
-                </c:if>
+            <ul class="on">
+            	<li class="important"><span id="pn_img" onClick="WriteSchedule()"><spring:message code='ezSchedule.t214'/></span></li>
+            	<li><span class="icon16 icon16_print" onClick="PrintSchedule()"></span></li>
+              	<li><span class="icon16 icon16_refresh" onClick="RefreshView()"></span></li>
             </ul>
-        </div>
-
+		</div>
+		<div class="calendar_pagenav">
+	        <ul class="contentlayout">
+	            <li class="contentlayout_left" id="preM"></li>
+	            <li class="contentlayout_right" id="preN"></li>
+	            <li class="contentlayout_none"><span class="spanText" id="calTitle"></span>
+	            </li>
+	        </ul>
+	    </div>
+	    <div class="mainmenuTab">
+	        <ul class="mainmenuTabUL">
+	            <li id="dayView" class="${defaultView == '0' ? 'on' : 'off' }"><span onclick='ViewChange("DAY");'><spring:message code='ezSchedule.t140'/></span></li><li id="weekView" class="${defaultView == '1' ? 'on' : 'off' }"><span onclick='ViewChange("WEEK");'><spring:message code='ezSchedule.t141'/></span></li><li id="monView" class="${defaultView == '2' ? 'on' : 'off' }"><span onclick='ViewChange("MONTH");'><spring:message code='ezSchedule.t142'/></span></li>
+	        </ul>
+	    </div>
+	    <c:if test="${useAnnualScheduleYN ne '0'}">
+		    <div style="margin-bottom:10px;">
+			    <span style="color:#3d8fea;"><spring:message code='ezSchedule.kje01'/></span>
+		    </div>	    
+	    </c:if>
+	    
         <script type="text/javascript">
-            selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+            //selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
         </script>
 
         <table>   

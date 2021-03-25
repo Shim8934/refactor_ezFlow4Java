@@ -14,11 +14,15 @@ import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzSystemAdminService {
 	public List<SysParamVO> getSysParam(int tenantID) throws Exception;
-	public void updateSysParam(int tenantId, List<Map<String, String>> list, Locale locale) throws Exception;
+	public void updateSysParam(int tenantId, List<Map<String, String>> list, Locale locale, String companyID) throws Exception;
 	public List<ConnectionInfoVO> getLoginHist(int tenantID, String offset, int startPage, int maxItemPerPage, 
 			String keyword, String keycode, String lang, String startDate, String endDate, String companyId) throws Exception;
+	public List<ConnectionInfoVO> getLoginHistNotAdmin(int tenantID, String offset, int startPage, int maxItemPerPage, 
+			String keyword, String keycode, String lang, String startDate, String endDate, String companyId, String userId) throws Exception;
 	public int getLoginHistCount(int tenantID, String offset, String keyword, String keycode, 
 			String lang, String startDate, String endDate, String companyId) throws Exception;
+	public int getLoginHistCountNotAdmin(int tenantID, String offset, String keyword, String keycode, 
+			String lang, String startDate, String endDate, String companyId, String userId) throws Exception;
 	public ArrayList<String> getServerInfo(String ip, String curServer, String serverName, ArrayList<String> getServerList) throws Exception;
 	public String getSysMonitorInfo(String ip, String serverName, String address, boolean chkServer) throws Exception;
 	public void deleteLoginHist(int keepLogPeriod, int tenantID) throws Exception;
@@ -34,4 +38,12 @@ public interface EzSystemAdminService {
 	public void deleteAccessId(String accessNo) throws Exception;
 	public void insertAccessId(int tenantID, String cn) throws Exception;
 	public ModuleSizeVO getModuleUsage(List<String> moduleNames, String realPath, LoginVO userInfo) throws Exception;
+	public void deleteWebfolderLog (int keepLogPeriod, int tenantID) throws Exception;
+	public void setMultiLoginType(String multiLoginType, int tenantID, String companyID, String editType) throws Exception;
+	public void updateNewPortalMenuByPackageType(String newPackageType, int tenantID, String companyID) throws Exception;
+	public String getAccessCountryList(int tenantId) throws Exception;
+	public void setAccessCountry(int tenantId, String countryCode) throws Exception;
+	public Map<String, Object> getPwPolicy(int tenantId, String companyId) throws Exception;
+	public void updateCompanyConfigParam(int tenantID, List<Map<String, String>> list, String companyID) throws Exception;
+	public int updatePwPolicy(int tenantId, String companyId, Map<String, String> patternTypeMap, List<Map<String, Object>> PwPolicyPatternList) throws Exception;
 }

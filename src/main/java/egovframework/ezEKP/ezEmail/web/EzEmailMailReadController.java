@@ -3,7 +3,6 @@ package egovframework.ezEKP.ezEmail.web;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,6 +11,7 @@ import java.io.OutputStream;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.UUID;
+import java.util.Base64.Decoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -50,9 +51,15 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.filefilter.PrefixFileFilter;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -60,6 +67,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -70,15 +79,18 @@ import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailSecureReaderVO;
 import egovframework.ezEKP.ezEmail.vo.MailSecureVO;
 import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxUserVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -133,10 +145,16 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	@Resource(name = "loginService")
     private LoginService loginService;
 	
+	@Resource(name="EzCabinetAdminService")
+	private EzCabinetAdminService cabinetAdminService;
+
+	@Resource(name = "EzOrganService")
+	private EzOrganService ezOrganService;
+	
 	/**
 	 * 메일 읽기화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailRead.do")
+	@RequestMapping(value="/ezEmail/mailRead.do", method=RequestMethod.GET)
 	public String readMail(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("readMail started.");
 		
@@ -155,10 +173,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			
 			if (shareId != null) {
 				if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
 					logger.debug("the user cannot access the shareId.");
 					logger.debug("readMail ended.");
 					
-					return "ezEmail/mailRead";
+					return "ezCommon/error";
 				}
 				
 				userEmail = shareId + "@" + domainName;
@@ -168,10 +188,17 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				model.addAttribute("shareId", shareId);
 				model.addAttribute("deletePermission", shareVO.getDeletePermission());
 				model.addAttribute("sendPermission", shareVO.getSendPermission());
+				model.addAttribute("managePermission", shareVO.getManagePermission());
 			}
 		}
 		
 		logger.debug("userId=" + loginInfo.getId() + ",userEmail=" + userEmail);
+		
+		//baonk 추가 2018-08-08
+		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", loginInfo.getTenantId());
+		if (use_cabinet.equals("YES")) {
+			use_cabinet = cabinetAdminService.checkModuleActive("email", loginInfo);
+		}
 		
 		// retrieve the passed in parameters
 		String url = request.getParameter("iptURL");
@@ -222,356 +249,247 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		boolean isSecureMail = false;
 		IMAPAccess ia = null;
 		String sentDateMsg = ""; // 전달, 회신 시 보낸 시간
+		boolean mailWritePreview = false; // 메일 작성 > 미리보기 
+		
+		// 읽기 화면에서 리스트 출력 위한 데이터
+		String countryName = "";
+		String countryIP = "";
+		String countryCode = "";
+		String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", loginInfo.getTenantId());
+		String useCountryIP = ezCommonService.getTenantConfig("useCountryIP", loginInfo.getTenantId());
+		String useShowSystemCountry = ezCommonService.getTenantConfig("useShowSystemCountry", loginInfo.getTenantId());
+		String useRDBOnlyMailList = ezCommonService.getTenantConfig("useRDBOnlyMailList", loginInfo.getTenantId());
 		
 		try {
-			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale, ezEmailUtil);
-			Folder f = ia.getFolder(folderPath);
+			Map<String, String> mailInfo = null;
+			boolean recipientHasAllRecipientTypes = false;
 			
-			if (f == null || !f.exists()) {
-				logger.error("Folder not found. folderPath=" + folderPath);
-				model.addAttribute("title", egovMessageSource.getMessage("ezEmail.t565", locale));
-				model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.t99000081", locale));
-				model.addAttribute("subContent", egovMessageSource.getMessage("ezEmail.t99000082", locale));
-				return "ezCommon/error";
-			} else {
-				f.open(Folder.READ_WRITE);
+			if (useRDBOnlyMailList.equals("YES")) {
+				mailInfo = ezEmailUtil.getMailInfo(userEmail, folderPath, uid);
 				
-				Message message = null;
-				if(f.isOpen() && f instanceof IMAPFolder){
-					message = ((IMAPFolder)f).getMessageByUID(uid);
-				}
-				
-				if (message == null) {
+				if (mailInfo == null) {
 					logger.error("Message not found. uid=" + uid);
 					model.addAttribute("title", egovMessageSource.getMessage("ezEmail.t565", locale));
 					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.t99000081", locale));
 					model.addAttribute("subContent", egovMessageSource.getMessage("ezEmail.t99000082", locale));
 					return "ezCommon/error";
-				} else {
+				}
+				
+				String recipientsStr = mailInfo.get("RECIPIENT");
+				
+				if (!recipientsStr.isEmpty()) {
+					// To, Cc, Bcc를 분리한다.(||로 구분됨.)
+					String[] recipientsArr = recipientsStr.split("\\|\\|", 3);		
 					
-					FetchProfile fp = new FetchProfile();
+					// 오래된 사이트(가온누리 포함)의 경우 오래된 메일의 RECIPIENT 필드값이 To, Cc, Bcc로 분리되어 있지 않은 경우가 있어
+					// 추가함.
+					if (recipientsArr.length > 1) {
+						recipientHasAllRecipientTypes = true;
+					}
+				}				
+			}
+			
+			if (useRDBOnlyMailList.equals("YES") && recipientHasAllRecipientTypes) {
+				// From
+				fromStr = ezEmailUtil.getNameOrAddress(mailInfo.get("SENDER"));
+				fromEmail = ezEmailUtil.getAddress(mailInfo.get("SENDER"));
+				
+				logger.debug("From=" + fromStr);
+				
+				// 메일 보낸사람 국기 표시 
+				if (useCountryIP.equals("YES")) {						
+					String ctryCode = mailInfo.get("COUNTRY_CODE");
+					String mailIp = mailInfo.get("MAIL_IP");
+					String systemLang = loginInfo.getLang();
 					
-					fp.add(FetchProfile.Item.ENVELOPE);
-					fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
-					fp.add(FetchProfile.Item.SIZE);
-					fp.add(FetchProfile.Item.FLAGS);
-					fp.add("Subject");
-					fp.add("From");
-					fp.add("To");
-					fp.add("Cc");
-					fp.add("Bcc");
-					
-					Message[] fetchMessages = new Message[] {message};
-					f.fetch(fetchMessages, fp);
-					
-					// From
-					arrFroms = message.getFrom();
-					
-					if (arrFroms != null) {
-						fromStr = ezEmailUtil.getFromNameOrAddressOfMessage(message);
-						fromStr = commonUtil.trimDoubleQuotes(fromStr);
-								
-						fromEmail = ((InternetAddress)arrFroms[0]).getAddress();
-					} else {
-						String[] fromHeaders = message.getHeader("From");
-						if (fromHeaders != null) {
-							fromStr = MimeUtility.decodeText(message.getHeader("From")[0]);
-						}
+					if (mailIp != null && !mailIp.isEmpty()) {
+						countryIP = mailIp;
 					}
 					
-					logger.debug("From=" + fromStr);
-					
-					// TO
-					arrRecipientsTo = message.getRecipients(Message.RecipientType.TO);
-					if(arrRecipientsTo != null){
-						/* 받는 사람에 유저 이름이 있는지 확인하는 로직  -> 미리보기랑 맞추기 위해 주석처리
-						boolean toListme = false;
-						for(int i=0; i<arrRecipientsTo.length; i++){
-							if(((InternetAddress)arrRecipientsTo[i]).getAddress().equals(userEmail)){
-								toListme = true;
+					if (ctryCode != null && !ctryCode.isEmpty()) {
+						String systemCountryName = "";
+						switch (systemLang) {
+							case "1":
+								systemCountryName = "ko";
 								break;
-							}
-						}*/
-						
-						String toHeader = message.getHeader("To")[0];
-						boolean isAscii = ezEmailUtil.isPureAscii(toHeader);						
-						String name = null;
-						String[] recipientHeaderArray = null;
-						
-						if (toHeader.contains("=?gb2312")) {
-							toHeader = MimeUtility.unfold(toHeader);
-							
-							logger.debug("toHeader=" + toHeader);
-							
-							recipientHeaderArray = toHeader.split(",");
-							
-							for (int i = 0; i < recipientHeaderArray.length; i++) {
-								recipientHeaderArray[i] = recipientHeaderArray[i].trim();
-							}
-						}						
-						
-						for (int i = 0; i < arrRecipientsTo.length; i++) {
-							name = ((InternetAddress)arrRecipientsTo[i]).getPersonal();
-							
-							if (name == null) {
-								name = ((InternetAddress)arrRecipientsTo[i]).getAddress();
-							} else {
-								if (!isAscii) {
-									byte[] rawBytes = name.getBytes("iso-8859-1");
-									
-									name = ezEmailUtil.decodeNonAsciiBytes(rawBytes);								
-								} else {
-									if (recipientHeaderArray != null) {
-										String recipientHeader = recipientHeaderArray[i];
-										
-					                    // gb2312로 인코딩되어 있다고 기술되어 있지만 gbk에서 
-					                    // 정의되어 있는 글자가 포함되어 디코딩 시 깨지는 문제가 발생하여 gbk로 디코딩 처리하는 코드를 추가함.						
-										String newHeader = ezEmailUtil.changeCharSet(recipientHeader, "gb2312", "gbk");
-										
-										// gb2312에서 gbk로 변경된 경우
-										if (!newHeader.equals(recipientHeader)) {
-								            int endPos = newHeader.indexOf("?=", 2);
-								            
-								            // 주소 부분을 제외한 이름 파트만 분리한다.
-								            if (endPos > -1) {
-								            	name = newHeader.substring(0, endPos + 2);
-								            }
-										}										
-									}
-									
-									name = MimeUtility.decodeText(name);
-								}
-								
-								name = commonUtil.trimDoubleQuotes(name);
-							}
-							
-							if (name != null) {
-								// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
-								// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
-								name = name.replace("\\\"", "");
-							}
-							
-							logger.debug("TO=" + name + ((InternetAddress)arrRecipientsTo[i]).getAddress());
-							
-							/* 유저 본인의 이름을 맨앞으로 toStr에 넣는 로직 -> 미리보기랑 맞추기 위해 주석처리
-							if(toListme){
-								if(((InternetAddress)arrRecipientsTo[i]).getAddress().equals(userEmail)){
-									if(arrRecipientsTo.length > 1){
-										toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), false) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsTo.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:pointer;' onclick='ShowHiddenTo(this);' align='absmiddle'></span>";
-									} else {
-										toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), false);
-									}
-								}
-								if(toHiddenStr == null){
-									toHiddenStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), false);
-								} else{
-									toHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), false);
-								}
-							} else {*/
-								if(i == 0){
-									if(arrRecipientsTo.length > 1){
-										toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), false) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsTo.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:pointer;' onclick='ShowHiddenTo(this);' align='absmiddle'></span>";
-									} else {
-										toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), false);
-									}
-								}
-								if(toHiddenStr == null){
-									toHiddenStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), false);
-								} else {
-									toHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), false);
-								}
-							//}
-						}
-					}
-					
-					// CC
-					arrRecipientsCC = message.getRecipients(Message.RecipientType.CC);
-					if(arrRecipientsCC != null){
-						/* 참조에 유저 이름이 있는지 확인하는 로직  -> 미리보기랑 맞추기 위해 주석처리
-						boolean ccListme = false;
-						for(int i=0; i<arrRecipientsCC.length; i++){
-							if(((InternetAddress)arrRecipientsCC[i]).getAddress().equals(userEmail)){
-								ccListme = true;
+							case "2":
+								systemCountryName = "en";
 								break;
-							}
-						}*/
-						
-						String ccHeader = message.getHeader("Cc")[0];
-						boolean isAscii = ezEmailUtil.isPureAscii(ccHeader);												
-						String name = null;
-						String[] recipientHeaderArray = null;
-						
-						if (ccHeader.contains("=?gb2312")) {
-							ccHeader = MimeUtility.unfold(ccHeader);
-							
-							logger.debug("ccHeader=" + ccHeader);
-							
-							recipientHeaderArray = ccHeader.split(",");
-							
-							for (int i = 0; i < recipientHeaderArray.length; i++) {
-								recipientHeaderArray[i] = recipientHeaderArray[i].trim();
-							}
-						}												
-						
-						for (int i = 0; i < arrRecipientsCC.length; i++) {
-							name = ((InternetAddress)arrRecipientsCC[i]).getPersonal();
-							
-							if (name == null) {
-								name = ((InternetAddress)arrRecipientsCC[i]).getAddress();
-							} else {
-								if (!isAscii) {
-									byte[] rawBytes = name.getBytes("iso-8859-1");
-									
-									name = ezEmailUtil.decodeNonAsciiBytes(rawBytes);								
-								} else {							
-									if (recipientHeaderArray != null) {
-										String recipientHeader = recipientHeaderArray[i];
-										
-					                    // gb2312로 인코딩되어 있다고 기술되어 있지만 gbk에서 
-					                    // 정의되어 있는 글자가 포함되어 디코딩 시 깨지는 문제가 발생하여 gbk로 디코딩 처리하는 코드를 추가함.						
-										String newHeader = ezEmailUtil.changeCharSet(recipientHeader, "gb2312", "gbk");
-										
-										// gb2312에서 gbk로 변경된 경우
-										if (!newHeader.equals(recipientHeader)) {
-								            int endPos = newHeader.indexOf("?=", 2);
-								            
-								            // 주소 부분을 제외한 이름 파트만 분리한다.
-								            if (endPos > -1) {
-								            	name = newHeader.substring(0, endPos + 2);
-								            }
-										}										
-									}
-									
-									name = MimeUtility.decodeText(name);
-								}
-								
-								name = commonUtil.trimDoubleQuotes(name);
-							}
-							
-							if (name != null) {
-								// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
-								// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
-								name = name.replace("\\\"", "");
-							}
-							
-							logger.debug("CC=" + name + ((InternetAddress)arrRecipientsCC[i]).getAddress());
-							
-							/* 유저 본인의 이름을 맨앞으로 ccStr에 넣는 로직 -> 미리보기랑 맞추기 위해 주석처리
-							if (ccListme) {
-								if (((InternetAddress)arrRecipientsCC[i]).getAddress().equals(userEmail)) {
-									if (arrRecipientsCC.length > 1) {
-										ccStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress(), false) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsCC.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:pointer;' onclick='ShowHiddenCc(this);' align='absmiddle'></span>";
-									} else {
-										ccStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress(), false);
-									}
-								}
-								if (ccHiddenStr == null) {
-									ccHiddenStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress(), false);
-								} else {
-									ccHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress(), false);
-								}
-							} else { */
-								if (i == 0) {
-									if (arrRecipientsCC.length > 1) {
-										ccStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress(), false) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsCC.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:pointer;' onclick='ShowHiddenCc(this);' align='absmiddle'></span>";
-									} else {
-										ccStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress(), false);
-									}
-								}
-								if (ccHiddenStr == null) {
-									ccHiddenStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress(), false);
-								} else {
-									ccHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress(), false);
-								}
-						//	}
+							case "3":
+								systemCountryName = "ja";
+								break;
+							default:
+								systemCountryName = "kr";
+								break;
 						}
+						Locale localeCountry = new Locale(systemCountryName, ctryCode);
+						countryName = localeCountry.getDisplayCountry(localeCountry);
+						countryName = countryName.replaceAll(" ", "");
+						countryCode = ctryCode.toLowerCase();
 					}
-	
-					// BCC
-					arrRecipientsBCC = message.getRecipients(Message.RecipientType.BCC);
 					
-					if (arrRecipientsBCC != null) {
-						String name = null;
+					logger.debug("countryName:" + countryName + ",ctryCode[0]:" + countryCode);
+				} 
+				
+				// To, Cc, Bcc를 모두 포함한다.
+				String recipientsStr = mailInfo.get("RECIPIENT");
+				
+				if (!recipientsStr.isEmpty()) {
+					// To, Cc, Bcc를 분리한다.(||로 구분됨.)
+					// sol0015@coupang.com <sol0015@coupang.com>; Judy Kh (Kyoung Hye Jang ) [PL Korea Sourcing] <khjang@coupang.com>||정덕범 <james71d@sajo.co.kr>; 강수한 <a0142@sajo.co.kr>; 함지혜 <a3016n@sajo.co.kr>||
+					String[] recipientsArr = recipientsStr.split("\\|\\|", 3);		
+					
+					if (!recipientsArr[0].isEmpty()) {
+						// Undisclosed recipients:; <Undisclosed recipients:;>|||| 와 같은 경우가 있어
+						// split delimiter를 기존 "; "에서 ">; "로 변경함.
+						String[] strArr = recipientsArr[0].split(">; ");
 						
-						for (int i = 0; i < arrRecipientsBCC.length; i++) {
-							name = ((InternetAddress)arrRecipientsBCC[i]).getPersonal();
+						for (int i = 0; i < strArr.length; i++) {
+							String item = strArr[i].trim();
+							String[] tokens = item.split(" <");
+							String name = tokens[0]; 		
+							name = commonUtil.trimDoubleQuotes(name);								
+							String address = ""; 
+									
+							if (tokens.length > 1) {
+								address = tokens[1];
+							}
 							
-							if (name == null) {
-								name = ((InternetAddress)arrRecipientsBCC[i]).getAddress();
+							if (address.endsWith(">")) {
+								address = address.substring(0, address.length() - 1);
+							}
+							
+							logger.debug("TO=" + name + " " + address);
+							
+							if (i == 0) {
+								if (strArr.length > 1) {
+									toStr = getReceiverHTML(name, address, false) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + strArr.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:pointer;' onclick='ShowHiddenTo(this);' align='absmiddle'></span>";
+								} else {
+									toStr = getReceiverHTML(name, address, false);
+								}
+							}
+							
+							if (toHiddenStr == null) {
+								toHiddenStr = getReceiverHTML(name, address, false);
 							} else {
-								name = MimeUtility.decodeText(name);
-								name = commonUtil.trimDoubleQuotes(name);
+								toHiddenStr += " , " + getReceiverHTML(name, address, false);
+							}								
+						}							
+					}	
+					
+					if (recipientsArr.length > 1 && !recipientsArr[1].isEmpty()) {
+						String[] strArr = recipientsArr[1].split(">; ");
+						
+						for (int i = 0; i < strArr.length; i++) {
+							String item = strArr[i].trim();
+							String[] tokens = item.split(" <");
+							String name = tokens[0]; 		
+							name = commonUtil.trimDoubleQuotes(name);								
+							String address = ""; 
+							
+							if (tokens.length > 1) {
+								address = tokens[1];
 							}
 							
-							if (name != null) {
-								// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
-								// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
-								name = name.replace("\\\"", "");
+							if (address.endsWith(">")) {
+								address = address.substring(0, address.length() - 1);
 							}
 							
-							logger.debug("BCC=" + name + ((InternetAddress)arrRecipientsBCC[i]).getAddress());
+							logger.debug("CC=" + name + " " + address);
 							
+							if (i == 0) {
+								if (strArr.length > 1) {
+									ccStr = getReceiverHTML(name, address, false) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + strArr.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:pointer;' onclick='ShowHiddenCc(this);' align='absmiddle'></span>";
+								} else {
+									ccStr = getReceiverHTML(name, address, false);
+								}
+							}
+							
+							if (ccHiddenStr == null) {
+								ccHiddenStr = getReceiverHTML(name, address, false);
+							} else {
+								ccHiddenStr += " , " + getReceiverHTML(name, address, false);
+							}								
+						}							
+					}						
+
+					if (recipientsArr.length > 2 && !recipientsArr[2].isEmpty()) {
+						String[] strArr = recipientsArr[2].split(">; ");
+						
+						for (int i = 0; i < strArr.length; i++) {
+							String item = strArr[i].trim();
+							String[] tokens = item.split(" <");
+							String name = tokens[0]; 		
+							name = commonUtil.trimDoubleQuotes(name);								
+							String address = ""; 
+							
+							if (tokens.length > 1) {
+								address = tokens[1];
+							}
+							
+							if (address.endsWith(">")) {
+								address = address.substring(0, address.length() - 1);
+							}
+							
+							logger.debug("BCC=" + name + " " + address);
+
 							if (i != 0) {
 								bccStr += ", ";
 							}
 							
-							bccStr += getReceiverHTML(name, ((InternetAddress)arrRecipientsBCC[i]).getAddress(), false);
-						}
-					}
-					
-					if (ccStr == null || ccStr.equals("")) {
-						pIsCCFg = "N";
-					}
-					
-					// received date
-					date = message.getReceivedDate();
-					if (date != null) {
-						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-						sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-						String receivedDateStr = sdf.format(date);
-						
-						dateStr = commonUtil.getDateStringInUTC(receivedDateStr, loginInfo.getOffset(), false);
-					}
-					logger.debug("dateStr=" + dateStr);
-					
-					// subject
-					subject = ezEmailUtil.getSubject(message);
-					
-					if(subject == null || subject.trim().equals("")){
-						subject = egovMessageSource.getMessage("ezEmail.kms03", locale);
-					}
-					
-					subject = commonUtil.cleanValue(subject);
+							bccStr += getReceiverHTML(name, address, false);								
+						}							
+					}												
+				}
+									
+				if (ccStr == null || ccStr.equals("")) {
+					pIsCCFg = "N";
+				}
+				
+				// received date
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				date = sdf.parse(mailInfo.get("MAIL_DATE"));
+				sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+				String receivedDateStr = sdf.format(date);					
+				dateStr = commonUtil.getDateStringInUTC(receivedDateStr, loginInfo.getOffset(), false);
+
+				logger.debug("dateStr=" + dateStr);
+				
+				// subject
+				subject = mailInfo.get("SUBJECT");
+				
+				if ((subject == null || subject.trim().equals("")) && !contentClass.equalsIgnoreCase("PREVIEW")) {
+					subject = egovMessageSource.getMessage("ezEmail.kms03", locale);
+				}
+				
+				subject = commonUtil.cleanValue(subject);
+				
+				if (contentClass.equalsIgnoreCase("PREVIEW")) {
+					title = egovMessageSource.getMessage("ezEmail.t487", locale) + " -" + subject;
+				} else {
 					title = egovMessageSource.getMessage("ezEmail.t565", locale) + subject;
-					
-					logger.debug("subject=" + subject);
-					
-					if (ezEmailUtil.hasSecureMailFlag(message)) {
-						isSecureMail = true;
-					}
-					
-					if (message.getFolder().getFullName().equals(ezEmailUtil.getSentFolderId(locale))) {
-						isSentItems = true;
-					}
-					
-					if (message.getFolder().getFullName().equals(ezEmailUtil.getTrashFolderId(locale))) {
-						isDelete = "BDELETE";
-					}
-					
-					if (!message.isSet(Flag.SEEN)) {
-						pReadFlag = "N";
-						message.setFlag(Flag.SEEN, true);
-						logger.debug("Message's seen flag changed to true.");
-					}
+				}
+				
+				logger.debug("subject=" + subject);
+				
+				if ("1".equals(mailInfo.get("MAIL_IS_SECURED"))) {
+					isSecureMail = true;
+				}
+				
+				if (folderPath.equals(ezEmailUtil.getSentFolderId(locale))) {
+					isSentItems = true;
+				}
+				
+				if (folderPath.equals(ezEmailUtil.getTrashFolderId(locale))) {
+					isDelete = "BDELETE";
 				}
 				
 				if (contentClass.equals("")) {
-					if (message.isSet(Flags.Flag.ANSWERED)) {
+					if ("1".equals(mailInfo.get("MAIL_IS_ANSWERED"))) {
 						contentClass = "REPLY";
 					}
 					else {
-						boolean isForwarded = ezEmailUtil.hasForwardedFlag(message);
+						boolean isForwarded = "1".equals(mailInfo.get("MAIL_IS_FORWARDED"));
 						
 						if (isForwarded) {
 							contentClass = "FORWARD";
@@ -584,6 +502,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				
 				// 전달, 회신 시 보낸 시간
 				if (contentClass.equals("REPLY") || contentClass.equals("FORWARD")) {
+					/*
 					if (ezEmailUtil.hasSentDateFlag(message)) {
 						String sentDateFlag = ezEmailUtil.getSentDateFlag(message);
 						sentDateFlag = sentDateFlag.split("-")[1];
@@ -600,9 +519,441 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						sentDateMsg = String.format(sentDateStr, sentDate);
 						logger.debug("sentDateMsg=" + sentDateMsg);
 					}
-				}
+					*/
+				} else if (contentClass.equalsIgnoreCase("PREVIEW")) {
+					mailWritePreview = true;
+					dateStr = "";
+					logger.debug("mailWritePreview=" + mailWritePreview + ", dateStr=" + dateStr);
+				}								
+			} else {
+				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+						userEmail, password, egovMessageSource, locale, ezEmailUtil);
+				Folder f = ia.getFolder(folderPath);
 				
-				f.close(true);
+				if (f == null || !f.exists()) {
+					logger.error("Folder not found. folderPath=" + folderPath);
+					model.addAttribute("title", egovMessageSource.getMessage("ezEmail.t565", locale));
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.t99000081", locale));
+					model.addAttribute("subContent", egovMessageSource.getMessage("ezEmail.t99000082", locale));
+					return "ezCommon/error";
+				} else {
+					f.open(Folder.READ_WRITE);
+					
+					Message message = null;
+					if(f.isOpen() && f instanceof IMAPFolder){
+						message = ((IMAPFolder)f).getMessageByUID(uid);
+					}
+					
+					if (message == null) {
+						logger.error("Message not found. uid=" + uid);
+						model.addAttribute("title", egovMessageSource.getMessage("ezEmail.t565", locale));
+						model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.t99000081", locale));
+						model.addAttribute("subContent", egovMessageSource.getMessage("ezEmail.t99000082", locale));
+						return "ezCommon/error";
+					} else {
+						
+						FetchProfile fp = new FetchProfile();
+						
+						fp.add(FetchProfile.Item.ENVELOPE);
+						fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
+						fp.add(FetchProfile.Item.SIZE);
+						fp.add(FetchProfile.Item.FLAGS);
+						fp.add("Subject");
+						fp.add("From");
+						fp.add("To");
+						fp.add("Cc");
+						fp.add("Bcc");
+						
+						Message[] fetchMessages = new Message[] {message};
+						f.fetch(fetchMessages, fp);
+						
+						// From
+						arrFroms = message.getFrom();
+						
+						if (arrFroms != null) {
+							fromStr = ezEmailUtil.getFromNameOrAddressOfMessage(message);
+							fromStr = commonUtil.trimDoubleQuotes(fromStr);
+									
+							fromEmail = ((InternetAddress)arrFroms[0]).getAddress();
+							
+							if (fromStr.equals(fromEmail)) {
+								List<String> mailAddrList = ezEmailUtil.mailAddrNameParse(fromStr, fromEmail);
+								fromStr = mailAddrList.get(0);
+								fromEmail = mailAddrList.get(1);
+							}
+						} else {
+							String[] fromHeaders = message.getHeader("From");
+							if (fromHeaders != null) {
+								fromStr = MimeUtility.decodeText(message.getHeader("From")[0]);
+							}
+						}
+						
+						logger.debug("From=" + fromStr);
+						
+						// 메일 보낸사람 국기 표시 
+						if (useCountryIP.equals("YES")) {
+							
+							String[] ctryCode = message.getHeader("X-Jmocha-Country-Code");
+							String[] mailIp = message.getHeader("X-Jmocha-IP");
+							String systemLang = loginInfo.getLang();
+							
+							if (mailIp != null && !mailIp[0].equals("")) {
+								countryIP = mailIp[0];
+							}
+							
+							if (ctryCode != null && ctryCode[0] != null) {
+								String systemCountryName = "";
+								switch (systemLang) {
+									case "1":
+										systemCountryName = "ko";
+										break;
+									case "2":
+										systemCountryName = "en";
+										break;
+									case "3":
+										systemCountryName = "ja";
+										break;
+									default:
+										systemCountryName = "kr";
+										break;
+								}
+								Locale localeCountry = new Locale(systemCountryName, ctryCode[0]);
+								countryName = localeCountry.getDisplayCountry(localeCountry);
+								countryName = countryName.replaceAll(" ", "");
+								countryCode = ctryCode[0].toLowerCase();
+							}
+							logger.debug("countryName:" + countryName + ",ctryCode[0]:" + countryCode );
+						} 
+						
+						// TO
+						arrRecipientsTo = message.getRecipients(Message.RecipientType.TO);
+						if(arrRecipientsTo != null){
+							/* 받는 사람에 유저 이름이 있는지 확인하는 로직  -> 미리보기랑 맞추기 위해 주석처리
+							boolean toListme = false;
+							for(int i=0; i<arrRecipientsTo.length; i++){
+								if(((InternetAddress)arrRecipientsTo[i]).getAddress().equals(userEmail)){
+									toListme = true;
+									break;
+								}
+							}*/
+							
+							String toHeader = message.getHeader("To")[0];
+							boolean isAscii = ezEmailUtil.isPureAscii(toHeader);						
+							String name = null;
+							String[] recipientHeaderArray = null;
+							
+							if (toHeader.contains("=?gb2312")) {
+								toHeader = MimeUtility.unfold(toHeader);
+								
+								logger.debug("toHeader=" + toHeader);
+								
+								recipientHeaderArray = toHeader.split(",");
+								
+								for (int i = 0; i < recipientHeaderArray.length; i++) {
+									recipientHeaderArray[i] = recipientHeaderArray[i].trim();
+								}
+							}						
+							
+							for (int i = 0; i < arrRecipientsTo.length; i++) {
+								name = ((InternetAddress)arrRecipientsTo[i]).getPersonal();
+								
+								if (name == null) {
+									name = ((InternetAddress)arrRecipientsTo[i]).getAddress();
+								} else {
+									if (!isAscii) {
+										byte[] rawBytes = name.getBytes("iso-8859-1");
+										
+										name = ezEmailUtil.decodeNonAsciiBytes(rawBytes);								
+									} else {
+										if (recipientHeaderArray != null) {
+											String recipientHeader = recipientHeaderArray[i];
+											
+						                    // gb2312로 인코딩되어 있다고 기술되어 있지만 gbk에서 
+						                    // 정의되어 있는 글자가 포함되어 디코딩 시 깨지는 문제가 발생하여 gbk로 디코딩 처리하는 코드를 추가함.						
+											String newHeader = ezEmailUtil.changeCharSet(recipientHeader, "gb2312", "gbk");
+											
+											// gb2312에서 gbk로 변경된 경우
+											if (!newHeader.equals(recipientHeader)) {
+									            int endPos = newHeader.indexOf("?=", 2);
+									            
+									            // 주소 부분을 제외한 이름 파트만 분리한다.
+									            if (endPos > -1) {
+									            	name = newHeader.substring(0, endPos + 2);
+									            }
+											}										
+										}
+										
+										name = MimeUtility.decodeText(name);
+									}
+									
+									name = commonUtil.trimDoubleQuotes(name);
+								}
+								
+								if (name != null) {
+									// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
+									// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
+									name = name.replace("\\\"", "");
+								}
+								
+								logger.debug("TO=" + name + ((InternetAddress)arrRecipientsTo[i]).getAddress());
+								
+								/* 유저 본인의 이름을 맨앞으로 toStr에 넣는 로직 -> 미리보기랑 맞추기 위해 주석처리
+								if(toListme){
+									if(((InternetAddress)arrRecipientsTo[i]).getAddress().equals(userEmail)){
+										if(arrRecipientsTo.length > 1){
+											toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), false) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsTo.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:pointer;' onclick='ShowHiddenTo(this);' align='absmiddle'></span>";
+										} else {
+											toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), false);
+										}
+									}
+									if(toHiddenStr == null){
+										toHiddenStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), false);
+									} else{
+										toHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), false);
+									}
+								} else {*/
+									if(i == 0){
+										if(arrRecipientsTo.length > 1){
+											toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), false) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsTo.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:pointer;' onclick='ShowHiddenTo(this);' align='absmiddle'></span>";
+										} else {
+											toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), false);
+										}
+									}
+									if(toHiddenStr == null){
+										toHiddenStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), false);
+									} else {
+										toHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), false);
+									}
+								//}
+							}
+						}
+						
+						// CC
+						arrRecipientsCC = message.getRecipients(Message.RecipientType.CC);
+						if(arrRecipientsCC != null){
+							/* 참조에 유저 이름이 있는지 확인하는 로직  -> 미리보기랑 맞추기 위해 주석처리
+							boolean ccListme = false;
+							for(int i=0; i<arrRecipientsCC.length; i++){
+								if(((InternetAddress)arrRecipientsCC[i]).getAddress().equals(userEmail)){
+									ccListme = true;
+									break;
+								}
+							}*/
+							
+							String ccHeader = message.getHeader("Cc")[0];
+							boolean isAscii = ezEmailUtil.isPureAscii(ccHeader);												
+							String name = null;
+							String[] recipientHeaderArray = null;
+							
+							if (ccHeader.contains("=?gb2312")) {
+								ccHeader = MimeUtility.unfold(ccHeader);
+								
+								logger.debug("ccHeader=" + ccHeader);
+								
+								recipientHeaderArray = ccHeader.split(",");
+								
+								for (int i = 0; i < recipientHeaderArray.length; i++) {
+									recipientHeaderArray[i] = recipientHeaderArray[i].trim();
+								}
+							}												
+							
+							for (int i = 0; i < arrRecipientsCC.length; i++) {
+								name = ((InternetAddress)arrRecipientsCC[i]).getPersonal();
+								
+								if (name == null) {
+									name = ((InternetAddress)arrRecipientsCC[i]).getAddress();
+								} else {
+									if (!isAscii) {
+										byte[] rawBytes = name.getBytes("iso-8859-1");
+										
+										name = ezEmailUtil.decodeNonAsciiBytes(rawBytes);								
+									} else {							
+										if (recipientHeaderArray != null) {
+											String recipientHeader = recipientHeaderArray[i];
+											
+						                    // gb2312로 인코딩되어 있다고 기술되어 있지만 gbk에서 
+						                    // 정의되어 있는 글자가 포함되어 디코딩 시 깨지는 문제가 발생하여 gbk로 디코딩 처리하는 코드를 추가함.						
+											String newHeader = ezEmailUtil.changeCharSet(recipientHeader, "gb2312", "gbk");
+											
+											// gb2312에서 gbk로 변경된 경우
+											if (!newHeader.equals(recipientHeader)) {
+									            int endPos = newHeader.indexOf("?=", 2);
+									            
+									            // 주소 부분을 제외한 이름 파트만 분리한다.
+									            if (endPos > -1) {
+									            	name = newHeader.substring(0, endPos + 2);
+									            }
+											}										
+										}
+										
+										name = MimeUtility.decodeText(name);
+									}
+									
+									name = commonUtil.trimDoubleQuotes(name);
+								}
+								
+								if (name != null) {
+									// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
+									// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
+									name = name.replace("\\\"", "");
+								}
+								
+								logger.debug("CC=" + name + ((InternetAddress)arrRecipientsCC[i]).getAddress());
+								
+								/* 유저 본인의 이름을 맨앞으로 ccStr에 넣는 로직 -> 미리보기랑 맞추기 위해 주석처리
+								if (ccListme) {
+									if (((InternetAddress)arrRecipientsCC[i]).getAddress().equals(userEmail)) {
+										if (arrRecipientsCC.length > 1) {
+											ccStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress(), false) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsCC.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:pointer;' onclick='ShowHiddenCc(this);' align='absmiddle'></span>";
+										} else {
+											ccStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress(), false);
+										}
+									}
+									if (ccHiddenStr == null) {
+										ccHiddenStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress(), false);
+									} else {
+										ccHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress(), false);
+									}
+								} else { */
+									if (i == 0) {
+										if (arrRecipientsCC.length > 1) {
+											ccStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress(), false) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsCC.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:pointer;' onclick='ShowHiddenCc(this);' align='absmiddle'></span>";
+										} else {
+											ccStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress(), false);
+										}
+									}
+									if (ccHiddenStr == null) {
+										ccHiddenStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress(), false);
+									} else {
+										ccHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress(), false);
+									}
+							//	}
+							}
+						}
+		
+						// BCC
+						arrRecipientsBCC = message.getRecipients(Message.RecipientType.BCC);
+						
+						if (arrRecipientsBCC != null) {
+							String name = null;
+							
+							for (int i = 0; i < arrRecipientsBCC.length; i++) {
+								name = ((InternetAddress)arrRecipientsBCC[i]).getPersonal();
+								
+								if (name == null) {
+									name = ((InternetAddress)arrRecipientsBCC[i]).getAddress();
+								} else {
+									name = MimeUtility.decodeText(name);
+									name = commonUtil.trimDoubleQuotes(name);
+								}
+								
+								if (name != null) {
+									// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
+									// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
+									name = name.replace("\\\"", "");
+								}
+								
+								logger.debug("BCC=" + name + ((InternetAddress)arrRecipientsBCC[i]).getAddress());
+								
+								if (i != 0) {
+									bccStr += ", ";
+								}
+								
+								bccStr += getReceiverHTML(name, ((InternetAddress)arrRecipientsBCC[i]).getAddress(), false);
+							}
+						}
+						
+						if (ccStr == null || ccStr.equals("")) {
+							pIsCCFg = "N";
+						}
+						
+						// received date
+						date = message.getReceivedDate();
+						if (date != null) {
+							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+							sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+							String receivedDateStr = sdf.format(date);
+							
+							dateStr = commonUtil.getDateStringInUTC(receivedDateStr, loginInfo.getOffset(), false);
+						}
+						logger.debug("dateStr=" + dateStr);
+						
+						// subject
+						subject = ezEmailUtil.getSubject(message);
+						if((subject == null || subject.trim().equals("")) && !contentClass.equalsIgnoreCase("PREVIEW")){
+							subject = egovMessageSource.getMessage("ezEmail.kms03", locale);
+						}
+						
+						subject = commonUtil.cleanValue(subject);
+						if(contentClass.equalsIgnoreCase("PREVIEW")){
+							title = egovMessageSource.getMessage("ezEmail.t487", locale) + " -" + subject;
+						} else {
+							title = egovMessageSource.getMessage("ezEmail.t565", locale) + subject;
+						}
+						
+						logger.debug("subject=" + subject);
+						
+						if (ezEmailUtil.hasSecureMailFlag(message)) {
+							isSecureMail = true;
+						}
+						
+						if (message.getFolder().getFullName().equals(ezEmailUtil.getSentFolderId(locale))) {
+							isSentItems = true;
+						}
+						
+						if (message.getFolder().getFullName().equals(ezEmailUtil.getTrashFolderId(locale))) {
+							isDelete = "BDELETE";
+						}
+						
+						if (!message.isSet(Flag.SEEN)) {
+							pReadFlag = "N";
+							message.setFlag(Flag.SEEN, true);
+							logger.debug("Message's seen flag changed to true.");
+						}
+					}
+					
+					if (contentClass.equals("")) {
+						if (message.isSet(Flags.Flag.ANSWERED)) {
+							contentClass = "REPLY";
+						}
+						else {
+							boolean isForwarded = ezEmailUtil.hasForwardedFlag(message);
+							
+							if (isForwarded) {
+								contentClass = "FORWARD";
+							}
+							else {
+								contentClass = "IPM.NOTE";
+							}
+						}
+					}
+					
+					// 전달, 회신 시 보낸 시간
+					if (contentClass.equals("REPLY") || contentClass.equals("FORWARD")) {
+						if (ezEmailUtil.hasSentDateFlag(message)) {
+							String sentDateFlag = ezEmailUtil.getSentDateFlag(message);
+							sentDateFlag = sentDateFlag.split("-")[1];
+							logger.debug("sentDateFlag=" + sentDateFlag);
+							
+							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+							sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+							String receivedDateStr = sdf.format(new Date(Long.parseLong(sentDateFlag)));
+							String sentDate = commonUtil.getDateStringInUTC(receivedDateStr, loginInfo.getOffset(), false);
+							logger.debug("receivedDateStr=" + receivedDateStr);
+							
+							String msg = contentClass.equals("REPLY") ? "ezEmail.ksa01" : "ezEmail.ksa02";
+							String sentDateStr = egovMessageSource.getMessage(msg, locale);
+							sentDateMsg = String.format(sentDateStr, sentDate);
+							logger.debug("sentDateMsg=" + sentDateMsg);
+						}
+					} else if (contentClass.equalsIgnoreCase("PREVIEW")) {
+						mailWritePreview = true;
+						dateStr = "";
+						logger.debug("mailWritePreview=" + mailWritePreview + ", dateStr=" + dateStr);
+					}
+					
+					f.close(true);
+				}
 			}
 		} catch (MessagingException e) {
 			e.printStackTrace();
@@ -615,7 +966,14 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String useReSend = ezCommonService.getTenantConfig("useReSend", loginInfo.getTenantId());
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", loginInfo.getTenantId());
 		String dotNetUrl = ezCommonService.getTenantConfig("dotNetUrl", loginInfo.getTenantId());
-				
+		
+		/* 2020-08-31 홍승비 - 메일을 커뮤니티 게시판에 게시하는 기능의 사용여부 전달 */
+		String useMailToCommunity = ezCommonService.getTenantConfig("useMailToCommunity", loginInfo.getTenantId());
+		
+		// 20200508 조진호 - 패키지 타입이 메일인 경우 메일 게시가 보이지 않도록 처리하기 위해 추가
+		String packageType = commonUtil.getPackageType(loginInfo.getTenantId());
+		model.addAttribute("packageType", packageType);
+		
 		model.addAttribute("fromStr", fromStr);
 		model.addAttribute("fromEmail", fromEmail);
 		model.addAttribute("url", url);
@@ -639,6 +997,15 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("dotNetUrl", dotNetUrl);
 		model.addAttribute("useReSend", useReSend);
 		model.addAttribute("sentDateMsg", sentDateMsg); // 전달, 회신 시 보낸 시간 
+		model.addAttribute("mailWritePreview", mailWritePreview); // 메일작성 > 미리보기
+		model.addAttribute("useCabinet", use_cabinet); 
+		model.addAttribute("countryName", countryName); 
+		model.addAttribute("countryIP", countryIP); 
+		model.addAttribute("countryCode", countryCode); 
+		model.addAttribute("systemCountryCode", systemCountryCode.toLowerCase()); 
+		model.addAttribute("useCountryIP", useCountryIP); 
+		model.addAttribute("useShowSystemCountry", useShowSystemCountry); 
+		model.addAttribute("useMailToCommunity", useMailToCommunity); 
 		
 		logger.debug("readMail ended.");
 		
@@ -648,7 +1015,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 * 메일 본문 내용 화면 정보 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailReadContent.do")
+	@RequestMapping(value="/ezEmail/mailReadContent.do", method=RequestMethod.POST)
 	public String readMailContent(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("readMailContent started.");
 		
@@ -664,17 +1031,26 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String mailId = userInfo.getId();
 		Map<String, Object> extraMap = new HashMap<String, Object>();
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
-
+		String useImageConvertServer = ezCommonService.getTenantConfig("useImageConvertServer", userInfo.getTenantId());
+		String useRDBOnlyMailList = ezCommonService.getTenantConfig("useRDBOnlyMailList", userInfo.getTenantId());		
+		
+		// 20200311 조진호 - 메일 읽기 > 첨부 파일 미리보기 활성화 여부 확인
+		if (!useImageConvertServer.equalsIgnoreCase("0")) {
+			extraMap.put("useImageConvertServer", useImageConvertServer);
+		}
+		
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = request.getParameter("shareId");
 			logger.debug("shareId=" + shareId);
 			
 			if (shareId != null) {
 				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
 					logger.debug("the user cannot access the shareId.");
 					logger.debug("readMailContent ended.");
 					
-					return "ezEmail/mailReadContent";
+					return "ezCommon/error";
 				}
 				
 				userEmail = shareId + "@" + domainName;
@@ -700,6 +1076,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		IMAPAccess ia = null;
 		List<String> bodyInfoList = null;
 		String pAttachListHtmlSub = null;
+		String pReadFlag = "Y";
+		String sentDateMsg = ""; // 전달, 회신 시 보낸 시간		
         boolean retryFlag = false;
         int retryCount = 1; // 메일 읽기 실패 시 재시도 횟수        
         
@@ -727,6 +1105,15 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
     				if (message == null) {
     					logger.error("Message not found. uid=" + uid);
     				} else {
+    					if (useRDBOnlyMailList.equals("YES")) {
+							if (!message.isSet(Flag.SEEN)) {
+								pReadFlag = "N";
+								message.setFlag(Flag.SEEN, true);
+								
+								logger.debug("Message's seen flag changed to true.");
+							}
+    					}
+    					
     					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, locale, extraMap);
     					double size = Double.parseDouble(bodyInfoList.get(2));
     					String strSize = ezEmailUtil.getSizeWithUnit(size);
@@ -757,6 +1144,42 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
     							logger.debug("MDNSentFlag is set");
     						}
     					}
+    					
+    					String contentClass = "";
+    					
+						if (message.isSet(Flags.Flag.ANSWERED)) {
+							contentClass = "REPLY";
+						}
+						else {
+							boolean isForwarded = ezEmailUtil.hasForwardedFlag(message);
+							
+							if (isForwarded) {
+								contentClass = "FORWARD";
+							}
+							else {
+								contentClass = "IPM.NOTE";
+							}
+						}
+    					
+    					// 전달, 회신 시 보낸 시간
+    					if (contentClass.equals("REPLY") || contentClass.equals("FORWARD")) {
+    						if (ezEmailUtil.hasSentDateFlag(message)) {
+    							String sentDateFlag = ezEmailUtil.getSentDateFlag(message);
+    							sentDateFlag = sentDateFlag.split("-")[1];
+    							logger.debug("sentDateFlag=" + sentDateFlag);
+    							
+    							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    							sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+    							String receivedDateStr = sdf.format(new Date(Long.parseLong(sentDateFlag)));
+    							String sentDate = commonUtil.getDateStringInUTC(receivedDateStr, userInfo.getOffset(), false);
+    							logger.debug("receivedDateStr=" + receivedDateStr);
+    							
+    							String msg = contentClass.equals("REPLY") ? "ezEmail.ksa01" : "ezEmail.ksa02";
+    							String sentDateStr = egovMessageSource.getMessage(msg, locale);
+    							sentDateMsg = String.format(sentDateStr, sentDate);
+    							logger.debug("sentDateMsg=" + sentDateMsg);
+    						}
+    					}
     				}
     			}
     		} catch (Exception e) { 
@@ -783,7 +1206,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
         Pattern p = Pattern.compile("<base\\s+href.*?>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 		Matcher m = p.matcher(htmlBody);
 		htmlBody = m.replaceAll("");
-        	
+
 		// 2018-08-03 황윤호 추가
         String memoFlag = "";
         if (ezCommonService.getTenantConfig("useMemo", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
@@ -791,6 +1214,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
         } else {
         	memoFlag = "NO";
         }
+        
+        // 20181219 김수아 : 첨부파일 이미지 미리보기 사용자 컨피그
+        MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(userInfo.getTenantId(), userInfo.getId()).get(0);
+        String previewMailImage = mailGeneralVO.getPreviewMailImage() == null ? "Y" : mailGeneralVO.getPreviewMailImage();
         
         model.addAttribute("htmlBody", htmlBody);
 		model.addAttribute("pAttachListHtml", bodyInfoList.get(1));
@@ -804,6 +1231,11 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("Name", userInfo.getDisplayName());	
 		model.addAttribute("Id", userInfo.getId());
 		model.addAttribute("memoFlag", memoFlag);
+		model.addAttribute("previewImageListHtml", bodyInfoList.get(5)); //이미지 미리보기 
+		
+		model.addAttribute("previewMailImage", previewMailImage);
+		model.addAttribute("pReadFlag", pReadFlag);		
+		model.addAttribute("sentDateMsg", sentDateMsg); // 전달, 회신 시 보낸 시간		
 		
 		logger.debug("readMailContent ended.");
 		
@@ -813,7 +1245,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 * 메일 웹페이지로 보기 수행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailReadOriginal.do")
+	@RequestMapping(value="/ezEmail/mailReadOriginal.do", method=RequestMethod.GET)
 	public String readMailOriginal(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("readMailOriginal started.");
 		
@@ -833,10 +1265,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			
 			if (shareId != null) {
 				if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
 					logger.debug("the user cannot access the shareId.");
 					logger.debug("readMailOriginal ended.");
 					
-					return "ezEmail/mailReadOriginal";
+					return "ezCommon/error";
 				}
 				
 				userEmail = shareId + "@" + domainName;
@@ -894,7 +1328,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 		}
 		
-		model.addAttribute("htmlBody", bodyInfoList.get(0));
+		String htmlBody = bodyInfoList.get(0);
+		model.addAttribute("htmlBody", htmlBody);
 		
 		logger.debug("readMailOriginal ended.");
 		
@@ -904,7 +1339,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 * 일반 첨부파일시 모두저장 클릭시 호출되는 메서드 (압축파일 내려받기) 
 	 */
-	@RequestMapping(value="/ezEmail/downloadAttachAll.do", produces="text/plain; charset=UTF-8")
+	@RequestMapping(value="/ezEmail/downloadAttachAll.do", method=RequestMethod.POST, produces="text/plain; charset=UTF-8")
 	public void downloadAttachAll(@CookieValue("loginCookie") String loginCookie, Locale locale, 
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("downloadAttachAll started.");
@@ -944,21 +1379,29 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		logger.debug("params=" + params);
 		
 		String param[] = params.split("&");
-		String filename[] = new String[param.length / 2];
-		String strIndex[] = new String[param.length / 2];
+		String filename[] = new String[param.length / 4];
+		String strIndex[] = new String[param.length / 4];
+		String strOrder[] = new String[param.length / 4];
+		String strDepth[] = new String[param.length / 4];
 		
-		int j = 0, k = 0;
+		int j = 0, k = 0, l = 0, m = 0;
 
 		for (int i = 0; i < param.length; i++) {
 			
 			String tmpStr[] = param[i].split("=");
 			
-			if (i % 2 == 0) {
+			if (i % 4 == 0) {
 				filename[j] = URLDecoder.decode(tmpStr[1], "utf-8");
 				j++;
-			} else {
+			} else if (i % 4 == 1) {
 				strIndex[k] = tmpStr[1];
 				k++;
+			} else if (i % 4 == 2) {
+				strOrder[l] = tmpStr[1];
+				l++;
+			} else {
+				strDepth[m] = tmpStr[1];
+				m++;
 			}
 		}
 		
@@ -972,11 +1415,20 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		Integer idx[] = new Integer[strIndex.length];
 		
-		if (strIndex != null) {
+		for (int i = 0; i < strIndex.length; i++) {
+			idx[i] = Integer.parseInt(strIndex[i]);
+		}
 
-			for (int i = 0; i < strIndex.length; i++) {
-				idx[i] = Integer.parseInt(strIndex[i]);
-			}
+		Integer order[] = new Integer[strOrder.length];
+		
+		for (int i = 0; i < strOrder.length; i++) {
+			order[i] = Integer.parseInt(strOrder[i]);
+		}
+
+		Integer depth[] = new Integer[strDepth.length];
+		
+		for (int i = 0; i < strDepth.length; i++) {
+			depth[i] = Integer.parseInt(strDepth[i]);
 		}
 		
 		String realPath = commonUtil.getRealPath(request);
@@ -1041,7 +1493,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					} else {
 						
 						for (int i = 0; i < idx.length; i++) {
-							part = ezEmailUtil.getAttachPart(message, idx[i]);
+							part = ezEmailUtil.getAttachPart(message, idx[i], order[i], depth[i]);
 
 							if (part == null) {
 								logger.debug("attachpart not found. AttachPartIndex=" + idx[i]);
@@ -1126,7 +1578,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 * 메일 첨부파일 다운로드 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/downloadAttach.do")
+	@RequestMapping(value="/ezEmail/downloadAttach.do", method=RequestMethod.GET)
 	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("downloadAttach started.");
 		
@@ -1177,6 +1629,24 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			index = Integer.parseInt(strIndex);
 		}
 		logger.debug("index=" + index);
+
+		String strOrder = request.getParameter("order");
+		int order = 0;
+		
+		if (strOrder != null) {
+			order = Integer.parseInt(strOrder);
+		}
+		
+		logger.debug("order=" + order);
+		
+		String strDepth = request.getParameter("depth");
+		int depth = 0;
+		
+		if (strDepth != null) {
+			depth = Integer.parseInt(strDepth);
+		}
+		
+		logger.debug("depth=" + depth);
 		
 		IMAPAccess ia = null;
 		try {
@@ -1203,13 +1673,22 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						part = message;
 					}
 					else {
-						part = ezEmailUtil.getAttachPart(message, index);
+						part = ezEmailUtil.getAttachPart(message, index, order, depth);
 					}
 					
 					if (part == null) {
 						logger.error("AttachPart not found. AttachPartIndex=" + index);
 					} else {
-						response.setContentType(part.getContentType());
+						String partContentType = part.getContentType();
+						
+						// Chrome에서 message/rfc822 Type으로 내려 보내면
+						// blocked a frame with origin from accessing a cross-origin frame
+						// 오류가 발생해 추가함.
+						if (partContentType.equalsIgnoreCase("message/rfc822")) {
+							partContentType = "application/octet-stream";
+						}
+						
+						response.setContentType(partContentType);
 						
 						filename = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), filename);						
 						
@@ -1262,7 +1741,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 * 메일 대용량 첨부파일 다운로드 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/downloadAttachCommon.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/downloadAttachCommon.do", method=RequestMethod.GET, produces = "text/xml; charset=utf-8")
 	public void downloadAttachCommon(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("downloadAttachCommon started.");
 		
@@ -1270,8 +1749,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		fileId = commonUtil.detectPathTraversal(fileId);		
 		String fileDate = request.getParameter("filedate") == null ? "" : request.getParameter("filedate");
 		fileDate = commonUtil.detectPathTraversal(fileDate);		
-		String tenantIdStr = request.getParameter("tid") == null ? "0" : request.getParameter("tid");
-			
+		String tenantIdStr = request.getParameter("tid");
+		tenantIdStr = (tenantIdStr == null || tenantIdStr.trim().equals("")) ? "0" : tenantIdStr;
+		tenantIdStr = commonUtil.detectPathTraversal(tenantIdStr);
+		
 		int tenantId = Integer.parseInt(tenantIdStr);
 		String serverLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 		Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(serverLang));
@@ -1299,6 +1780,17 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				response.getWriter().print(egovMessageSource.getMessage("main.t4", locale));
 				
 				return;
+			} else {
+				//대용량 첨부파일 다운로드 횟수 제한 처리 2020-03-10 홍대표.
+				String exceededFilelimit = ezEmailService.checkBigAttachDownloadCount(fileId, tenantId);
+				if (exceededFilelimit != null) {
+					response.setContentType("text/plain; charset=utf-8");
+					response.getWriter().print(egovMessageSource.getMessageExtend("ezEmail.hdp05", new Object[] {exceededFilelimit}, locale));
+					
+					return;
+				} else {
+					ezEmailService.updateBigAttachDownloadCount(fileId, tenantId);
+				}
 			}
 			
 			for (int i = 0; i < files.length; i++) {
@@ -1355,7 +1847,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 * 메일 인라인 이미지 읽어오기 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/downloadInline.do")
+	@RequestMapping(value="/ezEmail/downloadInline.do", method=RequestMethod.GET)
 	public void downloadInline(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("downloadInline started.");
 		
@@ -1467,7 +1959,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		logger.debug("downloadInline ended.");
 	}
 	
-	@RequestMapping(value="/ezEmail/downloadInlineDotNet.do")
+	@RequestMapping(value="/ezEmail/downloadInlineDotNet.do", method=RequestMethod.GET)
 	public void downloadInlineDotNet(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("downloadInlineDotNet started.");
 		
@@ -1565,7 +2057,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 * 미리보기 메일 정보 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailPrevShow.do")
+	@RequestMapping(value="/ezEmail/mailPrevShow.do", method=RequestMethod.POST)
 	public void mailPrevShow(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("mailPrevShow started.");
 		
@@ -1625,277 +2117,495 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		int unread = 0;
 		int importance = 1;
 		IMAPAccess ia = null;
+		String fromId = "";
+		String senderProfileImageName = "";
 		Boolean emptyFlag = false;
 		
+		// 읽기 화면에서 리스트 출력 위한 데이터
+		String countryName = "";
+		String countryIP = "";
+		String countryCode = "";
+		String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", loginInfo.getTenantId());
+		String useCountryIP = ezCommonService.getTenantConfig("useCountryIP", loginInfo.getTenantId());
+		String useShowSystemCountry = ezCommonService.getTenantConfig("useShowSystemCountry", loginInfo.getTenantId());
+		String useRDBOnlyMailList = ezCommonService.getTenantConfig("useRDBOnlyMailList", loginInfo.getTenantId());		
+		
 		try {
-			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale, ezEmailUtil);
-			Folder f = ia.getFolder(folderPath);
+			Map<String, String> mailInfo = null;
+			boolean recipientHasAllRecipientTypes = false;
 			
-			if (f == null || !f.exists()) {
-				logger.error("Folder not found. folderPath=" + folderPath);
-				emptyFlag = true;
-			} else {
-				f.open(Folder.READ_WRITE);
-				Message message = null;
+			if (useRDBOnlyMailList.equals("YES")) {
+				mailInfo = ezEmailUtil.getMailInfo(userEmail, folderPath, uid);
 				
-				if (f.isOpen() && f instanceof IMAPFolder) {
-					message = ((IMAPFolder)f).getMessageByUID(uid);
-				}
-				
-				if (message == null) {
+				if (mailInfo == null) {
 					logger.error("Message not found. uid=" + uid);
 					emptyFlag = true;
-				} else {
-					FetchProfile fp = new FetchProfile();
+				}	
+				
+				String recipientsStr = mailInfo.get("RECIPIENT");
+				
+				if (!recipientsStr.isEmpty()) {
+					// To, Cc, Bcc를 분리한다.(||로 구분됨.)
+					String[] recipientsArr = recipientsStr.split("\\|\\|", 3);		
 					
-					fp.add(FetchProfile.Item.ENVELOPE);
-					fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
-					fp.add(FetchProfile.Item.SIZE);
-					fp.add(FetchProfile.Item.FLAGS);
-					fp.add("Subject");
-					fp.add("From");
-					fp.add("To");
-					fp.add("Cc");
-					fp.add("Bcc");
-					fp.add("Importance");
+					// 오래된 사이트(가온누리 포함)의 경우 오래된 메일의 RECIPIENT 필드값이 To, Cc, Bcc로 분리되어 있지 않은 경우가 있어
+					// 추가함.
+					if (recipientsArr.length > 1) {
+						recipientHasAllRecipientTypes = true;
+					}
+				}								
+			}
+			
+			if (useRDBOnlyMailList.equals("YES") && recipientHasAllRecipientTypes) {
+				fromStr = ezEmailUtil.getNameOrAddress(mailInfo.get("SENDER"));
+				fromEmail = ezEmailUtil.getAddress(mailInfo.get("SENDER"));
+				
+				logger.debug("From=" + fromStr);
+				
+				// 메일 보낸사람 국기 표시 
+				if (useCountryIP.equals("YES")) {						
+					String ctryCode = mailInfo.get("COUNTRY_CODE");
+					String mailIp = mailInfo.get("MAIL_IP");
+					String systemLang = loginInfo.getLang();
 					
-					Message[] fetchMessages = new Message[] {message};
-					f.fetch(fetchMessages, fp);
+					if (mailIp != null && !mailIp.isEmpty()) {
+						countryIP = mailIp;
+					}
 					
-					arrFroms = message.getFrom();
-					
-					if (arrFroms != null) {
-						fromStr = ezEmailUtil.getFromNameOrAddressOfMessage(message);
-						fromEmail = ((InternetAddress)arrFroms[0]).getAddress();
-					} else {
-						String[] fromHeaders = message.getHeader("From");
-						if (fromHeaders != null) {
-							fromStr = MimeUtility.decodeText(message.getHeader("From")[0]);
+					if (ctryCode != null && !ctryCode.isEmpty()) {
+						String systemCountryName = "";
+						switch (systemLang) {
+							case "1":
+								systemCountryName = "ko";
+								break;
+							case "2":
+								systemCountryName = "en";
+								break;
+							case "3":
+								systemCountryName = "ja";
+								break;
+							default:
+								systemCountryName = "kr";
+								break;
 						}
+						Locale localeCountry = new Locale(systemCountryName, ctryCode);
+						countryName = localeCountry.getDisplayCountry(localeCountry);
+						countryName = countryName.replaceAll(" ", "");
+						countryCode = ctryCode.toLowerCase();
 					}
-					logger.debug("From=" + fromStr);
+					logger.debug("countryName:" + countryName + ",ctryCode[0]:" + countryCode);
+				} 
+				
+				// To, Cc, Bcc를 모두 포함한다.
+				String recipientsStr = mailInfo.get("RECIPIENT");
+				
+				if (!recipientsStr.isEmpty()) {
+					// To, Cc, Bcc를 분리한다.(||로 구분됨.)
+					String[] recipientsArr = recipientsStr.split("\\|\\|", 3);		
 					
-					arrRecipientsTo = message.getRecipients(Message.RecipientType.TO);
-					
-					if (arrRecipientsTo != null) {
-						InternetAddress iAddress = null;
-						String toHeader = message.getHeader("To")[0];
-						boolean isAscii = ezEmailUtil.isPureAscii(toHeader);												
-						String name = null;
-						String[] recipientHeaderArray = null;
-						
-						if (toHeader.contains("=?gb2312")) {
-							toHeader = MimeUtility.unfold(toHeader);
-							
-							logger.debug("toHeader=" + toHeader);
-							
-							recipientHeaderArray = toHeader.split(",");
-							
-							for (int i = 0; i < recipientHeaderArray.length; i++) {
-								recipientHeaderArray[i] = recipientHeaderArray[i].trim();
-							}
-						}
-						
-						for (int i = 0; i < arrRecipientsTo.length; i++) {
-							iAddress = ((InternetAddress)arrRecipientsTo[i]);
-							name = iAddress.getPersonal();
-							if (name == null) {
-								name = iAddress.getAddress();
-							} else {
-								// 표준을 지키지 않고 Non-Ascii 문자가 사용된 경우엔 직접 디코딩을 처리한다.
-								if (!isAscii) {
-									byte[] rawBytes = name.getBytes("iso-8859-1");
-									
-									name = ezEmailUtil.decodeNonAsciiBytes(rawBytes);								
-								} else {						
-									if (recipientHeaderArray != null) {
-										String recipientHeader = recipientHeaderArray[i];
-										
-					                    // gb2312로 인코딩되어 있다고 기술되어 있지만 gbk에서 
-					                    // 정의되어 있는 글자가 포함되어 디코딩 시 깨지는 문제가 발생하여 gbk로 디코딩 처리하는 코드를 추가함.						
-										String newHeader = ezEmailUtil.changeCharSet(recipientHeader, "gb2312", "gbk");
-										
-										// gb2312에서 gbk로 변경된 경우
-										if (!newHeader.equals(recipientHeader)) {
-								            int endPos = newHeader.indexOf("?=", 2);
-								            
-								            // 주소 부분을 제외한 이름 파트만 분리한다.
-								            if (endPos > -1) {
-								            	name = newHeader.substring(0, endPos + 2);
-								            }
-										}										
-									}
-									
-									name = MimeUtility.decodeText(name);
-								}
-							}
-							
-							if (i != 0) {
-								toStr += ";";
-	                        }					
-							
-							if (name != null) {
-								// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
-								// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
-								name = name.replace("\\\"", "");
-							}
-							
-							toStr += "\""+ name +"\" <" + iAddress.getAddress() + ">";
-						}
+					if (!recipientsArr[0].isEmpty()) {
+						// Undisclosed recipients:; <Undisclosed recipients:;>|||| 와 같은 경우가 있어
+						// :; 를 제거하도록 함.
+						toStr = recipientsArr[0].replace(":;", "").replace("; ", ";");
 					}
 					
-					logger.debug("TO=" + toStr);
-					
-					arrRecipientsCC = message.getRecipients(Message.RecipientType.CC);
-					
-					if (arrRecipientsCC != null) {
-						InternetAddress iAddress = null;
-						String ccHeader = message.getHeader("Cc")[0];
-						boolean isAscii = ezEmailUtil.isPureAscii(ccHeader);																		
-						String name = null;
-						String[] recipientHeaderArray = null;
-						
-						if (ccHeader.contains("=?gb2312")) {
-							ccHeader = MimeUtility.unfold(ccHeader);
-							
-							logger.debug("ccHeader=" + ccHeader);
-							
-							recipientHeaderArray = ccHeader.split(",");
-							
-							for (int i = 0; i < recipientHeaderArray.length; i++) {
-								recipientHeaderArray[i] = recipientHeaderArray[i].trim();
-							}
-						}						
-						
-						for (int i = 0; i < arrRecipientsCC.length; i++) {
-							iAddress = ((InternetAddress)arrRecipientsCC[i]);
-							name = iAddress.getPersonal();
-							if (name == null) {
-								name = iAddress.getAddress();
-							} else {
-								// 표준을 지키지 않고 Non-Ascii 문자가 사용된 경우엔 직접 디코딩을 처리한다.
-								if (!isAscii) {
-									byte[] rawBytes = name.getBytes("iso-8859-1");
-									
-									name = ezEmailUtil.decodeNonAsciiBytes(rawBytes);								
-								} else {					
-									if (recipientHeaderArray != null) {
-										String recipientHeader = recipientHeaderArray[i];
-										
-					                    // gb2312로 인코딩되어 있다고 기술되어 있지만 gbk에서 
-					                    // 정의되어 있는 글자가 포함되어 디코딩 시 깨지는 문제가 발생하여 gbk로 디코딩 처리하는 코드를 추가함.						
-										String newHeader = ezEmailUtil.changeCharSet(recipientHeader, "gb2312", "gbk");
-										
-										// gb2312에서 gbk로 변경된 경우
-										if (!newHeader.equals(recipientHeader)) {
-								            int endPos = newHeader.indexOf("?=", 2);
-								            
-								            // 주소 부분을 제외한 이름 파트만 분리한다.
-								            if (endPos > -1) {
-								            	name = newHeader.substring(0, endPos + 2);
-								            }
-										}										
-									}
-									
-									name = MimeUtility.decodeText(name);
-								}
-							}
-							
-							if (i != 0) {
-								ccStr += ";";
-	                        }
-							
-							if (name != null) {
-								// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
-								// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
-								name = name.replace("\\\"", "");
-							}
-							
-							ccStr += "\"" + name + "\" <" + iAddress.getAddress() + ">";
-						}
+					if (recipientsArr.length > 1 && !recipientsArr[1].isEmpty()) {
+						ccStr = recipientsArr[1].replace(":;", "").replace("; ", ";");
 					}
-					
-					logger.debug("CC=" + ccStr);
-					
-					arrRecipientsBCC = message.getRecipients(Message.RecipientType.BCC);
-					
-					if (arrRecipientsBCC != null) {
-						InternetAddress iAddress = null;
-						String name = null;
-												
-						for (int i = 0; i < arrRecipientsBCC.length; i++) {
-							iAddress = ((InternetAddress)arrRecipientsBCC[i]);
-							name = iAddress.getPersonal();
-							
-							if (name == null) {
-								name = iAddress.getAddress();
-							} else {
-								name = MimeUtility.decodeText(name);
-							}
-							
-							if (i != 0) {
-								bccStr += ";";
-	                        }
-							
-							if (name != null) {
-								// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
-								// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
-								name = name.replace("\\\"", "");
-							}
-							
-							bccStr += "\"" + name + "\" <" + iAddress.getAddress() + ">";
-						}
-					}
-					
-					logger.debug("BCC=" + bccStr);
-					
-					// received date
-					date = message.getReceivedDate();
-					if (date != null) {
-						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-						sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-						String receivedDateStr = sdf.format(date);
-						
-						dateStr = commonUtil.getDateStringInUTC(receivedDateStr, loginInfo.getOffset(), false);
-					}
-					logger.debug("dateStr=" + dateStr);
-					
-					subject = ezEmailUtil.getSubject(message);
-					subject = commonUtil.cleanValue(subject);
-					
-					logger.debug("subject=" + subject);
-					
-					// 메일 중요도
-					String[] importanceHeaders = message.getHeader("X-Priority");
-					if (importanceHeaders != null) {
-						logger.debug("X-Priority=" + importanceHeaders[0]);
-						switch (importanceHeaders[0]) {
-				            case "5": importance = 0;
-				                break;
-				            case "3": importance = 1;
-				                break;
-				            case "1": importance = 2;
-				                break;
-				            default: importance = 1;
-				                break;
-				        }
-					}
-					logger.debug("importance=" + importance);
-					
-					if(!message.isSet(Flag.SEEN)){
-						unread = 1;
-						message.setFlag(Flag.SEEN, true);
-						logger.debug("Message's seen flag changed to true.");
-					}
+
+					if (recipientsArr.length > 2 && !recipientsArr[2].isEmpty()) {
+						bccStr = recipientsArr[2].replace(":;", "").replace("; ", ";");
+					}						
+				}					
+				
+				logger.debug("TO=" + toStr);										
+				logger.debug("CC=" + ccStr);					
+				logger.debug("BCC=" + bccStr);
+				
+				// received date
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");					
+				date = sdf.parse(mailInfo.get("MAIL_DATE"));
+
+				sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+				String receivedDateStr = sdf.format(date);					
+				dateStr = commonUtil.getDateStringInUTC(receivedDateStr, loginInfo.getOffset(), false);
+
+				logger.debug("dateStr=" + dateStr);
+				
+				subject = mailInfo.get("SUBJECT");
+				subject = commonUtil.cleanValue(subject);
+				
+				logger.debug("subject=" + subject);
+				
+				// 메일 중요도
+				try {
+					importance = Integer.parseInt(mailInfo.get("IMPORTANCE"));
+				} catch (Exception ex) {						
 				}
-				f.close(true);
+				
+				logger.debug("importance=" + importance);		
+				
+				if (!"1".equals(mailInfo.get("MAIL_IS_SEEN"))) {
+					unread = 1;
+				}									
+			} else {
+				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+						userEmail, password, egovMessageSource, locale, ezEmailUtil);
+				Folder f = ia.getFolder(folderPath);
+				
+				if (f == null || !f.exists()) {
+					logger.error("Folder not found. folderPath=" + folderPath);
+					emptyFlag = true;
+				} else {
+					f.open(Folder.READ_WRITE);
+					Message message = null;
+					
+					if (f.isOpen() && f instanceof IMAPFolder) {
+						message = ((IMAPFolder)f).getMessageByUID(uid);
+					}
+					
+					if (message == null) {
+						logger.error("Message not found. uid=" + uid);
+						emptyFlag = true;
+					} else {
+						FetchProfile fp = new FetchProfile();
+						
+						fp.add(FetchProfile.Item.ENVELOPE);
+						fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
+						fp.add(FetchProfile.Item.SIZE);
+						fp.add(FetchProfile.Item.FLAGS);
+						fp.add("Subject");
+						fp.add("From");
+						fp.add("To");
+						fp.add("Cc");
+						fp.add("Bcc");
+						fp.add("Importance");
+						
+						Message[] fetchMessages = new Message[] {message};
+						f.fetch(fetchMessages, fp);
+						
+						arrFroms = message.getFrom();
+						
+						if (arrFroms != null) {
+							fromStr = ezEmailUtil.getFromNameOrAddressOfMessage(message);
+							fromEmail = ((InternetAddress)arrFroms[0]).getAddress();
+							
+							if (fromStr.equals(fromEmail)) {
+								List<String> mailAddrList = ezEmailUtil.mailAddrNameParse(fromStr, fromEmail);
+								fromStr = mailAddrList.get(0);
+								fromEmail = mailAddrList.get(1);
+								
+								if (fromStr.indexOf("\"") == 0 && fromStr.lastIndexOf("\"") == (fromStr.length()-1)) {
+									fromStr = fromStr.substring(1, fromStr.length()-2);
+								}
+							}
+						} else {
+							String[] fromHeaders = message.getHeader("From");
+							if (fromHeaders != null) {
+								fromStr = MimeUtility.decodeText(message.getHeader("From")[0]);
+							}
+						}
+						logger.debug("From=" + fromStr);
+						
+						// 메일 보낸사람 국기 표시 
+						if (useCountryIP.equals("YES")) {
+							
+							String[] ctryCode = message.getHeader("X-Jmocha-Country-Code");
+							String[] mailIp = message.getHeader("X-Jmocha-IP");
+							String systemLang = loginInfo.getLang();
+							
+							if (mailIp != null && !mailIp[0].equals("")) {
+								countryIP = mailIp[0];
+							}
+							
+							if (ctryCode != null && ctryCode[0] != null) {
+								String systemCountryName = "";
+								switch (systemLang) {
+									case "1":
+										systemCountryName = "ko";
+										break;
+									case "2":
+										systemCountryName = "en";
+										break;
+									case "3":
+										systemCountryName = "ja";
+										break;
+									default:
+										systemCountryName = "kr";
+										break;
+								}
+								Locale localeCountry = new Locale(systemCountryName, ctryCode[0]);
+								countryName = localeCountry.getDisplayCountry(localeCountry);
+								countryName = countryName.replaceAll(" ", "");
+								countryCode = ctryCode[0].toLowerCase();
+							}
+							logger.debug("countryName:" + countryName + ",ctryCode[0]:" + countryCode );
+						} 
+						
+						arrRecipientsTo = message.getRecipients(Message.RecipientType.TO);
+						
+						if (arrRecipientsTo != null) {
+							InternetAddress iAddress = null;
+							String toHeader = message.getHeader("To")[0];
+							boolean isAscii = ezEmailUtil.isPureAscii(toHeader);												
+							String name = null;
+							String[] recipientHeaderArray = null;
+							
+							if (toHeader.contains("=?gb2312")) {
+								toHeader = MimeUtility.unfold(toHeader);
+								
+								logger.debug("toHeader=" + toHeader);
+								
+								recipientHeaderArray = toHeader.split(",");
+								
+								for (int i = 0; i < recipientHeaderArray.length; i++) {
+									recipientHeaderArray[i] = recipientHeaderArray[i].trim();
+								}
+							}
+							
+							for (int i = 0; i < arrRecipientsTo.length; i++) {
+								iAddress = ((InternetAddress)arrRecipientsTo[i]);
+								name = iAddress.getPersonal();
+								if (name == null) {
+									name = iAddress.getAddress();
+								} else {
+									// 표준을 지키지 않고 Non-Ascii 문자가 사용된 경우엔 직접 디코딩을 처리한다.
+									if (!isAscii) {
+										byte[] rawBytes = name.getBytes("iso-8859-1");
+										
+										name = ezEmailUtil.decodeNonAsciiBytes(rawBytes);								
+									} else {						
+										if (recipientHeaderArray != null) {
+											String recipientHeader = recipientHeaderArray[i];
+											
+						                    // gb2312로 인코딩되어 있다고 기술되어 있지만 gbk에서 
+						                    // 정의되어 있는 글자가 포함되어 디코딩 시 깨지는 문제가 발생하여 gbk로 디코딩 처리하는 코드를 추가함.						
+											String newHeader = ezEmailUtil.changeCharSet(recipientHeader, "gb2312", "gbk");
+											
+											// gb2312에서 gbk로 변경된 경우
+											if (!newHeader.equals(recipientHeader)) {
+									            int endPos = newHeader.indexOf("?=", 2);
+									            
+									            // 주소 부분을 제외한 이름 파트만 분리한다.
+									            if (endPos > -1) {
+									            	name = newHeader.substring(0, endPos + 2);
+									            }
+											}										
+										}
+										
+										name = MimeUtility.decodeText(name);
+									}
+								}
+								
+								if (i != 0) {
+									toStr += ";";
+		                        }					
+								
+								if (name != null) {
+									// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
+									// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
+									name = name.replace("\\\"", "");
+								}
+								
+								toStr += "\""+ name +"\" <" + iAddress.getAddress() + ">";
+							}
+						}
+						
+						logger.debug("TO=" + toStr);
+						
+						arrRecipientsCC = message.getRecipients(Message.RecipientType.CC);
+						
+						if (arrRecipientsCC != null) {
+							InternetAddress iAddress = null;
+							String ccHeader = message.getHeader("Cc")[0];
+							boolean isAscii = ezEmailUtil.isPureAscii(ccHeader);																		
+							String name = null;
+							String[] recipientHeaderArray = null;
+							
+							if (ccHeader.contains("=?gb2312")) {
+								ccHeader = MimeUtility.unfold(ccHeader);
+								
+								logger.debug("ccHeader=" + ccHeader);
+								
+								recipientHeaderArray = ccHeader.split(",");
+								
+								for (int i = 0; i < recipientHeaderArray.length; i++) {
+									recipientHeaderArray[i] = recipientHeaderArray[i].trim();
+								}
+							}						
+							
+							for (int i = 0; i < arrRecipientsCC.length; i++) {
+								iAddress = ((InternetAddress)arrRecipientsCC[i]);
+								name = iAddress.getPersonal();
+								if (name == null) {
+									name = iAddress.getAddress();
+								} else {
+									// 표준을 지키지 않고 Non-Ascii 문자가 사용된 경우엔 직접 디코딩을 처리한다.
+									if (!isAscii) {
+										byte[] rawBytes = name.getBytes("iso-8859-1");
+										
+										name = ezEmailUtil.decodeNonAsciiBytes(rawBytes);								
+									} else {					
+										if (recipientHeaderArray != null) {
+											String recipientHeader = recipientHeaderArray[i];
+											
+						                    // gb2312로 인코딩되어 있다고 기술되어 있지만 gbk에서 
+						                    // 정의되어 있는 글자가 포함되어 디코딩 시 깨지는 문제가 발생하여 gbk로 디코딩 처리하는 코드를 추가함.						
+											String newHeader = ezEmailUtil.changeCharSet(recipientHeader, "gb2312", "gbk");
+											
+											// gb2312에서 gbk로 변경된 경우
+											if (!newHeader.equals(recipientHeader)) {
+									            int endPos = newHeader.indexOf("?=", 2);
+									            
+									            // 주소 부분을 제외한 이름 파트만 분리한다.
+									            if (endPos > -1) {
+									            	name = newHeader.substring(0, endPos + 2);
+									            }
+											}										
+										}
+										
+										name = MimeUtility.decodeText(name);
+									}
+								}
+								
+								if (i != 0) {
+									ccStr += ";";
+		                        }
+								
+								if (name != null) {
+									// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
+									// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
+									name = name.replace("\\\"", "");
+								}
+								
+								ccStr += "\"" + name + "\" <" + iAddress.getAddress() + ">";
+							}
+						}
+						
+						logger.debug("CC=" + ccStr);
+						
+						arrRecipientsBCC = message.getRecipients(Message.RecipientType.BCC);
+						
+						if (arrRecipientsBCC != null) {
+							InternetAddress iAddress = null;
+							String name = null;
+													
+							for (int i = 0; i < arrRecipientsBCC.length; i++) {
+								iAddress = ((InternetAddress)arrRecipientsBCC[i]);
+								name = iAddress.getPersonal();
+								
+								if (name == null) {
+									name = iAddress.getAddress();
+								} else {
+									name = MimeUtility.decodeText(name);
+								}
+								
+								if (i != 0) {
+									bccStr += ";";
+		                        }
+								
+								if (name != null) {
+									// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
+									// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
+									name = name.replace("\\\"", "");
+								}
+								
+								bccStr += "\"" + name + "\" <" + iAddress.getAddress() + ">";
+							}
+						}
+						
+						logger.debug("BCC=" + bccStr);
+						
+						// received date
+						date = message.getReceivedDate();
+						if (date != null) {
+							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+							sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+							String receivedDateStr = sdf.format(date);
+							
+							dateStr = commonUtil.getDateStringInUTC(receivedDateStr, loginInfo.getOffset(), false);
+						}
+						logger.debug("dateStr=" + dateStr);
+						
+						subject = ezEmailUtil.getSubject(message);
+						subject = commonUtil.cleanValue(subject);
+						
+						logger.debug("subject=" + subject);
+						
+						// 메일 중요도
+						String[] headers = message.getHeader("X-Priority");
+						String header = "";
+						
+						if (headers == null){
+							//importance      = "low" / "normal" / "high"
+							String[] headerImportance = message.getHeader("Importance"); 
+							
+							if (headerImportance == null){
+								header = "normal";
+							} else {
+								header = headerImportance[0];
+							}
+						} else {
+							header = headers[0];
+						}
+						// startsWith is used since
+						// there are cases like X-Priority: 1 (Highest) generated by Thunderbird.
+						if (header.startsWith("1") || header.startsWith("high")) {
+							importance = 2;
+						} else if (header.startsWith("5") || header.startsWith("low")) {
+							importance = 0;
+						} 	
+						
+						logger.debug("importance=" + importance);
+						
+						if(!message.isSet(Flag.SEEN)){
+							unread = 1;
+							message.setFlag(Flag.SEEN, true);
+							logger.debug("Message's seen flag changed to true.");
+						}
+					}
+					f.close(true);
+				}
 			}
 		} catch (MessagingException e) {
 			e.printStackTrace();
 		} finally {
 			if (ia != null) {
 				ia.close();
+			}
+		}
+		
+		if (fromEmail != null && !fromEmail.equals("")) {
+			if (fromEmail.contains("@")) {
+				fromId = ezOrganService.getCNByEmail(fromEmail, loginInfo.getTenantId());
+				
+				//email이 alias 메일이어서 id를 못가져왔을 경우
+				//alias mail인지 check후 원래 이메일 주소에서 id를 가져온다.
+				if (fromId == null || fromId.equals("")) {
+					List<String> aliasAddress = new ArrayList<String>();
+					aliasAddress.add(fromEmail);
+					Map<String, String> targetAddress = ezEmailService.getAliasAddressMap(aliasAddress, loginInfo.getTenantId());
+					
+					if (targetAddress != null) {
+						String resultTargetAddress = targetAddress.get(fromEmail);
+						logger.debug("resultAddress=" + resultTargetAddress);
+						
+						if (resultTargetAddress != null) {
+							int atSignPos = resultTargetAddress.indexOf("@");
+							if (atSignPos != -1) {
+								fromId = resultTargetAddress.substring(0, atSignPos);
+								logger.debug("fromId=" + fromId);
+							}
+						}
+						
+					}
+				}
+				
+				senderProfileImageName = ezOrganService.getPropertyValue(fromId, "EXTENSIONATTRIBUTE2", loginInfo.getTenantId());
+				logger.debug("senderProfileImageName=" + senderProfileImageName);
+				if (senderProfileImageName == null) {
+					senderProfileImageName = "";
+				}
 			}
 		}
 		
@@ -1926,7 +2636,14 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		sb.append("<SENSITIVITY><![CDATA[" + "Normal" + "]]></SENSITIVITY>");
 		sb.append("<HASEMBEDED><![CDATA[" + 0 + "]]></HASEMBEDED>");
 		sb.append("<ITEMID><![CDATA[" + url + "]]></ITEMID>");
+		sb.append("<SENDERPROFILEIMAGENAME><![CDATA[" + senderProfileImageName + "]]></SENDERPROFILEIMAGENAME>");
 		sb.append("<CONTENTCLASS><![CDATA[" + "]]></CONTENTCLASS>");
+		sb.append("<COUNTRYNAME><![CDATA[" + countryName + "]]></COUNTRYNAME>");
+		sb.append("<COUNTRYIP><![CDATA[" + countryIP + "]]></COUNTRYIP>");
+		sb.append("<COUNTRYCODE><![CDATA[" + countryCode + "]]></COUNTRYCODE>");
+		sb.append("<SYSTEMCOUNTRYCODE><![CDATA[" + systemCountryCode.toLowerCase() + "]]></SYSTEMCOUNTRYCODE>");
+		sb.append("<USECOUNTRYIP><![CDATA[" + useCountryIP + "]]></USECOUNTRYIP>");
+		sb.append("<USESHOWSYSTEMCOUNTRY><![CDATA[" + useShowSystemCountry + "]]></USESHOWSYSTEMCOUNTRY>");
 		sb.append("</DATA>");
 
 		response.setContentType("text/xml; charset=utf-8");
@@ -1940,7 +2657,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 * 미리보기 메일 본문 내용 화면 정보 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailPreviewContent.do")
+	@RequestMapping(value="/ezEmail/mailPreviewContent.do", method=RequestMethod.POST)
 	public String previewContent(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("previewContent started.");
 		
@@ -1954,6 +2671,13 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String mailId = userInfo.getId();
 		Map<String, Object> extraMap = new HashMap<String, Object>();
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		String useImageConvertServer = ezCommonService.getTenantConfig("useImageConvertServer", userInfo.getTenantId());
+		String useRDBOnlyMailList = ezCommonService.getTenantConfig("useRDBOnlyMailList", userInfo.getTenantId());
+		
+		// 20200311 조진호 - 메일 읽기 > 첨부 파일 미리보기 활성화 여부 확인
+		if (!useImageConvertServer.equalsIgnoreCase("0")) {
+			extraMap.put("useImageConvertServer", useImageConvertServer);
+		}
 		
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = request.getParameter("shareId");
@@ -1961,10 +2685,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			
 			if (shareId != null) {
 				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
 					logger.debug("the user cannot access the shareId.");
 					logger.debug("previewContent ended.");
 					
-					return "ezEmail/mailPreviewContent";
+					return "ezCommon/error";
 				}
 				
 				userEmail = shareId + "@" + domainName;
@@ -2001,6 +2727,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
         int retryCount = 1; // 메일 읽기 실패 시 재시도 횟수		
         String sentDateMsg = ""; // 전달, 회신 시 보낸 시간
         String contentClass = "";
+		int unread = 0;        
         
         do {
     		try {
@@ -2033,11 +2760,20 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
     					model.addAttribute("subContent", egovMessageSource.getMessage("ezEmail.t99000082", locale));
     					return "ezCommon/error";
     				} else {
+    					if (useRDBOnlyMailList.equals("YES")) {
+							if (!message.isSet(Flag.SEEN)) {
+								unread = 1;
+								message.setFlag(Flag.SEEN, true);
+								
+								logger.debug("Message's seen flag changed to true.");
+							}
+    					}
+    					
     					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, locale, extraMap);
     					double size = Double.parseDouble(bodyInfoList.get(2));
     					String strSize = ezEmailUtil.getSizeWithUnit(size);
-    					pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + "</b>(" + strSize + ")";
-    	
+    					pAttachListHtmlSub = " <span class='cblue'>" + bodyInfoList.get(3) + "</span> (" + strSize + ")";
+    	    					
     					if (!folderPath.equals(ezEmailUtil.getSentFolderId(locale))) {
                             String[] messageIds = message.getHeader("Message-ID");
                             
@@ -2069,7 +2805,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
     					} else if (ezEmailUtil.hasForwardedFlag(message)) {
     						contentClass = "FORWARD";
     					}
-    					
+    					    					
     					// 전달, 회신 시 보낸 시간
     					if (contentClass.equals("REPLY") || contentClass.equals("FORWARD")) {
     						if (ezEmailUtil.hasSentDateFlag(message)) {
@@ -2124,8 +2860,11 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
         } else {
         	memoFlag = "NO";
         }
-		
-		logger.debug("readMailContent ended.");
+
+        // 20181219 김수아 : 첨부파일 이미지 미리보기 사용자 컨피그
+        MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(userInfo.getTenantId(), userInfo.getId()).get(0);
+        String previewMailImage = mailGeneralVO.getPreviewMailImage() == null ? "Y" : mailGeneralVO.getPreviewMailImage();
+        
 		model.addAttribute("url", url);
 		model.addAttribute("htmlBody", htmlBody);
 		model.addAttribute("pAttachListHtml", bodyInfoList.get(1));
@@ -2133,6 +2872,9 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("isAttach", bodyInfoList.get(4));
 		model.addAttribute("sentDateMsg", sentDateMsg); // 전달, 회신 시 보낸 시간 
 		model.addAttribute("memoFlag", memoFlag);
+		model.addAttribute("previewImageListHtml", bodyInfoList.get(5)); //이미지 미리보기 
+		model.addAttribute("previewMailImage", previewMailImage);
+		model.addAttribute("unread", unread);
 		
 		logger.debug("previewContent ended.");
 		
@@ -2142,7 +2884,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 * 메일 인쇄
 	 */
-	@RequestMapping(value="/ezEmail/mailPrint.do")
+	@RequestMapping(value="/ezEmail/mailPrint.do", method=RequestMethod.GET)
 	public String mailPrint(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("mailPrint started.");
 		
@@ -2171,10 +2913,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			
 			if (shareId != null) {
 				if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
 					logger.debug("the user cannot access the shareId.");
 					logger.debug("mailPrint ended.");
 					
-					return "ezEmail/mailPrint";
+					return "ezCommon/error";
 				}
 				
 				userEmail = shareId + "@" + domainName;
@@ -2351,7 +3095,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 * 첨부파일 삭제(메일읽기)
 	 */
-	@RequestMapping(value="/ezEmail/mailDelReadInterAttach.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailDelReadInterAttach.do", method=RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailDelInterAttach(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("mailDelInterAttach started.");
@@ -2479,7 +3223,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		return returnValue;
 	}
 	
-	@RequestMapping(value="/ezEmail/mailReadBoard.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailReadBoard.do", method=RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailReadBoard(@CookieValue("loginCookie") String loginCookie, Locale locale, @RequestBody String bodyData, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("mailReadBoard started.");
@@ -2487,6 +3231,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		Document xmldom = commonUtil.convertStringToDocument(bodyData);
 		String url = xmldom.getElementsByTagName("URL").item(0).getTextContent();
 		String attachLimit = xmldom.getElementsByTagName("ATTACHLIMIT").item(0).getTextContent();
+		/* 2020-09-24 홍승비 - 메일게시 시 게시판과 커뮤니티 모듈을 구분  */
+		String itemType = request.getParameter("itemType") == null ? "" : (String) request.getParameter("itemType");
 		logger.debug("url=" + url + ",attachLimit=" + attachLimit);
 		
 		String folderPath = url.split("/")[0];
@@ -2613,8 +3359,16 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 
 							sb.append("<ROOT><NODES>");
 
+							/* 2020-09-24 홍승비 - 게시판과 커뮤니티 메일게시 시 첨부파일 업로드 경로 분리 */
+							String uploadTempPath = "";
+							if (itemType.equals("board")) {
+								uploadTempPath = "upload_board.TEMPUPLOADFILE";
+							} else if (itemType.equals("community")) {
+								uploadTempPath = "upload_community.TEMPUPLOADFILE";
+							}
+							
 							String realPath = commonUtil.getRealPath(request);
-							String path = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", loginInfo.getTenantId());
+							String path = commonUtil.getUploadPath(uploadTempPath, loginInfo.getTenantId());
 
 							String attach = ""; 
 
@@ -2628,6 +3382,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 									
 									String orgFileName = attachedFileList.get(i).get("filename");
 									String fileName = newGuid + "_" + orgFileName;
+									fileName = commonUtil.detectPathTraversal(fileName);
 
 									File file = new File(realPath + path);
 									if (!file.exists()) {
@@ -2673,7 +3428,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		return sb.toString();
 	}
 	
-	@RequestMapping(value="/ezEmail/mailReadBoardDotNet.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailReadBoardDotNet.do", method=RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailReadBoardDotNet(@CookieValue("loginCookie") String loginCookie, Locale locale, @RequestBody String bodyData, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
 		logger.debug("mailReadBoardDotNet started.");
@@ -2810,6 +3565,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					//첨부파일 관련
 					if (attachedFileList.size() > 0) {
 //						float attachLimitF = Float.parseFloat(attachLimit) * 1024 * 1024;
+						@SuppressWarnings("unused")
 						float size = 0;
 						
 						for (int i=0; i<attachedFileList.size(); i++) {
@@ -2833,7 +3589,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								if (part != null) {
 									String orgFileName = attachedFileList.get(i).get("filename");
 									String fileName = newGuid + "_" + orgFileName;
-
+									fileName = commonUtil.detectPathTraversal(fileName);
+									
 									File file = new File(realPath + path);
 									if (!file.exists()) {
 										file.mkdirs();
@@ -2891,7 +3648,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 * 보안메일 읽기화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/readSecureMail.do")
+	@RequestMapping(value="/ezEmail/readSecureMail.do", method=RequestMethod.POST)
 	public String readSecureMail(HttpServletRequest request, Model model) throws Exception{
 		logger.debug("readSecureMail started.");
 		
@@ -3234,7 +3991,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			//TODO
 		} finally {
 			if (fis != null) {
 				try { fis.close(); } catch (Exception e) {}
@@ -3270,7 +4026,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 * 보안메일 첨부파일 다운로드 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/downloadSecureAttach.do")
+	@RequestMapping(value="/ezEmail/downloadSecureAttach.do", method=RequestMethod.GET)
 	public void downloadSecureAttach(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("downloadSecureAttach started.");
 		
@@ -3405,8 +4161,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				}
 			}
 		} catch (MessagingException e) {
-			//TODO
-			
 			e.printStackTrace();
 		} finally {
 			if (fis != null) {
@@ -3426,7 +4180,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 * 보안메일 인라인 이미지 읽어오기 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/downloadSecureInline.do")
+	@RequestMapping(value="/ezEmail/downloadSecureInline.do", method=RequestMethod.GET)
 	public void downloadSecureInline(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("downloadSecureInline started.");
 		
@@ -3553,8 +4307,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				}
 			}
 		} catch (MessagingException e) {
-			//TODO
-			
 			e.printStackTrace();
 		} finally {
 			if (fis != null) {
@@ -3574,7 +4326,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 * 보안메일 원본내용 읽기화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/readSecureMailContent.do")
+	@RequestMapping(value="/ezEmail/readSecureMailContent.do", method=RequestMethod.POST)
 	public String readSecureMailContent(HttpServletRequest request, Model model) throws Exception{
 		logger.debug("readSecureMailContent started.");
 		
@@ -3691,7 +4443,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			//TODO
 		} finally {
 			if (fis != null) {
 				try { fis.close(); } catch (Exception e) {}
@@ -3711,7 +4462,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 * 보안메일 정보화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/secureMailInfo.do")
+	@RequestMapping(value="/ezEmail/secureMailInfo.do", method=RequestMethod.GET)
 	public String secureMailInfo(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("secureMailInfo started.");
 		
@@ -3856,7 +4607,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 *  편지함 모두 읽기
 	 */
-	@RequestMapping(value="/ezEmail/folderSetReadChange.do",method=RequestMethod.POST,
+	@RequestMapping(value="/ezEmail/folderSetReadChange.do", method=RequestMethod.POST,
 			produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String folderSetReadChange(@CookieValue("loginCookie") String loginCookie,
@@ -3930,8 +4681,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 * 메일 읽기 창에서 주소록에 추가 아이콘 클릭 시 나타나는 주소 추가 화면 출력
 	 */
-	@RequestMapping(value="/ezEmail/mailSelectAddress.do")
-	public String mailSelectAddress(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+	@RequestMapping(value="/ezEmail/mailSelectAddress.do", method=RequestMethod.GET)
+	public String mailSelectAddress(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model) throws Exception{
 		logger.debug("mailSelectAddress started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -3946,7 +4697,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			
 			if (shareId != null) {
 				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
 					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailSelectAddress ended.");
+					
+					return "ezCommon/error";
 				} else {
 					model.addAttribute("shareId", shareId);
 				}
@@ -3963,7 +4719,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 * 메일 주소 리스트 가져오는 함수
 	 */
-	@RequestMapping(value="/ezEmail/getMailAddressList.do")
+	@RequestMapping(value="/ezEmail/getMailAddressList.do", method=RequestMethod.POST)
 	@ResponseBody
 	public String getMailAddressList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale) throws Exception{
 		logger.debug("getMailAddressList started.");
@@ -4176,5 +4932,285 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		logger.debug("getMailAddressList ended.");
 		return new JSONObject(result).toString();
+	}
+	
+	/**
+	 * 메일 첨부파일 브라우저로 읽기
+	 */
+	@RequestMapping(value="/ezEmail/readAttachIamge.do")
+	public void readAttachIamge(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		logger.debug("readAttachIamge started.");
+		
+		// get user credentials
+		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
+		String password  = userInfo.get(1);
+		
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userEmail = loginInfo.getId() + "@" + domainName;
+		
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
+
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("downloadAttach ended.");
+					
+					return;
+				}
+				
+				userEmail = shareId + "@" + domainName;
+			}
+		}
+		
+		logger.debug("userId=" + loginInfo.getId() + ",userEmail=" + userEmail);
+		
+		// retrieve the passed in parameters
+		String folderPath = request.getParameter("folderPath");
+		String strUid = request.getParameter("uid");
+		long uid = strUid != null ? Long.parseLong(strUid) : 0;
+		String filename = request.getParameter("filename");
+		logger.debug("folderPath=" + folderPath + ",uid=" + uid + ",filename=" + filename);
+		
+		if (folderPath == null || strUid == null || filename == null) {
+			logger.debug("readAttachIamge illegal arguments.");
+			return;
+		}
+		
+		String strIndex = request.getParameter("index");
+		int index = -1;
+		
+		if (strIndex != null) {
+			index = Integer.parseInt(strIndex);
+		}
+		logger.debug("index=" + index);
+		
+		String strOrder = request.getParameter("order");
+		int order = 0;
+		
+		if (strOrder != null) {
+			order = Integer.parseInt(strOrder);
+		}
+		
+		logger.debug("order=" + order);
+		
+		String strDepth = request.getParameter("depth");
+		int depth = 0;
+		
+		if (strDepth != null) {
+			depth = Integer.parseInt(strDepth);
+		}
+		
+		logger.debug("depth=" + depth);
+		
+		IMAPAccess ia = null;
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
+	
+			Folder f = ia.getFolder(folderPath);
+			
+			if (f == null || !f.exists()) {
+				logger.error("Folder not found. folderPath=" + folderPath);
+			} else {
+				f.open(Folder.READ_ONLY);
+				Message message = null;
+				if(f.isOpen() && f instanceof IMAPFolder){
+					message = ((IMAPFolder)f).getMessageByUID(uid);
+				}
+				
+				if (message == null) {
+					logger.error("Message not found. uid=" + uid);
+				} else {
+					Part part = null;
+					
+					if (index == -1) {
+						part = message;
+					}
+					else {
+						part = ezEmailUtil.getAttachPart(message, index, order, depth);
+					}
+					
+					if (part == null) {
+						logger.error("AttachPart not found. AttachPartIndex=" + index);
+					} else {
+						response.setContentType(part.getContentType());
+						
+						filename = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), filename);						
+						
+						String nfcFilename = commonUtil.normalizeFileName(filename);
+						
+						response.addHeader("content-disposition", "inline; filename=\"" + nfcFilename + "\"");
+						logger.debug("content-disposition=" + "inline; filename=\"" + nfcFilename + "\"");
+						
+						InputStream input = null;
+						OutputStream output = null;
+						
+						try {
+							input = part.getInputStream();
+							output = response.getOutputStream();
+							
+							byte[] buffer = new byte[4096];
+							int byteRead;
+							
+							while ((byteRead = input.read(buffer)) != -1) {
+								output.write(buffer, 0, byteRead);
+							}
+						} catch(IOException e) {
+						} finally {
+							if (ia != null) {
+								ia.close();
+							}
+							if (input != null) {
+								try { input.close(); } catch (IOException e1) {}
+							}
+							if (output != null) {
+								try { output.flush(); } catch (IOException e1) {}
+								try { output.close(); } catch (IOException e1) {}
+							}
+						}
+						
+					}
+				}
+			}
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		
+		logger.debug("readAttachIamge ended.");
+	}
+	@RequestMapping(value="/ezEmail/attachFilePreview.do",method=RequestMethod.GET , produces="text/plain; charset=UTF-8")
+	@ResponseBody
+	public void attachFilePreview(HttpServletRequest request,HttpServletResponse response , @CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception {
+		logger.debug("attachFilePreview started.");
+		
+		String folderId = "";
+		String mailId = "";
+		String fileName = "";
+		String fileIndex = "";
+		
+		if (request.getParameter("folderId") != null) {
+			folderId = request.getParameter("folderId");
+		}
+		
+		if (request.getParameter("mailId") != null) {
+			mailId = request.getParameter("mailId");
+		}
+		
+		if (request.getParameter("fileName") != null) {
+			fileName = request.getParameter("fileName");
+		}
+		
+		if (request.getParameter("fileIndex") != null) {
+			fileIndex = request.getParameter("fileIndex");
+		}
+		
+		logger.debug("folderId : " + folderId + "mailId : " + mailId + "fileName : " + fileName + "fileIndex : " + fileIndex);
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");		
+		String url = gwServerUrl + "/mobile/ezemail/folders/" + folderId + "/mails/" + mailId + "/attach/" + fileIndex + "/users/" + userInfo.getId();
+
+		OutputStream output = null;
+							
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("filename", fileName);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+	
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+	
+		JSONObject data = (JSONObject) resultBody.get("data");
+		String filename = (String) data.get("filename");
+		String bytes = (String) data.get("bytes");
+		output = response.getOutputStream();
+		
+		try {
+			Decoder decoder = java.util.Base64.getDecoder();
+			
+			String useImageConvertServer = ezCommonService.getTenantConfig("useImageConvertServer", userInfo.getTenantId());
+			
+			if (useImageConvertServer.equals("1")) { //SAT
+				response.setContentType("text/plain");
+				
+				filename = URLDecoder.decode(filename, "UTF-8");
+				
+				String realPath = commonUtil.getRealPath(request);
+				String filePath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId()) + commonUtil.separator + "tempFileUpload"
+											+ commonUtil.separator + userInfo.getId();
+
+				MessageDigest md2 = MessageDigest.getInstance("MD5");
+				md2.update(filename.substring(0, filename.lastIndexOf(".")).getBytes());
+				byte mdDate2[] = md2.digest();
+				StringBuffer sb2 = new StringBuffer();
+				for (int i = 0; i < mdDate2.length; i++) {
+					sb2.append(Integer.toHexString((int) mdDate2[i] & 0x00ff));
+				}
+				String md5FileName = sb2.toString() + filename.substring(filename.lastIndexOf("."));
+				
+				File newFolder = new File(filePath);
+				if(!newFolder.exists()){
+					newFolder.mkdirs();
+				}
+				
+				File file = new File(filePath + commonUtil.separator + md5FileName);
+				FileOutputStream fos = new FileOutputStream(file);
+				
+				fos.write(decoder.decode(bytes));
+				fos.close();
+				fos = null;
+				
+				filePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId()) 
+				+ commonUtil.separator + "tempFileUpload" + commonUtil.separator + userInfo.getId() + commonUtil.separator + md5FileName;
+				String fileExt = filename.split("\\.")[filename.split("\\.").length - 1];
+				
+				logger.debug("filePath : " + filePath);
+				logger.debug("fileName : " + filename);
+				logger.debug("fileExt : " + fileExt);
+
+				String SATimageConvertServerURL = ezCommonService.getTenantConfig("SATimageConvertServerURL", userInfo.getTenantId());
+				
+				//output.write(("http://jmocha.kaoni.com:8080/uFOCS3.0/viewer/document/docviewer.do" + 
+				output.write((SATimageConvertServerURL + 
+							"?filepath=" + URLEncoder.encode(filePath, "UTF-8").replace("+", "%20") +
+							"&filename=" + URLEncoder.encode(filename, "UTF-8").replace("+", "%20") +
+							"&fileext=" + URLEncoder.encode(fileExt, "UTF-8").replace("+", "%20") +
+							"&viewerselect=image" +
+							"&userid=" + userInfo.getId()).getBytes());
+			} else {
+				
+				
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			output.flush();
+			output.close();
+		}
+		
+		
+		
+
+		logger.debug("attachFilePreview ended.");
 	}
 }

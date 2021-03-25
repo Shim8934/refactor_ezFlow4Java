@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezMemo.service.impl;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -172,7 +173,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		map.put("company_id", memoFolderVO.getCompany_id());
 		int orders = ezMemoDAO.maxFolderOrders(map);
 		
-		map.put("folder_name", memoFolderVO.getFolder_name());
+		map.put("folder_name", commonUtil.stripScriptTags(memoFolderVO.getFolder_name()));
 		map.put("reg_date", commonUtil.getTodayUTCTime(""));
 		map.put("orders", orders);
 		ezMemoDAO.addMemoFolder(map);
@@ -186,7 +187,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		map.put("user_id", memoFolderVO.getUser_id());
 		map.put("tenant_id", memoFolderVO.getTenant_id());
 		map.put("company_id", memoFolderVO.getCompany_id());
-		map.put("folder_name", memoFolderVO.getFolder_name());
+		map.put("folder_name", commonUtil.stripScriptTags(memoFolderVO.getFolder_name()));
 		map.put("folder_id", memoFolderVO.getFolder_id());
 		ezMemoDAO.modifyMemoFolder(map);
 		logger.debug("modifyMemoFolder ended.");
@@ -246,13 +247,13 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 
 	
 	@Override
-	public void setDefualtMemoFolder(MemoFolderVO memoFolderVO) throws Exception {
+	public void setDefualtMemoFolder(MemoFolderVO memoFolderVO, Locale locale) throws Exception {
 		logger.debug("setDefaultMemoFolder started");
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("user_id", memoFolderVO.getUser_id());
 		map.put("tenant_id", memoFolderVO.getTenant_id());
 		map.put("company_id", memoFolderVO.getCompany_id());
-		map.put("folder_name", "기본메모함");
+		map.put("folder_name", egovMessageSource.getMessage("ezMemo.t0065", locale));
 		map.put("reg_date", commonUtil.getTodayUTCTime(""));
 		map.put("orders", 0);
 		map.put("delete_flag", 0);
@@ -528,5 +529,62 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 		ezMemoDAO.setMemoLayerArea(map);
 
 		logger.debug("setLayerArea ended");
+	}
+
+	@Override
+	public void setDetailMemoArea(MemoConfigVO memoConfig) {
+		logger.debug("setDetailMemoArea started.");
+		
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("user_id", memoConfig.getUser_id());
+		map.put("tenant_id", memoConfig.getTenant_id());
+		map.put("company_id", memoConfig.getCompany_id());
+
+		if (memoConfig.getB_memo_height() > 0 && memoConfig.getB_memo_width() > 0) {
+			map.put("big_memo_height", memoConfig.getB_memo_height());
+			map.put("big_memo_width", memoConfig.getB_memo_width());
+			
+			ezMemoDAO.setDetailMemoArea(map);
+		}
+
+		logger.debug("setDetailMemoArea ended");
+	}
+
+	@Override
+	public void setDetailMemoPosition(MemoConfigVO memoConfig) {
+		logger.debug("setDetailMemoPosition started.");
+		
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("user_id", memoConfig.getUser_id());
+		map.put("tenant_id", memoConfig.getTenant_id());
+		map.put("company_id", memoConfig.getCompany_id());
+
+		if (memoConfig.getB_memo_top() >= 0 && memoConfig.getB_memo_left() >= 0) {
+			map.put("big_memo_top", memoConfig.getB_memo_top());
+			map.put("big_memo_left", memoConfig.getB_memo_left());
+			
+			ezMemoDAO.setDetailMemoPostion(map);
+		}
+
+		logger.debug("setDetailMemoPosition ended");
+	}
+
+	@Override
+	public void setDetailMemoStatus(MemoConfigVO memoConfig) {
+		logger.debug("setDetailMemoStatus started.");
+		
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("user_id", memoConfig.getUser_id());
+		map.put("tenant_id", memoConfig.getTenant_id());
+		map.put("company_id", memoConfig.getCompany_id());
+
+		if (memoConfig.getMemo_id() > 0) {
+			map.put("memo_id", memoConfig.getMemo_id());
+		}
+		map.put("b_memo_status", memoConfig.getB_memo_status());
+		
+		ezMemoDAO.setDetailMemoStatus(map);
+
+		logger.debug("setDetailMemoStatus ended");
 	}
 }

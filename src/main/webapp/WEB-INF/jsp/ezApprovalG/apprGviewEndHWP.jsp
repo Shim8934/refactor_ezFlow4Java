@@ -18,12 +18,12 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
 	    <script type="text/javascript">
-	        var pDocID = "${docID}";
-	        var docHref = "${docHref}";
-	        var pListSusin = "${listSusin}";
-	        var porgDocID = "${orgDocID}";
-	        var pFormID = "${formID}";
-	        var pTitle = "${docTitle}";
+	        var pDocID = "<c:out value='${docID}'/>";
+	        var docHref = "<c:out value='${docHref}'/>";
+	        var pListSusin = "<c:out value='${listSusin}'/>";
+	        var porgDocID = "<c:out value='${orgDocID}'/>";
+	        var pFormID = "<c:out value='${formID}'/>";
+	        var pTitle = "<c:out value='${docTitle}'/>";
 	        var pOpinionFlag;
 	        var pListTypeValue = 4;
 	        var flag = false;
@@ -31,30 +31,32 @@
 	        var NextOpinionFlag = true;
 	        var doctitle = "";
 	        var pOrgAttach = "";
-	        var pendDir = "${endDir}";
+	        var pendDir = "<c:out value='${endDir}'/>";
 			var xmlhttp = createXMLHttpRequest();
 			var arr_userinfo = new Array();
 			arr_userinfo[0] = "user";
-		    arr_userinfo[1]  = "${userInfo.id}";
-		    arr_userinfo[2]  = "${userInfo.displayName}";
-		    arr_userinfo[3]  = "${userInfo.title}";
-		    arr_userinfo[4]  = "${userInfo.deptID}";
-		    arr_userinfo[5]  = "${userInfo.deptName}";
-		    arr_userinfo[6]  = "${userInfo.jikChek}";
-		    arr_userinfo[8]  = "${userInfo.email}";
+		    arr_userinfo[1]  = "<c:out value='${userInfo.id}'/>";
+		    arr_userinfo[2]  = "<c:out value='${userInfo.displayName}'/>";
+		    arr_userinfo[3]  = "<c:out value='${userInfo.title}'/>";
+		    arr_userinfo[4]  = "<c:out value='${userInfo.deptID}'/>";
+		    arr_userinfo[5]  = "<c:out value='${userInfo.deptName}'/>";
+		    arr_userinfo[6]  = "<c:out value='${userInfo.jikChek}'/>";
+		    arr_userinfo[8]  = "<c:out value='${userInfo.email}'/>";
 	        arr_userinfo[9] = "";
-	        arr_userinfo[10] = "${susinAdmin}";
-	        arr_userinfo[11]  = "${userInfo.displayName1}";
-		    arr_userinfo[12]  = "${userInfo.displayName2}";
-		    arr_userinfo[13]  = "${userInfo.title1}";
-		    arr_userinfo[14]  = "${userInfo.title2}";
-		    arr_userinfo[15]  = "${userInfo.deptName1}";
-		    arr_userinfo[16]  = "${userInfo.deptName2}";
-	        var companyID = "${userInfo.companyID}";
+	        arr_userinfo[10] = "<c:out value='${susinAdmin}'/>";
+	        arr_userinfo[11]  = "<c:out value='${userInfo.displayName1}'/>";
+		    arr_userinfo[12]  = "<c:out value='${userInfo.displayName2}'/>";
+		    arr_userinfo[13]  = "<c:out value='${userInfo.title1}'/>";
+		    arr_userinfo[14]  = "<c:out value='${userInfo.title2}'/>";
+		    arr_userinfo[15]  = "<c:out value='${userInfo.deptName1}'/>";
+		    arr_userinfo[16]  = "<c:out value='${userInfo.deptName2}'/>";
+	        var companyID = "<c:out value='${userInfo.companyID}'/>";
 	        var pUserID = arr_userinfo[1];
-	        var pUse_Editor = "${useEditor}";
+	        var pUse_Editor = "<c:out value='${useEditor}'/>";
 			var ext = "hwp";
 			var orgCompanyID = "<c:out value='${orgCompanyID}' />";
+			
+			var useExternalMailServer = "<c:out value='${useExternalMailServer}'/>";
 			
 	        window.onresize = function () {
 	            HwpCtrl.style.height = null;
@@ -142,6 +144,10 @@
 	
 	            HwpCtrl.SetFieldFocus("doctitle");
 	            HwpCtrl.ezSetScrollPosInfo(0);
+	            
+	            if(useExternalMailServer == "NO") {
+			    	$("#btnMail").css("display","");
+			    }
 	        }
 	
 			function QuitWindow() {
@@ -227,10 +233,10 @@
 			        }
 			        else {
 			            if (pUse_Editor == "" || pUse_Editor == "CK") {
-			                window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + docHref, '', 'height=720,width=765,resizable=yes,scrollbars=no' + GetOpenPosition(765, 720));
+			                window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + docHref, '', 'height=720,width=765,resizable=yes,scrollbars=no' + GetOpenPosition(765, 720));
 			            }
 			            else {
-			                window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + docHref, '', 'height=720,width=765,resizable=yes,scrollbars=no' + GetOpenPosition(765, 720));
+			                window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + docHref, '', 'height=720,width=765,resizable=yes,scrollbars=no' + GetOpenPosition(765, 720));
 			                //window.open("/myoffice/ezBoardSTD/NewBoardItem_IE.aspx?BoardID=" + pBoardID + "&Mod=New&pbrdGbn=SiteNewBoard&pFromScreen=Mail&DocID=" + pDocID + "&Url=" + docHref, '', 'height=720,width=765,resizable=yes,scrollbars=no' + GetOpenPosition(765, 720));
 			            }
 			        }
@@ -263,7 +269,7 @@
 	
 			function btnDocInfo_onclick() {
 				var url = "/ezApprovalG/ezDocInfoView.do?docID=" + pDocID + "&ingFlag=END";
-			    var feature = "status:no;dialogWidth:420px;dialogHeight:495px;help:no;scroll:no;edge:sunken;";
+			    var feature = "status:no;dialogWidth:420px;dialogHeight:515px;help:no;scroll:no;edge:sunken;";
 			    var RtnVal = window.showModalDialog(url, "", feature);
 			}
 	
@@ -407,11 +413,12 @@
 	            <td height="20">
 	                <div id="menu">
 	                    <ul>
-	                        <li id="btnMail"><span onclick="return btnMail_onclick()"><spring:message code='ezApprovalG.t62'/></span></li>
+	                        <li id="btnMail" style="display:none"><span onclick="return btnMail_onclick()"><spring:message code='ezApprovalG.t62'/></span></li>
 	                        <li id="btnBoard"><span onclick="return btnBoard_onclick()"><spring:message code='ezApprovalG.t1514'/></span></li>
 	                        <li id="btnPrint"><span onclick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li>
 	                        <li id="btnSave"><span onclick="return btnSave_onclick()">PC<spring:message code='ezApprovalG.t59'/></span></li>
 	                        <li id="btnDocInfo"><span onclick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>
+	                        <li id="btnOpinion"><span onClick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
 	                        <li id="btnhistory"><span onclick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
 	                        <c:if test="${sendType eq 'T'}">
 		                        <li id="btnReqOpinion"><span onclick="btnReqOpinion_onclick()">재발송의견</span></li>
@@ -432,20 +439,27 @@
 	        <tr>
 	            <td style="padding-bottom: 10px">
 	                <div style="height: 100%">
-	                    <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "3", "0", "${hwpToolbar}", "");</script>
+	                    <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "3", "0", "<c:out value='${hwpToolbar}'/>", "");</script>
 	                </div>
 	            </td>
 	        </tr>
 	        <tr>
 	            <td height="20">
-	                <table class="file" style="height: 70px;">
+	                <table class="file" style="height:80px;">
 	                    <tr>
-	                        <th><spring:message code='ezApprovalG.t65'/></th>
-	                        <td>
-	                            <div id="lstAttachLink" style="height: 65px;"></div>
+	                        <th id="btn_Attach"><spring:message code='ezApprovalG.t65'/></th>
+	                        <td style="width:62%; border-right:1px solid #d5d5d5;">
+	                            <div id="lstAttachLink" style="height:70px;"></div>
 	                            <iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0" style="display: none;"></iframe>
 	                            <iframe name="AttachDownFrame" id="AttachDownFrame" src="about:blank" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" style="display: none"></iframe>
 	                        </td>
+							<td style="width:30%;">
+								<div id="lstAttachLinkDoc" style="height:70px;"></div>
+	                        </td>
+							<td class="pos2" style="display:none;width:8%; background:#fffcfa;">
+								<a class="imgbtn imgbck" style="width:60px;"><span style="height:24px;" onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
+								<a class="imgbtn imgbck" style="width:60px;"><span style="height:24px;" onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a><br/>
+							</td>
 	                    </tr>
 	                </table>
 	            </td>

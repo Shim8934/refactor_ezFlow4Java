@@ -24,13 +24,13 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
 	    <script type="text/javascript">
-	        var OrgAprUserID = "${orgAprUserID}";
-	        var OrgAprUserName = "${orgAprUserName}";
+	        var OrgAprUserID = "<c:out value ='${orgAprUserID}'/>";
+	        var OrgAprUserName = "<c:out value ='${orgAprUserName}'/>";
 	        var OrgAprUserName2 = "";
-	        var OrgAprUserDeptID = "${orgAprUserDeptID}";
-	        var pEndDocHref = "${dirPath}";
-	        var pDocID = "${docID}";
-	        var pingUserID = "${tempUserID}";
+	        var OrgAprUserDeptID = "<c:out value ='${orgAprUserDeptID}'/>";
+	        var pEndDocHref = "<c:out value ='${dirPath}'/>";
+	        var pDocID = "<c:out value ='${docID}'/>";
+	        var pingUserID = "<c:out value ='${tempUserID}'/>";
 	        var pDocInfo = null;
 	        var pDocHref = new String("");
 	        var pUserID = new String("");
@@ -89,29 +89,29 @@
 	
 	        var arr_userinfo = new Array();
 	        arr_userinfo[0] = "user";
-	        arr_userinfo[1]  = "${userInfo.id}";
-		    arr_userinfo[2]  = "${userInfo.displayName}";
-		    arr_userinfo[3]  = "${userInfo.title}";
-		    arr_userinfo[4]  = "${userInfo.deptID}";
-		    arr_userinfo[5]  = "${userInfo.deptName}";
-		    arr_userinfo[6]  = "${userInfo.jikChek}";
+	        arr_userinfo[1]  = "<c:out value ='${userInfo.id}'/>";
+		    arr_userinfo[2]  = "<c:out value ='${userInfo.displayName}'/>";
+		    arr_userinfo[3]  = "<c:out value ='${userInfo.title}'/>";
+		    arr_userinfo[4]  = "<c:out value ='${userInfo.deptID}'/>";
+		    arr_userinfo[5]  = "<c:out value ='${userInfo.deptName}'/>";
+		    arr_userinfo[6]  = "<c:out value ='${userInfo.jikChek}'/>";
 	        arr_userinfo[7] = "N";
-	        arr_userinfo[8]  = "${userInfo.email}";
+	        arr_userinfo[8]  = "<c:out value ='${userInfo.email}'/>";
 		    arr_userinfo[9]  = "";
-		    arr_userinfo[10] = "${susinAdmin}";
-		    arr_userinfo[11]  = "${userInfo.displayName1}";
-		    arr_userinfo[12]  = "${userInfo.displayName2}";
-		    arr_userinfo[13]  = "${userInfo.title1}";
-		    arr_userinfo[14]  = "${userInfo.title2}";
-		    arr_userinfo[15]  = "${userInfo.deptName1}";
-		    arr_userinfo[16]  = "${userInfo.deptName2}";
-	        var pCompanyID = "${userInfo.companyID}";
-	        var companyID = "${userInfo.companyID}";
+		    arr_userinfo[10] = "<c:out value ='${susinAdmin}'/>";
+		    arr_userinfo[11]  = "<c:out value ='${userInfo.displayName1}'/>";
+		    arr_userinfo[12]  = "<c:out value ='${userInfo.displayName2}'/>";
+		    arr_userinfo[13]  = "<c:out value ='${userInfo.title1}'/>";
+		    arr_userinfo[14]  = "<c:out value ='${userInfo.title2}'/>";
+		    arr_userinfo[15]  = "<c:out value ='${userInfo.deptName1}'/>";
+		    arr_userinfo[16]  = "<c:out value ='${userInfo.deptName2}'/>";
+	        var pCompanyID = "<c:out value ='${userInfo.companyID}'/>";
+	        var companyID = "<c:out value ='${userInfo.companyID}'/>";
 	        var KuyjeType = "002";
-	        var signDateFormat = "${optSignDateFormat}";
-		    var isSplit = "${optisSplit}";
-	        var SplitKind = "${optSplitKind}";
-	        var junKyukInfo = "${optjunKyukInfo}";
+	        var signDateFormat = "<c:out value ='${optSignDateFormat}'/>";
+		    var isSplit = "<c:out value ='${optisSplit}'/>";
+	        var SplitKind = "<c:out value ='${optSplitKind}'/>";
+	        var junKyukInfo = "<c:out value ='${optjunKyukInfo}'/>";
 	        var FirstHtml = "";
 	        var beforeHtml;
 	        var beforeHwp = "";
@@ -119,29 +119,41 @@
 	        var cabinetID = "";
 	        var TaskCode = "";
 	        var DocNumCode = "";
-	        var allFlag = "${allFlag}";
+	        var allFlag = "<c:out value ='${allFlag}'/>";
 		    var selectedDocID = "";
 		    var OpinionAction = "";
-		    var CurrYear = "${oldYear}";
+		    var CurrYear = "<c:out value ='${oldYear}'/>";
 		    var SummaryFlag = true;
 		    var pGubun;
 		    var isExtDoc;
-		    var pUse_Editor = "${useEditor}";
+		    var pUse_Editor = "<c:out value ='${useEditor}'/>";
 	        var g_szUserID = arr_userinfo[8];
-	        var g_senderinfo = "${userInfo.companyName}" + ", " + "${userInfo.deptName}" + ", " + "${userInfo.title}";
-	        var isHWP = "${isHWP}";
-	        var approvalFlag = "${approvalFlag}";
+	        var g_senderinfo = "<c:out value ='${userInfo.companyName}'/>" + ", " + "<c:out value ='${userInfo.deptName}'/>" + ", " + "<c:out value ='${userInfo.title}'/>";
+	        var isHWP = "<c:out value ='${isHWP}'/>";
+	        var approvalFlag = "<c:out value ='${approvalFlag}'/>";
 	        var ext = "hwp";
 	        var aprDocTimeStamp = "";
-	        var docState = "${docState}";
-	        var nonElecRec = "${nonElecRec}";
+	        var docState = "<c:out value ='${docState}'/>";
+	        var nonElecRec = "<c:out value ='${nonElecRec}'/>";
 	        var nonElecRecInfoXml = "", nonSepAttachLVXml = "", g_szSCListXml = "", sepAttachCheckYN = "";
-	        var useReceiveDocNo = "${useReceiveDocNo}";
+	        var useReceiveDocNo = "<c:out value ='${useReceiveDocNo}'/>";
 	        var orgCompanyID = "<c:out value='${orgCompanyID}' />";
-	        var docNumZeroCnt = "${docNumZeroCnt}";
+	        var docNumZeroCnt = "<c:out value ='${docNumZeroCnt}'/>";
+
+	        //원문공개정보
+            var useOpenGov = "<c:out value ='${useOpenGov}'/>";
+			var basis = "<c:out value ='${basis}' />";
+            var reason = "<c:out value ='${reason}' />";
+            var listOpenFlag = "<c:out value ='${listOpenFlag}' />";
+            var fileOpenFlagList = "<c:out value ='${fileOpenFlagList}' />";
 	        
 	        var curDocNum = "";
 	        
+	        var useExternalMailServer = "<c:out value='${useExternalMailServer}'/>";
+			var formAprOption = "<c:out value='${formAprOption}'/>";
+			
+			var useWebHWP = "<c:out value ='${useWebHWP}'/>";
+			
 		    function getNextDocList() {
 		        NextDocID = "";
 		        if (selectedDocID != "") {
@@ -180,7 +192,8 @@
 		        else if (RtnVal == "1") {
 		
 		            if (allFlag == "1")
-		                btnStay_onclick();
+		                //btnStay_onclick();
+		            	LoadNextDocument("\n<spring:message code='ezApprovalG.t2'/>");
 		            else if (allFlag == "2")
 		                LoadNextDocument("\n<spring:message code='ezApprovalG.t2'/>");
 			    }
@@ -266,8 +279,12 @@
 		
 		            openLocation = openLocation + "&uID=" + escape(pArgument[1]) + "&uName=" + escape(pArgument[2]) + "&uName2=" + escape(pArgument[4]);
 		            openLocation = openLocation + "&uDeptID=" + escape(pArgument[3]) + "&AllFlag=" + escape(allFlag);
-		        } else if (NextDocExtended.substring(NextDocExtended.lastIndexOf(".") + 1).toLowerCase() == "hwp") {
+		        } else if (NextDocExtended.substring(NextDocExtended.lastIndexOf(".") + 1).toLowerCase() == "hwp" && useWebHWP == "NO") {
 		            var openLocation = "/ezApprovalG/approvuiHWP.do?docID=" + escape(pArgument[0]);
+		            openLocation = openLocation + "&ID=" + escape(pArgument[1]) + "&name=" + escape(pArgument[2]) + "&name2=" + escape(pArgument[4]);
+		            openLocation = openLocation + "&deptID=" + escape(pArgument[3]) + "&allFlag=" + escape(allFlag);
+		        } else if (NextDocExtended.substring(NextDocExtended.lastIndexOf(".") + 1).toLowerCase() == "hwp" && useWebHWP == "YES") {
+		            var openLocation = "/ezApprovalG/approvuiWHWP.do?docID=" + escape(pArgument[0]);
 		            openLocation = openLocation + "&ID=" + escape(pArgument[1]) + "&name=" + escape(pArgument[2]) + "&name2=" + escape(pArgument[4]);
 		            openLocation = openLocation + "&deptID=" + escape(pArgument[3]) + "&allFlag=" + escape(allFlag);
 		        } else {
@@ -276,7 +293,7 @@
 		                openLocation = openLocation + "&uID=" + escape(pArgument[1]) + "&uName=" + escape(pArgument[2]) + "&uName2=" + escape(pArgument[4]);
 		                openLocation = openLocation + "&uDeptID=" + escape(pArgument[3]) + "&AllFlag=" + escape(allFlag);
 		            } else {
-		                var openLocation = "/myoffice/ezApprovalG/ApprovUI/approvui.aspx?DocID=" + escape(pArgument[0]);
+		                var openLocation = "/ezApprovalG/approvuiWHWP.do?docID=" + escape(pArgument[0]);
 		                openLocation = openLocation + "&uID=" + escape(pArgument[1]) + "&uName=" + escape(pArgument[2]) + "&uName2=" + escape(pArgument[4]);
 		                openLocation = openLocation + "&uDeptID=" + escape(pArgument[3]) + "&AllFlag=" + escape(allFlag);
 		            }
@@ -336,6 +353,10 @@
 				        var isTrue = HwpCtrl.LoadFile(URL, false);
 
 				        FieldsAvailable(isTrue);
+				        
+				        if(useExternalMailServer == "NO") {
+				    		$("#btnMail").css("display","");
+				    	}
 				    }
 		            HwpCtrl.ChangeMode(3);
 		
@@ -412,6 +433,11 @@
 				        btnClose_onclick();
 				        Btnflag = "false";
 				        ChangeBtnState();
+				        
+				      //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
+				        if (parent.opener != null && parent.opener.getApprovalList != undefined) {
+				        	parent.opener.getApprovalList("doing");
+				        }
 				        return;
 				    }
 		        }
@@ -425,6 +451,11 @@
 				        btnClose_onclick();
 				        Btnflag = "false";
 				        ChangeBtnState();
+				        
+				      //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
+				        if (parent.opener != null && parent.opener.getApprovalList != undefined) {
+				        	parent.opener.getApprovalList("doing");
+				        }
 				        return;
 				    }
 		        }
@@ -438,6 +469,11 @@
 				        btnClose_onclick();
 				        Btnflag = "false";
 				        ChangeBtnState();
+				        
+				      //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
+				        if (parent.opener != null && parent.opener.getApprovalList != undefined) {
+				        	parent.opener.getApprovalList("doing");
+				        }
 				        return;
 				    }
 		        }
@@ -519,7 +555,7 @@
 			        if (pDraftFlag == "HABYUI") {
 			            setMenuBar("btntotaldocinfo", false);
 			        }
-			    }
+				}
 			    //SignCheck();
 			}
 	
@@ -625,7 +661,7 @@
 			                }
 			            }
 			
-			            if (pDraftFlag != "SUSIN" && pDraftFlag != "HABYUI") {
+			            if (pDraftFlag != "SUSIN" && pDraftFlag != "HABYUI" || pDraftFlag != "B_GAMSA") {
 			                if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 			                    if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
 			                        var rtnval;
@@ -785,6 +821,8 @@
 							        setMenuDisable("btnApprove", false);
 							        return;
 			                    }
+								CurrentAprType = pAprLineType;
+								CurrentAprUserID = pUserID;
 					            sendAlertMail("APR", pAprMemberSN, "APPROV");
 			                }
 			
@@ -1039,6 +1077,10 @@
 			        try {
 			            window.opener.Refresh_Window();
 			        } catch (e) { }
+			        
+			        try {
+			            window.opener.getApprGraph("appr");
+			        } catch (e) { }
 			    }
 	
 			    function btnSave_onclick() {
@@ -1167,147 +1209,196 @@
 			        getHistory();
 			    }
 			    
+			    var ezapprovalinfo_dialogArguments = new Array();
 			    function btnApprovalInfo() {
-			        CheckDocCellInfo();
-			        var onlydocinfiview = false;
-			        var parameter = new Array();
-			        parameter[0] = pDocID;
-			        parameter[1] = pFormID;
-			        parameter[2] = SignCount;
-			        parameter[3] = SignInfo;
-			        parameter[4] = hapyuiCount;
-			        parameter[5] = pDraftFlag;
-			        parameter[6] = pSuSinFlag;
-			        parameter[7] = pChamJoFlag;
-			        parameter[8] = gongramCount;
-			        parameter[9] = true;
-			        parameter[10] = pDocType;
-			        parameter[11] = gamsaCount;
-			        parameter[12] = "DRAFT";
-			        parameter[28] = onlydocinfiview;
-			        parameter[30] = cabinetID;
-			        parameter[31] = tempSecurity;
-			        parameter[32] = tempUrgent;
-			        parameter[33] = pSummery;
-			        parameter[34] = pSpecialRecordCode;
-			        parameter[35] = pPublicityCode;
-			        parameter[36] = pLimitRange;
-			        parameter[37] = pPageNum;
-			        parameter[38] = tempSecurityDate;
-			        parameter[39] = SummaryFlag;
-			        parameter[40] = "";
-			        parameter[45] = pPublicityYN;
-			        parameter[46] = nonElecRec;
-				    
-				    if (nonElecRec == "Y") {
-				    	if (pGubun != "1") {
-				        	parameter[47] = cabinetID;
-			        	} else {
-				        	parameter[47] = "nonElecRecTempCabinet";
-			        	}
-				        parameter[48] = nonElecRecInfoXml; // 기록물 기본등록 정보
-				        parameter[49] = nonSepAttachLVXml; // 분첨
-				        parameter[50] = g_szSCListXml;
-				        parameter[51] = sepAttachCheckYN; // 분첨
-			        }
-			        
-			        if (tempItemCode != "")
-			            tempdocnumcode = tempItemCode;
-			        var url = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType + "&ext=" + "hwp";
-			        var feature = "status:no;dialogWidth:1140px;dialogHeight:750px;help:no;scroll:no;edge:sunken;";
-			        var ret = window.showModalDialog(url, parameter, feature);
-			
-			        if (ret != undefined && ret[0] == "OK") {
-			            try {
-			                HwpCtrl.ChangeMode(2);
-			                if (pGubun != "5" && pGubun != "7" && pGubun != "10") {
-			
-			                    if (ret[1] != false) {
-			                    	$.ajax({
-			                    		type : "POST",
-			                    		dataType : "json",
-			                    		async : false,
-			                    		url : "/ezApprovalG/aprLineSave.do",
-			                    		data : {
-			                    				ret    : ret[1]
-			                    				},
-			                    		success : function(result){
-			                    			
-			                    		}
-			                    	});
-			
-			                        IsSkipDrafter = "FALSE";
-			                        btnSendDraftEnable = "true";
-			                        ReAprLineSingMapping(ret);
-			                        SaveFile();
-			                        getCurApproverAprLine();
+			    			        CheckDocCellInfo();
+			    			        var onlydocinfiview = false;
+			    			        var parameter = new Array();
+			    			        parameter[0] = pDocID;
+			    			        parameter[1] = pFormID;
+			    			        parameter[2] = SignCount;
+			    			        parameter[3] = SignInfo;
+			    			        parameter[4] = hapyuiCount;
+			    			        parameter[5] = pDraftFlag;
+			    			        parameter[6] = pSuSinFlag;
+			    			        parameter[7] = pChamJoFlag;
+			    			        parameter[8] = gongramCount;
+			    			        parameter[9] = true;
+			    			        parameter[10] = pDocType;
+			    			        parameter[11] = gamsaCount;
+			    			        parameter[12] = "DRAFT";
+			    			        parameter[28] = onlydocinfiview;
+			    			        parameter[30] = cabinetID;
+			    			        parameter[31] = tempSecurity;
+			    			        parameter[32] = tempUrgent;
+			    			        parameter[33] = pSummery;
+			    			        parameter[34] = pSpecialRecordCode;
+			    			        parameter[35] = pPublicityCode;
+			    			        parameter[36] = pLimitRange;
+			    			        parameter[37] = pPageNum;
+			    			        parameter[38] = tempSecurityDate;
+			    			        parameter[39] = SummaryFlag;
+			    			        parameter[40] = "";
+			    			        parameter[45] = pPublicityYN;
+			    			        parameter[46] = nonElecRec;
+			    				    
+			    				    if (nonElecRec == "Y") {
+			    				    	if (pGubun != "1") {
+			    				        	parameter[47] = cabinetID;
+			    			        	} else {
+			    				        	parameter[47] = "nonElecRecTempCabinet";
+			    			        	}
+			    				        parameter[48] = nonElecRecInfoXml; // 기록물 기본등록 정보
+			    				        parameter[49] = nonSepAttachLVXml; // 분첨
+			    				        parameter[50] = g_szSCListXml;
+			    				        parameter[51] = sepAttachCheckYN; // 분첨
+			    			        }
+
+			    			        if (useOpenGov == "YES") {
+			                            parameter[52] = basis;
+			                            parameter[53] = reason;
+			                            parameter[54] = listOpenFlag;
+			                            parameter[55] = fileOpenFlagList;
+			    					}
+
+			    			        if (tempItemCode != "")
+			    			            tempdocnumcode = tempItemCode;
+			                        
+			                        ezapprovalinfo_dialogArguments[0] = parameter;
+			    		            ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
+
+			    		            var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType + "&ext=" + "hwp", "ezApprovalInfo", GetOpenWindowfeature(1144, 750));
+			    		            try { OpenWin.focus(); } catch (e) { }
+
+			    			        
 			                    }
-			                    savexmlhttp = null;
-			                    savexmlhttp = createXMLHttpRequest();
-			                }
-			
-			                if (pGubun != "6" && pGubun != "7" && pGubun != "9" && pGubun != "11" && pGubun != "12" && pGubun != "13") {
-			                	$.ajax({
-		                    		type : "POST",
-		                    		dataType : "text",
-		                    		async : false,
-		                    		url : "/ezApprovalG/aprDeptSave.do",
-		                    		data : {
-		                    				aprDeptInfo : ret[2]
-		                    				},
-		                    		success : function(result){
-		                    			if (result == 'TRUE') {
-		                    				
-		                    			} else {
-		                    				alert(strLang163);
-		                    			}
-		                    		}
-		                    	});
-			                	
-			                    btnReceivLineEnable = false;
-			                    setRecevInfo(ret[3]);
-			                }
-			
-			                if (pGubun != "5" && pGubun != "6" && pGubun != "7" && pGubun != "8" && pGubun != "9" && pGubun != "10") {
-			                    var g_SelCabXml = ret[4];
-			                    var xmlCab = createXmlDom();
-			                    xmlCab = loadXMLString(g_SelCabXml);
-			                    cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
-			                    TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
-			                }
-			                
-			                tempSecurity = ret[7];                // 보안등급 관련
-			                tempUrgent = ret[8];                  // 긴급 결재 여부
-			                pSummery = ret[9];                    // 요약 내용 관련
-			                tempSecurityDate = ret[14];           // 보안 결재 체크 관련
-			                pPublicityCode = ret[11];             // 대민공개여부 및 공개등급 관련 
-			                pPublicityYN = ret[21];             // 공개여부 및 공개등급 관련 
-			                pSpecialRecordCode = ret[10];
-			                pLimitRange = ret[12];
-			                pPageNum = ret[13];
-			                // 문서 공개 범위 설정 (대민 공개 여부)
-			                // setPublicFlag2();
-			                setPublicFlag();
-			                
-			                if (nonElecRec == "Y") {
-				            	nonElecRecInfoXml = ret[23];
-				            	nonSepAttachLVXml = ret[24];
-				            	g_szSCListXml = ret[25];
-						        sepAttachCheckYN = ret[26];
-				            	if (ext == "hwp") {
-					            	setNonElecRecInfo(nonElecRecInfoXml);
-				            	}
-				            }
-			                
-			                SummaryFlag = true;
-			                savexmlhttp = null;
-			                HwpCtrl.ChangeMode(3);
-			            }
-			            catch (e) {
-			                alert("저장시 오류 발생");
-			            }
-			        }
+
+			    function btnApprovalInfo_Complete(ret) {
+
+			    			        if (ret != undefined && ret[0] == "OK") {
+			    			            try {
+			    			                HwpCtrl.ChangeMode(2);
+			    			                if (pGubun != "5" && pGubun != "7" && pGubun != "10") {
+			    			
+			    			                    if (ret[1] != false) {
+			    			                    	$.ajax({
+			    			                    		type : "POST",
+			    			                    		dataType : "json",
+			    			                    		async : false,
+			    			                    		url : "/ezApprovalG/aprLineSave.do",
+			    			                    		data : {
+			    			                    				ret    : ret[1]
+			    			                    				},
+			    			                    		success : function(result){
+			    			                    			
+			    			                    		}
+			    			                    	});
+			    			
+			    			                        IsSkipDrafter = "FALSE";
+			    			                        btnSendDraftEnable = "true";
+			    			                        ReAprLineSingMapping(ret);
+			    			                        SaveFile();
+			    			                        getCurApproverAprLine();
+			    			                    }
+			    			                    savexmlhttp = null;
+			    			                    savexmlhttp = createXMLHttpRequest();
+			    			                }
+			    			
+			    			                if (pGubun != "6" && pGubun != "7" && pGubun != "9" && pGubun != "11" && pGubun != "12" && pGubun != "13") {
+			    			                	$.ajax({
+			    		                    		type : "POST",
+			    		                    		dataType : "text",
+			    		                    		async : false,
+			    		                    		url : "/ezApprovalG/aprDeptSave.do",
+			    		                    		data : {
+			    		                    				aprDeptInfo : ret[2]
+			    		                    				},
+			    		                    		success : function(result){
+			    		                    			if (result == 'TRUE') {
+			    		                    				
+			    		                    			} else {
+			    		                    				alert(strLang163);
+			    		                    			}
+			    		                    		}
+			    		                    	});
+			    			                	
+			    			                    btnReceivLineEnable = false;
+			    			                    setRecevInfo(ret[3]);
+			    			                }
+			    			
+			    			                if (pGubun != "5" && pGubun != "6" && pGubun != "7" && pGubun != "8" && pGubun != "9" && pGubun != "10") {
+			    			                    var g_SelCabXml = ret[4];
+			    			                    var xmlCab = createXmlDom();
+			    			                    xmlCab = loadXMLString(g_SelCabXml);
+			    			                    cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
+			    			                    TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
+			    			                }
+
+											tempKeyword = ret[6]; 				//2021-03-10 박기범 - 키워드 추가
+			    			                tempSecurity = ret[7];                // 보안등급 관련
+			    			                tempUrgent = ret[8];                  // 긴급 결재 여부
+			    			                pSummery = ret[9];                    // 요약 내용 관련
+			    			                tempSecurityDate = ret[14];           // 보안 결재 체크 관련
+			    			                pPublicityCode = ret[11];             // 대민공개여부 및 공개등급 관련 
+			    			                pPublicityYN = ret[21];             // 공개여부 및 공개등급 관련 
+			    			                pSpecialRecordCode = ret[10];
+			    			                pLimitRange = ret[12];
+			    			                pPageNum = ret[13];
+			    			                // 문서 공개 범위 설정 (대민 공개 여부)
+			    			                // setPublicFlag2();
+			    			                setPublicFlag();
+			    			                
+			    			                if (nonElecRec == "Y") {
+			    				            	nonElecRecInfoXml = ret[23];
+			    				            	nonSepAttachLVXml = ret[24];
+			    				            	g_szSCListXml = ret[25];
+			    						        sepAttachCheckYN = ret[26];
+			    				            	if (ext == "hwp") {
+			    					            	setNonElecRecInfo(nonElecRecInfoXml);
+			    				            	}
+			    				            }
+
+			    				            if (useOpenGov == "YES") {
+			                                    $.ajax({
+			                                        type : "POST",
+			                                        dataType : "text",
+			                                        async : false,
+			                                        url : "/ezApprovalG/openGovInfoSave.do",
+			                                        data : {
+			                                            openGovListFlag : ret[27],
+			                                            fileOpenFlagList : ret[28],
+			                                            basis : ret[29],
+			                                            reason : ret[30],
+			                                            publicity : ret[11],
+			                                            docID : pDocID,
+			                                            limitDate : ret[31]
+			                                        }
+			                                    });
+
+			                                    listOpenFlag = ret[27];
+			                                    fileOpenFlagList = ret[28];
+			                                    basis = ret[29];
+			                                    reason = ret[30];
+			                                    limitDate = ret[31];
+			    							}
+
+			    							//2020-05-08 : 결재정보확인 시 문서정보 저장 후 문서 반영
+			    							setApprDocInfo();	
+			    							SaveFile();
+
+			    			                SummaryFlag = true;
+			    			                savexmlhttp = null;
+			    			                HwpCtrl.ChangeMode(3);
+			    			            }
+			    			            catch (e) {
+			    			                alert("저장시 오류 발생");
+			    			            }
+			    			        }
+
 			    }
+
+
+
 			    
 			    function btnHelper_onclick() {
 			        var rtnVal = ExcuteInfo("MIDDLE_SIGN_INIT", "");
@@ -1378,7 +1469,7 @@
 	                        <li id="btnSave"><span onclick="return btnSave_onclick()"><spring:message code='ezApprovalG.t59'/></span></li>
 	                        <li id="btnPrint"><span onclick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li>
 	                        <li id="btnhistory"><span onclick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
-	                        <li id="btnMail"><span onclick="return btnMail_onclick()"><spring:message code='ezApprovalG.t62'/></span></li>
+	                        <li id="btnMail" style="display:none"><span onclick="return btnMail_onclick()"><spring:message code='ezApprovalG.t62'/></span></li>
 	                        <li id="btnHelper" style="display: none"><span onclick="return btnHelper_onclick()"><spring:message code='ezApprovalG.t157'/></span></li>
 	                        <li id="tbtnTotalSave" style="display: none"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 	                    </ul>
@@ -1402,13 +1493,20 @@
 	        </tr>
 	        <tr>
 	            <td height="20">
-	                <table class="file" style="height: 70px;">
+	                <table class="file" style="height:80px;">
 	                    <tr>
-	                        <th><spring:message code='ezApprovalG.t65'/></th>
-	                        <td>
-	                            <div id="lstAttachLink" style="height: 65px;"></div>
+	                        <th id="btn_Attach"><spring:message code='ezApprovalG.t65'/></th>
+	                        <td style="width:62%; border-right:1px solid #d5d5d5;">
+	                            <div id="lstAttachLink" style="height:70px;"></div>
 	                            <iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0" style="display: none;"></iframe>
 	                        </td>
+	                        <td style="width:30%;">
+								<div id="lstAttachLinkDoc" style="height:70px;"></div>
+	                        </td>
+							<td class="pos2" style="display:none;width:8%; background:#fffcfa;">
+								<a class="imgbtn imgbck" style="width:60px;"><span style="height:24px;" onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
+								<a class="imgbtn imgbck" style="width:60px;"><span style="height:24px;" onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a><br/>
+							</td>
 	                    </tr>
 	                </table>
 	

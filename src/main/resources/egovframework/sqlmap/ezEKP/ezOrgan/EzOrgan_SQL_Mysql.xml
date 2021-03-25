@@ -279,6 +279,16 @@
                				TBL_DEPTMASTER 
                			WHERE
                				EXTENSIONATTRIBUTE1 = #v_CN#
+		]]>
+						<isEmpty property="displayTrashDept">
+							<![CDATA[
+								AND
+									EXTENSIONATTRIBUTE1 NOT LIKE 'trash\_dept\_%' 
+								AND 
+									CN NOT LIKE 'trash\_dept\_%'
+							]]>
+						</isEmpty>
+		<![CDATA[
                			AND
                				TENANT_ID = #v_TENANT_ID#	 ) A
         	ORDER BY
@@ -941,7 +951,9 @@
 	            EXTENSIONATTRIBUTE2 ,
 	            EXTENSIONATTRIBUTE3 ,
 	            EXTENSIONATTRIBUTE4 ,
-	            EXTENSIONATTRIBUTE5 ,
+	            (CASE WHEN EXTENSIONATTRIBUTE5 IS NULL
+				THEN CAST('' AS VARCHAR(200))
+				ELSE EXTENSIONATTRIBUTE5 END) AS EXTENSIONATTRIBUTE5 ,
 	            EXTENSIONATTRIBUTE6 ,
 	            EXTENSIONATTRIBUTE7 ,
 	            EXTENSIONATTRIBUTE8 ,
@@ -1030,7 +1042,7 @@
              A.EXTENSIONATTRIBUTE2 ,
              A.EXTENSIONATTRIBUTE3 ,
              A.EXTENSIONATTRIBUTE4 ,
-             A.EXTENSIONATTRIBUTE5 ,
+             CAST(B.PROXY AS VARCHAR(200)) AS EXTENSIONATTRIBUTE5 ,
              A.EXTENSIONATTRIBUTE6 ,
              A.EXTENSIONATTRIBUTE7 ,
              A.EXTENSIONATTRIBUTE8 ,
@@ -1158,7 +1170,10 @@
                         		' ' DISPLAYNAMEPRINTABLE  ,
                         		POSITIONCD ,
                         		BIRTH ,
-                        		BIRTHTYPE 
+                        		BIRTHTYPE ,
+                        		FURIGANA ,
+                        		EXTENSIONPHONE ,
+                        		OFFICEMOBILE
              FROM
              	TBL_USERMASTER 
              WHERE
@@ -1536,9 +1551,11 @@
 						type 
 			          FROM 
 			          	(SELECT  
-			             	cn, 
+			             	cn,
+			             	CASE #v_LANGDATA# WHEN '1' THEN DISPLAYNAME ELSE DISPLAYNAME2 END as userName,
 			                department as displayName, 
 			                '' as extensionAttribute15,
+			                '0' as addJobFlag,
 			                'user' as type 
 			             FROM  
 			             	TBL_USERMASTER A
@@ -1560,8 +1577,10 @@
 			            
 					SELECT
 						a.cn  ,
+						CASE #v_LANGDATA# WHEN '1' THEN DISPLAYNAME ELSE DISPLAYNAME2 END as userName,
 						deptid as displayName ,
 						'' as extensionAttribute15,
+						'1' as addJobFlag,
 						'user' as type
 					FROM
 						TBL_USERMASTER b
@@ -1577,6 +1596,8 @@
 						AND A.TENANT_ID = #v_TENANT_ID#
 						$strSQLAddjobCom$
 						)  AA
+					ORDER BY
+						AA.addJobFlag, AA.userName
 					LIMIT #startRowForMySQL#, #count#
                ]]>
           </isEqual>

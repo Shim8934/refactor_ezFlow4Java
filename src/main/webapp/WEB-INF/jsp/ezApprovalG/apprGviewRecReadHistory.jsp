@@ -14,8 +14,8 @@
 <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/MiscFunc_Cross.js')}"></script>
 <script type="text/javascript" ID="clientEventHandlersJS">
     var g_DocID;
-    var CompanyID = "${userInfo.companyID}";
-    var UserLang = "${userInfo.lang}";
+    var CompanyID = "<c:out value='${userInfo.companyID}'/>";
+    var UserLang = "<c:out value='${userInfo.lang}'/>";
     var OrderCell = "";
     var RetValue;
     var ReturnFunction;
@@ -74,7 +74,7 @@
 	 </style>
 </head>
 
-<body style="background-color:#FFFFFF;margin-left:0px;margin-top:0px" class="popup" >
+<body style="background-color:#FFFFFF;" class="popup" >
 <h1><spring:message code='ezApprovalG.t1184'/></h1>
 <div id="close"><ul><li><span onClick="return cmdConfirm_onclick()"></span></li></ul></div>
 <h2 class="h2_dot" id="tdTitle" style="font-weight: normal;"><spring:message code='ezApprovalG.t1186'/></h2>

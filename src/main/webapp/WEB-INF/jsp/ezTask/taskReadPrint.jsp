@@ -81,29 +81,29 @@
 		</style>
 		
 		<script type="text/javascript">
-			var taskid = "${taskInfoVO.taskID }";
+			var taskid = "<c:out value='${taskInfoVO.taskID }'/>";
 			var contentpath = "${taskInfoVO.contentPath }";
 			var personContentpath = "${taskInfoVO.personContentPath }";
-			var taskstatus = "${taskInfoVO.taskStatus }";
-			var completerate = "${taskInfoVO.completeRate }";
+			var taskstatus = "<c:out value='${taskInfoVO.taskStatus }'/>";
+			var completerate = "<c:out value='${taskInfoVO.completeRate }'/>";
 			var duration = 0;
-			var delayColor = "${delayColor }";
-			var completeColor = "${completeColor }";
-		    var tasktype = "${taskInfoVO.taskType }";
+			var delayColor = "<c:out value='${delayColor }'/>";
+			var completeColor = "<c:out value='${completeColor }'/>";
+		    var tasktype = "<c:out value='${taskInfoVO.taskType }'/>";
 		    var content = "${contentPerson }";
-		    var date = "${date}";
-		    var selectedDate = "${selectedDate}";
-		    var type = "${type}";
-		    var hasTaskAttach = "${taskInfoVO.hasAttach}";
+		    var date = "<c:out value='${date}'/>";
+		    var selectedDate = "<c:out value='${selectedDate}'/>";
+		    var type = "<c:out value='${type}'/>";
+		    var hasTaskAttach = "<c:out value='${taskInfoVO.hasAttach}'/>";
 		    var taskAttachList = "${taskAttachList }";
 		    var hasTaskWorkAttach = "${taskInfoVO.personAttach}";
 		    var taskWorkAttachList = "${taskWorkAttachList }";
-		    var useTodoMemo = "${useTodoMemo }";
-		    var startdate = "${taskInfoVO.startDate}";
-		    var repeatCount = "${repeatCount}";
-		    var createDate = "${taskInfoVO.createDate}";
-		    var repetition = "${repetition}";
-		    var endDate = "${taskInfoVO.endDate}";
+		    var useTodoMemo = "<c:out value='${useTodoMemo }'/>";
+		    var startdate = "<c:out value='${taskInfoVO.startDate}'/>";
+		    var repeatCount = "<c:out value='${repeatCount}'/>";
+		    var createDate = "<c:out value='${taskInfoVO.createDate}'/>";
+		    var repetition = "<c:out value='${repetition}'/>";
+		    var endDate = "<c:out value='${taskInfoVO.endDate}'/>";
 		    var dateList = "${dateList}";
 		    var completeRateList = "${completeRateList}";
 		    var statusList = "${statusList}";
@@ -372,7 +372,7 @@
 			
 			function getCommentList() {
 				$.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "json",
 					async : false,
 					url : "/ezTask/getTaskCommentList.do",
@@ -407,7 +407,7 @@
 			
 			function dayOnMouseClick(changeDate) {								
 				$.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "text",
 					async : false,
 					url : "/ezTask/taskRepGetList.do",
@@ -637,7 +637,7 @@
 							</tr>
 							<tr>
 								<th><spring:message code='ezTask.t155' /></th>
-								<td style="padding-right:15px;white-space:nowrap">${fn:substring(taskInfoVO.createDate, 0, 10) }</td>
+								<td style="padding-right:15px;white-space:nowrap"><c:out value='${fn:substring(taskInfoVO.createDate, 0, 10) }'/></td>
 							</tr>
 							<tr>
 								<th><spring:message code='ezTask.t2003' /></th>

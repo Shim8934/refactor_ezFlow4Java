@@ -1,29 +1,33 @@
 package egovframework.ezEKP.ezStatistics.web;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.ezEKP.ezStatistics.service.EzStatisticsAdminService;
+import egovframework.ezEKP.ezStatistics.vo.StatApprVO;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.CellRangeAddress;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.hssf.util.Region;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.tools.ant.taskdefs.Definer.Format;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 
@@ -46,11 +50,14 @@ public class EzStatisticsController {
 	
 	@Autowired
 	CommonUtil commonUtil;
+
+	@Resource(name = "EzStatisticsAdminService")
+	private EzStatisticsAdminService ezStatisticsAdminService;
 	
 	/**
 	 * 통계 메인화면 호출 함수
 	 */
-	@RequestMapping(value="/ezStatistics/statisticsMain.do")
+	@RequestMapping(value="/ezStatistics/statisticsMain.do", method = RequestMethod.GET)
 	public String showMain() throws Exception {		
 		return "ezStatistics/statisticsMain";
 	}
@@ -58,7 +65,7 @@ public class EzStatisticsController {
 	/**
 	 * 사용자 통계 Excel 내려받기 호출 함수
 	 */
-	@RequestMapping(value = {"/ezStatistics/saticGetXls.do", "/ezStatistics/UserOSsaticXls.do"})
+	@RequestMapping(value = {"/ezStatistics/saticGetXls.do", "/ezStatistics/UserOSsaticXls.do"}, method = RequestMethod.POST)
 	public void qstResultAnalysisSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("qstResultAnalysisSave started");
 		
@@ -185,7 +192,7 @@ public class EzStatisticsController {
 	/**
 	 * 메일 통계 Excel 내려받기 호출 함수
 	 */
-	@RequestMapping(value = "/ezStatistics/saticGetXlsM.do")
+	@RequestMapping(value = "/ezStatistics/saticGetXlsM.do", method = RequestMethod.POST)
 	public void qstResultAnalysisSaveM(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("qstResultAnalysisSaveM started");
 		
@@ -286,15 +293,9 @@ public class EzStatisticsController {
 	 * 전자결재 통계 Excel 내려받기 호출 함수
 	 * 양식별, 부서별, 개인별 통계 현황
 	 */
-	@RequestMapping(value = "/ezStatistics/saticGetXlsA.do")
+	@RequestMapping(value = "/ezStatistics/saticGetXlsA.do", method = RequestMethod.POST)
 	public void qstResultAnalysisSaveA(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("qstResultAnalysisSaveA started");
-		
-		String headerFLAG = "";
-		
-		if (request.getParameter("headerFlag") != null) {
-			headerFLAG = request.getParameter("headerFlag");
-        }
 		
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		
@@ -426,16 +427,10 @@ public class EzStatisticsController {
 	/**
     * 결재 통계 - 양식별/부서별/개인별 Excel 내려받기 호출 함수
     */
-   @RequestMapping(value = "/ezStatistics/saticGetXlsApproval.do")
+   @RequestMapping(value = "/ezStatistics/saticGetXlsApproval.do", method = RequestMethod.POST)
    public void qstResultAnalysisSaveApproval(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
       logger.debug("qstResultAnalysisSaveApproval started");
       
-      String headerFLAG = "";
-      
-      if (request.getParameter("headerFlag") != null) {
-         headerFLAG = request.getParameter("headerFlag");
-        }
-  
       HSSFWorkbook workbook = new HSSFWorkbook();
       HSSFSheet sheet;
       
@@ -499,16 +494,10 @@ public class EzStatisticsController {
    /**
     * 결재 통계 - 양식별/부서별/개인별 결재처리 시간 Excel 내려받기 호출 함수
     */
-   @RequestMapping(value = "/ezStatistics/saticGetXlsApprovalTime.do")
+   @RequestMapping(value = "/ezStatistics/saticGetXlsApprovalTime.do", method = RequestMethod.POST)
    public void qstResultAnalysisSaveApprovalTime(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
       logger.debug("qstResultAnalysisSaveApprovalTime started");
       
-      String headerFLAG = "";
-      
-      if (request.getParameter("headerFlag") != null) {
-         headerFLAG = request.getParameter("headerFlag");
-        }
-  
       HSSFWorkbook workbook = new HSSFWorkbook();
       HSSFSheet sheet;
       
@@ -590,16 +579,10 @@ public class EzStatisticsController {
 	 * 전자결재 통계 Excel 내려받기 호출 함수
 	 * 양식별, 부서별, 개인별 통계 현황
 	 */
-	@RequestMapping(value = "/ezStatistics/saticGetXlsTotalA.do")
+	@RequestMapping(value = "/ezStatistics/saticGetXlsTotalA.do", method = RequestMethod.POST)
 	public void qstResultAnalysisSaveTotalA(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("qstResultAnalysisSaveTotalA started");
 	
-		String headerFLAG = "";
-		
-		if (request.getParameter("headerFlag") != null) {
-			headerFLAG = request.getParameter("headerFlag");
-        }
-		
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		
 		HSSFSheet sheet;
@@ -696,15 +679,9 @@ public class EzStatisticsController {
 	/**
 	 * 근태 통계 Excel 내려받기 호출 함수
 	 */
-	@RequestMapping(value = "/ezStatistics/saticGetXlsWA.do")
+	@RequestMapping(value = "/ezStatistics/saticGetXlsWA.do", method = RequestMethod.POST)
 	public void qstResultAnalysisSaveWA(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("qstResultAnalysisSaveM started");
-		
-		String headerFLAG = "";
-		
-		if (request.getParameter("headerFlag") != null) {
-			headerFLAG = request.getParameter("headerFlag");
-        }
 		
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet;
@@ -785,5 +762,21 @@ public class EzStatisticsController {
 		
 		logger.debug("qstResultAnalysisSaveM ended");
 	}
-	
+
+	/**
+	 * call yearlyDocCount
+	 */
+	@RequestMapping(value = "/ezStatistics/callYearlyDocCount.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String callYearlyDocCount(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,Model model, @RequestBody String xmlPara) throws Exception{
+		logger.debug("callYearlyDocCount started  "+ xmlPara);
+
+		StatApprVO statApprVO = new StatApprVO();
+
+		ezStatisticsAdminService.yearlyDocCount(statApprVO);
+
+		logger.debug("callYearlyDocCount ended ");
+
+		return "success";
+	}
 }

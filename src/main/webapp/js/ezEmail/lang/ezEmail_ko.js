@@ -299,6 +299,7 @@ var strLangKMS08 = "폴더는 업로드 할 수 없습니다."
 var strLangKYJ03 = "공백은 입력할 수 없습니다.";
 var strLangLSD02 = "구성원이 없는 부서입니다.";
 var strLangJYH01 = "선택된 메일이 없습니다.";
+var strLangKSA01 = "(이미 동일한 이메일 주소가 저장되어있습니다 : \n %s)";
 
 /* 2018-07-03 홍승비 - 승인게시물, 커뮤니티 답변메일 companyID 관련 처리 일본어 번역X*/
 var strLangHSB01 = "이 게시물은 ";
@@ -314,6 +315,11 @@ var strLangSharedMailbox03 = "암호를 변경하였습니다.";
 
 var strLangReceiverCount01 = "수신인은 최대 ";
 var strLangReceiverCount02 = "명까지 가능합니다.";
+
+var strLangHDP01 = "회까지";
+var strLangHDP02 = "다운로드 가능";
+var strLangHDP03 = "대용량파일 첨부는 {0}개까지 가능합니다.";
+var strLangHDP04 = "드래그 앤 드롭으로 파일 추가 및 추가한 파일의 순서를 변경할 수 있습니다.";
 
 function GetLocalTime(Offset , pDateTime)
 {

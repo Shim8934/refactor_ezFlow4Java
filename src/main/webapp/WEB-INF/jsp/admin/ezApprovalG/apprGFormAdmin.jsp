@@ -33,6 +33,8 @@
 		    var pEditor = "<c:out value = '${useEditor}' />";
 		    var ua = navigator.userAgent;
 		    var isIE = false;
+		    var useHWP = "<c:out value = '${useHWP}' />";
+		    var useWebHWP = "<c:out value = '${useWebHWP}' />";
 
             if (/msie 10/i.test(ua)) {
                 isIE = true;	
@@ -64,8 +66,13 @@
 					$('#btnFormListView').hide();
 				}
 				
-				if (!isIE) {
-					$('#btnInsForm2').hide();
+				if (useHWP == "YES") {
+					if(useWebHWP == "NO" && isIE) {		// 한글 기안기 -> ie에서만 사용가능
+						$('#btnInsForm2').show();
+					}
+					if(useWebHWP == "YES") {			// 웹 한글 기안기 -> 모든 브라우저 사용가능
+						$('#btnInsForm3').show();
+					}
 				}
 		    	
 				companyID = document.getElementById("ListCompany").value;
@@ -154,7 +161,7 @@
 		            return;
 		        }
 				
-		        var url = "/admin/ezApprovalG/formContMain.do?tCheck=fContIns&companyID=" + encodeURI(companyID) + "&parentID=" + para[6] + "&contID=" + para[1];
+		        var url = "/admin/ezApprovalG/formContMain.do?tCheck=fContIns&companyID=" + encodeURI(companyID) + "&parentID=" + encodeURIComponent(para[6]) + "&contID=" + encodeURIComponent(para[1]);
 		        formContMain_dialogArguments[0] = para;
 		        formContMain_dialogArguments[1] = btnInsFcont_onclick_complete;
 		        
@@ -204,7 +211,7 @@
 		            para[9] = g_multiDataNum;
 	
 		            
-		            var url = "/admin/ezApprovalG/formContMain.do?tCheck=fContMod&companyID=" + encodeURI(companyID) + "&parentID=" + para[4];
+		            var url = "/admin/ezApprovalG/formContMain.do?tCheck=fContMod&companyID=" + encodeURI(companyID) + "&parentID=" + encodeURIComponent(para[4]);
 		            formContMain_dialogArguments[0] = para;
 			        formContMain_dialogArguments[1] = UpdateFCont_complete;
 			        
@@ -314,9 +321,9 @@
 						var HWP = "&type=HWP";
 						var parameter = "?tCheck=fIns&contID=" + encodeURIComponent(nodeIdx.GetNodeData("DATA1")) + "&companyID=" + encodeURIComponent(companyID);
 						
-						if (type == "HWP") {
+						if (type == "HWP" || type == "WebHWP") {
 							url = "/admin/ezApprovalG/formMainOther.do";
-							parameter = parameter + HWP;
+							parameter = parameter + "&type=" + type;
 						} else {
 							//일반일때 ck
 							if (approvalFlag =='S') {
@@ -334,7 +341,7 @@
 							}
 						}
 						
-						var retVal = GetOpenWindow(url + parameter, "FormMain", 1050, 960, "no");
+						var retVal = GetOpenWindow(url + parameter, "FormMain", 1115, 960, "no");
 						Tree_setconfig();
 		            } else {
 		            	alert("<spring:message code = 'ezApproval.t722' />");
@@ -374,16 +381,23 @@
 		            var parameter = "?tCheck=fUpdate&contID=" + encodeURIComponent(GetAttribute(selRow[0], "DATA8")) + "&formID=" + encodeURIComponent(GetAttribute(selRow[0], "DATA1")) + "&companyID=" + encodeURIComponent(companyID);
 		            
 		            if ((GetAttribute(selRow[0], "DATA4") != null ? GetAttribute(selRow[0], "DATA4").toLowerCase().indexOf(".hwp") : -1) > 0) {
-		                if (isIE) {
-							url = "/admin/ezApprovalG/formMainOther.do";
-		                } else {
-	                		var pAlertContent = "한글양식은 IE에서만 수정할 수 있습니다.";
-	                        alert(pAlertContent);
-							return;
-		                }
+		            	if(useWebHWP == "NO") {
+			                if (isIE) {
+								url = "/admin/ezApprovalG/formMainOther.do";
+			                } else {
+		                		var pAlertContent = "한글양식은 IE에서만 수정할 수 있습니다.";
+		                        alert(pAlertContent);
+								return;
+			                }
+		            	} else {
+		            		HWP = "&type=WebHWP";
+		            		url = "/admin/ezApprovalG/formMainOther.do";
+		            	}
 		                parameter = parameter + HWP;
 		            }
 		            else {
+		            	parameter += "&reformflag=" + encodeURIComponent(GetAttribute(selRow[0], "REFORMFLAG"));
+		            	
 		            	if (approvalFlag =='S') {
 							if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE" || pEditor == "KUKUDOCS") {
 								url = "/admin/ezApprovalG/formMainOther.do";
@@ -400,7 +414,7 @@
 						}
 		            }
 		            
-		            GetOpenWindow(url + parameter, "FormMain", 1050, 960, "no");
+		            GetOpenWindow(url + parameter, "FormMain", 1115, 960, "no");
 
 		            Tree_setconfig();
 		        } else {
@@ -421,7 +435,7 @@
 		                	type : "POST",
 		                	url : "/admin/ezApprovalG/delForm.do",
 		                	async : false,
-		                	data : {formID : GetAttribute(selRow[0], "DATA1"), companyID : companyID},
+		                	data : {formID : GetAttribute(selRow[0], "DATA1"), companyID : companyID, officeFlag : GetAttribute(selRow[0],"DATA-OFFICEFLAG")},
 		                	success : function (result) {
 		                		tempRet = result;
 		                		
@@ -662,29 +676,32 @@
 			</TREEVIEWDATA>
 		</xml>
 		
+		<h1>
 		<c:choose>
 			<c:when test="${approvalFlag == 'S' }">
-				<h1><spring:message code = 'ezApprovalG.t1463' /></h1>
+				<spring:message code = 'ezApprovalG.t1463' />
 			</c:when>
 			<c:otherwise>
-				<h1><spring:message code = 'ezApprovalG.t1612' /></h1>
+				<spring:message code = 'ezApprovalG.t1612' />
 			</c:otherwise>
 		</c:choose>
-		<div id="mainmenu">    
-		    <span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
-			    <select id="ListCompany" onChange="selectCompanyID()">
-		        	<c:forEach var="item" items="${list}">
-	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-	            	</c:forEach>
-			    </select><br /><br />
-		    </span>
+			<span class="title_bar"><img src="/images/name_bar.gif"></span>
+			<select class="companySelect" id="ListCompany" onChange="selectCompanyID()">
+	        	<c:forEach var="item" items="${list}">
+	           		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+	           	</c:forEach>
+		    </select>
+		</h1>
+		
+		<div id="mainmenu">
 		    <ul>
-		        <li id="btnInsFcont"><span onclick="return btnInsFcont_onclick()"><spring:message code = 'ezApprovalG.t1623' /></span></li>
+		        <li class="important" id="btnInsFcont"><span onclick="return btnInsFcont_onclick()"><spring:message code = 'ezApprovalG.t1623' /></span></li>
 		        <li id="btnUpFcont"><span onclick="return btnUpFcont_onclick()"><spring:message code = 'ezApprovalG.t1627' /></span></li>
 		        <li id="btnDelFcont"><span onclick="return btnDelFcont_onclick()"><spring:message code = 'ezApprovalG.t1628' /></span></li>
 		        <!-- <li style="background: none;"><img src="/images/i_bar.gif" style="vertical-align: middle"></li> -->
-		        <li id="btnInsForm1"><span onclick="return btnInsForm_onclick('MHT')"><spring:message code = 'ezApprovalG.t1667' /></span></li>
-            	<li id="btnInsForm2" <c:if test="${useHWP != 'YES'}">style = 'display:none;'</c:if>><span onclick="return btnInsForm_onclick('HWP')">HWP <spring:message code = 'ezApprovalG.t1667' /></span></li>
+		        <li class="important" id="btnInsForm1"><span onclick="return btnInsForm_onclick('MHT')"><spring:message code = 'ezApprovalG.t1667' /></span></li>
+            	<li class="important" id="btnInsForm2" style = 'display:none;'><span onclick="return btnInsForm_onclick('HWP')">HWP <spring:message code = 'ezApprovalG.t1667' /></span></li>
+            	<li class="important" id="btnInsForm3" style = 'display:none;'><span onclick="return btnInsForm_onclick('WebHWP')">HWP <spring:message code = 'ezApprovalG.t1667' /></span></li>
 		        <li id="btnUpForm"><span onclick="return UpdateForm()"><spring:message code = 'ezApprovalG.t1668' /></span></li>
 		        <li id="btnDelForm"><span onclick="return DelForm()"><spring:message code = 'ezApprovalG.t1619' /></span></li>
 				<li id="btnModeForm"><span onclick="return MoveForm()"><spring:message code = 'ezApprovalG.t25000' /></span></li>
@@ -692,16 +709,13 @@
 		        <li id="btnFormListView" style="display: none;"><span onclick="return btnFormListView_onclick()"><spring:message code = 'ezApprovalG.t1252' /></span></li>
 			</ul>
 		</div>
-		<table class="content" style="width:1000px">
+		<table class="content" style="width:1000px;height:33px">
 			<tr>
-		    	<th><spring:message code = 'ezApprovalG.t1540' /></th>
-		    	<td style="border:0px">
-		    		<select name="select" style="WIDTH:200px;" onchange="return select_onchange()" id="FromList">
-		        		<option value="000" selected><spring:message code = 'ezApprovalG.t1541' /></option>
-		        		${docType}
-		      		</select>
+		    	<th style="border:0px"><spring:message code = 'ezApprovalG.t1540' /></th>
+		    	<td style="border:0px;background-color: #f8f8fa;">
+		    		<select name="select" style="WIDTH:200px;" onchange="return select_onchange()" id="FromList">${docType}</select>
 		      	</td>
-				<td style="white-space: nowrap;border:0px">
+				<td style="white-space: nowrap;border:0px;background-color: #f8f8fa;">
 					<select id="searchoption" style="height:22px; margin-top: 3px;">
 						<option value="1"><spring:message code = 'ezApprovalG.t442' /></option>
 						<option value="2"><spring:message code = 'ezApprovalG.t598' /></option>

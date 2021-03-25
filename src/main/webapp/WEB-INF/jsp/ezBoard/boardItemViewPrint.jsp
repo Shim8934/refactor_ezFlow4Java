@@ -29,10 +29,10 @@
 			var fontSize = new Array("10px", "12px", "15px", "20px", "30px");
 			var curFontSize = 1;
 			var pItemID = "${itemID}";
-			var pBoardID= "${boardID}";
+			var pBoardID= "<c:out value='${boardID}'/>";
 			var pBoardName = "${boardInfo.boardName}";
-		    var eOneline = "${oneLine}";
-		    var eAttach = "${attach}";
+		    var eOneline = "<c:out value='${oneLine}'/>";
+		    var eAttach = "<c:out value='${attach}'/>";
 			var strWriterID = "${boardItem.writerID}";
 			var strWriterName = "${boardItem.writerName}";
 			var strWriterDeptName = "${boardItem.writerDeptName}";
@@ -122,7 +122,7 @@
 		    function SetAttachmentInfo() {
 		        var xmlhttp = createXMLHttpRequest();
 		        var xmldom = createXmlDom();
-		        xmlhttp.open("POST", "/ezBoard/getItemAttachments.do?itemID=" + pItemID, false);
+		        xmlhttp.open("POST", "/ezBoard/getItemAttachments.do?itemID=" + encodeURIComponent(pItemID), false);
 		        xmlhttp.send();
 		        xmldom = loadXMLString(xmlhttp.responseText);
 		        xmlhttp = null;
@@ -146,7 +146,7 @@
 		    }
 		    function getOneLineReply() {
 		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/ezBoard/readOneLineReply.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&gubun=" + gubun, false);
+		        xmlhttp.open("POST", "/ezBoard/readOneLineReply.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&gubun=" + gubun, false);
 		        xmlhttp.send();
 		        var xmldom = createXmlDom();
 		        xmldom = loadXMLString(xmlhttp.responseText);
@@ -169,7 +169,7 @@
 		</script>
 	</head>
 	<!-- 2018-02-01 김보미 - 게시물 상세 테이블 컬럼 조정. -->
-	<body style="padding-top:10px; padding-left:10px; padding-right:10px;">
+	<body style="padding:10px;">
 		<table class="layout" >  
 		  <tr>
 		    <td>

@@ -13,16 +13,18 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>		
 	    <script type="text/javascript">	
-	    var P_CompanyID = "${CompanyID}";
+		var P_CompanyID = "<c:out value='${CompanyID}'/>";
 	    var ReturnFunction1 = "";
 	    var ReturnFunction2 = "";
 	    var para = new Array();
 	    var gubun = "";
+	    var contCompanyID = "";
 	    
 	    
 	    window.onload = function () {
             try {
             	gubun = opener.approval_admin_popup_choicedept_dialogArguments[0];
+            	P_CompanyID = opener.approval_admin_popup_choicedept_dialogArguments[2];
             	if (gubun == "one") {
                 	ReturnFunction1 = opener.approval_admin_popup_choicedept_dialogArguments[1];
             	} else {
@@ -48,6 +50,7 @@
             if (typeof (retVal) != "undefined") {
                 document.getElementsByName("TDeptName")[0].id = retVal[0];
                 document.getElementsByName("TDeptName")[0].value = retVal[1];
+                contCompanyID = retVal[2];
             }
             Flag = "TDeptName";
             getDocType(Flag);
@@ -57,6 +60,7 @@
             var Flag;
             if (typeof (retVal) != "undefined") {
                 $("#drafterdept").val(retVal[1]);
+                contCompanyID = retVal[2];
             }
             Flag = "TDeptName";
             getDocType(Flag);
@@ -86,7 +90,7 @@
             		url : "/admin/ezApprovalG/apprGMgetContInfo.do",
             		data : {
             			deptID     : deptID,
-            			comID  : P_CompanyID
+            			comID  : contCompanyID // 전체 조직도에서 선택한 회사ID를 전달
             		},
             		success: function(text){
             			result = text;
@@ -149,23 +153,30 @@
             oOption = null;
         }
         
+        /* 2020-11-30 홍승비 - 크롬 브라우저에서는 자식창의 부모창 제어 기능을 방지하므로, 자식창에서 confirm 뜨도록 처리 */
         function save_info() {
 
         	if (gubun == "one") {
             	if ($("select[name=selTContName]").val() != null && $("select[name=selTContName]").val() !="") {
 
-            		para[0] = $("select[name=selTContName]").val()
+            		para[0] = $("select[name=selTContName]").val();
+            		para[1] = contCompanyID;
             	} 
-	        	if(ReturnFunction1 != null)
+	        	if(ReturnFunction1 != null) {
+	        		window.opener.confirm = window.confirm;
 	        		ReturnFunction1(para);
+	        	}
 	        	window.close();
         	} else {
             	if ($("select[name=selTContName]").val() != null && $("select[name=selTContName]").val() !="") {
 
-            		para[0] = $("select[name=selTContName]").val()
+            		para[0] = $("select[name=selTContName]").val();
+            		para[1] = contCompanyID;
             	}
-	        	if(ReturnFunction2 != null)
+	        	if(ReturnFunction2 != null) {
+	        		window.opener.confirm = window.confirm;
 	        		ReturnFunction2(para);
+	        	}
 	        	window.close();        		
         	}
         }

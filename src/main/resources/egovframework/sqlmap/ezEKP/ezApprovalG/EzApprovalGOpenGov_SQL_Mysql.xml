@@ -149,7 +149,7 @@
 					CONCAT(
 						'본문:',
 						TBL_OPENGOVDOCINFO.docid,
-						':결재본문.hwp:',
+						':결재본문.mht:',
 						IFNULL(TBL_OPENGOVDOCINFO.docsize, '60112'),
 						':0:',
 						CASE WHEN openflag = '3' THEN 'N' ELSE 'Y' END,
@@ -164,7 +164,7 @@
     		AND
     			TBL_OPENGOVDOCINFO.tenant_id = TBL_ENDAPRDOCINFO.tenant_id
     		AND
-    			TBL_ENDAPRDOCINFO.companyid = TBL_ENDAPRDOCINFO.companyid
+    			TBL_OPENGOVDOCINFO.companyid = TBL_ENDAPRDOCINFO.companyid
     		INNER JOIN
     			TBL_EXPENDAPRDOCINFO
     		ON
@@ -185,10 +185,28 @@
 		    	TBL_CABINET
     		ON
     			TBL_EXPENDAPRDOCINFO.cabinetid = TBL_CABINET.cabinetid
+    		AND
+    			TBL_EXPENDAPRDOCINFO.tenant_id = TBL_CABINET.tenant_id
+    		AND
+    			TBL_EXPENDAPRDOCINFO.companyid = TBL_CABINET.companyid
     		INNER JOIN
     			TBL_CABINETCLASS
     		ON
     			TBL_CABINET.cabinetclassno = TBL_CABINETCLASS.cabinetclassno
+    		AND
+    			TBL_CABINET.tenant_id = TBL_CABINETCLASS.tenant_id
+    		AND
+    			TBL_CABINET.companyid = TBL_CABINETCLASS.companyid
+    		INNER JOIN
+				TBL_FORMINFO
+			ON
+				TBL_ENDAPRDOCINFO.COMPANYID = TBL_FORMINFO.COMPANYID
+			AND
+				TBL_ENDAPRDOCINFO.TENANT_ID = TBL_FORMINFO.TENANT_ID
+			AND
+				TBL_ENDAPRDOCINFO.FORMID = TBL_FORMINFO.FORMID
+			AND
+				TBL_FORMINFO.OPENGOVFLAG = 'Y'
     		LEFT OUTER JOIN
 				(SELECT
 					docid,
@@ -246,23 +264,23 @@
 		<![CDATA[
 			SELECT
 				TBL_OPENGOVDOCINFO.docid,
-				'' AS 'n2',
-				'' AS 'n3',
-				'' AS 'n4',
+    			'' AS 'n2',
+    			'' AS 'n3',
+    			'' AS 'n4',
 				'' AS 'n5',
 				'' AS 'n6',
 				'' AS 'n7',
-	    		TBL_ENDAPRDOCINFO.doctitle,
-	    		'' AS 'n9',
-	    		DATE_FORMAT(TBL_OPENGOVDOCINFO.createdate, "%Y%m%d%H%i%s") AS createdate,
-	    		#companyNum# AS companycode,
-	    		#companyName# AS companyname,
-	    		TBL_ENDAPRDOCINFO.writerdeptid,
-	    		TBL_ENDAPRDOCINFO.writerdeptname,
-	    		TBL_ENDAPRDOCINFO.writername,
-	    		'' AS 'n16',
-	    		TBL_ENDAPRDOCINFO.docno,
-	    		TBL_CABINETCLASS.keepingperiod,
+				TBL_ENDAPRDOCINFO.doctitle,
+				'' AS 'n9',
+				DATE_FORMAT(TBL_OPENGOVDOCINFO.createdate, "%Y%m%d%H%i%s") AS createdate,
+				#companyNum# AS companycode,
+				#companyName# AS companyname,
+				TBL_ENDAPRDOCINFO.writerdeptid,
+				TBL_ENDAPRDOCINFO.writerdeptname,
+				TBL_ENDAPRDOCINFO.writername,
+				'' AS 'n16',
+				TBL_ENDAPRDOCINFO.docno,
+				TBL_CABINETCLASS.keepingperiod,
 				TBL_EXPENDAPRDOCINFO.publicitycode,
 				TBL_OPENGOVDOCINFO.basis,
 				TBL_OPENGOVDOCINFO.reason,
@@ -294,85 +312,103 @@
 					CONCAT(
 						'본문:',
 						TBL_OPENGOVDOCINFO.docid,
-						':결재본문.hwp:',
+						':결재본문.mht:',
 						IFNULL(TBL_OPENGOVDOCINFO.docsize, '60112'),
 						':0:',
 						CASE WHEN openflag = '3' THEN 'N' ELSE 'Y' END,
 						CASE WHEN attach IS NULL THEN '' ELSE attach END)
 				) AS filelist
-	    FROM
-	    	TBL_OPENGOVDOCINFO
-	    INNER JOIN
-	    	TBL_ENDAPRDOCINFO
-	    ON
-	    	TBL_OPENGOVDOCINFO.docid = TBL_ENDAPRDOCINFO.docid
-	    AND
-	    	TBL_OPENGOVDOCINFO.tenant_id = TBL_ENDAPRDOCINFO.tenant_id
-	    AND
-	    	TBL_ENDAPRDOCINFO.companyid = TBL_ENDAPRDOCINFO.companyid
-	    INNER JOIN
-	    	TBL_EXPENDAPRDOCINFO
-	    ON
-	    	TBL_OPENGOVDOCINFO.docid = TBL_EXPENDAPRDOCINFO.docid
-	    AND
-	    	TBL_OPENGOVDOCINFO.tenant_id = TBL_EXPENDAPRDOCINFO.tenant_id
-	    AND
-	    	TBL_OPENGOVDOCINFO.companyid = TBL_EXPENDAPRDOCINFO.companyid
-	    INNER JOIN
-	    	TBL_RECORD
-	    ON
-	    	TBL_OPENGOVDOCINFO.docid = TBL_RECORD.docid
-	    AND
-	    	TBL_OPENGOVDOCINFO.tenant_id = TBL_RECORD.tenant_id
-	    AND
-	    	TBL_OPENGOVDOCINFO.companyid = TBL_RECORD.companyid
-	    INNER JOIN
-	    	TBL_CABINET
-	    ON
-	    	TBL_EXPENDAPRDOCINFO.cabinetid = TBL_CABINET.cabinetid
-	    INNER JOIN
-	    	TBL_CABINETCLASS
-	    ON
-	    	TBL_CABINET.cabinetclassno = TBL_CABINETCLASS.cabinetclassno
-	    LEFT OUTER JOIN
-	    	(SELECT
-	    		docid,
-	    		GROUP_CONCAT(attach SEPARATOR '') AS attach
 			FROM
+				TBL_OPENGOVDOCINFO
+    		INNER JOIN
+    			TBL_ENDAPRDOCINFO
+    		ON
+    			TBL_OPENGOVDOCINFO.docid = TBL_ENDAPRDOCINFO.docid
+    		AND
+    			TBL_OPENGOVDOCINFO.tenant_id = TBL_ENDAPRDOCINFO.tenant_id
+    		AND
+    			TBL_OPENGOVDOCINFO.companyid = TBL_ENDAPRDOCINFO.companyid
+    		INNER JOIN
+    			TBL_EXPENDAPRDOCINFO
+    		ON
+    			TBL_OPENGOVDOCINFO.docid = TBL_EXPENDAPRDOCINFO.docid
+    		AND
+    			TBL_OPENGOVDOCINFO.tenant_id = TBL_EXPENDAPRDOCINFO.tenant_id
+    		AND
+    			TBL_OPENGOVDOCINFO.companyid = TBL_EXPENDAPRDOCINFO.companyid
+    		INNER JOIN
+    			TBL_RECORD
+    		ON
+    			TBL_OPENGOVDOCINFO.docid = TBL_RECORD.docid
+    		AND
+    			TBL_OPENGOVDOCINFO.tenant_id = TBL_RECORD.tenant_id
+    		AND
+    			TBL_OPENGOVDOCINFO.companyid = TBL_RECORD.companyid
+		    INNER JOIN
+		    	TBL_CABINET
+    		ON
+    			TBL_EXPENDAPRDOCINFO.cabinetid = TBL_CABINET.cabinetid
+    		AND
+    			TBL_EXPENDAPRDOCINFO.tenant_id = TBL_CABINET.tenant_id
+    		AND
+    			TBL_EXPENDAPRDOCINFO.companyid = TBL_CABINET.companyid
+    		INNER JOIN
+    			TBL_CABINETCLASS
+    		ON
+    			TBL_CABINET.cabinetclassno = TBL_CABINETCLASS.cabinetclassno
+    		AND
+    			TBL_CABINET.tenant_id = TBL_CABINETCLASS.tenant_id
+    		AND
+    			TBL_CABINET.companyid = TBL_CABINETCLASS.companyid
+    		INNER JOIN
+				TBL_FORMINFO
+			ON
+				TBL_ENDAPRDOCINFO.COMPANYID = TBL_FORMINFO.COMPANYID
+			AND
+				TBL_ENDAPRDOCINFO.TENANT_ID = TBL_FORMINFO.TENANT_ID
+			AND
+				TBL_ENDAPRDOCINFO.FORMID = TBL_FORMINFO.FORMID
+			AND
+				TBL_FORMINFO.OPENGOVFLAG = 'Y'
+    		LEFT OUTER JOIN
 				(SELECT
-					TBL_OPENGOVFILEINFO.docid,
-					CONCAT(
-						':첨부:',
-						TBL_OPENGOVFILEINFO.docid,
-						sn,
-						':',
-						attachfilename,
-						':',
-						IFNULL(attachfilesize, '1024'),
-						':',
-						sn-1,
-						':',
-						fileopenflag) AS attach
+					docid,
+					GROUP_CONCAT(attach SEPARATOR '') AS attach
 				FROM
-					TBL_OPENGOVFILEINFO
-				INNER JOIN
-					TBL_ENDATTACHINFO
-				ON
-					TBL_OPENGOVFILEINFO.docid = TBL_ENDATTACHINFO.docid
-				AND
-					TBL_OPENGOVFILEINFO.sn = TBL_ENDATTACHINFO.attachfilesn
-				AND
-					TBL_OPENGOVFILEINFO.tenant_id = TBL_ENDATTACHINFO.tenant_id
-				AND
-					TBL_OPENGOVFILEINFO.companyid = TBL_ENDATTACHINFO.companyid
-				) ATTACHLIST
-	        GROUP BY
-	        	docid
-	    	) FILEATTACHLIST
-	    ON
-	    	TBL_OPENGOVDOCINFO.docid = FILEATTACHLIST.docid
-	    WHERE
-	    	(TBL_ENDAPRDOCINFO.docstate <> '011' OR TBL_ENDAPRDOCINFO.docstate IS NULL)
+					(SELECT
+						TBL_OPENGOVFILEINFO.docid,
+						CONCAT(
+							':첨부:',
+							TBL_OPENGOVFILEINFO.docid,
+							sn,
+							':',
+							attachfilename,
+							':',
+							IFNULL(attachfilesize, '1024'),
+							':',
+							sn-1,
+							':',
+							fileopenflag) AS attach
+					FROM
+						TBL_OPENGOVFILEINFO
+					INNER JOIN
+						TBL_ENDATTACHINFO
+					ON
+						TBL_OPENGOVFILEINFO.docid = TBL_ENDATTACHINFO.docid
+					AND
+						TBL_OPENGOVFILEINFO.sn = TBL_ENDATTACHINFO.attachfilesn
+					AND
+						TBL_OPENGOVFILEINFO.tenant_id = TBL_ENDATTACHINFO.tenant_id
+					AND
+						TBL_OPENGOVFILEINFO.companyid = TBL_ENDATTACHINFO.companyid
+					) ATTACHLIST
+				GROUP BY
+					docid
+    			) FILEATTACHLIST
+    		ON
+    			TBL_OPENGOVDOCINFO.docid = FILEATTACHLIST.docid
+    		WHERE
+    			(TBL_ENDAPRDOCINFO.docstate <> '011' OR TBL_ENDAPRDOCINFO.docstate IS NULL)
 		]]>
 	</select>
 </sqlMap>

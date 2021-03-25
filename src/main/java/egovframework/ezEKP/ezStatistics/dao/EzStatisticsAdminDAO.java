@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezStatistics.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -83,20 +84,16 @@ public class EzStatisticsAdminDAO extends EgovAbstractDAO{
 		return (List<StatConnVO>) list("EzStatisticsAdminDAO.getConnOS", statApprVO);	
 	}
 
-	@SuppressWarnings("unchecked")
 	public void insertCustomDocBatch() {
 		insert("EzStatisticsAdminDAO.insertCustomDocBatch");	
 	}
-	@SuppressWarnings("unchecked")
 	public void insertCustomFormBatch() {
 		insert("EzStatisticsAdminDAO.insertCustomFormBatch");	
 	}
 
-	@SuppressWarnings("unchecked")
 	public void deleteCustomDocBatch() {
 		insert("EzStatisticsAdminDAO.deleteCustomDocBatch");	
 	}
-	@SuppressWarnings("unchecked")
 	public void deleteCustomFormBatch() {
 		insert("EzStatisticsAdminDAO.deleteCustomFormBatch");	
 	}
@@ -117,4 +114,16 @@ public class EzStatisticsAdminDAO extends EgovAbstractDAO{
 		insert("EzStatisticsAdminDAO.insertDailyFormCountLog", statApprVO);
 	}
 
+	public void deleteYearlyDocCount(StatApprVO statApprVO) throws Exception {
+		delete("EzStatisticsAdminDAO.deleteYearlyDocCount", statApprVO);
+	}
+
+	public void insertYearlyDocCount(StatApprVO statApprVO) throws Exception {
+		insert("EzStatisticsAdminDAO.insertYearlyDocCount", statApprVO);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getYearlyDocCount(Map<String, Object> map) throws Exception {
+		return (List<HashMap<String, Object>>) list("EzStatisticsAdminDAO.getYearlyDocCount", map);
+	}
 }

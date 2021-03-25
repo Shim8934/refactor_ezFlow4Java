@@ -20,8 +20,8 @@
 		    var g_SelTaskCode="";
 		    var g_SelChargerID="";
 		    var g_InitFlag="0";
-		    var CompanyID = "${userInfo.companyID}";
-		    var approvalFlag = "${approvalFlag}";
+		    var CompanyID = "<c:out value='${userInfo.companyID}'/>";
+		    var approvalFlag = "<c:out value='${approvalFlag}'/>";
 		    window.onload = window_onload;
 		    window.onbeforeunload = window_onunload;
 		    var RetValue;
@@ -59,6 +59,9 @@
 		        if(document.txtDeptName) { 
 		        	txtDeptName.value = g_DeptName;
 		        }
+		        
+		      	//엔터키 눌렀을때도 검색 실행
+		        $(".text").attr("onkeyup", "enterkey(event)");
 		    }
 		    function InitCode() {
 		        var result = "";
@@ -258,7 +261,20 @@
 		    			selectE.selectedIndex = 0;
 		    		}
 		    	}
-		    }		    
+		    }	
+		    
+		    function enterkey(e) {
+		        if (window.event) {
+		            if (window.event.keyCode == 13) {
+		            	btnSearch_onclick();
+		            }
+		        }
+		        else {
+		            if (e.which == 13) {
+		            	btnSearch_onclick();
+		            }
+		        }
+			}
 		</script>
 	</head>
 	<body class="popup" leftmargin="0" topmargin="0" LANGUAGE ="javascript">

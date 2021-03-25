@@ -40,8 +40,8 @@ var strLang42 = "メールを選択してください。";
 var strLang44 = "メールを一つのみ選択してください。";
 var strLang52 = "エラーが発生しました。";
 var strLang53 = "コピーしました。";
-var strLang54 = "ゴミ箱のメールが全て永久削除されます。\n続行しますか?";
-var strLang58 = "このメールを永久削除してよろしいですか?";
+var strLang54 = "ゴミ箱のメールが全て完全削除されます。\n続行しますか?";
+var strLang58 = "このメールを完全削除してよろしいですか?";
 var strLang59 = "このメールを削除してよろしいですか?";
 var strLang61 = "受信拒否しました。";
 var strLang62 = "エラーが発生しました。";
@@ -157,7 +157,7 @@ var strLang197 = "メールアドレスを入力してください。";
 var strLang198 = "メールアドレスの形式が正しくありません。";
 var strLang199 = "-簡単アドレス帳-";
 var strLang200 = "データを読み込み中です。";
-var strLang201 = "永久削除";
+var strLang201 = "完全削除";
 var strLang202 = "データが存在しません";
 var strLang203 = "次の条件のとき：";
 var strLang204 = "差出人に：";
@@ -189,7 +189,7 @@ var strLang230 = "ルールのタイトルを入力してください。";
 var strLang231 = "条件を１つ以上選択してください。";
 var strLang232 = "実行する条件を選択してください。";
 var strLang233 = "ルールを追加中にエラーが発生しました。";
-var strLang234 = "\"保存せずに永久削除\"";
+var strLang234 = "\"保存せずに完全削除\"";
 var strLang235 = " または \"";
 var strLang236 = "\" または \"";
 var strLang238 = " エラーが発生しました。";
@@ -244,7 +244,7 @@ var strLang328 = "削除";
 var strLang330 = "フォルダを削除してよろしいですか？";
 var strLang331 = "フォルダを選択してください。";
 var strLang332 = "最上位フォルダは削除できません。";
-var strLang333 = "フォルダ内の全てのファイルを永久削除してよろしいですか？";
+var strLang333 = "フォルダ内の全てのファイルを完全削除してよろしいですか？";
 var strLang334 = "フォルダを選択してください。";
 var strLang336 = "経路が見つかりません。";
 var strLang337 = "匿名掲示板、フォト掲示板、URLリンク掲示板にはメールと決裁文書を掲示できません。";
@@ -299,6 +299,7 @@ var strLangKMS08 = "フォルダはアップロードすることができませ
 var strLangKYJ03 = "スペースは入力できません。";
 var strLangLSD02 = "選択した部署に部署員が登録されていないため、宛先指定できません。";
 var strLangJYH01 = "選択したメールがありません";
+var strLangKSA01 = "(同じメールアドレスがすでに保存されています : \n %s)";
 
 /* 2018-07-03 홍승비 - 승인게시물, 커뮤니티 답변메일 companyID 관련 처리*/
 var strLangHSB01 = "この掲示は";
@@ -314,6 +315,11 @@ var strLangSharedMailbox03 = "パスワードを変更しました。";
 
 var strLangReceiverCount01 = "受信者は";
 var strLangReceiverCount02 = "人まで設定可能です。";
+
+var strLangHDP01 = "回まで";
+var strLangHDP02 = "ダウンロード可能";
+var strLangHDP03 = "大容量添付は{0}個まで可能です。";
+var strLangHDP04 = "Drag＆Dropでファイルを追加および追加したファイルの並び順を変更できます。";
 
 function GetLocalTime(Offset , pDateTime)
 {

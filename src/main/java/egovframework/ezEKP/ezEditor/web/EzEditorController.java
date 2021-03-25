@@ -6,11 +6,10 @@ import java.awt.image.Raster;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Base64;
-import java.util.Iterator;
 import java.util.Base64.Decoder;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.UUID;
-import java.util.Base64.Decoder;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
@@ -18,7 +17,6 @@ import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.tools.ant.taskdefs.condition.IsSet;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -28,6 +26,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -67,7 +66,7 @@ public class EzEditorController extends EgovFileMngUtil {
 	/**
 	 * editor 호출 Method
 	 */
-	@RequestMapping(value = {"/ezEditor/selectEditor.do", "/ezEditor/selectApprovalEditor.do"})
+	@RequestMapping(value = {"/ezEditor/selectEditor.do", "/ezEditor/selectApprovalEditor.do"}, method = RequestMethod.GET)
 	public String selectEditor(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model) throws Exception {
 
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -134,14 +133,17 @@ public class EzEditorController extends EgovFileMngUtil {
 	/**
 	 * editor 호출 Method
 	 */
-	@RequestMapping(value = {"/admin/ezEditor/selectEditor.do", "/admin/ezEditor/selectApprovalEditor.do"})
+	@RequestMapping(value = {"/admin/ezEditor/selectEditor.do", "/admin/ezEditor/selectApprovalEditor.do"}, method = RequestMethod.GET)
 	public String adminSelectEditor(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model) throws Exception {
 
 		userInfo = commonUtil.userInfo(loginCookie);
 
 		String type = request.getParameter("type");
+		type = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(type));
 		String height = request.getParameter("height");
-		String formID = request.getParameter("formID").equals("") ? "editor1" : request.getParameter("formID");
+		height = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(height));
+		String formID = request.getParameter("formID");
+		formID = (formID == null || formID.equals("")) ? "editor1" : request.getParameter("formID");
 		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 
 		// TODO: http/https 설정값
@@ -197,7 +199,7 @@ public class EzEditorController extends EgovFileMngUtil {
 	/**
 	 * ck에디터 이미지 업로드 화면 호출 Method
 	 */
-	@RequestMapping(value = "/ezEditor/ckImageUpload.do")
+	@RequestMapping(value = "/ezEditor/ckImageUpload.do", method = RequestMethod.GET)
 	public String ckImageUpload(HttpServletRequest request, Model model) {
 		String type = request.getParameter("type");
 		logger.debug("ckImageUpload.do type : " + type);
@@ -208,11 +210,15 @@ public class EzEditorController extends EgovFileMngUtil {
 	/**
 	 * ck에디터 업로드 실행 Method
 	 */
-	@RequestMapping(value = "/ezEditor/ckUpload.do")
+	@RequestMapping(value = "/ezEditor/ckUpload.do", method = RequestMethod.POST)
 	public String ckUpload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception {
 		logger.debug("ckUpload started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String useMailLinkHost = ezCommonService.getTenantConfig("useMailLinkHostname", userInfo.getTenantId());
+		String mailLinkHost = ezCommonService.getTenantConfig("mailLinkHostname", userInfo.getTenantId());
+		logger.debug("useMailLinkHost=" + useMailLinkHost + ", mailLinkHost=" + mailLinkHost);
 
 		String type = request.getParameter("type");
 		MultipartFile multiFile = request.getFile("file1");
@@ -258,7 +264,7 @@ public class EzEditorController extends EgovFileMngUtil {
 		 * letterId + "/images"; }
 		 */
 
-		File file = new File(realPath + filePath);
+		File file = new File(commonUtil.detectPathTraversal(realPath + filePath));
 		if (!file.exists()) {
 			file.mkdirs();
 		}
@@ -268,7 +274,7 @@ public class EzEditorController extends EgovFileMngUtil {
 
 		writeUploadedFile(multiFile, fileName, realPath + filePath);
 
-		File imageFile = new File(realPath + filePath + commonUtil.separator + fileName);
+		File imageFile = new File(commonUtil.detectPathTraversal(realPath + filePath + commonUtil.separator + fileName));
 
 		if (imageFile.exists()) {
 			// Checking CMYK
@@ -277,18 +283,18 @@ public class EzEditorController extends EgovFileMngUtil {
 
 			if (check == true) {
 				// Find a suitable ImageReader
-				Iterator readers = ImageIO.getImageReadersByFormatName("JPEG");
+				Iterator<ImageReader> readers = ImageIO.getImageReadersByFormatName("JPEG");
 				ImageReader reader = null;
 
 				while (readers.hasNext()) {
-					reader = (ImageReader) readers.next();
+					reader = readers.next();
 					if (reader.canReadRaster()) {
 						break;
 					}
 				}
 
 				// Stream the image file (the original CMYK image)
-				ImageInputStream input = ImageIO.createImageInputStream(new File(realPath + filePath + commonUtil.separator + fileName));
+				ImageInputStream input = ImageIO.createImageInputStream(imageFile);
 				reader.setInput(input);
 
 				// Read the image raster
@@ -300,14 +306,34 @@ public class EzEditorController extends EgovFileMngUtil {
 				// Fill the new image with the old raster
 				bi.getRaster().setRect(raster);
 			} else {
-				bi = ImageIO.read(new File(realPath + filePath + commonUtil.separator + fileName));
+				bi = ImageIO.read(new File(commonUtil.detectPathTraversal(realPath + filePath + commonUtil.separator + fileName)));
 			}
 
 			width = bi.getWidth();
 			height = bi.getHeight();
 		}
-
-		model.addAttribute("imgPath", (filePath + commonUtil.separator + fileName + "|!|" + width + "|!|" + height).replace("\\", "/"));
+		
+		String imgPath = (filePath + commonUtil.separator + fileName + "|!|" + width + "|!|" + height).replace("\\", "/");
+		
+		if (type.equals("MAILLETTER")) {
+			String reProtocol = request.getScheme() + "://";
+			String reServer = request.getServerName()
+					+ ("http".equals(reProtocol)
+						&& request.getServerPort() == 80
+						|| "https".equals(reProtocol)
+						&& request.getServerPort() == 443 ? "" : ":"
+						+ request.getServerPort());
+			String hostTmp = reProtocol + reServer;
+			
+			if (useMailLinkHost.equalsIgnoreCase("YES") && !mailLinkHost.equals("")) {
+				hostTmp = reProtocol + mailLinkHost;
+			}
+			    
+			imgPath = hostTmp + imgPath;
+		}
+		logger.debug("imgPath=" + imgPath);
+		
+		model.addAttribute("imgPath", imgPath);
 
 		logger.debug("ckUpload ended");
 		return "ezEditor/ckUpload";
@@ -318,7 +344,7 @@ public class EzEditorController extends EgovFileMngUtil {
 		BufferedImage img = null;
 
 		try {
-			img = ImageIO.read(new File(filename));
+			img = ImageIO.read(new File(commonUtil.detectPathTraversal(filename)));
 		} catch (Exception e) {
 			result = true;
 		}
@@ -334,7 +360,7 @@ public class EzEditorController extends EgovFileMngUtil {
 	 * ck에디터 심플업로드 실행 Method
 	 */
 
-	@RequestMapping(value = "/ezEditor/ckSimpleUpload.do", produces = "application/json; charset=utf-8")
+	@RequestMapping(value = "/ezEditor/ckSimpleUpload.do", produces = "application/json; charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String ckSimpleUpload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception {
 		logger.debug("ckSimpleUpload started");
@@ -368,7 +394,7 @@ public class EzEditorController extends EgovFileMngUtil {
 			filePath = filePath + commonUtil.separator + today;
 		}
 
-		File file = new File(realPath + filePath);
+		File file = new File(commonUtil.detectPathTraversal(realPath + filePath));
 
 		if (!file.exists()) {
 			file.mkdirs();
@@ -382,12 +408,17 @@ public class EzEditorController extends EgovFileMngUtil {
 		return "{\"uploaded\": 1,\"fileName\": \"" + fileName + "\", \"url\": \"" + (filePath + commonUtil.separator + fileName).replace("\\", "/") + "\"}";
 	}
 
+	
 	/**
 	 * TagFree에디터 업로드 실행 Method
 	 */
-	@RequestMapping(value = "/ezEditor/tfxUpload.do")
+	@RequestMapping(value = "/ezEditor/tfxUpload.do", method = RequestMethod.POST)
 	public String tfxUpload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String useMailLinkHost = ezCommonService.getTenantConfig("useMailLinkHostname", userInfo.getTenantId());
+		String mailLinkHost = ezCommonService.getTenantConfig("mailLinkHostname", userInfo.getTenantId());
+		logger.debug("useMailLinkHost=" + useMailLinkHost + ", mailLinkHost=" + mailLinkHost);
 
 		MultipartFile multiFile = request.getFile("FILE_PATH");
 		// String letterPopUp = request.getParameter("letterPopUp"); // 편지지 추가,
@@ -420,16 +451,35 @@ public class EzEditorController extends EgovFileMngUtil {
 			filePath = filePath + commonUtil.separator + letterBoxNo + "/" + letterId + "/images";
 		}
 		logger.debug("filePath : " + filePath);
-
-		File file = new File(realPath + filePath);
+		
+		File file = new File(commonUtil.detectPathTraversal(realPath + filePath));
 		if (!file.exists()) {
 			file.mkdirs();
 		}
 
 		writeUploadedFile(multiFile, fileName, realPath + filePath);
 
+		String uploadPath = filePath + commonUtil.separator + fileName;
+		if (type.equals("MAILLETTER")) {
+			String reProtocol = request.getScheme() + "://";
+			String reServer = request.getServerName()
+					+ ("http".equals(reProtocol)
+						&& request.getServerPort() == 80
+						|| "https".equals(reProtocol)
+						&& request.getServerPort() == 443 ? "" : ":"
+						+ request.getServerPort());
+			String hostTmp = reProtocol + reServer;
+			
+			if (useMailLinkHost.equalsIgnoreCase("YES") && !mailLinkHost.equals("")) {
+				hostTmp = reProtocol + mailLinkHost;
+			}
+			    
+			uploadPath = hostTmp + uploadPath;
+		}
+		logger.debug("uploadPath=" + uploadPath);
+		
 		model.addAttribute("sContentType", request.getParameter("content_type"));
-		model.addAttribute("sUploadedPath", filePath + commonUtil.separator + fileName);
+		model.addAttribute("sUploadedPath", uploadPath);
 
 		return "ezEditor/tfxUpload";
 	}
@@ -437,14 +487,18 @@ public class EzEditorController extends EgovFileMngUtil {
 	/**
 	 * TagFree에디터 심플업로드(drag&drop) 실행 Method
 	 */
-	@RequestMapping(value = "/ezEditor/tfxSimpleUpload.do")
+	@RequestMapping(value = "/ezEditor/tfxSimpleUpload.do", method = RequestMethod.POST)
 	public String tfxSimpleUpload(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("tfxSimpleUpload started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String useMailLinkHost = ezCommonService.getTenantConfig("useMailLinkHostname", userInfo.getTenantId());
+		String mailLinkHost = ezCommonService.getTenantConfig("mailLinkHostname", userInfo.getTenantId());
+		logger.debug("useMailLinkHost=" + useMailLinkHost + ", mailLinkHost=" + mailLinkHost);
 
 		String fileData = request.getParameter("clip_contents");
-		String fileType = request.getParameter("file_extension");
+		String fileType = commonUtil.detectPathTraversal(request.getParameter("file_extension"));
 		String rootId = request.getParameter("xfe_root_id");
 		String resultCode = "0";
 
@@ -497,7 +551,7 @@ public class EzEditorController extends EgovFileMngUtil {
 			}
 			logger.debug("filePath : " + filePath);
 
-			File file = new File(realPath + filePath);
+			File file = new File(commonUtil.detectPathTraversal(realPath + filePath));
 
 			if (!file.exists()) {
 				file.mkdirs();
@@ -508,14 +562,32 @@ public class EzEditorController extends EgovFileMngUtil {
 			try {
 				Decoder decoder = Base64.getDecoder();
 				byte[] imageByte = decoder.decode(fileData);
-				fileOuputStream = new FileOutputStream(realPath + filePath + commonUtil.separator + fileName);
+				fileOuputStream = new FileOutputStream(commonUtil.detectPathTraversal(realPath + filePath + commonUtil.separator + fileName));
 				fileOuputStream.write(imageByte);
 				fileOuputStream.flush();
 
 				logger.debug("rootId=" + rootId + ", sUploadedPath=" + filePath + commonUtil.separator + fileName);
 
+				String uploadPath = filePath + commonUtil.separator + fileName;
+				if (type.equals("MAILLETTER")) {
+					String reProtocol = request.getScheme() + "://";
+					String reServer = request.getServerName()
+							+ ("http".equals(reProtocol)
+								&& request.getServerPort() == 80
+								|| "https".equals(reProtocol)
+								&& request.getServerPort() == 443 ? "" : ":"
+								+ request.getServerPort());
+					String hostTmp = reProtocol + reServer;
+					
+					if (useMailLinkHost.equalsIgnoreCase("YES") && !mailLinkHost.equals("")) {
+						hostTmp = reProtocol + mailLinkHost;
+					}
+					    
+					uploadPath = hostTmp + uploadPath;
+				}
+				
 				model.addAttribute("sRootId", rootId);
-				model.addAttribute("sUploadedPath", filePath + commonUtil.separator + fileName);
+				model.addAttribute("sUploadedPath", uploadPath);
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -539,7 +611,7 @@ public class EzEditorController extends EgovFileMngUtil {
 	/**
 	 * 메일 부재중설정 TagFree에디터 심플업로드(drag&drop) 시 아무처리 안하는 Method
 	 */
-	@RequestMapping(value = "/ezEditor/tfxNoop.do")
+	@RequestMapping(value = "/ezEditor/tfxNoop.do", method = RequestMethod.POST)
 	public String tfxNoop(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("tfxNoop started");
 
@@ -551,7 +623,8 @@ public class EzEditorController extends EgovFileMngUtil {
 	/**
 	 * namo에디터 업로드 실행 Method
 	 */
-	@RequestMapping(value = "/ezEditor/namoUpload.do")
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/ezEditor/namoUpload.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String namoUpload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception {
 		logger.debug("namoUpload started");
@@ -573,6 +646,7 @@ public class EzEditorController extends EgovFileMngUtil {
 
 				MultipartFile multiFile = request.getFile("imageFile");
 				String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
+				fileType = commonUtil.detectPathTraversal(fileType);
 				long fileSize = multiFile.getSize();
 				long maxSize = 10485760;
 				logger.debug("fileType=" + fileType + ",fileSize=" + fileSize);
@@ -614,7 +688,7 @@ public class EzEditorController extends EgovFileMngUtil {
 						filePath = filePath + commonUtil.separator + today;
 					}
 
-					File file = new File(realPath + filePath);
+					File file = new File(commonUtil.detectPathTraversal(realPath + filePath));
 					if (!file.exists()) {
 						file.mkdirs();
 					}
@@ -625,11 +699,11 @@ public class EzEditorController extends EgovFileMngUtil {
 					writeUploadedFile(multiFile, fileName, realPath + filePath);
 
 					String urlFilePath = filePath + commonUtil.separator + fileName;
-					File imageFile = new File(realPath + urlFilePath);
+					File imageFile = new File(commonUtil.detectPathTraversal(realPath + urlFilePath));
 
 					if (imageFile.exists()) {
 						try {
-							BufferedImage bi = ImageIO.read(new File(realPath + urlFilePath));
+							BufferedImage bi = ImageIO.read(new File(commonUtil.detectPathTraversal(realPath + urlFilePath)));
 							width = bi.getWidth();
 							height = bi.getHeight();
 						} catch (Exception e) {
@@ -694,7 +768,7 @@ public class EzEditorController extends EgovFileMngUtil {
 	/**
 	 * 쿠쿠닥스 에디터 업로드 실행 Method
 	 */
-	@RequestMapping(value = "/ezEditor/kukudocsUpload.do")
+	@RequestMapping(value = "/ezEditor/kukudocsUpload.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String kukudocsUpload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model, Locale locale) throws Exception {
 		logger.debug("kukudocsUpload started.");
@@ -702,7 +776,11 @@ public class EzEditorController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String result = "";
 		String msg = "";
-
+		
+		String useMailLinkHost = ezCommonService.getTenantConfig("useMailLinkHostname", userInfo.getTenantId());
+		String mailLinkHost = ezCommonService.getTenantConfig("mailLinkHostname", userInfo.getTenantId());
+		logger.debug("useMailLinkHost=" + useMailLinkHost + ", mailLinkHost=" + mailLinkHost);
+		
 		try {
 			MultipartFile multiFile = request.getFile("image_type");
 			String fileData = request.getParameter("image_base64_type");
@@ -723,6 +801,7 @@ public class EzEditorController extends EgovFileMngUtil {
 
 				if (fileDatas[0].startsWith("data:image/")) {
 					String fileType = fileDatas[0].substring(fileDatas[0].indexOf("/") + 1, fileDatas[0].indexOf(";"));
+					fileType = commonUtil.detectPathTraversal(fileType);
 					fileData = fileDatas[1];
 					FileOutputStream fileOuputStream = null;
 
@@ -741,7 +820,7 @@ public class EzEditorController extends EgovFileMngUtil {
 						String fileName = UUID.randomUUID() + "." + fileType;
 
 						filePath = filePath + commonUtil.separator + today;
-						File file = new File(realPath + filePath);
+						File file = new File(commonUtil.detectPathTraversal(realPath + filePath));
 
 						if (!file.exists()) {
 							file.mkdirs();
@@ -749,7 +828,7 @@ public class EzEditorController extends EgovFileMngUtil {
 
 						Decoder decoder = Base64.getDecoder();
 						byte[] imageByte = decoder.decode(fileData);
-						fileOuputStream = new FileOutputStream(realPath + filePath + commonUtil.separator + fileName);
+						fileOuputStream = new FileOutputStream(commonUtil.detectPathTraversal(realPath + filePath + commonUtil.separator + fileName));
 						fileOuputStream.write(imageByte);
 						fileOuputStream.flush();
 
@@ -792,7 +871,7 @@ public class EzEditorController extends EgovFileMngUtil {
 				}
 				logger.debug("filePath : " + filePath);
 
-				File file = new File(realPath + filePath);
+				File file = new File(commonUtil.detectPathTraversal(realPath + filePath));
 
 				if (!file.exists()) {
 					file.mkdirs();
@@ -800,6 +879,25 @@ public class EzEditorController extends EgovFileMngUtil {
 
 				writeUploadedFile(multiFile, fileName, realPath + filePath);
 				msg = filePath + commonUtil.separator + fileName;
+
+				if (type.equals("MAILLETTER")) {
+					String reProtocol = request.getScheme() + "://";
+					String reServer = request.getServerName()
+							+ ("http".equals(reProtocol)
+								&& request.getServerPort() == 80
+								|| "https".equals(reProtocol)
+								&& request.getServerPort() == 443 ? "" : ":"
+								+ request.getServerPort());
+					String hostTmp = reProtocol + reServer;
+					
+					if (useMailLinkHost.equalsIgnoreCase("YES") && !mailLinkHost.equals("")) {
+						hostTmp = reProtocol + mailLinkHost;
+					}
+					    
+					msg = hostTmp + msg;
+				}
+				logger.debug("msg=" + msg);
+				
 				result = "{ \"url\" : \"" + msg + "\" }";
 
 				// fileData, multiFile 모두 null일 경우

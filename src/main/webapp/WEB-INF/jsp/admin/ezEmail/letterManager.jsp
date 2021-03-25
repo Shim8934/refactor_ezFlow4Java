@@ -117,7 +117,7 @@
 	<script type="text/javascript">
 		// resultRead() 사용 *
 		var pageType = "${pageType}"; // letter
-		var returnCompany = '${companyId}'; // companyId
+		var returnCompany = "<c:out value='${companyId}'/>"; // companyId
 		var userLang = "${userLang}";
 		var result = [];
 		var treeCollection = [];
@@ -185,9 +185,10 @@
 
 				$.ajax({
 					type : "POST",
-					url : "/admin/ezEmail/updateLetterOrder.do?letterOrder="
-							+ (i + 1) + "&" + "letterNo=" + letterNo,
+					url : "/admin/ezEmail/updateLetterOrder.do",
 					dataType : "text",
+					data : {"letterOrder" : (i + 1),
+							"letterNo" : letterNo},
 					error : function(data) {
 						alert("error");
 						return;
@@ -203,23 +204,24 @@
 
 		// 편지지 이동
 		function letterBoxMove(btn) {
-			var letterBox = selectNode.node.id;
+			var letterBox = "";
 			var letterNo = $(".lmLetterSelect").attr("data-letterno");
 			var letterId = $(".lmLetterSelect").attr("data-letterid");
 
 			// 편지지 목록이 선택 되었을때
 			if (letterNo !== undefined) {
+				letterBox = selectNode.node.id;
 
 				url = "/admin/ezEmail/letterBoxMovePopUp.do?letterBox="
 						+ letterBox + "&letterNo=" + letterNo + "&letterId="
-						+ letterId;
+						+ letterId + "&companyId=" + returnCompany;
 				var win = window.open(url, "_blank", GetOpenWindowfeature(550, 450));
 
 				// 팝업이 끝나면 실행되는 부분
 				var interval = window.setInterval(function() {
 					try {
 						if (win === null || win.closed) {
-							if (searchTxt !== "") {
+							if ($("#lmSearchInput").val().trim() !== "") {
 								letterSearch();
 							} else {
 								getLetterList(selectNode.node.id);
@@ -244,15 +246,17 @@
 			var letterNo = "";
 
 			if (type === "add") {
-
-				if (searchMode == true) {
-					alert("<spring:message code='ezEmail.letter33'/>");
-					return;
-				}
-
 				popUpType = "add";
 				letterBoxNo = $(btn).parents(".boxNo").attr("data-boxNo");
 				letterNo = -1;
+
+				if (letterBoxNo == null || (typeof letterBoxNo == "undefined") || letterBoxNo == "") {
+					alert("<spring:message code='ezEmail.letter39'/>");
+					return;
+				} else if (searchMode == true) {
+					alert("<spring:message code='ezEmail.letter33'/>");
+					return;
+				}
 			} else {
 				popUpType = "modify";
 				letterBoxNo = $(btn).parents("li").attr("data-letterboxno");
@@ -278,7 +282,7 @@
 				success : function() {
 					var lmPreIframe = $(".lmPreViewIframe");
 
-					if (searchTxt != "") {
+					if ($("#lmSearchInput").val().trim() != "") {
 						letterSearch(); // 검색된 편지지 목록
 					} else {
 						getLetterList(letterBoxNo);

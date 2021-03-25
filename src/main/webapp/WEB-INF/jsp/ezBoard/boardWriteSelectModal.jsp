@@ -22,7 +22,6 @@
 				display: inline-block;
 			}
 			.node_div span {
-				width:266px;
 				overflow:hidden;
 				text-overflow:ellipsis;
 			}
@@ -38,7 +37,7 @@
 			var	selectedBoardGroupID = "";	
 			var SelectedBoardName = "";
 			var SelectedBoardType = "";
-			var SelectedBoardURL = "";
+			var SelectedBoardUrl = "";
 			var ret = new Array();
 			
 			var xmlDom_treeview = createXmlDom();
@@ -65,7 +64,7 @@
 				}
 				
 				/* 2020-06-23 홍승비 - URL게시판 선택 시 경고 메세지 추가 */
-				if (SelectedBoardURL != null && SelectedBoardURL != "null" && trim(SelectedBoardURL) != "") {
+				if (SelectedBoardUrl != null && SelectedBoardUrl != "null" && trim(SelectedBoardUrl) != "") {
 					var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.garm02' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.garm02'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 					DivPopUpShow(330, 205, pUrl);
 					return;
@@ -75,6 +74,7 @@
 			    ret[0] = SelectedBoardID;
 			    ret[1] = SelectedBoardName;
 			    ret[2] = SelectedBoardType;
+			    ret[3] = SelectedBoardUrl;
 			
 			    rtnVal = ret;
 			    window.close();
@@ -90,7 +90,7 @@
 		    // 미사용 함수 주석처리
 /* 			function CheckIfAnonyBoard(pBoardID)
 			{
-				xmlhttp.open("POST", "/ezBoard/checkIfAnonyBoard.do?boardID=" + pBoardID, false);
+				xmlhttp.open("POST", "/ezBoard/checkIfAnonyBoard.do?boardID=" + encodeURIComponent(pBoardID), false);
 				xmlhttp.send();
 				var ret = xmlhttp.responseText;
 				if (ret.indexOf("anonyboard") != -1 || ret.indexOf("URLboard") != -1) {
@@ -101,7 +101,7 @@
 			
 			function CheckIfCanWrite(pBoardID)
 			{
-				xmlhttp.open("POST", "/ezBoard/getACL.do?boardID=" + pBoardID, false);
+				xmlhttp.open("POST", "/ezBoard/getACL.do?boardID=" + encodeURIComponent(pBoardID), false);
 				xmlhttp.send();
 				var ret = xmlhttp.responseText;
 				 if (ret.indexOf("<WRITE>true</WRITE>") != -1 || ret.indexOf("<BOARDGROUPADMIN>OK</BOARDGROUPADMIN>") != -1) {
@@ -154,7 +154,7 @@
 			    treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
 			    
 			    /* 2018-08-06 홍승비 - boardLeft.jsp에서 하위게시판 ellipsis 부분 가져옴 */
-		        var node = document.getElementById(TreeIdx);
+		        /* var node = document.getElementById(TreeIdx);
 		        var title2 = node.getElementsByClassName("node_div");
 		        var nodeLevel = title2[0].getAttribute("nodelevel");
 		        if(nodeLevel > 9) {
@@ -166,10 +166,10 @@
 		        	title3[0].style.width = 266 - 18*nodeLevel +'px';
 		        	title3[0].style.textOverflow = 'ellipsis';
 		        	title3[0].style.overflow = 'hidden';
-		        }
+		        } */
 			}
 			
-			/* 2020-06-23 홍승비 - 게시 시 URL게시판 여부 체크에 쓰이는 변수 추가 */
+			/* 2018-11-08 홍승비 - URL게시판의 URL값 전달 추가 */
 			function TreeCtrl_onNodeClick(pNodeID,pTreeID)  
 			{
 				var treeNode = new TreeNode();
@@ -177,7 +177,7 @@
 			    SelectedBoardID = treeNode.GetNodeData("DATA1");	
 			    SelectedBoardName = treeNode.GetNodeData("DATA2");
 			    SelectedBoardType = treeNode.GetNodeData("DATA5");
-			    SelectedBoardURL = treeNode.GetNodeData("DATA6");
+			    SelectedBoardUrl = treeNode.GetNodeData("DATA6");
 			}
 			
 			function DisplayTopBoard()
@@ -220,7 +220,7 @@
 			
 			function GetSubBoard(pRootBoardID, pSubFlag)
 			{
-				xmlhttp.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=" + pRootBoardID + "&subFlag=" + pSubFlag + "&selectFlag=0&pExcludeBoardID=" + BoardID, false);
+				xmlhttp.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=" + encodeURIComponent(pRootBoardID) + "&subFlag=" + pSubFlag + "&selectFlag=0&pExcludeBoardID=" + encodeURIComponent(BoardID), false);
 				xmlhttp.send();
 				
 				return xmlhttp.responseXML;
@@ -249,7 +249,7 @@
 				    } else {
 						strHTML += "<tr><td><h2 id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl"+i.toString()+"\" ,\""+ tid + "\""+", \"" + items + "\"" + ")' style='cursor:pointer'><span class='groupBoard'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</span></h2></td></tr>";
 				    }
-					strHTML += "<TR id='TreeArea' ><td><DIV id='TreeCtrl" + i.toString() + "' style='display:none;height:100%;width:300px;overflow-x:hidden;padding-top:10px;padding-bottom:10px'></DIV></td></tr>";
+					strHTML += "<TR id='TreeArea' ><td><DIV id='TreeCtrl" + i.toString() + "' style='display:none;height:100%;width:300px;overflow:hidden;padding-top:10px;padding-bottom:10px'></DIV></td></tr>";
 				}
 				strHTML += "</table>";
 				

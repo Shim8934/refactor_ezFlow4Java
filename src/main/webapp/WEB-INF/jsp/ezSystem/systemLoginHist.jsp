@@ -110,7 +110,7 @@
 		    		changeYear: true,
 		    		autoSize: true,
 		    		showOn: "both",
-		    		buttonImage: "/images/ImgIcon/calendar-month.gif",
+		    		buttonImage: "/images/ImgIcon/calendar-month.png",
 		    		buttonImageOnly: true,
 		    		maxDate: 0,
 		    		onSelect: function(selected) {
@@ -124,7 +124,7 @@
 		    		changeYear: true,
 		    		autoSize: true,
 		    		showOn: "both",
-		    		buttonImage: "/images/ImgIcon/calendar-month.gif",
+		    		buttonImage: "/images/ImgIcon/calendar-month.png",
 		    		buttonImageOnly: true,
 		    		maxDate: 0,
 		    		onSelect: function(selected) {
@@ -194,9 +194,7 @@
 				var strtext;
 				var PagingHTML = "";
 				document.getElementById("tblPageRayer").innerHTML = "";
-				document.getElementById("listInfo").innerHTML = " &nbsp;["
-						+ strLang7 + "<span style='color:#017BEC;'> "
-						+ totalCount + " </span>" + strLang8 + "]";
+				document.getElementById("listInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + totalCount + "</span>";
 				strtext = "<div class='pagenavi'>";
 				PagingHTML += strtext;
 				var pageNum = CurPage;
@@ -388,7 +386,7 @@
 					var pageSize = "-1";
 					var params = 'startDate=' + searchStartTime	+ '&endDate=' + searchEndTime;
 					params += '&searchKeycode=' + searchKeycode + '&searchKeyword=' + searchKeyword;
-					params += '&pageNum=' + pageNum + '&pageSize='	+ pageSize + '&companyId='	+ companyID;
+					params += '&pageNum=' + pageNum + '&pageSize='	+ pageSize + '&companyId='	+ companyID +'&config=a';
 					var pURL = "/admin/ezSystem/systemLoginHistExcelExport.do" + "?" + params;
 					saveExcel.location.href = pURL;
 				} else {
@@ -411,7 +409,7 @@
 								var html = "";
 
 								if (res.itemCnt < 1) {
-									html += "<tr><td colspan=\"7\" style=\"text-align:center;\">" + strLang155 + "</td></tr>";
+									html += "<tr><td colspan=\"8\" style=\"text-align:center;\">" + strLang155 + "</td></tr>";
 								} else {
 									var j = ((pageNum - 1) * 20) + 1;
 
@@ -420,10 +418,10 @@
 										res.loginHistList.forEach(function(i, v) {
 											html += "<tr>";
 											html += "   <td>"	+ j 								+ "</td>";
-											html += "	<td title=\'" + i.usernm + "'>"	+ i.usernm	+ "</td>";
+											html += "	<td title=\'" + i.usernm + "(" + i.userid	+ ")'>"	+ i.usernm + "(" + i.userid	+ ")" + "</td>";
 											html += "	<td>"	+ i.deptnm							+ "</td>";
 											html += "	<td>"	+ i.companynm						+ "</td>";
-											html += "	<td>"	+ i.connectip						+ "</td>";
+											html += "	<td>"	+ i.connectip + " ( " + i.connectCountryName	+ " ) " + "</td>";
 											html += "	<td>"	+ i.connecttime						+ "</td>";
 											html += "	<td>"	+ i.connectbrowser					+ "</td>";
 											html += "	<td>"	+ i.connectos						+ "</td>";
@@ -436,10 +434,10 @@
 										res.loginHistList.forEach(function(i, v) {
 											html += "<tr>";
 											html += "   <td>"	+ j		+ "</td>";
-											html += "	<td title=\'" + i.usernm2 + "'>"  + i.usernm2 	+ "</td>";
+											html += "	<td title=\'" + i.usernm2 + "(" + i.userid	+ ")'>"  + i.usernm2 	+ "(" + i.userid	+ ")" + "</td>";
 											html += "	<td>"	+ i.deptnm2								+ "</td>";
 											html += "	<td>"	+ i.companynm2							+ "</td>";
-											html += "	<td>"	+ i.connectip							+ "</td>";
+											html += "	<td>"	+ i.connectip + " ( " + i.connectCountryName	+ " ) " + "</td>";
 											html += "	<td>"	+ i.connecttime							+ "</td>";
 											html += "	<td>"	+ i.connectbrowser						+ "</td>";
 											html += "	<td>"	+ i.connectos							+ "</td>";
@@ -457,11 +455,11 @@
 								totalCount = res.itemCnt;
 
 								if (res.searchKeycode != null) {
-									var idx = parseInt(searchKeycode) - 1;
-									$('#searchKeycode option:eq('+ idx + ')').attr('selected', 'selected');
+									var idx = parseInt(searchKeycode);
+									$('#searchKeycode option[value='+ idx + ']').attr('selected', 'selected');
 								}
 
-								$('#searchKeyword').val(res.searchKeyword);
+								// $('#searchKeyword').val(res.searchKeyword);
 								$('#startDatepicker').val(res.startDate);
 								$('#endDatepicker').val(res.endDate);
 								
@@ -554,9 +552,10 @@
 					</span> 
 					&nbsp;&nbsp;
 					<span id="topmenu" style="width: 500px"><spring:message code="ezStatistics.t1062"></spring:message> : &nbsp; 
-						<select id="searchKeycode"> 
+					<select id="searchKeycode"> 
 						<option value="1"><spring:message code="ezStatistics.t1068"></spring:message></option>
 						<option value="2"><spring:message code="ezSystem.x0023"></spring:message></option>
+						<option value="6"><spring:message code="ezOrgan.t218"></spring:message></option>
 						<option value="3"><spring:message code="ezSystem.x0024"></spring:message></option>
 						<option value="4"><spring:message code="ezSystem.x0026"></spring:message></option>
 						<option value="5"><spring:message code="ezSystem.x0027"></spring:message></option>
@@ -596,10 +595,10 @@
 				<thead style="">
 					<tr>
 						<th width="80px;"><spring:message code="ezSystem.kyj1"></spring:message></th>
-						<th><spring:message code="ezStatistics.t1068"></spring:message></th>
+						<th><spring:message code="ezEmail.lsd04"></spring:message></th>
 						<th><spring:message code="ezStatistics.t113"></spring:message></th>
 						<th><spring:message code="ezEmail.t712"></spring:message></th>
-						<th><spring:message code="ezSystem.x0024"></spring:message></th>
+						<th><spring:message code="ezSystem.x0039"></spring:message></th>
 						<th><spring:message code="ezSystem.x0025"></spring:message></th>
 						<th><spring:message code="ezSystem.x0026"></spring:message></th>
 						<th><spring:message code="ezSystem.x0027"></spring:message></th>
@@ -609,6 +608,6 @@
 			</table>
 		</div>
 		<div id="tblPageRayer" style="padding-top: 10px;"></div>
-		<iframe id=saveExcel name=saveExcel style="display:none"></iframe>
+		<iframe id="saveExcel" name="saveExcel" style="display:none"></iframe>
 	</body>
 </html>

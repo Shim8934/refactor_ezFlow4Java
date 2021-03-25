@@ -1,15 +1,19 @@
 package egovframework.ezMobile.sample.web;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
-import java.util.Properties;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.ezMobile.ezApprovalG.dao.MApprovalGDAO;
+import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAbsenteeAddJobInfoVO;
+import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -19,7 +23,6 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginVO;
-import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /** 
@@ -38,13 +41,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 public class MSampleController extends EgovFileMngUtil {
 	
 	private static final Logger logger = LoggerFactory.getLogger(MSampleController.class);
-	
-	@Autowired
-	private CommonUtil commonUtil;
 
-	@Autowired
-	private Properties config;
-	
 	@Resource(name="crypto") 
 	private EgovFileScrty egovFileScrty;
 	
@@ -53,6 +50,9 @@ public class MSampleController extends EgovFileMngUtil {
 	
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
+
+	@Resource(name = "MApprovalGDAO")
+	private MApprovalGDAO mApprovalGDAO;
 	
 	/**
 	 * 모바일 샘플 리스트 함수
@@ -95,5 +95,18 @@ public class MSampleController extends EgovFileMngUtil {
 		logger.debug("sampleDetail End");
 		
 		return "/mobile/sample/sampleDetail";
+	}
+
+	@RequestMapping(value = "/ezConn/gbptest.do")
+	public void testtest(HttpServletRequest request,  HttpServletResponse response) throws Exception {
+
+		Map<String, Object> map = new HashMap<>();
+		map.put("tenantId", 1);
+		try {
+			List<MApprovalGAbsenteeAddJobInfoVO> vo = mApprovalGDAO.getAbsenteeAddJobInfo(map);
+			System.out.println(vo.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

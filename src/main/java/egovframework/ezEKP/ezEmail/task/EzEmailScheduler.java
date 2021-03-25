@@ -1,10 +1,15 @@
 package egovframework.ezEKP.ezEmail.task;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
@@ -15,7 +20,10 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.TimeZone;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
@@ -63,6 +71,8 @@ import egovframework.ezEKP.ezEmail.util.EmailImportance;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailBlobVO;
 import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
+import egovframework.ezEKP.ezEmail.vo.MailDeletedIdVO;
+import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
@@ -71,6 +81,7 @@ import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.TenantVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
+import egovframework.let.utl.fcc.service.EgovStringUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Component
@@ -81,9 +92,6 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 	@Autowired
 	private Properties config;
 
-	@Autowired
-	private Properties globals;
-	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource; 
 
@@ -120,6 +128,12 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 	@Scheduled(cron = "${config.cron.mailboxQuotaListUpdate}")
 	public void mailboxQuotaListUpdate() throws Exception {
 		logger.debug("mailboxQuotaListUpdate scheduler started.");
+		
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", 0);
+		if(useExternalMailServer != null && useExternalMailServer.equalsIgnoreCase("YES")) {
+			logger.debug("mailboxQuotaListUpdate scheduler ended.");
+			return;
+		}
 		
 		if (!preScheduler("mailboxQuotaListUpdate")) {
 			logger.debug("mailboxQuotaListUpdate scheduler ended.");
@@ -171,6 +185,12 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 	@Scheduled(cron = "${config.cron.deleteAllUserOldMail}")
 	public void deleteAllUserMail() throws Exception {
 		logger.debug("deleteAllUserOldMail scheduler started.");
+		
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", 0);
+		if(useExternalMailServer != null && useExternalMailServer.equalsIgnoreCase("YES")) {
+			logger.debug("deleteAllUserOldMail scheduler ended.");
+			return;
+		}
 		
 		if (!preScheduler("deleteAllUserOldMail")) {
 			logger.debug("deleteAllUserOldMail scheduler ended.");
@@ -255,12 +275,28 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 	public void deleteMailBlob() throws Exception {
 		logger.debug("deleteMailBlob started.");
 		
-		String schedulerId = config.getProperty("config.SchedulerServer");
-		
+		String useDeleteMailBlob = ezCommonService.getTenantConfig("useDeleteMailBlob", 0);
+		if(useDeleteMailBlob != null && useDeleteMailBlob.equalsIgnoreCase("NO")) {
+			logger.debug("deleteMailBlob ended.");
+			return;
+		}
+				
+		//choose scheduler running server
+		if (!preScheduler("deleteMailBlob")) {
+			logger.debug("deleteMailBlob ended.");
+			return;
+		}
+				
 		int count = 0;
 		
-		// 1번 서버가 james_mail 테이블과 james_mail_blob 테이블을 조인하여 james_mail에 없는 blob 레코드를 삭제하는 작업을 수행한다.
-		if (schedulerId != null && schedulerId.equals("1")) {
+		String useMailDeletedId = ezCommonService.getTenantConfig("useMailDeletedId", 0);
+		
+		Calendar now = Calendar.getInstance();
+		int hour = now.get(Calendar.HOUR_OF_DAY);
+		int minute = now.get(Calendar.MINUTE);
+		
+		// 오전 3시에는 james_mail 테이블과 james_mail_blob 테이블을 outer join하여 삭제할 blob 목록을 구한다.
+		if (!useMailDeletedId.equals("YES") || (hour == 3 && minute < 10)) {
 			List<MailBlobVO> orphanedMailBlobList = ezEmailService.getOrphanedMailBlobList();
 			
 			logger.debug("orphanedMailBlobList count=" + orphanedMailBlobList.size());
@@ -271,21 +307,42 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 				}
 				
 				// 레코드가 하나씩 삭제될 때마다 즉시 반영되도록 하기 위해 Service Layer를 거치지 않고 직접 DAO에 접근하도록 함.
-				ezEmailDAO.deleteOrphanedMailBlob(mailBlobVO);
-				
-				Thread.sleep(500);
+				long sleepTime = ezEmailDAO.deleteOrphanedMailBlob(mailBlobVO);
+								
+				Thread.sleep(sleepTime);
 			}
+		// 그 외에는 james_mail_deleted_id 테이블에 있는 목록을 기초로 삭제할 blob 목록을 구한다.
+		} else {
+			List<MailDeletedIdVO> mailDeletedIdList = ezEmailService.getMailDeletedIdList();
+			
+			logger.debug("mailDeletedIdList count=" + mailDeletedIdList.size());
+									
+			for (MailDeletedIdVO mailDeletedIdVO : mailDeletedIdList) {
+				if (++count % 120 == 1) {
+					logger.debug("Deleting mailBoxId=" + mailDeletedIdVO.getMailBoxId() + ",mailUid=" + mailDeletedIdVO.getMailUid() + ",count=" + count);
+				}
+				
+				// 레코드가 하나씩 삭제될 때마다 즉시 반영되도록 하기 위해 Service Layer를 거치지 않고 직접 DAO에 접근하도록 함.
+				ezEmailDAO.deleteMailBlobWithDeletedId(mailDeletedIdVO);
+				ezEmailDAO.deleteMailDeletedId(mailDeletedIdVO);
+			}				
 		}
 		
 		logger.debug("deleteMailBlob ended. count=" + count);
 	}
-	
+		
 	/**
 	 * 환경설정 - 자동삭제 스케줄러
 	 */
 	@Scheduled(cron = "${config.cron.autoDelete}")
 	public void autoDelete() throws Exception{
 		logger.debug("autoDelete scheduler started.");
+		
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", 0);
+		if(useExternalMailServer != null && useExternalMailServer.equalsIgnoreCase("YES")) {
+			logger.debug("autoDelete scheduler ended.");
+			return;
+		}
 		
 		//choose scheduler running server
 		if (!preScheduler("autoDelete")) {
@@ -356,6 +413,12 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 	public void reservedMailSend() throws Exception{
 		logger.debug("reservedMailSend scheduler started.");
 		
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", 0);
+		if(useExternalMailServer != null && useExternalMailServer.equalsIgnoreCase("YES")) {
+			logger.debug("reservedMailSend scheduler ended.");
+			return;
+		}
+		
 		//choose scheduler running server
 		if (!preScheduler("reservedMailSend")) {
 			logger.debug("reservedMailSend scheduler ended.");
@@ -363,8 +426,12 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 		}
 		
 		List<MailReservationVO> list = ezEmailService.getMailReserved2();
+		List<String> invalidAddressList = new ArrayList<>();
+		boolean retryFlag = false;
 		
-		for (MailReservationVO vo : list) {
+		for (int i = 0; i < list.size(); i++) {
+			MailReservationVO vo = list.get(i);
+			
 			logger.debug("messageId=" + vo.getMessageId());
 			logger.debug("userAccount=" + vo.getConnUrl());
 			
@@ -372,9 +439,13 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 			FileInputStream fis = null;
 			File f = null;
 			File encryptedFile = null; // 보안메일 관련 파일 변수
+			String userAccount = vo.getConnUrl();
+			MimeMessage message = null;
+			Locale locale = null;
+			String offset = null;
+			
 			try {
 				
-				String userAccount = vo.getConnUrl();
 				String password = jspw;
 	
 				String realPath = config.getProperty("data_root");
@@ -384,23 +455,24 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 				
 				int tenantId = ezCommonService.getTenantIdByDomainName(domainName);
 				String lang = ezCommonService.selectUserGetLang(userId, tenantId);
-				Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(lang));
-				String offset = ezCommonService.selectUserGetTimeZone(userId, tenantId);
-				logger.debug("locale=" + locale + ",offset=" + offset);
+				locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(lang));
+				offset = ezCommonService.selectUserGetTimeZone(userId, tenantId);
+				String sentMailStoredInSentBox = config.getProperty("SentMailStoredInSentbox", "YES");
+				logger.debug("locale=" + locale + ",offset=" + offset + ",sentMailStoredInSentBox=" + sentMailStoredInSentBox);
 				
 				String pDirPath = commonUtil.getUploadPath("upload_mail.RESERVED_MAIL_PATH", tenantId);
 				pDirPath = realPath + commonUtil.separator + pDirPath;
 	
 				f = new File(pDirPath + commonUtil.separator + vo.getMessageId() + ".eml");
 				logger.debug("filePath=" + pDirPath + commonUtil.separator + vo.getMessageId() + ".eml");
-				
+								
 				if (f.exists()) {
 					fis = new FileInputStream(f);
 	
 					SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
 							userAccount, password);
 	
-					MimeMessage message = sa.readMimeMessage(fis);
+					message = sa.readMimeMessage(fis);
 					
 					//SentDate 재설정
 			        message.setSentDate(Calendar.getInstance().getTime());
@@ -600,17 +672,19 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 				        fis = null;
 			            
 					} else {
-						//보낸편지함에 저장
-						ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-								userAccount, password, egovMessageSource, locale, ezEmailUtil);
-						Folder folder = ia.getFolder(ezEmailUtil.getSentFolderId(locale));
-						
-						if (folder.exists()) {
-							message.setFlag(Flags.Flag.SEEN, true);
-							folder.open(Folder.READ_WRITE);
-							folder.appendMessages(new Message[]{message});
-							folder.close(true);
-							logger.debug("Succeed in saving a message in sent folder.");
+						if (!retryFlag && sentMailStoredInSentBox.equalsIgnoreCase("YES")) {
+							//보낸편지함에 저장
+							ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+									userAccount, password, egovMessageSource, locale, ezEmailUtil);
+							Folder folder = ia.getFolder(ezEmailUtil.getSentFolderId(locale));
+							
+							if (folder.exists()) {
+								message.setFlag(Flags.Flag.SEEN, true);
+								folder.open(Folder.READ_WRITE);
+								folder.appendMessages(new Message[]{message});
+								folder.close(true);
+								logger.debug("Succeed in saving a message in sent folder.");
+							}
 						}
 					}
 					
@@ -624,15 +698,132 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 		        		message.removeHeader("CC");
 		        		message.removeHeader("BCC");
 		        		
-		            	for (Address a : allRecipients) {
-		            		logger.debug("address=" + a);
+		        		invalidAddressList.clear();
+		        		
+		        		String useAdvancedEachMail = ezCommonService.getTenantConfig("useAdvancedEachMail", tenantId);
+		        		if (useAdvancedEachMail.equals("YES")) {		
+		        			try {
+		        				message.setRecipients(RecipientType.TO, allRecipients);
+		        				
+		        				message.setHeader("X-JMocha-Each-Mail", "true");
+		        				Transport.send(message);
+		        				
+		        			} catch (Exception e1) {
+		        				e1.printStackTrace();
+		        				String errorMessage = e1.getMessage();
+		        				logger.debug("remove Invalid address. and retry");
+		        				
+		        				if (errorMessage.contains("Invalid Addresses")) {
+		        					String cause = e1.getCause().toString();
+		        					findInvalidAddresses(cause, invalidAddressList);
+
+		        					List<Address> allRecipientList = new ArrayList<Address>();
+		        					for( int x = 0; x < allRecipients.length; x++){
+		        						String recipient = allRecipients[x].toString();
+		        						String temp2 = recipient.substring(recipient.lastIndexOf(" <")+2, recipient.length()-1);
+		        						
+		        						if (invalidAddressList.contains(temp2)){
+		        							continue;
+		        						} else {
+		        							allRecipientList.add(allRecipients[x]);
+		        						}
+		        					}
+		        					
+		        					Address[] newRecipients = allRecipientList.stream().toArray(Address[]::new);							
+		        					message.setRecipients(RecipientType.TO, newRecipients);
+		        					logger.debug("validAddressList=" + allRecipientList.toString());
+									logger.debug("invalidAddressList=" + invalidAddressList);
+									message.setHeader("X-JMocha-Each-Mail", "true");
+									Transport.send(message);
+									
+		        				} else {
+		        					throw e1;	 // 예외를 발생시킴
+		        				}
+		        			}
+						} else {
+			            	for (Address a : allRecipients) {
+			            		logger.debug("address=" + a);
+			            		
+			            		try {
+				            		message.setRecipient(RecipientType.TO, a);
+			            			Transport.send(message);
+			        			} catch (Exception e) {
+			        				e.printStackTrace();
+			        				String errorMessage = e.getMessage();
+			        				
+			        				if (errorMessage.contains("Invalid Addresses")) {
+			        					String cause = e.getCause().toString();		
+			        					
+			        					findInvalidAddresses(cause, invalidAddressList);
+			        				}
+			        			} 						
+							}
+						}
+		            	
+		            	if (invalidAddressList.size() > 0) {
+//		            		sendInvalidRecipientNotiMail(userAccount, message.getSubject(), invalidAddressList, locale, offset);
 		            		
-		            		message.setRecipient(RecipientType.TO, a);
-		            		
-		            		Transport.send(message);			            		
-		            	}						
+		            		invalidAddressList.clear();
+		            	}
 					} else {					
-						Transport.send(message);
+						if (retryFlag) {													
+							Address[] recipients = message.getRecipients(RecipientType.TO);
+							List<Address> newRecipientList = new ArrayList<>();
+
+							if (recipients != null) {
+								for (Address item : recipients) {
+									InternetAddress recipient = (InternetAddress)item;
+									if (!invalidAddressList.contains(recipient.getAddress())) {
+										newRecipientList.add(recipient);
+									}
+								}
+								
+								Address[] newRecipients = newRecipientList.stream().toArray(Address[]::new);							
+								message.setRecipients(RecipientType.TO, newRecipients);
+								
+								logger.debug("Retrying... i=" + i + ",newRecipientList TO=" + newRecipientList);
+							}
+							
+							recipients = message.getRecipients(RecipientType.CC);
+							newRecipientList.clear();
+
+							if (recipients != null) {
+								for (Address item : recipients) {
+									InternetAddress recipient = (InternetAddress)item;
+									if (!invalidAddressList.contains(recipient.getAddress())) {
+										newRecipientList.add(recipient);
+									}
+								}
+	
+								Address[] newRecipients = newRecipientList.stream().toArray(Address[]::new);							
+								message.setRecipients(RecipientType.CC, newRecipients);
+								
+								logger.debug("Retrying... i=" + i + ",newRecipientList CC=" + newRecipientList);
+							}
+
+							recipients = message.getRecipients(RecipientType.BCC);
+							newRecipientList.clear();
+
+							if (recipients != null) {
+								for (Address item : recipients) {
+									InternetAddress recipient = (InternetAddress)item;
+									if (!invalidAddressList.contains(recipient.getAddress())) {
+										newRecipientList.add(recipient);
+									}
+								}
+	
+								Address[] newRecipients = newRecipientList.stream().toArray(Address[]::new);							
+								message.setRecipients(RecipientType.BCC, newRecipients);
+								
+								logger.debug("Retrying... i=" + i + ",newRecipientList BCC=" + newRecipientList);
+							}
+							
+							invalidAddressList.clear();
+														
+							Transport.send(message);
+						} else {						
+							Transport.send(message);
+						}
 					}
 					
 			        logger.debug("Succeed in sending the reserved message.");
@@ -656,13 +847,29 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 				ezEmailService.deleteMailReserved(vo.getMessageId());
 				logger.debug("Succeed in deleting data from DB.");
 				
+				retryFlag = false;				
 			} catch (Exception e) {
 				e.printStackTrace();
 				String errorMessage = e.getMessage();
 				
 				//유효하지 않은 사용자일 경우, eml 파일 및  예약 발송 정보(DB) 삭제
-				if (errorMessage.contains("Invalid Addresses")
-						|| errorMessage.contains("No recipient addresses")) {					
+				if (!retryFlag && errorMessage.contains("Invalid Addresses")) {
+					invalidAddressList.clear();
+					
+					String cause = e.getCause().toString();					
+										
+					findInvalidAddresses(cause, invalidAddressList);
+					
+					logger.debug("invalidAddressList=" + invalidAddressList);
+					
+					if (message != null && invalidAddressList.size() > 0) {
+//						sendInvalidRecipientNotiMail(userAccount, message.getSubject(), invalidAddressList, locale, offset);
+					}
+					
+					retryFlag = true;
+					i--;
+					continue;
+				} else {					
 					//파일시스템의 eml파일 삭제
 					if (f != null && f.delete()) {
 						logger.debug("Succeed in deleting EML file.");
@@ -675,7 +882,9 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 					
 					//DB에서 메일 예약발송 정보 삭제.
 					ezEmailService.deleteMailReserved(vo.getMessageId());
-				}
+					
+					retryFlag = false;					
+				}				
 			} finally {
 				if (ia != null) {
 					ia.close();
@@ -690,6 +899,67 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 		logger.debug("reservedMailSend scheduler ended.");
 	}
 
+	private void findInvalidAddresses(String cause, List<String> invalidAddressList) {
+		String pattern = "Unknown user: ([\\S]+)";
+		Pattern r = Pattern.compile(pattern);
+		Matcher m = r.matcher(cause);
+		
+		int index = 1000;
+		while (m.find()) {
+			// 1000번 이상 반복되면 break한다.
+			--index;
+			if (index < 0) {
+				logger.error("Stop finding invalid addresses, because over 1000 times.");
+				break;
+			}
+			
+			invalidAddressList.add(m.group(1));
+		}		
+	}
+	
+	@SuppressWarnings("unused")
+	private void sendInvalidRecipientNotiMail(String originalSender, String originalSubject, List<String> invalidAddressList,
+					Locale locale, String offset) {
+		try {
+			String fontFamily = egovMessageSource.getMessage("main.t0620", locale).replace(";", ",");
+			String subject = egovMessageSource.getMessage("ezEmail.ldh02", locale) + " " + originalSubject;		
+			String message = egovMessageSource.getMessage("ezEmail.ldh03", locale);		
+			String fontStyle = String.format("style='font-family: %s; font-size: %spx;'", fontFamily, 14);
+			
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss ( z )");
+            
+            if (offset == null || offset.indexOf("|") == -1) {
+    			logger.error("Check the offset. Offset is null or offset format is wrong.");
+    		} else {
+    			String[] offsetArr = offset.split("\\|");
+    			sdf.setTimeZone(TimeZone.getTimeZone("GMT" + offsetArr[1]));
+    		}
+						
+			StringBuilder content = new StringBuilder();
+			content.append(String.format("<span %s>%s</span><br/><br/>", fontStyle, message));
+			
+			for (String address : invalidAddressList) {
+				content.append(String.format("<span %s>%s</span><br/>", fontStyle, address));
+			}
+
+			content.append("<br/>");	
+			
+			content.append("<p " + fontStyle + ">");
+			content.append(String.format("<b>%s : </b> %s", egovMessageSource.getMessage("ezEmail.t704", locale), sdf.format(new Date()).replace("GMT", "")));
+			content.append("</p>");
+			
+			content.append("<p " + fontStyle + ">");
+			content.append(String.format("<b>%s : </b> %s", egovMessageSource.getMessage("ezEmail.t707", locale), EgovStringUtil.getSpclStrCnvr(originalSubject)));
+			content.append("</p>");
+			
+			InternetAddress from = new InternetAddress("postmaster@localhost");
+			
+			ezEmailService.sendMail(originalSender, jspw, null, from, new InternetAddress[]{ new InternetAddress(originalSender) }, null, null, subject, content.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
     /**
      * Processes Mail Statistics Logs.
      * 매일 자정 1분 30초에 실행된다.
@@ -698,6 +968,12 @@ public class EzEmailScheduler extends EgovFileMngUtil {
     public void processMailStatLogs() throws Exception {
         logger.debug("processMailStatLogs scheduler started.");
         
+        String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", 0);
+		if(useExternalMailServer != null && useExternalMailServer.equalsIgnoreCase("YES")) {
+			logger.debug("processMailStatLogs scheduler ended.");
+			return;
+		}
+		
         //choose scheduler running server
         if (!preScheduler("processMailStatLogs")) {
             logger.debug("processMailStatLogs scheduler ended.");
@@ -729,6 +1005,14 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 	            // 보존 기간이 지난 로그인 히스토리 로그를 삭제한다.
 	            ezSystemAdminService.deleteLoginHist(keepLogPeriodNum, tenant.getTenantId());
             } catch (Exception e) {           
+            	e.printStackTrace();
+            }
+            
+            try {
+            	// 보존 기간이 지난 웹폴더 파일 로그를 삭제한다.
+            	ezSystemAdminService.deleteWebfolderLog(keepLogPeriodNum, tenant.getTenantId());
+            } catch (Exception e) { 
+            	logger.debug("deleteWebfolderLog delete fail. ");
             	e.printStackTrace();
             }
             
@@ -878,6 +1162,12 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 	public void broadcastQuotaWarning() throws Exception {
 		logger.debug("broadcastQuotaWarning started.");
 		
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", 0);
+		if(useExternalMailServer != null && useExternalMailServer.equalsIgnoreCase("YES")) {
+			logger.debug("broadcastQuotaWarning scheduler ended.");
+			return;
+		}
+		
 		//choose scheduler running server
 		if (!preScheduler("broadcastQuotaWarning")) {
 			logger.debug("broadcastQuotaWarning scheduler ended.");
@@ -1006,6 +1296,94 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 		logger.debug("broadcastQuotaWarning end.");
 	}
 	
+	
+	/**
+	 * 만료일 지난 사용자 공용배포그룹 삭제
+	 */
+	@Scheduled(cron = "${config.cron.useDistributionoDelete}")
+	public void useDistributionoDelete() throws Exception{
+		logger.debug("useDistributionoDelete scheduler started.");
+		
+		//choose scheduler running server
+		if (!preScheduler("useDistributionoDelete")) {
+			logger.debug("useDistributionoDelete scheduler ended.");
+			return;
+		}
+		
+		int tenantId = 0;
+		String delDLURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/deleteDistribution";
+		
+		String useUserDefinedDL = ezCommonService.getTenantConfig("useUserDefinedDL", tenantId);
+		
+		if (useUserDefinedDL.equalsIgnoreCase("YES")) {
+			try {
+				List<MailDistributionVO> dlVoList = ezEmailService.getExpiredUserDistributionList();
+				for (MailDistributionVO dlVo : dlVoList) {
+					String domain = dlVo.getDomain();
+					String dlId = dlVo.getId();
+					logger.debug("domain=" + domain + ", dlId=" + dlId);
+					
+					String delDlInputParams = "domain=" + domain + "&cn=" + dlId;
+					String delDlResponse = ezEmailUtil.getWebServiceResult(delDLURL, delDlInputParams);		
+					logger.debug("delDlResponse=" + delDlResponse);
+					
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+			}
+		}	
+		
+		logger.debug("useDistributionoDelete scheduler ended.");
+	}
+	
+
+	/** 
+	 * 퇴직일로부터 n일 지난 퇴직자 자동 삭제
+	 */
+	@Scheduled(cron = "${config.cron.autoDeleteOfRetireUser}")
+	public void autoDeleteOfRetireUser() throws Exception{
+		logger.debug("AutoDeleteOfRetireUser scheduler started.");
+
+		//choose scheduler running server
+		if (!preScheduler("AutoDeleteOfRetireUser")) {
+			logger.debug("AutoDeleteOfRetireUser scheduler ended.");
+			return;
+		}
+
+		int tenantID = 0;
+		
+		String useAutoDeleteOfRetireUser = ezCommonService.getTenantConfig("useAutoDeleteOfRetireUser", tenantID); // 사용여부 컨피그
+		String autoDeleteOfRetireUserLimit = ezCommonService.getTenantConfig("autoDeleteOfRetireUserLimit", tenantID); // n일 설정 컨피그
+		logger.debug("useAutoDeleteOfRetireUser=" + useAutoDeleteOfRetireUser + ", autoDeleteOfRetireUserLimit=" + autoDeleteOfRetireUserLimit);
+		
+		if (useAutoDeleteOfRetireUser.equalsIgnoreCase("YES") && !autoDeleteOfRetireUserLimit.equals("")) {
+			int autoRemoveUserLimitNum = Integer.parseInt(autoDeleteOfRetireUserLimit);
+			
+			if (autoRemoveUserLimitNum > 0) {
+				List<String> deleteUserCnList = ezOrganAdminService.getAutoDeleteOfRetireUserList(tenantID, autoRemoveUserLimitNum);
+				logger.debug("deleteUserCnList size=" + deleteUserCnList.size());
+				
+				if (deleteUserCnList.size() <= 0) {
+					logger.debug("There are no users to delete. AutoDeleteOfRetireUser scheduler ended.");
+					return; 
+				}
+
+				String urlStr = config.getProperty("config.scheduleGwServerURL") + "/admin/ezOrgan/delUser.do";
+				
+				String deleteUserCnStr = String.join(",", deleteUserCnList);
+				String inputParams = "cn="+deleteUserCnStr;
+				logger.debug("inputParams=" + inputParams);
+				
+				String result = getWebServiceResultForGw(urlStr, inputParams);
+				logger.debug("result=" + result);
+			}
+		}
+		
+		logger.debug("AutoDeleteOfRetireUser scheduler ended.");
+	}
+	
+	
 	/**
 	 * org.apache.james.transport.mailets.JMochaQuotaWarning humanReadableByteCount(long bytes) 복사
 	 * 
@@ -1058,9 +1436,12 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 				File[] files = file.listFiles(new DeleteExpireAttachFilter(bigSizeMailAttachDelDay));
 				
 				for (File expiredFile : files) {
+					File[] filelist = expiredFile.listFiles();
 					logger.debug("expired directory name=" + expiredFile.getName());
 					if (deleteDirectory(expiredFile)) {
 						logger.debug(expiredFile.getName() + " is deleted.");
+						//대용량 첨부파일 삭제 시 제한 횟수 정보도 삭제하는 로직 추가. 2020-03-12 홍대표.
+						ezEmailService.deleteBigAttachCountInfo(filelist, tenantVO.getTenantId());
 					}
 				}
 			}
@@ -1079,10 +1460,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 			try {
 				//set SchedulerServer
 				String server = config.getProperty("config.SchedulerServer");
-				
-				// 클러스터 환경에서 dead lock을 피하기 위해 각 서버 번호(초) 만큼 sleep한다.
-				Thread.sleep(Integer.parseInt(server) * 1000);
-				
+								
 				String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/setSchedulerServer";
 				
 				String schedulerParam = "scheduler=" + URLEncoder.encode(scheduler, "UTF-8");
@@ -1155,5 +1533,63 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 			}
 			return false;
 		}
+	}
+	
+	public String getWebServiceResultForGw(String urlString, String inputParams) throws Exception {
+		logger.debug("getWebServiceResultForGw Started.");
+
+		String result = null;
+		
+		URL url = new URL(urlString);
+		HttpURLConnection conn = null;
+				
+		try {
+			conn = (HttpURLConnection) url.openConnection();
+			
+			conn.setDoOutput(true);
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
+			//테넌트 0 번 
+			conn.setRequestProperty("Cookie", "loginCookie=hfH144YiWCggw53Wkj4WXmhb0rhoI1B/DeoAXRh0t13Q2Lhpiu2cfZxpGhaoRn5VGFc0scMdIv6w/TXttsWK+JzNnK345dM+ex3sizp9pXwdl7edNQKS8ydC51Aa6GINBE5qSRsW8cV7E7GpPJ5qiEqKq8asuFkHy2ZDT26lofk=;");
+			
+			if (inputParams != null) {
+				OutputStream os = conn.getOutputStream();
+				// UTF-8로 인코딩한다.
+				os.write(inputParams.getBytes("UTF-8"));
+				os.flush();
+			}
+			
+			if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+				// Response Body를 UTF-8로서 디코딩한다.			
+				BufferedReader br = new BufferedReader(
+							new InputStreamReader(conn.getInputStream(),"UTF-8")
+							);
+	
+				StringBuilder sb = new StringBuilder();
+				String output;
+	
+				while ((output = br.readLine()) != null) {
+					sb.append(output);
+				}
+				
+				result = sb.toString();
+				
+				conn.disconnect();		
+				conn = null;
+			}
+			else {
+				Exception e = new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());			
+				
+				throw e;
+			} 
+		} finally {
+			if (conn != null) {
+				conn.disconnect();
+				conn = null;
+			}
+		}
+		
+		logger.debug("getWebServiceResultForGw ended.");
+		return result;
 	}
 }

@@ -20,7 +20,7 @@
 		var isNewBBHOpinionFlag = false; // 신규 반송/보류/회송의견(002/003/004) 존재여부 플래그
 		
 		var pMode; //APR, END
-		var pOpinionType; //001,002,003,004
+		var pOpinionType; //001,002,003,004,008
 		var pDocID, pDisplay, pDraftFlag, pDocState, pOrgCompanyID, pExt;
 		
 		var pTempRowID = "";
@@ -71,7 +71,7 @@
 			validatePara();
 			
 			pMode = getDocMode(); //APR, END
-			pOpinionType = getOpinionType(pDisplay); //001,002,003,004
+			pOpinionType = getOpinionType(pDisplay); //001,002,003,004,008
 			
 			initOpinionInfo();
 			autoOpinionPopUp(); // 자동으로 의견 작성창 오픈
@@ -274,7 +274,7 @@
 			var result = "";
 			
 			if (ret != "cancel") {
-				if (ret[2] == true && (pOpinionType == "002" || pOpinionType == "003" || pOpinionType == "004")) { // 반송, 보류, 회송의견 신규작성 플래그값 변경
+				if (ret[2] == true && (pOpinionType == "002" || pOpinionType == "003" || pOpinionType == "004" || pOpinionType == "008")) { // 반송, 보류, 회송의견 신규작성 플래그값 변경
 					isNewBBHOpinionFlag = true;
 				} // 한 번이라도 신규작성되었다면, 해당 신규작성의견이 삭제되기 전까지 신규작성 플래그 true값을 유지함
 				

@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.json.simple.JSONObject;
+
 import egovframework.ezEKP.ezPortal.vo.PortalFirstMainListVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetMainMenuHtmlVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetPortletParametersVO;
@@ -238,9 +240,19 @@ public interface EzPortalService {
 	
 	public void updateTBLPortalACL (String pResult, String pAccessID, int tenantID) throws Exception;
 	
+	public String getWorkspaceUID (int tenantID) throws Exception;
+	
 	public String getMainMenuItemUID(String pAccessID, String linkURL, String userLang, String companyID, int tenantID) throws Exception;
 	
 	public Map<String, String> getMainMenuItemUIDList(String pAccessID, Map<String, String> linkURL, String userLang, String companyID, int tenantID, String topMenuID) throws Exception;
 
 	public List<PortalTopOtherCompanyAddJobVO> getAllCompanyList(String id, int tenantId) throws Exception;
+	
+	public String getTotalSearchURL(LoginVO userInfo, Map<String, Object> param) throws Exception;
+	
+	public Map<String, Object> callSearchServerForResult(String searchURL, String offset) throws Exception;
+	
+	public String chkBoardReadAuthor(String boardID, String accessID, int tenantID) throws Exception;
+	
+	public JSONObject callSearchServerForResult2(LoginVO userInfo, Map<String, Object> param) throws Exception;
 }

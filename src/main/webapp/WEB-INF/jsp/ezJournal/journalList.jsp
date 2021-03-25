@@ -63,7 +63,7 @@
 					</th>
 				</c:if>
 				<c:if test="${listType eq 'department' or listType eq 'mine' }">
-					<th id="BoardList_TH_7" onclick="setListOrder(this)" order="11" style="overflow: hidden; white-space: nowrap; cursor: pointer; text-align: center; width:35px;" class="h5_center">
+					<th id="BoardList_TH_7" onclick="setListOrder(this)" order="11" style="overflow: hidden; white-space: nowrap; cursor: pointer; text-align: center; width:45px;" class="h5_center">
 						<spring:message code='ezJournal.t65'/>
 					</th>
 				</c:if>
@@ -97,7 +97,7 @@
 					<c:if test="${listType eq 'mine' }">
 						<td	onclick="selectedTR(this);" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:25px;">
 							<c:if test="${journal.deptShare eq 'N' }">
-								<img src="/images/lock_icon.png">
+								<img src="/images/lock_icon.png" style="vertical-align: middle;">
 								<!-- <img src="/images/poll/seeResultBeforeVote_Off.png" style="width: 24px; height: 24px;"> --> 
 							</c:if>
 						</td>
@@ -130,7 +130,7 @@
 							<spring:message code='${journal.typeId}'/>
 						</td>
 					</c:if>
-					<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:80%;">
+					<td	onclick="selectedTR(this); goJournalDetailOneClick(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:80%;">
 					<jsp:useBean id="toDay" class="java.util.Date" />
 					<fmt:formatDate value="${toDay}" pattern="yyyy-MM-dd" var="nowDay"/>
 					<fmt:parseDate value="${journal.journalDate}" pattern="yyyy-MM-dd"  var="jDay"/>
@@ -175,7 +175,7 @@
 						</td>
 					</c:if>
 					<c:if test="${listType eq 'department' or listType eq 'mine' }">
-						<td	onclick="selectedTR(this);" class="viewCount" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:35px;">
+						<td	onclick="selectedTR(this);" class="viewCount" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:45px;">
 							<c:out value='${journal.viewCount}'/>
 						</td>
 					</c:if>

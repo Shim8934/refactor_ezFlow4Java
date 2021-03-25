@@ -650,7 +650,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 	}
 
 	@Override
-	public JournalVO getJournal(String journalId,String userId, int tenantId, String lang, String offset) throws Exception {
+	public JournalVO getJournal(String journalId,String userId, int tenantId, String lang, String offset, String pPreviewShow_HOW) throws Exception {
 		logger.debug("getJournal started");
 		logger.debug("journalId: " + journalId + ", tenantId: " + tenantId + ", userId: " + userId);
 		
@@ -662,7 +662,9 @@ public class EzJournalServiceImpl implements EzJournalService {
 		param.put("lang", lang);
 		param.put("offset", commonUtil.getMinuteUTC(offset));
 		
-		ezJournalDAO.insertViewInfo(param);
+		if(pPreviewShow_HOW != null && (pPreviewShow_HOW.equals("H") || pPreviewShow_HOW.equals("W") || pPreviewShow_HOW.equals("D"))){
+			ezJournalDAO.insertViewInfo(param);
+		}
 		JournalVO result = ezJournalDAO.selectJournal(param);
 		logger.debug("getJournal ended");
 		
@@ -706,7 +708,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		
 //		logger.debug("insertJournal map" + map);
 		
-		String journalId = ezJournalDAO.insertJournal(map) + "";
+		String journalId = commonUtil.detectPathTraversal(ezJournalDAO.insertJournal(map) + "");
 		
 		String fileList = jsonParam.get("fileList").toString();
 //		logger.debug("fileList정보 : " + fileList.toString());
@@ -739,8 +741,8 @@ public class EzJournalServiceImpl implements EzJournalService {
 			
 			for (int i = 0; i < attach.length; i++) {
 				String[] files = attach[i].split(":");
-				String filePath = files[0];
-				String fileName = files[1];
+				String filePath = commonUtil.detectPathTraversal(files[0]);
+				String fileName = commonUtil.detectPathTraversal(files[1]);
 				String fileSize = files[2];
 				String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
 				
@@ -765,10 +767,10 @@ public class EzJournalServiceImpl implements EzJournalService {
 					String reuseFileName = "";
 					
 					try {
-						orgFilePath = pDirPath + "uploadFile" + commonUtil.separator + originJournalId + "_uploadFile" + commonUtil.separator + filePath + "." + extension;
+						orgFilePath = commonUtil.detectPathTraversal(pDirPath + "uploadFile" + commonUtil.separator + originJournalId + "_uploadFile" + commonUtil.separator + filePath + "." + extension);
 					//	filePath = "{" + UUID.randomUUID() + "}";
 						reuseFileName = filePath + "." + extension;
-						destFilePath = pDirPath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile" + commonUtil.separator + reuseFileName;
+						destFilePath = commonUtil.detectPathTraversal(pDirPath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile" + commonUtil.separator + reuseFileName);
 						
 						FileUtils.copyFile(new File(orgFilePath), new File(destFilePath));
 					} catch (Exception e) { }
@@ -811,8 +813,8 @@ public class EzJournalServiceImpl implements EzJournalService {
 		logger.debug("fileMove started.");
 		logger.debug("beforeFilePath = " + beforeFilePath + " || afterFilePath = " + afterFilePath);
 		
-		File srcFile = new File(beforeFilePath);
-		File destFile = new File(afterFilePath);
+		File srcFile = new File(commonUtil.detectPathTraversal(beforeFilePath));
+		File destFile = new File(commonUtil.detectPathTraversal(afterFilePath));
 		
 		try {
 			boolean rename = srcFile.renameTo(destFile);
@@ -898,12 +900,12 @@ public class EzJournalServiceImpl implements EzJournalService {
 //			formThisHtml.append("<p><span style='color: #004a87'>" + journal.getJournalTitle().trim() + "</span></p>");
 //			formThisHtml.append("<p><img style='width:16px;height:16px;vertical-align:bottom;' src='/images/ImgIcon/icon_partapproval.gif'>" + journal.getJournalTitle().trim() + "</span></p>");
 			formThisHtml.append("<p><img style='width:14px;height:14px;vertical-align:middle;margin-left:5px' src='/images/ImgIcon/addon.png'>&nbsp;<span style='color: #58ACFA; font-family: Malgun Gothic; font-size: 13px;'>" + commonUtil.cleanValue(journal.getJournalTitle().trim()) + "</span></p>");
-			formThisHtml.append(thisContent.trim() + "<p></p><p></p>");
+			formThisHtml.append("<p><br/></p>" + thisContent.trim() + "<p><br/></p>");
 			
 //			formNextHtml.append("<p><span style='color: #004a87'>" + journal.getJournalTitle().trim() + "</span></p>");   
 //			formNextHtml.append("<p><img style='width:16px;height:16px;vertical-align:bottom;' src='/images/ImgIcon/icon_partapproval.gif'>" + journal.getJournalTitle().trim() + "</span></p>");
 			formNextHtml.append("<p><img style='width:14px;height:14px;vertical-align:middle;margin-left:5px' src='/images/ImgIcon/addon.png'>&nbsp;<span style='color: #58ACFA; font-family: Malgun Gothic; font-size: 13px;'>" + commonUtil.cleanValue(journal.getJournalTitle().trim()) + "</span></p>");
-			formNextHtml.append(nextContent.trim() + "<p></p><p></p>");
+			formNextHtml.append("<p><br/></p>" + nextContent.trim() + "<p><br/></p>");
 		}
 		
 		formThis.append(formThisHtml.toString());
@@ -970,8 +972,8 @@ public class EzJournalServiceImpl implements EzJournalService {
 			
 			for (int i = 0; i < attach.length; i++) {
 				String[] files = attach[i].split(":");
-				String filePath = files[0];
-				String fileName = files[1];
+				String filePath = commonUtil.detectPathTraversal(files[0]);
+				String fileName = commonUtil.detectPathTraversal(files[1]);
 				String fileSize = files[2];
 				String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
 				
@@ -1057,7 +1059,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 	private void deleteDirectory (String journalId, String pDirpath, int tenantId) throws Exception {
 		logger.debug("deleteDirectory started.");
 		
-		File directoryFile = new File(pDirpath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile");
+		File directoryFile = new File(commonUtil.detectPathTraversal(pDirpath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile"));
 		File[] deleteFileList = directoryFile.listFiles();
 
 		if (directoryFile.exists()) {

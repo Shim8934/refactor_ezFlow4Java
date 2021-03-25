@@ -14,7 +14,9 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleConfigVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleCumulerVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleDeptVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleMailConfigVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleReceiveListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -25,6 +27,11 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<ScheGetHolidayVO> getTholiday(Map<String, Object> map){
 		return  (List<ScheGetHolidayVO>) list("EzScheduleDAO.getTholiday", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ScheGetHolidayVO> getTholidayYear(Map<String, Object> map){
+		return  (List<ScheGetHolidayVO>) list("EzScheduleDAO.getTholidayYear", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -46,7 +53,7 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	public List<ScheduleGroupListVO> getMyGroupList(Map<String, Object> map) throws Exception {
 		return (List<ScheduleGroupListVO>) list("EzScheduleDAO.getMyGroupList", map);
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	public List<ScheduleGroupListVO> getMyGroupMemberList(Map<String, Object> map) throws Exception {
 		return (List<ScheduleGroupListVO>) list("EzScheduleDAO.getMyGroupMemberList", map);
@@ -111,10 +118,18 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 		return (ScheduleConfigVO) select("EzScheduleDAO.getScheduleConfig", map);
 	}
 	
+	public ScheduleMailConfigVO getScheduleMailNotiConfig(Map<String, Object> map){
+		return (ScheduleMailConfigVO) select("EzScheduleDAO.getScheduleMailNotiConfig", map);
+	}
+	
 	public ScheduleInfoVO getScheduleInfo(Map<String, Object> map){
 		return (ScheduleInfoVO) select("EzScheduleDAO.getScheduleInfo", map);
 	}
-	
+
+	public ScheduleGroupVO selectCreatorMember(Map<String, Object> map){
+		return (ScheduleGroupVO) select("EzScheduleDAO.selectCreatorMember", map);
+	}
+
 	public String scheduleGetLunarUse(Map<String, Object> map) throws Exception {
 		return (String) select("EzScheduleDAO.scheduleGetLunarUse", map);
 	}
@@ -125,6 +140,10 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	
 	public String getCumDeptId(Map<String, Object> map) throws Exception {
 		return (String) select("EzScheduleDAO.getCumDeptId", map);
+	}
+	
+	public String getUserScheduleConfig(Map<String, Object> map) throws Exception {
+		return (String) select("EzScheduleDAO.getUserScheduleConfig", map);
 	}
 
 	public int getCurScheduleId(Map<String, Object> map) {
@@ -167,6 +186,14 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 		delete("EzScheduleDAO.deleteScheduleMember", map);
 	}
 
+	public void updateManageScheduleMember(Map<String, Object> map) throws Exception {
+		update("EzScheduleDAO.updateManageScheduleMember", map);
+	}
+
+	public void updateManageScheduleGroupMember(Map<String, Object> map) throws Exception {
+		update("EzScheduleDAO.updateManageScheduleGroupMember", map);
+	}
+
 	public void updateScheduleMember(Map<String, Object> map) throws Exception {
 		update("EzScheduleDAO.updateScheduleMember", map);
 	}
@@ -178,7 +205,13 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	public void insertScheduleGroup(Map<String, Object> map) throws Exception {
 		insert("EzScheduleDAO.insertScheduleGroup", map);
 	}
+	
 
+	public void updateScheduleGroup(Map<String, Object> map) throws Exception {
+		insert("EzScheduleDAO.updateScheduleGroup", map);
+	}
+
+	
 	public void deleteScheduleConfig(Map<String, Object> map) throws Exception {
 		delete("EzScheduleDAO.deleteScheduleConfig", map);
 	}
@@ -269,6 +302,14 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 
 	public void updateDragSchedule(Map<String, Object> map) throws Exception {
 		update("EzScheduleDAO.updateDragSchedule", map);
+	}
+	
+	public void modifyScheduleConfig(Map<String, Object> map) throws Exception {
+		update("EzScheduleDAO.modifyScheduleConfig", map);
+	}
+	
+	public void setScheduleMailNotiConfig(Map<String, Object> map) throws Exception {
+		update("EzScheduleDAO.setScheduleMailNotiConfig", map);
 	}
 }
 

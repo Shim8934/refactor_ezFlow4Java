@@ -9,8 +9,8 @@
 		<script type="text/javascript">
 			window.onload = function() {
 				var result = "${result}";
-				var userkey = "${userkey}";
-				var tempId = "${tempId}";
+				var userkey = '<c:out value="${userkey}"/>';
+				var tempId = '<c:out value="${tempId}"/>';
 				var useEncryptZipForEmail = "${useEncryptZipForEmail}";
 				
 				if (result == "NOT" && useEncryptZipForEmail == "NO") {

@@ -122,9 +122,9 @@ var strLang247 = "午後";
 var strLang248 = "は選択した時間に予約が重複しています。"
 var strLang249 = "予約権限のない設備です。"
 var strLang250 = "既に選択した設備です。"
-var strLang251 = "設備区分の下位から設備を選択してください。"
+var strLang251 = "設備分類の下位から設備を選択してください。"
 var strLang252 = "選択した設備がありません。\n設備を選択してください。"
-var strLang253 = "選択した設備がありません。"
+var strLang253 = "選択した設備がありません"
 var strLang254 = "メインメニューで選択した設備は削除できません。"
 var strLang255 = "作成した様式を登録しますか?"
 var strLang256 = "登録しました。"
@@ -199,8 +199,26 @@ var strLang580 = "期間 : ";
 var strLang581 = "終了日を指定しない";
 var strLang582 = "回";
 var strLang583 = "期間の指定が正しくありません。";
-var strLang584 = "選択した設備予約を承認しました。"
-var strLang585 = "選択した設備予約の承認をキャンセルしました。"
+var strLang584 = "選択した設備予約を承認しました。";
+var strLang585 = "選択した設備予約の承認をキャンセルしました。";
+var strLang586 = "1月";
+var strLang587 = "2月";
+var strLang588 = "3月";
+var strLang589 = "4月";
+var strLang590 = "5月";
+var strLang591 = "6月";
+var strLang592 = "7月";
+var strLang593 = "8月";
+var strLang594 = "9月";
+var strLang595 = "10月";
+var strLang596 = "11月";
+var strLang597 = "12月";
+var strLang598 = "今日";
+var strLang599 = "<前";
+var strLang600 = "次>";
+var strLang601 = "閉じる";
+var strLang602 = "ja";
+var strLang603 = "設備リストは最大5つまで登録できます。";
 var strLangLHM01 = "default_jp";
 var strLangLHM02 = "印刷プレビュー";
 var strLangLHM03 = "印刷";
@@ -214,3 +232,25 @@ var strLangkmsr01 = "既に追加されている権限者です。";
 
 //2019-04-08 김민성
 var strLangkmsr02 = "設備管理者の中に設備分類に対して\n権限がないユーザがいます。";
+
+//2019-05-14
+var strLangkmsr03 = "ご承認をお拒みになりますか"
+var strLang321 = "承認待ち";
+var strLang322 = "却下";
+var strLang323 = "承認";
+var strLang324 = "使用中";
+var strLang325 = "返却";
+var strLang326 = "使用中";
+var strLang327 = "終了";
+var strLang331 = "返却要請をしますか？";
+var strLang332 = "返却要請を承認しますか？";
+var strLang333 = "返却しますか？";
+var strLang334 = "返却要請しました。";
+var strLang335 = "返却しました。";
+var strLang336 = "設備の設定が’使用しない’になっているため予約できません。";
+
+//2019-05-28
+var strLang337 = "申請が却下されました。"
+
+//2020-01-03
+var strLangkmsr04 = "윤 ";

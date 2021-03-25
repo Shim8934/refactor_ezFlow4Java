@@ -32,7 +32,9 @@
              		WHERE
              			COMPANYID = #v_COMPANYID#
              		AND
-             			TENANT_ID = #tenantID#	
+             			TENANT_ID = #tenantID#
+             		AND
+             			IMAGEPATH like '%SLIDERIMAGE%'
               		ORDER BY
               			SN
 				]]>
@@ -82,6 +84,8 @@
                 	ISUSE = 1
                 AND
                 	TENANT_ID = #tenantID#	
+                AND
+           			IMAGEPATH like '%SLIDERIMAGE%'
            		ORDER BY
            			SN
 			]]>
@@ -117,7 +121,8 @@
                 (SELECT SAVEMAILFLAG 
                  FROM TBL_PS_APPROVNOTIMAILCONF
                  WHERE UserID = #currentID# 
-                 AND TENANT_ID = #tenantID#) AS SAVEMAILFLAG 
+                 AND TENANT_ID = #tenantID#) AS SAVEMAILFLAG,
+                LINEPASS
            	FROM
 				TBL_PS_APPROVNOTIMAILCONF 
           	WHERE
@@ -135,9 +140,22 @@
                 '1' BANSONG  ,
                 '1' CALLBACK  ,
                 '1' HESONG  ,
-                'Y' SAVEMAILFLAG  
+                'Y' SAVEMAILFLAG  ,
+                '0' LINEPASS 
 		]]>
 	</select> 
+	
+	<select id="EzPersonalDAO.getApprovNotiConfig_S4" parameterClass="Map" resultClass="PersonalApprovMailVO">
+		<![CDATA[
+			SELECT
+				'0' ALERT  ,
+                '0' COMPLETE  ,
+                '0' BANSONG  ,
+                '0' CALLBACK  ,
+                '0' HESONG  ,
+                'N' SAVEMAILFLAG  
+		]]>
+	</select>
 	
 		<select id="EzPersonalDAO.setApprovalPwd_S" parameterClass="Map" resultClass="String">
 		<![CDATA[
@@ -238,9 +256,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_PS_APPROVNOTIMAILCONF
-        		( USERID, ALERT, COMPLETE, BANSONG, CALLBACK, HESONG, SAVEMAILFLAG, TENANT_ID )
+        		( USERID, ALERT, COMPLETE, BANSONG, CALLBACK, HESONG, SAVEMAILFLAG, TENANT_ID, LINEPASS )
         	VALUES
-        		( #v_PUSERID#, #v_PALERT#, #v_PCOMPLETE#, #v_PBANSONG#, #v_PCALLBACK#, #v_PHESONG#, #v_PSAVEMAILFLAG#, #tenantID# )
+        		( #v_PUSERID#, #v_PALERT#, #v_PCOMPLETE#, #v_PBANSONG#, #v_PCALLBACK#, #v_PHESONG#, #v_PSAVEMAILFLAG#, #tenantID#, #linePass#)
 		]]>
 	</insert>
 	
@@ -254,7 +272,8 @@
              	BANSONG = #v_PBANSONG#,
              	CALLBACK = #v_PCALLBACK#,
              	HESONG = #v_PHESONG#,
-             	SAVEMAILFLAG = #v_PSAVEMAILFLAG#
+             	SAVEMAILFLAG = #v_PSAVEMAILFLAG#,
+             	LINEPASS = #linePass#
        		WHERE
        			USERID = #v_PUSERID#
        		AND
@@ -327,7 +346,7 @@
                     POLLTITLE ,
                     POLLTITLE2 ,
                     STARTDATE ,
-                    IFNULL(EndDate, DATE_FORMAT('1900-01-01', '%Y-%m-%d %H:%i:%s')) EndDate  
+                    EndDate  
        			FROM
        				TBL_PS_LIGHTPOLL 
       			WHERE
@@ -347,7 +366,7 @@
        						POLLTITLE ,
        						POLLTITLE2 ,
        						STARTDATE ,
-       						IFNULL(ENDDATE, DATE_FORMAT('1900-01-01', '%Y-%m-%d %H:%i:%s')) EndDate  
+       						EndDate  
 				FROM
 					TBL_PS_LIGHTPOLL 
 				WHERE
@@ -394,9 +413,9 @@
    			WHERE
    				COMPANYID = #v_pCompanyID#
             AND
-            	STARTDATE < DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s')
+            	STARTDATE <= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s')
             AND
-            	ENDDATE IS NULL
+            	ENDDATE >=  DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s')
             AND
                	A.TENANT_ID = #tenantID#	
        		ORDER BY
@@ -550,19 +569,21 @@
 		<![CDATA[
 			SELECT
 				ITEMSEQ ,
-             	WIDTH ,
-             	HEIGHT ,
-             	POSITION 
-        	FROM
-        		TBL_PS_POPUP 
-       		WHERE
-               	COMPANYID = #v_pCompanyID# 
-            AND
-            	STARTDATE <= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s')
-            AND
-            	ENDDATE >= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s')
-            AND
-            	TENANT_ID = #tenantID#	
+				WIDTH ,
+				HEIGHT ,
+				POSITION 
+			FROM
+				TBL_PS_POPUP 
+			WHERE
+				COMPANYID = #v_pCompanyID# 
+			AND
+				STARTDATE <= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s')
+			AND
+				ENDDATE >= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s')
+			AND
+				TENANT_ID = #tenantID#
+			AND
+				INUSE = 1
 		]]>
 	</select>
 	
@@ -579,7 +600,9 @@
              	REGUSERID ,
              	VIEW_FLAG ,
              	SIZE_ ,
+             	LINKORDER,
              	REGDATE
+
         	FROM
         		TBL_PS_QUICKLINK A
             JOIN
@@ -621,31 +644,31 @@
 	<select id="EzPersonalDAO.getPollInfo" parameterClass="Map"  resultClass="PersonalLightPollVO">
 		<![CDATA[
 			SELECT
-				ITEMSEQ ,
-             	STARTDATE ,
-             	IFNULL(ENDDATE, DATE_FORMAT('1900-01-01', '%Y-%m-%d %H:%i:%s')) EndDate  ,
-             	POLLSELECTIONCOUNT ,
-             	POLLTITLE ,
-	            POLLTITLE2 ,
-	            ANSWER1 ,
-	            ANSWER2 ,
-	            ANSWER3 ,
-	            ANSWER4 ,
-	            ANSWER5 ,
-	            ANSWER6 ,
-	            ANSWER7 ,
-	            ANSWER8 ,
-	            ANSWER9 ,
-	            ANSWER10 
-        	FROM
-        		TBL_PS_LIGHTPOLL 
-       		WHERE
-       			ITEMSEQ = #v_pItemSeq#
-       		AND
-       			TENANT_ID = #tenantID#	
+				ITEMSEQ,
+				STARTDATE,
+				EndDate,
+				POLLSELECTIONCOUNT,
+				POLLTITLE,
+				POLLTITLE2,
+				ANSWER1,
+				ANSWER2,
+				ANSWER3,
+				ANSWER4,
+				ANSWER5,
+				ANSWER6,
+				ANSWER7,
+				ANSWER8,
+				ANSWER9,
+				ANSWER10
+			FROM
+				TBL_PS_LIGHTPOLL
+			WHERE
+				ITEMSEQ = #v_pItemSeq#
+			AND
+				TENANT_ID = #tenantID#	
 		]]>
-	</select>		
-	
+	</select>
+
 	<select id="EzPersonalDAO.getPollResult" parameterClass="Map"  resultClass="PersonalLightPollVO">
 		<![CDATA[
 			SELECT
@@ -890,6 +913,83 @@
      		OWNERID = #userID#
      	AND
      		SHAREUSERID = #shareUserID#
+     </select>
+     
+     <select id="EzPersonalDAO.getpopupPermitYN" parameterClass="Map" resultClass="Integer">
+     	<![CDATA[
+     		SELECT
+     			COUNT(user_id)
+     		FROM
+     			tbl_ps_popup_user
+     		WHERE
+     			itemseq = #itemSeq#
+     		AND
+     			companyid = #companyId#
+     		AND
+     			tenant_id = #tenantId#
+     		AND (
+     			  	(user_type = 'USER' AND user_id = #userId#)
+     			  OR
+     			  	(user_type = 'DEPT' AND subdept_permitted = 0 AND (user_id = #deptId# or user_id IN (SELECT deptid FROM tbl_addjobmaster WHERE cn = #userId# and tenant_id = #tenantId#)))
+     			  OR
+     			  	(user_type = 'JIKWI' AND user_id IN 
+						(
+							SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#
+							UNION DISTINCT
+							SELECT jobid FROM tbl_addjobmaster WHERE cn = #userId# AND tenant_id = #tenantId#
+						)
+					)
+     			  OR
+     			  	(user_type = 'JIKCHEK' AND user_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#))
+     			)
+     	]]>
+     </select>
+     
+     <select id="EzPersonalDAO.getpopupPermitSubDeptYN" parameterClass="Map" resultClass="int">
+     	<![CDATA[
+			SELECT 
+				COUNT(cn)
+			FROM 
+				tbl_deptmaster 
+			WHERE 
+				dept_cd_path REGEXP(
+						SELECT GROUP_CONCAT(dept_cd_path SEPARATOR '|')
+						FROM tbl_deptmaster
+						WHERE cn IN (
+										SELECT user_id
+										FROM tbl_ps_popup_user
+										WHERE 
+											itemseq = #itemSeq#
+										AND
+											user_type = 'DEPT'
+										AND 
+											subdept_permitted = 1
+									)
+						)
+			AND
+				(
+					cn = #deptId#
+				OR
+					cn IN (SELECT deptid FROM tbl_addjobmaster WHERE cn = #userId# and tenant_id = #tenantId#)
+				)
+     	]]>
+     </select>
+     
+     <select id="EzPersonalDAO.getPopupUserGroupList" parameterClass="Map" resultClass="String">
+     	<![CDATA[
+     		SELECT
+     			user_id
+     		FROM
+     			tbl_ps_popup_user
+     		WHERE
+     			itemseq = #itemSeq#
+     		AND
+     			companyid = #companyId#
+     		AND
+     			tenant_id = #tenantId#
+     		AND
+     			user_type = 'GROUP'
+     	]]>
      </select>
 </sqlMap>
 

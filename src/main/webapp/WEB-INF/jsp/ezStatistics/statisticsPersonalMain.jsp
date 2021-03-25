@@ -43,7 +43,7 @@
                 changeYear: true,
                 autoSize: true,
                 showOn: "both",
-                buttonImage: "/images/ImgIcon/calendar-month.gif",
+                buttonImage: "/images/ImgIcon/calendar-month.png",
                 buttonImageOnly: true
             });
             $("#Sdatepicker2").datepicker({
@@ -51,7 +51,7 @@
                 changeYear: true,
                 autoSize: true,
                 showOn: "both",
-                buttonImage: "/images/ImgIcon/calendar-month.gif",
+                buttonImage: "/images/ImgIcon/calendar-month.png",
                 buttonImageOnly: true
             });
             var NowDate = new Date();
@@ -309,6 +309,25 @@
                 else
                     return obj.text;
         }
+
+        function callyearlydoccount() {
+
+            $.ajax({
+                type : "POST",
+                dataType : "text",
+                async : true,
+                url : "/ezStatistics/callYearlyDocCount.do",
+                data : {
+                    search : ""
+                },
+                success: function(text) {
+                    console.log(text);
+                },
+                error: function() {
+                    console.log('error');
+                }
+            });
+        }
     </script>
 </head>
 <h1><spring:message code='ezStatistics.t1047'/></h1>
@@ -328,8 +347,11 @@
             <input type="text" id="Sdatepicker2" style="width: 80px; text-align: center" onchange="getpersonalstatistics('eDate')" readonly="readonly">
                 </span>
             </td>
+            <td style="display: none;">
+                <button onclick="callyearlydoccount()">callYearlyDocCount</button>
+            </td>
             <td>
-                <div id="mainmenu" style="height: 28px;margin:3px 0px !important">
+                <div id="mainmenu" style="height: 31px;margin:3px 0px !important">
                     <ul>
                         <li><span style="width: 110px;text-align:center;background-color: white" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003'/></span></li>
                     </ul>

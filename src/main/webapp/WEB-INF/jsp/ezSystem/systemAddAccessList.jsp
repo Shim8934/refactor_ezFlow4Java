@@ -146,7 +146,7 @@
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FromTreeView");
 		        nodeIdx = treeView.GetSelectNode();
-        		document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top;padding-right:3px;\" >" 
+        		document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" 
         		+ "<span id='spn_deptName' title='" + nodeIdx.GetNodeData("VALUE") + "'>" + nodeIdx.GetNodeData("VALUE") + "</span>"
         		+ "<span id='countInfo'></span>";
 		        SelectDeptNM.setAttribute("countinfo", "")
@@ -200,9 +200,9 @@
 							var strIsLeaf = $("div#" + id + "").attr("isleaf");
 							
 							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
-			        			document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang24 + "</span>/<spring:message code='ezAddress.t362' /> <span class='countColor'>" + result.totalCount2 + strLang24 + "</span>]";
+			        			document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span> / <span class='countColor'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
 							} else {
-								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang24 + "</span>]";
+								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span>";
 							}
 							//2018-08-01 김보미 - 부서명 [사원수] 가 넘치는지 확인하는 함수
 							deptNameLong(result.containLow, strIsLeaf);
@@ -216,7 +216,7 @@
 				});
 		    }
 		    
-		    var m_strColorSelect = "#edf4fd";
+		    var m_strColorSelect = "#f1f8ff";
 	        var m_strColorOver = "#f4f5f5";
 	        var m_strColorDefault = "#ffffff";
 	        var p_ListOrderObject = null;
@@ -376,7 +376,7 @@
 		            document.getElementById("Search_txtlist_table").style.display = "none";
 		            
 		            if (pSeach) {
-		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + "<spring:message code='ezOrgan.t101' />" + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang24 + "</span>]";
+		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<spring:message code='ezOrgan.t101' />" + "" + "&nbsp;&nbsp;<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "</span>";
 		                SelectDeptNM.setAttribute("countinfo", "1");
 		            }
 		        } else {
@@ -389,7 +389,7 @@
 	                } else {
 	                    document.getElementById("Search_txtlist_table").style.display = "";
 	                    document.getElementById("txtlist_table").style.display = "none";
-	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + "<spring:message code='ezOrgan.t101' />" + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang24 + "</span>]";
+	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<spring:message code='ezOrgan.t101' />" + "" + "&nbsp;&nbsp;<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "</span>";
 	                    SelectDeptNM.setAttribute("countinfo", "1")
 	                }
 	            }
@@ -1129,7 +1129,7 @@
 	    <script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
 		</script>
-	    <table id="TreeViewTD">
+	    <table id="TreeViewTD" style="margin-top:25px;"> 
 	        <tr>
 	            <td>
 	                <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
@@ -1156,8 +1156,8 @@
 	                                </td>    
 	                                <td>
 	                                	<div style="float: right; margin-right: 5px; position: relative;">
-                                            <a href="#" class="imgbtn" id="dept_select"><span onclick="dept_select()" style="z-index:10"><spring:message code='ezEmail.t596'/></span></a>
-                                            <a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezEmail.t597'/></span></a>
+                                            <a class="imgbtn" id="dept_select"><span onclick="dept_select()" style="z-index:10"><spring:message code='ezEmail.t596'/></span></a>
+                                            <a class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezEmail.t597'/></span></a>
                                         </div>
                                     </td>
 	                            </tr>
@@ -1171,7 +1171,7 @@
 	                        </td>
 	                        <td></td>
 	                        <td class="listview" style="width: 426px" id="orglistView">
-	                            <table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
+	                            <table style="width: 100%; margin-top: -1px; height:35px" class="popup_mainlist">
 	                                <tr>
 	                                    <th style="white-space:normal;background-color: white;border-top:0px;border-bottom:1px solid #eaeaea">
 											<span id="SelectDeptNM" style="font-weight: normal; width: 380px; height: 18px; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
@@ -1216,7 +1216,7 @@
 	                                <span style="min-width: 45px;" id="AddjobStr"><spring:message code='ezSystem.jje2'/></span>
 	                            </h2>
 	                            <div class="receiver_borderbox">
-	                                <div id="UserAddJobList" style="width: 230px; Height: 473px; overflow-x: auto; overflow-y: auto;" ondblclick="DeleteReceiver()"></div>
+	                                <div id="UserAddJobList" style="width: 230px; Height: 476px; overflow-x: auto; overflow-y: auto;" ondblclick="DeleteReceiver()"></div>
 	                            </div>
 	                        </td>
 	                    </tr>                    

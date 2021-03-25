@@ -52,6 +52,7 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 	@Resource(name = "jspw")
     private String jspw;
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public JSONArray getMainMailList(MCommonVO info, Locale locale, String filter, String listSize) {
         
@@ -100,7 +101,7 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 				listCount = 0;
 			}
         	
-    		messages = ezEmailUtil.searchFolder(ia, userEmail, folder, "", "", null, null, false, 
+    		messages = ezEmailUtil.searchFolder(ia, userEmail, folder, "", "", null, new Date(), false, 
     				isUnreadOnly, isImportantOnly, "receivedDate", false, startNo, listCount, true, null, info.getTenantId());
         	
 			for (Message message : messages) {
@@ -222,6 +223,7 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public JSONArray getFolderList(MCommonVO info, Locale locale, String folderId) {
 		LOGGER.debug("MEmailServiceImpl getFolderList started.");

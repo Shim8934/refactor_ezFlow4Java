@@ -21,34 +21,34 @@
 	<script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
     <script type="text/javascript">
-    	var pDocID = "${docID}";
-    	var pDocHref = "${docHref}";
-    	var pOrgDocID = "${orgDocID}";
+    	var pDocID = "<c:out value = '${docID}'/>";
+    	var pDocHref = "<c:out value = '${docHref}'/>";
+    	var pOrgDocID = "<c:out value = '${orgDocID}'/>";
         var pUserID;
         var flag = false;
         var flag2 = false;
         var stampFlag = false;
         var NostampFlag = false;
         var modeflag = false;
-        var companyID = "${userInfo.companyID}";
-	    var companyName = "${userInfo.companyName}";
+        var companyID = "<c:out value = '${userInfo.companyID}'/>";
+	    var companyName = "<c:out value = '${userInfo.companyName}'/>";
         var maxwidth = 659;
         var arr_userinfo = new Array();
         arr_userinfo[0]  = "user";
-	    arr_userinfo[1]  = "${userInfo.id}";
-	    arr_userinfo[2]  = "${userInfo.displayName}";
-	    arr_userinfo[3]  = "${userInfo.title}";
-	    arr_userinfo[4]  = "${userInfo.deptID}";
-	    arr_userinfo[5]  = "${userInfo.deptName}";
-	    arr_userinfo[6]  = "${userInfo.jikChek}";
-	    arr_userinfo[8]  = "${userInfo.email}";
+	    arr_userinfo[1]  = "<c:out value = '${userInfo.id}'/>";
+	    arr_userinfo[2]  = "<c:out value = '${userInfo.displayName}'/>";
+	    arr_userinfo[3]  = "<c:out value = '${userInfo.title}'/>";
+	    arr_userinfo[4]  = "<c:out value = '${userInfo.deptID}'/>";
+	    arr_userinfo[5]  = "<c:out value = '${userInfo.deptName}'/>";
+	    arr_userinfo[6]  = "<c:out value = '${userInfo.jikChek}'/>";
+	    arr_userinfo[8]  = "<c:out value = '${userInfo.email}'/>";
 	    arr_userinfo[9]  = companyID;
-	    arr_userinfo[11]  = "${userInfo.displayName}";
-	    arr_userinfo[12]  = "${userInfo.displayName2}";
-	    arr_userinfo[13]  = "${userInfo.title1}";
-	    arr_userinfo[14]  = "${userInfo.title2}";
-	    arr_userinfo[15]  = "${userInfo.deptName1}";
-	    arr_userinfo[16]  = "${userInfo.deptName2}";
+	    arr_userinfo[11]  = "<c:out value = '${userInfo.displayName}'/>";
+	    arr_userinfo[12]  = "<c:out value = '${userInfo.displayName2}'/>";
+	    arr_userinfo[13]  = "<c:out value = '${userInfo.title1}'/>";
+	    arr_userinfo[14]  = "<c:out value = '${userInfo.title2}'/>";
+	    arr_userinfo[15]  = "<c:out value = '${userInfo.deptName1}'/>";
+	    arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2}'/>";
         pUserID = arr_userinfo[1];
         var is_Enc = "NONE";
         var isExternal = false;
@@ -84,8 +84,8 @@
         var arrDelFiles = new Array();
         arrDelFiles[0] = "c:\\" + pDocID + ".xml";
         arrDelFiles[1] = "c:\\" + pOrgDocID + ".xml";
-        var pUse_Editor = "${useEditor}";
-        var approvalRoot = "${approvalRoot}";
+        var pUse_Editor = "<c:out value = '${useEditor}'/>";
+        var approvalRoot = "<c:out value = '${approvalRoot}'/>";
         var ext = "hwp";
         var orgCompanyID = "<c:out value='${orgCompanyID}' />";
         var docTitle = "";
@@ -372,7 +372,7 @@
                         window.open("/myoffice/ezBoardSTD/NewBoardItem.aspx?BoardID=" + pBoardID + "&Mod=New&pbrdGbn=SiteNewBoard&pFromScreen=Mail&DocID=" + pOrgDocID + "&Url=" + pDocHref, '', 'height=720,width=765,resizable=yes,scrollbars=no' + GetOpenPosition(765, 720));
                     }
                     else {
-                        window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + pDocHref, '', "top=" + pTop.toString() + ", left=" + pLeft.toString() + ',height=870,width=765,scrollbars=no');
+                        window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + pDocHref, '', "top=" + pTop.toString() + ", left=" + pLeft.toString() + ',height=870,width=765,scrollbars=no');
                     }
                 }
             }
@@ -423,7 +423,7 @@
 	            	if (HwpCtrl.CheckFieldExist("doctitle")) {
 	            		docTitle = HwpCtrl.GetFieldText("doctitle");
 	            	}
-	            	
+
 	            	//여기다 발송의뢰반송 메일알람 추가
 	                SendSimsaBansong(docTitle);
 	                var pAlertContent = "<spring:message code='ezApprovalG.t256'/>";
@@ -525,31 +525,37 @@
         function SaveFile() {
 			var result = "";
 			
-	        $.ajax({
-	    		type : "POST",
-	    		dataType : "text",
-	    		async : false,
-	    		url : "/ezApprovalG/saveEndFileHwp.do",
-	    		data : {
+			var data = {
 	    			docID : pOrgDocID,
-                    // formId : pFormID,
+	    			// formId : pFormID,
 	    			html  : HwpCtrl.GetCloneData("", "HWP")
-	    		},
-	    		success: function(xml){
-	    			result = xml;
-	    		}        			
-	    	});
+				}
+				
+		    $.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/saveEndFileHwp.do",
+		    		contentType : "application/json",
+		    		data : JSON.stringify(data),
+		    		success: function(xml){
+		    			result = xml;
+		    		}        			
+		    	});
+			
+	        var reqData = {
+    			docID : pDocID,
+                   // formId : pFormID,
+    			html  :  HwpCtrl.GetCloneData("", "HWP")
+        	}
 	        
 	        $.ajax({
 	    		type : "POST",
 	    		dataType : "text",
 	    		async : false,
 	    		url : "/ezApprovalG/saveFileHWP.do",
-	    		data : {
-	    			docID : pDocID,
-                    // formId : pFormID,
-	    			html  :  HwpCtrl.GetCloneData("", "HWP")
-	    		},
+	    		contentType : "application/json",
+	    		data : JSON.stringify(reqData),
 	    		success: function(text){
 	    		}        			
 	    	});
@@ -638,6 +644,7 @@
                     SetDocumentElement(HwpCtrl, "swidth", SealWidth);
                     SetDocumentElement(HwpCtrl, "sheight", SealHeight);
                     stampFlag = true;
+                    NostampFlag = false;
                 }
             } else {
                 if (HwpCtrl.CheckFieldExist("sealsign")) {
@@ -1222,7 +1229,7 @@ function CheckUsePassword() {
                         <li id="btnSend"><span onclick="return btnSend_onclick()"><spring:message code='ezApprovalG.t214'/></span></li>
                         <li id="btnBoard"><span onclick="return btnBoard_onclick()"><spring:message code='ezApprovalG.t215'/></span></li>
                         <li id="btnReject"><span onclick="return btnReject_onclick()"><spring:message code='ezApprovalG.t49'/></span></li>
-                        <li id="btnPrint"><span onclick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li>
+                        <li id="btnPrint"><span class='icon16 popup_icon16_print' onclick="return btnPrint_onclick()"></span></li>
                     </ul>
                 </div>
                 <div id="close">
@@ -1239,19 +1246,26 @@ function CheckUsePassword() {
         <tr>
             <td style="padding-bottom: 10px">
                 <div style="height: 100%">
-                    <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "3", "0", "${hwpToolbar}", "");</script>
+                    <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "3", "0", "<c:out value = '${hwpToolbar}'/>", "");</script>
                 </div>
             </td>
         </tr>
         <tr>
             <td height="20">
-                <table class="file" style="height: 70px;">
-                    <tr>
-                        <th><spring:message code='ezApprovalG.t65'/></th>
-                        <td>
-                            <div id="lstAttachLink" style="height: 65px;"></div>
-                            <iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0" style="display: none;"></iframe>
-                        </td>
+	                <table class="file" style="height:80px;">
+	                    <tr>
+	                        <th id="btn_Attach"><spring:message code='ezApprovalG.t65'/></th>
+	                        <td style="width:62%; border-right:1px solid #d5d5d5;">
+	                            <div id="lstAttachLink" style="height:70px;"></div>
+	                            <iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0" style="display: none;"></iframe>
+	                        </td>
+	                        <td style="width:30%;">
+								<div id="lstAttachLinkDoc" style="height:70px;"></div>
+	                        </td>
+							<td class="pos2" style="display:none;width:8%; background:#fffcfa;">
+								<a class="imgbtn imgbck" style="width:60px;"><span style="height:24px;" onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
+								<a class="imgbtn imgbck" style="width:60px;"><span style="height:24px;" onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a><br/>
+							</td>
                     </tr>
                 </table>
             </td>

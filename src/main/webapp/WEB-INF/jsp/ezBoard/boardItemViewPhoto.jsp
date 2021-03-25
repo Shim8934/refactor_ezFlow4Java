@@ -37,7 +37,18 @@
 			.iPBInnerDiv_Top{display:inline-block; float:right; width:40px; margin-top: 15px;}
 			.iPBInnerDiv_Top i{font-size:25px; color:black; cursor:pointer;}
 			.iPBInnerDiv_TopOff{display:none; float:right; width:40px;}
-			.iPBInnerDiv{height:50px; padding-right: 15px}
+			.iPBInnerDiv{height:50px; padding-right: 15px}	
+			.likeButton {
+				padding:5px;
+				cursor:pointer;
+				display:inline-block;
+				border:1px solid #c7c7c7;
+			    border-radius:2px;
+			}
+			.likeButton:hover {
+				background-color:#f1f8ff;
+				border:1px solid #6793d8;
+			}
 		</style>
 		<script type="text/javascript">
 				window.offscreenBuffering = true;
@@ -70,6 +81,10 @@
 				var g_progresswin;
 				var OneLineReplyFlag = "${oneLineReplyFlag}";
 				var gubun = "${boardInfo.guBun}";
+				var isLikeChecked = "<c:out value='${isLikeChecked}'/>";
+				var likeFlag = "<c:out value='${boardInfo.likeFlag}'/>";
+				var likeCount = "${boardItem.likeCount}";
+				var likeCountAfter = 0;
 				var commentCount = "${commentCount}";
 			    var nowCommentCount = ""; // 댓글 옵션처리를 위해 전역변수로 변경
 			    var userInfoID = "${userInfo.id}"; // 댓글 삭제가능여부 판단을 위해 자신의 userID 사용
@@ -119,6 +134,15 @@
  		            	getBoardComment();
  		            }
 		        };
+		        
+		        $(document).ready(function() {
+					/* 2019-04-05 홍승비 - 좋아요 버튼이 존재한다면 본문 패딩과 height 조절 */
+		            if (likeFlag != null && likeFlag == "Y") {
+						$(".MainContentTD").css({"padding" : "15px 0px 4px 0px", "height" : "47px"});
+						$("#MainContent").css("height", "35px");
+		            }
+		        });
+		        
 		        //강민수92 댓글 클릭 이벤트
 			    function btn_One_Line_Reply_Onclick() {
 			    	if (OneLineReplyFlag == "1") {
@@ -214,7 +238,7 @@
 				function CheckIfHasReplies()
 				{
 				    var xmlhttp = createXMLHttpRequest();
-					xmlhttp.open("POST", "/ezBoard/checkIfHasReply.do?itemList=" + pItemID + ",;", false);
+					xmlhttp.open("POST", "/ezBoard/checkIfHasReply.do?itemList=" + encodeURIComponent(pItemID) + ",;", false);
 					xmlhttp.send();	
 					if(xmlhttp.responseText == "FALSE") {
 						xmlhttp = null;	
@@ -242,6 +266,7 @@
 					//게시판관리자 또는 게시판그룹관리자 또는 게시물작성자가 아니면 지울 수 없다
 				    if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && strWriterID != SSUserID) {
 			            alert("<spring:message code='ezBoard.t265'/>");
+			            // GS 수정(2006.02.10) : 익명게시판인 경우 게시물 삭제 시 암호가 맞아도 삭제가 안되는 문제 수정 (return의 위치가 잘못되었음)
 			            return;
 				    } else {
 			            if (!confirm(strLang48)) {
@@ -249,7 +274,7 @@
 			            }
 	
 			            var xmlhttp = createXMLHttpRequest();
-			            xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + pBoardID + "&itemList=" + pItemID + ";", false);
+			            xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemList=" + encodeURIComponent(pItemID) + ";", false);
 			            xmlhttp.send();
 	
 			            if (xmlhttp.responseText == "NO") {
@@ -269,6 +294,28 @@
 			                window.opener.refresh_onclick();
 			            } catch (e) {
 			            }
+			            
+			            //2019.03.04 유은정 - 포토갤러리 포틀릿에도 리스트 업데이트 되도록 수정
+						if (parent.opener != null && parent.opener.photoBoardMovePage != undefined) {
+							parent.opener.photoBoardMovePage(null);
+						}
+			            
+			            // 게시판 포틀릿 리스트 업데이트 되도록 수정
+			            if (parent.opener.getBoardPortletInfo != undefined) {
+			            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
+			            	var customBoardCount = customBoardList.length;
+			            	
+			            	for (var i = 0; i < customBoardCount; i++) {
+			            		var boardId = customBoardList[i].querySelector(".portletPlus").getAttribute("data1");
+			            		
+			            		if (boardId == pBoardID) {
+			            			var portletId = customBoardList[i].parentElement.id;
+			            			portletId = portletId.substring(0, portletId.indexOf("P"));
+			            			parent.opener.getBoardPortletInfo(portletId);
+			            		}
+			            	}
+		            	}
+						
 			            window.close();
 				    }
 				}
@@ -281,7 +328,7 @@
 		
 		        if (!confirm(strLang48)) return;
 		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + pBoardID + "&itemList=" + pItemID + ";", false);
+		        xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemList=" + encodeURIComponent(pItemID) + ";", false);
 		        xmlhttp.send();
 		
 		        if (xmlhttp.responseText == "NO") {
@@ -310,7 +357,7 @@
 						return;
 					}
 		
-					window.location.href = "/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=reply";
+					window.location.href = "/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&mode=reply";
 				}
 /* 		
 				function btn_Copy_Onclick()
@@ -327,8 +374,9 @@
 					pheigth = pheigth - 200;
 					pwidth = pwidth - 127;
 					
-					window.open("/ezBoard/copyBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID, "", "height=600px,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth,"");		
+					window.open("/ezBoard/copyBoardItem.do?itemIDList=" + encodeURIComponent(pItemID) + ";" + "&boardID=" + encodeURIComponent(pBoardID), "", "height=600px,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth,"");		
 				} */
+				
 		        window.onunload = function () {
 		        	//리프레쉬 할 이유가 없는거 같음
 // 		            refresh_onclick();
@@ -402,7 +450,7 @@
 		            var pleft = (pwidth - swidth) / 2;
 		            var ptop = (pheight - sheight) / 2;
 		
-					var szHref = "/ezBoard/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;			
+					var szHref = "/ezBoard/itemReadList.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID);			
 					var strFeature = "status:no;dialogHeight: 425px;dialogWidth: 620px;help: no;resizable:yes";
 		
 					if (CrossYN()) {
@@ -453,8 +501,9 @@
 					if (strItemID != "") window.location.href = window.location.href.replace(pItemID, strItemID);
 				}
 				
+				/* 2019-11-28 홍승비 - 사용하지 않는 함수 주석처리 */
 				// 게시 보기(새거)
-				function Item_View_New(pBoardID, pItemID)
+/* 				function Item_View_New(pBoardID, pItemID)
 				{
 					var pheigth = window.screen.availHeight;
 					var pwidth = window.screen.availWidth;
@@ -463,8 +512,8 @@
 					pheigth = pheigth - 284;
 					pwidth = pwidth - 359;
 							
-					window.open("/ezBoard/boardItemViewPhoto.do?itemID=" + pItemID + "&boardID=" + pBoardID, "", "height=700,width=1000, status = no, toolbar=no, menubar=no, location=no,scrollbars=1, resizable=1, top=0, left=0", "");	
-				}
+					window.open("/ezBoard/boardItemViewPhoto.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID), "", "height=700,width=1000, status = no, toolbar=no, menubar=no, location=no,scrollbars=1, resizable=1, top=0, left=0", "");	
+				} */
 				function GoTop()
 				{
 				    message.AGoTop.click();
@@ -598,7 +647,7 @@
 		                if ((pListImage.split(";").length - 1) == 1) {
 		                    if (!confirm(strLang48)) return;
 		                    var xmlhttp = createXMLHttpRequest();
-		                    xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + pBoardID + "&itemList=" + pItemID + ";", false);
+		                    xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemList=" + encodeURIComponent(pItemID) + ";", false);
 		                    xmlhttp.send();
 		
 		                    if (xmlhttp.responseText == "NO") {
@@ -618,6 +667,28 @@
 		                        window.opener.refresh_onclick();
 		                    } catch (e) {
 		                    }
+		                    
+		                  	//2019.03.04 유은정 - 포토갤러리 포틀릿에도 리스트 업데이트 되도록 수정
+							if (parent.opener != null && parent.opener.photoBoardMovePage != undefined) {
+								parent.opener.photoBoardMovePage();
+							}
+			                
+							// 게시판 포틀릿 리스트 업데이트 되도록 수정
+				            if (parent.opener.getBoardPortletInfo != undefined) {
+				            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
+				            	var customBoardCount = customBoardList.length;
+				            	
+				            	for (var i = 0; i < customBoardCount; i++) {
+				            		var boardId = customBoardList[i].querySelector(".portletPlus").getAttribute("data1");
+				            		
+				            		if (boardId == pBoardID) {
+				            			var portletId = customBoardList[i].parentElement.id;
+				            			portletId = portletId.substring(0, portletId.indexOf("P"));
+				            			parent.opener.getBoardPortletInfo(portletId);
+				            		}
+				            	}
+			           		}
+							
 		                    window.close();
 		                }
 		                else {
@@ -626,8 +697,8 @@
 		                    
 		                    pleft = (pwidth - swidth) / 2;
 				            ptop = (pheight - sheight) / 2;
-				            
-		                    window.open("/ezBoard/boardItemDelete.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&mod=" + pMod, "", "height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft + ",status = no, toolbar=no, menubar=no,location=no, resizable=1");
+				          
+		                    window.open("/ezBoard/boardItemDelete.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID) + "&mod=" + pMod, "", "height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft + ",status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		                }
 		            }
 		            else {
@@ -637,13 +708,13 @@
 						if (gubun == 3) { // 포토게시판 (메인이미지 사용 안함)
 							sheight = 360;
 						} else { // 썸네일게시판 (메인이미지 사용함)
-							sheight = 380;
+							sheight = 475;
 						}
 						
 			            pleft = (pwidth - swidth) / 2;
 			            ptop = (pheight - sheight) / 2;
-			            
-		                window.open("/ezBoard/modifyImageItem.do?imageID=" + document.getElementById("mainimages").name + "&boardID=" + pBoardID + "&itemID=" + pItemID + "&page=" + pPage + "&mod=image&guBun=" + gubun, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=yes,resizable=1,height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft, "");
+			            //2019.03.04 유은정 - 게시판 포틀릿 리스트 업데이트 되도록 수정
+		                window.open("/ezBoard/modifyImageItem.do?imageID=" + encodeURIComponent(document.getElementById("mainimages").name) + "&boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&page=" + pPage + "&mod=image&guBun=" + gubun, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=yes,resizable=1,height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft, "");
 		            }
 		        }
 		
@@ -663,7 +734,7 @@
 		            var pleft = (pwidth - swidth) / 2;
 		            var ptop = (pheight - sheight) / 2;
 		
-		            window.open("/ezBoard/addImageItem.do?&boardID=" + pBoardID + "&itemID=" + pItemID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft , "");
+		            window.open("/ezBoard/addImageItem.do?&boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft , "");
 		        }
 		
 		        function btn_SmallIamge(Page)
@@ -869,16 +940,70 @@
 		                var feature = "status:no;dialogWidth:" + swidth + "px;dialogHeight:" + sheight + "px;help:no;scroll:no;edge:sunken";
 		
 		                var ret = window.showModalDialog("/ezBoard/photoAlbumEdit.do", params, feature);
-		                if (ret == "OK")
-		                    page_reload();
+		                if (ret == "OK") {
+		                	//2019.03.04 유은정 - 포토갤러리 포틀릿에도 리스트 업데이트 되도록 수정
+							if (parent.opener != null && parent.opener.photoBoardMovePage != undefined) {
+								parent.opener.photoBoardMovePage();
+							}
+			                
+							// 게시판 포틀릿 리스트 업데이트 되도록 수정
+				            if (parent.opener.getBoardPortletInfo != undefined) {
+				            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
+				            	var customBoardCount = customBoardList.length;
+				            	
+				            	for (var i = 0; i < customBoardCount; i++) {
+				            		var boardId = customBoardList[i].querySelector(".portletPlus").getAttribute("data1");
+				            		
+				            		if (boardId == pBoardID) {
+				            			var portletId = customBoardList[i].parentElement.id;
+				            			portletId = portletId.substring(0, portletId.indexOf("P"));
+				            			parent.opener.getBoardPortletInfo(portletId);
+				            		}
+				            	}
+				            }
+							
+				            if (parent.opener.getBoardList_NewBoardSTD != undefined) {
+								parent.opener.getBoardList_NewBoardSTD();
+							}
+				            
+		                	page_reload();
+		                }
 		
 		            }
 		           
 		        }
 		        function btn_albumEdit_Complete(ret) {
 		            DivPopUpHidden();
-		            if (ret == "OK")
-		                page_reload();
+		            
+		            if (ret == "OK") {
+	                	//2019.03.04 유은정 - 포토갤러리 포틀릿에도 리스트 업데이트 되도록 수정
+						if (parent.opener != null && parent.opener.photoBoardMovePage != undefined) {
+							parent.opener.photoBoardMovePage();
+						}
+		                
+						// 게시판 포틀릿 리스트 업데이트 되도록 수정
+			            if (parent.opener.getBoardPortletInfo != undefined) {
+			            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
+			            	var customBoardCount = customBoardList.length;
+			            	
+			            	for (var i = 0; i < customBoardCount; i++) {
+			            		var boardId = customBoardList[i].querySelector(".portletPlus").getAttribute("data1");
+			            		
+			            		if (boardId == pBoardID) {
+			            			var portletId = customBoardList[i].parentElement.id;
+			            			portletId = portletId.substring(0, portletId.indexOf("P"));
+			            			parent.opener.getBoardPortletInfo(portletId);
+			            		}
+			            	}
+			            }
+						
+			            if (parent.opener.getBoardList_NewBoardSTD != undefined) {
+							parent.opener.getBoardList_NewBoardSTD();
+						}
+			            
+			            page_reload();
+		            }
+		                
 		        }
 		        
 		        /* 2018-06-01 홍승비 - 페이징 코드 수정, 도달 불가능 코드 삭제 */
@@ -917,7 +1042,7 @@
 		            var swidth;
 		            var sheight;
 		
-		            swidth = 420;
+		            swidth = 460;
 		            sheight = 500;
 		            
 		            var pwidth = window.screen.availWidth;
@@ -926,7 +1051,7 @@
 		            var pleft = (pwidth - swidth) / 2;
 		            var ptop = (pheight - sheight) / 2;
 		            
-		            window.open("/ezBoard/imageDownload.do?itemID=" + pItemID + "&boardID=" + pBoardID, "", "height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft + ",status = no, toolbar=no, menubar=no,location=no, resizable=1");			
+		            window.open("/ezBoard/imageDownload.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID), "", "height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft + ",status = no, toolbar=no, menubar=no,location=no, resizable=1");			
 		        }
 		
 		    	//mouseWheel Event 
@@ -983,12 +1108,12 @@
 		        }
 		        function Appr_onclick(pFlag) {
 		            if (pFlag == "C") {
-		                var OpenWin = window.open("/ezBoard/boardApprOpinion.do?itemList=" + pItemID + ";&mode=" + pFlag, "BoardApprOpinion", GetOpenWindowfeature(540, 300));
+		                var OpenWin = window.open("/ezBoard/boardApprOpinion.do?itemList=" + encodeURIComponent(pItemID) + ";&mode=" + pFlag, "BoardApprOpinion", GetOpenWindowfeature(540, 300));
 		                try { OpenWin.focus(); } catch (e) { }
 		            }
 		            else {
 		                var xmlhttp = createXMLHttpRequest();
-		                xmlhttp.open("POST", "/ezBoard/apprBoardItem.do?itemList=" + pItemID + ";&mode=" + pFlag, false);
+		                xmlhttp.open("POST", "/ezBoard/apprBoardItem.do?itemList=" + encodeURIComponent(pItemID) + ";&mode=" + pFlag, false);
 		                xmlhttp.send();
 		
 		                if (xmlhttp.responseText == "OK") {
@@ -1022,7 +1147,7 @@
 		            window.close();
 		
 		            /* 2018-06-20 홍승비 - 승인게시물 반려 후 제작성 .do 경로 수정 */
-		            window.open("/ezBoard/boardNewItemTempPhoto.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&location=", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+		            window.open("/ezBoard/boardNewItemTempPhoto.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&mode=modify" + "&location=", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 		        }
 		    	
 		        /* 2018-07-24 홍승비 - 이미지 클릭 시 투표 모듈에서 가져온 레이어팝업 동작 */
@@ -1286,8 +1411,76 @@
 			  			$imgPopup.css("top", 0);
 			  			$imgPopupDiv.css("overflow", "auto");
 			  		}
-			  	}
+				}
+				
+				function addRelatedCabinet() {
+					window.open("/ezCabinet/cabinetAddRelated.do?module=board", "addRelated", getOpenWindowfeature(480, 505));
+				}
+				
+				function getOpenWindowfeature(popUpW, popUpH) {
+					var heigth   = window.screen.availHeight;
+					var width    = window.screen.availWidth;
+					var left     = 0;
+					var top      = 0;
+					var pleftpos = parseInt(width) - popUpW;
+					heigth       = parseInt(heigth) - popUpH;
+					left         = pleftpos / 2;
+					top          = heigth / 2;
+					var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=no, scrollbars=yes";
+					return feature;
+				}
 			  	
+			  	 /* 2019-04-05 홍승비 - 좋아요 버튼 클릭 동작 */
+			    function clickLikeButton() {
+			    	var mod = "";
+			    	if (isLikeChecked == "Y") {
+			    		mod = "DELETE";
+			    	} else {
+			    		mod = "INSERT";
+			    	}
+			    	
+			    	$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezBoard/clickLikeMod.do",
+						data : {
+							mod: mod,
+							itemID : pItemID
+						},
+						success: function(result){
+							isLikeChecked = result;
+							updateLikeCountImg(isLikeChecked);
+						}
+					});
+			    }
+			  	 
+			    /* 2019-04-05 홍승비 - 좋아요 버튼 이미지 및 좋아요 갯수 업데이트 */
+			    function updateLikeCountImg(isLikeChecked) {
+			    	$.ajax({
+						type : "GET",
+						dataType : "text",
+						async : false,
+						url : "/ezBoard/getLikeCount.do",
+						data : {
+							itemID : pItemID
+						},
+						success: function(result){
+							likeCountAfter = result;
+							if (parseInt(result) > 0) {
+								document.getElementById("likeCountSpan").innerText = "(" + result + ")";
+							} else {
+								document.getElementById("likeCountSpan").innerText = "";
+							}
+							if (isLikeChecked == "Y") {
+					    		document.getElementById("likeButtonImg").src = "/images/like_on.png";
+					    	} else {
+					    		document.getElementById("likeButtonImg").src = "/images/like_off.png";
+					    	}
+						}
+					});
+				}
+					
 			    /* 2019-04-12 홍승비 - 게시물 갱신 조건 체크 */
 			    function checkRefreshFlag () {
 			    	if (OneLineReplyFlag == "1") { // 레이어팝업의 경우 텍스트로 표출된 현재 댓글갯수를 가져옴
@@ -1297,13 +1490,12 @@
 			    	var opnenerHref = window.opener.location.href;
 			    	
 			    	// 댓글의 수가 달라졌고, 부모창의 주소가 게시판인 경우(새게시물 제외)에만 플래그값 변경
-			    	if ((commentCount != nowCommentCount) && (window.opener.location.href.indexOf("/ezBoard/") > -1) && (window.opener.location.href.indexOf("boardItemList_new") == -1)) {
+			    	if (((likeCount != likeCountAfter) || (commentCount != nowCommentCount)) && (window.opener.location.href.indexOf("/ezBoard/") > -1) && (window.opener.location.href.indexOf("boardItemList_new") == -1)) {
 			    		refreshFlag = "Y";
 			    	} else {
 			    		refreshFlag = "N";
 			    	}
 			    }
-			    
 		</script>
 	</head>
 	<body  id="bodyPopup" class="popup" style="overflow:hidden; height:100%;">
@@ -1345,6 +1537,9 @@
 		                    <li ID='btn_down' ><span  onclick="btn_ImgDownload()"><spring:message code='ezBoard.t1007'/></span></li>
 		        		</c:otherwise>
 		        	</c:choose>
+					<c:if test="${useCabinet == 'YES'}">
+						<li><span onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
+					</c:if>
 		        </ul>
 		      </div>
 		      <div id="close">
@@ -1385,7 +1580,7 @@
 		            <tr>
 		                <th><spring:message code='ezBoard.t1008'/></th>
 		                <td id="cimagecontent" colspan="3" style="padding-right:0px">
-		                    <div id="Div2" style="OVERFLOW-Y: auto; height:55px;WIDTH: 100%; padding-top:5px;padding-bottom:5px; vertical-align:middle; white-space:pre;"><c:out value="${boardItem.mainContent}"/></div>
+		                    <div id="Div2" style="OVERFLOW-Y: auto; overflow-x:hidden; height:55px;WIDTH: 100%; padding-top:5px;padding-bottom:5px; vertical-align:middle; white-space:pre-wrap;"><c:out value="${boardItem.mainContent}"/></div>
 		                </td>
 		            </tr>
 		          </table>
@@ -1416,18 +1611,36 @@
 		            </td>
 		        </tr>
 		        <tr>
-		        	<td style="padding:10px 0px; height:83px; text-align:center" colspan="3">
-		            	<div id="MainContent" style="height:60px; padding-left:23%; padding-right:24%;"></div>
+		        	<td class="MainContentTD" style="padding:10px 0px; height:83px; text-align:center" colspan="3">
+		            	<div id="MainContent" style="height:60px; padding-left:23%; padding-right:24%;white-space: pre-wrap;"></div>
 		            </td>
 		        </tr>
+			<%-- 2019-04-05 홍승비 - 본문, 사진소개 하단에 좋아요 버튼 추가 --%>
+			<c:if test="${boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y'}">
+				<tr>
+					<td style="text-align:center; padding-bottom:8px;" colspan="3">
+					  	<span class="likeButton" style="cursor:pointer; margin-left:-7px;" onclick="clickLikeButton()" title="<spring:message code='ezBoard.hsb10'/>">
+						  	<c:choose>
+						  		<c:when test="${isLikeChecked == 'Y'}">
+						  			<img id="likeButtonImg" src="/images/like_on.png"/>
+						  		</c:when>
+						  		<c:otherwise>
+						  			<img id="likeButtonImg" src="/images/like_off.png"/>
+						  		</c:otherwise>
+						  	</c:choose>
+					  	<span id="likeCountSpan" style="vertical-align:top;"><c:if test="${boardItem.likeCount > 0}"> (<c:out value="${boardItem.likeCount}"/>)</c:if></span>
+					  	</span>
+					</td>
+				</tr>
+			</c:if>
 		        </table>
 		    </td>
 		  </tr>
-		    <tr style="display:none;">
+		    <%--<tr style="display:none;">
 		        <td style="text-align:center">
 		            <span id="MainContent" ></span>
 		        </td>
-		    </tr>
+		    </tr>--%>
 		    <tr>
 		        <td  >
 					<div style="background:#f8f8fa; border:1px solid #ddd; border-top:0 none; height:70px; text-align:center; padding-top:25px;">
@@ -1505,7 +1718,7 @@
 			<%-- 2019-11-05 홍승비 - 하단댓글 영역 추가 --%>
 	        <c:if test="${oneLineReplyFlag == '2'}">
 	        	<div style='height:auto;'>
-					<table class="mainlist" style="width:100%; min-width:745px; margin-top:1px;" >
+					<table class="mainlist" style="width:100%; min-width:745px; margin-top:8px;" >
 						<tr>
 							<th style="text-align:center; width: 90%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
 								<textarea id="onelinereply" rows="3" style = "resize:none; width:98%" maxlength="600"></textarea>
@@ -1515,7 +1728,7 @@
 							</th>
 						</tr>
 					</table>
-					<table id="commentList" style="width:100%; min-width:745px; margin-top:10px;table-layout: fixed; overflow:auto;border:1px solid rgb(225,225,225)"></table>
+					<table id="commentList" style="width:100%; min-width:745px; margin-top:2px;table-layout: fixed; overflow:auto;border:1px solid rgb(225,225,225)"></table>
 				</div>
 	        </c:if>
 	        <%-- 본문하단 댓글영역 끝 --%>

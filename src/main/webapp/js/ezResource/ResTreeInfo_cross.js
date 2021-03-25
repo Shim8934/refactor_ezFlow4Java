@@ -14,6 +14,7 @@ function initTreeInfo(p_Flag, p_UserID, p_DeptID) {
 	createNodeAndInsertText(xmlpara, objNode, "TREE_TYPE", "0");
 	createNodeAndInsertText(xmlpara, objNode, "USER_ID", p_UserID);
 	createNodeAndInsertText(xmlpara, objNode, "DEPT_PATH", g_DeptPath);
+	createNodeAndInsertText(xmlpara, objNode, "ADMIN_CHECK", "Y");
 	
 	xmlhttp.open("POST","/ezResource/callNodeTreeData.do?flag=" + encodeURIComponent(selectNo), false);
 	xmlhttp.send(xmlpara);
@@ -104,7 +105,8 @@ function AddSubBrdTree(p_UserID, p_DeptID, p_BrdID, nodeIdx) {
 	    createNodeAndInsertText(xmlpara, objNode, "TREE_TYPE", "0");
 	    createNodeAndInsertText(xmlpara, objNode, "USER_ID", p_UserID);
 	    createNodeAndInsertText(xmlpara, objNode, "DEPT_PATH", g_DeptPath);
-	
+	    createNodeAndInsertText(xmlpara, objNode, "ADMIN_CHECK", "Y");
+	    
 		xmlhttp.open("POST","/ezResource/callNodeTreeData.do",false);
 		xmlhttp.send(xmlpara);
 		

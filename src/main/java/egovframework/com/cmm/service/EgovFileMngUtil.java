@@ -16,6 +16,7 @@ import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -28,8 +29,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.tomcat.util.http.fileupload.IOUtils;
-import org.apache.tools.ant.util.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -236,6 +236,24 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 		}
     }
 
+	/**
+	 * 절대 경로로 첨부파일을 서버에 저장한다.
+	 *
+	 * @param multipartFile
+	 * @param filePath
+	 * @throws Exception
+	 */
+	protected void writeUploadedFile(MultipartFile multipartFile, String filePath) {
+		try (InputStream stream = multipartFile.getInputStream()) {
+			File file = new File(filePath);
+
+			file.getParentFile().mkdirs();
+			Files.copy(stream, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+		} catch (Exception ex) {
+			LOGGER.debug("ex: {}", ex);
+		}
+	}
+
     /**
      * 서버의 파일을 다운로드한다.
      *
@@ -351,8 +369,8 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
     protected static void writeFile(MultipartFile file, String newName, String stordFilePath) throws Exception {
 		InputStream stream = null;
 		OutputStream bos = null;
-		newName = EgovStringUtil.isNullToString(newName).replaceAll("..", "");
-		stordFilePath = EgovStringUtil.isNullToString(stordFilePath).replaceAll("..", "");
+//		newName = EgovStringUtil.isNullToString(newName).replaceAll("..", "");
+//		stordFilePath = EgovStringUtil.isNullToString(stordFilePath).replaceAll("..", "");
 		
 		try {
 		    stream = file.getInputStream();
@@ -418,7 +436,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
     	
 		orgFileName = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), orgFileName);
 		
-		File file = new File(downFileName);
+		File file = new File(commonUtil.detectPathTraversal(downFileName));
 		//log.debug(this.getClass().getName()+" downFile downFileName "+downFileName);
 		//log.debug(this.getClass().getName()+" downFile orgFileName "+orgFileName);
 	
@@ -431,7 +449,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 		}
 		
 		//byte[] b = new byte[BUFF_SIZE]; //buffer size 2K.
-		int fSize = (int)file.length();
+		long fSize = file.length();
 		if (fSize > 0) {
 		    BufferedInputStream in = null;
 	
@@ -448,7 +466,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 				response.setContentType(mimetype);
 				response.setHeader("Content-Disposition", "attachment; filename=\"" + nfcFilename + "\"");				
 //				response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(orgFileName, "UTF-8").replaceAll("\\+","\\ ") + ";");
-				response.setContentLength(fSize);
+				response.setHeader("Content-Length", Long.toString(fSize));
 //				response.setHeader("Content-Transfer-Encoding","binary");
 				//response.setHeader("Pragma","no-cache");
 				//response.setHeader("Expires","0");
@@ -545,7 +563,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 		    throw new FileNotFoundException(downFileName);
 		}
 		
-		int fSize = (int) file.length();
+		long fSize = file.length();
 		
 		if (fSize > 0) {
 		    byte[] encryptedBytes = Files.readAllBytes(file.toPath());
@@ -559,7 +577,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 	    	    response.setBufferSize(BUFF_SIZE);	    	    
 				response.setContentType(mimetype);
 				response.setHeader("Content-Disposition", "attachment; filename=\"" + nfcFilename + "\"");				
-				response.setContentLength(fSize);
+				response.setHeader("Content-Length", Long.toString(fSize));
 				FileCopyUtils.copy(in, response.getOutputStream());
 		    } catch (Exception ex) {
 		    	ex.printStackTrace();
@@ -576,6 +594,16 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
      * 서버에 있는 이미지 요청을 처리한다. (화면에 보여주는 이미지)
      */
     public void downImage(String filePath, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    	// 보안을 위해 /fileroot내에 있는 파일들에만 접근가능하도록 제한한다.
+    	// 본래 /fileroot로 시작해야 정상이나 혹 //fileroot 등과 같이 사용되는 경우를 대비하여
+    	// contains를 사용함.
+    	if (!isValidFilePath(filePath)) {
+    		LOGGER.debug("filePath=" + filePath + " doesn't contain fileroot.");
+    		
+    		return;
+    	}
+    	
+    	filePath = commonUtil.detectPathTraversal(filePath);    	
         String realPath = commonUtil.getRealPath(request);
         
         filePath = realPath + filePath;
@@ -595,10 +623,10 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
         BufferedInputStream bis = null;
         OutputStream os = null;
         String contentType = null;
-        int fileSize = 0;
+        long fileSize = 0;
         
         try {
-	        fileSize = (int) file.length();
+	        fileSize = file.length();
 	        bis = new BufferedInputStream(new FileInputStream(file));
 	        contentType = URLConnection.guessContentTypeFromStream(bis);
 	        
@@ -607,7 +635,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 	        }
 	        
 	        response.setContentType(contentType);
-	        response.setContentLength(fileSize);
+	        response.setHeader("Content-Length", Long.toString(fileSize));
 	        
 	        LOGGER.debug("contentType=" + contentType + ",fileSize=" + fileSize);
 	        
@@ -636,6 +664,15 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
         
 
 	}
+    
+    public boolean isValidFilePath(String filePath) {
+    	
+    	if(filePath.contains("/fileroot/") || filePath.contains("/files/") || filePath.contains("/images/") || filePath.contains("/images_en/") || filePath.contains("/images_ja/")) {
+    		return true;
+    	}
+    	
+    	return false;
+    }
     
     /**
      * 서버 파일/폴더를 재귀적으로 삭제한다.

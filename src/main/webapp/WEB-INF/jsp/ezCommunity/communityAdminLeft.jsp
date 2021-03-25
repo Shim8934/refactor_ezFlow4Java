@@ -23,10 +23,19 @@
 				padding-left:20px;
 				margin-left:-40px;
 			}
-			.node_div {
-				overflow:hidden;
-				text-overflow:ellipsis;
-			}
+			/* ellipisis 추가 */
+			.node_normal {
+	    		overflow:hidden;
+	    		text-overflow:ellipsis;
+	    		display:inline-block;
+	    		width:135px;
+	    	}
+	    	.node_selected {
+	    		overflow:hidden;
+	    		text-overflow:ellipsis;
+	    		display:inline-block;
+	    		width:135px;
+	    	}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/TreeView.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -36,7 +45,7 @@
 			var beforeThis;
 			var topThis;
 			var colorflg=false;	
-			var code = "<c:out value = '${code}' />";
+			var code = "<c:out value = '${code}'/>";
 		    var num = "<c:out value = '${num}' />";
 			var clickboard = "<c:out value = '${clickBoard}' />";
 			var boardid = "<c:out value = '${boardID}' />";
@@ -110,6 +119,8 @@
 				var treeView = new TreeView();
 				treeView.LoadFromID(pTreeID);
 				treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
+				
+				applyEllipsis();
 			}
 	
 			function TreeCtrl_onNodeClick(pNodeID, pTreeID) {
@@ -120,6 +131,8 @@
 				chkPhotoBrd = treeNode.GetNodeData("DATA2");
 				SelectedBoardParentBoardID = treeNode.GetNodeData("DATA3");
 	
+				applyEllipsis();
+				
 				OpenRightMenu(curMenuIndex);
 			}
 	
@@ -159,6 +172,9 @@
 				treeView.SetNodeClick("TreeCtrl_onNodeClick");
 				treeView.DataSource(GetSubBoard(ID, "1"));
 				treeView.DataBind(obj + "obj");
+				
+				/* 2020-05-25 홍승비 - 하위게시판명의 말줄임표 스타일 오류 수정 */
+				applyEllipsis();
 	
 				var idx = obj.substring(8, obj.length)
 	
@@ -287,11 +303,11 @@
 				var url = "";
 				switch(idx) {
 					case 1:
-						url = "/ezCommunity/adminBasic.do?code=${code}"  ;
+						url = "/ezCommunity/adminBasic.do?code=" + code;
 						break;
 					
 					case 2:
-						url = "/ezCommunity/adminLogo.do?code=${code}";
+						url = "/ezCommunity/adminLogo.do?code=" + code;
 						break;
 						
 					case 3:
@@ -299,7 +315,7 @@
 						
 					case 4:
 						if ("${club.c_ClubConfirmType}" == '3') {
-							url = "/ezCommunity/adminMemPermit.do?code=${code}";
+							url = "/ezCommunity/adminMemPermit.do?code=" + code;
 						} else {
 							alert("<spring:message code = 'ezCommunity.t486' />");								
 							return false;
@@ -307,27 +323,27 @@
 						break;
 						
 					case 5:
-						url = "/ezCommunity/adminNoticeMail.do?code=${code}" ;
+						url = "/ezCommunity/adminNoticeMail.do?code=" + code;
 						break;	
 						
 					case 6:
-						url = "/ezCommunity/adminOuterList.do?code=${code}" ;
+						url = "/ezCommunity/adminOuterList.do?code=" + code;
 						break;
 						
 					case 7:
-						url = "/ezCommunity/adminMemberList.do?code=${code}&mode=delete" ;
+						url = "/ezCommunity/adminMemberList.do?code=" + code + "&mode=delete" ;
 						break;	
 						
 					case 8:
-						url = "/ezCommunity/adminMemberList.do?code=${code}&mode=master" ;
+						url = "/ezCommunity/adminMemberList.do?code=" + code + "&mode=master" ;
 						break;	
 						
 					case 9:
-						url = "/ezCommunity/adminCommClose.do?code=${code}";
+						url = "/ezCommunity/adminCommClose.do?code=" + code;
 					    break;
 					    
 				    case 10:
-				        url = "/ezCommunity/adminHomeBoard.do?code=${code}";
+				        url = "/ezCommunity/adminHomeBoard.do?code=" + code;
 				        break;
 				}
 				

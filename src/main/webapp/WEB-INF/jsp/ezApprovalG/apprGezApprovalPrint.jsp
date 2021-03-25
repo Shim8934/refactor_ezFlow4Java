@@ -7,6 +7,9 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <style>
+			P { margin-top: 0px;margin-bottom: 0px; }
+		</style>
 	    <script type="text/javascript">
 	
 	        var myVar;

@@ -1,17 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <html>
 	<head>
 		<title></title>
 	    <link rel="stylesheet" href="${util.addVer('/js/ezEditor/kukudocsEditor/stylesheets/style.css')}" />
-		<script type="text/javascript" src="${util.addVer('/js/ezEditor/kukudocsEditor/externalLib/jquery-1.9.1.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEditor/kukudocsEditor/externalLib/jquery-3.5.1.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezEditor/kukudocsEditor/externalLib/jquery-ui-1.11.4.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezEditor/kukudocsEditor/javascripts/build/Editor.bundle.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<style> html, body {height: 100%; margin: 0; padding: 0; overflow: hidden;} </style>
 		<script type="text/javascript">
-			var type = "${type}";
-			var height = "${height}";
+			var type = '<c:out value="${type}"/>';
+			var height = '<c:out value="${height}"/>';
 			var editorLoadFlag = false;
 			
 			function Editor_Complete() {
@@ -114,7 +115,7 @@
 		<script type="text/javascript">
 			// 언어 설정
 			var lang = "";
-			var userLang = "${userInfo.lang}";
+			var userLang = "<c:out value='${userInfo.lang}'/>";
 			
 			switch (userLang) {
 		    	case "1": 
@@ -135,13 +136,13 @@
 	    	}
 			
 			// html 모드 사용 여부 설정
-			var useHTMLMode = "${useHTMLMode}" == "NO" ? false : true;
+			var useHTMLMode = "<c:out value='${useHTMLMode}'/>" == "NO" ? false : true;
 			
 			// 메뉴 설정			
 			var customAlignMenu = ['about','print','undo','redo','text_paste','textFormatCopy','textFormatPaste','link','unlink','image','symbol','horizontal','numbered_list','bullet_list','outdent','indent',
 								   'table','table_insert_left','table_insert_right','table_insert_top','table_insert_bottom','table_remove_col','table_remove_row','table_remove_table',
 								   'table_merge','table_split_col','table_split_row','cell_horizontal_size','cell_vertical_size','table_background_color','table_border_style','align_left','align_center','align_right','align_justify','paragraph_margin',
-								   'template','heading','fontFamily','fontSize','line_height','bold','italic','underline','strike_through','remove_format','color','backgroundColor', 'border_visualize'];
+								   'template','heading','fontFamily','fontSize','line_height','bold','italic','underline','strikeThrough','remove_format','color','backgroundColor', 'border_visualize'];
 			
 			// 메일 부재중설정, 커뮤니티 포토게시판일 경우 이미지 업로드 아이콘 제거
 			if (type == "MAILOUTOFOFFICE" || type == "COMMUNITYPHOTO") {
@@ -160,8 +161,8 @@
 	        }
 			
 			// 디폴트 폰트 설정
-			var defaultFontFamily = "${defaultFontFamily}";
-			var defaultFontSize = "${defaultFontSize}";
+			var defaultFontFamily = "<c:out value='${defaultFontFamily}'/>";
+			var defaultFontSize = "<c:out value='${defaultFontSize}'/>";
 			var defaultFontAndSize = "style='font-size:" + defaultFontSize + ";font-family:" + defaultFontFamily + "'";
 			
 			// 폰트 크기 리스트 설정
@@ -222,6 +223,7 @@
 		    };
 			
 			var kukudocsEditor = new KuKudocsEditor('editor1', {
+				licPathURL: '/js/ezEditor/kukudocsEditor/kukudocs.lic',
 	            minHeight : 0,
 	            maxHeight : 0,
 	            width : '100%',

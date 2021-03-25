@@ -23,16 +23,16 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ViewCabInfo_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
-		    var CompanyID = "${userInfo.companyID}";
-		    var UserLang = "${userInfo.lang}";
+		    var CompanyID = "<c:out value='${userInfo.companyID}'/>";
+		    var UserLang = "<c:out value='${userInfo.lang}'/>";
 		    var OrderCell="";
 		</script>
 	</head>
 	<body class="popup" onload="return window_onload()">
 		<!-- <OBJECT classid=clsid:F8E93A35-2D04-4E2C-A04D-87947594C674 height=0 id=behave1 width=0 style="display:none"></OBJECT>  -->
-		<div id="menu">
+		<div id="menu" style="margin:6px 0px 18px 0px;">
 			<ul>
-				<li><span onClick="btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li> 
+				<li><span class="icon16 popup_icon16_print" onClick="btnPrint_onclick()"></span></li> 
 			</ul>
 		</div>
 		<div id="close"><ul><li><span onClick="btnClose_onclick()"></span></li></ul></div>

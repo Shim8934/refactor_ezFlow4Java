@@ -12,7 +12,7 @@
 			var selectedID = "";
 			var selectedDisplayName = "";
 			var selectedDepth = 1;
-			var mode = "${mode}";
+			var mode = "<c:out value='${mode}/>";
 		    
 			function CheckBoxClick() {
 				if (!event.srcElement.checked) return;

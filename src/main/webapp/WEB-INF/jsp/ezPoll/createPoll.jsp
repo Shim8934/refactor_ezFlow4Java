@@ -208,7 +208,7 @@
 		        	changeYear: true,
 		        	autoSize: true,
 		        	showOn: "both",
-		        	buttonImage: "/images/ImgIcon/calendar-month.gif",
+		        	buttonImage: "/images/ImgIcon/calendar-month.png",
 		        	buttonImageOnly: true,
 		            onSelect: function(dateText, inst) {
 		            	dateCompare(dateText, SDate);
@@ -220,7 +220,7 @@
 		    	    changeYear: true,
 		        	autoSize: true,
 		        	showOn: "both",
-		        	buttonImage: "/images/ImgIcon/calendar-month.gif",
+		        	buttonImage: "/images/ImgIcon/calendar-month.png",
 		        	buttonImageOnly: true
 		    	});		
 		
@@ -514,7 +514,7 @@
 	        	autoSize: true,
 	        	format: 'yyyy-mm-dd',
 	        	showOn: "both",
-	        	buttonImage: "/images/ImgIcon/calendar-month.gif",
+	        	buttonImage: "/images/ImgIcon/calendar-month.png",
 	        	buttonImageOnly: true,
 	            onSelect: function(dateText, inst) {
 	            	dateCompare(dateText);
@@ -533,7 +533,7 @@
 	        	autoSize: true,
 	        	format: 'yyyy-mm-dd',
 	        	showOn: "both",
-	        	buttonImage: "/images/ImgIcon/calendar-month.gif",
+	        	buttonImage: "/images/ImgIcon/calendar-month.png",
 	        	buttonImageOnly: true
 	    	});
 			
@@ -582,7 +582,7 @@
 				$('#columnsbnk').append('<li class="myBorder"> \n <span>' + currentOptionNumber + '</span> \n <input type="text" oninput="checkOptionsList();" value="" placeholder="<spring:message code="ezPoll.t152"/>" id="option' + currentOptionNumber + '" name="option' + currentOptionNumber + '" maxlength="200"> \n <img src="/images/sortIcon.png" class="drag_drop"> \n </li>');
 			} */					
 			$('#columnsbnk li').eq(currentOptionNumber - 2).addClass("myBorder");
-			$('#columnsbnk').append('<li class="myBorder"> \n <span>' + currentOptionNumber + '</span> \n <input type="text" oninput="checkOptionsList();" value="" placeholder="<spring:message code="ezPoll.t152"/>" id="option' + currentOptionNumber + '" name="option' + currentOptionNumber + '" maxlength="200"> \n <img src="/images/sortIcon.png" class="drag_drop"> \n <img src="/images/poll/attach_file_vote.png" onclick="optUploadBtn(this)" /> \n </li>');
+			$('#columnsbnk').append('<li class="myBorder"> \n <span>' + currentOptionNumber + '</span> \n <input type="text" oninput="checkOptionsList();" value="" placeholder="<spring:message code="ezPoll.t152"/>" id="option' + currentOptionNumber + '" name="option' + currentOptionNumber + '" maxlength="200"> \n <img src="/images/sortIcon.png" class="drag_drop"> \n <img src="/images/poll/attach_file_vote.png" onclick="optUploadBtn(this)" style="cursor: pointer;""/> \n </li>');
 		}
 		
 		function menuQst_List() {
@@ -786,7 +786,7 @@
             	document.getElementById("hidStartDate").value = L_StartDate + " " + L_StartTime ; 
             	document.getElementById("hidEndDate").value = L_EndDate + " " + L_EndTime ;
             	document.getElementById("hidCreateDate").value = getCurrTime();
-            	document.getElementById("hidContent").innerHTML = message.GetEditorContent();     	       	
+            	document.getElementById("hidContent").textContent = message.GetEditorContent();
 		    	var listtable = document.getElementById("filelist");
 		    	var filelist = GetChildNodes(listtable);		    	
 				
@@ -812,6 +812,8 @@
 		    		document.getElementById("hidModifyInfo").value = qstID;
 		    		flag = 1;
 		    	}
+		    	
+		    	window.parent.frames["left"].resetNodeSelected();
 				
 		    	document.getElementById("hidFilePath").value = document.getElementById("hidFilePath").value.substring(0, document.getElementById("hidFilePath").value.length - 1);               	  
 		    	document.getElementById("hidOptImgFilePath").value = document.getElementById("hidOptImgFilePath").value.substring(0, document.getElementById("hidOptImgFilePath").value.length - 1);               	  
@@ -1188,7 +1190,7 @@
 	
 				</tr>
 				<tr> 
-					<td style="width:100%;height:350px; margin:0px 0px 8px 0px; " id="EdtorSize" class="pollTd01">
+					<td style="width:100%;height:500px; margin:0px 0px 8px 0px; " id="EdtorSize" class="pollTd01">
 		               <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding:0; height:100%; width:100%;overflow:auto; border-top:0px" ></iframe>
 	           		</td>
 				</tr>		
@@ -1226,19 +1228,19 @@
 								<span>1</span>
 								<input type="text" value=""	placeholder="<spring:message code="ezPoll.t152"/>" id="option1" name="option1" oninput="checkOptionsList();" maxlength="200">
 								<img src="/images/sortIcon.png" class="drag_drop">
-								<img src="/images/poll/attach_file_vote.png" onclick="optUploadBtn(this)">
+								<img src="/images/poll/attach_file_vote.png" onclick="optUploadBtn(this)" style="cursor: pointer;">
 							</li>
 							<li class="myBorder">
 								<span>2</span>
 								<input type="text" value="" placeholder="<spring:message code="ezPoll.t152"/>" id="option2" name="option2" oninput="checkOptionsList();" maxlength="200">
 								<img src="/images/sortIcon.png" class="drag_drop">
-								<img src="/images/poll/attach_file_vote.png" onclick="optUploadBtn(this)">
+								<img src="/images/poll/attach_file_vote.png" onclick="optUploadBtn(this)" style="cursor: pointer;">
 							</li>
 							<li class="myBorder">
 								<span>3</span>
 								<input type="text" value=""	placeholder="<spring:message code="ezPoll.t152"/>" id="option3" name="option3" oninput="checkOptionsList();" maxlength="200">
 								<img src="/images/sortIcon.png" class="drag_drop">
-								<img src="/images/poll/attach_file_vote.png" onclick="optUploadBtn(this)">
+								<img src="/images/poll/attach_file_vote.png" onclick="optUploadBtn(this)" style="cursor: pointer;">
 							</li>
 								<input id="optionfile" type="file" onchange="optImgUpload()" style="display:none" />
 						</ul>

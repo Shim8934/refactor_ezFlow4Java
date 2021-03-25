@@ -3,7 +3,10 @@ package egovframework.ezEKP.ezEmail.service.impl;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
+
+import javax.annotation.Resource;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -13,7 +16,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
+import egovframework.ezEKP.ezEmail.task.EzEmailAsync;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 
 @Service("EzEmailUserAdminService")
@@ -26,6 +31,12 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 	
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
+	
+	@Autowired
+	private EzEmailAsync ezEmailAsync;
+	
+	@Resource(name = "EzCommonService")
+    private EzCommonService ezCommonService;
 	
 	@Override
 	public int addUser(String userEmailAddress, String password) throws Exception {
@@ -588,6 +599,37 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 	}
 	
 	@Override
+	public int deleteAllUserDistributionForMember(String targetEmail, String domain) throws Exception {
+		logger.debug("deleteAllUserDistributionForMember started.");
+		logger.debug("targetEmail=" + targetEmail + ", domain=" + domain);
+		
+		int reasonCode = -100;
+		
+		try {
+			String inputParams = "targetEmail=" + targetEmail + "&domain=" + domain;
+			
+			String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/deleteAllUserDistributionForMember";
+			String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+			logger.debug("response=" + response);
+			
+			if (response != null) {
+				JSONParser jsonParser = new JSONParser();
+				JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+				String resultCode = (String)responseObj.get("resultCode");
+				
+				if (resultCode.equalsIgnoreCase("OK")) {
+					reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+				}
+			}	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("deleteAllUserDistributionForMember ended.");
+		return reasonCode;
+	}
+	
+	@Override
 	public String getCopyrightText(int tenantId, String companyId) throws Exception {
 		logger.debug("getCopyrightText started. tenantId=" + tenantId);
 
@@ -654,5 +696,51 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 		
 		logger.debug("saveMailCopyright ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
 		return reasonCode;		
+	}
+	
+	@Override
+	public void setMailCancelSend(int tenantId, String primary, String pMessageId, String pUserId, String pSubject, List<String> pInnerAddresses, Locale locale) throws Exception {
+		logger.debug("setMailCancelSend started.");
+		logger.debug("tenantId=" + tenantId + ",primary=" + primary + ",pMessageId=" + pMessageId + ",pUserId=" + pUserId + ",pSubject=" + pSubject);
+		
+		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+		
+		String messageIdParam = "messageId=" + URLEncoder.encode(pMessageId, "UTF-8");
+		String senderEmailParam = "senderEmail=" + URLEncoder.encode(pUserId + "@" + domainName, "UTF-8");
+		String subjectParam = "subject=" + URLEncoder.encode(pSubject, "UTF-8");
+		String primaryParam = "primary=" + primary;
+		String tenantIdParam = "tenantId=" + tenantId;
+		
+		StringBuilder receiverEmailParam = new StringBuilder();
+		
+		for (String innerAddress : pInnerAddresses) {
+			receiverEmailParam.append("&re=" + URLEncoder.encode(innerAddress, "UTF-8"));
+		}
+		
+		String inputParams = messageIdParam + "&" + senderEmailParam + "&" + subjectParam + "&" + primaryParam + "&" + tenantIdParam;
+		inputParams += receiverEmailParam.toString();
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/setMailRecall2", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		//get recallIdx
+		String recallIdx = "";
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+		
+		if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
+        	recallIdx = (String)object.get("result");
+		}
+		
+		//회수처리 함수 호출(비동기)
+		if (recallIdx != null && !recallIdx.equals("") && !recallIdx.equals("0")) {
+			ezEmailAsync.cancelMailDelete(recallIdx, tenantId, locale);
+		} else {
+			throw new Exception("Cannot get recallIdx. So, cannot call cancelMailDelete method(Async).");
+		}
+		
+		logger.debug("setMailCancelSend ended.");
 	}
 }

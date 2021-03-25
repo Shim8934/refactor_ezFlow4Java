@@ -186,8 +186,13 @@ function getCalWeekViewSource_after() {
         var nlength = SelectNodes(listNode, "DATA/ROW").length;
         var k = 0;
         for (var i = 0; i < nlength; i++) {
-            var objNodes = SelectNodes(listNode, "DATA/ROW")[i];
+        	var objNodes = SelectNodes(listNode, "DATA/ROW")[i];
 
+        	// 2020-02-24 김정언 - 근태 현황은 [월보기]에서만 지원한다.
+        	if (SelectSingleNodeValue(objNodes, "DATETYPE") == "4") {
+        		continue;
+        	}
+        	
             var _Dtstart = SelectSingleNodeValue(objNodes, "STARTDATE");
             var _Dtend = SelectSingleNodeValue(objNodes, "ENDDATE");
             var DataSDT = new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7), 10) - 1, parseInt(_Dtstart.substring(8, 10), 10), parseInt(_Dtstart.substring(11, 13), 10), parseInt(_Dtstart.substring(14, 16), 10));
@@ -307,6 +312,11 @@ function getCalDayViewSource_after() {
         for (var i = 0; i < nlength; i++) {
             var objNodes = SelectNodes(listNode, "DATA/ROW")[i];
 
+            // 2020-02-24 김정언 - 근태 현황은 [월보기]에서만 지원한다.
+            if (SelectSingleNodeValue(objNodes, "DATETYPE") == "4") {
+            	continue;
+            }
+            
             var _Dtstart = SelectSingleNodeValue(objNodes, "STARTDATE");
             var _Dtend = SelectSingleNodeValue(objNodes, "ENDDATE");
             var DataSDT = new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7), 10) - 1, parseInt(_Dtstart.substring(8, 10), 10), parseInt(_Dtstart.substring(11, 13), 10), parseInt(_Dtstart.substring(14, 16), 10));
@@ -449,6 +459,8 @@ function tempInsert(objNodes, DataSDT, DataEDT) {
     pTempData.ParentID = SelectSingleNodeValue(objNodes, "PARENTID");
     pTempData.OwnerID = SelectSingleNodeValue(objNodes, "OWNERID");
     pTempData.CreatorID = SelectSingleNodeValue(objNodes, "CREATORID");
+    pTempData.CreatorName = SelectSingleNodeValue(objNodes, "CREATORNAME");
+    pTempData.ContentPath = SelectSingleNodeValue(objNodes, "CONTENTPATH");
     pTempData.ModifierID = SelectSingleNodeValue(objNodes, "MODIFIERID");
     pTempData.ScheduleType = SelectSingleNodeValue(objNodes, "SCHEDULETYPE");
     pTempData.Importance = SelectSingleNodeValue(objNodes, "IMPORTANCE");
@@ -699,7 +711,7 @@ function CalDataSize(oAppointment, order, tempData) {
 
 
 function CalMonthDataBind(oAppointment) {
-
+	
     var objElm = document.getElementById("TD_" + oAppointment.trID + "_Value");
     if (objElm) {    	
 
@@ -723,6 +735,10 @@ function CalMonthDataBind(oAppointment) {
             oTd.className = "Group";
             oSpan.className = "Group";
         }
+        else if (oAppointment.ScheduleType == 4) {
+            oTd.className = "collaboration";
+            oSpan.className = "collaboration";
+        }
         else {
             oTd.className = "department";
             oSpan.className = "department";
@@ -740,9 +756,21 @@ function CalMonthDataBind(oAppointment) {
 
         var pTime = "";
         var pSubject;
-        if (oAppointment.DateType != 2) {
-            pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay
-            pSubject = oAppointment.dtstartDisplay+ " " + oAppointment.Subject + " " ;
+        var pImg = document.createElement('img');
+        
+        // 2020-02-24 김정언
+        if (oAppointment.DateType == 4) {
+        	pImg.src = '/images/ezAttitude/' + oAppointment.ContentPath + '.png';
+        	pImg.className = "attiImg";
+        	pImg.style["vertical-align"] = "sub";
+        	pImg.style["margin-right"] = "3px";
+        	oTd.appendChild(pImg);
+            pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay;
+            pSubject = oAppointment.Subject + " : " + oAppointment.CreatorName;
+        }
+        else if (oAppointment.DateType != 2) {
+        	pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay;
+        	pSubject = oAppointment.dtstartDisplay+ " " + oAppointment.Subject + " " ;
         }
         else {
             pTime = strLang39;
@@ -765,6 +793,8 @@ function CalMonthDataBind(oAppointment) {
         oTd.setAttribute("ParentID", oAppointment.ParentID);
         oTd.setAttribute("OwnerID", oAppointment.OwnerID);
         oTd.setAttribute("CreatorID", oAppointment.CreatorID);
+        oTd.setAttribute("CreatorName", oAppointment.CreatorName);
+        oTd.setAttribute("ContentPath", oAppointment.ContentPath);
         oTd.setAttribute("ModifierID", oAppointment.ModifierID);
         oTd.setAttribute("ScheduleType", oAppointment.ScheduleType);
         oTd.setAttribute("Importance", oAppointment.Importance);
@@ -791,14 +821,23 @@ function CalMonthDataBind(oAppointment) {
         oTd.setAttribute("ptime", pTime);
         
         
-        oTd.onmouseover = function (event) { TooltipMouseOver(this, event); };
-        oTd.setAttribute("onmouseout", "hideTooltip(this)");
-        var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
-        oTd.setAttribute("ondblclick", "ReadSchedule(" + divID + ")");
+        // 2020-02-24 김정언 - 근태 현황일 경우에는 근태 상세보기로 이동 (DateType 4 : 근태 현황)
+        if(oAppointment.DateType == 4) {
+        	var divID = "\"" + oAppointment.ScheduleID + ":" + oAppointment.ParentID + "\"";
+        	oTd.setAttribute("ondblclick", "ReadAttitude(" + divID + ")");
+        }
+        else {
+        	var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
+        	oTd.setAttribute("onclick", "ReadSchedule(" + divID + ")");
+        	oTd.setAttribute("ondblclick", "ReadSchedule(" + divID + ")");
+        	oTd.onmouseover = function (event) { TooltipMouseOver(this, event); };
+        	oTd.setAttribute("onmouseout", "hideTooltip(this)");
+        }
 
-        var oText = document.createTextNode(pSubject);        
+        var oText = document.createTextNode(pSubject);
         //oTd.innerHTML += pSubject;
-        oTd.appendChild(oText);
+       	oTd.appendChild(oText); 
+
         
         oTr.appendChild(oTd);
         objElm.appendChild(oTr);
@@ -822,7 +861,7 @@ function CalMonthDataBind(oAppointment) {
 
 
 function CalWeekDataBind(oAppointment, order) {
-
+	
     var objDivS = document.getElementById("TD_" + oAppointment.trID + "_Value");
     var objDivE = document.getElementById("TD_" + oAppointment.endDiv + "_Value");
     if (objDivS && objDivE) {
@@ -857,6 +896,10 @@ function CalWeekDataBind(oAppointment, order) {
         else if (oAppointment.ScheduleType == 7) {
             oDiv.className = "calendar_data_Group";
             oSpan.className = "Group";
+        }
+        else if (oAppointment.ScheduleType == 4) {
+        	oDiv.className = "calendar_data_collaboration";
+        	oSpan.className = "collaboration";
         }
         else {
             oDiv.className = "calendar_data_department";
@@ -939,6 +982,7 @@ function CalWeekDataBind(oAppointment, order) {
         oDiv.onmouseover = function (event) { TooltipMouseOver(this, event); };
         oDiv.setAttribute("onmouseout", "hideTooltip(this)");
         var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
+        oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
         oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
 
         if (objDivE) {
@@ -998,6 +1042,10 @@ function CalWeekAllDataBind(oAppointment, order) {
         else if (oAppointment.ScheduleType == 7) {
             oDiv.className = "calendar_data_Group";
             oSpan.className = "Group";
+        }
+        else if (oAppointment.ScheduleType == 4) {
+            oDiv.className = "calendar_data_collaboration";
+            oSpan.className = "collaboration";
         }
         else {
             oDiv.className = "calendar_data_department";
@@ -1074,6 +1122,7 @@ function CalWeekAllDataBind(oAppointment, order) {
         oDiv.onmouseover = function (event) { TooltipMouseOver(this, event); };
         oDiv.setAttribute("onmouseout", "hideTooltip(this)");
         var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
+        oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
         oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
 
         objDivS.appendChild(oDiv);
@@ -1120,6 +1169,10 @@ function CalDayDataBind(oAppointment, order) {
         else if (oAppointment.ScheduleType == 7) {
             oDiv.className = "calendar_data_Group";
             oSpan.className = "Group";
+        }
+        else if (oAppointment.ScheduleType == 4) {
+            oDiv.className = "calendar_data_collaboration";
+            oSpan.className = "collaboration";
         }
         else {
             oDiv.className = "calendar_data_department";
@@ -1204,6 +1257,7 @@ function CalDayDataBind(oAppointment, order) {
         oDiv.onmouseover = function (event) { TooltipMouseOver(this, event); };
         oDiv.setAttribute("onmouseout", "hideTooltip(this)");
         var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
+        oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
         oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
 
         if (objDivE) {
@@ -1262,6 +1316,10 @@ function CalDayAllDataBind(oAppointment, order) {
         else if (oAppointment.ScheduleType == 7) {
             oDiv.className = "calendar_data_Group";
             oSpan.className = "Group";
+        }
+        else if (oAppointment.ScheduleType == 4) {
+            oDiv.className = "calendar_data_collaboration";
+            oSpan.className = "collaboration";
         }
         else {
             oDiv.className = "calendar_data_department";
@@ -1339,6 +1397,7 @@ function CalDayAllDataBind(oAppointment, order) {
         oDiv.onmouseover = function (event) { TooltipMouseOver(this, event); };
         oDiv.setAttribute("onmouseout", "hideTooltip(this)");
         var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
+        oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
         oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
 
         objDivS.appendChild(oDiv);
@@ -1612,7 +1671,7 @@ function leadingZeros(n, digits) {
 }
 
 function MonthlyViewHeader_onMouseOver(pThis) {
-    pThis.style.backgroundColor = "#edf4fd";
+    pThis.style.backgroundColor = "#f1f8ff";
 }
 
 
@@ -1627,7 +1686,7 @@ function Schedule_onMouseClick(event) {
             document.getElementById(g_szCurrentApptDivID).style.backgroundColor = "";
         }
 
-        event.style.backgroundColor = "#edf4fd";
+        event.style.backgroundColor = "#f1f8ff";
 
         g_szCurrentApptDivID = GetAttribute(event, "id");
     }
@@ -1679,7 +1738,7 @@ function showTooltip_MouseOver(thisID, e, pTime, pSubject, pScheduleType, pSched
     tTable.setAttribute("width", "100%");
     tTable.setAttribute("style", "word-break : break-all");
     tTh.setAttribute("scope", "col");
-    tTh.style.background = "#edf4fd";
+    tTh.style.background = "#f1f8ff";
     tTh.style.border = "1px solid #d1ddec";
     var oText = document.createTextNode(pSubject);        
     //tTh.innerHTML = pSubject;

@@ -42,6 +42,7 @@
 			var fileName = "<c:out value='${fileName}'/>";
 			var writerFakeName = "<c:out value='${writerFakeName}'/>";
 			var dirPath = "<c:out value='${dirPath}'/>";
+			var defaultFontAndSize  = "${defaultFontAndSize}";
 			
 			window.onresize = function () {
 			    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 140 + "PX";
@@ -149,8 +150,8 @@
 	 	 					        window.opener.parent.left.getBoardList();
 	 	 					    }
 	 						    
-	 	 					    window.opener.location.reload(false);
-	 	 					    window.close();
+	 	 					  window.opener.location.reload(false);
+	 	 					  window.close();
 	 	 					}
 	 					},
 	 					error : function(xhr, status, error) {
@@ -216,9 +217,15 @@
 			        var fullPath = strContentLocation;
 			        var htmlData = message.GetEditorContentURL(fullPath);
 			        
+			        /* 2019-10-28 홍승비 - 커뮤니티 공지사항 답변 작성 시 p 태그와 기본 폰트 스타일 추가 */
 			        if(pMode == "write" && pNo != "") {
 			            //htmlData = "<br><br>-----<B>[&nbsp;" + "<spring:message code = "ezCommunity.t1161"/>" + "</B>-----<br><B> " + "<spring:message code = "ezCommunity.t1162"/>" + "</B>" + wDate + "<br><B> " + "<spring:message code = 'ezCommunity.t218'/>" + "</B>" + writerFakeName + "<br><B> " + "<spring:message code = "ezCommunity.t885"/>" + "</B>" + ConvMakeXMLString(pTitle) + "<br><br>" + htmlData;
-			            htmlData = "<br><br>-----<B>[&nbsp;" + "<spring:message code = "ezCommunity.t1161"/>" + "</B>-----<br><B> " + "<spring:message code = "ezCommunity.t1162"/>" + "</B>" + wDate + "<br><B> " + "<spring:message code = 'ezCommunity.t218'/>" + "</B>" + writerFakeName + "<br><B> " + "<spring:message code = "ezCommunity.t885"/>" + "</B>" + "<c:out value='${cBoard.title}'/>" + "<br><br>" + htmlData;
+			            var replyHeader = "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+			            replyHeader += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;<spring:message code = 'ezCommunity.t1161'/></B>-----</p>";
+						replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code = 'ezCommunity.t1162'/></B>" + wDate + "</p> ";
+						replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code = 'ezCommunity.t885'/></B><c:out value='${cBoard.title}'/></p>";
+						replyHeader += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+						htmlData = (replyHeader + htmlData);
 			            message.SetEditorContent(htmlData);
 			        } else {
 			            message.SetEditorContentURL(fullPath);
@@ -296,7 +303,7 @@
 				<td style="height:20px;">
 					<div id="menu">
 						<ul>
-							<li><span onClick="SaveMHT_onclick();" ><spring:message code = "ezCommunity.t155"/></span></li>
+							<li><span onClick="SaveMHT_onclick();" ><spring:message code = "ezCommunity.t20"/></span></li>
 						</ul>
 					</div>
 					<div id="close">

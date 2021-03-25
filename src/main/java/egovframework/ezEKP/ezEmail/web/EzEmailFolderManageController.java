@@ -20,6 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -32,6 +33,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -73,21 +75,49 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	/**
 	 * 편지함 관리 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailFolderManage.do")
+	@RequestMapping(value="/ezEmail/mailFolderManage.do", method = RequestMethod.GET)
 	public String mailFolderManage(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailFolderManage started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 4, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailFolderManage ended.");
+					
+					return "ezCommon/error";
+				} else {
+					MailSharedMailboxUserVO shareInfo = ezEmailService.getSharedMailboxPermissionInfo(shareId, userInfo.getTenantId(), userInfo.getId());
+					
+					model.addAttribute("shareId", shareId);
+					model.addAttribute("shareName", shareInfo.getShareName());
+					model.addAttribute("deletePermission", shareInfo.getDeletePermission());
+				}
+			}
+		}
+		
 		String pDeleteBoxID = ezEmailUtil.getTrashFolderId(locale);
 		String pDeleteBoxName = ezEmailUtil.getTrashFolderId(locale);
 		
 		model.addAttribute("pDeleteBoxID", pDeleteBoxID);
 		model.addAttribute("pDeleteBoxName", pDeleteBoxName);
 		
+		logger.debug("mailFolderManage ended.");
 		return "ezEmail/mailFolderManage";
 	}
 	
 	/**
 	 * 편지함 추가/수정 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/inputNameDlg.do")
+	@RequestMapping(value="/ezEmail/inputNameDlg.do", method = RequestMethod.GET)
 	public String inputNameDlg(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		
 		return "ezEmail/mailInputNameDlg";
@@ -96,7 +126,7 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	/**
 	 * 편지함 이동/복사 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailMoveCopy.do")
+	@RequestMapping(value="/ezEmail/mailMoveCopy.do", method = RequestMethod.GET)
 	public String mailMoveCopy(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailMoveCopy started.");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -107,7 +137,16 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 			logger.debug("shareId=" + shareId);
 			
 			if (shareId != null) {
-				model.addAttribute("shareId", shareId);
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailMoveCopy ended.");
+					
+					return "ezCommon/error";
+				} else {
+					model.addAttribute("shareId", shareId);
+				}
 			}
 		}
 		
@@ -124,7 +163,7 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	/**
 	 * 편지함 추가/수정/삭제/이동/복사/메일삭제 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailMakeFolder.do")
+	@RequestMapping(value="/ezEmail/mailMakeFolder.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String mailMakeFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model, @RequestBody String bodyData) throws Exception{
 		logger.debug("mailMakeFolder started.");
@@ -166,7 +205,18 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 			logger.debug("shareId=" + shareId);
 			
 			if (shareId != null) {
-				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 1, userInfo.getTenantId())) {
+				int permissionType = 4;
+				
+				// 편지함 영구삭제 시 삭제 권한 및 관리 권한(5) 확인
+				// 모든 메일 삭제(지운편지함으로 이동), 모든 메일 영구 삭제 시 삭제 권한(1) 확인
+				// 그 외에는 관리 권한(4) 확인
+				if (cmd.equals("DEL")) {
+					permissionType = 5;
+				} else if (cmd.equals("MAILREALDEL") || cmd.equals("MAILDEL")) {
+					permissionType = 1;
+				}
+				
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, permissionType, userInfo.getTenantId())) {
 					logger.debug("the user cannot access the shareId.");
 					logger.debug("mailMakeFolder ended.");
 					
@@ -309,25 +359,25 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
             				folder.open(Folder.READ_WRITE);
             				Message[] messages = folder.getMessages();
             				
-            				// 지운 편지함으로 보낼 메시지의 크기가 Quota량을 초과하게 되면 Quota를 재조정한다.
-            				Double[] adjustQuotaData = ezEmailUtil.adjustUserQuotaForMessageMove(messages, userAccount, domainName, ia);
-            				
-            				if (adjustQuotaData[0] != null) {
-            					isNewUserQuotaNeeded = true;
-            					
-            					userQuota = adjustQuotaData[0];
-            					userWarn = adjustQuotaData[1];
-            				}
-
-            				if (adjustQuotaData[2] != null) {
-            					isThereUserLevelQuota = true;
-            				}
-            				
             				String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", userInfo.getTenantId());
             				
             				if (useImapMoveCommand.equals("YES")) {            				
 	            				folder.moveMessages(messages, trashFolder);
             				} else {            				
+                				// 지운 편지함으로 보낼 메시지의 크기가 Quota량을 초과하게 되면 Quota를 재조정한다.
+                				Double[] adjustQuotaData = ezEmailUtil.adjustUserQuotaForMessageMove(messages, userAccount, domainName, ia);
+                				
+                				if (adjustQuotaData[0] != null) {
+                					isNewUserQuotaNeeded = true;
+                					
+                					userQuota = adjustQuotaData[0];
+                					userWarn = adjustQuotaData[1];
+                				}
+
+                				if (adjustQuotaData[2] != null) {
+                					isThereUserLevelQuota = true;
+                				}
+                				            					
 	            				folder.copyMessages(messages, trashFolder);
 	            				folder.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
             				}
@@ -370,7 +420,7 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	/**
 	 * 편지함 구독 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/setSubscribe.do")
+	@RequestMapping(value="/ezEmail/setSubscribe.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String setSubscribe(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("setSubscribe started.");
@@ -392,7 +442,25 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		String userAccount = userInfo.getId() + "@" + domainName;
-		logger.debug("userEmail=" + userAccount);
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 4, userInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("setSubscribe ended.");
+					
+					return "";
+				}
+				
+				userAccount = shareId + "@" + domainName;
+			}
+		}
+		
+		logger.debug("userId=" + userInfo.getId() + ",userAccount=" + userAccount);
 		
 		IMAPAccess ia = null;
 		
@@ -419,6 +487,7 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 		return returnValue;
 	}
 	
+	@SuppressWarnings("unused")
 	private Set<String> unSubscribeAndGetSubscribeFolderSet(Folder folder, Set<String> folderSet) throws MessagingException {
 		if (folder.exists()) {
 			if (folder.isSubscribed()) {

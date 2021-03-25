@@ -89,6 +89,7 @@
         createNodeInsert(xmlpara, objNode, "DATA");
         createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptID);
         createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName");
+        createNodeAndInsertText(xmlpara, objNode, "DISPLAY_TRASH_DEPT", "");
 
 
         xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
@@ -732,7 +733,7 @@
             </div>
             <div id="seluser" class="statistics_select" style="margin: 0 auto">
                 <dl class="statistics_txt">
-                    <dt><spring:message code='ezStatistics.t1019' /></dt>
+                    <dt><spring:message code='ezStatistics.hsbUs01' /></dt>
                     <dd><spring:message code='ezStatistics.t1020' /><br>
                         <spring:message code='ezStatistics.t1021' /></dd>
                 </dl>

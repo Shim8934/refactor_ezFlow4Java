@@ -611,7 +611,12 @@
 	        		<c:when test="${approvalFlag == 'S'}">
 	        			<th><spring:message code = 'ezApprovalG.t729' /> <span style="color:red">*</span></th>
 <!-- 	        			<td><input type="text" id="tbTaskCode" name="tbTaskCode" style="WIDTH: 100%" maxlength="6"></td> -->
+					<c:if test="${userInfo.lang ne 3}">
 						<td><input type="text" id="ilbanCode" style="WIDTH: 6.4%; border:0px; background:white;" value="ZZ" disabled="disabled"><input type="text" id="tbTaskCode" name="tbTaskCode" style="WIDTH: 93.6%; box-sizing: border-box; -moz-box-sizing: border-box; " maxlength="6"></td>
+	        		</c:if>
+	        		<c:if test="${userInfo.lang eq 3}">
+						<td><input type="text" id="ilbanCode" style="WIDTH: 7.5%; border:0px; background:white;" value="ZZ" disabled="disabled"><input type="text" id="tbTaskCode" name="tbTaskCode" style="WIDTH: 92.5%; box-sizing: border-box; -moz-box-sizing: border-box; " maxlength="6"></td>
+	        		</c:if>
 	        		</c:when>
 	        		<c:otherwise>
 	        			<th><spring:message code = 'ezApprovalG.t576' /><br>(8<spring:message code = 'ezApprovalG.t754' /> <span style="color:red">*</span></th>
@@ -625,11 +630,11 @@
 	        <tr>
 	        	<c:choose>
 	        		<c:when test="${approvalFlag == 'S' }">
-	        			<th><spring:message code = 'ezApprovalG.t1641' />(<spring:message code = 'ezApprovalG.t1764' />) <span style="color:red">*</span></th>
+			        	<th><spring:message code = 'ezApprovalG.t1641' />(${primary }) <span style="color:red">*</span></th>
 						<td><input type="text" id="tbTaskName" name="tbTaskName" style="WIDTH: 100%; box-sizing: border-box; -moz-box-sizing: border-box;" maxlength="20"></td>
 	        		</c:when>
 	        		<c:otherwise>
-	        			<th><spring:message code = 'ezApprovalG.t597' />(<spring:message code = 'ezApprovalG.t1764' />) <span style="color:red">*</span></th>
+       					<th><spring:message code = 'ezApprovalG.t597' />(${primary }) <span style="color:red">*</span></th>
 	            		<td><input type="text" id="tbTaskName" name="tbTaskName" style="WIDTH: 100%; box-sizing: border-box; -moz-box-sizing: border-box;" maxlength="20"></td>
 	        		</c:otherwise>
 	        	</c:choose>
@@ -637,11 +642,11 @@
 	        <tr>
 	        	<c:choose>
 	        		<c:when test="${approvalFlag == 'S' }">
-	        			<th><spring:message code = 'ezApprovalG.t1641' />(<spring:message code = 'ezApprovalG.t1765' />) <span style="color:red">*</span></th>
+	        			<th><spring:message code = 'ezApprovalG.t1641' />(${secondary }) <span style="color:red">*</span></th>
             			<td><input type="text" id="tbTaskName2" name="tbTaskName2" style="WIDTH: 100%; box-sizing: border-box; -moz-box-sizing: border-box;" maxlength="200"></td>
 	        		</c:when>
 	        		<c:otherwise>
-	        			<th><spring:message code = 'ezApprovalG.t597' />(<spring:message code = 'ezApprovalG.t1765' />) <span style="color:red">*</span></th>
+	        			<th><spring:message code = 'ezApprovalG.t597' />(${secondary }) <span style="color:red">*</span></th>
 	            		<td><input type="text" id="tbTaskName2" name="tbTaskName2" style="WIDTH: 100%; box-sizing: border-box; -moz-box-sizing: border-box;" maxlength="200"></td> 
 	        		</c:otherwise>
 	        	</c:choose>
@@ -652,13 +657,13 @@
 	        </tr>
 	        <tr class = 'approvalS'<c:if test="${approvalFlag != 'S' }"> style="display:none;"</c:if>>
 	        	<th><spring:message code = 'ezApprovalG.t118' /></th>
-	        	<td><select id="securityLevel" style="WIDTH: 100%">${securityNode }</select></td> 
+	        	<td><select id="securityLevel" style="WIDTH: 100%"><c:out value='${securityNode }' escapeXml='false'/></select></td> 
 	        </tr>
 	        <tr>
 	        	<c:choose>
 	        		<c:when test="${approvalFlag == 'S' }">
 			            <th><spring:message code = 'ezApprovalG.t1198' /> <span style="color:red">*</span></th>
-			            <td><select id="selKeepPeriod" style="WIDTH: 100%">${periodNode }</select></td>
+			            <td><select id="selKeepPeriod" style="WIDTH: 100%"><c:out value='${periodNode }' escapeXml='false'/></select></td>
 	        		</c:when>
 	        		<c:otherwise>
 			            <th><spring:message code = 'ezApprovalG.t117' /> <span style="color:red">*</span></th>

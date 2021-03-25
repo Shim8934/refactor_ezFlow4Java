@@ -24,7 +24,7 @@
 		    var pDeptTempletName = "";
 		    var ConnectFlag = true;
 		    var Resultxml = createXmlDom();
-		    var approvalFlag = "${approvalFlag}";
+		    var approvalFlag = "<c:out value ='${approvalFlag}'/>";
 		    function btn_SaveAprDeptTempletName_onclick() {
 		        var p_AprDeptTempletName = TxtAprDeptTempletName.value;
 		

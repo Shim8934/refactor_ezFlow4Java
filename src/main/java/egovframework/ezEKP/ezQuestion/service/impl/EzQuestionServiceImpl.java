@@ -1104,8 +1104,8 @@ public class EzQuestionServiceImpl extends EgovFileMngUtil implements EzQuestion
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		map.put("subject", doc.getElementsByTagName("SUBJECT").item(0).getTextContent());
-		map.put("content", doc.getElementsByTagName("CONTENT").item(0).getTextContent());
+		map.put("subject", commonUtil.stripScriptTags(doc.getElementsByTagName("SUBJECT").item(0).getTextContent()));
+		map.put("content", commonUtil.stripScriptTags(doc.getElementsByTagName("CONTENT").item(0).getTextContent()));
 		map.put("startdate", startDate);
 		map.put("enddate", endDate);
 		map.put("expiredate", doc.getElementsByTagName("EXPIREDATE").item(0).getTextContent());
@@ -1264,7 +1264,7 @@ public class EzQuestionServiceImpl extends EgovFileMngUtil implements EzQuestion
 		for(int i=0; i<qstCnt; i++) {
 			XPath xpath = XPathFactory.newInstance().newXPath();
 			
-			String qstSubject = doc.getElementsByTagName("QUESTIONCONTENT").item(i).getTextContent();
+			String qstSubject = commonUtil.stripScriptTags(doc.getElementsByTagName("QUESTIONCONTENT").item(i).getTextContent());
 			String answerType = doc.getElementsByTagName("ANSWERTYPE").item(i).getTextContent();
 			String multiSelect = doc.getElementsByTagName("MULTISELECT").item(i).getTextContent();
 			/*String selViewStart = doc.getElementsByTagName("SELVIEWSTART").item(i).getTextContent();
@@ -1315,7 +1315,7 @@ public class EzQuestionServiceImpl extends EgovFileMngUtil implements EzQuestion
 					qstCompleteVO.setItemNo(Integer.parseInt(vItemID));
 					qstCompleteVO.setQuesNo(v_quesNo);
 					qstCompleteVO.setAnswerNo(iAnsAnsCnt+1);
-					qstCompleteVO.setAnswerAnswerContent(nodes1.item(iAnsAnsCnt).getChildNodes().item(0).getTextContent().replace("'", "''"));
+					qstCompleteVO.setAnswerAnswerContent(commonUtil.stripScriptTags(nodes1.item(iAnsAnsCnt).getChildNodes().item(0).getTextContent().replace("'", "''")));
 					insertAnswerAnswerContent(qstCompleteVO, loginVO.getTenantId());
 					
 				}
@@ -1331,7 +1331,7 @@ public class EzQuestionServiceImpl extends EgovFileMngUtil implements EzQuestion
 					qstCompleteVO.setItemNo(Integer.parseInt(vItemID));
 					qstCompleteVO.setQuesNo(v_quesNo);
 					qstCompleteVO.setAnswerNo(iAns+1);
-					qstCompleteVO.setAnswerContent(nodes.item(iAns).getChildNodes().item(0).getTextContent().replace("'", "\'"));
+					qstCompleteVO.setAnswerContent(commonUtil.stripScriptTags(nodes.item(iAns).getChildNodes().item(0).getTextContent().replace("'", "\'")));
 					insertAnswerContent(qstCompleteVO, loginVO.getTenantId());
 					
 					NodeList nodes2 = (NodeList)xpath.evaluate("//QUESTION/ROW["+(i+1)+"]/ANSWER/ATTACH", doc, XPathConstants.NODESET);

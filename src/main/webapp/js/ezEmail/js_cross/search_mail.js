@@ -1,4 +1,4 @@
-﻿var g_searchHttp = null;
+﻿﻿﻿var g_searchHttp = null;
 var g_progresswin = null;
 
 function showProgress() {
@@ -150,7 +150,7 @@ function start_search() {
     PressShiftKey = false;
     PressCtrlKey = false;
     
-    if (TrimText(keyword.value) == null || TrimText(keyword.value) == "") {
+    if (!searchKArray) {
         alert(strLang254);
         return;
     }
@@ -162,8 +162,6 @@ function start_search() {
     recordCount = 0;
 
     var sYear, sMonth, sDay, eYear, eMonth, eDay, sTime, eTime;
-    var sCategory;
-    var sKeyword;
     var i;
     var bError = false;
     var startDate = "", endDate = "";
@@ -186,63 +184,19 @@ function start_search() {
         return;
     }
 
-    sKeyword = TrimText(keyword.value);
-    sCategory = TrimText(select.value);
-
     var baseURL = document.location.protocol + "//" + g_servername + "/" + g_expath + "/" + g_userID + "/";
 
     var sMailFolder = TrimText(select2.value);
     ShowMailProgress();
-    searchRecurMail(sKeyword, sCategory, sMailFolder, startDate, endDate);
-    prekeyword.value = keyword.value;
-}
-
-function GetBoxPath(Url, boxinfo, sKeyword, sCategory, startDate, endDate) {
-    var strXml = "<?xml version='1.0' encoding='utf-8'?>" +
-		"<a:propfind xmlns:a='DAV:' xmlns:b='urn:schemas:httpmail:'>" +
-		"<a:prop>" +
-		"<b:" + boxinfo + "/>" +
-		"</></>";
-
-    g_searchHttp = new ActiveXObject("Microsoft.XMLHttp");
-    g_searchHttp.open("PROPFIND", Url, true);
-    g_searchHttp.setRequestHeader("Content-Type", "text/xml;charset=utf-8");
-    g_searchHttp.setRequestHeader("Depth", "0");
-    event_GetBoxPath.boxinfo = boxinfo;
-    event_GetBoxPath.sKeyword = sKeyword;
-    event_GetBoxPath.sCategory = sCategory;
-    event_GetBoxPath.startDate = startDate;
-    event_GetBoxPath.endDate = endDate;
-    g_searchHttp.onreadystatechange = event_GetBoxPath;
-    g_searchHttp.send(strXml);
-}
-
-function event_GetBoxPath() {
-    if (g_searchHttp == null || g_searchHttp.readyState != 4) {
-    	return;
-    }
-    
-    if (g_searchHttp.status > 199 && g_searchHttp.status < 300) {
-        var path = g_searchHttp.responseXML.getElementsByTagName("d:" + event_GetBoxPath.boxinfo).item(0).text
-        g_searchHttp = null;
-        
-        searchRecurMail(path, event_GetBoxPath.sKeyword, event_GetBoxPath.sCategory, event_GetBoxPath.startDate, event_GetBoxPath.endDate, true);
+    if(listType == "mailList"){	
+    	searchRecurMail2(sMailFolder, startDate, endDate);
     } else {
-        HiddenMailProgress();
-
-        alert(strLang150)
-        g_searchHttp = null;
-    }
-}
-
-function searchRecurMail(sKeyword, sCategory, sMailFolder, startDate, endDate) {
-    if (sKeyword.length && sCategory.length) {
-        sKeyword = ReplaceText(sKeyword, "&", "&amp;");
-        sKeyword = ReplaceText(sKeyword, "<", "&lt;");
-        sKeyword = ReplaceText(sKeyword, ">", "&gt;");
-        sKeyword = ReplaceText(sKeyword, "'", "''");
+    	searchRecurMail(sMailFolder, startDate, endDate);
     }
     
+}
+
+function searchRecurMail(sMailFolder, startDate, endDate) {
     var pageNum = parseInt(document.getElementById("resultTD").getAttribute("curPage"));
     var startIndex = listSize * (pageNum - 1);
     
@@ -252,11 +206,32 @@ function searchRecurMail(sKeyword, sCategory, sMailFolder, startDate, endDate) {
     var objNode;
     createNodeInsert(xmlDOM, objNode, "DATA");
     createNodeAndInsertText(xmlDOM, objNode, "MAILFOLDER", sMailFolder);
-    createNodeAndInsertText(xmlDOM, objNode, "KEYWORD", sKeyword);
-    createNodeAndInsertText(xmlDOM, objNode, "CATEGORY", sCategory);
+
+    for (var i = 0 ; i < searchCArray.length; i++ ){
+    	searchKArray[i] = ReplaceText(searchKArray[i], "&", "&amp;");
+    	searchKArray[i] = ReplaceText(searchKArray[i], "<", "&lt;");
+    	searchKArray[i] = ReplaceText(searchKArray[i], ">", "&gt;");
+    	searchKArray[i] = ReplaceText(searchKArray[i], "'", "''");
+    	createNodeAndInsertText(xmlDOM, objNode, "KEYWORD", searchKArray[i]);
+    	createNodeAndInsertText(xmlDOM, objNode, "CATEGORY", searchCArray[i]);
+    }
     createNodeAndInsertText(xmlDOM, objNode, "STARTDATE", startDate);
     createNodeAndInsertText(xmlDOM, objNode, "ENDDATE", endDate);
-
+    // attach contain
+    var attachStatus = "";
+    var andorStatus = "";
+    if( $("#moreSearch").css("display") != "none"){
+    	if(document.querySelector("input[name=attachment]:checked").value != null ){
+    			attachStatus = document.querySelector("input[name=attachment]:checked").value;
+    	}
+    	
+    	if(document.querySelector("input[name=andor]:checked").value != null ){
+    		andorStatus = document.querySelector("input[name=andor]:checked").value;
+    	}
+    }
+    createNodeAndInsertText(xmlDOM, objNode, "ATTACHSTATUS", attachStatus);
+    createNodeAndInsertText(xmlDOM, objNode, "ANDORSTATUS", andorStatus);
+    	
     if (p_ListOrderObject == null) {
         event_HeaderClick(document.getElementById("tofromdate"));
     }
@@ -265,10 +240,72 @@ function searchRecurMail(sKeyword, sCategory, sMailFolder, startDate, endDate) {
     createNodeAndInsertText(xmlDOM, objNode, "ORDERBY", p_ListOrderObject.getAttribute("orderoption"));
     createNodeAndInsertText(xmlDOM, objNode, "STARTINDEX", startIndex);
     createNodeAndInsertText(xmlDOM, objNode, "LISTCOUNT", listSize);
-
-    g_searchHttp.open("POST", "/ezEmail/mailSearch.do", true);
+    
+    var requestUrl = "/ezEmail/mailSearch.do";
+    
+    if (shareId != "") {
+    	requestUrl += "?shareId=" + encodeURIComponent(shareId);
+    }
+    
+    g_searchHttp.open("POST", requestUrl, true);
     g_searchHttp.onreadystatechange = event_searchRecurMail;
     g_searchHttp.send(xmlDOM);
+}
+
+function searchRecurMail2(sMailFolder, startDate, endDate) {
+	var pageNum = parseInt(document.getElementById("MailList").getAttribute("curPage"));
+	var startIndex = listSize * (pageNum - 1);
+	
+	g_searchHttp = createXMLHttpRequest();
+	var xmlDOM = createXmlDom();
+	
+	var objNode;
+	createNodeInsert(xmlDOM, objNode, "DATA");
+	createNodeAndInsertText(xmlDOM, objNode, "MAILFOLDER", sMailFolder);
+	
+	for (var i = 0 ; i < searchCArray.length; i++ ){
+		searchKArray[i] = ReplaceText(searchKArray[i], "&", "&amp;");
+		searchKArray[i] = ReplaceText(searchKArray[i], "<", "&lt;");
+		searchKArray[i] = ReplaceText(searchKArray[i], ">", "&gt;");
+		searchKArray[i] = ReplaceText(searchKArray[i], "'", "''");
+		createNodeAndInsertText(xmlDOM, objNode, "KEYWORD", searchKArray[i]);
+		createNodeAndInsertText(xmlDOM, objNode, "CATEGORY", searchCArray[i]);
+	}
+	createNodeAndInsertText(xmlDOM, objNode, "STARTDATE", startDate);
+	createNodeAndInsertText(xmlDOM, objNode, "ENDDATE", endDate);
+	// attach contain
+	var attachStatus = "";
+	var andorStatus = "";
+	if( $("#moreSearch").css("display") != "none"){
+		if(document.querySelector("input[name=attachment]:checked").value != null ){
+			attachStatus = document.querySelector("input[name=attachment]:checked").value;
+		}
+		
+		if(document.querySelector("input[name=andor]:checked").value != null ){
+			andorStatus = document.querySelector("input[name=andor]:checked").value;
+		}
+	}
+	createNodeAndInsertText(xmlDOM, objNode, "ATTACHSTATUS", attachStatus);
+	createNodeAndInsertText(xmlDOM, objNode, "ANDORSTATUS", andorStatus);
+	
+	if (p_ListOrderObject == null) {
+		event_HeaderClick(document.getElementById("tofromdate"));
+	}
+	
+	createNodeAndInsertText(xmlDOM, objNode, "PORP", p_ListOrderObject.getAttribute("porp"));
+	createNodeAndInsertText(xmlDOM, objNode, "ORDERBY", p_ListOrderObject.getAttribute("orderoption"));
+	createNodeAndInsertText(xmlDOM, objNode, "STARTINDEX", startIndex);
+	createNodeAndInsertText(xmlDOM, objNode, "LISTCOUNT", listSize);
+	
+	var requestUrl = "/ezEmail/mailSearch.do";
+	
+	if (shareId != "") {
+		requestUrl += "?shareId=" + encodeURIComponent(shareId);
+	}
+	
+	g_searchHttp.open("POST", requestUrl, true);
+	g_searchHttp.onreadystatechange = event_searchRecurMail;
+	g_searchHttp.send(xmlDOM);
 }
 
 var resultTable = null;
@@ -280,9 +317,16 @@ function event_searchRecurMail() {
     }
     	
     if (g_searchHttp.status > 199 && g_searchHttp.status < 300) {
-    	
-        if (document.getElementById("Checkbox1").checked) {
-            document.getElementById("Checkbox1").checked = false;
+    	var curPage = "";
+        if(listType == "mailList"){	
+        	var list = document.getElementById("MailList");
+        	if (list.childNodes.item(0).childNodes.item(0).checked) {
+        		list.childNodes.item(0).childNodes.item(0).checked = false;
+        	}
+        } else {
+        	if (document.getElementById("Checkbox1").checked) {
+         	   document.getElementById("Checkbox1").checked = false;
+        	}
         }
 
         var passXml = createXmlDom();
@@ -295,7 +339,12 @@ function event_searchRecurMail() {
         HiddenMailProgress();
         
         if (resultTable.rows.length == 0) {
-        	var curPage = document.getElementById("resultTD").getAttribute("curPage");
+        	var curPage = "";
+        	if(listType == "mailList"){
+        		curPage = document.getElementById("MailList").getAttribute("curPage");
+        	} else {
+	        	curPage = document.getElementById("resultTD").getAttribute("curPage");
+        	}
         	
         	if (Number(curPage) > 1) {
         		selbeforeBlock_one();
@@ -425,6 +474,7 @@ function resultView(xmlDoc) {
         tr.setAttribute("itemID", id);
         tr.setAttribute("targetURL", id);
         tr.setAttribute("securemail", securemail);
+        tr.setAttribute("read", read);
         tr.onmouseover = function () { event_listMover(this); };
         tr.onmouseout = function () { event_listMout(this); };
         tr.onclick = function () { event_listclick(this); };
@@ -444,10 +494,13 @@ function resultView(xmlDoc) {
 
         preparedTD(tr, "26px", "center", "middle", tempText, "", "", true);
 
+        var readStyle = "font-weight: inherit;";
+        
         if (read == "1") {
             tempText = "<img src='/images/ImgIcon/icon-msg-read.gif' border=0>";
         } else {
             tempText = "<img src='/images/ImgIcon/icon-msg-unread.gif' border=0>";
+            tr.style.fontWeight = "bold";
         }
 
         preparedTD(tr, "26px", "center", "middle", tempText, "", "", true);
@@ -473,21 +526,21 @@ function resultView(xmlDoc) {
         preparedTD(tr, "26px", "center", "middle", tempText, "", "", true);
 
         if (tofromname.innerText == strLang160) {
-            preparedTD(tr, "100px", "left", "middle", fromname, fromname, 1, false);
+            preparedTD(tr, "100px", "left", "middle", fromname, fromname, 1, false, readStyle);
             tr.recvFrom = fromname;
         } else {
             preparedTD(tr, "100px", "left", "middle", displayto, displayto, 1, false);
             tr.recvFrom = displayto;
         }
         
-        preparedTD(tr, "100%", "left", "middle", subject, subject, 1, false);
+        preparedTD(tr, "100%", "left", "middle", subject, subject, 1, false, readStyle);
 
         if (TrimText(datereceived) != "null") {
             datereceived = GetLocalTime(g_timezone, datereceived);
         }
 
         datereceived = datereceived.replace("T", " ")
-        preparedTD(tr, "200px", "left", "middle", datereceived, "", "", false);
+        preparedTD(tr, "200px", "left", "middle", datereceived, "", "", false, readStyle);
 
 
         var foldername = parentname;
@@ -500,8 +553,8 @@ function resultView(xmlDoc) {
             foldername = ReplaceText(foldername, strLang67, strLang71);
         }
 
-        preparedTD(tr, "120px", "left", "middle", foldername, foldername, 1, false);
-        preparedTD(tr, "50px", "left", "middle", FormatSize(Size), "", "", false);
+        preparedTD(tr, "120px", "left", "middle", foldername, foldername, 1, false, readStyle);
+        preparedTD(tr, "50px", "left", "middle", FormatSize(Size), "", "", false, readStyle);
 
         if (importance == 2) {
             for (var n = 0; n < tr.childNodes.length; n++) {
@@ -677,7 +730,7 @@ function ArrayDelete(TargetArray, DeleteNodeStr) {
     return TargetArray;
 }
 
-function preparedTD(TR, width, align, valign, innerHTML, title, textmode, nopadding) {
+function preparedTD(TR, width, align, valign, innerHTML, title, textmode, nopadding, styleStr) {
     if (navigator.userAgent.indexOf('Firefox') != -1) {
         var td = TR.insertCell(TR.childNodes.length);
     } else if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1) {
@@ -686,6 +739,10 @@ function preparedTD(TR, width, align, valign, innerHTML, title, textmode, nopadd
         var td = TR.insertCell();
     }
 
+    if (typeof styleStr != "undefined") {
+    	td.style.cssText = styleStr + ( (!td.getAttribute("style")) ? "" : td.getAttribute("style") );
+    }
+    
     if (width != "") {
         td.style.width = width;
     }
@@ -695,7 +752,13 @@ function preparedTD(TR, width, align, valign, innerHTML, title, textmode, nopadd
     td.style.whiteSpace = "nowrap";
     td.align = align;
     td.noWrap = true;
-
+    
+    if (innerHTML == "<img src='/images/ImgIcon/view-flag.gif' border=0>" || innerHTML == "<img src='/images/ImgIcon/icon-flag.gif' border=0>") {
+    	td.onclick = function (event) { 
+    		event.stopPropagation(); 
+    		event_flag(this); 
+    	};
+    }
     if (nopadding) {
         td.style.padding = "0px";
     }
@@ -735,9 +798,27 @@ function view_click() {
     var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
     
     if (this.parentname == ("/" + strLang65)) {
-    	window.open("/ezEmail/mailWrite.do?URL=" + encodeURIComponent(this.getAttribute("targeturl")) + "&cmd=EDIT", "", feature);
+    	var requestUrl = "/ezEmail/mailWrite.do?URL=" + encodeURIComponent(this.getAttribute("targeturl")) + "&cmd=EDIT";
+    	
+    	if (shareId != "") {
+    		requestUrl += "&shareId=" + encodeURIComponent(shareId);
+    	}
+    	
+    	window.open(requestUrl, "", feature);
     } else {
-    	window.open("/ezEmail/mailRead.do?URL=" + encodeURIComponent(this.getAttribute("targeturl")) + "&SEARCHPAGE=1&CONTENTCLASS=" + this.getAttribute("contentclass"), "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+    	var requestUrl = "/ezEmail/mailRead.do?URL=" + encodeURIComponent(this.getAttribute("targeturl")) + "&SEARCHPAGE=1&CONTENTCLASS=" + this.getAttribute("contentclass");
+    	
+    	if (shareId != "") {
+    		requestUrl += "&shareId=" + encodeURIComponent(shareId);
+    	}
+    	
+    	window.open(requestUrl, "", feature);
+    }
+    
+    if (this.getAttribute("read") == "0") {
+    	this.childNodes.item(2).childNodes.item(0).src = "/images/ImgIcon/icon-msg-read.gif";
+    	this.setAttribute("read", "1");
+    	this.style.fontWeight = "normal";
     }
 }
 
@@ -749,4 +830,86 @@ function onmouseOver() {
 function onmouseOut() {
     this.style.color = "";
     this.style.backgroundColor = "#FFFFFF";
+}
+function event_flag(obj) {
+    var temp_listContentArry = listContentArry;
+    listContentArry = [GetAttribute(obj.parentElement, "id")];
+    toggle_flag();
+//     listContentArry = temp_listContentArry;
+}
+
+var flagXmlHttp;
+function toggle_flag() {
+    if (listContentArry.length == 0 && listSubContentArry.length == 0 && currentFixingId == null) {
+        alert(strLang42);
+        return;
+    }
+    var pSelectItem;
+    if (listContentArry.length > 0) {
+        if (listContentArry.length > 1) {
+            pSelectItem = "";
+            for (var i = 1; i <= listContentArry.length; i++) {
+                pSelectItem += listContentArry[i];
+            }
+        }
+        else
+            pSelectItem = document.getElementById(listContentArry[listContentArry.length - 1]).getAttribute("id") + ";";
+	} else if (listSubContentArry.length > 0) {
+		pSelectItem = document.getElementById(listSubContentArry[listSubContentArry.length - 1]).getAttribute("id") + ";";
+	} else {
+		pSelectItem = currentFixingId.getAttribute("id") + ";";;
+	}
+
+    var now = new Date();
+    now.setDate(now.getDate() + 1);
+
+    var month = parseInt(now.getMonth()) + 1;
+    var pSDate = now.getFullYear() + "-" + month + "-" + now.getDate();
+    var pEDate = pSDate;
+
+
+    flagXmlHttp = createXMLHttpRequest();
+    var xmlDom = createXmlDom();
+
+
+    var objNode;
+    createNodeInsert(xmlDom, objNode, "DATA");
+    createNodeAndInsertText(xmlDom, objNode, "ITEMID", pSelectItem);
+    createNodeAndInsertText(xmlDom, objNode, "STARTDATE", pSDate);
+    createNodeAndInsertText(xmlDom, objNode, "ENDDATE", pEDate);
+
+    var url = "/ezEmail/mailSetFlag.do";
+    
+	if (typeof(shareId) != "undefined" && shareId != "") {
+		url += "?shareId=" + encodeURIComponent(shareId);
+	}
+    
+    try {
+        flagXmlHttp.open("POST", url, true);
+        flagXmlHttp.onreadystatechange = event_toggle_flag_end;
+        flagXmlHttp.send(xmlDom);
+        
+        // 20200428 조진호 - 메일 리스트에서 체크박스를 이용한 행위 뒤 체크박스가 풀리도록 추가
+        if (listContentArry.length > 0) {
+            for (var i = 1; i <= listContentArry.length; i++) {
+                document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
+            }
+        }
+    }
+    catch (e) { }
+}
+function event_toggle_flag_end() {
+    if (flagXmlHttp != null && flagXmlHttp.readyState == 4) {
+        if (flagXmlHttp.status < 200 || flagXmlHttp.status > 300) {
+            flagXmlHttp = null;
+            alert("ERROR");
+        }
+        else {
+        	if (flagXmlHttp.responseText != "NEW" && flagXmlHttp.responseText != "DEL") {
+        		alert("ERROR");
+        	}
+        }
+    } else {
+    	start_search();
+    }
 }

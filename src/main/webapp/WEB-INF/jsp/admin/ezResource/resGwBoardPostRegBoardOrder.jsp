@@ -12,29 +12,35 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezResource/admin/gwBoardsInfo.js')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}" ></script>
 		<style type="text/css">
-    		.warningbox01 { width:540px; margin:0 auto; border:1px solid #dedede; background:#f8f8fa;}
+			.warningbox{margin:50px auto 0px auto; padding:40px 20px 0px 20px; width:625px; height:184px; border:1px solid #d6d6d6; box-sizing:border-box;}
+			.warningbox .warningimg{margin:0px; padding:0px 0px 0px 40px; float:left;}
+			.warningbox .warningDL{margin:0px; padding:0px 0px 0px 30px; float:left; overflow:hidden;}
+			.warningbox .warningDL dt{margin:0px; padding:12px 0px 5px 0px; font-size:24px; font-weight:bold; color:#3d8fea; letter-spacing:-1px;}
+			.warningbox .warningDL dd{margin:0px; padding:0px; font-size:20px; color:#333; letter-spacing:-1px;}
+			.warningbox .warningDL dd span{ font-size:20px; font-weight:bold;}
+    		/* .warningbox01 { width:540px; margin:0 auto; border:1px solid #dedede; background:#f8f8fa;}
     		.warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 20px 25px;}
     		.warnintxt01 { position:relative ;padding-bottom:10px;margin-top:15px}
     		.warningimg { position:absolute; top:0px; left:0px;}
-    		/* .warningdl { padding:10px 0px 5px 150px; margin:0px 0px 0px 0px;}
+    		.warningdl { padding:10px 0px 5px 150px; margin:0px 0px 0px 0px;}
     		.warningdl dt { height:40px; margin-top:10px;text-align:left;}
-    		.warningdl dd { padding:0px 0px 0px 5px; margin:0px; height:50px; font-weight:bold; font-size:14px; color:#333333;text-align:left;} */
+    		.warningdl dd { padding:0px 0px 0px 5px; margin:0px; height:50px; font-weight:bold; font-size:14px; color:#333333;text-align:left;} 
 			.warningdl { width:75%; padding:10px 10px 5px 114px; margin:0px; display:inline-block; text-align:left;}
 			.warningdl dt { height:40px; padding-left:6px; margin-top:10px; margin-left:10px; text-align:left;}
 			.warningdl dd { padding:0px 10px 0px 20px; margin:0px 0px 10px 0px; height:50px; font-weight:bold; font-size:14px; color:#333333;text-align:left; word-break:break-all;}
-    		.warnintxt02 { font-size:12px; color:#666666; line-height:18px; margin:10px 10px 10px 10px; padding:0px;}
+    		.warnintxt02 { font-size:12px; color:#666666; line-height:18px; margin:10px 10px 10px 10px; padding:0px;}  */
 		</style>
 		<script type="text/javascript" id="clientEventHandlersJS" >
-			g_UserID	= "${userInfo.id}";
-			g_BrdID		= "${brdID}";
+			g_UserID	= "<c:out value='${userInfo.id}'/>";
+			g_BrdID		= "<c:out value='${brdID}'/>";
 
-			var L_UpLevel	= "${upLevel}";
-			var L_UpStep	= "${upStep}";
-			var L_UpCount	= "${upCount}";
+			var L_UpLevel	= "<c:out value='${upLevel}'/>";
+			var L_UpStep	= "<c:out value='${upStep}'/>";
+			var L_UpCount	= "<c:out value='${upCount}'/>";
 			var cAdmin		= "";
-			var pUserID		= "${userInfo.id}";
-			var pDeptID		= "${userInfo.deptID}";
-			var pCompanyID	= "${selCompanyID}";
+			var pUserID		= "<c:out value='${userInfo.id}'/>";
+			var pDeptID		= "<c:out value='${userInfo.deptID}'/>";
+			var pCompanyID	= "<c:out value='${selCompanyID}'/>";
 
 			document.onselectstart = function () {
 				if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -158,7 +164,14 @@
         	<c:when test="${intSubClsCnt <= 1}">
         		<!---------------------- 하위게시판이 없는 경우 ------------------------>
 		    	<div id="EmptyMsg">
-    				<div class="warningbox01" style="margin-top:50px; width:455px;">
+		    		<div class="warningbox">
+				        <p class="warningimg"><img src="/images/notify/warning_resorce.png" width="105" height="89"></p>
+				        <dl class="warningDL">
+				        	<dt>WARNING</dt>
+				        	<dd><spring:message code="ezResource.t103" /></dd>
+				        </dl>
+				    </div>
+		    	    <%-- <div class="warningbox01" style="margin-top:50px; width:455px;">
         				<div class="warningbox02" style="height:130px;width:auto">
   	        				<div class="warnintxt01" style="text-align:left">
 	        					<span class="warningimg"><img src="/images/notify/warning02_resorce.gif" width="64" height="64" style='margin:18px'></span>
@@ -168,7 +181,7 @@
 	        					</dl>
 	        				</div>
 	    				</div>
-    				</div>
+    				</div> --%>
 				</div>
 			</c:when>
         	<c:otherwise>

@@ -42,11 +42,11 @@
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <style>.txtClass{box-sizing : border-box; -moz-box-sizing:border-box;}</style>
 	    <script type="text/javascript">
-	        var addressid = "${addressId}";
-	        var folderid = "${folderId}";
-	        var ownerid = "${ownerId}";
-	        var foldertype = "${folderType}";
-	        var changekey = "${changeKey}";
+	        var addressid = "<c:out value='${addressId}'/>";
+	        var folderid = "<c:out value='${folderId}'/>";
+	        var ownerid = "<c:out value='${ownerId}'/>";
+	        var foldertype = "<c:out value='${folderType}'/>";
+	        var changekey = "<c:out value='${changeKey}'/>";
 	        var page = 1;
 	        var CurPage = "1";
 	        var pagecount;
@@ -85,7 +85,7 @@
 	                //document.getElementById("txtlist_Layer").style.height = "455px";
 	            }
 	            document.getElementById("AddressListView").hotTrackColor = "#f4f5f5";
-	            document.getElementById("AddressListView").selectColor = "#edf4fd";
+	            document.getElementById("AddressListView").selectColor = "#f1f8ff";
 	            document.getElementById("AddressListView").dataSource = listviewheader;
 	            AddressTreeView = new window['treeview.htc'].TreeView('AddressTreeView', 'AddressTreeView');
 	            AddressTreeView.attachEvent('requestdata', address_requestdata);
@@ -139,7 +139,7 @@
 	            tempownerid = ownerid;
 	
 	            if (CrossYN()) {
-	                document.getElementById('addressFolderCnt').textContent = xmlDom.getElementsByTagName("TOTALCN").item(0).firstChild.nodeValue + strLang42;
+	                document.getElementById('addressFolderCnt').textContent = xmlDom.getElementsByTagName("TOTALCN").item(0).firstChild.nodeValue;
 	
 	                var temptotal = xmlDom.getElementsByTagName("TOTALCN").item(0).firstChild.nodeValue;
 	                if ((temptotal % 25) == 0)
@@ -149,7 +149,7 @@
 	                pageNum = xmlDom.getElementsByTagName("CURRENTPAGE").item(0).firstChild.nodeValue;
 	            }
 	            else {
-	                document.getElementById('addressFolderCnt').innerText = xmlDom.getElementsByTagName("TOTALCN").item(0).firstChild.nodeValue + strLang42;
+	                document.getElementById('addressFolderCnt').innerText = xmlDom.getElementsByTagName("TOTALCN").item(0).firstChild.nodeValue;
 	
 	                var temptotal = xmlDom.getElementsByTagName("TOTALCN").item(0).firstChild.nodeValue;
 	                if ((temptotal % 25) == 0)
@@ -677,7 +677,7 @@
 	            var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
 	            nodeIdx = treeView.GetSelectNode();
-	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top; padding-right:3px; \" >"
+	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px; \" >"
 	            	+ "<span id='spn_deptName' title='" + nodeIdx.GetNodeData("VALUE") + "'>" + nodeIdx.GetNodeData("VALUE") + "</span>"
 	            	+ "<span id='countInfo'></span>";
 	            SelectDeptNM.setAttribute("countinfo", "")
@@ -760,9 +760,9 @@
 							
 							/* 2018-09-03 홍승비 - strLang 터지는 부분 수정 */
 							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
-								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang_2 + "</span>/<spring:message code='ezAddress.t362' /> <span class='countColor'>" + result.totalCount2 + strLang_2 + "</span>]";
+								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span> / <span class='countColor'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
 							} else {
-								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang_2 + "</span>]";
+								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span>";
 							}
 							//2018-08-01 김보미 - 부서명 [사원수] 가 넘치는지 확인하는 함수
 							deptNameLong(result.containLow, strIsLeaf);
@@ -1429,7 +1429,16 @@
 	                var objNode;
 	                createNodeInsert(xmlpara, objNode, "DATA");
 	                createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${userInfo.deptID}");
+	                
+	                <c:choose>
+	                <c:when test="${useShowAllCompanies eq 'YES'}">
+	                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top/organ");
+	                </c:when>
+	                <c:otherwise>
 	                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
+	                </c:otherwise>
+	                </c:choose>
+	                
 	                createNodeAndInsertText(xmlpara, objNode, "PROP", "mail");
 	
 	                xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
@@ -1520,8 +1529,7 @@
 	            document.getElementById("subtitle").innerText = "<spring:message code='ezAddress.t352' />";
 	            document.getElementById("emailname").focus();
 	        }
-	        
-	        var m_strColorSelect = "#edf4fd";
+	        var m_strColorSelect = "#f1f8ff";
 	        var m_strColorOver = "#f4f5f5";
 	        var m_strColorDefault = "#ffffff";
 	        var p_ListOrderObject = null;
@@ -2111,7 +2119,7 @@
 	                </td>
 	                <td></td>
 	                <td>
-	                    <h2 id="ToTitle" class="receiver_tltype01" onclick="SelectReceiverWindow(ToTitle,ListViewMsgTo)" style="font-weight: bold; height: 36px!important; line-height: 36px; position: absolute; top:87px; width:232px;">
+	                    <h2 id="ToTitle" class="receiver_tltype01" onclick="SelectReceiverWindow(ToTitle,ListViewMsgTo)" style="font-weight: bold; height: 36px!important; line-height: 36px; position: absolute; top:85px; width:232px;">
 	                        <span style="min-width:45px;" id="ToTitleStr"><spring:message code='ezAddress.t364' /></span>
 	                    </h2>
 	                </td>
@@ -2135,7 +2143,7 @@
 	                        </table>
 	                        <div style="text-align: center">
 	                        	<div class="btnpositionJsp">
-	                        		<a href="#" class="imgbtn"><span onclick="inputAddress()"><spring:message code='ezAddress.t173' /></span></a>
+	                        		<a class="imgbtn"><span onclick="inputAddress()"><spring:message code='ezAddress.t173' /></span></a>
 	                        	</div>	
 	                        </div>
 	                    </div>
@@ -2153,6 +2161,10 @@
 			                            			<option value="mobile" usedefault="0"><spring:message code='ezAddress.t999900006'/></option>
 			                            			<option value="HomePhone" usedefault="0"><spring:message code='ezAddress.t192'/></option>
 			                            			<option value="facsimileTelephoneNumber" usedefault="0"><spring:message code='ezAddress.t333'/></option>
+													<c:if test="${primaryLang eq '3' }">
+                                                    <option value="extensionPhone" usedefault="0"><spring:message code='main.ksa02' /></option>
+                                                    <option value="officeMobile" usedefault="0"><spring:message code='main.ksa03' /></option>
+                                                    </c:if>
 			                            			<option value="mail" usedefault="0"><spring:message code='ezAddress.t264'/></option>
 			                            			<option value="streetAddress" usedefault="0"><spring:message code='ezAddress.t296'/></option>
 			                            		</select>
@@ -2169,9 +2181,9 @@
 	                                    <div style="height: 470px; width: 220px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
 	                                </td>	                                
 	                                <td id ="OrganListView" class="listview" style="overflow-y: auto; overflow-x: auto;">
-	                                    <table style="width: 100%; margin-top: -1px; back" class="popup_mainlist">
+	                                    <table style="width: 100%; back" class="popup_mainlist">
 	                                        <tr>
-	                                            <th style="white-space:normal;background-color: white;border-top:1px solid #ddd;border-bottom:1px solid #eaeaea">
+	                                            <th style="white-space:normal;background-color: white;border-top:0px;border-bottom:1px solid #eaeaea">
 													<span id="SelectDeptNM" style="font-weight: normal; width: 380px; height: 18px; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
 	                                                <span style="float: right; position: relative;">
 	                                                    <span onclick="ChangeListView_onClick('TXT');">
@@ -2212,10 +2224,8 @@
 	                                    <div class="box" style="OVERFLOW-Y: auto; OVERFLOW-X: auto; WIDTH: 220px; HEIGHT: 502px; BACKGROUND-COLOR: #FFFFFF;padding-top:5px;border-right:0px" id="AddressTreeView"></div>
 	                                </td>	                                
 	                                <td>
-	                                    <div style="vertical-align: middle; border: 1px solid #ddd; border-bottom: 0px; height: 20px; padding-top: 5px; padding-left: 5px;margin-top:-1px">
-	                                    	<img src="/images/ImgIcon/fldr.gif" width="15" height="15" align="absmiddle" hspace="2" style="cursor: pointer"/>
-	                                    	<span id="addressFolderName" style= "BACKGROUND-COLOR: #f8f8fa;"></span>
-	                                    	-[<span id="addressFolderCnt" style="color: #017BEC;"></span>]
+	                                    <div style="vertical-align: middle; border: 1px solid #ddd; border-bottom: 0px; height: 20px; padding-top: 3px; padding-left: 5px;padding-bottom:2px">
+	                                    	<img src="/images/ImgIcon/fldr.gif" align="absmiddle" hspace="2" style="cursor: pointer"/><span id="addressFolderName"></span>&nbsp;&nbsp;<span id="addressFolderCnt" style="color: #017BEC;"></span>
 	                            		</div>
 	                                    <div id="AddressListView" style="BORDER: #ddd 1px solid; OVERFLOW: auto; WIDTH: 446px; HEIGHT: 436px; BACKGROUND-COLOR: white; border-bottom:0px;border-top:0px" class="listview"></div>
 	                                    <div id="tblPageRayer"  style="border:#ddd 1px solid;border-top:0px;width:auto !important"></div>

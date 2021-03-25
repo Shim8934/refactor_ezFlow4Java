@@ -81,6 +81,7 @@ public class ADConnection {
         	env.put(Context.SECURITY_PROTOCOL, "ssl");
         	// SSL 인증을 패스하기 위한 부분
         	env.put("java.naming.ldap.factory.socket", "egovframework.ezEKP.ezOrgan.util.MySSLSocketFactory"); // SSL 인증을 거치지 않고 사용
+			@SuppressWarnings("unused")
 			DirContext ctx = new InitialDirContext(env);
 			
 		} catch (NamingException e) {

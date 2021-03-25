@@ -13,6 +13,7 @@
 		
 		    var pUserID = "${userInfo.id}";
 		    var gSentBox = "Y";
+		    var useSaveSentMail = "<c:out value='${useSaveSentMail}'/>";
 		
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
@@ -23,11 +24,17 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
+		        
+		        if(useSaveSentMail == "true") {
+			    	$("#btnMail").css("display","");
+			    }
 		    };
 			function Save() {
 			    var Mode = "";
 			    var strmail = "";
 			    var pSentBox = "";
+			    var linePass = "";
+			    
 			    if (document.getElementById("alertMail").checked == true)
 			        strmail += "1;";
 			    else
@@ -53,6 +60,15 @@
 			    else
 			        pSentBox = "N";
 			    
+			    if(useSaveSentMail == "false")
+			    	pSentBox = "N";
+			    
+			    if (document.getElementById("linePass").checked == true) {
+			    	linePass = "1";
+			    } else {
+			    	linePass = "0";
+			    }
+			    
 			    var Result = "";
 			    
 			    $.ajax({
@@ -62,7 +78,8 @@
 					url : "/ezPersonal/setPersonalNotiMail.do",
 					data : {
 							email        : strmail,
-							sentBoxSave  : pSentBox
+							sentBoxSave  : pSentBox,
+							linePass 	 : linePass
 							},
 					success: function(text){
 						Result = text;
@@ -140,6 +157,17 @@
 						</c:otherwise>
 					</c:choose>
 				  <td>&nbsp;<spring:message code='ezPersonal.t408'/></td>
+				</tr> 
+				<tr id="btnMail" style="display:none;">
+					<c:choose>
+						<c:when test="${linePass == '1'}">
+							<th style="white-space:nowrap"><input type="checkbox" id="linePass" checked="checked"/></th>
+						</c:when>
+						<c:otherwise>
+							<th style="white-space:nowrap"><input type="checkbox" id="linePass"/></th>
+						</c:otherwise>
+					</c:choose>
+				  <td>&nbsp;결재문서 통과 알림 메일 사용</td>
 				</tr> 
 				<tr>
 					<c:choose>

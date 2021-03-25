@@ -25,29 +25,29 @@
 		<script type="text/javascript" ID="clientEventHandlersJS">
 		    var xmlhttp = createXMLHttpRequest();
 		    var xmldoc = createXmlDom();
-		    var lastdate = "${monthEndDay}";
-		    var initdate = "${initDate}";
+		    var lastdate = "<c:out value='${monthEndDay}'/>";
+		    var initdate = "<c:out value='${initDate}'/>";
 		    var arr_userinfo = new Array();
 		    arr_userinfo[0]  = "user";								
-		    arr_userinfo[1]  = "${userInfo.id}";              
-		    arr_userinfo[2]  = "${userInfo.displayName}";         
-		    arr_userinfo[3]  = "${userInfo.title}";               
-		    arr_userinfo[4]  = "${userInfo.deptID}";              
-		    arr_userinfo[5]  = "${userInfo.deptName}";            
-		    arr_userinfo[6]  = "${userInfo.jikChek}";                         
-		    arr_userinfo[8]  = "${userInfo.email}";               
+		    arr_userinfo[1]  = "<c:out value='${userInfo.id}'/>";              
+		    arr_userinfo[2]  = "<c:out value='${userInfo.displayName}'/>";         
+		    arr_userinfo[3]  = "<c:out value='${userInfo.title}'/>";               
+		    arr_userinfo[4]  = "<c:out value='${userInfo.deptID}'/>";              
+		    arr_userinfo[5]  = "<c:out value='${userInfo.deptName}'/>";            
+		    arr_userinfo[6]  = "<c:out value='${userInfo.jikChek}'/>";                         
+		    arr_userinfo[8]  = "<c:out value='${userInfo.email}'/>";               
 		    arr_userinfo[9]  = "";
-		    arr_userinfo[10] = "${susinAdmin}";
-		    arr_userinfo[11]  = "${userInfo.displayName1}";		
-		    arr_userinfo[12]  = "${userInfo.displayName2}";		
-		    arr_userinfo[13]  = "${userInfo.title1}";				
-		    arr_userinfo[14]  = "${userInfo.title2}";				
-		    arr_userinfo[15]  = "${userInfo.deptName1}";			
-		    arr_userinfo[16]  = "${userInfo.deptName2}";		
+		    arr_userinfo[10] = "<c:out value='${susinAdmin}'/>";
+		    arr_userinfo[11]  = "<c:out value='${userInfo.displayName1}'/>";		
+		    arr_userinfo[12]  = "<c:out value='${userInfo.displayName2}'/>";		
+		    arr_userinfo[13]  = "<c:out value='${userInfo.title1}'/>";				
+		    arr_userinfo[14]  = "<c:out value='${userInfo.title2}'/>";				
+		    arr_userinfo[15]  = "<c:out value='${userInfo.deptName1}'/>";			
+		    arr_userinfo[16]  = "<c:out value='${userInfo.deptName2}'/>";		
 		    var ReturnFunction;
-		    var Type = "${type}";
+		    var Type = "<c:out value='${type}'/>";
 		    var ReturnFunction;
-		    var approvalFlag = "${approvalFlag}";
+		    var approvalFlag = "<c:out value='${approvalFlag}'/>";
 		    var openPageInfo;
 		    window.onload = function () {
 		        try {
@@ -77,18 +77,37 @@
 		            //2018-09-10 이효진 진행중페이지에서 검색 시 문서번호 숨김
 		            document.getElementById("displayTR3").style.display = "none";
 		            //window.resizeBy(0, -60);
-		            window.resizeTo(510, 355);
-		        }
+					if (approvalFlag == "S") {
+			            window.resizeTo(510, 355);
+					} else {
+						if (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) {
+			            	window.resizeTo(510, 325);
+						} else {
+			            	window.resizeTo(510, 375);
+						}
+					}
+		        } else {
+		        	if (approvalFlag == "S"){
+							resizeTo(510,445);
+					} else {
+						if (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) {
+							resizeTo(510,415);
+						}
+					}
+				}
 				if (openPageInfo == "usercontlist") {
 					$("#displayTR2").css("display", "none");
 					//등록일자
 					//$("#Sdatepickerapr").parent().siblings("th").text("<spring:message code='ezApprovalG.t831'/>");
 					$("#Sdatepickerapr").parent().siblings("th").text("<spring:message code='ezApprovalG.bhs01'/>");
-					window.resizeTo(510, 400);
+					window.resizeTo(510, 450);
 				}
 				
 		        reset_onclick();
 		        Submit3.focus();
+		        
+		        //엔터키 눌렀을때도 검색 실행
+		        $("input[type=text]").attr("onkeyup", "enterkey(event)");
 		    };
 		    $(function () {
 		        $("#Sdatepickerapr").datepicker({
@@ -96,7 +115,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        $("#Edatepickerapr").datepicker({
@@ -104,7 +123,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        $("#Sdatepickerend").datepicker({
@@ -112,7 +131,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        $("#Edatepickerend").datepicker({
@@ -120,7 +139,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        $("#Sdatepickerapp").datepicker({
@@ -128,7 +147,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        $("#Edatepickerapp").datepicker({
@@ -136,7 +155,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        $("#Sdatepickerrec").datepicker({
@@ -317,11 +336,21 @@
 			
 			        if (document.getElementsByName("FormName")[0].id == "FormName") {
 			            document.getElementsByName("FormName")[0].id = "";
-			        }
-			        RtnVal[21] = document.getElementsByName("FormName")[0].id;
+					}
+					// 2021-01-14 폼이름 검색으로 변경 - 박기범
+			        // RtnVal[21] = document.getElementsByName("FormName")[0].id;
+			        RtnVal[21] = document.getElementsByName("FormName")[0].value;
 			        RtnVal[22] = EndAprYear.value;
 			        RtnVal[23] = drafterdept.value;
-			        RtnVal[24] = "";
+
+					// 2021-03-15 키워드 검색 추가 - 박기범
+					if (document.getElementById("keyword").value != "") {
+						if (Type === "APR") {
+					 		RtnVal[24] = "KAPR;" + document.getElementById("keyword").value;
+						} else {
+							RtnVal[24] = "KEND;" + document.getElementById("keyword").value;
+						}
+					}
 			       
 			        for (i = 0; i < 25; i++) {
 			            if (RtnVal[i] != "" && typeof (RtnVal[i]) != "undefined") {
@@ -356,7 +385,7 @@
 		            
 		            if (recvfrom != "")
 		            	recvfrom = recvfrom + " 00:00:01";
-		            else myapprfrom = "";
+		            else recvfrom = "";
 
 		            if (recvto != "")
 		            	recvto = recvto + " 23:59:59";
@@ -371,14 +400,25 @@
 		            RtnVal[6] = apprto;
 		            RtnVal[7] = myapprfrom;
 		            RtnVal[8] = myapprto;
-
-		            RtnVal[9] = document.getElementById("formid").value;
+					// 2021-01-14 폼이름 검색으로 변경 - 박기범
+		            // RtnVal[9] = document.getElementById("formid").value;
+		            RtnVal[9] = document.getElementsByName("FormName")[0].value;
 		            RtnVal[10] = document.getElementById("EndAprYear").value;
 		            RtnVal[11] = document.getElementById("drafterdept").value;
 
 		            RtnVal[12] = "";
 		            RtnVal[13] = "";
 		            RtnVal[25] = recvfrom;
+
+					 // 2021-03-15 키워드 검색 추가 - 박기범
+					 if (document.getElementById("keyword").value != "") {
+						 if (Type === "APR") {
+							 RtnVal[24] = "KAPR;" + document.getElementById("keyword").value;
+						 } else {
+							 RtnVal[24] = "KEND;" + document.getElementById("keyword").value;
+						 }
+					 }
+
 		            RtnVal[26] = recvto;
 		            RtnVal[27] = document.getElementById("sendDept").value;
 		            RtnVal[28] = document.getElementById("recDept").value;
@@ -555,11 +595,21 @@
 			            document.getElementsByName("FormName")[0].id = "";
 			        }
 			
-			        RtnVal[21] = document.getElementsByName("FormName")[0].id;
+			        // 2021-01-14 폼이름 검색으로 변경 - 박기범
+			        // RtnVal[21] = document.getElementsByName("FormName")[0].id;
+			        RtnVal[21] = document.getElementsByName("FormName")[0].value;
 			        RtnVal[22] = EndAprYear.value;
 			        RtnVal[23] = drafterdept.value;
-			
-			        RtnVal[24] = "";
+
+					// 2021-03-15 키워드 검색 추가 - 박기범
+					if (document.getElementById("keyword").value != "") {
+						if (Type === "APR") {
+							RtnVal[24] = "KAPR;" + document.getElementById("keyword").value;
+						} else {
+							RtnVal[24] = "KEND;" + document.getElementById("keyword").value;
+						}
+					}
+
 			        if (ReturnFunction != null)
 			            ReturnFunction(RtnVal);
 			        else
@@ -575,11 +625,22 @@
 		          RtnVal[6] = initdate.substring(0, 10) + " 23:59:59";
 		          RtnVal[7] = "";
 		          RtnVal[8] = "";
-		          RtnVal[9] = document.getElementById("formid").value;
+		          // 2021-01-14 폼이름 검색으로 변경 - 박기범
+		          // RtnVal[9] = document.getElementById("formid").value;
+		          RtnVal[9] = document.getElementsByName("FormName")[0].value;
 		          RtnVal[10] = document.getElementById("EndAprYear").value;
 		          RtnVal[11] = document.getElementById("drafterdept").value;
 		          RtnVal[12] = "";
 		          RtnVal[13] = "";
+
+					// 2021-03-15 키워드 검색 추가 - 박기범
+					if (document.getElementById("keyword").value != "") {
+						if (Type === "APR") {
+							RtnVal[24] = "KAPR;" + document.getElementById("keyword").value;
+						} else {
+							RtnVal[24] = "KEND;" + document.getElementById("keyword").value;
+						}
+					}
 
 // 		          if (document.getElementById("keyword").value != "") {
 // 		              if (SearchType != "APR") {
@@ -680,11 +741,20 @@
 			        if (document.getElementsByName("FormName")[0].id == "FormName") {
 			            document.getElementsByName("FormName")[0].id = "";
 			        }
-			        RtnVal[21] = document.getElementsByName("FormName")[0].id;
+			        // 2021-01-14 폼이름 검색으로 변경 - 박기범
+			        // RtnVal[21] = document.getElementsByName("FormName")[0].id;
+			        RtnVal[21] = document.getElementsByName("FormName")[0].value;
 			        RtnVal[22] = EndAprYear.value;
 			        RtnVal[23] = drafterdept.value;
-			
-			        RtnVal[24] = "";
+
+					// 2021-03-15 키워드 검색 추가 - 박기범
+					if (document.getElementById("keyword").value != "") {
+						if (Type === "APR") {
+							RtnVal[24] = "KAPR;" + document.getElementById("keyword").value;
+						} else {
+							RtnVal[24] = "KEND;" + document.getElementById("keyword").value;
+						}
+					}
 			        
 			        if (ReturnFunction != null)
 			            ReturnFunction(RtnVal);
@@ -703,12 +773,23 @@
 		             RtnVal[7] = "";
 		             RtnVal[8] = "";
 
-		             RtnVal[9] = document.getElementById("formid").value;
+		             // 2021-01-14 폼이름 검색으로 변경 - 박기범
+		             // RtnVal[9] = document.getElementById("formid").value;
+		             RtnVal[9] = document.getElementsByName("FormName")[0].value;
 		             RtnVal[10] = document.getElementById("EndAprYear").value;
 		             RtnVal[11] = document.getElementById("drafterdept").value;
 		             RtnVal[12] = "";
 		             RtnVal[12] = "";
 		             RtnVal[13] = "";
+
+					// 2021-03-15 키워드 검색 추가 - 박기범
+					if (document.getElementById("keyword").value != "") {
+						if (Type === "APR") {
+							RtnVal[24] = "KAPR;" + document.getElementById("keyword").value;
+						} else {
+							RtnVal[24] = "KEND;" + document.getElementById("keyword").value;
+						}
+					}
 // 		             if (document.getElementById("keyword").value != "") {
 // 		                 if (SearchType != "APR") {
 // 		                     RtnVal[12] += "KAPR;";
@@ -817,11 +898,20 @@
 			        if (document.getElementsByName("FormName")[0].id == "FormName") {
 			            document.getElementsByName("FormName")[0].id = "";
 			        }
-			        RtnVal[21] = document.getElementsByName("FormName")[0].id;
+			        // 2021-01-14 폼이름 검색으로 변경 - 박기범
+			        // RtnVal[21] = document.getElementsByName("FormName")[0].id;
+			        RtnVal[21] = document.getElementsByName("FormName")[0].value;
 			        RtnVal[22] = EndAprYear.value;
 			        RtnVal[23] = drafterdept.value;
-			
-			        RtnVal[24] = "";
+
+					// 2021-03-15 키워드 검색 추가 - 박기범
+					if (document.getElementById("keyword").value != "") {
+						if (Type === "APR") {
+							RtnVal[24] = "KAPR;" + document.getElementById("keyword").value;
+						} else {
+							RtnVal[24] = "KEND;" + document.getElementById("keyword").value;
+						}
+					}
 			
 			        if (ReturnFunction != null)
 			            ReturnFunction(RtnVal);
@@ -839,11 +929,22 @@
 		            RtnVal[7] = "";
 		            RtnVal[8] = "";
 
-		             RtnVal[9] = document.getElementById("formid").value;
+		             // 2021-01-14 폼이름 검색으로 변경 - 박기범
+		             // RtnVal[9] = document.getElementById("formid").value;
+		             RtnVal[9] = document.getElementsByName("FormName")[0].value;
 		             RtnVal[10] = document.getElementById("EndAprYear").value;
 		             RtnVal[11] = document.getElementById("drafterdept").value;
 		             RtnVal[12] = "";
 		             RtnVal[13] = "";
+
+					// 2021-03-15 키워드 검색 추가 - 박기범
+					if (document.getElementById("keyword").value != "") {
+						if (Type === "APR") {
+							RtnVal[24] = "KAPR;" + document.getElementById("keyword").value;
+						} else {
+							RtnVal[24] = "KEND;" + document.getElementById("keyword").value;
+						}
+					}
 // 		             if (document.getElementById("keyword").value != "") {
 // 		                 if (SearchType != "APR") {
 // 		                     RtnVal[12] += "KAPR;";
@@ -947,7 +1048,19 @@
 		
 		        return RtnVal;
 		    }
-		    
+
+		    function enterkey(e) {
+		        if (window.event) {
+		            if (window.event.keyCode == 13) {
+		            	btnSearch_onclick();
+		            }
+		        }
+		        else {
+		            if (e.which == 13) {
+		            	btnSearch_onclick();
+		            }
+		        }
+			}
 		</script>
 	</head>
 	<body class="popup">
@@ -962,11 +1075,11 @@
 		    <th ><spring:message code='ezApprovalG.t442'/></th>
 		    <c:choose>
 		    	<c:when test="${userInfo.lang == '1'}">
-				    <td ><input type="text" id="FormName" name="FormName" style="width:200px" disabled>
+				    <td ><input type="text" id="FormName" name="FormName" style="width:200px" >
 		      		<a  class="imgbtn imgbck" style="vertical-align:middle; margin-top:1.48px;"><span onClick="return btn_FormSelect_onclick()"><spring:message code='ezApprovalG.t442'/></span></a></td>
 		    	</c:when>
 		    	<c:otherwise>
-				    <td ><input type="text" id="FormName" name="FormName" style="width:193px" disabled>
+				    <td ><input type="text" id="FormName" name="FormName" style="width:193px" >
 		      		<a  class="imgbtn imgbck" style="vertical-align:middle"><span onClick="return btn_FormSelect_onclick()"><spring:message code='ezApprovalG.t442'/></span></a></td>
 		    	</c:otherwise>
 		    </c:choose>
@@ -980,6 +1093,11 @@
 		    <th ><spring:message code='ezApprovalG.t1330'/></th>
 		    <td ><input type="text" id="DocTitle" name="DocTitle" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box" maxlength="50">
 		    </td>
+		  </tr>
+		  <tr>
+		  	<th ><spring:message code='ezApprovalG.t1200'/></th>
+		  	<td ><input type="text" id="keyword" name="keyword" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box" maxlength="50">
+		  	</td>
 		  </tr>
 		  <c:choose>
 		  	<c:when test="${searchType eq 'recDept'}">
@@ -1018,8 +1136,8 @@
 				  <tr style="display:none;">
 				    <th ><spring:message code='ezApprovalG.t1332'/></th>
 				    <td >
-				        <input type="text" id="Sdatepickerapr" style="width:80px;text-align:center">
-				        <input type="text" id="Edatepickerapr" style="width:80px;text-align:center">
+				        <input type="text" id="Sdatepickerapr" style="width:80px;text-align:center" readonly>
+				        <input type="text" id="Edatepickerapr" style="width:80px;text-align:center" readonly>
 				    </td>
 				  </tr>
 		  	</c:when>
@@ -1037,8 +1155,8 @@
 				<tr style="display:none;">
 				    <th ><spring:message code='ezApprovalG.psb1334'/></th>
 				    <td >
-				        <input type="text" id="Sdatepickerrec" style="width:80px;text-align:center">
-				        <input type="text" id="Edatepickerrec" style="width:80px;text-align:center">
+				        <input type="text" id="Sdatepickerrec" style="width:80px;text-align:center" readonly>
+				        <input type="text" id="Edatepickerrec" style="width:80px;text-align:center" readonly>
 				    </td>
 			 	</tr>
 				  <tr>
@@ -1059,8 +1177,8 @@
 				  <tr>
 				    <th ><spring:message code='ezApprovalG.t1332'/></th>
 				    <td >
-				        <input type="text" id="Sdatepickerapr" style="width:80px;text-align:center">
-				        <input type="text" id="Edatepickerapr" style="width:80px;text-align:center">
+				        <input type="text" id="Sdatepickerapr" style="width:80px;text-align:center" readonly>
+				        <input type="text" id="Edatepickerapr" style="width:80px;text-align:center" readonly>
 				    </td>
 				  </tr>
 		  	</c:otherwise>
@@ -1069,15 +1187,15 @@
 		  <tr id="displayTR1">
 		    <th ><spring:message code='ezApprovalG.t1334'/></th>
 		    <td >
-		        <input type="text" id="Sdatepickerend" style="width:80px;text-align:center">
-		        <input type="text" id="Edatepickerend" style="width:80px;text-align:center">
+		        <input type="text" id="Sdatepickerend" style="width:80px;text-align:center" readonly>
+		        <input type="text" id="Edatepickerend" style="width:80px;text-align:center" readonly>
 		    </td>
 		  </tr>
 		  <tr id="displayTR2">
 		    <th ><spring:message code='ezApprovalG.pjj32'/></th>
 		    <td >
-		        <input type="text" id="Sdatepickerapp" style="width:80px;text-align:center">
-		        <input type="text" id="Edatepickerapp" style="width:80px;text-align:center">
+		        <input type="text" id="Sdatepickerapp" style="width:80px;text-align:center" readonly>
+		        <input type="text" id="Edatepickerapp" style="width:80px;text-align:center" readonly>
 		    </td>
 		      </tr>
 		</table>

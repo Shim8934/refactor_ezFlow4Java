@@ -27,6 +27,7 @@
 			var modeCheck = "<c:out value='${mode}' />";
 			var searchSelect = "<c:out value='${searchSelect}' />";
 			var searchInput = "<c:out value='${searchInput}' />";
+			var searchingVal = "<c:out value='${searching}' />";
 			var searchOption = "off";
 			var allData = [];
 			var id = "<c:out value='${id}' />";
@@ -62,16 +63,19 @@
 				$(".div_scroll").css("height", win_height + "px");
 			}
 			// 사다리 종류 드롭박스
+			var initFlag = false;
 			function checkSearchOption() {
 				if($("#searchOption option:selected").val()==='kind') {
 					$("#searchInput").css("display", "none");
-					$("#searchInput").val("");
 					$("#ladderType").css("display", "block");
 				} else {
 					$("#ladderType").css("display", "none");
-					$("#searchInput").val("");
+					if(!initFlag) {
+						$("#searchInput").val(searchingVal);
+					}
 					$("#searchInput").css("display", "block");
 				} 
+				initFlag = true;
 			}
 		
 		</script>
@@ -88,17 +92,25 @@
 		</style>
 	</head>
 	<body class="mainbody" style="overflow: hidden;">
-		<h1><spring:message code="ezLadder.t001"/>
+		<h1>
+			<c:choose>
+				<c:when test="${mode eq 'part' }">
+					<spring:message code="ezLadder.t108" />
+				</c:when>
+				<c:when test="${mode eq 'all' }">
+					<spring:message code="ezLadder.t011" /> <spring:message code="ezLadder.t001"/>
+				</c:when>
+			</c:choose>			
 			<span id="mailBoxInfo"></span>
-			<span style="float: right; font-weight:normal;color:black;">
-				<select id="searchOption" style="height:27px; ">
+			<span class="searchForm">
+				<select id="searchOption" style="height:27px; border-color: #c8c8c8">
 				  <option value="title" <c:if test = "${searchSelect eq 'title' }" >selected="selected"</c:if>><spring:message code="ezLadder.t003"/></option>
 				  <option value="kind" <c:if test = "${searchSelect eq 'kind' }" >selected="selected"</c:if>><spring:message code="ezLadder.t002"/></option>
 				  <option value="writer" <c:if test = "${searchSelect eq 'writer' }" >selected="selected"</c:if>><spring:message code="ezLadder.t004"/></option>
 				  <option value="participant" <c:if test = "${searchSelect eq 'participant' }" >selected="selected"</c:if>><spring:message code="ezLadder.t013"/></option>
 				</select>
-				<a href="#" style="float:right"><img src="/images/bsearch_new.gif" border="0" onclick="searchLadder()" ></a>
-				<input type="text" name="searchInput" id="searchInput" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;margin-left:5px;float:right" value="<c:out value='${searchInput}'/>">								
+				<input type="text" class="searchinputBox" name="searchInput" id="searchInput" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;margin-left:5px;float:right" value="<c:out value='${searchInput}'/>">
+				<a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onclick="searchLadder()" ></a>
 				<select id="ladderType" style="height: 27px; width:150px; margin-left:5px; float:right;">
 				  <option value="0" <c:if test = "${searchInput eq '0' }" >selected="selected"</c:if>><spring:message code="ezLadder.t101"/></option>
 				  <option value="1" <c:if test = "${searchInput eq '1' }" >selected="selected"</c:if>><spring:message code="ezLadder.t102"/></option>
@@ -109,8 +121,8 @@
 		</h1>
 		<div id="mainmenu">
 			<ul style="width:100%;">
-				<li id="btnInsert" onClick="newLad()" ><a><span><spring:message code="ezLadder.t018"/></span></a></li>
-				<li style="float:right; font-weight:normal; position: relative; top:4px; right:22px;">
+				<li class="important" id="btnInsert" onClick="newLad()" ><span><spring:message code="ezLadder.t018"/></span></li>
+				<li style="display:none; float:right; font-weight:normal; position: relative; top:4px; right:5px; border:0px;">
 					<input type="radio" class="participantBtn" id="part" onclick="participant(this.value)" value="part">
 					<label for="part"><spring:message code='ezLadder.t012' /></label>	
 					<input type="radio" class="participantBtn" id="all" onclick="participant(this.value)" value="all">

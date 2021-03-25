@@ -59,12 +59,12 @@
 				<tbody>
 					<c:forEach var="list" items="${list}" varStatus="seq">
 						<tr>
-							<td id="TD_0" style="width:5%">${seq.count}</td>
-							<td id="TD_1" style="width:15%">${list.company}</td>
-							<td id="TD_2" style="width:17%">${list.description}</td>
-							<td id="TD_3" style="width:12%">${list.title}</td>
-							<td id="TD_4" style="width:13%">${list.memberName}</td>
-							<td id="TD_5" style="width:38%">${list.mail}</td>
+							<td id="TD_0" style="width:5%"><c:out value='${seq.count}'/></td>
+							<td id="TD_1" style="width:15%"><c:out value='${list.company}'/></td>
+							<td id="TD_2" style="width:17%"><c:out value='${list.description}'/></td>
+							<td id="TD_3" style="width:12%"><c:out value='${list.title}'/></td>
+							<td id="TD_4" style="width:13%"><c:out value='${list.memberName}'/></td>
+							<td id="TD_5" style="width:38%"><c:out value='${list.mail}'/></td>
 						</tr>
 					</c:forEach>
 				</tbody>

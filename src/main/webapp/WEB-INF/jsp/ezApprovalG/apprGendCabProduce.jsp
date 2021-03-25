@@ -18,8 +18,8 @@
 		    var arrCabInfo = new Array();
 		    var g_PYear, g_DispFlag, g_DispEndDate;
 		    var rtnVal = new Array();
-		    var CompanyID = "${userInfo.companyID}";
-		    var UserLang = "${userInfo.lang}";
+		    var CompanyID = "<c:out value ='${userInfo.companyID}'/>";
+		    var UserLang = "<c:out value ='${userInfo.lang}'/>";
 		    var RetValue;
 		    var ReturnFunction;
 		    window.onload = function () {

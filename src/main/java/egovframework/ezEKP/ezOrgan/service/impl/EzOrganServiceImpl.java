@@ -1,9 +1,12 @@
 package egovframework.ezEKP.ezOrgan.service.impl;
 
 import java.lang.reflect.Field;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
@@ -50,6 +53,9 @@ public class EzOrganServiceImpl implements EzOrganService {
     
 	@Resource(name = "EzCommonService")
 	private EzCommonService ezCommonService;
+	
+	@Autowired
+	private Properties globals;
 	
     // 지정된 사원 혹은 부서의 특정 필드의 값을 반환한다.
 	@Override
@@ -221,8 +227,15 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 	
 	// 지정된 부서의 자식 부서 목록을 XML 형식으로 반환한다.
+	// 폐지부서 표출 안 함
 	@Override
 	public String getDeptSubTreeInfo(String pDeptID, String pPropList, String primary, int tenantID) throws Exception {
+		return getDeptSubTreeInfo(pDeptID, pPropList, primary, tenantID, false);
+	}
+	
+	// 지정된 부서의 자식 부서 목록을 XML 형식으로 반환한다.
+	@Override
+	public String getDeptSubTreeInfo(String pDeptID, String pPropList, String primary, int tenantID, boolean displayTrashDept) throws Exception {
 	    logger.debug("getDeptSubTreeInfo started");
 	    logger.debug("pDeptID=" + pDeptID + ",pPropList=" + pPropList + ",primary=" + primary + ",tenantID=" + tenantID);
 	    
@@ -231,6 +244,10 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("v_CN", pDeptID);
 		map.put("v_LANGDATA", primary);
 		map.put("v_TENANT_ID", tenantID);
+		
+		if (displayTrashDept) {
+			map.put("displayTrashDept", true);
+		}
 		
 		// 지정된 부서의 자식 부서 목록을 가져온다.
 		List<OrganDeptVO> list = ezOrganDAO.getDeptSubTreeInfo(map);
@@ -348,7 +365,6 @@ public class EzOrganServiceImpl implements EzOrganService {
 		logger.debug("deptID=" + deptID + ",lang=" + lang + ",tenantID=" + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		Map<String, Object> map1 = new HashMap<String, Object>();
 		
 		map.put("v_CLASS", pClass);
 		map.put("v_CN", deptID);
@@ -368,7 +384,14 @@ public class EzOrganServiceImpl implements EzOrganService {
 	    logger.debug("getDeptMemberList started");
 	    logger.debug("pDeptID=" + pDeptID + ",pCellList=" + pCellList + ",pPropList=" + pPropList
 	            + ",pClass=" + pClass + ",pLangCode=" + pLangCode + ",tenantID=" + tenantID);
-	    
+		
+	    // 2019-01-09 황윤호
+		// 조직도 관리에서 부서장 column을 id -> name으로 바꿔주기 위해 사용
+		String deptMaster = "";
+		if(pClass != null && pClass.equals("groupDeptMaster")) {
+			pClass = "group";
+			deptMaster = "group";
+		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map1 = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
@@ -406,9 +429,10 @@ public class EzOrganServiceImpl implements EzOrganService {
             	map1.put("v_CN", obj.getCn());
         		map1.put("v_LANGDATA", pLangCode);
         		map1.put("v_TENANT_ID", tenantID);
+        		map1.put("deptMaster", deptMaster);
         		                
         		// 자식 부서의 상세 정보를 가져온다.
-        		Object deptVO = ezOrganDAO.getTBLDeptMaster(map1);                
+        		Object deptVO = ezOrganDAO.getTBLDeptMaster(map1);
                 sb.append(commonUtil.getQueryResult(deptVO));
             }
             
@@ -436,10 +460,10 @@ public class EzOrganServiceImpl implements EzOrganService {
 	
 	@Override
 	public String getDeptMemberListPagination(String pDeptID, String pCellList, String pPropList, String pClass, String pLangCode, String pPage, int tenantID) throws Exception {
-        logger.debug("getDeptMemberListPagination started");
-        logger.debug("pDeptID=" + pDeptID + ",pCellList=" + pCellList + ",pPropList=" + pPropList
-                + ",pClass=" + pClass + ",pLangCode=" + pLangCode + ",pPage=" + pPage + ",tenantID=" + tenantID);
-	    		
+		logger.debug("getDeptMemberListPagination started");
+		logger.debug("pDeptID=" + pDeptID + ",pCellList=" + pCellList + ",pPropList=" + pPropList
+				+ ",pClass=" + pClass + ",pLangCode=" + pLangCode + ",pPage=" + pPage + ",tenantID=" + tenantID);
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map1 = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
@@ -483,7 +507,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         		map1.put("v_TENANT_ID", tenantID);
         		                
         		// 자식 부서의 상세 정보를 가져온다.
-        		Object userVO = ezOrganDAO.getTBLDeptMaster(map1);                
+        		Object userVO = ezOrganDAO.getTBLDeptMaster(map1);
                 sb.append(commonUtil.getQueryResult(userVO));
             }
             
@@ -591,6 +615,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         pPropList = convertAddandConvert(pCategory, pPropList);
 
         for (int i = 0; i < celllist.length; i++) {
+        	boolean isAbsence = false;
         	cellvalue = "";
 
             if (!pMemberID.equals("") && pCategory.equals("user") && (doc.getElementsByTagName("DEPARTMENT") != null && !pMemberID.equals(doc.getElementsByTagName("DEPARTMENT").item(0).getTextContent()))) {
@@ -634,8 +659,41 @@ public class EzOrganServiceImpl implements EzOrganService {
                     cellvalue = "";
                 }
             }
-
-            nodeInfo.append("<CELL><VALUE>" + commonUtil.cleanValue(cellvalue) + "</VALUE>");
+            // 부재자 YN 날짜계산
+            if(celllist[i].toUpperCase().equals("EXTENSIONATTRIBUTE5") && !cellvalue.equals("")) {
+            	String cellValSplit[] = cellvalue.split("[:]");
+            	
+            	if(cellValSplit.length > 5) {
+            		String absenceFromDateStr = cellValSplit[3]+":"+cellValSplit[4];
+            		String absenceToDateStr = cellValSplit[5]+":"+cellValSplit[6];
+                	
+            		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                	try {
+    					Date curDate = dateFormat.parse(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm"), "235|+09:00", false));
+    					Date absenceFromDate  = dateFormat.parse(absenceFromDateStr);
+    					Date absenceToDate  = dateFormat.parse(absenceToDateStr);
+    					
+    					if(absenceFromDate.before(curDate) && absenceToDate.after(curDate)) {
+    						isAbsence = true;
+    					}
+    				} catch (ParseException e) {
+    					// TODO Auto-generated catch block
+    					logger.error("dateFormat.parse(dateFormat.format(new Date())) error :: " + e);
+    					e.printStackTrace();
+    				} catch (Exception ee) {
+    				    ee.printStackTrace();
+    				}
+            	}
+            	
+            	if(isAbsence) {
+            		cellvalue = "Y";
+            	} else {
+            		cellvalue = "";
+            	}
+            	nodeInfo.append("<CELL><VALUE>" + commonUtil.cleanValue(cellvalue) + "</VALUE>");
+            } else {
+            	nodeInfo.append("<CELL><VALUE>" + commonUtil.cleanValue(cellvalue) + "</VALUE>");
+            }
 
             if (i == 0) {
                 String strNode = "";
@@ -661,7 +719,11 @@ public class EzOrganServiceImpl implements EzOrganService {
                     }
                 }
             }
-            
+            if(celllist[i].toUpperCase().equals("EXTENSIONATTRIBUTE5")) {
+            	if(isAbsence) {
+            		nodeInfo.append("<ABSENCE>" + doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent() + "</ABSENCE>");
+            	}
+            }
             nodeInfo.append("</CELL>");
         }
         
@@ -700,6 +762,11 @@ public class EzOrganServiceImpl implements EzOrganService {
             
             logger.debug("searchList.length=" + searchList.length);
             
+            String escapeString = " ";
+            if (globals.getProperty("Globals.DbType").equals("oracle")) {
+            	escapeString = " escape '\\' ";
+            }
+            
             for (i = 0; i < searchList.length; i++) {      	
                 searchInfo = searchList[i].split("@@");
                 searchParam[i] = searchInfo[1].replace("'", "\\'");
@@ -711,31 +778,33 @@ public class EzOrganServiceImpl implements EzOrganService {
                             strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " = '" + searchParam[i] + "' OR " + searchInfo[0].toLowerCase() + "2 = '" + searchParam[i] + "')";
                             searchParam[0] = searchParam[0].substring(0, searchParam[0].length() - 1);
                         } else {
-                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%' OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%')";
+                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString 
+                            		+ " OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString + ")";
                         }
                     } else {
                         if (searchInfo[0].indexOf("EXACT_") == 0) {
                             strSQL = strSQL + " WHERE " + searchInfo[0].substring(6).toLowerCase() + "='" + searchParam[i] + "' ";
                         } else if (searchInfo[0].indexOf("LEFT_") == 0) {
-                            strSQL = strSQL + " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + "%' ";
+                            strSQL = strSQL + " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + "%'" + escapeString;
                         } else if (searchInfo[0].indexOf("RIGHT_") == 0) {
-                            strSQL = strSQL + " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '%" + escapedSearchParam + "%'";
+                            strSQL = strSQL + " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString;
                     	} else {
-                            strSQL = strSQL + " WHERE " + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'";
+                            strSQL = strSQL + " WHERE " + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString;
                     	}
                     }
                 } else {
                     if (checkSearchField(searchInfo[0])) {
-                        strSQL = strSQL + " AND (" + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%' OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%')";
+                        strSQL = strSQL + " AND (" + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString 
+                        		+ " OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString + ")";
                     } else {
                         if (searchInfo[0].indexOf("EXACT_") == 0) {
                             strSQL = strSQL + " AND " + searchInfo[0].substring(6).toLowerCase() + "='" + searchParam[i] + "' ";
                         } else if (searchInfo[0].indexOf("LEFT_") == 0) {
-                            strSQL = strSQL + " AND " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + " %' ";
+                            strSQL = strSQL + " AND " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + " %'" + escapeString;
                         } else if (searchInfo[0].indexOf("RIGHT_") == 0) {
-                            strSQL = strSQL + " AND " + searchInfo[0].substring(5).toLowerCase() + " LIKE '%" + escapedSearchParam + "%'";
+                            strSQL = strSQL + " AND " + searchInfo[0].substring(5).toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString;
                         } else {
-                            strSQL = strSQL + " AND " + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'";
+                            strSQL = strSQL + " AND " + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString;
                         }
                     }
                 }
@@ -831,46 +900,50 @@ public class EzOrganServiceImpl implements EzOrganService {
             pSearchList = pSearchList.replace("::", "@@");
             searchList = pSearchList.split("##");
             searchParam = new String[searchList.length];
-            
+            String escapeString = " ";
+            if (globals.getProperty("Globals.DbType").equals("oracle")) {
+            	escapeString = " escape '\\' ";
+            } 
             logger.debug("searchList.length=" + searchList.length);
             
             for (i = 0; i < searchList.length; i++) {      	
                 searchInfo = searchList[i].split("@@");
                 searchParam[i] = searchInfo[1].replace("'", "\\'");
                 String escapedSearchParam = searchParam[i].replace("%", "\\%").replace("_", "\\_");
-
                 if (i == 0) {
                     if (checkSearchField(searchInfo[0])) {
                         if (searchInfo[0].toUpperCase().equals("DISPLAYNAME") && searchParam[0].toString().equals("/")) {
-                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " = '" + searchParam[i] + "' OR " + searchInfo[0].toLowerCase() + "2 = '" + searchParam[i] + "'";
+                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " = '" + searchParam[i] 
+                            		+ "' OR " + searchInfo[0].toLowerCase() + "2 = '" + searchParam[i] + "'";
                             searchParam[0] = searchParam[0].substring(0, searchParam[0].length() - 1);
                         } else {
-                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " LIKE  '%" + escapedSearchParam + "%' OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'";
+                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " LIKE  '%" + escapedSearchParam + "%'" + escapeString 
+                            		+ " OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString;
                         }
                     } else {
                         if (searchInfo[0].indexOf("EXACT_") == 0) {
                             strSQL = strSQL + " WHERE " + searchInfo[0].substring(6).toLowerCase() + "='" + searchParam[i] + "' ";
                         } else if (searchInfo[0].indexOf("LEFT_") == 0) {
-                            strSQL = strSQL + " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + "%' ";
+                            strSQL = strSQL + " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + "%'" + escapeString;
                         } else if (searchInfo[0].indexOf("RIGHT_") == 0) {
-                            strSQL = strSQL + " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '%" + escapedSearchParam + "%'";
+                            strSQL = strSQL + " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString;
                     	} else {
-                            strSQL = strSQL + " WHERE " + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'";
+                            strSQL = strSQL + " WHERE " + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString;
                     	}
                     }
                 } else {
                     // 20180628 - 기존 AND 조건이 아닌, OR 조건으로 검색
                     if (checkSearchField(searchInfo[0])) {
-                        strSQL = strSQL + " OR " + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%' OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'";
+                        strSQL = strSQL + " OR " + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString + "OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString ;
                     } else {
                         if (searchInfo[0].indexOf("EXACT_") == 0) {
                             strSQL = strSQL + " OR " + searchInfo[0].substring(6).toLowerCase() + "='" + searchParam[i] + "'";
                         } else if (searchInfo[0].indexOf("LEFT_") == 0) {
-                            strSQL = strSQL + " OR " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + " %'";
+                            strSQL = strSQL + " OR " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + "%'" + escapeString ;
                         } else if (searchInfo[0].indexOf("RIGHT_") == 0) {
-                            strSQL = strSQL + " OR " + searchInfo[0].substring(5).toLowerCase() + " LIKE '%" + escapedSearchParam + "%'";
+                            strSQL = strSQL + " OR " + searchInfo[0].substring(5).toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString ;
                         } else {
-                            strSQL = strSQL + " OR " + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'";
+                            strSQL = strSQL + " OR " + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString ;
                         }
                     }
                 }
@@ -966,6 +1039,11 @@ public class EzOrganServiceImpl implements EzOrganService {
 
         		searchParm = new String[searchList.length];
 
+        		String escapeString = " ";
+	            if (globals.getProperty("Globals.DbType").equals("oracle")) {
+	            	escapeString = " escape '\\' ";
+	            } 
+	            
         		logger.debug("searchList.length=" + searchList.length);
 
         		for (i = 0; i < searchList.length; i++) {
@@ -979,29 +1057,29 @@ public class EzOrganServiceImpl implements EzOrganService {
         						strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + "=UPPER('" + searchParm[i] + "') OR " + searchInfo[0].toLowerCase() + "2 = UPPER('" + searchParm[i] + "'))";
         						searchParm[0] = searchParm[0].substring(0, searchParm[0].length() - 1);
         					} else {
-        						strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%' OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%')";
+        						strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString + " OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString + ")";
         					}
         				} else {
         					if (searchInfo[0].indexOf("EXACT_") == 0) {
         						strSQL = strSQL + " WHERE " + searchInfo[0].substring(6).toLowerCase() + "=UPPER('" + searchParm[i] + "') ";
         					} else if (searchInfo[0].indexOf("LEFT_") == 0) {
-        						strSQL = strSQL + " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + "%' ";
+        						strSQL = strSQL + " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + "%'" + escapeString;
         					} else if (searchInfo[0].indexOf("RIGHT_") == 0) {
-        						strSQL = strSQL + " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '%" + escapedSearchParam + "%'";
+        						strSQL = strSQL + " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString;
         					} else {
-        						strSQL = strSQL + " WHERE " + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'";
+        						strSQL = strSQL + " WHERE " + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString;
         					}
         				}
         			} else {
         				if (checkSearchField(searchInfo[0])) {
-        					strSQL = strSQL + " AND (" + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%' OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%')";
+        					strSQL = strSQL + " AND (" + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString + "OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString +")";
         				} else {
         					if (searchInfo[0].indexOf("EXACT_") == 0) {
         						strSQL = strSQL + " AND " + searchInfo[0].substring(6).toLowerCase() + "=UPPER('" + searchParm[i] + "') ";
         					} else if (searchInfo[0].indexOf("LEFT_") == 0) {
-        						strSQL = strSQL + " AND " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + "%' ";
+        						strSQL = strSQL + " AND " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + "%'" + escapeString;
         					} else if (searchInfo[0].indexOf("RIGHT_") == 0) {
-        						strSQL = strSQL + " AND " + searchInfo[0].substring(5).toLowerCase() + " LIKE '%" + escapedSearchParam + "%'";
+        						strSQL = strSQL + " AND " + searchInfo[0].substring(5).toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString;
         					} else {
         						strSQL = strSQL + " AND " + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'";
         					}
@@ -1055,6 +1133,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         	map.put("strSQLCom", strSQLCom);  
         	map.put("strSQLAddjobCom", strSQLAddjobCom);
         	map.put("adminOrgan", adminOrgan);
+        	map.put("v_LANGDATA", pLangCode);
 
         	logger.debug("strSQL=" + strSQL);
         	logger.debug("strSQLCom=" + strSQLCom);
@@ -1193,6 +1272,9 @@ public class EzOrganServiceImpl implements EzOrganService {
                     bRet = true;
                     break;
                 case "TITLE":
+                    bRet = true;
+                    break;
+                case "EXTENSIONATTRIBUTE10":
                     bRet = true;
                     break;
             }
@@ -1677,7 +1759,6 @@ public class EzOrganServiceImpl implements EzOrganService {
 		return sb.toString();
 	}
 
-	//TODO eMail 값으로 ID 를 찾는 함수
 	@Override
 	public String getCNByEmail(String email, int tenantID) throws Exception {
 			String result = ezOrganDAO.getCNByEmail(email, tenantID);
@@ -2027,6 +2108,11 @@ public class EzOrganServiceImpl implements EzOrganService {
             
             logger.debug("searchList.length=" + searchList.length);
             
+            String escapeString = " ";
+            if (globals.getProperty("Globals.DbType").equals("oracle")) {
+            	escapeString = " escape '\\' ";
+            }
+            
             for (i = 0; i < searchList.length; i++) {      	
                 searchInfo = searchList[i].split("@@");
                 searchParam[i] = searchInfo[1].replace("'", "\\'");
@@ -2038,31 +2124,31 @@ public class EzOrganServiceImpl implements EzOrganService {
                             strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " = '" + searchParam[i] + "' OR " + searchInfo[0].toLowerCase() + "2 = '" + searchParam[i]+ "')";// + " AND PHYSICALDELIVERYOFFICENAME = '" + companyId + "'";
                             searchParam[0] = searchParam[0].substring(0, searchParam[0].length() - 1);
                         } else {
-                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " LIKE  '%" + escapedSearchParam + "%' OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%')";// + " AND PHYSICALDELIVERYOFFICENAME = '" + companyId + "'";
+                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " LIKE  '%" + escapedSearchParam + "%'" + escapeString + "OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString + " )";// + " AND PHYSICALDELIVERYOFFICENAME = '" + companyId + "'";
                         }
                     } else {
                         if (searchInfo[0].indexOf("EXACT_") == 0) {
                             strSQL = strSQL + " WHERE " + searchInfo[0].substring(6).toLowerCase() + "='" + searchParam[i] + "' ";
                         } else if (searchInfo[0].indexOf("LEFT_") == 0) {
-                            strSQL = strSQL + " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + "%' ";
+                            strSQL = strSQL + " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + "%'" + escapeString;
                         } else if (searchInfo[0].indexOf("RIGHT_") == 0) {
-                            strSQL = strSQL + " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '%" + escapedSearchParam + "%'";
+                            strSQL = strSQL + " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString;
                     	} else {
-                            strSQL = strSQL + " WHERE " + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'"; // 아이디 검색
+                            strSQL = strSQL + " WHERE " + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString; // 아이디 검색
                     	}
                     }
                 } else {
                     if (checkSearchField(searchInfo[0])) {
-                        strSQL = strSQL + " AND (" + searchInfo[0].toLowerCase() + " LIKE  '%" + escapedSearchParam + "%' OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%')";
+                        strSQL = strSQL + " AND (" + searchInfo[0].toLowerCase() + " LIKE  '%" + escapedSearchParam + "%'" + escapeString + "OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString + ")";
                     } else {
                         if (searchInfo[0].indexOf("EXACT_") == 0) {
                             strSQL = strSQL + " AND " + searchInfo[0].substring(6).toLowerCase() + "='" + searchParam[i] + "' ";
                         } else if (searchInfo[0].indexOf("LEFT_") == 0) {
-                            strSQL = strSQL + " AND " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + " %' ";
+                            strSQL = strSQL + " AND " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + " %'" + escapeString;
                         } else if (searchInfo[0].indexOf("RIGHT_") == 0) {
-                            strSQL = strSQL + " AND " + searchInfo[0].substring(5).toLowerCase() + " LIKE '%" + escapedSearchParam + "%'";
+                            strSQL = strSQL + " AND " + searchInfo[0].substring(5).toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString;
                         } else {
-                            strSQL = strSQL + " AND " + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'";
+                            strSQL = strSQL + " AND " + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString;
                         }
                     }
                 }
@@ -2212,6 +2298,20 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("v_TENANT_ID",  tenantId);
 		return ezOrganDAO.getUserInfo(map);
 	}
+	
+	/* 2020-10-22 홍승비 - 전달한 필드(칼럼)에 대응하는 값을 TBL_DEPTMASTER 테이블에서 가져오는 메서드 */
+	@Override
+	public String getPropertyValueForDept(String fieldName, String deptID, int tenantID) throws Exception {
+		logger.debug("getPropertyValueForDept started.");
+		
+	    Map<String, Object> map = new HashMap<String, Object>();
+	    map.put("v_FIELD", fieldName);
+		map.put("v_CN", deptID);
+		map.put("v_TENANT_ID", tenantID);
+		
+		//logger.debug("getPropertyValueForDept v_FIELD : " + fieldName + " || deptID : " + deptID);
+        logger.debug("getPropertyValueForDept ended.");
+        
+        return ezOrganDAO.getPropertyValue_S5(map);
+	}
 }
-
-

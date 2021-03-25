@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -17,7 +18,7 @@
 		    var OrderCell = "";
 		    var pUserID;
 		    var BaseURL;
-		    var pDeptID = "${userInfo.deptID}";
+		    var pDeptID = "<c:out value ='${userInfo.deptID}'/>";
 		    var RetValue;
 		    var ReturnFunction;
 		    window.onload = function () {
@@ -40,7 +41,7 @@
 		            btn_Save.style.display = "none";
 		        }
 		        GetImageXml(pUserID, pDeptID);
-		        if ("${userInfoApprovalG}" == "BOTH")
+		        if ("<c:out value ='${userInfoApprovalG}'/>" == "BOTH")
 		            BaseURL = "/fileroot/${userInfo.tenantId}/files/upload_approval/signImgs/" + "${userInfo.id}/";
 		        else
 		            BaseURL = "/fileroot/${userInfo.tenantId}/files/upload_approvalG/signImgs/" + "${userInfo.id}/";

@@ -6,7 +6,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 	    <title><spring:message code='ezBoard.t10044'/></title>
-	    <link rel="stylesheet" href="${util.addVer('/css/email_tree.css')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -14,22 +14,24 @@
 	    <script type="text/javascript" src="${util.addVer('/js/TreeView.js')}"></script>
 	    <script type="text/javascript">
 	        var treeView = new TreeView();
-	        var pType = "${type}";
-	        var pBoardID = "${boardID}";
+	        var pType = "<c:out value='${type}'/>";
+	        var pBoardID = "<c:out value='${boardID}'/>";
 	        var isChanged = "";
 	
 	        /* 2018-11-28 홍승비 - 마이게시판 관리 시 변화가 없다면 좌측 마이게시판 확장하지 않음 */
-			window.onunload = function () {
+			window.onbeforeunload = function () {
 				if (isChanged == "Y") {
-	            	try {window.opener.parent.frames["left"].ShowMyBoardItem();} catch (e) {}
-				} else {}
+	            	try {
+	            		window.opener.configmyboard_dialogArguments[0] = "Y";
+	            	} catch (e) {}
+				}
 	        };
 	
 	        window.onload = function () {
 	            SetTreeConfig();
 	            makeTreeList();
 	        };
-	        
+	            
 	        /* 2019-01-31 홍승비 - 세로방향 리사이즈 시 내부 테이블 높이도 리사이즈 */
 	        window.onresize = function () {    	
 	        	document.getElementById("TreeCtrl_MyBoardTree").style.height = (document.documentElement.clientHeight - 141) + "px";
@@ -45,7 +47,7 @@
 	        }
 	        function GetMyBoardItem(pRootTreeID) {
 	            var xmlhttp4 = createXMLHttpRequest();
-	            xmlhttp4.open("POST", "/ezBoard/getMyBoardsConfig.do?rootTreeID=" + pRootTreeID, false);
+	            xmlhttp4.open("POST", "/ezBoard/getMyBoardsConfig.do?rootTreeID=" + encodeURIComponent(pRootTreeID), false);
 	            xmlhttp4.send();
 	            var ret = xmlhttp4.responseXML;
 	            xmlhttp4 = null;
@@ -381,12 +383,12 @@
 	            if (CrossYN()) {
 	                myboard_movecopy_dialogArguments[0] = "";
 	                myboard_movecopy_dialogArguments[1] = move_onclick_Complete;
-	                DivPopUpShow(320, 375, "/ezBoard/myBoardmovecopy.do?selID=" + SelectedBoardID + "&nodeID=" + selectedNodeID + "&selectedBoardtype=" + selectedBoardtype);
+	                DivPopUpShow(320, 375, "/ezBoard/myBoardmovecopy.do?selID=" + encodeURIComponent(SelectedBoardID) + "&nodeID=" + encodeURIComponent(selectedNodeID) + "&selectedBoardtype=" + encodeURIComponent(selectedBoardtype));
 	            }
 	            else {
 	                var feature = "dialogWidth:320px; dialogHeight:375px; status:no; help:no; scroll:no; edge:sunken";
 	                feature = feature + GetShowModalPosition(320, 375);
-	                var moveUrl = window.showModalDialog("/ezBoard/myBoardmovecopy.do?selID=" + SelectedBoardID, null, feature);
+	                var moveUrl = window.showModalDialog("/ezBoard/myBoardmovecopy.do?selID=" + encodeURIComponent(SelectedBoardID), null, feature);
 	                if (moveUrl == undefined)
 	                    return;
 	

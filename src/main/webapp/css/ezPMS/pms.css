@@ -1,0 +1,141 @@
+@CHARSET "UTF-8";
+/* 프로젝트 관리 New Style */
+
+/* point_red */
+.point_red { color: #e40404; }
+
+/* point_red */
+.point_blue { color: #0470e4; }
+
+/* layout */
+.contentlayout {margin:0px; padding:0px; list-style:none; overflow:hidden;}
+.contentlayout .contentlayout_left {float:left;}
+.contentlayout .contentlayout_right {float:right;}
+.contentlayout .contentlayout_none {float:none; overflow:hidden;}
+
+/* 상태표시 */
+.situation_progress { display: inline-block; line-height: 18px; padding: 0px 6px; margin-right: 5px; background: #438ddd; border-radius: 3px; color: #fff; }/* 진행 */
+.situation_standby { display: inline-block; line-height: 18px; padding: 0px 6px; margin-right: 5px; background: #a5a5a5; border-radius: 3px; color: #fff; }/* 대기 */
+.situation_complete { display: inline-block; line-height: 18px; padding: 0px 6px; margin-right: 5px; background: #63c449; border-radius: 3px; color: #fff; }/* 완료 */
+.situation_delay { display: inline-block; line-height: 18px; padding: 0px 6px; margin-right: 5px; background: #dd7238; border-radius: 3px; color: #fff; }/* 지연 */
+.situation_hold { display: inline-block; line-height: 18px; padding: 0px 6px; margin-right: 5px; background: #57c7b6; border-radius: 3px; color: #fff; }/* 보류 */
+.situation_delet { display: inline-block; line-height: 18px; padding: 0px 6px; margin-right: 5px; background: #dd3b3b; border-radius: 3px; color: #fff; }/* 삭제 */
+.situation_registration { display: inline-block; line-height: 18px; padding: 0px 6px; margin-right: 5px; background: #9860b0; border-radius: 3px; color: #fff; }/* 등록 */
+.situation_modify { display: inline-block; line-height: 18px; padding: 0px 6px; margin-right: 5px; background: #c65091; border-radius: 3px; color: #fff; }/* 수정 */
+
+/* 프로젝트 목록 */
+.project_mainlist {}
+.project_mainlistUL {margin:0px; padding:0px; list-style:none;}
+.project_mainlistUL > li {float:left; margin:0px 20px 20px 0px;}
+.project_mainlistUL > li .project_list { width: 360px; height: 218px; }
+.project_mainlistUL > li .project_list > table { width: 100%; border-spacing: 0px; border-collapse: collapse; margin: 0px; padding: 0px; table-layout: fixed; }
+.project_mainlistUL > li .project_list > table th { height: 36px; padding: 0px; text-align: center; font-weight: normal; }
+.project_mainlistUL > li .project_list > table th input[type="checkbox"] { width: 13px; height: 13px; margin: 0px; padding: 0px; vertical-align: middle; overflow: hidden; }
+.project_mainlistUL > li .project_list > table th img { margin-top: 3px; cursor: pointer; }
+.project_mainlistUL > li .project_list > table th > span { display: block; line-height: 18px; padding: 0px 10px; color: #000; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+
+.project_mainlistUL > li .project_list .listBox { height: 180px; padding: 15px 20px; border: 1px solid #e8e8e8; border-top: 0px none; box-sizing: border-box; }
+.project_mainlistUL > li .project_list .listBox .project_Dday { width: 178px; height: 41px; line-height: 41px; margin: 0px; text-align: center; color: #000; font-weight:bold; font-family: "맑은 고딕", Malgun Gothic, "굴림",Gulim, sans-seri; font-size: 30px; }
+.project_mainlistUL > li .project_list .listBox .project_Dday span { font-family: "맑은 고딕", Malgun Gothic, "굴림",Gulim, sans-seri; font-size: 30px; }
+.project_mainlistUL > li .project_list .listBox .date p { margin: 0px 0px 5px 0px; padding: 0px; color: #444; font-size: 12px; }
+.project_mainlistUL > li .project_list .listBox .date p .startBox { display: inline-block; width: 43px; height: 18px; line-height: 18px; margin-right: 7px; background: #fff; border: 1px solid #000; border-radius: 3px; text-align: center; font-size: 11px; letter-spacing: -1px; color: #000; box-sizing: border-box; }
+.project_mainlistUL > li .project_list .listBox .date p .endBox { display: inline-block; width: 43px; height: 18px; line-height: 18px; margin-right: 7px; background: #fff; border: 1px solid #a7a7a7; border-radius: 3px; text-align: center; font-size: 11px; letter-spacing: -1px; color: #727272; box-sizing: border-box; }
+.project_mainlistUL > li .project_list .listBox .listBox_graph {clear:both; margin:10px 0px 0px 0px; padding:0px; overflow:hidden;}
+.project_mainlistUL > li .project_list .listBox .listBox_graph dt{clear:both; float:left; width:90px; height:25px; line-height:25px; margin:0px; padding:0px; color:#444;}
+.project_mainlistUL > li .project_list .listBox .listBox_graph dd { float: none; height: 25px; line-height: 25px; margin: 0px; padding: 0px; color:#444; overflow: hidden; }
+
+/* statr,end style 공통 */
+.date p { margin: 0px 0px 5px 0px; padding: 0px; color: #444; font-size: 12px; letter-spacing:-1px;}
+.date p .startBox { display: inline-block; width: 43px; height: 18px; line-height: 18px; margin-right: 7px; background: #fff; border: 1px solid #000; border-radius: 3px; text-align: center; font-size: 11px; letter-spacing: -1px; color: #000; box-sizing: border-box; }
+.date p .endBox { display: inline-block; width: 43px; height: 18px; line-height: 18px; margin-right: 7px; background: #fff; border: 1px solid #a7a7a7; border-radius: 3px; text-align: center; font-size: 11px; letter-spacing: -1px; color: #727272; box-sizing: border-box; }
+
+/* btnStyle_center */
+.btnStyle_center {clear:both; text-align:center;}
+
+
+/* 프로젝트 개요 */
+.project_overview {}
+/* 개요 우측 */
+.project_overview_right { width: 272px; border: 1px solid #e8e8e8; box-sizing: border-box; overflow:auto;}
+.project_overview_right .overview_graphinfoBox {height:220px; background:#e8e8e8;}
+.project_overview_right .overview_btnBox {height:38px; margin: 0px; padding:13px 10px 0px 10px; list-style: none; box-sizing:border-box; overflow: hidden;}
+.project_overview_right .overview_btnBox li { float: right; height:16px; margin:4px 0px 5px 10px; cursor:pointer;}
+.project_overview_right .overview_btnBox li img {vertical-align:top;}
+.project_overview_right .overview_graphinfo {clear:both; padding: 0px 10px; }
+.project_overview_right .overview_graphinfo .overview_graph_canvas {position:relative; width:130px; height:130px; margin-right:5px;}
+.project_overview_right .overview_graphinfo .overview_graph_canvas > strong { position: absolute; left: 0px; top: 37px; display: block; width: 130px; text-align: center; font-family: "맑은 고딕", Malgun Gothic, "굴림",Gulim, sans-seri; font-size: 26px; font-weight: bold; vertical-align: top; }
+.project_overview_right .overview_graphinfo .overview_graph_canvas > strong div { font-family: "맑은 고딕", Malgun Gothic, "굴림",Gulim, sans-seri; font-size: 26px; font-weight: bold; }
+.project_overview_right .overview_graphinfo .project_Dday {height: 41px; line-height: 41px; margin:10px 0px 15px 0px; text-align: center; color: #000; font-weight: bold; font-family: "맑은 고딕", Malgun Gothic, "굴림",Gulim, sans-seri; font-size: 30px; }
+.project_overview_right .overview_graphinfo .project_Dday {height: 41px; line-height: 41px; margin:10px 0px 15px 0px; text-align: center; color: #000; font-weight: bold; font-family: "맑은 고딕", Malgun Gothic, "굴림",Gulim, sans-seri; font-size: 30px; }
+.project_overview_right .overview_graphinfo .project_Dday span { font-family: "맑은 고딕", Malgun Gothic, "굴림",Gulim, sans-seri; font-size: 30px; }
+.project_overview_right .overview_graphinfoBox .btnStyle_center { margin-top: 15px; }
+.project_overview_right .overview_textbox { line-height: 18px; padding: 10px 15px; border-bottom: 1px solid #e8e8e8; overflow:hidden; }
+.project_overview_right .overview_infomationBox {clear:both; margin:0px; padding:20px 20px 10px 20px; list-style:none; overflow:hidden;}
+.project_overview_right .overview_infomationBox li {float:left; width:50%; height:30px; line-height:30px; margin-bottom:10px; box-sizing:border-box; cursor:pointer; overflow:hidden;}
+.project_overview_right .overview_infomationBox li:hover:nth-child(1) { color: #0470e4; }
+.project_overview_right .overview_infomationBox li:hover:nth-child(2) { color: #0470e4; }
+.project_overview_right .overview_infomationBox li:hover:nth-child(3) { color: #0470e4; }
+.project_overview_right .overview_infomationBox li:hover:nth-child(4) { color: #0470e4; }
+.project_overview_right .overview_infomationBox li img { width: 30px; height: 30px; margin-right:8px; border-radius:30px; border: 2px solid #e5e5e5; vertical-align:top; box-sizing:border-box;}
+.portlet_opinion {clear:both; overflow:hidden;}
+.project_portlet_title { height: 38px; margin: 0px; padding: 0px; background: #f5f6f6; border-top: 1px solid #e8e8e8; border-bottom: 1px solid #e8e8e8; box-sizing: border-box; }
+.project_portlet_title dd {float:right; width: 36px; height: 36px; margin: 0px; padding: 0px; background: url(../../images/ezPMS/icon_project_more.png) no-repeat 12px 12px; text-indent:-5000px; overflow:hidden; cursor:pointer;}
+.project_portlet_title dt {float:none; line-height: 38px; margin: 0px 0px 0px 10px; padding: 0px; font-size: 14px; font-weight:bold; color: #444; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+.project_portlet_list {clear:both; margin: 0px; padding: 7px 10px; list-style:none; overflow:hidden;}
+.project_portlet_list li { height: 24px; background: url(../../images/ezPMS/dot_project.png) no-repeat 6px 11px; cursor:pointer;}
+.project_portlet_list li .name{float:right; display:block; width:58px; height:24px; line-height:24px; margin-left:10px; overflow:hidden;}
+.project_portlet_list li .text {clear:none; float: none; display: block; height: 24px; line-height: 24px; padding-left:20px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+.project_portlet_workhistory { clear: both; margin-top:5px; overflow: hidden; }
+.project_portlet_workhistory .project_portlet_list li {background:none;}
+.project_portlet_workhistory .project_portlet_list li .text { padding-left: 0px; }
+.project_portlet_workhistory .project_portlet_list li .situation_registration,
+.project_portlet_workhistory .project_portlet_list li .situation_modify,
+.project_portlet_workhistory .project_portlet_list li .situation_delet { float: left; margin-right: 6px; margin-top:3px;}
+
+/* 20180629 */
+.projectAreaStyle {}
+.projectAreaStyle .project_subh1 { padding: 0px 10px; box-sizing: border-box; }
+.projectAreaStyle #mainmenu {padding:0px 10px; box-sizing:border-box;}
+
+/* 개요 좌측 list */
+.project_overview_section { clear: both; margin: 0px; padding: 0px; list-style:none; overflow: hidden; }
+.project_overview_section > li {float:left; width:25%; padding-right:10px; box-sizing:border-box;}
+.overview_section_list { clear: both; padding:0px 10px; border: 1px solid #e8e8ef; background: #fcfcfc; box-sizing: border-box; overflow: auto; }
+.overview_section_listDL {margin:12px 0px 13px 0px; padding:0px; overflow:hidden;}
+.overview_section_listDL dd { float: right; display: block; width: 26px; height: 22px; margin:0px; padding-top:2px; border: 1px solid #d1d1d1; border-radius: 3px; text-align:center; box-sizing: border-box; cursor:pointer; overflow: hidden; }
+.overview_section_listDL dd:hover { border: 1px solid #a1a1a1; }
+.overview_section_listDL dt { float: none; line-height: 22px; display: block; margin: 0px; text-align: center; font-size: 14px; font-weight: bold; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+.overview_section_listDL dt span {display:inline-block;}
+
+/* 개요 더보기 style */
+.overview_section_list .moreBtn {padding:9px 0px; margin-bottom:10px; border:1px solid #d1d1d1; background:#fff; text-align:center; box-sizing:border-box; cursor:pointer;}
+.overview_section_list .moreBtn:hover {color:#000; border:1px solid #a1a1a1;}
+
+.overview_list {height:135px; padding:0px 10px; margin-bottom:10px; border: 1px solid #d1d1d1; background:#ffffff; box-sizing:border-box;}
+.overview_list:hover {border:1px solid #a1a1a1; cursor:pointer;}
+.overview_list_title { height: 18px; line-height: 18px; margin: 0px; padding: 10px 0px 8px 0px; border-bottom: 1px solid #e8e8e8; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+.progressArea_new {clear:both; margin-top:15px; margin-bottom:10px; overflow:hidden;}
+.progressArea_new > .progressbar {float:left; width:70% !important; margin-right:10px; margin-top:0px; margin-bottom:0px;}
+.progressArea_new > .percentCount {float:none; width:auto; line-height:15px; text-align:right; margin:0px; font-size:14px; color:#000;}
+.overview_list .date p {letter-spacing:0px;}
+.boardArea_new { clear: both; height:73px; line-height:18px; margin-top: 10px; margin-bottom: 10px; overflow: hidden; }
+.boardArea_new > p {margin:0px; padding:0px;}
+
+/* 검색 btn style */
+.newbtn_position {margin-top:15px; text-align:center;}
+.newbtn_position > .imgbtn {height:auto; border:0px; border-radius:0px; background:none; margin:0px; padding:0px; vertical-align:top;}
+.newbtn_position > .imgbtn span { height: 34px; line-height: 34px; border: 1px solid #707070; border-radius: 3px; background: #707070; margin: 0px 3px; padding: 0px 15px; font-size: 14px; font-weight: bold; color: #fff; }
+.newbtn_position > .imgbtn:hover span { border: 1px solid #0470e4; background: #0470e4; }
+
+/* 20180629 project_mainlist moreBtn */
+.project_mainlist .moreBtn { border: 1px solid #d1d1d1; background-color: #f5f6f6; text-align: center; clear: both; cursor: pointer; height: 33px; line-height: 30px; box-sizing:border-box;}
+
+
+/* 20180629 project_mainlist moreBtn */
+.project_mainlist .moreBtn { clear: both; height: 33px; line-height: 30px; margin-right:190px; border: 1px solid #d1d1d1; background-color: #f5f6f6; text-align: center; cursor: pointer; box-sizing: border-box; }
+
+
+/* tooltipbox */
+.tooltipBox {border:1px solid #4e4e46;}
+.tooltipBox .tooltipTitle { height: 33px; line-height: 33px; padding: 0px 10px; background: #f0f6ff; border: 1px solid #d1ddec; font-size:14px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+.tooltipBox .tooltipText {padding:10px; background:#fff; font-size:12px; line-height:22px;}

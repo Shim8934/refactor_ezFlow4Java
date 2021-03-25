@@ -60,6 +60,9 @@
 	            }
 	            
 	            setAutoCompleteOff(); //#15157 자동완성 방지 메소드 추가
+	            
+	          	//엔터키 눌렀을때도 검색 실행
+		        $("input[type=text]").attr("onkeyup", "enterkey(event)");
 	        });
 	
 	        function initdatepicker() {
@@ -68,7 +71,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true,
 		            beforeShow: function(input) {
 		    		    var i_offset= $(input).offset();
@@ -83,7 +86,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true,
 		            beforeShow: function(input) {
 		    		    var i_offset= $(input).offset();
@@ -139,7 +142,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 				
@@ -148,7 +151,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 
@@ -296,9 +299,10 @@
 		        if (document.getElementsByName("FormName")[0].id == "FormName") {
 		            document.getElementsByName("FormName")[0].id = "";
 		        }
-		        
-		        RtnVal[15] = document.getElementsByName("FormName")[0].id;
-		        RtnVal[16] = "";
+				// 2021-01-13 박기범 : 문서명(16) 조회 추가 및 문서아이디(15)검색 제거.
+				// RtnVal[15] = document.getElementsByName("FormName")[0].id;
+				RtnVal[15] = "";
+		        RtnVal[16] = document.getElementsByName("FormName")[0].value;
 		        RtnVal[17] = document.getElementById("drafterdept").value;
 		        RtnVal[18] = "";
 		        
@@ -437,9 +441,10 @@
 		        if (document.getElementsByName("FormName")[0].id == "FormName") {
 		            document.getElementsByName("FormName")[0].id = "";
 		        }
-		        
-		        RtnVal[21] = document.getElementsByName("FormName")[0].id;
-		        RtnVal[22] = "";
+		        // 2021-01-13 박기범 : 문서명(16) 조회 추가 및 문서아이디(15)검색 제거.
+				// RtnVal[15] = document.getElementsByName("FormName")[0].id;
+				RtnVal[15] = "";
+		        RtnVal[16] = document.getElementsByName("FormName")[0].value;
 		        RtnVal[23] = document.getElementById("drafterdept").value;
 		        RtnVal[24] = "";
 		        
@@ -525,9 +530,10 @@
 			    if (document.getElementsByName("FormName")[0].id == "FormName") {
 			        document.getElementsByName("FormName")[0].id = "";
 			    }
-			    
-			    RtnVal[21] = document.getElementsByName("FormName")[0].id;
-			    RtnVal[22] = "";
+			    // 2021-01-13 박기범 : 문서명(16) 조회 추가 및 문서아이디(15)검색 제거.
+				// RtnVal[15] = document.getElementsByName("FormName")[0].id;
+				RtnVal[15] = "";
+		        RtnVal[16] = document.getElementsByName("FormName")[0].value;
 			    RtnVal[23] = document.getElementById("drafterdept").value;
 			    RtnVal[24] = "";
 			    
@@ -624,9 +630,10 @@
 		        if (document.getElementsByName("FormName")[0].id == "FormName") {
 		            document.getElementsByName("FormName")[0].id = "";
 		        }
-		        
-		        RtnVal[21] = document.getElementsByName("FormName")[0].id;
-		        RtnVal[22] = "";
+		        // 2021-01-13 박기범 : 문서명(16) 조회 추가 및 문서아이디(15)검색 제거.
+				// RtnVal[15] = document.getElementsByName("FormName")[0].id;
+				RtnVal[15] = "";
+		        RtnVal[16] = document.getElementsByName("FormName")[0].value;
 		        RtnVal[23] = document.getElementById("drafterdept").value;
 		        RtnVal[24] = "";
 		        
@@ -714,6 +721,19 @@
 		    		inputAry[i].setAttribute("autocomplete", "off");
 		    	}
 		    }
+		  	
+		    function enterkey(e) {
+		        if (window.event) {
+		            if (window.event.keyCode == 13) {
+		            	btnSearch_onclick();
+		            }
+		        }
+		        else {
+		            if (e.which == 13) {
+		            	btnSearch_onclick();
+		            }
+		        }
+			}
 		</script>
 	</head>
 	<body class="popup">
@@ -735,7 +755,7 @@
 	        <tr>
 	            <th><spring:message code ='ezApprovalG.t442' /></th>
 	            <td>
-	                <input type="text" id="FormName" name="FormName" style="width: 200px;" disabled>
+	                <input type="text" id="FormName" name="FormName" style="width: 200px;">
 	                <a class="imgbtn imgbck"><span onclick="return btn_FormSelect_onclick()"><spring:message code ='ezApproval.t113' /></span></a>
 	            </td>
 	        </tr>
@@ -784,7 +804,7 @@
 	                <input readonly="readonly" id='E1datepicker' type="text" style="PADDING-BOTTOM: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px; PADDING-TOP: 2px; WIDTH: 80px;">
 	            </td>
 	        </tr>
-	        <tr id="KEYWORDTR" style="display: none">
+	        <tr id="KEYWORDTR" style="">
 	            <th><spring:message code ='ezApprovalG.t1200' /></th>
 	            <td>
 	                <input type="text" id="keyword" name="keyword" style="width: 100%" maxlength="50">

@@ -53,6 +53,8 @@
 	        var RetValue;
 	        var ReturnFunction;
 	        var deptClickFlag; // 2018-05-11 (문성업) 직원 맴버를 전원 클릭하는 것 같은 효과를 나타내는 마우스 효과 (수정)
+	        var deptID = "<c:out value='${deptID}'/>";
+	        var lang = "<c:out value='${userInfo.lang}'/>";
 	        
 	        document.onselectstart = function () { return false; };
 	        if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
@@ -136,7 +138,7 @@
 	            	var xmlHTTP = createXMLHttpRequest();
 	            	var objNode;
 	            	createNodeInsert(xmlpara, objNode, "DATA");
-	            	createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${deptID}");
+	            	createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptID);
 	            	createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
 	            	createNodeAndInsertText(xmlpara, objNode, "PROP", "");
 	            	xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
@@ -196,8 +198,12 @@
 	                pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strDeptName1 + "]]></DATA4>";
 	                pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptName2 + "]]></DATA5>";
 	                pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
-	                pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
-	                
+	                if(lang == "1") {
+	               	 	pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
+	                }
+	                else {
+	                	pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName2 + "]]></VALUE></CELL></ROW>";
+	                }
 	                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                var Resultxml = loadXMLString(pparsingXML2);
 	
@@ -338,7 +344,7 @@
 	            var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
 	            var nodeIdx = treeView.GetSelectNode();
-	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top; padding-right:3px; \" >"
+	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px; \" >"
 	            	+ "<span id='spn_deptName' title='" + ReplaceText(nodeIdx.GetNodeData("VALUE"), "&", "&amp;") + "'>" + ReplaceText(nodeIdx.GetNodeData("VALUE"), "&", "&amp;") + "</span>"
 	            	+ "<span id='countInfo'></span>";
 	            SelectDeptNM.setAttribute("countinfo", "")
@@ -400,9 +406,9 @@
 							var strIsLeaf = $("div#" + id + "").attr("isleaf");
 							
 							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
-								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang256 + "</span>/<spring:message code='ezAddress.t362' /> <span class='countColor'>" + result.totalCount2 + strLang256 + "</span>]";
+								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span> / <span class='countColor'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
 							} else {
-								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang256 + "</span>]";
+								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span>";
 							}
 							//2018-08-01 김보미 - 부서명 [사원수] 가 넘치는지 확인하는 함수
 							deptNameLong(result.containLow, strIsLeaf);
@@ -426,7 +432,7 @@
 		        } 
 		    }	    
 	        
-	        var m_strColorSelect = "#edf4fd";
+	        var m_strColorSelect = "#f1f8ff";
 	        var m_strColorOver = "#f4f5f5";
 	        var m_strColorDefault = "#ffffff";
 	        var p_ListOrderObject = null;
@@ -1133,14 +1139,14 @@
 					document.getElementById("Search_txtlist_table").style.display = "none";
 
 					if (pSeach) {
-						document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top;padding-right:3px;\" >"
-								+ strLang257
-								+ ""
-								+ "-[<span style='color:#017BEC;'>"
+						document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >"
+								+ "<span id='spn_deptName'>" + strLang257
+								+ "</span>"
+								+ "<span id='countInfo' style='color:#017BEC;'>&nbsp;&nbsp;<span class='countColor'>"
 								//2018-07-10 김보미 - 전체 결과 갯수로 변경
 	 							//+ SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length
 								+ getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0])
-								+ strLang256 + "</span>]";
+								+ "</span></span>";
 						SelectDeptNM.setAttribute("countinfo", "1");
 					}
 				} else {
@@ -1153,14 +1159,14 @@
 					} else {
 						document.getElementById("Search_txtlist_table").style.display = "";
 						document.getElementById("txtlist_table").style.display = "none";
-						document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top;padding-right:3px;\" >"
-								+ strLang257
-								+ ""
-								+ "-[<span style='color:#017BEC;'>"
+						document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >"
+							+ "<span id='spn_deptName'>" + strLang257
+								+ "</span>"
+								+ "<span id='countInfo' style='color:#017BEC;'>&nbsp;&nbsp;<span class='countColor'>"
 								//2018-07-10 김보미 - 전체 결과 갯수로 변경
 	 							//+ SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length
 								+ getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0])
-								+ strLang256 + "</span>]";
+								+ "</span></span>";					// 2018-12-12 김민성 - 조직도 검색 결과 UI 통일
 						SelectDeptNM.setAttribute("countinfo", "1")
 					}
 				}
@@ -1514,7 +1520,7 @@
 								cell : "company;description;displayName;title;telephoneNumber;"
 										+ document
 												.getElementById("search_type").value,
-								prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
+								prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department",
 								page : CurPage,
 								type : "user"
 							},
@@ -1787,7 +1793,7 @@
 				$
 						.ajax({
 							url : '/ezCircular/getcircularDeptList.do',
-							type : 'POST',
+							type : 'GET',
 							dataType : "json",
 							data : {},
 							success : function(result) {
@@ -1856,7 +1862,7 @@
 				_RowObjectID = obj.id;
 				_RowObjectName = $(obj).attr("name");
 
-				obj.style.backgroundColor = "#edf4fd";
+				obj.style.backgroundColor = "#f1f8ff";
 
 				$
 						.ajax({
@@ -1907,7 +1913,7 @@
 				_RowObject = obj;
 				_RowObjectID = obj.id;
 				_RowObjectName = $(obj).attr("name");
-				obj.style.backgroundColor = "#edf4fd";
+				obj.style.backgroundColor = "#f1f8ff";
 			}
 
 			var Tab1_SelectID = "1tab1";
@@ -1983,11 +1989,11 @@
 	        	
 	          	if (containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
 	          		if (sum > 359) {
-	          			deptNameWidth = 360 - $("#countInfo").width();
+	          			deptNameWidth = 340 - $("#countInfo").width();
 	          		}
 	          	} else {
 	          		if (sum > 357) {
-	          			deptNameWidth = 358 - $("#countInfo").width();
+	          			deptNameWidth = 338 - $("#countInfo").width();
 	          		}
 	          	}
 	        	
@@ -2039,6 +2045,10 @@
 	                                                        <option value="mobile" usedefault="0"><spring:message code='ezCircular.t156' /></option>
 	                                                        <option value="HomePhone" usedefault="0"><spring:message code='ezCircular.t157' /></option>
 	                                                        <option value="facsimileTelephoneNumber" usedefault="0"><spring:message code='ezCircular.t158' /></option>
+	                                                        <c:if test="${primaryLang eq '3' }">
+		                                                    <option value="extensionPhone" usedefault="0"><spring:message code='main.ksa02' /></option>
+		                                                    <option value="officeMobile" usedefault="0"><spring:message code='main.ksa03' /></option>
+		                                                    </c:if>
 	                                                        <option value="mail" usedefault="0"><spring:message code='ezCircular.t159' /></option>
 	                                                        <option value="streetAddress" usedefault="0"><spring:message code='ezCircular.t160' /></option>
 	                                                    </select>
@@ -2048,7 +2058,7 @@
 	                                            </td>
 	                                            <td>
 	                                                <div style="float: right; margin-right: 5px;">
-	                                                    <a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezCircular.t161' /></span></a>
+	                                                    <a class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezCircular.t161' /></span></a>
 	                                                </div>
 	                                            </td>
 	                                        </tr>
@@ -2065,7 +2075,7 @@
 	                                        <table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
 	                                            <tr>
 	                                                <th style="white-space:normal;background-color: white;border-top:0px solid #ddd;border-bottom:1px solid #eaeaea">
-														<span id="SelectDeptNM" style="font-weight: normal; width: 380px; height: 18px; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
+														<span id="SelectDeptNM" style="font-weight: normal; width: 380px; height: 18px; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: middle; margin-top:-6px"></span>
 	                                                    <span style="float:right;">
 	                                                        <span onclick="ChangeListView_onClick('TXT');"><img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist"></span>
 	                                                        <span onclick="ChangeListView_onClick('IMG');"><img src="/images/kr/cm/btn_imglist.gif" class="icon_btn" id="imglist"></span>

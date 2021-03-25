@@ -3,7 +3,9 @@ package egovframework.ezEKP.ezWebFolder.vo;
 public class WebfolderConfigVO {
 	private String companyId;
 	private String uploadLimit;
-	private String totalLimit;
+	private String companyTotalLimit;
+	private String departmentTotalLimit;
+	private String userTotalLimit;
 	private int tenantId;
 
 	public String getCompanyId() {
@@ -22,12 +24,28 @@ public class WebfolderConfigVO {
 		this.uploadLimit = uploadLimit;
 	}
 
-	public String getTotalLimit() {
-		return totalLimit;
+	public String getCompanyTotalLimit() {
+		return companyTotalLimit;
 	}
 
-	public void setTotalLimit(String totalLimit) {
-		this.totalLimit = totalLimit;
+	public void setCompanyTotalLimit(String companyTotalLimit) {
+		this.companyTotalLimit = companyTotalLimit;
+	}
+
+	public String getDepartmentTotalLimit() {
+		return departmentTotalLimit;
+	}
+
+	public void setDepartmentTotalLimit(String departmentTotalLimit) {
+		this.departmentTotalLimit = departmentTotalLimit;
+	}
+
+	public String getUserTotalLimit() {
+		return userTotalLimit;
+	}
+
+	public void setUserTotalLimit(String userTotalLimit) {
+		this.userTotalLimit = userTotalLimit;
 	}
 
 	public int getTenantId() {

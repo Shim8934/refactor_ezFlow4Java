@@ -511,6 +511,7 @@ function func_addaddr_Complete(ret) {
             createNodeAndInsertText(xmlDom, objNode, "STYPE", "P");
             createNodeAndInsertText(xmlDom, objNode, "USERNM", "");
             createNodeAndInsertText(xmlDom, objNode, "USERNM2", "");
+            createNodeAndInsertText(xmlDom, objNode, "FURIGANA", "");
             objRow = createNodeAndAppandNode(xmlDom, objNode, objRow, "ATTACHLIST");
             
             xmlHTTP.open("POST", "/ezAddress/addressSave.do", false);
@@ -535,7 +536,22 @@ function func_addaddr_Complete(ret) {
             }
     	}
     	
-		alert(strLang136);
+    	// duplicateList 동일한 메일주소
+    	
+    	if (duplicateList.length > 0) {
+    		var alertMsg = strLang136 + "\n" + strLangKSA01;
+    		var dupliNameTxt = [];
+    		
+    		$.each(duplicateList, function(i, e) {
+    			dupliNameTxt.push(e.name);
+			});
+    		
+    		alertMsg = alertMsg.replace("%s", dupliNameTxt.join(","));
+    		
+    		alert(alertMsg);
+    	} else {
+    		alert(strLang136);
+    	}
     } catch (e) {
         xmlHTTP = null;
         alert(strLang133 + e.message);
@@ -612,7 +628,14 @@ function func_reject_Complete(retVal) {
         var objXml = new DOMParser().parseFromString('<DATA></DATA>', "text/xml");
         var objRoot = objXml.documentElement;
 
-
+        if (typeof(shareId) != "undefined" && shareId != "") {
+        	var objRow = objXml.createElement("ROW");
+            objRoot.appendChild(objRow);
+            
+            var objNode = objXml.createElement("SHAREID");
+            objNode.appendChild(objXml.createCDATASection(shareId));
+            objRow.appendChild(objNode);
+       }
 
         for (var i = 0 ; i < retVal.length ; i++) {
             var objRow = objXml.createElement("ROW");
@@ -969,16 +992,17 @@ function Item_View(vItem, pCItemID, vWriter, pBrdid, vGbnBoard, pBrdnm, brd_Gubu
     openwindow(openLocation, "", 880, 550);
 }
 
+/* 2019-12-19 홍승비 - 메일링크에 직접 encodeURIComponent 추가 */
 /* 2018-07-19 홍승비 - 답변메일, 새 게시 메일로 알리는 기능 -> 사간겸직 시 현재 회사가 아닌 곳에서 보내진 승인메일은 alert 처리 */
 function Item_View_New(pBoardID, pItemID, pBoardType) {
-    if (pBoardType == "3" || pBoardType == "4") {
+    if (pBoardType == "3" || pBoardType == "4" || pBoardType == "7") {
         var pheight = window.screen.availHeight;
         var pwidth = window.screen.availWidth;
         var pTop = (pheight - 720) / 2;
         var pLeft = (pwidth - 765) / 2;
 
         var xmlhttp = createXMLHttpRequest();
-        xmlhttp.open("POST", "/ezBoard/getItemViewNew.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
+        xmlhttp.open("POST", "/ezBoard/getItemViewNew.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID), false);
         xmlhttp.send();
         
         var xmlDoc = xmlhttp.responseXML;
@@ -992,10 +1016,13 @@ function Item_View_New(pBoardID, pItemID, pBoardType) {
         if (getNodeText(xmlDoc.getElementsByTagName("DATA1")[0]) == "FAIL") {
         	 alert(strLangHSB01 + xmlDoc.getElementsByTagName("DATA2")[0].childNodes[0].nodeValue + strLangHSB02);
         }
-        /* 2018-04-26 홍승비 - 포토, 썸네일게시물 메일 내부에서 접근 시 .aspx->.do로 수정 */
-        else if (getNodeText(xmlDoc.documentElement) != "0") {
+        /* 2018-11-06 홍승비 - 포토, 썸네일게시물 메일 내부에서 접근 시 .aspx->.do로 수정, 동영상게시판 구분 추가 */
+        else if (getNodeText(xmlDoc.documentElement) != "0" && pBoardType != "7") {
           //  window.open("/myoffice/ezBoardSTD/BoardItemView_Photo.aspx?&ItemID=" + pItemID + "&BoardID=" + pBoardID + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=780,width=765,top=" + pTop + ",left=" + pLeft, "");
-            window.open("/ezBoard/boardItemViewPhoto.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&location=GENERAL", "", "height=793,width=764, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");   
+            window.open("/ezBoard/boardItemViewPhoto.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID) + "&location=GENERAL", "", "height=793,width=790, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");   
+        } else if (getNodeText(xmlDoc.documentElement) != "0" && pBoardType == "7") {
+          //  window.open("/myoffice/ezBoardSTD/BoardItemView_Photo.aspx?&ItemID=" + pItemID + "&BoardID=" + pBoardID + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=780,width=765,top=" + pTop + ",left=" + pLeft, "");
+            window.open("/ezBoard/boardItemViewMovie.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID) + "&location=GENERAL", "", "height=679,width=764, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");   
         }
         else {
             alert(strLang166);
@@ -1012,7 +1039,7 @@ function Item_View_New(pBoardID, pItemID, pBoardType) {
         var isDotNet = false;
         var dotNetUrl;
         var xmlhttp = createXMLHttpRequest();
-        xmlhttp.open("POST", "/ezBoard/getItemViewNew.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
+        xmlhttp.open("POST", "/ezBoard/getItemViewNew.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID), false);
         xmlhttp.send();
         
         var xmlDoc = xmlhttp.responseXML;
@@ -1041,7 +1068,7 @@ function Item_View_New(pBoardID, pItemID, pBoardType) {
             if (isDotNet) {
                 window.open(dotNetUrl + "/myoffice/ezBoardSTD/BoardItemView_Cross.aspx?ItemID=" + pItemID + "&BoardID=" + pBoardID, "", "height=720,width=765, status = no, toolbar=no, menubar=no, location=no,scrollbars=1, resizable=1, top=0, left=0", "");                
             } else {
-                window.open("/ezBoard/boardItemView.do?itemID=" + pItemID + "&boardID=" + pBoardID, "", "height=720,width=765, status = no, toolbar=no, menubar=no, location=no,scrollbars=1, resizable=1, top=0, left=0", "");
+                window.open("/ezBoard/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID), "", "height=720,width=765, status = no, toolbar=no, menubar=no, location=no,scrollbars=1, resizable=1, top=0, left=0", "");
             }
         } else {
             alert(strLang166);
@@ -1059,7 +1086,7 @@ function Item_View_APPR(pBoardID, pItemID, pgubun) {
     pwidth = pwidth - 359;
 
     var xmlhttp = createXMLHttpRequest();
-    xmlhttp.open("POST", "/ezBoard/getItemViewNew.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
+    xmlhttp.open("POST", "/ezBoard/getItemViewNew.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID), false);
     xmlhttp.send();
     
     var xmlDoc = xmlhttp.responseXML;
@@ -1073,13 +1100,15 @@ function Item_View_APPR(pBoardID, pItemID, pgubun) {
     if (getNodeText(xmlDoc.getElementsByTagName("DATA1")[0]) == "FAIL") {
     	 alert(strLangHSB01 + xmlDoc.getElementsByTagName("DATA2")[0].childNodes[0].nodeValue + strLangHSB02);
     }
-    /* 2018-04-26 홍승비 - 포토, 썸네일게시물 승인을 위해 .aspx->.do로 수정 */
+    /* 2018-11-06 홍승비 - 포토, 썸네일게시물 승인을 위해 .aspx->.do로 수정, 동영상게시판 구분 추가 */
     else if (getNodeText(xmlDoc.documentElement) != "0") {
         if (pgubun == "3" || pgubun == "4") {
-            window.open("/ezBoard/boardItemViewPhoto.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&location=GENERAL", "", "height=793,width=764, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");
+            window.open("/ezBoard/boardItemViewPhoto.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID) + "&location=GENERAL", "", "height=793,width=790, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");
+        } else if (pgubun == "7") {
+        	 window.open("/ezBoard/boardItemViewMovie.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID) + "&location=GENERAL", "", "height=679,width=764, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");
         }
         else {
-            window.open("/ezBoard/boardItemView.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&location=GENERAL", "", "height=720,width=765, status = no, scrollbars=1, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");
+            window.open("/ezBoard/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID) + "&location=GENERAL", "", "height=720,width=765, status = no, scrollbars=1, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");
         }
     }
     else {
@@ -1101,7 +1130,7 @@ function item_View_New_Community(pBoardID, pItemID, pCommunityID) {
     pwidth = pwidth - 359;
 
     var xmlhttp = createXMLHttpRequest();
-    xmlhttp.open("POST", "/ezCommunity/getItemViewNew.do?itemID=" + pItemID + "&boardID=" + pBoardID, false);
+    xmlhttp.open("GET", "/ezCommunity/getItemViewNew.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID), false);
     xmlhttp.send();
     
     var xmlDoc = xmlhttp.responseXML;
@@ -1116,9 +1145,9 @@ function item_View_New_Community(pBoardID, pItemID, pCommunityID) {
     	 alert(strLangHSB01 + xmlDoc.getElementsByTagName("DATA2")[0].childNodes[0].nodeValue + strLangHSB02);
     } else {
     if (CrossYN())
-        window.open("/ezCommunity/boardItemView.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&code=" + pCommunityID, "", "height=720,width=765, status = no, toolbar=no, scrollbars=1, menubar=no, location=no, resizable=1, top=0, left=0", "");
+        window.open("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID) + "&code=" + encodeURIComponent(pCommunityID), "", "height=720,width=765, status = no, toolbar=no, scrollbars=1, menubar=no, location=no, resizable=1, top=0, left=0", "");
     else
-        window.open("/ezCommunity/boardItemView.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&code=" + pCommunityID, "", "height=720,width=765, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");
+        window.open("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID) + "&code=" + encodeURIComponent(pCommunityID), "", "height=720,width=765, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");
     }
 }
 
@@ -1136,6 +1165,38 @@ function ViewDoc(pDocID, pURL, pWhat, pOpinionFlag, pdocState, pListSusin, podoc
         openLocation = "/ezflow/AprDocView.asp?DocID=" + encodeURIComponent(pDocID) + "&DocHref=" + encodeURIComponent(pURL);
         openwindow(openLocation, "", 880, 550);
     }
+}
+
+// 2019-06-24 김민성 - 일정 초대 메일 읽기
+function open_schedule(scheduleid) {
+	var wWeight = "760";
+    var wHeight = "670";
+    var heigth = window.screen.availHeight;
+    var width = window.screen.availWidth;
+    var left = (width - wWeight) / 2;
+    var top = (heigth - wHeight) / 2;
+    
+    var xmlhttp = createXMLHttpRequest();
+    xmlhttp.open("POST", "/ezSchedule/getScheduleRead.do?scheduleid=" + encodeURIComponent(scheduleid), false);
+    xmlhttp.send();
+    
+  	var xmlDoc = xmlhttp.responseText;
+    
+  	if(xmlDoc == "D") {
+  		alert(strLang166);
+  		return;
+  	}
+  	else if (xmlDoc == "N") {
+      	 alert(strLangKMSS01);
+      	 return;
+    }
+
+    if (CrossYN())
+        window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&isMailNoti=Y", "",
+            "top = " + top + ", left = " + left + ",height = " + wHeight + "px, width = " + wWeight + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1 scrollbars=0");
+    else
+        window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&isMailNoti=Y", "",
+            "top = " + top + ", left = " + left + ",height = " + wHeight + "px, width = " + wWeight + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1 scrollbars=0");
 }
 
 function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
@@ -1179,7 +1240,7 @@ function mail_link(){
 	}
 	
 	/* 2020-07-08 홍승비 - 메일 링크의 결재문서 열기 시 팝업창 크기 조정 (전자결재 > 결재할문서, 결재진행문서 팝업창과 동일하게) */
-	//window.open(real_href, 'apprmailLink', GetOpenWindowfeature(880, 900));
+	// window.open(real_href, 'apprmailLink', GetOpenWindowfeature(880, 900, true));
     try {
         var heigth = window.screen.availHeight;
         var width = window.screen.availWidth;
@@ -1220,5 +1281,5 @@ function mail_link(){
     catch (e) {
         alert("openwindow :: " + e.description);
     }
-
+    
 }

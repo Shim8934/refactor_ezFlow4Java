@@ -427,6 +427,7 @@ function AppendFileAttachInfo(ret) {
         }
         
         AttachFlag = false;
+        dadiframe.window.showAttachInnerNotice();
     }
     catch (e) { alert("AppendFileAttachInfo :: " + e.description); }
 }

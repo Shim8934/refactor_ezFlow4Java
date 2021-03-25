@@ -1,0 +1,40 @@
+.node_div { line-height:10px !important;}
+
+.node_normal
+{
+    font-size: 13px;
+    height: 30px;
+    line-height: 30px;
+    color: #393939;
+    display: inline-block;
+    padding: 0px 0px 0px 5px;
+    font-family: arial, arial, arial;
+    cursor: pointer;
+    width: 76%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+.node_selected
+{
+    font-size: 13px;
+    height: 30px;
+    line-height: 30px;
+    color: #0470e4;
+    display: inline-block;
+    padding: 0px 0px 0px 5px;
+    font-family: arial, arial, arial;
+    cursor: pointer;
+    width: 76%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    box-sizing: border-box;
+    font-weight: bold;
+}
+.node_normal:hover
+{
+    color:#0470e4; 
+    font-weight:bold;
+} 

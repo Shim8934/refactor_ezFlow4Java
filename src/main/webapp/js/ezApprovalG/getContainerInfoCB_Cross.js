@@ -6,11 +6,45 @@ function DisplayLineCnt(Resultxml, viewtype) {
     //document.getElementById("listcount").innerHTML = strLang596 + "<span class='point'>" + NodeListLen + "</span> " + strLang445;
 }
 
+function getReceiptInfo() {
+    var DocList = new ListView();
+    DocList.LoadFromID("DocList");
+    var selRow = DocList.GetSelectedRows()[0];
+
+    var docID = GetAttribute(selRow, "DATA1");
+    var publicityYN = GetAttribute(selRow, "DATA16");
+
+    var reqData = new FormData();
+    reqData.append("docID", docID);
+    reqData.append("mode", "END");
+    reqData.append("publicityYN", publicityYN);
+
+    var req = new XMLHttpRequest();
+    req.open("POST", "/ezApprovalG/getReceiptinfo.do", false);
+    req.send(reqData);
+
+    var res = req.responseText;
+
+    return loadXMLString(res);
+}
+
 function getDataInfo() {
 	var pUrl = "";
-	
+
+    var DocList = new ListView();
+    DocList.LoadFromID("DocList");
+    var selRow = DocList.GetSelectedRows()[0];
+    //DocList_Flag 지워도 되면 삭제
+    if (DocList_Flag == "RECORD") {
+        if (trim_Cross(selRow.getAttribute("DATA14")) != "null" && trim_Cross(selRow.getAttribute("DATA14")) != "" && trim_Cross(selRow.getAttribute("DATA14")) >= GetTodayDate()) {
+            if (CheckAprLine(selRow.getAttribute("DATA1")) != "TRUE") {
+                getdoclistSub_after("NOTPERMISSION");
+                return;
+            }
+        }
+    }
+
     switch (jobState) {
-   
         case "ATTACH":
         	pUrl = "/ezApprovalG/getTotalAttachInfo.do";
             break;
@@ -27,6 +61,7 @@ function getDataInfo() {
         	pUrl = "/ezApprovalG/getReceiptinfo.do";
             break;
     }
+
     $.ajax({
 		type : "POST",
 		dataType : "text",
@@ -87,6 +122,7 @@ function selFirstRow(Resultxml) {
         DocID = "";
         pURL = "";
         WriterID = "";
+        WriterDeptID = "";
         getDataInfo();
     }
 }
@@ -141,15 +177,19 @@ function OpenReceiptHistory() {
         var pDeptID = tr[0].getAttribute("DATA1");
         var isExtYN = tr[0].getAttribute("DATA3");
 
+        /* 2019-08-20 홍승비 - 기록물대장 하단 수신자 > 수신자(부서)명 더블클릭 시 팝업창 사이즈 조절 */
         var Url, OpenWin;
+        var windowFeature;
         if (isExtYN.toUpperCase() == "Y") {
+        	windowFeature = GetOpenWindowfeature(610, 270);
             Url = "/ezApprovalG/ezReceiptHistoryInfo.do?docID=" + pDocID + "&deptID=" + pDeptID;
         }
         else {
+        	windowFeature = GetOpenWindowfeature(1155, 460);
             Url = "/ezApprovalG/ezLineInfo.do?docID=" + pDocID + "&deptID=" + pDeptID + "&docState=011";
         }
 
-        var OpenWin = window.open(Url, "OpenReceiptHistory", GetOpenWindowfeature(610, 270));
+        var OpenWin = window.open(Url, "OpenReceiptHistory", windowFeature);
         try { OpenWin.focus(); } catch (e) { }
     }
 }
@@ -350,77 +390,80 @@ function lvtDoclist_SelChange() {
     var tr = DocList.GetSelectedRows();
     if (tr.length > 0) {
         processRowClick(tr[0]);
+        
+        /* 2021-03-24 홍승비 - 제목 클릭 시 원클릭 이벤트로 전자결재 읽기, 결재 팝업창을 표출 */
+        var headerNameTD = $(event.target).attr("headerName");
+        if (headerNameTD != null && typeof(headerNameTD) != "undefined" && (headerNameTD == "DOCTITLE" || headerNameTD == "RECTITLE" || headerNameTD == "TITLE")) {
+        	lvtDoclist_onSel_DBclick();
+        }
     }
 }
 
 function processRowClick(tr) {
-    if (DocList_Flag == "CABINET" || DocList_Flag == "RECORD")
-        ChkCabRoleInfo(tr);
-    
     if (DocList_Flag == "RECORD") {
-    	publicityYN = GetAttribute(tr,"DATA16");
-    }
-
-    if (DocList_Flag != "CABINET") {
         DocID = GetAttribute(tr,"DATA1");
         pURL = GetAttribute(tr,"DATA2");
-        WriterID = GetAttribute(tr,"DATA19");
+        WriterDeptID = GetAttribute(tr, "DATA11");
+        WriterID = GetAttribute(tr,"DATA3");
+        publicityYN = GetAttribute(tr,"DATA16");
+
+        ChkCabRoleInfo(tr);
         
         //기록물등록대장에서 재발송버튼 보이기위해 추가 2018-07-27 강민수92
-        if (WriterID == "") {
-        	WriterID = GetAttribute(tr, "DATA3");
-        }
+        // if (WriterID == "") {
+        // 	WriterID = GetAttribute(tr, "DATA3");
+        // }
 
-        if (typeof (SendOfferCheckBtn) != "undefined")
-            SendOfferCheckBtn(DocID, UserID);
+        // if (typeof (SendOfferCheckBtn) != "undefined")
+        //     SendOfferCheckBtn(DocID, UserID);
 
-        if (DocList_Flag == "RECORD") {
-            if (document.getElementById("tdGongRam")) {
-                if ((GetAttribute(tr, "DATA15") == "011" || GetAttribute(tr, "DATA15") == "001") && (arr_userinfo[1] == WriterID))
-                    document.getElementById("tdGongRam").style.display = "";
-                else
-                    document.getElementById("tdGongRam").style.display = "none";
-            }
-        }
+        // if (DocList_Flag == "RECORD") {
+        //     if (document.getElementById("tdGongRam")) {
+        //         if ((GetAttribute(tr, "DATA15") == "011" || GetAttribute(tr, "DATA15") == "001") && (arr_userinfo[1] == WriterID) && GetAttribute(tr, "DATA8") === "00")
+        //             document.getElementById("tdGongRam").style.display = "";
+        //         else
+        //             document.getElementById("tdGongRam").style.display = "none";
+        //     }
+        // }
 
         /* 2020-08-06 홍승비 - 기록물등록대장 > 재발송 버튼 표출 시 리스트헤더의 칼럼 데이터를 colname 활용하여 가져오도록 수정 */
-        if (WriterID == arr_userinfo[1]) {
-            try {
-            	var rejectFlagIdx = 0; // 반려칼럼 인덱스
-            	var resendFlagIdx = 0; // 수신칼럼 인덱스
-            	var docListHeader = $("#DocList").find("tr[id='DocList_TH']");
+        // if (WriterID == arr_userinfo[1]) {
+        //     try {
+        //     	var rejectFlagIdx = 0; // 반려칼럼 인덱스
+        //     	var resendFlagIdx = 0; // 수신칼럼 인덱스
+        //     	var docListHeader = $("#DocList").find("tr[id='DocList_TH']");
             	
-            	if (docListHeader.length > 0) {
-            		rejectFlagIdx = docListHeader.find("th[colname='REJECTFLAG']").index();
-            		resendFlagIdx = docListHeader.find("th[colname='RESENDFLAG']").index();
-            	}
+        //     	if (docListHeader.length > 0) {
+        //     		rejectFlagIdx = docListHeader.find("th[colname='REJECTFLAG']").index();
+        //     		resendFlagIdx = docListHeader.find("th[colname='RESENDFLAG']").index();
+        //     	}
             	
-                if (typeof (tr.cells[resendFlagIdx].innerHTML) == "string") {
-                    if (tr.cells[resendFlagIdx].innerHTML == strLang597 && tr.cells[rejectFlagIdx].innerHTML == "") { // 수신칼럼 = "발송", 반려칼럼 = ""인 경우 재발송 버튼 표출
+        //         if (typeof (tr.cells[resendFlagIdx].innerHTML) == "string") {
+        //             if (tr.cells[resendFlagIdx].innerHTML == strLang597 && tr.cells[rejectFlagIdx].innerHTML == "") { // 수신칼럼 = "발송", 반려칼럼 = ""인 경우 재발송 버튼 표출
                     
-                        if (typeof (tdReSend) != "undefined" && typeof (tdReSend) != "unknown") {
-                            document.getElementById("tdReSend").style.display = "";
-                        }
-                    }
-                    else {
-                        if (typeof (tdReSend) != "undefined" && typeof (tdReSend) != "unknown") {
-                            document.getElementById("tdReSend").style.display = "none";
-                        }
-                    }
-                }
-                else {
-                    if (typeof (tdReSend) != "undefined" && typeof (tdReSend) != "unknown") {
-                        document.getElementById("tdReSend").style.display = "none";
-                    }
-                }
-            }
-            catch (e) { }
-        }
-        else {
-            if (typeof (tdReSend) != "undefined" && typeof (tdReSend) != "unknown") {
-                document.getElementById("tdReSend").style.display = "none";
-            }
-        }
+        //                 if (typeof (tdReSend) != "undefined" && typeof (tdReSend) != "unknown") {
+        //                     document.getElementById("tdReSend").style.display = "";
+        //                 }
+        //             }
+        //             else {
+        //                 if (typeof (tdReSend) != "undefined" && typeof (tdReSend) != "unknown") {
+        //                     document.getElementById("tdReSend").style.display = "none";
+        //                 }
+        //             }
+        //         }
+        //         else {
+        //             if (typeof (tdReSend) != "undefined" && typeof (tdReSend) != "unknown") {
+        //                 document.getElementById("tdReSend").style.display = "none";
+        //             }
+        //         }
+        //     }
+        //     catch (e) { }
+        // }
+        // else {
+        //     if (typeof (tdReSend) != "undefined" && typeof (tdReSend) != "unknown") {
+        //         document.getElementById("tdReSend").style.display = "none";
+        //     }
+        // }
 
         switch (jobState) {
             case "ATTACH":
@@ -439,5 +482,7 @@ function processRowClick(tr) {
                 Recipent_onclick()
                 break;
         }
+    } else if (DocList_Flag == "CABINET") {
+        ChkCabRoleInfo(tr);
     }
 }

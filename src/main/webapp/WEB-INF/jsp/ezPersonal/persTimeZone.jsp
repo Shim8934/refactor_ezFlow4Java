@@ -118,7 +118,7 @@
     			<tr>
       				<th><spring:message code='ezPersonal.s4'/></th>
       				<td>
-      					<SELECT NAME="TimeZone" id="TimeZone">
+      					<SELECT NAME="TimeZone" id="TimeZone" style="height:23px;">
           					<OPTION value="000|-12:00">(GMT-12:00) <spring:message code='ezPersonal.s5'/></OPTION>
           					<OPTION value="001|-11:00">(GMT-11:00) <spring:message code='ezPersonal.s6'/></OPTION>
           					<OPTION value="002|-10:00">(GMT-10:00) <spring:message code='ezPersonal.s7'/></OPTION>

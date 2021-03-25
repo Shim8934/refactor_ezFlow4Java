@@ -18,7 +18,7 @@
 		    var MailQuater;
 		    var previewSubTree = "${previewSubTree}";
 		    var usePreviewSubTree = "${usePreviewSubTree}";
-		    var dotnetFlag = "${dotnetFlag}";
+		    var dotnetFlag = "<c:out value='${dotnetFlag}'/>";
 		    
 		    window.onload = function()
 		    {
@@ -119,6 +119,7 @@
 				                "<PREVIEWHLIST>" + document.getElementById("HListUser").value + "</PREVIEWHLIST>" +
 				                "<PREVIEWHCONTENT>" + document.getElementById("HPreUser").value + "</PREVIEWHCONTENT>" +
 				                "<MAILSENDERNM>" + MakeXMLString(ExtName) + "</MAILSENDERNM>" +
+				                "<PREVIEWMAILIMAGE>" + document.getElementById("previewMailImage").value + "</PREVIEWMAILIMAGE>" +
 				                "<TEXTOPTION>" + textOptionVal + "</TEXTOPTION>";
 				
                 if (usePreviewSubTree == "YES") {
@@ -244,7 +245,7 @@
 			        _popObj.style.backgroundColor = "#ffffff";
 			    }
 			    _popObj = obj;
-			    obj.style.backgroundColor = "#edf4fd";
+			    obj.style.backgroundColor = "#f1f8ff";
 			}
 			var ConCellRow = null;
 			function pop_modify(obj) {
@@ -332,7 +333,7 @@
 		        <div id="mailquatersize" style="width:400px; height:200px;display: inline-block;"></div>
 		    </div>
 		<br />
-		<h2><spring:message code='ezEmail.t177' /></h2>
+		<h2><spring:message code='ezPersonal.yej01' /></h2>
 		<span class="txt">▒ <spring:message code='ezEmail.t178' /></span> <br>
 		<span class="txt">▒ <spring:message code='ezEmail.t99000033' /></span> <br><br>
 		<table class="content" style="width:680px;">
@@ -438,7 +439,7 @@
 		  <tr <c:if test="${useOnlyInnerMail == 'YES'}">style="display:none"</c:if>>
 		      <th><spring:message code='ezEmail.t99000032' /></th>
 		      <td>
-		          <select style="width:300px;height:20px;" id="ExtSenderNM">${mailSendObject}</select>
+		          <select style="width:300px;" id="ExtSenderNM">${mailSendObject}</select>
 		          <a class="imgbtn imgbck" onclick="MailOutNameModify();"><span><spring:message code='ezEmail.t149' /></span></a>
 		      </td>
 		  </tr>
@@ -453,6 +454,15 @@
 			  	</td>
 			  </tr>
 		  </c:if>
+		  <tr>
+		  	<th><spring:message code="ezEmail.ksa05"/> </th>
+		  	<td>
+		  		<select id="previewMailImage" style="width:100px;">
+		  			<option value="Y" <c:if test="${previewMailImage == 'Y'}">selected</c:if>><spring:message code="ezEmail.t808"/> </option>
+		  			<option value="N" <c:if test="${previewMailImage == 'N'}">selected</c:if>><spring:message code='ezEmail.t99000009' /></option>
+		  		</select>
+		  	</td>
+		  </tr>
 		  <tr>
 		      <th><spring:message code="ezEmail.lhm80"/></th>
 		      <td>
@@ -472,7 +482,7 @@
 		
 		<div  id="inboxRuleConbtn1" style="position:absolute; left:100px; top:65px;border:1px solid gray;width:415px;background-color:white; display:none;">
 			        <INPUT type="text" id="inboxRuleCon1" name="inboxRuleCon1" style="width:100%" onKeyDown="event_keyDown();"></td>
-			<div style="border:1px solid #dddddd; margin:10px 10px 10px 10px; padding:10px 10px 10px 10px; background-color:#f8f8fa;">
+			<div style="border:1px solid #dddddd; margin:10px 10px 10px 10px; padding:10px 10px 10px 10px; background-color:#f1f3f5;">
 			       <div id="Conitems" name="Conitems" style="border:1px solid #dbdbda;width:370px;height:200px;overflow-y:auto;overflow-x:hidden;text-overflow:ellipsis;background-color:#ffffff;">
 			       </div>
 			</div>

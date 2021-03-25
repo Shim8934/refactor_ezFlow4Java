@@ -112,7 +112,7 @@
 			    var strtext;
 			    var PagingHTML = "";
 			    $('#tblPageRayer').html();
-			    $('#mailBoxInfo').html(" - [" + strLang41 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang42 + "]");
+			    $('#mailBoxInfo').html("&nbsp;&nbsp;<span style='color:#017BEC;'>" + totalCount + "</span>");
 			    strtext = "<div class='pagenavi'>";
 			    PagingHTML += strtext;
 			    var pageNum = CurPage;

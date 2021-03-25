@@ -7,7 +7,8 @@
 		<title><spring:message code = 'ezCommunity.t352' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 		<link rel="stylesheet" href="${util.addVer('ezCommunity.i1', 'msg')}" type="text/css">
-		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
+		<%-- <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css"> --%>
+		<link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 		<style>
 			.groupBoard {
 				width:276px;
@@ -19,6 +20,25 @@
 				overflow:hidden;
 				text-overflow:ellipsis;
 			}
+			.node_div span {
+				vertical-align:text-bottom;
+			}
+			.node_div img {
+				margin-bottom: 3px;
+			}
+			/* ellipisis 추가 */
+			.node_normal {
+	    		overflow:hidden;
+	    		text-overflow:ellipsis;
+	    		display:inline-block;
+	    		width:270px;
+	    	}
+	    	.node_selected {
+	    		overflow:hidden;
+	    		text-overflow:ellipsis;
+	    		display:inline-block;
+	    		width:270px;
+	    	}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -70,10 +90,13 @@
 			        ret[2] = SelectedBoardName;
 			    }
 	
-			    if (ReturnFunction !=null)
+			    if (ReturnFunction !=null) {
 				    ReturnFunction(ret);
-				else
+			    }
+				else {
 				    window.returnValue = ret;
+				}
+			    
 				window.close();
 			}
 	
@@ -120,6 +143,8 @@
 			    var treeView = new TreeView();
 			    treeView.LoadFromID(pTreeID);
 			    treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
+			    
+			    applyEllipsis();
 			}
 	
 			function TreeCtrl_onNodeClick(pNodeID, pTreeID) {
@@ -129,6 +154,8 @@
 			    tmpSelectedBoardGroupName = "";
 			    SelectedBoardID = treeNode.GetNodeData("DATA1");
 			    SelectedBoardName = treeNode.GetNodeData("DATA2");
+			    
+			    applyEllipsis();
 			}
 	
 			function DisplayTopBoard() {
@@ -179,6 +206,8 @@
 			    treeView.SetNodeClick("TreeCtrl_onNodeClick");
 			    treeView.DataSource(GetSubBoard(rootBoardID, "1"));
 			    treeView.DataBind(obj);
+			    
+			    applyEllipsis();
 			}
 	
 			function SetTreeConfig() {
@@ -233,6 +262,7 @@
 			    for (var i = 0; i < xmldomNodes.length; i++) {
 			        var tid = SelectSingleNodeValue(xmldomNodes[i], "DATA1");
 			        tid = tid.substring(1, 37);
+			        
 			        //strHTML += "<tr><td><h2 id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ", \"" + items + "\"" + ")' style='cursor:pointer'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</h2></td></tr>";
 			        if (i == 0) {
 						strHTML += "<tr><td><h2 style='border-top:0px; cursor:pointer;' id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ", \"" + items + "\"" + ")'><span class='groupBoard'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</span></h2></td></tr>";
@@ -249,6 +279,28 @@
 	
 			    document.getElementById("TopBoardsList").innerHTML = strHTML;
 			}
+			
+			/* 2020-05-25 홍승비 - 커뮤니티 팝업홈 > 게시판이동 > 게시판선택 팝업창 게시판명 말줄임표 적용 */
+	        function applyEllipsis() {
+	        	
+	        	//nodelevel 값을 가져와서 처리한다.
+	        	$(".node_div").each(function(index, element){
+	        		var nodelevel = $(element).attr("nodelevel");
+	        		var title = $(element).attr("nodename");
+	        		var nodeId = $(element).attr("id");
+	        		
+	        		$("#spn_"+nodeId).attr("title", title);
+	        		
+	        		if (nodelevel > 0) {
+	        			var customWidth = 270 - (18 * nodelevel);
+	        			if (customWidth < 0) {
+	        				customWidth = 0;
+	        			}
+	        			$("#spn_"+nodeId).css("width", customWidth+"px");
+	        		}
+	        	});
+	        }
+	        
 		</script>
 	</head>
 	<body class="popup">

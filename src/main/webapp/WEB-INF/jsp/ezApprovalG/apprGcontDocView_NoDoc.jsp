@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<HEAD>
@@ -19,7 +20,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
 		<script type="text/javascript" ID="clientEventHandlersJS">
-		var pDocID = '${docID}';
+		var pDocID = "<c:out value ='${docID}'/>";
 		var pOpinionFlag;//의견 유무 Flag
 		var pListTypeValue = 4;
 		var flag = false;
@@ -31,16 +32,16 @@
 		
 		var arr_userinfo = new Array();
 		arr_userinfo[0]  = "user";								// 사용자-부서구분
-		arr_userinfo[1]  = "${userInfo.id}";	                // 사용자ID
-		arr_userinfo[2]  = "${userInfo.displayName}";         // 사용자명
-		arr_userinfo[3]  = "${userInfo.title}";              // 사용자 직위
-		arr_userinfo[4]  = "${userInfo.deptID}";              // 사용자 부서 ID
-		arr_userinfo[5]  = "${userInfo.deptName}";            // 사용자 부서 이름
-		arr_userinfo[6]  =  "${userInfo.jikChek}";            // 사용자 직책            
-		arr_userinfo[8]  = "${userInfo.email}";             // E-Mail Address 
+		arr_userinfo[1]  = "<c:out value ='${userInfo.id}'/>";	                // 사용자ID
+		arr_userinfo[2]  = "<c:out value ='${userInfo.displayName}'/>";         // 사용자명
+		arr_userinfo[3]  = "<c:out value ='${userInfo.title}'/>";              // 사용자 직위
+		arr_userinfo[4]  = "<c:out value ='${userInfo.deptID}'/>";              // 사용자 부서 ID
+		arr_userinfo[5]  = "<c:out value ='${userInfo.deptName}'/>";            // 사용자 부서 이름
+		arr_userinfo[6]  =  "<c:out value ='${userInfo.jikChek}'/>";            // 사용자 직책            
+		arr_userinfo[8]  = "<c:out value ='${userInfo.email}'/>";             // E-Mail Address 
 		arr_userinfo[9]  = "";
-		arr_userinfo[10] = "${susinAdmin}";                 // 수신 접수담당자
-		var CompanyID = "${userInfo.companyID}";
+		arr_userinfo[10] = "<c:out value ='${susinAdmin}'/>";                 // 수신 접수담당자
+		var CompanyID = "<c:out value ='${userInfo.companyID}'/>";
 		
 		var pUserID = arr_userinfo[1];     //사용자ID
 		
@@ -53,8 +54,8 @@
 		    g_arrayDIV = new Array(divTabDis1);
 		
 		    //var Para = dialogArguments;
-		    g_RecID = "${g_RecID}";//Para[0];
-		    g_SepAttNo = "${g_SepAttNo}";//Para[1];
+		    g_RecID = "<c:out value ='${g_RecID}'/>";//Para[0];
+		    g_SepAttNo = "<c:out value ='${g_SepAttNo}'/>";//Para[1];
 		    //기록물 정보를 가져와 g_szBInfoXml, g_szEInfoXml를 초기화한다.
 		    GetRecInfo();
 		

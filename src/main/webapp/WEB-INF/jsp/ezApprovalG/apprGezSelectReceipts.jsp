@@ -18,8 +18,8 @@
 <link rel="stylesheet" href="${util.addVer('/css/main_Cross.css')}"  type="text/css"/>
 <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css"/>
 <script type="text/javascript">
-    var pDocID = "${docID}";
-    var pServerName = "${serverName}";
+    var pDocID = "<c:out value ='${docID}'/>";
+    var pServerName = "<c:out value ='${serverName}'/>";
     var param = new Array();
     param[0] = "cancel";
     var OrderCell = "";

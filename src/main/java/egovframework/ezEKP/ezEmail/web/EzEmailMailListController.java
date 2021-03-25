@@ -1,5 +1,8 @@
 package egovframework.ezEKP.ezEmail.web;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,13 +51,17 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezEmail.util.EmailImportance;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailReadVO;
 import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxUserVO;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovStringUtil;
 
 /** 
  * @Description [Controller] 메일 리스트
@@ -91,10 +98,13 @@ public class EzEmailMailListController {
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
     
+	@Autowired
+	private EzOrganService ezOrganService;
+	
     /**
 	 * 메일 리스트화면 호출 함수
 	 */
-	@RequestMapping("/ezEmail/mailList.do")
+	@RequestMapping(value="/ezEmail/mailList.do", method = RequestMethod.GET)
 	public String showMailList(@CookieValue("loginCookie") String loginCookie, 
 			Locale locale,
 			HttpServletRequest request,
@@ -103,8 +113,10 @@ public class EzEmailMailListController {
 		
 		// retrieve the passed in parameters
 		String dispname = request.getParameter("dispname");
+		dispname = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(dispname));
 		String url = request.getParameter("url");
 		url = (url != null) ? url : "INBOX";
+		url = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(url));
 		logger.debug("dispname=" + dispname + ",url=" + url);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -125,16 +137,32 @@ public class EzEmailMailListController {
 		String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", userInfo.getTenantId());
 		String useShowSystemCountry = ezCommonService.getTenantConfig("useShowSystemCountry", userInfo.getTenantId());
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
-
+		String useMailConfirm = ezCommonService.getTenantConfig("useMailConfirm", userInfo.getTenantId());
+		String useHackingMailReport = ezCommonService.getTenantConfig("useHackingMailReport", userInfo.getTenantId());
+		String userTimeSet = userInfo.getOffset();
+		String offsetMin = commonUtil.getMinuteUTC(userTimeSet);
+		String serverName = userInfo.getServerName();
+		
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = request.getParameter("shareId");
 			logger.debug("shareId=" + shareId);
 			
 			if (shareId != null) {
-				MailSharedMailboxUserVO shareVO = ezEmailService.getSharedMailboxPermissionInfo(shareId, userInfo.getTenantId(), userInfo.getId());
-				model.addAttribute("shareId", shareId);
-				model.addAttribute("deletePermission", shareVO.getDeletePermission());
-				model.addAttribute("sendPermission", shareVO.getSendPermission());
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("showMailList ended.");
+					
+					return "ezCommon/error";
+				} else {
+					MailSharedMailboxUserVO shareVO = ezEmailService.getSharedMailboxPermissionInfo(shareId, userInfo.getTenantId(), userInfo.getId());
+					
+					model.addAttribute("shareId", shareId);
+					model.addAttribute("deletePermission", shareVO.getDeletePermission());
+					model.addAttribute("sendPermission", shareVO.getSendPermission());
+					model.addAttribute("managePermission", shareVO.getManagePermission());
+				}
 			}
 		}
 		
@@ -157,6 +185,10 @@ public class EzEmailMailListController {
 		
 		if (useMailNewWindow.equals("")) {
 			useMailNewWindow = "NO";
+		}
+		
+		if (useMailConfirm.equals("")) {
+			useMailConfirm = "NO";
 		}
 		
 		if (dispname != null) {
@@ -206,13 +238,18 @@ public class EzEmailMailListController {
 		model.addAttribute("useMailNewWindow", useMailNewWindow); 
 		model.addAttribute("sentFolderId", ezEmailUtil.getSentFolderId(locale));
 		model.addAttribute("useCountryIP", useCountryIP);
-		model.addAttribute("systemCountryCode", systemCountryCode);
+		model.addAttribute("systemCountryCode", systemCountryCode.toLowerCase());
 		model.addAttribute("useShowSystemCountry", useShowSystemCountry);
+		model.addAttribute("useMailConfirm", useMailConfirm);
+		model.addAttribute("useHackingMailReport", useHackingMailReport);
+		model.addAttribute("offsetMin", offsetMin);
+		model.addAttribute("serverName", serverName);
 
 		logger.debug("folderName=" + folderName + ",url=" + url + ",folderType=" + folderType + ",isSentItems=" + isSentItems
 				 + ",userLang=" + userInfo.getLang() + ",userId=" + userInfo.getId() + ",domainName=" + domainName + ",useEditor=" + useEditor
 				 + ",useOcs=" + useOcs + ",importanceColor=" + importanceColor + ",UseEncryptZipForEmail=" + useEncryptZipForEmail
-				 + ",useMailBoxBackUp=" + useMailBoxBackUp + ",useCountryIP=" + useCountryIP);
+				 + ",useMailBoxBackUp=" + useMailBoxBackUp + ",useCountryIP=" + useCountryIP + ", useMailConfirm=" + useMailConfirm 
+				 + ", useHackingMailReport=" + useHackingMailReport + ",offsetMin=" + offsetMin);
 		logger.debug("mailGeneral=" + mailGeneral);
 		logger.debug("showMailList ended.");
 		
@@ -246,10 +283,34 @@ public class EzEmailMailListController {
 		String end = doc.getElementsByTagName("END").item(0).getTextContent();
 		String search = doc.getElementsByTagName("SEARCH").item(0).getTextContent();
 		String viewSelectIndex = doc.getElementsByTagName("VIEWSELECTINDEX").item(0).getTextContent();
+		String startDate = doc.getElementsByTagName("STARTDATE").item(0).getTextContent();
+		String endDate = doc.getElementsByTagName("ENDDATE").item(0).getTextContent();
+		String andorStatus = doc.getElementsByTagName("ANDORSTATUS").item(0).getTextContent();
+		String attachStatus = doc.getElementsByTagName("ATTACHSTATUS").item(0).getTextContent();
+		
+		NodeList  nListCategory = doc.getElementsByTagName("CATEGORY");
+		NodeList  nListKeyword = doc.getElementsByTagName("KEYWORD");
+		String[] categoryArray = new String[nListCategory.getLength()] ;
+		String[] keywordArray = new String[nListKeyword.getLength()] ;
+		
+		for (int i = 0; i < nListCategory.getLength(); i++) {
+			categoryArray[i] = doc.getElementsByTagName("CATEGORY").item(i).getTextContent();
+		}
+		
+		for (int i = 0; i < nListKeyword.getLength(); i++) {
+			keywordArray[i] = EgovStringUtil.getHtmlStrCnvr(doc.getElementsByTagName("KEYWORD").item(i).getTextContent());
+		}
+		
+		SimpleDateFormat sdfForParsing = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		sdfForParsing.setTimeZone(TimeZone.getTimeZone("GMT"));
+		
+		Date startDateObj = startDate.equals("") ? null : sdfForParsing.parse(startDate);
+		Date endDateObj = endDate.equals("") ? null : new Date(sdfForParsing.parse(endDate).getTime() + 60*60*24*1000);
 		
 		logger.debug("userId=" + userInfo.getId() + ",tenantId=" + userInfo.getTenantId() + ",serverName=" + userInfo.getServerName() 
 		            + ",folderId=" + folderId + ",sortType=" + sortType + ",start=" + start + ",end=" + end
-					+ ",search=" + search + ",viewSelectIndex=" + viewSelectIndex);
+					+ ",search=" + search + ",viewSelectIndex=" + viewSelectIndex 
+					+ ",startDate=" + startDate + ",endDate=" + endDate);
 		
 		String returnData = "";
 		
@@ -326,7 +387,10 @@ public class EzEmailMailListController {
 					+ ",isAscending=" + isAscending + ",startNo=" + startNo + ",endNo=" + endNo + ",listCount=" + listCount);
 			
 			Map<String, Object> extraMap = new HashMap<String, Object>();
-			messages = ezEmailUtil.searchFolder(ia, userEmail, folder, searchField, searchValue, null, null, false, 
+			extraMap.put("andorStatus", andorStatus);
+			extraMap.put("attachStatus", attachStatus);
+			
+			messages = ezEmailUtil.searchFolder(ia, userEmail, folder, categoryArray, keywordArray, startDateObj, endDateObj, false, 
 					isUnreadOnly, isImportantOnly, sortTypeSpecifier, isAscending, startNo, listCount, false, extraMap, userInfo.getTenantId());
 			
 			totalCount = (int)extraMap.get("totalCount");
@@ -340,22 +404,35 @@ public class EzEmailMailListController {
 				
 				// importance
 				String[] headers = message.getHeader("X-Priority");
-				String header = headers != null ? headers[0] : "normal";
+//				String header = headers != null ? headers[0] : "normal";
+				String header = "";
+				
+				if (headers == null){
+					//importance      = "low" / "normal" / "high"
+					String[] headerImportance = message.getHeader("Importance"); 
+					
+					if (headerImportance == null){
+						header = "normal";
+					} else {
+						header = headerImportance[0];
+					}
+				} else {
+					header = headers[0];
+				}
+				
 				int importance = 1;
 				// startsWith is used since
 				// there are cases like X-Priority: 1 (Highest) generated by Thunderbird.
-				if (header.startsWith("1")) {
+				if (header.startsWith("1") || header.startsWith("high")) {
 					importance = 2;
-				}
-				else if (header.startsWith("5")) {
+				} else if (header.startsWith("5") || header.startsWith("low")) {
 					importance = 0;
-				}
+				} 
 				sb.append(String.format("<importance><![CDATA[%d]]></importance>", importance));	
 				
 				String msgto = "";
 				Address[] addresses = null;
 
-				int addressCount = 1;
 				String name = "";
 				
 				if (!viewSelectIndex.equals("3")) {
@@ -369,7 +446,6 @@ public class EzEmailMailListController {
 					addresses = message.getRecipients(Message.RecipientType.TO);
 					
 					if (addresses != null) {
-						addressCount = addresses.length;
 						String toHeader = message.getHeader("To")[0];
 						boolean isAscii = ezEmailUtil.isPureAscii(toHeader);
 						
@@ -575,10 +651,14 @@ public class EzEmailMailListController {
 				sb.append("</response>");
 			}
 			
+			// Folder.getUnreadMessageCount() 메소드 동작 방식이 folder가 open 상태일 때는 읽지 않은 메일 갯수를 IMAP search 명령을
+			// 통해 비효율적으로 구하는 관계로 여기서 folder를 close 하도록 수정함. open 상태가 아닐 때는 IMAP status 명령을 사용하며 status 명령이
+			// 더 효율적임.			
+			folder.close(false);
+			
 			sb.append(String.format("<CONTENTRANGE><![CDATA[rows;%s;%s;total;%d;BoxTCount;%d;BoxUCount;%d;]]></CONTENTRANGE>", 
 					start, end, totalCount, folder.getMessageCount(), folder.getUnreadMessageCount()));
 			sb.append("</maillist>");
-			folder.close(false);
 			
 			// skyblue0o0 20180402 : 특정 유니코드 문자 포함 시 xml파싱 에러나서 빈칸으로 치환
 			returnData = sb.toString().replaceAll("[\\u0000-\\u0008\\u000B-\\u000C\\u000E-\\u001F]", " ");
@@ -599,7 +679,7 @@ public class EzEmailMailListController {
 	/**
 	 * 메일 리스트 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailGetList.do",method=RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailGetList.do", method=RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String getMailList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestBody String bodyData, Locale locale, Model model) throws Exception {
 		logger.debug("getMailList started.");
@@ -624,6 +704,41 @@ public class EzEmailMailListController {
 		String viewSelectIndex = doc.getElementsByTagName("VIEWSELECTINDEX").item(0).getTextContent();
 		String useCountryIP = ezCommonService.getTenantConfig("useCountryIP", userInfo.getTenantId());
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", userInfo.getTenantId());
+		String useRDBOnlyMailList = ezCommonService.getTenantConfig("useRDBOnlyMailList", userInfo.getTenantId());
+		String startDate = doc.getElementsByTagName("STARTDATE").item(0).getTextContent();
+		
+		if (startDate == null) {
+			return "";
+		}
+		
+		String endDate = doc.getElementsByTagName("ENDDATE").item(0).getTextContent();
+		
+		if (endDate == null) {
+			return "";
+		}
+		
+		String andorStatus = doc.getElementsByTagName("ANDORSTATUS").item(0).getTextContent();
+		String attachStatus = doc.getElementsByTagName("ATTACHSTATUS").item(0).getTextContent();
+		
+		NodeList  nListCategory = doc.getElementsByTagName("CATEGORY");
+		NodeList  nListKeyword = doc.getElementsByTagName("KEYWORD");
+		String[] categoryArray = new String[nListCategory.getLength()] ;
+		String[] keywordArray = new String[nListKeyword.getLength()] ;
+		
+		for (int i = 0; i < nListCategory.getLength(); i++) {
+			categoryArray[i] = doc.getElementsByTagName("CATEGORY").item(i).getTextContent();
+		}
+		
+		for (int i = 0; i < nListKeyword.getLength(); i++) {
+			keywordArray[i] = EgovStringUtil.getHtmlStrCnvr(doc.getElementsByTagName("KEYWORD").item(i).getTextContent());
+		}
+		
+		SimpleDateFormat sdfForParsing = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		sdfForParsing.setTimeZone(TimeZone.getTimeZone("GMT"));
+		
+		Date startDateObj = startDate.equals("") ? null : sdfForParsing.parse(startDate);
+		Date endDateObj = endDate.equals("") ? null : new Date(sdfForParsing.parse(endDate).getTime() + 60*60*24*1000);
 		
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = request.getParameter("shareId");
@@ -646,16 +761,10 @@ public class EzEmailMailListController {
 					+ ",search=" + search + ",viewSelectIndex=" + viewSelectIndex + ",useCountryIP=" + useCountryIP);
 		
 		String returnData = "";
-		
+				
 		IMAPAccess ia = null;
 		
 		try {
-			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale, 40*1000, 20*1000, ezEmailUtil);
-					
-			Folder folder = ia.getFolder(folderId);		
-			folder.open(Folder.READ_ONLY);
-			
 			StringBuilder sb = new StringBuilder();
 			sb.append("<maillist><contentrange>").append(start).append("-").append(end).append("</contentrange>");
 			
@@ -734,203 +843,436 @@ public class EzEmailMailListController {
 			}
 			
 			Map<String, Object> extraMap = new HashMap<String, Object>();
-			messages = ezEmailUtil.searchFolder(ia, userEmail, folder, searchField, searchValue, null, null, false, 
-					isUnreadOnly, isImportantOnly, sortTypeSpecifier, isAscending, startNo, listCount, false, extraMap, userInfo.getTenantId());
-			
-			totalCount = (int)extraMap.get("totalCount");
-			logger.debug("totalCount=" + totalCount);
-		
-			for (Message message : messages) {
-				UIDFolder uidFolder = (UIDFolder)message.getFolder();
-				
-				sb.append("<response>");
-				sb.append(String.format("<href><![CDATA[%s/%s]]></href>", folderId, uidFolder.getUID(message)));
+			extraMap.put("andorStatus", andorStatus);
+			extraMap.put("attachStatus", attachStatus);
 
-				/*String fromEmail = ((InternetAddress)message.getFrom()[0]).getAddress();
-				if (fromEmail == null) {
-					sb.append("<fromemail><![CDATA[]]></fromemail>");
-				} else {
-					sb.append(String.format("<fromemail><![CDATA[%s]]></fromemail>", fromEmail));
-				}*/
-				
-				// importance
-				String[] headers = message.getHeader("X-Priority");
-				String header = headers != null ? headers[0] : "normal";
-				int importance = 1;
-				// startsWith is used since
-				// there are cases like X-Priority: 1 (Highest) generated by Thunderbird.
-				if (header.startsWith("1")) {
-					importance = 2;
-				}
-				else if (header.startsWith("5")) {
-					importance = 0;
-				}
-				sb.append(String.format("<importance><![CDATA[%d]]></importance>", importance));	
-				
-				// Flagged is used for bookmark
-				int flagged = 0;
-				if (message.isSet(Flags.Flag.FLAGGED)) {
-					flagged = 1;
-				}
-				sb.append(String.format("<flag><![CDATA[%d]]></flag>", flagged));
-				
-				// attachment
-				boolean isAttached = IMAPAccess.hasAttachment(message);
-				int attached = isAttached ? 1 : 0;
-				sb.append(String.format("<attach><![CDATA[%d]]></attach>", attached));
-				
-				String msgto = "";
-				Address[] addresses = null;
-
-				int addressCount = 1;
-				String name = "";
-				
-				if (!viewSelectIndex.equals("3")) {
-					name = ezEmailUtil.getFromNameOrAddressOfMessage(message);
-					String senderEmail = ezEmailUtil.getFromEmailAddressOfMessage(message);
-					
-					msgto = String.format("%s <%s>", name, senderEmail);
-				}
-				// in case of Sent mailbox
-				else {
-					addresses = message.getRecipients(Message.RecipientType.TO);
-					
-					if (addresses != null) {
-						addressCount = addresses.length;
-						String toHeader = message.getHeader("To")[0];
-						boolean isAscii = ezEmailUtil.isPureAscii(toHeader);
-						
-						String recipientName = "";
-						
-						StringBuilder msgtoBuilder = new StringBuilder();
-						
-						for (Address address : addresses) {
-							recipientName = ((InternetAddress) address).getPersonal(); // name part
-							String receiverUserEmail = ((InternetAddress) address).getAddress(); // email address part
-							
-							if (recipientName == null) {
-								recipientName = receiverUserEmail;
-							}
-							
-							if (receiverUserEmail != null) {
-								
-								if (!isAscii) {
-									byte[] rawBytes = receiverUserEmail.getBytes("iso-8859-1");
-									receiverUserEmail = ezEmailUtil.decodeNonAsciiBytes(rawBytes);								
-								} else {
-									// decoding is needed for the name part
-									receiverUserEmail = MimeUtility.decodeText(receiverUserEmail);
-								}
-							}
-							
-							msgtoBuilder.append(String.format("%s <%s>", recipientName, receiverUserEmail));
-							msgtoBuilder.append(",");
-							
-							name += recipientName;
-							name += "; ";
-						}
-						
-						msgto = msgtoBuilder.toString();
-						msgto = msgto.substring(0, msgto.length() - 1);
-						name = name.substring(0, name.length() - 2);
-					}
-				}
-				
-				// 2018-10-05 메일리스트에 보낸사람 국기표시 박예연
-				if (useCountryIP.equals("YES")) {
-					try {
-						String[] ctryCode = message.getHeader("X-Jmocha-Country-Code");
-						String countryCode = "";
-						
-						if (ctryCode != null && ctryCode[0] != null) {
-							countryCode = ctryCode[0].toLowerCase();
-						}
-						
-						sb.append(String.format("<countryCode><![CDATA[%s]]></countryCode>", countryCode));
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-				
-				sb.append(String.format("<useCountryIP><![CDATA[%s]]></useCountryIP>", useCountryIP));
-				sb.append(String.format("<sender><![CDATA[%s]]></sender>", name));
-				sb.append(String.format("<msgto><![CDATA[%s]]></msgto>", msgto));
-
-				// subject
-				String subject = ezEmailUtil.getSubject(message);								
-				subject = (subject != null) ? subject : "";
-				subject = commonUtil.cleanValue(subject);
-				
-				// secureMail
-				if (ezEmailUtil.hasSecureMailFlag(message)) {
-					sb.append(String.format("<securemail>1</securemail>"));
-				} else {
-					sb.append(String.format("<securemail>0</securemail>"));
-				}
+			if (useRDBOnlyMailList.equals("YES")) {
+				int mailboxMailCount = 0;
+				int mailboxUnreadMailCount = 0;				
+				boolean includeContent = false;
 				
 				if (viewSelectIndex.equals("1")) {
-					((IMAPMessage)message).setPeek(true);
-					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, folderId, uidFolder.getUID(message), -1, null, false, false, locale, null, null);
-					String htmlBody = bodyInfoList.get(0);
+					includeContent = true;
+				}
+				
+				List<Map<String, String>> mailList = ezEmailUtil.searchFolderUsingRDBOnly(userEmail, folderId, categoryArray, keywordArray, startDateObj, endDateObj, false, 
+						isUnreadOnly, isImportantOnly, sortTypeSpecifier, isAscending, startNo, listCount, false, extraMap, userInfo.getTenantId(), includeContent);
+				
+				totalCount = (int)extraMap.get("totalCount");
+				mailboxMailCount = (int)extraMap.get("mailboxMailCount");
+				mailboxUnreadMailCount = (int)extraMap.get("mailboxUnreadMailCount");
+				
+				logger.debug("totalCount=" + totalCount + ",mailboxMailCount=" + mailboxMailCount + ",mailboxUnreadMailCount=" + mailboxUnreadMailCount);
+			
+				for (Map<String, String> mailInfo : mailList) {
+					sb.append("<response>");
+					sb.append(String.format("<href><![CDATA[%s]]></href>", mailInfo.get("MAIL_ID")));
+						
+					sb.append(String.format("<importance><![CDATA[%s]]></importance>", mailInfo.get("IMPORTANCE")));	
 					
-					Pattern p = Pattern.compile("\\s*<(head|title|style)(.*?)<\\/(head|title|style)>\\s*", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-					Matcher m = p.matcher(htmlBody);
-					htmlBody = m.replaceAll("");
+					// Flagged is used for bookmark
+					sb.append(String.format("<flag><![CDATA[%s]]></flag>", mailInfo.get("MAIL_IS_FLAGGED")));
 					
-					p = Pattern.compile("\\s*<.*?>\\s*", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-					m = p.matcher(htmlBody);
-					htmlBody = m.replaceAll("").trim();
+					// attachment
+					sb.append(String.format("<attach><![CDATA[%s]]></attach>", mailInfo.get("HAS_ATTACH")));
+					
+					String msgto = "";
+					Address[] addresses = null;
 	
-					int minLen = Math.min(200, htmlBody.length());
-					htmlBody = htmlBody.substring(0, minLen);
+					String name = "";
 					
-					String preview = "<br/><span style='font-weight:normal;font-size:9pt;color:gray'>" + htmlBody + "</span>";
-					sb.append(String.format("<subject><![CDATA[%s]]></subject>", subject + preview));
-				}
-				else {
-					sb.append(String.format("<subject><![CDATA[%s]]></subject>", subject));
-				}
-				
-				// received date
-				Date receivedDate = message.getReceivedDate();
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-				sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-				String receivedDateStr = sdf.format(receivedDate);
-				
-				receivedDateStr = commonUtil.getDateStringInUTC(receivedDateStr, userInfo.getOffset(), false);
-				
-				sb.append(String.format("<receivedt><![CDATA[%s]]></receivedt>", receivedDateStr));
-				
-				// size
-				sb.append(String.format("<size><![CDATA[%d]]></size>", message.getSize()));
-				
-				// read/unread
-				int readFlag = message.isSet(Flags.Flag.SEEN) ? 1 : 0;
-				sb.append(String.format("<read><![CDATA[%d]]></read>", readFlag));
+					if (!viewSelectIndex.equals("3")) {
+						name = ezEmailUtil.getNameOrAddress(mailInfo.get("SENDER"));
+						String senderEmail = ezEmailUtil.getAddress(mailInfo.get("SENDER"));
+												
+						msgto = String.format("%s <%s>", name, senderEmail);
+					}
+					// in case of Sent mailbox
+					else {
+						// To, Cc, Bcc를 모두 포함한다.
+						String recipientsStr = mailInfo.get("RECIPIENT");
+						
+						if (!recipientsStr.isEmpty()) {
+							// To, Cc, Bcc를 분리한다.(||로 구분됨.)
+							String[] recipientsArr = recipientsStr.split("\\|\\|", 3);		
 							
-				if (message.isSet(Flags.Flag.ANSWERED)) {
-					sb.append("<contentclass><![CDATA[REPLY]]></contentclass>");
-				}
-				else {
-					boolean isForwarded = ezEmailUtil.hasForwardedFlag(message);
+							if (!recipientsArr[0].isEmpty()) {
+								String[] toStrArr = recipientsArr[0].split("; ");
+								StringBuilder msgtoBuilder = new StringBuilder();
+								
+								for (String toStr : toStrArr) {
+									toStr = toStr.trim();
+									String[] tokens = toStr.split(" <");
+									String toName = tokens[0]; 
+									
+									msgtoBuilder.append(toStr);
+									msgtoBuilder.append(",");
+									
+									name += toName;
+									name += "; ";									
+								}
+								
+								msgto = msgtoBuilder.toString();
+								msgto = msgto.substring(0, msgto.length() - 1);
+								name = name.substring(0, name.length() - 2);								
+							}
+						}
+					}
 					
-					if (isForwarded) {
-						sb.append("<contentclass><![CDATA[FORWARD]]></contentclass>");
+					// 2018-10-05 메일리스트에 보낸사람 국기표시 박예연
+					if (useCountryIP.equals("YES")) {
+						String countryCode = "";
+						String countryName = "";
+						
+						try {
+							String ctryCode = mailInfo.get("COUNTRY_CODE");
+							String mailIp = mailInfo.get("MAIL_IP");
+							String systemLang = userInfo.getLang();
+							
+							if (mailIp != null && !mailIp.equals("")) {
+								sb.append(String.format("<mailIP><![CDATA[%s]]></mailIP>", mailIp));
+							}
+							
+							if (ctryCode != null && !ctryCode.equals("")) {
+								String systemCountryName = "";
+								
+								switch (systemLang) {
+									case "1":
+										systemCountryName = "ko";
+										break;
+									case "2":
+										systemCountryName = "en";
+										break;
+									case "3":
+										systemCountryName = "ja";
+										break;
+									default:
+										systemCountryName = "kr";
+										break;
+								}
+								
+								Locale localeCountry = new Locale(systemCountryName, ctryCode);
+								countryName = localeCountry.getDisplayCountry(localeCountry);
+								countryName = countryName.replaceAll(" ", "");
+								countryCode = ctryCode.toLowerCase();
+							}
+							
+							sb.append(String.format("<countryName><![CDATA[%s]]></countryName>", countryName));
+							sb.append(String.format("<countryCode><![CDATA[%s]]></countryCode>", countryCode));							
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+					
+					sb.append(String.format("<systemCountryCode><![CDATA[%s]]></systemCountryCode>", systemCountryCode.toLowerCase()));
+					sb.append(String.format("<useCountryIP><![CDATA[%s]]></useCountryIP>", useCountryIP));
+					sb.append(String.format("<sender><![CDATA[%s]]></sender>", name));
+					sb.append(String.format("<msgto><![CDATA[%s]]></msgto>", msgto));
+	
+					// subject
+					String subject =  mailInfo.get("SUBJECT");								
+					subject = (subject != null) ? subject : "";
+					subject = commonUtil.cleanValue(subject);
+					
+					// secureMail
+					sb.append(String.format("<securemail>%s</securemail>", mailInfo.get("MAIL_IS_SECURED")));
+					
+					if (viewSelectIndex.equals("1")) {
+						String htmlBody = mailInfo.get("CONTENT");
+						
+						Pattern p = Pattern.compile("\\s*<(head|title|style)(.*?)<\\/(head|title|style)>\\s*", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+						Matcher m = p.matcher(htmlBody);
+						htmlBody = m.replaceAll("");
+						
+						p = Pattern.compile("\\s*<.*?>\\s*", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+						m = p.matcher(htmlBody);
+						htmlBody = m.replaceAll("").trim();
+		
+						int minLen = Math.min(200, htmlBody.length());
+						htmlBody = htmlBody.substring(0, minLen);
+						
+						String preview = "<br/><span style='font-weight:normal;font-size:9pt;color:gray'>" + htmlBody + "</span>";
+						sb.append(String.format("<subject><![CDATA[%s]]></subject>", subject + preview));
 					}
 					else {
-						sb.append("<contentclass><![CDATA[IPM.Note]]></contentclass>");
+						sb.append(String.format("<subject><![CDATA[%s]]></subject>", subject));
 					}
+					
+					// received date
+					sb.append(String.format("<receivedt><![CDATA[%s]]></receivedt>", mailInfo.get("MAIL_DATE")));
+					
+					// size
+					sb.append(String.format("<size><![CDATA[%s]]></size>", mailInfo.get("MAIL_SIZE")));
+					
+					// read/unread
+					sb.append(String.format("<read><![CDATA[%s]]></read>", mailInfo.get("MAIL_IS_SEEN")));
+								
+					if ("1".equals(mailInfo.get("MAIL_IS_ANSWERED"))) {
+						sb.append("<contentclass><![CDATA[REPLY]]></contentclass>");
+					}
+					else {
+						if ("1".equals(mailInfo.get("MAIL_IS_FORWARDED"))) {
+							sb.append("<contentclass><![CDATA[FORWARD]]></contentclass>");
+						}
+						else {
+							sb.append("<contentclass><![CDATA[IPM.Note]]></contentclass>");
+						}
+					}
+					
+					sb.append(String.format("<mailConfirm><![CDATA[%s]]></mailConfirm>", mailInfo.get("MAIL_IS_CONFIRMED").equals("1") ? true : false));
+					
+					sb.append("</response>");
 				}
 				
-				sb.append("</response>");
+				sb.append(String.format("<CONTENTRANGE><![CDATA[rows;%s;%s;total;%d;BoxTCount;%d;BoxUCount;%d;]]></CONTENTRANGE>", 
+						start, end, totalCount, mailboxMailCount, mailboxUnreadMailCount));
+				sb.append("</maillist>");				
+			} else {							
+				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+						userEmail, password, egovMessageSource, locale, 40*1000, 20*1000, ezEmailUtil);
+						
+				Folder folder = ia.getFolder(folderId);		
+				folder.open(Folder.READ_ONLY);
+								
+				messages = ezEmailUtil.searchFolder(ia, userEmail, folder, categoryArray, keywordArray, startDateObj, endDateObj, false, 
+						isUnreadOnly, isImportantOnly, sortTypeSpecifier, isAscending, startNo, listCount, false, extraMap, userInfo.getTenantId());
+				
+				totalCount = (int)extraMap.get("totalCount");
+				logger.debug("totalCount=" + totalCount);
+			
+				for (Message message : messages) {
+					UIDFolder uidFolder = (UIDFolder)message.getFolder();
+					
+					sb.append("<response>");
+					sb.append(String.format("<href><![CDATA[%s/%s]]></href>", folderId, uidFolder.getUID(message)));
+						
+					// importance
+					String[] headers = message.getHeader("X-Priority");
+					String header = "";
+					
+					if (headers == null){
+						//importance      = "low" / "normal" / "high"
+						String[] headerImportance = message.getHeader("Importance"); 
+						
+						if (headerImportance == null){
+							header = "normal";
+						} else {
+							header = headerImportance[0];
+						}
+					} else {
+						header = headers[0];
+					}
+					
+					int importance = 1;
+					// startsWith is used since
+					// there are cases like X-Priority: 1 (Highest) generated by Thunderbird.
+					if (header.startsWith("1") || header.startsWith("high")) {
+						importance = 2;
+					} else if (header.startsWith("5") || header.startsWith("low")) {
+						importance = 0;
+					} 
+					sb.append(String.format("<importance><![CDATA[%d]]></importance>", importance));	
+					
+					// Flagged is used for bookmark
+					int flagged = 0;
+					if (message.isSet(Flags.Flag.FLAGGED)) {
+						flagged = 1;
+					}
+					sb.append(String.format("<flag><![CDATA[%d]]></flag>", flagged));
+					
+					// attachment
+					boolean isAttached = IMAPAccess.hasAttachment(message);
+					int attached = isAttached ? 1 : 0;
+					sb.append(String.format("<attach><![CDATA[%d]]></attach>", attached));
+					
+					String msgto = "";
+					Address[] addresses = null;
+	
+					String name = "";
+					
+					if (!viewSelectIndex.equals("3")) {
+						name = ezEmailUtil.getFromNameOrAddressOfMessage(message);
+						String senderEmail = ezEmailUtil.getFromEmailAddressOfMessage(message);
+						
+						if (name.equals(senderEmail)) {
+							List<String> mailAddrList = ezEmailUtil.mailAddrNameParse(name, senderEmail);
+							name = mailAddrList.get(0);
+							senderEmail = mailAddrList.get(1);
+						}
+						
+						msgto = String.format("%s <%s>", name, senderEmail);
+					}
+					// in case of Sent mailbox
+					else {
+						addresses = message.getRecipients(Message.RecipientType.TO);
+						
+						if (addresses != null) {
+							String toHeader = message.getHeader("To")[0];
+							boolean isAscii = ezEmailUtil.isPureAscii(toHeader);
+							
+							String recipientName = "";
+							
+							StringBuilder msgtoBuilder = new StringBuilder();
+							
+							for (Address address : addresses) {
+								recipientName = ((InternetAddress) address).getPersonal(); // name part
+								String receiverUserEmail = ((InternetAddress) address).getAddress(); // email address part
+								
+								if (recipientName == null) {
+									recipientName = receiverUserEmail;
+								}
+								
+								if (receiverUserEmail != null) {
+									
+									if (!isAscii) {
+										byte[] rawBytes = receiverUserEmail.getBytes("iso-8859-1");
+										receiverUserEmail = ezEmailUtil.decodeNonAsciiBytes(rawBytes);								
+									} else {
+										// decoding is needed for the name part
+										receiverUserEmail = MimeUtility.decodeText(receiverUserEmail);
+									}
+								}
+								
+								msgtoBuilder.append(String.format("%s <%s>", recipientName, receiverUserEmail));
+								msgtoBuilder.append(",");
+								
+								name += recipientName;
+								name += "; ";
+							}
+							
+							msgto = msgtoBuilder.toString();
+							msgto = msgto.substring(0, msgto.length() - 1);
+							name = name.substring(0, name.length() - 2);
+						}
+					}
+					
+					// 2018-10-05 메일리스트에 보낸사람 국기표시 박예연
+					if (useCountryIP.equals("YES")) {
+						String countryCode = "";
+						String countryName = "";
+						try {
+							String[] ctryCode = message.getHeader("X-Jmocha-Country-Code");
+							String[] mailIp = message.getHeader("X-Jmocha-IP");
+							String systemLang = userInfo.getLang();
+							
+							if (mailIp != null && !mailIp[0].equals("")) {
+								sb.append(String.format("<mailIP><![CDATA[%s]]></mailIP>", mailIp[0]));
+							}
+							
+							if (ctryCode != null && ctryCode[0] != null) {
+								String systemCountryName = "";
+								switch (systemLang) {
+									case "1":
+										systemCountryName = "ko";
+										break;
+									case "2":
+										systemCountryName = "en";
+										break;
+									case "3":
+										systemCountryName = "ja";
+										break;
+									default:
+										systemCountryName = "kr";
+										break;
+								}
+								Locale localeCountry = new Locale(systemCountryName, ctryCode[0]);
+								countryName = localeCountry.getDisplayCountry(localeCountry);
+								countryName = countryName.replaceAll(" ", "");
+								countryCode = ctryCode[0].toLowerCase();
+							}
+							sb.append(String.format("<countryName><![CDATA[%s]]></countryName>", countryName));
+							sb.append(String.format("<countryCode><![CDATA[%s]]></countryCode>", countryCode));
+							
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+					sb.append(String.format("<systemCountryCode><![CDATA[%s]]></systemCountryCode>", systemCountryCode.toLowerCase()));
+					sb.append(String.format("<useCountryIP><![CDATA[%s]]></useCountryIP>", useCountryIP));
+					sb.append(String.format("<sender><![CDATA[%s]]></sender>", name));
+					sb.append(String.format("<msgto><![CDATA[%s]]></msgto>", msgto));
+	
+					// subject
+					String subject = ezEmailUtil.getSubject(message);								
+					subject = (subject != null) ? subject : "";
+					subject = commonUtil.cleanValue(subject);
+					
+					// secureMail
+					if (ezEmailUtil.hasSecureMailFlag(message)) {
+						sb.append(String.format("<securemail>1</securemail>"));
+					} else {
+						sb.append(String.format("<securemail>0</securemail>"));
+					}
+					
+					if (viewSelectIndex.equals("1")) {
+						((IMAPMessage)message).setPeek(true);
+						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, folderId, uidFolder.getUID(message), -1, null, false, false, locale, null, null);
+						String htmlBody = bodyInfoList.get(0);
+						
+						Pattern p = Pattern.compile("\\s*<(head|title|style)(.*?)<\\/(head|title|style)>\\s*", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+						Matcher m = p.matcher(htmlBody);
+						htmlBody = m.replaceAll("");
+						
+						p = Pattern.compile("\\s*<.*?>\\s*", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+						m = p.matcher(htmlBody);
+						htmlBody = m.replaceAll("").trim();
+		
+						int minLen = Math.min(200, htmlBody.length());
+						htmlBody = htmlBody.substring(0, minLen);
+						
+						String preview = "<br/><span style='font-weight:normal;font-size:9pt;color:gray'>" + htmlBody + "</span>";
+						sb.append(String.format("<subject><![CDATA[%s]]></subject>", subject + preview));
+					}
+					else {
+						sb.append(String.format("<subject><![CDATA[%s]]></subject>", subject));
+					}
+					
+					// received date
+					Date receivedDate = message.getReceivedDate();
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+					sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+					String receivedDateStr = sdf.format(receivedDate);
+					
+					receivedDateStr = commonUtil.getDateStringInUTC(receivedDateStr, userInfo.getOffset(), false);
+					
+					sb.append(String.format("<receivedt><![CDATA[%s]]></receivedt>", receivedDateStr));
+					
+					// size
+					sb.append(String.format("<size><![CDATA[%d]]></size>", message.getSize()));
+					
+					// read/unread
+					int readFlag = message.isSet(Flags.Flag.SEEN) ? 1 : 0;
+					sb.append(String.format("<read><![CDATA[%d]]></read>", readFlag));
+								
+					if (message.isSet(Flags.Flag.ANSWERED)) {
+						sb.append("<contentclass><![CDATA[REPLY]]></contentclass>");
+					}
+					else {
+						boolean isForwarded = ezEmailUtil.hasForwardedFlag(message);
+						
+						if (isForwarded) {
+							sb.append("<contentclass><![CDATA[FORWARD]]></contentclass>");
+						}
+						else {
+							sb.append("<contentclass><![CDATA[IPM.Note]]></contentclass>");
+						}
+					}
+					
+					sb.append(String.format("<mailConfirm><![CDATA[%s]]></mailConfirm>", ezEmailUtil.hasMailConfirmFlag(message)));
+					
+					sb.append("</response>");
+				}
+				
+				// Folder.getUnreadMessageCount() 메소드 동작 방식이 folder가 open 상태일 때는 읽지 않은 메일 갯수를 IMAP search 명령을
+				// 통해 비효율적으로 구하는 관계로 여기서 folder를 close 하도록 수정함. open 상태가 아닐 때는 IMAP status 명령을 사용하며 status 명령이
+				// 더 효율적임.
+				folder.close(false);
+				
+				sb.append(String.format("<CONTENTRANGE><![CDATA[rows;%s;%s;total;%d;BoxTCount;%d;BoxUCount;%d;]]></CONTENTRANGE>", 
+						start, end, totalCount, folder.getMessageCount(), folder.getUnreadMessageCount()));
+				sb.append("</maillist>");
 			}
-			
-			sb.append(String.format("<CONTENTRANGE><![CDATA[rows;%s;%s;total;%d;BoxTCount;%d;BoxUCount;%d;]]></CONTENTRANGE>", 
-					start, end, totalCount, folder.getMessageCount(), folder.getUnreadMessageCount()));
-			sb.append("</maillist>");
 		    
-			folder.close(false);
-			
 			// skyblue0o0 20180402 : 특정 유니코드 문자 포함 시 xml파싱 에러나서 빈칸으로 치환
 			returnData = sb.toString().replaceAll("[\\u0000-\\u0008\\u000B-\\u000C\\u000E-\\u001F]", " ");
 			
@@ -950,7 +1292,7 @@ public class EzEmailMailListController {
 	/**
 	 * 메일 삭제 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailDelete.do",method=RequestMethod.POST)
+	@RequestMapping(value="/ezEmail/mailDelete.do", method=RequestMethod.POST)
 	@ResponseBody
 	public String mailDelete(@CookieValue("loginCookie") String loginCookie, 
 			HttpServletRequest request,
@@ -1023,7 +1365,7 @@ public class EzEmailMailListController {
 				}
 	        }
 	        
-	        logger.debug("userId=" + userInfo.getId() + ",userEmail=" + userEmail);
+	        logger.debug("mailDelete userId=" + userInfo.getId() + ",userEmail=" + userEmail);
 	        
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);
@@ -1116,7 +1458,7 @@ public class EzEmailMailListController {
 	/**
 	 * 메일 이동/복사 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailMoveCopyMessage.do")
+	@RequestMapping(value="/ezEmail/mailMoveCopyMessage.do", method=RequestMethod.POST)
 	@ResponseBody
 	public String mailMoveCopyMessage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, 
 			@RequestBody String bodyData, Locale locale, Model model) throws Exception {
@@ -1245,7 +1587,7 @@ public class EzEmailMailListController {
 	/**
 	 * 메일 책갈피 지정 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailSetFlag.do",method=RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailSetFlag.do", method=RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailSetFlag(@CookieValue("loginCookie") String loginCookie,
 			HttpServletRequest request,
@@ -1347,7 +1689,7 @@ public class EzEmailMailListController {
 	/**
 	 * 메일 읽음 상태 지정 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailSetReadChange.do",method=RequestMethod.POST,
+	@RequestMapping(value="/ezEmail/mailSetReadChange.do", method=RequestMethod.POST,
 			produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailSetReadChange(@CookieValue("loginCookie") String loginCookie,
@@ -1437,7 +1779,7 @@ public class EzEmailMailListController {
 	/**
 	 * 메일에서 보낸사람 정보 추출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailGetFromEmail.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailGetFromEmail.do", method=RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailGetFromEmail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			@RequestBody String bodyData, Locale locale, Model model) throws Exception {
@@ -1504,6 +1846,10 @@ public class EzEmailMailListController {
 				
 				if (name == null || name.trim().equals("")) {
 					name = email;
+					
+					List<String> mailAddrList = ezEmailUtil.mailAddrNameParse(name, email);
+					name = mailAddrList.get(0);
+					email = mailAddrList.get(1);
 				}
 				
 				resultData = name + " <" + email + ">";
@@ -1528,7 +1874,7 @@ public class EzEmailMailListController {
 	/**
 	 * 수신거부 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailDenial.do")
+	@RequestMapping(value="/ezEmail/mailDenial.do", method=RequestMethod.GET)
 	public String mailDenial() throws Exception {
 		return "ezEmail/mailDenial";
 	}
@@ -1536,16 +1882,16 @@ public class EzEmailMailListController {
 	/**
 	 * jgw에 수신거부 요청 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailRequestDenial.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailRequestDenial.do", method=RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailRequestDenial(@CookieValue("loginCookie") String loginCookie,
 			@RequestBody String bodyData, Locale locale, Model model) throws Exception {
 		logger.debug("mailRequestDenial started.");
 		
 		String returnData = "<DATA><![CDATA[ERROR]]></DATA>";
-		
 		Document xmldom = commonUtil.convertStringToDocument(bodyData);
 		NodeList nodes = xmldom.getElementsByTagName("DENIAL");
+		NodeList shareId = xmldom.getElementsByTagName("SHAREID");
 		
 		if (nodes == null || nodes.getLength() == 0) {
 			logger.error("cannot get request data");
@@ -1558,6 +1904,12 @@ public class EzEmailMailListController {
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
         String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
         String userEmail = loginInfo.getId() + "@" + domainName;
+        // 20200109 공유사서함 수신거부 기능 추가
+        if (shareId != null && shareId.getLength() != 0) { 
+        	String shared = shareId.item(0).getTextContent();
+            logger.debug("shared=" + shared);
+        	userEmail = shared + "@" + domainName;
+        }
 		
         logger.debug("userEmail=" + userEmail);
         
@@ -1567,6 +1919,8 @@ public class EzEmailMailListController {
 		
 		for (int i=0; i<nodes.getLength(); i++) {
 			String address = nodes.item(i).getTextContent();
+			address = address.replaceAll(":", ""); // InternetAddress.class 1023_line
+			
 			InternetAddress internetAddress = new InternetAddress(address);
 			String email = internetAddress.getAddress();
 			String name = internetAddress.getPersonal();
@@ -1606,7 +1960,7 @@ public class EzEmailMailListController {
 	/**
 	 * mail list 및 mail quota 정보 추출 함수 (portal 연동)
 	 */
-	@RequestMapping(value="/ezEmail/getPortletMailList.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/getPortletMailList.do", method=RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String getPortletMailList(@CookieValue("loginCookie") String loginCookie,
 			Locale locale, Model model) throws Exception {
@@ -1649,20 +2003,21 @@ public class EzEmailMailListController {
 					
 			logger.debug("mailPercent=" + mailPercent + ",mailboxDetail=" + mailboxDetail + ",mailboxQuotaStr=" + mailboxQuotaStr);		
 			
-			Folder folder = ia.getFolder(folderPath);		
+			Folder folder = ia.getFolder(folderPath);
+			
+			// Folder.getUnreadMessageCount() 메소드 동작 방식이 folder가 open 상태일 때는 읽지 않은 메일 갯수를 IMAP search 명령을
+			// 통해 비효율적으로 구하는 관계로 folder open 전에 호출함. open 상태가 아닐 때는 IMAP status 명령을 사용하며 status 명령이
+			// 더 효율적임.							
+ 			int unreadCount = ia.getUnreadCount(folderPath);
+ 			
 			folder.open(Folder.READ_ONLY);
 	        
 	        Message[] messages = null;
 	        
-	        // set mailCount
  			int mailCount = 7;
- 			int unreadCount = ia.getUnreadCount(folderPath);
- 			if (unreadCount < mailCount) {
- 				mailCount = unreadCount;
- 			}
  			
-	        messages = ezEmailUtil.searchFolder(ia, userAccount, folder, "", "", null, null, false, 
-	        		true, false, "receivedDate", false, 0, mailCount, false, null, userInfo.getTenantId());
+	        messages = ezEmailUtil.searchFolder(ia, userAccount, folder, "", "", null, new Date(), false, 
+	        		false, false, "receivedDate", false, 0, mailCount, false, null, userInfo.getTenantId());
 	        
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -1693,11 +2048,14 @@ public class EzEmailMailListController {
 					subject = "<img src=\"/images/email/secureMail/security_icon.gif\" width=\"12\" />" + subject;
 				}
 				
+				int readFlag = message.isSet(Flags.Flag.SEEN) ? 1 : 0;
+				
 				sb.append("<NODE>");
 				sb.append("<HREF><![CDATA[" + href + "]]></HREF>");
 				sb.append("<DATE><![CDATA[" + receivedDateStr + "]]></DATE>");
 				sb.append("<SENDER><![CDATA[" + sender + "]]></SENDER>");
 				sb.append("<SUBJECT><![CDATA[" + subject + "]]></SUBJECT>");
+				sb.append("<READ><![CDATA[" + readFlag + "]]></READ>");
 				sb.append("</NODE>");
 			}
 			
@@ -1722,4 +2080,252 @@ public class EzEmailMailListController {
 		return returnData;
 	}
 	
+	/**
+	 * 메일 완료/완료취소 컨피그 설정
+	 */
+	@RequestMapping(value="/ezEmail/mailSetFlagForMailConfirm.do", method=RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String mailSetFlagForMailConfirm(@CookieValue("loginCookie") String loginCookie,
+			HttpServletRequest request,
+			@RequestBody String bodyData,
+			Locale locale, Model model) throws Exception {
+		logger.debug("mailSetFlagForMailConfirm started.");
+		logger.debug("bodyData=" + bodyData);
+		
+		String returnData = "OK";
+		
+		// get user credentials
+		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
+		String password = userIdAndPassword.get(1);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+        String userEmail = userInfo.getId() + "@" + domainName;
+        String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+
+        if (useSharedMailbox.equals("YES")) {
+        	String shareId = request.getParameter("shareId");
+    		logger.debug("shareId=" + shareId);
+            
+            if (shareId != null) {
+    			if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+    				logger.debug("the user cannot access the shareId.");
+    				logger.debug("mailSetFlag ended.");
+    				
+    				return "";
+    			}
+    			
+    			userEmail = shareId + "@" + domainName;
+    		}
+        }
+        logger.debug("userId=" + userInfo.getId() + ",userEmail=" + userEmail);
+        
+		Document doc = commonUtil.convertStringToDocument(bodyData);
+		String uniqueId = doc.getElementsByTagName("ITEMID").item(0).getTextContent();	
+		
+		String folderId = null;
+		long[] uids = null;
+		
+		if (uniqueId.endsWith(";")) {
+			uniqueId = uniqueId.substring(0, uniqueId.length() - 1);
+		}
+		
+		String[] folderAndMsgIdArray = uniqueId.split(";");
+		folderId = folderAndMsgIdArray[0].split("/")[0];			
+		uids = new long[folderAndMsgIdArray.length];
+		
+		for (int i = 0; i < folderAndMsgIdArray.length; i++) {
+			String folderAndMsgId = folderAndMsgIdArray[folderAndMsgIdArray.length - i - 1];
+			String msgId = folderAndMsgId.split("/")[1];
+			uids[i] = Long.parseLong(msgId);
+		}	
+		
+		logger.debug("folderId=" + folderId);		
+		
+		IMAPAccess ia = null;
+		
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
+					
+			IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
+			sourceFolder.open(Folder.READ_WRITE);		
+					
+			Message[] msgs = sourceFolder.getMessagesByUID(uids);
+			for (int i = 0; i < msgs.length; i++) {
+				Message msg = msgs[i];
+				ezEmailUtil.setMailConfirmFlag(msg, !ezEmailUtil.hasMailConfirmFlag(msg));
+			}
+					
+			sourceFolder.close(true);
+		} catch (Exception e) {
+			returnData = "ERROR : " + e.getMessage();
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		
+		logger.debug("returnData=" + returnData);
+		logger.debug("mailSetFlagForMailConfirm ended.");
+		
+		return returnData;				
+	}
+	
+	/**
+	 * 해킹 메일 신고 기능
+	 */
+	@RequestMapping(value="/ezEmail/hackingMailMoveAndSend.do", method=RequestMethod.POST)
+	@ResponseBody
+	public String hackingMailMoveAndSend(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, 
+			@RequestBody String bodyData, Locale locale, Model model) throws Exception {
+		logger.debug("mailMoveCopyMessage started.");
+		logger.debug("bodyData=" + bodyData);
+		
+		String returnValue = "OK";
+		
+		IMAPAccess ia = null;
+        String userEmail = "";      		
+		
+		try {
+			List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
+			String password = userIdAndPassword.get(1);
+			
+			Document doc = commonUtil.convertStringToDocument(bodyData);
+			String cmd = doc.getElementsByTagName("CMD").item(0).getTextContent();
+			String uniqueId = doc.getElementsByTagName("UNIQUEID").item(0).getTextContent();
+			
+			String[] folderAndMsgIdArray = ezEmailUtil.makeFolderAndMsgIdArray(uniqueId);
+			
+			String folderId = folderAndMsgIdArray[0].split("/")[0];			
+			long[] uids = new long[folderAndMsgIdArray.length];
+			
+			for (int i = 0; i < folderAndMsgIdArray.length; i++) {
+				String folderAndMsgId = folderAndMsgIdArray[i];
+				String msgId = folderAndMsgId.split("/")[1];
+				uids[i] = Long.parseLong(msgId);
+			}
+			
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+	        String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+	        userEmail = userInfo.getId() + "@" + domainName;
+	        
+	        logger.debug("userId=" + userInfo.getId() + ",userEmail=" + userEmail);
+	        
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
+
+			
+			IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
+			sourceFolder.open(Folder.READ_WRITE);
+			
+			///////////////////////// 해킹의심메일 관리자 계정으로 발송 로직 시작 /////////////////////////
+			InternetAddress from = new InternetAddress();
+	    	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+	    	from.setAddress(userInfo.getEmail());
+
+			String adminID = ezCommonService.getTenantConfig("HackingAdminID",
+					userInfo.getTenantId());
+
+			OrganUserVO adminVo = ezOrganService.getUserInfo(adminID,
+					userInfo.getLang(), userInfo.getTenantId());
+
+			// To
+			InternetAddress to = new InternetAddress();
+	    	to.setPersonal(adminVo.getDisplayName(), "UTF-8");
+	    	to.setAddress(adminVo.getMail());
+			
+			for (int i = 0; i < uids.length; i++) {
+				Message message = sourceFolder.getMessageByUID(uids[i]);
+
+				String subject = "[" + egovMessageSource.getMessage("ezEmail.zno000", locale) + "] " + message.getSubject();
+		    	
+		    	// 해킹의심메일의 보낸사람
+		    	Address[] arrFroms = message.getFrom();
+				String fromStr = ((InternetAddress)arrFroms[0]).getAddress();
+				/*if (arrFroms != null) {
+					fromStr = ezEmailUtil.getFromNameOrAddressOfMessage(message);
+					fromStr = commonUtil.trimDoubleQuotes(fromStr);
+					fromStr = fromStr + " <" + ((InternetAddress)arrFroms[0]).getAddress() + ">";
+				} else {
+					String[] fromHeaders = message.getHeader("From");
+					if (fromHeaders != null) {
+						fromStr = MimeUtility.decodeText(message.getHeader("From")[0]);
+					}
+				}*/
+				
+				// 해킹의심메일의 보낸일자
+		    	Date receivedDate = message.getReceivedDate();
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+				String receivedDateStr = sdf.format(receivedDate);
+				receivedDateStr = commonUtil.getDateStringInUTC(receivedDateStr, userInfo.getOffset(), false);
+				
+				// 내용
+				String content = "";
+		    	content += "<span>" + egovMessageSource.getMessage("ezEmail.t707", locale) + " : " + message.getSubject() + "</span><br>";
+		    	content += "<span>" + egovMessageSource.getMessage("ezEmail.t656", locale) + " : " + fromStr + "</span><br>";
+		    	content += "<span>" + egovMessageSource.getMessage("ezEmail.t657", locale) + " : " + receivedDateStr + "</span><br>";
+		    	content = "<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td>" + content + "</td></tr></table>";
+		    	
+		    	// 첨부파일
+		    	String fileName = ezEmailUtil.saveFilenameForm(userInfo, locale, message) + ".eml";
+				//fileName = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), fileName);
+				logger.debug("fileName=" + fileName);
+				
+				ByteArrayInputStream inputStream = null;
+				ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+				
+				try{
+					message.writeTo(outputStream);
+					inputStream = new ByteArrayInputStream(outputStream.toByteArray());
+				} catch(IOException e){
+					e.printStackTrace();
+				} finally {
+					if (inputStream != null) {
+						inputStream.close();
+					}
+					if (outputStream != null) {
+						outputStream.close();
+					}
+				}
+				
+				ezEmailService.sendMail(userEmail, password, userInfo.getLocale(), from, new InternetAddress[]{to}, null, null, subject, content, false, EmailImportance.NORMAL, fileName, "message/rfc822", inputStream);
+		        
+			}
+			
+	        ///////////////////////// 해킹의심메일 관리자 계정으로 발송 로직 끝 /////////////////////////
+	        
+	        
+	        ///////////////////////// 해당 메일을 사용자의 해킹의심메일함으로 이동 시작 /////////////////////////
+			Message[] messages = sourceFolder.getMessagesByUID(uids);						
+			IMAPFolder movefolder = (IMAPFolder)ia.getFolder(ezEmailUtil.getJunkFolderId(userInfo.getLocale()));			
+			
+			String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", userInfo.getTenantId());
+			
+			if (useImapMoveCommand.equals("YES")) {			
+				if (cmd.equalsIgnoreCase("MOVE")) {
+					sourceFolder.moveUIDMessages(messages, movefolder);
+				} else {					
+					sourceFolder.copyUIDMessages(messages, movefolder);					
+				}
+			}
+			///////////////////////// 해당 메일을 사용자의 해킹의심메일함으로 이동 끝 /////////////////////////
+			
+			sourceFolder.close(true);		
+		} catch (Exception e) {
+			returnValue = "ERROR : " + e.getMessage();
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}			
+		}
+		
+		logger.debug("returnValue=" + returnValue);
+		logger.debug("hackingMailMoveAndSend ended.");
+		
+		return returnValue;
+	}
 }

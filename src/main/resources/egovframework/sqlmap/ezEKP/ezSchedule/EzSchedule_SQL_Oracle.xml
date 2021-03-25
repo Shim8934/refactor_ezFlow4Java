@@ -14,6 +14,8 @@
 	<typeAlias  alias="ReceiveListVO" 		type="egovframework.ezEKP.ezSchedule.vo.ScheduleReceiveListVO"/>
 	<typeAlias  alias="OrganUserVO" 		type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>
 	<typeAlias  alias="ResGetScheduleVO" 	type="egovframework.ezEKP.ezResource.vo.ResGetScheduleVO"/>
+	<typeAlias  alias="ScheduleGroupVO" 	type="egovframework.ezEKP.ezSchedule.vo.ScheduleGroupVO"/>
+	
 	
 	<resultMap class="ScheGetHolidayVO" id="scheGetHolidayVO">
 		<result property="holidayID"		column="HOLIDAYID"			columnIndex="1"/>
@@ -118,6 +120,19 @@
 		<result property="info"				column="INFO"				columnIndex="8"/>		
 	</resultMap>
 	
+	<resultMap class="ScheduleGroupListVO" id="scheduleGroupMemberListVO2">
+		<result property="memberId"			column="MEMBERID"			columnIndex="1"/>
+		<result property="memberName"		column="MEMBERNAME"			columnIndex="2"/>
+		<result property="memberName2"		column="MEMBERNAME2"		columnIndex="3"/>
+		<result property="status"			column="STATUS"				columnIndex="4"/>
+		<result property="responseDate"		column="RESPONSEDATE"		columnIndex="5"/>
+		<result property="mail"				column="MAIL"				columnIndex="6"/>
+		<result property="department"		column="DEPARTMENT"			columnIndex="7"/>
+		<result property="info"				column="INFO"				columnIndex="8"/>		
+		<result property="description"				column="DESCRIPTION"	columnIndex="9"/>		
+		<result property="groupName"				column="GROUPNAME"		columnIndex="10"/>		
+	</resultMap>
+	
 	<resultMap class="ScheduleGroupListVO" id="inviteScheduleGroupListVO">
 		<result property="groupId"			column="GROUPID"			columnIndex="1"/>
 		<result property="groupName"		column="GROUPNAME"			columnIndex="2"/>
@@ -141,6 +156,7 @@
 		<result property="dateType"			column="DATETYPE"			columnIndex="9"/>
 		<result property="startDate"		column="STARTDATE"			columnIndex="10"/>
 		<result property="endDate"			column="ENDDATE"			columnIndex="11"/>
+		<result property="repetition"		column="REPETITION"			columnIndex="12"/>
 	</resultMap>
 
 	<resultMap class="OrganUserVO" id="organUserVO">
@@ -271,12 +287,12 @@
         	FROM 
         		TBL_SCHEDULE
        		WHERE  
-       			OWNERID IN ($v_INDILIST$)
+       			(OWNERID IN ($v_INDILIST$)
             AND 
             	(            		
             		(STARTDATE >= TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND STARTDATE <= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')) 
             		OR
-            		(ENDDATE >= TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE < TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')) 
+            		(ENDDATE > TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE < TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')) 
             		OR
             		(STARTDATE < TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE >= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')) 
             		OR 
@@ -288,51 +304,17 @@
             <isNotEmpty property="v_SEARCHTITLE">
             <![CDATA[
             and 
-            	title like '%'||(REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_')||'%'
+            	title like '%'|| (REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_')) ||'%'
             ]]>
             </isNotEmpty> 
-            <isNotEmpty prepend="AND" property="v_PKEYWORD"> $v_PFILTER$ LIKE '%'||#v_PKEYWORD#||'%' </isNotEmpty>            		
-        	ORDER BY STARTDATE ASC
-			) a
-			UNION
-			<![CDATA[
-			SELECT b.* FROM
-			(
-			SELECT 
-				SCHEDULEID,
-				PARENTID,
-				OWNERID,
-				OWNERNAME,
-				OWNERNAME2,
-				CREATORID,
-				CREATORNAME,
-				CREATORNAME2,
-				(CREATEDATE + #v_OFFSETMIN#/(24*60)) AS CREATEDATE,
-				MODIFIERID,
-				MODIFIERNAME,
-				MODIFIERNAME2,
-				(MODIFYDATE + #v_OFFSETMIN#/(24*60)) AS MODIFYDATE,
-				SCHEDULETYPE,
-				IMPORTANCE,
-				HASATTENDANT,
-				HASATTACH,
-				HASCOMMENT,
-				ISREADONLY,
-				ISPUBLIC,
-				DATETYPE,
-				(STARTDATE + #v_OFFSETMIN#/(24*60)) AS STARTDATE,
-				(ENDDATE + #v_OFFSETMIN#/(24*60)) AS ENDDATE,
-				REPETITION,
-				REPETITIONDELETE,
-				TITLE,
-				LOCATION,
-				CONTENTPATH,
-				'' AS GROUPNAME,
-				COMPANYID
-        	FROM 
-        		TBL_SCHEDULE
-       		WHERE  
-       			OWNERID IN ($v_PIDLIST$)
+            <isNotEmpty property="v_PKEYWORD">
+            and
+            	$v_PFILTER$ like '%' || (REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_')) || '%'
+            </isNotEmpty>
+            <![CDATA[
+            )
+            or 
+       			(OWNERID IN ($v_PIDLIST$)
        		and
         		companyid = #v_COMPANYID#        	     	
         	and 
@@ -369,7 +351,7 @@
             	(            		
             		(STARTDATE >= TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND STARTDATE <= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')) 
             		OR
-            		(ENDDATE >= TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE < TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')) 
+            		(ENDDATE > TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE < TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')) 
             		OR
             		(STARTDATE < TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE >= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')) 
             		OR 
@@ -381,12 +363,12 @@
             <isNotEmpty property="v_SEARCHTITLE">
             <![CDATA[
             and 
-            	title like concat('%',concat(REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_'),'%')
+            	title like '%'|| (REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_')) ||'%'
             ]]>
             </isNotEmpty>
             <isNotEmpty prepend="AND" property="v_PKEYWORD"> $v_PFILTER$ LIKE '%'||#v_PKEYWORD#||'%' </isNotEmpty>            		
+        	) ) A
         	ORDER BY STARTDATE ASC
-			)b
 	</select>
 	
 	<select id="EzScheduleDAO.getMyGroupList" parameterClass="map" resultMap="scheduleGroupListVO">
@@ -572,7 +554,7 @@
 	]]>
 	</select>
 	
-	<select id="EzScheduleDAO.getGroupMemberList" parameterClass="map" resultMap="scheduleGroupMemberListVO">
+	<select id="EzScheduleDAO.getGroupMemberList" parameterClass="map" resultMap="scheduleGroupMemberListVO2">
 			 <!-- SELECT 
 			 	memberid,
 			 	membername,
@@ -590,13 +572,10 @@
 	<![CDATA[
 	SELECT CC.*
 	FROM ( select A.memberid,
-		   E.GROUPNAME,
-		   E.DESCRIPTION,
-           case #v_LANG#
-	       when '1' then A.memberName                 
-		   when '2' then A.memberName2
-           end membername, 
-           '' as membername2,
+		   E.GROUPNAME as groupName,
+		   E.DESCRIPTION as description,
+           A.memberName,               
+		   A.memberName2,
 		   A.status as status,
 		   (A.RESPONSEDATE + #v_OFFSETMIN#/(24*60)) as responsedate,
            '' as mail,
@@ -701,6 +680,15 @@
 				TENANT_ID = #v_TENANTID#
 			AND
        		PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+       		AND
+				cn not in ( SELECT 
+										cn 
+								FROM
+						           		TBL_USERMASTER_RETIRE 
+						        WHERE
+						                TENANT_ID = #v_TENANTID#
+						        AND 
+						           		PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# )
 			UNION ALL
 				SELECT
 					A.CN ,                  			
@@ -911,14 +899,16 @@
 		]]>			
 	</select>
 	
-	<select id="EzScheduleDAO.getTholiday" parameterClass="Map" resultMap="scheGetHolidayVO">
+	<select id="EzScheduleDAO.getTholiday" parameterClass="Map" resultClass="scheGetHolidayVO">
 		<isEqual property="v_COMPANYID" compareValue="ALL">
 			<![CDATA[
 				SELECT 
 					HOLIDAYID,
 	                HOLIDAYNAME,
 	                HOLIDAYNAME2,
+	                HOLIDAYFLAG,
 	                HOLIDAYDATE,
+	                HOLIDAYREPEAT,
 	                NVL(ISSOLAR, '0') ISSOLAR,
 	                NVL(ISREPEAT, '0') ISREPEAT,
 	                NVL(ISUSE, '0') ISUSE,
@@ -932,12 +922,15 @@
 		</isEqual>
 		<isNotEqual property="v_COMPANYID" compareValue="ALL">
 	   		<isEqual property="v_COMPANYID" compareValue="VIEW">
+	   			<isEqual property="isRest" compareValue="all">
 	   			<![CDATA[
 					SELECT 
 						HOLIDAYID,
 		                HOLIDAYNAME,
 		                HOLIDAYNAME2,
+		                HOLIDAYFLAG,
 		                HOLIDAYDATE,
+		                HOLIDAYREPEAT,
 		                NVL(ISSOLAR, '0') ISSOLAR,
 		                NVL(ISREPEAT, '0') ISREPEAT,
 		                NVL(ISUSE, '0') ISUSE,
@@ -946,32 +939,142 @@
 		           	FROM 
 		           		TBL_HOLIDAYLIST 
 					WHERE  
-						(USECOMPANY = '1' OR USECOMPANY = #v_USERCOMPANY#)
+						(USECOMPANY = 'ALL' OR USECOMPANY = #v_USERCOMPANY#)
 					AND
 						TENANT_ID = #v_TENANTID#
-				]]>		                   
-			</isEqual>           
-            <isNotEqual property="v_COMPANYID" compareValue="VIEW">
-            	<![CDATA[
-		          	SELECT 
-		          		HOLIDAYID,
-		                HOLIDAYNAME,
-		                HOLIDAYNAME2,
-		                HOLIDAYDATE,
-		                NVL(ISSOLAR, '0') ISSOLAR,
-		                NVL(ISREPEAT, '0') ISREPEAT,
-		                NVL(ISUSE, '0') ISUSE,
-		                NVL(ISREST, '0') ISREST,
-		                USECOMPANY
-					FROM 
-						TBL_HOLIDAYLIST 
-					WHERE  
-						USECOMPANY = #v_COMPANYID#
 					AND
-						TENANT_ID = #v_TENANTID#	
-				]]>
+						ISUSE = 1
+				]]>		                   
+				</isEqual>
+				<isNotEqual property="isRest" compareValue="all">
+	   				<isEqual property="isRest" compareValue="rest">
+			   			<![CDATA[
+							SELECT 
+								HOLIDAYID,
+				                HOLIDAYNAME,
+				                HOLIDAYNAME2,
+				                HOLIDAYFLAG,
+				                HOLIDAYDATE,
+				                HOLIDAYREPEAT,
+				                NVL(ISSOLAR, '0') ISSOLAR,
+				                NVL(ISREPEAT, '0') ISREPEAT,
+				                NVL(ISUSE, '0') ISUSE,
+				                NVL(ISREST, '0') ISREST,
+				                USECOMPANY
+				           	FROM 
+				           		TBL_HOLIDAYLIST 
+							WHERE  
+								(USECOMPANY = 'ALL' OR USECOMPANY = #v_USERCOMPANY#)
+							AND
+								TENANT_ID = #v_TENANTID#
+							AND
+								ISUSE = 1
+							AND
+								ISREST = 1
+						]]>		                   
+	   				</isEqual>
+					<isEqual property="isRest" compareValue="normal">
+			   			<![CDATA[
+							SELECT 
+								HOLIDAYID,
+				                HOLIDAYNAME,
+				                HOLIDAYNAME2,
+				                HOLIDAYFLAG,
+				                HOLIDAYDATE,
+				                HOLIDAYREPEAT,
+				                NVL(ISSOLAR, '0') ISSOLAR,
+				                NVL(ISREPEAT, '0') ISREPEAT,
+				                NVL(ISUSE, '0') ISUSE,
+				                NVL(ISREST, '0') ISREST,
+				                USECOMPANY
+				           	FROM 
+				           		TBL_HOLIDAYLIST 
+							WHERE  
+								(USECOMPANY = 'ALL' OR USECOMPANY = #v_USERCOMPANY#)
+							AND
+								TENANT_ID = #v_TENANTID#							
+						]]>		                   
+	   				</isEqual>
+   				</isNotEqual>
+			</isEqual> 
+            <isNotEqual property="v_COMPANYID" compareValue="VIEW">
+            	<isEqual property="v_COMPANYID" compareValue="STATUTORY">
+            		<![CDATA[
+			          	SELECT 
+			          		HOLIDAYID,
+			                HOLIDAYNAME,
+			                HOLIDAYNAME2,
+			                HOLIDAYFLAG,
+			                HOLIDAYDATE,
+			                HOLIDAYREPEAT,
+			                NVL(ISSOLAR, '0') ISSOLAR,
+			                NVL(ISREPEAT, '0') ISREPEAT,
+			                NVL(ISUSE, '0') ISUSE,
+			                NVL(ISREST, '0') ISREST,
+			                USECOMPANY
+						FROM 
+							TBL_HOLIDAYLIST 
+						WHERE  
+							USECOMPANY = 'ALL'
+						AND
+							TENANT_ID = #v_TENANTID#
+						ORDER BY
+							TO_CHAR(HOLIDAYDATE,'yyyy-mm-dd'), ISSOLAR desc, SUBSTR(HOLIDAYREPEAT, 6)
+					]]>
+            	</isEqual>
+            	<isNotEqual property="v_COMPANYID" compareValue="STATUTORY">
+	            	<![CDATA[
+			          	SELECT 
+			          		HOLIDAYID,
+			                HOLIDAYNAME,
+			                HOLIDAYNAME2,
+			                HOLIDAYFLAG,
+			                HOLIDAYDATE,
+			                HOLIDAYREPEAT,
+			                NVL(ISSOLAR, '0') ISSOLAR,
+			                NVL(ISREPEAT, '0') ISREPEAT,
+			                NVL(ISUSE, '0') ISUSE,
+			                NVL(ISREST, '0') ISREST,
+			                USECOMPANY
+						FROM 
+							TBL_HOLIDAYLIST 
+						WHERE  
+							USECOMPANY = #v_COMPANYID#
+						AND
+							TENANT_ID = #v_TENANTID#
+						ORDER BY
+							TO_CHAR(HOLIDAYDATE,'yyyy-mm-dd'), ISSOLAR desc, SUBSTR(HOLIDAYREPEAT, 6)
+					]]>
+            	</isNotEqual>
 			</isNotEqual>                       	
 		</isNotEqual>			
+	</select>
+	
+	<select id="EzScheduleDAO.getTholidayYear" parameterClass="Map" resultClass="scheGetHolidayVO">
+		<![CDATA[
+			SELECT 
+          		HOLIDAYID,
+                HOLIDAYNAME,
+                HOLIDAYNAME2,
+                HOLIDAYFLAG,
+                HOLIDAYDATE,
+                HOLIDAYREPEAT,
+                NVL(ISSOLAR, '0') ISSOLAR,
+                NVL(ISREPEAT, '0') ISREPEAT,
+                NVL(ISUSE, '0') ISUSE,
+                NVL(ISREST, '0') ISREST,
+                USECOMPANY
+			FROM 
+				TBL_HOLIDAYLIST 
+			WHERE  
+				USECOMPANY = #v_COMPANYID#
+			AND
+				TENANT_ID = #v_TENANTID#	
+			AND
+				(TO_CHAR(HOLIDAYDATE,'YYYY') = #holidayYear# OR ISREPEAT = 1 OR HOLIDAYREPEAT LIKE #holidayYear# || '%')
+			ORDER BY
+				TO_CHAR(HOLIDAYDATE,'yyyy-mm-dd'), ISSOLAR desc, SUBSTR(HOLIDAYREPEAT, 6)
+		]]>
 	</select>
 	
 	<select id="EzScheduleDAO.getCurScheduleId" resultClass="int">
@@ -1024,7 +1127,8 @@
              	B.LOCATION AS LOCATION,
              	B.DATETYPE AS DATETYPE,             	
              	(B.STARTDATE + #v_OFFSETMIN#/(24*60)) AS STARTDATE,             	
-             	(B.ENDDATE + #v_OFFSETMIN#/(24*60)) AS ENDDATE
+             	(B.ENDDATE + #v_OFFSETMIN#/(24*60)) AS ENDDATE,
+             	b.repetition as repetition
         	FROM
         		TBL_ATTENDANT A JOIN TBL_SCHEDULE B ON A.SCHEDULEID = B.SCHEDULEID AND A.TENANT_ID = B.TENANT_ID
         	WHERE
@@ -1073,6 +1177,20 @@
 				scheduleid = #v_SCHEDULEID#
 			and
 				tenant_id = #v_TENANTID#
+		]]>
+	</select>
+	
+	<select id="EzScheduleDAO.selectCreatorMember" parameterClass="Map" resultClass="ScheduleGroupVO">
+		<![CDATA[
+			select
+				creatorid,
+				creatorname,
+				creatorname2
+			from
+				tbl_schedulegroup
+			where
+				groupId = #v_GROUPID#
+			
 		]]>
 	</select>
 	
@@ -1235,11 +1353,7 @@
 				DATETYPE = #v_DATETYPE#,
 				STARTDATE = TO_DATE(#v_STARTDATE#,'yyyy-mm-dd hh24:mi'),				
 				ENDDATE = TO_DATE(#v_ENDDATE#,'yyyy-mm-dd hh24:mi'),
-		    ]]>
-            <isNotEmpty property="v_REPETITION">
                 REPETITION = NVL(#v_REPETITION#, ' '),
-            </isNotEmpty>
-            <![CDATA[	
 				TITLE = #v_TITLE#,
 				LOCATION = NVL(#v_LOCATION#, ' ')
 	   		WHERE  
@@ -1312,6 +1426,17 @@
 	   			SCHEDULEID = #v_SCHEDULEID#
 	   		AND
 	   			TENANT_ID = #v_TENANTID#
+	   	]]>		
+	</delete>
+	
+	<delete id="EzScheduleDAO.deleteScheduleRepeChild" parameterClass="map">
+		<![CDATA[
+			delete from
+				tbl_schedulerepetition_del
+	   		where  
+	   			scheduleid in (select scheduleid from tbl_schedule where parentid = #v_SCHEDULEID#)
+	   		and
+	   			tenant_id = #v_TENANTID#
 	   	]]>		
 	</delete>
 	
@@ -1450,5 +1575,58 @@
 		]]>
 	</update>
 
+	<update id="EzScheduleDAO.updateManageScheduleMember" parameterClass="map">
+		<![CDATA[
+			update
+				tbl_schedulegroup
+			set 
+			    creatorid = #v_MEMBERID#,
+                creatorname = #v_MEMBERNAME#,
+                creatorname2 = #v_MEMBERNAME2#,
+                precreatorid = #v_CREATORID#,
+                precreatorname = #v_CREATORNAME#,
+                precreatorname2 = #v_CREATORNAME2#,
+                modifydate = SYS_EXTRACT_UTC(SYSTIMESTAMP)
+	   		where  
+	   			groupid = #v_GROUPID#
+	   		and	
+	   			tenant_id = #v_TENANTID#
+	   	]]>		
+	</update>
+	
+	<update id="EzScheduleDAO.updateManageScheduleGroupMember" parameterClass="map">
+		 <![CDATA[
+			 update
+				tbl_schedulegroupmember
+			set 
+			    memberid = #v_CREATORID#,
+                membername = #v_CREATORNAME#,
+                membername2 = #v_CREATORNAME2#,
+                responsedate = SYS_EXTRACT_UTC(SYSTIMESTAMP)
+                
+	   		where  
+	   			groupid = #v_GROUPID#
+	   		and	
+	   			tenant_id = #v_TENANTID#
+	   		and
+	   		    memberid = #v_MEMBERID# 
+	   	]]>	 
+	</update>
+	
+	<update id="EzScheduleDAO.updateScheduleGroup" parameterClass="map">
+		<![CDATA[
+			update 
+				tbl_schedulegroup
+			set
+				groupname = #v_GROUPNAME#, 		
+				description = #v_DESCRIPTION#					
+			where 
+				groupid = #v_GUID#
+			and
+				tenant_id = #v_TENANTID#
+   		]]>
+	</update>
+	
+	
 </sqlMap>
 

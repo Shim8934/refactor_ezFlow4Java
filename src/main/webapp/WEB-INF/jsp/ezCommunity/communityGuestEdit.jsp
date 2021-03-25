@@ -59,7 +59,7 @@
 				
 				switch(idx) {
 					case 1:
-						url = "/ezCommunity/guestOne.do?code=${code}";
+						url = "/ezCommunity/guestOne.do?code=" + '<c:out value="${code}"/>';
 						break;					
 				}
 				

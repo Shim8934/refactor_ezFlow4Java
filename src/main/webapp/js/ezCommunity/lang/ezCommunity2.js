@@ -38,7 +38,7 @@ var strLang80 = "Prev"
 var strLang81 = "Next"
 var strLang82 = "Total "
 var strLang83 = "-items"
-var strLang535 = "No data found.";
+var strLang535 = "\"No data found\"";
 var strLang5351 = "People";
 
 /* 2017-11-01 장진혁 */

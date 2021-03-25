@@ -12,12 +12,12 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezResource/admin/gwBoard_Post_RegBoardRightMain.js')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" id="clientEventHandlersJS" >
-			g_BrdID = "${brdID}";
-			g_BrdNm = "<c:out value='${brdNm}' />";
-			g_UserID = "${userInfo.id}";
+			g_BrdID = "<c:out value='${brdID}'/>";
+			g_BrdNm = "<c:out value='${brdNm}'/>";
+			g_UserID = "<c:out value='${userInfo.id}'/>";
 
-			var L_BrdGb = "${brdGb}";
-			var pCompanyID = "${companyID}";
+			var L_BrdGb = "<c:out value='${brdGb}'/>";
+			var pCompanyID = "<c:out value='${companyID}'/>";
 
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {

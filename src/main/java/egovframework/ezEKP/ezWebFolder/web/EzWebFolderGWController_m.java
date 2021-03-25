@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -23,6 +24,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
+import egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO;
 import egovframework.ezEKP.ezWebFolder.vo.FavoriteVO;
 import egovframework.ezEKP.ezWebFolder.vo.SearchVO;
 import egovframework.ezEKP.ezWebFolder.vo.ShareVO;
@@ -75,6 +77,8 @@ public class EzWebFolderGWController_m {
 		String searchExt = orElse(request.getParameter("searchExt"), "");
 		String searchFileName = orElse(request.getParameter("searchFileName"), "");
 		String searchCreatorName = orElse(request.getParameter("searchCreatorName"), "");
+		String sortColumn = orElse(request.getParameter("sortColumn"), "");
+		String sortType = orElse(request.getParameter("sortType"), "");
 		
 		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
    		searchExt = commonUtil.getWildcardEscapedString(searchExt, dbName);
@@ -126,7 +130,8 @@ public class EzWebFolderGWController_m {
 			
 			int startPoint = (pageNumInt - 1) * pageSizeInt;
 			
-			List<ShareVO> list = ezWebFolderService_m.getSharingList(subSearchFlag, userId, userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
+			List<ShareVO> list = ezWebFolderService_m.getSharingList(subSearchFlag, userId, userInfo.getPrimary(), offset, 
+					startPoint, pageSizeInt, searchInfo, tenantId, sortColumn, sortType );
 			Map<String, Long> countInfo = ezWebFolderService_m.getSharingCount(subSearchFlag, userId, userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
 			
 			data.put("list", list);
@@ -206,7 +211,7 @@ public class EzWebFolderGWController_m {
 	/**
 	 * 특정 폴더 또는 파일에 대해 특정 사용자가 공유한 정보 조회
 	 */
-	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/sharing/{folderFileId}/{folderFileType}", method=RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/sharing/{folderFileId}/{folderFileType:.+}", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getUserSharingInfo(@PathVariable String userId, @PathVariable String folderFileId, @PathVariable String folderFileType, HttpServletRequest request) {
 		logger.debug("getUserSharingInfo started.");
 		
@@ -281,6 +286,8 @@ public class EzWebFolderGWController_m {
 		String searchExt = orElse(request.getParameter("searchExt"), "");
 		String searchFileName = orElse(request.getParameter("searchFileName"), "");
 		String searchCreatorName = orElse(request.getParameter("searchCreatorName"), "");
+		String sortColumn = orElse(request.getParameter("sortColumn"), "");
+		String sortType = orElse(request.getParameter("sortType"), "");
 		
 		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
    		searchExt = commonUtil.getWildcardEscapedString(searchExt, dbName);
@@ -333,7 +340,8 @@ public class EzWebFolderGWController_m {
 			
 			int startPoint = (pageNumInt - 1) * pageSizeInt;
 			
-			List<ShareVO> list = ezWebFolderService_m.getSharedList(subSearchFlag, userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
+			List<ShareVO> list = ezWebFolderService_m.getSharedList(subSearchFlag, userId, userInfo.getDeptID(), userInfo.getCompanyID(), 
+					userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId, sortColumn, sortType);
 			Map<String, Long> countInfo = ezWebFolderService_m.getSharedCount(subSearchFlag, userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
 			
 			data.put("list", list);
@@ -356,7 +364,7 @@ public class EzWebFolderGWController_m {
 	/**
 	 * 공유 추가
 	 */
-	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/sharing/{folderFileId}/{folderFileType}", method=RequestMethod.POST, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/sharing/{folderFileId}/{folderFileType:.+}", method=RequestMethod.POST, produces="application/json;charset=utf-8")
 	public JSONObject addShare(@PathVariable String userId, @PathVariable String folderFileId, @PathVariable String folderFileType, HttpServletRequest request) throws Exception {
 		logger.debug("addShare started.");
 		
@@ -416,7 +424,7 @@ public class EzWebFolderGWController_m {
 	/**
 	 * 공유 수정
 	 */
-	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/sharing/{folderFileId}/{folderFileType}", method=RequestMethod.PUT, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/sharing/{folderFileId}/{folderFileType:.+}", method=RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject updateShare(@PathVariable String userId, @PathVariable String folderFileId, @PathVariable String folderFileType, HttpServletRequest request) throws Exception {
 		logger.debug("updateShare started.");
 		
@@ -551,6 +559,9 @@ public class EzWebFolderGWController_m {
 		String serverName = orElse(request.getHeader("x-user-host"), "");
 		String pageNum 		= orElse(request.getParameter("pageNum"), "1");
 		String pageSize 	= orElse(request.getParameter("pageSize"), "0");
+		String sortType 	= orElse(request.getParameter("sortType"), "");
+		String sortColumn 	= orElse(request.getParameter("sortColumn"), "");
+
 		logger.debug("serverName : " + serverName + " || userId : " + userId + " || pageNum : " + pageNum + " || pageSize : " + pageSize);
 		
 		JSONObject result = new JSONObject();
@@ -587,7 +598,8 @@ public class EzWebFolderGWController_m {
 			
 			int startPoint = (pageNumInt - 1) * pageSizeInt;
 			
-			List<ShareVO> list = ezWebFolderService_m.getHiddenSharedList(userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, startPoint, pageSizeInt, tenantId);
+			List<ShareVO> list = ezWebFolderService_m.getHiddenSharedList(userId, userInfo.getDeptID(), userInfo.getCompanyID(), 
+					userInfo.getPrimary(), offset, startPoint, pageSizeInt, tenantId, sortType, sortColumn);
 			Map<String, Long> countInfo = ezWebFolderService_m.getHiddenSharedCount(userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, pageSizeInt, tenantId);
 			
 			data.put("list", list);
@@ -775,6 +787,8 @@ public class EzWebFolderGWController_m {
 		String searchExt = orElse(request.getParameter("searchExt"), "");
 		String searchFileName = orElse(request.getParameter("searchFileName"), "");
 		String searchCreatorName = orElse(request.getParameter("searchCreatorName"), "");
+		String sortType = orElse(request.getParameter("sortType"), "");
+		String sortColumn = orElse(request.getParameter("sortColumn"), "");
 		
 		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
    		searchExt = commonUtil.getWildcardEscapedString(searchExt, dbName);
@@ -827,7 +841,8 @@ public class EzWebFolderGWController_m {
 				startIndex = (int) (totalCount - 1) / listCount * listCount;
 			}
 			
-			List<FavoriteVO> favoriteFiles = ezWebFolderService_m.getFavorites(userId, primary, offset, tenantId, searchInfo, startIndex, listCount);
+			List<FavoriteVO> favoriteFiles = ezWebFolderService_m.getFavorites(userId, primary, offset, tenantId, searchInfo, 
+					startIndex, listCount, sortType, sortColumn);
 			
 			JSONObject data = new JSONObject();
 			
@@ -1013,6 +1028,8 @@ public class EzWebFolderGWController_m {
 		String column           = orElse(request.getParameter("column"), "");
 		String order            = orElse(request.getParameter("order"), "");
 		String mode 		    = orElse(request.getParameter("mode"), "");
+		String sortType 		= orElse(request.getParameter("sortType"), "");
+		String sortColumn 		= orElse(request.getParameter("sortColumn"), "");
 		String realColumn        = "";
 		
 		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
@@ -1066,7 +1083,8 @@ public class EzWebFolderGWController_m {
 			
 			List<TrashCanVO> trashCanList = null;
 			JSONObject resultList = ezWebFolderService_m.getTrashCanList(realColumn, order.toUpperCase(), userId, offset, tenantId, currPage, listCount,
-										searchExt, searchFileName, searchCreateName, searchFileType, enrollStartDate, enrollEndDate, delStartDate, delEndDate, mode);
+										searchExt, searchFileName, searchCreateName, searchFileType, enrollStartDate, enrollEndDate, delStartDate, 
+										delEndDate, mode, sortType, sortColumn);
 			int fileCnt = 0;
 			int folderCnt = 0;
 			int totalCount = 0;
@@ -1092,9 +1110,9 @@ public class EzWebFolderGWController_m {
 						trashCanPath = ezWebFolderService.getFolderPath(trashCanPath.split("\\|"), primary, tenantId);
 						trashCanPath = trashCanPath.substring(0, trashCanPath.length() - 1);
 						
-						if (trashCan.getTrashCanExt().equals("folder")) {
-							trashCanPath = trashCanPath.substring(0, trashCanPath.lastIndexOf("/"));
-						}
+//						if (trashCan.getTrashCanExt().equals("folder")) {
+//							trashCanPath = trashCanPath.substring(0, trashCanPath.lastIndexOf("/"));
+//						}
 						
 						trashCan.setTrashCanPath(trashCanPath);
 					} else {
@@ -1160,7 +1178,7 @@ public class EzWebFolderGWController_m {
 				}
 			}
 			
-			ezWebFolderService_m.permanetDeleteSelectedFiles(fileIDList, folderIDList, userInfo, realPath);
+			ezWebFolderService_m.permanetDeleteSelectedFiles(fileIDList, folderIDList, userInfo, realPath, "");
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1218,17 +1236,10 @@ public class EzWebFolderGWController_m {
 				}
 			}
 			
-			int failType = ezWebFolderService_m.restoreTrashCan(fileIDList, folderIDList, tenantId,
+			Map<String, Object> resultMap = ezWebFolderService_m.restoreTrashCan(fileIDList, folderIDList, tenantId,
 					userId, offset, companyId, timeUTC, userInfo.getDisplayName1(), userInfo.getDisplayName2());
 			
-			if (failType == 0) {
-				result.put("code", 0);
-			 } else if (failType == 2) {
-				 result.put("code", 2);
-			 } else if (failType == 4) {
-				 result.put("code", 4);
-			 }
-			
+			result.putAll(resultMap);
 			result.put("status", "ok");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1249,6 +1260,12 @@ public class EzWebFolderGWController_m {
 		String serverName   = orElse(request.getHeader("x-user-host"), "");
 		String fileList = orElse(request.getParameter("fileList"), "");
 		String folderList = orElse(request.getParameter("folderList"), "");
+		String fileNameList = orElse(request.getParameter("fileNameList"), "");
+		
+		boolean isOverwritable = request.getParameter("overwritable") != null;
+		boolean hasNameList = fileNameList.trim().length() > 0;
+		// 폴더는 덮어쓰기, 이름변경 둘 다 지원하지 않음
+		// String folderNameList = orElse(request.getParameter("folderNameList"), "");
 		
 		logger.debug("moveTrashCan Started.");
 		logger.debug("userId : " + userId + " || folderId : " + folderId + " || serverName : " + serverName);
@@ -1257,6 +1274,7 @@ public class EzWebFolderGWController_m {
 		
 		String[] fileIDList = fileList.split(",");
 		String[] folderIDList = folderList.split(",");
+		String[] fileNameArray = hasNameList ? fileNameList.split(",") : null;
 		JSONObject result = new JSONObject();
 		
 		if (fileIDList.length == 0 & folderIDList.length == 0|| serverName.equals("") || userId.equals("") || folderId.equals("")) {
@@ -1266,30 +1284,53 @@ public class EzWebFolderGWController_m {
 			return result;
 		}
 		
+		if (hasNameList && fileNameArray.length != fileIDList.length) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", "1");
+			return result;
+		}
+		
 		try {
-			
-			MCommonVO user = mOptionService.commonInfoWeb(serverName, userId);
-			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
-			int tenantId  = common.getTenantId();
-			String offset = common.getOffSet();
-			String lang = common.getLang();
+			LoginVO user = commonUtil.getUserForGw(userId, serverName);
 			
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date                  = new Date();
-			String timeUTC             =  commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+			String timeUTC             =  commonUtil.getDateStringInUTC(formatter.format(date), user.getOffset(), true);
 		
 			if (!isWebfolderAdmin(user.getRollInfo())) {
-				JSONObject permissionCheckResult = ezWebFolderService_y.checkPermissions(userId, user.getDeptId(), user.getCompanyId(), folderList, fileList, tenantId);
+				JSONObject permissionCheckResult = ezWebFolderService_y.checkPermissions(userId, user.getDeptID(), user.getCompanyID(), folderList, fileList, user.getTenantId());
 				
 				if ("error".equals(permissionCheckResult.get("status"))) {
 					return permissionCheckResult;
 				}
 			}
 			
-			ezWebFolderService_m.moveTrashCan(fileIDList, folderIDList, folderId, tenantId, userId, offset, user.getCompanyId(), user.getUserName(), user.getUserName2(), timeUTC);
+			Map<String, Object> resultMap;
+			List<DuplicateInfoVO> duplicateList;
+			boolean hasExceededCapacities;
 			
+			if (isOverwritable || hasNameList) {
+				resultMap = ezWebFolderService_m.moveTrashCan(fileIDList, folderIDList, fileNameArray, folderId, timeUTC, user, isOverwritable);
+			} else {
+				resultMap = ezWebFolderService_m.moveTrashCan(fileIDList, folderIDList, folderId, timeUTC, user);
+			}
+			
+			duplicateList = (List<DuplicateInfoVO>) resultMap.get("duplicateList");
+			hasExceededCapacities = (boolean) Optional.ofNullable(resultMap.get("hasExceededCapacities")).orElse(false);
 			result.put("status", "ok");
-			result.put("code", 0);
+			
+			if (hasExceededCapacities) {
+				logger.debug("Not enough storage to move/copy these files!");
+				result.put("code", 4);
+				result.put("status", "error");
+			} else if (duplicateList.isEmpty()) {
+				result.put("code", 0);
+			} else {
+				result.put("code", 8);
+				result.put("duplicateInfoArray", duplicateList);
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			

@@ -52,7 +52,7 @@ public class EzStatisticsQuantityDeptController {
 	/**
 	 * 부서별 사서함 용량 사용 현황 표시 함수
 	 */
-	@RequestMapping(value="/ezStatistics/statisticsQuantityDept.do")
+	@RequestMapping(value="/ezStatistics/statisticsQuantityDept.do", method = RequestMethod.GET)
 	public String statisticsQuantityDept(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
 		//관리자 권한체크
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);

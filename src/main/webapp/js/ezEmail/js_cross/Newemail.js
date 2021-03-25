@@ -61,10 +61,10 @@ function MailPreviewEnd(e) {
             document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
             document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
             document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
-            document.getElementById("PreviewRayerH").style.width = pMailPreWidthH + "px";
+            document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 10) + "px";
             document.getElementById("PreContent_RayerH").style.width = pMailPreWidthH - 5 + "px";
             document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 88) + "px";
-            document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 185) + "px";
+            document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 155) + "px";
             
             pMailListDiv_H = (pMailListWidthH / CurrenWidth) * 100;
             pMailPreVDiv_H = (pMailPreWidthH / CurrenWidth) * 100;
@@ -89,7 +89,7 @@ function MailPreviewEnd(e) {
             document.getElementById("PreviewRayerW").style.width = "100%";
             document.getElementById("MailListRayer").style.height = pMailListHeightW + "px";
             document.getElementById("contentlist").style.height = (pMailListHeightW - 100) + "px";
-            document.getElementById("PreviewRayerW").style.height = pMailPreHeightW + "px";
+//            document.getElementById("PreviewRayerW").style.height = pMailPreHeightW + "px";
             document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 110) + "px";
             pMailListDiv = (pMailListHeightW / CurrentHeight) * 100;
             pMailPreVDiv = (pMailPreHeightW / CurrentHeight) * 100;
@@ -264,7 +264,7 @@ function ReSend(pURL, pEmail) {
 }
 
 function reply_mail_onclick() {
-    if (listContentArry.length == 0 && listSubContentArry.length == 0) {
+    if (listContentArry.length == 0 && listSubContentArry.length == 0 && currentFixingId == null) {
         alert(strLang42);
     }
     
@@ -276,9 +276,10 @@ function reply_mail_onclick() {
         var pSelectItem;
         if (listContentArry.length > 0) {
             pSelectItem = document.getElementById(listContentArry[listContentArry.length-1])
-        }
-        else {
+        } else if (listSubContentArry.length > 0) {
             pSelectItem = document.getElementById(listSubContentArry[listSubContentArry.length - 1])
+        } else {
+        	pSelectItem = currentFixingId;
         }
         var pheight = window.screen.availHeight;
         var conHeight = pheight * 0.8;
@@ -307,7 +308,7 @@ function GetNewGuid() {
 }
 
 function all_reply_mail_onclick() {
-    if (listContentArry.length == 0 && listSubContentArry.length == 0) {
+    if (listContentArry.length == 0 && listSubContentArry.length == 0 && currentFixingId == null) {
         alert(strLang42);
     }
     
@@ -319,9 +320,10 @@ function all_reply_mail_onclick() {
         var pSelectItem;
         if (listContentArry.length > 0) {
             pSelectItem = document.getElementById(listContentArry[listContentArry.length - 1])
-        }
-        else {
+		} else if (listSubContentArry.length > 0) {
             pSelectItem = document.getElementById(listSubContentArry[listSubContentArry.length - 1])
+        } else {
+        	pSelectItem = currentFixingId;
         }
         var pheight = window.screen.availHeight;
         var conHeight = pheight * 0.8;
@@ -343,8 +345,7 @@ function all_reply_mail_onclick() {
 }
 
 function reSend_onClick() {
-	
-	if (listContentArry.length == 0 && listSubContentArry.length == 0) {
+	if (listContentArry.length == 0 && listSubContentArry.length == 0 && currentFixingId == null) {
         alert(strLang42);
     }
     
@@ -356,8 +357,10 @@ function reSend_onClick() {
         
         if (listContentArry.length > 0) {
             pSelectItem = document.getElementById(listContentArry[listContentArry.length - 1])
-        } else {
+        } else if (listSubContentArry.length > 0) {
             pSelectItem = document.getElementById(listSubContentArry[listSubContentArry.length - 1])
+        } else {
+        	pSelectItem = currentFixingId;
         }
         
         var pURI = "/ezEmail/mailWrite.do?cmd=RESEND&URL=" + encodeURIComponent(pSelectItem.getAttribute('_href'));
@@ -373,7 +376,7 @@ function reSend_onClick() {
 }
 
 function transmission_mail_onclick() {
-    if (listContentArry.length == 0 && listSubContentArry.length == 0) {
+    if (listContentArry.length == 0 && listSubContentArry.length == 0 && currentFixingId == null) {
         alert(strLang42);
     }
     
@@ -385,9 +388,10 @@ function transmission_mail_onclick() {
         var pSelectItem;
         if (listContentArry.length > 0) {
             pSelectItem = document.getElementById(listContentArry[listContentArry.length - 1])
-        }
-        else {
+        } else if (listSubContentArry.length > 0) {
             pSelectItem = document.getElementById(listSubContentArry[listSubContentArry.length - 1])
+        } else {
+        	pSelectItem = currentFixingId;
         }
         var pheight = window.screen.availHeight;
         var conHeight = pheight * 0.8;
@@ -408,7 +412,7 @@ function transmission_mail_onclick() {
     }
 }
 function Read_StatusChange(pGubun) {
-    if (listContentArry.length == 0 && listSubContentArry.length == 0) {
+    if (listContentArry.length == 0 && listSubContentArry.length == 0 && currentFixingId == null) {
         alert(strLang42);
         return;
     }
@@ -427,11 +431,12 @@ function Read_StatusChange(pGubun) {
         for (var i = 0; i < listContentArry.length; i++) {
             createNodeAndInsertText(xmlpara, objNode, "MESSAGEID", document.getElementById(listContentArry[i]).getAttribute("_href"));
         }
-    }
-    else {
+    } else if (listSubContentArry.length > 0) {
         for (var i = 0; i < listSubContentArry.length; i++) {
             createNodeAndInsertText(xmlpara, objNode, "MESSAGEID", document.getElementById(listSubContentArry[i]).getAttribute("_href"));
         }
+    } else {
+    	createNodeAndInsertText(xmlpara, objNode, "MESSAGEID", currentFixingId.getAttribute("_href"));
     }
     
     var url = "/ezEmail/mailSetReadChange.do";
@@ -442,11 +447,19 @@ function Read_StatusChange(pGubun) {
     
     xmlHTTP.open("POST", url, false);
     xmlHTTP.send(xmlpara);
+    
+    // 20200428 조진호 - 메일 리스트에서 체크박스를 이용한 행위 뒤 체크박스가 풀리도록 추가
+    if (listContentArry.length > 0) {
+        for (var i = 1; i <= listContentArry.length; i++) {
+            document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
+        }
+    }
+    
     MailListRefresh();
 }
 var mail_movecopy_cross_dialogArguments = new Array();
 function move_mail_onclick() {
-    if (listContentArry.length == 0 && listSubContentArry.length == 0) {
+    if (listContentArry.length == 0 && listSubContentArry.length == 0 && currentFixingId == null) {
         alert(strLang42);
         return;
     }
@@ -460,12 +473,18 @@ function move_mail_onclick() {
 		requestUrl += "?shareId=" + encodeURIComponent(shareId);
 	}
     
+	if (listContentArry.length + listSubContentArry.length == 0) {
+		currentFixingIdTemp = currentFixingId;
+	}
+	
     var OpenWin = window.open(requestUrl, "mail_movecopy_cross", GetOpenWindowfeature(322, 380));
     try { OpenWin.focus(); } catch (e) { }
 }
 function move_mail_onclick_Complete(moveUrl) {
     if (typeof (moveUrl) == "undefined")
         return;
+
+	var isOnlyFixingId = listContentArry.length + listSubContentArry.length == 0;
 
     if (moveUrl["cmd"] == "MOVE") {
     	var includeSecureMail = false;
@@ -476,7 +495,7 @@ function move_mail_onclick_Complete(moveUrl) {
     	    }
     	}
     	
-    	if (includeSecureMail) {
+    	if (includeSecureMail || isOnlyFixingId && currentFixingIdTemp.getAttribute("securemail") == "1") {
     		if (!confirm(strLangLHM20)) {
 	    		return;
 	    	}
@@ -489,6 +508,11 @@ function move_mail_onclick_Complete(moveUrl) {
         for (var i = 0; i < listSubContentArry.length; i++) {
             szItemID += document.getElementById(listSubContentArry[i]).getAttribute("_href") + ",";
         }
+        
+        if (isOnlyFixingId) {
+        	szItemID = currentFixingIdTemp.getAttribute("_href") + ",";
+        }
+        
         Mail_CopyPostSend(moveUrl["cmd"], moveUrl["url"], szItemID);
     }
     else if (moveUrl["cmd"] == "COPY") {
@@ -499,7 +523,21 @@ function move_mail_onclick_Complete(moveUrl) {
         for (var i = 0; i < listSubContentArry.length; i++) {
             szItemID += document.getElementById(listSubContentArry[i]).getAttribute("_href") + ",";
         }
+
+		if (isOnlyFixingId) {
+			szItemID = currentFixingIdTemp.getAttribute("_href") + ",";
+		}
+
         Mail_CopyPostSend(moveUrl["cmd"], moveUrl["url"], szItemID);
+        
+        // 20200428 조진호 - 메일 리스트에서 체크박스를 이용한 행위 뒤 체크박스가 풀리도록 추가
+        if (listContentArry.length > 0) {
+            for (var i = 1; i <= listContentArry.length; i++) {
+                document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
+            }
+        }
+        
+        MailListRefresh();
     }
 }
 var xmlhttp_mailCopy;
@@ -753,6 +791,11 @@ function reject_onclick_Complete(retVal)
     var objRow;
     var objRow2;
     objNode = createNodeInsert(xmlpara, objNode, "DATA");
+    objRow = createNodeAndAppandNode(xmlpara, objNode, objRow, "ROW");
+    
+    if (typeof(shareId) != "undefined" && shareId != "") {
+    	 createNodeAndAppandNodeText(xmlpara, objRow, objRow2, "SHAREID", shareId);
+    }
     for (var i = 0; i < retVal.length; i++) {
         objRow = createNodeAndAppandNode(xmlpara, objNode, objRow, "ROW");
         createNodeAndAppandNodeText(xmlpara, objRow, objRow2, "DENIAL", retVal[i]);
@@ -845,6 +888,11 @@ function event_xmlhttp_mailPreview_Complete() {
             var pHasembed = getNodeText(SelectNodes(xmlhttp_mailPreview.responseXML, "DATA/HASEMBEDED")[0]);
             var pItemid = getNodeText(SelectNodes(xmlhttp_mailPreview.responseXML, "DATA/ITEMID")[0]);
             var pContentClass = getNodeText(SelectNodes(xmlhttp_mailPreview.responseXML, "DATA/CONTENTCLASS")[0]);
+            var senderProfileImageName = getNodeText(SelectNodes(xmlhttp_mailPreview.responseXML, "DATA/SENDERPROFILEIMAGENAME")[0]);
+            var pCountryCode = getNodeText(SelectNodes(xmlhttp_mailPreview.responseXML, "DATA/COUNTRYCODE")[0]);
+            var pMailIP =  getNodeText(SelectNodes(xmlhttp_mailPreview.responseXML, "DATA/COUNTRYIP")[0]);
+            var pCountryName =  getNodeText(SelectNodes(xmlhttp_mailPreview.responseXML, "DATA/COUNTRYNAME")[0]);
+            
             if (pPreviewShow_HOW == "H") {
                 PrevViewFormH.iptURL.value = pItemid;
                 PrevViewFormH.submit();
@@ -892,8 +940,7 @@ function event_xmlhttp_mailPreview_Complete() {
                 document.getElementById("PreW_ReceiverDetail").className = "icon_graydown";
                 pReceiverSubHtml = "(" + strLang156 + pReceiverCnt + strLang300 + ")";
                 pReceiverDetailDisplay = true;
-            }
-            else {
+            } else {
                 document.getElementById("PreH_ReceiverDetail").style.display = "none";
                 document.getElementById("PreW_ReceiverDetail").style.display = "none";
                 
@@ -905,7 +952,6 @@ function event_xmlhttp_mailPreview_Complete() {
 
             }
 
-            ////
             document.getElementById("PreH_CCMain").style.display = "none";
             document.getElementById("PreW_CCMain").style.display = "none";
             document.getElementById("PreH_CCDetail").style.display = "none";
@@ -951,8 +997,7 @@ function event_xmlhttp_mailPreview_Complete() {
                     document.getElementById("PreW_CCDetail").className = "icon_graydown";
                     pCcSubHtml = "(" + strLang156 + pCcCnt + strLang300 + ")";
                     pCcDetailDisplay = true;
-                }
-                else {
+                } else {
                     document.getElementById("PreH_CCDetail").style.display = "none";
                     document.getElementById("PreW_CCDetail").style.display = "none";
 
@@ -965,8 +1010,7 @@ function event_xmlhttp_mailPreview_Complete() {
                 }
                 if (pPreviewShow_HOW == "H") {                    
                     document.getElementById("PreH_CCMain").style.display = "";
-                }
-                else {
+                } else {
                     document.getElementById("PreW_CCMain").style.display = "";
                 }
                 $("#ifrmPreViewH").height($("#ifrmPreViewH").height()-20);
@@ -979,9 +1023,36 @@ function event_xmlhttp_mailPreview_Complete() {
             }
             
             if(pFromname == ""){
-            	pMailSenderHtml = pOCS + "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pFromemail) + "' onclick='show_personinfo(\"" + pFromemail + "\")'>&nbsp;" + pFromname + "</span>";
+            	pMailSenderHtml = pOCS + "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pFromemail) + "' onclick='show_personinfo(\"" + pFromemail + "\")'>&nbsp;" + pFromname + " " + "</span>";
             } else {
-            	pMailSenderHtml = pOCS + "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pFromemail) + "' onclick='show_personinfo(\"" + pFromemail + "\")'>\"" + pFromname + "\"</span>";
+            	pMailSenderHtml = pOCS + "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pFromemail) + "' onclick='show_personinfo(\"" + pFromemail + "\")'>\"" + pFromname +" " + "\"</span>";
+            	
+            	if (useCountryIP == "YES" ) {
+            		pMailSenderHtml += "<span title=" + pCountryName + ">"
+            		if (useShowSystemCountry == "YES") {
+            			if (pCountryCode != "") {
+            				if (pCountryCode == "unknown") {
+            					pCountryCode = "qm";
+            				}
+            				pMailSenderHtml += "<img src='/images/countryIcon/" + pCountryCode.toLowerCase() + ".png' style='vertical-align: middle; padding: 0px 0px 3px;'> " ;  
+            			}
+                		         		
+            		} else {
+            			if (pCountryCode != "") {
+            				if (systemCountryCode != pCountryCode) {
+            					if (pCountryCode == "unknown") {
+            						pCountryCode = "qm";
+            					}
+            					pMailSenderHtml += "<img src='/images/countryIcon/" + pCountryCode.toLowerCase() + ".png' style='vertical-align: middle; padding: 0px 0px 3px;'> " ;  
+            				}
+            			}
+            		}
+            		if (pMailIP != null && pMailIP != "") {
+            			pMailSenderHtml += "<span> ( " + pMailIP + " ) </span>";
+            		}
+            		pMailSenderHtml += "</span>";
+            		
+            	} 
             }
 
             //pMailSenderHtml = "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pFromname) + "' onclick='show_personinfo(\"" + pFromemail + "\")'>\"" + ConvertStringForHTML(pFromname) + "\"</span>";
@@ -1007,8 +1078,13 @@ function event_xmlhttp_mailPreview_Complete() {
                 document.getElementById("PreH_MailCC_sub").innerHTML = pCcSubHtml;
                 document.getElementById("PreH_MailCCDetail").innerHTML = pCcDetailHtml;
                 document.getElementById("PreH_sub_MailSender").innerHTML = pMailSenderHtml;
-            }
-            else {
+                
+                if (senderProfileImageName !== "") {
+                	document.getElementById("preHSenderImage").src = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + senderProfileImageName;
+                } else {
+                	document.getElementById("preHSenderImage").src = "/images/kr/main/bestEmployee_pic_none.png";
+                }
+            } else {
                 document.getElementById("PreW_subject").setAttribute("itemid", pItemid);
                 document.getElementById("PreW_subject").setAttribute("_contentclass", pContentClass);
                 document.getElementById("PreW_MailReceiverDetail_Rayer").style.display = "none";
@@ -1027,6 +1103,12 @@ function event_xmlhttp_mailPreview_Complete() {
                 document.getElementById("PreW_MailCC_sub").innerHTML = pCcSubHtml;
                 document.getElementById("PreW_MailCCDetail").innerHTML = pCcDetailHtml;
                 document.getElementById("PreW_sub_MailSender").innerHTML = pMailSenderHtml;
+                
+                if (senderProfileImageName !== "") {
+                	document.getElementById("preWSenderImage").src = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + senderProfileImageName;
+                } else {
+                	document.getElementById("preWSenderImage").src = "/images/kr/main/bestEmployee_pic_none.png";
+                }
             }
             MailList_ChangeStatus(xmlhttp_mailPreviewObject);
             xmlhttp_mailPreviewObject = null;
@@ -1151,7 +1233,7 @@ function PreviewRayerChange(pGubun) {
             pPreviewShow_HOW = "OFF";
             document.getElementById("PreviewRayerW").style.display = "none";
             document.getElementById("PreviewRayerH").style.display = "none";
-            CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);;
+            CurrentHeight = document.documentElement.clientHeight - 92 - (document.getElementById("mainmenu").clientHeight - 28);
             document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
             document.getElementById("MailListRayer").style.width = "100%";
             if (navigator.userAgent.indexOf('Firefox') != -1)
@@ -1178,7 +1260,7 @@ function PreviewRayerChange(pGubun) {
             document.getElementById("PreviewRayerH").style.display = "none";
 
             CurrenWidth = document.documentElement.clientWidth - 10;
-            CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);;
+            CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
             document.getElementById("ResizeBarH").style.height = CurrentHeight + "px";
             document.getElementById("ResizeBarW").style.width = (CurrenWidth - 10) + "px";
             pMailListHeightW = parseInt(CurrentHeight * (pMailListDiv / 100));
@@ -1190,9 +1272,9 @@ function PreviewRayerChange(pGubun) {
                 document.getElementById("contentlist").style.height = (pMailListHeightW - 100) + "px";
             else
                 document.getElementById("contentlist").style.height = (pMailListHeightW - 100) + "px";
-            document.getElementById("PreviewRayerW").style.height = pMailPreHeightW + "px";
-            document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 110) + "px";
-            document.getElementById("PreW_subject").style.width = (CurrenWidth - 185) + "px";
+//            document.getElementById("PreviewRayerW").style.height = pMailPreHeightW + "px";
+            document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 80) + "px";
+            document.getElementById("PreW_subject").style.width = (CurrenWidth - 155) + "px";
             
             pPreviewShow_HOW = "W";
             pMailListDiv = Math.round((pMailListHeightW / CurrentHeight) * 100);
@@ -1214,7 +1296,7 @@ function PreviewRayerChange(pGubun) {
                             var HeaderObject = document.getElementById("MailHeader");
                             var ContentObject = document.getElementById("MailList");
                             HeaderIni(HeaderObject);
-                            GetListInfo(HeaderObject, ContentObject);
+                            s(HeaderObject, ContentObject);
                         }*/
                     }
                 //}
@@ -1229,7 +1311,7 @@ function PreviewRayerChange(pGubun) {
             document.getElementById("PreviewRayerH").style.display = "inline-block";
 
             CurrenWidth = document.documentElement.clientWidth - 20;
-            CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
+            CurrentHeight = document.documentElement.clientHeight - 92 - (document.getElementById("mainmenu").clientHeight - 28);
             pMailListWidthH = parseInt(CurrenWidth * (pMailListDiv_H / 100));
             pMailPreWidthH = parseInt(CurrenWidth * (pMailPreVDiv_H / 100)) - 3;
 
@@ -1253,9 +1335,9 @@ function PreviewRayerChange(pGubun) {
             else
                 document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
             document.getElementById("PreviewRayerH").style.width = pMailPreWidthH + "px";
-            document.getElementById("PreContent_RayerH").style.width = pMailPreWidthH - 5 + "px";
+            document.getElementById("PreContent_RayerH").style.width = pMailPreWidthH - 2 + "px";
             document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 88) + "px";
-            document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 185) + "px";
+            document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 152) + "px";
             
             pPreviewShow_HOW = "H";
             g_bPrevShow = true;
@@ -1339,9 +1421,9 @@ function Window_resize() {
                     document.getElementById("contentlist").style.height = (pMailListHeightW - 100) + "px";
                 else
                     document.getElementById("contentlist").style.height = (pMailListHeightW - 100) + "px";
-                document.getElementById("PreviewRayerW").style.height = pMailPreHeightW + "px";
+//                document.getElementById("PreviewRayerW").style.height = pMailPreHeightW + "px";
                 document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 110) + "px";
-                document.getElementById("PreW_subject").style.width = (CurrenWidth - 185) + "px";
+                document.getElementById("PreW_subject").style.width = (CurrenWidth - 155) + "px";
                 
                 pMailListDiv = Math.round((pMailListHeightW / CurrentHeight) * 100);
                 pMailPreVDiv = Math.round((pMailPreHeightW / CurrentHeight) * 100);
@@ -1372,7 +1454,7 @@ function Window_resize() {
                 document.getElementById("PreviewRayerH").style.display = "inline-block";
 
                 CurrenWidth = document.documentElement.clientWidth - 20;
-                CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
+                CurrentHeight = document.documentElement.clientHeight - 92 - (document.getElementById("mainmenu").clientHeight - 28);
                 pMailListWidthH = parseInt(CurrenWidth * (pMailListDiv_H / 100));
                 pMailPreWidthH = parseInt(CurrenWidth * (pMailPreVDiv_H / 100)) - 3;
 
@@ -1393,10 +1475,10 @@ function Window_resize() {
                 else
                     document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
                 
-                document.getElementById("PreviewRayerH").style.width = pMailPreWidthH + "px";
-                document.getElementById("PreContent_RayerH").style.width = pMailPreWidthH - 5 + "px";
+                document.getElementById("PreviewRayerH").style.width = pMailPreWidthH - 10 + "px";
+                document.getElementById("PreContent_RayerH").style.width = pMailPreWidthH - 2 + "px";
                 document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 88) + "px";
-                document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 185) + "px";
+                document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 152) + "px";
                 
                 /* 좌우 리사이징 시 round로 인해 비율의 합이 100%가 되지 않아
                    오른쪽 끝에 여백이 발생하여 제거함
@@ -1423,7 +1505,7 @@ function Window_resize() {
             else if (pPreviewShow_HOW == "OFF") {
                 document.getElementById("PreviewRayerW").style.display = "none";
                 document.getElementById("PreviewRayerH").style.display = "none";
-                CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
+                CurrentHeight = document.documentElement.clientHeight - 92 - (document.getElementById("mainmenu").clientHeight - 28);
                 document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
                 document.getElementById("MailListRayer").style.width = "100%";
                 
@@ -1544,6 +1626,15 @@ function mail_export() {
 	} else {
 		mailExport_start();
 	}
+	
+	// 20200428 조진호 - 메일 리스트에서 체크박스를 이용한 행위 뒤 체크박스가 풀리도록 추가
+    if (listContentArry.length > 0) {
+        for (var i = 1; i <= listContentArry.length; i++) {
+            document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
+        }
+    }
+    
+    MailListRefresh();
     
 }
 
@@ -1619,6 +1710,9 @@ function mailExport_start(pwd){
 function HiddenContextMenu() {
     document.getElementById("mailPanel").style.display = "none";
     document.getElementById("ContextMenuDiv").style.display = "none";
+	if (window.currentFixingId) {
+		currentFixingId = null;
+	}
 }
 function ContextMenuHidden() {
     if (document.getElementById("ContextMenuDiv").style.display == "")
@@ -1630,6 +1724,13 @@ function ContextMenuHidden() {
     if (parent.frames["left"].document.getElementById("folderMenuDiv").style.display == "") {
     	parent.frames["left"].document.getElementById("folderPanel").style.display = "none";
     	parent.frames["left"].document.getElementById("folderMenuDiv").style.display = "none";
+    }
+    if(document.getElementById("moreSearch").style.display != "none"){
+	    $("#moreSearch").css("display", "none");   
+	    $("#searchButton").css("display", "none");   
+	    document.getElementsByName("keyword")[0].disabled = false;
+	    document.getElementById("searchCheck").disabled = false;
+	    document.getElementById("searchCheck").style.backgroundColor="white";
     }
 }
 function PopUpPreMail() {
@@ -1750,7 +1851,7 @@ function event_flag(obj) {
 
 var flagXmlHttp;
 function toggle_flag() {
-    if (listContentArry.length == 0 && listSubContentArry.length == 0) {
+    if (listContentArry.length == 0 && listSubContentArry.length == 0 && currentFixingId == null) {
         alert(strLang42);
         return;
     }
@@ -1764,10 +1865,12 @@ function toggle_flag() {
         }
         else
             pSelectItem = document.getElementById(listContentArry[listContentArry.length - 1]).getAttribute("_href") + ";";
-    }
-    else {
-        pSelectItem = document.getElementById(listSubContentArry[listSubContentArry.length - 1])
-    }
+	} else if (listSubContentArry.length > 0) {
+		pSelectItem = document.getElementById(listSubContentArry[listSubContentArry.length - 1]).getAttribute("_href") + ";";
+	} else {
+		pSelectItem = currentFixingId.getAttribute("_href") + ";";;
+	}
+
     var now = new Date();
     now.setDate(now.getDate() + 1);
 
@@ -1796,6 +1899,13 @@ function toggle_flag() {
         flagXmlHttp.open("POST", url, true);
         flagXmlHttp.onreadystatechange = event_toggle_flag_end;
         flagXmlHttp.send(xmlDom);
+        
+        // 20200428 조진호 - 메일 리스트에서 체크박스를 이용한 행위 뒤 체크박스가 풀리도록 추가
+        if (listContentArry.length > 0) {
+            for (var i = 1; i <= listContentArry.length; i++) {
+                document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
+            }
+        }
     }
     catch (e) { }
 }
@@ -1877,7 +1987,7 @@ function HiddenMailProgress() {
     document.getElementById("MailProgress").style.display = "none";
 }
 function PreviewMode_ChangeBtn() {
-    document.getElementById("PreViewNone").setAttribute("src", "/images/kr/cm/btn_noframe.gif");
+    /*document.getElementById("PreViewNone").setAttribute("src", "/images/kr/cm/btn_noframe.gif");
     document.getElementById("PreViewBottom").setAttribute("src", "/images/kr/cm/btn_bottomframe.gif");
     document.getElementById("PreViewleft").setAttribute("src", "/images/kr/cm/btn_leftframe.gif");
     if (pPreviewShow_HOW == "H")
@@ -1885,7 +1995,29 @@ function PreviewMode_ChangeBtn() {
     else if (pPreviewShow_HOW == "W")
         document.getElementById("PreViewBottom").setAttribute("src", "/images/kr/cm/btn_onbottomframe.gif");
     else
-        document.getElementById("PreViewNone").setAttribute("src", "/images/kr/cm/btn_onnoframe.gif");
+        document.getElementById("PreViewNone").setAttribute("src", "/images/kr/cm/btn_onnoframe.gif");*/
+	
+	document.getElementById("PreViewNone").className = "icon16 btn_noframe";
+	
+	if (document.getElementById("PreViewBottom")) {
+		document.getElementById("PreViewBottom").className = "icon16 btn_bottomframe";
+	}
+	
+	if (document.getElementById("PreViewleft")) {
+		document.getElementById("PreViewleft").className = "icon16 btn_leftframe";
+	}
+	
+	if (pPreviewShow_HOW == "H") {
+		if (document.getElementById("PreViewleft")) {
+			document.getElementById("PreViewleft").className = "icon16 btn_onleftframe";
+		}
+	} else if (pPreviewShow_HOW == "W") {
+		if (document.getElementById("PreViewBottom")) {
+			document.getElementById("PreViewBottom").className = "icon16 btn_onbottomframe";
+		}
+	} else {
+        document.getElementById("PreViewNone").className = "icon16 btn_onnoframe";
+	}
 
 }
 function MailOptionView(obj) {
@@ -1893,7 +2025,8 @@ function MailOptionView(obj) {
         document.getElementById("layer_popup").style.left = document.documentElement.clientWidth - 260 + "px";
         document.getElementById("layer_popup").style.top = "100px";
         document.getElementById("layer_popup").style.display = "";
-        obj.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
+        //obj.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
+        obj.setAttribute("class", "icon16 btn_onarrow_down");
         obj.setAttribute("mode", "on");
     }
     else {
@@ -1903,7 +2036,8 @@ function MailOptionView(obj) {
 function MailOptionHidden() {
     document.getElementById("layer_popup").style.display = "none";
     document.getElementById("maillistoptiondiv").setAttribute("mode", "off");
-    document.getElementById("maillistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
+    //document.getElementById("maillistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
+    document.getElementById("maillistoptiondiv").setAttribute("class", "icon16 btn_arrow_down");
     ContextMenuHidden();
 }
 //레이어팝업 바깥쪽 클릭시 레이어팝업 꺼지게 2018-02-22 강민수92
@@ -1931,5 +2065,58 @@ function mailPrevIframeSize() {
 	
 	previewmail_info = (Math.ceil((previewmail_info + sentDateStr)/10) * 10) + 10;
 	
-	$("#ifrmPreView" + pPreviewShow_HOW).height(pPreview - previewmail_info);
+	$("#ifrmPreView" + pPreviewShow_HOW).height(pPreview - previewmail_info + 15);
+}
+
+function mailConfirm_flag_btn() {
+	var listContentArrLen = listContentArry.length;
+	var listSubContentArrLen = listSubContentArry.length;
+	var pSelectItem  = "";
+	var url = "/ezEmail/mailSetFlagForMailConfirm.do";
+	
+	if (listContentArrLen == 0 && listSubContentArrLen == 0 && currentFixingId == null) {
+        alert(strLang42);
+        return;
+    }
+
+	if (listContentArrLen > 0) {
+        for (var i = 0; i < listContentArry.length; i++) {
+            pSelectItem += document.getElementById(listContentArry[i]).getAttribute("_href") + ";";
+        }
+    } else if (listSubContentArry.length > 0) {
+        pSelectItem = document.getElementById(listSubContentArry[listSubContentArry.length - 1])
+    } else {
+    	pSelectItem = currentFixingId.getAttribute("_href") + ";";
+    }
+
+    flagXmlHttp = createXMLHttpRequest();
+    var xmlDom = createXmlDom();
+    var objNode;
+    createNodeInsert(xmlDom, objNode, "DATA");
+    createNodeAndInsertText(xmlDom, objNode, "ITEMID", pSelectItem);
+    
+	if (typeof(shareId) != "undefined" && shareId != "") {
+		url += "?shareId=" + encodeURIComponent(shareId);
+	}
+    
+    try {
+        flagXmlHttp.open("POST", url, true);
+        flagXmlHttp.onreadystatechange = function() {
+        	if(flagXmlHttp.readyState == 4) {
+        		if (flagXmlHttp.responseText == "OK") {
+        			MailListRefresh();
+        		} else {
+        			alert(strLang321);
+        		}
+        	}
+        };
+        flagXmlHttp.send(xmlDom);
+    }
+    catch (e) { }
+}
+
+function mailConfirm_line() {
+	listContentArry.forEach(function(val, key) {
+		$("#"+val).toggleClass("mail_confirm");
+	});
 }

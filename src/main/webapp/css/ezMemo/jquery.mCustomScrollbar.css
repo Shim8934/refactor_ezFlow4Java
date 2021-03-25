@@ -64,12 +64,13 @@ y-axis
 
 	.mCSB_scrollTools{ /* contains scrollbar markup (draggable element, dragger rail, buttons etc.) */
 		position: absolute;
-		width: 16px;
+		width: 6px;
 		height: auto;
 		left: auto;
 		top: 0;
 		right: 0;
 		bottom: 0;
+		z-index: 100;
 	}
 
 	.mCSB_outside + .mCSB_scrollTools{ right: -26px; } /* scrollbar position: outside */
@@ -332,7 +333,7 @@ yx-axis
 	
 	/* default theme ("light") */
 
-	.mCSB_scrollTools{ opacity: 0.75; filter: "alpha(opacity=75)"; -ms-filter: "alpha(opacity=75)"; }
+	.mCSB_scrollTools{ opacity: 0.3; filter: "alpha(opacity=30)"; -ms-filter: "alpha(opacity=30)"; }
 	
 	.mCS-autoHide > .mCustomScrollBox > .mCSB_scrollTools,
 	.mCS-autoHide > .mCustomScrollBox ~ .mCSB_scrollTools{ opacity: 0; filter: "alpha(opacity=0)"; -ms-filter: "alpha(opacity=0)"; }
@@ -342,7 +343,7 @@ yx-axis
 	.mCustomScrollBox:hover > .mCSB_scrollTools,
 	.mCustomScrollBox:hover ~ .mCSB_scrollTools,
 	.mCS-autoHide:hover > .mCustomScrollBox > .mCSB_scrollTools,
-	.mCS-autoHide:hover > .mCustomScrollBox ~ .mCSB_scrollTools{ opacity: 1; filter: "alpha(opacity=100)"; -ms-filter: "alpha(opacity=100)"; }
+	.mCS-autoHide:hover > .mCustomScrollBox ~ .mCSB_scrollTools{ opacity: 0.5; filter: "alpha(opacity=100)"; -ms-filter: "alpha(opacity=100)"; }
 
 	.mCSB_scrollTools .mCSB_draggerRail{
 		background-color: #000; background-color: rgba(0,0,0,0.4);
@@ -424,12 +425,12 @@ yx-axis
 
 	.mCS-dark.mCSB_scrollTools .mCSB_draggerRail{ background-color: #000; background-color: rgba(0,0,0,0.15); }
 
-	.mCS-dark.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar{ background-color: #000; background-color: rgba(0,0,0,0.75); }
+	.mCS-dark.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar{ background-color: #000; background-color: rgba(0,0,0,0.3); }
 
-	.mCS-dark.mCSB_scrollTools .mCSB_dragger:hover .mCSB_dragger_bar{ background-color: rgba(0,0,0,0.85); }
+	.mCS-dark.mCSB_scrollTools .mCSB_dragger:hover .mCSB_dragger_bar{ background-color: rgba(0,0,0,0.3); }
 
 	.mCS-dark.mCSB_scrollTools .mCSB_dragger:active .mCSB_dragger_bar,
-	.mCS-dark.mCSB_scrollTools .mCSB_dragger.mCSB_dragger_onDrag .mCSB_dragger_bar{ background-color: rgba(0,0,0,0.9); }
+	.mCS-dark.mCSB_scrollTools .mCSB_dragger.mCSB_dragger_onDrag .mCSB_dragger_bar{ background-color: rgba(0,0,0,0.3); }
 
 	.mCS-dark.mCSB_scrollTools .mCSB_buttonUp{ background-position: -80px 0; }
 

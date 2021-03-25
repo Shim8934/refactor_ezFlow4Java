@@ -7,7 +7,8 @@
 		<title><spring:message code = 'ezCommunity.t352' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('ezCommunity.i1', 'msg')}">
-		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
+		<%-- <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css"> --%>
+		<link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 		<style>
 			.groupBoard {
 				display:inline-block;
@@ -21,6 +22,25 @@
 				overflow:hidden;
 				text-overflow:ellipsis;
 			}
+			.node_div span {
+				vertical-align:text-bottom;
+			}
+			.node_div img {
+				margin-bottom: 3px;
+			}
+			/* ellipisis 추가 */
+			.node_normal {
+	    		overflow:hidden;
+	    		text-overflow:ellipsis;
+	    		display:inline-block;
+	    		width:270px;
+	    	}
+	    	.node_selected {
+	    		overflow:hidden;
+	    		text-overflow:ellipsis;
+	    		display:inline-block;
+	    		width:270px;
+	    	}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -112,6 +132,8 @@
 	            var treeView = new TreeView();
 	            treeView.LoadFromID(pTreeID);
 	            treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
+	            
+	            applyEllipsis();
 	        }
 	
 	        function TreeCtrl_onNodeClick(pNodeID, pTreeID) {
@@ -119,6 +141,8 @@
 	            treeNode.LoadFromID(pNodeID);
 	            SelectedBoardID = treeNode.GetNodeData("DATA1");
 	            SelectedBoardName = treeNode.GetNodeData("DATA2");
+	            
+	            applyEllipsis();
 	        }
 	
 	        function DisplayTopBoard() {
@@ -160,6 +184,8 @@
 	            treeView.SetNodeClick("TreeCtrl_onNodeClick");
 	            treeView.DataSource(GetSubBoard(rootBoardID, "1"));
 	            treeView.DataBind(obj);
+	            
+	            applyEllipsis();
 	        }
 	        
 	        function GetSubBoard(pRootBoardID, pSubFlag) {
@@ -229,6 +255,7 @@
 	            }
 	        }
 	        
+	        /* 2020-05-25 홍승비 - 커뮤니티 팝업홈 > 게시판검색 > 게시판선택 팝업창 게시판명 말줄임표 적용 */
 			function applyEllipsis() {
 	        	//nodelevel 값을 가져와서 처리한다.
 	        	$(".node_div").each(function(index, element){
@@ -239,7 +266,7 @@
 	        		$("#spn_"+nodeId).attr("title", title);
 	        		
 	        		if (nodelevel > 0) {
-	        			var customWidth = 135 - (18 * nodelevel);
+	        			var customWidth = 270 - (18 * nodelevel);
 	        			if (customWidth < 0) {
 	        				customWidth = 0;
 	        			}

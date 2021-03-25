@@ -263,24 +263,29 @@ function AprrovMappingSign(ret)
 	  			else
 	  			{
 	  			    var content ="";
-					if(pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase())
-					{
-						HwpCtrl.SetFieldText(signID, strLang8 + arr_userinfo[2]);	
-	  			        content = strLang8 + arr_userinfo[2];						
-					}
-					else
-					{
-						HwpCtrl.SetFieldText(signID, arr_userinfo[2]);	
+					if (pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase()) {
+						HwpCtrl.SetFieldText(signID, strLang8 + arr_userinfo[2]);
+	  			        content = strLang8 + arr_userinfo[2];
+					} else {
+						HwpCtrl.SetFieldText(signID, arr_userinfo[2]);
 						content = arr_userinfo[2];
-					}			
-					HwpCtrl.AppendFieldText(signID, strLang7 + OpinionText, true);	
+					}
+					
+					if (!HwpCtrl.CheckFieldExist(seumyungdateID)) {
+						HwpCtrl.AppendFieldText(signID, OpinionText, true);
+						content = content + OpinionText;
+					}
+					
+					HwpCtrl.AppendFieldText(signID, strLang7 + "\15", true);
+					content = content + strLang7;
+					
 	  				signInfo[signCnt] = signID;
 			        SignName[signCnt] = signID;
 			        SignType[signCnt] = "TEXT";
-			        SignContent[signCnt] = content + strLang7 + OpinionText;
+			        SignContent[signCnt] = content;
 	  				signCnt = signCnt + 1
-	  				SingFlag = false; 
-	  			}		
+	  				SingFlag = false;
+	  			}
 	  		
 	  			DekyulFlag = true;
 	  			pAprMemberSignSN = pAprMemberSignSN + 1;
@@ -375,13 +380,13 @@ function AprrovMappingSign(ret)
 
 					if(pAprLineType == strAprType4)
 					{
-						HwpCtrl.AppendFieldText(signID, strLang6, true);
+						HwpCtrl.AppendFieldText(signID, strLang6 + "\15", true);
 						contents = contents + strLang6;
 	  				}
 
 					if(pAprLineType == strAprType16)  
 					{
-						HwpCtrl.AppendFieldText(signID, strLang7, true);
+						HwpCtrl.AppendFieldText(signID, strLang7 + "\15", true);
 						contents = contents + strLang7;
 	  				}
 
@@ -534,7 +539,7 @@ function openFileAttachUI()
 {
 	var parameter = pDocID;
 	var url = "/ezApprovalG/aprAttach.do?formID=" + pFormID + "&docID=" + pDocID + "&draftFlag=" + pDraftFlag + "&orgCompanyID=" + orgCompanyID + "&ext=" + "hwp";
-	var feature	= "status:no;dialogWidth:535px;dialogHeight:415px;edge:sunken;scroll:no"; 
+	var feature	= "status:no;dialogWidth:800px;dialogHeight:610px;edge:sunken;scroll:no"; 
 	var ret = window.showModalDialog(url,parameter,feature);
 
 	if (ret != "cancel")	{
@@ -697,7 +702,13 @@ function SaveApproveInfo(pApproveFlag) {
             
             for (i = 0; i < rows.length; i++) {
                 sepAtt = createNodeAndAppandNode(sepLVXml, root, sepAtt, "SEPATTACH");
-                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "CABINETID", SelectSingleNodeValue(rows[i], "CABINETID"));
+                
+                if (SelectSingleNodeValue(rows[i], "SEPCABINETID") != "") {
+                	Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "CABINETID", SelectSingleNodeValue(rows[i], "SEPCABINETID"));
+                } else {
+                	Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "CABINETID", SelectSingleNodeValue(rows[i], "CABINETID"));
+                }
+                
                 Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "TITLE", SelectSingleNodeValue(rows[i], "SEPTITLE"));
                 Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "NUMOFPAGE", SelectSingleNodeValue(rows[i], "SEPNUMOFPAGE"));
                 Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "REGTYPE", SelectSingleNodeValue(rows[i], "SEPREGTYPE"));
@@ -705,25 +716,6 @@ function SaveApproveInfo(pApproveFlag) {
                 Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "AVTYPE", SelectSingleNodeValue(rows[i], "SEPRECORDTYPE"));
             }
             
-            createNodeAndInsertText(xmlpara, objNode, "NONELECREC_SEPERATEATTACH", getXmlString(rtnXml));
-            
-		} else if (SelectNodes(NonElecXML, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/ROWS/ROW").length > 0) {
-			var sepAtt, Data, i;
-			var rtnXml = createXmlDom();
-	        var root = createNodeInsert(rtnXml, root, "SEPATTACHINFO");
-			var sepLVXml = createXmlDom();
-            	sepLVXml = loadXMLString(nonElecRecInfoXml);
-            var rows = SelectNodes(sepLVXml, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/ROWS/ROW");
-            
-            for (i = 0; i < rows.length; i++) {
-                sepAtt = createNodeAndAppandNode(sepLVXml, root, sepAtt, "SEPATTACH");
-                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "CABINETID", SelectSingleNodeValue(rows[i],"SEPCABINETID"));
-                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "TITLE", SelectSingleNodeValue(rows[i], "SEPTITLE"));
-                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "NUMOFPAGE", SelectSingleNodeValue(rows[i], "SEPNUMOFPAGE"));
-                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "REGTYPE", SelectSingleNodeValue(rows[i], "SEPREGTYPE"));
-                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "SUMMARY", SelectSingleNodeValue(rows[i], "SEPSUMMARY"));
-                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "AVTYPE", SelectSingleNodeValue(rows[i], "SEPRECORDTYPE"));
-            }
             createNodeAndInsertText(xmlpara, objNode, "NONELECREC_SEPERATEATTACH", getXmlString(rtnXml));
 		}
 		
@@ -780,17 +772,20 @@ function SaveApproveInfo(pApproveFlag) {
 function SaveFile() {
 	var result = "";
 	
+	var data = {
+		docID : pDocID,
+		formId : pFormID,
+		html  : HwpCtrl.GetCloneData("", "HWP"),
+		orgCompanyID : orgCompanyID
+	}
+	
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/saveFileHWP.do",
-		data : {
-			docID : pDocID,
-			formId : pFormID,
-			html  : HwpCtrl.GetCloneData("", "HWP"),
-			orgCompanyID : orgCompanyID
-		},
+		contentType : "application/json",
+		data : JSON.stringify(data),
 		success: function(text){
 			result = text;
 		}        			
@@ -802,16 +797,19 @@ function SaveFile() {
 function SaveOrgFile() {
 	var result = "";
 	
+	var data = {
+		docID : pDocID,
+		formId : pFormID,
+		html  : OrgHtml
+	}
+	
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/saveFileHWP.do",
-		data : {
-			docID : pDocID,
-			formId : pFormID,
-			html  : OrgHtml
-		},
+		contentType : "application/json",
+		data : JSON.stringify(data),
 		success: function(text){
 			result = text;
 		}        			
@@ -1017,7 +1015,7 @@ function ReAprLineSingMapping(ret)
 		        startIdx = startIdx + 1;
 		    else if (OrderType[i] != strAprType2 && OrderType[i] != strAprType7 && OrderType[i] != strAprType9 & OrderType[i] != strAprType11 && OrderType[i] != strAprType12)
 		        startIdx = startIdx + 1;
-		    else if (OrderType[i] == strAprType9 || OrderType[i] == strAprType11 || OrderType[i] == strAprType12)
+		    else if (OrderType[i] == strAprType8 ||OrderType[i] == strAprType9 || OrderType[i] == strAprType11 || OrderType[i] == strAprType12)
 		        hapyuiCnt = hapyuiCnt + 1;
 		}
 	}
@@ -1075,7 +1073,7 @@ function ReAprLineSingMapping(ret)
 		name = susinSN + "habyuisign" + i;
 		if (HwpCtrl.CheckFieldExist(name))
 		{
-			if(trim(HwpCtrl.GetFieldText(name)) != "")
+			if(trim(HwpCtrl.GetFieldText(name)) == "")
 			{
 				name = susinSN + "habyui" + i
 				if (HwpCtrl.CheckFieldExist(name))
@@ -1181,7 +1179,7 @@ function ReAprLineSingMapping(ret)
 			idx = idx + 1;
 		}
 		
-		if (OrderType[i] == strAprType9 || OrderType[i] == strAprType11 || OrderType[i] == strAprType12)		
+		if (OrderType[i] == strAprType8 ||OrderType[i] == strAprType9 || OrderType[i] == strAprType11 || OrderType[i] == strAprType12)		
 		{
 			fieldname = susinSN + "habyui" + hidx;
 			if (HwpCtrl.CheckFieldExist(fieldname))
@@ -1321,7 +1319,7 @@ function openAaprDocAttachUI()
 	try{
 		var parameter = pDocID;
 		var url = "/ezApprovalG/aprCabinetAttach.do";
-		var feature	= "status:no;dialogWidth:1050px;dialogHeight:500px;edge:sunken;scroll:no;help:no"; 
+		var feature	= "status:no;dialogWidth:1050px;dialogHeight:520px;edge:sunken;scroll:no;help:no"; 
 		var ret = window.showModalDialog(url,parameter,feature);
 
 		if (ret != "cancel") {
@@ -1571,4 +1569,37 @@ function setPublicFlag2() {
         PublicText = " ";
     
     HwpCtrl.SetFieldText("publication", PublicText);
+}
+
+//2020-05-08 : 결재정보/문서정보 저장
+function setApprDocInfo(){
+    var xmlpara = createXmlDom();
+
+    var objNode;
+    createNodeInsert(xmlpara, objNode, "PARAMETER");  
+    createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID); 
+    createNodeAndInsertText(xmlpara, objNode, "PUBLICATION", pPublicityYN); 
+    createNodeAndInsertText(xmlpara, objNode, "SECURITY", tempSecurity);
+    createNodeAndInsertText(xmlpara, objNode, "URGENTAPPROVAL", tempUrgent);
+    createNodeAndInsertText(xmlpara, objNode, "KEYWORD", tempKeyword); 
+    createNodeAndInsertText(xmlpara, objNode, "SPECIALRECORDCODE", pSpecialRecordCode);
+    createNodeAndInsertText(xmlpara, objNode, "PUBLICITYCODE", pPublicityCode);
+    createNodeAndInsertText(xmlpara, objNode, "PUBLICITYYN", pPublicityYN);
+    createNodeAndInsertText(xmlpara, objNode, "LIMITRANGE", pLimitRange);
+    createNodeAndInsertText(xmlpara, objNode, "PAGENUM", pPageNum);   
+    createNodeAndInsertText(xmlpara, objNode, "SUMMARY", pSummery);
+    createNodeAndInsertText(xmlpara, objNode, "SECURITYAPPROVAL", tempSecurityDate);
+
+    xmlhttp.open("POST", "/ezApprovalG/setApprDocInfo.do", false);
+    xmlhttp.send(xmlpara);
+
+    return xmlhttp.responseText;
+}
+
+//결재 세부옵션처리
+function setFormAprOption(){
+    if(formAprOption.indexOf("_a2_"))  //파일첨부
+        setMenuBar("btnFileAttach", false);
+    if(formAprOption.indexOf("_a3_"))  //문서첨부
+        setMenuBar("btnAprDocAttach", false);
 }

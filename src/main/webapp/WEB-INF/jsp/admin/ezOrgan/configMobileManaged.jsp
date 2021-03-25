@@ -12,9 +12,9 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 		
-		var userId = "${userId}";
-		var userName = "${userName}";
-		var adminOrder = "${adminOrder}";
+		var userId = "<c:out value='${userId}'/>";
+		var userName = "<c:out value='${userName}'/>";
+		var adminOrder = "<c:out value='${adminOrder}'/>";
 		var setUsed = 0;
 		var xhttp = null;
 		
@@ -119,7 +119,7 @@
 		</div>
 		<br/>
 		<!-- 20190621 김수아 : 모바일설정 스크롤 -->
-		<div style="height:130px; overflow-x: hidden; overflow-y: auto;">
+		<div style="height:84px; overflow-x: hidden; overflow-y: auto;">
 			<table class="mainlist" id="deviceTbl" style="white-space: nowrap; width:100%;">
 	            <tr>
 	                <th width='50%'><spring:message code="ezPersonal.kyj01" /></th>
@@ -166,7 +166,7 @@
 	    			</tr>
 	    		</c:if>
 	        </table>
-        </div>
+	    </div>
 		<br/><br/>
 	</body>
 </html>

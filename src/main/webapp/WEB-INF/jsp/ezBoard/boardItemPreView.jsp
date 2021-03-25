@@ -15,7 +15,7 @@
 		
 		var curFontSize = 1;
 		var fontSize = new Array("10px", "12px", "15px", "20px", "30px");
-		var gubun = "${guBun}";
+		var gubun = "<c:out value='${guBun}'/>";
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
 		            window.focus();
@@ -74,8 +74,8 @@
 		        }
 		        if (gubun != "2") {
 		        	document.getElementById('WriteUserNM').innerHTML = WriterName;
-		        } else {
-		        	document.getElementById('WriteUserNM').innerHTML = window.opener.document.getElementById('txtNickName').value;
+		        } else { // 익명게시판의 게시자명 특문처리 대응
+		        	document.getElementById('WriteUserNM').innerText = window.opener.document.getElementById('txtNickName').value;
 		        }
 		        if (document.getElementById('WriteUserNM').innerText == "") {
 		        	document.getElementById('WriteUserNM').innerHTML = "<spring:message code='ezBoard.t286'/>";

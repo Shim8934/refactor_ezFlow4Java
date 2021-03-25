@@ -11,7 +11,7 @@
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	<script type="text/javascript">
 	
-		var m_strColorSelect = "#edf4fd";
+		var m_strColorSelect = "#f1f8ff";
 		var m_strColorOver = "#f4f5f5";
 		var m_strColorDefault = "#ffffff";
 		var m_strColorOpened = "#fafafa";
@@ -52,6 +52,7 @@
 					document.getElementById("HeaderAllCheckBox").checked = false;
 					IPBandListRemove();
 					makeAccessIdList(data.responseJSON);
+					windowResize();
 			    }
 			});
 		}
@@ -237,20 +238,43 @@
 		}
 		
 		function windowResize() {
-        	var height = parent.document.documentElement.clientHeight - 270;
+			var mainContentDiv = document.getElementById("contentlist");
+			var mainContentTable = mainContentDiv.getElementsByTagName("table")[0];
+			var mainContentDivTableH = mainContentTable.offsetHeight;
+			var mainContentDivMaxH = mainContentDiv.getAttribute("data-maxH");
+			
+			if (mainContentDivTableH > mainContentDivMaxH) {
+				mainContentDiv.style.height = mainContentDivMaxH + "px";
+			}
+			
+			var iframeH = parent.document.getElementById("ipManager_ifrm").offsetHeight;
+			var bodyH = document.body.offsetHeight;
+			var iframeMH = parent.document.getElementById("ipManager_ifrm").style.maxHeight.split("px")[0];
+			
+			if (iframeH <= bodyH) {
+				if (iframeMH < bodyH) {
+					parent.document.getElementById("ipManager_ifrm").style.height = iframeMH + "px";
+				} else {
+					parent.document.getElementById("ipManager_ifrm").style.height = bodyH + "px";
+				}
+			} else {
+				parent.document.getElementById("ipManager_ifrm").style.height = bodyH + "px";
+			}
+			
+        	/* var height = parent.document.documentElement.clientHeight - 270;
         	var width = parent.document.documentElement.clientWidth - 30;
         	/* if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
         		height = height - 10;
-        	} */
+        	} *
         	document.getElementById("contentHeader").style.width = width + "px";
         	document.getElementById("contentlist").style.width = width + "px";
         	document.getElementById("contentlist").style.height = height + "px";
-        	document.getElementById("contentlist").style.overflow = "auto";
+        	document.getElementById("contentlist").style.overflow = "auto"; */
         }
 		
-		$(function(){
+		/* $(function(){
     		windowResize();
-	    });
+	    }); */
 		
 	</script>
 </head>
@@ -270,7 +294,7 @@
 	    </ul>
 	</div>
 	
-	<div id="contentHeader" style="width:50%;">
+	<div id="contentHeader" style="width:100%;">
 		<table class="mainlist" style="width:100%;">
 			<thead id="accessHeader">
 				<tr>
@@ -283,14 +307,13 @@
 	</div>
 	
 	
-	<div id="contentlist" style="height:400px; width:50%;">
+	<div id="contentlist" style="overflow:auto; "data-maxH="350">
 		<table id="tblIP" class="mainlist" style="width:100%;">	
 			<tbody id="accessBody">
-				
 			</tbody>
 		</table>
 	</div>
-	
+	<br>
 	
 </body>
 </html>

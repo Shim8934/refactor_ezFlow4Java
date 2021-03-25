@@ -71,37 +71,27 @@
 		SET
 			ATTACHFILEHREF = #href#
 		WHERE
-			DOCID = #docId#
-			AND ATTACHFILESN = #attachFileSN#
-			AND COMPANYID = #companyId#
-			AND TENANT_ID = #tenantId#
+			ATTACHFILEHREF = #orgHref#
 	</update>
 	
 	<update id="EzApprovalGKlib.updateAprAttachInfoHref" parameterClass="Map">	
 		UPDATE
-			TBL_APRATTACHINFO ATTACH
+			TBL_APRATTACHINFO
 		SET
 			ATTACHFILEHREF = #href#
 		WHERE
-			(
-				ATTACH.ATTACHFILEHREF = #orgHref#
-			OR
-				ATTACH.DOCID IN (
-					SELECT
-						DOCID
-					FROM
-						TBL_APRDOCINFO DOCINFO
-					WHERE
-						DOCINFO.ORGDOCID = #docId#
-						AND DOCINFO.COMPANYID = ATTACH.COMPANYID
-						AND DOCINFO.TENANT_ID = ATTACH.TENANT_ID
-				)
-			)
-			AND ATTACH.ATTACHFILESN = #attachFileSN#
-			AND ATTACH.COMPANYID = #companyId#
-			AND ATTACH.TENANT_ID = #tenantId#
+			ATTACHFILEHREF = #orgHref#
 	</update>
 	
+	<update id="EzApprovalGKlib.updateTmpAttachInfoHref" parameterClass="Map">
+		UPDATE
+			TBL_TMPATTACHINFO
+		SET
+			ATTACHFILEHREF = #href#
+		WHERE
+			ATTACHFILEHREF = #orgHref#
+	</update>
+
 	<update id="EzApprovalGKlib.updateHistoryDocHref" parameterClass="Map">
 		UPDATE
 			TBL_HISTORYDOCINFO

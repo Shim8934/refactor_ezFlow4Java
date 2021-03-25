@@ -130,6 +130,12 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			/* 2018-02-01 장진혁 모바일에서 검색을 다양하게 하기 위한 요소 추가 */
 			List<ScheduleInfoVO> sList = mScheduleService.scheduleList(info, startDate, endDate, searchTitle, searchColumn, searchData);
 						
+			String useWorkspaceSchedule = ezCommonService.getTenantConfig("useWorkspaceSchedule", info.getTenantId());
+	        if(useWorkspaceSchedule.equalsIgnoreCase("YES")) {
+	        	String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrlForMobile", info.getTenantId());
+	        	result.put("workspaceHostUrl", workspaceHostUrl);
+	        }
+			
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", sList);		
@@ -210,7 +216,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	/**
 	 * 모바일 G/W 일정관리 [GET] 일정 상세데이터
 	 */
-	@RequestMapping(value="/mobile/ezschedule/schedules/{scheduleId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezschedule/schedules/{scheduleId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject mScheduleDetail(@PathVariable String scheduleId, HttpServletRequest request, Locale locale) throws Exception {
 		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}] started.");
 		
@@ -536,7 +542,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	/**
 	 * 모바일 G/W 일정관리 [GET] 일정 수정
 	 */
-	@RequestMapping(value="/mobile/ezschedule/schedules/{scheduleId}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezschedule/schedules/{scheduleId:.+}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject mScheduleUpdate(@PathVariable String scheduleId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
 		LOGGER.debug("MOBILE G/W SCHEDULE [PUT /ezschedule/schedules/{scheduleId}] started.");
 		
@@ -620,7 +626,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	/**
 	 * 모바일 G/W 일정관리 [GET] 일정 삭제
 	 */	
-	@RequestMapping(value="/mobile/ezschedule/schedules/{scheduleId}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezschedule/schedules/{scheduleId:.+}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
 	public JSONObject mScheduleDelete(@PathVariable String scheduleId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("MOBILE G/W SCHEDULE [DELETE /ezschedule/schedules/{scheduleId}] started.");
 		
@@ -629,9 +635,6 @@ public class MScheduleGWController extends EgovFileMngUtil {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
-			String startDate = request.getParameter("startDate");
-			String endDate = request.getParameter("endDate");
-			String dateType = request.getParameter("dateType");
 			
 /*			if(dateType.equals("3")) {
 				mScheduleService.insertScheduleRepeDel(scheduleId, startDate, info.getTenantId());
@@ -680,10 +683,10 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			 
 			if(targetDate == null || targetDate.equals("")){   //파라메타값이 없을경우 오늘날짜
 			 
-				toYear = calForWeek.get(calForWeek.YEAR);  
-				toMonth = calForWeek.get(calForWeek.MONTH)+1;
-				toDay = calForWeek.get(calForWeek.DAY_OF_MONTH);
-				int yoil = calForWeek.get(calForWeek.DAY_OF_WEEK); //요일나오게하기(숫자로)
+				toYear = calForWeek.get(Calendar.YEAR);  
+				toMonth = calForWeek.get(Calendar.MONTH)+1;
+				toDay = calForWeek.get(Calendar.DAY_OF_MONTH);
+				int yoil = calForWeek.get(Calendar.DAY_OF_WEEK); //요일나오게하기(숫자로)
 
 			if(yoil != 1){   //해당요일이 일요일이 아닌경우
 				
@@ -708,10 +711,10 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			
 			String[] arrYMD = new String[7];
 			  
-			int inYear = calForWeek.get(calForWeek.YEAR);  
-			int inMonth = calForWeek.get(calForWeek.MONTH);
-			int inDay = calForWeek.get(calForWeek.DAY_OF_MONTH);
-			int yoil = calForWeek.get(calForWeek.DAY_OF_WEEK); //요일나오게하기(숫자로)
+			int inYear = calForWeek.get(Calendar.YEAR);  
+			int inMonth = calForWeek.get(Calendar.MONTH);
+			int inDay = calForWeek.get(Calendar.DAY_OF_MONTH);
+			int yoil = calForWeek.get(Calendar.DAY_OF_WEEK); //요일나오게하기(숫자로)
 			
 			yoil = yoil-1;
 			
@@ -720,9 +723,9 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			for(int i = 0; i < 7;i++){
 			
 				calForWeek.set(inYear, inMonth, inDay+i);  //
-				String y = Integer.toString(calForWeek.get(calForWeek.YEAR));  
-				String m = Integer.toString(calForWeek.get(calForWeek.MONTH)+1);
-				String d = Integer.toString(calForWeek.get(calForWeek.DAY_OF_MONTH));
+				String y = Integer.toString(calForWeek.get(Calendar.YEAR));  
+				String m = Integer.toString(calForWeek.get(Calendar.MONTH)+1);
+				String d = Integer.toString(calForWeek.get(Calendar.DAY_OF_MONTH));
 				
 				if(m.length() == 1) m = "0" + m; 
 				
@@ -733,7 +736,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			   
 			}
 			
-			List<Map> resultList = new ArrayList<Map>();
+			List<Map<String, Object>> resultList = new ArrayList<>();
 					
 			for (int i = 0; i < arrYMD.length; i++) {
 				
@@ -1063,6 +1066,66 @@ public class MScheduleGWController extends EgovFileMngUtil {
 		}
 		
 		LOGGER.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/schedules/users/{userId:.+}/group/status] ended.");
+		
+		return result;
+	}
+	
+	/**
+	 * 모바일 G/W 협업 - 그룹웨어 일정 데이터 연동
+	 */
+	@RequestMapping(value="/mobile/ezschedule/list/workspace/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject mWorkspaceScheduleGetList(@PathVariable String userId, HttpServletRequest request) throws Exception {		
+		LOGGER.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/list/workspace/{userId:.+}.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String startDate = request.getParameter("startDate");
+			String endDate = request.getParameter("endDate");
+			String searchTitle = request.getParameter("searchTitle");
+			
+			if (startDate != null && !startDate.equals("")) {
+				String[] sDate = startDate.split("-");
+				String sMon = (sDate[1].length() == 1 ? "0" + sDate[1] : sDate[1]);
+				String sDay = (sDate[2].length() == 1 ? "0" + sDate[2] : sDate[2]);
+				
+				startDate = sDate[0] + "-" + sMon + "-" + sDay + " 00:00:00";
+			} else {
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				Calendar cal = Calendar.getInstance();
+				
+				startDate = sdf.format(cal.getTime()) + " 00:00:00";
+			}
+			
+			if (endDate != null && !endDate.equals("")) {
+				String[] eDate = endDate.split("-");
+				String eMon = (eDate[1].length() == 1 ? "0" + eDate[1] : eDate[1]);
+				String eDay = (eDate[2].length() == 1 ? "0" + eDate[2] : eDate[2]);
+				
+				endDate = eDate[0] + "-" + eMon + "-" + eDay  + " 23:59:59";
+			} else {
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				Calendar cal = Calendar.getInstance();
+				
+				endDate = sdf.format(cal.getTime()) + " 23:59:59";
+			}
+			
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			
+			List<ScheduleInfoVO> sList = mScheduleService.scheduleListForWorkspace(info, startDate, endDate, searchTitle);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", sList);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/list/workspace/{userId:.+}] ended.");
 		
 		return result;
 	}

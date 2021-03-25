@@ -8,7 +8,7 @@ function Lineinfo_ini() {
             if (typeof(OrgAprUserDeptID) != "undefined" && OrgAprUserDeptID != "") {
             	TreeViewinitialize(OrgAprUserDeptID, companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "", "", orgCompanyID);
             } else {
-            	TreeViewinitialize(arr_userinfo[4], companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "", "", orgCompanyID);
+            	TreeViewinitialize(arr_userinfo[4], companyID + "/other", "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "", "", orgCompanyID);
             }
             displayUserList(DeptID);
             ChangeLineTab("Organ");
@@ -19,8 +19,9 @@ function Lineinfo_ini() {
     		Lineinfoini = true;
     		TreeViewinitialize(arr_userinfo[4], companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "");
     		InitListView();
-    		ChangeLineTab("Organ");
-    	}
+            ChangeLineTab("Organ");
+        }
+        treeViewScrollTo("FromTreeView");   //2020-04-24 : 선택된 노드로 트리뷰 커서 이동
     }
 }
 
@@ -35,6 +36,8 @@ function circulation_ini() {
     displayUserListCC(DeptID);
     InitListViewCC();
     ChangeLineTabCC("Organ");
+
+    treeViewScrollTo("FromTreeViewCC");   //2020-04-24 : 선택된 노드로 트리뷰 커서 이동
 }
 //#############################################################################################################################################결재선 내부 탭 이벤트
 var internalTab = false;
@@ -228,6 +231,8 @@ function LineAprTyepSet() {
 var p_RejectFlag = false;
 var ProSn = 0;
 function LineAprTyepSetAll() {
+	var auditCount1 = 0;
+	var auditCount2 = 0;
 	if (approvalFlag == "S") {
 		var pAPRLINE = new ListView();
 	    pAPRLINE.LoadFromID("lvAPRLINE");
@@ -252,6 +257,11 @@ function LineAprTyepSetAll() {
 	            else {
 	                if (GetAttribute(pTotalRows[i], "DATA12") == "015")
 	                    p_StatusDis = "disabled";
+	                
+	                if ($("input:checkbox[id='passAprLine']").is(":checked") && (pTotalRows[i].getAttribute("DATA12") == "004" || pTotalRows[i].getAttribute("DATA12") == "003" || pTotalRows[i].getAttribute("DATA12") == "002")) {
+	                	p_StatusDis = "disabled";
+	                }
+	                
 	                AprTyepID = GetAttribute(pTotalRows[i], "id") + "select";
 	                AprTypeObj = "<select id='" + AprTyepID + "' onChange=\"return AprlineType_onchangeLine(this)\" style=\"width:100%;\" " + p_StatusDis + " >" + AprTypeObj + "</select>";
 	                pTotalRows[i].childNodes[4].innerHTML = AprTypeObj;
@@ -271,6 +281,10 @@ function LineAprTyepSetAll() {
 	                
 	                if (GetAttribute(pTotalRows[i],"DATA8") == "Y")    
 	                     p_StatusDis = "disabled";
+	                
+	                if ($("input:checkbox[id='passAprLine']").is(":checked") && (pTotalRows[i].getAttribute("DATA12") == "004" || pTotalRows[i].getAttribute("DATA12") == "003" || pTotalRows[i].getAttribute("DATA12") == "002")) {
+	                	p_StatusDis = "disabled";
+	                }
 	            }
 	            if (GetAttribute(pTotalRows[i], "DATA11") != "003") {
 	                var AprTypeObj = SChangeAprlineType("user", GetAttribute(pTotalRows[i], "DATA11"));
@@ -308,13 +322,66 @@ function LineAprTyepSetAll() {
 			if ((pTotalRows[i].getAttribute("DATA11") == "009" || pTotalRows[i].getAttribute("DATA11") == "012") && parseInt(CurrentSn) < parseInt(ProSn))
 				p_StatusDis = "disabled";
 			
+			if ($("input:checkbox[id='passAprLine']").is(":checked") && (pTotalRows[i].getAttribute("DATA12") == "004" || pTotalRows[i].getAttribute("DATA12") == "003" || pTotalRows[i].getAttribute("DATA12") == "002")) {
+            	p_StatusDis = "disabled";
+            }
+			// 감사부서는 감사결재 유형만 사용할 수 있도록 설정. 2020-02-28 홍대표.
+			if(pDeptgamsaCount > 0 && pTotalRows[i].getAttribute("DATA4") == optGamsabu) {
+				p_StatusDis = "disabled";
+			}
+			
 			if (p_isDept == "Y") {
 				var AprTypeObj = ChangeAprlineType("group", pTotalRows[i].getAttribute("DATA11"));
 				AprTyepID = pTotalRows[i].getAttribute("id") + "select";
 				AprTypeObj = "<select id='" + AprTyepID + "' onChange=\"return AprlineType_onchangeLine(this)\" style =\"width:100%\" " + p_StatusDis + " >" + AprTypeObj + "</select>";
 				pTotalRows[i].childNodes[4].innerHTML = AprTypeObj;
+				
+				// 감사부서는 감사결재 유형만 사용할 수 있도록 설정. 2020-02-28 홍대표.
+				setDeptGamsaType(pTotalRows[i]);
 			} else {
 				var AprTypeObj = ChangeAprlineType("user", pTotalRows[i].getAttribute("DATA11"));
+				var tempHtml = "";
+				// 감사
+				var index = pTotalRows.length-1;
+				var revIndex = 0;
+				// (index-revIndex)최초감사자 index값
+				$.each($(pTotalRows).get().reverse(), function(j, item) {
+					if($(this).attr("DATA11") == "005") {
+						revIndex = j;
+						return false;
+					}
+				});
+				
+				if(pTotalRows[i].getAttribute("JUNBUBYN") == "Y" || pTotalRows[i].getAttribute("APPRLINETYPE") == "audit_add"
+					|| pTotalRows[i].getAttribute("DATA11") == "005") {
+					$.each($(AprTypeObj), function(j, item) {
+						if(this.value == "005") {
+							tempHtml += this.outerHTML;
+						}
+					});
+					AprTypeObj = tempHtml;
+					
+					// 현재 결재자가 준법지원인일때(최초감사일때)
+					if(arr_userinfo[1] == pTotalRows[i].getAttribute("DATA4") && i == (index-revIndex)) {
+						//$('#td_check_rep_sugg').hide();
+						$("#auditAddBtn").hide();
+						$("#td_check_rep_sugg").hide();
+						$("#tr_radio_audit").show();
+						$("#APRLINE").css("height", "488px");
+					}
+					
+					pTotalRows[i].setAttribute("APPRLINETYPE", "audit_add");
+					pTotalRows[i].setAttribute("DATA9", "N");
+					auditCount1++;
+					
+				} else {
+					$.each($(AprTypeObj), function(j, item) {
+						if(this.value != "005") {
+							tempHtml += this.outerHTML;
+						}
+					});
+					AprTypeObj = tempHtml;
+				}
 				AprTyepID = pTotalRows[i].getAttribute("id") + "select";
 				AprTypeObj = "<select id='" + AprTyepID + "' onChange=\"return AprlineType_onchangeLine(this)\" style =\"width:100%\" " + p_StatusDis + " >" + AprTypeObj + "</select>";
 				pTotalRows[i].childNodes[4].innerHTML = AprTypeObj;
@@ -332,6 +399,24 @@ function LineAprTyepSetAll() {
 			}
 		}
 	}
+	$.each($(pTotalRows).get().reverse(), function(index) {
+		var text = "";
+		var id = this.id;
+		id = id.substring(0, id.length-1) + index;
+		
+		if($(this).attr("DATA8") == "Y" && $(this).attr("DATA11") == "008") {
+			text = "★";
+		} else if($(this).attr("DATA9") == "Y" && $(this).attr("DATA11") == "005") {
+			auditCount2++;
+			if(auditCount1 > 1 && auditCount1 == auditCount2) {
+				text = "⊙";
+			}
+		}
+		
+		$(this).attr('id', id);
+		$(this).children('td:first').text(text+(index+1));
+		$(this).children().find('select').attr("id", id + 'select');
+	});
 }
 
 //############################################################################################################################################# 결재방법 지정 함수
@@ -349,6 +434,10 @@ function AprlineType_onchangeLine(obj) {
         if (pCheckTypevalue == "008" || pCheckTypevalue == "009" || pCheckTypevalue == "011" || pCheckTypevalue == "012") {
             if (pHapyuiArea == 0 && pHapYuiCount != "0")
                 Rtnval = CheckHapYuiCellValue();
+        }
+        
+        if (Rtnval && (pCheckTypevalue == "013" || pCheckTypevalue == "021" )) {
+            Rtnval = CheckGamsaYesan(pCheckTypevalue, obj);
         }
 
         if (Rtnval)
@@ -401,6 +490,7 @@ function InitListView() {
         pAPRLINE.SetID("lvAPRLINE");
         pAPRLINE.SetMulSelectable(false);
         pAPRLINE.SetHeightFree(true);
+        pAPRLINE.SetDrop("aprlineDrop");
         pAPRLINE.SetRowOnClick("OnSelChange_onclick");
         pAPRLINE.SetRowOnDblClick("AprlineDel_onclick");
         pAPRLINE.SetSelectFlag(false);
@@ -447,9 +537,11 @@ function InitListView() {
         	        var IniListData16 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA16").trim();
         	        var IniListData17 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA17").trim();
         	        var IniListData18 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA18").trim();
-        	        if(IniListData6!=null && IniListData6 != "" && IniListData6 != arr_userinfo[4] && orgCompanyID != "" && pReDraftFlag != "REDRAFT") { //2018-10-25 배현상, 사간겸직 조건 추가
+        	        
+        	        if(IniListData6!=null && IniListData6 != "" && IniListData6 != arr_userinfo[4] && orgCompanyID != "" && orgCompanyID != arr_userinfo[17] && pReDraftFlag != "REDRAFT") { //2018-10-25 배현상, 사간겸직 조건 추가
             	    	arr_userinfo[4] = IniListData6;
             	    }
+        	        
         	        var curaprline = "";
         	        for (var i = 0; i < NodeList.length; i++) {
         	            if (SelectSingleNodeValue(GetChildNodes(NodeList[i])[0], "DATA12") == strAprState2) {
@@ -787,7 +879,7 @@ function displayUserList(DeptID) {
 		url : "/ezOrgan/getDeptMemberList.do",
 		data : {
 				deptID   : DeptID, 
-				cell 	 : "displayName;description;title;telephoneNumber",
+				cell 	 : "displayName;description;title;telephoneNumber;extensionattribute5",
 				prop     : "department;displayName;description;title",
 				type 	 : "user"
 		},
@@ -819,10 +911,12 @@ function event_displayUserList(xml) {
     pUserList.SetID("pUserList");
     pUserList.SetRowOnClick("list2_onSel_Click"); 
     pUserList.SetRowOnDblClick("list2_onSel_DBclick");
+    pUserList.SetDrag("list2_onDragStart");  //2020-04-27 : 드래그앤드랍 추가
     pUserList.SetSelectFlag(false);
     pUserList.SetHeightFree(true);
+    pUserList.SetTitleIdx(1);
     pUserList.DataSource(headerData);                 
-    pUserList.DataBind("UserList");                   
+    pUserList.DataBind("UserList");
 
     var userRows = pUserList.GetDataRows();
 
@@ -856,9 +950,10 @@ function event_displayUserListCC(xml) {
 	var pUserList = new ListView();
 	pUserList.SetID("DivUserList");
 	pUserList.SetRowOnClick("list3_onSel_Click"); 
-	pUserList.SetRowOnDblClick("list4_onSel_DBclick");
+    pUserList.SetRowOnDblClick("list4_onSel_DBclick");
 	pUserList.SetSelectFlag(false);
 	pUserList.SetHeightFree(true);
+	pUserList.SetTitleIdx(1);
 	pUserList.DataSource(headerData);                 
 	pUserList.DataBind("UserListCC");                   
 	
@@ -1167,7 +1262,7 @@ function ChangeAprlineType(CheckGPerson, CurrentAprType) {
 
             for (i = 0; i < SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE").length; i++) {
                 if (SelectSingleNodeValue(SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[i], "CODE") == strAprType13) {
-                    if (pGamSaCount > 0) {
+                    if (pDeptgamsaCount > 0) {
                         p_AprlineValue[j] = SelectSingleNodeValue(SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[i], "NAME");
                         p_AprlineCode[j] = SelectSingleNodeValue(SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[i], "CODE");
                         j = j + 1;
@@ -1506,4 +1601,107 @@ function check_presence() {
         }
     }
     pSIPUriList = null;
+}
+
+//2020-04-27 : 드래그앤드랍 추가
+function list2_onDragStart(ev) {
+    dragTabMenu = "APRLINE";
+    ev.dataTransfer.setData("text", ev.target.id);
+
+    if (ev.target.getAttribute("selected") != "true") {
+        $(ev.target).click();
+    }
+}
+
+function aprlineDrop(ev) {
+    if (dragTabMenu == "APRLINE") {  //결재선 추가
+        list2_onSel_DBclick();  
+    }
+}
+
+function listViewStart(xml, id, dbClick) {
+    var retXml = createXmlDom();
+
+    if (document.getElementById(id).innerHTML != "")
+        document.getElementById(id).innerHTML = "";
+
+    var headerData = createXmlDom();
+    headerData = loadXMLString(userlist_h.innerHTML.toUpperCase());
+    if (xml != "") {
+    	var xmlRtn = xml.documentElement.getElementsByTagName("ROWS")[0];
+    	
+    	if(xmlRtn.textContent == '') {
+    		OpenAlertUI(linealt19);
+    		return false;
+    	}
+    	
+    	if (CrossYN()) {
+            var Node = headerData.importNode(xmlRtn, true);
+            headerData.documentElement.appendChild(Node);
+        } else {
+            headerData.documentElement.appendChild(xmlRtn);
+        }
+    }
+    var auditUserList = new ListView();
+    auditUserList.SetID('tb_'+id);
+    auditUserList.SetSelectFlag(true);
+    auditUserList.SetHeightFree(true);
+    if(dbClick != undefined && dbClick != "") {
+    	auditUserList.SetRowOnDblClick(dbClick);
+    }
+    auditUserList.DataSource(headerData);
+    auditUserList.DataBind(id);
+
+    var userRows = auditUserList.GetDataRows();
+
+    if (userRows.length <= 0) {
+        OpenAlertUI(linealt11);
+    }
+    else if (USE_OCS.toUpperCase() == "YES") {
+        check_presence();
+    }
+    return true;
+}
+function CheckGamsaYesan(pAprType, pObj) {
+    try {
+        var pDeptID, pDeptName;
+        for (i = 0; i < SelectNodes(GamsaYesanInfoXML, "DATA/ROW").length; i++) {
+            if (SelectSingleNodeValue(SelectNodes(GamsaYesanInfoXML, "DATA/ROW")[i], "APRTYPE") == pAprType) {
+                pDeptID = SelectSingleNodeValue(SelectNodes(GamsaYesanInfoXML, "DATA/ROW")[i], "CN");
+                pDeptName = SelectSingleNodeValue(SelectNodes(GamsaYesanInfoXML, "DATA/ROW")[i], "DISPLAYNAME");
+            }
+        }
+
+        var pAPRLINE = new ListView();
+        pAPRLINE.LoadFromID("lvAPRLINE");
+
+        var pSelRow = pAPRLINE.GetSelectedRows();
+        if (pSelRow.length > 0) {
+            if (pDeptID != GetAttribute(pSelRow[0], "DATA4")) {
+                var pAlertContent = "";
+                if (pAprType == "013")
+                    pAlertContent = strLang1068 + pDeptName + strLang1070;
+                else
+                    pAlertContent = strLang1069 + pDeptName + strLang1070;
+
+                OpenAlertUI(pAlertContent);
+                
+                pObj.value = GetAttribute(pSelRow[0], "DATA11");
+                return false;
+            }
+        }
+       
+       return true;
+    } catch (e) {
+    	alert("CheckGamsaYesan :: " + e.description);
+    }
+}
+
+function setDeptGamsaType(targetRow) {
+	[].forEach.call(targetRow.childNodes[4].getElementsByTagName("option"), function(elem) {
+		if(targetRow.getAttribute("DATA4") == optGamsabu && elem.value != strAprType13
+		  || targetRow.getAttribute("DATA4") != optGamsabu && elem.value == strAprType13) {
+			elem.parentNode.removeChild(elem);
+		}
+	})
 }

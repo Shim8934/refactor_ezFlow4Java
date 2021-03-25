@@ -1,28 +1,32 @@
 package egovframework.ezEKP.ezPersonal.service.impl;
 
-import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import com.ibm.icu.util.ChineseCalendar;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPersonal.dao.EzPersonalDAO;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
@@ -57,6 +61,9 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 	
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
+	
+	@Resource(name="EzOrganService")
+	private EzOrganService ezOrganService;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -145,11 +152,20 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		
 		List<PersonalApprovMailVO> approvMailVOList = new ArrayList<PersonalApprovMailVO>();
 		
-		if (temp != null && temp.equals("1")) {
-			// SAVEMAILFLAG는 메일 발신자 ID 값에서 가져올 것.
-			approvMailVOList = ezPersonalDAO.getApprovNotiConfig_S2(map);
+		String useMailApprNoti = ezCommonService.getTenantConfig("useMailApprNoti", tenantID);
+		if(useMailApprNoti == null || useMailApprNoti.equals("")) {
+			useMailApprNoti = "YES";
+		}
+		
+		if (useMailApprNoti.equalsIgnoreCase("NO")){
+			approvMailVOList = ezPersonalDAO.getApprovNotiConfig_S4(map);
 		} else {
-			approvMailVOList = ezPersonalDAO.getApprovNotiConfig_S3(map);
+			if (temp != null && temp.equals("1")) {
+			// SAVEMAILFLAG는 메일 발신자 ID 값에서 가져올 것.
+				approvMailVOList = ezPersonalDAO.getApprovNotiConfig_S2(map);
+			} else {
+				approvMailVOList = ezPersonalDAO.getApprovNotiConfig_S3(map);
+			}
 		}
 		
 		StringBuffer sb = new StringBuffer();
@@ -167,7 +183,7 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 	}
 
 	@Override
-	public String setApprovNotiMail(String userID, String alert, String complete, String bansong, String callBack, String hesong, String saveMailFlag, int tenantID) throws Exception {
+	public String setApprovNotiMail(String userID, String alert, String complete, String bansong, String callBack, String hesong, String saveMailFlag, int tenantID, String linePass) throws Exception {
 		logger.debug("setApprovNotiMail started");
 
 		String result = "";
@@ -182,6 +198,7 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		map.put("v_PHESONG", hesong);
 		map.put("v_PSAVEMAILFLAG", saveMailFlag);
 		map.put("tenantID", tenantID);
+		map.put("linePass", linePass);
 		
 		try {
 			String temp = ezPersonalDAO.setApprovNotiMail_S(map);
@@ -246,15 +263,12 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 	}
 	
 	@Override
-	public PersonalLightPollVO getCurrentPoll(String pUserID, String pCompanyID, int tenantID) throws Exception {
+	public PersonalLightPollVO getCurrentPoll(String pUserID, String pCompanyID, int tenantID, String offset) throws Exception {
 		logger.debug("getCurrentPoll started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		date.setTimeZone(TimeZone.getTimeZone("GMT"));
-		String nowDate = date.format(new Date()); 
-		
+		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false); 
+
 		map.put("v_pUserID", pUserID);
 		map.put("v_pCompanyID", pCompanyID);
 		map.put("tenantID", tenantID);
@@ -324,19 +338,76 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 	}
 	
 	@Override
-	public List<PersonalGetPopUpListUserVO> getPopUpListUser(String pComapnyID, int tenantID) throws Exception {
+	public List<PersonalGetPopUpListUserVO> getPopUpListUser(String pComapnyID, int tenantID, String offset) throws Exception {
 		logger.debug("getPopUpListUser started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		
-		String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"); 
-		
+
+		//String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
+		// 2018-11-23 황윤호 offset 적용 
+		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
+
 		map.put("v_pCompanyID", pComapnyID);
 		map.put("nowDate", nowDate);
 		map.put("tenantID", tenantID);
-
+		
+		List<PersonalGetPopUpListUserVO> popupList = ezPersonalDAO.getPopUpListUser(map);
+		
 		logger.debug("getPopUpListUser ended");
-		return (List<PersonalGetPopUpListUserVO>) ezPersonalDAO.getPopUpListUser(map);
+		return popupList;
+	}
+	
+	@Override
+	public List<PersonalGetPopUpListUserVO> getPopUpListUserWithAuth(String pComapnyID, int tenantID, String offset, String userId, String deptId) throws Exception {
+		logger.debug("getPopUpListUser started");
+		logger.debug("[params] companyId=" + pComapnyID + ", tenantId=" + tenantID + ", userId = " + userId + ", deptId = " + deptId);
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		//String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
+		// 2018-11-23 황윤호 offset 적용 
+		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
+
+		map.put("v_pCompanyID", pComapnyID);
+		map.put("nowDate", nowDate);
+		map.put("tenantID", tenantID);
+		
+		List<PersonalGetPopUpListUserVO> popupList = ezPersonalDAO.getPopUpListUser(map);
+		List<PersonalGetPopUpListUserVO> popupListWithAuth = new ArrayList<PersonalGetPopUpListUserVO>();
+		
+		if (popupList != null) {
+			for (PersonalGetPopUpListUserVO popup : popupList) {
+				map.put("companyId", pComapnyID);
+				map.put("tenantId", tenantID);
+				map.put("userId", userId);
+				map.put("itemSeq", popup.getItemSeq());
+				map.put("deptId", deptId);
+				
+				boolean popupYN = ezPersonalDAO.getPopupPermitYN(map);
+				
+				logger.debug("[popupAuth] popupSeq = " + popup.getItemSeq() + ", popupYN = " + popupYN);
+				
+				if (popupYN) {
+					popupListWithAuth.add(popup);
+				} else {
+					// popupYN이 false일 때 권한 그룹리스트 가져와서 체크
+					List<String> groupList = ezPersonalDAO.getPopupUserGroupList(map);
+					
+					if (groupList != null) {
+						for (String groupId : groupList) {
+							boolean groupPermissionYN = ezCommonService.getPermissionGroupAccessYN(groupId, pComapnyID, tenantID, userId, deptId, true);
+							
+							if (groupPermissionYN) {
+								popupListWithAuth.add(popup);
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		logger.debug("getPopUpListUser ended");
+		return popupListWithAuth;
 	}
 	
 	@Override
@@ -642,5 +713,36 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		
 		logger.debug("getCheckDuplShareUser ended.");
 		return rtnValue;
+	}
+	
+	public Object saveBujaeUser(String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		logger.debug("saveBujaeUser started");
+
+		JSONArray ja = new JSONArray();
+		JSONParser parser = new JSONParser();
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String result = "";
+
+		//TODO: 원래는 user를 ad에서 정보 가져오는데 임시로 하드코딩함 전자결재외에 다른 부분 발견하면 수정요망(전자결재만 존재하면 그냥 박아도됨)
+		String pClass = "user";
+		String strFormArray = request.getParameter("formArray");
+		
+		ja = (JSONArray)parser.parse(strFormArray);
+		
+		for(int i=0; i<ja.size(); i++) {
+			JSONObject jo = new JSONObject();
+			if(i == 0) {
+				jo = (JSONObject)ja.get(i);
+				result = ezOrganService.updateProperty(userInfo.getId(), "extensionAttribute5", jo.get("proxy").toString(), pClass, userInfo.getTenantId());
+			} else {
+				jo = (JSONObject)ja.get(i);
+				result = ezOrganService.updateAddJobProxy(userInfo.getId(), jo.get("proxy").toString(), userInfo.getTenantId(), jo.get("deptId").toString());
+			}
+		}
+		
+		logger.debug("saveBujaeUser ended");
+		return result;
 	}
 }

@@ -16,6 +16,7 @@
 		<script type="text/javascript">
 		    var pUserID = "${userId}";
 		    var pSigState = "0";
+		    var shareId = "${shareId}";
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -122,6 +123,7 @@
 		            createNodeAndInsertText(xmlDOM, objNode, "CONTENT1", sign1);
 		            createNodeAndInsertText(xmlDOM, objNode, "CONTENT2", sign2);
 		            createNodeAndInsertText(xmlDOM, objNode, "CONTENT3", sign3);
+		            createNodeAndInsertText(xmlDOM, objNode, "SHAREID", shareId);
 		            xmlHTTP.open("POST", "/ezEmail/mailSignSave.do", false);
 		            xmlHTTP.send(xmlDOM);
 		            if (xmlHTTP.status == 200)
@@ -218,6 +220,9 @@
 		
 		            obj.className = "tabon";
 		            Tab1_SelectID = obj.id;
+		            
+		            $("#signatureSelect").val("none");
+		            
 		            ChangeTab(obj);
 		        }
 		    }
@@ -261,8 +266,9 @@
 		    	} else if (obj !== "none") {
 		    		$.ajax({
 		        		type : "POST",
-		        		url : "/admin/ezEmail/signaturePreview.do?signNo=" + obj,
+		        		url : "/admin/ezEmail/signaturePreview.do",
 		        		datatype : 'json',
+		        		data : {"signNo" : obj},
 		        		error : function(data) {
 		        			alert("error");
 		        			console.log(data);
@@ -296,7 +302,7 @@
 	            <p id = "MailEnv_sub8"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezEmail.t828' /></span></p>
 		    </div>
 		   <!-- 서명 템플릿 선택 기능 -->
-		   <c:if test="${useSignatureTemplate == 'YES'}"> 
+		   <c:if test="${useSignatureTemplate == 'YES' and empty shareId}">
 			    <div style="float:right; margin-right:5px;">
 			    	<span><b><spring:message code='ezEmail.jje16'/> : </b></span>
 			    	<select id="signatureSelect" onchange="selectSignTemplate(this.value)">

@@ -25,6 +25,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/attach_CK.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/webfolderFilePick.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 			var pDocID = null;
 			var OrderCell = "";
@@ -37,40 +38,56 @@
 			var chkFlag			= false;
 			var arr_userinfo = new Array();
 			arr_userinfo[0]  = "user";								// 사용자-부서구분
-			arr_userinfo[1]  = "${userInfo.id}";              // 사용자ID
-			arr_userinfo[2]  = "${userInfo.displayName}";         // 사용자명
-			arr_userinfo[3]  = "${userInfo.title}";               // 사용자 직위
-			arr_userinfo[4]  = "${userInfo.deptID}";              // 사용자 부서 ID 
-			arr_userinfo[5]  = "${userInfo.deptName}";            // 사용자 부서 이름
-			arr_userinfo[6]  = "${userInfo.jikChek}";             // 사용자 직책            
-			arr_userinfo[8]  = "${userInfo.email}";               // E-Mail Address 
+			arr_userinfo[1]  = "<c:out value ='${userInfo.id}'/>";              // 사용자ID
+			arr_userinfo[2]  = "<c:out value ='${userInfo.displayName}'/>";         // 사용자명
+			arr_userinfo[3]  = "<c:out value ='${userInfo.title}'/>";               // 사용자 직위
+			arr_userinfo[4]  = "<c:out value ='${userInfo.deptID}'/>";              // 사용자 부서 ID 
+			arr_userinfo[5]  = "<c:out value ='${userInfo.deptName}'/>";            // 사용자 부서 이름
+			arr_userinfo[6]  = "<c:out value ='${userInfo.jikChek}'/>";             // 사용자 직책            
+			arr_userinfo[8]  = "<c:out value ='${userInfo.email}'/>";               // E-Mail Address 
 			arr_userinfo[9]  = "";
-			arr_userinfo[10] = "${susinAdmin}";                  // 수신 접수담당자
-			arr_userinfo[11]  = "${userInfo.displayName1}";		// 사용자명(P)
-			arr_userinfo[12]  = "${userInfo.displayName2}";		// 사용자명(S)
-			arr_userinfo[13]  = "${userInfo.title1}";				// 사용자 직위(P)
-			arr_userinfo[14]  = "${userInfo.title2}";				// 사용자 직위(S)
-			arr_userinfo[15]  = "${userInfo.deptName1}";			// 사용자 부서 이름(P)
-			arr_userinfo[16]  = "${userInfo.deptName2}";			// 사용자 부서 이름(S)
+			arr_userinfo[10] = "<c:out value ='${susinAdmin}'/>";                  // 수신 접수담당자
+			arr_userinfo[11]  = "<c:out value ='${userInfo.displayName1}'/>";		// 사용자명(P)
+			arr_userinfo[12]  = "<c:out value ='${userInfo.displayName2}'/>";		// 사용자명(S)
+			arr_userinfo[13]  = "<c:out value ='${userInfo.title1}'/>";				// 사용자 직위(P)
+			arr_userinfo[14]  = "<c:out value ='${userInfo.title2}'/>";				// 사용자 직위(S)
+			arr_userinfo[15]  = "<c:out value ='${userInfo.deptName1}'/>";			// 사용자 부서 이름(P)
+			arr_userinfo[16]  = "<c:out value ='${userInfo.deptName2}'/>";			// 사용자 부서 이름(S)
 			
 			var pUserID			= arr_userinfo[1];		// 사용자 ID
 			var pUserName		= arr_userinfo[2];	    // 사용자 이름
 			var pUserJobTitle	= arr_userinfo[3];	// 사용자 직위
 			var pDeptID			= arr_userinfo[4];		// 부서ID  
 			var pDeptName		= arr_userinfo[5];		// 부서 이름 
-			var optExt = "${poptExt}";
-			var maxSize = "${maxSize}";
-			var isBody = "${isBody}";
+			var optExt = "<c:out value ='${poptExt}'/>";
+			var maxSize = "<c:out value ='${maxSize}'/>";
+			var isBody = "<c:out value ='${isBody}'/>";
 			var BodyAttach = "N";
 			var AttachDelFlag = false;
-			var pDraftFlag = "${draftFlag}";
-			var approvalFlag = "${approvalFlag}";
-			var apprTotalAttachLimit = "${apprTotalAttachLimit}";
-			var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");
+			var pDraftFlag = "<c:out value ='${draftFlag}'/>";
+			var approvalFlag = "<c:out value ='${approvalFlag}'/>";
+			var apprTotalAttachLimit = "<c:out value ='${apprTotalAttachLimit}'/>";
+			var attachFileNameMaxLength = Number("<c:out value ='${attachFileNameMaxLength}'/>");
 			var totalSize = 0;
-			var orgCompanyID = "${orgCompanyID}";
-			var ext = "${ext}";
+			var orgCompanyID = "<c:out value ='${orgCompanyID}'/>";
+			var ext = "<c:out value ='${ext}'/>";
 			var pCompanyID = "<c:out value='${userInfo.companyID}'/>"; // 원회사가 아닌 현재 소속 회사ID
+			
+			/* 2020-11-12 홍승비 - 대용량첨부 기능 추가 */
+			var apprAttachLimit = "<c:out value='${apprAttachLimit}'/>"; // 일반 첨부파일 총 크기제한 (MB) = 일반 첨부파일 -> 대용량으로 변경되는 기준 크기 (MB)
+			var bigSizeAttachLimitCount = "<c:out value='${bigSizeAttachLimitCount}'/>"; // 전자결재 대용량 첨부파일 개수제한
+			var bigSizeApprAttachLimit = "<c:out value='${bigSizeApprAttachLimit}'/>"; //  전자결재 대용량 첨부파일 총 크기제한 (MB)
+			var bigSizeApprAttachDelDay = "<c:out value='${bigSizeApprAttachDelDay}'/>"; // 전자결재 대용량 첨부파일 보존기간 (일)
+	        var normalAttachSize = 0; // 일반첨부파일 크기
+	        var bigAttachSize = 0; // 대용량 첨부파일 크기
+	        var isBigAttachBtnClicked = false; // 대용량첨부 버튼으로 파일을 추가하는지 여부
+	        var isOuterForm = "<c:out value ='${isOuterForm}'/>";
+	        
+	        /*2021-03-05 남학선 첨부를 올린사람 이외의 사람도 삭제가능여부를  결정하는 값*/
+	        var delAttachByOthers = "<c:out value ='${delAttachByOthers}'/>";
+	        
+	        // 웹폴더첨부용 변수
+	        var pickerData = "";
 			
 			// 문서정보를 가져오는 함수
 			function getDocInfo()
@@ -152,14 +169,16 @@
 				var doc;
 				var form;
 				getDocInfo();
-				pDocID = "${docID}";
+				pDocID = "<c:out value ='${docID}'/>";
 				pBoardFileSize  =	parseInt(maxSize);
 			    document.getElementById("docid").value =pDocID;
-			    document.getElementById("compid").value =  "${userInfo.companyID}";
+			    document.getElementById("compid").value =  "<c:out value ='${userInfo.companyID}'/>";
 				Resultxml = InitAttach(pDocID);
 				
 				totalSize = 0;
-			
+				normalAttachSize = 0;
+				bigAttachSize = 0;
+				
 				var filezisearr = new Array();				
 				for (var i = 0; i < SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW").length; i++) {
 					
@@ -184,6 +203,14 @@
 				    strSize = fileSize;
 			
 				    setNodeText(GetChildNodes(GetChildNodes(SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW")[i])[2])[0], strSize);
+				    
+				    // 기존 일반첨부, 대용량첨부 파일크기 계산
+				    var isBigAttachFile = SelectSingleNodeValue(GetChildNodes(SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW")[i],2)[0], "ISBIGATTACH");
+				    if (isBigAttachFile == "Y") {
+				    	bigAttachSize += parseInt(realFileSize.split(".")[0]);
+				    } else {
+				    	normalAttachSize += parseInt(realFileSize.split(".")[0]);
+				    }
 				}
 				
 				/* 2020-03-19 홍승비 - 첨부파일 리스트뷰에서 다중선택이 가능하도록 수정 */
@@ -202,6 +229,12 @@
 				pAttachSN = pAttachSN + 1;
 				
 				//btn_AttachDel.disabled = true; 
+				
+				// 웹폴더첨부를 위한 파라미터 설정
+				pickerData = {
+						'confirmBT' : webFolderConfirmBT, // 웹폴더첨부 확인 시 실행할 함수
+						'cancelBT' : webFolderCancelBT // 웹폴더첨부 취소 시 실행할 함수
+				};
 			}
 			
 			
@@ -228,7 +261,7 @@
 						return;
 					} else {
 				        document.getElementById("btn_AttachDel").disabled = false;
-				        document.getElementById("attachsn").value = pAttachSN;            
+				        document.getElementById("attachsn").value = pAttachSN;
 				        document.getElementById("maxsize").value = pBoardFileSize * 1024 * 1024; 
 				        var frm = document.getElementById('form');
 				        frm.submit();
@@ -285,53 +318,18 @@
 			    if (pAttachCurSel.length > 0)
 				{
 					var pcheckID =  GetAttribute(pAttachCurSel[0], "DATA4");
-					if (pcheckID.toLowerCase() != pUserID.toLowerCase() && pDraftFlag != "REDRAFT")
+ 					if (pcheckID.toLowerCase() != pUserID.toLowerCase() && pDraftFlag != "REDRAFT")
 					{
-						var pAlertContent = "<spring:message code='ezApprovalG.t277'/>" + "<br>" + "<spring:message code='ezApprovalG.t278'/>";
-						OpenAlertUI(pAlertContent);
+ 						if(delAttachByOthers == "0"){
+							var pAlertContent = "<spring:message code='ezApprovalG.t277'/>" + "<br>" + "<spring:message code='ezApprovalG.t278'/>";
+							OpenAlertUI(pAlertContent);				 							
+ 						} else {
+							btn_AttachDel_onclick_doDel();		
+ 						}
 					}
 					else
-					{
-						var pInformationContent = "<spring:message code='ezApprovalG.t279'/>";
-					    var Ans = OpenInformationUI(pInformationContent, btn_AttachDel_onclick_Complete);
-					    
-					    /* 2020-03-30 홍승비 - 한글기안 시 첨부파일 호환 코드 추가 (Ans가 바로 조건으로 사용됨) */
-					    if (Ans) {
-					        var listview = new ListView();
-					        listview.LoadFromID("attachList");
-					        var pAttachCurSel = listview.GetSelectedRows();
-					        var pAttachRow = listview.GetSelectedRows();
-					        
-							/* 2020-03-19 홍승비 - 첨부파일 다중삭제 동작 구현 */
-					        var Rtnval = ""
-					        var pSelectedRowLength = pAttachRow.length; 
-					        for (var i = 0; i < pSelectedRowLength; i++) {
-						        Rtnval = DeleteFileAtServer(pAttachCurSel[i]);
-						        // 의미없는 미구현 함수 DelfileSize(delfileSize) 동작 제거
-						        
-						        if (Rtnval != "TRUE") {
-						        	break;
-						        } else {
-						            if (totalSize > 0) { // 첨부파일의 크기 계산하는 부분 루프 내부로 이동
-						            	totalSize -= parseInt(GetAttribute(pAttachRow[i], "DATA8"));
-						            }
-						        }
-					        }
-					        
-					        if (Rtnval == "TRUE") {
-					            DelAttachFileAtList(pAttachCurSel);
-					            
-					            /* 2018-10-11 김민성 - 데이터 없을 때 문구 뜨도록 수정 */
-					            var totalRows = listview.GetDataRows();
-							    if(totalRows.length == 0) {
-							    	setDeleteRow("attachList");
-							    }
-					        }
-					        else {
-					            var pAlertContent = "<spring:message code='ezApprovalG.t280'/>";
-					            OpenAlertUI(pAlertContent);
-					        }
-					    }
+					{ 
+						btn_AttachDel_onclick_doDel();						
 					}
 				}
 				else
@@ -339,6 +337,57 @@
 					var pAlertContent = "<spring:message code='ezApprovalG.t281'/>";
 					OpenAlertUI(pAlertContent);
 				}
+			}
+			
+			function btn_AttachDel_onclick_doDel(){
+				var pInformationContent = "<spring:message code='ezApprovalG.t279'/>";
+			    var Ans = OpenInformationUI(pInformationContent, btn_AttachDel_onclick_Complete);
+			    
+			    /* 2020-03-30 홍승비 - 한글기안 시 첨부파일 호환 코드 추가 (Ans가 바로 조건으로 사용됨) */
+			    if (Ans) {
+			        var listview = new ListView();
+			        listview.LoadFromID("attachList");
+			        var pAttachCurSel = listview.GetSelectedRows();
+			        var pAttachRow = listview.GetSelectedRows();
+			        
+					/* 2020-03-19 홍승비 - 첨부파일 다중삭제 동작 구현 */
+			        var Rtnval = ""
+			        var pSelectedRowLength = pAttachRow.length; 
+			        for (var i = 0; i < pSelectedRowLength; i++) {
+				        Rtnval = DeleteFileAtServer(pAttachCurSel[i]);
+				        // 의미없는 미구현 함수 DelfileSize(delfileSize) 동작 제거
+				        
+				        if (Rtnval != "TRUE") {
+				        	break;
+				        } else {
+				            if (totalSize > 0) { // 첨부파일의 크기 계산하는 부분 루프 내부로 이동
+				            	totalSize -= parseInt(GetAttribute(pAttachRow[i], "DATA8"));
+				            }
+				            
+				            // 일반첨부, 대용량첨부의 삭제 후 크기 계산
+				            if (bigAttachSize > 0 && GetAttribute(pAttachRow[i], "ISBIGATTACH") == "Y") {
+				            	bigAttachSize -= parseInt(GetAttribute(pAttachRow[i], "DATA8"));
+				            }
+				            else if (normalAttachSize > 0 && GetAttribute(pAttachRow[i], "ISBIGATTACH") != "Y") {
+				            	normalAttachSize -= parseInt(GetAttribute(pAttachRow[i], "DATA8"));
+				            }
+				        }
+			        }
+			        
+			        if (Rtnval == "TRUE") {
+			            DelAttachFileAtList(pAttachCurSel);
+			            
+			            /* 2018-10-11 김민성 - 데이터 없을 때 문구 뜨도록 수정 */
+			            var totalRows = listview.GetDataRows();
+					    if(totalRows.length == 0) {
+					    	setDeleteRow("attachList");
+					    }
+			        }
+			        else {
+			            var pAlertContent = "<spring:message code='ezApprovalG.t280'/>";
+			            OpenAlertUI(pAlertContent);
+			        }
+			    }
 			}
 			
 			function btn_AttachDel_onclick_Complete(Ans) {
@@ -361,6 +410,14 @@
 				        } else {
 				            if (totalSize > 0) { // 첨부파일의 크기 계산하는 부분 루프 내부로 이동
 				            	totalSize -= parseInt(GetAttribute(pAttachRow[i], "DATA8"));
+				            }
+				            
+				            // 일반첨부, 대용량첨부의 삭제 후 크기 계산
+				            if (bigAttachSize > 0 && GetAttribute(pAttachRow[i], "ISBIGATTACH") == "Y") {
+				            	bigAttachSize -= parseInt(GetAttribute(pAttachRow[i], "DATA8"));
+				            }
+				            else if (normalAttachSize > 0 && GetAttribute(pAttachRow[i], "ISBIGATTACH") != "Y") {
+				            	normalAttachSize -= parseInt(GetAttribute(pAttachRow[i], "DATA8"));
 				            }
 				        }
 			        }
@@ -437,7 +494,7 @@
 			}
 			   
 			
-			function AttachFileInfo(pFileName,pFileSize,pFileLocation)
+			function AttachFileInfo(pFileName, pFileSize, pFileLocation, addToBigAttach)
 			{
 			    if (pFileName == "Error") {
 			        var pAlertContent = "<spring:message code='ezApprovalG.t280'/>";
@@ -446,10 +503,10 @@
 			    }
 			    else {
 			        if (CrossYN()) {
-			            AddAttachFileInfoXmlParsing(pFileName, pFileSize, pFileLocation);
+			            AddAttachFileInfoXmlParsing(pFileName, pFileSize, pFileLocation, addToBigAttach);
 			        }
 			        else {
-			            Resultxml = AddAttachFileInfoXmlParsing(pFileName, pFileSize, pFileLocation)
+			            Resultxml = AddAttachFileInfoXmlParsing(pFileName, pFileSize, pFileLocation, addToBigAttach)
 			            InsertAttachFileInfo(ATTACH, Resultxml);
 			            pAttachFlag = pAttachFlag + 1;
 			            pAttachSN = pAttachSN + 1;
@@ -635,7 +692,7 @@
 						oPoster.AddFormData("UploadMaxFileSize", pBoardFileSize);
 						oPoster.AddFormData("UploadAddFileSize", pAttachAddFileSize);
 						oPoster.AddFile("UploadFile", g_fileList[i], 0);
-						oPoster.Host = "${serverName}";
+						oPoster.Host = "<c:out value ='${serverName}'/>";
 						oPoster.PostURL = "/myoffice/ezApprovalG_Cross/ezAPRATTACH/aspx/AttachFile.aspx";
 			            if (window.location.protocol == "http:")
 			                oPoster.Protocol = 0;
@@ -657,7 +714,7 @@
 							var ezUtil = new ActiveXObject("EzUtil.MiscFunc.1");
 							ezUtil.UseUTF8 = true;
 							fileSize = ezUtil.GetFileSize(g_fileList[i]) + "bytes"; 			
-							AttachFileInfo(g_fileList[i].substr(g_fileList[i].lastIndexOf("\\")+1), fileSize, oPoster.Response.substr(3, oPoster.Response.length-3));
+							AttachFileInfo(g_fileList[i].substr(g_fileList[i].lastIndexOf("\\")+1), fileSize, oPoster.Response.substr(3, oPoster.Response.length-3), "");
 						}
 					} 
 					catch (e) 
@@ -679,16 +736,16 @@
 			}
 			
 			var fileSize = 0;
-			function returnvalue(result, filename, filelocation, filesize)
+			function returnvalue(result, filename, filelocation, filesize, addToBigAttach)
 			{
 			    if(result == "true")
-			    {    
+			    {
 			        if (filesize == 0)
 				    {
 					    alert("<spring:message code='ezApprovalG.t270'/>");
 					    return;
 			        }
-			        AttachFileInfo(filename,filesize,filelocation, "")
+			        AttachFileInfo(filename, filesize, filelocation, addToBigAttach);
 			    }
 			    else if(result == "overflow")
 			    {
@@ -770,17 +827,72 @@
 		    
 		    function fileupload() {
 		        var fd = new FormData();
-		        var calTotalSize = 0;
+		        var calTotalSize = 0; // 전체 첨부파일 크기
+		        var calNormalAttachSize = 0; // 일반첨부파일 크기
+		        var calBigAttachSize = 0; // 대용량 첨부파일 크기
+		        var calBigAttachCnt = 0; // 대용량 첨부파일 개수
+		        var addToBigAttach = "N"; // 대용량 첨부파일로 추가하는지 여부
 
+		        // 대용량 첨부파일과 일반 첨부파일 분리하여 각각의 총합 계산
 		        for (var i = 0; i < file.length; i++) {
-		        	calTotalSize += parseInt(file[i].size);		        	
+		        	calTotalSize += parseInt(file[i].size);
+		        	
+		        	// 대용량첨부 버튼으로 추가하는 경우, 모든 파일을 대용량첨부로 계산 (isBigAttachBtnClicked)
+		        	// 일반 첨부파일의 총 용량을 넘지 않는다면 일반 첨부파일로 저장
+		        	if (isBigAttachBtnClicked == false && (normalAttachSize + calNormalAttachSize + parseInt(file[i].size) < apprAttachLimit * 1024 * 1024)) {
+		        		calNormalAttachSize += parseInt(file[i].size);
+		        	}
+		        	// 일반 첨부파일의 총 용량을 넘는 순간부터 대용량 첨부파일로 저장
+		        	else if (isBigAttachBtnClicked == true || ((normalAttachSize + calNormalAttachSize + parseInt(file[i].size) >= apprAttachLimit * 1024 * 1024) && isOuterForm == "false")) {
+		        		calBigAttachSize += parseInt(file[i].size);
+		        		calBigAttachCnt += 1;
+		        		addToBigAttach = "Y";
+		        	}
+		        }
+		        
+		        // 일반 첨부파일의 총용량제한 초과 시, 현재 추가하는 파일 전부를 대용량첨부로 변경
+		        if (addToBigAttach == "Y") {
+		        	var bigFileCheck = false;
+		        	
+		        	// 대용량첨부 버튼으로 추가하는 경우, 확인 알러트 발생하지 않음
+		        	if (isBigAttachBtnClicked == true) {
+		        		bigFileCheck = true;
+		        	} else {
+		        		//bigFileCheck = confirm(apprAttachLimit + "MB" + strLangHSBAt00 + bigSizeApprAttachDelDay + strLang1030 + " " +strLangHSBAt01);
+		        		bigFileCheck = confirm(apprAttachLimit + "MB" + strLangHSBAt00);
+		        	}
+		        	
+		        	if (bigFileCheck != true) {
+		        		addToBigAttach = "N";
+		        		return;
+		        	} else {
+		        		calBigAttachSize += calNormalAttachSize; // 같이 추가되는 일반 첨부파일도 전부 대용량으로 추가되므로.
+		        		calNormalAttachSize = 0; // 대용량으로 변환되므로 일반 첨부파일로는 추가되지 않음
+		        	}
+		        }
+		        
+		     	// 대용량첨부파일 최대개수 초과 체크
+				var checkBigAttachResult = checkBigAttachFileCntLimit(calBigAttachCnt);
+		        if (checkBigAttachResult == "NO") {
+		        	isfileup = false;
+		        	document.form.file1.value = "";
+		        	return;
+		        }
+		        
+		        // 대용량첨부파일 최대크기 초과 체크
+				if (bigAttachSize + calBigAttachSize > parseInt(bigSizeApprAttachLimit) * 1024 * 1024) {
+		        	alert(strLangHSBAt03 + bigSizeApprAttachLimit  + strLangHSBAt04);
+		        	isfileup = false;
+		        	document.form.file1.value = "";
+		        	return;
 		        }
 
+		        // 첨부파일 총용량제한 (일반 + 대용량의 합)
 		        if (apprTotalAttachLimit != "") {
 			        if (apprTotalAttachLimit > 0) {
 			        	var totMaxSize = parseInt(apprTotalAttachLimit) * 1024 * 1024;
-	
-			        	if (totalSize + calTotalSize > totMaxSize) {
+			        	
+			        	if (parseInt(totalSize + calTotalSize) > totMaxSize) {
 				        	alert(strLangjjh01 + apprTotalAttachLimit + strLangjjh02);
 				        	isfileup = false;
 				        	// 용량 초과 파일 같은 파일 업로드 시 알러트 다시 뜨게 수정 2018-04-19 강민수92
@@ -824,10 +936,14 @@
 		    			var uFileCnt = text.resultUpload.length
 
 		    			for (var i = 0; i < uFileCnt; i++) {
-		    				returnvalue(text.resultUpload[i], text.fileName[i], text.fileLocation[i], text.fileSize[i]);
+		    				returnvalue(text.resultUpload[i], text.fileName[i], text.fileLocation[i], text.fileSize[i], addToBigAttach);
 		    			}
 		    			
 		    			isfileup = false;
+		    			
+		    			// 일반첨부, 대용량첨부 용량 갱신
+		    			normalAttachSize += calNormalAttachSize;
+		    			bigAttachSize += calBigAttachSize;
 		    		}
 		    	});
 		       	// 같은 파일 업로드 할 수 있게 수정 2018-04-19 강민수92
@@ -926,6 +1042,181 @@
             	return resultTxt;
 		    }
 		    
+		    /* 2020-11-12 홍승비 - 현재 대용량첨부파일 개수 + 새로 업로드할 대용량첨부파일 개수를 계산하여 개수제한을 체크하는 함수 */
+		    function checkBigAttachFileCntLimit(pNewBigAttachFileCnt) {
+		    	var resultTxt = "YES";
+			    var orgBigAttachFileCnt =  $("#attachList").find("tr[isbigattach='Y']").length;
+			    
+			    if (document.getElementById("attachList_TR_noItems") != null) {
+			    	orgBigAttachFileCnt = 0;
+			    }
+			    
+			    var sumBigAttachFileCnt = orgBigAttachFileCnt + pNewBigAttachFileCnt;
+			    
+				if (bigSizeAttachLimitCount > 0 && sumBigAttachFileCnt > bigSizeAttachLimitCount) { // 0이라면 무제한
+					alert("<spring:message code='ezSystem.HSBAppr05' arguments='" + bigSizeAttachLimitCount + "'/>");
+					resultTxt = "NO";
+				}
+				
+            	return resultTxt;
+		    }
+		    
+		    // 대용량첨부 버튼으로 파일을 추가하는지 플래그를 변경하는 함수
+		    function isBigAttachButtonClick(flag) {
+		    	if (flag == "Y") {
+		    		isBigAttachBtnClicked = true;
+		    	} else {
+		    		isBigAttachBtnClicked = false;
+		    	}
+		    }
+		    
+		    // 웹폴더첨부를 위한 함수
+		    function filePicker() {
+		    	filePick.open(pickerData);
+		    }
+		    
+		    // 웹폴더첨부 확인, 확정 시 동작
+		    function webFolderConfirmBT(selectedFileInfo) {
+		    	var webFolderFileList = JSON.parse(selectedFileInfo.fileList);
+		    	var webFolderFileListCnt = webFolderFileList.length;
+		    	
+		    	if (isfileup) {
+		            alert(strLangjjh03);
+		            return;
+		        }
+		        // 새로 추가할 웹폴더 첨부파일과 기존 파일의 개수제한 체크
+				var checkAttachResult = checkAttachFileCntLimit(webFolderFileListCnt);
+		        if (checkAttachResult == "NO") {
+		        	return;
+		        }
+		        
+		        var fd = new FormData();
+		        var calTotalSize = 0; // 전체 첨부파일 크기
+		        var calNormalAttachSize = 0; // 일반첨부파일 크기
+		        var calBigAttachSize = 0; // 대용량 첨부파일 크기
+		        var calBigAttachCnt = 0; // 대용량 첨부파일 개수
+		        var addToBigAttach = "N"; // 대용량 첨부파일로 추가하는지 여부
+
+		        // 대용량 첨부파일과 일반 첨부파일 분리하여 각각의 총합 계산
+		        for (var i = 0; i < webFolderFileListCnt; i++) {
+		        	calTotalSize += parseInt(webFolderFileList[i].fileSize);
+		        	
+		        	// 대용량첨부 버튼으로 추가하는 경우, 모든 파일을 대용량첨부로 계산 (isBigAttachBtnClicked)
+		        	// 일반 첨부파일의 총 용량을 넘지 않는다면 일반 첨부파일로 저장
+		        	if (isBigAttachBtnClicked == false && (normalAttachSize + calNormalAttachSize + parseInt(webFolderFileList[i].fileSize) < apprAttachLimit * 1024 * 1024)) {
+		        		calNormalAttachSize += parseInt(webFolderFileList[i].fileSize);
+		        	}
+		        	// 일반 첨부파일의 총 용량을 넘는 순간부터 대용량 첨부파일로 저장
+		        	else if (isBigAttachBtnClicked == true || (normalAttachSize + calNormalAttachSize + parseInt(webFolderFileList[i].fileSize) >= apprAttachLimit * 1024 * 1024)) {
+		        		calBigAttachSize += parseInt(webFolderFileList[i].fileSize);
+		        		calBigAttachCnt += 1;
+		        		addToBigAttach = "Y";
+		        	}
+		        }
+		        
+		        // 일반 첨부파일의 총용량제한 초과 시, 현재 추가하는 파일 전부를 대용량첨부로 변경
+		        if (addToBigAttach == "Y") {
+		        	var bigFileCheck = false;
+		        	
+		        	// 대용량첨부 버튼으로 추가하는 경우, 확인 알러트 발생하지 않음
+		        	if (isBigAttachBtnClicked == true) {
+		        		bigFileCheck = true;
+		        	} else {
+		        		//bigFileCheck = confirm(apprAttachLimit + "MB" + strLangHSBAt00 + bigSizeApprAttachDelDay + strLang1030 + " " +strLangHSBAt01);
+		        		bigFileCheck = confirm(apprAttachLimit + "MB" + strLangHSBAt00);
+		        	}
+		        	
+		        	if (bigFileCheck != true) {
+		        		addToBigAttach = "N";
+		        		return;
+		        	} else {
+		        		calBigAttachSize += calNormalAttachSize; // 같이 추가되는 일반 첨부파일도 전부 대용량으로 추가되므로.
+		        		calNormalAttachSize = 0; // 대용량으로 변환되므로 일반 첨부파일로는 추가되지 않음
+		        	}
+		        }
+		        
+		     	// 대용량첨부파일 최대개수 초과 체크
+				var checkBigAttachResult = checkBigAttachFileCntLimit(calBigAttachCnt);
+		        if (checkBigAttachResult == "NO") {
+		        	isfileup = false;
+		        	document.form.file1.value = "";
+		        	return;
+		        }
+		        
+		        // 대용량첨부파일 최대크기 초과 체크
+				if (bigAttachSize + calBigAttachSize > parseInt(bigSizeApprAttachLimit) * 1024 * 1024) {
+		        	alert(strLangHSBAt03 + bigSizeApprAttachLimit  + strLangHSBAt04);
+		        	isfileup = false;
+		        	document.form.file1.value = "";
+		        	return;
+		        }
+
+		        // 첨부파일 총용량제한 (일반 + 대용량의 합)
+		        if (apprTotalAttachLimit != "") {
+			        if (apprTotalAttachLimit > 0) {
+			        	var totMaxSize = parseInt(apprTotalAttachLimit) * 1024 * 1024;
+			        	
+			        	if (parseInt(totalSize + calTotalSize) > totMaxSize) {
+				        	alert(strLangjjh01 + apprTotalAttachLimit + strLangjjh02);
+				        	isfileup = false;
+				        	document.form.file1.value = "";
+				        	return;
+				        } else {
+				        	totalSize += calTotalSize;
+				        }
+			        }
+		        }
+		        
+		        var webFolderFileStr = "";
+		        for (var i = 0; i < webFolderFileListCnt; i++) {
+					var fnl = webFolderFileList[i].fileName.length;
+		        	
+		        	if (fnl > attachFileNameMaxLength) {
+		        		alert("<spring:message code='main.jjh08' />" + attachFileNameMaxLength + "<spring:message code='main.lhm03' />");
+		        		isfileup = false;
+		        		return;
+		        	} else { // 파일명, 사이즈, 경로를 하드하게 '|' 문자열로 붙여서 서버로 전달
+		        		webFolderFileStr += webFolderFileList[i].fileName + "|" +  webFolderFileList[i].fileSize + "|" + webFolderFileList[i].filePath + "|||"; 
+		        	}		            
+		        }
+		        
+		        isfileup = true;
+		        fd.append("webFolderFileStr", webFolderFileStr);
+		        fd.append("boardid", window.parent.pBoardID);
+		        fd.append("maxsize", pBoardFileSize * 1024 * 1024);
+		        fd.append("compid", orgCompanyID);
+		        fd.append("docid", document.getElementById("docid").value);
+		        fd.append("attachsn", pAttachSN);
+		        
+		        $.ajax({
+		    		type : "POST",
+		    		dataType : "json",
+		    		async : false,
+		    		url : "/ezApprovalG/multiUploadWebFolder.do",
+		    		data : fd,
+		    		processData: false, 
+		    		contentType: false,
+		    		success: function(text){
+		    			var uFileCnt = text.resultUpload.length
+
+		    			for (var i = 0; i < uFileCnt; i++) {
+		    				returnvalue(text.resultUpload[i], text.fileName[i], text.fileLocation[i], text.fileSize[i], addToBigAttach);
+		    			}
+		    			
+		    			isfileup = false;
+		    			
+		    			// 일반첨부, 대용량첨부 용량 갱신
+		    			normalAttachSize += calNormalAttachSize;
+		    			bigAttachSize += calBigAttachSize;
+		    		}
+		    	});
+		    }
+		    
+		    // 웹폴더첨부 취소 시 동작. 필요하다면 input file 부분을 초기화한다.
+		    function webFolderCancelBT() {
+		    	return;
+		    }
+		    
 		</script>
 		<style>
 			.mainlist tr th {border-top:0px}
@@ -941,9 +1232,15 @@
 		<table>
 		  <tr>
 		    <td style="text-align:center;">
-		    	<div class="listview" style="width:518px;">
-		        	<div id="ATTACH" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)" STYLE="overflow-x:hidden;WIDTH:518px;HEIGHT:260px;margin:auto;"></div>					
+		    	<div class="listview" style="min-width:780px;">
+		        	<div id="ATTACH" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)" STYLE="overflow-x:hidden;HEIGHT:455px;min-width:780px;margin:auto;"></div>
 		      	</div>
+		      	<%-- 2020-11-12 홍승비 - 파일첨부 관련 알림 메세지 영역 --%>
+		      	<div style="text-align:left; line-height:21px;">
+		      		<img src="/images/i_notice.gif" style="vertical-align: middle;padding-left:1px;" />
+		      		<span style="color:#3a76c3;height:18px;display:inline-block;">${pAttachWarning0}</span><br>
+		      		<span style="color:#3a76c3;height:18px;display:${spanDisplayStyle}; margin-left:29px;">${pAttachWarning1}</span>
+		      	</div>	
 		    </td>
 		    <th style="display:none;width:75px;text-align:center;">
 		      <input id="btn_AttachEdit" type="button" name="btn_AttachEdit" onClick="return btn_AttachEdit_onclick()" value="<spring:message code='ezApprovalG.t269'/>" class="imginput" style="margin-top:3px;display:none;" /><br />
@@ -956,7 +1253,13 @@
 		<form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezApprovalG/upload.do" target="ifrm" >
 		    <div class="btnposition btnpositionNew">       
 		        <input id="file1" name="file1" type="file" onchange="onDrop()" multiple="multiple" style="margin-left:100px; display: none;">
-		        <a class="imgbtn"><label for="file1"><span id="btn_AttachAdd" style="cursor:pointer"><spring:message code='ezApprovalG.t268'/></span></label></a>
+		        <a class="imgbtn"><label for="file1"><span id="btn_AttachAdd" onclick="isBigAttachButtonClick('N')" style="cursor:pointer"><spring:message code='ezApprovalG.t268'/></span></label></a>
+		        <%-- 2020-11-12 홍승비 - 대용량첨부기능 추가 --%>
+		        <c:if test="${isOuterForm eq false}">
+		        <a class="imgbtn"><label for="file1"><span id="btn_BigAttachAdd" onclick="isBigAttachButtonClick('Y')" style="cursor:pointer"><spring:message code='ezSystem.HSBAppr11'/></span></label></a>
+		        <%-- 2020-11-17 홍승비 - 웹폴더첨부기능 추가 --%>
+				<a class="imgbtn" style="display:none;"><span id="btn_WebFolderAttachAdd" onclick="isBigAttachButtonClick('N'); filePicker();" style="cursor:pointer"><spring:message code='ezSystem.HSBAppr12'/></span></a>
+				</c:if>
 		        <a class="imgbtn"><span id="btn_AttachDel" onClick="return btn_AttachDel_onclick()"><spring:message code='ezApprovalG.t266'/></span></a>
 				<%-- 2020-03-19 홍승비 - 첨부파일 위/아래 이동버튼 추가 --%>
 		        <a class="imgbtn"><span id="btn_AttachMoveUp" onClick="return btn_AttachMoveUp_onclick()"><img src="/images/ImgIcon/prev.gif" alt="" style="vertical-align:middle;"></span></a>
@@ -972,6 +1275,11 @@
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+		</div>
+		<%-- 2020-11-17 홍승비 - 웹폴더 첨부 레이어팝업을 위한 태그 추가--%>
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel_sub">&nbsp;</div>	
+		<div class="layerpopup"  style="z-index:2000; position:absolute; display:none; overflow:hidden;" id="iFramePanel_sub">
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer_sub"></iframe>
 		</div>
 	</body>
 </html>

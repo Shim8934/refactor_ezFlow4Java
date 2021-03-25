@@ -66,6 +66,13 @@
 						}
 					});
 	        	}, 10);
+	        	
+				<c:if test="${unread == 1}">
+		        try {
+		            parent.parent.frames["left"].get_unreadcount();
+		        } catch(e) {		            
+		        }
+		        </c:if>
 	        });
 	        
 	        function btnPrint_onClick() {
@@ -134,11 +141,11 @@
 		    
 		    function AttachDetail_view(obj) {
 		       
-		    	if (obj.className == "icon_graydown") {
-		            obj.className = "icon_grayup"
+		    	if (obj.className == "attach_btn_down") {
+		            obj.className = "attach_btn_up"
 		            document.getElementById("PreviewAttachList").style.display = "";
 		        } else {
-		            obj.className = "icon_graydown"
+		            obj.className = "attach_btn_down"
 		            document.getElementById("PreviewAttachList").style.display = "none";
 		        }
 		    }
@@ -176,9 +183,9 @@
 				    		tmpStr = strArr[2].split('=');
 				    		uid = tmpStr[1];
 				    		
-				    		params = strArr[3] + "&" + strArr[4]; 
+				    		params = strArr[3] + "&" + strArr[4] + "&" + strArr[5] + "&" + strArr[6]; 
 						} else {
-				    		params += "&" + strArr[3] + "&" + strArr[4]; 
+				    		params += "&" + strArr[3] + "&" + strArr[4] + "&" + strArr[5] + "&" + strArr[6]; 
 						}
 			    		
 		    		}
@@ -392,6 +399,12 @@
 	        	});
 	        }
 	        
+	        //프로젝트 관리 이동
+	        function goProjectDetails(projectId) {
+	        	window.open("/ezPMS/getProjectDetails.do?projectId=" + projectId, "right");
+	        	window.open("/ezPMS/pmsLeft.do?mode=mail", "left");
+	        }
+	        
 	     	// 전달, 회신 시 보낸 시간
 	        function sentDateView(msg) {
 	     		var preViewInfoParent = $(".previewmail_info", parent.document).parent();
@@ -415,31 +428,66 @@
 	     		
 		    	parent.mailPrevIframeSize();
 	     	}
+	     	
+	        function AttachFile_Preview(mailPath, mailUid, fileIndex, fileName) {
+				
+	     		//window.open('http://jmocha.kaoni.com:8080/uFOCS3.0/viewer/document/docviewer.do?filepath=http://10.0.120.213:8080' + encodeURIComponent(downloadURL) + '&filename=' + fileName + '&fileext=txt&viewerselect=image');
+	    		  $.ajax({
+	    			  type : 'get',
+	    			  url : '/ezEmail/attachFilePreview.do',
+	    			  data : {
+	    				  "fileName" : fileName,
+	    				  "folderId" : mailPath,
+	    				  "mailId" : mailUid,
+	    				  "fileIndex" : fileIndex
+	    			  },
+	    			  error: function(xhr, status, error){
+	    			  },
+	    			  success : function(result){ // sat , kukudocs
+
+	    					  var link = document.createElement("a");
+
+	    					  link.setAttribute("href",result);
+	    					  link.setAttribute("target","_blink");
+	    					  link.click();
+
+	    			  }
+	    		  });
+	     	}
 	    </script> 
 	</head>
 
-	<body style="margin:10px 13px" onload="javascript:window_onload()" onclick="frameClick();">
-		<img src='/images/minus.png' title='<spring:message code='ezEmail.t99000065' />' onclick='Smaller()' style='cursor:pointer;' />
-		<img src='/images/plus.png' title='<spring:message code='ezEmail.t99000064' />' onclick='Bigger()' style='cursor: pointer; margin-left: -4px;' />
-		<c:if test="${shareId == null or (shareId != '' and sendPermission == 'Y')}">
-			<span style="float:right;">
-				<img src="/images/ImgIcon/PrereplyAll.gif" title="<spring:message code='ezEmail.t512' />" style='cursor:pointer;' onclick="Mail_Acton('ALLRE');" /><img src="/images/ImgIcon/Prereply.gif" title="<spring:message code='ezEmail.t511' />"  style='cursor:pointer;' onclick="Mail_Acton('RE');"/><img src="/images/ImgIcon/Preforward.gif" title="<spring:message code='ezEmail.t513' />"  style='cursor:pointer;' onclick="Mail_Acton('FW');"/>
-			</span>
-		</c:if>
-		
-		<div class="previewmail_addfile" id="ifrmPreViewRayer" style="<c:if test="${isAttach != 'OK'}">display:none;</c:if>margin-bottom:10px;font-family:<spring:message code='main.t246' />">
-			<p class="title"><spring:message code='ezEmail.t99000003' /><span>${pAttachListHtmlSub}</span><span class="icon_grayup" id="BtnAttachDetail" onclick="AttachDetail_view(this);"></span>
-	    	<span class="title_btn" onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style='cursor:pointer' onclick="AttachAllDownload();"><spring:message code='ezEmail.t99000004' /></span></p>
-			<ul class="list" id="PreviewAttachList">
+	<body onload="javascript:window_onload()" onclick="frameClick();">
+		<div class="attachedfile" id="ifrmPreViewRayer" style="<c:if test="${isAttach != 'OK'}">display:none;</c:if>margin-bottom:10px;font-family:<spring:message code='main.t246' />">
+			<ul class="attachedfile_title">
+				<li class="titleText"><span class="titleT"><spring:message code='ezEmail.t99000003' /><span>${pAttachListHtmlSub}</span></span><span class="attach_btn_up" id="BtnAttachDetail" onclick="AttachDetail_view(this);"></span></li>
+	    		<li class="titleSave"><span onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style='cursor:pointer' onclick="AttachAllDownload();"><spring:message code='ezEmail.t99000004' /></span></li>
+	    	</ul>
+			<ul class="attachedfile_list" id="PreviewAttachList">
 	            ${pAttachListHtml}
 			</ul>
 		</div>
 		<div id="MailBigAttachRayer" class="previewmail_addfile">
 		</div>
+		<div style="display:inline-block; font-size: 12px; font-family: 'malgun gothic', 'arial', 'verdana';">
+		<img src='/images/minus.png' title='<spring:message code='ezEmail.t99000065' />' onclick='Smaller()' style='cursor:pointer; width:29px; height:29px;' />
+		<img src='/images/plus.png' title='<spring:message code='ezEmail.t99000064' />' onclick='Bigger()' style='cursor: pointer; margin-left: -4px; width:28px; height:29px;' />
+		</div>
+		<c:if test="${shareId == null or (shareId != '' and sendPermission == 'Y')}">
+			<span style="float:right;">
+				<img src="/images/ImgIcon/PrereplyAll.gif" title="<spring:message code='ezEmail.t512' />" style='cursor:pointer; width:28px; height:29px;' onclick="Mail_Acton('ALLRE');" /><img src="/images/ImgIcon/Prereply.gif" title="<spring:message code='ezEmail.t511' />"  style='cursor:pointer; width:28px; height:29px;' onclick="Mail_Acton('RE');"/><img src="/images/ImgIcon/Preforward.gif" title="<spring:message code='ezEmail.t513' />"  style='cursor:pointer; width:29px; height:29px;' onclick="Mail_Acton('FW');"/>
+			</span>
+		</c:if>
 		<div id="normalScreen" style="margin-top:5px; word-wrap:break-word;">
 		${htmlBody}
 		<!---->
 		</div>
 		<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>
+	  	<c:if test="${previewMailImage == 'Y' && previewImageListHtml != ''}">
+		  	<div class="previewmail_addImage" style="margin-bottom:10px;">
+				<p class="title"><spring:message code='ezEmail.0hun05' /></p>
+				<div class="previewIamgelist" id="PreviewAttachList">${previewImageListHtml}</p>
+			</div>  
+		</c:if>
 	</body>
 </html>

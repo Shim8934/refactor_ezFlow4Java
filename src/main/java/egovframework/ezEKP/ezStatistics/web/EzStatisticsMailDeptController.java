@@ -52,7 +52,7 @@ public class EzStatisticsMailDeptController {
 	/**
 	 * 부서별 통계 현황 표시 함수
 	 */
-	@RequestMapping(value="/ezStatistics/statisticsMailDept.do")
+	@RequestMapping(value="/ezStatistics/statisticsMailDept.do", method = RequestMethod.GET)
 	public String statisticsMailDept(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
 		//관리자 권한체크
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);

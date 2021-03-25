@@ -11,11 +11,15 @@
 		<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
 		<link href="${util.addVer('/css/jquery.selectbox.css')}" type="text/css" rel="stylesheet" />
-		<link href="${util.addVer('/css/jquery.selectbox.css')}" type="text/css" rel="stylesheet" />
 		<link href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css" rel="stylesheet" />
+		<%-- <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css"> --%>
+		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 	    <style type="text/css">
 	        .instance.sbHolder{
 	            width: 100%;
+	        }
+	        .sbOptions {
+	        	z-index: 50;
 	        }
 	        /* 2018-04-30 천성준 - (#12523)선택메뉴 bold체로 표시안됨 */
 	        #left ul li.on, #TopBoards ul li.on{
@@ -31,51 +35,54 @@
 				overflow:hidden;
 				text-overflow:ellipsis;
 			}
-			<%-- 2018-08-22 홍승비 - 개인문서함 폴더명 ellipsis 처리 --%>
-			.node_div span {
+			#mCSB_1_container {
+				margin-right: 0px;
+			}
+			.node_normal, .node_selected {
 				overflow: hidden;
 			    text-overflow: ellipsis;
 			    display: inline-block;
-			}			
-			
+			}
 	    </style>
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.7.2.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.selectbox-0.2.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
-		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CabRoleInfo_Cross.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeView.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
+	    
 		<script ID="clientEventHandlersJS" type="text/javascript">
-			var pUserID = "${userInfo.id}";
-		    var pListTypeValue = "${listType}";
+			var pUserID = "<c:out value = '${userInfo.id}'/>";
+		    var pListTypeValue = '<c:out value="${listType}"/>';
 		    var PresentOpen = "APPROVAL";
-		    var CompanyID = '${userInfo.companyID}';
-		    var CompanyName = '${userInfo.companyName}';
+		    var CompanyID = '<c:out value = '${userInfo.companyID}'/>';
+		    var CompanyName = "<c:out value = '${userInfo.companyName}'/>";
 		    var gMenuFlag = 1;
-		    var pDeptID = "${userInfo.deptID}";
+		    var pDeptID = "<c:out value = '${userInfo.deptID}'/>";
 		    var contFlag = "END";
 		    var pChackYN = "FALSE";
 		    var ContainerID;
 		    var PageSize   = 10;
-		    var szRoleInfo = "${szRoleInfo}";
+		    var szRoleInfo = "<c:out value = '${szRoleInfo}'/>";
 		    var Containers = "${containers}";
 		    var DocList_Flag="";
 		    var DocDeptYN;
-		    var DeptID = "${userInfo.deptID}";
+		    var DeptID = "<c:out value = '${userInfo.deptID}'/>";
 		    var g_bRecAdmin=false;
 		    var g_bDeptCharger=false;
 		    var AdminYN;
-		    var approvalFlag = "${approvalFlag}";     //전자결재 일반/공공 여부 (G : 공공 , S : 일반)
-		    var ViewLeftCount = "${viewLeftCount}";
-		    var primaryStr = "${userInfo.primary}";
-		    var SubContCount = "${subContCount}";
+		    var approvalFlag = "<c:out value = '${approvalFlag}'/>";     //전자결재 일반/공공 여부 (G : 공공 , S : 일반)
+		    var ViewLeftCount = "<c:out value = '${viewLeftCount}'/>";
+		    var primaryStr = "<c:out value = '${userInfo.primary}'/>";
+		    var SubContCount = "<c:out value = '${subContCount}'/>";
 		    var tmpValue = "";
 		    var nodeIdx;
 		    var localValue = "";
-		    var hideSusin = "${hideSusin}";
-		    var whoKyulYN = "${whoKyulYN}";
+		    var hideSusin = "<c:out value = '${hideSusin}'/>";
+		    var whoKyulYN = "<c:out value = '${whoKyulYN}'/>";
+		    var useWebHWP = "<c:out value = '${useWebHWP}'/>";
 		    
 		    $(function () {
 		      	if(approvalFlag == "G") {
@@ -86,11 +93,16 @@
 	        		$(".approval").css("display","");
 	        	}
 		      	
-		        if ("${isSubTitle}" == "true")
+		        if ("<c:out value = '${isSubTitle}'/>" == "true")
 		            $("#country_id").selectbox();
 		            $(".sbHolder").each(function (index) {
 		                $(this).addClass('instance');
 		            });
+		         //19.08.05 김보미 - 마우스 클릭시 볼드체   
+		         $(document).on("click", "span.list_text", function(){
+		        	 $("#left li").removeClass("on");
+		        	 $(this).parent().addClass("on");
+		         })
 		    });
 		    document.onselectstart = function () {
 		    	 if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -108,33 +120,11 @@
 		        }
 		        initUserRoleinfo();
 		        
-		        if(approvalFlag == "G") {
-			        if (g_bRecAdmin || AdminYN == "TRUE") {
-			            /* document.getElementById("tag07").style.display = "";
-			            document.getElementById("tag08").style.display = ""; */
-			            document.getElementById("tag09").style.display = "";
-			            document.getElementById("tag10").style.display = "";
-			        }
-			        else if (g_bDeptCharger) {
-			            /* document.getElementById("tag07").style.display = "";
-			            document.getElementById("tag08").style.display = ""; */
-			            document.getElementById("tag09").style.display = "";
-			            document.getElementById("tag10").style.display = "none";
-			        }
-			        else {
-			            /* document.getElementById("tag07").style.display = "none";
-			            document.getElementById("tag08").style.display = "none"; */
-			            document.getElementById("tag09").style.display = "none";
-			            document.getElementById("tag10").style.display = "none";
-			        }
-		        }
-		        
-		        
 		        var idx = "4", navigation_info = "<spring:message code='ezApprovalG.t102'/>";
 		        if(approvalFlag == "S") {
 		        	Tree_setconfig();
 		            var xmlDom2 = createXmlDom();
-		            xmlDom2 = loadXMLString('${userCont}');
+		            xmlDom2 = loadXMLString("${userCont}");
 		            var treeView = new TreeView();
 		            treeView.SetID("UserContTree");
 		            treeView.SetUseAgency(true);
@@ -144,7 +134,7 @@
 		            treeView.DataBind("divUserContTree");
 
 		            //title3[0].setAttribute("TITLE", title3[0].innerHTML); 
- 		            $(".node_normal").css("width", "135px");
+ 		            $(".node_normal").css("width", "145px");
  		            
 					var node = $(".node_normal");
 					
@@ -203,7 +193,11 @@
 			                document.getElementById('APPROVAL21').click();
 			            }
 		        }
-			        getAprCount();
+		        getAprCount();
+		        leftResize();
+		        $(".apprListBox").mCustomScrollbar({
+	        		theme : "dark"
+	        	});
 		    };
 		    
 		    function UserContRequestData(pNodeID, pTreeID) {
@@ -229,11 +223,11 @@
 		        }
 		        for(var i=0; i<title2.length; i++) {
 		        	var title3 = title2[i].getElementsByClassName("node_normal");
-		        	title3[0].setAttribute("TITLE", title3[0].innerHTML); 
-		        	title3[0].style.width = 135 - 16*(nodeLevel-1) +'px';
-		        	title3[0].style.textOverflow = 'ellipsis';
-		        	title3[0].style.overflow = 'hidden';
-		        }		        
+		        	//title3[0].setAttribute("TITLE", title3[0].innerHTML); 
+		        	title3[0].style.width = 145 - 16*(nodeLevel-1) +'px';
+		        	//title3[0].style.textOverflow = 'ellipsis';
+		        	//title3[0].style.overflow = 'hidden';
+		        }
 	        }
 		    
 		    function Tree_setconfig() {
@@ -294,7 +288,7 @@
 	            treeView.DataSource(xmlDomRet);
 	            treeView.DataBind("divUserContTree");
 	            
-	            $(".node_normal").css("width", "135px");
+	            $(".node_normal").css("width", "145px");
  		          
 				var node = $(".node_normal");
 					
@@ -359,6 +353,12 @@
 		                    break;
 		                case "m10":
 		                    break;
+		                case "m12":
+							DocManageMain(pthis.id);
+		                    break;
+		                case "m13":
+							DocManageMain(pthis.id);
+		                    break;
 		                case "approvalForDoc":
 		                	window.open("/admin/ezApprovalG/forAprDoc.do?type=user", "right");
 		                	break;
@@ -368,10 +368,23 @@
 		                    break;    
 		                case "MYCONTWHO":
 		                    cmdOK_onclick('', "<spring:message code='ezApproval.t990042'/>", "TBL_ENDAPRLINEINFO.AprType = '" + strAprType40 + "' AND TBL_ENDAPRLINEINFO.AprState = '" + strAprState2 + "'");
+							break;
+		                case "UNTREATED":
+							pListTypeValue = "23";
+		                    DocManageMain(pthis.id);
 		                    break;
 		                default:
 		                    break;
 		            }
+		            
+		            if($(pthis).hasClass('shareCont')){
+	                    cmdOK_onclick('', "<spring:message code='ezApproval.t990042'/>",'',$(pthis).attr("shareUserId"));
+		            }
+		            if($(pthis).hasClass('deptShare')){
+		            	pListTypeValue = "";
+                		window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=docShare&shareDeptId=" + pthis.id;          		 
+		            }
+		            
 		            parent.frames["right"].$('#sel_year').val("ALL");
 		            parent.frames["right"].$('#sel_status').val("ALL");
 		            /* parent.frames["right"].$('#sel_year').selectmenu('refresh'); */
@@ -421,7 +434,7 @@
 		    	}
 		    } 
 		
-		    function convMain(listtype, SubQuery) {
+		    function convMain(listtype, SubQuery, shareUserId) {
 		        try {
 		            	parent.frames["right"].$('#sel_status').val("ALL");
 		            	
@@ -446,6 +459,10 @@
 				                }
 				                else if (listtype == "4") {
 				                    parent.frames["right"].passValLeftMenu("4");
+				                    parent.frames["right"].checkBujaeInfo();
+				                }
+				                else if (listtype == "5") {
+				                    parent.frames["right"].passValLeftMenu("5");
 				                    parent.frames["right"].checkBujaeInfo();
 				                }
 				                else if (listtype == "6") {
@@ -477,6 +494,10 @@
 				                    parent.frames["right"].passValLeftMenu("21");
 				                    parent.frames["right"].checkBujaeInfo();
 				                }
+				                else if (listtype == "23") {
+				                    parent.frames["right"].passValLeftMenu("23");
+				                    parent.frames["right"].checkBujaeInfo();
+				                }
 				                else {
 				                    parent.frames["right"].passValLeftMenu("1");
 				                    parent.frames["right"].checkBujaeInfo();
@@ -487,29 +508,165 @@
 				            parent.frames.right.change_statusCell();
 				            /* parent.frames["right"].$('#sel_year').selectmenu('refresh'); */
 		        		} else {
+		        			if(!shareUserId){
+		        				shareUserId = "";
+		        			}
 				        	if (PresentOpen != "APPROVAL") {
 				                PresentOpen = "APPROVAL";
-				                window.parent.frames.right.document.location.href = "/ezApprovalG/aprManage.do?listType=" + listtype  + "&SubQuery=" + encodeURIComponent(SubQuery) + "&tmpValue=" + encodeURIComponent(tmpValue);
+				                window.parent.frames.right.document.location.href = "/ezApprovalG/aprManage.do?listType=" + listtype  + "&SubQuery=" + encodeURIComponent(SubQuery) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&shareUserId=" + shareUserId;
 				            }
 				            else {
-				                window.parent.frames.right.document.location.href = "/ezApprovalG/aprManage.do?listType=" + listtype  + "&SubQuery=" + encodeURIComponent(SubQuery) + "&tmpValue=" + encodeURIComponent(tmpValue);
+				                window.parent.frames.right.document.location.href = "/ezApprovalG/aprManage.do?listType=" + listtype  + "&SubQuery=" + encodeURIComponent(SubQuery) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&shareUserId=" + shareUserId;
 				            }
 				        }
 		        }
 			        catch (e) { }
 		    }
 		
+		    var getformcont_cross_dialogArguments = new Array();
+		    var getformcont_Cross_OpenWin = "";
 		    function btnDraft_onclick() {
-		        parent.frames["right"].btnDraft_onclick();
+		    	var parameter = new Array();
+		        parameter[0] = "sol2";
+		        parameter[1] = "A01000";
+
+		        if ("YES" == ("YES")) {
+		            url = "/ezApprovalG/getFormCont.do";
+		        } else {
+		            url = "/ezApproval/getFormCont.do";
+		        }
+		        
+		        if (CrossYN()) {
+		            getformcont_cross_dialogArguments[0] = parameter;
+		            getformcont_cross_dialogArguments[1] = openForm_Complete;
+		            var getFormCont_Cross = window.open(url, "/ezApproval/getFormCont.do", GetOpenWindowfeature(713, 570));
+		            
+		            try { getFormCont_Cross.focus(); } catch (e) {}
+		        } else {
+		            var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no";
+		            var ret = window.showModalDialog(url, parameter, feature);
+		            formURL = ret[0];
+		            formDocType = ret[1];
+		            
+		            if (formURL != "cancel") {
+		                openDraftUI(formURL, formDocType);
+		            }
+		        }
 		    }
+		    
+		    function openForm_Complete(ret) {
+		        formURL = ret[0];
+		        formDocType = ret[1];
+		        var officeFlag = "";
+
+		        if(ret[4] !== null) {
+	    	    	officeFlag = ret[4];
+	    	    }
+		        
+		        if (formURL != "cancel") {
+		            openDraftUI("DRAFT","",officeFlag);
+		        }
+		    }
+
+		    function openDraftUI(pDraftFlag,pCurSelRow,officeFlag) {
+		        var pArgument = new Array();
+		        var gb = "";
+		        
+		        if ("YES" == ("YES"))
+		            gb = "G";
+		        
+	        	pArgument[0] = pUserID;
+	            pArgument[1] = formURL;
+	            pArgument[2] = "DRAFT";
+	            pArgument[3] = formDocType;
+	            pArgument[4] = "0"
+	            pArgument[5] = ""
+	            pArgument[6] = ""
+	            pArgument[7] = "";
+
+	            var openLocation = "";
+	            if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
+	            	if(useWebHWP == "NO") {
+		                if (!isIE()) {
+		                    alert("한글양식은 Cross Browser 를 지원하지 않습니다.");
+		                    return;
+		                } else {
+		                   var openLocation = "/ezApprovalG/draftuiHWP.do";
+		                }
+	            	} else {
+	            		var openLocation = "/ezApprovalG/draftuiWHWP.do";
+	            	}
+	            } else {
+	                var openLocation = "/ezApprovalG/draftui.do";
+	            }
+	            <%-- 2021-01-21 심기영 오피스결재 추가 --%>
+				var p_officeFlag = "";
+	            
+	            if(officeFlag !== null) {
+	            	p_officeFlag = officeFlag;
+	            }
+	            
+                openLocation = openLocation + "?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
+                openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1" + "&aprState=" + escape(pArgument[6]);
+                openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]) + "&officeFlag=" + encodeURI(p_officeFlag);
+                
+	            openwindow(openLocation, "", 1150, 950);
+	        }
+		    
+		    function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
+		        try {
+		            var heigth = window.screen.availHeight;
+		            var width = window.screen.availWidth;
+
+		            var left = 0;
+		            var top = 0;
+
+		            if (window.screen.width > 800) {
+		                var pleftpos;
+
+		                pleftpos = parseInt(width) - 1150;
+		                heigth = parseInt(heigth) - 30;
+
+		                if (CrossYN())
+		                    heigth = parseInt(heigth) - 25;
+
+		                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
+		                    heigth = parseInt(heigth) - 40;
+
+		                width = parseInt(width) - pleftpos;
+
+		                left = pleftpos / 2;
+		            }
+		            else {
+
+		                heigth = parseInt(heigth) - 30;
+
+		                if (CrossYN())
+		                    heigth = parseInt(heigth) - 25;
+
+		                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
+		                    heigth = parseInt(heigth) - 40;
+
+		                width = parseInt(width) - 10;
+		            }
+
+		            window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+		        }
+		        catch (e) {
+		            alert("openwindow :: " + e.description);
+		        }
+		    }	
 		
-		    function cmdOK_onclick(ContainerID, ContName, SubQuery) {
+		    function cmdOK_onclick(ContainerID, ContName, SubQuery, shareUserId) {
+		    	if(!shareUserId){
+		    		shareUserId = "";
+		    	}
 		        if (PresentOpen != "CONTAINER") {
 		            PresentOpen = "CONTAINER";
-	                window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURI(ContainerID) + "&sQuery="+ escape(SubQuery) + "&tmpValue=" + encodeURI(ContName) + "&ENDAPRTYPE=" + strAprType40 + "&ENDAPRSTATE=" + strAprState2;
+	                window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURI(ContainerID) + "&sQuery="+ escape(SubQuery) + "&tmpValue=" + encodeURI(ContName) + "&ENDAPRTYPE=" + strAprType40 + "&ENDAPRSTATE=" + strAprState2 + "&shareUserId=" + shareUserId;
 		        } else {
 		            try {
-		            	 window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURI(ContainerID) + "&sQuery="+ escape(SubQuery) + "&tmpValue=" + encodeURI(ContName) + "&ENDAPRTYPE=" + strAprType40 + "&ENDAPRSTATE=" + strAprState2;
+		            	 window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURI(ContainerID) + "&sQuery="+ escape(SubQuery) + "&tmpValue=" + encodeURI(ContName) + "&ENDAPRTYPE=" + strAprType40 + "&ENDAPRSTATE=" + strAprState2 + "&shareUserId=" + shareUserId;
 // 		                parent.frames["right"].SelCont_onclick2(ContainerID, ContName);
 		            } catch (e) { }
 		        }
@@ -544,6 +701,24 @@
 	                }
 	            }
 	        }
+		    
+		    function goFormContainer(ContainerID, shareDeptId){
+		    	if(!shareDeptId){
+		    		shareDeptId = "";
+		    	}
+		    	PresentOpen = "CONTAINER";
+                var subCondition = "TBL_EXPENDAPRDOCINFO.FORMNAME = '" + ContainerID + "'";
+                window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURIComponent(Containers) + "&sQuery=" + encodeURIComponent(subCondition) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&itemID=" + encodeURIComponent(ContainerID) + "&shareDeptId=" + shareDeptId;
+		    }
+		    
+		    function setBoldText(elem) {
+		    	$(".node_selected").each(function (index) {
+	                $(this).removeClass('node_selected');
+	                $(this).addClass('node_normal');
+	            });
+		    	$(elem).removeClass('node_normal');
+                $(elem).addClass('node_selected');
+		    }
 		
 		    function getAprCount() {
 		        try {
@@ -587,9 +762,9 @@
 	                    var dataNodes = GetChildNodes(ResultXML);
 	                    var count = getNodeText(dataNodes[0]);
 	                    if (count > 0)
-	                        document.getElementById("countsub" + presentValue).innerHTML = "<b>(" + count + ")</b>";
+	                        document.getElementById("countsub" + presentValue).innerHTML = "&nbsp;&nbsp;<b>" + count + "</b>";
 	                    else
-	                        document.getElementById("countsub" + presentValue).innerHTML = "(" + count + ")";
+	                        document.getElementById("countsub" + presentValue).innerHTML = "";
 	                    presentValue++;
 	                    getAprCountTemp();
 	                }
@@ -600,11 +775,11 @@
 		    function getAprTotalCount() {
 		        if (ViewLeftCount == "YES") {
 		            var strQuery = "<DATA><LISTTYPE>1</LISTTYPE></DATA>";
-		            xmlhttp_total = null;
-		            xmlhttp_total = createXMLHttpRequest();
-		            xmlhttp_total.open("POST", "/ezApprovalG/getListCount.do?mode=LEFT", true);
-		            xmlhttp_total.onreadystatechange = getAprTotalCount_after;
-		            xmlhttp_total.send(strQuery);
+					xmlhttp_total = null;
+					xmlhttp_total = createXMLHttpRequest();
+					xmlhttp_total.open("POST", "/ezApprovalG/getListCount.do?mode=LEFT", true);
+					xmlhttp_total.onreadystatechange = getAprTotalCount_after;
+					xmlhttp_total.send(strQuery);
 		        }
 		    }
 		
@@ -612,96 +787,37 @@
 		        if (xmlhttp_total == null || xmlhttp_total.readyState != 4) return;
 		        try {
 		            if (xmlhttp_total.responseText == "") return;
-		            var ResultXML = "";
-		            ResultXML = xmlhttp_total.responseXML;
-		            
-		            // 결재할 문서
-		            if (pListTypeValue != "1") {
-		                if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(0)) > 0)
-		                    count1.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(0)) + ")";
-		                else
-		                    count1.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(0)) + ")";
-		            }
-		            // 결재진행문서
-		            if (pListTypeValue != "3") {
-		                if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(1)) > 0)
-		                    count2.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(1)) + ")";
-		                else
-		                    count2.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(1)) + ")";
-		            }
-		            // 기안한문서
-		            if (pListTypeValue != "2") {
-		                if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(2)) > 0)
-		                    count3.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(2)) + ")";
-		                else
-		                    count3.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(2)) + ")";
-		            }
-		            // 부서수신함
-		            if (pListTypeValue != "4") {
-		                if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(3)) > 0)
-		                    count4.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(3)) + ")";
-		                else
-		                    count4.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(3)) + ")";
-		            }
-		            // 발송의뢰문서
-		            if (pListTypeValue != "6") {
-		                if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(4)) > 0)
-		                    count6.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(4)) + ")";
-		                else
-		                    count6.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(4)) + ")";
-		            }
-		            
-		            if (document.getElementById('countWHO') != null) {
-			            if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(10)) > 0)
-		                    document.getElementById('countWHO').innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(10)) + ")";
-		                else
-		                    document.getElementById('countWHO').innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(10)) + ")";
-		            }
-		            
-		            // 임시보관함
-		            if (pListTypeValue != "21") {
-		                if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(9)) > 0)
-		                    count21.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(9)) + ")";
-		                else
-		                    count21.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(9)) + ")";
-		            }
-		            
-		            try {
-		                // 공람할문서
-		                if (pListTypeValue != "99") {
-		                    if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) > 0)
-		                    	count99.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) + ")";
-		                    else
-		                    	count99.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) + ")";
-		                }
-		                // 공람한문서
-		                if (pListTypeValue != "10") {
-		                    if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) > 0)
-		                    	count10.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) + ")";
-		                    else
-		                    	count10.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) + ")";
-		                }
-		            } catch (e) { }
-		            try {
-		                // 직인의뢰함
-		                if (pListTypeValue != "7") {
-		                	//겸직 시 겸직된 부서로 이동할 경우 직인의뢰함의 count가 표시되지 않는 현상 제거
-		                	//if("${userSendOut}" == "YES") {
-		                    	if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(5)) > 0)
-		                        	count7.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(5)) + ")";
-		                    	else
-		                        	count7.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(5)) + ")";
-		                	//}
-	                	}
-		            } catch (e) { }
-		            
-		            // 공유결재문서
-		            if (pListTypeValue != "11") {
-		            	if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(11)) > 0)
-		            		count11.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(11)) + ")";
-		            	else
-		            		count11.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(11)) + ")";
-		            }
+					var countXml = xmlhttp_total.responseXML;
+					var countList = GetChildNodes(countXml.documentElement);
+
+					var listCountMap = {
+						"1" : "COUNT1",
+						"2" : "COUNT3",
+						"3" : "COUNT2",
+						"4" : "COUNT4",
+						"5" : "COUNT5",
+						"6" : "COUNT6",
+						"7" : "COUNT7",
+						"10" : "COUNT10",
+						"11" : "COUNT11",
+						"21" : "COUNT21",
+						"23" : "COUNTUNTREATED",
+						"99" : "COUNT99"
+					}
+
+					for (var i = 0, iLen = countList.length; i < iLen; i++) {
+						try {
+							var countNode = countList[i];
+							var countNodeName = countNode.nodeName;
+
+							if (listCountMap[pListTypeValue] !== countNodeName) {
+								var countElem = document.querySelector("[id=" + countNodeName + " i]");
+								if (countElem) {
+									countElem.innerHTML = getNodeText(countNode) === "0" ? "" : "&nbsp;&nbsp;" + getNodeText(countNode);
+								}
+							}
+						} catch (e) { }
+					}
 		        } catch (e) { }
 		    }
 		
@@ -720,9 +836,9 @@
 		            var ResultXML = xmlhttp_1.responseXML;
 		            var cnt = getNodeText(GetChildNodes(ResultXML)[0]);
 		            if (cnt > 0)
-		                count1.innerHTML = "<b>(" + cnt + ")</b>";
+		                count1.innerHTML = "&nbsp;&nbsp;<b>" + cnt + "</b>";
 		            else
-		                count1.innerHTML = "(" + cnt + ")";
+		                count1.innerHTML = "";
 		        } catch (e) { }
 		    }
 		
@@ -742,9 +858,9 @@
 		            var cnt = getNodeText(GetChildNodes(ResultXML)[0]);
 		
 		            if (cnt > 0)
-		                count2.innerHTML = "<b>(" + cnt + ")</b>";
+		                count2.innerHTML = "&nbsp;&nbsp;<b>" + cnt + "</b>";
 		            else
-		                count2.innerHTML = "(" + cnt + ")";
+		                count2.innerHTML = "";
 		        } catch (e) { }
 		    }
 		
@@ -763,9 +879,9 @@
 		            var ResultXML = xmlhttp_3.responseXML;
 		            var cnt = getNodeText(GetChildNodes(ResultXML)[0]);
 		            if (cnt > 0)
-		                count3.innerHTML = "<b>(" + cnt + ")</b>";
+		                count3.innerHTML = "&nbsp;&nbsp;<b>" + cnt + "</b>";
 		            else
-		                count3.innerHTML = "(" + cnt + ")";
+		                count3.innerHTML = "";
 		        } catch (e) { }
 		    }
 		
@@ -784,9 +900,9 @@
 		            var ResultXML = xmlhttp_4.responseXML;
 		            var cnt = getNodeText(GetChildNodes(ResultXML)[0]);
 		            if (cnt > 0)
-		                count4.innerHTML = "<b>(" + cnt + ")</b>";
+		                count4.innerHTML = "&nbsp;&nbsp;<b>" + cnt + "</b>";
 		            else
-		                count4.innerHTML = "(" + cnt + ")";
+		                count4.innerHTML = "";
 		        } catch (e) { }
 		    }
 		
@@ -805,9 +921,9 @@
 		            var ResultXML = xmlhttp_6.responseXML;
 		            var cnt = getNodeText(GetChildNodes(ResultXML)[0]);
 		            if (cnt > 0)
-		                count6.innerHTML = "<b>(" + cnt + ")</b>";
+		                count6.innerHTML = "&nbsp;&nbsp;<b>" + cnt + "</b>";
 		            else
-		                count6.innerHTML = "(" + cnt + ")";
+		                count6.innerHTML = "";
 		        } catch (e) { }
 		    }
 		
@@ -826,9 +942,9 @@
 		            var ResultXML = xmlhttp_7.responseXML;
 		            var cnt = getNodeText(GetChildNodes(ResultXML)[0]);
 		            if (cnt > 0)
-		                count7.innerHTML = "<b>(" + cnt + ")</b>";
+		                count7.innerHTML = "&nbsp;&nbsp;<b>" + cnt + "</b>";
 		            else
-		                count7.innerHTML = "(" + cnt + ")";
+		                count7.innerHTML = "";
 		        } catch (e) { }
 		    }
 		
@@ -847,9 +963,9 @@
 		            var ResultXML = xmlhttp_99.responseXML;
 		            var cnt = getNodeText(GetChildNodes(ResultXML)[0]);
 		            if (cnt > 0)
-		                count99.innerHTML = "<b>(" + cnt + ")</b>";
+		                count99.innerHTML = "&nbsp;&nbsp;<b>" + cnt + "</b>";
 		            else
-		                count99.innerHTML = "(" + cnt + ")";
+		                count99.innerHTML = "";
 		        } catch (e) { }
 		    }
 		
@@ -892,6 +1008,11 @@
 		                	PresentOpen = "DOC_ADMIN";
 		                	window.parent.frames.right.document.location.href = "/admin/ezApprovalG/forDoc.do?type=user";
 		                	break;
+						case "openGov":
+							//원문공개문서함
+							PresentOpen = "DOC_ADMIN";
+							window.parent.frames.right.document.location.href = "/admin/ezApprovalG/openGovForDoc.do?type=admin";
+							break;	
 		            }
 		        } catch (e) { }
 		    }
@@ -931,7 +1052,16 @@
 		                        break;
 		                    case "m09":
 		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
-		                        break;
+								break;
+							case "UNTREATED":
+		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+								break;
+							case "m12":
+		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+								break;
+							case "m13":
+		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+								break;
 		                }
 		            }
 		        } catch (e) { }
@@ -939,7 +1069,7 @@
 		    var arr_userinfo = new Array();
 		    function ChangeSubtitle(obj) {
 		        var UseSelectTitle = obj.getAttribute("href").split("#")[1].split("|");
-		        if ("${userInfo.deptID}" != UseSelectTitle[0]) {
+		        if ("<c:out value = '${userInfo.deptID}'/>" != UseSelectTitle[0]) {
 		            arr_userinfo[4] = UseSelectTitle[0];
 		            arr_userinfo[5] = UseSelectTitle[1];
 		            arr_userinfo[3] = UseSelectTitle[2];
@@ -999,15 +1129,330 @@
 	                var dataNodes = GetChildNodes(ResultXML);
 
 	                if (dataNodes.length > 0)
-	                    document.getElementById('countWHO').innerHTML = "<b>(" + getNodeText(dataNodes[0]) + ")</b>";
+	                    document.getElementById('countWHO').innerHTML = "&nbsp;&nbsp;<b>" + (getNodeText(dataNodes[0]) == "0" ? "" : getNodeText(dataNodes[0])) + "</b>";
 	                else
-	                    document.getElementById('countWHO').innerHTML = "(" + getNodeText(dataNodes[0]) + ")";
+	                    document.getElementById('countWHO').innerHTML = "";
 	            } catch (e) { }
 	        }
+	        
+	        function openFolder(val01) {
+	        	if ($("#" + val01 + "H2").attr("class") == "on") {	        	
+	        		$("#" + val01 + "H2").attr("class", "off");
+	        		$("#" + val01 + "UL").attr("class", "lnbUL off");
+	        	} else {
+	        		$(".lnb H2").attr("class", "off");
+	        		$(".lnb UL").attr("class", "lnbUL off");
+	        		
+	        		$("#" + val01 + "H2").attr("class", "on")
+	        		$("#" + val01 + "UL").attr("class", "lnbUL");
+	        	}
+	        }
+	        
+	        function leftResize(){
+	        	$(".apprListBox").height(window.innerHeight-105<c:if test="${isSubTitle}">-30</c:if>);
+	        }
+	        
+	        $( window ).resize(function() {
+	        	leftResize();
+        	});
 		</script>
 	</head>
-	<body ondragstart="return false" onselectstart="return false" class="leftbody" style="overflow-y:auto; ">
+	<body ondragstart="return false" onselectstart="return false" class="newLeft">
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel_left">&nbsp;</div>
 		<span  id="presentcell" style="display:none"></span>
+		<div id="left" class="lnb">
+	    	<!-- <div class="lnb_btn"></div> -->
+	        <!-- <div class="lnb_btn_hidden"></div> lnb 숨기기 버튼-->
+	    	<div class="left_title" title="<spring:message code='ezApprovalG.t102'/>">
+	    		<spring:message code='ezApprovalG.t102'/>
+	        	<span class="sub_iconLNB tree_leftconfig" id="ApprovalConfig" onClick="Open_Func(this)" title="<spring:message code='ezApprovalG.t1800'/>"></span>
+	        </div>
+	        <div class="btn_writeBox">
+	        	<p class="btn_write01" onclick="btnDraft_onclick();"><span class="sub_iconLNB tree_write"></span><spring:message code='main.t00031'/></p>
+	        </div>
+	        <c:if test="${isSubTitle}">
+		        <select name="country_id" id="country_id" tabindex="1">
+		            ${subTitleString}
+				</select>
+			</c:if>
+			<div class="apprListBox" style="overflow:hidden; padding-right: 0;">
+		        <h2 class="on" id="apprH2">
+		            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" id="APPROVAL" onclick="openFolder('appr')"><spring:message code='main.t00018'/></span>
+		        </h2>
+		        <ul class="lnbUL" id="apprUL">
+					<li><span class="sub_iconLNB tree_appr"></span><span class="list_text" id="APPROVAL1" onclick="setPresentValue('<spring:message code='ezApprovalG.t1747'/>');convMain('1','')"><spring:message code='ezApprovalG.t1747'/><span id=count1></span></span></li>
+                   	<c:if test="${whoKyulYN == '1'}">
+                       	<li><span class="sub_iconLNB tree_appr"></span><span class="list_text" id="MYCONTWHO" onclick="setPresentValue('<spring:message code='ezApproval.pjj34'/>');Open_Func(this)"><spring:message code='ezApproval.pjj34'/><span id="countWHO"></span></span></li>
+	                </c:if>
+                   	<c:if test="${approvalFlag == 'S' && useShareApproval == 'YES' }">
+                       	<li><span class="sub_iconLNB tree_appr"></span><span class="list_text" id="APPROVAL11" onclick="setPresentValue('<spring:message code='ezApprovalG.bhs03'/>');convMain('11','')"><spring:message code='ezApprovalG.bhs03'/><span id=count11></span></span></li>
+					</c:if>
+                   	<li><span class="sub_iconLNB tree_appr_ing"></span><span class="list_text" id="APPROVAL2" onclick="setPresentValue('<spring:message code='ezApprovalG.t1706'/>');convMain('3','')"><spring:message code='ezApprovalG.t1706'/><span id=count2></span></span></li>
+                   	<li><span class="sub_iconLNB tree_appr_write"></span><span class="list_text" id="APPROVAL3" onclick="setPresentValue('<spring:message code='ezApprovalG.t1748'/>');convMain('2','')"><spring:message code='ezApprovalG.t1748'/><span id=count3></span></span></li>
+					<c:if test="${approvalFlag eq 'G' && autoSendOfferFlag eq '1'}">
+                   	<li><span class="sub_iconLNB tree_outbox"></span><span class="list_text" id="UNTREATED" onclick="setPresentValue('미처리문서');Open_Func(this);">미처리문서<span id=countUntreated></span></span></li>
+                   	</c:if>
+                   	<li><span class="sub_iconLNB tree_outbox"></span><span class="list_text" id="APPROVAL21" onclick="setPresentValue('<spring:message code='ezApprovalG.t3000'/>');convMain('21','')"><spring:message code='ezApprovalG.t3000'/><span id=count21></span></span></li>
+                   	<c:if test="${hideSusin != 'N'}">
+                       	<li><span class="sub_iconLNB tree_appr_department"></span><span class="list_text" id="APPROVAL4" onclick="setPresentValue('<spring:message code='ezApprovalG.t1749'/>');convMain('4','')"><spring:message code='ezApprovalG.t1749'/><span id=count4></span></span></li>
+					</c:if>
+                   	<c:if test="${approvalFlag == 'S'}">
+                       	<li><span class="sub_iconLNB tree_appr_receive"></span><span class="list_text" id="APPROVAL99" onclick="setPresentValue('<spring:message code='ezApprovalG.hyj04'/>');convMain('99','')"><spring:message code='ezApprovalG.hyj04'/><span id="count99"></span></span></li>
+					</c:if>
+					<c:if test="${approvalFlag == 'G'}">
+                       	<li><span class="sub_iconLNB tree_appr_receive"></span><span class="list_text" id="APPROVAL99" onclick="setPresentValue('<spring:message code='ezApprovalG.t10011'/>');convMain('99','')"><spring:message code='ezApprovalG.t10011'/><span id="count99"></span></span></li>
+					</c:if>
+					<c:if test="${approvalFlag eq 'S' && userInfoEnforce == '2'}">
+                       	<li><span class="sub_iconLNB tree_appr_department"></span><span class="list_text" id="APPROVAL5" onclick="setPresentValue('<spring:message code='ezApproval.t839'/>');convMain('6', '')"><spring:message code='ezApproval.t839'/><span id="count6"></span></span></li>
+					</c:if>
+					<c:if test="${approvalFlag eq 'G'}">
+						<c:if test="${relayShowFlag eq 'Y'}">
+							<li class="approvalG"><span class="sub_iconLNB tree_appr_write"></span><span class="list_text" id="APPROVAL5" onclick="setPresentValue('<spring:message code='ezApprovalG.kbh04'/>');convMain('5');"><spring:message code='ezApprovalG.kbh04'/><span id="count5"></span></span></li>
+						</c:if>
+						<c:if test="${relayShowFlag eq 'Y' || howToSendOffer eq '1'}">
+							<li class="approvalG"><span class="sub_iconLNB tree_appr_write"></span><span class="list_text" id="APPROVAL6" onclick="setPresentValue('<spring:message code='ezApprovalG.kbh05'/>');convMain('6');"><spring:message code='ezApprovalG.kbh05'/><span id="count6"></span></span></li>
+						</c:if>
+                   	</c:if>
+					<c:if test="${userSendOut == 'YES'}">
+                       	<li class="approvalG"><span class="sub_iconLNB tree_appr_write"></span><span class="list_text" id="APPROVAL7" onclick="setPresentValue('<spring:message code='ezApprovalG.t1752'/>');convMain('7','')"><spring:message code='ezApprovalG.t1752'/><span id=count7></span></span></li>
+                       	<li class="approvalG"><span class="sub_iconLNB tree_appr_write"></span><span class="list_text" id="APPROVAL8" onclick="setPresentValue('<spring:message code='ezApprovalG.t1275'/>');convMain('8','')"><spring:message code='ezApprovalG.t1275'/></span></li>
+					</c:if>
+		        </ul>
+		        <h2 class="off" id="compH2">
+		            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" id="APPROVAL" onclick="openFolder('comp')"><spring:message code='ezApprovalG.lhj15'/></span>
+		        </h2>
+		        <ul class="lnbUL off" id="compUL">
+                   	<li><span class="sub_iconLNB tree_appr_complete"></span><span class="list_text" id="MYCONT" onClick="setPresentValue('<spring:message code='ezApproval.t990042'/>');Open_Func(this)"><spring:message code='ezApproval.t990042'/></span></li>
+                   	<c:if test="${approvalFlag == 'S'}">
+                           	<li><span class="sub_iconLNB tree_appr_turn"></span><span class="list_text" id="APPROVAL10" onClick="setPresentValue('<spring:message code='ezApprovalG.hyj03'/>');convMain('10','')"><spring:message code='ezApprovalG.hyj03'/></span></li>
+                   	</c:if>
+                   	<c:if test="${approvalFlag == 'G'}">
+                           	<li><span class="sub_iconLNB tree_appr_turn"></span><span class="list_text" id="APPROVAL10" onClick="setPresentValue('<spring:message code='ezApprovalG.t1787'/>');convMain('10','')"><spring:message code='ezApprovalG.t1787'/></span></li>
+                   	</c:if>
+		        </ul>
+		        <h2 class="off" id="deptH2">
+		            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="openFolder('dept')"><spring:message code='ezApprovalG.t1755'/></span>
+		        </h2>
+		        <ul class="lnbUL off" id="deptUL">
+                   	<c:choose>
+						<c:when test="${fn:length(apprGLeftVOList) > 0}">
+							<c:forEach var="apprGLeftVOList" items="${apprGLeftVOList}" varStatus="status">
+								<c:choose>
+									<c:when test="${strLang == ''}">
+		                            	<li><span class="sub_iconLNB tree_appr_department"></span><span class="list_text" id="myDeptCont${status.count - 1}" onclick="setPresentValue('${apprGLeftVOList.containerTypeName}');cmdOK_onclick('\'${apprGLeftVOList.containerID}\'', '${apprGLeftVOList.containerTypeName}', '')">${apprGLeftVOList.containerTypeName}</span></li>
+									</c:when>
+									<c:otherwise>
+		                            	<li><span class="sub_iconLNB tree_appr_department"></span><span class="list_text" id="myDeptCont${status.count - 1}" onclick="setPresentValue('${apprGLeftVOList.containerTypeName2}');cmdOK_onclick('\'${apprGLeftVOList.containerID}\'', '${apprGLeftVOList.containerTypeName2}', '')">${apprGLeftVOList.containerTypeName2}</span></li>
+									</c:otherwise>
+								</c:choose>
+							</c:forEach>
+						</c:when>
+						<%-- <c:when test="${fn:indexOf(optGamsabu, userInfo.deptID) < 0}">
+							<li><span style="width:100%;display:inline-block;"><spring:message code='ezApprovalG.t1788'/></span></li>
+						</c:when> --%>
+					</c:choose>
+					<c:if test="${fn:indexOf(optGamsabu, userInfo.deptID) > -1}">
+                       	<li><span class="sub_iconLNB tree_appr_department"></span><span class="list_text" onclick="setPresentValue('<spring:message code='ezApprovalG.t1517'/>');cmdOK_onclick('GAMSAHAM', '<spring:message code='ezApprovalG.t1517'/>')"><spring:message code='ezApprovalG.t1517'/></span></li>
+					</c:if>
+		        </ul>
+		        <c:if test="${approvalFlag == 'S'}">
+		        	<h2 class="off" id="ITEMCONTH2">
+		        		<span class="sub_iconLNB tree_arrow_up"></span>
+		        		<span class="h2Title" onclick="openFolder('ITEMCONT');">양식별 문서함</span>
+		        	</h2>
+					<ul class="lnbUL off" id="ITEMCONTUL">
+			          	<c:forEach var="form" items="${itemList}" varStatus="status">
+			          	    <li><span class="sub_iconLNB tree_appr_record1"></span><span class="list_text" id="itemList${status.count - 1}"  onclick="setPresentValue('${form.formName}'); goFormContainer('${form.formName}');"><c:out value="${form.formName}"></c:out></span></li>
+			          	</c:forEach>
+		          	</ul>
+		          	<c:if test="${fn:length(userShareList) > 0 }">
+			        	<h2 class="off" id="USERSHAREH2">
+			        		<span class="sub_iconLNB tree_arrow_up"></span>
+			        		<span class="h2Title" onclick="openFolder('USERSHARE');">개인공유함</span>
+			        	</h2>
+						<ul class="lnbUL off" id="USERSHAREUL">
+				          	<c:forEach var="userShare" items="${userShareList}" varStatus="status">				          	
+								<img id="imgNode_UserShare_${status.index}" border="0" src="/images/OrganTree_cross/plus.gif" onclick="treeicon_toggle('UserShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_UserShare_${status.index}');" style="width: 18px;height: 18px;cursor: pointer;margin-left: 10px;">
+								<img id="subImgNode_UserShare_${status.index}" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;" class="mCS_img_loaded">
+								<span id="spn_UserShare_${status.index}" class="node_normal" style="cursor: pointer; width: 135px;" title='<c:out value="${userShare.shareName }"></c:out>'><c:out value="${userShare.shareName }"></c:out></span>
+								<div id="UserShare_${status.index}_sub" style="display:none;">
+<%-- 					    			<div class="node_div" id="DeptShare_${status.index}_0" nodename="결재진행문서" nodelevel="1" endnode="true" value="결재진행문서" isleaf="TRUE" expanded="FALSE" style="white-space: nowrap;"> --%>
+<!-- 										<img border="0" class="DOT" src="/images/OrganTree/dot_end.gif" style="width: 18px; height: 18px;"> -->
+<%-- 										<img id="imgNode_DeptShare_${status.index}_0}" border="0" src="/images/OrganTree_cross/dot_end.gif" style="width: 18px; height: 18px;"> --%>
+<%-- 										<img id="subImgNode_DeptShare_${status.index}_0" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;"> --%>
+<%-- 										<span onclick="setPresentValue('결재진행문서');convMain('3','','${userShare.shareId}')" style="cursor: pointer; width: 135px;" title="결재진행문서" id="spn_DeptShare_${status.index}_0" class="node_normal">결재진행문서</span> --%>
+<!-- 									</div> -->
+					    			<div class="node_div" id="DeptShare_${status.index}_1" nodename="결재완료문서" nodelevel="1" endnode="true" value="결재완료문서" isleaf="TRUE" expanded="FALSE" style="white-space: nowrap;">
+										<img border="0" class="DOT" src="/images/OrganTree/dot_end.gif" style="width: 18px; height: 18px;">
+										<img id="imgNode_DeptShare_${status.index}_1" border="0" src="/images/OrganTree_cross/dot_end.gif" style="width: 18px; height: 18px;">
+										<img id="subImgNode_DeptShare_${status.index}_1" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;">
+										<span onclick="setPresentValue('결재완료문서'); Open_Func(this); setBoldText(this);" style="cursor: pointer; width: 135px;" shareUserId="${userShare.shareId }" title="결재완료문서" id="spn_DeptShare_${status.index}_1" class="node_normal shareCont">결재완료문서</span>
+									</div>
+								</div>
+				          	</c:forEach>
+			          	</ul>
+		          	</c:if>
+		          	<c:if test="${fn:length(deptShareList) > 0 }">
+			        	<h2 class="off" id="DEPTSHAREH2">
+			        		<span class="sub_iconLNB tree_arrow_up"></span>
+			        		<span class="h2Title" onclick="openFolder('DEPTSHARE');">부서공유함</span>
+			        	</h2>
+						<ul class="lnbUL off" id="DEPTSHAREUL">
+				          	<c:forEach var="deptShare" items="${deptShareList}" varStatus="status">				          	
+								<img id="imgNode_DeptShare_${status.index}" border="0" src="/images/OrganTree_cross/plus.gif" onclick="treeicon_toggle('DeptShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_DeptShare_${status.index}');" style="width: 18px;height: 18px;cursor: pointer;margin-left: 10px;">
+								<img id="subImgNode_DeptShare_${status.index}" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;" class="mCS_img_loaded">
+								<span id="spn_DeptShare_${status.index}" class="node_normal" style="cursor: pointer; width: 135px;" title='<c:out value="${deptShare.shareName }"></c:out>'><c:out value="${deptShare.shareName }"></c:out></span>
+								<div id="DeptShare_${status.index}_sub" style="display:none;">
+									<c:if test="${fn:length(shareUsersItemList) > 0 }">
+										<c:forEach items="${shareUsersItemList }" var="shareUsersItemListMap">
+									    	<c:if test="${shareUsersItemListMap.key eq deptShare.shareId}">
+									    		<c:forEach items="${shareUsersItemListMap.value}" var="item" varStatus="status2">
+									    			<div class="node_div" id="DeptShare_${status.index}_${status2.index}" nodename="${item.formName}" nodelevel="1" endnode="true" value="${item.formName}" isleaf="TRUE" expanded="FALSE" style="white-space: nowrap;">
+														<img border="0" class="DOT" src="/images/OrganTree/dot_end.gif" style="width: 18px; height: 18px;">
+														<img id="imgNode_DeptShare_${status.index}_${status2.index}" border="0" src="/images/OrganTree_cross/dot_end.gif" style="width: 18px; height: 18px;">
+														<img id="subImgNode_DeptShare_${status.index}_${status2.index}" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;">
+														<span onclick="setPresentValue('${item.formName}'); goFormContainer('${item.formName}', '${deptShare.shareId}'); setBoldText(this);" style="cursor: pointer; width: 135px;" title="${item.formName}" id="spn_DeptShare_${status.index}_${status2.index}" class="node_normal">${item.formName}</span>
+													</div>
+									    		</c:forEach>
+									    	</c:if>
+										</c:forEach>
+									</c:if>
+								</div>
+				          	</c:forEach>
+			          	</ul>
+		          	</c:if>
+<!-- 		          	<h2 class="off" id="ITEMCONTH2"> -->
+<!-- 		        		<span class="sub_iconLNB tree_arrow_up"></span> -->
+<%-- 		        		<span class="h2Title" onclick="openFolder('ITEMCONT');"><spring:message code='ezApproval.t844'/></span> --%>
+<!-- 		        	</h2> -->
+<!-- 					<ul class="off" id="ITEMCONTUL"> -->
+<%-- 			          	<c:forEach var="itemList" items="${itemList}" varStatus="status"> --%>
+<%-- 			          	    <li><span class="sub_iconLNB tree_appr_record1"></span><span class="list_text" id="itemList${status.count - 1}"  onclick="setPresentValue('${itemList.taskName}(${itemList.keepingPeriod})');cmdOK_onclick2('${itemList.taskCode}', '${itemList.taskName}', '${itemList.taskName}(${itemList.keepingPeriod})');">${itemList.taskName}(${itemList.keepingPeriod}) </span></li> --%>
+<%-- 			          	</c:forEach> --%>
+<!-- 		          	</ul> -->
+			        <h2 class="off" id="personH2">
+			        	<span class="sub_iconLNB tree_manage" onclick="MngUserOnclick()"></span>
+			            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="openFolder('person')"><spring:message code='ezApproval.t848'/></span>			            
+			        </h2>
+			        <ul class="lnbUL off" id="personUL">
+			        	<div class="tree onlytree" id="divUserContTree"></div>
+			        </ul>
+		        </c:if>
+		        <c:if test="${approvalFlag eq 'G'}">
+		        	<h2 class="off" id="recordCabinetH2">
+		        		<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="openFolder('recordCabinet')">기록물대장</span>
+			        </h2>
+			        <ul class="lnbUL off" id="recordCabinetUL">
+			        	<li><span class="sub_iconLNB tree_appr_record1"></span><span class="list_text" id="m01" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t552'/></span></li>
+			        	<li><span class="sub_iconLNB tree_appr_record2"></span><span class="list_text" id="m03" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t911'/></span></li>
+			        	<li><span class="sub_iconLNB tree_appr_record3"></span><span class="list_text" id="m05" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t905'/></span></li>
+			        	<li><span class="sub_iconLNB tree_appr_record4"></span><span class="list_text" id="m06" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t906'/></span></li>
+			        	<li><span class="sub_iconLNB tree_appr_record5"></span><span class="list_text" id="m02" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t912'/></span></li>
+						<li><span class="sub_iconLNB tree_appr_record3"></span><span class="list_text" id="m12" onclick="Open_Func(this)"><spring:message code='ezApprovalG.kbh06'/></span></li>
+						<li><span class="sub_iconLNB tree_appr_record4"></span><span class="list_text" id="m13" onclick="Open_Func(this)"><spring:message code='ezApprovalG.kbh07'/></span></li>
+			        </ul>
+			        <c:if test="${fn:contains(userInfo.rollInfo, 'm=1') || fn:contains(userInfo.rollInfo, 'w=1') || fn:contains(userInfo.rollInfo, 'c=1')}">
+				        <h2 class="off" id="manageCabinetH2">
+			        		<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="openFolder('manageCabinet')">기록물관리</span>
+				        </h2>
+				        <ul class="lnbUL off" id="manageCabinetUL">
+				        	<li><span class="sub_iconLNB tree_appr_record6"></span><span class="list_text" id="m07" onclick="Open_Func(this)">종료연기신청</span></li>
+				        	<li><span class="sub_iconLNB tree_appr_record7"></span><span class="list_text" id="m08" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t908'/></span></li>
+				        	 <c:if test="${fn:contains(userInfo.rollInfo, 'm=1') || fn:contains(userInfo.rollInfo, 'c=1')}">
+					        	<li><span class="sub_iconLNB tree_appr_record8"></span><span class="list_text" id="m09" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t909'/></span></li>
+					        	<li><span class="sub_iconLNB tree_appr_record9"></span><span class="list_text" id="admin_sub01" onclick="Menu_Click(this)"><spring:message code='ezApprovalG.t717'/></span></li>
+					        	<li><span class="sub_iconLNB tree_appr_record10"></span><span class="list_text" id="admin_sub02" onclick="Menu_Click(this)"><spring:message code='ezApprovalG.t1754'/></span></li>
+					        	<li><span class="sub_iconLNB tree_appr_record11"></span><span class="list_text" id="admin_sub03" onclick="Menu_Click(this)">종료연기승인</span></li>
+					        	<li><span class="sub_iconLNB tree_appr_record12"></span><span class="list_text" id="admin_sub04" onclick="Menu_Click(this)"><spring:message code='ezApprovalG.t520'/></span></li>
+					        </c:if>
+				        </ul>
+			        </c:if>
+			        
+			        <c:if test="${fn:length(userShareList) > 0 }">
+			        	<h2 class="off" id="USERSHAREH2">
+			        		<span class="sub_iconLNB tree_arrow_up"></span>
+			        		<span class="h2Title" onclick="openFolder('USERSHARE');">개인공유함</span>
+			        	</h2>
+						<ul class="lnbUL off" id="USERSHAREUL">
+				          	<c:forEach var="userShare" items="${userShareList}" varStatus="status">				          	
+								<img id="imgNode_UserShare_${status.index}" border="0" src="/images/OrganTree_cross/plus.gif" onclick="treeicon_toggle('UserShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_UserShare_${status.index}');" style="width: 18px;height: 18px;cursor: pointer;margin-left: 10px;">
+								<img id="subImgNode_UserShare_${status.index}" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;" class="mCS_img_loaded">
+								<span id="spn_UserShare_${status.index}" class="node_normal" style="cursor: pointer; width: 135px;" title='<c:out value="${userShare.shareName }"></c:out>'><c:out value="${userShare.shareName }"></c:out></span>
+								<div id="UserShare_${status.index}_sub" style="display:none;">
+<%-- 					    			<div class="node_div" id="DeptShare_${status.index}_0" nodename="결재진행문서" nodelevel="1" endnode="true" value="결재진행문서" isleaf="TRUE" expanded="FALSE" style="white-space: nowrap;"> --%>
+<!-- 										<img border="0" class="DOT" src="/images/OrganTree/dot_end.gif" style="width: 18px; height: 18px;"> -->
+<%-- 										<img id="imgNode_DeptShare_${status.index}_0}" border="0" src="/images/OrganTree_cross/dot_end.gif" style="width: 18px; height: 18px;"> --%>
+<%-- 										<img id="subImgNode_DeptShare_${status.index}_0" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;"> --%>
+<%-- 										<span onclick="setPresentValue('결재진행문서');convMain('3','','${userShare.shareId}')" style="cursor: pointer; width: 135px;" title="결재진행문서" id="spn_DeptShare_${status.index}_0" class="node_normal">결재진행문서</span> --%>
+<!-- 									</div> -->
+					    			<div class="node_div" id="DeptShare_${status.index}_1" nodename="결재완료문서" nodelevel="1" endnode="true" value="결재완료문서" isleaf="TRUE" expanded="FALSE" style="white-space: nowrap;">
+										<img border="0" class="DOT" src="/images/OrganTree/dot_end.gif" style="width: 18px; height: 18px;">
+										<img id="imgNode_DeptShare_${status.index}_1" border="0" src="/images/OrganTree_cross/dot_end.gif" style="width: 18px; height: 18px;">
+										<img id="subImgNode_DeptShare_${status.index}_1" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;">
+										<span onclick="setPresentValue('결재완료문서'); Open_Func(this); setBoldText(this);" style="cursor: pointer; width: 135px;" shareUserId="${userShare.shareId }" title="결재완료문서" id="spn_DeptShare_${status.index}_1" class="node_normal shareCont">결재완료문서</span>
+									</div>
+								</div>
+				          	</c:forEach>
+			          	</ul>
+		          	</c:if>
+		          	<c:if test="${fn:length(deptShareList) > 0 }">
+			        	<h2 class="off" id="DEPTSHAREH2">
+			        		<span class="sub_iconLNB tree_arrow_up"></span>
+			        		<span class="h2Title" onclick="openFolder('DEPTSHARE');">부서공유함</span>
+			        	</h2>
+						<ul class="lnbUL off" id="DEPTSHAREUL">
+				          	<c:forEach var="deptShare" items="${deptShareList}" varStatus="status">	
+				          		<li class="on">
+				          			<span class="sub_iconLNB tree_appr_record1"></span>
+				          			<span class="list_text deptShare" id="${deptShare.shareId}" onclick="Open_Func(this)"><c:out value="${deptShare.shareName }"></c:out></span>
+				          		</li>			          	
+				          	</c:forEach>
+			          	</ul>
+		          	</c:if>
+		        </c:if>
+		        
+	        <!-- 전자결재 G - 이후에 css작업 해야됨 -->
+		        <%-- <c:if test="${approvalFlag eq 'G'}">
+					<h2><span style="width:100%;display:inline-block;" id="m01" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t552'/></span><ul></ul></h2>
+					<h2><span style="width:100%;display:inline-block;" id="m03" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t911'/></span><ul></ul></h2>
+					<h2><span style="width:100%;display:inline-block;" id="m02" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t912'/></span><ul></ul></h2>
+					<h2><span style="width:100%;display:inline-block;" id="m05" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t905'/></span><ul></ul></h2>
+					<h2><span style="width:100%;display:inline-block;" id="m06" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t906'/></span><ul></ul></h2>			
+					<h2 id="tag09"><span style="width:100%;display:inline-block;" id="m07" onClick="Open_Func(this)" ><spring:message code='ezApprovalG.t999'/></span></h2>
+					<ul>
+						<li id="m07" onclick="Open_Func(this)"><span style="width:100%;display:inline-block;"><spring:message code='ezApprovalG.t524'/></span></li>
+						<li id="m08" onclick="Open_Func(this)"><span style="width:100%;display:inline-block;"><spring:message code='ezApprovalG.t908'/></span></li>
+					</ul>	
+					<h2 id="tag10"><span style="width:100%;display:inline-block;" id="m09" onClick="Open_Func(this)" ><spring:message code='ezApprovalG.t1753'/></span></h2>
+					<ul>
+						<li id="m09" onclick="Open_Func(this)"><span style="width:100%;display:inline-block;"><spring:message code='ezApprovalG.t909'/></span></li>
+						<li id="admin_sub01" onclick="Menu_Click(this)"><span style="width:100%;display:inline-block;"><spring:message code='ezApprovalG.t717'/></span></li>
+						<li id="admin_sub02" onclick="Menu_Click(this)"><span style="width:100%;display:inline-block;"><spring:message code='ezApprovalG.t1754'/></span></li>
+						<li id="admin_sub03" onclick="Menu_Click(this)"><span style="width:100%;display:inline-block;"><spring:message code='ezApprovalG.t524'/></span></li>
+						<li id="admin_sub04" onclick="Menu_Click(this)"><span style="width:100%;display:inline-block;"><spring:message code='ezApprovalG.t520'/></span></li>
+					</ul>
+				</c:if> --%>
+				<c:if test="${approvalForDoc == 'Y'}">
+					<c:if test="${fn:contains(userInfo.rollInfo, 'c=1') || fn:contains(userInfo.rollInfo, 'k=1') || fn:contains(userInfo.rollInfo, 'ff=1')}">
+						<h2 class="off" id="adminH2">
+			            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="openFolder('admin')"><spring:message code='ezApprovalG.lhj13'/></span>
+						</h2>
+						<ul class="lnbUL off" id="adminUL">
+                           	<li><span class="sub_iconLNB tree_appr_ing"></span><span class="list_text" id="approvalForDoc_sub01" onclick="Menu_Click(this)"><spring:message code='ezApprovalG.lhj14'/></span></li>
+                           	<li><span class="sub_iconLNB tree_appr_complete"></span><span class="list_text" id="approvalForDoc_sub02" onclick="Menu_Click(this)"><spring:message code='ezApprovalG.lhj15'/></span></li>
+						</ul>
+					</c:if>
+				</c:if>
+				<c:if test="${useOpenGov == 'YES'}">
+					<c:if test="${fn:contains(userInfo.rollInfo, 'c=1') || fn:contains(userInfo.rollInfo, 'k=1') || fn:contains(userInfo.rollInfo, 'ff=1')}">
+						<h2>
+							<span class="h2Title" id="openGov" onClick="Menu_Click(this)">원문공개문서함</span>
+						</h2>
+					</c:if>
+				</c:if>
+			</div>
+	    </div>
+		<%-- <span  id="presentcell" style="display:none"></span>
 		<div id="left" style="overflow-x:hidden">
 			<div class="left_appr" title="<spring:message code='ezApprovalG.t102'/>"><span><spring:message code='main.t25'/></span></div>
 			<c:if test="${isSubTitle}">
@@ -1067,10 +1512,10 @@
 			</c:if>
 			<c:if test="${approvalFlag == 'G'}">
 		        <h2><span style="width:100%; display:inline-block" id="APPROVAL10" onClick="setPresentValue('<spring:message code='ezApprovalG.t1787'/>');convMain('10','')"><spring:message code='ezApprovalG.t1787'/></span><ul></ul></h2>
-		         <%-- <ul id="iconul">
+		         <ul id="iconul">
 				    <li><span style="width:100%; display:inline-block;" id="APPROVAL99" onClick="setPresentValue('<spring:message code='ezApprovalG.t10011'/>');convMain('99','')"><img src="/images/ImgIcon/icon_displaypaper.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t10011'/><span id="count99"></span></li>
 				    <li><span style="width:100%; display:inline-block;" id="APPROVAL10" onClick="setPresentValue('<spring:message code='ezApprovalG.t1787'/>');convMain('10','')"><spring:message code='ezApprovalG.t1787'/><span id="count10"></span></li>
-				</ul> --%>
+				</ul>
 			</c:if>
 			<h2><span style="width:100%;display:inline-block;"  id="MYDEPTCONT" onClick="setPresentValue('<spring:message code='ezApprovalG.t1755'/>');Open_Func(this)"><spring:message code='ezApprovalG.t1755'/></span></h2>
 			<ul>
@@ -1091,7 +1536,7 @@
 						<li><span style="width:100%;display:inline-block;"><spring:message code='ezApprovalG.t1788'/></span></li>
 					</c:when>
 				</c:choose>
-				<c:if test="${fn:indexOf(optGamsabu, userInfo.deptID) > -1}">
+				<c:if test="${fn:indexOf(optGamsabu, userInfo.deptID) > -1 && approvalFlag == 'S'}">
 					<li onclick="setPresentValue('<spring:message code='ezApprovalG.t1517'/>');cmdOK_onclick('GAMSAHAM', '<spring:message code='ezApprovalG.t1517'/>')"><span style="width:100%;display:inline-block;"><spring:message code='ezApprovalG.t1517'/></span></li>
 				</c:if>
 			</ul>
@@ -1142,6 +1587,6 @@
 		</div>
 		<script type="text/javascript">
 			initToggleList(document.getElementById("left"), "h2", "ul", "li");
-		</script>
+		</script> --%>
 	</body>
 </html>

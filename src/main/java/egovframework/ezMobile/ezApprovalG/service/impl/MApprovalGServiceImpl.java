@@ -1,40 +1,40 @@
 package egovframework.ezMobile.ezApprovalG.service.impl;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.annotation.Resource;
-
+import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGDAO;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezEmail.util.EmailImportance;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
+import egovframework.ezMobile.ezApprovalG.dao.MApprovalGDAO;
+import egovframework.ezMobile.ezApprovalG.service.MApprovalGService;
+import egovframework.ezMobile.ezApprovalG.vo.*;
+import egovframework.ezMobile.ezOption.vo.MCommonVO;
+import egovframework.ezMobile.ezOption.vo.MOptionVO;
+import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.jsoup.Jsoup;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import egovframework.com.cmm.EgovMessageSource;
-import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
-import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezOrgan.service.EzOrganService;
-import egovframework.ezMobile.ezApprovalG.dao.MApprovalGDAO;
-import egovframework.ezMobile.ezApprovalG.service.MApprovalGService;
-import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAbsenteeInfoVO;
-import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO;
-import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAttachInfoVO;
-import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
-import egovframework.ezMobile.ezApprovalG.vo.MApprovalGLeftVO;
-import egovframework.ezMobile.ezApprovalG.vo.MApprovalGOpinionInfoVO;
-import egovframework.ezMobile.ezOption.vo.MCommonVO;
-import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import javax.annotation.Resource;
+import javax.mail.internet.InternetAddress;
+import javax.servlet.http.HttpServletRequest;
 
-import org.jsoup.Jsoup;
-import org.jsoup.select.Elements;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service("MApprovalGService")
 public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MApprovalGService {
@@ -57,7 +57,19 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	
 	@Resource(name = "EzOrganService")
 	private EzOrganService ezOrganService;
-	
+
+	@Resource(name = "EzPersonalService")
+	private EzPersonalService ezPersonalService;
+
+	@Resource(name = "EzEmailService")
+	private EzEmailService ezEmailService;
+
+	@Resource(name = "EzApprovalGDAO")
+	private EzApprovalGDAO ezApprovalGDAO;
+
+	@Resource(name = "jspw")
+	private String jspw;
+
 	@Override
 	public List<MApprovalGDocInfoVO> getDoApproveList(MCommonVO userInfo, String type, String searchText, String listSize, String lastDate) throws Exception {
 		LOGGER.debug("getDoApproveList started");
@@ -346,7 +358,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	}
 
 	@Override
-	public MApprovalGDocInfoVO getAprDocInfo(String docId, String type, String lang, String companyId, int tenantId, String aprMemberSN, String mode) throws Exception {
+	public MApprovalGDocInfoVO getAprDocInfo(String docId, String type, String lang, String offset, String companyId, int tenantId, String aprMemberSN, String mode) throws Exception {
 		LOGGER.debug("getAprDocInfo started");
 
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantId);
@@ -360,6 +372,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		map.put("lang", commonUtil.getMultiData(lang, tenantId));
 		map.put("tenantID", tenantId);
 		map.put("companyID", companyId);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
 		
 		MApprovalGDocInfoVO approvalGDocInfoVO = new MApprovalGDocInfoVO();
 		
@@ -473,6 +486,364 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		return result;
 	}
 	
+	/**
+	 * 결재동작 이후의 알림메일발송
+	 * @param userInfo
+	 * @param optionInfo
+	 * @param approvalGDocInfoVO
+	 * @param docId
+	 * @param type
+	 * @throws Exception
+	 */
+	@Override
+	public void sendApproveNoticeMail(MCommonVO userInfo, MOptionVO optionInfo, MApprovalGDocInfoVO approvalGDocInfoVO, String docId, String type) throws Exception {
+		LOGGER.debug("sendApproveNoticeMail started.");
+
+		String subject = null;
+		StringBuilder contentBuilder = null;
+
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String https = "YES".equals(ezCommonService.getTenantConfig("USE_HTTPS", userInfo.getTenantId())) ? "HTTPS://" : "HTTP://";
+		String serverName = ezCommonService.getTenantConfig("serverName", userInfo.getTenantId());
+		String userEmail = userInfo.getUserId() + "@" + domainName;
+		String password = jspw;
+
+		//to User
+		String targetUserId = null;
+		String targetUserName = null;
+		List<InternetAddress> toList = new ArrayList<>();
+		Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(userInfo.getLang()));
+
+		//from User
+		String userId = userInfo.getUserId();
+		String userName = userInfo.getUserName();
+		String lang = userInfo.getLang();
+		String companyId = userInfo.getCompanyId();
+		int tenantId = userInfo.getTenantId();
+
+		LOGGER.debug("docId = " + docId + ", type = " + type + ", userId = " + userId);
+
+		InternetAddress from = new InternetAddress();
+		from.setAddress(userInfo.getEmail());
+		from.setPersonal(userName, "UTF-8");
+
+		InternetAddress to;
+
+		boolean saveSendBoxFlag = ("Y".equals(commonUtil.convertStringToDocument(ezPersonalService.getApprovNotiConfig(userId, userId, tenantId)).getElementsByTagName("SAVEMAILFLAG").item(0).getTextContent().trim())) ? true : false;
+
+		List<MApprovalGAprLineInfoVO> approvalGAprLineInfoVOs = getAprLineInfo(docId, type, userInfo);
+
+		//"BO", "CHECK" 필요시 추가
+		switch (type) {
+			case "APR":
+				if (approvalGAprLineInfoVOs.isEmpty()) { //end
+					//[수신문서결재완료알림]
+					if ("011".equalsIgnoreCase(approvalGDocInfoVO.getDocState())) {
+						approvalGAprLineInfoVOs = getAprLineInfo(approvalGDocInfoVO.getOrgDocID(), "END", userInfo);
+
+						MApprovalGAprLineInfoVO targetVo = approvalGAprLineInfoVOs.get(approvalGAprLineInfoVOs.size() - 1);
+						targetUserId = targetVo.getAprMemberId();
+						targetUserName = targetVo.getAprMemberName();
+
+						if ("0".equals(commonUtil.convertStringToDocument(ezPersonalService.getApprovNotiConfig(targetUserId, userId, tenantId)).getElementsByTagName("COMPLETE").item(0).getTextContent().trim())) {
+							return;
+						}
+
+						LOGGER.debug("END REC : targetUserId = " + targetUserId + ", targetUserName = " + targetUserName);
+
+						to = new InternetAddress();
+
+						to.setAddress(ezOrganService.getPropertyValue(targetUserId, "mail", tenantId));
+						to.setPersonal(targetUserName, "UTF-8");
+
+						toList.add(to);
+
+						subject = egovMessageSource.getMessage("ezEmail.csj07", locale) + " " + approvalGDocInfoVO.getDocTitle(); //[수신부서결재완료알림] + DOCTITLE
+						contentBuilder = new StringBuilder("<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td>");
+						contentBuilder.append("<span style='font-size:13px;'>" + egovMessageSource.getMessage("ezEmail.csj17", locale) + ": " + approvalGDocInfoVO.getDocTitle() + "</span><br>");
+						contentBuilder.append("<span style='font-size:13px;'>" + egovMessageSource.getMessage("ezEmail.csj18", locale) + ": " + approvalGDocInfoVO.getWriterName() + "</span><br>");
+						contentBuilder.append("<span style='font-size:13px;'>" + egovMessageSource.getMessage("ezEmail.csj19", locale) + ": " + approvalGDocInfoVO.getStartDate() + "</span><br>");
+						contentBuilder.append("</td></tr></table>");
+
+						ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), tenantId, locale), saveSendBoxFlag, EmailImportance.NORMAL);
+					} else {
+						approvalGAprLineInfoVOs = getAprLineInfo(docId, "END", userInfo);
+
+						MApprovalGAprLineInfoVO targetVo = approvalGAprLineInfoVOs.get(approvalGAprLineInfoVOs.size() - 1);
+						targetUserId = targetVo.getAprMemberId();
+						targetUserName = targetVo.getAprMemberName();
+
+						if ("0".equals(commonUtil.convertStringToDocument(ezPersonalService.getApprovNotiConfig(targetUserId, userId, tenantId)).getElementsByTagName("COMPLETE").item(0).getTextContent().trim())) {
+							return;
+						}
+
+						LOGGER.debug("END : targetUserId = " + targetUserId + ", targetUserName = " + targetUserName);
+
+						to = new InternetAddress();
+
+						to.setAddress(ezOrganService.getPropertyValue(targetUserId, "mail", tenantId));
+						to.setPersonal(targetUserName, "UTF-8");
+
+						toList.add(to);
+
+						subject = egovMessageSource.getMessage("ezEmail.csj06", locale) + " " + approvalGDocInfoVO.getDocTitle(); //[결재완료알림] + DOCTITLE
+						contentBuilder = new StringBuilder("<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td>");
+						contentBuilder.append("<span style='font-size:13px;'>" + egovMessageSource.getMessage("ezEmail.csj17", locale) + ": " + approvalGDocInfoVO.getDocTitle() + "</span><br>");
+						contentBuilder.append("<span style='font-size:13px;'>" + egovMessageSource.getMessage("ezEmail.csj18", locale) + ": " + approvalGDocInfoVO.getWriterName() + "</span><br>");
+						contentBuilder.append("<span style='font-size:13px;'>" + egovMessageSource.getMessage("ezEmail.csj19", locale) + ": " + approvalGDocInfoVO.getStartDate() + "</span><br>");
+						contentBuilder.append("</td></tr></table>");
+						ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), tenantId, locale), saveSendBoxFlag, EmailImportance.NORMAL);
+					}
+
+					//[수신문서도착알림]
+					List<MApprovalGReceiptInfoVO> receiptInfos = getEndReceiptInfos(docId, companyId, tenantId);
+
+					if (!receiptInfos.isEmpty()) {
+						toList = new ArrayList<>();
+
+						subject = egovMessageSource.getMessage("ezEmail.csj02", locale) + " " + approvalGDocInfoVO.getDocTitle(); //[수신문서도착알림] + DOCTITLE
+						contentBuilder = new StringBuilder("<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td>");
+						contentBuilder.append("<span style='font-size:13px;'>" + egovMessageSource.getMessage("ezEmail.csj17", locale) + ": " + approvalGDocInfoVO.getDocTitle() + "</span><br>");
+						contentBuilder.append("<span style='font-size:13px;'>" + egovMessageSource.getMessage("ezEmail.csj18", locale) + ": " + approvalGDocInfoVO.getWriterName() + "</span><br>");
+						contentBuilder.append("<span style='font-size:13px;'>" + egovMessageSource.getMessage("ezEmail.csj19", locale) + ": " + approvalGDocInfoVO.getStartDate() + "</span><br>");
+						contentBuilder.append("</td></tr></table>");
+
+						//add user of dept
+						List<String> deptIds = receiptInfos.stream()
+								.filter(vo -> vo.getUserId().equalsIgnoreCase(""))
+								.map(MApprovalGReceiptInfoVO::getDeptId)
+								.collect(Collectors.toList());
+
+						for (String deptId : deptIds) {
+							Map<String, Object> map = new HashMap<>();
+							map.put("tenantId", tenantId);
+							map.put("deptId", deptId);
+
+							List<MCommonVO> userInfos = mApprovalGDAO.getReceiptInfosOfDept(map);
+
+							for (MCommonVO info : userInfos) {
+								LOGGER.debug("REC dept : targetUserId = " + info.getUserId() + ", targetUserName = " + info.getUserName());
+
+								to = new InternetAddress();
+
+								to.setAddress(info.getEmail());
+								to.setPersonal(info.getUserName(), "UTF-8");
+
+								toList.add(to);
+							}
+						}
+
+						//add user
+						List<String> userIds = receiptInfos.stream()
+								.filter(vo -> !vo.getUserId().equalsIgnoreCase(""))
+								.map(MApprovalGReceiptInfoVO::getUserId)
+								.collect(Collectors.toList());
+
+						for (String recUserId : userIds) {
+							Map<String, Object> map = new HashMap<>();
+							map.put("tenantId", tenantId);
+							map.put("userId", recUserId);
+
+							List<MCommonVO> userInfos = mApprovalGDAO.getReceiptInfosOfUser(map);
+
+							for (MCommonVO info : userInfos) {
+								LOGGER.debug("REC user : targetUserId = " + info.getUserName() + ", targetUserName = " + info.getUserName());
+
+								to = new InternetAddress();
+
+								to.setAddress(info.getEmail());
+								to.setPersonal(info.getUserName(), "UTF-8");
+
+								toList.add(to);
+							}
+						}
+
+						toList = toList.stream().distinct().collect(Collectors.toList());
+
+						ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), tenantId, locale), saveSendBoxFlag, EmailImportance.NORMAL);
+					}
+				} else { //apr
+					for (MApprovalGAprLineInfoVO vo : approvalGAprLineInfoVOs) {
+						targetUserId = vo.getAprMemberId();
+						targetUserName = vo.getAprMemberName();
+
+						// 결재유형이 참조인 경우에만 메일을 보내는 오류 분기 수정 (!"007".equalsIgnoreCase(vo.getAprType()) OR조건에서 제거)
+						if (!"002".equals(vo.getAprState()) || "0".equals(commonUtil.convertStringToDocument(ezPersonalService.getApprovNotiConfig(vo.getAprMemberId(), userId, tenantId)).getElementsByTagName("ALERT").item(0).getTextContent().trim())) {
+							continue;
+						}
+
+						LOGGER.debug("APR NEXT : targetUserId = " + targetUserId + ", targetUserName = " + targetUserName);
+
+						to = new InternetAddress();
+
+						to.setAddress(ezOrganService.getPropertyValue(targetUserId, "mail", tenantId));
+						to.setPersonal(targetUserName, "UTF-8");
+
+						toList.add(to);
+
+						/* 2021-01-12 홍승비 - 모바일에서 결재 시 참조와 일반 결재 메일 분기 추가 */
+						subject = egovMessageSource.getMessage("ezEmail.csj12", locale) + " " + approvalGDocInfoVO.getDocTitle(); // [결재문서도착알림]
+						contentBuilder = new StringBuilder("<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td>");
+						
+						if (!"007".equalsIgnoreCase(vo.getAprType())) { // 참조가 아닌 경우에만 결재링크 생성 (웹과 동일)
+							contentBuilder.append("<span style='font-size:13px; font-weight:bold;'>" + approvalGDocInfoVO.getWriterName() + "</span>");
+							contentBuilder.append("<span style='font-size:13px;'>" + egovMessageSource.getMessage("ezEmail.csj14", locale) + "</span>");
+							contentBuilder.append("<a id='approv_a' href ='" + https + serverName + "/ezApprovalG/approvui.do?");
+							contentBuilder.append("docID=" + approvalGDocInfoVO.getDocID());
+							contentBuilder.append("&id=" + targetUserId + "&name=" + targetUserName + "&deptID=" + ezOrganService.getPropertyValue(targetUserId, "department", tenantId));
+							contentBuilder.append("&allFlag=0&mailchk=Y&orgCompanyID=" + ezOrganService.getPropertyValue(targetUserId, "physicaldeliveryofficename", tenantId));
+							contentBuilder.append("' onclick ='javascript:mail_link();' style='cursor: pointer; font-size: 15px; color: blue;' target='_blank'><br>");
+							contentBuilder.append(egovMessageSource.getMessage("ezEmail.csj15", locale)); //결재 문서 바로가기 링크
+							contentBuilder.append("</a><br><br>");
+							contentBuilder.append("<span style='font-size:13px; font-weight:bold;'>" + egovMessageSource.getMessage("ezEmail.csj16", locale) + "</span><br>");
+						}
+						
+						contentBuilder.append("<span style='font-size:13px;'>" + egovMessageSource.getMessage("ezEmail.csj17", locale) + ": " + approvalGDocInfoVO.getDocTitle() + "</span><br>");
+						contentBuilder.append("<span style='font-size:13px;'>" + egovMessageSource.getMessage("ezEmail.csj18", locale) + ": " + approvalGDocInfoVO.getWriterName() + "</span><br>");
+						contentBuilder.append("<span style='font-size:13px;'>" + egovMessageSource.getMessage("ezEmail.csj19", locale) + ": " + approvalGDocInfoVO.getStartDate() + "</span><br>");
+						contentBuilder.append("</td></tr></table>");
+
+						ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), tenantId, locale), saveSendBoxFlag, EmailImportance.NORMAL);
+					}
+				}
+
+				break;
+
+			case "BAN" :
+				MApprovalGAprLineInfoVO targetVo = approvalGAprLineInfoVOs.get(approvalGAprLineInfoVOs.size() - 1);
+				targetUserId = targetVo.getAprMemberId();
+				targetUserName = targetVo.getAprMemberName();
+
+				if ("0".equals(commonUtil.convertStringToDocument(ezPersonalService.getApprovNotiConfig(targetUserId, userId, tenantId)).getElementsByTagName("BANSONG").item(0).getTextContent().trim())) {
+					return;
+				}
+
+				LOGGER.debug("BAN : targetUserId = " + targetUserId + ", targetUserName = " + targetUserName);
+
+				to = new InternetAddress();
+
+				to.setAddress(ezOrganService.getPropertyValue(targetUserId, "mail", tenantId));
+				to.setPersonal(targetUserName, "UTF-8");
+
+				toList.add(to);
+
+				subject = egovMessageSource.getMessage("ezEmail.csj04", locale) + " " + approvalGDocInfoVO.getDocTitle(); //[기안문서 반송알림]
+				contentBuilder = new StringBuilder("<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td>");
+				contentBuilder.append("<span style='font-size:13px;'>" + egovMessageSource.getMessage("ezEmail.csj17", locale) + ": " + approvalGDocInfoVO.getDocTitle() + "</span><br>");
+				contentBuilder.append("<span style='font-size:13px;'>" + egovMessageSource.getMessage("ezEmail.csj18", locale) + ": " + approvalGDocInfoVO.getWriterName() + "</span><br>");
+				contentBuilder.append("<span style='font-size:13px;'>" + egovMessageSource.getMessage("ezEmail.csj19", locale) + ": " + approvalGDocInfoVO.getStartDate() + "</span><br>");
+
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("docID", docId);
+				map.put("lang", commonUtil.getMultiData(lang, tenantId));
+				map.put("tenantID", tenantId);
+				map.put("companyID", companyId);
+
+				List<MApprovalGOpinionInfoVO> opinionInfos = mApprovalGDAO.getOpinionInfo(map);
+
+				if (!opinionInfos.isEmpty()) {
+					map.put("v_LISTTYPE", "031");
+					map.put("v_LANGTYPE", lang);
+					map.put("companyID", companyId);
+					map.put("v_TENANTID", tenantId);
+
+					List<ApprGListHeaderVO> headers = ezApprovalGDAO.getListHeader(map);
+
+					//table header
+					contentBuilder.append("<table width='750' cellpadding='0' cellspacing='0'><tr align='center' height='30' style='background:#F9F8F8'>");
+					contentBuilder.append("<td style='BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid;padding-left:10px;padding-right:10px'><b>No.</b></td>");
+					contentBuilder.append("<td style='BORDER-BOTTOM: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid;padding-left:10px;padding-right:10px'><b>" + headers.get(1).getName() + "</b></td>");
+					contentBuilder.append("<td style='BORDER-BOTTOM: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid;padding-left:10px;padding-right:10px'><b>" + headers.get(4).getName() + "</b></td>");
+					contentBuilder.append("<td style='BORDER-BOTTOM: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid;padding-left:10px;padding-right:10px'><b>" + headers.get(0).getName() + "</b></td>");
+					contentBuilder.append("<td style='BORDER-BOTTOM: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid;padding-left:10px;padding-right:10px'><b>" + headers.get(2).getName() + "</b></td>");
+					contentBuilder.append("</tr>");
+
+					for(MApprovalGOpinionInfoVO opinionInfo : opinionInfos) {
+						contentBuilder.append("<tr align='center' bgcolor='#FFFFFF' height='20'>");
+						contentBuilder.append("<td style='BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-RIGHT: black 1px solid;padding-left:10px;padding-right:10px'>" + (opinionInfos.indexOf(opinionInfo) + 1)  + "</td>");
+						contentBuilder.append("<td style='BORDER-BOTTOM: black 1px solid; BORDER-RIGHT: black 1px solid;padding-left:10px;padding-right:10px'>" + opinionInfo.getUserName() + "</td>");
+						contentBuilder.append("<td style='BORDER-BOTTOM: black 1px solid; BORDER-RIGHT: black 1px solid;padding-left:10px;padding-right:10px'>" + opinionInfo.getUserDeptName()  + "</td>");
+						contentBuilder.append("<td style='BORDER-BOTTOM: black 1px solid; BORDER-RIGHT: black 1px solid;padding-left:10px;padding-right:10px'>");
+						switch (opinionInfo.getOpinionGB()) {
+							case "001" :
+								contentBuilder.append(egovMessageSource.getMessage("ezApprovalG.lhj21", locale));
+								break;
+							case "002" :
+								contentBuilder.append(egovMessageSource.getMessage("ezApprovalG.lhj22", locale));
+								break;
+							case "003" :
+								contentBuilder.append(egovMessageSource.getMessage("ezApprovalG.lhj23", locale));
+								break;
+							case "004" :
+								contentBuilder.append(egovMessageSource.getMessage("ezApprovalG.lhj24", locale));
+								break;
+						}
+
+						contentBuilder.append("</td>");
+						contentBuilder.append("<td style='BORDER-BOTTOM: black 1px solid;  BORDER-RIGHT: black 1px solid;padding-left:10px;padding-right:10px' align='left'>" + commonUtil.cleanValue(opinionInfo.getContent()) + "</td>");
+						contentBuilder.append("</tr>");
+					}
+
+					contentBuilder.append("</table>");
+				}
+
+				contentBuilder.append("</td></tr></table>");
+				ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), tenantId, locale), saveSendBoxFlag, EmailImportance.NORMAL);
+
+				break;
+
+			case "HWE" :
+				for (MApprovalGAprLineInfoVO vo : approvalGAprLineInfoVOs) {
+					targetUserId = vo.getAprMemberId();
+					targetUserName = vo.getAprMemberName();
+
+					if (!"002".equals(vo.getAprState()) && !"003".equals(vo.getAprState()) || "0".equals(commonUtil.convertStringToDocument(ezPersonalService.getApprovNotiConfig(vo.getAprMemberId(), userId, tenantId)).getElementsByTagName("CALLBACK").item(0).getTextContent().trim()) || (approvalGAprLineInfoVOs.indexOf(vo) == approvalGAprLineInfoVOs.size())) {
+						continue;
+					}
+
+					LOGGER.debug("HWE : targetUserId = " + targetUserId + ", targetUserName = " + targetUserName);
+
+					to = new InternetAddress();
+
+					to.setAddress(ezOrganService.getPropertyValue(targetUserId, "mail", tenantId));
+					to.setPersonal(targetUserName, "UTF-8");
+
+					toList.add(to);
+
+					subject = egovMessageSource.getMessage("ezEmail.csj01", locale) + " " + approvalGDocInfoVO.getDocTitle(); //[결재문서회수알림]
+					contentBuilder = new StringBuilder("<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td>");
+					contentBuilder.append("<span style='font-size:13px;'>" + egovMessageSource.getMessage("ezEmail.csj17", locale) + ": " + approvalGDocInfoVO.getDocTitle() + "</span><br>");
+					contentBuilder.append("<span style='font-size:13px;'>" + egovMessageSource.getMessage("ezEmail.csj18", locale) + ": " + approvalGDocInfoVO.getWriterName() + "</span><br>");
+					contentBuilder.append("<span style='font-size:13px;'>" + egovMessageSource.getMessage("ezEmail.csj19", locale) + ": " + approvalGDocInfoVO.getStartDate() + "</span><br>");
+					contentBuilder.append("</td></tr></table>");
+
+					ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), tenantId, locale), saveSendBoxFlag, EmailImportance.NORMAL);
+				}
+
+				break;
+
+			default:
+				break;
+		}
+
+		LOGGER.debug("sendApproveNoticeMail ended.");
+	}
+
+	public List<MApprovalGReceiptInfoVO> getEndReceiptInfos(String docId, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("getEndReceiptInfos started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("docId", docId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+
+		List<MApprovalGReceiptInfoVO> receiptInfos = mApprovalGDAO.getEndReceiptInfos(map);
+
+		LOGGER.debug("getEndReceiptInfos ended");
+
+		return receiptInfos;
+	}
+	
 	/* 2020-07-02 홍승비 - 모바일에서 최종결재 완료 시 서명에 결재날짜 삽입 동작 추가(결재날짜 필드가 없는 경우에만, 웹과 동일하게) */
 	public String insertSeumyungdateMobile(String docId, String realPath, String offset, Locale locale, String domain, String scheme, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("insertSeumyungdateMobile started");
@@ -562,6 +933,80 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		}
 		
 		LOGGER.debug("insertSeumyungdateMobile ended");
+		return result;
+	}
+
+	@Override
+	public List<MApprovalGAbsenteeAddJobInfoVO> getAbsenteeAddJobInfo(MCommonVO userInfo) throws Exception {
+		LOGGER.debug("getAbsenteeAddJobInfo started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userInfo.getUserId());
+		map.put("tenantId", userInfo.getTenantId());
+		List<MApprovalGAbsenteeAddJobInfoVO> list = mApprovalGDAO.getAbsenteeAddJobInfo(map);
+
+		LOGGER.debug("getAbsenteeAddJobInfo ended");
+		return list;
+	}
+
+	@Override
+	public int updateAbsenteeJobInfo(JSONObject data, String userId, int tenantId) throws Exception {
+		LOGGER.debug("updateAbsenteeJobInfo started");
+
+		int result = 0;
+		String startDate = data.get("startDate").toString();
+		String endDate = data.get("endDate").toString();
+		String dataArr = data.get("dataArr").toString();
+		String deptId		;
+		String jobId 		;
+		String proxyId 		;
+		String proxyName 	;
+		String proxyDept 	;
+		String proxyReason	;
+		String proxyInfo 	;
+		JSONParser parser = new JSONParser();
+		Object obj = parser.parse( dataArr );
+		JSONObject jsonObj = (JSONObject) obj;
+		Map<String, Object> map;
+		MApprovalGAbsenteeInfoVO absenteeInfoVO = new MApprovalGAbsenteeInfoVO();
+		absenteeInfoVO.setTenantId(tenantId);
+		absenteeInfoVO.setUserId(userId);
+
+		for (int i = 0; i < jsonObj.size(); i++) {
+			String index = i + "";
+			JSONObject json = (JSONObject) parser.parse(jsonObj.get(index).toString());
+
+			deptId = json.get("deptId").toString();
+			jobId  = json.get("jobId").toString();
+			proxyId = json.get("proxyId") != null ? json.get("proxyId").toString() : "";
+			proxyName = json.get("proxyName") != null ? json.get("proxyName").toString() : "";
+			proxyDept = json.get("proxyDept") != null ? json.get("proxyDept").toString() : "";
+			proxyReason = json.get("proxyReason") != null ? json.get("proxyReason").toString() : "";
+			proxyInfo = proxyId + ":" + proxyName + ":" + proxyDept + ":" + startDate + ":" + endDate;
+
+			if (!proxyReason.equals("")) { // 사유가 없는 경우 :제거
+				proxyInfo += ":" + proxyReason;
+			} else if (proxyId.equals("")) { //사유가 없음 & 대리결제자 없을경우
+				proxyInfo = "";
+			}
+
+			if (jobId.equals("-1")) {
+				absenteeInfoVO.setAbsenteeInfo(proxyInfo);
+				result += setAbsenteeInfo(absenteeInfoVO);
+			} else {
+				map = new HashMap<String, Object>();
+				map.put("userID", userId);
+				map.put("deptId", deptId);
+				map.put("tenantId", tenantId);
+				map.put("absenteeInfo", proxyInfo);
+				map.put("jobId", jobId);
+				mApprovalGDAO.updateAbsenteeAddJobInfo(map);
+			}
+
+		}
+
+
+		LOGGER.debug("updateAbsenteeJobInfo ended");
 		return result;
 	}
 }

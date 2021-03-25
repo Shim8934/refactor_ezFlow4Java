@@ -1,4 +1,4 @@
-﻿var regex = /[\u0000-\u0008\u000B-\u000C\u000E-\u001F]/g;
+﻿﻿var regex = /[\u0000-\u0008\u000B-\u000C\u000E-\u001F]/g;
 var emailFlag=false;
 function MailToMe_Onclick() {
     var checked = document.getElementById('toMe').checked;
@@ -718,6 +718,7 @@ function Send_onClick_Complete(ReturnValue) {
                     document.getElementById("MsgCCGot").childNodes[0].childNodes.length == 0 &&
                     document.getElementById("MsgBCCGot").childNodes[0].childNodes.length == 0) {
                     alert(strLang93);
+                    gInvalidAddressArr = null;
                     return;
                 }
             } catch (e) {
@@ -725,6 +726,7 @@ function Send_onClick_Complete(ReturnValue) {
                         document.getElementById("MsgCCGot").childNodes.length == 0 &&
                         document.getElementById("MsgBCCGot").childNodes.length == 0) {
                     alert(strLang93);
+                    gInvalidAddressArr = null;
                     return;
                 }
             }
@@ -738,6 +740,7 @@ function Send_onClick_Complete(ReturnValue) {
                     iseachMail = "false";
                 }
                 else {
+                    gInvalidAddressArr = null;
                     return;
                 }
             }
@@ -824,6 +827,7 @@ function CheckNeedsApproval(pURL) {
 }
 
 var g_saveHttp = null;
+var gInvalidAddressArr = null;
 
 function checkMailStatusAndSave(savemode) {
     console.log("savemode=" + savemode + ",MailStatus=" + MailStatus);
@@ -844,9 +848,12 @@ function checkMailStatusAndSave(savemode) {
 
 function Save_onClick(savemode) {
     // 이미 저장 혹은 발송 중이면 저장 작업을(자동 저장) 수행하지 않고 그냥 반환한다.
-    if (savemode == "tempsave" && MailStatus == "SEND") {
+    if (savemode == "tempsave" && MailStatus == "SEND" && !previewChk) {
         return;
     }
+    
+    //Save_onClick을 탈 때(발송, 저장, 미리보기) 할 때, 첨부파일 순서를 저장하도록 수정. 2020-03-19 홍대표.
+    callMoveAttachFileOrder();
     
     checkMailStatusAndSave(savemode);
 }
@@ -855,7 +862,7 @@ function Save_onClick_Complete(ReturnValue) {
     try {
         if (ReturnValue) {
             var Subject = eSubject.value;
-            if (TrimText(Subject) == "")
+            if (TrimText(Subject) == "" && !previewChk)
                 Subject = strLang97;
 
             if (m_rgParams4PostOption["SecurityMail"] == "Security")
@@ -900,6 +907,7 @@ function Save_onClick_Complete(ReturnValue) {
             createNodeAndInsertText(xmlDoc, rootNode, "ISRESERVE", isReserve);
             createNodeAndInsertText(xmlDoc, rootNode, "RESERVEDID", pCDOMessageId);
             createNodeAndInsertText(xmlDoc, rootNode, "STATENAME", filedate);
+            createNodeAndInsertText(xmlDoc, rootNode, "MODEFLAG", Save_onClick_Complete.savemode); // 20190807 김수아 : 메일 작성 미리보기
             if (m_rgParams4PostOption["delaySendDate"] == "") {
                 createNodeAndInsertText(xmlDoc, rootNode, "DELAYSENDTIME", "");
             }
@@ -932,6 +940,8 @@ function Save_onClick_Complete(ReturnValue) {
             
             ConvertEmbedPath(xmlDoc, xmlDoc);
             ConvertEmbedImagToXml(xmlDoc, xmlDoc);
+            
+            gInvalidAddressArr = null;
 
             if (Org_cmd == "docsend" || Org_cmd == "docsenddoc" || Org_cmd == "board" || Org_cmd == "Community" || Org_cmd == "report")
                 DocFileIntoXML(xmlDoc, rootNode);
@@ -960,7 +970,9 @@ function Save_onClick_Complete(ReturnValue) {
                         MailSend_Show_Progress();                        
                     }
 
-                    g_saveHttp.timeout = 20000;
+                    if (window.iseachMail == "false") {
+                    	g_saveHttp.timeout = 20000;
+                    }
                     g_saveHttp.onreadystatechange = event_SaveonClick;
                     g_saveHttp.send(xmlDoc);
                 }
@@ -1032,7 +1044,7 @@ function event_SaveonClick() {
         if (event_SaveonClick.savemode == "sendsave") {
         	// status code가 200~300이 아닐 경우
         	if (g_saveHttp.status < 200 || g_saveHttp.status > 300) {
-        		alert(strLang105);
+        		alert(strLang105 + " error=-1");
         		MailSend_Hidden_Progress();
                 g_saveHttp = null;
                 MailStatus = "NO";
@@ -1062,6 +1074,8 @@ function event_SaveonClick() {
                 	invalidAddresses = invalidAddressArr.join("\n");
                 	
                 	if (confirm(strLangLHM16 + "\n" + invalidAddresses + "\n" + strLangLHM17)) {
+                	    gInvalidAddressArr = invalidAddressArr;
+                	    
                 		for (var i=0; i<invalidAddressArr.length; i++) {
                 			try { deleteMailUser(invalidAddressArr[i],"0"); } catch (e) {}
                 			try { deleteMailUser(invalidAddressArr[i],"1"); } catch (e) {}
@@ -1078,6 +1092,9 @@ function event_SaveonClick() {
                 // 잘못된 도메인 주소가 있을 경우 (ex> mailtotest@tes:t.com)
                 else if (pRtnMessage.indexOf("Domain contains illegal character") > -1) { 
                 	alert(strLangLHM22);
+                }
+                else if (pRtnMessage.indexOf("parse error") > -1) {
+                    alert(strLang105 + " error=-2");
                 }
                 // 그 외
                 else {
@@ -1131,11 +1148,11 @@ function event_SaveonClick() {
                 window.close();
         	}
         }
-        //메일 저장 or 자동임시저장인 경우
+        //메일 저장 or 자동임시저장인 경우 or 미리보기
         else {
         	// status code가 200~300이 아닐 경우
         	if (g_saveHttp.status < 200 || g_saveHttp.status > 300) {
-        		alert(strLang105);
+        	    alert(strLang105 + " error=-1");
             }
             // 메일쓰기 도중 로그아웃된 경우
             else if (g_saveHttp.responseText.indexOf("actionLogin()") > -1) {
@@ -1152,12 +1169,33 @@ function event_SaveonClick() {
                 	var messageArr = pRtnMessage.split(":");
                 	alert(strLangLHM13 + "\n(" + strLangLHM14 + messageArr[1] + strLangLHM15 + messageArr[2] + ")");
                 }
+                else if (pRtnMessage.indexOf("parse error") > -1) {
+                    alert(strLang105 + " error=-2");
+                }                
                 // 그 외
                 else {
             		alert(pRtnMessage);
                 }
+        	} 
+        	// 정상적으로 처리된 경우(메일작성 미리보기의 임시저장인 경우) 
+        	else if (event_SaveonClick.savemode == "preview"){
+                var result = pRtnMessage;
+                var xmlID = "";
+                xmlID = loadXMLString(g_saveHttp.responseText);
+                var xmlItem = xmlID.childNodes.item(0).childNodes;
+                
+                if (!CrossYN()) {
+                	preview_g_url = xmlItem.item(1).text;
+                	preview_g_url_forRead = xmlItem.item(2).text + "/" + preview_g_url;
+                }
+                else if (CrossYN()) {
+                	preview_g_url = xmlItem.item(1).textContent;
+                	preview_g_url_forRead = xmlItem.item(2).textContent + "/" + preview_g_url;
+                }
+                
+        		preMailRead(preview_g_url_forRead);
         	}
-        	// 정상적으로 처리된 경우
+        	// 정상적으로 처리된 경우(메일 저장 or 자동임시저장인 경우)
         	else {
         		g_bDirty = false;
                 g_originalHTML = message.GetEditorContent();
@@ -1190,6 +1228,7 @@ function event_SaveonClick() {
                 
                 if (!isAutoSave) {
                 	alert(strLang108);
+                	MailSend_Hidden_Progress();
                 }
                 
                 try {
@@ -1197,10 +1236,9 @@ function event_SaveonClick() {
                 } catch (e) { }
         	}
         	
-        	if (!isAutoSave) {
+    		/*if (!isAutoSave) {
         		MailSend_Hidden_Progress();
-        	}
-        	
+        	}*/
         	g_saveHttp = null;
         	MailStatus = "NO";
         	isAutoSave = false;
@@ -1245,6 +1283,9 @@ function onblurOnRecipientInputField(value) {
 
 var NameCertify_onClick_returnFunction;
 function NameCertify_onClick(returnFunction) {
+	document.getElementById("MsgTo").value = removeAsciiCode(document.getElementById("MsgTo").value);
+	document.getElementById("MsgCC").value = removeAsciiCode(document.getElementById("MsgCC").value);
+	document.getElementById("MsgBCC").value = removeAsciiCode(document.getElementById("MsgBCC").value);
     if (document.getElementById("MsgTo").value == "" && document.getElementById("MsgCC").value == "" && document.getElementById("MsgBCC").value == "") {
         NameCertify_onClick_returnFunction = null;
         if(returnFunction != undefined)
@@ -1264,6 +1305,15 @@ function NameCertify_onClick(returnFunction) {
     // 20181127 조진호 - 검색 후에 검색 리스트가 계속 보이는 현상 수정
     $(".ui-autocomplete").css('display', 'none');
     return true;
+}
+
+function removeAsciiCode(str) {
+    str = str.replace(/\ufeff/g,'');                    	// BOM 제거 window에서는 보이지 않고 linux에서는 whitespace로 나타나는 문자 제거
+    return str.replace(/[\x00-\x1F\x7F]/g, '');				// remove non-printable Ascii code
+}
+
+function removeSpace(str) {
+    return str.replace(/ /g,'');
 }
 
 function GetMailTips() {
@@ -1348,88 +1398,186 @@ function GetMailAddresses(name) {
     createNodeAndInsertText(xmlDOM, objNode, "FIELD", "AddressID,SNAME,SEMAIL,STYPE");
     createNodeAndInsertText(xmlDOM, objNode, "ADDFILTER", name);
     createNodeAndInsertText(xmlDOM, objNode, "SHAREDMAILBOXSEARCH", "displayname::" + name);
-    xmlHTTP.open("POST", "/ezEmail/mailNameCheck.do", false);
+    // useShowAllCompanies config가 YES일 경우 그룹사 전체 조직도를 대상으로 검색하기 위해 company 패러메터를 빈 값으로 추가함.
+    xmlHTTP.open("POST", "/ezEmail/mailNameCheck.do?company=", false);
     xmlHTTP.send(xmlDOM);
 
     xmlDOM = loadXMLString(xmlHTTP.responseText);
-    var rows = SelectNodes(xmlDOM, "RESULT/ORGAN/ROW");
-    adCount = rows.length;
-    for (count = 0; count < rows.length; count++) {
-        if (getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[1]) == "group") {
-            m_addrBook["type"][count] = "email";
-            m_addrBook["name"][count] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[0]);
-            m_addrBook["email"][count] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[6]);
-            m_addrBook["href"][count] = "";
-            m_addrBook["company"][count] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[7]);
-            m_addrBook["dept"][count] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[4]);
-            m_addrBook["title"][count] = strLang110;
+    
+    var mailAddressSearchOrder = getNodeText(GetChildNodes(GetChildNodes(SelectNodes(xmlDOM, "RESULT/MAILADDRESSSEARCHORDER/ROW")[0])[0])[0])
+    if (mailAddressSearchOrder != "") {
+    	var mailAddressSearchOrderSplit = mailAddressSearchOrder.split(";");
+    	
+    	for (var i = 0; i < mailAddressSearchOrderSplit.length; i++) {
+    		if (mailAddressSearchOrderSplit[i] =="organ") {
+    			var rows = SelectNodes(xmlDOM, "RESULT/ORGAN/ROW");
+    			adCount = m_addrBook.name.length;
+    	        for (count = 0; count < rows.length; count++) {
+    	            if (getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[1]) == "group") {
+    	                m_addrBook["type"][count + adCount] = "email";
+    	                m_addrBook["name"][count + adCount] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[0]);
+    	                m_addrBook["email"][count + adCount] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[6]);
+    	                m_addrBook["href"][count + adCount] = "";
+    	                m_addrBook["company"][count + adCount] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[7]);
+    	                m_addrBook["dept"][count + adCount] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[4]);
+    	                m_addrBook["title"][count + adCount] = strLang110;
+    	            }
+    	            else {
+    	                m_addrBook["type"][count + adCount] = "email";
+    	                m_addrBook["name"][count + adCount] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[0]);
+    	                m_addrBook["email"][count + adCount] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[6]);
+    	                m_addrBook["href"][count + adCount] = "";
+    	                m_addrBook["company"][count + adCount] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[3]);
+    	                m_addrBook["dept"][count + adCount] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[4]);
+    	                m_addrBook["title"][count + adCount] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[5]);
+    	            }
+    	        }
+    	        
+			} else if (mailAddressSearchOrderSplit[i] == "dl") {
+				rows = SelectNodes(xmlDOM, "RESULT/DL/ROW");
+				adCount = m_addrBook.name.length;
+		        for (var count = 0 ; count < rows.length ; count++) {
+		            m_addrBook["type"][count + adCount] = "email";
+		            m_addrBook["name"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("VALUE")[0]);
+		            m_addrBook["email"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("DATA3")[0]);
+		            m_addrBook["href"][count + adCount] = "";
+		            m_addrBook["company"][count + adCount] = strLang114;
+		            m_addrBook["dept"][count + adCount] = "";
+		            m_addrBook["title"][count + adCount] = "";
+		        }
+		        
+			} else if (mailAddressSearchOrderSplit[i] == "address") {
+				var contactList = SelectNodes(xmlDOM, "RESULT/ADDRESS/ROW");
+		        var row;
+		        var idx = 0;
+		        adCount = m_addrBook.name.length;
+		        for (count = 0; count < contactList.length; count++) {
+		        	if (SelectSingleNodeValue(contactList[count], "SEMAIL") != "") {
+		        		if (SelectSingleNodeValue(contactList[count], "STYPE") == "P") {
+			                m_addrBook["type"][idx + adCount] = "email";
+			                try {
+			                    m_addrBook["name"][idx + adCount] = SelectSingleNodeValue(contactList[count], "SNAME");
+			                }
+			                catch (ex) {
+			                    m_addrBook["name"][idx + adCount] = "";
+			                }
+			                try {
+			                    m_addrBook["email"][idx + adCount] = SelectSingleNodeValue(contactList[count], "SEMAIL");
+			                }
+			                catch (ex) {
+			                    m_addrBook["email"][idx + adCount] = "";
+			                }
+			                m_addrBook["href"][idx + adCount] = "";
+			            }
+			            else {
+			                m_addrBook["type"][idx + adCount] = "mailgroup";
+			                m_addrBook["name"][idx + adCount] = SelectSingleNodeValue(contactList[count], "SNAME");
+			                m_addrBook["email"][idx + adCount] = SelectSingleNodeValue(contactList[count], "SEMAIL");
+			                m_addrBook["href"][idx + adCount] = SelectSingleNodeValue(contactList[count], "ADDRESSID") + "|!|" + SelectSingleNodeValue(contactList[count], "FOLDERTYPE");
+			            }
+			            m_addrBook["company"][idx + adCount] = SelectSingleNodeValue(contactList[count], "SCOMPANY");
+			            m_addrBook["dept"][idx + adCount] = SelectSingleNodeValue(contactList[count], "SDEPT");
+			            m_addrBook["title"][idx + adCount] = SelectSingleNodeValue(contactList[count], "STITLE");
+			            idx++;
+		        	}
+		        }
+		        adCount = m_addrBook.name.length;
+			} else if (mailAddressSearchOrderSplit[i] == "shared") {
+		        rows = SelectNodes(xmlDOM, "RESULT/SHAREDMAILBOX/ROW");
+		        adCount = m_addrBook.name.length;
+		        for (var count = 0 ; count < rows.length ; count++) {
+		            m_addrBook["type"][count + adCount] = "email";
+		            m_addrBook["name"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("VALUE")[0]);
+		            m_addrBook["email"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("DATA3")[0]);
+		            m_addrBook["href"][count + adCount] = "";
+		            m_addrBook["company"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("DATA4")[0]);
+		            m_addrBook["dept"][count + adCount] = strLangSharedMailbox01;
+		            m_addrBook["title"][count + adCount] = "";
+		        }
+			}
+    	}
+    } else {
+    	var rows = SelectNodes(xmlDOM, "RESULT/ORGAN/ROW");
+        adCount = rows.length;
+        for (count = 0; count < rows.length; count++) {
+            if (getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[1]) == "group") {
+                m_addrBook["type"][count] = "email";
+                m_addrBook["name"][count] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[0]);
+                m_addrBook["email"][count] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[6]);
+                m_addrBook["href"][count] = "";
+                m_addrBook["company"][count] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[7]);
+                m_addrBook["dept"][count] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[4]);
+                m_addrBook["title"][count] = strLang110;
+            }
+            else {
+                m_addrBook["type"][count] = "email";
+                m_addrBook["name"][count] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[0]);
+                m_addrBook["email"][count] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[6]);
+                m_addrBook["href"][count] = "";
+                m_addrBook["company"][count] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[3]);
+                m_addrBook["dept"][count] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[4]);
+                m_addrBook["title"][count] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[5]);
+            }
         }
-        else {
-            m_addrBook["type"][count] = "email";
-            m_addrBook["name"][count] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[0]);
-            m_addrBook["email"][count] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[6]);
-            m_addrBook["href"][count] = "";
-            m_addrBook["company"][count] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[3]);
-            m_addrBook["dept"][count] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[4]);
-            m_addrBook["title"][count] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[5]);
-        }
-    }
 
-    var contactList = SelectNodes(xmlDOM, "RESULT/ADDRESS/ROW");
-    var row;
-    for (count = 0; count < contactList.length; count++) {
-        if (SelectSingleNodeValue(contactList[count], "STYPE") == "P") {
-            m_addrBook["type"][count + adCount] = "email";
-            try {
+        var contactList = SelectNodes(xmlDOM, "RESULT/ADDRESS/ROW");
+        var row;
+        for (count = 0; count < contactList.length; count++) {
+            if (SelectSingleNodeValue(contactList[count], "STYPE") == "P") {
+                m_addrBook["type"][count + adCount] = "email";
+                try {
+                    m_addrBook["name"][count + adCount] = SelectSingleNodeValue(contactList[count], "SNAME");
+                }
+                catch (ex) {
+                    m_addrBook["name"][count + adCount] = "";
+                }
+                try {
+                    m_addrBook["email"][count + adCount] = SelectSingleNodeValue(contactList[count], "SEMAIL");
+                }
+                catch (ex) {
+                    m_addrBook["email"][count + adCount] = "";
+                }
+                m_addrBook["href"][count + adCount] = "";
+            }
+            else {
+                m_addrBook["type"][count + adCount] = "mailgroup";
                 m_addrBook["name"][count + adCount] = SelectSingleNodeValue(contactList[count], "SNAME");
-            }
-            catch (ex) {
-                m_addrBook["name"][count + adCount] = "";
-            }
-            try {
                 m_addrBook["email"][count + adCount] = SelectSingleNodeValue(contactList[count], "SEMAIL");
+                m_addrBook["href"][count + adCount] = SelectSingleNodeValue(contactList[count], "ADDRESSID") + "|!|" + SelectSingleNodeValue(contactList[count], "FOLDERTYPE");
             }
-            catch (ex) {
-                m_addrBook["email"][count + adCount] = "";
-            }
+            m_addrBook["company"][count + adCount] = SelectSingleNodeValue(contactList[count], "SCOMPANY");
+            m_addrBook["dept"][count + adCount] = SelectSingleNodeValue(contactList[count], "SDEPT");
+            m_addrBook["title"][count + adCount] = SelectSingleNodeValue(contactList[count], "STITLE");
+        }
+        
+        rows = SelectNodes(xmlDOM, "RESULT/DL/ROW");
+        adCount += contactList.length;
+        
+        for (count = 0 ; count < rows.length ; count++) {
+            m_addrBook["type"][count + adCount] = "email";
+            m_addrBook["name"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("VALUE")[0]);
+            m_addrBook["email"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("DATA3")[0]);
             m_addrBook["href"][count + adCount] = "";
+            m_addrBook["company"][count + adCount] = strLang114;
+            m_addrBook["dept"][count + adCount] = "";
+            m_addrBook["title"][count + adCount] = "";
         }
-        else {
-            m_addrBook["type"][count + adCount] = "mailgroup";
-            m_addrBook["name"][count + adCount] = SelectSingleNodeValue(contactList[count], "SNAME");
-            m_addrBook["email"][count + adCount] = SelectSingleNodeValue(contactList[count], "SEMAIL");
-            m_addrBook["href"][count + adCount] = SelectSingleNodeValue(contactList[count], "ADDRESSID") + "|!|" + SelectSingleNodeValue(contactList[count], "FOLDERTYPE");
+        
+        adCount += rows.length;
+        rows = SelectNodes(xmlDOM, "RESULT/SHAREDMAILBOX/ROW");
+        
+        for (count = 0 ; count < rows.length ; count++) {
+            m_addrBook["type"][count + adCount] = "email";
+            m_addrBook["name"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("VALUE")[0]);
+            m_addrBook["email"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("DATA3")[0]);
+            m_addrBook["href"][count + adCount] = "";
+            m_addrBook["company"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("DATA4")[0]);
+            m_addrBook["dept"][count + adCount] = strLangSharedMailbox01;
+            m_addrBook["title"][count + adCount] = "";
         }
-        m_addrBook["company"][count + adCount] = SelectSingleNodeValue(contactList[count], "SCOMPANY");
-        m_addrBook["dept"][count + adCount] = SelectSingleNodeValue(contactList[count], "SDEPT");
-        m_addrBook["title"][count + adCount] = SelectSingleNodeValue(contactList[count], "STITLE");
     }
     
-    rows = SelectNodes(xmlDOM, "RESULT/DL/ROW");
-    adCount += contactList.length;
     
-    for (var count = 0 ; count < rows.length ; count++) {
-        m_addrBook["type"][count + adCount] = "email";
-        m_addrBook["name"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("VALUE")[0]);
-        m_addrBook["email"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("DATA3")[0]);
-        m_addrBook["href"][count + adCount] = "";
-        m_addrBook["company"][count + adCount] = strLang114;
-        m_addrBook["dept"][count + adCount] = "";
-        m_addrBook["title"][count + adCount] = "";
-    }
-    
-    adCount += rows.length;
-    rows = SelectNodes(xmlDOM, "RESULT/SHAREDMAILBOX/ROW");
-    
-    for (var count = 0 ; count < rows.length ; count++) {
-        m_addrBook["type"][count + adCount] = "email";
-        m_addrBook["name"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("VALUE")[0]);
-        m_addrBook["email"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("DATA3")[0]);
-        m_addrBook["href"][count + adCount] = "";
-        m_addrBook["company"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("DATA4")[0]);
-        m_addrBook["dept"][count + adCount] = strLangSharedMailbox01;
-        m_addrBook["title"][count + adCount] = "";
-    }
     
     xmlDOM = null;
     xmlHTTP = null;
@@ -1442,24 +1590,34 @@ function CheckMailReceiver(newElem) {
             continue;
         if (newElem.childNodes[0].getAttribute("email") == MsgToGot.childNodes[co].childNodes[0].getAttribute("email") && MsgToGot.childNodes[co].childNodes[0].getAttribute("type") != "mailgroup")
             return true;
-        else if (newElem.childNodes[0].getAttribute("href") == MsgToGot.childNodes[co].childNodes[0].getAttribute("href") && MsgToGot.childNodes[co].childNodes[0].getAttribute("type") == "mailgroup")
-            return true;
+        else if (newElem.childNodes[0].getAttribute("href") != null && MsgToGot.childNodes[co].childNodes[0].getAttribute("type") == "mailgroup") {
+        	if (newElem.childNodes[0].getAttribute("href").split("|!|")[0] == MsgToGot.childNodes[co].childNodes[0].getAttribute("href").split("|!|")[0]) {
+        		return true;
+        	}
+        }
+        
     }
     for (co = 0; co < MsgCCGot.childNodes.length; co++) {
         if (MsgCCGot.childNodes[co].childNodes[0].nodeName == "#text")
             continue;
         if (newElem.childNodes[0].getAttribute("email") == MsgCCGot.childNodes[co].childNodes[0].getAttribute("email") && MsgCCGot.childNodes[co].childNodes[0].getAttribute("type") != "mailgroup")
             return true;
-        else if (newElem.childNodes[0].getAttribute("href") == MsgCCGot.childNodes[co].childNodes[0].getAttribute("href") && MsgCCGot.childNodes[co].childNodes[0].getAttribute("type") == "mailgroup")
-            return true;
+        else if (newElem.childNodes[0].getAttribute("href") != null && MsgCCGot.childNodes[co].childNodes[0].getAttribute("type") == "mailgroup") {
+        	if (newElem.childNodes[0].getAttribute("href").split("|!|")[0] == MsgCCGot.childNodes[co].childNodes[0].getAttribute("href").split("|!|")[0]) {
+        		return true;
+        	}
+        }
     }
     for (co = 0; co < MsgBCCGot.childNodes.length; co++) {
         if (MsgBCCGot.childNodes[co].childNodes[0].nodeName == "#text")
             continue;
         if (newElem.childNodes[0].getAttribute("email") == MsgBCCGot.childNodes[co].childNodes[0].getAttribute("email") && MsgBCCGot.childNodes[co].childNodes[0].getAttribute("type") != "mailgroup")
             return true;
-        else if (newElem.childNodes[0].getAttribute("href") == MsgBCCGot.childNodes[co].childNodes[0].getAttribute("href") && MsgBCCGot.childNodes[co].childNodes[0].getAttribute("type") == "mailgroup")
-            return true;
+        else if (newElem.childNodes[0].getAttribute("href") != null && MsgBCCGot.childNodes[co].childNodes[0].getAttribute("type") == "mailgroup") {
+        	if (newElem.childNodes[0].getAttribute("href").split("|!|")[0] == MsgBCCGot.childNodes[co].childNodes[0].getAttribute("href").split("|!|")[0]) {
+        		return true;
+        	}
+        }
     }
     return rtnValue
 }
@@ -1565,8 +1723,11 @@ function CompleteEmailAddress(formName, validDIV, iType) {
 	    }
 	    
         if (mailName.indexOf("<") > -1 && mailName.indexOf(">") > 0) {
-            var reg_email = /^[<][-A-Za-z0-9_]+[-A-Za-z0-9_.]*[@]{1}[-A-Za-z0-9_]+[-A-Za-z0-9_.]*[.]{1}[A-Za-z]{2,5}[>]$/;
             var preTag = mailName.indexOf("<");
+            var emailAddressPart = removeSpace(mailName.substring(preTag));
+            mailName = mailName.substring(0, preTag) + emailAddressPart;
+            
+            var reg_email = /^[<][-A-Za-z0-9_]+[-A-Za-z0-9_.]*[@]{1}[-A-Za-z0-9_]+[-A-Za-z0-9_.]*[.]{1}[A-Za-z]{2,5}[>]$/;
             var endTag = mailName.indexOf(">");
             var mailTagNM;
             var mailTagAddress;
@@ -1577,7 +1738,7 @@ function CompleteEmailAddress(formName, validDIV, iType) {
                 }
                 else {
                     mailTagNM = mailName.substring(preTag + 1, endTag);
-                    mailTagAddress = mailName.substring(preTag + 1, endTag);
+                    mailTagAddress = mailTagNM;
                 }
                 newElem = PrepareMailTag(iType, "email", mailTagNM, mailTagAddress, "");
                 var IsInsert = CheckMailReceiver(newElem);
@@ -1590,6 +1751,10 @@ function CompleteEmailAddress(formName, validDIV, iType) {
                 }
                 continue;
             }
+        }
+        
+        if (isEmailFormat(mailName) == true) {
+            mailName = removeSpace(mailName);
         }
         
 	    GetMailAddresses(mailName);
@@ -1922,11 +2087,12 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
 	            var filepath = SelectSingleNodeValue(AttachRows[i], "ATTACHFILEHREF");
 	            var filename = SelectSingleNodeValue(AttachRows[i], "ATTACHNAME");
 	            var filesize = SelectSingleNodeValue(AttachRows[i], "ATTACHFILESIZE");
-	            if (filesize == "0" && filepath.substring(filepath.toLowerCase().lastIndexOf(".") + 1) == "hwp") {
+	            var fileExt = getOriginalFileExtension(filepath);
+	            if (filesize == "0" && fileExt == "hwp") {
 	                filename = filename + ".hwp";
 	                filesize = strLang116;
 	            }
-	            else if ((filesize == "0" || filesize == "") && filepath.substring(filepath.toLowerCase().lastIndexOf(".") + 1) == "mht") {
+	            else if ((filesize == "0" || filesize == "") && fileExt == "mht") {
 	                filename = filename + ".mht";
 	                filesize = strLang116;
 	            }
@@ -2095,10 +2261,27 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
     }
 }
 
+function getOriginalFileExtension(filePath) {
+	var pathLength = filePath.length;
+	var lastIndexOfDot = filePath.lastIndexOf(".");
+
+	if (lastIndexOfDot < 0) {
+		return "";
+	}
+
+	var ext = trim_Cross(filePath.substr(lastIndexOfDot + 1, filePath.length).toLowerCase());
+
+	if (ext === "ezd") {
+		return getOriginalFileExtension(filePath.substr(0, lastIndexOfDot));
+	}
+
+	return ext;
+}
+
 function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType, pFont) {
 	AttachFlag = true;
     var xmlHTTP = createXMLHttpRequest();
-    xmlHTTP.open("GET", "/ezBoard/getItemInfo.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
+    xmlHTTP.open("GET", "/ezBoard/getItemInfo.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID), false);
     xmlHTTP.send("");
 
     if (xmlHTTP.status == 200) {
@@ -2126,13 +2309,14 @@ function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType, pFont) {
         if (Sender.indexOf("(,,)") > -1) Sender = Sender.split("(")[0];
 
         htmlData = ReplaceText(htmlData, "<TD class=FIELD", "<TD");
+
         if (pRetransType != "boardAttach") {
             document.getElementById("bodyValue").innerHTML = "<DIV style='LINE-HEIGHT: 15pt' ><br /><br /><DIV id='MailSign'></div><br /></DIV>" +
             	"<br><br><hr></hr><DIV style='font-family:"+ pFont + "'><B>" + strLang118 + "</B>" + PostDate + "<br><B>" + strLang119 + "</B>" + Sender +
             	"<br><B>" + strLang120 + "</B>" + MakeXMLString(eSubject.value) + "</DIV><br><br>" + htmlData;
         }
         
-        xmlHTTP.open("POST", "/ezBoard/getItemAttachmentsMail.do?itemID=" + pItemID + "&mode=" + pRetransType + "&conLocation=" + encodeURIComponent(Rurl) + "&title=" + encodeURIComponent(getNodeText(SelectNodes(ReturnXML, "NODES/NODE/Title")[0])), false);
+        xmlHTTP.open("POST", "/ezBoard/getItemAttachmentsMail.do?itemID=" + encodeURIComponent(pItemID) + "&mode=" + pRetransType + "&conLocation=" + encodeURIComponent(Rurl) + "&title=" + encodeURIComponent(getNodeText(SelectNodes(ReturnXML, "NODES/NODE/Title")[0])), false);
         xmlHTTP.send();
         var ReturnXML = loadXMLString(xmlHTTP.responseText);
         var AttachRows = SelectNodes(ReturnXML, "NODES/NODE");
@@ -2201,7 +2385,7 @@ function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType, pFont) {
 function GetBoardItemInfo_New3(pBoardID, pItemID, pFont) {
     AttachFlag = true;
     var xmlHTTP = createXMLHttpRequest();
-    xmlHTTP.open("GET", "/ezCommunity/getItemInfo.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
+    xmlHTTP.open("GET", "/ezCommunity/getItemInfo.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID), false);
     xmlHTTP.send("");
 
     if (xmlHTTP.status == 200) {
@@ -2232,7 +2416,7 @@ function GetBoardItemInfo_New3(pBoardID, pItemID, pFont) {
         	"<br><br><hr></hr><DIV style='font-family:"+ pFont + "'><B>" + strLang118 + "</B>" + PostDate + "<br><B>" + strLang119 + "</B>" + Sender +
         	"<br><B>" + strLang120 + "</B>" + eSubject.value + "<br><br></DIV>" + htmlData;
 
-        xmlHTTP.open("POST", "/ezCommunity/getItemAttachments.do?itemID=" + pItemID, false);
+        xmlHTTP.open("GET", "/ezCommunity/getItemAttachments.do?itemID=" + pItemID, false);
         xmlHTTP.send();
         var ReturnXML = loadXMLString(xmlHTTP.responseText);
         var AttachRows = SelectNodes(ReturnXML, "NODES/NODE");
@@ -2350,7 +2534,8 @@ function ConvertEmbedImagToXml(xmlDoc, rootNode) {
 
     var imgColl = tempDiv.getElementsByTagName("IMG");
     for (var i = 0; i < imgColl.length; i++) {
-        if (imgColl.item(i).src.toLowerCase().indexOf("upload_common") > 0 || imgColl.item(i).src.toLowerCase().indexOf("mailsignimage") > 0) {
+        if (imgColl.item(i).src.toLowerCase().indexOf("upload_common") > 0 || imgColl.item(i).src.toLowerCase().indexOf("mailsignimage") > 0
+        	|| imgColl.item(i).src.toLowerCase().indexOf("letterboxupload") > 0 ) {
             var imagePath = imgColl.item(i).src;            
         	var srcValue = imgColl.item(i).getAttribute("src");
 
@@ -2484,7 +2669,10 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
         xmlhttp.send();
         var pAttachXml = loadXMLString(xmlhttp.responseText);
         var nodes = SelectNodes(pAttachXml, "ROOT/NODES/NODE");
+        var bigAttachFileArr = [];
 
+        //대용량 첨부 파일 순서를 첨부영역과 동일한 순서가 되도록 수정. 2020-03-18 홍대표.
+        nodes = setBigFileAttachOrder(nodes);
 
         for (var i = 0 ; i < nodes.length ; i++) {
             if (getNodeText(GetChildNodes(nodes[i])[5]) == "Y") {
@@ -2526,17 +2714,28 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
                                 "<a href='" + EmailHref + "' " + strTarget + " style='color:#333333; text-decoration: none;'><img src='" + document.location.protocol + "//" + g_servername + "/images/icon_adddownload.gif' width='16' height='16'  style='margin-right:8px; cursor:pointer;vertical-align:middle' border='0'/></a>" +
                                 "<a id='BigSizeFileLink' href='" + EmailHref + "' " + strTarget + " style='color:#333333; text-decoration: none;font-size:12px;'>" + FileName + " (" + fileSize + ")</a></td>" +
                                 "</tr>";
+                    
+                    bigAttachFileArr.push(getNodeText(GetChildNodes(nodes[i])[0]).substr(0, 36));
                 }
             }
         }
+        
+        // 대용량첨부 파일 다운로드 횟수제한 메시지 추가 및 대용량 첨부영역 넓이 수정. 2020-03-10 홍대표.
         TempText += "<tr>" +
-                    "<td width='75%' style='font-size:11px; font-weight:normal; color:#666666; padding-left:10px; margin:0px; border-bottom:1px solid #dadada;border-left:1px solid #dadada; background:#f6f6f6; height:25px; line-height:25px;'>" +
+                    "<td width='50%' style='font-size:11px; font-weight:normal; color:#666666; padding-left:10px; margin:0px; border-bottom:1px solid #dadada;border-left:1px solid #dadada; background:#f6f6f6; height:25px; line-height:25px;'>" +
                     strLang246 + "<span style='color:#FF0000 ;'>" + _pBigAttachDownloadPeriod + "</span></td>" +
-                    "<td width='30%' align='right' style='font-size:11px; font-weight:normal; color:#666666; padding-right:10px; margin:0px; border-bottom:1px solid #dadada;border-right:1px solid #dadada; background:#f6f6f6; height:25px; line-height:25px;'>" +
-	                strLang247 + "<span style='color:#FF0000 ;'>" + _pBigAttachDownloadDay + strLang248 + "</span>" + strLang249 + "</div>	</td>" +
-                    "</tr></table></div>";
+                    "<td width='50%' align='right' style='font-size:11px; font-weight:normal; color:#666666; padding-right:10px; margin:0px; border-bottom:1px solid #dadada;border-right:1px solid #dadada; background:#f6f6f6; height:25px; line-height:25px;'>" +
+	                strLang247 + "<span style='color:#FF0000 ;'>" + _pBigAttachDownloadDay + strLang248 + "</span>" + strLang249;
+        
+        if(BigSizeAttachDownloadLimitCount > 0) {
+        	TempText += " / <span style='color:#FF0000 ;'>" + BigSizeAttachDownloadLimitCount + strLangHDP01 + "</span> " + strLangHDP02;
+        }
+        
+        TempText += "</div></td></tr></table></div>";
 
         tempDiv.innerHTML = TempText + tempDiv.innerHTML;
+        
+        setBigAttachCountInfo(bigAttachFileArr);
     }
 
     var imgColl = tempDiv.getElementsByTagName("IMG");
@@ -3095,16 +3294,19 @@ function NameChange_onClick() {
     rgParams["g_EditNameDialog"] = "";
 
     if (this != null) {
-        GetMailAddresses(TrimText(ReplaceText((event.target ? event.target : event.srcElement).textContent, ";", "")));
+    	var eventElement = (event.target ? event.target : event.srcElement);
+    	var name = eventElement.parentElement.getAttribute("name");
+    	
+        GetMailAddresses(name);
         rgParams["addrBook"] = m_addrBook;
-        rgParams["g_DisplayName"] = TrimText(ReplaceText((event.target ? event.target : event.srcElement).textContent, ";", ""));
-        rgParams["g_EmailAddress"] = (event.target ? event.target : event.srcElement).getAttribute("email");
+        rgParams["g_DisplayName"] = name;
+        rgParams["g_EmailAddress"] = eventElement.getAttribute("email");
         rgParams["cmd"] = "JustThis";
         checkname_cross_dialogArguments = new Array();
         checkname_cross_dialogArguments[0] = rgParams;
         checkname_cross_dialogArguments[1] = NameChange_onClick_Complete;
         checkname_cross_dialogArguments[2] = DivPopUpHidden;
-        checkname_cross_dialogArguments[3] = (event.target ? event.target : event.srcElement).parentElement;
+        checkname_cross_dialogArguments[3] = eventElement.parentElement;
         
         if (!CrossYN()) {
             EzHTTPTrans.style.display = "none";
@@ -3220,10 +3422,38 @@ function GetAddrFormatForSend(receiveCol) {
         }
     }
 
-    if (ReplaceText(retAddr, " ", "") != "")
-        return retAddr.substr(0, retAddr.length - 2);
-    else
+    if (ReplaceText(retAddr, " ", "") != "") {
+        retAddr = retAddr.substr(0, retAddr.length - 2);
+        
+        if (gInvalidAddressArr != null) {
+            var retAddrArr = retAddr.split(", ");
+            var newRetAddr = "";
+        
+            for (var i = 0; i < retAddrArr.length; i++) {
+                var addr = retAddrArr[i];
+                var isInvalidAddr = false;
+                
+                for (var j = 0; j < gInvalidAddressArr.length; j++) {            
+                    if (addr.indexOf("<" + gInvalidAddressArr[j] + ">") > -1) {
+                        isInvalidAddr = true;
+                        break;
+                    }
+                }
+                
+                if (!isInvalidAddr) {
+                    if (addr != "") {
+                        newRetAddr += addr + ", ";
+                    }
+                }
+            }
+            
+            retAddr = newRetAddr;
+        }
+        
+        return retAddr;
+    } else {
         return "";
+    }
 }
 function GetAddrFormatEmail(receiveCol, ptype) {
     var retAddr = "";
@@ -3280,6 +3510,34 @@ function GetGroupEmail(pAddressId) {
 function PrepareMailTag(iWhich, type, name, email, href) {
     var TopSpan = document.createElement("span");
     var newElem = document.createElement("span");
+    // 앞 뒤로 따옴표 제거
+    name = name.replace(/^["']/, "").replace(/["']$/, "");
+    email = email.replace(/^["']/, "").replace(/["']$/, "");
+    
+    // 수신인 추가 정보 (부서 이름 또는 이메일 주소)
+    if (g_useAdditionalInfo) {
+    	$.ajax({
+    		type	: "GET",
+    		data	: {email: email},
+    		contentType : "application/json;charset=utf-8",
+    		url		: "/ezEmail/mailGetUserAdditionalInfo.do",
+    		async	: true,
+    		success	: function(additionalInfo) {
+    			var targetElem = document.querySelector("#infoTable span[itype='" + iWhich + "'][email='" + email + "']");
+    			
+    			if (type == "mailgroup") {
+    				newElem.innerHTML = "<u title=\"" + strLang126 + "\" alt=\"" + strLang126 + "\" >" + name + additionalInfo + "</u>; ";
+    				newElem.parentElement.innerHTML += "<img src='/images/icon/oneline_delete.gif' onclick='deleteMailUser(\"" + type + "\",\"" + iWhich + "\",\"" + href + "\")' style='width:10px;height:10px;cursor:pointer;'/>";
+    			} else {
+    				newElem.innerHTML = "<u title=\"" + email + "\" alt=\"" + email + "\" >" + name + additionalInfo + "</u>; ";
+    				newElem.parentElement.innerHTML += "<img src='/images/icon/oneline_delete.gif' onclick='deleteMailUser(\"" + email + "\",\"" + iWhich + "\")' style='width:10px;height:10px;cursor:pointer;'/>";
+    			}
+    		},
+    		error	: function(error) {
+    			console.log(error);
+    		}
+    	});
+    }
     
     newElem.style.cursor = "pointer";
     newElem.setAttribute("iType", iWhich); //newElem.getAttribute("iType") = iWhich;
@@ -3292,10 +3550,13 @@ function PrepareMailTag(iWhich, type, name, email, href) {
     	newElem.setAttribute("href", href);
     	newElem.style.fontWeight = "bold";
         newElem.style.color = inMailColor;
-        newElem.innerHTML = "<u title=\"" + strLang126 + "\" alt=\"" + strLang126 + "\" >" + name + "</u>; ";
         
         TopSpan.appendChild(newElem);
-        TopSpan.innerHTML += "<img src='/images/icon/oneline_delete.gif' onclick='deleteMailUser(\"" + type + "\",\"" + iWhich + "\",\"" + href + "\")' style='width:10px;height:10px;cursor:pointer;'/>";
+        
+        if (!g_useAdditionalInfo) {
+        	newElem.innerHTML = "<u title=\"" + strLang126 + "\" alt=\"" + strLang126 + "\" >" + name + "</u>; ";
+        	TopSpan.innerHTML += "<img src='/images/icon/oneline_delete.gif' onclick='deleteMailUser(\"" + type + "\",\"" + iWhich + "\",\"" + href + "\")' style='width:10px;height:10px;cursor:pointer;'/>";
+        }
     } else {
     	var innerDomainList = InnerDomain.toLowerCase().split(';');
     	var emailDomain = email.split('@')[1].toLowerCase();
@@ -3314,10 +3575,13 @@ function PrepareMailTag(iWhich, type, name, email, href) {
     		newElem.style.color = outMailColor;
     	}
         
-        newElem.innerHTML = "<u title=\"" + email + "\" alt=\"" + email + "\" >" + name + "</u>; ";
         
         TopSpan.appendChild(newElem);
-        TopSpan.innerHTML += "<img src='/images/icon/oneline_delete.gif' onclick='deleteMailUser(\"" + email + "\",\"" + iWhich + "\")' style='width:10px;height:10px;cursor:pointer;'/>";
+        
+        if (!g_useAdditionalInfo) {
+        	newElem.innerHTML = "<u title=\"" + email + "\" alt=\"" + email + "\" >" + name + "</u>; ";
+        	TopSpan.innerHTML += "<img src='/images/icon/oneline_delete.gif' onclick='deleteMailUser(\"" + email + "\",\"" + iWhich + "\")' style='width:10px;height:10px;cursor:pointer;'/>";
+        }
     }
 
     return TopSpan;
@@ -4046,4 +4310,72 @@ function decreaseReceiverCount(pType, pHref) {
 	} else {
 		receiverCount -= 1;
 	}
+}
+
+function preMailRead(Href) {
+	if(event_SaveonClick.savemode != 'preview' && !previewChk) {return; }
+
+    var pheight = window.screen.availHeight;
+    var conHeight = pheight * 0.8;
+    var pwidth = window.screen.availWidth;
+    var conWidth = pwidth * 0.8;
+    if (conWidth > 890)
+        conWidth = 890;
+    var pTop = (pheight - conHeight) / 2;
+    var pLeft = (pwidth - 890) / 2;
+    var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+    
+	var pURI = "/ezEmail/mailRead.do?iptURL=" + encodeURIComponent(Href) + "&PNFlag=Y&CONTENTCLASS=PREVIEW";
+    
+    if (typeof(shareId) != "undefined" && shareId != "") {
+    	pURI += "&shareId=" + encodeURIComponent(shareId);
+    }
+    
+    ReadMailOpenNewWin = window.open(pURI, "ReadMailOpenNewWin", feature);
+    
+    if (ReadMailOpenNewWin != null) {
+    	window.ReadMailOpenNewWin.focus();
+    }
+}
+
+function setBigFileAttachOrder(nodes) {
+	var tempBigAttachArr = dadiframe.document.querySelectorAll("#lstAttachLink tr[_big='Y']");
+	var tempNodes = [];
+	
+	for (var i = 0; i < nodes.length; i++) {
+		var pUploadSN = getNodeText(GetChildNodes(nodes[i])[0]);
+		for (var j = 0; j < tempBigAttachArr.length; j++) {
+			if (pUploadSN == tempBigAttachArr[j].getAttribute("value")) {
+				tempNodes[j] = nodes[i];
+			}
+		}
+	}
+	
+	return tempNodes;
+}
+
+function callMoveAttachFileOrder() {
+    var tmpFileList = dadiframe.document.querySelectorAll("#filelist tr[_fileindex]");
+    if(tmpFileList.length > 0) {
+    	dadiframe.moveAttachFileOrder(tmpFileList);
+    }
+}
+
+function setBigAttachCountInfo (bigAttachArr) {
+	$.ajax({
+		type	: "POST",
+		data	: {
+			bigAttach : bigAttachArr,
+			BigSizeAttachDownloadLimitCount : BigSizeAttachDownloadLimitCount
+		},
+		dataType: "text",
+		url		: "/ezEmail/setBigAttachCountInfo.do",
+		async	: true,
+		success	: function(res) {
+//			alert("setBigAttachCountInfo success");
+		},
+		error	: function(error) {
+			console.log(error);
+		}
+	});
 }

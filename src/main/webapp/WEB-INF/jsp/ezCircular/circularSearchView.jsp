@@ -38,7 +38,9 @@
             //2018-07-17 김보미 - 프로그래스바
             var startTime = "";
             var endTime = "";
+            var listHeader = "<c:out value='${listHeader}'/>";
             var isSearchPage = true;
+            var g_bPrevShow = false; // 회람판 검색메뉴에는 미리보기 없음
 		    
 		    document.onselectstart = function () { return false; };
 		    
@@ -55,7 +57,7 @@
 
 		        var height = parseInt(document.documentElement.clientHeight - 234);
 		        document.getElementById("divList").style.height = height + "px";
-		        getSearchList_after(loadXMLString("${listHeader}"));
+		        getSearchList_after(loadXMLString(ReplaceText(ReplaceText(listHeader, "&lt;", "<"), "&gt;", ">")));
 		    }
 		    
 		    window.onresize = function () {
@@ -69,7 +71,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        $("#Edatepicker").datepicker({
@@ -77,7 +79,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        var SDate;
@@ -595,7 +597,7 @@
 		          			<option value="writer"><spring:message code='ezCircular.t166' /></option>
 		        		</select>
 		        		<input type="text" id="keyword" size="21" onkeypress="return search_keypress(event)" style="height:22px" /> 
-		        		<a href="#" class="imgbtn imgbck"><span onClick="search('new')"><spring:message code='ezCircular.t85' /></span></a>
+		        		<a class="imgbtn imgbck"><span onClick="search('new')"><spring:message code='ezCircular.t85' /></span></a>
 		        	</td> 
 		    	</tr> 
 		    	<tr> 

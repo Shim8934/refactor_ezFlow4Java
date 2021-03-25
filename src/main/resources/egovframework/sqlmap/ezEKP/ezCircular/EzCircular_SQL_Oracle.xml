@@ -254,7 +254,8 @@
 				B.updateStatus,
 				B.commentStatus,
 				B.shareStatus,
-				A.companyId
+				A.companyId,
+				(SELECT extensionattribute2 FROM TBL_USERMASTER F WHERE A.memberid = F.cn AND A.tenantid = F.tenant_id) as userImageFile
             FROM
                 TBL_CIRCULAR A
 			JOIN
@@ -451,7 +452,7 @@
 				A.memberid,
 				CC.company,
     			CC.description,
-    			CC.title,
+    			NVL(CC.title, ' ') as title,
 				A.membername,
 				CC.mail
 			FROM
@@ -559,7 +560,7 @@
 				WHERE
 					BB.status = 1
 				AND
-					BB.tenantid = 0
+					BB.tenantid = #TENANTID#
 				GROUP BY
 					BB.circularid) C
 			ON
@@ -577,7 +578,7 @@
 				AND
 					AA.tenantid = BB.tenantid
 				WHERE
-					BB.tenantid = 0
+					BB.tenantid = #TENANTID#
 				GROUP BY
 					BB.circularid) D
 			ON
@@ -1005,7 +1006,7 @@
 				WHERE
 					BB.status = 1
 				AND
-					BB.tenantid = #tenandID#
+					BB.tenantid = #tenantID#
 				GROUP BY
 					BB.circularid) C
 			ON
@@ -2149,7 +2150,8 @@
                 importance = #importance#,
                 "option" = #option#,
                 "content" = #content#,
-                hasfile = #hasFile#
+                hasfile = #hasFile#,
+				regdate = #regDate#
             WHERE 
                 circularid = #circularID#
             AND
