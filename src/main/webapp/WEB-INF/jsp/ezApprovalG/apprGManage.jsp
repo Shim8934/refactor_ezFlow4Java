@@ -389,6 +389,8 @@
 		    				},
 		    		success: function(text){
 			            //alert("<spring:message code='ezPersonal.tt16'/>");
+			            // 2021-03-25 김민성 - 부재자 설정 해제시 부재자 정보 초기화
+			            arr_userinfo[7] = "";
 		    		},
 		    		error: function(){
 			            //alert("<spring:message code='ezPersonal.tt14'/>");
