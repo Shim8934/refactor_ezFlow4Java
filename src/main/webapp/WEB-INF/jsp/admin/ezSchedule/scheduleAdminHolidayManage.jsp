@@ -574,6 +574,7 @@
 		    		type : "GET",
 		    		dataType : "json",
 		    		async : true,
+		    		cache : false,
 		    		url : "/ezSchedule/scheduleGetHolidayJsonYear.do",
 		    		data : {
 		    			COMPANYID  : COMPANYID,		    			
