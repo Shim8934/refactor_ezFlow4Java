@@ -2256,4 +2256,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
         logger.debug("insertChartPortletInfo poertletId=" + portletId + " ended");
     }
+
+	@Override
+	public void createJmochaMailboxProgress() throws Exception {
+		ezCommonDAO.createMailboxProgressTable();
+	}
 }

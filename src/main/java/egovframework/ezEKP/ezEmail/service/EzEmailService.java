@@ -171,4 +171,9 @@ public interface EzEmailService {
 	public void deleteBigAttachCountInfo(File[] fileList, int tenantId) throws Exception;
 	public void deleteBigAttachCountInfo(String[] fileIdArr, int tenantId) throws Exception;
 	public int deleteMailDeleteForUser(String pUserEmail) throws Exception;
+
+	public void setMailboxProgress(String userKey, String userId, String action, int tenantId, int percent) throws Exception;
+	public int updateMailboxProgress(String userKey, int percent) throws Exception;
+	public int getMailboxProgress(String userKey) throws Exception;
+	public int delMailboxProgress(String userKey) throws Exception;
 }

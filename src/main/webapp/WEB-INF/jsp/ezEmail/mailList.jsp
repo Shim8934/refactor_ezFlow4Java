@@ -86,7 +86,7 @@
 		    var pUse_Editor = "${useEditor}";
 		    var pNoneActiveX = "YES";
 		    var webSocket =  null;
-		    var userkey = "";
+		    var socketUserkey = "";
 		    var pclose = "close";
 		    var protocol = window.location.protocol;
 		    var host = defineHost(protocol) + window.location.host + '/websocket/${userId}';
@@ -763,7 +763,7 @@
 		        	var obj = JSON.parse(message.data);
 		        	
 		        	if (obj.status == "transferStart") {
-		            	userkey = obj.userkey;
+		        		socketUserkey = obj.userkey;
 			            ShowMailProgressNew();
 			            ShowPercent(0);
 			            
@@ -773,21 +773,19 @@
 			            	requestUrl += "?shareId=" + encodeURIComponent(shareId);
 				    	}
 			            
+			            mailboxProgressFun(true, socketUserkey); // progress percent
+			            
 						$.ajax({
 							type : "POST",
 							dataType : "text",
 							async : true,
 							url : requestUrl,
-							data : { folderPath : "<c:out value='${url}'/>", userkey : userkey},
+							data : { folderPath : "<c:out value='${url}'/>", userkey : socketUserkey},
 							success : function(result) {
 								if (result == "") {
 									alert("<spring:message code='ezEmail.lhm33' />");
-									webSocket.close();
-					            	HiddenMailProgressNew();
 								} else if (result == "CANCEL") {
 									console.log('User Cancel');
-									webSocket.close();
-					            	HiddenMailProgressNew();
 								} else {
 									
 									if (useEncryptZipForEmail == 'YES' && encryptPw != ""){
@@ -797,7 +795,7 @@
 									var fullpath = "/ezEmail/downloadMailboxZip.do?folderName="
 											+ encodeURIComponent("<c:out value='${folderName}'/>")
 											+ "&temp=" + result + "&encryptPw=" + encodeURIComponent(encryptPw)
-											+ "&userkey=" + encodeURIComponent(userkey);
+											+ "&userkey=" + encodeURIComponent(socketUserkey);
 									
 									if (typeof(shareId) != "undefined" && shareId != "") {
 										fullpath += "&shareId=" + encodeURIComponent(shareId);
@@ -807,10 +805,14 @@
 									AttachDownFrame.target = "_blank";
 					          
 								}
+							}, complete : function() {
+				            	webSocket.close();
+				            	HiddenMailProgressNew();
+					            mailboxProgressFun(false); // progress percent
 							}
 						});
 						
-		            } else if (obj.status == 'progress') {
+		            } /* else if (obj.status == 'progress') {
 		            	
 		            	if (obj.percent <= 100) {
 			            	ShowPercent(obj.percent);
@@ -819,7 +821,7 @@
 		            } else if (obj.status == 'end') {
 		            	webSocket.close();
 		            	HiddenMailProgressNew();
-		            }
+		            } */
 		        };
 		        
 		        // 웹소켓 연결 해제시 실행 되는 함수
@@ -889,11 +891,13 @@
 		            }
 		            
 		        	if (obj.status == "transferStart") {
-		            	userkey = obj.userkey;
+		        		socketUserkey = obj.userkey;
+			            mailboxProgressFun(true, socketUserkey);
+		            	
 			            var frm = document.getElementById("importMailboxform");
 			            var requestUrl = "/ezEmail/mailboxImportZip.do?folderPath="
 							+ encodeURIComponent("<c:out value='${url}'/>") 
-							+ "&userkey=" + encodeURIComponent(userkey)
+							+ "&userkey=" + encodeURIComponent(socketUserkey)
 							+ "&encryptPw=" + encodeURIComponent(encryptPw)
 							+ "&tempId=" + encodeURIComponent(path);
 				        
@@ -904,11 +908,11 @@
 						frm.action = requestUrl;
 						frm.submit();
 						
-		            } else if (obj.status == 'progress') {
+		            } /* else if (obj.status == 'progress') {
 		            	if (obj.percent <= 100) {
 			            	ShowPercent(obj.percent);
 		            	}
-		            } 
+		            }  */
        
 		        };
 		        
@@ -927,7 +931,7 @@
 	        function sendMessage(data) {
 	        	var sendObj = {};
 	            sendObj.status = encodeURIComponent(data);
-	            sendObj.userkey = encodeURIComponent(userkey);
+	            sendObj.userkey = encodeURIComponent(socketUserkey);
 	            
 	            var json = JSON.stringify(sendObj);
 	            webSocket.send(json);
@@ -938,6 +942,7 @@
 
 	        	webSocket.close();
 				HiddenMailProgressNew();
+				mailboxProgressFun(false);
 				
 				if (result == "NOTSUPPORT"){ // 암호화된 파일 지원하지 않음
 					alert("<spring:message code='ezEmail.kyj08' />");
@@ -1108,6 +1113,7 @@
 
 			function cancleProgress(){
 	        	HiddenMailProgressNew();
+	        	mailboxProgressFun(false);
 	        	webSocket.close();
 	        	location.reload();
 			}
@@ -1268,6 +1274,56 @@
 				$("#Edatepicker").datepicker('setDate', today);
 				changeLangeEvent();
 			}
+			
+			var pgSetTimeout;
+		    var pgSetTime = 2000;
+		    var psSetTimeFlag = false;
+		    function mailboxProgressFun(act, userKey) { // mailboxProgress start or stop
+		    	psSetTimeFlag = act;
+		    	if (act) {
+		    		mailboxProgress(userKey);
+		    	} else {
+		    		clearTimeout(pgSetTimeout);
+		    		mailboxProgressDel(socketUserkey);
+		    	}
+		    }
+		    
+		    function mailboxProgress(userKey) { // get mailbox Export or Import progress
+		    	var uk = userKey;
+		    	
+		    	pgSetTimeout = setTimeout(function getMailboxProgress() {
+		    		if (!psSetTimeFlag) { return; }
+		    		
+		    		$.ajax({
+		    			type : "POST",
+		    			url : "/ezEmail/getMailboxProgress.do",
+		    			data : {"userKey" : uk},
+						dataType : "json", 
+		    			async : true,
+		    			success : function(data) {
+		    				var pg = data.progress;
+		    				
+		    				if (pg > -1 && pg <= 100) {
+		    					ShowPercent(pg);
+		    				}
+	    					if (pg < 100) { 
+	    						setTimeout(getMailboxProgress(), pgSetTime); 
+	    					}
+		    			}, error : function(e) {
+		    				alert("error. " + e.status);
+		    			}
+		    		});
+		    	}, pgSetTime)
+		    }
+		    
+		    function mailboxProgressDel(userKey) {
+		    	$.ajax({
+		    		type : "POST",
+	    			url : "/ezEmail/delMailboxProgress.do",
+	    			data : {"userKey" : userKey}
+		    	});
+		    }
+		    
 		</script>	
 	</head>
 	<body style="overflow:hidden;margin-bottom:0px;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);"  onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">

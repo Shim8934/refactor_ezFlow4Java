@@ -3380,4 +3380,25 @@
 			"COMPANYID" VARCHAR2(160)
 		)
 	</statement>
+	
+	<select id="EzCommonDAO.checkJmochaMailboxProgress">
+		SELECT
+			TENANT_ID
+		FROM
+			JMOCHA_MAILBOX_PROGRESS
+		WHERE
+			rownum = 1
+	</select>
+	
+	<statement id="EzCommonDAO.createJmochaMailboxProgress"> 
+		CREATE TABLE jmocha_mailbox_progress (
+		  USER_KEY NVARCHAR2(80) NOT NULL,
+		  TENANT_ID NUMBER(5,0) NOT NULL,
+		  USER_ID NVARCHAR2(80) NOT NULL,
+		  ACT NVARCHAR2(15) NOT NULL,
+		  PERCENT NUMBER(5,0) NOT NULL,
+		  UPDATEDT DATE DEFAULT SYSDATE,
+		  PRIMARY KEY (USER_KEY, TENANT_ID)
+		)
+	</statement>
 </sqlMap>
