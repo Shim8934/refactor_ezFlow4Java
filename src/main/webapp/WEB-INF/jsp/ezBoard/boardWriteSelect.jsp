@@ -206,7 +206,9 @@
 			
 			function TopBoard_onclick(obj, ID, items)
 			{
-			    var rootBoardID = "{" +ID+ "}";
+				//서한별 게시판아이디 그대로쓰도록 수정
+			    //var rootBoardID = "{" +ID+ "}";
+			    var rootBoardID =  ID;
 			    var num = obj.split("TreeCtrl");
 			
 			    if (document.getElementById(obj).style.display != "none") {
@@ -255,7 +257,8 @@
 				for(i=0;i<xmldomNodes.length;i++)
 				{
 				    var tid = SelectSingleNodeValue(xmldomNodes[i], "DATA1");
-				    tid= tid.substring(1,37);
+				  //서한별 게시판아이디 자르지않도록수정
+				   // tid= tid.substring(1,37);
 				    
 				    if (i == 0) {
 						strHTML += "<tr><td><h2 style='border-top:0px' id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl"+i.toString()+"\" ,\""+ tid + "\""+", \"" + items + "\"" + ")' style='cursor:pointer'><span class='groupBoard'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</span></h2></td></tr>";
