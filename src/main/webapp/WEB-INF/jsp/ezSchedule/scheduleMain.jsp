@@ -112,6 +112,7 @@
 		    		type : "GET",
 		    		dataType : "text",
 		    		async : true,
+		    		cache : false,
 		    		url : "/ezSchedule/scheduleGetHoliday.do",
 		    		data : {
 		    			COMPANYID  : "VIEW"		    			
