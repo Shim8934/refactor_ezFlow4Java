@@ -131,7 +131,7 @@
 			}
 				
 			if (functionType == "insert" && fileId == 0) {
-				newName = ReplaceText(newName, " ", "");
+// 				newName = ReplaceText(newName, " ", "");
 	            
 				if (newName == "") {
 	                alert('<spring:message code='ezWebFolder.t314'/>');
