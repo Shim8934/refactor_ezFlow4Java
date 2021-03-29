@@ -5612,10 +5612,15 @@ public class EzEmailUtil {
 			if (useExternalMailServer.equalsIgnoreCase("YES")) { // 외부메일 사용 시 
 				String externalMailServerAddr = ezCommonService.getTenantConfig("useExternalMailServerAddress", tenantId);
 				String externalMailServerAuth = ezCommonService.getTenantConfig("useExternalMailServerAuth", tenantId);
-				logger.debug("externalMailServerAddr=" + externalMailServerAddr + ", externalMailServerAuth=" + externalMailServerAuth);
+				String externalMailServerPort = ezCommonService.getTenantConfig("useExternalMailServerPort", tenantId);
+				logger.debug("externalMailServerAddr=" + externalMailServerAddr + ", externalMailServerAuth=" + externalMailServerAuth + ", externalMailServerPort=" + externalMailServerPort);
 				
 				if (!externalMailServerAddr.equals("") && !externalMailServerAddr.equals("0.0.0.0")) {
 					smtpMailServer = externalMailServerAddr;
+					
+					if (!smtpMailServerPort.trim().equals("")) { // external mail SMTP port.
+						smtpMailServerPort = externalMailServerPort;
+					}
 					
 					if (externalMailServerAuth.equalsIgnoreCase("YES")) { // 인증여부
 						String externalMailServerUserId = ezCommonService.getTenantConfig("useExternalMailServerUserId", tenantId);
