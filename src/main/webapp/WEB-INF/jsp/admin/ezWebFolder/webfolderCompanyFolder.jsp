@@ -110,7 +110,7 @@
 				} else {
 					spanFolderName.textContent = primary == "1" ? list["folderName"] : list["folderName2"];
 				}
-				spanFolderName.setAttribute("class", "spanName");
+				spanFolderName.setAttribute("class", "spanName3");
 				spanFolderName.setAttribute("name", list["folderId"]);
 				spanFolderName.setAttribute("level", list["folderLevel"]);
 				spanFolderName.setAttribute("fldName1", list["folderName"]);
