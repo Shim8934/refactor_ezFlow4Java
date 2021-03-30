@@ -753,4 +753,7 @@ public interface EzApprovalGService {
 	public String getAttachFileMinSaveDate(String docID, String companyID, int tenantID) throws Exception;
 	 
 	public Map<String, Object> getDocProcessState(String docID, String orgDocID, LoginVO userInfo) throws Exception;
+
+	// 정주환 수신처 스케쥴러
+	public void doSusinSchedule() throws Exception;
 }

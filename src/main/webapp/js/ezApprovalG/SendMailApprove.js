@@ -468,6 +468,8 @@ function receiverIDList(preceiveDeptID) {
 }
 
 function SendMailToReceiveDept_Approv() {
+	// 정주환 #70971 부서 메일 발송 서비스로 변경
+	return;
     var pwriterID = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[13]));
     var Drafter = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[14]));
     var pstartdate = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[11]));

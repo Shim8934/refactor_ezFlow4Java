@@ -7163,6 +7163,31 @@
 	     		 COMPANYID = #companyID#	     		 
 	</select>
 	
+	<select id="EzApprovalG.doSendDocReceiptInfo2" parameterClass="Map" resultClass="ApprGReceiptVO">
+		SELECT 
+				 RECEIPTPOINTID ,
+	             RECEIPTPOINTNAME ,
+	             RECEIPTPOINTNAME2 ,
+	             RECEIPTMEMBERID ,
+	             RECEIPTMEMBERNAME ,
+	             RECEIPTMEMBERNAME2 ,
+	             RECEIPTMEMBERJOBTITLE ,
+	             RECEIPTMEMBERJOBTITLE2 ,
+	             EXTRECEPTEMAIL 
+	     FROM 
+	     		 TBL_ENDRECEIPTPOINTINFO 
+	     WHERE  
+	     		 DOCID = #v_DOCID#
+	     AND 
+	     		 PROCESSSN = 1
+	     AND 
+	     	     EXTRECEPTYN = 'N'
+	     AND
+	     		 TENANT_ID = #v_TENANTID#
+	     AND
+	     		 COMPANYID = #companyID#
+	</select>
+	
 <!-- 	<procedure id="EzApprovalG.doSendDocAprDocInfo" parameterClass="Map" resultClass="ApprGDocListVO"> -->
 <!-- 		{CALL EZSP_DOSENDDOC_APRDOCINFO(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
@@ -7178,6 +7203,20 @@
        		 DOCID = #v_DOCID#
        AND
        		 COMPANYID= #companyID#       		 
+	</select>
+
+	<select id="EzApprovalG.doSendDocAprDocInfo2" parameterClass="Map" resultClass="ApprGDocListVO">
+	   SELECT 
+	 		 ORGDOCID ,
+             DOCSTATE 
+       FROM 
+       		 TBL_ENDAPRDOCINFO 
+       WHERE  
+       		 TENANT_ID = #v_TENANTID#
+       AND
+       		 DOCID = #v_DOCID#
+       AND
+       		 COMPANYID= #companyID#
 	</select>
 <!-- 	<procedure id="EzApprovalG.doSendDocReceiptGroupSub" parameterClass="Map" resultClass="ApprGReceiptVO"> -->
 <!-- 		{CALL EZSP_DOSENDDOC_RECEIPTGROUPSUB(#v_MAINID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -26309,6 +26348,22 @@
 		 	COMPANYID = #companyID#)
    	</insert>
    	
+   	<insert id="EzApprovalG.insertDoSendAprDocInfo2" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_APRDOCINFO 
+   		(    DocID,     FormID, OrgDocID,     DocType, DocState,      FunctionType,    Href,    DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, EndDate, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID) 
+   		(SELECT 
+   			#v_NEWID#, FormID, #v_orgDocID#, DocType, #v_DocState#, #v_FunctionType#, #v_URL#, DocTitle,   DocNo, HasAttachYN, HasOpinionYN,         NULL,     NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID
+   		 FROM 
+   		 	TBL_ENDAPRDOCINFO A 
+   		 WHERE 
+   		 	DOCID = #v_DOCID#
+		 AND 
+		 	TENANT_ID = #v_TENANTID#
+		 AND
+		 	COMPANYID = #companyID#)
+   	</insert>
+   	
    	<insert id="EzApprovalG.insertDoSendExpAprDocInfo" parameterClass="Map">
    	     INSERT INTO 
    	     		TBL_EXPAPRDOCINFO 
@@ -26325,6 +26380,22 @@
 		     	COMPANYID = #companyID#)
    	</insert>
    		
+   	<insert id="EzApprovalG.insertDoSendExpAprDocInfo2" parameterClass="Map">
+   	     INSERT INTO 
+   	     		TBL_EXPAPRDOCINFO 
+   	     (      DocID,      SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID, FORMVERSION)
+         (SELECT 
+         		#v_NEWID#, SecurityCode, storagePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID, FORMVERSION
+          FROM 
+          	TBL_EXPENDAPRDOCINFO A 
+          WHERE 
+          	DOCID = #v_DOCID#
+		  AND 
+		 	TENANT_ID = #v_TENANTID#
+		  AND
+		 	COMPANYID = #companyID#)
+   	</insert>
+   	
    	<insert id="EzApprovalG.insertDocSendAprAttachInfo" parameterClass="Map">
    		INSERT INTO
    				TBL_APRATTACHINFO 
@@ -26341,6 +26412,22 @@
 		 	COMPANYID = #companyID#)
    	</insert>
    
+   	<insert id="EzApprovalG.insertDocSendAprAttachInfo2" parameterClass="Map">
+   		INSERT INTO
+   				TBL_APRATTACHINFO 
+   		(     DocID,    AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
+   		(SELECT 
+   			#v_NEWID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID
+   		 FROM 
+             TBL_ENDATTACHINFO A 
+         WHERE 
+         	 DOCID = #v_DOCID#
+		 AND 
+		 	 TENANT_ID = #v_TENANTID#
+		 AND
+		 	COMPANYID = #companyID#)
+   	</insert>
+   	
    	<insert id="EzApprovalG.insertDocSendAprDocAttachInfo" parameterClass="Map">
    		 INSERT INTO 
    		 	TBL_APRDOCATTACHINFO 
@@ -26357,6 +26444,22 @@
 		  	 COMPANYID = #companyID#)
    	</insert>
    	
+   	<insert id="EzApprovalG.insertDocSendAprDocAttachInfo2" parameterClass="Map">
+   		 INSERT INTO 
+   		 	TBL_APRDOCATTACHINFO 
+   		 (  DocID,    AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, TENANT_ID, COMPANYID) 
+   		 (SELECT 
+   		 	#v_NEWID#, AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, TENANT_ID, COMPANYID 
+   		  FROM 
+   		  	TBL_ENDAPRDOCATTACHINFO A 
+   		  WHERE 
+   		  	DOCID = #v_DOCID#
+		  AND 
+		 	 TENANT_ID = #v_TENANTID#
+		  AND
+		  	 COMPANYID = #companyID#)
+   	</insert>
+
    	<insert id="EzApprovalG.insertDocSendAprOpenGovDocInfo" parameterClass="Map">
 		INSERT INTO
 	 		TBL_OPENGOVDOCINFO
@@ -26417,6 +26520,22 @@
 		  	COMPANYID = #companyID#)
    	</insert>
    		
+   	<insert id="EzApprovalG.insertDocSendAprReceiptProcessInfo2" parameterClass="Map">
+   	     INSERT INTO 
+   	     	TBL_APRRECEIPTPROCESSINFO 
+   	     (  ReceiveSN,      DocID,      SentDeptID, SentDeptName, SentDeptName2, ReceivedDeptID,          ReceivedDeptName,    ReceivedDeptName2,          DocState, AprState,     ProcessDate,                            ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID, COMPANYID) 
+   	     (SELECT 
+   	     	#v_ReceiveSN#, #v_NEWID#, WriterDeptID, WriterDeptName, WriterDeptName2, #v_ReceivedDeptID#, #v_ReceivedDeptName#, #v_ReceivedDeptName2#, #v_DocState#, #v_AprState#, #v_SYSDATE#, 'N',      '',       #v_ProcessorID#, #v_ProcessorName#, #v_ProcessorName2#, #v_ProcessorJobTitle#, #v_ProcessorJobTitle2#, #v_orgDocID#, TENANT_ID, COMPANYID
+   	      FROM 
+   	      	TBL_ENDAPRDOCINFO A 
+		  WHERE 
+		   	DOCID = #v_DOCID#
+		  AND 
+		 	TENANT_ID = #v_TENANTID#
+		  AND
+		  	COMPANYID = #companyID#)
+   	</insert>
+   	
    	<update id="EzApprovalG.updateDoSendAprDocInfo2" parameterClass="Map">
    		UPDATE 
    			TBL_APRDOCINFO 
@@ -26430,6 +26549,19 @@
 		 	COMPANYID = #companyID#
    	</update>
    
+   	<update id="EzApprovalG.updateDoSendAprDocInfo3" parameterClass="Map">
+   		UPDATE 
+   			TBL_ENDAPRDOCINFO 
+   		SET 
+   			DocState = '014' 
+   		WHERE 
+   			DOCID = #v_DOCID#
+		AND 
+		 	TENANT_ID = #v_TENANTID#
+		AND
+		 	COMPANYID = #companyID#
+   	</update>
+   	
    	<update id="EzApprovalG.updateDelayCabinetClass" parameterClass="Map">
    		<isEqual property="v_flag" compareValue="1">
 	   		UPDATE 
@@ -33213,6 +33345,19 @@
 			COMPANYID = #companyID#)
 	</insert>
 	
+	<insert id="EzApprovalG.copyOpinionsFromOrgDoc2" parameterClass="map">
+		INSERT INTO tbl_apropinioninfo
+		(`DOCID`, `USERID`, `OPINIONGB`, `CONTENT`, `USERNAME`, `USERJOBTITLE`, `USERDEPTID`, `USERDEPTNAME`, `OPINIONSN`, `USERNAME2`, `USERJOBTITLE2`, `USERDEPTNAME2`, `TENANT_ID`, `COMPANYID`)
+		SELECT #v_NEWID#, `USERID`, `OPINIONGB`, `CONTENT`, `USERNAME`, `USERJOBTITLE`, `USERDEPTID`, `USERDEPTNAME`, `OPINIONSN`, `USERNAME2`, `USERJOBTITLE2`, `USERDEPTNAME2`, `TENANT_ID`, #receiptCompanyID#
+		FROM tbl_endapropinioninfo
+		WHERE
+			`DOCID` = #v_orgDocID#
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
+	</insert>
+	
 	<select id="EzApprovalG.doApproveLineInfoForPassAprLine" parameterClass="Map" resultClass="ApprGAprLineVO">
 		SELECT
 			APRMEMBERSN ,
@@ -33674,4 +33819,53 @@
 		AND TENANT_ID = #tenantId#
 		AND COMPANYID = #companyId#
 	</select>
+	
+<!-- 정주환 수신처 스케쥴러 등록 -->
+	<insert id="EzApprovalG.insertSendDocDB" parameterClass="Map">
+		INSERT INTO 
+			TBL_SUSINSCHEDULE
+     	( DOCID , DEPTID , DIRPATH , DOCSTATE , COMPANYID , LANG , TENANTID )
+     	VALUES 
+     	( #v_DOCID# , #v_DEPTID# , #v_DIRPATH# , #v_DOCSTATE# , #v_COMPANYID# , #v_LANG# , #v_TENANTID# )
+	</insert>
+	
+	<resultMap id="getSendDocList" class="java.util.LinkedHashMap">
+		<result property="DOCID"				column="DOCID" />
+		<result property="DEPTID"				column="DEPTID" />
+		<result property="DIRPATH"				column="DIRPATH" />
+		<result property="DOCSTATE"				column="DOCSTATE" />
+		<result property="COMPANYID"			column="COMPANYID" />
+		<result property="LANG"					column="LANG" />
+		<result property="TENANTID"				column="TENANTID" />
+	</resultMap>
+	<select id="EzApprovalG.getSendDocList" resultMap="getSendDocList">
+		SELECT
+			DOCID,	
+			DEPTID,	
+			DIRPATH,	
+			DOCSTATE,
+			COMPANYID,
+			LANG,	
+			TENANTID
+		FROM TBL_SUSINSCHEDULE
+	</select>
+	
+	<delete id="EzApprovalG.deleteSendDocList" parameterClass="Map">
+	  	DELETE FROM 
+	  		TBL_SUSINSCHEDULE
+    	WHERE  
+    		DOCID = #DOCID#
+    	AND
+    		DEPTID = #DEPTID#
+    	AND
+    		DIRPATH = #DIRPATH#
+    	AND
+    		DOCSTATE = #DOCSTATE#
+    	AND
+    		COMPANYID = #COMPANYID#
+    	AND
+    		LANG = #LANG#
+    	AND
+    		TENANTID = #TENANTID#
+	</delete>
 </sqlMap>

@@ -78,6 +78,7 @@
 	        var UserLang = "<c:out value ='${userInfo.lang}'/>";
 	        var DeptID = "<c:out value ='${userInfo.deptID}'/>";
 	        var USE_OCS = "<c:out value ='${useOcs}'/>";
+	        var useDoc24 = "<c:out value ='${useDoc24}'/>";
 	        var linealt1 = "<spring:message code='ezApprovalG.t1742'/>";
 	        var linealt2 = "<spring:message code='ezApprovalG.t228'/>";
 	        var linealt3 = "<spring:message code='ezApprovalG.t226'/>";
@@ -318,7 +319,7 @@
             
 	            if(approvalFlag == "G") {
 		            CheckGubunInit();
-		
+					
 		            if (pReDraftFlag == "DRAFT" || pReDraftFlag == "REDRAFT") {
 		                document.getElementById("btnaddress").style.display = "";
 		            }
@@ -615,8 +616,11 @@
                 
              	// 2020-11-23 등급 툴팁 추가 - 박기범
                 giveTooltipLevel();
+             	if(useDoc24 == "YES"){
+             		getDoc24List();
+             	}
 	        };
-	
+	        
 	        function KeEventControl(obj) {
 	            useragt = navigator.userAgent.toUpperCase();
 	            if (useragt.indexOf("SAFARI") > 0 && useragt.indexOf("CHROME") < 0) //사파리 브라우저일 경우
@@ -1190,6 +1194,11 @@
 		        }
 		    }
 		
+		    function btnSearchDoc24_onKeyPress(e) {
+		        if (e.keyCode == "13") {
+		            document.getElementById("Span8").onclick();
+		        }
+		    }
 		
 		    function getGyulJeDateDB() {
 		        try {
@@ -2799,10 +2808,16 @@
 		                        		<c:when test="${receptGubunYN eq 'Y'}">
 		                        			<c:if test="${docType eq '001' && isOuterForm}">
 					                            <p><span id="3tab4" divname="Outer" class ="approvalG"><spring:message code='ezApprovalG.t330'/></span></p>
+					                            <c:if test="${useDoc24 eq 'YES'}">
+					                            <p><span id="3tab5" divname="Doc24" class ="approvalG">문서24</span></p>
+					                            </c:if>
 	           		                            <p><span id="3tab2" divname="Save"><spring:message code='ezApprovalG.G0001'/></span></p>
 		                        			</c:if>
 		                        			<c:if test="${docType ne '001' || (docType eq '001' && not isOuterForm)}">
 					                            <p><span id="3tab1" divname="Organ"><spring:message code='ezApprovalG.t232'/></span></p>
+					                            <c:if test="${useDoc24 eq 'YES'}">
+					                            <p><span id="3tab5" divname="Doc24" class ="approvalG">문서24</span></p>
+					                            </c:if>
            		                            	<p><span id="3tab2" divname="Save"><spring:message code='ezApprovalG.G0001'/></span></p>
            		                            	<p><span id="3tab3" divname="Group"><c:if test="${approvalFlag =='G' }"><spring:message code='ezApprovalG.t1568'/></c:if><c:if test="${approvalFlag =='S' }"><spring:message code='ezApproval.t227'/></c:if></span></p>
 		                        			</c:if>
@@ -2810,6 +2825,9 @@
 		                        		<c:otherwise>
 				                            <p><span id="3tab1" divname="Organ"><spring:message code='ezApprovalG.t232'/></span></p>
 				                            <p><span id="3tab4" style="display: none;" divname="Outer" class ="approvalG"><spring:message code='ezApprovalG.t330'/></span></p>
+				                            <c:if test="${useDoc24 eq 'YES'}">
+					                        <p><span id="3tab5" divname="Doc24" class ="approvalG">문서24</span></p>
+					                        </c:if>
            		                            <p><span id="3tab2" divname="Save"><spring:message code='ezApprovalG.G0001'/></span></p>
 		          			                <p><span id="3tab3" divname="Group"><c:if test="${approvalFlag =='G' }"><spring:message code='ezApprovalG.t1568'/></c:if><c:if test="${approvalFlag =='S' }"><spring:message code='ezApproval.t227'/></c:if></span></p>
 		                        		</c:otherwise>
@@ -2877,6 +2895,24 @@
 	                                    <input id="txtOuterDeptName" style="width: 150px;height:22px;" name="textUser2" onkeyup="return btnSearchDept_onKeyPress2(event)"  maxlength="50">
 	                                    <a class="imgbtn imgbck2"><span id="Span7" onkeyup="return btnSearchDept_onClick()" onclick="return btnSearchDept_onClick()" ><spring:message code='ezApprovalG.t250'/></span></a>
 	                                    <a class="imgbtn imgbck2" id="AprDeptOuterAdd" onclick="AprDeptOuterAdd_onclick();"><span><spring:message code='ezApprovalG.t1236'/></span></a>
+	                                </td>
+	                            </tr>
+	                        </table>
+	                    </div>
+	
+	                    <div id="ReceptDoc24" style="display: none;">
+	                        <table style="margin-left: 0px;">
+	                            <tr>
+	                                <td style="vertical-align: top;">
+	                                    <div id="TreeView4" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 517px; width: 388px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
+	                                    </div>
+	                                </td>
+	                            </tr>
+	                            <tr>
+	                                <td style="background-color: transparent; height: 36px; padding-top: 10px; vertical-align: top;">
+	                                    <input id="txtDoc24Name" style="width: 150px;height:22px;" name="textUser2" onkeyup="return btnSearchDoc24_onKeyPress(event)"  maxlength="50">
+	                                    <a class="imgbtn imgbck2"><span id="Span8" onkeyup="return btnSearchDoc24_onClick()" onclick="return btnSearchDoc24_onClick()" ><spring:message code='ezApprovalG.t250'/></span></a>
+	                                    <a class="imgbtn imgbck2" id="doc24Detail" onclick="doc24Detail_onclick();"><span>상세보기</span></a>
 	                                </td>
 	                            </tr>
 	                        </table>
