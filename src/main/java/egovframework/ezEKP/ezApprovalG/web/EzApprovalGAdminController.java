@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -3174,7 +3175,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 				draftToYear,draftToMonth,draftToDay, apprFromYear, apprFromMonth, apprFromDay, apprToYear, apprToMonth, apprToDay, formID, formName, draftDeptName, 
 				draftDeptName2,pageNum, pageSize, docState, subQuery, orderCell, orderOption, companyID, userInfo.getLang(), approvUser, userInfo.getOffset(), userInfo.getTenantId());
         
-		logger.debug("getStatSearchAprDocList ended.");
+			logger.debug("getStatSearchAprDocList ended.");
 
         return result; 
 	}
@@ -3392,9 +3393,12 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         //일반/공공구분
         String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 
+		//키워드 2021.03.11 박기범 추가
+		String keyword = request.getParameter("keyword");
+
         String result = "";
 
-        result = ezApprovalGAdminService.getAdminSearchDocList(formID, formName, docNumber, docTitle, drafter, approvUser, draftDeptName, draftFrom, draftTo, aprFrom, aprTo, pageSize, pageNum, orderCell, orderOption, companyID, tenantID, lang, offset, approvalFlag, locale);
+        result = ezApprovalGAdminService.getAdminSearchDocList(formID, formName, docNumber, docTitle, drafter, approvUser, draftDeptName, draftFrom, draftTo, aprFrom, aprTo, pageSize, pageNum, orderCell, orderOption, companyID, tenantID, lang, offset, approvalFlag, keyword,locale);
         
         logger.debug("getStatSearchDocList ended.");
         
@@ -4438,7 +4442,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         String result = "";
         result = ezApprovalGService.getSearchDocListForOpenGov("ADMIN", "", subQuery, docNumber, docTitle, drafter, formID, formName, draftFromYear, draftFromMonth, draftFromDay,
                 draftToYear, draftToMonth, draftToDay, apprFromYear, apprFromMonth, apprFromDay, apprToYear, apprToMonth, apprToDay, "", "", "", "", "", "",
-                draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, "", companyID, userInfo.getLang(), approvUser, userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
+                draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, "", companyID, userInfo.getLang(), approvUser, userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, "", userInfo.getLocale());
 
         logger.debug("getStatSearchDocLlistForOpenGov ended.");
 
@@ -5119,5 +5123,29 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		response.setCharacterEncoding("UTF-8");
 		response.setHeader("Cache-Control", "no-cache");
 		response.getWriter().write(ezApprovalGAdminService.getAuditStatisticsDocList(loginCookie, request, response, model).toString());
+	}
+
+	/**
+	 * 2021-02-23 박기범 - 수신자 그룹 일괄등록(엑셀파일)
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/setGroupWithExcel.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String setGroupWithExcel(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request) throws Exception {
+		logger.debug("setGroupWithExcel started.");
+
+		String ext = request.getParameter("ext");
+		String result = "";
+
+		if (ext.equals("xls")){
+			result = ezApprovalGAdminService.xlsSetGroupWithExcel(loginCookie, request);
+		}else if (ext.equals("xlsx")){
+			result = ezApprovalGAdminService.xlsxSetGroupWithExcel(loginCookie, request);
+		}else {
+			result = "ext out";
+		}
+
+		logger.debug("setGroupWithExcel ended.");
+
+		return result;
 	}
 }

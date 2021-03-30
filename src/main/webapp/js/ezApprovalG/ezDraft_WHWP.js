@@ -448,6 +448,8 @@ function SendDraftMappingSign(ret) {
 	var strimg;
 	var SingFlag = true;
 	var DekyulFlag = false;
+	// 2021-03-25 박기범 - 서명 이미지 삽입시 포트번호 추가.
+  	var portNum = document.location.port == "" ? "" : ":" + document.location.port;
 
 	if (message.FieldExist(pseumyungcell))
 		message.PutFieldText(pseumyungcell, message.GetFieldText(pseumyungcell) + PositionText);
@@ -461,7 +463,7 @@ function SendDraftMappingSign(ret) {
 				message.PutFieldText(psigncell, "");					
 				message.PrependFieldText(psigncell, strLang7 + OpinionText);
 				//HwpCtrl.SetFieldImage(psigncell, document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(ret), 3, 0, 0, true, 2);
-				message.InsertPicture(psigncell, document.location.protocol + "//" + document.location.hostname + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), SendDraftMappingSign_after);
+				message.InsertPicture(psigncell, document.location.protocol + "//" + document.location.hostname + portNum + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), SendDraftMappingSign_after);
 				
 			  	signInfo[signCnt] = psigncell;
 			  	
@@ -524,7 +526,7 @@ function SendDraftMappingSign(ret) {
                     OpinionText = strLangAprType4 + OpinionText;
 
                 message.PrependFieldText(psigncell, OpinionText);
-                message.InsertPicture(psigncell, document.location.protocol + "//" + document.location.hostname + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), SendDraftMappingSign_after);
+                message.InsertPicture(psigncell, document.location.protocol + "//" + document.location.hostname + portNum + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), SendDraftMappingSign_after);
                 
 			  	signInfo[signCnt] = psigncell;
 			  	
@@ -1613,6 +1615,8 @@ function putSignXML(SignXML)
 		    var SignType = getNodeText(NodeList.item(i).selectSingleNode("SIGNTYPE"));
 		    var SignName = getNodeText(NodeList.item(i).selectSingleNode("SIGNNAME"));
 		    var SignCont = getNodeText(NodeList.item(i).selectSingleNode("CONTENT"));
+			// 2021-03-25 박기범 - 서명 이미지 삽입시 포트번호 추가.
+			var portNum = document.location.port == "" ? "" : ":" + document.location.port;
 			
 			if (message.FieldExist(SignName)) {			
 			    retVal = true;
@@ -1634,7 +1638,7 @@ function putSignXML(SignXML)
 					
 					message.PutFieldText(SignName, " ");                        
 					message.AppendFieldText(SignName, strLang17);
-					message.InsertPicture(SignName, document.location.protocol + "//" + document.location.hostname + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(SignCont), null);
+					message.InsertPicture(SignName, document.location.protocol + "//" + document.location.hostname + portNum + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(SignCont), null);
 				}
 				else if (SignType == "IMAGE")  
 				{
@@ -1649,7 +1653,7 @@ function putSignXML(SignXML)
 					var img = SignCont.split("::");                        
                     message.PutFieldText(SignName, "");
                     if(img.length >= 1) {
-                    	message.InsertPicture(SignName, document.location.protocol + "//" + document.location.hostname + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(img[0]));
+                    	message.InsertPicture(SignName, document.location.protocol + "//" + document.location.hostname + portNum + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(img[0]));
                     }
                     
                     if(img.length >= 2) {

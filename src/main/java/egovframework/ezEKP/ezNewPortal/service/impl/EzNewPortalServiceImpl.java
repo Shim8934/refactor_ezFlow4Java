@@ -941,7 +941,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		}
 		
 		LOGGER.debug("getMonthlyBirthdayEmployees ended.");
-		return birthdayListLmit;
+		return birthdayList;
 	}
 	
 	public String convertLunarToSolar (String birthday, int compMonth) {
@@ -2895,6 +2895,17 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		LOGGER.debug("getWebFolderFileList ended.");
 		return fileList;
 	}
+	
+//	@Override
+//	public void updateThemePortlet(String portletId, int tenantId, String companyId, String menuId) {
+//		Map<String, Object> map = new HashMap<String, Object>();
+//		map.put("portletId", portletId);
+//		map.put("tenantId", tenantId);
+//		map.put("companyId", companyId);
+//		map.put("menuId", menuId);
+//		
+//		ezNewPortalDAO.updateThemePortlet(map);
+//	}
 	
 	@Override
 	public void addPortalTenantConfig(int tenantId, String propertyName, String propertyValue, String description, String configName, String configType) throws Exception {

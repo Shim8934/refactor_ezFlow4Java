@@ -564,8 +564,8 @@
 				<tr>
 					<th style="border-bottom: 0px; padding-right:29px;"><spring:message code='ezApprovalG.t1063'/></th>
        				<td style="border-bottom: 0px; border-right: 0px;">
-       				<span id="tdCabinetName">&nbsp;</span>
-       				<a class="imgbtn imgbck" style="position: absolute; top: 74px; left: 441px;"><span onClick="return btnChangeCabinet_onclick()"><spring:message code='ezApprovalG.t1064'/></span></a>
+       				<span id="tdCabinetName" style="display:inline-block; vertical-align:middle; width:80%;">&nbsp;</span>
+       				<a class="imgbtn imgbck" style="display:inline-block; vertical-align:middle;"><span onClick="return btnChangeCabinet_onclick()"><spring:message code='ezApprovalG.t1064'/></span></a>
        				</td>
 				</tr>
 			</table>

@@ -1,158 +1,168 @@
 package egovframework.ezEKP.ezApprovalG.service.impl;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.nio.file.StandardOpenOption;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.annotation.Resource;
-import javax.mail.internet.InternetAddress;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathFactory;
-
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.FileUtils;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Element;
-import org.jsoup.parser.Parser;
-import org.jsoup.select.Elements;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-
-import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
-import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGAdminDAO;
-import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGDAO;
-import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
-import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
-import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGCabCodeVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGCabinetListVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGCabinetRecVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGCabinetVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGDeliveryListVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGDeptTempletVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGDocAttachInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGDocInfoWebSrvVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListForOpenGovVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGHistoryAttachVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGHistoryDocVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGHistoryLineVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGLineTempletVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGListInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovAttachVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGOpinionVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiptVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiveDocVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGRecordListVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGRecordTempVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGRecordVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGRelayVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGSignInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGWebPartVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGYesanGamsaVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprUserContInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo;
-import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
-import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import java.io.BufferedReader; 
+import java.io.ByteArrayInputStream; 
+import java.io.File; 
+import java.io.FileInputStream; 
+import java.io.FileNotFoundException; 
+import java.io.FileOutputStream; 
+import java.io.IOException; 
+import java.io.InputStream; 
+import java.io.InputStreamReader; 
+import java.io.OutputStream; 
+import java.io.OutputStreamWriter; 
+import java.lang.reflect.Field; 
+import java.lang.reflect.Method; 
+import java.net.HttpURLConnection; 
+import java.net.URL; 
+import java.net.URLEncoder; 
+import java.nio.file.Files; 
+import java.nio.file.Path; 
+import java.nio.file.Paths; 
+import java.nio.file.StandardCopyOption; 
+import java.nio.file.StandardOpenOption; 
+import java.text.SimpleDateFormat; 
+import java.time.LocalDateTime; 
+import java.time.ZoneId; 
+import java.time.format.DateTimeFormatter; 
+import java.util.ArrayList; 
+import java.util.Calendar; 
+import java.util.Comparator; 
+import java.util.Date; 
+import java.util.GregorianCalendar; 
+import java.util.HashMap; 
+import java.util.List; 
+import java.util.Locale; 
+import java.util.Map; 
+import java.util.Properties; 
+import java.util.regex.Matcher; 
+import java.util.regex.Pattern; 
+ 
+import javax.annotation.Resource; 
+import javax.mail.internet.InternetAddress; 
+import javax.servlet.http.HttpServletRequest; 
+import javax.xml.parsers.DocumentBuilder; 
+import javax.xml.parsers.DocumentBuilderFactory; 
+import javax.xml.xpath.XPath; 
+import javax.xml.xpath.XPathConstants; 
+import javax.xml.xpath.XPathFactory; 
+ 
+import kr.dogfoot.hwplib.object.HWPFile; 
+import kr.dogfoot.hwplib.object.bodytext.Section; 
+import kr.dogfoot.hwplib.object.bodytext.control.Control; 
+import kr.dogfoot.hwplib.object.bodytext.control.ControlTable; 
+import kr.dogfoot.hwplib.object.bodytext.control.ControlType; 
+import kr.dogfoot.hwplib.object.bodytext.control.table.Cell; 
+import kr.dogfoot.hwplib.object.bodytext.control.table.Row; 
+import kr.dogfoot.hwplib.object.bodytext.paragraph.Paragraph; 
+import kr.dogfoot.hwplib.object.bodytext.paragraph.ParagraphList; 
+import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.ParaCharShape; 
+import kr.dogfoot.hwplib.object.bodytext.paragraph.header.ParaHeader; 
+import kr.dogfoot.hwplib.object.docinfo.BinData; 
+import kr.dogfoot.hwplib.object.docinfo.bindata.BinDataCompress; 
+import kr.dogfoot.hwplib.object.docinfo.bindata.BinDataState; 
+import kr.dogfoot.hwplib.object.docinfo.bindata.BinDataType; 
+import kr.dogfoot.hwplib.object.summaryInformation.SummaryInformation; 
+import kr.dogfoot.hwplib.reader.HWPReader; 
+import kr.dogfoot.hwplib.writer.HWPWriter; 
+ 
+import org.apache.commons.codec.binary.Base64; 
+import org.apache.commons.io.FileUtils; 
+import org.apache.commons.lang3.ObjectUtils; 
+import org.apache.commons.lang3.StringUtils; 
+import org.json.simple.JSONArray; 
+import org.json.simple.JSONObject; 
+import org.json.simple.parser.JSONParser; 
+import org.jsoup.Jsoup; 
+import org.jsoup.nodes.Element; 
+import org.jsoup.parser.Parser; 
+import org.jsoup.select.Elements; 
+import org.slf4j.Logger; 
+import org.slf4j.LoggerFactory; 
+import org.springframework.beans.factory.annotation.Autowired; 
+import org.springframework.context.ApplicationContext; 
+import org.springframework.stereotype.Service; 
+import org.springframework.web.multipart.MultipartFile; 
+import org.w3c.dom.Document; 
+import org.w3c.dom.Node; 
+import org.w3c.dom.NodeList; 
+import org.w3c.dom.html.HTMLCollection; 
+import org.w3c.dom.html.HTMLElement; 
+import org.w3c.dom.html.HTMLTableElement; 
+import org.w3c.dom.html.HTMLTableRowElement; 
+import org.xml.sax.ErrorHandler; 
+import org.xml.sax.InputSource; 
+import org.xml.sax.SAXException; 
+import org.xml.sax.SAXParseException; 
+ 
+import egovframework.com.cmm.EgovMessageSource; 
+import egovframework.com.cmm.service.EgovFileMngUtil; 
+import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGAdminDAO; 
+import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGDAO; 
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService; 
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService; 
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachInfoVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGCabCodeVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGCabinetListVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGCabinetRecVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGCabinetVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDeliveryListVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDeptTempletVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocAttachInfoVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocInfoWebSrvVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListForOpenGovVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGHistoryAttachVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGHistoryDocVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGHistoryLineVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGLineTempletVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGListInfoVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovAttachVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovInfoVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGOpinionVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiptVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiveDocVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGRecordListVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGRecordTempVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGRecordVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGRelayVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGSignInfoVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGWebPartVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGYesanGamsaVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprUserContInfoVO; 
+import egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo; 
+import egovframework.ezEKP.ezAttitude.service.EzAttitudeService; 
+import egovframework.ezEKP.ezCommon.service.EzCommonService; 
+import egovframework.ezEKP.ezEmail.service.EzEmailService; 
 import egovframework.ezEKP.ezEmail.util.EmailImportance;
-import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
-import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
-import egovframework.ezEKP.ezOrgan.service.EzOrganService;
-import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
-import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
-import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
-import egovframework.let.user.login.service.LoginService;
-import egovframework.let.user.login.vo.LoginVO;
-import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.let.utl.fcc.service.EgovDateUtil;
-import egovframework.let.utl.fcc.service.KlibUtil;
-import kr.dogfoot.hwplib.object.HWPFile;
-import kr.dogfoot.hwplib.object.bodytext.Section;
-import kr.dogfoot.hwplib.object.bodytext.control.Control;
-import kr.dogfoot.hwplib.object.bodytext.control.ControlTable;
-import kr.dogfoot.hwplib.object.bodytext.control.ControlType;
-import kr.dogfoot.hwplib.object.bodytext.control.table.Cell;
-import kr.dogfoot.hwplib.object.bodytext.control.table.Row;
-import kr.dogfoot.hwplib.object.bodytext.paragraph.Paragraph;
-import kr.dogfoot.hwplib.object.bodytext.paragraph.ParagraphList;
-import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.CharPositionShapeIdPair;
-import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.ParaCharShape;
-import kr.dogfoot.hwplib.object.bodytext.paragraph.header.ParaHeader;
-import kr.dogfoot.hwplib.object.docinfo.BinData;
-import kr.dogfoot.hwplib.object.docinfo.bindata.BinDataCompress;
-import kr.dogfoot.hwplib.object.docinfo.bindata.BinDataState;
-import kr.dogfoot.hwplib.object.docinfo.bindata.BinDataType;
-import kr.dogfoot.hwplib.object.summaryInformation.SummaryInformation;
-import kr.dogfoot.hwplib.reader.HWPReader;
-import kr.dogfoot.hwplib.writer.HWPWriter;
+import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO; 
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService; 
+import egovframework.ezEKP.ezOrgan.service.EzOrganService; 
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO; 
+import egovframework.ezEKP.ezPersonal.service.EzPersonalService; 
+import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO; 
+import egovframework.let.user.login.service.LoginService; 
+import egovframework.let.user.login.vo.LoginVO; 
+import egovframework.let.utl.fcc.service.CommonUtil; 
+import egovframework.let.utl.fcc.service.EgovDateUtil; 
+import egovframework.let.utl.fcc.service.KlibUtil; 
+import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.CharPositionShapeIdPair; 
+ 
+import javax.servlet.ServletContext; 
+ 
+import java.util.Iterator;
 
 @Service("EzApprovalGService")
 public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprovalGService {
@@ -6284,7 +6294,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	
 	/**
 	 * @param fieldName ex) sign1, sign2
-	 * @param signText 
+	 * @param signText
 	 * @param hwpFile
 	 * @throws Exception
 	 * 한글파일에 사인기입하기
@@ -9213,6 +9223,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		recordListVO.setMultiLang(commonUtil.getMultiData(lang, tenantID));
 		recordListVO.setOffsetMin(commonUtil.getMinuteUTC(offset));
 		recordListVO.setNowDate(commonUtil.getTodayUTCTime(""));
+		recordListVO.setRelayFormID(config.getProperty("Relay_FormID", ""));
 
 		switch (recordListVO.getListFlag()) {
 		case "0" :	// 기록물 대장
@@ -9228,7 +9239,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		case "3" :	// 목록이관 대상
 			listType = "005";
 			break;
-
 		case "4" :	// 파일이관 대상
 			listType = "005";
 			break;
@@ -9256,10 +9266,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		case "11" :	// 발송목록
 			listType = "001";
 			recordListVO.setUsePublicFlag(true);
+			recordListVO.setJoinEndReceiptPointInfo(true);
 			break;
+		case "12" :	// 유통 접수목록
+		    listType = "001";
+		    recordListVO.setUsePublicFlag(true);
+		    break;
+        case "13" : // 유통 발송목록
+            listType = "001";
+            recordListVO.setUsePublicFlag(true);
+            recordListVO.setJoinEndReceiptPointInfo(true);
+            break;
 		case "23" :	// 미처리문서
 		    listType = "001";
 		    recordListVO.setUsePublicFlag(true);
+		    recordListVO.setJoinEndReceiptPointInfo(true);
 		    break;
 		}
 		
@@ -9306,10 +9327,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		recordListVO.setExtraSelectClause(extraSelectClause);
 		recordListVO.setTempDeptCode(recordListVO.getDeptCode());
-
-		if (doc.getElementsByTagName("DEPTCODE").item(0) != null && doc.getElementsByTagName("DEPTCODE").item(0).getTextContent().length() > 0) {
-			recordListVO.setTempDeptCode(doc.getElementsByTagName("DEPTCODE").item(0).getTextContent().trim());
-		}
+		
+		Node pDeptCode = doc.getElementsByTagName("DEPTCODE").item(0);
+	    if (pDeptCode != null && pDeptCode.getTextContent().length() > 0) {
+	        recordListVO.setTempDeptCode(pDeptCode.getTextContent().trim());
+	    }
 		
 		String cabinetIDs = "";
 		
@@ -11701,8 +11723,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String listString = "";
 		
-		if (mode.equals("simsa")) {
+		if (mode.endsWith("simsa")) {
 			listString = getListHeader("005", companyID, userLang, tenantID);
+		} else if (mode.endsWith("relay")) {
+		    listString = getListHeader("004", companyID, userLang, tenantID);
 		} else {
 			listString = getListHeader("004", companyID, userLang, tenantID);
 		}
@@ -13038,10 +13062,23 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	private String getReceiveDocList(String mode, String userID, String deptID, String docManageDeptInfo, int querySize, int querySize2, String orderOption1, String orderOption2, String basicOrder,
 			String basicOrderReverse, String searchQuery, Document xmlDomSub, String companyID ,int tenantID) throws Exception {
 		logger.debug("getReceiveDocList started");
+		
+        String susinAdmin = "N";
+        String [] modeArr = mode.split(";");
+        if (modeArr[0].equals("admin")) {
+            susinAdmin = "Y";
+        }
+        if (modeArr.length > 1) {
+            mode = modeArr[1];
+        }
+        
+        String relayFormID = config.getProperty("Relay_FormID", "");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_MODE", mode.toLowerCase());
+        map.put("v_SUSINADMIN", susinAdmin);
+        map.put("v_RELAYFORMID", relayFormID);
 		map.put("v_USERID", userID);
 		map.put("v_DEPTID", deptID);
 		map.put("v_DEPTIDS", docManageDeptInfo);
@@ -13109,10 +13146,23 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	private int getReceiveDocListCount(String mode, String userID, String deptID, String docManageDeptInfo, String subQuery, String companyID, Document xmlDomSub, int tenantID) throws Exception {
 		logger.debug("getReceiveDocListCount started");
+		
+		String susinAdmin = "N";
+		String [] modeArr = mode.split(";");
+		if (modeArr[0].equals("admin")) {
+		    susinAdmin = "Y";
+		}
+		if (modeArr.length > 1) {
+		    mode = modeArr[1];
+		}
+		
+		String relayFormID = config.getProperty("Relay_FormID", "");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_MODE", mode.toLowerCase());
+		map.put("v_SUSINADMIN", susinAdmin);
+		map.put("v_RELAYFORMID", relayFormID);
 		map.put("v_USERID", userID);
 		map.put("v_DEPTID", deptID);
 		map.put("v_DEPTIDS", docManageDeptInfo);
@@ -22236,26 +22286,29 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if(rtnVal.toString().equals("")){
 			String howToSendOffer = ezCommonService.getTenantConfig("howToSendOffer", tenantID);
 	        
-	        if (howToSendOffer.equals("1")) {
-	        	rtnVal.append("<RESULT>TOKIAN</RESULT>");
-			}else{
-			    if ("1".equals(autoSendOfferFlag)) {
-                    List<String> receiptIDs = ezApprovalGDAO.sendOfferCheck_EndReceipt2(map);
-                    
-                    if(receiptIDs.size() == 0){
-                        rtnVal.append("<RESULT>RECEIPT</RESULT>"); //내부발송,민원인발송
+		    if ("1".equals(autoSendOfferFlag)) {
+                List<String> receiptIDs = ezApprovalGDAO.sendOfferCheck_EndReceipt2(map);
+                
+                if(receiptIDs.size() == 0){
+                    rtnVal.append("<RESULT>RECEIPT</RESULT>"); //내부발송
+                } else {
+                    if (receiptIDs.get(0).startsWith("Address")) {
+                        rtnVal.append("<RESULT>RECEIPADDR</RESULT>"); //민원인발송
                     } else {
-                        if (receiptIDs.get(0).startsWith("Address")) {
-                            rtnVal.append("<RESULT>RECEIPADDR</RESULT>"); //외부발송
+                        if ("1".equals(howToSendOffer)) {
+                            rtnVal.append("<RESULT>TOKIAN</RESULT>");
                         } else {
                             rtnVal.append("<RESULT>RECEIPTOUTER</RESULT>"); //외부발송
                         }
                     }
-			    } else {
-			        rtnVal.append("<RESULT>RECEIPTOUTER</RESULT>");
-			    }
-//				rtnVal.append("<RESULT>TRUE</RESULT>");
-			}
+                }
+		    } else {
+		        if ("1".equals(howToSendOffer)) {
+		            rtnVal.append("<RESULT>TOKIAN</RESULT>");
+		        } else {
+		            rtnVal.append("<RESULT>RECEIPTOUTER</RESULT>"); //외부발송
+		        }
+		    }
 		}
 
 		logger.debug("sendOfferCheck ended");
@@ -23840,6 +23893,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			 if (arrList.getElementsByTagName("COLALIAS").item(j).getTextContent().trim().toUpperCase().equals("DISPCLASSNO")) {
 				 resultXML.append("<COLNAME>DISPCLASSNO</COLNAME>");
 			 }
+			 // 제목 COLNAME 속성 추가
+			 else if (arrList.getElementsByTagName("COLALIAS").item(j).getTextContent().trim().toUpperCase().equals("TITLE")) {
+				 resultXML.append("<COLNAME>TITLE</COLNAME>");
+			 }
+			 
 			 resultXML.append("</HEADER>");
 		 }
 		
@@ -26365,7 +26423,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_FORMID", formID);
 		map.put("v_FORMNAME", formName);
 		map.put("v_DOCSTATE", docState);
-		
+
 		if(deptId.split("/").length > 1){
 			deptId = deptId.split("/")[1];
 			map.put("v_APRFLAG" ,"INMYAPPRSEARCH");
@@ -31483,7 +31541,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String getSearchDocListForOpenGov(String containerID, String userID, String subQuery, String docNumber, String docTitle, String drafter, String formID, String formName, String draftFromYEAR, String draftFromMONTH,
 			String draftFromDAY, String draftToYEAR, String draftToMONTH, String draftToDAY, String apprFromYEAR, String apprFromMONTH, String apprFromDAY, String apprToYEAR, String apprToMONTH,
 			String apprToDAY, String myApprFromYEAR, String myApprFromMONTH, String myApprFromDAY, String myApprToYEAR, String myApprToMONTH, String myApprToDAY, String draftDeptName,
-			String docState, String aprFlag, String pageSize, String pageNum, String orderCell, String orderOption, String alFlag, String companyID, String lang, String approvUser, int tenantID, String offset, String approvalFlag, Locale locale) throws Exception {
+			String docState, String aprFlag, String pageSize, String pageNum, String orderCell, String orderOption, String alFlag, String companyID, String lang, String approvUser, int tenantID, String offset, String approvalFlag, String keyword,Locale locale) throws Exception {
 		logger.debug("getSearchDocListForOpenGov started");
 
 		StringBuilder resultXML = new StringBuilder();
@@ -31551,7 +31609,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		int hlength = listXML.getElementsByTagName("NAME").getLength();
 		int totalCount = getSearchDocListCountForOpenGov(containerID, userID, userSecurityCode, publicFlag, subQuery, docNumber, docTitle, drafter, draftDeptName, formID, formName, tmpStartDate1, tmpStartDate2, tmpEndDate1, tmpEndDate2,
-				tmpProcessDate1, tmpProcessDate2, aprFlag, docState, commonUtil.getMultiData(lang, tenantID), approvUser, approvalFlag, companyID, tenantID, offset);
+				tmpProcessDate1, tmpProcessDate2, aprFlag, docState, commonUtil.getMultiData(lang, tenantID), approvUser, approvalFlag, companyID, tenantID, offset, keyword);
 		int querySize = Integer.parseInt(pageSize) * Integer.parseInt(pageNum);
 		int querySize2 = totalCount - Integer.parseInt(pageSize) * (Integer.parseInt(pageNum) - 1);
 		int querySize3 = querySize - Integer.parseInt(pageSize);
@@ -31586,7 +31644,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("</HEADERS>");
 		
 		String docList = getSearchDocListForOpenGov(containerID, userID, userSecurityCode, publicFlag, subQuery, docNumber, docTitle, drafter, draftDeptName, formID, formName, tmpStartDate1, tmpStartDate2, tmpEndDate1, tmpEndDate2,
-				tmpProcessDate1, tmpProcessDate2, aprFlag, docState, querySize, querySize2, querySize3, orderOption1, orderOption2, alFlag, lang, approvUser, companyID, tenantID, offset, approvalFlag, locale);
+				tmpProcessDate1, tmpProcessDate2, aprFlag, docState, querySize, querySize2, querySize3, orderOption1, orderOption2, alFlag, lang, approvUser, companyID, tenantID, offset, approvalFlag, keyword, locale);
 		
 		Document docXML = commonUtil.convertStringToDocument(docList);
 		
@@ -31679,7 +31737,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	
 	private String getSearchDocListForOpenGov(String containerID, String userID, String userSecurityCode, boolean publicFlag, String subQuery, String docNumber, String docTitle, String drafter,
 			String draftDeptName, String formID, String formName, String tmpStartDate1, String tmpStartDate2, String tmpEndDate1, String tmpEndDate2, String tmpProcessDate1, String tmpProcessDate2, String aprFlag,
-			String docState, int querySize, int querySize2, int querySize3, String orderOption1, String orderOption2, String alFlag, String langType, String approvUser, String companyID, int tenantID, String offset, String approvalFlag, Locale locale) throws Exception {
+			String docState, int querySize, int querySize2, int querySize3, String orderOption1, String orderOption2, String alFlag, String langType, String approvUser, String companyID, int tenantID, String offset, String approvalFlag, String keyword, Locale locale) throws Exception {
 		logger.debug("getSearchDocListForOpenGov started");
 		
 		
@@ -31758,6 +31816,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		map.put("v_APPROVUSER", approvUser.trim().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_"));
 		map.put("offset", commonUtil.getMinuteUTC(offset));
+        map.put("v_KEYWORD", keyword);
 		
 		map.put("v_H", messageSource.getMessage("ezApprovalG.t1434", locale));
 		map.put("v_I", messageSource.getMessage("ezApprovalG.t1422", locale));
@@ -31783,7 +31842,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	private int getSearchDocListCountForOpenGov(String containerID, String userID, String userSecurityCode, boolean publicFlag, String subQuery, String docNumber, String docTitle, String drafter,
 			String draftDeptName, String formID, String formName, String tmpStartDate1, String tmpStartDate2, String tmpEndDate1, String tmpEndDate2, String tmpProcessDate1, String tmpProcessDate2, String aprFlag,
-			String docState, String langType, String approvUser, String approvalFlag, String companyID, int tenantID, String offset) throws Exception {
+			String docState, String langType, String approvUser, String approvalFlag, String companyID, int tenantID, String offset, String keyword) throws Exception {
 		logger.debug("getSearchDocListCount started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -31804,6 +31863,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DEPTNAME", draftDeptName.trim().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_"));
 		map.put("v_FORMID", formID.trim());
 		map.put("v_FORMNAME", formName.trim());
+		map.put("v_KEYWORD", keyword.trim());
 		map.put("v_STARTDATE1", tmpStartDate1);
 		map.put("v_STARTDATE2", tmpStartDate2);
 		map.put("v_ENDDATE1", tmpEndDate1);
@@ -32504,22 +32564,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String shareApprovalFlag = ezCommonService.getTenantConfig("useShareApproval", tenantID);
 		map.put("v_shareApprovalFlag", shareApprovalFlag);
 		
+		String relayFormID = config.getProperty("Relay_FormID", "");
+		map.put("v_RELAYFORMID", relayFormID);
+		
 		Map<String, Object> result = ezApprovalGDAO.getLeftDocCountNew(map); 
 		
 		StringBuffer sb = new StringBuffer();
 		sb.append("<DATA>");
 		
-		result.keySet().stream().sorted(new Comparator<String>() {
-			@Override
-			public int compare(String o1, String o2) {
-				return Integer.parseInt(o1) - Integer.parseInt(o2);
-			}
-			
-		}).forEach(elem -> {
-			sb.append("<ROW>");
-			sb.append("<COUNT>" + String.valueOf(result.get(elem) == null ? "0" : result.get(elem)) + "</COUNT>");
-			sb.append("</ROW>");
-		});
+		for (String key : result.keySet()) {
+		    sb
+	        .append("<").append(key.toUpperCase()).append(">")
+	        .append(ObjectUtils.defaultIfNull(result.get(key), 0))
+	        .append("</").append(key.toUpperCase()).append(">");
+		}
 		
 		sb.append("</DATA>");
 		

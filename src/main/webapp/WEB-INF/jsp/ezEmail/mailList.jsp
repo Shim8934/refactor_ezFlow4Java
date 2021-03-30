@@ -223,7 +223,8 @@
 		    		useReceivingChk = true;
 		    		g_foldertype = g_moveUrl;
 		    		p_ListOrderby = "http://schemas.microsoft.com/exchange/date-iso";
-		    		select.selectedIndex = 3;
+	                document.getElementById("select").selectedIndex = 3;
+	                document.getElementById("select").item(3).selected = true;
 		    	} else {
 		    		document.getElementById("MailHeader").style.minWidth = "400px";
 		    		document.getElementById("contentlist").style.minWidth = "400px";
@@ -718,7 +719,7 @@
 		    // 메일박스 내보내기 config 확인
 			function mailbox_export() {
 
-                if (folderTotalCount == "") {
+                if (typeof folderTotalCount === "undefined" || folderTotalCount === "") {
                 	setTimeout (function() {
                 		mailbox_export();
                     }, 1000);
@@ -1395,8 +1396,8 @@
 							<ul class="content_layout">
 								<li class="content_layout_center">
 									<span id="datepickerData">
-										<input type="text" id="Sdatepicker" style="height:30px;" disabled="" readonly size="10" > ~ 
-			    						<input type="text" id="Edatepicker" style="height:30px;" size="10" disabled=""></span>
+										<input type="text" id="Sdatepicker" style="height:30px;" disabled="" readonly size="10" readonly> ~ 
+			    						<input type="text" id="Edatepicker" style="height:30px;" size="10" disabled="" readonly></span>
 									</span>
 								</li>
 							</ul>

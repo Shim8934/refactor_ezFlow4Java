@@ -145,6 +145,12 @@ function getYearlyDocCount() {
 				sumData  = sumData0 + sumData1 + sumData2;
 				xAxes = fixMonths(xAxes);
 				setChartData();
+
+				// 프레임 가로폭이 길 경우 도넛 그래프도 생성
+				if (frameId === "Frame3" || frameId === "Frame4" || frameId === "Frame7"){
+					doughnutOn();
+				}
+
 				initChart();
             } else if (jsonCounts.result == "false") {
 				initFail();
@@ -297,4 +303,10 @@ function sumArray(arr) {
 	}
 
 	return arrSum;
+}
+
+function doughnutOn() {
+	document.querySelector("#chartLeft").style.display = "";
+	document.querySelector("#chartRight").style.width = "75%";
+	barOptions.legend.display = false;
 }

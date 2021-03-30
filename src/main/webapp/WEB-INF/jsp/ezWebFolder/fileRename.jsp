@@ -131,7 +131,7 @@
 			}
 				
 			if (functionType == "insert" && fileId == 0) {
-				newName = ReplaceText(newName, " ", "");
+// 				newName = ReplaceText(newName, " ", "");
 	            
 				if (newName == "") {
 	                alert('<spring:message code='ezWebFolder.t314'/>');
@@ -155,6 +155,7 @@
 					success : function (data) {
 						switch(data.code) {
 						case 0: 
+							afterDeleteSuccess();
 							alert("<spring:message code='ezWebFolder.t263'/>");
 							break;
 						case 1:
@@ -185,6 +186,7 @@
 					success : function (data) {
 						switch(data.code) {
 						case 0: 
+							afterDeleteSuccess();
 							alert("<spring:message code='ezWebFolder.t264'/>");
 							break;
 						case 1:
@@ -237,7 +239,6 @@
 					}
 				});
 			}
-			afterDeleteSuccess();
 		}
 		</c:otherwise>
 		</c:choose>

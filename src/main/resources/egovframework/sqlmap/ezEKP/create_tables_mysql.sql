@@ -1295,13 +1295,13 @@ CREATE TABLE `jmocha_user_distribution_apply` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `jmocha_user_distribution_member`
+-- Table structure for table `jmocha_user_distribution_mem`
 --
 
-DROP TABLE IF EXISTS `jmocha_user_distribution_member`;
+DROP TABLE IF EXISTS `jmocha_user_distribution_mem`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `jmocha_user_distribution_member` (
+CREATE TABLE `jmocha_user_distribution_mem` (
   `DOMAIN_NAME` varchar(100) NOT NULL,
   `USER_NAME` varchar(100) NOT NULL,
   `MEMBER_ID` varchar(100) NOT NULL,
@@ -1731,43 +1731,6 @@ CREATE TABLE `road_name_jibun_info_change` (
   `대표여부` varchar(1) DEFAULT NULL,
   PRIMARY KEY (`관리번호`,`일련번호`),
   CONSTRAINT `변경분지번정보_FK` FOREIGN KEY (`관리번호`) REFERENCES `road_name_address_info_change` (`관리번호`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `search_index_approval`
---
-
-DROP TABLE IF EXISTS `search_index_approval`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `search_index_approval` (
-  `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `DOCID` varchar(80) NOT NULL,
-  `GUBUN` varchar(4) NOT NULL,
-  `INSERTDATE` datetime NOT NULL,
-  `STATUS` varchar(4) NOT NULL,
-  `TENANT_ID` mediumint(5) NOT NULL,
-  `COMPANYID` varchar(20) NOT NULL,
-  PRIMARY KEY (`ID`,`TENANT_ID`,`COMPANYID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `search_index_board`
---
-
-DROP TABLE IF EXISTS `search_index_board`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `search_index_board` (
-  `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `ITEMID` varchar(80) NOT NULL,
-  `GUBUN` varchar(4) NOT NULL,
-  `INSERTDATE` datetime NOT NULL,
-  `STATUS` varchar(4) NOT NULL,
-  `TENANT_ID` mediumint(5) NOT NULL,
-  PRIMARY KEY (`ID`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -13099,7 +13062,7 @@ CREATE TABLE `tbl_tmpattachinfo` (
   `ATTACHUSERDEPTID` varchar(400) DEFAULT NULL,
   `ATTACHUSERDEPTNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `PAGENUM` bigint(10) DEFAULT NULL,
-  `DISPLAYNAME` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `DISPLAYNAME` varchar(600) CHARACTER SET utf8mb4 DEFAULT NULL,
   `BODYATTACH` varchar(4) DEFAULT NULL,
   `ATTACHUSERNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `ATTACHUSERJOBTITLE2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -14690,17 +14653,17 @@ CREATE TABLE `tbl_auditapprline`(
 	CONSTRAINT `auditapprline_pk` PRIMARY KEY (`AUDITAPPRLINEID`, `USERID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `tbl_auditapprline`;
+DROP TABLE IF EXISTS `tbl_yearlydoccount`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_yearlydoccount`(
-     "DOC_COUNT" mediumint(11),
-     "DOC_TYPE" VARCHAR(100) COMMENT 'INSEND: 내부발송, OUTSEND: 외부발송, OUTRECIEVE: 외부수신',
-     "MONTH_TYPE" VARCHAR(100) COMMENT '1 ~ 12월, 작년-10(2) ~ 0(12) 월',
-     "CREATE_ID" VARCHAR(80) ,
-     "CREATE_DATE" datetime DEFAULT current_timestamp(),
-     "TENANT_ID" mediumint(5),
-     "COMPANYID" VARCHAR(80)
+     `DOC_COUNT` mediumint(11),
+     `DOC_TYPE` VARCHAR(100) COMMENT 'INSEND: 내부발송, OUTSEND: 외부발송, OUTRECIEVE: 외부수신',
+     `MONTH_TYPE` VARCHAR(100) COMMENT '1 ~ 12월, 작년-10(2) ~ 0(12) 월',
+     `CREATE_ID` VARCHAR(80) ,
+     `CREATE_DATE` datetime DEFAULT current_timestamp(),
+     `TENANT_ID` mediumint(5),
+     `COMPANYID` VARCHAR(80)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
 -- Final view structure for view `svtaskclass`

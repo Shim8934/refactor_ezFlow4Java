@@ -16,6 +16,7 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleDeptVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleMailConfigVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleReceiveListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -117,6 +118,10 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 		return (ScheduleConfigVO) select("EzScheduleDAO.getScheduleConfig", map);
 	}
 	
+	public ScheduleMailConfigVO getScheduleMailNotiConfig(Map<String, Object> map){
+		return (ScheduleMailConfigVO) select("EzScheduleDAO.getScheduleMailNotiConfig", map);
+	}
+	
 	public ScheduleInfoVO getScheduleInfo(Map<String, Object> map){
 		return (ScheduleInfoVO) select("EzScheduleDAO.getScheduleInfo", map);
 	}
@@ -135,6 +140,10 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	
 	public String getCumDeptId(Map<String, Object> map) throws Exception {
 		return (String) select("EzScheduleDAO.getCumDeptId", map);
+	}
+	
+	public String getUserScheduleConfig(Map<String, Object> map) throws Exception {
+		return (String) select("EzScheduleDAO.getUserScheduleConfig", map);
 	}
 
 	public int getCurScheduleId(Map<String, Object> map) {
@@ -295,6 +304,12 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 		update("EzScheduleDAO.updateDragSchedule", map);
 	}
 	
+	public void modifyScheduleConfig(Map<String, Object> map) throws Exception {
+		update("EzScheduleDAO.modifyScheduleConfig", map);
+	}
 	
+	public void setScheduleMailNotiConfig(Map<String, Object> map) throws Exception {
+		update("EzScheduleDAO.setScheduleMailNotiConfig", map);
+	}
 }
 

@@ -123,7 +123,11 @@
 		            if (checks.item(i).checked == check_Value) {
 		                count++;
 		                
-		                attendantIdList[i] = GetAttribute(checks.item(i), "attendantid");	                
+		                var data = new Object();
+	                    data.attendantId = GetAttribute(checks.item(i), "attendantid");
+	                    data.attendantName = GetAttribute(checks.item(i), "attendantName");
+
+	                    attendantIdList.push(data);
 		            }
 		        }
 
@@ -144,7 +148,7 @@
 					url : "/ezSchedule/scheduleDelAttendant.do",
 					data : {						
 						scheduleId 	 : scheduleid,						
-						attendantIdList : attendantIdList
+						attendantIdList : JSON.stringify(attendantIdList)
 					},
 					success: function(result) {
 						alert((check_Value) + "<spring:message code='ezSchedule.t241' />");
@@ -233,7 +237,7 @@
 		            <c:forEach var="item" items="${attendantList}">
 		            <tr> 
 		            	<td style="text-align:center">
-		            		<input type='checkbox' value="1" attendantid='${item.attendantId}' attendantstatus='${item.status}' />
+		            		<input type='checkbox' value="1" attendantid='${item.attendantId}' attendantName='${item.attendantName}' attendantstatus='${item.status}' />
 		            	</td> 
 		                <td title="<spring:message code='ezSchedule.t162' />" onClick="show_personinfo('${item.attendantId}')"  style="cursor:pointer; white-space:nowrap; text-align:center">
 		                	<c:if test="${primary == '1'}">${item.attendantName}</c:if>

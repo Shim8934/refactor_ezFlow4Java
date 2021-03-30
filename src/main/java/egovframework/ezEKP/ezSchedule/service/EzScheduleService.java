@@ -12,8 +12,10 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleCumulerVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleDeptVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleMailConfigVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleReceiveListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
+import egovframework.let.user.login.vo.LoginVO;
 
 
 public interface EzScheduleService {
@@ -49,6 +51,8 @@ public interface EzScheduleService {
 	public ScheduleConfigVO getScheduleConfig(String userId, int tenantId) throws Exception;
 	
 	public ScheduleInfoVO getScheduleInfo(String scheduleId, String offSetMin, int tenantId ,String companyID) throws Exception;
+	
+	public ScheduleMailConfigVO getScheduleMailNotiConfig(String userId, int tenantId) throws Exception;
 	
 	public String getMyGroupMemberList(String groupId, String lang, int tenantId ,String companyID) throws Exception;
 	
@@ -120,4 +124,8 @@ public interface EzScheduleService {
 	public void copySchedule(String dragDay, String startDate, String endDate, String defaultPath, String offSetMin, int tenantId, String companyId) throws Exception;
 
 	public List<ScheGetHolidayVO> getTholidayYear(String companyID,String userCompany, int tenantId, String isRest, String holidayYear) throws Exception;
+
+	public void scheduleSendMail(int scheduleId, String v_attendantId, String v_attendantName, String title, String period, String type, LoginVO userInfo, String loginCookie) throws Exception;
+
+	public void setScheduleMailNotiConfig(String userMailNoti, String userID, int tenantId) throws Exception;
 }

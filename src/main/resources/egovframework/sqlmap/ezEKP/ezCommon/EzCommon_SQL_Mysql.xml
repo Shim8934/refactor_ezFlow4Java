@@ -2287,7 +2287,7 @@
 		SELECT 
 			USER_NAME
 		FROM 
-			JMOCHA_USER_DISTRIBUTION_MEMBER
+			JMOCHA_USER_DISTRIBUTION_MEM
 		LIMIT 1
 	</select>
 	
@@ -2313,7 +2313,7 @@
 	</statement>
 	
 	<statement id="EzCommonDAO.createUserDlMemberTable"> 
-		CREATE TABLE `jmocha_user_distribution_member` (
+		CREATE TABLE `jmocha_user_distribution_mem` (
 		  `DOMAIN_NAME` varchar(100) NOT NULL,
 		  `USER_NAME` varchar(100) NOT NULL,
 		  `MEMBER_ID` varchar(100) NOT NULL,
@@ -2965,11 +2965,12 @@
     <statement id="EzCommonDAO.updateScehdulegroup">
         ALTER TABLE 
             TBL_SCHEDULEGROUP
-        ADD COLUMN 
+        ADD (
             MODIFYDATE datetime,
             PRECREATORID varchar(100),
             PRECREATORNAME varchar(100),
             PRECREATORNAME2 varchar(100)
+            )
     </statement>
     
     <select id="EzCommonDAO.checkAutoSendOfferFlag" resultClass="int">
@@ -3169,7 +3170,25 @@
 		     PRIMARY KEY (DOCID, ATTACHFILESN, TENANT_ID, COMPANYID)
 		)
 	</statement>
-
+	
+    <select id="EzCommonDAO.checkScheduleMailNotiConfig">
+        SELECT 
+            InvitationMail, CancellationMail, AttendanceMail, RejectedMail
+        FROM 
+            TBL_SCHEDULECONFIG
+        LIMIT 1
+    </select>
+    
+    <statement id="EzCommonDAO.updateScheduleMailNotiConfig">
+        ALTER TABLE 
+            TBL_SCHEDULECONFIG
+        ADD (
+            InvitationMail varchar(4) DEFAULT 'Y',
+			CancellationMail varchar(4) DEFAULT 'Y',
+			AttendanceMail varchar(4) DEFAULT 'Y',
+			RejectedMail varchar(4) DEFAULT 'Y'
+		)
+    </statement>
 
 	<select id="EzCommonDAO.checkChartPortletInfo" resultClass="int">
 		SELECT

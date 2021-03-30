@@ -1720,6 +1720,17 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createApprBigAttachTable");
 		}
 	}
+	
+	// 일정관리 알림메일 기능 추가
+	public void addScheduleMailNotiConfig() {
+	   try {
+		   select("EzCommonDAO.checkScheduleMailNotiConfig");
+	   } catch (Exception e) {
+		   logger.debug("tbl_scheduleconfig InvitationMail, CancellationMail, AttendanceMail, RejectedMail column doesn't exist. creating the column...");
+		   
+		   update("EzCommonDAO.updateScheduleMailNotiConfig");
+	   }
+    }
 
 	public void createTblYearlyDocCount() throws Exception {
 		try {
@@ -1750,5 +1761,19 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			}
 		}
 
+	}
+
+	public void createMailTemplateSequence() throws Exception {
+		if (dbType.equalsIgnoreCase("oracle")) {
+			try {
+				int cnt = (int) select("EzCommonDAO.checkMailTemplateSequence");
+				if (cnt < 1) {throw new Exception(); }
+			} catch (Exception e) {
+				e.printStackTrace();
+				logger.debug("MailTemplateSequence doesn't exist. creating the Sequence...");
+				
+				update("EzCommonDAO.createMailTemplateSequence");
+			}
+		}
 	}
 }

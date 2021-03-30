@@ -477,7 +477,7 @@
 	                    <table style="width:100%">
 	                    	<tr>
 	                        	<td style="width:100%; padding:3px 0px 0px 0px;">
-	                                <input type="text" id='getcontent' style='width:98%; border:1px solid #bbbbbb; background:#fff; height:21px; line-height:21px; padding:0px 0px 0px 4px;' maxlength="50" value="${imageContent}" />
+	                                <textarea type="text" id='getcontent' style='height:100px;width:97%; resize:none;' >${imageContent}</textarea>
 	                            </td>
 	                        </tr>
 	                    </table>

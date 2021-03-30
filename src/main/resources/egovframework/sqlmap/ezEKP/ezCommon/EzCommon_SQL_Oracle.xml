@@ -498,8 +498,8 @@
 		(
 		  SIGN_NO NUMBER NOT NULL 
 		, CONTENT LONG 
-		, DISPLAYNAME VARCHAR2(45) 
-		, DISPLAYNAME2 VARCHAR2(45) 
+		, DISPLAYNAME VARCHAR2(45 CHAR) 
+		, DISPLAYNAME2 VARCHAR2(45 CHAR) 
 		, TENANT_ID NUMBER DEFAULT 0 NOT NULL 
 		, COMPANY_ID VARCHAR2(45) 
 		, CONSTRAINT SIGNATURE_TEMPLATE_PK PRIMARY KEY 
@@ -2247,7 +2247,7 @@
 			SELECT 
 				USER_NAME
 			FROM 
-				JMOCHA_USER_DISTRIBUTION_MEMBER
+				JMOCHA_USER_DISTRIBUTION_MEM
 			WHERE
 			    rownum = 1
 		]]>
@@ -2277,12 +2277,12 @@
 	</statement>
 	
 	<statement id="EzCommonDAO.createUserDlMemberTable"> 
-		CREATE TABLE JMOCHA_USER_DISTRIBUTION_MEMBER (
+		CREATE TABLE JMOCHA_USER_DISTRIBUTION_MEM (
 		   	"DOMAIN_NAME" NVARCHAR2(100) NOT NULL ENABLE, 
 			"USER_NAME" NVARCHAR2(100) NOT NULL ENABLE, 
 			"MEMBER_ID" NVARCHAR2(100) NOT NULL ENABLE, 
 			"REG_DATE" DATE DEFAULT NULL, 
-			CONSTRAINT "PK_JMOCHA_USER_DISTRIBUTION_MEMBER" PRIMARY KEY ("DOMAIN_NAME", "USER_NAME", "MEMBER_ID")
+			CONSTRAINT "PK_JMOCHA_USER_DISTRIBUTION_MEM" PRIMARY KEY ("DOMAIN_NAME", "USER_NAME", "MEMBER_ID")
 		)
 	</statement>
 	
@@ -3076,7 +3076,7 @@
         ALTER TABLE 
             TBL_SCHEDULEGROUP
         ADD (
-            MODIFYDATE datetime,
+            MODIFYDATE DATE DEFAULT SYSDATE,
             PRECREATORID varchar(100),
             PRECREATORNAME varchar(100),
             PRECREATORNAME2 varchar(100)
@@ -3313,9 +3313,31 @@
 		    "DOWNLOAD_COUNT" NUMBER,
 		    "TENANT_ID" NUMBER(5,0) DEFAULT 0 NOT NULL ENABLE,
 		    "COMPANYID" VARCHAR2(20 BYTE) NOT NULL ENABLE,
-		     CONSTRAINT "TBL_APRBIGATTACH_DOWNLOADINFO_PK" PRIMARY KEY ("DOCID", "ATTACHFILESN", "TENANT_ID", "COMPANYID")
+		     CONSTRAINT "TBL_APRBIGATTACH_DLINFO_PK" PRIMARY KEY ("DOCID", "ATTACHFILESN", "TENANT_ID", "COMPANYID")
 		)
 	</statement>
+	
+	<select id="EzCommonDAO.checkScheduleMailNotiConfig">
+	<![CDATA[
+        SELECT 
+            InvitationMail, CancellationMail, AttendanceMail, RejectedMail
+        FROM 
+            TBL_SCHEDULECONFIG
+        WHERE
+            ROWNUM <= 1
+    ]]>
+    </select>
+    
+    <statement id="EzCommonDAO.updateScheduleMailNotiConfig">
+        ALTER TABLE 
+            TBL_SCHEDULECONFIG
+        ADD (
+            InvitationMail varchar(4) DEFAULT 'Y',
+			CancellationMail varchar(4) DEFAULT 'Y',
+			AttendanceMail varchar(4) DEFAULT 'Y',
+			RejectedMail varchar(4) DEFAULT 'Y'
+		)
+    </statement>
 
 	<select id="EzCommonDAO.checkChartPortletInfo" resultClass="int">
 		SELECT
@@ -3357,5 +3379,18 @@
 			"TENANT_ID" NUMBER(5,0),
 			"COMPANYID" VARCHAR2(160)
 		)
+	</statement>
+	
+	<select id="EzCommonDAO.checkMailTemplateSequence" resultClass="int">
+		SELECT
+			COUNT(SEQUENCE_NAME)
+		FROM 
+			USER_SEQUENCES
+		WHERE 
+			SEQUENCE_NAME = 'SEQ_JMOCHA_MAIL_SIGN_TEMP'
+	</select>
+	
+	<statement id="EzCommonDAO.createMailTemplateSequence">
+		CREATE SEQUENCE "SEQ_JMOCHA_MAIL_SIGN_TEMP"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE
 	</statement>
 </sqlMap>

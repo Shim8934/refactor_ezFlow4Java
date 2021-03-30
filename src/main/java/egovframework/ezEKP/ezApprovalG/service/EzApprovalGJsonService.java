@@ -27,7 +27,8 @@ public interface EzApprovalGJsonService {
 			int tenantID, 
 			String lang, 
 			String offSet, 
-			String approvalFlag, 
+			String approvalFlag,
+			String subQuery,
 			Locale locale
 			) throws Exception;
 	

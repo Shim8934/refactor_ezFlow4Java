@@ -28,10 +28,11 @@
 		<script type="text/javascript" ID="clientEventHandlersJS" >
 		    var OrderCell = "";
 		    var rtnVal = new Array();
-		    var g_AdminYN,g_DeptCode, g_DeptName;
+		    var g_AdminYN,g_DeptCode, g_DeptName, g_Listtype, g_Roleinfo;
 		    var g_SelChargerID="";
 		    var CompanyID = "<c:out value='${userInfo.companyID}'/>";
 		    var opnOption = "0";
+			var orgDeptID;
 		    var RetValue;
 		    var ReturnFunction;
 		    var winFlag;
@@ -61,7 +62,11 @@
 		        g_DeptCode = RetValue[1];
 		        g_DeptName = RetValue[2];
 		        opnOption = RetValue[3];
+		        g_Listtype = RetValue[4];
+		        g_Roleinfo = RetValue[5];
 		        rtnVal[0] = "FALSE";
+
+				orgDeptID = g_DeptCode;
 		        
 		        InitCode();
 		        document.getElementById("txtDeptName").value = g_DeptName;
@@ -205,11 +210,16 @@
 		    * 검색조건을 XML로 만들기
 		    */
 		    function GetCabSearchParamXml() {
+				var tempDeptID = g_DeptCode;
+				if ((g_Listtype === "m12" || g_Listtype === "m13") && g_Roleinfo.indexOf("i=1;") > -1 && g_DeptCode === orgDeptID) {
+					tempDeptID = "ALL";
+				}
+
 		        var oXml = createXmlDom();
 		        var oRoot = "";
 		        var oData = "";
 		        createNodeInsert(oXml, oRoot, "SEARCHPARAM");
-		        createNodeAndInsertText(oXml, oData, "DEPTCODE", g_DeptCode);
+		        createNodeAndInsertText(oXml, oData, "DEPTCODE", tempDeptID);
 		        createNodeAndInsertText(oXml, oData, "TITLE", document.getElementById("txtTitle").value);
 		        createNodeAndInsertText(oXml, oData, "REGTYPE", selRegisterType.value);
 		        createNodeAndInsertText(oXml, oData, "SREGDATE", GetRegSDate());

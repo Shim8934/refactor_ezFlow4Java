@@ -80,6 +80,7 @@
 	
 		        switch (pSelectTab) {
 		            case "scheduleTab": schedule_ini(); break;
+		            case "scheduleMailNotiTab": schedule_noti(); break;
 		            case "taskTab": task_ini(); break;
 		            case "taskGeneral": task_general(); break;
 		            case "addressTab": address_ini(); break;
@@ -106,6 +107,10 @@
 		    function Google_ini() {
 	            document.getElementById("mainframe").src = "schedule_google.aspx";
 		    }
+		    
+		    function schedule_noti() {
+	            document.getElementById("mainframe").src = "/ezSchedule/scheduleMailNotiConfig.do";
+		    }
 		</script>
 	</head>
 	<body class="mainbody">
@@ -122,6 +127,7 @@
        			<c:choose>
        				<c:when test="${flag eq 'schedule'}">
        					<p><span id="1tab1" divname="scheduleTab"><spring:message code='ezPersonal.yej01' /></span></p>		
+						<p><span id="1tab4" divname="scheduleMailNotiTab"><spring:message code='ezPersonal.t402' /></span></p>
        				</c:when>
        				<c:otherwise>
        					<p><span id="1tab3" divname="taskTab"><spring:message code='ezPersonal.yej01' /></span></p>	

@@ -497,7 +497,7 @@ var SurveyItem = function() {
 				trElmt.setAttribute("userId"    , itemList[i]["creatorId"]);
 				trElmt.setAttribute("createDate", itemList[i]["createDate"].substring(0, 19));
 				trElmt.setAttribute("surveyTtl" , itemList[i]["title"]);
-				trElmt.onclick    = function(event) {clickRowFunct(event);itemDblClickHandler2(event, this);};
+				trElmt.onclick    = function(event) {clickRowFunct(event);};
 				trElmt.ondblclick = function(event) {itemDblClickHandler(this);};
 				
 				var inputElmt  = document.createElement("input");
@@ -523,6 +523,11 @@ var SurveyItem = function() {
 				tdElmt4.setAttribute("title", tdElmt4.textContent);
 				tdElmt5.setAttribute("title", tdElmt5.textContent);
 				tdElmt9.setAttribute("title", tdElmt9.textContent);
+				
+				/* 2021-03-24 홍승비 - 원클릭 이벤트를 "제목" 칼럼에만 적용 */
+				tdElmt3.onclick = function () {
+					itemDblClickHandler2(event, this.parentElement);
+				}
 				
 				//Check statistic button
 				if (currentUser == itemList[i]["creatorId"]) {

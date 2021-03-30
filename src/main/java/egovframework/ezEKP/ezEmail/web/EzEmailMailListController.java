@@ -1919,6 +1919,8 @@ public class EzEmailMailListController {
 		
 		for (int i=0; i<nodes.getLength(); i++) {
 			String address = nodes.item(i).getTextContent();
+			address = address.replaceAll(":", ""); // InternetAddress.class 1023_line
+			
 			InternetAddress internetAddress = new InternetAddress(address);
 			String email = internetAddress.getAddress();
 			String name = internetAddress.getPersonal();

@@ -238,6 +238,9 @@
 		        else if (pListTypeValue == "4") {
 		            getReceivedDocList();
 		        }
+		        else if (pListTypeValue == "5") {
+		            getReceivedDocList();
+		        }
 		        else if (pListTypeValue == "6") {
 		            getSimsaDocList();
 		        }
@@ -561,7 +564,7 @@
 		        else if (pListTypeValue == "3") {
 		            getDocList();
 		        }
-		        else if (pListTypeValue == "4") {
+		        else if (pListTypeValue == "4" || pListTypeValue == "5") {
 		            getReceivedDocList();
 		        }
 		        else if (pListTypeValue == "6") {
@@ -604,10 +607,7 @@
 		        }
 		    }
 		    
-		    /* 2021-01-19 홍승비 - 원클릭 이벤트로 전자결재 읽기, 결재 팝업창을 표출 */
 		    function lvDocList_SelChange() {
-		    	lvDocList_DBSelChange();
-		    	
 		        var SelList = new ListView();
 		        SelList.LoadFromID("DocList");
 		        var oArrRows = SelList.GetSelectedRows();
@@ -646,6 +646,12 @@
 		                }
 		            }
 		            setbuttonenable();
+		            
+		            /* 2021-03-24 홍승비 - 제목 클릭 시 원클릭 이벤트로 전자결재 읽기, 결재 팝업창을 표출 */
+		            var headerNameTD = $(event.target).attr("headerName");
+		            if (headerNameTD != null && typeof(headerNameTD) != "undefined" && headerNameTD == "DOCTITLE") {
+		            	lvDocList_DBSelChange();
+		            }
 		        }
 		    }
 		    function lvDocList_SelChanging() {
@@ -673,7 +679,7 @@
 		                }
 		                else
 		                    btnRedraft_onclick();
-		            } else if (pListTypeValue == "4") {
+		            } else if (pListTypeValue == "4" || pListTypeValue == "5") {
 		                if (pSusinManagerFlag == "admin" || pCurSelRow.getAttribute("DATA8") == pUserID) {
 		                    var pDraftFlag;
 		                    var tmpDocState = pCurSelRow.getAttribute("DATA9");
@@ -695,8 +701,8 @@
 // 		                var newDocID = MakeTmp2Ing(pDocID);
 		                pURL = pCurSelRow.getAttribute("DATA3");
 		                btnRedraft_onclick();
-		            } else if (pListTypeValue != "5") {
-		                openViewDocInfo();
+					} else if (pListTypeValue != "5") {
+						openViewDocInfo();
 		            } else {
 		                var para = new Array();
 		                var tempURL = pURL;
@@ -1783,7 +1789,7 @@
 		        setsearchinfo_cross_dialogArguments[0] = para;
 		        setsearchinfo_cross_dialogArguments[1] = SearchCondi_onclick_Complete;
 		        var type = "APR";
-		        OpenWin2 = window.open("/ezApprovalG/setSearchInfo.do?type=" + type+ "&searchType="+pListTypeValue, "setsearchInfo_Cross", GetOpenWindowfeature(510, 375));
+		        OpenWin2 = window.open("/ezApprovalG/setSearchInfo.do?type=" + type+ "&searchType="+pListTypeValue, "setsearchInfo_Cross", GetOpenWindowfeature(510, 405));
 		        try { OpenWin2.focus(); } catch (e) { }
 		    }
 		
@@ -1810,7 +1816,7 @@
 		            else if (pListTypeValue == "3") {
 		                getDocList();
 		            }
-		            else if (pListTypeValue == "4") {
+		            else if (pListTypeValue == "4" || pListTypeValue == "5") {
 		                getReceivedDocList();
 		            }
 		            else if (pListTypeValue == "6") {
@@ -1891,8 +1897,15 @@
 			            TYPE += "WRITERDEPTNAME;";
 			            DATA += "<WRITERDEPTNAME>" + SearchCond[23] + "</WRITERDEPTNAME>";
 			        }
-			        
-			        SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
+
+			        // 2021-03-15 키워드 검색 추가 - 박기범
+					if (SearchCond[24] != "" && SearchCond[24] !== undefined )
+					{
+						TYPE += SearchCond[24].slice(0,5);
+						DATA += "<KEYWORD>" + SearchCond[24].slice(5) + "</KEYWORD>";
+					}
+
+					SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
 			        
 				} else {
 					if (condition[0] != "") {
@@ -1952,6 +1965,14 @@
 				        TYPE += condition[16];
 				        DATA += condition[17];
 				    }
+
+					// 2021-03-15 키워드 검색 추가 - 박기범
+					if (SearchCond[24] != "" && SearchCond[24] !== undefined )
+					{
+						TYPE += SearchCond[24].slice(0,5);
+						DATA += "<KEYWORD>" + SearchCond[24].slice(5) + "</KEYWORD>";
+					}
+
 				    if (typeof (condition[25]) != "undefined" && condition[25] != "") {
 				    	TYPE += "RECVSTARTDATE;"
 				        DATA += "<RECVSTARTDATE>" + condition[25] + "</RECVSTARTDATE>";
@@ -2045,7 +2066,7 @@
 		        else if (pListTypeValue == "3") {
 		            getDocList();
 		        }
-		        else if (pListTypeValue == "4") {
+		        else if (pListTypeValue == "4" || pListTypeValue == "5") {
 		            getReceivedDocList();
 		        }
 		        else if (pListTypeValue == "6") {

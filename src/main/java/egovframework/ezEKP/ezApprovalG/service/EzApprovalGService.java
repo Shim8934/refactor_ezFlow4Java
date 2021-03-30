@@ -685,7 +685,7 @@ public interface EzApprovalGService {
                                              String apprToDay, String string3, String string4, String string5, String string6, String string7, String string8,
                                              String draftDeptName, String docState, String string9, String pageSize, String pageNum, String orderCell,
                                              String orderOption, String string10, String companyID, String lang, String approvUser, int tenantId, String offset,
-                                             String approvalFlag, Locale locale) throws Exception;
+                                             String approvalFlag, String keyword, Locale locale) throws Exception;
 
     void deleteOpenGovDocInfo(String docID, String companyID, int tenantID) throws Exception;
 

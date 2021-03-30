@@ -9320,9 +9320,9 @@
 							   	 	 AND 
 							   	 	      FORMID = #v_FORMID#
 							   	</isNotEmpty>
-								<isNotEmpty property="v_FORMNAME"> 
-								AND 
-									(FORMNAME LIKE '%$v_FORMNAME$%' OR FORMNAME2 LIKE '%$v_FORMNAME$%')
+								<isNotEmpty property="v_FORMNAME">
+								    AND
+									    (FORMNAME LIKE '%$v_FORMNAME$%' OR FORMNAME2 LIKE '%$v_FORMNAME$%')
 								</isNotEmpty>
 							   	<isNotEmpty property="v_STARTDATE1">
 							   	 	 AND 
@@ -15062,10 +15062,14 @@
 	   		 AND 
 	   		 	FORMID = #v_FORMID#
 	   		</isNotEmpty>
-			<isNotEmpty property="v_FORMNAME"> 
+			<isNotEmpty property="v_FORMNAME">
 			AND 
 				(FORMNAME LIKE '%$v_FORMNAME$%' OR FORMNAME2 LIKE '%$v_FORMNAME$%')
 			</isNotEmpty>
+            <isNotEmpty property="v_KEYWORD">
+            AND
+                KEYWORD LIKE CONCAT('%', #v_KEYWORD#, '%')
+            </isNotEmpty>
 	   		<isNotEmpty property="v_STARTDATE1"> 
 	   		<![CDATA[
 	 				AND   
@@ -31740,10 +31744,14 @@
 							   	 	 AND 
 							   	 	      FORMID = $v_FORMID$
 							   	</isNotEmpty>
-								<isNotEmpty property="v_FORMNAME"> 
-								AND 
-									(FORMNAME LIKE '%$v_FORMNAME$%' OR FORMNAME2 LIKE '%$v_FORMNAME$%')
+								<isNotEmpty property="v_FORMNAME">
+								    AND
+									    (FORMNAME LIKE '%$v_FORMNAME$%' OR FORMNAME2 LIKE '%$v_FORMNAME$%')
 								</isNotEmpty>
+                                <isNotEmpty property="v_KEYWORD">
+                                    AND
+                                        KEYWORD LIKE CONCAT('%', #v_KEYWORD#, '%')
+                                </isNotEmpty>
 							   	<isNotEmpty property="v_STARTDATE1">
 							   	 	 AND 
 							   	 	 	   STARTDATE >= STR_TO_DATE(#v_STARTDATE1#, '%Y-%m-%d %H:%i:%s')
@@ -32039,14 +32047,14 @@
    		 AND 
    		 	FORMID = #v_FORMID#
    		</isNotEmpty>
-		<isNotEmpty property="v_FORMNAME"> 
+		<isNotEmpty property="v_FORMNAME">
    		AND 
    			(FORMNAME LIKE '%$v_FORMNAME$%' OR FORMNAME2 LIKE '%$v_FORMNAME$%')
    		</isNotEmpty>
-		<isNotEmpty property="v_FORMNAME"> 
-   		AND 
-   			(FORMNAME = #v_FORMNAME# or FORMNAME2 = #v_FORMNAME#)
-   		</isNotEmpty>
+        <isNotEmpty property="v_KEYWORD">
+        AND
+            KEYWORD LIKE CONCAT('%', #v_KEYWORD#, '%')
+        </isNotEmpty>
    		<isNotEmpty property="v_STARTDATE1"> 
    		<![CDATA[
  				AND   

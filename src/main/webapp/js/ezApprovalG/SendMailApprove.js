@@ -329,8 +329,15 @@ function continusendMail(nextMethod, aprlinelist, sn) {
         } 
 
         if (CurrentAprType == "009") {
+        	var alreadySend = false;
+        	
             for (var i = sn + 1; i < objNodes.length; i++) {
-                if (trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[12])) != "003" && trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[12])) != "010") {
+	            if(trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[12])) == "002"){
+	            	nextID = trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[sn])[0])[4]));
+		            Method = trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[sn])[0])[11]));
+		            sendNextMail(getNodeText(GetChildNodes(GetChildNodes(objNodes[sn])[0])[5]), nextID, Method);
+		            alreadySend = true;
+	            } else if ((trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[12])) != "003" && trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[12])) != "010") || alreadySend) {
                 	return;
                 }
             }
