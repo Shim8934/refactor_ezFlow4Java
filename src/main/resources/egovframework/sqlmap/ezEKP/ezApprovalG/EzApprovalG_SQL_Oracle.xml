@@ -31167,7 +31167,7 @@
 	 		TBL_OPENGOVDOCINFO
 	 		(DOCID, OPENFLAG,BASIS, REASON, LISTOPENFLAG, CREATEDATE, OPENLIMITDATE, TENANT_ID, COMPANYID) 
 	 	VALUES 
-	 		(#docID#, #openFlag#, #basis#, #reason#, #openGovListFlag#, TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS'), #limitDate#, #tenantID#, #companyID#)
+	 		(#docID#, #openFlag#, #basis#, #reason#, #openGovListFlag#, SYSDATE, #limitDate#, #tenantID#, #companyID#)
 		</insert>
 		<delete id="EzApprovalG.deleteOpenGovDocInfo" parameterClass="Map">
 		DELETE FROM
@@ -31206,7 +31206,7 @@
 			COMPANYID = #companyID#
 		</select>
 		
-		<select id="EzApprovalG.getOpenGovInfo" parameterClass="Map" resultClass="java.util.HashMap">
+		<select id="EzApprovalG.getOpenGovInfo" parameterClass="Map" resultClass="ApprGOpenGovInfoVO">
 		SELECT
 			BASIS, REASON, LISTOPENFLAG
 		FROM
