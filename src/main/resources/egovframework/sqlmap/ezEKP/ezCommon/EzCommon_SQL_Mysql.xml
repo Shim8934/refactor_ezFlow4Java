@@ -2287,7 +2287,7 @@
 		SELECT 
 			USER_NAME
 		FROM 
-			JMOCHA_USER_DISTRIBUTION_MEMBER
+			JMOCHA_USER_DISTRIBUTION_MEM
 		LIMIT 1
 	</select>
 	
@@ -2313,7 +2313,7 @@
 	</statement>
 	
 	<statement id="EzCommonDAO.createUserDlMemberTable"> 
-		CREATE TABLE `jmocha_user_distribution_member` (
+		CREATE TABLE `jmocha_user_distribution_mem` (
 		  `DOMAIN_NAME` varchar(100) NOT NULL,
 		  `USER_NAME` varchar(100) NOT NULL,
 		  `MEMBER_ID` varchar(100) NOT NULL,

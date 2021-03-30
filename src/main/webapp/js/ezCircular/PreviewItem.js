@@ -234,8 +234,6 @@ function ItemPreviewRead_click(obj) {
     
     if (g_bPrevShow) {
         ItemPreviewRead(document.getElementById(obj));
-    } else {
-    	ItemRead_onclick(selobj);
     }
 }
 

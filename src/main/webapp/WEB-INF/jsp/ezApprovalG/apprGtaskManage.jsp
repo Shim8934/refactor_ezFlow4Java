@@ -92,8 +92,11 @@
 		                document.getElementById("btnUpdateTempReq").style.display = "none";
 		            }
 		            
-		            /* 2021-01-20 홍승비 - 전자결재G 기록물관리에서 원클릭 시 더블클릭 이벤트 함께 적용 */
-		            btnViewTask_onclick();
+		            /* 2021-03-24 홍승비 - 전자결재G 기록물관리에서 제목 클릭 시 원클릭 시 더블클릭 이벤트 함께 적용 */
+			        var headerNameTD = $(event.target).attr("headerName");
+        			if (headerNameTD != null && typeof(headerNameTD) != "undefined" && (headerNameTD == "DOCTITLE" || headerNameTD == "RECTITLE" || headerNameTD == "TITLE")) {
+        				btnViewTask_onclick();
+     			   }
 		        }
 		    }
 		    function btnClose_onclick() {

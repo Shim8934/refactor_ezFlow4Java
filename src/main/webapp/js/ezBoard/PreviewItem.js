@@ -347,8 +347,6 @@ function ItemPreviewRead_click(obj) {
     onclickFlag = true;
     if (g_bPrevShow) {
         ItemPreviewRead(document.getElementById(obj));
-    } else {
-    	ItemRead_onclick(selobj);
     }
 }
 var xmlhttp = createXMLHttpRequest();
@@ -1281,8 +1279,6 @@ function ItemPreviewRead_AlbumClick(objDiv) {
     onclickFlag = true;
     if (g_bPrevShow) {
     	ItemPreviewRead_Album(objDiv);
-    } else {
-    	ItemRead_onclick(selobj);
     }
 }
 function ItemPreviewRead_Album(objDiv) {

@@ -719,7 +719,7 @@
 		    // 메일박스 내보내기 config 확인
 			function mailbox_export() {
 
-                if (folderTotalCount == "") {
+                if (typeof folderTotalCount === "undefined" || folderTotalCount === "") {
                 	setTimeout (function() {
                 		mailbox_export();
                     }, 1000);
