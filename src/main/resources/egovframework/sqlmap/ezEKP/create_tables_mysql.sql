@@ -14855,3 +14855,16 @@ CREATE TABLE `tbl_yearlydoccount`(
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2020-05-12 16:36:39
+
+DROP TABLE IF EXISTS `tbl_susinschedule`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_susinschedule` (
+  `DOCID` varchar(80) NOT NULL,
+  `DEPTID` varchar(80) DEFAULT NULL,
+  `DIRPATH` varchar(1020) DEFAULT NULL,
+  `DOCSTATE` varchar(12) DEFAULT NULL,
+  `COMPANYID` varchar(20) DEFAULT NULL,
+  `LANG` varchar(10) DEFAULT NULL,
+  `TENANTID` mediumint(5) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

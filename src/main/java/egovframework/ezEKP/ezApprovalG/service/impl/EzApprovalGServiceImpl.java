@@ -1,166 +1,167 @@
 package egovframework.ezEKP.ezApprovalG.service.impl;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.nio.file.StandardOpenOption;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.annotation.Resource;
-import javax.mail.internet.InternetAddress;
-import javax.servlet.http.HttpServletRequest;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathFactory;
-
-import kr.dogfoot.hwplib.object.HWPFile;
-import kr.dogfoot.hwplib.object.bodytext.Section;
-import kr.dogfoot.hwplib.object.bodytext.control.Control;
-import kr.dogfoot.hwplib.object.bodytext.control.ControlTable;
-import kr.dogfoot.hwplib.object.bodytext.control.ControlType;
-import kr.dogfoot.hwplib.object.bodytext.control.table.Cell;
-import kr.dogfoot.hwplib.object.bodytext.control.table.Row;
-import kr.dogfoot.hwplib.object.bodytext.paragraph.Paragraph;
-import kr.dogfoot.hwplib.object.bodytext.paragraph.ParagraphList;
-import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.ParaCharShape;
-import kr.dogfoot.hwplib.object.bodytext.paragraph.header.ParaHeader;
-import kr.dogfoot.hwplib.object.docinfo.BinData;
-import kr.dogfoot.hwplib.object.docinfo.bindata.BinDataCompress;
-import kr.dogfoot.hwplib.object.docinfo.bindata.BinDataState;
-import kr.dogfoot.hwplib.object.docinfo.bindata.BinDataType;
-import kr.dogfoot.hwplib.object.summaryInformation.SummaryInformation;
-import kr.dogfoot.hwplib.reader.HWPReader;
-import kr.dogfoot.hwplib.writer.HWPWriter;
-
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Element;
-import org.jsoup.parser.Parser;
-import org.jsoup.select.Elements;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.html.HTMLCollection;
-import org.w3c.dom.html.HTMLElement;
-import org.w3c.dom.html.HTMLTableElement;
-import org.w3c.dom.html.HTMLTableRowElement;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-
-import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
-import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGAdminDAO;
-import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGDAO;
-import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
-import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
-import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGCabCodeVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGCabinetListVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGCabinetRecVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGCabinetVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGDeliveryListVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGDeptTempletVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGDocAttachInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGDocInfoWebSrvVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListForOpenGovVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGHistoryAttachVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGHistoryDocVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGHistoryLineVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGLineTempletVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGListInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovAttachVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGOpinionVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiptVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiveDocVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGRecordListVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGRecordTempVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGRecordVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGRelayVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGSignInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGWebPartVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGYesanGamsaVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprUserContInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo;
-import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
-import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezEmail.service.EzEmailService;
-import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
-import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
-import egovframework.ezEKP.ezOrgan.service.EzOrganService;
-import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
-import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
-import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
-import egovframework.let.user.login.service.LoginService;
-import egovframework.let.user.login.vo.LoginVO;
-import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.let.utl.fcc.service.EgovDateUtil;
-import egovframework.let.utl.fcc.service.KlibUtil;
-import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.CharPositionShapeIdPair;
-
-import javax.servlet.ServletContext;
-
+import java.io.BufferedReader; 
+import java.io.ByteArrayInputStream; 
+import java.io.File; 
+import java.io.FileInputStream; 
+import java.io.FileNotFoundException; 
+import java.io.FileOutputStream; 
+import java.io.IOException; 
+import java.io.InputStream; 
+import java.io.InputStreamReader; 
+import java.io.OutputStream; 
+import java.io.OutputStreamWriter; 
+import java.lang.reflect.Field; 
+import java.lang.reflect.Method; 
+import java.net.HttpURLConnection; 
+import java.net.URL; 
+import java.net.URLEncoder; 
+import java.nio.file.Files; 
+import java.nio.file.Path; 
+import java.nio.file.Paths; 
+import java.nio.file.StandardCopyOption; 
+import java.nio.file.StandardOpenOption; 
+import java.text.SimpleDateFormat; 
+import java.time.LocalDateTime; 
+import java.time.ZoneId; 
+import java.time.format.DateTimeFormatter; 
+import java.util.ArrayList; 
+import java.util.Calendar; 
+import java.util.Comparator; 
+import java.util.Date; 
+import java.util.GregorianCalendar; 
+import java.util.HashMap; 
+import java.util.List; 
+import java.util.Locale; 
+import java.util.Map; 
+import java.util.Properties; 
+import java.util.regex.Matcher; 
+import java.util.regex.Pattern; 
+ 
+import javax.annotation.Resource; 
+import javax.mail.internet.InternetAddress; 
+import javax.servlet.http.HttpServletRequest; 
+import javax.xml.parsers.DocumentBuilder; 
+import javax.xml.parsers.DocumentBuilderFactory; 
+import javax.xml.xpath.XPath; 
+import javax.xml.xpath.XPathConstants; 
+import javax.xml.xpath.XPathFactory; 
+ 
+import kr.dogfoot.hwplib.object.HWPFile; 
+import kr.dogfoot.hwplib.object.bodytext.Section; 
+import kr.dogfoot.hwplib.object.bodytext.control.Control; 
+import kr.dogfoot.hwplib.object.bodytext.control.ControlTable; 
+import kr.dogfoot.hwplib.object.bodytext.control.ControlType; 
+import kr.dogfoot.hwplib.object.bodytext.control.table.Cell; 
+import kr.dogfoot.hwplib.object.bodytext.control.table.Row; 
+import kr.dogfoot.hwplib.object.bodytext.paragraph.Paragraph; 
+import kr.dogfoot.hwplib.object.bodytext.paragraph.ParagraphList; 
+import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.ParaCharShape; 
+import kr.dogfoot.hwplib.object.bodytext.paragraph.header.ParaHeader; 
+import kr.dogfoot.hwplib.object.docinfo.BinData; 
+import kr.dogfoot.hwplib.object.docinfo.bindata.BinDataCompress; 
+import kr.dogfoot.hwplib.object.docinfo.bindata.BinDataState; 
+import kr.dogfoot.hwplib.object.docinfo.bindata.BinDataType; 
+import kr.dogfoot.hwplib.object.summaryInformation.SummaryInformation; 
+import kr.dogfoot.hwplib.reader.HWPReader; 
+import kr.dogfoot.hwplib.writer.HWPWriter; 
+ 
+import org.apache.commons.codec.binary.Base64; 
+import org.apache.commons.io.FileUtils; 
+import org.apache.commons.lang3.ObjectUtils; 
+import org.apache.commons.lang3.StringUtils; 
+import org.json.simple.JSONArray; 
+import org.json.simple.JSONObject; 
+import org.json.simple.parser.JSONParser; 
+import org.jsoup.Jsoup; 
+import org.jsoup.nodes.Element; 
+import org.jsoup.parser.Parser; 
+import org.jsoup.select.Elements; 
+import org.slf4j.Logger; 
+import org.slf4j.LoggerFactory; 
+import org.springframework.beans.factory.annotation.Autowired; 
+import org.springframework.context.ApplicationContext; 
+import org.springframework.stereotype.Service; 
+import org.springframework.web.multipart.MultipartFile; 
+import org.w3c.dom.Document; 
+import org.w3c.dom.Node; 
+import org.w3c.dom.NodeList; 
+import org.w3c.dom.html.HTMLCollection; 
+import org.w3c.dom.html.HTMLElement; 
+import org.w3c.dom.html.HTMLTableElement; 
+import org.w3c.dom.html.HTMLTableRowElement; 
+import org.xml.sax.ErrorHandler; 
+import org.xml.sax.InputSource; 
+import org.xml.sax.SAXException; 
+import org.xml.sax.SAXParseException; 
+ 
+import egovframework.com.cmm.EgovMessageSource; 
+import egovframework.com.cmm.service.EgovFileMngUtil; 
+import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGAdminDAO; 
+import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGDAO; 
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService; 
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService; 
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachInfoVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGCabCodeVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGCabinetListVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGCabinetRecVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGCabinetVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDeliveryListVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDeptTempletVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocAttachInfoVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocInfoWebSrvVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListForOpenGovVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGHistoryAttachVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGHistoryDocVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGHistoryLineVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGLineTempletVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGListInfoVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovAttachVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovInfoVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGOpinionVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiptVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiveDocVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGRecordListVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGRecordTempVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGRecordVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGRelayVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGSignInfoVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGWebPartVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGYesanGamsaVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO; 
+import egovframework.ezEKP.ezApprovalG.vo.ApprUserContInfoVO; 
+import egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo; 
+import egovframework.ezEKP.ezAttitude.service.EzAttitudeService; 
+import egovframework.ezEKP.ezCommon.service.EzCommonService; 
+import egovframework.ezEKP.ezEmail.service.EzEmailService; 
+import egovframework.ezEKP.ezEmail.util.EmailImportance;
+import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO; 
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService; 
+import egovframework.ezEKP.ezOrgan.service.EzOrganService; 
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO; 
+import egovframework.ezEKP.ezPersonal.service.EzPersonalService; 
+import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO; 
+import egovframework.let.user.login.service.LoginService; 
+import egovframework.let.user.login.vo.LoginVO; 
+import egovframework.let.utl.fcc.service.CommonUtil; 
+import egovframework.let.utl.fcc.service.EgovDateUtil; 
+import egovframework.let.utl.fcc.service.KlibUtil; 
+import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.CharPositionShapeIdPair; 
+ 
+import javax.servlet.ServletContext; 
+ 
 import java.util.Iterator;
 
 @Service("EzApprovalGService")
@@ -222,6 +223,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	
 	@Resource(name = "EzOrganDAO")
 	private EzOrganDAO ezOrganDAO;
+
+	@Resource(name = "jspw")
+    private String jspw;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzApprovalGServiceImpl.class);
 	
@@ -14976,7 +14980,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		case "001": // 품의
 			if (approvalFlag.equals("G")) { 
 				if (realDocType.equals("003")) { // docType 003 : 수신문
-					subSQL = doSendDoc(docID, deptID, dirPath, staDSSuSin, companyID, lang, userInfo.getTenantId());
+					// 정주환 수신 문서 발송 분기
+					if("Y".equals(ezCommonService.getTenantConfig("useSusinSchedulerYn", userInfo.getTenantId()))) {
+						subSQL = insertSendDocDB(docID, deptID, dirPath, staDSSuSin, companyID, lang, userInfo.getTenantId());
+					}else {
+						subSQL = doSendDoc(docID, deptID, dirPath, staDSSuSin, companyID, lang, userInfo.getTenantId());
+						if (!subSQL.toUpperCase().equals("FALSE")) {
+							sendSusinMail(map, userInfo);
+						}
+					}
 					
 					if (subSQL.toUpperCase().equals("FALSE")) {
 						rtnVal = false;
@@ -15002,7 +15014,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 			} else { // 일반버젼
 				if (!(realDocType.equals(staDTDraftDoc) && getIsUse("SA45", "001", orgCompanyID, lang, userInfo.getTenantId()).equals("1"))){
-					subSQL = doSendDoc(docID, deptID, dirPath, staDSSuSin, companyID, lang, userInfo.getTenantId());
+					if("Y".equals(ezCommonService.getTenantConfig("useSusinSchedulerYn", userInfo.getTenantId()))) {
+						subSQL = insertSendDocDB(docID, deptID, dirPath, staDSSuSin, companyID, lang, userInfo.getTenantId());
+					}else {
+						subSQL = doSendDoc(docID, deptID, dirPath, staDSSuSin, companyID, lang, userInfo.getTenantId());
+					}
 					
 					if (subSQL.toUpperCase().equals("FALSE")) {
 						rtnVal = false;
@@ -17424,6 +17440,478 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 	}
 
+	// 정주환 수신처 스케쥴러 DB
+	public String insertSendDocDB(String docID, String deptID, String dirPath, String docState, String companyID, String lang, int tenantID) throws Exception {
+		logger.debug("insertSendDocDB started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_COMPANYID", companyID);
+		map.put("v_DOCID", docID);
+		map.put("v_DEPTID", deptID);
+		map.put("v_DIRPATH", dirPath);
+		map.put("v_DOCSTATE", docState);
+		map.put("v_LANG", lang);
+		map.put("v_TENANTID", tenantID);
+		
+		try {
+			ezApprovalGDAO.insertSendDocDB(map);
+		}catch (Exception e) {
+			return "FALSE";
+		}
+		
+		logger.debug("insertSendDocDB ended");
+		return "TRUE";
+	}
+	
+	// 정주환 수신처 스케쥴러
+	@Override
+	public void doSusinSchedule() throws Exception {
+		logger.debug("doSusinSchedule started");
+		List<HashMap<String,Object>> sendDocList = ezApprovalGDAO.getSendDocList();
+		if(sendDocList != null) {
+			for(int i = 0 ; i < sendDocList.size(); i++) {
+				HashMap<String,Object> map = sendDocList.get(i);
+				String docid = map.get("DOCID").toString();
+				String companyID = map.get("COMPANYID").toString();
+				int tenantID = Integer.parseInt(map.get("TENANTID").toString());
+				String result = doSendDocSchedule(
+						docid,
+						map.get("DEPTID").toString(),
+						map.get("DIRPATH").toString(),
+						map.get("DOCSTATE").toString(),
+						companyID,
+						map.get("LANG").toString(),
+						tenantID
+						);
+				if("TRUE".equals(result)) {
+					map.put("v_DOCID", docid);
+					map.put("companyID", companyID);
+					map.put("v_TENANTID", tenantID);
+					List<ApprGDocListVO> writer = ezApprovalGDAO.sendoffercheck_enddocinfo(map);
+					
+					LoginVO tempLoginVO = new LoginVO();
+					tempLoginVO.setId(writer.get(0).getWriterID());
+					tempLoginVO.setTenantId(tenantID);
+					tempLoginVO.setDn("NOPASSWORD");
+					
+					LoginVO userInfo = loginService.selectUser(tempLoginVO);
+					sendSusinMail(map, userInfo);
+					ezApprovalGDAO.deleteSendDocList(map);
+				}
+			}
+		}
+			
+		logger.debug("doSusinSchedule ended");
+	}
+	
+	public String doSendDocSchedule(String docID, String deptID, String dirPath, String docState, String companyID, String lang, int tenantID) throws Exception {
+		logger.debug("doSendDocSchedule started");
+		
+		boolean rtnVal = true;
+		String subSQL = "";
+		Document receiptXML = null;
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_DOCID", docID);
+		map.put("v_TENANTID", tenantID);
+		// '진행 문서 수신처 정보' 가져오기, TBL_RECEIPTPOINTINFO
+		List<ApprGReceiptVO> apprGReceiptVOList = ezApprovalGDAO.doSendDocReceiptInfo2(map);
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("<DATA>");
+		
+		for (int i = 0; i < apprGReceiptVOList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprGReceiptVOList.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		Document docXML = commonUtil.convertStringToDocument(sb.toString());
+		
+		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		boolean isGroup = false;
+		int groupCount = 0;
+		String receiptPointID = "";
+		String receiptPointName = "";
+		String receiptPointName2 = "";
+		String receiptMemberID = "";
+		String receiptMemberName = "";
+		String receiptMemberName2 = "";
+		String receiptMemberJobTitle = "";
+		String receiptMemberJobTitle2 = "";
+		String receiptCompanyID = "";
+		String susinGroupIcon = getCode2Name("A53", "001", companyID, lang, tenantID);
+		String flag = getCode2Name("A35", "002", companyID, lang, tenantID).toUpperCase().trim(); //G 정부버전, S 대학버전
+		String orgDocID = docID;
+		String tempOrgDocID = "";
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
+		
+		if (approvalFlag.equals("G")) {
+			// '진행 중인 문서'의 OrgDocID, 문서 상태(DOCSTATE) 리스트를 가져온다.
+			// TBL_APRDOCINFO
+			List<ApprGDocListVO> apprGDocListVOList = ezApprovalGDAO.doSendDocAprDocInfo2(map);
+			
+			StringBuffer sb1 = new StringBuffer();
+			sb1.append("<DATA>");
+			
+			for (int i = 0; i < apprGDocListVOList.size(); i++) {
+				sb1.append(commonUtil.getQueryResult(apprGDocListVOList.get(i)));
+			}
+			sb1.append("</DATA>");
+			
+			Document tempXML = commonUtil.convertStringToDocument(sb1.toString());
+			if (tempXML.getElementsByTagName("ORGDOCID").getLength() > 0) {
+				tempOrgDocID = makeListField(tempXML.getElementsByTagName("ORGDOCID").item(0).getTextContent());
+				String tempDocState = makeListField(tempXML.getElementsByTagName("DOCSTATE").item(0).getTextContent());
+				// docState 004 : 심사
+				if (!tempOrgDocID.trim().equals("") && (flag.equals("G") || tempDocState.equals("004"))) {
+					orgDocID = tempOrgDocID;
+					// '진행 문서 수신처 정보' List에서 데이터를 찾을 수 없는 경우
+					// 즉, 수신처가 없는 경우
+					if (dlength == 0) { 
+						subSQL = updateProcessYN(tempOrgDocID, "", "S", "QUERY", companyID, lang, tenantID);
+						
+						if (subSQL.toUpperCase().equals("FALSE")) {
+							rtnVal = false;
+						}
+					} else {
+						orgDocID = docID;
+					}
+				}
+			}
+			
+			// dlength != 0 -> 수신처가 존재하는 경우
+			// TBL_RECEIPTPOINTINFO 테이블의 데이터 사용
+			
+			for (int j = 0; j < dlength; j++) {
+				receiptPointID = makeListField(docXML.getElementsByTagName("RECEIPTPOINTID").item(j).getTextContent());
+				receiptPointName = makeListField(docXML.getElementsByTagName("RECEIPTPOINTNAME").item(j).getTextContent());
+				receiptPointName2 = makeListField(docXML.getElementsByTagName("RECEIPTPOINTNAME2").item(j).getTextContent());
+				receiptMemberID = makeListField(docXML.getElementsByTagName("RECEIPTMEMBERID").item(j).getTextContent());
+				receiptMemberName = makeListField(docXML.getElementsByTagName("RECEIPTMEMBERNAME").item(j).getTextContent());
+				receiptMemberName2 = makeListField(docXML.getElementsByTagName("RECEIPTMEMBERNAME2").item(j).getTextContent());
+				receiptMemberJobTitle = makeListField(docXML.getElementsByTagName("RECEIPTMEMBERJOBTITLE").item(j).getTextContent());
+				receiptMemberJobTitle2 = makeListField(docXML.getElementsByTagName("RECEIPTMEMBERJOBTITLE2").item(j).getTextContent());
+				receiptCompanyID = makeListField(docXML.getElementsByTagName("EXTRECEPTEMAIL").item(j).getTextContent());
+				isGroup = false;
+				groupCount = 1;
+				
+				/**
+				 *  수신처ID의 앞부분이 수신그룹의 이름과 같은 경우 -> 수신처가 그룹인 경우
+				 *  코드리스트에 있는 수신처 관련 '이름'이 receiptPointID에 포함된 경우.
+				 */
+				if (receiptPointID.indexOf(susinGroupIcon.trim()) > -1) {
+					Map<String, Object> map2 = new HashMap<String, Object>();
+					map2.put("companyID", companyID);
+					map2.put("v_MAINID", receiptPointID.substring(susinGroupIcon.length()));
+					map2.put("v_TENANTID" , tenantID);
+					
+					// '수신처그룹' 상세리스트 정보
+					
+					List<ApprGReceiptVO> apprGReceiptVOList2 = ezApprovalGDAO.doSendDocReceiptGroupSub(map2);
+					
+					StringBuffer sb2 = new StringBuffer();
+					sb2.append("<DATA>");
+					
+					for (int i = 0; i < apprGReceiptVOList2.size(); i++) {
+						sb2.append(commonUtil.getQueryResult(apprGReceiptVOList2.get(i)));
+					}
+					sb2.append("</DATA>");
+					
+					receiptXML = commonUtil.convertStringToDocument(sb2.toString());
+					
+					// '수신처그룹'이 존재하는 경우
+					
+					if (receiptXML.getElementsByTagName("ROW").getLength() > 0) {
+						isGroup = true;
+						groupCount = receiptXML.getElementsByTagName("ROW").getLength();
+					}
+				}
+				
+				for (int k = 0; k < groupCount; k++) {
+					if (rtnVal) {
+						/**
+						 * TBL_ADMINRECEIPTGROUP_SUB != null -> isGroup == True
+						 * 수신처그룹 상세리스트 정보가 존재하는 경우, 그룹으로 보내기 위해 해당 데이터를 사용
+						 * */
+						
+						if (isGroup) {
+							receiptPointID = makeListField(receiptXML.getElementsByTagName("DEPTID").item(k).getTextContent());
+							receiptPointName = makeListField(receiptXML.getElementsByTagName("DEPTNAME").item(k).getTextContent());
+							receiptPointName2 = makeListField(receiptXML.getElementsByTagName("DEPTNAME2").item(k).getTextContent());
+							receiptMemberID = "";
+							receiptMemberName = "";
+							receiptMemberJobTitle = "";
+							receiptCompanyID = makeListField(receiptXML.getElementsByTagName("COMPANYID").item(k).getTextContent());
+						}
+						
+						if (receiptPointID.indexOf("Address") > -1 && receiptCompanyID.equals("")) {
+							subSQL = updateProcessYN(docID, receiptPointID, "S", "QUERY", companyID, lang, tenantID);
+							
+							if (subSQL.toUpperCase().equals("FALSE")) {
+								rtnVal = false;
+							} 
+							
+							if (!tempOrgDocID.trim().equals("")) {
+								subSQL = updateProcessYN(tempOrgDocID, receiptPointID, "S", "QUERY", companyID, lang, tenantID);
+								
+								if (subSQL.toUpperCase().equals("FALSE")) {
+									rtnVal = false;
+								} 
+							}
+						} else {
+							
+							/**
+							 * 작업이 완료된 문서는 부서수신함 등으로 전달되게 되는데,
+							 * 수신을 받은 부서에서 문서를 통해 작업을 할 수 있기에 원본 보존을 위해서
+							 * 새로운 DOCID를 발급받아서 사용한다.
+							 * */
+							
+							String newID = getNewID(receiptCompanyID, tenantID);
+							
+							Map<String, Object> map3 = new HashMap<String, Object>();
+							map3.put("companyID", companyID);
+							map3.put("v_DOCID", docID);
+							map3.put("v_TENANTID", tenantID);
+							map3.put("v_FLAG", "END");
+							
+							String fileName = ezApprovalGDAO.getDocInfoHref(map3);
+							String extFileName;
+							
+							if (fileName.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+								extFileName = getExtendedFileName(fileName.substring(0, fileName.lastIndexOf('.')));
+							} else {
+								extFileName = getExtendedFileName(fileName);
+							}
+							
+							String url = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + receiptCompanyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getTodayUTCTime("yyyy") + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(newID) + commonUtil.separator + newID + "." + extFileName;
+							
+							if (rtnVal) {
+								map.put("v_NEWID", newID);
+								map.put("companyID", companyID);
+								map.put("v_orgDocID", orgDocID);
+								map.put("v_DocState", docState);
+								map.put("v_FunctionType", staASDoJak);
+								map.put("v_URL", url);
+								map.put("v_DOCID", docID);
+								map.put("v_TENANTID", tenantID);
+								map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+								map.put("receiptCompanyID", receiptCompanyID);
+								
+								/* 2020-08-04 홍승비 - 수신문서의 의견존재여부를 원문서에서 가져오도록 수정(내부결재 완료시 수신처 의견유지) */
+								ezApprovalGDAO.insertDoSendAprDocInfo2(map);
+								ezApprovalGDAO.insertDoSendExpAprDocInfo2(map);
+								ezApprovalGDAO.insertDocSendAprAttachInfo2(map);
+								ezApprovalGDAO.insertDocSendAprDocAttachInfo2(map);
+								
+								ezApprovalGDAO.copyOpinionsFromOrgDoc2(map);
+								
+								if (config.getProperty("config.useOpenGov").equalsIgnoreCase("YES")) {
+									ezApprovalGDAO.insertDocSendAprOpenGovDocInfo(map);
+									ezApprovalGDAO.insertDocSendAprOpenGovFileInfo(map);
+								}
+								
+								int susinSN = ezApprovalGDAO.getReceiptProcessInfoRec(map3);
+								
+								susinSN += 1;
+								
+								map.put("v_ReceiveSN", susinSN);
+								map.put("v_ReceivedDeptID", receiptPointID);
+								map.put("v_ReceivedDeptName", receiptPointName);
+								map.put("v_ReceivedDeptName2", receiptPointName2);
+								map.put("v_DocState", docState);
+								
+								//S 버젼 수신처 변경
+								if (ezCommonService.getTenantConfig("ApprovalFlag", tenantID).equals("S")) {
+									map.put("v_ReceiveSN", 1);
+									
+									if (receiptMemberID != null && !receiptMemberID.equals("")) {
+										map.put("v_AprState", staASJiJung);
+									} else {
+										map.put("v_AprState", staASDoJak);
+									}
+								} else {
+									map.put("v_AprState", staASDoJak);
+								}
+								
+								map.put("v_ProcessorID", receiptMemberID);
+								map.put("v_ProcessorName", receiptMemberName);
+								map.put("v_ProcessorName2", receiptMemberName2);
+								map.put("v_ProcessorJobTitle", receiptMemberJobTitle);
+								map.put("v_ProcessorJobTitle2", receiptMemberJobTitle2);
+								
+								// '진행 문서 수신처리 정보' 테이블에 저장
+								ezApprovalGDAO.insertDocSendAprReceiptProcessInfo2(map);
+								
+								if (!flag.equals("G")) { // S : 대학버전인 경우
+									
+									map.put("v_DOCID", docID);
+									map.put("v_TENANTID", tenantID);
+									map.put("companyID", companyID);
+									
+									ezApprovalGDAO.updateDoSendAprDocInfo3(map);
+									
+									subSQL = updateProcessYN(docID, receiptPointID, "S", "QUERY", companyID, lang, tenantID);
+									
+									if (subSQL.toUpperCase().equals("FALSE")) {
+										rtnVal = false;
+									} 
+									
+									if (!tempOrgDocID.trim().equals("")) {
+										subSQL = updateProcessYN(tempOrgDocID, receiptPointID, "S", "QUERY", companyID, lang, tenantID);
+										
+										if (subSQL.toUpperCase().equals("FALSE")) {
+											rtnVal = false;
+										} 
+									}
+								} else {
+									if (!tempOrgDocID.trim().equals("")) {
+										subSQL = updateProcessYN(tempOrgDocID, receiptPointID, "S", "QUERY", companyID, lang, tenantID);
+										
+										if (subSQL.toUpperCase().equals("FALSE")) {
+											rtnVal = false;
+										} 
+									}
+								}
+								
+								if (receiptMemberID.trim().equals("")) {
+									sendRecvMsg(receiptPointID, docID, "SUSIN", receiptCompanyID, lang, tenantID);
+								} else {
+									sendMsg(docID, receiptMemberID, "SUSIN", receiptCompanyID, lang, tenantID);
+								}
+							}
+						}
+					}
+				}
+			}
+		} else { // 일반버전
+			
+			for (int j = 0; j < dlength; j++) {
+				receiptPointID = makeListField(docXML.getElementsByTagName("RECEIPTPOINTID").item(j).getTextContent());
+				receiptPointName = makeListField(docXML.getElementsByTagName("RECEIPTPOINTNAME").item(j).getTextContent());
+				receiptPointName2 = makeListField(docXML.getElementsByTagName("RECEIPTPOINTNAME2").item(j).getTextContent());
+				receiptMemberID = makeListField(docXML.getElementsByTagName("RECEIPTMEMBERID").item(j).getTextContent());
+				receiptMemberName = makeListField(docXML.getElementsByTagName("RECEIPTMEMBERNAME").item(j).getTextContent());
+				receiptMemberName2 = makeListField(docXML.getElementsByTagName("RECEIPTMEMBERNAME2").item(j).getTextContent());
+				receiptMemberJobTitle = makeListField(docXML.getElementsByTagName("RECEIPTMEMBERJOBTITLE").item(j).getTextContent());
+				receiptMemberJobTitle2 = makeListField(docXML.getElementsByTagName("RECEIPTMEMBERJOBTITLE2").item(j).getTextContent());
+				receiptCompanyID = makeListField(docXML.getElementsByTagName("EXTRECEPTEMAIL").item(j).getTextContent());
+				isGroup = false;
+				groupCount = 1;
+				
+				if (receiptPointID.indexOf(susinGroupIcon.trim()) > -1) {
+					Map<String, Object> map2 = new HashMap<String, Object>();
+					map2.put("companyID", companyID);
+					map2.put("v_MAINID", receiptPointID.substring(susinGroupIcon.length(),receiptPointID.length() - susinGroupIcon.length()));
+					map2.put("v_TENANTID" , tenantID);  
+					List<ApprGReceiptVO> apprGReceiptVOList2 = ezApprovalGDAO.doSendDocReceiptGroupSub(map2);
+					
+					StringBuffer sb2 = new StringBuffer();
+					sb2.append("<DATA>");
+					
+					for (int i = 0; i < apprGReceiptVOList2.size(); i++) {
+						sb2.append(commonUtil.getQueryResult(apprGReceiptVOList2.get(i)));
+					}
+					sb2.append("</DATA>");
+					
+					receiptXML = commonUtil.convertStringToDocument(sb2.toString());
+					
+					if (receiptXML.getElementsByTagName("ROW").getLength() > 0) {
+						isGroup = true;
+						groupCount = receiptXML.getElementsByTagName("ROW").getLength();
+					}
+				}
+				
+				for (int k = 0; k < groupCount; k++) {
+					if (rtnVal) {
+						if (isGroup) {
+							receiptPointID = makeListField(receiptXML.getElementsByTagName("DEPTID").item(k).getTextContent());
+							receiptPointName = makeListField(receiptXML.getElementsByTagName("DEPTNAME").item(k).getTextContent());
+							receiptPointName2 = makeListField(receiptXML.getElementsByTagName("DEPTNAME2").item(k).getTextContent());
+							receiptMemberID = "";
+							receiptMemberName = "";
+							receiptMemberJobTitle = "";
+							receiptCompanyID = makeListField(receiptXML.getElementsByTagName("COMPANYID").item(k).getTextContent());
+						}
+						
+						String newID = getNewID(receiptCompanyID, tenantID);
+						
+						Map<String, Object> map3 = new HashMap<String, Object>();
+						map3.put("companyID", companyID);
+						map3.put("v_DOCID", docID);
+						map3.put("v_TENANTID", tenantID);
+						map3.put("v_FLAG", "END");
+						
+						String fileName = ezApprovalGDAO.getDocInfoHref(map3);
+						String extFileName = getExtendedFileName(fileName);
+						String url = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + receiptCompanyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getTodayUTCTime("yyyy") + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(newID) + commonUtil.separator + newID + "." + extFileName;
+						
+						if (rtnVal) {
+							map.put("v_NEWID", newID);
+							map.put("companyID", companyID);
+							map.put("v_orgDocID", orgDocID);
+							map.put("v_DocState", docState);
+							map.put("v_FunctionType", staASDoJak);
+							map.put("v_URL", url);
+							map.put("v_DOCID", docID);
+							map.put("v_TENANTID", tenantID);
+							map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+							map.put("receiptCompanyID", receiptCompanyID);
+							
+							/* 2020-08-04 홍승비 - 수신문서의 의견존재여부를 원문서에서 가져오도록 수정(내부결재 완료시 수신처 의견유지) */
+							ezApprovalGDAO.insertDoSendAprDocInfo2(map);
+							ezApprovalGDAO.insertDoSendExpAprDocInfo2(map);
+							ezApprovalGDAO.insertDocSendAprAttachInfo2(map);
+							ezApprovalGDAO.insertDocSendAprDocAttachInfo2(map);
+							
+							ezApprovalGDAO.copyOpinionsFromOrgDoc2(map);
+							
+							String susinSN = ezApprovalGDAO.getReceiptProcessInfoRecS(map3);
+							
+							if (susinSN == null) {
+								susinSN = "0";
+							}
+							susinSN = Integer.toString((Integer.parseInt(susinSN)+1));
+							
+							map.put("v_ReceiveSN", susinSN);
+							map.put("v_ReceivedDeptID", receiptPointID);
+							map.put("v_ReceivedDeptName", receiptPointName);
+							map.put("v_ReceivedDeptName2", receiptPointName2);
+							map.put("v_DocState", docState);
+							// 일반버젼 수신처
+							if (receiptMemberID != null && !receiptMemberID.equals("")) {
+								map.put("v_AprState", staASJiJung);
+							} else {
+								map.put("v_AprState", staASDoJak);
+							}                            
+							map.put("v_ProcessorID", receiptMemberID);
+							map.put("v_ProcessorName", receiptMemberName);
+							map.put("v_ProcessorName2", receiptMemberName2);
+							map.put("v_ProcessorJobTitle", receiptMemberJobTitle);
+							map.put("v_ProcessorJobTitle2", receiptMemberJobTitle2);
+							
+							ezApprovalGDAO.insertDocSendAprReceiptProcessInfo2(map);
+							
+							if (receiptMemberID.trim().equals("")) {
+								sendRecvMsg(receiptPointID, docID, "SUSIN", receiptCompanyID, lang, tenantID);
+							} else {
+								sendMsg(docID, receiptMemberID, "SUSIN", receiptCompanyID, lang, tenantID);
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		logger.debug("doSendDocSchedule ended");
+		
+		if (rtnVal) {
+			return "TRUE";
+		} else {
+			return "FALSE";
+		}
+	}
+	
 	public String sendRecvMsg(String deptID, String docID, String mode, String companyID, String lang, int tenantID) throws Exception {
 		logger.debug("sendRecvMsg started");
 
@@ -17468,7 +17956,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.updateProEndReceiptPointInfo(map);
 			
 			map.put("v_RECEIPTPOINTID", deptID.trim());
-			map.put("v_FLAG", "APR");
+			if("Y".equals(ezCommonService.getTenantConfig("useSusinSchedulerYn", tenantID))) {
+				map.put("v_FLAG", "END");
+			}else {
+				map.put("v_FLAG", "APR");
+			}
 			
 			List<ApprGReceiptVO> apprGReceiptVOList = ezApprovalGDAO.updateProcessYNReceipt(map);
 			
@@ -32615,5 +33107,60 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	    Map<String, Object> docProcessState = ezApprovalGDAO.getDocProcessState(map);
 	    
 	    return docProcessState;
+	}
+	
+	// 정주환 수신처에 메일 동시 발송
+	public void sendSusinMail(Map<String, Object> map, LoginVO userInfo) throws Exception {
+		logger.debug("sendSusinMail started.");
+		// '진행 문서 수신처 정보' 가져오기, TBL_RECEIPTPOINTINFO
+		List<ApprGReceiptVO> apprGReceiptVOList = null;
+		boolean schedule = map.get("LANG") != null;
+		if(schedule) {
+			apprGReceiptVOList = ezApprovalGDAO.doSendDocReceiptInfo2(map);
+		}else {
+			apprGReceiptVOList = ezApprovalGDAO.doSendDocReceiptInfo(map);
+		}
+		if(apprGReceiptVOList != null){
+			InternetAddress from = new InternetAddress();
+			String fromName = userInfo.getDisplayName();
+			if(fromName == null) {
+				fromName = "1".equals(map.get("LANG")) ? userInfo.getDisplayName1() : userInfo.getDisplayName2();
+			}
+			from.setPersonal(fromName, "UTF-8");
+			from.setAddress(userInfo.getEmail());
+			
+			List<InternetAddress> list = new ArrayList<InternetAddress>();
+			for(int i = 0; i < apprGReceiptVOList.size(); i++){
+				map.put("v_DEPTID", apprGReceiptVOList.get(i).getReceiptPointID());
+				List<OrganUserVO> organProxyVOList = ezOrganDAO.getDeptReceipterIDs(map);
+				for(int l = 0; l < organProxyVOList.size(); l++){
+					String infoXML = ezOrganService.getPropertyList(organProxyVOList.get(l).getCn(), "displayName;mail;department", userInfo.getLang(), userInfo.getTenantId());
+					Document doc = commonUtil.convertStringToDocument(infoXML);
+					String toName = doc.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
+					String to = doc.getElementsByTagName("MAIL").item(0).getTextContent();
+					InternetAddress to1 = new InternetAddress();
+					to1.setPersonal(toName, "UTF-8");
+					to1.setAddress(to);
+					list.add(to1);
+				}
+			}
+			InternetAddress[] toArr = list.toArray(new InternetAddress[list.size()]);
+			String userId = userInfo.getId();
+			String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+			String userAccount = userId + "@" + domainName;
+			String password  = jspw;
+			map.put("isUsed", "use");
+			map.put("v_COLS", "DocTitle, writername, startdate");
+			if(schedule) {
+				map.put("v_MODE", "END");
+			}else {
+				map.put("v_MODE", "APR");
+			}
+			List<ApprGDocListVO> docInfo = ezApprovalGDAO.getDocInfo(map);
+			ApprGDocListVO vo = docInfo.get(0);
+			String content = "<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td><span>제&nbsp;&nbsp;목: " + vo.getDocTitle() + "</span><br><span>기안자:" + vo.getWriterName() + "</span><br><span>기안일: " + vo.getStartDate() + "</span><br></td></tr></table>";
+			ezEmailService.sendMail(userAccount, password, userInfo.getLocale(), from, toArr, null, null, "[수신문서도착알림] " + vo.getDocTitle(), content, true, EmailImportance.NORMAL);
+		}
+		logger.debug("sendSusinMail ended.");
 	}
 }
