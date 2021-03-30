@@ -32260,7 +32260,7 @@
 		UPDATE
 			TBL_OPENGOVDOCINFO
 		SET
-			createdate = STR_TO_DATE(#nowDateTime#, '%Y-%m-%d %H:%i:%s'),
+			createdate = TO_DATE(#nowDateTime#, 'YYYY.MM.DD HH24:MI:SS'),
 			sendflag = 'N'
 			<isNotEmpty property="nowDate">
 			<!--                   당일로 넣어주기 주석처리 -->
