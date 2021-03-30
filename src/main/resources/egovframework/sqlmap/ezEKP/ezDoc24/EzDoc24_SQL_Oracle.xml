@@ -42,4 +42,10 @@
 			WHERE orgCd = ?
        	]]>
 	</update>
+	
+	<select id="EzDoc24DAO.getDoc24List" resultClass="EzDoc24VO">
+		SELECT 
+			orgCd, cmpnyNm, SenderNm, bizrno, adres, deleteFlag, updateDe, deleteDe
+		FROM tbl_doc24deptmaster
+	</select>
 </sqlMap>

@@ -84,26 +84,29 @@ public class EzDoc24ServiceImpl extends EgovFileMngUtil implements EzDoc24Servic
 		String resultPost = null;
         try
         {
+        	LoginVO userInfo = new LoginVO();
+        	userInfo.setTenantId(0);
+        	userInfo.setCompanyID("");
+        	userInfo.setLang("1");
+        	String optionInfo = ezApprovalGService.getOptionInfo("D24", "002", userInfo, "CODE");
+        	// 타겟이 되는 웹페이지 URL
+        	String url = ezApprovalGService.getOptionInfo("D24", "001", userInfo, "CODE");
+        	if(optionInfo == null || url == null || optionInfo.equals("") || url.equals("")) {
+        		return null;
+        	}
         	StringBuilder postParams = new StringBuilder();
         	postParams.append("orgCd=" + orgcn);
 
             HttpHeaders headers = new HttpHeaders();
     		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
     		headers.set("ContentType", "application/x-www-form-urlencoded");
-    		LoginVO userInfo = new LoginVO();
-    		userInfo.setTenantId(0);
-    		userInfo.setCompanyID("");
-    		userInfo.setLang("1");
-    		headers.set("API_KEY", ezApprovalGService.getOptionInfo("D24", "002", userInfo, "CODE"));
+    		headers.set("API_KEY", optionInfo);
     		Gson gson = new Gson();
     		JSONObject jsonParam = gson.fromJson(gson.toJson(postParams), JSONObject.class);
 
     		HttpEntity<?> entity = new HttpEntity<>(jsonParam, headers);
     		
     		RestTemplate rest = new RestTemplate();
-    		
-    		// 타겟이 되는 웹페이지 URL
-    		String url = ezApprovalGService.getOptionInfo("D24", "001", userInfo, "CODE");
     		
     		ResponseEntity<JSONObject> result = rest.postForEntity(url, entity, JSONObject.class);
     		

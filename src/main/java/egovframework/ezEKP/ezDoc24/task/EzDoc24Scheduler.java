@@ -41,17 +41,12 @@ public class EzDoc24Scheduler {
 	private static final Logger logger = LoggerFactory.getLogger(EzDoc24Scheduler.class);
 
 	@Autowired
-	private CommonUtil commonUtil;
-
-	@Autowired
-	private EzCommonService commonService;
-	
-	@Autowired
 	private EzApprovalGService ezApprovalGService;
 	
 	@Resource(name="ezDoc24DAO")
 	private EzDoc24DAO ezDoc24Dao;
 	
+	@SuppressWarnings("unchecked")
 	@Scheduled(cron = "0 0 5 * * ?")
 	public void doc24Scheduler() throws Exception {
 		logger.debug("doc24Scheduler started.");
@@ -61,12 +56,11 @@ public class EzDoc24Scheduler {
 		
 		String dateString = sdf.format(cal.getTime()) + " 00:00:00"; 
 				
-		String jsonData = null;
+		String jsonData = GetRecData(dateString);
 		
-//		if (("Type").toString().equals("SAMPLE"))
-		   jsonData = GetSampleRecData();
-//		else
-//			jsonData = GetRecData(dateString);
+		if (jsonData == null || jsonData.equals("")) {
+			jsonData = GetSampleRecData();
+		}
 		if (jsonData != null && !"".equals(jsonData.trim()))
 		{
 			 Map<String,Object> map = JsonUtil.JsonToMap(jsonData);
@@ -134,7 +128,17 @@ public class EzDoc24Scheduler {
 		String resultPost = null;
         try
         {
+        	LoginVO userInfo = new LoginVO();
+        	userInfo.setTenantId(0);
+        	userInfo.setCompanyID("");
+        	userInfo.setLang("1");
+        	// 타겟이 되는 웹페이지 URL
+        	String url = ezApprovalGService.getOptionInfo("D24", "001", userInfo, "CODE");
+        	String apiKey = ezApprovalGService.getOptionInfo("D24", "002", userInfo, "CODE");
         	StringBuilder postParams = new StringBuilder();
+        	if(url == null || apiKey == null || url.equals("") || apiKey.equals("")) {
+        		return null;
+        	}
             //postParams.Append("orgCd=" + "M999999");
             postParams.append("batchDay=" + CurDate);
             postParams.append("&deleteFlag = Y");
@@ -142,11 +146,7 @@ public class EzDoc24Scheduler {
             HttpHeaders headers = new HttpHeaders();
     		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
     		headers.set("ContentType", "application/x-www-form-urlencoded");
-    		LoginVO userInfo = new LoginVO();
-    		userInfo.setTenantId(0);
-    		userInfo.setCompanyID("");
-    		userInfo.setLang("1");
-    		headers.set("API_KEY", ezApprovalGService.getOptionInfo("D24", "002", userInfo, "CODE"));
+    		headers.set("API_KEY", apiKey);
     		Gson gson = new Gson();
     		JSONObject jsonParam = gson.fromJson(gson.toJson(postParams), JSONObject.class);
 
@@ -154,8 +154,6 @@ public class EzDoc24Scheduler {
     		
     		RestTemplate rest = new RestTemplate();
     		
-    		// 타겟이 되는 웹페이지 URL
-    		String url = ezApprovalGService.getOptionInfo("D24", "001", userInfo, "CODE");
     		
     		ResponseEntity<JSONObject> result = rest.postForEntity(url, entity, JSONObject.class);
     		

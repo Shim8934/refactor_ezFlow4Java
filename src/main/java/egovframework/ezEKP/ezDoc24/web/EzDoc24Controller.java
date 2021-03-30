@@ -7,23 +7,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezDoc24.service.EzDoc24Service;
-import egovframework.let.user.login.vo.LoginVO;
-import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.JsonUtil;
 
 @Controller
 public class EzDoc24Controller {
 	private static final Logger logger = LoggerFactory.getLogger(EzDoc24Controller.class);
-
-	@Autowired
-	private CommonUtil commonUtil;
 
 	@Autowired
 	private EzDoc24Service ezDoc24Service;	
@@ -44,19 +37,20 @@ public class EzDoc24Controller {
 	/**
 	 * 문서24 상세정보 조회 함수
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezDoc24/getDoc24Detail.do", method = RequestMethod.GET, produces = "text/xml;charset=utf-8")
 	public String getDoc24Detail(String orgcn, Model model) throws Exception{
 		logger.debug("getDoc24Detail Started.");
-//        String jsonData = ezDoc24Service.getDoc24Detail(orgcn);
-        String jsonData = "{\"cmpnyNm\": \"문서24테스트_법인2\",    \"zip\": \"03171\",    \"senderNm\": \"문서24테스트_법인1\",    \"detailAdres\": \"문서24\",    \"adres\": \"서울특별시 종로구 세종대로 209 (세종로)\",    \"fxnum\": \"02-0000-0000\",    \"telnum\": \"02-6006-5024\",    \"jurirno\": \"\",    \"bizrno\": \"000-00-00000\",    \"orgCd\": \"M999999\"  }";            
+        String jsonData = ezDoc24Service.getDoc24Detail(orgcn);
+        if(jsonData == null || jsonData.equals("")) {
+        	jsonData = "{\"header\": {\"code\": \"LNK000000\",\"message\": \"성공\"},\"result\": {\"cmpnyNm\": \"문서24테스트_법인2\",    \"zip\": \"03171\",    \"senderNm\": \"문서24테스트_법인1\",    \"detailAdres\": \"문서24\",    \"adres\": \"서울특별시 종로구 세종대로 209 (세종로)\",    \"fxnum\": \"02-0000-0000\",    \"telnum\": \"02-6006-5024\",    \"jurirno\": \"\",    \"bizrno\": \"000-00-00000\",    \"orgCd\": \"M999999\"  }}";            
+        }
         if (jsonData != null && !"".equals(jsonData.trim()))
         {
         	Map<String,Object> map = JsonUtil.JsonToMap(jsonData);
-//        	if (((Map<String, Object>)map.get("header")).get("code").toString().equals("LNK000000"))
-       		if (true)
+        	if (((Map<String, Object>)map.get("header")).get("code").toString().equals("LNK000000"))
         	{
-//				 Map<String, Object> data = (Map<String, Object>) map.get("result");
-				 Map<String, Object> data = map;
+				 Map<String, Object> data = (Map<String, Object>) map.get("result");
 				 
 				 if(data != null) {
 					model.addAttribute("cmpnyNm"	 ,data.get("cmpnyNm")    );      
