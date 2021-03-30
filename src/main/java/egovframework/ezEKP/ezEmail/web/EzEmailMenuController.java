@@ -982,6 +982,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		IMAPAccess ia = null;
 		
 		try {
+			String importState = "";
+			
 			if (multiFile == null || multiFile.get(0) == null) {
 				logger.error("Cannot find file."); 
 				throw new Exception("Cannot find file.");
@@ -1116,7 +1118,14 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 						messageList.add(message);
 						emlCount ++;
 					} catch (Exception e) {
-						e.printStackTrace();
+						String exceptionMessage = e.getMessage();
+						
+						if (exceptionMessage.contains("NO APPEND failed. Save failed.")) {
+							importState = "NO_APPEND";
+							break;
+						} else {
+							e.printStackTrace();
+						}
 					}
 	
 					// 진행율 클라이언트에게 전송
@@ -1161,6 +1170,10 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 					throw new Exception("ZEROEML");
 				}
 				
+				if (!importState.equals("")) {
+					throw new Exception(importState);
+				}
+				
 				folder.appendMessages(messageList.toArray(new Message[0]));
 				folder.close(true);
 			}
@@ -1193,6 +1206,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 					returnValue = "ABORT";
 				} else if (exceptionMessage.equals("ZEROEML")) {
 					returnValue = "ZEROEML";
+				} else if (exceptionMessage.equals("NO_APPEND")) {
+					returnValue = "NO_APPEND";
 				} else {
 					returnValue = "ERROR";
 					e.printStackTrace();

@@ -982,6 +982,12 @@
 					document.importMailboxform.file1.value = "";
 					MailListRefresh();
 				}
+
+				if (result == "NO_APPEND") { // 메일용량 초과시
+					alert("<spring:message code='ezEmail.ksa16' />");
+					document.importMailboxform.file1.value = "";
+					MailListRefresh();
+				}
 				
 				if (result == "OK") {
 					document.importMailboxform.file1.value = "";
