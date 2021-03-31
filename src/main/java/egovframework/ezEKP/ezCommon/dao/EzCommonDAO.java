@@ -1776,4 +1776,48 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			}
 		}
 	}
+
+	// 2020-10-19 김은실 - 웹폴더 > 하위부서 허용 여부 추가	
+	public void addWebfolderUserSubdeptPermittedColumn() throws Exception {
+		try {
+			select("EzCommonDAO.checkWebfolderUserSubdeptPermittedColumn");
+		} catch (Exception e) {
+			logger.debug("tbl_webfolder_user SUBDEPT_PERMITTED column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.createWebfolderUserSubdeptPermittedColumn");
+		}
+	}
+	
+	/* 2020-12-08 김은실 - [카이스트] 웹폴더 > 폴더 담당자 추가 */
+	public void addWebfolderUserFolderManagerColumn() throws Exception {
+		try {
+			select("EzCommonDAO.checkWebfolderUserFolderManagerColumn");
+		} catch (Exception e) {
+			logger.debug("tbl_webfolder_folderuser FOLDER_MANAGER column doesn't exist. creating the column...");
+			// FOLDER_MANAGER : (카이스트) 폴더담당자 (1레벨만 해당)
+			update("EzCommonDAO.createWebfolderUserFolderManagerColumn");
+		}
+	}
+
+	public void createWebfolderFileUserTable() {
+		try {
+			select("EzCommonDAO.selectWebfolderFileUserTable");
+		} catch (Exception e) {
+			logger.debug("tbl_webfolder_fileUser table doesn't exist. creating the table...");
+			update("EzCommonDAO.createtWebfolderFileUserTable");
+		}
+		
+		try {
+			update("EzCommonDAO.createWebfolderFolderUserSeq");
+		} catch (Exception e) {
+			logger.debug("createtWebfolderFolderUserSeq sequence exist.");
+		} 
+			
+		try {
+			update("EzCommonDAO.createWebfolderFileUserSeq");
+		} catch (Exception e) {
+			logger.debug("createtWebfolderFileUserSeq sequence exist.");
+		} 
+	}
+	
 }

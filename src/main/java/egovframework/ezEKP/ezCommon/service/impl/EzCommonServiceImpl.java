@@ -2226,6 +2226,23 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.addScheduleMailNotiConfig();
 	}
 
+	/* 2020-10-19 김은실 - 웹폴더 > 하위부서 허용 여부 추가 */
+	@Override
+	public void addWebfolderUserSubdeptPermittedColumn() throws Exception {
+		ezCommonDAO.addWebfolderUserSubdeptPermittedColumn();
+	}
+	
+	/* 2020-12-08 김은실 - [카이스트] 웹폴더 > 폴더 담당자 추가 */
+	@Override
+	public void addWebfolderUserFolderManagerColumn() throws Exception {
+		ezCommonDAO.addWebfolderUserFolderManagerColumn();
+	}
+	
+	@Override
+	public void createWebfolderFileUserTable() {
+		ezCommonDAO.createWebfolderFileUserTable();
+	}
+	
 	@Override
     public void createTblYearlyDocCount() throws Exception {
 	    ezCommonDAO.createTblYearlyDocCount();

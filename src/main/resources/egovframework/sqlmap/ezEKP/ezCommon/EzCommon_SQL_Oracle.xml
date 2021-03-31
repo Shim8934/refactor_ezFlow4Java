@@ -3393,4 +3393,84 @@
 	<statement id="EzCommonDAO.createMailTemplateSequence">
 		CREATE SEQUENCE "SEQ_JMOCHA_MAIL_SIGN_TEMP"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE
 	</statement>
+	
+	<select id="EzCommonDAO.checkWebfolderUserSubdeptPermittedColumn">
+		<![CDATA[
+			SELECT 
+				SUBDEPT_PERMITTED
+			FROM 
+				TBL_WEBFOLDER_FOLDERUSER
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createWebfolderUserSubdeptPermittedColumn">
+		ALTER TABLE
+			TBL_WEBFOLDER_FOLDERUSER
+		ADD 
+			SUBDEPT_PERMITTED NUMBER(11, 0) DEFAULT '0'
+	</statement>
+	
+	<select id="EzCommonDAO.selectWebfolderFileUserTable">
+		<![CDATA[
+			SELECT 
+			    SEQ_ID
+			FROM 
+			    TBL_WEBFOLDER_FILEUSER
+			WHERE 
+			    ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createtWebfolderFileUserTable"> 
+		CREATE TABLE TBL_WEBFOLDER_FILEUSER 
+		  (	"SEQ_ID" VARCHAR2(100 BYTE) NOT NULL ENABLE, 
+			"FILE_ID" VARCHAR2(100 BYTE) NOT NULL ENABLE, 
+			"USER_ID" VARCHAR2(100 BYTE) NOT NULL ENABLE, 
+			"USER_TYPE" VARCHAR2(50 BYTE) NOT NULL ENABLE, 
+			"CREATE_ID" VARCHAR2(100 BYTE) NOT NULL ENABLE, 
+			"CREATE_DATE" DATE NOT NULL ENABLE, 
+			"COMPANY_ID" VARCHAR2(50 BYTE) NOT NULL ENABLE, 
+			"TENANT_ID" NUMBER(7,0) NOT NULL ENABLE, 
+			"SUBDEPT_PERMITTED" NUMBER(11,0) DEFAULT '0', 
+			 PRIMARY KEY ("SEQ_ID", "TENANT_ID")
+		  )  		
+	</statement>
+	
+	<statement id="EzCommonDAO.createWebfolderFolderUserSeq"> 
+		<![CDATA[
+		CREATE SEQUENCE SEQ_FOLDERUSER MINVALUE 1000 MAXVALUE 9999999999999999999999999999
+		INCREMENT BY 1
+		START WITH 1000
+		NOORDER  NOCYCLE  NOKEEP  GLOBAL
+		]]>
+	</statement>
+	
+	<statement id="EzCommonDAO.createWebfolderFileUserSeq"> 
+		<![CDATA[
+		CREATE SEQUENCE SEQ_FILEUSER MINVALUE 1000 MAXVALUE 9999999999999999999999999999
+		INCREMENT BY 1
+		START WITH 1000
+		NOORDER  NOCYCLE  NOKEEP  GLOBAL
+		]]>
+	</statement>
+	
+	<select id="EzCommonDAO.checkWebfolderUserFolderManagerColumn">
+		<![CDATA[
+			SELECT 
+				FOLDER_MANAGER
+			FROM 
+				TBL_WEBFOLDER_FOLDERUSER
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createWebfolderUserFolderManagerColumn">
+		ALTER TABLE
+			TBL_WEBFOLDER_FOLDERUSER
+		ADD 
+			FOLDER_MANAGER NUMBER(11, 0) DEFAULT '0'
+	</statement>
 </sqlMap>

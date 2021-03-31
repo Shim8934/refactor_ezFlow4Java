@@ -276,4 +276,10 @@ public interface EzCommonService {
 	public void insertChartPortletInfo() throws Exception;
 	
 	public void createMailTemplateSequence() throws Exception;
+
+	public void addWebfolderUserSubdeptPermittedColumn() throws Exception;
+	
+	public void addWebfolderUserFolderManagerColumn() throws Exception;
+	
+	public void createWebfolderFileUserTable();
 }
