@@ -198,7 +198,7 @@
 		
 		    function checkBujaeInfo_Complete(Rtnval) {
 		    	if (Rtnval == true) {
-	                //setBujaeOff();
+	                // setBujaeOff();
 	                saveBujaeUser();
 	                btnVisible('ok');
 	            }
@@ -379,6 +379,13 @@
 		        	}
 	        	}
 				
+	        	else {
+	        		if(deptId == arr_userinfo[4]) {
+	        			jo.proxy = "";
+	        			formArray.push(jo);
+	        		}
+	        	}
+	        	
 		        $.ajax({
 		    		type : "POST",
 		    		dataType : "text",
