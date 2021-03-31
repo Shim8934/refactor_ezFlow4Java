@@ -53,6 +53,7 @@
 		    		dataType : "json",
 		    		async : true,
 		    		url : holiday_url,
+		    		cache:false,
 		    		data : {
 		    			COMPANYID  : COMPANYID,		    			
 		    			holidayType : holidayType,
