@@ -583,9 +583,9 @@
 	</h1>
 	<div id="mainmenu" style="margin-left: 5px;">
 		<ul>
-			<li id=""><a onClick="restoreTrashCan()" style="color: #fff; margin-top: 3px;"><span><spring:message code='ezWebFolder.t287'/></span></a></li>
-			<li id=""><a onClick="moveTraschCan()" style="color: #fff; margin-top: 3px;"><span><spring:message code='ezWebFolder.t282'/></span></a></li>
-			<li id=""><a onClick="filePermanentDelete()"   style="color: #fff; margin-top: 3px;"><span><spring:message code='ezWebFolder.t19'/></span></a></li>
+			<li id=""><a onClick="restoreTrashCan()" style=" margin-top: 3px;"><span><spring:message code='ezWebFolder.t287'/></span></a></li>
+			<li id=""><a onClick="moveTraschCan()" style=" margin-top: 3px;"><span><spring:message code='ezWebFolder.t282'/></span></a></li>
+			<li id=""><a onClick="filePermanentDelete()"   style=" margin-top: 3px;"><span><spring:message code='ezWebFolder.t19'/></span></a></li>
 			<li id="SearchOption" mode="off" onclick="doLayerPopup(this)" class="off"><span class="icon16 icon16_search"></span></li>
 			<li style="float:left;">
 				<select class="select" id="idSelect" onchange="changeValue(this.value);" style="height: 29px; border-radius: 3px; padding: 0px; width: 85px;">

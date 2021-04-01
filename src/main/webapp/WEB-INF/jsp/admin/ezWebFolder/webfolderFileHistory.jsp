@@ -528,7 +528,7 @@
 			<ul>
 				<li id="SearchOption" mode="off" onclick="openSearchPanel()"><span class="icon16 icon16_search"></span></li>
 				<li><span class="icon16 icon16_refresh" onclick="refreshView()"></span></li>
-				<li id=""><a id="btnSave"    style="margin-top: 3px;" onClick="excelExport();"    ><span style="color: #fff;"><spring:message code='ezStatistics.t1003'/></span></a></li>
+				<li id=""><a id="btnSave"    style="margin-top: 3px;" onClick="excelExport();"    ><span><spring:message code='ezStatistics.t1003'/></span></a></li>
 				<li id="">
 					<select id="fileTypeSelect" onchange="search_Set('1');">
 						<option value="1" selected><spring:message code='ezWebFolder.t191'/></option>
@@ -565,7 +565,7 @@
 					</tr>
 					<tr>
 						<th class="wfSearchTh"><spring:message code='ezWebFolder.t152'/></th>
-						<td style="background-color: #fff; min-width: 367px; width: 367px;">
+						<td style="min-width: 367px; width: 367px;">
 							<input id="fileExtVal" type="text" style="height: 23px; width: 200px;">
 							<select style="height: 25px; padding: 0px; width: 85px;" id="fileTypeVal">
 								<option value="1" selected><spring:message code='ezWebFolder.t191'/></option>

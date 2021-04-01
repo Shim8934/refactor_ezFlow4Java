@@ -1168,14 +1168,10 @@
 <body class="mainbody" style="padding-bottom:10px;">
 	<h1>
 		<c:choose>
-			<%-- 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정 --%>
-			<c:when test="${folderType eq 'C' && subTypeC eq 'meeting'}">
-				<spring:message code='ezWebFolder.kes011' />
-			</c:when>
-			<c:when test="${folderType eq 'C' && subTypeC eq 'dean'}">
+			<c:when test="${folderType eq 'C'}">
 				<spring:message code='ezWebFolder.t11' />
 			</c:when>
-			<c:when test="${folderType eq 'C' && subTypeC eq 'task'}">
+			<c:when test="${folderType eq 'D'}">
 				<spring:message code='ezWebFolder.t12' />
 			</c:when>
 			<c:when test="${folderType eq 'U'}">
