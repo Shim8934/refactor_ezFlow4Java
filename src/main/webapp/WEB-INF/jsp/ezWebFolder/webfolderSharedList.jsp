@@ -252,7 +252,7 @@
 						renderList(data.list);
 						setNamePath(data.folderPath, data.folderPath2);
 						setMailBoxInfo(data.folderCount, data.fileCount);
-						disableCapacity();
+// 						disableCapacity();
 						
 						folderId = "";
 					},
@@ -333,7 +333,7 @@
 						renderList2(result.fileList);
 						setNamePath(result.folderPath, result.originalPath);
 						setMailBoxInfo(result.fldCnt, result.fileCnt);
-						capacity.load();
+// 						capacity.load();
 					},
 					error : function(error) {
 						hideProgress();
@@ -603,6 +603,10 @@
 					setStyles([checkboxColumn, favoriteIconColumn, fileIconColumn, sizeColumn, shareStatusColumn], function(style) {
 						style.textAlign = "center";
 					})
+
+					setStyles([nameColumn], function(style) {
+						style.textAlign = "left";
+					});
 					
 					row.setAttribute("class", "bnkWebFolder");
 					row.setAttribute("targetId", resultJson["fileId"]);
@@ -1054,13 +1058,13 @@
 		<h1>
 			<spring:message code='ezWebFolder.t266'/>
 			<span id="mailBoxInfo"></span>
-			<div id="capacity-wrapper">
-				<span id="capacity-folder-type"></span>
-				<div class="progressbar">
-					<div id="capacity-bar" class="proggress"></div>
-				</div>
-				<span id="capacity-percent"></span>
-			</div>
+<!-- 			<div id="capacity-wrapper"> -->
+<!-- 				<span id="capacity-folder-type"></span> -->
+<!-- 				<div class="progressbar"> -->
+<!-- 					<div id="capacity-bar" class="proggress"></div> -->
+<!-- 				</div> -->
+<!-- 				<span id="capacity-percent"></span> -->
+<!-- 			</div> -->
 		</h1>
 		<div id="pageArea">
 			<div style="height: 40px;">
@@ -1072,20 +1076,25 @@
 					<li class="important" onclick="buttons.fileDownload()"><span><spring:message code='ezWebFolder.t186'/></span></li>
 					<li class="important" id="uploadBtn" style="display:none;" onclick="buttons.fileUpload()"><span><spring:message code='ezWebFolder.t187'/></span></li>
 					<li id ="newFolder"><span onclick="buttons.newFolder()"><spring:message code='ezWebFolder.t255' /></span></li>
-					<li id="fileRenameBtn" style="display:none;"><a onclick="buttons.fileRename()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t508' /></span></a></li>
-					<li id="fileMoveCopyBtn" style="display:none;"><a onclick="buttons.fileMoveAndCopy()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t251'/></span></a></li>
-					<li id="fileCopyBtn"><a onclick="buttons.fileCopy()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t316'/></span></a></li>
+					<li id="fileRenameBtn" onclick="buttons.fileRename()" style="display:none;"><span><spring:message code='ezWebFolder.t508' /></span></li>
+					<li id="fileMoveCopyBtn" onclick="buttons.fileMoveAndCopy()" style="display:none;"><span><spring:message code='ezWebFolder.t251'/></span></li>
+					<li id="fileCopyBtn" onclick="buttons.fileCopy()"><span><spring:message code='ezWebFolder.t316'/></span></li>
 					<!-- <li><img src="/images/i_bar.gif"></li> -->
-					<li><a onclick="shareContext.addShareView()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t254'/></span></a></li>
-					<li id="hideShareBtn"><a onclick="shareContext.hideShare()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t317'/></span></a></li>
-					<li id="hiddenShareListBtn"><a onclick="shareContext.showHiddenSharedList(1)" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t318'/></span></a></li>
+					<li onclick="shareContext.addShareView()"><span><spring:message code='ezWebFolder.t254'/></span></li>
+					<li id="hideShareBtn" onclick="shareContext.hideShare()"><span><spring:message code='ezWebFolder.t317'/></span></li>
+					<li id="hiddenShareListBtn" onclick="shareContext.showHiddenSharedList(1)"><span><spring:message code='ezWebFolder.t318'/></span></li>
 					<!-- <li><img src="/images/i_bar.gif"></li> -->
 					<li><span class="icon16 icon16_star" onclick="favoriteContext.toggleAll()"></span></li>
 					<li id="SearchOption" mode="off" onclick="doLayerPopup(this)"><span class="icon16 icon16_search"></span></li>
 					<li id="fileDeleteBtn" style="display:none;" onclick="buttons.fileDelete()"><span class="icon16 icon16_delete"></span></li>
 					<li onclick="refreshView()"><span class="icon16 icon16_refresh"></span></li>
 					<!-- <li><img src="/images/i_bar.gif"></li> -->
-					<li>
+					<div class="sub_frameIcon" style="float:right">
+						<div class="sub_frameIconUL02">
+							  <p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="webfolderlistoptiondiv"></span></p>  
+						</div>
+					</div>
+					<li style="float:right;">
 						<select id="fileTypeSelect" class="select" onchange="onFileTypeChange(this.value);">
 							<option value=""><spring:message code='ezWebFolder.t191'/></option>
 							<option value="document"><spring:message code='ezWebFolder.t192'/></option>
@@ -1100,11 +1109,6 @@
 					<!-- <li id="right" style="float:right;">
 						<img src ="/images/kr/cm/btn_arrow_down.gif" mode="off" id="webfolderlistoptiondiv">
 					</li> -->
-					<div class="sub_frameIcon" style="float:right">
-						<div class="sub_frameIconUL02">
-						  	<p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="webfolderlistoptiondiv"></span></p>  
-						</div>
-					</div>
 				</ul>
 			</div>
 			
@@ -1123,7 +1127,7 @@
 		                <table style="width: 100%; border-spacing: 0px; border-collapse: collapse; border: none;" class="list_element">
 		                    <caption></caption>
 		                    <colgroup>
-		                        <col style="width: 80px;">
+		                        <col style="width: 90px;">
 		                        <col>
 		                    </colgroup>
 		                    <tr>

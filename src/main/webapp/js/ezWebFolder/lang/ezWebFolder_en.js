@@ -34,7 +34,7 @@ var messages = {
 	strLang33 : "You canceled sharing.",
 	strLang34 : "Shared folders cannot be modified.",									// ezWebFolder.t327
 	strLang35 : "Top-level folders cannot be modified.",								// ezWebFolder.t328
-	strLang36 : "This folder can be managed only by administrators.",					// ezWebFolder.t329
+	strLang36 : "This folder can be managed only by folder manager",					// ezWebFolder.t329
 	strLang37 : "If you are not a folder creator, you cannot modify the folder name.",	// ezWebFolder.t258
 	strLang38 : "Please select a file or folder.",
 	strLang39 : "Please select one file or folder.",
@@ -45,11 +45,17 @@ var messages = {
 	parameterError: "Insufficient parameters.",
 	serverError: "An error has occurred.",
 	permissionError: "You do not have permission.",
+	permissionErrorContains: "Some items cannot be accessed.",
 	resultErrDuplicateRename : "You can not change the duplicate names.",
 	resultErrDuplicateCreate : "You can not create duplicate names.",
 	successMoveFile: "You have successfully moved the file.",
 	successCopyFile: "You have successfully copied the files.",
 	outOfStorageSpaceForOneTime: "It has exceeded the one-time upload capacity.",
 	outOfStorageSpace: "The capacity has been exceeded.",
-	strLangDragNDrop: "Folders can not be uploaded."
+	strLangDragNDrop: "Folders can not be uploaded.",
+	replyFileDelete: "Files containing replies cannot be deleted.",
+	extensionError: "The file extension is not allowed\n",
+	webviewerConfirm: "Do you want to open the selected file with web viewer?",
+	moveFromNotInheritError: "You cannot move/copy files or folders in folders that do not inherit permissions.",
+	moveFromNotInheritErrorContains: "You cannot move/copy because the selected item contains files or folders in folders that do not inherit permissions."
 }

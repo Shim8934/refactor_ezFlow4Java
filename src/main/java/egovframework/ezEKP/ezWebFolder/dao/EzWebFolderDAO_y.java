@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezWebFolder.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -153,6 +154,10 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 		return (int) select("EzWebFolderDAO_y.checkCompanyFolderPermission", map);
 	}
 	
+	public int checkCompanyFilePermission(Map<String, Object> map) {
+		return (int) select("EzWebFolderDAO_y.checkCompanyFilePermission", map);
+	}
+	
 	// 파일 상세 정보 탐색기지원
 	public FileVO getFileDetailForExplorer(Map<String, Object> map) {
 		return (FileVO) select("EzWebFolderDAO_y.getFileDetailForExplorer", map);
@@ -193,4 +198,35 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 	public String folderIdByUserIdAndFolderType (Map<String, Object> map) {
 		return (String) select("EzWebFolderDAO_y.folderIdByUserIdAndFolderType", map);
 	}
+
+	public ArrayList<Map<String, Object>> selectWebfolderFiletoAnother(Map<String, String> map) {
+		return  (ArrayList<Map<String, Object>>) list("EzWebFolderDAO_y.selectWebfolderFiletoAnother", map);
+	}
+	
+	// 
+	public List<String> getWebFolderUserGroupList(Map<String, Object> map) {
+		return (List<String>) list("EzWebFolderDAO_y.getWebFolderUserGroupList", map);
+	}
+
+	public List<String> getjikWiChekAddjobList(Map<String, Object> map) {
+		return (List<String>) list("EzWebFolderDAO_y.getjikWiChekAddjobList", map);
+	}
+
+	public FileVO selectFileDetail(Map<String, String> map) {
+		return (FileVO) select("EzWebFolderDAO_y.selectFileDetail", map);
+	}
+
+	public String getPortletFolderId(Map<String, Object> map) {
+		return (String) select("EzWebFolderDAO_y.getPortletFolderId", map);
+	}
+
+	public List<Map<String,String>> getFolderUser (Map<String, Object> map) {
+		return (List<Map<String, String>>) list("EzWebFolderDAO_y.getFolderUser", map);
+	}
+		
+	public List<Map<String, Object>> selectRootFolderListInfo(
+			Map<String, Object> map) {
+		return (List<Map<String, Object>>) list("EzWebFolderDAO_y.getRootFolderListInfo",map);
+	}
+	
 }

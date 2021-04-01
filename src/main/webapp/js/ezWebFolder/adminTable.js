@@ -239,6 +239,8 @@ function TableView() {
 				var trElmt  = document.createElement("tr");
 				var tdElmt1 = document.createElement("td");
 				var tdElmt2 = document.createElement("td");
+				var tdElmt2_path = document.createElement("td");
+				var tdElmt3_version = document.createElement("td");
 				var tdElmt3 = document.createElement("td");
 				var tdElmt4 = document.createElement("td");
 				var tdElmt5 = document.createElement("td");
@@ -246,7 +248,9 @@ function TableView() {
 				
 				tdElmt1.setAttribute("class", "wfFileType");
 				tdElmt2.setAttribute("class", "wfFileLogName");
+				tdElmt2_path.setAttribute("class", "wfFileLogName");
 				tdElmt3.setAttribute("class", "wfFileFavoriteSize");
+				tdElmt3_version.setAttribute("class", "wfFileFavoriteSize");
 				tdElmt4.setAttribute("class", "wfFileLogMember");
 				tdElmt5.setAttribute("class", "wfActive");
 				tdElmt6.setAttribute("class", "wfFileLogDate");
@@ -258,13 +262,18 @@ function TableView() {
 				tdElmt1.setAttribute("style", "text-align: center;");
 				tdElmt1.appendChild(fileIconElmt);
 				
-				tdElmt2.setAttribute("style", "overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap; word-wrap: normal;");
+				tdElmt2.setAttribute("style", "word-break: break-all;white-space: pre-wrap;cursor: pointer; word-wrap: normal;");
 				tdElmt2.setAttribute("title", _dataSource[i]["fileName"]);
 				tdElmt2.textContent = _dataSource[i]["fileName"];
 				
+				tdElmt2_path.setAttribute("style", "word-break: break-all;white-space: pre-wrap;cursor: pointer; word-wrap: normal;");
+				tdElmt2_path.setAttribute("title", _dataSource[i]["folderPathName"] == null ? '-' : _dataSource[i]["folderPathName"].substring(8, _dataSource[i]["folderPathName"].length-1));
+				tdElmt2_path.textContent = _dataSource[i]["folderPathName"] == null ? '-' : _dataSource[i]["folderPathName"].substring(8, _dataSource[i]["folderPathName"].length-1);
+				
+				tdElmt3_version.textContent = _dataSource[i]["version"] == 0 ? '-' : _dataSource[i]["version"] + ".0";
 				tdElmt3.textContent = getFileSize(_dataSource[i]["fileSize"]);
 				
-				tdElmt4.setAttribute("style","overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap; word-wrap: normal;");
+				tdElmt4.setAttribute("style","word-break: break-all;white-space: pre-wrap;cursor: pointer; word-wrap: normal;");
 				tdElmt4.textContent = primary == "1" ? _dataSource[i]["createName1"] : _dataSource[i]["createName2"];
 				tdElmt4.setAttribute("title", tdElmt4.textContent);
 				
@@ -278,17 +287,20 @@ function TableView() {
 					case "MV": tdElmt5.textContent = strActType7; break;
 					case "CP": tdElmt5.textContent = strActType8; break;
 					case "WR": tdElmt5.textContent = strActType9; break;
+					case "V" : tdElmt5.textContent = strActType10; break;
 				}
 				
-				tdElmt6.setAttribute("style", "text-align: center; overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap; word-wrap: normal;");
+				tdElmt6.setAttribute("style", "text-align: center; word-break: break-all;white-space: pre-wrap;cursor: pointer; word-wrap: normal;");
 				tdElmt6.textContent = _dataSource[i]["createDate"].substring(0, 19);
 				tdElmt6.setAttribute("title", tdElmt6.textContent);
 				
 				trElmt.appendChild(tdElmt1);
 				trElmt.appendChild(tdElmt2);
+				trElmt.appendChild(tdElmt2_path);
+				trElmt.appendChild(tdElmt3_version);
 				trElmt.appendChild(tdElmt3);
 				trElmt.appendChild(tdElmt4);
-				trElmt.appendChild(tdElmt5);
+				trElmt.appendChild(tdElmt5);  
 				trElmt.appendChild(tdElmt6);
 				tableList.appendChild(trElmt);
 			}
@@ -653,6 +665,11 @@ function TableView() {
 				var tdElmt8 = document.createElement("td");	
 				var tdElmt9 = document.createElement("td");
 				
+				var encryptedFlag = _dataSource[i]["encryptedFlag"];
+				var fileName = _dataSource[i]["fileName"];
+				var depth = _dataSource[i]["depth"];
+				var ext = _dataSource[i]["fileExt"];
+				
 				tdElmt1.setAttribute("class", "wfFilecheck");
 				tdElmt2.setAttribute("class", "wfFileType");
 				tdElmt3.setAttribute("class", "wfFileName");
@@ -666,8 +683,18 @@ function TableView() {
 				trElmt.setAttribute("class", _unselectClass);
 				trElmt.setAttribute("_fileId", _dataSource[i]["fileId"]);
 				trElmt.setAttribute("_filePath", _dataSource[i]["filePath"]);
+				trElmt.setAttribute("encryptedFlag", _dataSource[i]["encryptedFlag"]);
+				trElmt.setAttribute("depth", depth);
 				trElmt.onclick = function(event) {clickRow(event);};
-				trElmt.ondblclick = function(event) {downloadFileByDbClick(event);};
+				trElmt.addEventListener("dblclick", function(event) {
+					if (subTypeC == "meeting" || this.getAttribute("encryptedFlag") == "1") {
+						unidocsWebViewer(event);
+					} else {
+						downloadFileByDbClick(event);
+					}
+					rowContext.setSelectState(this, true);
+				});
+				trElmt.addEventListener("contextmenu", openContextMenu);
 				
 				var inputElmt = document.createElement("input");
 				inputElmt.setAttribute("type", "checkbox");
@@ -681,9 +708,26 @@ function TableView() {
 				fileIconElmt.src = _dataSource[i]["fileIconUrl"];
 				tdElmt2.appendChild(fileIconElmt);
 				tdElmt2.setAttribute("style", "text-align: center;");
-				tdElmt3.textContent = _dataSource[i]["fileName"];
-				tdElmt3.setAttribute("title", _dataSource[i]["fileName"]);
-				tdElmt3.setAttribute("style", "overflow: hidden;text-overflow: ellipsis;white-space: nowrap; word-wrap: normal;");
+				tdElmt3.textContent = fileName;
+				tdElmt3.setAttribute("title", fileName);
+				tdElmt3.setAttribute("ext", ext);
+				tdElmt3.setAttribute("style", "overflow: hidden;text-overflow: ellipsis;white-space: nowrap; word-wrap: normal; text-align: left;");
+
+				// 계층 구조 표시
+				if (depth > 1) {
+					var additional = "↪ ";
+
+					for (var j = 0; j < depth - 1; j++) {
+						additional = " " + additional;
+					}
+
+					tdElmt3.innerHTML = additional + tdElmt3.innerHTML;
+				}
+
+				if (encryptedFlag == 1) {
+					tdElmt3.innerHTML = "<img src='/images/email/secureMail/security_icon.gif' width='12' /> " + tdElmt3.innerHTML;
+				}
+				
 				tdElmt4.textContent = getFileSize(_dataSource[i]["fileSize"]);
 				tdElmt4.setAttribute("style", "text-align: center;");
 				tdElmt5.textContent = primary == "1" ? _dataSource[i]["createName1"] : _dataSource[i]["createName2"];
@@ -766,6 +810,8 @@ function TableView() {
 				trElement.setAttribute("targetid", resultElement["trashCanId"]);
 				trElement.setAttribute("targetPath", resultElement["trashCanPath"]);
 				trElement.setAttribute("ext", resultElement["trashCanExt"]);
+				// version이 1 이상이라면 버전 파일이다.
+				trElement.setAttribute("version", resultElement["version"]);
 				trElement.onclick = function(event) {clickRow(event);};
 				
 				var inputElmt = document.createElement("input");
@@ -787,7 +833,7 @@ function TableView() {
 				tdName.textContent         = resultElement["trashCanName"];
 				tdSize.textContent         = resultElement["trashCanExt"] != 'folder' ? getFileSize(resultElement["trashCanSize"]) : "-";
 				tdSize.setAttribute("style", "overflow: hidden;text-overflow: ellipsis;white-space: nowrap;text-align: center; word-wrap: normal;");
-				tdName.setAttribute("style", "overflow: hidden;text-overflow: ellipsis;white-space: nowrap; word-wrap: normal;");
+				tdName.setAttribute("style", "overflow: hidden;text-overflow: ellipsis;white-space: nowrap; word-wrap: normal; text-align: left;");
 				tdName.setAttribute("title", resultElement["trashCanName"]);
 				tdCreator.textContent      = lang == "1" ? resultElement["createName1"] : resultElement["createName2"];
 				tdUpdateDate.textContent   = resultElement["updateDate"].substring(0, 10);
@@ -848,19 +894,20 @@ function TableView() {
 	}
 }
 function optionView(obj) {
-		 if (obj.getAttribute("mode") == "off") {
-	        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
-          document.getElementById("layer_Viewpopup").style.top = "130px";
-	        document.getElementById("layer_Viewpopup").style.display = "";
-	        obj.setAttribute("class", "icon16 btn_onarrow_down");
-	        obj.setAttribute("mode", "on");
-	    } else {
-	        optionHidden();
-	    }
+	if (obj.getAttribute("mode") == "off") {
+		var a_left = $("#wfOptionDiv").offset().left - ($("#layer_Viewpopup").width() - $("#wfOptionDiv").outerWidth());
+		var a_top = $("#wfOptionDiv").offset().top + $("#wfOptionDiv").outerHeight() + 2;
+		document.getElementById("layer_Viewpopup").style.display = "";
+		obj.setAttribute("class", "icon16 btn_onarrow_down");
+		obj.setAttribute("mode", "on");
+		$("#layer_Viewpopup").css({"left":a_left, "top":a_top});
+	} else {
+		optionHidden();
 	}
- 
+}
+
 function optionHidden() {
-    document.getElementById("layer_Viewpopup").style.display = "none";
-    document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
-    document.getElementById("webfolderlistoptiondiv").setAttribute("class", "icon16 btn_arrow_down");
+	document.getElementById("layer_Viewpopup").style.display = "none";
+	document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
+	document.getElementById("webfolderlistoptiondiv").setAttribute("class", "icon16 btn_arrow_down");
 }

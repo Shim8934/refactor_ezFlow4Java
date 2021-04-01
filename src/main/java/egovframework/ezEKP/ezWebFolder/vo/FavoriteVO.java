@@ -16,11 +16,15 @@ public class FavoriteVO {
 
 	private String favoriteStatus;
 	private int tenantId;
-	
+
+	private String folderSubType;
+	private int encryptedFlag;
+	private int depth;
+
 	public String getFolderId() {
 		return folderId;
 	}
-	
+
 	public void setFolderId(String folderId) {
 		this.folderId = folderId;
 	}
@@ -121,10 +125,42 @@ public class FavoriteVO {
 		this.tenantId = tenantId;
 	}
 
+	public String getFolderSubType() {
+		return folderSubType;
+	}
+
+	public void setFolderSubType(String folderSubType) {
+		this.folderSubType = folderSubType;
+	}
+
+	public int getEncryptedFlag() {
+		return encryptedFlag;
+	}
+
+	public void setEncryptedFlag(int encryptedFlag) {
+		this.encryptedFlag = encryptedFlag;
+	}
+
+	public int getDepth() {
+		return depth;
+	}
+
+	public void setDepth(int depth) {
+		this.depth = depth;
+	}
+
+	public boolean isFolder() {
+		return "D".equalsIgnoreCase(targetType);
+	}
+
+	public boolean isFile() {
+		return "F".equalsIgnoreCase(targetType);
+	}
+
 	@Override
 	public String toString() {
 		return "FavoriteVO [targetId=" + targetId + ", targetName=" + targetName + ", targetType=" + targetType + ", targetIconUrl=" + targetIconUrl + ", targetPath=" + targetPath + ", targetExt="
-				+ targetExt + ", targetSize=" + targetSize + ", creatorId=" + creatorId + ", creatorName=" + creatorName + ", createDate=" + createDate + ", favoriteStatus=" + favoriteStatus
-				+ ", tenantId=" + tenantId + "]";
+				+ targetExt + ", targetSize=" + targetSize + ", folderId=" + folderId + ", creatorId=" + creatorId + ", creatorName=" + creatorName + ", createDate=" + createDate + ", favoriteStatus="
+				+ favoriteStatus + ", tenantId=" + tenantId + ", folderSubType=" + folderSubType + ", encryptedFlag=" + encryptedFlag + ", depth=" + depth + "]";
 	}
 }

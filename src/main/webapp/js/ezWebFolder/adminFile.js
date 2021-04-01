@@ -200,12 +200,17 @@ function search_Set(pPage) {
 					totalPages  = data.totalPages;
 					currentPage = pPage > totalPages                    ? totalPages : pPage;
 					currentPage = (currentPage == 0 && totalPages > 0)  ? 1          : currentPage;
+					containsReplyFiles = data.containsReplyFiles;
 					makePageSelPage();
 					renderData(result);
 					
 					if (window.capacity) {
 						capacity.load();
 					}
+					
+					// 폴더 권한 비상속 (이동/복사 버튼 숨기기)
+					$("#moveButton, #moveMenu").css("display", data.isNotInherit ? "none" : "");
+					
 					break;
 				case 1:
 					alert(resultErr1);
@@ -258,7 +263,9 @@ function startSearch() {
 
 function changeCompanyForCompFile() {
 	refresh();
-	window.parent.frames["left"].getCompanyData(document.getElementById("companyList").value, 1, "folderTree");
+	var subTypeC = window.subTypeC;
+	var treeType = subTypeC == 'task'? "folderTree4" : subTypeC == 'meeting'? "folderTree" : subTypeC == 'dean'? "folderTree3" : "";
+	window.parent.frames["left"].getCompanyData(document.getElementById("companyList").value, 1, treeType, subTypeC);
 }
 
 function changeCompanyForDeptFile() {
@@ -297,13 +304,17 @@ function getCheckedRowInfo() {
 	var listOfChecked = document.getElementsByClassName("bnkWebFolder2");
 	var filesList     = [];
 	
-	if (listOfChecked.length <= 0) {return null;}
-	
 	for (var i = 0; i < listOfChecked.length; i++) {
 		var fileFolderId = listOfChecked[i].getAttribute("_fileId");
 		filesList.push(fileFolderId);
 	}
 	
+	if (window.contextClickedTr && filesList.length <= 1) {
+		return [contextClickedTr.getAttribute("_fileId")];
+	}
+
+	if (listOfChecked.length <= 0) {return null;}
+
 	return filesList;
 }
 
@@ -325,8 +336,13 @@ function fileDelete() {
 	
 	if (filesList == null) {alert(strLang38); return;}
 	
+	if (hasContainsReplyFiles(filesList)) {
+		alert(messages.replyFileDelete);
+		return;
+	}
+	
 	openLeftPanel();
-	DivPopUpShow(450, 200, "/ezWebFolder/deleteConfirm.do?fileList=" + filesList.toString());
+	DivPopUpShow(450, 180, "/ezWebFolder/deleteConfirm.do?fileList=" + filesList.toString());
 }
 
 function fileRename() {
@@ -336,6 +352,17 @@ function fileRename() {
 	if (filesList.length > 1) {alert(strLang37); return;}
 	
 	var fileId = filesList[0];
+
+	var nameTd = document.querySelector("tr[_fileId='" + fileId + "'] > .wfFileName");
+	var currentName = nameTd.getAttribute("title");
+	var fileExt = nameTd.getAttribute("ext");
+
+	if (fileExt && fileExt != ".none") {
+		currentName = currentName.substr(0, currentName.length - fileExt.length - 1);
+	}
+
+	window.inputNameDlg_cross_dialogArguments = { currentName: currentName };
+
 	openLeftPanel();
 	DivPopUpShow(450, 200, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
 }
@@ -346,7 +373,57 @@ function fileMove() {
 	if (filesList == null) {alert(strLang38); return;}
 	
 	openLeftPanel();
-	DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + filesList.toString() + "&mode=admin");
+	DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + filesList.toString() + "&mode=admin&subTypeC=" + (subTypeC != null? subTypeC : ""));
+}
+
+function openFileVersionHistory() {
+	var filesList = getCheckedRowInfo();
+
+	if (filesList == null) {
+		alert(messages.strLang5);
+		return;
+	}
+
+	if (filesList.length > 1) {
+		alert(messages.strLang6);
+		return;
+	}
+
+	openLeftPanel();
+	DivPopUpShow(450, 405, "/ezWebFolder/fileVersionManage.do?fileId=" + filesList.toString());
+}
+
+function openReply() {
+	var filesList = getCheckedRowInfo();
+
+	if (filesList == null) {
+		alert(messages.strLang5);
+		return;
+	}
+
+	if (filesList.length > 1) {
+		alert(messages.strLang6);
+		return;
+	}
+
+	openLeftPanel();
+	DivPopUpShow(300, 220, "/ezWebFolder/webfolderReply.do?fileId=" + filesList.toString());
+}
+
+function hasContainsReplyFiles(fileIds) {
+	if (!window.containsReplyFiles) {
+		return false;
+	}
+
+	for (var i = 0; i < fileIds.length; i++) {
+		for (var j = 0; j < containsReplyFiles.length; j++) {
+			if (fileIds[i] == containsReplyFiles[j]) {
+				return true;
+			}
+		}
+	}
+
+	return false;
 }
 
 function refresh() {
@@ -366,6 +443,12 @@ function refreshView() {
 }
 
 function toggleUploadBttn(levelValue) {
+	if (levelValue == 0){
+		document.getElementById("uploadBttn").style.display = "none"
+		return;
+	} else {
+		document.getElementById("uploadBttn").style.display = ""
+	}
 	var dragDropAreaElmt = document.getElementById("dragDropArea");
 	
 	dragDropAreaElmt.ondragenter = function(e) {onDragEnter(e)};

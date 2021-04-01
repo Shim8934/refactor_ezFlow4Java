@@ -45,6 +45,10 @@
 			var sortColumn = null;
 			var sortType = null;
 			var strLang43  = "<spring:message code='ezWebFolder.t308'/>";
+			var subTypeC = "<c:out value='${subTypeC}' />";
+			var containsReplyFiles = [];
+			var contextClickedTr = null;
+			var uploadLimit = <c:out value="${uploadLimit}" />;
 			
 			capacity.setFolderIdProvider(function() {
 				return "<c:out value='${folderId}'/>";
@@ -113,7 +117,64 @@
 					pagination.setListSize(this.value);
 					refreshView();
 				});
+
+				document.body.addEventListener("click", hideContextMenu, true);
+				document.getElementById("dragDropArea").addEventListener("scroll", hideContextMenu);
 			});
+			
+			function openSearchPanel() {
+				var searchPanel = document.getElementById("searchPanel");
+				if (searchPanel.style.display == "none") {
+					window.parent.frames["left"].document.getElementById("bnkBlockLeft").style.display = "";
+					document.getElementById("mailPanel").style.display                              = "";
+					var position              = getPosition(516, 247);
+					searchPanel.style.top     = position[0] + "px";
+					searchPanel.style.right   = position[1] + "px";
+					searchPanel.style.display = "";
+				}
+				else {
+					closeAllPopups();
+				}
+				
+				$("#Sdatepicker").datepicker('setDate', "");
+				$("#Edatepicker").datepicker('setDate', "");
+				document.getElementById("fileExtVal").value                = "";
+				document.getElementById("fileNameVal").value               = "";
+				document.getElementById("fileCreatorVal").value            = "";
+				document.getElementById("fileTypeVal").options[0].selected = 'selected';
+			}
+			
+			function closeAllPopups() {
+				window.parent.frames["left"].document.getElementById("bnkBlockLeft").style.display = "none";
+				document.getElementById("mailPanel").style.display                                 = "none";
+				document.getElementById("searchPanel").style.display                               = "none";
+				
+				if (document.getElementById("ui-datepicker-div")) {
+					document.getElementById("ui-datepicker-div").style.display = "none";
+				}
+			}
+			
+			function getPosition(popUpW, popUpH) {
+				var returnValue = new Array();
+				var heigth      = window.parent.document.documentElement.clientHeight;
+				if (heigth == 0) {heigth = window.parent.document.body.clientHeight;}
+				
+				var width = window.parent.document.documentElement.clientWidth;
+				if (width == 0) {width = window.parent.document.body.clientWidth;}
+				
+				var pleftpos = parseInt(width) - popUpW;
+				heigth       = parseInt(heigth) - popUpH;
+				
+				if (heigth < (popUpH + 50)) {
+					returnValue[0] = (heigth / 2);
+				}
+				else {
+					returnValue[0] = (heigth / 2) - 50;
+				}
+				
+				returnValue[1] = pleftpos / 2;
+				return returnValue;
+			}
 			
 			function sortByHeader(cell) {
 				var column = cell.getAttribute("data-column");
@@ -147,8 +208,8 @@
 				this.sortColumn = column;
 				search_Set(currentPage);
 			}
-			/*
-			function optionHidden() {
+			
+			/* function optionHidden() {
 		 	    document.getElementById("layer_Viewpopup").style.display = "none";
 		 	    document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
 		 	    document.getElementById("webfolderlistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
@@ -166,17 +227,118 @@
 		   	    } else {
 		   	        optionHidden();
 		   	    }
-		   	}*/
+		   	} */
 			
 	        function leftFolderCPMV(functionType, folderList, toTargetId) {
 				closeAllPopup();
 				window.close();
 	        }
+
+			// 메일의 콘텍스트 메뉴를 그대로 들고옴
+			function openContextMenu(event) {
+				if (document.getElementById("contextMenuDiv").style.display == "") {
+					hideContextMenu();
+				}
+				if (!event)
+					event = window.event;
+				
+				event.stopPropagation();
+				event.preventDefault();
+				contextClickedTr = event.currentTarget;
+				
+				var EventMouseX = event.clientX;
+				var EventMouseY = event.clientY;
+				
+				var listsizeheight = document.documentElement.clientHeight;
+				var listsizewidth = document.documentElement.clientWidth;
+				
+				var target = event.target ? event.target : event.srcElement;
+				var targetTag = target.tagName;
+				var EventDivSize = EventMouseY + $("#contextMenuDiv").height() + 70;
+
+				if (listsizeheight < EventDivSize) {
+					var Div_ = EventDivSize - listsizeheight;
+					EventMouseY = EventMouseY - Div_;
+				}
+				
+				EventDivSize = EventMouseX + 140;
+				if (listsizewidth < EventDivSize) {
+					var Div_ = EventDivSize - listsizewidth;
+					EventMouseX = EventMouseX - Div_;
+				}
+
+				document.getElementById("contextMenuDiv").style.left = EventMouseX + "px";
+				document.getElementById("contextMenuDiv").style.top = EventMouseY + "px";
+				document.getElementById("contextMenuDiv").style.display = "";
+			}
+
+			function hideContextMenu() {
+				document.getElementById("contextMenuDiv").style.display = "none";
+				if (window.contextClickedTr) {
+					setTimeout(function() {
+						contextClickedTr = null;
+					}, 0);
+				}
+			}
+			
+			function unidocsWebViewer(event){
+				event.stopPropagation();
+				event.preventDefault();
+				var trElmt = event.currentTarget;
+				var fileId = trElmt.getAttribute("_fileId");
+				
+				 var json = {
+						"folderId" : folderId,
+						"fileId" : fileId, 
+						"adminPage" : "admin"
+				};
+				openLeftPanel();
+				document.getElementById("webFolderRightPanel").style.display = "block";
+				document.getElementById("webFolderRightPanel").style.background = "rgba(0,0,0,0.5)";
+				showProgress();
+				
+				$.ajax({
+					type:"POST",
+					async: true,
+					url : "/ezWebFolder/webfolderFileDownForUnidocs.do",
+					data : JSON.stringify(json),
+					contentType: "application/json; charset=UTF-8",
+					dataType: "JSON",
+					success : function (result) {
+						hideProgress();
+						document.getElementById("webFolderRightPanel").style.display = "none";
+						closeLeftPanel();
+						if (result.status == "OK"){
+							var unidocsUrl = result.url + result.encData;
+							window.open(unidocsUrl, '_blank'); 
+						} else if (result.code == -1) {
+							alert("<spring:message code='webfolder.wfjob.notsupport' />");
+						} else {
+							alert("<spring:message code='ezWebFolder.t305' />");
+						}
+					},
+					error : function(error) {
+						alert("<spring:message code='ezWebFolder.t305' />");
+						closeLeftPanel();
+						hideProgress();
+						document.getElementById("webFolderRightPanel").style.display = "none";
+					}
+				});
+			}
 		</script>
 	</head>
 	<body class="mainbody" onload="init('comp');" onresize="preProcessing();" onkeydown="keyPressPanel(event);">
+		<%-- 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정 --%>
 		<h1>
-			<spring:message code='ezWebFolder.t127'/>
+			<c:if test="${subTypeC eq 'task'}">
+				<spring:message code='ezWebFolder.t220' />
+			</c:if>
+			<c:if test="${subTypeC eq 'meeting'}">
+				<spring:message code='ezWebFolder.t127' />
+			</c:if>
+			<c:if test="${subTypeC eq 'dean'}">
+				<spring:message code='ezWebFolder.kes010' />
+			</c:if>
 			<span id="mailBoxInfo"></span>
 			<div id="capacity-wrapper">
 				<div class="progressbar">
@@ -196,13 +358,16 @@
 		
 		<div id="mainmenu" style="position: relative; margin-left: 5px;">
 			<ul>
-				<li id="" class="important" onclick="fileDownload();"><a><span><spring:message code='ezWebFolder.t186'/></span></a></li>
+				<li id="" class="important" onclick="fileDownload();"><span><spring:message code='ezWebFolder.t186'/></span></li>
 				<!-- root에서 파일업로드 되도록하려면 아래를 주석  -->
 <%-- 				<c:if test="${level != '0'}"> --%>
-				<li id="uploadBttn" class="important" onclick="fileUpload();"><a><span><spring:message code='ezWebFolder.t187'/></span></a></li>
+				<li id="uploadBttn" class="important" onclick="fileUpload();"><span><spring:message code='ezWebFolder.t187'/></span></li>
 <%-- 				</c:if> --%>
-				<li id="" onclick="fileRename();"><a><span><spring:message code='ezWebFolder.t508'/></span></a></li>
-				<li id="" onclick="fileMove();"><a><span><spring:message code='ezWebFolder.t120'/></span></a></li>
+				<li id="" onclick="fileRename();"><span><spring:message code='ezWebFolder.t508'/></span></li>
+				<li id="moveButton" onclick="fileMove();"><span><spring:message code='ezWebFolder.t120'/></span></li>
+				<c:if test="${useVersionHistory}">
+					<li><span onclick="openFileVersionHistory()"><spring:message code='webfolder.version.button' /></span></li>
+				</c:if>
 				<li id="SearchOption" mode="off" onclick="openSearchPanel();"><span class="icon16 icon16_search"></span></li>
 				<li><span class="icon16 icon16_delete" onclick="fileDelete();"></span></li>
 				<li><span class="icon16 icon16_refresh" onclick="refreshView();"></span></li>
@@ -217,7 +382,7 @@
 						<option value="7"         ><spring:message code='ezWebFolder.t311'/></option>
 					</select>
 				</li>
-				<div class="sub_frameIcon" style="float:right">
+				<div class="sub_frameIcon" style="float:right" id="wfOptionDiv">
 					<div class="sub_frameIconUL02">
 					  	<p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="webfolderlistoptiondiv"></span></p>  
 					</div>
@@ -230,11 +395,10 @@
 			setParameter("<c:out value='${folderId}'/>", "<c:out value='${primary}'/>", "company", "<c:out value='${rootFolder}'/>", "<c:out value='${level}'/>");
 		</script>
 		
-		<div id="searchPanel" class="wfSearchPanel" style="display: none; overflow: hidden;">
-		<div class="popup" style="margin: 0; padding: 5px 10px 10px;">
-			<h1><spring:message code='ezWebFolder.t21'/></h1> 
-			<div id="wfSearchCloseBttn" class="wfClose"><ul><li><span></span></li></ul></div>
-			<div style="margin: 10px 0px 15px;">
+		<div id="searchPanel" class="wfSearchPanel popupwrap3 modal" style="margin-bottom: 70px; display: none; width:537px;">
+		<div class="popupJQLayer" >
+			<div class="title"><spring:message code='ezWebFolder.t21'/></div>
+			<div id = "wfSearchCloseBttn" class="wfClose" onclick="openSearchPanel();"><ul><li><span></span></li></ul></div>
 				<table class="content wftable">
 					<tr>
 						<th class="wfSearchTh"><spring:message code='ezWebFolder.t151'/></th>
@@ -267,7 +431,6 @@
 						</td>
 					</tr>
 				</table>
-			</div>
 			<div class="wfdivBttn">
 				<a class="webfolderBttn"><span><spring:message code='ezWebFolder.t123'/></span></a>
 				<a class="webfolderBttn" style="display:none"><span><spring:message code='ezWebFolder.t112'/></span></a>
@@ -321,7 +484,7 @@
 	                <table style="width: 100%; border-spacing: 0px; border-collapse: collapse; border: none;" class="list_element">
 	                    <caption></caption>
 	                    <colgroup>
-	                        <col style="width: 80px;">
+	                        <col style="width: 90px;">
 	                        <col>
 	                    </colgroup>
 	                    <tr>
@@ -342,6 +505,38 @@
 	        <div class="shadow">
 	        </div>
 	 	</div>
+		<c:if test="${subTypeC eq 'task'}">
+			<%@ include file="/WEB-INF/jsp/ezWebFolder/component/downloadOptionPopup.jsp" %>
+		</c:if>
+		<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:5000;display:none;" id="webFolderRightPanel">&nbsp;</div>
+		<div id="contextMenuDiv" style="position: absolute; z-index: 6000; display: none;">
+			<table cellpadding="2" cellspacing="1" border="0" class="popuplist">
+				<tbody>
+					<tr id="moveMenu">
+						<td onclick="fileMove();" onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor: pointer; background-color: rgb(255, 255, 255);">
+							<span style="font-size: 12px; width: 100%; display: inline-block;"><img src="/images/ImgIcon/move.gif" align="absmiddle" hspace="5"><spring:message code='ezWebFolder.t251' /></span>
+						</td>
+					</tr>
+					<c:if test="${useVersionHistory}">
+					<tr>
+						<td onclick="openFileVersionHistory();" onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor: pointer; background-color: rgb(255, 255, 255);">
+							<span style="font-size: 12px; width: 100%; display: inline-block;"><img src="/images/ImgIcon/options.gif" align="absmiddle" hspace="5"><spring:message code='webfolder.version.button' /></span>
+						</td>
+					</tr>
+					</c:if>
+					<tr>
+						<td onclick="openReply();" onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor: pointer; background-color: rgb(255, 255, 255);">
+							<span style="font-size: 12px; width: 100%; display: inline-block;"><img src="/images/ImgIcon/rul-sml.png" align="absmiddle" hspace="5"><spring:message code='webfolder.reply.title' /></span>
+						</td>
+					</tr>
+					<tr>
+						<td onclick="refreshView();" onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor: pointer; background-color: rgb(255, 255, 255);">
+							<span style="font-size: 12px; width: 100%; display: inline-block;"><img src="/images/ImgIcon/recur.gif" align="absmiddle" hspace="5"><spring:message code='ezWebFolder.t139' /></span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 		<script type="text/javascript" src="${util.addVer('ezWebFolder.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/pageNav.js')}"></script>
 	</body>

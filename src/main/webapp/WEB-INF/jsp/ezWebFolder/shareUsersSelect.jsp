@@ -157,8 +157,8 @@
 					<div style="overflow:auto; width:280px; height:270px; background-color:#ffffff; white-space: nowrap; padding:0;" id="TreeView" class="box"></div>
 				</td>
 				<td width="30" align="center" valign="middle">
-					<div><img src="/images/arr_right.gif" width="16" height="16" vspace="3" onclick="add_dept();" style="cursor:pointer"></div>
-					<div><img src="/images/arr_left.gif" width="16" height="16" vspace="3" onclick="unselect_dept();" style="cursor:pointer"></div>
+					<div><img src="/images/arr_right.gif" vspace="3" onclick="add_dept();" style="cursor:pointer"></div>
+					<div><img src="/images/arr_left.gif" vspace="3" onclick="unselect_dept();" style="cursor:pointer"></div>
 				</td>
 				<td valign="top">
 					<h2><spring:message code='ezWebFolder.t520'/></h2>
@@ -177,8 +177,8 @@
 				<td valign="top">
 					<h2 style="display: inline-block;"><spring:message code='ezWebFolder.t517'/></h2>
 					<span style="float:right;padding-top:3px">
-						<input id="cnkeyword" onkeypress="cnsearch_press(event)" style="width:120px;height:20px">
-						<a class="imgbtn imgbck btnSearch" id="cnkeybtn" onclick="cnsearch_click()" style="vertical-align: top"><span><spring:message code='ezWebFolder.t521' /></span></a>
+						<input id="cnkeyword" type="text" onkeypress="cnsearch_press(event)" style="width:120px;">
+						<a class="imgbtn imgbck" id="cnkeybtn" onclick="cnsearch_click()" style="vertical-align: top"><span><spring:message code='ezWebFolder.t521' /></span></a>
 					</span>
 					<div class="listview" style="margin-top:3px;margin-bottom:5px">
 						<div id="OrganListView" style="overflow:auto; width:280px; height:240px;border:0">
@@ -193,8 +193,8 @@
 					</div>
 				</td>
 				<td width="30" align="center" valign="middle">
-					<div><img src="/images/arr_right.gif" width="16" height="16" vspace="3" onclick="add_member();" style="cursor:pointer"></div>
-					<div><img src="/images/arr_left.gif"  width="16" height="16" vspace="3" onclick="unselect_member();" style="cursor:pointer"></div>
+					<div><img src="/images/arr_right.gif" vspace="3" onclick="add_member();" style="cursor:pointer"></div>
+					<div><img src="/images/arr_left.gif"  vspace="3" onclick="unselect_member();" style="cursor:pointer"></div>
 				</td> 
 				<td valign="top">
 					<h2><spring:message code='ezWebFolder.t319' /></h2>

@@ -33,7 +33,7 @@ var messages = {
 	strLang33 : "共有を解除しました。",
 	strLang34 : "共有されたフォルダは修正できません。",			// ezWebFolder.t327
 	strLang35 : "最上位フォルダは修正できません。",				// ezWebFolder.t328
-	strLang36 : "管理者のみ操作可能フォルダです。",				// ezWebFolder.t329
+	strLang36 : "擔當者のみ操作可能フォルダです。",				// ezWebFolder.t329
 	strLang37 : "フォルダの生成者のみフォルダ名を修正できます。",	// ezWebFolder.t258
 	strLang38 : "ファイルまたはフォルダを選択してください。",
 	strLang39 : "ファイルまたはフォルダを一つだけ選択してください。",
@@ -44,12 +44,18 @@ var messages = {
 	parameterError: " パラメータ値が足りていません。",
 	serverError: " エラーが発生しました。",
 	permissionError: "アクセス権限がありません。 ",
+	permissionErrorContains: "一部のアイテムにアクセスできません。",
 	resultErrDuplicateRename : "名前が重複しているため、変更できません。",
 	resultErrDuplicateCreate : "名前が重複しているため、生成できません。",
 	successMoveFile: "ファイル（フォルダ）が移動されました。",
 	successCopyFile: " ファイル（フォルダ）がコピーされました。",
 	outOfStorageSpaceForOneTime: " アップロード容量が基本容量を超えています。",
 	outOfStorageSpace: "アップロード容量上限を超えています。",
-	strLangDragNDrop:"フォルダはアップロードすることができません。"
+	strLangDragNDrop:"フォルダはアップロードすることができません。",
+	replyFileDelete: "返信を含むファイルは削除できません。",
+	extensionError: "次のファイルの拡張子は許可されません\n",
+	webviewerConfirm: "選択したファイルをWebビューアで開きますか？",
+	moveFromNotInheritError: "You cannot move/copy files or folders in folders that do not inherit permissions.",
+	moveFromNotInheritErrorContains: "You cannot move/copy because the selected item contains files or folders in folders that do not inherit permissions."
 
 }

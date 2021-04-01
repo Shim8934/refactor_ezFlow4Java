@@ -1,11 +1,13 @@
 var g_windowReference = null;
 
-function menu_SelectRange(companyId) {
+function menu_SelectRange(companyId, folderManager) {
 	if (CrossYN()) {
-		var szUrl = "/admin/ezWebFolder/targetSelect.do?company=" + companyId;
+		// 2020-11-26 김은실 - (카이스트)회사 폴더별 관리자 지원 기능 
+		var szUrl = "/admin/ezPersonal/personalPopupUser.do?companyId=" + companyId + "&folderManager=" + folderManager;
 		var _MSIE = 'MSIE';
 		var useragentstr = navigator.userAgent;
 		
+		/* 2020-12-18 김은실 - [카이스트]IE 10에서 문제 일으킴.
 		if (useragentstr.indexOf(_MSIE) != -1) {
 			var szParam = "dialogHeight:705px;dialogWidth:562px;edge:sunken;status:no;resizable:no;help:no;center:yes;scroll:no" + GetShowModalPosition(562, 705);
 			var rv = window.showModalDialog(szUrl, document.getElementById("rangeStr").value, szParam);
@@ -18,36 +20,43 @@ function menu_SelectRange(companyId) {
 			}
 		}
 		else {
+			*/
 			if ((g_windowReference == null) || (g_windowReference.closed == true)) {
 				if (window.navigator.userAgent.indexOf("Safari") > 0 && window.navigator.userAgent.indexOf("Chrome") == -1) {
-					var feature = GetOpenPosition(560, 730);
-					g_windowReference = window.open(szUrl, "SelectRange", "height=730,width=560,resizable=no,center=yes" + feature);
+//					var feature = GetOpenPosition(560, 730);
+					var feature = GetOpenPosition(970, 698);					//730		 560
+					g_windowReference = window.open(szUrl, "SelectRange", "height=698,width=970,resizable=no,center=yes" + feature);
 				}
 				else {
-					var feature = GetOpenPosition(730, 700);
-					g_windowReference = window.open(szUrl, "SelectRange", "height=700,width=560,resizable=no,center=yes" + feature);
+//					var feature = GetOpenPosition(730, 700);
+					var feature = GetOpenPosition(970, 670);					//700->670, 560->970
+					g_windowReference = window.open(szUrl, "SelectRange", "height=670,width=970,resizable=no,center=yes" + feature);
 				}
 			}
 			
 			g_windowReference.focus();
+	/*		
 		}
+	*/
 	}
 	else {
-		menu_SelectRange_IE(companyId);
+		menu_SelectRange_IE(companyId, folderManager);
 	}
 }
 
-function menu_SelectRange_IE(companyId) {
-	var szUrl = "/admin/ezWebFolder/targetSelect.do?company=" + companyId;
+function menu_SelectRange_IE(companyId, folderManager) {
+	var szUrl = "/admin/ezPersonal/personalPopupUser.do?companyId=" + companyId + "&folderManager=" + folderManager;
 	
 	if ((g_windowReference == null) || (g_windowReference.closed == true)) {
 		if (window.navigator.userAgent.indexOf("Safari") > 0 && window.navigator.userAgent.indexOf("Chrome") == -1) {
-			var feature = GetOpenPosition(560, 630);
-			g_windowReference = window.open(szUrl, "SelectRange", "height=630,width=560,resizable=no,center=yes" + feature);
+//			var feature = GetOpenPosition(560, 630);
+			var feature = GetOpenPosition(970, 603);					//630		560
+			g_windowReference = window.open(szUrl, "SelectRange", "height=603,width=970,resizable=no,center=yes" + feature);
 		}
 		else {
-			var feature = GetOpenPosition(560, 700);
-			g_windowReference = window.open(szUrl, "SelectRange", "height=700,width=560,resizable=no,center=yes" + feature);
+//			var feature = GetOpenPosition(560, 700);
+			var feature = GetOpenPosition(970, 670);					//700		560
+			g_windowReference = window.open(szUrl, "SelectRange", "height=670,width=970,resizable=no,center=yes" + feature);
 		}
 	}
 	
@@ -73,8 +82,16 @@ function updateParent(_element, _value, _Type) {
 	}
 }
 
-function updateTarget(listOfTarget) {
-	var newTargetDiv = document.getElementById("newTargetDiv");
+function updateTarget(listOfTarget, folderManager) {
+	// 2020-12-02 김은실 - (카이스트)회사 폴더별 관리자 지원 기능 
+	if(folderManager === undefined) {
+		updateTarget(listOfTarget, 1);
+		updateTarget(listOfTarget, 0);
+		return;
+	}
+	
+	// 2020-11-26 김은실 - (카이스트)회사 폴더별 관리자 지원 기능 
+	var newTargetDiv = document.getElementById(folderManager == 1? "newTargetDivManager" : "newTargetDiv");
 	
 	if (newTargetDiv == null) {
 		return;

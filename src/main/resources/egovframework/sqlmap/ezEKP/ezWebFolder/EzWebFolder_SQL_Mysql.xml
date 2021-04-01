@@ -12,6 +12,8 @@
 	<typeAlias  alias="OrganDeptVO"                  type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"       />
 	<typeAlias  alias="EnvVO"                        type="egovframework.ezEKP.ezWebFolder.vo.WebfolderEnvVO"/>
 	<typeAlias  alias="duplicateInfoVO"              type="egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO"/>
+	<typeAlias  alias="fileHistoryVO"                type="egovframework.ezEKP.ezWebFolder.vo.FileHistoryVO"/>
+	<typeAlias  alias="OrganUserVO" 				 type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>
 	
 	<sql id="getAllFilesInFolderCont">
 		WHERE
@@ -82,7 +84,33 @@
 			</isNotEqual>
 		</isEqual>
 	</sql>
-	
+
+	<sql id="getFileHistories">
+		<![CDATA[
+			SELECT
+				FILE_ID AS fileId,
+				FILE_PATH AS filePath,
+				DATE_FORMAT(DATE_ADD(UPDATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS modifiedDate,
+				UPDATE_NAME AS modifiedAuthorName,
+				UPDATE_NAME2 AS modifiedAuthorName2,
+				FILE_SIZE AS fileSize,
+				VERSION
+			FROM
+				TBL_WEBFOLDER_FILE_HISTORY
+			WHERE
+				FILE_ID = #fileId#
+				AND TENANT_ID = #tenantId#
+		]]>
+	</sql>
+
+	<sql id="deletePermanetlyFileHistories">
+		DELETE FROM
+			TBL_WEBFOLDER_FILE_HISTORY
+		WHERE
+			FILE_ID = #fileId#
+			AND TENANT_ID = #tenantId#
+	</sql>
+
 	<!-- File resultMap -->
 	<resultMap id="fileVO" class="webFolderFileVO">
 		<result property="fileId"               column="file_id"                columnIndex="1"  />
@@ -145,6 +173,7 @@
 		<result property="displayName1"         column="DISPLAY_NAME1"           columnIndex="2"/>
 		<result property="displayName2"         column="DISPLAY_NAME2"           columnIndex="3"/>
 		<result property="userType"             column="USER_TYPE"               columnIndex="4"/>
+		<result property="subdeptPermitted"     column="SUBDEPT_PERMITTED"       columnIndex="5"/>
 	</resultMap>
 	
 	<!-- FolderSimpleVO resultMap -->
@@ -800,24 +829,47 @@
 	</select>
 	
 	<select id="EzWebFolderDAO.getFolderUsers" resultMap="folderUserVO">
-		<![CDATA[
-			SELECT
+			<!-- 
 				CASE  WHEN USER_TYPE = "user" THEN a.CN else d.CN                     END AS USER_ID,
 				CASE  WHEN USER_TYPE = "user" THEN a.DISPLAYNAME else d.DISPLAYNAME   END AS DISPLAY_NAME1,
 				CASE  WHEN USER_TYPE = "user" THEN a.DISPLAYNAME2 else d.DISPLAYNAME2 END AS DISPLAY_NAME2,
-				USER_TYPE
+			 -->
+		<![CDATA[
+			SELECT
+				USER_ID,
+				CASE  WHEN LOWER(USER_TYPE) = "user" THEN a.DISPLAYNAME
+					  WHEN LOWER(USER_TYPE) = "dept" THEN d.DISPLAYNAME
+                      WHEN LOWER(USER_TYPE) = "jikwi" THEN jw.displayname
+                      WHEN LOWER(USER_TYPE) = "jikchek" THEN jc.displayname
+                      WHEN LOWER(USER_TYPE) = "group" THEN g.group_name 
+                      else ''                				
+				END AS DISPLAY_NAME1,
+				CASE  WHEN LOWER(USER_TYPE) = "user" THEN a.DISPLAYNAME2
+					  WHEN LOWER(USER_TYPE) = "dept" THEN d.DISPLAYNAME2
+                      WHEN LOWER(USER_TYPE) = "jikwi" THEN jw.displayname2
+                      WHEN LOWER(USER_TYPE) = "jikchek" THEN jc.displayname2
+                      WHEN LOWER(USER_TYPE) = "group" THEN g.group_name
+                      else ''                				
+				END AS DISPLAY_NAME2,
+				USER_TYPE,
+				SUBDEPT_PERMITTED
 			FROM
-				TBL_WEBFOLDER_FOLDERUSER u LEFT JOIN TBL_USERMASTER a ON u.USER_ID = a.CN and u.TENANT_ID = a.TENANT_ID and u.USER_TYPE = 'user'
-										   LEFT JOIN TBL_DEPTMASTER d ON u.USER_ID = d.CN and u.TENANT_ID = d.TENANT_ID and u.USER_TYPE = 'dept'
+				TBL_WEBFOLDER_FOLDERUSER u LEFT JOIN TBL_USERMASTER a ON u.USER_ID = a.CN and u.TENANT_ID = a.TENANT_ID and LOWER(u.USER_TYPE) = 'user'
+										   LEFT JOIN TBL_DEPTMASTER d ON u.USER_ID = d.CN and u.TENANT_ID = d.TENANT_ID and LOWER(u.USER_TYPE) = 'dept'
+										   LEFT JOIN TBL_USER_JOBMASTER jw ON u.USER_ID = jw.JOBID and u.TENANT_ID = jw.TENANT_ID and u.COMPANY_ID = jw.COMPANYID and LOWER(u.USER_TYPE) = 'jikwi' and jw.TYPE = '001'
+										   LEFT JOIN TBL_USER_JOBMASTER jc ON u.USER_ID = jc.JOBID and u.TENANT_ID = jc.TENANT_ID and u.COMPANY_ID = jc.COMPANYID and LOWER(u.USER_TYPE) = 'jikchek' and jc.TYPE = '002'
+										   LEFT JOIN TBL_PERMISSIONGROUPLIST g ON u.USER_ID = g.GROUP_ID and u.TENANT_ID = g.TENANT_ID and LOWER(u.USER_TYPE) = 'group'
 			WHERE
 				u.FOLDER_ID = #folderId#
-			AND
-				(u.USER_TYPE = 'user' OR u.USER_TYPE = 'dept')
 			AND
 				u.TENANT_ID = #tenantId#
 			ORDER BY
 				USER_TYPE ASC
 		]]>
+		<!-- 
+			AND
+				(u.USER_TYPE = 'user' OR u.USER_TYPE = 'dept')
+		 -->
 	</select>
 	
 	<select id="EzWebFolderDAO.getAllSimpleSubFolders" resultMap="folderSimpleVO2">
@@ -837,11 +889,23 @@
 				a.USE_STATUS   = 'Y'
 			AND
 				a.TENANT_ID    = #tenantId#
+		]]>
+		<isNotNull property="isDean">
+			<isEqual property="isDean" compareValue="Y">
+				<iterate property="deanList" prepend="AND" open="(" close=")" conjunction="OR">
+					a.FOLDER_PATH LIKE concat(#deanList[]#, '%') 
+				</iterate>
+			</isEqual>
+			<isEqual property="isDean" compareValue="N">
+				<iterate property="deanList" prepend="AND" open="(" close=")" conjunction="AND">
+					a.FOLDER_PATH NOT LIKE concat(#deanList[]#, '%') 
+				</iterate>
+			</isEqual>
+		</isNotNull>
 			ORDER BY
 				a.FOLDER_NAME1,
 				a.FOLDER_LEVEL ASC,
 				a.FOLDER_STEP  ASC
-		]]>
 	</select>
 	
 	<select id="EzWebFolderDAO.getAllSubFolders" resultMap="folderVO">
@@ -1368,11 +1432,23 @@
 				f.TENANT_ID    = #tenantId#
 			AND
 				f.FOLDER_UPPER = #compFolderId#
+		]]>
+		<isNotNull property="isDean">
+			<isEqual property="isDean" compareValue="Y">
+				<iterate property="deanList" prepend="AND" open="(" close=")" conjunction="OR">
+					f.FOLDER_PATH LIKE concat(#deanList[]#, '%') 
+				</iterate>
+			</isEqual>
+			<isEqual property="isDean" compareValue="N">
+				<iterate property="deanList" prepend="AND" open="(" close=")" conjunction="AND">
+					f.FOLDER_PATH NOT LIKE concat(#deanList[]#, '%') 
+				</iterate>
+			</isEqual>
+		</isNotNull>
 			ORDER BY
 				f.FOLDER_NAME1,
 				f.FOLDER_LEVEL ASC,
 				f.FOLDER_STEP  ASC
-		]]>
 	</select>
 	
 	<select id="EzWebFolderDAO.getCompanyFolderTreeForChief" resultMap="folderSimpleVO">
@@ -1449,12 +1525,24 @@
 				f1.TENANT_ID    = #tenantId#
 			AND
 				f1.FOLDER_UPPER = #compFolderId#
+		]]>
+		<isNotNull property="isDean">
+			<isEqual property="isDean" compareValue="Y">
+				<iterate property="deanList" prepend="AND" open="(" close=")" conjunction="OR">
+					F1.FOLDER_PATH LIKE concat(#deanList[]#, '%') 
+				</iterate>
+			</isEqual>
+			<isEqual property="isDean" compareValue="N">
+				<iterate property="deanList" prepend="AND" open="(" close=")" conjunction="AND">
+					F1.FOLDER_PATH NOT LIKE concat(#deanList[]#, '%') 
+				</iterate>
+			</isEqual>
+		</isNotNull>
 			) f
 			ORDER BY
 				f.FOLDER_NAME1,
 				f.FOLDER_LEVEL ASC,
 				f.FOLDER_STEP  ASC
-		]]>
 	</select>
 	
 	<select id="EzWebFolderDAO.getCompanySimpleFolder" resultMap="folderSimpleVO">
@@ -1731,4 +1819,324 @@
 				FILE_ID = #fileId# 
 			and TENANT_ID = #tenantId#
 	</update>
+
+	<insert id="EzWebFolderDAO.insertEncryptionFolder">
+		<![CDATA[
+			INSERT INTO
+				TBL_WEBFOLDER_ENC_FOLDER
+			VALUES
+				(#folderId#, #tenantId#)
+		]]>
+	</insert>
+
+	<delete id="EzWebFolderDAO.deleteEncryptionFolder">
+		<![CDATA[
+			DELETE FROM
+				TBL_WEBFOLDER_ENC_FOLDER
+			WHERE
+				FOLDER_ID = #folderId#
+				AND TENANT_ID = #tenantId#
+		]]>
+	</delete>
+
+	<delete id="EzWebFolderDAO.deleteAllChildrenEncryptionFolder">
+		<![CDATA[
+			DELETE WF FROM
+				TBL_WEBFOLDER_ENC_FOLDER WF
+			JOIN
+				TBL_WEBFOLDER_FOLDER F
+			WHERE
+				WF.FOLDER_ID <> #folderId#
+				AND WF.TENANT_ID = #tenantId#
+				AND F.FOLDER_ID = WF.FOLDER_ID
+				AND F.TENANT_ID = WF.TENANT_ID
+				AND F.FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
+		]]>
+	</delete>
+
+	<insert id="EzWebFolderDAO.insertEncryptedFile">
+		<![CDATA[
+			INSERT INTO
+				TBL_WEBFOLDER_ENCRYPTED_FILE
+				SELECT
+					FILE_ID, VERSION, TENANT_ID
+				FROM
+					TBL_WEBFOLDER_FILE
+				WHERE
+					FILE_ID = #fileId#
+					AND TENANT_ID = #tenantId#
+		]]>
+	</insert>
+
+	<delete id="EzWebFolderDAO.deleteEncryptedFile">
+		<![CDATA[
+				DELETE A
+				FROM
+					TBL_WEBFOLDER_FILE A
+				LEFT JOIN
+					TBL_WEBFOLDER_ENCRYPTED_FILE B
+				ON
+					A.FILE_ID = B.FILE_ID
+					AND A.VERSION = B.VERSION
+					AND A.TENANT_ID = B.TENANT_ID
+				WHERE
+					A.FILE_ID = #fileId#
+					AND A.TENANT_ID = #tenantId#
+		]]>
+	</delete>
+
+	<delete id="EzWebFolderDAO.deleteEncryptedAllVersions">
+		<![CDATA[
+			DELETE FROM
+				TBL_WEBFOLDER_ENCRYPTED_FILE
+			WHERE
+				FILE_ID = #fileId#
+				AND TENANT_ID = #tenantId#
+		]]>
+	</delete>
+
+	<delete id="EzWebFolderDAO.deleteEncryptedVersion">
+		<![CDATA[
+			DELETE FROM
+				TBL_WEBFOLDER_ENCRYPTED_FILE
+			WHERE
+				FILE_ID = #fileId#
+				AND VERSION = #version#
+				AND TENANT_ID = #tenantId#
+		]]>
+	</delete>
+
+	<select id="EzWebFolderDAO.getEncryptionRootFolder" resultMap="folderVO">
+		<![CDATA[
+			SELECT
+				F.FOLDER_ID                                       AS FOLDER_ID,
+				F.FOLDER_NAME1                                    AS FOLDER_NAME1,
+				F.FOLDER_NAME2                                    AS FOLDER_NAME2,
+				F.FOLDER_TYPE                                     AS FOLDER_TYPE,
+				F.FOLDER_PATH                                     AS FOLDER_PATH,
+				F.FOLDER_STEP                                     AS FOLDER_STEP,
+				F.FOLDER_LEVEL                                    AS FOLDER_LEVEL,
+				F.FOLDER_UPPER                                    AS FOLDER_UPPER,
+				F.USE_STATUS                                      AS USE_STATUS,
+				F.OWNER_ID                                        AS OWNER_ID,
+				F.CREATE_ID                                       AS CREATE_ID,
+				DATE_ADD(F.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
+				F.CREATE_NAME1                                    AS CREATE_NAME1,
+				F.CREATE_NAME2                                    AS CREATE_NAME2,
+				F.UPDATE_ID                                       AS UPDATE_ID,
+				DATE_ADD(F.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
+				F.COMPANY_ID                                      AS COMPANY_ID,
+				F.DELETER_ID                                      AS DELETER_ID,
+				F.TENANT_ID                                       AS TENANT_ID
+			FROM
+				TBL_WEBFOLDER_FOLDER F
+			RIGHT JOIN
+				TBL_WEBFOLDER_ENC_FOLDER WF
+			ON
+				F.FOLDER_ID = WF.FOLDER_ID
+				AND F.TENANT_ID = WF.TENANT_ID
+			WHERE
+				#folderPath# LIKE CONCAT(F.FOLDER_PATH, '%')
+				AND F.TENANT_ID = #tenantId#
+			ORDER BY F.FOLDER_ID ASC
+			LIMIT 1
+		]]>
+	</select>
+
+	<select id="EzWebFolderDAO.isEncryptionFolder" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(F.FOLDER_ID)
+			FROM
+				TBL_WEBFOLDER_FOLDER F
+			RIGHT JOIN
+				TBL_WEBFOLDER_ENC_FOLDER WF
+			ON
+				F.FOLDER_ID = WF.FOLDER_ID
+				AND F.TENANT_ID = WF.TENANT_ID
+			WHERE
+				#folderPath# LIKE CONCAT(F.FOLDER_PATH, '%')
+				AND F.TENANT_ID = #tenantId#
+		]]>
+	</select>
+
+	<select id="EzWebFolderDAO.isEncryptedFile" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(B.FILE_ID)
+			FROM
+				TBL_WEBFOLDER_FILE A
+			RIGHT JOIN
+				TBL_WEBFOLDER_ENCRYPTED_FILE B
+			ON
+				A.FILE_ID = B.FILE_ID
+				AND A.VERSION = B.VERSION
+				AND A.TENANT_ID = B.TENANT_ID
+			WHERE
+				A.FILE_ID = #fileId#
+				AND A.TENANT_ID = #tenantId#
+		]]>
+	</select>
+
+	<select id="EzWebFolderDAO.isEncryptedVersion" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(FILE_ID)
+			FROM
+				TBL_WEBFOLDER_ENCRYPTED_FILE
+			WHERE
+				FILE_ID = #fileId#
+				AND VERSION = #version#
+				AND TENANT_ID = #tenantId#
+		]]>
+	</select>
+
+	<select id="EzWebFolderDAO.isEncryptedFilePath" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(ENC.FILE_ID)
+			FROM
+				TBL_WEBFOLDER_FILE_HISTORY HIS
+			RIGHT JOIN
+				TBL_WEBFOLDER_ENCRYPTED_FILE ENC
+			ON
+				ENC.FILE_ID = HIS.FILE_ID
+				AND ENC.VERSION = HIS.VERSION
+				AND ENC.TENANT_ID = HIS.TENANT_ID
+			WHERE
+				HIS.FILE_PATH = #filePath#
+		]]>
+	</select>
+
+	<select id="EzWebFolderDAO.getFileHistories" resultClass="fileHistoryVO">
+		<include refid="getFileHistories"/>
+		AND USE_STATUS = 'Y'
+		ORDER BY VERSION DESC
+	</select>
+
+	<select id="EzWebFolderDAO.getFileHistory" resultClass="fileHistoryVO">
+		<include refid="getFileHistories"/>
+		AND VERSION = #version#
+	</select>
+
+	<select id="EzWebFolderDAO.getLatestHistory" resultClass="fileHistoryVO">
+		<include refid="getFileHistories"/>
+		ORDER BY VERSION DESC
+		LIMIT 1
+	</select>
+
+	<select id="EzWebFolderDAO.getCurrentVersion" resultClass="Integer">
+		SELECT
+			VERSION
+		FROM
+			TBL_WEBFOLDER_FILE
+		WHERE
+			FILE_ID = #fileId#
+			AND TENANT_ID = #tenantId#
+	</select>
+
+	<insert id="EzWebFolderDAO.insertFileHistory">
+		<![CDATA[
+			INSERT INTO
+				TBL_WEBFOLDER_FILE_HISTORY
+					(FILE_ID, FILE_PATH, FILE_SIZE, USE_STATUS, UPDATE_DATE, DELETER_ID, TENANT_ID,
+					UPDATE_ID, UPDATE_NAME, UPDATE_NAME2,
+					VERSION)
+				SELECT
+					F.FILE_ID, F.FILE_PATH, F.FILE_SIZE, F.USE_STATUS, F.UPDATE_DATE, NULL, F.TENANT_ID,
+					U.CN, U.DISPLAYNAME, U.DISPLAYNAME2,
+					#version#
+				FROM
+					TBL_WEBFOLDER_FILE F
+				LEFT JOIN
+					TBL_USERMASTER U
+				ON
+					F.TENANT_ID = U.TENANT_ID
+					AND U.CN = #modifierUserId#
+				WHERE
+					F.FILE_ID = #fileId#
+					AND F.TENANT_ID = #tenantId#
+		]]>
+	</insert>
+
+	<update id="EzWebFolderDAO.updateCurrentFileVersion">
+		UPDATE
+			TBL_WEBFOLDER_FILE
+		SET
+			VERSION = #version#
+		WHERE
+			FILE_ID = #fileId#
+			AND TENANT_ID = #tenantId#
+	</update>
+
+	<update id="EzWebFolderDAO.updateFilePathHistory">
+		UPDATE
+			TBL_WEBFOLDER_FILE_HISTORY
+		SET
+			FILE_PATH = #filePath#
+		WHERE
+			FILE_ID = #fileId#
+			AND VERSION = #version#
+			AND TENANT_ID = #tenantId#
+	</update>
+
+	<update id="EzWebFolderDAO.deleteFileVersion">
+		UPDATE
+			TBL_WEBFOLDER_FILE_HISTORY
+		SET
+			USE_STATUS = 'T',
+			DELETER_ID = #deleteUserId#
+		WHERE
+			FILE_ID = #fileId#
+			AND VERSION = #version#
+			AND TENANT_ID = #tenantId#
+	</update>
+
+	<update id="EzWebFolderDAO.restoreFileVersionFromTrash">
+		UPDATE
+			TBL_WEBFOLDER_FILE_HISTORY
+		SET
+			USE_STATUS = 'Y',
+			DELETER_ID = NULL
+		WHERE
+			FILE_ID = #fileId#
+			AND VERSION = #version#
+			AND TENANT_ID = #tenantId#
+	</update>
+
+	<delete id="EzWebFolderDAO.deletePermanetlyFileHistory">
+		<include refid="deletePermanetlyFileHistories"/>
+		AND VERSION = #version#
+	</delete>
+
+	<delete id="EzWebFolderDAO.deletePermanetlyFileHistories">
+		<include refid="deletePermanetlyFileHistories"/>
+	</delete>
+	
+	<select id="EzEmailDAO.getWebFolderMembers" parameterClass="Map" resultClass="OrganUserVO">
+		<![CDATA[
+			SELECT 
+				DISTINCT (cn), mail, DISPLAYNAME
+			FROM 
+				TBL_USERMASTER a
+			JOIN
+				(
+					(SELECT 
+					P.MEMBER_ID AS USER_ID, P.MEMBER_TYPE AS USER_TYPE 
+					FROM 
+					TBL_PERMISSIONGROUPINFO P
+					JOIN
+					TBL_WEBFOLDER_FOLDERUSER W2
+					ON P.GROUP_ID = W2.USER_ID 
+					WHERE W2.USER_TYPE = 'GROUP' AND W2.FOLDER_ID = #folderId#)
+					UNION 
+					(SELECT 
+					USER_ID, USER_TYPE 
+					FROM 
+					TBL_WEBFOLDER_FOLDERUSER W
+					WHERE W.USER_TYPE NOT IN ('DEPT', 'GROUP') AND W.FOLDER_ID = #folderId#)
+				) b
+			ON a.cn = b.user_id OR a.EXTENSIONATTRIBUTE7 = b.USER_ID OR a.EXTENSIONATTRIBUTE8 = b.USER_ID
+		]]>
+	</select>
 </sqlMap>

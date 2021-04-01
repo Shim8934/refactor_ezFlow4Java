@@ -8,6 +8,7 @@
 	<typeAlias  alias="webFolderFolderSimpleVO"      type="egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO"/>
 	<typeAlias  alias="webFolderloginVO" 			type="egovframework.let.user.login.vo.LoginVO"/>
 	<typeAlias 	alias="webFolderTreeVO"         type="egovframework.ezEKP.ezWebFolder.vo.FolderTreeVO"/>
+	<typeAlias  alias="webFolderSimpleFileVO"          	type="egovframework.ezEKP.ezWebFolder.vo.FileVO"/>
 	
 	<!-- 로그인 처리를 위한 resultMap -->
 	<resultMap id="login" class="egovframework.let.user.login.vo.LoginVO">
@@ -29,6 +30,26 @@
 		<result property="jikChek"				column="JIKCHEK"					columnIndex="16"/>
         <result property="tenantId"             column="TENANT_ID"                  columnIndex="17"/>
 	</resultMap>
+                                                                                                                                                                  
+	<!-- File resultMap -->
+    <resultMap id="fileSimpleVO" class="webFolderSimpleFileVO">
+        <result property="fileId"               column="FILE_ID"                 columnIndex="1"/>                                                             
+        <result property="fileName"         	column="FILE_NAME"               columnIndex="2"/>                                                    
+        <result property="filePath"         	column="FILE_PATH"               columnIndex="3"/>                                                    
+        <result property="fileSize"          	column="FILE_SIZE"               columnIndex="4"/>                                                        
+        <result property="typeId"          		column="TYPE_ID"                 columnIndex="5"/>                                                    
+        <result property="downloadCnt"          column="DOWN_COUNT"              columnIndex="6"/>                                                        
+        <result property="fileExt"           	column="FILE_EXT"                columnIndex="7"/>                                                      
+        <result property="folderId"           	column="FOLDER_ID"               columnIndex="8"/>                                                    
+        <result property="useStatus"        	column="USE_STATUS"         	 columnIndex="9"/>                                                      
+        <result property="createId"             column="CREATE_ID"            	 columnIndex="10"/>                                                    
+        <result property="createName1"          column="CREATE_NAME1"          	 columnIndex="11"/>                                                      
+        <result property="createName2"          column="CREATE_NAME2"          	 columnIndex="12"/>                                                      
+        <result property="createDate"           column="CREATE_DATE"             columnIndex="13"/>                                                      
+        <result property="updateId"             column="UPDATE_ID"               columnIndex="14"/>                                                    
+        <result property="updateDate"           column="UPDATE_DATE"             columnIndex="15"/>                                                        
+        <result property="tenantId"         	column="TENANT_ID"               columnIndex="16"/>     
+    </resultMap>
 	
 	<!-- FolderTree resultMap -->
 	<resultMap id="folderTreeVO" class="webFolderTreeVO">
@@ -373,16 +394,38 @@
 				#idList[]#
 			</iterate>
 		<![CDATA[
-				AND FU.USER_ID IN 
+				AND ( FU.USER_ID IN 
 		]]>
 			<iterate property="idList" open="(" close=")" conjunction=",">
 				#idList[]#
 			</iterate>
+			<iterate property="userDeptList">
+				OR ( FU.SUBDEPT_PERMITTED = 1 
+					 AND #userDeptList[]# IN (SELECT CN FROM TBL_DEPTMASTER
+					 						  WHERE DEPT_CD_PATH LIKE CONCAT(CONCAT('%',FU.USER_ID),'%') 
+					 							    AND EXTENSIONATTRIBUTE2 = FU.COMPANY_ID AND TENANT_ID = FU.TENANT_ID)
+					)
+			</iterate>
 		<![CDATA[
+					)
 				WHERE FF.TENANT_ID = #tenantId# ) FP
             ON F.FOLDER_PATH LIKE  concat(FP.FOLDER_PATH , '%')
 			WHERE F.USE_STATUS = 'Y'
 			AND F.TENANT_ID = #tenantId#
+		]]>
+		<isNotNull property="isDean">
+			<isEqual property="isDean" compareValue="Y">
+				<iterate property="deanList" prepend="AND" open="(" close=")" conjunction="OR">
+					F.FOLDER_PATH LIKE concat(#deanList[]#, '%') 
+				</iterate>
+			</isEqual>
+			<isEqual property="isDean" compareValue="N">
+				<iterate property="deanList" prepend="AND" open="(" close=")" conjunction="AND">
+					F.FOLDER_PATH NOT LIKE concat(#deanList[]#, '%') 
+				</iterate>
+			</isEqual>
+		</isNotNull>
+		<![CDATA[
 	        UNION
 	        SELECT
 	        	FOLDER_ID AS ID,
@@ -520,12 +563,32 @@
 			</iterate>
 	         <isEqual property="parentId" compareValue="root" > 
 	      	 	<isEqual property="folderType" compareValue="C" >
-                	AND 
+                	AND (
                 		u.user_id IN
    		
-					<iterate property="idList" open="(" close=")" conjunction=",">
-						#idList[].id#
+					<iterate property="idListUpgrade" open="(" close=")" conjunction=",">
+						#idListUpgrade[]#
 					</iterate>
+					<iterate property="userDeptList">
+						OR ( U.SUBDEPT_PERMITTED = 1 
+							 AND #userDeptList[]# IN (SELECT CN FROM TBL_DEPTMASTER
+							 						  WHERE DEPT_CD_PATH LIKE CONCAT(CONCAT('%',U.USER_ID),'%') 
+							 							    AND EXTENSIONATTRIBUTE2 = U.COMPANY_ID AND TENANT_ID = U.TENANT_ID)
+							)
+					</iterate>
+						)
+					<isNotNull property="isDean">
+						<isEqual property="isDean" compareValue="Y">
+							<iterate property="deanList" prepend="AND" open="(" close=")" conjunction="OR">
+								FOLDER.FOLDER_PATH LIKE concat(#deanList[]#, '%') 
+							</iterate>
+						</isEqual>
+						<isEqual property="isDean" compareValue="N">
+							<iterate property="deanList" prepend="AND" open="(" close=")" conjunction="AND">
+								FOLDER.FOLDER_PATH NOT LIKE concat(#deanList[]#, '%') 
+							</iterate>
+						</isEqual>
+					</isNotNull>
 	      	   </isEqual>  
 	         </isEqual>  
 	         <![CDATA[
@@ -1478,10 +1541,18 @@
 		ON FU.FOLDER_ID = F.FOLDER_ID
 		AND FU.TENANT_ID = F.TENANT_ID
 		WHERE F.FOLDER_TYPE = 'C'
-		AND FU.USER_ID IN
+		AND ( FU.USER_ID IN 
 		<iterate property="permissionIdList" open="(" close=")" conjunction=",">
 			#permissionIdList[]#
 		</iterate>
+		<iterate property="userDeptList">
+			OR ( FU.SUBDEPT_PERMITTED = 1 
+				 AND #userDeptList[]# IN (SELECT CN FROM TBL_DEPTMASTER
+				 						  WHERE DEPT_CD_PATH LIKE CONCAT(CONCAT('%',FU.USER_ID),'%') 
+				 							    AND EXTENSIONATTRIBUTE2 = FU.COMPANY_ID AND TENANT_ID = FU.TENANT_ID)
+				)
+		</iterate>
+			)
 		AND FU.FOLDER_ID IN
 		<iterate property="folderIdList" open="(" close=")" conjunction=",">
 			#folderIdList[]#
@@ -1632,9 +1703,67 @@
 			WHERE 
 				FOLDER_UPPER = 'root' 
 			AND 
-				OWNER_ID = #userId#
+				OWNER_ID = #ownerId#
+			AND 
+				FOLDER_TYPE = #folderType#
 			AND 
 				TENANT_ID = #tenantId#
 		]]>
 	</select>
+	<select id="EzWebFolderDAO_y.selectWebfolderFiletoAnother" parameterClass="Map" resultClass="java.util.HashMap">
+		<![CDATA[
+			SELECT 
+				FILE_NAME, FILE_PATH, FILE_SIZE  
+			FROM 
+				TBL_WEBFOLDER_FILE
+			WHERE 
+				(FOLDER_ID = #folderId# 
+				AND 
+				FILE_ID = #fileId#)
+				$query$
+		]]>
+	</select>
+    <select id="EzWebFolderDAO_y.getWebFolderUserGroupList" parameterClass="Map" resultClass="String">
+    	<![CDATA[
+    		SELECT
+    			user_id
+    		FROM
+    			tbl_webfolder_folderuser
+    		WHERE
+    			company_id = #companyId#
+    		AND
+    			tenant_id = #tenantId#
+    		AND
+    			user_type = 'GROUP'
+    	]]>
+    </select>
+    <select id="EzWebFolderDAO_y.getjikWiChekAddjobList" parameterClass="Map" resultClass="String">
+    	<![CDATA[
+    		SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#
+			UNION DISTINCT
+			SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#
+			UNION DISTINCT
+			SELECT jobid FROM tbl_addjobmaster WHERE cn = #userId# AND tenant_id = #tenantId#
+    	]]>
+    </select>
+	<select id="EzWebFolderDAO_y.selectFileDetail" parameterClass="Map" resultMap="fileSimpleVO">
+    	<![CDATA[
+    		select 
+    			f.* 
+			from 
+				tbl_webfolder_file f inner join tbl_webfolder_folder folder 
+			on 
+					f.folder_id = folder.folder_id 
+				and 
+					folder.tenant_id = #tenantId# 
+				and 
+					folder.company_id = #comId#
+			where 
+					f.folder_id = #folderId# 
+				and 
+					f.file_id = #fileId# 
+				and 
+					f.use_status != 'T'
+    	]]>
+    </select>
 </sqlMap>

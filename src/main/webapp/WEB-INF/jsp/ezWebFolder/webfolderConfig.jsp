@@ -32,15 +32,20 @@
 		}
 		
 		function ChangeTab(obj) {
+			/* 2020-12-11 김은실 - [카이스트] 업무자료실 포틀릿 설정
 			var pSelectTab = obj.getAttribute("divname");
 			switch (pSelectTab) {
 				case "wfEnv_div1":
+					 */
+					document.getElementById("wfEnv_ifrm").src = "/ezWebFolder/webfolderPortletConfig.do";
+					/* 
 					document.getElementById("wfEnv_ifrm").src = "/ezWebFolder/wefolderGeneral.do";
 					break;
 				case "wfEnv_div2":
 					document.getElementById("wfEnv_ifrm").src = "/ezWebFolder/deptChiefSetting.do";
 					break;
 			}
+			 */
 		}
 		
 		var Tab1_SelectID = "";
@@ -70,8 +75,8 @@
 			for (var i = 0; i < document.getElementById(pTabNodeID).childNodes.length; i++) {
 				if (document.getElementById(pTabNodeID).childNodes.item(i).nodeName == "P") {
 					if (document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).nodeName == "SPAN") {
-						document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).onmouseover = function () { Tab1_MouserOver(this); };;
-						document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).onmouseout = function () { Tab1_MouserOut(this); };;
+						//document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).onmouseover = function () { Tab1_MouserOver(this); };;
+						//document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).onmouseout = function () { Tab1_MouserOut(this); };;
 						document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).onclick = function () { Tab1_MouseClick(this); };;
 						
 						if (i == 0) {
@@ -85,14 +90,15 @@
 	</script>
 </head>
 <body class="mainbody">
-	<h1><spring:message code="ezWebFolder.t31" /></h1>
+	<h1><spring:message code="ezWebFolder.kes017" /></h1>
 	<div class="portlet_tabpart01">
 		<div class="portlet_tabpart01_top" id="tab1">
 			<p ><span divname="wfEnv_div1" id="1tab1"><spring:message code="ezWebFolder.t238" /></span></p>
-			<p style="display: ${(isChief == '1') ? 'block' : 'none'};"><span divname="wfEnv_div2" id="1tab2"><spring:message code="ezWebFolder.t239" /></span></p>
+			<%-- <p style="display: ${(isChief == '1') ? 'block' : 'none'};"><span divname="wfEnv_div2" id="1tab2"><spring:message code="ezWebFolder.t239" /></span></p> --%>
 		</div>
 	</div>
 	<iframe id="wfEnv_ifrm" style="width: 100%; height: 100%; border: none;"></iframe>
+	<%@ include file="/WEB-INF/jsp/ezWebFolder/webFolderApplyPopUp.jsp" %>
 </body>
 <script type="text/javascript">
 	Tab1_NewTabIni("tab1");

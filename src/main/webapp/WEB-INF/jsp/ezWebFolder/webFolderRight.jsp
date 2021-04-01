@@ -31,6 +31,7 @@
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/share.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/selectUsers.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/popup.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
     <script type="text/javascript">
 		var file 		 = new Array();
 		var strShared1	= messages.strLang2;
@@ -58,6 +59,26 @@
 		var _cellInfo        = {};
 		var sortColumn = null;
 		var sortType = null;
+		var subTypeC = "${subTypeC}";
+		var containsReplyFiles = [];
+		var contextClickedTr = null;
+		// 2020-12-10 김은실 - (카이스트)회사 폴더별 관리자 지원 기능 
+		var firstLevelFolderId	= "";
+		var userManager = {
+				targetId: "",
+				targetType: ""
+		};
+		var selectXhr         	= null;
+		var authListUser		= [];
+		var strictAuthList		= [];
+		var addUser    			= [];
+		var deleteUser    		= [];
+		var subFolderType 		= "0";
+		var uploadLimit = "<c:out value='${uploadLimit}' />";
+		<c:if test="${ folderManager eq '1' }">
+		// 담당자로 지정된 폴더들
+		var managedFolderList = ${managedFolderList};
+		</c:if>
 		
 		// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 		window.onresize = function () {
@@ -81,6 +102,7 @@
 			if (allFileFlag == "all") {
 				$('#upload').css('display','none');
 				$('#newFolder').css('display','none');
+				$('#SearchOption').css('display','none');
 			}
 			getFileList(folderId);
 			
@@ -130,6 +152,9 @@
 				pagination.setListSize(this.value);
 				refreshView();
 			});
+			
+			document.body.addEventListener("click", hideContextMenu, true);
+			document.getElementById("dragDropArea").addEventListener("scroll", hideContextMenu);
 			
 			// datepicker setup
 			$(".datepicker").datepicker({
@@ -217,14 +242,15 @@
 	    	}
 	    	
 	    	searchRequirement = searchContext.getCurrentRequirement();
-	    	folderId = a;
+//	    	folderId = a;
 	    	showProgress();
 			$.ajax ({
 				type:"POST",
 				async: true,
 				url : "/ezWebFolder/fileList.do",
 				data : { 
-					 "folderId"   		: folderId,
+//					 "folderId"   		: folderId,
+					 "folderId"   		: a,
 					 "folderType" 		: folderType,
 					 "currPage"   		: pagination.currentPage(),
 					 "listCount"  		: pagination.listSize(),
@@ -238,17 +264,35 @@
 					 "allFileFlag"		: allFileFlag,
 					 "sortType"			: sortType,
 					 "sortColumn"		: sortColumn
+					 ,"subTypeC" 			: "${subTypeC}"
 					},
 				dataType: "JSON",
 				success : function (data) {
 					hideProgress();
 					successFile(data);
+					if(data.status != "error"){
+						folderId = a;
+						containsReplyFiles = data.data.containsReplyFiles;
+						managedFolderList = data.data.managedFolderList;
+						mailsendBtn(data.data.folderLevel);
+						/* 
+						document.getElementById("userManagerBtn").style.display =
+							checkIsManager(folderId) ? "" : "none";
+						 */
+					}
 				},
 				error : function(error) {
 					hideProgress();
 				}
 			});
 		}
+	    
+	    function mailsendBtn(folderLevel) {
+	    	if ($("#sendingMail").length > 0) {
+	    		var displayVal = (isNaN(parseInt(folderLevel)) || folderLevel != 1 || !checkIsManager(folderId)) ? "none" : "block";
+				$("#sendingMail").css("display", displayVal);	    		
+	    	}
+	    }
 	    
 		function successFile(data) {
 			if (data.status == "error") {
@@ -270,6 +314,8 @@
 			var fldCnt = result.fldCnt;
 			
 			var folderPath = result.folderPath;
+			// 2020-12-10 김은실 - [카이스트]회사 폴더별 관리자 지원 기능 
+			firstLevelFolderId = result.folderPath.split("|")[2];
 			var originalPath = result.originalPath;
 			var folderUpp = result.folderUpp;
 			var dragDropAreaElmt = document.getElementById("dragDropArea");
@@ -282,6 +328,7 @@
 			if (folderUpp == 'root' && folderType == 'C') {
 				$('#upload').css('display','none');
 				$('#newFolder').css('display','none');		
+				$('#SearchOption').css('display','none');		
 				dragDropAreaElmt.ondragenter = function(e) {
 					e.stopPropagation();e.preventDefault();
 				};
@@ -294,6 +341,7 @@
 			} else {
 				$('#upload').css('display','inline');
 				$('#newFolder').css('display','inline');				
+				$('#SearchOption').css('display','inline');				
 				dragDropAreaElmt.ondragenter = function(e) {onDragEnter(e)};
 				dragDropAreaElmt.ondragover  = function(e) {onDragOver(e)};
 				dragDropAreaElmt.ondrop      = function(e) {onDrop(e)};
@@ -302,14 +350,31 @@
 			$('#tblFileList tr td').parent().remove();
 			renderData(filelist);
 			parentId = data.data.folderUpp;
+
+			if(parentId == "root"){
+				switch (subTypeC) {
+				case "task":
+					$('.webFolderImg').attr("src", "/images/webfolder/business_data.png");
+					break;
+				case "meeting":
+					$('.webFolderImg').attr("src", "/images/webfolder/conference_file.png");
+					break;
+				case "dean":
+					$('.webFolderImg').attr("src", "/images/webfolder/agenda_item.png");
+					break;
+				}
+			}
 			
 			namePath(folderPath, originalPath);
 			document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp; " + messages.strLang15 + " <span style='color:#017BEC;'>" + fldCnt +" </span>"
 			 + " / " + messages.strLang16 + " <span style='color:#017BEC;'> " 
 				+ fileCnt +" </span>";
 			$("#listcount").val(result.listCount).prop("selected", true);
-			capacity.load();
+// 			capacity.load();
 			scroll();
+
+			// 폴더 권한 비상속시 이동/복사 버튼 숨기기
+			$("#moveMenu, #moveButton").css("display", data.data.isNotInherit ? "none" : "");
 		} 
 		
 		// originalPath 는 한글 path
@@ -345,26 +410,8 @@
 				
 				divName.textContent = path[i] ;
 				divName.setAttribute("title", path[i]);
-				/* 2018-05-07 장진혁 - 상단 폰트사이즈 15px로 조정 */
-				divName.setAttribute("style", "font-size:15px; padding-right:3px;");
 				detailName.appendChild(divName);
 				nameTag.appendChild(detailName);
-				
-				/* root 폴더 업로드기능이 적용되지 않았을 시 name path 
-				if(length == 1) {
-					var divSeparator = document.createElement("div");
-					divSeparator.setAttribute("class", "separator");
-					divSeparator.textContent =  " > " + messages.strLang17 + " "; // 모든파일
-					nameTag.appendChild(divSeparator);
-				}
-				
-				if (i != length - 1) {
-					var divSeparator = document.createElement("div");
-					divSeparator.textContent = " > ";
-					divSeparator.setAttribute("class", "separator");
-					nameTag.appendChild(divSeparator);
-				}
-				*/
 				
 				if (allFileFlag == "all") {
 					var divSeparator = document.createElement("div");
@@ -436,11 +483,24 @@
 						style.textAlign = "center";
 					});
 
+					// 2020.11.03 강승구 : '제목'컬럼 좌측정렬 추가
+					setStyles([tdElmt4], function(style) {
+						style.textAlign = "left";
+					});
+
+					var fileName = result[i]["fileName"];
+					var depth = result[i]["depth"];
+					var isExpired = result[i]["expired"];
+					var encryptedFlag = result[i]["encryptedFlag"];
+
 					trElmt.setAttribute("class", "bnkWebFolder");
 					trElmt.setAttribute("targetId", result[i]["fileId"]);
 					trElmt.setAttribute("targetType", result[i]["fileTypeName"] == 'folder' ? 'D' : 'F');
 					trElmt.setAttribute("targetCreater", result[i]["createId"]);
 					trElmt.setAttribute("targetPath", result[i]["filePosition"]);
+					trElmt.setAttribute("encryptedFlag", encryptedFlag);
+					trElmt.setAttribute("depth", depth);
+					trElmt.setAttribute("expired", isExpired);
 					
 					if (result[i]["targetType"]) {
 						trElmt.setAttribute("targetFunction", resultJson["folderType"]);
@@ -453,10 +513,15 @@
 						trElmt.setAttribute("targetCreater", result[i]["creatorId"]);
 					}
 					trElmt.addEventListener("click", function(event) {rowContext.onRowClick(event, this);});
+					trElmt.addEventListener("contextmenu", openContextMenu);
 					
 					if (result[i]["fileTypeName"] != 'folder') {
 						trElmt.addEventListener("dblclick", function(event) {
-							downloadFileByDbClick(event);
+							if (this.getAttribute("encryptedFlag") == "1") {
+								unidocsWebViewer(event);
+							} else {
+								downloadFileByDbClick(event);
+							}
 							rowContext.setSelectState(this, true);
 						});
 					}
@@ -483,8 +548,8 @@
 						trElmt.setAttribute("favorite", "");
 					}
 					
-					faImgElmt.style.height  = "14px";
-					faImgElmt.style.width  	= "14px";
+					// faImgElmt.style.height  = "14px";
+					// faImgElmt.style.width  	= "14px";
 					
 					tdElmt2.appendChild(faImgElmt);
 					
@@ -493,8 +558,30 @@
 					fileIconElmt.src = result[i]["fileIconUrl"];
 					tdElmt3.appendChild(fileIconElmt);
 					
-					tdElmt4.textContent = result[i]["fileName"];
-					tdElmt4.setAttribute("title", result[i]["fileName"]);
+					tdElmt4.textContent = fileName;
+					tdElmt4.setAttribute("title", fileName);
+					
+					if (depth > 1) {
+						var additional = "↪ ";
+
+						for (var j = 0; j < depth - 1; j++) {
+							additional = " " + additional;
+						}
+
+						tdElmt4.innerHTML = additional + tdElmt4.innerHTML;
+					} else if (isExpired && (result[i]["folderPath"].match(/\|/g) || []).length  == 3) {
+						// 회의실 만료된거임
+						tdElmt4.innerHTML += "<span style='color:red;font-weight:bold;'>&nbsp;<spring:message code='webfolder.meeting.expired'/></span>";
+					}
+
+					if (encryptedFlag == 1) {
+						tdElmt4.innerHTML = "<img src='/images/email/secureMail/security_icon.gif' width='12' /> " + tdElmt4.innerHTML;
+					}
+					
+					var fileExt = result[i]["fileExt"];
+					if (fileExt) {
+						tdElmt4.setAttribute("ext", fileExt);
+					}
 					
 					if(result[i]["typeId"] == "folder") {
 						tdElmt5.textContent = ' - ';
@@ -533,13 +620,16 @@
 					
 					if(result[i]["typeId"] == "folder") {
 						trElmt.ondblclick = function() {
-							selectLeftFolder(this.getAttribute("targetId"));
-							getFileList(this.getAttribute("targetId"));
+							// selectLeftFolder(this.getAttribute("targetId"));
+							// getFileList(this.getAttribute("targetId"));
+							nameFileList(this.getAttribute("targetId"))
 						};
 					}
 					
 					trElmt.appendChild(tdElmt1);
-					trElmt.appendChild(tdElmt2);
+					<c:if test="${ subTypeC eq 'task' }">
+						trElmt.appendChild(tdElmt2);
+					</c:if>
 					trElmt.appendChild(tdElmt3);
 					trElmt.appendChild(tdElmt4);
 					trElmt.appendChild(tdElmt5);
@@ -547,7 +637,6 @@
 					trElmt.appendChild(tdElmt7);
 					trElmt.appendChild(tdElmt8);
 					trElmt.appendChild(tdElmt9);
-					trElmt.appendChild(tdElmt10);
 					
 					tableList.appendChild(trElmt);
 				}
@@ -652,10 +741,83 @@
 			var filesList    = [];
 			filesList.push(fileFolderId);
 			
-			var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + filesList.toString();
-			AttachDownFrame.location.href = downloadUrl;
+			$.ajax({
+				type: "POST",
+				url: "/ezWebFolder/selectedFolderCheckPermission.do",
+				data: {
+					"fileId" : fileFolderId.toString()
+				},
+				dataType: "JSON",
+				async: true,
+				success : function(data) {
+					var result = data.status;
+					
+					if (result != "ok" && data.code == "3") {
+						alert(messages.strLang25);
+					} else if (data.code == "1") {
+						alert(messages.strLang7);
+					} else {
+						var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + filesList.toString();
+						AttachDownFrame.location.href = downloadUrl;
+					}
+				},
+				error : function(error) {
+					alert(messages.strLang7 + error);
+				}
+			});
+			
 		}
 		
+		function unidocsWebViewer(event){
+			var trElmt = event.currentTarget;
+			var targetCreator = trElmt.getAttribute("targetcreater");
+
+			if (targetCreator === userId && !confirm(messages.webviewerConfirm)) {
+				downloadFileByDbClick(event);
+				return;
+			}
+
+			event.stopPropagation();
+			event.preventDefault();
+			var fileId = trElmt.getAttribute("targetId");
+			
+			unidocsWebViewerOpen(fileId);
+		}
+		
+		function unidocsWebViewerOpen(fileId) {
+			showLoading();
+
+			$.ajax({
+				type: "POST",
+				async: true,
+				url: "/ezWebFolder/webfolderFileDownForUnidocs.do",
+				data: JSON.stringify({
+					"folderId": folderId,
+					"fileId": fileId
+				}),
+				contentType: "application/json; charset=UTF-8",
+				dataType: "JSON",
+				success: function(result) {
+					if (result.status == "OK") {
+						var unidocsUrl = result.url + result.encData;
+						window.open(unidocsUrl, '_blank');
+					} else if (result.code == -1) {
+						alert("<spring:message code='webfolder.wfjob.notsupport' />");
+					} else if (result.code == 3) {
+						alert(messages.strLang25);
+					} else {
+						alert("<spring:message code='ezWebFolder.t305' />");
+					}
+				},
+				error: function(error) {
+					alert("<spring:message code='ezWebFolder.t305' />");
+				},
+				complete: function() {
+					hideLoading();
+				}
+			});
+		}
+
 		function openLeftPanel() {
 			var leftFrame = window.parent.frames["left"].document;
 			var blockLeft = leftFrame.getElementById("bnkBlockLeft");
@@ -674,17 +836,34 @@
 		}
 		
 		function showProgress() {
-			var CurrentHeight = document.documentElement.clientHeight;
+			listLoading(true);
+			
+			/* var CurrentHeight = document.documentElement.clientHeight;
 			var CurrenWidth = document.documentElement.clientWidth;
 			document.getElementById("progressPanel").style.top = (CurrentHeight / 2) + "px";
 			document.getElementById("progressPanel").style.left = (CurrenWidth / 2) - 100 + "px";
-		    document.getElementById("progressPanel").style.display = "block";
+			document.getElementById("progressPanel").style.display = "block"; */
 		}
         
         function hideProgress() {
-        	document.getElementById("progressPanel").style.display = "none";
+			listLoading(false);
+			
+        	//document.getElementById("progressPanel").style.display = "none";
         }
         
+		function showLoading() {
+			openLeftPanel();
+			document.getElementById("webFolderRightPanel").style.display = "block";
+			document.getElementById("webFolderRightPanel").style.background = "rgba(0,0,0,0.5)";
+			showProgress();
+		}
+
+		function hideLoading() {
+			hideProgress();
+			document.getElementById("webFolderRightPanel").style.display = "none";
+			closeLeftPanel();
+		}
+
         function selectLeftFolder(targetID) {
         	window.parent.frames["left"].selectFolder(targetID);
         }
@@ -711,15 +890,292 @@
         	}
         }
         
+
+		function hasContainsReplyFiles(fileIds) {
+			if (!window.containsReplyFiles) {
+				return false;
+			}
+
+			for (var i = 0; i < fileIds.length; i++) {
+				for (var j = 0; j < containsReplyFiles.length; j++) {
+					if (fileIds[i] == containsReplyFiles[j]) {
+						return true;
+					}
+				}
+			}
+
+			return false;
+		}
+
+		// 메일의 콘텍스트 메뉴를 그대로 들고옴
+		function openContextMenu(event) {
+			if (document.getElementById("contextMenuDiv").style.display == "") {
+				hideContextMenu();
+			}
+			if (!event)
+				event = window.event;
+			
+			event.stopPropagation();
+			event.preventDefault();
+			contextClickedTr = event.currentTarget;
+			
+			// 2020-12-10 김은실 - (카이스트)회사 폴더별 관리자 지원 기능 
+			var targetFolderId = contextClickedTr.getAttribute("targetid");
+			var targetDepth = contextClickedTr.getAttribute("depth");
+			if (!(Number(targetDepth) > 1) && (checkIsManager(targetFolderId) || contextClickedTr.getAttribute("targetcreater") == userId) ) {
+				document.getElementById("folderManagerTR").style.display = "";
+			}
+			
+			var EventMouseX = event.clientX;
+			var EventMouseY = event.clientY;
+			
+			var listsizeheight = document.documentElement.clientHeight;
+			var listsizewidth = document.documentElement.clientWidth;
+			
+			var target = event.target ? event.target : event.srcElement;
+			var targetTag = target.tagName;
+			var EventDivSize = EventMouseY + $("#contextMenuDiv").height() + 70;
+
+			if (listsizeheight < EventDivSize) {
+				var Div_ = EventDivSize - listsizeheight;
+				EventMouseY = EventMouseY - Div_;
+			}
+			
+			EventDivSize = EventMouseX + 140;
+			if (listsizewidth < EventDivSize) {
+				var Div_ = EventDivSize - listsizewidth;
+				EventMouseX = EventMouseX - Div_;
+			}
+
+			document.getElementById("contextMenuDiv").style.left = EventMouseX + "px";
+			document.getElementById("contextMenuDiv").style.top = EventMouseY + "px";
+			document.getElementById("contextMenuDiv").style.display = "";
+		}
+
+		function hideContextMenu() {
+			// 2020-12-10 김은실 - (카이스트)회사 폴더별 관리자 지원 기능 
+			document.getElementById("folderManagerTR").style.display = "none";
+			
+			document.getElementById("contextMenuDiv").style.display = "none";
+			if (window.contextClickedTr) {
+				setTimeout(function() {
+					contextClickedTr = null;
+				}, 0);
+			}
+		}
+		
+		// 2020-12-10 김은실 - (카이스트)회사 폴더별 관리자 지원 기능 
+		function checkIsManager(folderId) {
+			if (!window.managedFolderList) {
+				return false;
+			}
+			
+			// 담당 1레벨 폴더 안으로 들어 왔으면 true
+			if (managedFolderList.indexOf(firstLevelFolderId) > -1) {
+				return true;
+			}
+			
+			// 파라미터로 넘어온 폴더가 담당하는 폴더인 경우 true
+			if (typeof(folderId) === "string") {
+				// 문자열이면 바로 검사
+				return managedFolderList.indexOf(folderId) > -1;
+			} else if (typeof(folderId) === "object") {
+				// 배열이면 반복문 검사
+				for (var i = 0; i < folderId.length; i++) {
+					if (managedFolderList.indexOf(folderId[i]) > -1) {
+						return true;
+					}
+				}
+			}
+			
+			return false;
+		}
+		
+		function getUsersPage_manager() {
+			authListUser = [];			
+			addUser      = [];
+			deleteUser   = [];
+			var url 	 = "";
+			if (selectXhr) {
+				selectXhr.abort();
+			}
+			
+			var selectedRows = rowContext.getSelectedRows();
+
+			if (selectedRows.length < 1 || selectedRows.length > 1) {
+				alert(messages.strLang39);
+				return;
+			}
+
+			var targetRow = selectedRows[0];
+			var targetId = targetRow.getAttribute("targetid");
+			var targetType = targetRow.getAttribute("targettype");
+			if (Number(targetRow.getAttribute("depth")) > 1) {
+				alert("<spring:message code='ezWebFolder.kes019'/>");
+				return;
+			}
+			if (!checkIsManager(targetId) && targetRow.getAttribute("targetcreater") != userId) {
+				alert("<spring:message code='ezWebFolder.kes020' />");
+				return;
+			}
+
+			if (targetType == "D"){
+				url = "/admin/ezWebFolder/getFolderUsers.do"; 
+			} else {
+				url = "/admin/ezWebFolder/getFileUsers.do";
+			}
+			
+			data = {
+				"fileId"	: targetId,
+				"folderId"	: targetId,
+				"folderManager" : "${folderManager}"
+			}
+
+			// global
+			userManager.targetId = targetId;
+			userManager.targetType = targetType;
+
+			selectXhr = $.ajax({
+				type: "POST",
+				url: url,
+				data: data,
+				dataType: "JSON",
+				async: true,
+				success : function(data) {
+					var code = data.code;
+					
+					switch(code) {
+						case 0:
+							var folderUsers = data.folderUsers;
+							if(folderUsers != null && folderUsers.length != 0) {
+								for (var i = 0; i < folderUsers.length ; i++) {
+									if(folderUsers[i]["folderManager"]) {
+										continue;
+									}
+									var auth         		= {};
+									auth["userId"]   		= folderUsers[i]["userId"];
+									auth["userName"] 		= "<spring:message code='main.t0619' />" == "ko" ? folderUsers[i]["displayName1"] : folderUsers[i]["displayName2"];
+									auth["userType"]   		= folderUsers[i]["userType"];
+									auth["subdeptPermitted"]= folderUsers[i]["subdeptPermitted"];
+									auth["sn"] 		 		= i;
+									auth["folderManager"]	= folderUsers[i]["folderManager"];
+									auth["displayDeptName"] = "<spring:message code='main.t0619' />" == "ko" ? folderUsers[i]["displayDeptName1"] : folderUsers[i]["displayDeptName2"];
+									authListUser.push(auth);
+								}
+								strictAuthList 		= authListUser;
+							}
+							menu_SelectRange("${companyId}", 0);
+							break;
+						case 1:
+							alert("<spring:message code='ezWebFolder.t306'/>");
+							break;
+						case 2:
+							alert("<spring:message code='ezWebFolder.t305'/>");
+							break;
+						case 3:
+							alert("<spring:message code='ezWebFolder.t300' />");
+							break;
+					}
+				},
+				error : function(error) {
+					if (error.statusText == "abort") {
+						return;
+					}
+        
+					alert("<spring:message code='ezWebFolder.t134'/>" + error);
+				},
+				complete: function() {
+					selectXhr = null;
+				}
+			});
+		}
+		
+		function saveChanges_manager(returnMsg) { // returnMsg == ture ? return message : alert message;
+			if(addUser.length == 0 && deleteUser.length == 0) {
+				return;
+			}
+			
+			var strAuthListUser = (typeof authListUser == "string")? authListUser : JSON.stringify(authListUser);
+			var ajaxData = {
+					"currFolderId"  : folderId,
+					"targetId"   	: userManager.targetId,
+					"targetType" 	: userManager.targetType,
+					"folderUsers" 	: strAuthListUser,
+					"addUser" 		: convertJSONToJSONStr(addUser),
+					"deleteUser" 	: convertJSONToJSONStr(deleteUser),
+					"subFolderType"	: subFolderType,
+					"folderManager" : "${folderManager}"
+				};
+	   		var reMsg = "";
+			
+			$.ajax({
+				type: "POST",
+				url: "/ezWebFolder/changeUserFileORFolder.do",
+				data: ajaxData,
+				dataType: "JSON",
+				async: false,
+				success: function(data) {
+					var code = data.code;
+					
+					switch(parseInt(code)) {
+						case 0: 
+							reMsg = "<spring:message code='ezWebFolder.t182'/>";
+							//alert("<spring:message code='ezWebFolder.t182'/>");
+							break;
+						case 1:
+							reMsg = "<spring:message code='ezWebFolder.t306'/>";
+							//alert("<spring:message code='ezWebFolder.t306'/>");
+							break;
+						case 2:
+							reMsg = "<spring:message code='ezWebFolder.t305'/>";
+							//alert("<spring:message code='ezWebFolder.t305'/>");
+							break;
+						case 3:
+							reMsg = "<spring:message code='ezWebFolder.t300' />";
+							//alert("<spring:message code='ezWebFolder.t300' />");
+							break;
+						case 8:
+							reMsg = messages.resultErrDuplicateRename;
+							//alert(messages.resultErrDuplicateRename);
+							break;
+					}
+				},
+				error: function (xhr, status, e){
+					reMsg = "<spring:message code='ezWebFolder.t134'/>";
+					//alert("<spring:message code='ezWebFolder.t134'/>");
+				}
+			});
+
+			
+			if (returnMsg) {
+				return reMsg;
+			} else {
+				alert(reMsg);
+			}
+		}
+		
+		function convertJSONToJSONStr(obj) {
+			var returnStr = obj;
+			if (typeof returnStr != "string") {
+				var tmp = obj.length == 0 ? [] : obj;
+				returnStr = JSON.stringify(tmp);
+			}
+			
+			return returnStr;
+		}
     </script>
 </head>
 <body class="mainbody" style="padding-bottom:10px;">
 	<h1>
 		<c:choose>
-			<c:when test="${folderType eq 'C'}">
+			<%-- 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정 --%>
+			<c:when test="${folderType eq 'C' && subTypeC eq 'meeting'}">
+				<spring:message code='ezWebFolder.kes011' />
+			</c:when>
+			<c:when test="${folderType eq 'C' && subTypeC eq 'dean'}">
 				<spring:message code='ezWebFolder.t11' />
 			</c:when>
-			<c:when test="${folderType eq 'D'}">
+			<c:when test="${folderType eq 'C' && subTypeC eq 'task'}">
 				<spring:message code='ezWebFolder.t12' />
 			</c:when>
 			<c:when test="${folderType eq 'U'}">
@@ -727,42 +1183,45 @@
 			</c:when>
 		</c:choose>
 		<span id="mailBoxInfo"></span>
-		<div id="capacity-wrapper">
-			<div class="progressbar">
-				<div id="capacity-bar" class="proggress"></div>
-			</div>
-			<span id="capacity-percent"></span>
-		</div>
 	</h1>
 	<div id="pageArea">
-		<div style="height:40px;">
-			<div style="font-size: 24px;font-weight: bold;font-weight: bold; padding: 8px 4px 0px;" id ="originalPath" ></div>
+		<div style="height:30px;">
+			<div id ="originalPath" ></div>
 		</div>
 		<div id="mainmenu">
 			<ul>
-				<li class="important"><span onclick="buttons.fileDownload()"><spring:message code='ezWebFolder.t186' /></span></li>
+				<c:if test="${ subTypeC ne 'meeting' }">
+					<li class="important"><span onclick="buttons.fileDownload()"><spring:message code='ezWebFolder.t186' /></span></li>
+				</c:if>
 				<li class="important" id="upload"><span onclick="buttons.fileUpload()"><spring:message code='ezWebFolder.t187' /></span></li>
 				<li id ="newFolder"><span onclick="buttons.newFolder()"><spring:message code='ezWebFolder.t255' /></span></li>
 				<li><span onclick="buttons.fileRename()"><spring:message code='ezWebFolder.t508' /></span></li>
-				<li><span onclick="buttons.fileMoveAndCopy()"><spring:message code='ezWebFolder.t251' /></span></li>
-				<li><span onclick="shareContext.addShareView()"><spring:message code='ezWebFolder.t254' /></span></li>			
-				<!-- <li><img src="/images/i_bar.gif" /></li> -->
-				<li><span class="icon16 icon16_star" onclick="favoriteContext.toggleAll()"></span></li>
-	<%-- 			<li id=""><a onClick=""     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t272'/></span></a></li> --%>
-				<!-- <li><img src="/images/i_bar.gif"></li> -->
-				<li id="SearchOption" mode="off" onclick="doLayerPopup(this)"><span class="icon16 icon16_search"></span></li>
-				<li><span class="icon16 icon16_delete" onclick="buttons.fileDelete()"></span></li>
+				<c:if test="${ subTypeC eq 'task' }">
+					<li id="moveButton"><span onclick="buttons.fileMoveAndCopy()"><spring:message code='ezWebFolder.t251' /></span></li>
+				</c:if>
+				<c:if test="${useVersionHistory}">
+					<li><span onclick="buttons.openFileVersionHistory()"><spring:message code='webfolder.version.button' /></span></li>
+				</c:if>
+					<li id="userManagerBtn"><span onclick="getUsersPage_manager()"><spring:message code='ezWebFolder.kes013' /></span></li>
+ 				<c:if test="${(subTypeC eq 'meeting' || subTypeC eq 'task')}">
+					<li id ="sendingMail" style="display:none;"><span onclick="buttons.sendingMail()"><spring:message code='ezWebFolder.ksa01' /></span></li>
+				</c:if> 
+				<c:if test="${ subTypeC eq 'task' }">
+					<li><span class="icon16 icon16_star" onclick="favoriteContext.toggleAll()" title="<spring:message code='ezWebFolder.t216' />"></span></li>
+				</c:if>
+				<li id="SearchOption" mode="off" onclick="doLayerPopup(this)"><span class="icon16 icon16_search" title="<spring:message code='ezWebFolder.t123' />"></span></li>
+				<li><span class="icon16 icon16_delete" onclick="buttons.fileDelete()" title="<spring:message code='ezWebFolder.t111' />"></span></li>
 				<!-- <li><img src="/images/i_bar.gif"></li> -->
 	<!-- 			<li id=""><a onClick="folder_Manage()"style="margin-top: 3px;"><span>폴더관리</span></a></li> -->
-				<li><span class="icon16 icon16_refresh" onclick="refreshView()"></span></li>
+				<li><span class="icon16 icon16_refresh" onclick="refreshView()" style="display:none;"></span></li>
 				<!-- <li><img src="/images/i_bar.gif" /></li> -->
 				<!-- <li style="float:right;border:0px;background-color: white"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv" /></li> -->
-				<div class="sub_frameIcon" style="float:right">
+				<div class="sub_frameIcon" style="float:right" id="wfOptionDiv">
 					<div class="sub_frameIconUL02">
 					  	<p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="webfolderlistoptiondiv"></span></p>  
 					</div>
 				</div>
-				<li style="float:left;">
+				<li style="float:right;">
 					<select class="select" id="idSelect" onchange="onFileTypeChange(this.value)">
 						<option value=""><spring:message code='ezWebFolder.t191' /></option>
 						<option value="document"><spring:message code='ezWebFolder.t192' /></option>
@@ -790,7 +1249,7 @@
 	                <table style="width: 100%; border-spacing: 0px; border-collapse: collapse; border: none;" class="list_element">
 	                    <caption></caption>
 	                    <colgroup>
-	                        <col style="width: 80px;">
+	                        <col style="width: 90px;">
 	                        <col>
 	                    </colgroup>
 	                    <tr>
@@ -820,7 +1279,9 @@
 					<thead id ="BoardList_THEAD">
 						<tr>
 							<th class="wfFilecheck " style="text-align: center;" ><input type="checkbox" onchange="rowContext.selectAll(this.checked)" id="_checkAll"></th>
-							<th class="wfFileFavorite 	headListClick" style="text-align: center;" headers="FAVORITE_STATUS"><img class="none-drag" src='/images/ImgIcon/icon-flag.gif'/></th><!-- 즐겨찾기 -->
+							<c:if test="${ subTypeC eq 'task' }">
+								<th class="wfFileFavorite 	headListClick" style="text-align: center;" headers="FAVORITE_STATUS"><img class="none-drag" src='/images/ImgIcon/icon-flag.gif'/></th><!-- 즐겨찾기 -->
+							</c:if>
 							<th class="wfFileType 		headListClick" style="text-align: center;" headers="TYPE_ICON"><spring:message code='ezWebFolder.t188'/></th><!-- 유형 -->
 							<th class="wfFileName 		headListClick" headers="FILE_NAME"><spring:message code='ezWebFolder.t156'/></th><!-- 이름 -->
 							<th class="wfFileSize 		headListClick" style="text-align: center;" headers="FILE_SIZE"><spring:message code='ezWebFolder.t157'/></th><!-- 파일크기 -->
@@ -828,7 +1289,6 @@
 							<th class="wfFileUploadDate headListClick" headers="CREATE_DATE"><spring:message code='ezWebFolder.t190'/></th><!-- 등록일 -->
 							<th class="wfFileUpdateDate headListClick" headers="UPDATE_DATE"><spring:message code='ezWebFolder.t198'/></th><!-- 갱신일 -->
 							<th class="wfFilePath 		" headers="FILE_PATH"><spring:message code='ezWebFolder.t199'/></th><!-- 위치 -->
-							<th class="wfFileShare 		headListClick" style="text-align: center;" headers="FILESHARE_STATUS"><spring:message code='ezWebFolder.t278'/></th><!-- 공유상태 -->
 						</tr>
 					</thead>
 				</table>
@@ -850,8 +1310,8 @@
 		<div id="tblPageRayer"></div>
     </div>
 	<div id="searchpopup" class="popupwrap3" style="display:none;margin-bottom:70px">
-		<div class="popupJQLayer" style="padding-top:6px">
-			<div class="title"><spring:message code='ezWebFolder.t10' /><spring:message code='ezWebFolder.t123' /></div>
+		<div class="popupJQLayer">
+			<div class="title"><spring:message code='ezWebFolder.kje01' /></div>
 			<div id="close">
 	            <ul>
 	                <li><a rel="modal:close"><span onclick="searchOptionHidden()"></span></a></li>
@@ -890,11 +1350,68 @@
 			</table>
 		</div>
 	</div>	
+	
+	<c:if test="${subTypeC eq 'task'}">
+		<%@ include file="/WEB-INF/jsp/ezWebFolder/component/downloadOptionPopup.jsp" %>
+	</c:if>
 	<div style="width:200px;height:110px; border-radius:8px;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="progressPanel">
 	    <img src="/images/email/progress_img.gif" style="padding-top:20px;"/>
+	</div>
+	<div id="listload_div" class="loadingBox2" style="display:none; z-index:7500;">
+		<div class="loader loader-3">
+			<div class="dot dot1"></div>
+			<div class="dot dot2"></div>
+			<div class="dot dot3"></div>
+			<div class="dot dot4"></div>
+		</div>
 	</div>
 	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 		<iframe src="" style="border:none;" id="iFrameLayer"></iframe>
 	</div>
+	<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:5000;display:none;" id="webFolderRightPanel">&nbsp;</div>
+	<div id="contextMenuDiv" style="position: absolute; z-index: 6000; display: none;">
+		<table cellpadding="2" cellspacing="1" border="0" class="popuplist">
+			<tbody>
+				<c:if test="${subTypeC eq 'task'}">
+				<tr id="moveMenu">
+					<td onclick="buttons.fileMoveAndCopy();" onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor: pointer; background-color: rgb(255, 255, 255);">
+						<span style="font-size: 12px; width: 100%; display: inline-block;"><img src="/images/ImgIcon/move.gif" align="absmiddle" hspace="5"><spring:message code='ezWebFolder.t251' /></span>
+					</td>
+				</tr>
+				<tr>
+					<td onclick="favoriteContext.toggleAll();" onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor: pointer; background-color: rgb(255, 255, 255);">
+						<span style="font-size: 12px; width: 100%; display: inline-block;"><img src="/images/ImgIcon/icon-flag.gif" align="absmiddle" hspace="5"><spring:message code='ezWebFolder.t216'/></span>
+					</td>
+				</tr>
+				</c:if>
+				<c:if test="${useVersionHistory}">
+				<tr>
+					<td onclick="buttons.openFileVersionHistory();" onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor: pointer; background-color: rgb(255, 255, 255);">
+						<span style="font-size: 12px; width: 100%; display: inline-block;"><img src="/images/ImgIcon/options.gif" align="absmiddle" hspace="5"><spring:message code='webfolder.version.button' /></span>
+					</td>
+				</tr>
+				</c:if>
+				<tr>
+					<td onclick="buttons.openReply();" onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor: pointer; background-color: rgb(255, 255, 255);">
+						<span style="font-size: 12px; width: 100%; display: inline-block;"><img src="/images/ImgIcon/rul-sml.png" align="absmiddle" hspace="5"><spring:message code='webfolder.reply.title' /></span>
+					</td>
+				</tr>
+				<tr>
+					<td onclick="refreshView();" onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor: pointer; background-color: rgb(255, 255, 255);">
+						<span style="font-size: 12px; width: 100%; display: inline-block;"><img src="/images/ImgIcon/recur.gif" align="absmiddle" hspace="5"><spring:message code='ezWebFolder.t139' /></span>
+					</td>
+				</tr>
+				<!-- 2020-12-10 김은실 - [카이스트] 구성원관리 추가  -->
+				<tr id ="folderManagerTR" style="display:none;">
+					<td onclick="getUsersPage_manager();" onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor: pointer; background-color: rgb(255, 255, 255);">
+						<span style="font-size: 12px; width: 100%; display: inline-block;"><img src="/images/ImgIcon/options.gif" align="absmiddle" hspace="5"><spring:message code='ezWebFolder.kes013' /></span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<%@ include file="/WEB-INF/jsp/ezWebFolder/webFolderApplyPopUp.jsp" %>
+	<!-- 2020-12-08 김은실 - [카이스트] 구성원관리 추가  -->
+	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/selectUsers.js')}"></script>
 </body>
 </html>

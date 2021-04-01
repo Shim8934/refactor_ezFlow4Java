@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezWebFolder.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +15,7 @@ import egovframework.let.user.login.vo.LoginVO;
 public interface EzWebFolderService_y {
 	public void insertIfNotExistRootForder(String userId, String userName1, String userName2, String compId, List<Map<String, String>> permissionIdList, String offset, int tenantId) throws Exception;
 	
-	public List<Map<String, Object>> getFolderTree(String userId, String deptId, String compId, String folderType, String primary, int tenantId, String flag) throws Exception;
+	public List<Map<String, Object>> getFolderTree(String userId, String deptId, String compId, String folderType, String primary, int tenantId, String flag, String subTypeC) throws Exception;
 	
 	// 파일리스트
 	List<FileVO> getFileList(String folderId, String userId, String deptId, int tenantId, String comId, String searchExt, String searchFileName, 
@@ -24,7 +25,7 @@ public interface EzWebFolderService_y {
 	// 파일리스트2  root가 모든 파일들이 나오지 않는 메서드 
 	List<FileVO> getFileList2(String folderId, String userId, String deptId, int tenantId, String comId, String searchExt, String searchFileName, 
 			String searchStartDate, String searchEndDate, String searchCreateName, String searchFileType, String searchPageCount, 
-			int pStart, int pEnd, String offset, String primary, String sortType, String sortColumn) throws Exception;
+			int pStart, int pEnd, String offset, String primary, String sortType, String sortColumn, String subTypeC) throws Exception;
 	
 	// 파일리스트의 총 개수 가져오는 메서드
 	Map<String, Integer> getFileToTalCount(String folderId, String userId, String deptId, int tenantId, String parameter,
@@ -34,7 +35,7 @@ public interface EzWebFolderService_y {
 	// 파일리스트의 총 개수 가져오는 메서드
 	Map<String, Integer> getFileToTalCount2(String folderId, String userId, String deptId, int tenantId, String parameter,
 			String searchExt, String searchFileName, String searchStartDate, String searchEndDate, String searchCreateName,
-			String searchFileType, String searchPageCount, int pStart, int pEnd, String offset, String primary) throws Exception;
+			String searchFileType, String searchPageCount, int pStart, int pEnd, String offset, String primary, String subTypeC) throws Exception;
 
 	// folder insert위한 폴서 세부 정보 folderDetail
 	FolderVO getFolderDetail(String folderUppId, String userId, int tenantId ,String comId) throws Exception;
@@ -42,6 +43,8 @@ public interface EzWebFolderService_y {
 	// 폴더 생성
 	String insertFolder(int tenantId, String comId,String deptId, String userId, String folderType, 
 			String newFolderName1,String newFolderName2, FolderVO uppFolder, String timeUTC) throws Exception;
+	
+	public List<Map<String,String>> getFolderUser (String folderId, String comId, int tenantId) throws Exception;
 	
 	// folderUser 테이블에 데이터 생성
 	LoginVO getUserInfo(int tenantId , String comId, String userId ) throws Exception;
@@ -53,14 +56,22 @@ public interface EzWebFolderService_y {
 	void updateFolder(String folderId, int tenantId, String userId, String comId, String newFolderName1, String newFolderName2 , String timeUTC) throws Exception;
 	
 	// 폴더 삭제
-	int deleteSubFldAFile(String folderId, int tenantId, String comId , String userId , String timeUTC) throws Exception;
+	int deleteSubFldAFile(String folderId, int tenantId, String comId , String userId , String timeUTC, String rollInfo) throws Exception;
 	
 	// 하위폴더가 모두 자신이 만든 폴더인지 확인하는 메서드
 	// 모두 자신이 만든 폴더이면 true , 아니라서 삭제가 불가능하면  false 
-	int checkCreater(String folderId , int tenantId, String comId, String userId ) throws Exception;
+	int checkCreatorRecursive(String folderId , int tenantId, String comId, String userId ) throws Exception;
+
+	// 해당 폴더가 자신이 만든 폴더인지 확인하는 메서드 (하위 체크 X)
+	int checkCreator(String folderId , int tenantId, String comId, String userId) throws Exception;
 	
 	// 본인이 환경설정에서 설정해놓은 listCount를 출력
 	int getUsrListCount(int tenantId, String userId ) throws Exception;
+
+	/** 카이스트: 이름변경, 이동, 삭제에서의 권한 (만든이인지, 담당자인지를 체크) */
+	JSONObject checkPermissionForCreator(String[] folderIds, String[] fileIds, LoginVO user) throws Exception;
+
+	JSONObject checkPermissionForCreator(String[] folderIds, String[] fileIds, LoginVO user, boolean isRecursive) throws Exception;
 
 	// listCount 수정시 insert
 	void insertEnv(String userId, int tenantId, int listCount) throws Exception;
@@ -94,6 +105,20 @@ public interface EzWebFolderService_y {
 
 	public void deleteToken(String userId,  int tenantId) throws Exception ;
 	
-	public String folderIdByUserIdAndFolderType(String userId, int tenantId) throws Exception ;
-	
+	public String folderIdByUserIdAndFolderType(String userId, int tenantId, String folderType) throws Exception ;
+
+	public ArrayList<Map<String, Object>> selectWebfolderFiletoAnother(String userId, ArrayList<String> param) throws Exception;
+
+	public List<String> getjikWiChekAddjobList(int tenantId, String userId, String compId) throws Exception;
+
+	public FileVO selectFileDetail(JSONObject jsonObject) throws Exception;
+
+	public List<Map<String, Object>> getRootFolderListInfo(JSONObject jsonObject) throws Exception;
+
+	public List<String> idListUpgrade(String userId, String deptId, String comId, int tenantId) throws Exception;
+
+	public String changeUserFileORFolder(String currFolderId, String userId, String targetId, String folderUsers, String targetType, String offset, int tenantId,
+			ArrayList<String> addUser, ArrayList<String> deleteUser, String subFolderType, LoginVO userInfo) throws Exception ;
+
+	void addFileUserCurrFolder(String currFolderId, String offset, int tenantId, String folderUsers, ArrayList<String> addUserr, String subFolderType) throws Exception;
 }

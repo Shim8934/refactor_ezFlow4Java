@@ -16,13 +16,17 @@
 	<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 	<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}" type="text/css">
 	<script type="text/javascript" src="${util.addVer('/js/ezOrgan/ListView_list.js')}"></script>
-	<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
 	<!-- time picker-->
 	<script type="text/javascript" src="${util.addVer('ezWebFolder.e1', 'msg')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/popup.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/pageNav.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/adminTable.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/duplicate-file.js')}"></script>
+	<!-- capacity -->
+	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/capacity.js')}"></script>
+	<link rel="stylesheet" href="${util.addVer('/css/jquery.lineProgressbar.css')}" type="text/css" />
+	<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
+	
 	<script type="text/javascript">
 		var lang      = ${lang};
 		var strErr    = "<spring:message code = 'ezWebFolder.t107'/>";
@@ -65,6 +69,10 @@
 		document.onselectstart = function() {return false;}
 		
 		window.onload = function () {
+			capacity.setFolderIdProvider(function() {
+				return "${folderId}";
+			});
+
 			closeAllPopup();
 			tableView.setTableId("tblFileList");
 			tableView.setTabledHeader("tblFileList1");
@@ -269,6 +277,7 @@
 		function renderFileListElement(result) {
 			tableView.setDataSource(result);
 			tableView.renderTable();
+ 			capacity.load();
 		}
 		
 		$(function() {
@@ -517,22 +526,23 @@
 		}
 		
 		function optionView(obj) {
-	   		 if (obj.getAttribute("mode") == "off") {
-	   	        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
-  	            document.getElementById("layer_Viewpopup").style.top = "100px";
-	   	        document.getElementById("layer_Viewpopup").style.display = "";
-	   	        obj.setAttribute("class", "icon16 btn_onarrow_down");
-	   	        obj.setAttribute("mode", "on");
-	   	    } else {
-	   	        optionHidden();
-	   	    }
-	   	}
-  	   
-	 	function optionHidden() {
-	 	    document.getElementById("layer_Viewpopup").style.display = "none";
-	 	    document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
-	 	    document.getElementById("webfolderlistoptiondiv").setAttribute("class", "icon16 btn_arrow_down");
-	 	}
+			if (obj.getAttribute("mode") == "off") {
+				var a_left = $("#wfOptionDiv").offset().left - ($("#layer_Viewpopup").width() - $("#wfOptionDiv").width());
+				var a_top = $("#wfOptionDiv").offset().top + $("#wfOptionDiv").height() + 2;
+				document.getElementById("layer_Viewpopup").style.display = "";
+				obj.setAttribute("class", "icon16 btn_onarrow_down");
+				obj.setAttribute("mode", "on");
+				$("#layer_Viewpopup").css({"left":a_left, "top":a_top});
+			} else {
+				optionHidden();
+			}
+		}
+
+		function optionHidden() {
+			document.getElementById("layer_Viewpopup").style.display = "none";
+			document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
+			document.getElementById("webfolderlistoptiondiv").setAttribute("class", "icon16 btn_arrow_down");
+		}
 		
 		function scroll() {
 			var BoardList_BODYHeight = document.getElementById("dragDropArea").clientHeight;
@@ -563,12 +573,19 @@
 	</script>
 </head>
 <body class="mainbody" onkeydown="keyPressPanel(event);">
-    <h1><spring:message code='ezWebFolder.t269'/><span id="mailBoxInfo"></span></h1>
+    <h1><spring:message code='ezWebFolder.t269'/><span id="mailBoxInfo"></span>
+		<div id="capacity-wrapper">
+			<div class="progressbar">
+				<div id="capacity-bar" class="proggress"></div>
+			</div>
+			<span id="capacity-percent"></span>
+		</div>
+	</h1>
 	<div id="mainmenu" style="margin-left: 5px;">
 		<ul>
-			<li id=""><a onClick="restoreTrashCan()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t287'/></span></a></li>
-			<li id=""><a onClick="moveTraschCan()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t282'/></span></a></li>
-			<li id=""><a onClick="filePermanentDelete()"   style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t19'/></span></a></li>
+			<li id=""><a onClick="restoreTrashCan()" style="color: #fff; margin-top: 3px;"><span><spring:message code='ezWebFolder.t287'/></span></a></li>
+			<li id=""><a onClick="moveTraschCan()" style="color: #fff; margin-top: 3px;"><span><spring:message code='ezWebFolder.t282'/></span></a></li>
+			<li id=""><a onClick="filePermanentDelete()"   style="color: #fff; margin-top: 3px;"><span><spring:message code='ezWebFolder.t19'/></span></a></li>
 			<li id="SearchOption" mode="off" onclick="doLayerPopup(this)" class="off"><span class="icon16 icon16_search"></span></li>
 			<li style="float:left;">
 				<select class="select" id="idSelect" onchange="changeValue(this.value);" style="height: 29px; border-radius: 3px; padding: 0px; width: 85px;">
@@ -582,7 +599,7 @@
 					<option value="unknown"><spring:message code='ezWebFolder.t311'/></option>
 				</select>
 			</li>
-			<div class="sub_frameIcon" style="float:right">
+			<div class="sub_frameIcon" style="float:right" id="wfOptionDiv">
 				<div class="sub_frameIconUL02">
 				  	<p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="webfolderlistoptiondiv"></span></p>  
 				</div>
@@ -599,7 +616,7 @@
                 <table style="width: 100%; border-spacing: 0px; border-collapse: collapse; border: none;" class="list_element">
                     <caption></caption>
                     <colgroup>
-                        <col style="width: 80px;">
+                        <col style="width: 90px;">
                         <col>
                     </colgroup>
                     <tr>
@@ -656,11 +673,10 @@
         <iframe style="border:none;" id="iFrameLayer"></iframe>
     </div>
 
-	<div id="searchPanel" class="wfSearchPanel" style="display: none; overflow: hidden;">
-	<div class="popup" style="margin: 0; padding: 5px 10px 10px;">
-		<h1><spring:message code='ezWebFolder.kje01'/></h1> 
+	<div id="searchPanel" class="wfSearchPanel popupwrap3 modal" style="margin-bottom: 70px; display: none; width:537px;">
+		<div class="popupJQLayer" >
+		<div class="title"><spring:message code='ezWebFolder.kje01'/></div>
 		<div class="wfClose" onclick="doLayerPopup();"><ul><li><span></span></li></ul></div>
-		<div style="margin: 10px 0px 15px;">
 			<table class="content wftable">
 				<tr>
 					<th class="wfSearchTh"><spring:message code='ezWebFolder.t190' /></th>
@@ -691,7 +707,6 @@
 					<td class="wfSearchTd"><input type="text" id="searchCreateName" value="" name="searchCreateName"></td>
 				</tr>
 			</table>
-		</div>
 		<div class="wfdivBttn">
 			<a class="webfolderBttn"><span onclick="search('basic');"><spring:message code='ezWebFolder.t123'/></span></a>
 			<a class="webfolderBttn" style="display:none"><span onclick="doLayerPopup();" ><spring:message code='ezWebFolder.t112'/></span></a>

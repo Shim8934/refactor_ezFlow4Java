@@ -13,6 +13,7 @@
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/fileFolderDrop.js')}"></script>
 	<script type="text/javascript">
+		<c:set var="isTask" value="${subTypeC eq 'task' && mode ne 'admin'}" />
 		var primary        = "<c:out value='${primary}'/>";
 		var fileList       = "<c:out value='${fileIdList}'/>";
 		var folderList     = "<c:out value='${folderIdList}'/>";
@@ -24,6 +25,11 @@
 		var mode           = "<c:out value='${mode}'/>";
 		var functionType   = "";
 		var targetId 	   = "";
+		var adminCheck     = "<c:out value='${mode}'/>";
+		var subTypeC 	   = "<c:out value='${subTypeC}'/>";
+		<c:if test="${isTask}">
+		subTypeC 		   = "task";
+		</c:if>
 		
 		window.onbeforeunload = function() {
 			parent.closeAllPopup();
@@ -38,16 +44,20 @@
 			selectedFolder = null;
 			selectedLevel  = null;
 			currentFolders = [];
-			var type       = document.querySelector('input[name=treeType]:checked').value;
+			// var type       = document.querySelector('input[name=treeType]:checked').value;
 			var compVal    = document.getElementById("companyList") ? document.getElementById("companyList").value : "";
+			<c:if test="${isTask}">
+			subTypeC = document.querySelector('input[name=treeType]:checked').value;
+			</c:if>
 			$.ajax({
 				type: "POST",
 				url: "/ezWebFolder/getFileFolderTree.do",
 				data: {
 					"fileList"  : fileList,
 					"companyId" : compVal,
-					"type"      : type,
-					"mode"      : mode
+					"type"      : "comp",
+					"mode"      : mode,
+					"subTypeC"  : subTypeC
 				},
 				dataType: "JSON",
 				async: true,
@@ -58,7 +68,16 @@
 							var result     = data.folderTree;
 							currentFolders = data.currentFolders;
 							
-							renderData(result, (type == "dept" || type == "share") ? "0" : "1");
+							if(adminCheck == "admin"){
+								data.folderTree.listSubFolders = null;
+							}
+							
+							// renderData(result, (type == "dept" || type == "share") ? "0" : "1");
+							renderData(result, "1");
+							//2020-10-07 김은실 - (카이스트) 펼치기
+							"${subTypeC}"? getDetailTree(document.getElementById(data.folderTree.folderId), "1") : "";
+							$('#folderTree>div>img').css('display','none');
+							$('#folderTree>div>span').css('display','none');
 							break;
 						case 1:
 							alert("<spring:message code='ezWebFolder.t306'/>");
@@ -100,7 +119,7 @@
 			var nodelevel = list["folderLevel"];
 
 			if (level > 0) {
-				for (var j = 0; j < level; j++) {
+				for (var j = 1; j < level; j++) {
 					var imgTag = document.createElement("img");
 					imgTag.setAttribute("class", "webfolderImg");
 					imgTag.src="/images/OrganTree_cross/dot_continue.gif";
@@ -114,7 +133,18 @@
 			
 			var imgElmt2 = document.createElement("img");
 			imgElmt2.setAttribute("class", "webfolderImg");
+			if(level == 1){
+				switch (subTypeC) {
+				case "task": imgElmt2.src = "/images/webfolder/business_data.png";
+					break;
+				case "meeting": imgElmt2.src = "/images/webfolder/conference_file.png";
+					break;
+				case "dean": imgElmt2.src = "/images/webfolder/agenda_item.png";
+					break;
+				}				
+			}else{
 			imgElmt2.src = "/images/OrganTree_cross/fldr.gif";
+			}
 			
 			var spanFolderName = document.createElement("span");
 			spanFolderName.textContent = primary == "1" ? list["folderName"] : list["folderName2"];
@@ -133,7 +163,7 @@
 				imgElmt.setAttribute("class", "webfolderImg");
 			}
 			else {
-				if (document.querySelector('input[name=treeType]:checked').value == "comp" && mode =="normal" && level == "0") {
+				if (/* document.querySelector('input[name=treeType]:checked').value == "comp" && */ mode =="normal" && level == "0") {
 					imgElmt.onclick = function() {getDetailTree(this, "1");};
 				}
 				else {
@@ -200,13 +230,18 @@
 			else {
 				obj.src = "/images/OrganTree_cross/minus.gif";
 				obj.setAttribute("class", "webfolderMinus");
+				<c:if test="${isTask}">
+				var subTypeC = document.querySelector('input[name=treeType]:checked').value;
+				</c:if>
 				
 				$.ajax({
 					type: "GET",
 					url: "/admin/ezWebFolder/getSubFolderTree.do",
 					data: {
 						"folderId" : uniqueId,
-						"mode"     : mode
+						"mode"     : mode,
+						"subTypeC" : subTypeC,
+						"adminCheck" : adminCheck
 					},
 					dataType: "JSON",
 					async: true,
@@ -273,15 +308,16 @@
 			wClose();
 		}
 		
+		<c:if test="${isPermittedCopy}">
 		function fileCopy() {
-			var type = document.querySelector('input[name=treeType]:checked').value;
+			/* var type = document.querySelector('input[name=treeType]:checked').value; */
 			
 			if (selectedFolder == null) {
 				alert("<spring:message code='ezWebFolder.t181'/>");
 				return;
 			}
 			
-			if (type == "comp" && selectedLevel == '0') {
+			if (/* type == "comp" &&  */selectedLevel == '0') {
 				alert("<spring:message code='ezWebFolder.t18'/>");
 				return;
 			}
@@ -338,6 +374,9 @@
 						case 4:
 							alert("<spring:message code='ezWebFolder.t250' />");
 							break;
+						case 20210128: // 폴더 권한 비상속
+							alert("<spring:message code='webfolder.move.to.noinherit' />");
+							break;
 						case 8:
 							var folderArr = new Array();
 							folderArr = folderList.split(',');
@@ -380,22 +419,29 @@
 				}
 			});
 		}
+		</c:if>
 		
+		<c:if test="${isPermittedMove}">
 		function fileMove() {
-			var type = document.querySelector('input[name=treeType]:checked').value;
+			/* var type = document.querySelector('input[name=treeType]:checked').value; */
 			
 			if (selectedFolder == null) {
 				alert("<spring:message code='ezWebFolder.t181'/>");
 				return;
 			}
 			
-			if (type == "comp" && selectedLevel == '0') {
+			if (/* type == "comp" &&  */selectedLevel == '0') {
 				alert("<spring:message code='ezWebFolder.t18'/>");
 				return;
 			}
 			
 			if (currentFolders.indexOf(selectedFolder) > -1) {
 				alert("<spring:message code='ezWebFolder.t210'/>");
+				return;
+			}
+			
+			if (parent.hasContainsReplyFiles && parent.hasContainsReplyFiles(fileList.split(","))) {
+				alert("<spring:message code='webfolder.reply.move'/>");
 				return;
 			}
 			
@@ -450,6 +496,9 @@
 						case 5:
 							alert("<spring:message code='ezWebFolder.t243' />");
 							break;
+						case 20210128: // 폴더 권한 비상속
+							alert("<spring:message code='webfolder.move.to.noinherit' />");
+							break;
 						case 8:
 							var folderArr = new Array();
 							folderArr = folderList.split(',');
@@ -492,6 +541,7 @@
 				}
 			});
 		}
+		</c:if>
 	</script>
 </head>
 <body class="popup" style="overflow: hidden;">
@@ -504,30 +554,30 @@
             <li><span id="btnClose" onClick="wClose();"></span></li>
         </ul>
     </div>
-	<div style="margin: 0px 10px; border: none; height: 30px; position: relative;">
-		<c:if test="${mode != 'normal'}">
-			<select id="companyList" style="font-size: 12px; height: 20px; display:inline-block;" onchange="getData();">
-					<c:forEach var="item" items="${list}">
-						<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-					</c:forEach>
-			</select>
-		</c:if>
+	<div style="margin: 0px 10px; border: none; height: 30px; position: relative; ${isTask ? '' : 'display: none;'}">
 		<div style="position: absolute; top: 0px; right: 0px;">
-			<input name="treeType" id="radio1" type="radio" value="comp" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="getData();"><label for="radio1"><span> <spring:message code="ezWebFolder.t233"/></span></label>
-			<input name="treeType" id="radio2" type="radio" value="dept" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="getData();"><label for="radio2"><span> <spring:message code="ezWebFolder.t234"/></span></label>
+			<%-- 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: isDean으로 구분 추가 --%>
+			<%-- <input name="treeType" id="radio1" type="radio" value="comp" ${isDean.length() > 0? 'checked' : ''} style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="getData();"><label for="radio1"><span> <spring:message code="ezWebFolder.t233"/></span></label>
+			<input name="treeType" id="radio2" type="radio" value="dept" ${isDean.length() > 0? '' : 'checked'} style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="getData();"><label for="radio2"><span> <spring:message code="ezWebFolder.t234"/></span></label>
 			<c:if test="${mode == 'normal'}">
 				<input name="treeType" id="radio3" type="radio" value="user" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="getData();"><label for="radio3"><span> <spring:message code="ezWebFolder.t235"/></span></label>
 				<input name="treeType" id="radio4" type="radio" value="share" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="getData();"><label for="radio4"><span> <spring:message code="ezWebFolder.t266"/></span></label>
+			</c:if>  --%>
+			<c:if test="${isTask}">
+				<input name="treeType" id="radio5" checked type="radio" value="task" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="getData();"><label for="radio5"><span> <spring:message code="ezWebFolder.kes008"/></span></label>
+				<input name="treeType" id="radio6" type="radio" value="meeting" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="getData();"><label for="radio6"><span> <spring:message code="ezWebFolder.kes011"/></span></label>
 			</c:if>
 		</div>
 	</div>
 	<div style="margin: 0px 10px 10px 10px; border: 1px solid #ddd; min-height: 330px; height: 330px; overflow: auto; padding: 5px 0px 0px 5px; white-space: nowrap;" id="folderTree"></div>
 	
 	<div class="btnpositionNew">
-		<c:if test="${type ne 'copy'}">
+		<c:if test="${type ne 'copy' and isPermittedMove}">
 			<a id="btnSave" class="imgbtn" onClick="fileMove();"><span><spring:message code='ezWebFolder.t121'/></span></a>
 		</c:if>
-		<a id="btnCancel" class="imgbtn" onClick="fileCopy();"><span><spring:message code='ezWebFolder.t122'/></span></a>
+		<c:if test="${isPermittedCopy}">
+			<a id="btnCancel" class="imgbtn" onClick="fileCopy();"><span><spring:message code='ezWebFolder.t122'/></span></a>
+		</c:if>
 	</div>
 	
 </body>

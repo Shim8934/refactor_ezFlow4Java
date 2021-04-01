@@ -32,6 +32,11 @@
 	<!-- module -->
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/duplicate-file.js')}"></script>
 	<link href="${util.addVer('/js/jquery/jquery.modal.css')}" rel="stylesheet" type="text/css" />
+	<!-- capacity -->
+	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/capacity.js')}"></script>
+	<link rel="stylesheet" href="${util.addVer('/css/jquery.lineProgressbar.css')}" type="text/css" />
+	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	
     <script type="text/javascript">
    		var lang = ${userInfo.lang};
 		var strErr		= "<spring:message code = 'ezWebFolder.t107'/>";
@@ -63,6 +68,7 @@
     	var _cellInfo        = {};
     	var sortColumn = null;
     	var sortType = null;
+    	var folderType = window.parent.frames["left"].folderType;
 		
 		window.onresize = function () {
 			var reheight = document.documentElement.clientHeight - 210;
@@ -78,6 +84,10 @@
 		}
 		
 		window.onload = function() {
+			capacity.setFolderIdProvider(function() {
+				return "${folderId}";
+			});
+
 			hiddenPanel();
 			tableView.setTableId("tblFileList");
 			tableView.setTabledHeader("tblFileList1");
@@ -263,6 +273,7 @@
 		function renderFileListElement(result) {
 			tableView.setDataSource(result);
 			tableView.renderTable();
+ 			capacity.load();
 			scroll();
 		}
 		
@@ -366,23 +377,24 @@
 	        document.getElementById("SearchOption").setAttribute("mode", "off");
 	    }
    	   
-		function optionView(obj) {
-	   		 if (obj.getAttribute("mode") == "off") {
-	   	        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
- 	            document.getElementById("layer_Viewpopup").style.top = "100px";
-	   	        document.getElementById("layer_Viewpopup").style.display = "";
-	   	        obj.setAttribute("class", "icon16 btn_onarrow_down");
-	   	        obj.setAttribute("mode", "on");
-	   	    } else {
-	   	        optionHidden();
-	   	    }
-	   	}
- 	   
-	 	function optionHidden() {
-	 	    document.getElementById("layer_Viewpopup").style.display = "none";
-	 	    document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
-	 	    document.getElementById("webfolderlistoptiondiv").setAttribute("class", "icon16 btn_arrow_down");
-	 	}
+	    function optionView(obj) {
+	    	if (obj.getAttribute("mode") == "off") {
+	    		var a_left = $("#wfOptionDiv").offset().left - ($("#layer_Viewpopup").width() - $("#wfOptionDiv").width());
+	    		var a_top = $("#wfOptionDiv").offset().top + $("#wfOptionDiv").height() + 2;
+	    		document.getElementById("layer_Viewpopup").style.display = "";
+				obj.setAttribute("class", "icon16 btn_onarrow_down");
+	    		obj.setAttribute("mode", "on");
+	    		$("#layer_Viewpopup").css({"left":a_left, "top":a_top});
+	    	} else {
+	    		optionHidden();
+	    	}
+	    }
+
+	    function optionHidden() {
+	    	document.getElementById("layer_Viewpopup").style.display = "none";
+	    	document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
+	    	document.getElementById("webfolderlistoptiondiv").setAttribute("class", "icon16 btn_arrow_down");
+	    }
          
 		function refreshView() {
 			renderFileList();
@@ -398,18 +410,24 @@
 	   	   
 		   	var filesList  = [];
 			var folderList = [];
+			var versionList = [];
 			
 			for (var i = 0; i < listOfChecked.length; i++) {
 				var fileFolderId = listOfChecked[i].getAttribute("targetid");
+				var version = listOfChecked[i].getAttribute("version");
 				
 				if (listOfChecked[i].getAttribute("ext") == 'folder') {
 					folderList.push(fileFolderId);
-				} else {
+				} else if (version == "0") {
 					filesList.push(fileFolderId);
+				} else {
+					// 버전 속성이 1 이상이면 버전관리 파일이다.
+					versionList.push(fileFolderId + ":" + version);
 				}
 			}
 			
-			showPanel(450, 200, "/ezWebFolder/permanentDeleteConfirm.do?fileList=" + filesList.toString() + "&folderList=" + folderList.toString());
+			showPanel(450, 200, "/ezWebFolder/permanentDeleteConfirm.do?fileList=" + filesList.toString()
+					+ "&folderList=" + folderList.toString() + "&versionList=" + versionList.toString());
 			refreshView();
 		}
 
@@ -444,6 +462,14 @@
 			} catch (e) {}
 		}
 		
+		function treeRefresh() {
+			var refreshFun = window.parent.frames["left"].folderList2;
+			
+			if (typeof folderType != "undefined" && typeof refreshFun == "function") {
+				refreshFun(folderType);
+			}
+		}
+		
 		function restoreTrashCan() {
 			var listOfChecked = document.getElementsByClassName("bnkWebFolder2");
     	   
@@ -454,14 +480,18 @@
 	   	   
 		   	var filesList  = [];
 			var folderList = [];
+			var versionList = [];
 			
 			for (var i = 0; i < listOfChecked.length; i++) {
 				var fileFolderId = listOfChecked[i].getAttribute("targetid");
+				var version = listOfChecked[i].getAttribute("version");
 				
 				if (listOfChecked[i].getAttribute("ext") == 'folder') {
 					folderList.push(fileFolderId);
-				} else {
+				} else if (version == "0") {
 					filesList.push(fileFolderId);
+				} else {
+					versionList.push(fileFolderId + ":" + version);
 				}
 			}
     	  
@@ -472,11 +502,16 @@
 				dataType: "json",
 				data: {
 					"fileList": filesList.toString(),
-					"folderList":  folderList.toString()
+					"folderList":  folderList.toString(),
+					"versionList":  versionList.toString()
 				},
 				success : function (data) {
-					if (data.code == 0) {
+					// 버전 복원이 실패했다면 알림
+					var successRestoredVersions = data.errorVersions && data.errorVersions.length == 0;
+					
+					if (data.code == 0 && successRestoredVersions) {
 						alert("<spring:message code = 'ezWebFolder.t289'/>");
+						treeRefresh();
 					} else if (data.code == 2) {
 					   alert("<spring:message code = 'ezWebFolder.t292'/>");
 					} else if (data.code == 3) {
@@ -494,6 +529,16 @@
 						if (data.hasExceededCapacities) {
 							alert("<spring:message code = 'webfolder.trash.restore.error.capacity'/>");
 						}
+						
+						if (!data.hasAllParentFile) {
+							alert("<spring:message code = 'webfolder.trash.restore.error.reply'/>");
+						}
+						
+						treeRefresh();
+					}
+					
+					if (!successRestoredVersions) {
+						alert("<spring:message code = 'webfolder.version.trash.restore.error'/>");
 					}
 				},
 				error : function(error) {
@@ -517,17 +562,39 @@
 		
 			for (var i = 0; i < listOfChecked.length; i++) {
 				var fileFolderId = listOfChecked[i].getAttribute("targetid");
+				var version = listOfChecked[i].getAttribute("version");
 				
 				if (listOfChecked[i].getAttribute("ext") == 'folder') {
 					folderList.push(fileFolderId);
-				} else {
+				} else if (version == "0") {
 					filesList.push(fileFolderId);
+				} else {
+					// 버전은 이동시킬 수 없으니 함수를 종료합니다.
+					alert("<spring:message code='webfolder.version.trash.cantmove' />");
+					return;
 				}
 			}
-		 	   
-			var openWin = window.open("/ezWebFolder/moveTrashCanManage.do?folderType=C&fileList=" + filesList.toString() + "&folderList=" + folderList.toString(), "", GetOpenWindowfeature(460, 490));
-			try { openWin.focus(); } catch (e) {}
-			   
+
+			$.ajax({
+				type: "POST",
+				url: "/ezWebFolder/checkNotInherit.do",
+				data: {
+					"fileList" : filesList.toString(),
+					"folderList" : folderList.toString()
+				},
+				dataType: "JSON",
+				async: true,
+				success : function(data) {
+					if (data.result) {
+						alert(filesList.length + folderList.length > 1 ?
+								messages.moveFromNotInheritErrorContains : messages.moveFromNotInheritError);
+						return;
+					}
+
+					var openWin = window.open("/ezWebFolder/moveTrashCanManage.do?folderType=C&fileList=" + filesList.toString() + "&folderList=" + folderList.toString(), "", GetOpenWindowfeature(460, 490));
+					try { openWin.focus(); } catch (e) {}
+				}
+			});
 		}
 		function scroll() {
 			var BoardList_BODYHeight = document.getElementById("dragDropArea").clientHeight;
@@ -573,7 +640,14 @@
     </script>
 </head>
 <body class="mainbody">
-    <h1><spring:message code='ezWebFolder.t269'/><span id="mailBoxInfo"></span></h1>
+    <h1><spring:message code='ezWebFolder.t269'/><span id="mailBoxInfo"></span>
+		<div id="capacity-wrapper">
+			<div class="progressbar">
+				<div id="capacity-bar" class="proggress"></div>
+			</div>
+			<span id="capacity-percent"></span>
+		</div>
+	</h1>
 	<div id="mainmenu">
 		<ul>
 			<li><span onClick="restoreTrashCan()"><spring:message code='ezWebFolder.t287'/></span></li>
@@ -581,12 +655,12 @@
 			<li><span onClick="filePermanentDelete()"><spring:message code='ezWebFolder.t19'/></span></li>
 			<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><span class="icon16 icon16_search"></span></li>
 			<!-- <li id="right" style="float:right;"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"></li> -->
-			<div class="sub_frameIcon" style="float:right">
+			<div class="sub_frameIcon" style="float:right" id="wfOptionDiv">
 				<div class="sub_frameIconUL02">
 				  	<p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="webfolderlistoptiondiv"></span></p>  
 				</div>
 			</div>
-			<li>
+			<li style="float:right">
 				<select class="select" id="idSelect" onchange="changeValue(this.value);">
 					<option value=""><spring:message code='ezWebFolder.t191'/></option>
 					<option value="document"><spring:message code='ezWebFolder.t192'/></option>
@@ -614,7 +688,7 @@
                 <table style="width: 100%; border-spacing: 0px; border-collapse: collapse; border: none;" class="list_element">
                     <caption></caption>
                     <colgroup>
-                        <col style="width: 80px;">
+                        <col style="width: 90px;">
                         <col>
                     </colgroup>
                     <tr>
@@ -726,5 +800,6 @@
 	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 		<iframe src="<spring:message code='main.kms4'/>" style="border:none;" id="iFrameLayer"></iframe>
 	</div>
+	<%@ include file="/WEB-INF/jsp/ezWebFolder/webFolderApplyPopUp.jsp" %>
 </body>
 </html>

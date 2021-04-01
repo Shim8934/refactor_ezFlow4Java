@@ -506,12 +506,12 @@
 					if (currentNode.nodeName == "P") {
 						var spanNode = currentNode.children.item(0);
 						if (spanNode.nodeName == "SPAN") {
-							spanNode.onmouseover = function() {
-								Tab1_MouserOver(this);
-							};
-							spanNode.onmouseout = function() {
-								Tab1_MouserOut(this);
-							};
+							// spanNode.onmouseover = function() {
+							// 	Tab1_MouserOver(this);
+							// };
+							// spanNode.onmouseout = function() {
+							// 	Tab1_MouserOut(this);
+							// };
 							spanNode.onclick = function() {
 								Tab1_MouseClick(this);
 							};
@@ -541,9 +541,11 @@
 		<p>
 			<span id="companyTab" class="tabover"><spring:message code='ezWebFolder.tab.company'/></span>
 		</p>
+		<%-- 
 		<p>
 			<span id="departmentTab"><spring:message code='ezWebFolder.tab.department'/></span>
 		</p>
+		 --%>
 		<p>
 			<span id="userTab"><spring:message code='ezWebFolder.tab.user'/></span>
 		</p>

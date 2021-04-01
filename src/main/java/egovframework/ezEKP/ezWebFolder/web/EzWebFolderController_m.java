@@ -2,9 +2,14 @@ package egovframework.ezEKP.ezWebFolder.web;
 
 import java.security.MessageDigest;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 
+import javax.annotation.Resource;
+import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -29,6 +34,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
 import egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO.Type;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -41,6 +51,18 @@ public class EzWebFolderController_m {
 	
 	@Autowired
 	private Properties config;
+	
+	@Autowired
+	private EzWebFolderService_m ezWebFolderService_m;
+	
+	@Autowired
+	private EzCommonService ezCommonService;
+	
+	@Autowired
+	private EzEmailService ezEmailService;
+	
+	@Resource(name = "egovMessageSource")
+	private EgovMessageSource egovMessageSource;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderController_m.class);
 	
@@ -357,7 +379,29 @@ public class EzWebFolderController_m {
 		}
 		
 		logger.debug("listCount=" + getUsrListCount(loginCookie, request));
-		logger.debug("userInfo=" + commonUtil.userInfoSimple(loginCookie));
+		
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		logger.debug("userInfo=" + user);
+
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId",   orElse(user.getId(), "" ));
+		param.put("tenantId", orElse(user.getTenantId(), "" ));
+		param.put("comId", 	  orElse(user.getCompanyID(), "" ));
+		
+		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/getFolderDetail", param, request, "post", null);
+		
+		String status = resultBody.get("status").toString();
+		String code = resultBody.get("code").toString();
+
+		if (status.equals("ok")) {
+			model.addAttribute("status","ok");
+			model.addAttribute("code", code);
+			model.addAttribute("folderId",resultBody.get("folderId"));
+		}else {
+			model.addAttribute("status","error");
+			model.addAttribute("code", code);
+			model.addAttribute("folderId","");
+		}
 		
 		model.addAttribute("listCount", getUsrListCount(loginCookie, request));
 		model.addAttribute("userInfo", commonUtil.userInfoSimple(loginCookie));
@@ -446,11 +490,16 @@ public class EzWebFolderController_m {
 	public String permanentDeleteConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse response, Model model) throws Exception {
 		logger.debug("permanentDeleteConfirm started.");
+
+		String versionList = orElse(request.getParameter("versionList"), "");
+
 		logger.debug("fileLise=" + orElse(request.getParameter("fileList"), ""));
 		logger.debug("folderList=" + orElse(request.getParameter("folderList"), ""));
+		logger.debug("versionList=" + versionList);
 		
 		model.addAttribute("fileList", orElse(request.getParameter("fileList"), ""));
 		model.addAttribute("folderList", orElse(request.getParameter("folderList"), ""));
+		model.addAttribute("versionList", versionList);
 		
 		logger.debug("permanentDeleteConfirm ended.");
 		return "ezWebFolder/filePermanentDelete";
@@ -465,12 +514,14 @@ public class EzWebFolderController_m {
 		
 		String fileList = orElse(request.getParameter("fileList"), "");
 		String folderList = orElse(request.getParameter("folderList"), "");
+		String versionList = orElse(request.getParameter("versionList"), "");
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		
 		param.put("userId", user.getId());                 
 		param.put("fileList", fileList);               
 		param.put("folderList", folderList);     
+		param.put("versionList", versionList);
 		
 		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/file-permanent-delete", param, request, "delete", null);
 		
@@ -481,7 +532,7 @@ public class EzWebFolderController_m {
 			model.addAttribute("status","ok");
 			model.addAttribute("code", code);
 		} else {
-			model.addAttribute("reason", resultBody.get("reason").toString());
+			model.addAttribute("reason", Optional.ofNullable(resultBody.get("reason")).map(Object::toString).orElse(""));
 			model.addAttribute("status","error");
 			model.addAttribute("code", code);
 		}
@@ -494,13 +545,16 @@ public class EzWebFolderController_m {
 	@RequestMapping(value="/ezWebFolder/restoreTrashCan.do", method= RequestMethod.POST)
 	public String restoreTrashCan (@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("restoreFile started");
-		logger.debug("fileList=" + orElse(request.getParameter("fileList"), ""));
-		logger.debug("folderList=" + orElse(request.getParameter("folderList"), ""));
-		
-		LoginVO user = commonUtil.userInfo(loginCookie);
-		
+
 		String fileList = orElse(request.getParameter("fileList"), "");
 		String folderList = orElse(request.getParameter("folderList"), "");
+		String versionList = orElse(request.getParameter("versionList"), "");
+
+		logger.debug("fileList=" + fileList);
+		logger.debug("folderList=" + folderList);
+		logger.debug("versionList=" + versionList);
+
+		LoginVO user = commonUtil.userInfo(loginCookie);
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		
@@ -508,6 +562,7 @@ public class EzWebFolderController_m {
 		param.put("companyId", user.getCompanyID());
 		param.put("fileList", fileList);               
 		param.put("folderList", folderList);
+		param.put("versionList", versionList);
 		
 		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/restore-trashCan", param, request, "post", null);
 
@@ -525,8 +580,16 @@ public class EzWebFolderController_m {
 			if (resultBody.containsKey("hasExceededCapacities")) {
 				model.addAttribute("hasExceededCapacities", resultBody.get("hasExceededCapacities"));
 			}
+
+			if (resultBody.containsKey("hasAllParentFile")) {
+				model.addAttribute("hasAllParentFile", resultBody.get("hasAllParentFile"));
+			}
+
+			if (resultBody.containsKey("errorVersions")) {
+				model.addAttribute("errorVersions", resultBody.get("errorVersions"));
+			}
 		}else {
-			model.addAttribute("reason", resultBody.get("reason").toString());
+			model.addAttribute("reason", Optional.ofNullable(resultBody.get("reason")).map(Object::toString).orElse(""));
 			model.addAttribute("status","error");
 			model.addAttribute("code",code);
 		}
@@ -539,10 +602,20 @@ public class EzWebFolderController_m {
 	@RequestMapping(value = "/ezWebFolder/favorite.do", method = RequestMethod.GET)
 	public String favor(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
 		logger.debug("favorite started.");
-		LoginSimpleVO user	= commonUtil.userInfoSimple(loginCookie);
-		
-		model.addAttribute("userId",user.getId());
-		
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+
+		model.addAttribute("userId", user.getId());
+		// 즐겨찾기는 업무자료관리로 고정
+		model.addAttribute("subTypeC", "task");
+
+		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/" + user.getId() + "/upload-limit", null, request, "get", null);
+
+		if ("ok".equals(resultBody.get("status"))) {
+			model.addAttribute("uploadLimit", (double) resultBody.get("uploadLimit"));
+		} else {
+			model.addAttribute("uploadLimit", -1);
+		}
+
 		logger.debug("favorite ended.");
 		return "ezWebFolder/webfolderFavorite";
 	}
@@ -680,6 +753,276 @@ public class EzWebFolderController_m {
 		logger.debug("result=" + resultJson);
 		logger.debug("moveTrashCan ended");
 		return resultJson;		
+	}
+	
+	@RequestMapping(value = "/ezWebFolder/insertEncryptionFolder.do", method = RequestMethod.POST)
+	@ResponseBody
+	public JSONObject insertEncryptionFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
+			@RequestParam String folderId) throws Exception {
+		logger.debug("insertEncryptionFolder started.");
+
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		Map<String, Object> param = new HashMap<String, Object>();
+
+		param.put("tenantId", user.getTenantId());
+
+		JSONObject resultJson = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/folder/" + folderId + "/encryption",
+				param, request, "put", null);
+
+		logger.debug("result={}", resultJson);
+		logger.debug("insertEncryptionFolder ended");
+		return resultJson;
+	}
+
+	@RequestMapping(value = "/ezWebFolder/deleteEncryptionFolder.do", method = RequestMethod.POST)
+	@ResponseBody
+	public JSONObject deleteEncryptionFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
+			@RequestParam String folderId) throws Exception {
+		logger.debug("deleteEncryptionFolder started.");
+
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		Map<String, Object> param = new HashMap<String, Object>();
+
+		param.put("tenantId", user.getTenantId());
+
+		JSONObject resultJson = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/folder/" + folderId + "/encryption",
+				param, request, "delete", null);
+
+		logger.debug("result={}", resultJson);
+		logger.debug("deleteEncryptionFolder ended");
+		return resultJson;
+	}
+
+	@RequestMapping(value = "/ezWebFolder/personalPopUpUser.do", method = RequestMethod.GET)
+	public String personalPopUpUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("w personalPopUpUser started.");
+
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		String userID = user.getId();
+		String deptID = user.getDeptID();
+		String lang = user.getLang();
+		String companyID = user.getCompanyID();
+		
+		String cn = request.getParameter("cn") == null ? "" : request.getParameter("cn");
+		String textName = request.getParameter("name") == null ? "" : request.getParameter("name");
+		String useOcs = config.getProperty("config.USE_OCS");
+		// 2020-11-26 김은실 - (카이스트)회사 폴더별 관리자 지원 기능 
+		
+		String type = request.getParameter("type"); // 담당자:master, 구성원:member
+		type = type.equals("") ? "member" : type;
+		String folderManager = type.equals("master") ? "1" : "0";
+		logger.debug("type=" + type);
+		
+		model.addAttribute("type", type);
+		model.addAttribute("deptID", deptID);
+		model.addAttribute("cn", cn);
+		model.addAttribute("textName", textName);
+		model.addAttribute("useOcs", useOcs);
+		model.addAttribute("companyId", companyID);
+		model.addAttribute("folderManager", folderManager);
+		model.addAttribute("dept", deptID);
+		model.addAttribute("lang", lang);
+
+		logger.debug("w personalPopUpUser ended.");
+		return "ezWebFolder/personalPopupUser";
+	}
+	
+	@RequestMapping(value = "/ezWebFolder/applyForWebFolder.do", method = RequestMethod.POST)
+	@SuppressWarnings("unchecked")
+	@ResponseBody
+	public String applyForWebFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale) throws Exception {
+		logger.debug("applyForWebFolder started.");
+		
+		String returnStr = "OK";
+
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		String userId = user.getId();
+		int tenantId = user.getTenantId();
+		String companyId = user.getCompanyID();
+		String userDeptName = user.getDeptName();
+		String userName = user.getDisplayName();
+		String applicantSUserName = userName + "(" + userDeptName + ")";
+		String wfApplicantStr = "[{\"userType\":\"USER\",\"userId\":\""+userId+"\",\"sUserName\":\""+applicantSUserName+"\"}]";
+		
+		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+		logger.debug("userId=" + userId + ", domainName=" + domainName);
+		
+		String folderName = orElse(request.getParameter("wfName"), "");
+		String content = orElse(request.getParameter("wfContent"), "");
+		String folderSubType = orElse(request.getParameter("subTypeC"), "");
+		String wfMasterList = orElse(request.getParameter("appMasterArr"), "");
+		String wfMemberList = orElse(request.getParameter("appMemberArr"), "");
+		String usingS = orElse(request.getParameter("wfUsingS"), "");
+		String usingE = orElse(request.getParameter("wfUsingE"), "");
+		String usingPeriodStr = usingS + " ~ " + usingE; 
+		logger.debug("folderName=" + folderName + ", folderSubType=" + folderSubType + ", usingS=" + usingS + ", usingE=" + usingE);
+		
+		if (folderName.equals("") || wfMasterList.equals("")) {
+			returnStr = "ERROR";
+		} else {
+			JSONArray memberListArr = new JSONArray();
+			convertApplyMemberListToJSONArray(wfMasterList, "master", memberListArr);
+			convertApplyMemberListToJSONArray(wfMemberList, "member", memberListArr);
+			convertApplyMemberListToJSONArray(wfApplicantStr, "applicant", memberListArr);
+			
+			JSONObject jsonObjParam = new JSONObject();
+			jsonObjParam.put("folderName", folderName);
+			jsonObjParam.put("content", content);
+			jsonObjParam.put("folderSubType", folderSubType);
+			jsonObjParam.put("usingS", usingS);
+			jsonObjParam.put("usingE", usingE);
+			jsonObjParam.put("memberList", memberListArr.toString());
+
+			JSONObject resultJson = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/"+userId+"/setApplyHistory",
+					null, request, "post", jsonObjParam);
+			logger.debug("result={}", resultJson);
+			
+			if (resultJson != null) {
+				returnStr = (String) resultJson.get("status");
+				String applyId = (String) resultJson.get("applyId");
+				
+				if (returnStr.equals("OK")) {
+					try {
+						// 메일 발송
+						InternetAddress from = new InternetAddress();
+						from.setPersonal(userName, "UTF-8");
+						from.setAddress(user.getEmail());
+
+						List<OrganUserVO> webfolderAdminList = ezWebFolderService_m.getWebFolderAdminUserList(companyId);
+						int webfolderAdminListCnt = webfolderAdminList.size();
+						InternetAddress[] toArr = new InternetAddress[webfolderAdminListCnt];
+						
+						int nowi = 0;
+						for (OrganUserVO vo : webfolderAdminList) {
+							String voMail = vo.getMail();
+							String voCn = vo.getCn();
+							voMail = voMail.trim().equals("") ? voCn + "@" + domainName : voMail;
+							
+							InternetAddress addrTemp = new InternetAddress();
+							addrTemp.setPersonal(vo.getDisplayName(), "UTF-8");
+							addrTemp.setAddress(voMail);
+							
+							toArr[nowi] = addrTemp;
+							nowi++;
+						}
+						
+						// messages
+						Map<String, String> taskMsgMap = new HashMap<String, String>();
+						taskMsgMap.put("subjectMsg", "ezWebFolder.ksa34");
+						taskMsgMap.put("wfNameMsg", "ezWebFolder.ksa04");
+						taskMsgMap.put("greetingsMsg", "ezWebFolder.ksa36");
+
+						Map<String, String> meetingMsgMap = new HashMap<String, String>();
+						meetingMsgMap.put("subjectMsg", "ezWebFolder.ksa35");
+						meetingMsgMap.put("wfNameMsg", "ezWebFolder.ksa05");
+						meetingMsgMap.put("greetingsMsg", "ezWebFolder.ksa37");
+						
+						Map<String, String> msgMap = folderSubType.equalsIgnoreCase("task") ? taskMsgMap : meetingMsgMap; 
+
+						String mailContent = "";
+						String mailSubject = String.format(egovMessageSource.getMessage(msgMap.get("subjectMsg"), locale), folderName);
+						String mailConentTemp = "<p><b>${tt}</b> : ${ttVal}</p>";
+
+						String wfUsingPeriodStr = folderSubType.equalsIgnoreCase("task") ? "" : mailConentTemp.replace("${tt}", egovMessageSource.getMessage("ezWebFolder.ksa20", locale)).replace("${ttVal}", usingPeriodStr) + "<br/>";
+						
+						mailContent += "<p>" + egovMessageSource.getMessage(msgMap.get("greetingsMsg"), locale) + "</p>"
+							+ "<br/>"
+							+ mailConentTemp.replace("${tt}", egovMessageSource.getMessage("ezWebFolder.ksa06", locale)).replace("${ttVal}", userName)
+							+ "<br/>"
+							+ mailConentTemp.replace("${tt}", egovMessageSource.getMessage(msgMap.get("wfNameMsg"), locale)).replace("${ttVal}", commonUtil.cleanValue(folderName))
+							+ "<br/>"
+							+ wfUsingPeriodStr
+							+ mailConentTemp.replace("${tt}", egovMessageSource.getMessage("ezWebFolder.ksa07", locale)).replace("${ttVal}", "")
+							+ convertApplyMemberListToUserString(wfMasterList)
+							+ "<br/>"
+							+ mailConentTemp.replace("${tt}", egovMessageSource.getMessage("ezWebFolder.ksa08", locale)).replace("${ttVal}", "")
+							+ convertApplyMemberListToUserString(wfMemberList)
+							+ "<br/>"
+							+ mailConentTemp.replace("${tt}", egovMessageSource.getMessage("ezWebFolder.ksa14", locale)).replace("${ttVal}", "")
+							+ "<pre style=\"font-size: inherit; font-family: inherit;\">" + commonUtil.cleanValue(content) + "</pre><br/>";
+						
+						mailContent = commonUtil.createNotiMailContent(mailContent, tenantId, locale);
+						ezEmailService.sendMail(loginCookie, from, toArr, null, null, mailSubject, mailContent, false);
+					} catch (Exception e) {
+						e.printStackTrace();
+						returnStr = "EMAIL_ERROR";
+						
+						logger.debug("delete webfolderApplyHistory..");
+						ezWebFolderService_m.deleteWebFolderApplyHistory(applyId);
+					}
+				} // ok end
+			}
+		}
+		
+		logger.debug("applyForWebFolder ended.");
+		return returnStr;
+	}
+	
+
+	@SuppressWarnings("unchecked")
+	private String convertApplyMemberListToUserString(String memberList) throws Exception { // memberList = jsonArray Str
+		if (memberList == null || memberList.trim().equals("")) {return ""; }
+		
+		String userListStr = "";
+		String deptListStr = "";
+		String jikwiListStr = "";
+		String jikchekListStr = "";
+		String groupListStr = "";
+		
+		JSONParser parser = new JSONParser();
+		JSONArray jsonArrMaster = (JSONArray) parser.parse(memberList);
+		
+		for (Object obj : jsonArrMaster) {
+			JSONObject jsonObj = (JSONObject) parser.parse(obj.toString());
+			String userType = (String) jsonObj.get("userType");
+			String userName = (String) jsonObj.get("sUserName");
+			
+			switch(userType.toLowerCase()){
+				case "dept":
+					deptListStr += userName + "<br/>";
+					break;
+				case "jikwi":
+					jikwiListStr += userName + "<br/>";
+					break;
+				case "jikchek":
+					jikchekListStr += userName + "<br/>";
+					break;
+				case "group":
+					groupListStr += userName + "<br/>";
+					break;
+				default :
+					userListStr += userName + "<br/>";
+					break;
+			}
+		}
+		
+		String returnStr = "<p>" + userListStr + deptListStr + jikwiListStr + jikchekListStr + groupListStr + "</p>";
+		return returnStr;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private JSONArray convertApplyMemberListToJSONArray(String memberList, String memberListItem, JSONArray bJsonArr) throws Exception { // memberList = jsonArray Str
+		logger.debug("memberList=" + memberList);
+		if (memberList == null || memberList.trim().equals("")) {return bJsonArr; }
+		
+		String memItem = memberListItem.equals("master") ? "ms" : memberListItem.equals("member") ? "m" : "a";
+		
+		JSONParser parser = new JSONParser();
+		JSONArray jsonArrMaster = (JSONArray) parser.parse(memberList);
+		
+		for (Object obj : jsonArrMaster) {
+			JSONObject jsonObj = (JSONObject) parser.parse(obj.toString());
+			
+			JSONObject tempJSON = new JSONObject();
+			tempJSON.put("memberId", jsonObj.get("userId"));
+			tempJSON.put("memberType", jsonObj.get("userType"));
+			tempJSON.put("memberItem", memItem);
+			tempJSON.put("memberName", jsonObj.get("sUserName"));
+			
+			bJsonArr.add(tempJSON);
+		}
+		
+		return bJsonArr;
 	}
 	
 	private <T> T orElse(T value, T other) {

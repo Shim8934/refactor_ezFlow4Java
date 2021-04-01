@@ -1,13 +1,20 @@
 package egovframework.ezEKP.ezWebFolder.web;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
+
 import javax.annotation.Resource;
+import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -33,10 +40,17 @@ import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Controller
@@ -52,6 +66,18 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	
 	@Resource(name = "EzWebFolderService")
 	private EzWebFolderService ezWebFolderService;
+
+	@Resource(name = "egovMessageSource")
+	private EgovMessageSource egovMessageSource;
+	
+	@Autowired
+	private EzCommonService ezCommonService;
+
+	@Autowired
+	private EzOrganService ezOrganService;
+	
+	@Autowired
+	private EzEmailService ezEmailService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderAdminController.class);
 	
@@ -122,6 +148,9 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		}
 		
 		String folderId = request.getParameter("folderId") != null ? request.getParameter("folderId") : "";
+		// 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: isDean으로 구분 추가
+		// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
+		String subTypeC 	= request.getParameter("subTypeC")   != null ? request.getParameter("subTypeC")   : "";
 		
 		if (folderId.equals("")) {
 			logger.debug("Folder delete confirm illegal arguments!");
@@ -129,6 +158,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		}
 		
 		model.addAttribute("folderId", folderId);
+		model.addAttribute("subTypeC", subTypeC);
 		logger.debug("deleteFolderConfirm end");
 		return "admin/ezWebFolder/folderDelete";
 	}
@@ -140,6 +170,26 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		
 		if (!checkWfAdmin(request, user.getId()).get("status").toString().equals("ok")) {
 			return "cmm/error/adminDenied";
+		}
+
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId",   user.getId()		  != null? user.getId()		   : "");
+		param.put("tenantId", (int) user.getTenantId());
+		param.put("comId", 	  user.getCompanyID() != null? user.getCompanyID() : "");
+		
+		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/getFolderDetail", param, request, "post", null);
+		
+		String status = resultBody.get("status").toString();
+		String code = resultBody.get("code").toString();
+
+		if (status.equals("ok")) {
+			model.addAttribute("status","ok");
+			model.addAttribute("code", code);
+			model.addAttribute("folderId",resultBody.get("folderId"));
+		}else {
+			model.addAttribute("status","error");
+			model.addAttribute("code", code);
+			model.addAttribute("folderId","");
 		}
 		
 		//model.addAttribute("listCount", getUsrListCount(loginCookie, request));
@@ -159,8 +209,11 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		}
 		
 		String folderId      = request.getParameter("folderId")   != null ? request.getParameter("folderId") : "";
+		// 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: isDean으로 구분 추가
+		// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
+		String subTypeC      	 = request.getParameter("subTypeC")  	  != null ? request.getParameter("subTypeC") 	 : "";
 		
-		logger.debug("Folder Id: " + folderId);
+		logger.debug("Folder Id: " + folderId + "subTypeC: " + subTypeC);
 		
 		String gwServerUrl   = config.getProperty("config.webFolderGwServerURL");
 		String url           = gwServerUrl + "/rest/ezwebfolderadmin/company-list/" + user.getId();
@@ -188,6 +241,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		}
 		
 		model.addAttribute("folderId", folderId);
+		model.addAttribute("subTypeC", subTypeC);
 		logger.debug("folderMoveConfirm end");
 		
 		return "admin/ezWebFolder/folderMove";
@@ -300,7 +354,13 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 			model.addAttribute("userCompany", companyId);
 			model.addAttribute("list", companyList);
 			model.addAttribute("primary", (String) resultBody.get("primary"));
+			model.addAttribute("isAdminMode", (boolean) resultBody.get("isAdminMode"));
+			model.addAttribute("useKlib", (boolean) resultBody.get("useKlib"));
 		}
+		// 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: isDean으로 구분 추가
+		// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
+		String subTypeC = request.getParameter("subTypeC");
+		model.addAttribute("subTypeC", subTypeC != null? subTypeC : "");
 		
 		logger.debug("webfolderCompanyFolder end");
 		return "admin/ezWebFolder/webfolderCompanyFolder";
@@ -345,9 +405,19 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 			model.addAttribute("primary", (String) resultBody.get("primary"));
 			model.addAttribute("folderId", folderId);
 			model.addAttribute("rootFolder", rootFolder);
+			model.addAttribute("useVersionHistory", (boolean) resultBody.get("useVersionHistory"));
 		}
 		
+		resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/" + user.getId() + "/upload-limit", null, request, "get", null);
+
+		if ("ok".equals(resultBody.get("status"))) {
+			model.addAttribute("uploadLimit", (double) resultBody.get("uploadLimit"));
+		} else {
+			model.addAttribute("uploadLimit", -1);
+		}
+
 		model.addAttribute("level", level);
+		model.addAttribute("subTypeC", request.getParameter("subTypeC"));
 		logger.debug("webfolderCompanyFile end");
 		return "admin/ezWebFolder/webfolderCompanyFile";
 	}
@@ -389,6 +459,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 			model.addAttribute("list", companyList);
 			model.addAttribute("primary", (String) resultBody.get("primary"));
 			model.addAttribute("folderId", folderId);
+			model.addAttribute("useVersionHistory", (boolean) resultBody.get("useVersionHistory"));
 		}
 		
 		model.addAttribute("level", level);
@@ -400,7 +471,8 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	public String webfolderFileHistory(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("webfolderFileHistory start");
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
-		
+		String adminFlag = request.getParameter("adminFlag") == null ? "admin" : request.getParameter("adminFlag");
+		logger.debug("adminFlag:" + adminFlag);
 		if (!checkWfAdmin(request, user.getId()).get("status").toString().equals("ok")) {
 			return "cmm/error/adminDenied";
 		}
@@ -428,6 +500,31 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 			model.addAttribute("list", companyList);
 			model.addAttribute("primary", (String) resultBody.get("primary"));
 		}
+		
+		if (adminFlag.equalsIgnoreCase("user")){
+			String gwServerUrl2   = config.getProperty("config.webFolderGwServerURL");
+			String url2           = gwServerUrl + "/rest/ezwebfolder/check-folderManager/" + user.getId();
+			
+			HttpHeaders headers2  = new HttpHeaders();
+			headers2.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+			headers2.set("x-user-host", request.getServerName());
+			HttpEntity<?> entity2 = new HttpEntity<>(headers2);
+			
+			UriComponentsBuilder builder2  = UriComponentsBuilder.fromHttpUrl(url2)
+					.queryParam("subTypeC", "task");
+			RestTemplate rest2             = new RestTemplate();
+			ResponseEntity<String> result2 = rest.exchange(builder2.build().encode().toUri(), HttpMethod.GET, entity2, String.class);
+			
+			JSONObject resultBody2        = (JSONObject) jp.parse(result2.getBody());
+			String status2                 = resultBody2.get("status").toString();
+			
+			if (status2.equals("ok")) {
+				JSONArray folderListMap = (JSONArray) resultBody2.get("folderListMap");
+				model.addAttribute("folderListMap", folderListMap);
+			}
+		}
+		
+		model.addAttribute("adminFlag", adminFlag);
 		
 		logger.debug("webfolderFileHistory end");
 		return "admin/ezWebFolder/webfolderFileHistory";
@@ -668,8 +765,12 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String actionType    = request.getParameter("actionType") != null ? request.getParameter("actionType") : "";
 		String sortType    	 = request.getParameter("sortType")   != null ? request.getParameter("sortType")   : "";
 		String sortColumn    = request.getParameter("sortColumn") != null ? request.getParameter("sortColumn") : "";
+		String adminFlag     = request.getParameter("adminFlag")  != null ? request.getParameter("adminFlag")  : "";
+		String folderId      = request.getParameter("folderId")   != null ? request.getParameter("folderId")   : "";
 		
-		logger.debug("Current page: " + currPage + " || CompanyId: " + companyId + " || Column: " + column + " || Order: " + order + " || ListCount: " + listCnt + " || StartDate: " + startDate + " || EndDate: " + endDate + " || File ext: " + fileExt + " || File Name: " + fileName + " || UserName: " + userName + " || File Type: " + fileType + " || Action Type: " + actionType);
+		logger.debug("Current page: " + currPage + " || CompanyId: " + companyId + " || Column: " + column + " || Order: " + order + " || ListCount: " + listCnt + " || StartDate: " + startDate 
+				+ " || EndDate: " + endDate + " || File ext: " + fileExt + " || File Name: " + fileName + " || UserName: " + userName 
+				+ " || File Type: " + fileType + " || Action Type: " + actionType + " || folderId:" + folderId);
 		
 		String gwServerUrl   = config.getProperty("config.webFolderGwServerURL");
 		String url           = gwServerUrl + "/rest/ezwebfolderadmin/filehistorylist";
@@ -694,7 +795,9 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 										.queryParam("actionType", actionType)
 										.queryParam("endDate", endDate)
 										.queryParam("sortType", sortType)
-										.queryParam("sortColumn", sortColumn);
+										.queryParam("sortColumn", sortColumn)
+										.queryParam("adminFlag", adminFlag)
+										.queryParam("folderId", folderId);
 		
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
@@ -786,6 +889,9 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		String companyId     = request.getParameter("companyId");
 		String folderId      = request.getParameter("folderId");
+		// 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: isDean으로 구분 추가
+		// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
+		String subTypeC     	 = request.getParameter("subTypeC");
 		
 		logger.debug("CompanyId: " + companyId + " || FolderId: " + folderId);
 		
@@ -799,7 +905,8 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("companyId", companyId)
 										.queryParam("folderId", folderId)
-										.queryParam("userId", user.getId());
+										.queryParam("userId", user.getId())
+										.queryParam("subTypeC", subTypeC);
 		
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
@@ -818,6 +925,10 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		String folderId      = request.getParameter("folderId");
 		String mode          = request.getParameter("mode");
+		// 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: isDean으로 구분 추가
+		// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
+		String subTypeC        = request.getParameter("subTypeC");
+		String adminCheck      = request.getParameter("adminCheck")   != null ? request.getParameter("adminCheck")  : mode;
 		
 		logger.debug("FolderId: " + folderId + " || mode: " + mode);
 		
@@ -830,7 +941,9 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("userId", user.getId())
-										.queryParam("mode", mode);
+										.queryParam("mode", mode)
+										.queryParam("subTypeC", subTypeC)
+										.queryParam("adminCheck", adminCheck);
 		
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
@@ -847,13 +960,27 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	public String getFolderUsers(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("getFolderUsers start");
 		LoginSimpleVO user     = commonUtil.userInfoSimple(loginCookie);
-		JSONObject resultCheck = (JSONObject) checkWfAdmin(request, user.getId());
+		String folderId = request.getParameter("folderId");
+		/*
+		JSONObject permissionCheck = (JSONObject) checkPermissions(request, folderId, null, user.getId());
 		
-		if (!resultCheck.get("status").toString().equals("ok")) {
-			return resultCheck.toString();
+		if ("error".equals(permissionCheck.get("status"))) {
+		*/
+		Map<String, Object> permissionParams = new HashMap<>();
+		permissionParams.put("folderList", folderId);
+		
+		// 제어권한 (관리자, 담당자, 만든이)
+		JSONObject permissionCheck = (JSONObject) commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/permission-check/" + user.getId(),
+				permissionParams, request, "get", null);
+		boolean isPermitted = Optional.of(permissionCheck)
+				.map(result -> result.get("status").toString())
+				.map("ok"::equalsIgnoreCase)
+				.orElse(false);
+		
+		if (!isPermitted) {
+			return permissionCheck.toString();
 		}
 		
-		String folderId      = request.getParameter("folderId");
 		String mode          = request.getParameter("mode") != null ? request.getParameter("mode") : "";
 		
 		logger.debug("Folder Id: " + folderId + " || mode: " + mode);
@@ -868,6 +995,57 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("userId", user.getId())
 										.queryParam("mode", mode);
+		RestTemplate rest             = new RestTemplate();
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp                 = new JSONParser();
+		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
+		
+		logger.debug("getFolderUsers end");
+		return resultBody.toString();
+	}
+	
+	// 폴더 담당자가 각자의 파일별 권한 리스트를 가져오는 로직 
+	@RequestMapping(value="/admin/ezWebFolder/getFileUsers.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String getFileUsers(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("getFolderUsers start");
+		LoginSimpleVO user     = commonUtil.userInfoSimple(loginCookie);
+		String fileId = request.getParameter("fileId");
+		/*
+		JSONObject permissionCheck = (JSONObject) checkPermissions(request, null, fileId, user.getId());
+		
+		if ("error".equals(permissionCheck.get("status"))) {
+		*/
+		Map<String, Object> permissionParams = new HashMap<>();
+		permissionParams.put("fileId", fileId);
+		
+		// 제어권한 (관리자, 담당자, 만든이)
+		JSONObject permissionCheck = (JSONObject) commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/permission-check/" + user.getId(),
+				permissionParams, request, "get", null);
+		boolean isPermitted = Optional.of(permissionCheck)
+				.map(result -> result.get("status").toString())
+				.map("ok"::equalsIgnoreCase)
+				.orElse(false);
+		
+		if (!isPermitted) {
+			return permissionCheck.toString();
+		}
+		
+		String mode         = request.getParameter("mode") != null ? request.getParameter("mode") : "";
+		
+		logger.debug("fileId: " + fileId + " || mode: " + mode);
+		
+		String gwServerUrl   = config.getProperty("config.webFolderGwServerURL");
+		String url           = gwServerUrl + "/rest/ezwebfolderadmin/file-users/" + fileId;
+		HttpHeaders headers  = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", user.getId())
+				.queryParam("mode", mode);
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		
@@ -894,6 +1072,14 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String folderName      = request.getParameter("folderName");
 		String folderName2     = request.getParameter("folderName2");
 		String folderUsers     = request.getParameter("folderUsers");
+		// 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: isDean으로 구분 추가
+		// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
+		String subTypeC	       = request.getParameter("subTypeC");
+		// 회의실 사용 기간
+		String startTime       = request.getParameter("startTime");
+		String endTime         = request.getParameter("endTime");
+		// 폴더 권한 비상속
+		String noInherit       = request.getParameter("noInherit");
 		
 		logger.debug("Folder Id: " + folderId + " || Folder Name1: " + folderName + " || Folder Name2: " + folderName2 + " || Folder users: " + folderUsers);
 		
@@ -906,6 +1092,10 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		jsonObject.put("fName", folderName);
 		jsonObject.put("fName2", folderName2);
 		jsonObject.put("fUsers", folderUsers);
+		jsonObject.put("subTypeC", subTypeC);
+		jsonObject.put("startTime", startTime);
+		jsonObject.put("endTime", endTime);
+		jsonObject.put("noInherit", noInherit);
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -929,8 +1119,10 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		logger.debug("changeCompanyFolder start");
 		LoginSimpleVO user     = commonUtil.userInfoSimple(loginCookie);
 		JSONObject resultCheck = (JSONObject) checkWfAdmin(request, user.getId());
+		// 2020-12-08 김은실 - (카이스트)회사 폴더별 관리자 지원 기능 
+		String folderManager   = request.getParameter("folderManager") != null ? request.getParameter("folderManager") : "";
 		
-		if (!resultCheck.get("status").toString().equals("ok")) {
+		if (!resultCheck.get("status").toString().equals("ok") && !folderManager.equals("1")) {
 			return resultCheck.toString();
 		}
 		
@@ -938,8 +1130,22 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String folderName     = request.getParameter("folderName");
 		String folderName2    = request.getParameter("folderName2");
 		String folderUsers    = request.getParameter("folderUsers");
+		String encryption     = request.getParameter("encryption");
+		String addUser     	  = request.getParameter("addUser");
+		String deleteUser     = request.getParameter("deleteUser");
+		String subFolderType  = request.getParameter("subFolderType");
+		// 2020-12-09 김은실 - (카이스트)회사 폴더별 관리자 지원 기능
+		String addUserManager = request.getParameter("addUserManager");
+		String deleteUserManager = request.getParameter("deleteUserManager");
+		// 회의실 사용 기간
+		String startTime      = request.getParameter("startTime");
+		String endTime        = request.getParameter("endTime");
+		// 폴더 권한 비상속
+		String noInherit      = request.getParameter("noInherit");
 		
-		logger.debug("Folder Id: " + folderId + " || Folder Name1: " + folderName + " || Folder Name2: " + folderName2 + " || Folder users: " + folderUsers);
+		logger.debug("Folder Id:" + folderId + ",Folder Name1:" + folderName + ",Folder Name2:" + folderName2 
+				+ ",Folder users:" + folderUsers + ",addUser:" + addUser + ",deleteUser:" + deleteUser + ",subFolderType:" + subFolderType
+				 + ",addUserManager:" + addUserManager + ",deleteUserManager:" + deleteUserManager);
 		
 		String gwServerUrl    = config.getProperty("config.webFolderGwServerURL");
 		String url            = gwServerUrl + "/rest/ezwebfolderadmin/folders/" + folderId + "/comp";
@@ -949,6 +1155,15 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		jsonObject.put("fName", folderName);
 		jsonObject.put("fName2", folderName2);
 		jsonObject.put("fUsers", folderUsers);
+		jsonObject.put("encryption", encryption);
+		jsonObject.put("addUser", addUser);
+		jsonObject.put("deleteUser", deleteUser);
+		jsonObject.put("addUserManager", addUserManager);
+		jsonObject.put("deleteUserManager", deleteUserManager);
+		jsonObject.put("subFolderType", subFolderType);
+		jsonObject.put("startTime", startTime);
+		jsonObject.put("endTime", endTime);
+		jsonObject.put("noInherit", noInherit);
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -976,6 +1191,9 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		}
 		
 		String folderId      = request.getParameter("folderId");
+		// 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: isDean으로 구분 추가
+		// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
+		String subTypeC      	 = request.getParameter("subTypeC");
 		
 		logger.debug("Folder Id: " + folderId);
 		
@@ -987,7 +1205,8 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("userId", user.getId());
+										.queryParam("userId", user.getId())
+										.queryParam("subTypeC", subTypeC);
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.DELETE, entity, String.class);
 		JSONParser jp                 = new JSONParser();
@@ -1069,6 +1288,9 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String folderId     = request.getParameter("folderId");
 		String parentFld    = request.getParameter("parentFldId");
 		String mode         = request.getParameter("mode");
+		// 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: isDean으로 구분 추가
+		// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
+		String subTypeC       = request.getParameter("subTypeC");
 		
 		logger.debug("Folder Id: " + folderId + " || Parent folderId: " + parentFld + " || mode: " + mode);
 		
@@ -1077,7 +1299,8 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("userId", user.getId())
-										.queryParam("parentFld", parentFld);
+										.queryParam("parentFld", parentFld)
+										.queryParam("subTypeC", subTypeC);
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -1094,45 +1317,61 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		return resultBody.toString();
 	}
 
-	@RequestMapping(value="/admin/ezWebFolder/targetSelect.do", method = RequestMethod.GET)
-	public String selectTarget(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("selectTarget start");
-		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+//	
+//	@RequestMapping(value="/admin/ezWebFolder/targetSelect.do", method = RequestMethod.GET)
+//	public String selectTarget(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+//		logger.debug("selectTarget start");
+//		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+//		
+//		if (!checkWfAdmin(request, user.getId()).get("status").toString().equals("ok")) {
+//			return "cmm/error/adminDenied";
+//		}
+//		
+//		String companyId     = request.getParameter("company");
+//		String gwServerUrl   = config.getProperty("config.webFolderGwServerURL");
+//		String url           = gwServerUrl + "/rest/ezwebfolderadmin/company-id/" + user.getId();
+//		
+//		HttpHeaders headers  = new HttpHeaders();
+//		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+//		headers.set("x-user-host", request.getServerName());
+//		HttpEntity<?> entity = new HttpEntity<>(headers);
+//		
+//		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url);
+//		RestTemplate rest             = new RestTemplate();
+//		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+//		
+//		JSONParser jp                 = new JSONParser();
+//		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
+//		String status                 = resultBody.get("status").toString();
+//		
+//		if (status.equals("ok")) {
+//			model.addAttribute("primary", (String) resultBody.get("primary"));
+//		}
+//		
+//		
+//		logger.debug("CompanyId: " + companyId);
+//		
+//		model.addAttribute("pCompanyID", companyId);
+//		
+//		logger.debug("selectTarget end");
+//		return "admin/ezWebFolder/targetSelect";
+//	}
+
+	@RequestMapping(value="/admin/ezWebFolder/webfolderAddMemberList.do", method = RequestMethod.GET)
+	public String webfolderAddMemberList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("webfolderDeptFolder start");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		// 2020-12-10 김은실 - (카이스트)회사 폴더별 관리자 지원 기능  : 사용자화면(:담당자)
+		Boolean isManager        = Boolean.valueOf(request.getParameter("isManager"));		//false : Boolean.valueOf(null, "", "false", "1", "abc")
 		
-		if (!checkWfAdmin(request, user.getId()).get("status").toString().equals("ok")) {
+		if (!checkWfAdmin(request, user.getId()).get("status").toString().equals("ok") && !isManager) {
 			return "cmm/error/adminDenied";
 		}
 		
-		String companyId     = request.getParameter("company");
-		String gwServerUrl   = config.getProperty("config.webFolderGwServerURL");
-		String url           = gwServerUrl + "/rest/ezwebfolderadmin/company-id/" + user.getId();
-		
-		HttpHeaders headers  = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		
-		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url);
-		RestTemplate rest             = new RestTemplate();
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-		JSONParser jp                 = new JSONParser();
-		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
-		String status                 = resultBody.get("status").toString();
-		
-		if (status.equals("ok")) {
-			model.addAttribute("primary", (String) resultBody.get("primary"));
-		}
-		
-		
-		logger.debug("CompanyId: " + companyId);
-		
-		model.addAttribute("pCompanyID", companyId);
-		
-		logger.debug("selectTarget end");
-		return "admin/ezWebFolder/targetSelect";
+		logger.debug("webfolderDeptFolder end");
+		return "admin/ezWebFolder/webfolderAddMemberList";
 	}
-
+	
 	@RequestMapping(value="/admin/ezWebFolder/webfolderAdminDeptFolder.do", method = RequestMethod.GET)
 	public String webfolderDeptFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("webfolderDeptFolder start");
@@ -1164,6 +1403,8 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 			model.addAttribute("userCompany", companyId);
 			model.addAttribute("list", companyList);
 			model.addAttribute("primary", (String) resultBody.get("primary"));
+			model.addAttribute("isAdminMode", (boolean) resultBody.get("isAdminMode"));
+			model.addAttribute("useKlib", (boolean) resultBody.get("useKlib"));
 		}
 		
 		logger.debug("webfolderDeptFolder end");
@@ -1227,6 +1468,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String folderId       = request.getParameter("folderId");
 		String folderName     = request.getParameter("folderName");
 		String folderName2    = request.getParameter("folderName2");
+		String encryption     = request.getParameter("encryption");
 		
 		logger.debug("Folder Id: " + folderId + " || Folder Name: " + folderName + " || Folder Name2: " + folderName2);
 		
@@ -1237,6 +1479,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		jsonObject.put("userId", user.getId());
 		jsonObject.put("fName", folderName);
 		jsonObject.put("fName2", folderName2);
+		jsonObject.put("encryption", encryption);
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -1378,9 +1621,24 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		return resultBody;
 	}
 	
+	private JSONObject checkPermissions(HttpServletRequest request, String folderIdList, String fileIdList, String userId) throws ParseException {
+		logger.debug("checkPermissions start");
+
+		Map<String, Object> permissionParams = new HashMap<>();
+		permissionParams.put("folderList", Optional.ofNullable(folderIdList).orElse(""));
+		permissionParams.put("fileList", Optional.ofNullable(fileIdList).orElse(""));
+		permissionParams.put("adminCheck", true);
+
+		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userId + "/checkpermissions",
+				null, request, "post", new JSONObject(permissionParams));
+
+		logger.debug("checkPermissions end");
+		return resultBody;
+	}
+
 	@RequestMapping(value="/admin/ezWebFolder/exportFileLogs.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String exportFileLogs(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+	public String exportFileLogs(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response, Locale locale) throws Exception {
 		logger.debug("exportFileLogs start");
 		LoginSimpleVO user     = commonUtil.userInfoSimple(loginCookie);
 		JSONObject resultCheck = (JSONObject) checkWfAdmin(request, user.getId());
@@ -1399,11 +1657,14 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String userName      = request.getParameter("userName")   != null ? request.getParameter("userName")   : "";
 		String fileType      = request.getParameter("fileType")   != null ? request.getParameter("fileType")   : "";
 		String actionType    = request.getParameter("actionType") != null ? request.getParameter("actionType") : "";
+		String adminFlag     = request.getParameter("adminFlag")  != null ? request.getParameter("adminFlag")  : "";
+		String folderId      = request.getParameter("folderId")   != null ? request.getParameter("folderId")   : "";
 		String sortType    	 = request.getParameter("sortType")   != null ? request.getParameter("sortType")   : "";
 		String sortColumn    = request.getParameter("sortColumn") != null ? request.getParameter("sortColumn") : "";
 		
-		logger.debug("CompanyId: " + companyId + " Column: " + column + " || order: " + order + " || StartDate: " + startDate + " || EndDate: " + endDate 
-				+ " || File ext: " + fileExt + " || File Name: " + fileName + " || User Name: " + userName + " || File type: " + fileType + " || Action Type: " + actionType
+		logger.debug("CompanyId: " + companyId + " Column: " + column + " || order: " + order + " || StartDate: " + startDate 
+				+ " || EndDate: " + endDate + " || File ext: " + fileExt + " || File Name: " + fileName + " || User Name: " + userName 
+				+ " || File type: " + fileType + " || Action Type: " + actionType + "||adminFlag:" + adminFlag + "||folderId" + folderId
 				+ "||sortType:" + sortType + "||sortColumn:" + sortColumn);
 		
 		String gwServerUrl   = config.getProperty("config.webFolderGwServerURL");
@@ -1411,6 +1672,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		HttpHeaders headers  = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		headers.set("x-user-host", request.getServerName());
+		headers.set("Accept-Language", locale.toString());
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
@@ -1424,9 +1686,11 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 										.queryParam("column", column)
 										.queryParam("order", order)
 										.queryParam("actionType", actionType)
+										.queryParam("endDate", endDate)
 										.queryParam("sortType", sortType)
 										.queryParam("sortColumn", sortColumn)
-										.queryParam("endDate", endDate);
+										.queryParam("adminFlag", adminFlag)
+										.queryParam("folderId", folderId);
 		
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
@@ -1488,5 +1752,279 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		logger.debug("webfolderAdminTop ended");
 		
 		return "admin/ezWebFolder/webfolderAdminTop";
+	}
+
+	/**
+	 * 웹폴더 개설 신청 이력 조회 페이지 호출
+	 */
+	@RequestMapping(value="/admin/ezWebFolder/applicationHistoryMain.do", method = RequestMethod.GET)
+	public String webfolderApplicationHistoryMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		logger.debug("webfolderApplicationHistoryMain started.");
+		
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		
+		String companyId = user.getCompanyID();
+		String userRoll = user.getRollInfo();
+		if (!(userRoll.contains("c=1") || userRoll.contains("k=1") || userRoll.contains("wf=1"))) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String type = request.getParameter("type");
+		type = type.equals("") ? "task" : type;
+		logger.debug("companyId=" + companyId + ", type=" + type);
+		
+		// get companyList, companyId, isAdminMode
+		String gwServerUrl   = config.getProperty("config.webFolderGwServerURL");
+		String url           = gwServerUrl + "/rest/ezwebfolderadmin/company-list/" + user.getId();
+		
+		HttpHeaders headers  = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url).queryParam("mode", "admin");
+		RestTemplate rest             = new RestTemplate();
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp                 = new JSONParser();
+		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
+		String status                 = resultBody.get("status").toString();
+
+		JSONArray companyList = new JSONArray();
+		if (status.equals("ok")) {
+			companyList = (JSONArray) resultBody.get("data");
+		} 
+		// end companyList, companyId, isAdminMode
+		
+		model.addAttribute("subTypeC", type);
+		model.addAttribute("userCompany", companyId);
+		model.addAttribute("list", companyList);
+
+		logger.debug("webfolderApplicationHistoryMain ended.");
+		return "admin/ezWebFolder/webfolderApplicationHistory";
+	}
+	
+	@RequestMapping(value="/admin/ezWebFolder/getApplicationHistoryList.do", method = RequestMethod.POST, produces="application/text;charset=utf8")
+	@ResponseBody
+	@SuppressWarnings("unchecked")
+	public String getApplicationHistoryList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		logger.debug("getApplicationHistoryList started.");
+
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		String userCompanyId = user.getCompanyID();
+		int tenantId = user.getTenantId();
+		
+		String reStatus = "ERROR";
+		int reTotalSize = 0;
+		String reHistoryList = "[]";
+		
+		String companyId = request.getParameter("companyId");
+		companyId = companyId.trim().equals("") ? userCompanyId : companyId;
+		String folderSubType = request.getParameter("folderSubType");
+		String pageNum = request.getParameter("pageNum");
+		String pageListSize = request.getParameter("pageListSize");
+		logger.debug("companyId=" + companyId + ", tenantId=" + tenantId + ", folderSubType=" + folderSubType
+				 + ", pageNum=" + pageNum + ", pageListSize=" + pageListSize);
+		
+		if (folderSubType.trim().equals("") || pageNum.trim().equals("") || pageListSize.trim().equals("")) {
+			reStatus = "MISSING_VALUE";
+		} else {
+			Map<String, Object> param = new HashMap<String, Object>();
+			param.put("companyId", companyId);
+			param.put("tenantId", tenantId);
+			param.put("folderSubType", folderSubType);
+			param.put("pageNum", pageNum);
+			param.put("pageListSize", pageListSize);
+			
+			JSONObject resultJson = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/getApplyHistoryList",
+					param, request, "post", null);
+			if (resultJson != null) {
+				reStatus = (String) resultJson.get("status");
+				if (reStatus.equalsIgnoreCase("OK")) {
+					reTotalSize = ((Long) resultJson.get("totalSize")).intValue();
+					reHistoryList = (String) resultJson.get("historyList");
+				}
+			}
+		}
+
+		JSONObject returnJson = new JSONObject();
+		returnJson.put("status", reStatus);
+		returnJson.put("totalSize", reTotalSize);
+		returnJson.put("historyList", reHistoryList);
+		logger.debug("status=" + reStatus + ", totalSize=" + reTotalSize);
+		logger.debug("getApplicationHistoryList ended.");
+		return returnJson.toString();
+	}	
+	
+	@RequestMapping(value="/admin/ezWebFolder/getApplicationHistory.do", method = RequestMethod.POST, produces="application/text;charset=utf8")
+	@ResponseBody
+	@SuppressWarnings("unchecked")
+	public String getApplicationHistory(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		logger.debug("getApplicationHistory started.");
+		
+		String reStatus = "ERROR";
+		String appHistory = "[]";
+		String appHistoryMember = "[]";
+		
+		String applyId = request.getParameter("applyId");
+		logger.debug("applyId=" + applyId);
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("applyId", applyId);
+		
+		JSONObject resultJson = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/getApplyHistory", param, request, "post", null);
+		if (resultJson != null) {
+			reStatus = (String) resultJson.get("status");
+			if (reStatus.equalsIgnoreCase("OK")) {
+				appHistory = (String) resultJson.get("appHistory");
+				appHistoryMember = (String) resultJson.get("appHistoryMemberList");
+			}
+		}
+		
+		JSONObject returnJson = new JSONObject();
+		returnJson.put("status", reStatus);
+		returnJson.put("appHistory", appHistory);
+		returnJson.put("appHistoryMember", appHistoryMember);
+		logger.debug("getApplicationHistory ended.");
+		return returnJson.toString();
+	}
+
+	@RequestMapping(value="/admin/ezWebFolder/setApprovalToApplyForOpening.do", method = RequestMethod.POST, produces="application/text;charset=utf8")
+	@ResponseBody
+	@SuppressWarnings("unchecked")
+	public String setApprovalToApplyForOpening(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) throws Exception {
+		logger.debug("setApprovalToApplyForOpening started.");
+		
+		String reStatus = "ERROR";
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		int tenantId = userInfo.getTenantId();
+		String lang = userInfo.getLang();
+		
+		String applyId = request.getParameter("applyId");
+		String subTypeC = request.getParameter("subTypeC");
+		logger.debug("applyId=" + applyId + ", subTypeC=" + subTypeC);
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("applyId", applyId);
+		param.put("userId", userId);
+		
+		JSONObject resultJson = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/approvalToApplyForOpening", param, request, "post", null);
+		if (resultJson != null) {
+			reStatus = (String) resultJson.get("status"); // OK, DUPLICATE_FOLDER_NAME, ADD_ERROR, ERROR
+			String folderName = (String) resultJson.get("folderName");
+			String applicantId = (String) resultJson.get("applicantId");
+			folderName = commonUtil.cleanValueUnescape(folderName);
+			
+			if (reStatus.equalsIgnoreCase("OK")) {
+				List<OrganUserVO> toUserList = new ArrayList<OrganUserVO>();
+				toUserList.add(ezOrganService.getUserInfo(applicantId, lang, tenantId));
+				
+				String mailSubjectMsg = subTypeC.equalsIgnoreCase("task") ? "ezWebFolder.ksa54" : "ezWebFolder.ksa56";
+				String mailContentMsg = subTypeC.equalsIgnoreCase("task") ? "ezWebFolder.ksa58" : "ezWebFolder.ksa59";
+				String mailSubject = egovMessageSource.getMessage(mailSubjectMsg, locale);
+				String mailContent = egovMessageSource.getMessage(mailContentMsg, locale);
+				mailSubject = String.format(mailSubject, folderName);
+				mailContent = String.format(mailContent, folderName);
+				
+				reStatus = sendNotiMail(loginCookie, toUserList, mailSubject, mailContent, locale); // OK, EMAIL_ERROR
+			}
+		}
+		
+		JSONObject returnJson = new JSONObject();
+		returnJson.put("status", reStatus);
+		logger.debug("setApprovalToApplyForOpening ended. reStatus=" + reStatus);
+		return returnJson.toString();
+	}
+	 
+	@RequestMapping(value="/admin/ezWebFolder/setRefusalToApplyForOpening.do", method = RequestMethod.POST, produces="application/text;charset=utf8")
+	@ResponseBody
+	@SuppressWarnings("unchecked")
+	public String setRefusalToApplyForOpening(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) throws Exception {
+		logger.debug("setRefusalToApplyForOpening started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantId = userInfo.getTenantId();
+		String lang = userInfo.getLang();
+		
+		String reStatus = "ERROR";
+		
+		String applyId = request.getParameter("applyId");
+		String reasonContent = request.getParameter("reasonCont");
+		String subTypeC = request.getParameter("subTypeC");
+		logger.debug("applyId=" + applyId + ", subTypeC=" + subTypeC +", reasonContent=" + reasonContent);
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("applyId", applyId);
+		
+		JSONObject resultJson = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/RefuseToApplyForOpening", param, request, "post", null);
+		if (resultJson != null) {
+			reStatus = (String) resultJson.get("status"); // OK, ERROR
+			String folderName = (String) resultJson.get("folderName");
+			String applicantId = (String) resultJson.get("applicantId");
+			folderName = commonUtil.cleanValueUnescape(folderName);
+			
+			if (reStatus.equalsIgnoreCase("OK")) {
+				List<OrganUserVO> toUserList = new ArrayList<OrganUserVO>();
+				toUserList.add(ezOrganService.getUserInfo(applicantId, lang, tenantId));
+				
+				String mailSubjectMsg = subTypeC.equalsIgnoreCase("task") ? "ezWebFolder.ksa55" : "ezWebFolder.ksa57";
+				String mailContentMsg = subTypeC.equalsIgnoreCase("task") ? "ezWebFolder.ksa60" : "ezWebFolder.ksa61";
+				String mailSubject = egovMessageSource.getMessage(mailSubjectMsg, locale);
+				String mailContent = egovMessageSource.getMessage(mailContentMsg, locale);
+				mailSubject = String.format(mailSubject, folderName);
+				mailContent = String.format(mailContent, folderName, reasonContent);
+				
+				reStatus = sendNotiMail(loginCookie, toUserList, mailSubject, mailContent, locale); // OK, EMAIL_ERROR
+			}
+		}
+		
+		JSONObject returnJson = new JSONObject();
+		returnJson.put("status", reStatus);
+		logger.debug("setRefusalToApplyForOpening ended. reStatus=" + reStatus);
+		return returnJson.toString();
+	}
+	
+	private String sendNotiMail(String loginCookie, List<OrganUserVO> toUser, String subject, String content, Locale locale) {
+		String reStr = "OK";
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userName = userInfo.getDisplayName();
+		String userEmail = userInfo.getEmail();
+		int tenantId = userInfo.getTenantId();
+		logger.debug("fromEmail=" + userEmail + ", subject=" + subject + ", content=" + content);
+		
+		try {
+			String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+			
+			InternetAddress from = new InternetAddress();
+			from.setPersonal(userName, "UTF-8");
+			from.setAddress(userEmail);
+
+			InternetAddress[] toArr = new InternetAddress[toUser.size()];
+			
+			int nowi = 0;
+			for (OrganUserVO vo : toUser) {
+				String voMail = vo.getMail();
+				String voCn = vo.getCn();
+				voMail = voMail.trim().equals("") ? voCn + "@" + domainName : voMail;
+				
+				InternetAddress addrTemp = new InternetAddress();
+				addrTemp.setPersonal(vo.getDisplayName(), "UTF-8");
+				addrTemp.setAddress(voMail);
+				
+				toArr[nowi] = addrTemp;
+				nowi++;
+			}
+
+			content = commonUtil.createNotiMailContent(content, tenantId, locale);
+			ezEmailService.sendMail(loginCookie, from, toArr, null, null, subject, content, false);
+		} catch (Exception e) {
+			reStr = "EMAIL_ERROR";
+			e.printStackTrace();
+		}
+		
+		return reStr;
 	}
 }

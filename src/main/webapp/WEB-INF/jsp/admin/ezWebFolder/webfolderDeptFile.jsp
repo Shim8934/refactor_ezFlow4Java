@@ -15,7 +15,6 @@
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/duplicate-file.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/capacity.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/fileFolderDrop.js')}"></script>
@@ -148,7 +147,7 @@
 				this.sortColumn = column;
 				init("dept");
 			}
-			/*
+			
 			function optionHidden() {
 		 	    document.getElementById("layer_Viewpopup").style.display = "none";
 		 	    document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
@@ -168,7 +167,7 @@
 		   	        optionHidden();
 		   	    }
 		   	}
-			*/
+			
 			function leftFolderCPMV(functionType, folderList, toTargetId) {
 				closeAllPopup();
 				window.close();
@@ -197,13 +196,16 @@
 		
 		<div id="mainmenu" style="position: relative; margin-left: 5px;">
 			<ul>
-				<li id="" class="important" onclick="fileDownload();"><a><span><spring:message code='ezWebFolder.t186'/></span></a></li>
+				<li id="" class="important" onclick="fileDownload();"><span><spring:message code='ezWebFolder.t186'/></span></li>
 				<!-- root에서 파일업로드 되도록하려면 아래를 주석  -->
 <%-- 				<c:if test="${level != '0'}"> --%>
-				<li id="uploadBttn" class="important" onclick="fileUpload();"><a><span><spring:message code='ezWebFolder.t187'/></span></a></li>
+				<li id="uploadBttn" class="important" onclick="fileUpload();"><span><spring:message code='ezWebFolder.t187'/></span></li>
 <%-- 				</c:if> --%>
-				<li id="" onclick="fileRename();"><a><span><spring:message code='ezWebFolder.t508'/></span></a></li>
-				<li id="" onclick="fileMove();"><a><span><spring:message code='ezWebFolder.t120'/></span></a></li>
+				<li id="" onclick="fileRename();"><span><spring:message code='ezWebFolder.t508'/></span></li>
+				<li id="" onclick="fileMove();"><span><spring:message code='ezWebFolder.t120'/></span></li>
+				<c:if test="${useVersionHistory}">
+					<li><span onclick="openFileVersionHistory()"><spring:message code='webfolder.version.button' /></span></li>
+				</c:if>
 				<li id="SearchOption" mode="off" onclick="openSearchPanel();"><span class="icon16 icon16_search"></span></li>
 				<li><span class="icon16 icon16_delete" onclick="fileDelete();"></span></li>
 				<li><span class="icon16 icon16_refresh" onclick="refreshView();"></span></li>
@@ -323,7 +325,7 @@
 	                <table style="width: 100%; border-spacing: 0px; border-collapse: collapse; border: none;" class="list_element">
 	                    <caption></caption>
 	                    <colgroup>
-	                        <col style="width: 80px;">
+	                        <col style="width: 90px;">
 	                        <col>
 	                    </colgroup>
 	                    <tr>

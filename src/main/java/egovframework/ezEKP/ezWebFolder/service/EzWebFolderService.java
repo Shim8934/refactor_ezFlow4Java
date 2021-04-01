@@ -12,19 +12,23 @@ import org.springframework.web.multipart.MultipartFile;
 
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO;
+import egovframework.ezEKP.ezWebFolder.vo.FileHistoryVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderUserVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
+import egovframework.ezEKP.ezWebFolder.vo.MeetingPeriod;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleDeptVO;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO;
 import egovframework.ezEKP.ezWebFolder.vo.WebfolderEnvVO;
+import egovframework.ezEKP.ezWebFolder.vo.result.UploadResult;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzWebFolderService {
 	String getFileSequence(int tenantId) throws Exception;
 	void insertFile(FileVO fileVO) throws Exception;
+	void insertFileUser(FileVO fileVO, String seqId, String userId, String userType, String comId, String subFolderType) throws Exception;
 	FileVO getFileByFileId(String fileId, String offset, int tenantId) throws Exception;
 	void deleteFileByFileId(String fileId, int tenantId) throws Exception;
 	void updateFileUseStatus(String userId, String fileId, String timeUTC, int tenantId) throws Exception;
@@ -34,15 +38,19 @@ public interface EzWebFolderService {
 	String getFileLogSequence(int tenantId) throws Exception;
 	FolderVO getFolderByFolderId(String folderId, String offset, int tenantId) throws Exception;
 	FolderSimpleVO getSimpleFolder(String folderId, int tenantId) throws Exception;
-	List<FolderSimpleVO> getAllSimpleSubFolders(String folderUpperId, int tenantId) throws Exception;
+	List<FolderSimpleVO> getAllSimpleSubFolders(String folderUpperId, int tenantId, String subTypeC, List<String> idList) throws Exception;
+	List<FolderSimpleVO> getAllSimpleSubFolders(String folderUpperId, int tenantId, String subTypeC, List<String> idList, String folderId) throws Exception;
 	FolderVO getRootFolderId(String companyId, String type, String offset, int tenantId) throws Exception;
-	void getAllSubDepts(FolderSimpleVO company, int tenantId, int i) throws Exception;
-	void getAllSubDepts(FolderSimpleVO company, int tenantId, String[] fdPath, int order) throws Exception;
+	void getAllSubDepts(FolderSimpleVO company, int tenantId, int i, String subTypeC) throws Exception;
+	void getAllSubDepts(FolderSimpleVO company, int tenantId, int i, String subTypeC, List<String> idList) throws Exception;
+	void getAllSubDepts(FolderSimpleVO company, int tenantId, String[] fdPath, int order, String subTypeC) throws Exception;
+	void getAllSubDepts(FolderSimpleVO company, int tenantId, String[] fdPath, int order, String subTypeC, List<String> idList) throws Exception;
 	void updateDownCnt(String fileId, int tenantId) throws Exception;
 	List<FolderUserVO> getFolderUsers(String folderId, int tenantId) throws Exception;
+	List<FolderUserVO> getFileUsers(String fileId, int tenantId) throws Exception;
 	String getFolderSequence(int tenantId) throws Exception;
 	String getMaxFolderStep(String folderId, int tenantId) throws Exception;
-	String getFolderUserSequence(int tenantId) throws Exception;
+	String getFolderUserSequence(int tenantId, String type) throws Exception;
 	void updateFolderUseStatus(FolderVO folder, LoginVO userInfo) throws Exception;
 //	List<FileVO> getDuplicateNameFiles(List<String> fileNames, String parentFolderId, String offset, int tenantId) throws Exception;
 //	List<FolderVO> getDuplicateNameFolders(List<String> folderNames, String parentFolderId, String offset, int tenantId) throws Exception;
@@ -67,7 +75,7 @@ public interface EzWebFolderService {
 	List<OrganDeptVO> getAllDepartments(String companyId, String primary, int tenantId) throws Exception;
 	List<FolderSimpleVO> getDeptFolderTreeForUser(String userId, String deptID, int tenantId) throws Exception;
 	FolderSimpleVO getCompanySimpleFolder(String companyID, LoginVO userInfo) throws Exception;
-	List<FolderSimpleVO> getCompanySubSimpleFolder(String userId, String deptId, String compFolderId, String compId, int tenantId) throws Exception;
+	List<FolderSimpleVO> getCompanySubSimpleFolder(String userId, String deptId, String compFolderId, String compId, int tenantId, String subTypeC, List<String> idList) throws Exception;
 	FolderSimpleVO getUserSimpleFolder(String userId, int tenantId) throws Exception;
 	boolean checkDepartChief(String userId, int tenantId) throws Exception;
 	WebfolderEnvVO getListCount(String userId, int tenantId) throws Exception;
@@ -77,14 +85,15 @@ public interface EzWebFolderService {
 	int checkFilesOwner(String userId, String fileList, int tenantId) throws Exception;
 	//Added
 	String getFolderPath(String[] split, String primary, int tenantId) throws Exception;
-	List<FileVO> saveUploadedFiles(List<MultipartFile> multiFileLists, JSONArray nameArray, FolderVO folder, String realPath, LoginVO userInfo) throws Exception;
+	UploadResult saveUploadedFiles(List<MultipartFile> multiFileLists, JSONArray nameArray, FolderVO folder, String realPath, LoginVO userInfo, boolean isEncrypt, String parentId) throws Exception;
 	void getDownloadedFiles(String[] folderIdList, String[] fileIDList, String realPath, LoginVO userInfo, String userAgent, HttpServletRequest request, HttpServletResponse response) throws Exception;
 	// 휴지통 용량 초과 하는지 체크
 	boolean canDelete(String[] fileIdList, String[] folderIdList, String userId, int tenantId) throws Exception;
 	void deleteSelectedFiles(String[] fileIDList, LoginVO userInfo) throws Exception;
 	// 예연추가 delete시 선택된 파일, 폴더 함께 삭제 
-	void deleteSelectedFilesFolders (String[] fileIDList, String[] folderIDList ,LoginVO userInfo) throws Exception ;
+	String deleteSelectedFilesFolders (String[] fileIDList, String[] folderIDList ,LoginVO userInfo) throws Exception ;
 	void saveLog(String string, String companyId, String offset, String userId, String userName1, String userName2, String fileName, long fileSize, String fileExt, String fileTypeName, int tenantId) throws Exception;
+	void saveLog(String string, String companyId, String offset, String userId, String userName1, String userName2, int tenantId, FileVO fileVO, String version, String primary) throws Exception;
 	String getMaxFileID(int tenantId) throws Exception;
 	JSONObject moveFiles(String folderId, String fileList, String mode, String privileges, LoginVO userInfo, boolean isOverwritable) throws Exception;
 	JSONObject moveFiles(String folderId, String fileList, List<String> nameList, String mode, String privileges, LoginVO userInfo, boolean isOverwritable) throws Exception;
@@ -96,4 +105,78 @@ public interface EzWebFolderService {
 	List<FolderSimpleVO> getAllSimpleShareFolder(String userId, String deptId, String compId, int tenantId) throws Exception;
 	void updateFileExt(String fileId, String oldFilePath, String fileExt,String realFileExt, String timeUTC, int tenantId) throws Exception;
 	FileTypeVO getFileTypeByFileExt(String string, int tenantId) throws Exception;
+
+	void insertEncryptionFolder(String folderId, int tenantId);
+
+	void deleteEncryptionFolder(String folderId, int tenantId);
+
+	void insertEncryptedFile(String fileId, int tenantId);
+
+	void deleteEncryptedFile(String fileId, int tenantId);
+
+	void deleteEncryptedAllVersions(String fileId, int tenantId);
+
+	void deleteEncryptedVersion(String fileId, int version, int tenantId);
+
+	FolderVO getEncryptionRootFolder(String folderId, int tenantId);
+
+	boolean isEncryptionFolder(String folderId, int tenantId);
+
+	boolean isEncryptedFile(String fileId, int tenantId);
+
+	boolean isEncryptedVersion(String fileId, int version, int tenantId);
+
+	boolean isEncryptedFilePath(String filePath);
+
+	List<FileHistoryVO> getFileHistories(LoginVO user, String fileId) throws Exception;
+
+	FileHistoryVO getFileHistory(LoginVO user, String fileId, int version) throws Exception;
+
+	void incrementFileVersion(LoginVO user, String fileId) throws Exception;
+
+	void revertFileVersion(LoginVO user, String fileId, int version) throws Exception;
+
+	boolean restoreFileVersionFromTrash(LoginVO user, String fileId, int version) throws Exception;
+
+	void deleteFileVersion(LoginVO user, String fileId, int version) throws Exception;
+
+	void deletePermanetlyFileHistory(String fileId, int version, int tenantId, LoginVO userInfo) throws Exception;
+
+	void deletePermanetlyFileHistories(String fileId, int tenantId);
+
+	void getDownloadedVersions(String fileId, int[] versions, LoginVO user, String userAgent, HttpServletRequest request, HttpServletResponse response) throws Exception;
+
+	public String getStringListOfWebFolderMembers(int tenantId, String webFolderId) throws Exception;
+
+	boolean containsReplyFile(String fileId, int tenantId);
+
+	List<String> getContainsReplyFiles(String folderId, int tenantId);
+
+	List<String> getContainsReplyFiles(List<String> fileIds, int tenantId);
+
+	MeetingPeriod getMeetingPeriod(String folderId, String offset, int tenantId) throws Exception;
+
+	void setMeetingPeriod(MeetingPeriod period, String folderId, int tenantId);
+
+	void deleteMeetingPeriod(String folderId, int tenantId);
+
+	/** 사용 기간이 만료된 회의실 리스트 (담당자로 설정된 회의실은 제외) */
+	List<String> getExpiredMeetingFolders(String userId, int tenantId);
+
+	/** 담당자로 설정된 회의실 중 사용 기간이 만료된 리스트 */
+	List<String> getExpiredManagedMeetingFolders(String userId, int tenantId);
+	
+	int checkFileUserExists(String userId, String fileId);
+	
+	int checkFolderUserExists(String userId, String folderId, Boolean manager);
+
+	List<String> getNotInheritFolders(int tenantId);
+
+	boolean isNotInheritFolder(String folderId, int tenantId);
+
+	boolean containsNotInheritFolder(String[] fileIds, String[] folderIds, int tenantId) throws Exception;
+
+	void insertNotInheritFolder(String folderId, int tenantId);
+
+	void deleteNotInheritFolder(String folderId, int tenantId);
 }

@@ -45,7 +45,7 @@ var buttons = (function() {
 			targetPath : targetPath
 		}
 	}
-	
+
 	return {
 		fileDownload: function() {
 			var selected = getSelectedFoldersAndFiles();
@@ -54,9 +54,48 @@ var buttons = (function() {
 				return;
 			}
 			
-			var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + selected.files.toString() + "&folderList=" + selected.folders.toString();
+			if (selected.folders.length > 0) {
+				alert(messages.strLang1);
+				return;
+			}
 			
-			AttachDownFrame.location.href = downloadUrl;
+			if (selected.files.length > 1) {
+				alert(messages.strLang6);
+				return;
+			}
+			
+			var selectedFileId = selected.files[0];
+			
+			$.ajax({
+				type: "POST",
+				url: "/ezWebFolder/selectedFolderCheckPermission.do",
+				data: {
+					"fileId" : selectedFileId
+				},
+				dataType: "JSON",
+				async: true,
+				success : function(data) {
+					var result = data.status;
+					
+					if (result != "ok" && data.code == "3") {
+						alert(messages.strLang25);
+					} else if (data.code == "1") {
+						alert(messages.strLang7);
+					} else {
+						var rowElem = rowContext.getRowElement(selectedFileId);
+						
+						if (rowElem.getAttribute("encryptedFlag") === "1") {
+							unidocsWebViewerOpen(selectedFileId);
+						} else {
+							var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + selectedFileId;
+							AttachDownFrame.location.href = downloadUrl;
+						}
+					}
+				},
+				error : function(error) {
+					alert(messages.strLang7 + error);
+				}
+			});
 		},
 		
 		fileUpload: function() {
@@ -84,29 +123,28 @@ var buttons = (function() {
 				folderType = selected.targetFunction[0];
 			}
 			
-			if (folderType == "S") {
-				if (parentId == 'root' || targetPathLength[0] < 2) {
-					alert(messages.strLang34);
-					return;
-				}
-			} else if (folderType == "C") {
-				if (parentId == 'root' || targetPathLength[0] < 2) {
-					alert(messages.strLang36);
-					return;
-				}
-			} else {
-				if (targetPathLength[0] < 1) {
-					alert(messages.strLang35);
-					return;
-				}
+			if (parentId == 'root' && !(window.checkIsManager && checkIsManager(selected.folders))) {
+				alert(messages.strLang36);
+				return;
 			}
-				
+			
+			if (targetPathLength[0] < 1) {
+				alert(messages.strLang35);
+				return;
+			}
+			
+			if (hasContainsReplyFiles(selected.files)) {
+				alert(messages.replyFileDelete);
+				return;
+			}
+			
 			$.ajax({
 				type: "POST",
 				url: "/ezWebFolder/checkPermission.do",
 				data: {
 					"fileList" : selected.files.toString(),
-					"folderList" : selected.folders.toString()
+					"folderList" : selected.folders.toString(),
+					"isRecursive" : true
 				},
 				dataType: "JSON",
 				async: true,
@@ -117,7 +155,7 @@ var buttons = (function() {
 						alert(messages.strLang41);
 					} else {
 						openLeftPanel();
-						DivPopUpShow(450, 200, "/ezWebFolder/deleteConfirm.do?fileList=" + selected.files.toString()+"&folderList=" + selected.folders.toString());
+						DivPopUpShow(450, 180, "/ezWebFolder/deleteConfirm.do?fileList=" + selected.files.toString()+"&folderList=" + selected.folders.toString());
 					}
 					
 				},
@@ -134,16 +172,14 @@ var buttons = (function() {
 				return;
 			}
 			
-			if (selected.files.length > 1 || selected.folders.length > 1 ) {
+			if (selected.files.length + selected.folders.length > 1) {
 				alert(messages.strLang39);
 				return;
 			}
 			
-			if (folderType == "C" || selected.targetFunction[0] == "C") {
-				if (parentId == 'root' || selected.targetPath[0] < 2) {
-					alert(messages.strLang36);
-					return;
-				}
+			if (parentId == 'root' && !(window.checkIsManager && checkIsManager(selected.folders))) {
+				alert(messages.strLang36);
+				return;
 			}
 			
 			var fileId = selected.files[0];
@@ -164,6 +200,17 @@ var buttons = (function() {
 						if (result != "ok" && folderType != "U") {
 							alert(messages.strLang42);
 						} else {
+							var nameTd = rowContext.getRowElement(fileId).querySelector(".wfFileName");
+							var currentName = nameTd.getAttribute("title");
+							var fileExt = nameTd.getAttribute("ext");
+
+							if (fileExt && fileExt != ".none") {
+								currentName = currentName.substr(0, currentName.length - fileExt.length - 1);
+							}
+							
+							inputNameDlg_cross_dialogArguments.currentName = currentName;
+							inputNameDlg_cross_dialogArguments[0] = folderId;
+							inputNameDlg_cross_dialogArguments[3] = "update";
 							openLeftPanel();
 							DivPopUpShow(450, 200, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
 						}
@@ -180,38 +227,49 @@ var buttons = (function() {
 				var targetPathLength = selected.targetPath;
 				var selectedCreatorId = selected.creater[0];
 				
-				if (folderType == "S") {
-					if (parentId == 'root' || targetPathLength[0] < 2) {
-						alert(messages.strLang34);
-						return;
-					}
-				} else {
-					if (folderId == "root" || targetPathLength[0] < 1) {
-						alert(messages.strLang35);
-						return;
-					}
-				}
-				
-				if (selectedCreatorId != userId && folderType != "U") {
-					alert(messages.strLang37);
+				if (folderId == "root" || targetPathLength[0] < 1) {
+					alert(messages.strLang35);
 					return;
 				}
 				
-				var functionType = "update";
+				functionType = "update";
 				
 				if (folderId.indexOf("_") > -1) {
 					folderId = folderId.substring(0, folderId.indexOf("_"));
 				}
 				
-				inputNameDlg_cross_dialogArguments[0] = selectedFolderId;
-				inputNameDlg_cross_dialogArguments[1] = add_onclick_Complete;
-				inputNameDlg_cross_dialogArguments[2] = DivPopUpHidden;
-				inputNameDlg_cross_dialogArguments[3] = functionType;
-				openLeftPanel();
-				DivPopUpShow(450, 200, "/ezWebFolder/fileRenameConfirm.do?fileId=0");
+				$.ajax({
+					type: "POST",
+					url: "/ezWebFolder/checkPermission.do",
+					data: {
+						"folderList" : selectedFolderId
+					},
+					dataType: "JSON",
+					async: true,
+					success : function(data) {
+						if (data.status == "ok") {
+							var nameTd = rowContext.getRowElement(selectedFolderId).querySelector(".wfFileName");
+							var currentName = nameTd.getAttribute("title");
+							inputNameDlg_cross_dialogArguments.currentName = currentName;
+							inputNameDlg_cross_dialogArguments[0] = selectedFolderId;
+							inputNameDlg_cross_dialogArguments[1] = add_onclick_Complete;
+							inputNameDlg_cross_dialogArguments[2] = DivPopUpHidden;
+							inputNameDlg_cross_dialogArguments[3] = functionType;
+							openLeftPanel();
+							DivPopUpShow(450, 200, "/ezWebFolder/fileRenameConfirm.do?fileId=0");
+						} else {
+							alert(messages.strLang42);
+						}
+					},
+					error : function(error) {
+						alert(messages.strLang7 + error);
+					},
+					complete: function() {
+						functionType = "";
+					}
+				});
 				
 			}
-			functionType = "";
 		},
 		
 		fileMoveAndCopy: function() {
@@ -221,54 +279,118 @@ var buttons = (function() {
 				return;
 			}
 			
+			if (parentId == 'root' && !(window.checkIsManager && checkIsManager(selected.folders))) {
+				alert(messages.strLang36);
+				return;
+			}
+			
 			for (var i = 0; i < selected.folders.length; i++) {
 				if (selected.targetFunction[i] != null || selected.targetFunction[i] == "") {
 					folderType = selected.targetFunction[i];
 				}
 				
 				var targetPathLength = selected.targetPath;
-				var selectedCreatorId = selected.creater[i];
 				
-				if (folderType == "S") {
-					if (parentId == 'root' || targetPathLength[i] < 2) {
-						alert(messages.strLang34);
-						return;
-					}
-				} else if (folderType == "C") {
-					if (parentId == 'root' || targetPathLength[i] < 2) {
-						alert(messages.strLang36);
-						return;
-					}
-				} else {
-					if (targetPathLength[i] < 1) {
-						alert(messages.strLang35);
-						return;
-					}
+				if (targetPathLength[i] < 1) {
+					alert(messages.strLang35);
+					return;
 				}
-				
-//				if (selectedCreatorId != userId) {
-//					alert(messages.strLang37);
-//					return;
-//				}
 			}
 			
-			var params = [];
-			
-			if (selected.files.length > 0) {
-				params.push("fileList=" + encodeURIComponent(selected.files.toString()));
+			if (window.showProgress) {
+				showProgress();
 			}
-			
-			if (selected.folders.length > 0) {
-				params.push("folderList=" + encodeURIComponent(selected.folders.toString()));
-			}
-			
-			if (folderTypeCheck === undefined || !folderTypeCheck ) {
-				folderTypeCheck = "N";
-			} 
-			params.push("folderTypeCheck=" + folderTypeCheck);
-			
-			openLeftPanel();
-			DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?" + params.join("&"));
+
+			$.ajax({
+				type: "POST",
+				url: "/ezWebFolder/checkPermission.do",
+				data: {
+					"fileList" : selected.files.toString(),
+					"folderList" : selected.folders.toString()
+				},
+				dataType: "JSON",
+				async: true,
+				success : function(data) {
+					var isPermitted = data.status == "ok";
+					if (!isPermitted) {
+						$.ajax({
+							type: "POST",
+							url: "/ezWebFolder/checkPermission_y.do",
+							data: {
+								"fileList" : selected.files.toString(),
+								"folderList" : selected.folders.toString()
+							},
+							dataType: "JSON",
+							async: false,
+							success : function(data) {
+								isPermitted = data.status == "ok";
+							}
+						});
+					}
+
+					var isMultiple = selected.folders.length + selected.files.length > 1;
+
+					if (!isPermitted) {
+						if (window.hideProgress) {
+							hideProgress();
+						}
+						
+						setTimeout(function() {
+							alert(isMultiple ? messages.permissionErrorContains : messages.permissionError);
+						}, 10);
+						return;
+					}
+					
+					// 폴더 권한 비상속 체크
+					var isNotInherit = false;
+
+					$.ajax({
+						type: "POST",
+						url: "/ezWebFolder/checkNotInherit.do",
+						data: {
+							"fileList" : selected.files.toString(),
+							"folderList" : selected.folders.toString()
+						},
+						dataType: "JSON",
+						async: false,
+						success : function(data) {
+							isNotInherit = Boolean(data.result);
+						}
+					});
+					
+					if (window.hideProgress) {
+						hideProgress();
+					}
+					
+					// 폴더 권한 비상속 리턴~
+					if (isNotInherit) {
+						alert(isMultiple ? messages.moveFromNotInheritErrorContains : messages.moveFromNotInheritError);
+						return;
+					}
+					
+					var params = [];
+					
+					if (selected.files.length > 0) {
+						params.push("fileList=" + encodeURIComponent(selected.files.toString()));
+					}
+					
+					if (selected.folders.length > 0) {
+						params.push("folderList=" + encodeURIComponent(selected.folders.toString()));
+					}
+					
+					if (folderTypeCheck === undefined || !folderTypeCheck ) {
+						folderTypeCheck = "N";
+					} 
+					params.push("folderTypeCheck=" + folderTypeCheck);
+					
+					// 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: isDean으로 구분 추가
+					// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
+					params.push("subTypeC=" + (subTypeC != null? subTypeC : ""));
+					
+					openLeftPanel();
+					DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?" + params.join("&"));
+				}
+			});
 		},
 		
 		fileCopy: function() {
@@ -297,7 +419,8 @@ var buttons = (function() {
 			}
 			
 			openLeftPanel();
-			DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + selected.files.toString() + "&type=copy&folderTypeCheck=" + folderTypeCheck );
+			DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + selected.files.toString() + "&type=copy&folderTypeCheck=" + folderTypeCheck 
+					+ "&subTypeC=" + (subTypeC != null? subTypeC : ""));
 		},
 		
 		newFolder: function() {
@@ -336,25 +459,105 @@ var buttons = (function() {
 			openLeftPanel();
 			DivPopUpShow(450, 200,  "/ezWebFolder/fileRenameConfirm.do?fileId=0");
 			functionType = "";
-		}
+		},
+		
+		openFileVersionHistory: function() {
+			var selectedRows = rowContext.getSelectedRows();
+			var selectedLength = selectedRows.length;
+			
+			if (selectedLength == 0) {
+				alert(messages.strLang5);
+				return;
+			} else if (selectedLength > 1) {
+				alert(messages.strLang6);
+				return;
+			}
+			
+			var rowInfo = rowContext.getRowInfo(selectedRows[0]);
+			
+			if (rowInfo.type == 'F') {
+				openLeftPanel();
+				DivPopUpShow(450, 405, "/ezWebFolder/fileVersionManage.do?fileId=" + rowInfo.id);
+			} else {
+				alert(messages.strLang1);
+			}
+		},
+		
+		openReply: function() {
+			var selectedRows = rowContext.getSelectedRows();
+			var selectedLength = selectedRows.length;
+			
+			if (selectedLength == 0) {
+				alert(messages.strLang5);
+				return;
+			} else if (selectedLength > 1) {
+				alert(messages.strLang6);
+				return;
+			}
+			
+			var rowInfo = rowContext.getRowInfo(selectedRows[0]);
+			
+			if (rowInfo.type == 'F') {
+				$.ajax({
+					type: "POST",
+					url: "/ezWebFolder/selectedFolderCheckPermission.do",
+					data: {
+						"fileId" : rowInfo.id
+					},
+					dataType: "JSON",
+					async: true,
+					success : function(data) {
+						if (data.status != "ok" && data.code == "3") {
+							alert(messages.strLang25);
+						} else if (data.code == "1") {
+							alert(messages.strLang7);
+						} else {
+							openLeftPanel();
+							DivPopUpShow(300, 220, "/ezWebFolder/webfolderReply.do?fileId=" + rowInfo.id);
+						}
+					},
+					error : function(error) {
+						alert(messages.strLang7 + error);
+					}
+				});
+			} else {
+				alert(messages.strLang1);
+			}
+		},
+		
+		sendingMail : function() {
+			var fId = (typeof folderId == "undefined") ? "" : folderId;
+			var url = "/ezEmail/mailWrite.do?";
+			var param = "fId=" + fId;
+			
+			var popH = window.screen.availHeight * 0.8;
+			var popW = 890;
+			var popX = (window.screen.width / 2) - (popW / 2);
+			var popY = (window.screen.height / 2) - (popH / 2);
+			
+			var popS = "height=" + popH + ", width=" + popW + ", left=" + popX + ", top=" + popY;
+			
+	    	window.open(url + param, "", popS + ", status=no, toolbar=no, menubar=no, location=no, resizable=1");
+	    }
+		
 	};
 })();
 
 function optionView(obj) {
-		 if (obj.getAttribute("mode") == "off") {
-	        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
-          document.getElementById("layer_Viewpopup").style.top = "130px";
-	        document.getElementById("layer_Viewpopup").style.display = "";
-	        obj.setAttribute("class", "icon16 btn_onarrow_down");
-	        obj.setAttribute("mode", "on");
-	    } else {
-	        optionHidden();
-	    }
+	if (obj.getAttribute("mode") == "off") {
+		var a_left = $("#wfOptionDiv").offset().left - ($("#layer_Viewpopup").width() - $("#wfOptionDiv").width());
+		var a_top = $("#wfOptionDiv").offset().top + $("#wfOptionDiv").height() + 2;
+		document.getElementById("layer_Viewpopup").style.display = "";
+		obj.setAttribute("class", "icon16 btn_onarrow_down");
+		obj.setAttribute("mode", "on");
+		$("#layer_Viewpopup").css({"left":a_left, "top":a_top});
+	} else {
+		optionHidden();
 	}
- 
-function optionHidden() {
-    document.getElementById("layer_Viewpopup").style.display = "none";
-    document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
-    document.getElementById("webfolderlistoptiondiv").setAttribute("class", "icon16 btn_arrow_down");
 }
 
+function optionHidden() {
+	document.getElementById("layer_Viewpopup").style.display = "none";
+	document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
+	document.getElementById("webfolderlistoptiondiv").setAttribute("class", "icon16 btn_arrow_down");
+}

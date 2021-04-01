@@ -15,18 +15,30 @@ function selectFolder(targetID) {
 	$($element).jstree().select_node(targetID , true); 
 }
 
+var backgroundImg_URL = {
+		"task":"/images/webfolder/business_data.png", 
+		"meeting":"/images/webfolder/conference_file.png",
+		"dean":"/images/webfolder/agenda_item.png"};
+function setTopLevelIcon() {
+	var tempURL = backgroundImg_URL[subTypeC];
+	tempURL = (typeof tempURL == "undefined") ? "/images/OrganTree_cross/fldr.gif" : tempURL;
+	tempURL = "url(" + tempURL + ")";
+	$("#tree>ol li[aria-level=2]>a i.jstree-themeicon").css("background-image", tempURL);   
+}
+
 function insertLeftFolder(parentFolderId, targetId, folderName ) {
     $($element).jstree().settings.core.check_callback = true; 
-    $($element).jstree().create_node(parentFolderId, {id:targetId, text:folderName}); 
+    $($element).jstree().create_node(parentFolderId, {id:targetId, text:folderName}, "", function() {setTopLevelIcon() }); 
 }
 
 function updateLeftFolder(parentFolderId, targetId, folderName ) {
 	$($element).jstree().settings.core.check_callback = true; 
 	$($element).jstree().rename_node(targetId, folderName);
+	setTopLevelIcon();
 }
 
 function deleteLeftFolder(folderList) {
-	$($element).jstree().settings.core.check_callback = true; 
+	/* $($element).jstree().settings.core.check_callback = true; 
 	var list = new Array();
 	list = folderList.split(",");
 	
@@ -35,6 +47,10 @@ function deleteLeftFolder(folderList) {
 		targetId = list[i];
     	$($element).jstree().delete_node(targetId); 
 	}
+	setTopLevelIcon(); */
+	try {
+		folderList2(folderType);
+	} catch (ignore) {}
 }
 
 // 이동시키려고 하는 폴더 , 이동시킬곳 
@@ -54,6 +70,7 @@ function moveLeftFolder(folderList, toTargetId) {
 				// 이동시키려고 하는 폴더가 존재하지 않을시 폴더가 현재 jstree에 나타나지 않도록 삭제 
         		deleteLeftFolder(targetId);
 			}
+			folderList2(folderType);
 
     	} catch(e) {
     		deleteLeftFolder(targetId);

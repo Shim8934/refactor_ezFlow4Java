@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.json.simple.JSONObject;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezWebFolder.vo.FavoriteVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
@@ -59,6 +60,8 @@ public interface EzWebFolderService_m {
 
 	void permanetDeleteSelectedFiles(String[] fileIDList,String[] folderIDList ,LoginVO userInfo, String realPath, String flag) throws Exception;
 
+	void permanetDeleteSelectedVersions(String[] versionTokens, int tenantId, LoginVO userInfo) throws Exception;
+
 	int realFileDelete(FileVO fileVO, String realPath, LoginVO userInfo, String userName1, String userName2) throws Exception;
 	
 	int deleteFile(String fileId, int tenantId, String Flag) throws Exception;
@@ -95,13 +98,13 @@ public interface EzWebFolderService_m {
 	 **/
 	int deleteFavoritesInFolder(String folderId, int tenantId) throws Exception;
 	
-	boolean restoreFile (FileVO fileVO, int tenantId, String userId, String timeUTC, String companyId, String offset, String userName1, String userName2) throws Exception;
+	boolean restoreFile (FileVO fileVO, int tenantId, String userId, String timeUTC, String companyId, String offset, String userName1, String userName2, String primary) throws Exception;
 	
 	boolean restoreFolder (String folderId, int tenantId, String userId, String timeUTC) throws Exception;
 	
-	Map<String, Object> restoreTrashCan (String[] fileIDList, String[] folderIDList, int tenantId, String userId, String offset, String companyId, String timeUTC, String userName1, String userName2) throws Exception;
+	Map<String, Object> restoreTrashCan (String[] fileIDList, String[] folderIDList, int tenantId, String userId, String offset, String companyId, String timeUTC, String userName1, String userName2, String primary) throws Exception;
 	
-	boolean restoreFileInFolder (String folderId, int tenantId, String userId, String timeUTC, String companyId, String offset, String userName1, String userName2) throws Exception;
+	boolean restoreFileInFolder (String folderId, int tenantId, String userId, String timeUTC, String companyId, String offset, String userName1, String userName2, String primary) throws Exception;
 
 	Map<String, Object> moveTrashCan (String[] fileIDList, String[] folderIDList,String folderId, String timeUTC, LoginVO userInfo) throws Exception;
 
@@ -118,4 +121,24 @@ public interface EzWebFolderService_m {
 	List<Map<String, String>> subFolders(String folderId, String folderOwner, int tenantId ) throws Exception;
 	
 	String subFolderRealDeleteRecursive(List<Map<String, String>> subFolders, int tenantId, Map<String, Object> map, LoginVO userInfo, String flag) throws Exception;
+
+	int deleteFolderUser(FolderVO folderVO, String flag) throws Exception;
+
+	int deleteFileUser(FileVO fileVO, String flag) throws Exception;
+	
+	String setWebFolderApplyHistory(String primary, int tenantId, String companyId, String folderName, String content, String folderSubType, List<Map<String, String>> memberList, String usingS, String usingE) throws Exception;
+	
+	int getWebFolderApplyHistoryListCount(int tenantId, String companyId, String folderSubType) throws Exception;
+	
+	List<Map<String, String>> getWebFolderApplyHistoryList(int tenantId, String companyId, String folderSubType, int startList, int endList) throws Exception;
+
+	Map<String, String> getWebFolderApplyHistory(String applyId) throws Exception;
+	
+	List<Map<String, String>> getWebFolderApplyHistoryMember(String applyId) throws Exception;
+
+	List<OrganUserVO> getWebFolderAdminUserList(String companyId) throws Exception;
+	
+	void deleteWebFolderApplyHistory(String applyId) throws Exception;
+	
+	void changeWebFolderAppliApprovalStatus(String applyId, String status) throws Exception;
 }

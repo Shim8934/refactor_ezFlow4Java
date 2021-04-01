@@ -8,6 +8,7 @@
 	<typeAlias  alias="webFolderFolderSimpleVO"      type="egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO"/>
 	<typeAlias  alias="webFolderloginVO" 			type="egovframework.let.user.login.vo.LoginVO"/>
 	<typeAlias 	alias="webFolderTreeVO"         type="egovframework.ezEKP.ezWebFolder.vo.FolderTreeVO"/>
+	<typeAlias  alias="webFolderSimpleFileVO"          	type="egovframework.ezEKP.ezWebFolder.vo.FileVO"/>
 	
 	<!-- 로그인 처리를 위한 resultMap -->
 	<resultMap id="login" class="egovframework.let.user.login.vo.LoginVO">
@@ -69,12 +70,37 @@
         <result property="folderSort"      		column="FOLDER_SORT"			 columnIndex="22"/>        
         <result property="fileTypeName"         column="TYPE_NAME"          	 columnIndex="23"/>            
         <result property="ownerId"		        column="OWNER_ID"          		 columnIndex="24"/>            
+        <result property="encryptedFlag"		column="ENCRYPTED"				 columnIndex="25"/>
+        <result property="depth"				column="DEPTH"					 columnIndex="26"/>
+        <result property="rootId"				column="ROOT_ID"				 columnIndex="27"/>
+        <result property="parentId"				column="PARENT_ID"				 columnIndex="28"/>
+        <result property="hierarchicalPath"		column="HIERARCHICAL_PATH"		 columnIndex="29"/>
                                                                                                                                                                          
                                                                                                                                                                                 
                                                                                                                                                                                   
 <!--         <result property="fileTypeId"           column="filetype_id"            columEND AS FILESHARE_STATUS,                                                  nIndex="16" /> -->
 <!--         <result property="fileIconUrl"          column="filetype_icon"          columdecode (f.FILE_EXT , 'folder',0,1) as FOLDER_SORT,                        nIndex="18" /> -->
 <!--         <result property="tenantId"         	column="tenant_id"              columntype.TYPE_NAME 	AS TYPE_NAME    		                                  Index="19" /> -->
+    </resultMap>
+                                                                                                                                                                  
+	<!-- File resultMap -->
+    <resultMap id="fileSimpleVO" class="webFolderSimpleFileVO">
+        <result property="fileId"               column="FILE_ID"                 columnIndex="1"/>                                                             
+        <result property="fileName"         	column="FILE_NAME"               columnIndex="2"/>                                                    
+        <result property="filePath"         	column="FILE_PATH"               columnIndex="3"/>                                                    
+        <result property="fileSize"          	column="FILE_SIZE"               columnIndex="4"/>                                                        
+        <result property="typeId"          		column="TYPE_ID"                 columnIndex="5"/>                                                    
+        <result property="downloadCnt"          column="DOWN_COUNT"              columnIndex="6"/>                                                        
+        <result property="fileExt"           	column="FILE_EXT"                columnIndex="7"/>                                                      
+        <result property="folderId"           	column="FOLDER_ID"               columnIndex="8"/>                                                    
+        <result property="useStatus"        	column="USE_STATUS"         	 columnIndex="9"/>                                                      
+        <result property="createId"             column="CREATE_ID"            	 columnIndex="10"/>                                                    
+        <result property="createName1"          column="CREATE_NAME1"          	 columnIndex="11"/>                                                      
+        <result property="createName2"          column="CREATE_NAME2"          	 columnIndex="12"/>                                                      
+        <result property="createDate"           column="CREATE_DATE"             columnIndex="13"/>                                                      
+        <result property="updateId"             column="UPDATE_ID"               columnIndex="14"/>                                                    
+        <result property="updateDate"           column="UPDATE_DATE"             columnIndex="15"/>                                                        
+        <result property="tenantId"         	column="TENANT_ID"               columnIndex="16"/>     
     </resultMap>
     
     <!-- FileType resultMap -->
@@ -104,6 +130,8 @@
         <result property="updateDate"           column="UPDATE_DATE"              columnIndex="16" />
         <result property="companyId"            column="COMPANY_ID"               columnIndex="17" />      
         <result property="tenantId"         	column="TENANT_ID"                columnIndex="18" />
+        <result property="folderSubType"       	column="FOLDER_SUBTYPE"           columnIndex="19" />
+        
     </resultMap>
     
     <!-- FolderSimple resultMap -->
@@ -143,7 +171,12 @@
 				END AS FILESHARE_STATUS,
 				decode (f.FILE_EXT , 'folder',0,1) as FOLDER_SORT,
 				type.TYPE_NAME 	AS TYPE_NAME,
-				f.CREATE_ID 	AS OWNER_ID 
+				f.CREATE_ID 	AS OWNER_ID,
+				NVL2(enc.file_id, 1, 0) as ENCRYPTED,
+				f.DEPTH,
+				f.ROOT_ID,
+				f.PARENT_ID,
+				f.HIERARCHICAL_PATH
 		]]>	
     </sql>
     <sql id="fldSelect">
@@ -151,7 +184,7 @@
 			union all 
 	    	select DISTINCT
 				folder.FOLDER_ID    AS FILE_ID 	    ,     
-				folder.FOLDER_NAME1 AS FILE_NAME	,     
+				decode ( #primary# , '1' , folder.FOLDER_NAME1, folder.FOLDER_NAME2) AS FILE_NAME	,     
 				folder.FOLDER_PATH  AS FILE_PATH	,     
 				0					AS FILE_SIZE	,     
 				'folder'			AS TYPE_ID		, 	  
@@ -176,7 +209,12 @@
 				END AS FILESHARE_STATUS,
 				decode (FILE_EXT , 'folder',0,1) as FOLDER_SORT,
 				type.TYPE_NAME 	AS TYPE_NAME,
-				folder.OWNER_ID 	AS OWNER_ID 
+				folder.OWNER_ID 	AS OWNER_ID,
+				0 as ENCRYPTED,
+				1 as DEPTH,
+				folder.FOLDER_ID as ROOT_ID,
+				folder.FOLDER_ID as PARENT_ID,
+				folder.FOLDER_ID as HIERARCHICAL_PATH
 		]]>			      
     </sql>
     
@@ -360,24 +398,42 @@
 			    F.FOLDER_LEVEL AS FOLDERLEVEL,
 			    F.FOLDER_PATH	 AS FOLDERPATH  
             FROM TBL_WEBFOLDER_FOLDER F
-            JOIN (
-				SELECT FF.FOLDER_PATH
-				FROM TBL_WEBFOLDER_FOLDER FF
-				JOIN TBL_WEBFOLDER_FOLDERUSER FU
-				ON FF.FOLDER_ID = FU.FOLDER_ID
-				AND FF.TENANT_ID = FU.TENANT_ID
-				AND FF.FOLDER_TYPE = 'C'
-				AND FF.COMPANY_ID = #compId#
-				AND FU.USER_ID IN 
+            JOIN TBL_WEBFOLDER_FOLDERUSER FU
+				ON F.FOLDER_ID = FU.FOLDER_ID
+				AND F.TENANT_ID = FU.TENANT_ID
+				AND F.FOLDER_TYPE = 'C'
+			WHERE F.TENANT_ID = #tenantId#
+			AND F.USE_STATUS = 'Y'
 		]]>
-			<iterate property="idList" open="(" close=")" conjunction=",">
-				#idList[]#
-			</iterate>
+		<isNotEmpty property="subTypeC">
+			AND
+				F.FOLDER_SUBTYPE    = #subTypeC#
+			<isNotEmpty prepend="AND" property="expiredFolders">
+				F.FOLDER_ID NOT IN
+				<iterate property="expiredFolders" open="(" close=")" conjunction=",">
+					#expiredFolders[]#
+				</iterate>
+			</isNotEmpty>
+		</isNotEmpty>
+		<!-- 2021-01-20 김은실 - [카이스트] 속도개선: join의 조건으로는 cost가 심하여 where의 조건으로 변경 (설마 데이터 사각지대가 있진 않겠지..??) -->
+			AND ( 
+					( FU.USER_ID IN 
+					<iterate property="idList" open="(" close=")" conjunction=",">
+						#idList[]#
+					</iterate>
+					<!-- 2020-12-30 김은실 - [카이스트] 하위부서를 포함시키지 않도록 했기 때문에, 불필요한 쿼리로 인한 부하를 줄임.
+					<iterate property="userDeptList">
+						OR ( FU.SUBDEPT_PERMITTED = 1 
+							 AND #userDeptList[]# IN (SELECT CN FROM TBL_DEPTMASTER
+							 						  WHERE DEPT_CD_PATH LIKE CONCAT(CONCAT('%',FU.USER_ID),'%') 
+							 							    AND EXTENSIONATTRIBUTE2 = FU.COMPANY_ID AND TENANT_ID = FU.TENANT_ID)
+							)
+					</iterate>
+					 -->
+					)
+					$managerFolderStr$
+				)
 		<![CDATA[
-				WHERE FF.TENANT_ID = #tenantId# ) FP
-            ON F.FOLDER_PATH LIKE  FP.FOLDER_PATH || '%'
-			WHERE F.USE_STATUS = 'Y'
-			AND F.TENANT_ID = #tenantId#
 	        UNION
 	        SELECT
 	        	FOLDER_ID AS ID,
@@ -399,7 +455,7 @@
 	        AND FOLDER_UPPER = 'root'
 	        AND USE_STATUS = 'Y'
 	        AND TENANT_ID = #tenantId#
-	        ORDER BY SELECTED DESC ,  FOLDERNAME1
+	        ORDER BY SELECTED DESC , FOLDERLEVEL, FOLDERNAME1
 		]]>
 	</select>
 	
@@ -426,6 +482,7 @@
 					inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  and type.tenant_id  = #tenantId# 
 					left outer join tbl_webfolder_favor s on f.file_id = s.target_id and s.user_id = #userId# 
 						and s.tenant_id = #tenantId# and s.target_type ='F'
+					left join tbl_webfolder_encrypted_file enc on enc.file_id = f.file_id and enc.tenant_id = f.tenant_id
 					where f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'  
 					
 				]]>
@@ -460,7 +517,7 @@
 				</isNotEqual>
 				
 			<![CDATA[
-				ORDER BY FOLDER_SORT, CREATE_DATE DESC, FILE_ID
+				ORDER BY FOLDER_SORT, CASE WHEN FOLDER_SORT = 0 THEN FILE_NAME END, ROOT_ID DESC, HIERARCHICAL_PATH
                 ) pchk 
 			where ROWNUM <= #pEnd# + #pStart#
             )
@@ -491,6 +548,7 @@
 					inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  and type.tenant_id  = #tenantId# 
 					left outer join tbl_webfolder_favor s on f.file_id = s.target_id and s.user_id = #userId# 
 						and s.tenant_id = #tenantId# and s.target_type ='F'
+					left join tbl_webfolder_encrypted_file enc on enc.file_id = f.file_id and enc.tenant_id = f.tenant_id
 					where f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'  
 					
 				]]>
@@ -514,18 +572,37 @@
 		   		]]>	
 		   		<isEqual property="parentId" compareValue="root" > 
 		      	 	<isEqual property="folderType" compareValue="C" >
+						AND ( u.user_id IN  
+							<iterate property="idListUpgrade" open="(" close=")" conjunction=",">
+								#idListUpgrade[]#
+							</iterate>
+							<iterate property="userDeptList">
+								OR ( U.SUBDEPT_PERMITTED = 1 
+									 AND #userDeptList[]# IN (SELECT CN FROM TBL_DEPTMASTER
+									 						  WHERE DEPT_CD_PATH LIKE CONCAT(CONCAT('%',U.USER_ID),'%') 
+									 							    AND EXTENSIONATTRIBUTE2 = U.COMPANY_ID AND TENANT_ID = U.TENANT_ID)
+									)
+							</iterate>
+							)
 						and folder.folder_id in (select distinct CASE WHEN ( substr(folder.folder_path, instr(folder.folder_path ,'|',1,2)+1,                    
 						(instr(folder.folder_path ,'|',1,3)-instr(folder.folder_path ,'|',1,2)-1)) in (                   
 						select distinct substr(folder.folder_path,instr(folder.folder_path ,'|',1,2)+1,                    
 						instr(folder.folder_path ,'|',1,3)-instr(folder.folder_path ,'|',1,2)-1)                   
 						from tbl_webfolder_folder folder left outer join tbl_webfolder_folderuser u on u.FOLDER_ID = folder.FOLDER_ID                   
 						where folder.folder_level > 0                    
-						AND u.user_id IN  
-						<iterate property="idList" open="(" close=")" conjunction=",">
-							#idList[].id#
-						</iterate>))
+						))
 			         then folder.folder_id 
 					else null end as aaa  from dual)
+					<isNotEmpty property="subTypeC">
+						AND
+							FOLDER.FOLDER_SUBTYPE    = #subTypeC#
+						<isNotEmpty prepend="AND" property="expiredFolders">
+							FOLDER.FOLDER_ID NOT IN
+							<iterate property="expiredFolders" open="(" close=")" conjunction=",">
+								#expiredFolders[]#
+							</iterate>
+						</isNotEmpty>
+					</isNotEmpty>
 		      	   </isEqual>  
 		         </isEqual> 
 		         <![CDATA[ 
@@ -583,6 +660,7 @@
 						ON type.TYPE_ID = f.TYPE_ID AND type.TENANT_ID = #tenantId#
 					left outer join tbl_webfolder_favor s on f.file_id = s.target_id and s.user_id = #userId# 
 						and s.tenant_id = #tenantId# and s.target_type ='F'   
+					left join tbl_webfolder_encrypted_file enc on enc.file_id = f.file_id and enc.tenant_id = f.tenant_id
 				 WHERE f.USE_STATUS = 'Y'
 				 AND f.TENANT_ID = #tenantId#
    		</isEqual>
@@ -601,6 +679,7 @@
 				inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  and type.tenant_id = f.tenant_id 
 				left outer join tbl_webfolder_favor s on f.file_id = s.target_id and s.user_id = #userId# 
 						and s.tenant_id = #tenantId# and s.target_type ='F' 
+				left join tbl_webfolder_encrypted_file enc on enc.file_id = f.file_id and enc.tenant_id = f.tenant_id
 				where f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'
 			]]>
 		</isNotEqual>
@@ -615,7 +694,7 @@
        		]]> 
 		</isNotEqual>
 		<![CDATA[
-			ORDER BY FOLDER_SORT, CREATE_DATE DESC, FILE_ID
+			ORDER BY FOLDER_SORT, CASE WHEN FOLDER_SORT = 0 THEN FILE_NAME END, ROOT_ID DESC, HIERARCHICAL_PATH
 	            ) pchk
 	           where ROWNUM <= #pEnd# + #pStart#
             )
@@ -644,6 +723,8 @@
 							inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  and type.tenant_id = f.tenant_id
 							left outer join tbl_webfolder_favor s on f.file_id = s.target_id and s.user_id = #userId# 
 								and s.tenant_id = #tenantId# and s.target_type ='F'   
+							left join tbl_webfolder_favor
+							left join tbl_webfolder_encrypted_file enc on enc.file_id = f.file_id and enc.tenant_id = f.tenant_id
 							where f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'
 							
 						]]>
@@ -671,7 +752,7 @@
 					]]>
 					<include refid="searchAll"/>
 					<![CDATA[
-					ORDER BY FOLDER_SORT, CREATE_DATE DESC, FILE_ID
+					ORDER BY FOLDER_SORT, CASE WHEN FOLDER_SORT = 0 THEN FILE_NAME END, ROOT_ID DESC, HIERARCHICAL_PATH
 	                ) pchk 
 				where ROWNUM <= #pEnd# + #pStart#
 	            )
@@ -698,6 +779,7 @@
 							inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  and type.tenant_id = f.tenant_id
 							left outer join tbl_webfolder_favor s on f.file_id = s.target_id and s.user_id = #userId# 
 								and s.tenant_id = #tenantId# and s.target_type ='F'   
+							left join tbl_webfolder_encrypted_file enc on enc.file_id = f.file_id and enc.tenant_id = f.tenant_id
 							where f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'
 							
 						]]>
@@ -716,6 +798,16 @@
 								</iterate>))
 					        	then folder.folder_id 
 								else null end as aaa  from dual)
+								<isNotEmpty property="subTypeC">
+									AND
+										FOLDER.FOLDER_SUBTYPE    = #subTypeC#
+									<isNotEmpty prepend="AND" property="expiredFolders">
+										FOLDER.FOLDER_ID NOT IN
+										<iterate property="expiredFolders" open="(" close=")" conjunction=",">
+											#expiredFolders[]#
+										</iterate>
+									</isNotEmpty>
+								</isNotEmpty>
 				      	   </isEqual>  
 				         </isEqual> 
 						<include refid="fldSelect"/>
@@ -751,6 +843,16 @@
 								</iterate>))
 					       		then folder.folder_id 
 								else null end as aaa  from dual)
+								<isNotEmpty property="subTypeC">
+									AND
+										FOLDER.FOLDER_SUBTYPE    = #subTypeC#
+									<isNotEmpty prepend="AND" property="expiredFolders">
+										FOLDER.FOLDER_ID NOT IN
+										<iterate property="expiredFolders" open="(" close=")" conjunction=",">
+											#expiredFolders[]#
+										</iterate>
+									</isNotEmpty>
+								</isNotEmpty>
 				      	   </isEqual>  
 				         </isEqual> 
 					<![CDATA[
@@ -799,6 +901,7 @@
 						ON type.TYPE_ID = f.TYPE_ID AND type.TENANT_ID = #tenantId#
 					left outer join tbl_webfolder_favor s on f.file_id = s.target_id and s.user_id = #userId# 
 						and s.tenant_id = #tenantId# and s.target_type ='F'    
+					left join tbl_webfolder_encrypted_file enc on enc.file_id = f.file_id and enc.tenant_id = f.tenant_id
 				 WHERE f.USE_STATUS = 'Y'
 				 AND f.TENANT_ID = #tenantId#
 	   		</isEqual>
@@ -818,6 +921,7 @@
 					inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  and type.tenant_id = f.tenant_id
 					left outer join tbl_webfolder_favor s on f.file_id = s.target_id and s.user_id = #userId# 
 						and s.tenant_id = #tenantId# and s.target_type ='F'   
+					left join tbl_webfolder_encrypted_file enc on enc.file_id = f.file_id and enc.tenant_id = f.tenant_id
 					where f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'
 				]]>
 			</isNotEqual>
@@ -917,6 +1021,20 @@
 			]]>
 			<isEqual property="parentId" compareValue="root" > 
 	      	 	<isEqual property="folderType" compareValue="C" >
+					AND ( u.user_id IN  
+					<iterate property="idListUpgrade" open="(" close=")" conjunction=",">
+						#idListUpgrade[]#
+					</iterate>
+					<!-- 2020-12-30 김은실 - [카이스트] 하위부서를 포함시키지 않도록 했기 때문에, 불필요한 쿼리로 인한 부하를 줄임.
+					<iterate property="userDeptList">
+						OR ( U.SUBDEPT_PERMITTED = 1 
+							 AND #userDeptList[]# IN (SELECT CN FROM TBL_DEPTMASTER
+							 						  WHERE DEPT_CD_PATH LIKE CONCAT(CONCAT('%',U.USER_ID),'%') 
+							 							    AND EXTENSIONATTRIBUTE2 = U.COMPANY_ID AND TENANT_ID = U.TENANT_ID)
+							)
+					</iterate>
+					 -->
+					)
 					and folder.folder_id in (
 					select distinct 
 						CASE WHEN ( substr(folder.folder_path, instr(folder.folder_path ,'|',1,2)+1,                    
@@ -925,12 +1043,21 @@
 							instr(folder.folder_path ,'|',1,3)-instr(folder.folder_path ,'|',1,2)-1)                   
 							from tbl_webfolder_folder folder left outer join tbl_webfolder_folderuser u on u.FOLDER_ID = folder.FOLDER_ID                   
 							where folder.folder_level > 0                    
-							AND u.user_id IN  
-					<iterate property="idList" open="(" close=")" conjunction=",">
-						#idList[].id#
-					</iterate>))
+						))
 				        then folder.folder_id 
-						else '0' end as aaa  from dual)
+						else null end as aaa  from dual)
+					<isNotNull property="subTypeC">
+					<isNotEmpty property="subTypeC">
+						AND
+							FOLDER.FOLDER_SUBTYPE    = #subTypeC#
+						<isNotEmpty prepend="AND" property="expiredFolders">
+							FOLDER.FOLDER_ID NOT IN
+							<iterate property="expiredFolders" open="(" close=")" conjunction=",">
+								#expiredFolders[]#
+							</iterate>
+						</isNotEmpty>
+					</isNotEmpty>
+					</isNotNull>
 	      	   </isEqual>  
 	         </isEqual> 
 	         
@@ -1052,13 +1179,36 @@
 					instr(folder.folder_path ,'|',1,3)-instr(folder.folder_path ,'|',1,2)-1)                   
 					from tbl_webfolder_folder folder left outer join tbl_webfolder_folderuser u on u.FOLDER_ID = folder.FOLDER_ID                   
 					where folder.folder_level > 0                    
-					AND                    u.user_id IN  
-		   		
-				<iterate property="idList" open="(" close=")" conjunction=",">
-					#idList[].id#
-				</iterate>))
-				    then folder.folder_id 
+						))
+			         then folder.folder_id 
 					else null end as aaa  from dual)
+					AND FOLDER.FOLDER_ID IN (SELECT FOLDER_ID FROM TBL_WEBFOLDER_FOLDERUSER 
+											WHERE user_id IN  
+							<iterate property="idListUpgrade" open="(" close=")" conjunction=",">
+								#idListUpgrade[]#
+							</iterate>
+							<!-- 2020-12-30 김은실 - [카이스트] 하위부서를 포함시키지 않도록 했기 때문에, 불필요한 쿼리로 인한 부하를 줄임.
+							<iterate property="userDeptList">
+								OR ( U.SUBDEPT_PERMITTED = 1 
+									 AND #userDeptList[]# IN (SELECT CN FROM TBL_DEPTMASTER
+									 						  WHERE DEPT_CD_PATH LIKE CONCAT(CONCAT('%',U.USER_ID),'%') 
+									 							    AND EXTENSIONATTRIBUTE2 = U.COMPANY_ID AND TENANT_ID = U.TENANT_ID)
+									)
+							</iterate>
+							 -->
+							)
+					<isNotNull property="subTypeC">
+						<isNotEmpty property="subTypeC">
+							AND
+								FOLDER.FOLDER_SUBTYPE    = #subTypeC#
+							<isNotEmpty prepend="AND" property="expiredFolders">
+								FOLDER.FOLDER_ID NOT IN
+								<iterate property="expiredFolders" open="(" close=")" conjunction=",">
+									#expiredFolders[]#
+								</iterate>
+							</isNotEmpty>
+						</isNotEmpty>
+					</isNotNull>
 				</isEqual>  
 			</isEqual> 
 			<![CDATA[
@@ -1223,8 +1373,21 @@
 		<![CDATA[
 			SELECT *
 			FROM TBL_WEBFOLDER_FOLDER
-			WHERE TENANT_ID = #tenantId# and FOLDER_ID = #folderId# 
 		]]>
+			WHERE 
+				TENANT_ID = #tenantId# 
+		<isNotEmpty property="folderId">
+			AND 
+				FOLDER_ID = #folderId# 
+		</isNotEmpty> 
+		<isEmpty property="folderId">
+		<isNotEmpty property="userId">
+			AND 
+				Upper(FOLDER_TYPE) = 'U' 
+			AND 
+				OWNER_ID = #userId# 
+		</isNotEmpty>
+		</isEmpty> 
 	</select>
 	<select id="EzWebFolderDAO_y.getUserInfo" parameterClass="Map" resultMap ="login">
 		<![CDATA[
@@ -1277,7 +1440,8 @@
 		    	UPDATE_ID,
 		    	UPDATE_DATE,
 		    	COMPANY_ID,
-		    	TENANT_ID
+		    	TENANT_ID,
+		    	FOLDER_SUBTYPE
 		    	 )
 		    VALUES(
 		    	#id#,
@@ -1297,7 +1461,8 @@
 		    	#userId#,
 		    	TO_DATE(#timeUTC#,'YYYY-MM-DD HH24:MI:SS'),
 		    	#comId#,
-		    	#tenantId#
+		    	#tenantId#,
+		    	#folderSubType#
 		    	)
     
 	</insert>
@@ -1490,15 +1655,36 @@
 		ON FU.FOLDER_ID = F.FOLDER_ID
 		AND FU.TENANT_ID = F.TENANT_ID
 		WHERE F.FOLDER_TYPE = 'C'
-		AND FU.USER_ID IN
+		AND ( FU.USER_ID IN
 		<iterate property="permissionIdList" open="(" close=")" conjunction=",">
 			#permissionIdList[]#
 		</iterate>
-		AND FU.FOLDER_ID IN
-		<iterate property="folderIdList" open="(" close=")" conjunction=",">
-			#folderIdList[]#
+		<!-- 2020-12-11 김은실 - [카이스트] 하위부서를 포함시키지 않도록 했기 때문에, 불필요한 쿼리로 인한 부하를 줄임.
+		<iterate property="userDeptList">
+			OR ( FU.SUBDEPT_PERMITTED = 1 
+				 AND #userDeptList[]# IN (SELECT CN FROM TBL_DEPTMASTER
+				 						  WHERE DEPT_CD_PATH LIKE CONCAT(CONCAT('%',FU.USER_ID),'%') 
+				 							    AND EXTENSIONATTRIBUTE2 = FU.COMPANY_ID AND TENANT_ID = FU.TENANT_ID)
+				)
 		</iterate>
+		 -->
+			)
+		AND FU.FOLDER_ID = #folderId#
 		AND FU.TENANT_ID = #tenantId#
+	</select>
+	<select id="EzWebFolderDAO_y.checkCompanyFilePermission" parameterClass="Map" resultClass="Integer">
+		SELECT COUNT(*) 
+		FROM TBL_WEBFOLDER_FILE F
+		JOIN TBL_WEBFOLDER_FILEUSER FU
+		ON FU.FILE_ID = F.ROOT_ID
+		AND FU.TENANT_ID = F.TENANT_ID
+		AND ( FU.USER_ID IN
+		<iterate property="permissionIdList" open="(" close=")" conjunction=",">
+			#permissionIdList[]#
+		</iterate>
+			)
+		WHERE F.FILE_ID = #fileId#
+		AND F.TENANT_ID = #tenantId#
 	</select>
 	
 	<select id="EzWebFolderDAO_y.getFileDetailForExplorer"  parameterClass="Map" resultMap="fileVO">
@@ -1526,9 +1712,16 @@
 				'' 						AS FAVORITE_STATUS,
 				'' 						AS FILESHARE_STATUS,
 				decode(f.FILE_EXT, 'folder',0,1) as FOLDER_SORT,
-				'' 						AS TYPE_NAME,
-				f.CREATE_ID 	AS OWNER_ID 		
-			FROM TBL_WEBFOLDER_FILE f LEFT OUTER JOIN TBL_WEBFOLDER_FOLDER folder on folder.FOLDER_ID = f.FOLDER_ID and f.TENANT_ID = folder.TENANT_ID
+				ft.TYPE_NAME 			AS TYPE_NAME,
+				f.CREATE_ID 			AS OWNER_ID,
+				0 AS ENCRYPTED,
+				f.DEPTH,
+				f.ROOT_ID,
+				f.PARENT_ID,
+				f.HIERARCHICAL_PATH
+			FROM TBL_WEBFOLDER_FILE f LEFT OUTER JOIN TBL_WEBFOLDER_FOLDER folder 
+			on folder.FOLDER_ID = f.FOLDER_ID and f.TENANT_ID = folder.TENANT_ID 
+			left outer join tbl_webfolder_filetype ft on ft.file_ext = LOWER(f.file_ext)
 			WHERE f.FILE_ID = #fldFileId# AND f.TENANT_ID = #tenantId#
 		]]>
 	</select>
@@ -1558,7 +1751,12 @@
 				'' 					AS FILESHARE_STATUS,  
 				decode(type.FILE_EXT, 'folder',0,1) as FOLDER_SORT,
 				'' 	AS TYPE_NAME,
-				folder.OWNER_ID 	AS OWNER_ID 	
+				folder.OWNER_ID 	AS OWNER_ID,
+				0 AS ENCRYPTED,
+				1 AS DEPTH,
+				folder.FOLDER_ID AS ROOT_ID,
+				folder.FOLDER_ID AS PARENT_ID,
+				folder.FOLDER_ID AS HIERARCHICAL_PATH
 			FROM TBL_WEBFOLDER_FOLDER folder left outer join tbl_webfolder_filetype type on  'folder' = type.FILE_EXT and folder.TENANT_ID = type.TENANT_ID
 				WHERE folder.FOLDER_ID = #fldFileId# and folder.TENANT_ID =#tenantId# 
 		]]>
@@ -1645,9 +1843,104 @@
 			WHERE 
 				FOLDER_UPPER = 'root' 
 			AND 
-				OWNER_ID = #userId#
+				OWNER_ID = #ownerId#
 			AND 
 				TENANT_ID = #tenantId#
+			AND 
+				FOLDER_TYPE = #folderType#
 		]]>
 	</select>
+	<select id="EzWebFolderDAO_y.selectWebfolderFiletoAnother" parameterClass="Map" resultClass="java.util.HashMap">
+		<![CDATA[
+			SELECT 
+				FILE_NAME, FILE_PATH, FILE_SIZE  
+			FROM 
+				TBL_WEBFOLDER_FILE
+			WHERE 
+				(FOLDER_ID = #folderId# 
+				AND 
+				FILE_ID = #fileId#)
+				$query$
+		]]>
+	</select>
+    <select id="EzWebFolderDAO_y.getWebFolderUserGroupList" parameterClass="Map" resultClass="String">
+    	<![CDATA[
+    		SELECT
+    			DISTINCT(user_id)
+    		FROM
+    			tbl_webfolder_folderuser
+    		WHERE
+    			company_id = #companyId#
+    		AND
+    			tenant_id = #tenantId#
+    		AND
+    			user_type = 'GROUP'
+    	]]>
+    </select>
+    <select id="EzWebFolderDAO_y.getjikWiChekAddjobList" parameterClass="Map" resultClass="String">
+    	<![CDATA[
+    		SELECT TO_CHAR(extensionattribute7) FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#
+			UNION
+			SELECT TO_CHAR(extensionattribute8) FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#
+			UNION
+			SELECT jobid FROM tbl_addjobmaster WHERE cn = #userId# AND tenant_id = #tenantId#
+    	]]>
+    </select>
+    <select id="EzWebFolderDAO_y.selectFileDetail" parameterClass="Map" resultMap="fileSimpleVO">
+    	<![CDATA[
+    		select 
+    			f.* 
+			from 
+				tbl_webfolder_file f inner join tbl_webfolder_folder folder 
+			on 
+					f.folder_id = folder.folder_id 
+				and 
+					folder.tenant_id = #tenantId# 
+			where 
+					f.folder_id = #folderId# 
+				and 
+					f.file_id = #fileId# 
+				and 
+					f.use_status != 'T'
+    	]]>
+    </select>
+    <select id="EzWebFolderDAO_y.getPortletFolderId" parameterClass="Map" resultClass="String">
+    	<![CDATA[
+    		SELECT 
+    			PROPERTY_VALUE 
+    		FROM 
+    			TBL_USER_CONFIG 
+    		WHERE 
+    			TENANT_ID = #tenantId# 
+    		AND 
+    			USER_ID = #ownerId#
+    		AND 
+    			PROPERTY_NAME = 'webfolderPortletFolderId'
+    	]]>
+    </select>
+    <select id="EzWebFolderDAO_y.getRootFolderListInfo" parameterClass="Map" resultClass="java.util.HashMap">
+    	<![CDATA[
+    		SELECT 
+    			distinct folder.FOLDER_ID AS FOLDER_ID, 
+    			folder.FOLDER_NAME1 AS FOLDER_NAME 
+    		FROM 
+    			TBL_WEBFOLDER_FOLDER folder
+    		LEFT JOIN 
+    			TBL_WEBFOLDER_FOLDERUSER fuser ON fuser.FOLDER_ID = folder.FOLDER_ID 
+    		WHERE 
+    			folder.FOLDER_TYPE = 'C' 
+    		AND 
+    			folder.FOLDER_SUBTYPE = #folderSubType#
+			AND 
+				folder.FOLDER_LEVEL = 1 
+			AND 
+				folder.USE_STATUS = 'Y'
+			AND 
+				fuser.USER_ID IN 
+    	]]>
+   		<iterate property="idList" open="(" close=")" conjunction=",">
+			#idList[]#
+		</iterate>
+			ORDER BY folder.FOLDER_NAME1
+    </select>
 </sqlMap>

@@ -32,6 +32,11 @@
 		.wfFileFavorite .wfFileCreator .wfFilePath .wfFileShare {
 			display:none;
 		}
+		.wfFilecheck 		{min-width:10px; width:5%;}
+		.wfFileType 		{min-width:10px; width:7%;}
+		.wfFileName 		{min-width:10px; width:59%;}
+		.wfFileSize 		{min-width:10px; width:12%;}
+		.wfFileUpdateDate 	{min-width:10px; width:15%;}
 	</style>	
 	
     <script type="text/javascript">
@@ -45,7 +50,7 @@
 		var strSuccess  = "<spring:message code='ezWebFolder.t27' />";
 		var pEnd =10;
 		var folderId = "<c:out value='${folderId}'/>";
-		var folderType = "<c:out value='${folderType}'/>";
+		var folderType = "C";
 		var allFileFlag = "${allFileFlag}";
 		var resultErr1 = "<spring:message code='ezWebFolder.t306'/>";
 		var resultErr2 = "<spring:message code='ezWebFolder.t305'/>";
@@ -63,6 +68,9 @@
 		var sortType = null;
 		var filePickArr = new Array();
 		var filePickObj = new Object();
+		var folderInfo = '${folderInfo}';
+		var jsonFolderInfo = JSON.parse(folderInfo);
+		var selectFileList = new Array();
 		
 		document.onselectstart = function() {return false;};
 		
@@ -71,6 +79,13 @@
 		}
 		
 		window.onload = function() {
+			$("#dragDropArea").css("height",  window.innerHeight * 0.42);
+			
+	        for(var i=0; i<jsonFolderInfo.length; i++){
+	        	var option = "<option value='" + jsonFolderInfo[i].FOLDER_ID 
+	        		+ "'>" + jsonFolderInfo[i].FOLDER_NAME + "</option>";
+	        	$('#taskRootFolder').append(option);
+	        }
 			getFileList(folderId);
 			
 			searchContext.setSearchStartEventHandler(function() {
@@ -82,6 +97,9 @@
 				getFileList(folderId);
 			});
 			
+			// 하나씩만 선택됨
+			rowContext.setSingleMode();
+
 			var listHeader = document.getElementsByClassName("headListClick");
 			for(var i = 0 ; i <listHeader.length; i++) {
 				listHeader[i].addEventListener("click", function(event) {
@@ -175,13 +193,12 @@
 	    	}
 	    	
 	    	searchRequirement = searchContext.getCurrentRequirement();
-	    	folderId = a;
 			$.ajax ({
 				type:"POST",
 				async: true,
 				url : "/ezWebFolder/fileList.do",
 				data : { 
-					 "folderId"   		: folderId,
+					 "folderId"   		: a,
 					 "folderType" 		: folderType,
 					 "currPage"   		: pagination.currentPage(),
 					 "listCount"  		: pagination.listSize(),
@@ -194,18 +211,19 @@
 					 "searchEndDate" 	: searchRequirement.endDate,
 					 "allFileFlag"		: allFileFlag,
 					 "sortType"			: sortType,
-					 "sortColumn"		: sortColumn
+					 "sortColumn"		: sortColumn,
+					 "subTypeC"			: "task"
 					},
 				dataType: "JSON",
 				success : function (data) {
-					successFile(data);
+					successFile(data, a);
 				},
 				error : function(error) {
 				}
 			});
 		}
 	    
-		function successFile(data) {
+		function successFile(data, a) {
 			if (data.status == "error") {
 				if (data.code == 1) {
 					console.log("<spring:message code='ezWebFolder.t306' />");
@@ -218,6 +236,7 @@
 					return;
 				}
 			}
+			folderId = a;
 			userId = data.data.userId;
 			var result = data.data;
 			
@@ -258,7 +277,7 @@
 						
 							var lastTh = $("#tblFileList1 tr th").last();
 							lastTh.attr("id", "forScroll");
-							lastTh.css("width", "9px");
+							lastTh.css("width", "15px");
 							
 					}
 				}
@@ -390,6 +409,9 @@
 					trElmt.setAttribute("targetCreater", result[i]["createId"]);
 					trElmt.setAttribute("targetPath", result[i]["filePosition"]);
 					
+					var encryptedFlag = result[i]["encryptedFlag"];
+					trElmt.setAttribute("encryptedFlag", encryptedFlag);
+
 					if (result[i]["targetType"]) {
 						trElmt.setAttribute("targetFunction", resultJson["folderType"]);
 					}
@@ -413,6 +435,7 @@
 					inputElmt.addEventListener("dblclick", function(event) { event.stopPropagation(); });
 					
 					var selectedFileCheck = folderId + "/" + result[i]["fileId"];
+
 					if (filePickArr.indexOf(selectedFileCheck) > -1){
 						inputElmt.setAttribute("checked", true);
 						trElmt.setAttribute("class", "bnkWebFolder2");
@@ -427,8 +450,13 @@
 					fileIconElmt.src = result[i]["fileIconUrl"];
 					tdElmt3.appendChild(fileIconElmt);
 					
-					tdElmt4.textContent = result[i]["fileName"];
-					tdElmt4.setAttribute("title", result[i]["fileName"]);
+					var fileName = result[i]["fileName"];
+					tdElmt4.setAttribute("title", fileName);
+					tdElmt4.textContent = fileName;
+					
+					if (encryptedFlag == 1) {
+						tdElmt4.innerHTML = "<img src='/images/email/secureMail/security_icon.gif' width='12' /> " + tdElmt4.innerHTML;
+					}
 					
 					if(result[i]["typeId"] == "folder") {
 						tdElmt5.textContent = ' - ';
@@ -454,8 +482,9 @@
 					
 					if(result[i]["typeId"] == "folder") {
 						trElmt.ondblclick = function() {
+							nameFileList(this.getAttribute("targetId"));
 // 							selectLeftFolder(this.getAttribute("targetId"));
-							getFileList(this.getAttribute("targetId"));
+// 							getFileList(this.getAttribute("targetId"));
 						};
 					}
 					
@@ -579,7 +608,48 @@
         	window.parent.fileListPick.event.cancel();
 	    }
         function confirm() {
-        	window.parent.fileListPick.event.confirm(filePickArr);
+			if (selectFileList.length == 0) {
+				alert("<spring:message code='ezWebFolder.t108' />");
+				return;
+			}
+
+        	var trElmt       = event.currentTarget;
+			var filesList    = [];
+// 			filesList.push(filePickArr);
+			filesList.push(selectFileList);
+
+			var selectedRows = rowContext.getSelectedRows();
+			for (var i = 0; i < selectedRows.length; i++) {
+				if (selectedRows[i].getAttribute("encryptedFlag") == 1) {
+					alert("<spring:message code='webfolder.encrypted.approve.attach' />");
+					return;
+				}
+			}
+			
+			$.ajax({
+				type: "POST",
+				url: "/ezWebFolder/checkPermission_y.do",
+				data: {
+					"fileList" : filesList.toString(),
+					"folderList" : ""
+				},
+				dataType: "JSON",
+				async: true,
+				success : function(data) {
+					var result = data.status;
+					
+					if (result != "ok" && data.code == "3") {
+						alert(messages.strLang25);
+					} else if (data.code == "1") {
+						alert(messages.strLang7);
+					} else {
+			        	window.parent.fileListPick.event.confirm(filePickArr);
+					}
+				},
+				error : function(error) {
+					alert(messages.strLang7 + error);
+				}
+			});
 	    }
         
     </script>
@@ -591,25 +661,10 @@
                 <li><span onclick="cancel()"></span></li>
             </ul>
         </div>
-		<h1 style="height:36px;">
-		<c:choose>
-			<c:when test="${folderType eq 'C'}">
-				<spring:message code='ezWebFolder.t11' />
-			</c:when>
-			<c:when test="${folderType eq 'D'}">
-				<spring:message code='ezWebFolder.t12' />
-			</c:when>
-			<c:when test="${folderType eq 'U'}">
-				<spring:message code='ezWebFolder.t13' />
-			</c:when>
-		</c:choose>
+		<h1 style="height:36px;"><spring:message code='ezWebFolder.t12' /></h1>
 		<span id="mailBoxInfo"></span>
-		<div id="capacity-wrapper">
-			<div class="progressbar">
-				<div id="capacity-bar" class="proggress"></div>
-			</div>
-			<span id="capacity-percent"></span>
-		</div>
+		<select class="select" id="taskRootFolder" onchange="getFileList(this.value)" style="margin-top: 8px;margin-left: 17px;">
+		</select>
 	</h1>
 	<div id="pageArea">
 		<div style="height:40px;">
@@ -617,7 +672,7 @@
 		</div>
 		<div id="mainmenu">
 			<ul>
-				<input type="text" id="searchFileName" style="float:left;margin-right:3px;height:31px;" value="" name="searchFileName" placeholder="<spring:message code='ezWebFolder.t523' />">
+				<input type="text" id="searchFileName" style="float:left;margin-right:3px;height:27px;" value="" name="searchFileName" placeholder="<spring:message code='ezWebFolder.t523' />">
 <!-- 				<input type="text" id="searchFileName" style="float:left;margin-right:3px;height:31px;" value="" name="searchFileName" placeholder="파일명 검색"> -->
 				<li id="SearchOption" mode="off" onclick="search('basic')"><span class="icon16 icon16_search"></span></li>
 				<li><span class="icon16 icon16_refresh" onclick="refreshView()"></span></li>
@@ -650,7 +705,7 @@
 				<table class="mainlist" style="width:100%"  id="tblFileList1">
 					<thead id ="BoardList_THEAD">
 						<tr>
-							<th class="wfFilecheck " style="text-align: center;" ><input type="checkbox" onchange="rowContext.selectAll(this.checked)" id="_checkAll"></th>
+							<th class="wfFilecheck " style="text-align: center;" ><input type="checkbox" onchange="rowContext.selectAll(this.checked)" id="_checkAll" style="display:none;"></th>
 							<th class="wfFileType 		headListClick" style="text-align: center;" headers="TYPE_ICON"><spring:message code='ezWebFolder.t188'/></th><!-- 유형 -->
 							<th class="wfFileName 		headListClick" headers="FILE_NAME"><spring:message code='ezWebFolder.t156'/></th><!-- 이름 -->
 							<th class="wfFileSize 		headListClick" style="text-align: center;" headers="FILE_SIZE"><spring:message code='ezWebFolder.t157'/></th><!-- 파일크기 -->
