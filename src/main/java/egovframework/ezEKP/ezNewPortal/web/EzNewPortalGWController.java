@@ -5105,7 +5105,7 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			JSONObject data = new JSONObject();
 			
-			String folderId = ezWebFolderService_y.folderIdByUserIdAndFolderType(userId, tenantId);
+			String folderId = ezWebFolderService_y.folderIdByUserIdAndFolderType(userId, tenantId, "C");
 			
 			List<FileVO> webFolderFileList = ezNewPortalService.getWebFolderFileList(folderId, tenantId);
 			data.put("fileList", webFolderFileList);

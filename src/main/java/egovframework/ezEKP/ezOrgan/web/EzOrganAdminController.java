@@ -239,17 +239,18 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.addScheduleMailNotiConfig();		// 2021-02-23 김민성 - 일정메일알림 컨피그 추가
 	    	
 	    	// webfolder
-//	    	ezCommonService.createTblWebfolderApplyHistroy();			
-//			ezCommonService.checkWebfolderEncryptTable(); 				
-//			ezCommonService.checkWebfolderVersionTable(); 				
 	    	ezCommonService.addWebfolderUserSubdeptPermittedColumn(); 	//2020-10-19 김은실 - 웹폴더 > 하위부서 허용 여부 추가
-//	    	ezCommonService.createWebfolderHierarchicalColumns(); 		
 	    	ezCommonService.addWebfolderUserFolderManagerColumn(); 		//2020-12-08 김은실 - [카이스트] 웹폴더 > 폴더 담당자 추가
-//	    	ezCommonService.createWebfolderMeetingPeriodTable(); 		
 	    	ezCommonService.createWebfolderFileUserTable(); 			
-//	    	ezCommonService.addWebfolderLogHistory(); 					// 2020-01-20 웹폴더 파일 이력관리 컬럼추가 
-//	    	ezCommonService.createWebfolderNoInherit(); 				// 권한비상속			
-
+	    	ezCommonService.createTblWebfolderApplyHistroy();			
+			ezCommonService.checkWebfolderEncryptTable(); 				
+			ezCommonService.checkWebfolderVersionTable(); 				
+	    	ezCommonService.createWebfolderHierarchicalColumns(); 		
+	    	ezCommonService.createWebfolderMeetingPeriodTable(); 		
+	    	ezCommonService.addWebfolderLogHistory(); 					// 2020-01-20 웹폴더 파일 이력관리 컬럼추가 
+	    	ezCommonService.createWebfolderNoInherit(); 				// 권한비상속			
+    		ezCommonService.alterWebfolderApplyHistoryAddColumn();
+    		ezCommonService.addWebfolderFolderFolderSubtypeColumn(); //2020-12-08 김은실 - [카이스트] 웹폴더 > 폴더 타입 추가(task/meeting/dean)
 	    	
     	} catch (Exception e) {
     		e.printStackTrace();

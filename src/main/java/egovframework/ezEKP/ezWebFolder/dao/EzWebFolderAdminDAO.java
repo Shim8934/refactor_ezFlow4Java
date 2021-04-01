@@ -6,6 +6,8 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
+import egovframework.ezEKP.ezWebFolder.vo.FileVO;
+import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
 import egovframework.ezEKP.ezWebFolder.vo.UserCapacityVO;
 import egovframework.ezEKP.ezWebFolder.vo.WebfolderConfigVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -118,5 +120,55 @@ public class EzWebFolderAdminDAO extends EgovAbstractDAO {
 
 	public double getFolderSize(Map<String, Object> map) {
 		return (double)select("EzWebFolderAdminDAO.getFolderSize", map);
+	}
+
+	// webfolder
+	
+	public void insertFolderUserSeq(Map<String, Object> map) {
+		insert("EzWebFolderAdminDAO.insertFileFolderUser", map);
+	}
+	
+	public void deleteFolderUsersByUserId(Map<String, Object> map) {
+		delete("EzWebFolderAdminDAO.deleteFolderUsersByUserId", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Map<String, Object>> getDecryptedAllSubFilePath(Map<String, Object> map) {
+		return (List<Map<String, Object>>) list("EzWebFolderAdminDAO.getDecryptedAllSubFilePath", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Map<String, Object>> getEncryptedAllSubFilePath(Map<String, Object> map) {
+		return (List<Map<String, Object>>) list("EzWebFolderAdminDAO.getEncryptedAllSubFilePath", map);
+	}
+
+	public void deleteSelectedFolderUser(Map<String, Object> map) {
+		delete("EzWebFolderAdminDAO.deleteSelectedFolderUser", map);
+	}
+
+	public void deleteSelectedFileUser(Map<String, Object> map) {
+		delete("EzWebFolderAdminDAO.deleteSelectedFileUser", map);
+	}
+		
+	public List<String> getSubFolderIdList(Map<String, Object> map) {
+		return (List<String>) list("EzWebFolderAdminDAO.getSubFolderIdList", map);
+	}
+
+	public List<FolderSimpleVO> selectSubAllFolder(Map<String, Object> map) {
+		return (List<FolderSimpleVO>) list("EzWebFolderAdminDAO.selectSubAllFolder", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<String> getFolderIdsByManagerUserId(Map<String, Object> map) {
+		return (List<String>) list("EzWebFolderAdminDAO.getFolderIdsByManagerUserId", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<String> getTopFoldersByManagerUserId(Map<String, Object> map) {
+		return (List<String>) list("EzWebFolderAdminDAO.getTopFoldersByManagerUserId", map);
+	}
+
+	public List<FileVO> folderInFileList(Map<String, Object> map) {
+		return (List<FileVO>) list("EzWebFolderAdminDAO.folderInFileList", map);	
 	}
 }

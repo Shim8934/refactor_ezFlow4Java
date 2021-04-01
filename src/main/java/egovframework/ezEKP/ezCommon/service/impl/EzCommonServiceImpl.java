@@ -2288,4 +2288,70 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void createMailTemplateSequence() throws Exception {
 		ezCommonDAO.createMailTemplateSequence();
 	}
+	
+	// webfolder
+	@Override
+	public List<String> getPermissionGroupIdListOfUser(String userId, String deptId, String companyId, int tenantId) throws Exception {
+		logger.debug("getPermissionGroupIdListOfUser started. userId=" + userId);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("userId", userId);
+		map.put("deptId", deptId);		
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		logger.debug("getPermissionGroupIdListOfUser ended.");
+		
+		return ezCommonDAO.getPermissionGroupIdListOfUser(map);				
+	}
+	
+	@Override
+    public void createTblWebfolderApplyHistroy() throws Exception {
+    	ezCommonDAO.createTblWebfolderApplyHistroy();
+    }
+	
+	/* 2020-10-19 웹폴더 KLIB 암호화 테이블 */
+	@Override
+	public void checkWebfolderEncryptTable() throws Exception {
+		ezCommonDAO.checkWebfolderEncryptTable();
+	}
+	
+	/* 2020-10-19 웹폴더 버전관리 */
+	@Override
+	public void checkWebfolderVersionTable() throws Exception {
+		ezCommonDAO.checkWebfolderVersionTable();
+	}
+	
+	/* 2020-11-25 웹폴더 답글 파일 컬럼 추가 */
+	@Override
+	public void createWebfolderHierarchicalColumns() {
+		ezCommonDAO.createWebfolderHierarchicalColumns();
+	}
+
+	@Override
+	public void createWebfolderMeetingPeriodTable() {
+		ezCommonDAO.createWebfolderMeetingPeriodTable();
+	}
+	
+	@Override
+	public void addWebfolderLogHistory() throws Exception {
+		ezCommonDAO.addWebfolderLogHistory();
+	}
+	
+	@Override
+	public void createWebfolderNoInherit() {
+		ezCommonDAO.createWebfolderNoInherit();
+	}
+	
+	@Override
+    public void alterWebfolderApplyHistoryAddColumn() throws Exception {
+    	ezCommonDAO.alterWebfolderApplyHistoryAddColumn();
+    }
+	
+	/* 2020-12-08 김은실 - [카이스트] 웹폴더 > 폴더 타입 추가(task/meeting/dean) */
+	@Override
+	public void addWebfolderFolderFolderSubtypeColumn() throws Exception {
+		ezCommonDAO.addWebfolderFolderFolderSubtypeColumn();
+	}
 }

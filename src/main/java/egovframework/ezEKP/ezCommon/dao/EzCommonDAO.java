@@ -1820,4 +1820,152 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		} 
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<String> getPermissionGroupIdListOfUser(Map<String, Object> map) throws Exception {
+		return (List<String>) list("EzCommonDAO.getPermissionGroupIdListOfUser", map);
+	}
+	
+	public void createTblWebfolderApplyHistroy() throws Exception {
+		Map<String, String> map = new HashMap<>();
+		
+		map.put("EzCommonDAO.checkTblWebfolderApplyHistroy", "EzCommonDAO.createTblWebfolderApplyHistroy");
+		map.put("EzCommonDAO.checkTblWebfolderApplyHistroyMember", "EzCommonDAO.createTblWebfolderApplyHistroyMember");
+		
+		for (Entry<String, String> entry : map.entrySet()) {
+			try {
+				select(entry.getKey());
+			} catch (Exception e) {
+				String keyVal = entry.getValue();
+				logger.debug("{} started.", keyVal);
+				
+				try {
+					update(keyVal);
+				} catch (Exception ex) {
+					// oracle 11g xe 오류
+					if (ex.getMessage().contains("ORA-00972")) {
+						logger.debug("{} skip, cause=oracle 11g xe error: {}", keyVal, ex.getMessage());
+					} else {
+						ex.printStackTrace();
+					}
+				}
+			}
+		}
+	}
+	
+	public void checkWebfolderEncryptTable() {
+		try {
+			select("EzCommonDAO.checkWebfolderEncryptedFileTable");
+		} catch (Exception e) {
+			logger.debug("tbl_webfolder_encrypted_file table doesn't exist. creating the table...");
+			update("EzCommonDAO.createWebfolderEncryptedFileTable");
+		}
+
+		try {
+			select("EzCommonDAO.checkWebfolderEncryptionFolderTable");
+		} catch (Exception e) {
+			logger.debug("tbl_webfolder_enc_folder table doesn't exist. creating the table...");
+			update("EzCommonDAO.createWebfolderEncryptionFolderTable");
+		}
+	}
+	
+	public void checkWebfolderVersionTable() {
+		try {
+			select("EzCommonDAO.checkWebfolderFileVersionColumn");
+		} catch (Exception e) {
+			logger.debug("tbl_webfolder_file VERSION column doesn't exist. creating the column...");
+			update("EzCommonDAO.createWebfolderFileVersionColumn");
+		}
+
+		try {
+			select("EzCommonDAO.checkWebfolderVersionTable");
+		} catch (Exception e) {
+			logger.debug("tbl_webfolder_version table doesn't exist. creating the table...");
+			update("EzCommonDAO.createWebfolderVersionTable");
+		}
+	}
+	
+	public void createWebfolderHierarchicalColumns() {
+		try {
+			select("EzCommonDAO.checkWebfolderFileDepthColumn");
+		} catch (Exception e) {
+			logger.debug("tbl_webfolder_file DEPTH column doesn't exist. creating the column...");
+			update("EzCommonDAO.createWebfolderFileDepthColumn");
+		}
+
+		try {
+			select("EzCommonDAO.checkWebfolderFileRootIdColumn");
+		} catch (Exception e) {
+			logger.debug("tbl_webfolder_file ROOT_ID column doesn't exist. creating the column...");
+			update("EzCommonDAO.createNullableWebfolderFileRootIdColumn");
+			update("EzCommonDAO.updateWebfolderFileRootIdColumn");
+			update("EzCommonDAO.notNullWebfolderFileRootIdColumn");
+		}
+
+		try {
+			select("EzCommonDAO.checkWebfolderFileParentIdColumn");
+		} catch (Exception e) {
+			logger.debug("tbl_webfolder_file PARENT_ID column doesn't exist. creating the column...");
+			update("EzCommonDAO.createNullableWebfolderFileParentIdColumn");
+			update("EzCommonDAO.updateWebfolderFileParentIdColumn");
+			update("EzCommonDAO.notNullWebfolderFileParentIdColumn");
+		}
+
+		try {
+			select("EzCommonDAO.checkWebfolderFileHierarchicalPathColumn");
+		} catch (Exception e) {
+			logger.debug("tbl_webfolder_file HIERARCHICAL_PATH column doesn't exist. creating the column...");
+			update("EzCommonDAO.createNullableWebfolderFileHierarchicalPathColumn");
+			update("EzCommonDAO.updateWebfolderFileHierarchicalPathColumn");
+			update("EzCommonDAO.notNullWebfolderFileHierarchicalPathColumn");
+		}
+	}
+	
+	public void createWebfolderMeetingPeriodTable() {
+		try {
+			select("EzCommonDAO.checkWebfolderMeetingPeriodTable");
+		} catch (Exception e) {
+			logger.debug("tbl_webfolder_meeting_period doesn't exist. creating the table...");
+			update("EzCommonDAO.createWebfolderMeetingPeriodTable");
+		}
+	}
+	
+	public void addWebfolderLogHistory() {
+		try {
+			logger.debug("여기 오나요 checkWebfolderFileHistoryColumn");
+            select("EzCommonDAO.checkWebfolderFileHistoryColumn");
+            logger.debug("여기 오나요 checkWebfolderFileHistoryColumn");
+        } catch (Exception e) {
+            logger.debug("tbl_webfolder_history file_id column doesn't exist. creating the column...");
+            update("EzCommonDAO.addWebfolderLogHistory");
+        }
+		
+	}
+	
+	public void createWebfolderNoInherit() {
+		try {
+			select("EzCommonDAO.selectWebfolderNoInherit");
+		} catch (Exception e) {
+			logger.debug("tbl_webfolder_no_inherit table doesn't exist. creating the table...");
+			update("EzCommonDAO.createtWebfolderNoInherit");
+		}
+	}
+	
+	public void alterWebfolderApplyHistoryAddColumn() {
+		try {
+			update("EzCommonDAO.alterWebfolderApplyHistoryAddColumn");
+		} catch (Exception e) {
+			logger.debug("Already exists");
+		}
+	}
+	
+	/* 2020-12-08 김은실 - [카이스트] 웹폴더 > 폴더 타입 추가(task/meeting/dean) */
+	public void addWebfolderFolderFolderSubtypeColumn() throws Exception {
+		try {
+			select("EzCommonDAO.checkWebfolderFolderFolderSubtypeColumn");
+		} catch (Exception e) {
+			logger.debug("tbl_webfolder_folder FOLDER_SUBTYPE column doesn't exist. creating the column...");
+			// FOLDER_SUBTYPE : (카이스트) FOLDER_TYPE=C 이면서 / 업무자료관리:task 회의관리:meeting 학처장회의:dean (TOP레벨은 null)
+			update("EzCommonDAO.createWebfolderFolderFolderSubtypeColumn");
+		}
+	}
 }
