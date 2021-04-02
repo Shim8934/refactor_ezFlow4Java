@@ -242,7 +242,7 @@
 					<li><span class="sub_iconLNB tree_dot_li"></span><span id="personal" class="list_text leftMenu_btn" onClick="goPage(2);" ><spring:message code='ezWebFolder.t103'/></span></li>
 				</ul>
 				
-				<%-- 회사폴더 -->
+				<%-- 회사폴더 --%>
 				<h2 class="off">
 					<span class="sub_iconLNB tree_arrow_up"></span>
 					<span class="h2Title"  onClick="displayPersonal(this);" id="task"><spring:message code='ezWebFolder.t11'/></span>
@@ -256,7 +256,7 @@
 					<div id="folderTree" class="tree onlytree" ></div>
 				</ul>
 				
-				<%-- 부서폴더 -->				
+				<%-- 부서폴더 --%>				
 				<h2 class="off">
 					<span class="sub_iconLNB tree_arrow_up"></span>
 					<span class="h2Title"  onClick="displayPersonal(this);" id="click2"><spring:message code='ezWebFolder.t12'/></span>
