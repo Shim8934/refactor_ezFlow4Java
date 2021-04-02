@@ -150,7 +150,7 @@
 					if (document.getElementsByClassName("on")[0]){
 						document.getElementsByClassName("on")[0].className = "off";
 					}
-					if (obj.id != "trashClick"){
+					if (obj.id != "trashClick" && obj.id != "fileHistory"){
 						if (obj.parentElement.tagName == "LI") {
 							obj.parentElement.parentElement.style.display = "";
 							obj.parentElement.parentElement.nextElementSibling.style.display = "";
@@ -158,8 +158,8 @@
 							document.getElementsByClassName("lnbUL").lnbUL.style.display = "none";
 							obj.parentElement.nextElementSibling.style.display = "";
 						}
+						obj.parentElement.className = "on";
 					}
-					obj.parentElement.className = "on";
 				}
 			}
 			
@@ -233,7 +233,7 @@
 	</head>
 	<body class="newLeft">
 		<div id="left" class="lnb" style="overflow: auto">
-			<div class="left_title" style="height: auto;padding: 14px 0 14px 20px;word-break: keep-all;line-height: 1.8;white-space: normal;"><spring:message code="ezWebFolder.t10_adminLeft"/></div>
+			<div class="left_title" style="height: auto;padding: 14px 0 14px 20px;word-break: keep-all;line-height: 1.8;white-space: normal;"><spring:message code="ezWebFolder.t10"/></div>
 			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
 				<h2 class="on">
 					<span class="sub_iconLNB tree_arrow_up"></span>
@@ -296,7 +296,7 @@
 				<ul class="lnbUL" id='lnbUL3' style="min-height: 200px; display: none; overflow-x: hidden; overflow-y: hidden; white-space: nowrap; padding: 5px">
 					<div id="folderTree3" class="tree onlytree" ></div>
 				</ul>
-				<h2><span class="h2Title" onClick="fileTransactionHistory(this);"><spring:message code='ezWebFolder.t128'/></span></h2>
+				<h2><span class="h2Title" onClick="fileTransactionHistory(this);" id="fileHistory"><spring:message code='ezWebFolder.t128'/></span></h2>
  				<h2><span class="h2Title" onclick="getTrashCanList(this);" id="trashClick"><spring:message code='ezWebFolder.t269'/></span></h2>
 			</div>
 		</div>
