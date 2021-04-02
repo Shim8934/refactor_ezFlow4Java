@@ -330,15 +330,7 @@
 	<body class="mainbody" onload="init('comp');" onresize="preProcessing();" onkeydown="keyPressPanel(event);">
 		<%-- 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정 --%>
 		<h1>
-			<c:if test="${subTypeC eq 'task'}">
-				<spring:message code='ezWebFolder.t220' />
-			</c:if>
-			<c:if test="${subTypeC eq 'meeting'}">
-				<spring:message code='ezWebFolder.t127' />
-			</c:if>
-			<c:if test="${subTypeC eq 'dean'}">
-				<spring:message code='ezWebFolder.kes010' />
-			</c:if>
+			<spring:message code='ezWebFolder.t127' />
 			<span id="mailBoxInfo"></span>
 			<div id="capacity-wrapper">
 				<div class="progressbar">

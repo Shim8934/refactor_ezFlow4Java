@@ -134,16 +134,14 @@
 				while (divTree2.hasChildNodes()) {
 					divTree2.removeChild(divTree2.lastChild);
 				} */
-				document.getElementById("lnbUL2").style.display  = "none";
 				document.getElementById("lnbUL").style.display = "none";
-				document.getElementById("lnbUL3").style.display = "none";
-				document.getElementById("lnbUL4").style.display = "none";
+				document.getElementById("lnbUL2").style.display = "none";
+
 				if (obj){
 					document.getElementById("ul1").style.display = "none";
 					document.getElementById("ul2").style.display = "none";
 					document.getElementById("ul3").style.display = "none";
-					document.getElementById("ul4").style.display = "none";
-					document.getElementById("ul5").style.display = "none";
+
 					if (document.querySelector("li.on")){
 						document.querySelector("li.on").className = "off";
 					}
@@ -172,9 +170,9 @@
 				
 				subTypeC = subTypeC;
 //				var lnbUL = subTypeC == 'N'? "lnbUL" : "lnbUL3";
-				var lnbUL = subTypeC == 'task'? "lnbUL4" : subTypeC == 'meeting'? "lnbUL" : subTypeC == 'dean'? "lnbUL3" : "";
+				var lnbUL = subTypeC == 'task'? "lnbUL" : subTypeC == 'meeting'? "lnbUL" : subTypeC == 'dean'? "lnbUL3" : "";
 //				var folderTree = subTypeC == 'N'? "folderTree" : "folderTree3";
-				var folderTree = subTypeC == 'task'? "folderTree4" : subTypeC == 'meeting'? "folderTree" : subTypeC == 'dean'? "folderTree3" : "";
+				var folderTree = subTypeC == 'task'? "folderTree" : subTypeC == 'meeting'? "folderTree" : subTypeC == 'dean'? "folderTree3" : "";
 				
 				clearToggle();
 				document.getElementById(lnbUL).style.display = "";
@@ -244,58 +242,33 @@
 					<li><span class="sub_iconLNB tree_dot_li"></span><span id="personal" class="list_text leftMenu_btn" onClick="goPage(2);" ><spring:message code='ezWebFolder.t103'/></span></li>
 				</ul>
 				
-				<%-- 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴 추가 => 2020-11-24 김은실 - 제거 --%>
-				<h2 class="off" style="display:none;">
+				<%-- 회사폴더 -->
+				<h2 class="off">
 					<span class="sub_iconLNB tree_arrow_up"></span>
-					<span class="h2Title"  onClick="displayPersonal(this);" id="click2"><spring:message code='ezWebFolder.kes008'/></span>
+					<span class="h2Title"  onClick="displayPersonal(this);" id="task"><spring:message code='ezWebFolder.t11'/></span>
 				</h2>
 				<ul class="lnbUL"  style="display:none;" id="ul2">
+					<li><span class="sub_iconLNB tree_dot_li"></span><span class="list_text leftMenu_btn" onClick="companyFolder('task');"><spring:message code='ezWebFolder.t126'/></span></li>
+					<li><span class="sub_iconLNB tree_dot_li"></span><span class="list_text leftMenu_btn" onClick="companyFile(this,'task');"><spring:message code='ezWebFolder.t127'/></span></li>
+					<li><span class="sub_iconLNB tree_dot_li"></span><span class="list_text leftMenu_btn" onClick="folderApplicationHistoryPage('task');" ><spring:message code='ezWebFolder.ksa02'/></span></li>
+				</ul>
+				<ul class="lnbUL" id="lnbUL" style="min-height: 200px; display: none; overflow-x: hidden; overflow-y: hidden; white-space: nowrap; padding: 5px">
+					<div id="folderTree" class="tree onlytree" ></div>
+				</ul>
+				
+				<%-- 부서폴더 -->				
+				<h2 class="off">
+					<span class="sub_iconLNB tree_arrow_up"></span>
+					<span class="h2Title"  onClick="displayPersonal(this);" id="click2"><spring:message code='ezWebFolder.t12'/></span>
+				</h2>
+				<ul class="lnbUL" style="display:none;" id="ul3">
 					<li><span class="sub_iconLNB tree_dot_li"></span><span class="list_text leftMenu_btn" onClick="departmentFolder();"><spring:message code='ezWebFolder.t219'/></span></li>
 					<li><span class="sub_iconLNB tree_dot_li"></span><span class="list_text leftMenu_btn" onClick="departmentFile(this);"><spring:message code='ezWebFolder.t220'/></span></li>
 				</ul>
 				<ul class="lnbUL" id="lnbUL2" style="min-height: 200px; display: none; overflow-x: hidden; overflow-y: hidden; white-space: nowrap; padding: 5px">
 					<div id="folderTree2" class="tree onlytree" ></div>
 				</ul>
-								
-				<%-- 2020-11-24 김은실 - (카이스트)회사 폴더별 관리자 지원 기능 --%>
-				<h2 class="off">
-					<span class="sub_iconLNB tree_arrow_up"></span>
-					<span class="h2Title"  onClick="displayPersonal(this);" id="task"><spring:message code='ezWebFolder.kes008'/></span>
-				</h2>
-				<ul class="lnbUL"  style="display:none;" id="ul5">
-					<li><span class="sub_iconLNB tree_dot_li"></span><span class="list_text leftMenu_btn" onClick="companyFolder('task');"><spring:message code='ezWebFolder.t219'/></span></li>
-					<li><span class="sub_iconLNB tree_dot_li"></span><span class="list_text leftMenu_btn" onClick="companyFile(this,'task');"><spring:message code='ezWebFolder.t220'/></span></li>
-					<li><span class="sub_iconLNB tree_dot_li"></span><span class="list_text leftMenu_btn" onClick="folderApplicationHistoryPage('task');" ><spring:message code='ezWebFolder.ksa02'/></span></li>
-				</ul>
-				<ul class="lnbUL" id="lnbUL4" style="min-height: 200px; display: none; overflow-x: hidden; overflow-y: hidden; white-space: nowrap; padding: 5px">
-					<div id="folderTree4" class="tree onlytree" ></div>
-				</ul>
-				
-				<%-- 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴 추가 --%>
-				<h2 class="off">
-					<span class="sub_iconLNB tree_arrow_up"></span>
-					<span class="h2Title"  onClick="displayPersonal(this);" id="meeting"><spring:message code='ezWebFolder.kes011'/></span>
-				</h2>
-				<ul class="lnbUL"  style="display:none;" id="ul3">
-					<li><span class="sub_iconLNB tree_dot_li"></span><span class="list_text leftMenu_btn" onClick="companyFolder('meeting');"><spring:message code='ezWebFolder.t126'/></span></li>
-					<li><span class="sub_iconLNB tree_dot_li"></span><span class="list_text leftMenu_btn" onClick="companyFile(this,'meeting');"><spring:message code='ezWebFolder.t127'/></span></li>
-					<li><span class="sub_iconLNB tree_dot_li"></span><span class="list_text leftMenu_btn" onClick="folderApplicationHistoryPage('meeting');" ><spring:message code='ezWebFolder.ksa03'/></span></li>
-				</ul>
-				<ul class="lnbUL" id='lnbUL' style="min-height: 200px; display: none; overflow-x: hidden; overflow-y: hidden; white-space: nowrap; padding: 5px">
-					<div id="folderTree" class="tree onlytree" ></div>
-				</ul>
-				
-				<h2 class="off">
-					<span class="sub_iconLNB tree_arrow_up"></span>
-					<span class="h2Title"  onClick="displayPersonal(this);" id="dean"><spring:message code='ezWebFolder.t11'/></span>
-				</h2>
-				<ul class="lnbUL" style="display:none;" id="ul4">
-					<li><span class="sub_iconLNB tree_dot_li"></span><span class="list_text leftMenu_btn" onClick="companyFolder('dean');"><spring:message code='ezWebFolder.kes009'/></span></li>
-					<li><span class="sub_iconLNB tree_dot_li"></span><span class="list_text leftMenu_btn" onClick="companyFile(this,'dean');"><spring:message code='ezWebFolder.kes010'/></span></li>
-				</ul>
-				<ul class="lnbUL" id='lnbUL3' style="min-height: 200px; display: none; overflow-x: hidden; overflow-y: hidden; white-space: nowrap; padding: 5px">
-					<div id="folderTree3" class="tree onlytree" ></div>
-				</ul>
+												
 				<h2><span class="h2Title" onClick="fileTransactionHistory(this);" id="fileHistory"><spring:message code='ezWebFolder.t128'/></span></h2>
  				<h2><span class="h2Title" onclick="getTrashCanList(this);" id="trashClick"><spring:message code='ezWebFolder.t269'/></span></h2>
 			</div>

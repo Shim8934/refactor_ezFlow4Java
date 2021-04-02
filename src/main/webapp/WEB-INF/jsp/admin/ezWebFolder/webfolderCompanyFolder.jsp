@@ -926,15 +926,7 @@
 		<%-- 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: isDean으로 구분 추가 --%>
 		<%-- 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정 --%>
 		<h1>
-			<c:if test="${subTypeC eq 'task'}">
-				<spring:message code='ezWebFolder.kes008' />
-			</c:if>
-			<c:if test="${subTypeC eq 'meeting'}">
-				<spring:message code='ezWebFolder.t126' />
-			</c:if>
-			<c:if test="${subTypeC eq 'dean'}">
-				<spring:message code='ezWebFolder.kes009' />
-			</c:if>
+			<spring:message code='ezWebFolder.t126' />
 		</h1>
 		<div style="margin-left:5px">
 			<div id="companySelect" style="margin: 10px 0px;">

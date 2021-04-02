@@ -541,11 +541,9 @@
 		<p>
 			<span id="companyTab" class="tabover"><spring:message code='ezWebFolder.tab.company'/></span>
 		</p>
-		<%-- 
 		<p>
 			<span id="departmentTab"><spring:message code='ezWebFolder.tab.department'/></span>
 		</p>
-		 --%>
 		<p>
 			<span id="userTab"><spring:message code='ezWebFolder.tab.user'/></span>
 		</p>
