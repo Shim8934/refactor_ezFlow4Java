@@ -2027,4 +2027,43 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		
 		return reStr;
 	}
+	
+	@RequestMapping(value = "/admin/ezWebfolder/webfolderUserAdd.do", method = RequestMethod.GET)
+	public String personalPopupUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("personalPopupUser started");
+		// 관리자 권한체크
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		// 2020-11-26 김은실 - (카이스트)회사 폴더별 관리자 지원 기능 
+		String folderManager = request.getParameter("folderManager");
+		
+		if (auth == null && userInfo.getRollInfo().indexOf("wf=1") == -1 && folderManager.isEmpty() ) {
+			return "cmm/error/adminDenied";
+		}
+		auth = userInfo;
+		
+		String deptID = auth.getDeptID();
+		String cn = request.getParameter("cn") == null ? "" : request
+				.getParameter("cn");
+		String textName = request.getParameter("name") == null ? "" : request
+				.getParameter("name");
+		String useOcs = config.getProperty("config.USE_OCS");
+		String companyId = request.getParameter("companyId");
+		String lang = auth.getLang();
+		
+		model.addAttribute("deptID", deptID);
+		model.addAttribute("cn", cn);
+		model.addAttribute("textName", textName);
+		model.addAttribute("useOcs", useOcs);
+		model.addAttribute("companyId", companyId);
+		
+		
+		model.addAttribute("folderManager", folderManager);
+		model.addAttribute("dept", auth.getDeptID());
+		model.addAttribute("lang", lang);
+		
+		logger.debug("personalPopupUser ended");
+		return "admin/ezWebFolder/webfolderUserAdd";
+	}
 }

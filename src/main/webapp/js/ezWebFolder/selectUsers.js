@@ -3,7 +3,7 @@ var g_windowReference = null;
 function menu_SelectRange(companyId, folderManager) {
 	if (CrossYN()) {
 		// 2020-11-26 김은실 - (카이스트)회사 폴더별 관리자 지원 기능 
-		var szUrl = "/admin/ezPersonal/personalPopupUser.do?companyId=" + companyId + "&folderManager=" + folderManager;
+		var szUrl = "/admin/ezWebfolder/webfolderUserAdd.do?companyId=" + companyId + "&folderManager=" + folderManager;
 		var _MSIE = 'MSIE';
 		var useragentstr = navigator.userAgent;
 		
@@ -45,7 +45,7 @@ function menu_SelectRange(companyId, folderManager) {
 }
 
 function menu_SelectRange_IE(companyId, folderManager) {
-	var szUrl = "/admin/ezPersonal/personalPopupUser.do?companyId=" + companyId + "&folderManager=" + folderManager;
+	var szUrl = "/admin/ezWebfolder/webfolderUserAdd.do?companyId=" + companyId + "&folderManager=" + folderManager;
 	
 	if ((g_windowReference == null) || (g_windowReference.closed == true)) {
 		if (window.navigator.userAgent.indexOf("Safari") > 0 && window.navigator.userAgent.indexOf("Chrome") == -1) {

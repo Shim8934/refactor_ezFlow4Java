@@ -1052,6 +1052,8 @@
 				a.USE_STATUS   = 'Y'
 			AND
 				a.TENANT_ID    = #tenantId#
+			AND 
+				a.OWNER_ID NOT IN ('shared_mailbox_Top')	
 		<isNotEmpty property="subTypeC">
 			<isNotEqual property="folderUpper" compareValue="root">
 			AND
@@ -1452,6 +1454,8 @@
 				a.COMPANY_ID   = #companyId#
 			AND
 				a.TENANT_ID    = #tenantId#
+			AND 
+				a.OWNER_ID NOT IN ('shared_mailbox_Top')	
 			ORDER BY
 				a.FOLDER_NAME1,
 				a.FOLDER_LEVEL ASC,
@@ -1507,6 +1511,8 @@
 				useflag              = 'Y'
 			AND
 				tenant_id            = #tenantId#
+			AND 
+				cn NOT IN ('shared_mailbox_Top')	
 		]]>
 	</select>
 	

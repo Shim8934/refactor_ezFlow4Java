@@ -2201,11 +2201,16 @@ public class EzWebFolderGWController {
 			String folderPath            = folder.getFolderPath();
 			folderPath                   = folderPath.substring(1, folderPath.length() - 1);
 			
-
-			if (folder.getFolderLevel() > 0) {
-			// 2020-11-26 김은실 - (카이스트)회사 폴더별 관리자 지원 기능 
-//				String ancestorId = folderPath.split("\\|")[mode.equals("") ? 1 : 0];
+			if(folder.getFolderType().equals("C") && folder.getFolderLevel() > 0) {
 				listUsers         = ezWebFolderService.getFolderUsers(folderId, tenantId);
+			} else {
+				if (mode.equals("")) {
+					String ancestorId = folderPath.split("\\|")[1];
+					listUsers         = ezWebFolderService.getFolderUsers(ancestorId, tenantId);
+				} else {
+					String ancestorId = folderPath.split("\\|")[0];
+					listUsers         = ezWebFolderService.getFolderUsers(ancestorId, tenantId);
+				}
 			}
 			
 			FolderVO encryptionRootFolder = ezWebFolderService.getEncryptionRootFolder(folderId, tenantId);
@@ -4029,4 +4034,5 @@ public class EzWebFolderGWController {
 		str = str.replaceAll("'", "&#39;");
 		return str;
 	}
+
 }
