@@ -10146,8 +10146,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             rtnXML.append("<PUBLICITYYN>" + makeXMLString(makeListField(docXML.getElementsByTagName("PUBLICITYYN").item(0).getTextContent())).trim() + "</PUBLICITYYN>");
             rtnXML.append("<ORGCOMPANYID>" + makeXMLString(makeListField(docXML.getElementsByTagName("COMPANYID").item(0).getTextContent())) + "</ORGCOMPANYID>");
 
-            String docState = docXML.getElementsByTagName("DOCSTATE").item(0).getTextContent());
-            String functionType = docXML.getElementsByTagName("FUNCTIONTYPE").item(0).getTextContent());
+            String docState = docXML.getElementsByTagName("DOCSTATE").item(0).getTextContent();
+            String functionType = docXML.getElementsByTagName("FUNCTIONTYPE").item(0).getTextContent();
             if (config.getProperty("config.useOpenGov").equalsIgnoreCase("YES")) {
             	if(!isUsed.isEmpty()) {
 	                Map<String, Object> resultMap = getOpenGovInfo(beforeDocID, tenantID, companyID);
