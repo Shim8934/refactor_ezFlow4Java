@@ -78,11 +78,8 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url = gwServerUrl + "/rest/ezwebfolder/users/" +userInfo.getId() + "/checkRootFolder";
-		String folderType = req.getParameter("folderType")      != null ? req.getParameter("folderType") : "C";
-		// 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: isDean으로 구분 추가
-		// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-		String subTypeC = req.getParameter("subTypeC") != null ? req.getParameter("subTypeC") : "";
-		String PortletFolderId = req.getParameter("PortletFolderId") != null ? req.getParameter("PortletFolderId") : "";
+		String folderType = req.getParameter("folderType")      != null ? commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("folderType"))) : "C";
+//		String PortletFolderId = req.getParameter("PortletFolderId") != null ? req.getParameter("PortletFolderId") : "";
 		
 		HttpHeaders headers  = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -100,8 +97,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			String status = resultBody.get("status").toString();
 			model.addAttribute("folderType", folderType);
 			model.addAttribute("status", status);
-			model.addAttribute("subTypeC", subTypeC);
-			model.addAttribute("PortletFolderId", PortletFolderId);
+//			model.addAttribute("PortletFolderId", PortletFolderId);
 		}
 		catch (ParseException e) {
 			e.printStackTrace();
@@ -119,10 +115,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url         = gwServerUrl + "/rest/ezwebfolder/check-wfadmin/" + userInfo.getId();
 		String folderType = request.getParameter("folderType")      != null ? request.getParameter("folderType") : "C";
-		// 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: isDean으로 구분 추가
-		// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-		String subTypeC = request.getParameter("subTypeC") != null ? request.getParameter("subTypeC") : "";
-		String PortletFolderId = request.getParameter("PortletFolderId") != null ? request.getParameter("PortletFolderId") : "";
+//		String PortletFolderId = request.getParameter("PortletFolderId") != null ? request.getParameter("PortletFolderId") : "";
 		folderType = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(folderType));
 		
 		HttpHeaders headers  = new HttpHeaders();
@@ -142,7 +135,8 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			String checkResult = (String) resultBody.get("data");
 			model.addAttribute("isWfAdmin", checkResult);
 		}
-
+		
+		if (folderType.equals("C") && true) {
 		String gwServerUrl2   = config.getProperty("config.webFolderGwServerURL");
 		String url2           = gwServerUrl + "/rest/ezwebfolder/check-folderManager/" + userInfo.getId();
 		
@@ -151,24 +145,23 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		headers2.set("x-user-host", request.getServerName());
 		HttpEntity<?> entity2 = new HttpEntity<>(headers2);
 		
-		UriComponentsBuilder builder2  = UriComponentsBuilder.fromHttpUrl(url2)
-				.queryParam("subTypeC", "task");
+		UriComponentsBuilder builder2  = UriComponentsBuilder.fromHttpUrl(url2);
 		RestTemplate rest2             = new RestTemplate();
 		ResponseEntity<String> result2 = rest.exchange(builder2.build().encode().toUri(), HttpMethod.GET, entity2, String.class);
 		
 		JSONObject resultBody2        = (JSONObject) jp.parse(result2.getBody());
 		String status2                 = resultBody2.get("status").toString();
 		
-		if (status2.equalsIgnoreCase("ok")){
-			JSONArray folderListMap = (JSONArray) resultBody2.get("folderListMap");
-			model.addAttribute("folderListCount", folderListMap.size());
+			if (status2.equalsIgnoreCase("ok")) {
+				JSONArray folderListMap = (JSONArray) resultBody2.get("folderListMap");
+				model.addAttribute("folderListCount", folderListMap.size());
+			}
 		} else {
 			model.addAttribute("folderListCount", 0);
 		}
 		
 		model.addAttribute("folderType", folderType);
-		model.addAttribute("subTypeC", subTypeC);
-		model.addAttribute("PortletFolderId", PortletFolderId);
+//		model.addAttribute("PortletFolderId", PortletFolderId);
 		
 		logger.debug("webfolderLeft end");
 		return "ezWebFolder/webfolderLeft";

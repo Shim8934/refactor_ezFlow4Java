@@ -59,10 +59,9 @@
 		var _cellInfo        = {};
 		var sortColumn = null;
 		var sortType = null;
-		var subTypeC = "${subTypeC}";
 		var containsReplyFiles = [];
 		var contextClickedTr = null;
-		// 2020-12-10 김은실 - (카이스트)회사 폴더별 관리자 지원 기능 
+		// 회사 폴더별 관리자 지원 기능 
 		var firstLevelFolderId	= "";
 		var userManager = {
 				targetId: "",
@@ -264,7 +263,6 @@
 					 "allFileFlag"		: allFileFlag,
 					 "sortType"			: sortType,
 					 "sortColumn"		: sortColumn
-					 ,"subTypeC" 			: "${subTypeC}"
 					},
 				dataType: "JSON",
 				success : function (data) {
@@ -350,20 +348,6 @@
 			$('#tblFileList tr td').parent().remove();
 			renderData(filelist);
 			parentId = data.data.folderUpp;
-
-			if(parentId == "root"){
-				switch (subTypeC) {
-				case "task":
-					$('.webFolderImg').attr("src", "/images/webfolder/business_data.png");
-					break;
-				case "meeting":
-					$('.webFolderImg').attr("src", "/images/webfolder/conference_file.png");
-					break;
-				case "dean":
-					$('.webFolderImg').attr("src", "/images/webfolder/agenda_item.png");
-					break;
-				}
-			}
 			
 			namePath(folderPath, originalPath);
 			document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp; " + messages.strLang15 + " <span style='color:#017BEC;'>" + fldCnt +" </span>"
@@ -410,6 +394,8 @@
 				
 				divName.textContent = path[i] ;
 				divName.setAttribute("title", path[i]);
+				/* 2018-05-07 장진혁 - 상단 폰트사이즈 15px로 조정 */
+				divName.setAttribute("style", "font-size:15px; padding-right:3px;");
 				detailName.appendChild(divName);
 				nameTag.appendChild(detailName);
 				
@@ -627,9 +613,7 @@
 					}
 					
 					trElmt.appendChild(tdElmt1);
-					<c:if test="${ subTypeC eq 'task' }">
-						trElmt.appendChild(tdElmt2);
-					</c:if>
+					trElmt.appendChild(tdElmt2);
 					trElmt.appendChild(tdElmt3);
 					trElmt.appendChild(tdElmt4);
 					trElmt.appendChild(tdElmt5);
@@ -637,6 +621,7 @@
 					trElmt.appendChild(tdElmt7);
 					trElmt.appendChild(tdElmt8);
 					trElmt.appendChild(tdElmt9);
+					trElmt.appendChild(tdElmt10);
 					
 					tableList.appendChild(trElmt);
 				}
@@ -1179,6 +1164,12 @@
 			</c:when>
 		</c:choose>
 		<span id="mailBoxInfo"></span>
+		<div id="capacity-wrapper">
+			<div class="progressbar">
+				<div id="capacity-bar" class="proggress"></div>
+			</div>
+			<span id="capacity-percent"></span>
+		</div>
 	</h1>
 	<div id="pageArea">
 		<div style="height:30px;">
@@ -1186,30 +1177,22 @@
 		</div>
 		<div id="mainmenu">
 			<ul>
-				<c:if test="${ subTypeC ne 'meeting' }">
-					<li class="important"><span onclick="buttons.fileDownload()"><spring:message code='ezWebFolder.t186' /></span></li>
-				</c:if>
+				<li class="important"><span onclick="buttons.fileDownload()"><spring:message code='ezWebFolder.t186' /></span></li>
 				<li class="important" id="upload"><span onclick="buttons.fileUpload()"><spring:message code='ezWebFolder.t187' /></span></li>
 				<li id ="newFolder"><span onclick="buttons.newFolder()"><spring:message code='ezWebFolder.t255' /></span></li>
 				<li><span onclick="buttons.fileRename()"><spring:message code='ezWebFolder.t508' /></span></li>
-				<c:if test="${ subTypeC eq 'task' }">
-					<li id="moveButton"><span onclick="buttons.fileMoveAndCopy()"><spring:message code='ezWebFolder.t251' /></span></li>
-				</c:if>
+				<li id="moveButton"><span onclick="buttons.fileMoveAndCopy()"><spring:message code='ezWebFolder.t251' /></span></li>
 				<c:if test="${useVersionHistory}">
 					<li><span onclick="buttons.openFileVersionHistory()"><spring:message code='webfolder.version.button' /></span></li>
 				</c:if>
 					<li id="userManagerBtn"><span onclick="getUsersPage_manager()"><spring:message code='ezWebFolder.kes013' /></span></li>
- 				<c:if test="${(subTypeC eq 'meeting' || subTypeC eq 'task')}">
 					<li id ="sendingMail" style="display:none;"><span onclick="buttons.sendingMail()"><spring:message code='ezWebFolder.ksa01' /></span></li>
-				</c:if> 
-				<c:if test="${ subTypeC eq 'task' }">
 					<li><span class="icon16 icon16_star" onclick="favoriteContext.toggleAll()" title="<spring:message code='ezWebFolder.t216' />"></span></li>
-				</c:if>
 				<li id="SearchOption" mode="off" onclick="doLayerPopup(this)"><span class="icon16 icon16_search" title="<spring:message code='ezWebFolder.t123' />"></span></li>
 				<li><span class="icon16 icon16_delete" onclick="buttons.fileDelete()" title="<spring:message code='ezWebFolder.t111' />"></span></li>
 				<!-- <li><img src="/images/i_bar.gif"></li> -->
 	<!-- 			<li id=""><a onClick="folder_Manage()"style="margin-top: 3px;"><span>폴더관리</span></a></li> -->
-				<li><span class="icon16 icon16_refresh" onclick="refreshView()" style="display:none;"></span></li>
+				<li><span class="icon16 icon16_refresh" onclick="refreshView()"></span></li>
 				<!-- <li><img src="/images/i_bar.gif" /></li> -->
 				<!-- <li style="float:right;border:0px;background-color: white"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv" /></li> -->
 				<div class="sub_frameIcon" style="float:right" id="wfOptionDiv">
@@ -1275,9 +1258,7 @@
 					<thead id ="BoardList_THEAD">
 						<tr>
 							<th class="wfFilecheck " style="text-align: center;" ><input type="checkbox" onchange="rowContext.selectAll(this.checked)" id="_checkAll"></th>
-							<c:if test="${ subTypeC eq 'task' }">
-								<th class="wfFileFavorite 	headListClick" style="text-align: center;" headers="FAVORITE_STATUS"><img class="none-drag" src='/images/ImgIcon/icon-flag.gif'/></th><!-- 즐겨찾기 -->
-							</c:if>
+							<th class="wfFileFavorite 	headListClick" style="text-align: center;" headers="FAVORITE_STATUS"><img class="none-drag" src='/images/ImgIcon/icon-flag.gif'/></th><!-- 즐겨찾기 -->
 							<th class="wfFileType 		headListClick" style="text-align: center;" headers="TYPE_ICON"><spring:message code='ezWebFolder.t188'/></th><!-- 유형 -->
 							<th class="wfFileName 		headListClick" headers="FILE_NAME"><spring:message code='ezWebFolder.t156'/></th><!-- 이름 -->
 							<th class="wfFileSize 		headListClick" style="text-align: center;" headers="FILE_SIZE"><spring:message code='ezWebFolder.t157'/></th><!-- 파일크기 -->
@@ -1285,6 +1266,7 @@
 							<th class="wfFileUploadDate headListClick" headers="CREATE_DATE"><spring:message code='ezWebFolder.t190'/></th><!-- 등록일 -->
 							<th class="wfFileUpdateDate headListClick" headers="UPDATE_DATE"><spring:message code='ezWebFolder.t198'/></th><!-- 갱신일 -->
 							<th class="wfFilePath 		" headers="FILE_PATH"><spring:message code='ezWebFolder.t199'/></th><!-- 위치 -->
+							<th class="wfFileShare 		headListClick" style="text-align: center;" headers="FILESHARE_STATUS"><spring:message code='ezWebFolder.t278'/></th><!-- 공유상태 -->
 						</tr>
 					</thead>
 				</table>
@@ -1306,8 +1288,8 @@
 		<div id="tblPageRayer"></div>
     </div>
 	<div id="searchpopup" class="popupwrap3" style="display:none;margin-bottom:70px">
-		<div class="popupJQLayer">
-			<div class="title"><spring:message code='ezWebFolder.kje01' /></div>
+		<div class="popupJQLayer" style="padding-top:6px">
+			<div class="title"><spring:message code='ezWebFolder.t10' /><spring:message code='ezWebFolder.t123' /></div>
 			<div id="close">
 	            <ul>
 	                <li><a rel="modal:close"><span onclick="searchOptionHidden()"></span></a></li>
@@ -1347,9 +1329,7 @@
 		</div>
 	</div>	
 	
-	<c:if test="${subTypeC eq 'task'}">
-		<%@ include file="/WEB-INF/jsp/ezWebFolder/component/downloadOptionPopup.jsp" %>
-	</c:if>
+	<%@ include file="/WEB-INF/jsp/ezWebFolder/component/downloadOptionPopup.jsp" %>
 	<div style="width:200px;height:110px; border-radius:8px;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="progressPanel">
 	    <img src="/images/email/progress_img.gif" style="padding-top:20px;"/>
 	</div>
@@ -1368,7 +1348,6 @@
 	<div id="contextMenuDiv" style="position: absolute; z-index: 6000; display: none;">
 		<table cellpadding="2" cellspacing="1" border="0" class="popuplist">
 			<tbody>
-				<c:if test="${subTypeC eq 'task'}">
 				<tr id="moveMenu">
 					<td onclick="buttons.fileMoveAndCopy();" onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor: pointer; background-color: rgb(255, 255, 255);">
 						<span style="font-size: 12px; width: 100%; display: inline-block;"><img src="/images/ImgIcon/move.gif" align="absmiddle" hspace="5"><spring:message code='ezWebFolder.t251' /></span>
@@ -1379,7 +1358,6 @@
 						<span style="font-size: 12px; width: 100%; display: inline-block;"><img src="/images/ImgIcon/icon-flag.gif" align="absmiddle" hspace="5"><spring:message code='ezWebFolder.t216'/></span>
 					</td>
 				</tr>
-				</c:if>
 				<c:if test="${useVersionHistory}">
 				<tr>
 					<td onclick="buttons.openFileVersionHistory();" onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor: pointer; background-color: rgb(255, 255, 255);">

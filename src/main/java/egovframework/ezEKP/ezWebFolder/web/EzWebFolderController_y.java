@@ -47,30 +47,29 @@ public class EzWebFolderController_y {
 		String allFileFlag = orElse(request.getParameter("allFileFlag"),"");
 		allFileFlag = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(allFileFlag));
 		String parentId = orElse(request.getParameter("parentId"),"");
-		// 2020-10-05 김은실 - (카이스트)커스터 마이징 메뉴: dean 추가
-		// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-		String subTypeC 	= orElse(request.getParameter("subTypeC")	, "");
-		model.addAttribute("subTypeC"	, subTypeC);
 		boolean useVersionHistory = "YES".equalsIgnoreCase(
 				commonUtil.getTenantConfigRest("useWebfolderVersionHistory", userInfo.getId(), request));
 				
 		parentId = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(parentId));
 		
-		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("folderId", folderId);
 		LOGGER.debug("folderType : "+ folderType + " folderId : " + request.getParameter("folderId") + "allFileFlag : " + request.getParameter("allFileFlag"));
-
-		// 2020-12-07 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: 관리자 또는 담당자 flag.
-		JSONObject resultBody = null;
-		param.put("subTypeC", subTypeC);
-		param.put("folderId", "");
-		resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/check-folderManager/"+userInfo.getId(), param, request, "get", null);
 		
-		if (resultBody.get("status").equals("ok")) {
-			model.addAttribute("folderManager", (String) resultBody.get("data"));
-			model.addAttribute("managedFolderList", resultBody.get("managedFolderList"));
+		Map<String, Object> param = new HashMap<String, Object>();
+		JSONObject resultBody = null;
+		
+		// 관리자 또는 담당자 flag.
+		if (folderType.equals("C") && true) {
+			param.put("folderId", "");
+			resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/check-folderManager/"+userInfo.getId(), param, request, "get", null);
+			
+			if (resultBody.get("status").equals("ok")) {
+				model.addAttribute("folderManager", (String) resultBody.get("data"));
+				model.addAttribute("managedFolderList", resultBody.get("managedFolderList"));
+			}
 		}
 
+		// 웹폴더 파일 업로드시 1회업로드 제한 체크를 프론트에서도하도록
+		param.put("folderId", folderId);
 		resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/" + userInfo.getId() + "/upload-limit", null, request, "get", null);
 
 		if ("ok".equals(resultBody.get("status"))) {
@@ -104,18 +103,12 @@ public class EzWebFolderController_y {
 		LoginSimpleVO userInfo 	= commonUtil.userInfoSimple(loginCookie);
 		String folderType 		= orElse(request.getParameter("folderType")	, "");
 		String folderId 		= orElse(request.getParameter("folderId")	, ""); 
-		// 2020-10-05 김은실 - (카이스트)커스터 마이징 메뉴: dean 추가
-		// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-		String subTypeC 	= orElse(request.getParameter("subTypeC")	, ""); 
 		
 		JSONObject resultBody = null;
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("folderType"	, folderType);
 		param.put("folderId"	, folderId);
-		// 2020-10-05 김은실 - (카이스트)커스터 마이징 메뉴: dean 추가
-		// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-		param.put("subTypeC"	, subTypeC);
-				
+		
 		resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" +userInfo.getId() + "/folder-tree", 
 				param, request, "get", null);
 		

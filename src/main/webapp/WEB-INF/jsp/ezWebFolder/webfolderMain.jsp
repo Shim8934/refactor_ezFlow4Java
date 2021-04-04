@@ -7,16 +7,13 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
-			var folderType = "${folderType}";
-			var subTypeC = "${subTypeC}";
-			var PortletFolderId = "${PortletFolderId}";
+			var folderType = "<c:out value='${folderType}'/>";
+//			var PortletFolderId = "${PortletFolderId}";
 			window.onload = function() {
 				if(folderType == "") {
 					folderType = "C"
 				}
-				// 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: isDean으로 구분 추가
-				// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-				var url = "/ezWebFolder/webfolderLeft.do?folderType=" + folderType + "&subTypeC=" + subTypeC + "&PortletFolderId=" + PortletFolderId;
+				var url = "/ezWebFolder/webfolderLeft.do?folderType=" + folderType;		//  + "&PortletFolderId=" + PortletFolderId;
 				document.getElementById("left").src = url;
 			}
 		</script>

@@ -20,40 +20,30 @@
         var test = [];
         var parent = "";
 		var folderId = "";
+		var folderType = "<c:out value='${folderType}'/>";
 		var checkedfileList = "<c:out value='${fileList}'/>";
 		var checkedfolderList = "<c:out value='${folderList}'/>";
 		var treeData;
-		var subTypeC;
 
         window.onload = function () {
-    		folderList();
+    		$('input:radio[name=treeType]:input[value='+folderType+']').attr("checked", true);
+    		folderList(folderType);
         }
         
-        function folderList() {
-			subTypeC = document.querySelector('input[name=treeType]:checked').value;
+        function folderList(obj) {
+			folderType = obj;
 			$.ajax({
 				type :"POST",
 				async: true,
 				url  : "/ezWebFolder/folderList.do",
 				data : { 
 					"folderId": folderId,
-					// 카이스트 커스터마이징: 무조건 회사폴더, subTypeC가 추가됨
-					"folderType": "C",
-					"subTypeC" : subTypeC
+					"folderType": obj
 				},
 				dataType: "JSON",
 				success : function (data) {
-					// 카이스트 커스터마이징: 루트 목록 안나오게
-					data.data = data.data.filter(function(folder) {
-						return folder.parent !== "#";
-					}).map(function(folder) {
-						if (folder.folderLevel === "1") {
-							folder.parent = "#";
-							folder.type = "root";
-						}
-						return folder;
-					});
-					// parent = data.data[0]["parent"];
+					test = data.data;
+					parent = data.data[0]["parent"];
 		        	$.jstree.destroy();
 					$('#folderTree').jstree({
 						'plugins': ["core","types","json_data","themes","ui"],
@@ -70,11 +60,6 @@
 							}
 						},
 						"types" : {
-							"root": {
-								"icon" : subTypeC === "task"
-										? "/images/webfolder/business_data.png"
-										: "/images/webfolder/conference_file.png"
-							},
 							"default": {
 								"icon" :"/images/OrganTree_cross/fldr.gif" 
 							}
@@ -86,13 +71,13 @@
 					}).on('loaded.jstree', function() {
 						treeData = data;
 						addTitle();
-						/* firFolderId = data.data[0]["id"];
+						firFolderId = data.data[0]["id"];
 						var test = "#" + folderId;
 						var elmentTest = document.getElementById(firFolderId);
 						var childE = document.getElementById(firFolderId + "_anchor");
 						childE.setAttribute("class", "jstree-anchor jstree-clicked");
 						elmentTest.setAttribute("aria-selected", "true");
-						folderId = firFolderId; */
+						folderId = firFolderId;
 					}).on('changed.jstree', function (e, data) {
 						folderId = data.selected[0];
 						parent = data.node.original.parent;
@@ -187,8 +172,9 @@
     </div>
 	<div style="margin: 0px 10px; border: none; height: 30px; position: relative;">
 		<div style="position: absolute; top: 0px; right: 0px;">
-			<input name="treeType" id="radio1" checked type="radio" value="task" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="folderList();"><label for="radio1"><span> <spring:message code="ezWebFolder.kes008"/></span></label>
-			<input name="treeType" id="radio2" type="radio" value="meeting" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="folderList();"><label for="radio2"><span> <spring:message code="ezWebFolder.kes011"/></span></label>
+			<input name="treeType" id="radio1" type="radio" value="C" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="folderList('C');"><label for="radio1"><span> <spring:message code='ezWebFolder.t233'/></span></label>
+			<input name="treeType" id="radio2" type="radio" value="D" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="folderList('D');"><label for="radio2"><span> <spring:message code='ezWebFolder.t234'/></span></label>
+			<input name="treeType" id="radio3" type="radio" value="U" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="folderList('U');"><label for="radio3"><span> <spring:message code='ezWebFolder.t235'/></span></label>
 		</div>
 	</div>
 	<div style="margin: 0px 10px 10px 10px; border: 1px solid #ddd; min-height: 330px; height: 330px; overflow: auto; padding-top:5px" id="folderTree"></div>
