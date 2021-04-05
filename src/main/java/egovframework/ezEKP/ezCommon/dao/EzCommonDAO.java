@@ -1776,4 +1776,12 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			}
 		}
 	}
+	public void createMailboxProgressTable() {
+		try {
+			select("EzCommonDAO.checkJmochaMailboxProgress");
+		} catch (Exception e) {
+			logger.debug("jmocha_mailbox_progress doesn't exist. creating the table...");
+			update("EzCommonDAO.createJmochaMailboxProgress");
+		}
+	}
 }

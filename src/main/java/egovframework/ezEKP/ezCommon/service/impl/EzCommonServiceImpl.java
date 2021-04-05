@@ -2271,4 +2271,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void createMailTemplateSequence() throws Exception {
 		ezCommonDAO.createMailTemplateSequence();
 	}
+	
+	@Override
+	public void createJmochaMailboxProgress() throws Exception {
+		ezCommonDAO.createMailboxProgressTable();
+	}
 }

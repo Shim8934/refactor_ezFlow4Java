@@ -276,4 +276,7 @@ public interface EzCommonService {
 	public void insertChartPortletInfo() throws Exception;
 	
 	public void createMailTemplateSequence() throws Exception;
+
+	public void createJmochaMailboxProgress() throws Exception;
+	
 }
