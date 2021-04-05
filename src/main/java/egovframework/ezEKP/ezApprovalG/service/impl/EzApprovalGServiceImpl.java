@@ -1831,7 +1831,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			int totalCount = getWebPartListCount(listType, userID, deptID, userIDs, getDocManageDeptInfo(deptID, tenantID), userFlag.toLowerCase().trim(), companyID, tenantID, list);
 			result = "<RESULT>" + totalCount + "</RESULT>";
 		} else if (mode.equals("LEFT")) {
-			String leftCount = getLeftDocCountNew(userID, deptID, userIDs, getDocManageDeptInfo(deptID, tenantID), userFlag.toLowerCase(), companyID, tenantID, list);
+			String leftCount = getLeftDocCountNew(userID, deptID, userIDs, getDocManageDeptInfo(deptID, tenantID), userFlag.toLowerCase(), offset, companyID, tenantID, list);
 			result = leftCount;
 		} else {
 			String webList = getWebPartList(listType, userID, deptID, userIDs, getDocManageDeptInfo(deptID, tenantID), userFlag.toLowerCase(), listCount, basicOrder, strMultiData, companyID, tenantID, list);
@@ -32578,13 +32578,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return result;
 	}
     
-	public String getLeftDocCountNew(String userID, String deptID, String userIDs, String deptIDs, String userFlag, String companyID , int tenantID, List<ApprGProxyVO> list) throws Exception {
+	public String getLeftDocCountNew(String userID, String deptID, String userIDs, String deptIDs, String userFlag, String offset, String companyID , int tenantID, List<ApprGProxyVO> list) throws Exception {
 		logger.debug("getLeftDocCount started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		String[] userIDArr = userIDs.replace(" ", "").replace("\'", "").split(",");
 		String[] deptIDArr = deptIDs.replace(" ", "").replace("\'", "").split(",");
+		String startDate = Integer.toString(Integer.parseInt(commonUtil.getTodayUTCTime("yyyy-MM-dd").substring(0,4))-1) + commonUtil.getTodayUTCTime("yyyy-MM-dd").substring(4,commonUtil.getTodayUTCTime("yyyy-MM-dd").length())  + " 00:00:01";
+		String endDate = commonUtil.getTodayUTCTime("yyyy-MM-dd") + " 23:59:59";
 		
 		map.put("v_USERID", userID);
 		map.put("v_DEPTID", deptID);
@@ -32593,8 +32595,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_USERFLAG", userFlag.trim().toLowerCase());
 		map.put("v_TENANTID", tenantID);
 		map.put("companyID", companyID);
-		map.put("v_STARTDATE", Integer.toString(Integer.parseInt(commonUtil.getTodayUTCTime("yyyy-MM-dd").substring(0,4))-1) + commonUtil.getTodayUTCTime("yyyy-MM-dd").substring(4,commonUtil.getTodayUTCTime("yyyy-MM-dd").length())  + " 00:00:01"); 
-		map.put("v_ENDDATE", commonUtil.getTodayUTCTime("yyyy-MM-dd") + " 23:59:59"); 
+		// v_STARTDATE, v_ENDDATE UTC 시간 기준으로 수정 (DB에는 UTC 시간으로 저장되므로)
+		map.put("v_STARTDATE", commonUtil.getDateStringInUTC(startDate, offset, true)); 
+		map.put("v_ENDDATE", commonUtil.getDateStringInUTC(endDate, offset, true)); 
 		map.put("MineViewYN", ezCommonService.getTenantConfig("MineViewYN", tenantID));
 		map.put("proxyList", list);
 		
