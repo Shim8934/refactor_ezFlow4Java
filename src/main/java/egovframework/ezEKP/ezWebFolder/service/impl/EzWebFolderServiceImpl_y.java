@@ -111,11 +111,10 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 	}
 
 	// 사용자 삭제시 그 사용자의 데이터 모두 삭제 위해 flag 추가 
-	// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
 	@Override
 	public List<Map<String, Object>> getFolderTree(String userId,
 			String deptId, String compId, String folderType, String primary,
-			int tenantId, String flag, String subTypeC) throws Exception {
+			int tenantId, String flag) throws Exception {
 		List<Map<String, Object>> folderTree = new ArrayList<Map<String, Object>>();
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -156,7 +155,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		if (folderType.equals("C") || folderType.equals("")) {
 			List<String> addjobList = getAddJobList(tenantId, userId);
 
-			List<String> managerFolderId = ezWebFolderAdminService.getFolderIdsByManagerUserId(userId, "", subTypeC, compId, tenantId);
+			List<String> managerFolderId = ezWebFolderAdminService.getFolderIdsByManagerUserId(userId, "", compId, tenantId);
 			String managerFolderStr = "";
 			for (String manger : managerFolderId) {
 				managerFolderStr += " OR F.FOLDER_PATH LIKE '%|" + manger +"|%' ";
@@ -197,14 +196,6 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			map.put("idList", idSet.toArray(new String[idSet.size()]));
 			map.put("compId", compId);
 			
-			// 2020-10-05 김은실 - (카이스트)커스터 마이징 메뉴: dean 추가
-			// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-//			if(dean != null){
-//				map.put("deanList", (String[]) dean.get("deanList"));
-//				map.put("isDean", dean.get("isDean"));
-//			}
-			map.put("subTypeC", subTypeC);
-			
 			Set<String> userDeptList = new HashSet<String>();
 			userDeptList.add(deptId);
 			userDeptList.addAll(addjobList);
@@ -212,11 +203,9 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			map.put("userDeptList", userDeptList.toArray(new String[userDeptList.size()]));
 			map.put("managerFolderStr", managerFolderStr);
 			
-			if ("meeting".equalsIgnoreCase(subTypeC)) {
 				// 사용 기간이 만료된 회의실 리스트 (담당자로 설정된 회의실은 제외)
 				List<String> expiredFolders = ezWebFolderService.getExpiredMeetingFolders(userId, tenantId);
 				map.put("expiredFolders", expiredFolders);
-			}
 			
 			List<Map<String, Object>> compFolderTree = ezWebFolderDAO_y.getCompFolderTree(map);
 
@@ -356,14 +345,13 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 	}
 	
 	// root가 모든 파일들이 나오지 않는 메서드 
-	// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
 	@Override
 	public List<FileVO> getFileList2(String folderId, String userId,
 			String deptId, int tenantId, String comId, String searchExt,
 			String searchFileName, String searchStartDate,
 			String searchEndDate, String searchCreateName,
 			String searchFileType, String searchPageCount, int pStart,
-			int pEnd, String offset, String primary, String sortType, String sortColumn, String subTypeC) throws Exception {
+			int pEnd, String offset, String primary, String sortType, String sortColumn) throws Exception {
 		LOGGER.debug("getFileList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -447,17 +435,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		
 		map.put("flag", flag);
 		
-		// 2020-10-06 김은실 - (카이스트)커스터 마이징 메뉴: dean 추가
-		// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-//		if(dean != null){
-//			map.put("deanList", (String[]) dean.get("deanList"));
-//			map.put("isDean", dean.get("isDean"));
-//		}
-		map.put("subTypeC", subTypeC);
-		
-		if ("meeting".equalsIgnoreCase(subTypeC)) {
 			map.put("expiredFolders", ezWebFolderService.getExpiredMeetingFolders(userId, tenantId));
-		}
 		
 		if (sortType.equals("")){
 			map.put("orderByData", ", CASE WHEN FOLDER_SORT = 0 THEN FILE_NAME END, ROOT_ID DESC, HIERARCHICAL_PATH" );
@@ -612,7 +590,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			String searchExt, String searchFileName, String searchStartDate,
 			String searchEndDate, String searchCreateName,
 			String searchFileType, String searchPageCount, int pStart,
-			int pEnd, String offset, String primary, String subTypeC) throws Exception {
+			int pEnd, String offset, String primary) throws Exception {
 		LOGGER.debug("getFileToTalCount started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -701,11 +679,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			fileTotalCnt = ezWebFolderDAO_y.getFileTotalCount(map);
 		}
 		
-		map.put("subTypeC", subTypeC);
-
-		if ("meeting".equalsIgnoreCase(subTypeC)) {
 			map.put("expiredFolders", ezWebFolderService.getExpiredMeetingFolders(userId, tenantId));
-		}
 
 		fldTotalCnt = ezWebFolderDAO_y.getFldTotalCount2(map);
 		
@@ -764,7 +738,6 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			map.put("folderLevel", uppFolder.getFolderLevel() + 1);
 			map.put("folderPath", uppFolder.getFolderPath());
 			map.put("ownerId", uppFolder.getOwnerId());
-			map.put("folderSubType", uppFolder.getFolderSubType());
 
 			// uppFolder가 없으면 최상위 폴더를 만드는거
 		} else if (uppFolder == null) {
@@ -798,8 +771,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		LOGGER.debug("folderType is " + folderType);
 
 		// 폴더 권한 비상속
-		boolean isNotInherited = uppFolder.isTask()
-				&& ezWebFolderService.isNotInheritFolder(uppFolder.getFolderId(), tenantId);
+		boolean isNotInherited = ezWebFolderService.isNotInheritFolder(uppFolder.getFolderId(), tenantId);
 
 		// result 새로 생긴 fileId
 		String result = ezWebFolderDAO_y.insertFolder(map);
@@ -915,7 +887,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 
 	private int checkCreator(String folderId, int tenantId, String comId, String userId, boolean isRecursive)  throws Exception {
 		// 담당자는 모든 권한을 가짐
-		if (ezWebFolderAdminService.getFolderIdsByManagerUserId(userId, folderId, "", comId, tenantId).size() > 0) {
+		if (ezWebFolderAdminService.getFolderIdsByManagerUserId(userId, folderId, comId, tenantId).size() > 0) {
 			return 1;
 		}
 
@@ -1021,7 +993,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 
 				FileVO fileVO = ezWebFolderService.getFileByFileId(fileId, "000|+00:00", tenantId);
 
-				if (ezWebFolderAdminService.getFolderIdsByManagerUserId(userId, fileVO.getFolderId(), "", companyId, tenantId).isEmpty()
+				if (ezWebFolderAdminService.getFolderIdsByManagerUserId(userId, fileVO.getFolderId(), companyId, tenantId).isEmpty()
 						&& !fileVO.getCreateId().equals(userId)) {
 					result.put("status", "error");
 					result.put("code", 3);
@@ -1062,7 +1034,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			parentFolderId = folderFileId;
 		}
 		
-		if (ezWebFolderAdminService.getFolderIdsByManagerUserId(userId, parentFolderId, "", comId, tenantId).size() > 0) {
+		if (ezWebFolderAdminService.getFolderIdsByManagerUserId(userId, parentFolderId, comId, tenantId).size() > 0) {
 			return status = "ok";
 		}
 
@@ -1491,7 +1463,6 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		map.put("idList", 		idSet.toArray(new String[idSet.size()]));
 		map.put("tenantId"		, (Integer)jsonObject.get("tenantId"));
 		map.put("folderType"	, (String)jsonObject.get("folderType"));
-		map.put("folderSubType"	, (String)jsonObject.get("folderSubtype"));
 		List<Map<String, Object>> result = ezWebFolderDAO_y.selectRootFolderListInfo(map); 
 		System.out.println("result=" + result);
 		return result; 
@@ -1577,7 +1548,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 				if(addUser.contains(json.get("userId").toString())){
 					// insert 
 					ezWebFolderService.insertFileUser(fileVO, "", 
-							(String)json.get("userId"), (String)json.get("userType"), folder.getCompanyId(), subFolderType);
+							(String)json.get("userId"), (String)json.get("userType"), folder.getCompanyId());
 				}
 			}
 			
@@ -1654,7 +1625,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 				if(addUser.contains(json.get("userId").toString())){
 					if(ezWebFolderService.checkFileUserExists((String)json.get("userId"), fileList.get(j).getFileId()) == 0){
 						ezWebFolderService.insertFileUser(fileList.get(j), "", 
-								(String)json.get("userId"), (String)json.get("userType"), folder.getCompanyId(), subFolderType);
+								(String)json.get("userId"), (String)json.get("userType"), folder.getCompanyId());
 					}
 				}
 			}

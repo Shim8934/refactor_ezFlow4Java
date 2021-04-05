@@ -5,7 +5,6 @@ public class FolderVO {
 	private String folderName1;
 	private String folderName2;
 	private String folderType;
-	private String folderSubType;
 	private String folderPath;
 	private int    folderStep;
 	private int    folderLevel;
@@ -174,29 +173,9 @@ public class FolderVO {
 		this.deleterId = deleterId;
 	}
 
-	public String getFolderSubType() {
-		return folderSubType;
-	}
-
-	public void setFolderSubType(String folderSubType) {
-		this.folderSubType = folderSubType;
-	}
-
-	public boolean isTask() {
-		return "task".equalsIgnoreCase(folderSubType);
-	}
-
-	public boolean isMeeting() {
-		return "meeting".equalsIgnoreCase(folderSubType);
-	}
-
-	public boolean isDean() {
-		return "dean".equalsIgnoreCase(folderSubType);
-	}
-
 	@Override
 	public String toString() {
-		return "FolderVO [folderId=" + folderId + ", folderName1=" + folderName1 + ", folderName2=" + folderName2 + ", folderType=" + folderType + ", folderSubType=" + folderSubType + ", folderPath=" + folderPath + ", folderStep="
+		return "FolderVO [folderId=" + folderId + ", folderName1=" + folderName1 + ", folderName2=" + folderName2 + ", folderType=" + folderType + ", folderPath=" + folderPath + ", folderStep="
 				+ folderStep + ", folderLevel=" + folderLevel + ", folderUpper=" + folderUpper + ", useStatus=" + useStatus + ", ownerId=" + ownerId + ", createId=" + createId + ", createDate="
 				+ createDate + ", createName1=" + createName1 + ", createName2=" + createName2 + ", updateId=" + updateId + ", updateDate=" + updateDate + ", companyId=" + companyId + ", deleterId="
 				+ deleterId + ", tenantId=" + tenantId + "]";

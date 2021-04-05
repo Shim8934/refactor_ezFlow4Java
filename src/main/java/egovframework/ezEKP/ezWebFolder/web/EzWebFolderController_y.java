@@ -58,7 +58,7 @@ public class EzWebFolderController_y {
 		JSONObject resultBody = null;
 		
 		// 관리자 또는 담당자 flag.
-		if (folderType.equals("C") && true) {
+		if (folderType.equals("C")) {
 			param.put("folderId", "");
 			resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/check-folderManager/"+userInfo.getId(), param, request, "get", null);
 			
@@ -192,9 +192,6 @@ public class EzWebFolderController_y {
 			
 		param.put("sortType"		, sortType);
 		param.put("sortColumn"		, orElse(request.getParameter("sortColumn")			, ""));
-		// 2020-10-06 김은실 - (카이스트)커스터 마이징 메뉴: dean 추가
-		// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-		param.put("subTypeC"		, orElse(request.getParameter("subTypeC")			, ""));
 		
 		LOGGER.debug("folderId : " + folderId);
 		LOGGER.debug(	"listCount : " + request.getParameter("listCount") 
@@ -445,7 +442,6 @@ public class EzWebFolderController_y {
 		String folderType = orElse(request.getParameter("folderType"), "");
 		String allFileFlag = orElse(request.getParameter("allFileFlag"),"");
 		String parentId = orElse(request.getParameter("parentId"),"");
-		String folderSubtype = orElse(request.getParameter("folderSubtype"), "task");
 		String folderId = "";
 		
 		LOGGER.debug("folderType : "+ folderType + ",allFileFlag : " + request.getParameter("allFileFlag"));
@@ -455,7 +451,6 @@ public class EzWebFolderController_y {
 		jsonObj.put("folderType", folderType);
 		jsonObj.put("tenantId", userInfo.getTenantId());
 		jsonObj.put("ownerId", userInfo.getDeptID());
-		jsonObj.put("folderSubtype", folderSubtype);
 		jsonObj.put("comId", userInfo.getCompanyID());
 		jsonObj.put("deptId", userInfo.getDeptID());
 		
@@ -668,10 +663,7 @@ public class EzWebFolderController_y {
 	@RequestMapping(value="/ezWebFolder/openWebFolderRightWarning.do", method = RequestMethod.GET)
 	public String openWebFolderRightWarning (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model ) throws Exception {
-		LOGGER.debug("openWebFolderRightWarning started");
-		model.addAttribute("subTypeC"	, orElse(request.getParameter("subTypeC")	, ""));
-		
-		LOGGER.debug("openWebFolderRightWarning end");
+		LOGGER.debug("openWebFolderRightWarning started-end");
 		return "ezWebFolder/webFolderRightWarning";
 	}
 }

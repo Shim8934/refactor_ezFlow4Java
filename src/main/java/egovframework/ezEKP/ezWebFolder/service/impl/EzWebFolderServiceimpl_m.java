@@ -890,7 +890,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 							// 현재 아래와 같이 진행할 경우 아에 자신의 모든것을 지우는 형태임 하지만 모든 것을 지우는 형태로 할게 아니고 그 하위를 지우게 할 거니까 
 							// 수정해야함 ( 현재 하위의 폴더를 찾는 )
 							List<Map<String, Object>> subAllFolder = ezWebFolderService_y.getFolderTree(userId, userInfo.getDeptID(), userInfo.getCompanyID(), currentFolderVO.getFolderType(), 
-								userInfo.getPrimary(), tenantId, "delete", null);
+								userInfo.getPrimary(), tenantId, "delete");
 							ObjectMapper oMapper = new ObjectMapper();
 							for ( int i = 0 ; i< subAllFolder.size() ; i++ ) {
 								
@@ -1828,14 +1828,14 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	
 	@Override
 	public String setWebFolderApplyHistory(String primary, int tenantId, String companyId, String folderName, String content, 
-			String folderSubType, List<Map<String, String>> memberList, String usingS, String usingE) throws Exception {
+			List<Map<String, String>> memberList, String usingS, String usingE) throws Exception {
 		LOGGER.debug("setWebFolderApplyHistory started.");
 		
 		String applyId = UUID.randomUUID().toString();
 		LOGGER.debug("applyId=" + applyId);
 
 		// HISTORY
-		insertWebFolderApplyHistory(applyId, tenantId, companyId, folderName, content, folderSubType, usingS, usingE);
+		insertWebFolderApplyHistory(applyId, tenantId, companyId, folderName, content, usingS, usingE);
 		// HISTORY MEMBER
 		insertWebFolderApplyHistoryMember(primary, tenantId, companyId, applyId, memberList);
 		                     
@@ -1844,7 +1844,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	private void insertWebFolderApplyHistory(String applyId, int tenantId, String companyId, String folderName, String content, 
-			String folderSubType, String usingS, String usingE) throws Exception {
+			String usingS, String usingE) throws Exception {
 	
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("applyId", applyId);
@@ -1852,7 +1852,6 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("companyId", companyId);
 		map.put("folderName", folderName);
 		map.put("content", content);
-		map.put("folderSubType", folderSubType);
 		map.put("usingS", usingS);
 		map.put("usingE", usingE);
 		    
@@ -1896,11 +1895,10 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	@Override
-	public int getWebFolderApplyHistoryListCount(int tenantId, String companyId, String folderSubType) throws Exception {
+	public int getWebFolderApplyHistoryListCount(int tenantId, String companyId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
-		map.put("folderSubType", folderSubType);
 		
 		int listCnt = ezWebFolderDAO_m.getWebFolderApplyHistoryListCount(map);
 		
@@ -1908,13 +1906,12 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 
 	@Override
-	public List<Map<String, String>> getWebFolderApplyHistoryList(int tenantId, String companyId, String folderSubType, int startList, int endList) throws Exception {
+	public List<Map<String, String>> getWebFolderApplyHistoryList(int tenantId, String companyId, int startList, int endList) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		map.put("startList", startList);
 		map.put("endList", endList);
-		map.put("folderSubType", folderSubType);
 		
 		List<Map<String, String>> historyList = ezWebFolderDAO_m.getWebFolderApplyHistoryList(map);
 		return historyList;

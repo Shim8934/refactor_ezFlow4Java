@@ -130,7 +130,6 @@
         <result property="updateDate"           column="UPDATE_DATE"              columnIndex="16" />
         <result property="companyId"            column="COMPANY_ID"               columnIndex="17" />      
         <result property="tenantId"         	column="TENANT_ID"                columnIndex="18" />
-        <result property="folderSubType"       	column="FOLDER_SUBTYPE"           columnIndex="19" />
         
     </resultMap>
     
@@ -405,16 +404,12 @@
 			WHERE F.TENANT_ID = #tenantId#
 			AND F.USE_STATUS = 'Y'
 		]]>
-		<isNotEmpty property="subTypeC">
-			AND
-				F.FOLDER_SUBTYPE    = #subTypeC#
 			<isNotEmpty prepend="AND" property="expiredFolders">
 				F.FOLDER_ID NOT IN
 				<iterate property="expiredFolders" open="(" close=")" conjunction=",">
 					#expiredFolders[]#
 				</iterate>
 			</isNotEmpty>
-		</isNotEmpty>
 		<!-- 2021-01-20 김은실 - [카이스트] 속도개선: join의 조건으로는 cost가 심하여 where의 조건으로 변경 (설마 데이터 사각지대가 있진 않겠지..??) -->
 			AND ( 
 					( FU.USER_ID IN 
@@ -593,16 +588,12 @@
 						))
 			         then folder.folder_id 
 					else null end as aaa  from dual)
-					<isNotEmpty property="subTypeC">
-						AND
-							FOLDER.FOLDER_SUBTYPE    = #subTypeC#
 						<isNotEmpty prepend="AND" property="expiredFolders">
 							FOLDER.FOLDER_ID NOT IN
 							<iterate property="expiredFolders" open="(" close=")" conjunction=",">
 								#expiredFolders[]#
 							</iterate>
 						</isNotEmpty>
-					</isNotEmpty>
 		      	   </isEqual>  
 		         </isEqual> 
 		         <![CDATA[ 
@@ -798,16 +789,12 @@
 								</iterate>))
 					        	then folder.folder_id 
 								else null end as aaa  from dual)
-								<isNotEmpty property="subTypeC">
-									AND
-										FOLDER.FOLDER_SUBTYPE    = #subTypeC#
 									<isNotEmpty prepend="AND" property="expiredFolders">
 										FOLDER.FOLDER_ID NOT IN
 										<iterate property="expiredFolders" open="(" close=")" conjunction=",">
 											#expiredFolders[]#
 										</iterate>
 									</isNotEmpty>
-								</isNotEmpty>
 				      	   </isEqual>  
 				         </isEqual> 
 						<include refid="fldSelect"/>
@@ -843,16 +830,12 @@
 								</iterate>))
 					       		then folder.folder_id 
 								else null end as aaa  from dual)
-								<isNotEmpty property="subTypeC">
-									AND
-										FOLDER.FOLDER_SUBTYPE    = #subTypeC#
 									<isNotEmpty prepend="AND" property="expiredFolders">
 										FOLDER.FOLDER_ID NOT IN
 										<iterate property="expiredFolders" open="(" close=")" conjunction=",">
 											#expiredFolders[]#
 										</iterate>
 									</isNotEmpty>
-								</isNotEmpty>
 				      	   </isEqual>  
 				         </isEqual> 
 					<![CDATA[
@@ -1046,18 +1029,12 @@
 						))
 				        then folder.folder_id 
 						else null end as aaa  from dual)
-					<isNotNull property="subTypeC">
-					<isNotEmpty property="subTypeC">
-						AND
-							FOLDER.FOLDER_SUBTYPE    = #subTypeC#
 						<isNotEmpty prepend="AND" property="expiredFolders">
 							FOLDER.FOLDER_ID NOT IN
 							<iterate property="expiredFolders" open="(" close=")" conjunction=",">
 								#expiredFolders[]#
 							</iterate>
 						</isNotEmpty>
-					</isNotEmpty>
-					</isNotNull>
 	      	   </isEqual>  
 	         </isEqual> 
 	         
@@ -1197,18 +1174,12 @@
 							</iterate>
 							 -->
 							)
-					<isNotNull property="subTypeC">
-						<isNotEmpty property="subTypeC">
-							AND
-								FOLDER.FOLDER_SUBTYPE    = #subTypeC#
 							<isNotEmpty prepend="AND" property="expiredFolders">
 								FOLDER.FOLDER_ID NOT IN
 								<iterate property="expiredFolders" open="(" close=")" conjunction=",">
 									#expiredFolders[]#
 								</iterate>
 							</isNotEmpty>
-						</isNotEmpty>
-					</isNotNull>
 				</isEqual>  
 			</isEqual> 
 			<![CDATA[
@@ -1440,8 +1411,7 @@
 		    	UPDATE_ID,
 		    	UPDATE_DATE,
 		    	COMPANY_ID,
-		    	TENANT_ID,
-		    	FOLDER_SUBTYPE
+		    	TENANT_ID
 		    	 )
 		    VALUES(
 		    	#id#,
@@ -1461,8 +1431,7 @@
 		    	#userId#,
 		    	TO_DATE(#timeUTC#,'YYYY-MM-DD HH24:MI:SS'),
 		    	#comId#,
-		    	#tenantId#,
-		    	#folderSubType#
+		    	#tenantId#
 		    	)
     
 	</insert>
@@ -1929,8 +1898,6 @@
     			TBL_WEBFOLDER_FOLDERUSER fuser ON fuser.FOLDER_ID = folder.FOLDER_ID 
     		WHERE 
     			folder.FOLDER_TYPE = 'C' 
-    		AND 
-    			folder.FOLDER_SUBTYPE = #folderSubType#
 			AND 
 				folder.FOLDER_LEVEL = 1 
 			AND 

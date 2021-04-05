@@ -55,7 +55,6 @@
 	var sortColumn = null;
 	var sortType = null;
 	var isFavoriteMode = false;
-	var subTypeC = "task";
 	var functionType;
 	var unidocsDomain = "${unidocsDomain}";
 	var containsReplyFiles = [];
@@ -164,7 +163,6 @@
 			creatorName: "creatorName",
 			createDate: "createDate",
 			type: "targetType",
-			folderSubType: "folderSubType",
 			encryptedFlag: "encryptedFlag",
 			depth: "depth",
 			expired: "expired"
@@ -180,7 +178,6 @@
 			creatorName: "createName1",
 			createDate: "createDate",
 			type: "fileTypeName",
-			folderSubType: "folderSubType",
 			encryptedFlag: "encryptedFlag",
 			depth: "depth",
 			expired: "expired"
@@ -461,8 +458,7 @@
 				"searchStartDate": searchRequirement.startDate,
 				"searchEndDate": searchRequirement.endDate,
 				"sortType"			: sortType,
-				"sortColumn"		: sortColumn,
-				"subTypeC"			: "task"
+				"sortColumn"		: sortColumn
 			},
 			success: function(result) {
 				var data = result.data;
@@ -687,7 +683,6 @@
 			row.setAttribute("class", "bnkWebFolder");
 			row.setAttribute("targetId", resultJson[columnMap.id]);
 			row.setAttribute("targetPath", resultJson[columnMap.path]);
-			row.setAttribute("folderSubType", resultJson[columnMap.folderSubType]);
 
 			if (result[i]["targetType"]) {
 				functionType = splitTargetType(result[i]["targetType"]);
@@ -746,21 +741,7 @@
 			fileIconElement.setAttribute("class", "webFolderImg");
 			
 			var iconUrl = "";
-			if (targetType === "folder" && folderUpp == "root") {
-			        switch (subTypeC) {
-			        case "task":
-			        	iconUrl = "/images/webfolder/business_data.png";
-			            break;
-			        case "meeting":
-			        	iconUrl = "/images/webfolder/conference_file.png";
-		                break;
-			        case "dean":
-			        	iconUrl = "/images/webfolder/agenda_item.png";
-		                break;
-			        }
-			} else {
 				iconUrl = resultJson[columnMap.iconUrl];
-			}
 			fileIconElement.src = iconUrl;
 			
 			fileIconColumn.appendChild(fileIconElement);
@@ -851,8 +832,6 @@
 	function onFolderDoubleClick(obj) {
 		folderId = obj.getAttribute("targetId");
 		folderType = obj.getAttribute("folderType");
-		// 글로별 변수로 뺌
-		// subTypeC = obj.getAttribute("folderSubType");
 		
 		if (folderType === undefined) {
 			forderType = context.getFolderType();

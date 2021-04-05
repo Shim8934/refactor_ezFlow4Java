@@ -79,7 +79,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url = gwServerUrl + "/rest/ezwebfolder/users/" +userInfo.getId() + "/checkRootFolder";
 		String folderType = req.getParameter("folderType")      != null ? commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("folderType"))) : "C";
-//		String PortletFolderId = req.getParameter("PortletFolderId") != null ? req.getParameter("PortletFolderId") : "";
 		
 		HttpHeaders headers  = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -97,7 +96,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			String status = resultBody.get("status").toString();
 			model.addAttribute("folderType", folderType);
 			model.addAttribute("status", status);
-//			model.addAttribute("PortletFolderId", PortletFolderId);
 		}
 		catch (ParseException e) {
 			e.printStackTrace();
@@ -115,7 +113,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url         = gwServerUrl + "/rest/ezwebfolder/check-wfadmin/" + userInfo.getId();
 		String folderType = request.getParameter("folderType")      != null ? request.getParameter("folderType") : "C";
-//		String PortletFolderId = request.getParameter("PortletFolderId") != null ? request.getParameter("PortletFolderId") : "";
 		folderType = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(folderType));
 		
 		HttpHeaders headers  = new HttpHeaders();
@@ -136,7 +133,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			model.addAttribute("isWfAdmin", checkResult);
 		}
 		
-		if (folderType.equals("C") && true) {
+		if (folderType.equals("C")) {
 		String gwServerUrl2   = config.getProperty("config.webFolderGwServerURL");
 		String url2           = gwServerUrl + "/rest/ezwebfolder/check-folderManager/" + userInfo.getId();
 		
@@ -161,7 +158,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		}
 		
 		model.addAttribute("folderType", folderType);
-//		model.addAttribute("PortletFolderId", PortletFolderId);
 		
 		logger.debug("webfolderLeft end");
 		return "ezWebFolder/webfolderLeft";
@@ -231,36 +227,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		logger.debug("webfolderGeneral end");
 		return "ezWebFolder/webfolderGeneral";
-	}
-	
-	// 2020-12-11 김은실 - [카이스트] 업무자료실 포틀릿 설정
-	@RequestMapping(value="/ezWebFolder/webfolderPortletConfig.do", method = RequestMethod.GET)
-	public String webfolderPortletConfig(@CookieValue("loginCookie") String loginCookie,  HttpServletRequest request, Model model) throws Exception {
-		logger.debug("webfolderPortletConfig start");
-		
-		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
-		String url         = gwServerUrl + "/rest/ezwebfolder/users/" + user.getId() + "/getPortletFolderId";
-		
-		HttpHeaders headers  = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		
-		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url);
-		RestTemplate rest             = new RestTemplate();
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-		JSONParser jp                 = new JSONParser();
-		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
-		String status                 = resultBody.get("status").toString();
-		
-		if (status.equals("ok")) {
-			model.addAttribute("folderId", (String) resultBody.get("data").toString());
-		}
-		
-		logger.debug("webfolderPortletConfig end");
-		return "ezWebFolder/webfolderPortletConfig";
 	}
 	
 	@RequestMapping(value = "/ezWebFolder/fileDuplicateConfirm.do", method = RequestMethod.GET)
@@ -724,8 +690,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String mode         	= request.getParameter("mode")       		!= null ? request.getParameter("mode")       : "normal";
 		String type         	= request.getParameter("type")       		!= null ? request.getParameter("type")       : "";
 		String folderTypeCheck  = request.getParameter("folderTypeCheck") 	!= null ? request.getParameter("folderTypeCheck") : "";
-		// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-		String subTypeC			= request.getParameter("subTypeC") 			!= null ? request.getParameter("subTypeC") 	 : "";
 		
 		logger.debug("FileId list: " + fileIdList + " || FolderId List: " + folderIdList + " || mode: " + mode + " || type: " + type + 
 				"|| folderTypeCheck : " + folderTypeCheck);
@@ -771,7 +735,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		model.addAttribute("mode", mode);
 		model.addAttribute("type", type);
 		model.addAttribute("folderTypeCheck", folderTypeCheck);
-		model.addAttribute("subTypeC", subTypeC);
 		model.addAttribute("isPermittedMove", isPermittedMove);
 		model.addAttribute("isPermittedCopy", isPermittedCopy);
 		logger.debug("fileMoveConfirm end");
@@ -835,9 +798,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String companyId   = request.getParameter("companyId");
 		String folderId    = request.getParameter("folderId");
 		String type        = request.getParameter("type");
-		// 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: isDean으로 구분 추가
-		// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-		String subTypeC      = request.getParameter("subTypeC");
 		
 		logger.debug("Company Id: " + companyId + " || Folder Id: " + folderId + " || Type: " + type);
 		
@@ -852,8 +812,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 										.queryParam("userId", user.getId())
 										.queryParam("companyId", companyId)
 										.queryParam("folderId", folderId)
-										.queryParam("type", type)
-										.queryParam("subTypeC", subTypeC);
+										.queryParam("type", type);
 		
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
@@ -965,9 +924,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String mode        = request.getParameter("mode");
 		String companyId   = request.getParameter("companyId");
 		String type        = request.getParameter("type");
-		// 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: isDean으로 구분 추가
-		// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-		String subTypeC      = request.getParameter("subTypeC");
 		
 		logger.debug("FileId list: " + fileList + " || mode: " + mode + " || CompanyId: " + companyId + " || type: " + type);
 		
@@ -983,8 +939,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 										.queryParam("companyId", companyId)
 										.queryParam("fileList", fileList)
 										.queryParam("type", type)
-										.queryParam("mode", mode)
-										.queryParam("subTypeC", subTypeC);
+										.queryParam("mode", mode);
 		
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
@@ -1250,7 +1205,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 
 		if (status.equals("ok")) {
 			JSONArray histories = (JSONArray) resultBody.get("data");
-			String subTypeC = (String) resultBody.get("subTypeC");
 			boolean isEncrypted = (boolean) resultBody.get("isEncrypted");
 			boolean isPermitted = (boolean) resultBody.get("isPermitted");
 			boolean isCreator = (boolean) resultBody.get("isCreator");
@@ -1261,7 +1215,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			});
 
 			model.addAttribute("histories", histories);
-			model.addAttribute("subTypeC", subTypeC);
 			model.addAttribute("isEncrypted", isEncrypted);
 			model.addAttribute("isPermitted", isPermitted);
 			model.addAttribute("isCreator", isCreator);

@@ -8,7 +8,7 @@
 		};
 	var MY_DOMAIN = util.getHostDomain();
 //	var url = "/ezWebFolder/main.do?folderId=97&folderType=D&allFileFlag=N&parentId=root";
-	var url = "/ezWebFolder/webfolderFileListPickup.do?folderType=C&allFileFlag=N&parentId=root&folderSubtype=task";
+	var url = "/ezWebFolder/webfolderFileListPickup.do?folderType=C&allFileFlag=N&parentId=root";
 	var selectedInfo = new Object();
 	var filePick = {
 		'confirmBT' : null,

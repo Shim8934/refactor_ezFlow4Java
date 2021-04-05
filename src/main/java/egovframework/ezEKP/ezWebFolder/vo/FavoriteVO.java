@@ -17,7 +17,6 @@ public class FavoriteVO {
 	private String favoriteStatus;
 	private int tenantId;
 
-	private String folderSubType;
 	private int encryptedFlag;
 	private int depth;
 
@@ -125,14 +124,6 @@ public class FavoriteVO {
 		this.tenantId = tenantId;
 	}
 
-	public String getFolderSubType() {
-		return folderSubType;
-	}
-
-	public void setFolderSubType(String folderSubType) {
-		this.folderSubType = folderSubType;
-	}
-
 	public int getEncryptedFlag() {
 		return encryptedFlag;
 	}
@@ -161,6 +152,6 @@ public class FavoriteVO {
 	public String toString() {
 		return "FavoriteVO [targetId=" + targetId + ", targetName=" + targetName + ", targetType=" + targetType + ", targetIconUrl=" + targetIconUrl + ", targetPath=" + targetPath + ", targetExt="
 				+ targetExt + ", targetSize=" + targetSize + ", folderId=" + folderId + ", creatorId=" + creatorId + ", creatorName=" + creatorName + ", createDate=" + createDate + ", favoriteStatus="
-				+ favoriteStatus + ", tenantId=" + tenantId + ", folderSubType=" + folderSubType + ", encryptedFlag=" + encryptedFlag + ", depth=" + depth + "]";
+				+ favoriteStatus + ", tenantId=" + tenantId + ", encryptedFlag=" + encryptedFlag + ", depth=" + depth + "]";
 	}
 }

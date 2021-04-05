@@ -87,7 +87,7 @@
     	   
 	       var fileId = checkedArr[0];
     	   
-    	   DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileId=" + fileId + "&subTypeC=" + (subTypeC != null? subTypeC : ""));
+    	   DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileId=" + fileId);
        }
        
        function getChecked(obj) {

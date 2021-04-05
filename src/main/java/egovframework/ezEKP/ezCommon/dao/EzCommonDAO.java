@@ -1957,15 +1957,4 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("Already exists");
 		}
 	}
-	
-	/* 2020-12-08 김은실 - [카이스트] 웹폴더 > 폴더 타입 추가(task/meeting/dean) */
-	public void addWebfolderFolderFolderSubtypeColumn() throws Exception {
-		try {
-			select("EzCommonDAO.checkWebfolderFolderFolderSubtypeColumn");
-		} catch (Exception e) {
-			logger.debug("tbl_webfolder_folder FOLDER_SUBTYPE column doesn't exist. creating the column...");
-			// FOLDER_SUBTYPE : (카이스트) FOLDER_TYPE=C 이면서 / 업무자료관리:task 회의관리:meeting 학처장회의:dean (TOP레벨은 null)
-			update("EzCommonDAO.createWebfolderFolderFolderSubtypeColumn");
-		}
-	}
 }

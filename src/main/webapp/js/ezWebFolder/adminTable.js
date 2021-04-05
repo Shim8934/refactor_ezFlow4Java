@@ -687,7 +687,7 @@ function TableView() {
 				trElmt.setAttribute("depth", depth);
 				trElmt.onclick = function(event) {clickRow(event);};
 				trElmt.addEventListener("dblclick", function(event) {
-					if (subTypeC == "meeting" || this.getAttribute("encryptedFlag") == "1") {
+					if (this.getAttribute("encryptedFlag") == "1") {
 						unidocsWebViewer(event);
 					} else {
 						downloadFileByDbClick(event);

@@ -263,9 +263,7 @@ function startSearch() {
 
 function changeCompanyForCompFile() {
 	refresh();
-	var subTypeC = window.subTypeC;
-	var treeType = subTypeC == 'task'? "folderTree4" : subTypeC == 'meeting'? "folderTree" : subTypeC == 'dean'? "folderTree3" : "";
-	window.parent.frames["left"].getCompanyData(document.getElementById("companyList").value, 1, treeType, subTypeC);
+	window.parent.frames["left"].getCompanyData(document.getElementById("companyList").value, 1, treeType);
 }
 
 function changeCompanyForDeptFile() {
@@ -373,7 +371,7 @@ function fileMove() {
 	if (filesList == null) {alert(strLang38); return;}
 	
 	openLeftPanel();
-	DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + filesList.toString() + "&mode=admin&subTypeC=" + (subTypeC != null? subTypeC : ""));
+	DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + filesList.toString() + "&mode=admin");
 }
 
 function openFileVersionHistory() {

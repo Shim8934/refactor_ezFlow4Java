@@ -366,7 +366,6 @@
 				dataType: "json",
 				data: {
 					companyId : companyId,
-					folderSubType : p_subTypeC,
 					pageNum  : now_pageNum,
 					pageListSize : pageListSize
 				}, success: function(data) {

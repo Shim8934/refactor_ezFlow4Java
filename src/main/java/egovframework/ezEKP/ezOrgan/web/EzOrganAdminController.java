@@ -250,7 +250,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.addWebfolderLogHistory(); 					// 2020-01-20 웹폴더 파일 이력관리 컬럼추가 
 	    	ezCommonService.createWebfolderNoInherit(); 				// 권한비상속			
     		ezCommonService.alterWebfolderApplyHistoryAddColumn();
-    		ezCommonService.addWebfolderFolderFolderSubtypeColumn(); //2020-12-08 김은실 - [카이스트] 웹폴더 > 폴더 타입 추가(task/meeting/dean)
 	    	
     	} catch (Exception e) {
     		e.printStackTrace();

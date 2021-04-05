@@ -1643,9 +1643,6 @@ public class EzWebFolderGWController {
 		String folderName  		= jsonObject.get("fName")        		!= null ? (String) jsonObject.get("fName")     : "";
 		String folderName2 		= jsonObject.get("fName2")       		!= null ? (String) jsonObject.get("fName2")    : "";
 		String folderUsers 		= jsonObject.get("fUsers")       		!= null ? (String) jsonObject.get("fUsers")    : "";
-		// 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: isDean으로 구분 추가
-		// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-		String subTypeC	   		= jsonObject.get("subTypeC")       		!= null ? (String) jsonObject.get("subTypeC")    : "";
 		// 회의실 사용 기간
 		long startTime          = parseLong(jsonObject.get("startTime"));
 		long endTime            = parseLong(jsonObject.get("endTime"));
@@ -1664,7 +1661,7 @@ public class EzWebFolderGWController {
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			Map<String, Object> serviceResult =
-					ezWebFolderAdminService.addCompanyFolder(pFolderId, folderUsers, folderName, folderName2, userInfo, subTypeC, startTime, endTime, isNotInherit);
+					ezWebFolderAdminService.addCompanyFolder(pFolderId, folderUsers, folderName, folderName2, userInfo, startTime, endTime, isNotInherit);
 			result = new JSONObject(serviceResult);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1781,9 +1778,6 @@ public class EzWebFolderGWController {
 		String companyId  = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
 		String folderId   = request.getParameter("folderId")  != null ? request.getParameter("folderId")  : "";
 		String type       = request.getParameter("type")      != null ? request.getParameter("type")      : "";
-		// 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: isDean으로 구분 추가
-		// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-		String subTypeC     = request.getParameter("subTypeC")    != null ? request.getParameter("subTypeC")    : "";
 		String serverName = request.getHeader("x-user-host")    != null ? request.getHeader("x-user-host")    : "";
 //		Map<String, Object> dean = null;
 		JSONObject result = new JSONObject();
@@ -1813,14 +1807,7 @@ public class EzWebFolderGWController {
 					//Get company folder tree
 					FolderSimpleVO company = ezWebFolderService.getCompanySimpleFolder(companyId, userInfo);
 
-					// 2020-10-06 김은실 - (카이스트)커스터 마이징 메뉴: dean 추가
-					// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-//					if(isDean != null && !isDean.isEmpty()){
-//						dean = new HashMap<String, Object>();
-//						dean.put("isDean", isDean);
-//						dean.put("deanList", ezCommonService.getTenantConfig("webFolderPathsOfDean", tenantId).split(","));
-//					}
-					ezWebFolderService.getAllSubDepts(company, tenantId, 2, subTypeC);
+					ezWebFolderService.getAllSubDepts(company, tenantId, 2);
 					
 					result.put("currentFolder", "");
 					result.put("folderTree", company);
@@ -2028,7 +2015,6 @@ public class EzWebFolderGWController {
 		String userId     = request.getParameter("userId")    != null ? request.getParameter("userId")    : "";
 		String companyId  = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
 		String folderId   = request.getParameter("folderId")  != null ? request.getParameter("folderId")  : "";
-		String subTypeC 	  = request.getParameter("subTypeC") 	  != null ? request.getParameter("subTypeC")    : "";
 		JSONObject result = new JSONObject();
 //		Map<String, Object> dean = null;
 		
@@ -2079,25 +2065,17 @@ public class EzWebFolderGWController {
 				ezWebFolderAdminService.insertFolder2(folderVO);
 			}
 
-			// 2020-10-06 김은실 - (카이스트)커스터 마이징 메뉴: dean 추가
-			// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-//			if(isDean != null && !isDean.isEmpty()){
-//				dean = new HashMap<String, Object>();
-//				dean.put("isDean", isDean);
-//				dean.put("deanList", ezCommonService.getTenantConfig("webFolderPathsOfDean", tenantId).split(","));
-//			}
-			
 			FolderSimpleVO company = ezWebFolderService.getSimpleFolder(folderVO.getFolderId(), tenantId);
 			
 			if (folderId.equals("")) {
-				ezWebFolderService.getAllSubDepts(company, tenantId, 2, subTypeC);
+				ezWebFolderService.getAllSubDepts(company, tenantId, 2);
 			}
 			else {
 				FolderVO selectedFolder = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
 				String folderPath       = selectedFolder.getFolderPath();
 				folderPath              = folderPath.substring(1, folderPath.length() - 1);
 				String[] path           = folderPath.split("\\|");
-				ezWebFolderService.getAllSubDepts(company, tenantId, path, 1, subTypeC);
+				ezWebFolderService.getAllSubDepts(company, tenantId, path, 1);
 			}
 			
 			result.put("status", "ok");
@@ -2120,7 +2098,6 @@ public class EzWebFolderGWController {
 		String serverName = request.getHeader("x-user-host")   != null ? request.getHeader("x-user-host")  : "";
 		String mode       = request.getParameter("mode")     != null ? request.getParameter("mode")    : "";
 		String userId     = request.getParameter("userId")   != null ? request.getParameter("userId")  : "";
-		String subTypeC     = request.getParameter("subTypeC")   != null ? request.getParameter("subTypeC")  : "";
 		String adminCheck     = request.getParameter("adminCheck")   != null ? request.getParameter("adminCheck")  : mode;
 //		Map<String, Object> dean = null;
 		JSONObject result = new JSONObject();
@@ -2139,26 +2116,19 @@ public class EzWebFolderGWController {
 			int tenantId          = userInfo.getTenantId();
 			FolderSimpleVO folder = ezWebFolderService.getSimpleFolder(folderId, tenantId);
 			if (mode.equals("1") && folder.getFolderLevel() == 0) {
-				// 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: dean 추가
-				// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-//				if(isDean != null && !isDean.isEmpty()){
-//					dean = new HashMap<String, Object>();
-//					dean.put("isDean", isDean);
-//					dean.put("deanList", ezCommonService.getTenantConfig("webFolderPathsOfDean", tenantId).split(","));
-//				}
 				List<String> idList = null;
-				if( !adminCheck.equals("admin") && ezWebFolderAdminService.getFolderIdsByManagerUserId(userId, folderId, "", userInfo.getCompanyID(), tenantId).size() == 0){
+				if( !adminCheck.equals("admin") && ezWebFolderAdminService.getFolderIdsByManagerUserId(userId, folderId, userInfo.getCompanyID(), tenantId).size() == 0){
 					idList = ezWebFolderService_y.idListUpgrade(userId, userInfo.getDeptID(), userInfo.getCompanyID(), tenantId);
 				}
-				List<FolderSimpleVO> listCompSubFolders = ezWebFolderService.getCompanySubSimpleFolder(userInfo.getId(), userInfo.getDeptID(), folder.getFolderId(), userInfo.getCompanyID(), tenantId, subTypeC, idList);
+				List<FolderSimpleVO> listCompSubFolders = ezWebFolderService.getCompanySubSimpleFolder(userInfo.getId(), userInfo.getDeptID(), folder.getFolderId(), userInfo.getCompanyID(), tenantId, idList);
 				folder.setListSubFolders(listCompSubFolders);
 			}
 			else {
 				List<String> idList = null;
-				if( !adminCheck.equals("admin") && ezWebFolderAdminService.getFolderIdsByManagerUserId(userId, folderId, "", userInfo.getCompanyID(), tenantId).size() == 0){
+				if( !adminCheck.equals("admin") && ezWebFolderAdminService.getFolderIdsByManagerUserId(userId, folderId, userInfo.getCompanyID(), tenantId).size() == 0){
 					idList = ezWebFolderService_y.idListUpgrade(userId, userInfo.getDeptID(), userInfo.getCompanyID(), tenantId);
 				}
-				ezWebFolderService.getAllSubDepts(folder, tenantId, 1, subTypeC, idList);
+				ezWebFolderService.getAllSubDepts(folder, tenantId, 1, idList);
 			}
 			
 			result.put("status", "ok");
@@ -2218,11 +2188,9 @@ public class EzWebFolderGWController {
 			boolean isInhertiedEncryption = isEncryption && !folderId.equals(encryptionRootFolder.getFolderId());
 
 			// 회의실 사용 기간
-			if (folder.isMeeting()) {
 				MeetingPeriod period = ezWebFolderService.getMeetingPeriod(folderId, offset, tenantId);
 				result.put("meetingStartDate", period.getStartDate());
 				result.put("meetingEndDate", period.getEndDate());
-			}
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -2337,9 +2305,6 @@ public class EzWebFolderGWController {
 		String serverName   = request.getHeader("x-user-host")    != null ? request.getHeader("x-user-host")    : "";
 		String userId       = request.getParameter("userId")    != null ? request.getParameter("userId")    : "";
 		String destFolderId = request.getParameter("parentFld") != null ? request.getParameter("parentFld") : "";
-		// 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: isDean으로 구분 추가
-		// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-		String subTypeC		= request.getParameter("subTypeC") 	!= null ? request.getParameter("subTypeC") 	: "";
 		JSONObject result   = new JSONObject();
 		
 		logger.debug("FolderID: " + folderId + " || serverName: " + serverName + " || destination: " + destFolderId + " || mode: " + mode + " UserId: " + userId);
@@ -2374,7 +2339,7 @@ public class EzWebFolderGWController {
 			}
 			
 			String realPath = request.getServletContext().getRealPath("");
-			List<DuplicateInfoVO> duplicateList = ezWebFolderAdminService.moveCompanyFolder(folder, destFolder, mode, realPath, userInfo, subTypeC, "admin");
+			List<DuplicateInfoVO> duplicateList = ezWebFolderAdminService.moveCompanyFolder(folder, destFolder, mode, realPath, userInfo, "admin");
 		
 			if (duplicateList == null){
 				result.put("status", "error");
@@ -3052,9 +3017,6 @@ public class EzWebFolderGWController {
 		String companyId  = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
 		String mode       = request.getParameter("mode")      != null ? request.getParameter("mode")      : "";
 		String type       = request.getParameter("type")      != null ? request.getParameter("type")      : "";
-		// 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: isDean으로 구분 추가
-		// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-		String subTypeC     = request.getParameter("subTypeC")    != null ? request.getParameter("subTypeC")    : "";
 		String serverName = request.getHeader("x-user-host")    != null ? request.getHeader("x-user-host")    : "";
 		String[] fileArr  = fileList.split(",");
 //		Map<String, Object> dean = null;
@@ -3082,20 +3044,13 @@ public class EzWebFolderGWController {
 					FolderSimpleVO company = new FolderSimpleVO();
 					if (webfolderUtil.isWebfolderAdmin(userInfo) && mode.equalsIgnoreCase("admin")) {
 						company = ezWebFolderService.getCompanySimpleFolder(companyId, userInfo);
-						ezWebFolderService.getAllSubDepts(company, tenantId, 2, subTypeC);
+						ezWebFolderService.getAllSubDepts(company, tenantId, 2);
 					}
 					else {
 						company                                 = ezWebFolderService.getCompanySimpleFolder(userInfo.getCompanyID(), userInfo);
 						
-						// 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: dean 추가
-						// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-//						if(isDean != null && !isDean.isEmpty()){
-//							dean = new HashMap<String, Object>();
-//							dean.put("isDean", isDean);
-//							dean.put("deanList", ezCommonService.getTenantConfig("webFolderPathsOfDean", tenantId).split(","));
-//						}
 						List<String> idList = ezWebFolderService_y.idListUpgrade(userId, userInfo.getDeptID(), userInfo.getCompanyID(), tenantId);
-						List<FolderSimpleVO> listCompSubFolders = ezWebFolderService.getCompanySubSimpleFolder(userInfo.getId(), userInfo.getDeptID(), company.getFolderId(), userInfo.getCompanyID(), tenantId, subTypeC, idList);
+						List<FolderSimpleVO> listCompSubFolders = ezWebFolderService.getCompanySubSimpleFolder(userInfo.getId(), userInfo.getDeptID(), company.getFolderId(), userInfo.getCompanyID(), tenantId, idList);
 						
 						if (listCompSubFolders != null && listCompSubFolders.size() > 0) {
 							company.setHasSubFolder(1);
@@ -3223,40 +3178,6 @@ public class EzWebFolderGWController {
 		}
 		
 		logger.debug("getListCount end");
-		return result;
-	}
-	
-	// 
-	@RequestMapping(value="/rest/ezwebfolder/users/{userid}/getPortletFolderId", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject getPortletFolderId(@PathVariable(value="userid") String userId, HttpServletRequest request, Locale locale) {
-		logger.debug("getPortletFolderId start");
-		String serverName = request.getHeader("x-user-host")   != null ? request.getHeader("x-user-host") : "";
-		JSONObject result = new JSONObject();
-		
-		logger.debug("ServerName: " + serverName + " || userId: " + userId);
-		
-		if (serverName.equals("") || userId.equals("")) {
-			logger.debug("Parameter error!");
-			result.put("status", "error");
-			result.put("code", 1);
-			return result;
-		}
-		
-		try {
-			int tenantId         = loginService.getTenantId(serverName);
-			String folderId = ezWebFolderService_y.folderIdByUserIdAndFolderType(userId, tenantId, "C");
-			
-			result.put("data", folderId != null ? folderId : "");
-			result.put("status", "ok");
-			result.put("code", 0);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			result.put("status", "error");
-			result.put("code", 2);
-		}
-		
-		logger.debug("getPortletFolderId end");
 		return result;
 	}
 	
@@ -3685,11 +3606,6 @@ public class EzWebFolderGWController {
 
 			FileVO file = ezWebFolderService.getFileByFileId(fileId, user.getOffset(), user.getTenantId());
 			FolderVO folder = ezWebFolderService.getFolderByFolderId(file.getFolderId(), user.getOffset(), user.getTenantId());
-			// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-//			boolean isDean = ezWebFolderService.isDeanFolder(folder);
-
-//			result.put("isDean", isDean);
-			result.put("subTypeC", orElse(folder.getFolderSubType(), ""));
 			result.put("isEncrypted", ezWebFolderService.isEncryptedFile(fileId, user.getTenantId()));
 			result.put("isCreator", file.getCreateId().equals(userId));
 			result.put("data", dataJson);
@@ -3982,7 +3898,6 @@ public class EzWebFolderGWController {
 		logger.debug("checkFolderManager start");
 		String serverName = request.getHeader("x-user-host") != null ? request.getHeader("x-user-host") : "";
 		String folderId     = request.getParameter("folderId")   != null ? request.getParameter("folderId")   : "";
-		String subTypeC     = request.getParameter("subTypeC")   != null ? request.getParameter("subTypeC")   : "";
 		JSONObject result = new JSONObject();
 		
 		logger.debug("ServerName: " + serverName + " || userId: " + userId);
@@ -3996,7 +3911,7 @@ public class EzWebFolderGWController {
 		
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-			List<String> managedFolderList = ezWebFolderAdminService.getFolderIdsByManagerUserId(userInfo.getId(), folderId, subTypeC, userInfo.getCompanyID(), userInfo.getTenantId());
+			List<String> managedFolderList = ezWebFolderAdminService.getFolderIdsByManagerUserId(userInfo.getId(), folderId, userInfo.getCompanyID(), userInfo.getTenantId());
 			JSONArray folderListMap = new JSONArray();
 			for( String folderIdTemp : managedFolderList){
 				FolderVO folderVOtemp = ezWebFolderService_y.getFolderDetail(folderIdTemp, userId, userInfo.getTenantId(), userInfo.getCompanyID());

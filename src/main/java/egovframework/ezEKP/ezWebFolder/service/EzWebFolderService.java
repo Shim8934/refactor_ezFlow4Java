@@ -28,7 +28,7 @@ import egovframework.let.user.login.vo.LoginVO;
 public interface EzWebFolderService {
 	String getFileSequence(int tenantId) throws Exception;
 	void insertFile(FileVO fileVO) throws Exception;
-	void insertFileUser(FileVO fileVO, String seqId, String userId, String userType, String comId, String subFolderType) throws Exception;
+	void insertFileUser(FileVO fileVO, String seqId, String userId, String userType, String comId) throws Exception;
 	FileVO getFileByFileId(String fileId, String offset, int tenantId) throws Exception;
 	void deleteFileByFileId(String fileId, int tenantId) throws Exception;
 	void updateFileUseStatus(String userId, String fileId, String timeUTC, int tenantId) throws Exception;
@@ -38,13 +38,13 @@ public interface EzWebFolderService {
 	String getFileLogSequence(int tenantId) throws Exception;
 	FolderVO getFolderByFolderId(String folderId, String offset, int tenantId) throws Exception;
 	FolderSimpleVO getSimpleFolder(String folderId, int tenantId) throws Exception;
-	List<FolderSimpleVO> getAllSimpleSubFolders(String folderUpperId, int tenantId, String subTypeC, List<String> idList) throws Exception;
-	List<FolderSimpleVO> getAllSimpleSubFolders(String folderUpperId, int tenantId, String subTypeC, List<String> idList, String folderId) throws Exception;
+	List<FolderSimpleVO> getAllSimpleSubFolders(String folderUpperId, int tenantId, List<String> idList) throws Exception;
+	List<FolderSimpleVO> getAllSimpleSubFolders(String folderUpperId, int tenantId, List<String> idList, String folderId) throws Exception;
 	FolderVO getRootFolderId(String companyId, String type, String offset, int tenantId) throws Exception;
-	void getAllSubDepts(FolderSimpleVO company, int tenantId, int i, String subTypeC) throws Exception;
-	void getAllSubDepts(FolderSimpleVO company, int tenantId, int i, String subTypeC, List<String> idList) throws Exception;
-	void getAllSubDepts(FolderSimpleVO company, int tenantId, String[] fdPath, int order, String subTypeC) throws Exception;
-	void getAllSubDepts(FolderSimpleVO company, int tenantId, String[] fdPath, int order, String subTypeC, List<String> idList) throws Exception;
+	void getAllSubDepts(FolderSimpleVO company, int tenantId, int i) throws Exception;
+	void getAllSubDepts(FolderSimpleVO company, int tenantId, int i, List<String> idList) throws Exception;
+	void getAllSubDepts(FolderSimpleVO company, int tenantId, String[] fdPath, int order) throws Exception;
+	void getAllSubDepts(FolderSimpleVO company, int tenantId, String[] fdPath, int order, List<String> idList) throws Exception;
 	void updateDownCnt(String fileId, int tenantId) throws Exception;
 	List<FolderUserVO> getFolderUsers(String folderId, int tenantId) throws Exception;
 	List<FolderUserVO> getFileUsers(String fileId, int tenantId) throws Exception;
@@ -75,7 +75,7 @@ public interface EzWebFolderService {
 	List<OrganDeptVO> getAllDepartments(String companyId, String primary, int tenantId) throws Exception;
 	List<FolderSimpleVO> getDeptFolderTreeForUser(String userId, String deptID, int tenantId) throws Exception;
 	FolderSimpleVO getCompanySimpleFolder(String companyID, LoginVO userInfo) throws Exception;
-	List<FolderSimpleVO> getCompanySubSimpleFolder(String userId, String deptId, String compFolderId, String compId, int tenantId, String subTypeC, List<String> idList) throws Exception;
+	List<FolderSimpleVO> getCompanySubSimpleFolder(String userId, String deptId, String compFolderId, String compId, int tenantId, List<String> idList) throws Exception;
 	FolderSimpleVO getUserSimpleFolder(String userId, int tenantId) throws Exception;
 	boolean checkDepartChief(String userId, int tenantId) throws Exception;
 	WebfolderEnvVO getListCount(String userId, int tenantId) throws Exception;

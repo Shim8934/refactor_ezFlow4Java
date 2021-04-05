@@ -53,14 +53,7 @@
 		    	} else if (folderType == "U") {
 		    		openFolder('personal');
 		    	} 
-		    	/* 
-		    	if(Boolean("${PortletFolderId}".trim())) {
-		    		// 2021-01-13 김은실 - 포틀릿 more을 타고 온 경우: PortletFolderId 값이 있음.
-		    		folderListOverloading(folderType, false, "${PortletFolderId}".trim());
-		    	} else {
-		    	 */
-					folderList(folderType);
-		    	//}
+				folderList(folderType);
 		    	
 		    	leftResize();
 		        $(".webfolderListBox").mCustomScrollbar({
@@ -81,12 +74,6 @@
 		    }
 		    
 		    function folderList(obj) {
-		    /*
-		    	folderListOverloading(obj, true, "");
-		    }
-			var firstLevelArray = []; 
-		    function folderListOverloading(obj, isFirstLevelDisplay, PortletFolderId) {
-		    */
 		    	$($element).jstree('destroy');
 				if ( obj == 'C') {
 					$element = '#tree';
@@ -107,12 +94,11 @@
 						},
 					dataType: "JSON",
 					success : function (data) {
-						/* 해당폴더가 없음 화면
-						if(data.data.length == 1){
+						var listSize = data.data.length;
+						if (obj == 'C' && listSize == 1) {
 							openWebFolderRightWarning();
 							return;
 						}
-						*/
 
 						var firstNode = "#" + folderId;
 						
@@ -131,19 +117,6 @@
 							folderId = firFolderId;
 							parentId = data.data[0].parent;
 							getFileList(folderId);
-							
-							/* 첫번째 폴더 오픈
-							firstLevelArray = [];
-							for(var i = 0; i < data.data.length; i++){ 
-								if(data.data[i].parent == folderId){
-									firstLevelArray.push(data.data[i]["id"]);
-								}
-							}
-							if( ! firstLevelArray.length > 0 ){
-								openWebFolderRightWarning();
-								return;
-							}
-							*/
 						}).on('changed.jstree', function (e, data) {
 							var folderId = "";
 							folderId = data.selected[0];
@@ -173,22 +146,6 @@
 								"width"       : "20",
 								"margin-left" : "10"
 							}
-						/* 첫번째 폴더 오픈
-						}).on("ready.jstree", function(event) {
-							$(this).jstree("open_all");
-							for ( var i in firstLevelArray) {
-								$("#tree").jstree("toggle_node", '#' + firstLevelArray[i]);
-							}
-							
-							if(Boolean(PortletFolderId)){
-								selectFolder(PortletFolderId);
-								$('#' + PortletFolderId + '_anchor').click();
-							} else if(isFirstLevelDisplay){
-								$('#' + firstLevelArray[0] + '_anchor').click();
-							} else {
-								getFileList(folderId);
-							}
-						*/
 						});
 					},
 					error : function(error) {
@@ -263,18 +220,6 @@
 								"width"       : "20",
 								"margin-left" : "10"
 							}
-						/* 첫번째 폴더 오픈
-						}).on("ready.jstree", function(event) {
-							$(this).jstree("open_all");
-
-							for ( var i in firstLevelArray) {
-								$("#tree").jstree("toggle_node", '#' + firstLevelArray[i]);
-							}
-							
-							// 삭제하거나 어떤 변화가 있을 때 자꾸 다 닫히는 게 거슬린다면.. : selectFolder(selectFolderData == ""? folderId : selectFolderData); 
-							//									   + getFileList()에 selectFolderData = folderId;
-							selectFolder(folderId);
-						*/
 						});
 					},
 					error : function(error) {
@@ -366,9 +311,7 @@
 			}
 			
 			function wfConfig() {
-				if (warningFlag == "N") {
-					window.parent.frames["right"].location.href = "/ezWebFolder/webfolderConfig.do";
-				}
+				window.parent.frames["right"].location.href = "/ezWebFolder/webfolderConfig.do";
 			}
 			
 			function getTrashCanList() {
@@ -424,9 +367,6 @@
 	        		
 	        		if (val01 == "company") {
 	        			folderList('C')
-	        			/*
-	        			folderListOverloading('C', false, "");
-	        			*/
 	        		} else if (val01 == "dept") {
 	        			folderList('D');
 	        		} else if (val01 == "personal") {
@@ -482,12 +422,11 @@
 				getFileList(folderId);
 			}
 			
-			/* 해당폴더가 없음 화면
+			// 해당폴더가 없음 화면
 			function openWebFolderRightWarning() {
 				warningFlag = "Y";
-				window.parent.frames["right"].location.href = "/ezWebFolder/openWebFolderRightWarning.do?subTypeC=${subTypeC}";
+				window.parent.frames["right"].location.href = "/ezWebFolder/openWebFolderRightWarning.do";
 			}
-			*/
 
 			function appliWebFolder() {
 				if (typeof window.parent.frames["right"].applicationPopUp === "function") { 

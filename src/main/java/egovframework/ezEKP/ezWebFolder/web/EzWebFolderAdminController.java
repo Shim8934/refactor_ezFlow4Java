@@ -148,17 +148,12 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		}
 		
 		String folderId = request.getParameter("folderId") != null ? request.getParameter("folderId") : "";
-		// 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: isDean으로 구분 추가
-		// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-		String subTypeC 	= request.getParameter("subTypeC")   != null ? request.getParameter("subTypeC")   : "";
-		
 		if (folderId.equals("")) {
 			logger.debug("Folder delete confirm illegal arguments!");
 			return "cmm/error/egovError";
 		}
 		
 		model.addAttribute("folderId", folderId);
-		model.addAttribute("subTypeC", subTypeC);
 		logger.debug("deleteFolderConfirm end");
 		return "admin/ezWebFolder/folderDelete";
 	}
@@ -209,11 +204,6 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		}
 		
 		String folderId      = request.getParameter("folderId")   != null ? request.getParameter("folderId") : "";
-		// 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: isDean으로 구분 추가
-		// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-		String subTypeC      	 = request.getParameter("subTypeC")  	  != null ? request.getParameter("subTypeC") 	 : "";
-		
-		logger.debug("Folder Id: " + folderId + "subTypeC: " + subTypeC);
 		
 		String gwServerUrl   = config.getProperty("config.webFolderGwServerURL");
 		String url           = gwServerUrl + "/rest/ezwebfolderadmin/company-list/" + user.getId();
@@ -241,7 +231,6 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		}
 		
 		model.addAttribute("folderId", folderId);
-		model.addAttribute("subTypeC", subTypeC);
 		logger.debug("folderMoveConfirm end");
 		
 		return "admin/ezWebFolder/folderMove";
@@ -357,10 +346,6 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 			model.addAttribute("isAdminMode", (boolean) resultBody.get("isAdminMode"));
 			model.addAttribute("useKlib", (boolean) resultBody.get("useKlib"));
 		}
-		// 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: isDean으로 구분 추가
-		// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-		String subTypeC = request.getParameter("subTypeC");
-		model.addAttribute("subTypeC", subTypeC != null? subTypeC : "");
 		
 		logger.debug("webfolderCompanyFolder end");
 		return "admin/ezWebFolder/webfolderCompanyFolder";
@@ -417,7 +402,6 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		}
 
 		model.addAttribute("level", level);
-		model.addAttribute("subTypeC", request.getParameter("subTypeC"));
 		logger.debug("webfolderCompanyFile end");
 		return "admin/ezWebFolder/webfolderCompanyFile";
 	}
@@ -510,8 +494,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 			headers2.set("x-user-host", request.getServerName());
 			HttpEntity<?> entity2 = new HttpEntity<>(headers2);
 			
-			UriComponentsBuilder builder2  = UriComponentsBuilder.fromHttpUrl(url2)
-					.queryParam("subTypeC", "task");
+			UriComponentsBuilder builder2  = UriComponentsBuilder.fromHttpUrl(url2);
 			RestTemplate rest2             = new RestTemplate();
 			ResponseEntity<String> result2 = rest.exchange(builder2.build().encode().toUri(), HttpMethod.GET, entity2, String.class);
 			
@@ -889,9 +872,6 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		String companyId     = request.getParameter("companyId");
 		String folderId      = request.getParameter("folderId");
-		// 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: isDean으로 구분 추가
-		// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-		String subTypeC     	 = request.getParameter("subTypeC");
 		
 		logger.debug("CompanyId: " + companyId + " || FolderId: " + folderId);
 		
@@ -905,8 +885,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("companyId", companyId)
 										.queryParam("folderId", folderId)
-										.queryParam("userId", user.getId())
-										.queryParam("subTypeC", subTypeC);
+										.queryParam("userId", user.getId());
 		
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
@@ -925,10 +904,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		String folderId      = request.getParameter("folderId");
 		String mode          = request.getParameter("mode");
-		// 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: isDean으로 구분 추가
-		// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-		String subTypeC        = request.getParameter("subTypeC");
-		String adminCheck      = request.getParameter("adminCheck")   != null ? request.getParameter("adminCheck")  : mode;
+		String adminCheck    = request.getParameter("adminCheck")   != null ? request.getParameter("adminCheck")  : mode;
 		
 		logger.debug("FolderId: " + folderId + " || mode: " + mode);
 		
@@ -942,7 +918,6 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("userId", user.getId())
 										.queryParam("mode", mode)
-										.queryParam("subTypeC", subTypeC)
 										.queryParam("adminCheck", adminCheck);
 		
 		RestTemplate rest             = new RestTemplate();
@@ -1072,9 +1047,6 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String folderName      = request.getParameter("folderName");
 		String folderName2     = request.getParameter("folderName2");
 		String folderUsers     = request.getParameter("folderUsers");
-		// 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: isDean으로 구분 추가
-		// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-		String subTypeC	       = request.getParameter("subTypeC");
 		// 회의실 사용 기간
 		String startTime       = request.getParameter("startTime");
 		String endTime         = request.getParameter("endTime");
@@ -1092,7 +1064,6 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		jsonObject.put("fName", folderName);
 		jsonObject.put("fName2", folderName2);
 		jsonObject.put("fUsers", folderUsers);
-		jsonObject.put("subTypeC", subTypeC);
 		jsonObject.put("startTime", startTime);
 		jsonObject.put("endTime", endTime);
 		jsonObject.put("noInherit", noInherit);
@@ -1191,9 +1162,6 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		}
 		
 		String folderId      = request.getParameter("folderId");
-		// 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: isDean으로 구분 추가
-		// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-		String subTypeC      	 = request.getParameter("subTypeC");
 		
 		logger.debug("Folder Id: " + folderId);
 		
@@ -1205,8 +1173,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("userId", user.getId())
-										.queryParam("subTypeC", subTypeC);
+										.queryParam("userId", user.getId());
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.DELETE, entity, String.class);
 		JSONParser jp                 = new JSONParser();
@@ -1288,9 +1255,6 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String folderId     = request.getParameter("folderId");
 		String parentFld    = request.getParameter("parentFldId");
 		String mode         = request.getParameter("mode");
-		// 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: isDean으로 구분 추가
-		// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-		String subTypeC       = request.getParameter("subTypeC");
 		
 		logger.debug("Folder Id: " + folderId + " || Parent folderId: " + parentFld + " || mode: " + mode);
 		
@@ -1299,8 +1263,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("userId", user.getId())
-										.queryParam("parentFld", parentFld)
-										.queryParam("subTypeC", subTypeC);
+										.queryParam("parentFld", parentFld);
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -1769,10 +1732,6 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
-		String type = request.getParameter("type");
-		type = type.equals("") ? "task" : type;
-		logger.debug("companyId=" + companyId + ", type=" + type);
-		
 		// get companyList, companyId, isAdminMode
 		String gwServerUrl   = config.getProperty("config.webFolderGwServerURL");
 		String url           = gwServerUrl + "/rest/ezwebfolderadmin/company-list/" + user.getId();
@@ -1796,7 +1755,6 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		} 
 		// end companyList, companyId, isAdminMode
 		
-		model.addAttribute("subTypeC", type);
 		model.addAttribute("userCompany", companyId);
 		model.addAttribute("list", companyList);
 
@@ -1820,19 +1778,17 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		
 		String companyId = request.getParameter("companyId");
 		companyId = companyId.trim().equals("") ? userCompanyId : companyId;
-		String folderSubType = request.getParameter("folderSubType");
 		String pageNum = request.getParameter("pageNum");
 		String pageListSize = request.getParameter("pageListSize");
-		logger.debug("companyId=" + companyId + ", tenantId=" + tenantId + ", folderSubType=" + folderSubType
+		logger.debug("companyId=" + companyId + ", tenantId=" + tenantId
 				 + ", pageNum=" + pageNum + ", pageListSize=" + pageListSize);
 		
-		if (folderSubType.trim().equals("") || pageNum.trim().equals("") || pageListSize.trim().equals("")) {
+		if (pageNum.trim().equals("") || pageListSize.trim().equals("")) {
 			reStatus = "MISSING_VALUE";
 		} else {
 			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("companyId", companyId);
 			param.put("tenantId", tenantId);
-			param.put("folderSubType", folderSubType);
 			param.put("pageNum", pageNum);
 			param.put("pageListSize", pageListSize);
 			
@@ -1903,8 +1859,6 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String lang = userInfo.getLang();
 		
 		String applyId = request.getParameter("applyId");
-		String subTypeC = request.getParameter("subTypeC");
-		logger.debug("applyId=" + applyId + ", subTypeC=" + subTypeC);
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("applyId", applyId);
@@ -1921,10 +1875,8 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 				List<OrganUserVO> toUserList = new ArrayList<OrganUserVO>();
 				toUserList.add(ezOrganService.getUserInfo(applicantId, lang, tenantId));
 				
-				String mailSubjectMsg = subTypeC.equalsIgnoreCase("task") ? "ezWebFolder.ksa54" : "ezWebFolder.ksa56";
-				String mailContentMsg = subTypeC.equalsIgnoreCase("task") ? "ezWebFolder.ksa58" : "ezWebFolder.ksa59";
-				String mailSubject = egovMessageSource.getMessage(mailSubjectMsg, locale);
-				String mailContent = egovMessageSource.getMessage(mailContentMsg, locale);
+				String mailSubject = egovMessageSource.getMessage("ezWebFolder.ksa54", locale);
+				String mailContent = egovMessageSource.getMessage("ezWebFolder.ksa58", locale);
 				mailSubject = String.format(mailSubject, folderName);
 				mailContent = String.format(mailContent, folderName);
 				
@@ -1952,8 +1904,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		
 		String applyId = request.getParameter("applyId");
 		String reasonContent = request.getParameter("reasonCont");
-		String subTypeC = request.getParameter("subTypeC");
-		logger.debug("applyId=" + applyId + ", subTypeC=" + subTypeC +", reasonContent=" + reasonContent);
+		logger.debug("applyId=" + applyId + ", reasonContent=" + reasonContent);
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("applyId", applyId);
@@ -1969,10 +1920,8 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 				List<OrganUserVO> toUserList = new ArrayList<OrganUserVO>();
 				toUserList.add(ezOrganService.getUserInfo(applicantId, lang, tenantId));
 				
-				String mailSubjectMsg = subTypeC.equalsIgnoreCase("task") ? "ezWebFolder.ksa55" : "ezWebFolder.ksa57";
-				String mailContentMsg = subTypeC.equalsIgnoreCase("task") ? "ezWebFolder.ksa60" : "ezWebFolder.ksa61";
-				String mailSubject = egovMessageSource.getMessage(mailSubjectMsg, locale);
-				String mailContent = egovMessageSource.getMessage(mailContentMsg, locale);
+				String mailSubject = egovMessageSource.getMessage("ezWebFolder.ksa55", locale);
+				String mailContent = egovMessageSource.getMessage("ezWebFolder.ksa60", locale);
 				mailSubject = String.format(mailSubject, folderName);
 				mailContent = String.format(mailContent, folderName, reasonContent);
 				

@@ -383,10 +383,6 @@ var buttons = (function() {
 					} 
 					params.push("folderTypeCheck=" + folderTypeCheck);
 					
-					// 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: isDean으로 구분 추가
-					// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-					params.push("subTypeC=" + (subTypeC != null? subTypeC : ""));
-					
 					openLeftPanel();
 					DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?" + params.join("&"));
 				}
@@ -419,8 +415,7 @@ var buttons = (function() {
 			}
 			
 			openLeftPanel();
-			DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + selected.files.toString() + "&type=copy&folderTypeCheck=" + folderTypeCheck 
-					+ "&subTypeC=" + (subTypeC != null? subTypeC : ""));
+			DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + selected.files.toString() + "&type=copy&folderTypeCheck=" + folderTypeCheck);
 		},
 		
 		newFolder: function() {

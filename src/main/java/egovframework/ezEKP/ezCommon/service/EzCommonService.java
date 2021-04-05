@@ -301,6 +301,4 @@ public interface EzCommonService {
 	void createWebfolderNoInherit();
 	
 	public void alterWebfolderApplyHistoryAddColumn() throws Exception;
-	
-	public void addWebfolderFolderFolderSubtypeColumn() throws Exception;
 }

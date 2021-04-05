@@ -879,7 +879,7 @@ public class EzWebFolderGWController_m {
 
 				boolean isManaged = folderManagedCache.computeIfAbsent(folderId, fldId -> {
 					try {
-						return ezWebFolderAdminService.getFolderIdsByManagerUserId(userId, fldId, "task", companyId, tenantId).size() > 0;
+						return ezWebFolderAdminService.getFolderIdsByManagerUserId(userId, fldId, companyId, tenantId).size() > 0;
 					} catch (Exception e) {
 						e.printStackTrace();
 						return false;
@@ -1486,7 +1486,7 @@ public class EzWebFolderGWController_m {
 	/**
 	 * 웹폴더 개설 신청
 	 * - 웹폴더 개설 신청 정보, 개설 신청 당시의 구성원, 담당자 목록 저장
-	 * param : folderName, content, folderSubType, memberList
+	 * param : folderName, content, memberList
 	 */
 	@RequestMapping(value="/rest/ezwebfolder/{userId}/setApplyHistory", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject setApplyHistory (@PathVariable String userId, HttpServletRequest request, @RequestBody JSONObject bodyObj) {
@@ -1501,7 +1501,6 @@ public class EzWebFolderGWController_m {
 		logger.debug("bodyObj=" + bodyObj.toString());
 		String folderName = commonUtil.cleanValue(orElse((String) bodyObj.get("folderName"), ""));
 		String content = commonUtil.cleanValue(orElse((String) bodyObj.get("content"), ""));
-		String folderSubType = orElse((String) bodyObj.get("folderSubType"), "");
 		String memberList = orElse((String) bodyObj.get("memberList"), "[]");
 		String usingS = orElse((String) bodyObj.get("usingS"), "");
 		String usingE = orElse((String) bodyObj.get("usingE"), "");
@@ -1512,7 +1511,7 @@ public class EzWebFolderGWController_m {
 		String primary = userInfo.getPrimary();
 		String companyId = userInfo.getCompanyID();
 		logger.debug("userId=" + userId + ", serverName=" + serverName + ", tenantId=" + tenantId + ", primary=" + primary + ", companyId=" + companyId 
-				+ ", folderName=" + folderName + ", content=" + content + ", folderSubType=" + folderSubType + ", usingS=" + usingS + ", usingE=" + usingE);
+				+ ", folderName=" + folderName + ", content=" + content + ", usingS=" + usingS + ", usingE=" + usingE);
 
 		try {
 			// 이름 중복 체크
@@ -1531,7 +1530,7 @@ public class EzWebFolderGWController_m {
 			ObjectMapper objMapper = new ObjectMapper();
 			List<Map<String, String>> memList = objMapper.readValue(jsonArr.toString(), objMapper.getTypeFactory().constructCollectionType(List.class, Map.class));
 
-			applyId = ezWebFolderService_m.setWebFolderApplyHistory(primary, tenantId, companyId, folderName, content, folderSubType, memList, usingS, usingE);
+			applyId = ezWebFolderService_m.setWebFolderApplyHistory(primary, tenantId, companyId, folderName, content, memList, usingS, usingE);
 		} catch (Exception e) {
 			String errorMsg = orElse(e.getMessage(), "");
 			if (errorMsg.equals("HISTORY_ERROR") || errorMsg.equals("HISTORY_MEMBER_ERROR") || errorMsg.equals("DUPLICATE_NAME")) {
@@ -1552,7 +1551,7 @@ public class EzWebFolderGWController_m {
 	
 	/**
 	 * 웹폴더 개설 신청 리스트
-	 * param : companyId, folderSubType, tenantId, pageNum, pageListSize
+	 * param : companyId, tenantId, pageNum, pageListSize
 	 * return : total size(전체 신청 개수), list<map<>>(개설신청리스트)
 	 */
 	@RequestMapping(value="/rest/ezwebfolder/getApplyHistoryList", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
@@ -1566,21 +1565,19 @@ public class EzWebFolderGWController_m {
 		JSONArray applicationHistoryArr = new JSONArray();
 		
 		String companyId = orElse(request.getParameter("companyId"), "");
-		String folderSubType = orElse(request.getParameter("folderSubType"), "");
 		int tenantId = Integer.parseInt(orElse(request.getParameter("tenantId"), "0"));
 		int pageNum = Integer.parseInt(orElse(request.getParameter("pageNum"), "0")); // 현재 페이지 번호
 		int pageListSize = Integer.parseInt(orElse(request.getParameter("pageListSize"), "0")); // 보여줄 리스트 개수
-		logger.debug("tenantId=" + tenantId + ", companyId=" + companyId + ", pageNum=" + pageNum + ", pageListSize=" + pageListSize
-				+ ", folderSubType=" + folderSubType);
+		logger.debug("tenantId=" + tenantId + ", companyId=" + companyId + ", pageNum=" + pageNum + ", pageListSize=" + pageListSize);
 
 		try {
-			totalSize = ezWebFolderService_m.getWebFolderApplyHistoryListCount(tenantId, companyId, folderSubType);
+			totalSize = ezWebFolderService_m.getWebFolderApplyHistoryListCount(tenantId, companyId);
 			
 			int startList = (pageNum-1) * pageListSize;
 			int endList = pageNum * pageListSize;
 			logger.debug("startList=" + startList + ", endList=" + endList);
 			
-			List<Map<String, String>> historyListMap = ezWebFolderService_m.getWebFolderApplyHistoryList(tenantId, companyId, folderSubType, startList, endList);
+			List<Map<String, String>> historyListMap = ezWebFolderService_m.getWebFolderApplyHistoryList(tenantId, companyId, startList, endList);
 			for (Map<String, String> mm : historyListMap) {
 				applicationHistoryArr.add(new JSONObject(mm));
 			}
@@ -1667,12 +1664,10 @@ public class EzWebFolderGWController_m {
 			
 			if (historyMap != null) {
 				// 웹폴더 생성 정보
-				String subTypeC = historyMap.get("folderSubType");
 				long startTime = 0;
 				long endTime = 0;
 				folderName = commonUtil.cleanValueUnescape(historyMap.get("folderName"));
 				
-				if ("meeting".equalsIgnoreCase(subTypeC)) {
 					String usingS = historyMap.get("usingS");
 					String usingE = historyMap.get("usingE");
 					
@@ -1681,7 +1676,6 @@ public class EzWebFolderGWController_m {
 					Date dateE = sdf.parse(usingE);
 					startTime = dateS.getTime();
 					endTime = dateE.getTime();
-				}
 				
 				// 관리자, 구성원 정보
 				JSONArray memberListArr = new JSONArray();
@@ -1723,7 +1717,7 @@ public class EzWebFolderGWController_m {
 				logger.debug("pFolderId=" + pFolderId);
 				
 				Map<String, Object> serviceResult =
-						ezWebFolderAdminService.addCompanyFolder(pFolderId, memberListArr.toString(), folderName, folderName, userInfo, subTypeC, startTime, endTime, false);
+						ezWebFolderAdminService.addCompanyFolder(pFolderId, memberListArr.toString(), folderName, folderName, userInfo, startTime, endTime, false);
 				String addFolderStatus = (String) serviceResult.get("status");
 				int addFolderCode = (int) serviceResult.get("code");
 				logger.debug("addFolderStatus=" + addFolderStatus + ", addFolderCode=" + addFolderCode);

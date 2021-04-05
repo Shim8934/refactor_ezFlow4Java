@@ -229,7 +229,6 @@
 		<result property="companyId"            column="COMPANY_ID"               columnIndex="17" />
 		<result property="deleterId"            column="DELETER_ID"               columnIndex="18" />
 		<result property="tenantId"             column="TENANT_ID"                columnIndex="19" />
-		<result property="folderSubType"        column="FOLDER_SUBTYPE"           columnIndex="20" />
 	</resultMap>
 	
 	<!-- FolderSimple resultMap -->
@@ -425,8 +424,7 @@
 				(UPDATE_DATE + #offset#/(24*60)) AS UPDATE_DATE,
 				COMPANY_ID                       AS COMPANY_ID,
 				DELETER_ID                       AS DELETER_ID,
-				TENANT_ID                        AS TENANT_ID,
-				FOLDER_SUBTYPE
+				TENANT_ID                        AS TENANT_ID
 			FROM
 				TBL_WEBFOLDER_FOLDER
 			WHERE
@@ -887,8 +885,7 @@
 				(UPDATE_DATE + #offset#/(24*60))                AS UPDATE_DATE,
 				COMPANY_ID                                      AS COMPANY_ID,
 				DELETER_ID                                      AS DELETER_ID,
-				TENANT_ID                                       AS TENANT_ID,
-				FOLDER_SUBTYPE
+				TENANT_ID                                       AS TENANT_ID
 			FROM
 				TBL_WEBFOLDER_FOLDER
 			WHERE
@@ -1054,12 +1051,6 @@
 				a.TENANT_ID    = #tenantId#
 			AND 
 				a.OWNER_ID NOT IN ('shared_mailbox_Top')	
-		<isNotEmpty property="subTypeC">
-			<isNotEqual property="folderUpper" compareValue="root">
-			AND
-				a.FOLDER_SUBTYPE    = #subTypeC#
-			</isNotEqual>
-		</isNotEmpty>
 		<isNotEmpty property="idList"> 
 			AND
                 (
@@ -1128,8 +1119,7 @@
 				(UPDATE_DATE + #offset#/(24*60))                AS UPDATE_DATE,
 				COMPANY_ID                                      AS COMPANY_ID,
 				DELETER_ID                                      AS DELETER_ID,
-				TENANT_ID                                       AS TENANT_ID,
-				FOLDER_SUBTYPE
+				TENANT_ID                                       AS TENANT_ID
 			FROM
 				TBL_WEBFOLDER_FOLDER
 			WHERE
@@ -1674,9 +1664,6 @@
 				f.TENANT_ID    = #tenantId#
 			AND
 				f.FOLDER_UPPER = #compFolderId#
-		<isNotEmpty property="subTypeC">
-			AND
-				f.FOLDER_SUBTYPE    = #subTypeC#
 			<isNotEmpty prepend="AND" property="expiredFolders">
 				f.FOLDER_ID NOT IN
 				<iterate property="expiredFolders" open="(" close=")" conjunction=",">
@@ -1689,7 +1676,6 @@
 					#notInheritFolders[]#
 				</iterate>
 			</isNotEmpty>
-		</isNotEmpty>
 		<isNotEmpty property="idList"> 
 			AND
 				f.FOLDER_ID IN 
@@ -1785,12 +1771,6 @@
 			AND
 				f1.FOLDER_UPPER = #compFolderId#
 		]]>
-		<isNotNull property="subTypeC">
-		<isNotEmpty property="subTypeC">
-			AND
-				f1.FOLDER_SUBTYPE    = #subTypeC#
-		</isNotEmpty>
-		</isNotNull>
 			) f
 			ORDER BY
 				f.FOLDER_NAME1,
@@ -2189,8 +2169,7 @@
 					(F.UPDATE_DATE + #offset#/(24*60))                AS UPDATE_DATE,
 					F.COMPANY_ID                                      AS COMPANY_ID,
 					F.DELETER_ID                                      AS DELETER_ID,
-					F.TENANT_ID                                       AS TENANT_ID,
-					F.FOLDER_SUBTYPE
+					F.TENANT_ID                                       AS TENANT_ID
 				FROM
 					TBL_WEBFOLDER_FOLDER F
 				RIGHT JOIN
@@ -2521,7 +2500,6 @@
 				ON F.TENANT_ID = EX.TENANT_ID
 				AND F.FOLDER_PATH LIKE EX.FOLDER_PATH
 			WHERE F.TENANT_ID = #tenantId#
-				AND F.FOLDER_SUBTYPE = 'meeting'
 				AND F.USE_STATUS = 'Y'
 		]]>
 	</select>
@@ -2551,7 +2529,6 @@
 				ON F.TENANT_ID = EX.TENANT_ID
 				AND F.FOLDER_PATH LIKE EX.FOLDER_PATH
 			WHERE F.TENANT_ID = #tenantId#
-				AND F.FOLDER_SUBTYPE = 'meeting'
 				AND F.USE_STATUS = 'Y'
 		]]>
 	</select>

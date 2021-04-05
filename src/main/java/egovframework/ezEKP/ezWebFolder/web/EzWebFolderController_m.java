@@ -605,8 +605,6 @@ public class EzWebFolderController_m {
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 
 		model.addAttribute("userId", user.getId());
-		// 즐겨찾기는 업무자료관리로 고정
-		model.addAttribute("subTypeC", "task");
 
 		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/" + user.getId() + "/upload-limit", null, request, "get", null);
 
@@ -849,13 +847,12 @@ public class EzWebFolderController_m {
 		
 		String folderName = orElse(request.getParameter("wfName"), "");
 		String content = orElse(request.getParameter("wfContent"), "");
-		String folderSubType = orElse(request.getParameter("subTypeC"), "");
 		String wfMasterList = orElse(request.getParameter("appMasterArr"), "");
 		String wfMemberList = orElse(request.getParameter("appMemberArr"), "");
 		String usingS = orElse(request.getParameter("wfUsingS"), "");
 		String usingE = orElse(request.getParameter("wfUsingE"), "");
 		String usingPeriodStr = usingS + " ~ " + usingE; 
-		logger.debug("folderName=" + folderName + ", folderSubType=" + folderSubType + ", usingS=" + usingS + ", usingE=" + usingE);
+		logger.debug("folderName=" + folderName + ", usingS=" + usingS + ", usingE=" + usingE);
 		
 		if (folderName.equals("") || wfMasterList.equals("")) {
 			returnStr = "ERROR";
@@ -868,7 +865,6 @@ public class EzWebFolderController_m {
 			JSONObject jsonObjParam = new JSONObject();
 			jsonObjParam.put("folderName", folderName);
 			jsonObjParam.put("content", content);
-			jsonObjParam.put("folderSubType", folderSubType);
 			jsonObjParam.put("usingS", usingS);
 			jsonObjParam.put("usingE", usingE);
 			jsonObjParam.put("memberList", memberListArr.toString());
@@ -917,13 +913,13 @@ public class EzWebFolderController_m {
 						meetingMsgMap.put("wfNameMsg", "ezWebFolder.ksa05");
 						meetingMsgMap.put("greetingsMsg", "ezWebFolder.ksa37");
 						
-						Map<String, String> msgMap = folderSubType.equalsIgnoreCase("task") ? taskMsgMap : meetingMsgMap; 
+						Map<String, String> msgMap = meetingMsgMap; 
 
 						String mailContent = "";
 						String mailSubject = String.format(egovMessageSource.getMessage(msgMap.get("subjectMsg"), locale), folderName);
 						String mailConentTemp = "<p><b>${tt}</b> : ${ttVal}</p>";
 
-						String wfUsingPeriodStr = folderSubType.equalsIgnoreCase("task") ? "" : mailConentTemp.replace("${tt}", egovMessageSource.getMessage("ezWebFolder.ksa20", locale)).replace("${ttVal}", usingPeriodStr) + "<br/>";
+						String wfUsingPeriodStr = mailConentTemp.replace("${tt}", egovMessageSource.getMessage("ezWebFolder.ksa20", locale)).replace("${ttVal}", usingPeriodStr) + "<br/>";
 						
 						mailContent += "<p>" + egovMessageSource.getMessage(msgMap.get("greetingsMsg"), locale) + "</p>"
 							+ "<br/>"

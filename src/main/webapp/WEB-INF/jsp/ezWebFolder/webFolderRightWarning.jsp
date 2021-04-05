@@ -23,8 +23,8 @@
 				<div class="warningbox">
 					<p class="warningimg"><img src="/images/notify/warning_resorce.png" width="105" height="89"></p>
 					<dl class="warningDL">
-						<dt><spring:message code="ezWebFolder.kes0${subTypeC eq 'task'? '08' : '11' }" /></dt>
-						<dd><spring:message code="ezWebFolder.kes01${subTypeC eq 'task'? '5' : '6' }" /></dd>
+						<dt><spring:message code="ezWebFolder.t11" /></dt>
+						<dd><spring:message code="ezWebFolder.kes008" /></dd>
 					</dl>
 				</div>
 			</div>

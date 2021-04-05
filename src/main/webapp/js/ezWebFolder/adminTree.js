@@ -1,13 +1,10 @@
-// 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: isDean으로 구분 추가
-// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-function getCompanyData(companyId, mode, rootDiv, subTypeC) {
+function getCompanyData(companyId, mode, rootDiv) {
 	$.ajax({
 		type: "GET",
 		url: "/admin/ezWebFolder/getCompanyFolderTree.do",
 		data: {
 			"companyId" : companyId,
-			"folderId"  : selectedFolder,
-			"subTypeC"  : subTypeC
+			"folderId"  : selectedFolder
 		},
 		dataType: "JSON",
 		async: false,
@@ -17,7 +14,7 @@ function getCompanyData(companyId, mode, rootDiv, subTypeC) {
 			switch(code) {
 				case 0: 
 					var result = data.companyTree;
-					renderData(companyId, result, mode, rootDiv, subTypeC);
+					renderData(companyId, result, mode, rootDiv);
 					break;
 				case 1:
 					alert(resultErr1);
@@ -36,7 +33,7 @@ function getCompanyData(companyId, mode, rootDiv, subTypeC) {
 	});
 }
 
-function renderData(companyId, result, mode, rootDiv, subTypeC) {
+function renderData(companyId, result, mode, rootDiv) {
 	if (!result) {
 		alert(strMessage3);
 		return;
@@ -48,17 +45,17 @@ function renderData(companyId, result, mode, rootDiv, subTypeC) {
 	selectedFolder = compFolderId;
 	
 	if (mode == "") {
-		window.open("/admin/ezWebFolder/webfolderAdminCompanyFile.do?folderId=" + selectedFolder + "&rootFolder=" + compFolderId + "&level=0&subTypeC=" + subTypeC, "right");
+		window.open("/admin/ezWebFolder/webfolderAdminCompanyFile.do?folderId=" + selectedFolder + "&rootFolder=" + compFolderId + "&level=0", "right");
 	}
 	else {
-		window.open("/admin/ezWebFolder/webfolderAdminCompanyFile.do?folderId=" + selectedFolder + "&rootFolder=" + compFolderId + "&companyId=" + companyId + "&level=0&subTypeC=" + subTypeC, "right");
+		window.open("/admin/ezWebFolder/webfolderAdminCompanyFile.do?folderId=" + selectedFolder + "&rootFolder=" + compFolderId + "&companyId=" + companyId + "&level=0", "right");
 	}
 	
 	while (divTree.hasChildNodes()) {
 		divTree.removeChild(divTree.lastChild);
 	}
 	
-	displaySubFolder(divTree, divComp, result, "comp", subTypeC);
+	displaySubFolder(divTree, divComp, result, "comp");
 	
 	var spanCompany = document.getElementById(compFolderId).nextSibling.nextSibling;
 	spanCompany.style.color      = "#004a87";
@@ -67,7 +64,7 @@ function renderData(companyId, result, mode, rootDiv, subTypeC) {
 	divTree.style.display = "";
 }
 
-function displaySubFolder(divTree, divElmt, list, folderType, subTypeC) {
+function displaySubFolder(divTree, divElmt, list, folderType) {
 	var level = list["folderLevel"];
 	
 	if (level > 0) {
@@ -96,7 +93,7 @@ function displaySubFolder(divTree, divElmt, list, folderType, subTypeC) {
 	spanFolderName.setAttribute("name", list["folderId"]);
 	spanFolderName.setAttribute("level", list["folderLevel"]);
 	spanFolderName.setAttribute("title", primary == "1" ? list["folderName"] : list["folderName2"]);
-	spanFolderName.onclick = function() {getSelected(this, folderType, subTypeC);};
+	spanFolderName.onclick = function() {getSelected(this, folderType);};
 	
 	/* 2018-08-23 홍승비 - 웹폴더 폴더명 ellipsis 작업 */
 	var spanW = 157 - (15 * list["folderLevel"]);
@@ -119,7 +116,7 @@ function displaySubFolder(divTree, divElmt, list, folderType, subTypeC) {
 		imgElmt.setAttribute("class", "webfolderImg");
 	}
 	else {
-		imgElmt.onclick = function() {getDetailTree(this, folderType, subTypeC);};
+		imgElmt.onclick = function() {getDetailTree(this, folderType);};
 		
 		if (list["listSubFolders"] == null) {
 			imgElmt.src = "/images/OrganTree_cross/plus.gif";
@@ -138,12 +135,12 @@ function displaySubFolder(divTree, divElmt, list, folderType, subTypeC) {
 		
 		for (var i = 0; i < len; i++) {
 			var subDivElmt = document.createElement("div");
-			displaySubFolder(newDivElmt, subDivElmt, list["listSubFolders"][i], folderType, subTypeC);
+			displaySubFolder(newDivElmt, subDivElmt, list["listSubFolders"][i], folderType);
 		}
 	}
 }
 
-function getSelected(obj, mode, subTypeC) {
+function getSelected(obj, mode) {
 	var previousElmt = document.getElementsByName(selectedFolder)[0];
 	
 	if (previousElmt != null) {
@@ -159,7 +156,7 @@ function getSelected(obj, mode, subTypeC) {
 	var level            = obj.getAttribute("level");
 	
 	if (mode == "comp") {
-		window.open("/admin/ezWebFolder/webfolderAdminCompanyFile.do?folderId=" + selectedFolder + "&rootFolder=" + compFolderId + "&level=" + level + "&subTypeC=" + subTypeC, "right");
+		window.open("/admin/ezWebFolder/webfolderAdminCompanyFile.do?folderId=" + selectedFolder + "&rootFolder=" + compFolderId + "&level=" + level, "right");
 	}
 	else {
 		window.open("/admin/ezWebFolder/webfolderAdminDeptFile.do?folderId=" + selectedFolder + "&level=" + level, "right");
@@ -171,7 +168,7 @@ function getSelected(obj, mode, subTypeC) {
 	//window.parent.frames["right"].refresh();
 }
 
-function getDetailTree(obj, folderType, subTypeC) {
+function getDetailTree(obj, folderType) {
 	//Check if already in arrSubFolder
 	var uniqueId = obj.getAttribute("id");
 	
@@ -208,7 +205,7 @@ function getDetailTree(obj, folderType, subTypeC) {
 				switch(code) {
 					case 0: 
 						var result = data.subTree;
-						displaySubTree(result, obj.parentElement, folderType, subTypeC);
+						displaySubTree(result, obj.parentElement, folderType);
 						arrSubFolder.push(uniqueId);
 						break;
 					case 1:
@@ -229,7 +226,7 @@ function getDetailTree(obj, folderType, subTypeC) {
 	}
 }
 
-function displaySubTree(result, divElmt, folderType, subTypeC) {
+function displaySubTree(result, divElmt, folderType) {
 	if (result["listSubFolders"] == null) {
 		alert(strMessage);
 		return;
@@ -241,7 +238,7 @@ function displaySubTree(result, divElmt, folderType, subTypeC) {
 	
 	for (var i = 0; i < len; i++) {
 		var subDiv = document.createElement("div");
-		displaySubFolder(newDivElmt, subDiv, result["listSubFolders"][i], folderType, subTypeC);
+		displaySubFolder(newDivElmt, subDiv, result["listSubFolders"][i], folderType);
 	}
 }
 

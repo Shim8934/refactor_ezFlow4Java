@@ -2348,10 +2348,4 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void alterWebfolderApplyHistoryAddColumn() throws Exception {
     	ezCommonDAO.alterWebfolderApplyHistoryAddColumn();
     }
-	
-	/* 2020-12-08 김은실 - [카이스트] 웹폴더 > 폴더 타입 추가(task/meeting/dean) */
-	@Override
-	public void addWebfolderFolderFolderSubtypeColumn() throws Exception {
-		ezCommonDAO.addWebfolderFolderFolderSubtypeColumn();
-	}
 }

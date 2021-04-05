@@ -124,24 +124,22 @@
 	<resultMap id="applicationHistoryList" class="HashMap">
 		<result property="applyId"      column="APPLY_ID"      columnIndex="1" javaType="String"  />
 		<result property="folderName"    column="FOLDER_NAME"      columnIndex="2" javaType="String"  />
-		<result property="folderSubType"        column="FOLDER_SUBTYPE"        columnIndex="3" javaType="String"  />
-		<result property="applicationDate"    column="APPLICATION_DATE"      columnIndex="4" javaType="String"  />
-		<result property="applicantName"    column="APPLICANTNAME"      columnIndex="5" javaType="String"  />
-		<result property="masterName"    column="MASTERNAME"      columnIndex="6" javaType="String"  />
-		<result property="masterCnt"    column="MASTERCNT"      columnIndex="7" javaType="String"  />
-		<result property="usingS"     column="USINGS"       columnIndex="8" javaType="String"  />  
-		<result property="usingE"     column="USINGE"       columnIndex="9" javaType="String"  />
-		<result property="approvalStatus"     column="APPROVAL_STATUS"       columnIndex="10" javaType="String"  />
+		<result property="applicationDate"    column="APPLICATION_DATE"      columnIndex="3" javaType="String"  />
+		<result property="applicantName"    column="APPLICANTNAME"      columnIndex="4" javaType="String"  />
+		<result property="masterName"    column="MASTERNAME"      columnIndex="5" javaType="String"  />
+		<result property="masterCnt"    column="MASTERCNT"      columnIndex="6" javaType="String"  />
+		<result property="usingS"     column="USINGS"       columnIndex="7" javaType="String"  />  
+		<result property="usingE"     column="USINGE"       columnIndex="8" javaType="String"  />
+		<result property="approvalStatus"     column="APPROVAL_STATUS"       columnIndex="9" javaType="String"  />
 	</resultMap>
 	
 	<resultMap id="applicationHistory" class="HashMap">
 		<result property="applyId"      column="APPLY_ID"      columnIndex="1" javaType="String"  />
 		<result property="folderName"    column="FOLDER_NAME"      columnIndex="2" javaType="String"  />
-		<result property="folderSubType"        column="FOLDER_SUBTYPE"        columnIndex="3" javaType="String"  />
-		<result property="applicationDate"    column="APPLICATION_DATE"      columnIndex="4" javaType="String"  />
-		<result property="content"    column="CONTENT"      columnIndex="5" javaType="String"  />
-		<result property="usingS"     column="USINGS"       columnIndex="6" javaType="String"  />  
-		<result property="usingE"     column="USINGE"       columnIndex="7" javaType="String"  />
+		<result property="applicationDate"    column="APPLICATION_DATE"      columnIndex="3" javaType="String"  />
+		<result property="content"    column="CONTENT"      columnIndex="4" javaType="String"  />
+		<result property="usingS"     column="USINGS"       columnIndex="5" javaType="String"  />  
+		<result property="usingE"     column="USINGE"       columnIndex="6" javaType="String"  />
 	</resultMap>
 	
 	<resultMap id="applicationHistoryMember" class="HashMap">
@@ -2072,9 +2070,9 @@
 		<![CDATA[ 
 			INSERT INTO
 				TBL_WEBFOLDER_APPLY_HISTORY 
-			(APPLY_ID, TENANT_ID, COMPANY_ID, FOLDER_NAME, CONTENT, APPLICATION_DATE, FOLDER_SUBTYPE, USINGS, USINGE)
+			(APPLY_ID, TENANT_ID, COMPANY_ID, FOLDER_NAME, CONTENT, APPLICATION_DATE, USINGS, USINGE)
 				VALUES
-			(#applyId#, #tenantId#, #companyId#, #folderName#, #content#, SYSDATE, #folderSubType#, #usingS#, #usingE#)
+			(#applyId#, #tenantId#, #companyId#, #folderName#, #content#, SYSDATE, #usingS#, #usingE#)
 		]]>
 	</insert>
 	
@@ -2122,13 +2120,13 @@
 	<select id="EzWebFolderDAO_m.getWebFolderApplyHistoryList" parameterClass="Map" resultMap="applicationHistoryList">
 		<![CDATA[
 		SELECT 
-			RNUM, APPLY_ID, FOLDER_NAME, FOLDER_SUBTYPE, APPLICATION_DATE, APPLICANTNAME, MASTERNAME, MASTERCNT, USINGE, USINGS, APPROVAL_STATUS
+			RNUM, APPLY_ID, FOLDER_NAME, APPLICATION_DATE, APPLICANTNAME, MASTERNAME, MASTERCNT, USINGE, USINGS, APPROVAL_STATUS
 		FROM (
 			SELECT 
 			rownum AS rnum, tt.*
 			FROM 
 				(SELECT 
-					h.APPLY_ID, h.FOLDER_NAME, h.FOLDER_SUBTYPE, h.APPLICATION_DATE, a.MEMBER_NAME AS applicantName,
+					h.APPLY_ID, h.FOLDER_NAME, h.APPLICATION_DATE, a.MEMBER_NAME AS applicantName,
 					ms.member_name AS masterName, ms.cnt AS masterCnt, h.USINGE, h.USINGS, h.APPROVAL_STATUS
 		]]>
 				<include refid="getWebFolderApplyHistroyQuery" />
@@ -2142,7 +2140,7 @@
 	<select id="EzWebFolderDAO_m.getWebFolderApplyHistory" parameterClass="Map" resultMap="applicationHistory">
 		<![CDATA[
 			SELECT
-				APPLY_ID,  FOLDER_NAME, FOLDER_SUBTYPE, CONTENT, 
+				APPLY_ID,  FOLDER_NAME, CONTENT, 
 				APPLICATION_DATE AS APPLICATION_DATE, USINGE, USINGS
 			FROM 
 				TBL_WEBFOLDER_APPLY_HISTORY

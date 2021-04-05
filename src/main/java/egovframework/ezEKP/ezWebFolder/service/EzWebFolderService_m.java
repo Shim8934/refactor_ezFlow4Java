@@ -126,11 +126,11 @@ public interface EzWebFolderService_m {
 
 	int deleteFileUser(FileVO fileVO, String flag) throws Exception;
 	
-	String setWebFolderApplyHistory(String primary, int tenantId, String companyId, String folderName, String content, String folderSubType, List<Map<String, String>> memberList, String usingS, String usingE) throws Exception;
+	String setWebFolderApplyHistory(String primary, int tenantId, String companyId, String folderName, String content, List<Map<String, String>> memberList, String usingS, String usingE) throws Exception;
 	
-	int getWebFolderApplyHistoryListCount(int tenantId, String companyId, String folderSubType) throws Exception;
+	int getWebFolderApplyHistoryListCount(int tenantId, String companyId) throws Exception;
 	
-	List<Map<String, String>> getWebFolderApplyHistoryList(int tenantId, String companyId, String folderSubType, int startList, int endList) throws Exception;
+	List<Map<String, String>> getWebFolderApplyHistoryList(int tenantId, String companyId, int startList, int endList) throws Exception;
 
 	Map<String, String> getWebFolderApplyHistory(String applyId) throws Exception;
 	

@@ -211,8 +211,7 @@
 					 "searchEndDate" 	: searchRequirement.endDate,
 					 "allFileFlag"		: allFileFlag,
 					 "sortType"			: sortType,
-					 "sortColumn"		: sortColumn,
-					 "subTypeC"			: "task"
+					 "sortColumn"		: sortColumn
 					},
 				dataType: "JSON",
 				success : function (data) {

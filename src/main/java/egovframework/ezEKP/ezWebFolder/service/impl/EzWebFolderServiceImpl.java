@@ -155,7 +155,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 	
 	@Override
-	public void insertFileUser(FileVO fileVO, String seqId, String userId, String userType, String comId, String subFolderType) throws Exception {
+	public void insertFileUser(FileVO fileVO, String seqId, String userId, String userType, String comId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("seqId", 		seqId);
 		map.put("fileId",      	fileVO.getFileId());
@@ -165,7 +165,6 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		map.put("createDate",  	fileVO.getCreateDate().substring(0, 10));
 		map.put("comId",  	   	comId);
 		map.put("tenantId",    	fileVO.getTenantId());
-		map.put("subFolderType",    	subFolderType);
 		
 		ezWebFolderDAO.insertFileUser(map);
 	}
@@ -264,22 +263,15 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 
 	@Override
-	public List<FolderSimpleVO> getAllSimpleSubFolders(String folderUpperId, int tenantId, String subTypeC, List<String> idList) throws Exception {
-		return getAllSimpleSubFolders(folderUpperId, tenantId, subTypeC, idList, "");
+	public List<FolderSimpleVO> getAllSimpleSubFolders(String folderUpperId, int tenantId, List<String> idList) throws Exception {
+		return getAllSimpleSubFolders(folderUpperId, tenantId, idList, "");
 	}
 	@Override
-	public List<FolderSimpleVO> getAllSimpleSubFolders(String folderUpperId, int tenantId, String subTypeC, List<String> idList, String folderId) throws Exception {
+	public List<FolderSimpleVO> getAllSimpleSubFolders(String folderUpperId, int tenantId, List<String> idList, String folderId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("folderUpper", folderUpperId);
 		map.put("folderId",    folderId);
 		map.put("tenantId",    tenantId);
-		// 2020-10-06 김은실 - (카이스트)커스터 마이징 메뉴: dean 추가
-		// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-//		if(dean != null){
-//			map.put("deanList", (String[]) dean.get("deanList"));
-//			map.put("isDean", dean.get("isDean"));
-//		}
-		map.put("subTypeC",    subTypeC);
 		map.put("idList",      idList);
 		map.put("userId",      idList != null && idList.size() > 1 ? idList.get(1) : "");
 		return ezWebFolderDAO.getAllSimpleSubFolders(map);
@@ -515,41 +507,39 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		return ezWebFolderDAO.getTotalFileCnt2(map);
 	}
 
-	// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
 	@Override
-	public void getAllSubDepts(FolderSimpleVO company, int tenantId, int mode, String subTypeC) throws Exception {
-		getAllSubDepts(company, tenantId, mode, subTypeC, null);
+	public void getAllSubDepts(FolderSimpleVO company, int tenantId, int mode) throws Exception {
+		getAllSubDepts(company, tenantId, mode, null);
 	}
 	// 2020-12-14 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: 권한에(idList) 따른 폴더 리스트 특정하기 
 	@Override
-	public void getAllSubDepts(FolderSimpleVO company, int tenantId, int mode, String subTypeC, List<String> idList) throws Exception {
+	public void getAllSubDepts(FolderSimpleVO company, int tenantId, int mode, List<String> idList) throws Exception {
 		if (company.getHasSubFolder() == 1) {
-			List<FolderSimpleVO> listSubSimpleFolders = getAllSimpleSubFolders(company.getFolderId(), tenantId, subTypeC, idList);
+			List<FolderSimpleVO> listSubSimpleFolders = getAllSimpleSubFolders(company.getFolderId(), tenantId, idList);
 			company.setListSubFolders(listSubSimpleFolders);
 			
 			if (mode == 0) {
 				for (FolderSimpleVO subFolder: listSubSimpleFolders) {
-					getAllSubDepts(subFolder, tenantId, mode, subTypeC, idList);
+					getAllSubDepts(subFolder, tenantId, mode, idList);
 				}
 			}
 		}
 	}
 
-	// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
 	@Override
-	public void getAllSubDepts(FolderSimpleVO company, int tenantId, String[] fdPath, int order, String subTypeC) throws Exception {
-		getAllSubDepts(company, tenantId, fdPath, order, subTypeC, null);
+	public void getAllSubDepts(FolderSimpleVO company, int tenantId, String[] fdPath, int order) throws Exception {
+		getAllSubDepts(company, tenantId, fdPath, order, null);
 	}
 	// 2020-12-14 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: 권한에(idList) 따른 폴더 리스트 특정하기 
 	@Override
-	public void getAllSubDepts(FolderSimpleVO company, int tenantId, String[] fdPath, int order, String subTypeC, List<String> idList) throws Exception {
+	public void getAllSubDepts(FolderSimpleVO company, int tenantId, String[] fdPath, int order, List<String> idList) throws Exception {
 		if (company.getHasSubFolder() == 1) {
-			List<FolderSimpleVO> listSubSimpleFolders = getAllSimpleSubFolders(company.getFolderId(), tenantId, subTypeC, idList);
+			List<FolderSimpleVO> listSubSimpleFolders = getAllSimpleSubFolders(company.getFolderId(), tenantId, idList);
 			company.setListSubFolders(listSubSimpleFolders);
 			
 			for (FolderSimpleVO subFolder: listSubSimpleFolders) {
 				if (order < fdPath.length && subFolder.getFolderId().equals(fdPath[order])) {
-					getAllSubDepts(subFolder, tenantId, fdPath, order + 1, subTypeC, idList);
+					getAllSubDepts(subFolder, tenantId, fdPath, order + 1, idList);
 				}
 			}
 		}
@@ -754,7 +744,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 
 	@Override
-	public List<FolderSimpleVO> getCompanySubSimpleFolder(String userId, String deptId, String compFolderId, String compId, int tenantId, String subTypeC, List<String> idList) throws Exception {
+	public List<FolderSimpleVO> getCompanySubSimpleFolder(String userId, String deptId, String compFolderId, String compId, int tenantId, List<String> idList) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("userId",    userId);
 		map.put("deptId",    deptId);
@@ -762,24 +752,12 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		map.put("tenantId",  tenantId);
 		map.put("compId",  compId);
 		map.put("idList",  idList);
-		// 2020-10-06 김은실 - (카이스트)커스터 마이징 메뉴: dean 추가
-		// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-//		if(dean != null){
-//			map.put("deanList", (String[]) dean.get("deanList"));
-//			map.put("isDean", dean.get("isDean"));
-//		}
-		map.put("subTypeC",  subTypeC);
-		if ("meeting".equalsIgnoreCase(subTypeC)) {
 			// 사용 기간이 만료된 회의실 리스트 (담당자로 설정된 회의실은 제외)
 			List<String> expiredFolders = getExpiredMeetingFolders(userId, tenantId);
 			map.put("expiredFolders", expiredFolders);
-		}
-		
-		if ("task".equalsIgnoreCase(subTypeC)) {
 			// 사용 기간이 만료된 회의실 리스트 (담당자로 설정된 회의실은 제외)
 			List<String> notInheritFolders = getNotInheritFolders(tenantId);
 			map.put("notInheritFolders", notInheritFolders);
-		}
 
 		List<FolderSimpleVO> listFolders = new ArrayList<FolderSimpleVO>();
 		
@@ -927,7 +905,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		
 		boolean isReply = !parentId.isEmpty();
 		// 폴더 권한 비상속
-		boolean isNotInherit = folder.isTask() && isNotInheritFolder(folder.getFolderId(), tenantId);
+		boolean isNotInherit = isNotInheritFolder(folder.getFolderId(), tenantId);
 
 		FileVO parentFile = null;
 
@@ -1000,7 +978,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				// 답글이 아닐 때만 권한 넣어주기
 				if (!isReply) {
 					if (isNotInherit) {
-						insertFileUser(fileVO, "", userId, "USER", companyId, folder.getFolderSubType());
+						insertFileUser(fileVO, "", userId, "USER", companyId);
 					} else {
 						Map<String,Object> map = new HashMap<String, Object>();
 						map.put("targetId", fileId);
@@ -1805,7 +1783,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				}
 
 				String realPath = servletContext.getRealPath("");
-				ezWebFolderAdminService.moveCompanyFolder(folder, destFolder, mode, realPath, userInfo, null, "user");
+				ezWebFolderAdminService.moveCompanyFolder(folder, destFolder, mode, realPath, userInfo, "user");
 
 				continue forStatement;
 			}

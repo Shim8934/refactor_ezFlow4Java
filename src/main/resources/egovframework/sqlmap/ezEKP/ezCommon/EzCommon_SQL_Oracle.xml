@@ -3736,24 +3736,6 @@
             )
 	 </statement>
 	 
-	 <select id="EzCommonDAO.checkWebfolderFolderFolderSubtypeColumn">
-		<![CDATA[
-			SELECT 
-				FOLDER_SUBTYPE
-			FROM 
-				TBL_WEBFOLDER_FOLDER
-			WHERE
-				ROWNUM <= 1
-		]]>
-	</select>
-	
-	<statement id="EzCommonDAO.createWebfolderFolderFolderSubtypeColumn">
-		ALTER TABLE
-			TBL_WEBFOLDER_FOLDER
-		ADD 
-			FOLDER_SUBTYPE VARCHAR2(50 BYTE) DEFAULT NULL
-	</statement>
-	
 	<select id="EzCommonDAO.checkTblWebfolderApplyHistroy" resultClass="String">
 		<![CDATA[
 			SELECT
@@ -3773,7 +3755,6 @@
 		    FOLDER_NAME NVARCHAR2(200) NOT NULL ENABLE, 
 		    CONTENT NVARCHAR2(1000),  
 		    APPLICATION_DATE DATE NOT NULL ENABLE, 
-		    FOLDER_SUBTYPE NVARCHAR2(50) NOT NULL ENABLE,  
 		    USINGS NVARCHAR2(20),  
 		    USINGE NVARCHAR2(20),  
 		    APPROVAL_STATUS NVARCHAR2(10),

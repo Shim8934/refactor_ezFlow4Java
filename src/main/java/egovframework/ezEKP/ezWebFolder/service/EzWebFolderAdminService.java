@@ -36,7 +36,7 @@ public interface EzWebFolderAdminService {
 			String actionType, String primary, int tenantId, String folderId, String adminFlag) throws Exception;
 	//int getTotalListUserCapacity(String companyId, String searchStr, String searchOpt, int startPoint, int pageSize, int tenantId, String primary) throws Exception;
 	void deleteFolderUsersOfChief(String userId, int tenantId) throws Exception;
-	Map<String, Object> addCompanyFolder(String pFolderId, String folderUsers, String folderName, String folderName2, LoginVO userInfo, String subTypeC, long startTime, long endTime, boolean isNotInherit) throws Exception;
+	Map<String, Object> addCompanyFolder(String pFolderId, String folderUsers, String folderName, String folderName2, LoginVO userInfo, long startTime, long endTime, boolean isNotInherit) throws Exception;
 	String getMaxFolderID(int tenantId) throws Exception;
 	int getMaxFolderStep(String pFolderId, int tenantId) throws Exception;
 	Map<String, Object> updateCompanyFolder(String userId, String folderId, String folderUsers, String folderName, String folderName2, String offset, int tenantId
@@ -47,7 +47,7 @@ public interface EzWebFolderAdminService {
 	String getMaxFolderUserSeq(int tenantId) throws Exception;
 	String getMaxFolderUserSeq(int tenantId, String type) throws Exception;
 	void updateSelectedDeptsForChief(List<String> deptsList, LoginVO userInfo) throws Exception;
-	List<DuplicateInfoVO> moveCompanyFolder(FolderVO folder, FolderVO destFolder, String mode, String realPath, LoginVO userInfo, String subTypeC, String adminCheck) throws Exception;
+	List<DuplicateInfoVO> moveCompanyFolder(FolderVO folder, FolderVO destFolder, String mode, String realPath, LoginVO userInfo, String adminCheck) throws Exception;
 	void addPersonalFolder(LoginVO userInfo) throws Exception;
 	void setDefaultCapacity(String companyValue, String departmentValue, String userValue, String companyId, int tenantId) throws Exception;
 	void setCapacities(List<String> cnList, String type, String value, String companyId, int tenantId) throws Exception;
@@ -64,8 +64,8 @@ public interface EzWebFolderAdminService {
 			, String type, List<String> addUser, String subFolderType, String folderPath, List<String> addUserManager, String offset) throws Exception;
 	void deleteSelectedFolderUser(List<String> idList,	int tenantId, int folderManger) throws Exception;
 	void deleteSelectedFileUser(List<String> userIdList, int tenantId, String fileId) throws Exception;
-	List<String> getFolderIdsByManagerUserId(String userId, String folderId, String folderSubType, String companyId, int tenantId) throws Exception;
-	List<String> getTopFoldersByManagerUserId(String userId, String folderSubType, int tenantId) throws Exception;
+	List<String> getFolderIdsByManagerUserId(String userId, String folderId, String companyId, int tenantId) throws Exception;
+	List<String> getTopFoldersByManagerUserId(String userId, int tenantId) throws Exception;
 	List<String> getSubFolderIdList(String folderPath, int tenantId, List<String> userIdList) throws Exception;
 	public List<FolderSimpleVO> selectSubAllFolder(String folderPath, int tenantId) throws Exception;
 	void insertFolderUser(Map<String, Object> map) throws Exception;

@@ -8,12 +8,11 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 			var folderType = "<c:out value='${folderType}'/>";
-//			var PortletFolderId = "${PortletFolderId}";
 			window.onload = function() {
 				if(folderType == "") {
 					folderType = "C"
 				}
-				var url = "/ezWebFolder/webfolderLeft.do?folderType=" + folderType;		//  + "&PortletFolderId=" + PortletFolderId;
+				var url = "/ezWebFolder/webfolderLeft.do?folderType=" + folderType;
 				document.getElementById("left").src = url;
 			}
 		</script>

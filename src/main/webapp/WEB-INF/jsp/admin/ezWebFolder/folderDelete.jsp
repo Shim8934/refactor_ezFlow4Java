@@ -32,7 +32,6 @@
 				url: "/admin/ezWebFolder/delCompanyFolder.do",
 				data: {
 					"folderId" : folderId
-					,"subTypeC" : "${subTypeC}"
 				},
 				dataType: "JSON",
 				async: false,

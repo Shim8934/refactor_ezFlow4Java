@@ -144,11 +144,6 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 		String folderType 	= orElse(request.getParameter("folderType"), "");
 		LOGGER.debug("userId: " + userId + " || serverName: " + serverName + "|| folderType: " + folderType);
 
-		// 2020-10-05 김은실 - (카이스트)커스터 마이징 메뉴: dean 추가
-		// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-//		Map<String, Object> dean = null;
-		String subTypeC 	= request.getParameter("subTypeC");
-
 		JSONObject jsonObj = new JSONObject();
 		
 		// 요청  파라미터 비어있을 경우 에러 리턴
@@ -168,15 +163,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			String primary   = common.getPrimary();
 			int tenantId     = common.getTenantId();
 
-			// 2020-10-05 김은실 - (카이스트)커스터 마이징 메뉴: dean 추가
-			// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-//			if(isDean != null && !isDean.isEmpty()){
-//				dean = new HashMap<String, Object>();
-//				dean.put("isDean", isDean);
-//				dean.put("deanList", ezCommonService.getTenantConfig("webFolderPathsOfDean", tenantId).split(","));
-//			}
-			
-			List<Map<String, Object>> folderList = service.getFolderTree(userId, deptId, compId, folderType, primary, tenantId, "", subTypeC);
+			List<Map<String, Object>> folderList = service.getFolderTree(userId, deptId, compId, folderType, primary, tenantId, "");
 
 			jsonObj.put("status", "ok");
 			jsonObj.put("code", 0);
@@ -426,7 +413,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			}
 			
 			String realPath = request.getServletContext().getRealPath("");
-			List<DuplicateInfoVO> duplicateList = ezWebFolderAdminService.moveCompanyFolder(folder, destFolder, resmode, realPath, userInfo, null, "user");
+			List<DuplicateInfoVO> duplicateList = ezWebFolderAdminService.moveCompanyFolder(folder, destFolder, resmode, realPath, userInfo, "user");
 			
 			if (duplicateList == null){
 				result.put("status", "error");
@@ -562,7 +549,6 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 		String searchStartDate = request.getParameter("searchStartDate")	!= null ? request.getParameter("searchStartDate") 	: "" ;
 		String searchEndDate = request.getParameter("searchEndDate") 		!= null ? request.getParameter("searchEndDate") 	: "" ;
 		String searchPageCount = request.getParameter("searchPageCount") 	!= null ? request.getParameter("searchPageCount") 	: "" ;
-		String subTypeC = request.getParameter("subTypeC");
 		
 		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
    		searchExt = commonUtil.getWildcardEscapedString(searchExt, dbName);
@@ -743,10 +729,10 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			List<String> managedFolderList;
 
 			if (fldDetail.getFolderLevel() == 0) {
-				managedFolderList = ezWebFolderAdminService.getTopFoldersByManagerUserId(userId, subTypeC, tenantId);
+				managedFolderList = ezWebFolderAdminService.getTopFoldersByManagerUserId(userId, tenantId);
 			} else {
 				managedFolderList = ezWebFolderAdminService.getFolderIdsByManagerUserId(userId,
-						folderId, fldDetail.getFolderSubType(), common.getCompanyId(), tenantId);
+						folderId, common.getCompanyId(), tenantId);
 			}
 
 			data.put("managedFolderList", managedFolderList);
@@ -789,7 +775,6 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 		String isExplorer = request.getParameter("isExplorer") 				!= null ? request.getParameter("isExplorer") 		: "" ;
 		String sortType 		= request.getParameter("sortType") 			!= null ? request.getParameter("sortType") 			: "" ;
 		String sortColumn 		= request.getParameter("sortColumn") 		!= null ? request.getParameter("sortColumn") 		: "" ;
-		String subTypeC = request.getParameter("subTypeC");
 		
 		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
 		searchExt = commonUtil.getWildcardEscapedString(searchExt, dbName);
@@ -863,7 +848,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			// fileCnt : 파일 개수 , fldCnt : 폴더 개수 , totalCount : 파일, 폴더 둘다 합한 개수 ( 페이징 하기 위해 필요 ) 
 			Map<String, Integer> cnt = service.getFileToTalCount2(folderId, userId, deptId, tenantId, comId,
 					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
-					searchPageCount, pStart, pEnd, offset , primary, subTypeC);
+					searchPageCount, pStart, pEnd, offset , primary);
 			
 			LOGGER.debug("fileListSize : " + cnt + " || searchStartDate : " + searchStartDate + " || searchEndDate : " + searchEndDate );
 			
@@ -883,18 +868,9 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			}
 			pEnd = listCount;
 			
-			// 2020-10-05 김은실 - (카이스트)커스터 마이징 메뉴: dean 추가
-			// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-//			Map<String, Object> dean = null;
-//			if(isDean != null && !isDean.isEmpty()){
-//				dean = new HashMap<String, Object>();
-//				dean.put("isDean", isDean);
-//				dean.put("deanList", ezCommonService.getTenantConfig("webFolderPathsOfDean", tenantId).split(","));
-//			}
-			
 			fileList = service.getFileList2(folderId, userId, deptId, tenantId , comId,
 					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
-					searchPageCount, pStart, pEnd, offset, primary, sortType, sortColumn, subTypeC);
+					searchPageCount, pStart, pEnd, offset, primary, sortType, sortColumn);
 			
 			LOGGER.debug("fileListSize : " + fileList.size()+ " || searchStartDate : " +searchStartDate+" || searchEndDate : "+searchEndDate );
 			
@@ -981,10 +957,10 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			List<String> managedFolderList;
 
 			if (fldDetail.getFolderLevel() == 0) {
-				managedFolderList = ezWebFolderAdminService.getTopFoldersByManagerUserId(userId, subTypeC, tenantId);
+				managedFolderList = ezWebFolderAdminService.getTopFoldersByManagerUserId(userId, tenantId);
 			} else {
 				managedFolderList = ezWebFolderAdminService.getFolderIdsByManagerUserId(userId,
-						folderId, fldDetail.getFolderSubType(), common.getCompanyId(), tenantId);
+						folderId, common.getCompanyId(), tenantId);
 			}
 
 			data.put("managedFolderList", managedFolderList);

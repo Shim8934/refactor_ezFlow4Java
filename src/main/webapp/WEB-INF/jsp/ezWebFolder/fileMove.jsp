@@ -39,7 +39,7 @@
 			selectedFolder = null;
 			selectedLevel  = null;
 			currentFolders = [];
-			// var type       = document.querySelector('input[name=treeType]:checked').value;
+			var type       = document.querySelector('input[name=treeType]:checked').value;
 			var compVal    = document.getElementById("companyList") ? document.getElementById("companyList").value : "";
 			$.ajax({
 				type: "POST",
