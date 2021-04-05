@@ -15188,7 +15188,7 @@
 <!-- 	</procedure> -->
 	<select id ="EzApprovalG.getSearchDocListCount" parameterClass="Map" resultClass="int" remapResults="true">
 	<![CDATA[
-		SELECT 
+		SELECT STRAIGHT_JOIN
 			COUNT(DISTINCT TBL_ENDAPRDOCINFO.DOCID,TBL_ENDAPRDOCINFO.COMPANYID
    	]]>
 			<isNotEqual property="approvalFlag" compareValue="G">
