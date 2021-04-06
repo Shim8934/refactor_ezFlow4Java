@@ -497,7 +497,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 
 	@Override
 	public Map<String, Object> addCompanyFolder(String pFolderId, String folderUsers, String folderName, String folderName2,
-			LoginVO userInfo, long startTime, long endTime, boolean isNotInherit) throws Exception {
+			LoginVO userInfo) throws Exception {
 		Map<String, Object> result = new HashMap<>();
 		String offset              = userInfo.getOffset();
 		int tenantId               = userInfo.getTenantId();
@@ -522,21 +522,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		String folderId            = getMaxFolderID(tenantId);
 		int newFolderLevel = parentFolder.getFolderLevel() + 1;
 
-			// 회의실 사용 기간 저장
-			if (newFolderLevel == 1) {
-				if (!setMeetingPeriod(folderId, offset, startTime, endTime, tenantId)) {
-					result.put("status", "error");
-					result.put("code", 20001129);
-					return result;
-				}
-			}
-
-			ezWebFolderService.insertEncryptionFolder(folderId, tenantId);
-		
-		// 폴더 권한 비상속
-		if (newFolderLevel == 1 && isNotInherit) {
-			ezWebFolderService.insertNotInheritFolder(folderId, tenantId);
-		}
+		ezWebFolderService.insertEncryptionFolder(folderId, tenantId);
 		
 		folder.setFolderId(folderId);
 		folder.setFolderLevel(newFolderLevel);
@@ -573,7 +559,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 	public Map<String, Object> updateCompanyFolder(String userId, String folderId, String folderUsers, String folderName 
 			, String folderName2, String offset, int tenantId, ArrayList<String> addUser, ArrayList<String> deleteUser
 			, String subFolderType, LoginVO userInfo, ArrayList<String> addUserManager, ArrayList<String> deleteUserManager
-			, boolean encryption, long startTime, long endTime, boolean isNotInherit) throws Exception {
+			, boolean encryption) throws Exception {
 		Map<String, Object> result = new HashMap<>();
 		List<DuplicateInfoVO> duplicateList = new ArrayList<>();
 		FolderVO folder            = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
@@ -591,27 +577,6 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 				result.put("code", 8);
 				result.put("duplicateInfoArray", duplicateList);
 				return result;
-			}
-		}
-
-		// 회의실 사용 기간 저장
-		if (folder.getFolderLevel() == 1) {
-			if (!setMeetingPeriod(folderId, offset, startTime, endTime, tenantId)) {
-				result.put("status", "error");
-				result.put("code", 20001129);
-				return result;
-			}
-		}
-		
-		// 폴더 권한 비상속
-		// 오우 쉣 이게 뭐야 너무 헷갈리고 ㅋㅋ
-		if (folder.getFolderLevel() == 1
-				&& isNotInherit != ezWebFolderService.isNotInheritFolder(folderId, tenantId)) {
-
-			if (isNotInherit) {
-				ezWebFolderService.insertNotInheritFolder(folderId, tenantId);
-			} else {
-				ezWebFolderService.deleteNotInheritFolder(folderId, tenantId);
 			}
 		}
 

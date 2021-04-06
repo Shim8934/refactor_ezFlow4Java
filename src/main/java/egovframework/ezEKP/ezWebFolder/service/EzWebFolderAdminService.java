@@ -36,13 +36,13 @@ public interface EzWebFolderAdminService {
 			String actionType, String primary, int tenantId, String folderId, String adminFlag) throws Exception;
 	//int getTotalListUserCapacity(String companyId, String searchStr, String searchOpt, int startPoint, int pageSize, int tenantId, String primary) throws Exception;
 	void deleteFolderUsersOfChief(String userId, int tenantId) throws Exception;
-	Map<String, Object> addCompanyFolder(String pFolderId, String folderUsers, String folderName, String folderName2, LoginVO userInfo, long startTime, long endTime, boolean isNotInherit) throws Exception;
+	Map<String, Object> addCompanyFolder(String pFolderId, String folderUsers, String folderName, String folderName2, LoginVO userInfo) throws Exception;
 	String getMaxFolderID(int tenantId) throws Exception;
 	int getMaxFolderStep(String pFolderId, int tenantId) throws Exception;
 	Map<String, Object> updateCompanyFolder(String userId, String folderId, String folderUsers, String folderName, String folderName2, String offset, int tenantId
 			, ArrayList<String> addUser, ArrayList<String> deleteUser, String subFolderType, LoginVO userInfo
 			, ArrayList<String> addUserManager, ArrayList<String> deleteUserManager
-			, boolean encryption, long startTime, long endTime, boolean isNotInherit) throws Exception;
+			, boolean encryption) throws Exception;
 	void addDeptFolders(String companyId, LoginVO userInfo) throws Exception;
 	String getMaxFolderUserSeq(int tenantId) throws Exception;
 	String getMaxFolderUserSeq(int tenantId, String type) throws Exception;

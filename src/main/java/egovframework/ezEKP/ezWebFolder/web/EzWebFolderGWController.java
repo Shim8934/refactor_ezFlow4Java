@@ -1643,11 +1643,6 @@ public class EzWebFolderGWController {
 		String folderName  		= jsonObject.get("fName")        		!= null ? (String) jsonObject.get("fName")     : "";
 		String folderName2 		= jsonObject.get("fName2")       		!= null ? (String) jsonObject.get("fName2")    : "";
 		String folderUsers 		= jsonObject.get("fUsers")       		!= null ? (String) jsonObject.get("fUsers")    : "";
-		// 회의실 사용 기간
-		long startTime          = parseLong(jsonObject.get("startTime"));
-		long endTime            = parseLong(jsonObject.get("endTime"));
-		// 폴더 권한 비상속
-		boolean isNotInherit    = Boolean.parseBoolean(String.valueOf(jsonObject.get("noInherit")));
 		
 		logger.debug("serverName: " + serverName + " || UserId: " + userId + " || Folder user: " + folderUsers + " || folderName1: " + folderName + " || FolderName2: " + folderName2 + " || ParentFolderID: " + pFolderId);
 		
@@ -1661,7 +1656,7 @@ public class EzWebFolderGWController {
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			Map<String, Object> serviceResult =
-					ezWebFolderAdminService.addCompanyFolder(pFolderId, folderUsers, folderName, folderName2, userInfo, startTime, endTime, isNotInherit);
+					ezWebFolderAdminService.addCompanyFolder(pFolderId, folderUsers, folderName, folderName2, userInfo);
 			result = new JSONObject(serviceResult);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1733,12 +1728,6 @@ public class EzWebFolderGWController {
 		}
 		
 		boolean encryption     = Optional.ofNullable((String) jsonObject.get("encryption")).map(Boolean::parseBoolean).orElse(false);
-		// 회의실 사용 기간
-		long startTime         = parseLong(jsonObject.get("startTime"));
-		long endTime           = parseLong(jsonObject.get("endTime"));
-
-		// 폴더 권한 비상속
-		boolean isNotInherit    = Boolean.parseBoolean(String.valueOf(jsonObject.get("noInherit")));
 
 		logger.debug("serverName: {}, userId: {}, folderUsers: {}, folderName1: {}, folderName2: {}, encryption: {}, deleteUser: {}, addUser: {}",
 				serverName, userId, folderUsers, folderName, folderName2, encryption, deleteUser, addUser);
@@ -1757,8 +1746,7 @@ public class EzWebFolderGWController {
 
 			Map<String, Object> serviceResult = ezWebFolderAdminService.updateCompanyFolder(userId, folderId, folderUsers, 
 					folderName, folderName2, offset, tenantId, (ArrayList<String>)addUser, (ArrayList<String>)deleteUser, subFolderType, userInfo, 
-					(ArrayList<String>)addUserManager, (ArrayList<String>)deleteUserManager,
-					encryption, startTime, endTime, isNotInherit);
+					(ArrayList<String>)addUserManager, (ArrayList<String>)deleteUserManager, encryption);
 			result = new JSONObject(serviceResult);
 		}
 		catch (Exception e) {

@@ -1664,18 +1664,7 @@ public class EzWebFolderGWController_m {
 			
 			if (historyMap != null) {
 				// 웹폴더 생성 정보
-				long startTime = 0;
-				long endTime = 0;
 				folderName = commonUtil.cleanValueUnescape(historyMap.get("folderName"));
-				
-					String usingS = historyMap.get("usingS");
-					String usingE = historyMap.get("usingE");
-					
-					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-					Date dateS = sdf.parse(usingS);
-					Date dateE = sdf.parse(usingE);
-					startTime = dateS.getTime();
-					endTime = dateE.getTime();
 				
 				// 관리자, 구성원 정보
 				JSONArray memberListArr = new JSONArray();
@@ -1717,7 +1706,7 @@ public class EzWebFolderGWController_m {
 				logger.debug("pFolderId=" + pFolderId);
 				
 				Map<String, Object> serviceResult =
-						ezWebFolderAdminService.addCompanyFolder(pFolderId, memberListArr.toString(), folderName, folderName, userInfo, startTime, endTime, false);
+						ezWebFolderAdminService.addCompanyFolder(pFolderId, memberListArr.toString(), folderName, folderName, userInfo);
 				String addFolderStatus = (String) serviceResult.get("status");
 				int addFolderCode = (int) serviceResult.get("code");
 				logger.debug("addFolderStatus=" + addFolderStatus + ", addFolderCode=" + addFolderCode);
