@@ -8266,7 +8266,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String cabinetID = request.getParameter("cabinetID");
 	
-		String strXML = ezApprovalGService.getUncompleteDocList(userInfo.getDeptID(), userInfo.getCompanyID(), cabinetID, userInfo.getTenantId(), userInfo.getLang());
+		String strXML = ezApprovalGService.getUncompleteDocList(userInfo.getDeptID(), userInfo.getCompanyID(), cabinetID, userInfo.getTenantId(), userInfo.getLang(), userInfo);
 		
 		logger.debug("getUncompleteDocList ended");
 		

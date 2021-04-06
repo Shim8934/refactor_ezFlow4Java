@@ -5426,7 +5426,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 	
 	@Override
-	public String getUncompleteDocList(String deptID, String companyID, String cabinetID, int tenantID, String userLang) throws Exception {
+	public String getUncompleteDocList(String deptID, String companyID, String cabinetID, int tenantID, String userLang, LoginVO userInfo) throws Exception {
 		logger.debug("getUncompleteDocList started");
 
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
@@ -5486,7 +5486,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			rtnXML.append("<CELL><VALUE>" + makeXMLString(makeListField(docXML.getElementsByTagName("APRMEMBERDEPTNAME").item(k).getTextContent())) + "</VALUE></CELL>");
 			rtnXML.append("<CELL><VALUE>" + makeXMLString(makeListField(docXML.getElementsByTagName("WRITERNAME").item(k).getTextContent())) + "</VALUE></CELL>");
-			rtnXML.append("<CELL><VALUE>" + makeXMLString(makeListField(docXML.getElementsByTagName("STARTDATE").item(k).getTextContent())) + "</VALUE></CELL>");
+			rtnXML.append("<CELL><VALUE>" + commonUtil.getDateStringInUTC(makeXMLString(makeListField(convertDate(docXML.getElementsByTagName("STARTDATE").item(k).getTextContent()))), userInfo.getOffset(), false) + "</VALUE></CELL>");
 			rtnXML.append("</ROW>");	
 		}
 		rtnXML.append("</ROWS>");
