@@ -24,7 +24,7 @@
 					<p class="warningimg"><img src="/images/notify/warning_resorce.png" width="105" height="89"></p>
 					<dl class="warningDL">
 						<dt><spring:message code="ezWebFolder.t11" /></dt>
-						<dd><spring:message code="ezWebFolder.kes008" /></dd>
+						<dd><spring:message code="ezWebFolder.kes015" /></dd>
 					</dl>
 				</div>
 			</div>
