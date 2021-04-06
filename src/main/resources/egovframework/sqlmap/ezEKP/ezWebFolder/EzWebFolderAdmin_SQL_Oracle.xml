@@ -163,6 +163,8 @@
 					AND
 						EXTENSIONATTRIBUTE2 = #companyId#
 				</isNotEmpty>
+				    AND 
+				        DEPT_CD_PATH NOT LIKE '%shared_mailbox%' OR DEPT_CD_PATH LIKE '%trash%'
 				) MAIN
 		</isEqual>
 		<isEqual property="type" compareValue="U">
@@ -182,6 +184,8 @@
 					AND
 						PHYSICALDELIVERYOFFICENAME = #companyId#
 				</isNotEmpty>
+					 AND 
+				        DEPARTMENT NOT LIKE '%shared_mailbox%' OR DEPT_CD_PATH LIKE '%trash%'
 				) MAIN
 		</isEqual>
 		<![CDATA[

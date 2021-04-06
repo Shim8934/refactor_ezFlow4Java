@@ -1445,7 +1445,7 @@
 			AND
 				a.TENANT_ID    = #tenantId#
 			AND 
-				a.OWNER_ID NOT IN ('shared_mailbox_Top')	
+				a.OWNER_ID NOT IN (SELECT CN FROM TBL_DEPTMASTER WHERE DEPT_CD_PATH LIKE '%shared_mailbox%' OR DEPT_CD_PATH LIKE '%trash%')	
 			ORDER BY
 				a.FOLDER_NAME1,
 				a.FOLDER_LEVEL ASC,
