@@ -32,11 +32,6 @@
 	<!-- module -->
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/duplicate-file.js')}"></script>
 	<link href="${util.addVer('/js/jquery/jquery.modal.css')}" rel="stylesheet" type="text/css" />
-	<!-- capacity -->
-	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/capacity.js')}"></script>
-	<link rel="stylesheet" href="${util.addVer('/css/jquery.lineProgressbar.css')}" type="text/css" />
-	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
-	
     <script type="text/javascript">
    		var lang = ${userInfo.lang};
 		var strErr		= "<spring:message code = 'ezWebFolder.t107'/>";
@@ -68,7 +63,6 @@
     	var _cellInfo        = {};
     	var sortColumn = null;
     	var sortType = null;
-    	var folderType = window.parent.frames["left"].folderType;
 		
 		window.onresize = function () {
 			var reheight = document.documentElement.clientHeight - 210;
@@ -84,10 +78,6 @@
 		}
 		
 		window.onload = function() {
-			capacity.setFolderIdProvider(function() {
-				return "${folderId}";
-			});
-
 			hiddenPanel();
 			tableView.setTableId("tblFileList");
 			tableView.setTabledHeader("tblFileList1");
@@ -273,7 +263,6 @@
 		function renderFileListElement(result) {
 			tableView.setDataSource(result);
 			tableView.renderTable();
- 			capacity.load();
 			scroll();
 		}
 		
@@ -640,14 +629,7 @@
     </script>
 </head>
 <body class="mainbody">
-    <h1><spring:message code='ezWebFolder.t269'/><span id="mailBoxInfo"></span>
-		<div id="capacity-wrapper">
-			<div class="progressbar">
-				<div id="capacity-bar" class="proggress"></div>
-			</div>
-			<span id="capacity-percent"></span>
-		</div>
-	</h1>
+    <h1><spring:message code='ezWebFolder.t269'/><span id="mailBoxInfo"></span></h1>
 	<div id="mainmenu">
 		<ul>
 			<li><span onClick="restoreTrashCan()"><spring:message code='ezWebFolder.t287'/></span></li>

@@ -379,29 +379,7 @@ public class EzWebFolderController_m {
 		}
 		
 		logger.debug("listCount=" + getUsrListCount(loginCookie, request));
-		
-		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		logger.debug("userInfo=" + user);
-
-		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("userId",   orElse(user.getId(), "" ));
-		param.put("tenantId", orElse(user.getTenantId(), "" ));
-		param.put("comId", 	  orElse(user.getCompanyID(), "" ));
-		
-		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/getFolderDetail", param, request, "post", null);
-		
-		String status = resultBody.get("status").toString();
-		String code = resultBody.get("code").toString();
-
-		if (status.equals("ok")) {
-			model.addAttribute("status","ok");
-			model.addAttribute("code", code);
-			model.addAttribute("folderId",resultBody.get("folderId"));
-		}else {
-			model.addAttribute("status","error");
-			model.addAttribute("code", code);
-			model.addAttribute("folderId","");
-		}
+		logger.debug("userInfo=" + commonUtil.userInfoSimple(loginCookie));
 		
 		model.addAttribute("listCount", getUsrListCount(loginCookie, request));
 		model.addAttribute("userInfo", commonUtil.userInfoSimple(loginCookie));

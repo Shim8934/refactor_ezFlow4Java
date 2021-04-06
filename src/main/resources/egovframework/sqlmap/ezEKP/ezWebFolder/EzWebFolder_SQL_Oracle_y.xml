@@ -1344,21 +1344,8 @@
 		<![CDATA[
 			SELECT *
 			FROM TBL_WEBFOLDER_FOLDER
+			WHERE TENANT_ID = #tenantId# and FOLDER_ID = #folderId# 
 		]]>
-			WHERE 
-				TENANT_ID = #tenantId# 
-		<isNotEmpty property="folderId">
-			AND 
-				FOLDER_ID = #folderId# 
-		</isNotEmpty> 
-		<isEmpty property="folderId">
-		<isNotEmpty property="userId">
-			AND 
-				Upper(FOLDER_TYPE) = 'U' 
-			AND 
-				OWNER_ID = #userId# 
-		</isNotEmpty>
-		</isEmpty> 
 	</select>
 	<select id="EzWebFolderDAO_y.getUserInfo" parameterClass="Map" resultMap ="login">
 		<![CDATA[

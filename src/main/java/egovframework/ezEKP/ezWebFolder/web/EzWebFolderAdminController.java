@@ -166,26 +166,6 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		if (!checkWfAdmin(request, user.getId()).get("status").toString().equals("ok")) {
 			return "cmm/error/adminDenied";
 		}
-
-		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("userId",   user.getId()		  != null? user.getId()		   : "");
-		param.put("tenantId", (int) user.getTenantId());
-		param.put("comId", 	  user.getCompanyID() != null? user.getCompanyID() : "");
-		
-		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/getFolderDetail", param, request, "post", null);
-		
-		String status = resultBody.get("status").toString();
-		String code = resultBody.get("code").toString();
-
-		if (status.equals("ok")) {
-			model.addAttribute("status","ok");
-			model.addAttribute("code", code);
-			model.addAttribute("folderId",resultBody.get("folderId"));
-		}else {
-			model.addAttribute("status","error");
-			model.addAttribute("code", code);
-			model.addAttribute("folderId","");
-		}
 		
 		//model.addAttribute("listCount", getUsrListCount(loginCookie, request));
 		model.addAttribute("lang", commonUtil.userInfoSimple(loginCookie).getLang());

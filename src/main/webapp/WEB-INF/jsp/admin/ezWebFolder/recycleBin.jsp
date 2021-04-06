@@ -22,11 +22,6 @@
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/pageNav.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/adminTable.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/duplicate-file.js')}"></script>
-	<!-- capacity -->
-	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/capacity.js')}"></script>
-	<link rel="stylesheet" href="${util.addVer('/css/jquery.lineProgressbar.css')}" type="text/css" />
-	<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
-	
 	<script type="text/javascript">
 		var lang      = ${lang};
 		var strErr    = "<spring:message code = 'ezWebFolder.t107'/>";
@@ -69,10 +64,6 @@
 		document.onselectstart = function() {return false;}
 		
 		window.onload = function () {
-			capacity.setFolderIdProvider(function() {
-				return "${folderId}";
-			});
-
 			closeAllPopup();
 			tableView.setTableId("tblFileList");
 			tableView.setTabledHeader("tblFileList1");
@@ -277,7 +268,6 @@
 		function renderFileListElement(result) {
 			tableView.setDataSource(result);
 			tableView.renderTable();
- 			capacity.load();
 		}
 		
 		$(function() {
@@ -573,14 +563,7 @@
 	</script>
 </head>
 <body class="mainbody" onkeydown="keyPressPanel(event);">
-    <h1><spring:message code='ezWebFolder.t269'/><span id="mailBoxInfo"></span>
-		<div id="capacity-wrapper">
-			<div class="progressbar">
-				<div id="capacity-bar" class="proggress"></div>
-			</div>
-			<span id="capacity-percent"></span>
-		</div>
-	</h1>
+    <h1><spring:message code='ezWebFolder.t269'/><span id="mailBoxInfo"></span></h1>
 	<div id="mainmenu" style="margin-left: 5px;">
 		<ul>
 			<li id=""><a onClick="restoreTrashCan()" style=" margin-top: 3px;"><span><spring:message code='ezWebFolder.t287'/></span></a></li>

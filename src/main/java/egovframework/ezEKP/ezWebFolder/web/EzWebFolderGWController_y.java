@@ -1664,35 +1664,4 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 		LOGGER.debug("webfolderFileDownForUnidocs end.");
 		return result ;
 	}
-
-	@RequestMapping(value="/rest/ezwebfolder/getFolderDetail", method=RequestMethod.POST, produces ="application/json;charset=utf-8")
-	public JSONObject getFolderDetail (HttpServletRequest request, Locale locale) {
-		LOGGER.debug("getFolderDetail start.");
-		
-		JSONObject result = new JSONObject();
-		FolderVO fldDetail = null;
-		
-		String folderId = orElse(request.getParameter("folderId"), "");
-		String userId 	= orElse(request.getParameter("userId"), "");
-		int tenantId 	= orElse(Integer.parseInt(request.getParameter("tenantId")), 0);
-		String comId 	= orElse(request.getParameter("comId"), "");
-
-		try {
-			LOGGER.debug("folderId={}, tenantId={}, comId={}, userId={}", folderId, tenantId, comId, userId);
-
-			fldDetail = service.getFolderDetail(folderId, userId, tenantId, comId);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.put("status", "error");
-			result.put("code", 2);
-			return result;
-		}
-		
-		result.put("folderId", fldDetail.getFolderId());
-		result.put("status", "ok");
-		result.put("code", 0);
-		LOGGER.debug("getFolderDetail end.");
-		return result ;
-	}
 }
