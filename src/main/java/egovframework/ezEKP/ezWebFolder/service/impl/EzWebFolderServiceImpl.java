@@ -991,9 +991,9 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				
 				saveLog("C", companyId, offset, userId, userName1, userName2, tenantId, fileVO, "", userInfo.getPrimary());
 
-//				if (isEncryptionFolder || isEncrypt) {
-//					insertEncryptedFile(fileVO.getFileId(), tenantId);
-//				}
+				if (isEncryptionFolder || isEncrypt) {
+					insertEncryptedFile(fileVO.getFileId(), tenantId);
+				}
 			} else {
 				failureList.add(new ExtensionErrorFile(pFileName[i], ".none".equals(extend) ? "" : extend));
 			}
@@ -1036,13 +1036,13 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		*/
 
 		FileVO fileVO = getFileByFileId(fileId, offset, tenantId);
-//		boolean isEncrypted = isEncryptedFile(fileId, tenantId);
-//		boolean isCreator = fileVO.getCreateId().equals(userId);
+		boolean isEncrypted = isEncryptedFile(fileId, tenantId);
+		boolean isCreator = fileVO.getCreateId().equals(userId);
 
-//		if (isEncrypted && !isCreator) {
-//			response.sendError(403, "Encrypted file cannot be downloaded!");
-//			return;
-//		}
+		if (isEncrypted && !isCreator) {
+			response.sendError(403, "Encrypted file cannot be downloaded!");
+			return;
+		}
 
 		logger.debug( "여기 " + realPath + commonUtil.detectPathTraversal(fileVO.getFilePath()));
 		File file = new File(realPath + commonUtil.detectPathTraversal(fileVO.getFilePath()));
@@ -1061,15 +1061,15 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 
 			long contentLength;
 
-//			if (isEncrypted) {
-//				byte[] decryptedBytes = klibUtil.decrypt(Files.readAllBytes(file.toPath()));
-//				IOUtils.write(decryptedBytes, response.getOutputStream());
-//				contentLength = decryptedBytes.length;
-//				decryptedBytes = null;
-//			} else {
+			if (isEncrypted) {
+				byte[] decryptedBytes = klibUtil.decrypt(Files.readAllBytes(file.toPath()));
+				IOUtils.write(decryptedBytes, response.getOutputStream());
+				contentLength = decryptedBytes.length;
+				decryptedBytes = null;
+			} else {
 				Files.copy(file.toPath(), response.getOutputStream());
 				contentLength = file.length();
-//			}
+			}
 
 			response.setHeader("Content-Length", Long.toString(contentLength));
 		} catch (Exception ex) {

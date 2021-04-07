@@ -522,7 +522,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		String folderId            = getMaxFolderID(tenantId);
 		int newFolderLevel = parentFolder.getFolderLevel() + 1;
 
-		ezWebFolderService.insertEncryptionFolder(folderId, tenantId);
+//		ezWebFolderService.insertEncryptionFolder(folderId, tenantId);
 		
 		folder.setFolderId(folderId);
 		folder.setFolderLevel(newFolderLevel);
