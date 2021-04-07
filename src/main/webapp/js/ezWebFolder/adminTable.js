@@ -688,11 +688,11 @@ function TableView() {
 				trElmt.setAttribute("depth", depth);
 				trElmt.onclick = function(event) {clickRow(event);};
 				trElmt.addEventListener("dblclick", function(event) {
-					if (this.getAttribute("encryptedFlag") == "1") {
-						unidocsWebViewer(event);
-					} else {
+//					if (this.getAttribute("encryptedFlag") == "1") {
+//						unidocsWebViewer(event);
+//					} else {
 						downloadFileByDbClick(event);
-					}
+//					}
 					rowContext.setSelectState(this, true);
 				});
 				trElmt.addEventListener("contextmenu", openContextMenu);

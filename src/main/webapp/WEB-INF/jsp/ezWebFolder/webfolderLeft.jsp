@@ -430,7 +430,7 @@
 
 			function appliWebFolder() {
 				if (typeof window.parent.frames["right"].applicationPopUp === "function") { 
-					window.parent.frames["right"].applicationPopUp("${subTypeC}");
+					window.parent.frames["right"].applicationPopUp();
 				}
 			}
 			

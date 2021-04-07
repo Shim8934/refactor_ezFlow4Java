@@ -752,13 +752,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		map.put("tenantId",  tenantId);
 		map.put("compId",  compId);
 		map.put("idList",  idList);
-			// 사용 기간이 만료된 회의실 리스트 (담당자로 설정된 회의실은 제외)
-			List<String> expiredFolders = getExpiredMeetingFolders(userId, tenantId);
-			map.put("expiredFolders", expiredFolders);
-			// 사용 기간이 만료된 회의실 리스트 (담당자로 설정된 회의실은 제외)
-			List<String> notInheritFolders = getNotInheritFolders(tenantId);
-			map.put("notInheritFolders", notInheritFolders);
-
+		
 		List<FolderSimpleVO> listFolders = new ArrayList<FolderSimpleVO>();
 		
 		//Check if user is dept chief

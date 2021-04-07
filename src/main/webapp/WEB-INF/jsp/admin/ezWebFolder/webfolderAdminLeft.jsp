@@ -28,7 +28,6 @@
 			var arrSubFolder      = [];
 			var selectedFolder    = "";
 			var compFolderId      = null;
-			var subTypeC		  = "";
 			var primary           = "<c:out value='${primary}'/>";
 			var companyId         = "<c:out value='${company}'/>";
 			var strMessage        = "<spring:message code='ezWebFolder.t134'/>";
@@ -90,11 +89,9 @@
 				}
 			}
 			
-			function companyFolder(subTypeC) {
+			function companyFolder() {
 				clearToggle();
-				// 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: isDean으로 구분 추가
-				// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-				window.open("/admin/ezWebFolder/webfolderAdminCompanyFolder.do?subTypeC=" + subTypeC, "right");
+				window.open("/admin/ezWebFolder/webfolderAdminCompanyFolder.do", "right");
 			}
 			
 			function displayPersonal(obj) {
@@ -161,22 +158,14 @@
 				}
 			}
 			
-			// 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: isDean으로 구분 추가
-			// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-			function companyFile(obj, subTypeC) {
+			function companyFile(obj) {
 // 				if (obj.parentElement.className == 'on') {
 // 					return;
 // 				}
 				
-				subTypeC = subTypeC;
-//				var lnbUL = subTypeC == 'N'? "lnbUL" : "lnbUL3";
-				var lnbUL = subTypeC == 'task'? "lnbUL" : subTypeC == 'meeting'? "lnbUL" : subTypeC == 'dean'? "lnbUL3" : "";
-//				var folderTree = subTypeC == 'N'? "folderTree" : "folderTree3";
-				var folderTree = subTypeC == 'task'? "folderTree" : subTypeC == 'meeting'? "folderTree" : subTypeC == 'dean'? "folderTree3" : "";
-				
 				clearToggle();
-				document.getElementById(lnbUL).style.display = "";
-				getCompanyData(companyId, "", folderTree, subTypeC);
+				document.getElementById("lnbUL").style.display = "";
+				getCompanyData(companyId, "", "folderTree");
 			}
 			
 			function fileTransactionHistory(obj) {

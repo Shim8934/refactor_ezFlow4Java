@@ -891,13 +891,14 @@ public class EzWebFolderController_m {
 						meetingMsgMap.put("wfNameMsg", "ezWebFolder.ksa05");
 						meetingMsgMap.put("greetingsMsg", "ezWebFolder.ksa37");
 						
-						Map<String, String> msgMap = meetingMsgMap; 
+						Map<String, String> msgMap = taskMsgMap; 
 
 						String mailContent = "";
 						String mailSubject = String.format(egovMessageSource.getMessage(msgMap.get("subjectMsg"), locale), folderName);
 						String mailConentTemp = "<p><b>${tt}</b> : ${ttVal}</p>";
 
-						String wfUsingPeriodStr = mailConentTemp.replace("${tt}", egovMessageSource.getMessage("ezWebFolder.ksa20", locale)).replace("${ttVal}", usingPeriodStr) + "<br/>";
+						String wfUsingPeriodStr = "";
+//						String wfUsingPeriodStr = folderSubType.equalsIgnoreCase("task") ? "" : mailConentTemp.replace("${tt}", egovMessageSource.getMessage("ezWebFolder.ksa20", locale)).replace("${ttVal}", usingPeriodStr) + "<br/>";
 						
 						mailContent += "<p>" + egovMessageSource.getMessage(msgMap.get("greetingsMsg"), locale) + "</p>"
 							+ "<br/>"

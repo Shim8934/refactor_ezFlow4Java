@@ -203,10 +203,6 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			map.put("userDeptList", userDeptList.toArray(new String[userDeptList.size()]));
 			map.put("managerFolderStr", managerFolderStr);
 			
-				// 사용 기간이 만료된 회의실 리스트 (담당자로 설정된 회의실은 제외)
-				List<String> expiredFolders = ezWebFolderService.getExpiredMeetingFolders(userId, tenantId);
-				map.put("expiredFolders", expiredFolders);
-			
 			List<Map<String, Object>> compFolderTree = ezWebFolderDAO_y.getCompFolderTree(map);
 
 			compFolderTree = checkFolderParent(compFolderTree);
@@ -434,8 +430,6 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		map.put("userDeptList", addjobList);
 		
 		map.put("flag", flag);
-		
-			map.put("expiredFolders", ezWebFolderService.getExpiredMeetingFolders(userId, tenantId));
 		
 		if (sortType.equals("")){
 			map.put("orderByData", ", CASE WHEN FOLDER_SORT = 0 THEN FILE_NAME END, ROOT_ID DESC, HIERARCHICAL_PATH" );
@@ -679,8 +673,6 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			fileTotalCnt = ezWebFolderDAO_y.getFileTotalCount(map);
 		}
 		
-			map.put("expiredFolders", ezWebFolderService.getExpiredMeetingFolders(userId, tenantId));
-
 		fldTotalCnt = ezWebFolderDAO_y.getFldTotalCount2(map);
 		
 		if (fileTotalCnt < 0) {
@@ -770,21 +762,13 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 
 		LOGGER.debug("folderType is " + folderType);
 
-		// 폴더 권한 비상속
-		boolean isNotInherited = ezWebFolderService.isNotInheritFolder(uppFolder.getFolderId(), tenantId);
-
 		// result 새로 생긴 fileId
 		String result = ezWebFolderDAO_y.insertFolder(map);
 
-		if (isNotInherited) {
-			ezWebFolderAdminService.insertFolderUser("", userId, "USER", result,
-					userId, timeUTC, comId, tenantId);
-		} else {
-			map.put("upperFolderId", uppFolder.getFolderId());
-			map.put("targetId", result);
-			map.put("type_f", "D");
-			ezWebFolderAdminService.insertFolderUser(map);
-		}
+		map.put("upperFolderId", uppFolder.getFolderId());
+		map.put("targetId", result);
+		map.put("type_f", "D");
+		ezWebFolderAdminService.insertFolderUser(map);
 		LOGGER.debug("insert folderId is " + result);
 
 		if (result == null) {

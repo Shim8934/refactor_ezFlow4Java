@@ -2175,11 +2175,6 @@ public class EzWebFolderGWController {
 			boolean isEncryption = encryptionRootFolder != null;
 			boolean isInhertiedEncryption = isEncryption && !folderId.equals(encryptionRootFolder.getFolderId());
 
-			// 회의실 사용 기간
-				MeetingPeriod period = ezWebFolderService.getMeetingPeriod(folderId, offset, tenantId);
-				result.put("meetingStartDate", period.getStartDate());
-				result.put("meetingEndDate", period.getEndDate());
-
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("folderUsers", listUsers);

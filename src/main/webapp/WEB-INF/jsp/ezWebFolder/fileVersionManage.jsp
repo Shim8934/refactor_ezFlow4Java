@@ -108,49 +108,49 @@
 			return;
 		}
 		
-		<c:choose>
-			<c:when test="${subTypeC eq 'meeting' or isEncrypted}">
-				var json = {
-						"fileId" : fileId,
-						"version" : versions[0]
-				};
-				
-				<c:if test="${isCreator}">
-					if (!confirm(messages.webviewerConfirm)) {
-						downloadFrame.location.href = "/ezWebFolder/downloadVersion.do?fileId=" + fileId
-								+ "&versions=" + encodeURIComponent(versions.toString());
-						return;
-					}
-				</c:if>
-				
-				fileVersionDim(true);
-				
-				var sTimeOut = setTimeout(function() { // setTimeout 안하면 dim 처리가 안됨..
-					$.ajax({
-						type:"POST",
-						async: false,
-						url : "/ezWebFolder/webfolderFileDownForUnidocs.do",
-						data : JSON.stringify(json),
-						contentType: "application/json; charset=UTF-8",
-						dataType: "JSON",
-						success : function(result) {
-							window.open(result.url + result.encData, '_blank');
-						},
-						error : function(error) {
-							alert("<spring:message code='ezWebFolder.t305' />");
-						}
-					});
-					
-					fileVersionDim(false);
-					clearTimeout(sTimeOut);
-				}, 500);
-			
-			</c:when>
-			<c:otherwise>
+//		<c:choose>
+//			<c:when test="${subTypeC eq 'meeting' or isEncrypted}">
+//				var json = {
+//						"fileId" : fileId,
+//						"version" : versions[0]
+//				};
+//				
+//				<c:if test="${isCreator}">
+//					if (!confirm(messages.webviewerConfirm)) {
+//						downloadFrame.location.href = "/ezWebFolder/downloadVersion.do?fileId=" + fileId
+//								+ "&versions=" + encodeURIComponent(versions.toString());
+//						return;
+//					}
+//				</c:if>
+//				
+//				fileVersionDim(true);
+//				
+//				var sTimeOut = setTimeout(function() { // setTimeout 안하면 dim 처리가 안됨..
+//					$.ajax({
+//						type:"POST",
+//						async: false,
+//						url : "/ezWebFolder/webfolderFileDownForUnidocs.do",
+//						data : JSON.stringify(json),
+//						contentType: "application/json; charset=UTF-8",
+//						dataType: "JSON",
+//						success : function(result) {
+//							window.open(result.url + result.encData, '_blank');
+//						},
+//						error : function(error) {
+//							alert("<spring:message code='ezWebFolder.t305' />");
+//						}
+//					});
+//					
+//					fileVersionDim(false);
+//					clearTimeout(sTimeOut);
+//				}, 500);
+//			
+//			</c:when>
+//			<c:otherwise>
 				downloadFrame.location.href = "/ezWebFolder/downloadVersion.do?fileId=" + fileId
 						+ "&versions=" + encodeURIComponent(versions.toString());
-			</c:otherwise>
-		</c:choose>
+//			</c:otherwise>
+//		</c:choose>
 	}
 
 	function versionRestore() {
@@ -282,8 +282,8 @@
 		<c:choose>
 			<c:when test="${isPermitted}">
 				<a id="btn-download" class="imgbtn"><span><c:choose>
-					<c:when test="${subTypeC eq 'meeting' or isEncrypted}"><spring:message code='webfolder.version.button.watch' /></c:when>
-					<c:otherwise><spring:message code='webfolder.version.button.download' /></c:otherwise>
+					<%-- <c:when test="${subTypeC eq 'meeting' or isEncrypted}"><spring:message code='webfolder.version.button.watch' /></c:when>
+					<c:otherwise> --%><spring:message code='webfolder.version.button.download' /><%-- </c:otherwise> --%>
 				</c:choose></span></a>
 				<a id="btn-restore" class="imgbtn"><span><spring:message code='ezWebFolder.t287' /></span></a>
 				<a id="btn-delete" class="imgbtn"><span><spring:message code='ezWebFolder.t111' /></span></a>

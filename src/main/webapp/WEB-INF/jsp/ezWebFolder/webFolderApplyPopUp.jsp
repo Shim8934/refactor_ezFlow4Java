@@ -104,8 +104,7 @@
 </div>	
 
 <script>
-	var applyPopUpType = "task";
-	var popTypemsg = {"task":"<spring:message code='ezWebFolder.ksa04'/>", "meeting":"<spring:message code='ezWebFolder.ksa05'/>"};
+	var popTypemsg = "<spring:message code='ezWebFolder.ksa04'/>";
 	var memTypeMsg = {"JIKWI":"<spring:message code='main.t77'/>","JIKCHEK":"<spring:message code='ezOrgan.t1500'/>",
         "GROUP":"<spring:message code='ezOrgan.zNo001'/>","DEPT":"<spring:message code='main.t75'/>"};
 	var peopleMsg = "<spring:message code='ezWebFolder.ksa65' />";
@@ -113,13 +112,9 @@
 	var appMemberArr = [];
 	var appliMembersPopUp;
 	
-	function applicationPopUp(popType) {
-		applyPopUpType = popType;
-		
-		var usagePeriodDisplay = (applyPopUpType == "meeting") ? "table-row" :"none";
-
-		$("#popTitle").text(popTypemsg[applyPopUpType]);
-		$("#usage_period").css("display",usagePeriodDisplay);
+	function applicationPopUp() {
+		$("#popTitle").text(popTypemsg);
+		$("#usage_period").css("display","none");
 		
 		showApplicationPopUp();
 	}
@@ -165,7 +160,7 @@
 		var wfUsingS = $("#Sdatepicker_meeting").val();
 		var wfUsingE = $("#Edatepicker_meeting").val();
 		
-		if (isEmptyStr(wfName) || appMasterArr.length <= 0  || (applyPopUpType == "meeting" && (isEmptyStr(wfUsingS) || isEmptyStr(wfUsingE))) ) {
+		if (isEmptyStr(wfName) || appMasterArr.length <= 0  /* || (applyPopUpType == "meeting" && (isEmptyStr(wfUsingS) || isEmptyStr(wfUsingE))) */ ) {
 			alert("<spring:message code='ezWebFolder.ksa21' />");
 			return;
 		} else if (isValidName(wfName)) {
@@ -185,8 +180,7 @@
 					wfUsingS : wfUsingS,
 					wfUsingE : wfUsingE,
 					appMasterArr : JSON.stringify(appMasterArr),
-					appMemberArr : JSON.stringify(appMemberArr),
-					subTypeC : applyPopUpType
+					appMemberArr : JSON.stringify(appMemberArr)
 				},success: function(data) {
 					if (data == "OK") {
 						alert("<spring:message code='ezWebFolder.ksa22'/>");

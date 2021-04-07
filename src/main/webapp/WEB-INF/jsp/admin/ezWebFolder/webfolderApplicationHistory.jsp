@@ -47,7 +47,7 @@
 	</head>
 	<body class="mainbody" style="overflow:auto; height:93%" onresize="reSizePage()">
 		<h1>
-			<spring:message code="${subTypeC eq 'task' ? 'ezWebFolder.ksa02' : 'ezWebFolder.ksa03'}"/>
+			<spring:message code="ezWebFolder.ksa02"/>
 			
 			<span id="mailBoxInfo"><span style="color:#017BEC;">0</span></span>
 		</h1>
@@ -76,7 +76,7 @@
 				<table class="mainlist" style="width:100%;" id="listHead">
 					<tr>
 						<th key="folderName">
-							<spring:message code="${subTypeC eq 'task' ? 'ezWebFolder.ksa04' : 'ezWebFolder.ksa05'}"/>
+							<spring:message code="ezWebFolder.ksa04"/>
 						</th>
 						<th key="applicantName"><spring:message code='ezWebFolder.ksa06'/></th>
 						<th key="masterName"><spring:message code='ezWebFolder.ksa07'/></th>
@@ -105,7 +105,7 @@
 		        <table class="content" style="margin-top:10px ">
 		        	<tr>
 		        		<th>
-		        			<spring:message code="${subTypeC eq 'task'? 'ezWebFolder.ksa04' : 'ezWebFolder.ksa05'}"/>
+		        			<spring:message code="ezWebFolder.ksa04"/>
 		        			<span style="color:red;">*</span>
 		        		</th>
 		        		<td><input type="text" class="" style="width:100%;"></td>
@@ -201,7 +201,7 @@
 				</table>
 			</div>
 			<div class="popupJQLayer detailPopUp">
-				<div class="title"><spring:message code="${subTypeC eq 'task'? 'ezWebFolder.ksa02' : 'ezWebFolder.ksa03'}"/></div>
+				<div class="title"><spring:message code="ezWebFolder.ksa02"/></div>
 				<div id="close">
 		            <ul>
 		                <li><a rel="modal:close"><span onclick="closePopUp()"></span></a></li>
@@ -211,7 +211,7 @@
 		        <table class="content" style="margin-top:10px ">
 		        	<tr>
 		        		<th>
-		        			<spring:message code="${subTypeC eq 'task'? 'ezWebFolder.ksa04' : 'ezWebFolder.ksa05'}"/>
+		        			<spring:message code="ezWebFolder.ksa04"/>
 		        		</th>
 		        		<td><div key="folderName" class="wfAppformHTML historyInfo"></div></td>
 		        	</tr>
@@ -227,7 +227,7 @@
 		        		</th>
 		        		<td><div key="approvalStatusUpdateDt" class="wfAppformHTML historyInfo"></div></td>
 		        	</tr>
-	        		<tr style="display:${subTypeC eq 'meeting' ? '' : 'none' }; ">
+	        		<tr style="display:none; ">
 		        		<th>
 		        			<spring:message code="ezWebFolder.ksa20" />
 		        		</th>
@@ -290,7 +290,6 @@
 	<script type="text/javascript" >
 		// var p_pageType = "${type}";
 		var p_companyId = "${userCompany}";
-		var p_subTypeC = "${subTypeC}";
 		var approvalMsg = "<spring:message code='ezWebFolder.ksa45' />";
 		var approvalMsg2 = "<spring:message code='ezWebFolder.ksa62' />";
 		var RefusalMsg = "<spring:message code='ezWebFolder.ksa46' />";
@@ -649,8 +648,7 @@
 						async: false,
 						dataType: "json",
 						data: {
-							applyId : applyId,
-							subTypeC : p_subTypeC
+							applyId : applyId
 						}, success: function(data) {
 							if (data.status == "OK") {
 								alert("<spring:message code='ezWebFolder.ksa49' />");
@@ -687,8 +685,7 @@
 						dataType: "json",
 						data: {
 							applyId : applyId,
-							reasonCont : reasonCont,
-							subTypeC : p_subTypeC
+							reasonCont : reasonCont
 						}, success: function(data) {
 							if (data.status == "OK") {
 								alert("<spring:message code='ezWebFolder.ksa50' />");

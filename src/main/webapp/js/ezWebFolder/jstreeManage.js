@@ -15,15 +15,8 @@ function selectFolder(targetID) {
 	$($element).jstree().select_node(targetID , true); 
 }
 
-var backgroundImg_URL = {
-		"task":"/images/webfolder/business_data.png", 
-		"meeting":"/images/webfolder/conference_file.png",
-		"dean":"/images/webfolder/agenda_item.png"};
 function setTopLevelIcon() {
-	var tempURL = backgroundImg_URL[subTypeC];
-	tempURL = (typeof tempURL == "undefined") ? "/images/OrganTree_cross/fldr.gif" : tempURL;
-	tempURL = "url(" + tempURL + ")";
-	$("#tree>ol li[aria-level=2]>a i.jstree-themeicon").css("background-image", tempURL);   
+	$("#tree>ol li[aria-level=2]>a i.jstree-themeicon").css("background-image", "url(/images/OrganTree_cross/fldr.gif)");   
 }
 
 function insertLeftFolder(parentFolderId, targetId, folderName ) {
