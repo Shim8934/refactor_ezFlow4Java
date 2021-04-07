@@ -324,22 +324,26 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 		map.put("folderPath", ezWebFolderDAO_m.getFolderPath(map));
 
 		Integer count = (Integer) select("EzWebFolderDAO.isEncryptionFolder", map);
-		return count != null && count > 0;
+//		return count != null && count > 0;
+		return false;
 	}
 
 	public boolean isEncryptedFile(Map<String, Object> map) {
 		Integer count = (Integer) select("EzWebFolderDAO.isEncryptedFile", map);
-		return count != null && count > 0;
+//		return count != null && count > 0;
+		return false;
 	}
 
 	public boolean isEncryptedVersion(Map<String, Object> map) {
 		Integer count = (Integer) select("EzWebFolderDAO.isEncryptedVersion", map);
-		return count != null && count > 0;
+//		return count != null && count > 0;
+		return false;
 	}
 
 	public boolean isEncryptedFilePath(Map<String, Object> map) {
 		Integer count = (Integer) select("EzWebFolderDAO.isEncryptedFilePath", map);
-		return count != null && count > 0;
+//		return count != null && count > 0;
+		return false;
 	}
 
 	@SuppressWarnings("unchecked")
