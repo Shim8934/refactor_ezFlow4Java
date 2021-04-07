@@ -1860,20 +1860,6 @@
 					f.use_status != 'T'
     	]]>
     </select>
-    <select id="EzWebFolderDAO_y.getPortletFolderId" parameterClass="Map" resultClass="String">
-    	<![CDATA[
-    		SELECT 
-    			PROPERTY_VALUE 
-    		FROM 
-    			TBL_USER_CONFIG 
-    		WHERE 
-    			TENANT_ID = #tenantId# 
-    		AND 
-    			USER_ID = #ownerId#
-    		AND 
-    			PROPERTY_NAME = 'webfolderPortletFolderId'
-    	]]>
-    </select>
     <select id="EzWebFolderDAO_y.getRootFolderListInfo" parameterClass="Map" resultClass="java.util.HashMap">
     	<![CDATA[
     		SELECT 

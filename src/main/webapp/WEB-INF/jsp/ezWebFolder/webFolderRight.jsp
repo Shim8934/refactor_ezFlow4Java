@@ -354,7 +354,7 @@
 			 + " / " + messages.strLang16 + " <span style='color:#017BEC;'> " 
 				+ fileCnt +" </span>";
 			$("#listcount").val(result.listCount).prop("selected", true);
-// 			capacity.load();
+			capacity.load();
 			scroll();
 
 			// 폴더 권한 비상속시 이동/복사 버튼 숨기기

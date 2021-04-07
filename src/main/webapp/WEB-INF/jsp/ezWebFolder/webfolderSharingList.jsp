@@ -280,7 +280,7 @@
 						renderList(data.list);
 						setNamePath(data.folderPath, data.folderPath2);
 						setMailBoxInfo(data.folderCount, data.fileCount);
-// 						disableCapacity();
+						disableCapacity();
 						
 						folderId = "";
 					},
@@ -361,7 +361,7 @@
 						renderList2(result.fileList);
 						setNamePath(result.folderPath, result.originalPath);
 						setMailBoxInfo(result.fldCnt, result.fileCnt);
-// 						capacity.load();
+						capacity.load();
 					},
 					error : function(error) {
 						hideProgress();
@@ -1063,13 +1063,13 @@
 		<h1>
 			<spring:message code='ezWebFolder.t266'/>
 			<span id="mailBoxInfo"></span>
-<!-- 			<div id="capacity-wrapper"> -->
-<!-- 				<span id="capacity-folder-type"></span> -->
-<!-- 				<div class="progressbar"> -->
-<!-- 					<div id="capacity-bar" class="proggress"></div> -->
-<!-- 				</div> -->
-<!-- 				<span id="capacity-percent"></span> -->
-<!-- 			</div> -->
+			<div id="capacity-wrapper">
+				<span id="capacity-folder-type"></span>
+				<div class="progressbar">
+					<div id="capacity-bar" class="proggress"></div>
+				</div>
+				<span id="capacity-percent"></span>
+			</div>
 		</h1>
 		
 		<div id="pageArea">

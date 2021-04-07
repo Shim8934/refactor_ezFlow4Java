@@ -1357,21 +1357,15 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 	@Override
 	public String folderIdByUserIdAndFolderType(String ownerId, int tenantId, String folderType) throws Exception {
 		Map<String, Object> map  = new HashMap<String, Object>();
-		String folderId = "";
-		
 		map.put("tenantId", tenantId);
+		if (folderType == null || folderType.equals("")){
+			folderType = "U";
+		} 
+		map.put("folderType", folderType);
 		map.put("ownerId", ownerId);
 		
-		if (folderType.equalsIgnoreCase("C")){
-			folderId = ezWebFolderDAO_y.getPortletFolderId(map);
-		} else {
-			if (folderType == null || folderType.equals("")){
-				folderType = "U";
-			} 
-			map.put("folderType", folderType);
-			
-			folderId = ezWebFolderDAO_y.folderIdByUserIdAndFolderType(map);
-		}
+		String folderId = ezWebFolderDAO_y.folderIdByUserIdAndFolderType(map);
+		
 		return folderId ;
 	}
 
