@@ -216,10 +216,6 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 		return (FileVO) select("EzWebFolderDAO_y.selectFileDetail", map);
 	}
 
-	public String getPortletFolderId(Map<String, Object> map) {
-		return (String) select("EzWebFolderDAO_y.getPortletFolderId", map);
-	}
-
 	public List<Map<String,String>> getFolderUser (Map<String, Object> map) {
 		return (List<Map<String, String>>) list("EzWebFolderDAO_y.getFolderUser", map);
 	}
