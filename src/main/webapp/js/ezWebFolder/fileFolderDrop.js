@@ -211,10 +211,10 @@ function fileupload() {
 	uploadData.uploadableFiles = uploadableFiles;
 	uploadData.duplicateInfoArray = duplicateInfoArray;
 	
-	if (subTypeC === "task") {
-		doLayerPopupDownloadOption();
-		return;
-	}
+//	if (subTypeC === "task") {
+//		doLayerPopupDownloadOption();
+//		return;
+//	}
 
 	realUpload();
 }

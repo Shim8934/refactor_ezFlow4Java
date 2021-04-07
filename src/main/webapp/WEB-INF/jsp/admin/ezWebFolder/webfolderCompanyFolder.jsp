@@ -16,8 +16,6 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/popup.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" >
-			<c:set var="isMeeting" value="${subTypeC eq 'meeting'}" />
-			<c:set var="isTask" value="${subTypeC eq 'task'}" />
 			<c:set var="divHeight" value="${isMeeting or isTask ? 493 : 450}" />
 			var arrSubFolder      = [];
 			var selectedFolder    = "";
@@ -43,47 +41,6 @@
 				closeAllPopup();
 				document.onselectstart = function() {return false;}
 				getData();
-				
-				<c:if test="${isMeeting}">
-				// datepicker setup ()
-				$(".datepicker").datepicker({
-					changeMonth: true,
-					changeYear: true,
-					autoSize: true,
-					showOn: "both",
-					buttonImage: "/images/ImgIcon/calendar-month.png",
-					buttonImageOnly: true
-				});
-
-				$(".datepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-				$(".datepicker").datepicker('setDate', "");
-
-				var monthMsg = "<spring:message code='ezSchedule.t110' />";
-				var monthStr = monthMsg.split(";");
-				var dayMsg = "<spring:message code='ezSchedule.t108' />";
-				var dayStr = dayMsg.split(";");
-
-				$.datepicker.regional["<spring:message code='main.t0619' />"] = {
-					closeText: "<spring:message code='main.t3' />",
-					prevText: "<spring:message code='main.t0604' />",
-					nextText: "<spring:message code='main.t0605' />",
-					currentText: "<spring:message code='main.t0606' />",
-					monthNames: monthStr,
-					monthNamesShort: monthStr,
-					dayNames: dayStr,
-					dayNamesShort: dayStr,
-					dayNamesMin: dayStr,
-					weekHeader: 'Wk',
-					dateFormat: 'yy-mm-dd',
-					firstDay: 0,
-					isRTL: false,
-					duration: 200,
-					showAnim: 'show',
-					showMonthAfterYear: true
-				};
-
-				$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
-				</c:if>
 			}
 			
 			window.onbeforeunload = function() {
@@ -96,8 +53,7 @@
 					url: "/admin/ezWebFolder/getCompanyFolderTree.do",
 					data: {
 						"companyId" : document.getElementById("companyList").value,
-						"folderId"  : selectedFolder,
-						"subTypeC"  	: "${subTypeC}"
+						"folderId"  : selectedFolder
 					},
 					dataType: "JSON",
 					async: true,
@@ -270,11 +226,6 @@
 					deleteUserManager    = [];
 					strictAuthList 			= [];
 					strictAuthListMng 		= [];
-					<c:if test="${isTask}">
-					// 업무자료실 폴더 권한 비상속
-					document.getElementById("noInherit").checked = false;
-					document.getElementById("noInherit").disabled = true;
-					</c:if>
 					return;
 				}
 				
@@ -300,26 +251,6 @@
 								document.getElementById("usersSelectManager").style.display  = (level != 1) ? "none" : "";
 								document.getElementById("displayUsersManager").style.display = (level == 0) ? "none" : "inline-block";
 								document.getElementById("newTargetDivManager").parentNode.style.background = (level > 1) ? "#f6f6f6" : "";
-								<c:if test="${isMeeting}">
-								// 회의실 사용기간
-								if (level > 1) {
-									$(".datepicker").datepicker("disable").attr("disabled", true);
-								} else {
-									$(".datepicker").datepicker("enable").removeAttr("disabled");
-								}
-								var startDate = new Date(data.meetingStartDate);
-								var endDate = new Date(data.meetingEndDate);
-								$("#date1").datepicker("setDate", startDate);
-								$("#date2").datepicker("setDate", endDate);
-								
-								var isExpired = new Date().toISOString().substr(0, 10) > endDate.toISOString().substr(0, 10);
-								document.getElementById("expiredTip").style.display = isExpired ? "" : "none";
-								</c:if>
-								<c:if test="${isTask}">
-								// 업무자료실 폴더 권한 비상속
-								document.getElementById("noInherit").checked = data.isNotInherit;
-								document.getElementById("noInherit").disabled = level > 1;
-								</c:if>
 								processUsersList(data, obj.getAttribute("fldName1"), obj.getAttribute("fldName2"));
 								break;
 							case 1:
@@ -526,14 +457,6 @@
 				} else {
 					$(".datepicker").datepicker("disable").attr("disabled", true);
 				}
-
-				<c:if test="${isTask}">
-				// 업무자료실 폴더 권한 비상속
-				// document.getElementById("noInherit").checked = false;
-				document.getElementById("noInherit").disabled = compFolderId != selectedFolder;
-				</c:if>
-				// 2020-12-17 김은실 - (카이스트) 하위권한 체크하는 창을 스킵할 flag.
-				isInsert = true;
 			}
 			
 			function cancelAdd() {
@@ -572,42 +495,6 @@
 					return;
 				}
 
-				<c:if test="${isMeeting}">
-				// 중복코드입니다
-				// 회의실 사용 기간
-				function getDate(selector) {
-					try {
-						return $.datepicker.parseDate($(selector).datepicker('option', 'dateFormat'), $(selector).val()).getTime();
-					} catch (ignore) {
-						return false;
-					}
-				}
-				
-				var startTime = "", endTime = "";
-				
-				if (compFolderId == selectedFolder) {
-					startTime = getDate("#date1");
-					endTime = getDate("#date2");
-					
-					if (!startTime) {
-						alert("<spring:message code='webfolder.meeting.period.err.start'/>");
-						$("#date1").datepicker("show");
-						return;
-					}
-					
-					if (!endTime) {
-						alert("<spring:message code='webfolder.meeting.period.err.end'/>");
-						$("#date2").datepicker("show");
-						return;
-					}
-					
-					if (startTime > endTime) {
-						alert("<spring:message code='webfolder.meeting.period.err.early'/>");
-						$("#date1").datepicker("show");
-						return;
-					}
-				}
-				</c:if>
 				// 2020-12-04 김은실 - (카이스트)회사 폴더별 관리자 지원 기능 
 				var strAuthListManager = (typeof authListManager == "string")? authListManager : JSON.stringify(authListManager);
 				var strAuthListUser = (typeof authListUser == "string")? authListUser : JSON.stringify(authListUser);
@@ -618,17 +505,7 @@
 						"folderId"    : selectedFolder,
 						"folderUsers" : selectedLevel == 1? strAuthListManager.substring(0,strAuthListManager.length-1) + "," + strAuthListUser.substring(1) : strAuthListUser,
 						"folderName"  : folderName,
-						"folderName2" : folderName2,
-						"subTypeC" 	  : "${subTypeC}"
-						<c:if test="${isTask}">
-						// 업무자료실 폴더 권한 비상속
-						,"noInherit" : document.getElementById("noInherit").checked
-						</c:if>
-						<c:if test="${isMeeting}">
-						// 회의실 사용 기간
-						,"startTime" : startTime
-						,"endTime" : endTime
-						</c:if>
+						"folderName2" : folderName2
 					},
 					dataType: "JSON",
 					async: false,
@@ -721,42 +598,6 @@
 					return;
 				}
 				
-				<c:if test="${isMeeting}">
-				// 회의실 사용 기간
-				function getDate(selector) {
-					try {
-						return $.datepicker.parseDate($(selector).datepicker('option', 'dateFormat'), $(selector).val()).getTime();
-					} catch (ignore) {
-						return false;
-					}
-				}
-				
-				var startTime = "", endTime = "";
-				
-				if (selectedLevel == 1) {
-					startTime = getDate("#date1");
-					endTime = getDate("#date2");
-					
-					if (!startTime) {
-						alert("<spring:message code='webfolder.meeting.period.err.start'/>");
-						$("#date1").datepicker("show");
-						return;
-					}
-					
-					if (!endTime) {
-						alert("<spring:message code='webfolder.meeting.period.err.end'/>");
-						$("#date2").datepicker("show");
-						return;
-					}
-					
-					if (startTime > endTime) {
-						alert("<spring:message code='webfolder.meeting.period.err.early'/>");
-						$("#date1").datepicker("show");
-						return;
-					}
-				}
-				</c:if>
-				
 				/* 조직도에 아무도 선택하지 않고 저장할 수 있도록 주석처리
 				if (!target.replace(/\s/g,'')) {
 					alert("<spring:message code='ezWebFolder.t202'/>");
@@ -777,15 +618,6 @@
 						"addUserManager" 		: convertJSONToJSONStr(addUserManager),
 						"deleteUserManager" 	: convertJSONToJSONStr(deleteUserManager),
 						"subFolderType"	: subFolderType
-						<c:if test="${isTask}">
-						// 업무자료실 폴더 권한 비상속
-						,"noInherit" : document.getElementById("noInherit").checked
-						</c:if>
-						<c:if test="${isMeeting}">
-						// 회의실 사용 기간
-						,"startTime" : startTime
-						,"endTime" : endTime
-						</c:if>
 					};
 
 				$.ajax({
@@ -837,9 +669,7 @@
 				}
 				
 				leftPanelProcess();
-				// 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: isDean으로 구분 추가
-				// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-				DivPopUpShow(450, 500, "/admin/ezWebFolder/folderMoveConfirm.do?folderId=" + selectedFolder + "&subTypeC=${subTypeC}");
+				DivPopUpShow(450, 500, "/admin/ezWebFolder/folderMoveConfirm.do?folderId=" + selectedFolder);
 			}
 			
 			function leftPanelProcess() {
@@ -859,9 +689,7 @@
 				}
 				
 				leftPanelProcess();
-				// 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: isDean으로 구분 추가
-				// 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정
-				DivPopUpShow(450, 250, "/admin/ezWebFolder/deleteFolderConfirm.do?folderId=" + selectedFolder + "&subTypeC=${subTypeC}");
+				DivPopUpShow(450, 250, "/admin/ezWebFolder/deleteFolderConfirm.do?folderId=" + selectedFolder);
 			}
 			
 			function change() {
@@ -923,8 +751,6 @@
 		</script>
 	</head>
 	<body class="mainbody">
-		<%-- 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: isDean으로 구분 추가 --%>
-		<%-- 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정 --%>
 		<h1>
 			<spring:message code='ezWebFolder.t126' />
 		</h1>
@@ -965,34 +791,6 @@
 											</div>
 										</td>
 									</tr>								
-									<c:if test="${isTask}">
-									<tr>
-										<td>
-											<div style="margin: 5px 20px 10px 20px;position:relative;">
-												<img src="/images/kr/left/left_dot02.gif" />
-												<span style="display:inline-block; width:110px;"><spring:message code='webfolder.admin.noinherit'/></span>
-												<input id="noInherit" type="checkbox" style=" border: 1px solid #ddd; vertical-align: middle;">
-												<span id="noInheritDescription" style="display:inline-block; color:grey"></span>
-											</div>
-										</td>
-									</tr>
-									</c:if>
-									<c:if test="${isMeeting}">
-									<tr>
-										<td>
-											<div style="margin: 5px 20px 10px 20px;position:relative;">
-												<div style="display: inline-block;" id="displayPeriod">
-													<img src="/images/kr/left/left_dot02.gif" />
-													<span class="wfAdmin_t1" style="display:inline-block;"><spring:message code="webfolder.meeting.period" /></span>
-													<input id="date1" class="datepicker" type="text" style="width: 80px;text-align:center;margin-left: 2px;" readonly>
-													<span style="padding: 0px 5px;">~</span>
-													<input id="date2" class="datepicker" type="text" style="width: 80px;text-align:center;" readonly>
-													<span id="expiredTip" style="display:none;position:absolute;color:red;left:100px;top:28px;"><spring:message code="webfolder.meeting.expired.noti" /></span>
-												</div>
-											</div>
-										</td>
-									</tr>
-									</c:if>
 									<%-- 2020-11-24 김은실 - (카이스트)회사 폴더별 관리자 지원 기능 --%>
 									<tr>
 										<td>
@@ -1037,9 +835,7 @@
 											<div style="text-align:center;" id="listBttn1">
 												<a class="webfolderBttn"><span onclick="saveChanges();" ><spring:message code='ezWebFolder.t133'/></span></a>
 												<a class="webfolderBttn"><span onclick="newFolder();"   ><spring:message code='ezWebFolder.t206'/></span></a>
-												<%-- 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: isDean으로 구분 추가 --%>
-												<%-- 2020-11-25 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: subTypeC으로 구분 수정 --%>
-												<a class="webfolderBttn"><span onclick="moveFolder('${subTypeC}');"  ><spring:message code='ezWebFolder.t251'/></span></a>
+												<a class="webfolderBttn"><span onclick="moveFolder();"  ><spring:message code='ezWebFolder.t251'/></span></a>
 												<a class="webfolderBttn"><span onclick="deleteFolder();"><spring:message code='ezWebFolder.t111'/></span></a>
 											</div>
 											<div style="text-align:center; display: none;" id="listBttn2">

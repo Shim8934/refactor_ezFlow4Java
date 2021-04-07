@@ -44,6 +44,9 @@
 			var sortColumn = null;
 			var sortType = null;
 			var strLang43  = "<spring:message code='ezWebFolder.t308'/>";
+			var containsReplyFiles = [];
+			var contextClickedTr = null;
+// 			var uploadLimit = <c:out value="${uploadLimit}" />;
 			
 			capacity.setFolderIdProvider(function() {
 				return "<c:out value='${folderId}'/>";
@@ -94,6 +97,12 @@
 				document.addEventListener("mouseup", listOptionHidden, true);
 				parent.frames["left"].document.addEventListener("mouseup", listOptionHidden, true);
 				
+				// listoption 클릭 이벤트
+				document.getElementById("webfolderlistoptiondiv").addEventListener("click", function(event) {
+					event.stopPropagation();
+					optionView(event.target);
+				});
+				
 				var listHeader = document.getElementsByClassName("headListClick");
 				for(var i = 0 ; i <listHeader.length; i++) {
 					listHeader[i].addEventListener("click", function(event) {
@@ -113,7 +122,41 @@
 					refreshView();
 				});
 				
+				document.body.addEventListener("click", hideContextMenu, true);
+				document.getElementById("dragDropArea").addEventListener("scroll", hideContextMenu);
 			});
+			
+			function closeAllPopups() {
+				window.parent.frames["left"].document.getElementById("bnkBlockLeft").style.display = "none";
+				document.getElementById("mailPanel").style.display                                 = "none";
+				document.getElementById("searchPanel").style.display                               = "none";
+				
+				if (document.getElementById("ui-datepicker-div")) {
+					document.getElementById("ui-datepicker-div").style.display = "none";
+				}
+			}
+			
+			function getPosition(popUpW, popUpH) {
+				var returnValue = new Array();
+				var heigth      = window.parent.document.documentElement.clientHeight;
+				if (heigth == 0) {heigth = window.parent.document.body.clientHeight;}
+				
+				var width = window.parent.document.documentElement.clientWidth;
+				if (width == 0) {width = window.parent.document.body.clientWidth;}
+				
+				var pleftpos = parseInt(width) - popUpW;
+				heigth       = parseInt(heigth) - popUpH;
+				
+				if (heigth < (popUpH + 50)) {
+					returnValue[0] = (heigth / 2);
+				}
+				else {
+					returnValue[0] = (heigth / 2) - 50;
+				}
+				
+				returnValue[1] = pleftpos / 2;
+				return returnValue;
+			}
 
 			function sortByHeader(cell) {
 				var column = cell.getAttribute("data-column");
@@ -147,7 +190,7 @@
 				this.sortColumn = column;
 				init("dept");
 			}
-			
+/*		
 			function optionHidden() {
 		 	    document.getElementById("layer_Viewpopup").style.display = "none";
 		 	    document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
@@ -167,11 +210,57 @@
 		   	        optionHidden();
 		   	    }
 		   	}
-			
+*/			
 			function leftFolderCPMV(functionType, folderList, toTargetId) {
 				closeAllPopup();
 				window.close();
 	        }
+			// 메일의 콘텍스트 메뉴를 그대로 들고옴
+			function openContextMenu(event) {
+				if (document.getElementById("contextMenuDiv").style.display == "") {
+					hideContextMenu();
+				}
+				if (!event)
+					event = window.event;
+				
+				event.stopPropagation();
+				event.preventDefault();
+				contextClickedTr = event.currentTarget;
+				
+				var EventMouseX = event.clientX;
+				var EventMouseY = event.clientY;
+				
+				var listsizeheight = document.documentElement.clientHeight;
+				var listsizewidth = document.documentElement.clientWidth;
+				
+				var target = event.target ? event.target : event.srcElement;
+				var targetTag = target.tagName;
+				var EventDivSize = EventMouseY + $("#contextMenuDiv").height() + 70;
+
+				if (listsizeheight < EventDivSize) {
+					var Div_ = EventDivSize - listsizeheight;
+					EventMouseY = EventMouseY - Div_;
+				}
+				
+				EventDivSize = EventMouseX + 140;
+				if (listsizewidth < EventDivSize) {
+					var Div_ = EventDivSize - listsizewidth;
+					EventMouseX = EventMouseX - Div_;
+				}
+
+				document.getElementById("contextMenuDiv").style.left = EventMouseX + "px";
+				document.getElementById("contextMenuDiv").style.top = EventMouseY + "px";
+				document.getElementById("contextMenuDiv").style.display = "";
+			}
+
+			function hideContextMenu() {
+				document.getElementById("contextMenuDiv").style.display = "none";
+				if (window.contextClickedTr) {
+					setTimeout(function() {
+						contextClickedTr = null;
+					}, 0);
+				}
+			}
 		</script>
 	</head>
 	<body class="mainbody" onload="init('dept');" onresize="preProcessing();" onkeydown="keyPressPanel(event);">
@@ -346,6 +435,36 @@
 	        <div class="shadow">
 	        </div>
 	 	</div>
+		<%@ include file="/WEB-INF/jsp/ezWebFolder/component/downloadOptionPopup.jsp" %>
+		<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:5000;display:none;" id="webFolderRightPanel">&nbsp;</div>
+		<div id="contextMenuDiv" style="position: absolute; z-index: 6000; display: none;">
+			<table cellpadding="2" cellspacing="1" border="0" class="popuplist">
+				<tbody>
+					<tr id="moveMenu">
+						<td onclick="fileMove();" onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor: pointer; background-color: rgb(255, 255, 255);">
+							<span style="font-size: 12px; width: 100%; display: inline-block;"><img src="/images/ImgIcon/move.gif" align="absmiddle" hspace="5"><spring:message code='ezWebFolder.t251' /></span>
+						</td>
+					</tr>
+					<c:if test="${useVersionHistory}">
+					<tr>
+						<td onclick="openFileVersionHistory();" onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor: pointer; background-color: rgb(255, 255, 255);">
+							<span style="font-size: 12px; width: 100%; display: inline-block;"><img src="/images/ImgIcon/options.gif" align="absmiddle" hspace="5"><spring:message code='webfolder.version.button' /></span>
+						</td>
+					</tr>
+					</c:if>
+					<tr>
+						<td onclick="openReply();" onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor: pointer; background-color: rgb(255, 255, 255);">
+							<span style="font-size: 12px; width: 100%; display: inline-block;"><img src="/images/ImgIcon/rul-sml.png" align="absmiddle" hspace="5"><spring:message code='webfolder.reply.title' /></span>
+						</td>
+					</tr>
+					<tr>
+						<td onclick="refreshView();" onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor: pointer; background-color: rgb(255, 255, 255);">
+							<span style="font-size: 12px; width: 100%; display: inline-block;"><img src="/images/ImgIcon/recur.gif" align="absmiddle" hspace="5"><spring:message code='ezWebFolder.t139' /></span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 		<script type="text/javascript" src="${util.addVer('ezWebFolder.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/pageNav.js')}"></script>
 	</body>

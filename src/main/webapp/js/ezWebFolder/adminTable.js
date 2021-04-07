@@ -266,9 +266,10 @@ function TableView() {
 				tdElmt2.setAttribute("title", _dataSource[i]["fileName"]);
 				tdElmt2.textContent = _dataSource[i]["fileName"];
 				
+				var folderpathName = _dataSource[i]["folderPathName"].substring(4, _dataSource[i]["folderPathName"].length-1);
 				tdElmt2_path.setAttribute("style", "word-break: break-all;white-space: pre-wrap;cursor: pointer; word-wrap: normal;");
-				tdElmt2_path.setAttribute("title", _dataSource[i]["folderPathName"] == null ? '-' : _dataSource[i]["folderPathName"].substring(8, _dataSource[i]["folderPathName"].length-1));
-				tdElmt2_path.textContent = _dataSource[i]["folderPathName"] == null ? '-' : _dataSource[i]["folderPathName"].substring(8, _dataSource[i]["folderPathName"].length-1);
+				tdElmt2_path.setAttribute("title", _dataSource[i]["folderPathName"] == null ? '-' : folderpathName);
+				tdElmt2_path.textContent = _dataSource[i]["folderPathName"] == null ? '-' : folderpathName;
 				
 				tdElmt3_version.textContent = _dataSource[i]["version"] == 0 ? '-' : _dataSource[i]["version"] + ".0";
 				tdElmt3.textContent = getFileSize(_dataSource[i]["fileSize"]);

@@ -123,7 +123,6 @@ public class EzWebFolderAdminDAO extends EgovAbstractDAO {
 	}
 
 	// webfolder
-	
 	public void insertFolderUserSeq(Map<String, Object> map) {
 		insert("EzWebFolderAdminDAO.insertFileFolderUser", map);
 	}

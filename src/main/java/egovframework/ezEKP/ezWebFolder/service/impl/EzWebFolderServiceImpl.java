@@ -904,8 +904,6 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				? this::writeUploadedFileEncryptKlib : this::writeUploadedFile;
 		
 		boolean isReply = !parentId.isEmpty();
-		// 폴더 권한 비상속
-		boolean isNotInherit = isNotInheritFolder(folder.getFolderId(), tenantId);
 
 		FileVO parentFile = null;
 
@@ -977,16 +975,12 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				
 				// 답글이 아닐 때만 권한 넣어주기
 				if (!isReply) {
-					if (isNotInherit) {
-						insertFileUser(fileVO, "", userId, "USER", companyId);
-					} else {
-						Map<String,Object> map = new HashMap<String, Object>();
-						map.put("targetId", fileId);
-						map.put("upperFolderId", folder.getFolderId());
-						map.put("tenantId", tenantId);
-						map.put("type_f", "F");
-						ezWebFolderAdminService.insertFolderUser(map);
-					}
+					Map<String,Object> map = new HashMap<String, Object>();
+					map.put("targetId", fileId);
+					map.put("upperFolderId", folder.getFolderId());
+					map.put("tenantId", tenantId);
+					map.put("type_f", "F");
+					ezWebFolderAdminService.insertFolderUser(map);
 				}
 				
 				// 첫번째 버전은 무조건 생성하도록 한다.
@@ -997,9 +991,9 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				
 				saveLog("C", companyId, offset, userId, userName1, userName2, tenantId, fileVO, "", userInfo.getPrimary());
 
-				if (isEncryptionFolder || isEncrypt) {
-					insertEncryptedFile(fileVO.getFileId(), tenantId);
-				}
+//				if (isEncryptionFolder || isEncrypt) {
+//					insertEncryptedFile(fileVO.getFileId(), tenantId);
+//				}
 			} else {
 				failureList.add(new ExtensionErrorFile(pFileName[i], ".none".equals(extend) ? "" : extend));
 			}
@@ -1033,22 +1027,24 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		}
 
 		String fileId = fileIDList[0];
-
+		/*
 		if ("fail".equals(ezWebFolderService_y.checkPermission(userId, userInfo.getDeptID(),
 				companyId, fileId, "F", tenantId))) {
 			response.sendError(403, "Do not have access!");
 			return;
 		}
+		*/
 
 		FileVO fileVO = getFileByFileId(fileId, offset, tenantId);
-		boolean isEncrypted = isEncryptedFile(fileId, tenantId);
-		boolean isCreator = fileVO.getCreateId().equals(userId);
+//		boolean isEncrypted = isEncryptedFile(fileId, tenantId);
+//		boolean isCreator = fileVO.getCreateId().equals(userId);
 
-		if (isEncrypted && !isCreator) {
-			response.sendError(403, "Encrypted file cannot be downloaded!");
-			return;
-		}
+//		if (isEncrypted && !isCreator) {
+//			response.sendError(403, "Encrypted file cannot be downloaded!");
+//			return;
+//		}
 
+		logger.debug( "여기 " + realPath + commonUtil.detectPathTraversal(fileVO.getFilePath()));
 		File file = new File(realPath + commonUtil.detectPathTraversal(fileVO.getFilePath()));
 
 		String fileName = fileVO.getFileName();
@@ -1065,15 +1061,15 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 
 			long contentLength;
 
-			if (isEncrypted) {
-				byte[] decryptedBytes = klibUtil.decrypt(Files.readAllBytes(file.toPath()));
-				IOUtils.write(decryptedBytes, response.getOutputStream());
-				contentLength = decryptedBytes.length;
-				decryptedBytes = null;
-			} else {
+//			if (isEncrypted) {
+//				byte[] decryptedBytes = klibUtil.decrypt(Files.readAllBytes(file.toPath()));
+//				IOUtils.write(decryptedBytes, response.getOutputStream());
+//				contentLength = decryptedBytes.length;
+//				decryptedBytes = null;
+//			} else {
 				Files.copy(file.toPath(), response.getOutputStream());
 				contentLength = file.length();
-			}
+//			}
 
 			response.setHeader("Content-Length", Long.toString(contentLength));
 		} catch (Exception ex) {
@@ -1087,7 +1083,6 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		saveLog("D", companyId, offset, userId, userName1, userName2, tenantId, fileVO, "", userInfo.getPrimary());
 	}
 	
-	// 응 안 쓸거야
 	@SuppressWarnings("unused")
 	private void packFolder(HashSet<String> folderNameList, String folderId, String path, ZipOutputStream zipOutputStream, String userName1, String userName2, String offset, String primary, String userId, String companyId, String realPath, int tenantId) throws Exception {
 		FileInputStream fileInputStream = null;
@@ -1393,8 +1388,14 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			folderPathName 	= getFolderPath(folderPath.split("\\|"), primary, tenantId);
 			folderId 		= folder.getFolderId();
 			folderName 		= folder.getFolderName1();
-			topFolderId 	= folderPath.split("\\|")[2];
-			topFolderName 	= folderPathName.split("\\/")[1];
+			
+			if (folder.getFolderLevel() == 0){
+				topFolderId = folderId;
+				topFolderName 	= folderName;
+			} else {
+				topFolderId 	= folderPath.split("\\|")[2];
+				topFolderName 	= folderPathName.split("\\/")[1];
+			}
 		}
 		
 		fileLog.setVersion(version);

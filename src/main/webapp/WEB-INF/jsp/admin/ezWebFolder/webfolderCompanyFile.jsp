@@ -497,9 +497,7 @@
 	        <div class="shadow">
 	        </div>
 	 	</div>
-		<c:if test="${subTypeC eq 'task'}">
-			<%@ include file="/WEB-INF/jsp/ezWebFolder/component/downloadOptionPopup.jsp" %>
-		</c:if>
+		<%@ include file="/WEB-INF/jsp/ezWebFolder/component/downloadOptionPopup.jsp" %>
 		<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:5000;display:none;" id="webFolderRightPanel">&nbsp;</div>
 		<div id="contextMenuDiv" style="position: absolute; z-index: 6000; display: none;">
 			<table cellpadding="2" cellspacing="1" border="0" class="popuplist">
