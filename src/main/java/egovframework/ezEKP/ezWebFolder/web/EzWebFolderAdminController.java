@@ -884,6 +884,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		String folderId      = request.getParameter("folderId");
 		String mode          = request.getParameter("mode");
+		String type          = request.getParameter("type");
 		String adminCheck    = request.getParameter("adminCheck")   != null ? request.getParameter("adminCheck")  : mode;
 		
 		logger.debug("FolderId: " + folderId + " || mode: " + mode);
@@ -898,6 +899,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("userId", user.getId())
 										.queryParam("mode", mode)
+										.queryParam("type", type)
 										.queryParam("adminCheck", adminCheck);
 		
 		RestTemplate rest             = new RestTemplate();

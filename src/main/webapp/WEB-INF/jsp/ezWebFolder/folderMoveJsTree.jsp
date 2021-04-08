@@ -26,8 +26,8 @@
 		var treeData;
 		
 		window.onload = function() {
-			folderList('D');
-			folderType = 'D';
+			folderList('C');
+			folderType = 'C';
 			
 			try {
 				folderId = parent.moveCopyFolderDlg_cross_dialogArguments[0];
@@ -210,7 +210,7 @@
 		</ul>
 	</div>
 	
-	<div style="border: none; height: 30px; position: relative; display:none;">
+	<div style="border: none; height: 30px; position: relative;">
 		<div style="text-align: center">
 			<input name="treeType" id="radio1" type="radio" value="C" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="folderList('C');"><label for="radio1"><span> <spring:message code="ezWebFolder.t233"/></span></label>
 			<input name="treeType" id="radio2" type="radio" value="D" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="folderList('D');"><label for="radio2"><span> <spring:message code="ezWebFolder.t234"/></span></label>

@@ -138,7 +138,7 @@
 				imgElmt.setAttribute("class", "webfolderImg");
 			}
 			else {
-				if (/* document.querySelector('input[name=treeType]:checked').value == "comp" && */ mode =="normal" && level == "0") {
+				if (document.querySelector('input[name=treeType]:checked').value == "comp" && mode =="normal" && level == "0") {
 					imgElmt.onclick = function() {getDetailTree(this, "1");};
 				}
 				else {
@@ -187,6 +187,7 @@
 			//Check if already in arrSubFolder
 			var uniqueId = obj.getAttribute("id");
 			var level = obj.getAttribute("level");
+			var type       = document.querySelector('input[name=treeType]:checked').value;
 			
 			if (arrSubFolder.indexOf(uniqueId) != -1) {
 				var childElmt = obj.parentElement.lastElementChild;
@@ -212,6 +213,7 @@
 					data: {
 						"folderId" : uniqueId,
 						"mode"     : mode,
+						"type"     : type,
 						"adminCheck" : adminCheck
 					},
 					dataType: "JSON",
@@ -281,14 +283,14 @@
 		
 		<c:if test="${isPermittedCopy}">
 		function fileCopy() {
-			/* var type = document.querySelector('input[name=treeType]:checked').value; */
+			var type = document.querySelector('input[name=treeType]:checked').value;
 			
 			if (selectedFolder == null) {
 				alert("<spring:message code='ezWebFolder.t181'/>");
 				return;
 			}
 			
-			if (/* type == "comp" &&  */selectedLevel == '0') {
+			if (type == "comp" && selectedLevel == '0') {
 				alert("<spring:message code='ezWebFolder.t18'/>");
 				return;
 			}
@@ -345,9 +347,6 @@
 						case 4:
 							alert("<spring:message code='ezWebFolder.t250' />");
 							break;
-						case 20210128: // 폴더 권한 비상속
-							alert("<spring:message code='webfolder.move.to.noinherit' />");
-							break;
 						case 8:
 							var folderArr = new Array();
 							folderArr = folderList.split(',');
@@ -394,14 +393,14 @@
 		
 		<c:if test="${isPermittedMove}">
 		function fileMove() {
-			/* var type = document.querySelector('input[name=treeType]:checked').value; */
+			var type = document.querySelector('input[name=treeType]:checked').value;
 			
 			if (selectedFolder == null) {
 				alert("<spring:message code='ezWebFolder.t181'/>");
 				return;
 			}
 			
-			if (/* type == "comp" &&  */selectedLevel == '0') {
+			if (type == "comp" && selectedLevel == '0') {
 				alert("<spring:message code='ezWebFolder.t18'/>");
 				return;
 			}
@@ -466,9 +465,6 @@
 							break;
 						case 5:
 							alert("<spring:message code='ezWebFolder.t243' />");
-							break;
-						case 20210128: // 폴더 권한 비상속
-							alert("<spring:message code='webfolder.move.to.noinherit' />");
 							break;
 						case 8:
 							var folderArr = new Array();

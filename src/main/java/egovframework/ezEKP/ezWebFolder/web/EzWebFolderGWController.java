@@ -2085,6 +2085,7 @@ public class EzWebFolderGWController {
 		logger.debug("getSubFoldersTree start");
 		String serverName = request.getHeader("x-user-host")   != null ? request.getHeader("x-user-host")  : "";
 		String mode       = request.getParameter("mode")     != null ? request.getParameter("mode")    : "";
+		String type       = request.getParameter("type")     != null ? request.getParameter("type")    : "";
 		String userId     = request.getParameter("userId")   != null ? request.getParameter("userId")  : "";
 		String adminCheck     = request.getParameter("adminCheck")   != null ? request.getParameter("adminCheck")  : mode;
 //		Map<String, Object> dean = null;
@@ -2113,7 +2114,7 @@ public class EzWebFolderGWController {
 			}
 			else {
 				List<String> idList = null;
-				if( !adminCheck.equals("admin") && ezWebFolderAdminService.getFolderIdsByManagerUserId(userId, folderId, userInfo.getCompanyID(), tenantId).size() == 0){
+				if( type.equals("comp") && !adminCheck.equals("admin") && ezWebFolderAdminService.getFolderIdsByManagerUserId(userId, folderId, userInfo.getCompanyID(), tenantId).size() == 0){
 					idList = ezWebFolderService_y.idListUpgrade(userId, userInfo.getDeptID(), userInfo.getCompanyID(), tenantId);
 				}
 				ezWebFolderService.getAllSubDepts(folder, tenantId, 1, idList);
