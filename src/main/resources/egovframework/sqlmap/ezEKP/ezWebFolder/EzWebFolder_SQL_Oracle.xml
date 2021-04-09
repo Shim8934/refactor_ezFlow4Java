@@ -950,9 +950,9 @@
 										   LEFT JOIN TBL_USER_JOBMASTER jc ON u.USER_ID = TO_CHAR(jc.JOBID) and u.TENANT_ID = jc.TENANT_ID and u.COMPANY_ID = jc.COMPANYID and LOWER(u.USER_TYPE) = 'jikchek' and jc.TYPE = '002'
 										   LEFT JOIN TBL_PERMISSIONGROUPLIST g ON u.USER_ID = g.GROUP_ID and u.TENANT_ID = g.TENANT_ID and LOWER(u.USER_TYPE) = 'group'
 			WHERE
-				u.FOLDER_ID = #folderId#
+				(u.FOLDER_ID = #folderId#
 				OR (u.FOLDER_MANAGER = 1 AND u.FOLDER_ID = (SELECT REGEXP_SUBSTR(folder_path,'[^|]+',1,2)
-                                                            FROM tbl_webfolder_folder where FOLDER_ID = #folderId# AND TENANT_ID = #tenantId#))
+                                                            FROM tbl_webfolder_folder where FOLDER_ID = #folderId# AND TENANT_ID = #tenantId#)))
 			AND
 				u.TENANT_ID = #tenantId#
 			ORDER BY
