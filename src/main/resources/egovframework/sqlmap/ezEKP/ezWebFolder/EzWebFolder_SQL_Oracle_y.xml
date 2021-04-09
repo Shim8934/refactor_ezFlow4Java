@@ -403,28 +403,16 @@
 				AND F.FOLDER_TYPE = 'C'
 			WHERE F.TENANT_ID = #tenantId#
 			AND F.USE_STATUS = 'Y'
+			AND FF.COMPANY_ID IN
 		]]>
-			<isNotEmpty prepend="AND" property="expiredFolders">
-				F.FOLDER_ID NOT IN
-				<iterate property="expiredFolders" open="(" close=")" conjunction=",">
-					#expiredFolders[]#
-				</iterate>
-			</isNotEmpty>
-		<!-- 2021-01-20 김은실 - [카이스트] 속도개선: join의 조건으로는 cost가 심하여 where의 조건으로 변경 (설마 데이터 사각지대가 있진 않겠지..??) -->
+			<iterate property="idList" open="(" close=")" conjunction=",">
+				#idList[]#
+			</iterate>
 			AND ( 
 					( FU.USER_ID IN 
 					<iterate property="idList" open="(" close=")" conjunction=",">
 						#idList[]#
 					</iterate>
-					<!-- 2020-12-30 김은실 - [카이스트] 하위부서를 포함시키지 않도록 했기 때문에, 불필요한 쿼리로 인한 부하를 줄임.
-					<iterate property="userDeptList">
-						OR ( FU.SUBDEPT_PERMITTED = 1 
-							 AND #userDeptList[]# IN (SELECT CN FROM TBL_DEPTMASTER
-							 						  WHERE DEPT_CD_PATH LIKE CONCAT(CONCAT('%',FU.USER_ID),'%') 
-							 							    AND EXTENSIONATTRIBUTE2 = FU.COMPANY_ID AND TENANT_ID = FU.TENANT_ID)
-							)
-					</iterate>
-					 -->
 					)
 					$managerFolderStr$
 				)
@@ -444,8 +432,13 @@
 			    FOLDER_LEVEL AS FOLDERLEVEL,
 			    FOLDER_PATH	 AS FOLDERPATH 
 	        FROM TBL_WEBFOLDER_FOLDER
-	        WHERE OWNER_ID = #compId#
-	        AND COMPANY_ID = #compId#
+	        WHERE
+	        COMPANY_ID IN
+			]]>
+				<iterate property="idList" open="(" close=")" conjunction=",">
+					#idList[]#
+				</iterate>
+			<![CDATA[
 	        AND FOLDER_TYPE = 'C'
 	        AND FOLDER_UPPER = 'root'
 	        AND USE_STATUS = 'Y'
@@ -496,7 +489,12 @@
 			                and 
 			                	folder.folder_upper = #folderId#
 			                and 
-			                	folder.company_id = #comId#
+	                	folder.company_id IN
+				]]>
+					<iterate property="idList" open="(" close=")" conjunction=",">
+						#idList[].id#
+					</iterate>
+				<![CDATA[
 			            ) t
 			            where 1=1
 		   		]]>	
@@ -563,8 +561,11 @@
 			                and 
 			                	folder.folder_upper = #folderId#
 			                and 
-			                	folder.company_id = #comId#
-		   		]]>	
+			                	folder.company_id IN
+				]]>
+				<iterate property="idList" open="(" close=")" conjunction=",">
+					#idList[].id#
+				</iterate>
 		   		<isEqual property="parentId" compareValue="root" > 
 		      	 	<isEqual property="folderType" compareValue="C" >
 						AND ( u.user_id IN  
@@ -588,12 +589,6 @@
 						))
 			         then folder.folder_id 
 					else null end as aaa  from dual)
-						<isNotEmpty prepend="AND" property="expiredFolders">
-							FOLDER.FOLDER_ID NOT IN
-							<iterate property="expiredFolders" open="(" close=")" conjunction=",">
-								#expiredFolders[]#
-							</iterate>
-						</isNotEmpty>
 		      	   </isEqual>  
 		         </isEqual> 
 		         <![CDATA[ 
@@ -645,7 +640,8 @@
 						<iterate property="idList" open="(" close=")" conjunction=",">
 							#idList[].id#
 						</iterate>
-						WHERE FF.TENANT_ID = #tenantId# ) FP or folder.folder_id = #folderId#
+						WHERE FF.TENANT_ID = #tenantId# ) FP 
+					or folder.folder_id = #folderId#
 					ON folder.FOLDER_PATH LIKE  FP.FOLDER_PATH || '%'
 					JOIN TBL_WEBFOLDER_FILETYPE type 
 						ON type.TYPE_ID = f.TYPE_ID AND type.TENANT_ID = #tenantId#
@@ -789,12 +785,6 @@
 								</iterate>))
 					        	then folder.folder_id 
 								else null end as aaa  from dual)
-									<isNotEmpty prepend="AND" property="expiredFolders">
-										FOLDER.FOLDER_ID NOT IN
-										<iterate property="expiredFolders" open="(" close=")" conjunction=",">
-											#expiredFolders[]#
-										</iterate>
-									</isNotEmpty>
 				      	   </isEqual>  
 				         </isEqual> 
 						<include refid="fldSelect"/>
@@ -811,7 +801,12 @@
 				                and 
 				                	folder.USE_STATUS = 'Y'
 				                and 
-				                	folder.company_id = #comId#
+				                	folder.company_id IN
+						]]>
+								<iterate property="idList" open="(" close=")" conjunction=",">
+									#idList[].id#
+								</iterate>
+						<![CDATA[
 				                and 
 				                	folder_path <> #folderPath#		
 						]]>
@@ -830,12 +825,6 @@
 								</iterate>))
 					       		then folder.folder_id 
 								else null end as aaa  from dual)
-									<isNotEmpty prepend="AND" property="expiredFolders">
-										FOLDER.FOLDER_ID NOT IN
-										<iterate property="expiredFolders" open="(" close=")" conjunction=",">
-											#expiredFolders[]#
-										</iterate>
-									</isNotEmpty>
 				      	   </isEqual>  
 				         </isEqual> 
 					<![CDATA[
@@ -897,7 +886,6 @@
 						tbl_webfolder_folder 
 					where 
 							folder_path like (#folderPath# || '%') 
-						and folder_path <> #folderPath#
 						and tenant_id = #tenantId# 
 						and folder_type = #folderType# and use_status = 'Y'
 					) folder on f.folder_id = folder.folder_id
@@ -998,7 +986,12 @@
 						folder.tenant_id = #tenantId#	 
 					and folder.FOLDER_TYPE = #folderType#
 	                and folder.USE_STATUS = 'Y'
-	                and folder.company_id = #comId#
+	                and folder.company_id IN
+	        ]]>
+	                <iterate property="idList" open="(" close=")" conjunction=",">
+							#idList[].id#
+						</iterate>
+			<![CDATA[
 	                and type.tenant_id = #tenantId#
 	                and folder_path <> #folderPath#	
 			]]>
@@ -1008,15 +1001,6 @@
 					<iterate property="idListUpgrade" open="(" close=")" conjunction=",">
 						#idListUpgrade[]#
 					</iterate>
-					<!-- 2020-12-30 김은실 - [카이스트] 하위부서를 포함시키지 않도록 했기 때문에, 불필요한 쿼리로 인한 부하를 줄임.
-					<iterate property="userDeptList">
-						OR ( U.SUBDEPT_PERMITTED = 1 
-							 AND #userDeptList[]# IN (SELECT CN FROM TBL_DEPTMASTER
-							 						  WHERE DEPT_CD_PATH LIKE CONCAT(CONCAT('%',U.USER_ID),'%') 
-							 							    AND EXTENSIONATTRIBUTE2 = U.COMPANY_ID AND TENANT_ID = U.TENANT_ID)
-							)
-					</iterate>
-					 -->
 					)
 					and folder.folder_id in (
 					select distinct 
@@ -1029,12 +1013,6 @@
 						))
 				        then folder.folder_id 
 						else null end as aaa  from dual)
-						<isNotEmpty prepend="AND" property="expiredFolders">
-							FOLDER.FOLDER_ID NOT IN
-							<iterate property="expiredFolders" open="(" close=")" conjunction=",">
-								#expiredFolders[]#
-							</iterate>
-						</isNotEmpty>
 	      	   </isEqual>  
 	         </isEqual> 
 	         
@@ -1174,12 +1152,6 @@
 							</iterate>
 							 -->
 							)
-							<isNotEmpty prepend="AND" property="expiredFolders">
-								FOLDER.FOLDER_ID NOT IN
-								<iterate property="expiredFolders" open="(" close=")" conjunction=",">
-									#expiredFolders[]#
-								</iterate>
-							</isNotEmpty>
 				</isEqual>  
 			</isEqual> 
 			<![CDATA[
