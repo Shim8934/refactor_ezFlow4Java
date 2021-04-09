@@ -3227,4 +3227,402 @@
 			`COMPANYID` VARCHAR(80)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 	</statement>
+	
+		<select id="EzCommonDAO.checkWebfolderUserSubdeptPermittedColumn">
+		<![CDATA[
+			SELECT 
+				SUBDEPT_PERMITTED
+			FROM 
+				TBL_WEBFOLDER_FOLDERUSER
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createWebfolderUserSubdeptPermittedColumn">
+		ALTER TABLE
+			TBL_WEBFOLDER_FOLDERUSER
+		ADD 
+			SUBDEPT_PERMITTED INT DEFAULT '0'
+	</statement>
+	
+	<select id="EzCommonDAO.selectWebfolderFileUserTable">
+		<![CDATA[
+			SELECT 
+			    SEQ_ID
+			FROM 
+			    TBL_WEBFOLDER_FILEUSER
+		    LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createtWebfolderFileUserTable"> 
+		CREATE TABLE TBL_WEBFOLDER_FILEUSER 
+		  (	`SEQ_ID` VARCHAR(100) NOT NULL, 
+			`FILE_ID` VARCHAR(100) NOT NULL, 
+			`USER_ID` VARCHAR(100) NOT NULL, 
+			`USER_TYPE` VARCHAR(50) NOT NULL, 
+			`CREATE_ID` VARCHAR(100) NOT NULL, 
+			`CREATE_DATE` DATE NOT NULL, 
+			`COMPANY_ID` VARCHAR(50) NOT NULL, 
+			`TENANT_ID` INT(7) NOT NULL, 
+			`SUBDEPT_PERMITTED` INT(11) DEFAULT '0', 
+			 PRIMARY KEY (`SEQ_ID`, `TENANT_ID`)
+		  )  	
+	</statement>
+	
+	<statement id="EzCommonDAO.createWebfolderFolderUserSeq"> 
+		<![CDATA[
+		CREATE SEQUENCE SEQ_FOLDERUSER MINVALUE 1000 MAXVALUE 9999999999999999999999999999
+		INCREMENT BY 1
+		START WITH 1000
+		NOORDER  NOCYCLE  NOKEEP  GLOBAL
+		]]>
+	</statement>
+	
+	<statement id="EzCommonDAO.createWebfolderFileUserSeq"> 
+		<![CDATA[
+		CREATE SEQUENCE SEQ_FILEUSER MINVALUE 1000 MAXVALUE 9999999999999999999999999999
+		INCREMENT BY 1
+		START WITH 1000
+		NOORDER  NOCYCLE  NOKEEP  GLOBAL
+		]]>
+	</statement>
+	
+	<select id="EzCommonDAO.checkWebfolderUserFolderManagerColumn">
+		<![CDATA[
+			SELECT 
+				FOLDER_MANAGER
+			FROM 
+				TBL_WEBFOLDER_FOLDERUSER
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createWebfolderUserFolderManagerColumn">
+		ALTER TABLE
+			TBL_WEBFOLDER_FOLDERUSER
+		ADD 
+			FOLDER_MANAGER INT(11) DEFAULT '0'
+	</statement>
+	
+	<select id="EzCommonDAO.getPermissionGroupIdListOfUser" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT DISTINCT
+				group_id
+			FROM
+				tbl_permissiongroupinfo
+			WHERE
+				company_id = #companyId#
+			AND
+				tenant_id = #tenantId#
+			AND
+				(
+					(member_type = 'USER' AND member_id = #userId#)
+				  OR
+					(member_type = 'DEPT' AND (member_id = #deptId# OR member_id IN (SELECT deptid FROM tbl_addjobmaster WHERE cn = #userId# and tenant_id = #tenantId#)))
+				  OR 
+					(member_type = 'JIKWI' AND member_id IN 
+						(
+							SELECT TO_CHAR(extensionattribute7) FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#
+							UNION
+							SELECT jobid FROM tbl_addjobmaster WHERE cn = #userId# AND tenant_id = #tenantId#
+						)
+					)
+				  OR
+					(member_type = 'JIKCHEK' AND member_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#))
+                  OR
+                    (
+                        member_type = 'DEPT' AND sub_dept_yn = 'Y'
+                        AND REGEXP_LIKE
+                            (
+                                (SELECT ',' || LISTAGG(dept_cd_path, ',') WITHIN GROUP(ORDER BY dept_cd_path) || ',' FROM tbl_deptmaster
+                                    WHERE cn = #deptId# OR CN IN (SELECT deptid FROM tbl_addjobmaster WHERE cn = #userId# and tenant_id = #tenantId#)),
+                                ',' || member_id || ','
+                            )
+                    )
+				)		
+	     ]]> 
+	</select>
+	
+	<select id="EzCommonDAO.checkWebfolderEncryptedFileTable" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				FILE_ID
+			FROM
+				TBL_WEBFOLDER_ENCRYPTED_FILE
+			LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.createWebfolderEncryptedFileTable">
+		CREATE TABLE TBL_WEBFOLDER_ENCRYPTED_FILE (
+			FILE_ID VARCHAR(100) NOT NULL,
+			VERSION INT(7) NOT NULL,
+			TENANT_ID INT(7) NOT NULL,
+			CONSTRAINT WEBFOLDER_ENCRYPTED_FILE_PK PRIMARY KEY (`FILE_ID`, `VERSION`, `TENANT_ID`)
+		)
+	</statement>
+	<select id="EzCommonDAO.checkWebfolderFileVersionColumn" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				VERSION
+			FROM
+				TBL_WEBFOLDER_FILE
+			LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.createWebfolderFileVersionColumn">
+		ALTER TABLE
+			TBL_WEBFOLDER_FILE
+		ADD
+			VERSION INT(7) DEFAULT 1 NOT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkWebfolderVersionTable" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				VERSION
+			FROM
+				TBL_WEBFOLDER_FILE_HISTORY
+			LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.createWebfolderVersionTable">
+		CREATE TABLE TBL_WEBFOLDER_FILE_HISTORY (
+			`FILE_ID` VARCHAR(100) NOT NULL,
+			`VERSION` INT(7) DEFAULT 1 NOT NULL,
+			`FILE_PATH` VARCHAR(250) NOT NULL,
+			`FILE_SIZE` NUMBER NOT NULL,
+			`USE_STATUS` VARCHAR(250) DEFAULT 'Y' NOT NULL,
+			`UPDATE_DATE` DATE NOT NULL,
+			`UPDATE_ID` VARCHAR(80) NOT NULL,
+			`UPDATE_NAME` VARCHAR(120) NOT NULL,
+			`UPDATE_NAME2` VARCHAR(120),
+			`DELETER_ID` VARCHAR(100),
+			`TENANT_ID` INT(7) NOT NULL,
+			CONSTRAINT TBL_WEBFOLDER_FILE_HISTORY PRIMARY KEY ('FILE_ID', 'VERSION', 'TENANT_ID')
+		)
+	</statement>
+	
+	<select id="EzCommonDAO.checkWebfolderFileDepthColumn" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				DEPTH
+			FROM
+				TBL_WEBFOLDER_FILE
+			LIMIT 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.createWebfolderFileDepthColumn">
+		ALTER TABLE
+			TBL_WEBFOLDER_FILE
+		ADD
+			DEPTH INT(7) DEFAULT 1 NOT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkWebfolderFileRootIdColumn" resultClass="Integer">
+		<![CDATA[
+			SELECT ROOT_ID
+			FROM TBL_WEBFOLDER_FILE
+			LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.createNullableWebfolderFileRootIdColumn">
+		ALTER TABLE TBL_WEBFOLDER_FILE
+		ADD ROOT_ID VARCHAR(100)
+	</statement>
+	
+	<update id="EzCommonDAO.updateWebfolderFileRootIdColumn">
+		UPDATE TBL_WEBFOLDER_FILE
+		SET ROOT_ID = FILE_ID
+	</update>
+
+	<statement id="EzCommonDAO.notNullWebfolderFileRootIdColumn">
+		ALTER TABLE TBL_WEBFOLDER_FILE
+		MODIFY ROOT_ID VARCHAR(100) NOT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkWebfolderFileParentIdColumn" resultClass="Integer">
+		<![CDATA[
+			SELECT PARENT_ID
+			FROM TBL_WEBFOLDER_FILE
+			LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.createNullableWebfolderFileParentIdColumn">
+		ALTER TABLE TBL_WEBFOLDER_FILE
+		ADD PARENT_ID VARCHAR(100)
+	</statement>
+
+	<update id="EzCommonDAO.updateWebfolderFileParentIdColumn">
+		UPDATE TBL_WEBFOLDER_FILE
+		SET PARENT_ID = FILE_ID
+	</update>
+
+	<statement id="EzCommonDAO.notNullWebfolderFileParentIdColumn">
+		ALTER TABLE TBL_WEBFOLDER_FILE
+		MODIFY PARENT_ID VARCHAR(100) NOT NULL
+	</statement>
+	
+		<select id="EzCommonDAO.checkWebfolderFileHierarchicalPathColumn" resultClass="Integer">
+		<![CDATA[
+			SELECT HIERARCHICAL_PATH
+			FROM TBL_WEBFOLDER_FILE
+			LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.createNullableWebfolderFileHierarchicalPathColumn">
+		ALTER TABLE TBL_WEBFOLDER_FILE
+		ADD HIERARCHICAL_PATH VARCHAR(300)
+	</statement>
+
+	<update id="EzCommonDAO.updateWebfolderFileHierarchicalPathColumn">
+		UPDATE TBL_WEBFOLDER_FILE
+		SET HIERARCHICAL_PATH = FILE_ID
+	</update>
+
+	<statement id="EzCommonDAO.notNullWebfolderFileHierarchicalPathColumn">
+		ALTER TABLE TBL_WEBFOLDER_FILE
+		MODIFY HIERARCHICAL_PATH VARCHAR(300) NOT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkWebfolderMeetingPeriodTable">
+		<![CDATA[
+			SELECT FOLDER_ID
+			FROM TBL_WEBFOLDER_MEETING_PERIOD
+			LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.createWebfolderMeetingPeriodTable">
+		CREATE TABLE TBL_WEBFOLDER_MEETING_PERIOD (
+			FOLDER_ID	VARCHAR(100)	NOT NULL,
+			START_DATE	DATE			NOT NULL,
+			END_DATE	DATE			NOT NULL,
+			TENANT_ID	INT(7)		NOT NULL,
+			CONSTRAINT `WEBFOLDER_MEETING_PERIOD_PK` PRIMARY KEY (FOLDER_ID, TENANT_ID)
+		)
+	</statement>
+	
+	<select id="EzCommonDAO.checkWebfolderFileHistoryColumn">
+        <![CDATA[
+            SELECT 
+                FILE_ID
+            FROM 
+                TBL_WEBFOLDER_LOG
+            LIMIT 1
+        ]]>
+    </select>
+    
+    <statement id="EzCommonDAO.addWebfolderLogHistory">
+        ALTER TABLE 
+        	TBL_WEBFOLDER_LOG 
+		ADD (
+			FILE_ID VARCHAR(100)  DEFAULT NULL,
+			VERSION INT(7) DEFAULT NULL,
+			FOLDER_ID VARCHAR(100) DEFAULT NULL,
+			FOLDER_NAME VARCHAR(200) DEFAULT NULL,
+			FOLDER_PATH VARCHAR(200) DEFAULT NULL,
+			FOLDER_PATH_NAME VARCHAR(500) DEFAULT NULL,
+			TOP_FOLDER_ID VARCHAR(100) DEFAULT NULL,
+			TOP_FOLDER_NAME VARCHAR(200) DEFAULT NULL
+		)
+    </statement>
+    
+    	<select id="EzCommonDAO.selectWebfolderNoInherit" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				FOLDER_ID
+			FROM
+				TBL_WEBFOLDER_NO_INHERIT
+			LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.createtWebfolderNoInherit">
+		CREATE TABLE TBL_WEBFOLDER_NO_INHERIT (
+			FOLDER_ID VARCHAR(100) NOT NULL,
+			TENANT_ID INT(7) NOT NULL,
+			CONSTRAINT WEBFOLDER_NO_INHERIT_PK PRIMARY KEY (`FOLDER_ID`, `TENANT_ID`)
+		)
+	</statement>
+	
+	<statement id="EzCommonDAO.alterWebfolderApplyHistoryAddColumn">
+        ALTER TABLE
+            TBL_WEBFOLDER_APPLY_HISTORY
+        ADD (
+            APPROVAL_STATUS VARCHAR(10),
+            APPROVAL_STATUS_UPDATEDT DATE
+            )
+	 </statement>
+	 
+	<select id="EzCommonDAO.checkTblWebfolderApplyHistroy" resultClass="String">
+		<![CDATA[
+			SELECT
+				FOLDER_NAME
+			FROM
+				TBL_WEBFOLDER_APPLY_HISTORY
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblWebfolderApplyHistroy"> 
+	    CREATE TABLE TBL_WEBFOLDER_APPLY_HISTORY (
+	        APPLY_ID VARCHAR(40), 
+	        TENANT_ID INT(5), 
+	        COMPANY_ID VARCHAR(80) NOT NULL, 
+		    FOLDER_NAME VARCHAR(200) NOT NULL, 
+		    CONTENT VARCHAR(1000),  
+		    APPLICATION_DATE DATE NOT NULL, 
+		    USINGS VARCHAR(20),  
+		    USINGE VARCHAR(20),  
+		    APPROVAL_STATUS VARCHAR(10),
+		    CONSTRAINT `PK2_TBL_WF_APPLY_HISTORY` PRIMARY KEY (`APPLY_ID`)
+	    )	
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblWebfolderApplyHistroyMember" resultClass="String">
+		<![CDATA[
+			SELECT
+				MEMBER_ID
+			FROM
+				TBL_WEBFOLDER_APPLY_HIST_MEM
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblWebfolderApplyHistroyMember"> 
+	    CREATE TABLE TBL_WEBFOLDER_APPLY_HIST_MEM (
+	        APPLY_ID VARCHAR(40), 
+		    MEMBER_ID VARCHAR(80) NOT NULL,  
+		    MEMBER_NAME VARCHAR(200) NOT NULL,  
+		    MEMBER_TYPE VARCHAR(10) NOT NULL,  
+		    MEMBER_ITEM VARCHAR(10) NOT NULL,  
+		    CONSTRAINT `PK2_TBL_WF_APPLY_HIST_MEM` PRIMARY KEY (`APPLY_ID`,`MEMBER_ID`,`MEMBER_TYPE`,`MEMBER_ITEM`)
+	    )
+	</statement>
+	
+	<select id="EzCommonDAO.checkWebfolderEncryptionFolderTable" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				FOLDER_ID
+			FROM
+				TBL_WEBFOLDER_ENC_FOLDER
+			LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.createWebfolderEncryptionFolderTable">
+		CREATE TABLE TBL_WEBFOLDER_ENC_FOLDER (
+			FOLDER_ID VARCHAR(100) NOT NULL,
+			TENANT_ID INT(7) NOT NULL,
+			CONSTRAINT WEBFOLDER_ENCRYPTION_FOLDER_PK PRIMARY KEY (`FOLDER_ID`, `TENANT_ID`)
+		)
+	</statement>
+	
 </sqlMap>
