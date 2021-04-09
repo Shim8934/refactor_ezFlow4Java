@@ -1030,6 +1030,8 @@
 	        			}
 	        		}
 	        	});
+		     	// 2021-04-09 김은실 - 검색 시 PressShiftKey = true 되는 현상(commit 6c23f8716 참조): 모든 search_click()에 적용. 
+	            PressShiftKey = false;
 	    	}
 		    
 		    var rgParams = new Array();
