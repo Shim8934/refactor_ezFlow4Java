@@ -316,6 +316,11 @@
 		            obj.className = "tabon";
 		            Tab1_SelectID = obj.id;
 		            ChangeTab(obj);
+
+					// 2021-04-09 박기범 - #76321 즐겨찾기 탭 누를시 양식종류 옵션 적용되지 않던 오류
+					if (pSelectTab == "favoritelist") {
+						Get_Favoritelist();
+					}
 		        }
 		    }
 		    function Tab1_NewTabIni(pTabNodeID) {
