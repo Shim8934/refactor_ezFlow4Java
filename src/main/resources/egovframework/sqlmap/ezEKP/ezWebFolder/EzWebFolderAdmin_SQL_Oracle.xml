@@ -865,7 +865,7 @@
 <!-- 		]]> -->
 <!-- 		<include refid="userCapacityCondition"/> -->
 <!-- 	</select> -->
-	
+	<!--  mysql은 주석처리 되어있어 함께 주석추가
 	<insert id="EzWebFolderAdminDAO.updateNewAmount" parameterClass="Map">
 		<selectKey keyProperty="v_temp" resultClass="Integer">
 			<![CDATA[
@@ -909,7 +909,7 @@
 			]]>
 		</isNotEqual>
 	</insert>
-	
+	 -->
 	<select id="EzWebFolderAdminDAO.getListFileLogs" resultMap="fileLogVO">
 		<![CDATA[
 			SELECT
