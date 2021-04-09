@@ -534,6 +534,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		String absenceAllClear = ezCommonService.getTenantConfig("absenceAllClear", userInfo.getTenantId());
+		/* 2021-04-07 홍승비 - 비전자문서 양식 MHT 확장자 추가 (기본은 HWP) */
+		String nonElecRecType = ezCommonService.getTenantConfig("ApprNonElecRecType", userInfo.getTenantId()) != null ? ezCommonService.getTenantConfig("ApprNonElecRecType", userInfo.getTenantId()) : "HWP";
 		
 		model.addAttribute("SubQuery", subQuery);
 		model.addAttribute("approvalFlag", approvalFlag);
@@ -558,6 +560,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("userLang", userLang);
 		model.addAttribute("primary", commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()));
 		model.addAttribute("absenceAllClear", absenceAllClear);
+		model.addAttribute("nonElecRecType", nonElecRecType);
 		
 		logger.debug("aprManage ended.");
 		

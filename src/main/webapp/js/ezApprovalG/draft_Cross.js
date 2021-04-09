@@ -1919,10 +1919,13 @@ function SendDraftMappingSign(ret) {
 //        		message.GetListItem(fields, "1sign1").height = "65";
 //      	}
 //     }
+        var signWidth = 0;
+        var signHeight = 0;
+        if (field) {
+        	signWidth = parseInt(field.offsetWidth) - 4;
+            signHeight = parseInt(field.offsetHeight) - 4;	
+        }
         
-        var signWidth = parseInt(field.offsetWidth) - 4;
-        var signHeight = parseInt(field.offsetHeight) - 4;
-
         var field = message.GetListItem(fields, pseumyungcell);
         if (field) {
             setNodeText(field , getNodeText(field) + PositionText);

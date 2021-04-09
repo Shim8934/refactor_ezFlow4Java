@@ -2770,7 +2770,6 @@
 	                            	<c:if test ="${approvalFlag =='G'}">
 	                                <td style="text-align: right;">
 	                                	<span id="passAprLineSpan" style="float:left;display:none"><input id="passAprLine" type="checkbox" style="vertical-align: middle" onchange="passAprLine_onchange(this)"><span style="vertical-align: middle"> <spring:message code='ezApprovalG.garm09'/></span></span>
-	                                    <a style="margin-top: 8px;" class="imgbtn imgbck2">
 	                                	<a id="btnAddGamsaDept" style="margin-top: 8px; display: none;" class="imgbtn imgbck">
 	                                		<span onclick="return btnAddEtcDept_onclick('013')">감사추가</span>
 	                                	</a>
@@ -2781,7 +2780,8 @@
 	                                 	<span id="passAprLineSpan" style="float:left;display:none"><input id="passAprLine" type="checkbox" style="vertical-align: middle" onchange="passAprLine_onchange(this)"><span style="vertical-align: middle"> <spring:message code='ezApprovalG.garm09'/></span></span>
 	                                 <a class="imgbtn imgbck2">
 	                                 </c:if>
-	                                 <span id="btn_SaveAprLineTemplet" onclick="return btn_SaveAprLineTemplet_onclick()"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t384'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t270'/></c:if></span></a>
+	                                 	<span id="btn_SaveAprLineTemplet" onclick="return btn_SaveAprLineTemplet_onclick()"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t384'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t270'/></c:if></span>
+	                                 </a>
 	                                </td>
 	                            </tr>
 	                        </table>

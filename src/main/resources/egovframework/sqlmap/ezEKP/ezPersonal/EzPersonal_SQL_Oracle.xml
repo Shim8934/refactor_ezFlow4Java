@@ -147,6 +147,20 @@
 		]]>
 	</select> 
 	
+	<select id="EzPersonalDAO.getApprovNotiConfig_S4" parameterClass="Map" resultClass="PersonalApprovMailVO">
+		<![CDATA[
+			SELECT
+				'0' ALERT  ,
+                '0' COMPLETE  ,
+                '0' BANSONG  ,
+                '0' CALLBACK  ,
+                '0' HESONG  ,
+                'N' SAVEMAILFLAG  
+			FROM
+           		DUAL
+		]]>
+	</select>
+	
 	<select id="EzPersonalDAO.setApprovalPwd_S" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT

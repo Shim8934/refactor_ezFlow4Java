@@ -3661,8 +3661,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
 
-		//2018-09-18 천성준 - 비전자등록 팝업 호출 시, TBL_FORMINFO에서 양식정보를 참조하여 문서정보 인서트 하는것 때문에 비전자등록 전용 양식일 경우 구분값을 가지고 고정데이터로 인서트 한다.
-		if (formID != null && formID.equals("2018000000")) {
+		// 2021-04-08 홍승비 - MHT전용 비전자양식 추가
+		// 2018-09-18 천성준 - 비전자등록 팝업 호출 시, TBL_FORMINFO에서 양식정보를 참조하여 문서정보 인서트 하는것 때문에 비전자등록 전용 양식일 경우 구분값을 가지고 고정데이터로 인서트 한다.
+		if (formID != null && (formID.equals("2018000000") || formID.equals("2021000000"))) {
 			map.put("v_NONELECYN", "Y");
 		}
 		

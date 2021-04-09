@@ -6,9 +6,11 @@ function Receptinfo_ini() {
         TreeViewinitialize_tree2(arr_userinfo[4], companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "<%=_pServerName%>");
         
         if (approvalFlag == "G") {
-			// 정주환
-			ChangeReceptTab(document.getElementById("3tab5"));
-			document.getElementById("3tab5").onclick();
+			// 정주환 - 문서24 관련 분기 추가
+        	if (useDoc24 == "YES") {
+        		ChangeReceptTab(document.getElementById("3tab5"));
+        		document.getElementById("3tab5").onclick();
+        	}
         	if (receptGubunYN == "Y") {
                 if (pDocType == "001" && isOuterForm) { //시행문
         			ChangeReceptTab(document.getElementById("3tab4"));
