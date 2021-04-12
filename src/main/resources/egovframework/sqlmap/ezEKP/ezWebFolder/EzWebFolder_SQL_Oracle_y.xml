@@ -403,7 +403,7 @@
 				AND F.FOLDER_TYPE = 'C'
 			WHERE F.TENANT_ID = #tenantId#
 			AND F.USE_STATUS = 'Y'
-			AND FF.COMPANY_ID IN
+			AND F.COMPANY_ID IN
 		]]>
 			<iterate property="idList" open="(" close=")" conjunction=",">
 				#idList[]#
