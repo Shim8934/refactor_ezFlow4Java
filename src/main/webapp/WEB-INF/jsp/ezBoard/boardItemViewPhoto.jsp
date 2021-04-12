@@ -709,7 +709,7 @@
 						swidth = 460;
 		            	
 						if (gubun == 3) { // 포토게시판 (메인이미지 사용 안함)
-							sheight = 360;
+							sheight = 475;
 						} else { // 썸네일게시판 (메인이미지 사용함)
 							sheight = 475;
 						}
