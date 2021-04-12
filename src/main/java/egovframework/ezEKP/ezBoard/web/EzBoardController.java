@@ -6068,6 +6068,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		String thumbnailName = "";
 		long fileSize = 0;
 		
+		boolean isImage = false;
+		
 		List<MultipartFile> multiFile = null;
 		
 		if (mode.equals("PICTURE")) {
@@ -6181,10 +6183,14 @@ public class EzBoardController extends EgovFileMngUtil{
 						bufferedImage = new BufferedImage(nWidth, nHeight, bi.getType());
 					}
 					bufferedImage.createGraphics().drawImage(bi, 0, 0, nWidth, nHeight, null);
-					ImageIO.write(bufferedImage, extension, new File(commonUtil.detectPathTraversal(serverPath + thumbnailName)));
+					isImage = ImageIO.write(bufferedImage, extension, new File(commonUtil.detectPathTraversal(serverPath + thumbnailName)));
 				}
 				
-				resultUpload = "true";
+				if(isImage) {
+					resultUpload = "true";
+				} else {
+					resultUpload = "Not Image file";
+				}
 				
 				strXML.append("<NODE><THUMBNAILNAME><![CDATA[" + thumbnailName + "]]></THUMBNAILNAME>");
 				strXML.append("<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>");
