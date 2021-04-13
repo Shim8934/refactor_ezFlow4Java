@@ -522,10 +522,12 @@
 				setNamePath(data.folderPath, data.originalPath);
 				setMailBoxInfo(data.fldCnt, data.fileCnt);
 				window.folderType = folderType;
-				capacity.load();
+
 				if (successHandler) {
 					successHandler();
 				}
+
+				capacity.load();
 
 				// 폴더 권한 비상속 (이동/복사 버튼 숨기기)
 				$("#moveButton, #moveMenu").css("display", data.isNotInherit ? "none" : "");
