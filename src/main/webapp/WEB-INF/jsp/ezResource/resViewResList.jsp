@@ -29,6 +29,7 @@
 			var pSortGbn	= "${sortGbn}";
 			var pAdminFg = "${adminFg}";
 			var TotalCnt = "${totalCnt}";
+			var selectedResourceId = "${selectedResourceId}";
 
 		   function MemberInfo_onDblclick(pSelUserID, pDeptID) {
 			  var feature = GetOpenPosition(420, 438);
@@ -361,6 +362,9 @@
 		    window.onload = function() {
 		    	makePageSelPage();
 	    		windowResize();
+	    		if(selectedResourceId != "") {
+	    			$("input[name=chk][value="+selectedResourceId+"]").trigger("click");
+	    		}
 		    }
 		    
 		    window.onresize = function() {
@@ -404,7 +408,8 @@
 		    		},
 		    		url : "/ezResource/changeResourceOrder.do",
 		    		success: function(text){
-		    			window.RefreshPageDoc();
+		    			//window.RefreshPageDoc();
+		    			location.href = "/ezResource/viewResList.do?brdID=" + pBrdid + "&brdNm=" + encodeURI(pBrdnm) + "&accessCode=" + pAccessCode + "&goToPage=" + pcurpage + "&selectedResourceId=" + $(checkId[0]).attr("value");
 		    			/* var $tr = $(checkId[0]).closest("tr"); // 클릭한 버튼이 속한 tr 요소
 		    			$tr.prev().before($tr); // 현재 tr 의 이전 tr 앞에 선택한 tr 넣기
 		    			
@@ -447,7 +452,8 @@
 		    		},
 		    		url : "/ezResource/changeResourceOrder.do",
 		    		success: function(text){
-		    			window.RefreshPageDoc();
+		    			//window.RefreshPageDoc();
+		    			location.href = "/ezResource/viewResList.do?brdID=" + pBrdid + "&brdNm=" + encodeURI(pBrdnm) + "&accessCode=" + pAccessCode + "&goToPage=" + pcurpage + "&selectedResourceId=" + $(checkId[0]).attr("value");
 		    			/* var $tr = $(checkId[0]).closest("tr"); // 클릭한 버튼이 속한 tr 요소
 		    			$tr.next().after($tr); // 현재 tr 의 이전 tr 앞에 선택한 tr 넣기
 		    			
