@@ -1919,16 +1919,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.notNullWebfolderFileHierarchicalPathColumn");
 		}
 	}
-	
-	public void createWebfolderMeetingPeriodTable() {
-		try {
-			select("EzCommonDAO.checkWebfolderMeetingPeriodTable");
-		} catch (Exception e) {
-			logger.debug("tbl_webfolder_meeting_period doesn't exist. creating the table...");
-			update("EzCommonDAO.createWebfolderMeetingPeriodTable");
-		}
-	}
-	
+
 	public void addWebfolderLogHistory() {
 		try {
 			logger.debug("여기 오나요 checkWebfolderFileHistoryColumn");

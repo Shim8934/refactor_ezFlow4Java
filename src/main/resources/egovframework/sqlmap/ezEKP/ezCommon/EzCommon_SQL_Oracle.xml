@@ -3663,25 +3663,7 @@
 		ALTER TABLE TBL_WEBFOLDER_FILE
 		MODIFY (HIERARCHICAL_PATH NOT NULL)
 	</statement>
-	
-	<select id="EzCommonDAO.checkWebfolderMeetingPeriodTable">
-		<![CDATA[
-			SELECT FOLDER_ID
-			FROM TBL_WEBFOLDER_MEETING_PERIOD
-			WHERE ROWNUM <= 1
-		]]>
-	</select>
 
-	<statement id="EzCommonDAO.createWebfolderMeetingPeriodTable">
-		CREATE TABLE TBL_WEBFOLDER_MEETING_PERIOD (
-			FOLDER_ID	VARCHAR2(100)	NOT NULL,
-			START_DATE	DATE			NOT NULL,
-			END_DATE	DATE			NOT NULL,
-			TENANT_ID	NUMBER(7,0)		NOT NULL,
-			CONSTRAINT "WEBFOLDER_MEETING_PERIOD_PK" PRIMARY KEY (FOLDER_ID, TENANT_ID)
-		)
-	</statement>
-	
 	<select id="EzCommonDAO.checkWebfolderFileHistoryColumn">
         <![CDATA[
             SELECT 

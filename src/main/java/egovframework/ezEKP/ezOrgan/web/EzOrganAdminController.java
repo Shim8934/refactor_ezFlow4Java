@@ -246,7 +246,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.checkWebfolderEncryptTable(); 				
 			ezCommonService.checkWebfolderVersionTable(); 				
 	    	ezCommonService.createWebfolderHierarchicalColumns(); 		
-	    	ezCommonService.createWebfolderMeetingPeriodTable(); 		
 	    	ezCommonService.addWebfolderLogHistory(); 					// 2020-01-20 웹폴더 파일 이력관리 컬럼추가 
 	    	ezCommonService.createWebfolderNoInherit(); 				// 권한비상속			
     		ezCommonService.alterWebfolderApplyHistoryAddColumn();

@@ -16,7 +16,6 @@ import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderUserVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
-import egovframework.ezEKP.ezWebFolder.vo.MeetingPeriod;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleDeptVO;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO;
 import egovframework.ezEKP.ezWebFolder.vo.WebfolderEnvVO;
@@ -408,28 +407,6 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<String> getContainsReplyFiles(Map<String, Object> map) {
 		return (List<String>) list("EzWebFolderDAO.getContainsReplyFiles", map);
-	}
-
-	public MeetingPeriod getMeetingPeriod(Map<String, Object> map) {
-		return (MeetingPeriod) select("EzWebFolderDAO.getMeetingPeriod", map);
-	}
-
-	public void setMeetingPeriod(Map<String, Object> map) {
-		update("EzWebFolderDAO.setMeetingPeriod", map);
-	}
-
-	public void deleteMeetingPeriod(Map<String, Object> map) {
-		delete("EzWebFolderDAO.deleteMeetingPeriod", map);
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<String> getExpiredMeetingFolders(Map<String, Object> map) {
-		return (List<String>) list("EzWebFolderDAO.getExpiredMeetingFolders", map);
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<String> getExpiredManagedMeetingFolders(Map<String, Object> map) {
-		return (List<String>) list("EzWebFolderDAO.getExpiredManagedMeetingFolders", map);
 	}
 
 	public int checkFileUserExists(Map<String, Object> map) {

@@ -293,9 +293,7 @@ public interface EzCommonService {
 	public void checkWebfolderVersionTable() throws Exception;
 	
 	void createWebfolderHierarchicalColumns();
-	
-	void createWebfolderMeetingPeriodTable();
-	
+
 	public void addWebfolderLogHistory() throws Exception;
 	
 	void createWebfolderNoInherit();

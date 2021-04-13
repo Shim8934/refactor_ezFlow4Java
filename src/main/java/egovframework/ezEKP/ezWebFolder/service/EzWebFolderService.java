@@ -18,7 +18,6 @@ import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderUserVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
-import egovframework.ezEKP.ezWebFolder.vo.MeetingPeriod;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleDeptVO;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO;
 import egovframework.ezEKP.ezWebFolder.vo.WebfolderEnvVO;
@@ -154,18 +153,6 @@ public interface EzWebFolderService {
 
 	List<String> getContainsReplyFiles(List<String> fileIds, int tenantId);
 
-	MeetingPeriod getMeetingPeriod(String folderId, String offset, int tenantId) throws Exception;
-
-	void setMeetingPeriod(MeetingPeriod period, String folderId, int tenantId);
-
-	void deleteMeetingPeriod(String folderId, int tenantId);
-
-	/** 사용 기간이 만료된 회의실 리스트 (담당자로 설정된 회의실은 제외) */
-	List<String> getExpiredMeetingFolders(String userId, int tenantId);
-
-	/** 담당자로 설정된 회의실 중 사용 기간이 만료된 리스트 */
-	List<String> getExpiredManagedMeetingFolders(String userId, int tenantId);
-	
 	int checkFileUserExists(String userId, String fileId);
 	
 	int checkFolderUserExists(String userId, String folderId, Boolean manager);

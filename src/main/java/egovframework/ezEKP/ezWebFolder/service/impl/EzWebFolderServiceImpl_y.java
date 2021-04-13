@@ -465,13 +465,6 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			filevo = (List<FileVO>) ezWebFolderDAO_y.getFileList2(map);
 		}
 		
-		List<String> expiredManagedFolders = ezWebFolderService.getExpiredManagedMeetingFolders(userId, tenantId);
-
-		// 담당자로 지정된 회의실 중 기간이 만료된 폴더들 플래그 설정해주기 히히 기모티
-		filevo.stream().filter(FileVO::isFolder)
-				.filter(file -> expiredManagedFolders.contains(file.getFileId()))
-				.forEach(file -> file.setExpired(true));
-		
 		LOGGER.debug("getFileList ended");
 		return filevo;
 	}
@@ -1066,9 +1059,9 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 //					addjobList.add(deptId);
 //					map.put("userDeptList", addjobList);
 
-					boolean isExpired = ezWebFolderService.getExpiredMeetingFolders(userId, tenantId).contains(folderId);
+					// boolean isExpired = ezWebFolderService.getExpiredMeetingFolders(userId, tenantId).contains(folderId);
 
-					if (ezWebFolderDAO_y.checkCompanyFolderPermission(map) > 0 && !isExpired) {
+					if (ezWebFolderDAO_y.checkCompanyFolderPermission(map) > 0) { //&& !isExpired) {
 						status = "ok";
 					}
 				}
@@ -1104,11 +1097,22 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 				map.put("permissionIdList", idList);
 				map.put("tenantId", tenantId);
 
-				if (ezWebFolderDAO_y.checkCompanyFilePermission(map) > 0) {
-					status = "ok";
+				String folderType = folderVO.getFolderType();
+
+				// TODO checkCompanyFilePermission을 공통 함수로 쓸 수 있도록 해야할듯
+				if ("C".equalsIgnoreCase(folderType)) {
+					if (ezWebFolderDAO_y.checkCompanyFilePermission(map) > 0) {
+						status = "ok";
+					}
+				} else if ("D".equalsIgnoreCase(folderType)) {
+					if (idList.contains(folderVO.getOwnerId())) {
+						status = "ok";
+					}
 				} else {
-					status = "fail";
-				}	
+					if (folderVO.getOwnerId().equals(userId)) {
+						status = "ok";
+					}
+				}
 			} else {
 				status = "fail";
 			}

@@ -2330,11 +2330,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 
 	@Override
-	public void createWebfolderMeetingPeriodTable() {
-		ezCommonDAO.createWebfolderMeetingPeriodTable();
-	}
-	
-	@Override
 	public void addWebfolderLogHistory() throws Exception {
 		ezCommonDAO.addWebfolderLogHistory();
 	}

@@ -268,15 +268,11 @@ public class EzWebFolderController extends EgovFileMngUtil {
 
 		try {
 			newSize = humanReadableByteCount(Long.parseLong(newSize));
-		} catch (Exception ex) {
-			// ignore
-		}
+		} catch (Exception ignore) {}
 
 		try {
 			oldSize = humanReadableByteCount(Long.parseLong(oldSize));
-		} catch (Exception ex) {
-			// ignore
-		}
+		} catch (Exception ignore) {}
 
 		model.addAttribute("fileName", fileName);
 		model.addAttribute("newDate", newDate);

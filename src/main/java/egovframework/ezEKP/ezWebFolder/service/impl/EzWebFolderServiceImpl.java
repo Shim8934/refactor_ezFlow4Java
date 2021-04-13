@@ -66,7 +66,6 @@ import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderUserVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
-import egovframework.ezEKP.ezWebFolder.vo.MeetingPeriod;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleDeptVO;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO;
 import egovframework.ezEKP.ezWebFolder.vo.UserCapacityVO;
@@ -2321,53 +2320,6 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		map.put("tenantId", tenantId);
 
 		return ezWebFolderDAO.getContainsReplyFiles(map);
-	}
-
-	@Override
-	public MeetingPeriod getMeetingPeriod(String folderId, String offset, int tenantId) throws Exception {
-		Map<String, Object> map = new HashMap<>();
-		map.put("folderId", folderId);
-		map.put("offset", commonUtil.getMinuteUTC(offset));
-		map.put("tenantId", tenantId);
-
-		return Optional.ofNullable(ezWebFolderDAO.getMeetingPeriod(map)).orElse(MeetingPeriod.EMPTY);
-	}
-
-	@Override
-	public void setMeetingPeriod(MeetingPeriod period, String folderId, int tenantId) {
-		Map<String, Object> map = new HashMap<>();
-		map.put("period", period);
-		map.put("folderId", folderId);
-		map.put("tenantId", tenantId);
-
-		ezWebFolderDAO.setMeetingPeriod(map);
-	}
-
-	@Override
-	public void deleteMeetingPeriod(String folderId, int tenantId) {
-		Map<String, Object> map = new HashMap<>();
-		map.put("folderId", folderId);
-		map.put("tenantId", tenantId);
-
-		ezWebFolderDAO.deleteMeetingPeriod(map);
-	}
-
-	@Override
-	public List<String> getExpiredMeetingFolders(String userId, int tenantId) {
-		Map<String, Object> map = new HashMap<>();
-		map.put("userId", userId);
-		map.put("tenantId", tenantId);
-
-		return ezWebFolderDAO.getExpiredMeetingFolders(map);
-	}
-
-	@Override
-	public List<String> getExpiredManagedMeetingFolders(String userId, int tenantId) {
-		Map<String, Object> map = new HashMap<>();
-		map.put("userId", userId);
-		map.put("tenantId", tenantId);
-
-		return ezWebFolderDAO.getExpiredManagedMeetingFolders(map);
 	}
 
 	@Override

@@ -12,7 +12,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -63,7 +62,6 @@ import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderUserVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
-import egovframework.ezEKP.ezWebFolder.vo.MeetingPeriod;
 import egovframework.ezEKP.ezWebFolder.vo.UserCapacityVO;
 import egovframework.ezEKP.ezWebFolder.vo.WebfolderConfigVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -647,37 +645,6 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		return result;
 	}
 
-	private boolean setMeetingPeriod(String folderId, String offset, long startTime, long endTime, int tenantId) throws Exception {
-		if (startTime == 0 || endTime == 0 || startTime > endTime) {
-			return false;
-		}
-
-		int userOffset = Integer.parseInt(commonUtil.getMinuteUTC(offset));
-
-		Calendar startDate = Calendar.getInstance();
-		startDate.setTimeInMillis(startTime);
-		startDate.set(Calendar.HOUR_OF_DAY, 0);
-		startDate.set(Calendar.MINUTE, 0);
-		startDate.set(Calendar.SECOND, 0);
-		startDate.set(Calendar.MILLISECOND, 0);
-		startDate.add(Calendar.MINUTE, -userOffset);
-
-		Calendar endDate = Calendar.getInstance();
-		endDate.setTimeInMillis(endTime);
-		endDate.set(Calendar.HOUR_OF_DAY, 23);
-		endDate.set(Calendar.MINUTE, 59);
-		endDate.set(Calendar.SECOND, 59);
-		endDate.set(Calendar.MILLISECOND, 999);
-		endDate.add(Calendar.MINUTE, -userOffset);
-
-		MeetingPeriod period = new MeetingPeriod();
-		period.setStartDate(new java.sql.Date(startDate.getTimeInMillis()));
-		period.setEndDate(new java.sql.Date(endDate.getTimeInMillis()));
-
-		ezWebFolderService.setMeetingPeriod(period, folderId, tenantId);
-		return true;
-	}
-	
 	@Override
 	public List<String> getSubFolderIdList(String folderPath, int tenantId, List<String> userIdList) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();

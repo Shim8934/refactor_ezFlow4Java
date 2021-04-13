@@ -1155,7 +1155,6 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		}
 
 		ezWebFolderService.deleteEncryptionFolder(folderVO.getFolderId(), tenantId);
-		ezWebFolderService.deleteMeetingPeriod(folderVO.getFolderId(), tenantId);
 		// 폴더 권한 비상속
 		ezWebFolderService.deleteNotInheritFolder(folderVO.getFolderId(), tenantId);
 
