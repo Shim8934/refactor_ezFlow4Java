@@ -809,6 +809,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 	}
 	
 	@Override
+	// 사용되지 않음. (2021-04-13 확인 - 김은실)
 	public String getMaxFolderUserSeq(int tenantId, String type) throws Exception {
 		int currentMaxolderUserId  = -1;
 		String result              = ezWebFolderService.getFolderUserSequence(tenantId, type);

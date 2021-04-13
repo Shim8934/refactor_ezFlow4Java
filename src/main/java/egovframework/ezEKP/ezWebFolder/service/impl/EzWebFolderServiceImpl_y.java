@@ -1396,7 +1396,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		
 		map.put("folderId", jsonObject.get("folderId").toString());
 		map.put("fileId", jsonObject.get("fileId").toString());
-//		map.put("comId", jsonObject.get("comId").toString());
+		map.put("comId", jsonObject.get("comId").toString());
 		map.put("tenantId", jsonObject.get("tenantId").toString());
 		
 		return ezWebFolderDAO_y.selectFileDetail(map);
@@ -1516,6 +1516,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			param.put("folderId", currFolderId);
 			param.put("fileId", targetId);
 			param.put("tenantId", tenantId);
+			param.put("comId", userInfo.getCompanyID());
 			
 			JSONParser parser          = new JSONParser();
 			folderUsers.replace("\\", "");

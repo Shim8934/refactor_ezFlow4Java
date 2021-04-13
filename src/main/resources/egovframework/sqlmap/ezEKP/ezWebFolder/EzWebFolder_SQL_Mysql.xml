@@ -334,7 +334,7 @@
 		INSERT INTO 
 			TBL_WEBFOLDER_FILEUSER (FILE_ID, USER_ID, USER_TYPE, CREATE_ID, CREATE_DATE, COMPANY_ID, TENANT_ID, SUBDEPT_PERMITTED)
   		VALUES 
-			(#fileId#, #userId#, #userType#, #createId#, TO_DATE(#createDate#, 'YYYY-MM-DD HH24:MI:SS'), #comId#, #tenantId#, 0)
+			(#fileId#, #userId#, #userType#, #createId#, #createDate#, #comId#, #tenantId#, 0)
 	</insert>
 	
 	<select id="EzWebFolderDAO.getFileSequence" resultClass="String">
