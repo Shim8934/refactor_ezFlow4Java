@@ -197,9 +197,9 @@
 						PHYSICALDELIVERYOFFICENAME = #companyId#
 				</isNotEmpty>
 					AND 
-				        DEPT_CD_PATH NOT LIKE '%shared_mailbox%' 
+				        DEPARTMENT NOT LIKE '%shared_mailbox%' 
 				    AND 
-				    	DEPT_CD_PATH NOT LIKE '%trash%'
+				    	DEPARTMENT NOT LIKE '%trash%'
 				) AS MAIN
 		</isEqual>
 		<![CDATA[
@@ -358,12 +358,10 @@
 	<sql id="upperFolderFolderUser">
 		SELECT 
 			<isEqual property="type_f" compareValue="D">
-			SEQ_FOLDERUSER.NEXTVAL,			
 			#targetId#,
 			FOLDER_MANAGER,
 			</isEqual>
 			<isEqual property="type_f" compareValue="F">
-			SEQ_FILEUSER.NEXTVAL,			
 			#targetId#,
 			</isEqual>
 			USER_ID,			
@@ -1178,18 +1176,18 @@
 								)
 			]]>
 		</selectKey>
-		<isEqual property="v_temp" compareValue="1">
+		<isEmpty property="seqId">
 			<![CDATA[
 				INSERT INTO TBL_WEBFOLDER_FOLDERUSER (
-					SEQ_ID,            USER_ID,               USER_TYPE,            FOLDER_ID,           CREATE_ID,
+					USER_ID,               USER_TYPE,            FOLDER_ID,           CREATE_ID,
 					CREATE_DATE,       COMPANY_ID,            TENANT_ID,			SUBDEPT_PERMITTED,	 FOLDER_MANAGER
 				)
 				VALUES (
-					#seqId#,           #userId#,              #userType#,            #folderId#,          #createId#,
+					#userId#,              #userType#,            #folderId#,          #createId#,
 					#createDate#,      #companyId#,           #tenantId#,			 #subdeptPermitted#,		#folderManager#
 				)
 			]]>
-		</isEqual>
+		</isEmpty>
 		<isNotEqual property="v_temp" compareValue="1">
 			<![CDATA[
 				UPDATE
@@ -1235,11 +1233,11 @@
 			INSERT INTO     
 			<isEqual property="type_f" compareValue="D">
 			TBL_WEBFOLDER_FOLDERUSER 
-			(SEQ_ID, FOLDER_ID, FOLDER_MANAGER, USER_ID, USER_TYPE, CREATE_ID, CREATE_DATE, COMPANY_ID, TENANT_ID, SUBDEPT_PERMITTED )
+			( FOLDER_ID, FOLDER_MANAGER, USER_ID, USER_TYPE, CREATE_ID, CREATE_DATE, COMPANY_ID, TENANT_ID, SUBDEPT_PERMITTED )
 			</isEqual>
 			<isEqual property="type_f" compareValue="F">
 			TBL_WEBFOLDER_FILEUSER 
-			(SEQ_ID, FILE_ID, USER_ID, USER_TYPE, CREATE_ID, CREATE_DATE, COMPANY_ID, TENANT_ID, SUBDEPT_PERMITTED)
+			( FILE_ID, USER_ID, USER_TYPE, CREATE_ID, CREATE_DATE, COMPANY_ID, TENANT_ID, SUBDEPT_PERMITTED)
 			</isEqual>
 			(
 				<include refid="upperFolderFolderUser"/>
