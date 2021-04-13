@@ -1534,12 +1534,12 @@
 				 							    AND EXTENSIONATTRIBUTE2 = FU.COMPANY_ID AND TENANT_ID = FU.TENANT_ID)
 				)
 		</iterate>
-			)
 		AND FU.FOLDER_ID IN
 		<iterate property="folderIdList" open="(" close=")" conjunction=",">
 			#folderIdList[]#
 		</iterate>
 		-->
+		)
 		AND FU.FOLDER_ID = #folderId#
 		AND FU.TENANT_ID = #tenantId#
 	</select>
