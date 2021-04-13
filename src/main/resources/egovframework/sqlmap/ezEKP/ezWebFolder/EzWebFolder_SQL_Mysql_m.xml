@@ -44,6 +44,9 @@
 		<result property="creatorName"		column="CREATOR_NAME"	 />
 		<result property="createDate"		column="CREATE_DATE"	 />
 		<result property="tenantId"			column="TENANT_ID"		 />
+		<result property="encryptedFlag"   column="ENCRYPTED_FLAG"	 />
+		<result property="depth"           column="DEPTH"			 />
+		<result property="folderId"        column="FOLDER_ID"		 />
 	</resultMap>
 
 	<!-- ShareFile resultMap -->
@@ -140,12 +143,14 @@
 		<result property="content"    column="CONTENT"      columnIndex="4" javaType="String"  />
 		<result property="usingS"     column="USINGS"       columnIndex="5" javaType="String"  />  
 		<result property="usingE"     column="USINGE"       columnIndex="6" javaType="String"  />
+		<result property="approvalStatusUpdateDt"     column="APPROVAL_STATUS_UPDATEDT"       columnIndex="7" javaType="String"  />
 	</resultMap>
 	
 	<resultMap id="applicationHistoryMember" class="HashMap">
 		<result property="memberName"      column="MEMBER_NAME"      columnIndex="1" javaType="String"  />
 		<result property="memberItem"    column="MEMBER_ITEM"      columnIndex="2" javaType="String"  />
 		<result property="memberType"        column="MEMBER_TYPE"        columnIndex="3" javaType="String"  />
+		<result property="memberId"        column="MEMBER_ID"        columnIndex="4" javaType="String"  />
 	</resultMap>
 
 	<sql id="searchTerm">
@@ -1507,11 +1512,35 @@
 		</isNotEqual>
 	</delete>
 	
+	<delete id="EzWebFolderDAO_m.deleteFileUser" parameterClass="Map">
+		<![CDATA[
+			DELETE
+			FROM
+				TBL_WEBFOLDER_FILEUSER
+			WHERE
+				FILE_ID    = #fileId#
+			AND
+				TENANT_ID  = #tenantId#
+		]]>
+	</delete>
+	
 	<delete id="EzWebFolderDAO_m.deleteFolder" parameterClass="Map" >
 	<![CDATA[
 			DELETE
 			FROM
 				TBL_WEBFOLDER_FOLDER
+			WHERE
+				TENANT_ID = #tenantId# 
+			AND
+				FOLDER_ID = #folderId#
+		]]>
+	</delete>
+	
+	<delete id="EzWebFolderDAO_m.deleteFolderUser" parameterClass="Map" >
+		<![CDATA[
+			DELETE
+			FROM
+				TBL_WEBFOLDER_FOLDERUSER
 			WHERE
 				TENANT_ID = #tenantId# 
 			AND
@@ -2008,20 +2037,24 @@
 			HISTORY.TENANT_ID = #tenantId#
 		AND
 			HISTORY.DELETER_ID = #userId#
-		<include refid="searchTrashCanFolder"/>
+		<include refid="searchTrashCanFile"/>
 	</select>
 
 	<update id="EzWebFolderDAO_m.moveFile" parameterClass="Map">
 			UPDATE
 				TBL_WEBFOLDER_FILE
 			SET
-			<isNotEmpty property="newName">
-				FILE_NAME = #newName#,
-			</isNotEmpty>
 				FOLDER_ID = #folderId#,
 				USE_STATUS = 'Y',
 				UPDATE_DATE = #timeUTC#,
-				DELETER_ID = null
+			<isNotEmpty property="newName">
+				FILE_NAME = #newName#,
+			</isNotEmpty>
+				DELETER_ID = null,
+				DEPTH = 1,
+				ROOT_ID = FILE_ID,
+				PARENT_ID = FILE_ID,
+				HIERARCHICAL_PATH = FILE_ID
 			WHERE
 				FILE_ID = #fileId#
 			AND
@@ -2152,7 +2185,7 @@
 	<select id="EzWebFolderDAO_m.getWebFolderApplyHistoryMember" parameterClass="Map" resultMap="applicationHistoryMember">
 		<![CDATA[
 			SELECT 
-				m.MEMBER_NAME as memberName, m.MEMBER_ITEM as memberItem, m.MEMBER_TYPE as memberType
+				m.MEMBER_NAME, m.MEMBER_ITEM, m.MEMBER_TYPE, m.MEMBER_ID
 			FROM 
 				TBL_WEBFOLDER_APPLY_HISTORY h
 			JOIN
