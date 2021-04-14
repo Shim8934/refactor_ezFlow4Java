@@ -19,6 +19,9 @@
 	.memList ul > li{
 		box-sizing: border-box; padding: 5px;
 	}
+	#applicationPopup th {
+		text-align: center;
+	}
 </style>
 <!-- 웹폴더 개설신청 팝업 -->
 <div id="applicationPopup" class="popupwrap3" style="display:none;margin-bottom:70px">

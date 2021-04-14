@@ -97,4 +97,5 @@
 <script type="text/javascript">
 	Tab1_NewTabIni("tab1");
 </script>
+<%@ include file="/WEB-INF/jsp/ezWebFolder/webFolderApplyPopUp.jsp" %>
 </html>

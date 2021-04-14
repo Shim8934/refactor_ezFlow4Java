@@ -1244,5 +1244,6 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
+		<%@ include file="/WEB-INF/jsp/ezWebFolder/webFolderApplyPopUp.jsp" %>
 	</body>
 </html>

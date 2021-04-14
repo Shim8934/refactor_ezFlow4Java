@@ -43,6 +43,15 @@
 			.memList ul > li{
 				box-sizing: border-box; padding: 5px;
 			}
+			#applicationPopup th {
+				text-align: center;
+			}
+			#applicationPopup td {
+				padding-left: 5px;
+			}
+			#applicationPopup li {
+				padding-left: 0;
+			}
 		</style>
 	</head>
 	<body class="mainbody" style="overflow:auto; height:93%" onresize="reSizePage()">
@@ -259,7 +268,7 @@
 		        		<th>
 		        			<spring:message code="ezWebFolder.ksa14"/>
 		        		</th>
-		        		<td><textarea readonly style="resize:none; border:none; height:150px; overflow:auto; box-sizing: border-box; padding:5px;" key="content" class="wfAppformHTML historyInfo"></textarea></td>
+		        		<td><textarea readonly style="resize:none; border:none; height:150px; overflow:auto; box-sizing: border-box; padding: 5px 5px 5px 0;" key="content" class="wfAppformHTML historyInfo"></textarea></td>
 		        	</tr>
 		        </table>
 		        

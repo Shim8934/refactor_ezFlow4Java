@@ -2105,7 +2105,7 @@
 				TBL_WEBFOLDER_APPLY_HISTORY 
 			(APPLY_ID, TENANT_ID, COMPANY_ID, FOLDER_NAME, CONTENT, APPLICATION_DATE, USINGS, USINGE)
 				VALUES
-			(#applyId#, #tenantId#, #companyId#, #folderName#, #content#, SYSDATE, #usingS#, #usingE#)
+			(#applyId#, #tenantId#, #companyId#, #folderName#, #content#, now(), #usingS#, #usingE#)
 		]]>
 	</insert>
 	
@@ -2130,7 +2130,7 @@
 					FROM 
 						TBL_WEBFOLDER_APPLY_HIST_MEM
 					WHERE MEMBER_ITEM IN ('ms')
-					GROUP BY (MEMBER_ITEM, APPLY_ID)
+					GROUP BY MEMBER_ITEM, APPLY_ID
 				) ms
 				ON h.APPLY_ID = ms.APPLY_ID 
 				JOIN 
@@ -2152,11 +2152,8 @@
 	
 	<select id="EzWebFolderDAO_m.getWebFolderApplyHistoryList" parameterClass="Map" resultMap="applicationHistoryList">
 		<![CDATA[
-		SELECT 
-			RNUM, APPLY_ID, FOLDER_NAME, APPLICATION_DATE, APPLICANTNAME, MASTERNAME, MASTERCNT, USINGE, USINGS, APPROVAL_STATUS
-		FROM (
 			SELECT 
-			rownum AS rnum, tt.*
+			'' AS rnum, tt.*
 			FROM 
 				(SELECT 
 					h.APPLY_ID, h.FOLDER_NAME, h.APPLICATION_DATE, a.MEMBER_NAME AS applicantName,
@@ -2165,8 +2162,7 @@
 				<include refid="getWebFolderApplyHistroyQuery" />
 		<![CDATA[	
 				)tt
-			WHERE rownum <= #endList#
-		) t WHERE RNUM > #startList#
+			LIMIT #startList#,#endList#
 		]]>
 	</select>
 	
@@ -2174,7 +2170,7 @@
 		<![CDATA[
 			SELECT
 				APPLY_ID,  FOLDER_NAME, CONTENT, 
-				APPLICATION_DATE AS APPLICATION_DATE, USINGE, USINGS
+				APPLICATION_DATE AS APPLICATION_DATE, USINGE, USINGS, APPROVAL_STATUS_UPDATEDT
 			FROM 
 				TBL_WEBFOLDER_APPLY_HISTORY
 			WHERE 
@@ -2194,7 +2190,7 @@
 			WHERE  
 				h.APPLY_ID = #applyId#
 			ORDER BY (
-				CASE to_char(m.MEMBER_TYPE)
+				CASE (m.MEMBER_TYPE)
 				WHEN 'USER' THEN 1 
 				WHEN 'DEPT' THEN 2 
 				WHEN 'JIKWI' THEN 3 

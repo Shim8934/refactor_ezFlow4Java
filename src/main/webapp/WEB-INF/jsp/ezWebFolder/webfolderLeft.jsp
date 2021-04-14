@@ -449,6 +449,12 @@
 	    	<div class="left_title" title="<spring:message code='ezWebFolder.t10' />"><spring:message code='ezWebFolder.t10' />
 	        	<span class="sub_iconLNB tree_leftconfig" onclick="wfConfig();" title="<spring:message code="ezWebFolder.t236" />"></span>
 	        </div>
+	        <div class="btn_writeBox webfolderListBoxOT" style="height: auto;">
+	        	<p class="btn_write01" onclick="appliWebFolder()" style="min-height: 30px; height: auto;">
+	        		<span class="sub_iconLNB tree_write"></span>
+	        		<spring:message code="ezWebFolder.ksa18"/>
+	        	</p>
+	        </div>
 	        <div class="webfolderListBox" style="overflow:hidden; padding-right: 0;">
 		        <h2 class="on" id="companyH2">
 	            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="openFolder('company')"><spring:message code='ezWebFolder.t233' /></span>

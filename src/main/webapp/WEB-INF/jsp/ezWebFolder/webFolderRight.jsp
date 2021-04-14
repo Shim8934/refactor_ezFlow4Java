@@ -1000,5 +1000,6 @@
 			</tbody>
 		</table>
 	</div>
+	<%@ include file="/WEB-INF/jsp/ezWebFolder/webFolderApplyPopUp.jsp" %>
 </body>
 </html>
