@@ -72,8 +72,11 @@ public class EzWebFolderAdminDAO extends EgovAbstractDAO {
 //		return (int)select("EzWebFolderAdminDAO.getTotalListUserCapacity", map);
 //	}
 
-	public void insertFolder2(Map<String, Object> map) {
-		insert("EzWebFolderAdminDAO.insertFolder2", map);
+	public int insertFolder2(Map<String, Object> map) {
+		return (int)insert("EzWebFolderAdminDAO.insertFolder2", map);
+	}
+	public int updateFolder2(Map<String, Object> map) {
+		return (int)insert("EzWebFolderAdminDAO.updateFolder2", map);
 	}
 
 	public void deleteFolderUsersOfChief(Map<String, Object> map) {
