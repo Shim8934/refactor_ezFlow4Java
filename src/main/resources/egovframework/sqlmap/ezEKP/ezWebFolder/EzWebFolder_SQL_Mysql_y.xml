@@ -1759,21 +1759,15 @@
 	<select id="EzWebFolderDAO_y.selectFileDetail" parameterClass="Map" resultMap="fileSimpleVO">
     	<![CDATA[
     		select 
-    			f.* 
+    			* 
 			from 
-				tbl_webfolder_file f inner join tbl_webfolder_folder folder 
-			on 
-					f.folder_id = folder.folder_id 
-				and 
-					folder.tenant_id = #tenantId# 
-				and 
-					folder.company_id = #comId#
+				tbl_webfolder_file
 			where 
-					f.folder_id = #folderId# 
+					file_id = #fileId# 
 				and 
-					f.file_id = #fileId# 
-				and 
-					f.use_status != 'T'
+					use_status != 'T'
+				and
+					tenant_id = #tenantId#
     	]]>
     </select>
     <select id="EzWebFolderDAO_y.getRootFolderListInfo" parameterClass="Map" resultClass="java.util.HashMap">

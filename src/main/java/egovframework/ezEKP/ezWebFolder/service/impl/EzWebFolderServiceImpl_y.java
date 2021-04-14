@@ -1391,14 +1391,12 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 	}
 
 	@Override
-	public FileVO selectFileDetail(JSONObject jsonObject) throws Exception {
-		Map<String, String> map = new JSONObject();
-		
-		map.put("folderId", jsonObject.get("folderId").toString());
-		map.put("fileId", jsonObject.get("fileId").toString());
-		map.put("comId", jsonObject.get("comId").toString());
-		map.put("tenantId", jsonObject.get("tenantId").toString());
-		
+	public FileVO selectFileDetail(String fileId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+
+		map.put("fileId", fileId);
+		map.put("tenantId", tenantId);
+
 		return ezWebFolderDAO_y.selectFileDetail(map);
 	}
 
@@ -1511,20 +1509,15 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 				}
 			}
 		} else {
-			FolderVO folder            = ezWebFolderService.getFolderByFolderId(currFolderId, offset, tenantId);
-			JSONObject param = new JSONObject();
-			param.put("folderId", currFolderId);
-			param.put("fileId", targetId);
-			param.put("tenantId", tenantId);
-			param.put("comId", userInfo.getCompanyID());
-			
 			JSONParser parser          = new JSONParser();
 			folderUsers.replace("\\", "");
 			if (folderUsers.substring(0,1).equals("\"")){
 				folderUsers = folderUsers.substring(1, folderUsers.length()-1);
 			}
 			JSONArray folderUsersArray = (JSONArray) parser.parse(folderUsers);
-			FileVO fileVO = selectFileDetail(param);
+
+			FileVO fileVO = selectFileDetail(targetId, tenantId);
+			FolderVO folder = ezWebFolderService.getFolderByFolderId(fileVO.getFolderId(), offset, tenantId);
 			
 			for(int i=0; i<folderUsersArray.size(); i++){
 				JSONObject json    = (JSONObject) folderUsersArray.get(i);

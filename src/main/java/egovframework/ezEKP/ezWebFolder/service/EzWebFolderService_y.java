@@ -111,7 +111,11 @@ public interface EzWebFolderService_y {
 
 	public List<String> getjikWiChekAddjobList(int tenantId, String userId, String compId) throws Exception;
 
-	public FileVO selectFileDetail(JSONObject jsonObject) throws Exception;
+	/**
+	 * @deprecated Instead, use the <code>EzWebFolderService.getFileByFileId</code>
+	 */
+	@Deprecated
+	FileVO selectFileDetail(String fileId, int tenantId) throws Exception;
 
 	public List<Map<String, Object>> getRootFolderListInfo(JSONObject jsonObject) throws Exception;
 

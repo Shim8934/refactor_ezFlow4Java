@@ -212,7 +212,7 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 		return (List<String>) list("EzWebFolderDAO_y.getjikWiChekAddjobList", map);
 	}
 
-	public FileVO selectFileDetail(Map<String, String> map) {
+	public FileVO selectFileDetail(Map<String, Object> map) {
 		return (FileVO) select("EzWebFolderDAO_y.selectFileDetail", map);
 	}
 
