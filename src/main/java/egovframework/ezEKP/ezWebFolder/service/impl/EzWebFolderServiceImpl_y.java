@@ -739,6 +739,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 				map.put("ownerId", userId);
 			}
 		}
+		
 		map.put("folderName1", newFolderName1);
 		map.put("folderName2", newFolderName2);
 		map.put("createName1", loginvo.getDisplayName1());
@@ -755,21 +756,25 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 
 		LOGGER.debug("folderType is " + folderType);
 
-		// result 새로 생긴 fileId
-		String result = ezWebFolderDAO_y.insertFolder(map);
-
+		int folderId = ezWebFolderDAO_y.insertFolder(map);
+		map.put("newFolderId", folderId);
+		map.put("folderUpper", uppFolder.getFolderId());
+		map.put("targetId", folderId);
+		
+		LOGGER.debug("folderId:" + folderId + ",folderUpper:"  + uppFolder.getFolderId() + ",tenantId:" + tenantId);
+		ezWebFolderDAO_y.updateFolderPath(map);
+		
 		map.put("upperFolderId", uppFolder.getFolderId());
-		map.put("targetId", result);
 		map.put("type_f", "D");
 		ezWebFolderAdminService.insertFolderUser(map);
-		LOGGER.debug("insert folderId is " + result);
+		LOGGER.debug("insert folderId is " + folderId);
 
-		if (result == null) {
-			result = "fail";
+		if (folderId == 0 ) {
+			new Exception();
 		} 
 
 		LOGGER.debug("insertFolder ended");
-		return result;
+		return Integer.toString(folderId);
 	}
 
 	@Override

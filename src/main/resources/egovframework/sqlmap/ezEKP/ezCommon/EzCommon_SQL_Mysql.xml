@@ -3335,9 +3335,9 @@
                         member_type = 'DEPT' AND sub_dept_yn = 'Y'
                         AND REGEXP_LIKE
                             (
-                                (SELECT ',' || LISTAGG(dept_cd_path, ',') WITHIN GROUP(ORDER BY dept_cd_path) || ',' FROM tbl_deptmaster
-                                    WHERE cn = #deptId# OR CN IN (SELECT deptid FROM tbl_addjobmaster WHERE cn = #userId# and tenant_id = #tenantId#)),
-                                ',' || member_id || ','
+                                (SELECT concat( group_concat(dept_cd_path separator ',') ,',' FROM tbl_deptmaster
+                                    WHERE cn = #deptId# OR CN IN (SELECT deptid FROM tbl_addjobmaster WHERE cn = #userId# and tenant_id = #tenantId#),
+                                ',' , member_id , ','))
                             )
                     )
 				)		

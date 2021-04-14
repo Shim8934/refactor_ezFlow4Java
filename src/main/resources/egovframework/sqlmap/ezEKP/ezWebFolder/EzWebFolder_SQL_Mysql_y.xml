@@ -1305,7 +1305,6 @@
 		    	FOLDER_NAME1,
 		    	FOLDER_NAME2,
 		    	FOLDER_TYPE,
-		    	FOLDER_PATH,
 		    	FOLDER_STEP,
 		    	FOLDER_LEVEL,
 		    	FOLDER_UPPER,
@@ -1324,7 +1323,6 @@
 		    	#folderName1#,
 		    	#folderName2#,
 		    	#folderType#,
-		    	concat(#folderPath#,#id#,'|'),
 		    	#folderStep#,
 		    	#folderLevel#,
 		    	#folderUppId#,
@@ -1340,8 +1338,21 @@
 		    	#tenantId#
 		    	)
  		]]> 
-    
+    	<selectKey keyProperty="folderId" resultClass="Integer">
+			SELECT LAST_INSERT_ID() as folderId FROM TBL_WEBFOLDER_FOLDER LIMIT 1
+		</selectKey>
 	</insert>
+	
+	<update id="EzWebFolderDAO_y.updateFolderPath" parameterClass="Map">
+	
+		update 
+			tbl_webfolder_folder 
+		set 
+			folder_path = concat((select folder_path from tbl_webfolder_folder where folder_id = #folderUpper# and tenant_id = #tenantId#) ,#newFolderId#,'|') 
+		where 
+			folder_id = #newFolderId#
+	
+	</update>
 	<select id="EzWebFolderDAO_y.getFolderStep" parameterClass="Map" resultClass ="Integer">
 		<![CDATA[
 			SELECT if(MAX(FOLDER_STEP) is not null, +1,0)
