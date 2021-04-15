@@ -169,7 +169,7 @@
 				if (f.FILE_EXT = 'folder',0,1) as FOLDER_SORT,
 				type.TYPE_NAME 	AS TYPE_NAME,
 				f.CREATE_ID 	AS OWNER_ID,
-				NVL2(enc.file_id, 1, 0) as ENCRYPTED,
+				IF(enc.file_id IS NULL, 0, 1) as ENCRYPTED,
 				f.DEPTH,
 				f.ROOT_ID,
 				f.PARENT_ID,
@@ -675,6 +675,7 @@
 				<![CDATA[
 				    from tbl_webfolder_filetype type inner JOIN  tbl_webfolder_folder folder ON type.TYPE_NAME = 'folder' and folder.tenant_id = #tenantId#
 				    left outer join tbl_webfolder_favor s on folder.folder_id = s.target_id and s.user_id = #userId# 
+				    
 		            	and s.tenant_id = #tenantId# and s.target_type ='D' 
 				    where 
 							folder.tenant_id = #tenantId# 
@@ -718,7 +719,7 @@
 					inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  and type.tenant_id = f.tenant_id
 					left outer join tbl_webfolder_favor s on f.file_id = s.target_id and s.user_id = #userId# 
 						and s.tenant_id = #tenantId# and s.target_type ='F'   
-					left outer join tbl_webfolder_folderuser u on folder.folder_id = u.folder_id
+					left join tbl_webfolder_encrypted_file enc on enc.file_id = f.file_id and enc.tenant_id = f.tenant_id
 					where f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'
 				]]>
 				<isEqual property="parentId" compareValue="root" > 
@@ -1074,9 +1075,7 @@
 						and folder_type = #folderType#
 						and use_status = 'Y'
 					) folder on folder.folder_id  = f.folder_id
-						
 				inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  and type.tenant_id = f.tenant_id 
-<!-- 				left outer join tbl_webfolder_folderuser u on folder.folder_id = u.folder_id -->
 				where f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'
 			]]>	
 	        <isEqual property="parentId" compareValue="root" > 
