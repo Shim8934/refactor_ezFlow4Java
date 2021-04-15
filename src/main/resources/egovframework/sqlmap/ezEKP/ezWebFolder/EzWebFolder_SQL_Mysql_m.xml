@@ -131,9 +131,7 @@
 		<result property="applicantName"    column="APPLICANTNAME"      columnIndex="4" javaType="String"  />
 		<result property="masterName"    column="MASTERNAME"      columnIndex="5" javaType="String"  />
 		<result property="masterCnt"    column="MASTERCNT"      columnIndex="6" javaType="String"  />
-		<result property="usingS"     column="USINGS"       columnIndex="7" javaType="String"  />  
-		<result property="usingE"     column="USINGE"       columnIndex="8" javaType="String"  />
-		<result property="approvalStatus"     column="APPROVAL_STATUS"       columnIndex="9" javaType="String"  />
+		<result property="approvalStatus"     column="APPROVAL_STATUS"       columnIndex="7" javaType="String"  />
 	</resultMap>
 	
 	<resultMap id="applicationHistory" class="HashMap">
@@ -141,9 +139,7 @@
 		<result property="folderName"    column="FOLDER_NAME"      columnIndex="2" javaType="String"  />
 		<result property="applicationDate"    column="APPLICATION_DATE"      columnIndex="3" javaType="String"  />
 		<result property="content"    column="CONTENT"      columnIndex="4" javaType="String"  />
-		<result property="usingS"     column="USINGS"       columnIndex="5" javaType="String"  />  
-		<result property="usingE"     column="USINGE"       columnIndex="6" javaType="String"  />
-		<result property="approvalStatusUpdateDt"     column="APPROVAL_STATUS_UPDATEDT"       columnIndex="7" javaType="String"  />
+		<result property="approvalStatusUpdateDt"     column="APPROVAL_STATUS_UPDATEDT"       columnIndex="5" javaType="String"  />
 	</resultMap>
 	
 	<resultMap id="applicationHistoryMember" class="HashMap">
@@ -2117,9 +2113,9 @@
 		<![CDATA[ 
 			INSERT INTO
 				TBL_WEBFOLDER_APPLY_HISTORY 
-			(APPLY_ID, TENANT_ID, COMPANY_ID, FOLDER_NAME, CONTENT, APPLICATION_DATE, USINGS, USINGE)
+			(APPLY_ID, TENANT_ID, COMPANY_ID, FOLDER_NAME, CONTENT, APPLICATION_DATE)
 				VALUES
-			(#applyId#, #tenantId#, #companyId#, #folderName#, #content#, now(), #usingS#, #usingE#)
+			(#applyId#, #tenantId#, #companyId#, #folderName#, #content#, now())
 		]]>
 	</insert>
 	
@@ -2166,17 +2162,13 @@
 	
 	<select id="EzWebFolderDAO_m.getWebFolderApplyHistoryList" parameterClass="Map" resultMap="applicationHistoryList">
 		<![CDATA[
-			SELECT 
-			'' AS rnum, tt.*
-			FROM 
-				(SELECT 
+				SELECT 
 					h.APPLY_ID, h.FOLDER_NAME, h.APPLICATION_DATE, a.MEMBER_NAME AS applicantName,
-					ms.member_name AS masterName, ms.cnt AS masterCnt, h.USINGE, h.USINGS, h.APPROVAL_STATUS
+					ms.member_name AS masterName, ms.cnt AS masterCnt, h.APPROVAL_STATUS
 		]]>
 				<include refid="getWebFolderApplyHistroyQuery" />
 		<![CDATA[	
-				)tt
-			LIMIT #startList#,#endList#
+				LIMIT #startList#,#endList#
 		]]>
 	</select>
 	
@@ -2184,7 +2176,7 @@
 		<![CDATA[
 			SELECT
 				APPLY_ID,  FOLDER_NAME, CONTENT, 
-				APPLICATION_DATE AS APPLICATION_DATE, USINGE, USINGS, APPROVAL_STATUS_UPDATEDT
+				APPLICATION_DATE AS APPLICATION_DATE, APPROVAL_STATUS_UPDATEDT
 			FROM 
 				TBL_WEBFOLDER_APPLY_HISTORY
 			WHERE 

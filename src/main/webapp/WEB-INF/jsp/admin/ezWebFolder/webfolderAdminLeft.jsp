@@ -207,13 +207,11 @@
 				rightWindow.closeAllPopups();
 			}
 			
-			function folderApplicationHistoryPage(type) { // task meeting
+			function folderApplicationHistoryPage() {
 				clearToggle();
 			
 				var rightURL = "/admin/ezWebFolder/applicationHistoryMain.do";
-				var param = "?type="+type;
-
-				window.open(rightURL+param, "right");
+				window.open(rightURL, "right");
 			}
 			
 		</script>
@@ -239,7 +237,7 @@
 				<ul class="lnbUL"  style="display:none;" id="ul2">
 					<li><span class="sub_iconLNB tree_dot_li"></span><span class="list_text leftMenu_btn" onClick="companyFolder('task');"><spring:message code='ezWebFolder.t126'/></span></li>
 					<li><span class="sub_iconLNB tree_dot_li"></span><span class="list_text leftMenu_btn" onClick="companyFile(this,'task');"><spring:message code='ezWebFolder.t127'/></span></li>
-					<li><span class="sub_iconLNB tree_dot_li"></span><span class="list_text leftMenu_btn" onClick="folderApplicationHistoryPage('task');" ><spring:message code='ezWebFolder.ksa02'/></span></li>
+					<li><span class="sub_iconLNB tree_dot_li"></span><span class="list_text leftMenu_btn" onClick="folderApplicationHistoryPage();" ><spring:message code='ezWebFolder.ksa02'/></span></li>
 				</ul>
 				<ul class="lnbUL" id="lnbUL" style="min-height: 200px; display: none; overflow-x: hidden; overflow-y: hidden; white-space: nowrap; padding: 5px">
 					<div id="folderTree" class="tree onlytree" ></div>

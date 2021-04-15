@@ -100,59 +100,6 @@
 			</div>
 		</div>
 		<div id="tblPageRayer" style="height:8%;"></div>
-		
-		<!-- 웹폴더 개설신청 팝업 -->
-		<%-- <div id="searchPanel" class="applicationPopup wfSearchPanel" style="display:none; margin-bottom:70px;">
-			<div class="popupJQLayer">
-				<div class="title"><spring:message code='ezWebFolder.ksa15' /></div>
-				<div id="close">
-		            <ul>
-		                <li><a rel="modal:close"><span onclick="doLayerPopupForDetail()"></span></a></li>
-		            </ul>
-		        </div>
-		        
-		        <table class="content" style="margin-top:10px ">
-		        	<tr>
-		        		<th>
-		        			<spring:message code="ezWebFolder.ksa04"/>
-		        			<span style="color:red;">*</span>
-		        		</th>
-		        		<td><input type="text" class="" style="width:100%;"></td>
-		        	</tr>
-		        	<tr style="height:80px;">
-		        		<th>
-		        			<a class="imgbtn"><span><spring:message code="ezWebFolder.ksa07"/></span></a>
-		        			<span style="color:red;">*</span>
-		        		</th>
-		        		<td><input type="text" class="" style="width:100%; height:100%" readonly></td>
-		        	</tr>
-		        	<tr style="height:80px;">
-		        		<th>
-		        			<a class="imgbtn"><span><spring:message code="ezWebFolder.ksa08"/></span></a>
-		        			<span style="color:red;">*</span>
-		        		</th>
-		        		<td><input type="text" class="" style="width:100%; height:100%" readonly></td>
-		        	</tr>
-		        	<tr style="height:150px;">
-		        		<th>
-		        			<spring:message code="ezWebFolder.ksa14"/>
-		        		</th>
-		        		<td><textarea readonly style="resize:none;width: 100%;height: 100%;box-sizing: border-box; overflow:auto;"></textarea></td>
-		        	</tr>
-		        </table>
-		        
-		        <table style="width:100%">
-					<tr>
-						<td style="text-align:center;">
-							<div class="btnpositionLayer">
-								<a class="imgbtn"><span onClick=""><spring:message code='ezWebFolder.ksa16' /></span></a>
-								<a class="imgbtn"><span onClick="doLayerPopupForDetail()"><spring:message code='ezWebFolder.ksa17' /></span></a>
-							</div>	
-						</td>
-					</tr>
-				</table>
-			</div>
-		</div>	 --%>
 		<div class="wfFogPanel" style="display: none;" id="mailPanel" tabindex="0">&nbsp;</div>
 		
 		<div id="layer_Viewpopup" style="width: 250px; position: absolute; left: 1440px; top: 130px; background-color: rgb(255, 255, 255); display:none;">
@@ -236,12 +183,6 @@
 		        		</th>
 		        		<td><div key="approvalStatusUpdateDt" class="wfAppformHTML historyInfo"></div></td>
 		        	</tr>
-	        		<tr style="display:none; ">
-		        		<th>
-		        			<spring:message code="ezWebFolder.ksa20" />
-		        		</th>
-		        		<td><div key="usingDate" class="wfAppformHTML historyInfo"></div></td>
-		        	</tr>
 		        	<tr>
 		        		<th>
 		        			<span><spring:message code="ezWebFolder.ksa06"/></span>
@@ -297,7 +238,6 @@
 	</body>
 	
 	<script type="text/javascript" >
-		// var p_pageType = "${type}";
 		var p_companyId = "${userCompany}";
 		var approvalMsg = "<spring:message code='ezWebFolder.ksa45' />";
 		var approvalMsg2 = "<spring:message code='ezWebFolder.ksa62' />";
@@ -492,10 +432,6 @@
 				var kk = e.getAttribute("key");
 				var kkVal = historyJson[kk];
 				kkVal = kkVal == null ? "" : kkVal;
-				
-				if (kk == "usingDate") {
-					kkVal = historyJson["usingS"] + " ~ " + historyJson["usingE"];
-				}
 				
 				e.innerHTML = kkVal;
 			});

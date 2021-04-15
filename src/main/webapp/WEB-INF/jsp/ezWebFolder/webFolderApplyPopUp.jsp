@@ -41,17 +41,6 @@
         		</th>
         		<td><input type="text" id="wfName" class="wfAppformINPUT" style="width:100%;" maxlength="50"></td>
         	</tr>
-       		<tr style="display:none;" id="usage_period">
-        		<th>
-        			<spring:message code="ezWebFolder.ksa20" />
-        			<span style="color:red;">*</span>
-        		</th>
-        		<td>
-	               <input type="text" id="Sdatepicker_meeting" class="app_datepicker wfAppformINPUT" style="width:80px;text-align:center" readonly="readonly" size="10">
-	                ~
-	               <input type="text" id="Edatepicker_meeting" class="app_datepicker wfAppformINPUT" style="width:80px;text-align:center" readonly="readonly" size="10">
-	           </td>
-        	</tr>
         	<tr style="height:80px;">
         		<th>
         			<div style="margin-bttom: 3px;">
@@ -117,7 +106,7 @@
 	
 	function applicationPopUp() {
 		$("#popTitle").text(popTypemsg);
-		$("#usage_period").css("display","none");
+		//$("#usage_period").css("display","none");
 		
 		showApplicationPopUp();
 	}
@@ -141,7 +130,7 @@
 		appMasterArr = [];
 		appMemberArr = [];
 		
-		$("#Sdatepicker_meeting, #Edatepicker_meeting").datepicker("option", {minDate: 0, maxDate: null});
+		//$("#Sdatepicker_meeting, #Edatepicker_meeting").datepicker("option", {minDate: 0, maxDate: null});
 		
 		$(".wfAppformINPUT").val("");
 		$(".wfAppformHTML").html("");
@@ -160,10 +149,10 @@
 	function applyForWebFolder() {
 		var wfName = $("#wfName").val();
 		var wfContent = $("#wfContent").val();
-		var wfUsingS = $("#Sdatepicker_meeting").val();
-		var wfUsingE = $("#Edatepicker_meeting").val();
+		//var wfUsingS = $("#Sdatepicker_meeting").val();
+		//var wfUsingE = $("#Edatepicker_meeting").val();
 		
-		if (isEmptyStr(wfName) || appMasterArr.length <= 0  /* || (applyPopUpType == "meeting" && (isEmptyStr(wfUsingS) || isEmptyStr(wfUsingE))) */ ) {
+		if (isEmptyStr(wfName) || appMasterArr.length <= 0) {
 			alert("<spring:message code='ezWebFolder.ksa21' />");
 			return;
 		} else if (isValidName(wfName)) {
@@ -180,8 +169,8 @@
 				data: {
 					wfName : wfName,
 					wfContent : wfContent,
-					wfUsingS : wfUsingS,
-					wfUsingE : wfUsingE,
+					//wfUsingS : wfUsingS,
+					//wfUsingE : wfUsingE,
 					appMasterArr : JSON.stringify(appMasterArr),
 					appMemberArr : JSON.stringify(appMemberArr)
 				},success: function(data) {
@@ -297,7 +286,7 @@
 		});
 	}
 	
-	$("#Sdatepicker_meeting").datepicker({
+	/* $("#Sdatepicker_meeting").datepicker({
 		changeYear: true,
 		changeMonth: true,
 		showOn: "both",
@@ -346,5 +335,5 @@
         showMonthAfterYear: true
     };
     
-    $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+    $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);*/
 </script>
