@@ -123,7 +123,7 @@ var buttons = (function() {
 				folderType = selected.targetFunction[0];
 			}
 			
-			if (parentId == 'root' && !(window.checkIsManager && checkIsManager(selected.folders))) {
+			if (folderType == "C" && parentId == 'root' && !(window.checkIsManager && checkIsManager(selected.folders))) {
 				alert(messages.strLang36);
 				return;
 			}
@@ -177,7 +177,7 @@ var buttons = (function() {
 				return;
 			}
 			
-			if (parentId == 'root' && !(window.checkIsManager && checkIsManager(selected.folders))) {
+			if (folderType == "C" && parentId == 'root' && !(window.checkIsManager && checkIsManager(selected.folders))) {
 				alert(messages.strLang36);
 				return;
 			}
@@ -279,7 +279,7 @@ var buttons = (function() {
 				return;
 			}
 			
-			if (parentId == 'root' && !(window.checkIsManager && checkIsManager(selected.folders))) {
+			if (folderType == "C" && parentId == 'root' && !(window.checkIsManager && checkIsManager(selected.folders))) {
 				alert(messages.strLang36);
 				return;
 			}
