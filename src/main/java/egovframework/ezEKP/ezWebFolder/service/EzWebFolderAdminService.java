@@ -27,8 +27,8 @@ public interface EzWebFolderAdminService {
 			int startPoint, int endPoint, String primary, String offset, int tenantId, String sortType, String sortColumn, 
 			String userId, String adminFlag) throws Exception;
 	void insertFileLog(FileLogVO fileLog) throws Exception;
-	void insertFolder(FolderVO folder) throws Exception;
-	void insertFolder2(FolderVO folder) throws Exception;
+	int insertFolder(FolderVO folder) throws Exception;
+	int insertFolder2(FolderVO folder) throws Exception;
 	void insertFolderUser(String seq, String userId, String userType, String folderId, String createId, String createDate, String companyId, int tenantId) throws Exception;
 	void insertFolderUser(String seq, String userId, String userType, String folderId, String createId, String createDate, String companyId, int tenantId, Boolean subdeptPermitted, Boolean folderManager) throws Exception;
 	void deleteFolderUsers(String folderId, int tenantId) throws Exception;

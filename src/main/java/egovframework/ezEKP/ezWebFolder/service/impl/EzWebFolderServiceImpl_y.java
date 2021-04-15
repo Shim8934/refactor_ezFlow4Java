@@ -739,6 +739,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 				map.put("ownerId", userId);
 			}
 		}
+		
 		map.put("folderName1", newFolderName1);
 		map.put("folderName2", newFolderName2);
 		map.put("createName1", loginvo.getDisplayName1());
@@ -755,21 +756,25 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 
 		LOGGER.debug("folderType is " + folderType);
 
-		// result 새로 생긴 fileId
-		String result = ezWebFolderDAO_y.insertFolder(map);
-
+		int folderId = ezWebFolderDAO_y.insertFolder(map);
+		map.put("newFolderId", folderId);
+		map.put("folderUpper", uppFolder.getFolderId());
+		map.put("targetId", folderId);
+		
+		LOGGER.debug("folderId:" + folderId + ",folderUpper:"  + uppFolder.getFolderId() + ",tenantId:" + tenantId);
+		ezWebFolderDAO_y.updateFolderPath(map);
+		
 		map.put("upperFolderId", uppFolder.getFolderId());
-		map.put("targetId", result);
 		map.put("type_f", "D");
 		ezWebFolderAdminService.insertFolderUser(map);
-		LOGGER.debug("insert folderId is " + result);
+		LOGGER.debug("insert folderId is " + folderId);
 
-		if (result == null) {
-			result = "fail";
+		if (folderId == 0 ) {
+			new Exception();
 		} 
 
 		LOGGER.debug("insertFolder ended");
-		return result;
+		return Integer.toString(folderId);
 	}
 
 	@Override
@@ -1391,14 +1396,12 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 	}
 
 	@Override
-	public FileVO selectFileDetail(JSONObject jsonObject) throws Exception {
-		Map<String, String> map = new JSONObject();
-		
-		map.put("folderId", jsonObject.get("folderId").toString());
-		map.put("fileId", jsonObject.get("fileId").toString());
-//		map.put("comId", jsonObject.get("comId").toString());
-		map.put("tenantId", jsonObject.get("tenantId").toString());
-		
+	public FileVO selectFileDetail(String fileId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+
+		map.put("fileId", fileId);
+		map.put("tenantId", tenantId);
+
 		return ezWebFolderDAO_y.selectFileDetail(map);
 	}
 
@@ -1511,19 +1514,15 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 				}
 			}
 		} else {
-			FolderVO folder            = ezWebFolderService.getFolderByFolderId(currFolderId, offset, tenantId);
-			JSONObject param = new JSONObject();
-			param.put("folderId", currFolderId);
-			param.put("fileId", targetId);
-			param.put("tenantId", tenantId);
-			
 			JSONParser parser          = new JSONParser();
 			folderUsers.replace("\\", "");
 			if (folderUsers.substring(0,1).equals("\"")){
 				folderUsers = folderUsers.substring(1, folderUsers.length()-1);
 			}
 			JSONArray folderUsersArray = (JSONArray) parser.parse(folderUsers);
-			FileVO fileVO = selectFileDetail(param);
+
+			FileVO fileVO = selectFileDetail(targetId, tenantId);
+			FolderVO folder = ezWebFolderService.getFolderByFolderId(fileVO.getFolderId(), offset, tenantId);
 			
 			for(int i=0; i<folderUsersArray.size(); i++){
 				JSONObject json    = (JSONObject) folderUsersArray.get(i);

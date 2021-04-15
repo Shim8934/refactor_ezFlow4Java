@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -51,6 +52,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderAdminDAO;
+import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO_y;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
@@ -74,6 +76,9 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 	private EzWebFolderAdminDAO ezWebFolderAdminDAO;
 	
 	@Autowired
+	private Properties globals;
+	
+	@Autowired
 	private CommonUtil commonUtil;
 	
 	@Autowired
@@ -81,6 +86,9 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 	
 	@Autowired
 	private EzWebFolderService_y ezWebFolderService_y;
+	
+	@Autowired
+	private EzWebFolderDAO_y ezWebfolderDao_y;
 	
 	@Autowired
 	private EzOrganService ezOrganService;
@@ -308,7 +316,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 	}
 
 	@Override
-	public void insertFolder(FolderVO folder) throws Exception {
+	public int insertFolder(FolderVO folder) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("folderId",    folder.getFolderId());
 		map.put("folerName1",  folder.getFolderName1());
@@ -329,11 +337,21 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		map.put("companyId",   folder.getCompanyId());
 		map.put("deleterId",   folder.getDeleterId());
 		map.put("tenantId",    folder.getTenantId());
-		ezWebFolderAdminDAO.insertFolder(map);
+		
+		int folderId = 0;
+		if (folder.getFolderId().isEmpty()){
+			folderId = ezWebFolderAdminDAO.insertFolder(map);
+		} else {
+			folderId = ezWebFolderAdminDAO.updateFolder(map);
+		}
+		map.put("newFolderId", folderId);
+		
+		ezWebfolderDao_y.updateFolderPath(map);
+		return folderId;
 	}
 
 	@Override
-	public void insertFolder2(FolderVO folder) throws Exception {
+	public int insertFolder2(FolderVO folder) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("folderId",    folder.getFolderId());
 		map.put("folerName1",  folder.getFolderName1());
@@ -355,6 +373,16 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		map.put("deleterId",   folder.getDeleterId());
 		map.put("tenantId",    folder.getTenantId());
 		ezWebFolderAdminDAO.insertFolder2(map);
+		int folderId = 0;
+		if (folder.getFolderId().isEmpty()){
+			folderId = ezWebFolderAdminDAO.insertFolder2(map);
+		} else {
+			folderId = ezWebFolderAdminDAO.updateFolder2(map);
+		}
+		map.put("newFolderId", folderId);
+		
+		ezWebfolderDao_y.updateFolderPath(map);
+		return folderId;
 	}
 
 	@Override
@@ -517,7 +545,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date                  = new Date();
 		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
-		String folderId            = getMaxFolderID(tenantId);
+		String folderId            = "";
 		int newFolderLevel = parentFolder.getFolderLevel() + 1;
 
 //		ezWebFolderService.insertEncryptionFolder(folderId, tenantId);
@@ -542,7 +570,8 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		folder.setUpdateDate(timeUTC);
 		
 		//Insert folder
-		insertFolder(folder);
+		int folderIdInt = insertFolder(folder);
+		folderId = Integer.toString(folderIdInt);
 		
 		//Insert new folder users
 		insertListFolderUsers(userId, folderId, folder.getCompanyId(), folderUsers, timeUTC, tenantId, "insert", null, "", "", null, offset);
@@ -711,7 +740,9 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 			folder.setCreateDate(timeUTC);
 			folder.setUpdateDate(timeUTC);
 			
-			insertFolder2(folder);
+			int folderIdInt = insertFolder2(folder);
+			folderId = Integer.toString(folderIdInt);
+			
 			insertFolderUser(getMaxFolderUserSeq(tenantId), dept.getCn(), "dept", folderId, userId, timeUTC, folder.getCompanyId(), tenantId);
 		}
 	}
@@ -745,7 +776,8 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		folder.setCreateDate(timeUTC);
 		folder.setUpdateDate(timeUTC);
 		
-		insertFolder(folder);
+		int folderIdInt = insertFolder(folder);
+		folderId = Integer.toString(folderIdInt);
 		insertFolderUser(getMaxFolderUserSeq(tenantId), userId, "user", folderId, userId, timeUTC, folder.getCompanyId(), tenantId);
 	}
 	
@@ -790,7 +822,9 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 					folderVO.setUpdateDate(timeUTC);
 					
 					//Insert folder
-					insertFolder(folderVO);
+					int folderIdInt = insertFolder(folderVO);
+					folderId = Integer.toString(folderIdInt);
+					
 					insertFolderUser(getMaxFolderUserSeq(tenantId), dept.getCn(), "dept", folderId, userId, timeUTC, folderVO.getCompanyId(), tenantId);
 				}
 				
@@ -809,6 +843,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 	}
 	
 	@Override
+	// 사용되지 않음. (2021-04-13 확인 - 김은실)
 	public String getMaxFolderUserSeq(int tenantId, String type) throws Exception {
 		int currentMaxolderUserId  = -1;
 		String result              = ezWebFolderService.getFolderUserSequence(tenantId, type);
@@ -827,6 +862,9 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		String result          = ezWebFolderService.getFolderSequence(tenantId);
 		currentMaxFolderId     = result.equals("")          ? 1 : Integer.parseInt(result);
 		currentMaxFolderId     = (currentMaxFolderId == -1) ? 1 : (currentMaxFolderId + 1);
+		if (globals.getProperty("Globals.DbType").equals("mysql")) {
+			return "";
+		}
 		return Integer.toString(currentMaxFolderId);
 	}
 	
@@ -967,8 +1005,8 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		String userId                = userInfo.getId();
 		String folderId              = folder.getFolderId();
 		//String oldPath               = folder.getFolderPath();
-		String newId                 = getMaxFolderID(tenantId);
-		String newPath               = parentFolder.getFolderPath() + newId + "|";
+		String newId                 = "";
+		
 		SimpleDateFormat formatter   = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date                    = new Date();
 		String timeUTC               = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
@@ -986,7 +1024,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 //			}
 		}
 		
-		folder.setFolderPath(newPath);
+		folder.setFolderPath("");
 		folder.setOwnerId(parentFolder.getOwnerId());
 		folder.setFolderType(parentFolder.getFolderType());
 		folder.setCreateId(userId);
@@ -1001,7 +1039,10 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		folder.setFolderId(newId);
 		
 		//Create new folder
-		insertFolder(folder);
+		int folderIdInt = insertFolder(folder);
+		newId = Integer.toString(folderIdInt);
+		
+		String newPath               = parentFolder.getFolderPath() + newId + "|";
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("upperFolderId", folderId);
 		map.put("targetId", newId);
@@ -1011,7 +1052,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		copyFile(folderId, newId, timeUTC, realPath, userInfo, userCheck);
 		
 		//copy all sub folders
-		copySubFolders(folderId, parentFolder.getFolderType(), newPath, timeUTC, parentFolder.getOwnerId(), levelDistance, realPath, userInfo, userCheck);
+		copySubFolders(folderId, parentFolder.getFolderType(), newPath, timeUTC, parentFolder.getOwnerId(), levelDistance, realPath, userInfo, userCheck, newId);
 
 		// 2020-10-07 김은실 - (카이스트)커스터 마이징 메뉴: 학처장회의안건 메뉴 리스트 수정
 //		if(isDean != null && isDean.equals("Y") && folder.getFolderLevel() == 1){
@@ -1024,7 +1065,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 
 
 	private void copySubFolders(String folderId, String folderType, String newPath, String timeUTC, String ownerId, int levelDistance, 
-			String realPath, LoginVO userInfo, String userCheck) throws Exception {
+			String realPath, LoginVO userInfo, String userCheck, String newFolderId) throws Exception {
 		List<FolderVO> listSubFolder = ezWebFolderService.getAllSubFolders(folderId, userInfo.getOffset(), userInfo.getTenantId());
 		
 		if (listSubFolder != null && listSubFolder.size() > 0) {
@@ -1039,9 +1080,8 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 				
 				String oldId      = subFld.getFolderId();
 				String newSubId   = getMaxFolderID(userInfo.getTenantId());
-				String folderPath = newPath + newSubId + "|";
 				
-				subFld.setFolderPath(folderPath);
+				subFld.setFolderPath("");
 				subFld.setFolderType(folderType);
 				subFld.setOwnerId(ownerId);
 				subFld.setCreateDate(timeUTC);
@@ -1052,15 +1092,13 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 				subFld.setUpdateId(userInfo.getId());
 				subFld.setFolderLevel(subFld.getFolderLevel() + levelDistance);
 				subFld.setFolderId(newSubId);
-				
-				folderPath           = folderPath.substring(1, folderPath.length() - 1);
-				String[] folderArry  = folderPath.split("\\|");
-				String upperFolderId = folderArry[folderArry.length - 2];
-				
-				subFld.setFolderUpper(upperFolderId);
+				subFld.setFolderUpper(newFolderId);
 				
 				//Create new folder
-				insertFolder(subFld);
+				int folderIdInt = insertFolder(subFld);
+				newSubId = Integer.toString(folderIdInt);
+				String folderPath = newPath + newSubId + "|";
+				
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("upperFolderId", oldId);
 				map.put("targetId", newSubId);
@@ -1070,7 +1108,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 				copyFile(oldId, newSubId, timeUTC, realPath, userInfo, userCheck);
 				
 				//copy all sub folders
-				copySubFolders(oldId, folderType, subFld.getFolderPath(), timeUTC, ownerId, levelDistance, realPath, userInfo, userCheck);
+				copySubFolders(oldId, folderType, folderPath, timeUTC, ownerId, levelDistance, realPath, userInfo, userCheck, newSubId);
 			}
 		}
 	}

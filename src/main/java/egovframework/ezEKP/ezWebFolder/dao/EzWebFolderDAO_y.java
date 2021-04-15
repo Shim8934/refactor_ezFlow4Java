@@ -99,8 +99,12 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 		return (FolderVO) select("EzWebFolderDAO_y.folderDetailByFileId", map);
 	}
 
-	public String insertFolder(Map<String, Object> map) {
-		return  (String) insert("EzWebFolderDAO_y.insertFolder", map);
+	public int insertFolder(Map<String, Object> map) {
+		return  (int) insert("EzWebFolderDAO_y.insertFolder", map);
+	}
+	
+	public void updateFolderPath(Map<String, Object> map) {
+		insert("EzWebFolderDAO_y.updateFolderPath", map);
 	}
 
 	public LoginVO getUserInfo(Map<String, Object> map) {
@@ -212,7 +216,7 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 		return (List<String>) list("EzWebFolderDAO_y.getjikWiChekAddjobList", map);
 	}
 
-	public FileVO selectFileDetail(Map<String, String> map) {
+	public FileVO selectFileDetail(Map<String, Object> map) {
 		return (FileVO) select("EzWebFolderDAO_y.selectFileDetail", map);
 	}
 

@@ -2345,6 +2345,7 @@ public class EzWebFolderGWController {
 		return result;
 	}
 
+	// 사용되지 않음. (2021-04-13 확인 - 김은실)
 	@RequestMapping(value="/rest/ezwebfolderadmin/folders/{folderid}/file-list", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getFileList(@PathVariable(value="folderid") String folderId, HttpServletRequest request, Locale locale) {
 		logger.debug("getFileList start");

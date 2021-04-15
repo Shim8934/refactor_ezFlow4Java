@@ -274,14 +274,8 @@
 	</select>
 	
 	<insert id="EzWebFolderDAO_y.insertRootFolder" parameterClass="Map">
-		<selectKey keyProperty="id" resultClass="String">
-			SELECT IF (FOLDER_ID IS NULL, 1, MAX(CONVERT(FOLDER_ID, UNSIGNED)) + 1)
-			FROM TBL_WEBFOLDER_FOLDER 
-			WHERE TENANT_ID = #tenantId# 
-		</selectKey>
-		
 	    INSERT INTO TBL_WEBFOLDER_FOLDER (
-	    	FOLDER_ID,                 FOLDER_NAME1,              FOLDER_NAME2,
+	    	FOLDER_NAME1,              FOLDER_NAME2,
 	    	FOLDER_TYPE,               FOLDER_PATH,               FOLDER_STEP,
 	    	FOLDER_LEVEL,              FOLDER_UPPER,              USE_STATUS,
 	    	OWNER_ID,                  CREATE_ID,                 CREATE_DATE,
@@ -289,7 +283,7 @@
 	    	UPDATE_DATE,               COMPANY_ID,                TENANT_ID
 	    )
 	    SELECT
-	    	#id#,                      DISPLAYNAME,               DISPLAYNAME2,
+	    	DISPLAYNAME,               DISPLAYNAME2,
 	    	#folderType#,              CONCAT('|', #id#, '|'),    0,
 	    	0,                         'root',                    'Y',
 	    	#ownerId#,                 #userId#,                  #timeUTC#,
@@ -1306,21 +1300,11 @@
 		]]>
 	</select>
 	<insert id="EzWebFolderDAO_y.insertFolder" parameterClass="Map" >
-		<selectKey keyProperty="id" resultClass="String">
-			<![CDATA[
-				SELECT if (folder_id is null,1, MAX(CONVERT(FOLDER_ID ,UNSIGNED))+1)
-				FROM TBL_WEBFOLDER_FOLDER 
-				WHERE TENANT_ID = #tenantId# 
-			]]>
-
-		</selectKey>
 		<![CDATA[
 		    INSERT INTO TBL_WEBFOLDER_FOLDER(
-		    	FOLDER_ID,
 		    	FOLDER_NAME1,
 		    	FOLDER_NAME2,
 		    	FOLDER_TYPE,
-		    	FOLDER_PATH,
 		    	FOLDER_STEP,
 		    	FOLDER_LEVEL,
 		    	FOLDER_UPPER,
@@ -1336,11 +1320,9 @@
 		    	TENANT_ID
 		    	 )
 		    VALUES(
-		    	#id#,
 		    	#folderName1#,
 		    	#folderName2#,
 		    	#folderType#,
-		    	concat(#folderPath#,#id#,'|'),
 		    	#folderStep#,
 		    	#folderLevel#,
 		    	#folderUppId#,
@@ -1356,8 +1338,21 @@
 		    	#tenantId#
 		    	)
  		]]> 
-    
+    	<selectKey keyProperty="folderId" resultClass="Integer">
+			SELECT LAST_INSERT_ID() as folderId FROM TBL_WEBFOLDER_FOLDER LIMIT 1
+		</selectKey>
 	</insert>
+	
+	<update id="EzWebFolderDAO_y.updateFolderPath" parameterClass="Map">
+	
+		update 
+			tbl_webfolder_folder 
+		set 
+			folder_path = concat((select folder_path from tbl_webfolder_folder where folder_id = #folderUpper# and tenant_id = #tenantId#) ,#newFolderId#,'|') 
+		where 
+			folder_id = #newFolderId#
+	
+	</update>
 	<select id="EzWebFolderDAO_y.getFolderStep" parameterClass="Map" resultClass ="Integer">
 		<![CDATA[
 			SELECT if(MAX(FOLDER_STEP) is not null, +1,0)
@@ -1550,12 +1545,12 @@
 				 							    AND EXTENSIONATTRIBUTE2 = FU.COMPANY_ID AND TENANT_ID = FU.TENANT_ID)
 				)
 		</iterate>
-			)
 		AND FU.FOLDER_ID IN
 		<iterate property="folderIdList" open="(" close=")" conjunction=",">
 			#folderIdList[]#
 		</iterate>
 		-->
+		)
 		AND FU.FOLDER_ID = #folderId#
 		AND FU.TENANT_ID = #tenantId#
 	</select>
@@ -1775,21 +1770,15 @@
 	<select id="EzWebFolderDAO_y.selectFileDetail" parameterClass="Map" resultMap="fileSimpleVO">
     	<![CDATA[
     		select 
-    			f.* 
+    			* 
 			from 
-				tbl_webfolder_file f inner join tbl_webfolder_folder folder 
-			on 
-					f.folder_id = folder.folder_id 
-				and 
-					folder.tenant_id = #tenantId# 
-				and 
-					folder.company_id = #comId#
+				tbl_webfolder_file
 			where 
-					f.folder_id = #folderId# 
+					file_id = #fileId# 
 				and 
-					f.file_id = #fileId# 
-				and 
-					f.use_status != 'T'
+					use_status != 'T'
+				and
+					tenant_id = #tenantId#
     	]]>
     </select>
     <select id="EzWebFolderDAO_y.getRootFolderListInfo" parameterClass="Map" resultClass="java.util.HashMap">
