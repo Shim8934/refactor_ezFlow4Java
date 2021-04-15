@@ -776,6 +776,22 @@
 		function checkIsManager() {
 			return false;
 		}
+		
+		function hasContainsReplyFiles(fileIds) {
+			if (!window.containsReplyFiles) {
+				return false;
+			}
+
+			for (var i = 0; i < fileIds.length; i++) {
+				for (var j = 0; j < containsReplyFiles.length; j++) {
+					if (fileIds[i] == containsReplyFiles[j]) {
+						return true;
+					}
+				}
+			}
+
+			return false;
+		}
     </script>
 </head>
 <body class="mainbody" style="padding-bottom:10px;">
