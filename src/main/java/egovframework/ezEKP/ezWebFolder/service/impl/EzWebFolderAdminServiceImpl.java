@@ -341,12 +341,14 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		int folderId = 0;
 		if (folder.getFolderId().isEmpty()){
 			folderId = ezWebFolderAdminDAO.insertFolder(map);
+			map.put("newFolderId", folderId);
+			if (folder.getFolderLevel() == 0){
+				map.put("folderPath", "|" + folderId + "|");
+			}
+			ezWebfolderDao_y.updateFolderPath(map);
 		} else {
 			folderId = ezWebFolderAdminDAO.updateFolder(map);
 		}
-		map.put("newFolderId", folderId);
-		
-		ezWebfolderDao_y.updateFolderPath(map);
 		return folderId;
 	}
 
@@ -372,16 +374,19 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		map.put("companyId",   folder.getCompanyId());
 		map.put("deleterId",   folder.getDeleterId());
 		map.put("tenantId",    folder.getTenantId());
-		ezWebFolderAdminDAO.insertFolder2(map);
+		
 		int folderId = 0;
 		if (folder.getFolderId().isEmpty()){
 			folderId = ezWebFolderAdminDAO.insertFolder2(map);
+			map.put("newFolderId", folderId);
+			if (folder.getFolderLevel() == 0){
+				map.put("folderPath", "|" + folderId + "|");
+			}
+			ezWebfolderDao_y.updateFolderPath(map);
 		} else {
 			folderId = ezWebFolderAdminDAO.updateFolder2(map);
 		}
-		map.put("newFolderId", folderId);
 		
-		ezWebfolderDao_y.updateFolderPath(map);
 		return folderId;
 	}
 

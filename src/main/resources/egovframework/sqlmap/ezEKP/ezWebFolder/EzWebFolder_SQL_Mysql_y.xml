@@ -1348,7 +1348,9 @@
 		update 
 			tbl_webfolder_folder 
 		set 
-			folder_path = concat((select folder_path from tbl_webfolder_folder where folder_id = #folderUpper# and tenant_id = #tenantId#) ,#newFolderId#,'|') 
+			folder_path = 
+			if(folder_level = 0, concat('|', #newFolderId#, '|'),
+			concat((select folder_path from tbl_webfolder_folder where folder_id = #folderUpper# and tenant_id = #tenantId#) ,#newFolderId#,'|') )
 		where 
 			folder_id = #newFolderId#
 	
