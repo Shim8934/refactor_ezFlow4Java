@@ -728,11 +728,11 @@
 			contextClickedTr = event.currentTarget;
 			
 			// 2020-12-10 김은실 - (카이스트)회사 폴더별 관리자 지원 기능 
-			var targetFolderId = contextClickedTr.getAttribute("targetid");
+			/* var targetFolderId = contextClickedTr.getAttribute("targetid");
 			var targetDepth = contextClickedTr.getAttribute("depth");
 			if (!(Number(targetDepth) > 1) && (checkIsManager(targetFolderId) || contextClickedTr.getAttribute("targetcreater") == userId) ) {
 				document.getElementById("folderManagerTR").style.display = "";
-			}
+			} */
 			
 			var EventMouseX = event.clientX;
 			var EventMouseY = event.clientY;
@@ -762,7 +762,7 @@
 
 		function hideContextMenu() {
 			// 2020-12-10 김은실 - (카이스트)회사 폴더별 관리자 지원 기능 
-			document.getElementById("folderManagerTR").style.display = "none";
+			// document.getElementById("folderManagerTR").style.display = "none";
 			
 			document.getElementById("contextMenuDiv").style.display = "none";
 			if (window.contextClickedTr) {
@@ -991,11 +991,10 @@
 						<span style="font-size: 12px; width: 100%; display: inline-block;"><img src="/images/ImgIcon/recur.gif" align="absmiddle" hspace="5"><spring:message code='ezWebFolder.t139' /></span>
 					</td>
 				</tr>
-				<!-- 2020-12-10 김은실 - [카이스트] 구성원관리 추가  -->
-				<tr id ="folderManagerTR" style="display:none;">
+				<!-- <tr id ="folderManagerTR" style="display:none;">
 					<td onclick="getUsersPage_manager();" onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor: pointer; background-color: rgb(255, 255, 255);">
 						<span style="font-size: 12px; width: 100%; display: inline-block;"><img src="/images/ImgIcon/options.gif" align="absmiddle" hspace="5"><spring:message code='ezWebFolder.kes013' /></span>
-					</td>
+					</td>-->
 				</tr>
 			</tbody>
 		</table>
