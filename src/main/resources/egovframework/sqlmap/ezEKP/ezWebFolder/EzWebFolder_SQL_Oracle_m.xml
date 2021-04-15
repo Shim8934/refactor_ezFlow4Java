@@ -47,6 +47,7 @@
 		<result property="encryptedFlag"   column="ENCRYPTED_FLAG"	 />
 		<result property="depth"           column="DEPTH"			 />
 		<result property="folderId"        column="FOLDER_ID"		 />
+		<result property="folderType"      column="FOLDER_TYPE"		 />
 	</resultMap>
 
 	<!-- ShareFile resultMap -->
@@ -1719,7 +1720,8 @@
 		</isNotNull>
 						RESULT.ENCRYPTED_FLAG,
 						RESULT.DEPTH,
-						RESULT.FOLDER_ID
+						RESULT.FOLDER_ID,
+						RESULT.FOLDER_TYPE
 		<![CDATA[
 					FROM (
 						SELECT
@@ -1740,7 +1742,8 @@
 							1 AS TEMP_TARGET_TYPE,
 							NVL2(ENC.FILE_ID, 1, 0) AS ENCRYPTED_FLAG,
 							FILES.DEPTH,
-							FILES.FOLDER_ID
+							FILES.FOLDER_ID,
+							FOLDER.FOLDER_TYPE
 						FROM
 							TBL_WEBFOLDER_FILE FILES
 							INNER JOIN
@@ -1760,7 +1763,7 @@
 							FOLDER.FOLDER_ID 	AS TARGET_ID,
 					        FOLDER.FOLDER_NAME1 AS TARGET_NAME_1,
 					        FOLDER.FOLDER_NAME2 AS TARGET_NAME_2,
-							'D_' || FOLDER.FOLDER_TYPE AS TARGET_TYPE,
+							'D' AS TARGET_TYPE,,
 							SUB_FILETYPE.TYPE_ID,
 							FOLDER.FOLDER_PATH	AS TARGET_PATH,
 							SUB_FILETYPE.FILE_EXT AS TARGET_EXT,
@@ -1774,7 +1777,8 @@
 							0 AS TEMP_TARGET_TYPE,
 							0 AS ENCRYPTED_FLAG,
 							1 AS DEPTH,
-							FOLDER.FOLDER_ID
+							FOLDER.FOLDER_ID,
+							FOLDER.FOLDER_TYPE
 						FROM
 							TBL_WEBFOLDER_FOLDER FOLDER
 							INNER JOIN

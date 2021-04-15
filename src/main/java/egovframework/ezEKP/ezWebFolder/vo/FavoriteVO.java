@@ -1,6 +1,10 @@
 package egovframework.ezEKP.ezWebFolder.vo;
 
 public class FavoriteVO {
+	private String folderId;
+	/** C: 회사 폴더, D: 부서 폴더, U: 개인 폴더 */
+	private String folderType;
+
 	private String targetId;
 	private String targetName;
 	private String targetType;
@@ -8,7 +12,6 @@ public class FavoriteVO {
 	private String targetPath;
 	private String targetExt;
 	private long targetSize;
-	private String folderId;
 
 	private String creatorId;
 	private String creatorName;
@@ -26,6 +29,14 @@ public class FavoriteVO {
 
 	public void setFolderId(String folderId) {
 		this.folderId = folderId;
+	}
+
+	public String getFolderType() {
+		return folderType;
+	}
+
+	public void setFolderType(String folderType) {
+		this.folderType = folderType;
 	}
 
 	public String getTargetId() {

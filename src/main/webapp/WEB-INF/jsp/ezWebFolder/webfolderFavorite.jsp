@@ -164,8 +164,7 @@
 			createDate: "createDate",
 			type: "targetType",
 			encryptedFlag: "encryptedFlag",
-			depth: "depth",
-			expired: "expired"
+			depth: "depth"
 		},
 		
 		folder: {
@@ -179,8 +178,7 @@
 			createDate: "createDate",
 			type: "fileTypeName",
 			encryptedFlag: "encryptedFlag",
-			depth: "depth",
-			expired: "expired"
+			depth: "depth"
 		}
 	};
 	
@@ -641,13 +639,8 @@
 		for (var i = 0; i < len; i++) {
 			resultJson = result[i];
 			targetType = resultJson[columnMap.type];
-			
-			if (targetType.indexOf("D_") === 0 || (isFromFolder && targetType === "folder")) {
-				isFolder = true;
-			} else {
-				isFolder = false;
-			}
-			
+			isFolder = resultJson.folder || isFromFolder && targetType === "folder";
+
 			row = document.createElement("tr");
 			
 			checkboxColumn = document.createElement("td");
@@ -686,28 +679,15 @@
 			row.setAttribute("class", "bnkWebFolder");
 			row.setAttribute("targetId", resultJson[columnMap.id]);
 			row.setAttribute("targetPath", resultJson[columnMap.path]);
+			row.setAttribute("targetType", isFolder ? "D" : "F");
+			row.setAttribute("targetCreater", resultJson["creatorId"] || resultJson["createId"]);
 
-			if (result[i]["targetType"]) {
-				functionType = splitTargetType(result[i]["targetType"]);
-				row.setAttribute("targetFunction", functionType);
-			}
-			var creator = ""
-			if (!result[i]["creatorId"]) {
-				row.setAttribute("targetCreater", result[i]["createId"]);
-			} else {
-				row.setAttribute("targetCreater", result[i]["creatorId"]);
-			}
 			row.addEventListener("click", function(event) {rowContext.onRowClick(event, this);});
 			row.addEventListener("contextmenu", openContextMenu);
 			
-			if (!isFromFolder && isFolder) {
-				row.setAttribute("folderType", targetType.charAt(2));
-			}
-			
-			if (isFolder) {
-				row.setAttribute("targetType", "D");
-			} else {
-				row.setAttribute("targetType", "F");
+			if (!isFromFolder) {
+				row.setAttribute("folderType", resultJson.folderType);
+				row.setAttribute("targetFunction", targetType);
 			}
 			
 			inputElement = document.createElement("input");
@@ -750,7 +730,6 @@
 			fileIconColumn.appendChild(fileIconElement);
 			
 			var depth = resultJson[columnMap.depth];
-			var isExpired = resultJson[columnMap.expired];
 			var encryptedFlag = resultJson[columnMap.encryptedFlag];
 			var fileName = resultJson[columnMap.name];
 
@@ -768,9 +747,6 @@
 				}
 
 				nameColumn.innerHTML = additional + nameColumn.innerHTML;
-			} else if (isExpired && (resultJson[columnMap.path].match(/\|/g) || []).length  == 3) {
-				// 회의실 만료된거임
-				nameColumn.innerHTML += "<span style='color:red;font-weight:bold;'>&nbsp;<spring:message code='webfolder.meeting.expired'/></span>";
 			}
 
 			if (encryptedFlag == 1) {
@@ -1111,11 +1087,17 @@
 		var targetFolderId = contextClickedTr.getAttribute("targetid");
 		var targetDepth = contextClickedTr.getAttribute("depth");
 //		if (targetDepth === "1" && checkIsManager(targetFolderId)) {
-		if (!(Number(targetDepth) > 1) && (checkIsManager(targetFolderId) || contextClickedTr.getAttribute("targetcreater") == userId) ) {
+		var isCompanyFolderInClicked = context.isFavoriteMode()
+			? contextClickedTr.getAttribute("folderType") === "C"
+			: folderType === "C";
+		
+		if (!(Number(targetDepth) > 1) && (checkIsManager(targetFolderId) || contextClickedTr.getAttribute("targetcreater") == userId) && isCompanyFolderInClicked) {
 			document.getElementById("folderManagerTR").style.display = "";
+		} else {
+			document.getElementById("folderManagerTR").style.display = "none";
 		}
 		
-		document.getElementById("replyFileTR").style.display = context.isFavoriteMode() ? "none" : "";
+		// document.getElementById("replyFileTR").style.display = context.isFavoriteMode() ? "none" : "";
 		
 		var EventMouseX = event.clientX;
 		var EventMouseY = event.clientY;
@@ -1537,11 +1519,11 @@
 						<span style="font-size: 12px; width: 100%; display: inline-block;"><img src="/images/ImgIcon/options.gif" align="absmiddle" hspace="5"><spring:message code='webfolder.version.button' /></span>
 					</td>
 				</tr>
-				<tr id="replyFileTR">
+				<%-- <tr id="replyFileTR">
 					<td onclick="buttons.openReply();" onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor: pointer; background-color: rgb(255, 255, 255);">
 						<span style="font-size: 12px; width: 100%; display: inline-block;"><img src="/images/ImgIcon/rul-sml.png" align="absmiddle" hspace="5"><spring:message code='webfolder.reply.title' /></span>
 					</td>
-				</tr>
+				</tr> --%>
 				<tr>
 					<td onclick="refreshView();" onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor: pointer; background-color: rgb(255, 255, 255);">
 						<span style="font-size: 12px; width: 100%; display: inline-block;"><img src="/images/ImgIcon/recur.gif" align="absmiddle" hspace="5"><spring:message code='ezWebFolder.t139' /></span>

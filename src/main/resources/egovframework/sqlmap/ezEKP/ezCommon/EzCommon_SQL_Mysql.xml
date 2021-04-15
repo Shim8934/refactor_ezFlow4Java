@@ -3323,7 +3323,7 @@
 				  OR 
 					(member_type = 'JIKWI' AND member_id IN 
 						(
-							SELECT TO_CHAR(extensionattribute7) FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#
+							SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#
 							UNION
 							SELECT jobid FROM tbl_addjobmaster WHERE cn = #userId# AND tenant_id = #tenantId#
 						)
@@ -3333,14 +3333,14 @@
                   OR
                     (
                         member_type = 'DEPT' AND sub_dept_yn = 'Y'
-                        AND REGEXP_LIKE
+                        AND           
                             (
-                                (SELECT concat( group_concat(dept_cd_path separator ',') ,',' FROM tbl_deptmaster
-                                    WHERE cn = #deptId# OR CN IN (SELECT deptid FROM tbl_addjobmaster WHERE cn = #userId# and tenant_id = #tenantId#),
-                                ',' , member_id , ','))
+                            	(SELECT  group_concat(dept_cd_path separator ',') as a FROM tbl_deptmaster
+ 								WHERE cn =  #deptId# OR CN IN (SELECT deptid FROM tbl_addjobmaster WHERE cn = #userId# and tenant_id = #tenantId#)) REGEXP
+                                CONCAT(',', member_id, ',' ) 
                             )
                     )
-				)		
+				)			
 	     ]]> 
 	</select>
 	
