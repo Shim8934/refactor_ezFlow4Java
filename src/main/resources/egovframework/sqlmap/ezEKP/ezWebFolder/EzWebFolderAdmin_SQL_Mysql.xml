@@ -778,7 +778,7 @@
 				l.CREATE_NAME2                                                   AS CREATE_NAME2,
 				DATE_ADD(l.CREATE_DATE, INTERVAL #offset# MINUTE)                AS CREATE_DATE,
 				l.COMPANY_ID                                                     AS COMPANY_ID,
-				l.TENANT_ID                                                      AS TENANT_ID
+				l.TENANT_ID                                                      AS TENANT_ID,
 				IFNULL(l.FILE_ID,'')											 AS FILE_ID,
 				IFNULL(l.VERSION, 0)											 AS VERSION,
 				IFNULL(l.FOLDER_ID, '')											 AS FOLDER_ID,
@@ -854,12 +854,14 @@
 				INSERT INTO TBL_WEBFOLDER_LOG (
 					LOG_ID,         FILE_TYPE,         FILE_NAME,           FILE_SIZE,          FILE_EXT,
 					LOG_TYPE,       CREATE_ID,         CREATE_NAME1,        CREATE_NAME2,       CREATE_DATE,
-					COMPANY_ID,     TENANT_ID
+					COMPANY_ID,     TENANT_ID, 		   FILE_ID, 			VERSION, 			FOLDER_ID, 
+					FOLDER_NAME, 	FOLDER_PATH, 	   FOLDER_PATH_NAME,	TOP_FOLDER_ID, 		TOP_FOLDER_NAME
 				)
 				VALUES (
 					#logId#,        #fileType#,        #fileName#,          #fileSize#,         #fileExt#,
 					#logType#,      #createId#,        #createName1#,       #createName2#,      #createDate#,
-					#companyId#,    #tenantId#
+					#companyId#,    #tenantId#, 	   #fileId#, 			#version#, 			#folderId#, 
+					#folderName#, 	#folderPath#, 	   #folderPathName#,	#topFolderId#, 		#topFolderName#
 				)
 			]]>
 		</isEqual>
