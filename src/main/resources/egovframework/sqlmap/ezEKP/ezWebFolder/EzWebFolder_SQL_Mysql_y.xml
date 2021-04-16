@@ -297,6 +297,10 @@
 		</isNotEqual>
 		WHERE CN = #ownerId#
 		AND TENANT_ID = #tenantId#
+		
+		<selectKey keyProperty="folderId" resultClass="Integer">
+			SELECT LAST_INSERT_ID() as folderId FROM TBL_WEBFOLDER_FOLDER LIMIT 1
+		</selectKey>
 	</insert>
 	
 	<select id="EzWebFolderDAO_y.getUserFolderTree" resultMap="folderTreeVO" parameterClass="Map">
@@ -1348,10 +1352,14 @@
 			tbl_webfolder_folder 
 		set 
 			folder_path = 
-			if(folder_level = 0, concat('|', #newFolderId#, '|'),
-			concat((select folder_path from tbl_webfolder_folder where folder_id = #folderUpper# and tenant_id = #tenantId#) ,#newFolderId#,'|') )
+			CASE WHEN FOLDER_LEVEL = 0 
+			THEN concat('|', #newFolderId#, '|')
+			ELSE 
+				concat((select folder_path from tbl_webfolder_folder where folder_id = #folderUpper# and tenant_id = #tenantId#) ,#newFolderId#,'|') 
+			END
 		where 
 			folder_id = #newFolderId#
+			and tenant_id = #tenantId#
 	
 	</update>
 	<select id="EzWebFolderDAO_y.getFolderStep" parameterClass="Map" resultClass ="Integer">

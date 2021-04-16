@@ -100,7 +100,12 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			map.put("folderType", idMap.get("type"));
 
 			if (ezWebFolderDAO_y.checkRootFolder(map) == 0) {
-				ezWebFolderDAO_y.insertRootFolder(map);
+				int folderIdInt = ezWebFolderDAO_y.insertRootFolder(map);
+				map.put("newFolderId", String.valueOf(folderIdInt));
+				map.put("folderUpper", "");
+				LOGGER.debug("folderId:" + folderId + ",folderUpper:" + ",tenantId:" + tenantId);
+				ezWebFolderDAO_y.updateFolderPath(map);
+				
 				if (idMap.get("type").equals("D")) {
 					ezWebFolderAdminService.insertFolderUser(
 						ezWebFolderAdminService.getMaxFolderUserSeq(tenantId), idMap.get("id"), "dept", folderId, userId,timeUTC, compId, tenantId);
