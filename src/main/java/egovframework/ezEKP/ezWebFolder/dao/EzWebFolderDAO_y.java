@@ -19,8 +19,8 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 		return (int) select("EzWebFolderDAO_y.checkRootFolder", map);
 	}
 	
-	public String insertRootFolder(Map<String, Object> map) {
-		return (String) insert("EzWebFolderDAO_y.insertRootFolder", map);
+	public int insertRootFolder(Map<String, Object> map) {
+		return (int) insert("EzWebFolderDAO_y.insertRootFolder", map);
 	}
 	
 	public List<Map<String, Object>> getUserFolderTree(Map<String, Object> map) {
