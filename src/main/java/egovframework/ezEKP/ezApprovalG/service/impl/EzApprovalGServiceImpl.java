@@ -23362,6 +23362,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			//    '2:분리첨부- 분류등록 항목은 수정 불가
 
 			ezApprovalGDAO.updateTbRecord(map);	
+			ezApprovalGDAO.updateTbEndAprDocInfo(map);
 			ezApprovalGDAO.updateTbExpendAprDocInfo(map);	
 			
 			historyCnt = ezApprovalGDAO.selectHistoryCnt(map);
