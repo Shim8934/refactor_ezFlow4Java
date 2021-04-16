@@ -94,11 +94,11 @@
 						},
 					dataType: "JSON",
 					success : function (data) {
-						var listSize = data.data.length;
+						/* var listSize = data.data.length;
 						if (obj == 'C' && listSize == 1) {
 							openWebFolderRightWarning();
 							return;
-						}
+						} */
 
 						var firstNode = "#" + folderId;
 						
