@@ -464,10 +464,10 @@
 		    }
 		  
 		    function save_onclick() {
-		        if (specialChk(document.all("groupname").value) || specialChk(document.all("description").value)) {
+		        /* if (specialChk(document.all("groupname").value) || specialChk(document.all("description").value)) {
 		    		alert("<spring:message code='ezResource.special' />");
 		    		return;
-		    	}		    	
+		    	} */		    	
 		    	
 		         if (document.all("groupname").value.replace(/\s/g, '') == "") {
 		            alert("<spring:message code='ezSchedule.t195' />");
@@ -573,8 +573,8 @@
 		    
 		    //2018-08-10 김보미 - 추가
 		    window.onload = function () {
-		    	    var groupName = "<c:out value='${groupName}' />";
-		    	    var description = "<c:out value='${description}' />";
+		    	    var groupName = "${groupName}";
+		    	    var description = "${description}";
 		        	$('#groupname').val(groupName);
 		        	$('#description').val(description);
 			    
