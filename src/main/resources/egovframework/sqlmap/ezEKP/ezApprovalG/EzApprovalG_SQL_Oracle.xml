@@ -32623,7 +32623,7 @@
 	           	AND 
 			        (
 					L.APRMEMBERID = #v_USERID#
-					<isNotEmpty property="proxyList">
+					<!-- <isNotEmpty property="proxyList">
 						OR 
 							(
 								L.APRMEMBERID IN 
@@ -32636,7 +32636,7 @@
 									#proxyList[].dept#
 								</iterate>
 							)
-					</isNotEmpty>
+					</isNotEmpty> -->
 					)    
 	        <![CDATA[
 	        	AND 
@@ -32700,7 +32700,7 @@
 	   		AND	
 	   			(
 					L.APRMEMBERID = #v_USERID#
-					<isNotEmpty property="proxyList">
+					<!-- <isNotEmpty property="proxyList">
 						OR 
 							(
 								L.APRMEMBERID IN 
@@ -32713,7 +32713,7 @@
 									#proxyList[].dept#
 								</iterate>
 							)
-					</isNotEmpty>
+					</isNotEmpty> -->
 				)
 			<![CDATA[		  
 	   		AND 
@@ -33026,7 +33026,7 @@
 					A.APRTYPE = '015'
 				AND
 					(APRMEMBERID = #v_USERID#
-					<isNotEmpty property="proxyList">
+					<!-- <isNotEmpty property="proxyList">
 						OR 
 							(
 								APRMEMBERID IN 
@@ -33039,7 +33039,7 @@
 									#proxyList[].dept#
 								</iterate>
 							)
-					</isNotEmpty>
+					</isNotEmpty> -->
 				)
 			<![CDATA[
 				AND
