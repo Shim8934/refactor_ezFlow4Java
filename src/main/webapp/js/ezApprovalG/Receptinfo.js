@@ -145,6 +145,12 @@ function initReceptListView() {
     	docIDorSN = beforeDocID;
     }*/
     
+    /* 2021-04-19 홍승비 - 수신부서에서 회송된 문서의 경우, 원문서(완료문서)의 수신처 정보를 가져오도록 수정 */
+    if (typeof(isSusinReset) != "undefined" && isSusinReset == true) {
+    	docIDorSN = getOrgDocID();
+    	pMode = "END2";
+    }
+    
     $.ajax({
 		type : "POST",
 		dataType : "text",
@@ -2981,4 +2987,26 @@ function doc24Detail_onclick() {
 var selDoc24;
 function TreeViewNodeClick4(){
 	selDoc24 = $(event.target).parent().attr("DATA1");
+}
+
+/* 2021-04-19 홍승비 - 원문서의 DOCID를 가져오는 ajax 함수 추가 */
+function getOrgDocID() {
+	var orgDocID = "";
+	
+	$.ajax({
+		type : "GET",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getOrgDocIDByMode.do",
+		data : {
+				docID    : pDocID,
+				mode : "APR",
+				orgCompanyID : companyID
+		},
+		success: function(result){
+			orgDocID = result;
+		}
+	});
+	
+	return orgDocID;
 }

@@ -73,6 +73,7 @@
 	        arr_userinfo[15] = "${userInfo.deptName1}"; 		// 사용자 부서 이름(P)
 	        arr_userinfo[16] = "${userInfo.deptName2}"; 		// 사용자 부서 이름(S)
 	        arr_userinfo[17] = "<c:out value ='${userInfo.companyID}'/>";
+	        var primary = "<c:out value ='${primary}'/>"; // 다국어 여부 - 1(primary) / 2(secondary)
 	        var CompanyID = "<c:out value ='${userInfo.companyID}'/>";
 	        var companyID = "<c:out value ='${userInfo.companyID}'/>";
 	        var UserLang = "<c:out value ='${userInfo.lang}'/>";
@@ -221,6 +222,9 @@
 	        
 	        // 부서감사 관련 2020-01-14 홍대표
 	        var pDeptgamsaCount = 0;
+			
+			/* 2021-04-19 홍승비 - 수신문서 회송여부를 판단하기 위한 변수 추가 */
+			var isSusinReset = false;
 	        
 	        $(function () {
 	        	if (document.getElementById("AprSecurity").checked){
@@ -2057,6 +2061,13 @@
 	        function getGongRamDocInfo() {
 	            try {
 	            	var result = "";
+	            	var paramDocID = pDocID;
+	            	var pMode = "";
+	            	
+	           	 /* 2021-04-19 홍승비 - 수신부서에서 회송된 문서의 경우, 원문서(완료문서)의 회람문서 정보를 가져오도록 수정 */
+	                if (typeof(isSusinReset) != "undefined" && isSusinReset == true) {
+	                	paramDocID = getOrgDocID();
+	                }
 	            	
 	            	$.ajax({
 	            		type : "POST",
@@ -2064,7 +2075,7 @@
 	            		async : false,
 	            		url : "/ezApprovalG/gongRamDocInfo.do",
 	            		data : {
-	            			docID : pDocID,
+	            			docID : paramDocID,
 	            			orgCompanyID : orgCompanyID
 	            		},
 	            		success: function(xml){
