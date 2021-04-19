@@ -1060,21 +1060,15 @@
 	<insert id="EzWebFolderAdminDAO.insertFolder" parameterClass="Map">
 		<selectKey keyProperty="v_temp" resultClass="Integer">
 			<![CDATA[
-				SELECT
-					1
-				FROM
-					DUAL
-				WHERE
-					NOT EXISTS (SELECT
-									FOLDER_ID,
-									TENANT_ID
+				SELECT NVL((SELECT
+									FOLDER_ID
 									FROM
 										TBL_WEBFOLDER_FOLDER 
 									WHERE
 										FOLDER_ID = #folderId#
 									AND
 										TENANT_ID = #tenantId#
-								)
+           		), 1) AS v_temp FROM DUAL
 			]]>
 		</selectKey>
 		<isEqual property="v_temp" compareValue="1">
@@ -1126,14 +1120,8 @@
 	<insert id="EzWebFolderAdminDAO.insertFolder2" parameterClass="Map">
 		<selectKey keyProperty="v_temp" resultClass="Integer">
 			<![CDATA[
-				SELECT
-					1
-				FROM
-					DUAL
-				WHERE
-					NOT EXISTS (SELECT
-									FOLDER_ID,
-									TENANT_ID
+				SELECT NVL((SELECT
+									FOLDER_ID
 									FROM
 										TBL_WEBFOLDER_FOLDER 
 									WHERE
@@ -1144,7 +1132,7 @@
 										FOLDER_TYPE  = #folderType#
 									AND
 										TENANT_ID    = #tenantId#
-								)
+           		), 1) AS v_temp FROM DUAL
 			]]>
 		</selectKey>
 		<isEqual property="v_temp" compareValue="1">

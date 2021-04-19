@@ -21,6 +21,7 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
@@ -82,6 +83,9 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 
 	@Resource(name = "EzWebFolderDAO")
 	private EzWebFolderDAO ezWebFolderDAO;
+	
+	@Autowired
+	private Properties globals;
 	
 	@Autowired
 	private EzWebFolderDAO_y ezWebFolderDAO_y;
@@ -659,7 +663,9 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				folder.setUpdateDate(timeUTC);
 				
 				int folderIdInt = ezWebFolderAdminService.insertFolder2(folder);
-				folderId = Integer.toString(folderIdInt);
+				if (globals.getProperty("Globals.DbType").equals("mysql")) {
+					folderId = Integer.toString(folderIdInt);
+				}
 			
 				ezWebFolderAdminService.insertFolderUser(ezWebFolderAdminService.getMaxFolderUserSeq(tenantId), dept.getCn(), "dept", folderId, userId, timeUTC, folder.getCompanyId(), tenantId);
 			}

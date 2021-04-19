@@ -1470,7 +1470,7 @@
 			AND
 				tenant_id            = #tenantId#
 			AND 
-				cn NOT IN ('shared_mailbox_Top')	
+				cn NOT IN (SELECT CN FROM TBL_DEPTMASTER WHERE DEPT_CD_PATH LIKE '%shared_mailbox%' OR DEPT_CD_PATH LIKE '%trash%')	
 		]]>
 	</select>
 	

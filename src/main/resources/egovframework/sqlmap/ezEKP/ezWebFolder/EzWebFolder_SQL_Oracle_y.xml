@@ -276,8 +276,8 @@
 	</select>
 	
 	<insert id="EzWebFolderDAO_y.insertRootFolder" parameterClass="Map">
-		<selectKey keyProperty="id" resultClass="String">
-			SELECT TO_CHAR(NVL(MAX(to_number(FOLDER_ID)), 0) + 1)
+		<selectKey keyProperty="id" resultClass="Integer">
+			SELECT NVL(MAX(to_number(FOLDER_ID)), 0) + 1
 			FROM TBL_WEBFOLDER_FOLDER 
 			WHERE TENANT_ID = #tenantId# 
 		</selectKey>
@@ -1346,9 +1346,21 @@
 		]]>
 	</select>
 	
+	
+	<update id="EzWebFolderDAO_y.updateFolderPath" parameterClass="Map">
+		update 
+			tbl_webfolder_folder 
+		set     folder_path = 
+		CASE WHEN FOLDER_LEVEL = 0 
+		THEN  '|' ||  #newFolderId# || '|'
+		ELSE (select folder_path ||  #newFolderId# || '|' from tbl_webfolder_folder where folder_id = #folderUpper# and tenant_id = #tenantId#)
+		end
+		where folder_id =  #newFolderId# and tenant_id = #tenantId#
+	</update>
+	
 	<insert id="EzWebFolderDAO_y.insertFolder" parameterClass="Map" >
-		<selectKey keyProperty="id" resultClass="String">
-			SELECT TO_CHAR(NVL(MAX(to_number(FOLDER_ID)), 0) + 1)
+		<selectKey keyProperty="id" resultClass="Integer">
+			SELECT NVL(MAX(to_number(FOLDER_ID)), 0) + 1
 			FROM TBL_WEBFOLDER_FOLDER 
 			WHERE TENANT_ID = #tenantId# 
 		</selectKey>
