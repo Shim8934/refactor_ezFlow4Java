@@ -433,6 +433,13 @@
 		                alert("<spring:message code='ezPersonal.t16'/>");
 		                return;
 		            }
+		            
+		            if (checkMatchingTime(userid)) {
+		            	// true를 반환 받으면 경고창 뜨고 저장 안 되겠끔
+		            	alert("<spring:message code='ezPersonal.sky0420'/>\n<spring:message code='ezPersonal.sky042001'/>");
+		            	return;
+		            }
+		            
 		            pBujae = userid + ":" + document.getElementById("TextName").value + ":" + deptid + ":" + $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val() + ":" + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() +  " " + $('#Etimepicker').val() + ":";
 		        } else if (document.getElementById("TextName1").value != "" && document.getElementById("absentreason").value != "" && document.getElementById("absentreason").value != "<spring:message code='ezPersonal.t35'/>") {
 		        	pBujae = "" + ":" + "" + ":" + "" + ":" + $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val() + ":" + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val() + ":" + document.getElementById("absentreason").value;
@@ -597,6 +604,65 @@
 				}
 			}
 			
+		    function checkMatchingTime(selectPersonId) {
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/admin/ezOrgan/getEntryInfo.do",
+		    		data : {
+		    			cn : selectPersonId,
+		    			prop : "displayName;extensionAttribute5"
+		    		},
+		    		success: function(xml) {
+		    			xmlDom = loadXMLString(xml);
+		    		}
+		    	});
+		    	
+		    	var buJaeInfo = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE5");
+	    		
+	    		if (buJaeInfo != "") {
+	        		var oDate = new Date();
+	        		var oYear = oDate.getFullYear();
+	        		var oMonth = oDate.getMonth() + 1;
+	        		var oDay = oDate.getDate();
+	        		var oHours = oDate.getHours();
+	        		var oMinutes = oDate.getMinutes();
+	        		
+	        		var sYear = buJaeInfo.split(":")[3].split("-")[0];
+	        		var sMonth = buJaeInfo.split(":")[3].split("-")[1];
+	        		var sDay = buJaeInfo.split(":")[3].split("-")[2].substring(0, 2);
+	        		var sHours = buJaeInfo.split(":")[3].split("-")[2].substring(3, 5); 
+	        		var sMinutes = buJaeInfo.split(":")[4]; 
+	        		
+	        		var bYear = buJaeInfo.split(":")[5].split("-")[0];
+	        		var bMonth = buJaeInfo.split(":")[5].split("-")[1];
+	        		var bDay = buJaeInfo.split(":")[5].split("-")[2].substring(0, 2);
+	        		var bHours = buJaeInfo.split(":")[5].split("-")[2].substring(3, 5); 
+	        		var bMinutes = buJaeInfo.split(":")[6]; 
+	        		
+	        		var currentDate = new Date(oYear, oMonth, oDay, oHours, oMinutes, 0); //현재 시간
+	        		var selectPersonBuJaeStartDate = new Date(sYear, sMonth-1, sDay, sHours, sMinutes, 0); //대리결재지정자 부재 시작 시간
+	        		var selectPersonBuJaeEndDate = new Date(bYear, bMonth-1, bDay, bHours, bMinutes, 0); //대리결재지정자 부재 종료 시간
+	        		var settingStartDate = new Date($("#Sdatepicker").datepicker({ dateFormat: 'yy/mm/dd' }).val() + " " + $('#Stimepicker').val()); // 부재자 시작시간
+	        		var settingEndDate = new Date($("#Edatepicker").datepicker({ dateFormat: 'yy/mm/dd' }).val() + " " + $('#Etimepicker').val()); // 부재자 종료시간
+	        		
+	        		console.log($("#Sdatepicker").datepicker({ dateFormat: 'yy/mm/dd' }).val() + " " + $('#Stimepicker').val() + "  ##### 시작설정시간");
+	        		console.log($("#Edatepicker").datepicker({ dateFormat: 'yy/mm/dd' }).val() + " " + $('#Etimepicker').val() + "  ##### 종료설정시간");
+	        		
+	        		// 1. 부재설정기간이 대리결재자의 부재기간 이후 (설정기간의 시작날 > 대리결재자의 부재기간 종료날) 
+	        		if (settingStartDate >= selectPersonBuJaeEndDate ||  settingEndDate <= selectPersonBuJaeStartDate) {
+	        			return false;	
+	        		}
+	        		else {
+	        			return true;
+	        		}
+	        	}
+	    		
+	    		else { // 대리결재자 지정자의 부재 설정 정보가 없는 경우.
+	    			return false;
+	    		}
+		    }
 		</script>
 	</head>
 	<body class="mainbody" marginwidth="0" marginheight="0">
