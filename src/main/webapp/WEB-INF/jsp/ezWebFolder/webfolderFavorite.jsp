@@ -1353,7 +1353,6 @@
 				<li id="moveButton" onclick="buttons.fileMoveAndCopy()"><span><spring:message code='ezWebFolder.t251'/></span></li>
 				<li><span onclick="buttons.openFileVersionHistory()"><spring:message code='webfolder.version.button' /></span></li>
 				<li id="userManagerBtn" style="display:none;"><span onclick="getUsersPage_manager()"><spring:message code='ezWebFolder.kes013' /></span></li>
-				<li id ="sendingMail" style="display:none;"><span onclick="buttons.sendingMail()"><spring:message code='ezWebFolder.ksa01' /></span></li>
 				<li favoritemenu onclick="favoriteContext.toggleAll()"><span class="icon16 icon16_star"></span></li>
 				<li id="SearchOption" favoritemenu mode="off" onclick="doLayerPopup(this)"><span class="icon16 icon16_search"></span></li>
 				<li favoritemenu onclick="buttons.fileDelete()"><span class="icon16 icon16_delete"></span></li>

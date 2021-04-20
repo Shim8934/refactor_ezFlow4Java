@@ -518,23 +518,7 @@ var buttons = (function() {
 			} else {
 				alert(messages.strLang1);
 			}
-		},
-		
-		sendingMail : function() {
-			var fId = (typeof folderId == "undefined") ? "" : folderId;
-			var url = "/ezEmail/mailWrite.do?";
-			var param = "fId=" + fId;
-			
-			var popH = window.screen.availHeight * 0.8;
-			var popW = 890;
-			var popX = (window.screen.width / 2) - (popW / 2);
-			var popY = (window.screen.height / 2) - (popH / 2);
-			
-			var popS = "height=" + popH + ", width=" + popW + ", left=" + popX + ", top=" + popY;
-			
-	    	window.open(url + param, "", popS + ", status=no, toolbar=no, menubar=no, location=no, resizable=1");
-	    }
-		
+		}
 	};
 })();
 
