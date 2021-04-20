@@ -1015,9 +1015,6 @@
 		<isNotEmpty property="folderUpper">
 				a.FOLDER_UPPER = #folderUpper#
 		</isNotEmpty>
-		<isNotEmpty property="folderId">
-				a.FOLDER_ID = #folderId#
-		</isNotEmpty>
 			AND
 				a.USE_STATUS   = 'Y'
 			AND
@@ -1631,18 +1628,6 @@
 				f.TENANT_ID    = #tenantId#
 			AND
 				f.FOLDER_UPPER = #compFolderId#
-			<isNotEmpty prepend="AND" property="expiredFolders">
-				f.FOLDER_ID NOT IN
-				<iterate property="expiredFolders" open="(" close=")" conjunction=",">
-					#expiredFolders[]#
-				</iterate>
-			</isNotEmpty>
-			<isNotEmpty prepend="AND" property="notInheritFolders">
-				f.FOLDER_ID NOT IN
-				<iterate property="notInheritFolders" open="(" close=")" conjunction=",">
-					#notInheritFolders[]#
-				</iterate>
-			</isNotEmpty>
 		<isNotEmpty property="idList"> 
 			AND
 				f.FOLDER_ID IN 

@@ -267,13 +267,8 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 
 	@Override
 	public List<FolderSimpleVO> getAllSimpleSubFolders(String folderUpperId, int tenantId, List<String> idList) throws Exception {
-		return getAllSimpleSubFolders(folderUpperId, tenantId, idList, "");
-	}
-	@Override
-	public List<FolderSimpleVO> getAllSimpleSubFolders(String folderUpperId, int tenantId, List<String> idList, String folderId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("folderUpper", folderUpperId);
-		map.put("folderId",    folderId);
 		map.put("tenantId",    tenantId);
 		map.put("idList",      idList);
 		map.put("userId",      idList != null && idList.size() > 1 ? idList.get(1) : "");
@@ -531,18 +526,13 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 
 	@Override
 	public void getAllSubDepts(FolderSimpleVO company, int tenantId, String[] fdPath, int order) throws Exception {
-		getAllSubDepts(company, tenantId, fdPath, order, null);
-	}
-	// 2020-12-14 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: 권한에(idList) 따른 폴더 리스트 특정하기 
-	@Override
-	public void getAllSubDepts(FolderSimpleVO company, int tenantId, String[] fdPath, int order, List<String> idList) throws Exception {
 		if (company.getHasSubFolder() == 1) {
-			List<FolderSimpleVO> listSubSimpleFolders = getAllSimpleSubFolders(company.getFolderId(), tenantId, idList);
+			List<FolderSimpleVO> listSubSimpleFolders = getAllSimpleSubFolders(company.getFolderId(), tenantId, null);
 			company.setListSubFolders(listSubSimpleFolders);
 			
 			for (FolderSimpleVO subFolder: listSubSimpleFolders) {
 				if (order < fdPath.length && subFolder.getFolderId().equals(fdPath[order])) {
-					getAllSubDepts(subFolder, tenantId, fdPath, order + 1, idList);
+					getAllSubDepts(subFolder, tenantId, fdPath, order + 1);
 				}
 			}
 		}

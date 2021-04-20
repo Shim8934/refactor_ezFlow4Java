@@ -1766,7 +1766,6 @@ public class EzWebFolderGWController {
 		String folderId   = request.getParameter("folderId")  != null ? request.getParameter("folderId")  : "";
 		String type       = request.getParameter("type")      != null ? request.getParameter("type")      : "";
 		String serverName = request.getHeader("x-user-host")    != null ? request.getHeader("x-user-host")    : "";
-//		Map<String, Object> dean = null;
 		JSONObject result = new JSONObject();
 		
 		logger.debug("Type: " + type + " || folderId: " + folderId + " || companyId: " + companyId + " || serverName: " + serverName);
@@ -1975,7 +1974,7 @@ public class EzWebFolderGWController {
 				
 				for (FolderSimpleVO deptFolder : listFolders) {
 					if (deptFolder.getFolderId().equals(path[0])) {
-						ezWebFolderService.getAllSubDepts(deptFolder, tenantId, path, 1, null);
+						ezWebFolderService.getAllSubDepts(deptFolder, tenantId, path, 1);
 					}
 				}
 				
@@ -2003,7 +2002,6 @@ public class EzWebFolderGWController {
 		String companyId  = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
 		String folderId   = request.getParameter("folderId")  != null ? request.getParameter("folderId")  : "";
 		JSONObject result = new JSONObject();
-//		Map<String, Object> dean = null;
 		
 		logger.debug("CompanyId: " + companyId + " || serverName: " + serverName + " || UserId: " + userId + " || FolderId: " + folderId);
 		
@@ -2087,7 +2085,6 @@ public class EzWebFolderGWController {
 		String type       = request.getParameter("type")     != null ? request.getParameter("type")    : "";
 		String userId     = request.getParameter("userId")   != null ? request.getParameter("userId")  : "";
 		String adminCheck     = request.getParameter("adminCheck")   != null ? request.getParameter("adminCheck")  : mode;
-//		Map<String, Object> dean = null;
 		JSONObject result = new JSONObject();
 		
 		logger.debug("folderId: " + folderId + " || serverName: " + serverName + " || mode: " + mode + " || UserId: " + userId);
@@ -3003,7 +3000,6 @@ public class EzWebFolderGWController {
 		String type       = request.getParameter("type")      != null ? request.getParameter("type")      : "";
 		String serverName = request.getHeader("x-user-host")    != null ? request.getHeader("x-user-host")    : "";
 		String[] fileArr  = fileList.split(",");
-//		Map<String, Object> dean = null;
 		JSONObject result = new JSONObject();
 		
 		logger.debug("Mode: " + mode + " || fileList: " + fileList + " || type: " + type + " || companyId: " + companyId + " || serverName: " + serverName + " || UserId: " + userId);

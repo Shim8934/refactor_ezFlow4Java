@@ -38,12 +38,10 @@ public interface EzWebFolderService {
 	FolderVO getFolderByFolderId(String folderId, String offset, int tenantId) throws Exception;
 	FolderSimpleVO getSimpleFolder(String folderId, int tenantId) throws Exception;
 	List<FolderSimpleVO> getAllSimpleSubFolders(String folderUpperId, int tenantId, List<String> idList) throws Exception;
-	List<FolderSimpleVO> getAllSimpleSubFolders(String folderUpperId, int tenantId, List<String> idList, String folderId) throws Exception;
 	FolderVO getRootFolderId(String companyId, String type, String offset, int tenantId) throws Exception;
 	void getAllSubDepts(FolderSimpleVO company, int tenantId, int i) throws Exception;
 	void getAllSubDepts(FolderSimpleVO company, int tenantId, int i, List<String> idList) throws Exception;
 	void getAllSubDepts(FolderSimpleVO company, int tenantId, String[] fdPath, int order) throws Exception;
-	void getAllSubDepts(FolderSimpleVO company, int tenantId, String[] fdPath, int order, List<String> idList) throws Exception;
 	void updateDownCnt(String fileId, int tenantId) throws Exception;
 	List<FolderUserVO> getFolderUsers(String folderId, int tenantId) throws Exception;
 	List<FolderUserVO> getFileUsers(String fileId, int tenantId) throws Exception;
