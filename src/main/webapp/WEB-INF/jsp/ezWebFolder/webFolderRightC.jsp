@@ -621,7 +621,6 @@
 					trElmt.appendChild(tdElmt7);
 					trElmt.appendChild(tdElmt8);
 					trElmt.appendChild(tdElmt9);
-					trElmt.appendChild(tdElmt10);
 					
 					tableList.appendChild(trElmt);
 				}
@@ -1266,7 +1265,6 @@
 							<th class="wfFileUploadDate headListClick" headers="CREATE_DATE"><spring:message code='ezWebFolder.t190'/></th><!-- 등록일 -->
 							<th class="wfFileUpdateDate headListClick" headers="UPDATE_DATE"><spring:message code='ezWebFolder.t198'/></th><!-- 갱신일 -->
 							<th class="wfFilePath 		" headers="FILE_PATH"><spring:message code='ezWebFolder.t199'/></th><!-- 위치 -->
-							<th class="wfFileShare 		headListClick" style="text-align: center;" headers="FILESHARE_STATUS"><spring:message code='ezWebFolder.t278'/></th><!-- 공유상태 -->
 						</tr>
 					</thead>
 				</table>
