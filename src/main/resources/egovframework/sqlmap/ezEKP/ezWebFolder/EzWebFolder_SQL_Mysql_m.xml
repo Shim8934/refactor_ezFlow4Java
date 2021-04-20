@@ -1388,6 +1388,7 @@
 			AND
 				FILES.DELETER_ID = #userId#
 		]]>
+		<include refid="searchTrashCanFile"/>
 		
 		<isEqual property="useVersionHistory" compareValue="true">
 				UNION
