@@ -918,10 +918,12 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 	    SimpleDateFormat targetDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");					// 우리가 지원하는 형식으로 다시 포맷
 	    String timeUTCCreate	   = commonUtil.getDateStringInUTC(targetDateFormat.format(date1), offset, true);	// timeUTC 적용
 		
+	    /* 회사폴더, 부서폴더/개인폴더 로 구분하기 위해서 이동시킬때에도 folderUser를 삭제하지 않도록 한다.
 		if (folder.getFolderLevel() == 1) {
 			//Delete all folder users
 			deleteFolderUsers(folder.getFolderId(), tenantId);
 		}
+		*/
 		
 		if ((folder.getFolderLevel() + levelDistance == 1) && parentFolder.getFolderType().equals("C")) {
 			String folderPath            = folder.getFolderPath();
