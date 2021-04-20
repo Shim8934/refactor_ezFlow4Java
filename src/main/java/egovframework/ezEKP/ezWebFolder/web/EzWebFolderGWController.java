@@ -2047,7 +2047,12 @@ public class EzWebFolderGWController {
 				folderVO.setCreateDate(timeUTC);
 				folderVO.setUpdateDate(timeUTC);
 				
-				ezWebFolderAdminService.insertFolder2(folderVO);
+				int folderIdInt = ezWebFolderAdminService.insertFolder2(folderVO);
+				
+				if (folderIdInt != 0) {
+					folderId = String.valueOf(folderIdInt);
+					folderVO.setFolderId(folderId);
+				}
 			}
 
 			FolderSimpleVO company = ezWebFolderService.getSimpleFolder(folderVO.getFolderId(), tenantId);
