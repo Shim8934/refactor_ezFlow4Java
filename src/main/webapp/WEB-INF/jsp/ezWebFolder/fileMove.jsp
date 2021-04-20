@@ -25,12 +25,14 @@
 		var functionType   = "";
 		var targetId 	   = "";
 		var adminCheck     = "<c:out value='${mode}'/>";
+		var folderType     = "<c:out value='${type}'/>";
 		
 		window.onbeforeunload = function() {
 			parent.closeAllPopup();
 		}
 		
 		window.onload = function () {
+			document.getElementsByName('treeType')[0].checked=true;
 			getData();
 		};
 		
@@ -530,9 +532,11 @@
 			</select>
 		</c:if>
 		<div style="position: absolute; top: 0px; right: 0px;">
-			<input name="treeType" id="radio1" type="radio" value="comp" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="getData();"><label for="radio1"><span> <spring:message code="ezWebFolder.t233"/></span></label>
-			<input name="treeType" id="radio2" type="radio" value="dept" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="getData();"><label for="radio2"><span> <spring:message code="ezWebFolder.t234"/></span></label>
-			<c:if test="${mode == 'normal'}">
+			<c:if test="${type == 'C'}">
+				<input name="treeType" id="radio1" type="radio" value="comp" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="getData();"><label for="radio1"><span> <spring:message code="ezWebFolder.t233"/></span></label>
+			</c:if>
+			<c:if test="${type != 'C'}">
+				<input name="treeType" id="radio2" type="radio" value="dept" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="getData();"><label for="radio2"><span> <spring:message code="ezWebFolder.t234"/></span></label>
 				<input name="treeType" id="radio3" type="radio" value="user" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="getData();"><label for="radio3"><span> <spring:message code="ezWebFolder.t235"/></span></label>
 				<input name="treeType" id="radio4" type="radio" value="share" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="getData();"><label for="radio4"><span> <spring:message code="ezWebFolder.t266"/></span></label>
 			</c:if>
