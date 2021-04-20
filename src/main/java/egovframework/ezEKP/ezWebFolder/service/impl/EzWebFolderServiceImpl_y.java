@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import org.json.simple.JSONArray;
@@ -40,6 +41,9 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 	@Autowired
 	private EzCommonService ezCommonService;
 
+	@Autowired
+	private Properties globals;
+		
 	@Autowired
 	private EzWebFolderDAO_y ezWebFolderDAO_y;
 
@@ -101,10 +105,13 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 
 			if (ezWebFolderDAO_y.checkRootFolder(map) == 0) {
 				int folderIdInt = ezWebFolderDAO_y.insertRootFolder(map);
-				map.put("newFolderId", String.valueOf(folderIdInt));
-				map.put("folderUpper", "");
-				LOGGER.debug("folderId:" + folderId + ",folderUpper:" + ",tenantId:" + tenantId);
-				ezWebFolderDAO_y.updateFolderPath(map);
+				if (globals.getProperty("Globals.DbType").equals("mysql")) {
+					map.put("newFolderId", String.valueOf(folderIdInt));
+					map.put("folderUpper", "");
+					LOGGER.debug("folderId:" + folderId + ",folderUpper:" + ",tenantId:" + tenantId);
+					ezWebFolderDAO_y.updateFolderPath(map);
+					folderId = String.valueOf(folderIdInt); 
+				}
 				
 				if (idMap.get("type").equals("D")) {
 					ezWebFolderAdminService.insertFolderUser(
@@ -765,8 +772,8 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		map.put("newFolderId", folderId);
 		map.put("folderUpper", uppFolder.getFolderId());
 		map.put("targetId", folderId);
-		
 		LOGGER.debug("folderId:" + folderId + ",folderUpper:"  + uppFolder.getFolderId() + ",tenantId:" + tenantId);
+		
 		ezWebFolderDAO_y.updateFolderPath(map);
 		
 		map.put("upperFolderId", uppFolder.getFolderId());
