@@ -42,8 +42,15 @@ function trim(str) {
 function setAttachInfo(tempDocID, INGFlag, attachTag) {
     attachTag.innerHTML = "";
     var docAttachTag = document.getElementById(attachTag.id + "Doc"); // 문서첨부영역 분리
-	if(docAttachTag != undefined)
-	    docAttachTag.innerHTML = "";
+
+	if(docAttachTag != undefined){
+		docAttachTag.innerHTML = "";
+	}
+
+    if(docAttachTag != null){
+    	docAttachTag.innerHTML = "";
+    }
+    var url = "";
     
 	var result = "";
 	
