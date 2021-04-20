@@ -393,14 +393,13 @@
 			    F.FOLDER_LEVEL AS FOLDERLEVEL,
 			    F.FOLDER_PATH  AS FOLDERPATH  
             FROM TBL_WEBFOLDER_FOLDER F
-            JOIN 
+            LEFT OUTER JOIN 
 				TBL_WEBFOLDER_FOLDERUSER FU
 				ON F.FOLDER_ID = FU.FOLDER_ID
 				AND F.TENANT_ID = FU.TENANT_ID
 				AND F.FOLDER_TYPE = 'C'
 			WHERE F.TENANT_ID = #tenantId#
 				AND F.USE_STATUS = 'Y'
-				AND F.TENANT_ID = #tenantId#
 				AND F.COMPANY_ID IN
 		]]>
 			<iterate property="idList" open="(" close=")" conjunction=",">
