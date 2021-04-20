@@ -426,8 +426,7 @@
 		        ezdocinfog_view_cross_dialogArguments[1] = btnDocInfo_onclick_Complete;
 		
 		        //DivPopUpShow(420, 500, "/ezApprovalG/ezDocInfoGView.do?docID=" + pDocID + "&ingFlag=END"); 문서정보 새로 구현해서 주석
-		        //2021-04-19 김정언 - (#76703) 전자결재G > 문서열람 > 정보 > 요약전 및 문서정보에 스크롤바 생김
-		        DivPopUpShow(420, 530, "/ezApprovalG/ezDocInfoView.do?docID=" + pDocID + "&ingFlag=END");
+		        DivPopUpShow(420, 520, "/ezApprovalG/ezDocInfoView.do?docID=" + pDocID + "&ingFlag=END");
 		    }
 		    function btnDocInfo_onclick_Complete() {
 		        DivPopUpHidden();
