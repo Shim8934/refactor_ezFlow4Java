@@ -8212,7 +8212,7 @@
 	         UNION ALL 
 	         
 	         SELECT 'ATT' TYPE  ,
-	                AttachFileName FILENAME  ,
+	                DISPLAYNAME FILENAME  ,
 	                AttachFileHref FILEPATH  ,
 					2 AS TYPESN,
 	                IFNULL(VIEWORDER, ATTACHFILESN) AS VIEWSN,
@@ -8266,7 +8266,7 @@
 		        
 		        SELECT 
 		        		'ATT' TYPE  ,
-		                AttachFileName FILENAME  ,
+		                DISPLAYNAME FILENAME  ,
 		                AttachFileHref FILEPATH  ,
 						2 AS TYPESN,
 	               	 	IFNULL(VIEWORDER, ATTACHFILESN) AS VIEWSN,
