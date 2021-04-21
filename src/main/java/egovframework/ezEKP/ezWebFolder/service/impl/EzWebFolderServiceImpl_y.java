@@ -990,12 +990,27 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 				}
 
 				FileVO fileVO = ezWebFolderService.getFileByFileId(fileId, "000|+00:00", tenantId);
-
-				if (ezWebFolderAdminService.getFolderIdsByManagerUserId(userId, fileVO.getFolderId(), companyId, tenantId).isEmpty()
-						&& !fileVO.getCreateId().equals(userId)) {
-					result.put("status", "error");
-					result.put("code", 3);
-					return new JSONObject(result);
+				Map<String,Object> map = new HashMap<String, Object>();
+				map.put("fileId", fileId);
+				map.put("tenantId",tenantId);
+			
+				FolderVO folder = ezWebFolderDAO_y.getFolderDetailByFileId(map);
+				
+				
+				if (folder.getFolderType() == "C"){
+					List<String> dp = ezWebFolderAdminService.getFolderIdsByManagerUserId(userId, fileVO.getFolderId(), companyId, tenantId);
+					if (ezWebFolderAdminService.getFolderIdsByManagerUserId(userId, fileVO.getFolderId(), companyId, tenantId).isEmpty()
+							&& !fileVO.getCreateId().equals(userId)) {
+						result.put("status", "error");
+						result.put("code", 3);
+						return new JSONObject(result);
+					}
+				} else {
+					if (!fileVO.getCreateId().equalsIgnoreCase(userId)){
+						result.put("status", "error");
+						result.put("code", 3);
+						return new JSONObject(result);
+					}
 				}
 			}
 		}

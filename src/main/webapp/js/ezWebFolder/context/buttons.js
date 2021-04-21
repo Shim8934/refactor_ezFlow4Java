@@ -197,7 +197,7 @@ var buttons = (function() {
 					success : function(data) {
 						var result = data.status;
 						
-						if (result != "ok" && folderType != "U") {
+						if (result != "ok") {
 							alert(messages.strLang42);
 						} else {
 							var nameTd = rowContext.getRowElement(fileId).querySelector(".wfFileName");
