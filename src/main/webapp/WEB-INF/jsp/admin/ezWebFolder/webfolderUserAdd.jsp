@@ -113,11 +113,15 @@
                 
                 createNodeInsert(xmlpara, objNode, "DATA");
                 createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptId);
-                if (companyId == "Top") {
-                	createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top/organ");
-	            } else {
-	            	createNodeAndInsertText(xmlpara, objNode, "TOPID", companyId);
-	            }
+
+                <c:choose>
+                <c:when test="${useShowAllCompanies eq 'YES'}">
+                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top/organ");
+                </c:when>
+                <c:otherwise>
+                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
+                </c:otherwise>
+                </c:choose>
                 
                 createNodeAndInsertText(xmlpara, objNode, "PROP", "");
                 if(window.opener.$("#companyList option[value=" + companyId + "]") != null && 
@@ -490,7 +494,10 @@
 		        		search : document.all("search_type").value + "::" + document.all("keyword").value, 
 		        		cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value, 
 		        		prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department", 
-		        		type : "user"
+		        		<c:if test="${useShowAllCompanies eq 'YES'}">
+		    			company : "",
+		                </c:if>		        			
+		    			type : "user"
 		        	},
 		        	success : function(result){	
 		        		var headerData = createXmlDom();
