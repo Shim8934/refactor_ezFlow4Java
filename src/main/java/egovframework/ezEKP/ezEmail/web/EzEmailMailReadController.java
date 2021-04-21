@@ -4721,7 +4721,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/getMailAddressList.do", method=RequestMethod.POST)
 	@ResponseBody
-	public String getMailAddressList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale) throws Exception{
+	public JSONObject getMailAddressList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale) throws Exception{
 		logger.debug("getMailAddressList started.");
 		Map<String, Object> result = new HashMap<String, Object>();
 		
@@ -4751,7 +4751,9 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						logger.debug("the user cannot access the shareId.");
 						logger.debug("getMailAddressList ended.");
 						
-						return "";
+						result.put("status", "error");
+						
+						return new JSONObject(result);
 					}
 					
 					userAccount = shareId + "@" + domainName;
@@ -4931,7 +4933,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("getMailAddressList ended.");
-		return new JSONObject(result).toString();
+		return new JSONObject(result);
 	}
 	
 	/**
