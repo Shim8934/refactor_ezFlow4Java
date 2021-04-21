@@ -887,7 +887,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 
 		FolderVO folder = getFolderDetail(folderId, userId, tenantId, comId);
 
-		if (!isRecursive && folder.getCreateId().equals(userId)) {
+		if (!isRecursive && (folder.getCreateId().equals(userId) || userId.equals(folder.getOwnerId()))) {
 			return 1;
 		}
 
