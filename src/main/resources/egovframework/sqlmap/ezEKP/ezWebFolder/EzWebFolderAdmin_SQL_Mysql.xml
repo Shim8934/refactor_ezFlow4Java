@@ -1135,6 +1135,10 @@
 		<iterate property="idList" open="(" close=")" conjunction=",">
 			#idList[]#
 		</iterate>
+		<isNotEqual property="type" compareValue="">
+			AND 
+				FOLDER_MANAGER = #type#
+		</isNotEqual>
 	</select>
 	
 	<delete id="EzWebFolderAdminDAO.deleteSelectedFolderUser" parameterClass="Map">
