@@ -24,6 +24,9 @@
 			.mCustomScrollBox{ /* contains plugin's markup */
 				height: 93%;
 			}
+			.lnbUL li {
+				margin: 0px 0px 0px 10px;
+			}
 	    </style>
 		<script type="text/javascript" >
 		    var companyFolderId = "";

@@ -2559,7 +2559,7 @@
 				//node.childNodes[1].innerHTML += "<span class='jstree-span-title' style='width:" + spanW + "px'>" + obj.text + "</span>";
 
 				/* 김수아 - html entity 그대로 출력    core.force_text를 true로 설정하면 되지만, span.jstree-span-title에 폰트 크기 스타일이 걸려있어 걍 여기다 추가함.. */
-				node.childNodes[1].innerHTML += "<span class='jstree-span-title'></span>";
+				node.childNodes[1].innerHTML += "<span class='jstree-span-title' style='width:" + spanW + "px'></span>";
 				node.childNodes[1].getElementsByClassName('jstree-span-title')[0].appendChild(d.createTextNode(obj.text));
 			}
 			
