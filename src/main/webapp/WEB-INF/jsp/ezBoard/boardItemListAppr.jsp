@@ -955,7 +955,7 @@
 					}     			
 				});
 		        
-		       	$(window.parent.frames['left'].document.getElementById("applyCount")).text("(" + applyCount + ")");
+		       	$(window.parent.frames['left'].document.getElementById("applyCount")).text(" " + applyCount);
 		    }
 		    function Appr_onclick_Complete() {
 		

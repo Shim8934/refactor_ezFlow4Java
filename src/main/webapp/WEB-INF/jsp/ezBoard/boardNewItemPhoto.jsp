@@ -465,6 +465,11 @@
 		                alert("" + strLang8 + "" + AttachLimit + "MB" + strLang9 + "");
 		                return;
 		            }
+		            
+		            if (getNodeText(GetChildNodes(nodes[i])[1]) == "Not Image file") {
+		            	alert("<spring:message code ='ezBoard.jsw.01' />");
+		                return;
+		            }
 		            saveItemBoardId = pBoardID;
 		            var rtnMode = getNodeText(GetChildNodes(nodes[i])[5]);
 		            var imgFileName = getNodeText(GetChildNodes(nodes[i])[0]);

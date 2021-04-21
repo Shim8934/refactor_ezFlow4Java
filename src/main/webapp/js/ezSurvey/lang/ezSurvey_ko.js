@@ -70,7 +70,7 @@ var SurveyMessages = {
 //	strCreator   : "작&nbsp;성&nbsp;자",
 	strCreator   : "작성자",
 	strContent   : "보기를 입력해 주세요.",
-	strSlider1   : "최대값이 유효하지 않습니다. (유효값: 0 이상의 정수)",
+	strSlider1   : "최소값이 유효하지 않습니다. (유효값: 0 이상의 정수)",
 	strSlider2   : "최대값이 유효하지 않습니다. (유효값: 자연수)",
 	strSlider3   : "최소값을 최대값보다 작게 지정하세요.",
 	//strSlider4   : "현재 단위간격으로는 최대값에 도달할 수 없습니다.",

@@ -1222,6 +1222,9 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("bigAttachDownloadDay", bigAttachDownloadDay); // 보관되는 일수
 		model.addAttribute("bigSizeAttachDownloadLimitCount", bigSizeAttachDownloadLimitCount); // 다운로드 횟수
 		
+		// 비전자문서의 기안 시 파라미터 오류 방지
+		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
+
 		LOGGER.debug("draftuiWHWP ended");
 		
 		return "ezApprovalG/apprGdraftuiWHWP";

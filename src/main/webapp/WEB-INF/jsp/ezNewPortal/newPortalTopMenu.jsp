@@ -340,6 +340,18 @@
 			
 			window.open(url, "", option);
 		}
+
+		/* 2021-04-21 김정언 - (#76684) 직원조회 창 클릭 > 직원조회창 중앙에 뜨도록 수정 */
+		var employeeSearch = function () {
+			var height = window.screen.availHeight;
+			var width = window.screen.availWidth;
+			var top = (height - 560) / 2;
+			var left = (width - 750) / 2;
+			var url = '/ezPersonal/personSearch.do';
+			var option = 'height=560px,width=750px,top=' + top + ',left = ' + left + ',status = no, toolbar=no, menubar=no, location=no, resizable=0';
+			
+			window.open(url, "", option);
+		}
 		
 		// 유틸메뉴 이벤트 모아둔 곳
 		var setUtilEvent = function () {
@@ -347,7 +359,8 @@
 			if('${roleInfo}' === 'admin') {
 				setEvent('util_admin', '${utilAdminUrl}', '' ,'');	
 			}
-			setEvent('util_employee_search', '/ezPersonal/personSearch.do', '' ,'height=560px,width=750px, status = no, toolbar=no, menubar=no,location=no, resizable=0');
+			//setEvent('util_employee_search', '/ezPersonal/personSearch.do', '' ,'height=560px,width=750px, status = no, toolbar=no, menubar=no,location=no, resizable=0');
+			document.getElementById("util_employee_search").addEventListener('click', employeeSearch );
 			setEvent('util_set', '/ezPortal/environmentMain.do', 'main' ,'');
 			//setEvent('util_help', '/ezPortal/help/help.do', 'helpWindow', 'height=700px,width=1000px, status = no, toolbar=no, menubar=no, location=no, resizable=0');
 			//setEvent('util_help', '/ezNewPortal/help/index.do', 'helpWindow', 'height=700px,width=1000px, status = no, toolbar=no, menubar=no, location=no, resizable=0');

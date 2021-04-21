@@ -277,6 +277,8 @@ public interface EzCommonService {
 	
 	public void createMailTemplateSequence() throws Exception;
 
+	public void createJmochaMailboxProgress() throws Exception;
+	
 	public void addWebfolderUserSubdeptPermittedColumn() throws Exception;
 	
 	public void addWebfolderUserFolderManagerColumn() throws Exception;

@@ -5258,7 +5258,9 @@ CREATE TABLE `tbl_circular_link` (
   `memberId` varchar(100) DEFAULT NULL,
   `tenantId` mediumint(5) NOT NULL,
   PRIMARY KEY (`circularLinkId`),
-  KEY `tenantId_memberId_index` (`tenantId`,`memberId`)
+  KEY `tenantId_memberId_index` (`tenantId`,`memberId`),
+  KEY `idx_tbl_circular_link_circularId` (`circularId`),
+  KEY `idx_tbl_circular_link_circularFolderId` (`circularFolderId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -5326,7 +5328,8 @@ CREATE TABLE `tbl_circular_user` (
   `tenantId` mediumint(5) NOT NULL,
   `companyId` varchar(80) DEFAULT NULL,
   PRIMARY KEY (`circularUserId`),
-  KEY `tenantId_memberId_circularId_index` (`tenantId`,`memberId`,`circularId`)
+  KEY `tenantId_memberId_circularId_index` (`tenantId`,`memberId`,`circularId`),
+  KEY `idx_tbl_circular_user_circularId` (`circularId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -14855,3 +14858,16 @@ CREATE TABLE `tbl_yearlydoccount`(
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2020-05-12 16:36:39
+
+DROP TABLE IF EXISTS `tbl_susinschedule`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_susinschedule` (
+  `DOCID` varchar(80) NOT NULL,
+  `DEPTID` varchar(80) DEFAULT NULL,
+  `DIRPATH` varchar(1020) DEFAULT NULL,
+  `DOCSTATE` varchar(12) DEFAULT NULL,
+  `COMPANYID` varchar(20) DEFAULT NULL,
+  `LANG` varchar(10) DEFAULT NULL,
+  `TENANTID` mediumint(5) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

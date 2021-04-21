@@ -66,6 +66,8 @@
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezNewPortal/EzNewPortal_SQL_Oracle.xml"/>
     <!-- 메모 -->
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezMemo/EzMemo_SQL_Oracle.xml"/>
+    <!-- 문서24 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezDoc24/EzDoc24_SQL_Oracle.xml"/>
 
 	<!-- 2.관리자 모듈관리 SQL쿼리 XML -->
 	

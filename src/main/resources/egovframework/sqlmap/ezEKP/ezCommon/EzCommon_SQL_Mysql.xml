@@ -3228,6 +3228,26 @@
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 	</statement>
 	
+	<select id="EzCommonDAO.checkJmochaMailboxProgress">
+		SELECT
+			TENANT_ID
+		FROM
+			JMOCHA_MAILBOX_PROGRESS
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createJmochaMailboxProgress"> 
+		CREATE TABLE `jmocha_mailbox_progress` (
+		  `USER_KEY` varchar(80) NOT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  `USER_ID` varchar(80) NOT NULL,
+		  `ACT` varchar(15) NOT NULL,
+		  `PERCENT` mediumint(100) NOT NULL,
+		  `UPDATEDT` datetime DEFAULT current_timestamp(),
+		  PRIMARY KEY (`USER_KEY`,`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8
+	</statement>
+	
 		<select id="EzCommonDAO.checkWebfolderUserSubdeptPermittedColumn">
 		<![CDATA[
 			SELECT 

@@ -2199,7 +2199,7 @@ function setbuttonenable() {
         document.getElementById("tbtnSimsa").style.display = "none";
         
 		if (approvalFlag == "G") {
-			if(pListTypeValue == "4" && useHWP == 'YES') {
+			if(pListTypeValue == "4" && (useHWP == 'YES' || pNonElecRecType.toUpperCase() == "MHT")) {
 				document.getElementById("tbtnNonElecRec").style.display = "";
 			}
 		}

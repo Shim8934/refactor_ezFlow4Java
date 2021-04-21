@@ -136,6 +136,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	logger.debug("init started.");
     	try {
 	    	ezCommonService.createMailTemplateSequence();
+    		ezCommonService.createJmochaMailboxProgress();
 	    	ezCommonService.createTblCompanyConfig();
 	    	ezCommonService.createReformFlagColumn();
 	    	ezCommonService.addMailToJMochaDistribution();

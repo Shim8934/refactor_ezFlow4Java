@@ -534,6 +534,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		String absenceAllClear = ezCommonService.getTenantConfig("absenceAllClear", userInfo.getTenantId());
+		/* 2021-04-07 홍승비 - 비전자문서 양식 MHT 확장자 추가 (기본은 HWP) */
+		String nonElecRecType = ezCommonService.getTenantConfig("ApprNonElecRecType", userInfo.getTenantId()) != null ? ezCommonService.getTenantConfig("ApprNonElecRecType", userInfo.getTenantId()) : "HWP";
 		
 		model.addAttribute("SubQuery", subQuery);
 		model.addAttribute("approvalFlag", approvalFlag);
@@ -558,6 +560,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("userLang", userLang);
 		model.addAttribute("primary", commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()));
 		model.addAttribute("absenceAllClear", absenceAllClear);
+		model.addAttribute("nonElecRecType", nonElecRecType);
 		
 		logger.debug("aprManage ended.");
 		
@@ -1512,6 +1515,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String signImageSize = ezCommonService.getTenantConfig("SignImageSize", userInfo.getTenantId());
 		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
+		String useDoc24 = ezCommonService.getTenantConfig("useDoc24", userInfo.getTenantId());
 		String chamjoAfterYN = ezCommonService.getTenantConfig("chamjoAfterYN", userInfo.getTenantId());
 		String receptGubunYN = ezCommonService.getTenantConfig("receptGubunYN", userInfo.getTenantId());
 		String addLastKyulJeYN = ezCommonService.getTenantConfig("addLastKyulJeYN", userInfo.getTenantId());
@@ -1614,6 +1618,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("useOpenGov", useOpenGov);
 		model.addAttribute("useDynamicAprLine", useDynamicAprLine); //가변 결재선 사용여부 - 1(사용) / 0(사용안함)
 		model.addAttribute("isOuterForm", isOuterForm);
+		model.addAttribute("useDoc24", useDoc24);
+		model.addAttribute("primary", commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId())); // 다국어 여부 - 1(primary) / 2(secondary)
 		
 		logger.debug("ezApprovalInfo ended.");
 		
@@ -11132,5 +11138,23 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	    
 	    logger.debug("returnYN ended.");
 	    return retStr;
+	}
+	
+	/**
+	 * 2021-04-19 홍승비 - 문서의 ORGDOCID를 리턴하는 ajax용 함수 추가 (mode에 따라서 진행문서, 완료문서 분기)
+	 */
+	@RequestMapping(value = "/ezApprovalG/getOrgDocIDByMode.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	public String getOrgDocIDByMode(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
+		logger.debug("getOrgDocIDByMode started.");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String mode = request.getParameter("mode");
+		String result = ezApprovalGService.getOrgDocIDByMode(docID, mode, orgCompanyID, userInfo.getTenantId());
+		
+		logger.debug("getOrgDocIDByMode ended.");
+		return result;
 	}
 }
