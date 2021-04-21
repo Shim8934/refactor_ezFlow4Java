@@ -1476,6 +1476,7 @@
 	                            where folder_path like #folderPath# || '%'
                             	and tenant_id = #tenantId#
                             ) t on f.folder_id = t.folder_id
+                            WHERE F.USE_STATUS = 'Y'
                             group by create_id 
                         )
                  ) = (
@@ -1487,6 +1488,7 @@
 	                            where folder_path like #folderPath# || '%'
                             	and tenant_id = #tenantId#
                             ) t on f.folder_id = t.folder_id 
+                            WHERE F.USE_STATUS = 'Y'
                             group by create_id 
                       )
                  WHERE CREATE_ID = #userId#
