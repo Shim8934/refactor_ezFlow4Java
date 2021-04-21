@@ -133,10 +133,10 @@ var buttons = (function() {
 				return;
 			}
 			
-			if (hasContainsReplyFiles(selected.files)) {
+			/*if (hasContainsReplyFiles(selected.files)) {
 				alert(messages.replyFileDelete);
 				return;
-			}
+			}*/
 			
 			$.ajax({
 				type: "POST",
