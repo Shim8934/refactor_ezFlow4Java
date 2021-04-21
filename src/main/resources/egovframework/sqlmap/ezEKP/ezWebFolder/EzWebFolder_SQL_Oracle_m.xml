@@ -141,6 +141,7 @@
 		<result property="applicationDate"    column="APPLICATION_DATE"      columnIndex="3" javaType="String"  />
 		<result property="content"    column="CONTENT"      columnIndex="4" javaType="String"  />
 		<result property="approvalStatusUpdateDt"     column="APPROVAL_STATUS_UPDATEDT"       columnIndex="5" javaType="String"  />
+		<result property="companyId"     column="COMPANY_ID"       columnIndex="6" javaType="String"  nullValue=""/>
 	</resultMap>
 	
 	<resultMap id="applicationHistoryMember" class="HashMap">
@@ -2245,7 +2246,7 @@
 			SELECT
 				APPLY_ID,  FOLDER_NAME, CONTENT, 
 				to_char(APPLICATION_DATE, 'yyyy-mm-dd hh24:mi') AS APPLICATION_DATE,
-				to_char(APPROVAL_STATUS_UPDATEDT, 'yyyy-mm-dd hh24:mi') AS APPROVAL_STATUS_UPDATEDT
+				to_char(APPROVAL_STATUS_UPDATEDT, 'yyyy-mm-dd hh24:mi') AS APPROVAL_STATUS_UPDATEDT, COMPANY_ID
 			FROM 
 				TBL_WEBFOLDER_APPLY_HISTORY
 			WHERE 

@@ -1655,8 +1655,10 @@ public class EzWebFolderGWController_m {
 
 		LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 		int tenantId = userInfo.getTenantId();
-		String companyId = userInfo.getCompanyID();
+		String userCompanyId = userInfo.getCompanyID();
 		String offset = userInfo.getOffset();
+		
+		String companyId = "";
 		
 		try {
 			Map<String, String> historyMap = ezWebFolderService_m.getWebFolderApplyHistory(applyId);
@@ -1665,6 +1667,8 @@ public class EzWebFolderGWController_m {
 			if (historyMap != null) {
 				// 웹폴더 생성 정보
 				folderName = commonUtil.cleanValueUnescape(historyMap.get("folderName"));
+				companyId = historyMap.get("companyId");
+				companyId = companyId.equals("") ? userCompanyId : companyId;
 				
 				// 관리자, 구성원 정보
 				JSONArray memberListArr = new JSONArray();

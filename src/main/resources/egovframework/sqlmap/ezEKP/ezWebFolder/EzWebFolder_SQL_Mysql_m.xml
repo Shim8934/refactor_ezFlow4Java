@@ -141,6 +141,7 @@
 		<result property="applicationDate"    column="APPLICATION_DATE"      columnIndex="3" javaType="String"  />
 		<result property="content"    column="CONTENT"      columnIndex="4" javaType="String"  />
 		<result property="approvalStatusUpdateDt"     column="APPROVAL_STATUS_UPDATEDT"       columnIndex="5" javaType="String"  />
+		<result property="companyId"     column="COMPANY_ID"       columnIndex="6" javaType="String"  nullValue=""/>
 	</resultMap>
 	
 	<resultMap id="applicationHistoryMember" class="HashMap">
@@ -2181,7 +2182,7 @@
 		<![CDATA[
 			SELECT
 				APPLY_ID,  FOLDER_NAME, CONTENT, 
-				APPLICATION_DATE AS APPLICATION_DATE, APPROVAL_STATUS_UPDATEDT
+				APPLICATION_DATE AS APPLICATION_DATE, APPROVAL_STATUS_UPDATEDT, COMPANY_ID
 			FROM 
 				TBL_WEBFOLDER_APPLY_HISTORY
 			WHERE 
