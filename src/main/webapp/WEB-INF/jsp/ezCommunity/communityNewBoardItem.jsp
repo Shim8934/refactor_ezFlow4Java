@@ -979,7 +979,7 @@
 											id="ChkPermanence" name="ChkPermanence"
 											onclick="return ChkPermanent()" checked>
 										<spring:message code='ezCommunity.t930' /></span>
-										<span id="Makedate"><input type="text" id="Edatepicker"
+										<span id="Makedate"><input type="text" id="Edatepicker" readonly="readonly"
 											style="width: 80px; text-align: center"></span>
 									</c:when>
 									<c:otherwise>
@@ -987,7 +987,7 @@
 											id="ChkPermanence" name="ChkPermanence"
 											onclick="return ChkPermanent()">
 										<spring:message code='ezCommunity.t930' /></span>
-										<span id="Makedate"><input type="text" id="Edatepicker"
+										<span id="Makedate"><input type="text" id="Edatepicker" readonly="readonly"
 											style="width: 80px; text-align: center"></span>
 									</c:otherwise>
 								</c:choose></td>
