@@ -1519,7 +1519,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 				param.put("folderPath", folder.getFolderPath());
 				List<FileVO> fileList = ezWebFolderAdminService.folderInFileList(param);
 				
-				List<String> seqIdList = ezWebFolderAdminService.getSubFolderIdList(folder.getFolderPath(), tenantId, deleteUser);
+				List<String> seqIdList = ezWebFolderAdminService.getSubFolderIdList(folder.getFolderPath(), tenantId, deleteUser, "0");
 				ezWebFolderAdminService.deleteSelectedFolderUser(seqIdList, tenantId, 0);
 				for(int i=0; i<fileList.size(); i++){
 					ezWebFolderAdminService.deleteSelectedFileUser(deleteUser, tenantId, fileList.get(i).getFileId());
