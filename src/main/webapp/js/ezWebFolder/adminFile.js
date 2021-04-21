@@ -334,10 +334,10 @@ function fileDelete() {
 	
 	if (filesList == null) {alert(strLang38); return;}
 	
-	if (hasContainsReplyFiles(filesList)) {
+	/*if (hasContainsReplyFiles(filesList)) {
 		alert(messages.replyFileDelete);
 		return;
-	}
+	}*/
 	
 	openLeftPanel();
 	DivPopUpShow(450, 180, "/ezWebFolder/deleteConfirm.do?fileList=" + filesList.toString());
