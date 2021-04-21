@@ -468,6 +468,8 @@ function receiverIDList(preceiveDeptID) {
 }
 
 function SendMailToReceiveDept_Approv() {
+	// 정주환 #70971 부서 메일 발송 서비스로 변경
+	return;
     var pwriterID = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[13]));
     var Drafter = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[14]));
     var pstartdate = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[11]));
@@ -495,8 +497,10 @@ function SendMailToReceiveDept(pdrafttitle, pdraftname, pdrafdate, docid) {
             var DeptID = receiveDeptID[i];
             var receiverList = receiverIDList(DeptID);
 
-            if (receiverList == "")
-                return;
+            /* 2021-04-06 홍승비 - 수신부서에 수발신담당자가 존재하지 않는 경우, 다음 부서를 체크하지 않고 바로 루프를 빠져나가는 오류 수정 */
+            if (receiverList == "") {
+                continue;
+            }
             else {
                 var receiverID = receiverList.split(";");
 

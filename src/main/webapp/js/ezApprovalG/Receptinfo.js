@@ -6,6 +6,11 @@ function Receptinfo_ini() {
         TreeViewinitialize_tree2(arr_userinfo[4], companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "<%=_pServerName%>");
         
         if (approvalFlag == "G") {
+			// 정주환 - 문서24 관련 분기 추가
+        	if (useDoc24 == "YES") {
+        		ChangeReceptTab(document.getElementById("3tab5"));
+        		document.getElementById("3tab5").onclick();
+        	}
         	if (receptGubunYN == "Y") {
                 if (pDocType == "001" && isOuterForm) { //시행문
         			ChangeReceptTab(document.getElementById("3tab4"));
@@ -39,6 +44,7 @@ function ChangeReceptTab(obj) {
         document.getElementById("ReceptTemp").style.display = "none";
         document.getElementById("ReceptGroup").style.display = "none";
         document.getElementById("ReceptOuter").style.display = "none";
+        document.getElementById("ReceptDoc24").style.display = "none";
         document.getElementById("btnaddressChange").style.display = "none";
         document.getElementById("AprDeptAdd").style.display = "";
         document.getElementById("AprDeptOuterAdd").style.display = "none";
@@ -57,6 +63,7 @@ function ChangeReceptTab(obj) {
         document.getElementById("ReceptOrgan").style.display = "none";
         document.getElementById("ReceptTemp").style.display = "";
         document.getElementById("ReceptOuter").style.display = "none";
+        document.getElementById("ReceptDoc24").style.display = "none";
         document.getElementById("btnaddressChange").style.display = "none";
         document.getElementById("ReceptGroup").style.display = "none";
         document.getElementById("AprDeptAdd").style.display = "";
@@ -72,6 +79,7 @@ function ChangeReceptTab(obj) {
         document.getElementById("ReceptOrgan").style.display = "none";
         document.getElementById("ReceptTemp").style.display = "none";
         document.getElementById("ReceptOuter").style.display = "none";
+        document.getElementById("ReceptDoc24").style.display = "none";
         document.getElementById("btnaddressChange").style.display = "none";
         document.getElementById("ReceptGroup").style.display = "";
         document.getElementById("AprDeptAdd").style.display = "";
@@ -83,6 +91,7 @@ function ChangeReceptTab(obj) {
         document.getElementById("ReceptOrgan").style.display = "none";
         document.getElementById("ReceptTemp").style.display = "none";
         document.getElementById("ReceptOuter").style.display = "";
+        document.getElementById("ReceptDoc24").style.display = "none";
         if (useReceiveInfoName == '1') {
 //        	document.getElementById("btnaddressChange").style.display = "";
         } else {
@@ -97,6 +106,21 @@ function ChangeReceptTab(obj) {
         SelDivName = "Outer";
         document.getElementById("imgInsertAll").style.display = "";
         document.getElementById("imgDeleteAll").style.display = "";
+        document.getElementById("AddRemoveBTN").style.display = "";
+    }
+    else if (obj.getAttribute("divname") == "Doc24") {
+        document.getElementById("ReceptOrgan").style.display = "none";
+        document.getElementById("ReceptTemp").style.display = "none";
+        document.getElementById("ReceptOuter").style.display = "none";
+        document.getElementById("ReceptDoc24").style.display = "";
+        document.getElementById("ReceptGroup").style.display = "none";
+        document.getElementById("AprDeptAdd").style.display = "none";
+        document.getElementById("AprDeptOuterAdd").style.display = "none";
+        internalTab = false;
+        //2015-06-23 표준모듈:추가 - KSK
+        SelDivName = "Doc24";
+        document.getElementById("imgInsertAll").style.display = "none";
+        document.getElementById("imgDeleteAll").style.display = "none";
         document.getElementById("AddRemoveBTN").style.display = "";
     }
 }
@@ -120,6 +144,12 @@ function initReceptListView() {
     /*if (isUsed == "reuse") {
     	docIDorSN = beforeDocID;
     }*/
+    
+    /* 2021-04-19 홍승비 - 수신부서에서 회송된 문서의 경우, 원문서(완료문서)의 수신처 정보를 가져오도록 수정 */
+    if (typeof(isSusinReset) != "undefined" && isSusinReset == true) {
+    	docIDorSN = getOrgDocID();
+    	pMode = "END2";
+    }
     
     $.ajax({
 		type : "POST",
@@ -2377,6 +2407,9 @@ function InsertRec() {
         if (SelDivName == "Outer") {
             AprDeptOuterAdd_onclick();
         }
+        if (SelDivName == "Doc24") {
+            AprDeptDoc24Add_onclick();
+        }
     } catch (e) {
         alert("Receptinfo.js.InsertRec()::" + e.description);
     }
@@ -2768,4 +2801,212 @@ function GetEntryInfo(_DEPTID) {
     } 
     
     return ReceiveDocument;
+}
+	
+var xmlhttp3;
+function getDoc24List(){
+    xmlhttp3 = createXMLHttpRequest();
+    xmlhttp3.open("GET", "/ezDoc24/getDoc24List.do", true);
+    xmlhttp3.onreadystatechange = event_GetReceptDoc24TempletList;
+    xmlhttp3.send();
+}
+function event_GetReceptDoc24TempletList() {
+    if (xmlhttp3 == null || xmlhttp3.readyState != 4 || xmlhttp3.responseXML == null) return;
+    try {
+
+        if (xmlhttp3.responseText == "Error")
+            return;
+
+        document.getElementById('TreeView4').innerHTML = "";
+        var treeView = new TreeView();
+        treeView.SetID("tvTreeView4");
+        treeView.SetUseAgency(true);
+        treeView.SetUseSusinColor4AprG(true);
+        treeView.SetRequestData("RequestDataG");
+        treeView.SetNodeClick("TreeViewNodeClick4");
+        treeView.DataSource(xmlhttp3.responseXML);
+        treeView.DataBind("TreeView4");
+        xmlhttp3 = null;
+    }
+    catch (ErrMsg) {
+        alert("event_GetReceptOuterTempletList : " + ErrMsg.description);
+    }
+}
+function btnSearchDoc24_onClick() {
+	var word = document.getElementById("txtDoc24Name").value;
+	$.each($("#tvTreeView4_0_sub").children(), function(index, item){
+		if($(item).attr("nodename").indexOf(word) == -1){
+			$(item).css("display","none");
+		}else{
+			$(item).css("display","");
+		}
+	});
+}
+function AprDeptDoc24Add_onclick() {
+    var listview = new ListView();
+    listview.LoadFromID("lvRECEPTLIST");
+    var CurSelRow = listview.GetSelectedRows();
+    if (isExistDept(false)) {
+        var pAlertContent = strLang244;
+        OpenAlertUI(pAlertContent);
+        return;
+    }
+    var treeView = new TreeView();
+    treeView.LoadFromID("tvTreeView4");
+    var selectnode = treeView.GetSelectNode();
+    if (selectnode == null) {
+        var pAlertContent = strLang584;
+        OpenAlertUI(pAlertContent);
+        return;
+    }
+
+    var ouReceiveDocumentYN = selectnode.GetNodeData("DATA3");
+    if (ouReceiveDocumentYN != "Y") {
+        alert(strLang1104);
+        return;
+    }
+
+    var DuplicateFlag = DuplicateAprDeptCheckG(RECEPTLIST, selectnode.GetNodeData("DATA1"));
+    if (DuplicateFlag) {
+        AprLineAddDoc24(selectnode);
+    }
+    else {
+        var pAlertContent = strLang247;
+        OpenAlertUI(pAlertContent);
+    }
+}
+function AprLineAddDoc24(selNode) {
+	var listView = new ListView();
+	listView.LoadFromID("lvRECEPTLIST");
+	
+	var lvIdx = listView.GetRowCount();
+	if (lvIdx > 0) {
+		if (listView.GetDataRows()[0].id.indexOf("noItems") > 0) {
+			lvIdx = 0;
+		}
+	}
+	lvIdx++;
+	
+	var ResultXml = createXmlDom();
+	var Root, Headers, Header, HData;
+	var Rows, Row, Cell, Value;
+	
+	Root = createNodeInsert(ResultXml, Root, "LISTVIEWDATA");
+	//HEADER만들기
+	Headers = createNodeAndAppandNode(ResultXml, Root, Headers, "HEADERS");
+	
+	Header = createNodeAndAppandNode(ResultXml, Headers, Header, "HEADER");
+	createNodeAndAppandNodeText(ResultXml, Header, HData, "NAME", "순번");
+	createNodeAndAppandNodeText(ResultXml, Header, HData, "WIDTH", "35");
+	
+	Header = createNodeAndAppandNode(ResultXml, Headers, Header, "HEADER");
+	createNodeAndAppandNodeText(ResultXml, Header, HData, "NAME", "수신자명");
+	createNodeAndAppandNodeText(ResultXml, Header, HData, "WIDTH", "200");
+	
+	//ROW만들기
+	Rows = createNodeAndAppandNode(ResultXml, Root, Rows, "ROWS");
+	Row = createNodeAndAppandNode(ResultXml, Rows, Row, "ROW");
+	
+	Cell = createNodeAndAppandNode(ResultXml, Row, Cell, "CELL");
+	createNodeAndAppandNodeText(ResultXml, Cell, Value, "VALUE", lvIdx);
+	createNodeAndAppandNodeText(ResultXml, Cell, Value, "DATA1", selNode.GetNodeData("DATA1"));
+	createNodeAndAppandNodeText(ResultXml, Cell, Value, "DATA2", pDocID);
+	createNodeAndAppandNodeText(ResultXml, Cell, Value, "DATA3", "Y");
+	createNodeAndAppandNodeText(ResultXml, Cell, Value, "DATA4", "N");
+	createNodeAndAppandNodeText(ResultXml, Cell, Value, "DATA5", "N");
+	createNodeAndAppandNodeText(ResultXml, Cell, Value, "DATA6", "");
+	createNodeAndAppandNodeText(ResultXml, Cell, Value, "DATA7", "");
+	createNodeAndAppandNodeText(ResultXml, Cell, Value, "DATA8", "");
+	createNodeAndAppandNodeText(ResultXml, Cell, Value, "DATA9", "");
+	createNodeAndAppandNodeText(ResultXml, Cell, Value, "DATA10", selNode.GetNodeData("nodename"));
+	createNodeAndAppandNodeText(ResultXml, Cell, Value, "DATA11", selNode.GetNodeData("nodename"));
+	createNodeAndAppandNodeText(ResultXml, Cell, Value, "DATA12", "");
+	createNodeAndAppandNodeText(ResultXml, Cell, Value, "DATA13", "");
+	createNodeAndAppandNodeText(ResultXml, Cell, Value, "DATA14", selNode.GetNodeData("nodename"));
+	createNodeAndAppandNodeText(ResultXml, Cell, Value, "DATA15", selNode.GetNodeData("nodename"));
+	
+	Cell = createNodeAndAppandNode(ResultXml, Row, Cell, "CELL");
+	createNodeAndAppandNodeText(ResultXml, Cell, Value, "VALUE", selNode.GetNodeData("nodename"));
+	
+	var InitTr = listView.GetDataRows();
+	var MaxID = 0;
+	var CurID = 0;
+	for (var j = 0; j < InitTr.length; j++) {
+		CurID = Number(listView.GetSelectedRowID(j).substring(listView.GetSelectedRowID(j).lastIndexOf('_') + 1), listView.GetSelectedRowID(j).length);
+		if (MaxID < CurID)
+			MaxID = CurID;
+	}
+	
+	if (InitTr.length > 0) {
+		if (InitTr[0].id.indexOf("noItems") <= 0) {
+			var oTr = listView.AddRow(0);
+			SetAttribute(oTr, "id", "lvRECEPTLIST" + "_TR_" + eval(MaxID + 1));
+			listView.AddDataRow(oTr, SelectNodes(ResultXml, "LISTVIEWDATA/ROWS/ROW")[0]);
+		} else {
+			document.getElementById("RECEPTLIST").innerHTML = "";
+            var listView = new ListView();
+            listView.SetID("lvRECEPTLIST");
+            listView.SetMulSelectable(false);
+            listView.SetHeightFree(true);
+            listView.SetRowOnDblClick("AprDeptDel_onclick");
+            listView.DataSource(ResultXml);
+            listView.DataBind("RECEPTLIST");
+            listView.SetSelectFlag(false);
+		}
+	} else {
+		document.getElementById("RECEPTLIST").innerHTML = "";
+        var listView = new ListView();
+        listView.SetID("lvRECEPTLIST");
+        listView.SetMulSelectable(false);
+        listView.SetHeightFree(true);
+        listView.SetRowOnDblClick("AprDeptDel_onclick");
+        listView.DataSource(ResultXml);
+        listView.DataBind("RECEPTLIST");
+        listView.SetSelectFlag(false);
+	}
+}
+function doc24Detail_onclick() {
+	console.log(selDoc24);
+    if (selDoc24 == undefined) {
+		var pAlertContent = strLang584;
+		OpenAlertUI(pAlertContent);
+		return;
+    }
+	var heigth = window.screen.availHeight; 
+    var width = window.screen.availWidth; 
+    var left = (width - 620) / 2; 
+    var top = (heigth - 425) / 2;         
+    var szHref = "/ezDoc24/getDoc24Detail.do?orgcn=" + selDoc24;   
+	try{
+	    DivPopUpShow(620, 380, szHref); 
+	}catch(e){
+		alert(e);
+	}
+//    window.open(szHref, "", "width=620, height=425, resizable=yes, scrollbars=yes, top="+top+", left=" + left); 
+}
+var selDoc24;
+function TreeViewNodeClick4(){
+	selDoc24 = $(event.target).parent().attr("DATA1");
+}
+
+/* 2021-04-19 홍승비 - 원문서의 DOCID를 가져오는 ajax 함수 추가 */
+function getOrgDocID() {
+	var orgDocID = "";
+	
+	$.ajax({
+		type : "GET",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getOrgDocIDByMode.do",
+		data : {
+				docID    : pDocID,
+				mode : "APR",
+				orgCompanyID : companyID
+		},
+		success: function(result){
+			orgDocID = result;
+		}
+	});
+	
+	return orgDocID;
 }

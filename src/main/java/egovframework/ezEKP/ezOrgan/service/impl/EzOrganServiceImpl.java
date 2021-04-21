@@ -1666,7 +1666,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         Collections.sort(ou, new Comparator<String[]>(){
         	@Override
             public int compare(String[] o1, String[] o2) {
-                return  o1[2].compareTo(o2[2]);
+                return  o1[0].compareTo(o2[0]);
             }
         });
         

@@ -114,6 +114,7 @@
 		    arr_userinfo[16]  = "<c:out value ='${userInfo.deptName2}'/>";
 		    arr_userinfo[17]  = "<c:out value ='${userInfo.primary}'/>";
 		    var pCompanyID = "<c:out value ='${userInfo.companyID}'/>";
+		    var companyID = "<c:out value = '${userInfo.companyID}'/>";
 		    var KuyjeType = "002";
 		    var signDateFormat = "<c:out value ='${optSignDateFormat}'/>";
 		    var isSplit = "<c:out value ='${optIsSplit}'/>";
@@ -199,11 +200,6 @@
 		    	if(approvalFlag == "G") {
 	        		$("#btnAddSepAttach").css("display","");
 	        	} 
-		    	
-		    	if (nonElecRec == "Y") {
-			        getNonElecInfoSusinInit();
-					document.getElementById("btnAddSepAttach").style.display = "none";
-		        }
 		    	
 		    	if(useExternalMailServer == "NO") {
 		    		$("#btnMail").css("display","");
@@ -416,7 +412,13 @@
 		            pUserID = pOrgAprUserID;
 		            getDocInfo();
 		            setAttachInfo(pDocID, "APR", lstAttachLink);
-		            GetExchInfo();		
+		            GetExchInfo();
+		            
+			    	if (nonElecRec == "Y") {
+				        getNonElecInfoSusinInit();
+						document.getElementById("btnAddSepAttach").style.display = "none";
+			        }
+		            
 		            if (pDocHref != "")
 		            {
 		                message.Set_EditorContentURL(pDocHref);
@@ -1721,7 +1723,7 @@
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 
-		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&orgCompanyID=" + pCompanyID + "&docType=" + pDocType + "&formID=" + pFormID, "ezApprovalInfo", GetOpenWindowfeature(1144, 750));
+		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&orgCompanyID=" + pCompanyID + "&docType=" + pDocType + "&formID=" + pFormID, "ezApprovalInfo", GetOpenWindowfeature(1194, 750));
 		        
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
@@ -1849,6 +1851,8 @@
 				            	sepAttachCheckYN = ret[26];
 				            	if (ext == "hwp") {
 					            	setNonElecRecInfo(nonElecRecInfoXml);
+				            	} else {
+				            		setNonElecRecInfo_mht(nonElecRecInfoXml);
 				            	}
 				            }
 

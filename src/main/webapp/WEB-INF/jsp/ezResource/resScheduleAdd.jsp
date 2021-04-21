@@ -479,7 +479,8 @@
 	        	} else {
 	        		if (!AllDayCheckStartEndDateTime()) {
 	        			// 2018-10-02 김민성 - 자원 반복예약 시 회수 설정 시 끝날짜 무시하도록 수정
-	        			if($("#EndTimeSet").checked == true) {		
+	        			// 2020-04-15 장세원 - 자원 하루종일 예약시 종료일이 시작일 전일경우 return
+	        			if($("#EndTimeSet").checked == true || $("#EndTimeSet").checked == undefined) {		
 		        			alert("" + strLang139 + "");			
 		        			return;
 	        			}

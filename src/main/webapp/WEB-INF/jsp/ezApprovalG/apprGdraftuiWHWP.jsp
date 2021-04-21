@@ -1768,7 +1768,7 @@
 	                        <li id="btnReturn" style="display: none"><span onclick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t155'/></span></li> --%>
 							<c:choose>
 								<c:when test="${nonElecRec eq 'Y'}">
-									<li id="btntotaldocinfo"><span onclick="return btnApprovalInfo()">문서정보</span></li>
+									<li id="btntotaldocinfo"><span onclick="return btnApprovalInfo('1')">문서정보</span></li>
 	                        		<li id="btnReturn" style="display: none"><span onclick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t155'/></span></li>
 			                        <li id="btnSendDraft"><span onclick="return btnSendDraft_onclick()">등록</span></li>
 								</c:when>

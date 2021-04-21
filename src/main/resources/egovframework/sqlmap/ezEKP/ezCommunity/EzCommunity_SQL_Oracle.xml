@@ -780,7 +780,8 @@
 			<![CDATA[
 				ORDER BY
 					A.parentwritedate DESC,
-					TO_CHAR(A.upperitemidtree)
+					A.upperitemidtree,
+					A.itemlevel
 				)
 			]]>
 		</isEqual>

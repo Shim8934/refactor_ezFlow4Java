@@ -101,6 +101,7 @@
 		        var imgWidth = "57px";
 		        var imgHeight = "37px";
 		        var rsa = new RSAKey();
+		        var imageContentArray = new Array();
 
 		        window.onload = function () {
 		            imageViewInit();
@@ -538,7 +539,8 @@
 		            document.getElementById("mainimages").style.display = "none";
 		            document.getElementById("mainimages").src = mainfilename;
 		            document.getElementById("mainimages").name = imagefilename.name;
-		            document.getElementById("MainContent").innerHTML = MakeXMLString(imagefilename.title);
+		            //document.getElementById("MainContent").innerHTML = MakeXMLString(imagefilename.title);
+		            document.getElementById("MainContent").innerHTML = MakeXMLString(imageContentArray[index].title);
 		
 		            imageloding();
 		        }
@@ -838,6 +840,8 @@
 		                pListImage += getNodeText(xmldom.getElementsByTagName("FILEPATH")[i]) + ";";
 		                pImageID += getNodeText(xmldom.getElementsByTagName("IMAGEID")[i]) + ";";
 		                resultimage += getNodeText(xmldom.getElementsByTagName("IMAGEPATH")[i]);
+		                
+		                imageContentArray.push({title:getNodeText(xmldom.getElementsByTagName("FILECONTENT")[i])});
 		            }
 		
 		            ImageCount = xmldom.getElementsByTagName("ROW").length;

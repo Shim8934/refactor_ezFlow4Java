@@ -921,7 +921,7 @@
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;		
 		
-		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType, "ezApprovalInfo", GetOpenWindowfeature(1144, 750));
+		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType, "ezApprovalInfo", GetOpenWindowfeature(1194, 750));
 
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
@@ -986,7 +986,7 @@
 		            	nonSepAttachLVXml = ret[24];
 		            	g_szSCListXml = ret[25];
 		            	sepAttachCheckYN = ret[26];
-		            	setNonElecRecInfo(nonElecRecInfoXml);
+		            	setNonElecRecInfo_mht(nonElecRecInfoXml);
 		            }
 
 		            if (useOpenGov == "YES") {

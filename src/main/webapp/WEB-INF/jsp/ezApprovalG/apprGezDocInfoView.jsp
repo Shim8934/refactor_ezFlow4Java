@@ -43,7 +43,7 @@
 	        if(approvalFlag == "G") {
         		$(".approvalG").css("display","");
         		$(".approval").css("display","none");
-        		$("#summary_txta").css("width", "388px").css("height", "90px");
+        		$("#summary_txta").css("width", "388px").css("height", "82px");
         	} else {
         		$(".approvalG").css("display","none");
         		$(".approval").css("display","");

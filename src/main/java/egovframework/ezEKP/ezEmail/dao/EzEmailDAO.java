@@ -245,4 +245,21 @@ public class EzEmailDAO extends EgovAbstractDAO {
 	public void deleteBigAttachCountInfo(Map<String, Object> map) {
 		delete("EzEmailDAO.deleteBigAttachCountInfo", map);
 	}
+	
+	public void setMailboxProgress(Map<String, Object> map) {
+		insert("EzEmailDAO.setMailboxProgress", map);
+	}
+	
+	public int updateMailboxProgress(Map<String, Object> map) {
+		return update("EzEmailDAO.updateMailboxProgress", map);
+	}
+	
+	public String getMailboxProgress(Map<String, Object> map) {
+		return (String) select("EzEmailDAO.getMailboxProgress", map);
+	}
+	
+	public int deleteMailboxProgress(Map<String, Object> map) {
+		return delete("EzEmailDAO.deleteMailboxProgress", map);
+	}
+	
 }

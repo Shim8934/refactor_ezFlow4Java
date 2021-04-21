@@ -130,6 +130,7 @@
 		    var extensionattribute5 = "<c:out value = '${userInfo.extensionattribute5}'/>";
 		    var absenceAllClear = "<c:out value = '${absenceAllClear}'/>";
 		    var deptPathCode = "<c:out value = '${userInfo.deptPathCode}'/>";
+		    var pNonElecRecType = "<c:out value = '${nonElecRecType}'/>";
 		    
 		    var selectcabinet_cross_dialogArguments = new Array();
 		    
@@ -2210,22 +2211,33 @@
 		    function initselyear() {
 		        $('#sel_year').selectmenu('close');
 		    }
+		    
+		    /*2021-04-07 홍승비 - MHT양식의 비전자문서등록 추가 */
 			<%-- 비전자문서 등록 --%>
 			function btnNonElecRec_onclick() {
-				if(useWebHWP == "NO") {
-					if (isIE()) {
-						var url = "/ezApprovalG/draftuiHWP.do?formURL=";
+				if (pNonElecRecType.toUpperCase() == "MHT") {
+					var url = "/ezApprovalG/draftui.do?formURL=";
+				    var form = "/files/upload_approvalG/form/2021000000.mht";
+				    var docInfo = "&draftFlag=DRAFT&formDocType=003&susinSN=0&docState=&listType=4&aprState=&isTmpDoc=&nonElecRec=Y";
+				   	window.open(url + form + docInfo, "", GetOpenWindowfeature(1145, 1000));
+				}
+				else { // 기존 HWP
+					if (useWebHWP == "NO") {
+						if (isIE()) {
+							var url = "/ezApprovalG/draftuiHWP.do?formURL=";
+						    var form = "/files/upload_approvalG/form/2018000000.hwp";
+						    var docInfo = "&draftFlag=DRAFT&formDocType=003&susinSN=0&docState=&listType=4&aprState=&isTmpDoc=&nonElecRec=Y";
+						   	window.open(url + form + docInfo, "", GetOpenWindowfeature(1145, 1000));
+		                } else {
+		                	alert("비전자문서 등록은 IE에서만 가능합니다.");
+		                }
+					}
+					else {
+						var url = "/ezApprovalG/draftuiWHWP.do?formURL=";
 					    var form = "/files/upload_approvalG/form/2018000000.hwp";
 					    var docInfo = "&draftFlag=DRAFT&formDocType=003&susinSN=0&docState=&listType=4&aprState=&isTmpDoc=&nonElecRec=Y";
 					   	window.open(url + form + docInfo, "", GetOpenWindowfeature(1145, 1000));
-	                } else {
-	                	alert("비전자문서 등록은 IE에서만 가능합니다.");
-	                }
-				} else {
-					var url = "/ezApprovalG/draftuiWHWP.do?formURL=";
-				    var form = "/files/upload_approvalG/form/2018000000.hwp";
-				    var docInfo = "&draftFlag=DRAFT&formDocType=003&susinSN=0&docState=&listType=4&aprState=&isTmpDoc=&nonElecRec=Y";
-				   	window.open(url + form + docInfo, "", GetOpenWindowfeature(1145, 1000));
+					}
 				}
 			}
 		    

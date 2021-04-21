@@ -753,4 +753,10 @@ public interface EzApprovalGService {
 	public String getAttachFileMinSaveDate(String docID, String companyID, int tenantID) throws Exception;
 	 
 	public Map<String, Object> getDocProcessState(String docID, String orgDocID, LoginVO userInfo) throws Exception;
+
+	// 정주환 수신처 스케쥴러
+	public void doSusinSchedule() throws Exception;
+
+	/* 2021-04-19 홍승비 - 문서의 ORGDOCID를 리턴하는 ajax용 함수 추가 (mode에 따라서 진행문서, 완료문서 분기) */
+	public String getOrgDocIDByMode(String docID, String mode, String orgCompanyID, int tenantID) throws Exception;
 }
