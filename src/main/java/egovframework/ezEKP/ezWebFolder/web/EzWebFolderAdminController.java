@@ -1982,14 +1982,14 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String useOcs = config.getProperty("config.USE_OCS");
 		String companyId = request.getParameter("companyId");
 		String lang = auth.getLang();
+		String useShowAllCompanies = ezCommonService.getTenantConfig("useShowAllCompanies", userInfo.getTenantId());
 		
 		model.addAttribute("deptID", deptID);
 		model.addAttribute("cn", cn);
 		model.addAttribute("textName", textName);
 		model.addAttribute("useOcs", useOcs);
 		model.addAttribute("companyId", companyId);
-		
-		
+		model.addAttribute("useShowAllCompanies", useShowAllCompanies);
 		model.addAttribute("folderManager", folderManager);
 		model.addAttribute("dept", auth.getDeptID());
 		model.addAttribute("lang", lang);
