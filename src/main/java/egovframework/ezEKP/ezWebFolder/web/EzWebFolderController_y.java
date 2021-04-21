@@ -40,7 +40,6 @@ public class EzWebFolderController_y {
 	public String main (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model )throws Exception {
 		LOGGER.debug("main started");
-		String webappJsp = "ezWebFolder/webFolderRight";
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String folderType = orElse(request.getParameter("folderType"), "");
@@ -60,7 +59,6 @@ public class EzWebFolderController_y {
 		
 		// 관리자 또는 담당자 flag.
 		if (folderType.equals("C")) {
-			webappJsp = webappJsp + folderType;
 			param.put("folderId", "");
 			resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/check-folderManager/"+userInfo.getId(), param, request, "get", null);
 			
@@ -92,7 +90,7 @@ public class EzWebFolderController_y {
         model.addAttribute("useVersionHistory", useVersionHistory);
         
         LOGGER.debug("main ended");
-		return webappJsp;
+		return "ezWebFolder/webFolderRight";
 	}
 	
 	// getFolderList /ezwebfolder/users/{userId}/folder-tree에 가는 메소드 
