@@ -17145,6 +17145,25 @@
 	<insert id="EzApprovalG.aprMakeTmp2Ing" parameterClass="Map">
 		INSERT INTO 
 			TBL_RECEIPTPOINTINFO
+			(DOCID ,
+              RECEIPTPOINTID ,
+              RECEIPTPOINTNAME ,
+              EXTRECEPTYN ,
+              PROCESSYN ,
+              PROCESSSN ,
+              CANEDITYN ,
+              EXTRECEPTEMAIL ,
+              RECEIPTMEMBERID ,
+              RECEIPTMEMBERNAME ,
+              PROCESSDATE ,
+              RECEIPTMEMBERJOBTITLE ,
+              DEPTMEMBERSN ,
+              ReceiptPointName2 ,
+              ReceiptMemberJobTitle2 ,
+              ReceiptMemberName2 ,
+              RouteYN ,
+              TENANT_ID,
+              COMPANYID)
 	     ( SELECT 
 	     		  #v_PDOCID# ,
 	              RECEIPTPOINTID ,
@@ -24058,6 +24077,26 @@
    <insert id="EzApprovalG.insertTmpReceiptPointInfo" parameterClass="Map">
    		INSERT INTO 
    			TBL_TMPRECEIPTPOINTINFO 
+   			(OWNERID,
+   			SN,
+   			RECEIPTPOINTID, 
+   			RECEIPTPOINTNAME, 
+   			EXTRECEPTYN, 
+   			PROCESSYN, 
+   			PROCESSSN, 
+   			CANEDITYN, 
+   			EXTRECEPTEMAIL ,  
+   			RECEIPTMEMBERID ,
+   			RECEIPTMEMBERNAME , 
+   			PROCESSDATE , 
+   			RECEIPTMEMBERJOBTITLE ,
+   			DEPTMEMBERSN , 
+   			ReceiptPointName2 , 
+   			ReceiptMemberJobTitle2 , 
+   			ReceiptMemberName2 , 
+   			RouteYN, 
+   			TENANT_ID ,
+   			COMPANYID)
    		( SELECT 
 	   			#v_USERID#, 
 	   			#v_SN#, 
