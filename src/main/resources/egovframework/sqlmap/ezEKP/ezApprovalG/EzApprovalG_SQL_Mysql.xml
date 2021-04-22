@@ -8198,7 +8198,8 @@
 	                DocTitle FILENAME  ,
 	                Href FILEPATH   ,
 	                1 AS TYPESN,
-	                1 AS VIEWSN
+	                1 AS VIEWSN,
+	                1 AS ATTACHFILESN
 	         FROM 
 	         		TBL_APRDOCINFO 
 	         WHERE  
@@ -8214,7 +8215,8 @@
 	                AttachFileName FILENAME  ,
 	                AttachFileHref FILEPATH  ,
 					2 AS TYPESN,
-	                IFNULL(VIEWORDER, ATTACHFILESN) AS VIEWSN
+	                IFNULL(VIEWORDER, ATTACHFILESN) AS VIEWSN,
+	                ATTACHFILESN
 	         FROM 
 	         		TBL_APRATTACHINFO 
 	         WHERE  
@@ -8231,7 +8233,8 @@
 	                AttachDocName FILENAME  ,
 	                AttachDocURL FILEPATH  ,
 	                3 AS TYPESN,
-	                ATTACHSN AS VIEWSN
+	                ATTACHSN AS VIEWSN,
+	                1 AS ATTACHFILESN
 	         FROM 
 	         		TBL_APRDOCATTACHINFO 
 	         WHERE 
@@ -8248,7 +8251,8 @@
 		                DocTitle FILENAME  ,
 		                Href FILEPATH   ,
 						1 AS TYPESN,
-		                1 AS VIEWSN
+		                1 AS VIEWSN,
+		                1 AS ATTACHFILESN
 		        FROM 
 		        		TBL_ENDAPRDOCINFO
 		        WHERE  
@@ -8265,7 +8269,8 @@
 		                AttachFileName FILENAME  ,
 		                AttachFileHref FILEPATH  ,
 						2 AS TYPESN,
-	               	 	IFNULL(VIEWORDER, ATTACHFILESN) AS VIEWSN
+	               	 	IFNULL(VIEWORDER, ATTACHFILESN) AS VIEWSN,
+	               	 	ATTACHFILESN
 		        FROM 
 		        		TBL_ENDATTACHINFO 
 		        WHERE  
@@ -8282,7 +8287,8 @@
 		                AttachDocName FILENAME  ,
 		                AttachDocURL FILEPATH  ,
 						3 AS TYPESN,
-	                	ATTACHSN AS VIEWSN
+	                	ATTACHSN AS VIEWSN,
+	                	1 AS ATTACHFILESN
 		        FROM 
 		        		TBL_ENDAPRDOCATTACHINFO 
 		        WHERE  
@@ -8305,7 +8311,8 @@
 							HREF FILEPATH,
 							CONCAT(OWNERID, '@', SN) AS DOCID,
 							1 AS TYPESN,
-		                	1 AS VIEWSN
+		                	1 AS VIEWSN,
+		                	1 AS ATTACHFILESN
 						FROM
 							TBL_TMPAPRDOCINFO
 						WHERE
@@ -8321,7 +8328,8 @@
 							ATTACHFILEHREF FILEPATH,
 							CONCAT(OWNERID, '@', SN) AS DOCID,
 							2 AS TYPESN,
-	               	 		IFNULL(VIEWORDER, ATTACHFILESN) AS VIEWSN
+	               	 		IFNULL(VIEWORDER, ATTACHFILESN) AS VIEWSN,
+	               	 		ATTACHFILESN
 						FROM
 							TBL_TMPATTACHINFO
 						WHERE
@@ -8337,7 +8345,8 @@
 							ATTACHDOCURL FILEPATH,
 							CONCAT(OWNERID, '@', SN) AS DOCID,
 							3 AS TYPESN,
-	                		ATTACHSN AS VIEWSN
+	                		ATTACHSN AS VIEWSN,
+	                		1 AS ATTACHFILESN
 						FROM
 							TBL_TMPAPRDOCATTACHINFO
 						WHERE
@@ -17388,6 +17397,25 @@
 	<insert id="EzApprovalG.aprMakeTmp2Ing" parameterClass="Map">
 		INSERT INTO 
 			TBL_RECEIPTPOINTINFO
+			(DOCID ,
+              RECEIPTPOINTID ,
+              RECEIPTPOINTNAME ,
+              EXTRECEPTYN ,
+              PROCESSYN ,
+              PROCESSSN ,
+              CANEDITYN ,
+              EXTRECEPTEMAIL ,
+              RECEIPTMEMBERID ,
+              RECEIPTMEMBERNAME ,
+              PROCESSDATE ,
+              RECEIPTMEMBERJOBTITLE ,
+              DEPTMEMBERSN ,
+              ReceiptPointName2 ,
+              ReceiptMemberJobTitle2 ,
+              ReceiptMemberName2 ,
+              RouteYN ,
+              TENANT_ID,
+              COMPANYID)
 	     ( SELECT 
 	     		  #v_PDOCID# ,
 	              RECEIPTPOINTID ,
@@ -24206,6 +24234,26 @@
    <insert id="EzApprovalG.insertTmpReceiptPointInfo" parameterClass="Map">
    		INSERT INTO 
    			TBL_TMPRECEIPTPOINTINFO 
+   			(OWNERID,
+   			SN,
+   			RECEIPTPOINTID, 
+   			RECEIPTPOINTNAME, 
+   			EXTRECEPTYN, 
+   			PROCESSYN, 
+   			PROCESSSN, 
+   			CANEDITYN, 
+   			EXTRECEPTEMAIL ,  
+   			RECEIPTMEMBERID ,
+   			RECEIPTMEMBERNAME , 
+   			PROCESSDATE , 
+   			RECEIPTMEMBERJOBTITLE ,
+   			DEPTMEMBERSN , 
+   			ReceiptPointName2 , 
+   			ReceiptMemberJobTitle2 , 
+   			ReceiptMemberName2 , 
+   			RouteYN, 
+   			TENANT_ID ,
+   			COMPANYID)
    		( SELECT 
 	   			#v_USERID#, 
 	   			#v_SN#, 
