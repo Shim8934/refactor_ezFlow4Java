@@ -1229,8 +1229,11 @@ public class EzWebFolderGWController {
 			String path = commonUtil.getUploadPath("upload_webfolder.ROOT", tenantId) + commonUtil.separator;
 			path = path.substring(0, path.length()-1);
 			
+			String _file[] = new String[1];
+			_file[0] = fileId;
 			if (!webfolderUtil.isWebfolderAdmin(userInfo)){
-				JSONObject permissionResult = ezWebFolderService_y.checkPermissions(userId, userInfo.getDeptID(), userInfo.getCompanyID(), null, fileId, userInfo.getTenantId());
+//				JSONObject permissionResult = ezWebFolderService_y.checkPermissions(userId, userInfo.getDeptID(), userInfo.getCompanyID(), null, fileId, userInfo.getTenantId());
+				JSONObject permissionResult = ezWebFolderService_y.checkPermissionForCreator(null, _file, userInfo, false);
 
 				if ("error".equals(permissionResult.get("status"))) {
 					return permissionResult;
