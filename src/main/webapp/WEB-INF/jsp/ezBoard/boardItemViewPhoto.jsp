@@ -528,6 +528,7 @@
 		        function ImageMain(imagefilename)
 		        {
 		            imageonmouse(imagefilename.id);
+		            var index = Number(imagefilename.id.substring(imagefilename.id.length-1));
 		
 		            var mainfilename = imagefilename.src;
 		            if (imagefilename.src.indexOf("s_") > -1) {

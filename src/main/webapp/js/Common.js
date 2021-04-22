@@ -643,3 +643,28 @@ var listExcelDown = function(params) {
 	request.send(params);
 };
 
+function escapeHtml(text) {
+    var map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        '"': '&#034;',
+        "'": '&#039;'
+    };
+
+    return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+}
+
+function unEscapeHtml(text) {
+    var map = {
+        '&amp;' : '&',
+        '&lt;' : '<',
+        '&gt;' : '>',
+        '&quot;' : '"',
+        '&#034;' : '"',
+        '&#039;' : "'"
+    };
+
+    return text.replace(/&amp;|&lt;|&gt;|&quot;|&#034;|&#039;/g, function(m) { return map[m]; });
+}
