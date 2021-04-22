@@ -1005,6 +1005,12 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 						result.put("code", 3);
 						return new JSONObject(result);
 					}
+				} else if (folder.getFolderType().equals("U")) { // 개인폴더 공유시, 공유대상자가 올린 파일에 대해서 '이동'권한이 없다고 하여 해당 코드 추가
+					if (!folder.getOwnerId().equalsIgnoreCase(userId) && !fileVO.getCreateId().equalsIgnoreCase(userId)) {
+						result.put("status", "error");
+						result.put("code", 3);
+						return new JSONObject(result);
+					}
 				} else {
 					if (!fileVO.getCreateId().equalsIgnoreCase(userId)){
 						result.put("status", "error");
