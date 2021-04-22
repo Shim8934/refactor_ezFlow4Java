@@ -183,7 +183,8 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
-		String folderId      = request.getParameter("folderId")   != null ? request.getParameter("folderId") : "";
+		String folderId      = request.getParameter("folderId")   	!= null ? request.getParameter("folderId") 		: "";
+		String folderType    = request.getParameter("folderType")   != null ? request.getParameter("folderType") 	: "";
 		
 		String gwServerUrl   = config.getProperty("config.webFolderGwServerURL");
 		String url           = gwServerUrl + "/rest/ezwebfolderadmin/company-list/" + user.getId();
@@ -208,6 +209,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 			model.addAttribute("userCompany", companyId);
 			model.addAttribute("list", companyList);
 			model.addAttribute("primary", (String) resultBody.get("primary"));
+			model.addAttribute("folderType", folderType);
 		}
 		
 		model.addAttribute("folderId", folderId);

@@ -686,6 +686,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String mode         	= request.getParameter("mode")       		!= null ? request.getParameter("mode")       : "normal";
 		String type         	= request.getParameter("type")       		!= null ? request.getParameter("type")       : "";
 		String folderTypeCheck  = request.getParameter("folderTypeCheck") 	!= null ? request.getParameter("folderTypeCheck") : "";
+		String folderType  		= request.getParameter("folderType") 		!= null ? request.getParameter("folderType") : "";
 		
 		logger.debug("FileId list: " + fileIdList + " || FolderId List: " + folderIdList + " || mode: " + mode + " || type: " + type + 
 				"|| folderTypeCheck : " + folderTypeCheck);
@@ -758,6 +759,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		model.addAttribute("folderTypeCheck", folderTypeCheck);
 		model.addAttribute("isPermittedMove", isPermittedMove);
 		model.addAttribute("isPermittedCopy", isPermittedCopy);
+		model.addAttribute("folderType", folderType);
 		logger.debug("fileMoveConfirm end");
 		
 		return "/ezWebFolder/fileMove";

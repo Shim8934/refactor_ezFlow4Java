@@ -669,7 +669,7 @@
 				}
 				
 				leftPanelProcess();
-				DivPopUpShow(450, 500, "/admin/ezWebFolder/folderMoveConfirm.do?folderId=" + selectedFolder);
+				DivPopUpShow(450, 500, "/admin/ezWebFolder/folderMoveConfirm.do?folderId=" + selectedFolder + "&folderType=C");
 			}
 			
 			function leftPanelProcess() {

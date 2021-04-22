@@ -371,7 +371,12 @@ function fileMove() {
 	if (filesList == null) {alert(strLang38); return;}
 	
 	openLeftPanel();
-	DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + filesList.toString() + "&mode=admin");
+	var _folderType = "";
+	if (folderType == "company") {
+		_folderType = "C";
+	} 
+	
+	DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + filesList.toString() + "&mode=admin&folderType=" + _folderType);
 }
 
 function openFileVersionHistory() {

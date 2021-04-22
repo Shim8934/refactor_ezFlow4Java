@@ -382,7 +382,7 @@ var buttons = (function() {
 						folderTypeCheck = "N";
 					} 
 					params.push("folderTypeCheck=" + folderTypeCheck);
-					params.push("type=" + folderType);
+					params.push("folderType=" + folderType);
 					
 					openLeftPanel();
 					DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?" + params.join("&"));
