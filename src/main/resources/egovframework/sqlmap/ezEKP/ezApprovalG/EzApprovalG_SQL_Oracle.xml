@@ -8000,7 +8000,8 @@
 	                DocTitle FILENAME  ,
 	                Href FILEPATH   ,
 	                1 AS TYPESN,
-	                1 AS VIEWSN
+	                1 AS VIEWSN,
+	                1 AS ATTACHFILESN
 	         FROM 
 	         		TBL_APRDOCINFO 
 	         WHERE  
@@ -8016,7 +8017,8 @@
 	                AttachFileName FILENAME  ,
 	                AttachFileHref FILEPATH  ,
 					2 AS TYPESN,
-	                NVL(VIEWORDER, ATTACHFILESN) AS VIEWSN
+	                NVL(VIEWORDER, ATTACHFILESN) AS VIEWSN,
+	               	 ATTACHFILESN
 	         FROM 
 	         		TBL_APRATTACHINFO 
 	         WHERE  
@@ -8033,7 +8035,8 @@
 	                AttachDocName FILENAME  ,
 	                AttachDocURL FILEPATH  ,
 	               	3 AS TYPESN,
-	                ATTACHSN AS VIEWSN
+	                ATTACHSN AS VIEWSN,
+	                1 AS ATTACHFILESN
 	         FROM 
 	         		TBL_APRDOCATTACHINFO 
 	         WHERE 
@@ -8050,7 +8053,8 @@
 		                DocTitle FILENAME  ,
 		                Href FILEPATH   ,
 		                1 AS TYPESN,
-		                1 AS VIEWSN
+		                1 AS VIEWSN,
+	                	1 AS ATTACHFILESN
 		        FROM 
 		        		TBL_ENDAPRDOCINFO
 		        WHERE  
@@ -8067,7 +8071,8 @@
 		                AttachFileName FILENAME  ,
 		                AttachFileHref FILEPATH  ,
 		                2 AS TYPESN,
-	               	 	NVL(VIEWORDER, ATTACHFILESN) AS VIEWSN
+	               	 	NVL(VIEWORDER, ATTACHFILESN) AS VIEWSN,
+	               	 	ATTACHFILESN
 		        FROM 
 		        		TBL_ENDATTACHINFO 
 		        WHERE  
@@ -8084,7 +8089,8 @@
 		                AttachDocName FILENAME  ,
 		                AttachDocURL FILEPATH  ,
 		                3 AS TYPESN,
-	                	ATTACHSN AS VIEWSN
+	                	ATTACHSN AS VIEWSN,
+	                	1 AS ATTACHFILESN
 		        FROM 
 		        		TBL_ENDAPRDOCATTACHINFO 
 		        WHERE  
@@ -8107,7 +8113,8 @@
 							HREF FILEPATH,
 							CONCAT(CONCAT(OWNERID, '@'), TO_CHAR(SN)) AS DOCID,
 							1 AS TYPESN,
-		                	1 AS VIEWSN
+		                	1 AS VIEWSN,
+		                	1 AS ATTACHFILESN
 						FROM
 							TBL_TMPAPRDOCINFO
 						WHERE
@@ -8123,7 +8130,8 @@
 							ATTACHFILEHREF FILEPATH,
 							CONCAT(CONCAT(OWNERID, '@'), TO_CHAR(SN)) AS DOCID,
 							2 AS TYPESN,
-	               	 		NVL(VIEWORDER, ATTACHFILESN) AS VIEWSN
+	               	 		NVL(VIEWORDER, ATTACHFILESN) AS VIEWSN,
+	               	 		ATTACHFILESN
 						FROM
 							TBL_TMPATTACHINFO
 						WHERE
@@ -8139,7 +8147,8 @@
 							ATTACHDOCURL FILEPATH,
 							CONCAT(CONCAT(OWNERID, '@'), TO_CHAR(SN)) AS DOCID,
 							3 AS TYPESN,
-	                		ATTACHSN AS VIEWSN
+	                		ATTACHSN AS VIEWSN,
+		                	1 AS ATTACHFILESN
 						FROM
 							TBL_TMPAPRDOCATTACHINFO
 						WHERE
