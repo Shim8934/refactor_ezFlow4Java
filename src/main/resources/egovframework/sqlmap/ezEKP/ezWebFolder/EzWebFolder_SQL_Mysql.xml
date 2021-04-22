@@ -1474,7 +1474,7 @@
 	<select id="EzWebFolderDAO.getDeptFolderTreeForUser" resultMap="folderSimpleVO">
 		<![CDATA[
 			SELECT
-				f.FOLDER_ID                                                                                                                                                           AS FOLDER_ID,
+				distinct f.FOLDER_ID                                                                                                                                                  AS FOLDER_ID,
 				f.FOLDER_NAME1                                                                                                                                                        AS FOLDER_NAME,
 				f.FOLDER_NAME2                                                                                                                                                        AS FOLDER_NAME2,
 				CASE WHEN (SELECT COUNT(*) FROM TBL_WEBFOLDER_FOLDER b WHERE b.FOLDER_UPPER = f.FOLDER_ID AND b.USE_STATUS = 'Y' AND b.TENANT_ID  = #tenantId#) = 0 THEN 0 ELSE 1 END AS HAS_SUB,
