@@ -500,7 +500,7 @@
 		        		} else if(colType[i] == "text") {
 		        			if(document.getElementById(tableCol[i]).value == ""){
 		        				Tab1_MouseClick(document.getElementById("1tab1"));
-	                            alert(colName1[i] + strLang179);
+	                            alert(colName1[i] + strLang187);
 	                            return;
 		        			}
 		        		} else if(colType[i] == "check") {
