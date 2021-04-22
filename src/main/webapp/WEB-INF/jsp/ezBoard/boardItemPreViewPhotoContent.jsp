@@ -91,6 +91,7 @@
 		    var OneLineReplyFlag = "${boardInfo.oneLineReply}";
 		    var userInfoID = "${userInfo.id}";
 		    var mode = "${mode}";
+		    var imageContentArray = new Array();
 		    
 		    window.onresize = window_resize;
 		    window.onload = function () {
@@ -370,6 +371,7 @@
 	
 	        function ImageMain(imagefilename) {
 	            imageonmouse(imagefilename.id);
+	            var index = Number(imagefilename.id.substring(imagefilename.id.length-1));
 	
 	            var mainfilename = imagefilename.src;
 	            if (imagefilename.src.indexOf("s_") > -1) {
@@ -381,7 +383,8 @@
 				document.getElementById("mainimages").style.display = "none";
 	            document.getElementById("mainimages").src = mainfilename;
 	            document.getElementById("mainimages").name = imagefilename.name;
-	            document.getElementById("MainContent").innerHTML = MakeXMLString(imagefilename.title);
+	            //document.getElementById("MainContent").innerHTML = MakeXMLString(imagefilename.title);
+	            document.getElementById("MainContent").innerHTML = MakeXMLString(imageContentArray[index].title);
 	
 	            imageloding();
 	        }
@@ -575,6 +578,8 @@
 	                pListImage += getNodeText(xmldom.getElementsByTagName("FILEPATH")[i]) + ";";
 	                pImageID += getNodeText(xmldom.getElementsByTagName("IMAGEID")[i]) + ";";
 	                pImagename += getNodeText(xmldom.getElementsByTagName("IMAGENAME")[i]) + ";";
+	                
+	                imageContentArray.push({title:getNodeText(xmldom.getElementsByTagName("FILECONTENT")[i])});
 	            }
 	
 	            ImageCount = xmldom.getElementsByTagName("ROW").length;
