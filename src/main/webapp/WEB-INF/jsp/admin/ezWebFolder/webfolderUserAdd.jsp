@@ -124,10 +124,10 @@
                 </c:choose>
                 
                 createNodeAndInsertText(xmlpara, objNode, "PROP", "");
-                if(window.opener.$("#companyList option[value=" + companyId + "]") != null && 
-                		window.opener.$("#companyList option[value=" + companyId + "]").text().length > 0){
-	                createNodeAndInsertText(xmlpara, objNode, "ADMINCHK", "true");
-                }
+//                 if(window.opener.$("#companyList option[value=" + companyId + "]") != null && 
+//                 		window.opener.$("#companyList option[value=" + companyId + "]").text().length > 0){
+// 	                createNodeAndInsertText(xmlpara, objNode, "ADMINCHK", "true");
+//                 }
 /*                 createNodeAndInsertText(xmlpara, objNode, "ADMINDIST", "true");
                 createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true"); */
 	            xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
