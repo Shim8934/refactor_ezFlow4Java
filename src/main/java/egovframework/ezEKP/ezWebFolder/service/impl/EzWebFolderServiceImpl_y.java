@@ -1149,6 +1149,20 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 						status = "ok";
 					}
 				}
+				
+				if (!status.equals("ok")) {
+					map = new HashMap<String, Object>();
+
+					map.put("folderFileId", folderFileId);
+					map.put("folderFileType", folderFileType);
+					map.put("folderIdList", folderVO.getFolderPath().split("\\|"));
+					map.put("permissionIdList", idList);
+					map.put("tenantId", tenantId);
+
+					if (ezWebFolderDAO_m.checkSharePermission(map) > 0) {
+						status = "ok";
+					}
+				}
 			} else {
 				status = "fail";
 			}
