@@ -328,6 +328,8 @@
 	        			folderList('D');
 	        		} else if (val01 == "personal") {
 	        			folderList('U');
+	        		} else if (val01 == "share") {
+	        			getSharedList();
 	        		} 
 	        	} else {
 	        		$("#"+val01+"H2").attr("class", "off");

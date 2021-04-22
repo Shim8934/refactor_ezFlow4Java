@@ -3668,5 +3668,9 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void deleteSendDocList(HashMap<String, Object> map) throws Exception{
 		delete("EzApprovalG.deleteSendDocList", map);
 	}
+
+	public String getOrgDocIDByMode(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getOrgDocIDByMode", map);
+	}
 	
 }

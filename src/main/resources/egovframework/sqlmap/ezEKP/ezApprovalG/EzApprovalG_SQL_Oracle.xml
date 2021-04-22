@@ -2681,8 +2681,79 @@
               	 ORDER BY 
               	 	TBL_ENDAPRLINEINFO.APRMEMBERSN DESC
               </isEmpty>
-              	  
 		</isEqual>
+		
+		<!-- 2021-04-19 홍승비 - 회송된 수신문서 재기안 시, 원문서의 회람정보 그대로 가져와야 하므로 결재상태를 "대기"로 고정 -->
+		<isEqual property="v_MODE" compareValue="END2">
+			SELECT 
+				TBL_APRLINEINFO.DOCID, 
+				TBL_APRLINEINFO.APRMEMBERSN, 
+				TBL_APRLINEINFO.APRTYPE,
+              	'001' AS APRSTATE, 
+              	TBL_APRLINEINFO.APRMEMBERID, 
+              	TBL_APRLINEINFO.APRMEMBERISDEPTYN,
+              	TBL_APRLINEINFO.APRMEMBERNAME, 
+              	TBL_APRLINEINFO.APRMEMBERNAME2, 
+              	TBL_APRLINEINFO.APRMEMBERJOBTITLE, 
+              	TBL_APRLINEINFO.APRMEMBERJOBTITLE2,
+              	TBL_APRLINEINFO.APRMEMBERDEPTID,
+              	TBL_APRLINEINFO.APRMEMBERDEPTNAME,
+              	TBL_APRLINEINFO.APRMEMBERDEPTNAME2, 
+              	TBL_APRLINEINFO.APRMEMBERLDAPPATH, 
+              	' ' AS RECEIVEDDATE,
+              	' ' AS PROCESSDATE, 
+              	TBL_APRLINEINFO.ISPROPOSERYN, 
+              	TBL_APRLINEINFO.ISBRIEFUSERYN,
+              	TBL_APRLINEINFO.REASONDONOTAPPROV, 
+              	TBL_EXPAPRLINE.ORGUSERID, 
+              	TBL_EXPAPRLINE.PROXYUSERID,
+              	TBL_EXPAPRLINE.PROXYUSERNAME,  
+              	TBL_EXPAPRLINE.PROXYUSERNAME2,
+              	TBL_EXPAPRLINE.PROXYUSERJOBTITLE, 
+              	TBL_EXPAPRLINE.PROXYUSERJOBTITLE2,
+              	TBL_EXPAPRLINE.PROXYUSERDEPTID, 
+              	TBL_EXPAPRLINE.PROXYUSERDEPTNAME, 
+              	TBL_EXPAPRLINE.PROXYUSERDEPTNAME2
+            FROM 
+            	TBL_APRLINEINFO 
+            INNER JOIN 
+            	TBL_EXPAPRLINE 
+            ON 
+            	TBL_APRLINEINFO.DOCID = TBL_EXPAPRLINE.DOCID 
+            AND 
+            	TBL_APRLINEINFO.APRMEMBERSN = TBL_EXPAPRLINE.APRMEMBERSN
+            AND
+            	TBL_APRLINEINFO.TENANT_ID = TBL_EXPAPRLINE.TENANT_ID
+            AND
+            	TBL_APRLINEINFO.COMPANYID = TBL_EXPAPRLINE.COMPANYID
+            WHERE 
+            	TBL_APRLINEINFO.DOCID = #v_DOCID#  
+            AND
+            	TBL_APRLINEINFO.TENANT_ID = #v_TENANTID#   
+            AND
+            	TBL_APRLINEINFO.COMPANYID = #companyID#
+            <isNotEmpty property="v_ORDEROPTION">
+	           <isGreaterEqual property="v_ORDEROPTIONLENGTH"  compareValue="10" >
+		          <isEqual property="v_ORDEROPTIONVALUE" compareValue="aprmembersn">
+		              	ORDER BY 
+		              		TBL_APRLINEINFO.$v_ORDEROPTION$ 
+		          </isEqual>
+		          <isNotEqual property="v_ORDEROPTIONVALUE" compareValue="aprmembersn">
+		              	 ORDER BY 
+		              	 	$v_ORDEROPTION$, TBL_APRLINEINFO.APRMEMBERSN DESC
+		          </isNotEqual>
+	           </isGreaterEqual>
+	           <isLessThan property="v_ORDEROPTIONLENGTH"  compareValue="10" >
+	               	ORDER BY 
+	               		$v_ORDEROPTION$, TBL_APRLINEINFO.APRMEMBERSN DESC
+	           </isLessThan>
+           </isNotEmpty>
+           <isEmpty property="v_ORDEROPTION">
+				 ORDER BY 
+				 	TBL_APRLINEINFO.APRMEMBERSN DESC             
+			</isEmpty>
+		</isEqual>
+		
 		<isEqual property="v_MODE" compareValue="COD">
 			SELECT 
 				TBL_APRLINEINFO.DOCID, 
@@ -2824,6 +2895,7 @@
 		</isEqual>
 		<isNotEqual property="v_MODE" compareValue="APR">
 		<isNotEqual property="v_MODE" compareValue="END">
+		<isNotEqual property="v_MODE" compareValue="END2">
 		<isNotEqual property="v_MODE" compareValue="COD">
 		<isNotEqual property="v_MODE" compareValue="TMP">
 			SELECT 
@@ -2889,6 +2961,7 @@
            <isEmpty property="v_ORDEROPTION">
 				 ORDER BY TBL_APRLINEINFO.APRMEMBERSN DESC             
 			</isEmpty>
+		</isNotEqual>
 		</isNotEqual>
 		</isNotEqual>
 		</isNotEqual>
@@ -7927,7 +8000,8 @@
 	                DocTitle FILENAME  ,
 	                Href FILEPATH   ,
 	                1 AS TYPESN,
-	                1 AS VIEWSN
+	                1 AS VIEWSN,
+	                1 AS ATTACHFILESN
 	         FROM 
 	         		TBL_APRDOCINFO 
 	         WHERE  
@@ -7943,7 +8017,8 @@
 	                AttachFileName FILENAME  ,
 	                AttachFileHref FILEPATH  ,
 					2 AS TYPESN,
-	                NVL(VIEWORDER, ATTACHFILESN) AS VIEWSN
+	                NVL(VIEWORDER, ATTACHFILESN) AS VIEWSN,
+	               	 ATTACHFILESN
 	         FROM 
 	         		TBL_APRATTACHINFO 
 	         WHERE  
@@ -7960,7 +8035,8 @@
 	                AttachDocName FILENAME  ,
 	                AttachDocURL FILEPATH  ,
 	               	3 AS TYPESN,
-	                ATTACHSN AS VIEWSN
+	                ATTACHSN AS VIEWSN,
+	                1 AS ATTACHFILESN
 	         FROM 
 	         		TBL_APRDOCATTACHINFO 
 	         WHERE 
@@ -7977,7 +8053,8 @@
 		                DocTitle FILENAME  ,
 		                Href FILEPATH   ,
 		                1 AS TYPESN,
-		                1 AS VIEWSN
+		                1 AS VIEWSN,
+	                	1 AS ATTACHFILESN
 		        FROM 
 		        		TBL_ENDAPRDOCINFO
 		        WHERE  
@@ -7994,7 +8071,8 @@
 		                AttachFileName FILENAME  ,
 		                AttachFileHref FILEPATH  ,
 		                2 AS TYPESN,
-	               	 	NVL(VIEWORDER, ATTACHFILESN) AS VIEWSN
+	               	 	NVL(VIEWORDER, ATTACHFILESN) AS VIEWSN,
+	               	 	ATTACHFILESN
 		        FROM 
 		        		TBL_ENDATTACHINFO 
 		        WHERE  
@@ -8011,7 +8089,8 @@
 		                AttachDocName FILENAME  ,
 		                AttachDocURL FILEPATH  ,
 		                3 AS TYPESN,
-	                	ATTACHSN AS VIEWSN
+	                	ATTACHSN AS VIEWSN,
+	                	1 AS ATTACHFILESN
 		        FROM 
 		        		TBL_ENDAPRDOCATTACHINFO 
 		        WHERE  
@@ -8034,7 +8113,8 @@
 							HREF FILEPATH,
 							CONCAT(CONCAT(OWNERID, '@'), TO_CHAR(SN)) AS DOCID,
 							1 AS TYPESN,
-		                	1 AS VIEWSN
+		                	1 AS VIEWSN,
+		                	1 AS ATTACHFILESN
 						FROM
 							TBL_TMPAPRDOCINFO
 						WHERE
@@ -8050,7 +8130,8 @@
 							ATTACHFILEHREF FILEPATH,
 							CONCAT(CONCAT(OWNERID, '@'), TO_CHAR(SN)) AS DOCID,
 							2 AS TYPESN,
-	               	 		NVL(VIEWORDER, ATTACHFILESN) AS VIEWSN
+	               	 		NVL(VIEWORDER, ATTACHFILESN) AS VIEWSN,
+	               	 		ATTACHFILESN
 						FROM
 							TBL_TMPATTACHINFO
 						WHERE
@@ -8066,7 +8147,8 @@
 							ATTACHDOCURL FILEPATH,
 							CONCAT(CONCAT(OWNERID, '@'), TO_CHAR(SN)) AS DOCID,
 							3 AS TYPESN,
-	                		ATTACHSN AS VIEWSN
+	                		ATTACHSN AS VIEWSN,
+		                	1 AS ATTACHFILESN
 						FROM
 							TBL_TMPAPRDOCATTACHINFO
 						WHERE
@@ -17063,6 +17145,25 @@
 	<insert id="EzApprovalG.aprMakeTmp2Ing" parameterClass="Map">
 		INSERT INTO 
 			TBL_RECEIPTPOINTINFO
+			(DOCID ,
+              RECEIPTPOINTID ,
+              RECEIPTPOINTNAME ,
+              EXTRECEPTYN ,
+              PROCESSYN ,
+              PROCESSSN ,
+              CANEDITYN ,
+              EXTRECEPTEMAIL ,
+              RECEIPTMEMBERID ,
+              RECEIPTMEMBERNAME ,
+              PROCESSDATE ,
+              RECEIPTMEMBERJOBTITLE ,
+              DEPTMEMBERSN ,
+              ReceiptPointName2 ,
+              ReceiptMemberJobTitle2 ,
+              ReceiptMemberName2 ,
+              RouteYN ,
+              TENANT_ID,
+              COMPANYID)
 	     ( SELECT 
 	     		  #v_PDOCID# ,
 	              RECEIPTPOINTID ,
@@ -23976,6 +24077,26 @@
    <insert id="EzApprovalG.insertTmpReceiptPointInfo" parameterClass="Map">
    		INSERT INTO 
    			TBL_TMPRECEIPTPOINTINFO 
+   			(OWNERID,
+   			SN,
+   			RECEIPTPOINTID, 
+   			RECEIPTPOINTNAME, 
+   			EXTRECEPTYN, 
+   			PROCESSYN, 
+   			PROCESSSN, 
+   			CANEDITYN, 
+   			EXTRECEPTEMAIL ,  
+   			RECEIPTMEMBERID ,
+   			RECEIPTMEMBERNAME , 
+   			PROCESSDATE , 
+   			RECEIPTMEMBERJOBTITLE ,
+   			DEPTMEMBERSN , 
+   			ReceiptPointName2 , 
+   			ReceiptMemberJobTitle2 , 
+   			ReceiptMemberName2 , 
+   			RouteYN, 
+   			TENANT_ID ,
+   			COMPANYID)
    		( SELECT 
 	   			#v_USERID#, 
 	   			#v_SN#, 
@@ -28247,7 +28368,6 @@
    		 UPDATE 
    		 	TBL_APRDOCINFO 
    		 SET 
-   		 	OrgDocID = NULL, 
    		 	DocState = #v_APRSTATE#, 
    		 	FunctionType = #v_FUNCTIONTYPE#,
    		 	StartDate = TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS')
@@ -30276,6 +30396,23 @@
     		COMPANYID = #companyID#
     	AND
     		TENANT_ID = #tenantID#
+    </select>
+	<select id="EzApprovalG.getOrgDocIDByMode" parameterClass="Map" resultClass="String" remapResults="true">
+    	SELECT 
+    		NVL(ORGDOCID, ' ') AS ORGDOCID
+    	FROM
+    	<isEqual property="v_MODE" compareValue="APR">
+    		TBL_APRDOCINFO
+    	</isEqual>
+    	<isNotEqual property="v_MODE" compareValue="APR">
+    		TBL_ENDAPRDOCINFO
+    	</isNotEqual>
+    	WHERE
+    		DOCID = #v_DOCID#
+    	AND
+    		COMPANYID = #v_COMPANYID#
+    	AND
+    		TENANT_ID = #v_TENANTID#
     </select>
     <select id="EzApprovalG.getRecordID" parameterClass="Map" resultClass="String">
     	SELECT
