@@ -6047,8 +6047,10 @@
 						   		NOT (TBL_CABINET.CabinetTransferFlag = '2' 
 						   				And 
 						   			ConfirmFlag = '0')
-						  AND 
-						  		OwnerDeptID = #tempDeptCode#
+						  <isNotEqual property="tempDeptCode" compareValue="ALL">
+							  AND 
+							  		OwnerDeptID = #tempDeptCode#
+						  </isNotEqual>
 						</isEmpty> 
 				  		<isNotEmpty property="cabinetIDs">
 						  <isEqual property="listFlag" compareValue="0">
@@ -6182,7 +6184,7 @@
 				<isEqual property="transFlag" compareValue="1" prepend="OR">
 						TBL_SEPERATEATTACH.CabinetID = TBL_CABINET.TCabinetID  
 				</isEqual>
-                <isEqual property="listFlag" compareValue="23">
+                <isEqual property="joinEndReceiptPointInfo" compareValue="true">
                     JOIN 
                         TBL_ENDRECEIPTPOINTINFO 
                     ON 
@@ -6244,12 +6246,30 @@
 						( TBL_ENDAPRDOCINFO.DocState = '011' 
 							OR 
 						  TBL_RECORD.DocType = '2')
+						AND 
+						  TBL_ENDAPRDOCINFO.FORMID != #relayFormID#
 				</isEqual>
 				<isEqual property="listFlag" compareValue="11" prepend="AND">
 						( TBL_ENDAPRDOCINFO.DocState = '014' 
 							OR 
 						  TBL_RECORD.DocType = '1')
+						AND 
+						  TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'N'
 				</isEqual>
+				<isEqual property="listFlag" compareValue="12" prepend="AND">
+                        ( TBL_ENDAPRDOCINFO.DocState = '011' 
+                            OR 
+                          TBL_RECORD.DocType = '2')
+                        AND 
+                          TBL_ENDAPRDOCINFO.FORMID = #relayFormID#
+                </isEqual>
+                <isEqual property="listFlag" compareValue="13" prepend="AND">
+                        ( TBL_ENDAPRDOCINFO.DocState = '014' 
+                            OR 
+                          TBL_RECORD.DocType = '1')
+                        AND 
+                          TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
+                </isEqual>
 				<isNotEmpty property="recDeptCode" prepend="AND">
 						TBL_RECORD.ProcessDeptCode = #recDeptCode#
 				</isNotEmpty>						
@@ -8315,7 +8335,7 @@
 	      		AND
 	      			TBL_APRRECEIPTPROCESSINFO.COMPANYID = #companyID#	      			
 	      	]]>
-	      	<isEqual property="v_MODE" compareValue="admin">
+	      	<isEqual property="v_SUSINADMIN" compareValue="Y">
 	      		OR 
 	      			(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
 	         	AND 
@@ -8336,6 +8356,19 @@
 		     		TBL_APRRECEIPTPROCESSINFO.APRSTATE != '013')
 		     </isEqual>
 	      	)
+	      	<isEqual property="v_MODE" compareValue="relay">
+	      	    AND TBL_APRDOCINFO.FORMID = #v_RELAYFORMID#
+	      	    AND TBL_APRRECEIPTPROCESSINFO.APRSTATE = '011'
+	      	</isEqual>
+	      	<isNotEqual property="v_MODE" compareValue="relay">
+	      	    AND (
+	      	        TBL_APRDOCINFO.FORMID != #v_RELAYFORMID#
+	      	        OR (
+	      	            TBL_APRDOCINFO.FORMID = #v_RELAYFORMID#
+	      	            AND TBL_APRRECEIPTPROCESSINFO.APRSTATE != '011'
+	      	        )
+	      	    )
+	      	</isNotEqual>
 			</isNotEqual>
 			<isGreaterThan property="v_SPSUBQUERYLENGTH" compareValue="0"> 
 			AND
@@ -11840,9 +11873,9 @@
 				   		AND 
 				   			APRTYPE <> '015' 
 				   		AND 
-				   			 STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s') 
+				   			 STARTDATE >= TO_TIMESTAMP(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s') 
 				   		AND 
-				   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s') 
+				   			STARTDATE <= TO_TIMESTAMP(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s') 
 				   		AND	
 				   			TENANT_ID = #v_TENANTID#
 				   		AND
@@ -11883,9 +11916,9 @@
 				   		AND 
 				   			APRTYPE <> '015' 
 				   		AND 
-				   			 STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s') 
+				   			 STARTDATE >= TO_TIMESTAMP(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s') 
 				   		AND 
-				   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s') 
+				   			STARTDATE <= TO_TIMESTAMP(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s') 
 				   		AND	
 				   			TENANT_ID = #v_TENANTID#
 				   		AND
@@ -13773,8 +13806,10 @@
 				   		NOT (TBL_CABINET.CabinetTransferFlag = '2' 
 				   				And 
 				   			ConfirmFlag = '0')
+				<isNotEqual property="tempDeptCode" compareValue="ALL">
 				  AND 
 				  		OwnerDeptID = #tempDeptCode#
+				</isNotEqual>
 				</isEmpty> 
 		  		<isNotEmpty property="cabinetIDs">
 				  <isEqual property="listFlag" compareValue="0">
@@ -13908,7 +13943,7 @@
 		<isEqual property="transFlag" compareValue="1" prepend="OR">
 				TBL_SEPERATEATTACH.CabinetID = TBL_CABINET.TCabinetID  
 		</isEqual>
-	    <isEqual property="listFlag" compareValue="23">
+	    <isEqual property="joinEndReceiptPointInfo" compareValue="true">
 	        JOIN
 	            TBL_ENDRECEIPTPOINTINFO 
 	        ON 
@@ -13970,11 +14005,29 @@
 				( TBL_ENDAPRDOCINFO.DocState = '011' 
 					OR 
 				  TBL_RECORD.DocType = '2')
+				AND 
+			 	 TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'N'
 		</isEqual>
 		<isEqual property="listFlag" compareValue="11" prepend="AND">
 				( TBL_ENDAPRDOCINFO.DocState = '014' 
 					OR 
 				  TBL_RECORD.DocType = '1')
+				AND 
+              	  TBL_ENDAPRDOCINFO.FORMID != #relayFormID#
+		</isEqual>
+		<isEqual property="listFlag" compareValue="12" prepend="AND">
+				( TBL_ENDAPRDOCINFO.DocState = '011' 
+					OR 
+				  TBL_RECORD.DocType = '2')
+	            AND 
+	              TBL_ENDAPRDOCINFO.FORMID = #relayFormID#
+		</isEqual>
+		<isEqual property="listFlag" compareValue="13" prepend="AND">
+				( TBL_ENDAPRDOCINFO.DocState = '014' 
+					OR 
+				  TBL_RECORD.DocType = '1')
+				AND 
+				  TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
 		</isEqual>
 		<isNotEmpty property="recDeptCode" prepend="AND">
 				TBL_RECORD.ProcessDeptCode = #recDeptCode#
@@ -14963,7 +15016,7 @@
 			AND
 	      		TBL_APRRECEIPTPROCESSINFO.COMPANYID = #companyID#
 	      			]]>
-	     <isEqual property="v_MODE" compareValue="admin">
+	     <isEqual property="v_SUSINADMIN" compareValue="Y">
 	     OR 
 	     	(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)  AND  TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014')) 
           OR 
@@ -14980,6 +15033,19 @@
 		     		TBL_APRRECEIPTPROCESSINFO.APRSTATE != '013')
 	     </isEqual>
 	     	)  
+	    <isEqual property="v_MODE" compareValue="relay">
+            AND TBL_APRDOCINFO.FORMID = #v_RELAYFORMID#
+            AND TBL_APRRECEIPTPROCESSINFO.APRSTATE = '011'
+		</isEqual>
+		<isNotEqual property="v_MODE" compareValue="relay">
+            AND (
+                TBL_APRDOCINFO.FORMID != #v_RELAYFORMID#
+                OR (
+                    TBL_APRDOCINFO.FORMID = #v_RELAYFORMID#
+                    AND TBL_APRRECEIPTPROCESSINFO.APRSTATE != '011'
+                )
+            )
+		</isNotEqual>
 		</isNotEqual>
 		<isGreaterThan property="v_SPSUBQUERYLENGTH" compareValue="0">
 		AND 
@@ -32882,6 +32948,13 @@
 			     	)
 		     </isEqual>
 	   		 	 )
+	   		 	AND (
+                    TBL_APRDOCINFO.FORMID != #v_RELAYFORMID#
+                    OR (
+                        TBL_APRDOCINFO.FORMID = #v_RELAYFORMID#
+                        AND TBL_APRRECEIPTPROCESSINFO.APRSTATE != '011'
+                    )
+                )
 	  		 <![CDATA[
 	   		 	AND 
 	   		 		PROCESSDATE >= TO_TIMESTAMP(#v_STARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
@@ -32891,6 +32964,105 @@
 		   			TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
 	  		]]>
 			)) AS "count4", <!---부서 수신함 -->
+			SUM((
+	            SELECT 
+	                COUNT(TBL_APRRECEIPTPROCESSINFO.DOCID)
+	            FROM 
+	                TBL_APRRECEIPTPROCESSINFO 
+	            INNER JOIN 
+	                TBL_APRDOCINFO 
+	            ON 
+	                TBL_APRRECEIPTPROCESSINFO.DOCID = TBL_APRDOCINFO.DOCID
+	            AND
+	                TBL_APRRECEIPTPROCESSINFO.TENANT_ID = TBL_APRDOCINFO.TENANT_ID
+	            AND
+	                TBL_APRRECEIPTPROCESSINFO.COMPANYID = TBL_APRDOCINFO.COMPANYID
+	            INNER JOIN 
+	                TBL_EXPAPRDOCINFO 
+	            ON 
+	                TBL_EXPAPRDOCINFO.DOCID = TBL_APRDOCINFO.DOCID
+	            AND
+	                TBL_EXPAPRDOCINFO.TENANT_ID = TBL_APRDOCINFO.TENANT_ID
+	            AND
+	                TBL_EXPAPRDOCINFO.COMPANYID = TBL_APRDOCINFO.COMPANYID
+	            LEFT JOIN 
+	                TBL_RECORD_TEMP
+	            ON 
+	                TBL_RECORD_TEMP.DOCID = TBL_APRDOCINFO.ORGDOCID
+	            AND 
+	                TBL_RECORD_TEMP.TENANT_ID = TBL_APRDOCINFO.TENANT_ID
+	            AND 
+	                TBL_RECORD_TEMP.COMPANYID = TBL_APRDOCINFO.COMPANYID
+	            AND 
+	                TBL_RECORD_TEMP.PROCESSDEPTCODE = TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID
+	            WHERE 
+	                <![CDATA[TBL_APRRECEIPTPROCESSINFO.PROCESSYN <> 'Y']]>
+	            AND 
+	                (
+	                    (
+	                        (
+	                            TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# 
+	                        AND 
+	                            TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#
+	                        )
+	                    AND 
+	                        (
+	                            TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012'
+	                        OR 
+	                            TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'
+	                        )
+	                    )
+	                AND
+	                    TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
+	                AND
+	                    TBL_APRRECEIPTPROCESSINFO.COMPANYID = #companyID#
+	                <isEqual property="v_USERFLAG" compareValue="admin">
+	                OR 
+	                    (
+	                        TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN 
+	                        <iterate property="v_DEPTIDS" open="(" close=")" conjunction=",">
+	                            #v_DEPTIDS[]#
+	                        </iterate>
+	                    AND 
+	                        (
+	                            TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014') 
+	                        OR 
+	                            TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'
+	                        )
+	                    )
+	                </isEqual>
+	                <isEqual property="v_aprFlag" compareValue="G">
+	                OR
+	                    (
+	                        (
+	                            TBL_APRDOCINFO.WRITERID = #v_USERID# 
+	                        AND 
+	                            TBL_APRDOCINFO.WRITERDEPTID = #v_DEPTID# 
+	                        ) 
+	                    AND
+	                        TBL_RECORD_TEMP.PROCESSDEPTCODE = #v_DEPTID#
+	                    AND
+	                        (
+	                            TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# 
+	                        OR 
+	                            TBL_APRRECEIPTPROCESSINFO.PROCESSORID = '' 
+	                        )
+	                    AND
+	                        TBL_APRRECEIPTPROCESSINFO.APRSTATE != '013'
+	                    )
+	                </isEqual>
+	                )
+	            AND 
+	                TBL_APRDOCINFO.FORMID = #v_RELAYFORMID#
+	            AND 
+	                TBL_APRRECEIPTPROCESSINFO.APRSTATE = '011'
+	            AND 
+	                TBL_APRRECEIPTPROCESSINFO.PROCESSDATE >= TO_TIMESTAMP(#v_STARTDATE#, 'YYYY-MM-DD HH24:MI:SS') 
+	            AND 
+	                <![CDATA[TBL_APRRECEIPTPROCESSINFO.PROCESSDATE <= TO_TIMESTAMP(#v_STARTDATE#, 'YYYY-MM-DD HH24:MI:SS')]]> 
+	            AND 
+	                TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
+            )) AS "count5", <!-- 유통 수신함 -->
 			SUM((
 				<![CDATA[
 	   		 	SELECT 
@@ -32918,7 +33090,7 @@
 	   		 	AND	
 		   			TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
 	   		]]>
-			)) AS "count5", <!-- 심사할 문서-->
+			)) AS "count6", <!-- 유통발송함 혹은 발송의뢰문서함 -->
 			SUM((
 			 <![CDATA[
 	   			SELECT 
@@ -32975,64 +33147,7 @@
 							SELECT TO_NCHAR(#companyID#) FROM DUAL
 							)
 	   		]]>			
-			)) AS "count6", <!-- 직인 의뢰함 -->
-			SUM((
-	   		<![CDATA[
-	   			SELECT 
-	   				COUNT(TBL_ENDAPRDOCINFO.DOCID) AS COUNT
-	   			FROM 
-	   				TBL_ENDAPRDOCINFO 
-	   			INNER JOIN 
-	   				TBL_EXPENDAPRDOCINFO 
-	   			ON 
-	   				TBL_EXPENDAPRDOCINFO.DOCID = TBL_ENDAPRDOCINFO.DOCID
-	   			AND
-	   				TBL_EXPENDAPRDOCINFO.TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID
-	   			AND
-	   				TBL_EXPENDAPRDOCINFO.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID
-	   			INNER JOIN 
-	   				TBL_ENDRECEIPTPOINTINFO 
-	   			ON 
-	   				TBL_ENDAPRDOCINFO.DOCID = TBL_ENDRECEIPTPOINTINFO.DOCID
-	   			AND
-	   				TBL_ENDAPRDOCINFO.TENANT_ID = TBL_ENDRECEIPTPOINTINFO.TENANT_ID
-	   			AND
-	   				TBL_ENDAPRDOCINFO.COMPANYID = TBL_ENDRECEIPTPOINTINFO.COMPANYID
-	   			WHERE 
-	   				TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
-	   			AND 
-	   				TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTID LIKE 'Address%'
-	   			AND 
-	   				TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
-	   			AND 
-	   				TBL_ENDRECEIPTPOINTINFO.PROCESSYN = 'Y'
-	   			AND 
-	   			 	STARTDATE >= TO_TIMESTAMP(#v_STARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
-		   		AND 
-		   			STARTDATE <= TO_TIMESTAMP(#v_ENDDATE#, 'YYYY-MM-DD HH24:MI:SS')
-		   		AND	
-		   			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
-		   		AND
-					TBL_ENDAPRDOCINFO.COMPANYID IN (
-							SELECT 
-								EXTENSIONATTRIBUTE2 
-							FROM 
-								TBL_DEPTMASTER 
-							INNER JOIN 
-								TBL_ADDJOBMASTER 
-							ON
-								TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-							AND 
-								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID
-							WHERE 
-								TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
-							AND 
-								TBL_ADDJOBMASTER.CN = #v_USERID#
-							UNION ALL
-							SELECT TO_NCHAR(#companyID#) FROM DUAL
-							)
-		   	]]>			
-			)) AS "count7", <!-- 직인  대장 -->
+			)) AS "count7", <!-- 직인 의뢰함 -->
 			SUM((
 			SELECT
 			SUM(CASE WHEN
@@ -33191,7 +33306,7 @@
 	                TBL_APRLINEINFO.AprState = '010'
 	             AND
 	                TBL_APRDOCINFO.TENANT_ID = #v_TENANTID#
-			)) AS "count9", <!-- 공람한 문서 -->
+			)) AS "count10", <!-- 공람한 문서 -->
 			SUM((
 			<![CDATA[
 	  			SELECT 
@@ -33418,66 +33533,8 @@
 			   		AND	
 			   			D.TENANT_ID = #v_TENANTID#
 		   		) A
-			)) AS "count12"
+			)) AS "count11"
 		</isEqual> <!-- 공유결재 -->
-            , SUM((
-                SELECT 
-                    COUNT(TBL_APRRECEIPTPROCESSINFO.DOCID)
-                FROM 
-                    TBL_APRRECEIPTPROCESSINFO 
-                INNER JOIN 
-                    TBL_APRDOCINFO 
-                ON 
-                    TBL_APRRECEIPTPROCESSINFO.DOCID = TBL_APRDOCINFO.DOCID
-            <isEqual property="v_aprFlag" compareValue="G">
-                LEFT JOIN 
-                    TBL_RECORD_TEMP
-                ON 
-                    TBL_RECORD_TEMP.DOCID = TBL_APRDOCINFO.ORGDOCID
-                AND 
-                    TBL_RECORD_TEMP.PROCESSDEPTCODE = TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID
-            </isEqual>
-                WHERE 
-                    TBL_APRRECEIPTPROCESSINFO.PROCESSYN != 'Y'
-                AND 
-                    (((TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# AND TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#)
-                AND 
-                    (TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'))
-                    
-            <isEqual property="v_USERFLAG" compareValue="admin">
-                OR 
-                    (
-                        TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID 
-                        IN 
-                        <iterate property="v_DEPTIDS" open="(" close=")" conjunction=",">
-                            #v_DEPTIDS[]#
-                        </iterate>
-                    AND 
-                        (TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014') OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015')
-                    )
-            </isEqual>
-            <isEqual property="v_aprFlag" compareValue="G">
-                OR
-                    (
-                        (TBL_APRDOCINFO.WRITERID = #v_USERID# AND TBL_APRDOCINFO.WRITERDEPTID = #v_DEPTID#) 
-                    AND
-                        TBL_RECORD_TEMP.PROCESSDEPTCODE = #v_DEPTID#
-                    AND
-                        (TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# OR TBL_APRRECEIPTPROCESSINFO.PROCESSORID = '')
-                    AND
-                        TBL_APRRECEIPTPROCESSINFO.APRSTATE != '013'
-                    )
-             </isEqual>
-                 )
-             <![CDATA[
-                AND 
-                    PROCESSDATE >= TO_TIMESTAMP(#v_STARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
-                AND 
-                    PROCESSDATE <= TO_TIMESTAMP(#v_ENDDATE#, 'YYYY-MM-DD HH24:MI:SS')
-                AND 
-                    (TBL_APRDOCINFO.FORMID = #v_RELAYFORMID# AND TBL_APRRECEIPTPROCESSINFO.APRSTATE = '011')
-            ]]>
-            )) AS "count14" <!-- 유통접수함 -->
             , SUM((
             <![CDATA[
             SELECT 
