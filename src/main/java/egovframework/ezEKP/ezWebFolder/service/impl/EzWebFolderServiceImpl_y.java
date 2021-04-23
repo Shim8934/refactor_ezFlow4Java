@@ -997,7 +997,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 				FolderVO folder = ezWebFolderDAO_y.getFolderDetailByFileId(map);
 				
 				
-				if (folder.getFolderType() == "C"){
+				if (folder.getFolderType().equals("C")){
 					List<String> dp = ezWebFolderAdminService.getFolderIdsByManagerUserId(userId, fileVO.getFolderId(), companyId, tenantId);
 					if (ezWebFolderAdminService.getFolderIdsByManagerUserId(userId, fileVO.getFolderId(), companyId, tenantId).isEmpty()
 							&& !fileVO.getCreateId().equals(userId)) {
