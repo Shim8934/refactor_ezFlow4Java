@@ -112,8 +112,9 @@
 				onFileTypeChange("");
 			});
 			
-			pagination.setPageChangeEventHandler(function() {
-				getFileList(folderId);
+			pagination.setPageChangeEventHandler(function(currentPage, listSize, fldId) {
+				var getFldId = (typeof fldId == "undefined") ? folderId : fldId;
+				getFileList(getFldId);
 			});
 			
 			capacity.setFolderIdProvider(function() {
@@ -269,7 +270,7 @@
 				dataType: "JSON",
 				success : function (data) {
 					hideProgress();
-					successFile(data);
+					successFile(data, a);
 					if(folderType == 'C' && data.status != "error"){
 						folderId = a;
 						containsReplyFiles = data.data.containsReplyFiles;
@@ -294,7 +295,7 @@
 	    	}
 	    }
 	    
-		function successFile(data) {
+		function successFile(data, fldId) {
 			if (data.status == "error") {
 				if (data.code == 1) {
 					console.log("<spring:message code='ezWebFolder.t306' />");
@@ -307,6 +308,9 @@
 					return;
 				}
 			}
+			
+			folderId = (typeof fldId == "undefined") ? folderId : fldId;
+			
 			userId = data.data.userId;
 			var result = data.data;
 			
@@ -436,11 +440,11 @@
 		}
 		
 		function nameFileList(param) {
-			folderId = param;
+			// folderId = param;
 			searchContext.clearRequirement();
 			$("#idSelect").val("");
-			onFileTypeChange("");
-			selectLeftFolder(folderId);
+			onFileTypeChange("", param);
+			selectLeftFolder(param);
 		}
 		
 		function renderData(result) {
@@ -748,9 +752,9 @@
 			getFileList(folderId);
 		}
        
-		function onFileTypeChange(value) {
+		function onFileTypeChange(value, fldId) {
 			searchContext.setFileType(value);
-			pagination.setPage(1);
+			pagination.setPage(1, false, fldId);
 		}
        
 		function downloadFileByDbClick(event) {

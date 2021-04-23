@@ -267,7 +267,7 @@
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 		    
-		    function getFileList(folderId) {
+		    function getFileList(a) {
 		    	if (parentId == "#") {
 		    		parentId = "root";
 		    	}
@@ -275,7 +275,7 @@
 					type: "POST",
 					url: "/ezWebFolder/selectedFolderCheckPermission.do",
 					data: {
-						"folderId" : folderId
+						"folderId" : a
 					},
 					dataType: "JSON",
 					async: true,
@@ -283,6 +283,7 @@
 						var result = data.status;
 						
 						if (result == "ok") {
+							folderId = a;
 					    	window.parent.frames["right"].location.href = "/ezWebFolder/main.do?folderId="+folderId+"&folderType="+folderType+"&allFileFlag="+allFileFlag+"&parentId="+parentId;
 					    	allFileFlag = "N";
 						} else {
