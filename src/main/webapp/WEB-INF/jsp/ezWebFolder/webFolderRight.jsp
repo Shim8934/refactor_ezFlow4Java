@@ -638,6 +638,7 @@
 							if (folderType == 'C') {
 								nameFileList(this.getAttribute("targetId"))
 							} else {
+								folderId = this.getAttribute("targetId");
 								selectLeftFolder(this.getAttribute("targetId"));
 								getFileList(this.getAttribute("targetId"));
 							}
