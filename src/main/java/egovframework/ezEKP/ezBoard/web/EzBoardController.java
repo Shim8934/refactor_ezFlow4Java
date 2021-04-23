@@ -6176,6 +6176,10 @@ public class EzBoardController extends EgovFileMngUtil{
 					}
 					
 					BufferedImage bufferedImage = null;
+					
+					if(extension.toUpperCase().equals("TIF") || extension.toUpperCase().equals("TIFF")) {
+						extension = "png";
+					}
 					/* 2019-10-21 홍승비 - png파일의 경우, 썸네일 이미지 저장 시 타입을 TYPE_4BYTE_ABGR로 고정 */
 					if (bi.getType() == 0 || extension.equals("png")) { // 일부 png 파일의 경우, type값이 0으로 넘어오거나 검은색으로 저장된다.
 						bufferedImage = new BufferedImage(nWidth, nHeight, BufferedImage.TYPE_4BYTE_ABGR);
