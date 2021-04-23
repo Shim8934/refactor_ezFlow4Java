@@ -23210,9 +23210,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			return "<RESULT>FALSE</RESULT>";
 		}
 		
-		
-		
-		
 		for (int k=0; k<docXML2.getElementsByTagName("ROW").getLength(); k++){
 			String SepAttSN = makeListField(docXML2.getElementsByTagName("SERIALNO").item(k).getTextContent().trim());
 		
@@ -23236,9 +23233,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 		}
-		resultXML.append("<APRMEMBER2>"  + makeListField(docXML.getElementsByTagName("APRMEMBERTITLE2").item(0).getTextContent()) + "</APRMEMBER2>" );
-		resultXML.append("<DRAFTER2>"  + makeListField(docXML.getElementsByTagName("DRAFTERNAME2").item(0).getTextContent()) + "</DRAFTER2>" );
-		resultXML.append("<RECEIPTMEMBER2>"  + makeListField(docXML.getElementsByTagName("RECEIPTMEMBERNAME2").item(0).getTextContent()) + "</RECEIPTMEMBER2>" );
+		resultXML.append("<APRMEMBER2><![CDATA["  + makeListField(docXML.getElementsByTagName("APRMEMBERTITLE2").item(0).getTextContent()) + "]]></APRMEMBER2>" );
+		resultXML.append("<DRAFTER2><![CDATA["  + makeListField(docXML.getElementsByTagName("DRAFTERNAME2").item(0).getTextContent()) + "]]></DRAFTER2>" );
+		resultXML.append("<RECEIPTMEMBER2><![CDATA["  + makeListField(docXML.getElementsByTagName("RECEIPTMEMBERNAME2").item(0).getTextContent()) + "]]></RECEIPTMEMBER2>" );
 		resultXML.append("</SCINFO>");                                                          
 		resultXML.append("</RESULT>");
 		
