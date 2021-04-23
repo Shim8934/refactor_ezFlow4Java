@@ -22393,7 +22393,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("<TITLE><![CDATA[" + makeListField(docXML.getElementsByTagName("RECTITLE").item(0).getTextContent()) + "]]></TITLE>");
 		resultXML.append("<REGTYPE>" + getRegTypeString(makeListField(docXML.getElementsByTagName("REGISTERTYPE").item(0).getTextContent()),companyID, lang, tenantID) + "</REGTYPE>");
 		resultXML.append("<DEPTCODE>" + makeListField(docXML.getElementsByTagName("RECDEPTCODE").item(0).getTextContent()) + "</DEPTCODE>");
-		resultXML.append("<DEPTNAME>" + makeListField(docXML.getElementsByTagName("RECDEPTNAME").item(0).getTextContent()) + "</DEPTNAME>");
+		resultXML.append("<DEPTNAME><![CDATA[" + makeListField(docXML.getElementsByTagName("RECDEPTNAME").item(0).getTextContent()) + "]]></DEPTNAME>");
 		
 		resultXML.append("<REGNO><![CDATA[" + getRecRegSNToName(makeListField(docXML.getElementsByTagName("RECDEPTNAME").item(0).getTextContent()), makeListField(docXML.getElementsByTagName("RECREGSN").item(0).getTextContent()), makeListField(docXML.getElementsByTagName("RECDEPTCODE").item(0).getTextContent()), tenantID, companyID) + "]]></REGNO>");
 		
