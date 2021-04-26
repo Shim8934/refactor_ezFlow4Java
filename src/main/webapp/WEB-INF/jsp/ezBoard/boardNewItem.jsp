@@ -196,11 +196,11 @@
 			    				
 			    				for (var i = 0; i < colType.length;i++){
 			            			if(colType[i] == "radio") {
-			            				SetRadioVal(tableCol[i], getExtensionValue(ConvMakeXMLString(tableCol[i])));
+			            				SetRadioVal(tableCol[i], getExtensionValue(tableCol[i]));
 			            			} else if(colType[i] == "text") {
-			            				document.getElementById(tableCol[i]).value = getExtensionValue(ConvMakeXMLString(tableCol[i]));
+			            				document.getElementById(tableCol[i]).value = getExtensionValue(tableCol[i]);
 			            			} else if(colType[i] == "check") {
-			            				SetCheckVal(tableCol[i], getExtensionValue(ConvMakeXMLString(tableCol[i])));
+			            				SetCheckVal(tableCol[i], getExtensionValue(tableCol[i]));
 			            			}
 			    				}
 			            	}
@@ -821,11 +821,11 @@
 				
 				for (var i = 0; i < colType.length;i++){
 		        	if(colType[i] == "radio") {
-		        		createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase() ,GetRadioVal(tableCol[i]));
+		        		createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase(), MakeXMLString(GetRadioVal(tableCol[i])));
 		        	} else if(colType[i] == "text") {
-		        		createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase() ,document.getElementById(tableCol[i]).value);
+		        		createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase(), MakeXMLString(document.getElementById(tableCol[i]).value));
 		        	} else if(colType[i] == "check") {
-		        		createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase() ,GetCheckVal(tableCol[i]));
+		        		createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase(), MakeXMLString(GetCheckVal(tableCol[i])));
 		        	}
 				}
 
@@ -2108,15 +2108,15 @@
 	        	var retValue = "";
 	        	
 	        	if (tableCol == "extensionAttribute6") {
-	        		retValue = "${boardListVO.extensionAttribute6}"; 
+	        		retValue = ConvMakeXMLString("<c:out value='${boardListVO.extensionAttribute6}'/>"); 
 				} else if (tableCol == "extensionAttribute7") {
-					retValue = "${boardListVO.extensionAttribute7}";
+					retValue = ConvMakeXMLString("<c:out value='${boardListVO.extensionAttribute7}'/>");
 				} else if (tableCol == "extensionAttribute8") {
-					retValue = "${boardListVO.extensionAttribute8}";
+					retValue = ConvMakeXMLString("<c:out value='${boardListVO.extensionAttribute8}'/>");
 				} else if (tableCol == "extensionAttribute9") {
-					retValue = "${boardListVO.extensionAttribute9}";
+					retValue = ConvMakeXMLString("<c:out value='${boardListVO.extensionAttribute9}'/>");
 				} else if (tableCol == "extensionAttribute10") {
-					retValue = "${boardListVO.extensionAttribute10}";
+					retValue = ConvMakeXMLString("<c:out value='${boardListVO.extensionAttribute10}'/>");
 				}
 	        	
 	        	return retValue;
