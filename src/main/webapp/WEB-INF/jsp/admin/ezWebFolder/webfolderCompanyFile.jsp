@@ -513,11 +513,6 @@
 					</tr>
 					</c:if>
 					<tr>
-						<td onclick="openReply();" onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor: pointer; background-color: rgb(255, 255, 255);">
-							<span style="font-size: 12px; width: 100%; display: inline-block;"><img src="/images/ImgIcon/rul-sml.png" align="absmiddle" hspace="5"><spring:message code='webfolder.reply.title' /></span>
-						</td>
-					</tr>
-					<tr>
 						<td onclick="refreshView();" onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor: pointer; background-color: rgb(255, 255, 255);">
 							<span style="font-size: 12px; width: 100%; display: inline-block;"><img src="/images/ImgIcon/recur.gif" align="absmiddle" hspace="5"><spring:message code='ezWebFolder.t139' /></span>
 						</td>
