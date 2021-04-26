@@ -10,6 +10,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezBoard/common.js')}"></script>
 		<style>
 	        .viewbox {
 				line-height:20px;
@@ -241,7 +242,7 @@
 					<!-- 제목 -->
 		            <tr>
 	                  <th><spring:message code='ezBoard.t291'/></th>
-	                  <td id="cTitle" style="WORD-WRAP: break-word;" colspan="6">&nbsp;${boardItem.title} </td>
+	                  <td id="cTitle" style="WORD-WRAP: break-word;" colspan="6">&nbsp;<c:out value="${boardItem.title}"/></td>
 		            </tr>
 		      </table>
 <!-- 		<table class="layout">  -->
