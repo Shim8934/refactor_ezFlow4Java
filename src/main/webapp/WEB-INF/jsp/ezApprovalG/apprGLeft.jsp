@@ -1190,7 +1190,7 @@
                    	<li><span class="sub_iconLNB tree_appr_ing"></span><span class="list_text" id="APPROVAL2" onclick="setPresentValue('<spring:message code='ezApprovalG.t1706'/>');convMain('3','')"><spring:message code='ezApprovalG.t1706'/><span id=COUNT2></span></span></li>
                    	<li><span class="sub_iconLNB tree_appr_write"></span><span class="list_text" id="APPROVAL3" onclick="setPresentValue('<spring:message code='ezApprovalG.t1748'/>');convMain('2','')"><spring:message code='ezApprovalG.t1748'/><span id=COUNT3></span></span></li>
 					<c:if test="${approvalFlag eq 'G' && autoSendOfferFlag eq '1'}">
-                   	<li><span class="sub_iconLNB tree_outbox"></span><span class="list_text" id="UNTREATED" onclick="setPresentValue('미처리문서');Open_Func(this);">미처리문서함<span id=countUntreated></span></span></li>
+                   	<li><span class="sub_iconLNB tree_outbox"></span><span class="list_text" id="UNTREATED" onclick="setPresentValue('미처리문서');Open_Func(this);">미처리문서함<span id=COUNTUNTREATED></span></span></li>
                    	</c:if>
                    	<li><span class="sub_iconLNB tree_outbox"></span><span class="list_text" id="APPROVAL21" onclick="setPresentValue('<spring:message code='ezApprovalG.t3000'/>');convMain('21','')"><spring:message code='ezApprovalG.t3000'/><span id=COUNT21></span></span></li>
                    	<c:if test="${hideSusin != 'N'}">
