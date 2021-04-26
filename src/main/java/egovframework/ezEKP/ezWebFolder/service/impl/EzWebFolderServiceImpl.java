@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezWebFolder.service.impl;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -23,6 +24,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
+import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
@@ -43,6 +45,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -997,81 +1000,140 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 
 	@Override
-	public void getDownloadedFiles(String[] folderIdList, String[] fileIDList, String realPath, LoginVO userInfo, String userAgent, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public void getDownloadedFiles(String[] folderIdList, String[] fileIDList, String realPath, LoginVO userInfo, String userAgent, HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
 		String userName1 = userInfo.getDisplayName1();
 		String userName2 = userInfo.getDisplayName2();
-		String offset    = userInfo.getOffset();
-		String userId    = userInfo.getId();
+		String offset = userInfo.getOffset();
+		String userId = userInfo.getId();
 		String companyId = userInfo.getCompanyID();
-		int tenantId     = userInfo.getTenantId();
-		
-		// 폴더 다운로드 불가 (권한체크 힘들어서! 이게 스펙임)
-		if (folderIdList.length > 0) {
-			response.sendError(403, "Do not download folders!");
-			return;
-		}
+		int tenantId = userInfo.getTenantId();
 
-		// 다중 파일은 다운로드 불가
-		if (fileIDList.length > 1) {
-			response.sendError(403, "Do not download multiple files!");
-			return;
-		}
+		if (fileIDList.length == 1 && folderIdList.length == 0) {
+			FileVO fileVO = getFileByFileId(fileIDList[0], offset, tenantId);
+			String _fileName = fileVO.getFileName();
+			_fileName = CommonUtil.getEncodedFileNameForDownload(userAgent, _fileName);
+			File file = new File(realPath + commonUtil.detectPathTraversal(fileVO.getFilePath()));
 
-		String fileId = fileIDList[0];
-		/*
-		if ("fail".equals(ezWebFolderService_y.checkPermission(userId, userInfo.getDeptID(),
-				companyId, fileId, "F", tenantId))) {
-			response.sendError(403, "Do not have access!");
-			return;
-		}
-		*/
-
-		FileVO fileVO = getFileByFileId(fileId, offset, tenantId);
-		boolean isEncrypted = isEncryptedFile(fileId, tenantId);
-		boolean isCreator = fileVO.getCreateId().equals(userId);
-
-		if (isEncrypted && !isCreator) {
-			response.sendError(403, "Encrypted file cannot be downloaded!");
-			return;
-		}
-
-		logger.debug( "여기 " + realPath + commonUtil.detectPathTraversal(fileVO.getFilePath()));
-		File file = new File(realPath + commonUtil.detectPathTraversal(fileVO.getFilePath()));
-
-		String fileName = fileVO.getFileName();
-		fileName = CommonUtil.getEncodedFileNameForDownload(userAgent, fileName);
-
-		if (!file.exists() || !file.isFile()) {
-			throw new FileNotFoundException(fileVO.getFileName());
-		}
-
-		try {
-			response.setBufferSize(BUFF_SIZE);
-			response.setContentType("application/octet-stream");
-			response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
-
-			long contentLength;
-
-			if (isEncrypted) {
-				byte[] decryptedBytes = klibUtil.decrypt(Files.readAllBytes(file.toPath()));
-				IOUtils.write(decryptedBytes, response.getOutputStream());
-				contentLength = decryptedBytes.length;
-				decryptedBytes = null;
-			} else {
-				Files.copy(file.toPath(), response.getOutputStream());
-				contentLength = file.length();
+			if (!file.exists()) {
+				throw new FileNotFoundException(fileVO.getFileName());
 			}
 
-			response.setHeader("Content-Length", Long.toString(contentLength));
-		} catch (Exception ex) {
-			throw ex;
+			if (!file.isFile()) {
+				throw new FileNotFoundException(fileVO.getFileName());
+			}
+
+			BufferedInputStream in = null;
+
+			try {
+				in = new BufferedInputStream(new FileInputStream(file));
+				String mimetype = "application/octet-stream";
+
+				response.setBufferSize(BUFF_SIZE);
+				response.setContentType(mimetype);
+				response.setHeader("Content-Disposition", "attachment; filename=\"" + _fileName + "\"");
+				response.setContentLength((int) file.length());
+
+				FileCopyUtils.copy(in, response.getOutputStream());
+			} finally {
+				if (in != null) {
+					try {
+						in.close();
+					} catch (Exception ignore) {
+						logger.debug("IGNORED: {}", ignore.getMessage());
+					}
+				}
+			}
+
+			response.getOutputStream().flush();
+			response.getOutputStream().close();
+
+			updateDownCnt(fileVO.getFileId(), tenantId);
+			saveLog("D", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
+		} else {
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+			Date today = new Date();
+			String fileName = "webfolder_download_" + formatter.format(today) + ".zip";
+			ZipOutputStream zipOutputStream = null;
+			FileInputStream fileInputStream = null;
+
+			try {
+				//Setting headers
+				response.setStatus(HttpServletResponse.SC_OK);
+				response.addHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+				zipOutputStream = new ZipOutputStream(response.getOutputStream());
+				HashSet<String> nameList = new HashSet<>();
+				HashSet<String> folderNameList = new HashSet<>();
+
+				//Package files
+				for (int i = 0; i < fileIDList.length; i++) {
+					//New zip entry and copying input stream with file to zipOutputStream, after all closing streams
+					FileVO fileVO = getFileByFileId(fileIDList[i], offset, tenantId);
+					File file = new File(realPath + commonUtil.detectPathTraversal(fileVO.getFilePath()));
+
+					if (!file.exists()) {
+						throw new FileNotFoundException(fileVO.getFileName());
+					}
+
+					if (!file.isFile()) {
+						throw new FileNotFoundException(fileVO.getFileName());
+					}
+
+					String zFileName = fileVO.getFileName();
+
+					if (!nameList.contains(zFileName)) {
+						nameList.add(zFileName);
+					} else {
+						int pos = zFileName.lastIndexOf(".");
+						String extend = zFileName.substring(pos + 1);
+						String mainName = zFileName.substring(0, pos);
+						int k = 1;
+						zFileName = mainName + "(" + Integer.toString(k) + ")." + extend;
+
+						while (nameList.contains(zFileName)) {
+							zFileName = mainName + "(" + Integer.toString(++k) + ")." + extend;
+						}
+
+						nameList.add(zFileName);
+					}
+
+					zipOutputStream.putNextEntry(new ZipEntry(zFileName));
+					fileInputStream = new FileInputStream(file);
+
+					IOUtils.copy(fileInputStream, zipOutputStream);
+
+					fileInputStream.close();
+					zipOutputStream.closeEntry();
+
+					updateDownCnt(fileVO.getFileId(), tenantId);
+					saveLog("D", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
+				}
+
+				//Package folders
+				for (int i = 0; i < folderIdList.length; i++) {
+					packFolder(folderNameList, folderIdList[i], "", zipOutputStream, userName1, userName2, offset, userInfo.getPrimary(), userId, companyId, realPath, tenantId);
+				}
+
+				zipOutputStream.close();
+			} catch (Exception e) {
+				throw e;
+			} finally {
+				if (fileInputStream != null) {
+					try {
+						fileInputStream.close();
+					} catch (Exception e) {}
+				}
+
+				if (zipOutputStream != null) {
+					try {
+						zipOutputStream.closeEntry();
+					} catch (Exception e) {}
+					try {
+						zipOutputStream.close();
+					} catch (Exception e) {}
+				}
+			}
 		}
-
-		response.getOutputStream().flush();
-		response.getOutputStream().close();
-
-		updateDownCnt(fileVO.getFileId(), tenantId);
-		saveLog("D", companyId, offset, userId, userName1, userName2, tenantId, fileVO, "", userInfo.getPrimary());
 	}
 	
 	@SuppressWarnings("unused")
