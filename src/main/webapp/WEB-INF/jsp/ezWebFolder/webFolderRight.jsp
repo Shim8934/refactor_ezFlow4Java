@@ -1245,6 +1245,9 @@
 			</c:when>
 			<c:otherwise>
 				<li><span onclick="buttons.fileMoveAndCopy()"><spring:message code='ezWebFolder.t251' /></span></li>
+				<c:if test="${useVersionHistory}">
+					<li><span onclick="buttons.openFileVersionHistory()"><spring:message code='webfolder.version.button' /></span></li>
+				</c:if>
 				<li><span onclick="shareContext.addShareView()"><spring:message code='ezWebFolder.t254' /></span></li>			
 				<!-- <li><img src="/images/i_bar.gif" /></li> -->
 				<li><span class="icon16 icon16_star" onclick="favoriteContext.toggleAll()"></span></li>
