@@ -333,9 +333,10 @@
 			if (folderUpp == 'root' && folderType == 'C') {
 				$('#upload').css('display','none');
 				$('#newFolder').css('display','none');		
-				if (folderType == 'C') {
-					$('#SearchOption').css('display','none');		
-				}
+				$('#SearchOption').css('display','none');	
+				$('#rename').css('display','none');
+				$('#moveButton').css('display','none');
+				$('#delete').css('display','none');
 				dragDropAreaElmt.ondragenter = function(e) {
 					e.stopPropagation();e.preventDefault();
 				};
@@ -347,7 +348,10 @@
 				};
 			} else {
 				$('#upload').css('display','inline');
-				$('#newFolder').css('display','inline');				
+				$('#newFolder').css('display','inline');	
+				$('#rename').css('display','inline');
+				$('#moveButton').css('display','inline');
+				$('#delete').css('display','inline');
 				if (folderType == 'C') {
 					$('#SearchOption').css('display','inline');				
 				}
@@ -1230,7 +1234,7 @@
 				<li class="important"><span onclick="buttons.fileDownload()"><spring:message code='ezWebFolder.t186' /></span></li>
 				<li class="important" id="upload"><span onclick="buttons.fileUpload()"><spring:message code='ezWebFolder.t187' /></span></li>
 				<li id ="newFolder"><span onclick="buttons.newFolder()"><spring:message code='ezWebFolder.t255' /></span></li>
-				<li><span onclick="buttons.fileRename()"><spring:message code='ezWebFolder.t508' /></span></li>
+				<li id="rename"><span onclick="buttons.fileRename()"><spring:message code='ezWebFolder.t508' /></span></li>
 		<c:choose>
 			<c:when test="${folderType eq 'C'}">
 				<li id="moveButton"><span onclick="buttons.fileMoveAndCopy()"><spring:message code='ezWebFolder.t251' /></span></li>
@@ -1240,7 +1244,7 @@
 					<li id="userManagerBtn"><span onclick="getUsersPage_manager()"><spring:message code='ezWebFolder.kes013' /></span></li>
 					<li><span class="icon16 icon16_star" onclick="favoriteContext.toggleAll()" title="<spring:message code='ezWebFolder.t216' />"></span></li>
 				<li id="SearchOption" mode="off" onclick="doLayerPopup(this)"><span class="icon16 icon16_search" title="<spring:message code='ezWebFolder.t123' />"></span></li>
-				<li><span class="icon16 icon16_delete" onclick="buttons.fileDelete()" title="<spring:message code='ezWebFolder.t111' />"></span></li>
+				<li id="delete"><span class="icon16 icon16_delete" onclick="buttons.fileDelete()" title="<spring:message code='ezWebFolder.t111' />"></span></li>
 			</c:when>
 			<c:otherwise>
 				<li><span onclick="buttons.fileMoveAndCopy()"><spring:message code='ezWebFolder.t251' /></span></li>

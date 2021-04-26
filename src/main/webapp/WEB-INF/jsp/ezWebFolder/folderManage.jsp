@@ -38,6 +38,7 @@
 		var folderName2 = "";
 		var drawVolume = "";
 		var treeData;
+		var selectedFolderLevel = "";
 		
 		var inputNameDlg_cross_dialogArguments = new Array();
 		var moveCopyFolderDlg_cross_dialogArguments = [];
@@ -92,6 +93,7 @@
 						folderName1 = folderName1 != null ? data.node.original.folderName1 : "";
 						folderName2 = folderName2 != null ? data.node.original.folderName2 : "";
 						parent = data.node.original.parent;
+						selectedFolderLevel = data.node.original.folderLevel;
 					}).jstree({
 						'plugins': [ "core", "types", "json_data", "themes", "ui" ],
 						'core': {
@@ -285,6 +287,11 @@
 					}
 				}
 			}
+
+			if (folderType == "C" && selectedFolderLevel == "1") {
+				alert("<spring:message code='ezWebFolder.t329'/>");
+				return;
+			}
 			
 			if (userId != createId) {
 				alert("<spring:message code='ezWebFolder.t334'/>");
@@ -312,6 +319,11 @@
 			
 			if (parent == '#' && folderType != "S") {
 				alert("<spring:message code='ezWebFolder.t336'/>");
+				return;
+			}
+			
+			if (folderType == "C" && selectedFolderLevel == "1") {
+				alert("<spring:message code='ezWebFolder.t329'/>");
 				return;
 			}
 			
