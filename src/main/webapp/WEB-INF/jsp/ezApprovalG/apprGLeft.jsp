@@ -1210,7 +1210,7 @@
 							<li class="approvalG"><span class="sub_iconLNB tree_appr_write"></span><span class="list_text" id="APPROVAL5" onclick="setPresentValue('<spring:message code='ezApprovalG.kbh04'/>');convMain('5');"><spring:message code='ezApprovalG.kbh04'/><span id="COUNT5"></span></span></li>
 						</c:if>
 						<c:if test="${relayShowFlag eq 'Y' || howToSendOffer eq '1'}">
-							<li class="approvalG"><span class="sub_iconLNB tree_appr_write"></span><span class="list_text" id="APPROVAL6" onclick="setPresentValue('<spring:message code='ezApprovalG.kbh05'/>');convMain('6');"><spring:message code='ezApprovalG.kbh05'/><span id="count6"></span></span></li>
+							<li class="approvalG"><span class="sub_iconLNB tree_appr_write"></span><span class="list_text" id="APPROVAL6" onclick="setPresentValue('<spring:message code='ezApprovalG.kbh05'/>');convMain('6');"><spring:message code='ezApprovalG.kbh05'/><span id="COUNT6"></span></span></li>
 						</c:if>
                    	</c:if>
 					<c:if test="${userSendOut == 'YES'}">
