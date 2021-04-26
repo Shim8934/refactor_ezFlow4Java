@@ -1235,6 +1235,10 @@
 			AND
 				TENANT_ID = #tenantId#
 		]]>
+		<isNotEmpty property="folderManager">
+			AND
+				FOLDER_MANAGER = #folderManager#
+		</isNotEmpty>
 	</delete>
 	
 	<select id="EzWebFolderAdminDAO.findFileFolderUserCurrVal">

@@ -426,10 +426,11 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 	}
 
 	@Override
-	public void deleteFolderUsers(String folderId, int tenantId) throws Exception {
+	public void deleteFolderUsers(String folderId, int tenantId, String folderManager) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("folderId", folderId);
 		map.put("tenantId", tenantId);
+		map.put("folderManager", folderManager);
 		ezWebFolderAdminDAO.deleteFolderUsers(map);
 	}
 
@@ -919,23 +920,25 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 	    SimpleDateFormat targetDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");					// 우리가 지원하는 형식으로 다시 포맷
 	    String timeUTCCreate	   = commonUtil.getDateStringInUTC(targetDateFormat.format(date1), offset, true);	// timeUTC 적용
 		
-	    /* 회사폴더, 부서폴더/개인폴더 로 구분하기 위해서 이동시킬때에도 folderUser를 삭제하지 않도록 한다.
-		if (folder.getFolderLevel() == 1) {
-			//Delete all folder users
-			deleteFolderUsers(folder.getFolderId(), tenantId);
+	    // /* 회사폴더, 부서폴더/개인폴더 로 구분하기 위해서 이동시킬때에도 folderUser를 삭제하지 않도록 한다.
+		if (folder.getFolderLevel() == 1 && parentFolder.getFolderType().equals("C")) {
+			deleteFolderUsers(folder.getFolderId(), tenantId, "1");
 		}
-		*/
 		
+		/* 회사폴더 - 모든 폴더들이 구성원을 가지므로 따로 추가해줄 필요가 없음.
+			// parentFolder.getFolderLevel() == 0
 		if ((folder.getFolderLevel() + levelDistance == 1) && parentFolder.getFolderType().equals("C")) {
 			String folderPath            = folder.getFolderPath();
 			folderPath                   = folderPath.substring(1, folderPath.length() - 1);
 			String ancestorId            = folder.getFolderType().equals("C") ? folderPath.split("\\|")[1] : folderPath.split("\\|")[0];
 			List<FolderUserVO> listUsers = ezWebFolderService.getFolderUsers(ancestorId, tenantId);
+			// 원부서의 1레벨 folderUser를 따른다.
 			
 			for (FolderUserVO folderUser: listUsers) {
 				insertFolderUser(getMaxFolderUserSeq(tenantId), folderUser.getUserId(), folderUser.getUserType(), folder.getFolderId(), userId, timeUTC, folder.getCompanyId(), tenantId);
 			}
 		}
+		*/
 		
 		moveListSubFiles(parentFolder.getFolderId(), oldPath, tenantId);
 

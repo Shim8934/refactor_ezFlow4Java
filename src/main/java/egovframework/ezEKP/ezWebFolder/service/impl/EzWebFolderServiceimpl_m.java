@@ -1742,7 +1742,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		int levelDistance = destFolderVO.getFolderLevel() + 1 - folderVO.getFolderLevel();
 		
 		if (folderVO.getFolderLevel() == 1) {
-			ezWebFolderAdminService.deleteFolderUsers(folderVO.getFolderId(), tenantId);
+			ezWebFolderAdminService.deleteFolderUsers(folderVO.getFolderId(), tenantId, null);
 		}
 		
 		if (destFolderVO.getFolderType().equals("C")) {

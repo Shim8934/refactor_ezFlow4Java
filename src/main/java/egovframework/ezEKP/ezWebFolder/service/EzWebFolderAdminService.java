@@ -31,7 +31,7 @@ public interface EzWebFolderAdminService {
 	int insertFolder2(FolderVO folder) throws Exception;
 	void insertFolderUser(String seq, String userId, String userType, String folderId, String createId, String createDate, String companyId, int tenantId) throws Exception;
 	void insertFolderUser(String seq, String userId, String userType, String folderId, String createId, String createDate, String companyId, int tenantId, Boolean subdeptPermitted, Boolean folderManager) throws Exception;
-	void deleteFolderUsers(String folderId, int tenantId) throws Exception;
+	void deleteFolderUsers(String folderId, int tenantId, String folderManager) throws Exception;
 	int getTotalFileLogs(String companyId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, 
 			String actionType, String primary, int tenantId, String folderId, String adminFlag) throws Exception;
 	//int getTotalListUserCapacity(String companyId, String searchStr, String searchOpt, int startPoint, int pageSize, int tenantId, String primary) throws Exception;
