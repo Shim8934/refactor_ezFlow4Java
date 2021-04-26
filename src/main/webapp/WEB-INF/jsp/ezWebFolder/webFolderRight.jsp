@@ -572,10 +572,15 @@
 					tdElmt3.appendChild(fileIconElmt);
 					
 					
+					tdElmt4.textContent = result[i]["fileName"];
+					tdElmt4.setAttribute("title", result[i]["fileName"]);
+					
+					var fileExt = result[i]["fileExt"];
+					if (fileExt) {
+						tdElmt4.setAttribute("ext", fileExt);
+					}
+					
 					if (folderType == 'C') {
-						tdElmt4.textContent = fileName;
-						tdElmt4.setAttribute("title", fileName);
-						
 						if (depth > 1) {
 							var additional = "↪ ";
 	
@@ -592,14 +597,6 @@
 						if (encryptedFlag == 1) {
 							tdElmt4.innerHTML = "<img src='/images/email/secureMail/security_icon.gif' width='12' /> " + tdElmt4.innerHTML;
 						}
-						
-						var fileExt = result[i]["fileExt"];
-						if (fileExt) {
-							tdElmt4.setAttribute("ext", fileExt);
-						}
-					} else {
-						tdElmt4.textContent = result[i]["fileName"];
-						tdElmt4.setAttribute("title", result[i]["fileName"]);
 					}
 					
 					if(result[i]["typeId"] == "folder") {
