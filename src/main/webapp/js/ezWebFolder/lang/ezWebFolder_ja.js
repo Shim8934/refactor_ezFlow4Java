@@ -33,7 +33,7 @@ var messages = {
 	strLang33 : "共有を解除しました。",
 	strLang34 : "共有されたフォルダは修正できません。",			// ezWebFolder.t327
 	strLang35 : "最上位フォルダは修正できません。",				// ezWebFolder.t328
-	strLang36 : "擔當者のみ操作可能フォルダです。",				// ezWebFolder.t329
+	strLang36 : "管理者ページでのみ管理が可能なフォルダです。",				// ezWebFolder.t329
 	strLang37 : "フォルダの生成者のみフォルダ名を修正できます。",	// ezWebFolder.t258
 	strLang38 : "ファイルまたはフォルダを選択してください。",
 	strLang39 : "ファイルまたはフォルダを一つだけ選択してください。",

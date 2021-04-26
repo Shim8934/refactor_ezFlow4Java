@@ -34,7 +34,7 @@ var messages = {
 	strLang33 : "You canceled sharing.",
 	strLang34 : "Shared folders cannot be modified.",									// ezWebFolder.t327
 	strLang35 : "Top-level folders cannot be modified.",								// ezWebFolder.t328
-	strLang36 : "This folder can be managed only by folder manager",					// ezWebFolder.t329
+	strLang36 : "This folder can be managed only on the admin page.",					// ezWebFolder.t329
 	strLang37 : "If you are not a folder creator, you cannot modify the folder name.",	// ezWebFolder.t258
 	strLang38 : "Please select a file or folder.",
 	strLang39 : "Please select one file or folder.",
