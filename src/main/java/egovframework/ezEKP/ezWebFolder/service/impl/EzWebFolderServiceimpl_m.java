@@ -985,7 +985,10 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			
 			if (!folderStatus.equals("T")){
 				FolderVO subFolder = new FolderVO();
-				subFolder.setFolderId(subFolders.get(i).get("folderId"));
+				
+				String fldId = String.valueOf(subFolders.get(i).get("folderId"));
+				
+				subFolder.setFolderId(fldId);
 				subFolder.setTenantId(tenantId);
 				
 				int isFolderUserDeleted = deleteFolderUser(subFolder, flag);
@@ -997,7 +1000,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 					deleteAllFilesInFolder(subFolder, map.get("companyId").toString(), map.get("realPath").toString(), userInfo,  
 							map.get("offset").toString(), tenantId, map.get("userId").toString(), map.get("userName1").toString(), map.get("userName2").toString(), flag);
 				}
-				List<Map<String, String>> subFolders2 = subFolders(subFolders.get(i).get("folderId"), userInfo.getId(), tenantId);
+				List<Map<String, String>> subFolders2 = subFolders(fldId, userInfo.getId(), tenantId);
 				if (subFolders2.size() != 0){
 					subFolderRealDeleteRecursive(subFolders2, tenantId, map, userInfo, flag);
 				} 

@@ -408,20 +408,27 @@
 			
 			var filesList  = [];
 			var folderList = [];
+			var versionList = [];
 			
 			for (var i = 0; i < listOfChecked.length; i++) {
 				var fileFolderId = listOfChecked[i].getAttribute("targetid");
+				var version = listOfChecked[i].getAttribute("version");
 				
 				if (listOfChecked[i].getAttribute("ext") == 'folder') {
 					folderList.push(fileFolderId);
-				}
-				else {
+				} else if (version == "0") {
 					filesList.push(fileFolderId);
+				} else {
+					// 버전 속성이 1 이상이면 버전관리 파일이다.
+					versionList.push(fileFolderId + ":" + version);
 				}
 			}
 			
 			openLeftPanel();
-			DivPopUpShow(450, 200, "/ezWebFolder/permanentDeleteConfirm.do?fileList=" + filesList.toString() + "&folderList=" + folderList.toString());
+			
+			var param = "?fileList=" + filesList.toString() + "&folderList=" + folderList.toString() 
+					+ "&versionList=" + versionList.toString();
+			DivPopUpShow(450, 200, "/ezWebFolder/permanentDeleteConfirm.do" + param);
 		
 			refreshView();
 		}
@@ -440,15 +447,18 @@
 			
 			var filesList  = [];
 			var folderList = [];
+			var versionList = [];
 			
 			for (var i = 0; i < listOfChecked.length; i++) {
 				var fileFolderId = listOfChecked[i].getAttribute("targetid");
+				var version = listOfChecked[i].getAttribute("version");
 				
 				if (listOfChecked[i].getAttribute("ext") == 'folder') {
 					folderList.push(fileFolderId);
-				}
-				else {
+				} else if (version == "0") {
 					filesList.push(fileFolderId);
+				} else {
+					versionList.push(fileFolderId + ":" + version);
 				}
 			}
 			
@@ -459,16 +469,49 @@
 				dataType: "json",
 				data : {
 					"fileList"   : filesList.toString(),
-					"folderList" : folderList.toString()
+					"folderList" : folderList.toString(),
+					"versionList":  versionList.toString()
 				},
 				success : function (data) {
-					if (data.code == "1") {
+					// 버전 복원이 실패했다면 알림
+					var successRestoredVersions = data.errorVersions && data.errorVersions.length == 0;
+					
+					if (data.code == 0 && successRestoredVersions) {
+						alert("<spring:message code = 'ezWebFolder.t289'/>");
+					} else if (data.code == 2) {
+					   alert("<spring:message code = 'ezWebFolder.t292'/>");
+					} else if (data.code == 3) {
+						alert("<spring:message code = 'ezWebFolder.t28'/>");
+					} else {
+						if (data.code == 4) {
+							alert("<spring:message code = 'ezWebFolder.t290'/>");
+						}
+						
+						// 중복된 정보가 존재한다면 알림
+						if (data.duplicateInfoArray && data.duplicateInfoArray.length > 0) {
+							alert("<spring:message code = 'webfolder.duplicate.restore.error'/>");
+						}
+						
+						if (data.hasExceededCapacities) {
+							alert("<spring:message code = 'webfolder.trash.restore.error.capacity'/>");
+						}
+						
+						if (!data.hasAllParentFile) {
+							alert("<spring:message code = 'webfolder.trash.restore.error.reply'/>");
+						}
+					}
+					
+					if (!successRestoredVersions) {
+						alert("<spring:message code = 'webfolder.version.trash.restore.error'/>");
+					}
+					
+					/* if (data.code == "1") {
 						alert("<spring:message code = 'ezWebFolder.t289'/>");
 					} else if (data.code == "4") {
 						alert("<spring:message code = 'ezWebFolder.t290'/>");
 					} else if (data.code == "8") {
 						alert("<spring:message code = 'webfolder.duplicate.restore.error'/>");
-					}
+					} */
 				},
 				error : function(error) {
 						alert("<spring:message code = 'ezWebFolder.t292'/>");
