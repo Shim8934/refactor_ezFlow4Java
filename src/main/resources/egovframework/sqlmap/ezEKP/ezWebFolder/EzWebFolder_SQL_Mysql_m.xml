@@ -2169,7 +2169,7 @@
 	<select id="EzWebFolderDAO_m.getWebFolderApplyHistoryList" parameterClass="Map" resultMap="applicationHistoryList">
 		<![CDATA[
 				SELECT 
-					h.APPLY_ID, h.FOLDER_NAME, h.APPLICATION_DATE, a.MEMBER_NAME AS applicantName,
+					h.APPLY_ID, h.FOLDER_NAME, DATE_FORMAT(h.APPLICATION_DATE, '%Y-%m-%d %H:%i') as APPLICATION_DATE, a.MEMBER_NAME AS applicantName,
 					ms.member_name AS masterName, ms.cnt AS masterCnt, h.APPROVAL_STATUS
 		]]>
 				<include refid="getWebFolderApplyHistroyQuery" />
@@ -2182,7 +2182,7 @@
 		<![CDATA[
 			SELECT
 				APPLY_ID,  FOLDER_NAME, CONTENT, 
-				APPLICATION_DATE AS APPLICATION_DATE, APPROVAL_STATUS_UPDATEDT, COMPANY_ID
+				DATE_FORMAT(APPLICATION_DATE, '%Y-%m-%d %H:%i') AS APPLICATION_DATE, DATE_FORMAT(APPROVAL_STATUS_UPDATEDT, '%Y-%m-%d %H:%i') AS APPROVAL_STATUS_UPDATEDT, COMPANY_ID
 			FROM 
 				TBL_WEBFOLDER_APPLY_HISTORY
 			WHERE 
