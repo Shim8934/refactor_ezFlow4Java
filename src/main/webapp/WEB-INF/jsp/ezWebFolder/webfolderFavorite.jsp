@@ -1351,7 +1351,9 @@
 				<li id ="newFolder"><span onclick="buttons.newFolder()"><spring:message code='ezWebFolder.t255' /></span></li>
 				<li favoritemenu onclick="buttons.fileRename()"><span><spring:message code='ezWebFolder.t508'/></span></li><!-- 파일명 변경에서 이름변경으로 수정  -->
 				<li id="moveButton" onclick="buttons.fileMoveAndCopy()"><span><spring:message code='ezWebFolder.t251'/></span></li>
+				<c:if test="${useVersionHistory}">
 				<li><span onclick="buttons.openFileVersionHistory()"><spring:message code='webfolder.version.button' /></span></li>
+				</c:if>
 				<li id="userManagerBtn" style="display:none;"><span onclick="getUsersPage_manager()"><spring:message code='ezWebFolder.kes013' /></span></li>
 				<li favoritemenu onclick="favoriteContext.toggleAll()"><span class="icon16 icon16_star"></span></li>
 				<li id="SearchOption" favoritemenu mode="off" onclick="doLayerPopup(this)"><span class="icon16 icon16_search"></span></li>
