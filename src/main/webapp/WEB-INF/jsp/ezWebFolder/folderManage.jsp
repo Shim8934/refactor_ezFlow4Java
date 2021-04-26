@@ -210,6 +210,7 @@
 				folderId = folderId.substring(0, folderId.indexOf("_"));
 			}
 			
+			inputNameDlg_cross_dialogArguments.currentName = folderName1;
 			inputNameDlg_cross_dialogArguments[0] = folderId;
 			inputNameDlg_cross_dialogArguments[1] = add_onclick_Complete;
 			inputNameDlg_cross_dialogArguments[2] = DivPopUpHidden;
