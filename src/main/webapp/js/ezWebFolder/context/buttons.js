@@ -54,23 +54,14 @@ var buttons = (function() {
 				return;
 			}
 			
-			if (selected.folders.length > 0) {
-				alert(messages.strLang1);
-				return;
-			}
-			
-			if (selected.files.length > 1) {
-				alert(messages.strLang6);
-				return;
-			}
-			
 			var selectedFileId = selected.files[0];
 			
 			$.ajax({
 				type: "POST",
-				url: "/ezWebFolder/selectedFolderCheckPermission.do",
+				url: "/ezWebFolder/checkPermission_y.do",
 				data: {
-					"fileId" : selectedFileId
+					"fileList" : selected.files.toString(),
+					"folderList" : selected.folders.toString()
 				},
 				dataType: "JSON",
 				async: true,
@@ -82,14 +73,14 @@ var buttons = (function() {
 					} else if (data.code == "1") {
 						alert(messages.strLang7);
 					} else {
-						var rowElem = rowContext.getRowElement(selectedFileId);
+						/* var rowElem = rowContext.getRowElement(selectedFileId);
 						
 						if (rowElem.getAttribute("encryptedFlag") === "1") {
 							unidocsWebViewerOpen(selectedFileId);
-						} else {
-							var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + selectedFileId;
+						} else { */
+							var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + selected.files.toString() + "&folderList=" + selected.folders.toString();
 							AttachDownFrame.location.href = downloadUrl;
-						}
+						//}
 					}
 				},
 				error : function(error) {
