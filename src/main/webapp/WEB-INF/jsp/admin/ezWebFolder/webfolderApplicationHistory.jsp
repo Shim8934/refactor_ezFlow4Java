@@ -353,6 +353,8 @@
 					}
 				}, error: function(e) {
 					alert("<spring:message code='ezWebFolder.ksa23' /> : " + e);
+				}, complete : function() {
+					clickChk = false;
 				}
 			});
 		}
@@ -410,6 +412,8 @@
 			} else  {
 				var listTR = document.createElement("TR");
 				listTR.setAttribute("id", "nodataRow");
+				listTR.style.textAlign = "center";
+				listTR.style.cursor = "default";
 				
 				var listTD = document.createElement("TD");
 				listTD.setAttribute("cellspan", listHead_TH_Key.length);
@@ -677,10 +681,14 @@
 			}
 		}
 		
+		var clickChk = false;
 		$(document).on("click", "#listContent tr:not(#nodataRow)", function() {
 			$("#listContent tr").removeAttr("id");
 			$(this).attr("id", "selectedRow")
 		}).on("dblclick", "#listContent tr:not(#nodataRow)", function() {
+			if (clickChk) {return; }
+			
+			clickChk = true;
 			getAppliHisotry();
 		}).on("click", "#wfOptionDiv", function() {
 			optionView($(this).find("span")[0]);
