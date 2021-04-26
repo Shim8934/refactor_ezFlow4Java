@@ -298,6 +298,7 @@
 			moveCopyFolderDlg_cross_dialogArguments[0] = folderId;
 			moveCopyFolderDlg_cross_dialogArguments[1] = "move";
 			moveCopyFolderDlg_cross_dialogArguments[2] = returnFunction;
+			moveCopyFolderDlg_cross_dialogArguments[3] = folderType;
 			console.log("folderId moveCopy_onclick function" + folderId);
 			console.log("moveCopyFolderDlg_cross_dialogArguments delete_onclick function" + moveCopyFolderDlg_cross_dialogArguments[0]);
 			DivPopUpShow(360, 470, "/ezWebFolder/folderMove.do");
@@ -321,6 +322,7 @@
 			moveCopyFolderDlg_cross_dialogArguments[0] = folderId;
 			moveCopyFolderDlg_cross_dialogArguments[1] = "copy";
 			moveCopyFolderDlg_cross_dialogArguments[2] = returnFunction;
+			moveCopyFolderDlg_cross_dialogArguments[3] = folderType;
 			DivPopUpShow(360, 470, "/ezWebFolder/folderMove.do");
 		}
 		

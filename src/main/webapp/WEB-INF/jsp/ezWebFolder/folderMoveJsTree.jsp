@@ -24,20 +24,30 @@
 		var parentId = "";
 		var createId = "";
 		var treeData;
+		var folderMoveType = "";
 		
 		window.onload = function() {
-			folderList('C');
-			folderType = 'C';
 			
 			try {
 				folderId = parent.moveCopyFolderDlg_cross_dialogArguments[0];
 				moveCopyType = parent.moveCopyFolderDlg_cross_dialogArguments[1];
 				returnFunction = parent.moveCopyFolderDlg_cross_dialogArguments[2];
+				folderMoveType = parent.moveCopyFolderDlg_cross_dialogArguments[3];
+				
+				folderType = folderMoveType != "C" ? "D" : folderMoveType;
+				folderList(folderType);
 			} catch (e) {}
 			
 			try {
 				txt_FolderName.focus();
 			} catch (e) {}
+			
+			if (folderMoveType == "C") {
+				$("input[id='radio1'], label[for='radio1']").css("display", "inline-block")
+			} else {
+				// radio2.checked = true;
+				$("input[id!='radio1'], label[for!='radio1']").css("display", "inline-block")
+			}
 			
 			if (moveCopyType == "move") {
 				$('#topMenu').text("<spring:message code='ezWebFolder.t296'/>");
@@ -211,11 +221,11 @@
 	</div>
 	
 	<div style="border: none; height: 30px; position: relative;">
-		<div style="text-align: center">
-			<input name="treeType" id="radio1" type="radio" value="C" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="folderList('C');"><label for="radio1"><span> <spring:message code="ezWebFolder.t233"/></span></label>
-			<input name="treeType" id="radio2" type="radio" value="D" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="folderList('D');"><label for="radio2"><span> <spring:message code="ezWebFolder.t234"/></span></label>
-			<input name="treeType" id="radio3" type="radio" value="U" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="folderList('U');"><label for="radio3"><span> <spring:message code='ezWebFolder.t235'/></span></label>
-			<input name="treeType" id="radio4" type="radio" value="S" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="folderList('S');"><label for="radio4"><span> <spring:message code='ezWebFolder.t266'/></span></label>
+		<div style="text-align: right;margin-right: 10px;">
+			<input name="treeType" id="radio1" type="radio" value="C" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle; display: none;" onclick="folderList('C');"><label for="radio1" style="display: none;"><span> <spring:message code="ezWebFolder.t233"/></span></label>
+			<input name="treeType" id="radio2" type="radio" value="D" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle; display: none;" onclick="folderList('D');"><label for="radio2" style="display: none;"><span> <spring:message code="ezWebFolder.t234"/></span></label>
+			<input name="treeType" id="radio3" type="radio" value="U" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle; display: none;" onclick="folderList('U');"><label for="radio3" style="display: none;"><span> <spring:message code='ezWebFolder.t235'/></span></label>
+			<input name="treeType" id="radio4" type="radio" value="S" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle; display: none;" onclick="folderList('S');"><label for="radio4" style="display: none;"><span> <spring:message code='ezWebFolder.t266'/></span></label>
 		</div>
 	</div>
 	<div style="margin: 0px 10px 10px 10px; border: 1px solid #ddd; min-height: 320px; height: 320px; overflow: auto; padding-top:5px" id="folderTree"></div>
