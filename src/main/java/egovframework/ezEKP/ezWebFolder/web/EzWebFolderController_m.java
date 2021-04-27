@@ -75,7 +75,7 @@ public class EzWebFolderController_m {
 	}
 	
 	@RequestMapping(value="/ezWebFolder/getSharingList.do", method = RequestMethod.POST)
-	public @ResponseBody String getSharingList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public @ResponseBody JSONObject getSharingList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getSharingList started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -96,7 +96,7 @@ public class EzWebFolderController_m {
 		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/sharing", param, request, "get", null);
 		
 		logger.debug("getSharingList ended.");
-		return resultBody.toString();
+		return resultBody;
 	}
 	
 	@RequestMapping(value="/ezWebFolder/webfolderSharedList.do", method = RequestMethod.GET)
@@ -108,7 +108,7 @@ public class EzWebFolderController_m {
 	}
 	
 	@RequestMapping(value="/ezWebFolder/getSharedList.do", method = RequestMethod.POST)
-	public @ResponseBody String getSharedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public @ResponseBody JSONObject getSharedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getSharedList started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -129,7 +129,7 @@ public class EzWebFolderController_m {
 		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/shared", param, request, "get", null);
 		
 		logger.debug("getSharedList ended.");
-		return resultBody.toString();
+		return resultBody;
 	}
 	
 	@RequestMapping(value="/ezWebFolder/showShareInfo.do", method = RequestMethod.GET)
@@ -143,7 +143,7 @@ public class EzWebFolderController_m {
 	}
 	
 	@RequestMapping(value="/ezWebFolder/getShareInfo.do", method=RequestMethod.POST)
-	public @ResponseBody String getShareInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public @ResponseBody JSONObject getShareInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getShareInfo started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -154,12 +154,12 @@ public class EzWebFolderController_m {
 		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/sharing/" + folderFileId + "/" + folderFileType + "/all", null, request, "get", null);
 		
 		logger.debug("getShareInfo ended.");
-		return resultBody.toString();
+		return resultBody;
 	}
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezWebFolder/getShareUserList.do", method=RequestMethod.POST)
-	public @ResponseBody String getShareUserList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public @ResponseBody JSONObject getShareUserList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getShareUserList started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -206,7 +206,7 @@ public class EzWebFolderController_m {
 		
 		logger.debug("result: " + result);
 		logger.debug("getShareUserList ended.");
-		return result;
+		return resultBody;
 	}
 	
 	@RequestMapping(value="/ezWebFolder/addShareView.do", method = RequestMethod.GET)
@@ -239,7 +239,7 @@ public class EzWebFolderController_m {
 	}
 	
 	@RequestMapping(value="/ezWebFolder/addShare.do", method=RequestMethod.POST)
-	public @ResponseBody String addShare(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public @ResponseBody JSONObject addShare(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("addShare started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -266,7 +266,7 @@ public class EzWebFolderController_m {
 		}
 		
 		logger.debug("addShare ended.");
-		return  resultBody.toString();
+		return  resultBody;
 	}
 	
 	@RequestMapping(value="/ezWebFolder/deleteShareConfirm.do", method = RequestMethod.GET)
@@ -287,7 +287,7 @@ public class EzWebFolderController_m {
 	}
 	
 	@RequestMapping(value="/ezWebFolder/deleteShare.do", method=RequestMethod.POST)
-	public @ResponseBody String deleteShare(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public @ResponseBody JSONObject deleteShare(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("deleteShare started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -302,11 +302,11 @@ public class EzWebFolderController_m {
 		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/sharing", param, request, "delete", null);
 		
 		logger.debug("deleteShare ended.");
-		return  resultBody.toString();
+		return  resultBody;
 	}
 	
 	@RequestMapping(value="/ezWebFolder/hideShare.do", method=RequestMethod.POST)
-	public @ResponseBody String hideShare(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public @ResponseBody JSONObject hideShare(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("hideShare started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -321,11 +321,11 @@ public class EzWebFolderController_m {
 		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/shared-hide", param, request, "post", null);
 		
 		logger.debug("hideShare ended.");
-		return  resultBody.toString();
+		return  resultBody;
 	}
 	
 	@RequestMapping(value="/ezWebFolder/showShare.do", method=RequestMethod.POST)
-	public @ResponseBody String showShare(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public @ResponseBody JSONObject showShare(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("showShare started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -340,7 +340,7 @@ public class EzWebFolderController_m {
 		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/shared-hide", param, request, "delete", null);
 		
 		logger.debug("showShare ended.");
-		return  resultBody.toString();
+		return  resultBody;
 	}
 	
 	@RequestMapping(value="/ezWebFolder/webfolderHiddenSharedList.do", method = RequestMethod.GET)
@@ -351,7 +351,7 @@ public class EzWebFolderController_m {
 	}
 	
 	@RequestMapping(value="/ezWebFolder/getHiddenSharedList.do", method = RequestMethod.POST)
-	public @ResponseBody String getHiddenSharedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public @ResponseBody JSONObject getHiddenSharedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getHiddenSharedList started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -365,7 +365,7 @@ public class EzWebFolderController_m {
 		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/shared-hide", param, request, "get", null);
 		
 		logger.debug("getHiddenSharedList ended.");
-		return resultBody.toString();
+		return resultBody;
 	}
 	
 	@RequestMapping(value="/ezWebFolder/trashCan.do", method = RequestMethod.GET)
