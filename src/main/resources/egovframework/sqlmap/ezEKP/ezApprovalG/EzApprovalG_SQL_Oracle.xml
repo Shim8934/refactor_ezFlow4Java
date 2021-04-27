@@ -6137,6 +6137,10 @@
 					]]>
 				</isNotEmpty>
 					AND 
+						TBL_RECORD.TENANT_ID = #tenantID#
+					AND
+						TBL_RECORD.COMPANYID = #companyID#
+					AND 
 						TBL_RECORD.DelFlag = '0' 
 					AND 
 						TBL_SEPERATEATTACH.DelFlag = '0'
@@ -13938,14 +13942,14 @@
 					OR 
 				  TBL_RECORD.DocType = '2')
 				AND 
-			 	 TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'N'
+              	  TBL_ENDAPRDOCINFO.FORMID != #relayFormID#
 		</isEqual>
 		<isEqual property="listFlag" compareValue="11" prepend="AND">
 				( TBL_ENDAPRDOCINFO.DocState = '014' 
 					OR 
 				  TBL_RECORD.DocType = '1')
 				AND 
-              	  TBL_ENDAPRDOCINFO.FORMID != #relayFormID#
+			  	  TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'N'
 		</isEqual>
 		<isEqual property="listFlag" compareValue="12" prepend="AND">
 				( TBL_ENDAPRDOCINFO.DocState = '011' 
