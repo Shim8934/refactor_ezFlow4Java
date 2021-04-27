@@ -1686,7 +1686,7 @@ function makePageSelPage(pTotalCnt) {
             document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;font-weight:bold;'>" + pTotalCnt + "</span>&nbsp;/ " + period;
 
         if (g_sFlag === "UNTREATED") {
-            parent.frames["left"].document.getElementById("countUntreated").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
+            parent.frames["left"].document.getElementById("COUNTUNTREATED").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
         }
     }
 
