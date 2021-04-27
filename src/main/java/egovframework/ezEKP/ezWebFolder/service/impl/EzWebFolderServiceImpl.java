@@ -1049,7 +1049,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			response.getOutputStream().close();
 
 			updateDownCnt(fileVO.getFileId(), tenantId);
-			saveLog("D", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
+			saveLog("D", companyId, offset, userId, userName1, userName2, tenantId, fileVO, "", userInfo.getPrimary());
 		} else {
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
 			Date today = new Date();
@@ -1106,7 +1106,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 					zipOutputStream.closeEntry();
 
 					updateDownCnt(fileVO.getFileId(), tenantId);
-					saveLog("D", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
+					saveLog("D", companyId, offset, userId, userName1, userName2, tenantId, fileVO, "", userInfo.getPrimary());
 				}
 
 				//Package folders
@@ -1368,7 +1368,8 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 	
 	@Override
-	public void saveLog(String type, String companyId, String offset, String userId, String userName1, String userName2, String filename, long fileSize, String fileExt, String fileType, int tenantId) throws Exception {
+	public void saveLog(String type, String companyId, String offset, String userId, String userName1, String userName2,
+			String filename, long fileSize, String fileExt, String fileType, int tenantId) throws Exception {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date                  = new Date();
 		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
