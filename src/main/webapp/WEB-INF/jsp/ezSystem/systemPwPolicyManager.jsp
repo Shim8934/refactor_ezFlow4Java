@@ -205,10 +205,17 @@
             }
             
             var matcheElements = document.querySelectorAll("td[_PatternCnt]");
+            
+            Array.prototype.forEach.call(matcheElements,function(e, i) {
+	   			var querySelectElement = e.querySelector("SELECT");
+	   			querySelectElement.value = "unlimit";
+        	});
+            <%-- IE에서는 forEach 메소드 미지원해서 위와 같이 수정. 2021-04-23 심기영
             matcheElements.forEach(function(e, i) {
 	   			var querySelectElement = e.querySelector("SELECT");
 	   			querySelectElement.value = "unlimit";
         	});
+            --%>
             
             if (pwPolicyPattern.length > 0) {
 	            for (var i = 0; i < pwPolicyPattern.length; i++) {

@@ -1668,7 +1668,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				} else {
 				}*/
 				
-				resultXML.append("<VALUE>" + getListField(fieldName, fieldValue, companyID, lang, tenantID, offset) + "</VALUE>");
+				/* 2021-04-20 홍승비 - 수신부서 회송문서 재기안 시 기존 수신자 정보를 초기화 (수신자 정보가 남아있으면 수신문서가 수신부서로 도착하지 않고, 해당 수신자에게만 '지정'됨) */
+				if (mode.equals("END2") && (fieldName.equals("RECEIPTMEMBERNAME") || fieldName.equals("RECEIPTMEMBERNAME2"))) {
+					resultXML.append("<VALUE></VALUE>");
+				} else {
+					resultXML.append("<VALUE>" + getListField(fieldName, fieldValue, companyID, lang, tenantID, offset) + "</VALUE>");
+				}
 				
 				if (p == 0) {
 					resultXML.append("<DATA1>" + makeListField(vo.getReceiptPointID()) + "</DATA1>");
@@ -1684,13 +1689,26 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					resultXML.append("<DATA5>" + makeListField(vo.getCanEditYN()) + "</DATA5>");
 					resultXML.append("<DATA6>" + makeListField(vo.getExtRecepteMail()) + "</DATA6>");
-					resultXML.append("<DATA7>" + makeListField(vo.getReceiptMemberID()) + "</DATA7>");
-					resultXML.append("<DATA8><![CDATA[" + makeListField(vo.getReceiptMemberName()) + "]]></DATA8>");
-					resultXML.append("<DATA9><![CDATA[" + makeListField(vo.getReceiptMemberJobTitle()) + "]]></DATA9>");
-					resultXML.append("<DATA10><![CDATA[" + makeListField(vo.getReceiptPointName()) + "]]></DATA10>");
-					resultXML.append("<DATA11><![CDATA[" + makeListField(vo.getReceiptPointName2()) + "]]></DATA11>");
-					resultXML.append("<DATA12><![CDATA[" + makeListField(vo.getReceiptMemberJobTitle2()) + "]]></DATA12>");
-					resultXML.append("<DATA13><![CDATA[" + makeListField(vo.getReceiptMemberName2()) + "]]></DATA13>");
+					
+					/* 2021-04-20 홍승비 - 수신부서 회송문서 재기안 시 기존 수신자 정보를 초기화 (수신자 정보가 남아있으면 수신문서가 수신부서로 도착하지 않고, 해당 수신자에게만 '지정'됨) */
+					if (mode.equals("END2")) {
+						resultXML.append("<DATA7></DATA7>");
+						resultXML.append("<DATA8><![CDATA[]]></DATA8>");
+						resultXML.append("<DATA9><![CDATA[]]></DATA9>");
+						resultXML.append("<DATA10><![CDATA[" + makeListField(vo.getReceiptPointName()) + "]]></DATA10>");
+						resultXML.append("<DATA11><![CDATA[" + makeListField(vo.getReceiptPointName2()) + "]]></DATA11>");
+						resultXML.append("<DATA12><![CDATA[]]></DATA12>");
+						resultXML.append("<DATA13><![CDATA[]]></DATA13>");
+					}
+					else {
+						resultXML.append("<DATA7>" + makeListField(vo.getReceiptMemberID()) + "</DATA7>");
+						resultXML.append("<DATA8><![CDATA[" + makeListField(vo.getReceiptMemberName()) + "]]></DATA8>");
+						resultXML.append("<DATA9><![CDATA[" + makeListField(vo.getReceiptMemberJobTitle()) + "]]></DATA9>");
+						resultXML.append("<DATA10><![CDATA[" + makeListField(vo.getReceiptPointName()) + "]]></DATA10>");
+						resultXML.append("<DATA11><![CDATA[" + makeListField(vo.getReceiptPointName2()) + "]]></DATA11>");
+						resultXML.append("<DATA12><![CDATA[" + makeListField(vo.getReceiptMemberJobTitle2()) + "]]></DATA12>");
+						resultXML.append("<DATA13><![CDATA[" + makeListField(vo.getReceiptMemberName2()) + "]]></DATA13>");
+					}
 				}
 				
 				resultXML.append("</CELL>");
@@ -22375,7 +22393,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("<TITLE><![CDATA[" + makeListField(docXML.getElementsByTagName("RECTITLE").item(0).getTextContent()) + "]]></TITLE>");
 		resultXML.append("<REGTYPE>" + getRegTypeString(makeListField(docXML.getElementsByTagName("REGISTERTYPE").item(0).getTextContent()),companyID, lang, tenantID) + "</REGTYPE>");
 		resultXML.append("<DEPTCODE>" + makeListField(docXML.getElementsByTagName("RECDEPTCODE").item(0).getTextContent()) + "</DEPTCODE>");
-		resultXML.append("<DEPTNAME>" + makeListField(docXML.getElementsByTagName("RECDEPTNAME").item(0).getTextContent()) + "</DEPTNAME>");
+		resultXML.append("<DEPTNAME><![CDATA[" + makeListField(docXML.getElementsByTagName("RECDEPTNAME").item(0).getTextContent()) + "]]></DEPTNAME>");
 		
 		resultXML.append("<REGNO><![CDATA[" + getRecRegSNToName(makeListField(docXML.getElementsByTagName("RECDEPTNAME").item(0).getTextContent()), makeListField(docXML.getElementsByTagName("RECREGSN").item(0).getTextContent()), makeListField(docXML.getElementsByTagName("RECDEPTCODE").item(0).getTextContent()), tenantID, companyID) + "]]></REGNO>");
 		
@@ -23192,9 +23210,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			return "<RESULT>FALSE</RESULT>";
 		}
 		
-		
-		
-		
 		for (int k=0; k<docXML2.getElementsByTagName("ROW").getLength(); k++){
 			String SepAttSN = makeListField(docXML2.getElementsByTagName("SERIALNO").item(k).getTextContent().trim());
 		
@@ -23218,9 +23233,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 		}
-		resultXML.append("<APRMEMBER2>"  + makeListField(docXML.getElementsByTagName("APRMEMBERTITLE2").item(0).getTextContent()) + "</APRMEMBER2>" );
-		resultXML.append("<DRAFTER2>"  + makeListField(docXML.getElementsByTagName("DRAFTERNAME2").item(0).getTextContent()) + "</DRAFTER2>" );
-		resultXML.append("<RECEIPTMEMBER2>"  + makeListField(docXML.getElementsByTagName("RECEIPTMEMBERNAME2").item(0).getTextContent()) + "</RECEIPTMEMBER2>" );
+		resultXML.append("<APRMEMBER2><![CDATA["  + makeListField(docXML.getElementsByTagName("APRMEMBERTITLE2").item(0).getTextContent()) + "]]></APRMEMBER2>" );
+		resultXML.append("<DRAFTER2><![CDATA["  + makeListField(docXML.getElementsByTagName("DRAFTERNAME2").item(0).getTextContent()) + "]]></DRAFTER2>" );
+		resultXML.append("<RECEIPTMEMBER2><![CDATA["  + makeListField(docXML.getElementsByTagName("RECEIPTMEMBERNAME2").item(0).getTextContent()) + "]]></RECEIPTMEMBER2>" );
 		resultXML.append("</SCINFO>");                                                          
 		resultXML.append("</RESULT>");
 		

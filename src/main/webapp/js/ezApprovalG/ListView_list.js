@@ -1008,6 +1008,7 @@ function ListView() {
                     	objTd.appendChild(oText);
                     }
                     else {
+                    	oText = document.createTextNode(ConvMakeXMLString(strValue));
                         objTd.appendChild(oText);
                     }
                 }
