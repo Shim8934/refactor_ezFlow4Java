@@ -8331,6 +8331,33 @@ CREATE TABLE "TBL_GOVSENDDOCHISTORY"
 	"TENANT_ID" NUMBER(7,0), 
 	"TYPE" VARCHAR2(50 BYTE)
    ) ;
+-----------------------	---------------------------------
+--  DDL for Table TBL_WEBFOLDER_APPLY_HISTORY
+--------------------------------------------------------
+
+  CREATE TABLE "TBL_WEBFOLDER_APPLY_HISTORY" 
+   (	"APPLY_ID" NVARCHAR2(40), 
+	"TENANT_ID" NUMBER(5,0), 
+	"COMPANY_ID" NVARCHAR2(80) NOT NULL ENABLE, 
+	"FOLDER_NAME" NVARCHAR2(200) NOT NULL ENABLE, 
+	"CONTENT" NVARCHAR2(1000), 
+	"APPLICATION_DATE" DATE NOT NULL ENABLE, 
+	"APPROVAL_STATUS" NVARCHAR2(10), 
+	"APPROVAL_STATUS_UPDATEDT" DATE,
+	PRIMARY KEY ("APPLY_ID")
+   ) ;
+-----------------------	---------------------------------
+--  DDL for Table TBL_WEBFOLDER_APPLY_HIST_MEM
+--------------------------------------------------------
+
+  CREATE TABLE "TBL_WEBFOLDER_APPLY_HIST_MEM" 
+   (	"APPLY_ID" NVARCHAR2(40), 
+	"MEMBER_ID" NVARCHAR2(80) NOT NULL ENABLE, 
+	"MEMBER_NAME" NVARCHAR2(200) NOT NULL ENABLE, 
+	"MEMBER_TYPE" NVARCHAR2(10) NOT NULL ENABLE, 
+	"MEMBER_ITEM" NVARCHAR2(10) NOT NULL ENABLE,
+	PRIMARY KEY ("APPLY_ID", "MEMBER_ID", "MEMBER_TYPE", "MEMBER_ITEM")
+   ) ;
 --------------------------------------------------------
 --  DDL for Sequence DBOBJECTID_SEQUENCE
 --------------------------------------------------------

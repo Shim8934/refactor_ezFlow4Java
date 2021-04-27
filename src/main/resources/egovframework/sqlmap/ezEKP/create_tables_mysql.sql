@@ -14269,6 +14269,43 @@ CREATE TABLE `tbl_webfolder_user` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_webfolder_apply_history`
+--
+
+DROP TABLE IF EXISTS `tbl_webfolder_apply_history`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_webfolder_apply_history` (
+  `APPLY_ID` varchar(40) NOT NULL,
+  `TENANT_ID` int(5) DEFAULT NULL,
+  `COMPANY_ID` varchar(80) NOT NULL,
+  `FOLDER_NAME` varchar(200) NOT NULL,
+  `CONTENT` varchar(1000) DEFAULT NULL,
+  `APPLICATION_DATE` datetime DEFAULT NULL,
+  `APPROVAL_STATUS` varchar(10) DEFAULT NULL,
+  `APPROVAL_STATUS_UPDATEDT` datetime DEFAULT NULL,
+  PRIMARY KEY (`APPLY_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_webfolder_apply_hist_mem`
+--
+
+DROP TABLE IF EXISTS `tbl_webfolder_apply_hist_mem`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_webfolder_apply_hist_mem` (
+  `APPLY_ID` varchar(40) NOT NULL,
+  `MEMBER_ID` varchar(80) NOT NULL,
+  `MEMBER_NAME` varchar(200) NOT NULL,
+  `MEMBER_TYPE` varchar(10) NOT NULL,
+  `MEMBER_ITEM` varchar(10) NOT NULL,
+  PRIMARY KEY (`APPLY_ID`,`MEMBER_ID`,`MEMBER_TYPE`,`MEMBER_ITEM`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Temporary view structure for view `vaprdoingdoclist`
 --
 
