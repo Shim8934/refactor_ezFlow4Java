@@ -177,17 +177,17 @@
 		        	<!-- 게시자&부서 -->
 		        	<tr>
 		        		<th style="width:10%;"><spring:message code='ezBoard.t223'/></th>
-						<td id="WriteUserNM" style="width:40%; white-space:nowrap">&nbsp;<c:out value="${boardItem.writerName}"/></td>
-						<th style="width:10%;"><spring:message code='ezBoard.t289'/></th>
-						<td id="User_DeptNM" style="width:40%; white-space:nowrap">&nbsp;${boardItem.writerDeptName}</td>
+						<td id="WriteUserNM" style="width:40%; white-space:nowrap" colspan="4">&nbsp;<c:out value="${boardItem.writerName}"/></td>
+						<%-- <th style="width:10%;"><spring:message code='ezBoard.t289'/></th>
+						<td id="User_DeptNM" style="width:40%; white-space:nowrap">&nbsp;${boardItem.writerDeptName}</td> --%>
 		        	</tr>
 		        	<!-- 직위&사내전화 -->
-		        	<tr>
+		        	<%-- <tr>
 		        		<th><spring:message code='ezBoard.t290'/></th>
 						<td id="User_JobTitle" style="width:40%; white-space:nowrap;">&nbsp;${boardItem.extensionAttribute3}<div></div></td>
 						<th><spring:message code='ezPersonal.t177'/></th>
 						<td id="Telephone" style="width:40%; white-space:nowrap">&nbsp;${boardItem.extensionAttribute4}</td>
-		        	</tr>
+		        	</tr> --%>
 		        	<!-- 게시일&게시종료일 -->
 		        	<tr>
 						<th><spring:message code='ezBoard.t224'/></th>
