@@ -1746,7 +1746,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		return "admin/ezWebFolder/webfolderApplicationHistory";
 	}
 	
-	@RequestMapping(value="/admin/ezWebFolder/getApplicationHistoryList.do", method = RequestMethod.POST, produces="application/text;charset=utf8")
+	@RequestMapping(value="/admin/ezWebFolder/getApplicationHistoryList.do", method = RequestMethod.POST, produces="application/json;charset=utf8")
 	@ResponseBody
 	@SuppressWarnings("unchecked")
 	public JSONObject getApplicationHistoryList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
@@ -1796,7 +1796,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		return returnJson;
 	}	
 	
-	@RequestMapping(value="/admin/ezWebFolder/getApplicationHistory.do", method = RequestMethod.POST, produces="application/text;charset=utf8")
+	@RequestMapping(value="/admin/ezWebFolder/getApplicationHistory.do", method = RequestMethod.POST, produces="application/json;charset=utf8")
 	@ResponseBody
 	@SuppressWarnings("unchecked")
 	public JSONObject getApplicationHistory(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
@@ -1829,7 +1829,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		return returnJson;
 	}
 
-	@RequestMapping(value="/admin/ezWebFolder/setApprovalToApplyForOpening.do", method = RequestMethod.POST, produces="application/text;charset=utf8")
+	@RequestMapping(value="/admin/ezWebFolder/setApprovalToApplyForOpening.do", method = RequestMethod.POST, produces="application/json;charset=utf8")
 	@ResponseBody
 	@SuppressWarnings("unchecked")
 	public JSONObject setApprovalToApplyForOpening(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) throws Exception {
@@ -1874,7 +1874,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		return returnJson;
 	}
 	 
-	@RequestMapping(value="/admin/ezWebFolder/setRefusalToApplyForOpening.do", method = RequestMethod.POST, produces="application/text;charset=utf8")
+	@RequestMapping(value="/admin/ezWebFolder/setRefusalToApplyForOpening.do", method = RequestMethod.POST, produces="application/json;charset=utf8")
 	@ResponseBody
 	@SuppressWarnings("unchecked")
 	public JSONObject setRefusalToApplyForOpening(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) throws Exception {
