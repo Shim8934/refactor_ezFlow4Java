@@ -316,9 +316,9 @@
 			        ELSE 0
 			    END SELECTED,
 			    CASE WHEN #primary# = '1'
-			        THEN REPLACE(FOLDER_NAME1, '&', '&amp')
-			        ELSE REPLACE(FOLDER_NAME2, '&', '&amp')
-			    END TEXT,
+	        		THEN FOLDER_NAME1
+			        ELSE FOLDER_NAME2
+	        	END TEXT,
 			    CREATE_ID AS CREATEID,
 			    FOLDER_NAME1 AS FOLDERNAME1, 
 			    FOLDER_NAME2 AS FOLDERNAME2,
@@ -350,8 +350,8 @@
 	        		ELSE 0
 	        	END SELECTED,
 	        	CASE WHEN #primary# = '1'
-	        		THEN REPLACE(FOLDER_NAME1, '&', '&amp')
-			        ELSE REPLACE(FOLDER_NAME2, '&', '&amp')
+	        		THEN FOLDER_NAME1
+			        ELSE FOLDER_NAME2
 	        	END TEXT,
 	        	CREATE_ID AS CREATEID,
 			    FOLDER_NAME1 AS FOLDERNAME1, 
@@ -384,8 +384,8 @@
 	        		ELSE 0
 	        	END SELECTED,
 	        	CASE WHEN #primary# = '1'
-	        		THEN REPLACE(FOLDER_NAME1, '&', '&amp')
-			        ELSE REPLACE(FOLDER_NAME2, '&', '&amp')
+	        		THEN FOLDER_NAME1
+			        ELSE FOLDER_NAME2
 	        	END TEXT,
 	        	F.CREATE_ID AS CREATEID,
 			    F.FOLDER_NAME1 AS FOLDERNAME1, 
@@ -420,8 +420,8 @@
 	        	'##' AS PARENT,
 	        	1  AS SELECTED,
 	        	CASE WHEN #primary# = '1'
-	        		THEN REPLACE(FOLDER_NAME1, '&', '&amp')
-			        ELSE REPLACE(FOLDER_NAME2, '&', '&amp')
+	        		THEN FOLDER_NAME1
+			        ELSE FOLDER_NAME2
 	        	END TEXT,
 	        	CREATE_ID AS CREATEID,
 			    FOLDER_NAME1 AS FOLDERNAME1,
