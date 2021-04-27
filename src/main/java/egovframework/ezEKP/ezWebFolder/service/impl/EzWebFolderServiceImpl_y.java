@@ -1617,7 +1617,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 					JSONObject json    = (JSONObject) folderUsersArray.get(i);
 					if(addUser.contains(json.get("userId").toString())){
 						// insert 
-						if(ezWebFolderService.checkFileUserExists((String)json.get("userId"), folderIdTemp) == 0){
+						if(ezWebFolderService.checkFolderUserExists((String)json.get("userId"), folderIdTemp, (Boolean)json.get("folderManager")) == 0){
 							ezWebFolderAdminService.insertFolderUser(ezWebFolderAdminService.getMaxFolderUserSeq(tenantId), (String)json.get("userId"), 
 									(String)json.get("userType"), folderIdTemp, userId, timeUTC, companyId, 
 									tenantId, (Boolean)json.get("subdeptPermitted"), (Boolean)json.get("folderManager"));
