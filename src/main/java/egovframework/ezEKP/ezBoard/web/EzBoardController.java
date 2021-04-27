@@ -3947,9 +3947,13 @@ public class EzBoardController extends EgovFileMngUtil{
 			if (!commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()).equals("1")) {
 				extenLang = "2";
 			}
-			/* 2021-04-26 홍승비 - 확장칼럼의 VALUE에 대한 ', "문자 파싱 추가 (jsp단에서 추가 파싱 없이 value 속성으로 쓰기 위해)*/
+			/* 2021-04-26 홍승비 - 확장칼럼의 COLNAME, VALUE에 대한 ', "문자 파싱 추가 (jsp단에서 추가 파싱 없이 value 속성으로 쓰기 위해)*/
 			for (int i = 0; i < boardAttributeListVO.size(); i++) {
 				String tempValue = boardAttributeListVO.get(i).getValue();
+				String tempColName1 = boardAttributeListVO.get(i).getColName1();
+				String tempColName2 = boardAttributeListVO.get(i).getColName2();
+				boardAttributeListVO.get(i).setColName1(tempColName1.replaceAll("\'", "&#039;").replaceAll("\"", "&#034;"));
+				boardAttributeListVO.get(i).setColName2(tempColName2.replaceAll("\'", "&#039;").replaceAll("\"", "&#034;"));
 				boardAttributeListVO.get(i).setValue(tempValue.replaceAll("\'", "&#039;").replaceAll("\"", "&#034;"));
 			}
 		}

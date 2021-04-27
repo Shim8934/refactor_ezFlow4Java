@@ -480,15 +480,15 @@ function ListView() {
 
         var oHeaders = _dataSource.getElementsByTagName("HEADER");        
         
-
+        var tempStrName = new Array();
         var Chkbox = false;
         for (var i = 0; i < oHeaders.length; i++) {
             var strWidth = SelectSingleNodeValue(oHeaders[i], "WIDTH");
             
             if(strWidth != "0"){ //2011.07.05 Header의 width가 0이면 td를 만들지 않는다.
                 var strName = SelectSingleNodeValue(oHeaders[i], "NAME");
-                
                 var strColName = SelectSingleNodeValue(oHeaders[i], "COLNAME");
+                var strColNameUpper = strColName.toUpperCase();
                 
                 if(strColName == "DocTitle")
                 	_titleIdx = i;
@@ -503,12 +503,28 @@ function ListView() {
                 var objTd = document.createElement("TH");
                 objTd.id = _thisID + "_TH_" + i;
 
+                /* 2021-04-27 홍승비 - 확장칼럼 사용 시, 헤더에 특수문자가 존재할 수 있어 다르게 파싱하여 전달하도록 수정 */
                 if (_headeronclick != null && _headeronclick != "" ) {
                     objTd.style.cursor = "pointer";
-                    objTd.onclick = new Function(_headeronclick + "('" + strName + "');");
+                    
+                    if ((strColNameUpper == "EXTENSIONATTRIBUTE6" || strColNameUpper == "EXTENSIONATTRIBUTE7" || strColNameUpper == "EXTENSIONATTRIBUTE8" || strColNameUpper == "EXTENSIONATTRIBUTE9" || strColNameUpper == "EXTENSIONATTRIBUTE10")
+                    	&& typeof(stringFnParam) != "undefined" && stringFnParam != null) {
+                    	
+                    	var fn = window[stringFnParam]; // 현재 window의 파라미터(문자열로 선언된 함수명 "SortPage")에 접근
+                    	// 실제로 onclick 함수 실행 시, 루프 종료 후의 마지막 strName에 접근하게 되어 임시 변수 사용(함수/변수의 유효범위 관련)
+                    	tempStrName[parseInt(strColNameUpper.split("EXTENSIONATTRIBUTE")[1]) % 6] = strName; // [0] ~ [5]
+                    	if (typeof(fn) === "function") {
+                    		objTd.onclick = function() {
+                    			var tempColName = this.getAttribute("colname");
+                    			fn(tempStrName[parseInt(tempColName.split("EXTENSIONATTRIBUTE")[1]) % 6]);
+                    		};
+                    	}
+                    }
+                    else {
+                    	objTd.onclick = new Function(_headeronclick + "('" + strName + "');");
+                    }
                 }
-
-
+                
                 if (strStyle != "") {
                     if (_headeronclick != null && _headeronclick != ""  ) {
                         strStyle += "cursor:pointer;";
@@ -530,7 +546,7 @@ function ListView() {
                     }
                     else
                         objTd.className = strClass;
-                }        
+                }
 
                 // 리스트 제목부분 width 제거
                 if (strWidth != "") {
@@ -583,6 +599,9 @@ function ListView() {
                 if (strColName == "ATTACHMENTS" || strColName == "READCOUNT" || strColName == "LIKECOUNT") {
                 	objTd.style.textAlign = "CENTER";
                 }
+                
+                /* 2021-04-27 홍승비 - 확장칼럼 등의 헤더 정렬기능을 위해 COLNAME을 헤더 속성으로 삽입 */
+                objTd.setAttribute("colname", strColNameUpper);
 
                 var oText = document.createTextNode(strName);
                 // 2018-01-08 강민수92 첨부파일이면 첨부파일 이미지로 출력

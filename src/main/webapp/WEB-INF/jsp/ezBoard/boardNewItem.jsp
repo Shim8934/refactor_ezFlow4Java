@@ -194,12 +194,12 @@
 			    					tableCol.push("${item.tableCol}");
 			    				</c:forEach>
 			    				
-			    				for (var i = 0; i < colType.length;i++){
-			            			if(colType[i] == "radio") {
+			    				for (var i = 0; i < colType.length;i++) {
+			            			if (colType[i] == "radio") {
 			            				SetRadioVal(tableCol[i], getExtensionValue(tableCol[i]));
-			            			} else if(colType[i] == "text") {
+			            			} else if (colType[i] == "text") {
 			            				document.getElementById(tableCol[i]).value = getExtensionValue(tableCol[i]);
-			            			} else if(colType[i] == "check") {
+			            			} else if (colType[i] == "check") {
 			            				SetCheckVal(tableCol[i], getExtensionValue(tableCol[i]));
 			            			}
 			    				}
@@ -1463,8 +1463,8 @@
 		        str = ReplaceText(str, "&gt;", ">");
 		        str = ReplaceText(str, "&#039;", "'");
 		        str = ReplaceText(str, "&#034;", "\"");
+		        str = ReplaceText(str, "&#92;", "\\");
 		  	    str = ReplaceText(str, "&amp;", "&");	    
-		  		str = ReplaceText(str, "&#92;", "\\");
 		        return str;
 		    }
 		    function GetSmallUrl() {
@@ -2107,16 +2107,17 @@
 	        function getExtensionValue(tableCol) {
 	        	var retValue = "";
 	        	
+	        	// 이미 HTML/XML에 대응하도록 저장된 확장칼럼 파라미터를 다시 c:out으로 파싱했으므로, ConvMakeXMLString()을 두 번 실행한다.
 	        	if (tableCol == "extensionAttribute6") {
-	        		retValue = ConvMakeXMLString("<c:out value='${boardListVO.extensionAttribute6}'/>"); 
+	        		retValue = ConvMakeXMLString(ConvMakeXMLString("<c:out value='${boardListVO.extensionAttribute6}'/>")); 
 				} else if (tableCol == "extensionAttribute7") {
-					retValue = ConvMakeXMLString("<c:out value='${boardListVO.extensionAttribute7}'/>");
+					retValue = ConvMakeXMLString(ConvMakeXMLString("<c:out value='${boardListVO.extensionAttribute7}'/>"));
 				} else if (tableCol == "extensionAttribute8") {
-					retValue = ConvMakeXMLString("<c:out value='${boardListVO.extensionAttribute8}'/>");
+					retValue = ConvMakeXMLString(ConvMakeXMLString("<c:out value='${boardListVO.extensionAttribute8}'/>"));
 				} else if (tableCol == "extensionAttribute9") {
-					retValue = ConvMakeXMLString("<c:out value='${boardListVO.extensionAttribute9}'/>");
+					retValue = ConvMakeXMLString(ConvMakeXMLString("<c:out value='${boardListVO.extensionAttribute9}'/>"));
 				} else if (tableCol == "extensionAttribute10") {
-					retValue = ConvMakeXMLString("<c:out value='${boardListVO.extensionAttribute10}'/>");
+					retValue = ConvMakeXMLString(ConvMakeXMLString("<c:out value='${boardListVO.extensionAttribute10}'/>"));
 				}
 	        	
 	        	return retValue;

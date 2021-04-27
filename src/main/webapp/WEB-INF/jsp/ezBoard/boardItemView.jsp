@@ -1362,8 +1362,8 @@
 		        str = ReplaceText(str, "&gt;", ">");
 		        str = ReplaceText(str, "&#039;", "'");
 		        str = ReplaceText(str, "&#034;", "\"");
-		  	    str = ReplaceText(str, "&amp;", "&");	    
 		  		str = ReplaceText(str, "&#92;", "\\");
+		  	    str = ReplaceText(str, "&amp;", "&");
 		        return str;
 		    }
 		    

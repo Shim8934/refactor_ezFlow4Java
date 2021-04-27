@@ -125,6 +125,7 @@
 			var likeFlag = "${boardInfo.likeFlag}";
 		    var useNotReadCnt = "${useNotReadCnt}";
 		    var BoardGroupID = "${boardInfo.boardGroupID}";
+		    var stringFnParam = "SortPage"; // 2021-04-27 홍승비 - 문자열인 함수명에 접근하기 위한 변수
 		    
 		    window.onunload = Window_onunload;
 		    var window_onunload_Event = false;
