@@ -4563,13 +4563,13 @@ public class EzNewPortalGWController {
 				
 				for (int k = 0; k < docXML.getDocumentElement().getChildNodes().getLength(); k++) {
 					if (k==0) {
-						appr1 = docXML.getElementsByTagName("COUNT").item(k).getTextContent();
+						appr1 = docXML.getElementsByTagName("COUNT1").item(0).getTextContent();
 					} else if (k==1) {
-						appr2 = docXML.getElementsByTagName("COUNT").item(k).getTextContent();
+						appr2 = docXML.getElementsByTagName("COUNT2").item(0).getTextContent();
 					} else if (k==2) {
-						appr3 = docXML.getElementsByTagName("COUNT").item(k).getTextContent();
+						appr3 = docXML.getElementsByTagName("COUNT3").item(0).getTextContent();
 					} else if (k==3) {
-						appr4 = docXML.getElementsByTagName("COUNT").item(k).getTextContent();
+						appr4 = docXML.getElementsByTagName("COUNT4").item(0).getTextContent();
 					} else if (k>3) {
 						break;
 					}
