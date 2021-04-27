@@ -3669,6 +3669,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String formUrl = "";
 		String formDocType = "";
 		String formVersion = "";
+		String sendType = request.getParameter("sendType");
 		if (orgDocID != null  && !orgDocID.equals("")) {
 			endDir = String.valueOf(Integer.parseInt(orgDocID) % 1000);
 		}
@@ -3731,6 +3732,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 		} 
 		
+		if (sendType == null || sendType.equals("")) {
+			sendType = ezApprovalGService.getDocSendType(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		}
+		
 		int whoKyulCount = ezApprovalGService.getWhoKyulCount(docID, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getLang());
 		String checkPwdFlag = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(),  userInfo.getCompanyID());
 		String ext = docHref.substring(docHref.toLowerCase().lastIndexOf(".") + 1);
@@ -3774,6 +3779,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("useExternalMailServer", useExternalMailServer);
 		model.addAttribute("useBoard", useBoard);
 		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
+		model.addAttribute("sendType", sendType);
 		
 		// 대용량첨부 관련 정보
 		model.addAttribute("bigAttachDownloadPeriod", bigAttachDownloadPeriod); // 다운로드 기간
