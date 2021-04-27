@@ -33108,23 +33108,48 @@
 	   		]]>			
 			)) AS "count7", <!-- 직인 의뢰함 -->
 			SUM((
-				SELECT 
-					COUNT(DISTINCT DOCID)
-				FROM 
-					TBL_APRLINEINFO A
-				WHERE
-					A.APRSTATE = '002'
-				AND
-					(SELECT 
-						DOCSTATE 
-					  FROM 
-					    TBL_APRDOCINFO B 
-					  WHERE 
-					    A.DOCID = B.DOCID) = '015'
-				AND
-					A.APRTYPE = '015'
-				AND
-					(APRMEMBERID = #v_USERID#
+				SELECT
+				SUM(CASE WHEN
+						A.APR = 'TRUE' AND A.APRSTATE = '002' AND A.DOCSTATE = '015' AND A.APRTYPE = '015' 
+						<isNotEmpty property="proxyList">
+							AND A.APRMEMBERID = #v_USERID#
+						</isNotEmpty>
+					THEN A.COUNT ELSE 0 END
+				) 
+				FROM
+				(
+				SELECT
+					L.APRSTATE,
+					D.FUNCTIONTYPE,
+					L.APRTYPE,
+					D.DOCSTATE,
+					L.APRMEMBERSN,
+					L.APRMEMBERID,
+					'TRUE' AS APR,
+					COUNT(D.DOCID) AS COUNT
+				FROM
+					tbl_aprdocinfo D
+				JOIN 
+					tbl_aprlineinfo L 
+				ON
+					D.DOCID = L.DOCID
+				AND 
+					D.TENANT_ID = L.TENANT_ID
+				AND 
+					D.COMPANYID = L.COMPANYID
+				GROUP BY 
+						L.APRSTATE,
+						D.FUNCTIONTYPE,
+						L.APRTYPE,
+						D.DOCSTATE,
+						L.APRMEMBERSN,
+						L.APRMEMBERID,
+						D.STARTDATE,
+						D.TENANT_ID,
+						L.APRMEMBERDEPTID
+				HAVING
+					(
+						L.APRMEMBERID = #v_USERID#
 					<!-- <isNotEmpty property="proxyList">
 						OR 
 							(
