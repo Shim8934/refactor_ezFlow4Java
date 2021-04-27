@@ -95,7 +95,7 @@ public class EzWebFolderController_y {
 	
 	// getFolderList /ezwebfolder/users/{userId}/folder-tree에 가는 메소드 
 	@RequestMapping(value = "/ezWebFolder/folderList.do", method = RequestMethod.POST)
-	public @ResponseBody String getFolderList (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
+	public @ResponseBody JSONObject getFolderList (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model ){
 		LOGGER.debug("getFolderList started");
 		
@@ -113,13 +113,13 @@ public class EzWebFolderController_y {
 				param, request, "get", null);
 		
 		LOGGER.debug("getFolderList ended");
-		return resultBody.toString();
+		return resultBody;
 	}
 	
 	// 파일 리스트 가져오기 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezWebFolder/fileList.do", method = RequestMethod.POST)
-	public @ResponseBody String getFileList (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
+	public @ResponseBody JSONObject getFileList (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model )throws Exception {
 		LOGGER.debug("getFileList started");
 		
@@ -132,7 +132,7 @@ public class EzWebFolderController_y {
 			jsonObj.put("status", "error");
 			jsonObj.put("code", 1);
 			LOGGER.debug("getFileList ended");
-			return jsonObj.toString();
+			return jsonObj;
 		}
 		
 		// checkPermisson 
@@ -152,7 +152,7 @@ public class EzWebFolderController_y {
 				null, request, "post", checkPermission);
 
 		if (resultBody.get("status").equals("error")) {
-			return resultBody.toString();
+			return resultBody;
 		} else {
 			resultBody = null;
 		}
@@ -167,7 +167,7 @@ public class EzWebFolderController_y {
 		
 		if (currPage != null && !currPage.isEmpty()) {
 			if (!commonUtil.isIntNumber(currPage)) {
-				return "";
+				return new JSONObject();
 			}
 		}
 		
@@ -187,7 +187,7 @@ public class EzWebFolderController_y {
 		
 		// SQL Injection 방지를 위해 유효한 값을 체크
 		if (!sortType.isEmpty() && !sortType.equalsIgnoreCase("DESC") && !sortType.equalsIgnoreCase("ASC")) {
-			return "";
+			return new JSONObject();
 		}
 			
 		param.put("sortType"		, sortType);
@@ -207,7 +207,7 @@ public class EzWebFolderController_y {
 		}
 		
 		LOGGER.debug("getFileList ended");
-		return resultBody.toString();
+		return resultBody;
 	}
 	
 	@RequestMapping( value ="/ezWebFolder/folderManage.do", method = RequestMethod.GET)
@@ -236,7 +236,7 @@ public class EzWebFolderController_y {
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping( value ="/ezWebFolder/insertFolder.do", method = RequestMethod.POST) 
-	public @ResponseBody String insertFolder (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
+	public @ResponseBody JSONObject insertFolder (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model )throws Exception {
 		LOGGER.debug("insertFolder started");
 		
@@ -251,7 +251,7 @@ public class EzWebFolderController_y {
 			jsonObj.put("code", 1);
 			LOGGER.debug("must necessary data is not comming. ");
 			LOGGER.debug("insertFolder ended");
-			return jsonObj.toString();
+			return jsonObj;
 		}
 		
 		// checkPermisson 
@@ -275,12 +275,12 @@ public class EzWebFolderController_y {
 		resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/folders", null, request, "post", jsonObj);
 		
 		LOGGER.debug("insertFolder ended");
-		return resultBody.toString();
+		return resultBody;
 	}
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping( value ="/ezWebFolder/updateFolder.do", method = RequestMethod.POST) 
-	public @ResponseBody String updateFolder (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
+	public @ResponseBody JSONObject updateFolder (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model ) throws Exception {
 		LOGGER.debug("updateFolder started");
 		
@@ -295,7 +295,7 @@ public class EzWebFolderController_y {
 			jsonObj.put("code", 1);
 			LOGGER.debug("must necessary data is not comming. ");
 			LOGGER.debug("insertFolder ended");
-			return jsonObj.toString();
+			return jsonObj;
 		}
 		
 		// checkPermisson 
@@ -319,7 +319,7 @@ public class EzWebFolderController_y {
 				null, request, "put", jsonObj);
 		
 		LOGGER.debug("updateFolder ended");
-		return resultBody.toString();
+		return resultBody;
 	}
 	
 	
@@ -331,7 +331,7 @@ public class EzWebFolderController_y {
 		
 	@SuppressWarnings("unchecked")
 	@RequestMapping( value ="/ezWebFolder/deleteFolder.do", method=RequestMethod.POST) 
-	public @ResponseBody String deleteFolder (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
+	public @ResponseBody JSONObject deleteFolder (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model )throws Exception {
 		LOGGER.debug("deleteFolder started");
 		
@@ -344,7 +344,7 @@ public class EzWebFolderController_y {
 			jsonObj.put("code", 1);
 			LOGGER.debug("must necessary data is not comming. ");
 			LOGGER.debug("insertFolder ended");
-			return jsonObj.toString();
+			return jsonObj;
 		}
 		
 		// checkPermisson 
@@ -367,7 +367,7 @@ public class EzWebFolderController_y {
 				null, request, "delete", jsonObj);
 		
 		LOGGER.debug("folderDelete ended");
-		return resultBody.toString();
+		return resultBody;
 	}
 	
 	
@@ -379,7 +379,7 @@ public class EzWebFolderController_y {
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping( value ="/ezWebFolder/moveFolder.do", method=RequestMethod.POST) 
-	public @ResponseBody String moveFolder (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
+	public @ResponseBody JSONObject moveFolder (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model )throws Exception {
 		LOGGER.debug("moveFolder started");
 		
@@ -393,7 +393,7 @@ public class EzWebFolderController_y {
 			jsonObj.put("code", 1);
 			LOGGER.debug("must necessary data is not comming. ");
 			LOGGER.debug("insertFolder ended");
-			return jsonObj.toString();
+			return jsonObj;
 		}
 		
 		// checkPermisson 
@@ -419,7 +419,7 @@ public class EzWebFolderController_y {
 		LOGGER.debug("userId : "+ userInfo.getId() + "folderId : "+ request.getParameter("folderId") 
 				+ "uppFolderId : "+ request.getParameter("uppFolderId") + "lang : "+ userInfo.getLang());
 		
-		return resultBody.toString();
+		return resultBody;
 	}
 	
 	private <T> T orElse(T value, T other) {
@@ -537,7 +537,7 @@ public class EzWebFolderController_y {
 	
 	@RequestMapping(value = "/ezWebFolder/selectedFolderCheckPermission.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	@ResponseBody
-	public String selectedFolderCheckPermission(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+	public JSONObject selectedFolderCheckPermission(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		LOGGER.debug("seletedFolderCheckpermission start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String userId = user.getId();
@@ -556,12 +556,12 @@ public class EzWebFolderController_y {
 		null, request, "post", jsonObj);
 		
 		LOGGER.debug("seletedFolderCheckpermission end");
-		return resultBody.toString();
+		return resultBody;
 	}
 	
 	@RequestMapping(value = "/ezWebFolder/changeUserFileORFolder.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	@ResponseBody
-	public String changeUserFileORFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+	public JSONObject changeUserFileORFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		LOGGER.debug("seletedFolderCheckpermission start");
 		LoginSimpleVO user     = commonUtil.userInfoSimple(loginCookie);
 		
@@ -592,7 +592,7 @@ public class EzWebFolderController_y {
 				null, request, "post", jsonObject);
 		
 		LOGGER.debug("seletedFolderCheckpermission end resultBody=" + resultBody);
-		return resultBody.toString();
+		return resultBody;
 	}
 		
 	// 카이스트 파일 미리보기시 유니닥스 호출 전 파일을 dec 해서 특정 폴더에 다운받아놓아야함. 

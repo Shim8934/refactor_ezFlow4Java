@@ -497,13 +497,13 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 
 	@RequestMapping(value="/admin/ezWebFolder/saveConfig.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	@ResponseBody
-	public String saveConfig(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+	public JSONObject saveConfig(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 		logger.debug("saveConfig start");
 		LoginSimpleVO user     = commonUtil.userInfoSimple(loginCookie);
 		JSONObject resultCheck = (JSONObject) checkWfAdmin(request, user.getId());
 		
 		if (!resultCheck.get("status").toString().equals("ok")) {
-			return resultCheck.toString();
+			return resultCheck;
 		}
 		
 		String companyLimit = request.getParameter("companyLimit");
@@ -533,18 +533,18 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
 		
 		logger.debug("saveConfig end");
-		return resultBody.toString();
+		return resultBody;
 	}
 
 	@RequestMapping(value="/admin/ezWebFolder/getConfig.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	@ResponseBody
-	public String getConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+	public JSONObject getConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("getConfig start");
 		LoginSimpleVO user     = commonUtil.userInfoSimple(loginCookie);
 		JSONObject resultCheck = (JSONObject) checkWfAdmin(request, user.getId());
 		
 		if (!resultCheck.get("status").toString().equals("ok")) {
-			return resultCheck.toString();
+			return resultCheck;
 		}
 		
 		String companyId     = request.getParameter("companyId");
@@ -571,18 +571,18 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		
 		logger.debug("getConfig end");
 		
-		return resultBody.toString();
+		return resultBody;
 	}
 
 	@RequestMapping(value="/admin/ezWebFolder/getCapacities.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	@ResponseBody
-	public String getCapacities(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+	public JSONObject getCapacities(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("getCapacities start");
 		LoginSimpleVO user     = commonUtil.userInfoSimple(loginCookie);
 		JSONObject resultCheck = (JSONObject) checkWfAdmin(request, user.getId());
 		
 		if (!resultCheck.get("status").toString().equals("ok")) {
-			return resultCheck.toString();
+			return resultCheck;
 		}
 		
 		String type          = request.getParameter("type");
@@ -619,18 +619,18 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
 		
 		logger.debug("getCapacities end");
-		return resultBody.toString();
+		return resultBody;
 	}
 
 	@RequestMapping(value="/admin/ezWebFolder/updateCapacities.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	@ResponseBody
-	public String updateCapacities(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestParam(value = "list") List<String> list, Model model, HttpServletResponse response) throws Exception {
+	public JSONObject updateCapacities(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestParam(value = "list") List<String> list, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("updateCapacities start");
 		LoginSimpleVO user     = commonUtil.userInfoSimple(loginCookie);
 		JSONObject resultCheck = (JSONObject) checkWfAdmin(request, user.getId());
 		
 		if (!resultCheck.get("status").toString().equals("ok")) {
-			return resultCheck.toString();
+			return resultCheck;
 		}
 		
 		String type = request.getParameter("type");
@@ -658,18 +658,18 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
 		
 		logger.debug("updateCapacities end");
-		return resultBody.toString();
+		return resultBody;
 	}
 
 	@RequestMapping(value="/admin/ezWebFolder/restoreCapacities.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	@ResponseBody
-	public String restoreCapacities(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestParam(value = "list") List<String> list, HttpServletResponse response, Model model) throws Exception {
+	public JSONObject restoreCapacities(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestParam(value = "list") List<String> list, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("restoreCapacities start");
 		LoginSimpleVO user     = commonUtil.userInfoSimple(loginCookie);
 		JSONObject resultCheck = (JSONObject) checkWfAdmin(request, user.getId());
 		
 		if (!resultCheck.get("status").toString().equals("ok")) {
-			return resultCheck.toString();
+			return resultCheck;
 		}
 		
 		String type          = request.getParameter("type");
@@ -689,7 +689,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
 		
 		logger.debug("restoreCapacities end");
-		return resultBody.toString();
+		return resultBody;
 	}
 	
 	private String getCapacityURL(String type) {
@@ -707,13 +707,13 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 
 	@RequestMapping(value="/admin/ezWebFolder/getFileLogs.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String getFileLogs(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+	public JSONObject getFileLogs(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("getFileLogs start");
 		LoginSimpleVO user     = commonUtil.userInfoSimple(loginCookie);
 		JSONObject resultCheck = (JSONObject) checkWfAdmin(request, user.getId());
 		
 		if (!resultCheck.get("status").toString().equals("ok")) {
-			return resultCheck.toString();
+			return resultCheck;
 		}
 		
 		String currPage      = request.getParameter("currentPage");
@@ -771,18 +771,18 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
 		
 		logger.debug("getFileLogs end");
-		return resultBody.toString();
+		return resultBody;
 	}
 
 	@RequestMapping(value="/admin/ezWebFolder/getAdminList.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String webfolderAdminList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+	public JSONObject webfolderAdminList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("webfolderAdminList start");
 		LoginSimpleVO user     = commonUtil.userInfoSimple(loginCookie);
 		JSONObject resultCheck = (JSONObject) checkWfAdmin(request, user.getId());
 		
 		if (!resultCheck.get("status").toString().equals("ok")) {
-			return resultCheck.toString();
+			return resultCheck;
 		}
 		
 		
@@ -812,12 +812,12 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
 		
 		logger.debug("webfolderAdminList end");
-		return resultBody.toString();
+		return resultBody;
 	}
 	
 	@RequestMapping(value="/admin/ezWebFolder/getDepartFolderTree.do", method = RequestMethod.GET)
 	@ResponseBody
-	public String getDepartmentFolderTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+	public JSONObject getDepartmentFolderTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("getDepartmentFolderTree start");
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		String companyId     = request.getParameter("companyId");
@@ -844,12 +844,12 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
 		
 		logger.debug("getDepartmentFolderTree end");
-		return resultBody.toString();
+		return resultBody;
 	}
 	
 	@RequestMapping(value="/admin/ezWebFolder/getCompanyFolderTree.do", method = RequestMethod.GET)
 	@ResponseBody
-	public String getCompanyFolderTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+	public JSONObject getCompanyFolderTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("getCompanyFolderTree start");
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		String companyId     = request.getParameter("companyId");
@@ -876,12 +876,12 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
 		
 		logger.debug("getCompanyFolderTree end");
-		return resultBody.toString();
+		return resultBody;
 	}
 
 	@RequestMapping(value="/admin/ezWebFolder/getSubFolderTree.do", method = RequestMethod.GET)
 	@ResponseBody
-	public String getSubFolderTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+	public JSONObject getSubFolderTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("getSubFolderTree start");
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		String folderId      = request.getParameter("folderId");
@@ -911,12 +911,12 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
 		
 		logger.debug("getSubFolderTree end");
-		return resultBody.toString();
+		return resultBody;
 	}
 
 	@RequestMapping(value="/admin/ezWebFolder/getFolderUsers.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String getFolderUsers(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+	public JSONObject getFolderUsers(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("getFolderUsers start");
 		LoginSimpleVO user     = commonUtil.userInfoSimple(loginCookie);
 		String folderId = request.getParameter("folderId");
@@ -937,7 +937,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 				.orElse(false);
 		
 		if (!isPermitted) {
-			return permissionCheck.toString();
+			return permissionCheck;
 		}
 		
 		String mode          = request.getParameter("mode") != null ? request.getParameter("mode") : "";
@@ -961,13 +961,13 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
 		
 		logger.debug("getFolderUsers end");
-		return resultBody.toString();
+		return resultBody;
 	}
 	
 	// 폴더 담당자가 각자의 파일별 권한 리스트를 가져오는 로직 
 	@RequestMapping(value="/admin/ezWebFolder/getFileUsers.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String getFileUsers(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+	public JSONObject getFileUsers(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("getFolderUsers start");
 		LoginSimpleVO user     = commonUtil.userInfoSimple(loginCookie);
 		String fileId = request.getParameter("fileId");
@@ -988,7 +988,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 				.orElse(false);
 		
 		if (!isPermitted) {
-			return permissionCheck.toString();
+			return permissionCheck;
 		}
 		
 		String mode         = request.getParameter("mode") != null ? request.getParameter("mode") : "";
@@ -1012,19 +1012,19 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
 		
 		logger.debug("getFolderUsers end");
-		return resultBody.toString();
+		return resultBody;
 	}
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/admin/ezWebFolder/addCompanyFolder.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String addCompanyFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+	public JSONObject addCompanyFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("addCompanyFolder start");
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		JSONObject resultCheck = (JSONObject) checkWfAdmin(request, userInfo.getId());
 		
 		if (!resultCheck.get("status").toString().equals("ok")) {
-			return resultCheck.toString();
+			return resultCheck;
 		}
 		
 		String folderId        = request.getParameter("folderId");
@@ -1064,13 +1064,13 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
 		
 		logger.debug("addCompanyFolder end");
-		return resultBody.toString();
+		return resultBody;
 	}
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/admin/ezWebFolder/changeCompanyFolder.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String changeCompanyFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+	public JSONObject changeCompanyFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("changeCompanyFolder start");
 		LoginSimpleVO user     = commonUtil.userInfoSimple(loginCookie);
 		JSONObject resultCheck = (JSONObject) checkWfAdmin(request, user.getId());
@@ -1078,7 +1078,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String folderManager   = request.getParameter("folderManager") != null ? request.getParameter("folderManager") : "";
 		
 		if (!resultCheck.get("status").toString().equals("ok") && !folderManager.equals("1")) {
-			return resultCheck.toString();
+			return resultCheck;
 		}
 		
 		String folderId       = request.getParameter("folderId");
@@ -1131,18 +1131,18 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		JSONParser jp                 = new JSONParser();
 		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
 		logger.debug("changeCompanyFolder end");
-		return resultBody.toString();
+		return resultBody;
 	}
 
 	@RequestMapping(value="/admin/ezWebFolder/delCompanyFolder.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String deleteCompanyFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+	public JSONObject deleteCompanyFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("deleteCompanyFolder start");
 		LoginSimpleVO user     = commonUtil.userInfoSimple(loginCookie);
 		JSONObject resultCheck = (JSONObject) checkWfAdmin(request, user.getId());
 		
 		if (!resultCheck.get("status").toString().equals("ok")) {
-			return resultCheck.toString();
+			return resultCheck;
 		}
 		
 		String folderId      = request.getParameter("folderId");
@@ -1164,18 +1164,18 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
 		
 		logger.debug("deleteCompanyFolder end");
-		return resultBody.toString();
+		return resultBody;
 	}	
 
 	@RequestMapping(value="/admin/ezWebFolder/getFileList.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String getFileList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+	public JSONObject getFileList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("getFileList start");
 		LoginSimpleVO user     = commonUtil.userInfoSimple(loginCookie);
 		JSONObject resultCheck = (JSONObject) checkWfAdmin(request, user.getId());
 		
 		if (!resultCheck.get("status").toString().equals("ok")) {
-			return resultCheck.toString();
+			return resultCheck;
 		}
 		
 		String currPage    = request.getParameter("currentPage");
@@ -1222,18 +1222,18 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
 		
 		logger.debug("getFileList end");
-		return resultBody.toString();
+		return resultBody;
 	}
 
 	@RequestMapping(value="/admin/ezWebFolder/moveFolder.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String moveFolder(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public JSONObject moveFolder(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("moveFolder start");
 		LoginSimpleVO user     = commonUtil.userInfoSimple(loginCookie);
 		JSONObject resultCheck = (JSONObject) checkWfAdmin(request, user.getId());
 		
 		if (!resultCheck.get("status").toString().equals("ok")) {
-			return resultCheck.toString();
+			return resultCheck;
 		}
 		
 		String folderId     = request.getParameter("folderId");
@@ -1261,7 +1261,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
 		
 		logger.debug("moveFolder end");
-		return resultBody.toString();
+		return resultBody;
 	}
 
 //	
@@ -1361,13 +1361,13 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/admin/ezWebFolder/addDeptFolder.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String addDeptFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+	public JSONObject addDeptFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("addDeptFolder start");
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		JSONObject resultCheck = (JSONObject) checkWfAdmin(request, userInfo.getId());
 		
 		if (!resultCheck.get("status").toString().equals("ok")) {
-			return resultCheck.toString();
+			return resultCheck;
 		}
 		
 		String folderId        = request.getParameter("folderId");
@@ -1397,19 +1397,19 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
 		
 		logger.debug("addDeptFolder end");
-		return resultBody.toString();
+		return resultBody;
 	}
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/admin/ezWebFolder/changeDepartFolder.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String changeDeptFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+	public JSONObject changeDeptFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("changeDeptFolder start");
 		LoginSimpleVO user     = commonUtil.userInfoSimple(loginCookie);
 		JSONObject resultCheck = (JSONObject) checkWfAdmin(request, user.getId());
 		
 		if (!resultCheck.get("status").toString().equals("ok")) {
-			return resultCheck.toString();
+			return resultCheck;
 		}
 		
 		String folderId       = request.getParameter("folderId");
@@ -1440,18 +1440,18 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
 		
 		logger.debug("changeDeptFolder end");
-		return resultBody.toString();
+		return resultBody;
 	}
 
 	@RequestMapping(value="/admin/ezWebFolder/makeCompanyFolder.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String makeCompFolder(@CookieValue("loginCookie") String loginCookie,  Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public JSONObject makeCompFolder(@CookieValue("loginCookie") String loginCookie,  Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("makeCompFolder start");
 		LoginSimpleVO user     = commonUtil.userInfoSimple(loginCookie);
 		JSONObject resultCheck = (JSONObject) checkWfAdmin(request, user.getId());
 		
 		if (!resultCheck.get("status").toString().equals("ok")) {
-			return resultCheck.toString();
+			return resultCheck;
 		}
 		
 		String companyId    = request.getParameter("companyId");
@@ -1475,18 +1475,18 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
 		
 		logger.debug("makeCompFolder end");
-		return resultBody.toString();
+		return resultBody;
 	}
 
 	@RequestMapping(value="/admin/ezWebFolder/makeDeptFolder.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String makeDeptFolders(@CookieValue("loginCookie") String loginCookie,  Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public JSONObject makeDeptFolders(@CookieValue("loginCookie") String loginCookie,  Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("makeDeptFolders start");
 		LoginSimpleVO user     = commonUtil.userInfoSimple(loginCookie);
 		JSONObject resultCheck = (JSONObject) checkWfAdmin(request, user.getId());
 		
 		if (!resultCheck.get("status").toString().equals("ok")) {
-			return resultCheck.toString();
+			return resultCheck;
 		}
 		
 		String companyId    = request.getParameter("companyId");
@@ -1510,18 +1510,18 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
 		
 		logger.debug("makeDeptFolders end");
-		return resultBody.toString();
+		return resultBody;
 	}
 	
 	@RequestMapping(value="/admin/ezWebFolder/checkValidDept.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String checkValidDept(@CookieValue("loginCookie") String loginCookie,  Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public JSONObject checkValidDept(@CookieValue("loginCookie") String loginCookie,  Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("checkValidDept start");
 		LoginSimpleVO user     = commonUtil.userInfoSimple(loginCookie);
 		JSONObject resultCheck = (JSONObject) checkWfAdmin(request, user.getId());
 		
 		if (!resultCheck.get("status").toString().equals("ok")) {
-			return resultCheck.toString();
+			return resultCheck;
 		}
 		
 		String folderId     = request.getParameter("folderId");
@@ -1545,7 +1545,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
 		
 		logger.debug("checkValidDept end");
-		return resultBody.toString();
+		return resultBody;
 	}
 	
 	private JSONObject checkWfAdmin(HttpServletRequest request, String userId) throws ParseException {
@@ -1585,13 +1585,13 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 
 	@RequestMapping(value="/admin/ezWebFolder/exportFileLogs.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String exportFileLogs(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response, Locale locale) throws Exception {
+	public JSONObject exportFileLogs(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response, Locale locale) throws Exception {
 		logger.debug("exportFileLogs start");
 		LoginSimpleVO user     = commonUtil.userInfoSimple(loginCookie);
 		JSONObject resultCheck = (JSONObject) checkWfAdmin(request, user.getId());
 		
 		if (!resultCheck.get("status").toString().equals("ok")) {
-			return resultCheck.toString();
+			return resultCheck;
 		}
 		
 		String companyId     = request.getParameter("companyId");
@@ -1646,7 +1646,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
 		
 		logger.debug("exportFileLogs end");
-		return resultBody.toString();
+		return resultBody;
 	}
 	
 	@RequestMapping(value="/admin/ezWebFolder/downloadExcel.do", method = RequestMethod.GET)
@@ -1749,7 +1749,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	@RequestMapping(value="/admin/ezWebFolder/getApplicationHistoryList.do", method = RequestMethod.POST, produces="application/text;charset=utf8")
 	@ResponseBody
 	@SuppressWarnings("unchecked")
-	public String getApplicationHistoryList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+	public JSONObject getApplicationHistoryList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("getApplicationHistoryList started.");
 
 		LoginVO user = commonUtil.userInfo(loginCookie);
@@ -1793,13 +1793,13 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		returnJson.put("historyList", reHistoryList);
 		logger.debug("status=" + reStatus + ", totalSize=" + reTotalSize);
 		logger.debug("getApplicationHistoryList ended.");
-		return returnJson.toString();
+		return returnJson;
 	}	
 	
 	@RequestMapping(value="/admin/ezWebFolder/getApplicationHistory.do", method = RequestMethod.POST, produces="application/text;charset=utf8")
 	@ResponseBody
 	@SuppressWarnings("unchecked")
-	public String getApplicationHistory(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+	public JSONObject getApplicationHistory(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("getApplicationHistory started.");
 		
 		String reStatus = "ERROR";
@@ -1826,13 +1826,13 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		returnJson.put("appHistory", appHistory);
 		returnJson.put("appHistoryMember", appHistoryMember);
 		logger.debug("getApplicationHistory ended.");
-		return returnJson.toString();
+		return returnJson;
 	}
 
 	@RequestMapping(value="/admin/ezWebFolder/setApprovalToApplyForOpening.do", method = RequestMethod.POST, produces="application/text;charset=utf8")
 	@ResponseBody
 	@SuppressWarnings("unchecked")
-	public String setApprovalToApplyForOpening(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) throws Exception {
+	public JSONObject setApprovalToApplyForOpening(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) throws Exception {
 		logger.debug("setApprovalToApplyForOpening started.");
 		
 		String reStatus = "ERROR";
@@ -1871,13 +1871,13 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		JSONObject returnJson = new JSONObject();
 		returnJson.put("status", reStatus);
 		logger.debug("setApprovalToApplyForOpening ended. reStatus=" + reStatus);
-		return returnJson.toString();
+		return returnJson;
 	}
 	 
 	@RequestMapping(value="/admin/ezWebFolder/setRefusalToApplyForOpening.do", method = RequestMethod.POST, produces="application/text;charset=utf8")
 	@ResponseBody
 	@SuppressWarnings("unchecked")
-	public String setRefusalToApplyForOpening(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) throws Exception {
+	public JSONObject setRefusalToApplyForOpening(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) throws Exception {
 		logger.debug("setRefusalToApplyForOpening started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -1916,7 +1916,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		JSONObject returnJson = new JSONObject();
 		returnJson.put("status", reStatus);
 		logger.debug("setRefusalToApplyForOpening ended. reStatus=" + reStatus);
-		return returnJson.toString();
+		return returnJson;
 	}
 	
 	private String sendNotiMail(String loginCookie, List<OrganUserVO> toUser, String subject, String content, Locale locale) {
