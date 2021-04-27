@@ -1597,6 +1597,8 @@
 				f.TENANT_ID   = #tenantId#
 			AND
 				f.USE_STATUS  = 'Y'
+			AND
+				f.FOLDER_LEVEL   = 0
 			ORDER BY
 				f.FOLDER_NAME1,
 				f.FOLDER_LEVEL ASC,
