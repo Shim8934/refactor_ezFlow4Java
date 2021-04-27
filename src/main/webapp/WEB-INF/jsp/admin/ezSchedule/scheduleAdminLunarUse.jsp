@@ -33,6 +33,7 @@
 		    		type : "GET",
 		    		dataType : "text",
 		    		async : true,
+		    		cache : false,
 		    		url : "/ezSchedule/scheduleGetLunarUse.do",
 		    		data : {
 		    			/* COMPANYID  : document.getElementById("ListCompany")[document.getElementById("ListCompany").selectedIndex].value */		    			

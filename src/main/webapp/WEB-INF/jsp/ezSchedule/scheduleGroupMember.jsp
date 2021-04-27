@@ -517,6 +517,7 @@
 		        var memberId;
 		        var memberName;
 		        var memberName2;
+		        var status;
 		        
 		        var count = 0;
 		        

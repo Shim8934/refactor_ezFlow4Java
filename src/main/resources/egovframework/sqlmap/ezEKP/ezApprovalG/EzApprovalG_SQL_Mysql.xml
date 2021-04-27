@@ -23164,6 +23164,29 @@
         	COMPANYID = #companyID#
    </update>
    
+   <update id ="EzApprovalG.updateTbEndAprDocInfo" parameterClass="map">
+   		UPDATE 
+   			TBL_ENDAPRDOCINFO 
+   		SET 
+			ISPUBLIC = #v_PUBCODE2#
+		WHERE 
+			DOCID = (	
+        				SELECT 
+        					DOCID
+        				FROM 
+        					TBL_RECORD 
+        				WHERE 
+        					RECORDID = #v_RECORDID#
+        				AND
+        					TENANT_ID = #v_TENANTID#
+        				AND 
+        					COMPANYID = #companyID#)
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
+   </update>
+   
    <delete id ="EzApprovalG.deleteTbSpecialCatalogInfo" parameterClass="map">
    		DELETE FROM 
    			TBL_SPECIALCATALOGINFO_REC 

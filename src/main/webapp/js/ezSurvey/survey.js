@@ -314,6 +314,7 @@ var SurveyCreate     = function() {
 		var code = data.code;
 		switch(code) {
 			case 0 : window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=processing";
+					 window.parent.frames["left"].surveyId = -1;
 					 break;
 			case 1 : alert(SurveyMessages.strParamErr); break;
 			case 2 : alert(SurveyMessages.strError)   ; break;

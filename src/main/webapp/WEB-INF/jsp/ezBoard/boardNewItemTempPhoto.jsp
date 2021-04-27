@@ -559,7 +559,7 @@
 		                }
 		                if (pMode == "reply") {
 		                	xmlhttp = createXMLHttpRequest();
-						    xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(strItemID) + "&itemTreeID=" + strUpperItemIDTree, false);
+						    xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(strItemID) + "&itemTreeID=" + encodeURIComponent(strUpperItemIDTree), false);
 						    xmlhttp.send();
 						    xmlhttp = null;
 		                }

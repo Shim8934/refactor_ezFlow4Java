@@ -182,7 +182,10 @@
 		        try {
 		    		window.opener.openerCalendarMiniView("CalendarMini");	    		
 		    		window.opener.openerCalendarMiniDataSource();
-		            window.opener.getScheduleList(window.opener.nowDay, "P");
+		    		// 정주환 포틀릿 일정추가후 불변요청
+		    		var date = window.opener.selDate;
+		    		if(date == "") date = window.opener.nowDay;
+		            window.opener.getScheduleList(date, "P");
 		    		window.opener.openerCalendarMiniView("CalendarMini_Top");	    		
 		    		window.opener.openerCalendarMiniDataSource("Top");
 		        } catch (e) { }
