@@ -177,7 +177,7 @@
 		        	<!-- 게시자&부서 -->
 		        	<tr>
 		        		<th style="width:10%;"><spring:message code='ezBoard.t223'/></th>
-						<td id="WriteUserNM" style="width:40%; white-space:nowrap" colspan="4">&nbsp;<c:out value="${boardItem.writerName}"/></td>
+						<td id="WriteUserNM" style="width:40%; white-space:nowrap" colspan=4>&nbsp;<c:out value="${boardItem.writerName}"/></td>
 						<%-- <th style="width:10%;"><spring:message code='ezBoard.t289'/></th>
 						<td id="User_DeptNM" style="width:40%; white-space:nowrap">&nbsp;${boardItem.writerDeptName}</td> --%>
 		        	</tr>
