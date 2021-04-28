@@ -1500,15 +1500,21 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		String _fileSize = "";
 		
 		if (fileSize / 1024 / 1024 / 1024 >= 1) {
-			_fileSize = String.format("%.2f", (double)(fileSize / 1024 / 1024 * 10) / 10);
+			double tmp = Math.floor((double)((fileSize / 1024 / 1024 * 10) / 10) * 100) / 100.0;
+			_fileSize = String.valueOf(tmp);
+			//_fileSize = String.format("%.2f", (double)(fileSize / 1024 / 1024 * 10) / 10);
 			_fileSize = _fileSize + "GB";
 		}
 		else if (fileSize / 1024 / 1024 >= 1) {
-			_fileSize = String.format("%.2f", (double)(fileSize / 1024 / 1024 * 10) / 10);
+			double tmp = Math.floor((double)((fileSize / 1024 / 1024 * 10) / 10) * 100) / 100.0;
+			_fileSize = String.valueOf(tmp);
+			//_fileSize = String.format("%.2f", (double)(fileSize / 1024 / 1024 * 10) / 10);
 			_fileSize = _fileSize + "MB";
 		}
 		else if (fileSize / 1024 >= 1) {
-			_fileSize = String.format("%.2f", (double)(fileSize / 1024));
+			double tmp = Math.floor((double)(fileSize / 1024) * 100) / 100.0;
+			_fileSize = String.valueOf(tmp);
+			//_fileSize = String.format("%.2f", (double)(fileSize / 1024));
 			_fileSize = _fileSize + "KB";
 		}
 		else {
