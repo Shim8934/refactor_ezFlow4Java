@@ -81,7 +81,7 @@
 			            window.resizeTo(510, 355);
 					} else {
 						if (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) {
-			            	window.resizeTo(510, 325);
+			            	window.resizeTo(510, 375);
 						} else {
 			            	window.resizeTo(510, 375);
 						}

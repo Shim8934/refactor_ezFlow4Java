@@ -2382,6 +2382,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		update("EzApprovalG.updateTbExpendAprDocInfo", map);
 	}
 	
+	public void updateTbEndAprDocInfo(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.updateTbEndAprDocInfo", map);
+	}
+	
 	public void updateCabinetClass(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.updateCabinetClass", map);
 	}

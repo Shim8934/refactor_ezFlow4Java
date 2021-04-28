@@ -29,6 +29,7 @@
 		    		type : "GET",
 		    		dataType : "xml",
 		    		async : true,
+		    		cache : false,
 		    		url : "/ezSchedule/scheduleGroupList.do",		    		
 		    		success: function(text){
 		    			var listNode = SelectSingleNodeNew(text, "LISTVIEWDATA");

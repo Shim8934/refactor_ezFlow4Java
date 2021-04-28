@@ -158,7 +158,7 @@
 			    var items = xmldomNodes.length;
 			    for (i = 0; i < xmldomNodes.length; i++) {
 			        var tid = SelectSingleNodeValue(xmldomNodes[i], "DATA1");
-			        tid = tid.substring(1, 37);
+			        //tid = tid.substring(1, 37);
 			        
 			        if (i == 0) {
 			        	strHTML += "<tr><td><h2 style='border-top:0px' id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ", \"" + items + "\"" + ")' style='cursor:pointer'><span class='groupBoard'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</span></h2></td></tr>";
@@ -176,13 +176,13 @@
 			}
 			
 			function TopBoard_onclick(obj, ID, items){
-			    tmpSelectedBoardGroupID = document.getElementById("{" + ID + "}").id;
+			    tmpSelectedBoardGroupID = document.getElementById(ID).id;
 			    if (CrossYN())
-			        tmpSelectedBoardGroupName = document.getElementById("{" + ID + "}").textContent;
+			        tmpSelectedBoardGroupName = document.getElementById(ID).textContent;
 			    else
-			        tmpSelectedBoardGroupName = document.getElementById("{" + ID + "}").innerText;
+			        tmpSelectedBoardGroupName = document.getElementById(ID).innerText;
 			    SelectedBoardID = tmpSelectedBoardGroupID;
-			    var rootBoardID = "{" + ID + "}";
+			    var rootBoardID = ID;		//"{" + ID + "}";
 			    var num = obj.split("TreeCtrl");
 			    if (document.getElementById(obj).style.display != "none") {
 			        document.getElementById(obj).style.display = "none";

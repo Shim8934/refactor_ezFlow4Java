@@ -886,7 +886,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				resultUpload = "overflow";
 			} else {
 				if (pMode.equals("ATT")) {
-					if (userExtension.indexOf(pFileName.substring(pFileName.lastIndexOf(".") + 1).toString()) == -1 && !userExtension.equals("*")) {
+					if (userExtension.toLowerCase().indexOf(pFileName.substring(pFileName.lastIndexOf(".") + 1).toString().toLowerCase()) == -1 && !userExtension.equals("*")) {
 						resultUpload = "denied";
 					} else {
 						pAttachPath = pDirPath + "tempUploadFile" + commonUtil.separator + pUploadSN + "_" + pFileName;
@@ -896,26 +896,30 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 						resultUpload = "true";
 					}
 				} else if (pMode.equals("PHOTO")) {
-					pAttachPath = pDirPath + "tempUploadFile" + commonUtil.separator + pUploadSN + pFileName.substring(pFileName.lastIndexOf("."));
-					pAttachPath = commonUtil.detectPathTraversal(pAttachPath);
-					File thumbnailFile = new File(pAttachPath);
-					file.transferTo(thumbnailFile);
-					
-					BufferedImage inputImage = ImageIO.read(thumbnailFile);
-					BufferedImage outputImage = null;
-					Graphics2D saveImage = null;
-					//썸네일 생성		
-					outputImage= new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
-					saveImage = outputImage.createGraphics();
-					saveImage.drawImage(inputImage, 0, 0, 100, 100, null);
-					
-					String tempThumbFilaPath = pDirPath + "tempUploadFile" + commonUtil.separator + "s_" + pUploadSN + pFileName.substring(pFileName.lastIndexOf("."));
-					tempThumbFilaPath = commonUtil.detectPathTraversal(tempThumbFilaPath);
-					
-					File tempTumbbail = new File(tempThumbFilaPath);
-					ImageIO.write(outputImage, "png", tempTumbbail);
-					
-					resultUpload = "true";
+					if (userExtension.toLowerCase().indexOf(pFileName.substring(pFileName.lastIndexOf(".") + 1).toString().toLowerCase()) == -1 && !userExtension.equals("*")) {
+						resultUpload = "denied";
+					} else {
+						pAttachPath = pDirPath + "tempUploadFile" + commonUtil.separator + pUploadSN + pFileName.substring(pFileName.lastIndexOf("."));
+						pAttachPath = commonUtil.detectPathTraversal(pAttachPath);
+						File thumbnailFile = new File(pAttachPath);
+						file.transferTo(thumbnailFile);
+						
+						BufferedImage inputImage = ImageIO.read(thumbnailFile);
+						BufferedImage outputImage = null;
+						Graphics2D saveImage = null;
+						//썸네일 생성		
+						outputImage= new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
+						saveImage = outputImage.createGraphics();
+						saveImage.drawImage(inputImage, 0, 0, 100, 100, null);
+						
+						String tempThumbFilaPath = pDirPath + "tempUploadFile" + commonUtil.separator + "s_" + pUploadSN + pFileName.substring(pFileName.lastIndexOf("."));
+						tempThumbFilaPath = commonUtil.detectPathTraversal(tempThumbFilaPath);
+						
+						File tempTumbbail = new File(tempThumbFilaPath);
+						ImageIO.write(outputImage, "png", tempTumbbail);
+						
+						resultUpload = "true";
+					}
 					strXML += "<NODE><PUPLOADSN>" + commonUtil.cleanValue(pUploadSN + pFileName.substring(pFileName.lastIndexOf('.'))) + "</PUPLOADSN>";
 				}
 			}

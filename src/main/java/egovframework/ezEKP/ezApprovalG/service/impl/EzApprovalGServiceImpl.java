@@ -5426,7 +5426,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 	
 	@Override
-	public String getUncompleteDocList(String deptID, String companyID, String cabinetID, int tenantID, String userLang) throws Exception {
+	public String getUncompleteDocList(String deptID, String companyID, String cabinetID, int tenantID, String userLang, LoginVO userInfo) throws Exception {
 		logger.debug("getUncompleteDocList started");
 
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
@@ -5486,7 +5486,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			rtnXML.append("<CELL><VALUE>" + makeXMLString(makeListField(docXML.getElementsByTagName("APRMEMBERDEPTNAME").item(k).getTextContent())) + "</VALUE></CELL>");
 			rtnXML.append("<CELL><VALUE>" + makeXMLString(makeListField(docXML.getElementsByTagName("WRITERNAME").item(k).getTextContent())) + "</VALUE></CELL>");
-			rtnXML.append("<CELL><VALUE>" + makeXMLString(makeListField(docXML.getElementsByTagName("STARTDATE").item(k).getTextContent())) + "</VALUE></CELL>");
+			rtnXML.append("<CELL><VALUE>" + commonUtil.getDateStringInUTC(makeXMLString(makeListField(convertDate(docXML.getElementsByTagName("STARTDATE").item(k).getTextContent()))), userInfo.getOffset(), false) + "</VALUE></CELL>");
 			rtnXML.append("</ROW>");	
 		}
 		rtnXML.append("</ROWS>");
@@ -10146,12 +10146,22 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             rtnXML.append("<PUBLICITYYN>" + makeXMLString(makeListField(docXML.getElementsByTagName("PUBLICITYYN").item(0).getTextContent())).trim() + "</PUBLICITYYN>");
             rtnXML.append("<ORGCOMPANYID>" + makeXMLString(makeListField(docXML.getElementsByTagName("COMPANYID").item(0).getTextContent())) + "</ORGCOMPANYID>");
 
+            String docState = docXML.getElementsByTagName("DOCSTATE").item(0).getTextContent();
+            String functionType = docXML.getElementsByTagName("FUNCTIONTYPE").item(0).getTextContent();
             if (config.getProperty("config.useOpenGov").equalsIgnoreCase("YES")) {
-                Map<String, Object> resultMap = getOpenGovInfo(docID, tenantID, companyID);
-                rtnXML.append("<BASIS>" + resultMap.get("basis") + "</BASIS>");
-                rtnXML.append("<REASON>" + resultMap.get("reason") + "</REASON>");
-                rtnXML.append("<LISTOPENFLAG>" + resultMap.get("listOpenFlag") + "</LISTOPENFLAG>");
-                rtnXML.append("<FILEOPENFLAGLIST>" + resultMap.get("fileOpenFlagList") + "</FILEOPENFLAGLIST>");
+            	if(!isUsed.isEmpty()) {
+	                Map<String, Object> resultMap = getOpenGovInfo(beforeDocID, tenantID, companyID);
+	                rtnXML.append("<BASIS>" + resultMap.get("basis") + "</BASIS>");
+	                rtnXML.append("<REASON>" + resultMap.get("reason") + "</REASON>");
+	                rtnXML.append("<LISTOPENFLAG>" + resultMap.get("listOpenFlag") + "</LISTOPENFLAG>");
+	                rtnXML.append("<FILEOPENFLAGLIST>" + resultMap.get("fileOpenFlagList") + "</FILEOPENFLAGLIST>");
+            	} else if(!(docState.equals("011") && functionType.equals("011")) && !docState.equals("015") && !docState.equals("004")) {
+            		Map<String, Object> resultMap = getOpenGovInfo(docID, tenantID, companyID);
+                    rtnXML.append("<BASIS>" + resultMap.get("basis") + "</BASIS>");
+                    rtnXML.append("<REASON>" + resultMap.get("reason") + "</REASON>");
+                    rtnXML.append("<LISTOPENFLAG>" + resultMap.get("listOpenFlag") + "</LISTOPENFLAG>");
+                    rtnXML.append("<FILEOPENFLAGLIST>" + resultMap.get("fileOpenFlagList") + "</FILEOPENFLAGLIST>");
+            	}
             }
             //결재 상세정보
             rtnXML.append("<FORMAPROPTION>" + makeXMLString(makeListField(getFormAprOptionInfo(docID, "DOC", companyID, tenantID))) + "</FORMAPROPTION>");
@@ -23349,6 +23359,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			//    '2:분리첨부- 분류등록 항목은 수정 불가
 
 			ezApprovalGDAO.updateTbRecord(map);	
+			ezApprovalGDAO.updateTbEndAprDocInfo(map);
 			ezApprovalGDAO.updateTbExpendAprDocInfo(map);	
 			
 			historyCnt = ezApprovalGDAO.selectHistoryCnt(map);
