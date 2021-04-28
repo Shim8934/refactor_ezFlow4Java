@@ -1475,10 +1475,10 @@
 				<include refid="searchTrashCanFile"/>
 				<![CDATA[
 				) A
-				ORDER BY
+				ORDER BY SLEVEL
 				]]>
 				<isNotEqual property="orderByData" compareValue="">
-					$orderByData$,
+					$orderByData$
 				</isNotEqual>
 				<isNotEqual property="realColmn" compareValue="">
 						<isEqual property="realColmn" compareValue="TRASHCAN_SIZE">
@@ -1487,11 +1487,11 @@
 						<isNotEqual property="realColmn" compareValue="TRASHCAN_SIZE">
 							$realColmn$ $order$,
 						</isNotEqual>
-						SLEVEL, UPDATE_DATE DESC, TRASHCAN_EXT DESC
+						, UPDATE_DATE DESC, TRASHCAN_EXT DESC
 				</isNotEqual>
 				<isEqual property="realColmn" compareValue="">
 					<![CDATA[
-						SLEVEL, UPDATE_DATE DESC, TRASHCAN_EXT DESC
+						, UPDATE_DATE DESC, TRASHCAN_EXT DESC
 					]]>
 				</isEqual>
 				

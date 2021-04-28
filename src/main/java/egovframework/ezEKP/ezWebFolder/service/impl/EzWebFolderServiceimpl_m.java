@@ -792,7 +792,11 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 		String secondSort = "";
 		if (!sortType.equals("")){
-			secondSort = sortColumn + " " + sortType;
+			if (sortColumn.equals("TRASHCAN_ICON_URL") && sortType.equals("DESC")){
+				secondSort = " DESC , " + sortColumn + " " + sortType;
+			} else {
+				secondSort = " , " + sortColumn + " " + sortType;
+			}
 		} 
 		
 		LOGGER.debug("orderByData:"+ secondSort);
