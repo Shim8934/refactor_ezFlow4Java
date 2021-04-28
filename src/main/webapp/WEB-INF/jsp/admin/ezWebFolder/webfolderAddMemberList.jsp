@@ -60,8 +60,8 @@
     </div>
     <div > <!--style삭제-->
         <div class="txt mb10" id="divTop"> <!-- clss추가 style삭제--><spring:message code="ezWebFolder.ksa40" /></div>
-        <div class="txt mb10" id="memberList"> <!-- clss추가 style삭제--></div>
         <div class="txt mb10" id="divBottom"> <spring:message code="ezWebFolder.ksa41" /></div>
+        <div class="txt mb10" id="memberList" style="overflow:auto;height:100px;"> <!-- clss추가 style삭제--></div>
     </div>
     <div class="btnpositionNew">
         <a id="btnSave" class="imgbtn" onclick="click_type(1);"><span><spring:message code="ezWebFolder.ksa42" /></span></a>
