@@ -421,7 +421,8 @@
 		        var ret = openAaprDocAttachUI();
 		    }
 		    function btnOpinion_onclick() {
-		        var ret = openOpinionUI("N");
+		        //var ret = openOpinionUI("N");
+		    	openOpinionUI_New("");
 		    }
 		    function btnPrint_onclick() {
 		        PrintClick("Cross", pDocID, "");
