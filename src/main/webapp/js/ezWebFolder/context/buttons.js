@@ -516,8 +516,10 @@ var buttons = (function() {
 
 function optionView(obj) {
 	if (obj.getAttribute("mode") == "off") {
-		var a_left = $("#wfOptionDiv").offset().left - ($("#layer_Viewpopup").width() - $("#wfOptionDiv").width());
-		var a_top = $("#wfOptionDiv").offset().top + $("#wfOptionDiv").height() + 2;
+		var isWfOptionDiv = $("#wfOptionDiv").length > 0;	//  2021-04-28 김은실 - #20200 공유폴더 > 리스트 선택박스 나타나지 않음.
+		var a_left = isWfOptionDiv? $("#wfOptionDiv").offset().left - ($("#layer_Viewpopup").width() - $("#wfOptionDiv").width()) 
+									: document.documentElement.clientWidth - 260 + "px";
+		var a_top = isWfOptionDiv? $("#wfOptionDiv").offset().top + $("#wfOptionDiv").height() + 2 : "130px";
 		document.getElementById("layer_Viewpopup").style.display = "";
 		obj.setAttribute("class", "icon16 btn_onarrow_down");
 		obj.setAttribute("mode", "on");
