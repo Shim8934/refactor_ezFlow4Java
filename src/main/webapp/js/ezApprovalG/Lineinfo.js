@@ -1813,7 +1813,8 @@ function AprLineAddUser_Complete(Ans) {
     }
     setRep_Suggester();
     aprlinecount = 0;
-    LineAprTyepSetAll();
+    //LineAprTyepSetAll();
+    LineAprTyepSetAll_DELETE_ADD();
 }
 
 function SAprLineAddUser_Complete(RtnVal)
@@ -1896,6 +1897,9 @@ function SAprLineAddUser_Complete(RtnVal)
     
     LineAprTyepSet();
 }
+
+
+
 
 function AprLineUserAdd(AprLineAddIndex, AprLineRow, pSelectedRow, selnode)
 {
@@ -2288,6 +2292,206 @@ function APRLINEATTENDERDELFunction()
     alert("APRLINEATTENDERDELFunction :: " + e.description);
   }
 }
+
+// 결재선 지정 -> 보고자  or 발의자 선택 -> 결재선 삭제,추가  -> 보고자 발의자 표기가 되지 않아   LineAprTypeSetAll()을 수정하여 함수 추가 , 
+// 원복하려면  LineAprTypeSetALL_DELETE_ADD()함수를 지우고 LineAprTypeSetAll_DELETE_ADD() -> LineAprTypeSetAll()로 바꾸면됨.
+function LineAprTyepSetAll_DELETE_ADD() {
+	var auditCount1 = 0;
+	var auditCount2 = 0;
+	if (approvalFlag == "S") {
+		var pAPRLINE = new ListView();
+	    pAPRLINE.LoadFromID("lvAPRLINE");
+	    var pTotalRows = pAPRLINE.GetDataRows();
+	    for (var i = 0; i < pTotalRows.length; i++) {
+	        var CurrentSn = getNodeText(pTotalRows[i].childNodes.item(0));
+
+	        if (GetAttribute(pTotalRows[i], "DATA12") == "002")
+	            ProSn = CurrentSn;
+
+	        var p_isDept = GetAttribute(pTotalRows[i], "DATA5");
+	        
+	        if (GetAttribute(pTotalRows[i], "DATA12") == "004")
+	            p_RejectFlag = true;
+
+	        var p_StatusDis = (GetAttribute(pTotalRows[i], "DATA12") == "003" && !p_RejectFlag) ? "disabled" : "";
+	        if (p_isDept == "Y") {
+	            var AprTypeObj = SChangeAprlineType("group", GetAttribute(pTotalRows[i], "DATA11"));
+	            if (AprTypeObj == "") {
+	                pAPRLINE.DeleteRow(pTotalRows[i].id);
+	            }
+	            else {
+	                if (GetAttribute(pTotalRows[i], "DATA12") == "015")
+	                    p_StatusDis = "disabled";
+	                
+	                if ($("input:checkbox[id='passAprLine']").is(":checked") && (pTotalRows[i].getAttribute("DATA12") == "004" || pTotalRows[i].getAttribute("DATA12") == "003" || pTotalRows[i].getAttribute("DATA12") == "002")) {
+	                	p_StatusDis = "disabled";
+	                }
+	                
+	                AprTyepID = GetAttribute(pTotalRows[i], "id") + "select";
+	                AprTypeObj = "<select id='" + AprTyepID + "' onChange=\"return AprlineType_onchangeLine(this)\" style=\"width:100%;\" " + p_StatusDis + " >" + AprTypeObj + "</select>";
+	                pTotalRows[i].childNodes[4].innerHTML = AprTypeObj;
+	            }
+	        } else {
+	            if (pTotalRows.length == 1)
+	                p_StatusDis = "disabled";
+	            else {
+	                if (CurrentSn == "1")
+	                    p_StatusDis = "disabled";
+
+	                if (GetAttribute(pTotalRows[i], "DATA12") == "002" && CurrentSn == ProSn)
+	                    p_StatusDis = "disabled";
+
+	                if ((GetAttribute(pTotalRows[i], "DATA11") == "009" || GetAttribute(pTotalRows[i], "DATA11") == "007" || GetAttribute(pTotalRows[i], "DATA11") == "012") && parseInt(CurrentSn) < parseInt(ProSn))
+	                    p_StatusDis = "disabled";
+	                
+	                if (GetAttribute(pTotalRows[i],"DATA8") == "Y")    
+	                     p_StatusDis = "disabled";
+	                
+	                if ($("input:checkbox[id='passAprLine']").is(":checked") && (pTotalRows[i].getAttribute("DATA12") == "004" || pTotalRows[i].getAttribute("DATA12") == "003" || pTotalRows[i].getAttribute("DATA12") == "002")) {
+	                	p_StatusDis = "disabled";
+	                }
+	            }
+	            if (GetAttribute(pTotalRows[i], "DATA11") != "003") {
+	                var AprTypeObj = SChangeAprlineType("user", GetAttribute(pTotalRows[i], "DATA11"));
+	                if (AprTypeObj == "") {
+	                    pAPRLINE.DeleteRow(pTotalRows[i].id);
+	                }
+	                else {
+	                    AprTyepID = GetAttribute(pTotalRows[i], "id") + "select";
+	                    AprTypeObj = "<select id='" + AprTyepID + "' onChange=\"return AprlineType_onchangeLine(this)\" style=\"width:100%;\"" + p_StatusDis + " >" + AprTypeObj + "</select>";
+	                    pTotalRows[i].childNodes[4].innerHTML = AprTypeObj;
+	                    var selectedindex = pTotalRows[i].childNodes[4].childNodes[0].selectedIndex;
+	                    SetAttribute(pTotalRows[i], "DATA11", pTotalRows[i].childNodes[4].childNodes[0].childNodes[selectedindex].value);
+	                }
+	            }
+	        }
+	    }
+	} else {
+		aprlinecount = 0;
+		var pAPRLINE = new ListView();   
+		pAPRLINE.LoadFromID("lvAPRLINE");
+		var pTotalRows = pAPRLINE.GetDataRows();
+		for (var i = 0; i < pTotalRows.length; i++) {
+			var p_isDept = pTotalRows[i].getAttribute("DATA5");
+			var CurrentSn = CrossYN() ? pTotalRows[i].childNodes.item(0).textContent : pTotalRows[i].childNodes.item(0).innerText;
+			
+			if (pTotalRows[i].getAttribute("DATA12") == "002") {
+				ProSn = CurrentSn;
+			}
+			
+			if (pTotalRows[i].getAttribute("DATA12") == "004" || GetAttribute(pTotalRows[i], "DATA12") == "015")
+				p_RejectFlag = true;
+			
+			
+			var p_StatusDis = (CurrentSn != 1 && (pTotalRows[i].getAttribute("DATA12") == "001" || p_RejectFlag)) ? "" : pTotalRows.length == 1 ? "" : "disabled";
+			if ((pTotalRows[i].getAttribute("DATA11") == "009" || pTotalRows[i].getAttribute("DATA11") == "012") && parseInt(CurrentSn) < parseInt(ProSn))
+				p_StatusDis = "disabled";
+			
+			if ($("input:checkbox[id='passAprLine']").is(":checked") && (pTotalRows[i].getAttribute("DATA12") == "004" || pTotalRows[i].getAttribute("DATA12") == "003" || pTotalRows[i].getAttribute("DATA12") == "002")) {
+            	p_StatusDis = "disabled";
+            }
+			// 감사부서는 감사결재 유형만 사용할 수 있도록 설정. 2020-02-28 홍대표.
+			if(pDeptgamsaCount > 0 && pTotalRows[i].getAttribute("DATA4") == optGamsabu) {
+				p_StatusDis = "disabled";
+			}
+			
+			if (p_isDept == "Y") {
+				var AprTypeObj = ChangeAprlineType("group", pTotalRows[i].getAttribute("DATA11"));
+				AprTyepID = pTotalRows[i].getAttribute("id") + "select";
+				AprTypeObj = "<select id='" + AprTyepID + "' onChange=\"return AprlineType_onchangeLine(this)\" style =\"width:100%\" " + p_StatusDis + " >" + AprTypeObj + "</select>";
+				pTotalRows[i].childNodes[4].innerHTML = AprTypeObj;
+				
+				// 감사부서는 감사결재 유형만 사용할 수 있도록 설정. 2020-02-28 홍대표.
+				setDeptGamsaType(pTotalRows[i]);
+			} else {
+				var AprTypeObj = ChangeAprlineType("user", pTotalRows[i].getAttribute("DATA11"));
+				var tempHtml = "";
+				// 감사
+				var index = pTotalRows.length-1;
+				var revIndex = 0;
+				// (index-revIndex)최초감사자 index값
+				$.each($(pTotalRows).get().reverse(), function(j, item) {
+					if($(this).attr("DATA11") == "005") {
+						revIndex = j;
+						return false;
+					}
+				});
+				
+				if(pTotalRows[i].getAttribute("JUNBUBYN") == "Y" || pTotalRows[i].getAttribute("APPRLINETYPE") == "audit_add"
+					|| pTotalRows[i].getAttribute("DATA11") == "005") {
+					$.each($(AprTypeObj), function(j, item) {
+						if(this.value == "005") {
+							tempHtml += this.outerHTML;
+						}
+					});
+					AprTypeObj = tempHtml;
+					
+					// 현재 결재자가 준법지원인일때(최초감사일때)
+					if(arr_userinfo[1] == pTotalRows[i].getAttribute("DATA4") && i == (index-revIndex)) {
+						//$('#td_check_rep_sugg').hide();
+						$("#auditAddBtn").hide();
+						$("#td_check_rep_sugg").hide();
+						$("#tr_radio_audit").show();
+						$("#APRLINE").css("height", "488px");
+					}
+					
+					pTotalRows[i].setAttribute("APPRLINETYPE", "audit_add");
+					pTotalRows[i].setAttribute("DATA9", "N");
+					auditCount1++;
+					
+				} else {
+					$.each($(AprTypeObj), function(j, item) {
+						if(this.value != "005") {
+							tempHtml += this.outerHTML;
+						}
+					});
+					AprTypeObj = tempHtml;
+				}
+				AprTyepID = pTotalRows[i].getAttribute("id") + "select";
+				AprTypeObj = "<select id='" + AprTyepID + "' onChange=\"return AprlineType_onchangeLine(this)\" style =\"width:100%\" " + p_StatusDis + " >" + AprTypeObj + "</select>";
+				pTotalRows[i].childNodes[4].innerHTML = AprTypeObj;
+				
+				if (pTotalRows[i].childNodes[0].innerHTML != pTotalRows.length && pTotalRows[i].getAttribute("DATA11") == "001") {
+					pTotalRows[i].setAttribute("DATA11", "019");
+				}
+				else if (pTotalRows[i].childNodes[0].innerHTML.replace("★","").replace("⊙","") == "1" && pTotalRows[i].getAttribute("DATA11") == "001") {
+					pTotalRows[i].setAttribute("DATA11", "018");
+				}
+				
+				var selectedindex = pTotalRows[i].childNodes[4].childNodes[0].selectedIndex;
+				pTotalRows[i].setAttribute("DATA11", pTotalRows[i].childNodes[4].childNodes[0].childNodes[selectedindex].value);
+				
+			}
+		}
+	}
+	$.each($(pTotalRows).get().reverse(), function(index) {
+		var text = "";
+		var id = this.id;
+		id = id.substring(0, id.length-1) + index;
+		
+		/*if($(this).attr("DATA8") == "Y" && $(this).attr("DATA11") == "008") {
+			text = "★";
+		} else if($(this).attr("DATA9") == "Y" && $(this).attr("DATA11") == "005") {
+			auditCount2++;
+			if(auditCount1 > 1 && auditCount1 == auditCount2) {
+			text = "⊙";
+			}
+		}*/
+		
+		if($(this).attr("DATA8") == "Y") {
+			text += "★";
+		}
+		if($(this).attr("DATA9") == "Y") {
+			text += "⊙";
+		}
+		
+		
+		$(this).attr('id', id);
+		$(this).children('td:first').text(text+(index+1));
+		$(this).children().find('select').attr("id", id + 'select');
+	});
+}
+
 //############################################################################################################################################# 결재선리스트 삭제 이벤트 
 function DoDelete(pSelectedRow) {
     try {
@@ -2362,7 +2566,13 @@ function DoDelete(pSelectedRow) {
     			pAPRLINE.DeleteRow(selIdx);
     		}
     		aprlinecount = 0;
-    		LineAprTyepSetAll();
+
+    		//LineAprTyepSetAll();
+    		LineAprTyepSetAll_DELETE_ADD();
+    		
+    		document.getElementById('Reporter').checked =false;
+    		document.getElementById('Suggester').checked =false;
+
     	}
     } catch (e) {
         alert("DoDelete :: " + e.description);
