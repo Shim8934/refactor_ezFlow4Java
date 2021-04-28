@@ -781,9 +781,9 @@ function openDraftUI(pDraftFlag, pCurSelRow,officeFlag) {
         windowName = "openDraftUI_REDRAFT";
         
         //2020-01-16 홍대표. receptGubunYN이 Y인데 재기안 할 경우, 민원인 주소 입력 버튼이 사라지는 버그 수정. 닷넷 참고.
-        if (formDocType == "") {
+        // if (formDocType == "") {
             formDocType = GetAttribute(pCurSelRow, "DATA15");
-        }
+        //}
     }
 
     var pArgument = new Array();
@@ -2477,7 +2477,7 @@ function getdoclistSub_after(xml) {
         var AprLine = new ListView();
         AprLine.SetID("AprLine");
         AprLine.SetMulSelectable(false);
-        AprLine.SetTitleIdx(arrySubTab[subTabLastCol]);
+//        AprLine.SetTitleIdx(arrySubTab[subTabLastCol]);
         AprLine.SetRowOnDblClick("lvAprLine_DBSelChange");
         AprLine.DataSource(loadXMLString(xml));
         AprLine.DataBind("lvAprLine");

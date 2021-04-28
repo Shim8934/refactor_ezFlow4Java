@@ -422,6 +422,7 @@ function CheckPreviously(timeCheck) {
 		type : "GET",
 		dataType : "text",
 		async : false,
+		cache : false,
 		url : "/ezSchedule/scheduleGetRegi.do",
 		data : {
 			COMPANYID  : companyID		    			

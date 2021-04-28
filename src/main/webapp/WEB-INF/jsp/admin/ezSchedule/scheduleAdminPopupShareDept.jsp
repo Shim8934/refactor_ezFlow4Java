@@ -25,7 +25,7 @@
 	                schedule_select_secretary_cross_dialogArguments[1] = select_person_Complete;
 	
 	                if (navigator.appName.indexOf("Microsoft") > -1) {
-	                    var OpenWin = window.open("/ezSchedule/scheduleSelectSecretary.do", "scheduleSelectSecretary", GetOpenWindowfeature(735, 580));
+	                    var OpenWin = window.open("/ezSchedule/scheduleSelectSecretary.do", "scheduleSelectSecretary", GetOpenWindowfeature(1000, 580));
 	                    try { OpenWin.focus(); } catch (e) { }
 	                } else {
 	                    var OpenWin = window.open("/ezSchedule/scheduleSelectSecretary.do", "scheduleSelectSecretary", GetOpenWindowfeature(1000, 590));

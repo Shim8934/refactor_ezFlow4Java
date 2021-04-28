@@ -782,6 +782,7 @@ function ListView() {
                 objTd.onmouseout = new Function("td_mouseout(this)");
             }
 
+			oText = document.createTextNode(ConvMakeXMLString(strValue));
             objTd.appendChild(oText);
             objTr.appendChild(objTd);
 

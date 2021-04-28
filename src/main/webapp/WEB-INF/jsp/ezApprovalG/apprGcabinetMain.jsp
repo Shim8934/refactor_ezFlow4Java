@@ -1388,6 +1388,19 @@
 		
 		    var ezreceivedistributeui_cross_dialogArguments = new Array();
 		    function btnBaeBu_onclick() {
+		    	var DocList = new ListView();
+				DocList.LoadFromID("DocList");
+				
+				var selRows = DocList.GetSelectedRows();
+		        if (selRows.length === 0) {
+		            var pAlertContent = "문서를 선택해주십시오.";
+		            alert(pAlertContent);
+		            return;
+				}
+
+				var selRow = selRows[0];
+				
+				var DocID = GetAttribute(selRow, "DATA1");
 		        if (DocID == "") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t99991'/>";
 		            OpenAlertUI(pAlertContent);

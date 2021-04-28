@@ -215,6 +215,7 @@ public class EzEmailAsync {
 				String domainName = ezCommonService.getTenantConfig("DomainName", userinfo.getTenantId());
 				int tenantId = ezCommonService.getTenantIdByDomainName(domainName);
 				String lang = ezCommonService.selectUserGetLang(userId, tenantId);
+				lang = lang == null ? "1" : lang;
 				Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(lang));
 				String creatorName = locale.toString().equals("ko") ? survey.getCreatorName1() : survey.getCreatorName2();
 				logger.debug("userAccount : " + userAccount + ", locale=" + locale);

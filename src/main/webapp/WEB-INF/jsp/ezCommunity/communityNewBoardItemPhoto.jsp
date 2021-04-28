@@ -148,11 +148,14 @@
 		    function SaveItem() {
 		    	var strArray = document.getElementById('txtPhotoFile').value.split('.'); 
 		    	var mimeType = strArray[strArray.length-1].toLowerCase();
-		    	if (mimeType != "gif" && mimeType != "jpg" && mimeType != "png" && mimeType != "jpeg" && mimeType != "bmp") {
-		    		alert(strLang85);
+		    	var check = false;
+		    	check = compareExtension(check, mimeType);
+		    	
+		    	if (!check) {
+		    		alert("<spring:message code ='ezBoard.hsbImg01' />");
 		    		return;
-		    	} 
-
+		        }
+		    	
 		        if(MHTLoadComplete != "true") {
 		            alert("<spring:message code = 'ezCommunity.t1138' />");
 		            return;
@@ -334,6 +337,9 @@
 		            } else if (SelectSingleNodeValue(nodes[i], "RESULTUPLOADA") == "overflow") {
 		                alert(strLang8 + AttachLimit + "MB" + strLang9);		                
 		                return;
+		            } else if (SelectSingleNodeValue(nodes[i], "RESULTUPLOADA") == "denied") {
+		                alert(strLang75);		                
+		                return;
 		            } else {
 		                alert(filename + " <spring:message code = 'ezCommunity.lhj08' />" + "\n\n" + result);
 		            }
@@ -394,6 +400,18 @@
 		        	return strRet;
 		        }
 		    }
+		    
+		    /* 2021-04-27 홍승비 - 이미지파일 확장자체크 추가 */
+		    function compareExtension(check, extension) {
+	    		var filterExtension = new Array("jpe", "jpg", "jpeg", "gif", "png", "bmp", "ico", "svg", "svgz", "tif", "tiff", "ai", "drw", "pct", "psp", "xcf", "psd", "raw");
+	    		for (var i = 0; i < filterExtension.length; i++) {
+	        		if (extension.toLowerCase() == filterExtension[i]) {
+	            		check = true;
+	            		break;
+	        		}
+	    		}
+	    		return check;
+			}
 		</script>
 		
 	</head>
@@ -445,7 +463,7 @@
 		
 		<div id="txtAttachList"></div>
 		<form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezCommunity/upload.do">
-			<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="display:none" />
+			<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="display:none;" accept="image/*" />
 			<input type="hidden" name="boardID" id="boardID" />
 			<input type="hidden" name="maxSize" id="maxSize" />
 			<input type="hidden" name="mode" id="mode" />
