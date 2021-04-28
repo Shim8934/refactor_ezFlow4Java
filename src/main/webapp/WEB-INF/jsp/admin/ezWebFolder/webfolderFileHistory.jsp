@@ -574,6 +574,7 @@
 								<option value="4"         ><spring:message code='ezWebFolder.t194'/></option>
 								<option value="5"         ><spring:message code='ezWebFolder.t195'/></option>
 								<option value="6"         ><spring:message code='ezWebFolder.t196'/></option>
+								<option value="7"         ><spring:message code='ezWebFolder.t311'/></option>
 							</select>
 						</td>
 					</tr>
