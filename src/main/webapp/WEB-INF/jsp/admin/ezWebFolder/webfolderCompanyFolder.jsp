@@ -15,6 +15,11 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/popup.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<style>
+			.spanName {
+				width: auto;
+			}
+		</style>
 		<script type="text/javascript" >
 			<c:set var="divHeight" value="${isMeeting or isTask ? 493 : 450}" />
 			var arrSubFolder      = [];

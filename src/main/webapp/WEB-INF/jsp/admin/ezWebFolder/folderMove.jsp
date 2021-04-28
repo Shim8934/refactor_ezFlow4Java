@@ -13,6 +13,11 @@
     <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
     <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
     <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/fileFolderDrop.js')}"></script>
+    <style>
+		.spanName {
+			width: auto;
+		}
+	</style>
 	<script type="text/javascript">
 		var primary        = "<c:out value='${primary}'/>";
 		var folderId       = "<c:out value='${folderId}'/>";
