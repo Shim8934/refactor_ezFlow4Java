@@ -20,6 +20,7 @@
 		var arrSubFolder   = [];
 		
 		window.onload = function () {
+			document.getElementsByName('treeType')[0].checked=true;
 			getData();
 		};
 		
