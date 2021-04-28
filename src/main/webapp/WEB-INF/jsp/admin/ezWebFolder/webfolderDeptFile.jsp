@@ -39,6 +39,7 @@
 			var resultErr3 = "<spring:message code='ezWebFolder.t300'/>";
 			var resultErr4 = "<spring:message code='ezWebFolder.t249'/>";
 			var resultErr5 = "<spring:message code='ezWebFolder.t250'/>";
+			var resultErr6 = "<spring:message code='ezWebFolder.kes014'/>";
 			var _selectedCell = null;
 			var _cellInfo        = {};
 			var sortColumn = null;

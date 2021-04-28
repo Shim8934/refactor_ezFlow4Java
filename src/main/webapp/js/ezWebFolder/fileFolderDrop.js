@@ -111,8 +111,20 @@ function fileupload() {
 	// 1회 업로드 용량 체크
 	if (window.uploadLimit) {
 		var totalSize = 0;
+		var fileNameOverByte = false;
 		// reduce를 쓰고 싶은데 length가 1이면 계산이 안 됨 코드가 길어져서 포이치로 일단,,
-		tempFileArray.forEach(function(fileObj) { totalSize += fileObj.size; });
+		tempFileArray.forEach(function(fileObj) { 
+			totalSize += fileObj.size;
+			if (fileObj.name.byteLength() > 200) {
+				alert(resultErr6 + ' : "' + fileObj.name + '"');
+				fileNameOverByte = true;
+				return;
+			}
+		});
+		
+		if (fileNameOverByte) {
+			return;
+		}
 		
 		if (window.uploadLimit < totalSize) {
 			alert(resultErr4);
@@ -393,3 +405,17 @@ function uploadReply(parentId, files) {
 	closeAllPopup();
 	fileupload();
 }
+
+String.prototype.byteLength = function() {
+    var l= 0;
+     
+    for(var idx=0; idx < this.length; idx++) {
+        var c = escape(this.charAt(idx));
+         
+        if( c.length==1 ) l ++;
+        else if( c.indexOf("%u")!=-1 ) l += 2;
+        else if( c.indexOf("%")!=-1 ) l += c.length/3;
+    }
+     
+    return l;
+};
