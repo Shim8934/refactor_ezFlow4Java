@@ -834,6 +834,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docState = request.getParameter("docState");
 		//2018-10-23 이효진 대리결제 지정된 사람 결재 시 메일발송부분 권한체크때 현재결재선진행되고 다음결재선의 ID로 자꾸 비교되서
 		String proxyUserFlag = request.getParameter("proxyUserFlag");
+		/* 2021-04-28 홍승비 - 전자결재 알림메일 발송 시, 대리결재자도 메일 발송을 위해 결재선에 접근 가능하도록 판단하는 플래그 추가 */
+		String isMailSendFlag = request.getParameter("isMailSendFlag") != null ? request.getParameter("isMailSendFlag") : "";
 		
 		//2018-09-04 강민수92 비공개문서일때 결재라인 안보이게 하기 위해 추가
 		String publicityYN = request.getParameter("publicityYN");
@@ -859,7 +861,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				return "NOTPERMISSION";
 			}
         }
-    
+        
         if (mode == null) {
         	mode = "APR";
         }
@@ -936,10 +938,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 //		                        return "NOTPERMISSION";
 //		                    }
 							
+							/* 2021-04-28 홍승비 - 전자결재 알림메일 발송 시, 대리결재자도 메일 발송을 위해 결재선에 접근 가능하도록 수정 */
 							//2018-08-23 천성준 - Document doc = ezApprovalGService.checkPermission 에서 결재선에 올라와 있지만 부서가 다르단 이유로 권한이 없다고 걸러버려서 부서가 다르면 결재선에 있는지 체크로직 추가
 							if (docID != null && mode != null) {
 								String checkLine = ezApprovalGService.checkAprLine(docID.trim(), mode, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
-								if (!checkLine.equals("<RESULT>TRUE</RESULT>")) {
+								if (!checkLine.equals("<RESULT>TRUE</RESULT>") && !isMailSendFlag.equals("Y")) {
 									return "NOTPERMISSION";
 								}
 							} else {
