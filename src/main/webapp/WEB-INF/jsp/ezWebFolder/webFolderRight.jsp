@@ -337,6 +337,7 @@
 				$('#SearchOption').css('display','none');	
 				$('#rename').css('display','none');
 				$('#moveButton').css('display','none');
+				$('#moveMenu').css('display','none');
 				$('#delete').css('display','none');
 				dragDropAreaElmt.ondragenter = function(e) {
 					e.stopPropagation();e.preventDefault();
@@ -352,6 +353,7 @@
 				$('#newFolder').css('display','inline');	
 				$('#rename').css('display','inline');
 				$('#moveButton').css('display','inline');
+				$('#moveMenu').css('display','');
 				$('#delete').css('display','inline');
 				if (folderType == 'C') {
 					$('#SearchOption').css('display','inline');				
