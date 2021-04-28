@@ -35,7 +35,7 @@ function getDataInfo() {
     DocList.LoadFromID("DocList");
     var selRow = DocList.GetSelectedRows()[0];
     //DocList_Flag 지워도 되면 삭제
-    if (DocList_Flag == "RECORD") {
+    if (DocList_Flag == "RECORD" && selRow != undefined) {
         if (trim_Cross(selRow.getAttribute("DATA14")) != "null" && trim_Cross(selRow.getAttribute("DATA14")) != "" && trim_Cross(selRow.getAttribute("DATA14")) >= GetTodayDate()) {
             if (CheckAprLine(selRow.getAttribute("DATA1")) != "TRUE") {
                 getdoclistSub_after("NOTPERMISSION");
