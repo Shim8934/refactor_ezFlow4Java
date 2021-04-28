@@ -1235,9 +1235,9 @@
 			target.className = "tabon";
 		}
 		
-		// adminPage 이므로 항상 true return
-		function checkRecordAll(){
-			return true;
+		// 기록물대장의 대외접수목록(m12), 대외발송목록(m13)이 아니라면 기본적으로 자신의 부서에만 접근한다. (false 리턴)
+		function checkRecordAll() {
+			return false;
 		}
 		
 	    </script>
