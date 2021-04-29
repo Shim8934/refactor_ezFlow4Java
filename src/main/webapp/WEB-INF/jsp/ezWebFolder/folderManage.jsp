@@ -345,6 +345,11 @@
 				return;
 			}
 			
+			if (folderType == "C"){
+				alert("<spring:message code='ezWebFolder.pyy01'/>");
+				return;
+			}
+			
 			if (parent == '#' && folderType != "S") {
 				alert("<spring:message code='ezWebFolder.t338'/>");
 				return;
