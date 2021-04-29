@@ -8,6 +8,7 @@
 		<title><spring:message code='ezJournal.t3' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css" />
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -155,7 +156,7 @@
 		    
 		    function insertShare(flag) {
 		    	if ($("tr[class='active']").length <= 0) {
-		    		alert("수정할 공유자를 선택해주세요.");
+		    		alert(strLang960);
 		    		return;
 		    	}
 		    	
@@ -170,11 +171,11 @@
 		    	
 		    	/* 2020-09-11 홍승비 - 선택된 공유자 없는 경우 알러트 메세지 추가 (다국어 미적용) */
 		    	if ($("tr[class='active']").length <= 0) {
-		    		alert("삭제할 공유자를 선택해주세요.");
+		    		alert(strLang961);
 		    		return;
 		    	}
 		    	
-		    	if (!confirm("삭제하시겠습니까?")) {
+		    	if (!confirm(strLang962)) {
 		    		return;
 		    	}
 		    	
@@ -184,10 +185,10 @@
 		    		data : {"ownerId"  : ownerId}, 
 		    		success: function(result) {
 		    			if(result == "YES"){
-		    				alert("삭제되었습니다.");
+		    				alert(strLang963);
 		    				location.reload();
 		    			} else {
-		    				alret("삭제가 실패하였습니다.");
+		    				alret(strLang964);
 		    			}
 		    		},
 		    		error : function(request, status, error) {
