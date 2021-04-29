@@ -1564,11 +1564,15 @@
     	                }
     	            }
 	            } else if (m_selectedTree == ListViewGroup) {
+	            	var listid = "MsgToList";
+					var targetList = new ListView();
+		            targetList.LoadFromID(listid);
+		            
 	            	var pListViewGroup = new ListView();
 	                var _tdlength = 0;
 	                pListViewGroup.LoadFromID("pListViewGroup");
 	                var arrRows = pListViewGroup.GetSelectedRows();
-	                
+	                var strId = "";
 	                if (arrRows.length > 0) {
 	                    var pparsingXML = "";
 	                    var pparsingXML2 = "";
@@ -1576,11 +1580,13 @@
 	                        var strName = arrRows[i].innerText;
 	                        var groupId = arrRows[i].getAttribute("data1");
 	                        var listid = "MsgToList";
-	
-	                        var targetList = new ListView();
-	                        targetList.LoadFromID(listid);
-
-	                            pparsingXML2 = "";
+	                        strId = GetAttribute(arrRows[i], "data1");
+							var bFlag = targetList.ExistRow("data1", strId);
+    		                
+	                        if (bFlag) {
+								alert(strName + ": <spring:message code='ezBoard.t20' />");
+							} else {
+		                        pparsingXML2 = "";
 	                            pparsingXML = "";
 	                            pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 	                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(groupId) + "</DATA1>";
@@ -1615,6 +1621,8 @@
 	                                document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
 	                                document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
 	                            }
+								
+							}
 	                    }
 
 	                }
