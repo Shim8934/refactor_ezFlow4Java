@@ -17,7 +17,8 @@ function getAprLinefor(mode, docid) {
 			docID : docid,
 			mode  : mode,
 			orgCompanyID : orgCompanyID,
-			proxyUserFlag : ""
+			proxyUserFlag : "",
+			isMailSendFlag : "Y"
 		},
 		success: function(text){
 			result = text;
