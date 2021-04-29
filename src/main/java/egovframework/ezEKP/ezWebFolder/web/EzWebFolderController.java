@@ -699,6 +699,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		Map<String, Object> permissionParams = new HashMap<>();
 		permissionParams.put("fileList", fileIdList);
 		permissionParams.put("folderList", folderIdList);
+		permissionParams.put("adminCheck", mode.equalsIgnoreCase("admin")? true : false);
 		
 		// 이동 가능한지 (관리자, 담당자, 만든이)
 		boolean isPermittedMove = Optional.of(
