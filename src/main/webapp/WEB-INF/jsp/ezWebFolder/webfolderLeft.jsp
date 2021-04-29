@@ -25,8 +25,14 @@
 				height: 93%;
 			}
 			.lnbUL li {
-				margin: 0px 0px 0px 10px;
+/* 				margin: 0px 0px 0px 10px; */
 			}
+			.jstree-default-small .jstree-node {
+			    min-height: 18px;
+			    line-height: 18px;
+			    margin-left: 7px;
+			    padding-left: 7px;
+		    }
 	    </style>
 		<script type="text/javascript" >
 		    var companyFolderId = "";
