@@ -152,6 +152,8 @@
 				if (document.getElementById("ui-datepicker-div")) {
 					document.getElementById("ui-datepicker-div").style.display = "none";
 				}
+				
+				DivPopUpHidden();
 			}
 			
 			function getPosition(popUpW, popUpH) {
