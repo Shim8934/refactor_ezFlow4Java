@@ -2261,6 +2261,7 @@ function openFormUI_Complete(ret) {
             tempItemName = "";
             tempdocnumcode = strLang107;
             tempSecurityDate = "";
+            pHasOpinionYN = "N";			// 2021-04-29 김민성 - 기안 > 양식선택시 기존에 의견이 있었던 경우 값이 안바뀌는 오류 수정 
 
             message.Set_EditorContentURL(pFormHref);
             
