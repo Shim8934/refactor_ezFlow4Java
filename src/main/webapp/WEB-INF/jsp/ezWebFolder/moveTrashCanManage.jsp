@@ -98,7 +98,7 @@
            	
             // 회사폴더일 경우에만 최상위폴더에 파일을 이동할 수 없도록 수정. 2020-03-24 홍대표.
             // 카이스트 커스터마이징 건으로 아래 코드 삭제                              2020-12-14 서재원.
-            if ( folderType == 'C' && parent =='#' && checkedfileList.length > 0) {
+            if ( folderType == 'C' && parent =='#') {
 	            alert("<spring:message code='ezWebFolder.t293'/>");
 	            return;
             } 
