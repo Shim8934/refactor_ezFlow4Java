@@ -53,7 +53,7 @@
 	</head>
 	<body class="mainbody"> 
 		<h1>
-			문서함공유
+			<spring:message code='ezApprovalG.share01'/>
 		</h1>
 		<div id="mainmenu" style="padding-left: 5px;">
             <ul>
@@ -72,18 +72,18 @@
 						<div style="vertical-align:top; height:600px; border: none; width:100%; overflow-x:auto;overflow-y:auto;/* BORDER:#b6b6b6 1px solid; */ BACKGROUND-COLOR:#ffffff" >
 							<table id="ownerList" class="mainlist ownerList" style="width: 100%; border-width: 0px 0px 1px 0px;">
 								<tr>
-									<th style="text-align: center; border-top:none;">공유자</th>
-									<th style="text-align: center; border-top:none;">공유타입</th>
+									<th style="text-align: center; border-top:none;"><spring:message code='ezApprovalG.share02'/></th>
+									<th style="text-align: center; border-top:none;"><spring:message code='ezApprovalG.share03'/></th>
 								</tr>
 								<c:forEach items="${ownerList}" var="owner">
 									<tr onclick="viewShareList(this)" ondblclick="insertShare('M');" ownerId="${owner.ownerId }" ownerName="${owner.ownerName }" ownerType="${owner.ownerType}">
 										<td><c:out value="${owner.ownerName}"></c:out></td>
 										<td>
 											<c:if test="${owner.ownerType eq 'U' }">
-												사용자
+												<spring:message code='ezApprovalG.share04'/>
 											</c:if>
 											<c:if test="${owner.ownerType eq 'D' }">
-												부서
+												<spring:message code='ezApprovalG.share05'/>
 											</c:if>
 										</td>
 									</tr>
@@ -98,8 +98,8 @@
 			        		<table class="mainlist" style="width: 100%;">
 			        			<thead>
 			        				<tr>
-										<th style="text-align: center; border-top:none;">공유대상</th>
-										<th style="text-align: center; border-top:none;">공유타입</th>
+										<th style="text-align: center; border-top:none;"><spring:message code='ezApprovalG.share06'/></th>
+										<th style="text-align: center; border-top:none;"><spring:message code='ezApprovalG.share03'/></th>
 									</tr>
 			        			</thead>
 			        			<tbody id="shareList" style="margin: 0; padding: 0;">
@@ -108,7 +108,7 @@
 					        				<div id="preview_nodata" class="preview_nodata" style="margin-top: 70px;">
 								                  <dl class="nodata_sIcon">
 									              <dt><img src="/images/kr/main/noData_sIcon.png"></dt>
-									              <dd id="nodata_title" style="font-family: malgun gothic">선택된 공유자가 없습니다.</dd>
+									              <dd id="nodata_title" style="font-family: malgun gothic"><spring:message code='ezApprovalG.share07'/></dd>
 								                  </dl>
 							                 </div>
 			        					</td>
@@ -154,6 +154,11 @@
 		    }
 		    
 		    function insertShare(flag) {
+		    	if ($("tr[class='active']").length <= 0) {
+		    		alert("수정할 공유자를 선택해주세요.");
+		    		return;
+		    	}
+		    	
 				var url = "/admin/ezApprovalG/docDirOwnerInsert.do";
 				if(flag == 'M'){
 					url += "?ownerId=" + ownerId + "&ownerName=" + encodeURIComponent(ownerName) + "&ownerType=" + encodeURIComponent(ownerType);
