@@ -50,6 +50,13 @@
 		}
 		
 	</script>
+	<style> 
+		.margin ul, li{ margin-left:15px;} 
+		#memberList { margin-left:15px;overflow:auto; height:100px;}
+		@media screen and (-webkit-min-device-pixel-ratio:0){ 
+			#memberList { margin-left:0px;overflow:auto; height:100px;} } 
+	</style>
+
 </head>
 <body class="popup" style="overflow: hidden;">
     <h1 id="topMenu" ><spring:message code="ezWebFolder.ksa39" /></h1><!--style삭제-->
@@ -61,7 +68,7 @@
     <div > <!--style삭제-->
         <div class="txt mb10" id="divTop"> <!-- clss추가 style삭제--><spring:message code="ezWebFolder.ksa40" /></div>
         <div class="txt mb10" id="divBottom"> <spring:message code="ezWebFolder.ksa41" /></div>
-        <div class="txt mb10" id="memberList" style="overflow:auto;height:100px;"> <!-- clss추가 style삭제--></div>
+        <div class="txt mb10" id="memberList" style="overflow:auto; height:100px;"> <!-- clss추가 style삭제--></div>
     </div>
     <div class="btnpositionNew">
         <a id="btnSave" class="imgbtn" onclick="click_type(1);"><span><spring:message code="ezWebFolder.ksa42" /></span></a>
