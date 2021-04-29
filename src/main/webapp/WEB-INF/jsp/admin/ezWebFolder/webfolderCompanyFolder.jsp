@@ -335,16 +335,16 @@
 						deptArray.push(deptJson);
 					}
 					
-					folderUsers[i]["folderManager"]? targetManager = targetManager + displayName + "," 
-													 : target	   = target 	   + displayName + ",";
+					folderUsers[i]["folderManager"]? targetManager = targetManager + displayName + ", " 
+													 : target	   = target 	   + displayName + ", ";
 				}
 				
 				jsonObj["manager"] = managerArray;
 				jsonObj["user"] = userArray;
 				jsonObj["dept"] = deptArray;
 				
-				updateTarget(targetManager.slice(0, -1), 1);
-				updateTarget(target.slice(0, -1), 0);
+				updateTarget(targetManager.slice(0, -2), 1);
+				updateTarget(target.slice(0, -2), 0);
 				document.getElementById("rangeStr").value = JSON.stringify(jsonObj);
 				
 			}
@@ -799,7 +799,7 @@
 									<%-- 2020-11-24 김은실 - (카이스트)회사 폴더별 관리자 지원 기능 --%>
 									<tr>
 										<td>
-											<div style="margin: 20px 20px 5px; min-height: 36px;">
+											<div style="margin: 10px 20px 5px; min-height: 36px;">
 												<div class="wfAdmin_t2" style="display: inline-block;" id= "displayUsersManager">
 													<img src="/images/kr/left/left_dot02.gif" />
 													<span id=""><spring:message code="ezWebFolder.kes012" /></span>&nbsp;
@@ -810,7 +810,7 @@
 									</tr>
 									<tr>
 										<td>
-											<div style="margin: 0px 20px; min-height: 10px; border:1px solid #ddd; padding:10px; border-radius:3px;" >
+											<div style="margin: 0px 20px; height: 40px; border:1px solid #ddd; padding:10px; border-radius:3px; width: 455px; overflow-y: auto; word-spacing: 3px; line-height: 18px; box-sizing: border-box;" >
 												<span id="newTargetDivManager"></span>
 											</div>
 										</td>
@@ -829,7 +829,7 @@
 									</tr>
 									<tr>
 										<td>
-											<div style="margin: 0px 20px 20px; min-height: 120px; border:1px solid #ddd; padding:10px; border-radius:3px" >
+											<div style="margin: 0px 20px 20px; height: 150px; border:1px solid #ddd; padding:10px; border-radius:3px; width: 455px; overflow-y: auto; word-spacing: 3px; line-height: 18px;  box-sizing: border-box;" >
 												<span id="newTargetDiv"></span>
 											</div>
 										</td>
