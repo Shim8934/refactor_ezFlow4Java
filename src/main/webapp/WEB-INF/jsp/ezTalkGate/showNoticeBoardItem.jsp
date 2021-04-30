@@ -48,7 +48,7 @@ P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm }
 	            </tr>
 	            <tr valign="middle" bgcolor="#F5F5F5" height="25">
 	              <td width="200" style="min-width:200px;">&nbsp;<spring:message code="ezBoard.t223" /> | <c:out value='${boardItem.writerName}' /><font color="#333399"></font></td>
-	              <td align="center" width="200" style="min-width:200px;"><spring:message code="ezBoard.t5007" /> | <c:out value='${boardItem.writeDate}' /><font color="#333399"></font> </td>
+	              <td align="center" width="200" style="min-width:200px; float:right; padding-top:5px; padding-right:20%;"><spring:message code="ezBoard.t5007" /> | <c:out value='${boardItem.writeDate}' /><font color="#333399"></font> </td>
 	              <td width="150" align="center" style="display:none"><spring:message code="ezCommunity.t173" /> | <font color="#333399"></font></td>
 	              <td align="center">&nbsp;</td>
 	            </tr>
