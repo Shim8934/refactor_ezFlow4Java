@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -1878,7 +1879,14 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		map.put("primary",  primary);
 		map.put("tenantId", tenantId);
 		
-		return ezWebFolderDAO.getAllFolderNameMap(map);
+		Map<String, String> result = new LinkedHashMap<String, String>();
+		Map<String, String> temp = ezWebFolderDAO.getAllFolderNameMap(map);
+		
+		for (Map.Entry<String, String> entry : temp.entrySet()) {
+			result.put(String.valueOf(entry.getKey()), entry.getValue());
+		}
+		
+		return result;
 	}
 
 	@Override
