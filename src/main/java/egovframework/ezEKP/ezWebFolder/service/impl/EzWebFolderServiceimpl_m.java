@@ -1460,15 +1460,9 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			if (favoriteVO.isFolder()) {
 				targetPath = targetPath.substring(0, targetPath.indexOf(favoriteVO.getTargetId()));
 			}
-
+			
 			targetPath = ezWebFolderService.getFolderPath(targetPath.split("\\|"), primary, tenantId);
-			if (targetPath.indexOf("/") + 1 < targetPath.length() - 1) {
-				// 2020-12-28 김은실 - [카이스트] #69088 [이경찬선생] > 위치의 한국과학기술원 제거
-				targetPath = targetPath.substring(targetPath.indexOf("/") + 1, targetPath.length() - 1);
-			} else {
-				targetPath = targetPath.substring(targetPath.indexOf("/") + 1);
-			}
-
+			targetPath = targetPath.substring(0, targetPath.length() - 1);
 			favoriteVO.setTargetPath(targetPath);
 		}
 		

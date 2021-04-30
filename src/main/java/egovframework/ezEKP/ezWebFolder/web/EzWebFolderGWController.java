@@ -2442,14 +2442,7 @@ public class EzWebFolderGWController {
 			FolderVO folder       = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
 			String folderPath     = folder.getFolderPath();
 			folderPath            = folderPath.substring(1, folderPath.length() - 1);
-			String originalPathTemp   = ezWebFolderService.getFolderPath(folderPath.split("\\|"), primary, tenantId);
-			String originalPath = "";
-			if (originalPathTemp.indexOf("/")+1 < originalPathTemp.length()-1) {
-				// 2020-12-28 김은실 - [카이스트] #69088 [이경찬선생] > 위치의 한국과학기술원 제거
-				originalPath = originalPathTemp.substring(originalPathTemp.indexOf("/")+1);
-			}else{
-				originalPath = originalPathTemp.substring(originalPathTemp.indexOf("/"));
-			}
+			String originalPath   = ezWebFolderService.getFolderPath(folderPath.split("\\|"), primary, tenantId);
 			
 			if (folder.getFolderUpper().equals("root")) {
 				Map<String, String> filePathMap = new LinkedHashMap<String, String>();
@@ -2611,14 +2604,7 @@ public class EzWebFolderGWController {
 			FolderVO folder       = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
 			String folderPath     = folder.getFolderPath();
 			folderPath            = folderPath.substring(1, folderPath.length() - 1);
-			String originalPathTemp   = ezWebFolderService.getFolderPath(folderPath.split("\\|"), primary, tenantId);
-			String originalPath = "";
-			if (originalPathTemp.indexOf("/")+1 < originalPathTemp.length()-1) {
-				// 2020-12-28 김은실 - [카이스트] #69088 [이경찬선생] > 위치의 한국과학기술원 제거
-				originalPath = originalPathTemp.substring(originalPathTemp.indexOf("/")+1);
-			}else{
-				originalPath = originalPathTemp.substring(originalPathTemp.indexOf("/"));
-			}
+			String originalPath   = ezWebFolderService.getFolderPath(folderPath.split("\\|"), primary, tenantId);
 			
 			totalRows  = ezWebFolderService.getTotalFileCnt(folderId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, primary, tenantId);
 			totalPages = (totalRows + pageSize - 1)/pageSize;

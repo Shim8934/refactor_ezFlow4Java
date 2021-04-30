@@ -1159,15 +1159,9 @@ public class EzWebFolderGWController_m {
 					if(trashCan.getTrashCanPath() != null) {
 						trashCanPath = trashCan.getTrashCanPath().substring(1);
 						trashCanPath = ezWebFolderService.getFolderPath(trashCanPath.split("\\|"), primary, tenantId);
+						trashCanPath = trashCanPath.substring(0, trashCanPath.length() - 1);
 						
-						if (trashCanPath.indexOf("/")+1 < trashCanPath.length()-1) {
-							// 2020-12-28 김은실 - [카이스트] #69088 [이경찬선생] > 위치의 한국과학기술원 제거
-							trashCanPath = trashCanPath.substring(trashCanPath.indexOf("/")+1, trashCanPath.length() - 1);
-						} else {
-							trashCanPath = trashCanPath.substring(0, trashCanPath.length() - 1);
-						}
-						
-//						if (trashCan.getTrashCanExt().equals("folder")pp) {
+//						if (trashCan.getTrashCanExt().equals("folder")) {
 //							trashCanPath = trashCanPath.substring(0, trashCanPath.lastIndexOf("/"));
 //						}
 						

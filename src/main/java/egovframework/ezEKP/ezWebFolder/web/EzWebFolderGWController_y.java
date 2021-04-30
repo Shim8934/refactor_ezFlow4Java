@@ -651,14 +651,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			String folderPath     = folder.getFolderPath();
 			String folderPath2    = folder.getFolderPath();
 			folderPath            = folderPath.substring(1, folderPath.length() - 1);
-			String originalPathTemp   = ezWebFolderService.getFolderPath(folderPath.split("\\|"), primary, tenantId);
-			String originalPath = "";
-			if (originalPathTemp.indexOf("/")+1 < originalPathTemp.length()-1) {
-				// 2020-12-28 김은실 - [카이스트] #69088 [이경찬선생] > 위치의 한국과학기술원 제거
-				originalPath = originalPathTemp.substring(originalPathTemp.indexOf("/")+1);
-			}else{
-				originalPath = originalPathTemp.substring(originalPathTemp.indexOf("/"));
-			}
+			String originalPath   = ezWebFolderService.getFolderPath(folderPath.split("\\|"), primary, tenantId);
 			
 			LOGGER.debug("OriginalPath: " + originalPath);
 					
@@ -694,9 +687,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 							}
 						}
 						
-						if(!file_path.isEmpty()){
 						file_path = file_path.substring(0, file_path.length()-1);
-						}
 						file.setFilePosition(file_path);
 					}
 				}
@@ -714,7 +705,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			data.put("folderName2", fldDetail.getFolderName2());
 			data.put("userId", userId);
 			data.put("folderPath", folderPath2);
-			data.put("originalPath", originalPathTemp);
+			data.put("originalPath", originalPath);
 			data.put("fileList", fileList);
 			data.put("fileCnt", fileCnt);
 			data.put("fldCnt", fldCnt);
@@ -880,14 +871,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			String folderPath     = folder.getFolderPath();
 			String folderPath2    = folder.getFolderPath();
 			folderPath            = folderPath.substring(1, folderPath.length() - 1);
-			String originalPathTemp   = ezWebFolderService.getFolderPath(folderPath.split("\\|"), primary, tenantId);
-			String originalPath = "";
-			if (originalPathTemp.indexOf("/")+1 < originalPathTemp.length()-1) {
-				// 2020-12-28 김은실 - [카이스트] #69088 [이경찬선생] > 위치의 한국과학기술원 제거
-				originalPath = originalPathTemp.substring(originalPathTemp.indexOf("/")+1);
-			}else{
-				originalPath = originalPathTemp.substring(originalPathTemp.indexOf("/"));
-			}
+			String originalPath   = ezWebFolderService.getFolderPath(folderPath.split("\\|"), primary, tenantId);
 			
 			LOGGER.debug("OriginalPath: " + originalPath);
 			
@@ -922,9 +906,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 								file_path += filePathMap.get(fldPathArr[i]) + "/";
 							}
 						}
-						if(!file_path.isEmpty()){
 						file_path = file_path.substring(0, file_path.length() - 1);
-						}
 						file.setFilePosition(file_path );
 					}
 				}
@@ -941,7 +923,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			// 2020-12-08 김은실 - [카이스트] 
 			data.put("folderName2", fldDetail.getFolderName2());
 			data.put("folderPath", folderPath2);
-			data.put("originalPath", originalPathTemp);
+			data.put("originalPath", originalPath);
 			data.put("fileList", fileList);
 			data.put("fileCnt", fileCnt);
 			data.put("fldCnt", fldCnt);
