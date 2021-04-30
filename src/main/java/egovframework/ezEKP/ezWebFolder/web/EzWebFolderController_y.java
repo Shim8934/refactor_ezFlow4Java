@@ -25,7 +25,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.unidocs.cipher.PDFInfoEncrypter;
 import com.unidocs.workflow.util.PDFFileFilter;
 
+import egovframework.ezEKP.ezWebFolder.util.EzWebfolderUtil;
 import egovframework.let.user.login.vo.LoginSimpleVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Controller
@@ -33,6 +35,9 @@ public class EzWebFolderController_y {
 
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Autowired
+	private EzWebfolderUtil webfolderUtil;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(EzWebFolderController_y.class);
 	
@@ -99,15 +104,23 @@ public class EzWebFolderController_y {
 			HttpServletResponse resp, Model model ){
 		LOGGER.debug("getFolderList started");
 		
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		
 		// tenantID, companyId, userId, folderType, folderId
 		LoginSimpleVO userInfo 	= commonUtil.userInfoSimple(loginCookie);
 		String folderType 		= orElse(request.getParameter("folderType")	, "");
 		String folderId 		= orElse(request.getParameter("folderId")	, ""); 
+		String isAdmin	 		= orElse(request.getParameter("isAdmin")	, "false"); 
+		
+		if ("true".equalsIgnoreCase(isAdmin) && !webfolderUtil.isWebfolderAdmin(loginVO)) {
+			isAdmin = "false";
+		}
 		
 		JSONObject resultBody = null;
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("folderType"	, folderType);
 		param.put("folderId"	, folderId);
+		param.put("isAdmin"	, isAdmin);
 		
 		resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" +userInfo.getId() + "/folder-tree", 
 				param, request, "get", null);

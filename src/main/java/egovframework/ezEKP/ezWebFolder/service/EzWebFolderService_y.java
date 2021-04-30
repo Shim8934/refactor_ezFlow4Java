@@ -16,6 +16,7 @@ public interface EzWebFolderService_y {
 	public void insertIfNotExistRootForder(String userId, String userName1, String userName2, String compId, List<Map<String, String>> permissionIdList, String offset, int tenantId) throws Exception;
 	
 	public List<Map<String, Object>> getFolderTree(String userId, String deptId, String compId, String folderType, String primary, int tenantId, String flag) throws Exception;
+	public List<Map<String, Object>> getFolderTree(String userId, String deptId, String compId, String folderType, String primary, int tenantId, String flag, boolean isAdmin) throws Exception;
 	
 	// 파일리스트
 	List<FileVO> getFileList(String folderId, String userId, String deptId, int tenantId, String comId, String searchExt, String searchFileName, 

@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import javax.annotation.Resource;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -22,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO;
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO_m;
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO_y;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
@@ -62,6 +65,9 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 	@Autowired
 	private EzWebfolderUtil webfolderUtil;
 
+	@Resource(name = "EzWebFolderDAO")
+	private EzWebFolderDAO ezWebFolderDAO;
+	
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(EzWebFolderServiceImpl_y.class);
 
@@ -127,6 +133,13 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 	public List<Map<String, Object>> getFolderTree(String userId,
 			String deptId, String compId, String folderType, String primary,
 			int tenantId, String flag) throws Exception {
+		return getFolderTree(userId, deptId, compId, folderType, primary, tenantId, flag, false);
+	}
+		
+	// 사용자 삭제시 그 사용자의 데이터 모두 삭제 위해 flag 추가 
+	@Override
+	public List<Map<String, Object>> getFolderTree(String userId, String deptId, String compId, String folderType, String primary, int tenantId, String flag, boolean isAdmin) throws Exception {
+		
 		List<Map<String, Object>> folderTree = new ArrayList<Map<String, Object>>();
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -165,55 +178,73 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		}
 
 		if (folderType.equals("C") || folderType.equals("")) {
-			List<String> addjobList = getAddJobList(tenantId, userId);
-
-			List<String> managerFolderId = ezWebFolderAdminService.getFolderIdsByManagerUserId(userId, "", compId, tenantId);
-			String managerFolderStr = "";
-			for (String manger : managerFolderId) {
-				managerFolderStr += " OR F.FOLDER_PATH LIKE '%|" + manger +"|%' ";
-			}	
 			
-			// 직위, 직책 권한이 추가 
-			List<String> jikWiChekAddjobList = getjikWiChekAddjobList(tenantId, userId, compId);
-			
-			Map<String, Object> map2 = new HashMap<String, Object>();
-			map2.put("userId", userId);
-			map2.put("tenantId", tenantId);
-			map2.put("companyId", compId);
-
-			List<String> folderUserIdList = ezWebFolderDAO_m
-					.getFolderUserIdList_D(map2);
-
-			Set<String> idSet = new HashSet<String>();
-			idSet.add(userId);
-			idSet.add(deptId);
-			idSet.add(compId);
-			idSet.addAll(addjobList);
-			idSet.addAll(jikWiChekAddjobList);
-			idSet.addAll(folderUserIdList);
-
-			// 권한그룹이 추가 : tbl_webfolder_folderuser에 있는 권한 그룹리스트 가져와서 체크
-			List<String> groupList = ezWebFolderDAO_y.getWebFolderUserGroupList(map2);
-			
-			if (groupList != null) {
-				for (String groupId : groupList) {
-					boolean groupPermissionYN = ezCommonService.getPermissionGroupAccessYN(groupId, compId, tenantId, userId, deptId, true);
-					
-					if (groupPermissionYN) {
-						idSet.add(groupId);
+			if (!isAdmin) {
+				List<String> addjobList = getAddJobList(tenantId, userId);
+	
+				List<String> managerFolderId = ezWebFolderAdminService.getFolderIdsByManagerUserId(userId, "", compId, tenantId);
+				String managerFolderStr = "";
+				for (String manger : managerFolderId) {
+					managerFolderStr += " OR F.FOLDER_PATH LIKE '%|" + manger +"|%' ";
+				}	
+				
+				// 직위, 직책 권한이 추가 
+				List<String> jikWiChekAddjobList = getjikWiChekAddjobList(tenantId, userId, compId);
+				
+				Map<String, Object> map2 = new HashMap<String, Object>();
+				map2.put("userId", userId);
+				map2.put("tenantId", tenantId);
+				map2.put("companyId", compId);
+	
+				List<String> folderUserIdList = ezWebFolderDAO_m
+						.getFolderUserIdList_D(map2);
+	
+				Set<String> idSet = new HashSet<String>();
+				idSet.add(userId);
+				idSet.add(deptId);
+				idSet.add(compId);
+				idSet.addAll(addjobList);
+				idSet.addAll(jikWiChekAddjobList);
+				idSet.addAll(folderUserIdList);
+	
+				// 권한그룹이 추가 : tbl_webfolder_folderuser에 있는 권한 그룹리스트 가져와서 체크
+				List<String> groupList = ezWebFolderDAO_y.getWebFolderUserGroupList(map2);
+				
+				if (groupList != null) {
+					for (String groupId : groupList) {
+						boolean groupPermissionYN = ezCommonService.getPermissionGroupAccessYN(groupId, compId, tenantId, userId, deptId, true);
+						
+						if (groupPermissionYN) {
+							idSet.add(groupId);
+						}
 					}
 				}
-			}
-
-			map.put("idList", idSet.toArray(new String[idSet.size()]));
-			map.put("compId", compId);
+	
+				map.put("idList", idSet.toArray(new String[idSet.size()]));
+				map.put("compId", compId);
+				
+				Set<String> userDeptList = new HashSet<String>();
+				userDeptList.add(deptId);
+				userDeptList.addAll(addjobList);
+				map.put("userId", userId);
+				map.put("userDeptList", userDeptList.toArray(new String[userDeptList.size()]));
+				map.put("managerFolderStr", managerFolderStr);
 			
-			Set<String> userDeptList = new HashSet<String>();
-			userDeptList.add(deptId);
-			userDeptList.addAll(addjobList);
-			map.put("userId", userId);
-			map.put("userDeptList", userDeptList.toArray(new String[userDeptList.size()]));
-			map.put("managerFolderStr", managerFolderStr);
+			} else {
+				Map<String,Object> comFldMap = new HashMap<String, Object>();
+				comFldMap.put("companyId",  compId);
+				comFldMap.put("tenantId",   tenantId);
+				
+				FolderSimpleVO companyFolder = ezWebFolderDAO.getCompanySimpleFolder(comFldMap);
+				String folderId = companyFolder.getFolderId();
+
+				String mngStr = " OR F.FOLDER_PATH LIKE '%|" + folderId +"|%' ";
+				
+				Set<String> idSet = new HashSet<String>();
+				idSet.add(compId);
+				map.put("idList", new String[] {compId});
+				map.put("managerFolderStr", mngStr);
+			}
 			
 			List<Map<String, Object>> compFolderTree = ezWebFolderDAO_y.getCompFolderTree(map);
 

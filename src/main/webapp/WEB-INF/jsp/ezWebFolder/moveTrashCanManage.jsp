@@ -24,6 +24,7 @@
 		var checkedfileList = "<c:out value='${fileList}'/>";
 		var checkedfolderList = "<c:out value='${folderList}'/>";
 		var treeData;
+		var isAdmin = "<c:out value='${isAdmin}'/>";
 
         window.onload = function () {
     		$('input:radio[name=treeType]:input[value='+folderType+']').attr("checked", true);
@@ -38,7 +39,8 @@
 				url  : "/ezWebFolder/folderList.do",
 				data : { 
 					"folderId": folderId,
-					"folderType": obj
+					"folderType": obj,
+					"isAdmin": isAdmin
 				},
 				dataType: "JSON",
 				success : function (data) {

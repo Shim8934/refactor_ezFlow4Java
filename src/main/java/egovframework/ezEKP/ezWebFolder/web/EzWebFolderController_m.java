@@ -665,12 +665,14 @@ public class EzWebFolderController_m {
 	 String folderType = request.getParameter("folderType");
 	 String fileList = orElse(request.getParameter("fileList"), "");
 	 String folderList = orElse(request.getParameter("folderList"), "");
+	 String isAdmin = orElse(request.getParameter("isAdmin"), "false");
 		
 	 model.addAttribute("fileList", fileList);               
 	 model.addAttribute("folderList", folderList);               
-	 model.addAttribute("folderType", folderType);
+	 model.addAttribute("folderType", folderType);             
+	 model.addAttribute("isAdmin", isAdmin);
 	
-	 logger.debug("fileList=" + fileList + "&folderList=" + folderList + "&folderType=" + folderType);
+	 logger.debug("fileList=" + fileList + "&folderList=" + folderList + "&folderType=" + folderType + "&isAdmin=" + isAdmin);
 	 logger.debug("moveTrashCanManage ended.");
 	 return "ezWebFolder/moveTrashCanManage";
 	}

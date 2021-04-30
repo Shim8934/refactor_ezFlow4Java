@@ -142,7 +142,8 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 		
 		String serverName 	= orElse(request.getHeader("x-user-host"), "");
 		String folderType 	= orElse(request.getParameter("folderType"), "");
-		LOGGER.debug("userId: " + userId + " || serverName: " + serverName + "|| folderType: " + folderType);
+		boolean isAdmin 	= Boolean.valueOf(orElse(request.getParameter("isAdmin"), "false"));
+		LOGGER.debug("userId: " + userId + " || serverName: " + serverName + "|| folderType: " + folderType + "|| isAdmin: " + isAdmin);
 
 		JSONObject jsonObj = new JSONObject();
 		
@@ -163,7 +164,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			String primary   = common.getPrimary();
 			int tenantId     = common.getTenantId();
 
-			List<Map<String, Object>> folderList = service.getFolderTree(userId, deptId, compId, folderType, primary, tenantId, "");
+			List<Map<String, Object>> folderList = service.getFolderTree(userId, deptId, compId, folderType, primary, tenantId, "", isAdmin);
 
 			jsonObj.put("status", "ok");
 			jsonObj.put("code", 0);
