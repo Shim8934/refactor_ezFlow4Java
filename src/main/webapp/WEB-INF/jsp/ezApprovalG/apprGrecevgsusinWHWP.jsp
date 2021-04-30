@@ -517,9 +517,11 @@
 			
 			        if (!g_SepAttachLVXml)
 			            g_SepAttachLVXml = "";
-			
-			        SetDocumentElement("sepattachlvxml", SetSepAttParamXmlNull(g_SepAttachLVXml))
-			
+
+			        if(g_SepAttachLVXml != ""){
+						SetDocumentElement("sepattachlvxml", SetSepAttParamXmlNull(g_SepAttachLVXml));
+					}
+
 			        if (pReadPC) {
 			            var DocumentInfo = createXmlDom();
 			            DocumentInfo = loadXMLString(message.GetDocumentInfo());
