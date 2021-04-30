@@ -437,9 +437,11 @@
             btnBoard_onclick_complete3();
         }
         
+        /* 2021-04-30 홍승비 - 웹한글문서에서 결재문서 게시하는 경우, 한글 웹기안기 URL 리다이렉트 방지 (절대경로 URL 사용) */
         function btnBoard_onclick_complete3() {
             writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
-            var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
+            var openLocation = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezBoard/writeBoardSelectModal.do";
+            var OpenWin = window.open(openLocation, "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
         }
         
         function NewItem_onclick_Complete(ret) {
