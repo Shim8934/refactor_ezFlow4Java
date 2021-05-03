@@ -332,14 +332,14 @@
 		    		alert("<spring:message code='ezOrgan.psb02' />");
 					return;
             	}
-		        if (document.getElementById("UserID").value == "") {
+		        if (document.getElementById("UserID").value.trim() == "") {
 		            alert("<spring:message code='ezOrgan.t253' />");
 		            return;
 		        }
-		        if ((RetValue[2] == "") && (document.getElementById("UserID").value.length < 3)) {
+		        /* if ((RetValue[2] == "") && (document.getElementById("UserID").value.length < 3)) {
 		            alert("<spring:message code='ezOrgan.t254' />");
 		            return;
-		        }
+		        } */
 		        if (!Check_ID(document.getElementById("UserID").value)) {
 		            alert("<spring:message code='ezOrgan.t255' />");
 		            return;
@@ -843,7 +843,8 @@
 	            <th style="width: 80px; text-align:center"><c:if test="${primaryLang eq '3' }"><spring:message code='main.ksa03' /></c:if></th>
 	            <td style="width: 190px"><input type="text" id="txtOfficeMobile" size="22" value="${LiteralOfficeMobile }" maxlength="50" <c:out value="${primaryLang eq '3' ?  'style=width:100%' : 'style=display:none' }"/>></td>
 	        </tr>
-	        <tr class="onlyUseKo">
+	        <!-- /* 2021-05-03 김은실 - [표준] 집주소 영역을 사용하고자 하는 사이트는: style="display:none"을 삭제하면 된다. -->
+	        <tr class="onlyUseKo" style="display:none">
 	            <th style="width: 80px; text-align:center"><spring:message code='ezOrgan.t286' /></th>
 	            <td colspan="5">
                     <c:if test="${primaryLang == '1'}">
@@ -862,12 +863,13 @@
                     </c:if>
 	            </td>
 	        </tr>
-	        <tr>
+	        <tr style="display:none">
 	            <th style="width: 80px; text-align:center"><spring:message code='ezOrgan.t287' /></th>
 	            <td colspan="5">
 	                <input id="HomeAddr" style="WIDTH: 100%;" maxlength="150"/>
 	            </td>
 	        </tr>
+	        <!-- */ -->
 	    </table>
 	    <input type="hidden" id="userPhotoYN">
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>

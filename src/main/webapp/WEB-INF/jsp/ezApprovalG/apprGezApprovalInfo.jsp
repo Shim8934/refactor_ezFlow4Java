@@ -3097,7 +3097,7 @@
 		                                        	</c:if>
 		                                        </span>
 		                                <span id="trCreateCabDummy" style="display: none"></span>
-		                                <span  style="vertical-align: middle; margin-left: 247px;">
+		                                <span  style="vertical-align: middle; margin-left: 375px;">
 		                                    <select id="selSearchOption" style="vertical-align: top;height:22px;margin-top:3px">
 		                                        <option>
 		                                            <spring:message code='ezApprovalG.t10026'/>

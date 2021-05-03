@@ -762,7 +762,7 @@ function SetAutoPropertyValue() {
 function openReceivUI()
 {
 	var parameter	= new Array();
-	isExtDoc = GetDocumentElement(message, "EXTDOC");		
+	isExtDoc = GetDocumentElement("EXTDOC", false);
 	if(isExtDoc != "Y")	isExtDoc = "N"
 	
 	parameter[0]	= pFormID;
@@ -985,7 +985,7 @@ function SaveDraftDocInfo_susin() {
 	createNodeAndInsertText(xmlpara, objNode, "DOCNUMCODE", pDocNumCode);
 	createNodeAndInsertText(xmlpara, objNode, "ORGDOCNUMCODE", pOrgDocNumCode);
 	var g_SepAttachLVXml = "";
-	g_SepAttachLVXml = GetDocumentElement(message, "sepattachlvxml", true);
+	g_SepAttachLVXml = GetDocumentElement("sepattachlvxml", true);
 	if (!g_SepAttachLVXml)
 	    createNodeAndInsertText(xmlpara, objNode, "SEPERATEATTACHXML", "");
 	else

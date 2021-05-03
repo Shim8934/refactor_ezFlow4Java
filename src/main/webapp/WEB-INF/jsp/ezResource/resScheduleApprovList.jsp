@@ -396,11 +396,16 @@
 	    	var schedule_repetition_del_cross_dialogArguments = new Array();
 	    	var selrow;
 	    	function btn_Delete() {
+				var listview = new ListView();
+				listview.LoadFromID("ApprovListView");
+				selrow = listview.GetSelectedRows();
+
+				if(selrow.length <= 0){
+					alert("선택된 자원이 없습니다.");
+					return false;
+				}
+
 	    		if(confirm(strLang90)) {
-		        	var listview = new ListView();
-		        	listview.LoadFromID("ApprovListView");
-		        	selrow = listview.GetSelectedRows();
-	
 		        	var isRepetition = false;
 		        	for (var i = 0; i < selrow.length; i++) {
 			            var reFlagVal = selrow[i].getAttribute("DATA7");

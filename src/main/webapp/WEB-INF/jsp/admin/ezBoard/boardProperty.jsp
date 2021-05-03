@@ -795,7 +795,7 @@
 	    </style>
 	</head>	
 	<c:if test="${adminType != 'y'}">
-		<body class="mainbody"><h1><spring:message code="ezBoard.t60"/></h1>
+		<body class="mainbody"><h1><spring:message code="ezBoard.t60_1"/></h1>
 	</c:if>	
 	<c:if test="${adminType == 'y'}">
 		<body class="tabbody" style="margin-top:10px; margin-bottom: 15px; overflow-y:auto;">
