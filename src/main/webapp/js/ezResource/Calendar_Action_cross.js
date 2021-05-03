@@ -40,7 +40,7 @@ function createXMLHttpRequest() {
 function todayonlaod(s_Year, s_Month, s_Date)
 {
     //오늘의 데이터를 전역변수에 담아준다.
-    if (s_Year != null && s_Month != null && s_Date != null &&
+    /*if (s_Year != null && s_Month != null && s_Date != null &&
         s_Year != "" && s_Month != "" && s_Date != "")
     {
         var weekSetDate = new Date(s_Year, s_Month -1, s_Date);
@@ -50,10 +50,11 @@ function todayonlaod(s_Year, s_Month, s_Date)
         sz_DayOfWeek = weekSetDate.getDay();
     }
     
-    weekStartDate = new Date(sz_Year, sz_Month, sz_Date);
+    weekStartDate = new Date(sz_Year, sz_Month, sz_Date);*/
     
     //시작일 : 신청자명단위해..
-    mfGetSearchDate(weekStartDate);
+    //mfGetSearchDate(weekStartDate);
+    mfGetSearchDate(weektodate);
 
     c_xmlhttp = createXMLHttpRequest();
     var xmlpara = createXmlDom();

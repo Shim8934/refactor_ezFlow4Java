@@ -1190,6 +1190,10 @@ public class EzPersonalController extends EgovFileMngUtil {
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		
+		OrganUserVO userVO = ezOrganService.getUserInfo(userInfo.getId(), userInfo.getPrimary(), userInfo.getTenantId());
+		String userManualFlag = userVO.getManualFlag();
+		logger.debug("userManualFlag={}", userManualFlag);
+		
 		String companyID = userInfo.getCompanyID();
 		logger.debug("companyID=" + companyID);
 		
@@ -1304,6 +1308,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("companyID", companyID);
 		model.addAttribute("pwPolicyExplain", pwPolicyExplain);
 		model.addAttribute("useOnlyInnerMail", useOnlyInnerMail);
+		model.addAttribute("userManualFlag", userManualFlag);
 		
 		logger.debug("changePersonInfo ended");
 		return "/ezPersonal/persChangePersonInfo";
