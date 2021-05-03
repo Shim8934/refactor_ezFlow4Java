@@ -2667,15 +2667,14 @@ function APRLINETYPECHANGEFunction(valuecode, valueName) {
 	}
 	
 	if (approvalFlag == "S") {
-/*		if(!SCheckLineUser()) {
+		if(!SCheckLineUser()) {
 			resetList();
 			return;
-		}*/
+		}
 	} else {
-		//2021-05-03 남학선 validation은 확인버튼누를때 한번만 진행
-/*		if(!CheckLineUser()) {
+		if(!CheckLineUser()) {
 			return;
-		}*/
+		}
 	}
 }
 //############################################################################################################################################# 결재방법 체크

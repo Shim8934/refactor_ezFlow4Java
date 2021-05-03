@@ -1352,11 +1352,11 @@ function ChangeAprlineType(CheckGPerson, CurrentAprType) {
                             break;
 
                         case "004":
-                            //if (selUserSN == lastUserSN) {
+                            if (selUserSN == lastUserSN) {
                                 p_AprlineValue[j] = tempName;
                                 p_AprlineCode[j] = tempCode;
                                 j = j + 1;
-                            //}
+                            }
                             break;                       
 
                         case "007":
@@ -1367,27 +1367,25 @@ function ChangeAprlineType(CheckGPerson, CurrentAprType) {
                             }
                             break;
                         case "008":
-                            //if (pHapYuiCount != "0" && selUserSN != "1" && selUserSN != lastUserSN) {
-                            if (pHapYuiCount != "0" && selUserSN != "1") {
+                            if (pHapYuiCount != "0" && selUserSN != "1" && selUserSN != lastUserSN) {
                                 p_AprlineValue[j] = tempName;
                                 p_AprlineCode[j] = tempCode;
                                 j = j + 1;
                             }
                             break;
                         case "009":
-                            //if (pHapYuiCount != "0" && selUserSN != "1" && selUserSN != lastUserSN) {
-                            if (pHapYuiCount != "0" && selUserSN != "1") {
+                            if (pHapYuiCount != "0" && selUserSN != "1" && selUserSN != lastUserSN) {
                                 p_AprlineValue[j] = tempName;
                                 p_AprlineCode[j] = tempCode;
                                 j = j + 1;
                             }
                             break;
                         case "016":
-                            //if (selUserSN == lastUserSN || selUserSN == (lastUserSN - 1)) {
+                            if (selUserSN == lastUserSN || selUserSN == (lastUserSN - 1)) {
                                 p_AprlineValue[j] = tempName;
                                 p_AprlineCode[j] = tempCode;
                                 j = j + 1;
-                            //}
+                            }
                             break;
                         case "018":
                             if (selUserSN == "1") {
