@@ -336,7 +336,7 @@
 		            alert("<spring:message code='ezOrgan.t253' />");
 		            return;
 		        }
-		        if (document.getElementById("UserID").value.length < 3) {
+		        if ((RetValue[2] == "") && (document.getElementById("UserID").value.length < 3)) {
 		            alert("<spring:message code='ezOrgan.t254' />");
 		            return;
 		        }
