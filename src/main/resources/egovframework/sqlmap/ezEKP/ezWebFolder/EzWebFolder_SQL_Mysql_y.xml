@@ -723,35 +723,44 @@
 					left outer join tbl_webfolder_favor s on f.file_id = s.target_id and s.user_id = #userId# 
 						and s.tenant_id = #tenantId# and s.target_type ='F'   
 					left join tbl_webfolder_encrypted_file enc on enc.file_id = f.file_id and enc.tenant_id = f.tenant_id
-					where f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'
+					
 				]]>
-				<isEqual property="parentId" compareValue="root" > 
-		      	 	<isEqual property="folderType" compareValue="C" >
-					and 
-		                	if ( substring_index(substring_index(folder.folder_path,'|',3),'|',-1) in (
-		                	select distinct substring_index(substring_index(folder.folder_path,'|',3),'|',-1)
-		                	from tbl_webfolder_folder folder left outer join tbl_webfolder_folderuser u on u.FOLDER_ID = folder.FOLDER_ID
-		                	where folder.folder_level > 0   
-	                	AND 
-	                		u.user_id IN
-	   		
-						<iterate property="idList" open="(" close=")" conjunction=",">
-							#idList[].id#
-						</iterate>
-			         ), Folder_Type is not null , u.user_id in        
-				         <iterate property="idList" open="(" close=")" conjunction=",">
-							#idList[].id#
-						</iterate>
-						)
-		      	   </isEqual>  
-		         </isEqual> 
+	      	 	<isEqual property="folderType" compareValue="C" >
+	      	 		inner join tbl_webfolder_fileuser u on u.FILE_ID = f.FILE_ID
+	                	where folder.folder_level > 0   
+                	AND 
+                		u.user_id IN
+   		
+					<iterate property="idListUpgrade" open="(" close=")" conjunction=",">
+						#idListUpgrade[]#
+					</iterate>
+					AND 
+	      	   </isEqual>  
+	      	    <isNotEqual property="folderType" compareValue="C" >
+		         	where 
+		         </isNotEqual>
+		         f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'
 				<include refid="fldSelect"/>
 				<![CDATA[
 				    from tbl_webfolder_filetype type inner JOIN  tbl_webfolder_folder folder ON type.TYPE_NAME = 'folder' and folder.tenant_id = #tenantId#
 				    left outer join tbl_webfolder_favor s on folder.folder_id = s.target_id and s.user_id = #userId# 
 		            	and s.tenant_id = #tenantId# and s.target_type ='D' 
-		            left outer join tbl_webfolder_folderuser u on folder.folder_id = u.folder_id
-				    where 
+				]]>
+				    
+				<isEqual property="folderType" compareValue="C" >
+		            inner join tbl_webfolder_folderuser u on folder.folder_id = u.folder_id
+	                	where folder.folder_level > 0   
+                	AND 
+                		u.user_id IN
+			        <iterate property="idListUpgrade" open="(" close=")" conjunction=",">
+						#idListUpgrade[]#
+					</iterate>
+					AND 
+				</isEqual>  
+		         <isNotEqual property="folderType" compareValue="C" >
+		         	where 
+		         </isNotEqual>
+		         <![CDATA[
 							folder.tenant_id = #tenantId# 
 						and
 							type.tenant_id = #tenantId#
@@ -769,26 +778,6 @@
 		                and 
 		                	folder_path <> #folderPath#		
 				]]>
-				<isEqual property="parentId" compareValue="root" > 
-		      	 	<isEqual property="folderType" compareValue="C" >
-						AND 
-		                	if ( substring_index(substring_index(folder.folder_path,'|',3),'|',-1) in (
-		                	select distinct substring_index(substring_index(folder.folder_path,'|',3),'|',-1)
-		                	from tbl_webfolder_folder folder left outer join tbl_webfolder_folderuser u on u.FOLDER_ID = folder.FOLDER_ID
-		                	where folder.folder_level > 0   
-	                	AND 
-	                		u.user_id IN
-	   		
-						<iterate property="idList" open="(" close=")" conjunction=",">
-							#idList[].id#
-						</iterate>
-			         	), Folder_Type is not null , u.user_id in        
-				        <iterate property="idList" open="(" close=")" conjunction=",">
-							#idList[].id#
-						</iterate>
-						)
-		      	   </isEqual>  
-		         </isEqual> 
 			<![CDATA[
 			) t 
 			where folder_path like concat(#folderPath#, '%')
@@ -945,32 +934,17 @@
 	                and type.tenant_id = #tenantId#
 	                and folder_path <> #folderPath#	
 			]]>
-			<isEqual property="parentId" compareValue="root" > 
-		      	<isEqual property="folderType" compareValue="C" >
+	      	<isEqual property="folderType" compareValue="C" >
+				<isEqual property="flag" compareValue="1">
 		     	 	AND (u.user_id IN
-	   		
-						<iterate property="idListUpgrade" open="(" close=")" conjunction=",">
-							#idListUpgrade[]#
-						</iterate>
-					)
-					and 
-		                	if ( substring_index(substring_index(folder.folder_path,'|',3),'|',-1) in (
-		                	select distinct substring_index(substring_index(folder.folder_path,'|',3),'|',-1)
-		                	from tbl_webfolder_folder folder left outer join tbl_webfolder_folderuser u on u.FOLDER_ID = folder.FOLDER_ID
-		                	where folder.folder_level > 0   
-	                	AND 
-	                		u.user_id IN
-	   		
-						<iterate property="idListUpgrade" open="(" close=")" conjunction=",">
-							#idListUpgrade[]#
-						</iterate>
-			         ), Folder_Type is not null , u.user_id in        
-				         <iterate property="idList" open="(" close=")" conjunction=",">
-							#idList[].id#
-						</iterate>
-						)
-		      	   </isEqual>  
-	         </isEqual>  
+   		
+					<iterate property="idListUpgrade" open="(" close=")" conjunction=",">
+						#idListUpgrade[]#
+					</iterate>
+				)
+					
+				</isEqual> 
+			</isEqual>
 			<isEqual property = "flag" compareValue="1" prepend="AND">
 				<![CDATA[
 					folder.folder_path like concat('%', #folderPath#, '%') 
@@ -1079,34 +1053,21 @@
 						and use_status = 'Y'
 					) folder on folder.folder_id  = f.folder_id
 				inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  and type.tenant_id = f.tenant_id 
-				where f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'
 			]]>	
-	        <isEqual property="parentId" compareValue="root" > 
-		      	<isEqual property="folderType" compareValue="C" >
-					and 
-		                	if ( substring_index(substring_index(folder.folder_path,'|',3),'|',-1) in (
-		                	select distinct substring_index(substring_index(folder.folder_path,'|',3),'|',-1)
-		                	from tbl_webfolder_folder folder left outer join tbl_webfolder_folderuser u on u.FOLDER_ID = folder.FOLDER_ID
-		                	where folder.folder_level > 0   
-	                	AND 
-	                		u.user_id IN
-	   		
-						<iterate property="idList" open="(" close=")" conjunction=",">
-							#idList[].id#
-						</iterate>
-			         ), Folder_Type is not null , u.user_id in        
-				         <iterate property="idList" open="(" close=")" conjunction=",">
-							#idList[].id#
-						</iterate>
-						)
-						AND FOLDER.FOLDER_ID IN (SELECT FOLDER_ID FROM TBL_WEBFOLDER_FOLDERUSER 
-							WHERE user_id IN  
-							<iterate property="idListUpgrade" open="(" close=")" conjunction=",">
-								#idListUpgrade[]#
-							</iterate>
-							)
-		      	   </isEqual>  
-	         </isEqual>  
+			<isEqual property="folderType" compareValue="C" >
+				inner join tbl_webfolder_fileuser u on u.FILE_ID = f.FILE_ID
+               		WHERE
+               		u.user_id IN
+  		
+				<iterate property="idListUpgrade" open="(" close=")" conjunction=",">
+					#idListUpgrade[]#
+				</iterate>
+					AND 
+      	   </isEqual> 
+      	    <isNotEqual property="folderType" compareValue="C" >
+      	    	WHERE 
+      	    </isNotEqual> 
+			f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'
 			<![CDATA[
 			) t
 			where 1=1

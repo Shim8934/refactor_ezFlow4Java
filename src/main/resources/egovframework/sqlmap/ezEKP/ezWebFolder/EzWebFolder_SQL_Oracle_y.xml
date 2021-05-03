@@ -581,15 +581,6 @@
 									)
 							</iterate>
 							)
-						and folder.folder_id in (select distinct CASE WHEN ( substr(folder.folder_path, instr(folder.folder_path ,'|',1,2)+1,                    
-						(instr(folder.folder_path ,'|',1,3)-instr(folder.folder_path ,'|',1,2)-1)) in (                   
-						select distinct substr(folder.folder_path,instr(folder.folder_path ,'|',1,2)+1,                    
-						instr(folder.folder_path ,'|',1,3)-instr(folder.folder_path ,'|',1,2)-1)                   
-						from tbl_webfolder_folder folder left outer join tbl_webfolder_folderuser u on u.FOLDER_ID = folder.FOLDER_ID                   
-						where folder.folder_level > 0                    
-						))
-			         then folder.folder_id 
-					else null end as aaa  from dual)
 		      	   </isEqual>  
 		         </isEqual> 
 		         <![CDATA[ 
@@ -758,76 +749,67 @@
 						(
 					]]>
 					<include refid="fileListSelect"/>
+					<![CDATA[
+						from tbl_webfolder_file f inner join (
+							select *
+							from tbl_webfolder_folder  
+							where folder_path like (#folderPath#||'%') and tenant_id = #tenantId# and folder_type = #folderType# ) 
+								folder on folder.folder_id  = f.folder_id
+						inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  and type.tenant_id = f.tenant_id
+						left outer join tbl_webfolder_favor s on f.file_id = s.target_id and s.user_id = #userId# 
+							and s.tenant_id = #tenantId# and s.target_type ='F'   
+						left join tbl_webfolder_encrypted_file enc on enc.file_id = f.file_id and enc.tenant_id = f.tenant_id
+					]]>
+		      	 	<isEqual property="folderType" compareValue="C" >
+						inner join tbl_webfolder_fileuser u on u.FILE_ID = f.FILE_ID
+		                where 
+		                	folder.folder_level > 0   
+	                	AND 
+	                		u.user_id IN
+						<iterate property="idListUpgrade" open="(" close=")" conjunction=",">
+							#idListUpgrade[]#
+						</iterate>
+						AND 
+		      	   </isEqual>  
+		      	   <isNotEqual property="folderType" compareValue="C" >
+		      	   		WHERE
+		      	   </isNotEqual>
+		      	    	f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'
+					<include refid="fldSelect"/>
+					<![CDATA[
+					    from tbl_webfolder_filetype type inner JOIN  tbl_webfolder_folder folder ON type.TYPE_NAME = 'folder' and folder.tenant_id = #tenantId#
+					    left outer join tbl_webfolder_favor s on folder.folder_id = s.target_id and s.user_id = #userId# 
+			            	and s.tenant_id = #tenantId# and s.target_type ='D'
+					]]>
+					<isEqual property="folderType" compareValue="C" >
+						inner join tbl_webfolder_folderuser u on folder.folder_id = u.folder_id
+						WHERE 
+							u.user_id IN  
+							<iterate property="idListUpgrade" open="(" close=")" conjunction=",">
+								#idListUpgrade[]#
+							</iterate>
+						AND
+					</isEqual>
+					<isNotEqual property="folderType" compareValue="C" >
+						where
+					</isNotEqual>     	 
+						folder.tenant_id = #tenantId# 
+						and
+							type.tenant_id = #tenantId#
+						and 
+							folder.FOLDER_TYPE = #folderType#
+		                and 
+		                	folder.USE_STATUS = 'Y'
+		                and 
+		                	folder.company_id IN
+						<iterate property="idList" open="(" close=")" conjunction=",">
+							#idList[].id#
+						</iterate>
 						<![CDATA[
-							from tbl_webfolder_file f inner join (
-								select *
-								from tbl_webfolder_folder  
-								where folder_path like (#folderPath#||'%') and tenant_id = #tenantId# and folder_type = #folderType# ) 
-									folder on folder.folder_id  = f.folder_id
-							inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  and type.tenant_id = f.tenant_id
-							left outer join tbl_webfolder_favor s on f.file_id = s.target_id and s.user_id = #userId# 
-								and s.tenant_id = #tenantId# and s.target_type ='F'   
-							left join tbl_webfolder_encrypted_file enc on enc.file_id = f.file_id and enc.tenant_id = f.tenant_id
-							where f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'
-							
+		                and 
+		                	folder_path <> #folderPath#		
 						]]>
-						<isEqual property="parentId" compareValue="root" > 
-				      	 	<isEqual property="folderType" compareValue="C" >
-								and folder.folder_id in (select distinct CASE WHEN ( substr(folder.folder_path, instr(folder.folder_path ,'|',1,2)+1,                    
-								(instr(folder.folder_path ,'|',1,3)-instr(folder.folder_path ,'|',1,2)-1)) in (                   
-								select distinct substr(folder.folder_path,instr(folder.folder_path ,'|',1,2)+1,                    
-								instr(folder.folder_path ,'|',1,3)-instr(folder.folder_path ,'|',1,2)-1)                   
-								from tbl_webfolder_folder folder left outer join tbl_webfolder_folderuser u on u.FOLDER_ID = folder.FOLDER_ID                   
-								where folder.folder_level > 0                    
-								AND                    u.user_id IN  
-			   		
-								<iterate property="idList" open="(" close=")" conjunction=",">
-									#idList[].id#
-								</iterate>))
-					        	then folder.folder_id 
-								else null end as aaa  from dual)
-				      	   </isEqual>  
-				         </isEqual> 
-						<include refid="fldSelect"/>
-						<![CDATA[
-						    from tbl_webfolder_filetype type inner JOIN  tbl_webfolder_folder folder ON type.TYPE_NAME = 'folder' and folder.tenant_id = #tenantId#
-						    left outer join tbl_webfolder_favor s on folder.folder_id = s.target_id and s.user_id = #userId# 
-				            	and s.tenant_id = #tenantId# and s.target_type ='D' 
-						    where 
-									folder.tenant_id = #tenantId# 
-								and
-									type.tenant_id = #tenantId#
-								and 
-									folder.FOLDER_TYPE = #folderType#
-				                and 
-				                	folder.USE_STATUS = 'Y'
-				                and 
-				                	folder.company_id IN
-						]]>
-								<iterate property="idList" open="(" close=")" conjunction=",">
-									#idList[].id#
-								</iterate>
-						<![CDATA[
-				                and 
-				                	folder_path <> #folderPath#		
-						]]>
-						<isEqual property="parentId" compareValue="root" > 
-				      	 	<isEqual property="folderType" compareValue="C" >
-								and folder.folder_id in (select distinct CASE WHEN ( substr(folder.folder_path, instr(folder.folder_path ,'|',1,2)+1,                    
-								(instr(folder.folder_path ,'|',1,3)-instr(folder.folder_path ,'|',1,2)-1)) in (                   
-								select distinct substr(folder.folder_path,instr(folder.folder_path ,'|',1,2)+1,                    
-								instr(folder.folder_path ,'|',1,3)-instr(folder.folder_path ,'|',1,2)-1)                   
-								from tbl_webfolder_folder folder left outer join tbl_webfolder_folderuser u on u.FOLDER_ID = folder.FOLDER_ID                   
-								where folder.folder_level > 0                    
-								AND u.user_id IN  
-			   		
-								<iterate property="idList" open="(" close=")" conjunction=",">
-									#idList[].id#
-								</iterate>))
-					       		then folder.folder_id 
-								else null end as aaa  from dual)
-				      	   </isEqual>  
-				         </isEqual> 
+			      	 	
 					<![CDATA[
 					) t 
 					where folder_path like (#folderPath#||'%') 
@@ -996,26 +978,15 @@
 	                and type.tenant_id = #tenantId#
 	                and folder_path <> #folderPath#	
 			]]>
-			<isEqual property="parentId" compareValue="root" > 
-	      	 	<isEqual property="folderType" compareValue="C" >
+      	 	<isEqual property="folderType" compareValue="C" >
+      	 		<isEqual property="flag" compareValue="1">
 					AND ( u.user_id IN  
 					<iterate property="idListUpgrade" open="(" close=")" conjunction=",">
 						#idListUpgrade[]#
 					</iterate>
 					)
-					and folder.folder_id in (
-					select distinct 
-						CASE WHEN ( substr(folder.folder_path, instr(folder.folder_path ,'|',1,2)+1,                    
-							(instr(folder.folder_path ,'|',1,3)-instr(folder.folder_path ,'|',1,2)-1)) in (                   
-							select distinct substr(folder.folder_path,instr(folder.folder_path ,'|',1,2)+1,                    
-							instr(folder.folder_path ,'|',1,3)-instr(folder.folder_path ,'|',1,2)-1)                   
-							from tbl_webfolder_folder folder left outer join tbl_webfolder_folderuser u on u.FOLDER_ID = folder.FOLDER_ID                   
-							where folder.folder_level > 0                    
-						))
-				        then folder.folder_id 
-						else null end as aaa  from dual)
-	      	   </isEqual>  
-	         </isEqual> 
+      	 		</isEqual>
+      	   </isEqual>  
 	         
 			<isEqual property = "flag" compareValue="1" prepend="AND">
 				<![CDATA[
@@ -1125,36 +1096,20 @@
 					) folder on folder.folder_id  = f.folder_id
 						
 				inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  and type.tenant_id = f.tenant_id 
-				where f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'
+				
 			]]>	
-			<isEqual property="parentId" compareValue="root" > 
-	      	 	<isEqual property="folderType" compareValue="C" >
-					and folder.folder_id in (select distinct CASE WHEN ( substr(folder.folder_path, instr(folder.folder_path ,'|',1,2)+1,                    
-					(instr(folder.folder_path ,'|',1,3)-instr(folder.folder_path ,'|',1,2)-1)) in (                   
-					select distinct substr(folder.folder_path,instr(folder.folder_path ,'|',1,2)+1,                    
-					instr(folder.folder_path ,'|',1,3)-instr(folder.folder_path ,'|',1,2)-1)                   
-					from tbl_webfolder_folder folder left outer join tbl_webfolder_folderuser u on u.FOLDER_ID = folder.FOLDER_ID                   
-					where folder.folder_level > 0                    
-						))
-			         then folder.folder_id 
-					else null end as aaa  from dual)
-					AND FOLDER.FOLDER_ID IN (SELECT FOLDER_ID FROM TBL_WEBFOLDER_FOLDERUSER 
-											WHERE user_id IN  
-							<iterate property="idListUpgrade" open="(" close=")" conjunction=",">
-								#idListUpgrade[]#
-							</iterate>
-							<!-- 2020-12-30 김은실 - [카이스트] 하위부서를 포함시키지 않도록 했기 때문에, 불필요한 쿼리로 인한 부하를 줄임.
-							<iterate property="userDeptList">
-								OR ( U.SUBDEPT_PERMITTED = 1 
-									 AND #userDeptList[]# IN (SELECT CN FROM TBL_DEPTMASTER
-									 						  WHERE DEPT_CD_PATH LIKE CONCAT(CONCAT('%',U.USER_ID),'%') 
-									 							    AND EXTENSIONATTRIBUTE2 = U.COMPANY_ID AND TENANT_ID = U.TENANT_ID)
-									)
-							</iterate>
-							 -->
-							)
-				</isEqual>  
-			</isEqual> 
+      	 	<isEqual property="folderType" compareValue="C" >
+      	 		inner join tbl_webfolder_fileuser u on u.file_id = f.file_id
+				WHERE u.user_id IN  
+				<iterate property="idListUpgrade" open="(" close=")" conjunction=",">
+					#idListUpgrade[]#
+				</iterate>
+				AND
+			</isEqual>  
+			<isNotEqual property="folderType" compareValue="C" >
+				WHERE 
+			</isNotEqual>
+				f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'
 			<![CDATA[
 			) t
 			where 1=1

@@ -709,6 +709,8 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			fileTotalCnt = ezWebFolderDAO_y.getFileTotalCount(map);
 		}
 		
+		
+		
 		fldTotalCnt = ezWebFolderDAO_y.getFldTotalCount2(map);
 		
 		if (fileTotalCnt < 0) {
