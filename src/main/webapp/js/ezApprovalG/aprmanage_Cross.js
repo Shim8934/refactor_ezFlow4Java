@@ -2546,7 +2546,7 @@ function getSimsaDocList() {
 
 var xmlhttp3;
 var temppDocID;
-
+/* 2020-05-22 홍승비 - 사용자 부서에 특수문자 허용 + arr_userinfo[] 배열의 값은 c:out 태그로 저장하므로, DB 저장 시 역으로 특수문자 인코딩 진행 */
 function RemoveDocCabinet(tempDocID, FLAG) {
 	var result = "";
 	
@@ -2558,9 +2558,9 @@ function RemoveDocCabinet(tempDocID, FLAG) {
 		data : {
 			docID : tempDocID,
 			deptID : arr_userinfo[4],
-			deptName : arr_userinfo[15],
+			deptName : ConvMakeXMLString(arr_userinfo[15]),
 			flag : FLAG,
-			deptName2 : arr_userinfo[16]
+			deptName2 : ConvMakeXMLString(arr_userinfo[16])
 		},
 		success: function(xml){
 			result = xml;
@@ -3110,3 +3110,14 @@ function CheckUsePassword() {
     }
 }
 //일괄결재 끝
+
+/* 2021-05-03 홍승비 - 부서에 특수문자를 허용하므로, DB 저장 시 역인코딩을 위한 함수 추가 */
+function ConvMakeXMLString(str) {
+    str = ReplaceText(str, "&lt;", "<");
+    str = ReplaceText(str, "&gt;", ">");
+    str = ReplaceText(str, "&#039;", "'");
+    str = ReplaceText(str, "&#034;", "\"");
+	str = ReplaceText(str, "&#92;", "\\");
+	str = ReplaceText(str, "&amp;", "&");
+    return str;
+}

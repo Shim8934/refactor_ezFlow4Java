@@ -1334,7 +1334,7 @@
 			        DivPopUpHidden();
 			        if (rtn[0] == "TRUE") {
 			            g_SepAttachLVXml = rtn[1];
-			            SetDocumentElement(message, "sepattachlvxml", g_SepAttachLVXml)
+			            SetDocumentElement("sepattachlvxml", g_SepAttachLVXml)
 			        }
 			    }
 			    

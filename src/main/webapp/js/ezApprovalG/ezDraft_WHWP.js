@@ -1792,7 +1792,7 @@ function SaveTMPDocInfo(AutoSave, Saveflag, pState, phtml) {
         createNodeAndInsertText(xmlpara, objNode, "DRAFTFLAG", DraftFlag);
 
         var g_SepAttachLVXml = "";
-        g_SepAttachLVXml = GetDocumentElement(message, "sepattachlvxml", true);
+        g_SepAttachLVXml = GetDocumentElement("sepattachlvxml", true);
         if (!g_SepAttachLVXml)
             createNodeAndInsertText(xmlpara, objNode, "SEPERATEATTACHXML", "");
         else

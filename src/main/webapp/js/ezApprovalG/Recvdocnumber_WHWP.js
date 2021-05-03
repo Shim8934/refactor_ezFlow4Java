@@ -27,7 +27,7 @@ function setDocNumFormat() {
         return false;
     }
     else if (fieldValue == "") {
-        fieldValue = GetDocumentElement(message, "receiptnumber");
+        fieldValue = GetDocumentElement("receiptnumber", false);
     }
 
     Arr_Header = fieldValue.split("@")
