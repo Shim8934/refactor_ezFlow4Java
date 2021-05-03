@@ -1320,6 +1320,7 @@
 					type : "GET",
 					dataType : "text",
 					async : false,
+					cache : false,
 					url : "/ezBoard/getLikeCount.do",
 					data : {
 						itemID : pItemID

@@ -163,12 +163,13 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck, Method)
     
     console.log("Approv_a  : "+Approv_a)
     
+    // 메일 발송 이후 동기적인 추가 동작이 존재하지 않으므로 비동기처리 (async = true)
     try {
         var Result = "";
         $.ajax({
     		type : "POST",
     		dataType : "text",
-    		async : false,
+    		async : true,
     		data : {
     			Content : Content,
     			Subject : Subject,

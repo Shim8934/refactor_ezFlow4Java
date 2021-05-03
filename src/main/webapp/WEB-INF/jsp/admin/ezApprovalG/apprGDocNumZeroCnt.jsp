@@ -53,7 +53,7 @@
 		//유효성 검사 후, 저장 ajax
 		function SaveDocNumConfig() {
 			var companyID = document.getElementById("ListCompany").value;
-			var docNumVal = document.getElementById("docNumZeroCnt").value;
+			var docNumVal = parseInt(document.getElementById("docNumZeroCnt").value);
 			
 			$.ajax({
             	type : "POST",
@@ -67,6 +67,7 @@
             	},
             	success : function (result) {
             		alert("<spring:message code='ezApprovalG.t1581'/>");
+            		ListChange();
             	},
             	error : function(e) {
             		alert("<spring:message code='ezApprovalG.t1296'/>")

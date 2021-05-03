@@ -45,6 +45,8 @@
 		        if (!check) {
 		        	 document.getElementById("file1").value = "";
 		        	 document.getElementById("saveFileName").value = "";
+		        	 alert("이미지 파일을 선택해주세요.");
+		        	 return false;
 		        }
 		        var guid = "{" + GetGUID() + "}";
 		        document.form.guid.value = guid;	       

@@ -699,6 +699,7 @@
 	            vPublicFlag2 = RetValue[45];
 	            nonElecRec = RetValue[46];
 	            OrgAprUserDeptID = RetValue[52];
+	            pkeyword = RetValue[61];
 	            
 	            if (nonElecRec == "Y") {
 	            	g_CabID = RetValue[47];
@@ -1277,9 +1278,6 @@
 		                    return;
 		                }
 
-						// 2021.03.09 박기범 - 키워드 추가
-						ret[6] = document.querySelector("input[name=keyword]").value;
-
 		                if (approvalFlag == "G") {
 			                if (pIniGubun != 5 && pIniGubun != 7 && pIniGubun != 10 && pIniGubun != 12) {
 			                	if (!$("input:checkbox[id='passAprLine']").is(":checked")) {
@@ -1430,6 +1428,9 @@
 		                } else {
 		                    ret[5] = "C";
 		                }
+		                
+		            	// 2021.03.09 박기범 - 키워드 추가
+						ret[6] = document.querySelector("input[name=keyword]").value;
 		
 		                if (approvalFlag == "G") {
 			                ret[7] = selSecLevel.value;
@@ -1887,6 +1888,9 @@
 
 		        rtnVal[5] = document.getElementById("txtLimitRange").value;
 		        rtnVal[6] = document.getElementById("txtPageNum").value;
+		        
+		        document.querySelector("input[name=keyword]").value = pkeyword;
+		        
 		        if (document.getElementById("AprSecurity").checked)
 		            rtnVal[7] = vAprSecurity;
 		        else
@@ -3093,7 +3097,7 @@
 		                                        	</c:if>
 		                                        </span>
 		                                <span id="trCreateCabDummy" style="display: none"></span>
-		                                <span  style="vertical-align: middle; margin-left: 247px;">
+		                                <span  style="vertical-align: middle; margin-left: 375px;">
 		                                    <select id="selSearchOption" style="vertical-align: top;height:22px;margin-top:3px">
 		                                        <option>
 		                                            <spring:message code='ezApprovalG.t10026'/>

@@ -180,9 +180,10 @@
 			        if (pReservedItem != "true") {
 			        	$("#Sdatepicker").datepicker('setDate', "");
 			        }
-
-			        if(pMode != "boardContent" && pMode != "boardAttach")
-			        {
+			    }
+			    
+			    /* 2021-05-03 홍승비 - 확장칼럼값 설정 분기 분리 (새 게시물 작성, 메일 또는 전자결재문서 게시, 게시물을 본문으로 또는 첨부로 게시 시에만 확장칼럼값 없음) */
+				if (pMode != "new" && pMode != "new1" && pMode != "boardContent" && pMode != "boardAttach") {
 			            //추가항목
 			            try {
 			            	if("${fn:length(boardAttributeListVO)}" > 0){
@@ -206,8 +207,7 @@
 			            	}
 			            }
 			            catch (e) { }
-			        }
-			    }
+					}
 			        
 			    if (ExpireDays == -1 || ExpireItem == "YES") {
 			    	document.getElementById('Makedate').style.visibility = "hidden";

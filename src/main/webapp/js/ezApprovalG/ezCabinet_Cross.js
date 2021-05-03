@@ -1451,8 +1451,10 @@ function btnSearchRec_onclick(opnOption,opentype) {
 
     if (typeof (opnOption) == "undefined") opnOption = "0";
     para[3] = opnOption;	
-    para[4] = g_sFlag;	
-    para[5] = szRoleInfo;	
+    if(opnOption == "0") {
+    	para[4] = g_sFlag;
+    	para[5] = szRoleInfo;
+    }
 
     var url = "/ezApprovalG/searchRec.do";
 
