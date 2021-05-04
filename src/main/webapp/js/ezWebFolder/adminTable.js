@@ -867,6 +867,7 @@ function TableView() {
 		
 		var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + filesList.toString();
 		AttachDownFrame.location.href = downloadUrl;
+		search_Set(currentPage);
 	}
 	function scroll() {
 		var BoardList_BODYHeight = document.getElementById("dragDropArea").clientHeight;
