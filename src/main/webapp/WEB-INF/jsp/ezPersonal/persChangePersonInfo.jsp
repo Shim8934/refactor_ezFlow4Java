@@ -36,7 +36,7 @@
 			
 			$(function () {
 				var toYear = new Date().getFullYear();
-				var sYear = parseInt(toYear-70);
+				var sYear = parseInt(toYear-90);
 				var eYear = parseInt(toYear+10);
 				document.getElementById("TempCalImage").style.display = "none";
 			    $("#txtBirth").datepicker({
