@@ -1411,7 +1411,8 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 			// 속도 개선을 위해 주석
 			//drawPictureInExcel(workbook, sheet1, realPath + fileLog.getFileType(), 0, i);
 			newRow1.createCell(1).setCellValue(fileLog.getFileName());
-			String pathName = fileLog.getFolderPathName().length() != 0 ? fileLog.getFolderPathName().substring(0,fileLog.getFolderPathName().length()-1): "-";
+			String pathName = fileLog.getFolderPathName() != null && fileLog.getFolderPathName().length() != 0 
+					? fileLog.getFolderPathName().substring(0,fileLog.getFolderPathName().length()-1): "-";
 			newRow1.createCell(2).setCellValue(pathName);
 			String versionStr = fileLog.getVersion().equals("0") ?  "-" : fileLog.getVersion() + ".0";
 			newRow1.createCell(3).setCellValue(versionStr);
