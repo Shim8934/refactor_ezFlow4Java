@@ -513,13 +513,15 @@
 			        getGongRamDocInfo();
 			
 			        var g_SepAttachLVXml = "";
-			        g_SepAttachLVXml = GetDocumentElement(message, "sepattachlvxml", true);
+			        g_SepAttachLVXml = GetDocumentElement("sepattachlvxml", true);
 			
 			        if (!g_SepAttachLVXml)
 			            g_SepAttachLVXml = "";
-			
-			        SetDocumentElement("sepattachlvxml", SetSepAttParamXmlNull(g_SepAttachLVXml))
-			
+
+			        if(g_SepAttachLVXml != ""){
+						SetDocumentElement("sepattachlvxml", SetSepAttParamXmlNull(g_SepAttachLVXml));
+					}
+
 			        if (pReadPC) {
 			            var DocumentInfo = createXmlDom();
 			            DocumentInfo = loadXMLString(message.GetDocumentInfo());
@@ -657,7 +659,7 @@
 		        }
 		
 		        var g_SepAttachLVXml = "";
-		        g_SepAttachLVXml = GetDocumentElement(message, "sepattachlvxml", true);
+		        g_SepAttachLVXml = GetDocumentElement("sepattachlvxml", true);
 		        if (!g_SepAttachLVXml)
 		            g_SepAttachLVXml = "";
 		

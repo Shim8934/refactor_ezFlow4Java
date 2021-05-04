@@ -1315,7 +1315,7 @@
 				    }
 			
 			        var g_SepAttachLVXml = "";
-			        g_SepAttachLVXml = GetDocumentElement(message, "sepattachlvxml", true);
+			        g_SepAttachLVXml = GetDocumentElement("sepattachlvxml", true);
 			        if (!g_SepAttachLVXml)
 			            g_SepAttachLVXml = "";
 			
@@ -1334,7 +1334,7 @@
 			        DivPopUpHidden();
 			        if (rtn[0] == "TRUE") {
 			            g_SepAttachLVXml = rtn[1];
-			            SetDocumentElement(message, "sepattachlvxml", g_SepAttachLVXml)
+			            SetDocumentElement("sepattachlvxml", g_SepAttachLVXml)
 			        }
 			    }
 			    

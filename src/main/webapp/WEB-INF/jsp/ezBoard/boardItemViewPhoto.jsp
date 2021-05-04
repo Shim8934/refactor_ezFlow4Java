@@ -709,7 +709,7 @@
 						swidth = 460;
 		            	
 						if (gubun == 3) { // 포토게시판 (메인이미지 사용 안함)
-							sheight = 360;
+							sheight = 475;
 						} else { // 썸네일게시판 (메인이미지 사용함)
 							sheight = 475;
 						}
@@ -1618,7 +1618,7 @@
 		        </tr>
 		        <tr>
 		        	<td class="MainContentTD" style="padding:10px 0px; height:83px; text-align:center" colspan="3">
-		            	<div id="MainContent" style="height:60px; padding-left:23%; padding-right:24%;white-space: pre-wrap;"></div>
+		            	<div id="MainContent" style="height:60px; padding-left:23%; padding-right:24%;white-space: pre-wrap; overflow: auto;"></div>
 		            </td>
 		        </tr>
 			<%-- 2019-04-05 홍승비 - 본문, 사진소개 하단에 좋아요 버튼 추가 --%>

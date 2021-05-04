@@ -332,14 +332,14 @@
 		    		alert("<spring:message code='ezOrgan.psb02' />");
 					return;
             	}
-		        if (document.getElementById("UserID").value == "") {
+		        if (document.getElementById("UserID").value.trim() == "") {
 		            alert("<spring:message code='ezOrgan.t253' />");
 		            return;
 		        }
-		        if ((RetValue[2] == "") && (document.getElementById("UserID").value.length < 3)) {
+		        /* if ((RetValue[2] == "") && (document.getElementById("UserID").value.length < 3)) {
 		            alert("<spring:message code='ezOrgan.t254' />");
 		            return;
-		        }
+		        } */
 		        if (!Check_ID(document.getElementById("UserID").value)) {
 		            alert("<spring:message code='ezOrgan.t255' />");
 		            return;

@@ -28,7 +28,7 @@ function AprLineTempletNameCheck(p_AprLineTempletName) {
     var AprLineTempletXml = createXmlDom();
     var p_NodeList;
     var p_NodeListLen;
-    var p_AprLineTempleNameFlag = false;
+    var p_AprLineTempleNameFlag = true;
     var i;
 
     AprLineTempletXml = GetAprLineTempletList();
@@ -39,13 +39,13 @@ function AprLineTempletNameCheck(p_AprLineTempletName) {
         var NodeList;
         NodeList = GetChildNodes(p_NodeList[i]);
 
-        if (p_AprLineTempletName == getNodeText(NodeList[0])) {
-            p_AprLineTempleNameFlag = true;
-            break;
+        if (p_AprLineTempletName == getNodeText(NodeList[0]) && (g_TemplateSN == "" || g_TemplateSN != i+1)) {
+                p_AprLineTempleNameFlag = false;
+                break;
         }
     }
 
-    if (p_AprLineTempleNameFlag && g_TemplateSN == "") {
+    if (!p_AprLineTempleNameFlag) {
     	alert(strLangS194 + "\n  " + strLangS195);
 //        var pAlertContent = strLangS194 + "<br> " + strLangS195;
 //        OpenAlertUI(pAlertContent);

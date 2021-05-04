@@ -144,6 +144,7 @@
 	
 		    function filechange(e) {
 		        onDrop();
+		        e.target.value = '';
 		    }
 	
 		    function btnfiledel() {

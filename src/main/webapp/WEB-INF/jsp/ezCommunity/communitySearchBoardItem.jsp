@@ -794,7 +794,8 @@
 			}
 
 			function BoardItemList() {
-				$(location).attr('href', '/ezCommunity/boardItemList.do?' + encodeURIComponent(pOrgBoardParameters));
+				/* $(location).attr('href', '/ezCommunity/boardItemList.do?' + encodeURIComponent(pOrgBoardParameters)); */
+				$(location).attr('href', '/ezCommunity/boardItemList.do?' + pOrgBoardParameters); 
 // 				window.location.href = "/ezCommunity/boardItemList.do?" + pOrgBoardParameters;
 			}
 			

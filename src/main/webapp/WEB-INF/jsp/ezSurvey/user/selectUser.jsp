@@ -161,6 +161,18 @@
 	    		addUserToSelectList(listUser);
 	    	}
 	        
+	        function escapeHtml(text) {
+	    	    var map = {
+	    	        '&': '&amp;',
+	    	        '<': '&lt;',
+	    	        '>': '&gt;',
+	    	        '"': '&quot;',
+	    	        "'": '&#039;'
+	    	    };
+
+	    	    return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+	    	}
+	        
 	        var addUserToSelectList = function(listUser) {
 	        	var listUserLength = listUser.length;
 	        	
@@ -196,14 +208,14 @@
 	                    pparsingXML = pparsingXML + "<deptName1>" + deptName1 + "</deptName1></CELL></ROW>";
 	                } else if (userType == "dept" || userType == "comp") {
 	                	pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
-	                    pparsingXML = pparsingXML + "<DATA2>" + strName + "</DATA2>";
+	                    pparsingXML = pparsingXML + "<DATA2>" + escapeHtml(strName) + "</DATA2>";
 	                    pparsingXML = pparsingXML + "<DATA4>dept</DATA4>";
-	                    pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + strName + "</VALUE>";
-	                    pparsingXML = pparsingXML + "<deptId>" + strId + "</deptId>";
-                        pparsingXML = pparsingXML + "<userName2>" + strName + "</userName2>";
-                        pparsingXML = pparsingXML + "<userName1>" + strName + "</userName1>";
-                        pparsingXML = pparsingXML + "<deptName2>" + strName + "</deptName2>";
-                        pparsingXML = pparsingXML + "<deptName1>" + strName + "</deptName1></CELL></ROW>";
+	                    pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + escapeHtml(strName) + "</VALUE>";
+	                    pparsingXML = pparsingXML + "<deptId>" + escapeHtml(strId) + "</deptId>";
+                        pparsingXML = pparsingXML + "<userName2>" + escapeHtml(strName) + "</userName2>";
+                        pparsingXML = pparsingXML + "<userName1>" + escapeHtml(strName) + "</userName1>";
+                        pparsingXML = pparsingXML + "<deptName2>" + escapeHtml(strName) + "</deptName2>";
+                        pparsingXML = pparsingXML + "<deptName1>" + escapeHtml(strName) + "</deptName1></CELL></ROW>";
 	                } else if (userType == "jikwi") {
 	                	pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" +  strId + "</DATA1>";
 	                    // 직위명 추가
