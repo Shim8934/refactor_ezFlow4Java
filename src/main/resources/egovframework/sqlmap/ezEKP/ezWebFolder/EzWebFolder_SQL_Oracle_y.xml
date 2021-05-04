@@ -763,8 +763,6 @@
 		      	 	<isEqual property="folderType" compareValue="C" >
 						inner join tbl_webfolder_fileuser u on u.FILE_ID = f.FILE_ID
 		                where 
-		                	folder.folder_level > 0   
-	                	AND 
 	                		u.user_id IN
 						<iterate property="idListUpgrade" open="(" close=")" conjunction=",">
 							#idListUpgrade[]#
@@ -981,6 +979,13 @@
       	 	<isEqual property="folderType" compareValue="C" >
       	 		<isEqual property="flag" compareValue="1">
 					AND ( u.user_id IN  
+					<iterate property="idListUpgrade" open="(" close=")" conjunction=",">
+						#idListUpgrade[]#
+					</iterate>
+					)
+      	 		</isEqual>
+      	 		<isEqual property="folderLevel" compareValue="0">
+      	 			AND ( u.user_id IN  
 					<iterate property="idListUpgrade" open="(" close=")" conjunction=",">
 						#idListUpgrade[]#
 					</iterate>

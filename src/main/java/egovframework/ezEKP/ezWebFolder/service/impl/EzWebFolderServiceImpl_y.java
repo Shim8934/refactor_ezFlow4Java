@@ -420,6 +420,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("sortType", sortType);
 		map.put("sortColumn", sortColumn);
+		map.put("folderLevel", detailFld.getFolderLevel());
 		
 		LOGGER.debug("offset : " + commonUtil.getMinuteUTC(offset));
 		
@@ -649,6 +650,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		map.put("pEnd", pEnd);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("primary", primary);
+		map.put("folderLevel", detailFld.getFolderLevel());
 		
 		LOGGER.debug("offset  :  " + commonUtil.getMinuteUTC(offset));
 		
@@ -708,8 +710,6 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		} else {
 			fileTotalCnt = ezWebFolderDAO_y.getFileTotalCount(map);
 		}
-		
-		
 		
 		fldTotalCnt = ezWebFolderDAO_y.getFldTotalCount2(map);
 		
