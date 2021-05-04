@@ -329,39 +329,49 @@
 				return;
 			}
 			
-			$.ajax({
-				type: "POST",
-				url: "/ezWebFolder/checkPermission.do",
-				data: {
-					"folderList" : folderId,
-					"isRecursive" : false
-				},
-				dataType: "JSON",
-				async: true,
-				success : function(data) {
-					var isPermitted = data.status == "ok";
-					if (!isPermitted) {
-						alert("<spring:message code='ezWebFolder.t334'/>");
-						return;
-					} else {
-						if (folderId.indexOf("_") > -1) {
-							folderId = folderId.substring(0, folderId.indexOf("_"));
+			if (folderType == "C") {
+				$.ajax({
+					type: "POST",
+					url: "/ezWebFolder/checkPermission.do",
+					data: {
+						"folderList" : folderId,
+						"isRecursive" : false
+					},
+					dataType: "JSON",
+					async: true,
+					success : function(data) {
+						var isPermitted = data.status == "ok";
+						if (!isPermitted) {
+							alert("<spring:message code='ezWebFolder.t334'/>");
+							return;
+						} else {
+							if (folderId.indexOf("_") > -1) {
+								folderId = folderId.substring(0, folderId.indexOf("_"));
+							}
+							
+							moveCopyFolderDlg_cross_dialogArguments[0] = folderId;
+							moveCopyFolderDlg_cross_dialogArguments[1] = "move";
+							moveCopyFolderDlg_cross_dialogArguments[2] = returnFunction;
+							moveCopyFolderDlg_cross_dialogArguments[3] = folderType;
+							console.log("folderId moveCopy_onclick function" + folderId);
+							console.log("moveCopyFolderDlg_cross_dialogArguments delete_onclick function" + moveCopyFolderDlg_cross_dialogArguments[0]);
+							DivPopUpShow(360, 470, "/ezWebFolder/folderMove.do");
+							
 						}
-						
-						moveCopyFolderDlg_cross_dialogArguments[0] = folderId;
-						moveCopyFolderDlg_cross_dialogArguments[1] = "move";
-						moveCopyFolderDlg_cross_dialogArguments[2] = returnFunction;
-						moveCopyFolderDlg_cross_dialogArguments[3] = folderType;
-						console.log("folderId moveCopy_onclick function" + folderId);
-						console.log("moveCopyFolderDlg_cross_dialogArguments delete_onclick function" + moveCopyFolderDlg_cross_dialogArguments[0]);
-						DivPopUpShow(360, 470, "/ezWebFolder/folderMove.do");
-						
+					},
+					error : function(error) {
+						alert(messages.strLang7 + error);
 					}
-				},
-				error : function(error) {
-					alert(messages.strLang7 + error);
-				}
-			});
+				});
+			} else {
+				moveCopyFolderDlg_cross_dialogArguments[0] = folderId;
+				moveCopyFolderDlg_cross_dialogArguments[1] = "move";
+				moveCopyFolderDlg_cross_dialogArguments[2] = returnFunction;
+				moveCopyFolderDlg_cross_dialogArguments[3] = folderType;
+				console.log("folderId moveCopy_onclick function" + folderId);
+				console.log("moveCopyFolderDlg_cross_dialogArguments delete_onclick function" + moveCopyFolderDlg_cross_dialogArguments[0]);
+				DivPopUpShow(360, 470, "/ezWebFolder/folderMove.do");
+			}
 		}
 
 		function copy_onclick() {
@@ -380,37 +390,45 @@
 				return;
 			}
 			
-			$.ajax({
-				type: "POST",
-				url: "/ezWebFolder/checkPermission.do",
-				data: {
-					"folderList" : folderId,
-					"isRecursive" : false
-				},
-				dataType: "JSON",
-				async: true,
-				success : function(data) {
-					var isPermitted = data.status == "ok";
-					if (!isPermitted) {
-						alert("<spring:message code='ezWebFolder.t334'/>");
-						return;
-					} else {
-						if (folderId.indexOf("_") > -1) {
-							folderId = folderId.substring(0, folderId.indexOf("_"));
+			if (folderType == "C") {
+				$.ajax({
+					type: "POST",
+					url: "/ezWebFolder/checkPermission.do",
+					data: {
+						"folderList" : folderId,
+						"isRecursive" : false
+					},
+					dataType: "JSON",
+					async: true,
+					success : function(data) {
+						var isPermitted = data.status == "ok";
+						if (!isPermitted) {
+// 							alert("<spring:message code='ezWebFolder.t334'/>");
+// 							return;
+						} else {
+							if (folderId.indexOf("_") > -1) {
+								folderId = folderId.substring(0, folderId.indexOf("_"));
+							}
+							
+							moveCopyFolderDlg_cross_dialogArguments[0] = folderId;
+							moveCopyFolderDlg_cross_dialogArguments[1] = "copy";
+							moveCopyFolderDlg_cross_dialogArguments[2] = returnFunction;
+							moveCopyFolderDlg_cross_dialogArguments[3] = folderType;
+							DivPopUpShow(360, 470, "/ezWebFolder/folderMove.do");
+							
 						}
-						
-						moveCopyFolderDlg_cross_dialogArguments[0] = folderId;
-						moveCopyFolderDlg_cross_dialogArguments[1] = "copy";
-						moveCopyFolderDlg_cross_dialogArguments[2] = returnFunction;
-						moveCopyFolderDlg_cross_dialogArguments[3] = folderType;
-						DivPopUpShow(360, 470, "/ezWebFolder/folderMove.do");
-						
+					},
+					error : function(error) {
+						alert(messages.strLang7 + error);
 					}
-				},
-				error : function(error) {
-					alert(messages.strLang7 + error);
-				}
-			});
+				});
+			} else {
+				moveCopyFolderDlg_cross_dialogArguments[0] = folderId;
+				moveCopyFolderDlg_cross_dialogArguments[1] = "copy";
+				moveCopyFolderDlg_cross_dialogArguments[2] = returnFunction;
+				moveCopyFolderDlg_cross_dialogArguments[3] = folderType;
+				DivPopUpShow(360, 470, "/ezWebFolder/folderMove.do");
+			}
 		}
 		
 		function share_onclick() {
