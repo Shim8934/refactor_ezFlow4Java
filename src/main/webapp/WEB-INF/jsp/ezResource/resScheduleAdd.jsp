@@ -84,6 +84,7 @@
 	    	var timeSelect = false;
 	    	var userDisplayName2 = "${userInfo.displayName2}";
 	    	var repetition = "";
+	    	var offSetMin = "<c:out value='${offSetMin}'/>";
 	    	
 	    	// 메인페이지의 onload실행과 initLoad함수의 실행 속도 차이로 setTimeout함수 사용
 	    	var onloadflag = false;
@@ -497,10 +498,16 @@
 	        	}
 
 	        	if (check == true) {
-	            	// 일정관리 동시 등록
 	            	if (cmd == "add") {
+	            		// 일정관리 동시 등록
 		            	if(document.getElementById("useSchedule").checked == true) {
-		            		SaveScheduleId = saveSchedule();
+		            		// 일정 > 이전날짜 등록기능 자원예약시에도 적용
+		            		if (CheckPreviously()) {
+		            			alert(strLang340);
+		            			return;
+		            		} else {
+		            			SaveScheduleId = saveSchedule();
+		            		}
 		            	}
 	            	}
 	            	
@@ -515,6 +522,30 @@
 	        		}
 	    	    }
 	        	return check;
+	    	}
+	    	
+	    	function CheckPreviously() {
+	    	    var rtv = false;
+
+	    	    $.ajax({
+	    			type : "GET",
+	    			dataType : "text",
+	    			async : false,
+	    			cache : false,
+	    			url : "/ezSchedule/scheduleGetRegi.do",
+	    			data : {
+	    				COMPANYID  : ss_companyID		    			
+	    			},
+	    			success: function(text) {
+	    				if (text == "2") {		// 1일때 사용, 2일때 사용안함
+	    					if ($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() < utcDate(offSetMin)) {					
+	    						rtv = true;
+	    					}
+	    				}
+	    			}
+	    	    });
+
+	    	    return rtv;    
 	    	}
 	    	
 	    	function saveSchedule() {
