@@ -570,7 +570,17 @@
 		        
 	    	}
 		    	
-		    	
+		    function unEscapeHtml(text) {
+		        var map = {
+		            '&amp;' : '&',
+		            '&lt;' : '<',
+		            '&gt;' : '>',
+		            '&#034;' : '"',
+		            '&#039;' : "'"
+		        };
+
+		        return text.replace(/&amp;|&lt;|&gt;|&#034;|&#039;/g, function(m) { return map[m]; });
+		    }	
 		    
 		    
 		    //2018-08-10 김보미 - 추가
