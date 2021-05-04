@@ -430,7 +430,7 @@
 					+ "&versionList=" + versionList.toString();
 			DivPopUpShow(450, 200, "/ezWebFolder/permanentDeleteConfirm.do" + param);
 		
-			refreshView();
+			//refreshView();
 		}
 		
 		function hiddenPanel () {

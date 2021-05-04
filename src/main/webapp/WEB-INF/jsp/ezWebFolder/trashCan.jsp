@@ -417,7 +417,7 @@
 			
 			showPanel(450, 200, "/ezWebFolder/permanentDeleteConfirm.do?fileList=" + filesList.toString()
 					+ "&folderList=" + folderList.toString() + "&versionList=" + versionList.toString());
-			refreshView();
+			//refreshView();
 		}
 
 		function changeCount(value) {
