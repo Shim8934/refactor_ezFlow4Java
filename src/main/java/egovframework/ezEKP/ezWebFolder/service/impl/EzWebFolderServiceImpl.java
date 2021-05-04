@@ -1007,18 +1007,21 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		String userName2 = userInfo.getDisplayName2();
 		String offset = userInfo.getOffset();
 		String userId = userInfo.getId();
+		String deptId = userInfo.getDeptID();
 		String companyId = userInfo.getCompanyID();
 		int tenantId = userInfo.getTenantId();
 
 		if (fileIDList.length == 1 && folderIdList.length == 0) {
-			FileVO fileVO = getFileByFileId(fileIDList[0], offset, tenantId);
+			String fileId = fileIDList[0];
+
+			if ("fail".equalsIgnoreCase(ezWebFolderService_y.checkPermission(userId, deptId, companyId, fileId, "F", tenantId))) {
+				throw new IllegalAccessException("has no permission. fileId: " + fileId);
+			}
+
+			FileVO fileVO = getFileByFileId(fileId, offset, tenantId);
 			String _fileName = fileVO.getFileName();
 			_fileName = CommonUtil.getEncodedFileNameForDownload(userAgent, _fileName);
 			File file = new File(realPath + commonUtil.detectPathTraversal(fileVO.getFilePath()));
-
-			if (!file.exists()) {
-				throw new FileNotFoundException(fileVO.getFileName());
-			}
 
 			if (!file.isFile()) {
 				throw new FileNotFoundException(fileVO.getFileName());
@@ -1068,13 +1071,16 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 
 				//Package files
 				for (int i = 0; i < fileIDList.length; i++) {
-					//New zip entry and copying input stream with file to zipOutputStream, after all closing streams
-					FileVO fileVO = getFileByFileId(fileIDList[i], offset, tenantId);
-					File file = new File(realPath + commonUtil.detectPathTraversal(fileVO.getFilePath()));
+					String fileId = fileIDList[i];
 
-					if (!file.exists()) {
-						throw new FileNotFoundException(fileVO.getFileName());
+					if ("fail".equalsIgnoreCase(ezWebFolderService_y.checkPermission(userId, userInfo.getDeptID(), companyId, fileId, "F", tenantId))) {
+						logger.debug("has no permission. fileId: {}", fileId);
+						continue;
 					}
+
+					//New zip entry and copying input stream with file to zipOutputStream, after all closing streams
+					FileVO fileVO = getFileByFileId(fileId, offset, tenantId);
+					File file = new File(realPath + commonUtil.detectPathTraversal(fileVO.getFilePath()));
 
 					if (!file.isFile()) {
 						throw new FileNotFoundException(fileVO.getFileName());
@@ -1112,7 +1118,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 
 				//Package folders
 				for (int i = 0; i < folderIdList.length; i++) {
-					packFolder(folderNameList, folderIdList[i], "", zipOutputStream, userName1, userName2, offset, userInfo.getPrimary(), userId, companyId, realPath, tenantId);
+					packFolder(folderNameList, folderIdList[i], "", zipOutputStream, userName1, userName2, offset, userInfo.getPrimary(), userId, deptId, companyId, realPath, tenantId);
 				}
 
 				zipOutputStream.close();
@@ -1138,7 +1144,16 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 	
 	@SuppressWarnings("unused")
-	private void packFolder(HashSet<String> folderNameList, String folderId, String path, ZipOutputStream zipOutputStream, String userName1, String userName2, String offset, String primary, String userId, String companyId, String realPath, int tenantId) throws Exception {
+	private void packFolder(HashSet<String> folderNameList, String folderId, String path, ZipOutputStream zipOutputStream,
+			String userName1, String userName2, String offset, String primary,
+			String userId, String deptId, String companyId, String realPath, int tenantId) throws Exception {
+
+		// 권한 검사
+		if ("fail".equalsIgnoreCase(ezWebFolderService_y.checkPermission(userId, deptId, companyId, folderId, "D", tenantId))) {
+			logger.debug("has no permission. folderId: {}", folderId);
+			return;
+		}
+
 		FileInputStream fileInputStream = null;
 		HashSet<String> inernameList    = new HashSet<>();
 		FolderVO folder                 = getFolderByFolderId(folderId, offset, tenantId);
@@ -1168,11 +1183,12 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		zipOutputStream.closeEntry();
 		
 		for (FileVO innerFile : filesInFolder) {
-			File file = new File(realPath + commonUtil.detectPathTraversal(innerFile.getFilePath()));
-			
-			if (!file.exists()) {
-				throw new FileNotFoundException(innerFile.getFileName());
+			if ("fail".equalsIgnoreCase(ezWebFolderService_y.checkPermission(userId, deptId, companyId, innerFile.getFileId(), "F", tenantId))) {
+				logger.debug("has no permission. fileId: {}", innerFile.getFileId());
+				continue;
 			}
+
+			File file = new File(realPath + commonUtil.detectPathTraversal(innerFile.getFilePath()));
 			
 			if (!file.isFile()) {
 				throw new FileNotFoundException(innerFile.getFileName());
@@ -1212,7 +1228,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		if (listSubFolder.size() > 0) {
 			HashSet<String> subfolderNameList = new HashSet<>();
 			for (FolderVO innerfolder : listSubFolder) {
-				packFolder(subfolderNameList, innerfolder.getFolderId(), newPath, zipOutputStream, userName1, userName2, offset, primary, userId, companyId, realPath, tenantId);
+				packFolder(subfolderNameList, innerfolder.getFolderId(), newPath, zipOutputStream, userName1, userName2, offset, primary, userId, deptId, companyId, realPath, tenantId);
 			}
 		}
 	}
