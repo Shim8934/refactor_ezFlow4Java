@@ -4869,5 +4869,22 @@ public class EzCommunityController extends EgovFileMngUtil{
     	return "/ezCommunity/communityBoardSelectForMail";
     }
     
+	/**
+	 * 2021-05-03 홍승비 - 해당 커뮤니티의 전체 게시물 개수를 가져오는 함수 (ajax용)
+	 */
+	@RequestMapping(value = "/ezCommunity/getCommunityBoardItemCnt.do", method = RequestMethod.GET)
+	@ResponseBody
+	public int getCommunityBoardItemCnt(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getCommunityBoardItemCnt started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String code = request.getParameter("code");
+		int result = 0;
+		
+		result = ezCommunityService.categoryListItemCntGet(code, userInfo.getTenantId());
+		
+		logger.debug("getCommunityBoardItemCnt ended, result = " + result);
+		return result;
+	}
 }
 

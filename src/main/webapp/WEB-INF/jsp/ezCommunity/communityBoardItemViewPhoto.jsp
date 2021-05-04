@@ -80,6 +80,16 @@
 	            xmlhttp.send();
 	            xmlhttp = null;
 	            
+				// 게시물 보기창에서 삭제한 경우, 부모창의 카운트 새로고침 추가
+				if (window.opener.location.href.indexOf("ezCommunity/boardItemListPhoto.do") > -1) {
+					try {
+						var cntDom = window.opener.parent.document.getElementById("itemcnt");
+						var code = window.opener.parent.code;
+						if (typeof(cntDom) != "undefined" && cntDom != null && typeof(code) != "undefined" && code != null) {
+							reloadLeftCount(code, cntDom);
+						}
+					} catch(e) {}
+				}
 	            window.opener.refresh_onclick();
 	            window.close();
 	        }
@@ -161,6 +171,22 @@
 				var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=no, scrollbars=yes";
 				return feature;
 			}
+			
+	        /* 2021-05-03 홍승비 - 게시물 리스트에서 게시물을 등록한 경우, 커뮤니티 팝업홈 좌측 전체 게시물 개수 갱신 */
+	        function reloadLeftCount(pCode, pCntDom) {
+            	$.ajax({
+			    	type : "GET",
+			    	url : "/ezCommunity/getCommunityBoardItemCnt.do",
+			    	async : false,
+			    	data : {
+			    		code : pCode
+			    	},
+			    	success : function (result) {
+			    		pCntDom.innerText = result;
+			    	}
+			    });
+	        }
+	        
 		</script>	
 	</head>
 	<body class="popup" style ="overflow:hidden; height:100%">
