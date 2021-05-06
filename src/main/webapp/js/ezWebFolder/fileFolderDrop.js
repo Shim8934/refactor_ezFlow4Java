@@ -30,7 +30,7 @@ function onDrop(evt) {
 		if (evt.dataTransfer.items == undefined || evt.dataTransfer.items == null) {
 			
 			if (window.folderLevel) {
-				if (folderLevel == "0"){ return; } 
+				if (folderLevel == "0" && folderType == "company"){ return; } 
 			}
 			if (evt.dataTransfer.files.length == 0) {
 				alert(messages.strLangDragNDrop);
@@ -59,7 +59,7 @@ function onDrop(evt) {
 		    		
 		    		
 		    		if (window.folderLevel) {
-						if (folderLevel == "0"){ return; } 
+						if (folderLevel == "0" && folderType == "company"){ return; } 
 					}
 		    		
 		    		if (filelist.length == 0) {
@@ -81,7 +81,7 @@ function onDrop(evt) {
 		var filelist = (evt == undefined) ? document.getElementById("file").files : evt.dataTransfer.files;
 		
 		if (window.folderLevel) {
-			if (folderLevel == "0"){ return; } 
+			if (folderLevel == "0" && folderType == "company"){ return; } 
 		}
 		
 		if (filelist.length == 0) {

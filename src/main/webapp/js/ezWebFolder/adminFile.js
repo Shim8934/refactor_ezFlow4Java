@@ -446,7 +446,7 @@ function refreshView() {
 }
 
 function toggleUploadBttn(levelValue) {
-	if (levelValue == 0){
+	if (levelValue == 0 && folderType == "company"){
 		document.getElementById("uploadBttn").style.display = "none"
 		return;
 	} else {
