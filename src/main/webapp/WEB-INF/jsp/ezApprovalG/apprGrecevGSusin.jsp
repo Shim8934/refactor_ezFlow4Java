@@ -1619,6 +1619,7 @@
 		        }
 		        
 		        parameter[60] = passAprLine;
+		        parameter[61] = tempKeyword;
 		        
 		        if (tempItemCode != "")
 		            tempdocnumcode = tempItemCode;
