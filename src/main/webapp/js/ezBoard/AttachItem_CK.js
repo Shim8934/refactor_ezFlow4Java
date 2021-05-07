@@ -93,9 +93,10 @@ function DelAttachFileAtList(pNewNodeName)
 		    var objSelectedNode = objAttachNodes[i];
 		    var is_newfile = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[5]);
 
-		
+		    /* 2021-05-07 홍승비 - 새로 추가한 첨부파일은 경로에 "tempUploadFile"이 포함되므로 제거 */
 			var tempName = pDelAttachRow[k]
 			tempName = ReplaceText(tempName, "&apos;", "'");
+			tempName = ReplaceText(tempName, "tempUploadFile\/", "");
 
 			if (tempName == realFileNM) 
 			{
