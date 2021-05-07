@@ -503,8 +503,11 @@
 					} ,
    					success : function(text) {
    						alert("<spring:message code='ezSchedule.shb08' />");
-   			                window.close();
-   			                opener.location.reload();
+   							
+   							window.close();
+   							opener.parent.left.groupRefresh();
+   							
+   							
 					},
 					error : function(jqXHR, textStatus, errorThrown) {
 						alert("<spring:message code='ezSchedule.shb09' />");

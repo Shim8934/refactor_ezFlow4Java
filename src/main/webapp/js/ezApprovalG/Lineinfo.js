@@ -800,7 +800,8 @@ function AprlineDown_onclick() {
 	} else {
 		APRLINESNDownFunction();
 		aprlinecount = 0;
-		LineAprTyepSetAll();
+		//LineAprTyepSetAll();
+		LineAprTyepSetAll_DELETE_ADD();
 	}
 }
 //############################################################################################################################################# 결재순번(Down) 2)
@@ -1154,7 +1155,8 @@ function AprlineUpper_onclick() {
 	} else {
 		APRLINESNUPPERFunction();
 		aprlinecount = 0;
-		LineAprTyepSetAll();
+		//LineAprTyepSetAll();
+		LineAprTyepSetAll_DELETE_ADD();
 	}
 }
 //############################################################################################################################################# 결재순번(UP) 2)
