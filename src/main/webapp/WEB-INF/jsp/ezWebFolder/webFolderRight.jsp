@@ -555,6 +555,11 @@
 					inputElmt.addEventListener("dblclick", function(event) { event.stopPropagation(); });
 					
 					tdElmt1.appendChild(inputElmt);
+					tdElmt1.addEventListener("click", function(event) { 
+						this.firstChild.click();
+						event.stopPropagation();
+					});
+					
 					
 					var faImgElmt = document.createElement("img");
 					faImgElmt.setAttribute("class", "none-drag");
