@@ -8851,7 +8851,7 @@
                          AND
 							COMPANYID = #companyID#
                          AND 
-                            FUNCTIONTYPE IN ('002', '005', '000')
+                            FUNCTIONTYPE IN ('002', '005', '000', '004')
                          AND 
                             DOCID = #v_DOCID#
                          UNION
@@ -8886,7 +8886,7 @@
                         AND
 							COMPANYID = #companyID#
                         AND 
-                            FUNCTIONTYPE IN ('002', '005', '000')
+                            FUNCTIONTYPE IN ('002', '005', '000', '004')
                         AND 
                             DOCID = #v_DOCID#
                             
