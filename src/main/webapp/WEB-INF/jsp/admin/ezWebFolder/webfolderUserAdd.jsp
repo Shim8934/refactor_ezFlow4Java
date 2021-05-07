@@ -793,7 +793,7 @@
 		        	}
 	        		
 	    			// 2020-12-18 김은실 - (카이스트) 하위권한 체크하는 창을 스킵할 flag.
-	        		if(window.opener.isInsert || ${folderManager eq 1} || (window.opener.userManager != null && window.opener.userManager.targetType == "F")){
+	        		if(window.opener.isInsert || ${folderManager eq 1} || (window.opener.userManager != null && window.opener.userManager.targetType.toLowerCase() == "f")){
 	        			returnFunction(0);
 	        			return;
 	        		}

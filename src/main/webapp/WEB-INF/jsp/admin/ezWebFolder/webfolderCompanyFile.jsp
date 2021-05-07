@@ -21,6 +21,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/fileFolderDrop.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/adminTable.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/adminFile.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/selectUsers.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.js')}"></script>
 		<script type="text/javascript">
 			var strLang39  = "<spring:message code='ezWebFolder.t135'/>";
@@ -49,6 +50,16 @@
 			var containsReplyFiles = [];
 			var contextClickedTr = null;
 			var uploadLimit = <c:out value="${uploadLimit}" />;
+			var selectXhr         	= null;
+			var authListUser		= [];
+			var strictAuthList		= [];
+			var addUser    			= [];
+			var deleteUser    		= [];
+			var subFolderType 		= "0";
+			var userManager = {
+					targetId: "",
+					targetType: ""
+			};
 			
 			capacity.setFolderIdProvider(function() {
 				return "<c:out value='${folderId}'/>";
@@ -327,6 +338,168 @@
 					}
 				});
 			}
+			function getUsersPage_manager() {
+				authListUser = [];			
+				addUser      = [];
+				deleteUser   = [];
+				var url 	 = "";
+				if (selectXhr) {
+					selectXhr.abort();
+				}
+//				var trElmt = event.currentTarget;
+				var filesList = getCheckedRowInfo();
+
+				if (filesList == null) {
+					alert(messages.strLang5);
+					return;
+				}
+
+				if (filesList.length > 1) {
+					alert(messages.strLang39);
+					return;
+				}
+				
+				var targetId = filesList.toString();
+				var targetType = "f";
+
+				url = "/admin/ezWebFolder/getFileUsers.do";
+				
+				data = {
+					"fileId"	: targetId,
+					"folderId"	: targetId,
+					"folderManager" : "${folderManager}"
+				}
+
+				// global
+				userManager.targetId = targetId;
+				userManager.targetType = targetType;
+
+				selectXhr = $.ajax({
+					type: "POST",
+					url: url,
+					data: data,
+					dataType: "JSON",
+					async: true,
+					success : function(data) {
+						var code = data.code;
+						
+						switch(code) {
+							case 0:
+								var folderUsers = data.folderUsers;
+								if(folderUsers != null && folderUsers.length != 0) {
+									for (var i = 0; i < folderUsers.length ; i++) {
+										if(folderUsers[i]["folderManager"]) {
+											continue;
+										}
+										var auth         		= {};
+										auth["userId"]   		= folderUsers[i]["userId"];
+										auth["userName"] 		= "<spring:message code='main.t0619' />" == "ko" ? folderUsers[i]["displayName1"] : folderUsers[i]["displayName2"];
+										auth["userType"]   		= folderUsers[i]["userType"];
+										auth["subdeptPermitted"]= folderUsers[i]["subdeptPermitted"];
+										auth["sn"] 		 		= i;
+										auth["folderManager"]	= folderUsers[i]["folderManager"];
+										auth["displayDeptName"] = "<spring:message code='main.t0619' />" == "ko" ? folderUsers[i]["displayDeptName1"] : folderUsers[i]["displayDeptName2"];
+										authListUser.push(auth);
+									}
+									strictAuthList 		= authListUser;
+								}
+								menu_SelectRange("${companyId}", 0);
+								break;
+							case 1:
+								alert("<spring:message code='ezWebFolder.t306'/>");
+								break;
+							case 2:
+								alert("<spring:message code='ezWebFolder.t305'/>");
+								break;
+							case 3:
+								alert("<spring:message code='ezWebFolder.t300' />");
+								break;
+						}
+					},
+					error : function(error) {
+						if (error.statusText == "abort") {
+							return;
+						}
+
+						alert("<spring:message code='ezWebFolder.t134'/>" + error);
+					},
+					complete: function() {
+						selectXhr = null;
+					}
+				});
+			}
+			function convertJSONToJSONStr(obj) {
+				var returnStr = obj;
+				if (typeof returnStr != "string") {
+					var tmp = obj.length == 0 ? [] : obj;
+					returnStr = JSON.stringify(tmp);
+				}
+				
+				return returnStr;
+			}
+			function saveChanges_manager(returnMsg) { // returnMsg == ture ? return message : alert message;
+				if(addUser.length == 0 && deleteUser.length == 0) {
+					return;
+				}
+				
+				var strAuthListUser = (typeof authListUser == "string")? authListUser : JSON.stringify(authListUser);
+				var ajaxData = {
+						"currFolderId"  : folderId,
+						"targetId"   	: userManager.targetId,
+						"targetType" 	: userManager.targetType,
+						"folderUsers" 	: strAuthListUser,
+						"addUser" 		: convertJSONToJSONStr(addUser),
+						"deleteUser" 	: convertJSONToJSONStr(deleteUser),
+						"subFolderType"	: subFolderType,
+						"folderManager" : "${folderManager}"
+					};
+					var reMsg = "";
+				
+				$.ajax({
+					type: "POST",
+					url: "/ezWebFolder/changeUserFileORFolder.do",
+					data: ajaxData,
+					dataType: "JSON",
+					async: false,
+					success: function(data) {
+						var code = data.code;
+						
+						switch(parseInt(code)) {
+							case 0: 
+								reMsg = "<spring:message code='ezWebFolder.t182'/>";
+								//alert("<spring:message code='ezWebFolder.t182'/>");
+								break;
+							case 1:
+								reMsg = "<spring:message code='ezWebFolder.t306'/>";
+								//alert("<spring:message code='ezWebFolder.t306'/>");
+								break;
+							case 2:
+								reMsg = "<spring:message code='ezWebFolder.t305'/>";
+								//alert("<spring:message code='ezWebFolder.t305'/>");
+								break;
+							case 3:
+								reMsg = "<spring:message code='ezWebFolder.t300' />";
+								//alert("<spring:message code='ezWebFolder.t300' />");
+								break;
+							case 8:
+								reMsg = messages.resultErrDuplicateRename;
+								//alert(messages.resultErrDuplicateRename);
+								break;
+						}
+					},
+					error: function (xhr, status, e){
+						reMsg = "<spring:message code='ezWebFolder.t134'/>";
+						//alert("<spring:message code='ezWebFolder.t134'/>");
+					}
+				});
+
+				
+				if (returnMsg) {
+					return reMsg;
+				} else {
+					alert(reMsg);
+				}
+			}
 		</script>
 	</head>
 	<body class="mainbody" onload="init('comp');" onresize="preProcessing();" onkeydown="keyPressPanel(event);">
@@ -361,6 +534,7 @@
 				<c:if test="${useVersionHistory}">
 					<li><span onclick="openFileVersionHistory()"><spring:message code='webfolder.version.button' /></span></li>
 				</c:if>
+				<li id="userManagerBtn"><span onclick="getUsersPage_manager()"><spring:message code='ezWebFolder.kes013' /></span></li>
 				<li id="SearchOption" mode="off" onclick="openSearchPanel();"><span class="icon16 icon16_search"></span></li>
 				<li><span class="icon16 icon16_delete" onclick="fileDelete();"></span></li>
 				<li><span class="icon16 icon16_refresh" onclick="refreshView();"></span></li>
@@ -518,6 +692,11 @@
 					<tr>
 						<td onclick="refreshView();" onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor: pointer; background-color: rgb(255, 255, 255);">
 							<span style="font-size: 12px; width: 100%; display: inline-block;"><img src="/images/ImgIcon/recur.gif" align="absmiddle" hspace="5"><spring:message code='ezWebFolder.t139' /></span>
+						</td>
+					</tr>
+					<tr id ="folderManagerTR">
+						<td onclick="getUsersPage_manager();" onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor: pointer; background-color: rgb(255, 255, 255);">
+							<span style="font-size: 12px; width: 100%; display: inline-block;"><img src="/images/ImgIcon/options.gif" align="absmiddle" hspace="5"><spring:message code='ezWebFolder.kes013' /></span>
 						</td>
 					</tr>
 				</tbody>

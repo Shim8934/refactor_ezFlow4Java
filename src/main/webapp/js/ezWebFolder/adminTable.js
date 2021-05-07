@@ -685,6 +685,7 @@ function TableView() {
 				trElmt.setAttribute("_fileId", _dataSource[i]["fileId"]);
 				trElmt.setAttribute("_filePath", _dataSource[i]["filePath"]);
 				trElmt.setAttribute("encryptedFlag", _dataSource[i]["encryptedFlag"]);
+				trElmt.setAttribute("targetType", 'F');
 				trElmt.setAttribute("depth", depth);
 				trElmt.onclick = function(event) {clickRow(event);};
 				trElmt.addEventListener("dblclick", function(event) {

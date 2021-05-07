@@ -438,6 +438,7 @@
 					alert("<spring:message code='ezWebFolder.t181'/>");
 					return;
 				}
+				isInsert 		= true;
 				
 				// 2020-11-26 김은실 - (카이스트)회사 폴더별 관리자 지원 기능 
 				document.getElementById("displayUsersManager").style.display = "inline-block";
@@ -519,6 +520,7 @@
 						
 						switch(code) {
 							case 0: 
+								alert("<spring:message code='ezWebFolder.t182'/>");
 								refreshView2();
 								break;
 							case 1:
