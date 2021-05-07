@@ -480,21 +480,27 @@ public class EzResourceAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		String memberID = "";
 		String accessLvl = "";
 		String companyID = "";
-		
+
+/*		2021-05-07 남학선 권한대상 전체 삭제시 삭제가 안되는 문제 수정.
+		권한을 다 지우면 ResID, CompanyID만 가져오므로 나머지는 조건으로 처리함.*/
+		//logger.debug("ROW_DATA length : " + xmlRes.getElementsByTagName("ROW_DATA").getLength());
 		for (int i=0; i<xmlRes.getElementsByTagName("ROW_DATA").getLength(); i++) {
 			resID = xmlRes.getElementsByTagName("ROW_DATA").item(i).getAttributes().getNamedItem("ResID").getTextContent();
-			deptYN = xmlRes.getElementsByTagName("ROW_DATA").item(i).getAttributes().getNamedItem("Dept_YN").getTextContent();
-			SDAYN = xmlRes.getElementsByTagName("ROW_DATA").item(i).getAttributes().getNamedItem("SDA_YN").getTextContent();
-			memberNam = xmlRes.getElementsByTagName("ROW_DATA").item(i).getAttributes().getNamedItem("Member_nam").getTextContent();
-			memberID = xmlRes.getElementsByTagName("ROW_DATA").item(i).getAttributes().getNamedItem("Member_ID").getTextContent();
-			accessLvl = xmlRes.getElementsByTagName("ROW_DATA").item(i).getAttributes().getNamedItem("Access_lvl").getTextContent();
 			companyID = xmlRes.getElementsByTagName("ROW_DATA").item(i).getAttributes().getNamedItem("CompanyID").getTextContent();
-			
+
 			if (bDelete == false) {
 				delResAcll(resID, companyID, tenantID);
 				bDelete = true;
 			}
-			saveACL(resID, deptYN, SDAYN, memberNam, memberID, accessLvl, companyID, tenantID);
+
+			if(xmlRes.getElementsByTagName("ALL_DELETE").item(0).getTextContent().equalsIgnoreCase("NO")){
+				deptYN = xmlRes.getElementsByTagName("ROW_DATA").item(i).getAttributes().getNamedItem("Dept_YN").getTextContent();
+				SDAYN = xmlRes.getElementsByTagName("ROW_DATA").item(i).getAttributes().getNamedItem("SDA_YN").getTextContent();
+				memberNam = xmlRes.getElementsByTagName("ROW_DATA").item(i).getAttributes().getNamedItem("Member_nam").getTextContent();
+				memberID = xmlRes.getElementsByTagName("ROW_DATA").item(i).getAttributes().getNamedItem("Member_ID").getTextContent();
+				accessLvl = xmlRes.getElementsByTagName("ROW_DATA").item(i).getAttributes().getNamedItem("Access_lvl").getTextContent();
+				saveACL(resID, deptYN, SDAYN, memberNam, memberID, accessLvl, companyID, tenantID);
+			}
 		}
 		return true;
 	}
@@ -520,85 +526,91 @@ public class EzResourceAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		
 		for(int j=0; j<brdList.size(); j++) {
 			String[] ownerList = brdList.get(j).getOwnerID().split(",");
-			for(int k=0; k<ownerList.length; k++) {
-				boolean flag = false;
-				logger.debug("current resource manager : " + ownerList[k]);
-				for (int i=0; i<xmlRes.getElementsByTagName("ROW_DATA").getLength(); i++) {
-					String memberID = xmlRes.getElementsByTagName("ROW_DATA").item(i).getAttributes().getNamedItem("Member_ID").getTextContent();
-					String deptYN = xmlRes.getElementsByTagName("ROW_DATA").item(i).getAttributes().getNamedItem("Dept_YN").getTextContent();
-					
-					// 권한 중 everyone이 있는 경우 true로 리턴
-					if(memberID.equals("everyone")) {
-						logger.debug("This Resource Group has everyone privilege");
-						return true;
-					}
-					
-					if(deptYN.equals("Y")) {
-						if(memberID.equals(ownerList[k])) {
-							logger.debug("user id : " + memberID + ", This user has access privilege");
-							flag = true;
+			if(ownerList.length > 0 && xmlRes.getElementsByTagName("ALL_DELETE").item(0).getTextContent().equalsIgnoreCase("NO")){
+				//logger.debug("ROW_DATA length : " + xmlRes.getElementsByTagName("ROW_DATA").getLength());
+				for(int k=0; k<ownerList.length; k++) {
+					boolean flag = false;
+					logger.debug("current resource manager : " + ownerList[k]);
+					for (int i=0; i<xmlRes.getElementsByTagName("ROW_DATA").getLength(); i++) {
+						String memberID = xmlRes.getElementsByTagName("ROW_DATA").item(i).getAttributes().getNamedItem("Member_ID").getTextContent();
+						String deptYN = xmlRes.getElementsByTagName("ROW_DATA").item(i).getAttributes().getNamedItem("Dept_YN").getTextContent();
+
+						// 권한 중 everyone이 있는 경우 true로 리턴
+						if(memberID.equals("everyone")) {
+							logger.debug("This Resource Group has everyone privilege");
+							return true;
 						}
-					}
-					else {
-						// 부서 권한 체크
-						String deptSDA = xmlRes.getElementsByTagName("ROW_DATA").item(i).getAttributes().getNamedItem("SDA_YN").getTextContent();
-						String deptID = ezOrganService.getUserOrgDeptId(ownerList[k], tenantID, companyID);
-						
-						if(memberID.equals(deptID)) {		// 현재 부서
-							logger.debug("dept id : " + memberID + ", This dept has access privilege");
-							flag = true;
+
+						if(deptYN.equals("Y")) {
+							if(memberID.equals(ownerList[k])) {
+								logger.debug("user id : " + memberID + ", This user has access privilege");
+								flag = true;
+							}
 						}
-						else {					// 상위 부서
-							String deptPath = ezOrganService.getDeptPath(deptID, tenantID);
-							
-							List<String> deptIds = new ArrayList<String>();
-							Collections.addAll(deptIds, deptPath.split(","));
-							//deptIds.remove(0);				// companyID 삭제
-							if(deptIds.size() > 0) {
-								Collections.reverse(deptIds);
-								deptIds.remove(0);				// 부서 ID 삭제
-								
-								for(int l=0; l<deptIds.size(); l++) {
-									if(memberID.equals(deptIds.get(l)) && deptSDA.equals("Y")) {		// 현재 부서
-										logger.debug("dept(2) id : " + memberID + ", This dept has access privilege");
-										flag = true;
+						else {
+							// 부서 권한 체크
+							String deptSDA = xmlRes.getElementsByTagName("ROW_DATA").item(i).getAttributes().getNamedItem("SDA_YN").getTextContent();
+							String deptID = ezOrganService.getUserOrgDeptId(ownerList[k], tenantID, companyID);
+
+							if(memberID.equals(deptID)) {		// 현재 부서
+								logger.debug("dept id : " + memberID + ", This dept has access privilege");
+								flag = true;
+							}
+							else {					// 상위 부서
+								String deptPath = ezOrganService.getDeptPath(deptID, tenantID);
+
+								List<String> deptIds = new ArrayList<String>();
+								Collections.addAll(deptIds, deptPath.split(","));
+								//deptIds.remove(0);				// companyID 삭제
+								if(deptIds.size() > 0) {
+									Collections.reverse(deptIds);
+									deptIds.remove(0);				// 부서 ID 삭제
+
+									for(int l=0; l<deptIds.size(); l++) {
+										if(memberID.equals(deptIds.get(l)) && deptSDA.equals("Y")) {		// 현재 부서
+											logger.debug("dept(2) id : " + memberID + ", This dept has access privilege");
+											flag = true;
+										}
 									}
 								}
-							}
-							
-							// 사내 겸직 권한 체크
-							List<OrganUserVO> userAddJobList = ezOrganAdminService.getUserAddJobList(ownerList[k], "1", tenantID);
-							
-							for(int m=0; m<userAddJobList.size(); m++) {
-								if(userAddJobList.get(m).getDepartment().equals(memberID)) {
-									logger.debug("add job dept id : " + memberID + ", This dept has access privilege");
-									flag = true;
-								}
-								
-								String addJobDeptPath = ezOrganService.getDeptPath(userAddJobList.get(m).getDepartment(), tenantID);
-								
-								List<String> addJobDeptIds = new ArrayList<String>();
-								Collections.addAll(addJobDeptIds, addJobDeptPath.split(","));
-								//addJobDeptIds.remove(0);				// companyID 삭제
-								if(addJobDeptIds.size() > 0) {
-									Collections.reverse(addJobDeptIds);
-									addJobDeptIds.remove(0);				// 부서 ID 삭제
-									
-									for(int l=0; l<addJobDeptIds.size(); l++) {
-										if(memberID.equals(addJobDeptIds.get(l)) && deptSDA.equals("Y")) {		// 현재 부서
-											logger.debug("add job dept(2) id : " + memberID + ", This dept has access privilege");
-											flag = true;
+
+								// 사내 겸직 권한 체크
+								List<OrganUserVO> userAddJobList = ezOrganAdminService.getUserAddJobList(ownerList[k], "1", tenantID);
+
+								for(int m=0; m<userAddJobList.size(); m++) {
+									if(userAddJobList.get(m).getDepartment().equals(memberID)) {
+										logger.debug("add job dept id : " + memberID + ", This dept has access privilege");
+										flag = true;
+									}
+
+									String addJobDeptPath = ezOrganService.getDeptPath(userAddJobList.get(m).getDepartment(), tenantID);
+
+									List<String> addJobDeptIds = new ArrayList<String>();
+									Collections.addAll(addJobDeptIds, addJobDeptPath.split(","));
+									//addJobDeptIds.remove(0);				// companyID 삭제
+									if(addJobDeptIds.size() > 0) {
+										Collections.reverse(addJobDeptIds);
+										addJobDeptIds.remove(0);				// 부서 ID 삭제
+
+										for(int l=0; l<addJobDeptIds.size(); l++) {
+											if(memberID.equals(addJobDeptIds.get(l)) && deptSDA.equals("Y")) {		// 현재 부서
+												logger.debug("add job dept(2) id : " + memberID + ", This dept has access privilege");
+												flag = true;
+											}
 										}
 									}
 								}
 							}
 						}
 					}
+					if(!flag) {
+						logger.debug("This user has no access privilege. save fail");
+						return false;
+					}
 				}
-				if(!flag) {
-					logger.debug("This user has no access privilege. save fail");
-					return false;
-				}
+			} else {
+				logger.debug("This resource has only one owner(self)....");
+				return true;
 			}
 		}
 		
