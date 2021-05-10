@@ -191,6 +191,9 @@ function btn_AttachDel_onclick()
 				    alert(pAlertContent);
 			    }
 		    }
+	    }else{
+		    	var pAlertContent = "" +strLang89 + "";
+		    	alert(pAlertContent);
 	    }
 	}
 	catch(ErrMsg)

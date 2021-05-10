@@ -3523,7 +3523,7 @@ input[type=range]::-ms-tooltip {display: none;}
 .error_wrap{ overflow:hidden; border:1px solid #dedede; width:600px; margin:80px auto; padding:80px;}
 .error_wrap p{ margin:0px; padding:0px; font-family:Malgun Gothic; text-align:center;}
 .error_wrap dl{ margin:20px 0px 0px 40px;; padding:0px; line-height:40px; font-family:Malgun Gothic; text-align:center;}
-.error_wrap dt,dd{ margin:0px; padding:0px; letter-spacing:-1px;}
+.error_wrap dt,dd{ margin:0px; padding:0px; letter-spacing:0px;}
 .error_wrap dt{ font-size:26px; color:#333; padding:0px 0px 5px 0px;}
 .error_wrap dd{color:#666; font-size:18px; padding:0px 0px 0px 0px;}
 

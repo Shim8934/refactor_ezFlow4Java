@@ -468,7 +468,10 @@
 			}
 	
 			function btnSelForm_onclick() {
-			    var check = Form_check();
+				if(nonElecRec == "Y") {
+			    	return;
+			    }
+				var check = Form_check();
 			    if (check == "OK")
 			        openForm();
 			}
@@ -903,7 +906,7 @@
 		    }
 	
 	        function btnFileAttach_onclick() {
-	            try {
+	        	try {
 	                var ret = openFileAttachUI();
 	            } catch (e) {
 	                alert("ezdraftui_hwp.btnFileAttach_onclick()::" + e.description);
@@ -913,7 +916,11 @@
 	        function btnAprDocAttach_onclick() {
 	        	var deptCheckFlag = checkDeptAndCabinetId();
 	        	
-				if (deptCheckFlag == "3") {
+	        	if(nonElecRec == "Y") {
+			    	return;
+			    }
+				
+	        	if (deptCheckFlag == "3") {
 					alert("기안창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n겸직부서를'" + arr_userinfo[5] + "'부서로 변경하시거나 기안창을 새로 띄워주시기바랍니다." );
 					return;
 				} else if (deptCheckFlag == "4") {
@@ -926,6 +933,9 @@
 	
 	        function btnOpinion_onclick() {
 	            //var ret = openOpinionUI("N");
+	            if(nonElecRec == "Y") {
+			    	return;
+			    }
 	        	openOpinionUI_New("");
 	        }
 	
@@ -944,6 +954,9 @@
 	        }
 	
 	        function btnPrint_onclick() {
+	        	if(nonElecRec == "Y") {
+			    	return;
+			    }
 	        	message.PrintDocument();
 	        }
 	
@@ -1122,6 +1135,10 @@
 			function btnAddSepAttach_onclick() {
 				var deptCheckFlag = checkDeptAndCabinetId();
 				
+				if(nonElecRec == "Y") {
+			    	return;
+			    }
+				
 				if (deptCheckFlag == "3") {
 					alert("기안창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n겸직부서를'" + arr_userinfo[5] + "'부서로 변경하시거나 기안창을 새로 띄워주시기바랍니다." );
 					return;
@@ -1138,7 +1155,7 @@
 					}
 				
 				    var g_SepAttachLVXml = "";
-				    g_SepAttachLVXml = GetDocumentElement(message, "sepattachlvxml", true);
+				    g_SepAttachLVXml = GetDocumentElement("sepattachlvxml", true);
 				    if (!g_SepAttachLVXml)
 				        g_SepAttachLVXml = "";
 				
@@ -1215,7 +1232,10 @@
 			}
 	
 			function btnhistory_onclick() {
-			    getHistory();
+				if(nonElecRec == "Y") {
+			    	return;
+			    }
+				getHistory();
 			}
 			
 			var pGubun;
@@ -1399,7 +1419,10 @@
 			}
 	
 			function btnSaveServer_onclick(AutoSave) {
-			    try {
+				if(nonElecRec == "Y") {
+			    	return;
+			    }
+				try {
 			        if (pDraftFlag == "REDRAFT") {
 			            if (AutoSave == "save") {
 			                AutoSave = "";

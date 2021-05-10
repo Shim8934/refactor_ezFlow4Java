@@ -3342,7 +3342,7 @@
 		 			#v_LANGFILE# AS ATTACHTYPE, 
 		 			'file' AS ATTACHTYPECODE, 
 		 			ATTACHFILESN AS ATTACHSN, 
-            		ATTACHFILENAME AS ATTACHNAME, 
+            		DISPLAYNAME AS ATTACHNAME, 
             		ATTACHFILEHREF AS ATTACHHREF, 
             		ATTACHUSERNAME$v_STRLANG$ AS ATTACHUSERNAME, 
             		ATTACHUSERJOBTITLE$v_STRLANG$ AS ATTACHUSERJOBTITLE, 
@@ -8212,7 +8212,7 @@
 	         UNION ALL 
 	         
 	         SELECT 'ATT' TYPE  ,
-	                AttachFileName FILENAME  ,
+	                DISPLAYNAME FILENAME  ,
 	                AttachFileHref FILEPATH  ,
 					2 AS TYPESN,
 	                IFNULL(VIEWORDER, ATTACHFILESN) AS VIEWSN,
@@ -8266,7 +8266,7 @@
 		        
 		        SELECT 
 		        		'ATT' TYPE  ,
-		                AttachFileName FILENAME  ,
+		                DISPLAYNAME FILENAME  ,
 		                AttachFileHref FILEPATH  ,
 						2 AS TYPESN,
 	               	 	IFNULL(VIEWORDER, ATTACHFILESN) AS VIEWSN,
@@ -8851,7 +8851,7 @@
                          AND
 							COMPANYID = #companyID#
                          AND 
-                            FUNCTIONTYPE IN ('002', '005', '000')
+                            FUNCTIONTYPE IN ('002', '005', '000', '004')
                          AND 
                             DOCID = #v_DOCID#
                          UNION
@@ -8886,7 +8886,7 @@
                         AND
 							COMPANYID = #companyID#
                         AND 
-                            FUNCTIONTYPE IN ('002', '005', '000')
+                            FUNCTIONTYPE IN ('002', '005', '000', '004')
                         AND 
                             DOCID = #v_DOCID#
                             

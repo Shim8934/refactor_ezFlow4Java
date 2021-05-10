@@ -503,8 +503,11 @@
 					} ,
    					success : function(text) {
    						alert("<spring:message code='ezSchedule.shb08' />");
-   			                window.close();
-   			                opener.location.reload();
+   							
+   							window.close();
+   							opener.parent.left.groupRefresh();
+   							
+   							
 					},
 					error : function(jqXHR, textStatus, errorThrown) {
 						alert("<spring:message code='ezSchedule.shb09' />");
@@ -570,7 +573,17 @@
 		        
 	    	}
 		    	
-		    	
+		    function unEscapeHtml(text) {
+		        var map = {
+		            '&amp;' : '&',
+		            '&lt;' : '<',
+		            '&gt;' : '>',
+		            '&#034;' : '"',
+		            '&#039;' : "'"
+		        };
+
+		        return text.replace(/&amp;|&lt;|&gt;|&#034;|&#039;/g, function(m) { return map[m]; });
+		    }	
 		    
 		    
 		    //2018-08-10 김보미 - 추가

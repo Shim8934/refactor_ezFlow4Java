@@ -66,9 +66,25 @@ function SetDocumentElement(pCharName, pValue) {
                 createNodeAndAppandNodeCDataText(keywordXml, connRoot, null, pCharName, pValue);
             }
 
-            keywordStr = getXmlString(keywordXml).replace(/<[/]?KEYWORD>/gi, "");
-            message.SetDocumentInfo("NULL", "NULL", "NULL", keywordStr, "NULL");
+        } else {
+            if(keywordXml.getElementsByTagName("connroot").length == 0){
+                objNode = document.createElement("CONNROOT");
+                setNodeText(objNode , "");
+                keywordXml.getElementsByTagName("KEYWORD")[0].appendChild(objNode);
+            }
+            if (keywordXml.getElementsByTagName(pCharName).length > 0) {
+                objNode = keywordXml.getElementsByTagName(pCharName)[0];
+                setNodeText(objNode , pValue);
+                keywordXml.documentElement.appendChild(objNode);
+            } else {
+                //createNodeAndAppandNodeCDataText(keywordXml, connRoot, null, pCharName, pValue);
+                objNode = document.createElement(pCharName);
+                setNodeText(objNode , pValue);
+                keywordXml.documentElement.appendChild(objNode);
+            }
         }
+        keywordStr = getXmlString(keywordXml).replace(/<[/]?KEYWORD>/gi, "");
+        message.SetDocumentInfo("NULL", "NULL", "NULL", keywordStr, "NULL");
     } catch (e) {
         alert("연동정보를 저장하던 도중 오류가 발생했습니다.");
         return false;

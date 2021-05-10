@@ -428,7 +428,8 @@
 						F.DESCRIPTION$lang$ AS WRITER_DEPT_NAME,
 						D.ATTEND_TYPE,
 						D.LATITUDE,
-						D.LONGITUDE
+						D.LONGITUDE,
+						D.WORK_STATUS
 					FROM   
 						tbl_attitude D 
 					INNER JOIN 
