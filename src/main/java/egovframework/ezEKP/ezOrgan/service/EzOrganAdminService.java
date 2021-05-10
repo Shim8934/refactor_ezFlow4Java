@@ -40,6 +40,10 @@ public interface EzOrganAdminService {
 	public int companyChildCheck(String cn, int tenantID) throws Exception;
 	
 	public int userCheck(String cn, int tenantID) throws Exception;
+
+	PreResult checkDuplicateId(String cn, String employeeNumber, int tenantId) throws Exception;
+
+	PreResult checkDuplicateLoginId(String cn, String employeeNumber, int tenantId) throws Exception;
 	
 	public int getRetireListCount(int pPage, int pPageRow, int tenantID, String searchStartDate, String searchEndDate, String searchKeycode, String searchKeyword, String searchCompanyID) throws Exception;
 
