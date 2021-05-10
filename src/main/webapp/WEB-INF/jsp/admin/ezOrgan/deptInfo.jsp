@@ -125,15 +125,15 @@
 			}
 			
 			function OK_Click() {
-				if (DeptID.value == "") {
+				if (DeptID.value.trim() == "") {
                 	OpenAlertUI("<spring:message code='ezOrgan.t210'/>");
 					return;
 				}
 				
-				if (DeptID.value.length < 3) {
+				/* if (DeptID.value.length < 3) {
                 	OpenAlertUI("<spring:message code='ezOrgan.t211'/>");
 					return;
-				}
+				} */
 				
 				if (!Check_ID(DeptID.value, isAdd)) {
                 	OpenAlertUI("<spring:message code='ezOrgan.t212'/>");
