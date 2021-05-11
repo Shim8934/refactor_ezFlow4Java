@@ -1547,7 +1547,7 @@
 				AND 
 					A.PHYSICALDELIVERYOFFICENAME = #companyId#
 				AND			
-					A.CN IN (select CN FROM TBL_USERMASTER WHERE TENANT_ID = 0 AND PHYSICALDELIVERYOFFICENAME = #companyId#)
+					A.CN IN (select CN FROM TBL_USERMASTER WHERE TENANT_ID = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#)
 		]]>
 		<isNotEmpty prepend="AND" property="searchDeptName">
 			A.description$primary$ LIKE CONCAT('%', #searchDeptName#, '%')
