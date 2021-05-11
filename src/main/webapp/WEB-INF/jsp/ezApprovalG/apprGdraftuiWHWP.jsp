@@ -342,6 +342,7 @@
 	        function CopyAndPasteContent(isTrue) {
 	        	try {
 		        	if(isTrue) {
+		        		message2.GetCloneData("doctitle", "JSON", function (tempContent) { message.SetCloneData(tempContent, "doctitle", "JSON") });
 		        		message2.GetCloneData("body", "JSON", function (tempContent) { message.SetCloneData(tempContent, "body", "JSON") });
 		        	} else {
 	                    var pAlertContent = "<spring:message code='ezApprovalG.t369'/>";
