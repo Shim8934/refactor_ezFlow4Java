@@ -1366,11 +1366,11 @@
 	        }
 	        
 	        function popupClose() {
-	        	if (shareId != "") {
-	        		if (confirm("<spring:message code='ezEmail.lhm16' />")) {
-		        		return OK_Click();
-		        	}
-	        	}
+// 	        	if (shareId != "") {
+// 	        		if (confirm("<spring:message code='ezEmail.lhm16' />")) {
+// 		        		return OK_Click();
+// 		        	}
+// 	        	}
 	        	
 	        	window.close();
 	        }
