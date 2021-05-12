@@ -4315,6 +4315,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 									logger.debug("hasAttach=" + hasAttach + ",hasRelated=" + hasRelated
 													+ ",hasInlineImage=" + hasInlineImage);
 									
+									// related 파트가 없는 경우 multipart/mixed로 생성하게 되면 인라인 이미지 표시가
+									// 되지 않는 문제가 발생한다. hasAttach 변수를 false로 설정하여 이후 처리 과정에서 multipart/mixed가
+									// 아닌 multipart/related로 메시지 생성이 되도록 한다.
 									if (hasAttach && !hasRelated && hasInlineImage) {
 										hasAttach = false;
 									}
