@@ -725,7 +725,7 @@
 					left join tbl_webfolder_encrypted_file enc on enc.file_id = f.file_id and enc.tenant_id = f.tenant_id
 					
 				]]>
-	      	 	<isEqual property="folderType" compareValue="C" >
+	      	 	<isEqual property="manager" compareValue="1" >
 	      	 		inner join tbl_webfolder_fileuser u on u.FILE_ID = f.FILE_ID
 	                	where 
                 		u.user_id IN
@@ -734,10 +734,10 @@
 						#idListUpgrade[]#
 					</iterate>
 					AND 
-	      	   </isEqual>  
-	      	    <isNotEqual property="folderType" compareValue="C" >
-		         	where 
-		         </isNotEqual>
+	      	    </isEqual>  
+	      	    <isEqual property="manager" compareValue="0" >
+			         	where 
+		         </isEqual>
 		         f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'
 				<include refid="fldSelect"/>
 				<![CDATA[
@@ -746,7 +746,7 @@
 		            	and s.tenant_id = #tenantId# and s.target_type ='D' 
 				]]>
 				    
-				<isEqual property="folderType" compareValue="C" >
+				<isEqual property="manager" compareValue="1" >
 		            inner join tbl_webfolder_folderuser u on folder.folder_id = u.folder_id
 	                	where folder.folder_level > 0   
                 	AND 
@@ -756,9 +756,9 @@
 					</iterate>
 					AND 
 				</isEqual>  
-		         <isNotEqual property="folderType" compareValue="C" >
+		         <isEqual property="manager" compareValue="0" >
 		         	where 
-		         </isNotEqual>
+		         </isEqual>
 		         <![CDATA[
 							folder.tenant_id = #tenantId# 
 						and
@@ -927,13 +927,13 @@
 	                and folder.company_id IN
 	        ]]>
 	                <iterate property="idList" open="(" close=")" conjunction=",">
-							#idList[].id#
-						</iterate>
+						#idList[].id#
+					</iterate>
 			<![CDATA[
 	                and type.tenant_id = #tenantId#
 	                and folder_path <> #folderPath#	
 			]]>
-	      	<isEqual property="folderType" compareValue="C" >
+	      	<isEqual property="manager" compareValue="1" >
 				<isEqual property="flag" compareValue="1">
 		     	 	AND (u.user_id IN
    		
@@ -1060,7 +1060,7 @@
 					) folder on folder.folder_id  = f.folder_id
 				inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  and type.tenant_id = f.tenant_id 
 			]]>	
-			<isEqual property="folderType" compareValue="C" >
+			<isEqual property="manager" compareValue="1" >
 				inner join tbl_webfolder_fileuser u on u.FILE_ID = f.FILE_ID
                		WHERE
                		u.user_id IN
@@ -1070,9 +1070,9 @@
 				</iterate>
 					AND 
       	   </isEqual> 
-      	    <isNotEqual property="folderType" compareValue="C" >
+      	    <isEqual property="manager" compareValue="0" >
       	    	WHERE 
-      	    </isNotEqual> 
+      	    </isEqual> 
 			f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'
 			<![CDATA[
 			) t

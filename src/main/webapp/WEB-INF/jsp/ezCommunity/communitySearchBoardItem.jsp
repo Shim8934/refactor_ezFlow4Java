@@ -450,6 +450,16 @@
 						} else if (document.getElementById("rowdata") != null && document.getElementById("rowdata").length == strListInfo.split(";").length - 1 && CurPage != 1) {
 						    movePage(CurPage);
 						} else {
+							// 게시물 리스트에서 게시물 삭제 시 팝업홈 좌측 전체 카운트 새로고침 추가
+							if (window.location.href.indexOf("ezCommunity/boardItemList.do") > -1  || window.location.href.indexOf("ezCommunity/searchBoardItem.do") > -1) {
+								try {
+									var cntDom = window.parent.document.getElementById("itemcnt");
+									var code = window.parent.code;
+									if (typeof(cntDom) != "undefined" && cntDom != null && typeof(code) != "undefined" && code != null) {
+										reloadLeftCount(code, cntDom);
+									}
+								} catch(e) {}
+							}
 						    window.location.reload();
 						}
 					}
@@ -784,7 +794,8 @@
 			}
 
 			function BoardItemList() {
-				$(location).attr('href', '/ezCommunity/boardItemList.do?' + encodeURIComponent(pOrgBoardParameters));
+				/* $(location).attr('href', '/ezCommunity/boardItemList.do?' + encodeURIComponent(pOrgBoardParameters)); */
+				$(location).attr('href', '/ezCommunity/boardItemList.do?' + pOrgBoardParameters); 
 // 				window.location.href = "/ezCommunity/boardItemList.do?" + pOrgBoardParameters;
 			}
 			

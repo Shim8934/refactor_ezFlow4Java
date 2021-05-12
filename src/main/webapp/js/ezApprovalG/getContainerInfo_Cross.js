@@ -617,6 +617,8 @@ function selFirstRow(Resultxml) {
     var tr = oArrRows[0];
 
     if (oArrRows.length != 0) {
+    	document.getElementById("tbtnExcel").style.display = "";
+    	document.getElementById("tbtnExcelAll").style.display = "";
         DocID = tr.getAttribute("DATA1");
         pURL = tr.getAttribute("DATA2");
         WriterID = tr.getAttribute("DATA3");

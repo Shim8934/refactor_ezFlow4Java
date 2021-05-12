@@ -503,6 +503,13 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			map.put("orderByData", secondSort);
 		}
 		
+		// C 인데 담당자가 아니라 조건 검색을 해야하는 경우 
+		if (folderType.equalsIgnoreCase("C") && ezWebFolderAdminService.getFolderIdsByManagerUserId(userId, folderId, comId, tenantId).size() == 0) {
+			map.put("manager", 1);
+		} else {
+			map.put("manager", 0);
+		}
+
 		if (flag.equals("1")) {
 			filevo = (List<FileVO>) ezWebFolderDAO_y.searchFileList2(map);
 		} else {
@@ -702,8 +709,14 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		List<String> addjobList = getAddJobList(tenantId, userId);
 		addjobList.add(deptId);
 		map.put("userDeptList", addjobList);
-
 		map.put("flag", flag);
+		
+		// C 인데 담당자가 아니라 조건 검색을 해야하는 경우 
+		if (folderType.equalsIgnoreCase("C") && ezWebFolderAdminService.getFolderIdsByManagerUserId(userId, folderId, companyId, tenantId).size() == 0) {
+			map.put("manager", 1);
+		} else {
+			map.put("manager", 0);
+		}
 		
 		if (flag.equals("1")) {
 			fileTotalCnt = ezWebFolderDAO_y.searchFileToTalCount2(map);

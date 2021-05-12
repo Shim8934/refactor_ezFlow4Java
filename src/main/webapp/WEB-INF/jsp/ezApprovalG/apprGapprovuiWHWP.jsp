@@ -1315,7 +1315,7 @@
 				    }
 			
 			        var g_SepAttachLVXml = "";
-			        g_SepAttachLVXml = GetDocumentElement(message, "sepattachlvxml", true);
+			        g_SepAttachLVXml = GetDocumentElement("sepattachlvxml", true);
 			        if (!g_SepAttachLVXml)
 			            g_SepAttachLVXml = "";
 			

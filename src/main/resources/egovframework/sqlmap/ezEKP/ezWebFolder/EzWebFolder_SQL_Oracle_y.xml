@@ -760,7 +760,7 @@
 							and s.tenant_id = #tenantId# and s.target_type ='F'   
 						left join tbl_webfolder_encrypted_file enc on enc.file_id = f.file_id and enc.tenant_id = f.tenant_id
 					]]>
-		      	 	<isEqual property="folderType" compareValue="C" >
+		      	 	<isEqual property="manager" compareValue="1" >
 						inner join tbl_webfolder_fileuser u on u.FILE_ID = f.FILE_ID
 		                where 
 	                		u.user_id IN
@@ -769,9 +769,9 @@
 						</iterate>
 						AND 
 		      	   </isEqual>  
-		      	   <isNotEqual property="folderType" compareValue="C" >
+		      	   <isEqual property="manager" compareValue="0" >
 		      	   		WHERE
-		      	   </isNotEqual>
+		      	   </isEqual>
 		      	    	f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'
 					<include refid="fldSelect"/>
 					<![CDATA[
@@ -779,7 +779,7 @@
 					    left outer join tbl_webfolder_favor s on folder.folder_id = s.target_id and s.user_id = #userId# 
 			            	and s.tenant_id = #tenantId# and s.target_type ='D'
 					]]>
-					<isEqual property="folderType" compareValue="C" >
+					<isEqual property="manager" compareValue="1" >
 						inner join tbl_webfolder_folderuser u on folder.folder_id = u.folder_id
 						WHERE 
 							u.user_id IN  
@@ -788,9 +788,9 @@
 							</iterate>
 						AND
 					</isEqual>
-					<isNotEqual property="folderType" compareValue="C" >
+					<isEqual property="manager" compareValue="0" >
 						where
-					</isNotEqual>     	 
+					</isEqual>     	 
 						folder.tenant_id = #tenantId# 
 						and
 							type.tenant_id = #tenantId#
@@ -976,7 +976,7 @@
 	                and type.tenant_id = #tenantId#
 	                and folder_path <> #folderPath#	
 			]]>
-      	 	<isEqual property="folderType" compareValue="C" >
+      	 	<isEqual property="manager" compareValue="1">
       	 		<isEqual property="flag" compareValue="1">
 					AND ( u.user_id IN  
 					<iterate property="idListUpgrade" open="(" close=")" conjunction=",">
@@ -1103,7 +1103,7 @@
 				inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  and type.tenant_id = f.tenant_id 
 				
 			]]>	
-      	 	<isEqual property="folderType" compareValue="C" >
+      	 	<isEqual property="manager" compareValue="1" >
       	 		inner join tbl_webfolder_fileuser u on u.file_id = f.file_id
 				WHERE u.user_id IN  
 				<iterate property="idListUpgrade" open="(" close=")" conjunction=",">
@@ -1111,9 +1111,9 @@
 				</iterate>
 				AND
 			</isEqual>  
-			<isNotEqual property="folderType" compareValue="C" >
+			<isEqual property="manager" compareValue="0" >
 				WHERE 
-			</isNotEqual>
+			</isEqual>
 				f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'
 			<![CDATA[
 			) t

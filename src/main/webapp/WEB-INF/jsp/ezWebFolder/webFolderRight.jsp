@@ -555,6 +555,11 @@
 					inputElmt.addEventListener("dblclick", function(event) { event.stopPropagation(); });
 					
 					tdElmt1.appendChild(inputElmt);
+					tdElmt1.addEventListener("click", function(event) { 
+						this.firstChild.click();
+						event.stopPropagation();
+					});
+					
 					
 					var faImgElmt = document.createElement("img");
 					faImgElmt.setAttribute("class", "none-drag");
@@ -643,13 +648,13 @@
 					
 					if(result[i]["typeId"] == "folder") {
 						trElmt.ondblclick = function() {
-							if (folderType == 'C') {
+						//	if (folderType == 'C') {
 								nameFileList(this.getAttribute("targetId"))
-							} else {
-								folderId = this.getAttribute("targetId");
-								selectLeftFolder(this.getAttribute("targetId"));
-								getFileList(this.getAttribute("targetId"));
-							}
+						//	} else {
+						//		folderId = this.getAttribute("targetId");
+						//		selectLeftFolder(this.getAttribute("targetId"));
+						//		getFileList(this.getAttribute("targetId"));
+						//	}
 						};
 					}
 					

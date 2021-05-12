@@ -12199,9 +12199,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		
 		if (allApproveYN.equals("Y")) {
-			map.put("v_FLAG", "2");
+			map.put("v_FLAG", "2"); // DOCID > #v_DOCID# 조건으로 문서를 가져옴
 		} else {
-			map.put("v_FLAG", "1");
+			map.put("v_FLAG", "1"); // DOCID < #v_DOCID# 조건으로 문서를 가져옴
 		}
 		
 		List<ApprGDocListVO> apprGDocListVOList = ezApprovalGDAO.getNextDocInfo(map); 
@@ -12262,8 +12262,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							makeXMLString(makeListField(docXML.getElementsByTagName("APRMEMBERSN").item(0).getTextContent())) + "</APRMEMBERSN></NEXTDOCINFO>";
 				}
 			} 
-		} else {
-			if (allApproveYN.equals("N")) {
+		}
+		else {
+			/* 2021-05-07 홍승비 - 모두결재 시 마지막 문서까지 도달하는 경우, 두 문서가 계속 반복되는 현상 수정 */
+			// v_FLAG에 따라서 기안일이 오래되었거나 최근인 순서로 문서 가져오는 부분은 쿼리로 분기처리가 분리됨 (DOCID < #v_DOCID# / DOCID > #v_DOCID#) 
+			/*if (allApproveYN.equals("N")) {
 				map.put("v_FLAG", "2");
 				apprGDocListVOList = ezApprovalGDAO.getNextDocInfo(map); 
 				sb.setLength(0);
@@ -12296,7 +12299,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				} 
 			} else {
 				strXML = "<NEXTDOCINFO><DOCID></DOCID><USERID></USERID><USERNAME></USERNAME><USERNAME2></USERNAME2><USERDEPTID></USERDEPTID><DOCTYPE></DOCTYPE><DOCSTATE></DOCSTATE><WRITERID></WRITERID><APRTYPE></APRTYPE><HREF></HREF><EXTENDEDNAME></EXTENDEDNAME><DOCNUMZEROCNT></DOCNUMZEROCNT></NEXTDOCINFO>";
-			}
+			}*/
+			strXML = "<NEXTDOCINFO><DOCID></DOCID><USERID></USERID><USERNAME></USERNAME><USERNAME2></USERNAME2><USERDEPTID></USERDEPTID><DOCTYPE></DOCTYPE><DOCSTATE></DOCSTATE><WRITERID></WRITERID><APRTYPE></APRTYPE><HREF></HREF><EXTENDEDNAME></EXTENDEDNAME><DOCNUMZEROCNT></DOCNUMZEROCNT></NEXTDOCINFO>";
 		}
 
 		logger.debug("getNextDocInfo ended");

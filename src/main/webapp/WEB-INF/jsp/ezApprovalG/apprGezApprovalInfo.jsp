@@ -2861,11 +2861,11 @@
 	                            <tr>
 	                                <td style="vertical-align: top;">
 	                                	<c:if test="${approvalFlag =='G' }">
-		                                    <div id="TreeView2" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 517px; width: 388px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
+		                                    <div id="TreeView2" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 517px; width: 436px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
 		                                    </div>
 	                                    </c:if>
 	                                    <c:if test="${approvalFlag == 'S' }">
-                                        	<div id="TreeView2" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 290px; width: 438px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
+                                        	<div id="TreeView2" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 290px; width: 436px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
 		                                    </div>
 	                                    </c:if>
 	                                </td>
@@ -2901,7 +2901,7 @@
 	                        <table style="margin-left: 0px;">
 	                            <tr>
 	                                <td style="vertical-align: top;">
-	                                    <div id="TreeView3" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 517px; width: 388px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
+	                                    <div id="TreeView3" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 517px; width: 436px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
 	                                    </div>
 	                                </td>
 	                            </tr>

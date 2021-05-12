@@ -10,6 +10,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezBoard/common.js')}"></script>
 		<style>
 	        .viewbox {
 				line-height:20px;
@@ -177,17 +178,17 @@
 		        	<!-- 게시자&부서 -->
 		        	<tr>
 		        		<th style="width:10%;"><spring:message code='ezBoard.t223'/></th>
-						<td id="WriteUserNM" style="width:40%; white-space:nowrap">&nbsp;<c:out value="${boardItem.writerName}"/></td>
-						<th style="width:10%;"><spring:message code='ezBoard.t289'/></th>
-						<td id="User_DeptNM" style="width:40%; white-space:nowrap">&nbsp;${boardItem.writerDeptName}</td>
+						<td id="WriteUserNM" style="width:40%; white-space:nowrap" colspan=4>&nbsp;<c:out value="${boardItem.writerName}"/></td>
+						<%-- <th style="width:10%;"><spring:message code='ezBoard.t289'/></th>
+						<td id="User_DeptNM" style="width:40%; white-space:nowrap">&nbsp;${boardItem.writerDeptName}</td> --%>
 		        	</tr>
 		        	<!-- 직위&사내전화 -->
-		        	<tr>
+		        	<%-- <tr>
 		        		<th><spring:message code='ezBoard.t290'/></th>
 						<td id="User_JobTitle" style="width:40%; white-space:nowrap;">&nbsp;${boardItem.extensionAttribute3}<div></div></td>
 						<th><spring:message code='ezPersonal.t177'/></th>
 						<td id="Telephone" style="width:40%; white-space:nowrap">&nbsp;${boardItem.extensionAttribute4}</td>
-		        	</tr>
+		        	</tr> --%>
 		        	<!-- 게시일&게시종료일 -->
 		        	<tr>
 						<th><spring:message code='ezBoard.t224'/></th>
@@ -241,7 +242,7 @@
 					<!-- 제목 -->
 		            <tr>
 	                  <th><spring:message code='ezBoard.t291'/></th>
-	                  <td id="cTitle" style="WORD-WRAP: break-word;" colspan="6">&nbsp;${boardItem.title} </td>
+	                  <td id="cTitle" style="WORD-WRAP: break-word;" colspan="6">&nbsp;<c:out value="${boardItem.title}"/></td>
 		            </tr>
 		      </table>
 <!-- 		<table class="layout">  -->

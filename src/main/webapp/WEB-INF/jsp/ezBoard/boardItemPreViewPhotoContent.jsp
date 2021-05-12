@@ -1032,7 +1032,7 @@
 			        </tr>
 			        <tr>
 			        	<td class="MainContentTD" style="padding:10px 0px; height:88px; text-align:center" colspan="3">
-			            	<div id="MainContent" style="height:88px; padding-left:23%; padding-right:24%;"></div>
+			            	<div id="MainContent" style="height:88px; padding-left:23%; padding-right:24%; white-space: pre-wrap; overflow: auto;"></div>
 			            </td>
 			        </tr>
 		        <%-- 2019-04-05 홍승비 - 본문, 사진소개 하단에 좋아요 버튼 추가 --%>

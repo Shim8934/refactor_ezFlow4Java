@@ -188,7 +188,7 @@
 					return;
 				}
 				
-				clearToggle(obj);
+				clearToggle();
 				document.getElementById("lnbUL2").style.display  = "";
 				getDepartmentData(companyId, "", "folderTree2");
 			}
