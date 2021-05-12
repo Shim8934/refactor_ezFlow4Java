@@ -384,6 +384,10 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		}
 
 		model.addAttribute("level", level);
+
+		/*boolean usePreview = "1".equalsIgnoreCase(commonUtil.getTenantConfigRest("useImageConvertServer", user.getId(), request));
+		model.addAttribute("usePreview", usePreview);*/
+
 		logger.debug("webfolderCompanyFile end");
 		return "admin/ezWebFolder/webfolderCompanyFile";
 	}
@@ -429,6 +433,10 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		}
 		
 		model.addAttribute("level", level);
+
+		/*boolean usePreview = "1".equalsIgnoreCase(commonUtil.getTenantConfigRest("useImageConvertServer", user.getId(), request));
+		model.addAttribute("usePreview", usePreview);*/
+
 		logger.debug("webfolderDeptFile end");
 		return "admin/ezWebFolder/webfolderDeptFile";
 	}

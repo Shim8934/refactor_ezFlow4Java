@@ -2,6 +2,10 @@ package egovframework.ezEKP.ezWebFolder.web;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.websocket.server.PathParam;
 
+import org.apache.commons.lang3.Validate;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -42,6 +47,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -72,10 +78,11 @@ import egovframework.ezEKP.ezWebFolder.vo.UserCapacityVO;
 import egovframework.ezEKP.ezWebFolder.vo.WebfolderConfigVO;
 import egovframework.ezEKP.ezWebFolder.vo.WebfolderEnvVO;
 import egovframework.ezEKP.ezWebFolder.vo.result.UploadResult;
-import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.Offset;
+import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @SuppressWarnings("unchecked")
 @RestController
@@ -86,6 +93,9 @@ public class EzWebFolderGWController {
 	@Autowired
 	private CommonUtil commonUtil;
 	
+	@Autowired
+	private EgovFileScrty egovFileScrty;
+
 	@Autowired
 	private EzWebfolderUtil webfolderUtil;
 
@@ -3835,6 +3845,119 @@ public class EzWebFolderGWController {
 		return result;
 	}
 
+	@RequestMapping(value = "/rest/ezwebfolder/file/{fileId}/viewer/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getSatViewerURI(@PathVariable String fileId, @PathVariable String userId, HttpServletRequest request) {
+		String requestURI = request.getRequestURI();
+		String serverName = request.getHeader("x-user-host");
+
+		logger.debug("G/W WEBFOLDER [GET {}] started.", requestURI);
+		logger.debug("serverName: {}, fileId: {}, userId: {}", serverName, fileId, userId);
+
+		JSONObject result = new JSONObject();
+
+		if (containsNull(serverName, userId)) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+
+		process: try {
+			LoginVO user = commonUtil.getUserForGw(userId, serverName);
+			int tenantId = user.getTenantId();
+
+			String permissionState = ezWebFolderService_y.checkPermission(userId, user.getDeptID(), user.getCompanyID(), fileId, "F", tenantId);
+
+			if ("fail".equalsIgnoreCase(permissionState)) {
+				throw new IllegalAccessException("접근 권한이 없습니다.");
+			}
+
+			if (!"1".equals(ezCommonService.getTenantConfig("useImageConvertServer", tenantId))) {
+				throw new RuntimeException("Not enabled useImageConvertServer tenant config");
+			}
+
+			FileVO file = ezWebFolderService.getFileByFileId(fileId, user.getOffset(), tenantId);
+			String fileType = file.getFileTypeName();
+
+			if (!"document".equals(fileType) && !"image".equals(fileType)) {
+				logger.debug("is unsupported format");
+				result.put("status", "ok");
+				result.put("code", 1);
+				break process;
+			}
+
+			SatDownloadKey key = new SatDownloadKey(fileId, tenantId);
+			String filePath = request.getScheme() + "://" + serverName + ":" + request.getServerPort()
+					+ "/rest/ezwebfolder/file/sat?key=" + URLEncoder.encode(key.toString(), "UTF-8");
+			String fileName = file.getFileName();
+
+			logger.debug("filePath: {}, fileName: {}", filePath, fileName);
+
+			String satImageConvertServerUrl = ezCommonService.getTenantConfig("SATimageConvertServerURL", user.getTenantId());
+			String url = UriComponentsBuilder.fromHttpUrl(satImageConvertServerUrl)
+					.queryParam("filepath", filePath)
+					.queryParam("filename", fileName)
+					.queryParam("fileext", file.getFileExt())
+					.queryParam("viewerselect", "image")
+					.queryParam("userid", user.getId())
+					.build().encode().toString();
+
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", url);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+
+		logger.debug("G/W WEBFOLDER [GET {}] ended.", requestURI);
+
+		return result;
+	}
+
+	@RequestMapping(value = "/rest/ezwebfolder/file/sat", method = RequestMethod.GET)
+	public void downloadFileFromSat(@RequestParam String key, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("G/W WEBFOLDER [GET {}] started.", request.getRequestURI());
+
+		try {
+			SatDownloadKey satKey = new SatDownloadKey(key);
+
+			int tenantId = satKey.getTenantId();
+			String fileId = satKey.getFileId();
+			FileVO fileVO = Validate.notNull(ezWebFolderService.getFileByFileId(fileId, Offset.KST, tenantId),
+					"fileVO must not be null, fileId: %s", fileId);
+			Path filePath = Paths.get(request.getServletContext().getRealPath(fileVO.getFilePath()));
+
+			logger.debug("fileId: {}, filePath: {}", fileId, filePath);
+
+			Validate.isTrue(Files.isRegularFile(filePath), "file not found");
+
+			response.setBufferSize(2048);
+			response.setHeader("Content-Length", Long.toString(Files.size(filePath)));
+
+			// file I/O
+			Files.copy(filePath, response.getOutputStream());
+		} catch (Exception ex) {
+			if (!response.isCommitted()) {
+				Map<String, Object> result = new HashMap<>();
+
+				result.put("status", "error");
+				result.put("data", "Invalid key or not found file");
+				result.put("code", 2);
+
+				String resultStr = JSONObject.toJSONString(result);
+
+				response.setHeader("Content-Length", Integer.toString(resultStr.length()));
+				response.getOutputStream().print(resultStr);
+			}
+
+			logger.error("Invalid key or not found file. key: {}, exception: {}", key, ex);
+		}
+
+		logger.debug("G/W WEBFOLDER [GET {}] ended.", request.getRequestURI());
+	}
+
 	private <T> T orElse(T value, T other) {
 		if (other == null) {
 			throw new IllegalArgumentException("other is null!");
@@ -3922,6 +4045,50 @@ public class EzWebFolderGWController {
 	private String changeString(String str){
 		str = str.replaceAll("'", "&#39;");
 		return str;
+	}
+
+	private class SatDownloadKey {
+
+		private static final char SEPARATOR = '|';
+
+		private final String fileId;
+		private final int tenantId;
+
+		private SatDownloadKey(String fileId, int tenantId) {
+			this.fileId = fileId;
+			this.tenantId = tenantId;
+		}
+
+		private SatDownloadKey(String encryptedKey) throws Exception {
+			String decryptedKey = egovFileScrty.decryptAES(encryptedKey);
+			int separatorIndex = decryptedKey.indexOf(SEPARATOR);
+
+			if (separatorIndex == -1) {
+				throw new IllegalArgumentException("has no separator!");
+			}
+
+			this.fileId = decryptedKey.substring(0, separatorIndex);
+			this.tenantId = Integer.parseInt(decryptedKey.substring(separatorIndex + 1));
+		}
+
+		public String getFileId() {
+			return fileId;
+		}
+
+		public int getTenantId() {
+			return tenantId;
+		}
+
+		@Override
+		public String toString() {
+			try {
+				return egovFileScrty.encryptAES(fileId + SEPARATOR + tenantId);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return "";
+			}
+		}
+
 	}
 
 }

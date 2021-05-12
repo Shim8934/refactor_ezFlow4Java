@@ -54,6 +54,7 @@ var messages = {
 	strLangDragNDrop:"フォルダはアップロードすることができません。",
 	replyFileDelete: "返信を含むファイルは削除できません。",
 	extensionError: "次のファイルの拡張子は許可されません\n",
+	unsupportedFormat: "The file format is not supported.",
 	webviewerConfirm: "選択したファイルをWebビューアで開きますか？",
 	moveFromNotInheritError: "You cannot move/copy files or folders in folders that do not inherit permissions.",
 	moveFromNotInheritErrorContains: "You cannot move/copy because the selected item contains files or folders in folders that do not inherit permissions."

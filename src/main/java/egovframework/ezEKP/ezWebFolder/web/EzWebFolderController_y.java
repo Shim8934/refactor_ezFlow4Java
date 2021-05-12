@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.unidocs.cipher.PDFInfoEncrypter;
-import com.unidocs.workflow.util.PDFFileFilter;
 
 import egovframework.ezEKP.ezWebFolder.util.EzWebfolderUtil;
 import egovframework.let.user.login.vo.LoginSimpleVO;
@@ -52,8 +51,8 @@ public class EzWebFolderController_y {
 		String allFileFlag = orElse(request.getParameter("allFileFlag"),"");
 		allFileFlag = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(allFileFlag));
 		String parentId = orElse(request.getParameter("parentId"),"");
-		boolean useVersionHistory = "YES".equalsIgnoreCase(
-				commonUtil.getTenantConfigRest("useWebfolderVersionHistory", userInfo.getId(), request));
+		boolean usePreview = "1".equalsIgnoreCase(commonUtil.getTenantConfigRest("useImageConvertServer", userInfo.getId(), request));
+		boolean useVersionHistory = "YES".equalsIgnoreCase(commonUtil.getTenantConfigRest("useWebfolderVersionHistory", userInfo.getId(), request));
 				
 		parentId = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(parentId));
 		
@@ -92,6 +91,7 @@ public class EzWebFolderController_y {
         model.addAttribute("lang"		, userInfo.getLang());
         model.addAttribute("allFileFlag", allFileFlag);
         model.addAttribute("parentId"	, parentId);
+        model.addAttribute("usePreview"	, usePreview);
         model.addAttribute("useVersionHistory", useVersionHistory);
         
         LOGGER.debug("main ended");

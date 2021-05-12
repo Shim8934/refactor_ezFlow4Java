@@ -592,6 +592,10 @@ public class EzWebFolderController_m {
 			model.addAttribute("uploadLimit", -1);
 		}
 
+		boolean usePreview = "1".equalsIgnoreCase(commonUtil.getTenantConfigRest("useImageConvertServer", user.getId(), request));
+
+		model.addAttribute("usePreview", usePreview);
+
 		logger.debug("favorite ended.");
 		return "ezWebFolder/webfolderFavorite";
 	}

@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-	<title>Insert title here</title>
+	<title></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}" type="text/css">
 	<script type="text/javascript" src="${util.addVer('ezWebFolder.e1', 'msg')}"></script>	
@@ -537,11 +537,11 @@
 					
 					if (result[i]["fileTypeName"] != 'folder') {
 						trElmt.addEventListener("dblclick", function(event) {
-							if (this.getAttribute("encryptedFlag") == "1") {
+							/* if (this.getAttribute("encryptedFlag") == "1") {
 								unidocsWebViewer(event);
 							} else {
-								downloadFileByDbClick(event);
-							}
+							} */
+							downloadFileByDbClick(event);
 							rowContext.setSelectState(this, true);
 						});
 					}
@@ -956,6 +956,12 @@
 			event.preventDefault();
 			contextClickedTr = event.currentTarget;
 			
+			
+			<c:if test="${usePreview}">
+			document.getElementById("previewMenu").style.display =
+					rowContext.getRowInfo(contextClickedTr).type == "F" ? "" : "none";
+			</c:if>
+			
 			if (folderType == 'C') {
 				var targetFolderId = contextClickedTr.getAttribute("targetid");
 				var targetDepth = contextClickedTr.getAttribute("depth");
@@ -1233,6 +1239,9 @@
 			<ul>
 				<li class="important"><span onclick="buttons.fileDownload()"><spring:message code='ezWebFolder.t186' /></span></li>
 				<li class="important" id="upload"><span onclick="buttons.fileUpload()"><spring:message code='ezWebFolder.t187' /></span></li>
+				<c:if test="${usePreview}">
+					<li id="previewButton"><span onclick="buttons.filePreview()"><spring:message code='main.t4009' /></span></li>
+				</c:if>
 				<li id ="newFolder"><span onclick="buttons.newFolder()"><spring:message code='ezWebFolder.t255' /></span></li>
 				<li id="rename"><span onclick="buttons.fileRename()"><spring:message code='ezWebFolder.t508' /></span></li>
 		<c:choose>
@@ -1425,6 +1434,13 @@
 	<div id="contextMenuDiv" style="position: absolute; z-index: 6000; display: none;">
 		<table cellpadding="2" cellspacing="1" border="0" class="popuplist">
 			<tbody>
+				<c:if test="${usePreview}">
+				<tr id="previewMenu">
+					<td onclick="buttons.filePreview();" onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor: pointer; background-color: rgb(255, 255, 255);">
+						<span style="font-size: 12px; width: 100%; display: inline-block;"><img src="/images/icon_preview.png" align="absmiddle" hspace="5"><spring:message code='main.t4009' /></span>
+					</td>
+				</tr>
+				</c:if>
 				<tr id="moveMenu">
 					<td onclick="buttons.fileMoveAndCopy();" onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor: pointer; background-color: rgb(255, 255, 255);">
 						<span style="font-size: 12px; width: 100%; display: inline-block;"><img src="/images/ImgIcon/move.gif" align="absmiddle" hspace="5"><spring:message code='ezWebFolder.t251' /></span>

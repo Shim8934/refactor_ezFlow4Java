@@ -7,11 +7,11 @@ var buttons = (function() {
 		var jbSplit = data.split('/');
 		return jbSplit;
 	}
-	function getSelectedFoldersAndFiles() {
+	function getSelectedFoldersAndFiles(ignoreAlert) {
 		var selectedRows = rowContext.getSelectedRows();
 		var selectedLength = selectedRows.length;
 		
-		if (selectedLength <= 0) {
+		if (!ignoreAlert && selectedLength <= 0) {
 			alert(messages.strLang38);
 			return undefined;
 		}
@@ -88,7 +88,65 @@ var buttons = (function() {
 				}
 			});
 		},
-		
+		filePreview: function() {
+			var selected = getSelectedFoldersAndFiles(true);
+
+			if (selected.folders.length > 0) {
+				alert(messages.strLang1);
+				return;
+			}
+
+			if (selected.files.length == 0) {
+				alert(messages.strLang5);
+				return;
+			}
+
+			if (selected.files.length > 1) {
+				alert(messages.strLang6);
+				return;
+			}
+
+			var fileId = selected.files[0];
+
+			$.ajax({
+				type: "POST",
+				url: "/ezWebFolder/checkPermission_y.do",
+				data: { "fileList" : fileId, "folderList" : "" },
+				dataType: "JSON",
+				success : function(data) {
+					if (data.status != "ok" && data.code == "3") {
+						alert(messages.strLang25);
+					} else if (data.code == "1") {
+						alert(messages.strLang7);
+					} else {
+						$.ajax({
+							type: "GET",
+							url: "/ezWebFolder/filePreview.do",
+							data: { "fileId" : fileId },
+							dataType: "JSON",
+							success: function(previewData) {
+								if (previewData.status == "ok") {
+									if (previewData.code == 1) {
+										alert(messages.unsupportedFormat);
+										return;
+									}
+
+									window.open(previewData.data, "_blank");
+								} else {
+									alert(messages.strLang7);
+								}
+							},
+							error : function(error) {
+								alert(messages.strLang7 + error);
+							}
+						});
+					}
+				},
+				error : function(error) {
+					alert(messages.strLang7 + error);
+				}
+			});
+		},
 		fileUpload: function() {
 			document.getElementById("file").click();
 		},

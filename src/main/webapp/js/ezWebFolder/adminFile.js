@@ -329,6 +329,42 @@ function fileUpload() {
 	document.getElementById("file").click();
 }
 
+function filePreview() {
+	var filesList = getCheckedRowInfo();
+
+	if (filesList == null) {
+		alert(messages.strLang5);
+		return;
+	}
+
+	if (filesList.length > 1) {
+		alert(messages.strLang6);
+		return;
+	}
+
+	$.ajax({
+		type: "GET",
+		url: "/ezWebFolder/filePreview.do",
+		data: { "fileId" : filesList[0] },
+		dataType: "JSON",
+		success: function(previewData) {
+			if (previewData.status == "ok") {
+				if (previewData.code == 1) {
+					alert(messages.unsupportedFormat);
+					return;
+				}
+
+				window.open(previewData.data, "_blank");
+			} else {
+				alert(messages.strLang7);
+			}
+		},
+		error : function(error) {
+			alert(messages.strLang7 + error);
+		}
+	});
+}
+
 function fileDelete() {
 	var filesList = getCheckedRowInfo();
 	

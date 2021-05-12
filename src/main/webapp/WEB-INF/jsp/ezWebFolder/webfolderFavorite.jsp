@@ -1084,6 +1084,11 @@
 		event.preventDefault();
 		contextClickedTr = event.currentTarget;
 		
+		<c:if test="${usePreview}">
+		document.getElementById("previewMenu").style.display =
+				rowContext.getRowInfo(contextClickedTr).type == "F" ? "" : "none";
+		</c:if>
+		
 		// 2020-12-10 김은실 - (카이스트)회사 폴더별 관리자 지원 기능 
 		var targetFolderId = contextClickedTr.getAttribute("targetid");
 		var targetDepth = contextClickedTr.getAttribute("depth");
@@ -1349,6 +1354,9 @@
 			<ul>
 				<li favoritemenu onclick="buttons.fileDownload()" class="important"><span><spring:message code='ezWebFolder.t186'/></span></li>
 				<li id="upload" onclick="buttons.fileUpload()" class="important"><span><spring:message code='ezWebFolder.t187'/></span></li>
+				<c:if test="${usePreview}">
+					<li id="previewButton" favoritemenu><span onclick="buttons.filePreview()"><spring:message code='main.t4009' /></span></li>
+				</c:if>
 				<li id ="newFolder"><span onclick="buttons.newFolder()"><spring:message code='ezWebFolder.t255' /></span></li>
 				<li favoritemenu onclick="buttons.fileRename()"><span><spring:message code='ezWebFolder.t508'/></span></li><!-- 파일명 변경에서 이름변경으로 수정  -->
 				<li id="moveButton" onclick="buttons.fileMoveAndCopy()"><span><spring:message code='ezWebFolder.t251'/></span></li>
@@ -1506,6 +1514,13 @@
 	<div id="contextMenuDiv" style="position: absolute; z-index: 6000; display: none;">
 		<table cellpadding="2" cellspacing="1" border="0" class="popuplist">
 			<tbody>
+				<c:if test="${usePreview}">
+				<tr id="previewMenu">
+					<td onclick="buttons.filePreview();" onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor: pointer; background-color: rgb(255, 255, 255);">
+						<span style="font-size: 12px; width: 100%; display: inline-block;"><img src="/images/icon_preview.png" align="absmiddle" hspace="5"><spring:message code='main.t4009' /></span>
+					</td>
+				</tr>
+				</c:if>
 				<tr id="moveMenu">
 					<td onclick="buttons.fileMoveAndCopy();" onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor: pointer; background-color: rgb(255, 255, 255);">
 						<span style="font-size: 12px; width: 100%; display: inline-block;"><img src="/images/ImgIcon/move.gif" align="absmiddle" hspace="5"><spring:message code='ezWebFolder.t251' /></span>

@@ -1411,6 +1411,24 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		return resultBody;
 	}
 
+	@RequestMapping(value = "/ezWebFolder/filePreview.do", method = RequestMethod.GET)
+	@ResponseBody
+	public JSONObject getSatViewerURI(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("getSatViewerURI started.");
+
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		String fileId = request.getParameter("fileId");
+
+		logger.debug("fileId: {}, userId: {}", fileId, user.getId());
+
+		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi(
+				"/rest/ezwebfolder/file/" + fileId + "/viewer/" + user.getId(), null, request, "get", null);
+
+		logger.debug("getSatViewerURI end");
+
+		return resultBody;
+	}
+
 	private class MultipartFileResource extends InputStreamResource {
 		private String filename;
 		
