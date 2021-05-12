@@ -1441,7 +1441,7 @@
 			                    			<option selected value="displayname"><spring:message code="ezResource.t135"/></option>
 			                    			<option value="description"><spring:message code="ezResource.t132"/></option>
 			                    			<option value="title"><spring:message code="ezResource.t10"/></option>
-			                    			<option value="telephonenumber"><spring:message code="ezResource.t11"/></option>
+			                    			<option value="telephonenumber"><spring:message code="ezPersonal.t177"/></option>
 			                    			<option value="mobile"><spring:message code="ezResource.t136"/></option>
 			                    			<!-- 2018.02.20 김기하 #11640 -->
 			                    			<%-- <option value="HomePhone"><spring:message code="ezResource.t137"/></option> --%>
@@ -1484,7 +1484,7 @@
 			              			<tr>
 			                  			<td style="width:170px;font-weight: normal" class="td_gray"><spring:message code="ezResource.t9"/></td>
 			                  			<td style="width:150px;font-weight: normal" class="td_gray"><spring:message code="ezResource.t10"/></td>
-			                  			<td class="td_gray" style="font-weight: normal"><spring:message code="ezResource.t11"/></td>
+			                  			<td class="td_gray" style="font-weight: normal"><spring:message code="ezPersonal.t177"/></td>
 			              			</tr>
 			          			</table>
 			          			<table style="width:100%;border:1px solid #ddd;display:none;" id="Search_txtlist_table" class="mainlist" > 
@@ -1492,7 +1492,7 @@
 			                  			<td style="width:130px;font-weight:normal;" class="td_gray"><spring:message code="ezResource.t132"/></td>
 			                  			<td style="width:90px;font-weight:normal;" class="td_gray"><spring:message code="ezResource.t9"/></td>
 			                  			<td style="width:90px;font-weight:normal;" class="td_gray"><spring:message code="ezResource.t10"/></td>
-			                  			<td class="td_gray" style="font-weight:normal;"><spring:message code="ezResource.t11"/></td>
+			                  			<td class="td_gray" style="font-weight:normal;"><spring:message code="ezPersonal.t177"/></td>
 			              			</tr>
 			          			</table>
 			          		</div>

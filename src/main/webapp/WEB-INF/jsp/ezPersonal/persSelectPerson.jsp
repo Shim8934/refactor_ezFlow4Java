@@ -453,7 +453,7 @@
 		        <WIDTH>50</WIDTH>
 		      </HEADER>
 		      <HEADER>
-		        <NAME><spring:message code='ezPersonal.t70'/></NAME>
+		        <NAME><spring:message code='ezPersonal.t177'/></NAME>
 		        <WIDTH>70</WIDTH>
 		      </HEADER>
 		      <HEADER>
@@ -507,7 +507,7 @@
 				            <option selected value="displayname"><spring:message code='ezPersonal.t9'/></option>
 				            <option value="description"><spring:message code='ezPersonal.t7'/></option>
 				            <option value="title"><spring:message code='ezPersonal.t69'/></option>
-				            <option value="telephonenumber"><spring:message code='ezPersonal.t70'/></option>
+				            <option value="telephonenumber"><spring:message code='ezPersonal.t177'/></option>
 				            <option value="mobile"><spring:message code='ezPersonal.t72'/></option>
 				            <option value="HomePhone"><spring:message code='ezPersonal.t73'/></option>
 				            <option value="facsimileTelephoneNumber"><spring:message code='ezPersonal.t74'/></option>
