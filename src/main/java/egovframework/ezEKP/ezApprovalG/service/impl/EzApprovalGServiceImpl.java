@@ -21814,14 +21814,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	   String rtnVal = "";
 	   try{
-		   int j=0;
 		   for(int i=1; i<=pCode.length(); i++){
-			   if(pCode.substring(j,i).equals("Y")){
+			   if(pCode.substring(i-1,i).equals("Y")){
 				   if (!rtnVal.trim().equals("")){
-					   rtnVal += ",";   
+					   rtnVal += ", ";   
 				   }
 				   rtnVal += getCabinetCode2Name("005", Integer.toString(i), companyID, lang, tenantID);
-				   j=j+i;
 			   }
 		   }
 		   return rtnVal;
