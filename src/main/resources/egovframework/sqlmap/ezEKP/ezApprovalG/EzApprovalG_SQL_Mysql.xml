@@ -9125,6 +9125,10 @@
                 AND 
                      A.AprType = #strType#
                 </isEqual>                
+                <isNotEmpty property="v_APRMEMBERSN">
+                AND 
+                     A.AprMemberSN = #v_APRMEMBERSN#
+                </isNotEmpty>
 		        AND
 		        	 A.TENANT_ID = #v_TENANTID# 
 		       	AND
@@ -10496,6 +10500,10 @@
 		             A.AprMemberID = #v_PUSERID#
 		        AND 
 		             A.AprState = #v_PAPRSTATE#
+		        <isNotEmpty property = "v_APRMEMBERSN">
+		        AND
+		        	 A.AprMemberSN = #v_APRMEMBERSN#
+		        </isNotEmpty>
 		        AND
 		        	 A.TENANT_ID = #v_TENANTID#
 		        AND
