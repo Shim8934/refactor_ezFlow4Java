@@ -98,6 +98,10 @@ function onDrop(evt) {
 }
 
 function fileupload() {	
+	if (uploadIng) {
+		alert(uploadIngStatusMessage);
+		return;
+	}
 	var progress_bar_id = '#progress-wrp';
 	// 2018.11.28 파일명 중복 체크 -------------
 	
@@ -107,7 +111,7 @@ function fileupload() {
 	var duplicateInfoArray = [];
 	// FileList to Array
 	var tempFileArray = Array.prototype.slice.call(file);
-	
+
 	// 1회 업로드 용량 체크
 	if (window.uploadLimit) {
 		var totalSize = 0;
@@ -138,7 +142,7 @@ function fileupload() {
 		document.getElementById("webFolderRightPanel").style.background = "rgba(0,0,0,0.5)";
 		showProgress();
 	} catch (ignore) {}
-	
+
 	$.ajax({
 		url: "/ezWebFolder/getDuplicateFiles.do",
 		type: "POST",
@@ -247,6 +251,7 @@ function realUpload() {
 	var dragZone = document.getElementById("dragDropArea");
 	var height   = dragZone.clientHeight;
 	dragZone.style.height = height - 34 + "px";
+	uploadIng = true; 
 	
 	$.ajax({
 		url : "/ezWebFolder/uploadFile.do",
@@ -300,6 +305,7 @@ function realUpload() {
 	})
 	.complete(function(res){
 		ajaxUploadComplete();
+		uploadIng = false;
 		
 		// 이름 중복된 파일 처리
 		duplicateFile.process({

@@ -75,6 +75,8 @@
 	var selectXhr;
 	var uploadLimit = <c:out value="${uploadLimit}" />;
 	var folderUpp = "";
+	var uploadIng = false;
+	var uploadIngStatusMessage = "<spring:message code='uploadIngStatusMessage'/>";
 	
 	var context = (function() {
 		var currentFolderId = 0;

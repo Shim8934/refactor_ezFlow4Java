@@ -56,6 +56,8 @@
 			var _cellInfo        = {};
 			var sortColumn = null;
 			var sortType = null;
+			var uploadIng = false;
+			var uploadIngStatusMessage = "<spring:message code='uploadIngStatusMessage'/>";
 			
 			// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 			window.onresize = function () {
