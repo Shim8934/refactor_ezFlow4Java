@@ -8804,7 +8804,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				if (rtnVal.equals("ERROR")) {
 					falseCnt++;
 				} else {
-					if (!docState.equals("017")) {
+					if (!docState.equals("017")) { // 참조가 아닌 경우에만 발송
 						ezApprovalGService.sendMailToNextAprMember(xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), request, loginCookie, userInfo, orgCompanyID, userInfo.getTenantId());
 					}
 					trueCnt++;
