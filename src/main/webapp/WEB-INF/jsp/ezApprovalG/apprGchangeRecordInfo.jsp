@@ -404,6 +404,11 @@
                 OpenAlertUI("<spring:message code='ezApprovalG.t955'/>");
                 return "";
             }
+            
+            if (txtTotalPage.value.length > 3) {
+            	OpenAlertUI("<spring:message code='ezApprovalG.t1061'/>");
+                return;
+            }
         }
         else {
         }

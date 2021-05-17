@@ -5940,7 +5940,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 	
 	@Override
-	public String mobileSrvConn(String userID, String result, String formID, String keyVal, String docID, String orgUID, String strLang, String companyID, HttpServletRequest request, LoginVO userInfo, String mode) throws Exception {
+	public String mobileSrvConn(String userID, String result, String formID, String keyVal, String docID, String orgUID, String strLang, String companyID, HttpServletRequest request, LoginVO userInfo, String mode, String aprMemberSN) throws Exception {
 		logger.debug("mobileSrvConn started.");
 		logger.debug("docID : " + docID);
 		logger.debug("result : " + result); // 2017.09.01 기준 "A" 만 들어옴
@@ -5949,10 +5949,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			return "ERROR";
 		}
 		// userID로 추출
-		String docState = getDocAprState(docID, userID, companyID, userInfo.getTenantId());
+		String docState = getDocAprState(docID, aprMemberSN, userID, companyID, userInfo.getTenantId());
 		// userID로 추출한 값이 없을 경우 orgID로 추출
 		if (docState == null || docState.equals("")) {
-			docState = getDocAprState(docID, orgUID, companyID, userInfo.getTenantId());
+			docState = getDocAprState(docID, "", orgUID, companyID, userInfo.getTenantId());
 		}
 		
 		String docType = getDocInfo(docID, "APR", "FUNCTIONTYPE", userInfo, companyID, userInfo.getTenantId(), "", "");
@@ -5968,10 +5968,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			return messageSource.getMessage("ezApprovalG.t2104", userInfo.getLocale());
 		}
 		// userID로 추출
-		String rValue = getDocAprLine(docID, userID, docState, companyID, userInfo.getTenantId());
+		String rValue = getDocAprLine(docID, aprMemberSN, userID, docState, companyID, userInfo.getTenantId());
 		// userID로 추출한 값이 없을 경우 orgUID로 추출
 		if (rValue == null || rValue.equals("<DATA></DATA>")) {
-			rValue = getDocAprLine(docID, orgUID, docState, companyID, userInfo.getTenantId());
+			rValue = getDocAprLine(docID, "", orgUID, docState, companyID, userInfo.getTenantId());
 		}
 		
 		Document xmlDom = commonUtil.convertStringToDocument(rValue);
@@ -5988,7 +5988,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 	
 	@Override
-	public String mobileSrvConn_HWP(String userID, String result, String formID, String keyVal, String docID, String orgUID,  String strLang, String companyID, HttpServletRequest request, LoginVO userInfo, String mode) throws Exception {
+	public String mobileSrvConn_HWP(String userID, String result, String formID, String keyVal, String docID, String orgUID,  String strLang, String companyID, HttpServletRequest request, LoginVO userInfo, String mode, String aprMemberSN) throws Exception {
 		logger.debug("mobileSrvConn_HWP started");
 		logger.debug("docID : " + docID);
 		logger.debug("result : " + result);
@@ -5999,10 +5999,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		// userID로 추출
-		String docState = getDocAprState(docID, userID, companyID, userInfo.getTenantId());
+		String docState = getDocAprState(docID, aprMemberSN, userID, companyID, userInfo.getTenantId());
 		// userID로 추출한 값이 없을 경우 orgID로 추출
 		if (docState == null || docState.equals("")) {
-			docState = getDocAprState(docID, orgUID, companyID, userInfo.getTenantId());
+			docState = getDocAprState(docID, "", orgUID, companyID, userInfo.getTenantId());
 		}
 		
 		if (docState.equals("004") || docState.equals("015")) {
@@ -6010,10 +6010,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		// userID로 추출
-		String rValue = getDocAprLine(docID, userID, docState, companyID, userInfo.getTenantId());
+		String rValue = getDocAprLine(docID, aprMemberSN, userID, docState, companyID, userInfo.getTenantId());
 		// userID로 추출한 값이 없을 경우 orgUID로 추출
 		if (rValue == null || rValue.equals("<DATA></DATA>")) {
-			rValue = getDocAprLine(docID, orgUID, docState, companyID, userInfo.getTenantId());
+			rValue = getDocAprLine(docID, "", orgUID, docState, companyID, userInfo.getTenantId());
 		}
 		
 		Document xmlDom = commonUtil.convertStringToDocument(rValue);
@@ -8458,7 +8458,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return ezApprovalGDAO.getDocAprCnt(map);
 	}
 
-	public String getDocAprLine(String docID, String userID, String docState, String companyID, int tenantID) throws Exception {
+	public String getDocAprLine(String docID, String aprMemberSN, String userID, String docState, String companyID, int tenantID) throws Exception {
 		logger.debug("getDocAprLine started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -8468,6 +8468,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_PUSERID", userID);
 		map.put("v_PAPRSTATE", docState);
 		map.put("v_TENANTID", tenantID);
+		map.put("v_APRMEMBERSN", aprMemberSN);
 		
 		List<ApprGAprLineVO> apprGAprLineVOList = ezApprovalGDAO.getDocAprLine(map);
 		
@@ -8485,7 +8486,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return sb.toString();
 	}
 
-	public String getDocAprState(String docID, String userID, String companyID, int tenantID) throws Exception {
+	public String getDocAprState(String docID, String aprMemberSN, String userID, String companyID, int tenantID) throws Exception {
 		logger.debug("getDocAprState started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -8494,6 +8495,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_PDOCID", docID);
 		map.put("v_PUSERID", userID);
 		map.put("v_TENANTID", tenantID);
+		map.put("v_APRMEMBERSN", aprMemberSN);
 		// 승인(003), 완료(010) 아닌 결재정보 가져오기
 		List<ApprGAprLineVO> apprGAprLineVOList = ezApprovalGDAO.getAprLineInfoAprState(map);
 		
@@ -21827,14 +21829,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	   String rtnVal = "";
 	   try{
-		   int j=0;
 		   for(int i=1; i<=pCode.length(); i++){
-			   if(pCode.substring(j,i).equals("Y")){
+			   if(pCode.substring(i-1,i).equals("Y")){
 				   if (!rtnVal.trim().equals("")){
-					   rtnVal += ",";   
+					   rtnVal += ", ";   
 				   }
 				   rtnVal += getCabinetCode2Name("005", Integer.toString(i), companyID, lang, tenantID);
-				   j=j+i;
 			   }
 		   }
 		   return rtnVal;

@@ -182,10 +182,10 @@
 		                    
 	                        if(getNodeText(GetChildNodes(nodes[i])[0]) == "USER"){
 	                        	pparsingXML = pparsingXML + "<DATA6>" + getNodeText(GetChildNodes(nodes[i])[4]) + "</DATA6>";
-	                            pparsingXML = pparsingXML + "<VALUE>" + getNodeText(GetChildNodes(nodes[i])[2]) + "</VALUE></CELL></ROW>";
+	                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(getNodeText(GetChildNodes(nodes[i])[2])) + "</VALUE></CELL></ROW>";
 	                        } else if (getNodeText(GetChildNodes(nodes[i])[0]) == "DEPT"){
 	                        	pparsingXML = pparsingXML + "<DATA6>" + getNodeText(GetChildNodes(nodes[i])[4]) + "</DATA6>";
-	                            pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + getNodeText(GetChildNodes(nodes[i])[2]) + "</VALUE></CELL></ROW>";
+	                            pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + MakeXMLString(getNodeText(GetChildNodes(nodes[i])[2])) + "</VALUE></CELL></ROW>";
 	                        } else if (getNodeText(GetChildNodes(nodes[i])[0]) == "JIKWI") {
 	                        	pparsingXML = pparsingXML + "<DATA6>" + getNodeText(GetChildNodes(nodes[i])[3]) + "</DATA6>";
 	                        	
@@ -596,7 +596,7 @@
 	        	var strName = document.getElementById("TextName").value.trim();
 	        	
 	            if (strName == "") {
-	                alert("<spring:message code='ezEmail.t22' />");
+	                alert("<spring:message code='ezEmail.ksa17' />");
 	                document.getElementById("TextName").focus();
 	                return;
 	            }
@@ -632,7 +632,7 @@
 	            xmlHTTP.send(xmlDom);
 	            
 	            if (xmlHTTP.status == 200 && xmlHTTP.responseText == "OK") {
-	            	alert("<spring:message code='ezEmail.t24' />");
+	            	alert("<spring:message code='ezEmail.ksa18' />");
 	            	
 	                if (ReturnFunction != null) {
 	                    ReturnFunction(1);
@@ -644,7 +644,7 @@
 	            } else if (xmlHTTP.status == 200 && xmlHTTP.responseText == "GROUP_NAME") {
 	            	alert("<spring:message code='ezEmail.lhm11' />");
 	            } else {
-	            	alert("<spring:message code='ezEmail.t23' />");
+	            	alert("<spring:message code='ezEmail.ksa19' />");
 	            }
 	        }
 	
@@ -1436,7 +1436,7 @@
 		            xmlHTTP.send("");
 		            
 		            if (xmlHTTP.status != 200) {
-			            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.statusText);
+			            alert("<spring:message code='ezEmail.ksa19' />" + xmlHTTP.statusText);
 		            } else {
 		            	document.getElementById("ListViewJikwi").innerHTML = "";
 			            var pListViewJikwi = new ListView();
@@ -1453,7 +1453,7 @@
 		            
 		            xmlHTTP = null;
 		        } catch (e) {
-		            alert("<spring:message code='ezEmail.t574' />" + e.description);
+		            alert("<spring:message code='ezEmail.ksa19' />" + e.description);
 		            xmlHTTP = null;
 		            return;
 		        }
@@ -1478,7 +1478,7 @@
 		            xmlHTTP.send("");
 		            
 		            if (xmlHTTP.status != 200) {
-			            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.statusText);
+			            alert("<spring:message code='ezEmail.ksa19' />" + xmlHTTP.statusText);
 		            } else {
 		            	document.getElementById("ListViewJikchek").innerHTML = "";
 			            var pListViewJikchek = new ListView();
@@ -1495,7 +1495,7 @@
 		            
 		            xmlHTTP = null;
 		        } catch (e) {
-		            alert("<spring:message code='ezEmail.t574' />" + e.description);
+		            alert("<spring:message code='ezEmail.ksa19' />" + e.description);
 		            xmlHTTP = null;
 		            return;
 		        }
@@ -2308,7 +2308,7 @@
 			            xmlHTTP.send("");
 			            
 			            if (xmlHTTP.status != 200) {
-				            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.statusText);
+				            alert("<spring:message code='ezEmail.ksa19' />" + xmlHTTP.statusText);
 			            } else {
 			            	document.getElementById("ListViewJikwi").innerHTML = "";
 				            var pListViewJikwi = new ListView();
@@ -2332,7 +2332,7 @@
 			            xmlHTTP.send("");
 			            
 			            if (xmlHTTP.status != 200) {
-				            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.statusText);
+				            alert("<spring:message code='ezEmail.ksa19' />" + xmlHTTP.statusText);
 			            } else {
 			            	document.getElementById("ListViewJikchek").innerHTML = "";
 				            var pListViewJikchek = new ListView();
@@ -2352,7 +2352,7 @@
 	        		
 		        	
 		        } catch (e) {
-		            alert("<spring:message code='ezEmail.t574' />" + e.description);
+		            alert("<spring:message code='ezEmail.ksa19' />" + e.description);
 		            xmlHTTP = null;
 		            return;
 		        }

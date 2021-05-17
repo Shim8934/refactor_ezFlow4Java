@@ -1238,6 +1238,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		}
 		
 		model.addAttribute("pwPolicyExplain", pwPolicyExplain);
+		model.addAttribute("type", type);
 		return "admin/ezOrgan/inputPassword";
 	}
 	

@@ -1510,6 +1510,12 @@
 			function move_user(event){
 				event.stopPropagation();
 				
+				var addjobChk = $(event.target).parents("tr").attr("data4");
+				if (typeof addjobChk != "undefined" && addjobChk.toLowerCase() == "addjob") {
+					alert("<spring:message code='ezOrgan.psb02' />");
+					return;
+				}
+				
 				userID = event.target.id;
 				var indexCN = userID.indexOf("move") + 4;
 				userID = userID.substring(indexCN);
