@@ -14,10 +14,12 @@ public interface MOptionService {
 
 	public void insertOption(String uid, String timeZone, String lang, String mainType, String listCnt, String useSecurity, int tenantId) throws Exception;
 
-	public void updateOption(String userId, String timeZone, String lang, String mainType, String listCnt, String useSecurity, int tenantId) throws Exception;
+	public void updateOption(String userId, String timeZone, String lang, String mainType, String listCnt, String useSecurity, int tenantId, String deviceId, String pinState, String pin, String biometric) throws Exception;
 
 	public List<MPortalTimeLineVO> getTimeLineList(MCommonVO info, String sessionDate, String listCnt, String approvalAccess, String boardAccess) throws Exception;
 
 	public MCommonVO commonInfoWeb(String serverName, String userId) throws Exception;
+	
+	public String getDevicePinfInfo(String deviceId, String userId) throws Exception;
 	
 }

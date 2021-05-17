@@ -1,12 +1,14 @@
 package egovframework.ezMobile.ezOption.web;
 
 
+import java.security.PrivateKey;
 import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,6 +75,27 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MOptionGWController
 					opt.setUsePrimaryLangOnly(usePrimaryLangOnly);
 				}
 				
+				String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", info.getTenantId());
+				String deviceId = (request.getParameter("deviceID") == null) ? "" : request.getParameter("deviceID");
+				
+				if (dotNetIntegration.equalsIgnoreCase("NO") && !deviceId.equals("")) {
+					
+					String strJson = mOptionService.getDevicePinfInfo(deviceId, userId);
+					
+					JSONParser parser = new JSONParser();
+					JSONObject pinInfo = (JSONObject)parser.parse(strJson);
+					JSONObject data = (JSONObject) pinInfo.get("data");
+					
+					String biometric = (data.get("biometric") == null) ? "N" : data.get("biometric").toString();
+					String pin = (data.get("pin") == null) ? "" : data.get("pin").toString();
+					String pinState = (data.get("pinState") == null) ? "N" : data.get("pinState").toString();
+					
+					opt.setBiometric(biometric); 
+					opt.setPin(pin);
+					opt.setPinState(pinState);
+					
+				}
+
 				String obj = "";
 				Gson gson = new Gson();
 				obj = gson.toJson(opt);
@@ -149,11 +172,18 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MOptionGWController
 			
 			int tenantId = info.getTenantId();
 			
+			// 20210426 조진호 - pin번호 SHA-256으로 암호화 하여 저장
+			PrivateKey pk = EgovFileScrty.getPrivateKey(egovFileScrty.getPrm(), egovFileScrty.getPre());
+			String pin = EgovFileScrty.decryptRsa(pk, jsonObject.get("pin").toString());
+			pin = EgovFileScrty.encryptPassword(pin, userId);
+			
 			LOGGER.debug("timeZone : " + jsonObject.get("timeZone").toString() + ", lang : " + jsonObject.get("lang").toString() + ", mainType : " + jsonObject.get("mainType").toString()
 					 + ", listCnt : " + jsonObject.get("listCnt").toString() + ", useSecurity : " + jsonObject.get("useSecurity").toString());
 			
-			mOptionService.updateOption(userId, jsonObject.get("timeZone").toString(), jsonObject.get("lang").toString(), jsonObject.get("mainType").toString(), jsonObject.get("listCnt").toString(), jsonObject.get("useSecurity").toString(), tenantId);
-			
+			mOptionService.updateOption(userId, jsonObject.get("timeZone").toString(), jsonObject.get("lang").toString(), jsonObject.get("mainType").toString(), jsonObject.get("listCnt").toString(), 
+					jsonObject.get("useSecurity").toString(), tenantId, "94043aebd77c80b16579002d9dfc5635", jsonObject.get("pinState").toString(), pin,
+					jsonObject.get("biometric").toString());
+
 			MOptionVO opt = mOptionService.optionInfo(userId, tenantId);
 
 			result.put("status", "ok");

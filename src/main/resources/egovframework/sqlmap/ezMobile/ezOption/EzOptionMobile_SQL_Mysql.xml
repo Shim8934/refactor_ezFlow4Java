@@ -36,7 +36,7 @@
       <result property="mainType"	      	column="mainType"        					columnIndex="4"/>
       <result property="listCnt"	     	column="listCnt"        					columnIndex="5"/>      
       <result property="useSecurity"       	column="useSecurity"        				columnIndex="6"/>
-      <result property="tenantId"       	column="tenant_id"        					columnIndex="7"/>     
+      <result property="tenantId"       	column="tenant_id"        					columnIndex="7"/>        
     </resultMap>
     
     <select id="EzOptionDAO.commonInfo" parameterClass="Map" resultMap="MCommonVO">
@@ -81,7 +81,7 @@
 			    useSecurity,
 			    tenant_id
 			FROM
-				TBL_USERMOBILEINFO
+				TBL_USERMOBILEINFO 
 			WHERE
 				userid = #userId#
 			AND
