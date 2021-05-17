@@ -1086,6 +1086,9 @@
 				<ul>
 					<li class="important"><span onclick="buttons.fileDownload()"><spring:message code='ezWebFolder.t186'/></span></li>
 					<li class="important" id="uploadBtn" onclick="buttons.fileUpload()"><span><spring:message code='ezWebFolder.t187'/></span></li>
+					<c:if test="${usePreview}">
+						<li id="previewButton"><span onclick="buttons.filePreview()"><spring:message code='main.t4009' /></span></li>
+					</c:if>
 					<li id ="newFolder"><span onclick="buttons.newFolder()"><spring:message code='ezWebFolder.t255' /></span></li>
 					<li onclick="buttons.fileRename()"><span><spring:message code='ezWebFolder.t508'/></span></li>
 					<li onclick="buttons.fileMoveAndCopy()"><span><spring:message code='ezWebFolder.t251'/></span></li>
