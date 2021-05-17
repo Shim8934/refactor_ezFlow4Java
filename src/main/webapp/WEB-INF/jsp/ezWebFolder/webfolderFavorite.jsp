@@ -255,10 +255,7 @@
 				optionHidden();
 			}
 		};
-		
-		document.body.addEventListener("click", hideContextMenu, true);
-		document.getElementById("dragDropArea").addEventListener("scroll", hideContextMenu);
-		
+
 		document.addEventListener("mouseup", listOptionHidden, true);
 		parent.frames["left"].document.addEventListener("mouseup", listOptionHidden, true);
 		parent.parent.document.getElementById("topFrame").contentWindow.document.addEventListener("mouseup", listOptionHidden, true);
@@ -1074,72 +1071,6 @@
 		return false;
 	}
 
-	// 메일의 콘텍스트 메뉴를 그대로 들고옴
-	function openContextMenu(event) {
-		if (document.getElementById("contextMenuDiv").style.display == "") {
-			hideContextMenu();
-		}
-		if (!event)
-			event = window.event;
-		
-		event.stopPropagation();
-		event.preventDefault();
-		contextClickedTr = event.currentTarget;
-		
-		// 2020-12-10 김은실 - (카이스트)회사 폴더별 관리자 지원 기능 
-		var targetFolderId = contextClickedTr.getAttribute("targetid");
-		var targetDepth = contextClickedTr.getAttribute("depth");
-//		if (targetDepth === "1" && checkIsManager(targetFolderId)) {
-		var isCompanyFolderInClicked = context.isFavoriteMode()
-			? contextClickedTr.getAttribute("folderType") === "C"
-			: folderType === "C";
-		
-		if (!(Number(targetDepth) > 1) && (checkIsManager(targetFolderId) || contextClickedTr.getAttribute("targetcreater") == userId) && isCompanyFolderInClicked) {
-			document.getElementById("folderManagerTR").style.display = "";
-		} else {
-			document.getElementById("folderManagerTR").style.display = "none";
-		}
-		
-		// document.getElementById("replyFileTR").style.display = context.isFavoriteMode() ? "none" : "";
-		
-		var EventMouseX = event.clientX;
-		var EventMouseY = event.clientY;
-		
-		var listsizeheight = document.documentElement.clientHeight;
-		var listsizewidth = document.documentElement.clientWidth;
-		
-		var target = event.target ? event.target : event.srcElement;
-		var targetTag = target.tagName;
-		var EventDivSize = EventMouseY + $("#contextMenuDiv").height() + 70;
-
-		if (listsizeheight < EventDivSize) {
-			var Div_ = EventDivSize - listsizeheight;
-			EventMouseY = EventMouseY - Div_;
-		}
-		
-		EventDivSize = EventMouseX + 140;
-		if (listsizewidth < EventDivSize) {
-			var Div_ = EventDivSize - listsizewidth;
-			EventMouseX = EventMouseX - Div_;
-		}
-
-		document.getElementById("contextMenuDiv").style.left = EventMouseX + "px";
-		document.getElementById("contextMenuDiv").style.top = EventMouseY + "px";
-		document.getElementById("contextMenuDiv").style.display = "";
-	}
-
-	function hideContextMenu() {
-		// 2020-12-10 김은실 - (카이스트)회사 폴더별 관리자 지원 기능 
-		document.getElementById("folderManagerTR").style.display = "none";
-		
-		document.getElementById("contextMenuDiv").style.display = "none";
-		if (window.contextClickedTr) {
-			setTimeout(function() {
-				contextClickedTr = null;
-			}, 0);
-		}
-	}
-	
 	// 2020-12-10 김은실 - (카이스트)회사 폴더별 관리자 지원 기능 
 	function checkIsManager(targetId) {
 		if (!window.managedList) {
@@ -1492,8 +1423,6 @@
 		</div>
 	</div>
 
-	<%@ include file="/WEB-INF/jsp/ezWebFolder/component/downloadOptionPopup.jsp" %>
-
 	<div style="width:200px;height:110px; border-radius:8px;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="progressPanel">
 		<img src="/images/email/progress_img.gif" style="padding-top:20px;"/>
 	</div>
@@ -1505,44 +1434,10 @@
 
 	<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:5000;display:none;" id="webFolderRightPanel">&nbsp;</div>
 
-	<div id="contextMenuDiv" style="position: absolute; z-index: 6000; display: none;">
-		<table cellpadding="2" cellspacing="1" border="0" class="popuplist">
-			<tbody>
-				<tr id="moveMenu">
-					<td onclick="buttons.fileMoveAndCopy();" onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor: pointer; background-color: rgb(255, 255, 255);">
-						<span style="font-size: 12px; width: 100%; display: inline-block;"><img src="/images/ImgIcon/move.gif" align="absmiddle" hspace="5"><spring:message code='ezWebFolder.t251' /></span>
-					</td>
-				</tr>
-				<tr>
-					<td onclick="favoriteContext.toggleAll();" onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor: pointer; background-color: rgb(255, 255, 255);">
-						<span style="font-size: 12px; width: 100%; display: inline-block;"><img src="/images/ImgIcon/icon-flag.gif" align="absmiddle" hspace="5"><spring:message code='ezWebFolder.t216'/></span>
-					</td>
-				</tr>
-				<tr>
-					<td onclick="buttons.openFileVersionHistory();" onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor: pointer; background-color: rgb(255, 255, 255);">
-						<span style="font-size: 12px; width: 100%; display: inline-block;"><img src="/images/ImgIcon/options.gif" align="absmiddle" hspace="5"><spring:message code='webfolder.version.button' /></span>
-					</td>
-				</tr>
-				<%-- <tr id="replyFileTR">
-					<td onclick="buttons.openReply();" onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor: pointer; background-color: rgb(255, 255, 255);">
-						<span style="font-size: 12px; width: 100%; display: inline-block;"><img src="/images/ImgIcon/rul-sml.png" align="absmiddle" hspace="5"><spring:message code='webfolder.reply.title' /></span>
-					</td>
-				</tr> --%>
-				<tr>
-					<td onclick="refreshView();" onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor: pointer; background-color: rgb(255, 255, 255);">
-						<span style="font-size: 12px; width: 100%; display: inline-block;"><img src="/images/ImgIcon/recur.gif" align="absmiddle" hspace="5"><spring:message code='ezWebFolder.t139' /></span>
-					</td>
-				</tr>
-				<!-- 2020-12-10 김은실 - [카이스트] 구성원관리 추가  -->
-				<tr id ="folderManagerTR">
-					<td onclick="getUsersPage_manager();" onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor: pointer; background-color: rgb(255, 255, 255);">
-						<span style="font-size: 12px; width: 100%; display: inline-block;"><img src="/images/ImgIcon/options.gif" align="absmiddle" hspace="5"><spring:message code='ezWebFolder.kes013' /></span>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-		<%@ include file="/WEB-INF/jsp/ezWebFolder/webFolderApplyPopUp.jsp" %>
-	</div>
+	<%@ include file="/WEB-INF/jsp/ezWebFolder/component/downloadOptionPopup.jsp" %>
+	<%@ include file="/WEB-INF/jsp/ezWebFolder/component/contextMenu.jsp" %>
+	<%@ include file="/WEB-INF/jsp/ezWebFolder/webFolderApplyPopUp.jsp" %>
+
 	<!-- 2020-12-08 김은실 - [카이스트] 구성원관리 추가  -->
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/selectUsers.js')}"></script>
 </body>

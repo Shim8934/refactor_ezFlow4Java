@@ -612,6 +612,7 @@
 					}
 					
 					row.addEventListener("click", function(event) {rowContext.onRowClick(event, this);});
+					row.addEventListener("contextmenu", openContextMenu);
 					
 					inputElement = document.createElement("input");
 					inputElement.setAttribute("type", "checkbox");
@@ -814,6 +815,7 @@
 						row.setAttribute("targetCreater", result[i]["creatorId"]);
 					}
 					row.addEventListener("click", function(event) {rowContext.onRowClick(event, this);});
+					row.addEventListener("contextmenu", openContextMenu);
 					
 					inputElement = document.createElement("input");
 					inputElement.setAttribute("type", "checkbox");
@@ -1087,6 +1089,9 @@
 					<li id ="newFolder"><span onclick="buttons.newFolder()"><spring:message code='ezWebFolder.t255' /></span></li>
 					<li onclick="buttons.fileRename()"><span><spring:message code='ezWebFolder.t508'/></span></li>
 					<li onclick="buttons.fileMoveAndCopy()"><span><spring:message code='ezWebFolder.t251'/></span></li>
+					<c:if test="${useVersionHistory}">
+						<li><span onclick="buttons.openFileVersionHistory()"><spring:message code='webfolder.version.button' /></span></li>
+					</c:if>
 					<!-- <li><img src="/images/i_bar.gif"></li> -->
 					<li id="addShareBtn" onclick="shareContext.addShareView()" style="display:none"><span><spring:message code='ezWebFolder.t254'/></span></li>
 					<li id="modifyShareBtn" onclick="shareContext.addShareView()"><span><spring:message code='ezWebFolder.t217'/></span></li>
@@ -1248,5 +1253,6 @@
 			<iframe src="" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 		<%@ include file="/WEB-INF/jsp/ezWebFolder/webFolderApplyPopUp.jsp" %>
+		<%@ include file="/WEB-INF/jsp/ezWebFolder/component/contextMenu.jsp" %>
 	</body>
 </html>

@@ -71,6 +71,7 @@ public class EzWebFolderController_m {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		model.addAttribute("primary", userInfo.getLang());
 		model.addAttribute("userId", userInfo.getId());
+		model.addAttribute("useVersionHistory", "YES".equalsIgnoreCase(commonUtil.getTenantConfigRest("useWebfolderVersionHistory", userInfo.getId(), request)));
 		return "ezWebFolder/webfolderSharingList";
 	}
 	
@@ -104,6 +105,7 @@ public class EzWebFolderController_m {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		model.addAttribute("primary", userInfo.getLang());
 		model.addAttribute("userId", userInfo.getId());
+		model.addAttribute("useVersionHistory", "YES".equalsIgnoreCase(commonUtil.getTenantConfigRest("useWebfolderVersionHistory", userInfo.getId(), request)));
 		return "ezWebFolder/webfolderSharedList";
 	}
 	
@@ -581,16 +583,19 @@ public class EzWebFolderController_m {
 	public String favor(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
 		logger.debug("favorite started.");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		String userId = user.getId();
 
-		model.addAttribute("userId", user.getId());
+		model.addAttribute("userId", userId);
 
-		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/" + user.getId() + "/upload-limit", null, request, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/" + userId + "/upload-limit", null, request, "get", null);
 
 		if ("ok".equals(resultBody.get("status"))) {
 			model.addAttribute("uploadLimit", (double) resultBody.get("uploadLimit"));
 		} else {
 			model.addAttribute("uploadLimit", -1);
 		}
+
+		model.addAttribute("useVersionHistory", "YES".equalsIgnoreCase(commonUtil.getTenantConfigRest("useWebfolderVersionHistory", userId, request)));
 
 		logger.debug("favorite ended.");
 		return "ezWebFolder/webfolderFavorite";
