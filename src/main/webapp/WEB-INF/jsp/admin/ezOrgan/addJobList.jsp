@@ -939,9 +939,11 @@
 			function windowResize() {
 				var doc = window.document;
 				var addJobListView = doc.getElementById("AddJobListView");
+				var previewmailDIV = doc.getElementById("previewmail");
 				var height = doc.documentElement.clientHeight-170;
 				if(height>120) {
 					addJobListView.style.height = height + "px";
+					previewmailDIV.style.height = height + "px";
 				}
 			}
 
@@ -1050,7 +1052,7 @@
 				              <dd id="nodata_title"><spring:message code='ezOrgan.mse5'/></dd>
 			                  </dl>
 		                 </div>
-		              <div class="previewmail" id="previewmail">
+		              <div class="previewmail" id="previewmail" style="Height:670px; overflow-y:auto; ">
 		                 <div class="preview_info">
 		                     <div id="Preview_HeaderH" style="line-height: 11px;">
 						<p class="preview_header">
