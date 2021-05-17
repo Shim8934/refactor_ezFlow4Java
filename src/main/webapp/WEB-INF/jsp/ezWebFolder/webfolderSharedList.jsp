@@ -55,6 +55,8 @@
 			var _cellInfo     = {};
 			var sortColumn    = null;
 			var sortType      = null;
+			var uploadIng = false;
+			var uploadIngStatusMessage = "<spring:message code='uploadIngStatusMessage'/>";
 			
 			// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 			window.onresize = function () {
@@ -627,6 +629,7 @@
 					}
 					
 					row.addEventListener("click", function(event) {rowContext.onRowClick(event, this);});
+					row.addEventListener("contextmenu", openContextMenu);
 					
 					inputElement = document.createElement("input");
 					inputElement.setAttribute("type", "checkbox");
@@ -831,6 +834,7 @@
 					}
 					
 					row.addEventListener("click", function(event) {rowContext.onRowClick(event, this);});
+					row.addEventListener("contextmenu", openContextMenu);
 					
 					inputElement = document.createElement("input");
 					inputElement.setAttribute("type", "checkbox");
@@ -1083,6 +1087,9 @@
 					<li id="fileRenameBtn" onclick="buttons.fileRename()" style="display:none;"><span><spring:message code='ezWebFolder.t508' /></span></li>
 					<li id="fileMoveCopyBtn" onclick="buttons.fileMoveAndCopy()" style="display:none;"><span><spring:message code='ezWebFolder.t251'/></span></li>
 					<li id="fileCopyBtn" onclick="buttons.fileCopy()"><span><spring:message code='ezWebFolder.t316'/></span></li>
+					<c:if test="${useVersionHistory}">
+						<li><span onclick="buttons.openFileVersionHistory()"><spring:message code='webfolder.version.button' /></span></li>
+					</c:if>
 					<!-- <li><img src="/images/i_bar.gif"></li> -->
 					<li onclick="shareContext.addShareView()"><span><spring:message code='ezWebFolder.t254'/></span></li>
 					<li id="hideShareBtn" onclick="shareContext.hideShare()"><span><spring:message code='ezWebFolder.t317'/></span></li>
@@ -1243,6 +1250,8 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
+
 		<%@ include file="/WEB-INF/jsp/ezWebFolder/webFolderApplyPopUp.jsp" %>
+		<%@ include file="/WEB-INF/jsp/ezWebFolder/component/contextMenu.jsp" %>
 	</body>
 </html>

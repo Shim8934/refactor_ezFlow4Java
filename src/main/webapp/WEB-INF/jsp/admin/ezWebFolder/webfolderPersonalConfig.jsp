@@ -240,7 +240,17 @@
 				var checkedList = getSelectedRowInfo();
 				
 				if (checkedList == null) {
-					alert("<spring:message code='ezWebFolder.t208'/>");
+					switch(currentType) {
+					case "C":
+						alert("<spring:message code='ezWebFolder.t208_com'/>");
+						break;
+					case "D":
+						alert("<spring:message code='ezWebFolder.t208_dep'/>");
+						break;
+					case "U":
+						alert("<spring:message code='ezWebFolder.t208'/>");
+						break;
+					}
 					document.getElementById("storageVal").value = "";
 					document.getElementById("storageVal").focus();
 					return;

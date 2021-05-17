@@ -67,10 +67,18 @@ public class EzWebFolderController_m {
 	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderController_m.class);
 	
 	@RequestMapping(value="/ezWebFolder/webfolderSharingList.do", method = RequestMethod.GET)
-	public String webfolderSharingList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
+	public String webfolderSharingList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		model.addAttribute("primary", userInfo.getLang());
-		model.addAttribute("userId", userInfo.getId());
+		String userId = userInfo.getId();
+
+		boolean usePreview = "1".equalsIgnoreCase(commonUtil.getTenantConfigRest("useImageConvertServer", userId, request));
+		boolean useVersionHistory = "YES".equalsIgnoreCase(commonUtil.getTenantConfigRest("useWebfolderVersionHistory", userId, request));
+
+		model.addAttribute("primary", userId);
+		model.addAttribute("userId", userId);
+		model.addAttribute("usePreview", usePreview);
+		model.addAttribute("useVersionHistory", useVersionHistory);
+
 		return "ezWebFolder/webfolderSharingList";
 	}
 	
@@ -100,10 +108,18 @@ public class EzWebFolderController_m {
 	}
 	
 	@RequestMapping(value="/ezWebFolder/webfolderSharedList.do", method = RequestMethod.GET)
-	public String webfolderSharedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+	public String webfolderSharedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		model.addAttribute("primary", userInfo.getLang());
-		model.addAttribute("userId", userInfo.getId());
+		String userId = userInfo.getId();
+
+		boolean usePreview = "1".equalsIgnoreCase(commonUtil.getTenantConfigRest("useImageConvertServer", userId, request));
+		boolean useVersionHistory = "YES".equalsIgnoreCase(commonUtil.getTenantConfigRest("useWebfolderVersionHistory", userId, request));
+
+		model.addAttribute("primary", userId);
+		model.addAttribute("userId", userId);
+		model.addAttribute("usePreview", usePreview);
+		model.addAttribute("useVersionHistory", useVersionHistory);
+
 		return "ezWebFolder/webfolderSharedList";
 	}
 	
@@ -581,10 +597,11 @@ public class EzWebFolderController_m {
 	public String favor(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
 		logger.debug("favorite started.");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		String userId = user.getId();
 
-		model.addAttribute("userId", user.getId());
+		model.addAttribute("userId", userId);
 
-		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/" + user.getId() + "/upload-limit", null, request, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/" + userId + "/upload-limit", null, request, "get", null);
 
 		if ("ok".equals(resultBody.get("status"))) {
 			model.addAttribute("uploadLimit", (double) resultBody.get("uploadLimit"));
@@ -592,9 +609,11 @@ public class EzWebFolderController_m {
 			model.addAttribute("uploadLimit", -1);
 		}
 
-		boolean usePreview = "1".equalsIgnoreCase(commonUtil.getTenantConfigRest("useImageConvertServer", user.getId(), request));
+		boolean usePreview = "1".equalsIgnoreCase(commonUtil.getTenantConfigRest("useImageConvertServer", userId, request));
+		boolean useVersionHistory = "YES".equalsIgnoreCase(commonUtil.getTenantConfigRest("useWebfolderVersionHistory", userId, request));
 
 		model.addAttribute("usePreview", usePreview);
+		model.addAttribute("useVersionHistory", useVersionHistory);
 
 		logger.debug("favorite ended.");
 		return "ezWebFolder/webfolderFavorite";

@@ -48,6 +48,8 @@
 			var containsReplyFiles = [];
 			var contextClickedTr = null;
 // 			var uploadLimit = <c:out value="${uploadLimit}" />;
+			var uploadIng = false;
+			var uploadIngStatusMessage = "<spring:message code='uploadIngStatusMessage'/>";
 			
 			capacity.setFolderIdProvider(function() {
 				return "<c:out value='${folderId}'/>";

@@ -17,6 +17,11 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/share.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/organJson.js')}"></script>
+		<style>
+			.spanName {
+				width:auto;text-overflow:inherit;
+			}
+		</style>
 		<script type="text/javascript">
 			var type = "<c:out value='${type}'/>";
 			var pDeptID = "<c:out value='${userInfo.deptID}'/>";
