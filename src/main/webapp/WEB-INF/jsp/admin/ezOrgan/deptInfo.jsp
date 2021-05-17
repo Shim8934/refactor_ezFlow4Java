@@ -231,7 +231,7 @@
 	            var type = "selDeptMaster";
 	            selectperson_cross_dialogArguments[1] = selectDeptMasterComplete;
 	            
-	            var OpenWin = window.open("/ezPersonal/selectPerson.do?type=" + type, "selDeptMaster", GetOpenWindowfeature(760, 535));
+	            var OpenWin = window.open("/ezPersonal/selectPerson.do?type=" + type, "selDeptMaster", GetOpenWindowfeature(860, 535));
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 	
