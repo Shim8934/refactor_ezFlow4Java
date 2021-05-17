@@ -182,10 +182,10 @@
 		                    
 	                        if(getNodeText(GetChildNodes(nodes[i])[0]) == "USER"){
 	                        	pparsingXML = pparsingXML + "<DATA6>" + getNodeText(GetChildNodes(nodes[i])[4]) + "</DATA6>";
-	                            pparsingXML = pparsingXML + "<VALUE>" + getNodeText(GetChildNodes(nodes[i])[2]) + "</VALUE></CELL></ROW>";
+	                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(getNodeText(GetChildNodes(nodes[i])[2])) + "</VALUE></CELL></ROW>";
 	                        } else if (getNodeText(GetChildNodes(nodes[i])[0]) == "DEPT"){
 	                        	pparsingXML = pparsingXML + "<DATA6>" + getNodeText(GetChildNodes(nodes[i])[4]) + "</DATA6>";
-	                            pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + getNodeText(GetChildNodes(nodes[i])[2]) + "</VALUE></CELL></ROW>";
+	                            pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + MakeXMLString(getNodeText(GetChildNodes(nodes[i])[2])) + "</VALUE></CELL></ROW>";
 	                        } else if (getNodeText(GetChildNodes(nodes[i])[0]) == "JIKWI") {
 	                        	pparsingXML = pparsingXML + "<DATA6>" + getNodeText(GetChildNodes(nodes[i])[3]) + "</DATA6>";
 	                        	
