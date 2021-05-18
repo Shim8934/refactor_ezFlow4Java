@@ -340,7 +340,12 @@
 		    function UserAddjobList(obj) {
 				// 체크박스 클릭
 				if(flags) {
-					var className = window.event.target.getAttribute('class');
+					var className = "";
+					try {
+						window.event.target.getAttribute('class');
+					} catch(e) {
+						window.event.srcElement.getAttribute('class');
+					}
 					if(className === 'checks') {
 						return;
 					}
