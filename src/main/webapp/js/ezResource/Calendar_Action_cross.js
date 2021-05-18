@@ -40,7 +40,7 @@ function createXMLHttpRequest() {
 function todayonlaod(s_Year, s_Month, s_Date)
 {
     //오늘의 데이터를 전역변수에 담아준다.
-    if (s_Year != null && s_Month != null && s_Date != null &&
+    /*if (s_Year != null && s_Month != null && s_Date != null &&
         s_Year != "" && s_Month != "" && s_Date != "")
     {
         var weekSetDate = new Date(s_Year, s_Month -1, s_Date);
@@ -50,10 +50,11 @@ function todayonlaod(s_Year, s_Month, s_Date)
         sz_DayOfWeek = weekSetDate.getDay();
     }
     
-    weekStartDate = new Date(sz_Year, sz_Month, sz_Date);
+    weekStartDate = new Date(sz_Year, sz_Month, sz_Date);*/
     
     //시작일 : 신청자명단위해..
-    mfGetSearchDate(weekStartDate);
+    //mfGetSearchDate(weekStartDate);
+    mfGetSearchDate(weektodate);
 
     c_xmlhttp = createXMLHttpRequest();
     var xmlpara = createXmlDom();
@@ -773,7 +774,7 @@ function tableListControl_Week()
                 _span.onmouseout = new Function("onmouse_out(this);");
                 var pResourceName = "";
                 pResourceName = getNodeText(selObj.parentNode.childNodes[0]).trim();             
-                _span.onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[j]) + "','" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]) + "','" + getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0] + "','" + getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0] + "','" + pResourceName + "','" + getNodeText(xmldom.getElementsByTagName("writer_id")[j]) + "');");
+                _span.onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[j]) + "','" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]) + "','" + getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0] + "','" + getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0] + "','" + escapeHtml(pResourceName) + "','" + getNodeText(xmldom.getElementsByTagName("writer_id")[j]) + "');");
                 setNodeText(_span,getNodeText(xmldom.getElementsByTagName("subject")[j]));
                 _td.appendChild(_span2);
                 _td.appendChild(_span);

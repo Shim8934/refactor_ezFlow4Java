@@ -6,9 +6,9 @@
 				return thisUrl.match(/^https?:\/\/[a-z0-9-_:\.]*/i)[0];
 			}
 		};
-	const MY_DOMAIN = util.getHostDomain();
-//	const url = "/ezWebFolder/main.do?folderId=97&folderType=D&allFileFlag=N&parentId=root";
-	const url = "/ezWebFolder/webfolderFileListPickup.do?folderType=D&allFileFlag=N&parentId=root";
+	var MY_DOMAIN = util.getHostDomain();
+//	var url = "/ezWebFolder/main.do?folderId=97&folderType=D&allFileFlag=N&parentId=root";
+	var url = "/ezWebFolder/webfolderFileListPickup.do?folderType=C&allFileFlag=N&parentId=root";
 	var selectedInfo = new Object();
 	var filePick = {
 		'confirmBT' : null,

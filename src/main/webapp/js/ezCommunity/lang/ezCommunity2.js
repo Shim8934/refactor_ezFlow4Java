@@ -51,3 +51,5 @@ var strLang85 = "You must upload an image file.";
 var strLang86 = "No My Community";
 var strLang87 = "Join the Community";
 var strLang88 = "No communities open";
+
+var strLang89 = "Please select a file to delete.";

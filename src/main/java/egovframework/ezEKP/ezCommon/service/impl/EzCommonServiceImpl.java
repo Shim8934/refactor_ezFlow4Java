@@ -1743,6 +1743,26 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("config_type","메일");
 			put("property","USEEXTERNALMAILSERVERUSERPW"); // property_name
 		}});
+		test.put("useExternalMailServerPort", new HashMap<String, Object>(){{
+			put("tenantID", 0);
+			put("confName","useExternalMailServerPort"); // property_name
+			put("property_value","25");
+			put("config_name","외부메일 서버  smtp 포트 ");
+			put("regdate","2021-03-29 00:00:00");
+			put("description","외부메일 서버 smtp 포트 (deafult:25)");
+			put("config_type","메일");
+			put("property","USEEXTERNALMAILSERVERPORT"); // property_name
+		}});
+		test.put("useDeleteMailBlob", new HashMap<String, Object>(){{
+			put("tenantID", 0);
+			put("confName","useDeleteMailBlob"); // property_name
+			put("property_value","YES");
+			put("config_name","메일 blob 삭제 스케줄러 사용여부");
+			put("regdate","2021-02-19 00:00:00");
+			put("description","메일 blob 삭제 스케줄러 사용여부 (default:YES)");
+			put("config_type","메일");
+			put("property","USEDELETEMAILBLOB"); // property_name
+		}});
 		
 		
 		Iterator<String> keys = test.keySet().iterator();
@@ -2206,6 +2226,23 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.addScheduleMailNotiConfig();
 	}
 
+	/* 2020-10-19 김은실 - 웹폴더 > 하위부서 허용 여부 추가 */
+	@Override
+	public void addWebfolderUserSubdeptPermittedColumn() throws Exception {
+		ezCommonDAO.addWebfolderUserSubdeptPermittedColumn();
+	}
+	
+	/* 2020-12-08 김은실 - [카이스트] 웹폴더 > 폴더 담당자 추가 */
+	@Override
+	public void addWebfolderUserFolderManagerColumn() throws Exception {
+		ezCommonDAO.addWebfolderUserFolderManagerColumn();
+	}
+	
+	@Override
+	public void createWebfolderFileUserTable() {
+		ezCommonDAO.createWebfolderFileUserTable();
+	}
+	
 	@Override
     public void createTblYearlyDocCount() throws Exception {
 	    ezCommonDAO.createTblYearlyDocCount();
@@ -2245,5 +2282,70 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         }
 
         logger.debug("insertChartPortletInfo poertletId=" + portletId + " ended");
+    }
+
+	@Override
+	public void createMailTemplateSequence() throws Exception {
+		ezCommonDAO.createMailTemplateSequence();
+	}
+	
+	@Override
+	public void createJmochaMailboxProgress() throws Exception {
+		ezCommonDAO.createMailboxProgressTable();
+	}
+	
+	// webfolder
+	@Override
+	public List<String> getPermissionGroupIdListOfUser(String userId, String deptId, String companyId, int tenantId) throws Exception {
+		logger.debug("getPermissionGroupIdListOfUser started. userId=" + userId);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("userId", userId);
+		map.put("deptId", deptId);		
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		logger.debug("getPermissionGroupIdListOfUser ended.");
+		
+		return ezCommonDAO.getPermissionGroupIdListOfUser(map);				
+	}
+	
+	@Override
+    public void createTblWebfolderApplyHistroy() throws Exception {
+    	ezCommonDAO.createTblWebfolderApplyHistroy();
+    }
+	
+	/* 2020-10-19 웹폴더 KLIB 암호화 테이블 */
+	@Override
+	public void checkWebfolderEncryptTable() throws Exception {
+		ezCommonDAO.checkWebfolderEncryptTable();
+	}
+	
+	/* 2020-10-19 웹폴더 버전관리 */
+	@Override
+	public void checkWebfolderVersionTable() throws Exception {
+		ezCommonDAO.checkWebfolderVersionTable();
+	}
+	
+	/* 2020-11-25 웹폴더 답글 파일 컬럼 추가 */
+	@Override
+	public void createWebfolderHierarchicalColumns() {
+		ezCommonDAO.createWebfolderHierarchicalColumns();
+	}
+
+	@Override
+	public void addWebfolderLogHistory() throws Exception {
+		ezCommonDAO.addWebfolderLogHistory();
+	}
+	
+	@Override
+	public void createWebfolderNoInherit() {
+		ezCommonDAO.createWebfolderNoInherit();
+	}
+	
+	@Override
+    public void alterWebfolderApplyHistoryAddColumn() throws Exception {
+    	ezCommonDAO.alterWebfolderApplyHistoryAddColumn();
     }
 }

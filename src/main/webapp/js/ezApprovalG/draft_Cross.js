@@ -1919,10 +1919,13 @@ function SendDraftMappingSign(ret) {
 //        		message.GetListItem(fields, "1sign1").height = "65";
 //      	}
 //     }
+        var signWidth = 0;
+        var signHeight = 0;
+        if (field) {
+        	signWidth = parseInt(field.offsetWidth) - 4;
+            signHeight = parseInt(field.offsetHeight) - 4;	
+        }
         
-        var signWidth = parseInt(field.offsetWidth) - 4;
-        var signHeight = parseInt(field.offsetHeight) - 4;
-
         var field = message.GetListItem(fields, pseumyungcell);
         if (field) {
             setNodeText(field , getNodeText(field) + PositionText);
@@ -2258,6 +2261,7 @@ function openFormUI_Complete(ret) {
             tempItemName = "";
             tempdocnumcode = strLang107;
             tempSecurityDate = "";
+            pHasOpinionYN = "N";			// 2021-04-29 김민성 - 기안 > 양식선택시 기존에 의견이 있었던 경우 값이 안바뀌는 오류 수정 
 
             message.Set_EditorContentURL(pFormHref);
             

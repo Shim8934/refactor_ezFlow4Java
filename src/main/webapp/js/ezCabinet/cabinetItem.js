@@ -459,7 +459,7 @@ var CabinetItem = function() {
 				
 				trElmt.setAttribute("class", unselectClass);
 				trElmt.setAttribute("role",  itemList[i]["itemId"]);
-				trElmt.onclick    = function(event) {clickRowFunct(event); itemDblClickHandler2(event, this);};
+				trElmt.onclick    = function(event) {clickRowFunct(event);};
 				trElmt.ondblclick = function(event) {itemDblClickHandler(this);};
 				
 				var inputElmt  = document.createElement("input");
@@ -472,6 +472,10 @@ var CabinetItem = function() {
 				
 				tdElmt3.textContent = itemList[i]["title"];
 				tdElmt3.setAttribute("title", tdElmt3.textContent);
+				/* 2021-03-24 홍승비 - 원클릭 이벤트를 "제목" 칼럼에만 적용 */
+				tdElmt3.onclick = function () {
+					itemDblClickHandler2(event, this.parentElement);
+				}
 				
 				tdElmt4.textContent = itemList[i]["creatorName"];
 				tdElmt4.setAttribute("title", tdElmt4.textContent);
@@ -758,7 +762,7 @@ var CabinetItem = function() {
 		openFileDetail(itemId);
 	}
 	
-	/* 2021-01-21 홍승비 - 미리보기 영역 열려있지 않은 경우, 원클릭으로 캐비넷 읽기팝업창 표출 */
+	/* 2021-03-24 홍승비 - 미리보기 영역이 열려있지 않은 경우, 제목 클릭 시 원클릭으로 캐비넷 읽기팝업창 표출 */
 	function itemDblClickHandler2(event, trObj) {
 		if (document.getElementById("previewCabH").style.display == "none" && document.getElementById("previewCabW").style.display == "none") {
 			if (!event.ctrlKey && !event.shiftKey) {

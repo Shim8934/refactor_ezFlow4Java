@@ -74,6 +74,9 @@ public class ApprGRecordListVO {
 	/** */
 	private String nowDate;
 	
+	private String relayFormID;
+	private boolean joinEndReceiptPointInfo;
+	
 	public int getTenantID() {
 		return tenantID;
 	}
@@ -290,5 +293,17 @@ public class ApprGRecordListVO {
 	public void setNowDate(String nowDate) {
 		this.nowDate = nowDate;
 	}
+    public String getRelayFormID() {
+        return relayFormID;
+    }
+    public void setRelayFormID(String relayFormID) {
+        this.relayFormID = relayFormID;
+    }
+    public boolean getJoinEndReceiptPointInfo() {
+        return joinEndReceiptPointInfo;
+    }
+    public void setJoinEndReceiptPointInfo(boolean joinEndReceiptPointInfo) {
+        this.joinEndReceiptPointInfo = joinEndReceiptPointInfo;
+    }
 	
 }

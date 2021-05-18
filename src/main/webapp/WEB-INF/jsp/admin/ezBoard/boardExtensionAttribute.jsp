@@ -71,12 +71,12 @@
 		                    var xmlRtn = loadXMLString(result).getElementsByTagName("ROWS")[0];
 		                    /* 2018.02.12 김기하 */
 		                    var temp = xmlRtn.getElementsByTagName("VALUE");
-		                	for(i = 0; i < temp.length ; i++){
-		                		temp[i].innerHTML = "<![CDATA[" + ConvMakeXMLString(temp[i].innerHTML) + "]]>";
+		                	for (i = 0; i < temp.length ; i++) {
+		                		temp[i].innerHTML = "<![CDATA[" + temp[i].innerHTML + "]]>";
 		                	}
 		                    headerData.documentElement.appendChild(xmlRtn);
 		                }
-
+		                
 		                var pSelectList = new ListView();
 		                pSelectList.SetID("lvSelectList");
 		                pSelectList.SetMulSelectable(false);
@@ -107,7 +107,7 @@
 		                    /* 2018.02.12 김기하 */
 		                    var temp = xmlRtn.getElementsByTagName("VALUE");
 		                	for(i = 0; i < temp.length ; i++){
-		                		temp[i].innerHTML = "<![CDATA[" + ConvMakeXMLString(temp[i].innerHTML) + "]]>";
+		                		temp[i].innerHTML = "<![CDATA[" + temp[i].innerHTML + "]]>";
 		                	}
 		                    headerData.documentElement.appendChild(xmlRtn);
 		                }
@@ -131,8 +131,8 @@
 		        var tr = listview.GetSelectedRows();
 
 		        if (tr.length != 0) {
-		            document.getElementById("txtNameKor").value = ConvMakeXMLString(getNodeText(tr[0].cells[0]));
-		            document.getElementById("txtNameEng").value = ConvMakeXMLString(getNodeText(tr[0].cells[1]));
+		            document.getElementById("txtNameKor").value = getNodeText(tr[0].cells[0]);
+		            document.getElementById("txtNameEng").value = getNodeText(tr[0].cells[1]);
 
 		            if (getNodeText(tr[0].cells[2]) == "Y")
 		                document.getElementById("chkRequired").checked = true;
@@ -153,6 +153,7 @@
 		            document.getElementById("Gubun").innerHTML = "<table style='width:400px' id='CAS_NO_LIST'><tr><td style='width:100%'><input type='text' id='cas_no1' name='cas_no1' style='width:90%' maxlength='50'>&nbsp;<input type='checkbox' id='DEL_FG1' name='DEL_FG1' /></td></tr></table>";
 		            document.getElementById("AddDel").style.display = "";
 
+		            /* 2021-04-26 홍승비 - 라디오버튼, 체크박스의 각 항목 첫번째 타입명만 ', " 문자를 제대로 표출하는 부분 수정 */
 		            for (var i = 1; i < (pCassNo.split("|").length + 1) ; i++) {
 		                if (i > 1) {
 		                    oRow = document.getElementById("CAS_NO_LIST").insertRow(-1);
@@ -160,7 +161,8 @@
 		                    oCell01 = oRow.insertCell(-1);
 		                    oCell01.align = "left";
 		                    oCell01.valign = "middle";
-		                    oCell01.innerHTML = "<input type=\"text\" id=\"cas_no" + i + "\" value= " + pCassNo.split("|")[(i - 1)] + " name=\"cas_no" + i + "\" style=\"width:90%\" maxlength=\"50\" />&nbsp;<input type=\"checkbox\" name=\"DEL_FG" + i + "\" id=\"DEL_FG" + i + "\" />"
+		                    oCell01.innerHTML = "<input type=\"text\" id=\"cas_no" + i + "\" name=\"cas_no" + i + "\" style=\"width:90%\" maxlength=\"50\" />&nbsp;<input type=\"checkbox\" name=\"DEL_FG" + i + "\" id=\"DEL_FG" + i + "\" />";
+		                    document.getElementById("cas_no" + i).value = pCassNo.split("|")[(i - 1)];
 		                }
 		                else {
 		                    document.getElementById("cas_no1").value = pCassNo.split("|")[(0)];
@@ -177,7 +179,7 @@
 		        var tr = listview.GetSelectedRows();
 
 		        if (tr.length != 0) {
-		            document.getElementById("HeadName").innerHTML = getNodeText(tr[0].cells[0]);
+		            document.getElementById("HeadName").innerText = getNodeText(tr[0].cells[0]);
 		            document.getElementById("HeadWidth").value = getNodeText(tr[0].cells[2]);
 		        }
 		    }

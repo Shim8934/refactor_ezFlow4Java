@@ -154,7 +154,7 @@
 			            if (GetAttribute(pCurSel[count1], "DATA14") != null && GetAttribute(pCurSel[count1], "DATA14") != "") {
 			            	date = GetAttribute(pCurSel[count1], "DATA14");
 			            	today = GetTodayDate();
-			            	if (date > today) {
+			            	if (date >= today) {
 			            		OpenAlertUI("<spring:message code='ezApprovalG.kbm07'/>");
 				            	return;
 			            	}

@@ -12,6 +12,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 import org.springframework.ui.Model;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.w3c.dom.Document;
 
@@ -240,7 +241,8 @@ public interface EzApprovalGAdminService {
 			int tenantID, 
 			String lang, 
 			String offSet, 
-			String approvalFlag, 
+			String approvalFlag,
+			String keyword,
 			Locale locale
 			) throws Exception;
 
@@ -253,4 +255,8 @@ public interface EzApprovalGAdminService {
 	public Object getAuditApprLineListPrc(String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception;
 	
 	public Object getAuditStatisticsDocList(String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception;
+
+	public String xlsSetGroupWithExcel(String loginCookie, MultipartHttpServletRequest request) throws Exception;
+
+	public String xlsxSetGroupWithExcel(String loginCookie, MultipartHttpServletRequest request) throws Exception;
 }

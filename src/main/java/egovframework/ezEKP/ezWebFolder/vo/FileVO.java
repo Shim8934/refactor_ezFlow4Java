@@ -28,6 +28,15 @@ public class FileVO {
 	private String owerId;
 	private int    tenantId;
 	private int    folderSort;
+	private int    encryptedFlag;
+	/* 카이스트 파일 답글 기능 */
+	private int    depth;
+	private String rootId;
+	private String parentId;
+	private String hierarchicalPath;
+	/* 만료된 폴더인지 확인을 위한 플래그 값 */
+	private boolean isExpired;
+	private int version; 
 
 	public String getOwnerId() {
 		return owerId;
@@ -243,5 +252,69 @@ public class FileVO {
 
 	public void setFolderSort(int folderSort) {
 		this.folderSort = folderSort;
+	}
+
+	public int getEncryptedFlag() {
+		return encryptedFlag;
+	}
+
+	public void setEncryptedFlag(int encryptedFlag) {
+		this.encryptedFlag = encryptedFlag;
+	}
+
+	public int getDepth() {
+		return depth;
+	}
+
+	public void setDepth(int depth) {
+		this.depth = depth;
+	}
+
+	public String getRootId() {
+		return rootId;
+	}
+
+	public void setRootId(String rootId) {
+		this.rootId = rootId;
+	}
+
+	public String getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
+	}
+
+	public String getHierarchicalPath() {
+		return hierarchicalPath;
+	}
+
+	public void setHierarchicalPath(String hierarchicalPath) {
+		this.hierarchicalPath = hierarchicalPath;
+	}
+
+	public boolean isReply() {
+		return depth > 1;
+	}
+
+	public boolean isExpired() {
+		return isExpired;
+	}
+
+	public void setExpired(boolean isExpired) {
+		this.isExpired = isExpired;
+	}
+	
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
+	}
+
+	public boolean isFolder() {
+		return "folder".equalsIgnoreCase(typeId);
 	}
 }

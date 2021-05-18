@@ -1,4 +1,4 @@
-﻿﻿﻿var beforeJob = "0";
+﻿var beforeJob = "0";
 var pDocTypeValue = "000";
 var pageSize = "10";
 var CallPage = "Right";
@@ -255,6 +255,9 @@ function getReceivedDocList(p_FormCd) {
     	});
     }
 
+    if (pListTypeValue == "5") {
+        manager = manager + ";relay";
+    }
 
     if (beforeJob != pListTypeValue || SelYearFlag || SearchFlag) {
         beforeJob = pListTypeValue;
@@ -778,9 +781,9 @@ function openDraftUI(pDraftFlag, pCurSelRow,officeFlag) {
         windowName = "openDraftUI_REDRAFT";
         
         //2020-01-16 홍대표. receptGubunYN이 Y인데 재기안 할 경우, 민원인 주소 입력 버튼이 사라지는 버그 수정. 닷넷 참고.
-        if (formDocType == "") {
+        // if (formDocType == "") {
             formDocType = GetAttribute(pCurSelRow, "DATA15");
-        }
+        //}
     }
 
     var pArgument = new Array();
@@ -1778,9 +1781,8 @@ function openergetDocInfo() {
     	selRowChangeFlag = true;
         if (pListTypeValue == "6")
             getSimsaDocList();
-        else if (pListTypeValue == "4")
+        else if (pListTypeValue == "4" || pListTypeValue == "5")
             getReceivedDocList();
-            
         else if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9")
             getSendOutDocList();
         else
@@ -2021,7 +2023,7 @@ function setbuttonenable() {
     else
         document.getElementById("tbar1").style.display = "";*/
 
-    if (pListTypeValue != 1 && pListTypeValue != 4 && pListTypeValue != 10 && pListTypeValue != 99 && pListTypeValue != 11) {
+    if (pListTypeValue != 1 && pListTypeValue != 4 && pListTypeValue != 5 && pListTypeValue != 10 && pListTypeValue != 99 && pListTypeValue != 11) {
     	document.getElementById("tbtnRedraft").style.display = "none";		
         //SwapImage(document.getElementById("btnRedraft"), "dis");
         document.getElementById("tbtnRemoveDoc").style.display = "none";
@@ -2197,7 +2199,7 @@ function setbuttonenable() {
         document.getElementById("tbtnSimsa").style.display = "none";
         
 		if (approvalFlag == "G") {
-			if(pListTypeValue == "4" && useHWP == 'YES') {
+			if(pListTypeValue == "4" && (useHWP == 'YES' || pNonElecRecType.toUpperCase() == "MHT")) {
 				document.getElementById("tbtnNonElecRec").style.display = "";
 			}
 		}
@@ -2475,7 +2477,7 @@ function getdoclistSub_after(xml) {
         var AprLine = new ListView();
         AprLine.SetID("AprLine");
         AprLine.SetMulSelectable(false);
-        AprLine.SetTitleIdx(arrySubTab[subTabLastCol]);
+//        AprLine.SetTitleIdx(arrySubTab[subTabLastCol]);
         AprLine.SetRowOnDblClick("lvAprLine_DBSelChange");
         AprLine.DataSource(loadXMLString(xml));
         AprLine.DataBind("lvAprLine");
@@ -2544,7 +2546,7 @@ function getSimsaDocList() {
 
 var xmlhttp3;
 var temppDocID;
-
+/* 2020-05-22 홍승비 - 사용자 부서에 특수문자 허용 + arr_userinfo[] 배열의 값은 c:out 태그로 저장하므로, DB 저장 시 역으로 특수문자 인코딩 진행 */
 function RemoveDocCabinet(tempDocID, FLAG) {
 	var result = "";
 	
@@ -2556,9 +2558,9 @@ function RemoveDocCabinet(tempDocID, FLAG) {
 		data : {
 			docID : tempDocID,
 			deptID : arr_userinfo[4],
-			deptName : arr_userinfo[15],
+			deptName : ConvMakeXMLString(arr_userinfo[15]),
 			flag : FLAG,
-			deptName2 : arr_userinfo[16]
+			deptName2 : ConvMakeXMLString(arr_userinfo[16])
 		},
 		success: function(xml){
 			result = xml;
@@ -3108,3 +3110,14 @@ function CheckUsePassword() {
     }
 }
 //일괄결재 끝
+
+/* 2021-05-03 홍승비 - 부서에 특수문자를 허용하므로, DB 저장 시 역인코딩을 위한 함수 추가 */
+function ConvMakeXMLString(str) {
+    str = ReplaceText(str, "&lt;", "<");
+    str = ReplaceText(str, "&gt;", ">");
+    str = ReplaceText(str, "&#039;", "'");
+    str = ReplaceText(str, "&#034;", "\"");
+	str = ReplaceText(str, "&#92;", "\\");
+	str = ReplaceText(str, "&amp;", "&");
+    return str;
+}

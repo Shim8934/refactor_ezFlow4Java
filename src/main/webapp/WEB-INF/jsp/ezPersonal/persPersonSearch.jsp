@@ -1004,8 +1004,8 @@
 			    str = ReplaceText(str, "&gt;", ">");
 			    str = ReplaceText(str, "&#039;", "'");
 			    str = ReplaceText(str, "&#034;", "\"");
-			    str = ReplaceText(str, "&amp;", "&");	    
 				str = ReplaceText(str, "&#92;", "\\");
+			    str = ReplaceText(str, "&amp;", "&");	    
 			    return str;
 			}
 			
@@ -1053,7 +1053,7 @@
                                         <option value="extensionPhone" usedefault="0"><spring:message code='main.ksa02' /></option>
                                         <option value="officeMobile" usedefault="0"><spring:message code='main.ksa03' /></option>
                                         </c:if>
-                            			<option value="streetAddress" usedefault="0"><spring:message code='ezPersonal.t180'/></option>
+                            			<option value="streetAddress" usedefault="0" style="display:none"><spring:message code='ezPersonal.t180'/></option>
                             		</select>
                             		<input id="keyword" value="" onKeyPress="search_press(event)" onmousedown="keyword_Clear();" style="width:120px;margin:0px;height: 22px;">
                             			<a class="imgbtn"><span onclick="search_click('search')"><spring:message code='ezPersonal.t83'/></span></a>

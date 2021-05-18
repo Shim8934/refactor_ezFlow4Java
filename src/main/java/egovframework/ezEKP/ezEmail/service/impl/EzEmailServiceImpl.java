@@ -4483,4 +4483,57 @@ public class EzEmailServiceImpl implements EzEmailService {
 		logger.debug("deleteMailDeleteForUser ended.");
         return returnInt;
 	}
+
+	@Override
+	public void setMailboxProgress(String userKey, String userId, String action, int tenantId, int percent) throws Exception {
+		logger.debug("setMailboxProgress started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userKey", userKey);
+		map.put("userId", userId);
+		map.put("action", action);
+		map.put("tenantId", tenantId);
+		map.put("percent", percent);
+		
+		ezEmailDAO.setMailboxProgress(map);
+		
+		logger.debug("setMailboxProgress ended.");
+	}
+	
+	@Override
+	public int updateMailboxProgress(String userKey, int percent) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userKey", userKey);
+		map.put("percent", percent);
+		
+		return ezEmailDAO.updateMailboxProgress(map);
+	}
+
+	@Override
+	public int getMailboxProgress(String userKey) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userKey", userKey);
+		
+		String progressCnt = ezEmailDAO.getMailboxProgress(map);
+		if (progressCnt == null || progressCnt.equals("")) {
+			progressCnt = "-100";
+		}
+		
+		return Integer.parseInt(progressCnt);
+	}
+
+	@Override
+	public int delMailboxProgress(String userKey) throws Exception {
+		logger.debug("delMailboxProgress started.");
+		logger.debug("userKey=" + userKey);
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userKey", userKey);
+		
+		int resultInt = ezEmailDAO.deleteMailboxProgress(map);
+		
+		logger.debug("delMailboxProgress ended.");
+		return resultInt;
+	}
+
 }

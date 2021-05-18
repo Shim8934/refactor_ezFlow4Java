@@ -16,7 +16,7 @@ var shareContext = (function() {
 		
 		var rowInfo = rowContext.getRowInfo(selectedRows[0]);
 		
-		var openWindow = window.open("/ezWebFolder/addShareView.do?folderFileId=" + rowInfo.id + "&folderFileType=" + rowInfo.type, "addShareView", GetOpenWindowfeature(610, 685));
+		var openWindow = window.open("/ezWebFolder/addShareView.do?folderFileId=" + rowInfo.id + "&folderFileType=" + rowInfo.type, "addShareView", GetOpenWindowfeature(610, 708));
         try { openWindow.focus(); } catch (e) { }
 	}
 	

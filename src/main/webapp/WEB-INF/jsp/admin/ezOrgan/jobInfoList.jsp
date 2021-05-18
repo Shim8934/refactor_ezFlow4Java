@@ -157,9 +157,9 @@
 					}
 				} else { // 직책
 					if (isPrimary == "1") { // 기본 언어
-						pJobNM = oArrRows[0].childNodes[0].textContent;
-					} else {
 						pJobNM = oArrRows[0].childNodes[1].textContent;
+					} else {
+						pJobNM = oArrRows[0].childNodes[2].textContent;
 					}
 				}
 				

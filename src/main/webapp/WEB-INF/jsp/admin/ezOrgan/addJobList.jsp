@@ -37,6 +37,7 @@
 			border-color: transparent transparent rgba(66, 66, 66, 0.7) transparent;
 		}
 		.preview_count {display: inline-block; margin-top: -6px; color: #017BEC; font-size: 11px;}
+		.tooltip_span .tooltiptext {color: white; }
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -571,7 +572,7 @@
 							listview.LoadFromID("lvAddJobList");
 
 							for (var i = 0; i < document.getElementById("AddJobList").childNodes.length ; i++) {
-								createNodeAndInsertText(xmlDom, objNode, "CN", GetAttribute(listview.GetSelectedRows()[0], "data1"));
+								createNodeAndInsertText(xmlDom, objNode, "CN", GetAttribute(_RowObject, "_CN"));
 								createNodeAndInsertText(xmlDom, objNode, "DEPTID", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_deptid"));
 								createNodeAndInsertText(xmlDom, objNode, "TITLE", "");
 								createNodeAndInsertText(xmlDom, objNode, "JOBID", "");
@@ -938,9 +939,11 @@
 			function windowResize() {
 				var doc = window.document;
 				var addJobListView = doc.getElementById("AddJobListView");
+				var previewmailDIV = doc.getElementById("previewmail");
 				var height = doc.documentElement.clientHeight-170;
 				if(height>120) {
 					addJobListView.style.height = height + "px";
+					previewmailDIV.style.height = height + "px";
 				}
 			}
 
@@ -1049,7 +1052,7 @@
 				              <dd id="nodata_title"><spring:message code='ezOrgan.mse5'/></dd>
 			                  </dl>
 		                 </div>
-		              <div class="previewmail" id="previewmail">
+		              <div class="previewmail" id="previewmail" style="Height:670px; overflow-y:auto; ">
 		                 <div class="preview_info">
 		                     <div id="Preview_HeaderH" style="line-height: 11px;">
 						<p class="preview_header">

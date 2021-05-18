@@ -71,7 +71,13 @@
 						
 						for (var i = 0; i < 5; i++) {
 							if (forms[i]) {
-								formsHTML += "<li class='bookmarkLi' data-location='" + forms[i].formFileLocation + "' data-type='" + forms[i].formDocType + "'><span style='width: 65px; display: inline-block; overflow:hidden; text-overflow:ellipsis;'>" + forms[i].formName + "</span></li>";
+								formsHTML += "<li class='bookmarkLi' data-location='" + forms[i].formFileLocation + "' data-type='" + forms[i].formDocType + "'><span style='width: 65px; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:3; -webkit-box-orient:vertical; height: 39px;";
+								if (navigator.userAgent.indexOf("Trident") > -1) {
+									formsHTML += " display:-ms-flexbox; -ms-flex-pack:center; "
+								} else {
+									formsHTML += " display:-webkit-box; "
+								}
+								formsHTML += "'>" + forms[i].formName + "</span></li>";
 							} else {
 								formsHTML += "<li class='bookmarkLi_none'></li>";
 							}

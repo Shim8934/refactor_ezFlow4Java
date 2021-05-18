@@ -154,16 +154,23 @@
 				parameter[6] = getNodeText(oSelRow[0].cells[4]);
 				parameter[7] = GetAttribute(oSelRow[0], "DATA3")
 				parameter[8] = getNodeText(oSelRow[0].cells[5]);
+				parameter[9] = "";  // 현재 선택된 부서ID (부서직인 관리 시에만 사용되므로, 공백으로 넘김)
+                parameter[10] = pCompanyID;  // 현재 선택된 회사ID
 				
 				ezsealinfo_dialogArguments[0] = parameter;
 				ezsealinfo_dialogArguments[1] = btnInfo_onclick_complete;
+				ezsealinfo_dialogArguments[2] = btnInfo_onDelete_Complete; // 관인삭제 후 동작
 				
-				var ezSealInfo = window.open("/admin/ezApprovalG/sealInfo.do", "ezSealInfo", GetOpenWindowfeature(500, 420));
+				var ezSealInfo = window.open("/admin/ezApprovalG/sealInfo.do", "ezSealInfo", GetOpenWindowfeature(510, 470));
 				try { ezSealInfo.focus(); } catch (e) {}
 			} else {
 				alert("<spring:message code='ezApprovalG.t1280'/>");
 			}
 		}
+		
+		function btnInfo_onDelete_Complete() {
+	    	getSealListInfo();
+	    }
 		
 		function btnInfo_onclick_complete() {
 			

@@ -67,13 +67,21 @@ function closeAllPopup() {
 }
 
 function showProgress() {
-	var CurrentHeight = document.documentElement.clientHeight;
-	var CurrenWidth = document.documentElement.clientWidth;
-	document.getElementById("progressPanel").style.top = (CurrentHeight / 2) + "px";
-	document.getElementById("progressPanel").style.left = (CurrenWidth / 2) - 100 + "px";
-	document.getElementById("progressPanel").style.display = "block";
+	if (typeof listLoading == "function") {
+		listLoading(true);
+	} else {
+		var CurrentHeight = document.documentElement.clientHeight;
+		var CurrenWidth = document.documentElement.clientWidth;
+		document.getElementById("progressPanel").style.top = (CurrentHeight / 2) + "px";
+		document.getElementById("progressPanel").style.left = (CurrenWidth / 2) - 100 + "px";
+		document.getElementById("progressPanel").style.display = "block";
+	}
 }
 
 function hideProgress() {
-	document.getElementById("progressPanel").style.display = "none";
+	if (typeof listLoading == "function") {
+		listLoading(false);
+	} else {
+		document.getElementById("progressPanel").style.display = "none";
+	}
 }

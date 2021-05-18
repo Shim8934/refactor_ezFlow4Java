@@ -62,3 +62,6 @@ var strLang183 = "Please enter your password.";
 var strLang184 = "You can only delete comments you have registered.";
 var strLang185 = "The password is incorrect.";
 var strLang186 = "Comment";
+
+//2021-04-22 김정언 추가
+var strLang187 = "Enter ";

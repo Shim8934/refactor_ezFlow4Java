@@ -396,11 +396,16 @@
 	    	var schedule_repetition_del_cross_dialogArguments = new Array();
 	    	var selrow;
 	    	function btn_Delete() {
+				var listview = new ListView();
+				listview.LoadFromID("ApprovListView");
+				selrow = listview.GetSelectedRows();
+
+				if(selrow.length <= 0){
+					alert("선택된 자원이 없습니다.");
+					return false;
+				}
+
 	    		if(confirm(strLang90)) {
-		        	var listview = new ListView();
-		        	listview.LoadFromID("ApprovListView");
-		        	selrow = listview.GetSelectedRows();
-	
 		        	var isRepetition = false;
 		        	for (var i = 0; i < selrow.length; i++) {
 			            var reFlagVal = selrow[i].getAttribute("DATA7");
@@ -929,7 +934,7 @@
 	    		<a id="writerdept1" class="imgbtn" style="padding-top:2px;"><span id="Span3" onclick="seldept()"><spring:message code='ezResource.t132'/></span></a>
 	    		<input id="writerdept" type="text" style="width: 120px;"/>
 	    	</c:if>
-    		<input type="text" id="Sdatepicker" style="width: 80px; text-align: center"> ~  <input type="text" id="Sdatepicker2" style="width: 80px; text-align: center">
+    		<input type="text" id="Sdatepicker" style="width: 80px; text-align: center" readonly> ~  <input type="text" id="Sdatepicker2" style="width: 80px; text-align: center" readonly>
        		<a class="imgbtn" style="padding-top:2px"><span id="btn_OK" onclick="getCalendarList('search')"><spring:message code='ezResource.t14'/></span></a>
 		</div>
 		<div id="ApprovList" style ="BORDER:0;WIDTH:100%; height:100%;border-top:0px;"></div>

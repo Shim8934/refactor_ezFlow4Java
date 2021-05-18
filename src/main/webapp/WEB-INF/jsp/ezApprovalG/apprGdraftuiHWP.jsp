@@ -172,6 +172,7 @@
 	        var useRedraftOpinionKeep = "<c:out value='${useRedraftOpinionKeep}'/>";
 	        var formAprOption = "<c:out value='${formAprOption}'/>";
 	        var passAprLine = "";
+	        var useWebHWP = "<c:out value ='${useWebHWP}'/>";
 	        
 	        var gpGubun;
 			//부서감사 관련 2020-01-14 홍대표
@@ -1331,7 +1332,8 @@
 			                cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
 			                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
 			            }
-			            
+
+						tempKeyword = ret[6]; 				//2021-03-10 박기범 - 키워드 추가
 			            tempSecurity = ret[7];
 			            tempUrgent = ret[8];
 			            pSummery = ret[9];
@@ -1550,7 +1552,7 @@
 	                        <li id="btnReturn" style="display: none"><span onclick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t155'/></span></li> --%>
 							<c:choose>
 								<c:when test="${nonElecRec eq 'Y'}">
-									<li id="btntotaldocinfo"><span onclick="return btnApprovalInfo()">문서정보</span></li>
+									<li id="btntotaldocinfo"><span onclick="return btnApprovalInfo('1')">문서정보</span></li>
 	                        		<li id="btnReturn" style="display: none"><span onclick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t155'/></span></li>
 			                        <li id="btnSendDraft"><span onclick="return btnSendDraft_onclick()">등록</span></li>
 								</c:when>

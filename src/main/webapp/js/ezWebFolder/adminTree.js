@@ -194,7 +194,8 @@ function getDetailTree(obj, folderType) {
 			type: "GET",
 			url: "/admin/ezWebFolder/getSubFolderTree.do",
 			data: {
-				"folderId" : uniqueId
+				"folderId" : uniqueId,
+				"adminCheck" : "admin"
 			},
 			dataType: "JSON",
 			async: false,

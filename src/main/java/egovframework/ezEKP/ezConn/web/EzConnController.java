@@ -59,7 +59,7 @@ public class EzConnController {
 						"/ezConn/admin/organMain.do", "/ezConn/admin/scheduleMain.do", "/ezConn/scheduleRead.do",
 						"/ezConn/scheduleConfig.do", "/ezConn/mailConfig.do", "/ezConn/addressConfig.do",
 						"/ezConn/scheduleReceiveAttendant.do", "/ezConn/scheduleReceiveMember.do",
-						"/ezConn/portalMain.do"
+						"/ezConn/portalMain.do", "/ezConn/admin/mailMain.do"
 						})
 	public void mailMain(
 					@RequestParam String id,

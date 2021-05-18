@@ -31,10 +31,12 @@
 			var locale = "${locale}";
 			var primaryLang = "${primaryLang}";
 			var companyID = "${companyID}";
+			var userManualFlag = "${userManualFlag}";
+			userManualFlag = userManualFlag.toUpperCase();
 			
 			$(function () {
 				var toYear = new Date().getFullYear();
-				var sYear = parseInt(toYear-70);
+				var sYear = parseInt(toYear-90);
 				var eYear = parseInt(toYear+10);
 				document.getElementById("TempCalImage").style.display = "none";
 			    $("#txtBirth").datepicker({
@@ -94,6 +96,14 @@
 			    	if (locale != 'ko') {
 			        	$(".onlyUseKo").css("display", "none");
 			        }
+			    	
+			    	// /* 2021-05-03 김은실 - [표준] "인사연동으로 등록된 사용자는 전화, 팩스, 생년월일, 프로필 사진을 바꿀수 없도록 한다."를 풀고자 하는 사이트는: 이 부분을 주석처리하면 된다.  
+			    	if (userManualFlag != "Y") {
+			    		$(".manualFlagNotYDisabled").attr("disabled", "disabled");
+			    		$(".manualFlagNotYClickOff *").off("click");
+			    		$(".manualFlagNotYOnClickEmpty").attr("onClick", "");
+			    	}
+			    	// */
 			    }
 			    
 			    var personpicture_cross_dialogArguments = new Array();
@@ -446,15 +456,15 @@
     		<table class="content" width="50%" style="margin-top:10px;"> 
         		<tr>
             		<th><spring:message code='ezPersonal.t177'/></th>
-            		<td width="230" style="width:50%"><input type="text" id="txtTelePhone" size="22" value="${txtTelePhone}" maxlength="20" style="width:100%"></td>
+            		<td width="230" style="width:50%"><input type="text" id="txtTelePhone" class="manualFlagNotYDisabled" size="22" value="${txtTelePhone}" maxlength="20" style="width:100%"></td>
             		<th><spring:message code='ezPersonal.t178'/></th>
-            		<td><input type="text" id="txtMobilePhone" size="22" value="${txtMobilePhone}" maxlength="20" style="width:100%"> </td> 
+            		<td><input type="text" id="txtMobilePhone" class="manualFlagNotYDisabled" size="22" value="${txtMobilePhone}" maxlength="20" style="width:100%"> </td> 
         		</tr> 
         		<tr> 
             		<th><spring:message code='ezPersonal.t70'/></th> 
-            		<td style="width:50%"> <input type="text" id="txtHomePhone" size="22" value="${txtHomePhone}" maxlength="20" style="width:100%"> </td> 
+            		<td style="width:50%"> <input type="text" id="txtHomePhone" class="manualFlagNotYDisabled" size="22" value="${txtHomePhone}" maxlength="20" style="width:100%"> </td> 
             		<th><spring:message code='ezPersonal.t179'/></th> 
-            		<td> <input type="text" id="txtFax" size="22" value="${txtFax}" maxlength="20" style="width:100%"> </td> 
+            		<td> <input type="text" id="txtFax" class="manualFlagNotYDisabled" size="22" value="${txtFax}" maxlength="20" style="width:100%"> </td> 
         		</tr> 
 				<tr style=<c:out value="${primaryLang eq '3' ? 'display:table-row' : 'display:none' }"/>>
 				  	<th><spring:message code='main.ksa02' /></td>
@@ -462,7 +472,8 @@
 				  	<th><spring:message code='main.ksa03' /></td>
 				  	<td><input type="text" id="txtOfficeMobile" size="22" value="${LiteralOfficeMobile }" maxlength="50" style="width:100%"></td>
 				</tr>
-        		<tr> 
+				<!-- /* 2021-05-03 김은실 - [표준] 집주소 영역을 사용하고자 하는 사이트는: style="display:none"을 삭제하면 된다. -->
+        		<tr style="display:none"> 
             		<th rowspan="2"><spring:message code='ezPersonal.t180'/></th> 
             		<td colspan="3" class="onlyUseKo">
                 		<c:if test="${primaryLang == '1'}">
@@ -481,23 +492,24 @@
                 		</c:if>
             		</td> 
         		</tr> 
-        		<tr> 
+        		<tr style="display:none"> 
             		<td colspan="3"> <input type="text" id="txtAddress" size="72" value="${txtAddress}" style="width:100%"> </td> 
         		</tr> 
+        		<!-- */ -->
         		<tr>
             		<th><spring:message code='ezPersonal.t2003'/></th>
-            		<td colspan="3">
-                		<input type="text" id="txtBirth" style="width:80px;text-align:center;" value="${txtBirth}" onkeydown="return checkKey()">
+            		<td colspan="3" class="manualFlagNotYClickOff">
+                		<input type="text" id="txtBirth" class="manualFlagNotYDisabled" style="width:80px;text-align:center;" value="${txtBirth}" oninput="this.value=this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" onkeydown="return checkKey()">
                 			<img id="TempCalImage" src="/images/ImgIcon/calendar-month.png" style="margin-bottom:-5px"/>
                 			&nbsp;&nbsp;
              			   <c:choose>
                 				<c:when test="${birthType eq 'Y'}">
-                					<span class="onlyUseKo"><input type="radio" id="RadBirthType1" name="radioGroup"  checked><spring:message code='ezPersonal.t2001'/></span>
-                					<span class="onlyUseKo"><input type="radio" id="RadBirthType2" name="radioGroup" ><spring:message code='ezPersonal.t2002'/></span>
+                					<span class="onlyUseKo"><input type="radio" id="RadBirthType1" class="manualFlagNotYDisabled" name="radioGroup"  checked><spring:message code='ezPersonal.t2001'/></span>
+                					<span class="onlyUseKo"><input type="radio" id="RadBirthType2" class="manualFlagNotYDisabled" name="radioGroup" ><spring:message code='ezPersonal.t2002'/></span>
                 				</c:when>
                 				<c:otherwise>
-                					<span class="onlyUseKo"><input type="radio" id="RadBirthType1" name="radioGroup" ><spring:message code='ezPersonal.t2001'/></span>
-                					<span class="onlyUseKo"><input type="radio" id="RadBirthType2" name="radioGroup"  checked><spring:message code='ezPersonal.t2002'/></span>
+                					<span class="onlyUseKo"><input type="radio" id="RadBirthType1" class="manualFlagNotYDisabled" name="radioGroup" ><spring:message code='ezPersonal.t2001'/></span>
+                					<span class="onlyUseKo"><input type="radio" id="RadBirthType2" class="manualFlagNotYDisabled" name="radioGroup"  checked><spring:message code='ezPersonal.t2002'/></span>
                 				</c:otherwise>
                 			</c:choose>
 		            </td>
@@ -511,9 +523,9 @@
     			<c:if test="${userMobileManaged == 'YES' }">
        				<a class="imgbtn" onClick="SettingMobile()"><span><spring:message code='ezPersonal.t998'/></span></a>
        			</c:if>
-       			<a class="imgbtn" name="Submit" onClick="return btnPhoto_onclick()"><span><spring:message code='ezPersonal.t183'/></span></a>
-       			<a class ="imgbtn"  onClick="ButtonDeleteClick()" name="ButtonDelete"  id="ButtonDelete" ><span><spring:message code='ezPersonal.t184'/></span></a>
-       			<a class ="imgbtn"  onClick="ButtonChangeClick()" name="ButtonChange"  id="ButtonChange" ><span><spring:message code='ezPersonal.t34'/></span></a>
+       			<a class="imgbtn manualFlagNotYOnClickEmpty" name="Submit" onClick="return btnPhoto_onclick()"><span><spring:message code='ezPersonal.t183'/></span></a>
+       			<a class ="imgbtn manualFlagNotYOnClickEmpty"  onClick="ButtonDeleteClick()" name="ButtonDelete"  id="ButtonDelete" ><span><spring:message code='ezPersonal.t184'/></span></a>
+       			<a class ="imgbtn" onClick="ButtonChangeClick()" name="ButtonChange"  id="ButtonChange" ><span><spring:message code='ezPersonal.t34'/></span></a>
        			<a class="imgbtn" name="Submit2" onClick="window.location.href='/ezPersonal/changePersonInfo.do'"><span><spring:message code='ezPersonal.t13'/></span></a>
     		</div>    		
     		<h2><spring:message code='ezPersonal.t185'/></h2>

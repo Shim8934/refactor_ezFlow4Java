@@ -238,9 +238,9 @@
 				        tempString = tempString.replace("\n", "");
 				        var pAlertContent = tempString + "<br><spring:message code='ezApprovalG.t3'/>";
 		            }
-		            OpenAlertUI(pAlertContent);
-		            window.parent.close();
-		            btnClose_onclick();
+			        OpenAlertUI(pAlertContent, btnClose_onclick); // 알림창 확인 시 문서창 닫도록 수정
+		            //window.parent.close();
+		            //btnClose_onclick();
 		        }
 		        else {
 		            if (NextDocExtended.substring(NextDocExtended.lastIndexOf(".") + 1).toLowerCase() != "hwp") {
@@ -1315,7 +1315,7 @@
 				    }
 			
 			        var g_SepAttachLVXml = "";
-			        g_SepAttachLVXml = GetDocumentElement(message, "sepattachlvxml", true);
+			        g_SepAttachLVXml = GetDocumentElement("sepattachlvxml", true);
 			        if (!g_SepAttachLVXml)
 			            g_SepAttachLVXml = "";
 			
@@ -1334,7 +1334,7 @@
 			        DivPopUpHidden();
 			        if (rtn[0] == "TRUE") {
 			            g_SepAttachLVXml = rtn[1];
-			            SetDocumentElement(message, "sepattachlvxml", g_SepAttachLVXml)
+			            SetDocumentElement("sepattachlvxml", g_SepAttachLVXml)
 			        }
 			    }
 			    
@@ -1503,7 +1503,8 @@
    			                    cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
    			                    TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
    			                }
-   			                
+
+							tempKeyword = ret[6]; 				//2021-03-10 박기범 - 키워드 추가
    			                tempSecurity = ret[7];                // 보안등급 관련
    			                tempUrgent = ret[8];                  // 긴급 결재 여부
    			                pSummery = ret[9];                    // 요약 내용 관련

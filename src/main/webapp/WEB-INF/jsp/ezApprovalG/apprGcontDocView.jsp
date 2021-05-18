@@ -426,7 +426,7 @@
 		        ezdocinfog_view_cross_dialogArguments[1] = btnDocInfo_onclick_Complete;
 		
 		        //DivPopUpShow(420, 500, "/ezApprovalG/ezDocInfoGView.do?docID=" + pDocID + "&ingFlag=END"); 문서정보 새로 구현해서 주석
-		        DivPopUpShow(420, 500, "/ezApprovalG/ezDocInfoView.do?docID=" + pDocID + "&ingFlag=END");
+		        DivPopUpShow(420, 520, "/ezApprovalG/ezDocInfoView.do?docID=" + pDocID + "&ingFlag=END");
 		    }
 		    function btnDocInfo_onclick_Complete() {
 		        DivPopUpHidden();
@@ -900,6 +900,33 @@
                  }
 	    	}
 	    	
+	    	var ezapralertlong_cross_dialogArguments = new Array();
+			function btnReqOpinion_onclick() {
+				var result = "";
+		    	
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "json",
+		    		async : false,
+		    		url : "/ezApprovalG/getRelayReqOpinion.do",
+		    		data : {
+		    			docID : pDocID
+		    		},
+		    		success: function(text){
+		    			result = text.opinion;
+		    		}
+		    	});
+		    	
+				var url = "/ezApprovalG/ezAprAlertLong.do";
+		    	ezapralertlong_cross_dialogArguments[0] = result;
+				ezapralertlong_cross_dialogArguments[1] = OpenAlertUILong_Complete;
+				
+				DivPopUpShow(330, 305, url);
+			}
+			
+			function OpenAlertUILong_Complete() {
+				DivPopUpHidden();
+			}
 		</script>
 	</head>
 	<body class="popup" style="OVERFLOW:hidden;height:100%">
@@ -912,6 +939,9 @@
 		          <li id="btnOpinion"><span id="span_btnOpinion" onClick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
 		          <li id="btnhistory"><span id="span_btnhistory" onClick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
 		          <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
+		          <c:if test="${sendType eq 'T'}">
+                  	<li id="btnReqOpinion"><span onclick="btnReqOpinion_onclick()">재발송의견</span></li>
+                  </c:if>
 		          <c:if test="${useBoard == 'YES' }">
 				  <li id="btnBoard"><span id="span_btnBoard" onClick="return NewItem_onclick()"><spring:message code='ezApprovalG.t1514'/></span></li>
 				  </c:if>

@@ -37,7 +37,7 @@
 		return false;
 	}
 	
-	<c:if test="${isOwner && isAllFiles}">
+	<c:if test="${isAccessible && isAllFiles && not isReply}">
 	function onClickOverwrite() {
 		onClickClose({
 			code: "OVERWRITE",
@@ -55,7 +55,33 @@
 	
 	<c:if test="${not isFolder}">
 	function onClickRename() {
-		parent.DivPopUpShow(450, 250, "/ezWebFolder/fileRenameConfirm.do?isUploading");
+		// 이름 하나 넣어주려고 이게 무슨,,, 현타가 온다
+		var currentName = "<c:out value='${fileName}' />";
+		try {
+			var nameTd = parent.document.querySelector(".wfFileName[title='" + currentName + "']");
+			
+			if (!nameTd) {
+				var lastDot = currentName.lastIndexOf(".");
+				lastDot = lastDot < 0 ? currentName.length : currentName.lastIndexOf(".");
+				currentName = currentName.substr(0, lastDot);
+			} else {
+				var fileExt;
+	
+				if (parent.location.href.indexOf("trashCan.do") > 0) {
+					fileExt = nameTd.parentElement.getAttribute("ext");
+				} else {
+					fileExt = nameTd.getAttribute("ext");
+				}
+	
+				if (fileExt && fileExt != ".none") {
+					currentName = currentName.substr(0, currentName.length - fileExt.length - 1);
+				}
+			} // if end
+		} catch (ignore) {}
+
+		parent.inputNameDlg_cross_dialogArguments = { currentName: currentName }
+		document.body.style.opacity = 0;
+		parent.DivPopUpShow(450, 200, "/ezWebFolder/fileRenameConfirm.do?isUploading");
 	}
 	</c:if>
 </script>
@@ -128,7 +154,7 @@ table.content-inner td>h2 {
 						</table>
 						<div style="text-align: center;">
 							<c:if test="${not isFolder && not isOne}"><input id="all-apply" type="checkbox" style="vertical-align: middle;"> <label for="all-apply" style="vertical-align: middle;"><spring:message code='webfolder.duplicate.looping' /></label></c:if>
-							<c:if test="${not isOwner && isAllFiles}"><p style="margin: 10px 0 0 0; color: red;"><spring:message code='webfolder.duplicate.permission' /></p></c:if>
+							<c:if test="${not isAccessible && isAllFiles}"><p style="margin: 10px 0 0 0; color: red;"><spring:message code='webfolder.duplicate.permission' /></p></c:if>
 						</div>
 					</c:otherwise>
 				</c:choose>
@@ -136,21 +162,9 @@ table.content-inner td>h2 {
 		</tr>
 	</table>
 	<div class="btnpositionNew">
-		<c:if test="${isOwner && isAllFiles}"><a class="imgbtn" onclick="onClickOverwrite();"><span><spring:message code='webfolder.duplicate.button.overwrite' /></span></a></c:if>
+		<c:if test="${isAccessible && isAllFiles && not isReply}"><a class="imgbtn" onclick="onClickOverwrite();"><span><spring:message code='webfolder.duplicate.button.overwrite' /></span></a></c:if>
 		<a class="imgbtn" onclick="onClickSkip();"><span><c:choose><c:when test="${isFolder}"><spring:message code="ezWebFolder.t116" /></c:when><c:otherwise><spring:message code="webfolder.duplicate.button.skip" /></c:otherwise></c:choose></span></a>
 		<c:if test="${not isFolder}"><a class="imgbtn" onclick="onClickRename();"><span><spring:message code='webfolder.duplicate.button.rename' /></span></a></c:if>
 	</div>
-	<script>
-		(function() {
-			try {
-				var documentHeight = document.documentElement.offsetHeight;
-				var buttonDivHeight = document.querySelector(".btnpositionNew").scrollHeight;
-				
-				frameElement.style.height = documentHeight + buttonDivHeight + "px"
-			} catch (error) {
-				// ignore
-			}
-		})();
-	</script>
 </body>
 </html>

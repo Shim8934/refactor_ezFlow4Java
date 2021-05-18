@@ -3127,6 +3127,7 @@ public class EzEmailUtil {
 					
 					// 코린도에서 수신한 메일 중 multipart/related 안에 첨부 파일이 있는 경우가 있어
 					// Content-Disposition: attachment 헤더가 있는 경우도 추가함.
+					// includeAttachment는 메일 전달 시에만 적용되도록 하기 위한 용도임(메일 회신 시에는 첨부 파일을 포함하면 안되므로).
 					// 료비에서 온 메일 중에 related 파트안에 인라인으로 첨부파일이 있는 메일이 있어 이 경우
 					// Forward시 첨부되도록 하기 위해 || p.isMimeType("application/*") 조건을 추가함.
 					if (((MimePart)p).getContentID() != null
@@ -5612,10 +5613,15 @@ public class EzEmailUtil {
 			if (useExternalMailServer.equalsIgnoreCase("YES")) { // 외부메일 사용 시 
 				String externalMailServerAddr = ezCommonService.getTenantConfig("useExternalMailServerAddress", tenantId);
 				String externalMailServerAuth = ezCommonService.getTenantConfig("useExternalMailServerAuth", tenantId);
-				logger.debug("externalMailServerAddr=" + externalMailServerAddr + ", externalMailServerAuth=" + externalMailServerAuth);
+				String externalMailServerPort = ezCommonService.getTenantConfig("useExternalMailServerPort", tenantId);
+				logger.debug("externalMailServerAddr=" + externalMailServerAddr + ", externalMailServerAuth=" + externalMailServerAuth + ", externalMailServerPort=" + externalMailServerPort);
 				
 				if (!externalMailServerAddr.equals("") && !externalMailServerAddr.equals("0.0.0.0")) {
 					smtpMailServer = externalMailServerAddr;
+					
+					if (!smtpMailServerPort.trim().equals("")) { // external mail SMTP port.
+						smtpMailServerPort = externalMailServerPort;
+					}
 					
 					if (externalMailServerAuth.equalsIgnoreCase("YES")) { // 인증여부
 						String externalMailServerUserId = ezCommonService.getTenantConfig("useExternalMailServerUserId", tenantId);

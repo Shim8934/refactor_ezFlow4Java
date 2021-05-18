@@ -334,4 +334,45 @@
      		WHERE FILE_ID IN (<iterate property="fileIdArr" conjunction=",">#fileIdArr[]#</iterate>)
       		AND TENANT_ID = #tenantId#
 	</delete>
+	
+	<insert id="EzEmailDAO.setMailboxProgress" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO jmocha_mailbox_progress 
+				(USER_KEY, TENANT_ID, USER_ID, ACT, PERCENT)
+			VALUES 
+			(#userKey#, #tenantId#, #userId#, #action#, #percent#)
+		]]>
+	</insert>
+	
+	<update id="EzEmailDAO.updateMailboxProgress" parameterClass="Map">
+		<![CDATA[
+			UPDATE 
+				JMOCHA_MAILBOX_PROGRESS 
+			SET 
+				PERCENT = #percent#, UPDATEDT = SYSDATE
+			WHERE 
+				USER_KEY = #userKey#
+		]]>
+	</update>
+	
+	<select id="EzEmailDAO.getMailboxProgress" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				PERCENT
+			FROM 
+				JMOCHA_MAILBOX_PROGRESS 
+			WHERE 
+				USER_KEY = #userKey#
+		]]>
+	</select>
+	
+	<delete id="EzEmailDAO.deleteMailboxProgress" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM 
+				JMOCHA_MAILBOX_PROGRESS 
+			WHERE 
+				USER_KEY = #userKey#
+		]]>
+	</delete>
+	
 </sqlMap>

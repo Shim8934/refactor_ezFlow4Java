@@ -13,6 +13,14 @@ public class FileLogVO {
 	private String createDate;
 	private String companyId;
 	private int tenantId;
+	private String fileId;
+	private String version;
+	private String folderId;
+	private String folderName;
+	private String folderPath;
+	private String folderPathName;
+	private String topFolderId;
+	private String topFolderName;
 	
 	public String getLogId() {
 		return logId;
@@ -109,4 +117,69 @@ public class FileLogVO {
 	public void setFileExt(String fileExt) {
 		this.fileExt = fileExt;
 	}
+	
+	public String getFileId() {
+		return fileId;
+	}
+
+	public void setFileId(String fileId) {
+		this.fileId = fileId;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
+	public String getFolderId() {
+		return folderId;
+	}
+
+	public void setFolderId(String folderId) {
+		this.folderId = folderId;
+	}
+
+	public String getFolderName() {
+		return folderName;
+	}
+
+	public void setFolderName(String folderName) {
+		this.folderName = folderName;
+	}
+
+	public String getFolderPath() {
+		return folderPath;
+	}
+
+	public void setFolderPath(String folderPath) {
+		this.folderPath = folderPath;
+	}
+
+	public String getFolderPathName() {
+		return folderPathName;
+	}
+
+	public void setFolderPathName(String folderPathName) {
+		this.folderPathName = folderPathName;
+	}
+
+	public String getTopFolderId() {
+		return topFolderId;
+	}
+
+	public void setTopFolderId(String topFolderId) {
+		this.topFolderId = topFolderId;
+	}
+
+	public String getTopFolderName() {
+		return topFolderName;
+	}
+
+	public void setTopFolderName(String topFolderName) {
+		this.topFolderName = topFolderName;
+	}
+
 }

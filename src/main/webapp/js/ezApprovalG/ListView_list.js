@@ -949,6 +949,8 @@ function ListView() {
                 if (oHeaders.length > 0) {
                 	var colNameUpperCase = SelectSingleNodeValue(oHeaders[j], "COLNAME").toUpperCase();
                 	
+                    objTd.setAttribute("headerName", colNameUpperCase); // 제목 TD임을 구분하기 위한 속성 추가
+                	
                 	if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "AttachFlag") {
                 		objTd.style.textAlign = "center";
                 		if (SelectSingleNodeValue(oCells[j], "HASATTACHYN") == "Y" || SelectSingleNodeValue(oCells[j], "HASATTACHYN") == "1") {
@@ -1006,6 +1008,7 @@ function ListView() {
                     	objTd.appendChild(oText);
                     }
                     else {
+                    	oText = document.createTextNode(ConvMakeXMLString(strValue));
                         objTd.appendChild(oText);
                     }
                 }
@@ -1916,7 +1919,7 @@ function ConvMakeXMLString(str) {
     str = ReplaceText(str, "&gt;", ">");
     str = ReplaceText(str, "&#039;", "'");
     str = ReplaceText(str, "&#034;", "\"");
-	str = ReplaceText(str, "&amp;", "&");
 	str = ReplaceText(str, "&#92;", "\\");
+	str = ReplaceText(str, "&amp;", "&");
     return str;
 }

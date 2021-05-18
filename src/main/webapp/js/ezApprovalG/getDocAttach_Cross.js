@@ -42,6 +42,15 @@ function trim(str) {
 function setAttachInfo(tempDocID, INGFlag, attachTag) {
     attachTag.innerHTML = "";
     var docAttachTag = document.getElementById(attachTag.id + "Doc"); // 문서첨부영역 분리
+
+	if(docAttachTag != undefined){
+		docAttachTag.innerHTML = "";
+	}
+
+    if(docAttachTag != null){
+    	docAttachTag.innerHTML = "";
+    }
+    var url = "";
     
 	var result = "";
 	
@@ -82,7 +91,7 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
     var xmlRtn = SelectNodes(xmldom, "LISTVIEWDATA/ROWS/ROW");
     if (xmlRtn.length > 0) {
         var strAttach = "";
-        var strDocAttach = " &nbsp ";
+        var strDocAttach = "";
         var rep = /'/g;
         for (i = 0; i < xmlRtn.length; i++) {
             var Row = xmlRtn[i];

@@ -581,7 +581,7 @@
 		        setsearchinfo_cross_dialogArguments[0] = para;
 		        setsearchinfo_cross_dialogArguments[1] = SearchCondi_onclick_Complete;
 		
-		        OpenWin2 = window.open("/ezApprovalG/setSearchInfo.do", "setsearchInfo_Cross", GetOpenWindowfeature(510, 375));
+		        OpenWin2 = window.open("/ezApprovalG/setSearchInfo.do", "setsearchInfo_Cross", GetOpenWindowfeature(510, 405));
 		        try { OpenWin2.focus(); } catch (e) { }
 		    }
 		
@@ -614,12 +614,13 @@
 						condition[6] = nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59";
 					}
 				}
-	    	   
+
 	    	    if (LoadSquery == "usercontlist") {
 	    	    	MakeSubCondition();
 	    	    	GetUserContList();
 	    	    } else if (condition) {
 		            Init_Flag = "False";
+					MakeSubCondition();
 		            GetDocSearch();
 		        }
 		        $('#sel_year').val("ALL");
@@ -1606,7 +1607,7 @@
 		        }
 		        pageNum = 1;
 		        Init_Flag = "False";
-		        
+
 		        if (LoadSquery == "usercontlist") {
 		        	MakeSubCondition();
 	    	    	GetUserContList();

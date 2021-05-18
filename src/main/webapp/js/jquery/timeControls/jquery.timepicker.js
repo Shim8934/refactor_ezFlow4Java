@@ -102,7 +102,10 @@ requires jQuery 1.7+
 
 			// check if input is readonly
 			if (self.prop('readonly')) {
-				return;
+				//jangsewon 추가
+				if(self.attr('readonlyExcept') == 'Y') {
+					return;
+				}
 			}
 
 			// check if list needs to be rendered

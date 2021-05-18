@@ -17,7 +17,8 @@ function getAprLinefor(mode, docid) {
 			docID : docid,
 			mode  : mode,
 			orgCompanyID : orgCompanyID,
-			proxyUserFlag : ""
+			proxyUserFlag : "",
+			isMailSendFlag : "Y"
 		},
 		success: function(text){
 			result = text;
@@ -162,12 +163,13 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck, Method)
     
     console.log("Approv_a  : "+Approv_a)
     
+    // 메일 발송 이후 동기적인 추가 동작이 존재하지 않으므로 비동기처리 (async = true)
     try {
         var Result = "";
         $.ajax({
     		type : "POST",
     		dataType : "text",
-    		async : false,
+    		async : true,
     		data : {
     			Content : Content,
     			Subject : Subject,
@@ -329,8 +331,15 @@ function continusendMail(nextMethod, aprlinelist, sn) {
         } 
 
         if (CurrentAprType == "009") {
+        	var alreadySend = false;
+        	
             for (var i = sn + 1; i < objNodes.length; i++) {
-                if (trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[12])) != "003" && trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[12])) != "010") {
+	            if(trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[12])) == "002"){
+	            	nextID = trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[sn])[0])[4]));
+		            Method = trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[sn])[0])[11]));
+		            sendNextMail(getNodeText(GetChildNodes(GetChildNodes(objNodes[sn])[0])[5]), nextID, Method);
+		            alreadySend = true;
+	            } else if ((trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[12])) != "003" && trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[12])) != "010") || alreadySend) {
                 	return;
                 }
             }
@@ -461,6 +470,8 @@ function receiverIDList(preceiveDeptID) {
 }
 
 function SendMailToReceiveDept_Approv() {
+	// 정주환 #70971 부서 메일 발송 서비스로 변경
+	return;
     var pwriterID = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[13]));
     var Drafter = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[14]));
     var pstartdate = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[11]));
@@ -488,8 +499,10 @@ function SendMailToReceiveDept(pdrafttitle, pdraftname, pdrafdate, docid) {
             var DeptID = receiveDeptID[i];
             var receiverList = receiverIDList(DeptID);
 
-            if (receiverList == "")
-                return;
+            /* 2021-04-06 홍승비 - 수신부서에 수발신담당자가 존재하지 않는 경우, 다음 부서를 체크하지 않고 바로 루프를 빠져나가는 오류 수정 */
+            if (receiverList == "") {
+                continue;
+            }
             else {
                 var receiverID = receiverList.split(";");
 

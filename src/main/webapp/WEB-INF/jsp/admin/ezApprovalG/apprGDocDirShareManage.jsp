@@ -8,6 +8,7 @@
 		<title><spring:message code='ezJournal.t3' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css" />
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -53,7 +54,7 @@
 	</head>
 	<body class="mainbody"> 
 		<h1>
-			문서함공유
+			<spring:message code='ezApprovalG.share01'/>
 		</h1>
 		<div id="mainmenu" style="padding-left: 5px;">
             <ul>
@@ -72,18 +73,18 @@
 						<div style="vertical-align:top; height:600px; border: none; width:100%; overflow-x:auto;overflow-y:auto;/* BORDER:#b6b6b6 1px solid; */ BACKGROUND-COLOR:#ffffff" >
 							<table id="ownerList" class="mainlist ownerList" style="width: 100%; border-width: 0px 0px 1px 0px;">
 								<tr>
-									<th style="text-align: center; border-top:none;">공유자</th>
-									<th style="text-align: center; border-top:none;">공유타입</th>
+									<th style="text-align: center; border-top:none;"><spring:message code='ezApprovalG.share02'/></th>
+									<th style="text-align: center; border-top:none;"><spring:message code='ezApprovalG.share03'/></th>
 								</tr>
 								<c:forEach items="${ownerList}" var="owner">
 									<tr onclick="viewShareList(this)" ondblclick="insertShare('M');" ownerId="${owner.ownerId }" ownerName="${owner.ownerName }" ownerType="${owner.ownerType}">
 										<td><c:out value="${owner.ownerName}"></c:out></td>
 										<td>
 											<c:if test="${owner.ownerType eq 'U' }">
-												사용자
+												<spring:message code='ezApprovalG.share04'/>
 											</c:if>
 											<c:if test="${owner.ownerType eq 'D' }">
-												부서
+												<spring:message code='ezApprovalG.share05'/>
 											</c:if>
 										</td>
 									</tr>
@@ -98,8 +99,8 @@
 			        		<table class="mainlist" style="width: 100%;">
 			        			<thead>
 			        				<tr>
-										<th style="text-align: center; border-top:none;">공유대상</th>
-										<th style="text-align: center; border-top:none;">공유타입</th>
+										<th style="text-align: center; border-top:none;"><spring:message code='ezApprovalG.share06'/></th>
+										<th style="text-align: center; border-top:none;"><spring:message code='ezApprovalG.share03'/></th>
 									</tr>
 			        			</thead>
 			        			<tbody id="shareList" style="margin: 0; padding: 0;">
@@ -108,7 +109,7 @@
 					        				<div id="preview_nodata" class="preview_nodata" style="margin-top: 70px;">
 								                  <dl class="nodata_sIcon">
 									              <dt><img src="/images/kr/main/noData_sIcon.png"></dt>
-									              <dd id="nodata_title" style="font-family: malgun gothic">선택된 공유자가 없습니다.</dd>
+									              <dd id="nodata_title" style="font-family: malgun gothic"><spring:message code='ezApprovalG.share07'/></dd>
 								                  </dl>
 							                 </div>
 			        					</td>
@@ -154,6 +155,11 @@
 		    }
 		    
 		    function insertShare(flag) {
+		    	if (flag == 'M' && $("tr[class='active']").length <= 0) {
+		    		alert(strLang960);
+		    		return;
+		    	}
+		    	
 				var url = "/admin/ezApprovalG/docDirOwnerInsert.do";
 				if(flag == 'M'){
 					url += "?ownerId=" + ownerId + "&ownerName=" + encodeURIComponent(ownerName) + "&ownerType=" + encodeURIComponent(ownerType);
@@ -165,11 +171,11 @@
 		    	
 		    	/* 2020-09-11 홍승비 - 선택된 공유자 없는 경우 알러트 메세지 추가 (다국어 미적용) */
 		    	if ($("tr[class='active']").length <= 0) {
-		    		alert("삭제할 공유자를 선택해주세요.");
+		    		alert(strLang961);
 		    		return;
 		    	}
 		    	
-		    	if (!confirm("삭제하시겠습니까?")) {
+		    	if (!confirm(strLang962)) {
 		    		return;
 		    	}
 		    	
@@ -179,10 +185,10 @@
 		    		data : {"ownerId"  : ownerId}, 
 		    		success: function(result) {
 		    			if(result == "YES"){
-		    				alert("삭제되었습니다.");
+		    				alert(strLang963);
 		    				location.reload();
 		    			} else {
-		    				alret("삭제가 실패하였습니다.");
+		    				alret(strLang964);
 		    			}
 		    		},
 		    		error : function(request, status, error) {

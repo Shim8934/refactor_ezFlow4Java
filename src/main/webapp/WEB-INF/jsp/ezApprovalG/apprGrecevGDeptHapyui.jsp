@@ -783,7 +783,7 @@
 				parameter[8]  = tempItemName;			// tempItemName
 				
 				var url			= "../ezDocInfo/ezDocInfo.aspx?arr1=" + escape(tempKeep) + "&arr2="+escape(tempSecurity);
-				var feature	= "status:no;dialogWidth:370px;dialogHeight:535px;help:no;scroll:no;edge:sunken";
+				var feature	= "status:no;dialogWidth:370px;dialogHeight:555px;help:no;scroll:no;edge:sunken";
 					 	
 				feature =  feature + GetShowModalPosition(370, 535);
 				var ret = window.showModalDialog(url,parameter,feature);
@@ -921,7 +921,7 @@
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;		
 		
-		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType, "ezApprovalInfo", GetOpenWindowfeature(1144, 750));
+		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType, "ezApprovalInfo", GetOpenWindowfeature(1194, 750));
 
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
@@ -964,7 +964,8 @@
 		                cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
 		                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
 	                }
-	            	
+
+					tempKeyword = ret[6]; 				//2021-03-10 박기범 - 키워드 추가
 		            tempSecurity = ret[7];
 	                tempUrgent = ret[8];
 	                pSummery = ret[9];
@@ -985,7 +986,7 @@
 		            	nonSepAttachLVXml = ret[24];
 		            	g_szSCListXml = ret[25];
 		            	sepAttachCheckYN = ret[26];
-		            	setNonElecRecInfo(nonElecRecInfoXml);
+		            	setNonElecRecInfo_mht(nonElecRecInfoXml);
 		            }
 
 		            if (useOpenGov == "YES") {

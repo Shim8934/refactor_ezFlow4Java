@@ -336,7 +336,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 	
 	@RequestMapping(value="/ezSurvey/getSurveyQuestions.do", method = RequestMethod.GET)
 	@ResponseBody
-	public String jsonGetSurveyQuestions(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public JSONObject jsonGetSurveyQuestions(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonGetSurveyQuestions start");
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		String itemId        = request.getParameter("surveyId") != null ? request.getParameter("surveyId") : "";
@@ -346,18 +346,18 @@ public class EzSurveyController extends EgovFileMngUtil {
 		if (itemId.equals("")) {
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
-			return resultObj.toString();
+			return resultObj;
 		}
 		
 		resultObj = surveyRestService.getSurveyQuestions(request, user.getId(), itemId, logicMode);
 		
 		logger.debug("jsonGetSurveyQuestions end");
-		return resultObj.toString();
+		return resultObj;
 	}
 	
 	@RequestMapping(value="/ezSurvey/changeSurveyState.do", method = RequestMethod.GET)
 	@ResponseBody
-	public String jsonChangeSurveyState(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public JSONObject jsonChangeSurveyState(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonChangeSurveyState start");
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		JSONObject resultObj = new JSONObject();
@@ -366,29 +366,29 @@ public class EzSurveyController extends EgovFileMngUtil {
 		if (itemId.equals("")) {
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
-			return resultObj.toString();
+			return resultObj;
 		}
 		
 		resultObj = surveyRestService.changeSurveyState(request, user.getId(), itemId);
 		
 		logger.debug("jsonChangeSurveyState end");
-		return resultObj.toString();
+		return resultObj;
 	}
 	
 	@RequestMapping(value="/ezSurvey/checkReusePermission.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String jsonCheckItems(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public JSONObject jsonCheckItems(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonCheckItems start");
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		JSONObject resultObj = surveyRestService.checkSurveyItems(request, user.getId());
 		
 		logger.debug("jsonCheckItems end");
-		return resultObj.toString();
+		return resultObj;
 	}
 	
 	@RequestMapping(value="/ezSurvey/checkProcessingSurvey.do", method = RequestMethod.GET)
 	@ResponseBody
-	public String jsonCheckProcessingSurvey(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public JSONObject jsonCheckProcessingSurvey(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonCheckItems start");
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		JSONObject resultObj = new JSONObject();
@@ -397,18 +397,18 @@ public class EzSurveyController extends EgovFileMngUtil {
 		if (itemId.equals("")) {
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
-			return resultObj.toString();
+			return resultObj;
 		}
 		
 		resultObj = surveyRestService.checkProcessingSurvey(request, user.getId(), itemId);
 		
 		logger.debug("jsonCheckItems end");
-		return resultObj.toString();
+		return resultObj;
 	}
 	
 	@RequestMapping(value="/ezSurvey/checkAnalysisPermission.do", method = RequestMethod.GET)
 	@ResponseBody
-	public String jsonCheckAnalysisPermission (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public JSONObject jsonCheckAnalysisPermission (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonCheckAnalysisPermission start");
 
 		LoginSimpleVO user    = commonUtil.userInfoSimple(loginCookie);
@@ -431,12 +431,12 @@ public class EzSurveyController extends EgovFileMngUtil {
 		resultObj.put("code", messageCode);
 
 		logger.debug("jsonCheckAnalysisPermission end");
-		return resultObj.toString();
+		return resultObj;
 	}
 	
 	@RequestMapping(value="/ezSurvey/saveSurvey.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String jsonSaveSurveyItem(@RequestBody JSONObject surveyItem, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+	public JSONObject jsonSaveSurveyItem(@RequestBody JSONObject surveyItem, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jsonSaveSurveyItem started");
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		surveyItem.put("userId", user.getId());
@@ -444,12 +444,12 @@ public class EzSurveyController extends EgovFileMngUtil {
 		JSONObject resultObj = surveyRestService.saveSurveyItem(request, surveyItem);
 		
 		logger.debug("jsonSaveSurveyItem ended");
-		return resultObj.toString();
+		return resultObj;
 	}
 	
 	@RequestMapping(value="/ezSurvey/deleteItems.do", method = RequestMethod.GET)
 	@ResponseBody
-	public String jsonDeleteItems(@CookieValue("loginCookie") String loginCookie, @RequestParam(value = "itemList") List<String> itemList, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public JSONObject jsonDeleteItems(@CookieValue("loginCookie") String loginCookie, @RequestParam(value = "itemList") List<String> itemList, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonDeleteItems start");
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		JSONObject resultObj = new JSONObject();
@@ -457,18 +457,18 @@ public class EzSurveyController extends EgovFileMngUtil {
 		if (itemList.size() == 0) {
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
-			return resultObj.toString();
+			return resultObj;
 		}
 		
 		resultObj = surveyRestService.deleteItems(request, user.getId(), itemList);
 		
 		logger.debug("jsonDeleteItems end");
-		return resultObj.toString();
+		return resultObj;
 	}
 	
 	@RequestMapping(value="/ezSurvey/getSurveyItems.do", method = RequestMethod.GET)
 	@ResponseBody
-	public String jsonGetSurveyItems(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public JSONObject jsonGetSurveyItems(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonGetSurveyItems start");
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		String currentPage   = request.getParameter("currentPage") != null ? request.getParameter("currentPage") : "";
@@ -506,18 +506,18 @@ public class EzSurveyController extends EgovFileMngUtil {
 		if (pageMode.equals("") || listCntSize.equals("") || currentPage.equals("")) {
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
-			return resultObj.toString();
+			return resultObj;
 		}
 		
 		resultObj = surveyRestService.getSurveyItems(request, user.getId(), pageMode, title, creatorName, startDate, endDate, column, order, srchMode, srchOption, listCntSize, currentPage, userMode);
 		
 		logger.debug("jsonGetSurveyItems end");
-		return resultObj.toString();
+		return resultObj;
 	}
 	
 	@RequestMapping(value="/ezSurvey/getSurveyPopupItems.do", method=RequestMethod.GET)
 	@ResponseBody
-	public String jsonGetSurveyPopupItems(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public JSONObject jsonGetSurveyPopupItems(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonGetSurveyPopupItems start");
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		String mode          = request.getParameter("mode")        != null ? request.getParameter("mode")        : "";
@@ -550,22 +550,22 @@ public class EzSurveyController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("jsonGetSurveyPopupItems end");
-		return resultObj.toString();
+		return resultObj;
 	}
 	
 	@RequestMapping(value="/ezSurvey/getCompanyTree.do", method=RequestMethod.GET)
 	@ResponseBody
-	public String jsonGetCompanyTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
+	public JSONObject jsonGetCompanyTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String companyId       = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
 		JSONObject resultObj   = surveyRestService.getCompanyTree(request, userInfo.getId(), companyId);
 		
-		return resultObj.toString();
+		return resultObj;
 	}
 	
 	@RequestMapping(value="/ezSurvey/getSubNodes.do", method=RequestMethod.GET)
 	@ResponseBody
-	public String jsonGetSubNodes(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
+	public JSONObject jsonGetSubNodes(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
 		logger.debug("jsonGetSubNodes started");
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String deptId          = request.getParameter("nodeId") != null ? request.getParameter("nodeId") : "";
@@ -576,18 +576,18 @@ public class EzSurveyController extends EgovFileMngUtil {
 			logger.debug("Parameter error");
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
-			return resultObj.toString();
+			return resultObj;
 		}
 		
 		resultObj = surveyRestService.getDeptSubNodes(request, userInfo.getId(), deptId, level);
 		logger.debug("jsonGetSubNodes ended");
 		
-		return resultObj.toString();
+		return resultObj;
 	}
 	
 	@RequestMapping(value="/ezSurvey/getDeptMembers.do", method=RequestMethod.POST)
 	@ResponseBody
-	public String jsonGetDeptMembers(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public JSONObject jsonGetDeptMembers(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("jsonGetDeptMembers started");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String deptId      = request.getParameter("deptId")      != null ? request.getParameter("deptId")      : "";
@@ -600,19 +600,19 @@ public class EzSurveyController extends EgovFileMngUtil {
 		if (deptId.equals("") || currentPage.equals("")) {
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
-			return resultObj.toString();
+			return resultObj;
 		}
 		
 		resultObj = surveyRestService.getDeptMembers(request, user.getId(), deptId, currentPage);
 		
 		logger.debug("jsonGetDeptMembers ended");
 		logger.debug(resultObj.toString());
-		return resultObj.toString();
+		return resultObj;
 	}
 	
 	@RequestMapping(value="/ezSurvey/getSearchMember.do", method=RequestMethod.POST)
 	@ResponseBody
-	public String jsonGetSearchMember(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public JSONObject jsonGetSearchMember(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("jsonGetSearchMember started");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String srchOption  = request.getParameter("srchOption")  != null  ? request.getParameter("srchOption") : "";
@@ -626,19 +626,19 @@ public class EzSurveyController extends EgovFileMngUtil {
 		if (srchOption.equals("") || srchValue.equals("") || currentPage.equals("")) {
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
-			return resultObj.toString();
+			return resultObj;
 		}
 		
 		resultObj = surveyRestService.getSearchMember(request, user.getId(), srchOption, srchValue, currentPage);
 		
 		logger.debug("jsonGetSearchMember ended");
 		logger.debug(resultObj.toString());
-		return resultObj.toString();
+		return resultObj;
 	}
 	
 	@RequestMapping(value="/ezSurvey/uploadAttachFile.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String jsonUploadFile(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
+	public JSONObject jsonUploadFile(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("Upload file is running!");
 		LoginSimpleVO userInfo         = commonUtil.userInfoSimple(loginCookie);
 		List<MultipartFile> multiFiles = request.getFiles("fileToUpload");
@@ -647,18 +647,18 @@ public class EzSurveyController extends EgovFileMngUtil {
 		if (multiFiles.size() == 0) {
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
-			return resultObj.toString();
+			return resultObj;
 		}
 		
 		resultObj = surveyRestService.uploadAttachFile(request, userInfo.getId(), multiFiles);
 		
 		logger.debug("Upload file finishes!");
-		return resultObj.toString();
+		return resultObj;
 	}
 	
 	@RequestMapping(value="/ezSurvey/deleteAttachFile.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String jsonDeleteFile(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
+	public JSONObject jsonDeleteFile(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("Delete file is running!");
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String filePath        = request.getParameter("filePath") != null ? request.getParameter("filePath") : "";
@@ -668,13 +668,13 @@ public class EzSurveyController extends EgovFileMngUtil {
 		if (filePath.equals("")) {
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
-			return resultObj.toString();
+			return resultObj;
 		}
 		
 		resultObj = surveyRestService.deleteAttachFile(request, userInfo.getId(), filePath);
 		
 		logger.debug("Delete file finishes!");
-		return resultObj.toString();
+		return resultObj;
 	}
 	
 	@RequestMapping(value="/ezSurvey/downloadAttachFile", produces="application/zip", method=RequestMethod.GET)
@@ -698,7 +698,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 	
 	@RequestMapping(value="/ezSurvey/saveUserConfig.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String jsonSaveUserConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public JSONObject jsonSaveUserConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonSaveUserConfig start");
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		String prevMode      = request.getParameter("prevMode")  != null ? request.getParameter("prevMode")  : "";
@@ -710,18 +710,18 @@ public class EzSurveyController extends EgovFileMngUtil {
 		if (prevMode.equals("") || listCount.equals("") || (!prevMode.equals("off") && (contentWPrev.equals("") || contentHPrev.equals("")))) {
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
-			return resultObj.toString();
+			return resultObj;
 		}
 		
 		resultObj = surveyRestService.saveUserConfig(request, user.getId(), prevMode, listCount, contentWPrev, contentHPrev);
 		
 		logger.debug("jsonSaveUserConfig end");
-		return resultObj.toString();
+		return resultObj;
 	}
 	
 	@RequestMapping(value="/ezSurvey/saveResponse.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String jsonSaveResponse(@RequestBody JSONObject responseItem, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+	public JSONObject jsonSaveResponse(@RequestBody JSONObject responseItem, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jsonSaveResponse started");
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		responseItem.put("userId", user.getId());
@@ -729,7 +729,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		JSONObject resultObj = surveyRestService.saveResponse(request, responseItem);
 		
 		logger.debug("jsonSaveResponse ended");
-		return resultObj.toString();
+		return resultObj;
 	}
 	
 	@RequestMapping(value="/ezSurvey/exportResultExcel.do", method = RequestMethod.POST)
@@ -1349,7 +1349,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 	// 20.05.08 강승구 : 설문수정 코드
 	@RequestMapping(value="/ezSurvey/updateResponse.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String jsonUpdateResponse(@RequestBody JSONObject responseItem, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+	public JSONObject jsonUpdateResponse(@RequestBody JSONObject responseItem, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jsonUpdateResponse started");
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		responseItem.put("userId", user.getId());
@@ -1357,6 +1357,6 @@ public class EzSurveyController extends EgovFileMngUtil {
 		JSONObject resultObj = surveyRestService.saveResponse(request, responseItem);
 		
 		logger.debug("jsonUpdateResponse ended");
-		return resultObj.toString();
+		return resultObj;
 	}
 }

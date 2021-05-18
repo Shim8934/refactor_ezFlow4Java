@@ -134,12 +134,14 @@
 		        var pBoardID = window.parent.pBoardID;
 		        var filecnt = document.getElementById("filelist").childNodes.length;
 		        
+		        /* 2021-04-29 홍승비 - 새로운 첨부파일 업로드 완료 후, 파일경로(DATA2) 속성을 갱신하도록 수정 */
 		        for (var i = 0; i < filecnt - 1; i++) {
 		            var filepath = document.getElementById("filelist").childNodes[i + 1].getAttribute("DATA2");
 		            if (filepath.indexOf(pBoardID) != -1) {
 		                strRet += filepath + "|";
 		            } else {
 		                strRet += "tempUploadFile/" + filepath + "|";
+		                document.getElementById("filelist").childNodes[i + 1].setAttribute("DATA2", "tempUploadFile/" + filepath);
 		            }
 		        }
 		        window.parent.attachxml = strRet;

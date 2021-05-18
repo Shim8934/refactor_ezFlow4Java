@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿var ListTypeFlag;
+﻿var ListTypeFlag;
 var g_SelCabXml = "";
 var g_TransFlag = "0";
 var g_szParamXml = "";
@@ -269,7 +269,9 @@ function ezCabMunuCtl(MenuType, selRow) {
             }
 
             if (document.getElementById("tdGongRam")) {
-                if ((GetAttribute(selRow, "DATA15") == "011" || GetAttribute(selRow, "DATA15") == "001") && arr_userinfo[1] == GetAttribute(selRow, "DATA3") && GetAttribute(selRow, "DATA8") === "00")
+//                if ((GetAttribute(selRow, "DATA15") == "011" || GetAttribute(selRow, "DATA15") == "001") && arr_userinfo[1] == GetAttribute(selRow, "DATA3") && GetAttribute(selRow, "DATA8") === "00")
+				// 2020-01-08 정주환 공람발송 기안자는 항상 on
+               	if (arr_userinfo[1] == GetAttribute(selRow, "DATA3") && GetAttribute(selRow, "DATA8") === "00")
                     document.getElementById("tdGongRam").style.display = "";
                 else
                     document.getElementById("tdGongRam").style.display = "none";
@@ -550,7 +552,12 @@ function GetRecordList() {
         if (nowday < 10)
             nowday = "0" + nowday;
 
-        g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00.001</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
+        var tempDeptID = DeptID;
+        if (checkRecordAll()) {
+            tempDeptID = "ALL";
+        }
+
+        g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00.001</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
     } else if (g_isSearching) {
     	var searchParamXml = loadXMLString(g_RecSearchParamXml);
         var startDate = SelectSingleNodeValue(searchParamXml.firstChild, "SREGDATE");
@@ -1444,6 +1451,10 @@ function btnSearchRec_onclick(opnOption,opentype) {
 
     if (typeof (opnOption) == "undefined") opnOption = "0";
     para[3] = opnOption;	
+    if(opnOption == "0") {
+    	para[4] = g_sFlag;
+    	para[5] = szRoleInfo;
+    }
 
     var url = "/ezApprovalG/searchRec.do";
 
@@ -1677,7 +1688,7 @@ function makePageSelPage(pTotalCnt) {
             document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;font-weight:bold;'>" + pTotalCnt + "</span>&nbsp;/ " + period;
 
         if (g_sFlag === "UNTREATED") {
-            parent.frames["left"].document.getElementById("countUntreated").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
+            parent.frames["left"].document.getElementById("COUNTUNTREATED").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
         }
     }
 

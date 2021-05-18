@@ -334,7 +334,7 @@
 		    function Send_OpenUI(Ans) {
 		        DivPopUpHidden();
 		        if (!Ans) {
-		        	setMenuDisable("btnSend", false);
+		        	//setMenuDisable("btnSend", false);
 		        	return;
 		        }
 		        //if ("${approvalPWD}" != "N") {
@@ -1005,7 +1005,7 @@
 		                //strimg = strimg + " width=" + signWidth;
 		                //strimg = strimg + " height=" + signHeight + ">";
 		
-		                var field2 = message.GetListItem(fields, "chief");
+		                /* var field2 = message.GetListItem(fields, "chief");
 		                var chiefwidth = 1;
 		                if (field2) {
 		                    if (isNaN(chiefwidth)) {
@@ -1013,17 +1013,18 @@
 	                        }
 		                    field2.height = signHeight;
 		                }
-		                var sealwidth = (maxwidth + chiefwidth) / 2 + 20;
+		                var sealwidth = (maxwidth + chiefwidth) / 2 + 20; */
 		                var field2 = message.GetListItem(fields, "sealwidth");
 		                if (field2)
-		                    field2.width = sealwidth;
+		                    field2.width = "480px";
 		
 		                var field2 = message.GetListItem(fields, "noseal");
 		                if (field2) {
-		                    if ((maxwidth - sealwidth - getPixel(SealWidth)) > 0)
+		                    /* if ((maxwidth - sealwidth - getPixel(SealWidth)) > 0)
 		                        field2.width = (maxwidth - sealwidth - getPixel(SealWidth));
 		                    else
-		                        field2.width = (maxwidth - sealwidth - getPixel(SealWidth)) * (-1);
+		                        field2.width = (maxwidth - sealwidth - getPixel(SealWidth)) * (-1); */
+		                    field2.width = "105px";
 		                    field2.innerHTML = " ";
 		                    stampFlag = false;
 		                }

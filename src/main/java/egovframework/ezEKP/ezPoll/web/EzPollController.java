@@ -2510,7 +2510,8 @@ public class EzPollController extends EgovFileMngUtil {
 			if (useFromAddress.equals("YES")) {
 				List<String[]> fromAddressList = ezEmailService.getAliasAddress(loginInfo.getId(), loginInfo.getTenantId());
 				
-				if (fromAddressList.size() >= 2) {
+				/* 아래 내용은 료비개발 시에 추가된 내용으로 표준에는 미적용
+				 * if (fromAddressList.size() >= 2) {
 					String companyDomainName = ezCommonService.getCompanyConfig(loginInfo.getTenantId(), loginInfo.getCompanyID(), "DomainName");
 					
 					// 회사별 이메일 도메인명이 설정되어 있으면 Account 이메일 주소를 목록에서 제외한다.								
@@ -2528,7 +2529,7 @@ public class EzPollController extends EgovFileMngUtil {
 							}
 						}
 					}
-				}
+				}*/
 				
 				if (fromAddressList.size() < 2) {
 					useFromAddress = "NO";

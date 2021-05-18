@@ -274,6 +274,12 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 	@Scheduled(fixedDelay = 600000, initialDelay = 60000)
 	public void deleteMailBlob() throws Exception {
 		logger.debug("deleteMailBlob started.");
+		
+		String useDeleteMailBlob = ezCommonService.getTenantConfig("useDeleteMailBlob", 0);
+		if(useDeleteMailBlob != null && useDeleteMailBlob.equalsIgnoreCase("NO")) {
+			logger.debug("deleteMailBlob ended.");
+			return;
+		}
 				
 		//choose scheduler running server
 		if (!preScheduler("deleteMailBlob")) {
@@ -694,24 +700,65 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 		        		
 		        		invalidAddressList.clear();
 		        		
-		            	for (Address a : allRecipients) {
-		            		logger.debug("address=" + a);
-		            		
-		            		try {
-			            		message.setRecipient(RecipientType.TO, a);
-			            		
-		            			Transport.send(message);
-		        			} catch (Exception e) {
-		        				e.printStackTrace();
-		        				String errorMessage = e.getMessage();
+		        		String useAdvancedEachMail = ezCommonService.getTenantConfig("useAdvancedEachMail", tenantId);
+		        		if (useAdvancedEachMail.equals("YES")) {		
+		        			try {
+		        				message.setRecipients(RecipientType.TO, allRecipients);
+		        				
+		        				message.setHeader("X-JMocha-Each-Mail", "true");
+		        				Transport.send(message);
+		        				
+		        			} catch (Exception e1) {
+		        				e1.printStackTrace();
+		        				String errorMessage = e1.getMessage();
+		        				logger.debug("remove Invalid address. and retry");
 		        				
 		        				if (errorMessage.contains("Invalid Addresses")) {
-		        					String cause = e.getCause().toString();		
-		        					
+		        					String cause = e1.getCause().toString();
 		        					findInvalidAddresses(cause, invalidAddressList);
+
+		        					List<Address> allRecipientList = new ArrayList<Address>();
+		        					for( int x = 0; x < allRecipients.length; x++){
+		        						String recipient = allRecipients[x].toString();
+		        						String temp2 = recipient.substring(recipient.lastIndexOf(" <")+2, recipient.length()-1);
+		        						
+		        						if (invalidAddressList.contains(temp2)){
+		        							continue;
+		        						} else {
+		        							allRecipientList.add(allRecipients[x]);
+		        						}
+		        					}
+		        					
+		        					Address[] newRecipients = allRecipientList.stream().toArray(Address[]::new);							
+		        					message.setRecipients(RecipientType.TO, newRecipients);
+		        					logger.debug("validAddressList=" + allRecipientList.toString());
+									logger.debug("invalidAddressList=" + invalidAddressList);
+									message.setHeader("X-JMocha-Each-Mail", "true");
+									Transport.send(message);
+									
+		        				} else {
+		        					throw e1;	 // 예외를 발생시킴
 		        				}
-		        			} 
-		            	}
+		        			}
+						} else {
+			            	for (Address a : allRecipients) {
+			            		logger.debug("address=" + a);
+			            		
+			            		try {
+				            		message.setRecipient(RecipientType.TO, a);
+			            			Transport.send(message);
+			        			} catch (Exception e) {
+			        				e.printStackTrace();
+			        				String errorMessage = e.getMessage();
+			        				
+			        				if (errorMessage.contains("Invalid Addresses")) {
+			        					String cause = e.getCause().toString();		
+			        					
+			        					findInvalidAddresses(cause, invalidAddressList);
+			        				}
+			        			} 						
+							}
+						}
 		            	
 		            	if (invalidAddressList.size() > 0) {
 //		            		sendInvalidRecipientNotiMail(userAccount, message.getSubject(), invalidAddressList, locale, offset);

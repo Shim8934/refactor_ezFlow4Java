@@ -88,6 +88,7 @@
             <mvc:mapping path="/rest/ezwebfolder/**"/>
             <mvc:mapping path="/rest/ezwebfolderadmin/**"/>
             <mvc:exclude-mapping path="/rest/ezwebfolder/login"/>
+            <mvc:exclude-mapping path="/rest/ezwebfolder/file/sat" />
 		    <bean class="egovframework.com.cmm.interceptor.WebfolderAuthenticInterceptor" />
         </mvc:interceptor>
 

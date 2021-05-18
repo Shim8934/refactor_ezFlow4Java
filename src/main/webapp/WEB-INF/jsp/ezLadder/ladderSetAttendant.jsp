@@ -1338,6 +1338,8 @@
 		        else {
 		            usedefault = GetAttribute(document.getElementById("search_type").options[document.getElementById("search_type").selectedIndex], "usedefault");
 		        }
+		     	// 2021-04-09 김은실 - 검색 시 PressShiftKey = true 되는 현상(commit 6c23f8716 참조): 모든 search_click()에 적용. 
+	            PressShiftKey = false;
 		    }
 		    function event_displayUserList2(xml) {
 		        if (xml != null) {
@@ -1958,7 +1960,7 @@
 		                                                    <option value="officeMobile" usedefault="0"><spring:message code='main.ksa03' /></option>
 		                                                    </c:if>
 	                                                        <option value="mail" usedefault="0"><spring:message code='ezLadder.t044' /></option>
-	                                                        <option value="streetAddress" usedefault="0"><spring:message code='ezLadder.t045' /></option>
+	                                                        <option value="streetAddress" usedefault="0" style="display:none"><spring:message code='ezLadder.t045' /></option>
 	                                                    </select>
 	                                                    <input id="keyword" value="" onkeyup="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px;height:22px">
 	                                                    <a class="imgbtn"><span onclick="search_click('search')"><spring:message code='ezLadder.t046' /></span></a>

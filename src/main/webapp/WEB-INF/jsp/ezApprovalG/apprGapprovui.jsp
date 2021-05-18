@@ -114,6 +114,7 @@
 		    arr_userinfo[16]  = "<c:out value ='${userInfo.deptName2}'/>";
 		    arr_userinfo[17]  = "<c:out value ='${userInfo.primary}'/>";
 		    var pCompanyID = "<c:out value ='${userInfo.companyID}'/>";
+		    var companyID = "<c:out value = '${userInfo.companyID}'/>";
 		    var KuyjeType = "002";
 		    var signDateFormat = "<c:out value ='${optSignDateFormat}'/>";
 		    var isSplit = "<c:out value ='${optIsSplit}'/>";
@@ -199,11 +200,6 @@
 		    	if(approvalFlag == "G") {
 	        		$("#btnAddSepAttach").css("display","");
 	        	} 
-		    	
-		    	if (nonElecRec == "Y") {
-			        getNonElecInfoSusinInit();
-					document.getElementById("btnAddSepAttach").style.display = "none";
-		        }
 		    	
 		    	if(useExternalMailServer == "NO") {
 		    		$("#btnMail").css("display","");
@@ -343,9 +339,10 @@
 		                tempString = tempString.replace("\n", "");
 		                var pAlertContent = tempString + "<br>" + "<spring:message code='ezApprovalG.t3'/>";
 		            }
-		            OpenAlertUI(pAlertContent);
-		            window.parent.close();
-		            btnClose_onclick();
+		            
+					OpenAlertUI(pAlertContent, btnClose_onclick); // 알림창 확인 시 문서창 닫도록 수정
+		            //window.parent.close();
+		           // btnClose_onclick();
 		        } else {
 		            if(NextDocExtended.substring(NextDocExtended.lastIndexOf(".")+1) != "mht") {
 		                openOtherApprovUI();
@@ -416,7 +413,13 @@
 		            pUserID = pOrgAprUserID;
 		            getDocInfo();
 		            setAttachInfo(pDocID, "APR", lstAttachLink);
-		            GetExchInfo();		
+		            GetExchInfo();
+		            
+			    	if (nonElecRec == "Y") {
+				        getNonElecInfoSusinInit();
+						document.getElementById("btnAddSepAttach").style.display = "none";
+			        }
+		            
 		            if (pDocHref != "")
 		            {
 		                message.Set_EditorContentURL(pDocHref);
@@ -1653,7 +1656,7 @@
 		        var parameter = new Array();
 		        CheckDocCellInfo();
 		        parameter[0] = pDocID;
-		        parameter[1] = pFormID;
+		        parameter[1] = pFormID
 		        parameter[2] = SignCount;
 		        parameter[3] = SignInfo;
 		        parameter[4] = hapyuiCount;
@@ -1717,11 +1720,13 @@
 		
 		        if (tempItemCode != "")
 		            tempdocnumcode = tempItemCode;
+		        
+		        parameter[61] = tempKeyword;
 		
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 
-		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&orgCompanyID=" + pCompanyID + "&docType=" + pDocType + "&formID=" + pFormID, "ezApprovalInfo", GetOpenWindowfeature(1144, 750));
+		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&orgCompanyID=" + pCompanyID + "&docType=" + pDocType + "&formID=" + pFormID, "ezApprovalInfo", GetOpenWindowfeature(1194, 750));
 		        
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
@@ -1817,7 +1822,8 @@
 			                cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
 			                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
 		                }
-		                
+
+						tempKeyword = ret[6]; 				//2021-03-10 박기범 - 키워드 추가
 		                tempSecurity = ret[7];                // 보안등급 관련
 		                tempUrgent = ret[8];                  // 긴급 결재 여부
 		                pSummery = ret[9];                    // 요약 내용 관련
@@ -1848,6 +1854,8 @@
 				            	sepAttachCheckYN = ret[26];
 				            	if (ext == "hwp") {
 					            	setNonElecRecInfo(nonElecRecInfoXml);
+				            	} else {
+				            		setNonElecRecInfo_mht(nonElecRecInfoXml);
 				            	}
 				            }
 

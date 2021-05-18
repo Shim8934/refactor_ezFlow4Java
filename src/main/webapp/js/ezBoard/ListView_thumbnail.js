@@ -823,7 +823,14 @@ function ListView() {
                     var ContentCell = document.createElement("TD");
                     ContentCell.setAttribute("style", "border-bottom-width: 0px; width:100%;");
                     ContentCell.appendChild(ContentTable);
-
+                    
+                    /* 2021-03-19 홍승비 - 원클릭 이벤트를 "제목" 칼럼에만 적용 */
+                    objTd.onclick = function () {
+                    	if (g_bPrevShow == false) {
+                    		ItemRead_onclick(this.parentElement);
+                    	}
+                    };
+                    
                     //tr.appendChild(NewCell);
                     tr.appendChild(imgCell);
                     tr.appendChild(ContentCell);

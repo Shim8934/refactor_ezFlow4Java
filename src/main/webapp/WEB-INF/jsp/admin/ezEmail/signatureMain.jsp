@@ -39,10 +39,12 @@
 	        		data : {"companyId" : companyID},
 	        		error : function(data) {
 	        			alert("error");
-	        			console.log(data);
+	        			//console.log(data);
 	        		},
 	        		complete : function(data) {
 	        			makeSignatureList(data.responseJSON);
+	        			window.frames.signPreViewIframe.document.body.innerHTML = "";
+	        			$(".signPreViewTxt").css("display", "block");
 	        	    }
 	        	});
 	        }
@@ -139,7 +141,7 @@
 		        		data : {"signNo" : signNo},
 		        		error : function(data) {
 		        			alert("error");
-		        			console.log(data);
+		        			//console.log(data);
 		        		},
 		        		complete : function(data) {
 		        			alert("<spring:message code='ezEmail.t604'/>");

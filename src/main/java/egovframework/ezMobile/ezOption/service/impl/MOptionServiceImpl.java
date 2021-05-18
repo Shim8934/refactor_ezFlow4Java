@@ -60,6 +60,13 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 			} else {
 				info.setPrimary("2");				
 			}
+			
+			// 20210305 조진호 - 	모바일 그룹웨어를 한번도 로그인 하지 않은 사용자는 TBL_USERMOBILEINFO TABLE에 DATA가 없어서 lang과 timeZone(offset)이 Null이라 추가 해줌. 
+			//					offset이 Null 경우 mobile gateway api 호출시 데이터 반환 하지 못함
+			if (info.getOffSet() == null) {
+				info.setOffSet("235|+09:00");
+			}
+
 		}
 		
 		LOGGER.debug("commonInfo ended");

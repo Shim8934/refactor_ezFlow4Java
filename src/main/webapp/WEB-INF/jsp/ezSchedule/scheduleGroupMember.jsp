@@ -9,7 +9,8 @@
 		<title><spring:message code="ezSchedule.t170" /></title>
 		<link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />			    
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>		
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript">
 		    var groupid = "<c:out value='${groupID}' />";
@@ -464,10 +465,10 @@
 		    }
 		  
 		    function save_onclick() {
-		        if (specialChk(document.all("groupname").value) || specialChk(document.all("description").value)) {
+		        /* if (specialChk(document.all("groupname").value) || specialChk(document.all("description").value)) {
 		    		alert("<spring:message code='ezResource.special' />");
 		    		return;
-		    	}		    	
+		    	} */		    	
 		    	
 		         if (document.all("groupname").value.replace(/\s/g, '') == "") {
 		            alert("<spring:message code='ezSchedule.t195' />");
@@ -502,8 +503,11 @@
 					} ,
    					success : function(text) {
    						alert("<spring:message code='ezSchedule.shb08' />");
-   			                window.close();
-   			                opener.location.reload();
+   							
+   							window.close();
+   							opener.parent.left.groupRefresh();
+   							
+   							
 					},
 					error : function(jqXHR, textStatus, errorThrown) {
 						alert("<spring:message code='ezSchedule.shb09' />");
@@ -516,6 +520,7 @@
 		        var memberId;
 		        var memberName;
 		        var memberName2;
+		        var status;
 		        
 		        var count = 0;
 		        
@@ -568,15 +573,25 @@
 		        
 	    	}
 		    	
-		    	
+		    function unEscapeHtml(text) {
+		        var map = {
+		            '&amp;' : '&',
+		            '&lt;' : '<',
+		            '&gt;' : '>',
+		            '&#034;' : '"',
+		            '&#039;' : "'"
+		        };
+
+		        return text.replace(/&amp;|&lt;|&gt;|&#034;|&#039;/g, function(m) { return map[m]; });
+		    }	
 		    
 		    
 		    //2018-08-10 김보미 - 추가
 		    window.onload = function () {
-		    	    var groupName = "<c:out value='${groupName}' />";
-		    	    var description = "<c:out value='${description}' />";
-		        	$('#groupname').val(groupName);
-		        	$('#description').val(description);
+		    	var groupName = "<c:out value='${groupName}' />";
+	    	    var description = "<c:out value='${description}' />";
+	        	$('#groupname').val(unEscapeHtml(groupName));
+	        	$('#description').val(unEscapeHtml(description));
 			    
 		    	g_Member = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
 		    	

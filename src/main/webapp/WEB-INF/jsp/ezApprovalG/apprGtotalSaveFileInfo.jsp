@@ -74,6 +74,11 @@
 	                        TR.setAttribute("DATA3", attSN);
 	                        attSN++;
 	                    }
+	                    /* 2021-04-22 홍승비 - 통합PC저장 UI에서 더블클릭으로 첨부파일 다운로드 시, VIEWSN(표출순번)이 아닌 ATTACHFILESN(실제 PRI KEY 순번)을 사용하도록 수정 */
+	                    if (getNodeText(SelectNodes(docAttach, "TYPE")[i]) == "ATT") {
+	                        TR.setAttribute("DATA4", getNodeText(SelectNodes(docAttach, "ATTACHFILESN")[i]));
+	                    }
+	                    
 	                    TD1.style.width = "30px";
 	                    TD1.appendChild(CHECK);
 	                    TD2.style.textAlign = "left";
@@ -119,9 +124,9 @@
 	            var pSourcePath = obj.getAttribute("FILEPATH").split('.')[1];
 	            var pDocID_mht = obj.getAttribute("FILEPATH").substring(obj.getAttribute("FILEPATH").lastIndexOf("/") + 1, obj.getAttribute("FILEPATH").length).split('.')[0];
 	            
-	            if (obj.getAttribute("DATA1") == "ATT")
-	                AttachDownFrame.location.href = "/ezApprovalG/downloadAttachDbClick.do?type=APPROVALG&fileName=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&docID=" + pDocID + "&docStatus=" + pType + "&docAttachSN=" + obj.getAttribute("DATA3") + "&orgCompanyID=" + orgCompanyID;
-	            else if (obj.getAttribute("DATA1") == "ATTDOC") {
+	            if (obj.getAttribute("DATA1") == "ATT") {
+	                AttachDownFrame.location.href = "/ezApprovalG/downloadAttachDbClick.do?type=APPROVALG&fileName=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&docID=" + pDocID + "&docStatus=" + pType + "&docAttachSN=" + obj.getAttribute("DATA4") + "&orgCompanyID=" + orgCompanyID;
+	            } else if (obj.getAttribute("DATA1") == "ATTDOC") {
 	                AttachDownFrame.location.href = "/ezApprovalG/downloadAttachDbClick.do?type=APPROVALGMHT&fileName=" + encodeURIComponent(obj.getAttribute("DATA2") + "." + pSourcePath) + "&docID=" + pDocID_mht + "&docStatus=END&orgCompanyID=" + orgCompanyID;
 	            } else {
 	            	if (pType == "TMP") { //2019-02-08 천성준 - #14965 임시보관함문서 > 문서보기 > 통합PC저장 시, 첨부 및 문서파일을 내려받을수 없던 문제해결

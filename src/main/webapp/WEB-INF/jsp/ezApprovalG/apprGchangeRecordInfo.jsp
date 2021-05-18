@@ -404,6 +404,11 @@
                 OpenAlertUI("<spring:message code='ezApprovalG.t955'/>");
                 return "";
             }
+            
+            if (txtTotalPage.value.length > 3) {
+            	OpenAlertUI("<spring:message code='ezApprovalG.t1061'/>");
+                return;
+            }
         }
         else {
         }
@@ -430,8 +435,8 @@
 
         if (ChangeCabinetInfo()) {
             rtnVal[0] = "TRUE";
-            OpenAlertUI("<spring:message code='ezApprovalG.t975'/>");
-            window.close();
+            OpenAlertUI("<spring:message code='ezApprovalG.t975'/>", ChangeCabinetInfo_Complete);
+            //window.close();
         }
     }
     function ChangeCabinetInfo() {
@@ -545,6 +550,10 @@
                  return false;
          	 }
        }
+    }
+    
+    function ChangeCabinetInfo_Complete() {
+    	window.close();
     }
     
     function btnClose_onclick() {

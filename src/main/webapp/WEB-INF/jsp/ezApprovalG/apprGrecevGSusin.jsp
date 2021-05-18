@@ -93,6 +93,7 @@
 		    arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2}'/>";
 		    arr_userinfo[17]  = "<c:out value = '${userInfo.primary}'/>";
 		    var pCompanyID = "<c:out value = '${userInfo.companyID}'/>";
+		    var companyID = "<c:out value = '${userInfo.companyID}'/>";
 		    var pSummery = "", pSpecialRecordCode = "", pPublicityCode = "", pPublicityYN = "", pLimitRange = "", pPageNum = "1";
 		    var cabinetID = "";
 		    var TaskCode = "";
@@ -1410,7 +1411,7 @@
 		        parameter[7] = tempSecurityDate;
 		
 		        var url = "../ezDocInfo/ezDocInfoG_Cross.aspx";
-		        var feature = "status:no;dialogWidth:430px;dialogHeight:605px;help:no;scroll:no;edge:sunken;";
+		        var feature = "status:no;dialogWidth:430px;dialogHeight:625px;help:no;scroll:no;edge:sunken;";
 		        feature = feature + GetShowModalPosition(430, 605);
 		        var RtnVal = window.showModalDialog(url, parameter, feature);
 		
@@ -1618,6 +1619,7 @@
 		        }
 		        
 		        parameter[60] = passAprLine;
+		        parameter[61] = tempKeyword;
 		        
 		        if (tempItemCode != "")
 		            tempdocnumcode = tempItemCode;
@@ -1629,7 +1631,7 @@
 		        	alert("<spring:message code='ezApprovalG.pjg04'/>");
 		        	window.close();
 		        } else {
-		        	var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType, "ezApprovalInfo", GetOpenWindowfeature(1144, 750));
+		        	var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType, "ezApprovalInfo", GetOpenWindowfeature(1194, 750));
 		        	try { OpenWin.focus(); } catch (e) { }
 		        }
 
@@ -1691,7 +1693,8 @@
 			                cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
 			                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
 		                }
-		
+
+						tempKeyword = ret[6]; 				//2021-03-10 박기범 - 키워드 추가
 		                tempSecurity = ret[7];
 		                tempUrgent = ret[8];
 		                pSummery = ret[9];
@@ -1719,7 +1722,7 @@
 				            	nonSepAttachLVXml = ret[24];
 				            	g_szSCListXml = ret[25];
 				            	sepAttachCheckYN = ret[26];
-				            	setNonElecRecInfo(nonElecRecInfoXml);
+				            	setNonElecRecInfo_mht(nonElecRecInfoXml);
 				            }
 
 				            if (useOpenGov == "YES") {

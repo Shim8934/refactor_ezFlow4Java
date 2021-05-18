@@ -1588,6 +1588,8 @@ function callMsgDlg(szContentClass, Href) {
             	if (ReadMailOpenNewWin != null) {
                 	ReadMailOpenNewWin.focus();
                 }
+    		} else {
+    			alert(strLangKSA02);
     		}
     	} else {
     		var pURI = "/ezEmail/mailWrite.do?cmd=EDIT&URL=" + encodeURIComponent(Href);
@@ -2086,12 +2088,11 @@ function mailConfirm_flag_btn() {
     } else if (listSubContentArry.length > 0) {
         pSelectItem = document.getElementById(listSubContentArry[listSubContentArry.length - 1])
     } else {
-    	pSelectItem = currentFixingId;
+    	pSelectItem = currentFixingId.getAttribute("_href") + ";";
     }
 
     flagXmlHttp = createXMLHttpRequest();
     var xmlDom = createXmlDom();
-    console.log(pSelectItem);
     var objNode;
     createNodeInsert(xmlDom, objNode, "DATA");
     createNodeAndInsertText(xmlDom, objNode, "ITEMID", pSelectItem);
@@ -2105,7 +2106,7 @@ function mailConfirm_flag_btn() {
         flagXmlHttp.onreadystatechange = function() {
         	if(flagXmlHttp.readyState == 4) {
         		if (flagXmlHttp.responseText == "OK") {
-        			mailConfirm_line(); 
+        			MailListRefresh();
         		} else {
         			alert(strLang321);
         		}

@@ -1749,7 +1749,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		fileId = commonUtil.detectPathTraversal(fileId);		
 		String fileDate = request.getParameter("filedate") == null ? "" : request.getParameter("filedate");
 		fileDate = commonUtil.detectPathTraversal(fileDate);		
-		String tenantIdStr = request.getParameter("tid") == null ? "0" : request.getParameter("tid");
+		String tenantIdStr = request.getParameter("tid");
+		tenantIdStr = (tenantIdStr == null || tenantIdStr.trim().equals("")) ? "0" : tenantIdStr;
 		tenantIdStr = commonUtil.detectPathTraversal(tenantIdStr);
 		
 		int tenantId = Integer.parseInt(tenantIdStr);
@@ -4720,7 +4721,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/getMailAddressList.do", method=RequestMethod.POST)
 	@ResponseBody
-	public String getMailAddressList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale) throws Exception{
+	public JSONObject getMailAddressList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale) throws Exception{
 		logger.debug("getMailAddressList started.");
 		Map<String, Object> result = new HashMap<String, Object>();
 		
@@ -4750,7 +4751,9 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						logger.debug("the user cannot access the shareId.");
 						logger.debug("getMailAddressList ended.");
 						
-						return "";
+						result.put("status", "error");
+						
+						return new JSONObject(result);
 					}
 					
 					userAccount = shareId + "@" + domainName;
@@ -4930,7 +4933,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("getMailAddressList ended.");
-		return new JSONObject(result).toString();
+		return new JSONObject(result);
 	}
 	
 	/**

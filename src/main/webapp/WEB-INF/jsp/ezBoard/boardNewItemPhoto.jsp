@@ -385,7 +385,7 @@
 						if (pMode == "reply")
 						{
 						    xmlhttp = createXMLHttpRequest();
-						    xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(itemid) + "&itemTreeID=" + strUpperItemIDTree, false);
+						    xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(itemid) + "&itemTreeID=" + encodeURIComponent(strUpperItemIDTree), false);
 						    xmlhttp.send();
 						    xmlhttp = null;
 						}
@@ -463,6 +463,11 @@
 		
 		            if (getNodeText(GetChildNodes(nodes[i])[1]) == "overflow") {
 		                alert("" + strLang8 + "" + AttachLimit + "MB" + strLang9 + "");
+		                return;
+		            }
+		            
+		            if (getNodeText(GetChildNodes(nodes[i])[1]) == "Not Image file") {
+		            	alert("<spring:message code ='ezBoard.jsw.01' />");
 		                return;
 		            }
 		            saveItemBoardId = pBoardID;

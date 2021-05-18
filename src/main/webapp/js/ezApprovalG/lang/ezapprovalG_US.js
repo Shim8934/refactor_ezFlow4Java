@@ -1094,3 +1094,9 @@ var strLang957 = "Director";
 
 var strLangAdd00040 = "발신기관에서 보내온 본문정보가 잘못되었습니다. 재전송요청하시기 바랍니다.";
 var strLangAdd00041 = "본문정보중 이미지정보가 포함되어 있지않아서 제거 후 저장되었습니다.<br />접수 하시겠습니까?";
+
+var strLang960 = "Please select a shareholder to modify";
+var strLang961 = "Please select a shareholder to delete";
+var strLang962 = "Are you sure you want to delete it?";
+var strLang963 = "Deleted.";
+var strLang964 = "failed";
