@@ -402,7 +402,7 @@
 					                            <option value="HomePhone"><spring:message code='ezJournal.t212'/></option>
 					                            <option value="facsimileTelephoneNumber"><spring:message code='ezJournal.t213'/></option>
 					                            <option value="mail"><spring:message code='ezJournal.t214'/></option>
-					                            <option value="streetAddress"><spring:message code='ezJournal.t215'/></option>
+					                            <option value="streetAddress" style="display:none"><spring:message code='ezJournal.t215'/></option>
 	                                        </select>
 	                                        <input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){fn_serach('search'); return false;}" id="keyword" value="" style="width: 130px; height:22px; margin: 0px;" />
 	                                        <a class="imgbtn"><span onclick="fn_serach('search')"><spring:message code='ezJournal.t43'/></span></a>

@@ -1983,7 +1983,7 @@
                     <option value="extensionPhone" usedefault="0"><spring:message code='main.ksa02' /></option>
                     <option value="officeMobile" usedefault="0"><spring:message code='main.ksa03' /></option>
                     </c:if>
-					<option value="streetAddress"><spring:message code='ezOrgan.t100' /></option>
+					<option value="streetAddress" style="display:none"><spring:message code='ezOrgan.t100' /></option>
 				</select>
 				<input id="keyword" class="organSearchKeyword" onKeyPress="search_press()" style="ime-mode: active;height: 27px;border: 1px solid #cbcbcb; border-right:0px;"/>
 				<a class=searchBtn>

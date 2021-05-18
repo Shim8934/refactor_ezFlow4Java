@@ -1373,7 +1373,7 @@
 					                            <option value="HomePhone"><spring:message code='ezOrgan.t97'/></option>
 					                            <option value="facsimileTelephoneNumber"><spring:message code='ezOrgan.t98'/></option>
 					                            <option value="mail"><spring:message code='ezOrgan.t99'/></option>
-					                            <option value="streetAddress"><spring:message code='ezOrgan.t100'/></option>
+					                            <option value="streetAddress" style="display:none"><spring:message code='ezOrgan.t100'/></option>
 	                                        </select>
 	                                        <input type="text" id="keyword" value="" onkeyup="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; height:22px; margin: 0px;" />
 	                                        <a class="imgbtn"><span onclick="search_click()"><spring:message code='ezOrgan.t101'/></span></a>
