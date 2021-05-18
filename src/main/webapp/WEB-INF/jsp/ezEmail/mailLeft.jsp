@@ -618,8 +618,10 @@
 	        		window[treeviewStr].source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
 	        		window[treeviewStr].update();
 	                
+	        		getUnreadCountAll();
 	                previewSubTreeCall();
 	                applyEllipsisMailTree();
+	                detailView();
 	        	}, 100);
 	        }
 	        
