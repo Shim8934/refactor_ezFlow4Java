@@ -8,6 +8,9 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
 		<link href="${util.addVer('/js/jquery/jquery.modal.css')}" rel="stylesheet" type="text/css" />
+		<style>
+			#Conitems span { word-break: break-all; }
+		</style>
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/encode_component.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -289,16 +292,16 @@
 
 		            if (ischeck) {
 		                if (ConCellRow != null) {
-		                    ConCellRow.outerHTML = "<div style='font-size:small;height:18px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + inboxRuleCon1.value + "'><nobr></nobr><div>";
-		                    $("div#Conitems div:nth-child(" + Conitems.children.length + ")  nobr").text(inboxRuleCon1.value);
+		                    ConCellRow.outerHTML = "<div style='font-size:small;max-height:55px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px; overflow-y: auto;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + inboxRuleCon1.value + "'><span></span><div>";
+		                    $("div#Conitems div:nth-child(" + Conitems.children.length + ")  span").text(inboxRuleCon1.value);
 		                    inboxRuleCon1.value = "";
 		                    inboxRuleCon1.focus();
 		                    inputBtn.textContent = strLang239;
 		                    ConCellRow = null;
 		                }
 		                else {
-		                    Conitems.innerHTML += "<div style='font-size:small;height:18px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + inboxRuleCon1.value + "'><nobr></nobr><div>";
-		                    $("div#Conitems div:nth-child(" + Conitems.children.length + ")  nobr").text(inboxRuleCon1.value);
+		                    Conitems.innerHTML += "<div style='font-size:small;max-height:55px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px; overflow-y: auto;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + inboxRuleCon1.value + "'><span></span><div>";
+		                    $("div#Conitems div:nth-child(" + Conitems.children.length + ")  span").text(inboxRuleCon1.value);
 		                    inboxRuleCon1.value = "";
 		                    inboxRuleCon1.focus();
 		                }
@@ -319,15 +322,15 @@
 		            if (rulekind == "SENDER" || rulekind == "RECEIVER" || rulekind == "FORWARD" || rulekind == "REDIRECTION") {
 		                if (value.split("<").length > 1) {
 		                    var mailaddress = value.split("<")[1].replace(">", "");
-		                    Conitems.innerHTML += "<div style='font-size:small;height:18px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px;' ondblclick='pop_modify(this);' ondblclick onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + mailaddress + "'><nobr>" + MakeXMLString(value) + "</nobr><div>";
+		                    Conitems.innerHTML += "<div style='font-size:small;max-height:55px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px; overflow-y: auto;' ondblclick='pop_modify(this);' ondblclick onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + mailaddress + "'><span>" + MakeXMLString(value) + "</span><div>";
 		                }
 		                else {
-		                    Conitems.innerHTML += "<div style='font-size:small;height:18px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px;' ondblclick='pop_modify(this);' ondblclick onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + value + "'><nobr>" + value + "</nobr><div>";
+		                    Conitems.innerHTML += "<div style='font-size:small;max-height:55px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px; overflow-y: auto;' ondblclick='pop_modify(this);' ondblclick onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + value + "'><span>" + value + "</span><div>";
 		                }
 		            }
 		            else {
-		                Conitems.innerHTML += "<div style='font-size:small;height:18px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px;' ondblclick='pop_modify(this);' ondblclick onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + value + "'><nobr></nobr><div>";
-		                $("div#Conitems div:nth-child(" + i + ")  nobr").text(value);
+		                Conitems.innerHTML += "<div style='font-size:small;max-height:55px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px; overflow-y: auto;' ondblclick='pop_modify(this);' ondblclick onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + value + "'><span></span><div>";
+		                $("div#Conitems div:nth-child(" + i + ")  span").text(value);
 		            }
 		        }
 		    }
