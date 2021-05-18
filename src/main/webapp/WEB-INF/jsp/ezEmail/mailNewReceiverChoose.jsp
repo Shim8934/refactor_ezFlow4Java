@@ -760,7 +760,7 @@
 	                    var strEmail = document.getElementById(listContentArry[0]).getAttribute("_data3");
 	                }
 	                else {
-	                    alert(strLang42);
+	                    alert(strLangPYY01);
 	                    return;
 	                }
 	            }
@@ -776,7 +776,7 @@
 	                    }
 	                }
 	                else {
-	                    alert(strLang42);
+	                    alert(strLangPYY01);
 	                    return;
 	                }
 	            } else if (selTab == "DistributionList") {
@@ -787,7 +787,7 @@
 	                    var strEmail = GetAttribute(arrRows[0], "DATA2");
 	                }
 	                else {
-	                    alert(strLang42);
+	                    alert(strLangPYY01);
 	                    return;
 	                }
 	            } else if (selTab == "sharedMailboxList") {
@@ -798,7 +798,7 @@
 	                    var strEmail = GetAttribute(arrRows[0], "DATA2");
 	                }
 	                else {
-	                    alert(strLang42);
+	                    alert(strLangPYY01);
 	                    return;
 	                }
 	            }

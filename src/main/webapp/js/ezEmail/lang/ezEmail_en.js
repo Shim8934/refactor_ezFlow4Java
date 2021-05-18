@@ -1,4 +1,4 @@
-﻿var strLang1 = "There are no items to show in this view.";
+﻿﻿var strLang1 = "There are no items to show in this view.";
 var strLang2 = "Can not display folder. Internal server error occurred.";
 var strLang3 = "";
 var strLang4 = "Deleted Items";
@@ -301,6 +301,7 @@ var strLangLSD02 = "The non-members of the department.";
 var strLangJYH01 = "Not selected mail.";
 var strLangKSA01 = "(The same email address is already stored : \n %s)";
 var strLangKSA02 = "You do not have permission to send mail.";
+var strLangPYY01 = "Please select a mail account to be automatically forwarded.";
 
 /* 2018-07-03 홍승비 - 승인게시물, 커뮤니티 답변메일 companyID 관련 처리*/
 var strLangHSB01 = "이 게시물은 ";
