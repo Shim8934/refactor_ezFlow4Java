@@ -8,6 +8,9 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
 		<link href="${util.addVer('/js/jquery/jquery.modal.css')}" rel="stylesheet" type="text/css" />
+		<style>
+			#ConS span, #ExptArea span, #Conitems span { word-break: break-all; }
+		</style>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/encode_component.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/string_component.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -517,16 +520,16 @@
 		            }
 		            if (ischeck) {
 		                if (ConCellRow != null) {
-		                	ConCellRow.outerHTML = "<div style='font-size:small;height:18px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + inboxRuleCon1.value + "'><nobr></nobr><div>";
-		                    $("div#Conitems div:nth-child(" + Conitems.children.length + ")  nobr").text(inboxRuleCon1.value);
+		                	ConCellRow.outerHTML = "<div style='font-size:small;max-height:55px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px; overflow-y: auto;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + inboxRuleCon1.value + "'><span></span><div>";
+		                    $("div#Conitems div:nth-child(" + Conitems.children.length + ")  span").text(inboxRuleCon1.value);
 		                    inboxRuleCon1.value = "";
 		                    inboxRuleCon1.focus();
 		                    inputBtn.textContent = strLang239;
 		                    ConCellRow = null;
 		                }
 		                else {
-		                    Conitems.innerHTML += "<div style='font-size:small;height:18px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + inboxRuleCon1.value + "'><nobr>" + inboxRuleCon1.value + "</nobr><div>";
-		                    $("div#Conitems div:nth-child(" + Conitems.children.length + ")  nobr").text(inboxRuleCon1.value);
+		                    Conitems.innerHTML += "<div style='font-size:small;max-height:55px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px; overflow-y: auto;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + inboxRuleCon1.value + "'><span>" + inboxRuleCon1.value + "</span><div>";
+		                    $("div#Conitems div:nth-child(" + Conitems.children.length + ")  span").text(inboxRuleCon1.value);
 		                    inboxRuleCon1.value = "";
 		                    inboxRuleCon1.focus();
 		                }
@@ -545,15 +548,15 @@
 		            if (RuleKind == "SENDER" || RuleKind == "RECEIVER" || _RuleKind == "FORWARD" || _RuleKind == "REDIRECTION") {
 		                if (value.split("<").length > 1) {
 		                    var mailaddress = value.split("<")[1].replace(">", "");
-		                    Conitems.innerHTML += "<div style='font-size:small;height:18px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px;' ondblclick='pop_modify(this);' ondblclick='' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + mailaddress + "'><nobr>" + MakeXMLString(value) + "</nobr><div>";
+		                    Conitems.innerHTML += "<div style='font-size:small;max-height:55px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px; overflow-y: auto;' ondblclick='pop_modify(this);' ondblclick='' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + mailaddress + "'><span>" + MakeXMLString(value) + "</span><div>";
 		                }
 		                else {
-		                    Conitems.innerHTML += "<div style='font-size:small;height:18px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px;' ondblclick='pop_modify(this);' ondblclick='' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + value + "'><nobr>" + value + "</nobr><div>";
+		                    Conitems.innerHTML += "<div style='font-size:small;max-height:55px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px; overflow-y: auto;' ondblclick='pop_modify(this);' ondblclick='' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + value + "'><span>" + value + "</span><div>";
 		                }
 		            }
 		            else {
-		                Conitems.innerHTML += "<div style='font-size:small;height:18px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px;' ondblclick='pop_modify(this);' ondblclick='' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + value + "'><nobr></nobr><div>";
-		                $("div#Conitems div:nth-child(" + i + ")  nobr").text(value);
+		                Conitems.innerHTML += "<div style='font-size:small;max-height:55px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px; overflow-y: auto;' ondblclick='pop_modify(this);' ondblclick='' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + value + "'><span></span><div>";
+		                $("div#Conitems div:nth-child(" + i + ")  span").text(value);
 		            }
 		        }
 		    }
@@ -1052,7 +1055,7 @@
 		    <option value="BODY"><spring:message code='ezEmail.t821' /></option>
 		    <option value="SUBJECTORBODY"><spring:message code='ezEmail.t835' /></option>
 		    <option value="ALLMESSAGES"><spring:message code='ezEmail.t836' /></option>
-		</select><span id="ConS" name="ConS" style="width:230px;border:0px solid #dbdbda;height:20px;margin-left:8px;margin-top:0px;text-overflow:ellipsis; overflow:hidden;cursor:pointer;vertical-align:middle;color:#6495ED;font-weight:bold;"></span>
+		</select><span id="ConS" name="ConS" style="display: inline-block; width:230px;border:0px solid #dbdbda;height:20px;margin-left:8px;margin-top:0px;text-overflow:ellipsis; overflow:hidden;cursor:pointer;vertical-align:middle;color:#6495ED;font-weight:bold;"></span>
 	</div>
 	<div id="Ruledsc1" name="Ruledsc2"></div>
 	<div id="inboxRuleAct" name="inboxRuleCon"  style="display:none;">
@@ -1065,7 +1068,7 @@
 		    <option value="READ"><spring:message code='ezEmail.t839' /></option>
 		    <option value="IMPORTANCE"><spring:message code='ezEmail.t840' /></option>
 		    <!-- <option value="FORWARD"><spring:message code='ezEmail.t841' /></option> -->
-		</select><span id="ActS" name="ActS"  style="width:230px;height:20px;border:0px solid #dbdbda;height:20px;margin-left:8px;margin-top:0px;text-overflow:ellipsis; overflow:hidden;cursor:pointer;vertical-align:middle;color:#6495ED;font-weight:bold;"></span>
+		</select><span id="ActS" name="ActS"  style="display: inline-block; width:230px;height:20px;border:0px solid #dbdbda;height:20px;margin-left:8px;margin-top:0px;text-overflow:ellipsis; overflow:hidden;cursor:pointer;vertical-align:middle;color:#6495ED;font-weight:bold;"></span>
         <select id="ImportanceSel" name="ImportanceSel" class="mailRule_select" onchange="ImSelect(this)" style="width:auto; display:none;">
             <option value="NONE" selected><spring:message code='ezEmail.t359' /><spring:message code='ezEmail.t488' /></option>
             <option value="LOW"><spring:message code='ezEmail.t360' /></option>
@@ -1082,7 +1085,7 @@
 		    <option value="SUBJECT"><spring:message code='ezEmail.t820' /></option>
 		    <option value="BODY"><spring:message code='ezEmail.t821' /></option>
 		    <option value="SUBJECTORBODY"><spring:message code='ezEmail.t835' /></option>
-		</select><span id="ExptS" name="ExptS" style="width:230px;height:20px;border:0px solid #dbdbda;margin-left:8px;margin-top:0px;text-overflow:ellipsis; overflow:hidden;cursor:pointer;vertical-align:middle;color:#6495ED;font-weight:bold;"></span>
+		</select><span id="ExptS" name="ExptS" style="display: inline-block; width:230px;height:20px;border:0px solid #dbdbda;margin-left:8px;margin-top:0px;text-overflow:ellipsis; overflow:hidden;cursor:pointer;vertical-align:middle;color:#6495ED;font-weight:bold;"></span>
 	</div>
 	<div  id="inboxRuleConbtn1" name="inboxRuleConbtn1" style="display:none;left:40px">
 		<div class="popupJQLayer" style="padding-top:6px">

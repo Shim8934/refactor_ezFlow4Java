@@ -24,6 +24,7 @@ function createMemo(memo, flag) {
 		var input = document.createElement("input");
 		input.setAttribute("id", memo.memo_id);
 		input.setAttribute("name", "memo");
+		input.setAttribute("class", "kangnam");
 		input.setAttribute("type", "checkbox");
 		input.setAttribute("style", "cursor:pointer");
 		input.setAttribute("value", memo.memo_id);
