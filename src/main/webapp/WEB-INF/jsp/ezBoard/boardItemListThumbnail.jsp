@@ -74,8 +74,8 @@
 			}
 			.topInfoP input[type="checkbox"] {
 				margin: 11px 5px 0px 0px;
-				width: 13px;
-				height: 13px;
+				/* width: 13px;
+				height: 13px; */
 				vertical-align: top;
 			}
 			.albumThumbImg {
