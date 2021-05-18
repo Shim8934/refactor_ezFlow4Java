@@ -795,6 +795,16 @@ function ListView() {
         oDatas = null;
     }
 
+    function ConvMakeXMLString(str) {
+        str = ReplaceText(str, "&lt;", "<");
+        str = ReplaceText(str, "&gt;", ">");
+        str = ReplaceText(str, "&#039;", "'");
+        str = ReplaceText(str, "&#034;", "\"");
+    	str = ReplaceText(str, "&#92;", "\\");
+    	str = ReplaceText(str, "&amp;", "&");
+        return str;
+    }
+    
     //리스트뷰 DataSource에서 DATA1, DATA2, DATA3 ... 등의 데이터 가져오기
     function GetDataElements(pObjElm) {
         var elements = new Array();

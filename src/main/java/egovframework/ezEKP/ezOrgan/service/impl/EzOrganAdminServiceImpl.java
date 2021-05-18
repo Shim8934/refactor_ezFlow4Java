@@ -25,6 +25,7 @@ import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.service.PreResult;
 import egovframework.ezEKP.ezOrgan.util.ADConnection;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganGroupVO;
@@ -589,7 +590,33 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	public int userCheck(String cn, int tenantID) throws Exception {
 		return ezOrganAdminDao.userCheck(cn, tenantID);
 	}
-	
+
+	@Override
+	public PreResult checkDuplicateId(String cn, String employeeNumber, int tenantId) throws Exception {
+		if (ezOrganAdminDao.userCheck(cn, tenantId) > 0) {
+			return PreResult.PRE;
+		}
+
+		return checkDuplicateLoginId(cn, employeeNumber, tenantId);
+	}
+
+	@Override
+	public PreResult checkDuplicateLoginId(String cn, String employeeNumber, int tenantId) throws Exception {
+		if (!"yes".equalsIgnoreCase(ezCommonService.getTenantConfig("UseEmpNumberLogin", tenantId))) {
+			return PreResult.NONE;
+		}
+
+		if (ezOrganAdminDao.isDuplicateLoginId(cn, cn, tenantId)) {
+			return PreResult.PRE_CN;
+		}
+
+		if (ezOrganAdminDao.isDuplicateLoginId(cn, employeeNumber, tenantId)) {
+			return PreResult.PRE_EMPLOYEE_NUMBER;
+		}
+
+		return PreResult.NONE;
+	}
+
 	@Override
 	public int getRetireListCount(int pPage, int pPageRow, int tenantID, String searchStartDate, String searchEndDate, String searchKeycode, String searchKeyword, String searchCompanyID) throws Exception {
 	    logger.debug("getRetireListCount started");

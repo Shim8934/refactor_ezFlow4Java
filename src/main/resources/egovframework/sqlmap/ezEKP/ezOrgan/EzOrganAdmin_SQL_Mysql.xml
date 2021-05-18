@@ -4004,12 +4004,26 @@
       		WHERE  
       			department = #cn#
             AND 
-                CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantID#)                                                                                                                                                     
+                CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantID#)
       		AND
       			tenant_id = #tenantID#	
 	     ]]>
 	</select>
- 
+
+	<select id="EzOrganAdminDAO.getDuplicateLoginIdCount" parameterClass="Map" resultClass="int">
+		<![CDATA[
+			SELECT COUNT(U.CN)
+			FROM TBL_USERMASTER U
+			LEFT JOIN TBL_USERMASTER_RETIRE R
+				ON U.CN = R.CN
+				AND U.TENANT_ID = R.TENANT_ID
+			WHERE R.CN IS NULL
+				AND U.CN <> #userId#
+				AND U.TENANT_ID = #tenantId#
+				AND (U.CN = #id# OR U.EXTENSIONATTRIBUTE14 = #id#)
+		]]>
+	</select>
+
     <update id="EzOrganAdminDAO.updateDBData_company" parameterClass="Map">
         <![CDATA[
            UPDATE 

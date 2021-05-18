@@ -81,7 +81,7 @@
 	    	            else
 	    	                specialText = specialText + ",  " + "<spring:message code='ezApprovalG.t986'/>";
 	    	        }
-	    	        if (specialRecordCode.substring(3, 4) == "Y") {
+	    	        if (specialRecordCode.substring(4, 5) == "Y") {
 	    	            if (specialText == "")
 	    	                specialText = specialText + "<spring:message code='ezApprovalG.t1207'/>";
 	    	            else

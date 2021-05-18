@@ -155,7 +155,7 @@
 		    }
 		    
 		    function insertShare(flag) {
-		    	if ($("tr[class='active']").length <= 0) {
+		    	if (flag == 'M' && $("tr[class='active']").length <= 0) {
 		    		alert(strLang960);
 		    		return;
 		    	}

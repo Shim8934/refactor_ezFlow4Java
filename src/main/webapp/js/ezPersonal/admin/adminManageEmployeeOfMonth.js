@@ -249,7 +249,7 @@ function btn_add(obj) {
 	selectedTerm = term;
 	
 	selectperson_cross_dialogArguments[1] = btn_add_Complete;
-	var SelectPerson_cross = window.open("/ezPersonal/selectPerson.do?type=EMP", "SelectPerson", GetOpenWindowfeature(760, 535));
+	var SelectPerson_cross = window.open("/ezPersonal/selectPerson.do?type=EMP", "SelectPerson", GetOpenWindowfeature(860, 535));
 	popup = SelectPerson_cross;
 	try { SelectPerson_cross.focus(); } catch (e) { }
 	
