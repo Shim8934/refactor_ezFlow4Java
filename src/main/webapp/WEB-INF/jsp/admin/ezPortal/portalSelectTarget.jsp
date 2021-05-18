@@ -983,7 +983,7 @@
                                                         <option value="HomePhone" usedefault="0"><spring:message code='ezPortal.t1051'/></option>
                                                         <option value="facsimileTelephoneNumber" usedefault="0"><spring:message code='ezPortal.t1052'/></option>
                                                         <option value="mail" usedefault="0"><spring:message code='ezPortal.t38'/></option>
-                                                        <option value="streetAddress" usedefault="0"><spring:message code='ezPortal.t1053'/></option>
+                                                        <option value="streetAddress" usedefault="0" style="display:none"><spring:message code='ezPortal.t1053'/></option>
                                                     </select>
                                                     <input id="keyword" value="" onkeyup="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; height:22px; margin: 0px;">
                                                     <a class="imgbtn"><span onclick="search_click()"><spring:message code='ezPortal.t252'/></span></a>

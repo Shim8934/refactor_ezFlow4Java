@@ -672,7 +672,7 @@
 		                                                    <option value="officeMobile" usedefault="0"><spring:message code='main.ksa03' /></option>
 		                                                    </c:if>
 								                            <option value="mail"><spring:message code='ezJournal.t214'/></option>
-								                            <option value="streetAddress"><spring:message code='ezJournal.t215'/></option>
+								                            <option value="streetAddress" style="display:none"><spring:message code='ezJournal.t215'/></option>
 				                                        </select>
 				                                        <input id="keyword" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){fn_serach('search'); return false;}" value="" style="width: 130px; margin: 0px;height:22px" />
 				                                        <a class="imgbtn"><span onclick="fn_serach('search')"><spring:message code='ezJournal.t43'/></span></a>

@@ -1421,7 +1421,7 @@
                                                         	<option value="HomePhone"><spring:message code="ezResource.t137" /></option>
                                                         	<option value="facsimileTelephoneNumber"><spring:message code="ezResource.t138" /></option>
                                                         	<option value="mail"><spring:message code="ezResource.t139" /></option>
-                                                        	<option value="streetAddress"><spring:message code="ezResource.t140" /></option>
+                                                        	<option value="streetAddress" style="display:none"><spring:message code="ezResource.t140" /></option>
                                                     	</select>
                                                     	<input id="keyword" value="" onkeyup="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; height:22px; margin: 0px;">
                                                     		<a class="imgbtn"><span onclick="search_click()"><spring:message code="ezResource.t14" /></span></a>

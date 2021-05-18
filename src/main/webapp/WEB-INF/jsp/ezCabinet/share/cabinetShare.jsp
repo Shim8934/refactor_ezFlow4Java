@@ -50,7 +50,7 @@
 		                                                    <option value="officeMobile" usedefault="0"><spring:message code='main.ksa03' /></option>
 		                                                    </c:if>
 															<option          value="mail"                     ><spring:message code="ezCabinet.t102"/></option>
-															<option          value="streetAddress"            ><spring:message code="ezCabinet.t107"/></option>
+															<option value="streetAddress" style="display:none"><spring:message code="ezCabinet.t107"/></option>
 														</select>
 														<input type="text" id="keyword">
 														<a class="imgbtn" id="searchBtn"><span><spring:message code='ezCabinet.t49'/></span></a>

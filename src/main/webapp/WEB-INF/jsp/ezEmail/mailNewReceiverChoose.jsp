@@ -4081,7 +4081,7 @@
 	                                                        <option value="extensionPhone" usedefault="0"><spring:message code='main.ksa02' /></option>
 	                                                        <option value="officeMobile" usedefault="0"><spring:message code='main.ksa03' /></option>
 	                                                        </c:if>
-	                                                        <option value="streetAddress" usedefault="0"><spring:message code='ezEmail.t99000049' /></option>
+	                                                        <option value="streetAddress" usedefault="0" style="display:none"><spring:message code='ezEmail.t99000049' /></option>
 	                                                    </select>
 	                                                    <input id="keyword" value="" onkeypress="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px; height:21px">
 	                                                    <a class="imgbtn"><span onclick="search_click('search')"><spring:message code='ezEmail.t37' /></span></a>
