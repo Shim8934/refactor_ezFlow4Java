@@ -392,6 +392,69 @@ function setNonElecRecInfo_whwp(ret) {
 	}
 }
 
+// MHT양식 비전자문서 전용
+function setNonElecRecInfo_mht(ret) {
+	var objNodes;
+	var objNodesSep;
+	var count;
+	var title = "";
+	var xmldom = createXmlDom();
+	xmldom.async = false;
+	xmldom = loadXMLString(ret);
+	
+	if( xmldom.xml == "" ) return;
+	if( xmldom.documentElement.childNodes.length == 0 ) return;
+	
+	objNodes = SelectNodes(xmldom, "NONELECRECINFO/NONELECREC");
+	var fields = message.GetFieldsList();
+	
+	field = message.GetListItem(fields, "nonElecRec_RegType"); // 등록구분
+     if (field) {
+         setNodeText(field, regTypePicker(getNodeText(objNodes[0].childNodes[3])));
+     }
+     
+     field = message.GetListItem(fields, "nonElecRec_Title"); // 기록물제목
+     if (field) {
+    	 setNodeText(field, getNodeText(objNodes[0].childNodes[6]));
+     }
+     
+     field = message.GetListItem(fields, "nonElecRec_RegDate"); // 등록일자
+     if (field) {
+    	 setNodeText(field, getNodeText(objNodes[0].childNodes[4]));
+     }
+     
+     field = message.GetListItem(fields, "nonElecRec_ExeDate"); // 시행일자
+     if (field) {
+    	 setNodeText(field, getNodeText(objNodes[0].childNodes[11]));
+     }
+     
+     field = message.GetListItem(fields, "nonElecRec_SepAttachYN"); // 분리첨부 건수
+     if (field) {
+    	 objNodesSep = SelectNodes(xmldom, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/ROWS/ROW");
+    	 count = objNodesSep.length;
+    	 if (count > 0) {
+    		 	setNodeText(field, count + " 건");
+    	 } else {
+    		 	setNodeText(field, "X");
+    	 }
+     }
+     
+     field = message.GetListItem(fields, "doctitle"); // 문서제목
+     if (field) {
+    	 setNodeText(field, getNodeText(objNodes[0].childNodes[6]) + " " + title);
+     }
+     
+     field = message.GetListItem(fields, "docnumber"); // 문서번호
+     if (field) {
+    	 setNodeText(field,  getNodeText(objNodes[0].childNodes[16]));
+     }
+     
+     field = message.GetListItem(fields, "nonElecRec_sendingDept"); // 발신기관
+     if (field) {
+    	 setNodeText(field, getNodeText(objNodes[0].childNodes[12]));
+     }
+}
+
 /*
  * 등록 타입에 맞게 데이터 맵핑
  * */

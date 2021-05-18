@@ -1,4 +1,4 @@
-TD,input, text, div:not(.slick-slide.slick-current.slick-center),select, textarea,a{FONT-SIZE: 9pt;COLOR: #393939;FONT-FAMILY: malgun gothic, arial,verdana;}
+TD,input, text, div:not(.slick-slide.slick-current.slick-center, .adminTopTitle),select, textarea,a{FONT-SIZE: 9pt;COLOR: #393939;FONT-FAMILY: malgun gothic, arial,verdana;}
 input,SELECT{HEIGHT: 20px}
 .td{empty-cells:show}
 TEXTAREA{padding:5px}

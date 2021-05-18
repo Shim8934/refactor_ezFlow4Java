@@ -4064,7 +4064,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	 * 모바일 G/W 이메일 [PUT] 메일 이동 
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/move/users/{userId:.+}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/users/{userId}/copy_move", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public Object mMailMove(HttpServletRequest request, @PathVariable String folderId, @PathVariable String messageId, @PathVariable String userId,
 			@RequestBody JSONObject jsonobject) throws Exception {
 		LOGGER.debug("MOBILE G/W MAIL mMailMove started.");
@@ -4076,9 +4076,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		try {
 			
 			String uniqueId =  messageId;
-			String mfolderId = (String) jsonobject.get("mfolderId");
+			String mfolderId = folderId;
+			String cmd = (String) jsonobject.get("cmd");
 			
-			LOGGER.debug("uniqueId, mfolderId=" + uniqueId + "," + mfolderId);
+			LOGGER.debug("uniqueId, mfolderId, cmd = " + uniqueId + "," + mfolderId + "," + cmd);
 			
 //			if (uniqueId.endsWith(",")) {
 //				uniqueId = uniqueId.substring(0, uniqueId.length() - 1);
@@ -4112,14 +4113,19 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			
 			String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", info.getTenantId());
 			
-			if (useImapMoveCommand.equals("YES")) {
-				sourceFolder.moveUIDMessages(messages, movefolder);
-			} else {			
-			sourceFolder.copyUIDMessages(messages, movefolder);
-			
-			sourceFolder.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
+			// 20210315 조진호 - 메일 이동 및 복사 기능 구분 추가
+			if (cmd.equalsIgnoreCase("move")) {
+				if (useImapMoveCommand.equals("YES")) {
+					sourceFolder.moveUIDMessages(messages, movefolder);
+				} else {			
+					sourceFolder.copyUIDMessages(messages, movefolder);
+					
+					sourceFolder.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
+				}
+			} else if (cmd.equalsIgnoreCase("copy")) {
+				sourceFolder.copyUIDMessages(messages, movefolder);
 			}
-			
+
 			sourceFolder.close(true);
 		
 			result.put("status", "ok");

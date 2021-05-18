@@ -14,6 +14,7 @@
 			var ReturnFunction;
 			var confirmStr;
 			var companyID;
+			var type = "<c:out value='${type}'/>";
 
 			$(document).ready(function(){
 				try {
@@ -29,14 +30,14 @@
 			});		
 
 			function OK_Click(){
-				if (NewPassword.value == "") {
+				if (NewPassword.value.trim() == "") {
 					alert("<spring:message code='ezOrgan.t229' />");
 					document.getElementById('NewPassword').focus();
 					return;
 				}
 
-				var checkPw = CheckPassword(document.getElementById('NewPassword').value, companyID);
-		        if (checkPw != "OK"){
+				var checkPw = type == "shared" ? sharedMailCheckPassword(NewPassword.value) : CheckPassword(NewPassword.value, companyID);
+		        if (!checkPw || checkPw != "OK"){
 		        	if (checkPw == "ERROR") {
 		        		alert("<spring:message code='ezSystem.ksaPwPolicy34'/>");
 		        	} else {

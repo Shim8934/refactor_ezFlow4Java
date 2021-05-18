@@ -1588,6 +1588,8 @@ function callMsgDlg(szContentClass, Href) {
             	if (ReadMailOpenNewWin != null) {
                 	ReadMailOpenNewWin.focus();
                 }
+    		} else {
+    			alert(strLangKSA02);
     		}
     	} else {
     		var pURI = "/ezEmail/mailWrite.do?cmd=EDIT&URL=" + encodeURIComponent(Href);

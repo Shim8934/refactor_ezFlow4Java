@@ -24,6 +24,7 @@
 		var checkedfileList = "<c:out value='${fileList}'/>";
 		var checkedfolderList = "<c:out value='${folderList}'/>";
 		var treeData;
+		var isAdmin = "<c:out value='${isAdmin}'/>";
 
         window.onload = function () {
     		$('input:radio[name=treeType]:input[value='+folderType+']').attr("checked", true);
@@ -38,7 +39,8 @@
 				url  : "/ezWebFolder/folderList.do",
 				data : { 
 					"folderId": folderId,
-					"folderType": obj
+					"folderType": obj,
+					"isAdmin": isAdmin
 				},
 				dataType: "JSON",
 				success : function (data) {
@@ -97,10 +99,11 @@
             }
            	
             // 회사폴더일 경우에만 최상위폴더에 파일을 이동할 수 없도록 수정. 2020-03-24 홍대표.
-            if ( folderType == 'C' && parent =='#' && checkedfileList.length > 0) {
+            // 카이스트 커스터마이징 건으로 아래 코드 삭제                              2020-12-14 서재원.
+            if ( folderType == 'C' && parent =='#') {
 	            alert("<spring:message code='ezWebFolder.t293'/>");
 	            return;
-            }
+            } 
             
         	if (!confirm("<spring:message code='ezWebFolder.t283'/>")) {
         		return;
@@ -119,6 +122,10 @@
             	success : function (data) {
             		if (data.code == 0) {
 	            		alert("<spring:message code='ezWebFolder.t284'/>");
+	            		
+	            		if (typeof opener.treeRefresh == "function") {
+	            			opener.treeRefresh();
+	            		}
             		} else if (data.code == 1) {
             			alert(data.reason);
             		} else if (data.code == 2) {

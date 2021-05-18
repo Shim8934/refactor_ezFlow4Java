@@ -45,6 +45,8 @@
 			var enddate = "";
 			var usepostDate = false;
 			var isSearchPage = true;
+			var g_bPrevShow = false; // 게시물 검색회면에는 미리보기 없음
+			
 			document.onselectstart = function () { return false; };
 			
 			window.onload = function () {
@@ -231,8 +233,7 @@
 			        DocList.SetID("BoardList");
 			        DocList.SetMulSelectable(false);
 			        DocList.SetHeaderOnClick("SortPage");
-//			        DocList.SetRowOnDblClick("ItemRead_onclick(this)");
-			        DocList.SetRowOnClick("ItemRead_onclick(this)");
+			        DocList.SetRowOnDblClick("ItemRead_onclick(this)");
 			        DocList.SetTitleIdx(0);
 			        DocList.SetSelectFlag(false);
 			        DocList.DataSource(xmlDoc);

@@ -33,22 +33,29 @@ var messages = {
 	strLang33 : "공유를 해제했습니다.",
 	strLang34 : "공유받은 폴더는 수정할 수 없습니다.",			// ezWebFolder.t327
 	strLang35 : "최상위 폴더는 수정할 수 없습니다.",			// ezWebFolder.t328
-	strLang36 : "관리자만 관리가 가능한 폴더입니다.",			// ezWebFolder.t329
+	strLang36 : "관리자페이지에서만 관리가 가능한 폴더입니다.",			// ezWebFolder.t329
 	strLang37 : "폴더 생성자가 아니면 폴더명을 수정 할 수 없습니다.",	// ezWebFolder.t258
 	strLang38 : "파일 또는 폴더를 선택하세요.",
 	strLang39 : "하나의 파일 또는 폴더를 선택하세요.",
 	strLang40 : "폴더 생성자가 아니면 폴더를 삭제 할 수 없습니다.",
-	strLang41 : "파일 또는 폴더의 생성자가 아니면 삭제 할 수 없습니다.",
+	strLang41 : "파일 또는 폴더(하위포함)의 생성자가 아니면 삭제 할 수 없습니다.",
 	strLang42 : "파일 또는 폴더의 생성자가 아니면 이름을 수정 할 수 없습니다.",
 	completeDuplicateJob : "작업을 완료했습니다.",
 	parameterError: "파라메터가 부족합니다.",
 	serverError: "에러가 발생했습니다.",
 	permissionError: "접근 권한이 없습니다.",
+	permissionErrorContains: "접근 권한이 없는 항목이 있습니다.",
 	resultErrDuplicateRename : "중복되는 이름으로 변경할 수 없습니다.",
 	resultErrDuplicateCreate : "중복되는 이름으로 생성할 수 없습니다.",
 	successMoveFile: "파일 또는 폴더를 이동하였습니다.",
 	successCopyFile: "파일 또는 폴더를 복사하였습니다.",
 	outOfStorageSpaceForOneTime: "1회 업로드 용량을 초과하였습니다.",
 	outOfStorageSpace: "용량을 초과하였습니다.",
-	strLangDragNDrop: "폴더는 업로드 할 수 없습니다."
+	strLangDragNDrop: "폴더는 업로드 할 수 없습니다.",
+	replyFileDelete: "답글을 포함한 파일은 삭제할 수 없습니다.",
+	extensionError: "해당 파일의 확장자는 허용되지 않습니다.\n",
+	unsupportedFormat: "지원하지 않는 파일 형식입니다.",
+	webviewerConfirm: "선택한 파일을 웹뷰어로 열겠습니까?",
+	moveFromNotInheritError: "권한 비상속 폴더의 파일이나 폴더는 이동/복사할 수 없습니다.",
+	moveFromNotInheritErrorContains: "선택한 항목 중 권한 비상속 폴더의 파일이나 폴더가 있어 이동/복사할 수 없습니다."
 }

@@ -73,11 +73,13 @@
 	        arr_userinfo[15] = "${userInfo.deptName1}"; 		// 사용자 부서 이름(P)
 	        arr_userinfo[16] = "${userInfo.deptName2}"; 		// 사용자 부서 이름(S)
 	        arr_userinfo[17] = "<c:out value ='${userInfo.companyID}'/>";
+	        var primary = "<c:out value ='${primary}'/>"; // 다국어 여부 - 1(primary) / 2(secondary)
 	        var CompanyID = "<c:out value ='${userInfo.companyID}'/>";
 	        var companyID = "<c:out value ='${userInfo.companyID}'/>";
 	        var UserLang = "<c:out value ='${userInfo.lang}'/>";
 	        var DeptID = "<c:out value ='${userInfo.deptID}'/>";
 	        var USE_OCS = "<c:out value ='${useOcs}'/>";
+	        var useDoc24 = "<c:out value ='${useDoc24}'/>";
 	        var linealt1 = "<spring:message code='ezApprovalG.t1742'/>";
 	        var linealt2 = "<spring:message code='ezApprovalG.t228'/>";
 	        var linealt3 = "<spring:message code='ezApprovalG.t226'/>";
@@ -220,6 +222,9 @@
 	        
 	        // 부서감사 관련 2020-01-14 홍대표
 	        var pDeptgamsaCount = 0;
+			
+			/* 2021-04-19 홍승비 - 수신문서 회송여부를 판단하기 위한 변수 추가 */
+			var isSusinReset = false;
 	        
 	        $(function () {
 	        	if (document.getElementById("AprSecurity").checked){
@@ -318,7 +323,7 @@
             
 	            if(approvalFlag == "G") {
 		            CheckGubunInit();
-		
+					
 		            if (pReDraftFlag == "DRAFT" || pReDraftFlag == "REDRAFT") {
 		                document.getElementById("btnaddress").style.display = "";
 		            }
@@ -615,8 +620,11 @@
                 
              	// 2020-11-23 등급 툴팁 추가 - 박기범
                 giveTooltipLevel();
+             	if(useDoc24 == "YES"){
+             		getDoc24List();
+             	}
 	        };
-	
+	        
 	        function KeEventControl(obj) {
 	            useragt = navigator.userAgent.toUpperCase();
 	            if (useragt.indexOf("SAFARI") > 0 && useragt.indexOf("CHROME") < 0) //사파리 브라우저일 경우
@@ -691,6 +699,7 @@
 	            vPublicFlag2 = RetValue[45];
 	            nonElecRec = RetValue[46];
 	            OrgAprUserDeptID = RetValue[52];
+	            pkeyword = RetValue[61];
 	            
 	            if (nonElecRec == "Y") {
 	            	g_CabID = RetValue[47];
@@ -1190,6 +1199,11 @@
 		        }
 		    }
 		
+		    function btnSearchDoc24_onKeyPress(e) {
+		        if (e.keyCode == "13") {
+		            document.getElementById("Span8").onclick();
+		        }
+		    }
 		
 		    function getGyulJeDateDB() {
 		        try {
@@ -1263,9 +1277,6 @@
 		                if (line == false) {
 		                    return;
 		                }
-
-						// 2021.03.09 박기범 - 키워드 추가
-						ret[6] = document.querySelector("input[name=keyword]").value;
 
 		                if (approvalFlag == "G") {
 			                if (pIniGubun != 5 && pIniGubun != 7 && pIniGubun != 10 && pIniGubun != 12) {
@@ -1417,6 +1428,9 @@
 		                } else {
 		                    ret[5] = "C";
 		                }
+		                
+		            	// 2021.03.09 박기범 - 키워드 추가
+						ret[6] = document.querySelector("input[name=keyword]").value;
 		
 		                if (approvalFlag == "G") {
 			                ret[7] = selSecLevel.value;
@@ -1874,6 +1888,9 @@
 
 		        rtnVal[5] = document.getElementById("txtLimitRange").value;
 		        rtnVal[6] = document.getElementById("txtPageNum").value;
+		        
+		        document.querySelector("input[name=keyword]").value = pkeyword;
+		        
 		        if (document.getElementById("AprSecurity").checked)
 		            rtnVal[7] = vAprSecurity;
 		        else
@@ -2048,6 +2065,13 @@
 	        function getGongRamDocInfo() {
 	            try {
 	            	var result = "";
+	            	var paramDocID = pDocID;
+	            	var pMode = "";
+	            	
+	           	 /* 2021-04-19 홍승비 - 수신부서에서 회송된 문서의 경우, 원문서(완료문서)의 회람문서 정보를 가져오도록 수정 */
+	                if (typeof(isSusinReset) != "undefined" && isSusinReset == true) {
+	                	paramDocID = getOrgDocID();
+	                }
 	            	
 	            	$.ajax({
 	            		type : "POST",
@@ -2055,7 +2079,7 @@
 	            		async : false,
 	            		url : "/ezApprovalG/gongRamDocInfo.do",
 	            		data : {
-	            			docID : pDocID,
+	            			docID : paramDocID,
 	            			orgCompanyID : orgCompanyID
 	            		},
 	            		success: function(xml){
@@ -2598,7 +2622,7 @@
 	                            <c:if test="${approvalFlag =='S'}">
 	                               <tr>
                                     <td style="vertical-align: top;">                                    	
-                                        <div id="TreeView" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 290px; width: 437px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
+                                        <div id="TreeView" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 290px; width: 436px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
                                         </div>
                                     </td>
                                	 	</tr>
@@ -2761,7 +2785,6 @@
 	                            	<c:if test ="${approvalFlag =='G'}">
 	                                <td style="text-align: right;">
 	                                	<span id="passAprLineSpan" style="float:left;display:none"><input id="passAprLine" type="checkbox" style="vertical-align: middle" onchange="passAprLine_onchange(this)"><span style="vertical-align: middle"> <spring:message code='ezApprovalG.garm09'/></span></span>
-	                                    <a style="margin-top: 8px;" class="imgbtn imgbck2">
 	                                	<a id="btnAddGamsaDept" style="margin-top: 8px; display: none;" class="imgbtn imgbck">
 	                                		<span onclick="return btnAddEtcDept_onclick('013')">감사추가</span>
 	                                	</a>
@@ -2772,7 +2795,8 @@
 	                                 	<span id="passAprLineSpan" style="float:left;display:none"><input id="passAprLine" type="checkbox" style="vertical-align: middle" onchange="passAprLine_onchange(this)"><span style="vertical-align: middle"> <spring:message code='ezApprovalG.garm09'/></span></span>
 	                                 <a class="imgbtn imgbck2">
 	                                 </c:if>
-	                                 <span id="btn_SaveAprLineTemplet" onclick="return btn_SaveAprLineTemplet_onclick()"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t384'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t270'/></c:if></span></a>
+	                                 	<span id="btn_SaveAprLineTemplet" onclick="return btn_SaveAprLineTemplet_onclick()"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t384'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t270'/></c:if></span>
+	                                 </a>
 	                                </td>
 	                            </tr>
 	                        </table>
@@ -2799,10 +2823,16 @@
 		                        		<c:when test="${receptGubunYN eq 'Y'}">
 		                        			<c:if test="${docType eq '001' && isOuterForm}">
 					                            <p><span id="3tab4" divname="Outer" class ="approvalG"><spring:message code='ezApprovalG.t330'/></span></p>
+					                            <c:if test="${useDoc24 eq 'YES'}">
+					                            <p><span id="3tab5" divname="Doc24" class ="approvalG">문서24</span></p>
+					                            </c:if>
 	           		                            <p><span id="3tab2" divname="Save"><spring:message code='ezApprovalG.G0001'/></span></p>
 		                        			</c:if>
 		                        			<c:if test="${docType ne '001' || (docType eq '001' && not isOuterForm)}">
 					                            <p><span id="3tab1" divname="Organ"><spring:message code='ezApprovalG.t232'/></span></p>
+					                            <c:if test="${useDoc24 eq 'YES'}">
+					                            <p><span id="3tab5" divname="Doc24" class ="approvalG">문서24</span></p>
+					                            </c:if>
            		                            	<p><span id="3tab2" divname="Save"><spring:message code='ezApprovalG.G0001'/></span></p>
            		                            	<p><span id="3tab3" divname="Group"><c:if test="${approvalFlag =='G' }"><spring:message code='ezApprovalG.t1568'/></c:if><c:if test="${approvalFlag =='S' }"><spring:message code='ezApproval.t227'/></c:if></span></p>
 		                        			</c:if>
@@ -2810,6 +2840,9 @@
 		                        		<c:otherwise>
 				                            <p><span id="3tab1" divname="Organ"><spring:message code='ezApprovalG.t232'/></span></p>
 				                            <p><span id="3tab4" style="display: none;" divname="Outer" class ="approvalG"><spring:message code='ezApprovalG.t330'/></span></p>
+				                            <c:if test="${useDoc24 eq 'YES'}">
+					                        <p><span id="3tab5" divname="Doc24" class ="approvalG">문서24</span></p>
+					                        </c:if>
            		                            <p><span id="3tab2" divname="Save"><spring:message code='ezApprovalG.G0001'/></span></p>
 		          			                <p><span id="3tab3" divname="Group"><c:if test="${approvalFlag =='G' }"><spring:message code='ezApprovalG.t1568'/></c:if><c:if test="${approvalFlag =='S' }"><spring:message code='ezApproval.t227'/></c:if></span></p>
 		                        		</c:otherwise>
@@ -2828,11 +2861,11 @@
 	                            <tr>
 	                                <td style="vertical-align: top;">
 	                                	<c:if test="${approvalFlag =='G' }">
-		                                    <div id="TreeView2" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 517px; width: 388px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
+		                                    <div id="TreeView2" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 517px; width: 436px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
 		                                    </div>
 	                                    </c:if>
 	                                    <c:if test="${approvalFlag == 'S' }">
-                                        	<div id="TreeView2" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 290px; width: 388px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
+                                        	<div id="TreeView2" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 290px; width: 436px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
 		                                    </div>
 	                                    </c:if>
 	                                </td>
@@ -2868,7 +2901,7 @@
 	                        <table style="margin-left: 0px;">
 	                            <tr>
 	                                <td style="vertical-align: top;">
-	                                    <div id="TreeView3" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 517px; width: 388px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
+	                                    <div id="TreeView3" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 517px; width: 436px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
 	                                    </div>
 	                                </td>
 	                            </tr>
@@ -2877,6 +2910,24 @@
 	                                    <input id="txtOuterDeptName" style="width: 150px;height:22px;" name="textUser2" onkeyup="return btnSearchDept_onKeyPress2(event)"  maxlength="50">
 	                                    <a class="imgbtn imgbck2"><span id="Span7" onkeyup="return btnSearchDept_onClick()" onclick="return btnSearchDept_onClick()" ><spring:message code='ezApprovalG.t250'/></span></a>
 	                                    <a class="imgbtn imgbck2" id="AprDeptOuterAdd" onclick="AprDeptOuterAdd_onclick();"><span><spring:message code='ezApprovalG.t1236'/></span></a>
+	                                </td>
+	                            </tr>
+	                        </table>
+	                    </div>
+	
+	                    <div id="ReceptDoc24" style="display: none;">
+	                        <table style="margin-left: 0px;">
+	                            <tr>
+	                                <td style="vertical-align: top;">
+	                                    <div id="TreeView4" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 517px; width: 388px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
+	                                    </div>
+	                                </td>
+	                            </tr>
+	                            <tr>
+	                                <td style="background-color: transparent; height: 36px; padding-top: 10px; vertical-align: top;">
+	                                    <input id="txtDoc24Name" style="width: 150px;height:22px;" name="textUser2" onkeyup="return btnSearchDoc24_onKeyPress(event)"  maxlength="50">
+	                                    <a class="imgbtn imgbck2"><span id="Span8" onkeyup="return btnSearchDoc24_onClick()" onclick="return btnSearchDoc24_onClick()" ><spring:message code='ezApprovalG.t250'/></span></a>
+	                                    <a class="imgbtn imgbck2" id="doc24Detail" onclick="doc24Detail_onclick();"><span>상세보기</span></a>
 	                                </td>
 	                            </tr>
 	                        </table>
@@ -3046,7 +3097,7 @@
 		                                        	</c:if>
 		                                        </span>
 		                                <span id="trCreateCabDummy" style="display: none"></span>
-		                                <span  style="vertical-align: middle; margin-left: 247px;">
+		                                <span  style="vertical-align: middle; margin-left: 375px;">
 		                                    <select id="selSearchOption" style="vertical-align: top;height:22px;margin-top:3px">
 		                                        <option>
 		                                            <spring:message code='ezApprovalG.t10026'/>

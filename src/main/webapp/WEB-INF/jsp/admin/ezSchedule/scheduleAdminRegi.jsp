@@ -33,6 +33,7 @@
 		    		type : "GET",
 		    		dataType : "text",
 		    		async : true,
+		    		cache : false,
 		    		url : "/ezSchedule/scheduleGetRegi.do",
 		    		data : {
 		    			COMPANYID  : document.getElementById("ListCompany")[document.getElementById("ListCompany").selectedIndex].value		    			
@@ -56,6 +57,7 @@
 		    		type : "POST",
 		    		dataType : "text",
 		    		async : false,
+		    		cache: false,
 		    		url : "/admin/ezSchedule/scheduleSaveRegi.do",
 		    		data : {
 		    			COMPANYID  : document.getElementById("ListCompany")[document.getElementById("ListCompany").selectedIndex].value,

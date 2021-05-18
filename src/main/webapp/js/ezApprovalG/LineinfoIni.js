@@ -528,15 +528,15 @@ function InitListView() {
         	    } else {
         	        var DraftNode = createXmlDom();
         	        DraftNode = SelectNodes(result, "LISTVIEWDATA/ROWS/ROW")[nodeCnt - 1];
-        	        var IniListData4 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA4").trim();
-        	        var IniListData6 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA6").trim();
-        	        var IniListData10 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA10").trim();
-        	        var IniListData13 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA13").trim();
-        	        var IniListData14 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA14").trim();
-        	        var IniListData15 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA15").trim();
-        	        var IniListData16 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA16").trim();
-        	        var IniListData17 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA17").trim();
-        	        var IniListData18 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA18").trim();
+        	        var IniListData4 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA4").trim(); // 결재자ID
+        	        var IniListData6 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA6").trim(); // 결재자부서ID
+        	        var IniListData10 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA10").trim(); // 결재자LDAP경로
+        	        var IniListData13 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA13").trim(); // 결재자 이름
+        	        var IniListData14 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA14").trim(); // 결재자 이름(다국어)
+        	        var IniListData15 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA15").trim(); // 결재자 부서명
+        	        var IniListData16 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA16").trim(); // 결재자 부서명 (다국어)
+        	        var IniListData17 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA17").trim(); // 결재자 직위
+        	        var IniListData18 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA18").trim(); // 결재자 직위 (다국어)
         	        
         	        if(IniListData6!=null && IniListData6 != "" && IniListData6 != arr_userinfo[4] && orgCompanyID != "" && orgCompanyID != arr_userinfo[17] && pReDraftFlag != "REDRAFT") { //2018-10-25 배현상, 사간겸직 조건 추가
             	    	arr_userinfo[4] = IniListData6;
@@ -544,7 +544,7 @@ function InitListView() {
         	        
         	        var curaprline = "";
         	        for (var i = 0; i < NodeList.length; i++) {
-        	            if (SelectSingleNodeValue(GetChildNodes(NodeList[i])[0], "DATA12") == strAprState2) {
+        	            if (SelectSingleNodeValue(GetChildNodes(NodeList[i])[0], "DATA12") == strAprState2) { // APRSTATE (002, 진행)
         	                curaprline = SelectSingleNodeValue(GetChildNodes(NodeList[i])[0], "VALUE");
         	                break;
         	            }
@@ -554,14 +554,16 @@ function InitListView() {
 
         	            var susinreset = false;
         	            for (var i = 0; i < NodeList.length; i++) {
-        	                if (SelectSingleNodeValue(GetChildNodes(NodeList[i])[0], "DATA11") == strAprType14) {
-        	                    susinreset = true;
+        	                if (SelectSingleNodeValue(GetChildNodes(NodeList[i])[0], "DATA11") == strAprType14) { // APRTYPE (014, 수신)
+        	                    susinreset = true; // 결재선 상에 수신 타입의 결재자가 존재한다는 것은, 수신부서에서 회송된 문서를 의미한다.
+        	                    isSusinReset = true;
         	                    break;
         	                }
         	            }
         	            if (susinreset) {
         	                var DraftXml;
-        	                DraftXml = AddDraftUserFirst();
+        	                //DraftXml = AddDraftUserFirst();
+        	                DraftXml = addOrgAprLine(); // 수신부서에서 회송된 문서의 경우, 원문서의 결재선을 불러온다.
         	                Resultxml = loadXMLString(DraftXml);
         	                pAPRLINE.DataSource(Resultxml);
         	                pAPRLINE.DataBind("APRLINE");
@@ -678,7 +680,13 @@ function InitListView() {
 function InitListViewCC() {
     try {
     	var result = "";
-
+    	var pMode = "APR";
+    	
+    	/* 2021-04-19 홍승비 - 수신부서에서 회송된 문서의 경우, 원문서(완료문서)의 회람(공람) 정보를 가져오도록 수정 */
+    	if (typeof(isSusinReset) != "undefined" && isSusinReset == true) {
+    		pMode = "END2";
+    	}
+    	
     	$.ajax({
     		type : "POST",
     		dataType : "text",
@@ -686,7 +694,7 @@ function InitListViewCC() {
     		url : "/ezApprovalG/getLineList.do",
     		data : {
     			docID : pGongRamDocID,
-    			mode  : "APR",
+    			mode  : pMode,
     			docState : "015",
     			orgCompanyID : companyID
     		},
@@ -1009,7 +1017,7 @@ function searchUserList(search)
 			url : "/ezOrgan/getSearchList.do",
 			data : {
 				search : "displayName::" + strSearch + ";;PhysicalDeliveryOfficeName::" + companyID,
-				cell   : "displayName;description;title;telephoneNumber",
+				cell   : "displayName;description;title;telephoneNumber;extensionattribute5",
 				prop   : "department;displayName;description;title",
 				type   : "user"
 			},
@@ -1704,4 +1712,136 @@ function setDeptGamsaType(targetRow) {
 			elem.parentNode.removeChild(elem);
 		}
 	})
+}
+
+/* 2021-04-16 홍승비 - 회송된 수신문서에 대하여, 완료된 원문서의 결재선을 가져와 결재정보에 맵핑하기 위한 함수 */
+function addOrgAprLine() {
+    try {
+    	var result = "";
+    	var pparsingXML = "";
+    	var orgDocID = getOrgDocID();
+    	
+    	$.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezApprovalG/aprLineRequest.do",
+    		data : {
+    				docID    : orgDocID, 
+    				userID 	 : pUserID,
+    				formID   : pFormID,
+    				deptID 	 : arr_userinfo[4],
+    				reDraft  : pReDraftFlag,
+    				isUsed   : "",
+    				mode     : "END",
+    				orgCompanyID : companyID
+    		},
+    		success: function(xml){
+    			result = xml;
+    		}        			
+    	});
+    	
+    	result = loadXMLString(result);
+    	
+        var NodeList = createXmlDom();
+        NodeList = SelectNodes(result, "LISTVIEWDATA/ROWS/ROW");
+        var nodeCnt;
+        nodeCnt = NodeList.length;
+        
+        // 원문서의 결재선 카운트가 1개 이하인 경우, 기존의 결재선 초기화 함수를 실행한다.
+        if (nodeCnt <= 1) {
+        	pparsingXML = AddDraftUserFirst();
+        } else {
+        	var DraftNode = createXmlDom();
+        	
+            pparsingXML = "<LISTVIEWDATA><HEADERS>";
+        	pparsingXML += "<HEADER><NAME>" + strLang300 + "</NAME><WIDTH>35</WIDTH></HEADER>";
+        	pparsingXML += "<HEADER><NAME>" + strLang29 + "</NAME><WIDTH>120</WIDTH></HEADER>";
+        	pparsingXML += "<HEADER><NAME>" + strLang28 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+        	pparsingXML += "<HEADER><NAME>" + strLang32 + "</NAME><WIDTH>130</WIDTH></HEADER>";
+        	pparsingXML += "<HEADER><NAME>" + strLang61 + "</NAME><WIDTH>120</WIDTH></HEADER>";
+        	pparsingXML += "<HEADER><NAME>" + strLang125 + "</NAME><WIDTH>70</WIDTH></HEADER>";
+        	pparsingXML += "<HEADER><NAME>" + strLang301 + "</NAME><WIDTH>120</WIDTH></HEADER>";
+            pparsingXML += "</HEADERS>";
+        	
+        	for (var i = 0; i < nodeCnt; i++) {
+	        	DraftNode = SelectNodes(result, "LISTVIEWDATA/ROWS/ROW")[i]; // 기안자부터 최종결재자까지 결재선 생성 루프를 진행
+	        	
+	            pparsingXML += "<ROWS><ROW><CELL>";
+	            pparsingXML += "<VALUE>" + SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "VALUE").trim() + "</VALUE>"; // 결재순번
+	            pparsingXML += "<DATA1>" + SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA1").trim() + "</DATA1>"; // 결재일자
+	            pparsingXML += "<DATA2>" + SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA2").trim() + "</DATA2>"; // 도착일자
+	            pparsingXML += "<DATA3>" + pDocID + "</DATA3>"; // 문서ID
+	            pparsingXML += "<DATA4>" + SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA4").trim() + "</DATA4>"; // 결재자ID
+	            pparsingXML += "<DATA5>" + SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA5").trim() + "</DATA5>"; // 결재자 또는 결재부서 플래그 (APRMEMBERISDEPTYN)
+	            pparsingXML += "<DATA6>" + SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA6").trim() + "</DATA6>"; // 결재자부서ID
+	            pparsingXML += "<DATA7>" + "" + "</DATA7>"; // 결재안함사유 (REASONDONOTAPPROV)
+	            pparsingXML += "<DATA8>" + SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA8").trim() + "</DATA8>"; // 발의자 (ISPROPOSERYN)
+	            pparsingXML += "<DATA9>" + SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA9").trim() + "</DATA9>"; // 보고자 (ISBRIEFUSERYN) 
+	            pparsingXML += "<DATA10>" + SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA10").trim() + "</DATA10>"; // 결재자LDAP경로
+	            pparsingXML += "<DATA11>" + SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA11").trim() + "</DATA11>"; // 결재유형 (APRTYPE)
+	            pparsingXML += "<DATA12>" + strAprState1 + "</DATA12>"; // APRSTATE는 대기로 고정
+	            pparsingXML += "<DATA13>" + SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA13").trim() + "</DATA13>"; // 결재자 이름
+	            pparsingXML += "<DATA14>" + SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA14").trim() + "</DATA14>"; // 결재자 이름 (다국어)
+	            pparsingXML += "<DATA15>" + SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA15").trim() + "</DATA15>"; // 결재자 부서명
+	            pparsingXML += "<DATA16>" + SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA16").trim() + "</DATA16>"; // 결재자 부서명 (다국어)
+	            pparsingXML += "<DATA17>" + SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA17").trim() + "</DATA17>"; // 결재자 직위
+	            pparsingXML += "<DATA18>" + SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA18").trim() + "</DATA18>"; // 결재자 직위 (다국어)
+	            
+	            pparsingXML += "</CELL><CELL>";
+	            if (primary == "1") {
+	            	pparsingXML += "<VALUE>" + SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA13").trim() + "</VALUE>"; // 결재자 이름
+	            } else {
+	            	pparsingXML += "<VALUE>" + SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA14").trim() + "</VALUE>"; // 결재자 이름 (다국어)
+	            }
+	            pparsingXML += "</CELL><CELL>";
+	            if (primary == "1") {
+	            	pparsingXML += "<VALUE>" + SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA17").trim() + "</VALUE>"; // 결재자 직위
+	            } else {
+	            	pparsingXML += "<VALUE>" + SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA18").trim() + "</VALUE>"; // 결재자 직위 (다국어)
+	            }
+	            pparsingXML += "</CELL><CELL>";
+	            if (primary == "1") {
+	            	pparsingXML += "<VALUE>" + SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA15").trim() + "</VALUE>"; // 결재자 부서명
+	            } else {
+	            	pparsingXML += "<VALUE>" + SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA16").trim() + "</VALUE>"; // 결재자 부서명 (다국어)
+	            }
+	            pparsingXML += "</CELL><CELL>";
+	            pparsingXML += "<VALUE>" + SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA11").trim() + "</VALUE>"; // 결재유형 (APRTYPE)
+	            pparsingXML += "</CELL><CELL>";
+	            pparsingXML += "<VALUE>" + strLangAprState1 + "</VALUE>";  // APRSTATE는 대기로 고정
+	            pparsingXML += "</CELL><CELL></CELL></ROW></ROWS>";
+        	}
+        	
+        	pparsingXML += "</LISTVIEWDATA>";
+        }
+        
+        return pparsingXML;
+    } catch (e) {
+        alert("addOrgAprLine :: " + e.description);
+        pparsingXML = AddDraftUserFirst();
+        return pparsingXML;
+    }
+}
+
+/* 2021-04-19 홍승비 - 원문서의 DOCID를 가져오는 ajax 함수 추가 */
+function getOrgDocID() {
+	var orgDocID = "";
+	
+	$.ajax({
+		type : "GET",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getOrgDocIDByMode.do",
+		data : {
+				docID    : pDocID,
+				mode : "APR",
+				orgCompanyID : companyID
+		},
+		success: function(result){
+			orgDocID = result;
+		}
+	});
+	
+	return orgDocID;
 }

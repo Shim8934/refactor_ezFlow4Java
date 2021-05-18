@@ -62,18 +62,25 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MOptionGWController
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			int tenantId = info.getTenantId();
 			MOptionVO opt = mOptionService.optionInfo(userId, tenantId);			
-			LOGGER.debug("opt: " + opt.toString());
 			
-			String usePrimaryLangOnly = config.getProperty("config.UsePrimaryLangOnly");
-			opt.setUsePrimaryLangOnly(usePrimaryLangOnly);
-			
-			String obj = "";
-			Gson gson = new Gson();
-			obj = gson.toJson(opt);
-			
-			result.put("status", "ok");
-			result.put("code", 0);			
-			result.put("data", obj);
+			if (opt == null) {
+				result.put("status", "ok");
+				result.put("code", 1);			
+				result.put("data", "");
+			} else {
+				if (opt.getUsePrimaryLangOnly() == null || opt.getUsePrimaryLangOnly().toString() == "") {
+					String usePrimaryLangOnly = config.getProperty("config.UsePrimaryLangOnly");
+					opt.setUsePrimaryLangOnly(usePrimaryLangOnly);
+				}
+				
+				String obj = "";
+				Gson gson = new Gson();
+				obj = gson.toJson(opt);
+				
+				result.put("status", "ok");
+				result.put("code", 0);			
+				result.put("data", obj);
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -102,12 +109,13 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MOptionGWController
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
 			int tenantId = info.getTenantId();
-						
+			
+			LOGGER.debug("timeZone : " + jsonObject.get("timeZone").toString() + ", lang : " + jsonObject.get("lang").toString() + ", mainType : " + jsonObject.get("mainType").toString()
+					 + ", listCnt : " + jsonObject.get("listCnt").toString() + ", useSecurity : " + jsonObject.get("useSecurity").toString());
+			
 			mOptionService.insertOption(userId, jsonObject.get("timeZone").toString(), jsonObject.get("lang").toString(), jsonObject.get("mainType").toString(), jsonObject.get("listCnt").toString(), jsonObject.get("useSecurity").toString(), tenantId);
 			
 			MOptionVO opt = mOptionService.optionInfo(userId, tenantId);
-
-			LOGGER.debug("opt: " + opt.toString());
 
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -141,11 +149,12 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MOptionGWController
 			
 			int tenantId = info.getTenantId();
 			
+			LOGGER.debug("timeZone : " + jsonObject.get("timeZone").toString() + ", lang : " + jsonObject.get("lang").toString() + ", mainType : " + jsonObject.get("mainType").toString()
+					 + ", listCnt : " + jsonObject.get("listCnt").toString() + ", useSecurity : " + jsonObject.get("useSecurity").toString());
+			
 			mOptionService.updateOption(userId, jsonObject.get("timeZone").toString(), jsonObject.get("lang").toString(), jsonObject.get("mainType").toString(), jsonObject.get("listCnt").toString(), jsonObject.get("useSecurity").toString(), tenantId);
 			
 			MOptionVO opt = mOptionService.optionInfo(userId, tenantId);
-
-			LOGGER.debug("opt: " + opt.toString());
 
 			result.put("status", "ok");
 			result.put("code", 0);			

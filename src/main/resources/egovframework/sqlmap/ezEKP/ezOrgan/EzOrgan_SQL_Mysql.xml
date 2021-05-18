@@ -1173,7 +1173,8 @@
                         		BIRTHTYPE ,
                         		FURIGANA ,
                         		EXTENSIONPHONE ,
-                        		OFFICEMOBILE
+                        		OFFICEMOBILE ,
+                        		MANUAL_FLAG AS MANUALFLAG
              FROM
              	TBL_USERMASTER 
              WHERE

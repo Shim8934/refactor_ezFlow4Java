@@ -70,7 +70,7 @@
                 <div id="menu">
                     <ul id="icons">
                         <li><span onclick="return btnSave_onclick()"><spring:message code='ezApprovalG.t59'/></span></li>
-                        <li><span onclick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span> </li>
+                        <li><span class="icon16 popup_icon16_print" onclick="return btnPrint_onclick()"></span> </li>
                     </ul>
                 </div>
                 <div id="close">

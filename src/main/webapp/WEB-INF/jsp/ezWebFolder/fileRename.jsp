@@ -8,6 +8,23 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}" type="text/css">
 	<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
+</head>
+<body class="popup" style="overflow: hidden; opacity: 0; transition: 0.1s all;">
+    <h1 id="topMenu"><spring:message code='ezWebFolder.t118'/></h1>
+    <div id="close">
+        <ul>
+            <li><span id="btnCancel" onclick="wClose()"></span></li>
+        </ul>
+    </div>
+    <div>
+        <div class="txt mb10" id="fileNamediv"><spring:message code='ezWebFolder.t119'/></div>
+        <div>
+            <input id="nameInput" maxlength="50" type="text" style="width:100%;">
+        </div>
+    </div>
+    <div class="btnpositionNew">
+        <a id="btnSave" class="imgbtn" onclick="ok_Click();"><span><spring:message code='ezWebFolder.t116'/></span></a>
+    </div>
 	<script type="text/javascript" src="${util.addVer('ezWebFolder.e1', 'msg')}"></script>	
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.min.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -21,6 +38,14 @@
 		
 		<c:choose>
 		<c:when test="${isUploading}">
+		window.onload = function() {
+			try {
+				var currentName = parent.inputNameDlg_cross_dialogArguments.currentName;
+				document.getElementById("nameInput").value = currentName;
+			} catch (ignore) {}
+			document.body.style.opacity = "";
+		};
+		
 		function wClose() {
 			parent.closeAllPopup();
 			skipRename();
@@ -89,6 +114,13 @@
             	$('#topMenu').text("<spring:message code='ezWebFolder.t303'/>");
             	$('#fileNamediv').text('<spring:message code='ezWebFolder.t514'/>');
             } 		
+			
+			if (functionType != "insert") {
+				var currentName = parent.inputNameDlg_cross_dialogArguments.currentName;
+				document.getElementById("nameInput").value = currentName;
+			}
+			
+			document.body.style.opacity = "";
 		}
 		
 		function wClose() {
@@ -131,7 +163,7 @@
 			}
 				
 			if (functionType == "insert" && fileId == 0) {
-				newName = ReplaceText(newName, " ", "");
+// 				newName = ReplaceText(newName, " ", "");
 	            
 				if (newName == "") {
 	                alert('<spring:message code='ezWebFolder.t314'/>');
@@ -155,6 +187,7 @@
 					success : function (data) {
 						switch(data.code) {
 						case 0: 
+							targetId = data.data;
 							afterDeleteSuccess();
 							alert("<spring:message code='ezWebFolder.t263'/>");
 							break;
@@ -186,6 +219,7 @@
 					success : function (data) {
 						switch(data.code) {
 						case 0: 
+							targetId = folderUppId;
 							afterDeleteSuccess();
 							alert("<spring:message code='ezWebFolder.t264'/>");
 							break;
@@ -243,22 +277,5 @@
 		</c:otherwise>
 		</c:choose>
 	</script>
-</head>
-<body class="popup" style="overflow: hidden;"> 
-	<h1 id ="topMenu" style="margin:2px;"><spring:message code='ezWebFolder.t118'/></h1>
-	<div id="close">
-        <ul>
-            <li><span id="btnCancel" onclick="wClose()"></span></li>
-        </ul>
-    </div>
-	<div style="margin: 0px; height:65px; border:1px solid #ddd; padding:15px; margin-bottom:10px">
-		<div style="text-align:left; font-size:12px" id ="fileNamediv"><spring:message code='ezWebFolder.t119'/></div>
-		<div style="height: 40px; line-height: 40px; margin-top: 10px;">
-			<input id="nameInput" maxlength="50" type="text" style="width: 380px; height: 35px; line-height: 35px; font-size: 12px; padding: 0px 10px; border-radius: 5px; border: 1px solid #ddd;">
-		</div>
-	</div>	
-	<div class="btnpositionNew">
-		<a id="btnSave" class="imgbtn" onclick="ok_Click();"><span><spring:message code='ezWebFolder.t116'/></span></a>
-	</div>
 </body>
 </html>

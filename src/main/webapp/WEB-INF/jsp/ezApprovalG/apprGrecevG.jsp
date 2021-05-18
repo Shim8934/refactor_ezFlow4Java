@@ -421,7 +421,8 @@
 		        var ret = openAaprDocAttachUI();
 		    }
 		    function btnOpinion_onclick() {
-		        var ret = openOpinionUI("N");
+		        //var ret = openOpinionUI("N");
+		    	openOpinionUI_New("");
 		    }
 		    function btnPrint_onclick() {
 		        PrintClick("Cross", pDocID, "");
@@ -762,6 +763,8 @@
 	    			        retvalue[1] = "NONE";
 	    			        retvalue[2] = "R";
 	    			        retvalue[3] = "";
+
+							btnSendDraftEnable = "true";
 	    			
 	    			        if (approvalFlag == "S") {
 	    	                    SGetDraftAprLineInfo(retvalue);

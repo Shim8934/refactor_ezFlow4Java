@@ -295,7 +295,7 @@ public interface EzApprovalGService {
 
     public String getUncompleteDocCount(String deptID, String companyID, String cabinetID, int tenantID) throws Exception;
     
-    public String getUncompleteDocList(String deptID, String companyID, String cabinetID, int tenantID, String userLang) throws Exception;
+    public String getUncompleteDocList(String deptID, String companyID, String cabinetID, int tenantID, String userLang, LoginVO userInfo) throws Exception;
 
     public String transferCabinet(Document xmlDom, int tenantID) throws Exception;
     
@@ -316,9 +316,9 @@ public interface EzApprovalGService {
 
     public String endCabProduce(String cabClassNo, String flag, String companyID, int tenantID) throws Exception;
 
-    public String mobileSrvConn(String userID, String result, String formID, String keyVal, String docID, String orgUID, String strLang, String companyID, HttpServletRequest request, LoginVO userInfo, String mode) throws Exception;
+    public String mobileSrvConn(String userID, String result, String formID, String keyVal, String docID, String orgUID, String strLang, String companyID, HttpServletRequest request, LoginVO userInfo, String mode, String aprMemberSN) throws Exception;
 
-    public String mobileSrvConn_HWP(String userID, String result, String formID, String keyVal, String docID, String orgUID, String langType, String companyID, HttpServletRequest request, LoginVO userInfo, String mode) throws Exception;
+    public String mobileSrvConn_HWP(String userID, String result, String formID, String keyVal, String docID, String orgUID, String langType, String companyID, HttpServletRequest request, LoginVO userInfo, String mode, String aprMemberSN) throws Exception;
 
     public String reqDelayCabEndY(String cabClassList, String flag, String companyID, int tenantID) throws Exception;
 
@@ -753,4 +753,10 @@ public interface EzApprovalGService {
 	public String getAttachFileMinSaveDate(String docID, String companyID, int tenantID) throws Exception;
 	 
 	public Map<String, Object> getDocProcessState(String docID, String orgDocID, LoginVO userInfo) throws Exception;
+
+	// 정주환 수신처 스케쥴러
+	public void doSusinSchedule() throws Exception;
+
+	/* 2021-04-19 홍승비 - 문서의 ORGDOCID를 리턴하는 ajax용 함수 추가 (mode에 따라서 진행문서, 완료문서 분기) */
+	public String getOrgDocIDByMode(String docID, String mode, String orgCompanyID, int tenantID) throws Exception;
 }

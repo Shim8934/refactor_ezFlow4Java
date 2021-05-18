@@ -240,7 +240,17 @@
 				var checkedList = getSelectedRowInfo();
 				
 				if (checkedList == null) {
-					alert("<spring:message code='ezWebFolder.t208'/>");
+					switch(currentType) {
+					case "C":
+						alert("<spring:message code='ezWebFolder.t208_com'/>");
+						break;
+					case "D":
+						alert("<spring:message code='ezWebFolder.t208_dep'/>");
+						break;
+					case "U":
+						alert("<spring:message code='ezWebFolder.t208'/>");
+						break;
+					}
 					document.getElementById("storageVal").value = "";
 					document.getElementById("storageVal").focus();
 					return;
@@ -506,12 +516,12 @@
 					if (currentNode.nodeName == "P") {
 						var spanNode = currentNode.children.item(0);
 						if (spanNode.nodeName == "SPAN") {
-							spanNode.onmouseover = function() {
-								Tab1_MouserOver(this);
-							};
-							spanNode.onmouseout = function() {
-								Tab1_MouserOut(this);
-							};
+							// spanNode.onmouseover = function() {
+							// 	Tab1_MouserOver(this);
+							// };
+							// spanNode.onmouseout = function() {
+							// 	Tab1_MouserOut(this);
+							// };
 							spanNode.onclick = function() {
 								Tab1_MouseClick(this);
 							};

@@ -21,6 +21,10 @@
 			var totalRows    = null;
 			var totalPages   = null;
 			var primary      = "<c:out value='${primary}'/>";
+			var adminFlag    = "<c:out value='${adminFlag}'/>";
+			var folderListTemp = '${folderListMap}';
+			folderListTemp = folderListTemp.replace("&#39;", "'");
+			var folderListMap = adminFlag == "user" ? JSON.parse(folderListTemp) : '';
 			var strLang39    = "<spring:message code='ezWebFolder.t135'/>";
 			var strLang40    = "<spring:message code='ezWebFolder.t136'/>";
 			var strLang41    = "<spring:message code='ezWebFolder.t137'/>";
@@ -34,6 +38,7 @@
 			var strActType7  = "<spring:message code='ezWebFolder.t121'/>";
 			var strActType8  = "<spring:message code='ezWebFolder.t122'/>";
 			var strActType9  = "<spring:message code='ezWebFolder.t506'/>";
+			var strActType10 = "<spring:message code='ezWebFolder.t524'/>";
 			var strNoData    = "<spring:message code='ezWebFolder.t144'/>";
 			var startDateStr = "";
 			var endDateStr   = "";
@@ -47,9 +52,11 @@
 			var _cellInfo        = {};
 			var sortColumn = null;
 			var sortType = null;
+			var folderId = "";
 			
 			window.onload = function () {
 				closeAllPopup();
+				selectFolderName();
 				document.onselectstart = function() {return false;}
 				
 				tableView.setTableId("tblFileList");
@@ -154,6 +161,20 @@
 				
 			});
 			
+			function selectFolderName() {
+				if (adminFlag == "user") {
+					for(var i=0; i<folderListMap.length; i++){
+						$("#folderListMap").append('<option value="' + folderListMap[i].folderId + '">' + folderListMap[i].folderName + '</option>');
+					}
+					document.getElementById("companySelectSub").style.display = "none";
+					document.getElementById("adminFlagType").style.margin = "10px 0px 10px 0px;";
+					document.getElementById("adminFlagType").style.display = "inline;";
+				} else {
+					$("#folderListMap").append('<option value="all">all</option>');
+					document.getElementById("adminFlagType").style.display = "none";
+					document.getElementById("adminFlagType").style.margin = "10px 0px 10px 5px;";
+				}
+			}
 			function preProcessing() {
 				var divList          = document.getElementById("dragDropArea");
 				var reheight         = document.documentElement.clientHeight - 215;
@@ -220,7 +241,9 @@
 						"listCntSize" : listCnt,
 						"companyId"   : document.getElementById("companyList").value,
 						"sortType"	  : sortType,
-						"sortColumn"  : sortColumn
+						"sortColumn"  : sortColumn,
+						"adminFlag"	  : adminFlag,
+						"folderId"    : document.getElementById("folderListMap").value
 					},
 					dataType: "JSON",
 					async: true,
@@ -304,7 +327,7 @@
 				var fileTypeIdx = document.getElementById("fileTypeVal").selectedIndex;
 				var actTypeVal  = document.getElementById("actionType").value;
 				
-				if (!sDateVal && !eDateVal && !fileExtVal && !fileNameVal && !userNameVal) {
+				if (!sDateVal && !eDateVal && !fileExtVal && !fileNameVal && !userNameVal && !actTypeVal) {
 					alert("<spring:message code='ezWebFolder.t163'/>");
 					return;
 				} 
@@ -347,6 +370,7 @@
 				fileNameStr  = "";
 				userNameStr  = "";
 				actTypeStr   = "";
+				_selectedCell = null;
 				search_Set("1");
 			}
 			
@@ -400,7 +424,9 @@
 						"fileType"    : document.getElementById("fileTypeSelect").value,
 						"companyId"   : document.getElementById("companyList").value,
 						"sortType"	  : sortType,
-						"sortColumn"  : sortColumn
+						"sortColumn"  : sortColumn,
+						"adminFlag"	  : adminFlag, 
+						"folderId" 	  : document.getElementById("folderListMap").value
 					},
 					dataType: "JSON",
 					async: true,
@@ -483,15 +509,22 @@
 			<span id="mailBoxInfo"></span>
 		</h1>
 		<div id="companySelect" style="margin: 10px 0px 10px 5px;">
-			<span style="font-size: 12px; display: inline-block; vertical-align: middle;"><b><spring:message code='ezWebFolder.t129'/></b></span>
-			<select id="companyList" style="font-size: 12px; height: 20px; display: inline-block;" onchange="change();">
-				<c:forEach var="item" items="${list}">
-					<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-				</c:forEach>
+			<div id="companySelectSub" style="margin:10px 0px 10px 0px;diplay:inline;">
+				<span style="font-size: 12px; display: inline-block; vertical-align: middle;"><b><spring:message code='ezWebFolder.t129'/></b></span>
+				<select id="companyList" style="font-size: 12px; height: 20px; display: inline-block;" onchange="change();">
+					<c:forEach var="item" items="${list}">
+						<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+					</c:forEach>
+				</select>
+			</div>
+			<div id="adminFlagType">
+				<span style="font-size: 12px; display: inline-block; vertical-align: middle;"><b><spring:message code='ezWebFolder.t525'/></b></span>
+				<select id="folderListMap" style="font-size: 12px; height: 20px; display: inline-block;" onchange="change();">
+			</div>
 			</select>
 		</div>
 		
-		<div id="mainmenu" style="position: relative; margin-left: 5px;">
+		<div id="mainmenu" style="position: relative; margin-top:5px;">
 			<ul>
 				<li id="SearchOption" mode="off" onclick="openSearchPanel()"><span class="icon16 icon16_search"></span></li>
 				<li><span class="icon16 icon16_refresh" onclick="refreshView()"></span></li>
@@ -507,7 +540,7 @@
 						<option value="7"         ><spring:message code='ezWebFolder.t311'/></option>
 					</select>
 				</li>
-				<div class="sub_frameIcon" style="float:right">
+				<div class="sub_frameIcon" style="float:right" id="wfOptionDiv">
 					<div class="sub_frameIconUL02">
 					  	<p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="webfolderlistoptiondiv"></span></p>  
 					</div>
@@ -519,11 +552,10 @@
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
 		
-		<div id="searchPanel" class="wfSearchPanel" style="display: none; overflow: hidden;">
-		<div class="popup" style="margin: 0; padding: 5px 10px 10px;">
-			<h1><spring:message code='ezWebFolder.t24'/></h1> 
+		<div id="searchPanel" class="wfSearchPanel popupwrap3" style="margin-bottom: 70px; display: none; width:537px;">
+		<div class="popupJQLayer" >
+			<div class="title"><spring:message code='ezWebFolder.t24'/></div> 
 			<div class="wfClose" onclick="openSearchPanel();"><ul><li><span></span></li></ul></div>
-			<div style="margin: 10px 0px 15px;">
 				<table class="content wftable">
 					<tr>
 						<th class="wfSearchTh"><spring:message code='ezWebFolder.t151'/></th>
@@ -533,7 +565,7 @@
 					</tr>
 					<tr>
 						<th class="wfSearchTh"><spring:message code='ezWebFolder.t152'/></th>
-						<td style="border: 1px solid #b6b6b6; background-color: #fff; min-width: 367px; width: 367px;">
+						<td style="min-width: 367px; width: 367px;">
 							<input id="fileExtVal" type="text" style="height: 23px; width: 200px;">
 							<select style="height: 25px; padding: 0px; width: 85px;" id="fileTypeVal">
 								<option value="1" selected><spring:message code='ezWebFolder.t191'/></option>
@@ -542,19 +574,20 @@
 								<option value="4"         ><spring:message code='ezWebFolder.t194'/></option>
 								<option value="5"         ><spring:message code='ezWebFolder.t195'/></option>
 								<option value="6"         ><spring:message code='ezWebFolder.t196'/></option>
+								<option value="7"         ><spring:message code='ezWebFolder.t311'/></option>
 							</select>
 						</td>
 					</tr>
 					<tr>
 						<th class="wfSearchTh"><spring:message code='ezWebFolder.t153'/></th>
 						<td class="wfSearchTd">
-							<input id="fileNameVal" type="text" style="height: 23px;">
+							<input id="fileNameVal" type="text" style="height: 23px;width: 99%">
 						</td>
 					</tr>
 					<tr>
 						<th class="wfSearchTh"><spring:message code='ezWebFolder.t154'/></th>
 						<td class="wfSearchTd">
-							<input id="fileCreatorVal" type="text" style="height: 23px;">
+							<input id="fileCreatorVal" type="text" style="height: 23px;width: 99%">
 						</td>
 					</tr>
 					<tr>
@@ -568,11 +601,12 @@
 								<option value="R"         ><spring:message code='ezWebFolder.t111'/></option>
 								<option value="P"         ><spring:message code='ezWebFolder.t19' /></option>
 								<option value="RE"        ><spring:message code='ezWebFolder.t287'/></option>
+								<option value="WR"        ><spring:message code='ezWebFolder.t506'/></option>
+								<option value="V"         ><spring:message code='ezWebFolder.t524'/></option>
 							</select>
 						</td>
 					</tr>
 				</table>
-			</div>
 			<div class="wfdivBttn">
 				<a class="webfolderBttn"><span onclick="startSearch();"    ><spring:message code='ezWebFolder.t123'/></span></a>
 				<a class="webfolderBttn" style="display:none"><span onclick="openSearchPanel();"><spring:message code='ezWebFolder.t112'/></span></a>
@@ -587,6 +621,8 @@
 						<tr>
 							<th headers="ft" class="wfFileType			headListClick" data-column="FILE_TYPE" style="text-align: center;"><spring:message code='ezWebFolder.t188'/></th>
 							<th headers="fn" class="wfFileLogName		headListClick" data-column="FILE_NAME"><spring:message code='ezWebFolder.t156'/></th>
+							<th headers="fp" class="wfFileLogName		headListClick" data-column="FOLDER_PATH_NAME"><spring:message code='ezWebFolder.t199'/></th>
+							<th headers="fv" class="wfFileFavoriteSize	headListClick" data-column="VERSION"><spring:message code='webfolder.version'/></th>
 							<th headers="fs" class="wfFileFavoriteSize	headListClick" data-column="FILE_SIZE"><spring:message code='ezWebFolder.t157'/></th>
 							<th headers="un" class="wfFileLogMember		headListClick" data-column="CREATE_NAME1" ><spring:message code='ezWebFolder.t339'/></th>
 							<th headers="at" class="wfActive			headListClick" data-column="LOG_TYPE" ><spring:message code='ezWebFolder.t158'/></th>
@@ -616,7 +652,7 @@
 	                <table style="width: 100%; border-spacing: 0px; border-collapse: collapse; border: none;" class="list_element">
 	                    <caption></caption>
 	                    <colgroup>
-	                        <col style="width: 80px;">
+	                        <col style="width: 90px;">
 	                        <col>
 	                    </colgroup>
 	                    <tr>
@@ -637,6 +673,7 @@
 	        <div class="shadow">
 	        </div>
 	 	</div>
+	 	<div><%@ include file="/WEB-INF/jsp/ezWebFolder/webFolderApplyPopUp.jsp" %></div>
 		<script type="text/javascript" src="${util.addVer('ezWebFolder.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/pageNav.js')}"></script>
 	</body>

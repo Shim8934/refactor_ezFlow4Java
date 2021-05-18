@@ -40,6 +40,7 @@
             var endTime = "";
             var listHeader = "<c:out value='${listHeader}'/>";
             var isSearchPage = true;
+            var g_bPrevShow = false; // 회람판 검색메뉴에는 미리보기 없음
 		    
 		    document.onselectstart = function () { return false; };
 		    
@@ -337,8 +338,7 @@
                 var DocList = new ListView();
                 DocList.SetID("BoardList");
                 DocList.SetHeaderOnClick("SortPage");
-//                DocList.SetRowOnDblClick("ItemRead_onclick(this)");
-                DocList.SetRowOnClick("ItemRead_onclick(this)");
+                DocList.SetRowOnDblClick("ItemRead_onclick(this)");
                 DocList.SetTitleIdx(0);
                 DocList.SetSelectFlag(false);
                 DocList.DataSource(xmlDoc);

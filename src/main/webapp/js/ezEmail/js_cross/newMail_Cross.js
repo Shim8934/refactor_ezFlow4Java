@@ -693,7 +693,7 @@ function attach_click(para) {
 }
 
 function Send_onClick() {
-    if (eSubject.value == "") {
+    if (eSubject.value.trim() == "") {
         alert(strLang92);
         eSubject.focus();
         return;

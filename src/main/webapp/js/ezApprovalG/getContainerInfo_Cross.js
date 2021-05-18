@@ -264,6 +264,8 @@ function GetDocSearch() {
 	    }
 	    xmlhttp.onreadystatechange = getsearchDocList_after;		
 	    xmlhttp.send(xmlpara);
+		
+			listLoading(false);
 	}
 
     //ShowMailProgress();
@@ -615,6 +617,8 @@ function selFirstRow(Resultxml) {
     var tr = oArrRows[0];
 
     if (oArrRows.length != 0) {
+    	document.getElementById("tbtnExcel").style.display = "";
+    	document.getElementById("tbtnExcelAll").style.display = "";
         DocID = tr.getAttribute("DATA1");
         pURL = tr.getAttribute("DATA2");
         WriterID = tr.getAttribute("DATA3");
@@ -801,7 +805,6 @@ function getdoclistSub_after(xml) {
     catch (e) { }
 }
 
-/* 2021-01-19 홍승비 - 원클릭 이벤트로 전자결재 읽기, 결재 팝업창을 표출 */
 var oArrRowsid = "";
 function lvtDoclist_SelChange() {
     var SelList = new ListView();
@@ -890,7 +893,11 @@ function lvtDoclist_SelChange() {
             	break;
         }
     }
-    lvtDoclist_onSel_DBclick();
+    /* 2021-03-24 홍승비 - 제목 클릭 시 원클릭 이벤트로 전자결재 읽기, 결재 팝업창을 표출 */
+    var headerNameTD = $(event.target).attr("headerName");
+    if (headerNameTD != null && typeof(headerNameTD) != "undefined" && headerNameTD == "DOCTITLE") {
+    	lvtDoclist_onSel_DBclick();
+    }
 }
 
 function paging(p_page, p_nowblock) {

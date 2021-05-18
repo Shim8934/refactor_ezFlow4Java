@@ -180,9 +180,10 @@
 			        if (pReservedItem != "true") {
 			        	$("#Sdatepicker").datepicker('setDate', "");
 			        }
-
-			        if(pMode != "boardContent" && pMode != "boardAttach")
-			        {
+			    }
+			    
+			    /* 2021-05-03 홍승비 - 확장칼럼값 설정 분기 분리 (새 게시물 작성, 메일 또는 전자결재문서 게시, 게시물을 본문으로 또는 첨부로 게시 시에만 확장칼럼값 없음) */
+				if (pMode != "new" && pMode != "new1" && pMode != "boardContent" && pMode != "boardAttach") {
 			            //추가항목
 			            try {
 			            	if("${fn:length(boardAttributeListVO)}" > 0){
@@ -194,20 +195,19 @@
 			    					tableCol.push("${item.tableCol}");
 			    				</c:forEach>
 			    				
-			    				for (var i = 0; i < colType.length;i++){
-			            			if(colType[i] == "radio") {
-			            				SetRadioVal(tableCol[i], getExtensionValue(ConvMakeXMLString(tableCol[i])));
-			            			} else if(colType[i] == "text") {
-			            				document.getElementById(tableCol[i]).value = getExtensionValue(ConvMakeXMLString(tableCol[i]));
-			            			} else if(colType[i] == "check") {
-			            				SetCheckVal(tableCol[i], getExtensionValue(ConvMakeXMLString(tableCol[i])));
+			    				for (var i = 0; i < colType.length;i++) {
+			            			if (colType[i] == "radio") {
+			            				SetRadioVal(tableCol[i], getExtensionValue(tableCol[i]));
+			            			} else if (colType[i] == "text") {
+			            				document.getElementById(tableCol[i]).value = getExtensionValue(tableCol[i]);
+			            			} else if (colType[i] == "check") {
+			            				SetCheckVal(tableCol[i], getExtensionValue(tableCol[i]));
 			            			}
 			    				}
 			            	}
 			            }
 			            catch (e) { }
-			        }
-			    }
+					}
 			        
 			    if (ExpireDays == -1 || ExpireItem == "YES") {
 			    	document.getElementById('Makedate').style.visibility = "hidden";
@@ -500,7 +500,7 @@
 		        		} else if(colType[i] == "text") {
 		        			if(document.getElementById(tableCol[i]).value == ""){
 		        				Tab1_MouseClick(document.getElementById("1tab1"));
-	                            alert(colName1[i] + strLang179);
+	                            alert(colName1[i] + strLang187);
 	                            return;
 		        			}
 		        		} else if(colType[i] == "check") {
@@ -821,11 +821,11 @@
 				
 				for (var i = 0; i < colType.length;i++){
 		        	if(colType[i] == "radio") {
-		        		createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase() ,GetRadioVal(tableCol[i]));
+		        		createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase(), MakeXMLString(GetRadioVal(tableCol[i])));
 		        	} else if(colType[i] == "text") {
-		        		createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase() ,document.getElementById(tableCol[i]).value);
+		        		createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase(), MakeXMLString(document.getElementById(tableCol[i]).value));
 		        	} else if(colType[i] == "check") {
-		        		createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase() ,GetCheckVal(tableCol[i]));
+		        		createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase(), MakeXMLString(GetCheckVal(tableCol[i])));
 		        	}
 				}
 
@@ -852,7 +852,7 @@
 		                    }
 		                    if (pMode == "reply") {
 		                        xmlhttp = createXMLHttpRequest();
-		                        xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID) + "&itemTreeID=" + strUpperItemIDTree, false);
+		                        xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID) + "&itemTreeID=" + encodeURIComponent(strUpperItemIDTree), false);
 		                        xmlhttp.send();
 		                        xmlhttp = null;
 		                    }
@@ -1463,8 +1463,8 @@
 		        str = ReplaceText(str, "&gt;", ">");
 		        str = ReplaceText(str, "&#039;", "'");
 		        str = ReplaceText(str, "&#034;", "\"");
+		        str = ReplaceText(str, "&#92;", "\\");
 		  	    str = ReplaceText(str, "&amp;", "&");	    
-		  		str = ReplaceText(str, "&#92;", "\\");
 		        return str;
 		    }
 		    function GetSmallUrl() {
@@ -2107,16 +2107,17 @@
 	        function getExtensionValue(tableCol) {
 	        	var retValue = "";
 	        	
+	        	// 이미 HTML/XML에 대응하도록 저장된 확장칼럼 파라미터를 다시 c:out으로 파싱했으므로, ConvMakeXMLString()을 두 번 실행한다.
 	        	if (tableCol == "extensionAttribute6") {
-	        		retValue = "${boardListVO.extensionAttribute6}"; 
+	        		retValue = ConvMakeXMLString(ConvMakeXMLString("<c:out value='${boardListVO.extensionAttribute6}'/>")); 
 				} else if (tableCol == "extensionAttribute7") {
-					retValue = "${boardListVO.extensionAttribute7}";
+					retValue = ConvMakeXMLString(ConvMakeXMLString("<c:out value='${boardListVO.extensionAttribute7}'/>"));
 				} else if (tableCol == "extensionAttribute8") {
-					retValue = "${boardListVO.extensionAttribute8}";
+					retValue = ConvMakeXMLString(ConvMakeXMLString("<c:out value='${boardListVO.extensionAttribute8}'/>"));
 				} else if (tableCol == "extensionAttribute9") {
-					retValue = "${boardListVO.extensionAttribute9}";
+					retValue = ConvMakeXMLString(ConvMakeXMLString("<c:out value='${boardListVO.extensionAttribute9}'/>"));
 				} else if (tableCol == "extensionAttribute10") {
-					retValue = "${boardListVO.extensionAttribute10}";
+					retValue = ConvMakeXMLString(ConvMakeXMLString("<c:out value='${boardListVO.extensionAttribute10}'/>"));
 				}
 	        	
 	        	return retValue;
@@ -2334,7 +2335,7 @@
 	                        		</c:otherwise>
 	                        	</c:choose>
 	                            <span id="reservation_date">
-		                            <input type="text" id="Sdatepicker" readonly="readonly" style="width:80px;text-align:center; "><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
+		                            <input type="text" id="Sdatepicker" readonly="readonly" style="width:80px;text-align:center; "><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;"readonly readonlyExcept />
 	                                   &nbsp;<a class="imgbtn imgbck" style= "height:21px;margin-top:1px"><span onclick="btn_PostDate_Clear()" popuplocation='topright'><spring:message code='ezBoard.t220' /></span></a></td>
 	                            </span>
 	                    </tr>
@@ -2420,7 +2421,7 @@
 	                                    	</c:choose>
 	                                    </td>
 	                                    <td id="reservation_date">
-	                                        <input type="text" id="Sdatepicker" readonly="readonly" style="width:80px;text-align:center" ><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
+	                                        <input type="text" id="Sdatepicker" readonly="readonly" style="width:80px;text-align:center" ><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;"readonly readonlyExcept />
 	                                        &nbsp;<img src="/images/btn_date.gif" border="0" style="CURSOR: pointer; width: 75px; height: 20px; vertical-align: middle" onclick="btn_PostDate_Clear()" popuplocation='topright'>
 	                                    </td>
 	                                </tr>

@@ -35,7 +35,7 @@ function getDataInfo() {
     DocList.LoadFromID("DocList");
     var selRow = DocList.GetSelectedRows()[0];
     //DocList_Flag 지워도 되면 삭제
-    if (DocList_Flag == "RECORD") {
+    if (DocList_Flag == "RECORD" && selRow != undefined) {
         if (trim_Cross(selRow.getAttribute("DATA14")) != "null" && trim_Cross(selRow.getAttribute("DATA14")) != "" && trim_Cross(selRow.getAttribute("DATA14")) >= GetTodayDate()) {
             if (CheckAprLine(selRow.getAttribute("DATA1")) != "TRUE") {
                 getdoclistSub_after("NOTPERMISSION");
@@ -391,8 +391,11 @@ function lvtDoclist_SelChange() {
     if (tr.length > 0) {
         processRowClick(tr[0]);
         
-        /* 2021-01-20 홍승비 - 전자결재G 기록물대장에서 원클릭 시 더블클릭 이벤트 함께 적용 */
-        lvtDoclist_onSel_DBclick();
+        /* 2021-03-24 홍승비 - 제목 클릭 시 원클릭 이벤트로 전자결재 읽기, 결재 팝업창을 표출 */
+        var headerNameTD = $(event.target).attr("headerName");
+        if (headerNameTD != null && typeof(headerNameTD) != "undefined" && (headerNameTD == "DOCTITLE" || headerNameTD == "RECTITLE" || headerNameTD == "TITLE")) {
+        	lvtDoclist_onSel_DBclick();
+        }
     }
 }
 
@@ -481,5 +484,23 @@ function processRowClick(tr) {
         }
     } else if (DocList_Flag == "CABINET") {
         ChkCabRoleInfo(tr);
-    }
+    } else if (DocList_Flag == "Delivery") {
+		switch (jobState) {
+            case "ATTACH":
+                Attach_onclick();
+                break;
+
+            case "OPINION":
+                Opinion_onclick();
+                break;
+
+            case "APPROVAL":
+                Approval_onclick();
+                break;
+
+            case "RECIPENT":
+                Recipent_onclick()
+                break;
+        }
+	}
 }

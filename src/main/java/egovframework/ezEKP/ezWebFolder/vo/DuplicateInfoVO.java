@@ -1,8 +1,18 @@
 package egovframework.ezEKP.ezWebFolder.vo;
 
-public class DuplicateInfoVO {
+public class DuplicateInfoVO implements Comparable<DuplicateInfoVO> {
 	public enum Type {
-		DIRECTORY, FILE
+		DIRECTORY("D"), FILE("F");
+
+		private final String alias;
+
+		Type(String alias) {
+			this.alias = alias;
+		}
+
+		public String alias() {
+			return alias;
+		}
 	}
 
 	private String fileName;
@@ -15,6 +25,9 @@ public class DuplicateInfoVO {
 	private String oldDate;
 	private String oldSize;
 	private String oldOwnerId;
+
+	// 2020-12-16 카이스트 권한 체크
+	private boolean isAccessible;
 
 	public String getFileName() {
 		return fileName;
@@ -98,5 +111,22 @@ public class DuplicateInfoVO {
 
 	public boolean isAllFiles() {
 		return newType == Type.FILE && oldType == Type.FILE;
+	}
+
+	public boolean isAccessible() {
+		return isAccessible;
+	}
+
+	public void setAccessible(boolean isAccessible) {
+		this.isAccessible = isAccessible;
+	}
+
+	@Override
+	public int compareTo(DuplicateInfoVO o) {
+		return getOrder() - o.getOrder();
+	}
+
+	private int getOrder() {
+		return isAllFiles() && isAccessible() ? 0 : 1;
 	}
 }

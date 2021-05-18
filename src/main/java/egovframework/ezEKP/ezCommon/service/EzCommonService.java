@@ -284,4 +284,31 @@ public interface EzCommonService {
 	public void insertChartPortletInfo() throws Exception;
 
 	void addTblUserMultiLoginMobileFlagColumn() throws Exception;
+	
+	public void createMailTemplateSequence() throws Exception;
+
+	public void createJmochaMailboxProgress() throws Exception;
+	
+	public void addWebfolderUserSubdeptPermittedColumn() throws Exception;
+	
+	public void addWebfolderUserFolderManagerColumn() throws Exception;
+	
+	public void createWebfolderFileUserTable();
+	
+	// webfolder
+	public List<String> getPermissionGroupIdListOfUser(String userId, String deptId, String companyId, int tenantId) throws Exception;
+	
+	public void createTblWebfolderApplyHistroy() throws Exception;
+	
+	public void checkWebfolderEncryptTable() throws Exception;
+	
+	public void checkWebfolderVersionTable() throws Exception;
+	
+	void createWebfolderHierarchicalColumns();
+
+	public void addWebfolderLogHistory() throws Exception;
+	
+	void createWebfolderNoInherit();
+	
+	public void alterWebfolderApplyHistoryAddColumn() throws Exception;
 }

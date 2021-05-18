@@ -428,7 +428,8 @@
 						F.DESCRIPTION$lang$ AS WRITER_DEPT_NAME,
 						D.ATTEND_TYPE,
 						D.LATITUDE,
-						D.LONGITUDE
+						D.LONGITUDE,
+						D.WORK_STATUS
 					FROM   
 						tbl_attitude D 
 					INNER JOIN 
@@ -1232,6 +1233,7 @@
 							D.ANNUAL_DOC_ID = E.DOCID
 						OR
 							D.ANNUAL_DOC_ID = E.ORGDOCID
+						LIMIT 1
 					)
 				, 0) AS DOC_APPR_STATUS
 		FROM   

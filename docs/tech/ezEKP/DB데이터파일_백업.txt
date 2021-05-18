@@ -1,0 +1,62 @@
+데이터베이스 Data File 이동 작업
+
+* 사용중일 때 절대 이동시키면 안된다. 서비스 내리고 진행.
+
+#### 1. Oracle ####
+	sqlplus '/as sysdba'
+	select tablespace_name, file_name from dba_data_files;
+
+	1) 오프라인(offline)되는 테이블 스페이스인 경우
+		1. 테이블 스페이스 오프라인
+			SQL) alter tablespace test offline;
+		2. 대상이되는 데이터파일 대상위치로 복사
+			SQL) !mkdir /app/disk1
+			SQL) !cp -av /app/testrman/test01.def /app/disk1/
+		3. 컨트롤 파일내의 데이터파일 위치 변경
+			SQL) alter tablespace test rename datafile '/app/testman/test01.dbf' to '/app/disk1/test01.dbf';
+		4. 테이블스페이스 온라인
+			SQL) alter tablespace test online;
+
+		* 컨트롤파일 내 데이터파일 경로 조회 방법
+		SQL) select name, status from v$datafile;
+
+	2) 오프라인 안되는 테이블 스페이스 경우
+		> System, undo, default 테이블스페이스
+		1. DB 종료
+			SQL) shutdown immediate;
+		2. 마운트 상태 시작
+			SQL) startup mount;
+			SQL) select status from v$instance;
+		3. 데이터파일 이동
+			!cp -av /app/testman/system01.dbf /app/disk1/
+			!cp -av /app/testman/undo01.dbf /app/disk1/
+		4. 컨트롤파일내 위치경로 변경
+			alter database rename file '/app/testman/system01.dbf' to '/app/disk1/system01.dbf';
+			alter database rename file '/app/testman/system01.dbf' to '/app/disk1/undo01.dbf';
+		5. DB 오픈
+			alter database open
+			select name, status from v$datafile; (v$logfile, v$controlfile)
+
+#### 2. MariaDB ####
+	방법1. data 디렉토리 전체 복사
+		1. data 폴더 조회
+			MariaDB [(none)]> show variables like 'datadir';
+			+---------------+------------------------+
+			| Variable_name | Value                  |
+			+---------------+------------------------+
+			| datadir       | /usr/local/mysql/data/ |
+			+---------------+------------------------+
+			1 row in set (0.00 sec)
+		2. 데이터 파일을 tar로 묶는다.
+		3. 가지고 갈 서버에 mysql datadir에 data 폴더를 교체
+		4. mysql 소유권한인지 확인 (안되어있으면 소유권주기 > chown -R mysql data)
+
+	방법2. mysqldump 사용 (workbench에서 하면 되는 방법)
+		* 모든 데이터베이스 백업
+			mysqldump -u유저명 -p패스워드 -A > 백업파일명.sql
+		* 특정 데이터베이스 백업
+			mysqldump -u유저명 -p패스워드 > 백업파일명.sql
+		* 특정 테이블 백업
+			mysqldump -u유저명 -p패스워드 데이터베이스명 테이블명 > 백업파일명.sql
+		* 테이블 구조만 백업
+			mysqldump -u유저명 -p패스워드 --no-data > 백업파일명.sql

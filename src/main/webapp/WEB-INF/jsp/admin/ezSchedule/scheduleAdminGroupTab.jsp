@@ -291,6 +291,7 @@
 		    	$.ajax({
 		    		type : "GET",
 		    		dataType : "xml",
+		    		cache : false,
 		    		data : {
 		    			searchType2 : QuerySelect.options[QuerySelect.selectedIndex].value, // 검색옵션
 						searchValue : document.getElementById("txt_SearchQuery").value,

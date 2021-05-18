@@ -115,6 +115,12 @@
 		    			companyID : pCompanyID
 		    		},
 		    		success : function (result) {
+		    			if (result == "FALSE") {
+							alert("<spring:message code='ezBoard.t1020'/>");
+						} else {
+							alert("<spring:message code='ezBoard.t268'/>");
+						}
+		    			
 		    			window.close();
 		    			ReturnFunctionDel(); // 관인삭제 후 리스트 갱신
 		    		}

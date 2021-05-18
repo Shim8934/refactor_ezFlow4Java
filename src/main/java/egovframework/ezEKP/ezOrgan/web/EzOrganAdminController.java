@@ -65,6 +65,7 @@ import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.service.PreResult;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganGroupVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
@@ -90,7 +91,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
 public class EzOrganAdminController extends EgovFileMngUtil {
-	
+
     private static final Logger logger = LoggerFactory.getLogger(EzOrganAdminController.class);
             
 	@Autowired	
@@ -135,6 +136,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	public void init() throws Exception {
     	logger.debug("init started.");
     	try {
+	    	ezCommonService.createMailTemplateSequence();
+    		ezCommonService.createJmochaMailboxProgress();
 	    	ezCommonService.createTblCompanyConfig();
 	    	ezCommonService.createReformFlagColumn();
 	    	ezCommonService.addMailToJMochaDistribution();
@@ -237,6 +240,19 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.insertApprBigAttachInfo(); //2021-02-10 홍승비 - 전자결재 대용량첨부 컨피그, 칼럼, 테이블 추가
 	    	ezCommonService.addScheduleMailNotiConfig();		// 2021-02-23 김민성 - 일정메일알림 컨피그 추가
 			ezCommonService.addTblUserMultiLoginMobileFlagColumn(); // 2021-03-19 중복로그인 모바일 플래그 컬럼 추가
+	    	
+	    	// webfolder
+	    	ezCommonService.addWebfolderUserSubdeptPermittedColumn(); 	//2020-10-19 김은실 - 웹폴더 > 하위부서 허용 여부 추가
+	    	ezCommonService.addWebfolderUserFolderManagerColumn(); 		//2020-12-08 김은실 - [카이스트] 웹폴더 > 폴더 담당자 추가
+	    	ezCommonService.createWebfolderFileUserTable(); 			
+	    	ezCommonService.createTblWebfolderApplyHistroy();			
+			ezCommonService.checkWebfolderEncryptTable(); 				
+			ezCommonService.checkWebfolderVersionTable(); 				
+	    	ezCommonService.createWebfolderHierarchicalColumns(); 		
+	    	ezCommonService.addWebfolderLogHistory(); 					// 2020-01-20 웹폴더 파일 이력관리 컬럼추가 
+	    	ezCommonService.createWebfolderNoInherit(); 				// 권한비상속			
+    		ezCommonService.alterWebfolderApplyHistoryAddColumn();
+	    	
     	} catch (Exception e) {
     		e.printStackTrace();
     	}
@@ -1236,6 +1252,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		}
 		
 		model.addAttribute("pwPolicyExplain", pwPolicyExplain);
+		model.addAttribute("type", type);
 		return "admin/ezOrgan/inputPassword";
 	}
 	
@@ -1759,8 +1776,18 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		// 기존 사용자를 수정하는 경우엔 parentCn의 값이 null 혹은 empty string 이다.
         } else if (vo.getParentCn() == null || vo.getParentCn().equals("")) {
         	try {
-        		ezOrganAdminService.updateDBData_user(vo);
-        		result = "OK";
+				String cn = vo.getCn();
+				String employeeNumber = vo.getExtensionAttribute14();
+				PreResult preResult = ezOrganAdminService.checkDuplicateLoginId(cn, employeeNumber, tenantID);
+
+				logger.debug("pre result={}", preResult);
+
+				if (preResult.succeeded()) {
+					ezOrganAdminService.updateDBData_user(vo);
+					result = "OK";
+				} else {
+					result = preResult.toString();
+				}
         	} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
         		e.printStackTrace();
         		e.printStackTrace();
@@ -1775,12 +1802,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			
 			// 사용자, 부서, 퇴직자, 회사 상관없이 기존에 사용되는 아이디를 체크한다.
 			// 공용배포그룹ID, 메일ID(alias 메일ID 포함)로 이미 사용중인지도 체크한다.
-			int cnt = ezOrganAdminService.userCheck(cn, tenantID);
+			// UseEmpNumberLogin이 YES일때는 사번도 중복되는지 검사한다.
+			String employeeNumber = vo.getExtensionAttribute14();
+			PreResult preResult = ezOrganAdminService.checkDuplicateId(cn, employeeNumber, tenantID);
 			
-			logger.debug("cnt=" + cnt);
+			logger.debug("pre result={}", preResult);
 			
-			if (cnt > 0) {
-				result = "PRE";
+			if (preResult.failed()) {
+				result = preResult.toString();
 			} else {
 				// 라이센스키를 체크한다.
 				String checkResult = checkLicenseKey(tenantID, domain);

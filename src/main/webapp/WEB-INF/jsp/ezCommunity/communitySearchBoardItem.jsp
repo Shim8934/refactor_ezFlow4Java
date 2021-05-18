@@ -450,6 +450,16 @@
 						} else if (document.getElementById("rowdata") != null && document.getElementById("rowdata").length == strListInfo.split(";").length - 1 && CurPage != 1) {
 						    movePage(CurPage);
 						} else {
+							// 게시물 리스트에서 게시물 삭제 시 팝업홈 좌측 전체 카운트 새로고침 추가
+							if (window.location.href.indexOf("ezCommunity/boardItemList.do") > -1  || window.location.href.indexOf("ezCommunity/searchBoardItem.do") > -1) {
+								try {
+									var cntDom = window.parent.document.getElementById("itemcnt");
+									var code = window.parent.code;
+									if (typeof(cntDom) != "undefined" && cntDom != null && typeof(code) != "undefined" && code != null) {
+										reloadLeftCount(code, cntDom);
+									}
+								} catch(e) {}
+							}
 						    window.location.reload();
 						}
 					}
@@ -784,7 +794,8 @@
 			}
 
 			function BoardItemList() {
-				$(location).attr('href', '/ezCommunity/boardItemList.do?' + encodeURIComponent(pOrgBoardParameters));
+				/* $(location).attr('href', '/ezCommunity/boardItemList.do?' + encodeURIComponent(pOrgBoardParameters)); */
+				$(location).attr('href', '/ezCommunity/boardItemList.do?' + pOrgBoardParameters); 
 // 				window.location.href = "/ezCommunity/boardItemList.do?" + pOrgBoardParameters;
 			}
 			
@@ -887,7 +898,7 @@
 			<tr>
 				<th><spring:message code='ezCommunity.t434'/></th>
 				<td>
-					<input class="inputText" type="text" id="Sdatepicker" style="width:80px;text-align:center"> ~ <input class="inputText" type="text" id="Edatepicker" style="width:80px;text-align:center">&nbsp;
+					<input class="inputText" type="text" id="Sdatepicker" oninput="this.value=this.value.replace(/[^0-9.\-]/g, '').replace(/(\..*)\./g, '$1');"  style="width:80px;text-align:center"> ~ <input class="inputText" type="text" id="Edatepicker" oninput="this.value=this.value.replace(/[^0-9.\-]/g, '').replace(/(\..*)\./g, '$1');"  style="width:80px;text-align:center">&nbsp;
 					<a class="imgbtn imgbck"><span onClick= "btn_PostDate_Clear()" popupLocation='bottomright'><spring:message code='ezCommunity.t444'/></span></a>&nbsp;<a class="imgbtn imgbck"><span onClick="search()"><spring:message code='ezCommunity.t31'/></span></a>
 				</td>
 			</tr>
