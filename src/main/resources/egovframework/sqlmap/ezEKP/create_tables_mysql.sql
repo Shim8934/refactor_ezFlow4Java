@@ -14068,7 +14068,7 @@ DROP TABLE IF EXISTS `tbl_webfolder_enc_folder`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_webfolder_enc_folder` (
-  `FOLDER_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `FOLDER_ID` int(11) NOT NULL,
   `TENANT_ID` int(7) NOT NULL,
   PRIMARY KEY (`FOLDER_ID`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
