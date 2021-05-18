@@ -10,6 +10,8 @@ import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import egovframework.let.user.login.vo.LoginVO;
+
 /**
  * @Description ezWebfolder 모듈에서 사용하는 유틸리티 클래스
  * @author yy9320
@@ -63,5 +65,13 @@ public class EzWebfolderUtil {
 		}
 
 		return result + "." + extension;
+	}
+
+	public boolean isWebfolderAdmin(LoginVO user) {
+		return isWebfolderAdmin(user.getRollInfo());
+	}
+
+	public boolean isWebfolderAdmin(String rollInfo) {
+		return rollInfo.contains("c=1") || rollInfo.contains("k=1") || rollInfo.contains("wf=1");
 	}
 }

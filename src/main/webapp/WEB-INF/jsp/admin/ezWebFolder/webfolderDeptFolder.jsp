@@ -12,11 +12,17 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/popup.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<style>
+			.spanName {
+				width: auto;
+			}
+		</style>
 		<script type="text/javascript" >
 			var primary           = "<c:out value='${primary}'/>";
 			var arrSubFolder      = [];
 			var selectedFolder    = "";
 			var primary           = "<c:out value='${primary}'/>";
+			var selectXhr         = null;
 			
 			window.onload = function () {
 				closeAllPopup();
@@ -112,7 +118,7 @@
 				} else {
 					spanFolderName.textContent = primary == "1" ? list["folderName"] : list["folderName2"];
 				}
-				spanFolderName.setAttribute("class", "spanName3");
+				spanFolderName.setAttribute("class", "spanName");
 				spanFolderName.setAttribute("name", list["folderId"]);
 				spanFolderName.setAttribute("level", list["folderLevel"]);
 				spanFolderName.setAttribute("fldName1", list["folderName"]);
@@ -174,10 +180,14 @@
 				obj.style.color      = "#004a87";
 				obj.style.fontWeight = "bold";
 				
+				if (selectXhr) {
+					selectXhr.abort();
+				}
+
 				document.getElementById("fldName").readOnly  = false;
 				document.getElementById("fldName2").readOnly = false;
 				
-				$.ajax({
+				selectXhr = $.ajax({
 					type: "POST",
 					url: "/admin/ezWebFolder/getFolderUsers.do",
 					data: {
@@ -191,8 +201,7 @@
 						
 						switch(code) {
 							case 0: 
-								var result = data.folderUsers;
-								processUsersList(result, obj.getAttribute("fldName1"), obj.getAttribute("fldName2"), level);
+								processUsersList(data, obj.getAttribute("fldName1"), obj.getAttribute("fldName2"), level);
 								break;
 							case 1:
 								alert("<spring:message code='ezWebFolder.t306'/>");
@@ -206,7 +215,14 @@
 						}
 					},
 					error : function(error) {
+						if (error.statusText == "abort") {
+							return;
+						}
+
 						alert("<spring:message code='ezWebFolder.t134'/>" + error);
+					},
+					complete: function() {
+						selectXhr = null;
 					}
 				});
 			}
@@ -220,14 +236,16 @@
 					document.getElementById("fldName2").readOnly = true;
 				}
 				
-				if(result == null || result.length == 0) {
+				var folderUsers = result.folderUsers;
+				
+				if(folderUsers == null || folderUsers.length == 0) {
 					updateTarget("");
 				}
 				else {
 					var target = "";
 					
-					for (var i = 0; i < result.length; i++) {
-						target = primary == "1" ? (target + result[i]["displayName1"] + ",") : (target + result[i]["displayName2"] + ",");
+					for (var i = 0; i < folderUsers.length; i++) {
+						target = primary == "1" ? (target + folderUsers[i]["displayName1"] + ",") : (target + folderUsers[i]["displayName2"] + ",");
 					}
 					
 					updateTarget(target.slice(0, -1));
@@ -260,7 +278,8 @@
 						type: "GET",
 						url: "/admin/ezWebFolder/getSubFolderTree.do",
 						data: {
-							"folderId" : uniqueId
+							"folderId" : uniqueId,
+							"adminCheck" : "admin"
 						},
 						dataType: "JSON",
 						async: true,
@@ -446,14 +465,16 @@
 					return;
 				}
 				
-				$.ajax({
-					type: "POST",
-					url: "/admin/ezWebFolder/changeDepartFolder.do",
-					data: {
+				var ajaxData = {
 						"folderId"    : selectedFolder,
 						"folderName"  : folderName,
 						"folderName2" : folderName2
-					},
+					};
+
+				$.ajax({
+					type: "POST",
+					url: "/admin/ezWebFolder/changeDepartFolder.do",
+					data: ajaxData,
 					dataType: "JSON",
 					async: false,
 					success: function(data) {
@@ -538,7 +559,7 @@
 				}
 				
 				leftPanelProcess();
-				DivPopUpShow(450, 500, "/admin/ezWebFolder/folderMoveConfirm.do?folderId=" + selectedFolder);
+				DivPopUpShow(450, 500, "/admin/ezWebFolder/folderMoveConfirm.do?folderId=" + selectedFolder + "&folderType=D");
 			}
 			
 			function deleteFolder() {
@@ -647,7 +668,7 @@
 											<div style="margin: 20px 20px 5px 20px;">
 												<img src="/images/kr/left/left_dot02.gif" />
 												<span style="display:inline-block; width:110px;"><spring:message code='ezWebFolder.t226'/></span>
-												<input id="fldName" type="text" maxlength="50" style="height: 25px; border-radius: 3px; border: 1px solid #ddd; width: 200px; margin-left: 2px; padding-left: 5px;">
+												<input id="fldName" type="text" maxlength="50" style="width: 200px; margin-left: 2px; padding-left: 5px;">
 											</div>
 										</td>
 									</tr>
@@ -656,11 +677,10 @@
 											<div style="margin: 5px 20px 10px 20px;">
 												<img src="/images/kr/left/left_dot02.gif" />
 												<span style="display:inline-block; width:110px;"><spring:message code='ezWebFolder.t227'/></span>
-												<input id="fldName2" type="text" maxlength="50" style="height: 25px; border-radius: 3px; border: 1px solid #ddd; width: 200px; margin-left: 2px; padding-left: 5px;">
+												<input id="fldName2" type="text" maxlength="50" style="width: 200px; margin-left: 2px; padding-left: 5px;">
 											</div>
 										</td>
 									</tr>
-									
 									<tr>
 										<td>
 											<div style="margin: 20px 20px 5px; min-height: 36px;">

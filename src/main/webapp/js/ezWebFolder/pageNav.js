@@ -18,11 +18,11 @@ var pagination = (function() {
 		listSize = size;
 	}
 	
-	function setPage(page, disableHandler) {
+	function setPage(page, disableHandler, fldId) {
 		currentPage = page;
 		
 		if (!disableHandler) {
-			eventHandler.pageChange(currentPage, listSize);
+			eventHandler.pageChange(currentPage, listSize, fldId);
 		}
 	}
 	

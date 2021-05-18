@@ -6,6 +6,15 @@ var duplicateFile = (function() {
 	var infoQueue = [];
 	// 현재 상태를 담는 변수
 	var current = null;
+
+	// ok: 파일, 폴더아이디
+	// okMessage: 처리 완료 메세지 (ok 배열들과 같은 처리니깐 하나만 있으면 됨)
+	// error: 
+	var alerts = {
+			ok: [],
+			okMessage: "",
+			error: []
+	};
 	
 	var work = {
 		upload: {
@@ -32,34 +41,38 @@ var duplicateFile = (function() {
 					processData: false,
 					xhr: ajaxUploadXhr,
 					mimeType: "multipart/form-data",
-					success: function(data) {
-						var code = data.code;
-						
-						switch (code) {
-						case 0:
-							alert(strSuccess);
-							refreshView();
-							break;
-						case 1:
-							alert(messages.parameterError);
-							break;
-						case 2:
-							alert(messages.serverError);
-							break;
-						case 3:
-							alert(messages.permissionError);
-							break;
-						case 4:
-							alert(messages.outOfStorageSpaceForOneTime);
-							break;
-						case 5:
-							alert(messages.outOfStorageSpace);
-							break;
-						}
-					},
-					error: function(error) {
-						alert(strErr);
-					}
+					success: (function(currentInfo) {
+						return function(data) {
+							var code = data.code;
+							
+							switch (code) {
+							case 0:
+								refreshView();
+								addSuccessAlert(currentInfo, strSuccess);
+								break;
+							case 1:
+								addErrorAlert(currentInfo, messages.parameterError);
+								break;
+							case 2:
+								addErrorAlert(currentInfo, messages.serverError);
+								break;
+							case 3:
+								addErrorAlert(currentInfo, messages.permissionError);
+								break;
+							case 4:
+								addErrorAlert(currentInfo, messages.outOfStorageSpaceForOneTime);
+								break;
+							case 5:
+								addErrorAlert(currentInfo, messages.outOfStorageSpace);
+								break;
+							}
+						};
+					})(current.info),
+					error: (function(currentInfo) {
+						return function(error) {
+							addErrorAlert(currentInfo, strErr);
+						};
+					})(current.info)
 				}).complete(function(res) {
 					ajaxUploadComplete();
 					nextJob(result);
@@ -86,6 +99,10 @@ var duplicateFile = (function() {
 				fd.append("fileToUpload", current.info.fileObject);
 				fd.append("nameArray", JSON.stringify([ newFileName ]));
 				
+				if (current.isReply) {
+					fd.append("parentId", current.parentId);
+				}
+
 				var dragZone = document.getElementById("dragDropArea");
 				var height = dragZone.clientHeight;
 				dragZone.style.height = height - 34 + "px";
@@ -100,35 +117,41 @@ var duplicateFile = (function() {
 					processData: false,
 					xhr: ajaxUploadXhr,
 					mimeType: "multipart/form-data",
-					success: function(data) {
-						switch (data.code) {
-						case 0:
-							alert(strSuccess);
-							refreshView();
-							break;
-						case 1:
-							alert(messages.parameterError);
-							break;
-						case 2:
-							alert(messages.serverError);
-							break;
-						case 3:
-							alert(messages.permissionError);
-							break;
-						case 4:
-							alert(messages.outOfStorageSpaceForOneTime);
-							break;
-						case 5:
-							alert(messages.outOfStorageSpace);
-							break;
-						case 8:
-							alert(messages.resultErrDuplicateRename);
-							break;
-						}
-					},
-					error: function(error) {
-						alert(strErr);
-					}
+					success: (function(currentInfo) {
+						return function(data) {
+							var code = data.code;
+							
+							switch (code) {
+							case 0:
+								refreshView();
+								addSuccessAlert(currentInfo, strSuccess);
+								break;
+							case 1:
+								addErrorAlert(currentInfo, messages.parameterError);
+								break;
+							case 2:
+								addErrorAlert(currentInfo, messages.serverError);
+								break;
+							case 3:
+								addErrorAlert(currentInfo, messages.permissionError);
+								break;
+							case 4:
+								addErrorAlert(currentInfo, messages.outOfStorageSpaceForOneTime);
+								break;
+							case 5:
+								addErrorAlert(currentInfo, messages.outOfStorageSpace);
+								break;
+							case 8:
+								addErrorAlert(currentInfo, messages.resultErrDuplicateRename);
+								break;
+							}
+						};
+					})(current.info),
+					error: (function(currentInfo) {
+						return function(error) {
+							addErrorAlert(currentInfo, strErr);
+						};
+					})(current.info)
 				}).complete(function(res) {
 					ajaxUploadComplete();
 					nextJob(result);
@@ -149,31 +172,35 @@ var duplicateFile = (function() {
 					},
 					dataType: "JSON",
 					async: true,
-					success: function(data) {
-						var code = data.code;
-						
-						switch (code) {
-						case 0:
-							alert(messages.successMoveFile);
-							refreshView();
-							break;
-						case 1:
-							alert(messages.parameterError);
-							break;
-						case 2:
-							alert(messages.serverError);
-							break;
-						case 3:
-							alert(messages.permissionError);
-							break;
-						case 4:
-							alert(messages.strLang13);
-							break;
-						}
-					},
-					error: function(error) {
-						alert(strErr);
-					}
+					success: (function(currentInfo) {
+						return function(data) {
+							var code = data.code;
+							
+							switch (code) {
+							case 0:
+								refreshView();
+								addSuccessAlert(currentInfo, messages.successMoveFile);
+								break;
+							case 1:
+								addErrorAlert(currentInfo, messages.parameterError);
+								break;
+							case 2:
+								addErrorAlert(currentInfo, messages.serverError);
+								break;
+							case 3:
+								addErrorAlert(currentInfo, messages.permissionError);
+								break;
+							case 4:
+								addErrorAlert(currentInfo, messages.strLang13);
+								break;
+							}
+						};
+					})(current.info),
+					error: (function(currentInfo) {
+						return function(error) {
+							addErrorAlert(currentInfo, strErr);
+						};
+					})(current.info)
 				}).complete(function(res) {
 					nextJob(result);
 				});
@@ -196,34 +223,38 @@ var duplicateFile = (function() {
 					},
 					dataType: "JSON",
 					async: true,
-					success: function(data) {
-						var code = data.code;
-						
-						switch (code) {
-						case 0:
-							alert(messages.successMoveFile);
-							refreshView();
-							break;
-						case 1:
-							alert(messages.parameterError);
-							break;
-						case 2:
-							alert(messages.serverError);
-							break;
-						case 3:
-							alert(messages.permissionError);
-							break;
-						case 4:
-							alert(messages.strLang13);
-							break;
-						case 8:
-							alert(messages.resultErrDuplicateRename);
-							break;
-						}
-					},
-					error: function(error) {
-						alert(strErr);
-					}
+					success: (function(currentInfo) {
+						return function(data) {
+							var code = data.code;
+							
+							switch (code) {
+							case 0:
+								refreshView();
+								addSuccessAlert(currentInfo, messages.successMoveFile);
+								break;
+							case 1:
+								addErrorAlert(currentInfo, messages.parameterError);
+								break;
+							case 2:
+								addErrorAlert(currentInfo, messages.serverError);
+								break;
+							case 3:
+								addErrorAlert(currentInfo, messages.permissionError);
+								break;
+							case 4:
+								addErrorAlert(currentInfo, messages.strLang13);
+								break;
+							case 8:
+								addErrorAlert(currentInfo, messages.resultErrDuplicateRename);
+								break;
+							}
+						};
+					})(current.info),
+					error: (function(currentInfo) {
+						return function(error) {
+							addErrorAlert(currentInfo, strErr);
+						};
+					})(current.info)
 				}).complete(function(res) {
 					nextJob(result);
 				});
@@ -242,32 +273,38 @@ var duplicateFile = (function() {
 					},
 					dataType: "JSON",
 					async: true,
-					success: function(data) {
-						switch (data.code) {
-						case 0:
-							alert(messages.successCopyFile);
-							refreshView();
-							break;
-						case 1:
-							alert(messages.parameterError);
-							break;
-						case 2:
-							alert(messages.serverError);
-							break;
-						case 3:
-							alert(messages.permissionError);
-							break;
-						case 4:
-							alert(messages.outOfStorageSpace);
-							break;
-						case 8:
-							alert(messages.resultErrDuplicateRename);
-							break;
-						}
-					},
-					error: function(error) {
-						alert(strErr);
-					}
+					success: (function(currentInfo) {
+						return function(data) {
+							var code = data.code;
+							
+							switch (code) {
+							case 0:
+								refreshView();
+								addSuccessAlert(currentInfo, messages.successCopyFile);
+								break;
+							case 1:
+								addErrorAlert(currentInfo, messages.parameterError);
+								break;
+							case 2:
+								addErrorAlert(currentInfo, messages.serverError);
+								break;
+							case 3:
+								addErrorAlert(currentInfo, messages.permissionError);
+								break;
+							case 4:
+								addErrorAlert(currentInfo, messages.outOfStorageSpace);
+								break;
+							case 8:
+								addErrorAlert(currentInfo, messages.resultErrDuplicateRename);
+								break;
+							}
+						};
+					})(current.info),
+					error: (function(currentInfo) {
+						return function(error) {
+							addErrorAlert(currentInfo, strErr);
+						};
+					})(current.info)
 				}).complete(function(res) {
 					nextJob(result);
 				});
@@ -289,32 +326,38 @@ var duplicateFile = (function() {
 					},
 					dataType: "JSON",
 					async: true,
-					success: function(data) {
-						switch (data.code) {
-						case 0:
-							alert(messages.successCopyFile);
-							refreshView();
-							break;
-						case 1:
-							alert(messages.parameterError);
-							break;
-						case 2:
-							alert(messages.serverError);
-							break;
-						case 3:
-							alert(messages.permissionError);
-							break;
-						case 4:
-							alert(messages.outOfStorageSpace);
-							break;
-						case 8:
-							alert(messages.resultErrDuplicateRename);
-							break;
-						}
-					},
-					error: function(error) {
-						alert(strErr);
-					}
+					success: (function(currentInfo) {
+						return function(data) {
+							var code = data.code;
+							
+							switch (code) {
+							case 0:
+								refreshView();
+								addSuccessAlert(currentInfo, messages.successCopyFile);
+								break;
+							case 1:
+								addErrorAlert(currentInfo, messages.parameterError);
+								break;
+							case 2:
+								addErrorAlert(currentInfo, messages.serverError);
+								break;
+							case 3:
+								addErrorAlert(currentInfo, messages.permissionError);
+								break;
+							case 4:
+								addErrorAlert(currentInfo, messages.outOfStorageSpace);
+								break;
+							case 8:
+								addErrorAlert(currentInfo, messages.resultErrDuplicateRename);
+								break;
+							}
+						};
+					})(current.info),
+					error: (function(currentInfo) {
+						return function(error) {
+							addErrorAlert(currentInfo, strErr);
+						};
+					})(current.info)
 				}).complete(function(res) {
 					nextJob(result);
 				});
@@ -332,26 +375,32 @@ var duplicateFile = (function() {
 						"folderId": current.folderId,
 						"overwritable": true
 					},
-					success: function(data) {
-						switch (data.code) {
-						case 0:
-							alert(messages.successMoveFile);
-							refreshView();
-							break;
-						case 1:
-							alert(messages.parameterError);
-							break;
-						case 2:
-							alert(messages.serverError);
-							break;
-						case 3:
-							alert(messages.permissionError);
-							break;
-						}
-					},
-					error: function(error) {
-						alert(strErr);
-					}
+					success: (function(currentInfo) {
+						return function(data) {
+							var code = data.code;
+							
+							switch (code) {
+							case 0:
+								refreshView();
+								addSuccessAlert(currentInfo, messages.successMoveFile);
+								break;
+							case 1:
+								addErrorAlert(currentInfo, messages.parameterError);
+								break;
+							case 2:
+								addErrorAlert(currentInfo, messages.serverError);
+								break;
+							case 3:
+								addErrorAlert(currentInfo, messages.permissionError);
+								break;
+							}
+						};
+					})(current.info),
+					error: (function(currentInfo) {
+						return function(error) {
+							addErrorAlert(currentInfo, strErr);
+						};
+					})(current.info)
 				}).complete(function(res) {
 					nextJob(result);
 				});
@@ -372,29 +421,35 @@ var duplicateFile = (function() {
 						"folderId": current.folderId,
 						"newName": result.newFileName
 					},
-					success: function(data) {
-						switch (data.code) {
-						case 0:
-							alert(messages.successMoveFile);
-							refreshView();
-							break;
-						case 1:
-							alert(messages.parameterError);
-							break;
-						case 2:
-							alert(messages.serverError);
-							break;
-						case 3:
-							alert(messages.permissionError);
-							break;
-						case 8:
-							alert(messages.resultErrDuplicateRename);
-							break;
-						}
-					},
-					error: function(error) {
-						alert(strErr);
-					}
+					success: (function(currentInfo) {
+						return function(data) {
+							var code = data.code;
+							
+							switch (code) {
+							case 0:
+								refreshView();
+								addSuccessAlert(currentInfo, messages.successMoveFile);
+								break;
+							case 1:
+								addErrorAlert(currentInfo, messages.parameterError);
+								break;
+							case 2:
+								addErrorAlert(currentInfo, messages.serverError);
+								break;
+							case 3:
+								addErrorAlert(currentInfo, messages.permissionError);
+								break;
+							case 8:
+								addErrorAlert(currentInfo, messages.resultErrDuplicateRename);
+								break;
+							}
+						};
+					})(current.info),
+					error: (function(currentInfo) {
+						return function(error) {
+							addErrorAlert(currentInfo, strErr);
+						};
+					})(current.info)
 				}).complete(function(res) {
 					nextJob(result);
 				});
@@ -402,12 +457,41 @@ var duplicateFile = (function() {
 		}
 	};
 	
+	function addSuccessAlert(currentInfo, message) {
+		alerts.ok.push(currentInfo);
+		alerts.okMessage = message;
+	}
+
+	function addErrorAlert(currentInfo, message) {
+		alerts.error.push({info: currentInfo, message: message});
+	}
+
+	function flushAlerts() {
+		if (alerts.ok.length > 0) {
+			alert(alerts.okMessage);
+		}
+
+		var errors = alerts.error;
+		var error;
+		for (var i = 0; i < errors.length; i++) {
+			error = errors[i];
+			alert(error.message + "\n" + error.info.fileName);
+		}
+
+		alerts = {
+				ok: [],
+				okMessage: "",
+				error: []
+		};
+	}
+
 	var completeJob = function() {
 		// 큐 비우기
 		infoQueue = [];
 		// 현재 정보 비우기
 		current = null;
 		
+		flushAlerts();
 		// 완료 알림 띄우기
 		// alert(messages.completeDuplicateJob);
 	}
@@ -447,15 +531,22 @@ var duplicateFile = (function() {
 			return;
 		}
 		
+		var currentInfo = current.info;
+
 		// 반복 수행 중이라면 팝업 안 띄우고 작업 수행
 		if (result && result.looping) {
-			executeJob(result);
-			return;
+			if (result.code !== "OVERWRITE"
+				|| (currentInfo.oldType === "FILE" && currentInfo.newType === "FILE" && currentInfo.accessible)) {
+				executeJob(result);
+				return;
+			}
 		}
 		
+		// 이전 작업들 완료 알림 띄우기
+		flushAlerts();
+
 		// 파일 중복 처리하는 팝업 띄우기
 		var url = "/ezWebFolder/fileDuplicateConfirm.do?";
-		var currentInfo = current.info;
 		var height;
 		
 		url += "fileName=" + encodeURIComponent(currentInfo.fileName);
@@ -466,14 +557,23 @@ var duplicateFile = (function() {
 		url += "&oldDate=" + encodeURIComponent(currentInfo.oldDate);
 		url += "&oldSize=" + encodeURIComponent(currentInfo.oldSize);
 		url += "&oldOwnerId=" + encodeURIComponent(currentInfo.oldOwnerId);
+		url += "&oldId=" + encodeURIComponent(currentInfo.oldId);
+		
+		if (current.isReply) {
+			url += "&isReply";
+		}
 		
 		if (currentInfo.newType === "FILE") {
 			// 파일이 하나일 때는 체크박스 사라지니까 더 작게
 			if (isEmptyInfo()) {
 				url += "&isOne";
-				height = 278;
+				height = 315;
 			} else {
-				height = 300;
+				height = 332;
+			}
+
+			if (currentInfo.oldType === "FILE" && !currentInfo.accessible) {
+				height += isEmptyInfo() ? 12 : 27;
 			}
 		} else {
 			height = 200;

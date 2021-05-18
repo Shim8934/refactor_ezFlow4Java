@@ -239,6 +239,19 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.addScehdulegroup(); //2021-02-17 그룹일정의 tbl_schedulegroup 컬럼 추가
 	    	ezCommonService.insertApprBigAttachInfo(); //2021-02-10 홍승비 - 전자결재 대용량첨부 컨피그, 칼럼, 테이블 추가
 	    	ezCommonService.addScheduleMailNotiConfig();		// 2021-02-23 김민성 - 일정메일알림 컨피그 추가
+	    	
+	    	// webfolder
+	    	ezCommonService.addWebfolderUserSubdeptPermittedColumn(); 	//2020-10-19 김은실 - 웹폴더 > 하위부서 허용 여부 추가
+	    	ezCommonService.addWebfolderUserFolderManagerColumn(); 		//2020-12-08 김은실 - [카이스트] 웹폴더 > 폴더 담당자 추가
+	    	ezCommonService.createWebfolderFileUserTable(); 			
+	    	ezCommonService.createTblWebfolderApplyHistroy();			
+			ezCommonService.checkWebfolderEncryptTable(); 				
+			ezCommonService.checkWebfolderVersionTable(); 				
+	    	ezCommonService.createWebfolderHierarchicalColumns(); 		
+	    	ezCommonService.addWebfolderLogHistory(); 					// 2020-01-20 웹폴더 파일 이력관리 컬럼추가 
+	    	ezCommonService.createWebfolderNoInherit(); 				// 권한비상속			
+    		ezCommonService.alterWebfolderApplyHistoryAddColumn();
+	    	
     	} catch (Exception e) {
     		e.printStackTrace();
     	}

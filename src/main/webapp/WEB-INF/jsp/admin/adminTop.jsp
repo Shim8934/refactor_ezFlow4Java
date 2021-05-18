@@ -13,7 +13,8 @@
 			function window_onload(){
 				process();
 				document.getElementById("adminTopTitle").addEventListener("click", function() {
-					parent.frames["bottom"].location.href = "/admin/ezNewPortal/portalMain.do";
+					process();
+					//parent.frames["bottom"].location.href = "/admin/ezNewPortal/portalMain.do";
 				});
 			}
 			
