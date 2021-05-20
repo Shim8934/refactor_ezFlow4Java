@@ -112,24 +112,11 @@
                 var objNode;
                 
                 createNodeInsert(xmlpara, objNode, "DATA");
-                createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptId);
-
-                <c:choose>
-                <c:when test="${useShowAllCompanies eq 'YES'}">
-                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top/organ");
-                </c:when>
-                <c:otherwise>
-                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
-                </c:otherwise>
-                </c:choose>
-                
-                createNodeAndInsertText(xmlpara, objNode, "PROP", "");
-//                 if(window.opener.$("#companyList option[value=" + companyId + "]") != null && 
-//                 		window.opener.$("#companyList option[value=" + companyId + "]").text().length > 0){
-// 	                createNodeAndInsertText(xmlpara, objNode, "ADMINCHK", "true");
-//                 }
-/*                 createNodeAndInsertText(xmlpara, objNode, "ADMINDIST", "true");
-                createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true"); */
+                createNodeAndInsertText(xmlpara, objNode, "DEPTID", companyId);
+                createNodeAndInsertText(xmlpara, objNode, "TOPID", companyId);
+                createNodeAndInsertText(xmlpara, objNode, "PROP", "mail");
+                createNodeAndInsertText(xmlpara, objNode, "ADMINDIST", "true");
+                createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true");
 	            xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	            xmlHTTP.send(xmlpara);
 	            ListTypeChangeIcon();
