@@ -52,9 +52,9 @@
 	        function btn_ok_onclick() {
 	            var szInput;
 	            szInput = txt_FolderName.value;
-	            szInput = ReplaceText(szInput, " ", "");
+	            //szInput = ReplaceText(szInput, " ", "");
 	
-	            if (szInput == "") {
+	            if (szInput.trim() == "") {
 	                alert("<spring:message code='ezAddress.t22' />");
 	                return;
 	            }
