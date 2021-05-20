@@ -42,7 +42,7 @@
 	            }
 	        }
 	        window.onunload = function () {
-	            if (ReturnFunction!=null && !DivPopup)
+	            if (ReturnFunction!=null)
 	                ReturnFunction(ReturnValue);
 	        }
 	        function Window_close() {
@@ -52,6 +52,7 @@
 	            }
 	            else {
 	                window.returnValue = 0;
+	                window.ReturnFunction(ReturnValue);
 	                window.close();
 	            }
 	        }
@@ -177,12 +178,13 @@
 	            else {
 	                alert("<spring:message code='ezAddress.t153' />");
 	                
-	                window.location.reload();
-// 	                LoadAddressTree();
+	                //window.location.reload();
 	                if (ReturnFunction!=null)
 	                    ReturnValue = 1;
 	                else
 	                    window.returnValue = 1;
+	                
+ 	                LoadAddressTree();
 	            }
 	        }
 	        function modify_onclick() {
@@ -256,12 +258,13 @@
 	            else {
 	                alert("<spring:message code='ezAddress.t158' />");
 	                
-	                window.location.reload();
-// 	                LoadAddressTree();
+	                //window.location.reload();
 	                if (ReturnFunction!=null)
 	                    ReturnValue = 1;
 	                else
 	                    window.returnValue = 1;
+	                
+ 	                LoadAddressTree();
 	            }
 	        }
 	        function delete_onclick() {
@@ -309,12 +312,13 @@
 	                else {
 	                    alert("<spring:message code='ezAddress.t165' />");
 	                    
-	                    window.location.reload();
-//	 	                LoadAddressTree();
+	                    //window.location.reload();
 	                    if (ReturnFunction!=null)
 	                        ReturnValue = 1;
 	                    else
 	                        window.returnValue = 1;
+	                    
+	 	                LoadAddressTree();
 	                }
 	            }
 	        }
@@ -374,12 +378,13 @@
 	                else {
 	                    alert("<spring:message code='ezAddress.t172' />");
 	                    
-	                    window.location.reload();
-//	 	                LoadAddressTree();
+	                    //window.location.reload();
 	                    if (CrossYN())
 	                        ReturnValue = 1;
 	                    else
 	                        window.returnValue = 1;
+	                    
+	 	                LoadAddressTree();
 	                }
 	            }
 	        }
@@ -409,12 +414,13 @@
 	            else {
 	                alert("<spring:message code='ezAddress.t172' />");
 	                
-	                window.location.reload();
-// 	                LoadAddressTree();
+	                //window.location.reload();
 	                if (ReturnFunction!=null)
 	                    ReturnValue = 1;
 	                else
 	                    window.returnValue = 1;
+	                
+ 	                LoadAddressTree();
 	            }
 	        }
 	        function get_length(chkstr) {
