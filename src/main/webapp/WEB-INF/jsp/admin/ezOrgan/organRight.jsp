@@ -646,7 +646,7 @@
 						url : "/ezOrgan/getSearchList.do",
 						async : false,
 						data : {
-							search : search_type.value + "::" + keyword.value,
+							search : search_type.value + "::" + encodeURIComponent(keyword.value),
 							cell : "extensionAttribute9;displayName;cn;description;title;extensionAttribute10",
 							prop : "department;usertype",
 							type : "user",
@@ -730,7 +730,7 @@
 						dataType : "text",
 						url : "/ezOrgan/getSearchList.do",
 						async : false,
-						data : {search : "displayname::" + keyword.value, cell : "extensionAttribute3;displayName;extensionAttribute9", prop : "", type : "group", adminOrgan : "y"},
+						data : {search : "displayname::" + encodeURIComponent(keyword.value), cell : "extensionAttribute3;displayName;extensionAttribute9", prop : "", type : "group", adminOrgan : "y"},
 						success : function(result){	
 							xmlDOM = loadXMLString(result);
 							adCount = xmlDOM.getElementsByTagName("ROW").length;
@@ -1803,7 +1803,7 @@
 					url : "/ezOrgan/getSearchList.do",
 					async : false,
 					data : {
-						search : searchType + "::" + searchWord,
+						search : searchType + "::" + encodeURIComponent(searchWord),
 						cell : "extensionAttribute9;displayName;cn;description;title;extensionAttribute10",
 						prop : "department",
 						type : "user",

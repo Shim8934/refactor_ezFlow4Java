@@ -478,7 +478,7 @@
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : true,
 		        	data : {
-		        		search : document.all("search_type").value + "::" + document.all("keyword").value, 
+		        		search : document.all("search_type").value + "::" + encodeURIComponent(document.all("keyword").value), 
 		        		cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value, 
 		        		prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department", 
 		        		<c:if test="${useShowAllCompanies eq 'YES'}">
@@ -550,7 +550,7 @@
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : false,
 		        	data : {
-		        		search : "displayname::" + searchWord, 
+		        		search : "displayname::" + encodeURIComponent(searchWord), 
 		        		cell : "extensionAttribute3;displayName;extensionAttribute9;", 
 		        		prop : "cn", 
 		        		type : "group"
