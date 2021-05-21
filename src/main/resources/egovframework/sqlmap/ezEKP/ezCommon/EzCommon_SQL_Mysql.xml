@@ -3189,6 +3189,15 @@
 			RejectedMail varchar(4) DEFAULT 'Y'
 		)
     </statement>
+    
+    <insert id="EzCommonDAO.insertApprFormCont">
+		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
+    		VALUES (#tenantID#, 'useApprFormCont', '양식별문서함 사용유무(전자결재 일반)', 'YES', '전자결재 양식별문서함 사용유무', current_timestamp(), '전자결재')
+	</insert>
+	<insert id="EzCommonDAO.insertApprCodeCont">
+		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
+    		VALUES (#tenantID#, 'useApprCodeCont', '분류코드문서함 사용유무(전자결재 일반)', 'YES', '전자결재 분류코드문서함 사용유무', current_timestamp(), '전자결재')
+	</insert>
 
 	<select id="EzCommonDAO.checkChartPortletInfo" resultClass="int">
 		SELECT

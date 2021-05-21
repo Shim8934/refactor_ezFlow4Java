@@ -2225,6 +2225,18 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addScheduleMailNotiConfig() throws Exception {
 		ezCommonDAO.addScheduleMailNotiConfig();
 	}
+	
+	@Override
+	public void insertApprContainterConfig() throws Exception {
+		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+		
+		for (TenantVO tenantVo : tenantIdList) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("tenantID", tenantVo.getTenantId());
+			
+			ezCommonDAO.insertApprContainterConfig(map);
+		}
+	}
 
 	/* 2020-10-19 김은실 - 웹폴더 > 하위부서 허용 여부 추가 */
 	@Override

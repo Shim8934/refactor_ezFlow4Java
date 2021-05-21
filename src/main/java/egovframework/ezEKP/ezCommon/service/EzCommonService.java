@@ -285,6 +285,8 @@ public interface EzCommonService {
 	
 	public void createWebfolderFileUserTable();
 	
+	public void insertApprContainterConfig() throws Exception;
+	
 	// webfolder
 	public List<String> getPermissionGroupIdListOfUser(String userId, String deptId, String companyId, int tenantId) throws Exception;
 	
