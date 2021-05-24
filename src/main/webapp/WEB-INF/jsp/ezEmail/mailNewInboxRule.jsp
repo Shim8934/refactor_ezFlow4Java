@@ -112,6 +112,10 @@
 		        }
 		
 		        switch (obj.value) {
+		        	case "NONE":
+		        		_curCellObj.innerHTML = "";
+		            	_curCellObj.removeAttribute("RuleKind", true);
+		        		break;
 		            case "MOVE":
 		            case "COPY":
 		            	_curCellObj.innerHTML = "";
@@ -544,6 +548,10 @@
 		            }
 		
 		            Commentdsc(_RuleKind);
+		        } else {
+		        	_curCellObj.removeAttribute("RuleKind", true);
+                    _curCellObj.removeAttribute("value", true);
+                    _curCellObj.innerHTML = "";
 		        }
 		    }
 		    function Ruleselectcell(obj) {
