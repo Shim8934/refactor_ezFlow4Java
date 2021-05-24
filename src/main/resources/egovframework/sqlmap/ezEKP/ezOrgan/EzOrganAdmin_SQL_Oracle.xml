@@ -75,6 +75,15 @@
 		<result property="extensionAttribute4" 					column="extensionAttribute4" 			columnIndex="2"/>	
 	</resultMap>
 	
+	<resultMap id="exportUserInfo" class="OrganUserVO">
+		<result property="cn" 									column="cn" 							columnIndex="1"/>
+		<result property="displayName" 							column="displayName"					columnIndex="2"/>
+		<result property="description" 							column="description" 					columnIndex="3"/>
+		<result property="mail" 								column="mail" 							columnIndex="4"/>
+		<result property="title" 								column="title" 							columnIndex="5"/>
+		<result property="extensionAttribute10" 				column="extensionAttribute10" 			columnIndex="6"/>
+	</resultMap>
+	
 	<!-- <procedure id="EzOrganAdminDAO.insertDBData_company" parameterClass="Map">
 		<![CDATA[
 			{CALL EZSP_INSERTDBDATA_COMPANY(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_LDAPPATH#)}
@@ -7341,5 +7350,35 @@
 			AND 
 				TENANT_ID = #tenantId#
 		]]>
+	</select>
+	
+	<select id="EzOrganAdminDAO.getExportUserList" parameterClass="Map" resultMap="exportUserInfo">
+			SELECT       
+				CN,         
+				CASE       WHEN #primary# = '1'       THEN DISPLAYNAME          ELSE DISPLAYNAME2     		 END displayName,         
+				CASE       WHEN #primary# = '1'       THEN DESCRIPTION          ELSE DESCRIPTION2      		 END description,        
+				MAIL,
+				CASE       WHEN #primary# = '1'       THEN TITLE                ELSE TITLE2       			 END TITLE,       
+				CASE       WHEN #primary# = '1'       THEN EXTENSIONATTRIBUTE10 ELSE EXTENSIONATTRIBUTE11    END EXTENSIONATTRIBUTE10    
+			FROM      
+				TBL_USERMASTER     
+			WHERE     
+			<![CDATA[
+					CN <> 'masteradmin'     
+			]]>
+			<isNotEmpty property="companyId">
+				AND      
+					PHYSICALDELIVERYOFFICENAME = #companyId#     
+			</isNotEmpty>
+				AND      
+					TENANT_ID = #tenantId#
+				AND      
+					CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
+				AND      
+					DEPARTMENT NOT LIKE 'shared_mailbox%' 
+				AND 
+					DEPARTMENT NOT IN (SELECT CN FROM TBL_DEPTMASTER WHERE DEPT_CD_PATH LIKE '%trash_dept%') 
+			ORDER BY      
+				PHYSICALDELIVERYOFFICENAME, DEPARTMENT, EXTENSIONATTRIBUTE15, DISPLAYNAME
 	</select>
 </sqlMap>

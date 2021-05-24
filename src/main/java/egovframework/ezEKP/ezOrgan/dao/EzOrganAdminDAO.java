@@ -2183,6 +2183,11 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     public OrganJobVO getTitleInfo(Map<String, Object> map) throws Exception {
 		return (OrganJobVO) select("EzOrganAdminDAO.selectTitleInfo", map);
 	}
+    
+	@SuppressWarnings("unchecked")
+	public List<OrganUserVO> getExportUserList(Map<String, Object> map) {
+		return (List<OrganUserVO>)list("EzOrganAdminDAO.getExportUserList", map);
+	}
 	
 	public void updateTitle(Map<String, Object> map) throws Exception {
 		update("EzOrganAdminDAO.updateTitle", map);

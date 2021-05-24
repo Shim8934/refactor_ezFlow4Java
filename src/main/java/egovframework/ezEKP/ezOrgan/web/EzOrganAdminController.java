@@ -5176,4 +5176,88 @@ public class EzOrganAdminController extends EgovFileMngUtil {
  		logger.debug("configEmailAdd ended.");
  		return "admin/ezOrgan/configEmailAdd";
  	}
+ 	
+ 	/*
+ 	 * 관리자 > 조직도 > 엑셀내려받기
+ 	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/admin/ezOrgan/exportFileLogs.do", method = RequestMethod.POST)
+	@ResponseBody
+	public JSONObject exportFileLogs(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response, Locale locale) throws Exception {
+		logger.debug("ezOrgan exportFileLogs start");
+		// 기능 확장 시 쓸 수 있음. (선택한 부서부터) 
+//		String selectedId     = request.getParameter("selectedId") != null ? request.getParameter("selectedId") : "";	
+//		logger.debug("selectedId: " + selectedId);
+
+ 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+ 		JSONObject result = new JSONObject();
+ 		String rollInfo = userInfo.getRollInfo();
+ 		boolean isRollC = rollInfo.indexOf("c=1") > -1;		// c:전체
+ 		boolean isRollK = rollInfo.indexOf("k=1") > -1;		// k:회사
+ 		//관리자 권한 체크 
+ 		if (!isRollC && !isRollK) {	
+			result.put("status", "error");
+			result.put("code", 2);
+			return result;
+ 		}
+   		
+		try {
+			String primary   = userInfo.getPrimary();
+			String companyId = isRollC? "" : userInfo.getCompanyID();
+			int tenantId     = userInfo.getTenantId();
+			
+			List<OrganUserVO> exportUserlist = ezOrganAdminService.getExportUserList(primary, companyId, tenantId);
+			String realPath              = request.getServletContext().getRealPath("");
+			String pDirPath              = commonUtil.getUploadPath("upload_ezOrgan.ROOT", tenantId) + commonUtil.separator;
+			pDirPath                     = realPath + pDirPath + "temp" + commonUtil.separator;
+			String excelPath             = ezOrganAdminService.createExcelUsers(realPath + commonUtil.separator, pDirPath, exportUserlist, primary, locale);
+			
+			if (excelPath.equals("")) {
+				result.put("status", "error");
+				result.put("code", 1);
+				return result;
+			}
+			
+			result.put("status", "ok");
+			result.put("path", excelPath);
+			result.put("code", 0);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+		}
+		
+		logger.debug("ezOrgan exportFileLogs end");
+		return result;
+	}
+	
+	@RequestMapping(value="/admin/ezOrgan/downloadExcel.do", method = RequestMethod.GET)
+	public void downloadExcelReport(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("downloadExcelReport start");
+		String fileName     = request.getParameter("fileName") != null ? request.getParameter("fileName") : "";
+		String serverName   = request.getServerName()     	   != null ? request.getServerName()     	  : "";
+		String userAgent    = request.getHeader("User-Agent")  != null ? request.getHeader("User-Agent")  : "";
+		
+		logger.debug("serverName: " + serverName + " || File Name: " + fileName + " || UserAgent: " + userAgent);
+		
+		if (serverName.equals("") || fileName.equals("")) {
+			logger.debug("downloadAttach illegal arguments!");
+			return;
+		}
+		
+		//Get absolute path of the application
+		String realPath  = request.getServletContext().getRealPath("");
+ 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+ 		int tenantId     = userInfo.getTenantId();
+		
+		try {
+			ezOrganAdminService.getExcelFile(fileName, realPath, userAgent, response, tenantId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("downloadExcelReport end");
+	}
+	
 }
