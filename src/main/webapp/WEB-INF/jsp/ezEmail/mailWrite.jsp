@@ -2365,8 +2365,8 @@
 	                        </li>
 	                        <c:if test="${useOnlyInnerMail != 'YES' && shareId == null}">
 	                        	<li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;cursor:default; display:none;"><img src="/images/pbar.gif"></li>
-	                        	<li class="sel" style="background:none; border:none; padding:0px;">
-		                            <select style="vertical-align:top;" onchange="ChangeSenderName(this);">
+	                        	<li class="sel" style="background:none; border:none; padding:0px; width: 110px; ">
+		                            <select style="vertical-align:top; width: 100%; " onchange="ChangeSenderName(this);">
 		                            ${mailSendObject}
 		                            </select>
 		                        </li>

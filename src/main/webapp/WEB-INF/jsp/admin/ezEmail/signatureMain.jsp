@@ -213,6 +213,8 @@
 	        			searchMode = true;
 	        			$("#signList *").remove();
 	        			makeSignatureList(data.responseJSON);
+	        			window.frames.signPreViewIframe.document.body.innerHTML = "";
+	        			$(".signPreViewTxt").css("display", "block");
 	        	    }
 	        	});
 	        	searchMode = false;

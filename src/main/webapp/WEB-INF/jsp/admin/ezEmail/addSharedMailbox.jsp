@@ -407,7 +407,7 @@
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : true,
 		        	data : {
-		        		search : document.getElementById("search_type").value + "::" + document.getElementById("keyword").value, 
+		        		search : document.getElementById("search_type").value + "::" + encodeURIComponent(document.getElementById("keyword").value), 
 		        		cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value, 
 		        		prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;usertype", 
 		        		type : "user"

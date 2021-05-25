@@ -579,7 +579,7 @@
 				}
 				
 				leftPanelProcess();
-				DivPopUpShow(450, 250, "/admin/ezWebFolder/deleteFolderConfirm.do?folderId=" + selectedFolder);
+				DivPopUpShow(450, 180, "/admin/ezWebFolder/deleteFolderConfirm.do?folderId=" + selectedFolder);
 			}
 			
 			function updateTarget(value) {

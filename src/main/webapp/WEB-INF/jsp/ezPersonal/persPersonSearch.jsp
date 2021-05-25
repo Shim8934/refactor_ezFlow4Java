@@ -557,7 +557,7 @@
 					method : 'POST',
 					dataType : "text",
 					data : {
-						search : document.getElementById("search_type").value + "::" + keyword.value,
+						search : document.getElementById("search_type").value + "::" + encodeURIComponent(keyword.value),
 						cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value,
 						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;userType",
 						page : CurPage ,
@@ -622,7 +622,7 @@
 					method : 'POST',
 					dataType : "text",
 					async : false,
-					data : {search : "displayname::" + document.all("deptkeyword").value, 
+					data : {search : "displayname::" + encodeURIComponent(document.all("deptkeyword").value), 
 					    cell : "extensionAttribute3;displayname;extensionAttribute9;", 
 					    prop : "", 
 		        	    <c:if test="${useShowAllCompanies eq 'YES'}">

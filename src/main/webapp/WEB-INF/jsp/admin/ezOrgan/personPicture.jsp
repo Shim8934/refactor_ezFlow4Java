@@ -142,14 +142,26 @@
 			            alert("<spring:message code='ezOrgan.x0001' />");
 			        }
 	            	
-		            var fd = new FormData();		            
-		            fd.append("file1", document.getElementById("form").file1.files[0]);
-		          
-		            xhr = new XMLHttpRequest();
-		            xhr.addEventListener("load", uploadComplete, false);
-		            imageName = document.getElementById("form").file1.files[0].name;
-		            xhr.open("POST", "/admin/ezOrgan/signImageUpload.do?mode=PICTURE&userID=" + RetValue);
-		            xhr.send(fd);
+	            	var file1val = document.getElementById("file1").value;
+					var exIndex = file1val.lastIndexOf('.');
+				    var extension = file1val.substring(exIndex+1, file1val.length);
+				    var check = false;
+				    check = compareExtension(check, extension);
+				    
+				    if (!check) {
+		    		    alert("<spring:message code='ezPersonal.t206'/>" + " <spring:message code='ezPersonal.t200'/>");
+		        		document.getElementById("file1").value = "";
+		    		} else {
+			            var fd = new FormData();		            
+			            fd.append("file1", document.getElementById("form").file1.files[0]);
+			          
+			            xhr = new XMLHttpRequest();
+			            xhr.addEventListener("load", uploadComplete, false);
+			            imageName = document.getElementById("form").file1.files[0].name;
+			            xhr.open("POST", "/admin/ezOrgan/signImageUpload.do?mode=PICTURE&userID=" + RetValue);
+			            xhr.send(fd);
+		    		}
+	            	
 	            }
 	        }
 			
@@ -277,7 +289,7 @@
 		    		<input id=imagefile name=imagefile style=" WIDTH: 247px" readonly="readonly" />
 		    		<iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 		    		<form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm" >
-		  				<input type="file" name="file1" id="file1" style="width: 1px; height: 1px; display:none;" onchange="imgtemp_onclick()" multiple="false"/>
+		  				<input type="file" name="file1" id="file1" style="width: 1px; height: 1px; display:none;" onchange="imgtemp_onclick()" multiple="false" accept="image/*"/>
 		    			<input type="hidden" name="mode" id="mode" />
 		    			<input type="hidden" name="tempFilePath" id="tempFilePath" />
 		    		</form>

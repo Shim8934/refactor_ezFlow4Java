@@ -112,24 +112,11 @@
                 var objNode;
                 
                 createNodeInsert(xmlpara, objNode, "DATA");
-                createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptId);
-
-                <c:choose>
-                <c:when test="${useShowAllCompanies eq 'YES'}">
-                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top/organ");
-                </c:when>
-                <c:otherwise>
-                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
-                </c:otherwise>
-                </c:choose>
-                
-                createNodeAndInsertText(xmlpara, objNode, "PROP", "");
-//                 if(window.opener.$("#companyList option[value=" + companyId + "]") != null && 
-//                 		window.opener.$("#companyList option[value=" + companyId + "]").text().length > 0){
-// 	                createNodeAndInsertText(xmlpara, objNode, "ADMINCHK", "true");
-//                 }
-/*                 createNodeAndInsertText(xmlpara, objNode, "ADMINDIST", "true");
-                createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true"); */
+                createNodeAndInsertText(xmlpara, objNode, "DEPTID", companyId);
+                createNodeAndInsertText(xmlpara, objNode, "TOPID", companyId);
+                createNodeAndInsertText(xmlpara, objNode, "PROP", "mail");
+                createNodeAndInsertText(xmlpara, objNode, "ADMINDIST", "true");
+                createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true");
 	            xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	            xmlHTTP.send(xmlpara);
 	            ListTypeChangeIcon();
@@ -491,7 +478,7 @@
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : true,
 		        	data : {
-		        		search : document.all("search_type").value + "::" + document.all("keyword").value, 
+		        		search : document.all("search_type").value + "::" + encodeURIComponent(document.all("keyword").value), 
 		        		cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value, 
 		        		prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department", 
 		        		<c:if test="${useShowAllCompanies eq 'YES'}">
@@ -563,7 +550,7 @@
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : false,
 		        	data : {
-		        		search : "displayname::" + searchWord, 
+		        		search : "displayname::" + encodeURIComponent(searchWord), 
 		        		cell : "extensionAttribute3;displayName;extensionAttribute9;", 
 		        		prop : "cn", 
 		        		type : "group"

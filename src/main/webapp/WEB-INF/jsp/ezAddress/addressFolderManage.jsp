@@ -8,6 +8,7 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="${util.addVer('ezAddress.e2', 'msg')}" type="text/css">
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 	    <style>
 	    	.tree div div{
@@ -52,9 +53,26 @@
 	            }
 	            else {
 	                window.returnValue = 0;
+	                window.ReturnFunction(ReturnValue);
 	                window.close();
 	            }
 	        }
+	        
+	        function LoadAddressTree1() {
+	        	$.ajax({
+	        		type : "GET",
+	        		url : "/ezAddress/getRootAddressXML.do",
+	        		dataType : "text",
+	        		success : function(data) {
+	        			document.getElementById("AddressFolderXML").innerHTML = data;
+	        			LoadAddressTree();
+	        		}, error : function(ee) {
+	        			alert("error: " + ee.statusText);
+	        		}
+	        	});
+
+	        }
+	        
 	        var AddressTreeView = null;
 	        function LoadAddressTree() {
 	            if (AddressTreeView == null) {
@@ -177,12 +195,13 @@
 	            else {
 	                alert("<spring:message code='ezAddress.t153' />");
 	                
-	                window.location.reload();
-// 	                LoadAddressTree();
+	                //window.location.reload();
 	                if (ReturnFunction!=null)
 	                    ReturnValue = 1;
 	                else
 	                    window.returnValue = 1;
+
+	                LoadAddressTree1();
 	            }
 	        }
 	        function modify_onclick() {
@@ -256,12 +275,13 @@
 	            else {
 	                alert("<spring:message code='ezAddress.t158' />");
 	                
-	                window.location.reload();
-// 	                LoadAddressTree();
+	                //window.location.reload();
 	                if (ReturnFunction!=null)
 	                    ReturnValue = 1;
 	                else
 	                    window.returnValue = 1;
+	                
+ 	                LoadAddressTree1();
 	            }
 	        }
 	        function delete_onclick() {
@@ -309,12 +329,13 @@
 	                else {
 	                    alert("<spring:message code='ezAddress.t165' />");
 	                    
-	                    window.location.reload();
-//	 	                LoadAddressTree();
+	                    //window.location.reload();
 	                    if (ReturnFunction!=null)
 	                        ReturnValue = 1;
 	                    else
 	                        window.returnValue = 1;
+	                    
+	 	                LoadAddressTree1();
 	                }
 	            }
 	        }
@@ -374,12 +395,13 @@
 	                else {
 	                    alert("<spring:message code='ezAddress.t172' />");
 	                    
-	                    window.location.reload();
-//	 	                LoadAddressTree();
+	                    //window.location.reload();
 	                    if (CrossYN())
 	                        ReturnValue = 1;
 	                    else
 	                        window.returnValue = 1;
+	                    
+	 	                LoadAddressTree1();
 	                }
 	            }
 	        }
@@ -409,12 +431,13 @@
 	            else {
 	                alert("<spring:message code='ezAddress.t172' />");
 	                
-	                window.location.reload();
-// 	                LoadAddressTree();
+	                //window.location.reload();
 	                if (ReturnFunction!=null)
 	                    ReturnValue = 1;
 	                else
 	                    window.returnValue = 1;
+	                
+ 	                LoadAddressTree1();
 	            }
 	        }
 	        function get_length(chkstr) {

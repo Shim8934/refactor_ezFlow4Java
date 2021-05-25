@@ -214,6 +214,7 @@
 		    	
 		    	if (g_moveUrl == 'receiveChk') {
 		    		document.getElementById("reply").style.display = "none";
+		    		document.getElementById("replyMenu").style.display = "none";
 		    		document.getElementById("toggle_flag_btn").style.display = "none"; 
 		    		document.getElementById("read_stat").style.display = "none";
 		    		document.getElementById("unread_stat").style.display = "none";
@@ -237,6 +238,7 @@
 		            case "sent":
 		                receivecheck.style.display = "";
 		                reply.style.display = 'none';
+		                replyMenu.style.display = 'none';
 		                p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile2.xml";
 		                p_ListOrderby = "http://schemas.microsoft.com/exchange/date-iso";
 		                p_Listoption = "2";
@@ -245,6 +247,7 @@
 		                break;
 		            case "draft":
 		                reply.style.display = 'none';
+		                replyMenu.style.display = 'none';
 		                p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile2.xml";
 		                p_ListOrderby = "http://schemas.microsoft.com/exchange/date-iso";
 		                p_Listoption = "2";
