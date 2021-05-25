@@ -15,6 +15,14 @@ import egovframework.let.user.login.vo.TenantVO;
 
 public interface EzCommonService {
 
+	public enum Device {
+		PC, MOBILE;
+
+		public boolean isMobile() {
+			return this == MOBILE;
+		}
+	}
+
 	public String startHtml2Mht(String strHTML, String realPath, Locale locale) throws Exception;
 	
 	public String getMHTtoHTML(String type, String itemID, int tenantID, String realPath, HttpServletRequest request, Locale locale, String scheme) throws Exception;
@@ -63,11 +71,11 @@ public interface EzCommonService {
 
 	public void deleteCompanyConfig(int tenantId, String companyId, String propertyName) throws Exception;
 	
-	public void setMultiLoginUser(int tenantID, String userID, String loginTime) throws Exception;
+	public void setMultiLoginUser(int tenantID, String companyId, String userID, String loginTime, Device deviceType) throws Exception;
 	
-	public String selectMultiLoginTime(int tenantID, String userID) throws Exception;
+	public String selectMultiLoginTime(int tenantID, String companyId, String userID, Device deviceType) throws Exception;
 	
-	public boolean matchMultiLoginTime(int tenantID, String userID, String loginTime) throws Exception;
+	public boolean matchMultiLoginTime(int tenantID, String companyId, String userID, String loginTime, Device deviceType) throws Exception;
 	
 	public void createTblUserMultiLogin() throws Exception;
 
@@ -274,6 +282,8 @@ public interface EzCommonService {
 	public void createTblYearlyDocCount() throws Exception;
 
 	public void insertChartPortletInfo() throws Exception;
+
+	void addTblUserMultiLoginMobileFlagColumn() throws Exception;
 	
 	public void createMailTemplateSequence() throws Exception;
 
@@ -284,6 +294,8 @@ public interface EzCommonService {
 	public void addWebfolderUserFolderManagerColumn() throws Exception;
 	
 	public void createWebfolderFileUserTable();
+	
+	public void insertApprContainterConfig() throws Exception;
 	
 	// webfolder
 	public List<String> getPermissionGroupIdListOfUser(String userId, String deptId, String companyId, int tenantId) throws Exception;

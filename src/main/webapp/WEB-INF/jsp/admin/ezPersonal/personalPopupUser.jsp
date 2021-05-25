@@ -51,7 +51,7 @@
 	    <script>
 	        var cn = "${cn}";
 	        var ua = navigator.userAgent.toLowerCase();
-	        var browserIE = (ua.indexOf("msie") != -1) ? true : false;
+	        var browserIE = (ua.indexOf("msie") != -1) || (ua.indexOf("trident") != -1) ? true : false;
 	        var pListType = "TXT";
 	        var pListXML_Info = null;
 	        var strLang1 = "<spring:message code='ezEmail.t10001' />";
@@ -427,8 +427,13 @@
 	        function search_press() {
 	            if (window.event.keyCode == "13") {
 	                search_click();
-	                event.cancelBubble = true;
-	                event.returnValue = false;
+	                window.event.cancelBubble = true;
+	                if (browserIE) {
+	                	event.preventDefault();	
+	                }
+	                else {
+	                	event.returnValue = false;
+	                }
 	            }
 	        }
 	

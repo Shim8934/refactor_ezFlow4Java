@@ -1731,6 +1731,23 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		   update("EzCommonDAO.updateScheduleMailNotiConfig");
 	   }
     }
+	
+	//전자결재 양식별문서함, 분류코드문서함 컨피그 추가
+	public void insertApprContainterConfig(Map<String, Object> map) {
+		map.put("property", "USEAPPRFORMCONT");
+		String useApprFormCont = (String) select("EzCommonDAO.getTenantConfig", map);
+		if (useApprFormCont == null) {
+			logger.debug("useApprFormCont tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertApprFormCont", map);
+		}
+		
+		map.put("property", "USEAPPRCODECONT");
+		String useApprCodeCont = (String) select("EzCommonDAO.getTenantConfig", map);
+		if (useApprCodeCont == null) {
+			logger.debug("useApprCodeCont tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertApprCodeCont", map);
+		}
+	}
 
 	public void createTblYearlyDocCount() throws Exception {
 		try {
@@ -1761,6 +1778,18 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			}
 		}
 
+	}
+
+	public void addTblUserMultiLoginMobileFlagColumn() {
+		try {
+			select("EzCommonDAO.checkTblUserMultiLoginMobileFlagColumn");
+		} catch (Exception e) {
+			logger.debug("tbl_user_multilogin mobile_flag column doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addTblUserMultiLoginMobileFlagColumn");
+			update("EzCommonDAO.dropTblUserMultiLoginPrimaryKey");
+			update("EzCommonDAO.addTblUserMultiLoginPrimaryKey");
+		}
 	}
 
 	public void createMailTemplateSequence() throws Exception {
