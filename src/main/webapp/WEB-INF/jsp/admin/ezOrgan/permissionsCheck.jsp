@@ -975,7 +975,7 @@
 		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : false,
-		        	data : {search : "displayname::" + document.all("deptkeyword").value, cell : "extensionAttribute3;displayname;extensionAttribute9;", prop : "cn", type : 'group', adminOrgan : "y", noAddJob : "Y"},
+		        	data : {search : "displayname::" + encodeURIComponent(document.all("deptkeyword").value), cell : "extensionAttribute3;displayname;extensionAttribute9;", prop : "cn", type : 'group', adminOrgan : "y", noAddJob : "Y"},
 		        	success : function(xml){	
 		        		result=loadXMLString(xml);
 		        		xmlDOM = result;
@@ -1082,7 +1082,7 @@
 		        	type : "POST",
 		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",		        	
-		        	data : {search : document.getElementById("search_type").value + "::" + document.getElementById("keyword").value, cell : "company;description;displayname;title;telephonenumber;" + document.getElementById("search_type").value, 
+		        	data : {search : document.getElementById("search_type").value + "::" + encodeURIComponent(document.getElementById("keyword").value), cell : "company;description;displayname;title;telephonenumber;" + document.getElementById("search_type").value, 
 		        			prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;extensionAttribute1;userType", type : "user", adminOrgan : "y", noAddJob : "Y"},
 		        	success : function(xml){
 		        		result=loadXMLString(xml);

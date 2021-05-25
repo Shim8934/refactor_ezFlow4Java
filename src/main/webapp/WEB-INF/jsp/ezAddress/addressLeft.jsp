@@ -343,16 +343,24 @@
 	        }
 	        function address_foldermanage_Complete(ret) {
 	            if (ret != undefined) {
-	            	try {
-	            		var xmlHTTP = createXMLHttpRequest();
-			            xmlHTTP.open("GET", "/ezAddress/getRootAddressXML.do", false);
-			            xmlHTTP.send();
-		            	
-			            document.getElementById("AddressFolderXML").innerHTML = xmlHTTP.responseText;
-		            	LoadAddressTree();
-					} catch (e) {
-						console.log(e);
-					}
+	            	$.ajax({
+	            		type : "GET",
+	            		url : "/ezAddress/getRootAddressXML.do",
+	            		dataType : "text",
+	            		success : function(data) {
+	            			document.getElementById("AddressFolderXML").innerHTML = data;
+	     	            	LoadAddressTree();
+	            		}, error : function(ee) {
+	            			alert("error: " + ee.statusText);
+	            		}
+	            	});
+	            	
+	            	/* var xmlHTTP = createXMLHttpRequest();
+		            xmlHTTP.open("GET", "/ezAddress/getRootAddressXML.do", false);
+		            xmlHTTP.send();
+	            	
+		            document.getElementById("AddressFolderXML").innerHTML = xmlHTTP.responseText;
+	            	LoadAddressTree(); */
 	            }
 	        }
 	        function address_Search() {

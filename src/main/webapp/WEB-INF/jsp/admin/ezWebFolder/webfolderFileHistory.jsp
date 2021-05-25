@@ -585,7 +585,7 @@
 						</td>
 					</tr>
 					<tr>
-						<th class="wfSearchTh"><spring:message code='ezWebFolder.t154'/></th>
+						<th class="wfSearchTh"><spring:message code='ezWebFolder.t339'/></th>
 						<td class="wfSearchTd">
 							<input id="fileCreatorVal" type="text" style="height: 23px;width: 99%">
 						</td>
