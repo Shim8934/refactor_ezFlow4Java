@@ -528,6 +528,7 @@
        			<a class ="imgbtn" onClick="ButtonChangeClick()" name="ButtonChange"  id="ButtonChange" ><span><spring:message code='ezPersonal.t34'/></span></a>
        			<a class="imgbtn" name="Submit2" onClick="window.location.href='/ezPersonal/changePersonInfo.do'"><span><spring:message code='ezPersonal.t13'/></span></a>
     		</div>    		
+    		<c:if test="${ezOffice365Auth == 'NO' }">
     		<h2><spring:message code='ezPersonal.t185'/></h2>
     		<div>▒ <spring:message code='ezPersonal.t186'/></div>
     		<div style="margin-top:3px">${pwPolicyExplain }</div> 		
@@ -550,6 +551,7 @@
         		<a class="imgbtn" onclick="return PassWordChange()"><span><spring:message code='ezPersonal.t34'/></span></a>
         		<a class="imgbtn" name="Submit2" onClick="window.location.href='/ezPersonal/changePersonInfo.do'"><span><spring:message code='ezPersonal.t13'/></span></a>
     		</div>
+    		</c:if>
 		</form>
 	<br/>
 	<br/>
