@@ -1015,7 +1015,7 @@
 		<div id="normalScreen">
   			<div id="menu">
     			<ul>
-      				<li><span onClick="Listprint()"><spring:message code='ezPersonal.t1005'/></span></li>
+      				<li><span class="icon16 popup_icon16_print" onClick="Listprint()"></span></li>
     			</ul>
   			</div>
   			<div id="close">

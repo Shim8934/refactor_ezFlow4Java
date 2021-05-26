@@ -97,7 +97,7 @@
 			<div id="normalScreen">
 			    <div id="menu" style="margin-top:7px;margin-bottom:19px;">
 					<ul>
-			        	<li><span onClick="window.print()"><spring:message code='main.t73' /></span></li>
+			        	<li><span class="icon16 popup_icon16_print" onClick="window.print()"></span></li>
 					</ul>
 			    </div>
 			    <div id="close">

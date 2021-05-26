@@ -631,6 +631,11 @@ function AprLineAddDept(nodeIdx, tr) {
         SetAttribute(objTr, "id", "lvRECEPTLIST" + "_TR_" + eval(MaxID + 1));
         listview.AddDataRow(objTr, Resultxml.documentElement.getElementsByTagName("ROW")[0]);
     }
+    
+    if (useReceiveInfoName == '0') {
+    	document.getElementById("btnaddressChange").style.display = "none";
+    }
+    
     //DeptAddIndex = DeptAddIndex + 1;
 }
 //#############################################################################################################################################수신처 사용자 수신 추가
@@ -2293,7 +2298,11 @@ function AprLineAddDeptAddress(AddressName) {
     }
 
     DeptAddIndex = DeptAddIndex + 1;
-
+    
+    if (useReceiveInfoName == '0') {
+	    document.getElementById("btnaddressChange").style.display = "";
+	}
+	
     return true;
 }
 /******************************모두추가/모두제거/추가/제거 버튼 관련 function******************************/

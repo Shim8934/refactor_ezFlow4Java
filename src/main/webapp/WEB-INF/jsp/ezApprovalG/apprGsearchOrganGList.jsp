@@ -8,6 +8,7 @@
     <title><spring:message code='ezApprovalG.t1236'/></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 <link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
 <script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -42,6 +43,14 @@
                     RetValue = window.dialogArguments;
                 }
             }
+            
+            var timer = setInterval(function() {
+    			if($('#OuterOrganSearchResult_TH').length > 0) {
+		            $('#OuterOrganSearchResult_TH_0').prop('width', '35%');
+		            $('#OuterOrganSearchResult_TH_1').prop('width', '65%');
+    				clearInterval(timer);
+    			}
+    		}, 100);
         }
         var xmlhttpSearch = null;
         function GetSearchList() {
@@ -277,7 +286,7 @@
     </div>
     <span>▒ <spring:message code='ezApprovalG.bhs02'/></span>
     <div style="width: 100%; overflow: AUTO; height: 474px; margin-top:5px;" id="divList">
-        <div id="lvOuterOrganList" style="height: 480px;"></div>
+        <div id="lvOuterOrganList" style="height: 100%;"></div>
     </div>
     <div class="btnpositionNew">
         <a class="imgbtn" onclick="return btnsearchDept_onClick()"><span><spring:message code='ezApprovalG.t900001'/></span></a>
