@@ -2300,12 +2300,13 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		//Process first row
 		Row rowhead1 = sheet1.createRow(0);
 		
-		rowhead1.createCell(0).setCellValue(egovMessageSource.getMessage("ezAttitude.t218", locale).trim());
-		rowhead1.createCell(1).setCellValue(egovMessageSource.getMessage("ezOrgan.t67", locale).trim());
-		rowhead1.createCell(2).setCellValue(egovMessageSource.getMessage("ezOrgan.t68", locale).trim());
-		rowhead1.createCell(3).setCellValue(egovMessageSource.getMessage("ezPersonal.t75", locale).trim());
-		rowhead1.createCell(4).setCellValue(egovMessageSource.getMessage("ezOrgan.t69", locale).trim());
-		rowhead1.createCell(5).setCellValue(egovMessageSource.getMessage("ezOrgan.t1500", locale).trim());
+		rowhead1.createCell(0).setCellValue(egovMessageSource.getMessage("ezPersonal.t67", locale).trim());
+		rowhead1.createCell(1).setCellValue(egovMessageSource.getMessage("ezOrgan.t68", locale).trim());
+		rowhead1.createCell(2).setCellValue(egovMessageSource.getMessage("ezAttitude.t218", locale).trim());
+		rowhead1.createCell(3).setCellValue(egovMessageSource.getMessage("ezOrgan.t67", locale).trim());
+		rowhead1.createCell(4).setCellValue(egovMessageSource.getMessage("ezPersonal.t75", locale).trim());
+		rowhead1.createCell(5).setCellValue(egovMessageSource.getMessage("ezOrgan.t69", locale).trim());
+		rowhead1.createCell(6).setCellValue(egovMessageSource.getMessage("ezOrgan.t1500", locale).trim());
 		
 		rowhead1.getCell(0).setCellStyle(centerStyle);
 		rowhead1.getCell(1).setCellStyle(centerStyle);
@@ -2313,6 +2314,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		rowhead1.getCell(3).setCellStyle(centerStyle);
 		rowhead1.getCell(4).setCellStyle(centerStyle);
 		rowhead1.getCell(5).setCellStyle(centerStyle);
+		rowhead1.getCell(6).setCellStyle(centerStyle);
 		
 		int i = 1;
 		
@@ -2320,12 +2322,13 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		for (OrganUserVO exportUser : exportUserlist) {
 			Row newRow1 = sheet1.createRow(i);
 			
-			newRow1.createCell(0).setCellValue(exportUser.getCn());
-			newRow1.createCell(1).setCellValue(exportUser.getDisplayName());
-			newRow1.createCell(2).setCellValue(exportUser.getDescription());
-			newRow1.createCell(3).setCellValue(exportUser.getMail());
-			newRow1.createCell(4).setCellValue(exportUser.getTitle());
-			newRow1.createCell(5).setCellValue(exportUser.getExtensionAttribute10());
+			newRow1.createCell(0).setCellValue(exportUser.getCompany());
+			newRow1.createCell(1).setCellValue(exportUser.getDescription());
+			newRow1.createCell(2).setCellValue(exportUser.getCn());
+			newRow1.createCell(3).setCellValue(exportUser.getDisplayName());
+			newRow1.createCell(4).setCellValue(exportUser.getMail());
+			newRow1.createCell(5).setCellValue(exportUser.getTitle());
+			newRow1.createCell(6).setCellValue(exportUser.getExtensionAttribute10());
 			
 			newRow1.getCell(0).setCellStyle(centerStyle2);
 			newRow1.getCell(1).setCellStyle(centerStyle2);
@@ -2333,16 +2336,18 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			newRow1.getCell(3).setCellStyle(centerStyle2);
 			newRow1.getCell(4).setCellStyle(centerStyle2);
 			newRow1.getCell(5).setCellStyle(centerStyle2);
+			newRow1.getCell(6).setCellStyle(centerStyle2);
 			
 			i++;
 		}
 		
 		sheet1.setColumnWidth(0, ((int)(15 * 1.14388)) * 256);
-		sheet1.setColumnWidth(1, ((int)(15 * 1.14388)) * 256);
-		sheet1.setColumnWidth(2, ((int)(25 * 1.14388)) * 256);
-		sheet1.setColumnWidth(3, ((int)(45 * 1.14388)) * 256);
-		sheet1.setColumnWidth(4, ((int)(15 * 1.14388)) * 256);
+		sheet1.setColumnWidth(1, ((int)(25 * 1.14388)) * 256);
+		sheet1.setColumnWidth(2, ((int)(15 * 1.14388)) * 256);
+		sheet1.setColumnWidth(3, ((int)(15 * 1.14388)) * 256);
+		sheet1.setColumnWidth(4, ((int)(45 * 1.14388)) * 256);
 		sheet1.setColumnWidth(5, ((int)(15 * 1.14388)) * 256);
+		sheet1.setColumnWidth(6, ((int)(15 * 1.14388)) * 256);
 		
 //		sheet1.autoSizeColumn(0);
 		

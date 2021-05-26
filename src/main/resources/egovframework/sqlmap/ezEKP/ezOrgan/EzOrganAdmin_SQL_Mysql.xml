@@ -78,12 +78,13 @@
 	</resultMap>
 	
 	<resultMap id="exportUserInfo" class="OrganUserVO">
-		<result property="cn" 									column="cn" 							columnIndex="1"/>
-		<result property="displayName" 							column="displayName"					columnIndex="2"/>
-		<result property="description" 							column="description" 					columnIndex="3"/>
-		<result property="mail" 								column="mail" 							columnIndex="4"/>
-		<result property="title" 								column="title" 							columnIndex="5"/>
-		<result property="extensionAttribute10" 				column="extensionAttribute10" 			columnIndex="6"/>
+		<result property="company" 								column="company" 						columnIndex="1"/>
+		<result property="description" 							column="description" 					columnIndex="2"/>
+		<result property="cn" 									column="cn" 							columnIndex="3"/>
+		<result property="displayName" 							column="displayName"					columnIndex="4"/>
+		<result property="mail" 								column="mail" 							columnIndex="5"/>
+		<result property="title" 								column="title" 							columnIndex="6"/>
+		<result property="extensionAttribute10" 				column="extensionAttribute10" 			columnIndex="7"/>
 	</resultMap>
 	
 	<!-- <procedure id="EzOrganAdminDAO.insertDBData_company" parameterClass="Map">
@@ -5485,9 +5486,10 @@
 	
 	<select id="EzOrganAdminDAO.getExportUserList" parameterClass="Map" resultMap="exportUserInfo">
 			SELECT       
+				CASE       WHEN #primary# = '1'       THEN COMPANY          	ELSE COMPANY2     		 	 END COMPANY,         
+				CASE       WHEN #primary# = '1'       THEN DESCRIPTION          ELSE DESCRIPTION2      		 END description,        
 				CN,         
 				CASE       WHEN #primary# = '1'       THEN DISPLAYNAME          ELSE DISPLAYNAME2     		 END displayName,         
-				CASE       WHEN #primary# = '1'       THEN DESCRIPTION          ELSE DESCRIPTION2      		 END description,        
 				MAIL,
 				CASE       WHEN #primary# = '1'       THEN TITLE                ELSE TITLE2       			 END TITLE,       
 				CASE       WHEN #primary# = '1'       THEN EXTENSIONATTRIBUTE10 ELSE EXTENSIONATTRIBUTE11    END EXTENSIONATTRIBUTE10    
