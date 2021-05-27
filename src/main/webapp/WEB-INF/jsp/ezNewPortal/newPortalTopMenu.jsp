@@ -750,6 +750,7 @@
 			var position3Count = 0;
 			var position4Count = 0;
 			var position5Count = 0;
+			var position6Count = 0;
 			
 			if (notiList != null && notiList.length != 0) {
 				for (var i = 0; i < notiList.length; i++) {
