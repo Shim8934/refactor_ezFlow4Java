@@ -216,7 +216,6 @@ public class MLoginGWController {
     						JSONParser parser = new JSONParser();
     						JSONObject resultObj = (JSONObject) parser.parse(getResult);
 
-    						String pin = "";
     						if (Integer.valueOf(String.valueOf(resultObj.get("data"))) > 0) {
     							LOGGER.debug("this device cannot use. userId=" + uid);
     							
@@ -245,7 +244,8 @@ public class MLoginGWController {
     		    				}
     		    				
     		    				// 20210426 조진호 - pin login 처리 부분. 사용자가 입력한 pin과 DB에 저장된 pin 값이 일치하면 pinLoginAuth를 true로 전환
-    		    				String userInputPin = EgovFileScrty.decryptRsa(pk, request.getParameter("encryptPin"));
+    		    				
+    		    				String userInputPin = EgovFileScrty.decryptRsa(pk, request.getParameter("encryptPin") == null ? "" : request.getParameter("encryptPin"));
     		    				userInputPin = EgovFileScrty.encryptPassword(userInputPin, uid);
     		    				String authPin = String.valueOf(resultObj.get("pin"));
     		    				
@@ -257,13 +257,56 @@ public class MLoginGWController {
     					}
     				}
     			}
+    			else {
+    				String deviceId = request.getParameter("deviceID") == null ? "" : request.getParameter("deviceID");
+					
+					if (!deviceId.equals("")) {
+						String inputParams = "userId=" + uid + "&deviceId=" + deviceId;
+						LOGGER.debug("userId=" + uid + ",deviceId=" + deviceId);
+						
+						String requestURL = "/ezTalkGate/getUserMobileDeviceUsedInfo";
+						String getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
+						LOGGER.debug("getResult=" + getResult);
+						
+						JSONParser parser = new JSONParser();
+						JSONObject resultObj = (JSONObject) parser.parse(getResult);
+
+						// 20210426 조진호 - pin login 처리 부분. 사용자가 입력한 pin과 DB에 저장된 pin 값이 일치하면 pinLoginAuth를 true로 전환
+	    				String userInputPin = EgovFileScrty.decryptRsa(pk, request.getParameter("encryptPin") == null ? "" : request.getParameter("encryptPin"));
+	    				userInputPin = EgovFileScrty.encryptPassword(userInputPin, uid);
+	    				
+	    				String pinState = String.valueOf(resultObj.get("pinState"));
+	    				String authPin = String.valueOf(resultObj.get("pin"));
+	    				
+	    				if (pinState.equalsIgnoreCase("Y")) {
+	    					if (!userInputPin.equals("") && !authPin.equals("") && authPin.equals(userInputPin)) {
+		    					pinLoginAuth = true;
+		    					LOGGER.debug("pin Login Auth Successed.");
+		    				}
+	    					else {
+	    						LOGGER.debug("pin Login Auth Failed.");
+	    					}
+	    				}
+	    				else {
+	    					LOGGER.debug("pin Login not useded.");
+	    				}
+	    				
+					}
+    			}
+    			
     			
     			// 사용자 ID를 사용해 로그인하는 경우
     			if (uid.equals(resultVO.getId())) {
     				loginVO.setId(uid);
-					pwd = EgovFileScrty.encryptPassword(rpwd, uid);
-		        	loginVO.setPassword(pwd);
-		            loginVO.setDn("PASSWORD");
+    				
+    				if (pinLoginAuth) { // pinLogin 인증 통과
+    					loginVO.setDn("NOPASSWORD");
+    				}
+    				else {
+    					pwd = EgovFileScrty.encryptPassword(rpwd, uid);
+    		        	loginVO.setPassword(pwd);
+    		            loginVO.setDn("PASSWORD");
+    				}
 		            
 		            // 암호가 맞는 지 확인한다.
 		            resultVO = loginService.selectUser(loginVO);
@@ -506,9 +549,10 @@ public class MLoginGWController {
         					// LoginCookieSSO는 모바일용 쿠키가 아니라 웹버전 연동 쿠키임
         					Map<String, Object> mapSSO = new HashMap<String, Object>();
         					if (!useSSOCookie.trim().isEmpty() && !"NO".equalsIgnoreCase(useSSOCookie)) {
-        						pwd = EgovFileScrty.encryptPassword(rpwd, uid);
-        						mapSSO.put("userPw", rpwd);
-        						mapSSO.put("encryptedUserPw", pwd);
+        						// 20210521 조진호 - loginCookieSSO에서 사용자의 패스워드를 사용 할 이유가 없어 WEB과 동일하게 문자열로 처리
+        						//pwd = EgovFileScrty.encryptPassword(rpwd, uid);
+        						mapSSO.put("userPw","userPw");
+        						mapSSO.put("encryptedUserPw", "encryptedUserPw");
         						mapSSO.put("deptID", resultVO.getDeptID());
         						mapSSO.put("companyID", resultVO.getCompanyID());
         					}

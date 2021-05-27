@@ -177,11 +177,13 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MOptionGWController
 			String pin = EgovFileScrty.decryptRsa(pk, jsonObject.get("pin").toString());
 			pin = EgovFileScrty.encryptPassword(pin, userId);
 			
+			String deviceId = (request.getParameter("deviceID") == null) ? "" : request.getParameter("deviceID");
+			
 			LOGGER.debug("timeZone : " + jsonObject.get("timeZone").toString() + ", lang : " + jsonObject.get("lang").toString() + ", mainType : " + jsonObject.get("mainType").toString()
 					 + ", listCnt : " + jsonObject.get("listCnt").toString() + ", useSecurity : " + jsonObject.get("useSecurity").toString());
 			
 			mOptionService.updateOption(userId, jsonObject.get("timeZone").toString(), jsonObject.get("lang").toString(), jsonObject.get("mainType").toString(), jsonObject.get("listCnt").toString(), 
-					jsonObject.get("useSecurity").toString(), tenantId, "94043aebd77c80b16579002d9dfc5635", jsonObject.get("pinState").toString(), pin,
+					jsonObject.get("useSecurity").toString(), tenantId, deviceId, jsonObject.get("pinState").toString(), pin,
 					jsonObject.get("biometric").toString());
 
 			MOptionVO opt = mOptionService.optionInfo(userId, tenantId);
