@@ -1780,6 +1780,18 @@ public class EzCommonDAO extends EgovAbstractDAO {
 
 	}
 
+	public void addTblUserMultiLoginMobileFlagColumn() {
+		try {
+			select("EzCommonDAO.checkTblUserMultiLoginMobileFlagColumn");
+		} catch (Exception e) {
+			logger.debug("tbl_user_multilogin mobile_flag column doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addTblUserMultiLoginMobileFlagColumn");
+			update("EzCommonDAO.dropTblUserMultiLoginPrimaryKey");
+			update("EzCommonDAO.addTblUserMultiLoginPrimaryKey");
+		}
+	}
+
 	public void createMailTemplateSequence() throws Exception {
 		if (dbType.equalsIgnoreCase("oracle")) {
 			try {

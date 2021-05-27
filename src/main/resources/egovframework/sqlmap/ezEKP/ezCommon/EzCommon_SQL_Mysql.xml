@@ -293,8 +293,8 @@
 	</update>
 	
 	<insert id="EzCommonDAO.insertMultiLoginUser" parameterClass="map">
-		INSERT INTO TBL_USER_MULTILOGIN (TENANT_ID, USER_ID, LOGIN_TIME)
-		VALUES (#tenantID#, #userID#, #loginTime#)
+		INSERT INTO TBL_USER_MULTILOGIN (TENANT_ID, USER_ID, LOGIN_TIME, MOBILE_FLAG)
+		VALUES (#tenantID#, #userID#, #loginTime#, #mobileFlag#)
 	</insert>
 	
 	<delete id="EzCommonDAO.deleteMultiLoginUser" parameterClass="map">
@@ -304,6 +304,9 @@
 			TENANT_ID = #tenantID#
 		AND
 			USER_ID = #userID#
+		<isEqual property="isMobileIntegrated" compareValue="false">
+			AND MOBILE_FLAG = #mobileFlag#
+		</isEqual>
 	</delete>
 	
 	<select id="EzCommonDAO.selectMultiLoginUser" parameterClass="map" resultClass="String">
@@ -315,6 +318,8 @@
 			TENANT_ID = #tenantID#
 		AND
 			USER_ID = #userID#
+		AND
+			MOBILE_FLAG = #mobileFlag#
 	</select>
 	
 	<select id="EzCommonDAO.checkTblUserMultiLogin" resultClass="String">
@@ -3235,6 +3240,35 @@
 			`TENANT_ID` mediumint(5),
 			`COMPANYID` VARCHAR(80)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+
+	<select id="EzCommonDAO.checkTblUserMultiLoginMobileFlagColumn">
+		SELECT
+			MOBILE_FLAG
+		FROM
+			TBL_USER_MULTILOGIN
+		LIMIT 1
+	</select>
+
+	<statement id="EzCommonDAO.addTblUserMultiLoginMobileFlagColumn">
+		ALTER TABLE
+			TBL_USER_MULTILOGIN
+		ADD
+			MOBILE_FLAG TINYINT(1) DEFAULT 0 NOT NULL
+	</statement>
+
+	<statement id="EzCommonDAO.dropTblUserMultiLoginPrimaryKey">
+		ALTER TABLE
+			TBL_USER_MULTILOGIN
+		DROP
+			PRIMARY KEY
+	</statement>
+
+	<statement id="EzCommonDAO.addTblUserMultiLoginPrimaryKey">
+		ALTER TABLE
+			TBL_USER_MULTILOGIN
+		ADD CONSTRAINT
+			TBL_USER_MULTILOGIN_PK PRIMARY KEY (USER_ID, MOBILE_FLAG, TENANT_ID)
 	</statement>
 	
 	<select id="EzCommonDAO.checkJmochaMailboxProgress">
