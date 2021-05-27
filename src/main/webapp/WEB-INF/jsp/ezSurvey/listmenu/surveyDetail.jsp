@@ -1228,6 +1228,54 @@
 			var selectedValue = $("select[name = drdw" + id + "]").val();
 			return selectedValue;
 		}
+		
+		/* 2021-05-27 전자설문 이미지 확대 개선 */
+		$(document).on("mouseenter mouseleave", ".qstnImg", function(event) {
+            event.target.style.backgroundUrl = event.target.src;
+            event.target.style.backgroundRepeat = "no-repeat";
+            
+            // 이미지 파일이 아닌, 다른 첨부로 인한 이미지가 있는 경우 확대 안 시키기 위해!
+            if (event.target.src.indexOf("/images/ezSurvey/pdf.png") != -1) {
+                return;
+            }
+            
+            if (event.type == "mouseenter") {
+                console.log("imgEnter");
+                event.target.style.transform = "translate(150px, 0) scale(4)";
+                event.target.style.opacity = 1;
+                event.target.style.zIndex = 1;
+                event.target.style.transition = "all 0.5s";
+            }
+            else {
+                console.log("imgLeave");
+                event.target.style.transform = "none";
+                event.target.style.zIndex = 0;
+                event.target.style.transition = "all 0.5s";
+            }
+        })
+        
+        $(document).on("mouseenter mouseleave", ".optImg", function(event) {
+            event.target.style.backgroundUrl = event.target.src;
+            event.target.style.backgroundRepeat = "no-repeat";
+            
+            if (event.target.src.indexOf("/images/ezSurvey/pdf.png") != -1) {
+                return;
+            }
+            
+            if (event.type == "mouseenter") {
+                console.log("imgEnter");
+                event.target.style.transform = "translate(50px, -50px) scale(5)";
+                event.target.style.opacity = 1;
+                event.target.style.zIndex = 1;
+                event.target.style.transition = "all 0.5s";
+            }
+            else {
+                console.log("imgLeave");
+                event.target.style.transform = "none";
+                event.target.style.zIndex = 0;
+                event.target.style.transition = "all 0.5s";
+            }
+        })
 	});
 </script>
 </html>
