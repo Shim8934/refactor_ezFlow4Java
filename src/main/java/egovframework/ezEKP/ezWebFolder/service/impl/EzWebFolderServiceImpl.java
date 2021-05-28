@@ -657,9 +657,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				folder.setUpdateDate(timeUTC);
 				
 				int folderIdInt = ezWebFolderAdminService.insertFolder2(folder);
-				if (globals.getProperty("Globals.DbType").equals("mysql")) {
-					folderId = Integer.toString(folderIdInt);
-				}
+				folderId = Integer.toString(folderIdInt);
 			
 				ezWebFolderAdminService.insertFolderUser(ezWebFolderAdminService.getMaxFolderUserSeq(tenantId), dept.getCn(), "dept", folderId, userId, timeUTC, folder.getCompanyId(), tenantId);
 			}

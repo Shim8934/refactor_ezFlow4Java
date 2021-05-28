@@ -111,13 +111,11 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 
 			if (ezWebFolderDAO_y.checkRootFolder(map) == 0) {
 				int folderIdInt = ezWebFolderDAO_y.insertRootFolder(map);
-				if (globals.getProperty("Globals.DbType").equals("mysql")) {
-					map.put("newFolderId", String.valueOf(folderIdInt));
-					map.put("folderUpper", "");
-					LOGGER.debug("folderId:" + folderId + ",folderUpper:" + ",tenantId:" + tenantId);
-					ezWebFolderDAO_y.updateFolderPath(map);
-					folderId = String.valueOf(folderIdInt); 
-				}
+				map.put("newFolderId", String.valueOf(folderIdInt));
+				map.put("folderUpper", "");
+				LOGGER.debug("folderId:" + folderId + ",folderUpper:" + ",tenantId:" + tenantId);
+				ezWebFolderDAO_y.updateFolderPath(map);
+				folderId = String.valueOf(folderIdInt); 
 				
 				if (idMap.get("type").equals("D")) {
 					ezWebFolderAdminService.insertFolderUser(
@@ -1528,6 +1526,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		idSet.addAll(addjobList);
 		idSet.addAll(jikWiChekAddjobList);
 		idSet.addAll(folderUserIdList);
+		
 
 		// 권한그룹이 추가 : tbl_webfolder_folderuser에 있는 권한 그룹리스트 가져와서 체크
 		List<String> groupList = ezWebFolderDAO_y.getWebFolderUserGroupList(map2);
@@ -1546,7 +1545,8 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		map.put("tenantId"		, (Integer)jsonObject.get("tenantId"));
 		map.put("folderType"	, (String)jsonObject.get("folderType"));
 		List<Map<String, Object>> result = ezWebFolderDAO_y.selectRootFolderListInfo(map); 
-		System.out.println("result=" + result);
+		
+		LOGGER.debug("result=" + result);
 		return result; 
 	}
 	

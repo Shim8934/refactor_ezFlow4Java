@@ -1058,121 +1058,99 @@
 	</insert>
 	
 	<insert id="EzWebFolderAdminDAO.insertFolder" parameterClass="Map">
-		<selectKey keyProperty="v_temp" resultClass="Integer">
-			<![CDATA[
-				SELECT NVL((SELECT
-									FOLDER_ID
-									FROM
-										TBL_WEBFOLDER_FOLDER 
-									WHERE
-										FOLDER_ID = #folderId#
-									AND
-										TENANT_ID = #tenantId#
-           		), 1) AS v_temp FROM DUAL
-			]]>
+		<![CDATA[
+			INSERT INTO TBL_WEBFOLDER_FOLDER (
+				FOLDER_ID,          FOLDER_NAME1,         FOLDER_NAME2,         FOLDER_TYPE,          FOLDER_PATH,
+				FOLDER_STEP,        FOLDER_LEVEL,         FOLDER_UPPER,         USE_STATUS,           OWNER_ID,
+				CREATE_ID,          CREATE_DATE,          CREATE_NAME1,         CREATE_NAME2,         UPDATE_ID,
+				UPDATE_DATE,        COMPANY_ID,           DELETER_ID,           TENANT_ID
+			)
+			VALUES (
+				SEQ_FOLDERID.nextval, #folerName1#,         #folerName2#,         #folderType#,        #folderPath#,
+				#folderStep#,         #folderLevel#,        #folderUpper#,        #useStatus#,         #ownerId#,
+				#createId#,           TO_DATE(#createDate#,'yyyy-mm-dd hh24:mi:ss'),         #createName1#,        #createName2#,       #updateId#,
+				TO_DATE(#updateDate#,'yyyy-mm-dd hh24:mi:ss'),       #companyId#,          #deleterId#,          #tenantId#
+			)
+		]]>
+		<selectKey keyProperty="newFolderId" resultClass="Integer">
+			SELECT SEQ_FOLDERID.currval as newFolderId FROM dual
 		</selectKey>
-		<isEqual property="v_temp" compareValue="1">
-			<![CDATA[
-				INSERT INTO TBL_WEBFOLDER_FOLDER (
-					FOLDER_ID,          FOLDER_NAME1,         FOLDER_NAME2,         FOLDER_TYPE,          FOLDER_PATH,
-					FOLDER_STEP,        FOLDER_LEVEL,         FOLDER_UPPER,         USE_STATUS,           OWNER_ID,
-					CREATE_ID,          CREATE_DATE,          CREATE_NAME1,         CREATE_NAME2,         UPDATE_ID,
-					UPDATE_DATE,        COMPANY_ID,           DELETER_ID,           TENANT_ID
-				)
-				VALUES (
-					#folderId#,         #folerName1#,         #folerName2#,         #folderType#,        #folderPath#,
-					#folderStep#,       #folderLevel#,        #folderUpper#,        #useStatus#,         #ownerId#,
-					#createId#,         TO_DATE(#createDate#,'yyyy-mm-dd hh24:mi:ss'),         #createName1#,        #createName2#,       #updateId#,
-					TO_DATE(#updateDate#,'yyyy-mm-dd hh24:mi:ss'),       #companyId#,          #deleterId#,          #tenantId#
-				)
-			]]>
-		</isEqual>
-		<isNotEqual property="v_temp" compareValue="1">
-			<![CDATA[
-				UPDATE
-					TBL_WEBFOLDER_FOLDER
-				SET
-					FOLDER_NAME1    = #folerName1#,
-					FOLDER_NAME2    = #folerName2#,
-					FOLDER_TYPE     = #folderType#,
-					FOLDER_PATH     = #folderPath#,
-					FOLDER_STEP     = #folderStep#,
-					FOLDER_LEVEL    = #folderLevel#,
-					FOLDER_UPPER    = #folderUpper#,
-					USE_STATUS      = #useStatus#,
-					OWNER_ID        = #ownerId#,
-					CREATE_ID       = #createId#,
-					CREATE_DATE     = TO_DATE(#createDate#, 'YYYY-MM-DD HH24:MI:SS'),
-					CREATE_NAME1    = #createName1#,
-					CREATE_NAME2    = #createName2#,
-					UPDATE_ID       = #updateId#,
-					UPDATE_DATE     = TO_DATE(#updateDate#, 'YYYY-MM-DD HH24:MI:SS'),
-					COMPANY_ID      = #companyId#,
-					DELETER_ID      = #deleterId#
-				WHERE
-						FOLDER_ID   = #folderId#
-					AND
-						TENANT_ID   = #tenantId#
-			]]>
-		</isNotEqual>
+	</insert>
+	<insert id="EzWebFolderAdminDAO.updateFolder" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_WEBFOLDER_FOLDER
+			SET
+				FOLDER_NAME1    = #folerName1#,
+				FOLDER_NAME2    = #folerName2#,
+				FOLDER_TYPE     = #folderType#,
+				FOLDER_PATH     = #folderPath#,
+				FOLDER_STEP     = #folderStep#,
+				FOLDER_LEVEL    = #folderLevel#,
+				FOLDER_UPPER    = #folderUpper#,
+				USE_STATUS      = #useStatus#,
+				OWNER_ID        = #ownerId#,
+				CREATE_ID       = #createId#,
+				CREATE_DATE     = TO_DATE(#createDate#, 'YYYY-MM-DD HH24:MI:SS'),
+				CREATE_NAME1    = #createName1#,
+				CREATE_NAME2    = #createName2#,
+				UPDATE_ID       = #updateId#,
+				UPDATE_DATE     = TO_DATE(#updateDate#, 'YYYY-MM-DD HH24:MI:SS'),
+				COMPANY_ID      = #companyId#,
+				DELETER_ID      = #deleterId#
+			WHERE
+					FOLDER_ID   = #folderId#
+				AND
+					TENANT_ID   = #tenantId#
+		]]>
+		<selectKey keyProperty="newFolderId" resultClass="Integer">
+			SELECT FOLDER_ID as newFolderId FROM TBL_WEBFOLDER_FOLDER WHERE FOLDER_ID = #folderId# AND TENANT_ID = #tenantId#
+		</selectKey>
 	</insert>
 	
 	<insert id="EzWebFolderAdminDAO.insertFolder2" parameterClass="Map">
-		<selectKey keyProperty="v_temp" resultClass="Integer">
-			<![CDATA[
-				SELECT NVL((SELECT
-									FOLDER_ID
-									FROM
-										TBL_WEBFOLDER_FOLDER 
-									WHERE
-										OWNER_ID     = #ownerId#
-									AND
-										COMPANY_ID   = #companyId#
-									AND
-										FOLDER_TYPE  = #folderType#
-									AND
-										TENANT_ID    = #tenantId#
-           		), 1) AS v_temp FROM DUAL
-			]]>
+		<![CDATA[
+			INSERT INTO TBL_WEBFOLDER_FOLDER (
+				FOLDER_ID,          FOLDER_NAME1,         FOLDER_NAME2,         FOLDER_TYPE,          FOLDER_PATH,
+				FOLDER_STEP,        FOLDER_LEVEL,         FOLDER_UPPER,         USE_STATUS,           OWNER_ID,
+				CREATE_ID,          CREATE_DATE,          CREATE_NAME1,         CREATE_NAME2,         UPDATE_ID,
+				UPDATE_DATE,        COMPANY_ID,           TENANT_ID
+			)
+			VALUES (
+				SEQ_FOLDERID.nextval, #folerName1#,         #folerName2#,         #folderType#,        #folderPath#,
+				#folderStep#,         #folderLevel#,        #folderUpper#,        #useStatus#,         #ownerId#,
+				#createId#,         TO_DATE(#createDate#,'yyyy-mm-dd hh24:mi:ss'),         #createName1#,        #createName2#,       #updateId#,
+				TO_DATE(#updateDate#,'yyyy-mm-dd hh24:mi:ss'),       #companyId#,                 #tenantId#
+			)
+		]]>
+		<selectKey keyProperty="newFolderId" resultClass="Integer">
+			SELECT SEQ_FOLDERID.currval as newFolderId FROM DUAL
 		</selectKey>
-		<isEqual property="v_temp" compareValue="1">
-			<![CDATA[
-				INSERT INTO TBL_WEBFOLDER_FOLDER (
-					FOLDER_ID,          FOLDER_NAME1,         FOLDER_NAME2,         FOLDER_TYPE,          FOLDER_PATH,
-					FOLDER_STEP,        FOLDER_LEVEL,         FOLDER_UPPER,         USE_STATUS,           OWNER_ID,
-					CREATE_ID,          CREATE_DATE,          CREATE_NAME1,         CREATE_NAME2,         UPDATE_ID,
-					UPDATE_DATE,        COMPANY_ID,           TENANT_ID
-				)
-				VALUES (
-					#folderId#,         #folerName1#,         #folerName2#,         #folderType#,        #folderPath#,
-					#folderStep#,       #folderLevel#,        #folderUpper#,        #useStatus#,         #ownerId#,
-					#createId#,         TO_DATE(#createDate#,'yyyy-mm-dd hh24:mi:ss'),         #createName1#,        #createName2#,       #updateId#,
-					TO_DATE(#updateDate#,'yyyy-mm-dd hh24:mi:ss'),       #companyId#,                 #tenantId#
-				)
-			]]>
-		</isEqual>
-		<isNotEqual property="v_temp" compareValue="1">
-			<![CDATA[
-				UPDATE
-					TBL_WEBFOLDER_FOLDER
-				SET
-					FOLDER_NAME1 = #folerName1#,
-					FOLDER_NAME2 = #folerName2#,
-					UPDATE_ID    = #updateId#,
-					UPDATE_DATE  = TO_DATE(#updateDate#,'yyyy-mm-dd hh24:mi:ss'),
-					DELETER_ID   = #deleterId#
-				WHERE
-					FOLDER_NAME1 = #folerName1#
-				AND
-					FOLDER_NAME2 = #folerName2#
-				AND
-					OWNER_ID     = #ownerId#
-				AND
-					COMPANY_ID   = #companyId#
-				AND
-					TENANT_ID    = #tenantId#
-			]]>
-		</isNotEqual>
+	</insert>
+	<insert id="EzWebFolderAdminDAO.updateFolder2" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_WEBFOLDER_FOLDER
+			SET
+				FOLDER_NAME1 = #folerName1#,
+				FOLDER_NAME2 = #folerName2#,
+				UPDATE_ID    = #updateId#,
+				UPDATE_DATE  = TO_DATE(#updateDate#,'yyyy-mm-dd hh24:mi:ss'),
+				DELETER_ID   = #deleterId#
+			WHERE
+				FOLDER_NAME1 = #folerName1#
+			AND
+				FOLDER_NAME2 = #folerName2#
+			AND
+				OWNER_ID     = #ownerId#
+			AND
+				COMPANY_ID   = #companyId#
+			AND
+				TENANT_ID    = #tenantId#
+		]]>
+		<selectKey keyProperty="newFolderId" resultClass="Integer">
+			SELECT FOLDER_ID as newFolderId FROM TBL_WEBFOLDER_FOLDER WHERE FOLDER_ID = #folderId# AND TENANT_ID = #tenantId#
+		</selectKey>
 	</insert>
 	
 	<insert id="EzWebFolderAdminDAO.insertFolderUser" parameterClass="Map">
