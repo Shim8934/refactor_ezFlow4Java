@@ -1350,7 +1350,7 @@
 	                                                <tr>
 	                                                    <td style="width: 150px;color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezTask.t17' /></td>
 	                                                    <td style="width: 130px;color:#333;background-color: #f8f8fa"><spring:message code='ezTask.t201' /></td>
-	                                                    <td class="td_gray" style="color:#333;background-color: #f8f8fa"><spring:message code='ezTask.t202' /></td>
+	                                                    <td class="td_gray" style="color:#333;background-color: #f8f8fa"><spring:message code='ezTask.t1000' /></td>
 	                                                </tr>
 	                                            </table>
 	                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="Search_txtlist_table" class="mainlist">
@@ -1358,7 +1358,7 @@
 	                                                    <td style="width: 130px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezTask.t15' /></td>
 	                                                    <td style="width: 90px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezTask.t17' /></td>
 	                                                    <td style="width: 90px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezTask.t201' /></td>
-	                                                    <td class="td_gray" style="color:#333;background-color: #f8f8fa"><spring:message code='ezTask.t202' /></td>
+	                                                    <td class="td_gray" style="color:#333;background-color: #f8f8fa"><spring:message code='ezTask.t1000' /></td>
 	                                                </tr>
 	                                            </table>
 	                                        </div>
