@@ -1262,7 +1262,7 @@
 <!-- 	                </div> -->
 <!-- 	            </td> -->
 	            <td style="vertical-align: top;">
-	                <h2 class="h2_dot">
+	                <h2 class="h2_dot" style="margin-left: 5px;">
 	                	<c:if test="${approvalFlag == 'G'}">
 		            		<spring:message code='ezApprovalG.t1689'/>
 				    	</c:if>
@@ -1276,12 +1276,12 @@
 	                            <img src="/images/ImgIcon/next.gif" height="16" alt="<spring:message code='ezApprovalG.pjj29'/>" style="vertical-align: middle" /></span></a>
 	                	</div>
 	                </h2>
-	                <div class="listview" style="margin-top: 11px; margin-left: 1px">
+	                <div class="listview" style="margin-top: 11px; margin-left: 5px">
 	                <c:if test="${approvalFlag == 'S'}">
 	                    <div id="APRLINE" style="overflow: auto; border: 0px solid #ddd; width: 730px; height: 550px; background-color: #ffffff;"></div>
 	                </c:if>
 	                <c:if test="${approvalFlag == 'G'}">
-	                    <div id="APRLINE" style="overflow: auto; border: 0px solid #ddd; width: 750px; height: 550px; background-color: #ffffff;"></div>
+	                    <div id="APRLINE" style="overflow: auto; border: 0px solid #ddd; width: 781px; height: 550px; background-color: #ffffff;"></div>
 	                </c:if>
 	                </div>
 	                <div style="text-align: right; padding:4px 0px 0px 0px">

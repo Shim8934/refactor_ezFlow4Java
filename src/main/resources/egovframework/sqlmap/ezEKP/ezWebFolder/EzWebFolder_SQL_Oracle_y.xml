@@ -1320,11 +1320,6 @@
 	</update>
 	
 	<insert id="EzWebFolderDAO_y.insertFolder" parameterClass="Map" >
-		<selectKey keyProperty="id" resultClass="Integer">
-			SELECT NVL(MAX(to_number(FOLDER_ID)), 0) + 1
-			FROM TBL_WEBFOLDER_FOLDER 
-			WHERE TENANT_ID = #tenantId# 
-		</selectKey>
 		    INSERT INTO TBL_WEBFOLDER_FOLDER(
 		    	FOLDER_ID,
 		    	FOLDER_NAME1,
@@ -1346,7 +1341,7 @@
 		    	TENANT_ID
 		    	 )
 		    VALUES(
-		    	#id#,
+		    	SEQ_FOLDERID.NEXTVAL,
 		    	#folderName1#,
 		    	#folderName2#,
 		    	#folderType#,
@@ -1365,7 +1360,9 @@
 		    	#comId#,
 		    	#tenantId#
 		    	)
-    
+   		<selectKey keyProperty="id" resultClass="Integer">
+			SELECT SEQ_FOLDERID.CURRVAL FROM DUAL
+		</selectKey>
 	</insert>
 	
 	<select id="EzWebFolderDAO_y.getFolderStep" parameterClass="Map" resultClass ="Integer">

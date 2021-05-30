@@ -339,20 +339,16 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		map.put("tenantId",    folder.getTenantId());
 		
 		int folderId = 0;
-		if (globals.getProperty("Globals.DbType").equals("mysql")) {
-			if (folder.getFolderId().isEmpty()){
-				folderId = ezWebFolderAdminDAO.insertFolder(map);
-				map.put("newFolderId", folderId);
-				if (folder.getFolderLevel() == 0){
-					map.put("folderPath", "|" + folderId + "|");
-				}
-			} else {
-				folderId = ezWebFolderAdminDAO.updateFolder(map);
-			}
-			ezWebfolderDao_y.updateFolderPath(map);
-		} else {
+		if (folder.getFolderId().isEmpty()){
 			folderId = ezWebFolderAdminDAO.insertFolder(map);
+			map.put("newFolderId", folderId);
+			if (folder.getFolderLevel() == 0){
+				map.put("folderPath", "|" + folderId + "|");
+			}
+		} else {
+			folderId = ezWebFolderAdminDAO.updateFolder(map);
 		}
+		ezWebfolderDao_y.updateFolderPath(map);
 		return folderId;
 	}
 
@@ -380,20 +376,16 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		map.put("tenantId",    folder.getTenantId());
 		
 		int folderId = 0;
-		if (globals.getProperty("Globals.DbType").equals("mysql")) {
-			if (folder.getFolderId().isEmpty()){
-				folderId = ezWebFolderAdminDAO.insertFolder2(map);
-				map.put("newFolderId", folderId);
-				if (folder.getFolderLevel() == 0){
-					map.put("folderPath", "|" + folderId + "|");
-				}
-			} else {
-				folderId = ezWebFolderAdminDAO.updateFolder2(map);
-			}
-			ezWebfolderDao_y.updateFolderPath(map);
-		} else {
+		if (folder.getFolderId().isEmpty()){
 			folderId = ezWebFolderAdminDAO.insertFolder2(map);
+			map.put("newFolderId", folderId);
+			if (folder.getFolderLevel() == 0){
+				map.put("folderPath", "|" + folderId + "|");
+			}
+		} else {
+			folderId = ezWebFolderAdminDAO.updateFolder2(map);
 		}
+		ezWebfolderDao_y.updateFolderPath(map);
 		
 		return folderId;
 	}
@@ -585,9 +577,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		
 		//Insert folder
 		int folderIdInt = insertFolder(folder);
-		if (globals.getProperty("Globals.DbType").equals("mysql")) {
-			folderId = Integer.toString(folderIdInt);
-		}
+		folderId = Integer.toString(folderIdInt);
 		
 		//Insert new folder users
 		insertListFolderUsers(userId, folderId, folder.getCompanyId(), folderUsers, timeUTC, tenantId, "insert", null, "", "", null, offset);
@@ -758,9 +748,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 			folder.setUpdateDate(timeUTC);
 			
 			int folderIdInt = insertFolder2(folder);
-			if (globals.getProperty("Globals.DbType").equals("mysql")) {
-				folderId = Integer.toString(folderIdInt);
-			}
+			folderId = Integer.toString(folderIdInt);
 			
 			insertFolderUser(getMaxFolderUserSeq(tenantId), dept.getCn(), "dept", folderId, userId, timeUTC, folder.getCompanyId(), tenantId);
 		}
@@ -796,9 +784,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		folder.setUpdateDate(timeUTC);
 		
 		int folderIdInt = insertFolder(folder);
-		if (globals.getProperty("Globals.DbType").equals("mysql")) {
-			folderId = Integer.toString(folderIdInt);
-		}
+		folderId = Integer.toString(folderIdInt);
 		insertFolderUser(getMaxFolderUserSeq(tenantId), userId, "user", folderId, userId, timeUTC, folder.getCompanyId(), tenantId);
 	}
 	
@@ -844,9 +830,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 					
 					//Insert folder
 					int folderIdInt = insertFolder(folderVO);
-					if (globals.getProperty("Globals.DbType").equals("mysql")) {
-						folderId = Integer.toString(folderIdInt);
-					}
+					folderId = Integer.toString(folderIdInt);
 					
 					insertFolderUser(getMaxFolderUserSeq(tenantId), dept.getCn(), "dept", folderId, userId, timeUTC, folderVO.getCompanyId(), tenantId);
 				}
@@ -881,14 +865,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 	
 	@Override
 	public String getMaxFolderID(int tenantId) throws Exception {
-		int currentMaxFolderId = -1;
-		String result          = ezWebFolderService.getFolderSequence(tenantId);
-		currentMaxFolderId     = result.equals("")          ? 1 : Integer.parseInt(result);
-		currentMaxFolderId     = (currentMaxFolderId == -1) ? 1 : (currentMaxFolderId + 1);
-		if (globals.getProperty("Globals.DbType").equals("mysql")) {
-			return "";
-		}
-		return Integer.toString(currentMaxFolderId);
+		return "";
 	}
 	
 	public int getMaxFolderStep(String folderId, int tenantId) throws Exception {
@@ -1068,9 +1045,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		
 		//Create new folder
 		int folderIdInt = insertFolder(folder);
-		if (globals.getProperty("Globals.DbType").equals("mysql")) {
-			newId = Integer.toString(folderIdInt);
-		} 			
+		newId = Integer.toString(folderIdInt);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("upperFolderId", folderId);
@@ -1126,9 +1101,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 				
 				//Create new folder
 				int folderIdInt = insertFolder(subFld);
-				if (globals.getProperty("Globals.DbType").equals("mysql")) {
-					newSubId = Integer.toString(folderIdInt);
-				}
+				newSubId = Integer.toString(folderIdInt);
 				
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("upperFolderId", oldId);
