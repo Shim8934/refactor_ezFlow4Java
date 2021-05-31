@@ -528,7 +528,7 @@
        			<a class ="imgbtn" onClick="ButtonChangeClick()" name="ButtonChange"  id="ButtonChange" ><span><spring:message code='ezPersonal.t34'/></span></a>
        			<a class="imgbtn" name="Submit2" onClick="window.location.href='/ezPersonal/changePersonInfo.do'"><span><spring:message code='ezPersonal.t13'/></span></a>
     		</div>    		
-    		<c:if test="${ezOffice365Auth == 'NO' }">
+    		<c:if test="${ezOffice365Auth == 'NO' && userManualFlag eq 'Y'}">
     		<h2><spring:message code='ezPersonal.t185'/></h2>
     		<div>▒ <spring:message code='ezPersonal.t186'/></div>
     		<div style="margin-top:3px">${pwPolicyExplain }</div> 		
