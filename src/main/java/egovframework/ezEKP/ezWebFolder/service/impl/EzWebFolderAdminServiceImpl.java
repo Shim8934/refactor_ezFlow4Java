@@ -1181,9 +1181,13 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 				file.setParentId(newFileId);
 				file.setHierarchicalPath(newFileId);
 
-				ezWebFolderService.insertFile(file);
+				newFileId = String.valueOf(ezWebFolderService.insertFile(file));
+
+				file.setFileId(newFileId);
+				
+				logger.debug("newFileId:" + newFileId);
 				// 첫번째 버전은 무조건 생성하도록 한다.
-				ezWebFolderService.incrementFileVersion(userInfo, file.getFileId());
+				ezWebFolderService.incrementFileVersion(userInfo, newFileId);
 
 				if (requireKlibTransformation || isEncryptedFile) {
 					ezWebFolderService.insertEncryptedFile(newFileId, userInfo.getTenantId());

@@ -30,8 +30,19 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 		return (String)select("EzWebFolderDAO.getFileSequence", map);
 	}
 
-	public void insertFile(Map<String, Object> map) {
-		insert("EzWebFolderDAO.insertFile", map);
+	public int insertFile(Map<String, Object> map) {
+		int fileId = 0;
+		if (map.get("fileId").equals("")){
+			fileId = (int) insert("EzWebFolderDAO.insertFile", map);
+		} else {
+			update("EzWebFolderDAO.updateFile", map);
+			fileId = (int) map.get("fileId"); 
+		}
+		return fileId;
+	}
+	
+	public void updateFileRoot(Map<String, Object> map) {
+		update("EzWebFolderDAO.updateFileRoot", map);
 	}
 
 	public FileVO getFileByFileId(Map<String, Object> map) {

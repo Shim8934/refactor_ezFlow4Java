@@ -26,7 +26,7 @@ import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzWebFolderService {
 	String getFileSequence(int tenantId) throws Exception;
-	void insertFile(FileVO fileVO) throws Exception;
+	int insertFile(FileVO fileVO) throws Exception;
 	void insertFileUser(FileVO fileVO, String seqId, String userId, String userType, String comId) throws Exception;
 	FileVO getFileByFileId(String fileId, String offset, int tenantId) throws Exception;
 	void deleteFileByFileId(String fileId, int tenantId) throws Exception;

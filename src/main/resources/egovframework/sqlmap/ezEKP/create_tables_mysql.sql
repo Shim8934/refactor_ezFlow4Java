@@ -14154,7 +14154,7 @@ CREATE TABLE `tbl_webfolder_file` (
   `PARENT_ID` int(11) NOT NULL,
   `HIERARCHICAL_PATH` varchar(300) NOT NULL,
   PRIMARY KEY (`FILE_ID`,`TENANT_ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='웹폴더 파일';
+) ENGINE=InnoDB AUTO_INCREMENT=10000000 DEFAULT CHARSET=utf8 COMMENT='웹폴더 파일';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -14216,7 +14216,7 @@ CREATE TABLE `tbl_webfolder_fileuser` (
   `TENANT_ID` int(7) NOT NULL,
   `SUBDEPT_PERMITTED` int(11) DEFAULT 0,
   PRIMARY KEY (`SEQ_ID`,`TENANT_ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=10000000 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

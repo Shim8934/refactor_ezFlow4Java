@@ -134,7 +134,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 
 	@Override
-	public void insertFile(FileVO fileVO) throws Exception {
+	public int insertFile(FileVO fileVO) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("fileId",      fileVO.getFileId());
 		map.put("fileName",    fileVO.getFileName());
@@ -157,8 +157,18 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		map.put("rootId",      fileVO.getRootId());
 		map.put("parentId",    fileVO.getParentId());
 		map.put("hierarchicalPath", fileVO.getHierarchicalPath());
+		int fileId = ezWebFolderDAO.insertFile(map);
+		logger.debug("fileId'" + fileId);
 		
-		ezWebFolderDAO.insertFile(map);
+		if (fileVO.getFileId().equals("")){
+			map.put("fileId", 	  fileId);
+			map.put("rootId",     fileId);
+			map.put("parentId",   fileId);
+			map.put("hierarchicalPath",   fileId);
+			ezWebFolderDAO.updateFileRoot(map);
+		}
+		
+		return fileId;
 	}
 	
 	@Override
@@ -964,7 +974,8 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 					fileVO.setHierarchicalPath(fileId);
 				}
 				
-				insertFile(fileVO);
+				fileId = String.valueOf(insertFile(fileVO));
+				fileVO.setFileId(fileId);
 				
 				// 답글이 아닐 때만 권한 넣어주기
 				if (!isReply) {
@@ -1359,11 +1370,12 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	
 	@Override
 	public synchronized String getMaxFileID(int tenantId) throws Exception {
-		int currentMaxFileId = -1;
-		String result        = getFileSequence(tenantId);
-		currentMaxFileId     = result.equals("")        ? 10000000 : Integer.parseInt(result);
-		currentMaxFileId     = (currentMaxFileId == -1) ? 10000000 : (currentMaxFileId + 1);
-		return Integer.toString(currentMaxFileId);
+//		int currentMaxFileId = -1;
+//		String result        = getFileSequence(tenantId);
+//		currentMaxFileId     = result.equals("")        ? 10000000 : Integer.parseInt(result);
+//		currentMaxFileId     = (currentMaxFileId == -1) ? 10000000 : (currentMaxFileId + 1);
+//		return Integer.toString(currentMaxFileId);
+		return "";
 	}
 	
 	@Override
@@ -1631,7 +1643,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			oldFile.setFileSize(newFile.getFileSize());
 			oldFile.setFilePath(newPath);
 
-			insertFile(oldFile);
+			newFile.setFileId(String.valueOf(insertFile(oldFile)));
 
 			// Backup the previous history file and insert the new history
 			if (useVersionHistory) {
@@ -1764,7 +1776,8 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				destFile.createNewFile();
 				
 				fileVO.setFilePath(newPath);
-				insertFile(fileVO);
+				fileId = String.valueOf(insertFile(fileVO));
+				fileVO.setFileId(fileId);
 				
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("upperId", oldFileId);

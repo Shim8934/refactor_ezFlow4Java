@@ -265,70 +265,67 @@
 	</resultMap>
 	
 	<insert id="EzWebFolderDAO.insertFile" parameterClass="Map">
-		<selectKey keyProperty="v_temp" resultClass="Integer">
-			<![CDATA[
-				SELECT
-					1
-				FROM
-					DUAL
-				WHERE
-					NOT EXISTS (SELECT
-									FILE_ID,
-									TENANT_ID
-									FROM
-										TBL_WEBFOLDER_FILE
-									WHERE
-										FILE_ID = #fileId#
-									AND
-										TENANT_ID = #tenantId#
-								)
-			]]>
+		<![CDATA[
+			INSERT INTO TBL_WEBFOLDER_FILE (
+				FILE_NAME,          FILE_PATH,         FILE_SIZE,           TYPE_ID,
+				DOWN_COUNT,         FILE_EXT,          FOLDER_ID,           USE_STATUS,         CREATE_ID,
+				CREATE_NAME1,       CREATE_NAME2,      CREATE_DATE,         UPDATE_ID,          UPDATE_DATE,
+				DELETER_ID,         TENANT_ID,         DEPTH,               ROOT_ID,            PARENT_ID,
+				HIERARCHICAL_PATH
+			)
+			VALUES (
+				#fileName#,         #filePath#,        #fileSize#,          #typeId#, 
+				#downloadCnt#,      #fileExt#,         #folderId#,          #useStatus#,        #createId#,
+				#createName1#,      #createName2#,     #createDate#,        #updateId#,         #updateDate#,
+				#deleterId#,        #tenantId#,        #depth#,             #rootId#,           #parentId#,
+				#hierarchicalPath#
+			)
+		]]>
+		<selectKey keyProperty="newFolderId" resultClass="Integer">
+			SELECT LAST_INSERT_ID() as newFolderId FROM TBL_WEBFOLDER_FILE LIMIT 1
 		</selectKey>
-		<isEqual property="v_temp" compareValue="1">
-			<![CDATA[
-				INSERT INTO TBL_WEBFOLDER_FILE (
-					FILE_ID,            FILE_NAME,         FILE_PATH,           FILE_SIZE,          TYPE_ID,
-					DOWN_COUNT,         FILE_EXT,          FOLDER_ID,           USE_STATUS,         CREATE_ID,
-					CREATE_NAME1,       CREATE_NAME2,      CREATE_DATE,         UPDATE_ID,          UPDATE_DATE,
-					DELETER_ID,         TENANT_ID,         DEPTH,               ROOT_ID,            PARENT_ID,
-					HIERARCHICAL_PATH
-				)
-				VALUES (
-					#fileId#,           #fileName#,        #filePath#,          #fileSize#,         #typeId#, 
-					#downloadCnt#,      #fileExt#,         #folderId#,          #useStatus#,        #createId#,
-					#createName1#,      #createName2#,     #createDate#,        #updateId#,         #updateDate#,
-					#deleterId#,        #tenantId#,        #depth#,             #rootId#,           #parentId#,
-					#hierarchicalPath#
-				)
-			]]>
-		</isEqual>
-		<isNotEqual property="v_temp" compareValue="1">
-			<![CDATA[
-				UPDATE
-					TBL_WEBFOLDER_FILE
-				SET
-					FILE_NAME      = #fileName#,
-					FILE_PATH      = #filePath#,
-					FILE_SIZE      = #fileSize#,
-					TYPE_ID        = #typeId#,
-					DOWN_COUNT     = #downloadCnt#,
-					FILE_EXT       = #fileExt#,
-					FOLDER_ID      = #folderId#,
-					USE_STATUS     = #useStatus#,
-					CREATE_ID      = #createId#,
-					CREATE_NAME1   = #createName1#,
-					CREATE_NAME2   = #createName2#,
-					CREATE_DATE    = #createDate#,
-					UPDATE_ID      = #updateId#,
-					UPDATE_DATE    = #updateDate#,
-					DELETER_ID     = #deleterId#
-				WHERE
-						FILE_ID    = #fileId#
-					AND
-						TENANT_ID  = #tenantId#
-			]]>
-		</isNotEqual>
 	</insert>
+	<update id="EzWebFolderDAO.updateFile" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_WEBFOLDER_FILE
+			SET
+				FILE_NAME      = #fileName#,
+				FILE_PATH      = #filePath#,
+				FILE_SIZE      = #fileSize#,
+				TYPE_ID        = #typeId#,
+				DOWN_COUNT     = #downloadCnt#,
+				FILE_EXT       = #fileExt#,
+				FOLDER_ID      = #folderId#,
+				USE_STATUS     = #useStatus#,
+				CREATE_ID      = #createId#,
+				CREATE_NAME1   = #createName1#,
+				CREATE_NAME2   = #createName2#,
+				CREATE_DATE    = #createDate#,
+				UPDATE_ID      = #updateId#,
+				UPDATE_DATE    = #updateDate#,
+				DELETER_ID     = #deleterId#
+			WHERE
+					FILE_ID    = #fileId#
+				AND
+					TENANT_ID  = #tenantId#
+		]]>
+	</update>
+	
+	<update id="EzWebFolderDAO.updateFileRoot" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_WEBFOLDER_FILE
+			SET
+				ROOT_ID      = #rootId#,
+				PARENT_ID      = #parentId#,
+				HIERARCHICAL_PATH      = #hierarchicalPath#
+			WHERE
+					FILE_ID    = #fileId#
+				AND
+					TENANT_ID  = #tenantId#
+		]]>
+	</update>
 	
 	<insert id="EzWebFolderDAO.insertFileUser" parameterClass="Map">
 		INSERT INTO 
