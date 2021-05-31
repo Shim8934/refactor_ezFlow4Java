@@ -33,6 +33,7 @@
 			var BlockSize = 10;
 			var pageNum = 1;
 			var PageSize = 15;
+			var exportingExcel = false;
 			
 		    document.onselectstart = function(){
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA"){
@@ -945,6 +946,10 @@
 			}
 			
 			function showProgress() {
+				// $('#progressPanel').width() = 220, $('#loadingLayer').width() = 168
+				var leftSize = (window.innerWidth - 388)/2 + "px"
+				document.getElementById("loadingLayer").style.left = leftSize;
+				
 			    document.getElementById("progressPanel").style.display = "";
 			    document.getElementById("loadingLayer").style.display = "";
 			    
@@ -1923,6 +1928,47 @@
 				}
 			}
 			
+			function excelExport() {
+				if (exportingExcel) {
+					return;
+				}
+				
+				showProgress();
+				exportingExcel = true;
+				
+				$.ajax({
+					type: "POST",
+					url: "/admin/ezOrgan/exportFileLogs.do",
+					data: {
+						"selectedId"  : ""
+					},
+					dataType: "JSON",
+					async: true,
+					success : function(data) {
+						var code = data.code;
+						
+						switch(code) {
+							case 0: 
+								var url = "/admin/ezOrgan/downloadExcel.do?fileName=" + encodeURIComponent(data.path);
+								AttachDownFrame.location.href = url;
+								break;
+							case 1:
+								alert("<spring:message code='ezWebFolder.t305'/>");
+								break;
+							case 2:
+								alert("<spring:message code='ezWebFolder.t300'/>");
+								break;
+						}
+					},
+					error : function(error) {
+						alert("<spring:message code='ezWebFolder.t134'/>" + error);
+					}
+				}).complete(function() {
+					hideProgress();
+					exportingExcel = false;
+				});
+			}
+			
 		</script>
 		<style>
 			.OrganListView {width:100%;}
@@ -2021,6 +2067,7 @@
 				<c:if test="${useMobileManagemant == 'YES' }">
 					<li id="usermenu23"><span onClick="mobile_managed()"><spring:message code='ezPersonal.t998' /></span></li>
 				</c:if>
+				<li id="btnSave"><span onClick="excelExport()"><spring:message code='ezStatistics.t1003' /></span></li>
 				<dl class="organList">
 					<dt class="organListDT">
 						<input type="radio" name="listOpt" id="listOpt1" value="muser" onClick="Change_List()" checked /><label for="listOpt1" style="cursor:pointer;"><spring:message code='ezOrgan.t74' /></label>
@@ -2080,6 +2127,7 @@
 						</div>
 					</c:if>
 					<div id="tblPageRayer" class="tblPageRayerOrgan" style="width: 100%;"></div>
+					<iframe name="AttachDownFrame" id="AttachDownFrame" style="display:none"></iframe>
 				</div>
 			</div><!-- organListDIv END -->
 		</div>	

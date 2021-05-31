@@ -1,10 +1,16 @@
 package egovframework.ezEKP.ezOrgan.service.impl;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
@@ -12,12 +18,21 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.naming.directory.DirContext;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
@@ -70,6 +85,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     @Autowired
     private ADConnection conn;
     
+	@Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource;
+	
    	@Autowired
 	private Properties globals;
     
@@ -2208,6 +2226,194 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		logger.debug("getTitleInfo_group ended.");
 		return vo;
 	}
+	
+	// 관리자 > 조직도 > 엑셀내려받기 :사용자 목록
+	@Override
+	public List<OrganUserVO> getExportUserList(String primary, String companyId, int tenantId) throws Exception {
+		logger.debug("getExportUserList start");
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("primary",  primary);
+		map.put("companyId",  companyId);
+		map.put("tenantId",  tenantId);
+		
+		logger.debug("getExportUserList end");
+		return ezOrganAdminDao.getExportUserList(map);
+	}
+	
+	@Override
+	public String createExcelUsers(String realPath, String dirPath, List<OrganUserVO> exportUserlist, String primary, Locale locale) throws Exception {
+		logger.debug("createExcelUsers start");
+		Date date                  = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		String fileName            = egovMessageSource.getMessage("ezOrgan.t72", locale).trim() + "_" + formatter.format(date) + ".xlsx";
+		String filePath            = dirPath + fileName;
+		File file                  = new File(dirPath);
+		File file2                 = new File(filePath);
+		
+		// temp 폴더가 없는 경우: 만들거나(mkdir), 폴더 안을 깨끗히 비운다.
+		if (file == null || !file.exists()) {
+			file.mkdirs();
+		}
+		else {
+			FileUtils.cleanDirectory(file); 
+		}
+		
+		// 같은 이름의 파일이 있을 경우: "파일(2).xlsx"으로 만든다.
+		if (file2.exists()) {
+			int pos         = fileName.lastIndexOf('.');
+			String extend   = fileName.substring(pos + 1);
+			String mainName = fileName.substring(0, pos);
+			int k           = 1;
+			fileName        = mainName + "(" + Integer.toString(k) + ")." + extend;
+			filePath        = dirPath + fileName;
+			file2           = new File(filePath);
+			
+			while (file2.exists()) {
+				fileName = mainName + "(" + Integer.toString(++k) + ")." + extend;
+				filePath = dirPath + fileName;
+			}
+		}
+		
+		// 엑셀 파일 생성(workbook). 시트 이름은(sheet1): "ezOrgan.t72"
+		FileOutputStream fileOut = null;
+		Workbook workbook = new XSSFWorkbook();
+		
+		Sheet sheet1 = workbook.createSheet(egovMessageSource.getMessage("ezOrgan.t72", locale).trim());
+		sheet1.setDefaultRowHeight((short)500);
+		
+		//Set style
+		CellStyle centerStyle = workbook.createCellStyle();
+		centerStyle.setWrapText(false);
+		centerStyle.setAlignment(CellStyle.ALIGN_CENTER);
+		centerStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+		
+		CellStyle centerStyle2 = workbook.createCellStyle();
+		centerStyle2.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+		
+		CellStyle centerStyle3 = workbook.createCellStyle();
+		centerStyle3.setAlignment(CellStyle.ALIGN_LEFT);
+		centerStyle3.setIndention((short)3);
+		centerStyle3.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+		
+		//sheet1.setColumnWidth(0, 8 * 256);
+		
+		//Process first row
+		Row rowhead1 = sheet1.createRow(0);
+		
+		rowhead1.createCell(0).setCellValue(egovMessageSource.getMessage("ezPersonal.t67", locale).trim());
+		rowhead1.createCell(1).setCellValue(egovMessageSource.getMessage("ezOrgan.t68", locale).trim());
+		rowhead1.createCell(2).setCellValue(egovMessageSource.getMessage("ezAttitude.t218", locale).trim());
+		rowhead1.createCell(3).setCellValue(egovMessageSource.getMessage("ezOrgan.t67", locale).trim());
+		rowhead1.createCell(4).setCellValue(egovMessageSource.getMessage("ezPersonal.t75", locale).trim());
+		rowhead1.createCell(5).setCellValue(egovMessageSource.getMessage("ezOrgan.t69", locale).trim());
+		rowhead1.createCell(6).setCellValue(egovMessageSource.getMessage("ezOrgan.t1500", locale).trim());
+		
+		rowhead1.getCell(0).setCellStyle(centerStyle);
+		rowhead1.getCell(1).setCellStyle(centerStyle);
+		rowhead1.getCell(2).setCellStyle(centerStyle);
+		rowhead1.getCell(3).setCellStyle(centerStyle);
+		rowhead1.getCell(4).setCellStyle(centerStyle);
+		rowhead1.getCell(5).setCellStyle(centerStyle);
+		rowhead1.getCell(6).setCellStyle(centerStyle);
+		
+		int i = 1;
+		
+		// 액셀 라이브러리가 지원하는 row수: 65536건
+		for (OrganUserVO exportUser : exportUserlist) {
+			Row newRow1 = sheet1.createRow(i);
+			
+			newRow1.createCell(0).setCellValue(exportUser.getCompany());
+			newRow1.createCell(1).setCellValue(exportUser.getDescription());
+			newRow1.createCell(2).setCellValue(exportUser.getCn());
+			newRow1.createCell(3).setCellValue(exportUser.getDisplayName());
+			newRow1.createCell(4).setCellValue(exportUser.getMail());
+			newRow1.createCell(5).setCellValue(exportUser.getTitle());
+			newRow1.createCell(6).setCellValue(exportUser.getExtensionAttribute10());
+			
+			newRow1.getCell(0).setCellStyle(centerStyle2);
+			newRow1.getCell(1).setCellStyle(centerStyle2);
+			newRow1.getCell(2).setCellStyle(centerStyle2);
+			newRow1.getCell(3).setCellStyle(centerStyle2);
+			newRow1.getCell(4).setCellStyle(centerStyle2);
+			newRow1.getCell(5).setCellStyle(centerStyle2);
+			newRow1.getCell(6).setCellStyle(centerStyle2);
+			
+			i++;
+		}
+		
+		sheet1.setColumnWidth(0, ((int)(15 * 1.14388)) * 256);
+		sheet1.setColumnWidth(1, ((int)(25 * 1.14388)) * 256);
+		sheet1.setColumnWidth(2, ((int)(15 * 1.14388)) * 256);
+		sheet1.setColumnWidth(3, ((int)(15 * 1.14388)) * 256);
+		sheet1.setColumnWidth(4, ((int)(45 * 1.14388)) * 256);
+		sheet1.setColumnWidth(5, ((int)(15 * 1.14388)) * 256);
+		sheet1.setColumnWidth(6, ((int)(15 * 1.14388)) * 256);
+		
+//		sheet1.autoSizeColumn(0);
+		
+		try {
+			fileOut = new FileOutputStream(filePath);
+			workbook.write(fileOut);
+			fileOut.close();
+		}
+		catch (Exception e) {
+			throw e;
+		}
+		finally {
+			fileOut.close();
+			workbook.close();
+		}
+		logger.debug("createExcelUsers end");
+		return fileName;
+	}
+
+	@Override
+	public void getExcelFile(String fileName, String realPath, String userAgent, HttpServletResponse response, int tenantId) throws Exception {
+		String _fileName = CommonUtil.getEncodedFileNameForDownload(userAgent, fileName);
+		String dirPath   = commonUtil.getUploadPath("upload_ezOrgan.ROOT", tenantId) + commonUtil.separator;
+		dirPath          = realPath + dirPath + "temp" + commonUtil.separator;
+		File file        = new File(dirPath + commonUtil.detectPathTraversal(fileName));
+		
+		if (!file.exists()) {
+			throw new FileNotFoundException(fileName);
+		}
+	
+		if (!file.isFile()) {
+			throw new FileNotFoundException(fileName);
+		}
+		
+		BufferedInputStream in = null;
+		
+		try {
+			in              = new BufferedInputStream(new FileInputStream(file));
+			String mimetype = "application/octet-stream";
+			
+			response.setBufferSize(2048);		// BUFF_SIZE: 2048 (extends EgovFileMngUtil) 
+			response.setContentType(mimetype);
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + _fileName + "\"");
+			response.setContentLength((int)file.length());
+			
+			FileCopyUtils.copy(in, response.getOutputStream());
+		}
+		finally {
+			if (in != null) {
+				try {
+					in.close();
+				} catch (Exception ignore) {
+					logger.debug("IGNORED: {}", ignore.getMessage());
+				}
+			}
+			
+			try {
+				file = new File(dirPath + fileName);
+				file.delete();
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
 
 	@Override
 	public List<OrganGroupVO> getGroupListBoard(int tenantID, String companyID, String isAllGroupBoard) throws Exception{
@@ -2351,4 +2557,5 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		logger.debug("getAutoDeleteOfRetireUserList ended.");
 		return result;
 	}
+
 }
