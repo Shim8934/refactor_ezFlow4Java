@@ -34074,4 +34074,18 @@
     	AND
     		TENANTID = #TENANTID#
 	</delete>
+	
+	<select id="EzApprovalG.getChaebunDept" parameterClass="Map" resultClass="String">
+		SELECT
+			GRANTDEPTID
+		FROM
+			TBL_SERIALNUMGEN_GRANT
+		WHERE
+			DEPTID = #v_DEPTID#
+		AND
+    		TENANT_ID = #v_TENANTID#
+		AND
+    		COMPANYID = #v_COMPANYID#
+	</select>
+	
 </sqlMap>

@@ -5635,4 +5635,68 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		logger.debug("xlsSetGroupWithExcel ended, return :" + result);
 		return result;
 	}
+	
+	@Override
+	public String getChaebunDeptList(String deptID, String companyID, LoginVO userInfo) throws Exception {
+		logger.debug("getChaebunDeptList started");
+		
+		StringBuilder sb = new StringBuilder("<LISTVIEWDATA>");
+		sb.append("<HEADERS><HEADER>");
+		sb.append("<NAME>" + egovMessageSource.getMessage("ezOrgan.t70", userInfo.getLocale()) + "</NAME>");
+		sb.append("</HEADER></HEADERS>");
+		sb.append("<ROWS>");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_DEPTID", deptID);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", userInfo.getTenantId());
+		
+		List<HashMap<String, Object>> chaebunDeptList = ezApprovalGAdminDAO.getChaebunDeptList(map);
+		
+		for(int i=0; i<chaebunDeptList.size(); i++) {
+			HashMap<String, Object> chaebunDept = chaebunDeptList.get(i);
+			sb.append("<ROW><CELL>");
+			sb.append("<VALUE>" + commonUtil.cleanValue(chaebunDept.get("DEPTNAME").toString()) + "</VALUE>");
+			sb.append("<DATA1>" + chaebunDept.get("DEPTID") + "</DATA1>");
+			sb.append("<DATA2>" + companyID + "</DATA2>");
+			sb.append("<DATA3>" + commonUtil.cleanValue(chaebunDept.get("DEPTNAME").toString()) + "</DATA3>");
+			sb.append("</CELL></ROW>");
+		}
+		sb.append("</ROWS>");
+        sb.append("</LISTVIEWDATA>");
+		
+		logger.debug("getChaebunDeptList ended");
+		return sb.toString();
+	}
+	
+	@Override
+	public String setChaebunDeptList(Document doc, LoginVO userInfo) throws Exception {
+		try {
+			logger.debug("setChaebunDeptList started");
+			String deptID = doc.getDocumentElement().getChildNodes().item(0).getChildNodes().item(0).getTextContent();
+			String deptName = doc.getDocumentElement().getChildNodes().item(0).getChildNodes().item(1).getTextContent();
+			String companyID = doc.getDocumentElement().getChildNodes().item(0).getChildNodes().item(2).getTextContent();
+					
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("v_DEPTID", deptID);
+			map.put("v_COMPANYID", companyID);
+			map.put("v_TENANTID", userInfo.getTenantId());
+			ezApprovalGAdminDAO.deleteChaebunDeptList(map);
+			
+			NodeList nodes = doc.getDocumentElement().getChildNodes().item(1).getChildNodes();
+			for(int i=0; i<nodes.getLength(); i++) {
+				map.put("v_DEPTID", nodes.item(i).getChildNodes().item(0).getTextContent());
+				map.put("v_DEPTNAME", nodes.item(i).getChildNodes().item(1).getTextContent());
+				map.put("v_GRANTDEPTID", deptID);
+				map.put("v_GRANTDEPTNAME", deptName);
+				ezApprovalGAdminDAO.insertChaebunDeptList(map);
+			}
+		
+			logger.debug("setChaebunDeptList ended");
+			return "OK";
+		} catch (Exception e) {
+			logger.debug("setChaebunDeptList ERROR : " + e.getMessage());
+			return "error";
+		}
+	}
 }

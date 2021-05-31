@@ -11178,4 +11178,26 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("getOrgDocIDByMode ended.");
 		return result;
 	}
+	
+	@RequestMapping(value = "/ezApprovalG/getChaebunDept.do", method = RequestMethod.POST, produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getChaebunDept(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
+		logger.debug("getChaebunDept started.");
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String deptID = request.getParameter("deptID");
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		String result = ezApprovalGService.getChaebunDept(deptID, orgCompanyID, userInfo.getTenantId());
+		
+		if(result != null) {
+			deptID = result;
+		} 
+		
+		String propName = "displayName;extensionAttribute6";
+		String infoXML = ezOrganService.getPropertyList(deptID, propName, userInfo.getPrimary(), userInfo.getTenantId());
+		
+		logger.debug("getChaebunDept ended.");
+		return infoXML;
+	}
 }

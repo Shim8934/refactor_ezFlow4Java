@@ -13363,6 +13363,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			accountYear = getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, langType, tenantID);
 		}
 		
+		// 채번대상이 되는 부서가 있는지 체크하여 deptId를 변경
+		String ApprovalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
+		if(ApprovalFlag.equals("S")) {
+			String chaebunDept = getChaebunDept(type2, companyID, tenantID);
+			if(chaebunDept != null) {
+				logger.debug("채번부서 : " + chaebunDept + ", 대상부서 : " + type2);
+				type2 = chaebunDept;
+			}
+		}
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("iv_Type1", type1);
 		map.put("iv_Type2", type2);
@@ -33285,5 +33295,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		logger.debug("getOrgDocIDByMode ended.");
 		return orgDocID;
+	}
+	
+	@Override
+	public String getChaebunDept(String deptId, String orgCompanyID, int tenantID) throws Exception {
+		logger.debug("getChaebunDept started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_DEPTID", deptId);
+		map.put("v_COMPANYID", orgCompanyID);
+		map.put("v_TENANTID", tenantID);
+		
+		String chaebunDept = ezApprovalGDAO.getChaebunDept(map);
+		
+		logger.debug("getChaebunDept ended.");
+		return chaebunDept;
 	}
 }
