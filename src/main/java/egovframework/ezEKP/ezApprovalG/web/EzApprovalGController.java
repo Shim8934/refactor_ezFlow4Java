@@ -11194,7 +11194,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			deptID = result;
 		} 
 		
-		String propName = "displayName;extensionAttribute6";
+		String propName = "displayName;extensionAttribute6;cn";
 		String infoXML = ezOrganService.getPropertyList(deptID, propName, userInfo.getPrimary(), userInfo.getTenantId());
 		
 		logger.debug("getChaebunDept ended.");

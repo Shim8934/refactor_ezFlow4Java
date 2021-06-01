@@ -478,14 +478,16 @@
 		    subNode = createNodeAndAppandNodeText(xmlpara, objRow, subNode, "COMPANYID", targetCompanyID);
 		    
 		    objRow = createNodeAndAppandNode(xmlpara, objNode, objRow, "ROWS");
-		    for(var i=0; i<InitTr.length; i++) {
-		    	var curDeptID = InitTr[i].getAttribute("data1");
-		    	var curDeptName = InitTr[i].getAttribute("data3");
-		    	
-		    	objRow2 = createNodeAndAppandNode(xmlpara, objRow, objRow2, "ROW");
-			    
-		    	subNode = createNodeAndAppandNodeText(xmlpara, objRow2, subNode, "DEPTID", curDeptID);
-			    subNode = createNodeAndAppandNodeText(xmlpara, objRow2, subNode, "DEPTNAME", curDeptName);
+		    if (InitTr.length > 0 && InitTr[0].id.indexOf("noItems") == -1) {
+			    for(var i=0; i<InitTr.length; i++) {
+			    	var curDeptID = InitTr[i].getAttribute("data1");
+			    	var curDeptName = InitTr[i].getAttribute("data3");
+			    	
+			    	objRow2 = createNodeAndAppandNode(xmlpara, objRow, objRow2, "ROW");
+				    
+			    	subNode = createNodeAndAppandNodeText(xmlpara, objRow2, subNode, "DEPTID", curDeptID);
+				    subNode = createNodeAndAppandNodeText(xmlpara, objRow2, subNode, "DEPTNAME", curDeptName);
+			    }
 		    }
 		    
 	    	var xmlhttp = createXMLHttpRequest();
