@@ -560,8 +560,8 @@
 		                    <tr id="ListTargetDept">
 		                        <td style="width: 30px; text-align: center; padding: 5px;">
 		                        	<br>
-		                            <img src="/images/arr_left.gif" alt="" border="0" style="cursor: pointer;" onclick="DeleteTargetDept()">
 		                        	<img src="/images/arr_right.gif" alt="" border="0" style="cursor: pointer; margin-top:3px" onclick="InsertTargetDept()"><br>
+		                            <img src="/images/arr_left.gif" alt="" border="0" style="cursor: pointer;" onclick="DeleteTargetDept()">
 		                        </td>
 		                        <td style="vertical-align: top;">
 		                            <h2 id="ToTitle" class="h2_dot" style="font-weight: bold;">
@@ -572,10 +572,10 @@
 		                    </tr>
 		                    <tr id="ListCriteriaDept">
 		                        <td style="width: 30px; text-align: center; padding: 5px;">
-		                        	<img src="/images/arr_lleft.gif" alt="" border="0" style="cursor: pointer;" id="imgDeleteAll" onclick="return DeleteDeptAll();">
-		                            <img src="/images/arr_left.gif" alt="" border="0" style="cursor: pointer; margin-top:3px" onclick="DeleteDept()"><br>
-		                            <img src="/images/arr_right.gif" alt="" border="0" style="cursor: pointer; margin-top:3px" onclick="InsertDept()"><br>
 		                            <img src="/images/arr_rright.gif" alt="" border="0" style="cursor: pointer; margin-top:3px" id="imgInsertAll" onclick="return InsertDeptAll();"><br>
+		                            <img src="/images/arr_right.gif" alt="" border="0" style="cursor: pointer; margin-top:3px" onclick="InsertDept()"><br>
+		                            <img src="/images/arr_left.gif" alt="" border="0" style="cursor: pointer; margin-top:3px" onclick="DeleteDept()"><br>
+		                        	<img src="/images/arr_lleft.gif" alt="" border="0" style="cursor: pointer;" id="imgDeleteAll" onclick="return DeleteDeptAll();">
 		                        </td>
 		                        <td style="vertical-align: top;">
 		                            <br>
