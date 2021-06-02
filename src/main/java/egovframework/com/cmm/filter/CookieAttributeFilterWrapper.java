@@ -1,6 +1,7 @@
 package egovframework.com.cmm.filter;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Collection;
 
 import javax.servlet.ServletResponse;
@@ -15,6 +16,17 @@ public class CookieAttributeFilterWrapper extends HttpServletResponseWrapper{
 	
 	public CookieAttributeFilterWrapper(ServletResponse response) {
 		super((HttpServletResponse) response);
+	}
+	
+	@Override
+	public PrintWriter getWriter() {
+		try {
+			setSameSite();
+			return super.getWriter();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	@Override
