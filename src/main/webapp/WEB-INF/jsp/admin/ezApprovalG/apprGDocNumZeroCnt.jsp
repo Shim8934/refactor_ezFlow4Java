@@ -329,6 +329,23 @@
 	    }
 	    
 	    function InsertDeptAll() {
+	    	treeView.LoadFromID("FromTreeView");
+            var nodeIdx = treeView.GetSelectNode();
+            var treeNode = new TreeNode();
+            treeNode.LoadFromID(nodeIdx.NodeID);
+            
+			var selectDeptNodeId = document.getElementsByName("targetDept")[0].id
+ 	        
+ 	        if(selectDeptNodeId == "") {
+ 	        	alert('채번부서를 선택해주세요.');
+ 	        	return;
+ 	        }
+			
+			if(treeNode.GetNodeData("ID").indexOf(selectDeptNodeId) == -1) {
+	        	alert('채번부서의 하위 부서를 선택해주세요.')
+	        	return;
+	        }
+            
 	    	var pAlertContent = "<spring:message code='ezApprovalG.t1361'/>";
 	        var Ans = OpenInformationUI(pAlertContent);
 	    }
@@ -347,13 +364,6 @@
         	if (!RtnVal) {
                 return;
             }
-        	
-        	var selectDeptNodeId = document.getElementsByName("targetDept")[0].id
- 	        
- 	        if(selectDeptNodeId == "") {
- 	        	alert('채번부서를 선택해주세요.');
- 	        	return;
- 	        }
         	
         	treeView.LoadFromID("FromTreeView");
             var nodeIdx = treeView.GetSelectNode();
