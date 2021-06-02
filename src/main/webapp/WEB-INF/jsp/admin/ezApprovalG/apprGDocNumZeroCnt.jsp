@@ -477,6 +477,11 @@
 		    var subNode;
 		    var InitTr = lvtDeptSelect.GetDataRows();
 		    
+		    if(document.getElementsByName("targetDept")[0].value == "") {
+		    	alert('채번부서를 선택해주세요.');
+		    	return;
+		    }
+		    
 		    var targetDeptID = document.getElementsByName("targetDept")[0].getAttribute("data1");
 		    var targetDeptName = document.getElementsByName("targetDept")[0].getAttribute("data2");
 		    var targetCompanyID = document.getElementsByName("targetDept")[0].getAttribute("data3");
