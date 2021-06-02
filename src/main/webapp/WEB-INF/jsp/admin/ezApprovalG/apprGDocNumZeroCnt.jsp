@@ -186,6 +186,8 @@
 				document.getElementById("mainmenu").style.display = "none";
 				document.getElementById("mainmenu2").style.display = "";
 				document.getElementById("ListCompany").style.display = "none";
+				
+				document.getElementsByName("targetDept")[0].value = "";
 			}
 				ListChange();
 			
