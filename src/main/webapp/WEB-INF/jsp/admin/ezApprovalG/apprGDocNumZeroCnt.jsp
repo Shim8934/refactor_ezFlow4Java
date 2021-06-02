@@ -267,7 +267,6 @@
 	        var treeNode = new TreeNode();
 	        treeNode.LoadFromID(nodeIdx.NodeID);
 	        
-	        var tr = lvtDeptSelect.GetSelectedRows();
 	        var InitTr = lvtDeptSelect.GetDataRows();
 	        var MaxID = 0;
 	        var objTr;
@@ -447,7 +446,8 @@
 	    function DeleteDept() {
 	    	try {
 		        var CurSelRow = lvtDeptSelect.GetSelectedRows();
-		        lvtDeptSelect.DeleteRow(GetAttribute(CurSelRow[0], "id"));
+		        for(var i=0; i<CurSelRow.length; i++)
+			        lvtDeptSelect.DeleteRow(GetAttribute(CurSelRow[i], "id"));
 		        
 		        if (lvtDeptSelect.GetDataRows().length <= 0) {
 		        	insertNoItems();
