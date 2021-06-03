@@ -188,6 +188,7 @@
 				document.getElementById("ListCompany").style.display = "none";
 				
 				document.getElementsByName("targetDept")[0].value = "";
+				document.getElementById('lvtDeptSelect').innerHTML = "";
 			}
 				ListChange();
 			
