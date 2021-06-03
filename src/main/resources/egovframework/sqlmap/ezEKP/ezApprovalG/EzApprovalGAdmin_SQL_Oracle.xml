@@ -5832,5 +5832,25 @@
         		COMPANYID = #v_COMPANYID#
 		]]>
 	</delete>
+		
+	<select id="EzApprovalGAdminDAO.checkChaebunDeptList" parameterClass="Map" resultClass="String">
+		SELECT
+			DEPTNAME
+		FROM
+			TBL_SERIALNUMGEN_GRANT
+		WHERE
+			DEPTID IN
+		<iterate property="v_DEPTIDS" open="(" close=")" conjunction=",">
+			#v_DEPTIDS[]#
+		</iterate>
+		<![CDATA[
+		AND
+			GRANTDEPTID <> #v_DEPTID#
+		AND
+    		TENANT_ID = #v_TENANTID#
+		AND
+    		COMPANYID = #v_COMPANYID#
+    	]]>
+	</select>
 </sqlMap>
 

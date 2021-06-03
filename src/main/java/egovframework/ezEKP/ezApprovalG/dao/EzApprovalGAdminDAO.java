@@ -700,4 +700,9 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public void insertChaebunDeptList(Map<String, Object> map) throws Exception {
 		insert("EzApprovalGAdminDAO.insertChaebunDeptList", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> checkChaebunDeptList(Map<String, Object> map) throws Exception{
+		return (List<String>) list("EzApprovalGAdminDAO.checkChaebunDeptList", map);
+	}
 }

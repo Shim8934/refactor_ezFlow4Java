@@ -512,10 +512,12 @@
 	        xmlhttp.send(xmlpara);
 	        var xmlRtn = xmlhttp.responseText;
 	        
-	        if(xmlRtn == "NO"){
+	        if(xmlRtn == "error"){
 				alert('오류가 발생하였습니다.');
-			} else {
+			} else if(xmlRtn == "OK"){
 				alert("저장하였습니다.");
+			} else {
+				alert("채번부서가 중복지정된 부서가 있습니다\n" + xmlRtn);
 			}
 	    }
 	</script>
