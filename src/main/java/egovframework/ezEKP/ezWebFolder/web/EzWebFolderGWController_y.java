@@ -1378,6 +1378,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 		JSONObject json = new JSONObject();
 		String folderId = "";
 		List<Map<String,Object>> folderInfo = new ArrayList<Map<String,Object>>();
+		String folderType = (String) jsonObject.get("folderType");
 		
 		try {
 			LOGGER.debug("userId=" + jsonObject.get("ownerId").toString() + ",tenantId=" + jsonObject.get("tenantId").toString() 
@@ -1391,16 +1392,20 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			jsonObject.put("idList", permissionIdList);
 			
 			folderInfo = service.getRootFolderListInfo(jsonObject); 
-			folderId = folderInfo.get(0).get("FOLDER_ID").toString();
+			if (folderInfo.size() > 0) {
+				folderId = folderInfo.get(0).get("FOLDER_ID").toString();
+			}
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			json.put("status", "error");
 			json.put("code", 2);
 			return json;
 		}
-		if(folderId == ""){
+		
+		if (!folderType.equals("S") && folderId == ""){
 			throw new Exception("Exception message");
 		}
+		
 		LOGGER.debug("folderId=" + folderId);
 		json.put("folderInfo", folderInfo);
 		json.put("folderId", folderId);

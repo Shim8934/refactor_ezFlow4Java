@@ -363,6 +363,7 @@ public class EzWebFolderGWController_m {
 			Map<String, Long> countInfo = ezWebFolderService_m.getSharedCount(subSearchFlag, userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
 			
 			data.put("list", list);
+			data.put("listCount", userListCount);
 			data.putAll(countInfo);
 			
 			result.put("status", "ok");
