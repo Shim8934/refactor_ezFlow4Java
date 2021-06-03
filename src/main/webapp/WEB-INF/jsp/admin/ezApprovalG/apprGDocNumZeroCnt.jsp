@@ -147,8 +147,8 @@
 		        
 	        createNodeInsert(xmlpara, objNode, "PARAMETER");
 			if(targetDept == "") {
-		    	createNodeAndInsertText(xmlpara, objNode, "NODE1", "Top");
-		    	createNodeAndInsertText(xmlpara, objNode, "NODE2", "Top");
+		    	createNodeAndInsertText(xmlpara, objNode, "NODE1", "");
+		    	createNodeAndInsertText(xmlpara, objNode, "NODE2", "");
 	    	} else {
 	    		treeView.LoadFromID("FromTreeView");
 		        var nodeIdx = treeView.GetSelectNode();
@@ -190,7 +190,7 @@
 				document.getElementsByName("targetDept")[0].value = "";
 				document.getElementById('lvtDeptSelect').innerHTML = "";
 			}
-				ListChange();
+			ListChange();
 			
 		}
 		/* 탭 이동 관련 이벤트 2 [마우스오버] */
