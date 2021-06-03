@@ -1801,26 +1801,78 @@
     	]]>
     </select>
     <select id="EzWebFolderDAO_y.getRootFolderListInfo" parameterClass="Map" resultClass="java.util.HashMap">
-    	<![CDATA[
+    	<isNotEqual property="folderType" compareValue="S">
     		SELECT 
     			distinct folder.FOLDER_ID AS FOLDER_ID, 
-    			folder.FOLDER_NAME1 AS FOLDER_NAME 
+    			folder.FOLDER_NAME1 AS FOLDER_NAME,   
+    			folder.folder_type AS FOLDER_TYPE  
     		FROM 
     			TBL_WEBFOLDER_FOLDER folder
-    		LEFT JOIN 
-    			TBL_WEBFOLDER_FOLDERUSER fuser ON fuser.FOLDER_ID = folder.FOLDER_ID 
-    		WHERE 
-    			folder.FOLDER_TYPE = 'C' 
-			AND 
-				folder.FOLDER_LEVEL = 1 
-			AND 
-				folder.USE_STATUS = 'Y'
-			AND 
-				fuser.USER_ID IN 
-    	]]>
-   		<iterate property="idList" open="(" close=")" conjunction=",">
-			#idList[]#
-		</iterate>
-			ORDER BY folder.FOLDER_NAME1
+   			<isEqual property="folderType" compareValue="C">
+   				LEFT JOIN 
+		    			TBL_WEBFOLDER_FOLDERUSER fuser ON fuser.FOLDER_ID = folder.FOLDER_ID 
+	    		WHERE 
+					folder.FOLDER_LEVEL = 1 
+					AND 
+						fuser.USER_ID IN 
+		   		<iterate property="idList" open="(" close=")" conjunction=",">
+					#idList[]#
+				</iterate>
+	    	</isEqual>
+    		<isNotEqual property="folderType" compareValue="C">
+		    	WHERE 
+					folder.FOLDER_LEVEL = 0 
+	    	</isNotEqual>
+		    	AND
+	    			folder.FOLDER_TYPE = #folderType#
+	    		AND 
+	    			folder.tenant_id = #tenantId#
+	    		AND 
+	    			folder.OWNER_ID IN
+	    			<iterate property="idList" open="(" close=")" conjunction=",">
+						#idList[]#
+					</iterate>
+				AND 
+					folder.USE_STATUS = 'Y'
+				ORDER BY FOLDER_NAME
+		</isNotEqual>
+		<isEqual property="folderType" compareValue="S">
+			SELECT
+				distinct FOLDER_ID AS FOLDER_ID, 
+    			D2.FOLDER_NAME1 AS FOLDER_NAME,  
+    			D2.folder_type AS FOLDER_TYPE  
+			FROM TBL_WEBFOLDER_FOLDER D2
+			JOIN (
+			    SELECT
+			    	D.FOLDER_PATH,
+			    	SD.SHARE_ID AS NUM
+			    FROM TBL_WEBFOLDER_FOLDER D
+			    JOIN (
+			        SELECT DISTINCT
+			            S.FOLDERFILE_ID,
+			            S.SHARE_ID,
+			            S.TENANT_ID
+			        FROM TBL_WEBFOLDER_SHARE S
+			        JOIN TBL_WEBFOLDER_SHARE_SUB SS
+			        ON S.SHARE_ID = SS.SHARE_ID
+			        AND S.TENANT_ID = SS.TENANT_ID
+			        LEFT JOIN TBL_WEBFOLDER_SHARE_HIDE SH
+			        ON S.SHARE_ID = SH.SHARE_ID
+			        AND S.TENANT_ID = SH.TENANT_ID
+			        AND SH.USER_ID = #userId#
+			        WHERE SS.USER_ID IN 
+			        <iterate property="idList" open="(" close=")" conjunction=",">
+						#idList[]#
+					</iterate>
+			        AND S. FOLDERFILE_TYPE = 'D'
+			        AND SH.USER_ID IS NULL ) SD
+			    ON D.FOLDER_ID = SD.FOLDERFILE_ID
+			    AND D.TENANT_ID = SD.TENANT_ID
+			    WHERE D.TENANT_ID = #tenantId# ) FP
+			ON D2.FOLDER_PATH LIKE (FP.FOLDER_PATH)
+			AND D2.TENANT_ID = #tenantId#
+			WHERE D2.USE_STATUS = 'Y'
+			ORDER BY FOLDER_NAME
+		</isEqual>
     </select>
 </sqlMap>

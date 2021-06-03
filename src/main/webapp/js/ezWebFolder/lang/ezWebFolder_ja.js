@@ -57,6 +57,7 @@ var messages = {
 	unsupportedFormat: "The file format is not supported.",
 	webviewerConfirm: "選択したファイルをWebビューアで開きますか？",
 	moveFromNotInheritError: "You cannot move/copy files or folders in folders that do not inherit permissions.",
-	moveFromNotInheritErrorContains: "You cannot move/copy because the selected item contains files or folders in folders that do not inherit permissions."
+	moveFromNotInheritErrorContains: "You cannot move/copy because the selected item contains files or folders in folders that do not inherit permissions.",
+	sharedFileFolderNotExists： "共有されたファイルまたはフォルダが存在しません。"
 
 }

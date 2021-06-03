@@ -451,7 +451,7 @@ public class EzWebFolderController_y {
 			HttpServletResponse resp, Model model ) throws Exception {
 		LOGGER.debug("webfolderFileListPickup started");
 		
-		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String folderType = orElse(request.getParameter("folderType"), "");
 		String allFileFlag = orElse(request.getParameter("allFileFlag"),"");
 		String parentId = orElse(request.getParameter("parentId"),"");
@@ -466,6 +466,7 @@ public class EzWebFolderController_y {
 		jsonObj.put("ownerId", userInfo.getDeptID());
 		jsonObj.put("comId", userInfo.getCompanyID());
 		jsonObj.put("deptId", userInfo.getDeptID());
+		jsonObj.put("primary", userInfo.getPrimary());
 		
 		JSONObject json = null;
 		json = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/folderidbyuserid-foldertype", 
@@ -487,6 +488,53 @@ public class EzWebFolderController_y {
         
         LOGGER.debug("webfolderFileListPickup ended");
 		return "ezWebFolder/webfolderFileListPickup";
+	}
+	
+	/**
+	 * 다른 모듈에서 웹폴더의 파일 선택시 선택한 파일의 리스트를 선택할 수 있는 레이어 팝업 호출 
+	 */
+	@RequestMapping(value="/ezWebFolder/webfolderAuthFolderList.do", method = RequestMethod.GET)
+	@ResponseBody 
+	public JSONObject webfolderAuthFolderList (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
+			HttpServletResponse resp) throws Exception {
+		LOGGER.debug("webfolderFileListPickup started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String folderType = orElse(request.getParameter("folderType"), "");
+		String allFileFlag = orElse(request.getParameter("allFileFlag"),"");
+		String parentId = orElse(request.getParameter("parentId"),"");
+		String folderId = "";
+		String ownerId = "";
+		
+		LOGGER.debug("folderType : "+ folderType + ",allFileFlag : " + request.getParameter("allFileFlag"));
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("userId", userInfo.getId());
+		jsonObj.put("folderType", folderType);
+		jsonObj.put("tenantId", userInfo.getTenantId());
+		switch (folderType) {
+		case "C":
+			ownerId = userInfo.getCompanyID();
+			break;
+		case "D":
+			ownerId = userInfo.getDeptID();
+			break;
+		case "U":
+			ownerId = userInfo.getId();
+			break;
+		}
+		
+		jsonObj.put("ownerId", userInfo.getDeptID());
+		jsonObj.put("comId", userInfo.getCompanyID());
+		jsonObj.put("deptId", userInfo.getDeptID());
+		jsonObj.put("primary", userInfo.getPrimary());
+		
+		JSONObject json = null;
+		json = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/folderidbyuserid-foldertype", 
+				null, request, "post", jsonObj);
+		LOGGER.debug("json=" + json);
+        LOGGER.debug("webfolderFileListPickup ended");
+		return json;
 	}
 	
 	/**

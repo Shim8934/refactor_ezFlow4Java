@@ -1507,29 +1507,30 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		String deptId = (String)jsonObject.get("deptId");
 		String comId = (String)jsonObject.get("comId");
 		int tenantId = (Integer)jsonObject.get("tenantId");
+		String folderType = (String)jsonObject.get("folderType");
+		
 		System.out.println(jsonObject);
 		Map<String, Object> map = new HashMap<String, Object>();
-		Map<String, Object> map2 = new HashMap<String, Object>();
 		
-		map2.put("userId", userId);
-		map2.put("tenantId", tenantId);
-		map2.put("companyId", comId);
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", comId);
 		List<String> addjobList = getAddJobList(tenantId, userId);
-		List<String> folderUserIdList = ezWebFolderDAO_m
-				.getFolderUserIdList_D(map2);
+		List<String> folderUserIdList = ezWebFolderDAO_m.getFolderUserIdList_D(map);
 
 		List<String> jikWiChekAddjobList = getjikWiChekAddjobList(tenantId, userId, comId);
 		Set<String> idSet = new HashSet<String>();
 		idSet.add(userId);
 		idSet.add(deptId);
-		idSet.add(comId);
 		idSet.addAll(addjobList);
-		idSet.addAll(jikWiChekAddjobList);
-		idSet.addAll(folderUserIdList);
-		
+		if (folderType.equals("C") || folderType.equals("S")) {
+			idSet.add(comId);
+			idSet.addAll(jikWiChekAddjobList);
+			idSet.addAll(folderUserIdList);
+		}
 
 		// 권한그룹이 추가 : tbl_webfolder_folderuser에 있는 권한 그룹리스트 가져와서 체크
-		List<String> groupList = ezWebFolderDAO_y.getWebFolderUserGroupList(map2);
+		List<String> groupList = ezWebFolderDAO_y.getWebFolderUserGroupList(map);
 		
 		if (groupList != null) {
 			for (String groupId : groupList) {
@@ -1541,9 +1542,11 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			}
 		}
 
-		map.put("idList", 		idSet.toArray(new String[idSet.size()]));
-		map.put("tenantId"		, (Integer)jsonObject.get("tenantId"));
+		map.put("idList"		, idSet.toArray(new String[idSet.size()]));
+		map.put("tenantId"		, tenantId);
 		map.put("folderType"	, (String)jsonObject.get("folderType"));
+		map.put("primary"		, (String)jsonObject.get("primary"));
+		
 		List<Map<String, Object>> result = ezWebFolderDAO_y.selectRootFolderListInfo(map); 
 		
 		LOGGER.debug("result=" + result);

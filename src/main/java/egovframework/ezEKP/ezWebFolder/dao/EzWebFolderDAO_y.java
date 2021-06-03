@@ -225,8 +225,7 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 		return (List<Map<String, String>>) list("EzWebFolderDAO_y.getFolderUser", map);
 	}
 		
-	public List<Map<String, Object>> selectRootFolderListInfo(
-			Map<String, Object> map) {
+	public List<Map<String, Object>> selectRootFolderListInfo (Map<String, Object> map) {
 		return (List<Map<String, Object>>) list("EzWebFolderDAO_y.getRootFolderListInfo",map);
 	}
 	

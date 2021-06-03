@@ -57,5 +57,6 @@ var messages = {
 	unsupportedFormat: "지원하지 않는 파일 형식입니다.",
 	webviewerConfirm: "선택한 파일을 웹뷰어로 열겠습니까?",
 	moveFromNotInheritError: "권한 비상속 폴더의 파일이나 폴더는 이동/복사할 수 없습니다.",
-	moveFromNotInheritErrorContains: "선택한 항목 중 권한 비상속 폴더의 파일이나 폴더가 있어 이동/복사할 수 없습니다."
+	moveFromNotInheritErrorContains: "선택한 항목 중 권한 비상속 폴더의 파일이나 폴더가 있어 이동/복사할 수 없습니다.",
+	sharedFileFolderNotExists: "공유받은 파일 또는 폴더가 존재하지 않습니다."
 }
