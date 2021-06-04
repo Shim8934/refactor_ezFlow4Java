@@ -52,17 +52,21 @@
 				<tr style="height:100%;">
 					<!-- 전체 도메인 -->
 					<td>
-						<div style="height: 100%; border:1px solid #dbdbda;">
-							<table class="mainlist_free" cellspacing="0" cellpadding="0" width="100%" border="0">
-								<thead>
-									<tr>
-										<th style="padding-left:10px;"><spring:message code='ezEmail.multiDomain.ksa13' /></th>
-									</tr>
-								</thead>
-							</table>
-							<table class="mainlist" id="listTable" style="width:100%;">
-								<tbody></tbody>
-							</table>
+						<div style="height: 100%; border:1px solid #dbdbda; height: 400px;">
+							<div style="height: 8%; ">
+								<table class="mainlist_free" cellspacing="0" cellpadding="0" width="100%" border="0">
+									<thead>
+										<tr>
+											<th style="padding-left:10px;"><spring:message code='ezEmail.multiDomain.ksa13' /></th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div style="height: 92%; overflow-y: auto;">
+								<table class="mainlist" id="listTable" style="width:100%;">
+									<tbody></tbody>
+								</table>
+							</div>
 						</div>
 					</td>	
 					<!-- 추가 삭제 화살표 아이콘 -->
@@ -72,17 +76,21 @@
 					</td>
 					<!-- 회사 도메인 -->
 					<td>
-						<div style="height: 100%; border:1px solid #dbdbda;">
-							<table class="mainlist_free" cellspacing="0" cellpadding="0" width="100%" border="0">
-								<thead>
-									<tr>
-										<th style="padding-left:10px;"><spring:message code='ezEmail.multiDomain.ksa14' /></th>
-									</tr>
-								</thead>
-							</table>
-							<table class="mainlist" id="companyListTable" style="width:100%;">
-								<tbody></tbody>
-							</table>
+						<div style="height: 100%; border:1px solid #dbdbda; height: 400px;">
+							<div style="height: 8%; ">
+								<table class="mainlist_free" cellspacing="0" cellpadding="0" width="100%" border="0">
+									<thead>
+										<tr>
+											<th style="padding-left:10px;"><spring:message code='ezEmail.multiDomain.ksa14' /></th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div style="height: 92%; overflow-y: auto;">
+								<table class="mainlist" id="companyListTable" style="width:100%;">
+									<tbody></tbody>
+								</table>
+							</div>
 						</div>
 					</td>		
 				</tr>
