@@ -1097,3 +1097,7 @@ var strLang961 = "삭제할 공유자를 선택해주세요.";
 var strLang962 = "삭제하시겠습니까?";
 var strLang963 = "삭제되었습니다.";
 var strLang964 = "삭제가 실패하였습니다.";
+
+var strLang970 = "请选择采编部门.";
+var strLang971 = "请选择采编部门的下级部门.";
+var strLang972 = "有复核部门";

@@ -1100,3 +1100,7 @@ var strLang961 = "Please select a shareholder to delete";
 var strLang962 = "Are you sure you want to delete it?";
 var strLang963 = "Deleted.";
 var strLang964 = "failed";
+
+var strLang970 = "Please select a target department";
+var strLang971 = "Please select a sub-department";
+var strLang972 = "Duplicate assigned department exists";

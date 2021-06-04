@@ -275,13 +275,13 @@
 	        
 	        // 1. 채번부서를 선택했는지 확인
 	        if(selectDeptNodeId == "") {
-	        	alert('채번부서를 선택해주세요.');
+	        	alert(strLang970);
 	        	return;
 	        }
 	        
 	        // 2. 현재 선택한 부서가 채번부서의 하위 부서인지 체크
 	        if(treeNode.GetNodeData("ID").indexOf(selectDeptNodeId) == -1) {
-	        	alert('채번부서의 하위 부서를 선택해주세요.')
+	        	alert(strLang971)
 	        	return;
 	        }
 	        
@@ -337,12 +337,12 @@
 			var selectDeptNodeId = document.getElementsByName("targetDept")[0].id
  	        
  	        if(selectDeptNodeId == "") {
- 	        	alert('채번부서를 선택해주세요.');
+ 	        	alert(strLang970);
  	        	return;
  	        }
 			
 			if(treeNode.GetNodeData("ID").indexOf(selectDeptNodeId) == -1) {
-	        	alert('채번부서의 하위 부서를 선택해주세요.')
+	        	alert(strLang971)
 	        	return;
 	        }
             
@@ -454,7 +454,7 @@
 		        	insertNoItems();
 		        }
 	    	} catch(e) {
-	    		alert('오류가 발생하였습니다. ' + e);
+	    		alert(strLang131 + '\n' + e);
 	    	}
 	    }
 	    
@@ -467,7 +467,7 @@
 		    	
 		    	insertNoItems();
 		    } catch(e) {
-	    		alert('오류가 발생하였습니다. ' + e);
+		    	alert(strLang131 + '\n' + e);
 	    	}
 	    }
 	    
@@ -479,7 +479,7 @@
 		    var InitTr = lvtDeptSelect.GetDataRows();
 		    
 		    if(document.getElementsByName("targetDept")[0].value == "") {
-		    	alert('채번부서를 선택해주세요.');
+		    	alert(strLang970);
 		    	return;
 		    }
 		    
@@ -514,11 +514,11 @@
 	        var xmlRtn = xmlhttp.responseText;
 	        
 	        if(xmlRtn == "error"){
-				alert('오류가 발생하였습니다.');
+	    		alert(strLang131 + '\n' + e);
 			} else if(xmlRtn == "OK"){
-				alert("저장하였습니다.");
+				alert(strLang490);
 			} else {
-				alert("채번부서가 중복지정된 부서가 있습니다\n" + xmlRtn);
+				alert(strLang972 + "\n" + xmlRtn);
 			}
 	    }
 	</script>
@@ -535,8 +535,8 @@
 	</h1>
 	<div class="portlet_tabpart01" style="width: 100%; <c:if test="${approvalFlag eq 'G' }">display:none;</c:if>">
 		<div class="portlet_tabpart01_top" id="tab1">
-			<p><span id="001" class="tabover">채번설정</span></p>
-			<p><span id="002">채번부서설정</span></p>
+			<p><span id="001" class="tabover"><spring:message code='ezApprovalG.chaebun01'/></span></p>
+			<p><span id="002"><spring:message code='ezApprovalG.chaebun02'/></span></p>
 	    </div>
 	</div>
 	<div id="mainmenu" style="width: 350px;margin-top:30px">
@@ -561,9 +561,9 @@
 	    </div>
 	</div>
 	<div id="mainmenu2" style="margin-top:30px;display:none">
-		<div style="margin-top:3px;">▒&nbsp;결재완료시의 채번부서를 선택할 수 있습니다</div>
-		<div style="margin-top:3px;">▒&nbsp;채번의 기준이 되는 부서를 채번부서로, 채번부서로 채번하는 부서를 대상부서에 추가해주세요</div>
-		<div style="margin-top:3px;">▒&nbsp;저장시 수정 사항이 반영됩니다</div>
+		<div style="margin-top:3px;">▒&nbsp;<spring:message code='ezApprovalG.chaebun03' /></div>
+		<div style="margin-top:3px;">▒&nbsp;<spring:message code='ezApprovalG.chaebun04' /></div>
+		<div style="margin-top:3px;">▒&nbsp;<spring:message code='ezApprovalG.chaebun05' /></div>
 		<br/>
 		<table>
 			<tbody>
@@ -583,7 +583,7 @@
 		                        </td>
 		                        <td style="vertical-align: top;">
 		                            <h2 id="ToTitle" class="h2_dot" style="font-weight: bold;">
-		                                <span style="min-width: 45px;" id="ToTitleStr">채번부서</span>
+		                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezApprovalG.chaebun06' /></span>
 		                            </h2>
 		                            <input type="text" name="targetDept" style="width:360px;" readonly>
 		                        </td>
@@ -598,7 +598,7 @@
 		                        <td style="vertical-align: top;">
 		                            <br>
 		                            <h2 id="CriteriaDept" class="h2_dot" style="font-weight: bold;">
-		                                <span style="min-width: 45px;">대상부서</span>
+		                                <span style="min-width: 45px;"><spring:message code='ezApprovalG.chaebun07' /></span>
 		                            </h2>
 		                            <div class="listview">
 				                    	<div id="lvtDeptSelect" style="OVERFLOW-Y: auto; OVERFLOW-X: hidden; BACKGROUND-COLOR: #ffffff; Width: 360px; Height: 320px; font-size: 9pt"></div>
@@ -612,7 +612,7 @@
 	       	</tbody>
 		</table>
 		<div class="btnpositionJsp" style="width:700px;">
-			<a class="imgbtn" onclick="Save2()"><span>저장</span></a>
+			<a class="imgbtn" onclick="Save2()"><span><spring:message code='main.sp09' /></span></a>
 	    </div>
 	</div>
 </body>
