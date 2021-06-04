@@ -5679,19 +5679,22 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			String deptName = doc.getDocumentElement().getChildNodes().item(0).getChildNodes().item(1).getTextContent();
 			String companyID = doc.getDocumentElement().getChildNodes().item(0).getChildNodes().item(2).getTextContent();
 					
-			NodeList nodes = doc.getDocumentElement().getChildNodes().item(1).getChildNodes();
-			String[] deptIds = new String[nodes.getLength()];
-			for(int i=0; i<nodes.getLength(); i++) {
-				deptIds[i] = nodes.item(i).getChildNodes().item(0).getTextContent();
-			}
-			map.put("v_DEPTID", deptID);
-			map.put("v_DEPTIDS", deptIds);
-			map.put("v_COMPANYID", companyID);
 			map.put("v_TENANTID", userInfo.getTenantId());
-			List<String> retVal = ezApprovalGAdminDAO.checkChaebunDeptList(map);
+			map.put("v_DEPTID", deptID);
+			map.put("v_COMPANYID", companyID);
 			
-			if(retVal.size() > 0) {
-				return retVal.toString();
+			NodeList nodes = doc.getDocumentElement().getChildNodes().item(1).getChildNodes();
+			if(nodes.getLength() > 0) {
+				String[] deptIds = new String[nodes.getLength()];
+				for(int i=0; i<nodes.getLength(); i++) {
+					deptIds[i] = nodes.item(i).getChildNodes().item(0).getTextContent();
+				}
+				map.put("v_DEPTIDS", deptIds);
+				List<String> retVal = ezApprovalGAdminDAO.checkChaebunDeptList(map);
+				
+				if(retVal.size() > 0) {
+					return retVal.toString();
+				}
 			}
 			
 			ezApprovalGAdminDAO.deleteChaebunDeptList(map);
