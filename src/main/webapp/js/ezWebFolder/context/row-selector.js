@@ -32,7 +32,7 @@ var rowContext = (function() {
 			if ((typeof filePickArr) != "undefined"){
 				var selectedFile = folderId + "/" + rowElement.getAttribute("targetId");
 				var selectedFileId = rowElement.getAttribute("targetId");
-				if (!filePickArr.indexOf(selectedFile) > -1){
+				if (!(filePickArr.indexOf(selectedFile) > -1)){
 					filePickArr.push(selectedFile);
 					if (typeof selectFileList != "undefinded"){
 						selectFileList.push(selectedFileId);
@@ -87,7 +87,7 @@ var rowContext = (function() {
 			if ((typeof filePickArr) != "undefined"){
 				var selectedFile = folderId + "/" + rowElement.getAttribute("targetId");
 				var selectedFileId = rowElement.getAttribute("targetId");
-				if (!filePickArr.indexOf(selectedFile) > -1){
+				if (!(filePickArr.indexOf(selectedFile) > -1)){
 					filePickArr.push(selectedFile);
 					if (typeof selectFileList != "undefinded"){
 						selectFileList.push(selectedFileId);
@@ -95,7 +95,7 @@ var rowContext = (function() {
 				}
 				
 				var seletedCheck = folderId + "/" + rowElement.firstChild.firstChild.getAttribute("value");
-				var seletedCheckId = rowElement.firstChild.firstChild.getAttribute("value");
+				var selectedCheckId = rowElement.firstChild.firstChild.getAttribute("value");
 				if (!rowElement.firstChild.firstChild.checked){
 					var index = filePickArr.indexOf(selectedFile);
 					var index2 = selectedCheckId.indexOf(selectedFileId);
@@ -114,7 +114,7 @@ var rowContext = (function() {
 				filePickArr = new Array();
 				var selectedFile = folderId + "/" + rowElement.getAttribute("targetId");
 				var selectedFileId = rowElement.getAttribute("targetId");
-				if (!filePickArr.indexOf(selectedFile) > -1){
+				if (!(filePickArr.indexOf(selectedFile) > -1)){
 					filePickArr.push(selectedFile);
 					if (typeof selectFileList != "undefinded"){
 						selectFileList.push(selectedFileId);
