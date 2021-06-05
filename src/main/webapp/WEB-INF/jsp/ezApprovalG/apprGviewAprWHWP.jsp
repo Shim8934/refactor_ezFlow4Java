@@ -298,7 +298,9 @@
 		    function btnforcecallback_onclick_Complete(ans) {
 		        if (ans) {
 		            doCancelForce();
-		        }
+		        } else {
+					DivPopUpHidden();
+				}
 			}
 			function doCancelForce() {
 				var retVal = ExcuteInfo("CALLBACK_BEFORE", "DRAFT"); // pdraftflag 정상적으로 가져오게 수정해야함
