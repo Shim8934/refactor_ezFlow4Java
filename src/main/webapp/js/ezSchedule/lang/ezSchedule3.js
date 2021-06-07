@@ -196,3 +196,12 @@ var strLangGHA1 = "、";
 var strLangHSB1 = "MHT ファイルの保存に失敗しました。";
 /* 2020-05-19 */
 var strLang131_1 = "협업일정";
+
+var googleSyncMessages = {
+		strConfirmSync : "同期を行いますか？",
+		strSyncSuccess : "同期が正常に終わりました。",
+		strSyncFail : "同期に失敗しました。",
+		strNoSync : "同期の認証情報がないため、修正、削除はできません。",
+		strOnlyGoogle : "Googleカレンダーで提供する機能です。\n 修正、削除、ドラッグ＆ドロップはできません。 ",
+		strConfirmDelete : "同期を無効にしますか？"
+	}
