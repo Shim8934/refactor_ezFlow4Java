@@ -742,7 +742,7 @@
                 <li><span onclick="cancel()"></span></li>
             </ul>
         </div>
-		<select class="select" id="taskRootFolder" onchange="getFileList(this.value)" style="margin-top: -6px;margin-left: 6px;">
+		<select class="select" id="taskRootFolder" onchange="getFileList(this.value)" style="margin-top: -6px;margin-left: 6px; max-width: 400px;">
 		</select>
 		<div style="position: absolute; top: 54px; right: 10px;">
 			<input name="treeType" id="radio1" type="radio" value="C" checked style="margin:0px;padding:0px;width:13px;height:17px;vertical-align: middle" onclick="radioOnclick('C');"><label for="radio1"><span> <spring:message code='ezWebFolder.t233'/></span></label>
