@@ -381,9 +381,12 @@
 		    function btncallback_onclick_Complete(ans) {
 				DivPopUpHidden();
 		        if (ans) {
-		            doCancel();
-		        }
-			}
+                    doCancel();
+                } else {
+                    DivPopUpHidden();
+                }
+
+            }
 			function doCancel() {
 				var retVal = ExcuteInfo("CALLBACK_BEFORE", "DRAFT"); // pdraftflag 정상적으로 가져오게 수정해야함
 				if (!retVal) {
