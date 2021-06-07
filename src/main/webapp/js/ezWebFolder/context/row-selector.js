@@ -55,18 +55,10 @@ var rowContext = (function() {
 			}
 			
 			clearFocus();
-			
 			for (var i = startIndex; i <= endIndex; i++) {
 				setSelectState(rows[i], true);
 				if ((typeof filePickArr) != "undefined"){
-					var selectedFile = folderId + "/" + rows[i].getAttribute("targetId");
-					var selectedFileId = rows[i].getAttribute("targetId");
-					if (!filePickArr.indexOf(selectedFile) > -1){
-						filePickArr.push(selectedFile);
-						if (typeof selectFileList != "undefinded"){
-							selectFileList.push(selectedFileId);
-						}
-					}
+					selectedFileList(rowElement);
 				}	
 			}
 			
@@ -85,40 +77,38 @@ var rowContext = (function() {
 		if (event.ctrlKey || isDuplicateFocus) {
 			setSelectState(rowElement, !isSelected(rowElement));
 			if ((typeof filePickArr) != "undefined"){
-				var selectedFile = folderId + "/" + rowElement.getAttribute("targetId");
-				var selectedFileId = rowElement.getAttribute("targetId");
-				if (!(filePickArr.indexOf(selectedFile) > -1)){
-					filePickArr.push(selectedFile);
-					if (typeof selectFileList != "undefinded"){
-						selectFileList.push(selectedFileId);
-					}
-				}
-				
-				var seletedCheck = folderId + "/" + rowElement.firstChild.firstChild.getAttribute("value");
-				var selectedCheckId = rowElement.firstChild.firstChild.getAttribute("value");
-				if (!rowElement.firstChild.firstChild.checked){
-					var index = filePickArr.indexOf(selectedFile);
-					var index2 = selectedCheckId.indexOf(selectedFileId);
-					if (index != -1){
-						filePickArr.splice(index,1);
-					}
-				}
+				selectedFileList(rowElement);
 			}
 		} else {
 			clearFocus();
 			setSelectState(rowElement, true);
-			
 			firstSelected = rowElement;
-			
 			if ((typeof filePickArr) != "undefined"){
 				filePickArr = new Array();
-				var selectedFile = folderId + "/" + rowElement.getAttribute("targetId");
-				var selectedFileId = rowElement.getAttribute("targetId");
-				if (!(filePickArr.indexOf(selectedFile) > -1)){
-					filePickArr.push(selectedFile);
-					if (typeof selectFileList != "undefinded"){
-						selectFileList.push(selectedFileId);
-					}
+				selectedFileList(rowElement);
+			}
+			
+		}
+	}
+	
+	function selectedFileList(rowElement) {
+		var selectedFile = folderId + "/" + rowElement.getAttribute("targetId");
+		var selectedFileId = rowElement.getAttribute("targetId");
+		
+		var seletedCheck = folderId + "/" + rowElement.firstChild.firstChild.getAttribute("value");
+		var selectedCheckId = rowElement.firstChild.firstChild.getAttribute("value");
+		if (!rowElement.firstChild.firstChild.checked){
+			var index = filePickArr.indexOf(selectedFile);
+			var index2 = selectedCheckId.indexOf(selectedFileId);
+			if (index != -1){
+				filePickArr.splice(index,1);
+				selectFileList.splice(index, 1);
+			}
+		} else {
+			if (!(filePickArr.indexOf(selectedFile) > -1)){
+				filePickArr.push(selectedFile);
+				if (typeof selectFileList != "undefinded"){
+					selectFileList.push(selectedFileId);
 				}
 			}
 		}
