@@ -67,6 +67,7 @@ var searchContext = (function() {
 	
 	function clearRequirement() {
 		setRequirement("", "", "", "", "", "");
+		setFileType("");
 		
 		if (isSearchPage) {
 			isSearchPage = false;

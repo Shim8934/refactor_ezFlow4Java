@@ -680,6 +680,7 @@
 	    function radioOnclick(obj) {
 	    	folderType = obj;
 	    	document.getElementById("searchFileName").value = "";
+	    	$("#idSelect").val("").prop("selected",true);
 	    	searchContext.clearRequirement();
 			if (folderType == "S") {
 		    	folderId = "S";
