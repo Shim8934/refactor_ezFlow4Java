@@ -15,6 +15,7 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleMailConfigVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleReceiveListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleTokenInfoVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 
@@ -139,4 +140,8 @@ public interface EzScheduleService {
 	public String getScheduleCompleteIsAllRep(String scheduleId, String repeatCount, String startdate, String dateType, int tenantId, String companyID) throws Exception;
 	/* 2021-11-26 홍승비 - 일정 리스트 데이터를 전달받아 일정완료 데이터를 추가 가공하여 리턴 */
 	public List<ScheduleInfoVO> applyScheduleCompleteData(List<ScheduleInfoVO> sList, String offset, int tenantId, String companyID) throws Exception;
+	
+	public ScheduleTokenInfoVO scheduleGetTokenInfo(String userID, int tenantID, String companyID) throws Exception;
+	
+	public void scheduleSaveTokenInfo(String userID, String googleAccessToken, String googleRefreshToken, String todayUtcTime, int tenantID, String companyID) throws Exception;
 }

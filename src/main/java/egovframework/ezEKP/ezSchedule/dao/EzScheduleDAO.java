@@ -19,6 +19,8 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleMailConfigVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleReceiveListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleTokenInfoVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzScheduleDAO")
@@ -336,6 +338,33 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	/* 2021-11-29 홍승비 - 참석자 초대 수락 시, 부모 일정의 일정완료 레코드도 동일하게 삽입 */
 	public void insertAttendantScheduleComplete(Map<String, Object> map) throws Exception {
 		insert("EzScheduleDAO.insertAttendantScheduleComplete", map);
+	}
+	
+	public ScheduleTokenInfoVO getScheduleTokenInfo(Map<String, Object> map) throws Exception {
+		return (ScheduleTokenInfoVO) select("EzScheduleDAO.getScheduleTokenInfo", map);
+	}
+	
+	public void insertScheduleTokenInfo(Map<String, Object> map) throws Exception {
+		insert("EzScheduleDAO.insertScheduleTokenInfo", map);
+	}
+	
+	public void updateScheduleTokenInfo(Map<String, Object> map) throws Exception {
+		update("EzScheduleDAO.updateScheduleTokenInfo", map);
+	}
+	
+	public String getIsSync(LoginVO userInfo) throws Exception {
+		String token = (String) select("EzScheduleDAO.getIsSync", userInfo); 
+		return (token != null && !token.equals("")) ? "Y" : "N";
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ScheduleTokenInfoVO> getAllGoogleToken(Map<String, Object> map) throws Exception {
+		return (List<ScheduleTokenInfoVO>) list("EzScheduleDAO.getAllGoogleToken", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ScheduleTokenInfoVO> getExpiredGoogleToken(Map<String, Object> map) throws Exception {
+		return (List<ScheduleTokenInfoVO>) list("EzScheduleDAO.getExpiredGoogleToken", map);
 	}
 }
 

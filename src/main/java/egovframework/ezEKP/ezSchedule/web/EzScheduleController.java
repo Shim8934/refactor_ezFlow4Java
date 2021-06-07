@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.ParseException;
@@ -47,6 +48,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.view.RedirectView;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -64,6 +66,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPortal.service.EzPortalService;
+import egovframework.ezEKP.ezSchedule.service.EzScheduleGoogleService;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
 import egovframework.ezEKP.ezSchedule.service.impl.EzScheduleCompareUtil;
 import egovframework.ezEKP.ezSchedule.service.impl.EzScheduleCompareUtilPublic;
@@ -78,6 +81,7 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleMailConfigVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleReceiveListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleTokenInfoVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -162,6 +166,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 	
 	@Autowired
 	private EzEmailService ezEmailService;
+
+	@Autowired
+	private EzScheduleGoogleService googleService;
 	
 	/**
 	 * 일정관리 인덱스화면 호출함수
@@ -1600,11 +1607,16 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 * 환경설정 메인
 	 */
 	@RequestMapping(value="/ezSchedule/scheduleConfigMain.do", method = RequestMethod.GET)
-	public String scheduleConfigMain(Model model, HttpServletRequest request) throws Exception {
+	public String scheduleConfigMain(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("============ scheduleConfigMain started ============");
+		
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		
+		String useGoogleCalrendar = ezCommonService.getTenantConfig("useGoogleCalrendar", loginVO.getTenantId());
 		
 		String flag = request.getParameter("flag") == null ? "" : request.getParameter("flag");
 		model.addAttribute("flag", flag);
+		model.addAttribute("useGoogleCalrendar", useGoogleCalrendar);
 		
 		logger.debug("============ scheduleConfigMain ended ============");
 		return "/ezSchedule/scheduleConfigMain";
@@ -4624,4 +4636,112 @@ public class EzScheduleController extends EgovFileMngUtil {
 		}		
 		return cDate;
     }   
+    
+    @RequestMapping(value = "/ezSchedule/scheduleSyncConfig.do", method = RequestMethod.GET)
+    public String scheduleGoogle(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+    	logger.debug("============ scheduleSyncConfig started ============");
+		
+    	LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		
+    	String isGoogleSync = googleService.getIsSync(loginVO);
+		
+    	model.addAttribute("isGoogleSync", isGoogleSync);
+		
+    	logger.debug("============ scheduleSyncConfig ended ============");
+		return "/ezSchedule/scheduleSyncConfig";
+    }
+    
+    @SuppressWarnings("unchecked")
+	@RequestMapping(value="/ezSchedule/scheduleGetTokenInfo.do")
+	@ResponseBody
+	public JSONObject scheduleGetTokenInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginSimpleVO loginSimpleVO) throws Exception {
+		logger.debug("============ scheduleGetTokenInfo started ============");
+		JSONObject jsonObj = new JSONObject();
+		
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		
+		int tenantID = loginSimpleVO.getTenantId();
+		String userID = loginSimpleVO.getId();
+		String companyID = loginSimpleVO.getCompanyID();
+		
+		ScheduleTokenInfoVO tokenData = ezScheduleService.scheduleGetTokenInfo(userID, tenantID, companyID);
+		jsonObj.put("data", tokenData);
+		
+		logger.debug("============ scheduleGetTokenInfo ended ============");
+		return jsonObj;
+	}
+    
+	@RequestMapping(value="/ezSchedule/scheduleSaveTokenInfo.do")
+	@ResponseBody
+	public void scheduleSaveTokenInfo(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
+		logger.debug("============ scheduleSaveTokenInfo started ============");
+		
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		
+		int tenantID = loginSimpleVO.getTenantId();
+		String userID = loginSimpleVO.getId();
+		String companyID = loginSimpleVO.getCompanyID();
+		String todayUtcTime = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
+		String googleAccessToken = request.getParameter("GOOGLEACCESSTOKEN").equals("")   ? null : request.getParameter("GOOGLEACCESSTOKEN");
+		String googleRefreshToken = request.getParameter("GOOGLEREFRESHTOKEN").equals("") ? null : request.getParameter("GOOGLEREFRESHTOKEN");
+		
+		ezScheduleService.scheduleSaveTokenInfo(userID, googleAccessToken, googleRefreshToken, todayUtcTime, tenantID, companyID);
+		
+		logger.debug("============ scheduleSaveTokenInfo ended ============");
+	}
+	
+    /**
+	 * 구글 oAuth
+	 */
+	@RequestMapping(value="/ezSchedule/scheduleGoogleOauth.do")
+	public RedirectView scheduleGoogleOauth(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+		logger.debug("============ scheduleGoogleOauth started ============");
+		logger.debug("============ scheduleGoogleOauth ended   ============");
+		return new RedirectView(googleService.authorize());
+	}
+	
+	/**
+	 * 구글 oAuth Callback
+	 * @throws IOException 
+	 */
+	@RequestMapping(value = "/ezSchedule/returnFromCallBack.do", method = RequestMethod.GET, params = "code")
+	public void oauth2Callback(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestParam(value = "code") String code, HttpServletResponse response) throws IOException {
+		logger.debug("============ oauth2Callback started ============");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		JSONObject returnObj = googleService.getReturnMessage(code, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+		PrintWriter writer  = response.getWriter();
+		if (Integer.parseInt(returnObj.get("code").toString()) == 0) {
+			writer.println("<html>");
+			writer.println("<head>");
+			writer.println("<script>window.onload=function(){ "
+								+ "if(!window.opener) window.opener = window.open('','popupParent');"
+								+ "window.opener.afterGoogleSuccess('"+ returnObj.get("googleAccessToken").toString() + "' , '" + returnObj.get("googleRefreshToken").toString() + "'); "
+								+ "window.open('about:blank','_self').close();}"
+						+ "</script>");
+			writer.println("</head>");
+			writer.println("<body>");
+			writer.println("</body>");
+			writer.println("</html>");
+			
+			logger.debug("accessToken: " + returnObj.get("googleAccessToken"));
+			logger.debug("refreshToken: " + returnObj.get("googleRefreshToken"));
+		}
+		else {
+			writer.println("<html>");
+			writer.println("<head>");
+			writer.println("<script>window.onload=function(){ "
+								+ "if(!window.opener) window.opener = window.open('','popupParent');"
+								+ "window.opener.afterGoogleFailure();"
+								+ "window.open('about:blank','_self').close();}"
+						+ "</script>");
+			writer.println("</head>");
+			writer.println("<body>");
+			writer.println("</body>");
+			writer.println("</html>");
+		}
+		
+		logger.debug("============ oauth2Callback ended ==============");
+	}
+
 }
