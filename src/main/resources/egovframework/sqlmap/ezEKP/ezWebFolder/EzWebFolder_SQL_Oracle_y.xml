@@ -1813,14 +1813,14 @@
    				LEFT JOIN 
 		    			TBL_WEBFOLDER_FOLDERUSER fuser ON fuser.FOLDER_ID = folder.FOLDER_ID 
 	    		WHERE 
-	    			(
+	    			((
 					folder.FOLDER_LEVEL = 1 
 					AND 
 						fuser.USER_ID IN 
 		   		<iterate property="idList" open="(" close=")" conjunction=",">
 					#idList[]#
 				</iterate>)
-				or (folder.FOLDER_LEVEL= 0 AND folder.OWNER_ID = #companyId#)
+				or (folder.FOLDER_LEVEL= 0 AND folder.OWNER_ID = #companyId#))
 	    	</isEqual>
     		<isNotEqual property="folderType" compareValue="C">
 		    	WHERE 
