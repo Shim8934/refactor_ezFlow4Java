@@ -313,4 +313,6 @@ public interface EzCommonService {
 	void createWebfolderNoInherit();
 	
 	public void alterWebfolderApplyHistoryAddColumn() throws Exception;
+	
+	public void createSerialnumgenGrant() throws Exception;
 }

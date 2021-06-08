@@ -1986,4 +1986,13 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("Already exists");
 		}
 	}
+	
+	public void createSerialnumgenGrant() {
+		try {
+			select("EzCommonDAO.checkSerialnumgenGrant");
+		} catch (Exception e) {
+			logger.debug("tbl_serialnumgen_grant doesn't exist. creating the table...");
+			update("EzCommonDAO.createSerialnumgenGrant");
+		}
+	}
 }

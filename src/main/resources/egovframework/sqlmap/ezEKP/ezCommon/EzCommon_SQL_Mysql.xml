@@ -3670,4 +3670,25 @@
 		)
 	</statement>
 	
+	<select id="EzCommonDAO.checkSerialnumgenGrant">
+		SELECT 
+			IDX
+		FROM 
+			TBL_SERIALNUMGEN_GRANT
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createSerialnumgenGrant">
+		CREATE TABLE `tbl_serialnumgen_grant` (
+			  `IDX` int(10) NOT NULL AUTO_INCREMENT,
+			  `DEPTID` varchar(100) NOT NULL,
+			  `DEPTNAME` varchar(100) NOT NULL,
+			  `GRANTDEPTID` varchar(100) NOT NULL,
+			  `GRANTDEPTNAME` varchar(100) NOT NULL,
+			  `TENANT_ID` mediumint(5) NOT NULL,
+			  `COMPANYID` varchar(20) NOT NULL,
+			  PRIMARY KEY (`IDX`,`DEPTID`,`TENANT_ID`,`COMPANYID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+	</statement>
+	
 </sqlMap>

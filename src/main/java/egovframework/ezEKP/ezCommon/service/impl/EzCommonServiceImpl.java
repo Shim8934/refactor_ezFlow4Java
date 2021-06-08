@@ -2382,4 +2382,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void alterWebfolderApplyHistoryAddColumn() throws Exception {
     	ezCommonDAO.alterWebfolderApplyHistoryAddColumn();
     }
+	
+	@Override
+	public void createSerialnumgenGrant() throws Exception {
+		ezCommonDAO.createSerialnumgenGrant();
+	}
 }
