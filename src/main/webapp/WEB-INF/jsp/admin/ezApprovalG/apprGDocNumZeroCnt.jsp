@@ -533,7 +533,7 @@
 			</c:forEach>
 		</select>
 	</h1>
-	<div class="portlet_tabpart01" style="width: 100%; <c:if test="${approvalFlag eq 'G' }">display:none;</c:if>">
+	<div class="portlet_tabpart01" style="width: 100%; display:none;">
 		<div class="portlet_tabpart01_top" id="tab1">
 			<p><span id="001" class="tabover"><spring:message code='ezApprovalG.chaebun01'/></span></p>
 			<p><span id="002"><spring:message code='ezApprovalG.chaebun02'/></span></p>
