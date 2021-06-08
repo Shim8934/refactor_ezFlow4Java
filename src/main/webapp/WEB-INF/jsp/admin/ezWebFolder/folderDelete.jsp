@@ -71,14 +71,10 @@
 			<li><span onclick="wClose();"></span></li>
 		</ul>
 	</div>
+	<p style="margin: 0;padding:25px 0px;font-size:14px;text-align:center;"><spring:message code='ezWebFolder.t222'/></p>
 	
-	<div style="margin: 0px 0px 12px; height: 110px; border: 1px solid #ddd; padding: 15px;">
-		<span><spring:message code='ezWebFolder.t222'/></span>
-	</div>
-	
-	<div style="margin: 6px 0px 0px; bottom: 0px; text-align: center">
-		<a id="btnSave"  class="webfolderBttn" onClick="ok_Click();"><span><spring:message code='ezWebFolder.t111'/></span></a>
-		<a id="btnCancel"class="webfolderBttn" onClick="wClose();"  ><span><spring:message code='ezWebFolder.t112'/></span></a>
+	<div class="btnpositionNew">
+		<a id="btnSave" class="imgbtn" onClick="ok_Click();"><span><spring:message code='ezWebFolder.t111'/></span></a>
 	</div>
 	
 </body>

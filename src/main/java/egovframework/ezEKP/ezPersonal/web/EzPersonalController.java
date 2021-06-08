@@ -1275,6 +1275,13 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String pwPolicyExplain = commonUtil.getPwPolicyExplain(companyID, userInfo.getTenantId(), locale);
 		boolean useOnlyInnerMail = "yes".equalsIgnoreCase(ezCommonService.getTenantConfig("UseOnlyInnerMail", userInfo.getTenantId()));
 		
+		// 2021-05-26 김민성 - office 사용시 사용자 비밀번호관리탭 제외
+		String ezOffice365Auth = ezCommonService.getTenantConfig("ezOffice365Auth", userInfo.getTenantId());
+		if (ezOffice365Auth == null || ezOffice365Auth.equals("")) {
+			ezOffice365Auth = "NO";
+		}
+		model.addAttribute("ezOffice365Auth", ezOffice365Auth);
+		
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("txtInfo", pInfo);
 		model.addAttribute("labelCompany", labelCompany);

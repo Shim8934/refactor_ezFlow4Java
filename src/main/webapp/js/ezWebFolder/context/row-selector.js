@@ -9,6 +9,7 @@ var rowContext = (function() {
 	
 	var rowWrapElement;
 	var firstSelected;
+	var isSingleMode = false;
 	
 	window.addEventListener("load", function() {
 		rowWrapElement = document.getElementById("tblFileList");
@@ -16,18 +17,28 @@ var rowContext = (function() {
 	
 	function onRowClick(event, rowElement) {
 		event.stopPropagation();
+		var element = event.target;
+		var parentElement = element.parentElement.parentElement;
 		
+		if (isSingleMode) {
+			clearFocus();
+			setSelectState(rowElement, !isSelected(rowElement));
+			return;
+		}
+
 		if (isFirstSelected()) {
 			firstSelected = rowElement;
 			setSelectState(rowElement, true);
-			
 			if ((typeof filePickArr) != "undefined"){
 				var selectedFile = folderId + "/" + rowElement.getAttribute("targetId");
-				if (!filePickArr.indexOf(selectedFile) > -1){
+				var selectedFileId = rowElement.getAttribute("targetId");
+				if (!(filePickArr.indexOf(selectedFile) > -1)){
 					filePickArr.push(selectedFile);
+					if (typeof selectFileList != "undefinded"){
+						selectFileList.push(selectedFileId);
+					}
 				}
 			}
-			
 			return;
 		}
 		
@@ -44,15 +55,10 @@ var rowContext = (function() {
 			}
 			
 			clearFocus();
-			
 			for (var i = startIndex; i <= endIndex; i++) {
 				setSelectState(rows[i], true);
-				
 				if ((typeof filePickArr) != "undefined"){
-					var selectedFile = folderId + "/" + rows[i].getAttribute("targetId");
-					if (!filePickArr.indexOf(selectedFile) > -1){
-						filePickArr.push(selectedFile);
-					}
+					selectedFileList(rowElement);
 				}	
 			}
 			
@@ -70,32 +76,39 @@ var rowContext = (function() {
 		
 		if (event.ctrlKey || isDuplicateFocus) {
 			setSelectState(rowElement, !isSelected(rowElement));
-			
 			if ((typeof filePickArr) != "undefined"){
-				var selectedFile = folderId + "/" + rowElement.getAttribute("targetId");
-				if (!filePickArr.indexOf(selectedFile) > -1){
-					filePickArr.push(selectedFile);
-				}
-				
-				var seletedCheck = folderId + "/" + rowElement.firstChild.firstChild.getAttribute("value");
-				if (!rowElement.firstChild.firstChild.checked){
-					var index = filePickArr.indexOf(selectedFile);
-					if (index != -1){
-						filePickArr.splice(index,1);
-					}
-				}
+				selectedFileList(rowElement);
 			}
 		} else {
 			clearFocus();
 			setSelectState(rowElement, true);
-			
 			firstSelected = rowElement;
-			
 			if ((typeof filePickArr) != "undefined"){
 				filePickArr = new Array();
-				var selectedFile = folderId + "/" + rowElement.getAttribute("targetId");
-				if (!filePickArr.indexOf(selectedFile) > -1){
-					filePickArr.push(selectedFile);
+				selectedFileList(rowElement);
+			}
+			
+		}
+	}
+	
+	function selectedFileList(rowElement) {
+		var selectedFile = folderId + "/" + rowElement.getAttribute("targetId");
+		var selectedFileId = rowElement.getAttribute("targetId");
+		
+		var seletedCheck = folderId + "/" + rowElement.firstChild.firstChild.getAttribute("value");
+		var selectedCheckId = rowElement.firstChild.firstChild.getAttribute("value");
+		if (!rowElement.firstChild.firstChild.checked){
+			var index = filePickArr.indexOf(selectedFile);
+			var index2 = selectedCheckId.indexOf(selectedFileId);
+			if (index != -1){
+				filePickArr.splice(index,1);
+				selectFileList.splice(index, 1);
+			}
+		} else {
+			if (!(filePickArr.indexOf(selectedFile) > -1)){
+				filePickArr.push(selectedFile);
+				if (typeof selectFileList != "undefinded"){
+					selectFileList.push(selectedFileId);
 				}
 			}
 		}
@@ -107,6 +120,12 @@ var rowContext = (function() {
 		var element = event.target;
 		var rowElement = element.parentElement.parentElement;
 		
+		if (isSingleMode) {
+			clearFocus();
+			setSelectState(rowElement, element.checked);
+			return;
+		}
+
 		if (isFirstSelected()) {
 			firstSelected = rowElement;
 		}
@@ -115,13 +134,21 @@ var rowContext = (function() {
 		
 		if (typeof filePickArr != "undefined"){
 			var selectedFile = folderId + "/" + rowElement.firstChild.firstChild.getAttribute("value");
+			var selectedFileId = rowElement.firstChild.firstChild.getAttribute("value");
 			if (rowElement.firstChild.firstChild.checked){
 				if (!filePickArr.indexOf(selectedFile) > -1){
+					if (typeof selectFileList != "undefinded"){
+						selectFileList.push(selectedFileId);
+					}
 					filePickArr.push(selectedFile);
 				}
 			} else {
 				var index = filePickArr.indexOf(selectedFile);
 				if (index != -1){
+					if (typeof selectFileList != "undefinded"){
+						var index2 = selectFileList.indexOf(selectedFileId);
+						selectFileList.splice(index2,1);
+					}
 					filePickArr.splice(index,1);
 				}
 			}
@@ -133,11 +160,21 @@ var rowContext = (function() {
 	}
 	
 	function getSelectedRows() {
-		return rowWrapElement.querySelectorAll("tr." + className.selected);
+		var rows = rowWrapElement.querySelectorAll("tr." + className.selected);
+		
+		if (window.contextClickedTr && rows.length <= 1) {
+			return [contextClickedTr];
+		}
+		
+		return rows;
 	}
 	
 	function getUnselectedRows() {
 		return rowWrapElement.querySelectorAll("tr." + className.unselected);
+	}
+	
+	function getRowElement(targetId) {
+		return document.querySelector("#tblFileList tr[targetid='"+ targetId +"'");
 	}
 	
 	function getRowInfo(rowElement) {
@@ -168,14 +205,36 @@ var rowContext = (function() {
 		
 		for (var i = 0; i < length; i++) {
 			setSelectState(selectedRows[i], false);
+			if ((typeof filePickArr) != "undefined"){
+				filePickArr = new Array();
+				if (typeof selectFileList != "undefinded"){
+					selectFileList = new Array();
+				}
+			}
 		}
 	}
 	
 	function setSelectState(rowElement, isSelect) {
 		var checkboxElement = rowElement.firstChild.firstChild;
 		
+		if (typeof filePickArr != "undefined"){
+			if("D" == rowElement.getAttribute("targettype")){
+				return;
+			}
+		}
 		checkboxElement.checked = isSelect;
 		rowElement.setAttribute("class", isSelect ? className.selected : className.unselected);
+
+		if (isSingleMode && isSelect) {
+			var selectedFileId = rowElement.getAttribute("targetId");
+			var selectedFile = folderId + "/" + selectedFileId;
+			if (rowElement.firstChild.firstChild.checked) {
+				if (typeof selectFileList != "undefinded") {
+					selectFileList.push(selectedFileId);
+				}
+				filePickArr.push(selectedFile);
+			}
+		}
 	}
 	
 	function selectAll(isEnable) {
@@ -184,28 +243,39 @@ var rowContext = (function() {
 		
 		for (var i = 0; i < length; i++) {
 			setSelectState(targetRows[i], isEnable);
-			
+		
 			if ((typeof filePickArr) != "undefined"){
 				if(isEnable){
 					var selectedFile = folderId + "/" + targetRows[i].getAttribute("targetid");
+					var selectedFileId = targetRows[i].getAttribute("targetid");
 					if (!filePickArr.indexOf(selectedFile) > -1){
 						filePickArr.push(selectedFile);
+						if (typeof selectFileList != "undefinded"){
+							selectFileList.push(selectedFileId);
+						}
 					}
 				} else {
 					filePickArr = new Array();
+					selectFileList = new Array();
 				}
 			}
 		}
 	}
 	
+	function setSingleMode() {
+		isSingleMode = true;
+	}
+
 	return {
 		onRowClick: onRowClick,
 		onCheckboxChange: onCheckboxChange,
 		getSelectedRows: getSelectedRows,
 		getUnselectedRows: getSelectedRows,
+		getRowElement: getRowElement,
 		getRowInfo: getRowInfo,
 		setSelectState: setSelectState,
 		clearFocus: clearFocus,
-		selectAll: selectAll
+		selectAll: selectAll,
+		setSingleMode: setSingleMode
 	};
 }());

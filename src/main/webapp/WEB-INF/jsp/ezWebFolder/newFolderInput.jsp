@@ -55,7 +55,9 @@
 	        function btn_ok_onclick() {
 	            var szInput1 = "";
 	            var szInput2 = "";
-	            szInput1 = txt_FolderName1.value.trim();
+	            szInput1 = txt_FolderName1.value;
+	            szInput1 = ReplaceText(szInput1, " ", "");
+	            szInput2 = ReplaceText(szInput2, " ", "");
 	
 	            if (szInput1 == "") {
 	                alert('<spring:message code='ezWebFolder.t314'/>');

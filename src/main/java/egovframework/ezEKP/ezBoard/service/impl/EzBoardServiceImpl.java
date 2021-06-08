@@ -3739,6 +3739,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		String useAppr = "N";
 		StringBuilder destItemIDStr = new StringBuilder();
 		StringBuilder resultStr = new StringBuilder();
+		List<String> deleteMHTStr = new ArrayList<String>(); // DB 데이터 변경작업 이후 한꺼번에 삭제할 MHT파일 경로
+		List<String> deleteAttachStr = new ArrayList<String>(); // DB 데이터 변경작업 이후 한꺼번에 삭제할 첨부파일 경로
 		
 		// 목표 게시판이 승인을 사용하는지 체크
 		BoardPropertyVO destBoardProp = getBoardProperty(destBoardID, userInfo.getTenantId());
@@ -3790,14 +3792,18 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				boardListVO.setDocPassword("");
 			}
 			
-			copyFiles(orgItemID, orgBoardID, destItemID, destBoardID, realPath + uploadFilePath, "move");
+			/* 2021-06-02 홍승비 - 파일 이동 시 move가 아닌 copy로 변경, 모든 DB 데이터 변경작업이 정상적으로 끝난 이후 한꺼번에 기존 위치의 MHT파일을 삭제하도록 수정 */
+			copyFiles(orgItemID, orgBoardID, destItemID, destBoardID, realPath + uploadFilePath, "copy");
+			deleteMHTStr.add(realPath + uploadFilePath + commonUtil.separator + orgBoardID + commonUtil.separator + "doc" + commonUtil.separator + orgItemID + ".mht");
 			
 			List<String> attachmentList = getCopyItemAttach(orgItemID, userInfo.getTenantId());
 			
 			String attachments = "";
 			
+			/* 2021-06-02 홍승비 - 파일 이동 시 move가 아닌 copy로 변경, 모든 DB 데이터 변경작업이 정상적으로 끝난 이후 한꺼번에 기존 위치의 첨부파일을 삭제하도록 수정 */
 			if (attachmentList != null) {
-				attachments = copyAttachments(orgBoardID, destItemID, destBoardID, attachmentList, realPath + uploadFilePath, "move", userInfo.getTenantId());
+				attachments = copyAttachments(orgBoardID, destItemID, destBoardID, attachmentList, realPath + uploadFilePath, "copy", userInfo.getTenantId());
+				deleteAttachStr.addAll(attachmentList);
 			}
 			
 			//2018-05-09 강민수92 댓글도 이동
@@ -3857,6 +3863,17 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	        	destItemIDStr.append(destItemID).append(";");
 	        	resultStr.append(result).append("|");
 	        }
+		}
+		
+		if (result.equals("OK")) {
+			// 기존의 MHT파일 삭제
+			for (String deleteStr : deleteMHTStr) { // 실제 파일경로를 그대로 사용, 치환 없이 접근 가능
+				FileUtils.deleteQuietly(new File(deleteStr));
+			}
+			// 기존의 첨부파일 삭제
+			for (String deleteAttachStrlog : deleteAttachStr) { // realPath + uploadFilePath + commonUtil.separator 치환 진행
+				FileUtils.deleteQuietly(new File((realPath + uploadFilePath).replace(commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()), "") + deleteAttachStrlog));
+			}
 		}
 
 		logger.debug("moveItem ended");

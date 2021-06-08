@@ -358,6 +358,11 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	            		if (folder.exists() && trashFolder.exists()) {
             				folder.open(Folder.READ_WRITE);
             				Message[] messages = folder.getMessages();
+            				logger.debug("messageCount:" + messages.length );
+            				if (messages.length == 0){
+            					returnValue = "MAIL_NOT_EXISTS";
+            					break;
+            				}
             				
             				String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", userInfo.getTenantId());
             				

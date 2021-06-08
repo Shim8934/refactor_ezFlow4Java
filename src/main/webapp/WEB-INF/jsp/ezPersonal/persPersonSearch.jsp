@@ -557,7 +557,7 @@
 					method : 'POST',
 					dataType : "text",
 					data : {
-						search : document.getElementById("search_type").value + "::" + keyword.value,
+						search : document.getElementById("search_type").value + "::" + encodeURIComponent(keyword.value),
 						cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value,
 						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;userType",
 						page : CurPage ,
@@ -622,7 +622,7 @@
 					method : 'POST',
 					dataType : "text",
 					async : false,
-					data : {search : "displayname::" + document.all("deptkeyword").value, 
+					data : {search : "displayname::" + encodeURIComponent(document.all("deptkeyword").value), 
 					    cell : "extensionAttribute3;displayname;extensionAttribute9;", 
 					    prop : "", 
 		        	    <c:if test="${useShowAllCompanies eq 'YES'}">
@@ -1015,7 +1015,7 @@
 		<div id="normalScreen">
   			<div id="menu">
     			<ul>
-      				<li><span onClick="Listprint()"><spring:message code='ezPersonal.t1005'/></span></li>
+      				<li><span class="icon16 popup_icon16_print" onClick="Listprint()"></span></li>
     			</ul>
   			</div>
   			<div id="close">
@@ -1053,7 +1053,7 @@
                                         <option value="extensionPhone" usedefault="0"><spring:message code='main.ksa02' /></option>
                                         <option value="officeMobile" usedefault="0"><spring:message code='main.ksa03' /></option>
                                         </c:if>
-                            			<option value="streetAddress" usedefault="0"><spring:message code='ezPersonal.t180'/></option>
+                            			<option value="streetAddress" usedefault="0" style="display:none"><spring:message code='ezPersonal.t180'/></option>
                             		</select>
                             		<input id="keyword" value="" onKeyPress="search_press(event)" onmousedown="keyword_Clear();" style="width:120px;margin:0px;height: 22px;">
                             			<a class="imgbtn"><span onclick="search_click('search')"><spring:message code='ezPersonal.t83'/></span></a>

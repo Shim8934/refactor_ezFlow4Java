@@ -37,7 +37,7 @@
 	    	
 			$(document).ready(function(){
 				var toYear = new Date().getFullYear();
-				var sYear = parseInt(toYear-70);
+				var sYear = parseInt(toYear-90);
 				var eYear = parseInt(toYear+10);
 				
 				if (primaryLang == '3') {
@@ -448,7 +448,14 @@
 					    
 					    setTimeout(function() {
  							if (result == "PRE") {
+ 								focusInput(document.getElementById("UserID"));
  								alert("<spring:message code='ezOrgan.t119' />");
+ 							} else if (result == "PRE_CN") {
+ 								focusInput(document.getElementById("UserID"));
+ 								alert("<spring:message code='ezOrgan.t119.2' />");
+ 							} else if (result == "PRE_EMPLOYEE_NUMBER") {
+ 								focusInput(document.getElementById("SocialNum"));
+ 								alert("<spring:message code='ezOrgan.t119.3' />");
  							} else if (result == "EMAIL_ERROR") {
  								alert("<spring:message code='ezOrgan.t269' />");
  							} else if (result == "NO_LICENSE_KEY") {
@@ -479,6 +486,13 @@
 					}
 				});
 		    }
+
+			function focusInput(element) {
+				if (element && !element.readOnly) {
+					element.focus();
+				}
+			}
+
 		    function trim(str) {
 		        while (str && str.indexOf(" ") == 0)
 		            str = str.substring(1);

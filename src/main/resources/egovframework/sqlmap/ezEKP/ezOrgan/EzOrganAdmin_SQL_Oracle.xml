@@ -75,6 +75,16 @@
 		<result property="extensionAttribute4" 					column="extensionAttribute4" 			columnIndex="2"/>	
 	</resultMap>
 	
+	<resultMap id="exportUserInfo" class="OrganUserVO">
+		<result property="company" 								column="company" 						columnIndex="1"/>
+		<result property="description" 							column="description" 					columnIndex="2"/>
+		<result property="cn" 									column="cn" 							columnIndex="3"/>
+		<result property="displayName" 							column="displayName"					columnIndex="4"/>
+		<result property="mail" 								column="mail" 							columnIndex="5"/>
+		<result property="title" 								column="title" 							columnIndex="6"/>
+		<result property="extensionAttribute10" 				column="extensionAttribute10" 			columnIndex="7"/>
+	</resultMap>
+	
 	<!-- <procedure id="EzOrganAdminDAO.insertDBData_company" parameterClass="Map">
 		<![CDATA[
 			{CALL EZSP_INSERTDBDATA_COMPANY(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_LDAPPATH#)}
@@ -5786,12 +5796,26 @@
       		WHERE  
       			department = #cn#
             AND 
-                CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantID#)                                                                                                                                                              
+                CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantID#)
       		AND
       			tenant_id = #tenantID#	
 	     ]]>
 	</select>
- 
+
+	<select id="EzOrganAdminDAO.getDuplicateLoginIdCount" parameterClass="Map" resultClass="int">
+		<![CDATA[
+			SELECT COUNT(U.CN)
+			FROM TBL_USERMASTER U
+			LEFT JOIN TBL_USERMASTER_RETIRE R
+				ON U.CN = R.CN
+				AND U.TENANT_ID = R.TENANT_ID
+			WHERE R.CN IS NULL
+				AND U.CN <> #userId#
+				AND U.TENANT_ID = #tenantId#
+				AND (U.CN = #id# OR U.EXTENSIONATTRIBUTE14 = #id#)
+		]]>
+	</select>
+
     <update id="EzOrganAdminDAO.updateDBData_company" parameterClass="Map">
         <![CDATA[
            UPDATE 
@@ -7327,5 +7351,36 @@
 			AND 
 				TENANT_ID = #tenantId#
 		]]>
+	</select>
+	
+	<select id="EzOrganAdminDAO.getExportUserList" parameterClass="Map" resultMap="exportUserInfo">
+			SELECT       
+				CASE       WHEN #primary# = '1'       THEN COMPANY          	ELSE COMPANY2     		 	 END COMPANY,         
+				CASE       WHEN #primary# = '1'       THEN DESCRIPTION          ELSE DESCRIPTION2      		 END description,        
+				CN,         
+				CASE       WHEN #primary# = '1'       THEN DISPLAYNAME          ELSE DISPLAYNAME2     		 END displayName,         
+				MAIL,
+				CASE       WHEN #primary# = '1'       THEN TITLE                ELSE TITLE2       			 END TITLE,       
+				CASE       WHEN #primary# = '1'       THEN EXTENSIONATTRIBUTE10 ELSE EXTENSIONATTRIBUTE11    END EXTENSIONATTRIBUTE10    
+			FROM      
+				TBL_USERMASTER     
+			WHERE     
+			<![CDATA[
+					CN <> 'masteradmin'     
+			]]>
+			<isNotEmpty property="companyId">
+				AND      
+					PHYSICALDELIVERYOFFICENAME = #companyId#     
+			</isNotEmpty>
+				AND      
+					TENANT_ID = #tenantId#
+				AND      
+					CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
+				AND      
+					DEPARTMENT NOT LIKE 'shared_mailbox%' 
+				AND 
+					DEPARTMENT NOT IN (SELECT CN FROM TBL_DEPTMASTER WHERE DEPT_CD_PATH LIKE '%trash_dept%') 
+			ORDER BY      
+				PHYSICALDELIVERYOFFICENAME, DEPARTMENT, EXTENSIONATTRIBUTE15, DISPLAYNAME
 	</select>
 </sqlMap>

@@ -1,4 +1,4 @@
-﻿var strLang1 = "이 보기에서 표시할 항목이 없습니다.";
+﻿﻿var strLang1 = "이 보기에서 표시할 항목이 없습니다.";
 var strLang2 = "폴더를 표시할 수 없습니다. 서버 내부 오류가 발생했습니다.";
 var strLang3 = "보기종류를 가지고 있는 변수입니다.";
 var strLang4 = "지운편지함";
@@ -300,6 +300,8 @@ var strLangKYJ03 = "공백은 입력할 수 없습니다.";
 var strLangLSD02 = "구성원이 없는 부서입니다.";
 var strLangJYH01 = "선택된 메일이 없습니다.";
 var strLangKSA01 = "(이미 동일한 이메일 주소가 저장되어있습니다 : \n %s)";
+var strLangKSA02 = "메일전송 권한이 없습니다.";
+var strLangPYY01 = "자동전달할 메일계정을 선택하세요.";
 
 /* 2018-07-03 홍승비 - 승인게시물, 커뮤니티 답변메일 companyID 관련 처리 일본어 번역X*/
 var strLangHSB01 = "이 게시물은 ";

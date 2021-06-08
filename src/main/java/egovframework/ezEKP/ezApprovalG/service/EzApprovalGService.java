@@ -316,9 +316,9 @@ public interface EzApprovalGService {
 
     public String endCabProduce(String cabClassNo, String flag, String companyID, int tenantID) throws Exception;
 
-    public String mobileSrvConn(String userID, String result, String formID, String keyVal, String docID, String orgUID, String strLang, String companyID, HttpServletRequest request, LoginVO userInfo, String mode) throws Exception;
+    public String mobileSrvConn(String userID, String result, String formID, String keyVal, String docID, String orgUID, String strLang, String companyID, HttpServletRequest request, LoginVO userInfo, String mode, String aprMemberSN) throws Exception;
 
-    public String mobileSrvConn_HWP(String userID, String result, String formID, String keyVal, String docID, String orgUID, String langType, String companyID, HttpServletRequest request, LoginVO userInfo, String mode) throws Exception;
+    public String mobileSrvConn_HWP(String userID, String result, String formID, String keyVal, String docID, String orgUID, String langType, String companyID, HttpServletRequest request, LoginVO userInfo, String mode, String aprMemberSN) throws Exception;
 
     public String reqDelayCabEndY(String cabClassList, String flag, String companyID, int tenantID) throws Exception;
 
@@ -759,4 +759,6 @@ public interface EzApprovalGService {
 
 	/* 2021-04-19 홍승비 - 문서의 ORGDOCID를 리턴하는 ajax용 함수 추가 (mode에 따라서 진행문서, 완료문서 분기) */
 	public String getOrgDocIDByMode(String docID, String mode, String orgCompanyID, int tenantID) throws Exception;
+	
+	public String getChaebunDept(String deptId, String orgCompanyID, int tenantID) throws Exception;
 }

@@ -3824,25 +3824,48 @@ function CheckMem(DeptID) {
 }
 function getDeptSymbol(DeptID, DeptName) {
 	var result = "";
+	var dataNodes;
+	var RtnVal;
 	
-	$.ajax({
-		type : "POST",
-		dataType : "text",
-		async : false,
-		url : "/ezOrgan/getADInfos.do",
-		data : {
-			cn : DeptID,
-			prop : "extensionAttribute6",
-			cate  : "group"
-		},
-		success: function(xml){
-			result = xml;
-		}        			
-	});
+	if(approvalFlag == "S") {
+		$.ajax({
+			type : "POST",
+			dataType : "text",
+			async : false,
+			url : "/ezApprovalG/getChaebunDept.do",
+			data : {
+				deptID : DeptID,
+				orgCompanyID : orgCompanyID
+			},
+			success: function(xml){
+				result = xml;
+				if(result != null) {
+					dataNodes = GetChildNodes(loadXMLString(result).documentElement);
+					DeptName = getNodeText(dataNodes[0]);
+					RtnVal = getNodeText(dataNodes[1]);
+				}
+			}        			
+		});
+	} else {
+		$.ajax({
+			type : "POST",
+			dataType : "text",
+			async : false,
+			url : "/ezOrgan/getADInfos.do",
+			data : {
+				cn : DeptID,
+				prop : "extensionAttribute6",
+				cate  : "group"
+			},
+			success: function(xml){
+				result = xml;
+			}        			
+		});
 	
-    var dataNodes = GetChildNodes(loadXMLString(result).documentElement);
-    var RtnVal = getNodeText(dataNodes[0]);
-
+		dataNodes = GetChildNodes(loadXMLString(result).documentElement);
+		RtnVal = getNodeText(dataNodes[0]);
+	}
+	
     if (RtnVal == "") {
         return DeptName;
     }

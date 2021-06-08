@@ -645,6 +645,11 @@
 				    }
 				}		
 
+				if (count < 1) {
+			        alert(strLang42);
+			        return;
+			    }
+				
 				var includeSecureMail = false;
 				for (var i = 0; i < selcheck.length; i++) {
 					if (selcheck[i].getAttribute("securemail") == "1") {

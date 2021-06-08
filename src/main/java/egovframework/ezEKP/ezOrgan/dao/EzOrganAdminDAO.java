@@ -260,7 +260,21 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	
         return result;    
 	}
-		
+
+	public boolean isDuplicateLoginId(String userId, String id, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+
+		map.put("tenantId", tenantId);
+		map.put("userId", userId);
+		map.put("id", id);
+
+		int count = (int) select("EzOrganAdminDAO.getDuplicateLoginIdCount", map);
+
+		logger.debug("isDuplicateLoginId id={}, count={}", id, count);
+
+		return count > 0;
+	}
+
     private int getPermissionListCountForLocal(Map<String, Object> map) throws Exception {
         return (int) select("EzOrganAdminDAO.getPermissionListCount", map);
     }
@@ -2168,6 +2182,11 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     
     public OrganJobVO getTitleInfo(Map<String, Object> map) throws Exception {
 		return (OrganJobVO) select("EzOrganAdminDAO.selectTitleInfo", map);
+	}
+    
+	@SuppressWarnings("unchecked")
+	public List<OrganUserVO> getExportUserList(Map<String, Object> map) {
+		return (List<OrganUserVO>)list("EzOrganAdminDAO.getExportUserList", map);
 	}
 	
 	public void updateTitle(Map<String, Object> map) throws Exception {

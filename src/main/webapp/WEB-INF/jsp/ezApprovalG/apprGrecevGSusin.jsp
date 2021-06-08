@@ -1273,8 +1273,9 @@
 		        Resultxml = Resultxml + "<COLUMN>1</COLUMN>";
 		        Resultxml = Resultxml + "<COLUMN>" + MakeXMLString(DisplayName) + "</COLUMN>";
 		        Resultxml = Resultxml + "<COLUMN>" + MakeXMLString(Position) + "</COLUMN>";
-		
-		        Resultxml = Resultxml + "<COLUMN>" + MakeXMLString(DeptName) + "</COLUMN>";
+		        
+		        /* 2021-06-03 홍승비 - 부서명에 특수문자를 허용 + c:out 처리되었으므로 특수문자 역 인코딩 및 CDATA 처리 진행 */
+		        Resultxml = Resultxml + "<COLUMN><![CDATA[" + ConvMakeXMLString(DeptName) + "]]></COLUMN>";
 		
 		        Resultxml = Resultxml + "<COLUMN>" + "<spring:message code='ezApprovalG.t25'/>" + "</COLUMN>";
 		        Resultxml = Resultxml + "<COLUMN>" + "<spring:message code='ezApprovalG.t1422'/>" + "</COLUMN>";
@@ -1293,8 +1294,8 @@
 		        Resultxml = Resultxml + "<DATA name='AprState'>" + strAprState2 + "</DATA>";
 		        Resultxml = Resultxml + "<DATA name='PMemberName'>" + MakeXMLString(arr_userinfo[11]) + "</DATA>";
 		        Resultxml = Resultxml + "<DATA name='SMemberName'>" + MakeXMLString(arr_userinfo[12]) + "</DATA>";
-		        Resultxml = Resultxml + "<DATA name='PMemberDeptName'>" + MakeXMLString(arr_userinfo[15]) + "</DATA>";
-		        Resultxml = Resultxml + "<DATA name='SMemberDeptName'>" + MakeXMLString(arr_userinfo[16]) + "</DATA>";
+		        Resultxml = Resultxml + "<DATA name='PMemberDeptName'><![CDATA[" + ConvMakeXMLString(arr_userinfo[15]) + "]]></DATA>";
+		        Resultxml = Resultxml + "<DATA name='SMemberDeptName'><![CDATA[" + ConvMakeXMLString(arr_userinfo[16]) + "]]></DATA>";
 		        Resultxml = Resultxml + "<DATA name='PMemberJobTitle'>" + MakeXMLString(arr_userinfo[13]) + "</DATA>";
 		        Resultxml = Resultxml + "<DATA name='SMemberJobTitle'>" + MakeXMLString(arr_userinfo[14]) + "</DATA>";
 		
@@ -1619,6 +1620,7 @@
 		        }
 		        
 		        parameter[60] = passAprLine;
+		        parameter[61] = tempKeyword;
 		        
 		        if (tempItemCode != "")
 		            tempdocnumcode = tempItemCode;
@@ -1904,6 +1906,18 @@
 			function btnConn_onclick() {
 				ExcuteInfo("INIT");
 			}
+			
+		    /* 2021-06-03 홍승비 - 특수문자 역인코딩 처리 */
+		    function ConvMakeXMLString(str) {
+		        str = ReplaceText(str, "&lt;", "<");
+		        str = ReplaceText(str, "&gt;", ">");
+		        str = ReplaceText(str, "&#039;", "'");
+		        str = ReplaceText(str, "&#034;", "\"");
+		        str = ReplaceText(str, "&#92;", "\\");
+		  	    str = ReplaceText(str, "&amp;", "&");	    
+		        return str;
+		    }
+		    
 		</script>
 	</head>
 	<body class="popup" style="height:100%;">

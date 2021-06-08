@@ -618,8 +618,10 @@
 	        		window[treeviewStr].source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
 	        		window[treeviewStr].update();
 	                
+	        		getUnreadCountAll();
 	                previewSubTreeCall();
 	                applyEllipsisMailTree();
+	                detailView();
 	        	}, 100);
 	        }
 	        
@@ -1071,6 +1073,8 @@
 								}
 		            		} else if (xmlHTTP2.responseText.indexOf("NO COPY processing failed.") > -1) {
 		            			alert(strLang241);
+		            		} else if (xmlHTTP2.responseText.indexOf("MAIL_NOT_EXISTS") > -1) {
+		            			alert("<spring:message code='ezEmail.pyy23' />");
 		            		} else {
 		            			alert("<spring:message code='ezEmail.t477' />");
 		            		}

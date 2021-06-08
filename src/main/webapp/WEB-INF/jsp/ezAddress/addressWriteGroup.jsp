@@ -513,7 +513,7 @@
   					method : 'POST',
   					dataType : "text",
   					data : {
-  						search : document.getElementById("search_type").value + "::" + document.getElementById("keyword").value.trim(),
+  						search : document.getElementById("search_type").value + "::" + encodeURIComponent(document.getElementById("keyword").value.trim()),
   						cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value,
   						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
   						page : CurPage,
@@ -533,6 +533,8 @@
   	        	} else {
   	        		usedefault = GetAttribute(document.getElementById("search_type").options[document.getElementById("search_type").selectedIndex], "usedefault");
   	        	}
+		     	// 2021-04-09 김은실 - 검색 시 PressShiftKey = true 되는 현상(commit 6c23f8716 참조): 모든 search_click()에 적용. 
+	            PressShiftKey = false;
   	        	
   	    	}
   	    	
@@ -2166,7 +2168,7 @@
                                                     <option value="officeMobile" usedefault="0"><spring:message code='main.ksa03' /></option>
                                                     </c:if>
 			                            			<option value="mail" usedefault="0"><spring:message code='ezAddress.t264'/></option>
-			                            			<option value="streetAddress" usedefault="0"><spring:message code='ezAddress.t296'/></option>
+			                            			<option value="streetAddress" usedefault="0" style="display:none"><spring:message code='ezAddress.t296'/></option>
 			                            		</select>
 			                            		<input id="keyword" value="" onKeyPress="search_press(event)" onmousedown="keyword_Clear();" style="width:130px;height:22px;margin:0px;">
 			                            		<a class="imgbtn"><span onclick="search_click('search')"><spring:message code='ezAddress.t142'/></span></a>

@@ -259,4 +259,8 @@ public interface EzApprovalGAdminService {
 	public String xlsSetGroupWithExcel(String loginCookie, MultipartHttpServletRequest request) throws Exception;
 
 	public String xlsxSetGroupWithExcel(String loginCookie, MultipartHttpServletRequest request) throws Exception;
+	
+	public String getChaebunDeptList(String deptID, String companyID, LoginVO userInfo) throws Exception;
+
+	public String setChaebunDeptList(Document doc, LoginVO userInfo) throws Exception;
 }

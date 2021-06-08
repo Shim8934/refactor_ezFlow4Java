@@ -3677,4 +3677,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (String) select("EzApprovalG.getOrgDocIDByMode", map);
 	}
 	
+	public String getChaebunDept(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getChaebunDept", map);
+	}
+	
 }

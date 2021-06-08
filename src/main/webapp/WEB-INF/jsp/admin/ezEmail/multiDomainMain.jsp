@@ -41,16 +41,20 @@
 		</div>	  
 
 		<div style="width:310px; height:400px; border:1px solid #dbdbda;">
-			<table class="mainlist_free" cellspacing="0" cellpadding="0" width="100%" border="0">
-				<thead>
-					<tr>
-						<th style="padding-left:10px; border-top:0;"><spring:message code='ezEmail.multiDomain.ksa05' /></th>
-					</tr>
-				</thead>
-			</table>
-			<table class="mainlist" id="listTable" style="width:100%;">
-				<tbody></tbody>
-			</table>
+			<div style="height: 8%; ">
+				<table class="mainlist_free" cellspacing="0" cellpadding="0" width="100%" border="0">
+					<thead>
+						<tr>
+							<th style="padding-left:10px; border-top:0;"><spring:message code='ezEmail.multiDomain.ksa05' /></th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+			<div style="height: 92%; overflow-y: auto;">
+				<table class="mainlist" id="listTable" style="width:100%;">
+					<tbody></tbody>
+				</table>
+			</div>
 		</div>
 	</body>
 	<script type="text/javascript">

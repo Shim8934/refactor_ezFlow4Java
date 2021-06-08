@@ -231,12 +231,13 @@
 			// 검색 버튼 클릭시 이벤트
 		    function search() {
 				$(function() {
-					
+					var reset = false;
 					if ($('#searchKeyword').val().trim() == "") {
+						reset = true;
 						alert("<spring:message code='ezEmail.t349'></spring:message>");
 					}
 					
-		        	getUserList(1);
+		        	getUserList(1, reset);
 				});
 		    }
 			
@@ -252,13 +253,18 @@
 				getUserList(page);
 			}		
 		    
-		    function getUserList(pageNum){
+		    function getUserList(pageNum, reset){
 		    	$(function() {
 		    		
 		    		var selectOption = document.getElementById("searchKeycode");
 					var searchKeycode = selectOption.options[selectOption.selectedIndex].value;
 					var searchKeyword = document.getElementById("searchKeyword").value;
 					var companyIdChk = companyID;
+					
+					if (reset) {
+						searchKeycode = selectOption.options[0].value;
+						searchKeyword = "";
+					}
 					
 					 if (pageNum == "-1") {
 						 var pageSize = "-1";

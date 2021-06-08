@@ -4265,8 +4265,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			}
 		}
 		
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("list", resultList);
+		model.addAttribute("approvalFlag", approvalFlag);
 		
 		logger.debug("docNumZeroCnt ended");
 		return "/admin/ezApprovalG/apprGDocNumZeroCnt";
@@ -5146,6 +5149,38 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 
 		logger.debug("setGroupWithExcel ended.");
 
+		return result;
+	}
+	
+	@RequestMapping(value = "/admin/ezApprovalG/getChaebunDeptList.do", produces = "text/html;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String getChaebunDeptList(@CookieValue("loginCookie") String loginCookie, @RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("getChaebunDeptList started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		Document doc = commonUtil.convertStringToDocument(data);
+		String deptID = doc.getDocumentElement().getChildNodes().item(0).getTextContent();
+		String companyID = doc.getDocumentElement().getChildNodes().item(1).getTextContent();
+		
+		String result = ezApprovalGAdminService.getChaebunDeptList(deptID, companyID, userInfo);
+		
+		logger.debug("getChaebunDeptList ended.");
+		return result;
+	}
+	
+	@RequestMapping(value = "/admin/ezApprovalG/setChaebunDeptList.do", produces = "text/html;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String setChaebunDeptList(@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlPara, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("setChaebunDeptList started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		Document doc = commonUtil.convertStringToDocument(xmlPara);
+		
+		String result = ezApprovalGAdminService.setChaebunDeptList(doc, userInfo);
+		
+		logger.debug("setChaebunDeptList ended.");
 		return result;
 	}
 }

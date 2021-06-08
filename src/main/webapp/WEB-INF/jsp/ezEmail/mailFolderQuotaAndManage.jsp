@@ -349,6 +349,9 @@
 	            }
 	            requestFolderList();
 	            HiddenMailProgress();
+	            if(parent.parent.frames["left"].configFlag == "false") {
+		        	parent.parent.frames["left"].mailbox_treeview_reload();
+		        }
 		    }
 		  
 		 

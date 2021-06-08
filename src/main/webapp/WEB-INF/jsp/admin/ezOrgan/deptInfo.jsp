@@ -125,15 +125,15 @@
 			}
 			
 			function OK_Click() {
-				if (DeptID.value == "") {
+				if (DeptID.value.trim() == "") {
                 	OpenAlertUI("<spring:message code='ezOrgan.t210'/>");
 					return;
 				}
 				
-				if (DeptID.value.length < 3) {
+				/* if (DeptID.value.length < 3) {
                 	OpenAlertUI("<spring:message code='ezOrgan.t211'/>");
 					return;
-				}
+				} */
 				
 				if (!Check_ID(DeptID.value, isAdd)) {
                 	OpenAlertUI("<spring:message code='ezOrgan.t212'/>");
@@ -231,7 +231,7 @@
 	            var type = "selDeptMaster";
 	            selectperson_cross_dialogArguments[1] = selectDeptMasterComplete;
 	            
-	            var OpenWin = window.open("/ezPersonal/selectPerson.do?type=" + type, "selDeptMaster", GetOpenWindowfeature(760, 535));
+	            var OpenWin = window.open("/ezPersonal/selectPerson.do?type=" + type, "selDeptMaster", GetOpenWindowfeature(860, 535));
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 	

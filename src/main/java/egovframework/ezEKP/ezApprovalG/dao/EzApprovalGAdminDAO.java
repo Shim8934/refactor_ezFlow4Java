@@ -687,4 +687,22 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public Integer checkDeptId(String deptId) throws Exception {
 		return (Integer) select("EzApprovalGAdminDAO.checkDeptId", deptId);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getChaebunDeptList(Map<String, Object> map) throws Exception{
+		return (List<HashMap<String, Object>>) list("EzApprovalGAdminDAO.getChaebunDeptList", map);
+	}
+	
+	public void deleteChaebunDeptList(Map<String, Object> map) throws Exception {
+		delete("EzApprovalGAdminDAO.deleteChaebunDeptList", map);
+	}
+	
+	public void insertChaebunDeptList(Map<String, Object> map) throws Exception {
+		insert("EzApprovalGAdminDAO.insertChaebunDeptList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> checkChaebunDeptList(Map<String, Object> map) throws Exception{
+		return (List<String>) list("EzApprovalGAdminDAO.checkChaebunDeptList", map);
+	}
 }

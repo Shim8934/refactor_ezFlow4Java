@@ -1256,6 +1256,7 @@
 					</c:if>
 		        </ul>
 		        <c:if test="${approvalFlag == 'S'}">
+		        	<c:if test="${useApprFormCont == 'YES'}">
 		        	<h2 class="off" id="ITEMCONTH2">
 		        		<span class="sub_iconLNB tree_arrow_up"></span>
 		        		<span class="h2Title" onclick="openFolder('ITEMCONT');">양식별 문서함</span>
@@ -1265,6 +1266,18 @@
 			          	    <li><span class="sub_iconLNB tree_appr_record1"></span><span class="list_text" id="itemList${status.count - 1}"  onclick="setPresentValue('${form.formName}'); goFormContainer('${form.formName}');"><c:out value="${form.formName}"></c:out></span></li>
 			          	</c:forEach>
 		          	</ul>
+		          	</c:if>
+		          	<c:if test="${useApprCodeCont == 'YES'}">
+		        	<h2 class="off" id="ITEMCONT2H2">
+		        		<span class="sub_iconLNB tree_arrow_up"></span>
+		        		<span class="h2Title" onclick="openFolder('ITEMCONT2');"><spring:message code='ezApproval.t844'/></span>
+		        	</h2>
+		        	<ul class="lnbUL off" id="ITEMCONT2UL">
+			          	<c:forEach var="itemList" items="${taskItemList}" varStatus="status">
+			          	    <li><span class="sub_iconLNB tree_appr_record1"></span><span class="list_text" id="itemList${status.count - 1}"  onclick="setPresentValue('${itemList.taskName}(${itemList.keepingPeriod})');cmdOK_onclick2('${itemList.taskCode}', '${itemList.taskName}', '${itemList.taskName}(${itemList.keepingPeriod})');">${itemList.taskName}(${itemList.keepingPeriod}) </span></li>
+			          	</c:forEach>
+		          	</ul>
+		          	</c:if>
 		          	<c:if test="${fn:length(userShareList) > 0 }">
 			        	<h2 class="off" id="USERSHAREH2">
 			        		<span class="sub_iconLNB tree_arrow_up"></span>

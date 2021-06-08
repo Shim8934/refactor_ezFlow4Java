@@ -38,6 +38,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezCommon.service.EzCommonService.Device;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
@@ -841,11 +842,11 @@ public class LoginController {
     		
     		String useMultiLogin = ezCommonService.getCompanyConfig(tenantId, companyID, "useMultiLogin");
     		if(useMultiLogin.equalsIgnoreCase("NO")) {
-    			commonUtil.setLoginUsers(tenantId, userId, multiLoginTime);
+    			commonUtil.setLoginUsers(tenantId, companyID, userId, multiLoginTime, Device.PC);
     		}
     	} else {
     		// 멀티로그인 쿠키 셀렉트해서 넣어주기 
-    		multiLoginTime = ezCommonService.selectMultiLoginTime(tenantId, userId);
+    		multiLoginTime = ezCommonService.selectMultiLoginTime(tenantId, companyID, userId, Device.PC);
     	}
     	
     	Cookie multiLoginCookieID = new Cookie("multiLoginCookie", multiLoginTime);
@@ -889,7 +890,7 @@ public class LoginController {
     				cookie.setDomain(ssoDomain);
     			}
     			
-    			if(!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*")){
+    			if(!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*") && !cookie.getName().matches("SURV_POPUP_.*")){
     				cookie.setMaxAge(0);
     				cookie.setPath("/");
     				response.addCookie(cookie);

@@ -8619,7 +8619,7 @@
 			   			 AND
 			   				COMPANYID = #companyID#
 			   			 AND 
-			   				FUNCTIONTYPE IN ('002', '005', '000')
+			   				FUNCTIONTYPE IN ('002', '005', '000', '004')
 			   			 AND 
 			   				DOCID = #v_DOCID#
 			   				
@@ -8656,7 +8656,7 @@
                         AND
                             COMPANYID = #companyID#
                         AND 
-                            FUNCTIONTYPE IN ('002', '005', '000')
+                            FUNCTIONTYPE IN ('002', '005', '000', '004')
                         AND 
                             DOCID = #v_DOCID#
                             
@@ -8893,6 +8893,10 @@
                 AND 
                      A.AprType = #strType#
                 </isEqual> 
+                <isNotEmpty property="v_APRMEMBERSN">
+                AND 
+                     A.AprMemberSN = #v_APRMEMBERSN#
+                </isNotEmpty>
 		        AND
 		        	 A.TENANT_ID = #v_TENANTID# 
 		       	AND
@@ -10269,6 +10273,10 @@
 		             A.AprMemberID = #v_PUSERID#
 		        AND 
 		             A.AprState = #v_PAPRSTATE#
+		        <isNotEmpty property = "v_APRMEMBERSN">
+		        AND
+		        	 A.AprMemberSN = #v_APRMEMBERSN#
+		        </isNotEmpty>
 		        AND
 		        	 A.TENANT_ID = #v_TENANTID#
 		        AND
@@ -34083,4 +34091,18 @@
     	AND
     		TENANTID = #TENANTID#
 	</delete>
+	
+	<select id="EzApprovalG.getChaebunDept" parameterClass="Map" resultClass="String">
+		SELECT
+			GRANTDEPTID
+		FROM
+			TBL_SERIALNUMGEN_GRANT
+		WHERE
+			DEPTID = #v_DEPTID#
+		AND
+    		TENANT_ID = #v_TENANTID#
+		AND
+    		COMPANYID = #v_COMPANYID#
+	</select>
+	
 </sqlMap>

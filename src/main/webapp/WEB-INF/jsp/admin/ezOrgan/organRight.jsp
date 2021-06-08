@@ -33,6 +33,7 @@
 			var BlockSize = 10;
 			var pageNum = 1;
 			var PageSize = 15;
+			var exportingExcel = false;
 			
 		    document.onselectstart = function(){
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA"){
@@ -646,7 +647,7 @@
 						url : "/ezOrgan/getSearchList.do",
 						async : false,
 						data : {
-							search : search_type.value + "::" + keyword.value,
+							search : search_type.value + "::" + encodeURIComponent(keyword.value),
 							cell : "extensionAttribute9;displayName;cn;description;title;extensionAttribute10",
 							prop : "department;usertype",
 							type : "user",
@@ -730,7 +731,7 @@
 						dataType : "text",
 						url : "/ezOrgan/getSearchList.do",
 						async : false,
-						data : {search : "displayname::" + keyword.value, cell : "extensionAttribute3;displayName;extensionAttribute9", prop : "", type : "group", adminOrgan : "y"},
+						data : {search : "displayname::" + encodeURIComponent(keyword.value), cell : "extensionAttribute3;displayName;extensionAttribute9", prop : "", type : "group", adminOrgan : "y"},
 						success : function(result){	
 							xmlDOM = loadXMLString(result);
 							adCount = xmlDOM.getElementsByTagName("ROW").length;
@@ -945,6 +946,10 @@
 			}
 			
 			function showProgress() {
+				// $('#progressPanel').width() = 220, $('#loadingLayer').width() = 168
+				var leftSize = (window.innerWidth - 388)/2 + "px"
+				document.getElementById("loadingLayer").style.left = leftSize;
+				
 			    document.getElementById("progressPanel").style.display = "";
 			    document.getElementById("loadingLayer").style.display = "";
 			    
@@ -1510,6 +1515,12 @@
 			function move_user(event){
 				event.stopPropagation();
 				
+				var addjobChk = $(event.target).parents("tr").attr("data4");
+				if (typeof addjobChk != "undefined" && addjobChk.toLowerCase() == "addjob") {
+					alert("<spring:message code='ezOrgan.psb02' />");
+					return;
+				}
+				
 				userID = event.target.id;
 				var indexCN = userID.indexOf("move") + 4;
 				userID = userID.substring(indexCN);
@@ -1797,7 +1808,7 @@
 					url : "/ezOrgan/getSearchList.do",
 					async : false,
 					data : {
-						search : searchType + "::" + searchWord,
+						search : searchType + "::" + encodeURIComponent(searchWord),
 						cell : "extensionAttribute9;displayName;cn;description;title;extensionAttribute10",
 						prop : "department",
 						type : "user",
@@ -1917,6 +1928,47 @@
 				}
 			}
 			
+			function excelExport() {
+				if (exportingExcel) {
+					return;
+				}
+				
+				showProgress();
+				exportingExcel = true;
+				
+				$.ajax({
+					type: "POST",
+					url: "/admin/ezOrgan/exportFileLogs.do",
+					data: {
+						"selectedId"  : ""
+					},
+					dataType: "JSON",
+					async: true,
+					success : function(data) {
+						var code = data.code;
+						
+						switch(code) {
+							case 0: 
+								var url = "/admin/ezOrgan/downloadExcel.do?fileName=" + encodeURIComponent(data.path);
+								AttachDownFrame.location.href = url;
+								break;
+							case 1:
+								alert("<spring:message code='ezWebFolder.t305'/>");
+								break;
+							case 2:
+								alert("<spring:message code='ezWebFolder.t300'/>");
+								break;
+						}
+					},
+					error : function(error) {
+						alert("<spring:message code='ezWebFolder.t134'/>" + error);
+					}
+				}).complete(function() {
+					hideProgress();
+					exportingExcel = false;
+				});
+			}
+			
 		</script>
 		<style>
 			.OrganListView {width:100%;}
@@ -1977,7 +2029,7 @@
                     <option value="extensionPhone" usedefault="0"><spring:message code='main.ksa02' /></option>
                     <option value="officeMobile" usedefault="0"><spring:message code='main.ksa03' /></option>
                     </c:if>
-					<option value="streetAddress"><spring:message code='ezOrgan.t100' /></option>
+					<option value="streetAddress" style="display:none"><spring:message code='ezOrgan.t100' /></option>
 				</select>
 				<input id="keyword" class="organSearchKeyword" onKeyPress="search_press()" style="ime-mode: active;height: 27px;border: 1px solid #cbcbcb; border-right:0px;"/>
 				<a class=searchBtn>
@@ -2015,6 +2067,7 @@
 				<c:if test="${useMobileManagemant == 'YES' }">
 					<li id="usermenu23"><span onClick="mobile_managed()"><spring:message code='ezPersonal.t998' /></span></li>
 				</c:if>
+				<li id="btnSave"><span onClick="excelExport()"><spring:message code='ezStatistics.t1003' /></span></li>
 				<dl class="organList">
 					<dt class="organListDT">
 						<input type="radio" name="listOpt" id="listOpt1" value="muser" onClick="Change_List()" checked /><label for="listOpt1" style="cursor:pointer;"><spring:message code='ezOrgan.t74' /></label>
@@ -2074,6 +2127,7 @@
 						</div>
 					</c:if>
 					<div id="tblPageRayer" class="tblPageRayerOrgan" style="width: 100%;"></div>
+					<iframe name="AttachDownFrame" id="AttachDownFrame" style="display:none"></iframe>
 				</div>
 			</div><!-- organListDIv END -->
 		</div>	

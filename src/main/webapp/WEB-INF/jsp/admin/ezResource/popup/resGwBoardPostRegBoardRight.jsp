@@ -1030,6 +1030,8 @@
 	        			}
 	        		}
 	        	});
+		     	// 2021-04-09 김은실 - 검색 시 PressShiftKey = true 되는 현상(commit 6c23f8716 참조): 모든 search_click()에 적용. 
+	            PressShiftKey = false;
 	    	}
 		    
 		    var rgParams = new Array();
@@ -1421,7 +1423,7 @@
                                                         	<option value="HomePhone"><spring:message code="ezResource.t137" /></option>
                                                         	<option value="facsimileTelephoneNumber"><spring:message code="ezResource.t138" /></option>
                                                         	<option value="mail"><spring:message code="ezResource.t139" /></option>
-                                                        	<option value="streetAddress"><spring:message code="ezResource.t140" /></option>
+                                                        	<option value="streetAddress" style="display:none"><spring:message code="ezResource.t140" /></option>
                                                     	</select>
                                                     	<input id="keyword" value="" onkeyup="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; height:22px; margin: 0px;">
                                                     		<a class="imgbtn"><span onclick="search_click()"><spring:message code="ezResource.t14" /></span></a>

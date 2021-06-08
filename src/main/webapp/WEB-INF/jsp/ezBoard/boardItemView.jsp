@@ -1433,7 +1433,9 @@
 			                    	</c:if>
 			                    	<li ID='btn_Delete'><span class="icon16 popup_icon16_delete" onclick='btn_Delete_Onclick()'></span></li>
 		                        	<li ID='btn_Print'><span class="icon16 popup_icon16_print" onclick='btn_Print_Onclick()'></span></li>
+		                        	<c:if test="${useExternalMailServer eq 'NO' }">
 		                        	<li ID='btn_Mail' ><span class="icon16 popup_icon16_mail_gray" onclick='mail_boarditem()' ></span></li>
+		                        	</c:if>
 			        			</c:when>
 			        			<c:otherwise>
 				        			<!--		강민수92	   -->

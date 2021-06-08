@@ -379,7 +379,7 @@
 		                  	<option value="HomePhone"><spring:message code='ezSchedule.t20' /></option> 
 		                  	<option value="facsimileTelephoneNumber"><spring:message code='ezSchedule.t21' /></option> 
 		                  	<option value="mail"><spring:message code='ezSchedule.t22' /></option> 
-		                  	<option value="streetAddress"><spring:message code='ezSchedule.t23' /></option> 
+		                  	<option value="streetAddress" style="display:none"><spring:message code='ezSchedule.t23' /></option> 
 		                </select>
 		                <input id="keyword" onkeypress="search_press()" style="width:130px; height:22px; margin-bottom:2px;" />
 		                <a class="imgbtn" style="margin-top :2px;"><span onclick="search_click()"><spring:message code='ezSchedule.t24' /></span></a>

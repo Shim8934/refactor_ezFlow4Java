@@ -405,6 +405,8 @@
 						alert("<spring:message code="ezResource.t2"/>" + textStatus);
 					}
 				}); 
+		     	// 2021-04-09 김은실 - 검색 시 PressShiftKey = true 되는 현상(commit 6c23f8716 참조): 모든 search_click()에 적용. 
+	            PressShiftKey = false;
 		    }
 
 		    function event_displayUserList2() {
@@ -1441,13 +1443,13 @@
 			                    			<option selected value="displayname"><spring:message code="ezResource.t135"/></option>
 			                    			<option value="description"><spring:message code="ezResource.t132"/></option>
 			                    			<option value="title"><spring:message code="ezResource.t10"/></option>
-			                    			<option value="telephonenumber"><spring:message code="ezResource.t11"/></option>
+			                    			<option value="telephonenumber"><spring:message code="ezPersonal.t177"/></option>
 			                    			<option value="mobile"><spring:message code="ezResource.t136"/></option>
 			                    			<!-- 2018.02.20 김기하 #11640 -->
 			                    			<%-- <option value="HomePhone"><spring:message code="ezResource.t137"/></option> --%>
 			                    			<option value="facsimileTelephoneNumber"><spring:message code="ezResource.t138"/></option>
 			                    			<option value="mail"><spring:message code="ezResource.t139"/></option>
-			                    			<option value="streetAddress"><spring:message code="ezResource.t140"/></option>
+			                    			<option value="streetAddress" style="display:none"><spring:message code="ezResource.t140"/></option>
 			                    		</select>
 			                    		<input id="keyword" value="" onkeyup="search_press(event)" style="width: 130px;height:21px">
 			                    		<a class="imgbtn" onClick="search_click('search')"><span><spring:message code="ezResource.t141"/></span></a>
@@ -1484,7 +1486,7 @@
 			              			<tr>
 			                  			<td style="width:170px;font-weight: normal" class="td_gray"><spring:message code="ezResource.t9"/></td>
 			                  			<td style="width:150px;font-weight: normal" class="td_gray"><spring:message code="ezResource.t10"/></td>
-			                  			<td class="td_gray" style="font-weight: normal"><spring:message code="ezResource.t11"/></td>
+			                  			<td class="td_gray" style="font-weight: normal"><spring:message code="ezPersonal.t177"/></td>
 			              			</tr>
 			          			</table>
 			          			<table style="width:100%;border:1px solid #ddd;display:none;" id="Search_txtlist_table" class="mainlist" > 
@@ -1492,7 +1494,7 @@
 			                  			<td style="width:130px;font-weight:normal;" class="td_gray"><spring:message code="ezResource.t132"/></td>
 			                  			<td style="width:90px;font-weight:normal;" class="td_gray"><spring:message code="ezResource.t9"/></td>
 			                  			<td style="width:90px;font-weight:normal;" class="td_gray"><spring:message code="ezResource.t10"/></td>
-			                  			<td class="td_gray" style="font-weight:normal;"><spring:message code="ezResource.t11"/></td>
+			                  			<td class="td_gray" style="font-weight:normal;"><spring:message code="ezPersonal.t177"/></td>
 			              			</tr>
 			          			</table>
 			          		</div>

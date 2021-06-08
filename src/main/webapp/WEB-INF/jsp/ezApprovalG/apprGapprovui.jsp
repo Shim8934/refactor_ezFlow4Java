@@ -339,9 +339,10 @@
 		                tempString = tempString.replace("\n", "");
 		                var pAlertContent = tempString + "<br>" + "<spring:message code='ezApprovalG.t3'/>";
 		            }
-		            OpenAlertUI(pAlertContent);
-		            window.parent.close();
-		            btnClose_onclick();
+		            
+					OpenAlertUI(pAlertContent, btnClose_onclick); // 알림창 확인 시 문서창 닫도록 수정
+		            //window.parent.close();
+		           // btnClose_onclick();
 		        } else {
 		            if(NextDocExtended.substring(NextDocExtended.lastIndexOf(".")+1) != "mht") {
 		                openOtherApprovUI();

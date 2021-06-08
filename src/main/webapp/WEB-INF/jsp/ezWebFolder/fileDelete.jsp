@@ -60,6 +60,14 @@
 						case 4:
 							alert("<spring:message code='webfolder.trash.delete.full' />");
 							break;
+						case 5:
+							alert(messages.replyFileDelete);
+							afterDeleteSuccess();
+							break;
+						case 6:
+							alert("<spring:message code='ezWebFolder.ksa44' />");
+							afterDeleteSuccess();
+							break;
 					}
 				},
 				error : function(error) {
@@ -77,7 +85,7 @@
             <li><span id="btnCancel" onclick="wClose();"></span></li>
         </ul>
     </div>
-	<div style="margin: 0px 0px 12px;height:65px;border:1px solid #ddd;padding:15px;font-size:12px;"><spring:message code='ezWebFolder.t513'/></div>	
+	<p style="margin: 0;padding:25px 0px;font-size:14px;text-align:center;"><spring:message code='ezWebFolder.t513'/></p>
 	<div class="btnpositionNew">
 		<a id="btnSave" class="imgbtn" onclick="ok_Click();"><span><spring:message code='ezWebFolder.t111'/></span></a>
 	</div>

@@ -634,7 +634,6 @@ public class EzTalkGateController {
 			int approvalCount = 0;
 			boolean isMailType = type.contains("M");
 			boolean isApprovalType = type.contains("A");
-			boolean firstTypeIsMail = type.startsWith("M");
 			boolean isAll = isMailType && isApprovalType;
 
 			Map<String, Object> parameters = new HashMap<>();
@@ -660,13 +659,13 @@ public class EzTalkGateController {
 			}
 
 			if (isAll) {
-				if (firstTypeIsMail) {
+				if (type.startsWith("M")) {
 					result = String.format("%d/%d", mailCount, approvalCount);
 				} else {
 					result = String.format("%d/%d", approvalCount, mailCount);
 				}
 			} else {
-				result = Integer.toString(Math.max(mailCount, approvalCount));
+				result = Integer.toString(isMailType ? mailCount : approvalCount);
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();

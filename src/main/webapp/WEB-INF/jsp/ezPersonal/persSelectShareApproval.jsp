@@ -439,7 +439,7 @@
 				            <option value="HomePhone"><spring:message code='ezPersonal.t73'/></option>
 				            <option value="facsimileTelephoneNumber"><spring:message code='ezPersonal.t74'/></option>
 				            <option value="mail"><spring:message code='ezPersonal.t75'/></option>
-				            <option value="streetAddress"><spring:message code='ezPersonal.t76'/></option>
+				            <option value="streetAddress" style="display:none"><spring:message code='ezPersonal.t76'/></option>
 				        </select>
 				        <input type="text" id="keyword" onKeyPress="search_press(event)" style="width:130px; height:22px;" maxLength="50">
 				        <a class="imgbtn" style="margin-right:5px;"><span onClick="search_click()"><spring:message code='ezPersonal.t77'/></span></a>

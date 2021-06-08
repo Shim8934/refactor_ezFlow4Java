@@ -8,10 +8,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
+
+import javax.annotation.Resource;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +23,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO;
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO_m;
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO_y;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
@@ -27,12 +33,20 @@ import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
 import egovframework.ezEKP.ezWebFolder.util.EzWebfolderUtil;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
+import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
+import egovframework.ezEKP.ezWebFolder.vo.FolderTreeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzWebFolderService_y")
 public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFolderService_y{
+	@Autowired
+	private EzCommonService ezCommonService;
+
+	@Autowired
+	private Properties globals;
+		
 	@Autowired
 	private EzWebFolderDAO_y ezWebFolderDAO_y;
 
@@ -51,6 +65,9 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 	@Autowired
 	private EzWebfolderUtil webfolderUtil;
 
+	@Resource(name = "EzWebFolderDAO")
+	private EzWebFolderDAO ezWebFolderDAO;
+	
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(EzWebFolderServiceImpl_y.class);
 
@@ -93,7 +110,13 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			map.put("folderType", idMap.get("type"));
 
 			if (ezWebFolderDAO_y.checkRootFolder(map) == 0) {
-				ezWebFolderDAO_y.insertRootFolder(map);
+				int folderIdInt = ezWebFolderDAO_y.insertRootFolder(map);
+				map.put("newFolderId", String.valueOf(folderIdInt));
+				map.put("folderUpper", "");
+				LOGGER.debug("folderId:" + folderId + ",folderUpper:" + ",tenantId:" + tenantId);
+				ezWebFolderDAO_y.updateFolderPath(map);
+				folderId = String.valueOf(folderIdInt); 
+				
 				if (idMap.get("type").equals("D")) {
 					ezWebFolderAdminService.insertFolderUser(
 						ezWebFolderAdminService.getMaxFolderUserSeq(tenantId), idMap.get("id"), "dept", folderId, userId,timeUTC, compId, tenantId);
@@ -108,6 +131,13 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 	public List<Map<String, Object>> getFolderTree(String userId,
 			String deptId, String compId, String folderType, String primary,
 			int tenantId, String flag) throws Exception {
+		return getFolderTree(userId, deptId, compId, folderType, primary, tenantId, flag, false);
+	}
+		
+	// 사용자 삭제시 그 사용자의 데이터 모두 삭제 위해 flag 추가 
+	@Override
+	public List<Map<String, Object>> getFolderTree(String userId, String deptId, String compId, String folderType, String primary, int tenantId, String flag, boolean isAdmin) throws Exception {
+		
 		List<Map<String, Object>> folderTree = new ArrayList<Map<String, Object>>();
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -146,26 +176,77 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		}
 
 		if (folderType.equals("C") || folderType.equals("")) {
-			List<String> addjobList = getAddJobList(tenantId, userId);
+			
+			if (!isAdmin) {
+				List<String> addjobList = getAddJobList(tenantId, userId);
+	
+				List<String> managerFolderId = ezWebFolderAdminService.getFolderIdsByManagerUserId(userId, "", compId, tenantId);
+				String managerFolderStr = "";
+				for (String manger : managerFolderId) {
+					managerFolderStr += " OR F.FOLDER_PATH LIKE '%|" + manger +"|%' ";
+				}	
+				
+				// 직위, 직책 권한이 추가 
+				List<String> jikWiChekAddjobList = getjikWiChekAddjobList(tenantId, userId, compId);
+				
+				Map<String, Object> map2 = new HashMap<String, Object>();
+				map2.put("userId", userId);
+				map2.put("tenantId", tenantId);
+				map2.put("companyId", compId);
+	
+				List<String> folderUserIdList = ezWebFolderDAO_m
+						.getFolderUserIdList_D(map2);
+	
+				Set<String> idSet = new HashSet<String>();
+				idSet.add(userId);
+				idSet.add(deptId);
+				idSet.add(compId);
+				idSet.addAll(addjobList);
+				idSet.addAll(jikWiChekAddjobList);
+				idSet.addAll(folderUserIdList);
+	
+				// 권한그룹이 추가 : tbl_webfolder_folderuser에 있는 권한 그룹리스트 가져와서 체크
+				List<String> groupList = ezWebFolderDAO_y.getWebFolderUserGroupList(map2);
+				
+				if (groupList != null) {
+					for (String groupId : groupList) {
+						boolean groupPermissionYN = ezCommonService.getPermissionGroupAccessYN(groupId, compId, tenantId, userId, deptId, true);
+						
+						if (groupPermissionYN) {
+							idSet.add(groupId);
+						}
+					}
+				}
+	
+				map.put("idList", idSet.toArray(new String[idSet.size()]));
+				map.put("compId", compId);
+				
+				Set<String> userDeptList = new HashSet<String>();
+				userDeptList.add(deptId);
+				userDeptList.addAll(addjobList);
+				map.put("userId", userId);
+				map.put("userDeptList", userDeptList.toArray(new String[userDeptList.size()]));
+				map.put("managerFolderStr", managerFolderStr);
+			
+			} else {
+				Map<String,Object> comFldMap = new HashMap<String, Object>();
+				comFldMap.put("companyId",  compId);
+				comFldMap.put("tenantId",   tenantId);
+				
+				FolderSimpleVO companyFolder = ezWebFolderDAO.getCompanySimpleFolder(comFldMap);
+				String folderId = companyFolder.getFolderId();
 
-			Map<String, Object> map2 = new HashMap<String, Object>();
-			map2.put("userId", userId);
-			map2.put("tenantId", tenantId);
+				String mngStr = " OR F.FOLDER_PATH LIKE '%|" + folderId +"|%' ";
+				
+				Set<String> idSet = new HashSet<String>();
+				idSet.add(compId);
+				map.put("idList", new String[] {compId});
+				map.put("managerFolderStr", mngStr);
+			}
+			
+			List<Map<String, Object>> compFolderTree = ezWebFolderDAO_y.getCompFolderTree(map);
 
-			List<String> folderUserIdList = ezWebFolderDAO_m
-					.getFolderUserIdList_D(map2);
-
-			Set<String> idSet = new HashSet<String>();
-			idSet.add(userId);
-			idSet.add(deptId);
-			idSet.add(compId);
-			idSet.addAll(addjobList);
-			idSet.addAll(folderUserIdList);
-
-			map.put("idList", idSet.toArray(new String[idSet.size()]));
-			map.put("compId", compId);
-			List<Map<String, Object>> compFolderTree = ezWebFolderDAO_y
-					.getCompFolderTree(map);
+			compFolderTree = checkFolderParent(compFolderTree);
 			folderTree.addAll(compFolderTree);
 		}
 
@@ -186,6 +267,39 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		return folderTree;
 	}
 
+	/**
+	 * 상위 권한이 없는 폴더라면 하위의 폴더는 나타나지 않도록 제거 
+	 */
+	private List<Map<String, Object>> checkFolderParent(List<Map<String,Object>> allCompFolderTree){
+		LOGGER.debug("checkFolderParent start.");
+		List<Map<String, Object>> compFolderTree = new ArrayList<Map<String,Object>>();
+		compFolderTree = allCompFolderTree;
+		
+		ArrayList<String> folderId = new ArrayList<String>(); 
+		ArrayList<String> folderIdTemp = folderId;
+		ArrayList<FolderTreeVO> folderVOList = new ArrayList<FolderTreeVO>();
+		
+		for(int i = 0; i <allCompFolderTree.size(); i++){
+			FolderTreeVO folderVO = new FolderTreeVO();
+			folderVO = (FolderTreeVO) allCompFolderTree.get(i);
+			folderVOList.add(folderVO);
+			folderId.add(folderVO.getId());
+		}
+
+		for(int i = 0; i <folderVOList.size(); i++){
+			if (!folderVOList.get(i).getParent().equals("#")){
+				if(folderIdTemp.contains(folderVOList.get(i).getParent()) == false){
+					LOGGER.debug("parent folder not exists permission. delete folderId:" + folderVOList.get(i).getId());
+					compFolderTree.remove(folderVOList.get(i));
+					folderIdTemp.remove(folderVOList.get(i).getId());
+				} 			
+			}
+		}
+		
+		LOGGER.debug("checkFolderParent end.");
+		return compFolderTree;
+	}
+	
 	@Override
 	public List<FileVO> getFileList(String folderId, String userId,
 			String deptId, int tenantId, String comId, String searchExt,
@@ -304,6 +418,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("sortType", sortType);
 		map.put("sortColumn", sortColumn);
+		map.put("folderLevel", detailFld.getFolderLevel());
 		
 		LOGGER.debug("offset : " + commonUtil.getMinuteUTC(offset));
 		
@@ -316,8 +431,8 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 					"searchCreateName"+searchCreateName+"searchFileName"+searchFileName);
 			
 			if (!searchEndDate.equals("") ) {
-				searchStartDate = searchStartDate + " 00:00:00";
-				searchEndDate   = searchEndDate + " 23:59:59";
+				searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
+				searchEndDate = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
 			}
 		}
 		
@@ -327,10 +442,39 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		List<Map<String, String>> idList = ezWebFolderService_m.getPermissionIdMapList(userId, deptId, comId, tenantId);
 		System.out.println(idList);
 		map.put("idList", idList);
+		
+		List<String> idListUpgrade = new ArrayList<String>();
+		for (Map<String, String> id : idList) {
+			idListUpgrade.add((String)id.get("id"));
+		}
+		
+		// 직위, 직책 권한이 추가 
+		map.put("companyId", comId);
+		List<String> jikWiChekAddjobList = getjikWiChekAddjobList(tenantId, userId, comId);
+		idListUpgrade.addAll(jikWiChekAddjobList);
+		
+		// 권한그룹이 추가 : tbl_webfolder_folderuser에 있는 권한 그룹리스트 가져와서 체크
+		List<String> groupList = ezWebFolderDAO_y.getWebFolderUserGroupList(map);
+		
+		if (groupList != null) {
+			for (String groupId : groupList) {
+				boolean groupPermissionYN = ezCommonService.getPermissionGroupAccessYN(groupId, comId, tenantId, userId, deptId, true);
+				
+				if (groupPermissionYN) {
+					idListUpgrade.add(groupId);
+				}
+			}
+		}
+		map.put("idListUpgrade", idListUpgrade);
+		
+		List<String> addjobList = getAddJobList(tenantId, userId);
+		addjobList.add(deptId);
+		map.put("userDeptList", addjobList);
+		
 		map.put("flag", flag);
 		
 		if (sortType.equals("")){
-			map.put("orderByData", ", UPDATE_DATE DESC" );
+			map.put("orderByData", ", CASE WHEN FOLDER_SORT = 0 THEN FILE_NAME END, ROOT_ID DESC, HIERARCHICAL_PATH" );
 		} else {
 			if (sortColumn.equals("CREATE_NAME") || sortColumn.equals("CREATOR_NAME")){
 				sortColumn = "CREATE_NAME1";
@@ -353,10 +497,17 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 				secondSort = " DESC , " + sortColumn + " " + sortType;
 			}
 			
-			secondSort += ", UPDATE_DATE DESC " ;
+			secondSort += ", CASE WHEN FOLDER_SORT = 0 THEN FILE_NAME END, ROOT_ID DESC, HIERARCHICAL_PATH " ;
 			map.put("orderByData", secondSort);
 		}
 		
+		// C 인데 담당자가 아니라 조건 검색을 해야하는 경우 
+		if (folderType.equalsIgnoreCase("C") && ezWebFolderAdminService.getFolderIdsByManagerUserId(userId, folderId, comId, tenantId).size() == 0) {
+			map.put("manager", 1);
+		} else {
+			map.put("manager", 0);
+		}
+
 		if (flag.equals("1")) {
 			filevo = (List<FileVO>) ezWebFolderDAO_y.searchFileList2(map);
 		} else {
@@ -504,6 +655,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		map.put("pEnd", pEnd);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("primary", primary);
+		map.put("folderLevel", detailFld.getFolderLevel());
 		
 		LOGGER.debug("offset  :  " + commonUtil.getMinuteUTC(offset));
 		
@@ -517,17 +669,52 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 					"searchCreateName"+searchCreateName+"searchFileName"+searchFileName);
 			
 			if (!searchEndDate.equals("") ) {
-				searchStartDate = searchStartDate + " 00:00:00";
-				searchEndDate   = searchEndDate + " 23:59:59";
+				searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
+				searchEndDate = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
 			}
 		}
 		map.put("searchStartDate", searchStartDate);
 		map.put("searchEndDate", searchEndDate);
 		
-		List<Map<String, String>> idList = ezWebFolderService_m
-				.getPermissionIdMapList(userId, deptId, companyId, tenantId);
+		List<Map<String, String>> idList = ezWebFolderService_m.getPermissionIdMapList(userId, deptId, companyId, tenantId);
+		System.out.println(idList);
 		map.put("idList", idList);
+		
+		List<String> idListUpgrade = new ArrayList<String>();
+		for (Map<String, String> id : idList) {
+			idListUpgrade.add((String)id.get("id"));
+		}
+		
+		// 직위, 직책 권한이 추가 
+		map.put("companyId", companyId);
+		List<String> jikWiChekAddjobList = getjikWiChekAddjobList(tenantId, userId, companyId);
+		idListUpgrade.addAll(jikWiChekAddjobList);
+		
+		// 권한그룹이 추가 : tbl_webfolder_folderuser에 있는 권한 그룹리스트 가져와서 체크
+		List<String> groupList = ezWebFolderDAO_y.getWebFolderUserGroupList(map);
+		
+		if (groupList != null) {
+			for (String groupId : groupList) {
+				boolean groupPermissionYN = ezCommonService.getPermissionGroupAccessYN(groupId, companyId, tenantId, userId, deptId, true);
+				
+				if (groupPermissionYN) {
+					idListUpgrade.add(groupId);
+				}
+			}
+		}
+		map.put("idListUpgrade", idListUpgrade);
+		
+		List<String> addjobList = getAddJobList(tenantId, userId);
+		addjobList.add(deptId);
+		map.put("userDeptList", addjobList);
 		map.put("flag", flag);
+		
+		// C 인데 담당자가 아니라 조건 검색을 해야하는 경우 
+		if (folderType.equalsIgnoreCase("C") && ezWebFolderAdminService.getFolderIdsByManagerUserId(userId, folderId, companyId, tenantId).size() == 0) {
+			map.put("manager", 1);
+		} else {
+			map.put("manager", 0);
+		}
 		
 		if (flag.equals("1")) {
 			fileTotalCnt = ezWebFolderDAO_y.searchFileToTalCount2(map);
@@ -608,6 +795,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 				map.put("ownerId", userId);
 			}
 		}
+		
 		map.put("folderName1", newFolderName1);
 		map.put("folderName2", newFolderName2);
 		map.put("createName1", loginvo.getDisplayName1());
@@ -624,17 +812,39 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 
 		LOGGER.debug("folderType is " + folderType);
 
-		String result = ezWebFolderDAO_y.insertFolder(map);
-		LOGGER.debug("insert folderId is " + result);
+		int folderId = ezWebFolderDAO_y.insertFolder(map);
+		map.put("newFolderId", folderId);
+		map.put("folderUpper", uppFolder.getFolderId());
+		map.put("targetId", folderId);
+		LOGGER.debug("folderId:" + folderId + ",folderUpper:"  + uppFolder.getFolderId() + ",tenantId:" + tenantId);
+		
+		ezWebFolderDAO_y.updateFolderPath(map);
+		
+		map.put("upperFolderId", uppFolder.getFolderId());
+		map.put("type_f", "D");
+		ezWebFolderAdminService.insertFolderUser(map);
+		LOGGER.debug("insert folderId is " + folderId);
 
-		if (result == null) {
-			result = "fail";
+		if (folderId == 0 ) {
+			new Exception();
 		} 
 
 		LOGGER.debug("insertFolder ended");
-		return result;
+		return Integer.toString(folderId);
 	}
 
+	@Override
+	public List<Map<String,String>> getFolderUser (String folderId, String comId, int tenantId) throws Exception {
+		List<Map<String,String>> folderUserList = new ArrayList<Map<String,String>>();
+		Map<String, Object> userTempMap = new HashMap<String, Object>();
+		userTempMap.put("folderId", folderId);
+		userTempMap.put("comId", comId);
+		userTempMap.put("tenantId", tenantId);
+		folderUserList = ezWebFolderDAO_y.getFolderUser(userTempMap);
+		LOGGER.debug("folderUserList: " + folderUserList);
+		return folderUserList ;
+	}
+	
 	// 겸직 리스트 가져오는 메서드
 	@Override
 	public List<String> getAddJobList(int tenantId, String userId)
@@ -665,7 +875,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 
 	@Override
 	public int deleteSubFldAFile(String folderId, int tenantId, String comId,
-			String userId, String timeUTC) throws Exception {
+			String userId, String timeUTC, String rollInfo) throws Exception {
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("folderId", folderId);
@@ -679,10 +889,10 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		LOGGER.debug("folderId : " + folderId + "comId : " + comId + "userId"
 				+ userId + "deleteSubFldAFile  Method");
 		
-		if (folder.getFolderType().equals("U") && folder.getOwnerId().equals(userId)) {
+		if (webfolderUtil.isWebfolderAdmin(rollInfo) || (folder.getFolderType().equals("U") && folder.getOwnerId().equals(userId))) {
 			result = 1;
 		} else {
-			result = checkCreater(folderId, tenantId, comId, userId);
+			result = checkCreatorRecursive(folderId, tenantId, comId, userId);
 		}
 
 		// result 가 1이 아니면 creater가 자신이 아닌 폴더가 있다는 말
@@ -704,13 +914,33 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 	}
 
 	@Override
-	public int checkCreater(String folderId, int tenantId, String comId,
-			String userId) throws Exception {
+	public int checkCreatorRecursive(String folderId, int tenantId, String comId, String userId) throws Exception {
+		return checkCreator(folderId, tenantId, comId, userId, true);
+	}
+
+	@Override
+	public int checkCreator(String folderId, int tenantId, String comId, String userId) throws Exception {
+		return checkCreator(folderId, tenantId, comId, userId, false);
+	}
+
+	private int checkCreator(String folderId, int tenantId, String comId, String userId, boolean isRecursive)  throws Exception {
+		// 담당자는 모든 권한을 가짐
+		if (ezWebFolderAdminService.getFolderIdsByManagerUserId(userId, folderId, comId, tenantId).size() > 0) {
+			return 1;
+		}
+
+		FolderVO folder = getFolderDetail(folderId, userId, tenantId, comId);
+		
+		if (userId.equals(folder.getOwnerId())) {
+			return 1;
+		}
+
+		if (!isRecursive && folder.getCreateId().equals(userId)) {
+			return 1;
+		}
 
 		// 자기 하위에 있는 폴더, 파일들이 모두 본인이 creater인지 확인
-
 		Map<String, Object> map = new HashMap<String, Object>();
-		FolderVO folder = getFolderDetail(folderId, userId, tenantId, comId);
 		int result = 0;
 		int resultFld = 0;
 		int resultFile = 0;
@@ -761,6 +991,86 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 	}
 
 	@Override
+	public JSONObject checkPermissionForCreator(String[] folderIds, String[] fileIds, LoginVO user) throws Exception {
+		return checkPermissionForCreator(folderIds, fileIds, user, false);
+	}
+
+	@Override
+	public JSONObject checkPermissionForCreator(String[] folderIds, String[] fileIds, LoginVO user, boolean isRecursive) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+
+		if (webfolderUtil.isWebfolderAdmin(user)) {
+			result.put("status", "ok");
+			result.put("code", 0);
+			return new JSONObject(result);
+		}
+
+		String userId = user.getId();
+		String companyId = user.getCompanyID();
+		int tenantId = user.getTenantId();
+
+		if (folderIds != null) {
+			for (String folderId : folderIds) {
+				if (folderId == null || folderId.isEmpty()) {
+					continue;
+				}
+
+				int folderCheck = isRecursive
+						? checkCreatorRecursive(folderId, tenantId, companyId, userId)
+						: checkCreator(folderId, tenantId, companyId, userId);
+
+				if (folderCheck == 0) {
+					result.put("status", "error");
+					result.put("code", 3);
+					return new JSONObject(result);
+				}
+			}
+		}
+
+		if (fileIds != null) {
+			for (String fileId : fileIds) {
+				if (fileId == null || fileId.isEmpty()) {
+					continue;
+				}
+
+				FileVO fileVO = ezWebFolderService.getFileByFileId(fileId, "000|+00:00", tenantId);
+				Map<String,Object> map = new HashMap<String, Object>();
+				map.put("fileId", fileId);
+				map.put("tenantId",tenantId);
+			
+				FolderVO folder = ezWebFolderDAO_y.getFolderDetailByFileId(map);
+				
+				
+				if (folder.getFolderType().equals("C")){
+					List<String> dp = ezWebFolderAdminService.getFolderIdsByManagerUserId(userId, fileVO.getFolderId(), companyId, tenantId);
+					if (ezWebFolderAdminService.getFolderIdsByManagerUserId(userId, fileVO.getFolderId(), companyId, tenantId).isEmpty()
+							&& !fileVO.getCreateId().equals(userId)) {
+						result.put("status", "error");
+						result.put("code", 3);
+						return new JSONObject(result);
+					}
+				} else if (folder.getFolderType().equals("U")) { // 개인폴더 공유시, 공유대상자가 올린 파일에 대해서 '이동'권한이 없다고 하여 해당 코드 추가
+					if (!folder.getOwnerId().equalsIgnoreCase(userId) && !fileVO.getCreateId().equalsIgnoreCase(userId)) {
+						result.put("status", "error");
+						result.put("code", 3);
+						return new JSONObject(result);
+					}
+				} else {
+					if (!fileVO.getCreateId().equalsIgnoreCase(userId)){
+						result.put("status", "error");
+						result.put("code", 3);
+						return new JSONObject(result);
+					}
+				}
+			}
+		}
+
+		result.put("status", "ok");
+		result.put("code", 0);
+		return new JSONObject(result);
+	}
+
+	@Override
 	public String checkPermission(String userId, String deptId, String comId,
 			String folderFileId, String folderFileType, int tenantId)
 			throws Exception {
@@ -775,21 +1085,48 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		map.put("tenantId", tenantId);
 
 		FolderVO folderVO = null;
-
+		String parentFolderId = "";
+		
 		if (folderFileType.equals("F")) {
 			map.put("fileId", folderFileId);
 			folderVO = ezWebFolderDAO_y.getFolderDetailByFileId(map);
+			parentFolderId = folderVO.getFolderId();
 		} else {
 			map.put("folderId", folderFileId);
 			folderVO = ezWebFolderDAO_y.getFolderDetail(map);
+			parentFolderId = folderFileId;
+		}
+		
+		if (ezWebFolderAdminService.getFolderIdsByManagerUserId(userId, parentFolderId, comId, tenantId).size() > 0) {
+			return status = "ok";
 		}
 
 		List<String> idList = ezWebFolderService_m.getPermissionIdList(userId,
 				deptId, comId, tenantId);
 
-		if (folderVO != null) {
+		// 직위, 직책 권한이 추가 
+		List<String> jikWiChekAddjobList = getjikWiChekAddjobList(tenantId, userId, comId);
+		idList.addAll(jikWiChekAddjobList);
+
+		// 권한그룹이 추가 : tbl_webfolder_folderuser에 있는 권한 그룹리스트 가져와서 체크
+		map.put("companyId", comId);
+		List<String> groupList = ezWebFolderDAO_y.getWebFolderUserGroupList(map);
+		
+		if (groupList != null) {
+			for (String groupId : groupList) {
+				boolean groupPermissionYN = ezCommonService.getPermissionGroupAccessYN(groupId, comId, tenantId, userId, deptId, true);
+				
+				if (groupPermissionYN) {
+					idList.add(groupId);
+				}
+			}
+		}
+
+		
+		if (folderFileType.equalsIgnoreCase("D") && folderVO != null) {
 			String folderType = folderVO.getFolderType();
 			String folderPath = folderVO.getFolderPath();
+			String folderId = folderVO.getFolderId();
 
 			if (folderType.equals("C")) {
 				if (folderPath.equals("|" + folderVO.getFolderId() + "|")) {
@@ -800,10 +1137,17 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 					map = new HashMap<String, Object>();
 
 					map.put("folderIdList", folderPath.split("\\|"));
+					map.put("folderId", folderFileId);
 					map.put("permissionIdList", idList);
 					map.put("tenantId", tenantId);
+					// 2020-12-11 김은실 - [카이스트] 하위부서를 포함시키지 않도록 했기 때문에, 불필요한 쿼리로 인한 부하를 줄임.
+//					List<String> addjobList = getAddJobList(tenantId, userId);
+//					addjobList.add(deptId);
+//					map.put("userDeptList", addjobList);
 
-					if (ezWebFolderDAO_y.checkCompanyFolderPermission(map) > 0) {
+					// boolean isExpired = ezWebFolderService.getExpiredMeetingFolders(userId, tenantId).contains(folderId);
+
+					if (ezWebFolderDAO_y.checkCompanyFolderPermission(map) > 0) { //&& !isExpired) {
 						status = "ok";
 					}
 				}
@@ -832,7 +1176,46 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			}
 
 		} else {
-			status = "fail";
+			if (folderFileType.equalsIgnoreCase("F")){
+				map = new HashMap<String, Object>();
+
+				map.put("fileId", folderFileId);
+				map.put("permissionIdList", idList);
+				map.put("tenantId", tenantId);
+
+				String folderType = folderVO.getFolderType();
+
+				// TODO checkCompanyFilePermission을 공통 함수로 쓸 수 있도록 해야할듯
+				if ("C".equalsIgnoreCase(folderType)) {
+					if (ezWebFolderDAO_y.checkCompanyFilePermission(map) > 0) {
+						status = "ok";
+					}
+				} else if ("D".equalsIgnoreCase(folderType)) {
+					if (idList.contains(folderVO.getOwnerId())) {
+						status = "ok";
+					}
+				} else {
+					if (folderVO.getOwnerId().equals(userId)) {
+						status = "ok";
+					}
+				}
+				
+				if (!status.equals("ok")) {
+					map = new HashMap<String, Object>();
+
+					map.put("folderFileId", folderFileId);
+					map.put("folderFileType", folderFileType);
+					map.put("folderIdList", folderVO.getFolderPath().split("\\|"));
+					map.put("permissionIdList", idList);
+					map.put("tenantId", tenantId);
+
+					if (ezWebFolderDAO_m.checkSharePermission(map) > 0) {
+						status = "ok";
+					}
+				}
+			} else {
+				status = "fail";
+			}
 		}
 
 		LOGGER.debug("checkPermission ended. status=" + status);
@@ -877,8 +1260,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		PermissionChecker permissionChecker = new PermissionChecker();
 
 		try {
-			if (permissionChecker.accept(folders, "D")
-					&& permissionChecker.accept(files, "F")) {
+			if (permissionChecker.accept(folders, "D") && permissionChecker.accept(files, "F")) {
 				LOGGER.debug("permission allowed.");
 				result.put("status", "ok");
 				result.put("code", 0);
@@ -934,24 +1316,40 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		Map<String, Object> result = new HashMap<>();
 		long[] fileSize            = new long[multiFileLists.size()];
 		
+		boolean isEncryptionFolder = ezWebFolderService.isEncryptionFolder(folderId, tenantId);
+		boolean useVersionHistory = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useWebfolderVersionHistory", tenantId));
+
 		// 파일 가지고 온 array의 이름과 id를 가지고 다시 업로드 시켜야함
 		// id의 정보를 가지고 와서 그 id의 정보를 가지고 온다 
 		for (int i = 0; i < multiFileLists.size(); i++ ) {
 			FileVO filevo = getFolderFileDetailForExplorer("file", (String)(((JSONObject)fileIdArray.get(i)).get("fileIdArray")), userId, tenantId , comId, offset, primary);
+			String fileId = filevo.getFileId();
 			fileName = filevo.getFilePath();
 			String[] arryStrings = fileName.split("/");
 			fileName = arryStrings[arryStrings.length-1];
 			LOGGER.debug("before fileName is " + fileName);
+			
+			if (filevo.getFileTypeName() == null) {
+				filevo.setFileTypeName(ezWebFolderService.getFileTypeByFileExt("unknown", tenantId).getTypeName());
+			}
 			
 			int dotPos     = fileName.lastIndexOf(".");
 			String extend  = dotPos == -1 ? ".none" : fileName.substring(dotPos + 1);
 			String newName = webfolderUtil.generateFilePath(extend);
 			path = commonUtil.getUploadPath("upload_webfolder.ROOT", tenantId) + commonUtil.separator; 
 			LOGGER.debug("new fileName is " + newName);
+
+			// 폴더가 암호화 대상이거나, 첫 번째 파일을 업로드할때 다운로드 불가 옵션을 선택했었다면 암호화하여 저장함
+			boolean isEncryptedFile = ezWebFolderService.isEncryptedFile(fileId, tenantId);
+			boolean requireEncrypt = isEncryptionFolder || isEncryptedFile;
 			
 			Date date      = new Date();
 			// 실제 파일을 생성
-			writeUploadedFile(multiFileLists.get(i), realPath + path + newName);
+			if (requireEncrypt) {
+				writeUploadedFileEncryptKlib(multiFileLists.get(i), realPath + path + newName);
+			} else {
+				writeUploadedFile(multiFileLists.get(i), realPath + path + newName);
+			}
 			
 			String timeUTC = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
 			
@@ -969,8 +1367,16 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			@SuppressWarnings("unused")
 			int updateResult = ezWebFolderDAO_y.updateFileRealData(map);
 			
+			if (useVersionHistory) {
+				ezWebFolderService.incrementFileVersion(userInfo, fileId);
+
+				if (requireEncrypt) {
+					ezWebFolderService.insertEncryptedFile(fileId, tenantId);
+				}
+			}
+
 			// 로그 찍기
-			ezWebFolderService.saveLog("WR", comId, offset, userId, userInfo.getDisplayName1(), userInfo.getDisplayName2(), filevo.getFileName(), filevo.getFileSize(), filevo.getFileExt(), filevo.getFileTypeName(), tenantId);
+			ezWebFolderService.saveLog("WR", comId, offset, userId, userInfo.getDisplayName1(), userInfo.getDisplayName2(), tenantId, filevo, "", userInfo.getPrimary());
 			
 			// db 업데이트 성공시 기존 파일 delete
 			File file = new File(realPath + commonUtil.detectPathTraversal(filevo.getFilePath()));
@@ -1037,14 +1443,275 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 	}
 	
 	@Override
-	public String folderIdByUserIdAndFolderType(String userId, int tenantId) throws Exception {
+	public String folderIdByUserIdAndFolderType(String ownerId, int tenantId, String folderType) throws Exception {
 		Map<String, Object> map  = new HashMap<String, Object>();
-		map.put("userId", userId);
 		map.put("tenantId", tenantId);
+		if (folderType == null || folderType.equals("")){
+			folderType = "U";
+		} 
+		map.put("folderType", folderType);
+		map.put("ownerId", ownerId);
 		
 		String folderId = ezWebFolderDAO_y.folderIdByUserIdAndFolderType(map);
 		
 		return folderId ;
 	}
 
+	@Override
+	public ArrayList<Map<String, Object>> selectWebfolderFiletoAnother(String userId,  ArrayList<String> param) {
+		Map<String, String> map = new HashMap<String, String>();
+		String[] arr = null;
+		String query = "";
+		
+		for (int i = 1; i <param.size(); i++){
+			arr = param.get(i).split("/");
+			query += " or (folder_id=" + arr[0] + " and file_id=" + arr[1] + ") "; 
+		}
+		
+		map.put("userId" , userId);
+		map.put("folderId", param.get(0).split("/")[0]);
+		map.put("fileId", param.get(0).split("/")[1]);
+		map.put("query", query);
+		
+		ArrayList<Map<String, Object>> result = new ArrayList<Map<String,Object>>();
+		result = ezWebFolderDAO_y.selectWebfolderFiletoAnother(map);
+		
+		return result;
+	}
+	
+	// 겸직 리스트 가져오는 메서드
+	@Override
+	public List<String> getjikWiChekAddjobList(int tenantId, String userId, String compId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("userId", userId);
+		map.put("companyId", compId);
+		
+		return ezWebFolderDAO_y.getjikWiChekAddjobList(map);
+	}
+
+	@Override
+	public FileVO selectFileDetail(String fileId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+
+		map.put("fileId", fileId);
+		map.put("tenantId", tenantId);
+
+		return ezWebFolderDAO_y.selectFileDetail(map);
+	}
+
+	@Override
+	public List<Map<String, Object>> getRootFolderListInfo(JSONObject jsonObject)
+			throws Exception {
+		String userId = (String)jsonObject.get("userId");
+		String deptId = (String)jsonObject.get("deptId");
+		String comId = (String)jsonObject.get("comId");
+		int tenantId = (Integer)jsonObject.get("tenantId");
+		String folderType = (String)jsonObject.get("folderType");
+		
+		System.out.println(jsonObject);
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", comId);
+		List<String> addjobList = getAddJobList(tenantId, userId);
+		List<String> folderUserIdList = ezWebFolderDAO_m.getFolderUserIdList_D(map);
+
+		List<String> jikWiChekAddjobList = getjikWiChekAddjobList(tenantId, userId, comId);
+		Set<String> idSet = new HashSet<String>();
+		idSet.add(userId);
+		idSet.add(deptId);
+		idSet.addAll(addjobList);
+		if (folderType.equals("C") || folderType.equals("S")) {
+			idSet.add(comId);
+			idSet.addAll(jikWiChekAddjobList);
+			idSet.addAll(folderUserIdList);
+		}
+
+		// 권한그룹이 추가 : tbl_webfolder_folderuser에 있는 권한 그룹리스트 가져와서 체크
+		List<String> groupList = ezWebFolderDAO_y.getWebFolderUserGroupList(map);
+		
+		if (groupList != null) {
+			for (String groupId : groupList) {
+				boolean groupPermissionYN = ezCommonService.getPermissionGroupAccessYN(groupId, comId, tenantId, userId, deptId, true);
+				
+				if (groupPermissionYN) {
+					idSet.add(groupId);
+				}
+			}
+		}
+
+		map.put("idList"		, idSet.toArray(new String[idSet.size()]));
+		map.put("tenantId"		, tenantId);
+		map.put("folderType"	, (String)jsonObject.get("folderType"));
+		map.put("primary"		, (String)jsonObject.get("primary"));
+		
+		List<Map<String, Object>> result = ezWebFolderDAO_y.selectRootFolderListInfo(map); 
+		
+		LOGGER.debug("result=" + result);
+		return result; 
+	}
+	
+	@Override
+	public List<String> idListUpgrade(String userId, String deptId, String comId, int tenantId) throws Exception{
+		List<Map<String, String>> idList = ezWebFolderService_m.getPermissionIdMapList(userId, deptId, comId, tenantId);
+		Map<String, Object> map = new HashMap<String, Object>();
+		System.out.println(idList);
+		map.put("tenantId", tenantId);
+		
+		List<String> idListUpgrade = new ArrayList<String>();
+		for (Map<String, String> id : idList) {
+			idListUpgrade.add((String)id.get("id"));
+		}
+		
+		// 직위, 직책 권한이 추가 
+		map.put("companyId", comId);
+		List<String> jikWiChekAddjobList = getjikWiChekAddjobList(tenantId, userId, comId);
+		idListUpgrade.addAll(jikWiChekAddjobList);
+		
+		// 권한그룹 idList 변경 :특정 사용자가 속한 모든 권한그룹의 아이디 목록을 반환하는 Method API(이동호 팀장님_2020-12-10) 
+		idListUpgrade.addAll(ezCommonService.getPermissionGroupIdListOfUser(userId, deptId, comId, tenantId));
+		
+		return idListUpgrade;
+	}
+
+	@Override
+	public String changeUserFileORFolder(String currFolderId, String userId, String targetId, String folderUsers, String targetType, String offset, int tenantId,
+			ArrayList<String> addUser, ArrayList<String> deleteUser, String subFolderType, LoginVO userInfo) throws Exception {
+		String result = "OK";
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date                  = new Date();
+		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+		if (targetType.equalsIgnoreCase("D")){
+			String folderId = targetId;
+			FolderVO folder            = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
+			
+			if (folder.getFolderLevel() == 0) {
+				return "error";
+			}
+			
+			folder.setUpdateId(userId);
+			folder.setTenantId(tenantId);
+			
+			if (addUser.size() > 0){
+				insertListUsers(userId, folderId, folder.getCompanyId(), folderUsers, tenantId, timeUTC, addUser, subFolderType, folder.getFolderPath(), offset);
+			}
+			
+			if (deleteUser.size() > 0){
+				
+				JSONObject param = new JSONObject();
+				param.put("folderId", folderId);
+				param.put("tenantId", tenantId);
+				param.put("subFolderType", 1);
+				param.put("folderPath", folder.getFolderPath());
+				List<FileVO> fileList = ezWebFolderAdminService.folderInFileList(param);
+				
+				List<String> seqIdList = ezWebFolderAdminService.getSubFolderIdList(folder.getFolderPath(), tenantId, deleteUser, "0");
+				ezWebFolderAdminService.deleteSelectedFolderUser(seqIdList, tenantId, 0);
+				for(int i=0; i<fileList.size(); i++){
+					ezWebFolderAdminService.deleteSelectedFileUser(deleteUser, tenantId, fileList.get(i).getFileId());
+				}
+			}
+		} else {
+			JSONParser parser          = new JSONParser();
+			folderUsers.replace("\\", "");
+			if (folderUsers.substring(0,1).equals("\"")){
+				folderUsers = folderUsers.substring(1, folderUsers.length()-1);
+			}
+			JSONArray folderUsersArray = (JSONArray) parser.parse(folderUsers);
+
+			FileVO fileVO = selectFileDetail(targetId, tenantId);
+			FolderVO folder = ezWebFolderService.getFolderByFolderId(fileVO.getFolderId(), offset, tenantId);
+			
+			for(int i=0; i<folderUsersArray.size(); i++){
+				JSONObject json    = (JSONObject) folderUsersArray.get(i);
+				if(addUser.contains(json.get("userId").toString())){
+					// insert 
+					ezWebFolderService.insertFileUser(fileVO, "", 
+							(String)json.get("userId"), (String)json.get("userType"), folder.getCompanyId());
+				}
+			}
+			
+			if (deleteUser.size() > 0){
+				ezWebFolderAdminService.deleteSelectedFileUser(deleteUser, tenantId, targetId);
+			}
+		}
+		return result;
+	}
+
+	private void insertListUsers(String userId, String folderId, String companyId, String folderUsers, int tenantId, String timeUTC, 
+			ArrayList<String> addUser, String subFolderType, String folderPath, String offset) throws Exception{
+		List<FolderSimpleVO> subAllFolderInfo = new ArrayList<FolderSimpleVO>();
+		JSONParser parser          = new JSONParser();
+		folderUsers.replace("\\", "");
+		if (folderUsers.substring(0,1).equals("\"")){
+			folderUsers = folderUsers.substring(1, folderUsers.length()-1);
+		}
+		JSONArray folderUsersArray = (JSONArray) parser.parse(folderUsers);
+		
+		if (subFolderType.equals("1")) {
+			subAllFolderInfo = ezWebFolderAdminService.selectSubAllFolder(folderPath, tenantId);
+		} else {
+			FolderSimpleVO temp = new FolderSimpleVO();
+			temp.setFolderId(folderId);
+			subAllFolderInfo.add(temp);
+		}
+		
+		for(int j=0; j<subAllFolderInfo.size(); j++){
+			String folderIdTemp = subAllFolderInfo.get(j).getFolderId();
+			
+			for(int i=0; i<folderUsersArray.size(); i++){
+				try {
+					JSONObject json    = (JSONObject) folderUsersArray.get(i);
+					if(addUser.contains(json.get("userId").toString())){
+						// insert 
+						if(ezWebFolderService.checkFolderUserExists((String)json.get("userId"), folderIdTemp, (Boolean)json.get("folderManager")) == 0){
+							ezWebFolderAdminService.insertFolderUser(ezWebFolderAdminService.getMaxFolderUserSeq(tenantId), (String)json.get("userId"), 
+									(String)json.get("userType"), folderIdTemp, userId, timeUTC, companyId, 
+									tenantId, (Boolean)json.get("subdeptPermitted"), (Boolean)json.get("folderManager"));
+						}
+					}
+				} catch (Exception e) {
+					LOGGER.debug("exists userId, so next userInsert.");
+					continue;
+				}
+			}
+		}
+		if(subFolderType.equals("1")) {
+			addFileUserCurrFolder(folderId, offset, tenantId, folderUsers, addUser, subFolderType);
+		}
+	}
+	
+	@Override
+	public void addFileUserCurrFolder (String currFolderId, String offset, int tenantId, String folderUsers, ArrayList<String> addUser, String subFolderType) throws Exception {
+		FolderVO folder            = ezWebFolderService.getFolderByFolderId(currFolderId, offset, tenantId);
+		JSONObject param = new JSONObject();
+		param.put("folderId", currFolderId);
+		param.put("tenantId", tenantId);
+		param.put("subFolderType", subFolderType);
+		param.put("folderPath", folder.getFolderPath());
+		
+		JSONParser parser          = new JSONParser();
+		folderUsers.replace("\\", "");
+		if (folderUsers.substring(0,1).equals("\"")){
+			folderUsers = folderUsers.substring(1, folderUsers.length()-1);
+		}
+		JSONArray folderUsersArray = (JSONArray) parser.parse(folderUsers);
+		List<FileVO> fileList = ezWebFolderAdminService.folderInFileList(param);
+		
+		for(int j=0; j<fileList.size(); j++){
+			for(int i=0; i<folderUsersArray.size(); i++){
+				JSONObject json    = (JSONObject) folderUsersArray.get(i);
+				if(addUser.contains(json.get("userId").toString())){
+					if(ezWebFolderService.checkFileUserExists((String)json.get("userId"), fileList.get(j).getFileId()) == 0){
+						fileList.get(j).setTenantId(tenantId);
+						ezWebFolderService.insertFileUser(fileList.get(j), "", 
+								(String)json.get("userId"), (String)json.get("userType"), folder.getCompanyId());
+					}
+				}
+			}
+		}
+	}
+	
 }

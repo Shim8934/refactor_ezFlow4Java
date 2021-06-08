@@ -2,11 +2,15 @@ package egovframework.ezEKP.ezWebFolder.dao;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO;
+import egovframework.ezEKP.ezWebFolder.vo.FileHistoryVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
@@ -19,12 +23,26 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzWebFolderDAO")
 public class EzWebFolderDAO extends EgovAbstractDAO {
+	@Autowired
+	private EzWebFolderDAO_m ezWebFolderDAO_m;
+
 	public String getFileSequence(Map<String, Object> map) {
 		return (String)select("EzWebFolderDAO.getFileSequence", map);
 	}
 
-	public void insertFile(Map<String, Object> map) {
-		insert("EzWebFolderDAO.insertFile", map);
+	public int insertFile(Map<String, Object> map) {
+		int fileId = 0;
+		if (map.get("fileId").equals("")){
+			fileId = (int) insert("EzWebFolderDAO.insertFile", map);
+		} else {
+			update("EzWebFolderDAO.updateFile", map);
+			fileId = (int) map.get("fileId"); 
+		}
+		return fileId;
+	}
+	
+	public void updateFileRoot(Map<String, Object> map) {
+		update("EzWebFolderDAO.updateFileRoot", map);
 	}
 
 	public FileVO getFileByFileId(Map<String, Object> map) {
@@ -83,6 +101,11 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<FolderUserVO> getFolderUsers(Map<String, Object> map) {
 		return (List<FolderUserVO>)list("EzWebFolderDAO.getFolderUsers", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<FolderUserVO> getFileUsers(Map<String, Object> map) {
+		return (List<FolderUserVO>)list("EzWebFolderDAO.getFileUsers", map);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -269,5 +292,159 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 	
 	public void updateFileExt(Map<String, Object> map) {
 		update("EzWebFolderDAO.updateFileExt", map);
+	}
+
+	public void insertEncryptionFolder(Map<String, Object> map) {
+		insert("EzWebFolderDAO.insertEncryptionFolder", map);
+	}
+
+	public void deleteEncryptionFolder(Map<String, Object> map) {
+		insert("EzWebFolderDAO.deleteEncryptionFolder", map);
+	}
+
+	public void deleteAllChildrenEncryptionFolder(Map<String, Object> map) {
+		map.put("folderPath", ezWebFolderDAO_m.getFolderPath(map));
+
+		delete("EzWebFolderDAO.deleteAllChildrenEncryptionFolder", map);
+	}
+
+	public void insertEncryptedFile(Map<String, Object> map) {
+		insert("EzWebFolderDAO.insertEncryptedFile", map);
+	}
+
+	public void deleteEncryptedFile(Map<String, Object> map) {
+		delete("EzWebFolderDAO.deleteEncryptedFile", map);
+	}
+
+	public void deleteEncryptedAllVersions(Map<String, Object> map) {
+		delete("EzWebFolderDAO.deleteEncryptedAllVersions", map);
+	}
+
+	public void deleteEncryptedVersion(Map<String, Object> map) {
+		delete("EzWebFolderDAO.deleteEncryptedVersion", map);
+	}
+
+	public FolderVO getEncryptionRootFolder(Map<String, Object> map) {
+		map.put("folderPath", ezWebFolderDAO_m.getFolderPath(map));
+
+		return (FolderVO) select("EzWebFolderDAO.getEncryptionRootFolder", map);
+	}
+
+	public boolean isEncryptionFolder(Map<String, Object> map) {
+		map.put("folderPath", ezWebFolderDAO_m.getFolderPath(map));
+
+		Integer count = (Integer) select("EzWebFolderDAO.isEncryptionFolder", map);
+//		return count != null && count > 0;
+		return false;
+	}
+
+	public boolean isEncryptedFile(Map<String, Object> map) {
+		Integer count = (Integer) select("EzWebFolderDAO.isEncryptedFile", map);
+//		return count != null && count > 0;
+		return false;
+	}
+
+	public boolean isEncryptedVersion(Map<String, Object> map) {
+		Integer count = (Integer) select("EzWebFolderDAO.isEncryptedVersion", map);
+//		return count != null && count > 0;
+		return false;
+	}
+
+	public boolean isEncryptedFilePath(Map<String, Object> map) {
+		Integer count = (Integer) select("EzWebFolderDAO.isEncryptedFilePath", map);
+//		return count != null && count > 0;
+		return false;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<FileHistoryVO> getFileHistories(Map<String, Object> map) {
+		return (List<FileHistoryVO>) list("EzWebFolderDAO.getFileHistories", map);
+	}
+
+	public FileHistoryVO getFileHistory(Map<String, Object> map) {
+		return (FileHistoryVO) select("EzWebFolderDAO.getFileHistory", map);
+	}
+
+	public FileHistoryVO getLatestHistory(Map<String, Object> map) {
+		return (FileHistoryVO) select("EzWebFolderDAO.getLatestHistory", map);
+	}
+
+	public int getCurrentVersion(Map<String, Object> map) {
+		return Optional.ofNullable((Integer) select("EzWebFolderDAO.getCurrentVersion", map)).orElse(0);
+	}
+
+	public void insertFileHistory(Map<String, Object> map) {
+		insert("EzWebFolderDAO.insertFileHistory", map);
+	}
+
+	public void updateFilePathHistory(Map<String, Object> map) {
+		insert("EzWebFolderDAO.updateFilePathHistory", map);
+	}
+
+	public void updateCurrentFileVersion(Map<String, Object> map) {
+		update("EzWebFolderDAO.updateCurrentFileVersion", map);
+	}
+
+	public void deleteFileVersion(Map<String, Object> map) {
+		update("EzWebFolderDAO.deleteFileVersion", map);
+	}
+
+	public void restoreFileVersionFromTrash(Map<String, Object> map) {
+		update("EzWebFolderDAO.restoreFileVersionFromTrash", map);
+	}
+
+	public void deletePermanetlyFileHistory(Map<String, Object> map) {
+		delete("EzWebFolderDAO.deletePermanetlyFileHistory", map);
+	}
+
+	public void deletePermanetFileHistories(Map<String, Object> map) {
+		delete("EzWebFolderDAO.deletePermanetlyFileHistories", map);
+	}
+
+	public void insertFileUser(Map<String, Object> map) {
+		insert ("EzWebFolderDAO.insertFileUser", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<OrganUserVO> getWebFolderMembers(Map<String, Object> map) {
+		return (List<OrganUserVO>)list("EzEmailDAO.getWebFolderMembers", map);
+	}
+
+	public boolean containsReplyFile(Map<String, Object> map) {
+		Integer count = (Integer) select("EzWebFolderDAO.containsReplyFile", map);
+		return count != null && count > 0;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<String> getContainsReplyFiles(Map<String, Object> map) {
+		return (List<String>) list("EzWebFolderDAO.getContainsReplyFiles", map);
+	}
+
+	public int checkFileUserExists(Map<String, Object> map) {
+		return (int) select("EzWebFolderDAO.checkFileUserExists", map);
+	}
+	
+	public int checkFolderUserExists(Map<String, Object> map) {
+		return (int) select("EzWebFolderDAO.checkFolderUserExists", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<String> getNotInheritFolders(Map<String, Object> map) {
+		return (List<String>) list("EzWebFolderDAO.getNotInheritFolders", map);
+	}
+
+	public boolean isNotInheritFolder(Map<String, Object> map) {
+		map.put("folderPath", ezWebFolderDAO_m.getFolderPath(map));
+
+		Integer count = (Integer) select("EzWebFolderDAO.isNotInheritFolder", map);
+		return count != null && count > 0;
+	}
+
+	public void insertNotInheritFolder(Map<String, Object> map) {
+		insert("EzWebFolderDAO.insertNotInheritFolder", map);
+	}
+
+	public void deleteNotInheritFolder(Map<String, Object> map) {
+		insert("EzWebFolderDAO.deleteNotInheritFolder", map);
 	}
 }

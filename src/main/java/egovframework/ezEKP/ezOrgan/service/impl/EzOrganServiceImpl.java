@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezOrgan.service.impl;
 
 import java.lang.reflect.Field;
+import java.net.URLDecoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -769,7 +770,8 @@ public class EzOrganServiceImpl implements EzOrganService {
             
             for (i = 0; i < searchList.length; i++) {      	
                 searchInfo = searchList[i].split("@@");
-                searchParam[i] = searchInfo[1].replace("'", "\\'");
+                String searchVal =  URLDecoder.decode(searchInfo[1], "utf-8");
+                searchParam[i] = searchVal.replace("'", "\\'");
             	String escapedSearchParam = searchParam[i].replace("%", "\\%").replace("_", "\\_");
             	
                 if (i == 0) {
@@ -1048,7 +1050,8 @@ public class EzOrganServiceImpl implements EzOrganService {
 
         		for (i = 0; i < searchList.length; i++) {
         			searchInfo = searchList[i].split("@@");
-        			searchParm[i] = searchInfo[1].replace("'", "\\'");
+        			String searchVal =  URLDecoder.decode(searchInfo[1], "utf-8");
+        			searchParm[i] = searchVal.replace("'", "\\'");
         			String escapedSearchParam = searchParm[i].replace("%", "\\%").replace("_", "\\_");
 
         			if (i == 0) {
@@ -2115,7 +2118,8 @@ public class EzOrganServiceImpl implements EzOrganService {
             
             for (i = 0; i < searchList.length; i++) {      	
                 searchInfo = searchList[i].split("@@");
-                searchParam[i] = searchInfo[1].replace("'", "\\'");
+                String searchVal =  URLDecoder.decode(searchInfo[1], "utf-8");
+                searchParam[i] = searchVal.replace("'", "\\'");
                 String escapedSearchParam = searchParam[i].replace("%", "\\%").replace("_", "\\_");
 
                 if (i == 0) {
