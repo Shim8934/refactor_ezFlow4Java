@@ -1776,7 +1776,7 @@
 			   		<iterate property="idList" open="(" close=")" conjunction=",">
 						#idList[]#
 					</iterate>)
-					or (folder.FOLDER_LEVEL = 0 and folder.owner_id = #comId#))
+					or (folder.FOLDER_LEVEL = 0 and folder.owner_id = #companyId#))
 		    	</isEqual>
 		    	<isNotEqual property="folderType" compareValue="C">
 			    	WHERE 
