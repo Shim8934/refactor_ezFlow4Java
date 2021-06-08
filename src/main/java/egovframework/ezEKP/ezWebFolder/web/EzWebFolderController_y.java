@@ -460,6 +460,15 @@ public class EzWebFolderController_y {
 		LOGGER.debug("folderType : "+ folderType + ",allFileFlag : " + request.getParameter("allFileFlag"));
 		
 		JSONObject jsonObj = new JSONObject();
+		
+		JSONObject existsCheck = null;
+		existsCheck = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" +userInfo.getId() + "/checkRootFolder", 
+				null, request, "get", jsonObj);
+		LOGGER.debug("existsCheck=" + existsCheck);
+		if (existsCheck.get("status").equals("error")){
+			return "cmm/error/egovError";
+		}
+		
 		jsonObj.put("userId", userInfo.getId());
 		jsonObj.put("folderType", folderType);
 		jsonObj.put("tenantId", userInfo.getTenantId());

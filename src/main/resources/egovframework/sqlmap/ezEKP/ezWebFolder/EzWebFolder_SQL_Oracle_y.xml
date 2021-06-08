@@ -1805,19 +1805,22 @@
     		SELECT 
     			distinct folder.FOLDER_ID AS FOLDER_ID, 
     			folder.FOLDER_NAME1 AS FOLDER_NAME,   
-    			folder.folder_type AS FOLDER_TYPE  
+    			folder.folder_type AS FOLDER_TYPE,
+    			folder.FOLDER_LEVEL AS FOLDER_LEVEL  
     		FROM 
     			TBL_WEBFOLDER_FOLDER folder
    			<isEqual property="folderType" compareValue="C">
    				LEFT JOIN 
 		    			TBL_WEBFOLDER_FOLDERUSER fuser ON fuser.FOLDER_ID = folder.FOLDER_ID 
 	    		WHERE 
+	    			(
 					folder.FOLDER_LEVEL = 1 
 					AND 
 						fuser.USER_ID IN 
 		   		<iterate property="idList" open="(" close=")" conjunction=",">
 					#idList[]#
-				</iterate>
+				</iterate>)
+				or (folder.FOLDER_LEVEL= 0 AND folder.OWNER_ID = #companyId#)
 	    	</isEqual>
     		<isNotEqual property="folderType" compareValue="C">
 		    	WHERE 
@@ -1834,13 +1837,14 @@
 					</iterate>
 				AND 
 					folder.USE_STATUS = 'Y'
-				ORDER BY FOLDER_NAME
+				ORDER BY FOLDER_LEVEL, FOLDER_NAME
 		</isNotEqual>
 		<isEqual property="folderType" compareValue="S">
 			SELECT
 				distinct FOLDER_ID AS FOLDER_ID, 
     			D2.FOLDER_NAME1 AS FOLDER_NAME,  
-    			D2.folder_type AS FOLDER_TYPE  
+    			D2.folder_type AS FOLDER_TYPE,
+    			D2.FOLDER_LEVEL AS FOLDER_LEVEL  
 			FROM TBL_WEBFOLDER_FOLDER D2
 			JOIN (
 			    SELECT

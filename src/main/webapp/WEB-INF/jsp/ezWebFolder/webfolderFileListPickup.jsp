@@ -188,6 +188,7 @@
         }
 	    
 	    function getFileList(a){
+	    	folderId = a;
 	    	if(folderId == "") {
 	    		alert(messages.strLang14);
 	    		return;
@@ -386,6 +387,9 @@
 			searchContext.clearRequirement();
 			$("#idSelect").val("");
 			getFileList(folderId);
+			if (folderType == "C" && folderId == rootFolderId){
+				$("#taskRootFolder").val(folderId).prop("selected",true);
+			}
 		}
 		
 		function renderData(result) {
@@ -706,10 +710,15 @@
 					} else {
 						jsonFolderInfo = data.folderInfo;
 			        	$('#taskRootFolder').empty();
-			        	if (folderType == "U" || jsonFolderInfo.length == 0) {
+			        	if (jsonFolderInfo.length == 0) {
 			        		$("#taskRootFolder").css("visibility","hidden");
 			        	} else {
 			        		$("#taskRootFolder").css("visibility","visible");
+			        		if (folderType == "S") {
+					        	var option = "<option value='S"
+					        		+ "'>" + "<spring:message code='ezWebFolder.t214' />" + "</option>";
+					        	$('#taskRootFolder').append(option);
+			        		}
 							for(var i=0; i<jsonFolderInfo.length; i++){
 					        	var option = "<option value='" + jsonFolderInfo[i].FOLDER_ID 
 					        		+ "'>" + jsonFolderInfo[i].FOLDER_NAME + "</option>";

@@ -1770,12 +1770,13 @@
 		    		LEFT JOIN 
 		    			TBL_WEBFOLDER_FOLDERUSER fuser ON fuser.FOLDER_ID = folder.FOLDER_ID 
 		    		WHERE 
-						folder.FOLDER_LEVEL = 1 
+						(folder.FOLDER_LEVEL = 1  
 						AND 
 							fuser.USER_ID IN 
 			   		<iterate property="idList" open="(" close=")" conjunction=",">
 						#idList[]#
-					</iterate>
+					</iterate>)
+					or (folder.FOLDER_LEVEL = 0 and folder.owner_id = #comId#)
 		    	</isEqual>
 		    	<isNotEqual property="folderType" compareValue="C">
 			    	WHERE 
@@ -1798,7 +1799,8 @@
 	    		SELECT 
 	    			distinct FOLDER_ID AS FOLDER_ID, 
 	    			D2.FOLDER_NAME1 AS FOLDER_NAME,  
-	    			D2.folder_type AS FOLDER_TYPE  
+	    			D2.folder_type AS FOLDER_TYPE,
+    				D2.FOLDER_LEVEL AS FOLDER_LEVEL  
 				FROM TBL_WEBFOLDER_FOLDER D2
 				JOIN (
 				    SELECT

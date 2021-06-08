@@ -1402,10 +1402,6 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			return json;
 		}
 		
-		if (!folderType.equals("S") && folderId == ""){
-			throw new Exception("Exception message");
-		}
-		
 		LOGGER.debug("folderId=" + folderId);
 		json.put("folderInfo", folderInfo);
 		json.put("folderId", folderId);
