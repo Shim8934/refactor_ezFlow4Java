@@ -72,6 +72,8 @@ public class ScheduleInfoVO {
 	private String isAllRep; // 단일 또는 특정 반복일정의 완료인 경우 N, 전체일정 완료인 경우 Y
 	private String repStartDate; // 일정완료 레코드의 일정 시작일 (YYYY-MM-DD HH:mm:SS)
 
+	private String scheduleFlag;
+
 	public String getRealEndDate() {
 		return realEndDate;
 	}
@@ -508,6 +510,14 @@ public class ScheduleInfoVO {
 
 	public void setCompanyid(String companyid) {
 		this.companyid = companyid;
+	}
+	
+	public String getScheduleFlag() {
+		return scheduleFlag;
+	}
+
+	public void setScheduleFlag(String scheduleFlag) {
+		this.scheduleFlag = scheduleFlag;
 	}
 
 	public String getCompleteFG() {

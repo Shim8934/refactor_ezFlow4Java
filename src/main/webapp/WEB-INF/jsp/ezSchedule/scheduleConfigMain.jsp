@@ -134,7 +134,7 @@
        				</c:otherwise>
        			</c:choose>
            		<%-- 구글캘린더 --%>
-           		<c:if test="${useGoogleCalrendar == 'YES'}">
+           		<c:if test="${useGoogleCalendar == 'YES'}">
            				<p><span id="1tab2" divname="googleTab"><spring:message code='ezSchedule.t401'/></span></p>
            		</c:if>
            		<%-- <p><span id="1tab4" divname="taskGeneral"><spring:message code='ezTask.jsh12' /></span></p> --%>

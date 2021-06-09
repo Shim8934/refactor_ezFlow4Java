@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezSchedule.service;
 
+import java.util.List;
+
 import org.json.simple.JSONObject;
 
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
@@ -12,4 +14,6 @@ public interface EzScheduleGoogleService {
 	public String authorize() throws Exception;
 	
 	public JSONObject getReturnMessage(String code, String userID, String companyID, int tenantID);
+
+	public List<ScheduleInfoVO> getGoogleScheduleList(String startDate, String endDate, LoginVO userinfo, String memberId, String scheduleFlag, String memberName) throws Exception;
 }

@@ -559,6 +559,14 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		/* 2021-11-26 홍승비 - 일정 리스트 데이터를 전달받아 일정완료 데이터를 추가 가공하여 리턴 */
 		sList = ezScheduleService.applyScheduleCompleteData(sList, userInfo.getOffset(), userInfo.getTenantId(), companyID);
+
+		String useGoogleCalendar = ezCommonService.getTenantConfig("useGoogleCalendar", userInfo.getTenantId());
+		if(useGoogleCalendar.equals("YES")) {
+			List<ScheduleInfoVO> googleList = googleService.getGoogleScheduleList(startDate, endDate, userInfo, userInfo.getId(), "member", userInfo.getDisplayName());		
+			if(googleList != null) {
+				sList.addAll(googleList);
+			}
+		}
 		
 		return sList;
 	}
@@ -1612,11 +1620,11 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		
-		String useGoogleCalrendar = ezCommonService.getTenantConfig("useGoogleCalrendar", loginVO.getTenantId());
+		String useGoogleCalendar = ezCommonService.getTenantConfig("useGoogleCalendar", loginVO.getTenantId());
 		
 		String flag = request.getParameter("flag") == null ? "" : request.getParameter("flag");
 		model.addAttribute("flag", flag);
-		model.addAttribute("useGoogleCalrendar", useGoogleCalrendar);
+		model.addAttribute("useGoogleCalendar", useGoogleCalendar);
 		
 		logger.debug("============ scheduleConfigMain ended ============");
 		return "/ezSchedule/scheduleConfigMain";
