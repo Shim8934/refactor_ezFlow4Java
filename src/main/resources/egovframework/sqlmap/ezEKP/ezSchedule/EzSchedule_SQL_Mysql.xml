@@ -1922,6 +1922,58 @@
 		and
 			tenant_id = #v_TENANTID#
 	</update>
+	
+	<select id="EzScheduleDAO.getAllGoogleToken" parameterClass="map" resultClass="ScheduleTokenInfoVO">
+	<![CDATA[
+		select
+			USERID,
+			COMPANYID,
+			TENANT_ID,
+			GOOGLEACCESSTOKEN,
+			GOOGLEREFRESHTOKEN
+		from
+			tbl_schedule_oauthinfo
+		where
+			GOOGLEACCESSTOKEN IS NOT NULL
+		and
+			GOOGLEREFRESHTOKEN IS NOT NULL
+	]]>
+	</select>
+	
+	<select id="EzScheduleDAO.getExpiredGoogleToken" parameterClass="map" resultClass="ScheduleTokenInfoVO">
+	<![CDATA[
+		select
+			USERID,
+			COMPANYID,
+			TENANT_ID,
+			GOOGLEACCESSTOKEN,
+			GOOGLEREFRESHTOKEN
+		from
+			tbl_schedule_oauthinfo
+		where
+			DATE_ADD(GOOGLEUPDATEDATE, INTERVAL + 50 MINUTE) < #v_TODAYUTCTIME#
+		and
+			GOOGLEACCESSTOKEN IS NOT NULL
+		and
+			GOOGLEREFRESHTOKEN IS NOT NULL
+	]]>
+	</select>
+	
+	<update id="EzScheduleDAO.updateGoogleTokenInfo" parameterClass="map">
+		<![CDATA[
+			update
+				tbl_schedule_oauthinfo
+			set
+				GOOGLEACCESSTOKEN  = #v_GOOGLEACCESSTOKEN#,
+				GOOGLEUPDATEDATE   = #v_TODAYUTCTIME#
+			where
+				userid = #v_USERID#
+			and
+				tenant_id = #v_TENANTID#
+			and
+				companyid = #v_COMPANYID#
+		]]>
+	</update>
 
 </sqlMap>
 

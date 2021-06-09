@@ -366,5 +366,9 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	public List<ScheduleTokenInfoVO> getExpiredGoogleToken(Map<String, Object> map) throws Exception {
 		return (List<ScheduleTokenInfoVO>) list("EzScheduleDAO.getExpiredGoogleToken", map);
 	}
+	
+	public void updateGoogleTokenInfo(Map<String, Object> map) throws Exception {
+		update("EzScheduleDAO.updateGoogleTokenInfo", map);
+	}
 }
 

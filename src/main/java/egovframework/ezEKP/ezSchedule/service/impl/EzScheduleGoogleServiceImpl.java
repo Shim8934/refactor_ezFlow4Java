@@ -24,6 +24,7 @@ import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets.Details;
+import com.google.api.client.googleapis.auth.oauth2.GoogleRefreshTokenRequest;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
@@ -266,6 +267,54 @@ public class EzScheduleGoogleServiceImpl implements EzScheduleGoogleService {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+    public void checkGoogleToken(String type) throws Exception {
+    	String clientId = config.getProperty("config.clientId");
+    	String clientSecret = config.getProperty("config.clientSecret");
+    	
+    	String todayUtcTime = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
+    	logger.debug("Google Check todayUtcTime : " + todayUtcTime);
+    	
+    	Map<String, Object> map = new HashMap<>();
+		map.put("v_TODAYUTCTIME", todayUtcTime);
+		
+		List<ScheduleTokenInfoVO> tokenList;
+		if (type.equals("all")) {
+			tokenList = ezScheduleDAO.getAllGoogleToken(map);
+		} else {
+			tokenList = ezScheduleDAO.getExpiredGoogleToken(map);
+		}
+		
+		for (ScheduleTokenInfoVO token : tokenList) {
+			TokenResponse response = null;
+			try {
+				logger.debug("만료된 userId: " + token.getUserID());
+				logger.debug("old accessToken : " + token.getGoogleAccessToken());
+				
+				response = new GoogleRefreshTokenRequest(new NetHttpTransport(), new GsonFactory(), token.getGoogleRefreshToken(), clientId, clientSecret).execute();
+				
+				logger.debug("new accessToken : " + response.getAccessToken());
+				
+				updateGoogleAccessTokenInfo(response.getAccessToken(), token.getUserID(), token.getCompanyID(), token.getTenantID());
+			} catch (Exception e) {
+				e.printStackTrace();
+				logger.debug("accessToken refresh error : " + response.toPrettyString());
+			}
+		}
+    }
+    
+    public void updateGoogleAccessTokenInfo(String accessToken, String userID, String companyID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_TODAYUTCTIME", commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"));
+		map.put("v_GOOGLEACCESSTOKEN", accessToken);
+		map.put("v_USERID", userID);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		ezScheduleDAO.updateGoogleTokenInfo(map);
 	}
 }
     
