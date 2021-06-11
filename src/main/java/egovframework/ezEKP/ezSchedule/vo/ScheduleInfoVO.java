@@ -73,6 +73,18 @@ public class ScheduleInfoVO {
 	private String repStartDate; // 일정완료 레코드의 일정 시작일 (YYYY-MM-DD HH:mm:SS)
 
 	private String scheduleFlag;
+	
+	private String googleId;
+	
+	private boolean isRepetitionChanged;
+	
+	private String repetitionDelIds;
+	
+	private String googleRecurringEventId;
+	
+	private String googleOriginalStartTime;
+	
+	private long repeatedScheduleOffset;
 
 	public String getRealEndDate() {
 		return realEndDate;
@@ -518,6 +530,54 @@ public class ScheduleInfoVO {
 
 	public void setScheduleFlag(String scheduleFlag) {
 		this.scheduleFlag = scheduleFlag;
+	}
+	
+	public String getGoogleId() {
+		return googleId;
+	}
+
+	public void setGoogleId(String googleId) {
+		this.googleId = googleId;
+	}
+	
+	public boolean isRepetitionChanged() {
+		return isRepetitionChanged;
+	}
+
+	public void setRepetitionChanged(boolean isRepetitionChanged) {
+		this.isRepetitionChanged = isRepetitionChanged;
+	}
+	
+	public String getRepetitionDelIds() {
+		return repetitionDelIds;
+	}
+
+	public void setRepetitionDelIds(String repetitionDelIds) {
+		this.repetitionDelIds = repetitionDelIds;
+	}
+	
+	public String getGoogleRecurringEventId() {
+		return googleRecurringEventId;
+	}
+
+	public void setGoogleRecurringEventId(String googleRecurringEventId) {
+		this.googleRecurringEventId = googleRecurringEventId;
+	}
+	
+	public String getGoogleOriginalStartTime() {
+		return googleOriginalStartTime;
+	}
+
+	public void setGoogleOriginalStartTime(String googleOriginalStartTime) {
+		this.googleOriginalStartTime = googleOriginalStartTime;
+	}
+	
+	public long getRepeatedScheduleOffset() {
+		return repeatedScheduleOffset;
+	}
+
+	public void setRepeatedScheduleOffset(long repeatedScheduleOffset) {
+		this.repeatedScheduleOffset = repeatedScheduleOffset;
 	}
 
 	public String getCompleteFG() {
