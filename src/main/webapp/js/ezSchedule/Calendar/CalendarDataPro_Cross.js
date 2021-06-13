@@ -273,6 +273,7 @@ function getCalWeekViewSource_after() {
         chk_scheduleCSS();
         
         //2018-11-05 김혜정  주보기화면에서 드래그앤드롭을 위해 추가 - 하루종일
+      if(SelectSingleNodeValue(objNodes, "scheduleFlag") != "google") {
         $("div[id$='ALL'").children().draggable({
         	addClasses: false,
         	revert : "invalid",
@@ -293,6 +294,7 @@ function getCalWeekViewSource_after() {
         	handle: "td", 
         	helper: "clone"
         });
+      }
     }
     catch (e) {
         alert("getCalWeekViewSource_after : " + e.description);
@@ -402,6 +404,7 @@ function getCalDayViewSource_after() {
         }        
         tempData = null;
         chk_scheduleCSS();
+        if(SelectSingleNodeValue(objNodes, "scheduleFlag") != "google") {
         //2018-11-05 김혜정  일보기화면에서 드래그앤드롭을 위해 추가 - 시간지정
         $("#CalDiv").find("div[id^='div_']").draggable({
         	addClasses: false,
@@ -409,6 +412,7 @@ function getCalDayViewSource_after() {
         	helper : "clone",
         	cursorAt: { top: 1, left: 1 }
         });
+        }
     }
     catch (e) {
         alert("getCalDayViewSource_after : " + e.description);
@@ -495,6 +499,11 @@ function tempInsert(objNodes, DataSDT, DataEDT) {
     pTempData.IsAllRep = SelectSingleNodeValue(objNodes, "ISALLREP");
     pTempData.StartDateNoTZ = SelectSingleNodeValue(objNodes, "STARTDATE").substring(0, 19);
     pTempData.RepStartDate = SelectSingleNodeValue(objNodes, "REPSTARTDATE");
+
+    if(SelectSingleNodeValue(objNodes, "SCHEDULEFLAG") == "google") {
+    	pTempData.scheduleFlag = SelectSingleNodeValue(objNodes, "SCHEDULEFLAG");
+    	pTempData.googleId = SelectSingleNodeValue(objNodes, "GOOGLEID");
+    }
     
     return pTempData;
 }
@@ -729,7 +738,7 @@ function CalMonthDataBind(oAppointment) {
             oTd.className = "company";
             oSpan.className = "company";
         }
-        else if (oAppointment.ScheduleType == 1 || oAppointment.ScheduleType == 5) {
+        else if (oAppointment.ScheduleType == 1 || oAppointment.ScheduleType == 5 || oAppointment.ScheduleType == 9) {
             oTd.className = "individual";
             oSpan.className = "individual";
         }
@@ -839,8 +848,15 @@ function CalMonthDataBind(oAppointment) {
         }
         else {
         	var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
-        	oTd.setAttribute("onclick", "ReadSchedule(" + divID + ")");
-        	oTd.setAttribute("ondblclick", "ReadSchedule(" + divID + ")");
+        	if(oAppointment.scheduleFlag == "google") {
+        		oTd.setAttribute("isGoogle", "Y");
+        		oTd.setAttribute("googleId", oAppointment.googleId);
+        		oTd.setAttribute("onclick", "ReadGoogleSchedule(" + divID + ")");
+        		oTd.setAttribute("ondblclick", "ReadGoogleSchedule(" + divID + ")");
+      	    } else {
+        		oTd.setAttribute("onclick", "ReadSchedule(" + divID + ")");
+        		oTd.setAttribute("ondblclick", "ReadSchedule(" + divID + ")");
+        	}
         	oTd.onmouseover = function (event) { TooltipMouseOver(this, event); };
         	oTd.setAttribute("onmouseout", "hideTooltip(this)");
         }
@@ -862,6 +878,7 @@ function CalMonthDataBind(oAppointment) {
         objElm.appendChild(oTr);
         
         //2018-11-05 김혜정 월보기
+        if (oAppointment.scheduleFlag != 'google') {
         $("#" + "div_" + oAppointment.trID + "_" + oAppointment.ScheduleID).parent("tr").draggable({
         	addClasses: false,
         	containment: $("#dayDiv"),
@@ -873,6 +890,7 @@ function CalMonthDataBind(oAppointment) {
         	},
         	scroll : false
         });
+        }
     }
     objElm = null;
     oAppointment = null;
@@ -904,7 +922,7 @@ function CalWeekDataBind(oAppointment, order) {
             oDiv.className = "calendar_data_company";
             oSpan.className = "company";
         }
-        else if (oAppointment.ScheduleType == 1 || oAppointment.ScheduleType == 5) {
+        else if (oAppointment.ScheduleType == 1 || oAppointment.ScheduleType == 5 || oAppointment.ScheduleType == 9) {
             oDiv.className = "calendar_data_individual";
             oSpan.className = "individual";
         }
@@ -1009,9 +1027,16 @@ function CalWeekDataBind(oAppointment, order) {
         oDiv.onmouseover = function (event) { TooltipMouseOver(this, event); };
         oDiv.setAttribute("onmouseout", "hideTooltip(this)");
         var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
-        oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
-        oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
-
+        if(oAppointment.scheduleFlag == "google") {
+        	oDiv.setAttribute("isGoogle", "Y");
+        	oDiv.setAttribute("googleId", oAppointment.googleId);
+        	oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
+        	oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
+        } else {
+        	oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadGoogleSchedule(" + divID + ")");
+        	oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadGoogleSchedule(" + divID + ")");
+        }
+        
         if (objDivE) {
             var DivSRect = objDivS.getBoundingClientRect();
             var DivERect = objDivE.getBoundingClientRect();
@@ -1058,7 +1083,7 @@ function CalWeekAllDataBind(oAppointment, order) {
             oDiv.className = "calendar_data_company";
             oSpan.className = "company";
         }
-        else if (oAppointment.ScheduleType == 1 || oAppointment.ScheduleType == 5) {
+        else if (oAppointment.ScheduleType == 1 || oAppointment.ScheduleType == 5 || oAppointment.ScheduleType == 9) {
             oDiv.className = "calendar_data_individual";
             oSpan.className = "individual";
         }
@@ -1157,9 +1182,15 @@ function CalWeekAllDataBind(oAppointment, order) {
         oDiv.onmouseover = function (event) { TooltipMouseOver(this, event); };
         oDiv.setAttribute("onmouseout", "hideTooltip(this)");
         var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
-        oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
-        oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
-
+        if(oAppointment.scheduleFlag == "google") {
+        	oDiv.setAttribute("isGoogle", "Y");
+        	oDiv.setAttribute("googleId", oAppointment.googleId);
+        	oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadGoogleSchedule(" + divID + ")");
+            oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadGoogleSchedule(" + divID + ")");
+        } else {
+        	oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
+            oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
+        }
         objDivS.appendChild(oDiv);
 
     }
@@ -1193,7 +1224,7 @@ function CalDayDataBind(oAppointment, order) {
             oDiv.className = "calendar_data_company";
             oSpan.className = "company";
         }
-        else if (oAppointment.ScheduleType == 1 || oAppointment.ScheduleType == 5) {
+        else if (oAppointment.ScheduleType == 1 || oAppointment.ScheduleType == 5 || oAppointment.ScheduleType == 9) {
             oDiv.className = "calendar_data_individual";
             oSpan.className = "individual";
         }
@@ -1301,9 +1332,17 @@ function CalDayDataBind(oAppointment, order) {
         oDiv.onmouseover = function (event) { TooltipMouseOver(this, event); };
         oDiv.setAttribute("onmouseout", "hideTooltip(this)");
         var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
-        oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
-        oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
 
+        if(oAppointment.scheduleFlag == "google") {
+        	oDiv.setAttribute("isGoogle", "Y");
+        	oDiv.setAttribute("googleId", oAppointment.googleId);
+        	oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadGoogleSchedule(" + divID + ")");
+            oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadGoogleSchedule(" + divID + ")");
+        } else {
+        	oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
+            oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
+        }
+        
         if (objDivE) {
             var DivSRect = objDivS.getBoundingClientRect();
             var DivERect = objDivE.getBoundingClientRect();
@@ -1349,7 +1388,7 @@ function CalDayAllDataBind(oAppointment, order) {
             oDiv.className = "calendar_data_company";
             oSpan.className = "company";
         }
-        else if (oAppointment.ScheduleType == 1 || oAppointment.ScheduleType == 5) {
+        else if (oAppointment.ScheduleType == 1 || oAppointment.ScheduleType == 5 || oAppointment.ScheduleType == 9) {
             oDiv.className = "calendar_data_individual";
             oSpan.className = "individual";
         }
@@ -1448,9 +1487,16 @@ function CalDayAllDataBind(oAppointment, order) {
         oDiv.onmouseover = function (event) { TooltipMouseOver(this, event); };
         oDiv.setAttribute("onmouseout", "hideTooltip(this)");
         var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
-        oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
-        oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
-
+        if(oAppointment.scheduleFlag == "google") {
+        	oDiv.setAttribute("isGoogle", "Y");
+        	oDiv.setAttribute("googleId", oAppointment.googleId);
+        	oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
+	        oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
+        } else {
+	        oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
+	        oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
+        }
+        
         objDivS.appendChild(oDiv);
 
     }
@@ -1495,7 +1541,7 @@ function showTooltip(thisID, e, pTime, pSubject, pScheduleType, pScheduleID) {
         sSpan.className = "company";
         sTd.className = "company";
     }
-    else if (pScheduleType == "1" || pScheduleType == "5") {
+    else if (pScheduleType == "1" || pScheduleType == "5" || pScheduleType == "9") {
         sSpan.className = "individual";
         sTd.className = "individual";
     }
@@ -1513,7 +1559,7 @@ function showTooltip(thisID, e, pTime, pSubject, pScheduleType, pScheduleID) {
     }
     sTd.appendChild(sSpan);
 
-    if (pScheduleType == 1 || pScheduleType == 5)
+    if (pScheduleType == 1 || pScheduleType == 5 || pScheduleType == 9)
         sTd.innerHTML += strLang125;
     else if (pScheduleType == 3)
         sTd.innerHTML += strLang127;

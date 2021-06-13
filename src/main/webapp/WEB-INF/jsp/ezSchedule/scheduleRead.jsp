@@ -54,6 +54,11 @@
 	        var repetitionInfo = "<c:out value='${repetitionInfo}' />";
 	        var startDate = "<c:out value='${scheduleInfo.startDate}' />";
 	        var endDate = "<c:out value='${scheduleInfo.endDate}' />";
+	        var scheduleFlag = "<c:out value='${scheduleInfo.scheduleFlag}' />";
+	        var memberId = "<c:out value='${memberId}' />";
+	        var isOnlyGoogle = "<c:out value='${isOnlyGoogle}' />";
+	        var repetition = "<c:out value='${repetition}' />";
+	        var lang = "<c:out value='${lang}' />";
 	        
 	        /* 2021-11-25 홍승비 - 일정완료 관련 데이터 추가 (반복일정 대응) */
 	        var repeatCount = "<c:out value='${repeatCount}' />";
@@ -78,6 +83,7 @@
                 	manageli.style.display = "none";
                 }
                 
+                if (scheduleFlag != 'google') {
                 $.ajax({
 					type : "POST",
 					dataType : "text",
@@ -94,6 +100,19 @@
 						doc.close();
 					}
 				});
+                } else {
+                	var tempDiv = document.getElementById("syncDataTemp");
+                	var doc = document.getElementById('message').contentWindow.document;
+					doc.open();
+					doc.write(tempDiv.innerHTML);
+					doc.close();
+					tempDiv.parentElement.removeChild(tempDiv);
+					var styleNode = document.createElement('style');
+					styleNode.type = "text/css";
+					var styleText = lang == '3' ? document.createTextNode('p, div{font-size: 13px; font-family: Meiryo UI;}') : document.createTextNode('p, div{font-size: 13px; font-family: 맑은 고딕;}');
+			        styleNode.appendChild(styleText);
+					doc.head.appendChild(styleNode);
+                }
 	            
 	            window.onresize();
 	            
@@ -961,6 +980,9 @@
 	                </tr>
 	            </table>
 	        </div>	
+	        <c:if test="${scheduleInfo.scheduleFlag == 'google'}">
+	        	 <div id="syncDataTemp">${scheduleBody}</div>
+	        </c:if>
 	        <script type="text/javascript">
 				selToggleList(document.getElementById("menu"), "ul", "li", "0");
 	        </script>	

@@ -539,6 +539,15 @@
 							</li>	
 						</c:forEach>
 					</c:if>
+					<c:if test="${isGoogleSync == 'Y'}">
+						<li>
+							<label class="IDcontainer" onchange="chk_DisplayChange()">
+						  		<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="9" value="${loginVO.id}" class="checkSelect">
+						  		<span class="checkmark" style="background:rgb(1, 138, 249);"></span>
+						  		<span class="list_text"><spring:message code='ezSchedule.google03'/></span>
+							</label>
+						</li>
+					</c:if>
 					<li>
 						<label class="IDcontainer" onchange="chk_DisplayChange()">
 							<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${loginVO.deptID}" class="checkSelect">

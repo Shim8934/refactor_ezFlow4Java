@@ -465,6 +465,26 @@
 		        }
 		    }
 		    
+		    function ReadGoogleSchedule(e) {
+		    	srcEl = document.getElementById(e);
+		    	var repeatcount = GetAttribute(srcEl, "RepeatCount");
+	        	var googleid = GetAttribute(srcEl, "googleid");
+	        	var datetype = GetAttribute(srcEl, "DateType");
+	        	var startdate = GetAttribute(srcEl, "StartDate").substring(0, 19);
+		        var enddate   = GetAttribute(srcEl, "EndDate").substring(0, 19);
+		        if(datetype == "2") {
+	            	startdate = GetAttribute(srcEl, "orgStartDate").substring(0, 19);
+	            	enddate   = GetAttribute(srcEl, "orgEndDate").substring(0, 19);
+	            }
+		        
+		        var pheight = window.screen.availHeight;
+	            var pwidth = window.screen.availWidth;
+	            var pTop = (pheight - 660) / 2;
+	            var pLeft = (pwidth - 790) / 2;
+	        	window.open("/ezSchedule/googleScheduleRead.do" + "?id=" + encodeURIComponent(googleid) + "&repeatcount=" + repeatcount + "&startdate=" + startdate + "&enddate=" + enddate + "&datetype=" + datetype, "",
+                        "height = 640px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
+		    }
+		    
 		    function getRedirectScheduleDetailUrl(id, date, repeatCount, callTypeId, bMobile) {
 		        if (typeof (id) == "undefined" || typeof (date) == "undefined")
 		            return;

@@ -52,6 +52,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
+import com.google.api.services.calendar.model.Event;
 import com.ibm.icu.util.Calendar;
 import com.sun.mail.imap.IMAPFolder;
 
@@ -259,6 +260,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String useWorkspaceSchedule = ezCommonService.getTenantConfig("useWorkspaceSchedule", loginVO.getTenantId());
 	    logger.debug("useWorkspaceSchedule : " + useWorkspaceSchedule);
 		
+	    String isGoogleSync = isGoogleSync(loginVO);
+		
+		model.addAttribute("isGoogleSync", isGoogleSync);
 		model.addAttribute("loginVO", loginVO);
 		model.addAttribute("groupList", groupList);
 		model.addAttribute("scheSec", pubScheSecVO);
@@ -4750,6 +4754,137 @@ public class EzScheduleController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("============ oauth2Callback ended ==============");
+	}
+	
+	@RequestMapping(value = "/ezSchedule/googleScheduleRead.do", method = RequestMethod.GET)
+	public String googleScheduleRead(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, LoginVO userInfo, Locale locale) throws Exception {
+		logger.debug("googleScheduleRead started");
+		userInfo = commonUtil.userInfo(loginCookie);
+		String s_date = request.getParameter("startdate");
+		String e_date = request.getParameter("enddate");
+		String googleid = request.getParameter("id");
+		String repeatcount = request.getParameter("repeatcount");
+		String companyID = userInfo.getCompanyID();
+		String dateString = "";
+		String _date = s_date.substring(0,10);
+		String googleContent = "";
+		
+		String readFlag = "";
+        if (request.getParameter("readFlag") != null) {
+        	readFlag = request.getParameter("readFlag");
+        }
+		
+		String memberId = "";
+        if (request.getParameter("memberId") != null) {
+        	memberId = commonUtil.stripScriptTagsAndFunctions(request.getParameter("memberId"));
+        }
+        String memberName = "";
+        if (request.getParameter("memberName") != null) {
+        	memberName = request.getParameter("memberName");
+        }
+		
+		Event event = googleService.getGoogleScheduleInfo(googleid, userInfo, readFlag, memberId);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		ScheduleInfoVO svo = new ScheduleInfoVO();
+		if (event != null) {
+			svo.setScheduleId(event.getId());
+    		svo.setOwnerId(readFlag.equals("member") ? memberId : userInfo.getId());
+    		svo.setCreatorId(readFlag.equals("member") ? memberId : userInfo.getId());
+    		svo.setModifierId(readFlag.equals("member") ? memberId : userInfo.getId());
+    		if (readFlag.equals("member")) {
+				svo.setOwnerName(memberName);
+				svo.setCreatorName(memberName);
+				svo.setModifierName(memberName);
+				svo.setOwnerName2(memberName);
+				svo.setCreatorName2(memberName);
+				svo.setModifierName2(memberName);
+			} else {
+				svo.setOwnerName(userInfo.getDisplayName());
+				svo.setCreatorName(userInfo.getDisplayName());
+				svo.setModifierName(userInfo.getDisplayName());
+				svo.setOwnerName2(userInfo.getDisplayName2());
+				svo.setCreatorName2(userInfo.getDisplayName2());
+				svo.setModifierName2(userInfo.getDisplayName2());
+			}
+    		svo.setScheduleType("9");
+    		svo.setScheduleFlag("google");
+    		svo.setCompanyid(companyID);
+    		svo.setTitle(event.getSummary() != null ? event.getSummary() : "No Title");
+    		svo.setImportance("2");
+    		
+    		svo.setCreateDate(sdf.format(event.getCreated().getValue()));
+    		svo.setModifyDate(sdf.format(event.getUpdated().getValue()));
+
+    		svo.setIsPublic(event.getVisibility() != null && (event.getVisibility().equals("private") || event.getVisibility().equals("confidential")) ? "N" : "Y");
+    		
+    		boolean isAllday = (event.getStart().getDateTime() == null) ? true : false;
+    		// 반복일정인 경우
+    		if (event.getRecurrence() != null){
+    			svo.setDateType("3");
+    			com.google.api.client.util.DateTime googleStartDate = isAllday ? event.getStart().getDate() : event.getStart().getDateTime();
+    			com.google.api.client.util.DateTime googleEndDate = isAllday ? event.getEnd().getDate() : event.getEnd().getDateTime();
+    			long repeatedScheduleOffset = googleEndDate.getValue() - googleStartDate.getValue();
+    			// 반복일정 중 일정이 하루 이상인 경우
+    			dateString = msg.getMessage("ezSchedule.t343", locale) + " (" + repeatcount + msg.getMessage("ezSchedule.t329", locale) + " ";
+    			if (repeatedScheduleOffset != 0 && repeatedScheduleOffset > 86400000) {
+    				if (isAllday) {
+        				svo.setDateType("2");
+        				dateString += _date + " (" + msg.getMessage("ezSchedule.t280", locale) + " ~ " + e_date.substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", locale);
+        			}
+        			else {
+        				svo.setDateType("1");
+        				dateString += s_date.substring(0,10) + " " + s_date.substring(11,16) + " ~ " + e_date.substring(0,10) + " " + e_date.substring(11,16);
+        			}
+    			} else {
+    				if (isAllday) {
+	    				dateString +=  _date + " (" + msg.getMessage("ezSchedule.t280", locale);
+	        		}
+	        		else {
+	        			dateString += _date + " " + s_date.substring(11, 16) + " ~ " + e_date.substring(11, 16);
+	        		}
+    			}
+    		} else {
+    			if (isAllday) {
+    				svo.setDateType("2");
+    				dateString = _date + " (" + msg.getMessage("ezSchedule.t280", locale) + " ~ " + e_date.substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", locale);
+    			}
+    			else {
+    				svo.setDateType("1");
+    				dateString = s_date.substring(0,10) + " " + s_date.substring(11,16) + " ~ " + e_date.substring(0,10) + " " + e_date.substring(11,16);
+    			}
+    		}
+    		
+    		googleContent = event.getDescription() != null ? event.getDescription() : "";
+    		svo.setContent(googleContent);
+		} else {
+			logger.error("Schedule not found.");
+			model.addAttribute("title", egovMessageSource.getMessage("ezSchedule.t342", locale));
+			model.addAttribute("mainContent", egovMessageSource.getMessage("ezSchedule.gha03", locale));
+			model.addAttribute("subContent", egovMessageSource.getMessage("ezSchedule.gha04", locale));
+			return "ezCommon/error";
+		}
+		
+		String _admin = "N";
+	    String _editPosible = "N";
+        
+    	model.addAttribute("_admin", _admin);
+        model.addAttribute("_editPosible", _editPosible);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("scheduleInfo", svo);
+		model.addAttribute("_date", _date);
+		model.addAttribute("dateString", dateString);
+		model.addAttribute("primary", userInfo.getPrimary());
+        model.addAttribute("lang", userInfo.getLang());
+        model.addAttribute("scheduleBody", googleContent);
+        model.addAttribute("companyID", companyID);
+		
+		logger.debug("googleScheduleRead ended");
+		return "ezSchedule/scheduleRead";
+	}
+	
+    private String isGoogleSync(LoginVO userInfo) throws Exception {
+	    return googleService.getIsSync(userInfo); 
 	}
 
 }

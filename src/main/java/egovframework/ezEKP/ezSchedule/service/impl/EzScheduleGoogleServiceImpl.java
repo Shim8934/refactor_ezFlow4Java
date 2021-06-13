@@ -71,6 +71,7 @@ public class EzScheduleGoogleServiceImpl implements EzScheduleGoogleService {
 	private final Logger logger = LoggerFactory.getLogger(EzScheduleGoogleServiceImpl.class);
 	private final String APPLICATION_NAME  = "ezSchedule";
     private final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
+    private final String GOOGLE_SCHEDULE_TYPE  = "9";
     private com.google.api.services.calendar.Calendar service;
     private HttpTransport httpTransport = null;
     GoogleAuthorizationCodeFlow flow  = null;
@@ -293,8 +294,9 @@ public class EzScheduleGoogleServiceImpl implements EzScheduleGoogleService {
 		ScheduleInfoVO svo = new ScheduleInfoVO();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
+		svo.setScheduleId(event.getId());
 		svo.setGoogleId(event.getId()); // 구글일정아이디		
-		svo.setScheduleType("1"); // google type fixed		
+		svo.setScheduleType(GOOGLE_SCHEDULE_TYPE); // google type fixed		
 		svo.setTitle(event.getSummary() != null && !event.getSummary().equals("") ? event.getSummary() : "(No Title)");		
 		svo.setLocation(event.getLocation() != null ? (event.getLocation().length() > 49 ? event.getLocation().substring(0,49) : event.getLocation()) : null); // 50자까지만		
 		
@@ -311,6 +313,7 @@ public class EzScheduleGoogleServiceImpl implements EzScheduleGoogleService {
 		svo.setModifierName2(userInfo.getDisplayName2());
 		
 		svo.setIsPublic(checkPublic(event) ? "N" : "Y");
+		svo.setImportance("2");
 		
 		svo.setCreateDate(sdf.format(event.getCreated().getValue()));
 		svo.setModifyDate(sdf.format(event.getUpdated().getValue()));
@@ -328,10 +331,8 @@ public class EzScheduleGoogleServiceImpl implements EzScheduleGoogleService {
 			updatedStartDate = sdf.format(originalStartTime.getValue()); 
 			if (isAllday) {
 				svo.setGoogleOriginalStartTime(originalStartTime + " 00:00:00");
-				//svo.setGoogleOriginalStartTime(commonUtil.getDateStringInUTC(commonUtil.getDateStringInUTC(updatedStartDate, userInfo.getOffset(), true), userInfo.getOffset(), true));
 			} else {
 				svo.setGoogleOriginalStartTime(updatedStartDate);
-				//svo.setGoogleOriginalStartTime(commonUtil.getDateStringInUTC(updatedStartDate, userInfo.getOffset(), true));
 			}
 		}
 		
@@ -342,6 +343,7 @@ public class EzScheduleGoogleServiceImpl implements EzScheduleGoogleService {
 		ScheduleInfoVO svo = new ScheduleInfoVO();
 		
 		logger.debug("DEL GOOGLE ID : " + event.getId());
+		svo.setScheduleId(event.getId());
 		svo.setGoogleId(event.getId());
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
@@ -658,7 +660,7 @@ public class EzScheduleGoogleServiceImpl implements EzScheduleGoogleService {
 		for(ScheduleInfoVO svo : tList) {
 			resultList.stream().filter(x -> x.getStartDate().equals(svo.getGoogleOriginalStartTime()) && x.getGoogleId().equals(svo.getGoogleRecurringEventId()))
 											.findFirst()
-											.ifPresent(x -> { x.setStartDate(svo.getStartDate()); x.setEndDate(svo.getEndDate()); });
+											.ifPresent(x -> { x.setStartDate(svo.getStartDate()); x.setEndDate(svo.getEndDate()); x.setGoogleId(svo.getGoogleId()); });
 		}
 		
 		for(ScheduleInfoVO rList2 : rList) {
@@ -709,7 +711,11 @@ public class EzScheduleGoogleServiceImpl implements EzScheduleGoogleService {
 			Calendar cal = Calendar.getInstance();
 			Calendar cal2 = Calendar.getInstance();
 			
-			cal.setTimeInMillis(date.getTime() + repeatedScheduleOffset);
+			if(repeatedScheduleOffset % 86400000 != 0) {
+				cal.setTimeInMillis(date.getTime() + repeatedScheduleOffset);
+			} else {
+				cal.setTimeInMillis(date.getTime() + repeatedScheduleOffset - 1);
+			}
 			cal2.setTimeInMillis(date.getTime());
 			dateTime2 = sdf.format(cal.getTime());
 		} else {
@@ -988,6 +994,38 @@ public class EzScheduleGoogleServiceImpl implements EzScheduleGoogleService {
 		}
 		return recur;
 	}
+	
+	public Event getGoogleScheduleInfo(String googleid, LoginVO userInfo, String readFlag, String memberId) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		if (readFlag.equals("member")) {
+			map.put("v_USERID", memberId);
+		} else {
+			map.put("v_USERID", userInfo.getId());
+		}
+		map.put("v_COMPANYID", userInfo.getCompanyID());
+		map.put("v_TENANTID", userInfo.getTenantId());
+		
+		ScheduleTokenInfoVO token = ezScheduleDAO.getScheduleTokenInfo(map);
+
+		if (token != null && token.getGoogleAccessToken() != null && token.getGoogleRefreshToken() != null) {
+			try {
+				buildCalendarService(userInfo);
+				
+				Event event = service.events().get("primary", googleid).execute();
+				
+				logger.debug("getGoogleSchedule ended ==> success");
+				return event;
+			} catch (IOException e) {
+				e.printStackTrace();
+				logger.debug("getGoogleSchedule ended ==> error");
+				return null;
+			}
+		} else {
+			logger.debug("getGoogleSchedule ended ==> no sync user");
+			return null;
+		}
+	}
+
 }
     
     
