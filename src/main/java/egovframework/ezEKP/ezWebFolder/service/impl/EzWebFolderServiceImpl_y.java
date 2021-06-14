@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
@@ -128,7 +129,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 
 	// 사용자 삭제시 그 사용자의 데이터 모두 삭제 위해 flag 추가 
 	@Override
-	public List<Map<String, Object>> getFolderTree(String userId,
+	public List<FolderTreeVO> getFolderTree(String userId,
 			String deptId, String compId, String folderType, String primary,
 			int tenantId, String flag) throws Exception {
 		return getFolderTree(userId, deptId, compId, folderType, primary, tenantId, flag, false);
@@ -136,9 +137,9 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		
 	// 사용자 삭제시 그 사용자의 데이터 모두 삭제 위해 flag 추가 
 	@Override
-	public List<Map<String, Object>> getFolderTree(String userId, String deptId, String compId, String folderType, String primary, int tenantId, String flag, boolean isAdmin) throws Exception {
+	public List<FolderTreeVO> getFolderTree(String userId, String deptId, String compId, String folderType, String primary, int tenantId, String flag, boolean isAdmin) throws Exception {
 		
-		List<Map<String, Object>> folderTree = new ArrayList<Map<String, Object>>();
+		List<FolderTreeVO> folderTree = new ArrayList<>();
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		LOGGER.debug("getFolderTree. userId :" + userId + ", folderType :" + folderType);
@@ -149,8 +150,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		if (folderType.equals("U") || folderType.equals("")) {
 			map.put("userId", userId);
 			map.put("flag", flag);
-			List<Map<String, Object>> userFolderTree = ezWebFolderDAO_y
-					.getUserFolderTree(map);
+			List<FolderTreeVO> userFolderTree = ezWebFolderDAO_y.getUserFolderTree(map);
 			folderTree.addAll(userFolderTree);
 		}
 
@@ -170,8 +170,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			idSet.addAll(folderUserIdList);
 
 			map.put("idList", idSet.toArray(new String[idSet.size()]));
-			List<Map<String, Object>> deptFolderTree = ezWebFolderDAO_y
-					.getDeptFolderTree(map);
+			List<FolderTreeVO> deptFolderTree = ezWebFolderDAO_y.getDeptFolderTree(map);
 			folderTree.addAll(deptFolderTree);
 		}
 
@@ -244,7 +243,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 				map.put("managerFolderStr", mngStr);
 			}
 			
-			List<Map<String, Object>> compFolderTree = ezWebFolderDAO_y.getCompFolderTree(map);
+			List<FolderTreeVO> compFolderTree = checkFolderParent(ezWebFolderDAO_y.getCompFolderTree(map));
 
 			compFolderTree = checkFolderParent(compFolderTree);
 			folderTree.addAll(compFolderTree);
@@ -258,8 +257,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			map.put("idList", idList);
 			map.put("compId", compId);
 
-			List<Map<String, Object>> compFolderTree = ezWebFolderDAO_m
-					.getShareFolderTree(map);
+			List<FolderTreeVO> compFolderTree = ezWebFolderDAO_m.getShareFolderTree(map);
 			folderTree.addAll(compFolderTree);
 		}
 
@@ -270,34 +268,25 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 	/**
 	 * 상위 권한이 없는 폴더라면 하위의 폴더는 나타나지 않도록 제거 
 	 */
-	private List<Map<String, Object>> checkFolderParent(List<Map<String,Object>> allCompFolderTree){
+	private List<FolderTreeVO> checkFolderParent(List<FolderTreeVO> folderTreeList) {
 		LOGGER.debug("checkFolderParent start.");
-		List<Map<String, Object>> compFolderTree = new ArrayList<Map<String,Object>>();
-		compFolderTree = allCompFolderTree;
-		
-		ArrayList<String> folderId = new ArrayList<String>(); 
-		ArrayList<String> folderIdTemp = folderId;
-		ArrayList<FolderTreeVO> folderVOList = new ArrayList<FolderTreeVO>();
-		
-		for(int i = 0; i <allCompFolderTree.size(); i++){
-			FolderTreeVO folderVO = new FolderTreeVO();
-			folderVO = (FolderTreeVO) allCompFolderTree.get(i);
-			folderVOList.add(folderVO);
-			folderId.add(folderVO.getId());
-		}
 
-		for(int i = 0; i <folderVOList.size(); i++){
-			if (!folderVOList.get(i).getParent().equals("#")){
-				if(folderIdTemp.contains(folderVOList.get(i).getParent()) == false){
-					LOGGER.debug("parent folder not exists permission. delete folderId:" + folderVOList.get(i).getId());
-					compFolderTree.remove(folderVOList.get(i));
-					folderIdTemp.remove(folderVOList.get(i).getId());
-				} 			
+		List<String> folderIds = folderTreeList.stream().map(FolderTreeVO::getId).collect(Collectors.toList());
+
+		folderTreeList.removeIf(treeVO -> {
+			String parentId = treeVO.getParent();
+
+			if (parentId.equals("#") || folderIds.contains(parentId)) {
+				return false;
 			}
-		}
-		
+
+			String id = treeVO.getId();
+			LOGGER.debug("parent folder not exists permission. delete folderId={}", id);
+			return folderIds.remove(id);
+		});
+
 		LOGGER.debug("checkFolderParent end.");
-		return compFolderTree;
+		return folderTreeList;
 	}
 	
 	@Override

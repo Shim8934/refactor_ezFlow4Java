@@ -83,7 +83,7 @@ public interface EzWebFolderService_m {
 	 *         "folderCount" : 폴더 개수<br>
 	 *         "fileCount" : 파일 개수<br>
 	 **/
-	Map<String, Long> getFavoritesCount(String userId, String primary, String offset, int tenantId, SearchVO searchInfo) throws Exception;
+	Map<String, Long> getFavoritesCount(String userId, String primary, String offset, int tenantId, int pageSize, SearchVO searchInfo) throws Exception;
 	
 	boolean isExistsFavorite(String userId, String targetId, String targetType, int tenantId) throws Exception;
 	

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezWebFolder.vo.FavoriteVO;
+import egovframework.ezEKP.ezWebFolder.vo.FolderTreeVO;
 import egovframework.ezEKP.ezWebFolder.vo.ShareSubVO;
 import egovframework.ezEKP.ezWebFolder.vo.ShareVO;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleShareVO;
@@ -17,8 +18,8 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 @SuppressWarnings("unchecked")
 public class EzWebFolderDAO_m extends EgovAbstractDAO {
 	
-	public List<Map<String, Object>> getShareFolderTree(Map<String, Object> map) {
-		return (List<Map<String, Object>>) list("EzWebFolderDAO_m.getShareFolderTree", map);
+	public List<FolderTreeVO> getShareFolderTree(Map<String, Object> map) {
+		return (List<FolderTreeVO>) list("EzWebFolderDAO_m.getShareFolderTree", map);
 	}
 	
 	public List<ShareVO> getSharingList(Map<String, Object> map) {

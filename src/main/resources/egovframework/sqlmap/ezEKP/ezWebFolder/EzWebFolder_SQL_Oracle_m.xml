@@ -152,72 +152,72 @@
 	</resultMap>
 	
 	<sql id="searchTerm">
-		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
+		<isNotEmpty property="searchFileType" prepend="AND">
 				<![CDATA[
 					FT2.TYPE_NAME = #searchFileType#
 				]]>
-		</isNotEqual>
-		<isNotEqual property="searchExt" compareValue="" prepend="AND">
+		</isNotEmpty>
+		<isNotEmpty property="searchExt" prepend="AND">
 				<![CDATA[
 					LOWER(DF.FILE_EXT) LIKE ('%' || LOWER(#searchExt#) || '%') ESCAPE '\'
 				]]>
-		</isNotEqual>
-		<isNotEqual property="searchFileName" compareValue="" prepend="AND">
+		</isNotEmpty>
+		<isNotEmpty property="searchFileName" prepend="AND">
 				<![CDATA[
 					(LOWER(DF.FILE_NAME1) LIKE ('%' || LOWER(#searchFileName#) || '%') ESCAPE '\' OR LOWER(DF.FILE_NAME2) LIKE ('%' || LOWER(#searchFileName#) || '%') ESCAPE '\')
 				]]>
-		</isNotEqual>
-		<isNotEqual property="searchCreatorName" compareValue="" prepend="AND">
+		</isNotEmpty>
+		<isNotEmpty property="searchCreatorName" prepend="AND">
 				<![CDATA[
 					(LOWER(DF.CREATE_NAME1) LIKE ('%' || LOWER(#searchCreatorName#) || '%') ESCAPE '\' OR LOWER(DF.CREATE_NAME2) LIKE ('%' || LOWER(#searchCreatorName#) || '%') ESCAPE '\')
 				]]>
-		</isNotEqual>
-		<isNotEqual property="searchStartDate" compareValue="">
-			<isNotEqual property="searchEndDate" compareValue="" prepend="AND">
+		</isNotEmpty>
+		<isNotEmpty property="searchStartDate">
+			<isNotEmpty property="searchEndDate" prepend="AND">
 				<![CDATA[
 					DF.CREATE_DATE >= TO_DATE(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS') AND DF.CREATE_DATE <= TO_DATE(#searchEndDate#, 'YYYY-MM-DD HH24:MI:SS')
 				]]>
-			</isNotEqual>
-		</isNotEqual>
+			</isNotEmpty>
+		</isNotEmpty>
 	</sql>
 	
 	<sql id ="searchTrashCanFile">
-	<isNotEqual property="searchExt" compareValue="" prepend="AND">
+		<isNotEmpty property="searchExt" prepend="AND">
 				<![CDATA[
 					LOWER(FILES.FILE_EXT) LIKE '%' || LOWER(#searchExt#) || '%' ESCAPE '\'
 				]]>
-		</isNotEqual>
-		<isNotEqual property="searchFileName" compareValue="" prepend="AND">
+		</isNotEmpty>
+		<isNotEmpty property="searchFileName" prepend="AND">
 				<![CDATA[
 					LOWER(FILES.FILE_NAME) LIKE '%' || LOWER(#searchFileName#) || '%' ESCAPE '\'
 				]]>
-		</isNotEqual>
-		<isNotEqual property="searchCreateName" compareValue="" prepend="AND">
+		</isNotEmpty>
+		<isNotEmpty property="searchCreateName" prepend="AND">
 				<![CDATA[
 					LOWER(FILES.CREATE_NAME1) LIKE '%' || LOWER(#searchCreateName#) || '%' ESCAPE '\'
 				]]>
-		</isNotEqual>
-		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
+		</isNotEmpty>
+		<isNotEmpty property="searchFileType" prepend="AND">
 				<![CDATA[
 					LOWER(FILE_TYPE.TYPE_NAME) LIKE '%' || LOWER(#searchFileType#) || '%' ESCAPE '\'
 				]]>
-		</isNotEqual>
-		<isNotEqual property="endrollStartDate" compareValue="">
-			<isNotEqual property="endrollEndDate" compareValue="" prepend="AND">
+		</isNotEmpty>
+		<isNotEmpty property="endrollStartDate">
+			<isNotEmpty property="endrollEndDate" prepend="AND">
 				<![CDATA[
 					FILES.CREATE_DATE >= TO_DATE(#endrollStartDate#, 'YYYY-MM-DD HH24:MI:SS') 
 					AND FILES.CREATE_DATE <= TO_DATE(#endrollEndDate#, 'YYYY-MM-DD HH24:MI:SS')
 				]]>
-			</isNotEqual>
-		</isNotEqual>
-		<isNotEqual property="delStartDate" compareValue="">
-			<isNotEqual property="delEndDate" compareValue="" prepend="AND">
+			</isNotEmpty>
+		</isNotEmpty>
+		<isNotEmpty property="delStartDate">
+			<isNotEmpty property="delEndDate" prepend="AND">
 				<![CDATA[
 					FILES.UPDATE_DATE >= TO_DATE(#delStartDate#, 'YYYY-MM-DD HH24:MI:SS') 
 					AND FILES.UPDATE_DATE <= TO_DATE(#delEndDate#, 'YYYY-MM-DD HH24:MI:SS')
 				]]>
-			</isNotEqual>
-		</isNotEqual>
+			</isNotEmpty>
+		</isNotEmpty>
 	</sql>
 
 	<sql id ="searchTrashCanFolder">
@@ -260,33 +260,33 @@
 	</sql>
 	
 	<sql id="searchFavorite">
-		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
+		<isNotEmpty property="searchFileType" prepend="AND">
 			<![CDATA[
 				FILETYPE.TYPE_NAME = #searchFileType#
 			]]>
-		</isNotEqual>
-		<isNotEqual property="searchExt" compareValue="" prepend="AND">
+		</isNotEmpty>
+		<isNotEmpty property="searchExt" prepend="AND">
 			<![CDATA[
 				LOWER(RESULT.TARGET_EXT) LIKE '%' || LOWER(#searchExt#) || '%' ESCAPE '\'
 			]]>
-		</isNotEqual>
-		<isNotEqual property="searchFileName" compareValue="" prepend="AND">
+		</isNotEmpty>
+		<isNotEmpty property="searchFileName" prepend="AND">
 			<![CDATA[
 				(LOWER(RESULT.TARGET_NAME_1) LIKE '%' || LOWER(#searchFileName#) || '%' ESCAPE '\'  OR LOWER(RESULT.TARGET_NAME_2) LIKE '%' || LOWER(#searchFileName#) || '%' ESCAPE '\')
 			]]>
-		</isNotEqual>
-		<isNotEqual property="searchCreatorName" compareValue="" prepend="AND">
+		</isNotEmpty>
+		<isNotEmpty property="searchCreatorName" prepend="AND">
 			<![CDATA[
 				(LOWER(RESULT.CREATE_NAME1) LIKE '%' || LOWER(#searchCreatorName#) || '%' ESCAPE '\' OR LOWER(RESULT.CREATE_NAME2) LIKE '%' || LOWER(#searchCreatorName#) || '%' ESCAPE '\')
 			]]>
-		</isNotEqual>
-		<isNotEqual property="searchStartDate" compareValue="">
-			<isNotEqual property="searchEndDate" compareValue="" prepend="AND">
+		</isNotEmpty>
+		<isNotEmpty property="searchStartDate">
+			<isNotEmpty property="searchEndDate" prepend="AND">
 				<![CDATA[
 					RESULT.CREATE_DATE >= TO_DATE(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS') AND RESULT.CREATE_DATE <= TO_DATE(#searchEndDate#, 'YYYY-MM-DD HH24:MI:SS')
 				]]>
-			</isNotEqual>
-		</isNotEqual>
+			</isNotEmpty>
+		</isNotEmpty>
 	</sql>
 	
 	<select id="EzWebFolderDAO_m.getShareFolderTree" parameterClass="Map" resultMap="folderTreeVO">
