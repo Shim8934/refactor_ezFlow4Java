@@ -156,7 +156,7 @@
 		        var temp;
 		        for (var i = 0; i < xmldom.getElementsByTagName("REPLYID").length; i++) {
 		            temp = i + 1;
-		                strHTML += "<font color=blue>" + temp.toString() + ". " + "<span><font color=blue>" + getNodeText(xmldom.getElementsByTagName("USERNAME").item(i)) + "</font></span>(" + getNodeText(xmldom.getElementsByTagName("WRITEDATE").item(i)) + ")" + " : </font>" + getNodeText(xmldom.getElementsByTagName("CONTENT").item(i)) + "<br>";
+		                strHTML += "<font color=blue>" + temp.toString() + ". " + "<span><font color=blue>" + getNodeText(xmldom.getElementsByTagName("USERNAME").item(i)) + "</font></span>(" + getNodeText(xmldom.getElementsByTagName("WRITEDATE").item(i)).substr(0, 16) + ")" + " : </font>" + getNodeText(xmldom.getElementsByTagName("CONTENT").item(i)) + "<br>";
 		        }
 
 		        if (i == 0)
