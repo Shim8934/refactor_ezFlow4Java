@@ -196,6 +196,7 @@ var strLangGHA1 = ", ";
 var strLangHSB1 = "MHT files to store failed.";
 /* 2020-05-19 */
 var strLang131_1 = "협업일정";
+var strLang141_1 = "Google";
 
 var googleSyncMessages = {
 		strConfirmSync : "Do you want to proceed with synchronization?",

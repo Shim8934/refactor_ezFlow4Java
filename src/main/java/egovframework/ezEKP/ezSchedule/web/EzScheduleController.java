@@ -566,11 +566,11 @@ public class EzScheduleController extends EgovFileMngUtil {
 
 		String useGoogleCalendar = ezCommonService.getTenantConfig("useGoogleCalendar", userInfo.getTenantId());
 		if(useGoogleCalendar.equals("YES")) {
-			List<ScheduleInfoVO> googleList = googleService.getGoogleScheduleList(startDate, endDate, userInfo, userInfo.getId(), "member", userInfo.getDisplayName());		
-			if(googleList != null) {
-				sList.addAll(googleList);
-			}
+			List<ScheduleInfoVO> googleList = googleService.getGoogleScheduleList(startDate, endDate, "", userInfo, userInfo.getId(), "member", userInfo.getDisplayName());		
+			sList.addAll(googleList);
 		}
+		
+		Collections.sort(sList, new EzScheduleCompareUtil());
 		
 		return sList;
 	}
@@ -1385,6 +1385,17 @@ public class EzScheduleController extends EgovFileMngUtil {
 			}			
 			
 			sList = ezScheduleService.getScheduleList(indiList, pidList, filter.trim(), utcStartTime, utcEndTime, startDate, endDate, keyword.trim(), offSetMin, keyword.trim(), loginVO.getTenantId(), loginVO.getCompanyID(), loginVO.getId(), loginVO.getDeptID(), useAnnualScheduleYN);
+			
+			String useGoogleCalendar = ezCommonService.getTenantConfig("useGoogleCalendar", loginVO.getTenantId());
+			if(useGoogleCalendar.equals("YES")) {
+				String gKeyword = filter.trim().equals("title") ? keyword.trim() : "";
+				List<ScheduleInfoVO> googleList = googleService.getGoogleScheduleList(startDate, endDate, gKeyword, loginVO, loginVO.getId(), "member", loginVO.getDisplayName());		
+				if(filter.trim().equals("location")) {
+					final String gKeyword2 = keyword.trim();
+					googleList = googleList.stream().filter(x -> x.getLocation() != null && x.getLocation().contains(gKeyword2)).collect(Collectors.toList());
+				}
+				sList.addAll(googleList);
+			}
 			
 			Collections.sort(sList, new EzScheduleCompareUtilPublic());
 			
@@ -4812,6 +4823,7 @@ public class EzScheduleController extends EgovFileMngUtil {
     		svo.setCompanyid(companyID);
     		svo.setTitle(event.getSummary() != null ? event.getSummary() : "No Title");
     		svo.setImportance("2");
+    		svo.setLocation(event.getLocation());
     		
     		svo.setCreateDate(sdf.format(event.getCreated().getValue()));
     		svo.setModifyDate(sdf.format(event.getUpdated().getValue()));

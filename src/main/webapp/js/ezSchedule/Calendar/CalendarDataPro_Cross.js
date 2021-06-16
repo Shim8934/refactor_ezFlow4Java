@@ -273,7 +273,7 @@ function getCalWeekViewSource_after() {
         chk_scheduleCSS();
         
         //2018-11-05 김혜정  주보기화면에서 드래그앤드롭을 위해 추가 - 하루종일
-      if(SelectSingleNodeValue(objNodes, "scheduleFlag") != "google") {
+      if(objNodes != undefined && SelectSingleNodeValue(objNodes, "scheduleFlag") != "google") {
         $("div[id$='ALL'").children().draggable({
         	addClasses: false,
         	revert : "invalid",
@@ -404,7 +404,7 @@ function getCalDayViewSource_after() {
         }        
         tempData = null;
         chk_scheduleCSS();
-        if(SelectSingleNodeValue(objNodes, "scheduleFlag") != "google") {
+        if(objNodes != undefined && SelectSingleNodeValue(objNodes, "scheduleFlag") != "google") {
         //2018-11-05 김혜정  일보기화면에서 드래그앤드롭을 위해 추가 - 시간지정
         $("#CalDiv").find("div[id^='div_']").draggable({
         	addClasses: false,

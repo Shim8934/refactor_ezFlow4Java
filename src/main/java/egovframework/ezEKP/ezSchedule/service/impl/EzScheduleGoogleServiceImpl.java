@@ -136,7 +136,7 @@ public class EzScheduleGoogleServiceImpl implements EzScheduleGoogleService {
 	}
 
     @Override
-	public List<ScheduleInfoVO> getGoogleScheduleList(String startDate, String endDate, LoginVO userinfo, String memberId, String scheduleFlag, String memberName) throws Exception { 
+	public List<ScheduleInfoVO> getGoogleScheduleList(String startDate, String endDate, String keyword, LoginVO userinfo, String memberId, String scheduleFlag, String memberName) throws Exception { 
 		logger.debug("getGoogleScheduleList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -161,7 +161,7 @@ public class EzScheduleGoogleServiceImpl implements EzScheduleGoogleService {
 				com.google.api.services.calendar.Calendar.Events events = service.events(); 
 				
 				com.google.api.services.calendar.model.Events eventList; 
-				eventList = events.list("primary").setTimeMin(date1).setTimeMax(date2).execute();//.setSingleEvents(true)
+				eventList = events.list("primary").setTimeMin(date1).setTimeMax(date2).setQ(keyword).execute();//.setSingleEvents(true)
 				eventList.getNextSyncToken();
 				
 				List<Event> items = eventList.getItems();
@@ -483,7 +483,7 @@ public class EzScheduleGoogleServiceImpl implements EzScheduleGoogleService {
 							if (scheduleCalendar.getTime().compareTo(scheduleStartDate) >= 0 && scheduleCalendar.getTime().compareTo(sdf.parse(endDate)) <= 0) {
 								count++;
 								ScheduleInfoVO rVo = addRepeatRow(vo, scheduleCalendar.getTime(), count, isAllday);									
-								tempResultList.add(rVo);
+								resultList.add(rVo);
 							}
 						}
 					} else if (Integer.parseInt(isExistEndDate) > 0) { //isExistEndDate Code > 0 : 숫자만큼 일정을 반복
@@ -493,7 +493,7 @@ public class EzScheduleGoogleServiceImpl implements EzScheduleGoogleService {
 								if (maxCount > count) {
 									count++;
 									ScheduleInfoVO rVo = addRepeatRow(vo, scheduleCalendar.getTime(), count, isAllday);									
-									tempResultList.add(rVo);
+									resultList.add(rVo);
 								} else {
 									break;
 								}
@@ -505,7 +505,7 @@ public class EzScheduleGoogleServiceImpl implements EzScheduleGoogleService {
 							if (scheduleCalendar.getTime().compareTo(scheduleStartDate) >= 0 && scheduleCalendar.getTime().compareTo(sdf.parse(endDate)) <= 0) {
 								count++;
 								ScheduleInfoVO rVo = addRepeatRow(vo, scheduleCalendar.getTime(), count, isAllday);									
-								tempResultList.add(rVo);
+								resultList.add(rVo);
 							}
 						}
 					}
@@ -651,10 +651,6 @@ public class EzScheduleGoogleServiceImpl implements EzScheduleGoogleService {
 					date_cal.add(Calendar.YEAR, 1);
 				}						
 			break;	
-		}
-		
-		if(tempResultList != null) {
-			resultList = realList(resultList, tempResultList, orgStartDate, orgEndDate);
 		}
 		
 		for(ScheduleInfoVO svo : tList) {

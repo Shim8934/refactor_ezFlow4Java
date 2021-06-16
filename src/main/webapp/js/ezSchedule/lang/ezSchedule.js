@@ -196,6 +196,7 @@ var strLangGHA1 = ", ";
 var strLangHSB1 = "MHT 파일을 저장하는데 실패하였습니다.";
 /* 2020-05-19 */
 var strLang131_1 = "협업일정";
+var strLang141_1 = "구글일정";
 
 var googleSyncMessages = {
 		strConfirmSync : "동기화를 진행하시겠습니까?",

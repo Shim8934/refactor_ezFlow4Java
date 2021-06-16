@@ -17,7 +17,7 @@ public interface EzScheduleGoogleService {
 	
 	public JSONObject getReturnMessage(String code, String userID, String companyID, int tenantID);
 
-	public List<ScheduleInfoVO> getGoogleScheduleList(String startDate, String endDate, LoginVO userinfo, String memberId, String scheduleFlag, String memberName) throws Exception;
+	public List<ScheduleInfoVO> getGoogleScheduleList(String startDate, String endDate, String keyword, LoginVO userinfo, String memberId, String scheduleFlag, String memberName) throws Exception;
 
 	public void checkGoogleToken(String type) throws Exception;
 	
