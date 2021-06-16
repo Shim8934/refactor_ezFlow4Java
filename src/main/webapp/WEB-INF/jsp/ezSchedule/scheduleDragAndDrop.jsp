@@ -39,7 +39,7 @@
 		            evt.preventDefault();
 		        }
 		        if (isfileup) {
-		            alert(strLang258);
+		            //alert(strLang258);
 		            return;
 		        }
 		        var filelist;
