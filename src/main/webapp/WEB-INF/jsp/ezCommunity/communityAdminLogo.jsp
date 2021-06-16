@@ -149,6 +149,7 @@
 				        if (check == "false") {
 				            alert("<spring:message code ='ezCommunity.lhj03' />");
 			                tempLogoPath = "";
+			                document.getElementById("filename1").innerText = "";
 			            }
 				            
 			            if (tempLogoPath != "") { // 상단이미지 미리보기, 디폴트 로고값 해제
@@ -198,6 +199,7 @@
 			            if (check == "false") {
 			                alert("<spring:message code ='ezCommunity.lhj03' />");
 			                tempThumbPath = "";
+			                document.getElementById("filename2").innerText = "";
 			            }
 			            
 			            if (tempThumbPath != "") { // 썸네일 이미지 미리보기, 디폴트 썸네일값 해제

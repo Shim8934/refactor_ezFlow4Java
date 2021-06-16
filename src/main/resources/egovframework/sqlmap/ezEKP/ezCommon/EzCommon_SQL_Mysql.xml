@@ -3691,4 +3691,13 @@
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
 	</statement>
 	
+    <insert id="EzCommonDAO.insertUseApprImageConvert">
+        INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
+            VALUES (#tenantID#, 'useApprImageConvert', '전자결재 첨부파일 이미지 변환솔루션 사용', '0', '전자결재 첨부파일 이미지 변환솔루션 사용  여부  0: 사용 1: 사용안함 (default : 0)', '2021-06-15 00:00:00', '전자결재')
+    </insert>
+    <insert id="EzCommonDAO.insertApprConvertExt">
+        INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
+            VALUES (#tenantID#, 'apprConvertExt', '이미지 변환솔루션 사용할 전자결재 첨부파일 확장자 모음', 'xlsx:xls:pdf:hwp:doc', '이미지 변환할 확장자 모음 (default : xlsx, xls, pdf, hwp, doc) / 구분자 : ', '2021-06-15 00:00:00', '전자결재')
+    </insert>
+    
 </sqlMap>

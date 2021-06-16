@@ -1614,7 +1614,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			String filePath;
 			FileVO filevo = ezWebFolderService.getFileByFileId(fileId, offset, tenantId);
 			if (isVersionFile) {
-				FileHistoryVO history = ezWebFolderService.getFileHistory(user, fileId, Integer.parseInt(version));
+				FileHistoryVO history = ezWebFolderService.getFileHistory(fileId, Integer.parseInt(version), offset, tenantId);
 				filePath = history.getFilePath();
 				filevo.setFileName(filevo.getFileName() + " ("+ version + ".0)");
 				filevo.setFileSize(history.getFileSize());

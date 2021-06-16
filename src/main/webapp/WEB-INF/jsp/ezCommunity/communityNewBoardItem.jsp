@@ -881,7 +881,7 @@
                 for (var i = 0; i < nodes.length; i++) {
                     if (SelectSingleNodeValue(nodes[i], "RESULTUPLOADA") == "true") {
                         if (SelectSingleNodeValue(nodes[i], "FILESIZE") == 0) {
-                            alert(SelectSingleNodeValue(nodes[i], "PFILENAME") + strLang6);
+                            alert(strLang1);
                             return;
                         }
                     } else if (SelectSingleNodeValue(nodes[i], "RESULTUPLOADA") == "overflow") {

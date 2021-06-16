@@ -47,6 +47,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.security.MessageDigest;
 import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,6 +57,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Pattern;
 import java.util.UUID;
+import java.util.Base64.Decoder;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -3233,60 +3235,119 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			logger.debug("docStatus = " + docStatus + "|| result = " + result);
 		}
 		
+		/* 
+		 	2021-06-14 심기영 전자결재 첨부 파일 다운로직에서, 미리보기 뷰어 사용할 확장자 옵션화
+		 	useApprImageConvert 0 이면 파일 다운 1이면 일부 확장자는 뷰어, 나머지는 다운로직
+	 	*/
+		String useApprImageConvert = ezCommonService.getTenantConfig("useApprImageConvert", userInfo.getTenantId());
+		String apprConvertExt = ezCommonService.getTenantConfig("apprConvertExt", userInfo.getTenantId());
+		String useImageConvertServer = ezCommonService.getTenantConfig("useImageConvertServer", userInfo.getTenantId());
+		String fileNameExt =  fileName.substring(fileName.lastIndexOf(".")+1).toLowerCase();
+		OutputStream output = null;
+		
+		// logger.debug(" === Ext Check ----->  apprConvertExt : " + apprConvertExt.toLowerCase() + "  |   fileNameExt : " + fileNameExt + "  ===  ");
+		// logger.debug(" === useApprImageConvert Check ----->  useApprImageConvert : " + useApprImageConvert + "  |   fileNameExt : " + fileNameExt + "  ===  ");
+		
+		if (useApprImageConvert.equals("1") && apprConvertExt.toLowerCase().indexOf(fileNameExt)!=-1) {
+			try {
+				if (useImageConvertServer.equals("1")) { //SAT
+					
+					fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
+					filePath = filePath.substring(0, filePath.lastIndexOf("/"));
+					String fileExt = fileName.split("\\.")[fileName.split("\\.").length - 1];
+					
+					File newFolder = new File(filePath);
+					if(!newFolder.exists()){
+						newFolder.mkdirs();
+					}
+					
+					logger.debug("filePath : " + filePath);
+					logger.debug("fileName : " + fileName);
+					logger.debug("fileExt : " + fileExt);
 
-		
-		//2017-04-02 클라이언트단에서 replace해서 받아와야함.
-		//fileName = fileName.replaceAll("&amp;", "&").replaceAll("&lt", "<").replaceAll("&gt;", ">");
-		
-		if (fileName == null || fileName.equals("")) {
-			fileName = filePath.substring(filePath.lastIndexOf("/") + 1); 
+					String SATimageConvertServerURL = ezCommonService.getTenantConfig("SATimageConvertServerURL", userInfo.getTenantId());
+					
+					filePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + filePath + "/" + fileName;
+					// logger.debug("==== fileOriginPath = " + filePath);
+					
+					String satPath = SATimageConvertServerURL + 
+							"?filepath=" + URLEncoder.encode(filePath, "UTF-8").replace("+", "%20") +
+							"&filename=" + URLEncoder.encode(fileName, "UTF-8").replace("+", "%20") +
+							"&fileext=" + URLEncoder.encode(fileExt, "UTF-8").replace("+", "%20") +
+							"&viewerselect=image" +
+							"&userid=" + userInfo.getId();
+					
+					// logger.debug("======= 최종 패스 :" + satPath);
+					
+					response.setCharacterEncoding("UTF-8");
+					response.setContentType("text/html; charset=UTF-8");
+					response.getWriter().write("<script language='javascript'>\n");
+					response.getWriter().write("window.open('"+ satPath +"', '', '_blank');\n");
+					response.getWriter().write("</script>");
+					response.getWriter().flush();
+				} else {
+					
+				}
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				logger.debug("downloadAttach - ViewSatDocImage ended. ");
+			}
 		}
-		
-		// 대용량첨부 파일의 다운로드 횟수 초과 시 다운로드 불가능 처리
-		String bigSizeAttachDownloadLimitCount = ezCommonService.getTenantConfig("ApprBigSizeAttachDownloadLimitCount", userInfo.getTenantId()); // 전자결재 대용량 첨부파일 다운로드 횟수제한
-		String isBigAttachFileDownloadCntOver = "NO";
-		if (!bigSizeAttachDownloadLimitCount.equals("0") && !bigSizeAttachDownloadLimitCount.equals("")) {
-			isBigAttachFileDownloadCntOver = ezApprovalGService.checkBigAttachFileDownloadCntOver(docID, docAttachSN, Integer.parseInt(bigSizeAttachDownloadLimitCount), userInfo.getCompanyID(), userInfo.getTenantId());
-		}
-		
-		// 대용량 첨부파일의 기간만료 및 자동삭제기능 사용안함
-		// 다운로드받을 파일이 대용량첨부인 경우, 저장기간이 지나 삭제된 파일은 다운로드 불가능 처리
-		/*
-		String isAttachFileCanDownload = "NO";
-		if (docAttachSN.equals("")) { // 전자결재 첨부파일이 아닌 경우, 분기 생략
-			isAttachFileCanDownload = "YES";
-		} else {
-			isAttachFileCanDownload = ezApprovalGService.checkAttachFileCanDownload(docID, docAttachSN, userInfo.getCompanyID(), userInfo.getTenantId());
-		}
-		*/
-		String isAttachFileCanDownload = "YES";
-		
-		if (isBigAttachFileDownloadCntOver.equals("NO") && isAttachFileCanDownload.equals("YES") && !result.equals("NOTPERMISSION")) {
-			downFile(request, response, realPath + filePath, fileName);
+		else {
+			//2017-04-02 클라이언트단에서 replace해서 받아와야함.
+			//fileName = fileName.replaceAll("&amp;", "&").replaceAll("&lt", "<").replaceAll("&gt;", ">");
 			
-			// 대용량첨부파일인 경우, 다운로드 성공 시 다운로드 카운트 증가
-			ezApprovalGService.updateBigAttachFileDownloadCnt(docID, docAttachSN, userInfo.getCompanyID(), userInfo.getTenantId());
+			if (fileName == null || fileName.equals("")) {
+				fileName = filePath.substring(filePath.lastIndexOf("/") + 1); 
+			}
+			
+			// 대용량첨부 파일의 다운로드 횟수 초과 시 다운로드 불가능 처리
+			String bigSizeAttachDownloadLimitCount = ezCommonService.getTenantConfig("ApprBigSizeAttachDownloadLimitCount", userInfo.getTenantId()); // 전자결재 대용량 첨부파일 다운로드 횟수제한
+			String isBigAttachFileDownloadCntOver = "NO";
+			if (!bigSizeAttachDownloadLimitCount.equals("0") && !bigSizeAttachDownloadLimitCount.equals("")) {
+				isBigAttachFileDownloadCntOver = ezApprovalGService.checkBigAttachFileDownloadCntOver(docID, docAttachSN, Integer.parseInt(bigSizeAttachDownloadLimitCount), userInfo.getCompanyID(), userInfo.getTenantId());
+			}
+				// 대용량 첨부파일의 기간만료 및 자동삭제기능 사용안함
+			// 다운로드받을 파일이 대용량첨부인 경우, 저장기간이 지나 삭제된 파일은 다운로드 불가능 처리
+			/*
+			String isAttachFileCanDownload = "NO";
+			if (docAttachSN.equals("")) { // 전자결재 첨부파일이 아닌 경우, 분기 생략
+				isAttachFileCanDownload = "YES";
+			} else {
+				isAttachFileCanDownload = ezApprovalGService.checkAttachFileCanDownload(docID, docAttachSN, userInfo.getCompanyID(), userInfo.getTenantId());
+			}
+			*/
+			String isAttachFileCanDownload = "YES";
+			
+			if (isBigAttachFileDownloadCntOver.equals("NO") && isAttachFileCanDownload.equals("YES") && !result.equals("NOTPERMISSION")) {
+				downFile(request, response, realPath + filePath, fileName);
+				
+				// 대용량첨부파일인 경우, 다운로드 성공 시 다운로드 카운트 증가
+				ezApprovalGService.updateBigAttachFileDownloadCnt(docID, docAttachSN, userInfo.getCompanyID(), userInfo.getTenantId());
+			}
+			else if (isBigAttachFileDownloadCntOver.equals("YES")) { // 대용량첨부 다운로드횟수 초과
+				response.setCharacterEncoding("UTF-8");
+				response.setContentType("text/html; charset=UTF-8");
+				response.getWriter().write("<script language='javascript'>\n");
+				response.getWriter().write("alert(\'" + messageSource.getMessageExtend("ezEmail.hdp05", new Object[] {bigSizeAttachDownloadLimitCount}, userInfo.getLocale()) + "\');\n");
+				response.getWriter().write("window.history.back();");
+				response.getWriter().write("</script>");
+				response.getWriter().flush();
+			}
+			else if (isAttachFileCanDownload.equals("NO")) { // 대용량첨부 저장기간 초과
+				response.setCharacterEncoding("UTF-8");
+				response.setContentType("text/html; charset=UTF-8");
+				response.getWriter().write("<script language='javascript'>\n");
+				response.getWriter().write("alert(\'" + messageSource.getMessage("main.t4", userInfo.getLocale()) + "\');\n");
+				response.getWriter().write("window.history.back();");
+				response.getWriter().write("</script>");
+				response.getWriter().flush();
+			}
+			
+			logger.debug("downloadAttach ended. result = " + result);
 		}
-		else if (isBigAttachFileDownloadCntOver.equals("YES")) { // 대용량첨부 다운로드횟수 초과
-			response.setCharacterEncoding("UTF-8");
-			response.setContentType("text/html; charset=UTF-8");
-			response.getWriter().write("<script language='javascript'>\n");
-			response.getWriter().write("alert(\'" + messageSource.getMessageExtend("ezEmail.hdp05", new Object[] {bigSizeAttachDownloadLimitCount}, userInfo.getLocale()) + "\');\n");
-			response.getWriter().write("window.history.back();");
-			response.getWriter().write("</script>");
-			response.getWriter().flush();
-		}
-		else if (isAttachFileCanDownload.equals("NO")) { // 대용량첨부 저장기간 초과
-			response.setCharacterEncoding("UTF-8");
-			response.setContentType("text/html; charset=UTF-8");
-			response.getWriter().write("<script language='javascript'>\n");
-			response.getWriter().write("alert(\'" + messageSource.getMessage("main.t4", userInfo.getLocale()) + "\');\n");
-			response.getWriter().write("window.history.back();");
-			response.getWriter().write("</script>");
-			response.getWriter().flush();
-		}
-		
-		logger.debug("downloadAttach ended. result = " + result);
 	}
 	
 	/**

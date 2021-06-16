@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -1205,6 +1206,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	public String fileVersionManage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("fileVersionManage start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		String userId = user.getId();
 		String fileId = request.getParameter("fileId");
 
 		logger.debug("fileId: {}", fileId);
@@ -1222,7 +1224,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		headers.set("x-user-host", request.getServerName());
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url).queryParam("userId", user.getId());
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url).queryParam("userId", userId);
 		RestTemplate rest = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 
@@ -1245,6 +1247,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			model.addAttribute("isEncrypted", isEncrypted);
 			model.addAttribute("isPermitted", isPermitted);
 			model.addAttribute("isCreator", isCreator);
+			model.addAttribute("usePreview", "1".equalsIgnoreCase(commonUtil.getTenantConfigRest("useImageConvertServer", userId, request)));
 		}
 
 		model.addAttribute("primary", user.getLang());
@@ -1413,18 +1416,19 @@ public class EzWebFolderController extends EgovFileMngUtil {
 
 	@RequestMapping(value = "/ezWebFolder/filePreview.do", method = RequestMethod.GET)
 	@ResponseBody
-	public JSONObject getSatViewerURI(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception {
-		logger.debug("getSatViewerURI started.");
+	public JSONObject filePreview(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, @RequestParam(value = "version") Optional<Integer> versionOptional) throws Exception {
+		logger.debug("filePreview started.");
 
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		String userId = user.getId();
 		String fileId = request.getParameter("fileId");
 
-		logger.debug("fileId: {}, userId: {}", fileId, user.getId());
+		logger.debug("fileId: {}, userId: {}, version: {}", fileId, userId, versionOptional);
 
-		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi(
-				"/rest/ezwebfolder/file/" + fileId + "/viewer/" + user.getId(), null, request, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/file/" + fileId + "/viewer/" + userId,
+				versionOptional.isPresent() ? Collections.singletonMap("version", versionOptional.get()) : null, request, "get", null);
 
-		logger.debug("getSatViewerURI end");
+		logger.debug("filePreview end");
 
 		return resultBody;
 	}
