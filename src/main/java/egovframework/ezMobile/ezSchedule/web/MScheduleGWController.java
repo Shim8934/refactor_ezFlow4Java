@@ -31,6 +31,7 @@ import com.ibm.icu.util.Calendar;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezSchedule.service.EzScheduleGoogleService;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
 import egovframework.ezEKP.ezSchedule.vo.AttachListVO;
 import egovframework.ezEKP.ezSchedule.vo.AttendantListVO;
@@ -42,6 +43,7 @@ import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezSchedule.service.MScheduleService;
 import egovframework.ezMobile.ezSchedule.vo.MScheduleInfoVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 /** 
@@ -78,6 +80,9 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	
 	@Resource(name = "EzCommonService")
 	private EzCommonService ezCommonService;
+	
+	@Autowired
+	private EzScheduleGoogleService googleService;
 		
 	/**
 	 * 모바일 G/W 일정관리 [GET] 일정 리스트 (월간,주간,일정검색)
@@ -136,6 +141,14 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	        	String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrlForMobile", info.getTenantId());
 	        	result.put("workspaceHostUrl", workspaceHostUrl);
 	        }
+	        
+	        String useGoogleCalendar = ezCommonService.getTenantConfig("useGoogleCalendar", info.getTenantId());
+			if(useGoogleCalendar.equals("YES")) {
+				LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+				userInfo.setDisplayName(info.getUserName());	// 오늘의 일정 > 데이터가 없어서 추가
+				List<ScheduleInfoVO> googleList = googleService.getGoogleScheduleList(startDate, endDate, "", userInfo, userInfo.getId(), "member", userInfo.getDisplayName());		
+				sList.addAll(googleList);
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -200,7 +213,14 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			
 			/* 2018-02-01 장진혁 모바일에서 검색을 다양하게 하기 위한 요소 추가 */
 			List<ScheduleInfoVO> sList = mScheduleService.scheduleList(info, startDate, endDate, searchTitle, searchColumn, searchData);
-						
+
+			String useGoogleCalendar = ezCommonService.getTenantConfig("useGoogleCalendar", info.getTenantId());
+			if(useGoogleCalendar.equals("YES")) {
+				LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+				List<ScheduleInfoVO> googleList = googleService.getGoogleScheduleList(startDate, endDate, "", userInfo, userInfo.getId(), "member", userInfo.getDisplayName());		
+				sList.addAll(googleList);
+			}
+			
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", sList.size());
@@ -789,6 +809,13 @@ public class MScheduleGWController extends EgovFileMngUtil {
 				info.setLang(langStr);
 				
 				List<ScheduleInfoVO> sList = mScheduleService.scheduleList(info, startDate, endDate, searchTitle, "", "");
+				
+				String useGoogleCalendar = ezCommonService.getTenantConfig("useGoogleCalendar", info.getTenantId());
+				if(useGoogleCalendar.equals("YES")) {
+					LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+					List<ScheduleInfoVO> googleList = googleService.getGoogleScheduleList(startDate, endDate, "", userInfo, userInfo.getId(), "member", userInfo.getDisplayName());		
+					sList.addAll(googleList);
+				}
 					
 				Map<String, Object> dayMap = new HashMap<String, Object>();
 				
