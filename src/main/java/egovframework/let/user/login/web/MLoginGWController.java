@@ -14,6 +14,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -47,6 +48,7 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
+import egovframework.let.utl.fcc.service.Offset;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 /** 
  * @Description [Controller] 모바일 - 로그인
@@ -468,6 +470,45 @@ public class MLoginGWController {
         						useSecurity = mOptionVO.getUseSecurity();
         						returnValue = commonUtil.getTwoLetterLangFromLangNum(lang);
         					}
+
+							// PC 첫 로그인에서 비밀번호만 변경하고 재로그인을 하지 않았을 때
+							// TBL_USERLOCALINFO 테이블에 값이 없어서 모바일 rest 호출시 mOptionService.commonInfoWeb 를 사용하는
+							// 모듈들에서 에러가 발생하게 된다. 체크 후 넣어주는 로직!
+							if (StringUtils.isEmpty(ezCommonService.selectUserGetLang(uid, tenantId))) {
+								//UsePrimaryLangOnly가 YES일 때는 무조건 PrimaryLang 언어로 설정한다.
+								if (config.getProperty("config.UsePrimaryLangOnly").equals("YES")) {
+									if (primaryLang.equals("1")) {
+										acceptLanguage = "ko";
+									} else if (primaryLang.equals("3")) {
+										acceptLanguage = "ja";
+									}
+								}
+
+								String pcLang;
+
+								if (acceptLanguage != null) {
+									pcLang = acceptLanguage.substring(0, 2);
+									//이유는 정확히 알 수 없지만 로그를 확인한 결과 윗 라인에서 acceptLanguage가 null인 경우가 발생하여 추가함.
+								} else {
+									pcLang = commonUtil.getTwoLetterLangFromLangNum(primaryLang);
+								}
+
+								pcLang = commonUtil.getLangNumFromTwoLetterLang(pcLang);
+
+								//브라우저 언어가 한국어/일본어가 아닐 경우 시스템 언어로 설정(영어/중국어 추후 지원)
+								if (pcLang.equals("")) {
+									pcLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+								}
+
+								String primaryTimeZone = ezCommonService.getTenantConfig("PrimaryTimeZone", tenantId);
+
+								if (primaryTimeZone.equals("")) {
+									primaryTimeZone = Offset.KST;
+								}
+
+								ezCommonService.insertTblUserLocalInfo(uid, primaryTimeZone, pcLang, tenantId);
+							}
+
         					// 20180711 조진호 - 로그인 성공시 로그인실패 횟수 초기화
         					ezCommonService.updateUserConfigInfo(tenantId, uid, "LoginFailCount", "0");
         					
