@@ -21,6 +21,7 @@ import javax.naming.directory.DirContext;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -628,7 +629,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			return PreResult.PRE_CN;
 		}
 
-		if (ezOrganAdminDao.isDuplicateLoginId(cn, employeeNumber, tenantId)) {
+		if (StringUtils.isNotEmpty(employeeNumber) && ezOrganAdminDao.isDuplicateLoginId(cn, employeeNumber, tenantId)) {
 			return PreResult.PRE_EMPLOYEE_NUMBER;
 		}
 
