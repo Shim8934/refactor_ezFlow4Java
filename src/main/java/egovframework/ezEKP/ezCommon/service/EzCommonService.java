@@ -315,4 +315,6 @@ public interface EzCommonService {
 	public void alterWebfolderApplyHistoryAddColumn() throws Exception;
 	
 	public void createSerialnumgenGrant() throws Exception;
+	
+	public void insertApprSatViewerConfig() throws Exception;
 }

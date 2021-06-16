@@ -1995,4 +1995,21 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createSerialnumgenGrant");
 		}
 	}
+	
+	// 전자결재 첨부파일 이미지 변환 여부 및 변환할 확장자 파일 모음 컨피그 추가
+		public void insertApprSatViewerConfig(Map<String, Object> map) {
+			map.put("property", "USEAPPRIMAGECONVERT");
+			String useApprImageConvert = (String) select("EzCommonDAO.getTenantConfig", map);
+			if (useApprImageConvert == null) {
+				logger.debug("useApprImageConvert tenant config doesn't exist. insert data...");
+				insert("EzCommonDAO.insertUseApprImageConvert", map);
+			}
+			
+			map.put("property", "APPRCONVERTEXT");
+			String apprConvertExt = (String) select("EzCommonDAO.getTenantConfig", map);
+			if (apprConvertExt == null) {
+				logger.debug("apprConvertExt tenant config doesn't exist. insert data...");
+				insert("EzCommonDAO.insertApprConvertExt", map);
+			}
+		}
 }
