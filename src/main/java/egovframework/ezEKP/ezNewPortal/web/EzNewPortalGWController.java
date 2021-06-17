@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -74,7 +75,9 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
+import egovframework.ezEKP.ezSchedule.service.EzScheduleGoogleService;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
+import egovframework.ezEKP.ezSchedule.service.impl.EzScheduleCompareUtil;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleCumulerVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleDeptVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
@@ -155,6 +158,9 @@ public class EzNewPortalGWController {
 
 	@Resource(name = "egovMessageSource")
 	private EgovMessageSource egovMessageSource;
+	
+	@Autowired
+	private EzScheduleGoogleService googleService;
 
 	// ///사용자///////
 	/**
@@ -1831,6 +1837,15 @@ public class EzNewPortalGWController {
 
 				pidList += pidListSub;
 				List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", startTime, endTime, startDate, endDate, "", offsetMin, "", tenantId, companyId, userId, deptId, useAnnualScheduleYN);
+				
+				// 구글연동 일정 가져오기(포탈 카운트)
+				LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+				String useGoogleCalendar = ezCommonService.getTenantConfig("useGoogleCalendar", userInfo.getTenantId());
+				if(useGoogleCalendar.equals("YES")) {
+					List<ScheduleInfoVO> googleList = googleService.getGoogleScheduleList(startDate, endDate, "", userInfo, userInfo.getId(), "member", userInfo.getDisplayName());		
+					sList.addAll(googleList);
+				}
+				
 				int scheduleCount = sList.size();
 				data.put("scheduleCount", scheduleCount);
 			}
@@ -4097,6 +4112,16 @@ public class EzNewPortalGWController {
 			
 			List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, "",tenantId, companyId, userId, deptId, useAnnualScheduleYN);		
 			
+			// 구글연동 일정 가져오기(포탈 일정포틀릿)
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			String useGoogleCalendar = ezCommonService.getTenantConfig("useGoogleCalendar", userInfo.getTenantId());
+			if(useGoogleCalendar.equals("YES")) {
+				List<ScheduleInfoVO> googleList = googleService.getGoogleScheduleList(startDate, endDate, "", userInfo, userInfo.getId(), "member", userInfo.getDisplayName());		
+				sList.addAll(googleList);
+			}
+			
+			Collections.sort(sList, new EzScheduleCompareUtil());
+			
 			LOGGER.debug("sList : " + sList.toString());
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -4602,6 +4627,15 @@ public class EzNewPortalGWController {
 
 				pidList += pidListSub;
 				List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", startTime, endTime, startDate, endDate, "", offsetMin, "", tenantId, companyId, userId, deptId, useAnnualScheduleYN);
+
+				// 구글연동 일정 가져오기(포탈 카운트 포틀릿)
+				LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+				String useGoogleCalendar = ezCommonService.getTenantConfig("useGoogleCalendar", userInfo.getTenantId());
+				if(useGoogleCalendar.equals("YES")) {
+					List<ScheduleInfoVO> googleList = googleService.getGoogleScheduleList(startDate, endDate, "", userInfo, userInfo.getId(), "member", userInfo.getDisplayName());		
+					sList.addAll(googleList);
+				}
+				
 				int scheduleCount = sList.size();
 				data.put("scheduleCount", scheduleCount);
 			}
