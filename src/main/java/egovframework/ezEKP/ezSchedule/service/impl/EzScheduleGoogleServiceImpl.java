@@ -191,6 +191,19 @@ public class EzScheduleGoogleServiceImpl implements EzScheduleGoogleService {
 							resultList.add(insertEvent);
 						}
 					}
+					
+					// 삭제된 반복일정 정보에 대해 반영
+					for(ScheduleInfoVO svo : delResultList) {
+						resultList = resultList.stream()
+												.filter(x -> !x.getGoogleId().equals(svo.getGoogleRecurringEventId()) && !x.getStartDate().equals(svo.getStartDate())).collect(Collectors.toList());
+					}
+					
+					// 수정된 반복일정 중 기본 일정 정보가 없는 반복일정에 대해 반영
+					for(ScheduleInfoVO svo : resultList) {
+						partResultList = partResultList.stream().filter(x -> !x.getGoogleRecurringEventId().equals(svo.getGoogleId()) && !x.getStartDate().equals(svo.getStartDate())).collect(Collectors.toList());
+					}
+					resultList.addAll(partResultList);
+					
 				}
 				logger.debug("getGoogleScheduleList ended ==> success");
 			} catch (IOException e) {
@@ -423,9 +436,9 @@ public class EzScheduleGoogleServiceImpl implements EzScheduleGoogleService {
 						
 						String calcuDate = nsdf.format(date_cal.getTime());
 
-						if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(orgEndDate.substring(0,10)) <= 0) {	
+						if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 || calcuDate.compareTo(orgEndDate.substring(0,10)) <= 0) {	
 							ScheduleInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);
-							resultList.add(rVo);
+							tempResultList.add(rVo);
 						}
 					}
 					
@@ -481,32 +494,32 @@ public class EzScheduleGoogleServiceImpl implements EzScheduleGoogleService {
 						for (int k = 0; k < repeatDayList.size(); k++) {
 							scheduleCalendar.set(Calendar.DAY_OF_WEEK,repeatDayList.get(k)+1);
 							if (scheduleCalendar.getTime().compareTo(scheduleStartDate) >= 0 && scheduleCalendar.getTime().compareTo(sdf.parse(endDate)) <= 0) {
-								count++;
 								ScheduleInfoVO rVo = addRepeatRow(vo, scheduleCalendar.getTime(), count, isAllday);									
-								resultList.add(rVo);
+								tempResultList.add(rVo);
 							}
+							count++;
 						}
 					} else if (Integer.parseInt(isExistEndDate) > 0) { //isExistEndDate Code > 0 : 숫자만큼 일정을 반복
 						for (int k = 0; k < repeatDayList.size(); k++) {
 							scheduleCalendar.set(Calendar.DAY_OF_WEEK,repeatDayList.get(k)+1);
 							if (scheduleCalendar.getTime().compareTo(scheduleStartDate) >= 0 && scheduleCalendar.getTime().compareTo(sdf.parse(endDate)) <= 0) {
 								if (maxCount > count) {
-									count++;
 									ScheduleInfoVO rVo = addRepeatRow(vo, scheduleCalendar.getTime(), count, isAllday);									
-									resultList.add(rVo);
+									tempResultList.add(rVo);
 								} else {
 									break;
 								}
 							} 
+							count++;
 						}
 					} else { //isExistEndDate Code "-1" : 종료일 없음
 						for (int k = 0; k < repeatDayList.size(); k++) {
 							scheduleCalendar.set(Calendar.DAY_OF_WEEK,repeatDayList.get(k)+1);
 							if (scheduleCalendar.getTime().compareTo(scheduleStartDate) >= 0 && scheduleCalendar.getTime().compareTo(sdf.parse(endDate)) <= 0) {
-								count++;
 								ScheduleInfoVO rVo = addRepeatRow(vo, scheduleCalendar.getTime(), count, isAllday);									
-								resultList.add(rVo);
+								tempResultList.add(rVo);
 							}
+							count++;
 						}
 					}
 					scheduleCalendar.add(Calendar.DATE, (Integer.parseInt(weeklyInterval)) * 7);
@@ -525,6 +538,11 @@ public class EzScheduleGoogleServiceImpl implements EzScheduleGoogleService {
 					
 					Calendar newCal = Calendar.getInstance();
 					newCal.set(year, month-1, 1);
+					if(info[1].equals("1")) {
+						newCal.set(Calendar.HOUR_OF_DAY, 0);
+						newCal.set(Calendar.MINUTE, 0);
+						newCal.set(Calendar.SECOND, 0);
+					}
 
 					if (info[3].equals("1")) {
 						newCal.add(Calendar.DATE, Integer.parseInt(info[5]) - 1);
@@ -562,14 +580,14 @@ public class EzScheduleGoogleServiceImpl implements EzScheduleGoogleService {
 						String calcuDate = nsdf.format(newCal.getTime());
 						
 						if (info[0].equals("0")) {
-							if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {
+							if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 || calcuDate.compareTo(endDate.substring(0,10)) <= 0) {
 								ScheduleInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
-								resultList.add(rVo);
+								tempResultList.add(rVo);
 							}
 						} else {
-							if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(orgEndDate.substring(0,10)) <= 0) {
+							if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 || calcuDate.compareTo(orgEndDate.substring(0,10)) <= 0) {
 								ScheduleInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
-								resultList.add(rVo);
+								tempResultList.add(rVo);
 							}
 						}
 					}
@@ -635,12 +653,12 @@ public class EzScheduleGoogleServiceImpl implements EzScheduleGoogleService {
 						String calcuDate = nsdf.format(newCal.getTime());
 						
 						if (info[0].equals("0")) {
-							if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0 && calcuDate.compareTo(vo.getStartDate().substring(0,10)) >= 0) {
+							if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 || calcuDate.compareTo(endDate.substring(0,10)) <= 0 ) {
 								ScheduleInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
 								resultList.add(rVo);
 							}
 						} else {
-							if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(orgEndDate.substring(0,10)) <= 0 && calcuDate.compareTo(vo.getStartDate().substring(0,10)) >= 0) {
+							if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 || calcuDate.compareTo(orgEndDate.substring(0,10)) <= 0 ) {
 								ScheduleInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
 								resultList.add(rVo);
 							}
@@ -653,15 +671,14 @@ public class EzScheduleGoogleServiceImpl implements EzScheduleGoogleService {
 			break;	
 		}
 		
+		if (tempResultList != null) {
+			resultList = realList(resultList, tempResultList, orgStartDate, orgEndDate);
+		}
+		
 		for(ScheduleInfoVO svo : tList) {
 			resultList.stream().filter(x -> x.getStartDate().equals(svo.getGoogleOriginalStartTime()) && x.getGoogleId().equals(svo.getGoogleRecurringEventId()))
 											.findFirst()
-											.ifPresent(x -> { x.setStartDate(svo.getStartDate()); x.setEndDate(svo.getEndDate()); x.setGoogleId(svo.getGoogleId()); });
-		}
-		
-		for(ScheduleInfoVO rList2 : rList) {
-			resultList = resultList.stream()
-									.filter(x -> rList2.getGoogleRecurringEventId().equals(vo.getGoogleId()) && !x.getStartDate().equals(rList2.getStartDate())).collect(Collectors.toList());
+											.ifPresent(x -> { x.setTitle(svo.getTitle()); x.setStartDate(svo.getStartDate()); x.setEndDate(svo.getEndDate()); x.setGoogleId(svo.getGoogleId()); });
 		}
 		
 		return resultList;
@@ -686,9 +703,17 @@ public class EzScheduleGoogleServiceImpl implements EzScheduleGoogleService {
 			voeDate_cal.setTime(sdf.parse(voeDate));
 			sDate_cal.setTime(sdf.parse(startDate));
 			eDate_cal.setTime(sdf.parse(endDate));
-			
-			if (vosDate_cal.compareTo(sDate_cal) >= 0 && voeDate_cal.compareTo(eDate_cal) <= 0) {
-				resultList.add(svo);
+
+			if (vosDate.substring(0,10).equals(voeDate.substring(0,10))) {
+				if (vosDate_cal.compareTo(sDate_cal) >= 0 && voeDate_cal.compareTo(eDate_cal) <= 0) {
+					resultList.add(svo);
+				} 
+			} else {
+				if (voeDate_cal.compareTo(sDate_cal) < 0 || vosDate_cal.compareTo(eDate_cal) > 0) {
+					
+				} else {
+					resultList.add(svo);
+				}
 			}
 		}
 		
@@ -705,14 +730,12 @@ public class EzScheduleGoogleServiceImpl implements EzScheduleGoogleService {
 		long repeatedScheduleOffset = vo.getRepeatedScheduleOffset();
 		if (repeatedScheduleOffset != 0 && repeatedScheduleOffset > 86400000) {
 			Calendar cal = Calendar.getInstance();
-			Calendar cal2 = Calendar.getInstance();
 			
 			if(repeatedScheduleOffset % 86400000 != 0) {
 				cal.setTimeInMillis(date.getTime() + repeatedScheduleOffset);
 			} else {
-				cal.setTimeInMillis(date.getTime() + repeatedScheduleOffset - 1);
+				cal.setTimeInMillis(date.getTime() + repeatedScheduleOffset - 1000);
 			}
-			cal2.setTimeInMillis(date.getTime());
 			dateTime2 = sdf.format(cal.getTime());
 		} else {
 			dateTime2 = nsdf.format(date) + vo.getEndDate().substring(10);
