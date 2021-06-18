@@ -475,10 +475,16 @@
 	                        
 	                        jobName += M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
 	                        M_TR_TD3.innerHTML = jobName;
-	                    	M_TR_TD3.style.width = "80px";
+	                        M_TR_TD3.style.overflow = "hidden";
+	                        M_TR_TD3.style.textOverflow = "ellipsis";
+	                        M_TR_TD3.style.whiteSpace = "nowrap";
+	                    	M_TR_TD3.style.width = "70px";
 
 		                    var M_TR_TD4 = document.createElement("TD");
 							M_TR_TD4.innerHTML = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");
+	                    	M_TR_TD4.style.overflow = "hidden";
+	                    	M_TR_TD4.style.textOverflow = "ellipsis";
+	                    	M_TR_TD4.style.whiteSpace = "nowrap";
 		                    
 	                    	M_TR.appendChild(M_TR_TD1);
 	                    	M_TR.appendChild(M_TR_TD2);
@@ -504,9 +510,15 @@
 	                        
 	                        jobName += M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
 	                        M_TR_TD2.innerHTML = jobName;
+	                        M_TR_TD2.style.overflow = "hidden";
+	                        M_TR_TD2.style.textOverflow = "ellipsis";
+	                        M_TR_TD2.style.whiteSpace = "nowrap";
 
 	            	        var M_TR_TD3 = document.createElement("TD");
 	                	    M_TR_TD3.innerHTML = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");
+	                        M_TR_TD3.style.overflow = "hidden";
+	                        M_TR_TD3.style.textOverflow = "ellipsis";
+	                        M_TR_TD3.style.whiteSpace = "nowrap";
 
 		                    M_TR.appendChild(M_TR_TD1);
 	                    	M_TR.appendChild(M_TR_TD2);
