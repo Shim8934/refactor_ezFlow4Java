@@ -146,8 +146,8 @@ public class EzScheduleGoogleServiceImpl implements EzScheduleGoogleService {
 		
 		ScheduleTokenInfoVO token = ezScheduleDAO.getScheduleTokenInfo(map);
 		
+		List<ScheduleInfoVO> resultList = new ArrayList<ScheduleInfoVO>();
 		if (token != null && token.getGoogleAccessToken() != null && token.getGoogleRefreshToken() != null) {
-			List<ScheduleInfoVO> resultList = new ArrayList<ScheduleInfoVO>();
 			List<ScheduleInfoVO> delResultList = new ArrayList<ScheduleInfoVO>();
 			List<ScheduleInfoVO> partResultList = new ArrayList<ScheduleInfoVO>();
 			try {
@@ -209,14 +209,11 @@ public class EzScheduleGoogleServiceImpl implements EzScheduleGoogleService {
 			} catch (IOException e) {
 				e.printStackTrace();
 				logger.debug("getGoogleScheduleList ended ==> error");
-				return null;
 			}
-			return resultList;
 		} else {
 			logger.debug("getGoogleScheduleList ended ==> no sync user");
-			return null;
 		}
-		
+		return resultList;
 	}
 	
 	private void buildCalendarService(LoginVO userInfo) throws Exception {
@@ -492,34 +489,34 @@ public class EzScheduleGoogleServiceImpl implements EzScheduleGoogleService {
 					
 					if(isExistEndDate.equals("0")){ //isExistEndDate Code "0" : 종료일 있음
 						for (int k = 0; k < repeatDayList.size(); k++) {
+							count++;
 							scheduleCalendar.set(Calendar.DAY_OF_WEEK,repeatDayList.get(k)+1);
 							if (scheduleCalendar.getTime().compareTo(scheduleStartDate) >= 0 && scheduleCalendar.getTime().compareTo(sdf.parse(endDate)) <= 0) {
 								ScheduleInfoVO rVo = addRepeatRow(vo, scheduleCalendar.getTime(), count, isAllday);									
 								tempResultList.add(rVo);
 							}
-							count++;
 						}
 					} else if (Integer.parseInt(isExistEndDate) > 0) { //isExistEndDate Code > 0 : 숫자만큼 일정을 반복
 						for (int k = 0; k < repeatDayList.size(); k++) {
+							count++;
 							scheduleCalendar.set(Calendar.DAY_OF_WEEK,repeatDayList.get(k)+1);
 							if (scheduleCalendar.getTime().compareTo(scheduleStartDate) >= 0 && scheduleCalendar.getTime().compareTo(sdf.parse(endDate)) <= 0) {
-								if (maxCount > count) {
+								if (maxCount >= count) {
 									ScheduleInfoVO rVo = addRepeatRow(vo, scheduleCalendar.getTime(), count, isAllday);									
 									tempResultList.add(rVo);
 								} else {
 									break;
 								}
 							} 
-							count++;
 						}
 					} else { //isExistEndDate Code "-1" : 종료일 없음
 						for (int k = 0; k < repeatDayList.size(); k++) {
+							count++;
 							scheduleCalendar.set(Calendar.DAY_OF_WEEK,repeatDayList.get(k)+1);
 							if (scheduleCalendar.getTime().compareTo(scheduleStartDate) >= 0 && scheduleCalendar.getTime().compareTo(sdf.parse(endDate)) <= 0) {
 								ScheduleInfoVO rVo = addRepeatRow(vo, scheduleCalendar.getTime(), count, isAllday);									
 								tempResultList.add(rVo);
 							}
-							count++;
 						}
 					}
 					scheduleCalendar.add(Calendar.DATE, (Integer.parseInt(weeklyInterval)) * 7);

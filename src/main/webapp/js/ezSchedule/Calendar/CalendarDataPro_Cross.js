@@ -1030,11 +1030,11 @@ function CalWeekDataBind(oAppointment, order) {
         if(oAppointment.scheduleFlag == "google") {
         	oDiv.setAttribute("isGoogle", "Y");
         	oDiv.setAttribute("googleId", oAppointment.googleId);
-        	oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
-        	oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
-        } else {
         	oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadGoogleSchedule(" + divID + ")");
         	oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadGoogleSchedule(" + divID + ")");
+        } else {
+        	oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
+        	oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
         }
         
         if (objDivE) {

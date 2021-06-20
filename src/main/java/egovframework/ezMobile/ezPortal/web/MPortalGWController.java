@@ -382,6 +382,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 						mPortalTimeLineVO.setWriterName((primary.equals("1") ? scheduleInfoVO.getCreatorName() : scheduleInfoVO.getCreatorName2()));
 						mPortalTimeLineVO.setSchID(scheduleInfoVO.getScheduleId());
 						mPortalTimeLineVO.setRepeatCount(scheduleInfoVO.getRepeatCount());
+						mPortalTimeLineVO.setSchFlag(scheduleInfoVO.getScheduleFlag());
 						
 						if (shotDF.parse(scheduleInfoVO.getStartDate()).compareTo(shotDF.parse(nowDate)) == 0) {
 							if (longDF.parse(scheduleInfoVO.getStartDate()).compareTo(longDF.parse(sessionDate)) == 1) {
