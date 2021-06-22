@@ -4130,6 +4130,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("keyword", commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(keyword)));
+		model.addAttribute("useWebfolder", ezCommonService.getTenantConfig("useWebfolder", userInfo.getTenantId())); // 20210607 조진호 - 웹폴더 사용유무
 		logger.debug("totalSearchRight is ended.");
 		return "/ezPortal/totalSearchRight";
 	}

@@ -327,6 +327,7 @@
 		                MainTable.setAttribute("class", pListType == "IMG" ? "organwrap" : "organwrap_list");
 	    	            MainTable.setAttribute("cellspacing", "0");
 	        	        MainTable.setAttribute("cellpadding", "0");
+						MainTable.setAttribute("style", "width:98%");
 	        	        
 		                if (pListType == "IMG") {
 	                	    MainTable.style.marginTop = "5px";
@@ -357,6 +358,7 @@
 
 	                	var M_TR_TD = document.createElement("TD");
 	                	M_TR_TD.setAttribute("class", "pictd");
+						M_TR_TD.setAttribute("width", "98.5px");
 	                	var M_TR_DIV = document.createElement("DIV");
 	                	M_TR_DIV.setAttribute("class", "pic");
 	                	
@@ -371,7 +373,7 @@
 	                	M_TR.appendChild(M_TR_TD);
 
 	                	var M_TR_TD2 = document.createElement("TD");
-	                	M_TR_TD2.style.width = "300px";
+	                	M_TR_TD2.style.width = "100%";
 
 	                	var M_TR_TDS_Table = document.createElement("TABLE");
 	                	M_TR_TDS_Table.setAttribute("class", "organinfo");
@@ -475,10 +477,16 @@
 	                        
 	                        jobName += M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
 	                        M_TR_TD3.innerHTML = jobName;
-	                    	M_TR_TD3.style.width = "80px";
+	                        M_TR_TD3.style.overflow = "hidden";
+	                        M_TR_TD3.style.textOverflow = "ellipsis";
+	                        M_TR_TD3.style.whiteSpace = "nowrap";
+	                    	M_TR_TD3.style.width = "70px";
 
 		                    var M_TR_TD4 = document.createElement("TD");
 							M_TR_TD4.innerHTML = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");
+	                    	M_TR_TD4.style.overflow = "hidden";
+	                    	M_TR_TD4.style.textOverflow = "ellipsis";
+	                    	M_TR_TD4.style.whiteSpace = "nowrap";
 		                    
 	                    	M_TR.appendChild(M_TR_TD1);
 	                    	M_TR.appendChild(M_TR_TD2);
@@ -504,9 +512,15 @@
 	                        
 	                        jobName += M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
 	                        M_TR_TD2.innerHTML = jobName;
+	                        M_TR_TD2.style.overflow = "hidden";
+	                        M_TR_TD2.style.textOverflow = "ellipsis";
+	                        M_TR_TD2.style.whiteSpace = "nowrap";
 
 	            	        var M_TR_TD3 = document.createElement("TD");
 	                	    M_TR_TD3.innerHTML = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");
+	                        M_TR_TD3.style.overflow = "hidden";
+	                        M_TR_TD3.style.textOverflow = "ellipsis";
+	                        M_TR_TD3.style.whiteSpace = "nowrap";
 
 		                    M_TR.appendChild(M_TR_TD1);
 	                    	M_TR.appendChild(M_TR_TD2);
@@ -1026,7 +1040,7 @@
   			<script type="text/javascript" >
       			selToggleList(document.getElementById("menu"), "ul", "li", "0");
   			</script>
-  			<div style="width: 730px;">
+  			<div style="width: 100%;">
         	<div class="portlet_tabpart03" style="background-color:#f8f8fa; border: 1px solid #dedede; border-bottom: 0px; padding-top: 6px;">
 	            <div class="portlet_tabpart03_top" id="tab1" style="border-bottom: 0px; height: 28px;">
     	           <table style="width:100%;">
@@ -1066,11 +1080,11 @@
 		  <table>
     		<tr>
       			<td class="box">
-          			<div style="width:298px;height:450px;overflow-x:auto;overflow-y:auto;" id="TreeView" ></div>
+          			<div style="width:298px;height:80vh;overflow-x:auto;overflow-y:auto;" id="TreeView" ></div>
       			</td>
       			<td></td>
-      			<td class="listview" style="width:426px;">
-          			<table style="width:425px;margin-top:-1px;"  class="popup_mainlist" > 
+      			<td class="listview" style="width:58.5%;">
+          			<table style="width:100%;margin-top:-1px;"  class="popup_mainlist" > 
               			<tr>
                   			<th style="white-space:normal;background-color: white;border-top:0px solid #ddd;border-bottom:1px solid #eaeaea">
                       			<span id="SelectDeptNM" style="font-weight: normal; width: 359px; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;padding-top: 3px;padding-left: 3px;"></span>
@@ -1081,7 +1095,7 @@
                   			</th>
               			</tr>              
           			</table>
-          			<div style="vertical-align:top;height:375px;overflow:auto;width:425px;" id="txtlist_Layer">   
+          			<div style="vertical-align:top;height:67vh;overflow:auto;width:100%;" id="txtlist_Layer">   
           				<table style="width:100%;border:1px solid #ddd;display:none;" id="txtlist_table" class="mainlist" > 
               				<tr>
                   				<td style="width:150px;color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezPersonal.t304'/></td>
@@ -1098,7 +1112,7 @@
               				</tr>
           				</table>
           			</div>
-		  			<div style="vertical-align:top;text-align:center;height:375px;overflow:auto;display:none;width:425px;" id="DeptUserImgList"></div>
+		  			<div style="vertical-align:top;text-align:center;height:67vh;overflow:auto;display:none;width:100%;" id="DeptUserImgList"></div>
           			<div id="tblPageRayer" style="text-align:center;"></div>
     			</tr>
     			<tr>

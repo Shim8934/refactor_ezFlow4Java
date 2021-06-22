@@ -821,7 +821,7 @@ public class MApprovalGGWController {
 				}
 				
 				/* 2020-07-02 홍승비 - 모바일에서 최종결재 완료 시 서명에 결재날짜 삽입 동작 추가(결재날짜 필드가 없는 경우에만, 웹과 동일하게) */
-				if (rtnVal != null && !rtnVal.equals("ERROR")) {
+				if (rtnVal != null && !rtnVal.contains("ERROR")) {
 					String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 					if(approvalFlag.equals("S")) {
 						String domain = request.getServerName() + ":" + request.getServerPort();
@@ -834,7 +834,7 @@ public class MApprovalGGWController {
 					}
 				}
 				
-				if (rtnVal != null && !rtnVal.equals("ERROR")) {
+				if (rtnVal != null && !rtnVal.contains("ERROR")) {
 					result.put("status", "ok");
 					result.put("code", "0");
 					result.put("data", "SUCCESS");
@@ -855,7 +855,7 @@ public class MApprovalGGWController {
 				
 //				rtnVal = ezApprovalGService.doBansong(docId, "", approvalGDocInfoVO.getAprMemberID(), "004", realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator, pBansongDeptID, userInfo.getCompanyId(), optionInfo.getLang(), loginVO, "");
 				
-				if (rtnVal != null && !rtnVal.equals("ERROR")) {
+				if (rtnVal != null && !rtnVal.contains("ERROR")) {
 //				    if (rtnVal != null && !rtnVal.equals("FALSE")) {
 					result.put("status", "ok");
 					result.put("code", "0");
