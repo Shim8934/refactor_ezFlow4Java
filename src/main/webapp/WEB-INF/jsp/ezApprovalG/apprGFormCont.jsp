@@ -400,6 +400,7 @@
 		    	});
 		
 		        document.getElementById('divlvtFavForm').innerHTML = "";
+		        document.getElementById('descrip2').innerHTML = "";
 		
 		        var listview = new ListView();
 		        listview.SetID("lvtFavForm");
