@@ -4011,31 +4011,31 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		boardListVO.setReadFlag(doc.getElementsByTagName("READCOUNTFLAG").item(0).getTextContent());
 		
 		if (doc.getElementsByTagName("EXTENSIONATTRIBUTE6").item(0) != null) {
-			boardListVO.setExtensionAttribute6(doc.getElementsByTagName("EXTENSIONATTRIBUTE6").item(0).getTextContent());
+			boardListVO.setExtensionAttribute6(commonUtil.stripScriptTags(commonUtil.htmlUnescape(doc.getElementsByTagName("EXTENSIONATTRIBUTE6").item(0).getTextContent())));
 		} else {
 			boardListVO.setExtensionAttribute6("");
 		}
 		
 		if (doc.getElementsByTagName("EXTENSIONATTRIBUTE7").item(0) != null) {
-			boardListVO.setExtensionAttribute7(doc.getElementsByTagName("EXTENSIONATTRIBUTE7").item(0).getTextContent());
+			boardListVO.setExtensionAttribute7(commonUtil.stripScriptTags(commonUtil.htmlUnescape(doc.getElementsByTagName("EXTENSIONATTRIBUTE7").item(0).getTextContent())));
 		} else {
 			boardListVO.setExtensionAttribute7("");
 		}
 		
 		if (doc.getElementsByTagName("EXTENSIONATTRIBUTE8").item(0) != null) {
-			boardListVO.setExtensionAttribute8(doc.getElementsByTagName("EXTENSIONATTRIBUTE8").item(0).getTextContent());
+			boardListVO.setExtensionAttribute8(commonUtil.stripScriptTags(commonUtil.htmlUnescape(doc.getElementsByTagName("EXTENSIONATTRIBUTE8").item(0).getTextContent())));
 		} else {
 			boardListVO.setExtensionAttribute8("");
 		}
 		
 		if (doc.getElementsByTagName("EXTENSIONATTRIBUTE9").item(0) != null) {
-			boardListVO.setExtensionAttribute9(doc.getElementsByTagName("EXTENSIONATTRIBUTE9").item(0).getTextContent());
+			boardListVO.setExtensionAttribute9(commonUtil.stripScriptTags(commonUtil.htmlUnescape(doc.getElementsByTagName("EXTENSIONATTRIBUTE9").item(0).getTextContent())));
 		} else {
 			boardListVO.setExtensionAttribute9("");
 		}
 		
 		if (doc.getElementsByTagName("EXTENSIONATTRIBUTE10").item(0) != null) {
-			boardListVO.setExtensionAttribute10(doc.getElementsByTagName("EXTENSIONATTRIBUTE10").item(0).getTextContent());
+			boardListVO.setExtensionAttribute10(commonUtil.stripScriptTags(commonUtil.htmlUnescape(doc.getElementsByTagName("EXTENSIONATTRIBUTE10").item(0).getTextContent())));
 		} else {
 			boardListVO.setExtensionAttribute10("");
 		}
