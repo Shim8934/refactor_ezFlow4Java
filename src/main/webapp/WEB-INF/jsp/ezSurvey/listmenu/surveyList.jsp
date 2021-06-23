@@ -10,6 +10,11 @@
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/jquery-ui.css')                       }">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/dateControls/demos.css')        }">
+		<style>
+        #ui-datepicker-div {
+          width:195px;
+        }
+        </style>
 	</head>
 	<body class="mainbody overY">
 		<h1>
