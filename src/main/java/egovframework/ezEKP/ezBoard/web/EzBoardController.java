@@ -9930,7 +9930,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String userDeptPath = deptPathOrgan.toString();
 		addJobDeptList.add(userDeptPath);
 		
-		logger.debug("accessListViewFGCheck for userID[" + userID + "] userDeptPath in web    ::    " + userDeptPath);
+		//logger.debug("accessListViewFGCheck for userID[" + userID + "] userDeptPath in web    ::    " + userDeptPath);
 		
 		List<String> addJobList = ezBoardService.getPDOAddJobDeptID(userID, companyID, tenantID);
 		StringJoiner addJobStr = new StringJoiner(",");
