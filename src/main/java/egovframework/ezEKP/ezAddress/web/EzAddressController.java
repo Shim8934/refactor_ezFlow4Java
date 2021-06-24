@@ -666,7 +666,7 @@ public class EzAddressController{
 		String replaceMemo = addressInfo.getsMemo();
 		
 		if (replaceMemo != null) {
-			replaceMemo = replaceMemo.replace("\\", "\\\\").replaceAll("\"", "\\\\\"").replace("\'", "\\\'").replaceAll("\n", "&lt;br&gt;").replaceAll("/", "\\\\/");
+			replaceMemo = replaceMemo.replace("\\", "\\\\").replaceAll("\"", "\\\\\"").replace("\'", "\\\'").replaceAll("\n", "&#92;n").replaceAll("/", "\\\\/");
 		}
 		
 		model.addAttribute("useEditor", useEditor);
