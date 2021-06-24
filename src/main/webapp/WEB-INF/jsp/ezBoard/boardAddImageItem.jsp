@@ -49,6 +49,7 @@
 	        var pNoneActiveX = "YES";
 	        var pUrl = "";
 	        var lastItemID = "000";
+	        var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
 	        
 	        window.onload = function () {
 	            var ua = navigator.userAgent;
@@ -323,6 +324,8 @@
 				    xmldom = null;
 				    alert(strLang46);
 				    
+				    sendBoardAlertMail("modify", pBoardID, pItemID, isAllGroupBoard);
+				    
 				    /* 2019-01-15 홍승비 - 사진추가 후 DB에 게시물 수정일자 업데이트 */
                     $.ajax({
 						type : "POST",
@@ -503,6 +506,22 @@
 	    		}
 	    		return check;
 			}
+	        
+	        /* 2021-06-22 홍승비 - 게시판 메일알림 함수 추가, 비동기로 백그라운드 동작 */
+	        function sendBoardAlertMail(pMode, pBoardID, pItemID, pIsAllGroupBoard) {
+		        $.ajax({
+					type : "POST",
+					dataType : "text",
+					async : true,
+					url : "/ezBoard/sendBoardAlertMail.do",
+					data : {
+						mode : pMode,
+						boardID : pBoardID,
+						itemID : pItemID,
+						isAllGroupBoard : pIsAllGroupBoard
+					}
+				});
+	        }
 	    
 	    </script>
 	    <c:if test="${!isCrossBrowser}">

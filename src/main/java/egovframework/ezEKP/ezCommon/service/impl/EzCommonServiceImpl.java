@@ -2399,4 +2399,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			ezCommonDAO.insertApprSatViewerConfig(map);
 		}
 	}
+	
+	@Override
+	public void addBoardMailFGColumn() throws Exception {
+		ezCommonDAO.addBoardMailFGColumn();
+	}
 }

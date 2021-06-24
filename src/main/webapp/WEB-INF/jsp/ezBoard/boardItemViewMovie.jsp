@@ -86,6 +86,7 @@
 		        var imgWidth = "57px";
 		        var imgHeight = "37px";
 		        var rsa = new RSAKey();
+		        var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
 
 		        window.onload = function () {
 		        	imageViewInit();
@@ -501,6 +502,7 @@
 		            params[1] = pItemID;
 		            params[2] = document.getElementById("title").textContent;
 		            params[3] = document.getElementById("Div2").textContent;
+		            params[5] = isAllGroupBoard;
 	                photoalbumedit_dialogArguments[0] = params;
 	                photoalbumedit_dialogArguments[1] = btn_albumEdit_Complete;
 	                DivPopUpShow(400, 200, "/ezBoard/movieAlbumEdit.do");          

@@ -317,4 +317,6 @@ public interface EzCommonService {
 	public void createSerialnumgenGrant() throws Exception;
 	
 	public void insertApprSatViewerConfig() throws Exception;
+
+	public void addBoardMailFGColumn() throws Exception;
 }

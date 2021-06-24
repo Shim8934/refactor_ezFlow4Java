@@ -2325,7 +2325,10 @@
 		          	FORMFLAG = #v_PFORM#,
 		          	APPRFLAG = #v_PAPPRFLAG#,
 		          	APPRMAILFLAG = #v_PAPPRMAILFLAG#,
-		          	LIKEFLAG = #v_LIKEFLAG#
+		          	LIKEFLAG = #v_LIKEFLAG#,
+					MAILFG_POST = #v_MAILFG_POST#,
+		          	MAILFG_MOD = #v_MAILFG_MOD#,
+		          	MAILFG_COMMENT = #v_MAILFG_COMMENT#
 	    		WHERE
 	    			TENANT_ID = #v_TENANTID#
 	    		AND  

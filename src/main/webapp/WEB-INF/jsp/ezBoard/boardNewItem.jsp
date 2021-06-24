@@ -856,6 +856,14 @@
 		                        xmlhttp.send();
 		                        xmlhttp = null;
 		                    }
+		                    
+		                    /* 2021-06-22 홍승비 - 게시판 게시알림(일반 사용자 대상 발송), 수정알림 추가 (승인게시판인 경우 게시알림 메일 사용안함) */
+		                    if (("${boardInfo.apprFlag}" != "Y") && (pMode == "new" || pMode == "new1" || pMode == "boardContent" || pMode == "boardAttach" || pMode == "save")) { // 게시알림
+		                    	sendBoardAlertMail("new", pBoardID, newID, isAllGroupBoard);
+		                    } else if (pMode == "modify") { // 수정알림
+		                    	sendBoardAlertMail("modify", pBoardID, strItemID, isAllGroupBoard);
+		                    }
+		                    
 		                    alert("<spring:message code='ezBoard.t399' />");
 		                } else {
 		                    alert("<spring:message code='ezBoard.t400' />" + pStartDate.substr(0, 16) + "<spring:message code='ezBoard.t401' />");
@@ -2142,6 +2150,23 @@
 		           }
 		    	return strRet;
 		    }
+	        
+	        /* 2021-06-22 홍승비 - 게시판 메일알림 함수 추가, 비동기로 백그라운드 동작 */
+	        function sendBoardAlertMail(pMode, pBoardID, pItemID, pIsAllGroupBoard) {
+		        $.ajax({
+					type : "POST",
+					dataType : "text",
+					async : true,
+					url : "/ezBoard/sendBoardAlertMail.do",
+					data : {
+						mode : pMode,
+						boardID : pBoardID,
+						itemID : pItemID,
+						isAllGroupBoard : pIsAllGroupBoard
+					}
+				});
+	        }
+	        
 	    </script>
 	    <c:if test="${!isCrossBrowser}">
 	   		<script type="text/javascript" FOR="EzHTTPTrans" EVENT="AttachAddFile(filename)">

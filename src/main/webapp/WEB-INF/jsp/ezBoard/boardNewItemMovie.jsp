@@ -52,6 +52,7 @@
 	        var pNoneActiveX = "YES";
 	        var saveItemBoardId = "";
 	        var SelBoard = false;
+	        var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
 	        
 	        function window_onload() {
 	            try{
@@ -275,6 +276,11 @@
 						    xmlhttp = null;
 						}
 						
+						 /* 2021-06-22 홍승비 - 게시판 게시알림(일반 사용자 대상 발송), 수정알림 추가 (승인게시판인 경우 게시알림 메일 사용안함) */
+	                    if (("${boardInfo.apprFlag}" != "Y") && pMode == "new") { // 게시알림
+	                    	sendBoardAlertMail("new", pBoardID, itemid, isAllGroupBoard);
+	                    }
+						 
 						/* 2019-05-08 홍승비 - 이미 승인된 게시물을 수정하는 경우, 승인요청 알림메일 발송하지 않도록 수정 */
 						if (("${boardInfo.apprMail_FG}" == "Y") && (pMode != "modify")) {
 						    xmlhttp = createXMLHttpRequest();
@@ -497,6 +503,23 @@
 			    
 			 	return canvas.toDataURL();
 			}
+		    
+	        /* 2021-06-22 홍승비 - 게시판 메일알림 함수 추가, 비동기로 백그라운드 동작 */
+	        function sendBoardAlertMail(pMode, pBoardID, pItemID, pIsAllGroupBoard) {
+		        $.ajax({
+					type : "POST",
+					dataType : "text",
+					async : true,
+					url : "/ezBoard/sendBoardAlertMail.do",
+					data : {
+						mode : pMode,
+						boardID : pBoardID,
+						itemID : pItemID,
+						isAllGroupBoard : pIsAllGroupBoard
+					}
+				});
+	        }
+	        
 	    </script>
 	</head>
 	<c:if test="${!isCrossBrowser}">

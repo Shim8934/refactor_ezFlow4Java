@@ -814,4 +814,22 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public int getReaderListCount2(Map<String, Object> map) throws Exception {
 		return (int) select("EzBoardDAO.getReaderListCount2", map);
 	}
+	
+	/* 2021-06-23 홍승비 - 그룹권한을 포함하여 ACCESSID에 대한 게시판 접근 + 리스트보기 권한을 리스트로 리턴하는 쿼리 */
+	@SuppressWarnings("unchecked")
+	public List<String> getBoardAccessListViewFG(Map<String, Object> map) throws Exception {
+		return (List<String>) list("EzBoardDAO.getBoardAccessListViewFG", map);
+	}
+
+	/* 2021-06-23 홍승비 - 게시알림 메일 발송을 위한 사용자 정보를 map 리스트로 리턴하는 쿼리 */
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, String>> getBoardUserInfoForMailSend(Map<String, Object> map) throws Exception {
+		return (List<HashMap<String, String>>) list("EzBoardDAO.getBoardUserInfoForMailSend", map);
+	}
+	
+	/* 2021-06-23 홍승비 - 댓글알림 메일 발송을 위한 사용자 정보를 map으로 리턴하는 쿼리 */
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, String>> getCommentNoticeMail(Map<String, Object> map) throws Exception {
+		return (List<HashMap<String, String>>) list("EzBoardDAO.getCommentNoticeMail", map);
+	}
 }
