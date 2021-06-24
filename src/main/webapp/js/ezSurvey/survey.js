@@ -2198,13 +2198,13 @@ var SurveyCreate     = function() {
 		sliderUnit.append(unitInput);
 		
 		var slidWrap   = $("<div class='silder-wrap'></div>");
-		var sliderLw   = $("<input type='input' class='slider-lw' value='" + lowest  + "'/>");
+		var sliderLw   = $("<input type='input' class='slider-lw' onKeyup=this.value=this.value.replace(/[^0-9]/g,''); value='" + lowest  + "'/>");
 		slidWrap.append(sliderLw);
 		
 		var slideMain = $("<input type='range' class='slider-main' value='0'/>");
 		slidWrap.append(slideMain);
 		
-		var sliderUp = $("<input type='input' class='slider-up' value='" + highest + "'/>");
+		var sliderUp = $("<input type='input' class='slider-up' onKeyup=this.value=this.value.replace(/[^0-9]/g,''); value='" + highest + "'/>");
 		
 		var lwUpDiv = $("<div><span class='slider-lwExp'>" + SurveyMessages.strSlider8 + "</span><span class='slider-upExp'>" + SurveyMessages.strSlider9 + "</span></div>")
 		
