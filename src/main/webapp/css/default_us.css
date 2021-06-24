@@ -3109,7 +3109,7 @@ h2, #menu span {font-size: 12px;}
 /*** survey tab start ***/
 .surveyBtn{overflow:hidden; margin:10px 0px 10px 0px;}
 /*.headpanel{float:left; height:48px; margin:0px; padding:0px; display: block; background:url(../images/ezSurvey/survey_progressBG_bar.png) top left repeat-x; width:auto;}*/
-.headpanel{float:left; height:48px; margin:0px; padding:0px; display: flex; background:url(../images/ezSurvey/survey_progressBG_bar.png) top left repeat-x;}
+.headpanel{float:left; width:860px; height:48px; margin:0px; padding:0px; display: flex; background:url(../images/ezSurvey/survey_progressBG_bar.png) top left repeat-x;}
 /*.headpanel .crust {float:left; position:relative; clear:none; display:block; zoom:1; max-width:50%; margin:0px; padding:6px 0px;}*/
 .headpanel .crust {position:relative; clear:none; display:inline-block; zoom:1; width:25%; margin:0px; padding:6px 0px;}
 .headpanel .crust a.crumb>span {display:inline-block; vertical-align:middle; text-overflow:ellipsis; white-space:nowrap; overflow:hidden; max-width:100%; font-size:14px;}
