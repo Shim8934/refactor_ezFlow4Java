@@ -3892,7 +3892,7 @@ public class EzWebFolderGWController {
 					tenantId, file, String.valueOf(version), user.getPrimary());
 
 			SatDownloadKey key = new SatDownloadKey(fileId, version, tenantId);
-			String filePath = request.getScheme() + "://" + serverName + ":" + request.getServerPort()
+			String filePath = ezCommonService.getTenantConfig("webfolderHostUrlForSAT", tenantId)
 					+ "/rest/ezwebfolder/file/sat?key=" + URLEncoder.encode(key.toString(), "UTF-8");
 			String fileName = file.getFileName();
 
@@ -3967,8 +3967,8 @@ public class EzWebFolderGWController {
 				response.getOutputStream().print(resultStr);
 			}
 
-			logger.error("Invalid key or not found file. key: {}, exception: {}", key, ex);
 			ex.printStackTrace();
+			logger.error("Invalid key or not found file. key: {}, exception: {}", key, ex);
 		}
 
 		logger.debug("G/W WEBFOLDER [GET {}] ended.", request.getRequestURI());

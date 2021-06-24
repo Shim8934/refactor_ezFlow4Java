@@ -109,7 +109,7 @@ var SurveyMessages = {
 	nextMonth    : "Next month",
 	strToday     : "Today",
 	monthNames   : ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-	dayNames     : ["Sun", "Mon", "Wed", "Thu", "Fri", "Sat"],
+	dayNames     : ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
 	strNoLogic   : "No logic",
 	strchooseNum : "Please select logic.",
 	strBetweenNum: "Please enter an integer between min and max.",

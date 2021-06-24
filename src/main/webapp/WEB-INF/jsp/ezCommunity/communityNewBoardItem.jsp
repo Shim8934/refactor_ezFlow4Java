@@ -838,7 +838,10 @@
 		                        	replyHeader += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;<spring:message code='ezCommunity.t1161' /></B>-----</p>";
 		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t1162' /></B>" + tempWriteDate + "</p>";
 		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t1163' /></B>" + strWriterName + "(" + strWriterTitle + "," + strWriterDeptName + "," + strWriterCompanyName + ")</p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t885' /></B>" + ConvMakeXMLString("<c:out value = '${item.title}' />") + "</p>";
+		                        	// 2021-06-22 김은실 - htmlData 이후 => 에디터에 옮겨지면서, 특수문자<>와 영문 혼용 시 태그로 인식함. 특수코드로(&lt; 등) 보내면 -> 에디터에서 알아서 변경하기 때문에, 특수코드로 보내는 것이 나음. 
+		                        	//					에디터에 따라 다를 경우, 경우를 나눠 추가작업을 요망.
+		                        	// replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t885' /></B>" + ConvMakeXMLString("<c:out value = '${item.title}' />") + "</p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t885' /></B><c:out value = '${item.title}' /></p>";
 		                        	replyHeader += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
 		                        	htmlData = replyHeader + htmlData;
 	                            
@@ -847,7 +850,7 @@
 		                        	replyHeader += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;<spring:message code='ezCommunity.t1161' /></B>-----</p>";
 		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t1162' /></B>" + strWriteDate + "</p>";
 		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t1163' /></B>" + strWriterName + "</p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t885' /></B>" + ConvMakeXMLString("<c:out value = '${item.title}' />") + "</p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t885' /></B><c:out value = '${item.title}' /></p>";
 		                        	replyHeader += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
 		                        	htmlData = replyHeader + htmlData;
 	                            }

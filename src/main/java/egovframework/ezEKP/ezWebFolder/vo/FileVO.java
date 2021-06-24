@@ -314,7 +314,29 @@ public class FileVO {
 		this.version = version;
 	}
 
+	public boolean isFavorite() {
+		return "1".equals(favouriteStatus);
+	}
+
 	public boolean isFolder() {
 		return "folder".equalsIgnoreCase(typeId);
 	}
+
+	public String getHumanReadableSize() {
+		if (isFolder()) {
+			return "";
+		}
+
+		int unit = 1024;
+
+		if (fileSize < unit) {
+			return fileSize + "B";
+		}
+
+		int exp = (int) (Math.log(fileSize) / Math.log(unit));
+		String pre = ("KMGTPE").charAt(exp - 1) + "";
+
+		return String.format("%.1f%sB", fileSize / Math.pow(unit, exp), pre);
+	}
+
 }

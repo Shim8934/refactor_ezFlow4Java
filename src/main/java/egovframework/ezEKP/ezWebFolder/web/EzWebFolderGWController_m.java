@@ -853,7 +853,7 @@ public class EzWebFolderGWController_m {
 				ezWebFolderService_y.insertEnv(userId, tenantId, listCount);
 			}
 			
-			Map<String, Long> favoriteCountMap = ezWebFolderService_m.getFavoritesCount(userId, primary, offset, tenantId, searchInfo);
+			Map<String, Long> favoriteCountMap = ezWebFolderService_m.getFavoritesCount(userId, primary, offset, tenantId, listCount, searchInfo);
 			long totalCount = favoriteCountMap.get("totalCount");
 			long folderCount = favoriteCountMap.get("folderCount");
 			long fileCount = favoriteCountMap.get("fileCount");
