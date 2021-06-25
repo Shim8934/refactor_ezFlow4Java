@@ -3286,8 +3286,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					response.setCharacterEncoding("UTF-8");
 					response.setContentType("text/html; charset=UTF-8");
 					response.getWriter().write("<script language='javascript'>\n");
-					response.getWriter().write("window.history.back();");
+//					response.getWriter().write("window.history.back();");
 					response.getWriter().write("window.open('"+ satPath +"', '', '_blank');\n");
+					response.getWriter().write("if (typeof parent.removeTempFrame === 'function') {parent.removeTempFrame();}\n");
 					response.getWriter().write("</script>");
 					response.getWriter().flush();
 				} else {
