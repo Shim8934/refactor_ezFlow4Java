@@ -568,16 +568,63 @@
 			
 			    function ATTACH_onDblclick_Complete(retValue) {
 			        DivPopUpHidden();
-			        if (retValue[0] == "OK") {
-			            var CurSelList = new ListView();
-			            CurSelList.LoadFromID("attachList");
-			            var pCurSelRow = CurSelList.GetSelectedRows();
-			            SetAttribute(pCurSelRow[0], "DATA9", retValue[1]);
-			            pCurSelRow[0].childNodes[1].innerHTML = MakeXMLString(retValue[2]);
-			            pCurSelRow[0].childNodes[1].title = retValue[2];
-// 			            pCurSelRow[0].childNodes[3].innerHTML = retValue[1];
-			            SetAttribute(pCurSelRow[0], "DATA12", retValue[2]);
-			        }
+			        var CurSelList = new ListView();
+                    CurSelList.LoadFromID("attachList");
+                    var pCurSelRow = CurSelList.GetSelectedRows();
+                     
+                    if (retValue[0] == "OK") {
+                        if (retValue[2] != GetAttribute(pCurSelRow[0],"DATA12")) {
+                             var CurSelList = new ListView();
+                             CurSelList.LoadFromID("attachList");
+                             
+                             <%-- 기안시점엔 첨부 파일이 DB에 없는 상태라 업데이트문 태우는 로직은 결재 진행중 문서 보기일 때만 가능하도록 index검사 분기 --%>
+                             if (this.window.location.href.indexOf("draft") == -1) {
+                            	 var param = new Array();
+                                 param[0] = retValue[2]; //수정할 파일 이름
+                                 param[1] = GetAttribute(pCurSelRow[0],"DATA12"); // 원본파일이름
+                                 param[2] = GetAttribute(pCurSelRow[0],"DATA1"); // 원본파일경로
+                                 param[3] = GetAttribute(pCurSelRow[0],"DATA3"); // 문서ID
+                                 param[4] = GetAttribute(pCurSelRow[0],"DATA2"); // 첨부파일순서
+                                 
+                                 var data = {'data' : JSON.stringify(param)};
+                                 
+                                 $.ajax({
+                                        type : "GET",
+                                        dataType : "json",
+                                        async : false,
+                                        url : "/ezApprovalG/aprUpdateAttachName.do",
+                                        data : data,
+                                        contentType : 'application/json; charset=UTF-8',
+                                        success: function(result){
+                                            console.log(result);
+                                            if (result[0] != "fail") {
+                                                var fileName = decodeURI(result["fileName"]);
+                                                var filePath = decodeURI(result["filePath"]);
+                                                SetAttribute(pCurSelRow[0], "DATA1", filePath);
+                                                SetAttribute(pCurSelRow[0], "DATA10", fileName);
+                                                SetAttribute(pCurSelRow[0], "DATA12", fileName);
+                                                SetAttribute(pCurSelRow[0], "DATA9", retValue[1]);
+                                                pCurSelRow[0].childNodes[1].innerHTML = MakeXMLString(fileName);
+                                                pCurSelRow[0].childNodes[1].title = fileName;
+                                            }
+                                        },
+                                        error : function() {
+                                            alert("오류가 발생했습니다. 새로고침을 눌러주세요.");
+                                        }
+                                 });
+                             }
+                             else {
+                            	 <%-- 기안 시점엔 리스트뷰 데이터만 교체하도록 수정  --%>
+                            	 var filePath = GetAttribute(pCurSelRow[0],"DATA1").replace(GetAttribute(pCurSelRow[0],"DATA10"),retValue[2]);
+                            	 //SetAttribute(pCurSelRow[0], "DATA1", filePath);
+                                 SetAttribute(pCurSelRow[0], "DATA10", retValue[2]);
+                                 SetAttribute(pCurSelRow[0], "DATA12", retValue[2]);
+                                 SetAttribute(pCurSelRow[0], "DATA9", retValue[1]);
+                                 pCurSelRow[0].childNodes[1].innerHTML = MakeXMLString(retValue[2]);
+                                 pCurSelRow[0].childNodes[1].title = retValue[2];
+                             }
+                        }
+                    }
 			    }
 			
 			function btn_AttachEdit_onclick()

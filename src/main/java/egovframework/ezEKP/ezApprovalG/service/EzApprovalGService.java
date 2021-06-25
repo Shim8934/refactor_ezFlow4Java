@@ -761,4 +761,7 @@ public interface EzApprovalGService {
 	public String getOrgDocIDByMode(String docID, String mode, String orgCompanyID, int tenantID) throws Exception;
 	
 	public String getChaebunDept(String deptId, String orgCompanyID, int tenantID) throws Exception;
+	
+	/* 2021-06-25 심기영 - 문서 첨부파일 수정 시, 파일 이동생성 및 DB 업데이트문용 추가 */
+	public String updateAttachFileNamePath(LoginVO userInfo, Map tempMap, String difPath) throws Exception;
 }

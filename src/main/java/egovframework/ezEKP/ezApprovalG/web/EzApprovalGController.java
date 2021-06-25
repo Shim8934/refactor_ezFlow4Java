@@ -2988,6 +2988,35 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	}
 	
 	/**
+	 * 전자결재G 첨부파일명 수정 시, DB 업데이트 및 수정한 파일 이름으로 파일 수정 로직
+	 * @throws Exception s
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/ezApprovalG/aprUpdateAttachName.do", method = RequestMethod.GET)
+	public String aprUpdateAttachName(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestParam Map map) throws Exception{
+		logger.debug("aprUpdateAttachName started");
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+	    
+		String dirPath = commonUtil.getRealPath(request);
+		
+	    String result = ezApprovalGService.updateAttachFileNamePath(userInfo, map, dirPath);
+	    if (!result.equalsIgnoreCase("fail")) {
+		    String fileName = result.substring(0,result.indexOf("|"));
+		    String filePath = result.substring(result.indexOf("|")+1);
+			
+			JSONObject data = new JSONObject();
+			data.put("fileName", URLEncoder.encode(fileName, "UTF-8").replace("+", "%20"));
+			data.put("filePath", URLEncoder.encode(filePath, "UTF-8").replace("+", "%20"));
+			logger.debug("aprUpdateAttachName ended");
+		return data.toJSONString();
+	    }
+	    else {
+	    	logger.debug("## result = " + result);
+	    	return "";
+	    }
+	}
+	
+	/**
 	 * 전자결재G 기안 첨부리스트 표출 Method
 	 */
 	@RequestMapping(value = "/ezApprovalG/attachRequest.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)

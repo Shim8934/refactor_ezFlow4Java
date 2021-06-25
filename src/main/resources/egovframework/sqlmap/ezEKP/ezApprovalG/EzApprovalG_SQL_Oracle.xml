@@ -34104,5 +34104,26 @@
 		AND
     		COMPANYID = #v_COMPANYID#
 	</select>
+
+<!-- 2021-06-25 심기영 - 문서첨부파일 이름 및 경로 수정 -->
+    <update id="EzApprovalG.updateAttachFileNamePath" parameterClass="Map">
+    <![CDATA[
+            UPDATE
+                TBL_APRATTACHINFO
+            SET
+                ATTACHFILENAME = #editFileName#,            
+                ATTACHFILEHREF = #editFilePath#,
+                DISPLAYNAME = #editFileName#,
+                SAVEDATE = #v_SYSDATE#
+            WHERE
+                TENANT_ID = #tenantId#
+            AND
+                COMPANYID = #companyId#
+            AND
+                DOCID = #docId#
+            AND
+                ATTACHFILESN = #fileSn#
+            ]]>
+    </update>
 	
 </sqlMap>
