@@ -3680,8 +3680,5 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public String getChaebunDept(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalG.getChaebunDept", map);
 	}
-
-	public int updateAttachFileNamePath(Map<String, Object> tempMap) {
-		return update("EzApprovalG.updateAttachFileNamePath",tempMap);
-	}
+	
 }
