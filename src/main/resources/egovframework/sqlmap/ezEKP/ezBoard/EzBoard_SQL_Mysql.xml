@@ -5991,4 +5991,170 @@
 				TENANT_ID = #v_TENANTID# 
 		]]>
 	</select>
+	
+	<!-- 2021-06-23 홍승비 -  일반게시판의 경우, 해당 회사 사용자의 정보를 리턴 (사간겸직자를 제외하므로 겸직 테이블 참조하지 않음) -->
+	<select id="EzBoardDAO.getBoardUserInfoForMailSend" parameterClass="Map" resultClass="HashMap">
+		<![CDATA[
+		SELECT
+			*
+		FROM (
+			SELECT
+				U.CN,
+				CASE
+					WHEN #v_PRIMARY# = '1'
+					THEN U.DISPLAYNAME
+					ELSE U.DISPLAYNAME2
+				END USERNAME,
+				U.MAIL,
+                U.DEPARTMENT AS DEPTID,
+                D.EXTENSIONATTRIBUTE2 AS COMPANYID,
+                U.EXTENSIONATTRIBUTE1 AS ROLLINFO,
+                D.DEPTLEVEL,
+                D.DEPT_CD_PATH
+			FROM
+				TBL_USERMASTER U
+			INNER JOIN
+				TBL_DEPTMASTER D
+			ON
+				U.TENANT_ID = D.TENANT_ID
+			AND
+				U.DEPARTMENT = D.CN
+			WHERE 
+		]]>
+		<isNotEqual property="v_isAllGroupBoard" compareValue="Y">
+			<![CDATA[
+				(D.EXTENSIONATTRIBUTE2 = #v_COMPANYID#
+			AND
+				PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#)
+			AND
+			]]>
+		</isNotEqual>
+				U.TENANT_ID = #v_TENANTID#
+		) TMP
+		GROUP BY
+			CN, COMPANYID
+		ORDER BY
+			CN
+	</select>
+	
+	<select id="EzBoardDAO.getCommentNoticeMail" parameterClass="Map" resultClass="HashMap">
+		<![CDATA[
+			SELECT 
+				DISTINCT WRITERID, 
+				WRITERNAME$lang$ AS WRITERNAME, 
+				TUM.MAIL 
+			FROM 
+				TBL_BOARD_ITEM TBI
+            INNER JOIN 
+            	TBL_USERMASTER TUM
+			ON 
+				TBI.TENANT_ID = TUM.TENANT_ID
+			AND
+				TBI.WRITERID = TUM.CN
+			WHERE
+				TBI.TENANT_ID = #v_TENANTID#
+			AND 
+				BOARDID = #v_BOARDID# 
+			AND 
+				ITEMID = #v_ITEMID#
+		]]>
+	</select>
+	
+	<!-- 2021-06-23 홍승비 - ACCESSID에 대해 권한그룹의 접근 + 리스트보기권한까지 체크하는 쿼리 (QNA게시판은 관리자권한 체크) -->
+	<select id="EzBoardDAO.getBoardAccessListViewFG" parameterClass="Map" resultClass="String" remapResults="true">
+		(SELECT
+		<isEqual property="v_GUBUN" compareValue="5">
+			<![CDATA[
+				CASE
+					WHEN BOARDADMIN_FG = 'true'
+					THEN 'true'
+					ELSE 'false'
+				END AS RESULTFG
+			]]>
+		</isEqual>
+		<isNotEqual property="v_GUBUN" compareValue="5">
+			<![CDATA[
+				CASE
+					WHEN (BOARDADMIN_FG = 'true' OR (ACCESS_ = ' 1' AND LISTVIEW_FG = 'true'))
+					THEN 'true'
+					ELSE 'false'
+				END AS RESULTFG
+			]]>
+		</isNotEqual>
+		<![CDATA[
+			FROM 
+				TBL_BOARD_BOARDMANAGE 
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND 
+				ACCESSID = #v_ACCESSID#
+			AND
+				(TYPE <> 'GROUP' OR TYPE IS NULL)
+			AND 
+				BOARDID = #v_BOARDID#
+		]]>
+		<isEqual property="v_ISDEPT" compareValue="1">
+			<isEqual property="v_ISEQUALDEPT" compareValue="0">
+				AND
+					BoardGroupACL = 'Y'
+			</isEqual>
+		</isEqual>
+		)
+		
+		UNION
+		
+		(SELECT
+		<isEqual property="v_GUBUN" compareValue="5">
+			<![CDATA[
+				CASE
+					WHEN BOARDADMIN_FG = 'true'
+					THEN 'true'
+					ELSE 'false'
+				END AS RESULTFG
+			]]>
+		</isEqual>
+		<isNotEqual property="v_GUBUN" compareValue="5">
+			<![CDATA[
+				CASE
+					WHEN (BOARDADMIN_FG = 'true' OR (ACCESS_ = ' 1' AND LISTVIEW_FG = 'true'))
+					THEN 'true'
+					ELSE 'false'
+				END AS RESULTFG
+			]]>
+		</isNotEqual>
+		<![CDATA[
+		FROM 
+			TBL_BOARD_BOARDMANAGE TBB
+			
+		INNER JOIN
+			TBL_PERMISSIONGROUPLIST PGL
+		ON
+			TBB.TENANT_ID = PGL.TENANT_ID
+		AND
+			TBB.ACCESSID = PGL.GROUP_ID
+		INNER JOIN
+			TBL_PERMISSIONGROUPINFO PGI
+		ON
+			PGL.TENANT_ID = PGI.TENANT_ID
+		AND
+			PGL.GROUP_ID = PGI.GROUP_ID
+			
+		WHERE
+			TBB.TENANT_ID = #v_TENANTID#
+		AND 
+			PGI.MEMBER_ID = #v_ACCESSID#
+		AND
+          		TBB.TYPE = 'GROUP'
+		AND 
+			BOARDID = #v_BOARDID#
+	]]>
+	<isEqual property="v_ISDEPT" compareValue="1">
+		<isEqual property="v_ISEQUALDEPT" compareValue="0">
+			AND
+				PGI.SUB_DEPT_YN = 'Y'
+		</isEqual>
+	</isEqual>
+		)
+	</select>
+	
 </sqlMap>

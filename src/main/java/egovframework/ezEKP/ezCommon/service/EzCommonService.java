@@ -322,4 +322,6 @@ public interface EzCommonService {
 	public void insertApprSatViewerConfig() throws Exception;
 
 	public JSONObject attachWebFolderFile(JSONArray fileListJson, LoginVO userInfo, String param, HttpServletRequest request);
+
+	public void addBoardMailFGColumn() throws Exception;
 }

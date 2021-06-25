@@ -3700,4 +3700,53 @@
             VALUES (#tenantID#, 'apprConvertExt', '이미지 변환솔루션 사용할 전자결재 첨부파일 확장자 모음', 'xlsx:xls:pdf:hwp:doc', '이미지 변환할 확장자 모음 (default : xlsx, xls, pdf, hwp, doc) / 구분자 : ', '2021-06-15 00:00:00', '전자결재')
     </insert>
     
+    <select id="EzCommonDAO.checkBoardMailFG_PostColumn">
+        <![CDATA[
+            SELECT 
+                MAILFG_POST
+            FROM 
+                TBL_BOARD_BOARDINFO
+            LIMIT 1
+        ]]>
+    </select>
+    <statement id="EzCommonDAO.addBoardMailFG_PostColumn">
+        ALTER TABLE 
+        	TBL_BOARD_BOARDINFO 
+		ADD (
+			MAILFG_POST VARCHAR(2) DEFAULT NULL
+		)
+    </statement>
+    <select id="EzCommonDAO.checkBoardMailFG_ModColumn">
+        <![CDATA[
+            SELECT 
+                MAILFG_MOD
+            FROM 
+                TBL_BOARD_BOARDINFO
+            LIMIT 1
+        ]]>
+    </select>
+    <statement id="EzCommonDAO.addBoardMailFG_ModColumn">
+        ALTER TABLE 
+        	TBL_BOARD_BOARDINFO 
+		ADD (
+			MAILFG_MOD VARCHAR(2) DEFAULT NULL
+		)
+    </statement>
+    <select id="EzCommonDAO.checkBoardMailFG_CommentColumn">
+        <![CDATA[
+            SELECT 
+                MAILFG_COMMENT
+            FROM 
+                TBL_BOARD_BOARDINFO
+            LIMIT 1
+        ]]>
+    </select>
+    <statement id="EzCommonDAO.addBoardMailFG_CommentColumn">
+        ALTER TABLE 
+        	TBL_BOARD_BOARDINFO 
+		ADD (
+			MAILFG_COMMENT VARCHAR(2) DEFAULT NULL
+		)
+    </statement>
+    
 </sqlMap>

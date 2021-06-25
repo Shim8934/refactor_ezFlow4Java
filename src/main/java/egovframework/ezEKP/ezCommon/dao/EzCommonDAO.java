@@ -1997,19 +1997,41 @@ public class EzCommonDAO extends EgovAbstractDAO {
 	}
 	
 	// 전자결재 첨부파일 이미지 변환 여부 및 변환할 확장자 파일 모음 컨피그 추가
-		public void insertApprSatViewerConfig(Map<String, Object> map) {
-			map.put("property", "USEAPPRIMAGECONVERT");
-			String useApprImageConvert = (String) select("EzCommonDAO.getTenantConfig", map);
-			if (useApprImageConvert == null) {
-				logger.debug("useApprImageConvert tenant config doesn't exist. insert data...");
-				insert("EzCommonDAO.insertUseApprImageConvert", map);
-			}
-			
-			map.put("property", "APPRCONVERTEXT");
-			String apprConvertExt = (String) select("EzCommonDAO.getTenantConfig", map);
-			if (apprConvertExt == null) {
-				logger.debug("apprConvertExt tenant config doesn't exist. insert data...");
-				insert("EzCommonDAO.insertApprConvertExt", map);
-			}
+	public void insertApprSatViewerConfig(Map<String, Object> map) {
+		map.put("property", "USEAPPRIMAGECONVERT");
+		String useApprImageConvert = (String) select("EzCommonDAO.getTenantConfig", map);
+		if (useApprImageConvert == null) {
+			logger.debug("useApprImageConvert tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertUseApprImageConvert", map);
 		}
+		
+		map.put("property", "APPRCONVERTEXT");
+		String apprConvertExt = (String) select("EzCommonDAO.getTenantConfig", map);
+		if (apprConvertExt == null) {
+			logger.debug("apprConvertExt tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertApprConvertExt", map);
+		}
+	}
+
+	/* 2021-06-21 홍승비 - 게시판 메일알림 옵션 컬럼 추가 */
+	public void addBoardMailFGColumn() {
+		try {
+			select("EzCommonDAO.checkBoardMailFG_PostColumn");
+		} catch (Exception e) {
+			logger.debug("TBL_Board_BoardInfo MailFG_Post column doesn't exist. creating the column...");
+			update("EzCommonDAO.addBoardMailFG_PostColumn");
+		}
+		try {
+			select("EzCommonDAO.checkBoardMailFG_ModColumn");
+		} catch (Exception e) {
+			logger.debug("TBL_Board_BoardInfo MailFG_Mod column doesn't exist. creating the column...");
+			update("EzCommonDAO.addBoardMailFG_ModColumn");
+		}
+		try {
+			select("EzCommonDAO.checkBoardMailFG_CommentColumn");
+		} catch (Exception e) {
+			logger.debug("TBL_Board_BoardInfo MailFG_Comment column doesn't exist. creating the column...");
+			update("EzCommonDAO.addBoardMailFG_CommentColumn");
+		}
+	}
 }

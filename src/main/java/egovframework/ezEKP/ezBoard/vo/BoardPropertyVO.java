@@ -139,6 +139,10 @@ public class BoardPropertyVO {
 	private String likeFlag;
 	/** 2019-09-19 홍승비 - 게시판 권한의 타입 부여 (PERSON, JIKWI, JIKCHEK, DEPT, GROUP)*/
 	private String type;
+	/** 2021-06-21 홍승비 - 게시판 메일알림 컬럼 추가 (게시알림, 수정알림, 댓글알림) */
+	private String mailFG_Post;
+	private String mailFG_Mod;
+	private String mailFG_Comment;
 	
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
@@ -539,6 +543,25 @@ public class BoardPropertyVO {
 	}
 	public void setType(String type) {
 		this.type = type;
+	}
+	
+	public String getMailFG_Post() {
+		return mailFG_Post;
+	}
+	public void setMailFG_Post(String mailFG_Post) {
+		this.mailFG_Post = mailFG_Post;
+	}
+	public String getMailFG_Mod() {
+		return mailFG_Mod;
+	}
+	public void setMailFG_Mod(String mailFG_Mod) {
+		this.mailFG_Mod = mailFG_Mod;
+	}
+	public String getMailFG_Comment() {
+		return mailFG_Comment;
+	}
+	public void setMailFG_Comment(String mailFG_Comment) {
+		this.mailFG_Comment = mailFG_Comment;
 	}
 	
 }

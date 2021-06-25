@@ -120,6 +120,7 @@
 	                    else {
 	                        document.getElementById("AddressList").style.border = "";
 	                        document.getElementById("AddressList").innerHTML = "<table class='mainlist' style='width:100%;'><tr><td style='color:gray;border:0px'> " + "<spring:message code='ezPersonal.t20005' />" + "</td></tr></table>";
+	                        document.getElementById("tblPageRayer").innerHTML = "";
 	                    }
 
 	                    g_xmlHTTP = null;                    

@@ -2439,4 +2439,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 				
 		return resultJson;
 	}
+	
+	public void addBoardMailFGColumn() throws Exception {
+		ezCommonDAO.addBoardMailFGColumn();
+	}
 }

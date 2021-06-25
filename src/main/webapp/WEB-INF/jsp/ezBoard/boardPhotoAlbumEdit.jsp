@@ -12,7 +12,9 @@
 		    var pTitle = "";
 		    var pContent = "";
 		    var pMode = "";
+		    var isAllGroupBoard = "";
 		    var ReturnFunction;
+		    
 		    window.onload = function () {
 		        try {
 		            ReturnFunction = parent.photoalbumedit_dialogArguments[1];
@@ -21,12 +23,14 @@
 		            pTitle = parent.photoalbumedit_dialogArguments[0][2];
 		            pContent = parent.photoalbumedit_dialogArguments[0][3];
 		            pMode = parent.photoalbumedit_dialogArguments[0][4];
+		            isAllGroupBoard = parent.photoalbumedit_dialogArguments[0][5];
 		        } catch (e) {
 		            pBoardID = dialogArguments[0];
 		            pItemID = dialogArguments[1];
 		            pTitle = dialogArguments[2];
 		            pContent = dialogArguments[3];
 		            pMode = dialogArguments[4];
+		            isAllGroupBoard = dialogArguments[5];
 		        }
 		
 		        try {
@@ -75,6 +79,8 @@
 		        if (xmlhttp.responseText == "OK") {
 		            alert("<spring:message code='ezBoard.t1015'/>");
 		            
+		            sendBoardAlertMail("modify", pBoardID, pItemID, isAllGroupBoard);
+		            
 		            /* 2019-01-15 홍승비 - 앨범수정 후 DB에 게시물 수정일자 업데이트 */
                     $.ajax({
 						type : "POST",
@@ -104,7 +110,23 @@
 		        else
 		            window.close();
 		    }
-		
+		    
+	        /* 2021-06-22 홍승비 - 게시판 메일알림 함수 추가, 비동기로 백그라운드 동작 */
+	        function sendBoardAlertMail(pMode, pBoardID, pItemID, pIsAllGroupBoard) {
+		        $.ajax({
+					type : "POST",
+					dataType : "text",
+					async : true,
+					url : "/ezBoard/sendBoardAlertMail.do",
+					data : {
+						mode : pMode,
+						boardID : pBoardID,
+						itemID : pItemID,
+						isAllGroupBoard : pIsAllGroupBoard
+					}
+				});
+	        }
+	        
 		</script>
 	</head>
 	<body class="popup">

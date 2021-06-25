@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -1178,6 +1179,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardInfo.setReplyNotify(strProp.getReplyNotify());
 			boardInfo.setGuBun(strProp.getGuBun());
 			boardInfo.setUrl(strProp.getUrl());
+			boardInfo.setApprFlag(strProp.getApprFlag());
 			boardInfo.setApprMail_FG(strProp.getApprMailFlag());
 			boardInfo.setAttributeYN(strProp.getAttributeYN());
 			boardInfo.setLikeFlag(strProp.getLikeFlag());
@@ -6657,6 +6659,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		String itemID = request.getParameter("itemID");
 		String boardID = request.getParameter("boardID");
+		String isAllGroupBoard = request.getParameter("isAllGroupBoard");
 		String boardIDEncode = URLEncoder.encode(boardID, "UTF-8");
 		String g_ImageUrl = "";
 		StringBuilder listImages = new StringBuilder();
@@ -6682,6 +6685,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("imageCount", imageCount);
 		model.addAttribute("itemID", itemID);
 		model.addAttribute("boardID", boardID);
+		model.addAttribute("isAllGroupBoard", isAllGroupBoard);
 		model.addAttribute("g_ImageUrl", g_ImageUrl);
 		model.addAttribute("listImages", listImages.toString());
 		model.addAttribute("imageID", imageID.toString());
@@ -9768,5 +9772,279 @@ public class EzBoardController extends EgovFileMngUtil{
 		logger.debug("checkMyBoardExist ended.");
 		return result;
 	}
+	
+	/**
+	 * 2021-06-21 홍승비 - 게시판 메일알림 메일 발송 컨트롤러 (게시알림, 수정알림, 댓글알림)
+	 * */
+	@RequestMapping(value = "/ezBoard/sendBoardAlertMail.do", method = RequestMethod.POST)
+	@ResponseBody
+	public void sendBoardAlertMail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("sendBoardAlertMail started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String boardID = request.getParameter("boardID");
+		String itemID = request.getParameter("itemID");
+		String pIsAllGroupBoard = request.getParameter("isAllGroupBoard");
+		String pMode = request.getParameter("mode");
+		
+		// 게시판 옵션에서 메일알림을 사용하는 경우에만 발송한다.
+		BoardPropertyVO boardProperty = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
+		List<HashMap<String, String>> possibleUserInfo = new ArrayList<HashMap<String, String>>();
+		HashMap<String, String> recipientIDs = new HashMap<String, String>();
+		String companyID = pIsAllGroupBoard.equals("Y") ? "" : boardProperty.getCompanyID(); // 회사ID의 경우, 그룹사게시판이 아닌 경우에만 게시판이 속한 회사ID로 세팅한다.
+		
+		// 신규 게시물 등록, 수정 알림에 대한 수신인 ID 리턴
+		if ((pMode.equals("new") && boardProperty.getMailFG_Post() != null && boardProperty.getMailFG_Post().equals("Y")) || (pMode.equals("modify") && boardProperty.getMailFG_Mod() != null && boardProperty.getMailFG_Mod().equals("Y"))) {
+			// 표준모듈(포탈, 게시판)에 회사 전환 기능이 없으므로, 사간겸직에 대해서는 권한을 체크하지 않는다. (회사 변경기능이 있다면 해당 회사에 대응하도록 수정 필요)
+			possibleUserInfo = ezBoardService.getBoardUserInfoForMailSend(pIsAllGroupBoard, commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()), companyID, userInfo.getTenantId());
+			
+			// 관리자권한이 있는 사원 + 해당 회사 소속 사원 정보를 리턴받는다.
+			for (int i = 0; i < possibleUserInfo.size(); i++) {
+				String userID = possibleUserInfo.get(i).get("CN");
+				String userName = possibleUserInfo.get(i).get("USERNAME");
+				String mail = possibleUserInfo.get(i).get("MAIL");
+				String deptID = possibleUserInfo.get(i).get("DEPTID");
+				String userCompanyID = possibleUserInfo.get(i).get("COMPANYID");
+				String deptPathCode = possibleUserInfo.get(i).get("DEPT_CD_PATH");
+				String rollInfo = possibleUserInfo.get(i).get("ROLLINFO");
+				String value = userName + ";;" + mail;
+				
+				// userID가 메일발송 대상에 없는 경우 권한체크 진행
+				if (!recipientIDs.containsKey(userID)) {
+					boolean canAccess = accessListViewFGCheck(boardID, boardProperty.getGuBun(), userID, deptID, deptPathCode, rollInfo, pIsAllGroupBoard, userCompanyID, userInfo.getTenantId());
+					
+					if (canAccess) {
+						recipientIDs.put(userID, value);
+					}
+				}
+			}
+		}
+		// 게시물 댓글 알림에 대한 수신인 ID 리턴
+		else if (pMode.equals("comment") && boardProperty.getMailFG_Comment() != null && boardProperty.getMailFG_Comment().equals("Y")) {
+			possibleUserInfo = ezBoardService.getCommentNoticeMail(boardID, itemID, userInfo.getLang(), userInfo.getTenantId());
+			
+			for (int i = 0; i < possibleUserInfo.size(); i++) {
+				String writerID = possibleUserInfo.get(i).get("WRITERID");
+				String writerName = possibleUserInfo.get(i).get("WRITERNAME");
+				String mail = possibleUserInfo.get(i).get("MAIL");
+				String value = writerName + ";;" + mail;
+				
+				recipientIDs.put(writerID, value);
+			}
+		}
+		// 메일발송 하지 않는 경우, 바로 리턴
+		else {
+			logger.debug("sendBoardAlertMail ended. (mail alert is not used for mode [" + pMode + "])");
+			return;
+		}
+		
+		// 게시물 링크, 게시일 정보 등 생성
+		BoardListVO boardItem = ezBoardService.getBrdGetItemInfo(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
+		String strURL = "Item_View_New('" + boardID + "','" + itemID + "','" + boardProperty.getGuBun() + "');";
+        strURL = "<span id='board_a' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onClick=\"" + strURL + "\">";
+        String strDate = commonUtil.getDateStringInUTC(boardItem.getWriteDate(), userInfo.getOffset(), false); 
+        strDate += "( " + userInfo.getOffset().split("\\|")[1] + " )";
+        
+		// 메일 본문 생성
+		StringBuilder bodyContent = new StringBuilder();
+		String content = "";
+		String subject = "";
+		
+		if (pMode.equals("new")) { // 게시판 게시알림 (아래 게시판에 새 게시글이 게시되었습니다.)
+			bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.t250", userInfo.getLocale()) + "<br><br>");
+	        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", userInfo.getLocale()) + boardProperty.getBoardName());
+	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t252", userInfo.getLocale()) + strDate);
+	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + (userInfo.getTitle() == null || "null".equals(userInfo.getTitle()) ? "" : userInfo.getTitle()) + ", " + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
+	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + commonUtil.cleanValue(boardItem.getTitle()) + "</a>");
+	        
+	        content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
+	        subject = "[" + egovMessageSource.getMessage("ezBoard.t255", userInfo.getLocale()) + boardProperty.getBoardName() + "] " + boardItem.getTitle();
+		}
+		else if (pMode.equals("modify")) { // 게시판 수정알림 (아래 게시판의 게시물이 수정되었습니다.)
+			bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.HSBMail05", userInfo.getLocale()) + "<br><br>");
+	        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", userInfo.getLocale()) + boardProperty.getBoardName());
+	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t252", userInfo.getLocale()) + strDate);
+	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + (userInfo.getTitle() == null || "null".equals(userInfo.getTitle()) ? "" : userInfo.getTitle()) + ", " + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
+	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + commonUtil.cleanValue(boardItem.getTitle()) + "</a>");
+	        
+	        content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
+	        subject = "[" + egovMessageSource.getMessage("ezBoard.HSBMail07", userInfo.getLocale()) + boardProperty.getBoardName() + "] " + boardItem.getTitle();
+		}
+		else if (pMode.equals("comment")) { // 게시판 댓글알림 (아래 게시판의 게시물에 댓글이 등록되었습니다.)
+			bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.HSBMail06", userInfo.getLocale()) + "<br><br>");
+	        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", userInfo.getLocale()) + boardProperty.getBoardName());
+	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t252", userInfo.getLocale()) + strDate);
+	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + (userInfo.getTitle() == null || "null".equals(userInfo.getTitle()) ? "" : userInfo.getTitle()) + ", " + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
+	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + commonUtil.cleanValue(boardItem.getTitle()) + "</a>");
+	        
+	        content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
+	        subject = "[" + egovMessageSource.getMessage("ezBoard.HSBMail08", userInfo.getLocale()) + boardProperty.getBoardName() + "] " + boardItem.getTitle();
+		}
+		
+		// 수신인 ID에 대해 개별 메일발송 실행
+		Iterator<String> keys = recipientIDs.keySet().iterator();
+		while (keys.hasNext()) {
+			String key = keys.next(); // userID
+			String value = recipientIDs.get(key); // userName;;mail
+			String userName = value.split(";;")[0];
+			String mail = value.split(";;")[1];
+					
+			InternetAddress from = new InternetAddress();
+        	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+        	from.setAddress(userInfo.getEmail());
+        	
+			InternetAddress to = new InternetAddress();
+        	to.setPersonal(userName, "UTF-8");
+        	to.setAddress(mail);
+        	
+        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
+		}
+		
+		logger.debug("sendBoardAlertMail ended.");
+	}
+	
+	/**
+	 * 게시판 게시물 접근 + 리스트보기 권한 체크하여 권한이 허용인 개인 ID를 리스트로 리턴
+	 */
+	public boolean accessListViewFGCheck(String boardID, String gubun, String userID, String deptID, String deptPathCode, String rollInfo, String isAllGroupBoard, String companyID, int tenantID) throws Exception {
+		logger.debug("accessListViewFGCheck started");
+		
+		// 현재 소속 회사의 사내겸직이 존재하면 사내겸직부서ID와 그 상위부서ID까지 권한체크에 포함
+		boolean isBoardGroup = false; // 게시물 등록은 하위게시판에서 실행됨
+		String deptPath = deptPathCode;
+		StringBuilder deptPathOrgan = new StringBuilder();
+		List<String> addJobDeptList = new ArrayList<String>();
+		
+		/* 2019-09-24 홍승비 - 개인ID 이후, 부서ID 이전 위치에 직위+직책ID (사내겸직 직위 포함) 추가 */
+		String userJJID = ezBoardService.getUserJJID(userID, companyID, tenantID);
+		
+		for (int ch = 0; ch < deptPath.split(",").length; ch++) {
+			if (ch == 0) { // 0 : userID
+				deptPathOrgan.append(deptPath.split(",")[ch].trim());
+				deptPathOrgan.append(",").append(userJJID);
+			} else {
+				deptPathOrgan.append(",").append(deptPath.split(",")[deptPath.split(",").length - (ch)].trim());
+			}
+		}
+		
+		String userDeptPath = deptPathOrgan.toString();
+		addJobDeptList.add(userDeptPath);
+		
+		//logger.debug("accessListViewFGCheck for userID[" + userID + "] userDeptPath in web    ::    " + userDeptPath);
+		
+		List<String> addJobList = ezBoardService.getPDOAddJobDeptID(userID, companyID, tenantID);
+		StringJoiner addJobStr = new StringJoiner(",");
+		addJobStr.add(deptID);
+		if (addJobList != null && addJobList.size() > 0) {
+			for (int i = 0; i < addJobList.size(); i++) {
+				addJobStr.add(addJobList.get(i));
+				String upperDept = ezBoardService.getUpperDeptID(addJobList.get(i), tenantID);
+				
+				if (upperDept != null && !upperDept.equals("")) {
+					boolean loopContinue = true;
+					StringJoiner upperDeptStr = new StringJoiner(",");
+					upperDeptStr.add(upperDept);
+					
+					while (loopContinue) {
+						String upperDeptLoop = ezBoardService.getUpperDeptID(upperDept, tenantID);
+						if (upperDeptLoop != null && !upperDeptLoop.equals("")) {
+							upperDeptStr.add(upperDeptLoop);
+							upperDept = upperDeptLoop;
+						} else {
+							loopContinue = false;
+						}
+					}
+					addJobDeptList.add(addJobList.get(i) + "," + upperDeptStr.toString());
+				}
+			}
+		}
+		
+		Set<String> readFGSetDept = new HashSet<String>();
+		Set<String> readFGSetJJ = new HashSet<String>();
+		Set<String> userJJIDSet = new HashSet<String>(Arrays.asList(userJJID.split(",")));
+		
+		boolean rtv = false;
+		boolean isUserHasACL = false;
+		String tempDeptList = addJobStr.toString();
+		int addJobDeptListSize = addJobDeptList.size();
+		for (int jl = 0; jl < addJobDeptListSize; jl++) {
+			if (isUserHasACL == false) {
+				int addJobDeptListPathSize = addJobDeptList.get(jl).split(",").length;
+				for (int i = 0; i < addJobDeptListPathSize; i++) {
+					int isEqualDept = 0;
+					for (int j = 0; j < tempDeptList.split(",").length; j++) {
+						if(addJobDeptList.get(jl).split(",")[i].trim().equalsIgnoreCase(tempDeptList.split(",")[j])) {
+							isEqualDept = 1;
+							break;
+						} else {
+							isEqualDept = 0;
+						}
+					}
+					
+					int isDept = ezBoardService.isDeptChk(addJobDeptList.get(jl).split(",")[i].trim(), tenantID);
+					
+					/* 2019-09-24 홍승비 - 권한그룹을 포함하여 게시판그룹 관리자권한 체크 */
+					// 권한그룹 적용 시 개인권한이 다수 존재 가능하므로, 권한을 리스트로 가져온 뒤 '허용(OK)'기준으로 취합한다.
+					String boardGroupAdmin_FG_New = "";
+					List<String> boardGroupAdmin_FG_List = ezBoardService.checkIfBoardGroupAdminNew(boardID, addJobDeptList.get(jl).split(",")[i].trim(), tenantID, isDept, isEqualDept, isBoardGroup);
+					if (boardGroupAdmin_FG_List != null && boardGroupAdmin_FG_List.size() > 0) { // 권한이 없으면 공백값을 유지 > 다음 루프 진행
+						if (boardGroupAdmin_FG_List.contains("OK")) { // 동일한 우선순위의 권한에 대해서, OK가 하나라도 존재한다면 OK로 판정
+							boardGroupAdmin_FG_New = "OK";
+						} else {
+							boardGroupAdmin_FG_New = "NO";
+						}
+					}
+					
+					if (rollInfo != null && ((rollInfo.toLowerCase().indexOf("c=1") > -1 || boardGroupAdmin_FG_New.equals("OK")) ||
+							(isAllGroupBoard.equals("N") && (rollInfo.toLowerCase().indexOf("k=1") > -1 || rollInfo.toLowerCase().indexOf("n=1") > -1)))) {
+						logger.debug("user has admin roll, accessListViewFGCheck ended");
+						return true;
+					} else {
+						List<String> resultNewList = new ArrayList<String>();
+						boolean resultNew = false;
+						
+						// 접근 + 리스트보기 '허용' 기준으로 취합을 위해 리스트로 리턴 (QNA게시판인 경우, 관리자 권한을 체크함)
+						resultNewList = ezBoardService.getBoardAccessListViewFG(boardID, gubun, addJobDeptList.get(jl).split(",")[i].trim(), tenantID, isDept, isEqualDept);
+						
+						if (resultNewList != null && resultNewList.size() > 0) { // 넘겨준 ACCESSID에  대하여 접근 + 리스트보기권한 레코드가 존재
+							if (resultNewList.contains("true")) { // 접근 + 리스트보기권한 '허용' 기준으로 취합
+								resultNew = true;
+							} else { // '허용'이 아예 없는 경우 '불가'로 판정
+								resultNew = false;
+							}
+							
+							/* 2019-09-24 홍승비 - 읽기권한 체크를 숫자가 아닌 문자열(true/false)로 수정 */
+							if (addJobDeptList.get(jl).split(",")[i].equals(userID)) { // 개인권한
+								rtv = resultNew;
+								isUserHasACL = true;
+								break;
+							}
+							else if (userJJIDSet.contains(addJobDeptList.get(jl).split(",")[i].trim())) { // 직위, 직책권한
+								readFGSetJJ.add(String.valueOf(resultNew));
+								// 직위, 직책권한은 전부 루프돌때까지 break 안함
+							}
+							else { // 부서권한
+								readFGSetDept.add(String.valueOf(resultNew));
+								break;
+							}
+						} // 권한이 아예 존재하지 않는 경우, 다음 루프 진행
+					}
+				}
+			}
+		}
+		
+		// 개인권한이 존재하지 않고, 각 사내겸직의 부서경로에 대하여 가져온 접근 + 리스트보기권한 중 하나라도 true이면 true 리턴
+		if (isUserHasACL == false) {
+			if (readFGSetJJ.size() > 0 && readFGSetJJ.contains("true")) { // 직책, 직위권한이 존재
+				rtv = true;
+			}
+			else if (readFGSetJJ.size() == 0 && readFGSetDept.contains("true")) { // 직책, 직위권한 없고 부서권한이 존재
+				rtv = true;
+			}
+		} // 개인, 직위/직책, 부서권한 전부 존재하지 않는다면 false
+		
+		logger.debug("accessListViewFGCheck for userID[" + userID + "] ended. rtv   ::   " + rtv);
+		return rtv;
+    }
 }
 
