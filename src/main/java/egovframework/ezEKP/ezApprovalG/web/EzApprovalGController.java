@@ -3188,6 +3188,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String checkLine = "";
 		
+		if (StringUtils.isBlank(fileName)) {
+		    fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
+		}
+		
 		logger.debug("docID : " + docID);
 		logger.debug("docStatus : " + docStatus);
 		logger.debug("filePath : " + filePath);
