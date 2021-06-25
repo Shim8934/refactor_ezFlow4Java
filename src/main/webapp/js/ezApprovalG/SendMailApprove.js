@@ -65,6 +65,10 @@ function SendMailApproveMember(aprLineList,  aprsn, pdrafttitle, pdraftname, pdr
     var nextID = "";
     var sn = objNodes.length - aprsn - 1;
     var nextMethod = ""
+
+    if (!!isNextBujea(aprLineList, sn)) {
+        sn -= 1;
+    }
     
     if (sn >= 0) {
         nextMethod = trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[sn])[0])[11]));
@@ -80,6 +84,24 @@ function SendMailApproveMember(aprLineList,  aprsn, pdrafttitle, pdraftname, pdr
         }
         continusendMail(nextMethod, aprLineList, sn);
     }
+}
+
+function isNextBujea(aprLineList, sn) {
+    if (sn < 0) {
+        return "";
+    }
+
+    var nextUser = SelectNodes(aprLineList, "LISTVIEWDATA/ROWS/ROW")[sn];
+    var nextUserID = getNodeText(GetElementsByTagName(nextUser, "DATA4")[0]);
+    var nextUserDeptID = getNodeText(GetElementsByTagName(nextUser, "DATA6")[0]);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("get", "/ezApprovalG/getBujaeInfo.do?userID=" + nextUserID + "&deptID=" + nextUserDeptID, false);
+    xhr.send();
+
+    var res = xhr.responseText;
+
+    return res;
 }
 
 function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck, Method) {

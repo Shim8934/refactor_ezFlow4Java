@@ -761,4 +761,6 @@ public interface EzApprovalGService {
 	public String getOrgDocIDByMode(String docID, String mode, String orgCompanyID, int tenantID) throws Exception;
 	
 	public String getChaebunDept(String deptId, String orgCompanyID, int tenantID) throws Exception;
+	
+	public String getBujaeInfo(String userID, String deptID, int tenantID, String offset, String companyID) throws Exception;
 }

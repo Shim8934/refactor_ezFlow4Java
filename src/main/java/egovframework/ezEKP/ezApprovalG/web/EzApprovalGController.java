@@ -11266,4 +11266,21 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("getChaebunDept ended.");
 		return infoXML;
 	}
+	
+	@RequestMapping(value = "/ezApprovalG/getBujaeInfo.do", method = RequestMethod.GET, produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getBujaeInfo(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception{
+	    logger.debug("getBujaeInfo started.");
+	    
+	    LoginVO userInfo = commonUtil.userInfo(loginCookie);
+	    
+	    String userID = request.getParameter("userID");
+	    String deptID = request.getParameter("deptID");
+	    
+	    String result = ezApprovalGService.getBujaeInfo(userID, deptID, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getCompanyID());
+	    
+	    logger.debug("getBujaeInfo ended.");
+	    
+	    return result;
+	}
 }
