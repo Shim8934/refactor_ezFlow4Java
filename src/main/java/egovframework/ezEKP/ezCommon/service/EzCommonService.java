@@ -7,6 +7,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
 import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -317,4 +320,6 @@ public interface EzCommonService {
 	public void createSerialnumgenGrant() throws Exception;
 	
 	public void insertApprSatViewerConfig() throws Exception;
+
+	public JSONObject attachWebFolderFile(JSONArray fileListJson, LoginVO userInfo, String param, HttpServletRequest request);
 }

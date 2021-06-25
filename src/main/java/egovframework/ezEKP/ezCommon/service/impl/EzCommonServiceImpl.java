@@ -20,6 +20,8 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.KlibUtil;
 
 import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -2398,5 +2400,43 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			
 			ezCommonDAO.insertApprSatViewerConfig(map);
 		}
+	}
+	
+	@Override
+	public JSONObject attachWebFolderFile(JSONArray fileListJson, LoginVO loginVO, String param, HttpServletRequest request) {
+		
+		JSONObject resultJson = new JSONObject();
+		String downloadDIR = "";
+		if (param == ""){
+			param = "upload_mail.ROOT";
+		} else if(param.equals("BOARD")){
+			param = "upload_board.ROOT";
+		} else if(param.equals("APR")){
+			param = "upload_approvalG.ROOT";
+		} else if(param.equals("COMMUNITY")){
+			param = "upload_community.ROOT";
+		} else if(param.equals("TASK")){
+			param = "upload_task.ROOT";
+		} else if(param.equals("SCHEDULE")){
+			param = "upload_schedule.ROOT";
+		}
+		String realPath = commonUtil.getRealPath(request);
+		String paramPath = commonUtil.getUploadPath(param, loginVO.getTenantId());
+		
+		downloadDIR = paramPath + "/tempWebfolderFileUpload/";
+		
+		String status = "OK";
+		List<String> downloadPath = new ArrayList<String>();
+		
+		try {
+			downloadPath = commonUtil.attachWebFolderFile(fileListJson, downloadDIR, loginVO, realPath);
+		} catch (Exception e) {
+			e.printStackTrace();
+			status = "ERROR";
+		}
+		resultJson.put("status", status);
+		resultJson.put("downloadPath", downloadPath);
+				
+		return resultJson;
 	}
 }

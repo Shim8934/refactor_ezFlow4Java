@@ -61,6 +61,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/AttachMain_CK.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/AttachItem_CK.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/webfolderFilePick.js')}"></script>
         <c:if test="${isCrossBrowser != true}">
         	<script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
         </c:if>
@@ -189,7 +190,15 @@
         var previewChk = false;
         var ReadMailOpenNewWin;
         var g_useAdditionalInfo = Boolean(${useAdditionalInfo});
-        
+    	
+    	// 웹폴더첨부용 변수
+        var pickerData = "";
+     	// 웹폴더첨부를 위한 파라미터 설정
+		pickerData = {
+				'confirmBT' : doPolarisFileUpload_ConfirmHandler, 	// 웹폴더첨부 확인 시 실행할 함수
+				'cancelBT' : webFolderCancelBT 						// 웹폴더첨부 취소 시 실행할 함수
+		};
+     	
 	    window.onload = function () {
 	        if (!CrossYN()) {
 	            document.all.EzHTTPTrans.SetBigLang = "${userLang}" == "1" ? 1 : 0;
@@ -2289,7 +2298,81 @@
 				Save_onClick('preview');
 			}
 		}
+		function filePickerOpen() {
+	    	filePick.open(pickerData);
+	    }
+	    
+		function doPolarisFileUpload_ConfirmHandler(selectedFileInfo) {
+	        // HTTP download for polaris files
+	        
+	        var webFolderFileList = JSON.parse(selectedFileInfo.fileList);
+	    	var webFolderFileListCnt = webFolderFileList.length;
+	    	
+		    document.getElementById("mailPanel").style.display = "";
+		    document.getElementById("loadingLayer").style.display = "";
+		    document.getElementById("messageInSending").style.display = "none";
+		    
+			$.ajax({
+				type : "GET",
+				dataType : "JSON",
+				async : true,
+				url : "/ezCommon/attachWebFolderFile.do",
+				data : {
+					fileList: JSON.stringify(webFolderFileList),
+					param:""
+				},
+				success : function(result) {
+					if (result.status != "ERROR"){
+						fileList = result.fileList;
+						var pstrXML = "";
+	
+			            pstrXML += "<LISTVIEWDATA><HEADERS>";
+			            pstrXML += "<HEADER><NAME>" + strLang1 + "</NAME><WIDTH>100</WIDTH></HEADER>";
+			            pstrXML += "<HEADER><NAME>" + strLang3 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+			            pstrXML += "</HEADERS><ROWS>";
+			            
+			            for (var i = 0; i < fileList.length; i++) {
+				            var filepath = fileList[i].downloadLink;
+				            var filename = fileList[i].fileName;
+				            var filesize = fileList[i].fileSize;
+				
+				            pstrXML += "<ROW><CELL><VALUE><![CDATA[" + filename + "]]></VALUE>";
+				            pstrXML += "<DATA1><![CDATA[" + filename + "]]></DATA1>";
+				            pstrXML += "<DATA2><![CDATA[" + filepath + "]]></DATA2>";
+				            pstrXML += "<DATA3></DATA3>";
+				            pstrXML += "<DATA4>BOARD</DATA4>";
+				            pstrXML += "<DATA5>N</DATA5>";
+				            pstrXML += "<DATA6>" + filesize + "</DATA6>";
+				            if (filesize > BigSizeAttachSize )
+				                pstrXML += "<DATA7>Y</DATA7>";
+				            else
+				                pstrXML += "<DATA7>N</DATA7>";
+				            pstrXML += "</CELL><CELL>";
+				            pstrXML += "<VALUE>" + filesize + " Bytes" + "</VALUE>";
+				            pstrXML += "</CELL></ROW>";
+			            }
+	
+				        pstrXML += "</ROWS></LISTVIEWDATA>";
+				        objXML = loadXMLString(pstrXML);
+				        dadiframe.fileupload2(objXML);	    
+				        
+					} else {
+						alert("<spring:message code='ezEmail.lhm14' />");
+					}
+			        document.getElementById("mailPanel").style.display = "none";
+			        document.getElementById("loadingLayer").style.display = "none";	   
+				}, error: function(error) {
+					alert("<spring:message code='ezEmail.lhm14' />");
+					return;
+				}
+	       });
+	    }
 		
+		// 웹폴더첨부 취소 시 동작. 필요하다면 input file 부분을 초기화한다.
+	    function webFolderCancelBT() {
+	    	return;
+	    }
+	    
 	    </script>
         <c:if test="${isCrossBrowser != true}">
         <script language="javascript" for="EzHTTPTrans" event="AttachAddFile(filename)">  
@@ -2637,6 +2720,11 @@
 	  	        MailToMe_Onclick();
          	}
 	    </script>
+	    <%-- 웹폴더 첨부 레이어팝업을 위한 태그 추가--%>
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel_sub">&nbsp;</div>	
+		<div class="layerpopup"  style="z-index:2000; position:absolute; display:none; overflow:hidden;" id="iFramePanel_sub">
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer_sub"></iframe>
+		</div>
 	</body>
 	<xmp id="AttachXmlList" style="display:none;">
 	   ${attach}
