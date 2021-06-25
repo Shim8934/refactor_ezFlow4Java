@@ -347,6 +347,7 @@
  	var usedTheme = "<c:out value='${usedTheme}'/>";
  	var WorkspaceUrl = "${workspaceHostUrl}"; // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
     var workspaceContextRootUrl = "${workspaceContextRootUrl}";
+    var userLang = "<c:out value='${userLang}'/>";
  	
  	var quickLinkPage = {
  		current: 1,
