@@ -173,6 +173,19 @@ var getSubBoards = function(event) {
 						
 						$("#\\" + boardId + "").attr("gubun", board.gubun);
 					}
+				}).on("open_node.jstree", function(){
+					var resultCount = result.length;
+					
+					for (var i = 0; i < resultCount; i++) {
+						var board = result[i];
+						var boardId = board.id.replace("}", "\\}");
+						if (board.boardColor != null && board.boardColor != "#000000") {
+							//board.id.querySelectorAll("jstree-anchor").style.color = board.boardColor;
+							$("#\\" + boardId + "").find(".jstree-anchor").css("color", board.boardColor);
+						}
+						
+						$("#\\" + boardId + "").attr("gubun", board.gubun);
+					}
 				});
 			}
 		}
