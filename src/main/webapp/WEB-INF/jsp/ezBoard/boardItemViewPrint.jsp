@@ -319,8 +319,8 @@
 		        <td style="height:30px">
 		          <table class="file2" style="height:100%;">
 		            <tr>
-		              <th style="height:100%; "><spring:message code='ezBoard.jjh06'/></th>
-		              <td style="height:100%; width:100%; "><div id="onelinereplylist" style="OVERFLOW:visible;  background-color:white; text-align:left"></div></td>
+		              <th class="boardItemViewPrint_cssThEn" style="height:100%; "><spring:message code='ezBoard.jjh06'/></th>
+		              <td class="boardItemViewPrint_cssTdEn" style="height:100%; width:100%; "><div id="onelinereplylist" style="OVERFLOW:visible;  background-color:white; text-align:left"></div></td>
 		            </tr>
 		          </table>
 		        </td>
@@ -331,8 +331,8 @@
 		        <td style="height:20px" class="pad1">
 		          <table class="file2" style="height:100%">
 		            <tr>
-		              <th style="height:100%; "><spring:message code='ezBoard.t10025'/></th>
-		              <td style="width:100%; height:100%; "><div id="lstAttachLink" style="padding-top:3px;padding-bottom:3px;padding-left:3px;OVERFLOW:visible;  background-color:white; text-align:left"></div></td>
+		              <th class="boardItemViewPrint_cssThEn" style="height:100%; "><spring:message code='ezBoard.t10025'/></th>
+		              <td class="boardItemViewPrint_cssTdEn" style="width:100%; height:100%; "><div id="lstAttachLink" style="padding-top:3px;padding-bottom:3px;padding-left:3px;OVERFLOW:visible;  background-color:white; text-align:left"></div></td>
 		              <td id="ItemLevel" style="display:none"></td>
 		            </tr>
 		          </table>
