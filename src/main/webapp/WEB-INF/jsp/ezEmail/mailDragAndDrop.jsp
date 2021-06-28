@@ -659,6 +659,7 @@
 		        var tempfilesize = 0;
 		        var tempbigfilesize = 0;
 		        var bigFileCheck = false;
+		        var newBigAttachCount = 0;
 
 		        for (var i = 0; i < attachFileXml.getElementsByTagName("ROW").length; i++) {
 		            var filelistsize = Number(getNodeText(attachFileXml.getElementsByTagName("DATA6").item(i)));
@@ -669,8 +670,9 @@
 		            } else {
 		                tempfilesize += filelistsize;
 		            }
+		            newBigAttachCount++;
 		        }
-
+		        
 		        if (isbigyn == "Y") {
 		            bigFileCheck = true;
 		        }
@@ -714,6 +716,9 @@
 		        }
 
 		        if (bigFileCheck) {
+		        	if(!bigFileAttachCountCheck(newBigAttachCount)) {
+		        		return;
+		        	}
 		            var bigFileAttachChk = confirm(window.parent.BigSizeAttachMBSize + "MB" + strLang78 + window.parent._pBigAttachDownloadDay + strLang26 + strLang79);
 		            
 		            if (!bigFileAttachChk) {
