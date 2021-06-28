@@ -187,8 +187,9 @@
             try { OpenWin.focus(); } catch (e) { }
         }
 	    
-	    function getFileList(a){
-	    	folderId = a;
+	    function getFileList(newFolderId){
+	    	var oldFolderId = folderId;
+	    	folderId = newFolderId;
 	    	if(folderId == "") {
 	    		alert(messages.strLang14);
 	    		return;
@@ -207,7 +208,7 @@
 				async: true,
 				url : url,
 				data : { 
-					 "folderId"   		: a,
+					 "folderId"   		: newFolderId,
 					 "folderType" 		: folderType,
 					 "currPage"   		: pagination.currentPage(),
 					 "listCount"  		: pagination.listSize(),
@@ -224,7 +225,7 @@
 					},
 				dataType: "JSON",
 				success : function (data) {
-					successFile(data, a);
+					successFile(data, newFolderId, oldFolderId);
 					document.getElementById("countSpan").style.display = "none";
 				},
 				error : function(error) {
@@ -232,7 +233,7 @@
 			});
 		}
 	    
-		function successFile(data, a) {
+		function successFile(data, newFolderId, oldFolderId) {
 			if (data.status == "error") {
 				if (data.code == 1) {
 					console.log("<spring:message code='ezWebFolder.t306' />");
@@ -241,11 +242,12 @@
 					alert("<spring:message code='ezWebFolder.t305' />");
 					return;
 				} else if (data.code == 3) {
+					folderId = oldFolderId;
 					alert("<spring:message code='ezWebFolder.t300' />");
 					return;
 				}
 			}
-			folderId = a;
+			folderId = newFolderId;
 			userId = data.data.userId;
 			var result = data.data;
 			
@@ -383,11 +385,10 @@
 		}
 		
 		function nameFileList(param) {
-			folderId = param;
 			searchContext.clearRequirement();
 			$("#idSelect").val("");
-			getFileList(folderId);
-			if (folderType == "C" && folderId == rootFolderId){
+			getFileList(param);
+			if (folderType == "C" && param == rootFolderId){
 				$("#taskRootFolder").val(folderId).prop("selected",true);
 			}
 		}
