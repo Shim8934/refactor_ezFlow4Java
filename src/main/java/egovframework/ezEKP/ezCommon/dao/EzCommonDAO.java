@@ -2034,4 +2034,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addBoardMailFG_CommentColumn");
 		}
 	}
+
+	/* 2021-06-28 홍승비 - 커뮤니티 공지사항 부모게시물 정보 칼럼 추가 */
+	public void addCommNoticeUpperNoColumn() {
+		try {
+			select("EzCommonDAO.checkCommNoticeUpperNoColumn");
+		} catch (Exception e) {
+			logger.debug("TBL_C_Board UPPERNO column doesn't exist. creating the column...");
+			update("EzCommonDAO.addCommNoticeUpperNoColumn");
+		}
+	}
 }

@@ -3687,7 +3687,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 
         	String nowDate = commonUtil.getTodayUTCTime("");
         	
-        	bbsEditOkInsert(bName.toUpperCase(), myRef, newStep, newLevel, attachList, number, textContent, nowDate, fileName, code, userInfo.getCompanyID(), userInfo.getId(), userNm, userNm2, title, maxIdFieldName, userInfo.getTenantId());
+        	/* 2021-06-28 홍승비 - mode가 write이고 no가 존재하는 답변 공지사항 등록 시, 부모 no 데이터를 UPPERNO 칼럼에 저장하도록 수정 */
+        	bbsEditOkInsert(bName.toUpperCase(), myRef, newStep, newLevel, attachList, number, textContent, nowDate, fileName, code, userInfo.getCompanyID(), userInfo.getId(), userNm, userNm2, title, maxIdFieldName, no, userInfo.getTenantId());
         	
         	try{
         		File dir = new File(commonUtil.detectPathTraversal(dirPath));
@@ -6797,7 +6798,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug("bbsEditOkSet2 ended.");
 	}
 	
-	public void bbsEditOkInsert(String bName, int myRef, int newStep, int newLevel, String attachList, int number, String textContent, String nowDate, String fileName, String code, String companyID, String id, String userNm, String userNm2, String title, String maxIdFieldName, int tenantID) throws Exception {
+	public void bbsEditOkInsert(String bName, int myRef, int newStep, int newLevel, String attachList, int number, String textContent, String nowDate, String fileName, String code, String companyID, String id, String userNm, String userNm2, String title, String maxIdFieldName, String no, int tenantID) throws Exception {
 		logger.debug("bbsEditOkInsert started.");
 /*		logger.debug("bName : " + bName + ", myRef : " + myRef + ", newStep : " + newStep + ", newLevel : " + newLevel + ", attachList : " + attachList + ", number : " + number);
 		logger.debug(", textContent : " + textContent + ", nowDate : " + nowDate + ", fileName : " + fileName + ", code : " + code + ", companyID : " + companyID + ", id : " + id);
@@ -6820,6 +6821,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_USERINFO_DISPLAYNAME2", userNm2);
 		map.put("v_TITLE", title);
 		map.put("v_MAXIDFIELDNAME", maxIdFieldName);
+		map.put("v_NO", no); // TBL_C_BOARD에 등록될 공지사항 답변인 경우, 전달받은 부모 공지사항의 no값이 존재한다면 UPPERNO 칼럼에 기록
 		map.put("tenantID", tenantID);
 		
 		ezCommunityDAO.bbsEditOkInsert(map);
@@ -7728,5 +7730,16 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		logger.debug("getReaderListCount ended");
 		return ezCommunityDAO.getReaderListCount(map);
+	}
+	
+	public int bbsGetReplyItemCnt(String itemNo, int tenantID) throws Exception {
+		logger.debug("getReaderListCount started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_NO", itemNo); // 커뮤니티 공지사항의 PRI KEY는 NO 하나
+		map.put("v_TENANTID", tenantID);
+		
+		logger.debug("getReaderListCount ended");
+		return ezCommunityDAO.bbsGetReplyItemCnt(map);
 	}
 }

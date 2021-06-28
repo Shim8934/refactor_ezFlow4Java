@@ -256,7 +256,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.createWebfolderNoInherit(); 				// 권한비상속			
     		ezCommonService.alterWebfolderApplyHistoryAddColumn();
     		
-    		ezCommonService.addBoardMailFGColumn(); //2021-06-21 홍승비 - 게시판 메일알림 옵션 추가
+    		ezCommonService.addBoardMailFGColumn(); // 2021-06-21 홍승비 - 게시판 메일알림 옵션 추가
+    		ezCommonService.addCommNoticeUpperNoColumn(); // 2021-06-28 홍승비 - 커뮤니티 공지사항 부모게시물 정보 칼럼 추가
     		
     	} catch (Exception e) {
     		e.printStackTrace();
