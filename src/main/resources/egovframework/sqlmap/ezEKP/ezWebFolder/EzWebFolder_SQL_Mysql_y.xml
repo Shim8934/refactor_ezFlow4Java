@@ -1720,6 +1720,15 @@
 				FILE_ID = #fileId#)
 				$query$
 		]]>
+		<isEqual property="folderId" compareValue="S">
+			SELECT 
+				FILE_NAME, FILE_PATH, FILE_SIZE  
+			FROM 
+				TBL_WEBFOLDER_FILE
+			WHERE 
+				FILE_ID = #fileId#
+				$query$
+		</isEqual>
 	</select>
     <select id="EzWebFolderDAO_y.getWebFolderUserGroupList" parameterClass="Map" resultClass="String">
     	<![CDATA[
@@ -1793,7 +1802,7 @@
 					</iterate>
 				AND 
 					folder.USE_STATUS = 'Y'
-				ORDER BY folder.FOLDER_NAME1
+				ORDER BY folder.folder_level, folder.FOLDER_NAME1
 			</isNotEqual>
 	    	<isEqual property="folderType" compareValue="S">
 	    		SELECT 
