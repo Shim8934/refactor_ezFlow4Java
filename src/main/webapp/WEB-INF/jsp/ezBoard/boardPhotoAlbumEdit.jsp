@@ -55,6 +55,12 @@
 		    function updatealbum() {
 		        var pTitle = document.getElementById("title").value;
 		        var pContent = document.getElementById("content").value;
+
+		        if (!pTitle) {
+				    alert("<spring:message code='ezBoard.t390'/>");
+		            document.getElementById("title").focus();	            
+		            return;				
+		        }
 		
 		        var xmlhttp = createXMLHttpRequest();
 		        var xmldom = createXmlDom();
