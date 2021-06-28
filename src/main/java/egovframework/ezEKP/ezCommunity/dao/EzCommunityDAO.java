@@ -1173,4 +1173,9 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (CommunityClubVO) select("EzCommunityDAO.adminLogoGet2", map);
 	}
 
+	/* 2021-06-28 홍승비 - 커뮤니티 게시물의 답변 개수 리턴 */
+	public int bbsGetReplyItemCnt(Map<String, Object> map) {
+		return (int) select("EzCommunityDAO.bbsGetReplyItemCnt", map);
+	}
+
 }

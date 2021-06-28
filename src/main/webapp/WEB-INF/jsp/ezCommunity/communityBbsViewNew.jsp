@@ -81,13 +81,15 @@
 								bName : bName,
 						},
 						success : function(result) {
-							if (result != "OK") {
-								alert("<spring:message code='ezCommunity.t203' />");
-							} else {
+							if (result == "REPLYCNT") {
+								alert("<spring:message code='ezCommunity.t425' />");
+							} else if (result == "OK") {
 								 alert("<spring:message code='ezCommunity.t204' />");
 			 		                //window.opener.parent.left.getBoardList();
 			 		                window.opener.location.reload(false);
 			 		                window.close();
+							} else {
+								alert("<spring:message code='ezCommunity.t203' />");
 							}
 						},
 						error : function(xhr, status, error) {

@@ -319,4 +319,6 @@ public interface EzCommonService {
 	public void insertApprSatViewerConfig() throws Exception;
 
 	public void addBoardMailFGColumn() throws Exception;
+
+	public void addCommNoticeUpperNoColumn() throws Exception;
 }
