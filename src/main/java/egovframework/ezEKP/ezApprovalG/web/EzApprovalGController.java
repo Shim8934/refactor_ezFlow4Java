@@ -3338,7 +3338,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				response.setContentType("text/html; charset=UTF-8");
 				response.getWriter().write("<script language='javascript'>\n");
 				response.getWriter().write("alert(\'" + messageSource.getMessageExtend("ezEmail.hdp05", new Object[] {bigSizeAttachDownloadLimitCount}, userInfo.getLocale()) + "\');\n");
-				response.getWriter().write("window.history.back();");
+//				response.getWriter().write("window.history.back();");
+                response.getWriter().write("if (typeof parent.removeTempFrame === 'function') {parent.removeTempFrame();}\n");
 				response.getWriter().write("</script>");
 				response.getWriter().flush();
 			}
@@ -3347,7 +3348,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				response.setContentType("text/html; charset=UTF-8");
 				response.getWriter().write("<script language='javascript'>\n");
 				response.getWriter().write("alert(\'" + messageSource.getMessage("main.t4", userInfo.getLocale()) + "\');\n");
-				response.getWriter().write("window.history.back();");
+//				response.getWriter().write("window.history.back();");
+                response.getWriter().write("if (typeof parent.removeTempFrame === 'function') {parent.removeTempFrame();}\n");
 				response.getWriter().write("</script>");
 				response.getWriter().flush();
 			}
