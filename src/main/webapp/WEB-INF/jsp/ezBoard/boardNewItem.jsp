@@ -490,23 +490,31 @@
 				</c:forEach>
 				
 				for (var i = 0; i < colType.length;i++){
+					// 2021-06-24 김은실 - 대체 어디서 변경하는 지를 모르겠는데(핸들러??), model에서 jsp로 넘어올때 특수문자가 변경됨. &'"<> → &amp;&#039;&#034;&lt;&gt;
+					var colName = colName1[i].replace(/\n/gi, "\\n").replace(/\\\\/gi, "\\")
+											 .replace(/&amp;/gi, "&")
+											 .replace(/&#039;/gi, "'")
+											 .replace(/&#034;/gi, '\"')
+											 .replace(/&lt;/gi, "<")
+											 .replace(/&gt;/gi, ">");
+					
 					if(must[i] == "Y"){
 		        		if (colType[i] == "radio") {
 		        			if (GetRadioVal(tableCol[i]) == "") {
 		        				Tab1_MouseClick(document.getElementById("1tab1"));
-	                            alert(colName1[i] + strLang179);
+	                            alert(colName + strLang179);
 	                            return;
 		        			}
 		        		} else if(colType[i] == "text") {
 		        			if(document.getElementById(tableCol[i]).value == ""){
 		        				Tab1_MouseClick(document.getElementById("1tab1"));
-	                            alert(colName1[i] + strLang187);
+	                            alert(colName + strLang187);
 	                            return;
 		        			}
 		        		} else if(colType[i] == "check") {
 		        			if(GetCheckVal(tableCol[i]) == ""){
 		        				Tab1_MouseClick(document.getElementById("1tab1"));
-	                            alert(colName1[i] + strLang179);
+	                            alert(colName + strLang179);
 	                            return;
 		        			}
 		        		}
