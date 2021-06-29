@@ -149,6 +149,7 @@ function setFileTypeTag(type) {
 }
 
 function loadCapacity(webFolderId) {
+	if (Boolean(webFolderId)) {
 	$.ajax({
 		type: "POST",
 		async: false,
@@ -193,6 +194,7 @@ function loadCapacity(webFolderId) {
 			
 		}
 	});
+	}
 }
 
 function getFileSize(fileSize) {
