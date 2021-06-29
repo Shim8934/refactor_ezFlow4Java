@@ -334,7 +334,7 @@ public class EzTalkGateController {
 			if (ezTalkSsoType.equals("mail")) {
 				return "redirect:/ezEmail/mailMain.do";
 			} else if (ezTalkSsoType.equals("approval")) { 
-				return "redirect:/ezApprovalG/aprManage.do?listType=1&subQuery=";
+				return "redirect:/ezApprovalG/apprGMain.do";
 			} else if (ezTalkSsoType.equals("portal")) { 
 				return "redirect:/ezPortal/portalMain.do";
 			} else if (ezTalkSsoType.equals("noticeBoard")) { 

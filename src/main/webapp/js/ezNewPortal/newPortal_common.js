@@ -721,7 +721,11 @@ function getBirthdayEmployeesList() {
 			
 			var birth = birthdayMonth;
 			
-			if (birth < 10) {
+			if (userLang == '2') { 
+				var monthMsg = "January;February;March;April;May;June;July;August;September;October;November;December";
+			    var monthStr = monthMsg.split(";");
+				birth = monthStr[birth-1] + " ";
+			} else if (birth < 10) {
 				birth = "0" + birth;
 			}
 			

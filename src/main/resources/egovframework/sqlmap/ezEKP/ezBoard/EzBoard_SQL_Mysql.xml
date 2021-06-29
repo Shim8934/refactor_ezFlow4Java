@@ -6010,7 +6010,7 @@
                 D.EXTENSIONATTRIBUTE2 AS COMPANYID,
                 U.EXTENSIONATTRIBUTE1 AS ROLLINFO,
                 D.DEPTLEVEL,
-                D.DEPT_CD_PATH
+                CONCAT('top,', CONCAT('Top,', D.DEPT_CD_PATH)) AS DEPT_CD_PATH
 			FROM
 				TBL_USERMASTER U
 			INNER JOIN
