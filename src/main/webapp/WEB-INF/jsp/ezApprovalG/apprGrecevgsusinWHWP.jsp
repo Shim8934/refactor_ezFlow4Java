@@ -1798,8 +1798,10 @@
 	    	}
 			
 	    	function connInit() {
-				var connRootText = GetDocumentElement("CONNROOT", true);
-				if (connRootText) {
+				var keywordXml = loadXMLString(GetDocumentElement("CONNROOT", true));
+				var connNodes = SelectNodes(keywordXml, "CONNROOT/conn");
+
+				if (connNodes) {
 					if (g_DraftFlag === "REDRAFT") {
 						OpenAlertUI("연동문서는 다시 접수할 수 없습니다.<br/>문서보기 창으로 이동합니다.", function() {
 							var url = "/ezApprovalG/ezviewAprWHWP.do" +
