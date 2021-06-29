@@ -7640,7 +7640,7 @@ public class EzBoardController extends EgovFileMngUtil{
 
         /* 2018-10-26 홍승비 - 게시판 게시알림 메일 전송 시 폰트 다국어 설정, 특문처리 추가 */
         bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.t250", userInfo.getLocale()) + "<br><br>");
-        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", userInfo.getLocale()) + boardInfo.getBoardName());
+        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", userInfo.getLocale()) + commonUtil.cleanValue(boardInfo.getBoardName()));
         bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t252", userInfo.getLocale()) + strDate);
         
         if (boardInfo.getGuBun().equals("2")) {
