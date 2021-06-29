@@ -106,7 +106,7 @@
 
 	        function PutFieldText(field, text) {
 	            if (text == "")  //2020.07.13 웹한글기안기는 ""로 데이터 클리어 안됨
-	                text = " ";
+	                text = "\n";
 
 	            HwpCtrl.PutFieldText(field, text);
 	        }
