@@ -9817,7 +9817,7 @@ public class EzBoardController extends EgovFileMngUtil{
 				String mail = possibleUserInfo.get(i).get("MAIL");
 				String deptID = possibleUserInfo.get(i).get("DEPTID");
 				String userCompanyID = possibleUserInfo.get(i).get("COMPANYID");
-				String deptPathCode = possibleUserInfo.get(i).get("DEPT_CD_PATH");
+				String deptPathCode = userID + "," + possibleUserInfo.get(i).get("DEPT_CD_PATH");
 				String rollInfo = possibleUserInfo.get(i).get("ROLLINFO");
 				String value = userName + ";;" + mail;
 				
