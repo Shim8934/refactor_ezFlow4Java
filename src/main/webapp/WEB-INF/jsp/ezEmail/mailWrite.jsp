@@ -2335,6 +2335,11 @@
 				            var filepath = fileList[i].downloadLink;
 				            var filename = fileList[i].fileName;
 				            var filesize = fileList[i].fileSize;
+				            
+				            if (filesize == 0) {
+				            	alert(strLang167);
+				            	break;
+				            }
 				
 				            pstrXML += "<ROW><CELL><VALUE><![CDATA[" + filename + "]]></VALUE>";
 				            pstrXML += "<DATA1><![CDATA[" + filename + "]]></DATA1>";
