@@ -496,35 +496,39 @@
                 
                	var rowCnt = GetElementsByTagName(xmlDoc, "ROW").length;
                 var listXML = "";
-                /* 2020-05-04 홍승비 - 앨범형식 보기 시 특수문자 파싱 추가 */
-                for (var i = 0; i < rowCnt; i++) {
-                	var title= GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "TITLE")[0].textContent;
-                	title = MakeXMLString(title);
-                	var boardID = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA1")[0].textContent;
-                	var itemID = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA2")[0].textContent;
-                	var writerID = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA3")[0].textContent;
-                	var isNew = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA4")[0].textContent;
-                	var imgSrc = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA5")[0].textContent;
-                	var readFlag = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA8")[0].textContent;
-                	
-                	listXML += "<div class='boardAlbumDiv' onclick='selectAlbumDiv(this); ItemPreviewRead_AlbumClick(this);' ondblclick='ItemRead_onclick(this)' data1='" + boardID + "' data2='" + itemID + "'>";
-                	listXML += "<p class='topInfoP'><input type='checkbox' id='" + itemID + "," + writerID + ";' onclick='selectAlbumCheckBox(this, event)'>";
-                	listXML += "<span style='font-size:13px;'>";
-                	
-                	if (readFlag == "0") {
-                		listXML += "<span class='albumTitle' style='font-size:13px; font-weight:bold;'>";
-                	} else {
-                		listXML += "<span class='albumTitle' style='font-size:13px;'>";
-                	}
-                	
-					if (isNew == "Y") {
-						listXML+= "<img src='/images/i_new.gif' style='vertical-align:middle;margin:0px 5px 0px 2px'/>";
-					}
-                	listXML += title + "</span></p>";
-                	
-                	listXML += "<p style='text-align:center; overflow:hidden;'><img class='albumThumbImg' src='" + imgSrc + "'/></p>";
-                	listXML += "</div>";
-                }
+				if (rowCnt === 0) {
+					listXML = "<span style='display: block;text-align: center;margin-top: 50px;'><spring:message code='ezBoard.t281'/></span>";
+				} else {
+					/* 2020-05-04 홍승비 - 앨범형식 보기 시 특수문자 파싱 추가 */
+					for (var i = 0; i < rowCnt; i++) {
+						var title= GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "TITLE")[0].textContent;
+						title = MakeXMLString(title);
+						var boardID = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA1")[0].textContent;
+						var itemID = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA2")[0].textContent;
+						var writerID = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA3")[0].textContent;
+						var isNew = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA4")[0].textContent;
+						var imgSrc = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA5")[0].textContent;
+						var readFlag = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA8")[0].textContent;
+						
+						listXML += "<div class='boardAlbumDiv' onclick='selectAlbumDiv(this); ItemPreviewRead_AlbumClick(this);' ondblclick='ItemRead_onclick(this)' data1='" + boardID + "' data2='" + itemID + "'>";
+						listXML += "<p class='topInfoP'><input type='checkbox' id='" + itemID + "," + writerID + ";' onclick='selectAlbumCheckBox(this, event)'>";
+						listXML += "<span style='font-size:13px;'>";
+						
+						if (readFlag == "0") {
+							listXML += "<span class='albumTitle' style='font-size:13px; font-weight:bold;'>";
+						} else {
+							listXML += "<span class='albumTitle' style='font-size:13px;'>";
+						}
+						
+						if (isNew == "Y") {
+							listXML+= "<img src='/images/i_new.gif' style='vertical-align:middle;margin:0px 5px 0px 2px'/>";
+						}
+						listXML += title + "</span></p>";
+						
+						listXML += "<p style='text-align:center; overflow:hidden;'><img class='albumThumbImg' src='" + imgSrc + "'/></p>";
+						listXML += "</div>";
+					} 
+				}
                 
                 document.getElementById("lvBoardList").innerHTML = listXML;
                 
