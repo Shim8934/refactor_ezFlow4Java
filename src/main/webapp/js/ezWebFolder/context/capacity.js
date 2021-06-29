@@ -38,6 +38,7 @@ var capacity = (function() {
 			loadEventListener = listener;
 		},
 		load: function() {
+			if (Boolean(folderIdProvider())) {
 			$.ajax({
 				type: "POST",
 				async: true,
@@ -84,6 +85,7 @@ var capacity = (function() {
 					});
 				}
 			});
+			}
 		}
 	}
 })();
