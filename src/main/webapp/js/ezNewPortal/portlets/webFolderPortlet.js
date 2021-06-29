@@ -38,7 +38,7 @@ function getWebFolderFileList() {
 					var ddEl2 = document.createElement('dd');
 					
 					dtEl.textContent = file.fileName;
-					ddEl1.textContent = file.createName1;
+					ddEl1.textContent = userLang == '1'? file.createName1 : file.createName2; 
 					ddEl2.textContent = file.updateDate.substr(0, 10);
 					
 					dlEl.appendChild(dtEl);
@@ -149,6 +149,7 @@ function setFileTypeTag(type) {
 }
 
 function loadCapacity(webFolderId) {
+	if (Boolean(webFolderId)) {
 	$.ajax({
 		type: "POST",
 		async: false,
@@ -193,6 +194,7 @@ function loadCapacity(webFolderId) {
 			
 		}
 	});
+	}
 }
 
 function getFileSize(fileSize) {

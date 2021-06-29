@@ -256,7 +256,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.createWebfolderNoInherit(); 				// 권한비상속			
     		ezCommonService.alterWebfolderApplyHistoryAddColumn();
     		
-    		ezCommonService.addBoardMailFGColumn(); //2021-06-21 홍승비 - 게시판 메일알림 옵션 추가
+    		ezCommonService.addBoardMailFGColumn(); // 2021-06-21 홍승비 - 게시판 메일알림 옵션 추가
+    		ezCommonService.addCommNoticeUpperNoColumn(); // 2021-06-28 홍승비 - 커뮤니티 공지사항 부모게시물 정보 칼럼 추가
     		
     	} catch (Exception e) {
     		e.printStackTrace();
@@ -1842,6 +1843,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 						
 						// insertDBData_user 실패했을 경우 JMocha에서 계정 다시 삭제.
 						try {
+							String useStandardFolderId = config.getProperty("config.useStandardFolderId");
+							String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantID);
+							
+							if (useStandardFolderId != null && useStandardFolderId.equals("YES") && !useExternalMailServer.equalsIgnoreCase("YES")) {							
+								createDefaultFolders(loginCookie, mailAddr, locale);
+							}
+
 							String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantID);
 							
 							if (useBizmekaSpambox.equals("YES")) {
@@ -1875,14 +1883,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 							
 							// 로컬 시스템에 해당 User의 계정을 생성한다.
 							ezOrganAdminService.insertDBData_user(vo, oriPass);
-							
-							String useStandardFolderId = config.getProperty("config.useStandardFolderId");
-							String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantID);
-							
-							if (useStandardFolderId != null && useStandardFolderId.equals("YES") && !useExternalMailServer.equalsIgnoreCase("YES")) {							
-								createDefaultFolders(loginCookie, mailAddr, locale);
-							}
-							
+														
 							result = "OK";
 						} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
 							e.printStackTrace();

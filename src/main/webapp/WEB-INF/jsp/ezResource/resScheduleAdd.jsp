@@ -219,12 +219,12 @@
 	    	}
 		    
 		    window.onunload = function () {
-		        try {
-		            m_Arguments = opener.schedule_add_ck_dialogArguments[0];
-		            opener.close();
-		        }
-		        catch (e) {
-		        }
+		        // try {
+		        //     m_Arguments = opener.schedule_add_ck_dialogArguments[0];
+		        //     opener.close();
+		        // }
+		        // catch (e) {
+		        // }
 		    }
 		    
 		    $(function () {
@@ -635,7 +635,13 @@
 		                	window.opener.location.reload();
 		            	} catch (e) {}
 	            	}
-	        	}
+	        	} else {
+					if (window.opener != null && window.opener.name == "left" && g_fromStr == "schedule" && trim(s_userID) != "") {
+		            	try {
+			                window.opener.parent.right.btnRefresh_onclick();
+		            	} catch (e) {}
+					}
+				}
 	    	}
 
             //2018-08-28 김보미 - 현재시간으로 설정

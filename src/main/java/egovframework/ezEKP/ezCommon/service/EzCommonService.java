@@ -324,4 +324,6 @@ public interface EzCommonService {
 	public JSONObject attachWebFolderFile(JSONArray fileListJson, LoginVO userInfo, String param, HttpServletRequest request);
 
 	public void addBoardMailFGColumn() throws Exception;
+
+	public void addCommNoticeUpperNoColumn() throws Exception;
 }

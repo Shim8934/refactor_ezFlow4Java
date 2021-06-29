@@ -3668,3 +3668,7 @@ tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute
 .textbox_design.textbox_Success input[type="text"]:-ms-input-placeholder[type="text"]{border-color:#5dc560 !important; background-color:#f1fbf1 !important;color:#5dc560 !important;}
 .textbox_design.textbox_Success input[type="text"]::-webkit-input-placeholder{border-color:#5dc560 !important; background-color:#f1fbf1 !important; color:#5dc560 !important;}
 .textbox_design.textbox_Success input[type="text"]::-moz-placeholder {border-color:#5dc560 !important; background-color:#f1fbf1 !important; color:#5dc560 !important;}
+
+/* voc#80238 [영문] 커뮤니티>게시판>공지사항>글조회>인쇄>칸 ui 수정 필요 */
+.boardItemViewPrint_cssThEn{width:500px !important; text-align: center !important}
+.boardItemViewPrint_cssTdEn{width:80% !important;}

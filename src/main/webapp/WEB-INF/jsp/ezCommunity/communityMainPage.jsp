@@ -1858,7 +1858,7 @@
 			        		<c:when test ="${userInfo.lang == 1}"> 
 				                	<img src="../images/kr/community/bannertxt.png">
 				            </c:when>
-				            <c:when test ="${userInfo.lang == 2}"> 
+				            <c:when test ="${userInfo.lang == 3}"> 
 				                	<img src="../images/jp/community/bannertxt.png">
 				            </c:when>
 				            <c:otherwise>

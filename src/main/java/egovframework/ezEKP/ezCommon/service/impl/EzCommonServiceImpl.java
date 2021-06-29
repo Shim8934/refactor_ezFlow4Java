@@ -2443,4 +2443,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addBoardMailFGColumn() throws Exception {
 		ezCommonDAO.addBoardMailFGColumn();
 	}
+	
+	@Override
+	public void addCommNoticeUpperNoColumn() throws Exception {
+		ezCommonDAO.addCommNoticeUpperNoColumn();
+	}
 }

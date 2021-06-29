@@ -3937,4 +3937,22 @@
 		)
     </statement>
     
+	<select id="EzCommonDAO.checkCommNoticeUpperNoColumn">
+        <![CDATA[
+            SELECT 
+                UPPERNO
+            FROM 
+                TBL_C_BOARD
+            WHERE
+				ROWNUM = 1
+        ]]>
+    </select>
+    <statement id="EzCommonDAO.addCommNoticeUpperNoColumn">
+        ALTER TABLE 
+        	TBL_C_BOARD 
+		ADD (
+			UPPERNO NUMBER(19, 0)
+		)
+    </statement>
+    
 </sqlMap>

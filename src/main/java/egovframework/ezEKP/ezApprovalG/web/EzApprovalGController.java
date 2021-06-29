@@ -3188,6 +3188,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String checkLine = "";
 		
+		if (StringUtils.isBlank(fileName)) {
+		    fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
+		}
+		
 		logger.debug("docID : " + docID);
 		logger.debug("docStatus : " + docStatus);
 		logger.debug("filePath : " + filePath);
@@ -3282,8 +3286,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					response.setCharacterEncoding("UTF-8");
 					response.setContentType("text/html; charset=UTF-8");
 					response.getWriter().write("<script language='javascript'>\n");
-					response.getWriter().write("window.history.back();");
+//					response.getWriter().write("window.history.back();");
 					response.getWriter().write("window.open('"+ satPath +"', '', '_blank');\n");
+					response.getWriter().write("if (typeof parent.removeTempFrame === 'function') {parent.removeTempFrame();}\n");
 					response.getWriter().write("</script>");
 					response.getWriter().flush();
 				} else {
@@ -3333,7 +3338,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				response.setContentType("text/html; charset=UTF-8");
 				response.getWriter().write("<script language='javascript'>\n");
 				response.getWriter().write("alert(\'" + messageSource.getMessageExtend("ezEmail.hdp05", new Object[] {bigSizeAttachDownloadLimitCount}, userInfo.getLocale()) + "\');\n");
-				response.getWriter().write("window.history.back();");
+//				response.getWriter().write("window.history.back();");
+                response.getWriter().write("if (typeof parent.removeTempFrame === 'function') {parent.removeTempFrame();}\n");
 				response.getWriter().write("</script>");
 				response.getWriter().flush();
 			}
@@ -3342,7 +3348,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				response.setContentType("text/html; charset=UTF-8");
 				response.getWriter().write("<script language='javascript'>\n");
 				response.getWriter().write("alert(\'" + messageSource.getMessage("main.t4", userInfo.getLocale()) + "\');\n");
-				response.getWriter().write("window.history.back();");
+//				response.getWriter().write("window.history.back();");
+                response.getWriter().write("if (typeof parent.removeTempFrame === 'function') {parent.removeTempFrame();}\n");
 				response.getWriter().write("</script>");
 				response.getWriter().flush();
 			}
@@ -11261,5 +11268,22 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		logger.debug("getChaebunDept ended.");
 		return infoXML;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/getBujaeInfo.do", method = RequestMethod.GET, produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getBujaeInfo(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception{
+	    logger.debug("getBujaeInfo started.");
+	    
+	    LoginVO userInfo = commonUtil.userInfo(loginCookie);
+	    
+	    String userID = request.getParameter("userID");
+	    String deptID = request.getParameter("deptID");
+	    
+	    String result = ezApprovalGService.getBujaeInfo(userID, deptID, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getCompanyID());
+	    
+	    logger.debug("getBujaeInfo ended.");
+	    
+	    return result;
 	}
 }
