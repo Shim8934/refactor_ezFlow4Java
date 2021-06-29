@@ -8467,13 +8467,14 @@
 					            	  ROWNUM <= 1 ) SN  
 		        		FROM 
 		        			  TBL_APRDOCINFO 
-		        
 		                JOIN 
 		                	  TBL_APRRECEIPTPROCESSINFO    
 		                ON 
 		                	  TBL_APRDOCINFO.DocID = TBL_APRRECEIPTPROCESSINFO.DocID
 		                AND
 		                	  TBL_APRDOCINFO.TENANT_ID = TBL_APRRECEIPTPROCESSINFO.TENANT_ID
+                        AND
+                              TBL_APRDOCINFO.COMPANYID = TBL_APRRECEIPTPROCESSINFO.COMPANYID
 		       			WHERE  
 		       				  TBL_APRDOCINFO.DocID = #v_DOCID#
 		       			AND
@@ -15035,7 +15036,21 @@
 		        AND
 		        	DEPTID = #v_DEPTID#
 		        AND 
-		        	( TO_CHAR(RECEIPTDATE,'YYYY')  = #v_YEAR# ) )
+		        	( TO_CHAR(RECEIPTDATE,'YYYY')  = #v_YEAR# ) 
+                AND 
+                    EXTRECEPTYN = (
+                        SELECT 
+                            DECODE(FORMID, #v_RELAYFORMID#, 'Y', 'N') EXTRECEPTYN 
+                        FROM 
+                            TBL_APRDOCINFO
+                        WHERE 
+                          DOCID = #v_DOCID#
+                        AND 
+                          COMPANYID = #companyID#
+                        AND 
+                          TENANT_ID = #v_TENANTID#
+                    )
+		        )
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getSearchDocListCount" parameterClass="Map" resultClass="int"> -->
@@ -21206,11 +21221,15 @@
 	   	FROM 
 	   		TBL_DOCDELIVERY 
 	   	WHERE 
-	   		DEPTID = #v_DEPTID# 
-	   	AND
 	   		TENANT_ID = #v_TENANTID#
 	   	AND
 	        COMPANYID = #companyID#
+        AND
+            EXTRECEPTYN = #v_EXTRECEPTYN#
+        <isNotEmpty property="v_DEPTID">
+        AND
+            DEPTID = #v_DEPTID# 
+        </isNotEmpty>
 	   	$v_SUBQUERY$
 	   	<isNotEmpty property="v_MANAGEDEPTID">
 	   	 AND 
@@ -21273,11 +21292,15 @@
 				   		FROM 
 				   			TBL_DOCDELIVERY 
 				   		WHERE 
-				   			DEPTID = #v_DEPTID# 
-				   		AND
 				   			TENANT_ID = #v_TENANTID#
 				   		AND
 	        				COMPANYID = #companyID#
+                        AND
+                            EXTRECEPTYN = #v_EXTRECEPTYN#
+                        <isNotEmpty property="v_DEPTID">
+                        AND
+                            DEPTID = #v_DEPTID# 
+                        </isNotEmpty>
 				   		$v_SUBQUERY$
 				   		<isEqual property="v_ISDOCPRINT" compareValue="TRUE">
 				   			AND 
@@ -25807,9 +25830,9 @@
 	<insert id="EzApprovalG.insertBebuDocDelivery" parameterClass="Map">
 		INSERT INTO 
 			TBL_DOCDELIVERY 
-		(     sn,         DocID, Href, ReceiptDate,                                     OrganID,     Organ,     Organ2,  DocNumber, ManageDeptID,       ManageDept, ManageDept2,       ChargeID,       ChargeName, ChargeName2,     DeptID, Remark, OrgDocNumCode, DocTitle, TENANT_ID, COMPANYID, ORGANUSERNAME) 
+		(     sn,         DocID, Href, ReceiptDate,                                     OrganID,     Organ,     Organ2,  DocNumber, ManageDeptID,       ManageDept, ManageDept2,       ChargeID,       ChargeName, ChargeName2,     DeptID, Remark, OrgDocNumCode, DocTitle, TENANT_ID, COMPANYID, ORGANUSERNAME, EXTRECEPTYN) 
 		(SELECT 
-			#v_maxSN#, a.DocID, a.Href, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_OrganID#, #v_Organ#, #v_Organ2#, a.DocNo, #v_ManageDeptID#, #v_ManageDept#, #v_ManageDept2#, #v_ChargeID#, #v_ChargeName#, #v_ChargeName2#, #v_DeptID#, #v_Remark#, b.DocNumCode, a.DocTitle , a.TENANT_ID, a.COMPANYID, #v_OrganUserName#
+			#v_maxSN#, a.DocID, a.Href, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_OrganID#, #v_Organ#, #v_Organ2#, a.DocNo, #v_ManageDeptID#, #v_ManageDept#, #v_ManageDept2#, #v_ChargeID#, #v_ChargeName#, #v_ChargeName2#, #v_DeptID#, #v_Remark#, b.DocNumCode, a.DocTitle , a.TENANT_ID, a.COMPANYID, #v_OrganUserName#, DECODE(a.FORMID, #v_RelayFormID#, 'Y', 'N')
          FROM 
          	TBL_APRDOCINFO a 
          INNER JOIN 
@@ -26665,9 +26688,9 @@
    	<insert id="EzApprovalG.insertDocSendAprReceiptProcessInfo" parameterClass="Map">
    	     INSERT INTO 
    	     	TBL_APRRECEIPTPROCESSINFO 
-   	     (  ReceiveSN,      DocID,      SentDeptID, SentDeptName, SentDeptName2, ReceivedDeptID,          ReceivedDeptName,    ReceivedDeptName2,          DocState, AprState,     ProcessDate,                            ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID, COMPANYID) 
+   	     (  ReceiveSN,      DocID,      SentDeptID, SentDeptName, SentDeptName2, ReceivedDeptID,          ReceivedDeptName,    ReceivedDeptName2,          DocState, AprState,     ProcessDate,                            ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID, COMPANYID, ROOTDOCID) 
    	     (SELECT 
-   	     	#v_ReceiveSN#, #v_NEWID#, WriterDeptID, WriterDeptName, WriterDeptName2, #v_ReceivedDeptID#, #v_ReceivedDeptName#, #v_ReceivedDeptName2#, #v_DocState#, #v_AprState#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), 'N',      '',       #v_ProcessorID#, #v_ProcessorName#, #v_ProcessorName2#, #v_ProcessorJobTitle#, #v_ProcessorJobTitle2#, #v_orgDocID#, TENANT_ID, COMPANYID 
+   	     	#v_ReceiveSN#, #v_NEWID#, WriterDeptID, WriterDeptName, WriterDeptName2, #v_ReceivedDeptID#, #v_ReceivedDeptName#, #v_ReceivedDeptName2#, #v_DocState#, #v_AprState#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), 'N',      '',       #v_ProcessorID#, #v_ProcessorName#, #v_ProcessorName2#, #v_ProcessorJobTitle#, #v_ProcessorJobTitle2#, #v_orgDocID#, TENANT_ID, COMPANYID, #v_orgDocID# 
    	      FROM 
    	      	TBL_APRDOCINFO 
 		  WHERE 
@@ -26681,9 +26704,9 @@
    	<insert id="EzApprovalG.insertDocSendAprReceiptProcessInfo2" parameterClass="Map">
    	     INSERT INTO 
    	     	TBL_APRRECEIPTPROCESSINFO 
-   	     (  ReceiveSN,      DocID,      SentDeptID, SentDeptName, SentDeptName2, ReceivedDeptID,          ReceivedDeptName,    ReceivedDeptName2,          DocState, AprState,     ProcessDate,                            ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID, COMPANYID) 
+   	     (  ReceiveSN,      DocID,      SentDeptID, SentDeptName, SentDeptName2, ReceivedDeptID,          ReceivedDeptName,    ReceivedDeptName2,          DocState, AprState,     ProcessDate,                            ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID, COMPANYID, ROOTDOCID) 
    	     (SELECT 
-   	     	#v_ReceiveSN#, #v_NEWID#, WriterDeptID, WriterDeptName, WriterDeptName2, #v_ReceivedDeptID#, #v_ReceivedDeptName#, #v_ReceivedDeptName2#, #v_DocState#, #v_AprState#, #v_SYSDATE#, 'N',      '',       #v_ProcessorID#, #v_ProcessorName#, #v_ProcessorName2#, #v_ProcessorJobTitle#, #v_ProcessorJobTitle2#, #v_orgDocID#, TENANT_ID, COMPANYID
+   	     	#v_ReceiveSN#, #v_NEWID#, WriterDeptID, WriterDeptName, WriterDeptName2, #v_ReceivedDeptID#, #v_ReceivedDeptName#, #v_ReceivedDeptName2#, #v_DocState#, #v_AprState#, #v_SYSDATE#, 'N',      '',       #v_ProcessorID#, #v_ProcessorName#, #v_ProcessorName2#, #v_ProcessorJobTitle#, #v_ProcessorJobTitle2#, #v_orgDocID#, TENANT_ID, COMPANYID, #v_orgDocID#
    	      FROM 
    	      	TBL_ENDAPRDOCINFO A 
 		  WHERE 
@@ -29039,10 +29062,14 @@
 				A.DOCID = B.DOCID
 			AND
 				A.TENANT_ID = B.TENANT_ID
+            AND 
+                A.COMPANYID = B.COMPANYID 
 			WHERE 
 				(A.DOCID = #docID#) 
 			AND
 				A.TENANT_ID = #v_TENANTID#
+            AND 
+                A.COMPANYID = #companyID#
 			AND 
 				(B.OPINIONGB = '001' OR B.OPINIONGB IS NULL)
 			AND 
@@ -29288,9 +29315,9 @@
 	  <insert  id="EzApprovalG.insertRelayAprReceiptProessInfo" parameterClass="Map">
 	  		INSERT INTO 
 	  			TBL_APRRECEIPTPROCESSINFO 
-	  		(RECEIVESN, DOCID, SENTDEPTID, SENTDEPTNAME, SENTDEPTNAME2, RECEIVEDDEPTID, RECEIVEDDEPTNAME, RECEIVEDDEPTNAME2, DOCSTATE, APRSTATE, PROCESSDATE, PROCESSYN, PROCESSDOCID, PROCESSORID, PROCESSORNAME, PROCESSORNAME2 , PROCESSORJOBTITLE, PROCESSORJOBTITLE2, PARENTSDOCID, COMPANYID, TENANT_ID)
+	  		(RECEIVESN, DOCID, SENTDEPTID, SENTDEPTNAME, SENTDEPTNAME2, RECEIVEDDEPTID, RECEIVEDDEPTNAME, RECEIVEDDEPTNAME2, DOCSTATE, APRSTATE, PROCESSDATE, PROCESSYN, PROCESSDOCID, PROCESSORID, PROCESSORNAME, PROCESSORNAME2 , PROCESSORJOBTITLE, PROCESSORJOBTITLE2, PARENTSDOCID, COMPANYID, TENANT_ID, ROOTDOCID)
 			VALUES 
-				(1, #NEWID#, #FROMDEPTID#, #FROMDEPTNAME#, #FROMDEPTNAME#, #TODEPTID#, #TODEPTNAME#, #TODEPTNAME#, '011', '011', TO_DATE(#RECDATE#,'YYYY-MM-DD HH24:MI:SS'), 'N', '', '', '', '', '', '', #XDOCID#, #companyID#, #v_TENANTID#)
+				(1, #NEWID#, #FROMDEPTID#, #FROMDEPTNAME#, #FROMDEPTNAME#, #TODEPTID#, #TODEPTNAME#, #TODEPTNAME#, '011', '011', TO_DATE(#RECDATE#,'YYYY-MM-DD HH24:MI:SS'), 'N', '', '', '', '', '', '', #XDOCID#, #companyID#, #v_TENANTID#, #XDOCID#)
 	  </insert>
 		
 	  <update id="EzApprovalG.updateRecRelayInfo" parameterClass="Map">
@@ -31284,7 +31311,7 @@
             RECEIVEDDEPTID = #v_RECEIVEDDEPTID#,
             RECEIVEDDEPTNAME = #v_RECEIVEDDEPTNAME#,
             RECEIVEDDEPTNAME2 = #v_RECEIVEDDEPTNAME2#,
-            PROCESSDATE = #v_SYSDATE#
+            PROCESSDATE = TO_DATE(#v_SYSDATE#, 'yyyy-mm-dd hh24:mi:ss')
         WHERE
             TENANT_ID = #v_TENANTID#
         AND
@@ -34105,4 +34132,95 @@
     		COMPANYID = #v_COMPANYID#
 	</select>
 	
+    <delete id="EzApprovalG.deleteDocDelivery" parameterClass="Map">
+        DELETE FROM 
+            TBL_DOCDELIVERY 
+        WHERE 
+            DOCID = #v_DOCID# 
+        AND 
+            TENANT_ID = #v_TENANTID#
+        AND 
+            COMPANYID = #companyID#
+    </delete>
+    
+    <select id="EzApprovalG.selectDuplicateRebebuDoc" parameterClass="Map" resultClass="String">
+        SELECT 
+            DOCID
+        FROM 
+            TBL_APRRECEIPTPROCESSINFO 
+        WHERE 
+            ROOTDOCID = (
+                SELECT 
+                    ROOTDOCID 
+                FROM 
+                    TBL_APRRECEIPTPROCESSINFO 
+                WHERE
+                    DOCID = #v_DOCID# 
+                AND 
+                    COMPANYID = #companyID#
+                AND 
+                    TENANT_ID = #v_TENANTID#
+            ) 
+        AND 
+            DOCSTATE = '011' 
+        AND 
+            APRSTATE = '011' 
+        AND 
+            COMPANYID = #companyID#
+        AND 
+            TENANT_ID = #v_TENANTID#
+        ORDER BY 
+            ROOTDOCID, DOCID
+    </select>
+    
+    <insert id="EzApprovalG.insertMoveRebebuOpinion" parameterClass="Map">
+        <selectKey type="pre" keyProperty="v_OPINIONSN" resultClass="int">
+            SELECT 
+                NVL(MAX(OPINIONSN), 0) + 1 
+            FROM 
+                TBL_APROPINIONINFO
+            WHERE 
+                DOCID = #v_DUPLFIRSTDOCID# 
+            AND 
+                TENANT_ID = #v_TENANTID#
+            AND 
+                COMPANYID = #companyID#
+        </selectKey>
+        INSERT INTO 
+            TBL_APROPINIONINFO (DOCID, USERID, OPINIONGB, CONTENT, USERNAME, USERJOBTITLE, USERDEPTID, USERDEPTNAME, OPINIONSN, USERNAME2, USERJOBTITLE2, USERDEPTNAME2, TENANT_ID, COMPANYID)
+        SELECT 
+            #v_DUPLFIRSTDOCID#, USERID, OPINIONGB, CONTENT, USERNAME, USERJOBTITLE, USERDEPTID, USERDEPTNAME, #v_OPINIONSN#, USERNAME2, USERJOBTITLE2, USERDEPTNAME2, TENANT_ID, COMPANYID
+        FROM 
+            TBL_APROPINIONINFO 
+        WHERE 
+            DOCID = #v_DUPLDOCID# 
+        AND 
+            TENANT_ID = #v_TENANTID#
+        AND 
+            COMPANYID = #companyID#
+    </insert>
+    
+    <update id="EzApprovalG.updateAprReceiptProcessInfoRootDocID" parameterClass="Map">
+        UPDATE 
+            TBL_APRRECEIPTPROCESSINFO 
+        SET 
+            ROOTDOCID = (
+                SELECT 
+                    ROOTDOCID 
+                FROM 
+                    TBL_APRRECEIPTPROCESSINFO 
+                WHERE 
+                    DOCID = #v_DOCID#
+                AND 
+                    TENANT_ID = #v_TENANTID#
+                AND 
+                    COMPANYID = #companyID#
+            )
+        WHERE 
+            DOCID = #v_NEWID# 
+        AND 
+            TENANT_ID = #v_TENANTID#
+        AND 
+            COMPANYID = #companyID#
+    </update>	
 </sqlMap>

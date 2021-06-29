@@ -359,6 +359,9 @@
 		                case "m13":
 							DocManageMain(pthis.id);
 		                    break;
+		                case "m14":
+							DocManageMain(pthis.id);
+		                    break;
 		                case "approvalForDoc":
 		                	window.open("/admin/ezApprovalG/forAprDoc.do?type=user", "right");
 		                	break;
@@ -1062,6 +1065,9 @@
 							case "m13":
 		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 								break;
+							case "m14":
+		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+								break;
 		                }
 		            }
 		        } catch (e) { }
@@ -1361,6 +1367,7 @@
 			        	<li><span class="sub_iconLNB tree_appr_record3"></span><span class="list_text" id="m05" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t905'/></span></li>
 			        	<li><span class="sub_iconLNB tree_appr_record4"></span><span class="list_text" id="m06" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t906'/></span></li>
 			        	<li><span class="sub_iconLNB tree_appr_record5"></span><span class="list_text" id="m02" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t912'/></span></li>
+						<li><span class="sub_iconLNB tree_appr_record3"></span><span class="list_text" id="m14" onclick="Open_Func(this)"><spring:message code='ezApprovalG.kbh08'/></span></li>
 						<li><span class="sub_iconLNB tree_appr_record3"></span><span class="list_text" id="m12" onclick="Open_Func(this)"><spring:message code='ezApprovalG.kbh06'/></span></li>
 						<li><span class="sub_iconLNB tree_appr_record4"></span><span class="list_text" id="m13" onclick="Open_Func(this)"><spring:message code='ezApprovalG.kbh07'/></span></li>
 			        </ul>

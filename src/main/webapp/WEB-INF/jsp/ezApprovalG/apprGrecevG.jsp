@@ -627,18 +627,23 @@
                     async : false,
                     url : "/ezApprovalG/setReBebu.do",
                     data : {
-	       		            pDocID : pDocID,
-	       		            pReceiveSN : pSusinSN,
-	       		         	pDeptID : arr_userinfo[4],
+						docID : pDocID,
+						receiveSN : pSusinSN,
+						deptID : arr_userinfo[4],
                     },
                     success : function(text){
-                            result = text;
-        		            if (result == "TRUE") {
-        		            	delOpinionInfoAll2();
-        		                var pAlertContent = "<spring:message code='ezApprovalG.t1426'/>";
-        		                OpenAlertUI(pAlertContent, OpenAlertUI_Close);
-        		            }
-                    }
+						result = text;
+						if (result == "TRUE") {
+							delOpinionInfoAll2();
+							var pAlertContent = "<spring:message code='ezApprovalG.t1426'/>";
+							OpenAlertUI(pAlertContent, OpenAlertUI_Close);
+						}
+                    },
+					error : function() {
+						var pAlertContent = "재배부를 요청하는 도중 오류가 발생했습니다.";
+						OpenAlertUI(pAlertContent);
+						return;
+					}
             	});
 	        }
 		    

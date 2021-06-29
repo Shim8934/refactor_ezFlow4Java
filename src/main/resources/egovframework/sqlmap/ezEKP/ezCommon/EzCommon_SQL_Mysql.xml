@@ -3766,4 +3766,65 @@
 		)
     </statement>
     
+    <select id="EzCommonDAO.checkTblAprReceiptProcessInfoAddColumn">
+        SELECT 
+          ROOTDOCID 
+        FROM 
+          TBL_APRRECEIPTPROCESSINFO
+    </select>
+    
+    <statement id="EzCommonDAO.alterTblAprReceiptProcessInfoAddColumn">
+        ALTER TABLE
+            TBL_APRRECEIPTPROCESSINFO
+        ADD
+            ROOTDOCID VARCHAR(80)
+    </statement>
+    
+    <update id="EzCommonDAO.updateTblAprReceiptProcessInfoRootDocID">
+        UPDATE 
+            TBL_APRRECEIPTPROCESSINFO 
+        SET 
+            ROOTDOCID = PARENTSDOCID
+    </update>
+    
+    <select id="EzCommonDAO.checkTblDocDeliveryAddColumn">
+        SELECT 
+          EXTRECEPTYN 
+        FROM 
+          TBL_DOCDELIVERY
+    </select>
+    
+    <statement id="EzCommonDAO.alterTblDocDeliveryAddColumn">
+        ALTER TABLE
+            TBL_DOCDELIVERY
+        ADD
+            EXTRECEPTYN VARCHAR(5) DEFAULT 'N'
+    </statement>
+    
+    <update id="EzCommonDAO.updateTblDocDeliveryExtReceptYn">
+        UPDATE 
+          TBL_DOCDELIVERY 
+        SET 
+          EXTRECEPTYN = 'N'
+    </update>
+    
+    <select id="EzCommonDAO.checkTblCodelistA54002" resultClass="int">
+        SELECT COUNT(*) CNT
+        FROM TBL_CODELIST 
+        WHERE CODE1 ='A54' 
+        AND CODE2 = '002'
+    </select>
+    
+    <insert id="EzCommonDAO.insertTblCodelistA54002">
+        INSERT INTO 
+            TBL_CODELIST 
+        SELECT 
+            CODE1, '002', NAME, ISUSE, 'Y:다중배부 문서 재배부요청 시 한개의 문서만 남김, N:다중배부문서 재배부요청시 문서변화 없음', NAME2, NAME3, NAME4, TENANT_ID, COMPANYID 
+            FROM 
+                TBL_CODELIST 
+            WHERE 
+                CODE1 = 'A54' 
+            AND 
+                CODE2 = '001'
+    </insert>
 </sqlMap>

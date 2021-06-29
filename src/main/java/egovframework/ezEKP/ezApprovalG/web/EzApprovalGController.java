@@ -6909,20 +6909,17 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 접수 재배부 요청 표출 Method
 	 */	
-	@RequestMapping(value = "/ezApprovalG/setReBebu.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@RequestMapping(value = "/ezApprovalG/setReBebu.do", produces = "text/plain;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
-	public String setReBebu(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception{
+	public String setReBebu(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
 		logger.debug("setReBebu started");
 		
-		userInfo = commonUtil.aprUserInfo(loginCookie);
-		
-		String docID = request.getParameter("pDocID");
-		String receiveSN = request.getParameter("pReceiveSN");
-		String deptID = request.getParameter("pDeptID");
-		
-		// String realPath = commonUtil.getRealPath(request);
-		// String dirPath = realPath +  commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		userInfo.setRealPath(commonUtil.getRealPath(request));
+		
+		String docID = request.getParameter("docID");
+		String receiveSN = request.getParameter("receiveSN");
+		String deptID = request.getParameter("deptID");
 		
 		String result = ezApprovalGService.setReBebu(docID, receiveSN, deptID, userInfo, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getLang());
 		

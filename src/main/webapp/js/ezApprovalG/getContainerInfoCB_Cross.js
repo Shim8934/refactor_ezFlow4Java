@@ -272,6 +272,7 @@ function GetDocDeliveryList(g_DeliverySearchParamXml) {
     }
 
     createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID);
+    createNodeAndInsertText(xmlpara, objNode, "EXTRECEPTYN", g_sFlag === "m03" ? "N" : "Y");
     g_szParamXml = getXmlString(xmlpara);
    
     g_DeliveryXmlhttp = createXMLHttpRequest();
@@ -485,6 +486,9 @@ function processRowClick(tr) {
     } else if (DocList_Flag == "CABINET") {
         ChkCabRoleInfo(tr);
     } else if (DocList_Flag == "Delivery") {
+        DocID = GetAttribute(tr,"DATA1");
+        pURL = GetAttribute(tr,"DATA2");
+        
 		switch (jobState) {
             case "ATTACH":
                 Attach_onclick();

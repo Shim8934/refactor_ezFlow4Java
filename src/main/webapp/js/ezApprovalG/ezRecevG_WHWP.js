@@ -1055,7 +1055,7 @@ function getExtInfo_CompleteSave(html) {
 		return getExtInfo_Fail();
 	}
 	else {
-		btnReqReSend.style.display = "none";
+		// btnReqReSend.style.display = "none";
 		SetHref("UPD");
 		SetDocInfo();
 		SendAckForSend("", "accept");
@@ -1079,7 +1079,7 @@ function getExtInfo_Fail(rtnVal) {
 	DivPopUpHidden();
 	SetHref("DEL");
 	chkBtnConfirm("1");
-	btnReqReSend.style.display = "";
+	// btnReqReSend.style.display = "";
 	return false;
 }
 
@@ -1089,11 +1089,11 @@ function getExtInfo_Complete(rtnVal) {
 
 		SetHref("DEL");
 		chkBtnConfirm("1");
-		btnReqReSend.style.display = "";
+		// btnReqReSend.style.display = "";
 		return false;
 	}
 	else {
-		btnReqReSend.style.display = "none";
+		// btnReqReSend.style.display = "none";
 		SetHref("UPD");
 		SetDocInfo();
 		SendAckForSend("", "accept");

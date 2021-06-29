@@ -2044,4 +2044,33 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addCommNoticeUpperNoColumn");
 		}
 	}
+		
+    public void alterTblAprReceiptProcessInfoAddColumn() {
+        try {
+            select("EzCommonDAO.checkTblAprReceiptProcessInfoAddColumn");
+        } catch (Exception e) {
+            logger.debug("tbl_aprreceiptprocessinfo rootdocid column doesn't exist. creating the column...");
+            update("EzCommonDAO.alterTblAprReceiptProcessInfoAddColumn");
+            update("EzCommonDAO.updateTblAprReceiptProcessInfoRootDocID");
+        }
+    }
+    
+    public void alterTblDocDeliveryAddColumn() {
+        try {
+            select("EzCommonDAO.checkTblDocDeliveryAddColumn");
+        } catch (Exception e) {
+            logger.debug("tbl_docdelivery extreceptyn column doesn't exist. creating the column...");
+            update("EzCommonDAO.alterTblDocDeliveryAddColumn");
+            update("EzCommonDAO.updateTblDocDeliveryExtReceptYn");
+        }
+    }
+    
+    public void insertTblCodelistA54002() {
+        try {
+            int cnt = (int) select("EzCommonDAO.checkTblCodelistA54002");
+            if (cnt == 0) {
+                insert("EzCommonDAO.insertTblCodelistA54002");
+            }
+        } catch (Exception e) {}
+    }
 }
