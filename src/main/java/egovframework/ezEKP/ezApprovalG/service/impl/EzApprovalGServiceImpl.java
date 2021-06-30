@@ -12691,6 +12691,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						
 						ezApprovalGDAO.updateSetBebuAprReceiptProcessInfo2(map);
 						
+						ezApprovalGDAO.deleteSetBebuExpAprLine(map);
+						ezApprovalGDAO.deleteSetBebuAprLineInfo(map);
+						
+						//수신문 반송시 배부하면  의견을 지워주기 위해 추가
+						ezApprovalGDAO.deleteOpinionInfo(map);
+						ezApprovalGDAO.updateOpinionInfo(map);
 					} else {
 						subSQL = doBebuDoc(docID, xmlDom.getDocumentElement().getChildNodes().item(k).getChildNodes().item(0).getTextContent(),
 								xmlDom.getDocumentElement().getChildNodes().item(k).getChildNodes().item(1).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(k).getChildNodes().item(2).getTextContent(),
@@ -12701,13 +12707,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						} 
 					}
 				}
-				
-				ezApprovalGDAO.deleteSetBebuExpAprLine(map);
-				ezApprovalGDAO.deleteSetBebuAprLineInfo(map);
-				
-				//수신문 반송시 배부하면  의견을 지워주기 위해 추가
-				ezApprovalGDAO.deleteOpinionInfo(map);
-				ezApprovalGDAO.updateOpinionInfo(map);
 				
 				subSQL = updateDeliveryList(docID, sentDeptID, ezOrganService.getPropertyValue(sentDeptID, "displayName", tenantID), ezOrganService.getPropertyValue(sentDeptID, "displayName2", tenantID), objRows.item(0).getTextContent(),
 						objRows.item(1).getTextContent(), objRows.item(2).getTextContent(), "", "", "", sentDeptID, "", companyID, "QUERY", lang, tenantID, userInfo.getDisplayName());
@@ -12859,6 +12858,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				map.put("v_APRSTATE", staASBaeBu);
 				map.put("v_DEPTID", deptID);
 				ezApprovalGDAO.insertBebuAprReceiptProcessInfo(map);
+				ezApprovalGDAO.updateAprReceiptProcessInfoRootDocID(map);
 				
                 // 중계문서에서 배부 받는 부서가 2개 이상일 때, 보낸 부서가 외부기관으로 입력되지 않는 오류 수정. 2020-05-13 홍대표.
                 boolean isRelayDoc = ezApprovalGDAO.isRelayDoc(map) > 0 ? true : false;
@@ -12900,6 +12900,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_DEPTID", deptID.trim());
 			map.put("v_DEPTNAME", deptName.trim());
 			map.put("v_DEPTNAME2", deptName2.trim());
+			map.put("v_RELAYFORMID", config.getProperty("Relay_FormID", ""));
 			
 			int maxSN = ezApprovalGDAO.updateDeliveryListSNMax(map);
 			
@@ -12967,6 +12968,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		} else {
 			map.put("v_YEAR", commonUtil.getTodayUTCTime("yyyy"));
 			map.put("v_DEPTID", deptID.trim());
+			map.put("v_RELAYFORMID", config.getProperty("Relay_FormID", ""));
 			
 			int maxSN = ezApprovalGDAO.updateDeliveryListSNMax(map) + 1;
 			
@@ -12984,6 +12986,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_DeptID", deptID);
 			map.put("v_Remark", remark);
 			map.put("v_OrganUserName", organUserName);
+			map.put("v_RelayFormID", config.getProperty("Relay_FormID", ""));
 			
 			ezApprovalGDAO.insertBebuDocDelivery(map);
 		}
@@ -23436,13 +23439,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 	
 	@Override
-	public String getDeliveryList(String p_DeptID, String pageSize, String pageNum, String SortHeader, String SortOption, String pQuery, String companyID, String lang, String deptcode, String deptcode2, String title, String sregdate, String eregdate, String debenturer, String isdocprint, int tenantID, String offset) throws Exception {
+	public String getDeliveryList(String p_DeptID, String pageSize, String pageNum, String SortHeader, String SortOption, String pQuery, String companyID, String lang, String deptcode, String deptcode2, String title, String sregdate, String eregdate, String debenturer, String isdocprint, String extReceptYN, LoginVO userInfo) throws Exception {
+	    int tenantID = userInfo.getTenantId();
+	    String offset = userInfo.getOffset();
+	    
 		StringBuffer resultXML = new StringBuffer();
 		String OrderOption1 = "";
 		String OrderOption2 = "";
 		
 		String listString = getListHeader("067", companyID, lang, tenantID);
 		Document listXML = commonUtil.convertStringToDocument(listString);
+		
+		String extAttr4 = ezOrganService.getPropertyValue(p_DeptID, "extensionAttribute4", tenantID); // 현재부서의 문서과 아이디
+		if ("Y".equals(extReceptYN) && config.getProperty("config.companyNum", "").equals(extAttr4) && "i=0".contains(userInfo.getRollInfo())) {
+		    p_DeptID = "";
+		}
 		
  		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
@@ -23454,6 +23465,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_CHARGENAME", debenturer);
 		map.put("v_SREGDATE", sregdate);
 		map.put("v_EREGDATE", eregdate);
+		map.put("v_EXTRECEPTYN", extReceptYN);
 		map.put("v_TENANTID", tenantID);
 		
 		int totalCount = ezApprovalGDAO.getDeliveryListCount(map);
@@ -28664,6 +28676,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		map.put("docID", docID);
 		map.put("v_TENANTID", userInfo.getTenantId());
+		map.put("companyID", userInfo.getCompanyID());
 		
 		List<ApprGAprLineVO> strLineXML = new ArrayList<ApprGAprLineVO>(); 
 		strLineXML = ezApprovalGDAO.relayAprLineXmlForExt(map);
@@ -32163,11 +32176,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String setReBebu(String docID, String receiveSN, String deptID, LoginVO userInfo, String companyID, int tenantId, String lang) throws Exception {
 		logger.debug("setReBebu started");
 		
-		
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("companyID", companyID);
         map.put("v_DOCID", docID);
-        map.put("v_TENANTID", tenantId);
+        map.put("companyID", userInfo.getCompanyID());
+        map.put("v_TENANTID", userInfo.getTenantId());
         
         Map<String, Object> deliveryDeptInfo = ezApprovalGDAO.getDeliveryDeptInfo(map);
         
@@ -32176,18 +32188,41 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         map.put("v_RECEIVEDDEPTNAME2", (String) deliveryDeptInfo.get("DISPLAYNAME2"));
         map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 
+        // receivedDept정보 변경, 상태변경 (014 -> 011)
         ezApprovalGDAO.updateReBebuAprReceiptProcessInfo(map);
         
+        // 결재라인 삭제
 		ezApprovalGDAO.deleteSetBebuExpAprLine(map);
 		ezApprovalGDAO.deleteSetBebuAprLineInfo(map);
-        
-		Map<String, Object> map3 = new HashMap<String, Object>();
-		map3.put("companyID", companyID);
-		map3.put("v_DOCID", docID);
-		map3.put("v_TENANTID", userInfo.getTenantId());
-		map3.put("v_FLAG", "APR");
 		
-		String docHref = ezApprovalGDAO.getDocInfoHref(map3);
+		// 배부대장에서 삭제
+		ezApprovalGDAO.deleteDocDelivery(map);
+		
+		String rebebuDuplMergeOp = getCode2Name("A54", "002", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		if ("Y".equals(rebebuDuplMergeOp)) {
+		    List<String> duplRebebuDoc = ezApprovalGDAO.selectDuplicateRebebuDoc(map);
+		    if (duplRebebuDoc.size() > 1) {
+		        map.put("v_DUPLFIRSTDOCID", duplRebebuDoc.get(0));
+		        
+		        for (int i = 1, ilen = duplRebebuDoc.size(); i < ilen; i++) {
+		            String duplRebebuDocID = duplRebebuDoc.get(i);
+		            
+		            map.put("v_DUPLDOCID", duplRebebuDocID);
+		            ezApprovalGDAO.insertMoveRebebuOpinion(map);
+		            
+		            map.put("v_DocID", duplRebebuDocID);
+		            ezApprovalGDAO.aprDeleteDocInfo3(map);
+		            ezApprovalGDAO.aprDeleteDocInfo5(map);
+		            ezApprovalGDAO.aprDeleteDocInfo6(map);
+		            ezApprovalGDAO.aprDeleteDocInfo7(map);
+		            ezApprovalGDAO.aprDeleteDocInfo8(map);
+		            ezApprovalGDAO.aprDeleteDocInfo9(map);
+		        }
+		    }
+		}
+        
+		map.put("v_FLAG", "APR");
+		String docHref = ezApprovalGDAO.getDocInfoHref(map);
 		String formURL = userInfo.getRealPath() + docHref;
 		String ext = getExtendedFileName(formURL);
 		

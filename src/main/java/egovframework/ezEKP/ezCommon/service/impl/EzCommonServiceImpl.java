@@ -2448,4 +2448,15 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addCommNoticeUpperNoColumn() throws Exception {
 		ezCommonDAO.addCommNoticeUpperNoColumn();
 	}
+
+    @Override
+    public void alterTblAprReceiptProcessInfoAddColumn() throws Exception {
+        ezCommonDAO.alterTblAprReceiptProcessInfoAddColumn();
+    }
+    
+    @Override
+    public void alterTblDocDeliveryAddColumn() throws Exception {
+        ezCommonDAO.alterTblDocDeliveryAddColumn();
+        ezCommonDAO.insertTblCodelistA54002();
+    }
 }

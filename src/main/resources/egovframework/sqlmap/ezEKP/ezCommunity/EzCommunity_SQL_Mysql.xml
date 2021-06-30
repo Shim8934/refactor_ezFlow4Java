@@ -2482,9 +2482,9 @@
 			SELECT
 				A.itemid,
 				A.writerid,
-				A.writername$v_USERINFO_LANG$,
-				A.writerdeptname$v_USERINFO_LANG$,
-				A.writercompanyname$v_USERINFO_LANG$,
+				A.writername$v_USERINFO_LANG$ as writername,
+				A.writerdeptname$v_USERINFO_LANG$ as writerdeptname,
+				A.writercompanyname$v_USERINFO_LANG$ as writercompanyname,
 				A.startdate,
 				DATE_ADD(DATE_FORMAT(A.writedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS writedate,
 				A.parentwritedate,

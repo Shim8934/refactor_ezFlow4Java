@@ -326,4 +326,8 @@ public interface EzCommonService {
 	public void addBoardMailFGColumn() throws Exception;
 
 	public void addCommNoticeUpperNoColumn() throws Exception;
+	
+	public void alterTblAprReceiptProcessInfoAddColumn() throws Exception;
+	
+	public void alterTblDocDeliveryAddColumn() throws Exception;
 }
