@@ -1715,20 +1715,13 @@
 			FROM 
 				TBL_WEBFOLDER_FILE
 			WHERE 
-				(FOLDER_ID = #folderId# 
-				AND 
-				FILE_ID = #fileId#)
-				$query$
+				TENANT_ID = #tenantId# 
+			AND
+				FILE_ID IN 
 		]]>
-		<isEqual property="folderId" compareValue="S">
-			SELECT 
-				FILE_NAME, FILE_PATH, FILE_SIZE  
-			FROM 
-				TBL_WEBFOLDER_FILE
-			WHERE 
-				FILE_ID = #fileId#
-				$query$
-		</isEqual>
+		<iterate property="fileList" open="(" close=")" conjunction=",">
+			#fileList[]#
+		</iterate>
 	</select>
     <select id="EzWebFolderDAO_y.getWebFolderUserGroupList" parameterClass="Map" resultClass="String">
     	<![CDATA[

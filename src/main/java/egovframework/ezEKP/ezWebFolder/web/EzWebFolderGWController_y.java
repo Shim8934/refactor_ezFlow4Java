@@ -1416,21 +1416,20 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	public JSONObject selectWebfolderFiletoAnother(HttpServletRequest request, @RequestBody JSONObject jsonObject) throws Exception{
 		
 		LOGGER.debug("folderIdByUserIdAndFolderType start.");
-		JSONParser parser  = new JSONParser();
 		ArrayList<Map<String, Object>> fileList = new ArrayList<Map<String,Object>>();
 		JSONObject result = new JSONObject();
-		String folderId = "";
 		
 		ArrayList<String> list = new ArrayList<String>();
 		list = (ArrayList<String>) jsonObject.get("param");
 		
 		String userId = jsonObject.get("userId").toString();
+		int tenantId = (int) jsonObject.get("tenantId");
 		
 		// 퍼미션 체크 해야함 
 		try {
-			LOGGER.debug("userId=" + userId + ",list=" + list);
+			LOGGER.debug("userId=" + userId + ",list=" + list + ",tenantId=" + tenantId);
 			
-			fileList = service.selectWebfolderFiletoAnother(userId, list);
+			fileList = service.selectWebfolderFiletoAnother(userId, list, tenantId);
 			
 		} catch (Exception e) {
 			e.printStackTrace();

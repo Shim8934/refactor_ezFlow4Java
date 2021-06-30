@@ -204,7 +204,7 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 		return (String) select("EzWebFolderDAO_y.folderIdByUserIdAndFolderType", map);
 	}
 
-	public ArrayList<Map<String, Object>> selectWebfolderFiletoAnother(Map<String, String> map) {
+	public ArrayList<Map<String, Object>> selectWebfolderFiletoAnother(Map<String, Object> map) {
 		return  (ArrayList<Map<String, Object>>) list("EzWebFolderDAO_y.selectWebfolderFiletoAnother", map);
 	}
 	
