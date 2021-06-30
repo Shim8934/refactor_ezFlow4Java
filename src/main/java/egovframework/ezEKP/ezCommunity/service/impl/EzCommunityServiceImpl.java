@@ -7658,7 +7658,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			String communityID = sendPostNoticeMailGet1(boardID);
 			String subject = "[Community " + egovMessageSource.getMessage("ezCommunity.t127", locale) + boardInfo.getBoardName() + "] " + vo.getTitle();
 			bodyContent.append("<br>" + egovMessageSource.getMessage("ezCommunity.t126", locale) + "<br><br>");
-			bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t117", locale) + boardInfo.getBoardName());
+			bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t117", locale) + commonUtil.cleanValue(boardInfo.getBoardName()));
 			/* 2018-04-30 이소담 - 커뮤니티 > 답변 알림메일 송부 > 메일 > 게시일자, 게시자, 비정상적으로 표시되어서 수정 */
 //			bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t118", locale) + EgovDateUtil.getToday(""));
 			bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t118", locale) + vo.getWriteDate());
