@@ -17,7 +17,22 @@
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>		
 		<script type="text/javascript">
 		    function sendIt() {
-				if ( ByteLength(document.getElementById("pollSubject").value) > 200 ) {
+		    	// 2021-06-30 김은실 - 유효성 체크: (범우 개선 #80285 => 표준) 커뮤니티>커뮤니티선택>설문조사>설문이 객관식일 경우, 보기 입력안해도 등록가능
+		    	var subj = document.getElementById("pollSubject");
+	    		if ( subj.value.length == 0 ) {
+					alert("<spring:message code='ezQuestion.t492' />");
+					return;		
+				}
+		    	
+		    	var selNo_s = document.querySelectorAll('input[name*=selNo_]');
+		    	for ( i = 0 ; i < selNo_s.length ; i ++ ) {
+		    		if ( selNo_s[i].value.length == 0 ) {
+						alert("(" + (i + 1) + ") <spring:message code='ezQuestion.t493' />");
+						return;		
+					}
+		    	}
+		    	
+				if ( ByteLength(subj.value) > 200 ) {
 					alert("<spring:message code='ezCommunity.t614' />");
 					return;		
 				} else if (confirm("<spring:message code='ezPoll.t210'/>")) {			
