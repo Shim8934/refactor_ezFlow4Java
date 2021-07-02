@@ -1030,6 +1030,8 @@
 			        parameter[56] = limitDate;
 		        }
 		        
+				parameter[61] = tempKeyword;
+		        
 		        if (tempItemCode != "")
 		            tempdocnumcode = tempItemCode;
 		
