@@ -7174,33 +7174,39 @@
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getHistoryForAttach" parameterClass="Map" resultClass="ApprGHistoryAttachVO">
 		SELECT 
-				DOCID, 
-				ATTACHFILESN, 
-				ATTACHFILENAME, 
-				ATTACHFILEDISPLAYNAME,
-	   			ATTACHFILEHREF, 
-	   			ATTACHFILESIZE, 
-	   			ATTACHUSERID, 
-	   			ATTACHUSERNAME, 
-	   			ATTACHUSERNAME2,
-	   			ATTACHUSERJOBTITLE, 
-	   			ATTACHUSERJOBTITLE2, 
-	   			ATTACHUSERDEPTID, 
-	   			ATTACHUSERDEPTNAME, 
-	   			ATTACHUSERDEPTNAME2, 
-	   			MODIFYDATE,
-	   			MODIFYSN, 
-	   			MODIFYFLAG, 
-	   			PAGENUM, 
-	   			CHKFLAG
+				DISTINCT
+                    APR.DISPLAYNAME as DISPLAYNAME,
+                    HIS.DOCID, 
+				    HIS.ATTACHFILESN, 
+    				HIS.ATTACHFILENAME, 
+    				HIS.ATTACHFILEDISPLAYNAME,
+    	   			HIS.ATTACHFILEHREF, 
+    	   			HIS.ATTACHFILESIZE, 
+    	   			HIS.ATTACHUSERID, 
+    	   			HIS.ATTACHUSERNAME, 
+    	   			HIS.ATTACHUSERNAME2,
+    	   			HIS.ATTACHUSERJOBTITLE, 
+    	   			HIS.ATTACHUSERJOBTITLE2, 
+    	   			HIS.ATTACHUSERDEPTID, 
+    	   			HIS.ATTACHUSERDEPTNAME, 
+    	   			HIS.ATTACHUSERDEPTNAME2, 
+    	   			HIS.MODIFYDATE,
+    	   			HIS.MODIFYSN, 
+    	   			HIS.MODIFYFLAG, 
+    	   			HIS.PAGENUM, 
+    	   			HIS.CHKFLAG
 	   	FROM 
-	   			TBL_HISTORYATTACHINFO 
+	   			TBL_HISTORYATTACHINFO HIS
+        JOIN
+                TBL_APRATTACHINFO APR
+        ON
+                HIS.DOCID = APR.DOCID AND HIS.COMPANYID = APR.COMPANYID AND HIS.ATTACHFILEDISPLAYNAME = APR.ATTACHFILENAME                
 	   	WHERE 
-	   			DOCID = #v_DOCID#
+	   			HIS.DOCID = #v_DOCID#
 	   	AND
-	   			TENANT_ID = #v_TENANTID#
+	   			HIS.TENANT_ID = #v_TENANTID#
 	   	AND
-	   			COMPANYID = #companyID#
+	   			HIS.COMPANYID = #companyID#
 	   	<isGreaterThan property="v_ORDEROPTIONLENGTH" compareValue="0">
    		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="10">
    		<isEqual property="v_ORDEROPTIONVALUE" compareValue="modifydate">
