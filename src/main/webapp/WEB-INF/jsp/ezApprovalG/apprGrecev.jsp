@@ -186,6 +186,12 @@
 		                    pDocSN = tmpDocSN;
 		            }
 		        }
+		        temppDocSN = pDocSN;
+		        
+		        /* 2021-07-02 홍승비 - 합의문 회송 시 신규 의견창 사용 */
+		        openOpinionUI_New("HeSong", btnReturn_onclick_Complete);
+		        
+		        /*
 		        var parameter = new Array();
 		        parameter[0] = pDocID;
 		        parameter[1] = "HeSong";
@@ -204,6 +210,7 @@
 		        apropinion_cross_dialogArguments[1] = btnReturn_onclick_Complete;
 		
 		        DivPopUpShow(530, 520, "/ezApprovalG/aprOpinion.do");
+		        */
 		    }
 			
 		    function btnReturn_onclick_Complete(ret) {
@@ -256,7 +263,8 @@
 			                    Ans = OpenInformationUI(pInformationContent);
 			
 			                    if (Ans) {
-			                        openOpinionUI("Display");
+			                        //openOpinionUI("Display");
+			                    	openOpinionUI_New("");
 			                    }
 			                }
 			            } else if (pDraftFlag == "SUSIN" || pDraftFlag == "GONGRAM") {
@@ -275,7 +283,8 @@
 			                    Ans = OpenInformationUI(pInformationContent);
 			
 			                    if (Ans) {
-			                        openOpinionUI("Display");
+			                        //openOpinionUI("Display");
+			                        openOpinionUI_New("");
 			                    }
 			
 			                }
@@ -296,7 +305,8 @@
 			                    pInformationContent = "<spring:message code='ezApprovalG.t126'/><br> <spring:message code='ezApprovalG.t125'/>";
 			                    Ans = OpenInformationUI(pInformationContent);
 			                    if (Ans) {
-			                        openOpinionUI("Display");
+			                        //openOpinionUI("Display");
+			                    	openOpinionUI_New("");
 			                    }
 			                }
 			            }
@@ -808,7 +818,8 @@
 			// 첨언창 오픈 함수
 			function btnOpinion_onclick()
 			{
-				var ret = openOpinionUI("N");
+				//var ret = openOpinionUI("N");
+				openOpinionUI_New("");
 			}
 			
 			//프린트 
@@ -1018,6 +1029,8 @@
 			        parameter[55] = fileOpenFlagList;
 			        parameter[56] = limitDate;
 		        }
+		        
+				parameter[61] = tempKeyword;
 		        
 		        if (tempItemCode != "")
 		            tempdocnumcode = tempItemCode;
