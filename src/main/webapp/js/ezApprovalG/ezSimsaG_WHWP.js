@@ -387,7 +387,7 @@ function makeXML(newDocID) {
                 if (message.FieldExist("sign" + SignSN)) {
 					var signPath = GetDocumentElement("sign" + SignSN, false);
 							
-                    if (signPath != "") {
+                    if (!!signPath) {
                     	var tempNode3;
 						tempNode3 = createNodeAndAppandNodeText(sihangXML, tempNode2, tempNode3, "signimage", "");
 

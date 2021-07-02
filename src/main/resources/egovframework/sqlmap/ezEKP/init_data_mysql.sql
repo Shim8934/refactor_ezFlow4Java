@@ -549,6 +549,7 @@ INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMP
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A53','002','Y','1','수신처 그룹 확장(수신처 저장시 확장여부). Y는 사용. N은 사용안함','Y','Y','Y','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A54','0  ','배부대장처리방법','0','배부대장 처리방법','Dist. box proc. method','배부대장처리방법','배부대장처리방법','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A54','001','Y','1','Y:기존 데이터 업데이트, N:신규데이터생성','Y','Y','Y','Top',0);
+INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A54','002','Y','1','Y:다중배부 문서 재배부요청 시 한개의 문서만 남김, N:다중배부문서 재배부요청시 문서변화 없음','Y','Y','Y','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A55','0  ','자동발송의뢰코드','0','민원인 주소가 존재할 때에 자동 발송의뢰 하는 루틴 옵션. (계명대 특수 옵션)','Auto send req. code','자동발송의뢰코드','자동발송의뢰코드','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A55','001','S904000','1','민원인 주소일때에 이 부서로 자동 발신을 의뢰한다.','S904000','S904000','S904000','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A56','0  ','공람발송관련','0','수신처 공람발송 순차/병렬여부 설정','Public display','공람발송관련','공람발송관련','Top',0);

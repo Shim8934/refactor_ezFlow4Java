@@ -359,6 +359,9 @@
 		                case "m13":
 							DocManageMain(pthis.id);
 		                    break;
+		                case "m14":
+							DocManageMain(pthis.id);
+		                    break;
 		                case "approvalForDoc":
 		                	window.open("/admin/ezApprovalG/forAprDoc.do?type=user", "right");
 		                	break;
@@ -1062,6 +1065,9 @@
 							case "m13":
 		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 								break;
+							case "m14":
+		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+								break;
 		                }
 		            }
 		        } catch (e) { }
@@ -1259,7 +1265,7 @@
 		        	<c:if test="${useApprFormCont == 'YES'}">
 		        	<h2 class="off" id="ITEMCONTH2">
 		        		<span class="sub_iconLNB tree_arrow_up"></span>
-		        		<span class="h2Title" onclick="openFolder('ITEMCONT');">양식별 문서함</span>
+		        		<span class="h2Title" onclick="openFolder('ITEMCONT');"><spring:message code='ezApprovalG.apprLeft01'/></span>
 		        	</h2>
 					<ul class="lnbUL off" id="ITEMCONTUL">
 			          	<c:forEach var="form" items="${itemList}" varStatus="status">
@@ -1281,7 +1287,7 @@
 		          	<c:if test="${fn:length(userShareList) > 0 }">
 			        	<h2 class="off" id="USERSHAREH2">
 			        		<span class="sub_iconLNB tree_arrow_up"></span>
-			        		<span class="h2Title" onclick="openFolder('USERSHARE');">개인공유함</span>
+			        		<span class="h2Title" onclick="openFolder('USERSHARE');"><spring:message code='ezApprovalG.apprLeft02'/></span>
 			        	</h2>
 						<ul class="lnbUL off" id="USERSHAREUL">
 				          	<c:forEach var="userShare" items="${userShareList}" varStatus="status">				          	
@@ -1308,7 +1314,7 @@
 		          	<c:if test="${fn:length(deptShareList) > 0 }">
 			        	<h2 class="off" id="DEPTSHAREH2">
 			        		<span class="sub_iconLNB tree_arrow_up"></span>
-			        		<span class="h2Title" onclick="openFolder('DEPTSHARE');">부서공유함</span>
+			        		<span class="h2Title" onclick="openFolder('DEPTSHARE');"><spring:message code='ezApprovalG.apprLeft03'/></span>
 			        	</h2>
 						<ul class="lnbUL off" id="DEPTSHAREUL">
 				          	<c:forEach var="deptShare" items="${deptShareList}" varStatus="status">				          	
@@ -1361,6 +1367,7 @@
 			        	<li><span class="sub_iconLNB tree_appr_record3"></span><span class="list_text" id="m05" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t905'/></span></li>
 			        	<li><span class="sub_iconLNB tree_appr_record4"></span><span class="list_text" id="m06" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t906'/></span></li>
 			        	<li><span class="sub_iconLNB tree_appr_record5"></span><span class="list_text" id="m02" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t912'/></span></li>
+						<li><span class="sub_iconLNB tree_appr_record3"></span><span class="list_text" id="m14" onclick="Open_Func(this)"><spring:message code='ezApprovalG.kbh08'/></span></li>
 						<li><span class="sub_iconLNB tree_appr_record3"></span><span class="list_text" id="m12" onclick="Open_Func(this)"><spring:message code='ezApprovalG.kbh06'/></span></li>
 						<li><span class="sub_iconLNB tree_appr_record4"></span><span class="list_text" id="m13" onclick="Open_Func(this)"><spring:message code='ezApprovalG.kbh07'/></span></li>
 			        </ul>

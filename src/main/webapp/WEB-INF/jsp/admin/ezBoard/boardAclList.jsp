@@ -257,6 +257,10 @@
 		        var listview = new ListView();
 		        listview.LoadFromID("CopyBoardListViewTable");
 		        var rowData = listview.GetDataRows();
+		        if(rowData.length == 0) {
+		        	alert("<spring:message code='ezBoard.t0015'/>");
+		        	return;
+		        }
 		        var xmlhttp = createXMLHttpRequest();
 		        var xmlpara = createXmlDom();
 

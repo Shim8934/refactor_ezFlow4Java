@@ -5415,7 +5415,7 @@ public class EzNewPortalGWController {
 				
 				for (HashMap<String, Object> hashMap : tabBoardIdList) {
 					String tabBoardId = hashMap.get("BOARDID").toString();
-					String tabBoardName = hashMap.get("BOARDNAME").toString();
+					String tabBoardName = portletLang.equals("1") ? hashMap.get("BOARDNAME").toString() : hashMap.get("BOARDNAME2").toString();
 					// 탭게시판 권한 체크
 					boolean accessCheckSub = boardAuthCheck(tabBoardId, deptPath, tenantId, companyId, deptId, userId, rollInfo);
 					
