@@ -7932,8 +7932,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String userID = xmlDom.getElementsByTagName("USERID").item(0).getTextContent().trim();
 		// String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
 		String langType = xmlDom.getElementsByTagName("LANGTYPE").item(0).getTextContent().trim();
-		String formID = xmlDom.getElementsByTagName("FORMID").item(0).getTextContent().trim();
-		String mode = xmlDom.getElementsByTagName("MODE").item(0).getTextContent().trim();
+//		String formID = xmlDom.getElementsByTagName("FORMID").item(0).getTextContent().trim();
 		String orgUID = "";
 		String realPath = commonUtil.getRealPath(request);
 		
@@ -7941,6 +7940,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		if (xmlDom.getElementsByTagName("DOCID").getLength() > 0) {
 			totCnt = xmlDom.getElementsByTagName("DOCID").getLength(); // 결재 체크된 문서 갯수 확인
+			String mode = xmlDom.getElementsByTagName("MODE").item(0).getTextContent().trim();
 			
 			for (int k = xmlDom.getElementsByTagName("DOCID").getLength() - 1; k > -1; k--) {
 				orgUID = xmlDom.getElementsByTagName("ORGAPRUSERID").item(k).getTextContent(); // 원결재자
@@ -7950,6 +7950,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				String orgCompanyID = xmlDom.getElementsByTagName("orgCompanyID").item(k).getTextContent().trim();
 				String approveRet = ezApprovalGService.getApproveDocInfo(userInfo, xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgCompanyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(),mode,docState);
 				String aprMemberSN = xmlDom.getElementsByTagName("APRMEMBERSN").item(k).getTextContent().trim();
+				String formID = xmlDom.getElementsByTagName("FORMID").item(k).getTextContent().trim();
 				
 				Document aprXML = commonUtil.convertStringToDocument(approveRet);
 				
