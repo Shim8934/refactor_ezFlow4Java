@@ -30128,7 +30128,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		// formId, reformflag
 		ApprGFormVO reformInfo = (ApprGFormVO) ezApprovalGDAO.getReformInfoForApprovalDocument(parameterMap);
 
-		if (reformInfo.getReformFlag() == null) {
+		if (reformInfo != null && reformInfo.getReformFlag() == null) {
 			reformInfo.setReformFlag(isReformFromFileSystem(reformInfo.getFormID(), companyId, tenantId) ? "Y" : "N");
 		}
 
