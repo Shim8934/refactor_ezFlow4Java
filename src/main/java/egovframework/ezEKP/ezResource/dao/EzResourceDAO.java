@@ -324,8 +324,9 @@ public class EzResourceDAO extends EgovAbstractDAO {
 		return (String) select("EzResourceDAO.getResourceOrder", map);
 	}
 	
-	public String getTargetResourceOrder(Map<String, Object> map) throws Exception {
-		return (String) select("EzResourceDAO.getTargetResourceOrder", map);
+	@SuppressWarnings("unchecked")
+	public Map<String, Object> getTargetResourceOrder(Map<String, Object> map) throws Exception {
+		return (Map<String, Object>) select("EzResourceDAO.getTargetResourceOrder", map);
 	}
 	
 	public void changeResourceOrder(Map<String, Object> map) throws Exception {

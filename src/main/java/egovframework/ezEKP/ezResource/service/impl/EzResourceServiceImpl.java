@@ -4049,11 +4049,11 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map2.put("upperResourceId", upperResourceId);
 		map2.put("brd_step", selectedResourceIdOrder);
 		
-		String targetResourceId = ezResourceDAO.getTargetResourceOrder(map2);
+		Map<String, Object> targetResource = ezResourceDAO.getTargetResourceOrder(map2);
 		
-		map2.put("resourceId", targetResourceId);
+		map2.put("resourceId", targetResource.get("brd_id"));
 		
-		String targetResourceIdOrder = ezResourceDAO.getResourceOrder(map2);
+		String targetResourceIdOrder = Long.toString((Long)targetResource.get("brd_step"));
 		
 		String tempOrder = selectedResourceIdOrder;
 		selectedResourceIdOrder = targetResourceIdOrder;
