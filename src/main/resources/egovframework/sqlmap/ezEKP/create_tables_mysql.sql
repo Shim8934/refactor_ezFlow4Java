@@ -15173,4 +15173,4 @@ inner join (
  ) as folder
 inner join tbl_webfolder_folder fld 
 on fld.folder_path regexp folder.folder_path ) as folderInfo 
-on f.folder_id = folderInfo.folder_id
+on f.folder_id = folderInfo.folder_id;
