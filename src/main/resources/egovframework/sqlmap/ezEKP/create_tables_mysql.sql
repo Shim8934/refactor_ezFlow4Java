@@ -14218,7 +14218,7 @@ CREATE TABLE `tbl_webfolder_fileuser` (
   `SUBDEPT_PERMITTED` int(11) DEFAULT 0,
   PRIMARY KEY (`SEQ_ID`,`TENANT_ID`),
   KEY `INDEX_FILE_ID` (`FILE_ID` ASC),
-  KEY `INDEX_USER_ID` (`USER_ID` ASC),
+  KEY `INDEX_USER_ID` (`USER_ID` ASC)
 ) ENGINE=InnoDB AUTO_INCREMENT=10000000 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
