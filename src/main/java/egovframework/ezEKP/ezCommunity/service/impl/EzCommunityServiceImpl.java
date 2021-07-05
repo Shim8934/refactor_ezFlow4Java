@@ -1089,7 +1089,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			/* 2018-05-07 홍승비 - 커뮤니티 설문조사 체크박스 사용 (삭제를 위한 해당설문ID, 등록자ID, 커뮤니티ID) */
 			sb.append("<td><input type=\"checkbox\" id=\"" + item.getManagerID()+ ";\" pollRegID=\"" + item.getPollRegUser() + "\" clubNo=\"" + item.getC_clubNo() + "\"/></td>");			
 			sb.append("<td style=\"text-overflow:ellipsis;overflow:hidden;white-space:nowrap;\" title=\"" + commonUtil.cleanValue(item.getPollSubject()).replaceAll("\\\\", "&#92;") + "\">");
-			sb.append("<a style = \"cursor:pointer\" onclick=movepage(\"" + code + "\",\"" + item.getManagerID() + "\",\"" + pollState + "\")>" + commonUtil.cleanValue(item.getPollSubject()).replaceAll("\\\\", "&#92;") + "</a></td>");
+			sb.append("<a style = \"cursor:pointer\" onclick=movepage(\"" + code + "\",\"" + item.getManagerID() + "\",\"" + pollState.replaceAll(" ", "&nbsp;") + "\")>" + commonUtil.cleanValue(item.getPollSubject()).replaceAll("\\\\", "&#92;") + "</a></td>");
 			sb.append("<td>" + commonUtil.getDateStringInUTC(item.getPollStartDate().substring(0,19), offset, false).substring(0, 10) + " ~ " + commonUtil.getDateStringInUTC(item.getPollEndDate().substring(0,19), offset, false).substring(0, 10) + "</td>");
 			sb.append("<td>" + strResponseCnt + egovMessageSource.getMessage("ezCommunity.t478", userInfo.getLocale()) + "</td>");
 			sb.append("<td>" + pollState + "</td>");
@@ -7658,7 +7658,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			String communityID = sendPostNoticeMailGet1(boardID);
 			String subject = "[Community " + egovMessageSource.getMessage("ezCommunity.t127", locale) + boardInfo.getBoardName() + "] " + vo.getTitle();
 			bodyContent.append("<br>" + egovMessageSource.getMessage("ezCommunity.t126", locale) + "<br><br>");
-			bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t117", locale) + boardInfo.getBoardName());
+			bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t117", locale) + commonUtil.cleanValue(boardInfo.getBoardName()));
 			/* 2018-04-30 이소담 - 커뮤니티 > 답변 알림메일 송부 > 메일 > 게시일자, 게시자, 비정상적으로 표시되어서 수정 */
 //			bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t118", locale) + EgovDateUtil.getToday(""));
 			bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t118", locale) + vo.getWriteDate());

@@ -230,11 +230,13 @@
 		            
 		            var FavList = listView2.GetDataRows();
 		            
+		            if(GetAttribute(FavList[0], "id").indexOf("noItems") < 0) {
 		            for (var i = 0; i < FavList.length; i++) {
 		                if (GetAttribute(FavList[i], "DATA1") == GetAttribute(listView.GetSelectedRows()[0], "DATA1")) {
 		                    OpenAlertUI("<spring:message code='ezApprovalG.t20001'/>");
 		                    return;
 		                }
+		            }
 		            }
 		        }
 		
@@ -398,6 +400,7 @@
 		    	});
 		
 		        document.getElementById('divlvtFavForm').innerHTML = "";
+		        document.getElementById('descrip2').innerHTML = "";
 		
 		        var listview = new ListView();
 		        listview.SetID("lvtFavForm");

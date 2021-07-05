@@ -192,6 +192,9 @@
 		                case "m13":
 		                    OutSendList_onclick();
 		                    break;
+		                case "m14":
+		                    idistbox_onclick();
+		                    break;
 		                default:
 		                    RecordList_onclick();
 		                    break;
@@ -344,7 +347,7 @@
 		            }
 		        }
 		    function idistbox_onclick() {
-		        document.getElementById("imgTitle").innerHTML = "<spring:message code='ezApprovalG.t911'/>";
+		        document.getElementById("imgTitle").innerHTML = g_sFlag === "m03" ? "<spring:message code='ezApprovalG.t911'/>" : "<spring:message code='ezApprovalG.kbh08'/>";
 		        document.getElementById("imgTitle").style.display = "";
 		        SwapSubMenuDisplay("0");
 		

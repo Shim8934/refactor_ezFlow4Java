@@ -32,6 +32,8 @@ function GetFormInfo(ID, KIND, searchType, searchName) {
 	});
 	
 	document.getElementById('divlvtForm').innerHTML = "";
+	document.getElementById('descrip').innerHTML = "";
+	
     var listview = new ListView();                           
     listview.SetID("lvtForm");                               
     listview.SetMulSelectable(false);

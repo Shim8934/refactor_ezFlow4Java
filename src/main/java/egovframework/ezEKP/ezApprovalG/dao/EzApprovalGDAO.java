@@ -3680,5 +3680,20 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public String getChaebunDept(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalG.getChaebunDept", map);
 	}
+
+	public void deleteDocDelivery(Map<String, Object> map) throws Exception {
+	    delete("EzApprovalG.deleteDocDelivery", map);
+	}
 	
+	public List<String> selectDuplicateRebebuDoc(Map<String, Object> map) throws Exception {
+	    return (List<String>) list("EzApprovalG.selectDuplicateRebebuDoc", map);
+	}
+	
+	public void insertMoveRebebuOpinion(Map<String, Object> map) throws Exception {
+	    insert("EzApprovalG.insertMoveRebebuOpinion", map);
+	}
+	
+	public void updateAprReceiptProcessInfoRootDocID(Map<String, Object> map) throws Exception {
+	    update("EzApprovalG.updateAprReceiptProcessInfoRootDocID", map);
+	}
 }
