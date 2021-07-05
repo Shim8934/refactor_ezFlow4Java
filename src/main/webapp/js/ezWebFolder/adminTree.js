@@ -86,6 +86,7 @@ function displaySubFolder(divTree, divElmt, list, folderType) {
 	var spanFolderName = document.createElement("span");
 	if (list["folderLevel"] == 0) {
 		spanFolderName.textContent = primary == "1" ? list["folderName"]+"(" + list["ownerId"]+")" : list["folderName2"]+"(" + list["ownerId"]+")";
+		companyId = list["ownerId"];
 	} else {
 		spanFolderName.textContent = primary == "1" ? list["folderName"] : list["folderName2"];
 	}
@@ -93,7 +94,7 @@ function displaySubFolder(divTree, divElmt, list, folderType) {
 	spanFolderName.setAttribute("name", list["folderId"]);
 	spanFolderName.setAttribute("level", list["folderLevel"]);
 	spanFolderName.setAttribute("title", primary == "1" ? list["folderName"] : list["folderName2"]);
-	spanFolderName.onclick = function() {getSelected(this, folderType);};
+	spanFolderName.onclick = function() {getSelected(companyId, this, folderType);};
 	
 	/* 2018-08-23 홍승비 - 웹폴더 폴더명 ellipsis 작업 */
 	var spanW = 157 - (15 * list["folderLevel"]);
@@ -140,7 +141,7 @@ function displaySubFolder(divTree, divElmt, list, folderType) {
 	}
 }
 
-function getSelected(obj, mode) {
+function getSelected(compId, obj, mode) {
 	var previousElmt = document.getElementsByName(selectedFolder)[0];
 	
 	if (previousElmt != null) {
@@ -156,7 +157,7 @@ function getSelected(obj, mode) {
 	var level            = obj.getAttribute("level");
 	
 	if (mode == "comp") {
-		window.open("/admin/ezWebFolder/webfolderAdminCompanyFile.do?folderId=" + selectedFolder + "&rootFolder=" + compFolderId + "&level=" + level, "right");
+		window.open("/admin/ezWebFolder/webfolderAdminCompanyFile.do?folderId=" + selectedFolder + "&rootFolder=" + compFolderId + "&level=" + level + "&companyId=" + compId, "right");
 	}
 	else {
 		window.open("/admin/ezWebFolder/webfolderAdminDeptFile.do?folderId=" + selectedFolder + "&level=" + level, "right");

@@ -263,7 +263,7 @@ function startSearch() {
 
 function changeCompanyForCompFile() {
 	refresh();
-	window.parent.frames["left"].getCompanyData(document.getElementById("companyList").value, 1, treeType);
+	window.parent.frames["left"].getCompanyData(document.getElementById("companyList").value, 1, "folderTree");
 }
 
 function changeCompanyForDeptFile() {
