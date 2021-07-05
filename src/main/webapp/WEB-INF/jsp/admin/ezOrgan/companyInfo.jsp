@@ -260,7 +260,7 @@
 		  	<c:if test="${pageType eq 'modify' }">
 			  	<tr>
 			  		<th><spring:message code='main.t78' /></th>
-			  		<td>${companyMailDomain}</td>
+			  		<td>${compMail}</td>
 			  	</tr>
 		  	</c:if>
 		  	<tr> 
