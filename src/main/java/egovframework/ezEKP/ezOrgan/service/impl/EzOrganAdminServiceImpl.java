@@ -419,7 +419,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		logger.debug("type="+type);
 		
-        ezOrganAdminDao.moveDBDataForJMocha(map);
+        /*ezOrganAdminDao.moveDBDataForJMocha(map);*/
         
     	if (type.toLowerCase().equals("group")) {
     		OrganDeptVO dept = ezOrganAdminDao.moveDBData_S(map);
@@ -576,7 +576,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("timeUTC", timeUTC);
 		
 	    ezOrganAdminDao.retireDBData_I(map);
-	    ezOrganAdminDao.retireDBData(map);
+	    /*ezOrganAdminDao.retireDBData(map);*/
 	    ezOrganAdminDao.retireDBData_D3(map);
 	    
 	    /**
@@ -805,9 +805,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
             // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
             } catch (Exception e) {
                 e.printStackTrace();
-                
+                /*
                 map.put("v_CLASS", "group");
-                ezOrganAdminDao.deleteDBDataForJMocha(map);
+                ezOrganAdminDao.deleteDBDataForJMocha(map);*/
                 
                 throw e;
             }			
@@ -1166,7 +1166,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	    	//사용자를 삭제 할 때, 대상의 정보를 저장한다. 2018-06-04 홍대표
 	    	ezOrganAdminDao.insertDelUserDBData_I(map);
 	    	
-	        ezOrganAdminDao.deleteDBDataForJMocha(map);
+	        /*ezOrganAdminDao.deleteDBDataForJMocha(map);*/
      
 	        ezOrganAdminDao.deleteDBData_D1(map);
 	        ezOrganAdminDao.deleteDBData_D4(map);
