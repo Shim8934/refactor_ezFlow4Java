@@ -114,7 +114,7 @@ public interface EzApprovalGService {
 
     public String getReceiptTempletDetailInfo(String formID, String userID, String aprSN, String companyID, String lang, int tenantID, String offSet, String approvalFlag) throws Exception;
 
-    public String getTempList(String companyID, String lang, int tenantID) throws Exception;
+    public String getTempList(String companyID, String lang, int tenantID, String extReceptYn) throws Exception;
 
     public String getTempList2(String groupID, String companyID, String lang, int tenantID) throws Exception;
 

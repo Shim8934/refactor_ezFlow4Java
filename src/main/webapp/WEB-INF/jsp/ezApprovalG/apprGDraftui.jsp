@@ -198,6 +198,7 @@
 	        var bigAttachDownloadPeriod = "<c:out value ='${bigAttachDownloadPeriod}'/>";
 	        var bigAttachDownloadDay = "<c:out value ='${bigAttachDownloadDay}'/>";
 	        var bigSizeAttachDownloadLimitCount = "<c:out value ='${bigSizeAttachDownloadLimitCount}'/>";
+			var preSusinGroupStr = "<c:out value ='${preSusinGroupStr}'/>";
 	        
 		    window.onload = function ()
 		    {

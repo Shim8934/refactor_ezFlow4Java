@@ -3019,3 +3019,77 @@ function getOrgDocID() {
 	
 	return orgDocID;
 }
+
+function makeReceptListview(dataJson) {
+    /**
+     * data0: idx
+     * data1: deptId
+     * data2: docId
+     * data3: extReceptYn
+     * data4: processYn
+     * data5: canEditYn
+     * data6: companyId
+     * data7: receptMemberId
+     * data8: receptMemberName
+     * data9: receptMemberJobTitle
+     * data10: receptDeptName
+     * data11: receptDeptName2
+     * data12: receptMemberJobTitle2
+     * data13: receptMemberName2
+     */
+
+    var resultXml = "";
+    if(approvalFlag === "G") {
+    	resultXml = loadXMLFile(strLangEtcFile1);
+    } else {
+    	resultXml = loadXMLFile(strLangEtcFileliban1);
+    }
+
+    var cells = SelectNodes(resultXml, "LISTVIEWDATA/ROWS/ROW/CELL");
+
+    setNodeText(SelectSingleNode(cells[0], "VALUE"), dataJson["data0"] || "");
+    setNodeText(SelectSingleNode(cells[0], "DATA1"), dataJson["data1"] || "");
+    setNodeText(SelectSingleNode(cells[0], "DATA2"), dataJson["data2"] || "");
+    setNodeText(SelectSingleNode(cells[0], "DATA3"), dataJson["data3"] || "");
+    setNodeText(SelectSingleNode(cells[0], "DATA4"), dataJson["data4"] || "N");
+    setNodeText(SelectSingleNode(cells[0], "DATA5"), dataJson["data5"] || "N");
+    setNodeText(SelectSingleNode(cells[0], "DATA6"), dataJson["data6"] || "");
+    setNodeText(SelectSingleNode(cells[0], "DATA7"), dataJson["data7"] || "");
+    setNodeText(SelectSingleNode(cells[0], "DATA8"), dataJson["data8"] || "");
+    setNodeText(SelectSingleNode(cells[0], "DATA9"), dataJson["data9"] || "");
+    setNodeText(SelectSingleNode(cells[0], "DATA10"), dataJson["data10"] || "");
+    setNodeText(SelectSingleNode(cells[0], "DATA11"), dataJson["data11"] || "");
+    setNodeText(SelectSingleNode(cells[0], "DATA12"), dataJson["data12"] || "");
+    setNodeText(SelectSingleNode(cells[0], "DATA13"), dataJson["data13"] || "");
+
+    setNodeText(SelectSingleNode(cells[1], "VALUE"), UserLang === "1" ? dataJson["data10"] || "" : dataJson["data11"] || "");
+    
+    if (approvalFlag !== "G") {
+        setNodeText(SelectSingleNode(cells[2], "VALUE"), UserLang === "1" ? dataJson["data7"] || "" : dataJson["data13"] || "");
+    }
+
+    return resultXml;
+}
+
+function getReceptLastIdx(lv) {
+    var idx = lv.GetDataRows().filter(function(elem) {
+        return elem.id.indexOf("noItems") === -1;
+    }).length + 1;
+
+    return idx;
+}
+
+function checkDuplicationRecept(lv, addReceptId) {
+    var result = true;
+    var rows = lv.GetDataRows();
+
+    for (var i = 0, ilen = rows.length; i < ilen; i++) {
+        var row = rows[i];
+        if (row.getAttribute("DATA1") === addReceptId) {
+            result = false;
+            break;
+        }
+    }
+
+    return result;
+}

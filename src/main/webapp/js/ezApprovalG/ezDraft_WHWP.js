@@ -238,19 +238,33 @@ function setRecevInfo(ret) {
 		
         if (recipflag) {
             if (getNodeText(dataNodes[3]) == "Y") {
-					precipent = getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);
-					precipents = getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);
+				if (getNodeText(dataNodes[1]).indexOf(preSusinGroupStr) == 0) {
+					precipent = strLang92;
+					precipents = (getNodeText(dataNodes[7]) ? getNodeText(dataNodes[7]) + " " : "") + getNodeText(dataNodes[0]);
+				} else {
+					precipent = (getNodeText(dataNodes[7]) ? getNodeText(dataNodes[7]) + " " : "") + getNodeText(dataNodes[0]);
+					precipents = (getNodeText(dataNodes[7]) ? getNodeText(dataNodes[7]) + " " : "") + getNodeText(dataNodes[0]);
+				}
 					recipflag = false;	
 				}
             else {
                 if (isExtDoc == "Y") {
-						precipent = getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);
-						precipents = getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);				
-						recipflag = false;	
+					if (getNodeText(dataNodes[1]).indexOf(preSusinGroupStr) == 0) {
+						precipent = strLang92;
+						precipents = (getNodeText(dataNodes[7]) ? getNodeText(dataNodes[7]) + " " : "") + getNodeText(dataNodes[0]);				
+					} else {
+						precipent = (getNodeText(dataNodes[7]) ? getNodeText(dataNodes[7]) + " " : "") + getNodeText(dataNodes[0]);
+						precipents = (getNodeText(dataNodes[7]) ? getNodeText(dataNodes[7]) + " " : "") + getNodeText(dataNodes[0]);				
 					}
-                else {
+						recipflag = false;	
+				} else {
+					if (getNodeText(dataNodes[1]).indexOf(preSusinGroupStr) == 0) {
+						precipent = strLang92;
+						precipents = getNodeText(dataNodes[0]);			
+					} else {
 						precipent = getNodeText(dataNodes[0]);
 						precipents = getNodeText(dataNodes[0]);			
+					}
 						recipflag = false;	
 					}
 				}
@@ -260,12 +274,12 @@ function setRecevInfo(ret) {
 			precipent = strLang92;
 			
 			if(getNodeText(dataNodes[3]) == "Y")
-				precipents = precipents + "," + getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);
+				precipents = precipents + ", " + (getNodeText(dataNodes[7]) ? getNodeText(dataNodes[7]) + " " : "") + getNodeText(dataNodes[0]);
             else {
 				if(isExtDoc == "Y")
-					precipents = precipents + "," + getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]); 
+					precipents = precipents + ", " + (getNodeText(dataNodes[7]) ? getNodeText(dataNodes[7]) + " " : "") + getNodeText(dataNodes[0]); 
 				else
-					precipents = precipents + "," + getNodeText(dataNodes[0]);
+					precipents = precipents + ", " + getNodeText(dataNodes[0]);
 			}
 		}		
 	}
