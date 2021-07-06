@@ -20,6 +20,7 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.w3c.dom.Document;
@@ -73,6 +74,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	
 	@Autowired
 	private EzOrganService ezOrganService;
+	
+	@Value("#{globals['Globals.DbType']}")
+	private String dbType;
 
 	public List<ResGetAdmSubClsTreeVO> getAdmSubClsTree(String parentID,String companyID, String treeType, int tenantID, String adminType) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -4049,18 +4053,16 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map2.put("upperResourceId", upperResourceId);
 		map2.put("brd_step", selectedResourceIdOrder);
 		
-		String targetResourceId = ezResourceDAO.getTargetResourceOrder(map2);
+		Map<String, Object> targetResource = ezResourceDAO.getTargetResourceOrder(map2);
 		
-		map2.put("resourceId", targetResourceId);
-		
-		String targetResourceIdOrder = ezResourceDAO.getResourceOrder(map2);
-		
-		String tempOrder = selectedResourceIdOrder;
-		selectedResourceIdOrder = targetResourceIdOrder;
-		targetResourceIdOrder = tempOrder;
-		
-		map.put("resourceOrder", selectedResourceIdOrder);
-		map2.put("resourceOrder", targetResourceIdOrder);
+		if (dbType.equals("mysql")) {
+			map.put("resourceOrder", Long.toString((Long)targetResource.get("brd_step")));
+			map2.put("resourceId", targetResource.get("brd_id"));
+		} else {
+			map.put("resourceOrder", String.valueOf(targetResource.get("BRD_STEP")));
+			map2.put("resourceId", targetResource.get("BRD_ID"));
+		}
+		map2.put("resourceOrder", selectedResourceIdOrder);
 		
 		ezResourceDAO.changeResourceOrder(map);
 		ezResourceDAO.changeResourceOrder(map2);
