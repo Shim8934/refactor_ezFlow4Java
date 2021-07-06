@@ -1104,8 +1104,6 @@
     		FROM
     			TBL_RS_BRD 
     		WHERE
-    			BRD_UPPER = #v_P_ClassGB#
-    		AND
     			BRD_COMPANY = #v_P_CompanyID#
     		AND
     			TENANT_ID = #tenantID#	
