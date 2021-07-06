@@ -1082,10 +1082,12 @@ public class EzEmailUtil {
 		if (part.getDisposition() != null && part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)
 				&& ((MimePart)part).getContentID() != null) {
 			String htmlBodyContent = (String)extraMap.get("htmlBody");
+			String contentID = ((MimePart) part).getContentID();
 			
-			if (htmlBodyContent != null) {
-				String contentID = ((MimePart)part).getContentID();
-				
+			// htmlBody가 없다면 Content-ID 존재 여부 상관없이 무조건 첨부라고 판단
+			if (htmlBodyContent == null) {
+				isAttachmentWithUnreferencedContentID = true;
+			} else {
 				if (contentID.startsWith("<")) {
 					contentID = contentID.substring(1);
 				}
@@ -1093,13 +1095,13 @@ public class EzEmailUtil {
 				if (contentID.endsWith(">")) {
 					contentID = contentID.substring(0, contentID.length() - 1);
 				}
-				
+
 				if (!htmlBodyContent.contains("contentId=%3C" + contentID + "%3E")) {
 					isAttachmentWithUnreferencedContentID = true;
-				}				
-				
-				logger.debug("attachment with contentID=" + contentID + ",isAttachmentWithUnreferencedContentID=" + isAttachmentWithUnreferencedContentID);				
+				}
 			}
+
+			logger.debug("attachment with contentID={}, isAttachmentWithUnreferencedContentID={}", contentID, isAttachmentWithUnreferencedContentID);
 		}
 		
 		// 아래 if문 조건에 disposition이 attachment인지 체크했는데

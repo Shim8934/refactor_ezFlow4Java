@@ -424,6 +424,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String tenantDomain = ezCommonService.getTenantConfig("DomainName", tenantID); // primary domain
 		String innerDomain = ezEmailService.getMultiDomainList(tenantID); // 전체 도메인 리스트
 		String[] domainList = innerDomain.split(";");
+		
+		OrganDeptVO organCompVO = ezOrganService.getDeptInfo(selectCN, userInfo.getPrimary(), userInfo.getTenantId());		
+        String compMail = organCompVO.getMail();
+        logger.debug("compMail={}", compMail);
+		
         // user primary domain
         String companyMailDomain = ezCommonService.getCompanyConfig(tenantID, selectCN, "DomainName");
         companyMailDomain = companyMailDomain.equals("") ? tenantDomain : companyMailDomain;
@@ -435,6 +440,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("domainList", domainList);
 		model.addAttribute("companyMailDomain", companyMailDomain);
 		model.addAttribute("pageType", pageType);
+		model.addAttribute("compMail", compMail);
 		
 		logger.debug("companyInfo ended.");
 		

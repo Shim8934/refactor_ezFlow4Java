@@ -151,9 +151,9 @@ function DelDocInfoSave_onclick(delflag)
 		//console.log(xmlresult);
 		//if( xmlresult.documentElement.text == "TRUE" )
 		if(SelectNodes(xmlresult, "RESULT")[0].childNodes[0].nodeValue == "TRUE" )
-			alert("<spring:message code='ezTask.t99'/>");
+			alert("<spring:message code='ezApprovalG.t804'/>");
 		else
-			alert("실패 : " + SelectNodes(xmlresult, "RESULT")[0].childNodes[0].nodeValue);
+			alert("<spring:message code='ezApprovalG.t805'/> : " + SelectNodes(xmlresult, "RESULT")[0].childNodes[0].nodeValue);
 	}
 	window.opener.popupCallback({ flag: true, p_lang: '', mode: '' }); //Call callback function 
 	window.close();

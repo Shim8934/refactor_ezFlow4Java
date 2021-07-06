@@ -10871,6 +10871,9 @@ CREATE TABLE "TBL_GOVSENDDOCHISTORY"
 --  DDL for Index SYS_C0029214
 --------------------------------------------------------
 
+  CREATE INDEX "IDX_FILEUSER_FILE_ID" ON "TBL_WEBFOLDER_FILEUSER" ("FILE_ID");
+  CREATE INDEX "IDX_FILEUSER_USER_ID" ON "TBL_WEBFOLDER_FILEUSER" ("USER_ID");  
+  
   CREATE UNIQUE INDEX "SYS_C0029214" ON "TBL_WEBFOLDER_FOLDER" ("TENANT_ID", "FOLDER_ID") 
   ;
 --------------------------------------------------------
@@ -11966,6 +11969,8 @@ CREATE TABLE "TBL_GOVSENDDOCHISTORY"
 
   CREATE UNIQUE INDEX "PK_TBL_WEBFOLDER_FILE" ON "TBL_WEBFOLDER_FILE" ("TENANT_ID", "FILE_ID") 
   ;
+  CREATE INDEX "IDX_WEBFOLDER_FILE_FOLDER_ID" ON "TBL_WEBFOLDER_FILE" ("FOLDER_ID"); 
+  
 --------------------------------------------------------
 --  DDL for Index PK_TBL_WEBFOLDER_LOG
 --------------------------------------------------------

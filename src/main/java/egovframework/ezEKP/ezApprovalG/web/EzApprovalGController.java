@@ -690,20 +690,20 @@ public class EzApprovalGController extends EgovFileMngUtil{
                 String tempMonth = aprStartDate.split("-")[1];
                 String tempDay = aprStartDate.split("-")[2];
                 
-                if(tempMonth.length() < 2 && tempDay.length() < 2) {
+                if (tempMonth.length() < 2 && tempDay.length() < 2) {
                 	tempMonth = "0" + tempMonth;
                 	tempDay = "0" + tempDay;
                 	aprStartDate = aprStartDate.substring(0,5) + tempMonth + "-" + tempDay;
                 }
-                else if(tempMonth.length() < 2 && tempDay.length() > 1) {
+                else if (tempMonth.length() < 2 && tempDay.length() > 1) {
                 	tempMonth = "0" + tempMonth;
                 	aprStartDate = aprStartDate.substring(0,5) + tempMonth + "-" + tempDay;
                 }
-                else if(tempMonth.length() > 1 && tempDay.length() < 2) {
+                else if (tempMonth.length() > 1 && tempDay.length() < 2) {
                 	tempDay = "0" + tempDay;
                 	aprStartDate = aprStartDate.substring(0,5) + tempMonth + "-" + tempDay;
                 }
-                else if (aprStartDate.length() == 10) {
+                else if (aprStartDate.length() > 10) {
                 	aprStartDate = aprStartDate.substring(0, 10); // 년-월-일 뒤의 시-분-초를 제거 (아래에서 시간을 붙이므로)
                 }
                 /* 2021-03-24 심기영 전자결재 -> 문서검색 -> 오늘 문서 검색 시 한 자리수 달, 일로 인해 생기는 오류 조정 끝 */
@@ -729,25 +729,25 @@ public class EzApprovalGController extends EgovFileMngUtil{
             
             if (tempQuery.indexOf("APRENDDATE;") != -1) {
                 String aprEndDate = domSub.getElementsByTagName("APRENDDATE").item(0).getTextContent();
-
+                
                 /* 2021-03-24 심기영 전자결재 -> 문서검색 -> 오늘 문서 검색 시 한 자리수 달, 일로 인해 생기는 오류 조정 */
                 String tempMonth = aprEndDate.split("-")[1];
                 String tempDay = aprEndDate.split("-")[2];
                 
-                if(tempMonth.length() < 2 && tempDay.length() < 2) {
+                if (tempMonth.length() < 2 && tempDay.length() < 2) {
                 	tempMonth = "0" + tempMonth;
                 	tempDay = "0" + tempDay;
                 	aprEndDate = aprEndDate.substring(0,5) + tempMonth + "-" + tempDay;
                 }
-                else if(tempMonth.length() < 2 && tempDay.length() > 1) {
+                else if (tempMonth.length() < 2 && tempDay.length() > 1) {
                 	tempMonth = "0" + tempMonth;
                 	aprEndDate = aprEndDate.substring(0,5) + tempMonth + "-" + tempDay;
                 }
-                else if(tempMonth.length() > 1 && tempDay.length() < 2) {
+                else if (tempMonth.length() > 1 && tempDay.length() < 2) {
                 	tempDay = "0" + tempDay;
                 	aprEndDate = aprEndDate.substring(0,5) + tempMonth + "-" + tempDay;
                 }
-                else if (aprEndDate.length() == 10) {
+                else if (aprEndDate.length() > 10) {
                 	aprEndDate = aprEndDate.substring(0, 10); // 년-월-일 뒤의 시-분-초를 제거 (아래에서 시간을 붙이므로)
                 }
                 /* 2021-03-24 심기영 전자결재 -> 문서검색 -> 오늘 문서 검색 시 한 자리수 달, 일로 인해 생기는 오류 조정 끝 */
@@ -10602,6 +10602,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId());
 		String signImageSize = ezCommonService.getTenantConfig("SignImageSize", userInfo.getTenantId());
+		String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
 		String draftDeptID = ezApprovalGService.getOrgDraftDeptID(docID, userInfo.getTenantId(), userInfo.getCompanyID());
 		String isReDraft = request.getParameter("isReDraft");
 		
@@ -10661,6 +10662,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("junGyulFlag", junGyulFlag);
 		model.addAttribute("signImageSize", signImageSize);
+		model.addAttribute("signImageType", signImageType);
 		model.addAttribute("draftDeptID", draftDeptID);
 		model.addAttribute("useReceiveDocNo", useReceiveDocNo);
 		model.addAttribute("docNumZeroCnt", docNumZeroCnt);

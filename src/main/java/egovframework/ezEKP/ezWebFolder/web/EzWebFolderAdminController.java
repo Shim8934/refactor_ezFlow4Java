@@ -366,8 +366,10 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		
 		if (status.equals("ok")) {
 			String companyId      = (String) resultBody.get("userCompany");
+			String compId  		  = selectedComp.equals("") ? companyId : selectedComp;
 			JSONArray companyList = (JSONArray) resultBody.get("data");
-			model.addAttribute("userCompany", selectedComp.equals("") ? companyId : selectedComp);
+			model.addAttribute("userCompany", compId);
+			model.addAttribute("companyId", compId);
 			model.addAttribute("list", companyList);
 			model.addAttribute("primary", (String) resultBody.get("primary"));
 			model.addAttribute("folderId", folderId);

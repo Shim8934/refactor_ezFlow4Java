@@ -1007,6 +1007,11 @@ function ListView() {
                     	oText = document.createTextNode(ConvMakeXMLString(strValue));
                     	objTd.appendChild(oText);
                     }
+                    else if (_thisID == "pLvList" && colNameUpperCase == "TITLE") { // 분리첨부의 TITLE 속성 추가 (제목 툴팁)
+                    	objTd.title = ConvMakeXMLString(strValue);
+                    	oText = document.createTextNode(ConvMakeXMLString(strValue));
+                    	objTd.appendChild(oText);
+                    }
                     else {
                     	oText = document.createTextNode(ConvMakeXMLString(strValue));
                         objTd.appendChild(oText);
