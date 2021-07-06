@@ -288,7 +288,7 @@ function setRecevInfo(ret) {
         if (precipent == strLang92) {
         	message.PutFieldText("recipient", precipent);
 
-            if (SummaryOuterReceiverList != "") {
+            if (!!SummaryOuterReceiverList) {
                 if (message.FieldExist("recipients")) {
                 	message.PutFieldText("recipients", SummaryOuterReceiverList);
                     if (message.FieldExist("hrecipients"))
