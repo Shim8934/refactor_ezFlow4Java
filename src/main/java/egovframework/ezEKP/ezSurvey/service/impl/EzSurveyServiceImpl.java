@@ -186,6 +186,17 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		return ezSurveyDAO.getSearchMemberList(map);
 	}
+
+	@Override
+	public List<SimpleUserVO> getSearchMemberListByAttr(String primary, String srchOption, List<String> attrList, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("attrList", attrList);
+		map.put("srchOption", srchOption);
+		map.put("primary",    primary);
+		map.put("tenantId",   tenantId);
+
+		return ezSurveyDAO.getSearchMemberListByAttr(map);
+	}
 	
 	@Override
 	public SurveyGeneralVO getUserPreviewConfig(String userId, String companyId, int tenantId) throws Exception {
@@ -359,6 +370,8 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		String endDateUTC                    = commonUtil.getDateStringInUTC(endDate   + " 23:59:59", offset, true);
 		Set<SimpleUserVO> setUsers           = new HashSet<>();
 		List<String> deptList                = new ArrayList<>();
+		List<String> jikchekList                = new ArrayList<>();
+		List<String> jikwiList                = new ArrayList<>();
 		List<AttachVO> totalAttach           = new ArrayList<>();
 		List<QuestionVO> totalQuestions      = new ArrayList<>();
 		List<OptionVO> totalOptions          = new ArrayList<>();
@@ -546,6 +559,12 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				else if (userType.equals("dept")) {
 					deptList.add(userDeptId);
 				}
+				else if (userType.equals("jikwi")) {
+					jikwiList.add(userDeptId);
+				}
+				else if (userType.equals("jikchek")) {
+					jikchekList.add(userDeptId);
+				}
 				else {
 					SimpleUserVO simpleUser = new SimpleUserVO(surveyUser);
 					setUsers.add(simpleUser);
@@ -578,8 +597,14 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			if (deptList.size() > 0) {
 				setUsers.addAll(getDeptMemberList(null, deptList, primary, 0, 0, tenantId));
 			}
+			if (jikchekList.size() > 0) {
+				setUsers.addAll(getSearchMemberListByAttr(primary, "EXTENSIONATTRIBUTE8", jikchekList, 0));
+			}
+			if (jikwiList.size() > 0) {
+				setUsers.addAll(getSearchMemberListByAttr(primary, "EXTENSIONATTRIBUTE7", jikwiList, 0 ));
+			}
 		}
-		
+
 		survey.setTotalUser(setUsers.size());
 		
 		//Check modify/save mode

@@ -64,7 +64,11 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 	public List<SimpleUserVO> getSearchMemberList(Map<String, Object> map) {
 		return (List<SimpleUserVO>)list("EzSurveyDAO.getSearchMemberList", map);
 	}
-	
+
+	public List<SimpleUserVO> getSearchMemberListByAttr(Map<String, Object> map) {
+		return (List<SimpleUserVO>)list("EzSurveyDAO.getSearchMemberListByAttr", map);
+	}
+
 	public List<SurveyVO> getSurveyListForPermission(Map<String, Object> map) {
 		return (List<SurveyVO>)list("EzSurveyDAO.getSurveyListForPermission", map);
 	}
