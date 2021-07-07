@@ -3234,116 +3234,76 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	@Override
 	public String updateReceiptInfo(String ret2, String companyID, String lang, int tenantID, String approvalFlag) throws Exception {
 		logger.debug("updateReceiptInfo started");
-
-		Document docXML = commonUtil.convertStringToDocument(ret2);
-		String susinGroupIcon = getCode2Name("A53", "001", companyID, lang, tenantID);
+		
 		String susinGroupUseFlag = getCode2Name("A53", "002", companyID, lang, tenantID);
-		String strDocID  = "";
+		
+		Document docXML = commonUtil.convertStringToDocument(ret2);
 		NodeList rowNode = docXML.getElementsByTagName("ROW");
 		
+		String docID = "";
 		if (approvalFlag.equals("G")) {
-			strDocID = rowNode.item(0).getChildNodes().item(2).getTextContent();
+		    docID = rowNode.item(0).getChildNodes().item(2).getTextContent();
 		} else {
-			strDocID = rowNode.item(0).getChildNodes().item(3).getTextContent();
+		    docID = rowNode.item(0).getChildNodes().item(3).getTextContent();
 		}
-		String rtnVal = deleteReceiptInfo(strDocID, companyID, tenantID);
 		
-		Map<String, Object> map = new HashMap<String, Object>();
+		List<ApprGReceiptVO> receipts = new ArrayList<ApprGReceiptVO>();
+		for (int i = rowNode.getLength() - 1, j = 1; i >= 0; i--, j++) {
+		    ApprGReceiptVO receipt = new ApprGReceiptVO();
+		    
+		    if ("G".equals(approvalFlag)) {
+		        receipt.setReceiptPointID(rowNode.item(i).getChildNodes().item(3).getTextContent());
+		        receipt.setReceiptPointName(rowNode.item(i).getChildNodes().item(11).getTextContent());
+		        receipt.setReceiptPointName2(rowNode.item(i).getChildNodes().item(12).getTextContent());
+		        receipt.setExtReceptYN(rowNode.item(i).getChildNodes().item(4).getTextContent());
+		        receipt.setProcessYN(rowNode.item(i).getChildNodes().item(5).getTextContent());
+		        receipt.setProcessSN("1");
+		        receipt.setCanEditYN(rowNode.item(i).getChildNodes().item(6).getTextContent());
+		        receipt.setExtRecepteMail(rowNode.item(i).getChildNodes().item(7).getTextContent());
+		        receipt.setReceiptMemberID(rowNode.item(i).getChildNodes().item(8).getTextContent());
+		        receipt.setReceiptMemberName(rowNode.item(i).getChildNodes().item(9).getTextContent());
+		        receipt.setReceiptMemberName2(rowNode.item(i).getChildNodes().item(13).getTextContent());
+		        receipt.setProcessDate(null);
+		        receipt.setReceiptMemberJobTitle(rowNode.item(i).getChildNodes().item(10).getTextContent());
+		        receipt.setReceiptMemberJobTitle2(rowNode.item(i).getChildNodes().item(14).getTextContent());
+		        receipt.setDeptMemberSN(String.valueOf(j));
+		    } else if ("S".equals(approvalFlag)) {
+		        receipt.setReceiptPointID(rowNode.item(i).getChildNodes().item(4).getTextContent());
+		        receipt.setReceiptPointName(rowNode.item(i).getChildNodes().item(12).getTextContent());
+		        receipt.setReceiptPointName2(rowNode.item(i).getChildNodes().item(13).getTextContent());
+		        receipt.setExtReceptYN(rowNode.item(i).getChildNodes().item(5).getTextContent());
+		        receipt.setProcessYN(rowNode.item(i).getChildNodes().item(6).getTextContent());
+		        receipt.setProcessSN("1");
+		        receipt.setCanEditYN(rowNode.item(i).getChildNodes().item(7).getTextContent());
+		        receipt.setExtRecepteMail(rowNode.item(i).getChildNodes().item(8).getTextContent());
+		        receipt.setReceiptMemberID(rowNode.item(i).getChildNodes().item(9).getTextContent());
+		        receipt.setReceiptMemberName(rowNode.item(i).getChildNodes().item(10).getTextContent());
+		        receipt.setReceiptMemberName2(rowNode.item(i).getChildNodes().item(14).getTextContent());
+		        receipt.setProcessDate(null);
+		        receipt.setReceiptMemberJobTitle(rowNode.item(i).getChildNodes().item(11).getTextContent());
+		        receipt.setReceiptMemberJobTitle2(rowNode.item(i).getChildNodes().item(15).getTextContent());
+		        receipt.setDeptMemberSN(String.valueOf(j));
+		    }
+		    
+		    receipts.add(receipt);
+		}
 		
-		if (rtnVal.equals("<RESULT>TRUE</RESULT>")) {
-			String receiptPointID = "";
-			int j = 1;
-			
-			for (int k = rowNode.getLength() - 1; k >= 0; k--) {
-				receiptPointID = rowNode.item(k).getChildNodes().item(3).getTextContent();
-				
-				if (receiptPointID.indexOf(susinGroupIcon.trim()) < 0 || !susinGroupUseFlag.equals("Y")) {
-					if (approvalFlag.equals("G")) {
-						map.put("v_DOCID", strDocID);
-						map.put("v_ReceiptPointID", rowNode.item(k).getChildNodes().item(3).getTextContent());
-						map.put("v_ReceiptPointName", rowNode.item(k).getChildNodes().item(11).getTextContent());
-						map.put("v_ReceiptPointName2", rowNode.item(k).getChildNodes().item(12).getTextContent());
-						map.put("v_ExtReceptYN", rowNode.item(k).getChildNodes().item(4).getTextContent());
-						map.put("v_ProcessYN", rowNode.item(k).getChildNodes().item(5).getTextContent());
-						map.put("v_ProcessSN", "1");
-						map.put("v_CanEditYN", rowNode.item(k).getChildNodes().item(6).getTextContent());
-						map.put("v_ExtReceptEmail", rowNode.item(k).getChildNodes().item(7).getTextContent());
-						map.put("v_ReceiptMemberID", rowNode.item(k).getChildNodes().item(8).getTextContent());
-						map.put("v_ReceiptMemberName", rowNode.item(k).getChildNodes().item(9).getTextContent());
-						map.put("v_ReceiptMemberName2", rowNode.item(k).getChildNodes().item(9).getTextContent());
-						map.put("v_ProcessDate", "''");
-						map.put("v_ReceiptMemberJobTitle", rowNode.item(k).getChildNodes().item(13).getTextContent());
-						map.put("v_ReceiptMemberJobTitle2", rowNode.item(k).getChildNodes().item(14).getTextContent());
-						map.put("v_DeptMemberSN", j);
-						map.put("companyID", companyID);
-						map.put("v_TENANTID", tenantID);
-					} else {
-						map.put("v_DOCID", strDocID);
-						map.put("v_ReceiptPointID", rowNode.item(k).getChildNodes().item(4).getTextContent());
-						map.put("v_ReceiptPointName", rowNode.item(k).getChildNodes().item(12).getTextContent());
-						map.put("v_ReceiptPointName2", rowNode.item(k).getChildNodes().item(13).getTextContent());
-						map.put("v_ExtReceptYN", rowNode.item(k).getChildNodes().item(5).getTextContent());
-						map.put("v_ProcessYN", rowNode.item(k).getChildNodes().item(6).getTextContent());
-						map.put("v_ProcessSN", "1");
-						map.put("v_CanEditYN", rowNode.item(k).getChildNodes().item(7).getTextContent());
-						map.put("v_ExtReceptEmail", rowNode.item(k).getChildNodes().item(8).getTextContent());
-						map.put("v_ReceiptMemberID", rowNode.item(k).getChildNodes().item(9).getTextContent());
-						map.put("v_ReceiptMemberName", rowNode.item(k).getChildNodes().item(10).getTextContent());
-						map.put("v_ReceiptMemberName2", rowNode.item(k).getChildNodes().item(14).getTextContent());
-						map.put("v_ProcessDate", "''");
-						map.put("v_ReceiptMemberJobTitle", rowNode.item(k).getChildNodes().item(11).getTextContent());
-						map.put("v_ReceiptMemberJobTitle2", rowNode.item(k).getChildNodes().item(15).getTextContent());
-						map.put("v_DeptMemberSN", j);
-						map.put("companyID", companyID);
-						map.put("v_TENANTID", tenantID);
-					}
-					
-					ezApprovalGDAO.insertReciptInfo(map);
-					
-					j += 1;
-				} else {
-					map.put("v_MAINID", receiptPointID.substring(susinGroupIcon.length()));
-					map.put("v_TENANTID", tenantID);
-					map.put("companyID", companyID);
-					
-					List<ApprGAdminReceiveVO> apprGAdminReceiveVOList = ezApprovalGDAO.getReceiptGroupInfo(map);
-					
-					StringBuffer sb = new StringBuffer();
-					sb.append("<DATA>");
-					
-					for (int i = 0; i < apprGAdminReceiveVOList.size(); i++) {
-						sb.append(commonUtil.getQueryResult(apprGAdminReceiveVOList.get(i)));
-					}
-					sb.append("</DATA>");
-					
-					Document receiptGroupXML = commonUtil.convertStringToDocument(sb.toString());
-					int dlength = receiptGroupXML.getElementsByTagName("ROW").getLength();
-					
-					for (int p = 0; p < dlength; p++) {
-						map.put("v_DOCID", strDocID);
-						map.put("v_ReceiptPointID", receiptGroupXML.getElementsByTagName("DEPTID").item(p).getTextContent());
-						map.put("v_ReceiptPointName", receiptGroupXML.getElementsByTagName("DEPTNAME").item(p).getTextContent());
-						map.put("v_ReceiptPointName2", receiptGroupXML.getElementsByTagName("DEPTNAME2").item(p).getTextContent());
-						map.put("v_ExtReceptYN", "N");
-						map.put("v_ProcessYN", "N");
-						map.put("v_ProcessSN", "1");
-						map.put("v_CanEditYN", "N");
-						map.put("v_ExtReceptEmail", receiptGroupXML.getElementsByTagName("COMPANYID").item(p).getTextContent());
-						map.put("v_ReceiptMemberID", "");
-						map.put("v_ReceiptMemberName", "");
-						map.put("v_ReceiptMemberName2", "");
-						map.put("v_ProcessDate", "NULL");
-						map.put("v_ReceiptMemberJobTitle", "");
-						map.put("v_ReceiptMemberJobTitle2", "");
-						map.put("v_DeptMemberSN", j);
-						map.put("v_TENANTID", tenantID);
-						
-						ezApprovalGDAO.insertReciptInfo(map);
-						
-						j += 1;
-					}
-				}
-			}
+		if (receipts.size() > 0) {
+		    List<ApprGReceiptVO> newReceipts = null;
+		    if ("Y".equals(susinGroupUseFlag)) {
+		        newReceipts = getRealReceiptInfo(receipts, docID, companyID, lang, tenantID);
+		    } else {
+		        newReceipts = receipts;
+		    }
+		    
+		    Map<String, Object> map = new HashMap<String, Object>();
+		    map.put("companyID", companyID);
+		    map.put("v_DOCID", docID);
+		    map.put("v_TENANTID", tenantID);
+		    map.put("v_NEWRECEIPTS", newReceipts);
+		    
+		    ezApprovalGDAO.deleteReceiptInfo(map);
+		    ezApprovalGDAO.insertDisbandGroupReceipt(map);
 		}
 
 		logger.debug("updateReceiptInfo ended");
@@ -17123,6 +17083,28 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public void setRealReceiptInfo(String docID, String companyID, String lang, int tenantID) throws Exception {
         logger.debug("setRealReceiptInfo started");
         
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("companyID", companyID);
+        map.put("v_DOCID", docID);
+        map.put("v_TENANTID", tenantID);
+        
+        List<ApprGReceiptVO> receipts = ezApprovalGDAO.doSendDocReceiptInfo(map);
+        
+        if (receipts.size() > 0) {
+            List<ApprGReceiptVO> newReceipts = getRealReceiptInfo(receipts, docID, companyID, lang, tenantID);
+            
+            map.put("v_NEWRECEIPTS", newReceipts);
+            
+            ezApprovalGDAO.deleteReceiptInfo(map);
+            ezApprovalGDAO.insertDisbandGroupReceipt(map);
+        }
+        
+        logger.debug("setRealReceiptInfo ended");
+	}
+	
+	public List<ApprGReceiptVO> getRealReceiptInfo(List<ApprGReceiptVO> receipts, String docID, String companyID, String lang, int tenantID) throws Exception {
+        logger.debug("getRealReceiptInfo started");
+        
         String susinGroupIcon = getCode2Name("A53", "001", companyID, lang, tenantID);
         
         Map<String, Object> map = new HashMap<String, Object>();
@@ -17132,7 +17114,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         
         boolean isGroup = false;
         
-        List<ApprGReceiptVO> receipts = ezApprovalGDAO.doSendDocReceiptInfo(map);
         List<ApprGReceiptVO> newReceipts = new LinkedList<ApprGReceiptVO>();
         
         //수신처중 수신처그룹이 있는지 확인, 수신처그룹이 있으면 해제하여 수신처리스트에 추가함
@@ -17140,8 +17121,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             if (receipt.getReceiptPointID().startsWith(susinGroupIcon)) {
                 isGroup = true;
                 
-                map.put("v_SUSINGROUPICON", susinGroupIcon);
-                map.put("v_RECEIPTPOINTID", receipt.getReceiptPointID());
+                map.put("v_MAINID", Integer.parseInt(receipt.getReceiptPointID().replaceFirst(susinGroupIcon, "")));
+                map.put("v_CURRRECEIPT", receipt);
                 
                 List<ApprGReceiptVO> susinGroupMembers = ezApprovalGDAO.selectDisbandGroupReceipt(map);
                 
@@ -17165,14 +17146,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                     iter.remove();
                 }
             }
-            
-            map.put("v_NEWRECEIPTS", newReceipts);
-            
-            ezApprovalGDAO.deleteReceiptInfo(map);
-            ezApprovalGDAO.insertDisbandGroupReceipt(map);
         }
         
-        logger.debug("setRealReceiptInfo ended");
+        logger.debug("getRealReceiptInfo ended");
+        
+        return newReceipts;
 	}
 
     public String doSendDocOuter(String docID, String companyID, String lang, int tenantID) throws Exception {
