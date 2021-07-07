@@ -3361,7 +3361,10 @@ public class EzEmailUtil {
 							if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.INLINE)
 									|| ((MimePart)p).getContentID() != null) {
 								p = getConvertedBodyPartFromInlineToAttachment(p); 
-								p.setHeader("Content-Disposition", "attachment");
+
+								if (p.getHeader("Content-Disposition") == null) {
+									p.setHeader("Content-Disposition", "attachment");
+								}
 							}
 						}				
 					}
