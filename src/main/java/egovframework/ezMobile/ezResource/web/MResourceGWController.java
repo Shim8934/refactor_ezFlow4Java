@@ -94,7 +94,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
-			String langStr = request.getParameter("langStr");
+			String langStr = info.getLang();
 	    	String listCnt = "10";
 	    	
 	    	LOGGER.debug("userId : " + userId);
