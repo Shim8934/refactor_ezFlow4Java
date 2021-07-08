@@ -3704,4 +3704,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
     public void insertDisbandGroupReceipt(Map<String, Object> map) throws Exception {
         insert ("EzApprovalG.insertDisbandGroupReceipt", map);
     }
+    
+    public List<Map<String, Object>> getReceiptInfoIng(Map<String, Object> map) throws Exception {
+        return (List<Map<String, Object>>) list("EzApprovalG.getReceiptInfoIng", map);
+    }
 }
