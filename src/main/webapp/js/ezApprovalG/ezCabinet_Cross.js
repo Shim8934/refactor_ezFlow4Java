@@ -199,9 +199,14 @@ function ezCabMunuCtl(MenuType, selRow) {
                 if (typeof (tdbtnViewRecReadHist) != "undefined" && typeof (tdbtnViewRecReadHist) != "unknown") {
                 document.getElementById("tdbtnViewRecReadHist").style.display = "none";
                 }
-                if (typeof (tdbtnSetRecRole) != "undefined" && typeof (tdbtnSetRecRole) != "unknown") {
-                document.getElementById("tdbtnSetRecRole").style.display = "none";
-                }
+            }
+            
+            if (typeof (tdbtnSetRecRole) != "undefined" && typeof (tdbtnSetRecRole) != "unknown") {
+            	if (g_bRecAdmin || AdminYN == "TRUE" || g_bDeptCharger) {
+	                document.getElementById("tdbtnSetRecRole").style.display = "";
+            	} else {
+            		document.getElementById("tdbtnSetRecRole").style.display = "none";
+            	}
             }
             
             if (typeof (tdNotify_Rec) != "undefined" && typeof (tdNotify_Rec) != "unknown") {
