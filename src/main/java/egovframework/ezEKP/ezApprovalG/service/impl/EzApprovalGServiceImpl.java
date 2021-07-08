@@ -33267,4 +33267,31 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("getChaebunDept ended.");
 		return chaebunDept;
 	}
+	
+	@Override
+	public List<Map<String, Object>> getReceiptInfoIng(String docId, String receiptId, LoginVO userInfo) throws Exception {
+	    logger.debug("getReceiptInfoIng started.");
+	    
+	    String susinGroupIcon = getCode2Name("A53", "001", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+	    
+	    Map<String, Object> map = new HashMap<String, Object>();
+	    map.put("v_TENANTID", userInfo.getTenantId());
+	    map.put("companyID", userInfo.getCompanyID());
+	    map.put("v_LANG", commonUtil.getLangData(userInfo.getLang()));
+	    
+	    if (receiptId.startsWith(susinGroupIcon)) {
+	        map.put("v_TYPE", "group");
+	        map.put("v_MAINID", Integer.parseInt(receiptId.replace(susinGroupIcon, "")));
+	    } else {
+	        map.put("v_TYPE", "one");
+	        map.put("v_DOCID", docId);
+	        map.put("v_RECEIPTID", receiptId);
+	    }
+	    
+	    List<Map<String, Object>> receipts = ezApprovalGDAO.getReceiptInfoIng(map);
+	    
+	    logger.debug("getReceiptInfoIng ended.");
+	    
+	    return receipts;
+    }
 }

@@ -9052,6 +9052,28 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
 		return "ezApprovalG/apprGezReceiptInfo";
 	}
+	/**
+	 * 전자결재 진행중 문서 수신자탭에서 수신자 더블클릭시 나타나는 팝업
+	 */
+	@RequestMapping(value = "/ezApprovalG/ezReceiptInfoIng.do", method = RequestMethod.GET)
+	public String ezReceiptInfoIng(@CookieValue("loginCookie") String loginCookie, @RequestParam String docId, @RequestParam String receiptId, @RequestParam String receiptName, Model model) throws Exception{
+	    logger.debug("ezReceiptInfoIng started");
+	    
+	    LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+	    
+	    List<Map<String, Object>> receipts = ezApprovalGService.getReceiptInfoIng(docId, receiptId, userInfo);
+	    
+	    String susinGroupPrefix = ezApprovalGService.getCode2Name("A53", "001", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+	    
+	    model.addAttribute("receiptId", receiptId);
+	    model.addAttribute("receiptName", receiptName);
+	    model.addAttribute("receipts", receipts);
+	    model.addAttribute("susinGroupPrefix", susinGroupPrefix);
+	    
+	    logger.debug("ezReceiptInfo ended");
+	    
+	    return "ezApprovalG/apprGezReceiptInfoIng";
+	}
 
 	/**
 	 * 전자결재G 발송의뢰문서 발송 발송 저장 Method
