@@ -554,6 +554,7 @@
 		        if (cabinetID != "") {
 		        	LastSignSN = "1";
 		        	getRecvDocNumber(arr_userinfo[4], docNumZeroCnt);
+		        	setSusinUpdataDocID();
 		
 		         	$.ajax({
                 		type : "POST",
