@@ -261,6 +261,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     		
     		ezCommonService.alterTblAprReceiptProcessInfoAddColumn(); // 2021-06-29 - 수신결재정보 테이블 오리지날 docid 컬럼 추가 
     		ezCommonService.alterTblDocDeliveryAddColumn(); // 2021-06-29 - 배부테이블에 대내/대외 여부 컬럼 추가
+    		ezCommonService.addTblAdminReceiptGroupSubExtReceptYnColumn(); // 2021-06-29 수신처그룹 멤버 테이블에 외부/내부 수신여부 컬럼 추가
     	} catch (Exception e) {
     		e.printStackTrace();
     	}

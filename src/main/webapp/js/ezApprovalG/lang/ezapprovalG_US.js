@@ -1104,3 +1104,5 @@ var strLang964 = "failed";
 var strLang970 = "Please select a target department";
 var strLang971 = "Please select a sub-department";
 var strLang972 = "Duplicate assigned department exists";
+
+var strLang973 = "internal recipient, External recipient and address of petitioner can not be specified at the same time."

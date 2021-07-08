@@ -2758,7 +2758,8 @@
 				deptname,
 				deptname2,
 				companyid,
-				tenant_id)
+                tenant_id,
+                extreceptyn)
 			VALUES 
 				(#v_MAINID#,
 				(SELECT
@@ -2769,7 +2770,8 @@
 				#v_DEPTNAME#,
 				#v_DEPTNAME2#,
 				#v_COMPANYID#,
-				#tenantID#)
+                #tenantID#,
+                #v_EXTRECEPTYN#)
 		]]>
 	</insert>
 	

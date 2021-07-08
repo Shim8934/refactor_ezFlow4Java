@@ -4016,4 +4016,18 @@
             AND 
                 CODE2 = '001'
     </insert>
+    
+    <select id="EzCommonDAO.checkTblAdminReceiptGroupSubExtReceptYnColumn">
+        SELECT
+            EXTRECEPTYN
+        FROM
+            TBL_ADMINRECEIPTGROUP_SUB
+    </select>
+
+    <statement id="EzCommonDAO.addTblAdminReceiptGroupSubExtReceptYnColumn">
+        ALTER TABLE
+            TBL_ADMINRECEIPTGROUP_SUB
+        ADD
+            EXTRECEPTYN VARCHAR2(5) DEFAULT 'N' 
+    </statement>
 </sqlMap>

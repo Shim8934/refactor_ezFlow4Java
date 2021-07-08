@@ -225,6 +225,7 @@
 			
 			/* 2021-04-19 홍승비 - 수신문서 회송여부를 판단하기 위한 변수 추가 */
 			var isSusinReset = false;
+			var preSusinGroupStr = "<c:out value ='${preSusinGroupStr}'/>";
 	        
 	        $(function () {
 	        	if (document.getElementById("AprSecurity").checked){
@@ -2823,19 +2824,15 @@
 		                        		<c:when test="${receptGubunYN eq 'Y'}">
 		                        			<c:if test="${docType eq '001' && isOuterForm}">
 					                            <p><span id="3tab4" divname="Outer" class ="approvalG"><spring:message code='ezApprovalG.t330'/></span></p>
-					                            <c:if test="${useDoc24 eq 'YES'}">
-					                            <p><span id="3tab5" divname="Doc24" class ="approvalG">문서24</span></p>
-					                            </c:if>
-	           		                            <p><span id="3tab2" divname="Save"><spring:message code='ezApprovalG.G0001'/></span></p>
 		                        			</c:if>
 		                        			<c:if test="${docType ne '001' || (docType eq '001' && not isOuterForm)}">
 					                            <p><span id="3tab1" divname="Organ"><spring:message code='ezApprovalG.t232'/></span></p>
-					                            <c:if test="${useDoc24 eq 'YES'}">
-					                            <p><span id="3tab5" divname="Doc24" class ="approvalG">문서24</span></p>
-					                            </c:if>
-           		                            	<p><span id="3tab2" divname="Save"><spring:message code='ezApprovalG.G0001'/></span></p>
-           		                            	<p><span id="3tab3" divname="Group"><c:if test="${approvalFlag =='G' }"><spring:message code='ezApprovalG.t1568'/></c:if><c:if test="${approvalFlag =='S' }"><spring:message code='ezApproval.t227'/></c:if></span></p>
 		                        			</c:if>
+											<c:if test="${useDoc24 eq 'YES'}">
+											<p><span id="3tab5" divname="Doc24" class ="approvalG">문서24</span></p>
+											</c:if>
+											<p><span id="3tab2" divname="Save"><spring:message code='ezApprovalG.G0001'/></span></p>
+											<p><span id="3tab3" divname="Group"><spring:message code='ezApprovalG.t1568'/></span></p>
 		                        		</c:when>
 		                        		<c:otherwise>
 				                            <p><span id="3tab1" divname="Organ"><spring:message code='ezApprovalG.t232'/></span></p>
@@ -2983,7 +2980,9 @@
 	                                    <table class="content" style="margin-bottom: 5px; width: 100%">
 	                                        <tr>
 	                                            <td style="text-align: center; padding-top: 3px">
-	                                                <a class="imgbtn imgbck2"><span onclick="return btn_GroupReceptAdd_onclick()" style="width: 60px;"><spring:message code='ezApprovalG.G0008'/></span></a>
+	                                                <%-- <a class="imgbtn imgbck2"><span onclick="return btn_GroupReceptAdd_onclick()" style="width: 60px;"><spring:message code='ezApprovalG.G0008'/></span></a> --%>
+                                                    <a class="imgbtn imgbck2"><span onclick="return btn_GroupReceptAdd_onclick('each')" style="width: 60px;">적용</span></a>
+                                                    <a class="imgbtn imgbck2"><span onclick="return btn_GroupReceptAdd_onclick('group')" style="width: 60px;">그룹적용</span></a>
 	                                            </td>
 	                                        </tr>
 	                                    </table>

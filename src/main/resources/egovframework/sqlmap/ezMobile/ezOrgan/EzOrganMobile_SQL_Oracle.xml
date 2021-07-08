@@ -144,7 +144,11 @@
 	            EXTENSIONATTRIBUTE7 ,
 	            EXTENSIONATTRIBUTE8 ,
 	            EXTENSIONATTRIBUTE9 ,
-	            EXTENSIONATTRIBUTE10 ,
+            	CASE #lang#
+                WHEN '1'
+                THEN EXTENSIONATTRIBUTE10
+                ELSE EXTENSIONATTRIBUTE102
+                END EXTENSIONATTRIBUTE10 ,
 	            EXTENSIONATTRIBUTE11 ,
 	            EXTENSIONATTRIBUTE12 ,
 	            EXTENSIONATTRIBUTE13 ,
