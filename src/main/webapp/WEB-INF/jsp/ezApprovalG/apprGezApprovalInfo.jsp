@@ -3180,7 +3180,7 @@
 					                    </td>
 					                    <td style="padding-left: 3px;">
 					                        <div class="border_gray">
-					                            <div id="infolist" style="border: 0px; HEIGHT: 350px; WIDTH: 901px; overflow-x: hidden; overflow-y: auto; margin: 1px 1px 1px 1px; padding-top: 0px;"></div>
+					                            <div id="infolist" style="border: 0px; HEIGHT: 350px; WIDTH: 952px; overflow-x: hidden; overflow-y: auto; margin: 1px 1px 1px 1px; padding-top: 0px;"></div>
 					                        </div>
 					                    </td>
 					                </tr>					                
@@ -3198,7 +3198,7 @@
 					                <tr>
 					                    <td colspan="2">
 					                        <div class="border_gray">
-					                            <div id="infofrequencylist" style="border: 0px; HEIGHT: 155px; WIDTH: 1108px; overflow-x: hidden; overflow-y: auto; margin: 1px 1px 1px 1px; padding-top: 0px;"></div>
+					                            <div id="infofrequencylist" style="border: 0px; HEIGHT: 155px; overflow-x: hidden; overflow-y: auto; margin: 1px 1px 1px 1px; padding-top: 0px;"></div>
 					                        </div>
 					                    </td>
 					                </tr>
@@ -3360,7 +3360,7 @@
 	    </c:if>
 	    
 	    <c:if test="${approvalFlag eq 'S' }">
-	    	<div id="Docinfo" style="width: 1110px; height: 594px; display: none; padding-top:3px">
+	    	<div id="Docinfo" style="width: 1163px; height: 594px; display: none; padding-top:3px">
         		<td style="border: 0px solid red; height: 580px; width: 390px; margin-left: 5px; vertical-align: top">
 		            <h2 class="h2_dot"><spring:message code='ezApproval.t334'/></h2>
 		            <table class="content" style="margin-top:4px">

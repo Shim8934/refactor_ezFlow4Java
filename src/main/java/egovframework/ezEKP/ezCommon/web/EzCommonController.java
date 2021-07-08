@@ -312,7 +312,7 @@ public class EzCommonController extends EgovFileMngUtil{
 		String literalExtensionPhone = "";
 		String literalOfficeMobile = "";
 		
-		String proplist = "EXTENSIONATTRIBUTE2;COMPANY;DESCRIPTION;DISPLAYNAME;TITLE;MAIL;TELEPHONENUMBER;MOBILE;INFO;HOMEPHONE;FACSIMILETELEPHONENUMBER;POSTALCODE;STREETADDRESS;DEPARTMENT";
+		String proplist = "EXTENSIONATTRIBUTE2;COMPANY;DESCRIPTION;DISPLAYNAME;TITLE;MAIL;TELEPHONENUMBER;MOBILE;INFO;HOMEPHONE;FACSIMILETELEPHONENUMBER;POSTALCODE;STREETADDRESS;DEPARTMENT;EXTENSIONATTRIBUTE10";
 		
 		if (request.getParameter("id") != null) {
 			id = request.getParameter("id");
@@ -331,7 +331,7 @@ public class EzCommonController extends EgovFileMngUtil{
 		OrganUserVO userCheckVO = ezOrganService.getUserInfo(id, "1", loginVO.getTenantId());
 		if (userCheckVO != null) {
 			logger.debug(id + " is member.");
-			proplist += ";FURIGANA;EXTENSIONPHONE;OFFICEMOBILE;EXTENSIONATTRIBUTE10";
+			proplist += ";FURIGANA;EXTENSIONPHONE;OFFICEMOBILE";
 		}
 		logger.debug("prop=" + proplist);
 		

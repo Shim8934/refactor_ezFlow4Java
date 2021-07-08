@@ -79,7 +79,6 @@
 	    	var msgRtn = "";
 	    	var SdateNow = ""; 
 	    	var EdateNow = ""; 
-	    	var title = "${title}";
 	    	var allDay = "${allDay}";//"1":하루종일
 	    	var timeSelect = false;
 	    	var userDisplayName2 = "${userInfo.displayName2}";
@@ -114,7 +113,6 @@
 	        	if (cmd == "mod") {
 	        		/* 2018-07-10 김민성 - 자원 수정시 특수문자 처리 */
 	            	document.getElementById("importance1").value = "${importance}";
-	            	document.getElementById("title").value = title;
 	            	
 	            	if(allDay == "1") {
 	            		document.getElementById("AllDay").checked = true;
@@ -821,7 +819,7 @@
 						</tr>
 						<tr>
 	         				<th> <spring:message code="ezResource.t224"/></th>
-	         				<td colspan="3"><input type="text" id="title" name="title" maxlength="100"  style="width: 100%" />          </td>		<!-- 2018-07-13 김민성 - 자원예약 이름 글자수 제한 25->100자로 변경 -->
+	         				<td colspan="3"><input type="text" id="title" name="title" maxlength="100"  style="width: 100%" value="<c:out value='${title}' />" />          </td>		<!-- 2018-07-13 김민성 - 자원예약 이름 글자수 제한 25->100자로 변경 -->
 	       				</tr>
 	       				<c:if test="${useSchedule && cmdStr eq 'add'}">
 	       				<tr>
