@@ -1166,6 +1166,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String nonElecRec = request.getParameter("nonElecRec");
 		// 2021-01-21 심기영 오피스 결재 여부 추가
 		String officeFlag = request.getParameter("officeFlag");
+		String connKey = request.getParameter("connKey");
+		String connFormCode = request.getParameter("connFormCode");
 		// FormBuilder
 		// String reformflag = request.getParameter("reformflag");
 		
@@ -1366,6 +1368,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("bigAttachDownloadDay", bigAttachDownloadDay); // 보관되는 일수
 		model.addAttribute("bigSizeAttachDownloadLimitCount", bigSizeAttachDownloadLimitCount); // 다운로드 횟수
 		model.addAttribute("preSusinGroupStr", preSusinGroupStr);
+		model.addAttribute("connKey", connKey);
+		model.addAttribute("connFormCode", connFormCode);
 		
 		logger.debug("draftui ended.");
 
