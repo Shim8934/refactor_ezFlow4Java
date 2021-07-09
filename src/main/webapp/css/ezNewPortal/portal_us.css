@@ -263,8 +263,8 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .main_main_time .main_timeCheckOut .main_out{margin:0px; padding:0px;  background:url(/images/ezNewPortal/maincheckOut_bg.png) no-repeat left center; font-size:12px; font-weight:bold; color:#333; width:63px; height:39px; line-height:39px; text-align:center; cursor:pointer;}
 
 /* countingIcon */
-.countingIcon{ margin:0px; padding-top:15px; padding-bottom:15px; font-family: Malgun Gothic, Gulim,Arial, Helvetica, sans-serif; overflow:hidden; background-color: white;} /* 장진혁 추가 */
-.countingIcon01{ overflow:hidden; padding:0px 0px; margin:0 auto; width:182px;}
+.countingIcon{ margin:0px; padding:30px 0px; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; overflow:hidden; background-color: white;} /* 장진혁 추가 */
+.countingIcon01{ overflow:hidden; padding:0px 0px; margin:0 auto; width:258px;}
 .countingIcon02{ overflow:hidden; padding:30px 0px 0px 0px; margin:0 auto; width:182px;}
 .countingIcon dl{ margin:0px; padding:0px 13px; position:relative; float:left; cursor:pointer; text-align:center;}
 .countingIcon dl dt.iconImg{ margin:0px; padding:0px;}
