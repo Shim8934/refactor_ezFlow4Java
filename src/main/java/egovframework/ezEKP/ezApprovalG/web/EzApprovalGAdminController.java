@@ -77,6 +77,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1706,8 +1707,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 //		부서의회사아이디가 아닌 상위셀렉트박스의 회사아이디를 사용
 //		String pCompanyID = request.getParameter("node5");
 		String deptName2 = request.getParameter("node6");
+		String extReceptYn = StringUtils.defaultString(request.getParameter("node7"), "N");
 		
-		String result = ezApprovalGAdminService.insertReceiveGroupItemInfo(groupID, deptID, deptName, deptName2, companyID, companyID, userInfo.getTenantId());
+		String result = ezApprovalGAdminService.insertReceiveGroupItemInfo(groupID, deptID, deptName, deptName2, companyID, companyID, userInfo.getTenantId(), extReceptYn);
 		
 		logger.debug("setGroupSubItemInfo ended.");
 		

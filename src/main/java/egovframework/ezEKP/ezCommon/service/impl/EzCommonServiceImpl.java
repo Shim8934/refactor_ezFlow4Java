@@ -2420,4 +2420,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         ezCommonDAO.alterTblDocDeliveryAddColumn();
         ezCommonDAO.insertTblCodelistA54002();
     }
+    
+    @Override
+    public void addTblAdminReceiptGroupSubExtReceptYnColumn() throws Exception {
+        ezCommonDAO.addTblAdminReceiptGroupSubExtReceptYnColumn();
+    }
 }

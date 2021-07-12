@@ -36,6 +36,8 @@ public class ApprGDeptTempletVO {
 	private String aprMemberName2;
 	/** */
 	private String aprMemberJobTitle2;
+	
+	private String companyID;
 
 	public String getUserID() {
 		return userID;
@@ -139,5 +141,11 @@ public class ApprGDeptTempletVO {
 	public void setAprMemberJobTitle2(String aprMemberJobTitle2) {
 		this.aprMemberJobTitle2 = aprMemberJobTitle2;
 	}
+    public String getCompanyID() {
+        return companyID;
+    }
+    public void setCompanyID(String companyID) {
+        this.companyID = companyID;
+    }
 	
 }

@@ -325,4 +325,6 @@ public interface EzCommonService {
 	public void alterTblAprReceiptProcessInfoAddColumn() throws Exception;
 	
 	public void alterTblDocDeliveryAddColumn() throws Exception;
+	
+    public void addTblAdminReceiptGroupSubExtReceptYnColumn() throws Exception;
 }

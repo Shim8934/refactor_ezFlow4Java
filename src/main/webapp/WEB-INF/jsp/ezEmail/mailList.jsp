@@ -1831,7 +1831,7 @@
 			this.usepostDate = true;
 		}
     	
-   		if (!TrimText(prekeywordDetail1.value) && !TrimText(prekeywordDetail2.value) && !TrimText(prekeywordDetail3.value) ) {
+   		if (!TrimText(prekeywordDetail1.value) && !TrimText(prekeywordDetail2.value) && !TrimText(prekeywordDetail3.value) && !this.usepostDate ) {
     		alert(strLang254);
             return;
    		} 

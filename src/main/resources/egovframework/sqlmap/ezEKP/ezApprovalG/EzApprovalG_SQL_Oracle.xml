@@ -4942,20 +4942,34 @@
 <!-- 		{CALL EZSP_GETRECEIPTTEMPLETINFO(#v_FORMID#, #v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getReceiptTempletInfo" parameterClass="Map" resultClass="ApprGDeptTempletVO">
-		 SELECT 
-		 	* 
-	     FROM 
-	     		TBL_DEPTTEMPLET 
-	     WHERE  
-	     		TRIM(FORMID) = #v_FORMID#
-	     AND 
-	     		USERID = #v_USERID#
-	     AND
-	     		TENANT_ID = #v_TENANTID#
-	     AND
-        		COMPANYID = #companyID#	     		
-	     ORDER BY 
-	     		APRDEPTSN
+        SELECT 
+            A.USERID, 
+            A.FORMID, 
+            A.APRDEPTSN, 
+            A.APRDEPTTEMPLETNAME, 
+            B.EXTRECEPTYN 
+        FROM 
+            TBL_DEPTTEMPLET A 
+        JOIN 
+            TBL_DEPTTEMPLETDETAIL B 
+        ON 
+            A.USERID = B.USERID 
+        AND 
+            A.FORMID = B.FORMID 
+        AND 
+            A.APRDEPTSN = B.APRDEPTSN 
+        WHERE 
+            A.FORMID = #v_FORMID#
+        AND 
+            A.USERID = #v_USERID#
+        AND 
+            A.TENANT_ID = #v_TENANTID#
+        AND 
+            A.COMPANYID = #companyID#
+        GROUP BY 
+            A.USERID, A.FORMID, A.APRDEPTSN, A.APRDEPTTEMPLETNAME, B.EXTRECEPTYN 
+        ORDER BY 
+            A.APRDEPTSN
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getReceiptTempletDetailInfo" parameterClass="Map" resultClass="ApprGDeptTempletVO"> -->
@@ -4985,16 +4999,26 @@
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getTempListDB" parameterClass="Map" resultClass="ApprGAdminReceiveVO" remapResults="true">
 		<isEqual property="v_MODE" compareValue="GROUP">
-			SELECT 
-				* 
-           	FROM 
-           		TBL_ADMINRECEIPTGROUP_MAIN
-           	WHERE
-           		TENANT_ID = #v_TENANTID# 
-           	AND
-           		COMPANYID = #companyID#            		
-           	ORDER BY 
-             	MAINID
+            SELECT 
+                A.MAINID, 
+                A.MAINNAME,
+                B.EXTRECEPTYN
+            FROM 
+                TBL_ADMINRECEIPTGROUP_MAIN A 
+            JOIN 
+                TBL_ADMINRECEIPTGROUP_SUB B 
+            ON 
+                A.MAINID = B.MAINID 
+            WHERE 
+                B.EXTRECEPTYN = #v_EXTRECEPTYN# 
+            AND
+                A.TENANT_ID = #v_TENANTID# 
+            AND
+                A.COMPANYID = #companyID# 
+            GROUP BY 
+                A.MAINID, A.MAINNAME, B.EXTRECEPTYN 
+            ORDER BY 
+                A.MAINID
 		</isEqual>
 		<isEqual property="v_MODE" compareValue="ITEM">
 			SELECT 
@@ -7175,27 +7199,36 @@
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.doSendDocReceiptInfo" parameterClass="Map" resultClass="ApprGReceiptVO">
 		SELECT 
-				 RECEIPTPOINTID ,
-	             RECEIPTPOINTNAME ,
-	             RECEIPTPOINTNAME2 ,
-	             RECEIPTMEMBERID ,
-	             RECEIPTMEMBERNAME ,
-	             RECEIPTMEMBERNAME2 ,
-	             RECEIPTMEMBERJOBTITLE ,
-	             RECEIPTMEMBERJOBTITLE2 ,
-	             EXTRECEPTEMAIL 
+            DOCID, 
+            RECEIPTPOINTID, 
+            RECEIPTPOINTNAME, 
+            EXTRECEPTYN, 
+            PROCESSYN, 
+            PROCESSSN, 
+            CANEDITYN, 
+            EXTRECEPTEMAIL, 
+            RECEIPTMEMBERID, 
+            RECEIPTMEMBERNAME, 
+            PROCESSDATE, 
+            RECEIPTMEMBERJOBTITLE, 
+            DEPTMEMBERSN, 
+            RECEIPTPOINTNAME2, 
+            RECEIPTMEMBERJOBTITLE2, 
+            RECEIPTMEMBERNAME2, 
+            ROUTEYN, 
+            COMPANYID
 	     FROM 
 	     		 TBL_RECEIPTPOINTINFO 
 	     WHERE  
 	     		 DOCID = #v_DOCID#
 	     AND 
 	     		 PROCESSSN = 1
-	     AND 
-	     	     EXTRECEPTYN = 'N'
 	     AND
 	     		 TENANT_ID = #v_TENANTID#
 	     AND
-	     		 COMPANYID = #companyID#	     		 
+	     		 COMPANYID = #companyID#
+         ORDER BY 
+                 DEPTMEMBERSN 
 	</select>
 	
 	<select id="EzApprovalG.doSendDocReceiptInfo2" parameterClass="Map" resultClass="ApprGReceiptVO">
@@ -34228,5 +34261,66 @@
             TENANT_ID = #v_TENANTID#
         AND 
             COMPANYID = #companyID#
-    </update>	
+    </update>
+    
+    <select id="EzApprovalG.selectDisbandGroupReceipt" parameterClass="Map" resultClass="ApprGReceiptVO">
+        SELECT 
+            #v_DOCID# AS DOCID, 
+            DEPTID AS RECEIPTPOINTID, 
+            DEPTNAME AS RECEIPTPOINTNAME, 
+            #v_CURRRECEIPT.extReceptYN# AS EXTRECEPTYN, 
+            #v_CURRRECEIPT.processYN# AS PROCESSYN, 
+            #v_CURRRECEIPT.processSN# AS PROCESSSN, 
+            #v_CURRRECEIPT.canEditYN# AS CANEDITYN, 
+            #v_CURRRECEIPT.extRecepteMail# AS EXTRECEPTEMAIL, 
+            #v_CURRRECEIPT.receiptMemberID# AS RECEIPTMEMBERID, 
+            #v_CURRRECEIPT.receiptMemberName# AS RECEIPTMEMBERNAME, 
+            #v_CURRRECEIPT.processDate# AS PROCESSDATE, 
+            #v_CURRRECEIPT.receiptMemberJobTitle# AS RECEIPTMEMBERJOBTITLE, 
+            #v_CURRRECEIPT.deptMemberSN# AS DEPTMEMBERSN, 
+            DEPTNAME2 AS RECEIPTPOINTNAME2, 
+            #v_CURRRECEIPT.receiptMemberJobTitle2# AS RECEIPTMEMBERJOBTITLE2, 
+            #v_CURRRECEIPT.receiptMemberName2# AS RECEIPTMEMBERNAME2, 
+            #v_CURRRECEIPT.routeYN# AS ROUTEYN, 
+            #v_TENANTID# AS TENANT_ID, 
+            #companyID# AS COMPANYID
+        FROM 
+            TBL_ADMINRECEIPTGROUP_SUB
+        WHERE 
+            MAINID = #v_MAINID# 
+        AND 
+            COMPANYID = #companyID# 
+        AND 
+            TENANT_ID = #v_TENANTID# 
+        ORDER BY 
+            SUBID
+    </select>
+    
+    <insert id="EzApprovalG.insertDisbandGroupReceipt" parameterClass="Map">
+        INSERT INTO TBL_RECEIPTPOINTINFO (DOCID, RECEIPTPOINTID, RECEIPTPOINTNAME, EXTRECEPTYN, PROCESSYN, PROCESSSN, CANEDITYN, EXTRECEPTEMAIL, RECEIPTMEMBERID, RECEIPTMEMBERNAME, PROCESSDATE, RECEIPTMEMBERJOBTITLE, DEPTMEMBERSN, RECEIPTPOINTNAME2, RECEIPTMEMBERJOBTITLE2, RECEIPTMEMBERNAME2, ROUTEYN, TENANT_ID, COMPANYID)
+        <iterate property="v_NEWRECEIPTS" conjunction="UNION ALL">
+            SELECT
+                #v_DOCID#,
+                #v_NEWRECEIPTS[].receiptPointID#,
+                #v_NEWRECEIPTS[].receiptPointName#,
+                #v_NEWRECEIPTS[].extReceptYN#,
+                #v_NEWRECEIPTS[].processYN#,
+                #v_NEWRECEIPTS[].processSN#,
+                #v_NEWRECEIPTS[].canEditYN#,
+                #v_NEWRECEIPTS[].extRecepteMail#,
+                #v_NEWRECEIPTS[].receiptMemberID#,
+                #v_NEWRECEIPTS[].receiptMemberName#,
+                #v_NEWRECEIPTS[].processDate#,
+                #v_NEWRECEIPTS[].receiptMemberJobTitle#,
+                #v_NEWRECEIPTS[].deptMemberSN#,
+                #v_NEWRECEIPTS[].receiptPointName2#,
+                #v_NEWRECEIPTS[].receiptMemberJobTitle2#,
+                #v_NEWRECEIPTS[].receiptMemberName2#,
+                #v_NEWRECEIPTS[].routeYN#,
+                #v_TENANTID#,
+                #companyID#
+            FROM
+                DUAL
+        </iterate>
+    </insert>
 </sqlMap>

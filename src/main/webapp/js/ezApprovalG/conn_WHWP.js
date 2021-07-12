@@ -37,6 +37,8 @@ function GetDocumentElement(pCharName, pGubun) {
                 } else {
                     return getNodeText(connData[0]);
                 }
+            } else {
+                return "";
             }
         } else {
             return "";

@@ -839,7 +839,7 @@ function displayUserListCC(DeptID) {
 		url : "/ezOrgan/getDeptMemberList.do",
 		data : {
 				deptID   : DeptID,
-				cell 	 : "displayName;description;title;telephoneNumber",
+				cell 	 : "displayName;description;title;telephoneNumber;extensionattribute5",
 				prop     : "department;extensionAttribute4;displayName;description;title",
 				type 	 : "user"
 		},

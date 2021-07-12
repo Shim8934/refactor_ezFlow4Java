@@ -2073,4 +2073,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
             }
         } catch (Exception e) {}
     }
+    
+    public void addTblAdminReceiptGroupSubExtReceptYnColumn() {
+        try {
+            select("EzCommonDAO.checkTblAdminReceiptGroupSubExtReceptYnColumn");
+        } catch (Exception e) {
+            logger.debug("tbl_adminreceiptgroup_sub extreceptyn column doesn't exist. creating the column...");
+            
+            update("EzCommonDAO.addTblAdminReceiptGroupSubExtReceptYnColumn");
+        }
+    }
 }

@@ -1184,10 +1184,20 @@
 		  </tr>
 		  <tr>
 		    <td style="height:20px">
-		        <table class="file">
+		        <table class="file" style="height:80px;">
 		            <tr>
-		              <th id="btn_Attach"><spring:message code='ezApprovalG.t65'/></th>
-		              <td ><div id="lstAttachLink"></div></td>
+		              <th><spring:message code='ezApprovalG.t65'/></th>
+		              <td style=" width:62%; border-right:1px solid #d5d5d5;">
+                      	<div id="lstAttachLink" style="height:70px;"></div>
+                      	<iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0" style="display: none;"></iframe>
+		              </td>
+		              <td style=" width:30%;">
+						<div id="lstAttachLinkDoc" style="height:70px;"></div>
+		              </td>
+		              <td class="pos2" style="width:8%; background:#fffcfa;">
+						<a class="imgbtn imgbck" style="width:60px;"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
+						<a class="imgbtn imgbck" style="width:60px"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a> 
+		              </td>
 		            </tr>
 		        </table>
 		    </td>

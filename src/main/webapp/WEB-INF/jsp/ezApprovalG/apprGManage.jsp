@@ -780,6 +780,9 @@
 		                openUserInfo();
 		                break;
 		            case "2":
+						var url = "/ezApprovalG/ezReceiptInfoIng.do?docId=" + tr.getAttribute("DATA2") + "&receiptId=" + tr.getAttribute("DATA1") + "&receiptName=" + encodeURIComponent(tr.getAttribute("DATA10"));
+						var win = window.open(url, "", GetOpenWindowfeature(1155, 460, false));
+						try { win.focus(); } catch (e) {}
 		                break;
 		            case "4":
 		            	var AttachfilenameA1 = tr.cells[1].innerHTML;

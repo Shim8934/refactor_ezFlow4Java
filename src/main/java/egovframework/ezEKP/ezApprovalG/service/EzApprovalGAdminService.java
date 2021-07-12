@@ -44,7 +44,7 @@ public interface EzApprovalGAdminService {
 	
 	public String getReceiveGroupInfo(String pid, String mode,	String companyID, String lang, int tenantID, String offset, String approvalFlag) throws Exception;
 	
-	public String insertReceiveGroupItemInfo(String groupID, String deptID,	String deptName, String deptName2, String pCompanyID, String companyID, int tenantID) throws Exception;
+	public String insertReceiveGroupItemInfo(String groupID, String deptID,	String deptName, String deptName2, String pCompanyID, String companyID, int tenantID, String extReceptYn) throws Exception;
 	
 	public String updateReceiveGroupItemInfo(String groupID, String deptID,	String deptName, String deptName2, String pCompanyID, String companyID, int tenantID) throws Exception;
 	

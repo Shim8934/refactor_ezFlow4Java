@@ -3696,4 +3696,16 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void updateAprReceiptProcessInfoRootDocID(Map<String, Object> map) throws Exception {
 	    update("EzApprovalG.updateAprReceiptProcessInfoRootDocID", map);
 	}
+    
+    public List<ApprGReceiptVO> selectDisbandGroupReceipt(Map<String, Object> map) throws Exception {
+        return (List<ApprGReceiptVO>) list("EzApprovalG.selectDisbandGroupReceipt", map);
+    }
+    
+    public void insertDisbandGroupReceipt(Map<String, Object> map) throws Exception {
+        insert ("EzApprovalG.insertDisbandGroupReceipt", map);
+    }
+    
+    public List<Map<String, Object>> getReceiptInfoIng(Map<String, Object> map) throws Exception {
+        return (List<Map<String, Object>>) list("EzApprovalG.getReceiptInfoIng", map);
+    }
 }
