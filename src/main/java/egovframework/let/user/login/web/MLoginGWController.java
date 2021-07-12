@@ -256,7 +256,19 @@ public class MLoginGWController {
 					pwd = EgovFileScrty.encryptPassword(rpwd, uid);
 		        	loginVO.setPassword(pwd);
 		            loginVO.setDn("PASSWORD");
+		            String chkADpass = "";
 		            
+		            // AD를 사용하는 경우 AD의 암호화 비교한 값을 구한다.
+		            if (ezCommonService.getTenantConfig("USE_AD", tenantId).equalsIgnoreCase("YES")) {
+		            	// true 이면 그룹웨어 암호 변경
+		            	// false 이면 그냥 로그인 금지
+		            	chkADpass = loginService.chkADAndUpdatePassword(uid, rpwd, tenantId);	            	
+		            	
+		            	if (chkADpass.equalsIgnoreCase("false")) {
+		            		// vo의 password에 null 값을 넣어서 selectUser에서 무조건 암호가 틀리게 한다.
+		            		loginVO.setPassword(null);	            		
+		            	}
+		            }
 		            // 암호가 맞는 지 확인한다.
 		            resultVO = loginService.selectUser(loginVO);
     			// 사원번호를 사용해 로그인하는 경우
