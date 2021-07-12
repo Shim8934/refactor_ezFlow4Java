@@ -3888,7 +3888,7 @@
 		LIMIT 1
 	</select>
 	
-	<statement id="EzCommonDAO.checkTblCarAcl"> 
+	<statement id="EzCommonDAO.createTblCarAcl"> 
 		CREATE TABLE `tbl_car_acl` (
 		  `CAR_ID` varchar(40) NOT NULL,
 		  `MEMBER_NAM` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -3910,7 +3910,7 @@
 		LIMIT 1
 	</select>
 	
-	<statement id="EzCommonDAO.createTblCarAttach""> 
+	<statement id="EzCommonDAO.createTblCarAttach"> 
 		CREATE TABLE `tbl_car_attach` (
 		  `ATTACHID` bigint(10) NOT NULL AUTO_INCREMENT,
 		  `CAR_ID` varchar(40) NOT NULL,
