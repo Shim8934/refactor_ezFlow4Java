@@ -3197,6 +3197,15 @@
 	    			(#companyID#, #tenantID#, '1', '1', '1', #nowDate#, '1', '1', '1', #nowDate#)
 	    ]]>
     </insert>
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_I33" parameterClass="Map">
+      <![CDATA[
+          INSERT INTO
+            TBL_CAR
+                (CAR_ID, CAR_NAME, CAR_NAME2, CAR_NM, CAR_GB, CAR_LEVEL, CAR_STEP, CAR_ACCESS, CAR_UPPER, OWNDEPTID, OWNDEPTNM, OWNDEPTNM2,OWNERID, OWNERNM, OWNERNM2, OWNERPOSITION, OWNERPOSITION2, OWNERCALL, CAR_REGISTER_DATE, DELFLAG, COMPANYID, TENANT_ID, CAR_URL, CAR_EXPLAIN) 
+          VALUES
+                (1,#companyName#,#companyName2#,'',1,0,1,null,0,null,null,null,null,null,null,null,null,null,null,0,#companyID#,#tenantID#,null,null)
+      ]]>
+   </insert>
     
 	<delete id="EzOrganAdminDAO.retireDBData" parameterClass="Map">
 		<![CDATA[

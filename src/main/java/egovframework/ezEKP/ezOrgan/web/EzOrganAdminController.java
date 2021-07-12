@@ -243,6 +243,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.insertApprContainterConfig();		// 2021-05-21 김민성 - 전자결재 양식별문서함, 분류코드문서함 컨피그 추가
 	    	ezCommonService.createSerialnumgenGrant();			// 2021-06-08 김민성 - 전자결재 상위부서 채번 기능 테이블 추가
 	    	ezCommonService.insertApprSatViewerConfig(); // 2021-06-15 심기영 - 전자결재 첨부파일 SAT 뷰어 사용 컨피그 추가
+	    	ezCommonService.createTblCar(); // 2021-07-12 차량관리 테이블 추가
+	    	ezCommonService.createTblCarAcl(); // 2021-07-12 차량관리 테이블 추가
+	    	ezCommonService.createTblCarAttach(); // 2021-07-12 차량관리 테이블 추가
+	    	ezCommonService.createTblCarForm(); // 2021-07-12 차량관리 테이블 추가
 	    	
 	    	// webfolder
 	    	ezCommonService.addWebfolderUserSubdeptPermittedColumn(); 	//2020-10-19 김은실 - 웹폴더 > 하위부서 허용 여부 추가

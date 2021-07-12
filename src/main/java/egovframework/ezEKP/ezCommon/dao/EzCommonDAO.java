@@ -2083,4 +2083,44 @@ public class EzCommonDAO extends EgovAbstractDAO {
             update("EzCommonDAO.addTblAdminReceiptGroupSubExtReceptYnColumn");
         }
     }
+	public void createTblCar() {
+		try {
+			select("EzCommonDAO.checkTblCar");
+		} catch (Exception e) {
+			logger.debug("tbl_car doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblCar");
+		}
+	}
+
+	public void createTblCarAcl(){
+		try {
+			select("EzCommonDAO.checkTblCarAcl");
+		} catch (Exception e) {
+			logger.debug("tbl_car_acl doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblCarAcl");
+		}
+	}
+
+	public void createTblCarAttach()  {
+		try {
+			select("EzCommonDAO.checkTblCarAttach");
+		} catch (Exception e) {
+			logger.debug("tbl_car_attach doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblCarAttach");
+		}
+	}
+
+	public void createTblCarForm()  {
+		try {
+			select("EzCommonDAO.checkTblCarForm");
+		} catch (Exception e) {
+			logger.debug("tbl_car_form doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblCarForm");
+		}
+	}
+    
 }

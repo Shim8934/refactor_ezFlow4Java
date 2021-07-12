@@ -801,6 +801,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				
 				//회사등록시 근태설정(연차설정관리) 기본값 insert
 				ezOrganAdminDao.insertCompanyInfo_IJHS1(map1);
+				//차량관리 기본값 insert
+				ezOrganAdminDao.insertCompanyInfo_I33(map1);
 				
             // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
             } catch (Exception e) {
