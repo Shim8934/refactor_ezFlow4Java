@@ -132,6 +132,10 @@
 					case "menu32":
 						parent.frames["bottom"].location.href = "/admin/ezWebFolder/webFolderMain.do";
 						break;
+						
+					case "menu33":
+						parent.frames["bottom"].location.href = "/admin/ezCar/carMain.do";
+						break;
 				}
 			}
 			
@@ -240,6 +244,10 @@
 			      			<li><span id="menu18" onClick="menu_change(690, event)"><spring:message code="main.t10011" /></span></li>
 			      			<%-- 통계 --%>
 			      			<li><span id="menu09" onClick="menu_change(690, event)"><spring:message code="main.t27" /></span></li>
+			      			<%-- 차량관리 --%>
+			      			<c:if test="${useCar == 'YES'}">
+			      			<li><span id="menu33" onClick="menu_change(690, event)"><spring:message code="main.shb01" /></span></li>
+			      			</c:if>
 			      			<c:if test="${use_ezKMS == 'YES'}">
 			      				<li><span id="menu14" onClick="menu_change(920, event);"><spring:message code="main.t19" /></span></li>
 			      			</c:if>

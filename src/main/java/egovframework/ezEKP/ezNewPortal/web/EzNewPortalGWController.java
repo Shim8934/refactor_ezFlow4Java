@@ -2158,7 +2158,7 @@ public class EzNewPortalGWController {
 			//tenant config가 NO인 경우 관리자 메뉴 관리에서도 나오면 안됨
 			//컨피그 : useQuestion(전자설문), useMemo(메모), useLadder(사다리게임), useCabinet(캐비닛), 
 			//		 useBallotSystem(투표), USE_JOURNAL(업무일지), USE_CIRCULAR(회람판), USE_ATTITUDE(근태관리)
-			//		 useWebfolder(웹폴더),  USE_ezPMS(프로젝트관리), USE_COMMUNITY(커뮤니티)
+			//		 useWebfolder(웹폴더),  USE_ezPMS(프로젝트관리), USE_COMMUNITY(커뮤니티), UseCar(차량관리)
 			String useQuestion = ezCommonService.getTenantConfig("useQuestion", tenantId);
 			String useSurvey = ezCommonService.getTenantConfig("useSurvey", tenantId);
 			String useMemo = ezCommonService.getTenantConfig("useMemo", tenantId);
@@ -2177,6 +2177,7 @@ public class EzNewPortalGWController {
 			String useResource = ezCommonService.getTenantConfig("useResource", tenantId);
 			String useBoard = ezCommonService.getTenantConfig("useBoard", tenantId);
 			String useToDo = ezCommonService.getTenantConfig("useToDo", tenantId);
+			String useCar = ezCommonService.getTenantConfig("useCar", tenantId);
 			
 			if (useAttitude == null || useAttitude.equals("")) {
 				useAttitude = "NO";
@@ -2244,6 +2245,9 @@ public class EzNewPortalGWController {
 			
 			if (useToDo == null || useToDo.equals("")) {
 				useToDo = "YES";
+			}
+			if (useCar == null || useCar.equals("")) {
+				useCar = "YES";
 			}
 			
 			if (useQuestion.equals("NO")) {
@@ -2313,6 +2317,10 @@ public class EzNewPortalGWController {
 			
 			if (useToDo.equals("NO")) {
 				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("task")));
+			}
+			
+			if (useCar.equals("NO")) {
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("car")));
 			}
 			
 			result.put("status", "ok");
