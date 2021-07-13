@@ -1428,20 +1428,28 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	// 사용자 이름,부서 목록을 반환한다.
     @Override
     public List<OrganUserVO> getUserList(int tenantID,int startPage, int maxItemPerPage,
-    									 String keycode,String keyword,String companyId, String sortColumn, String sortType) throws Exception {     
+    									 String keycode,String keyword,String companyId, String sortColumn, String sortType, boolean[] searchFor) throws Exception {     
     	logger.debug("getUserList started");
+    	if(searchFor == null) {
+    		searchFor = new boolean[] {true, true, true}; 
+    	}
     	
     	Map<String, Object> params = new HashMap<String, Object>();
     	
     	params.put("tenantID", tenantID);
 		params.put("v_start", startPage);
-		params.put("v_end",   startPage + maxItemPerPage - 1);
+		params.put("v_end", (!searchFor[0] && !searchFor[1] && !searchFor[2])? 0 : startPage + maxItemPerPage - 1);
 		params.put("pageCount", maxItemPerPage);
 		params.put("search_keycode", keycode);
 		params.put("search_keyword", keyword);
 		params.put("companyId", companyId);
 		params.put("sortColumn", sortColumn);      
 		params.put("sortType", sortType);
+		params.put("searchForAll", searchFor[0] && searchFor[1] && searchFor[2]);
+		params.put("isAnd", (searchFor[0] && !searchFor[1] && !searchFor[2]) 
+					    || (!searchFor[0] && !(searchFor[1] && searchFor[2])));
+		params.put("retired", searchFor[1]);
+		params.put("stopped", searchFor[2]);
 		
 		String orderByData = "";
 		if(!sortColumn.equals("")){
@@ -1465,8 +1473,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 
     // 사용자 이름,부서 목록개수를 반환한다.
     @Override
-    public int getUserCount(int tenantID, String keycode,String keyword,String companyId) throws Exception {     
+    public int getUserCount(int tenantID, String keycode, String keyword, boolean[] searchFor, String companyId) throws Exception {     
     	logger.debug("getUserCount started");
+    	if(searchFor == null) {
+    		searchFor = new boolean[] {true, true, true}; 
+    	}
    		
     	Map<String, Object> params = new HashMap<String, Object>();
     	
@@ -1475,7 +1486,13 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		params.put("search_keyword", keyword);
 		params.put("companyId", companyId);
 		
-		int userCount = ezOrganAdminDao.getUserCount(params);
+		params.put("searchForAll", searchFor[0] && searchFor[1] && searchFor[2]);
+		params.put("isAnd", (searchFor[0] && !searchFor[1] && !searchFor[2]) 
+					    || (!searchFor[0] && !(searchFor[1] && searchFor[2])));
+		params.put("retired", searchFor[1]);
+		params.put("stopped", searchFor[2]);
+		
+		int userCount = (!searchFor[0] && !searchFor[1] && !searchFor[2])? 0 : ezOrganAdminDao.getUserCount(params);
 		
 		logger.debug("getUserCount ended. userCount=" + userCount);
     	
