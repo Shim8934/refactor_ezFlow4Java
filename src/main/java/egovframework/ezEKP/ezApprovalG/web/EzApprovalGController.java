@@ -4988,6 +4988,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 								model.addAttribute("docID", docID.trim());
 								model.addAttribute("docHref", apprGEndDocVO.getHref().trim());
 								model.addAttribute("orgCompanyID", orgCompanyID); // 결재문서 기안 당시의 회사ID(문서 재사용에 필요)
+								model.addAttribute("formID", formId);
 								
 								return "redirect:/ezApprovalG/contDocView.do";
 							} else {
