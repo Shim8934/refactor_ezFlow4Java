@@ -4310,6 +4310,8 @@
 		    VALUES (#companyID#, #tenantID#, 18, 1, 1, 18)
 		    INTO TBL_PORTAL_MENU_COMP (COMPANY_ID, TENANT_ID, MENU_ID, MENU_USED, COMPANY_LANG, COMPANY_ORDER) 
 		    VALUES (#companyID#, #tenantID#, 19, 1, 1, 19)
+		    INTO TBL_PORTAL_MENU_COMP (COMPANY_ID, TENANT_ID, MENU_ID, MENU_USED, COMPANY_LANG, COMPANY_ORDER) 
+		    VALUES (#companyID#, #tenantID#, 20, 1, 1, 20)
 	    SELECT
 	    	*
 	    FROM DUAL
@@ -4358,6 +4360,8 @@
 		    VALUES (18, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
 		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
 		    VALUES (19, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+		    VALUES (20, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
 	    SELECT
 	    	*
 	    FROM DUAL
@@ -4480,6 +4484,11 @@
 		    VALUES (19, 2, #companyID#, #tenantID#, 'Survey')
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
 		    VALUES (19, 3, #companyID#, #tenantID#, '電子アンケート')
+		    VALUES (20, 1, #companyID#, #tenantID#, '차량관리')
+		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
+		    VALUES (20, 2, #companyID#, #tenantID#, 'Car')
+		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
+		    VALUES (20, 3, #companyID#, #tenantID#, '自動車')
 		SELECT
 	    	*
 	    FROM DUAL
@@ -4878,6 +4887,16 @@
 	    ]]>
     </insert>
     
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_I33" parameterClass="Map">
+      <![CDATA[
+          INSERT INTO
+            TBL_CAR
+                (CAR_ID, CAR_NAME, CAR_NAME2, CAR_NM, CAR_GB, CAR_LEVEL, CAR_STEP, CAR_ACCESS, CAR_UPPER, OWNDEPTID, OWNDEPTNM, OWNDEPTNM2,OWNERID, OWNERNM, OWNERNM2, OWNERPOSITION, OWNERPOSITION2, OWNERCALL, CAR_REGISTER_DATE, DELFLAG, COMPANYID, TENANT_ID, CAR_URL, CAR_EXPLAIN) 
+          VALUES
+                (1,#companyName#,#companyName2#,'',1,0,1,null,0,null,null,null,null,null,null,null,null,null,null,0,#companyID#,#tenantID#,null,null)
+      ]]>
+   </insert>
+   
 	<delete id="EzOrganAdminDAO.retireDBData" parameterClass="Map">
 		<![CDATA[
 			DELETE

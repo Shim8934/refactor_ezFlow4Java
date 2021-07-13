@@ -6793,6 +6793,92 @@ CREATE TABLE "TBL_GOVSENDDOCHISTORY"
 	"TENANT_ID" NUMBER(5,0), 
 	"COMPANYID" VARCHAR2(20 BYTE)
    ) ;
+   
+ --------------------------------------------------------
+--  DDL for Table TBL_CAR
+--------------------------------------------------------  
+   
+   CREATE TABLE "TBL_CAR" (
+  "CAR_ID" NUMBER(11,0),
+  "CAR_NAME" NVARCHAR2(510),
+  "CAR_NAME2" NVARCHAR2(510),
+  "CAR_NM" NVARCHAR2(40),
+  "CAR_GB" NVARCHAR2(2),
+  "CAR_LEVEL" NUMBER(11,0),
+  "CAR_STEP" NUMBER(11,0),
+  "CAR_ACCESS" NVARCHAR2(510),
+  "CAR_UPPER" NUMBER(10,0),
+  "OWNDEPTID" NVARCHAR2(100),
+  "OWNDEPTNM" NVARCHAR2(100),
+  "OWNDEPTNM2" NVARCHAR2(100),
+  "OWNERID" NVARCHAR2(200),
+  "OWNERNM" NVARCHAR2(40),
+  "OWNERNM2" NVARCHAR2(40),
+  "OWNERPOSITION" NVARCHAR2(20),
+  "OWNERPOSITION2" NVARCHAR2(100),
+  "OWNERCALL" NVARCHAR2(200),
+  "CAR_REGISTER_DATE" NVARCHAR2(20),
+  "DELFLAG" NVARCHAR2(2),
+  "COMPANYID" NVARCHAR2(40),
+  "TENANT_ID" NUMBER DEFAULT 0,
+  "CAR_URL" NVARCHAR2(40),
+  "CAR_EXPLAIN" NVARCHAR2(40)
+);
+ --------------------------------------------------------
+--  DDL for Table TBL_CAR_ACL
+--------------------------------------------------------  
+CREATE TABLE "TBL_CAR_ACL" (
+  "CAR_ID" NVARCHAR2(40),
+  "MEMBER_NAM" NVARCHAR2(20),
+  "MEMBER_ID" NVARCHAR2(80),
+  "ACCESS_LVL" NVARCHAR2(2),
+  "DEPT_YN" NVARCHAR2(2),
+  "SDA_YN" NVARCHAR2(2),
+  "COMPANYID" NVARCHAR2(40),
+  "TENANT_ID" NUMBER DEFAULT 0
+);
+ --------------------------------------------------------
+--  DDL for Table TBL_CAR_ATTACH
+--------------------------------------------------------  
+CREATE TABLE "TBL_CAR_ATTACH" (
+  "ATTACHID" NUMBER(10,0),
+  "CAR_ID" NVARCHAR2(40),
+  "FILESIZE" NUMBER(11,0),
+  "FILENAME" NVARCHAR2(500),
+  "FILEPATH" NVARCHAR2(500),
+  "COMPANYID" NVARCHAR2(40),
+  "TENANT_ID" NUMBER DEFAULT 0
+);
+ --------------------------------------------------------
+--  DDL for Table TBL_CAR_FORM
+--------------------------------------------------------  
+CREATE TABLE "TBL_CAR_FORM" (
+  "CAR_FORM_ID" NUMBER(38,0),
+  "CAR_ID" NVARCHAR2(40),
+  "REGISTER_ID" NVARCHAR2(80),
+  "REGISTER_DATE" DATE,
+  "REV_DATE" DATE,
+  "REV_TIME" NVARCHAR2(45),
+  "REV_TIME2" NVARCHAR2(45),
+  "DRIVER_DEPTNAME" NVARCHAR2(80),
+  "DRIVER_NAME" NVARCHAR2(80),
+  "B_DEPT_ID" NVARCHAR2(100),
+  "B_DEPART_TIME" NVARCHAR2(16),
+  "B_DISTANCE" NVARCHAR2(40),
+  "DRIVE_PURPOSE" NVARCHAR2(200),
+  "DRIVE_POINT" NVARCHAR2(100),
+  "A_ARRIVE_TIME" NVARCHAR2(16),
+  "A_DISTANCE"  NVARCHAR2(40),
+  "A_DISTANCE_AUTO" NVARCHAR2(40),
+  "A_DISTANCE_COMMUTE" NVARCHAR2(40),
+  "A_DISTANCE_WORK" NVARCHAR2(40),
+  "A_DISTANCE_ETC" NVARCHAR2(40),
+  "A_SUBMIT_FLAG" NVARCHAR2(2),
+  "COMPANYID" NVARCHAR2(40),
+  "TENANT_ID" NUMBER DEFAULT 0,
+  "CAR_REGISTER_NO" NUMBER(20,0),
+  "DELFLAG" NVARCHAR2(2)
+  );
 --------------------------------------------------------
 --  DDL for Table TBL_SEALDEPTINFO
 --------------------------------------------------------
@@ -10434,6 +10520,30 @@ CREATE TABLE "TBL_GOVSENDDOCHISTORY"
 --------------------------------------------------------
 
   CREATE UNIQUE INDEX "PK_TBL_SEALDEPTINFO" ON "TBL_SEALDEPTINFO" ("TENANT_ID", "SEALNUM", "DEPTID", "COMPANYID") 
+  ;
+--------------------------------------------------------
+--  DDL for Index PK_TBL_CAR
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_TBL_CAR" ON "TBL_CAR" ("TENANT_ID", "CAR_ID", "COMPANYID") 
+  ;
+--------------------------------------------------------
+--  DDL for Index PK_TBL_CAR_ACL
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_TBL_CAR_ACL" ON "TBL_CAR_ACL" ("TENANT_ID", "CAR_ID", "MEMBER_ID", "COMPANYID") 
+  ;
+--------------------------------------------------------
+--  DDL for Index PK_TBL_CAR_ATTACH
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_TBL_CAR_ATTACH" ON "TBL_CAR_ATTACH" ("ATTACHID", "TENANT_ID", "COMPANYID") 
+  ;
+--------------------------------------------------------
+--  DDL for Index PK_TBL_CAR_FORM
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_TBL_CAR_FORM" ON "TBL_CAR_FORM" ("CAR_FORM_ID", "CAR_ID", "COMPANYID", "TENANT_ID", "CAR_REGISTER_NO")
   ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_SEALDEPTINFO1
