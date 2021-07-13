@@ -81,6 +81,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -258,6 +259,10 @@ public class CommonUtil {
 	}
     
 	public LoginVO userInfo(String loginCookie){
+		if (StringUtils.isEmpty(loginCookie)) {
+			return null;
+		}
+
 		try{
 			String decData = egovFileScrty.decryptAES(loginCookie);
 

@@ -68,6 +68,7 @@ public class ADConnection {
 	 * 로그인 페이지에서 비밀번호 확인하는 함수.
 	 * */
 	public String setConnection(String address, String security, String passwd) {
+		logger.debug("AD setConnection start.");
 		String chk = "true";
 
     	try {
@@ -89,6 +90,7 @@ public class ADConnection {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
 		}
+    	logger.debug("AD setConnection end. result=" + chk);
 		
 		return chk;
 	}
