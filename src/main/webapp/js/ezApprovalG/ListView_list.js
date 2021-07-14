@@ -1895,7 +1895,7 @@ function checkboxBtnShowCtl() {
     		if (pFunctionType == "004" || pFunctionType == "006" || pFunctionType == "015") {
     			// 내부결재가 아닌 수신문(011), 합의문(012)의 경우 삭제 불가능, 재기안 가능 (현재 체크박스가 결재할문서에만 존재하므로, 부서수신함 등의 다른 문서함은 고려하지 않음)
     			if (GetAttribute(oArrRows[i], "DATA9") == "0" && pDocState != "011" && pDocState != "012") {
-    				isDelShow === true ? true : false;
+    				isDelShow = isDelShow == true ? true : false;
     			} else {
     				isDelShow = false;
     			}
