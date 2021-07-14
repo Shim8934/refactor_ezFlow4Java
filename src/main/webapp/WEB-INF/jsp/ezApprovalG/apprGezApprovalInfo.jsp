@@ -2857,17 +2857,12 @@
 	                        <table style="margin-left: 0px;">
 	                            <tr>
 	                                <td style="vertical-align: top;">
-	                                	<c:if test="${approvalFlag =='G' }">
-		                                    <div id="TreeView2" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 517px; width: 436px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
-		                                    </div>
-	                                    </c:if>
-	                                    <c:if test="${approvalFlag == 'S' }">
+<!-- 	                                	 정주환 G 버전에서 개인 수신자 설정 기능 추가 -->
+<!-- 		                                    <div id="TreeView2" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 517px; width: 388px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;"> -->
                                         	<div id="TreeView2" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 290px; width: 436px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
 		                                    </div>
-	                                    </c:if>
 	                                </td>
 	                            </tr>
-	                            <c:if test="${approvalFlag == 'S' }">
 	                            <tr>
                                     <td>
                                         <div class="border_gray" style="margin-right: 1px;">
@@ -2876,19 +2871,11 @@
                                         </div>
                                     </td>
                                 </tr>
-                                </c:if>
 	                            <tr>
 	                                <td height="36px;" style="background-color: transparent; padding-top: 10px;vertical-align: top">
-	                                <c:if test="${approvalFlag == 'G'}">
-	                                    <input id="txtDeptName" style="width: 150px;height:22px" name="textUser" onkeyup="return btnSearchDept_onKeyPress(event)"  maxlength="50">
-	                                    <a class="imgbtn imgbck2" style="vertical-align: top; margin: auto;"><span id="Span2" onkeyup="return btnSearchDept_onClick()" onclick="return btnSearchDept_onClick()" ><spring:message code='ezApprovalG.t250'/></span></a>
-	                                	<a class="imgbtn imgbck2" style="vertical-align: top; margin: auto;" id="AprDeptAdd" onclick="AprDeptAdd_onclick('DEPT');"><span><spring:message code='ezApprovalG.G0002'/></span></a>
-	                                </c:if>
-	                                <c:if test="${approvalFlag == 'S'}">
 	                                 	<input id="textUser2" style="width: 150px;height:22px" name="textUser" onkeypress="return textUser_onkeypress2()" maxlength="50">
                                         <a class="imgbtn imgbck2"><span name="btn_searchUser" id="Span2" onkeypress="return btn_searchUser_onclick2()" onclick="return btn_searchUser_onclick2()"><spring:message code='ezApproval.t175'/></span></a>
 	                                	<a class="imgbtn imgbck2" id="AprDeptAdd"  onclick="AprDeptAdd_onclick('DEPT');"><span><spring:message code='ezApproval.t1101'/></span></a>
-	                                </c:if>
 	                                </td>
 	                            </tr>
 	                        </table>
