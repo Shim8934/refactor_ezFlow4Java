@@ -14234,8 +14234,8 @@ CREATE TABLE `tbl_webfolder_file` (
   `TENANT_ID` mediumint(5) unsigned NOT NULL COMMENT '테넌트 아이디',
   `VERSION` mediumint(5) NOT NULL DEFAULT 1,
   `DEPTH` int(7) NOT NULL DEFAULT 1,
-  `ROOT_ID` int(11) NOT NULL,
-  `PARENT_ID` int(11) NOT NULL,
+  `ROOT_ID` varchar(100) NOT NULL,
+  `PARENT_ID` varchar(100) NOT NULL,
   `HIERARCHICAL_PATH` varchar(300) NOT NULL,
   PRIMARY KEY (`FILE_ID`,`TENANT_ID`),
   KEY `INDEX_FOLDER_ID` (`FOLDER_ID` ASC)
