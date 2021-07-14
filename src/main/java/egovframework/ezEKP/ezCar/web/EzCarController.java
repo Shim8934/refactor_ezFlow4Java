@@ -1761,24 +1761,25 @@ public class EzCarController extends EgovFileMngUtil {
 			int sum_commute = 0;//주행거리합계_출퇴근
 			int sum_work = 0;//주행거리함계_일반업무
 			int sum_worketc = 0;//주행거리합계_업무외이용
+			
 			for(int i=0; i<carFormList.size(); i++){
-				if(!carFormList.get(i).getA_distance_commute().equals("")){
-					sum_commute = sum_commute + Integer.parseInt(carFormList.get(i).getA_distance_commute());
-				}
-				if(!carFormList.get(i).getA_distance_work().equals("")){
-					sum_work = sum_work + Integer.parseInt(carFormList.get(i).getA_distance_work());
-				}
-				if(!carFormList.get(i).getA_distance_etc().equals("")){
-					sum_worketc = sum_worketc + Integer.parseInt(carFormList.get(i).getA_distance_etc());
-				}
+					if(carFormList.get(i).getA_distance_commute()!= null && !carFormList.get(i).getA_distance_commute().equals("")){
+						sum_commute = sum_commute + Integer.parseInt(carFormList.get(i).getA_distance_commute());
+					}
+					if(carFormList.get(i).getA_distance_work() != null && !carFormList.get(i).getA_distance_work().equals("")){
+						sum_work = sum_work + Integer.parseInt(carFormList.get(i).getA_distance_work());
+					}
+					if(carFormList.get(i).getA_distance_etc() != null && !carFormList.get(i).getA_distance_etc().equals("")){
+						sum_worketc = sum_worketc + Integer.parseInt(carFormList.get(i).getA_distance_etc());
+					}
 			}
 			int a_distance = 0;
 			int b_distance = 0;
-			if(!carFormList.get(carFormList.size()-1).getA_distance().equals("")){
-				a_distance = Integer.parseInt(carFormList.get(carFormList.size()-1).getA_distance());
+			if(carFormList.get(carFormList.size()-1) != null && !carFormList.get(carFormList.size()-1).getA_distance().equals("")){
+					a_distance = Integer.parseInt(carFormList.get(carFormList.size()-1).getA_distance());
 			}
-			if(!carFormList.get(0).getB_distance().equals("")){
-				b_distance = Integer.parseInt(carFormList.get(0).getB_distance());
+			if(carFormList.get(0).getB_distance() != null && !carFormList.get(0).getB_distance().equals("")){
+					b_distance = Integer.parseInt(carFormList.get(0).getB_distance());
 			}
 			int errorRange = a_distance - b_distance - (sum_commute + sum_work);
 			

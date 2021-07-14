@@ -172,31 +172,31 @@
 		resultMap="carGetAdmSubClsTreeVO">
 		<isEmpty property="v_P_ParentID">
 			<![CDATA[
-				SELECT A.CAR_ID car_id ,
-						   A.CAR_NAME car_name ,
- 						   A.CAR_NAME2 car_name2 ,
-						   A.CAR_LEVEL car_level ,
-						   A.CAR_STEP car_step ,
-                    	   A.CAR_UPPER car_upper ,
-                    	   A.CAR_GB car_gb ,
+				SELECT A.CAR_ID CAR_ID,
+						   A.CAR_NAME CAR_NAME,
+ 						   A.CAR_NAME2 CAR_NAME2,
+						   A.CAR_LEVEL CAR_LEVEL,
+						   A.CAR_STEP CAR_STEP,
+                    	   A.CAR_UPPER CAR_UPPER,
+                    	   A.CAR_GB CAR_GB,
                     	   A.CAR_URL,
 						   A.CAR_EXPLAIN,
-                    	   A.CAR_ACCESS car_access ,
-                  	   ( SELECT IFNULL(COUNT(CAR_ID) , 0) 
+                    	   A.CAR_ACCESS CAR_ACCESS,
+                  	   ( SELECT NVL(COUNT(CAR_ID), 0) 
                          FROM TBL_CAR 
                          WHERE CAR_UPPER = A.CAR_ID
                      	 AND COMPANYID = #v_P_CompanyID#
                      	 AND CAR_GB = '1'
                      	 AND DELFLAG = 0
-                     	 AND TENANT_ID = #tenantID# ) sub_clscnt ,
-                   	   ( SELECT IFNULL(COUNT(CAR_ID) , 0) 
+                     	 AND TENANT_ID = #tenantID# ) SUB_CLSCNT,
+                   	   ( SELECT NVL(COUNT(CAR_ID), 0) 
                    		 FROM TBL_CAR 
                  		 WHERE  CAR_UPPER = A.CAR_ID
                          AND COMPANYID = #v_P_CompanyID#
                          AND CAR_GB = '2'
                          AND DELFLAG = 0
-                         AND TENANT_ID = #tenantID# ) sub_rescnt ,
-                   	   '0' Access_Lvl 
+                         AND TENANT_ID = #tenantID# )SUB_RESCNT,
+                   	   '0' ACCESS_LVL
 				FROM TBL_CAR A
             	WHERE  CAR_ID = 1
 				AND COMPANYID = #v_P_CompanyID#
@@ -209,27 +209,27 @@
 			<isEqual property="v_P_TreeType" compareValue="0">
 				<isEqual property="v_P_ParentID" compareValue="1">
 				<![CDATA[
-				SELECT B.car_id, B.car_name, B.car_name2, B.car_level, B.car_step, B.car_upper, B.car_gb, B.car_url, B.car_explain, B.car_access, B.sub_clscnt, B.sub_rescnt, B.Access_LvL
+				SELECT B.CAR_ID, B.CAR_NAME, B.CAR_NAME2, B.CAR_LEVEL, B.CAR_STEP, B.CAR_UPPER, B.CAR_GB, B.CAR_URL, B.CAR_EXPLAIN, B.CAR_ACCESS, B.SUB_CLSCNT, B.SUB_RESCNT, B.ACCESS_LVL
 				FROM 
 				(
-					SELECT A.CAR_ID car_id ,
-						   A.CAR_NAME car_name ,
- 						   A.CAR_NAME2 car_name2 ,
-						   A.CAR_LEVEL car_level ,
-						   A.CAR_STEP car_step ,
-                    	   A.CAR_UPPER car_upper ,
-                    	   A.CAR_GB car_gb ,
+					SELECT A.CAR_ID CAR_ID,
+						   A.CAR_NAME CAR_NAME,
+ 						   A.CAR_NAME2 CAR_NAME2,
+						   A.CAR_LEVEL CAR_LEVEL,
+						   A.CAR_STEP CAR_STEP,
+                    	   A.CAR_UPPER CAR_UPPER,
+                    	   A.CAR_GB CAR_GB,
                     	   A.CAR_URL,
 						   A.CAR_EXPLAIN,
-                    	   A.CAR_ACCESS car_access ,
-						   ( SELECT IFNULL(COUNT(CAR_ID) , 0) 
+                    	   A.CAR_ACCESS CAR_ACCESS,
+						   ( SELECT NVL(COUNT(CAR_ID), 0) 
 							 FROM TBL_CAR 
                     		 WHERE  CAR_UPPER = A.CAR_ID
                     		 AND COMPANYID = #v_P_CompanyID#
                     		 AND CAR_GB = '1'
                     		 AND DELFLAG = 0
-            				 AND TENANT_ID = #tenantID# ) sub_clscnt ,
-						   ( SELECT IFNULL(COUNT(CAR_ID) , 0) 
+            				 AND TENANT_ID = #tenantID# )SUB_CLSCNT,
+						   ( SELECT NVL(COUNT(CAR_ID) , 0) 
 							 FROM TBL_CAR 
 							 WHERE  CAR_UPPER = A.CAR_ID
 							 AND COMPANYID = #v_P_CompanyID#
@@ -238,39 +238,39 @@
 							 AND DELFLAG = 0
 							 ]]>
 							<![CDATA[
-							  ) sub_rescnt ,
-						   '0' Access_Lvl
+							  ) SUB_RESCNT,
+						   '0' ACCESS_LVL
 					FROM TBL_CAR A
-					WHERE CAR_Upper = IFNULL(#v_P_ParentID#,0)
+					WHERE CAR_Upper = NVL(#v_P_ParentID#,0)
 					AND COMPANYID = #v_P_CompanyID#
 					AND TENANT_ID = #tenantID#
 					AND A.DELFLAG = 0
-					ORDER BY CAR_GB, CAR_Step)B JOIN TBL_CAR_ACL C 
+					ORDER BY CAR_GB, CAR_STEP)B JOIN TBL_CAR_ACL C 
 					ON B.CAR_ID = C.CAR_ID
  					AND C.MEMBER_ID IN ($jobss$)
- 					group by car_id
+ 					GROUP BY B.CAR_ID, B.CAR_NAME, B.CAR_NAME2, B.CAR_LEVEL, B.CAR_STEP, B.CAR_UPPER, B.CAR_GB, B.CAR_URL, B.CAR_EXPLAIN, B.CAR_ACCESS, B.SUB_CLSCNT, B.SUB_RESCNT, B.ACCESS_LVL
 				]]>
 				</isEqual>
 				<isNotEqual property="v_P_ParentID" compareValue="1"> 
 					<![CDATA[
-					SELECT A.CAR_ID car_id ,
-						   A.CAR_NAME car_name ,
- 						   A.CAR_NAME2 car_name2 ,
-						   A.CAR_LEVEL car_level ,
-						   A.CAR_STEP car_step ,
-                    	   A.CAR_UPPER car_upper ,
-                    	   A.CAR_GB car_gb ,
+					SELECT A.CAR_ID CAR_ID,
+						   A.CAR_NAME CAR_NAME,
+ 						   A.CAR_NAME2 CAR_NAME2,
+						   A.CAR_LEVEL CAR_LEVEL,
+						   A.CAR_STEP CAR_STEP,
+                    	   A.CAR_UPPER CAR_UPPER,
+                    	   A.CAR_GB CAR_GB,
                     	   A.CAR_URL,
 						   A.CAR_EXPLAIN,
-                    	   A.CAR_ACCESS car_access ,
-						   ( SELECT IFNULL(COUNT(CAR_ID) , 0) 
+                    	   A.CAR_ACCESS CAR_ACCESS,
+						   ( SELECT NVL(COUNT(CAR_ID), 0) 
 							 FROM TBL_CAR 
                     		 WHERE  CAR_UPPER = A.CAR_ID
                     		 AND COMPANYID = #v_P_CompanyID#
                     		 AND CAR_GB = '1'
                     		 AND DELFLAG = 0
-            				 AND TENANT_ID = #tenantID# ) sub_clscnt ,
-						   ( SELECT IFNULL(COUNT(CAR_ID) , 0) 
+            				 AND TENANT_ID = #tenantID# ) SUB_CLSCNT,
+						   ( SELECT NVL(COUNT(CAR_ID) , 0) 
 							 FROM TBL_CAR 
 							 WHERE  CAR_UPPER = A.CAR_ID
 							 AND COMPANYID = #v_P_CompanyID#
@@ -279,94 +279,94 @@
 							 AND DELFLAG = 0
 							 ]]>
 							<![CDATA[
-							  ) sub_rescnt ,
-						   '0' Access_Lvl
+							  ) SUB_RESCNT,
+						   '0' ACCESS_LVL
 					FROM TBL_CAR A
-					WHERE CAR_Upper = IFNULL(#v_P_ParentID#,0)
+					WHERE CAR_UPPER = NVL(#v_P_ParentID#,0)
 					AND COMPANYID = #v_P_CompanyID#
 					AND TENANT_ID = #tenantID#
 					AND A.DELFLAG = 0
-					ORDER BY CAR_GB, CAR_Step
+					ORDER BY CAR_GB, CAR_STEP
 				]]>
 				</isNotEqual>
 			</isEqual>
 			<isNotEqual property="v_P_TreeType" compareValue="0"> 
 				<isEqual property="v_P_ParentID" compareValue="1">
 				<![CDATA[
-				SELECT B.car_id, B.car_name, B.car_name2, B.car_level, B.car_step, B.car_upper, B.car_gb, B.car_url, B.car_explain, B.car_access, B.sub_clscnt, B.sub_rescnt, B.Access_LvL
+				SELECT B.CAR_ID, B.CAR_NAME, B.CAR_NAME2, B.CAR_LEVEL, B.CAR_STEP, B.CAR_UPPER, B.CAR_GB, B.CAR_URL, B.CAR_EXPLAIN, B.CAR_ACCESS, B.SUB_CLSCNT, B.SUB_RESCNT, B.ACCESS_LVL
 				FROM 
 				(
-					SELECT A.CAR_ID car_id ,
-						   A.CAR_NAME car_name ,
- 						   A.CAR_NAME2 car_name2 ,
-						   A.CAR_LEVEL car_level ,
-						   A.CAR_STEP car_step ,
-						   A.CAR_UPPER car_upper ,
-						   A.CAR_GB car_gb ,
-						   A.CAR_ACCESS car_access ,
-						   ( SELECT IFNULL(COUNT(CAR_ID) , 0) 
+					SELECT A.CAR_ID CAR_ID,
+						   A.CAR_NAME CAR_NAME,
+ 						   A.CAR_NAME2 CAR_NAME2,
+						   A.CAR_LEVEL CAR_LEVEL,
+						   A.CAR_STEP CAR_STEP,
+						   A.CAR_UPPER CAR_UPPER,
+						   A.CAR_GB CAR_GB,
+						   A.CAR_ACCESS CAR_ACCESS,
+						   ( SELECT NVL(COUNT(CAR_ID), 0) 
 							 FROM TBL_CAR 
 							 WHERE CAR_UPPER = A.CAR_ID
 							 AND COMPANYID = #v_P_CompanyID#
-							 AND Car_GB = '1' 
+							 AND CAR_GB = '1' 
 							 AND DELFLAG = 0
-							 AND TENANT_ID = #tenantID# ) sub_clscnt ,
-						   ( SELECT IFNULL(COUNT(CAR_ID) , 0) 
-							 FROM TBL_CAR 
+							 AND TENANT_ID = #tenantID# ) SUB_CLSCNT,
+						   ( SELECT NVL(COUNT(CAR_ID) , 0) 
+							 FROM TBL_CAR
 							 WHERE  CAR_UPPER = A.CAR_ID
 							 AND COMPANYID = #v_P_CompanyID#
-							 AND Car_GB = '1'
+							 AND CAR_GB = '1'
 							 AND DELFLAG = 0 
-							 AND TENANT_ID = #tenantID# ) sub_rescnt ,
-						   '0' Access_Lvl,
+							 AND TENANT_ID = #tenantID# ) SUB_RESCNT,
+						   '0' ACCESS_LVL,
 						   CAR_URL,
 						   CAR_EXPLAIN
 					FROM TBL_CAR A
-					WHERE Car_Upper = IFNULL(#v_P_ParentID#,0)
+					WHERE CAR_Upper = NVL(#v_P_ParentID#,0)
 					AND COMPANYID = #v_P_CompanyID#
-					AND Car_GB = '1'
+					AND CAR_GB = '1'
 					AND TENANT_ID = #tenantID#
 					AND A.DELFLAG = 0
-					ORDER BY Car_Step )B JOIN TBL_CAR_ACL C 
+					ORDER BY CAR_STEP )B JOIN TBL_CAR_ACL C 
 					ON B.CAR_ID = C.CAR_ID
  					AND C.MEMBER_ID IN ($jobss$)
- 					group by car_id
+ 					GROUP BY B.CAR_ID, B.CAR_NAME, B.CAR_NAME2, B.CAR_LEVEL, B.CAR_STEP, B.CAR_UPPER, B.CAR_GB, B.CAR_URL, B.CAR_EXPLAIN, B.CAR_ACCESS, B.SUB_CLSCNT, B.SUB_RESCNT, B.ACCESS_LVL
 				]]>
 				</isEqual>
 				<isNotEqual property="v_P_ParentID" compareValue="1"> 
 					<![CDATA[
-					SELECT A.CAR_ID car_id ,
-						   A.CAR_NAME car_name ,
- 						   A.CAR_NAME2 car_name2 ,
-						   A.CAR_LEVEL car_level ,
-						   A.CAR_STEP car_step ,
-						   A.CAR_UPPER car_upper ,
-						   A.CAR_GB car_gb ,
-						   A.CAR_ACCESS car_access ,
-						   ( SELECT IFNULL(COUNT(CAR_ID) , 0) 
+					SELECT A.CAR_ID CAR_ID,
+						   A.CAR_NAME CAR_NAME,
+ 						   A.CAR_NAME2 CAR_NAME2,
+						   A.CAR_LEVEL CAR_LEVEL,
+						   A.CAR_STEP CAR_STEP,
+						   A.CAR_UPPER CAR_UPPER,
+						   A.CAR_GB CAR_GB,
+						   A.CAR_ACCESS CAR_ACCESS,
+						   ( SELECT NVL(COUNT(CAR_ID) , 0) 
 							 FROM TBL_CAR 
 							 WHERE CAR_UPPER = A.CAR_ID
 							 AND COMPANYID = #v_P_CompanyID#
 							 AND Car_GB = '1' 
 							 AND DELFLAG = 0
-							 AND TENANT_ID = #tenantID# ) sub_clscnt ,
-						   ( SELECT IFNULL(COUNT(CAR_ID) , 0) 
+							 AND TENANT_ID = #tenantID# ) SUB_CLSCNT,
+						   ( SELECT NVL(COUNT(CAR_ID), 0) 
 							 FROM TBL_CAR 
 							 WHERE  CAR_UPPER = A.CAR_ID
 							 AND COMPANYID = #v_P_CompanyID#
-							 AND Car_GB = '1'
+							 AND CAR_GB = '1'
 							 AND DELFLAG = 0 
-							 AND TENANT_ID = #tenantID# ) sub_rescnt ,
-						   '0' Access_Lvl,
+							 AND TENANT_ID = #tenantID# ) SUB_RESCNT,
+						   '0' ACCESS_LVL,
 						   CAR_URL,
 						   CAR_EXPLAIN
 					FROM TBL_CAR A
-					WHERE Car_Upper = IFNULL(#v_P_ParentID#,0)
+					WHERE CAR_UPPER = NVL(#v_P_ParentID#,0)
 					AND COMPANYID = #v_P_CompanyID#
-					AND Car_GB = '1'
+					AND CAR_GB = '1'
 					AND TENANT_ID = #tenantID#
 					AND A.DELFLAG = 0
-					ORDER BY Car_Step 
+					ORDER BY CAR_STEP
 				]]>
 				</isNotEqual>
 			</isNotEqual>
@@ -386,14 +386,14 @@
                     	   A.CAR_URL,
 						   A.CAR_EXPLAIN,
                     	   A.CAR_ACCESS car_access ,
-                  	   ( SELECT IFNULL(COUNT(CAR_ID) , 0) 
+                  	   ( SELECT NVL(COUNT(CAR_ID) , 0) 
                          FROM TBL_CAR 
                          WHERE CAR_UPPER = A.CAR_ID
                      	 AND COMPANYID = #v_P_CompanyID#
                      	 AND CAR_GB = '1'
                      	 AND DELFLAG = 0
                      	 AND TENANT_ID = #tenantID# ) sub_clscnt ,
-                   	   ( SELECT IFNULL(COUNT(CAR_ID) , 0) 
+                   	   ( SELECT NVL(COUNT(CAR_ID) , 0) 
                    		 FROM TBL_CAR 
                  		 WHERE  CAR_UPPER = A.CAR_ID
                          AND COMPANYID = #v_P_CompanyID#
@@ -421,14 +421,14 @@
                     	   A.CAR_URL,
 						   A.CAR_EXPLAIN,
                     	   A.CAR_ACCESS car_access ,
-						   ( SELECT IFNULL(COUNT(CAR_ID) , 0) 
+						   ( SELECT NVL(COUNT(CAR_ID) , 0) 
 							 FROM TBL_CAR 
                     		 WHERE  CAR_UPPER = A.CAR_ID
                     		 AND COMPANYID = #v_P_CompanyID#
                     		 AND CAR_GB = '1'
                     		 AND DELFLAG = 0
             				 AND TENANT_ID = #tenantID# ) sub_clscnt ,
-						   ( SELECT IFNULL(COUNT(CAR_ID) , 0) 
+						   ( SELECT NVL(COUNT(CAR_ID) , 0) 
 							 FROM TBL_CAR 
 							 WHERE  CAR_UPPER = A.CAR_ID
 							 AND COMPANYID = #v_P_CompanyID#
@@ -440,7 +440,7 @@
 							  ) sub_rescnt ,
 						   '0' Access_Lvl
 					FROM TBL_CAR A
-					WHERE CAR_Upper = IFNULL(#v_P_ParentID#,0)
+					WHERE CAR_Upper = NVL(#v_P_ParentID#,0)
 					AND COMPANYID = #v_P_CompanyID#
 					AND TENANT_ID = #tenantID#
 					AND A.DELFLAG = 0
@@ -457,14 +457,14 @@
 						   A.CAR_UPPER car_upper ,
 						   A.CAR_GB car_gb ,
 						   A.CAR_ACCESS car_access ,
-						   ( SELECT IFNULL(COUNT(CAR_ID) , 0) 
+						   ( SELECT NVL(COUNT(CAR_ID) , 0) 
 							 FROM TBL_CAR 
 							 WHERE CAR_UPPER = A.CAR_ID
 							 AND COMPANYID = #v_P_CompanyID#
 							 AND Car_GB = '1' 
 							 AND DELFLAG = 0
 							 AND TENANT_ID = #tenantID# ) sub_clscnt ,
-						   ( SELECT IFNULL(COUNT(CAR_ID) , 0) 
+						   ( SELECT NVL(COUNT(CAR_ID) , 0) 
 							 FROM TBL_CAR 
 							 WHERE  CAR_UPPER = A.CAR_ID
 							 AND COMPANYID = #v_P_CompanyID#
@@ -475,7 +475,7 @@
 						   CAR_URL,
 						   CAR_EXPLAIN
 					FROM TBL_CAR A
-					WHERE Car_Upper = IFNULL(#v_P_ParentID#,0)
+					WHERE Car_Upper = NVL(#v_P_ParentID#,0)
 					AND COMPANYID = #v_P_CompanyID#
 					AND Car_GB = '1'
 					AND TENANT_ID = #tenantID#
@@ -502,7 +502,7 @@
 						   A.CAR_EXPLAIN,
                     	   A.CAR_ACCESS car_access ,
                     ( SELECT
-                        IFNULL(COUNT(CAR_ID) , 0) 
+                        NVL(COUNT(CAR_ID) , 0) 
                       FROM
                         TBL_CAR
                       WHERE
@@ -516,7 +516,7 @@
                       AND
                         TENANT_ID = #tenantID# ) SUB_CLSCNT ,
                     ( SELECT
-                      	IFNULL(COUNT(CAR_ID) , 0) 
+                      	NVL(COUNT(CAR_ID) , 0) 
                       FROM
                       	TBL_CAR 
                       WHERE
@@ -556,7 +556,7 @@
 					A.CAR_EXPLAIN,
                     A.CAR_ACCESS car_access ,
       				(SELECT
-                         IFNULL(COUNT(CAR_ID), 0)
+                         NVL(COUNT(CAR_ID), 0)
                      FROM
                          TBL_CAR  
       				 WHERE
@@ -568,7 +568,7 @@
       				 AND
                          TENANT_ID = #tenantID#) AS SUB_CLSCNT, 
       				 (SELECT
-                        IFNULL(COUNT(CAR_ID), 0)
+                        NVL(COUNT(CAR_ID), 0)
                       FROM
                         TBL_CAR  
       				  WHERE
@@ -651,7 +651,7 @@
 				COMPANYID, 
                 CAR_GB, CAR_ID, CAR_LEVEL, CAR_NAME, OWNERID, OWNERNM,
                 CAR_STEP, CAR_UPPER, CAR_URL, OWNERCALL,
-                CONCAT(SUBSTR(CAR_REGISTER_DATE, 1, 4), '-', SUBSTR(CAR_REGISTER_DATE, 5, 2), '-', SUBSTR(CAR_REGISTER_DATE, 7, 2)) CAR_REGISTER_DATE 
+                (SUBSTR(CAR_REGISTER_DATE, 1, 4)|| '-' || SUBSTR(CAR_REGISTER_DATE, 5, 2) || '-'||  SUBSTR(CAR_REGISTER_DATE, 7, 2)) CAR_REGISTER_DATE
 			FROM
 				TBL_CAR  
 			WHERE
@@ -688,7 +688,7 @@
 		resultClass="Integer">
 		<![CDATA[
 			SELECT 
-				(IFNULL(MAX(car_ID) , 0) + 1)
+				(NVL(MAX(car_ID) , 0) + 1)
    			FROM
    				TBL_CAR 
    			WHERE
@@ -716,7 +716,7 @@
 		resultClass="Integer">
 		<![CDATA[
 			SELECT
-				(IFNULL(MAX(Car_Step) , 0) + 1)
+				(NVL(MAX(Car_Step) , 0) + 1)
     		FROM
     			TBL_CAR
     		WHERE
@@ -737,7 +737,7 @@
 			)
         	VALUES ( 
         		#v_P_ClassGB#, #v_P_ODeptID#, #v_P_ODeptNm#, #v_P_OwnerID#, #v_P_OwnerNm#, #v_P_OwnerPos#, #v_P_OwnerCall#, #v_P_Brd_NM#,   #v_P_CompanyID#, 
-        		#carID#, #v_Brd_GB#, #v_Brd_Level#, #v_Brd_Step#, DATE_FORMAT(UTC_TIMESTAMP(),'%Y%m%d'), '', #v_Brd_Access#, 
+        		#carID#, #v_Brd_GB#, #v_Brd_Level#, #v_Brd_Step#, TO_CHAR(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYYMMDD'), '', #v_Brd_Access#, 
       			#v_P_Brd_NM2#, #v_P_ODeptNm2#, #v_P_OwnerNm2#, #v_P_OwnerPos2#, #tenantID#, 0, #car_nm#
 			)
 		]]>
@@ -746,10 +746,10 @@
 	<insert id="EzCarDAO.addAttachFile" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_CAR_ATTACH ( 
-				CAR_ID, FILESIZE, FILENAME, FILEPATH, COMPANYID, TENANT_ID
+				ATTACHID, CAR_ID, FILESIZE, FILENAME, FILEPATH, COMPANYID, TENANT_ID
 			)
         	VALUES ( 
-        		#carID#, #fileSize#, #fileName#, #filePath#, #companyID#, #tenantID#
+        		(SELECT NVL(MAX(attachID)+1,0) FROM TBL_CAR_ATTACH), #carID#, #fileSize#, #fileName#, #filePath#, #companyID#, #tenantID#
 			)
 		]]>
 	</insert>
@@ -784,7 +784,7 @@
              	OWNERPOSITION ,
              	OWNERPOSITION2 ,
              	OWNERCALL ,
-             	CONCAT(SUBSTR(CAR_REGISTER_DATE, 1, 4), '-', SUBSTR(CAR_REGISTER_DATE, 5, 2), '-', SUBSTR(CAR_REGISTER_DATE, 7, 2)) CAR_REGISTER_DATE ,
+             	(SUBSTR(CAR_REGISTER_DATE, 1, 4)|| '-' || SUBSTR(CAR_REGISTER_DATE, 5, 2) || '-'||  SUBSTR(CAR_REGISTER_DATE, 7, 2)) CAR_REGISTER_DATE ,
              	CAR_ACCESS,
              	CAR_NM 
         	FROM
@@ -836,7 +836,7 @@
 		resultMap="carFormListVO2">
 		<![CDATA[
 			SELECT
-				A.REGISTER_DATE,A.REV_DATE, A.REGISTER_ID, A.CAR_FORM_ID, B.DESCRIPTION AS REGISTER_DEPTNAME, B.DISPLAYNAME AS REGISTER_NAME, A.REGISTER_ID AS REGISTER_ID
+				TO_CHAR(A.REGISTER_DATE, 'YYYY-MM-DD') AS REGISTER_DATE, A.REV_DATE, A.REGISTER_ID, A.CAR_FORM_ID, B.DESCRIPTION AS REGISTER_DEPTNAME, B.DISPLAYNAME AS REGISTER_NAME, A.REGISTER_ID AS REGISTER_ID
 			FROM
 				TBL_CAR_FORM A, TBL_USERMASTER B  
 			WHERE
@@ -850,8 +850,8 @@
 			AND 
 			    A.DELFLAG = 0
 			AND 
-			    A.REV_DATE > str_to_date(#currentDate#, '%Y%m') AND A.REV_DATE < str_to_date(#currentEndDate#, '%Y%m')
-			GROUP BY A.CAR_FORM_ID 
+			    A.REV_DATE >= TO_DATE(#currentDate#, 'YYYYMM') AND A.REV_DATE < TO_DATE(#currentEndDate#, 'YYYYMM')
+			GROUP BY A.REGISTER_DATE,A.REV_DATE, A.REGISTER_ID, A.CAR_FORM_ID, B.DESCRIPTION, B.DISPLAYNAME, A.REGISTER_ID
 			ORDER BY A.CAR_FORM_ID
 			
 		]]>
@@ -877,7 +877,8 @@
 			AND 
 			    A.DELFLAG = 0
 			AND 
-			    A.REV_DATE > str_to_date(#yearMonth#, '%Y%m') AND A.REV_DATE < str_to_date(#yearMonthEnd#, '%Y%m')
+		        A.REV_DATE >= TO_DATE(#yearMonth#, 'YYYYMM') AND A.REV_DATE < TO_DATE(#yearMonthEnd#, 'YYYYMM')
+			    
 			ORDER BY A.CAR_FORM_ID
 			
 		]]>
@@ -962,7 +963,7 @@
 				COMPANYID, 
                 CAR_GB, CAR_ID, CAR_LEVEL, CAR_NAME, OWNERID, OWNERNM,
                 CAR_STEP, CAR_UPPER, CAR_URL, OWNERCALL,
-                CONCAT(SUBSTR(CAR_REGISTER_DATE, 1, 4), '-', SUBSTR(CAR_REGISTER_DATE, 5, 2), '-', SUBSTR(CAR_REGISTER_DATE, 7, 2)) CAR_REGISTER_DATE 
+                (SUBSTR(CAR_REGISTER_DATE, 1, 4)|| '-' || SUBSTR(CAR_REGISTER_DATE, 5, 2) || '-'||  SUBSTR(CAR_REGISTER_DATE, 7, 2)) CAR_REGISTER_DATE 
 			FROM
 				TBL_CAR  
 			WHERE
@@ -983,7 +984,7 @@
 		resultClass="Integer">
 		<![CDATA[
 			SELECT
-				(IFNULL(MAX(CAR_FORM_ID) , 0) + 1)
+				(NVL(MAX(CAR_FORM_ID) , 0) + 1)
 			FROM
 				TBL_CAR_FORM 
 			WHERE  
@@ -998,7 +999,7 @@
 	<select id="EzCarDAO.getCarForm" parameterClass="Map" resultMap="carFormListVO">
 		<![CDATA[
 			SELECT
-				CAR_FORM_ID, CAR_ID, REGISTER_ID, DRIVER_NAME, DRIVER_DEPTNAME, REGISTER_DATE, B_DEPART_TIME, B_DISTANCE, DRIVE_PURPOSE, DRIVE_POINT, REV_TIME, REV_TIME2, REV_DATE,
+				CAR_FORM_ID, CAR_ID, REGISTER_ID, DRIVER_NAME, DRIVER_DEPTNAME, TO_CHAR(REGISTER_DATE,'YYYY-MM-DD') REGISTER_DATE, B_DEPART_TIME, B_DISTANCE, DRIVE_PURPOSE, NVL(DRIVE_POINT,' ') DRIVE_POINT, REV_TIME, REV_TIME2, TO_CHAR(REV_DATE,'YYYY-MM-DD') REV_DATE,
 				A_ARRIVE_TIME, A_DISTANCE, A_DISTANCE_AUTO, A_DISTANCE_COMMUTE, A_DISTANCE_WORK, A_DISTANCE_ETC, A_SUBMIT_FLAG, DELFLAG, COMPANYID, TENANT_ID, CAR_REGISTER_NO
 			FROM
 				TBL_CAR_FORM A 
@@ -1038,14 +1039,14 @@
 		resultMap="carFormListVO">
 		<![CDATA[
 			SELECT
-				CAR_FORM_ID, CAR_ID, REGISTER_ID, DRIVER_NAME, DRIVER_DEPTNAME, REGISTER_DATE, B_DEPART_TIME, B_DISTANCE, DRIVE_PURPOSE, DRIVE_POINT, REV_TIME, REV_TIME2, REV_DATE,
+				CAR_FORM_ID, CAR_ID, REGISTER_ID, DRIVER_NAME, DRIVER_DEPTNAME, REGISTER_DATE, B_DEPART_TIME, B_DISTANCE, DRIVE_PURPOSE, DRIVE_POINT, REV_TIME, REV_TIME2, TO_CHAR(REV_DATE,'YYYY-MM-DD') REV_DATE,
 				A_ARRIVE_TIME, A_DISTANCE, A_DISTANCE_AUTO, A_DISTANCE_COMMUTE, A_DISTANCE_WORK, A_DISTANCE_ETC, A_SUBMIT_FLAG, DELFLAG, COMPANYID, TENANT_ID, CAR_REGISTER_NO
 			FROM
 				TBL_CAR_FORM A 
 			WHERE
 				A.CAR_ID = #carID#
 			AND 
-			    A.REV_DATE > str_to_date(#yearMonth#, '%Y%m') AND A.REV_DATE < str_to_date(#yearMonthEnd#, '%Y%m')
+			    A.REV_DATE >= TO_DATE(#yearMonth#, 'YYYYMM') AND A.REV_DATE < TO_DATE(#yearMonthEnd#, 'YYYYMM')
 			AND
 				A.COMPANYID = #companyID#
 			AND
@@ -1104,19 +1105,26 @@
 <select id="EzCarDAO.getAdmFlag" parameterClass="Map" resultMap="resGetAdminFlagVO">
 		<![CDATA[
 			SELECT
-				member_id, min(access_lvl) as access_lvl 
-      		FROM
-      			TBL_CAR_ACL 
-      		WHERE
-      			companyid = #companyID#
-      		AND
-      			CAR_ID = #resID#
-			AND
+				*
+			FROM
+			(	SELECT
+					member_id, access_lvl 
+	      		FROM
+	      			TBL_CAR_ACL 
+	      		WHERE
+	      			companyid = #companyID#
+	      		AND
+	      			CAR_ID = #resID#
+				AND
 					( MEMBER_ID = #memberID#
-			OR
-					MEMBER_ID = 'everyone' )
-            AND
-                TENANT_ID = #tenantID#
+				OR
+						MEMBER_ID = 'everyone' )
+	            AND
+	                TENANT_ID = #tenantID#
+	            ORDER BY
+	            	ACCESS_LVL	ASC)
+	         WHERE
+	         	ROWNUM = 1
 		]]>
 	</select>
 	
