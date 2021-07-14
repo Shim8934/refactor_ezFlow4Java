@@ -4500,6 +4500,7 @@
 		    VALUES (19, 2, #companyID#, #tenantID#, 'Survey')
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
 		    VALUES (19, 3, #companyID#, #tenantID#, '電子アンケート')
+		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
 		    VALUES (20, 1, #companyID#, #tenantID#, '차량관리')
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
 		    VALUES (20, 2, #companyID#, #tenantID#, 'Car')
