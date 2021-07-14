@@ -38,7 +38,7 @@
 		</dl>
 		<div style="height:100%; background-color:#ffffff">
 			<div class="birthdayList" id="birthcount" style="display: none;">
-				<ul class="birthList" id="birthdayList"></ul>
+				<ul class="birthList" id="birthdayList" style="overflow:auto; width: 490px;height: 200px; padding-top:0px; padding-bottom: 0px; "></ul>
 			</div>
 			<div id="nodata_NewBirthday" class="nodata_newBirthday" style="padding-top: 15px;display:none;">
 				<dl class='nodata'>
