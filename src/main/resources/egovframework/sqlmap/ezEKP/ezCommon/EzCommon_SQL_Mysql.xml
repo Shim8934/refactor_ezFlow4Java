@@ -3504,11 +3504,6 @@
 		SET ROOT_ID = FILE_ID
 	</update>
 
-	<statement id="EzCommonDAO.notNullWebfolderFileRootIdColumn">
-		ALTER TABLE TBL_WEBFOLDER_FILE
-		MODIFY ROOT_ID VARCHAR(100) NOT NULL
-	</statement>
-	
 	<select id="EzCommonDAO.checkWebfolderFileParentIdColumn" resultClass="Integer">
 		<![CDATA[
 			SELECT PARENT_ID
@@ -3527,12 +3522,7 @@
 		SET PARENT_ID = FILE_ID
 	</update>
 
-	<statement id="EzCommonDAO.notNullWebfolderFileParentIdColumn">
-		ALTER TABLE TBL_WEBFOLDER_FILE
-		MODIFY PARENT_ID VARCHAR(100) NOT NULL
-	</statement>
-	
-		<select id="EzCommonDAO.checkWebfolderFileHierarchicalPathColumn" resultClass="Integer">
+	<select id="EzCommonDAO.checkWebfolderFileHierarchicalPathColumn" resultClass="Integer">
 		<![CDATA[
 			SELECT HIERARCHICAL_PATH
 			FROM TBL_WEBFOLDER_FILE
@@ -3549,11 +3539,6 @@
 		UPDATE TBL_WEBFOLDER_FILE
 		SET HIERARCHICAL_PATH = FILE_ID
 	</update>
-
-	<statement id="EzCommonDAO.notNullWebfolderFileHierarchicalPathColumn">
-		ALTER TABLE TBL_WEBFOLDER_FILE
-		MODIFY HIERARCHICAL_PATH VARCHAR(300) NOT NULL
-	</statement>
 
 	<select id="EzCommonDAO.checkWebfolderFileHistoryColumn">
         <![CDATA[

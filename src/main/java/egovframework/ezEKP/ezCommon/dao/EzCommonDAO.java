@@ -1936,7 +1936,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("tbl_webfolder_file ROOT_ID column doesn't exist. creating the column...");
 			update("EzCommonDAO.createNullableWebfolderFileRootIdColumn");
 			update("EzCommonDAO.updateWebfolderFileRootIdColumn");
-			update("EzCommonDAO.notNullWebfolderFileRootIdColumn");
 		}
 
 		try {
@@ -1945,7 +1944,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("tbl_webfolder_file PARENT_ID column doesn't exist. creating the column...");
 			update("EzCommonDAO.createNullableWebfolderFileParentIdColumn");
 			update("EzCommonDAO.updateWebfolderFileParentIdColumn");
-			update("EzCommonDAO.notNullWebfolderFileParentIdColumn");
 		}
 
 		try {
@@ -1954,7 +1952,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("tbl_webfolder_file HIERARCHICAL_PATH column doesn't exist. creating the column...");
 			update("EzCommonDAO.createNullableWebfolderFileHierarchicalPathColumn");
 			update("EzCommonDAO.updateWebfolderFileHierarchicalPathColumn");
-			update("EzCommonDAO.notNullWebfolderFileHierarchicalPathColumn");
 		}
 	}
 
