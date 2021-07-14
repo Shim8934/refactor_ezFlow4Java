@@ -3842,7 +3842,7 @@
             EXTRECEPTYN VARCHAR(5) DEFAULT 'N' 
     </statement>
     
-    <select id="EzCommonDAO.checkTblCar">
+    <select id="EzCommonDAO.checkTblCar" resultClass="Integer">
 		SELECT 
 			car_id
 		FROM 
@@ -3880,7 +3880,7 @@
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8
 	</statement>
 	
-	<select id="EzCommonDAO.checkTblCarAcl">
+	<select id="EzCommonDAO.checkTblCarAcl" resultClass="Integer">
 		SELECT 
 			car_id
 		FROM 
@@ -3902,7 +3902,7 @@
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8
 	</statement>
 	
-	<select id="EzCommonDAO.checkTblCarAttach">
+	<select id="EzCommonDAO.checkTblCarAttach" resultClass="Integer">
 		SELECT 
 			car_id
 		FROM 
@@ -3923,7 +3923,7 @@
 		) ENGINE=InnoDB AUTO_INCREMENT=93 DEFAULT CHARSET=utf8mb4
 	</statement>
 	
-	<select id="EzCommonDAO.checkTblCarForm">
+	<select id="EzCommonDAO.checkTblCarForm" resultClass="Integer">
 		SELECT 
 			car_id
 		FROM 

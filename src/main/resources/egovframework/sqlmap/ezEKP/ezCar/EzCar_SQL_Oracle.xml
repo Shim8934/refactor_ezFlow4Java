@@ -746,10 +746,10 @@
 	<insert id="EzCarDAO.addAttachFile" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_CAR_ATTACH ( 
-				CAR_ID, FILESIZE, FILENAME, FILEPATH, COMPANYID, TENANT_ID
+				ATTACHID, CAR_ID, FILESIZE, FILENAME, FILEPATH, COMPANYID, TENANT_ID
 			)
         	VALUES ( 
-        		#carID#, #fileSize#, #fileName#, #filePath#, #companyID#, #tenantID#
+        		(SELECT NVL(MAX(attachID)+1,0) FROM TBL_CAR_ATTACH), #carID#, #fileSize#, #fileName#, #filePath#, #companyID#, #tenantID#
 			)
 		]]>
 	</insert>
