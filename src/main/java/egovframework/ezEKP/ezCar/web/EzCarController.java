@@ -1777,6 +1777,13 @@ public class EzCarController extends EgovFileMngUtil {
 			int b_distance = 0;
 			if(carFormList.get(carFormList.size()-1).getA_distance() != null && !carFormList.get(carFormList.size()-1).getA_distance().equals("")){
 					a_distance = Integer.parseInt(carFormList.get(carFormList.size()-1).getA_distance());
+			}else{
+				 for(int i=carFormList.size()-1; i>=0; i--){
+					     if(carFormList.get(i).getA_distance()!= null && !carFormList.get(i).getA_distance().equals("")){
+					           a_distance = Integer.parseInt(carFormList.get(i).getA_distance());
+					           break;
+					     }
+				}
 			}
 			if(carFormList.get(0).getB_distance() != null && !carFormList.get(0).getB_distance().equals("")){
 					b_distance = Integer.parseInt(carFormList.get(0).getB_distance());
