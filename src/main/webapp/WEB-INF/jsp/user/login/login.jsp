@@ -584,9 +584,9 @@
 	                <li><a rel="modal:close"><span></span></a></li>
 	            </ul>
 	        </div>
-			<div class="warning_wrap" style="padding-left:20px">
-				<p style="border:0px" id="imgMnt4"></p>
-		        <dl>
+			<div class="warning_wrap" style="padding-left:80px">
+				<p style="border:0px; padding-left: 30px;" id="imgMnt4"></p>
+		        <dl style="margin-top: 23px; margin-left: 50px;">
 					<dt id="layerTitle1" class="layerTitle"><spring:message code="ezOrgan.hdp14" /></dt>
 		            <dd><spring:message code="ezOrgan.hdp15" /></dd>
 		            <dd><spring:message code="ezOrgan.hdp16" /></dd>
