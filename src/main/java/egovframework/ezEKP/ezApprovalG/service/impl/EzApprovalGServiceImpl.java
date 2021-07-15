@@ -3294,6 +3294,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		    if ("Y".equals(susinGroupUseFlag)) {
 		        newReceipts = getRealReceiptInfo(receipts, docID, companyID, lang, tenantID);
 		    } else {
+		        
+		        
 		        newReceipts = receipts;
 		    }
 		    

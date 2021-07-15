@@ -4266,9 +4266,11 @@
             ]]>	
             <isEqual property="v_USERFLAG" compareValue="admin">
              OR 
-             	(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$) AND TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014'))
-             OR 
-             	(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($ v_DEPTIDS$) AND TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015')
+             	(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
+                AND
+                    TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
+                AND
+                    PROCESSORID IS NULL)
             </isEqual>
             	 ) ORDER BY PROCESSDATE $v_BASICORDER$
 		</isEqual>
@@ -11387,12 +11389,10 @@
    		<isEqual property="v_USERFLAG" compareValue="admin">
    			OR 
    				(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
-      		AND 
-      			TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014'))
-      		OR 
-      			(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
-      		AND 
-      			TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015')
+                AND
+                    TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
+                AND
+                    PROCESSORID IS NULL)
       		AND	
 		   		TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
    		</isEqual>
@@ -16886,14 +16886,12 @@
 							)
 			]]>
 			<isEqual property="v_USERFLAG" compareValue="admin">
-			 	OR 
+			 	OR
 			 		(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN (#v_DEPTIDS#)
-                AND 
-                	TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014'))
-                OR 
-                	(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN (#v_DEPTIDS#)
-              	AND 
-              		TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015')
+                AND
+                    TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
+                AND
+                    PROCESSORID IS NULL)
 			</isEqual>
 				)
 		</isEqual>
@@ -32958,7 +32956,7 @@
 		   		AND 
 		   			(((TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# AND TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#)
 		   		AND 
-		   			(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'))
+		   			(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '011'))
 		   			
 	   		<isEqual property="v_USERFLAG" compareValue="admin">
 	   			OR 
@@ -32968,9 +32966,10 @@
 	   					<iterate property="v_DEPTIDS" open="(" close=")" conjunction=",">
 	   						#v_DEPTIDS[]#
 	   					</iterate>
-	   				AND 
-	   					(TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014') OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015')
-	   				)
+                        AND
+                            TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
+                        AND
+                            PROCESSORID IS NULL)
 	   		</isEqual>
 	   		<isEqual property="v_aprFlag" compareValue="G">
 		     	OR
