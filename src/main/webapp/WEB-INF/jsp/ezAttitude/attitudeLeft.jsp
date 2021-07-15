@@ -317,8 +317,8 @@
 	    				if(outAtt == 0 && outAtt2 == 0){ //전날 퇴근이 없고 오늘 날짜로 퇴근이 없는 경우
 	    					getAttitudeList();
 	    					pTypeId = "A25";
-	    				}else {
-	    					alert("<spring:message code='ezAttitude.kje21'/>");
+	    				}else { //전날 출,퇴근 기록이 있고 아직 출근을 안찍은 경우
+	    					alert("<spring:message code='ezAttitude.t168'/>");
 	    					return;
 	    				}
 	    			}else { //전날 출근이 없는 경우

@@ -5171,7 +5171,6 @@ public class EzEmailUtil {
 		/** 숨은 참조 */
 		private List<InternetAddress> bccList;
 		/** 실제 SMTP 레벨의 수신자 */
-		;
 		private List<InternetAddress> recipientList;
 		/** 첨부파일 */
 		private List<EmailAttachment> attachmentList;
