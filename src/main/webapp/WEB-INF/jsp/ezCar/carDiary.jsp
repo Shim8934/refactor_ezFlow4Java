@@ -550,19 +550,17 @@ textarea {
            	   j++;
         	}
     	}
-    	
-    	for(var i=0; i<checkIndex.length; i++){
-	    	if(checkIndex[i] < 3){
-	    		alert("<spring:message code='ezCar.shb17' />");
-	    		return;
+	    
+    	if(checkIndex.length <= 0){
+	    	alert("<spring:message code='ezCar.shb17' />");
+	    	return;
+	    }else{
+	    	for(var i=0; i<checkIndex.length; i++){
+				lo_table.deleteRow(checkIndex[i]-i);
+				startNum--; //행삭제될때 감소
+				document.getElementById("count").value = startNum;
 	    	}
-			lo_table.deleteRow(checkIndex[i]-i);
-		startNum--; //행삭제될때 감소
-		document.getElementById("count").value = startNum;
-    	}
-    	
-    	
-		
+	    }
 
 	}
 
