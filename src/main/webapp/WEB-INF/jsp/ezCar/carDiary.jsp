@@ -482,6 +482,14 @@ textarea {
 			stepMonths : 0,
 			showOtherMonths : false,
 			selectOtherMonths : false,
+			monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+                         "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+                         "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+                         "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+            monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+                              "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+                              "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+                              "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
 		}).focus(function() {
 			$(".ui-datepicker-next").hide();
 			$(".ui-datepicker-prev").hide();
@@ -500,6 +508,14 @@ textarea {
 			stepMonths : 0,
 			showOtherMonths : false,
 			selectOtherMonths : false,
+			monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+                         "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+                         "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+                         "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+            monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+                              "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+                              "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+                              "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
 		}).focus(function() {
 			$(".ui-datepicker-next").hide();
 			$(".ui-datepicker-prev").hide();
@@ -534,19 +550,17 @@ textarea {
            	   j++;
         	}
     	}
-    	
-    	for(var i=0; i<checkIndex.length; i++){
-	    	if(checkIndex[i] < 3){
-	    		alert("<spring:message code='ezCar.shb17' />");
-	    		return;
+	    
+    	if(checkIndex.length <= 0){
+	    	alert("<spring:message code='ezCar.shb17' />");
+	    	return;
+	    }else{
+	    	for(var i=0; i<checkIndex.length; i++){
+				lo_table.deleteRow(checkIndex[i]-i);
+				startNum--; //행삭제될때 감소
+				document.getElementById("count").value = startNum;
 	    	}
-			lo_table.deleteRow(checkIndex[i]-i);
-		startNum--; //행삭제될때 감소
-		document.getElementById("count").value = startNum;
-    	}
-    	
-    	
-		
+	    }
 
 	}
 
@@ -623,6 +637,14 @@ textarea {
 			stepMonths : 0,
 			showOtherMonths : false,
 			selectOtherMonths : false,
+			monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+                         "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+                         "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+                         "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+            monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+                              "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+                              "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+                              "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
 		}).focus(function() {
 			$(".ui-datepicker-next").hide();
 			$(".ui-datepicker-prev").hide();
@@ -774,9 +796,9 @@ textarea {
 			
 				<p style="text-align: center;"> <span style="font-weight: bold;">(km)</span> </p></td>
 			<td style="background-color: rgb(241, 243, 245); vertical-align: middle; width: 184px; border-width: 1px; border-style: solid; border-color: rgb(222, 222, 222); text-align: center; height: 55px;"
-			 rowspan="2" width="184" height="55"><p style="text-align: center;"> <span style="font-weight: bold;"><spring:message code="ezCar.shb36"/>*</span> </p></td>
+			 rowspan="2" width="184" height="55"><p style="text-align: center;"> <span style="font-weight: bold;"><spring:message code="ezCar.shb36"/></span> </p></td>
 			<td style="background-color: rgb(241, 243, 245); vertical-align: middle; width: 157px; border-width: 1px; border-style: solid; border-color: rgb(222, 222, 222); text-align: center; height: 55px;"
-			 rowspan="2" width="157" height="55"><p style="text-align: center;"> <span style="font-weight: bold;"><spring:message code="ezCar.shb37"/>*</span> </p></td>
+			 rowspan="2" width="157" height="55"><p style="text-align: center;"> <span style="font-weight: bold;"><spring:message code="ezCar.shb37"/></span> </p></td>
 			<td style="background-color: rgb(241, 243, 245); vertical-align: middle; width: 58px; border-width: 1px; border-style: solid; border-color: rgb(222, 222, 222); text-align: center; height: 55px;"
 			 rowspan="2" width="58" height="55"><p style="text-align: center;"> <span style="font-weight: bold;"><spring:message code="ezCar.shb32"/></span> </p>
 			

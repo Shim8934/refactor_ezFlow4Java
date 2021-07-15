@@ -762,7 +762,7 @@
 				A_DISTANCE_AUTO, A_DISTANCE_COMMUTE, A_DISTANCE_WORK, A_DISTANCE_ETC, CAR_REGISTER_NO, A_SUBMIT_FLAG, COMPANYID, DELFLAG
 			)
         	VALUES ( 
-        		#register_id#,#tenant_id#,#register_date#,#carID#,#car_form_id#,#rev_date#,#rev_time#,#rev_time2#,#driver_deptname#,#driver_name#,
+        		#register_id#,#tenant_id#,TO_DATE(#register_date#,'YY/MM/DD'),#carID#,#car_form_id#,TO_DATE(#rev_date#,'YY/MM/DD'),#rev_time#,#rev_time2#,#driver_deptname#,#driver_name#,
         		#b_depart_time#,#b_distance#,#drive_purpose#,#drive_point#,#a_arrive_time#,#a_distance#,
         		#a_distance_auto#,#a_distance_commute#,#a_distance_work#,#a_distance_etc#,#car_register_no#, #control#, #companyID#, 0
 			)
@@ -913,7 +913,7 @@
       		SET 
       			DELFLAG = 1,
           		CAR_FORM_ID = #car_form_id2#,
-          		REGISTER_DATE = #currentDate#
+          		REGISTER_DATE = TO_DATE(#currentDate#,'YY/MM/DD')
     		WHERE
     			CAR_ID = #carID#
     		AND
