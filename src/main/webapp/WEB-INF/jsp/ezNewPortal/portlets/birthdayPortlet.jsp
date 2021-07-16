@@ -5,6 +5,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+
 </head>
 <body>
 	<article class="box_shadow">
@@ -38,7 +39,7 @@
 		</dl>
 		<div style="height:100%; background-color:#ffffff">
 			<div class="birthdayList" id="birthcount" style="display: none;">
-				<ul class="birthList" id="birthdayList" style="overflow:auto; width: 490px;height: 200px; padding-top:0px; padding-bottom: 0px; "></ul>
+				<ul class="birthList" id="birthdayList" style="overflow-y:auto; overflow-x:hidden; width:100%; height:180px; padding-left: 25px; padding-right: 10px;"></ul>
 			</div>
 			<div id="nodata_NewBirthday" class="nodata_newBirthday" style="padding-top: 15px;display:none;">
 				<dl class='nodata'>
