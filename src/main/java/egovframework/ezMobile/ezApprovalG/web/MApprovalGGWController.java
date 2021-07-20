@@ -1,13 +1,29 @@
 package egovframework.ezMobile.ezApprovalG.web;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.security.PrivateKey;
+import java.util.Base64;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
+import java.util.Base64.Decoder;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import egovframework.ezMobile.ezApprovalG.vo.*;
+
+import org.apache.commons.lang3.StringUtils;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -18,6 +34,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
@@ -1039,4 +1057,38 @@ public class MApprovalGGWController {
 		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/AprMemberSN/" + docId + "/checkAprState] ended.");
 		return result;
 	}
+	
+	/**
+	 * 모바일 G/W 전자결재 [POST] 기안
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/mobile/ezapproval/gwDraft", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject gwDraft(@RequestBody JSONObject jsonParam, HttpServletRequest request) {
+		LOGGER.debug("MOBILE G/W APPROVAL [POST /mobile/ezapproval/gwDraft" + " started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String userId = jsonParam.get("userId").toString();
+			String serverName = request.getHeader("x-user-host");
+			
+			LOGGER.debug("serverName : " + serverName);
+			LOGGER.debug("userId : " + userId);
+			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
+
+			String realPath = commonUtil.getRealPath(request);
+			
+			result = mApprovalGService.gwDraft(jsonParam, realPath, userInfo);
+			
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", "1");
+			result.put("message", "geDraft controller error");
+		}
+
+		LOGGER.debug("MOBILE G/W APPROVAL [POST /mobile/ezapproval/gwDraft" + " ended.");
+		
+		return result;
+	}
+	
 }
