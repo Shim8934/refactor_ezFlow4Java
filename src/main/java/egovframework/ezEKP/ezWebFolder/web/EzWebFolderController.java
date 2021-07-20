@@ -459,34 +459,23 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		return "/ezWebFolder/fileDelete";
 	}
 
-	@RequestMapping(value="/ezWebFolder/deleteFile.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/ezWebFolder/deleteFile.do", method = RequestMethod.POST)
 	@ResponseBody
-	public JSONObject deleteFile(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public JSONObject deleteFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("deleteFile start");
-		LoginSimpleVO user  = commonUtil.userInfoSimple(loginCookie);
-		String listFileId   = request.getParameter("fileList");
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		String listFileId = request.getParameter("fileList");
 		String listFolderId = request.getParameter("folderList");
-		
-		logger.debug("FileId list: " + listFileId);
-		
-		String gwServerUrl  = config.getProperty("config.webFolderGwServerURL");
-		String url          = gwServerUrl + "/rest/ezwebfolder/filefolder-delete";
-		
-		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("userId", user.getId())
-										.queryParam("fileList", listFileId)
-										.queryParam("folderList", listFolderId);
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		RestTemplate rest    = new RestTemplate();
-		
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.DELETE, entity, String.class);
-		JSONParser jp                 = new JSONParser();
-		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
-		
+
+		logger.debug("FileId list: {}", listFileId);
+
+		JSONObject resultBody = rest.gateway(Module.WEBFOLDER, request)
+				.delete().url("/rest/ezwebfolder/filefolder-delete")
+				.queryParam("userId", user.getId())
+				.queryParam("fileList", listFileId)
+				.queryParam("folderList", listFolderId)
+				.exchangeBody();
+
 		logger.debug("deleteFile end");
 		return resultBody;
 	}
@@ -645,9 +634,9 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		return "/ezWebFolder/fileMove";
 	}
 
-	@RequestMapping(value="/ezWebFolder/moveFile.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/ezWebFolder/moveFile.do", method = RequestMethod.POST)
 	@ResponseBody
-	public JSONObject moveFile(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public JSONObject moveFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("moveFile start");
 		LoginSimpleVO user  = commonUtil.userInfoSimple(loginCookie);
 		String fileList     = request.getParameter("fileList");
@@ -657,340 +646,221 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String mode         = request.getParameter("mode");
 		String privileges   = request.getParameter("privileges");
 		String overwritable = request.getParameter("overwritable");
-		
-		logger.debug("FileId list: " + fileList + " || Folder Id: " + folderId + " || mode: " + mode + " || privileges: " + privileges + " || nameList: " + nameList);
-		
-		String gwServerUrl  = config.getProperty("config.webFolderGwServerURL");
-		String url          = gwServerUrl + "/rest/ezwebfolder/filemove/modes/" + mode;
-		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("fileList", fileList)
-										.queryParam("folderList", folderList)
-										.queryParam("userId", user.getId())
-										.queryParam("privileges", privileges)
-										.queryParam("folderId", folderId);
-		
+
+		logger.debug("FileId list: {} || Folder Id: {} || mode: {} || privileges: {} || nameList: {}", fileList, folderId, mode, privileges, nameList);
+
+		Rest.RestBuilder restBuilder = rest.gateway(Module.WEBFOLDER, request)
+				.put().url("/rest/ezwebfolder/filemove/modes/{0}", mode)
+				.queryParam("fileList", fileList)
+				.queryParam("folderList", folderList)
+				.queryParam("userId", user.getId())
+				.queryParam("privileges", privileges)
+				.queryParam("folderId", folderId);
+
 		if (overwritable != null) {
-			builder.queryParam("overwritable", overwritable);
+			restBuilder.queryParam("overwritable", overwritable);
 		}
-		
+
 		if (nameList != null) {
-			builder.queryParam("nameList", nameList);
+			restBuilder.queryParam("nameList", nameList);
 		}
-		
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		RestTemplate rest    = new RestTemplate();
-		
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
-		JSONParser jp                 = new JSONParser();
-		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
-		
+
+		JSONObject resultBody = restBuilder.exchangeBody();
+
 		logger.debug("moveFile end");
 		return resultBody;
 	}
 
-	@RequestMapping(value="/ezWebFolder/getFolderTree.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/ezWebFolder/getFolderTree.do", method = RequestMethod.POST)
 	@ResponseBody
-	public JSONObject getFolderTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+	public JSONObject getFolderTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getFolderTree start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String companyId   = request.getParameter("companyId");
 		String folderId    = request.getParameter("folderId");
 		String type        = request.getParameter("type");
-		
-		logger.debug("Company Id: " + companyId + " || Folder Id: " + folderId + " || Type: " + type);
-		
-		String gwServerUrl  = config.getProperty("config.webFolderGwServerURL");
-		String url          = gwServerUrl + "/rest/ezwebfolder/foldersTree";
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("userId", user.getId())
-										.queryParam("companyId", companyId)
-										.queryParam("folderId", folderId)
-										.queryParam("type", type);
-		
-		RestTemplate rest             = new RestTemplate();
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-		JSONParser jp                 = new JSONParser();
-		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
-		
+
+		logger.debug("Company Id: {} || Folder Id: {} || Type: {}" + companyId, folderId, type);
+
+		JSONObject resultBody = rest.gateway(Module.WEBFOLDER, request)
+				.url("/rest/ezwebfolder/foldersTree")
+				.queryParam("userId", user.getId())
+				.queryParam("companyId", companyId)
+				.queryParam("folderId", folderId)
+				.queryParam("type", type)
+				.exchangeBody();
+
 		logger.debug("getFolderTree end");
 		return resultBody;
 	}
 	
-	@RequestMapping(value="/ezWebFolder/getDeptTree.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/ezWebFolder/getDeptTree.do", method = RequestMethod.POST)
 	@ResponseBody
-	public JSONObject getDepartTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+	public JSONObject getDepartTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getDepartTree start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String companyId   = request.getParameter("companyId");
-		String deptId      = request.getParameter("deptId") != null ? request.getParameter("deptId") : "";
-		
-		logger.debug("Company Id: " + companyId + " || Department Id: " + deptId);
-		
-		String gwServerUrl  = config.getProperty("config.webFolderGwServerURL");
-		String url          = gwServerUrl + "/rest/ezwebfolder/depart-tree";
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("userId", user.getId())
-										.queryParam("deptId", deptId)
-										.queryParam("companyId", companyId);
-		
-		RestTemplate rest             = new RestTemplate();
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-		JSONParser jp                 = new JSONParser();
-		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
-		
+		String companyId = request.getParameter("companyId");
+		String deptId = StringUtils.defaultString(request.getParameter("deptId"));
+
+		logger.debug("Company Id: {} || Department Id: {}", companyId, deptId);
+
+		JSONObject resultBody = rest.gateway(Module.WEBFOLDER, request)
+				.url("/rest/ezwebfolder/depart-tree")
+				.queryParam("userId", user.getId())
+				.queryParam("deptId", deptId)
+				.queryParam("companyId", companyId)
+				.exchangeBody();
+
 		logger.debug("getDepartTree end");
 		return resultBody;
 	}
 	
-	@RequestMapping(value="/ezWebFolder/getSubTree.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/ezWebFolder/getSubTree.do", method = RequestMethod.POST)
 	@ResponseBody
-	public JSONObject getSubDepartTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+	public JSONObject getSubDepartTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getSubDepartTree start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String deptId      = request.getParameter("deptId");
-		String level       = request.getParameter("level");
-		
-		logger.debug("Department Id: " + deptId + " || Level: " + level);
-		
-		String gwServerUrl  = config.getProperty("config.webFolderGwServerURL");
-		String url          = gwServerUrl + "/rest/ezwebfolder/sub-tree/" + deptId;
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("userId", user.getId())
-										.queryParam("level", level);
-		
-		RestTemplate rest             = new RestTemplate();
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-		JSONParser jp                 = new JSONParser();
-		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
-		
+		String deptId = request.getParameter("deptId");
+		String level = request.getParameter("level");
+
+		logger.debug("Department Id: {} || Level: {}", deptId, level);
+
+		JSONObject resultBody = rest.gateway(Module.WEBFOLDER, request)
+				.url("/rest/ezwebfolder/sub-tree/{0}", deptId)
+				.queryParam("userId", user.getId())
+				.queryParam("level", level)
+				.exchangeBody();
+
 		logger.debug("getSubDepartTree end");
 		return resultBody;
 	}
-	
-	@RequestMapping(value="/ezWebFolder/getDeptMembers.do", method = RequestMethod.POST)
+
+	@RequestMapping(value = "/ezWebFolder/getDeptMembers.do", method = RequestMethod.POST)
 	@ResponseBody
-	public JSONObject getDeptMembers(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+	public JSONObject getDeptMembers(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getDeptMembers start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String deptId      = request.getParameter("deptId");
-		
+		String deptId = request.getParameter("deptId");
+
 		logger.debug("Department Id: " + deptId);
-		
-		String gwServerUrl  = config.getProperty("config.webFolderGwServerURL");
-		String url          = gwServerUrl + "/rest/ezwebfolder/dept-member/" + deptId;
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url).queryParam("userId", user.getId());
-		
-		RestTemplate rest             = new RestTemplate();
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-		JSONParser jp                 = new JSONParser();
-		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
-		
+
+		JSONObject resultBody = rest.gateway(Module.WEBFOLDER, request)
+				.url("/rest/ezwebfolder/dept-member/{0}", deptId)
+				.queryParam("userId", user.getId())
+				.exchangeBody();
+
 		logger.debug("getDeptMembers end");
 		return resultBody;
 	}
 
-	@RequestMapping(value="/ezWebFolder/getFileFolderTree.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/ezWebFolder/getFileFolderTree.do", method = RequestMethod.POST)
 	@ResponseBody
-	public JSONObject getFileFolderTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+	public JSONObject getFileFolderTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getFileFolderTree start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String fileList    = request.getParameter("fileList");
 		String mode        = request.getParameter("mode");
 		String companyId   = request.getParameter("companyId");
 		String type        = request.getParameter("type");
-		
-		logger.debug("FileId list: " + fileList + " || mode: " + mode + " || CompanyId: " + companyId + " || type: " + type);
-		
-		String gwServerUrl  = config.getProperty("config.webFolderGwServerURL");
-		String url          = gwServerUrl + "/rest/ezwebfolder/foldersTree/file";
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("userId", user.getId())
-										.queryParam("companyId", companyId)
-										.queryParam("fileList", fileList)
-										.queryParam("type", type)
-										.queryParam("mode", mode);
-		
-		RestTemplate rest             = new RestTemplate();
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-		JSONParser jp                 = new JSONParser();
-		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
-		
+
+		logger.debug("FileId list: {} || mode: {} || CompanyId: {} || type: {}", fileList, mode, companyId, type);
+
+		JSONObject resultBody = rest.gateway(Module.WEBFOLDER, request)
+				.url("/rest/ezwebfolder/foldersTree/file")
+				.queryParam("userId", user.getId())
+				.queryParam("companyId", companyId)
+				.queryParam("fileList", fileList)
+				.queryParam("type", type)
+				.queryParam("mode", mode)
+				.exchangeBody();
+
 		logger.debug("getFileFolderTree end");
 		return resultBody;
 	}
 	
-	@RequestMapping(value="/ezWebFolder/saveGeneralList.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/ezWebFolder/saveGeneralList.do", method = RequestMethod.POST)
 	@ResponseBody
-	public JSONObject saveListSize(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+	public JSONObject saveListSize(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("saveListSize start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String listCount   = request.getParameter("listCount");
-		
-		logger.debug("List count: " + listCount);
-		
-		String gwServerUrl  = config.getProperty("config.webFolderGwServerURL");
-		String url          = gwServerUrl + "/rest/ezwebfolder/env/" + listCount + "/update";
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url).queryParam("userId", user.getId());
-		
-		RestTemplate rest             = new RestTemplate();
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
-		
-		JSONParser jp                 = new JSONParser();
-		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
-		
+		String listCount = request.getParameter("listCount");
+
+		logger.debug("List count: {}", listCount);
+
+		JSONObject resultBody = rest.gateway(Module.WEBFOLDER, request)
+				.put().url("/rest/ezwebfolder/env/{0}/update", listCount)
+				.queryParam("userId", user.getId())
+				.exchangeBody();
+
 		logger.debug("saveListSize end");
 		return resultBody;
 	}
-	
+
 	@RequestMapping(value="/ezWebFolder/savePortletConfig.do", method = RequestMethod.POST)
 	@ResponseBody
 	public JSONObject savePortletConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("savePortletConfig start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String selectFolderId   = request.getParameter("selectFolderId");
-		String targetFolderId   = request.getParameter("targetFolderId");
-		
+		String selectFolderId = request.getParameter("selectFolderId");
+		String targetFolderId = request.getParameter("targetFolderId");
+
 		logger.debug("selectFolderId: {}, targetFolderId: {}", selectFolderId, targetFolderId);
-		if(targetFolderId.equals(selectFolderId)){
+
+		if (targetFolderId.equals(selectFolderId)) {
 			Map<String, Object> result = new HashMap<>();
 			result.put("status", "ok");
 			result.put("code", 0);
 			return new JSONObject(result);
 		}
-		
-		String gwServerUrl  = config.getProperty("config.webFolderGwServerURL");
-		String url          = gwServerUrl + "/rest/ezwebfolder/env/" + targetFolderId 
-				+ (selectFolderId.isEmpty()? "/insert" : "/update") + "PortletFolderId";
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url).queryParam("userId", user.getId());
-		
-		RestTemplate rest             = new RestTemplate();
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
-		
-		JSONParser jp                 = new JSONParser();
-		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
-		
+
+		JSONObject resultBody = rest.gateway(Module.WEBFOLDER, request)
+				.put().url("/rest/ezwebfolder/env/{0}/{1}PortletFolderId", targetFolderId, selectFolderId.isEmpty() ? "insert" : "update")
+				.queryParam("userId", user.getId()).exchangeBody();
+
 		logger.debug("savePortletConfig end");
 		return resultBody;
 	}
 	
-	@RequestMapping(value="/ezWebFolder/getDeptTreeForChief.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/ezWebFolder/getDeptTreeForChief.do", method = RequestMethod.POST)
 	@ResponseBody
-	public JSONObject getDepartTreeForChief(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+	public JSONObject getDepartTreeForChief(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getDepartTreeForChief start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
-		String url         = gwServerUrl + "/rest/ezwebfolder/depart-tree/chief/" + user.getId();
-		
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
-		
-		RestTemplate rest             = new RestTemplate();
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-		JSONParser jp                 = new JSONParser();
-		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
-		
+
+		JSONObject resultBody = rest.gateway(Module.WEBFOLDER, request)
+				.url("/rest/ezwebfolder/depart-tree/chief/{0}", user.getId())
+				.exchangeBody();
+
 		logger.debug("getDepartTreeForChief end");
 		return resultBody;
 	}
-	
-	@RequestMapping(value="/ezWebFolder/getSelectedDeptForChief.do", method = RequestMethod.POST)
+
+	@RequestMapping(value = "/ezWebFolder/getSelectedDeptForChief.do", method = RequestMethod.POST)
 	@ResponseBody
-	public JSONObject getSelectedDepartsForChief(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+	public JSONObject getSelectedDepartsForChief(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getSelectedDepartsForChief start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
-		String url         = gwServerUrl + "/rest/ezwebfolder/selected-dept/chief/" + user.getId();
-		
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
-		
-		RestTemplate rest             = new RestTemplate();
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-		JSONParser jp                 = new JSONParser();
-		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
-		
+
+		JSONObject resultBody = rest.gateway(Module.WEBFOLDER, request)
+				.url("/rest/ezwebfolder/selected-dept/chief/{0}", user.getId())
+				.exchangeBody();
+
 		logger.debug("getSelectedDepartsForChief end");
 		return resultBody;
 	}
-	
-	@RequestMapping(value="/ezWebFolder/saveSelectedDeptsForChief.do", method = RequestMethod.POST)
+
+	@RequestMapping(value = "/ezWebFolder/saveSelectedDeptsForChief.do", method = RequestMethod.POST)
 	@ResponseBody
-	public JSONObject updateEnvDeptList(@CookieValue("loginCookie") String loginCookie, @RequestParam("deptList") List<String> deptsList, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+	public JSONObject updateEnvDeptList(@CookieValue("loginCookie") String loginCookie, @RequestParam("deptList") List<String> deptsList, HttpServletRequest request) throws Exception {
 		logger.debug("updateEnvDeptList start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
-		String url         = gwServerUrl + "/rest/ezwebfolder/env/dept-list";
-		
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("deptList", String.join(",", deptsList))
-										.queryParam("userId", user.getId());
-		
-		RestTemplate rest             = new RestTemplate();
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
-		
-		JSONParser jp                 = new JSONParser();
-		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
-		
+
+		JSONObject resultBody = rest.gateway(Module.WEBFOLDER, request)
+				.put().url("/rest/ezwebfolder/env/dept-list")
+				.queryParam("deptList", String.join(",", deptsList))
+				.queryParam("userId", user.getId())
+				.exchangeBody();
+
 		logger.debug("updateEnvDeptList end");
 		return resultBody;
 	}
@@ -1054,7 +924,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		logger.debug("getFolderCapacity end");
 		return resultBody;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezWebFolder/fileVersionManage.do", method = RequestMethod.GET)
 	public String fileVersionManage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
@@ -1179,7 +1049,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 
 		return "/ezWebFolder/webfolderReply";
 	}
-
 
 	@RequestMapping(value="/ezWebFolder/checkNotInherit.do", method = RequestMethod.POST)
 	@ResponseBody
