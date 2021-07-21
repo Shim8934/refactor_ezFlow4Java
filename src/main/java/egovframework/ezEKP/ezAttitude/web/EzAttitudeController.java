@@ -2244,6 +2244,9 @@ public class EzAttitudeController {
 		model.addAttribute("adminFlag", adminFlag);
 		model.addAttribute("displayFlag", displayFlag);
 		
+		String attitudeMapApiKey = ezCommonService.getTenantConfig("attitudeMapApiKey", userInfo.getTenantId());
+		model.addAttribute("attitudeMapApiKey", attitudeMapApiKey);
+		
 		LOGGER.debug("attitudeUserMain ended");
 		return "/ezAttitude/attitudeUserMain";
 	}
