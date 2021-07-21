@@ -43,7 +43,7 @@ public interface EzAttitudeService {
 	public AttitudeFormVO getFormBody(String typeId, String companyId, int tenantId) throws Exception;
 	
 	public void updateAttitude(String attitudeId, String startDate, String endDate, String region,
-			String mobile, String bizSub, String content, String offset, String ip, String typeId, String dateType, String mode, AttitudeVO attVO, String adminId, MCommonVO info, MCommonVO userInfo, int tenantId, String companyId) throws Exception;
+			String mobile, String bizSub, String content, String offset, String ip, String typeId, String dateType, String mode, AttitudeVO attVO, String adminId, MCommonVO info, MCommonVO userInfo, int tenantId, String companyId, String latitude, String longitude) throws Exception;
 	
 	public void deleteAttitude(String attitudeId, int tenantId, String mode, AttitudeVO attitudeVO, String offset, MCommonVO info, MCommonVO userInfo) throws Exception;
 	
