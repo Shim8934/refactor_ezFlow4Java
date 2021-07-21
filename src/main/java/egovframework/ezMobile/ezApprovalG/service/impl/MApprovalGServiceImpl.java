@@ -1502,5 +1502,13 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 			
 			LOGGER.debug("saveAttachInfo ended");
 		}
+
+		@Override
+		public List<HashMap> checkChangeDocInfo(HashMap<String, Object> params) throws Exception {
+			
+			List<HashMap> result = mApprovalGDAO.checkChangeDocInfo(params);
+			
+			return result;
+		}
 		
 }
