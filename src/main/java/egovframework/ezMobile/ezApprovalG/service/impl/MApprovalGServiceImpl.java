@@ -1430,10 +1430,20 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	        		File file = new File(realPath + filePath);
 	        		
 	        		fileSize = file.length();
-	        			
-	        		filePath2 =  strFilePath + commonUtil.separator + targetStr;
+	        		String thisYear = ezApprovalGService.getDocHrefYear(newDocId, userInfo.getCompanyId(), userInfo.getTenantId());
+	    			String fileUploadPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyId() + commonUtil.separator + "uploadFile" + commonUtil.separator + thisYear + 
+	    					commonUtil.separator + ezApprovalGService.getDocDir(newDocId);
+	        		
+	    			File uploadPath = new File(realPath + fileUploadPath);
+	    			
+	    			if(!uploadPath.exists()) {
+	    				uploadPath.mkdir();
+	    			}
+	    			
+	    			
+	        		filePath2 =  fileUploadPath + commonUtil.separator + targetStr;
 	        				
-	        		File fileinfo = new File(realPath + strFilePath + commonUtil.separator + targetStr);
+	        		File fileinfo = new File(realPath + fileUploadPath + commonUtil.separator + targetStr);
 	        		
 	        		if (!fileinfo.exists()) {
 	        			FileUtils.moveFile(file, fileinfo);
@@ -1441,7 +1451,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 
 	        		file = null;
 	        		
-	        		fileName = filePath2.replace(strFilePath, "").substring(40);
+	        		fileName = filePath2.replace(fileUploadPath, "").substring(40);
 	        		
 	        		saveAttachInfo(newDocId, i, filePath2, fileSize, fileName, userInfo);
 	        	}
