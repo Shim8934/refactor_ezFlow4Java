@@ -2561,7 +2561,7 @@
               #v_AttachUserName2# ,
               #v_AttachUserJobTitle2# ,
               #v_AttachUserDeptName2# ,
-	          #v_TENANT_ID# ,
+	          #v_TENANTID# ,
 	          #v_COMPANYID# ,
 			  'N',
 			  'N',

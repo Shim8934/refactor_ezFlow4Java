@@ -1073,10 +1073,6 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 			
 			//첨부파일 저장
 			if (jObject.get("attachments") != null && !jObject.get("attachments").equals("")) {
-				if (!saveAttachmentsInfo(jObject.get("attachments").toString(), newDocId, filePath, "APPROVAL", realPath, userInfo)) {
-					//return egovMessageSource.getMessage("ezCommunity.lhj05", locale);
-				}
-			} else {
 				hasAttachYn = "Y";
 			}
 			
@@ -1187,6 +1183,11 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 				resultMessage = "file create failure";
 				
 			}
+			
+			if(hasAttachYn.equals("Y")) {
+				saveAttachmentsInfo(jObject.get("attachments").toString(), newDocId, filePath, "APPROVAL", realPath, userInfo);
+			}
+
 			
 			//resultCode 가 0이면 업데이트를 했는데 업데이트가 안된 경우 잘못된 경우지만 흐름은 정상적으로 흘러가기에 코드로 구분 프론트단에서 업데이트가 안됐다고 알려줘야하는데 안될리가 없을듯 하지만 한치앞을 내다볼수없는 세상이라 만들어놓음
 			if (resultCode == 0) {
@@ -1406,6 +1407,8 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		public boolean saveAttachmentsInfo(String strAttachments, String newDocId, String strFilePath, String strType, String realPath, MCommonVO userInfo) throws Exception{
 			LOGGER.debug("saveAttachmentsInfo started");
 			
+			String fileRoot = "fileroot/0/files";
+			
 	        long fileSize = 0;
 	        boolean rtnValue = false;
 	        String filePath = "";
@@ -1418,45 +1421,27 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	        	}
 	        	
 	        	for (int i = 0; i < strAttachments.split("\\|").length; i++) {
-	        		if (strType.equals("APP")) {
-	        			if (strAttachments.split("\\|")[i].indexOf("upload_board") > -1) {
-	        				filePath = strAttachments.split("\\|")[i];
-	        			} else {
-	        				filePath = strFilePath + commonUtil.separator + strAttachments.split("\\|")[i];
-	        			}
-	        			File file = new File(realPath + filePath);
-	        			fileSize = file.length();
-	        			
-	        			if (strAttachments.split("\\|")[i].indexOf("tempUploadFile") > -1) {
-	        				filePath2 = strFilePath + commonUtil.separator + "uploadFile" + strAttachments.split("\\|")[i].replace("tempUploadFile", "");
-	        				
-	        				File fileinfo = new File(realPath + filePath2);
-	        				
-	        				if (!fileinfo.exists()) {
-	        					FileUtils.moveFile(file, fileinfo);
-	        				}
-	        			} else if (strAttachments.split("\\|")[i].indexOf("upload_board") > -1) {
-	        				filePath2 = strAttachments.split("\\|")[i];
-	        			} else {
-	        				filePath2 = strFilePath + commonUtil.separator + strAttachments.split("\\|")[i];
-	        			}
-	        			file = null;
-	        		} else {
-	        			File file = new File(realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId())  + commonUtil.separator + strAttachments.split("\\|")[i].split("/")[2]);
-	        			fileSize = file.length();
-	        			
-	        			filePath2 = strFilePath + commonUtil.separator + commonUtil.separator + "uploadFile" + commonUtil.separator + strAttachments.split("\\|")[i].split("/")[2];
-	        			
-	        			File fileinfo = new File(realPath + filePath2);
-	        			
-	        			if (!fileinfo.exists()) {
-	        				FileUtils.moveFile(file, fileinfo);
-	        				file.delete();
-	        			}
-	        			file = null;
-	        		}
 	        		
-	        		fileName = filePath2.replace(strFilePath + commonUtil.separator + "uploadFile", "").substring(40);
+	        		String targetStr = strAttachments.split("\\|")[i];
+	        		targetStr = targetStr.substring(targetStr.indexOf("{"));
+	        			
+	        		filePath = commonUtil.separator + fileRoot + commonUtil.separator + "upload_board" + commonUtil.separator + "tempUploadFile" + commonUtil.separator + targetStr;
+	        			
+	        		File file = new File(realPath + filePath);
+	        		
+	        		fileSize = file.length();
+	        			
+	        		filePath2 =  strFilePath + commonUtil.separator + targetStr;
+	        				
+	        		File fileinfo = new File(realPath + strFilePath + commonUtil.separator + targetStr);
+	        		
+	        		if (!fileinfo.exists()) {
+	        			FileUtils.moveFile(file, fileinfo);
+	        		}
+
+	        		file = null;
+	        		
+	        		fileName = filePath2.replace(strFilePath, "").substring(40);
 	        		
 	        		saveAttachInfo(newDocId, i, filePath2, fileSize, fileName, userInfo);
 	        	}
@@ -1486,20 +1471,20 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 			
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_DOCID", newDocId);
-			map.put("ATTACHFILESN", seqNum);
-			map.put("VIEWORDER", seqNum);
-			map.put("ATTACHFILENAME", fileName);
-			map.put("ATTACHFILEHREF", filePath);
-			map.put("ATTACHFILESIZE", fileSize);
-			map.put("ATTACHUSERID", userInfo.getUserId());
-			map.put("ATTACHUSERNAME", userInfo.getDeptName());
-			map.put("ATTACHUSERJOBTITLE", userInfo.getTitle());
-			map.put("ATTACHUSERDEPTID", userInfo.getDeptId());
-			map.put("ATTACHUSERDEPTNAME", userInfo.getDeptName());
-			map.put("DISPLAYNAME", fileName);
-			map.put("ATTACHUSERNAME2", userInfo.getDeptName2());
-			map.put("ATTACHUSERJOBTITLE2", userInfo.getTitle2());
-			map.put("ATTACHUSERDEPTNAME2", userInfo.getDeptName2());
+			map.put("v_ATTACHFILESN", seqNum);
+			map.put("v_VIEWORDER", seqNum);
+			map.put("v_ATTACHFILENAME", fileName);
+			map.put("v_ATTACHFILEHREF", filePath);
+			map.put("v_ATTACHFILESIZE", fileSize);
+			map.put("v_ATTACHUSERID", userInfo.getUserId());
+			map.put("v_ATTACHUSERNAME", userInfo.getDeptName());
+			map.put("v_ATTACHUSERJOBTITLE", userInfo.getTitle());
+			map.put("v_ATTACHUSERDEPTID", userInfo.getDeptId());
+			map.put("v_ATTACHUSERDEPTNAME", userInfo.getDeptName());
+			map.put("v_DISPLAYNAME", fileName);
+			map.put("v_ATTACHUSERNAME2", userInfo.getDeptName2());
+			map.put("v_ATTACHUSERJOBTITLE2", userInfo.getTitle2());
+			map.put("v_ATTACHUSERDEPTNAME2", userInfo.getDeptName2());
 			map.put("v_TENANTID", userInfo.getTenantId());
 			map.put("v_COMPANYID", userInfo.getCompanyId());
 			
