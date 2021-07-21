@@ -4482,7 +4482,7 @@
 			FROM
 				TBL_COMM_ITEM
 			WHERE
-				upperitemidtree LIKE CONCAT('%', #v_pItemID#, '%')
+				upperitemidtree LIKE CONCAT('%', ( SELECT upperitemidtree FROM TBL_COMM_ITEM WHERE itemid = #v_pItemID# ), '%')
 			AND
 				itemid <> #v_pItemID#
 			AND

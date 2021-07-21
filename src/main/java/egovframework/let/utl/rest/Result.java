@@ -1,16 +1,18 @@
 package egovframework.let.utl.rest;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 /**
  * HTTP API 리턴 값으로 사용할 수 있는 DTO이다.<br>
  * 
  * <p>
  * 성공 리턴: {@link Result#success()}, {@link Result#success(data)},
- * {@link Result#success(code, data)}<br>
+ * {@link Result#successWithCode(code)}, {@link Result#success(code, data)}<br>
  * 실패 리턴: {@link Result#failure()}, {@link Result#failure(data)},
- * {@link Result#failure(code, data)}
+ * {@link Result#failureWithCode(code)}, {@link Result#failure(code, data)}
  * </p>
  * <p>
  * Result 객체에서 성공 여부는<br>
@@ -75,6 +77,15 @@ public class Result {
 	}
 
 	/**
+	 * code 값과 함께 성공에 대한 결과를 반환한다.
+	 * 
+	 * @return <code>{"status":"ok", "code":..., "data":null}</code>
+	 */
+	public static Result successWithCode(int code) {
+		return success(code, null);
+	}
+
+	/**
 	 * 구체적인 code 및 data 값과 함께 성공에 대한 결과를 반환한다.
 	 * 
 	 * @return <code>{"status":"ok", "code":..., "data":...}</code>
@@ -99,6 +110,15 @@ public class Result {
 	 */
 	public static Result failure(Object data) {
 		return failure(DEFAULT_FAILURE_CODE, data);
+	}
+
+	/**
+	 * code 값과 함께 실패에 대한 결과를 반환한다.
+	 * 
+	 * @return <code>{"status":"error","code":...,"data":null}</code>
+	 */
+	public static Result failureWithCode(int code) {
+		return failure(code, null);
 	}
 
 	/**
@@ -138,8 +158,14 @@ public class Result {
 		return clazz.cast(data);
 	}
 
-	public JsonElement toJsonData() {
+	@JsonIgnore
+	public JsonElement getDataAsJsonElement() {
 		return GSON.toJsonTree(data);
+	}
+
+	@JsonIgnore
+	public JsonObject getDataAsJsonObject() {
+		return getDataAsJsonElement().getAsJsonObject();
 	}
 
 	/** @return status 코드가 ok 라면 true, 아니면 false */

@@ -835,6 +835,32 @@
 	<select id="EzCarDAO.getCarFormList" parameterClass="Map"
 		resultMap="carFormListVO2">
 		<![CDATA[
+		SELECT C.REGISTER_DATE, C.REV_DATE, C.REGISTER_ID, C.CAR_FORM_ID, C.REGISTER_DEPTNAME, C.REGISTER_NAME
+		FROM(
+			SELECT
+				ROW_NUMBER() OVER(PARTITION BY A.CAR_FORM_ID ORDER BY A.CAR_FORM_ID) AS ROW_NUM, TO_CHAR(A.REGISTER_DATE, 'YYYY-MM-DD') AS REGISTER_DATE, A.REV_DATE, A.REGISTER_ID, A.CAR_FORM_ID, B.DESCRIPTION AS REGISTER_DEPTNAME, B.DISPLAYNAME AS REGISTER_NAME
+			FROM
+				TBL_CAR_FORM A, TBL_USERMASTER B  
+			WHERE
+				A.REGISTER_ID = B.CN
+			AND
+				A.CAR_ID = #carID#
+			AND
+				A.COMPANYID = #companyID#
+			AND
+				A.TENANT_ID = #tenantID#
+			AND 
+			    A.DELFLAG = 0
+			AND 
+			    A.REV_DATE >= TO_DATE(#currentDate#, 'YYYYMM') AND A.REV_DATE < TO_DATE(#currentEndDate#, 'YYYYMM')
+			)C
+		WHERE C.ROW_NUM = 1
+			
+		]]>
+	</select>
+<!-- 	<select id="EzCarDAO.getCarFormList" parameterClass="Map"
+		resultMap="carFormListVO2">
+		<![CDATA[
 			SELECT
 				TO_CHAR(A.REGISTER_DATE, 'YYYY-MM-DD') AS REGISTER_DATE, A.REV_DATE, A.REGISTER_ID, A.CAR_FORM_ID, B.DESCRIPTION AS REGISTER_DEPTNAME, B.DISPLAYNAME AS REGISTER_NAME, A.REGISTER_ID AS REGISTER_ID
 			FROM
@@ -855,7 +881,7 @@
 			ORDER BY A.CAR_FORM_ID
 			
 		]]>
-	</select>
+	</select> -->
 	
 	<select id="EzCarDAO.getCarForm3" parameterClass="Map"
 		resultMap="carFormListVO3">

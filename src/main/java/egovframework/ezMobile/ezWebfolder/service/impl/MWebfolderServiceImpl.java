@@ -165,7 +165,7 @@ public class MWebfolderServiceImpl implements MWebfolderService {
 			return listResult;
 		}
 
-		JsonObject data = listResult.toJsonData().getAsJsonObject();
+		JsonObject data = listResult.getDataAsJsonObject();
 		JsonArray jsonFiles = data.get("fileList").getAsJsonArray();
 		List<FileVO> files = new ArrayList<>(jsonFiles.size());
 

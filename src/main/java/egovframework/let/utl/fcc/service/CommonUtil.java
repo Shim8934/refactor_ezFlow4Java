@@ -54,9 +54,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.TimeZone;
-import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -124,6 +124,9 @@ import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.utl.rest.Rest;
+import egovframework.let.utl.rest.Rest.Module;
+import egovframework.let.utl.rest.Result;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /*
@@ -186,6 +189,9 @@ public class CommonUtil {
 	@Autowired
 	private KlibUtil kilbUtil;
 	
+	@Autowired
+	private Rest rest;
+
 	/* File separator 공통 함수 */
 	public String separator = "/";
 	
@@ -1277,41 +1283,17 @@ public class CommonUtil {
 	}
 
 	/**
-	/*
 	 * 테넌트에 따른 설정정보 얻어오는 메서드
 	 */
 	public String getTenantConfigRest(String property, String userId, HttpServletRequest request) throws Exception {
+		Result result = rest.gateway(Module.JOURNAL, request)
+				.url("/rest/ezcommon/configs")
+				.queryParam("property", property)
+				.queryParam("userId", userId)
+				.exchangeResult();
 
-		String gwServerUrl = config.getProperty("config.journalGWServerURL");
-		String url = gwServerUrl + "/rest/ezcommon/configs";
-				
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-		        .queryParam("property", property)
-		        .queryParam("userId", userId);
-		
-		RestTemplate rest = new RestTemplate();
-		
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-		JSONParser jp = new JSONParser();
-		
-		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
-				
-		String status = resultBody.get("status").toString();
-		
-		String propertyValue = "";
-		if (status.equals("ok")) {
-			propertyValue = (String) resultBody.get("data");
-		}
-        
-        return propertyValue;
-    }
+		return result.succeeded() ? result.getData(String.class) : "";
+	}
 	
 	//html entity unescape 메서드 2018-04-06 강민수92
 	public String htmlUnescape(String html) throws Exception {

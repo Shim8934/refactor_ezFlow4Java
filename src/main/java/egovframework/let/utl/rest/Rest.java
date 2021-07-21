@@ -152,6 +152,15 @@ public class Rest {
 			return this;
 		}
 
+		/** 쿼리 파라미터를 추가한다. */
+		public RestBuilder queryParams(Map<?, ?> map) {
+			for (Map.Entry<?, ?> entry : map.entrySet()) {
+				queryParams.put(entry.getKey().toString(), new Object[] { entry.getValue() });
+			}
+
+			return this;
+		}
+
 		/** body에 json 파라미터를 추가한다. */
 		@SuppressWarnings("unchecked")
 		public RestBuilder jsonParam(String name, Object value) {
