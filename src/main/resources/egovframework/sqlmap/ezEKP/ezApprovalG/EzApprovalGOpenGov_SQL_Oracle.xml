@@ -16,7 +16,7 @@
 	<select id="EzApprovalGOpenGov.getOpenGovDocHref" parameterClass="Map" resultClass="String">
 		<![CDATA[
 		SELECT
-			href
+			TBL_ENDAPRDOCINFO.href
 		FROM
 			TBL_OPENGOVDOCINFO
 		INNER JOIN
@@ -26,7 +26,7 @@
 		WHERE
 			TBL_OPENGOVDOCINFO.docid = #docId#
 		AND
-			openflag <> '3';
+			openflag <> '3'
 	    ]]>
 	</select>
 

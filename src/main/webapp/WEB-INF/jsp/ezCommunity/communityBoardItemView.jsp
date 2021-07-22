@@ -317,7 +317,7 @@
 	            	if (CrossYN()) {
 						checkpassword_dialogArguments = new Array();
 	                    checkpassword_dialogArguments[1] = btn_Modify_Onclick_Complete;
-	                    var OpenWin = window.open("/ezCommunity/checkPassword.do?itemID=" + encodeURIComponent(pItemID), "CheckPassWord", GetOpenWindowfeature(340, 200));
+	                    var OpenWin = window.open("/ezCommunity/checkPassword.do?itemID=" + encodeURIComponent(pItemID), "CheckPassWord", GetOpenWindowfeature(470, 200));
 	                    try { OpenWin.focus(); } catch (e) { }
 	            	} else {
 	 					var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";

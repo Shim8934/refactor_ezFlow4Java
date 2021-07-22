@@ -439,6 +439,7 @@
   					method : "GET",
   					dataType : "text",
   					async : false,
+  					cache : false,
   					data : {
       					treeID : pTreeID ,
       					boardID :  pBoardID

@@ -1304,7 +1304,7 @@
 				    		var objTr = $("<tr id='TR_" + vo.writerId + "'></tr>").append($("<td style='width:5%'></td>"));
 			    			objTr.append($("<td style='max-width:10%; width:10%;' title ='" + vo.writerName + "'></td>").append($("<div style='width:60px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.writerName)));	
 			    			if(attitudeMapApiKey != "" && vo.latitude != "") {
-			    				objTr.append($("<td style='max-width:7%; width:7%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").html("<span>" + vo.startDate.substring(11,16) + "</span><img style='cursor:pointer' onclick='geolocation(" + vo.latitude + "," + vo.longitude +")' src='/images/ezSurvey/survey_result.png'>")));
+			    				objTr.append($("<td style='max-width:7%; width:7%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").html("<span>" + vo.startDate.substring(11,16) + "</span><img style='cursor:pointer;vertical-align: bottom;' onclick='geolocation(" + vo.latitude + "," + vo.longitude +")' src='/images/ezSurvey/survey_result.png'>")));
 			    			} else {
 			    				objTr.append($("<td style='max-width:7%; width:7%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").html("<span>" + vo.startDate.substring(11,16) + "</span>")));
 			    			}
@@ -1318,7 +1318,7 @@
 				    		var objTr = $("<tr id='TR_" + vo.writerId + "'></tr>").append($("<td style='width:5%'></td>"));
 			    			objTr.append($("<td style='max-width:10%; width:10%;' title ='" + vo.writerName + "'></td>").append($("<div style='width:60px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.writerName)));	
 			    			if(attitudeMapApiKey != "" && vo.latitude != "") {
-			    				objTr.append($("<td style='max-width:7%; width:7%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").html("<span class='AttRedText'>" +vo.startDate.substring(11,16) + "</span><img style='cursor:pointer' onclick='geolocation(" + vo.latitude + "," + vo.longitude + ")' src='/images/ezSurvey/survey_result.png'>")));
+			    				objTr.append($("<td style='max-width:7%; width:7%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").html("<span class='AttRedText'>" +vo.startDate.substring(11,16) + "</span><img style='cursor:pointer;vertical-align: bottom;' onclick='geolocation(" + vo.latitude + "," + vo.longitude + ")' src='/images/ezSurvey/survey_result.png'>")));
 			    			} else {
 			    				objTr.append($("<td style='max-width:7%; width:7%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").html("<span class='AttRedText'>" +vo.startDate.substring(11,16) + "</span>")));
 			    			}
@@ -1354,8 +1354,12 @@
 		    	//퇴근 리스트
 		    	endTimeList.forEach(function(vo, index) {
 		    		if (vo.typeId == "A08") { //조퇴
-			    		$("#TR_" + vo.writerId + " td:eq(3)").html("<div style='width:70px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'><span class='AttRedText'>" + vo.startDate.substring(11,16) + "</span></div>");
-
+		    			if(attitudeMapApiKey != "" && vo.latitude != "") {
+		    				$("#TR_" + vo.writerId + " td:eq(3)").html("<div style='width:70px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'><span class='AttRedText'>" + vo.startDate.substring(11,16) + "</span><img style='cursor:pointer;vertical-align: bottom;' onclick='geolocation(" + vo.latitude + "," + vo.longitude +")' src='/images/ezSurvey/survey_result.png'></div>")
+		    			} else {
+			    			$("#TR_" + vo.writerId + " td:eq(3)").html("<div style='width:70px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'><span class='AttRedText'>" + vo.startDate.substring(11,16) + "</span></div>");
+		    			}
+		    		
 			    		if ($("#TR_" + vo.writerId + " td:eq(4)").text() == "<spring:message code='ezAttitude.t113' />") {//지각이면 "지각,조퇴" 형태로 되게끔.
 		    				$("#TR_" + vo.writerId + " td:eq(4)").html("<div style='width:55px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'><spring:message code='ezAttitude.t113' />" + ", " + vo.typeName + "</div>");
 			    			$("#TR_" + vo.writerId + " td:eq(4)").attr("title", "<spring:message code='ezAttitude.t113' />" + ", " + vo.typeName);
@@ -1364,9 +1368,17 @@
 			    			$("#TR_" + vo.writerId + " td:eq(4)").attr("title", vo.typeName);
 		    			}
 		    		} else if (vo.typeId == "A25") { //전일퇴근
-		    			$("#TR_" + vo.writerId + " td:eq(3)").html("<div style='width:70px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>" + vo.startDate.substring(11,16) + " (" + Number(vo.startDate.substring(8,10)) + "일)" + "</div>");		    				
+		    			if(attitudeMapApiKey != "" && vo.latitude != "") {
+		    				$("#TR_" + vo.writerId + " td:eq(3)").html("<div style='width:86px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>" + vo.startDate.substring(11,16) + " (" + Number(vo.startDate.substring(8,10)) + "일)" + "<img style='cursor:pointer;vertical-align: bottom;' onclick='geolocation(" + vo.latitude + "," + vo.longitude +")' src='/images/ezSurvey/survey_result.png'></div>");
+		    			} else {
+		    				$("#TR_" + vo.writerId + " td:eq(3)").html("<div style='width:70px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>" + vo.startDate.substring(11,16) + " (" + Number(vo.startDate.substring(8,10)) + "일)" + "</div>");		    				
+		    			}
 		    		} else { //퇴근
-		    			$("#TR_" + vo.writerId + " td:eq(3)").html("<div style='width:70px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>" + vo.startDate.substring(11,16) + "</div>");		    				
+		    			if(attitudeMapApiKey != "" && vo.latitude != "") {
+		    				$("#TR_" + vo.writerId + " td:eq(3)").html("<div style='width:70px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>" + vo.startDate.substring(11,16) + "<img style='cursor:pointer;vertical-align: bottom;' onclick='geolocation(" + vo.latitude + "," + vo.longitude +")' src='/images/ezSurvey/survey_result.png'></div>");
+		    			} else {
+		    				$("#TR_" + vo.writerId + " td:eq(3)").html("<div style='width:70px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>" + vo.startDate.substring(11,16) + "</div>");		    				
+		    			}
 		    		}
 		    	});
 			}

@@ -1074,6 +1074,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				//Setting headers
 				response.setStatus(HttpServletResponse.SC_OK);
 				response.addHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+				response.setContentType("application/zip");
 				zipOutputStream = new ZipOutputStream(response.getOutputStream());
 				HashSet<String> nameList = new HashSet<>();
 				HashSet<String> folderNameList = new HashSet<>();

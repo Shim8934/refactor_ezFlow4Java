@@ -645,7 +645,7 @@
 							taskCommentList += "<td onclick='show_personinfo(" + commentorID + ")' style='padding-left:3px;'>&nbsp;<span style='cursor:pointer'>" + vo.commentorName + "</span></td>";	
 							
 							taskCommentList += "</td>";
-							taskCommentList += "<td style='text-align:left;vertical-align:middle;padding:10px;word-wrap:break-word;line-height:1.5'>"
+							taskCommentList += "<td style='white-space: pre-wrap;text-align:left;vertical-align:middle;padding:10px;word-wrap:break-word;line-height:1.5'>"
 												+ vo.comment + "&nbsp;&nbsp;";
 								
 							if ( typeof userInfoID == "undefined") {

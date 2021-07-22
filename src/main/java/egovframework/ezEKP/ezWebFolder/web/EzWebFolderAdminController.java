@@ -52,35 +52,42 @@ import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.rest.Rest;
+import egovframework.let.utl.rest.Rest.Module;
+import egovframework.let.utl.rest.Result;
 
 @Controller
 public class EzWebFolderAdminController extends EgovFileMngUtil {
+
+	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderAdminController.class);
+
 	@Autowired
 	private CommonUtil commonUtil;
-	
+
 	@Autowired
 	private Properties config;
-	
+
 	@Resource(name = "EzWebFolderAdminService")
 	private EzWebFolderAdminService ezWebFolderAdminService;
-	
+
 	@Resource(name = "EzWebFolderService")
 	private EzWebFolderService ezWebFolderService;
 
 	@Resource(name = "egovMessageSource")
 	private EgovMessageSource egovMessageSource;
-	
+
 	@Autowired
 	private EzCommonService ezCommonService;
 
 	@Autowired
 	private EzOrganService ezOrganService;
-	
+
 	@Autowired
 	private EzEmailService ezEmailService;
-	
-	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderAdminController.class);
-	
+
+	@Autowired
+	private Rest rest;
+
 	@RequestMapping(value = "/admin/ezWebFolder/webFolderMain.do", method = RequestMethod.GET)
 	public String webFolderMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("webFolderMain start");
@@ -477,25 +484,12 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 			model.addAttribute("primary", (String) resultBody.get("primary"));
 		}
 		
-		if (adminFlag.equalsIgnoreCase("user")){
-			String gwServerUrl2   = config.getProperty("config.webFolderGwServerURL");
-			String url2           = gwServerUrl + "/rest/ezwebfolder/check-folderManager/" + user.getId();
-			
-			HttpHeaders headers2  = new HttpHeaders();
-			headers2.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-			headers2.set("x-user-host", request.getServerName());
-			HttpEntity<?> entity2 = new HttpEntity<>(headers2);
-			
-			UriComponentsBuilder builder2  = UriComponentsBuilder.fromHttpUrl(url2);
-			RestTemplate rest2             = new RestTemplate();
-			ResponseEntity<String> result2 = rest.exchange(builder2.build().encode().toUri(), HttpMethod.GET, entity2, String.class);
-			
-			JSONObject resultBody2        = (JSONObject) jp.parse(result2.getBody());
-			String status2                 = resultBody2.get("status").toString();
-			
-			if (status2.equals("ok")) {
-				JSONArray folderListMap = (JSONArray) resultBody2.get("folderListMap");
-				model.addAttribute("folderListMap", folderListMap);
+		if (adminFlag.equalsIgnoreCase("user")) {
+			Result result2 = this.rest.gateway(Module.WEBFOLDER, request)
+					.url("/rest/ezwebfolder/check-folderManager/" + user.getId()).exchangeResult();
+
+			if (result2.succeeded()) {
+				model.addAttribute("folderListMap", result2.getDataAsJsonObject().get("folderListMap").getAsJsonArray());
 			}
 		}
 		

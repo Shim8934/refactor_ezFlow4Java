@@ -1515,6 +1515,10 @@
 		<isNotEmpty property="modappl">
 				,MODAPPL = #modappl#
 		</isNotEmpty>
+		<isNotEmpty property="latitude">
+			,LATITUDE = #latitude#
+			,LONGITUDE = #longitude#
+		</isNotEmpty>
 		<![CDATA[
 			WHERE
 				ATTITUDE_ID = #attitudeId#

@@ -639,7 +639,6 @@ public class EzWebFolderController_m {
 		param.put("sortType", orElse(request.getParameter("sortType") , ""));
 		param.put("sortColumn", orElse(request.getParameter("sortColumn") , ""));
 		
-		
 		JSONObject result = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + user.getId() + "/favorites", param, request, "get", null);
 		
 		logger.debug("getFavorites ended.");

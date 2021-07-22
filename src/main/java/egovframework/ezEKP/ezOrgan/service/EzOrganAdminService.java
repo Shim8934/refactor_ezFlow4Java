@@ -90,9 +90,9 @@ public interface EzOrganAdminService {
 	public void syncWithBizmekaTalkAccounts(int tenantID) throws Exception;
 	
 	public List<OrganUserVO> getUserList(int tenantID, int startPage, int maxItemPerPage, String keycode,String keyword,
-			String companyId, String sortColumn, String sortType) throws Exception;
+			String companyId, String sortColumn, String sortType, boolean[] searchFor) throws Exception;
 	
-	public int getUserCount(int tenantID,String keycode,String keyword,String companyId) throws Exception;
+	public int getUserCount(int tenantID, String keycode, String keyword, boolean[] searchFor, String companyId) throws Exception;
 	
 	public void updateProperty(String cn, String column, String number, String pClass, int tenantID, String mCondition) throws Exception;
 	

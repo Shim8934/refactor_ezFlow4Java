@@ -2157,4 +2157,415 @@
 		AND
 			DEPTID = #deptId#
 	</update>
+	
+	<select id="MApprovalG.checkChangeDocInfo" parameterClass="Map" resultClass="HashMap">
+		<![CDATA[ 
+			select
+			e.APRMEMBERSN ,
+			e.APRMEMBERID ,
+			e.APRMEMBERDEPTID ,
+			e.APRMEMBERJOBTITLE ,
+			case 
+				when (u.cn = null && a.CN = null) then 'Y'
+				else 'N'
+			end as changeYn
+		from
+			tbl_endaprlineinfo e
+		left join 
+			tbl_usermaster u on u.CN = e.APRMEMBERID and u.DEPARTMENT = e.APRMEMBERDEPTID  and u.EXTENSIONATTRIBUTE10 = e.APRMEMBERJOBTITLE 
+		left join 
+			tbl_addjobmaster a on a.CN = e.APRMEMBERID and a.DEPTID = e.APRMEMBERDEPTID	and (select j.displayname from tbl_user_jobmaster j where j.JOBID = a.JOBID ) = e.APRMEMBERJOBTITLE 
+		where
+			DOCID = #v_DOCID#
+		]]>
+	</select>
+	<select id="MApprovalG.getLastDocInfo" parameterClass="Map" resultClass="HashMap">
+		SELECT 
+			A.DOCID,
+			A.DOCNO,
+			A.DOCTITLE,
+			A.WRITERID,
+			A.WRITERNAME,
+			A.WRITERJOBTITLE,
+			A.WRITERDEPTID,
+			A.WRITERDEPTNAME,
+			A.FORMID,
+			B.FORMVERSION,
+			CASE WHEN B.FORMVERSION = F.FORMVERSION THEN 'N' ELSE 'Y' END AS FORMCHANGYN
+	    FROM 
+	    	TBL_ENDAPRDOCINFO A
+	    JOIN TBL_EXPENDAPRDOCINFO B ON B.TENANT_ID = A.TENANT_ID AND B.COMPANYID = A.COMPANYID AND A.DOCID = B.DOCID
+	    JOIN TBL_FORMINFO F ON F.FORMID = A.FORMID AND F.TENANT_ID = A.TENANT_ID AND F.COMPANYID = A.COMPANYID 	
+	    WHERE  
+	    	A.WRITERID = #v_WRITERID#
+	    AND
+	    	A.WRITERDEPTID = #v_WRITERDEPTID#
+	   	AND
+	   		A.COMPANYID = #v_COMPANYID#
+	   	AND
+	   		A.FORMID = #v_FORMID#
+	   	AND
+	   		A.TENANT_ID = #v_TENANTID#	
+	   	AND 
+			A.ORGDOCID is null	
+	   	ORDER BY STARTDATE DESC
+	   	LIMIT 1
+	</select>
+	<select id="MApprovalG.getEndDocInfo" parameterClass="Map" resultClass="HashMap">
+		SELECT 
+			*
+	    FROM 
+	    	TBL_ENDAPRDOCINFO 
+	    WHERE  
+	    	DOCID = #v_DOCID#
+	   	AND
+	   		COMPANYID = #v_COMPANYID#
+	</select>
+	<select id="MApprovalG.getEndDocInfoEx" parameterClass="Map" resultClass="HashMap">
+		SELECT 
+			*
+	    FROM 
+	    	TBL_EXPENDAPRDOCINFO 
+	    WHERE  
+	    	DOCID = #v_DOCID#
+	   	AND
+	   		COMPANYID = #v_COMPANYID#
+	</select>
+	<select id="MApprovalG.getEndDocLineInfo" parameterClass="Map" resultClass="HashMap">
+		SELECT 
+			*
+	    FROM 
+	    	TBL_ENDAPRLINEINFO 
+	    WHERE  
+	    	DOCID = #v_DOCID#
+	   	AND
+	   		COMPANYID = #v_COMPANYID#
+	   	ORDER BY
+	   		APRMEMBERSN
+	</select>
+	<select id="MApprovalG.getEndDocLineInfoEx" parameterClass="Map" resultClass="HashMap">
+		SELECT 
+			*
+	    FROM 
+	    	TBL_EXPENDAPRLINE 
+	    WHERE  
+	    	DOCID = #v_DOCID#
+	   	AND
+	   		COMPANYID = #v_COMPANYID#
+	</select>
+	<select id="MApprovalG.getEndReceiptDocInfo" parameterClass="Map" resultClass="HashMap">
+		SELECT 
+			*
+	    FROM 
+	    	TBL_ENDRECEIPTPOINTINFO 
+	    WHERE  
+	    	DOCID = #v_DOCID#
+	   	AND
+	   		COMPANYID = #v_COMPANYID#
+	</select>
+	<update id="MApprovalG.updateDocInfo" parameterClass="Map">
+		UPDATE TBL_APRDOCINFO SET
+			DOCID = #DOCID#,
+			FORMID = #FORMID#,
+			DOCTYPE = #DOCTYPE#,
+			DOCSTATE = #DOCSTATE#,
+			FUNCTIONTYPE = #FUNCTIONTYPE#,
+			HREF = #HREF#,
+			DOCTITLE = #DOCTITLE#,
+			HASATTACHYN = #HASATTACHYN#,
+			HASOPINIONYN = #HASOPINIONYN#,
+			STARTDATE = STR_TO_DATE(#STARTDATE#,'%Y-%m-%d %H:%i:%s'),
+			WRITERID = #WRITERID#,
+			WRITERNAME = #WRITERNAME#,
+			WRITERJOBTITLE = #WRITERJOBTITLE#,
+			WRITERDEPTID = #WRITERDEPTID#,
+			WRITERDEPTNAME = #WRITERDEPTNAME#,
+			ISPUBLIC = #ISPUBLIC#,
+			WRITERNAME2 = #WRITERNAME2#,
+			WRITERJOBTITLE2 = #WRITERJOBTITLE2#,
+			WRITERDEPTNAME2 = #WRITERDEPTNAME2#,
+			TENANT_ID = #TENANT_ID#,
+			COMPANYID = #COMPANYID#
+		WHERE 
+			DOCID = #DOCID# 
+		AND 
+			COMPANYID = #COMPANYID# 
+		AND 
+			TENANT_ID = #TENANT_ID#
+	</update>
+	<update id="MApprovalG.updateDocInfoEx" parameterClass="Map">
+		UPDATE TBL_EXPAPRDOCINFO SET
+		DOCID = #DOCID#,
+		SECURITYCODE = #SECURITYCODE#,
+		STORAGEPERIOD = #STORAGEPERIOD#,
+		KEYWORD = #KEYWORD#,
+		FORMNAME = #FORMNAME#,
+		COMPANYID = #COMPANYID#,
+		ITEMCODE = #ITEMCODE#,
+		ITEMNAME = #ITEMNAME#,
+		URGENTAPPROVAL = #URGENTAPPROVAL#,
+		SECURITYAPPROVAL = #SECURITYAPPROVAL#,
+		TEMPATTRIBUTE = #TEMPATTRIBUTE#,
+		STATUS = #STATUS#,
+		SPECIALRECORDCODE = #SPECIALRECORDCODE#,
+		PUBLICITYCODE = #PUBLICITYCODE#,
+		LIMITRANGE = #LIMITRANGE#,
+		PAGENUM = #PAGENUM#,
+		CABINETID = #CABINETID#,
+		TASKCODE = #TASKCODE#,
+		SEPERATEATTACHXML = #SEPERATEATTACHXML#,
+		SUMMARY = #SUMMARY#,
+		FORMNAME2 = #FORMNAME2#,
+		ITEMNAME2 = #ITEMNAME2#,
+		TENANT_ID = #TENANT_ID#,
+		PUBLICITYYN = #PUBLICITYYN#,
+		FORMVERSION = #FORMVERSION#
+		WHERE
+			DOCID = #DOCID# 
+		AND 
+			COMPANYID = #COMPANYID# 
+		AND 
+			TENANT_ID = #TENANT_ID#
+	</update>
+	<insert id="MApprovalG.insertDocLineInfo" parameterClass="Map">
+		INSERT INTO TBL_APRLINEINFO 
+		(
+		DOCID,
+		APRMEMBERSN,
+		APRTYPE,
+		APRSTATE,
+		APRMEMBERID,
+		APRMEMBERISDEPTYN,
+		APRMEMBERNAME,
+		APRMEMBERJOBTITLE,
+		APRMEMBERDEPTID,
+		APRMEMBERDEPTNAME,
+		APRMEMBERLDAPPATH,
+		RECEIVEDDATE,
+		PROCESSDATE,
+		REASONDONOTAPPROV,
+		ISPROPOSERYN,
+		ISBRIEFUSERYN,
+		APRMEMBERNAME2,
+		APRMEMBERJOBTITLE2,
+		APRMEMBERDEPTNAME2,
+		TENANT_ID,
+		COMPANYID
+		)
+		VALUES
+		(
+		#DOCID#,
+		#APRMEMBERSN#,
+		#APRTYPE#,
+		#APRSTATE#,
+		#APRMEMBERID#,
+		#APRMEMBERISDEPTYN#,
+		#APRMEMBERNAME#,
+		#APRMEMBERJOBTITLE#,
+		#APRMEMBERDEPTID#,
+		#APRMEMBERDEPTNAME#,
+		#APRMEMBERLDAPPATH#,
+		STR_TO_DATE(#RECEIVEDDATE#,'%Y-%m-%d %H:%i:%s'),
+		STR_TO_DATE(#PROCESSDATE#,'%Y-%m-%d %H:%i:%s'),
+		#REASONDONOTAPPROV#,
+		#ISPROPOSERYN#,
+		#ISBRIEFUSERYN#,
+		#APRMEMBERNAME2#,
+		#APRMEMBERJOBTITLE2#,
+		#APRMEMBERDEPTNAME2#,
+		#TENANT_ID#,
+		#COMPANYID#
+		)
+	</insert>
+	<insert id="MApprovalG.insertDocLineInfoEx" parameterClass="Map">
+		INSERT INTO TBL_EXPAPRLINE 
+		(
+		DOCID,
+		APRMEMBERSN,
+		ORGUSERID,
+		PROXYUSERID,
+		PROXYUSERNAME,
+		PROXYUSERJOBTITLE,
+		PROXYUSERDEPTID,
+		PROXYUSERDEPTNAME,
+		PROXYUSERNAME2,
+		PROXYUSERJOBTITLE2,
+		PROXYUSERDEPTNAME2,
+		TENANT_ID,
+		COMPANYID
+		)
+		VALUES
+		(
+		#DOCID#,
+		#APRMEMBERSN#,
+		#ORGUSERID#,
+		#PROXYUSERID#,
+		#PROXYUSERNAME#,
+		#PROXYUSERJOBTITLE#,
+		#PROXYUSERDEPTID#,
+		#PROXYUSERDEPTNAME#,
+		#PROXYUSERNAME2#,
+		#PROXYUSERJOBTITLE2#,
+		#PROXYUSERDEPTNAME2#,
+		#TENANT_ID#,
+		#COMPANYID#
+		)
+	</insert>
+	<insert id="MApprovalG.insertDocRecvInfo" parameterClass="Map">
+		INSERT INTO TBL_RECEIPTPOINTINFO 
+		(
+		DOCID,
+		RECEIPTPOINTID,
+		RECEIPTPOINTNAME,
+		EXTRECEPTYN,
+		PROCESSYN,
+		PROCESSSN,
+		CANEDITYN,
+		EXTRECEPTEMAIL,
+		RECEIPTMEMBERID,
+		RECEIPTMEMBERNAME,
+		PROCESSDATE,
+		RECEIPTMEMBERJOBTITLE,
+		DEPTMEMBERSN,
+		RECEIPTPOINTNAME2,
+		RECEIPTMEMBERJOBTITLE2,
+		RECEIPTMEMBERNAME2,
+		ROUTEYN,
+		TENANT_ID,
+		COMPANYID
+		)
+		VALUES
+		(
+		#DOCID#,
+		#RECEIPTPOINTID#,
+		#RECEIPTPOINTNAME#,
+		#EXTRECEPTYN#,
+		#PROCESSYN#,
+		#PROCESSSN#,
+		#CANEDITYN#,
+		#EXTRECEPTEMAIL#,
+		#RECEIPTMEMBERID#,
+		#RECEIPTMEMBERNAME#,
+		#PROCESSDATE#,
+		#RECEIPTMEMBERJOBTITLE#,
+		#DEPTMEMBERSN#,
+		#RECEIPTPOINTNAME2#,
+		#RECEIPTMEMBERJOBTITLE2#,
+		#RECEIPTMEMBERNAME2#,
+		#ROUTEYN#,
+		#TENANT_ID#,
+		#COMPANYID#
+		)
+	</insert>
+	
+	<select id="MApprovalG.formInfo" parameterClass="Map" resultClass="HashMap">
+		SELECT
+			*
+		FROM
+			TBL_FORMINFO
+		WHERE 
+			FORMID = #v_FORMID#
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #v_COMPANYID#
+	</select>
+	
+	<select id="MApprovalG.getUserInfo" parameterClass="Map" resultClass="HashMap">
+	SELECT
+		CN,
+		DISPLAYNAME,
+		MAIL,
+		DEPARTMENT,
+		DESCRIPTION,
+		DESCRIPTION2,
+		PHYSICALDELIVERYOFFICENAME,
+		COMPANY,
+		COMPANY2,
+		TITLE,
+		TITLE2,
+		TELEPHONENUMBER,
+		HOMEPHONE,
+		FACSIMILETELEPHONENUMBER,
+		MOBILE,
+		POSTALCODE,
+		STREETADDRESS,
+		POSITIONCD,
+		BIRTH,
+		BIRTHTYPE,
+		IPADDRESS,
+		LASTLOGIN,
+		LOGINCNT,
+		TENANT_ID,
+		MANUAL_FLAG,
+		LISTTYPE,
+		PASSWORD_UPDATEDT,
+		EXTENSIONPHONE,
+		OFFICEMOBILE
+	FROM
+	 	TBL_USERMASTER	
+	WHERE
+		CN = #v_CN# 
+	AND 
+		TENANT_ID = #v_TENANTID#
+	</select>
+	<select id="MApprovalG.informationSchemaColumns" parameterClass="Map" resultClass="HashMap">
+		SELECT
+		*
+		FROM
+		INFORMATION_SCHEMA.COLUMNS
+		WHERE 
+			TABLE_NAME = #v_TABLENAME#
+	</select>
+	<insert id="MApprovalG.saveAttachInfo" parameterClass="Map">
+		INSERT INTO 
+			TBL_APRATTACHINFO
+     	(  		
+			  DOCID ,
+              ATTACHFILESN ,
+              VIEWORDER ,
+              ATTACHFILENAME ,
+              ATTACHFILEHREF ,
+              ATTACHFILESIZE ,
+              ATTACHUSERID ,
+              ATTACHUSERNAME ,
+              ATTACHUSERJOBTITLE ,
+              ATTACHUSERDEPTID ,
+              ATTACHUSERDEPTNAME ,
+              PAGENUM ,
+              DISPLAYNAME ,
+              BODYATTACH ,
+              AttachUserName2 ,
+              AttachUserJobTitle2 ,
+              AttachUserDeptName2 ,
+	          TENANT_ID ,
+	          COMPANYID,
+			  ISBIGATTACH,
+			  ISBIGATTACHDEL,
+			  SAVEDATE
+		) VALUES (
+			  #v_DOCID# ,
+             #v_ATTACHFILESN# ,
+              #v_VIEWORDER# ,
+              #v_ATTACHFILENAME# ,
+              #v_ATTACHFILEHREF# ,
+              #v_ATTACHFILESIZE# ,
+              #v_ATTACHUSERID# ,
+              #v_ATTACHUSERNAME# ,
+              #v_ATTACHUSERJOBTITLE# ,
+              #v_ATTACHUSERDEPTID# ,
+              #v_ATTACHUSERDEPTNAME# ,
+              1 ,
+              #v_DISPLAYNAME# ,
+              'N' ,
+              #v_AttachUserName2# ,
+              #v_AttachUserJobTitle2# ,
+              #v_AttachUserDeptName2# ,
+	          #v_TENANTID# ,
+	          #v_COMPANYID# ,
+			  'N',
+			  'N',
+			  SUBSTR(DATE_FORMAT(SYSDATE(), '%Y/%m/%d'), 1, 10)
+		)
+	</insert>
 </sqlMap>

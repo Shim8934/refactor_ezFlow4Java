@@ -2425,4 +2425,24 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void addTblAdminReceiptGroupSubExtReceptYnColumn() throws Exception {
         ezCommonDAO.addTblAdminReceiptGroupSubExtReceptYnColumn();
     }
+
+	@Override
+	public void createTblCar() throws Exception {
+		ezCommonDAO.createTblCar();
+	}
+
+	@Override
+	public void createTblCarAcl() throws Exception {
+		ezCommonDAO.createTblCarAcl();
+	}
+
+	@Override
+	public void createTblCarAttach() throws Exception {
+		ezCommonDAO.createTblCarAttach();
+	}
+
+	@Override
+	public void createTblCarForm() throws Exception {
+		ezCommonDAO.createTblCarForm();
+	}
 }

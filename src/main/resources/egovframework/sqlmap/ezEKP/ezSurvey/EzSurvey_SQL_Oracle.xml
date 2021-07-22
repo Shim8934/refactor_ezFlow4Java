@@ -1111,6 +1111,9 @@
 			tenant_id
 		from tbl_survey_participant 
 			where survey_id = #surveyId# and company_id = #companyId# and tenant_id = #tenantId#
+			and ( (user_type = 'user' and user_id in (select cn from tbl_usermaster where tenant_id = #tenantId#)) 
+				or
+				  user_type != 'user' )
 	</select>
 	
 	<delete id="EzSurveyDAO.deleteSurveyUsers" parameterClass="SurveyVO">

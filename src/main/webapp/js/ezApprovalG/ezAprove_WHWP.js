@@ -18,6 +18,8 @@ var bbtnhistory = "";
 var bbtnDocInfo = "";
 var bbtnModAprDept = "";
 var bbtntotaldocinfo = "";
+var portNum = document.location.port == "" ? "" : ":" + document.location.port;
+var hostURL = document.location.protocol + "//" + document.location.hostname + portNum + "/ezApprovalG/downloadAttachForHwp.do?filePath=";
 function putBansongSign()
 {
 	var SingFlag = true;
@@ -140,8 +142,7 @@ function AprrovMappingSign(ret)
 					SignContent[signCnt] = ret;
 				}
 				
-				message.InsertPicture(habyui, document.location.protocol + "//" + document.location.hostname + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), AprrovMappingSign_after);
-				//SetDocumentElement(HwpCtrl, habyui, ret);
+				message.InsertPicture(habyui, hostURL + escape(ret), AprrovMappingSign_after);
 				
 				signCnt = signCnt + 1
 				SingFlag = true;
@@ -238,14 +239,13 @@ function AprrovMappingSign(ret)
 	  				message.PrependFieldText(signID, strLang7 + OpinionText);
 	  				content = strLang7 + OpinionText;
 	  				
-	  				message.InsertPicture(signID, document.location.protocol + "//" + document.location.hostname + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), AprrovMappingSign_after);
+	  				message.InsertPicture(signID, hostURL + escape(ret), AprrovMappingSign_after);
 
 	  				signInfo[signCnt] = signID;
 			        SignName[signCnt] = signID;
 			        SignType[signCnt] = "IMAGE";
 			        SignContent[signCnt] = ret +"::"+ arr_userinfo[2] + "\15" + s;
 			
-	  				//SetDocumentElement(HwpCtrl, signID, ret);
 	  				signCnt = signCnt + 1
 	  				SingFlag = true;
 	  			}
@@ -327,14 +327,13 @@ function AprrovMappingSign(ret)
 	  					contents = strLang7 + contents;
 	  				}
 	  				
-	  				message.InsertPicture(signID, document.location.protocol + "//" + document.location.hostname + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), AprrovMappingSign_after);
+	  				message.InsertPicture(signID, hostURL + escape(ret), AprrovMappingSign_after);
 	      
 	  				signInfo[signCnt] = signID;
 		            SignName[signCnt] = signID;
 		            SignType[signCnt] = "IMAGE";
 		            SignContent[signCnt] = ret+"::"+contents;
 		        
-	  				//SetDocumentElement(HwpCtrl, signID, ret);
 	  				signCnt = signCnt + 1
 	  				SingFlag = true;
 	  			}
@@ -1292,12 +1291,12 @@ function putSignXML(SignXML) {
 				} else if (SignType == "PROXY") {
 					message.PutFieldText(SignName, " ");
 					message.AppendFieldText(SignName, strLang8);
-					message.InsertPicture(SignName, document.location.protocol + "//" + document.location.hostname + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(SignCont), null);
+					message.InsertPicture(SignName, hostURL + escape(SignCont), null);
 				} else if (SignType == "IMAGE") {
 				    var img = SignCont.split("::");
 				    message.PutFieldText(SignName, "");
 					if(img.length >= 1) {
-					    message.InsertPicture(SignName, document.location.protocol + "//" + document.location.hostname + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(img[0]), null);
+					    message.InsertPicture(SignName, hostURL + escape(img[0]), null);
 					}
 				    if(img.length >= 2)
 				    	message.AppendFieldText(SignName, img[1]);

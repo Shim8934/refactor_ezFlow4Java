@@ -3142,7 +3142,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			returnValue.append("<VALUE> " + commonUtil.cleanValue(docXML.getElementsByTagName("APRTEMPLETNAME").item(k).getTextContent()) + "</VALUE>");
 			returnValue.append("<DATA1>" + docXML.getElementsByTagName("APRLINESN").item(k).getTextContent() + "</DATA1>");
 			returnValue.append("<DATA2>" + commonUtil.cleanValue(docXML.getElementsByTagName("APRTEMPLETNAME").item(k).getTextContent()) + "</DATA2>");
-			returnValue.append("<DATA3>" + docXML.getElementsByTagName("EXTRECEPTYN").item(k).getTextContent() + "</DATA3>");
 			returnValue.append("</CELL>");
 			returnValue.append("</ROW>");
 		}
@@ -30877,6 +30876,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
     		bodyContent.append("docID=" + xmlDom.getElementsByTagName("DOCID").item(0).getTextContent());
     		bodyContent.append("&id=" + targetUserID + "&name=" + targetUserName + "&deptID=" + targetUserDeptID);
     		bodyContent.append("&allFlag=0&mailchk=Y&orgCompanyID=" + targetUserCompanyID);
+    		bodyContent.append("' data-id='" + xmlDom.getElementsByTagName("DOCID").item(0).getTextContent() + "'"+ "data-comp='" + targetUserCompanyID);
     		bodyContent.append("' onclick ='javascript:mail_link();' style='cursor: pointer; font-size: 15px; color: blue;' target='_blank'><br>");
     		bodyContent.append(messageSource.getMessage("ezEmail.csj15", userInfo.getLocale())); //결재 문서 바로가기 링크
     		bodyContent.append("</a><br><br>");
@@ -32502,6 +32502,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					bodyContent.append("docID=" + xmlDom.getElementsByTagName("DOCID").item(0).getTextContent());
 					bodyContent.append("&id=" + targetUserID + "&name=" + targetUserName + "&deptID=" + targetUserDeptID);
 					bodyContent.append("&allFlag=0&mailchk=Y&orgCompanyID=" + targetUserCompanyID);
+					bodyContent.append("' data-id='" + xmlDom.getElementsByTagName("DOCID").item(0).getTextContent() + "'"+ "data-comp='" + targetUserCompanyID);
 					bodyContent.append("' onclick ='javascript:mail_link();' style='cursor: pointer; font-size: 15px; color: blue;' target='_blank'><br>");
 					bodyContent.append(messageSource.getMessage("ezEmail.csj15", userInfo.getLocale())); //결재 문서 바로가기 링크
 					bodyContent.append("</a><br><br>");
@@ -32522,6 +32523,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					bodyContent.append("docID=" + xmlDom.getElementsByTagName("DOCID").item(0).getTextContent());
 					bodyContent.append("&id=" + targetUserID + "&name=" + targetUserName + "&deptID=" + targetUserDeptID);
 					bodyContent.append("&allFlag=0&mailchk=Y&orgCompanyID=" + targetUserCompanyID);
+					bodyContent.append("' data-id='" + xmlDom.getElementsByTagName("DOCID").item(0).getTextContent() + "'"+ "data-comp='" + targetUserCompanyID);
 					bodyContent.append("' onclick ='javascript:mail_link();' style='cursor: pointer; font-size: 15px; color: blue;' target='_blank'><br>");
 					bodyContent.append(messageSource.getMessage("ezEmail.csj15", userInfo.getLocale())); //결재 문서 바로가기 링크
 					bodyContent.append("</a><br>");

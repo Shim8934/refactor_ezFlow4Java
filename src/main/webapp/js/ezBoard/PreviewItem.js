@@ -368,6 +368,9 @@ function ItemPreviewRead(obj) {
         document.getElementById('spn_title' + obj.id.split('_')[2]).style.fontWeight = "normal";
         //document.getElementById('spn_content' + obj.id.split('_')[2]).style.fontWeight = "normal"; // 게시판 > 썸네일게시판  > PreViewH사용시 스크립트오류 발생시킨부분 주석
     }
+    if (document.getElementById('spn_content' + obj.id.split('_')[2]) != null) {
+    	document.getElementById('spn_content' + obj.id.split('_')[2]).style.fontWeight = "normal";
+    }
     if (previewType == "PHOTO" || previewType == "MOVIE" || (obj.getAttribute("DATA10") == "3" || obj.getAttribute("DATA10") == "4" || obj.getAttribute("DATA10") == "7")) {
         clickPreviweType = "PHOTO";
         if (document.getElementById("previewmail_bar_h") != null)
