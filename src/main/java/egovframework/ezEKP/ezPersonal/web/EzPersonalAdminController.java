@@ -1047,11 +1047,12 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		logger.debug("year: " + year);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userPrimaryLang = userInfo.getPrimary();
 		
 		List<PersonalEmpMonthVO> list = ezPersonalAdminService.getEmpMonth(year, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		for (PersonalEmpMonthVO vo : list) {
-			if (userInfo.getPrimary().equals("2")) {
+			if (!userPrimaryLang.equals("1")) {
 				vo.setDisplayName(vo.getDisplayName2());
 				vo.setTitle(vo.getTitle2());
 				vo.setDescription(vo.getDescription2());
