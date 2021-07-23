@@ -1637,7 +1637,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	container.put(new BasicAttribute( "sAMAccountName", map.get("v_CN") ));
     	container.put(new BasicAttribute( "displayName", map.get("v_DISPLAYNAME").toString().trim() ));
     	container.put(new BasicAttribute( "description", map.get("v_DISPLAYNAME").toString().trim() ));
-    	container.put(new BasicAttribute( "groupType", Integer.toString( UNIVERSAL_GROUP + SECURITY_ENABLED ) ));
+    	container.put(new BasicAttribute( "groupType", Integer.toString( ACCOUNT_GROUP + SECURITY_ENABLED ) ));
     	    	
 
     	if (!map.get("v_EXTATTR4").toString().equalsIgnoreCase("")) {

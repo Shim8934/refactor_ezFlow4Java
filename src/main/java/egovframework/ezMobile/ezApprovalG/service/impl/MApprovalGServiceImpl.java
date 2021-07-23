@@ -391,14 +391,15 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	}
 	
 	@Override
-	public MApprovalGDocInfoVO getAprMemberSn(String docId, String type, String companyId, int tenantId) throws Exception {
+	public MApprovalGDocInfoVO getAprMemberSn(String docId, String type, MCommonVO userInfo) throws Exception {
 		LOGGER.debug("getAprDocInfo started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("docID", docId);
 		map.put("type", type);
-		map.put("tenantID", tenantId);
-		map.put("companyID", companyId);
+		map.put("tenantID", userInfo.getTenantId());
+		map.put("companyID", userInfo.getCompanyId());
+		map.put("userID", userInfo.getUserId());
 		
 		MApprovalGDocInfoVO approvalGDocInfoVO = new MApprovalGDocInfoVO();
 		

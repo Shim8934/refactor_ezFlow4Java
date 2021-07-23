@@ -2001,6 +2001,8 @@
 					COMPANYID = #companyID#
 				AND
 					DOCID = #docID#
+				AND
+					APRMEMBERSN IN (SELECT APRMEMBERSN FROM TBL_APRDOCINFO WHERE APRMEMBERID = #userID#)
 			]]>
 				LIMIT
 					1

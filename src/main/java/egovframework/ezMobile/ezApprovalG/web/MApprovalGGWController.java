@@ -1001,7 +1001,7 @@ public class MApprovalGGWController {
 	    		scheme = "https://";
 	    	}
 			//결재문서정보
-			MApprovalGDocInfoVO approvalGDocInfoVO = mApprovalGService.getAprMemberSn(docId, type,userInfo.getCompanyId(), userInfo.getTenantId());
+			MApprovalGDocInfoVO approvalGDocInfoVO = mApprovalGService.getAprMemberSn(docId, type, userInfo);
 			
 			JSONObject totalData = new JSONObject();
 			
