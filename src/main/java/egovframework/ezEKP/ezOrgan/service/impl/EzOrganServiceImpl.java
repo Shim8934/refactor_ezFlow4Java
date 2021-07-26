@@ -1530,6 +1530,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	        stb.append("<COMPANY>");
 	        stb.append(commonUtil.cleanValue(userVO.getCompany()));
 	        stb.append("</COMPANY>");		           
+	        stb.append("<EXTENSIONATTRIBUTE10></EXTENSIONATTRIBUTE10>");		           
 			stb.append("</ROW>");
 			strXML = stb.toString();
 		}
