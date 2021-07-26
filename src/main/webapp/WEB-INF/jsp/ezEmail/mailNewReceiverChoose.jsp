@@ -4338,8 +4338,8 @@
 	                    </tr>
 	                </table>
 	            </td>
-	          <!--   <td style="vertical-align: top;"> -->
-	               <!--  <table id="listType1" style="margin-top:1px;"> -->
+	             <td style="vertical-align: top;">
+	                <table id="listType1" style="margin-top:1px;">
 	                    <tr id="ListMsgTo">
 	                        <td style="width: 30px; text-align: center;">
 	                            <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0"
@@ -4392,8 +4392,8 @@
 	                            </div>
 	                        </td>
 	                    </tr>
-	                <!-- </table> -->
-	        <!--     </td> -->
+	                 </table> 
+	             </td> 
 	        </tr>
 	    </table>
 	    <table style="width: 100%; text-align: center;">
