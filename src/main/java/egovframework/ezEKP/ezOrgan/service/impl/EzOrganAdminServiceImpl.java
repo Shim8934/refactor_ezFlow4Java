@@ -1615,6 +1615,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
 		
+		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		date.setTimeZone(TimeZone.getTimeZone("GMT"));
+		String nowDate = date.format(new Date());
+		map.put("nowDate", nowDate);
+		
 		try {
 			ezOrganAdminDao.updateTitle(map);	//TBL_USER_JOBMASTER
 			ezOrganAdminDao.updateTitle2(map);	//TBL_USERMASTER
