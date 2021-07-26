@@ -270,9 +270,7 @@ function TreeViewNodeClick2(pNodeID, pNodeNM) {
 
     var treeNode = new TreeNode();
     treeNode.LoadFromID(nodeIdx);
-    if (approvalFlag == 'S') {
-    	RdisplayUserList(treeNode.GetNodeData("CN"));
-    }
+	RdisplayUserList(treeNode.GetNodeData("CN"));
 }
 function RequestData2(pNodeID, pTreeID) {
     nodeIdx = pNodeID;
@@ -522,11 +520,11 @@ function AprLineAddDept(nodeIdx, tr) {
     var isCurretnCompany = "N";
     var Resultxml = "";
     Resultxml.async = false;
-    if(approvalFlag == "G") {
-    	Resultxml = loadXMLFile(strLangEtcFile1);
-    } else {
+//    if(approvalFlag == "G") {
+//    	Resultxml = loadXMLFile(strLangEtcFile1);
+//    } else {
     	Resultxml = loadXMLFile(strLangEtcFileliban1);
-    }	
+//    }	
     var treeNode = new TreeNode();
     treeNode.LoadFromID(nodeIdx);
     var deptid = treeNode.GetNodeData("CN");
@@ -644,11 +642,11 @@ function AprLineAddDept_User(pSelectedRow) {
     var isCurretnCompany = "N";
     var Resultxml ="";
     Resultxml.async = false;
-    if(approvalFlag == "G") {
-    	Resultxml = loadXMLFile(strLangEtcFile1);
-    } else {
+//    if(approvalFlag == "G") {
+//    	Resultxml = loadXMLFile(strLangEtcFile1);
+//    } else {
     	Resultxml = loadXMLFile(strLangEtcFileliban1);
-    }	
+//    }	
 
     var listview = new ListView();
     listview.LoadFromID("lvRECEPTLIST");
@@ -809,15 +807,15 @@ function searchUserList2(search) {
     try {
         var searchdoc = document.getElementById("textUser2");
         var strSearch = searchdoc.value + "";
-        if (textUser.value == "") {
+        if (searchdoc.value == "") {
             var pAlertContent = linealt3;
             OpenAlertUI(pAlertContent);
-            textUser.focus();
+            searchdoc.focus();
         }
         else if (strSearch.length < 2) {
             var pAlertContent = linealt4;
             OpenAlertUI(pAlertContent);
-            textUser.focus();
+            searchdoc.focus();
         }
         else {
     		$.ajax({
@@ -1628,7 +1626,11 @@ function AprLineAddDeptG_New(outDeptID) {
 		createNodeAndAppandNodeText(ResultXml, Header, HData, "WIDTH", "35");
 		
 		Header = createNodeAndAppandNode(ResultXml, Headers, Header, "HEADER");
-		createNodeAndAppandNodeText(ResultXml, Header, HData, "NAME", "수신자명");
+		createNodeAndAppandNodeText(ResultXml, Header, HData, "NAME", "수신부서명");
+		createNodeAndAppandNodeText(ResultXml, Header, HData, "WIDTH", "200");
+		
+		Header = createNodeAndAppandNode(ResultXml, Headers, Header, "HEADER");
+		createNodeAndAppandNodeText(ResultXml, Header, HData, "NAME", "수신자성명");
 		createNodeAndAppandNodeText(ResultXml, Header, HData, "WIDTH", "200");
 		
 		//ROW만들기
@@ -1656,6 +1658,9 @@ function AprLineAddDeptG_New(outDeptID) {
 		Cell = createNodeAndAppandNode(ResultXml, Row, Cell, "CELL");
 		createNodeAndAppandNodeText(ResultXml, Cell, Value, "VALUE", ldapDeptInfo);
 		
+		Cell = createNodeAndAppandNode(ResultXml, Row, Cell, "CELL");
+		createNodeAndAppandNodeText(ResultXml, Cell, Value, "VALUE", "");
+
 		var InitTr = listView.GetDataRows();
 		var MaxID = 0;
 		var CurID = 0;
@@ -2492,11 +2497,11 @@ function AddOrgan(_OrganId, _OrganName) {
         var isCurretnCompany = "N";
         var Resultxml = "";
         Resultxml.async = false;
-        if(approvalFlag == "G") {
-        	Resultxml = loadXMLFile(strLangEtcFile1);
-        } else {
+//        if(approvalFlag == "G") {
+//        	Resultxml = loadXMLFile(strLangEtcFile1);
+//        } else {
         	Resultxml = loadXMLFile(strLangEtcFileliban1);
-        }	
+//        }	
 
         var treeNode = new TreeNode();
         treeNode.LoadFromID(nodeIdx);
