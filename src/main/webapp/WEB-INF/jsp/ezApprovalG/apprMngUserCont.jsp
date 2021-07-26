@@ -242,11 +242,11 @@
                 para[0] = type;
                 getcontname_dialogArgument[0] = para;
                 getcontname_dialogArgument[1] = getContName_Complete;
-                DivPopUpShow(340, 200, windowName)
+                DivPopUpShow(330, 205, windowName)
             }
             else {
-                var parameter = "status:no;dialogWidth:340px;dialogHeight:200px;scroll:no;edge:sunken";
-                parameter = parameter + GetShowModalPosition(340, 200);
+                var parameter = "status:no;dialogWidth:330px;dialogHeight:205px;scroll:no;edge:sunken";
+                parameter = parameter + GetShowModalPosition(330, 205);
                 var ret = window.showModalDialog(windowName, "", parameter);
                 return ret;
             }
