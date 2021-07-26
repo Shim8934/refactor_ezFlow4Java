@@ -44,14 +44,14 @@
 		            txtPageNum.focus();
 		            return;
 		        }
-		        if (p_AprDeptTempletName == "") {
+		        if (!p_AprDeptTempletName) {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t290'/>";
 		            OpenAlertUI(pAlertContent);
 		            txtPageNum.focus();
 		            return;
 		        }
 
-		        if (p_DisplayName == "") {
+		        if (!p_DisplayName == "") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t291'/>";
 		            OpenAlertUI(pAlertContent);
 		            txtDisplayName.focus();

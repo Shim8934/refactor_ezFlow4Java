@@ -124,7 +124,7 @@
                 }
                 else {            
                     ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
-                    DivPopUpShow(325, 185, url);
+                    DivPopUpShow(330, 193, url);
                 }
             }
             else {
