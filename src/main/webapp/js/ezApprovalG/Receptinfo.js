@@ -2237,11 +2237,11 @@ function CheckLen(pStr, pSize) {
 function AprLineAddDeptAddress(AddressName) {
 	//2017-03-28 이효민
     //Resultxml.async = false;
-    if(approvalFlag == "G") {
-    	Resultxml = loadXMLFile(strLangEtcFile1);
-    } else {
+    // if(approvalFlag == "G") {
+    // 	Resultxml = loadXMLFile(strLangEtcFile1);
+    // } else {
     	Resultxml = loadXMLFile(strLangEtcFileliban1);
-    }	
+    // }
 
     var listview = new ListView();
     listview.SetID("lvRECEPTLIST");
