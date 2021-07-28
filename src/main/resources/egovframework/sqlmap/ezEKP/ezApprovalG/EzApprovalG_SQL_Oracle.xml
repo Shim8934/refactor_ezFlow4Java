@@ -4269,8 +4269,6 @@
              	(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
                 AND
                     TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
-                AND
-                    PROCESSORID IS NULL)
             </isEqual>
             	 ) ORDER BY PROCESSDATE $v_BASICORDER$
 		</isEqual>
@@ -11390,9 +11388,7 @@
    			OR 
    				(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
                 AND
-                    TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
-                AND
-                    PROCESSORID IS NULL)
+                    TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015'))
       		AND	
 		   		TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
    		</isEqual>
@@ -16889,9 +16885,7 @@
 			 	OR
 			 		(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN (#v_DEPTIDS#)
                 AND
-                    TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
-                AND
-                    PROCESSORID IS NULL)
+                    TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015'))
 			</isEqual>
 				)
 		</isEqual>
@@ -32956,7 +32950,7 @@
 		   		AND 
 		   			(((TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# AND TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#)
 		   		AND 
-		   			(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '011'))
+		   			(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'))
 		   			
 	   		<isEqual property="v_USERFLAG" compareValue="admin">
 	   			OR 
@@ -32967,9 +32961,7 @@
 	   						#v_DEPTIDS[]#
 	   					</iterate>
                         AND
-                            TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
-                        AND
-                            PROCESSORID IS NULL)
+                            TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015'))
 	   		</isEqual>
 	   		<isEqual property="v_aprFlag" compareValue="G">
 		     	OR
