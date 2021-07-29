@@ -298,6 +298,7 @@
  	var theme2 = true;
  	var WorkspaceUrl = "${workspaceHostUrl}"; // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
     var workspaceContextRootUrl = "${workspaceContextRootUrl}";
+    var userLang = "<c:out value='${userLang}'/>";
  	
  	var quickLinkPage = {
  		current: 1,
@@ -789,7 +790,74 @@
 		}
 	}
 	
-	var settingPortalInterval = function () {
+	var refreshInterval = "<c:out value='${usePortalAutoRefreshInterval}'/>";
+	var pRefreshInterval = 0;
+	var pRefreshIntervalTimerId = 0; // interval id
+	var pRefreshTimeOutTimerId = 0; // setTimeout id
+	var pNextRefreshTime = 0;
+	
+	var setPortalRefresh = function() { // set 포탈 자동 새로고침
+		if (refreshInterval == null || refreshInterval == "0") { return; }
+		
+		pRefreshInterval = parseInt(refreshInterval) * 60000;
+		setRefreshTimer();
+		
+		if ('hidden' in document) {
+			document.addEventListener('visibilitychange', onVisibilityChange);
+			nextRefreshTime();
+		}
+	}
+	
+	var setRefreshTimer = function() { // set 새로고침 Interval
+		if (pRefreshIntervalTimerId != 0) {
+			clearInterval(pRefreshIntervalTimerId);
+			pRefreshIntervalTimerId = 0;
+		}
+		
+		if (pRefreshInterval != 0) {
+			pRefreshIntervalTimerId = setInterval(function() {
+				refreshPage();
+			}, pRefreshInterval);
+		}
+	}
+	
+	var onVisibilityChange = function() {
+		 var remainingTime = pNextRefreshTime - getCurrentTime();
+		
+		 if (!document.hidden) { // 페이지 상태가 보임으로 변경될 때의 처리
+			if (remainingTime <= 0) { // 다음 번 갱신 시간이 이미 지났으면 즉시 목록 갱신을 수행하고 갱신 타이머를 설정한다.
+				refreshPage();
+			} else { // 다음 번 갱신 시간이 아직 남아 있으면 해당 시간에 갱신이 되도록 타이머를 등록한다.
+				pRefreshTimeOutTimerId = setTimeout(function() {
+					refreshPage();
+				}, remainingTime);
+			}			 
+		 } else { // 페이지 상태가 숨김으로 변경될 때의 처리   
+            if (pRefreshIntervalTimerId != 0) { // interval 목록 갱신 타이머를 제거한다.
+                clearInterval(pRefreshIntervalTimerId);
+                pRefreshIntervalTimerId = 0;
+            }
+		 
+		 	if (pRefreshTimeOutTimerId != 0) { // setTimeout 제거
+		 		clearTimeout(pRefreshTimeOutTimerId);
+		 		pRefreshTimeOutTimerId = 0;
+		 	}
+		 }
+	}
+	
+	var nextRefreshTime = function() { // 다음 새로고침 시각 구하기
+		pNextRefreshTime = getCurrentTime() + pRefreshInterval;
+	}
+	
+	var refreshPage = function () { // 포탈 로드
+		parent.document.getElementById("mainFrame").contentWindow.location.reload(true);
+	}
+	
+	function getCurrentTime() {
+        return new Date().getTime();		        
+    }
+	
+	/* var settingPortalInterval = function () {
 		var refreshInterval = "<c:out value='${usePortalAutoRefreshInterval}'/>";
 		
 		if (refreshInterval != null && refreshInterval != "0") {
@@ -797,7 +865,7 @@
 				parent.document.getElementById("mainFrame").contentWindow.location.reload(true);
 			}, Number(refreshInterval) * 60000);
 		}
-	}
+	} */
 	
 	$(function() {
 		$("#featured").orbit();
@@ -976,7 +1044,7 @@
 		assembleScheduleList(pScheduleList);
 		
 		schedule_get_holiday_top(); // getholiday를 2번 부른다. 1번만 호출하도록 수정할 필요 있음.
-		settingPortalInterval();
+		setPortalRefresh();
 	});
 </script>
 <!-- 협업 시작-->

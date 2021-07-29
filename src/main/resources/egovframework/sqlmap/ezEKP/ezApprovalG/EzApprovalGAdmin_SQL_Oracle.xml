@@ -960,7 +960,8 @@
 					TBL_AUTODOCNUM_ITEM.useFlag,
 					TBL_AUTODOCNUM_ITEM.keepPeriodCode,
 					aproption,
-					SIHANGTYPE
+					SIHANGTYPE,
+					formxslt
 				FROM
 					TBL_FORMINFO
 				JOIN 
@@ -1727,7 +1728,8 @@
 				aprOption,
 				tenant_id,
 				companyid,
-                SIHANGTYPE)
+                SIHANGTYPE,
+				formxslt)
 			VALUES
 				(#v_PFORMCONTAINERID#,
 				#v_PFORMID#,
@@ -1742,7 +1744,8 @@
 				#v_formAprOption#,
 				#tenantID#,
 				#companyID#,
-                #v_FORMSIHANGTYPE#)
+                #v_FORMSIHANGTYPE#,
+				#v_FORMXSLT#)
 		]]>
 	</insert>
 
@@ -1762,7 +1765,8 @@
 				formversion = formversion + 1,
 				aprOption = #v_formAprOption#,
 				passaprlineflag = #v_PPASSAPRLINEFLAG#,
-                SIHANGTYPE = #v_FORMSIHANGTYPE#
+                SIHANGTYPE = #v_FORMSIHANGTYPE#,
+				formxslt = #v_FORMXSLT#
 			WHERE
 				tenant_id = #tenantID#
 			AND
@@ -2758,7 +2762,8 @@
 				deptname,
 				deptname2,
 				companyid,
-				tenant_id)
+                tenant_id,
+                extreceptyn)
 			VALUES 
 				(#v_MAINID#,
 				(SELECT
@@ -2769,7 +2774,8 @@
 				#v_DEPTNAME#,
 				#v_DEPTNAME2#,
 				#v_COMPANYID#,
-				#tenantID#)
+                #tenantID#,
+                #v_EXTRECEPTYN#)
 		]]>
 	</insert>
 	

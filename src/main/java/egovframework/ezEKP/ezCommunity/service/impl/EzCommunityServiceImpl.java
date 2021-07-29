@@ -1089,7 +1089,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			/* 2018-05-07 홍승비 - 커뮤니티 설문조사 체크박스 사용 (삭제를 위한 해당설문ID, 등록자ID, 커뮤니티ID) */
 			sb.append("<td><input type=\"checkbox\" id=\"" + item.getManagerID()+ ";\" pollRegID=\"" + item.getPollRegUser() + "\" clubNo=\"" + item.getC_clubNo() + "\"/></td>");			
 			sb.append("<td style=\"text-overflow:ellipsis;overflow:hidden;white-space:nowrap;\" title=\"" + commonUtil.cleanValue(item.getPollSubject()).replaceAll("\\\\", "&#92;") + "\">");
-			sb.append("<a style = \"cursor:pointer\" onclick=movepage(\"" + code + "\",\"" + item.getManagerID() + "\",\"" + pollState + "\")>" + commonUtil.cleanValue(item.getPollSubject()).replaceAll("\\\\", "&#92;") + "</a></td>");
+			sb.append("<a style = \"cursor:pointer\" onclick=movepage(\"" + code + "\",\"" + item.getManagerID() + "\",\"" + pollState.replaceAll(" ", "&nbsp;") + "\")>" + commonUtil.cleanValue(item.getPollSubject()).replaceAll("\\\\", "&#92;") + "</a></td>");
 			sb.append("<td>" + commonUtil.getDateStringInUTC(item.getPollStartDate().substring(0,19), offset, false).substring(0, 10) + " ~ " + commonUtil.getDateStringInUTC(item.getPollEndDate().substring(0,19), offset, false).substring(0, 10) + "</td>");
 			sb.append("<td>" + strResponseCnt + egovMessageSource.getMessage("ezCommunity.t478", userInfo.getLocale()) + "</td>");
 			sb.append("<td>" + pollState + "</td>");
@@ -3687,7 +3687,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 
         	String nowDate = commonUtil.getTodayUTCTime("");
         	
-        	bbsEditOkInsert(bName.toUpperCase(), myRef, newStep, newLevel, attachList, number, textContent, nowDate, fileName, code, userInfo.getCompanyID(), userInfo.getId(), userNm, userNm2, title, maxIdFieldName, userInfo.getTenantId());
+        	/* 2021-06-28 홍승비 - mode가 write이고 no가 존재하는 답변 공지사항 등록 시, 부모 no 데이터를 UPPERNO 칼럼에 저장하도록 수정 */
+        	bbsEditOkInsert(bName.toUpperCase(), myRef, newStep, newLevel, attachList, number, textContent, nowDate, fileName, code, userInfo.getCompanyID(), userInfo.getId(), userNm, userNm2, title, maxIdFieldName, no, userInfo.getTenantId());
         	
         	try{
         		File dir = new File(commonUtil.detectPathTraversal(dirPath));
@@ -6797,7 +6798,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug("bbsEditOkSet2 ended.");
 	}
 	
-	public void bbsEditOkInsert(String bName, int myRef, int newStep, int newLevel, String attachList, int number, String textContent, String nowDate, String fileName, String code, String companyID, String id, String userNm, String userNm2, String title, String maxIdFieldName, int tenantID) throws Exception {
+	public void bbsEditOkInsert(String bName, int myRef, int newStep, int newLevel, String attachList, int number, String textContent, String nowDate, String fileName, String code, String companyID, String id, String userNm, String userNm2, String title, String maxIdFieldName, String no, int tenantID) throws Exception {
 		logger.debug("bbsEditOkInsert started.");
 /*		logger.debug("bName : " + bName + ", myRef : " + myRef + ", newStep : " + newStep + ", newLevel : " + newLevel + ", attachList : " + attachList + ", number : " + number);
 		logger.debug(", textContent : " + textContent + ", nowDate : " + nowDate + ", fileName : " + fileName + ", code : " + code + ", companyID : " + companyID + ", id : " + id);
@@ -6820,6 +6821,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_USERINFO_DISPLAYNAME2", userNm2);
 		map.put("v_TITLE", title);
 		map.put("v_MAXIDFIELDNAME", maxIdFieldName);
+		map.put("v_NO", no); // TBL_C_BOARD에 등록될 공지사항 답변인 경우, 전달받은 부모 공지사항의 no값이 존재한다면 UPPERNO 칼럼에 기록
 		map.put("tenantID", tenantID);
 		
 		ezCommunityDAO.bbsEditOkInsert(map);
@@ -7656,7 +7658,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			String communityID = sendPostNoticeMailGet1(boardID);
 			String subject = "[Community " + egovMessageSource.getMessage("ezCommunity.t127", locale) + boardInfo.getBoardName() + "] " + vo.getTitle();
 			bodyContent.append("<br>" + egovMessageSource.getMessage("ezCommunity.t126", locale) + "<br><br>");
-			bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t117", locale) + boardInfo.getBoardName());
+			bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t117", locale) + commonUtil.cleanValue(boardInfo.getBoardName()));
 			/* 2018-04-30 이소담 - 커뮤니티 > 답변 알림메일 송부 > 메일 > 게시일자, 게시자, 비정상적으로 표시되어서 수정 */
 //			bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t118", locale) + EgovDateUtil.getToday(""));
 			bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t118", locale) + vo.getWriteDate());
@@ -7728,5 +7730,16 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		logger.debug("getReaderListCount ended");
 		return ezCommunityDAO.getReaderListCount(map);
+	}
+	
+	public int bbsGetReplyItemCnt(String itemNo, int tenantID) throws Exception {
+		logger.debug("getReaderListCount started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_NO", itemNo); // 커뮤니티 공지사항의 PRI KEY는 NO 하나
+		map.put("v_TENANTID", tenantID);
+		
+		logger.debug("getReaderListCount ended");
+		return ezCommunityDAO.bbsGetReplyItemCnt(map);
 	}
 }

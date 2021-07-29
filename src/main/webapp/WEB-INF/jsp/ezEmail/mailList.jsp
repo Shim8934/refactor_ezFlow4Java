@@ -1406,8 +1406,14 @@
 									<select name="select" class="text" id="selectDetail3" style="height: 25px;margin-right: 3px;width: 86px;">
 										<option value="SUBJECT"><spring:message code="ezEmail.t98" /></option> 
 										<option value="CONTENT"><spring:message code="ezEmail.t649" /></option> 
-										<option selected value="FROM"><spring:message code="ezEmail.t161" /></option> 
-										<option value="RECEIVE"><spring:message code="ezEmail.t651" /></option> 
+										<c:if test="${isSentItems != true}">
+											<option selected value="FROM"><spring:message code="ezEmail.t161" /></option> 
+											<option value="RECEIVE"><spring:message code="ezEmail.t651" /></option> 
+										</c:if>
+										<c:if test="${isSentItems == true}">
+											<option value="FROM"><spring:message code="ezEmail.t161" /></option> 
+											<option selected value="RECEIVE"><spring:message code="ezEmail.t651" /></option> 
+										</c:if>
 										<option value="FILE"><spring:message code="ezEmail.pyy12" /></option> 
 									</select>
 								</li>
@@ -1831,7 +1837,7 @@
 			this.usepostDate = true;
 		}
     	
-   		if (!TrimText(prekeywordDetail1.value) && !TrimText(prekeywordDetail2.value) && !TrimText(prekeywordDetail3.value) ) {
+   		if (!TrimText(prekeywordDetail1.value) && !TrimText(prekeywordDetail2.value) && !TrimText(prekeywordDetail3.value) && !this.usepostDate ) {
     		alert(strLang254);
             return;
    		} 

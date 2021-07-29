@@ -125,9 +125,9 @@ public interface EzWebFolderService {
 
 	boolean isEncryptedFilePath(String filePath);
 
-	List<FileHistoryVO> getFileHistories(LoginVO user, String fileId) throws Exception;
+	List<FileHistoryVO> getFileHistories(String fileId, String offset, int tenantId) throws Exception;
 
-	FileHistoryVO getFileHistory(LoginVO user, String fileId, int version) throws Exception;
+	FileHistoryVO getFileHistory(String fileId, int version, String offset, int tenantId) throws Exception;
 
 	void incrementFileVersion(LoginVO user, String fileId) throws Exception;
 

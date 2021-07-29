@@ -2387,4 +2387,62 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void createSerialnumgenGrant() throws Exception {
 		ezCommonDAO.createSerialnumgenGrant();
 	}
+	
+	@Override
+	public void insertApprSatViewerConfig() throws Exception {
+		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+		
+		for (TenantVO tenantVo : tenantIdList) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("tenantID", tenantVo.getTenantId());
+			
+			ezCommonDAO.insertApprSatViewerConfig(map);
+		}
+	}
+	
+	@Override
+	public void addBoardMailFGColumn() throws Exception {
+		ezCommonDAO.addBoardMailFGColumn();
+	}
+	
+	@Override
+	public void addCommNoticeUpperNoColumn() throws Exception {
+		ezCommonDAO.addCommNoticeUpperNoColumn();
+	}
+
+    @Override
+    public void alterTblAprReceiptProcessInfoAddColumn() throws Exception {
+        ezCommonDAO.alterTblAprReceiptProcessInfoAddColumn();
+    }
+    
+    @Override
+    public void alterTblDocDeliveryAddColumn() throws Exception {
+        ezCommonDAO.alterTblDocDeliveryAddColumn();
+        ezCommonDAO.insertTblCodelistA54002();
+    }
+    
+    @Override
+    public void addTblAdminReceiptGroupSubExtReceptYnColumn() throws Exception {
+        ezCommonDAO.addTblAdminReceiptGroupSubExtReceptYnColumn();
+    }
+
+	@Override
+	public void createTblCar() throws Exception {
+		ezCommonDAO.createTblCar();
+	}
+
+	@Override
+	public void createTblCarAcl() throws Exception {
+		ezCommonDAO.createTblCarAcl();
+	}
+
+	@Override
+	public void createTblCarAttach() throws Exception {
+		ezCommonDAO.createTblCarAttach();
+	}
+
+	@Override
+	public void createTblCarForm() throws Exception {
+		ezCommonDAO.createTblCarForm();
+	}
 }

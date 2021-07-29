@@ -1603,19 +1603,19 @@
 					                <td colspan="5">
 					                	<c:choose>
 					                		<c:when test="${boardAttr.tableCol == 'extensionAttribute6'}">
-					                			${boardItem.extensionAttribute6}
+					                			<c:out value="${boardItem.extensionAttribute6}"/>
 					                		</c:when>
 					                		<c:when test="${boardAttr.tableCol == 'extensionAttribute7'}">
-					                			${boardItem.extensionAttribute7}
+					                			<c:out value="${boardItem.extensionAttribute7}"/>
 					                		</c:when>
 					                		<c:when test="${boardAttr.tableCol == 'extensionAttribute8'}">
-					                			${boardItem.extensionAttribute8}
+					                			<c:out value="${boardItem.extensionAttribute8}"/>
 					                		</c:when>
 					                		<c:when test="${boardAttr.tableCol == 'extensionAttribute9'}">
-					                			${boardItem.extensionAttribute9}
+					                			<c:out value="${boardItem.extensionAttribute9}"/>
 					                		</c:when>
 					                		<c:when test="${boardAttr.tableCol == 'extensionAttribute10'}">
-					                			${boardItem.extensionAttribute10}
+					                			<c:out value="${boardItem.extensionAttribute10}"/>
 					                		</c:when>
 					                		<c:otherwise></c:otherwise>
 					                	</c:choose>

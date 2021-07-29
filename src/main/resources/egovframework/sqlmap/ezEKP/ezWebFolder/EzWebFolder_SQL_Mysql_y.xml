@@ -181,7 +181,7 @@
 			union all 
 	    	select DISTINCT
 				folder.FOLDER_ID    AS FILE_ID 	    ,     
-				folder.FOLDER_NAME1 AS FILE_NAME	,     
+				if ( #primary# = '1' , folder.FOLDER_NAME1, folder.FOLDER_NAME2) AS FILE_NAME	,     
 				folder.FOLDER_PATH  AS FILE_PATH	,     
 				0					AS FILE_SIZE	,     
 				'folder'			AS TYPE_ID		, 	  
@@ -1588,7 +1588,7 @@
 		<![CDATA[
 			SELECT DISTINCT
 				folder.FOLDER_ID    AS FILE_ID 	    ,     
-				folder.FOLDER_NAME1 AS FILE_NAME	,     
+				if ( #primary# = '1' , folder.FOLDER_NAME1, folder.FOLDER_NAME2) AS FILE_NAME	,     
 				folder.FOLDER_PATH  AS FILE_PATH	,     
 				0					AS FILE_SIZE	,     
 				'folder'			AS TYPE_ID		, 	  
@@ -1776,7 +1776,7 @@
 			   		<iterate property="idList" open="(" close=")" conjunction=",">
 						#idList[]#
 					</iterate>)
-					or (folder.FOLDER_LEVEL = 0 and folder.owner_id = #comId#))
+					or (folder.FOLDER_LEVEL = 0 and folder.owner_id = #companyId#))
 		    	</isEqual>
 		    	<isNotEqual property="folderType" compareValue="C">
 			    	WHERE 

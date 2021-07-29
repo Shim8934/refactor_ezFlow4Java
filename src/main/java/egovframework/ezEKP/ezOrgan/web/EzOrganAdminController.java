@@ -242,6 +242,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.addTblUserMultiLoginMobileFlagColumn(); // 2021-03-19 중복로그인 모바일 플래그 컬럼 추가
 	    	ezCommonService.insertApprContainterConfig();		// 2021-05-21 김민성 - 전자결재 양식별문서함, 분류코드문서함 컨피그 추가
 	    	ezCommonService.createSerialnumgenGrant();			// 2021-06-08 김민성 - 전자결재 상위부서 채번 기능 테이블 추가
+	    	ezCommonService.insertApprSatViewerConfig(); // 2021-06-15 심기영 - 전자결재 첨부파일 SAT 뷰어 사용 컨피그 추가
+	    	ezCommonService.createTblCar(); // 2021-07-12 차량관리 테이블 추가
+	    	ezCommonService.createTblCarAcl(); // 2021-07-12 차량관리 테이블 추가
+	    	ezCommonService.createTblCarAttach(); // 2021-07-12 차량관리 테이블 추가
+	    	ezCommonService.createTblCarForm(); // 2021-07-12 차량관리 테이블 추가
 	    	
 	    	// webfolder
 	    	ezCommonService.addWebfolderUserSubdeptPermittedColumn(); 	//2020-10-19 김은실 - 웹폴더 > 하위부서 허용 여부 추가
@@ -254,7 +259,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.addWebfolderLogHistory(); 					// 2020-01-20 웹폴더 파일 이력관리 컬럼추가 
 	    	ezCommonService.createWebfolderNoInherit(); 				// 권한비상속			
     		ezCommonService.alterWebfolderApplyHistoryAddColumn();
-	    	
+    		
+    		ezCommonService.addBoardMailFGColumn(); // 2021-06-21 홍승비 - 게시판 메일알림 옵션 추가
+    		ezCommonService.addCommNoticeUpperNoColumn(); // 2021-06-28 홍승비 - 커뮤니티 공지사항 부모게시물 정보 칼럼 추가
+    		
+    		ezCommonService.alterTblAprReceiptProcessInfoAddColumn(); // 2021-06-29 - 수신결재정보 테이블 오리지날 docid 컬럼 추가 
+    		ezCommonService.alterTblDocDeliveryAddColumn(); // 2021-06-29 - 배부테이블에 대내/대외 여부 컬럼 추가
+    		ezCommonService.addTblAdminReceiptGroupSubExtReceptYnColumn(); // 2021-06-29 수신처그룹 멤버 테이블에 외부/내부 수신여부 컬럼 추가
     	} catch (Exception e) {
     		e.printStackTrace();
     	}
@@ -417,6 +428,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String tenantDomain = ezCommonService.getTenantConfig("DomainName", tenantID); // primary domain
 		String innerDomain = ezEmailService.getMultiDomainList(tenantID); // 전체 도메인 리스트
 		String[] domainList = innerDomain.split(";");
+		
+		String compMail = "";
+		if (!pageType.equalsIgnoreCase("add")) {
+			OrganDeptVO organCompVO = ezOrganService.getDeptInfo(selectCN, userInfo.getPrimary(), userInfo.getTenantId());		
+	        compMail = organCompVO.getMail();
+	        logger.debug("compMail={}", compMail);
+		}
+		
         // user primary domain
         String companyMailDomain = ezCommonService.getCompanyConfig(tenantID, selectCN, "DomainName");
         companyMailDomain = companyMailDomain.equals("") ? tenantDomain : companyMailDomain;
@@ -428,6 +447,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("domainList", domainList);
 		model.addAttribute("companyMailDomain", companyMailDomain);
 		model.addAttribute("pageType", pageType);
+		model.addAttribute("compMail", compMail);
 		
 		logger.debug("companyInfo ended.");
 		
@@ -1839,6 +1859,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 						
 						// insertDBData_user 실패했을 경우 JMocha에서 계정 다시 삭제.
 						try {
+							String useStandardFolderId = config.getProperty("config.useStandardFolderId");
+							String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantID);
+							
+							if (useStandardFolderId != null && useStandardFolderId.equals("YES") && !useExternalMailServer.equalsIgnoreCase("YES")) {							
+								createDefaultFolders(loginCookie, mailAddr, locale);
+							}
+
 							String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantID);
 							
 							if (useBizmekaSpambox.equals("YES")) {
@@ -1872,14 +1899,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 							
 							// 로컬 시스템에 해당 User의 계정을 생성한다.
 							ezOrganAdminService.insertDBData_user(vo, oriPass);
-							
-							String useStandardFolderId = config.getProperty("config.useStandardFolderId");
-							String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantID);
-							
-							if (useStandardFolderId != null && useStandardFolderId.equals("YES") && !useExternalMailServer.equalsIgnoreCase("YES")) {							
-								createDefaultFolders(loginCookie, mailAddr, locale);
-							}
-							
+														
 							result = "OK";
 						} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
 							e.printStackTrace();

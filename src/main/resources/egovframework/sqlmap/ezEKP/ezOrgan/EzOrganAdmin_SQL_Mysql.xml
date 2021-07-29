@@ -119,6 +119,22 @@
 		</isNotEmpty>
 	</sql>
 	
+	<!-- 2021-07-12 김은실 - 선택지가 3개 밖에 없어서.. 최대한 쿼리줄이고자 이렇게 짠건데, 더 추가된다면 아예 걍 바꿔주세요.ㅎㅎㅎ  여기서 변형하기에는 여간 복잡한게 아닐거에여ㅠ -->
+	<sql id="EzOrganAdminDAO.searchForQuery">
+		<isNotEqual property="searchForAll" compareValue="true" open="and (" close=")">
+			CN <isEqual property="retired" compareValue="false"> NOT </isEqual> IN 
+				(SELECT CN from TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantID#  AND PHYSICALDELIVERYOFFICENAME = #companyId#)
+			<isEqual property="isAnd" compareValue="true"> 
+				AND 
+			</isEqual>
+			<isEqual property="isAnd" compareValue="false"> 
+				OR 
+			</isEqual>
+			CN <isEqual property="stopped" compareValue="false"> NOT </isEqual> IN 
+				(SELECT USER_ID FROM TBL_USER_CONFIG WHERE TENANT_ID = #tenantID# AND PROPERTY_NAME = 'LoginStopUser')
+		</isNotEqual>
+	</sql>
+	
 	<sql id="EzOrganAdminDAO.searchQueryForLoginStop">
 		<isNotEmpty property="search_keycode" prepend="and">
 			<isNotEmpty property="search_keyword" >
@@ -2871,7 +2887,8 @@
 	    		(#companyID#, #tenantID#, 16, 1, 1, 16),
 	    		(#companyID#, #tenantID#, 17, 1, 1, 17),
 	    		(#companyID#, #tenantID#, 18, 1, 1, 18),
-	    		(#companyID#, #tenantID#, 19, 1, 1, 19)
+	    		(#companyID#, #tenantID#, 19, 1, 1, 19),
+	    		(#companyID#, #tenantID#, 20, 1, 1, 20)
   		]]>
     </insert>
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I26" parameterClass="Map">
@@ -2899,7 +2916,8 @@
 	    		(16, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
 	    		(17, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
 	    		(18, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
-	    		(19, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+	    		(19, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(20, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
   		]]>
     </insert>
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I27" parameterClass="Map">
@@ -2964,7 +2982,10 @@
 	    		(18, 3, #companyID#, #tenantID#, 'メモ帳'),
 	    		(19, 1, #companyID#, #tenantID#, '전자설문'),
 	    		(19, 2, #companyID#, #tenantID#, 'Survey'),
-	    		(19, 3, #companyID#, #tenantID#, '電子アンケート')
+	    		(19, 3, #companyID#, #tenantID#, '電子アンケート'),
+	    		(20, 1, #companyID#, #tenantID#, '차량관리'),
+	    		(20, 2, #companyID#, #tenantID#, 'Car'),
+	    		(20, 3, #companyID#, #tenantID#, '自動車')
   		]]>
     </insert>
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I28" parameterClass="Map">
@@ -3197,6 +3218,15 @@
 	    			(#companyID#, #tenantID#, '1', '1', '1', #nowDate#, '1', '1', '1', #nowDate#)
 	    ]]>
     </insert>
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_I33" parameterClass="Map">
+      <![CDATA[
+          INSERT INTO
+            TBL_CAR
+                (CAR_ID, CAR_NAME, CAR_NAME2, CAR_NM, CAR_GB, CAR_LEVEL, CAR_STEP, CAR_ACCESS, CAR_UPPER, OWNDEPTID, OWNDEPTNM, OWNDEPTNM2,OWNERID, OWNERNM, OWNERNM2, OWNERPOSITION, OWNERPOSITION2, OWNERCALL, CAR_REGISTER_DATE, DELFLAG, COMPANYID, TENANT_ID, CAR_URL, CAR_EXPLAIN) 
+          VALUES
+                (1,#companyName#,#companyName2#,'',1,0,1,null,0,null,null,null,null,null,null,null,null,null,null,0,#companyID#,#tenantID#,null,null)
+      ]]>
+   </insert>
     
 	<delete id="EzOrganAdminDAO.retireDBData" parameterClass="Map">
 		<![CDATA[
@@ -4375,6 +4405,7 @@
         WHERE 
             tenant_id = #tenantID#  AND PHYSICALDELIVERYOFFICENAME = #companyId#
 			<include refid="EzOrganAdminDAO.searchQuery"/>
+			<include refid="EzOrganAdminDAO.searchForQuery"/>
 	    ORDER BY 
 	    <isNotEmpty property="sortColumn">
 	    	$orderbyData$,
@@ -4393,6 +4424,7 @@
             TBL_USERMASTER 
 		WHERE	tenant_id = #tenantID# AND PHYSICALDELIVERYOFFICENAME = #companyId#
   		<include refid="EzOrganAdminDAO.searchQuery"/>
+  		<include refid="EzOrganAdminDAO.searchForQuery"/>
 	</select>
  	 
 	<insert id="EzOrganAdminDAO.insertDelUserDBData_I" parameterClass="Map">
@@ -4545,7 +4577,8 @@
 	<![CDATA[
 		SET
 			TITLE = #v_DISPLAYNAME#,
-			TITLE2 = #v_DISPLAYNAME2#
+			TITLE2 = #v_DISPLAYNAME2#,
+			UPDATEDT = #nowDate#
 		WHERE
 			EXTENSIONATTRIBUTE7 = #v_JOBID#
 	]]>
@@ -4554,7 +4587,8 @@
 	<![CDATA[
 		SET
 			EXTENSIONATTRIBUTE10 = #v_DISPLAYNAME#,
-			EXTENSIONATTRIBUTE102 = #v_DISPLAYNAME2#
+			EXTENSIONATTRIBUTE102 = #v_DISPLAYNAME2#,
+			UPDATEDT = #nowDate#
 		WHERE
 			EXTENSIONATTRIBUTE8 = #v_JOBID#
 	]]>

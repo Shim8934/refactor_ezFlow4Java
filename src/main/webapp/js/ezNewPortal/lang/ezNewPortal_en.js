@@ -13,7 +13,7 @@ var messages = {
 	strLang12 : "Please join us.",
 	strLang13 : "Voting is being modified.Please wait.",
 	strLang14 : '"You do not have permission on that bulletin."',
-	strLang15 : "JAN,FEB,MAR,APR,MAY,JUN,JUL,AUG,SEP,OCT,NOV,DEC",
+	strLang15 : "Sun;Mon;Tue;Wed;Thu;Fri;Sat",
 	strLang16 : "HWP is not supported.",
 	strLang17 : '"There is no designated bulletin boards."',
 	strLang18 : "Write Mail",

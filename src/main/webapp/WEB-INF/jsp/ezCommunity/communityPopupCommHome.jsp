@@ -266,7 +266,7 @@
 	            
 	            var _img = document.createElement("img");
 	            _img.id = "coplogo";
-	            _img.style.width = "auto";
+	            _img.style.width = "1200px";
 	            _img.style.height = "100px";
 
 	            if (SelectSingleNodeValueNew(xmldom, "DATA/C_LOGO").indexOf("default_logo_type") > -1) {

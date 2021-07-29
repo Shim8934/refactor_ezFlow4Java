@@ -315,4 +315,26 @@ public interface EzCommonService {
 	public void alterWebfolderApplyHistoryAddColumn() throws Exception;
 	
 	public void createSerialnumgenGrant() throws Exception;
+	
+	public void insertApprSatViewerConfig() throws Exception;
+
+	public void addBoardMailFGColumn() throws Exception;
+
+	public void addCommNoticeUpperNoColumn() throws Exception;
+	
+	public void alterTblAprReceiptProcessInfoAddColumn() throws Exception;
+	
+	public void alterTblDocDeliveryAddColumn() throws Exception;
+	
+    public void addTblAdminReceiptGroupSubExtReceptYnColumn() throws Exception;
+    
+    public void createTblCar() throws Exception;
+    
+    public void createTblCarAcl() throws Exception;
+    
+    public void createTblCarAttach() throws Exception;
+    
+    public void createTblCarForm() throws Exception;
+    
+	
 }

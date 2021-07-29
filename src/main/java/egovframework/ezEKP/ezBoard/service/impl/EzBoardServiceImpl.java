@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
@@ -26,8 +27,10 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.StringJoiner;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
+import javax.mail.internet.InternetAddress;
 
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -57,7 +60,11 @@ import egovframework.ezEKP.ezBoard.vo.BoardReadVO;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.util.EmailImportance;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganGroupVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -82,6 +89,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 	@Resource(name = "EzOrganService")
 	private EzOrganService ezOrganService;
+	
+	@Resource(name = "EzOrganAdminService")
+	private EzOrganAdminService ezOrganAdminService;
 	
 	@Resource(name = "EzCommonService")
 	private EzCommonService ezCommonService;
@@ -4011,31 +4021,31 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		boardListVO.setReadFlag(doc.getElementsByTagName("READCOUNTFLAG").item(0).getTextContent());
 		
 		if (doc.getElementsByTagName("EXTENSIONATTRIBUTE6").item(0) != null) {
-			boardListVO.setExtensionAttribute6(doc.getElementsByTagName("EXTENSIONATTRIBUTE6").item(0).getTextContent());
+			boardListVO.setExtensionAttribute6(commonUtil.stripScriptTags(commonUtil.htmlUnescape(doc.getElementsByTagName("EXTENSIONATTRIBUTE6").item(0).getTextContent())));
 		} else {
 			boardListVO.setExtensionAttribute6("");
 		}
 		
 		if (doc.getElementsByTagName("EXTENSIONATTRIBUTE7").item(0) != null) {
-			boardListVO.setExtensionAttribute7(doc.getElementsByTagName("EXTENSIONATTRIBUTE7").item(0).getTextContent());
+			boardListVO.setExtensionAttribute7(commonUtil.stripScriptTags(commonUtil.htmlUnescape(doc.getElementsByTagName("EXTENSIONATTRIBUTE7").item(0).getTextContent())));
 		} else {
 			boardListVO.setExtensionAttribute7("");
 		}
 		
 		if (doc.getElementsByTagName("EXTENSIONATTRIBUTE8").item(0) != null) {
-			boardListVO.setExtensionAttribute8(doc.getElementsByTagName("EXTENSIONATTRIBUTE8").item(0).getTextContent());
+			boardListVO.setExtensionAttribute8(commonUtil.stripScriptTags(commonUtil.htmlUnescape(doc.getElementsByTagName("EXTENSIONATTRIBUTE8").item(0).getTextContent())));
 		} else {
 			boardListVO.setExtensionAttribute8("");
 		}
 		
 		if (doc.getElementsByTagName("EXTENSIONATTRIBUTE9").item(0) != null) {
-			boardListVO.setExtensionAttribute9(doc.getElementsByTagName("EXTENSIONATTRIBUTE9").item(0).getTextContent());
+			boardListVO.setExtensionAttribute9(commonUtil.stripScriptTags(commonUtil.htmlUnescape(doc.getElementsByTagName("EXTENSIONATTRIBUTE9").item(0).getTextContent())));
 		} else {
 			boardListVO.setExtensionAttribute9("");
 		}
 		
 		if (doc.getElementsByTagName("EXTENSIONATTRIBUTE10").item(0) != null) {
-			boardListVO.setExtensionAttribute10(doc.getElementsByTagName("EXTENSIONATTRIBUTE10").item(0).getTextContent());
+			boardListVO.setExtensionAttribute10(commonUtil.stripScriptTags(commonUtil.htmlUnescape(doc.getElementsByTagName("EXTENSIONATTRIBUTE10").item(0).getTextContent())));
 		} else {
 			boardListVO.setExtensionAttribute10("");
 		}
@@ -4589,7 +4599,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	/* 2019-04-10 홍승비 - 사용자가 원회사이고 사내겸직이 존재하면 사내겸직부서ID를 리턴 */
 	@Override
 	public List<String> getPDOAddJobDeptID(String userID, String companyID, int tenantID) throws Exception {
-		logger.debug("getPDOAddJobDeptID started.");
+		//logger.debug("getPDOAddJobDeptID started.");
 		
 		Map<String, Object> map = new HashMap<>();
 		
@@ -4597,42 +4607,42 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_pCompanyID", companyID);
 		map.put("v_TENANTID", tenantID);
 		
-		logger.debug("getPDOAddJobDeptID ended.");
+		//logger.debug("getPDOAddJobDeptID ended.");
 		return ezBoardDAO.getPDOAddJobDeptID(map);
 	}
 	
 	/* 2019-05-15 홍승비 - 해당 부서ID로 상위부서ID(회사포함) 가져오기*/
 	@Override
 	public String getUpperDeptID(String deptID, int tenantID) throws Exception {
-		logger.debug("getUpperDeptID started.");
+		//logger.debug("getUpperDeptID started.");
 		
 		Map<String, Object> map = new HashMap<>();
 		
 		map.put("v_DEPTID", deptID);
 		map.put("v_TENANTID", tenantID);
 		
-		logger.debug("getUpperDeptID ended.");
+		//logger.debug("getUpperDeptID ended.");
 		return ezBoardDAO.getUpperDeptID(map);
 	}
 	
 	/* 2019-05-29 홍승비 - 해당 ID가 부서(회사)ID인지 확인하는 기능 서비스로 분리 */
 	@Override
 	public int isDeptChk(String id, int tenantID) throws Exception {
-		logger.debug("isDeptChk started.");
+		//logger.debug("isDeptChk started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("id", id);
 		map.put("tenantID", tenantID);
 		
-		logger.debug("isDeptChk ended.");
+		//logger.debug("isDeptChk ended.");
 		return ezBoardDAO.isDeptChk(map);
 	}
 	
 	/* 2019-09-18 홍승비 - 사용자의 직위와 직책 ID를 전부 문자열로 이어붙여 리턴하는 메서드 (사내겸직 포함) */
 	@Override
 	public String getUserJJID(String userID, String companyID, int tenantID) throws Exception {
-		logger.debug("getUserJJID started.");
+		//logger.debug("getUserJJID started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		StringJoiner result = new StringJoiner(",");
@@ -4651,14 +4661,14 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		
 		//logger.debug("result in getUserJJID    ::   " + result);
-		logger.debug("getUserJJID ended.");
+		//logger.debug("getUserJJID ended.");
 		return result.toString();
 	}
 	
 	/* 2019-09-18 홍승비 - 그룹권한을 포함하여 ACCESSID에 대한 권한정보를 리스트로 리턴하는 메서드 */
 	@Override
 	public List<BoardPropertyVO> getACLListNew(String pBoardID, String accessID, int tenantID, int isDept, int isEqualDept) throws Exception {
-		logger.debug("getACLListNew started.");
+		//logger.debug("getACLListNew started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -4669,13 +4679,13 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_ISEQUALDEPT", isEqualDept);
 		
 		//logger.debug("map in getACLListNew  ::  " + map.toString());
-		logger.debug("getACLListNew ended");
+		//logger.debug("getACLListNew ended");
 		return ezBoardDAO.getACLListNew(map);
 	}
 	
 	/* 2019-09-18 홍승비 - 그룹권한을 포함하여 ACCESSID에 대한 게시판 그룹의 관리자 권한을 리스트로 리턴하는 메서드 */
 	public List<String> checkIfBoardGroupAdminNew(String pRootBoardID, String accessID, int tenantID, int isDept, int isEqualDept, boolean isBoardGroup) throws Exception {
-		logger.debug("checkIfBoardGroupAdminNew started");
+		//logger.debug("checkIfBoardGroupAdminNew started");
 		
 		List<String> result = new ArrayList<String>();
 		
@@ -4697,7 +4707,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		result = ezBoardDAO.checkIfBoardGroupAdminNew(map);
 		
 		//logger.debug("result in checkIfBoardGroupAdminNew   ::   " + result);
-		logger.debug("checkIfBoardGroupAdminNew ended");
+		//logger.debug("checkIfBoardGroupAdminNew ended");
 		return result;
 	}
 	
@@ -4867,5 +4877,55 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		logger.debug("getReaderListCount2 ended");
 		return ezBoardDAO.getReaderListCount2(map);
+	}
+	
+	/* 2019-09-24 홍승비 - 그룹권한을 포함하여 ACCESSID에 대한 게시판 접근 + 리스트보기 권한을 리스트로 리턴하는 메서드 (QNA게시판은 관리자권한 체크) */
+	@Override
+	public List<String> getBoardAccessListViewFG(String boardID, String gubun, String userDeptPath, int tenantID, int isDept, int isEqualDept) throws Exception {
+		//logger.debug("getBoardAccessListViewFG started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_BOARDID", boardID);
+		map.put("v_GUBUN", gubun);
+		map.put("v_ACCESSID", userDeptPath);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_ISDEPT", isDept);
+		map.put("v_ISEQUALDEPT", isEqualDept);
+
+		//logger.debug("getBoardAccessListViewFG ended");
+		return ezBoardDAO.getBoardAccessListViewFG(map);
+	}
+	
+	/* 2021-06-23 홍승비 - 게시, 수정알림 메일 발송을 위한 사용자 정보를 map으로 리턴하는 메서드 */
+	@Override
+	public List<HashMap<String, String>> getBoardUserInfoForMailSend(String isAllGroupBoard, String primary, String companyID, int tenantID) throws Exception {
+		logger.debug("getBoardUserInfoForMailSend started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_isAllGroupBoard", isAllGroupBoard);
+		map.put("v_PRIMARY", primary);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_COMPANYID", companyID);
+
+		logger.debug("getBoardUserInfoForMailSend ended");
+		return ezBoardDAO.getBoardUserInfoForMailSend(map);
+	}
+	
+	/* 2021-06-23 홍승비 - 댓글알림 메일 발송을 위한 사용자 정보를 map으로 리턴하는 메서드 */
+	@Override
+	public List<HashMap<String, String>> getCommentNoticeMail(String boardID, String itemID, String lang, int tenantID) throws Exception {
+		logger.debug("getCommentNoticeMail started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("lang", commonUtil.getMultiData(lang, tenantID));
+		map.put("v_ITEMID", itemID);
+		map.put("v_BOARDID", boardID);
+		map.put("v_TENANTID", tenantID);
+		
+		logger.debug("getCommentNoticeMail ended");
+		return ezBoardDAO.getCommentNoticeMail(map);
 	}
 }

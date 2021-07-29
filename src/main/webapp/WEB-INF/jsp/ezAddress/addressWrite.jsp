@@ -46,10 +46,12 @@
 		        name = replaceEntityCodeToStr(name);
 		        document.getElementById("TextName").value = name;
 		        
+		        /* 
 		        var getMemo = document.getElementById("TextMemo").value;
 		        getMemo = getMemo.replace(/\\\\/gi, "\\");
 		        document.getElementById("TextMemo").innerText = "";
 		        document.getElementById("TextMemo").innerText = getMemo;
+		         */
 		    }
 
 		    function change_photo() {

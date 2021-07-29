@@ -1621,8 +1621,10 @@ function getPublicLevel(PublicLevel) {
     return strRtn;
 }
 
+// 접수관련된 버튼의 보임여부 처리
 function setBtnEnable() {
 	var result = "";
+	var tempFlag = false;
 	
 	$.ajax({
 		type : "POST",
@@ -1635,31 +1637,51 @@ function setBtnEnable() {
 		},
 		success: function(xml){
 			result = loadXMLString(xml);
-			
-			var tempFlag = false;
-		    if (getNodeText(GetChildNodes(result.documentElement)[0]) != "")
-		        tempFlag = true;
-
-		    if (tempFlag) { //문서과
-		        btnReqReSend.style.display = "";    //재전송요청
-		        btnDistribute.style.display = "";       //배부
-		        btnReDistribute.style.display = "none"; //재배부요청
-		        // 재접수 기능이 아직 없어서 주석처리.
-//		        btnRefresh.style.display = ""; //재접수
-		    }
-		    else {  //일반부서
-		        btnReqReSend.style.display = "none";     //재전송요청
-		        btnDistribute.style.display = "none";     //배부
-		        if (pSusinAdmin == "YES") {   //수발신담당자
-		            btnReDistribute.style.display = ""; //재배부요청
-		            btnAssign.style.display = "";   //지정
-		        }
-		        else {
-		            btnReAssign.style.display = "";; //재지정요청
-		        }
-		    }
+			if (getNodeText(GetChildNodes(result.documentElement)[0]) != "") {
+				tempFlag = true;
+			}
 		}        			
 	});
+
+	btnReturn.style.display = "none";   	//회송
+	btnAssign.style.display = "none";   	//지정
+	btnDistribute.style.display = "none";   //배부
+	btnReDistribute.style.display = "none"; //재배부요청
+	btnReqReSend.style.display = "none";    //재전송요청
+
+	if (pDocType === "001") { // 시행문(G)
+		if (tempFlag) { //문서과
+			btnAssign.style.display = "";
+			btnDistribute.style.display = "";
+			btnReqReSend.style.display = "";
+		} else { //일반부서
+			if (pAprState === "012") {
+				btnAssign.style.display = "";
+				if (pSusinAdmin === "YES") {
+					btnReDistribute.style.display = "";
+				}
+			} else if (pAprState === "014") {
+				btnAssign.style.display = "";
+				btnReDistribute.style.display = "";
+			}
+		}
+	} else if (pDocType === "003") {
+		if (pAprState === "011") {
+			btnReturn.style.display = "";
+			btnAssign.style.display = "";
+			btnDistribute.style.display = "";
+		} else if (pAprState === "012") {
+			btnAssign.style.display = "";
+			if (pSusinAdmin === "YES") {
+				btnReturn.style.display = "";
+				btnDistribute.style.display = "";
+			}
+		} else if (pAprState === "014") {
+			btnReturn.style.display = "";
+			btnAssign.style.display = "";
+			btnDistribute.style.display = "";
+		}
+	}
 }
 
 function openOpinionUI_Distribute_Complete(ret) {

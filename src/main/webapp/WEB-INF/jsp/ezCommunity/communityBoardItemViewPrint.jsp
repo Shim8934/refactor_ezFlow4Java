@@ -312,8 +312,8 @@
 		    	<td style="height:20px">
 		    		<table class="content">
 					    <tr>
-					        <th style="border-bottom: none; font-weight: bold;"><spring:message code = 'ezBoard.jjh06' /></th>
-					        <td style="height:50px;border-bottom: none;"><div id="onelinereplylist" style="height:auto; background-color:white;text-align:left"></div></td>
+					        <th class="boardItemViewPrint_cssThEn" style="border-bottom: none; font-weight: bold;"><spring:message code = 'ezBoard.jjh06' /></th>
+					        <td class="boardItemViewPrint_cssTdEn" style="height:50px;border-bottom: none;"><div id="onelinereplylist" style="height:auto; background-color:white;text-align:left"></div></td>
 					    </tr>
 				    </table>
 				</td>
@@ -322,8 +322,8 @@
 		    	<td style="height:20px;" >
 		    		<table class="file">
 				        <tr>
-				        	<th style="border-top: none;"><spring:message code = 'ezCommunity.t141' /></th>
-					        <td style="width:100%;height:100%;border-top: none;"><div id="lstAttachLink" style="margin-top:0px;padding-top:0px;background-color:white;height:auto;text-align:left "></div></td>
+				        	<th class="boardItemViewPrint_cssThEn" style="border-top: none;"><spring:message code = 'ezCommunity.t141' /></th>
+					        <td class="boardItemViewPrint_cssTdEn" style="width:100%;height:100%;border-top: none;"><div id="lstAttachLink" style="margin-top:0px;padding-top:0px;background-color:white;height:auto;text-align:left "></div></td>
 				          	<td id="ItemLevel" style="display:none"></td>
 				        </tr>
 					</table>

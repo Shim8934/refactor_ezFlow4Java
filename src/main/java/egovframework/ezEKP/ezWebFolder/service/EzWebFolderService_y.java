@@ -9,14 +9,15 @@ import org.json.simple.JSONObject;
 import org.springframework.web.multipart.MultipartFile;
 
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
+import egovframework.ezEKP.ezWebFolder.vo.FolderTreeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzWebFolderService_y {
 	public void insertIfNotExistRootForder(String userId, String userName1, String userName2, String compId, List<Map<String, String>> permissionIdList, String offset, int tenantId) throws Exception;
 	
-	public List<Map<String, Object>> getFolderTree(String userId, String deptId, String compId, String folderType, String primary, int tenantId, String flag) throws Exception;
-	public List<Map<String, Object>> getFolderTree(String userId, String deptId, String compId, String folderType, String primary, int tenantId, String flag, boolean isAdmin) throws Exception;
+	public List<FolderTreeVO> getFolderTree(String userId, String deptId, String compId, String folderType, String primary, int tenantId, String flag) throws Exception;
+	public List<FolderTreeVO> getFolderTree(String userId, String deptId, String compId, String folderType, String primary, int tenantId, String flag, boolean isAdmin) throws Exception;
 	
 	// 파일리스트
 	List<FileVO> getFileList(String folderId, String userId, String deptId, int tenantId, String comId, String searchExt, String searchFileName, 

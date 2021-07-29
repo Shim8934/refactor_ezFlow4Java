@@ -912,11 +912,13 @@ function GetListInfo(HeaderObject, ContentObject) {
     	searchCArray = [];
     }
     for (var i = 0 ; i < searchCArray.length; i++ ){
-    	searchKArray[i] = ReplaceText(searchKArray[i], "&", "&amp;");
-    	searchKArray[i] = ReplaceText(searchKArray[i], "<", "&lt;");
-    	searchKArray[i] = ReplaceText(searchKArray[i], ">", "&gt;");
-    	searchKArray[i] = ReplaceText(searchKArray[i], "'", "''");
-    	createNodeAndInsertText(xmlpara, objNode, "KEYWORD", searchKArray[i]);
+    	// 2021-06-22 김은실 - 이미 변경된 단어를 새로고침시 다시 변경하여, 직접 변경하기 보다 -> 그때만 변경하여 넘겨는 것이 좋을 것으로 보임. (&lt; -> &amp;lt; 등이 되는 경우가 있음.)
+    	var searchKTemp = searchKArray[i];
+    	searchKTemp = ReplaceText(searchKTemp, "&", "&amp;");
+    	searchKTemp = ReplaceText(searchKTemp, "<", "&lt;");
+    	searchKTemp = ReplaceText(searchKTemp, ">", "&gt;");
+    	searchKTemp = ReplaceText(searchKTemp, "'", "''");
+    	createNodeAndInsertText(xmlpara, objNode, "KEYWORD", searchKTemp);
     	createNodeAndInsertText(xmlpara, objNode, "CATEGORY", searchCArray[i]);
     }
     createNodeAndInsertText(xmlpara, objNode, "SEARCH", SearchKeyword);

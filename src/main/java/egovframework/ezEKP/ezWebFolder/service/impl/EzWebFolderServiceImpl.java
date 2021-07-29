@@ -1074,6 +1074,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				//Setting headers
 				response.setStatus(HttpServletResponse.SC_OK);
 				response.addHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+				response.setContentType("application/zip");
 				zipOutputStream = new ZipOutputStream(response.getOutputStream());
 				HashSet<String> nameList = new HashSet<>();
 				HashSet<String> folderNameList = new HashSet<>();
@@ -2057,22 +2058,22 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 
 	@Override
-	public List<FileHistoryVO> getFileHistories(LoginVO user, String fileId) throws Exception {
+	public List<FileHistoryVO> getFileHistories(String fileId, String offset, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<>();
 		map.put("fileId", fileId);
-		map.put("offset", commonUtil.getMinuteUTC(user.getOffset()));
-		map.put("tenantId", user.getTenantId());
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("tenantId", tenantId);
 
 		return ezWebFolderDAO.getFileHistories(map);
 	}
 
 	@Override
-	public FileHistoryVO getFileHistory(LoginVO user, String fileId, int version) throws Exception {
+	public FileHistoryVO getFileHistory(String fileId, int version, String offset, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<>();
 		map.put("fileId", fileId);
-		map.put("offset", commonUtil.getMinuteUTC(user.getOffset()));
 		map.put("version", version);
-		map.put("tenantId", user.getTenantId());
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("tenantId", tenantId);
 
 		return ezWebFolderDAO.getFileHistory(map);
 	}
@@ -2134,30 +2135,31 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 
 	@Override
 	public void revertFileVersion(LoginVO user, String fileId, int version) throws Exception {
-		FileHistoryVO targetHistory = getFileHistory(user, fileId, version);
-		FileVO file = getFileByFileId(fileId, user.getOffset(), user.getTenantId());
+		String offset = user.getOffset();
+		int tenantId = user.getTenantId();
+		FileHistoryVO targetHistory = getFileHistory(fileId, version, offset, tenantId);
+		FileVO file = getFileByFileId(fileId, offset, tenantId);
 
 		Objects.requireNonNull(targetHistory, "has no version. fileId: " + fileId + ", version: " + version);
 		Objects.requireNonNull(file, "has no file. fileId: " + fileId);
 
 		logger.debug("revertFileVersion - fileId: {}, version: {}", fileId, version);
 
-		boolean isEncryptionFolder = isEncryptionFolder(file.getFolderId(), user.getTenantId());
-		boolean isEncryptedVersion = isEncryptedVersion(fileId, version, user.getTenantId());
-		boolean isEncryptedLatestVersion = isEncryptedFile(fileId, user.getTenantId());
+		boolean isEncryptionFolder = isEncryptionFolder(file.getFolderId(), tenantId);
+		boolean isEncryptedVersion = isEncryptedVersion(fileId, version, tenantId);
+		boolean isEncryptedLatestVersion = isEncryptedFile(fileId, tenantId);
 
-		boolean requireEncryption = (isEncryptionFolder || isEncryptedLatestVersion)
-				&& !isEncryptedVersion;
+		boolean requireEncryption = (isEncryptionFolder || isEncryptedLatestVersion) && !isEncryptedVersion;
 
 		String currentTimeUTC = commonUtil.getTodayUTCTime("");
-		String newFilePath = copyFileVersionToNewFile(targetHistory, "", user.getTenantId());
+		String newFilePath = copyFileVersionToNewFile(targetHistory, "", tenantId);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		map.put("filePath", newFilePath);
 		map.put("userId", user.getId());
 		map.put("fileId", fileId);
-		map.put("tenantId", user.getTenantId());
+		map.put("tenantId", tenantId);
 		map.put("timeUTC", currentTimeUTC);
 		map.put("fileSize", targetHistory.getFileSize());
 
@@ -2178,11 +2180,11 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		if (isEncryptionFolder || isEncryptedVersion || isEncryptedLatestVersion) {
 			insertEncryptedFile(fileId, user.getTenantId());
 		}
-		
-		FileVO fileVO = getFileByFileId(fileId, user.getOffset(), user.getTenantId()); 
 
-		saveLog("WR", user.getCompanyID(), user.getOffset(), user.getId(), user.getDisplayName1(), user.getDisplayName2(),
-				user.getTenantId(), fileVO, "", user.getPrimary());
+		FileVO fileVO = getFileByFileId(fileId, offset, tenantId);
+
+		saveLog("WR", user.getCompanyID(), offset, user.getId(), user.getDisplayName1(), user.getDisplayName2(),
+				tenantId, fileVO, "", user.getPrimary());
 	}
 
 	@Override
@@ -2304,9 +2306,10 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			return;
 		}
 
+		String offset = user.getOffset();
 		int version = versions[0];
 		int tenantId = user.getTenantId();
-		FileVO fileVO = getFileByFileId(fileId, user.getOffset(), tenantId);
+		FileVO fileVO = getFileByFileId(fileId, offset, tenantId);
 		boolean isEncrypted = isEncryptedVersion(fileId, version, tenantId);
 		boolean isCreator = fileVO.getCreateId().equals(user.getId());
 
@@ -2318,7 +2321,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		String fileName = fileVO.getFileName();
 		String realPath = servletContext.getRealPath("");
 
-		FileHistoryVO history = getFileHistory(user, fileId, version);
+		FileHistoryVO history = getFileHistory(fileId, version, offset, tenantId);
 		String versionName = FilenameUtils.getBaseName(fileName)
 				+ " (" + version + ".0)."
 				+ FilenameUtils.getExtension(fileName);

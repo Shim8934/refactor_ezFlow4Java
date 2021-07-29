@@ -453,27 +453,32 @@
               var parameter = new Array();
               parameter[0] = ReturnValue_CN;
               parameter[1] = ReturnValue_Name;
-              var url;
-              var strTitle;
-              
-              if (CrossYN() || pNoneActiveX == "YES") {
-                  schedule_add_ck_dialogArguments[0] = parameter;
-                  strTitle = "scheduleAdd";
-                  url = "/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ReturnValue_CN[0];
-              } else {
-                  url = "/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ReturnValue_CN[0];
+
+              if (typeof ReturnFunction === "function") {
+                  ReturnFunction(parameter);
               }
 
-              if (ReturnFunction != null) {
-                  var OpenWin = window.open(url, strTitle, GetOpenWindowfeature(820, 700));
-                  try { OpenWin.focus(); } catch (e) { }
-                  ReturnFunction("close");
-              } else {
-                  var feature = "status:no;dialogWidth:820px;dialogHeight:700px;help:no;scroll:no;edge:sunken";
-                  feature = feature + GetShowModalPosition(700, 700);
-                  window.showModalDialog(url, parameter, feature);
-                  window.close();
-              }
+            //   var url;
+            //   var strTitle;
+              
+            //   if (CrossYN() || pNoneActiveX == "YES") {
+            //       schedule_add_ck_dialogArguments[0] = parameter;
+            //       strTitle = "scheduleAdd";
+            //       url = "/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ReturnValue_CN[0];
+            //   } else {
+            //       url = "/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ReturnValue_CN[0];
+            //   }
+
+            //   if (ReturnFunction != null) {
+            //       var OpenWin = window.open(url, strTitle, GetOpenWindowfeature(820, 700));
+            //       try { OpenWin.focus(); } catch (e) { }
+            //       ReturnFunction("close");
+            //   } else {
+            //       var feature = "status:no;dialogWidth:820px;dialogHeight:700px;help:no;scroll:no;edge:sunken";
+            //       feature = feature + GetShowModalPosition(700, 700);
+            //       window.showModalDialog(url, parameter, feature);
+            //       window.close();
+            //   }
           }
       }
 

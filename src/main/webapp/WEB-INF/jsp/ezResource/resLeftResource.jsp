@@ -147,14 +147,14 @@
         		}
     		}
 		    var schedule_add_select_cross_dialogArguments = new Array();
-		    
+			var Schedule_Add_Select_Cross = null;
 		    function resourceWrite() {
 		    	if (CrossYN()) {
                     var url = "/ezResource/scheduleAddSelect.do";
 
                     schedule_add_select_cross_dialogArguments[0] = "";
                     schedule_add_select_cross_dialogArguments[1] = btnWrite_onclick_Complete;
-                    var Schedule_Add_Select_Cross = GetOpenWindow(url, "Schedule_Add_Select_Cross", 552, 435);
+                    Schedule_Add_Select_Cross = GetOpenWindow(url, "Schedule_Add_Select_Cross", 552, 435);
                     try { Schedule_Add_Select_Cross.focus(); } catch (e) {
                     }
                 } else {
@@ -172,14 +172,30 @@
                 }
 		    }
 		    
+			var schedule_add_ck_dialogArguments = [];
 		    function btnWrite_onclick_Complete(ret) {
-		        if (ret != "close" && ret != undefined && ret[0][0] != undefined) {
+		        if (ret != "close" && !!ret) {
+					var tempRet = JSON.stringify(ret); //ie에서 팝업창 닫히고나면 객체를 찾을 수 없어서 미리 deep copy 함
+					tempRet = JSON.parse(tempRet);
+
+					schedule_add_ck_dialogArguments[0] = tempRet;
+
+					if (!!Schedule_Add_Select_Cross) {
+						Schedule_Add_Select_Cross.close();
+						Schedule_Add_Select_Cross = null;
+					}
+					
 		            url = "/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ret[0][0];
 
 		            var Schedule_Add_ck = window.open(url, "Schedule_Add_Cross", GetOpenWindowfeature(820, 700));
 		            
 		            try { Schedule_Add_ck.focus(); } catch (e) {}
-		        }
+		        } else {
+					if (!!Schedule_Add_Select_Cross) {
+						Schedule_Add_Select_Cross.close();
+						Schedule_Add_Select_Cross = null;
+					}
+				}
 		    }
 		    
 		    function leftResize(){

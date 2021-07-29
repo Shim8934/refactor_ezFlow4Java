@@ -1,5 +1,6 @@
 package egovframework.ezMobile.ezApprovalG.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -36,7 +37,7 @@ public interface MApprovalGService {
 
 	public MApprovalGDocInfoVO getAprDocInfo(String docId, String type, String lang, String offset, String companyId, int tenantId, String aprMemberSN, String mode) throws Exception;
 
-	public MApprovalGDocInfoVO getAprMemberSn(String docId, String type, String companyId, int tenantId) throws Exception;
+	public MApprovalGDocInfoVO getAprMemberSn(String docId, String type, MCommonVO userInfo) throws Exception;
 
 	public String getDocState(String docId, String companyId, int tenantId) throws Exception;
 
@@ -55,4 +56,9 @@ public interface MApprovalGService {
 	public List<MApprovalGAbsenteeAddJobInfoVO> getAbsenteeAddJobInfo(MCommonVO userInfo) throws Exception;
 
 	public int updateAbsenteeJobInfo(JSONObject data, String userId, int tenantId) throws Exception;
+
+	public JSONObject gwDraft(JSONObject data, String realPath, MCommonVO userInfo) throws Exception;
+	
+	public List<HashMap> checkChangeDocInfo(HashMap<String, Object> params) throws Exception;
+	
 }

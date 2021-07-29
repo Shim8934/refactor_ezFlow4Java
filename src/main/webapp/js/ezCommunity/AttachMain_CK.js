@@ -157,11 +157,12 @@ function btn_AttachDel_onclick()
 
 			    for (var k = 0; k < multi_cnt; k++) 
 		        {
-
-		            if (document.getElementsByName("fileSelect")[k].checked) 
+			    	var fileSelectNode = document.getElementsByName("fileSelect")[k];
+		            if (fileSelectNode.checked) 
 		            {
-		                pAttachDelFileName = document.getElementsByName("fileSelect")[k].value;
-		                is_newfile = GetAttribute(document.getElementsByName("fileSelect")[k], "newfile");
+		            	fileSelectNode.parentNode.removeChild(fileSelectNode.nextSibling);
+		            	pAttachDelFileName = fileSelectNode.value;
+		                is_newfile = GetAttribute(fileSelectNode, "newfile");
 		                pNewNodeName = pNewNodeName + pAttachDelFileName + "*)[_-";
 
 		                Rtnval = "TRUE";

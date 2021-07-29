@@ -55,6 +55,7 @@ public class EzMainAdminController {
 		String useSchedule = ezCommonService.getTenantConfig("useSchedule", userInfo.getTenantId());
 		String useResource = ezCommonService.getTenantConfig("useResource", userInfo.getTenantId());
 		String useBoard = ezCommonService.getTenantConfig("useBoard", userInfo.getTenantId());
+		String useCar = ezCommonService.getTenantConfig("useCar", userInfo.getTenantId());
 		
 		// 2020-04-10 김민성 - 메일 컨피그 추가
 		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", userInfo.getTenantId());
@@ -80,6 +81,7 @@ public class EzMainAdminController {
 		/* 2018-09-19 홍승비 - 커뮤니티 사용여부 컨피그 추가  */
 		model.addAttribute("use_community", use_community);
 		model.addAttribute("use_webfolder", useWebfolder);
+		model.addAttribute("useCar", useCar);
 		
 		
 		if (firstScreenMail == null || firstScreenMail.equals("")) {

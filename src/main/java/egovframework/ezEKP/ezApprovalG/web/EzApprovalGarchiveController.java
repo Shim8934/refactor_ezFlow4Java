@@ -475,13 +475,14 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		return "ezApprovalG/apprGdocListView";
 	}
 	
-	/** 기록물등록대장  문서출력 상세화면*/
+	/** 기록물 배부대장 목록 */
 	@RequestMapping(value = "/ezApprovalG/getDeliveryList.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
-	public String getDeliveryList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model, @RequestBody String xmlPara) throws Exception{
+	public String getDeliveryList(@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlPara) throws Exception{
 		logger.debug("getDeliveryList started");
 		
-		userInfo = commonUtil.aprUserInfo(loginCookie);
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
         String p_DeptID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent().trim();
         String pPageNum = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
@@ -490,6 +491,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
         String pOrderOption = xmlDom.getDocumentElement().getChildNodes().item(4).getTextContent();
         String pQuery = xmlDom.getDocumentElement().getChildNodes().item(5).getTextContent();
         String isdocprint = xmlDom.getDocumentElement().getChildNodes().item(6).getTextContent();
+        String extReceptYN = xmlDom.getDocumentElement().getChildNodes().item(10).getTextContent();
         String result = "";
         String deptcode = "";
         String deptcode2 = "";
@@ -499,7 +501,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
         String debenturer = "";
         
         if (xmlDom.getDocumentElement().getChildNodes().item(7).getTextContent().equals("0")) {
-        	result = ezApprovalGService.getDeliveryList(p_DeptID, pPageSize, pPageNum, pOrderCell, pOrderOption, pQuery, userInfo.getCompanyID(), userInfo.getLang(), deptcode, deptcode2, title, sregdate, eregdate, debenturer, isdocprint, userInfo.getTenantId(), userInfo.getOffset());
+        	result = ezApprovalGService.getDeliveryList(p_DeptID, pPageSize, pPageNum, pOrderCell, pOrderOption, pQuery, userInfo.getCompanyID(), userInfo.getLang(), deptcode, deptcode2, title, sregdate, eregdate, debenturer, isdocprint, extReceptYN, userInfo);
         } else {
             deptcode = xmlDom.getDocumentElement().getChildNodes().item(8).getChildNodes().item(0).getTextContent().trim();
             deptcode2 = xmlDom.getDocumentElement().getChildNodes().item(8).getChildNodes().item(1).getTextContent().trim();
@@ -507,7 +509,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
             sregdate = xmlDom.getDocumentElement().getChildNodes().item(8).getChildNodes().item(3).getTextContent();
             eregdate = xmlDom.getDocumentElement().getChildNodes().item(8).getChildNodes().item(4).getTextContent();
             debenturer = xmlDom.getDocumentElement().getChildNodes().item(8).getChildNodes().item(5).getTextContent().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_");
-            result = ezApprovalGService.getDeliveryList(p_DeptID, pPageSize, pPageNum, pOrderCell, pOrderOption, pQuery, userInfo.getCompanyID(), userInfo.getLang(), deptcode, deptcode2, title, commonUtil.getDateStringInUTC(sregdate, userInfo.getOffset(), true), commonUtil.getDateStringInUTC(eregdate, userInfo.getOffset(), true), debenturer, isdocprint, userInfo.getTenantId(), userInfo.getOffset());
+            result = ezApprovalGService.getDeliveryList(p_DeptID, pPageSize, pPageNum, pOrderCell, pOrderOption, pQuery, userInfo.getCompanyID(), userInfo.getLang(), deptcode, deptcode2, title, commonUtil.getDateStringInUTC(sregdate, userInfo.getOffset(), true), commonUtil.getDateStringInUTC(eregdate, userInfo.getOffset(), true), debenturer, isdocprint, extReceptYN, userInfo);
         }
         
         logger.debug("getDeliveryList ended");

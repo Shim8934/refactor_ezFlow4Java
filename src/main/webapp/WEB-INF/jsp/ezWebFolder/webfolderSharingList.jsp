@@ -652,6 +652,7 @@
 					
 					nameColumn.textContent = resultJson["fileName"];
 					nameColumn.setAttribute("title", resultJson["fileName"]);
+					nameColumn.setAttribute("ext", resultJson["fileExt"]);
 					creatorColumn.textContent = resultJson["createName"];
 					createDateColumn.textContent = resultJson["createDate"].substring(0, 10);
 					updateDateColumn.textContent = resultJson["updateDate"].substring(0, 10);

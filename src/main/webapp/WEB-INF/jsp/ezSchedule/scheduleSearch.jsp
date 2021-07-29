@@ -199,6 +199,7 @@
 		    }
 			
 		    function RefreshView() {
+		    	keyword = document.getElementById("keyword").value;
 		        window.location.href = "/ezSchedule/scheduleSearch.do?sdate=" + startdate + "&edate=" + enddate + "&filter=" + encodeURIComponent(filter) + "&keyword=" + encodeURIComponent(keyword);
 		    }
 			

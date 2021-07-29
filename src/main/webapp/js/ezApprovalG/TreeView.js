@@ -465,18 +465,24 @@ function TreeView() {
                 //노드ID 및 노드 이름 지정						
                 var strNodeID = pNode.id + "_" + i;
                 //값이 없을경우 트리뷰 에러나는 것을 막음
-                //TODO 2016-09-07 이효진 다국어 처리 관련 소스 추가
+                //TODO 2016-09-07 이효진 다국어 처리 관련 소스 추가  로 되어 있지만
+                // EzOrganDAO.getTBLDeptMaster > CASE #v_LANGDATA# WHEN '1' THEN DISPLAYNAME ELSE DISPLAYNAME2 END DEPTNM 이고,
+                // ezOrgan.service.impl.EzOrganServiceImpl > getTreeNodeInfo() > "<VALUE>" + commonUtil.cleanValue(vo.getDeptNM()) + "</VALUE>" 이고,
+                // (Commit a929ffab5) Hyojin Lee <hyojin0414@kaoni.com> on 16. 12. 19 오전 10:38 이때를 보면 VALUE2는 없음.
+                // [카이스트]는 apprGezApprovalInfo.jsp에서 primary를 삭제해서 에러가 안남. 왜 삭제했는지는 commit을 찾기 힘듦. 
+                /*
                 if (typeof(primary) != 'undefined' && primary != '1') {
                 	if(SelectSingleNodeValue(arrNodes[i], "VALUE2").replace(/ /gi, "") != "\n")
                         var strNodeNM = SelectSingleNodeValue(arrNodes[i], "VALUE2");
                     else
                         var strNodeNM = "　　　";
                 } else {
+                */
                 	if(SelectSingleNodeValue(arrNodes[i], "VALUE").replace(/ /gi, "") != "\n")
                         var strNodeNM = SelectSingleNodeValue(arrNodes[i], "VALUE");
                     else
                         var strNodeNM = "　　　";
-                }
+                // }
                 
 
                 //TreeNode 객체 생성하여 프로퍼티 지정

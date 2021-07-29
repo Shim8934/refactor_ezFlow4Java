@@ -190,6 +190,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 				// 도로명주소 open api 예외 처리
 				if (!"juso.go.kr".equalsIgnoreCase(refererDomainName)
 						&& !"microsoftonline.com".equalsIgnoreCase(refererDomainName)
+						&& !"google.com".equalsIgnoreCase(refererDomainName)
 						&& !refererDomainName.equalsIgnoreCase(hostDomainName)) {
 					logger.debug("hostDomainName and refererDomainName are different.");
 					

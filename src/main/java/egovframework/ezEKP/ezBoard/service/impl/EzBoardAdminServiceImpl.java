@@ -683,6 +683,9 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_PAPPRFLAG", boardPropertyVO.getApprFlag());
 		map.put("v_PAPPRMAILFLAG", boardPropertyVO.getApprMailFlag());
 		map.put("v_LIKEFLAG", boardPropertyVO.getLikeFlag());
+		map.put("v_MAILFG_POST", boardPropertyVO.getMailFG_Post());
+		map.put("v_MAILFG_MOD", boardPropertyVO.getMailFG_Mod());
+		map.put("v_MAILFG_COMMENT", boardPropertyVO.getMailFG_Comment());
 		map.put("v_TENANTID", boardPropertyVO.getTenantID());
 		
 		/* 2018-10-18 홍승비 - 게시판'그룹' 이름변경 시 하위게시판처럼 데이터가 업데이트되는 부분 수정 */

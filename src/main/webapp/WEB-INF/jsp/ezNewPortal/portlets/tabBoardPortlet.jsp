@@ -17,7 +17,7 @@
 				<dt id="tabBoardList2Tab"   onclick="return tapBoardChangeTab(this)" class="tabBoardTab" style="display: none;"><span></span></dt>
 				<dt id="tabBoardList3Tab"   onclick="return tapBoardChangeTab(this)" class="tabBoardTab" style="display: none;"><span></span></dt>
 				<dd class="portletPlus" id="tabBoardPlus" onclick="tabBoardPlus()">
-				    <img src="/images/ezNewPortal/portlet_Plus2.png">
+				    <img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
 				</dd>
 		   </dl>
 		   <div id="notexistence">

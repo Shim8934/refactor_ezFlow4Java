@@ -124,6 +124,8 @@ import net.lingala.zip4j.util.Zip4jConstants;
 @Component
 public class EzEmailUtil {
 
+	private static final String[] UNSUPPORTED_PREVIEW_CONTENT_TYPES = { "image/vnd.adobe.photoshop" };
+
 	private static final Logger logger = LoggerFactory.getLogger(EzEmailUtil.class);
 	
 	@Resource(name = "EzCommonService")
@@ -1080,10 +1082,12 @@ public class EzEmailUtil {
 		if (part.getDisposition() != null && part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)
 				&& ((MimePart)part).getContentID() != null) {
 			String htmlBodyContent = (String)extraMap.get("htmlBody");
+			String contentID = ((MimePart) part).getContentID();
 			
-			if (htmlBodyContent != null) {
-				String contentID = ((MimePart)part).getContentID();
-				
+			// htmlBody가 없다면 Content-ID 존재 여부 상관없이 무조건 첨부라고 판단
+			if (htmlBodyContent == null) {
+				isAttachmentWithUnreferencedContentID = true;
+			} else {
 				if (contentID.startsWith("<")) {
 					contentID = contentID.substring(1);
 				}
@@ -1091,13 +1095,13 @@ public class EzEmailUtil {
 				if (contentID.endsWith(">")) {
 					contentID = contentID.substring(0, contentID.length() - 1);
 				}
-				
+
 				if (!htmlBodyContent.contains("contentId=%3C" + contentID + "%3E")) {
 					isAttachmentWithUnreferencedContentID = true;
-				}				
-				
-				logger.debug("attachment with contentID=" + contentID + ",isAttachmentWithUnreferencedContentID=" + isAttachmentWithUnreferencedContentID);				
+				}
 			}
+
+			logger.debug("attachment with contentID={}, isAttachmentWithUnreferencedContentID={}", contentID, isAttachmentWithUnreferencedContentID);
 		}
 		
 		// 아래 if문 조건에 disposition이 attachment인지 체크했는데
@@ -1379,7 +1383,14 @@ public class EzEmailUtil {
 				pAttachListHtml += " <span class='icon_rbtn' fileid='" + bodyPartIndex + "' onclick=\"AttachFile_Delete(this);\"><img src='/images/icon_reddelete.gif' width='16' height='16' style='vertical-align: top'></span></li>";
 			}
 			
-			if (part.getContentType().contains("IMAGE")) {
+			appendPreviewImage: if (part.isMimeType("image/*")) {
+				// .psd 등 웹 브라우저에서 지원하지 않는 이미지인지 검사
+				for (String unsupportedContentType : UNSUPPORTED_PREVIEW_CONTENT_TYPES) {
+					if (part.isMimeType(unsupportedContentType)) {
+						break appendPreviewImage;
+					}
+				}
+
 				String aitem = "?mode=Attach&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex + "&order=" + order + "&depth=" + depth;
 				previewImageListHtml += " <div><p class=imageArea><a target=_blank href='" + "/ezEmail/readAttachIamge.do" + aitem + "'>";
 				previewImageListHtml += " <img src='" + "/ezEmail/downloadAttach.do" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' style='cursor:pointer;'></a></p>";
@@ -3350,7 +3361,10 @@ public class EzEmailUtil {
 							if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.INLINE)
 									|| ((MimePart)p).getContentID() != null) {
 								p = getConvertedBodyPartFromInlineToAttachment(p); 
-								p.setHeader("Content-Disposition", "attachment");
+
+								if (p.getHeader("Content-Disposition") == null) {
+									p.setHeader("Content-Disposition", "attachment");
+								}
 							}
 						}				
 					}
@@ -5157,7 +5171,6 @@ public class EzEmailUtil {
 		/** 숨은 참조 */
 		private List<InternetAddress> bccList;
 		/** 실제 SMTP 레벨의 수신자 */
-		;
 		private List<InternetAddress> recipientList;
 		/** 첨부파일 */
 		private List<EmailAttachment> attachmentList;

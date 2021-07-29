@@ -1007,6 +1007,11 @@ function ListView() {
                     	oText = document.createTextNode(ConvMakeXMLString(strValue));
                     	objTd.appendChild(oText);
                     }
+                    else if (_thisID == "pLvList" && colNameUpperCase == "TITLE") { // 분리첨부의 TITLE 속성 추가 (제목 툴팁)
+                    	objTd.title = ConvMakeXMLString(strValue);
+                    	oText = document.createTextNode(ConvMakeXMLString(strValue));
+                    	objTd.appendChild(oText);
+                    }
                     else {
                     	oText = document.createTextNode(ConvMakeXMLString(strValue));
                         objTd.appendChild(oText);
@@ -1871,13 +1876,14 @@ function SelectCheckBox(pTableID, pRowSN, event) {
 }
 
 /* 2020-08-27 홍승비 - 체크박스 선택 또는 해제 시, 문서들의 상태를 체크하여 일부 버튼의 표출을 제어 (재기안, 삭제, 회송) */
+// 2021-07-14 김민성 - 결재할문서 문서 선택 관련 스펙 변경 -> 다중 선택에 대해서는 일괄결재, 삭제만 가능(삭제의 경우에도 삭제 가능한 문서일 때만 버튼 활성화)
 function checkboxBtnShowCtl() {
 	var DocList = new ListView();
     DocList.LoadFromID("DocList");
     var oArrRows = DocList.GetSelectedRows();
     
-    var isDelShow = false;
-    var isRedraftShow = false;
+    var isDelShow = true;
+    var isRedraftShow = true;
     var pFunctionType = "";
     var pDocState = "";
     if (oArrRows.length > 0) {
@@ -1885,13 +1891,18 @@ function checkboxBtnShowCtl() {
     		pFunctionType = GetAttribute(oArrRows[i], "DATA10"); // DATA10 = APRSTATE(FUNCTIONTYPE)
     		pDocState = GetAttribute(oArrRows[i], "DATA12"); // DATA9 = 수신문 관련 플래그, DATA12 = DOCSTATE
     		
-    		// 반송, 회수, 회송 타입이 하나라도 선택된 상태라면 재기안/삭제버튼을 표출
+    		// 모든 선택된 문서의 상태가 반송, 회수, 회송 타입인 경우 -> 재기안/삭제버튼을 표출(단, 재기안은 문서가 하나만 선택 된 경우)
     		if (pFunctionType == "004" || pFunctionType == "006" || pFunctionType == "015") {
     			// 내부결재가 아닌 수신문(011), 합의문(012)의 경우 삭제 불가능, 재기안 가능 (현재 체크박스가 결재할문서에만 존재하므로, 부서수신함 등의 다른 문서함은 고려하지 않음)
     			if (GetAttribute(oArrRows[i], "DATA9") == "0" && pDocState != "011" && pDocState != "012") {
-    				isDelShow = true;
+    				isDelShow = isDelShow == true ? true : false;
+    			} else {
+    				isDelShow = false;
     			}
-    			isRedraftShow = true;
+    			isRedraftShow = oArrRows.length == 1 ? true : false;
+    		} else {
+    			isDelShow = false;
+    			isRedraftShow = false;
     		}
     	}
     	
@@ -1904,6 +1915,19 @@ function checkboxBtnShowCtl() {
     		document.getElementById("tbtnRedraft").style.display = "";
     	} else {
     		document.getElementById("tbtnRedraft").style.display = "none";
+    	}
+    	
+    	document.getElementById("tbtnApprove").style.display = "none";
+    	document.getElementById("tbtnApprove1").style.display = "";
+    	if(oArrRows.length == 1) {
+    		document.getElementById("tbtnViewDoc").style.display = "";
+        	document.getElementById("tbtnTotalSave").style.display = "";
+        	if (isDelShow == false && isRedraftShow == false) {
+        		document.getElementById("tbtnApprove").style.display = "";
+        	}
+    	} else {
+    		document.getElementById("tbtnViewDoc").style.display = "none";
+        	document.getElementById("tbtnTotalSave").style.display = "none";
     	}
     }
 }

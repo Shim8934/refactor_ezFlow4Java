@@ -37,6 +37,8 @@ function GetDocumentElement(pCharName, pGubun) {
                 } else {
                     return getNodeText(connData[0]);
                 }
+            } else {
+                return "";
             }
         } else {
             return "";
@@ -97,19 +99,21 @@ function ConnExist(pAttr) {
     var keywordXml = loadXMLString(GetDocumentElement("CONNROOT", true));
     var connNodes = SelectNodes(keywordXml, "CONNROOT/conn");
 
-    var findFlag = true;
-    for (var i = 0, ilen = connNodes.length; i < ilen; i++) {
-        for (var j = 0, jlen = pAttr.length; j < jlen; j++) {
-            var findAttrArr = pAttr[j].split(";");
-            var attrValue = findAttribute(connNodes[0], findAttrArr[0], findAttrArr[1]);
-            if (attrValue !== findAttrArr[2]) {
-                findFlag = findFlag * false;
-            } else {
-                findFlag = findFlag * true;
+    if (connNodes) {
+        var findFlag = true;
+        for (var i = 0, ilen = connNodes.length; i < ilen; i++) {
+            for (var j = 0, jlen = pAttr.length; j < jlen; j++) {
+                var findAttrArr = pAttr[j].split(";");
+                var attrValue = findAttribute(connNodes[0], findAttrArr[0], findAttrArr[1]);
+                if (attrValue !== findAttrArr[2]) {
+                    findFlag = findFlag * false;
+                } else {
+                    findFlag = findFlag * true;
+                }
             }
         }
     }
-
+    
     return Boolean(findFlag);
 }
 

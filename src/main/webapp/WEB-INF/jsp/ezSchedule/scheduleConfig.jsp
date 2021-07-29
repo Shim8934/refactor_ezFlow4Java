@@ -17,6 +17,7 @@
 			var starttime = "<c:out value='${scheduleConfigVO.startTime}'/>";
 			var endtime = "<c:out value='${scheduleConfigVO.endTime}'/>";
 			var autodelete = "<c:out value='${scheduleConfigVO.isAutoDelete}'/>";
+			var primary = "<c:out value='${lang}'/>";
 			
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
@@ -109,8 +110,8 @@
 	
 		        for (var i = 0; i < document.getElementById("ListSecretary").length; i++) {
 		            secretary["id"][i] = document.getElementById("ListSecretary").options[i].value;
-		            secretary["name"][i] = getNodeText(document.getElementById("ListSecretary").options[i]);
-		            secretary["name1"][i] = getNodeText(document.getElementById("ListSecretary").options[i]);
+		            secretary["name"][i] = GetAttribute(document.getElementById("ListSecretary").options[i], "name");
+		            secretary["name1"][i] = GetAttribute(document.getElementById("ListSecretary").options[i], "name");
 		            secretary["name2"][i] = GetAttribute(document.getElementById("ListSecretary").options[i], "name2");
 		            secretary["deptname"][i] = GetAttribute(document.getElementById("ListSecretary").options[i], "deptname");
 		            secretary["deptname2"][i] = GetAttribute(document.getElementById("ListSecretary").options[i], "deptname");
@@ -130,8 +131,12 @@
 	
 		            for (var i = 0; i < rtn["id"].length; i++) {
 		                var lastindex = document.getElementById("ListSecretary").length;
-		                var newoption = new Option(rtn["name"][i], rtn["id"][i]);
+		                var newoption = new Option(primary == 1 ? rtn["name"][i] : rtn["name2"][i], rtn["id"][i]);
 		                document.getElementById("ListSecretary").options[lastindex] = newoption;
+		                newoption.setAttribute("name", rtn["name"][i]);
+		                newoption.setAttribute("name2", rtn["name2"][i]);
+		                newoption.setAttribute("deptname", rtn["deptname"][i]);
+		                newoption.setAttribute("deptname2", rtn["deptname2"][i]);
 		            }
 		            
 		            //2018-08-10 김보미 - 비서가 없을 경우 dropbox가 내려오지 않도록 변경
@@ -243,8 +248,13 @@
  				      	<%--<select name="ListSecretary" id="ListSecretary" style="width:85px; margin-top: 1px;" > --%>
 				      		<select name="ListSecretary" id="ListSecretary" style="width:85px; margin-top: 1px;" <c:if test='${selectList eq null || selectList eq "[]"}'> disabled </c:if>>
 				      			<c:forEach var="item" items="${selectList}">
-				      				<option value="${item.cn}" name2="${item.displayName2}" deptname="${item.description}" deptname2="${item.description2}" email="${item.mail}">
-				      					${item.displayName}
+				      				<option value="${item.cn}" name="${item.displayName}" name2="${item.displayName2}" deptname="${item.description}" deptname2="${item.description2}" email="${item.mail}">
+				      					<c:if test="${lang == 1}">
+				      						${item.displayName}
+				      					</c:if>
+				      					<c:if test="${lang != 1}">
+				      						${item.displayName2}
+				      					</c:if>
 				      				</option>
 				      			</c:forEach>
 				      		</select>			      		

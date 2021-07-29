@@ -42,6 +42,7 @@ import egovframework.ezEKP.ezWebFolder.util.EzWebfolderUtil;
 import egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileHistoryVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
+import egovframework.ezEKP.ezWebFolder.vo.FolderTreeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.ezEKP.ezWebFolder.vo.UserCapacityVO;
 import egovframework.ezEKP.ezWebFolder.vo.WebfolderConfigVO;
@@ -164,7 +165,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			String primary   = common.getPrimary();
 			int tenantId     = common.getTenantId();
 
-			List<Map<String, Object>> folderList = service.getFolderTree(userId, deptId, compId, folderType, primary, tenantId, "", isAdmin);
+			List<FolderTreeVO> folderList = service.getFolderTree(userId, deptId, compId, folderType, primary, tenantId, "", isAdmin);
 
 			jsonObj.put("status", "ok");
 			jsonObj.put("code", 0);
@@ -1613,7 +1614,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			String filePath;
 			FileVO filevo = ezWebFolderService.getFileByFileId(fileId, offset, tenantId);
 			if (isVersionFile) {
-				FileHistoryVO history = ezWebFolderService.getFileHistory(user, fileId, Integer.parseInt(version));
+				FileHistoryVO history = ezWebFolderService.getFileHistory(fileId, Integer.parseInt(version), offset, tenantId);
 				filePath = history.getFilePath();
 				filevo.setFileName(filevo.getFileName() + " ("+ version + ".0)");
 				filevo.setFileSize(history.getFileSize());

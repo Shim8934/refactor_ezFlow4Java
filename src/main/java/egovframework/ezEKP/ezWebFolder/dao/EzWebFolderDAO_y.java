@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
+import egovframework.ezEKP.ezWebFolder.vo.FolderTreeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -23,16 +24,16 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 		return (int) insert("EzWebFolderDAO_y.insertRootFolder", map);
 	}
 	
-	public List<Map<String, Object>> getUserFolderTree(Map<String, Object> map) {
-		return (List<Map<String, Object>>) list("EzWebFolderDAO_y.getUserFolderTree",map);
+	public List<FolderTreeVO> getUserFolderTree(Map<String, Object> map) {
+		return (List<FolderTreeVO>) list("EzWebFolderDAO_y.getUserFolderTree",map);
 	}
 	
-	public List<Map<String, Object>> getDeptFolderTree(Map<String, Object> map) {
-		return (List<Map<String, Object>>) list("EzWebFolderDAO_y.getDeptFolderTree",map);
+	public List<FolderTreeVO> getDeptFolderTree(Map<String, Object> map) {
+		return (List<FolderTreeVO>) list("EzWebFolderDAO_y.getDeptFolderTree",map);
 	}
 	
-	public List<Map<String, Object>> getCompFolderTree(Map<String, Object> map) {
-		return (List<Map<String, Object>>) list("EzWebFolderDAO_y.getCompFolderTree",map);
+	public List<FolderTreeVO> getCompFolderTree(Map<String, Object> map) {
+		return (List<FolderTreeVO>) list("EzWebFolderDAO_y.getCompFolderTree",map);
 	}
 	
 	// fileList 가져오는 메소드
