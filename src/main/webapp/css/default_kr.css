@@ -97,11 +97,11 @@ form{display:inline;margin:0}
 	/* background:url('/images/kr/cm/btn_middle_left.gif') top left; */
 	background-repeat:no-repeat;
 	cursor: pointer;
-	height:24px;
+	height:20px;
 	padding-left:12px;
 	vertical-align:top;
 	cursor:pointer;
-	margin-bottom:4px;
+	margin-bottom:2px;
 	border:1px solid #ccc;
 	background-color: white;	
 }
@@ -109,12 +109,12 @@ form{display:inline;margin:0}
 	display:inline-block;
 	/* background:url('/images/kr/cm/btn_middle_right.gif') top right; */
 	background-repeat:no-repeat;
-	height:24px;
+	height:20px;
 	padding-right:12px;	
 	font:12px malgun gothic;
 	letter-spacing:-1;
 	vertical-align:top;
-	line-height:24px;
+	line-height:18px;
 
 }
 
