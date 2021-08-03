@@ -501,7 +501,7 @@
                    	<li><span class="sub_iconLNB tree_delete"></span><span class="list_text" onclick="getTrashCanList();"><spring:message code='ezWebFolder.t269'/></span></li>
                    	<li><span class="sub_iconLNB tree_manage" style="float:left"></span><span class="list_text" onClick="folder_Manage()"><spring:message code='ezWebFolder.t268'/></span></li>
                    	<c:if test="${folderListCount > 0}">                   	
-						<li><span class="sub_iconLNB tree_dot_li"></span><span class="list_text" onclick="fileTransactionHistory(this);">파일이력 관리</span></li>
+						<li><span class="sub_iconLNB tree_dot_li"></span><span class="list_text" onclick="fileTransactionHistory(this);"><spring:message code='ezWebFolder.t128'/></span></li>
 	         		</c:if>
 <!--                    	웹폴더 관리자 사용자화면에서 제거  -->
 <%--                    	<c:if test="${isWfAdmin == '1'}"> --%> 
