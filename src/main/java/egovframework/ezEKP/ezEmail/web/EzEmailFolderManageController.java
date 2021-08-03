@@ -290,9 +290,11 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	            	}
 	            	
 	                break;
-	            case "COPY": //특정 편지함을 복사 - 하위폴더는 복사하지 않음(닷넷버전은 하위폴더도 복사)
+	            case "COPY": 
+	            	// 특정 편지함을 복사 - 하위폴더는 복사하지 않음(닷넷버전은 하위폴더도 복사) 
+	            	// 편지함 삭제 및 복사시 timeout 오류 발생으로 시간 수정
 	            	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-	            			userAccount, password, egovMessageSource, locale, 120000, 20000, ezEmailUtil);
+	            			userAccount, password, egovMessageSource, locale, 600000, 20000, ezEmailUtil);
 	            	
 	            	if (!destination.equals("") && !url.equals("")) {
 	            		Folder oldFolder = ia.getFolder(url);
@@ -346,9 +348,11 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	            	}
 	            	
 	                break;
-	            case "MAILDEL": //특정폴더의 모든 메시지 삭제(지운편지함으로 이동)
+	            case "MAILDEL": 
+	            	// 특정폴더의 모든 메시지 삭제(지운편지함으로 이동)
+	            	// 편지함 삭제 및 복사시 timeout 오류 발생으로 시간 수정
 	            	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-	            			userAccount, password, egovMessageSource, locale, 120000, 20000, ezEmailUtil);
+	            			userAccount, password, egovMessageSource, locale, 600000, 20000, ezEmailUtil);
 	            	
 	            	if (!url.equals("")) {
 	            		String trashFolderName = ezEmailUtil.getTrashFolderId(locale);
