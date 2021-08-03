@@ -33,6 +33,9 @@
 			    margin-left: 7px;
 			    padding-left: 7px;
 		    }
+		    .lnbUL {
+		    	overflow : auto;
+		    }
 	    </style>
 		<script type="text/javascript" >
 		    var companyFolderId = "";
@@ -452,7 +455,7 @@
 		</script>
 	</head>
 	<style>
-		.jstree-span-title {display:inline-block; text-overflow:ellipsis; overflow-x:hidden; margin-left:3px}
+		.jstree-span-title {display:inline-block; margin-left:3px}
 	</style>
 	<body class="newLeft">
 		<div id="left" class="lnb" style="overflow: auto">
@@ -497,6 +500,9 @@
                    	<li><span class="sub_iconLNB tree_board_star"></span><span class="list_text" onclick="moveFavorPage();"><spring:message code='ezWebFolder.t216'/></span></li>
                    	<li><span class="sub_iconLNB tree_delete"></span><span class="list_text" onclick="getTrashCanList();"><spring:message code='ezWebFolder.t269'/></span></li>
                    	<li><span class="sub_iconLNB tree_manage" style="float:left"></span><span class="list_text" onClick="folder_Manage()"><spring:message code='ezWebFolder.t268'/></span></li>
+                   	<c:if test="${folderListCount > 0}">                   	
+						<li><span class="sub_iconLNB tree_dot_li"></span><span class="list_text" onclick="fileTransactionHistory(this);">파일이력 관리</span></li>
+	         		</c:if>
 <!--                    	웹폴더 관리자 사용자화면에서 제거  -->
 <%--                    	<c:if test="${isWfAdmin == '1'}"> --%> 
 <%-- 						<li><span class="sub_iconLNB tree_appr_department"></span><span class="list_text" onclick="wfAdministrator();"><spring:message code="ezWebFolder.t25" /></span></li><!-- 웹폴더 관리자 --> --%>

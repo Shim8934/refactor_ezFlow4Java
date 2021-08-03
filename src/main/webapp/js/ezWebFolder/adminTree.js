@@ -98,14 +98,10 @@ function displaySubFolder(divTree, divElmt, list, folderType) {
 	
 	/* 2018-08-23 홍승비 - 웹폴더 폴더명 ellipsis 작업 */
 	var spanW = 157 - (15 * list["folderLevel"]);
-	spanFolderName.style.display = "inline-block";
-	spanFolderName.style.textOverflow = "ellipsis";
-	spanFolderName.style.overflowX = "hidden";
 	
 	if (spanW < 0) {
 		 spanW = 0;
 	 }
-	spanFolderName.style.width = spanW + 'px';
 	
 	divElmt.appendChild(imgElmt);
 	divElmt.appendChild(imgElmt2);
