@@ -27,6 +27,7 @@
 	    		min-height: 200px;
 	    		overflow-x: auto;
 	    	}
+	    	.lnbUL > .tree.onlytree {border-bottom: 0px none;margin-bottom: -6px;}
 	    </style>
 		<script type="text/javascript" >
 			var arrSubFolder      = [];
