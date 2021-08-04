@@ -348,13 +348,13 @@
 					B.CN as userID,
 				    A.DEPTID as deptID,
 				    CASE
-						WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
-	  					THEN DISPLAYNAME
-	  					ELSE DISPLAYNAME$lang$
+						WHEN (B.DISPLAYNAME$lang$ = '' OR B.DISPLAYNAME$lang$ IS NULL) 
+	  					THEN B.DISPLAYNAME
+	  					ELSE B.DISPLAYNAME$lang$
 	  				END userName,
-	  				DESCRIPTION as deptName,
+	  				D.DISPLAYNAME$lang$ as deptName,
 	  				A.TITLE,
-	  				MAIL,
+	  				B.MAIL,
 				    CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(A.ORDERBY, '0'))), IFNULL(A.ORDERBY, '0')) EXTENSIONATTRIBUTE15,
 				    B.EXTENSIONATTRIBUTE2 as imageName,
 				    B.TENANT_ID,
@@ -363,14 +363,18 @@
 					TBL_ADDJOBMASTER A
 				JOIN
 					TBL_USERMASTER B
+				JOIN
+					TBL_DEPTMASTER D
 				ON
 					A.CN = B.CN
 				AND
 					A.TENANT_ID = B.TENANT_ID
+				AND
+					A.DEPTID = D.CN
 				WHERE
-					(B.DISPLAYNAME$lang$ LIKE CONCAT('%', #deptID#, '%')
-				OR
-					B.DESCRIPTION$lang$ LIKE CONCAT('%', #deptID#, '%'))
+					(B.DISPLAYNAME$lang$ LIKE CONCAT('%', #deptIDEscape#, '%')
+					OR
+					D.DISPLAYNAME$lang$ LIKE CONCAT('%', #deptIDEscape#, '%'))	
 				AND
 					A.TENANT_ID = #tenantID#) 
 				ORDER BY 
@@ -455,13 +459,13 @@
 					B.CN as userID,
 				    A.DEPTID as deptID,
 				    CASE
-						WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
-	  					THEN DISPLAYNAME
-	  					ELSE DISPLAYNAME$lang$
+						WHEN (B.DISPLAYNAME$lang$ = '' OR B.DISPLAYNAME$lang$ IS NULL) 
+	  					THEN B.DISPLAYNAME
+	  					ELSE B.DISPLAYNAME$lang$
 	  				END userName,
-	  				DESCRIPTION as deptName,
+	  				D.DISPLAYNAME$lang$ as deptName,
 	  				A.TITLE,
-	  				MAIL,
+	  				B.MAIL,
 				    CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(A.ORDERBY, '0'))), IFNULL(A.ORDERBY, '0')) EXTENSIONATTRIBUTE15,
 				    B.EXTENSIONATTRIBUTE2 as imageName,
 				    B.TENANT_ID,
@@ -470,10 +474,14 @@
 					TBL_ADDJOBMASTER A
 				JOIN
 					TBL_USERMASTER B
+				JOIN
+					TBL_DEPTMASTER D
 				ON
 					A.CN = B.CN
 				AND
 					A.TENANT_ID = B.TENANT_ID
+				AND
+					A.DEPTID = D.CN
 				WHERE
 					A.DEPTID = #deptID#
 				AND
