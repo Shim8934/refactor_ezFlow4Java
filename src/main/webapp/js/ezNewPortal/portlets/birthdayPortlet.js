@@ -84,7 +84,7 @@ function getBirthdayList() {
 				
 				for (var i = 0; i< resultCount; i++) {
 					var userInfo = birthdayList[i];
-					$("#P" + userInfo.userId).on("click", {"userId" : userInfo.userId}, openUserInfo);
+					$("#P" + userInfo.userId.replace(/[^\w\s]/gi, '\\$&')).on("click", {"userId" : userInfo.userId}, openUserInfo);
 				}
 			} else {
 				$("#nodata_NewBirthday").css("display", "");
