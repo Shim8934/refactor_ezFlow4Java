@@ -379,7 +379,7 @@
 					    	if (xmlHTTP2.responseText == "OK") {
 					    		alert("<spring:message code='ezEmail.t473' />");
 					    	} else if (xmlHTTP2.responseText == "MAIL_NOT_EXISTS") {
-					    		alert("<spring:message code='ezEmail.pyy23' />");				    	
+					    		alert("<spring:message code='ezEmail.t473' />");		    	
 					    	} else {
 					    		alert("<spring:message code='ezEmail.t472' />");
 					    	}
@@ -395,7 +395,7 @@
 		            		} else if (xmlHTTP2.responseText.indexOf("NO COPY processing failed.") > -1) {
 		            			alert(strLang241);
 		            		} else if (xmlHTTP2.responseText == "MAIL_NOT_EXISTS") {
-					    		alert("<spring:message code='ezEmail.pyy23' />");				    	
+					    		alert("<spring:message code='ezEmail.t478' />");			    	
 					    	} else {
 		            			alert("<spring:message code='ezEmail.t477' />");
 		            		}
