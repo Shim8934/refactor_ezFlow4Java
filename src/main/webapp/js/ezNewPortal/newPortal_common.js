@@ -757,7 +757,7 @@ function getBirthdayEmployeesList() {
 				
 				for (var i = 0; i< resultCount; i++) {
 					var userInfo = birthdayList[i];
-					$("#B" + userInfo.userId).on("click", {"userId" : userInfo.userId}, openUserInfo);
+					$("#B" + userInfo.userId.replace(/[^\w\s]/gi, '\\$&')).on("click", {"userId" : userInfo.userId}, openUserInfo);
 				}
 				}else{
 					getBirthdayEmployeesLists(birthdayList, resultCount, resultMaxCount, chkList);
@@ -804,7 +804,7 @@ function getBirthdayEmployeesLists(birthdayList, resultCount, resultMaxCount, ch
 		
 		for (var i = chkList; i< chkListMax; i++) {
 			var userInfo = birthdayList[i];
-			$("#B" + userInfo.userId).on("click", {"userId" : userInfo.userId}, openUserInfo);
+			$("#B" + userInfo.userId.replace(/[^\w\s]/gi, '\\$&')).on("click", {"userId" : userInfo.userId}, openUserInfo);
 		}
 	}else{
 		for (var i = chkList; i < resultMaxCount; i++) {
@@ -824,7 +824,7 @@ function getBirthdayEmployeesLists(birthdayList, resultCount, resultMaxCount, ch
 		
 		for (var i = chkList; i< resultMaxCount; i++) {
 			var userInfo = birthdayList[i];
-			$("#B" + userInfo.userId).on("click", {"userId" : userInfo.userId}, openUserInfo);
+			$("#B" + userInfo.userId.replace(/[^\w\s]/gi, '\\$&')).on("click", {"userId" : userInfo.userId}, openUserInfo);
 		}
 	}
 		
