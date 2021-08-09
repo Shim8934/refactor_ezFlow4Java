@@ -2888,7 +2888,7 @@
 	    		(#companyID#, #tenantID#, 17, 1, 1, 17),
 	    		(#companyID#, #tenantID#, 18, 1, 1, 18),
 	    		(#companyID#, #tenantID#, 19, 1, 1, 19),
-	    		(#companyID#, #tenantID#, 20, 1, 1, 20)
+	    		(#companyID#, #tenantID#, 20, 0, 1, 20)
   		]]>
     </insert>
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I26" parameterClass="Map">

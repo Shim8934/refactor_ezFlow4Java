@@ -2342,9 +2342,9 @@ public class EzAddressController{
 	        	}
 	        	
 	        	// 가져오기 시 메모에 줄바꿈이 있을 경우 치환
-	        	if (csvBody[14].contains("\n")) {
+	        	/*if (csvBody[14].contains("\n")) {
 	        		csvBody[14] = csvBody[14].replaceAll("\n", "<br>");
-	        	}
+	        	}*/
 	        	
 	        	String sName = csvBody[0];
 	        	if (sName.contains("\'") || sName.contains("<") || sName.contains(">") || sName.contains("\"") || sName.contains("&") || sName.contains(";")) {

@@ -1979,5 +1979,20 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		
 		logger.debug("delMailboxProgress ended. result=" + resultInt);
 	}
-	
+
+	@RequestMapping(value="/ezEmail/getUserKey.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String getUserKey(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getUserKey stared.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		
+		UUID uuid = UUID.randomUUID();
+    	String userkey = userId + String.valueOf(uuid);
+		
+		logger.debug("getUserKey ended.");
+		return userkey;
+	}
+	 
 }

@@ -16,13 +16,18 @@
 	    	.mCSB_inside > .mCSB_container {
 	    		margin-right:10px;
 	    	}
-	    	.spanName {
-	    		width:65%;
-	    	}
 	    	.lnbUL li .list_text {
 	    		height: auto;
 	    		white-space: normal;
 	    	}
+	    	.folderTree {
+    		    min-height: 200px;
+	    	}
+	    	.tree {
+	    		min-height: 200px;
+	    		overflow-x: auto;
+	    	}
+	    	.lnbUL > .tree.onlytree {border-bottom: 0px none;margin-bottom: -6px;}
 	    </style>
 		<script type="text/javascript" >
 			var arrSubFolder      = [];

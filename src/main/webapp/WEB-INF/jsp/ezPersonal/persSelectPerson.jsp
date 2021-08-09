@@ -222,7 +222,7 @@
 		    		url : "/ezOrgan/getSearchList.do",
 		    		data : {
 		    			search : document.getElementById("search_type").value + "::" + document.getElementById("keyword").value.trim(),
-		    			cell   : "company;description;displayname;title;telephonenumber",
+		    			cell   : "company;description;displayname;title;telephonenumber;extensionAttribute5",
 		    			prop   : "department",
 		    			type   : "user"
 		    		},

@@ -400,6 +400,10 @@
 		            OpenAlertUI("<spring:message code = 'ezApprovalG.t745' />");
 		            return;
 		        }
+				if (trim(document.getElementById("tbTaskName2").value) == "") {
+					OpenAlertUI("<spring:message code = 'ezApprovalG.t745' />");
+					return;
+				}
 
 		        if (approvalFlag == 'G' && trim(document.getElementById("tbTaskDesc").value) == "") {
 		            OpenAlertUI("<spring:message code = 'ezApprovalG.t746' />");

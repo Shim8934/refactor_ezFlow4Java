@@ -38,6 +38,17 @@
 	background-color: #f4f5f5;
 	cursor: pointer;
 }
+
+.imgbtn{ 
+	height:24px;
+	margin-bottom:4px;
+}
+.imgbtn span{
+	height:24px;
+	line-height:24px;
+
+}
+
 </style>
 <script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 <script type="text/javascript"

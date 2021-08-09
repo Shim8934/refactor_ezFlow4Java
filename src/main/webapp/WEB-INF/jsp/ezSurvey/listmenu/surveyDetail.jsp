@@ -77,7 +77,7 @@
 						</td>
 						<th class="left-Th"><spring:message code="ezSurvey.t94"/></th> <%-- create date setting --%>
 						<td class="right-Td">
-							<div class="surveyinf-divcf"><c:out value="${fn:substring(survey.createDate, 0, 19)}"/></div>
+							<div class="surveyinf-divcf"><c:out value="${fn:substring(survey.createDate, 0, 16)}"/></div> <%--16을 19로 변경하면 초까지 표기--%>
 						</td>
 					</tr>
 					<tr>
