@@ -273,7 +273,7 @@
 		                
 		                totalPage = Math.ceil(new Number(lstCnt / perCnt));
 		                
-		                if (CurPage > totalPage) {
+		                if (CurPage > totalPage && totalPage != 0) {
 		                    CurPage = totalPage;
 		                    getBoardList();
 		                    return;
