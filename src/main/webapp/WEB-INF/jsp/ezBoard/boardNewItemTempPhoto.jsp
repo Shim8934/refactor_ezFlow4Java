@@ -129,7 +129,7 @@
 					url : "/ezBoard/imageViewList.do",
 					data : { boardID   : pBoardID, 
 							 itemID    : strItemID,
-							 page      : "1"
+							 page      : "0"
 						   },
 					success: function(result){
 						ImageViewTable(result);

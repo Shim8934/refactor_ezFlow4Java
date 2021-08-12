@@ -527,7 +527,7 @@
 		</isNotEmpty>
 	</select>
 	
-	<select id="EzBoardDAO.photoViewDB" parameterClass="Map" resultMap="photoViewDB">
+	<select id="EzBoardDAO.photoViewDB" parameterClass="Map" resultMap="photoViewDB" remapResults="true">
 		<![CDATA[
     		  SELECT 
                 IMAGEID ,
@@ -545,9 +545,13 @@
               	BoardID = #v_pBoardID#
               ORDER BY 
               	IMAGEID ASC
+		]]>
+		<isEqual property="v_ISTEMPITEM" compareValue="N">
+		<![CDATA[
               LIMIT
               	#limit#, #rowCount#
 		]]>
+		</isEqual>
 	</select>
 	
 	<select id="EzBoardDAO.photoViewDBCount" parameterClass="Map" resultClass="Integer">

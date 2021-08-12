@@ -6366,7 +6366,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String realPath = commonUtil.getRealPath(request);
 		String g_ImageUrl = "";
 		int imageCnt = 10;
-		int page = Integer.parseInt(request.getParameter("page"));
+		int page = Integer.parseInt(request.getParameter("page")); // page = 0인 경우, photoViewDB에서 분기 체크하여 모든 이미지를 가져오도록 함
 		int pStartRow = (page - 1) * imageCnt + 1;
 		int pEndRow = page * imageCnt;
 		
