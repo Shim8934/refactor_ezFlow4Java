@@ -800,7 +800,7 @@
 			<![CDATA[
 				ORDER BY
 					A.parentwritedate DESC,
-					A.upperitemidtree,
+					TO_CHAR(A.upperitemidtree),
 					A.itemlevel
 				)
 			]]>
