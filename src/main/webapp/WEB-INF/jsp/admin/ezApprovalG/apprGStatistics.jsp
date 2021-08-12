@@ -352,7 +352,7 @@
 		</div>
 	    
 	    <div class="btnpositionJsp" style="width: 765px;">
-	        <a class="imgbtn" onclick="btnSave_onclick()"><span>CSV <spring:message code='ezApprovalG.t59'/></span></a>
+	        <a class="imgbtn" onclick="btnSave_onclick()"><span>EXCEL <spring:message code='ezApprovalG.t59'/></span></a>
 	    </div>
 	
 	    <iframe id="saveExcel" name="saveExcel" style="display: none"></iframe>
