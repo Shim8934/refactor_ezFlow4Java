@@ -306,7 +306,8 @@
 		                DocList.DataSource(xmlDoc);
 		                DocList.DataBind("lvBoardList");
 		                DocList = null;
-		
+		                
+		                strListInfo = "";
 		                var tempno = 0;
 		                for (var i = 0; i < GetElementsByTagName(xmlDoc, "ROW").length; i++) {
 		                    if (CrossYN()) {
