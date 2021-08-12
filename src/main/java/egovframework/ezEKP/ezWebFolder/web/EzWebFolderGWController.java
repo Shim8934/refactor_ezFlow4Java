@@ -3843,14 +3843,15 @@ public class EzWebFolderGWController {
 		return result;
 	}
 
-	@RequestMapping(value = "/rest/ezwebfolder/file/{fileId}/viewer/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public Result getSatViewerURI(@PathVariable String fileId, @PathVariable String userId,
+	@RequestMapping(value = "/rest/ezwebfolder/file/{fileId}/{mobilePath:(?:mobile-)?}viewer/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public Result getSatViewerURI(@PathVariable String fileId, @PathVariable String userId, @PathVariable String mobilePath,
 			@RequestParam(value = "version") Optional<Integer> versionOptional, HttpServletRequest request) {
 		String requestURI = request.getRequestURI();
 		String serverName = request.getHeader("x-user-host");
+		boolean isMobileRequest = !mobilePath.isEmpty();
 
 		logger.debug("G/W WEBFOLDER [GET {}] started.", requestURI);
-		logger.debug("serverName: {}, fileId: {}, userId: {}, version: {}", serverName, fileId, userId, versionOptional);
+		logger.debug("serverName: {}, fileId: {}, userId: {}, version: {}, isMobileRequest={}", serverName, fileId, userId, versionOptional, isMobileRequest);
 
 		if (containsNull(serverName, userId)) {
 			logger.error("Parameter error!");
@@ -3871,8 +3872,10 @@ public class EzWebFolderGWController {
 				throw new IllegalAccessException("접근 권한이 없습니다.");
 			}
 
-			if (!"1".equals(ezCommonService.getTenantConfig("useImageConvertServer", tenantId))) {
-				throw new RuntimeException("Not enabled useImageConvertServer tenant config");
+			String propertyNameForViewerMode = isMobileRequest ? "useMobileViewer" : "useImageConvertServer";
+
+			if (!"1".equals(ezCommonService.getTenantConfig(propertyNameForViewerMode, tenantId))) {
+				throw new RuntimeException("Not enabled " + propertyNameForViewerMode + " tenant config");
 			}
 
 			FileVO file = ezWebFolderService.getFileByFileId(fileId, offset, tenantId);

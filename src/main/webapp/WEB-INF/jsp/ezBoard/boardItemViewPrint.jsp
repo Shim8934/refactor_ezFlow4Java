@@ -35,7 +35,7 @@
 		    var eOneline = "<c:out value='${oneLine}'/>";
 		    var eAttach = "<c:out value='${attach}'/>";
 			var strWriterID = "${boardItem.writerID}";
-			var strWriterName = "${boardItem.writerName}";
+			var strWriterName = ConvMakeXMLString("<c:out value='${boardItem.writerName}'/>"); // 익명게시판의 게시자명 특문처리 대응
 			var strWriterDeptName = "${boardItem.writerDeptName}";
 			var strWriterCompanyName = "${boardItem.writerCompanyName}";
 			var strWriteDate = "${boardItem.writeDate}";
@@ -93,7 +93,8 @@
 		        }
 		        
 		        myVar = setInterval(function () { DocumentComplate(); }, 2000);
-		       
+		        
+		        document.getElementById("WriteUserNM").innerText = " " + strWriterName;
 		    };
 		
 		    function DocumentComplate() {
@@ -167,6 +168,18 @@
 		        if(message.document.body.innerHTML != "")
 		            document.getElementById("contenttable").innerHTML = message.document.body.innerHTML;
 		    }
+		    
+		    /* 2021-08-12 홍승비 - 익명게시물 게시자명 특문처리 추가 */
+		    function ConvMakeXMLString(str) {
+		        str = ReplaceText(str, "&lt;", "<");
+		        str = ReplaceText(str, "&gt;", ">");
+		        str = ReplaceText(str, "&#039;", "'");
+		        str = ReplaceText(str, "&#034;", "\"");
+		  		str = ReplaceText(str, "&#92;", "\\");
+		  	    str = ReplaceText(str, "&amp;", "&");
+		        return str;
+		    }
+		    
 		</script>
 	</head>
 	<!-- 2018-02-01 김보미 - 게시물 상세 테이블 컬럼 조정. -->
@@ -178,7 +191,7 @@
 		        	<!-- 게시자&부서 -->
 		        	<tr>
 		        		<th style="width:10%;"><spring:message code='ezBoard.t223'/></th>
-						<td id="WriteUserNM" style="width:40%; white-space:nowrap" colspan=4>&nbsp;<c:out value="${boardItem.writerName}"/></td>
+						<td id="WriteUserNM" style="width:40%; white-space:nowrap" colspan=4></td>
 						<%-- <th style="width:10%;"><spring:message code='ezBoard.t289'/></th>
 						<td id="User_DeptNM" style="width:40%; white-space:nowrap">&nbsp;${boardItem.writerDeptName}</td> --%>
 		        	</tr>

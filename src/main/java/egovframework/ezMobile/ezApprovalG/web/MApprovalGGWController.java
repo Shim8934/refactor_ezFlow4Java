@@ -827,6 +827,7 @@ public class MApprovalGGWController {
 			loginVO.setLang(optionInfo.getLang());
 			loginVO.setDeptID(userInfo.getDeptId());
 			loginVO.setDeptName(userInfo.getDeptName());
+			loginVO.setDisplayName(userInfo.getUserName());
 			loginVO.setPrimary(commonUtil.getPrimaryData(loginVO.getLang(), loginVO.getTenantId()));
 			
 			if (type.equals("APR")) {

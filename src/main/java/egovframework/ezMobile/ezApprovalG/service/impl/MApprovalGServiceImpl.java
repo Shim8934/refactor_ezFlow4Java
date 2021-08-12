@@ -603,6 +603,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 						ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), tenantId, locale), saveSendBoxFlag, EmailImportance.NORMAL);
 					}
 
+					/* 수신문서도착알림메일이 두번 발송되는현상 수정
 					//[수신문서도착알림]
 					List<MApprovalGReceiptInfoVO> receiptInfos = getEndReceiptInfos(docId, companyId, tenantId);
 
@@ -669,7 +670,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 						toList = toList.stream().distinct().collect(Collectors.toList());
 
 						ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), tenantId, locale), saveSendBoxFlag, EmailImportance.NORMAL);
-					}
+					}*/
 				} else { //apr
 					for (MApprovalGAprLineInfoVO vo : approvalGAprLineInfoVOs) {
 						targetUserId = vo.getAprMemberId();

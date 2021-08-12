@@ -3980,7 +3980,7 @@ public class EzBoardController extends EgovFileMngUtil{
 					boardListVO = ezBoardService.getBrdGetItemInfoTemp(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
 				}
 				
-				if (mode.equals("modify")) {
+				if (mode.equals("modify") && !boardListVO.getGuBun().equals("2")) {
 					/* 2020-12-11 홍승비 - URL 변조하여 임의의 게시물 수정 가능한 취약점 수정 */
 					// 게시물과 게시판의 boardID 정보가 서로 맞지 않는 경우 오류 페이지 리턴
 					if (boardListVO.getBoardID() == null || boardID == null || !boardListVO.getBoardID().equals(boardID)) {
@@ -5625,6 +5625,11 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		if (boardInfo.getBoardName2() != null && !boardInfo.getBoardName2().equals("")) {
 			boardInfo.setBoardName2(commonUtil.cleanValue(boardInfo.getBoardName2()));
+		}
+		
+		/* 2019-01-31 홍승비 - 게시물 보기 시 게시자 이름 특문처리 (익명게시판 오류수정) */
+		if (boardItem.getWriterName() != null && !boardItem.getWriterName().equals("")) {
+			boardItem.setWriterName(commonUtil.htmlUnescape(boardItem.getWriterName()).replace("\\", "&#92;"));
 		}
 		
 		model.addAttribute("boardItem", boardItem);
