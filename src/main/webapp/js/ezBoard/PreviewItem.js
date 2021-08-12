@@ -228,15 +228,7 @@ function PreviewRayerChange_photo(pGubun) {
             /* 2018-04-25 홍승비 - 크로스 브라우징 중복 코드 삭제 */
             document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
 
-            /* 2021-08-12 김성준 썸네일, 영상 미독 게시물 게시일 내려쓰기 되는 현상 수정 */
-            for(i=0; i<document.getElementById("BoardList_BODY").childNodes.length; i++) {
-                for(j=0; j<document.getElementById("BoardList_BODY").childNodes.item(i).childNodes.length; j++){
-                    if(document.getElementById("BoardList_BODY").childNodes.item(i).childNodes.item(j).textContent.length>15
-                        &&document.getElementById("BoardList_BODY").childNodes.item(i).childNodes.item(j).offsetWidth<=108) {
-                        document.getElementById("BoardList_BODY").childNodes.item(i).childNodes.item(j).style.paddingRight = "3px";
-                    }
-                }
-            }
+
 
             /* 2019-04-11 홍승비 - 앨범형식 보기 시 사용하지 않는 div 분기처리 */
             // if (document.getElementById("BoardList_BODY") != null) {
