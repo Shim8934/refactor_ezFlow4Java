@@ -5627,6 +5627,11 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardInfo.setBoardName2(commonUtil.cleanValue(boardInfo.getBoardName2()));
 		}
 		
+		/* 2019-01-31 홍승비 - 게시물 보기 시 게시자 이름 특문처리 (익명게시판 오류수정) */
+		if (boardItem.getWriterName() != null && !boardItem.getWriterName().equals("")) {
+			boardItem.setWriterName(commonUtil.htmlUnescape(boardItem.getWriterName()).replace("\\", "&#92;"));
+		}
+		
 		model.addAttribute("boardItem", boardItem);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("userInfo", userInfo);
@@ -7767,13 +7772,15 @@ public class EzBoardController extends EgovFileMngUtil{
 		String title = doc.getElementsByTagName("Title").item(0).getTextContent();
 		String strURL =  "javascript:Item_View_New('" + boardID + "','" + itemID + "');";
         strURL = "<span id='board_a' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onClick=\"" + strURL + "\">";
+        String strDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false); 
+        strDate += "( " + userInfo.getOffset().split("\\|")[1] + " )";
         
         StringBuilder bodyContent = new StringBuilder();
         
         /* 2018-10-26 홍승비 - 게시판 답변알림 메일 전송 시 폰트 다국어 설정, 특문처리 추가 */
         bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.t259", userInfo.getLocale()) + "<br><br>");
         bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", userInfo.getLocale()) + commonUtil.cleanValue(boardInfo.getBoardName()));
-        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t252", userInfo.getLocale()) + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
+        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t252", userInfo.getLocale()) + strDate);
         bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + (userInfo.getTitle() == null || "null".equals(userInfo.getTitle()) ? "" : userInfo.getTitle()) + ", " + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
         bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + commonUtil.cleanValue(title) + "</span>");
         
@@ -7822,12 +7829,15 @@ public class EzBoardController extends EgovFileMngUtil{
 		String strURL = "javascript:Item_View_APPR('" + boardID + "','" + itemID + "','" + gubun + "');";
         strURL = "<a id='board_a' style='color:blue;text-decoration:underline;cursor:pointer;' onClick=" + strURL + ">";
         
+        String strDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false); 
+        strDate += "( " + userInfo.getOffset().split("\\|")[1] + " )";
+        
         StringBuilder bodyContent = new StringBuilder();
         
         /* 2018-10-26 홍승비 - 게시판 게시물 승인대기 알림 메일 전송 시 폰트 다국어 설정, 특문처리 추가 */
         bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.t999006", userInfo.getLocale()) + "<br><br>");
         bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", userInfo.getLocale()) + commonUtil.cleanValue(boardInfo.getBoardName()));
-        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t252", userInfo.getLocale()) + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
+        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t252", userInfo.getLocale()) + strDate);
         bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + (userInfo.getTitle() == null || "null".equals(userInfo.getTitle()) ? "" : userInfo.getTitle()) + ", " + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
         bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + commonUtil.cleanValue(title) + "</a>");
         
