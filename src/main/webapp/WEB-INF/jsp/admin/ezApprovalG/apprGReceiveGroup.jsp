@@ -363,6 +363,10 @@
 		    }
 		    
 		    function Updategroupmaininfo() {
+				if(!document.getElementById("pGroupName").value){
+					alert("<spring:message code='ezApprovalG.t1562'/>");
+					return;
+				}
 		        $.ajax({
 		        	type : "POST",
 		        	dataType : "html",

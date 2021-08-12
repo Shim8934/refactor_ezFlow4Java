@@ -347,12 +347,17 @@
 		    var tempFromList;
 		    var tempFromList2;
 		    function ChangeTab(obj) {
-		    	if (typeof(tempFromList) == "undefined" || typeof(tempFromList2) == "undefined" ) {
-		    		tempFromList = document.getElementById("FromList").selectedIndex;
-		    		tempFromList2 = document.getElementById("FromList").selectedIndex;
-		    	}
-		    	
 		        pSelectTab = obj.getAttribute("divname");
+		    	if (typeof(tempFromList) == "undefined" || typeof(tempFromList2) == "undefined" ) {
+		    		if(pSelectTab == 'favoritelist'){
+						tempFromList = document.getElementById("FromList").selectedIndex;
+						tempFromList2 = 0;
+					} else if(pSelectTab == 'formlist'){
+						tempFromList = 0;
+						tempFromList2 = document.getElementById("FromList").selectedIndex;
+					}
+		    	}
+
 		        switch (pSelectTab) {
 		            case "favoritelist":
 		                tempFromList = document.getElementById("FromList").selectedIndex;
