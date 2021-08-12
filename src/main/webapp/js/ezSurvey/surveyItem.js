@@ -495,7 +495,7 @@ var SurveyItem = function() {
 				trElmt.setAttribute("role"      , itemList[i]["surveyId"]);
 				trElmt.setAttribute("userName"  , itemList[i]["creatorName"]);
 				trElmt.setAttribute("userId"    , itemList[i]["creatorId"]);
-				trElmt.setAttribute("createDate", itemList[i]["createDate"].substring(0, 19));
+				trElmt.setAttribute("createDate", itemList[i]["createDate"].substring(0, 16)); /* 초단위표기 삭제, 16 > 19로 변경하면 초단위 복구*/
 				trElmt.setAttribute("surveyTtl" , itemList[i]["title"]);
 				trElmt.onclick    = function(event) {clickRowFunct(event);};
 				trElmt.ondblclick = function(event) {itemDblClickHandler(this);};
