@@ -41,7 +41,7 @@ function Init()
       	async : false,
       	data : {deptID : pDeptID, comID : companyID},
       	success : function(result){
-      		xmlRtn = loadXMLString(result);	        		
+      		xmlRtn = loadXMLString(result.replace('&','&amp;'));
       		 document.getElementById('divlvtDept').innerHTML = "";
       	}
       });
