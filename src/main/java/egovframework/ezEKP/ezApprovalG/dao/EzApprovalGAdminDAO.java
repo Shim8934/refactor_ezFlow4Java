@@ -705,4 +705,8 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public List<String> checkChaebunDeptList(Map<String, Object> map) throws Exception{
 		return (List<String>) list("EzApprovalGAdminDAO.checkChaebunDeptList", map);
 	}
+	
+	public void removeMyTaskCode(Map<String, Object> map) throws Exception {
+		delete("EzApprovalGAdminDAO.removeMyTaskCode", map);
+	}
 }

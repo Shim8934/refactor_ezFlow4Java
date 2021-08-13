@@ -3896,6 +3896,19 @@
 				taskcode = #taskCode#
 	    ]]>
 	</update>
+	
+	<delete id="EzApprovalGAdminDAO.removeMyTaskCode" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_MYTASKCODE
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				taskcode = #taskCode#
+	    ]]>
+	</delete>
 
 	<update id="EzApprovalGAdmin.updateDeptInfo" parameterClass="Map">
 		<![CDATA[

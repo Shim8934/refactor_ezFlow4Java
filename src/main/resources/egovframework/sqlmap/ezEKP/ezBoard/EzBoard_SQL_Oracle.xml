@@ -535,7 +535,7 @@
 		</isNotEmpty>
 	</select>
 	
-	<select id="EzBoardDAO.photoViewDB" parameterClass="Map" resultMap="photoViewDB">
+	<select id="EzBoardDAO.photoViewDB" parameterClass="Map" resultMap="photoViewDB" remapResults="true">
 		<![CDATA[
 			SELECT 
 				* 
@@ -561,11 +561,15 @@
                       ORDER BY 
                   		IMAGEID ASC ) T1
                   	)
+		]]>
+		<isEqual property="v_ISTEMPITEM" compareValue="N">
+		<![CDATA[
 				WHERE
                     RN <= #v_pEndRow#
 				AND
 					RN >= #v_pStartRow#
 		]]>
+		</isEqual>
 	</select>
 		
 	<select id="EzBoardDAO.photoViewDBCount" parameterClass="Map" resultClass="Integer">

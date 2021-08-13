@@ -10,8 +10,9 @@ function btn_AttachAdd_onclick() {
     if( document.getElementById("cnt").value > 0) {
     	var formData = new FormData();
        	
+    	// 특수문자 파싱 이후 파일명 길이를 기준으로 체크
        	$.each($('#file1')[0].files, function(i, file) {
-       		if (file.name.length > attachFileNameMaxLength) {
+       		if (MakeXMLString(file.name).length > attachFileNameMaxLength) {
        			alert(strLang84 + attachFileNameMaxLength + strLangLHM01);
        			return;
        		} else {
