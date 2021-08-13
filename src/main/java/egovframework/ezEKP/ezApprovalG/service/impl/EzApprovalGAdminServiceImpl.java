@@ -1288,6 +1288,11 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			ezApprovalGAdminDAO.removeTaskCode2(map1);
 			ezApprovalGAdminDAO.removeAutoDoc(map1);
 			
+			if (approvalFlag.equals("S")) {
+				ezApprovalGAdminDAO.removeMyTaskCode(map1);
+				logger.debug("removeMyTaskCode success.");
+			}
+			
 			logger.debug("removeTaskCode1,2 ended.");
 			logger.debug("removeTaskCode ended.");
 			

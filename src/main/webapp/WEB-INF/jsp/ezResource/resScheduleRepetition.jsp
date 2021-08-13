@@ -207,7 +207,7 @@
 		    		setTimePickerModifiable();
 		    		
 		    		$('#Stimepicker').timepicker("setTime", sTimeTemp);
-		    		$('#Etimepicker').timepicker("setTime", eTimeTemp);
+		    		$('#Etimepicker').timepicker("setTime", eTimeTemp == "23:59" ? "23:30" : eTimeTemp);
 		    	}
 		    	else {
 		    		setTimePickerModifiable();

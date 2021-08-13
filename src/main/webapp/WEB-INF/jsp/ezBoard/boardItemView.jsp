@@ -488,7 +488,11 @@
 	                    if (parent.opener != null && parent.opener.getNoticePortletList != undefined) {
 	                    	parent.opener.getNoticePortletList();
 	                    }
-	                    
+
+	                    if (window.opener != null && window.opener.getBoardList != undefined) {
+							window.opener.getBoardList();
+	                    }
+
 	                 	// 게시판 포틀릿 리스트 업데이트 되도록 수정
 			            if (parent.opener.getBoardPortletInfo != undefined) {
 			            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
