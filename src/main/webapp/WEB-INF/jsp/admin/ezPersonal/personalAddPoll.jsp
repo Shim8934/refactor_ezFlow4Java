@@ -432,8 +432,8 @@
 				$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 				$("#Edatepicker").datepicker('setDate', EDate);
 
-				document.getElementById("Title").value = Title;
-				document.getElementById("Title2").value = Title2;
+				document.getElementById("Title").value = replaceEntityCodeToStr(Title);
+				document.getElementById("Title2").value = replaceEntityCodeToStr(Title2);
 
 				selectnum.value = pollCount;
 				selectnum_change();

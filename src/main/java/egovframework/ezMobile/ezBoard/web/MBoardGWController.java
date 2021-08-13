@@ -585,14 +585,23 @@ public class MBoardGWController {
 			
 			LOGGER.debug("serverName = " + serverName + " | userId = " + userId);
 			
-			mBoardService.deleteItem(contentId, boardId, info.getTenantId());
-			
-	        result.put("status", "ok");
-			result.put("code", 0);			
+			/* 2021-08-13 홍승비 - 모바일 게시물 삭제 전에 답변 존재여부 확인 */
+			String checkIfHasReply = ezBoardService.brdCheckIfHasReply(contentId, info.getTenantId());
+			if (checkIfHasReply.equals("FALSE")) {
+				mBoardService.deleteItem(contentId, boardId, info.getTenantId());
+				result.put("status", "ok");
+				result.put("code", 0);
+				result.put("hasReply", "NO");
+			} else {
+				result.put("status", "ok");
+				result.put("code", 0);
+				result.put("hasReply", "YES");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
+			result.put("hasReply", "ERROR");
 		}	
 		
 		LOGGER.debug("MOBILE G/W BOARD [DELETE /ezboard/boards/{boardId}/contents] ended.");

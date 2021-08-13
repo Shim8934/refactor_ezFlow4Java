@@ -691,6 +691,14 @@ function selFirstRow(Resultxml) {
         if (approvalFlag == "G") {
         	document.getElementById("tDocInfo").style.display = "none";
         }
+        if(DocListType == "UserContDocList"){
+            document.getElementById("tbtnExcel").style.display = "none";
+            document.getElementById("tbtnExcelAll").style.display = "none";
+            document.getElementById("tbtnRegUserCont").style.display = "none";
+            document.getElementById("tenforce").style.display = "none";
+            document.getElementById("tresend").style.display = "none";
+            document.getElementById("tbtnSelContainer").style.display = "none";
+        }
     }
 
     switch (jobState) {

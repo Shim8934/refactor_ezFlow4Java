@@ -580,24 +580,24 @@
 		        	var selectSearch = document.getElementById('selectType');
 	                if (selectSearch.item(0).selected) {
 	                    TYPE += "TITLE;";
-	                    DATA += "<TITLE>" + document.getElementById("txt_keyword").value + "</TITLE>";
+	                    DATA += "<TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE>";
 	                }
 	                else if (selectSearch.item(1).selected) {
 	                    TYPE += "WRITERNAME;";
-	                    DATA += "<WRITERNAME>" + document.getElementById("txt_keyword").value + "</WRITERNAME>";
+	                    DATA += "<WRITERNAME><![CDATA[" + MakeXMLString(document.getElementById("txt_keyword").value) + "]]></WRITERNAME>";
 	                }
 		        }
 		        else {
 		            if (document.getElementById("txtTitle").value != "")		// DocTitle
 		            {
 		                TYPE += "TITLE;";
-		                DATA += "<TITLE>" + document.getElementById("txtTitle").value + "</TITLE>";
+		                DATA += "<TITLE><![CDATA[" + document.getElementById("txtTitle").value + "]]></TITLE>";
 		            }
 		
 		            if (document.getElementById("txtWriterName").value != "")		// DrafterName
 		            {
 		                TYPE += "WRITERNAME;";
-		                DATA += "<WRITERNAME>" + document.getElementById("txtWriterName").value + "</WRITERNAME>";
+		                DATA += "<WRITERNAME><![CDATA[" + MakeXMLString(document.getElementById("txtWriterName").value) + "]]></WRITERNAME>";
 		            }
 		
 		            /* if (document.getElementById("txtAbstract").value != "")		// ABSTRACT
@@ -609,13 +609,13 @@
 		            if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "")		// StartDate
 		            {
 		                TYPE += "STARTDATE;";
-		                DATA += "<STARTDATE>" + $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + "</STARTDATE>";
+		                DATA += "<STARTDATE><![CDATA[" + $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + "]]></STARTDATE>";
 		            }
 		
 		            if ($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "")		// EndDate
 		            {
 		                TYPE += "ENDDATE;";
-		                DATA += "<ENDDATE>" + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + "</ENDDATE>";
+		                DATA += "<ENDDATE><![CDATA[" + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + "]]></ENDDATE>";
 		            }
 		        }
 		        SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";

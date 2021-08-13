@@ -306,7 +306,8 @@
 		                DocList.DataSource(xmlDoc);
 		                DocList.DataBind("lvBoardList");
 		                DocList = null;
-		
+		                
+		                strListInfo = "";
 		                var tempno = 0;
 		                for (var i = 0; i < GetElementsByTagName(xmlDoc, "ROW").length; i++) {
 		                    if (CrossYN()) {
@@ -834,36 +835,36 @@
 		        	var selectSearch = document.getElementById('selectType');
 	                if (selectSearch.item(0).selected) {
 	                    TYPE += "TITLE;";
-	                    DATA += "<TITLE>" + document.getElementById("txt_keyword").value + "</TITLE>";
+	                    DATA += "<TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE>";
 	                }
 	                else if (selectSearch.item(1).selected) {
 	                    TYPE += "WRITERNAME;";
-	                    DATA += "<WRITERNAME>" + document.getElementById("txt_keyword").value + "</WRITERNAME>";
+	                    DATA += "<WRITERNAME><![CDATA[" + MakeXMLString(document.getElementById("txt_keyword").value) + "]]></WRITERNAME>";
 	                }
 		        }
 		        else {
 		            if (document.getElementById("txtTitle").value != "")		// DocTitle
 		            {
 		                TYPE += "TITLE;";
-		                DATA += "<TITLE>" + document.getElementById("txtTitle").value + "</TITLE>";
+		                DATA += "<TITLE><![CDATA[" + document.getElementById("txtTitle").value + "]]></TITLE>";
 		            }
 		
 		            if (document.getElementById("txtAbstract").value != "")		// ABSTRACT
 		            {
 		                TYPE += "ABSTRACT;";
-		                DATA += "<ABSTRACT>" + document.getElementById("txtAbstract").value + "</ABSTRACT>";
+		                DATA += "<ABSTRACT><![CDATA[" + document.getElementById("txtAbstract").value + "]]></ABSTRACT>";
 		            }
 		
 		            if (document.getElementById("idDatepicker").value != "")		// StartDate
 		            {
 		                TYPE += "STARTDATE;";
-		                DATA += "<STARTDATE>" + document.getElementById("idDatepicker").value.substring(0, 10) + "</STARTDATE>";
+		                DATA += "<STARTDATE><![CDATA[" + document.getElementById("idDatepicker").value.substring(0, 10) + "]]></STARTDATE>";
 		            }
 		
 		            if (document.getElementById("_D2").value != "")		// EndDate
 		            {
 		                TYPE += "ENDDATE;";
-		                DATA += "<ENDDATE>" + document.getElementById("_D2").value.substring(0, 10) + "</ENDDATE>";
+		                DATA += "<ENDDATE><![CDATA[" + document.getElementById("_D2").value.substring(0, 10) + "]]></ENDDATE>";
 		            }
 		        }
 		        SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
