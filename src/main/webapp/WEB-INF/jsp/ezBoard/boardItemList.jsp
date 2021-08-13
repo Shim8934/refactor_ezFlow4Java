@@ -536,46 +536,46 @@
 		        	var selectSearch = document.getElementById('selectType');
 	                if (selectSearch.item(0).selected) {
 	                    TYPE += "TITLE;";
-	                    DATA += "<TITLE>" + document.getElementById("txt_keyword").value + "</TITLE>";
+	                    DATA += "<TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE>";
 	                }
 	                else if (selectSearch.item(1).selected) {
 	                    TYPE += "WRITERNAME;";
-	                    DATA += "<WRITERNAME>" + document.getElementById("txt_keyword").value + "</WRITERNAME>";
+	                    DATA += "<WRITERNAME><![CDATA[" + MakeXMLString(document.getElementById("txt_keyword").value) + "]]></WRITERNAME>";
 	                }
 		        }
 		        else {
 		            if (document.getElementById("txtTitle").value != "")		// DocTitle
 		            {
 		                TYPE += "TITLE;";
-		                DATA += "<TITLE>" + MakeXMLString(document.getElementById("txtTitle").value.replace("'", "''")) + "</TITLE>";
+		                DATA += "<TITLE><![CDATA[" + MakeXMLString(document.getElementById("txtTitle").value.replace("'", "''")) + "]]></TITLE>";
 		            }
 		            
 		        	if (document.getElementById("txtContent").value != "") {		// DocContent
            			    TYPE += "CONTENT;";
-          		        DATA += "<CONTENT>" + MakeXMLString(document.getElementById("txtContent").value.replace("'", "''")) + "</CONTENT>";
+          		        DATA += "<CONTENT><![CDATA[" + MakeXMLString(document.getElementById("txtContent").value.replace("'", "''")) + "]]></CONTENT>";
 		        	}
 		            if (document.getElementById("txtWriterName").value != "")		// DrafterName
 		            {
 		                TYPE += "WRITERNAME;";
-		                DATA += "<WRITERNAME>" + MakeXMLString(document.getElementById("txtWriterName").value.replace("'", "''")) + "</WRITERNAME>";
+		                DATA += "<WRITERNAME><![CDATA[" + MakeXMLString(document.getElementById("txtWriterName").value.replace("'", "''")) + "]]></WRITERNAME>";
 		            }
 		
 		            if (document.getElementById("txtAbstract").value != "")		// ABSTRACT
 		            {
 		                TYPE += "ABSTRACT;";
-		                DATA += "<ABSTRACT>" + MakeXMLString(document.getElementById("txtAbstract").value.replace("'", "''")) + "</ABSTRACT>";
+		                DATA += "<ABSTRACT><![CDATA[" + MakeXMLString(document.getElementById("txtAbstract").value.replace("'", "''")) + "]]></ABSTRACT>";
 		            }
 		
 		            if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "")		// StartDate
 		            {
 		                TYPE += "STARTDATE;";
-		                DATA += "<STARTDATE>" + $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + "</STARTDATE>";
+		                DATA += "<STARTDATE><![CDATA[" + $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + "]]></STARTDATE>";
 		            }
 		
 		            if ($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "")		// EndDate
 		            {
 		                TYPE += "ENDDATE;";
-		                DATA += "<ENDDATE>" + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + "</ENDDATE>";
+		                DATA += "<ENDDATE><![CDATA[" + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + "]]></ENDDATE>";
 		            }
 		        }
 		       	SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
