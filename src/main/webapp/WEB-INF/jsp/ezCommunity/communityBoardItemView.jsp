@@ -1007,23 +1007,17 @@
 	                        	</c:when>
 	                        	
 	                        	<c:otherwise>
-	                        		<td id="Td7" style="white-space: nowrap; width:40%">
+	                        		<td id="Td7" style="white-space: nowrap; width:40%" colspan="3">
 	                            		<div id="Div2" style="vertical-align: middle; height: 16px; overflow-y: auto;"><c:out value='${item.writerName}' /></div>
 	                            	</td>
 	                        	</c:otherwise>
 	                        </c:choose>
 	                        <!-- 작성자 end -->
-							<!-- 부서명 -->
-		                    <th style="width:10%"><spring:message code='ezCommunity.t959'/></th>
-	                        <c:choose>
-	                        	<c:when test="${boardInfo.gubun != '2' }">
+							<!-- 부서명 (익명게시판이 아닌 경우에만 표출) -->
+	                        <c:if test="${boardInfo.gubun != '2' }">
+	                        		<th style="width:10%"><spring:message code='ezCommunity.t959'/></th>
 	                        		<td id="Td1" style="white-space: nowrap; width: 40%;"><span><c:out value='${item.writerDeptName}' /></span></td>
-	                        	</c:when>
-	                        	
-	                        	<c:otherwise>
-	                        		<td id="Td2" style="white-space: nowrap; width: 40%;"><span>&nbsp;</span></td>
-	                        	</c:otherwise>
-	                        </c:choose>
+	                        </c:if>
 	                        <!-- 부서명 end -->
 		                </tr>
 		                
