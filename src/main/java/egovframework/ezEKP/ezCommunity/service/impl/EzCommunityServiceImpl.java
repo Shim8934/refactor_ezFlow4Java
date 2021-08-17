@@ -7750,4 +7750,15 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug("getReaderListCount ended");
 		return ezCommunityDAO.bbsGetReplyItemCnt(map);
 	}
+	
+	public String getClubConfirmType(String code, int tenantID) throws Exception {
+		logger.debug("getClubConfirmType started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_CODE", code);
+		map.put("v_TENANTID", tenantID);
+		
+		logger.debug("getClubConfirmType ended");
+		return ezCommunityDAO.getClubConfirmType(map);
+	}
 }
