@@ -785,6 +785,7 @@
 			    if (pCompanyID != document.getElementById("ListCompany").value) {
 			        pCompanyID = document.getElementById("ListCompany").value;
 			        pChackYN = "FALSE";
+			        pageNum = "1"; // 회사 선택 시 페이징 초기화
 			        
 			        GetDocList();
 			    }
