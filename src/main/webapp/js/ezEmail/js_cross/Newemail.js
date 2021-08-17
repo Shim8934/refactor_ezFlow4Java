@@ -1536,17 +1536,7 @@ function s4() {
     return ((CustomRandom() * 0x10000) | 0).toString(16).substring(1);
 };
 
-var ReadMailOpenNewWin;
-
-
-//20210812이희원 지금오픈되어있는 부라우저 확인
-var userAgent = navigator.userAgent.toLowerCase();
-var browser = {
-	    msie    : /msie/.test(userAgent) && !/opera/.test(userAgent),
-	    safari  : /webkit/.test(userAgent),
-	    firefox : /mozilla/.test(userAgent) && !/(compatible|webkit)/.test(userAgent),
-	    opera   : /opera/.test(userAgent)
-	};   
+var ReadMailOpenNewWin;	
 function callMsgDlg(szContentClass, Href) {
     if (szContentClass == "IPM.Appointment") {
         var xmlHTTP = createXMLHttpRequest();
@@ -1566,48 +1556,15 @@ function callMsgDlg(szContentClass, Href) {
                 feature);
         return;
     }
-    
-    
-    
-    var pheight = 0;
-    //20210812이희원 각브라우저별 높이
-    if (browser.msie){ //IE
-        var scrollHeight = document.documentElement.scrollHeight;
-        var browserHeight = document.documentElement.clientHeight;
-     
-        pheight = scrollHeight < browserHeight ? browserHeight : scrollHeight;
-    
-      } else if (browser.safari){ //Chrome || Safari
-    	 
-    	pheight = document.body.scrollHeight;
-     
-      } else if (browser.firefox){ // Firefox || NS
-        var bodyHeight = document.body.clientHeight;
-    
-        pheight = window.innerHeight < bodyHeight ? bodyHeight : window.innerHeight;
-    
-      } else if (browser.opera){ // Opera
-        var bodyHeight = document.body.clientHeight;
-
-        pheight = window.innerHeight < bodyHeight ? bodyHeight : window.innerHeight;
- 
-      } else { 
-    	pheight = window.screen.availHeight;
-      }
-     
-    var conHeight = pheight * 0.8;
-    pwidth = window.screen.availWidth;
+    var pheight = window.screen.availHeight;
+    var conHeight = 720;
+    var pwidth = window.screen.availWidth;
     var conWidth = pwidth * 0.8;
-    if (conHeight<650)
-    	conHeight=650;
     if (conWidth > 890)
         conWidth = 890;
-    if (pheight<800)
-    	pheight=800;
-    var pTop = (pheight/2) - (conHeight / 2);
-    var pLeft = (pwidth/2) - (conWidth / 2);
-    var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
-    console.log("feature"+feature);
+    var pTop = (pheight - conHeight) / 2;
+    var pLeft = (pwidth - 890) / 2;
+    var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1";
     if (!g_bdraft) {
         var pURI = "/ezEmail/mailRead.do?iptURL=" + encodeURIComponent(Href) + "&PNFlag=Y&CONTENTCLASS=" + encodeURIComponent(szContentClass);
         
