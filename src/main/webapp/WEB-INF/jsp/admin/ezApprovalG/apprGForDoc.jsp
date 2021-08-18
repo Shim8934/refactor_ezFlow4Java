@@ -90,10 +90,12 @@
 	                _draftUser = GetAttribute(tr, "DATA3");
 				    DelFlag = GetAttribute(tr, "DELFLAG");
 	                
-	                if(DelFlag == "Y") {
+	                if (DelFlag == "Y") {
+                		$("#btnDelete").removeClass();
                 		$("#btnDelete").text("<spring:message code='ezApprovalG.kms0002'/>");
-                	}else{
-                		$("#btnDelete").text("<spring:message code='ezApprovalG.kms0001'/>");
+                	} else {
+                		$("#btnDelete").addClass("icon16 icon16_delete");
+                		$("#btnDelete").text("");
                 	}
 	                
 				    switch (jobState) {
@@ -239,10 +241,12 @@
 	                
 				    DelFlag = GetAttribute(tr, "DELFLAG");
 	                
-	                if(DelFlag == "Y") {
+	                if (DelFlag == "Y") {
+	                	$("#btnDelete").removeClass();
                 		$("#btnDelete").text("<spring:message code='ezApprovalG.kms0002'/>");
-                	}else{
-                		$("#btnDelete").text("<spring:message code='ezApprovalG.kms0001'/>");
+                	} else {
+                		$("#btnDelete").addClass("icon16 icon16_delete");
+                		$("#btnDelete").text("");
                 	}
 	                
 	            }
@@ -1024,7 +1028,7 @@
 		            	<option value="ALL"><spring:message code ='ezApprovalG.kmsg01'/></option>
 		        	</select>
 		        </li>
-		        <li id="tbtnDelete"><span id="btnDelete" onclick="return btnDelete_onclick(1)"><spring:message code='ezApprovalG.t266'/></span></li>
+		        <li id="tbtnDelete"><span class="icon16 icon16_delete" id="btnDelete" onclick="return btnDelete_onclick(1)"></span></li>
 	        </ul>
 	    </div>
 	
