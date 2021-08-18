@@ -115,6 +115,9 @@
 				            Recipent_onclick();
 				            break;
 				    }
+				} else {
+					$("#btnDelete").addClass("icon16 icon16_delete");
+            		$("#btnDelete").text("");
 				}
 				
 	            /* 2021-03-24 홍승비 - 제목 클릭 시 원클릭 이벤트로 전자결재 읽기, 결재 팝업창을 표출 */
@@ -248,12 +251,14 @@
                 		$("#btnDelete").addClass("icon16 icon16_delete");
                 		$("#btnDelete").text("");
                 	}
-	                
 	            }
 	            else {
 	                DocID = "";
 	                pURL = "";
 	                _draftUser = "";
+	                
+	                $("#btnDelete").addClass("icon16 icon16_delete");
+            		$("#btnDelete").text("");
 	            }
 
 	            getDataInfo();
