@@ -558,6 +558,7 @@ public class EzWebFolderController_y {
 		
 		json.put("param", paramJson);
 		json.put("userId", userId);
+		json.put("tenantId", userInfo.getTenantId());
 		
 		result = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/selectwebfolderfiletoanother", 
 				null, request, "post", json);

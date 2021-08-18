@@ -79,6 +79,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -2613,5 +2614,59 @@ public class CommonUtil {
 		}
 
 		return value;
+	}
+	
+	public List<String> attachWebFolderFile(JSONArray jsonArr, String downloadDIR, LoginVO userInfo, String realPath) throws Exception {
+ 		logger.debug("attachWebFolderFile start.");
+		
+ 		JSONObject fileInfo = null;
+		String fileName = "";
+		String filePath = ""; 
+		int size = 0;
+		
+		List<String> fileDownPath = new ArrayList<String>();
+			
+		try {
+ 			for (int i=0; i <jsonArr.size(); i++){
+				fileInfo 	= (JSONObject) jsonArr.get(i);
+				fileName 	= fileInfo.get("fileName").toString() ;
+				filePath 	= fileInfo.get("filePath").toString() ;
+				size 		= Integer.parseInt(fileInfo.get("fileSize").toString());
+				String FileRealName = filePath.split("/")[filePath.split("/").length-1];
+				
+				String newFilePath = realPath + downloadDIR + FileRealName;
+				File newAttachFile = new File(newFilePath); 
+				File oldFile = new File(realPath + filePath);
+				FileUtils.copyFile(oldFile, newAttachFile);
+				fileDownPath.add(downloadDIR + FileRealName);
+
+			}
+			logger.debug("attachWebFolderFile copy complete.");
+		} catch (Exception e) {
+			for (int i = 0 ; i < fileDownPath.size() ; i++){
+				File file = new File(fileDownPath.get(i));
+				file.delete();
+			}
+			fileDownPath.clear();
+			e.printStackTrace();
+		} 
+		
+		logger.debug("attachWebFolderFile end.");
+		return fileDownPath;
+	}
+	
+	public void renameFileForOverwrite(String sourceFile, String destFile) throws Exception{
+		try {
+			File sFile = new File(sourceFile);
+			File dFile = new File(destFile);
+			
+			dFile.getParentFile().mkdirs();
+			logger.debug("renameFileForOverwrite-sFile:" + sourceFile + ",size:" +sFile.length());
+			
+			sFile.renameTo(dFile);
+			logger.debug("renameFileForOverwrite-dFile:" + sourceFile + ",size:" +dFile.length());
+		} catch (Exception ex) {
+			logger.debug("ex: {}", ex);
+		}
 	}
 }

@@ -1447,20 +1447,20 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 	}
 
 	@Override
-	public ArrayList<Map<String, Object>> selectWebfolderFiletoAnother(String userId,  ArrayList<String> param) {
-		Map<String, String> map = new HashMap<String, String>();
+	public ArrayList<Map<String, Object>> selectWebfolderFiletoAnother(String userId,  ArrayList<String> param, int tenantId) {
+		Map<String, Object> map = new HashMap<String, Object>();
 		String[] arr = null;
+		List<String> fileList = new ArrayList<String>();
 		String query = "";
 		
-		for (int i = 1; i <param.size(); i++){
+		for (int i = 0; i <param.size(); i++){
+			arr = null;
 			arr = param.get(i).split("/");
-			query += " or (folder_id=" + arr[0] + " and file_id=" + arr[1] + ") "; 
+			fileList.add(arr[1]);
 		}
 		
-		map.put("userId" , userId);
-		map.put("folderId", param.get(0).split("/")[0]);
-		map.put("fileId", param.get(0).split("/")[1]);
-		map.put("query", query);
+		map.put("fileList", fileList);
+		map.put("tenantId", tenantId);
 		
 		ArrayList<Map<String, Object>> result = new ArrayList<Map<String,Object>>();
 		result = ezWebFolderDAO_y.selectWebfolderFiletoAnother(map);

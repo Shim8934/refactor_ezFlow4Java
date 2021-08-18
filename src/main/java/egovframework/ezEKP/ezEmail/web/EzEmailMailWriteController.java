@@ -1522,7 +1522,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				}
 			}
 		}
+		String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", userInfo.getTenantId());
 		
+		model.addAttribute("useWebfolder", useWebfolder);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		
