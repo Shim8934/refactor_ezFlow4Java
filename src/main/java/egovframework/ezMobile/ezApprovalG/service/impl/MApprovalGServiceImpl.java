@@ -826,12 +826,14 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 				for (MApprovalGAprLineInfoVO vo : approvalGAprLineInfoVOs) {
 					targetUserId = vo.getAprMemberId();
 					targetUserName = vo.getAprMemberName();
-
-					if (!"002".equals(vo.getAprState()) && !"003".equals(vo.getAprState()) || "0".equals(commonUtil.convertStringToDocument(ezPersonalService.getApprovNotiConfig(vo.getAprMemberId(), userId, tenantId)).getElementsByTagName("CALLBACK").item(0).getTextContent().trim()) || (approvalGAprLineInfoVOs.indexOf(vo) == approvalGAprLineInfoVOs.size())) {
+					
+					// 회수알림 발송 대상자에서 기안자(회수자)를 제외하고, 현재 결재진행/승인상태가 아닌 경우도 제외함
+					if (!"002".equals(vo.getAprState()) && !"003".equals(vo.getAprState()) || "0".equals(commonUtil.convertStringToDocument(ezPersonalService.getApprovNotiConfig(vo.getAprMemberId(), userId, tenantId)).getElementsByTagName("CALLBACK").item(0).getTextContent().trim())
+							|| (approvalGAprLineInfoVOs.indexOf(vo) == approvalGAprLineInfoVOs.size() - 1)) {
 						continue;
 					}
 
-					LOGGER.debug("HWE : targetUserId = " + targetUserId + ", targetUserName = " + targetUserName);
+					LOGGER.debug("HWE : targetUserId = " + targetUserId + ", targetUserName = " + targetUserName + ", aprState = " + vo.getAprState() + ", aprType = " + vo.getAprType());
 
 					to = new InternetAddress();
 
@@ -846,9 +848,9 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 					contentBuilder.append("<span style='font-size:13px;'>" + egovMessageSource.getMessage("ezEmail.csj18", locale) + ": " + approvalGDocInfoVO.getWriterName() + "</span><br>");
 					contentBuilder.append("<span style='font-size:13px;'>" + egovMessageSource.getMessage("ezEmail.csj19", locale) + ": " + approvalGDocInfoVO.getStartDate() + "</span><br>");
 					contentBuilder.append("</td></tr></table>");
-
-					ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), tenantId, locale), saveSendBoxFlag, EmailImportance.NORMAL);
 				}
+				
+				ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), tenantId, locale), saveSendBoxFlag, EmailImportance.NORMAL);
 
 				break;
 

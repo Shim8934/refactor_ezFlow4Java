@@ -897,6 +897,9 @@ public class MApprovalGGWController {
 					result.put("data", "FAIL");
 				}
 			} else if (type.equals("HWE")) {
+				/* 2021-08-18 홍승비 - 회수메일 발송 시점은 회수동작 이전이 되도록 수정 (현재 결재진행(승인)상태인 참조자와 결재자에게 메일을 보내야 하므로) */
+				mApprovalGService.sendApproveNoticeMail(userInfo, optionInfo, approvalGDocInfoVO, docId, type);
+				
 				rtnVal = ezApprovalGService.doCallBack(docId, userId, userInfo.getCompanyId(), userInfo.getTenantId());
 				
 				if (rtnVal != null && !rtnVal.equals("<RESULT>FALSE</RESULT>")) {
@@ -926,7 +929,8 @@ public class MApprovalGGWController {
 				result.put("code", "1");
 			}
 
-            if ("SUCCESS".equals(result.get("data"))) {
+			// 회수알림메일의 경우, 회수동작 이전에 결재진행(승인)상태인 결재자 및 참조자에게 메일을 발송하므로 예외처리함
+            if (!type.equals("HWE") && "SUCCESS".equals(result.get("data"))) {
                 mApprovalGService.sendApproveNoticeMail(userInfo, optionInfo, approvalGDocInfoVO, docId, type);
             }
 		} catch (Exception e) {
