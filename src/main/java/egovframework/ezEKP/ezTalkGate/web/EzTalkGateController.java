@@ -723,6 +723,18 @@ public class EzTalkGateController {
 			loginVO.setPassword(encryptedPw);
 		}
 		
+		// AD 패스워드 체크
+		if (ezCommonService.getTenantConfig("USE_AD", tenantId).equalsIgnoreCase("YES")) {
+        	// true 이면 그룹웨어 암호 변경
+        	// false 이면 그냥 로그인 금지
+        	String chkADpass = loginService.chkADAndUpdatePassword(id, pw, tenantId);
+        	
+        	if (chkADpass.equalsIgnoreCase("false")) {
+        		// vo의 password에 null 값을 넣어서 selectUser에서 무조건 암호가 틀리게 한다.
+        		isUserExists = false;            		
+        	}
+        }
+		
 		LoginVO resultVO = loginService.selectUser(loginVO);
 		
 		logger.debug("resultVO=" + resultVO);

@@ -297,16 +297,15 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 
 		startDateLimit = commonUtil.getDateStringInUTC(startDateLimit, offset, true);
 		endDateLimit = commonUtil.getDateStringInUTC(endDateLimit, offset, true);
-		LOGGER.debug("");
 		
-		LOGGER.debug("startDateLimit" + startDateLimit);
-		LOGGER.debug("endDateLimit" + endDateLimit);
+		LOGGER.debug("startDateLimit : " + startDateLimit);
+		LOGGER.debug("endDateLimit : " + endDateLimit);
 		
 		
 		// 스케줄 정보 가져옴(tbl_schedule에서 반복예약이 아닌 것만 가져옴)
 		List<ResGetScheduleVO> getScheduleList = getScheduleNormalList(ownerID, companyID, startDateLimit, endDateLimit, pWriterDept, offset, tenantID);
 		
-		LOGGER.debug("getScheduleList: " + getScheduleList);
+		//LOGGER.debug("getScheduleList : " + getScheduleList);
 		
 		for (ResGetScheduleVO resVO : getScheduleList) {
 			resVO.setStartDate(commonUtil.getDateStringInUTC(resVO.getStartDate(), offset, false));
@@ -323,7 +322,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		// 스케줄 정보 가져옴(tbl_schedule에서 반복예약인 것만 가져옴)
 		List<ResGetScheduleVO> getScheduleListRept = getScheduleListRepetiti(ownerID, companyID, startDateLimit, endDateLimit, pWriterDept, offset, tenantID);
 		
-		LOGGER.debug("getScheduleListRept: " + getScheduleListRept);
+		//LOGGER.debug("getScheduleListRept: " + getScheduleListRept);
 		
 		getRepeatResult.addAll(getScheduleListRept);
 		
@@ -346,7 +345,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 					
 					// ResGetScheduleRepetitionVO -> ResScheduleRepetitionVO
 					ResScheduleRepetitionVO rvo = resStruct(vo);
-					LOGGER.debug("ResScheduleRepetitionVO: " + rvo);
+					//LOGGER.debug("ResScheduleRepetitionVO: " + rvo);
 					
 					// 반복예약의 반복되는 날짜리스트 뽑아옴
 					List<Date[]> returnRepDateTimes = getRepDateTimes(rvo, sDate, eDate, offset);

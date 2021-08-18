@@ -3540,6 +3540,7 @@ input[type=range]::-ms-tooltip {display: none;}
 
 .tree_resource_refuse{background-position:-312px -52px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 자원관리 승인거절 아이콘 */
 .tree_resource_unused{background-position:-338px -52px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 자원관리 미사용 아이콘 */
+.tree_car{background-position:0px -280px; margin: 8px 0px 0px 0px; width:16px; height:16px; display:inline-block;} /* tree 차량 */
 
 .calendar_layer .text .td_list td.individual .resource_rental {background-image: url('/images/ezResource/state_rental.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px 0px 5px;}
 .calendar_layer .text .td_list td.individual .resource_return {background-image: url('/images/ezResource/state_return.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px 0px 5px;}

@@ -93,7 +93,7 @@
 			</span>
 		</div>
 		<div class="survey-dropzone">
-			<div class="mainzone" id="fileDiv">
+			<div class="mainzone" id="fileDiv" style="min-height:64px;">
 				<div class="fileList off">
 					<ul class="ulFiles"></ul>
 				</div>

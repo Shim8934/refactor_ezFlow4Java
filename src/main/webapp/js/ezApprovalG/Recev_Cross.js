@@ -2628,3 +2628,73 @@ function SaveDraftDocInfo() {
     function OpenAlertUI_Close_Complete() {
         btnClose_onclick();
     }
+    
+    // 부서합의 문서에도 신규 의견작성창을 적용
+    function openOpinionUI_New(pOpinionType, CompleteFunction) {
+    	try {
+    		var parameter = new Array();
+    		parameter[0] = pDocID;		//DOCID
+    		parameter[1] = pOpinionType;//OPINIONTYPE NAME
+    		parameter[2] = "";			//DRAFTFLAG 결재는 공백 고정 
+    		parameter[3] = pDocState;	//DOCSTATE
+    		parameter[4] = orgCompanyID;//ORGCOMPANYID
+    		parameter[99] = ext;		//EXT
+    		
+    		apropinion_cross_dialogArguments[0] = parameter;
+    		if (typeof(CompleteFunction) != "undefined") {
+    			apropinion_cross_dialogArguments[1] = CompleteFunction; 
+    		} else {
+    			apropinion_cross_dialogArguments[1] = openOpinionUI_New_Complete;
+    		}
+    		
+    		DivPopUpShow(530, 520, "/ezApprovalG/aprOpinionNew.do");
+    	} catch (e) {
+    		alert("openOpinionUI_New ::: " + e.description);
+    	}
+    }
+    function openOpinionUI_New_Complete(ret) {
+    	try {
+    		DivPopUpHidden();
+    		if (ret == "Clear") {
+    			pHasOpinionYN = "N";
+    			var fields = message.GetFieldsList();
+    		    var field = message.GetListItem(fields, "opinions");
+    		    if (field) {
+    		    	field.innerHTML = " ";
+    		    }
+    		} else if (ret == "cancel") {
+    			//do_nothing
+    		} else {
+    	        var objXML = createXmlDom();
+    	        objXML = loadXMLString(ret);
+    	        
+    	        var NodeList = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW");
+    	        if (NodeList.length != 0) {
+    	            pHasOpinionYN = "Y";
+    	        } else {
+    	            pHasOpinionYN = "N";
+    	            ret = "cancel";
+    	        }
+    	        makeOpinionList(objXML);
+    		}
+    	} catch (e) {
+    		alert("openOpinionUI_New_Complete ::: " + e.description);
+    	}
+    }
+
+    function makeOpinionList(OpinionXML) {
+    	var fields = message.GetFieldsList();
+        var field = message.GetListItem(fields, "opinions");
+        if (!field) return;
+
+        var NodeList = SelectNodes(OpinionXML, "LISTVIEWDATA/ROWS/ROW");
+        field.innerHTML = " ";
+        if (NodeList.length > 0) {
+            for (i = NodeList.length - 1; i >= 0; i--) {
+        		var opinionsTable = '<p style="margin-top: 10px;margin-left: 3px;margin-bottom: 3px;">▶ ' + getNodeText(NodeList[i].childNodes[3]) + ' - ' + getNodeText(NodeList[i].childNodes[2]) + ' - ' + getNodeText(NodeList[i].childNodes[1]) + '</p><p style="margin-top: 0px;margin-left: 10px;margin-bottom: 0px;">' + getNodeText(NodeList[i].childNodes[6]) + '</p>';
+        		$(field).append(opinionsTable);
+            }
+        }
+        SaveFile();
+    }
+    

@@ -381,4 +381,6 @@ public interface EzCommunityService {
 
 	public int bbsGetReplyItemCnt(String itemNo, int tenantId) throws Exception;
 
+	public String getClubConfirmType(String code, int tenantID) throws Exception;
+
 }

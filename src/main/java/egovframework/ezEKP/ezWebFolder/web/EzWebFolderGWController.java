@@ -80,8 +80,10 @@ import egovframework.ezEKP.ezWebFolder.vo.WebfolderEnvVO;
 import egovframework.ezEKP.ezWebFolder.vo.result.UploadResult;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.utl.collection.ChainMap;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.Offset;
+import egovframework.let.utl.rest.Result;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @SuppressWarnings("unchecked")
@@ -3841,23 +3843,22 @@ public class EzWebFolderGWController {
 		return result;
 	}
 
-	@RequestMapping(value = "/rest/ezwebfolder/file/{fileId}/viewer/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getSatViewerURI(@PathVariable String fileId, @PathVariable String userId,
+	@RequestMapping(value = "/rest/ezwebfolder/file/{fileId}/{mobilePath:(?:mobile-)?}viewer/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public Result getSatViewerURI(@PathVariable String fileId, @PathVariable String userId, @PathVariable String mobilePath,
 			@RequestParam(value = "version") Optional<Integer> versionOptional, HttpServletRequest request) {
 		String requestURI = request.getRequestURI();
 		String serverName = request.getHeader("x-user-host");
+		boolean isMobileRequest = !mobilePath.isEmpty();
 
 		logger.debug("G/W WEBFOLDER [GET {}] started.", requestURI);
-		logger.debug("serverName: {}, fileId: {}, userId: {}, version: {}", serverName, fileId, userId, versionOptional);
-
-		JSONObject result = new JSONObject();
+		logger.debug("serverName: {}, fileId: {}, userId: {}, version: {}, isMobileRequest={}", serverName, fileId, userId, versionOptional, isMobileRequest);
 
 		if (containsNull(serverName, userId)) {
-			logger.debug("Parameter error!");
-			result.put("status", "error");
-			result.put("code", 1);
-			return result;
+			logger.error("Parameter error!");
+			return Result.failure();
 		}
+
+		Result result;
 
 		process: try {
 			LoginVO user = commonUtil.getUserForGw(userId, serverName);
@@ -3871,8 +3872,10 @@ public class EzWebFolderGWController {
 				throw new IllegalAccessException("접근 권한이 없습니다.");
 			}
 
-			if (!"1".equals(ezCommonService.getTenantConfig("useImageConvertServer", tenantId))) {
-				throw new RuntimeException("Not enabled useImageConvertServer tenant config");
+			String propertyNameForViewerMode = isMobileRequest ? "useMobileViewer" : "useImageConvertServer";
+
+			if (!"1".equals(ezCommonService.getTenantConfig(propertyNameForViewerMode, tenantId))) {
+				throw new RuntimeException("Not enabled " + propertyNameForViewerMode + " tenant config");
 			}
 
 			FileVO file = ezWebFolderService.getFileByFileId(fileId, offset, tenantId);
@@ -3880,8 +3883,7 @@ public class EzWebFolderGWController {
 
 			if (!"document".equals(fileType) && !"image".equals(fileType)) {
 				logger.debug("is unsupported format");
-				result.put("status", "ok");
-				result.put("code", 1);
+				result = Result.successWithCode(1);
 				break process;
 			}
 
@@ -3907,13 +3909,10 @@ public class EzWebFolderGWController {
 					.queryParam("userid", userId)
 					.build().encode().toString();
 
-			result.put("status", "ok");
-			result.put("code", 0);
-			result.put("data", url);
+			result = Result.success(url);
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			result.put("status", "error");
-			result.put("code", 2);
+			result = Result.failureWithCode(2);
 		}
 
 		logger.debug("G/W WEBFOLDER [GET {}] ended.", requestURI);
@@ -4007,53 +4006,50 @@ public class EzWebFolderGWController {
 
 	// 2020-12-11 김은실 - (카이스트)회사 폴더별 관리자 지원 기능: 담당자 flag.
 	@RequestMapping(value="/rest/ezwebfolder/check-folderManager/{userid:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject checkFolderManager(@PathVariable(value="userid") String userId, HttpServletRequest request, Locale locale) {
+	public Result checkFolderManager(@PathVariable(value = "userid") String userId, HttpServletRequest request, Locale locale) {
 		logger.debug("checkFolderManager start");
-		String serverName = request.getHeader("x-user-host") != null ? request.getHeader("x-user-host") : "";
-		String folderId     = request.getParameter("folderId")   != null ? request.getParameter("folderId")   : "";
-		JSONObject result = new JSONObject();
-		
-		logger.debug("ServerName: " + serverName + " || userId: " + userId);
-		
-		if (serverName.equals("") || userId.equals("")) {
+		String serverName = request.getHeader("x-user-host");
+		String folderId = request.getParameter("folderId");
+
+		logger.debug("ServerName: {} || userId: {}", serverName, userId);
+
+		if (containsNull(serverName, userId)) {
 			logger.debug("Parameter error!");
-			result.put("status", "error");
-			result.put("code", 1);
-			return result;
+			return Result.failure();
 		}
-		
+
+		Result result;
+
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			List<String> managedFolderList = ezWebFolderAdminService.getFolderIdsByManagerUserId(userInfo.getId(), folderId, userInfo.getCompanyID(), userInfo.getTenantId());
-			JSONArray folderListMap = new JSONArray();
-			for( String folderIdTemp : managedFolderList){
+			List<Map<String, String>> folderNameList = new ArrayList<>(managedFolderList.size());
+
+			for (String folderIdTemp : managedFolderList) {
 				FolderVO folderVOtemp = ezWebFolderService_y.getFolderDetail(folderIdTemp, userId, userInfo.getTenantId(), userInfo.getCompanyID());
-				Map<String, String> map = new HashMap<String, String>();
-				map.put("folderId", 	folderVOtemp.getFolderId());
-				map.put("folderName", 	userInfo.getPrimary() == "1" ? changeString(folderVOtemp.getFolderName1()) : changeString(folderVOtemp.getFolderName2()));
-				folderListMap.add(map);
+				Map<String, String> map = new HashMap<>();
+				map.put("folderId", folderVOtemp.getFolderId());
+				map.put("folderName", userInfo.getPrimary() == "1" ? changeString(folderVOtemp.getFolderName1()) : changeString(folderVOtemp.getFolderName2()));
+				folderNameList.add(map);
 			}
-			
-			boolean check = (managedFolderList.size() > 0)? true : false;
-			
-			if (check == true) {
-				result.put("status", "ok");
+
+			if (managedFolderList.isEmpty()) {
+				result = Result.failureWithCode(3);
+				/*result.put("status", "ok");
 				result.put("managedFolderList", managedFolderList);
 				result.put("folderListMap", folderListMap);
 				result.put("code", 0);
-				result.put("data", "1");
+				result.put("data", "1");*/
+			} else {
+				result = Result.success(ChainMap.of("managedFolderList", managedFolderList).add("folderListMap", folderNameList));
+				/*result.put("status", "error");
+				result.put("code", 3);*/
 			}
-			else {
-				result.put("status", "error");
-				result.put("code", 3);
-			}
-		} 
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-			result.put("status", "error");
-			result.put("code", 2);
+			result = Result.failureWithCode(2);
 		}
-		
+
 		logger.debug("checkFolderManager end");
 		return result;
 	}

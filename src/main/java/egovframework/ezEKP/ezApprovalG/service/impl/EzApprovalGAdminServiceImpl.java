@@ -653,6 +653,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 						sb.append("<DATA4>" + bodyVo.getCompanyID() + "</DATA4>");
 						sb.append("<DATA5>" + commonUtil.cleanValue(bodyVo.getDeptName()) + "</DATA5>");
 						sb.append("<DATA6>" + commonUtil.cleanValue(bodyVo.getDeptName2()) + "</DATA6>");
+						sb.append("<DATA7>" + bodyVo.getExtReceptYn() + "</DATA7>");
 					}
 				}
 				
@@ -666,7 +667,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String insertReceiveGroupItemInfo(String groupID, String deptID,	String deptName, String deptName2, String pCompanyID, String companyID, int tenantID) throws Exception {
+	public String insertReceiveGroupItemInfo(String groupID, String deptID,	String deptName, String deptName2, String pCompanyID, String companyID, int tenantID, String extReceptYn) throws Exception {
 		logger.debug("insertReceiveGroupItemInfo started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -677,6 +678,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("v_COMPANYID", pCompanyID);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
+		map.put("v_EXTRECEPTYN", extReceptYn);
 		
 		ezApprovalGAdminDAO.insertReceiveGroupItemInfo(map);
 			
@@ -1285,6 +1287,11 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			ezApprovalGAdminDAO.removeTaskCode1(map1);
 			ezApprovalGAdminDAO.removeTaskCode2(map1);
 			ezApprovalGAdminDAO.removeAutoDoc(map1);
+			
+			if (approvalFlag.equals("S")) {
+				ezApprovalGAdminDAO.removeMyTaskCode(map1);
+				logger.debug("removeMyTaskCode success.");
+			}
 			
 			logger.debug("removeTaskCode1,2 ended.");
 			logger.debug("removeTaskCode ended.");

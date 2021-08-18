@@ -375,8 +375,8 @@
 							</div>
 							<table style="width:100%">
 								<tr>
-									<td style="width:25px"><input type="text" id="textUser" name="textUser" style="width:130px; margin-top:8px;" value="" onKeyPress="return textUser_onkeypress()">
-										<a class="imgbtn imgbck" style="vertical-align:middle"><span onClick="return btn_searchUser_onclick()"><spring:message code='ezApprovalG.t234'/></span></a>
+									<td style="width:25px"><input type="text" id="textUser" name="textUser" style="width:130px; margin-top:3px;" value="" onKeyPress="return textUser_onkeypress()">
+										<a class="imgbtn imgbck" style="vertical-align:middle;padding-bottom: 1px;margin-bottom: 2px;"><span onClick="return btn_searchUser_onclick()"><spring:message code='ezApprovalG.t234'/></span></a>
 									</td>
 								</tr>
 							</table>

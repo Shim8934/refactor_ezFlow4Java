@@ -556,6 +556,7 @@
 
 		        if (ret != undefined) {
 		            alert("<spring:message code='ezOrgan.t273' />");
+		            document.getElementById("userPhotoYN").value = ret;
 		            UserPhotoDiv.innerHTML = "<img style='width:119px; height:128px;' SRC='/admin/ezOrgan/getPersonalInfo.do?fileName=" + ret + "' />";		            
 		        }
 		    }

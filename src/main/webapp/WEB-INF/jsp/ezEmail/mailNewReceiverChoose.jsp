@@ -4338,7 +4338,7 @@
 	                    </tr>
 	                </table>
 	            </td>
-	            <td style="vertical-align: top;">
+	             <td style="vertical-align: top;<c:if test="${type eq 'auto'}">display:none;</c:if>">
 	                <table id="listType1" style="margin-top:1px;">
 	                    <tr id="ListMsgTo">
 	                        <td style="width: 30px; text-align: center;">
@@ -4392,8 +4392,8 @@
 	                            </div>
 	                        </td>
 	                    </tr>
-	                </table>
-	            </td>
+	                 </table> 
+	             </td> 
 	        </tr>
 	    </table>
 	    <table style="width: 100%; text-align: center;">

@@ -344,7 +344,7 @@
 		        <tr>
 		            <td id='divRecurPatterns' >
 		            	<div style="margin:3px 1px">
-		                <input type="text" id="Sdatepicker" style="width: 80px; text-align: center" />
+		                <input type="text" id="Sdatepicker" style="width: 80px; text-align: center" readonly="readonly"/>
 		                </div>
 		            </td>
 		            <td id='divRecurPatterns' style="display:none">

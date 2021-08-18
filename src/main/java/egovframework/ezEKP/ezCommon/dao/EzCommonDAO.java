@@ -1936,7 +1936,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("tbl_webfolder_file ROOT_ID column doesn't exist. creating the column...");
 			update("EzCommonDAO.createNullableWebfolderFileRootIdColumn");
 			update("EzCommonDAO.updateWebfolderFileRootIdColumn");
-			update("EzCommonDAO.notNullWebfolderFileRootIdColumn");
 		}
 
 		try {
@@ -1945,7 +1944,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("tbl_webfolder_file PARENT_ID column doesn't exist. creating the column...");
 			update("EzCommonDAO.createNullableWebfolderFileParentIdColumn");
 			update("EzCommonDAO.updateWebfolderFileParentIdColumn");
-			update("EzCommonDAO.notNullWebfolderFileParentIdColumn");
 		}
 
 		try {
@@ -1954,7 +1952,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("tbl_webfolder_file HIERARCHICAL_PATH column doesn't exist. creating the column...");
 			update("EzCommonDAO.createNullableWebfolderFileHierarchicalPathColumn");
 			update("EzCommonDAO.updateWebfolderFileHierarchicalPathColumn");
-			update("EzCommonDAO.notNullWebfolderFileHierarchicalPathColumn");
 		}
 	}
 
@@ -2073,4 +2070,54 @@ public class EzCommonDAO extends EgovAbstractDAO {
             }
         } catch (Exception e) {}
     }
+    
+    public void addTblAdminReceiptGroupSubExtReceptYnColumn() {
+        try {
+            select("EzCommonDAO.checkTblAdminReceiptGroupSubExtReceptYnColumn");
+        } catch (Exception e) {
+            logger.debug("tbl_adminreceiptgroup_sub extreceptyn column doesn't exist. creating the column...");
+            
+            update("EzCommonDAO.addTblAdminReceiptGroupSubExtReceptYnColumn");
+        }
+    }
+	public void createTblCar() {
+		try {
+			select("EzCommonDAO.checkTblCar");
+		} catch (Exception e) {
+			logger.debug("tbl_car doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblCar");
+		}
+	}
+
+	public void createTblCarAcl(){
+		try {
+			select("EzCommonDAO.checkTblCarAcl");
+		} catch (Exception e) {
+			logger.debug("tbl_car_acl doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblCarAcl");
+		}
+	}
+
+	public void createTblCarAttach()  {
+		try {
+			select("EzCommonDAO.checkTblCarAttach");
+		} catch (Exception e) {
+			logger.debug("tbl_car_attach doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblCarAttach");
+		}
+	}
+
+	public void createTblCarForm()  {
+		try {
+			select("EzCommonDAO.checkTblCarForm");
+		} catch (Exception e) {
+			logger.debug("tbl_car_form doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblCarForm");
+		}
+	}
+    
 }

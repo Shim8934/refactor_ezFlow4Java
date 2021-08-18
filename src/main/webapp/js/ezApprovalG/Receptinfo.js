@@ -270,9 +270,7 @@ function TreeViewNodeClick2(pNodeID, pNodeNM) {
 
     var treeNode = new TreeNode();
     treeNode.LoadFromID(nodeIdx);
-    if (approvalFlag == 'S') {
-    	RdisplayUserList(treeNode.GetNodeData("CN"));
-    }
+	RdisplayUserList(treeNode.GetNodeData("CN"));
 }
 function RequestData2(pNodeID, pTreeID) {
     nodeIdx = pNodeID;
@@ -522,11 +520,11 @@ function AprLineAddDept(nodeIdx, tr) {
     var isCurretnCompany = "N";
     var Resultxml = "";
     Resultxml.async = false;
-    if(approvalFlag == "G") {
-    	Resultxml = loadXMLFile(strLangEtcFile1);
-    } else {
+//    if(approvalFlag == "G") {
+//    	Resultxml = loadXMLFile(strLangEtcFile1);
+//    } else {
     	Resultxml = loadXMLFile(strLangEtcFileliban1);
-    }	
+//    }	
     var treeNode = new TreeNode();
     treeNode.LoadFromID(nodeIdx);
     var deptid = treeNode.GetNodeData("CN");
@@ -644,11 +642,11 @@ function AprLineAddDept_User(pSelectedRow) {
     var isCurretnCompany = "N";
     var Resultxml ="";
     Resultxml.async = false;
-    if(approvalFlag == "G") {
-    	Resultxml = loadXMLFile(strLangEtcFile1);
-    } else {
+//    if(approvalFlag == "G") {
+//    	Resultxml = loadXMLFile(strLangEtcFile1);
+//    } else {
     	Resultxml = loadXMLFile(strLangEtcFileliban1);
-    }	
+//    }	
 
     var listview = new ListView();
     listview.LoadFromID("lvRECEPTLIST");
@@ -809,15 +807,15 @@ function searchUserList2(search) {
     try {
         var searchdoc = document.getElementById("textUser2");
         var strSearch = searchdoc.value + "";
-        if (textUser.value == "") {
+        if (searchdoc.value == "") {
             var pAlertContent = linealt3;
             OpenAlertUI(pAlertContent);
-            textUser.focus();
+            searchdoc.focus();
         }
         else if (strSearch.length < 2) {
             var pAlertContent = linealt4;
             OpenAlertUI(pAlertContent);
-            textUser.focus();
+            searchdoc.focus();
         }
         else {
     		$.ajax({
@@ -1628,7 +1626,11 @@ function AprLineAddDeptG_New(outDeptID) {
 		createNodeAndAppandNodeText(ResultXml, Header, HData, "WIDTH", "35");
 		
 		Header = createNodeAndAppandNode(ResultXml, Headers, Header, "HEADER");
-		createNodeAndAppandNodeText(ResultXml, Header, HData, "NAME", "수신자명");
+		createNodeAndAppandNodeText(ResultXml, Header, HData, "NAME", "수신부서명");
+		createNodeAndAppandNodeText(ResultXml, Header, HData, "WIDTH", "200");
+		
+		Header = createNodeAndAppandNode(ResultXml, Headers, Header, "HEADER");
+		createNodeAndAppandNodeText(ResultXml, Header, HData, "NAME", "수신자성명");
 		createNodeAndAppandNodeText(ResultXml, Header, HData, "WIDTH", "200");
 		
 		//ROW만들기
@@ -1656,6 +1658,9 @@ function AprLineAddDeptG_New(outDeptID) {
 		Cell = createNodeAndAppandNode(ResultXml, Row, Cell, "CELL");
 		createNodeAndAppandNodeText(ResultXml, Cell, Value, "VALUE", ldapDeptInfo);
 		
+		Cell = createNodeAndAppandNode(ResultXml, Row, Cell, "CELL");
+		createNodeAndAppandNodeText(ResultXml, Cell, Value, "VALUE", "");
+
 		var InitTr = listView.GetDataRows();
 		var MaxID = 0;
 		var CurID = 0;
@@ -2232,11 +2237,11 @@ function CheckLen(pStr, pSize) {
 function AprLineAddDeptAddress(AddressName) {
 	//2017-03-28 이효민
     //Resultxml.async = false;
-    if(approvalFlag == "G") {
-    	Resultxml = loadXMLFile(strLangEtcFile1);
-    } else {
+    // if(approvalFlag == "G") {
+    // 	Resultxml = loadXMLFile(strLangEtcFile1);
+    // } else {
     	Resultxml = loadXMLFile(strLangEtcFileliban1);
-    }	
+    // }
 
     var listview = new ListView();
     listview.SetID("lvRECEPTLIST");
@@ -2492,11 +2497,11 @@ function AddOrgan(_OrganId, _OrganName) {
         var isCurretnCompany = "N";
         var Resultxml = "";
         Resultxml.async = false;
-        if(approvalFlag == "G") {
-        	Resultxml = loadXMLFile(strLangEtcFile1);
-        } else {
+//        if(approvalFlag == "G") {
+//        	Resultxml = loadXMLFile(strLangEtcFile1);
+//        } else {
         	Resultxml = loadXMLFile(strLangEtcFileliban1);
-        }	
+//        }	
 
         var treeNode = new TreeNode();
         treeNode.LoadFromID(nodeIdx);
@@ -3018,4 +3023,78 @@ function getOrgDocID() {
 	});
 	
 	return orgDocID;
+}
+
+function makeReceptListview(dataJson) {
+    /**
+     * data0: idx
+     * data1: deptId
+     * data2: docId
+     * data3: extReceptYn
+     * data4: processYn
+     * data5: canEditYn
+     * data6: companyId
+     * data7: receptMemberId
+     * data8: receptMemberName
+     * data9: receptMemberJobTitle
+     * data10: receptDeptName
+     * data11: receptDeptName2
+     * data12: receptMemberJobTitle2
+     * data13: receptMemberName2
+     */
+
+    var resultXml = "";
+    if(approvalFlag === "G") {
+    	resultXml = loadXMLFile(strLangEtcFile1);
+    } else {
+    	resultXml = loadXMLFile(strLangEtcFileliban1);
+    }
+
+    var cells = SelectNodes(resultXml, "LISTVIEWDATA/ROWS/ROW/CELL");
+
+    setNodeText(SelectSingleNode(cells[0], "VALUE"), dataJson["data0"] || "");
+    setNodeText(SelectSingleNode(cells[0], "DATA1"), dataJson["data1"] || "");
+    setNodeText(SelectSingleNode(cells[0], "DATA2"), dataJson["data2"] || "");
+    setNodeText(SelectSingleNode(cells[0], "DATA3"), dataJson["data3"] || "");
+    setNodeText(SelectSingleNode(cells[0], "DATA4"), dataJson["data4"] || "N");
+    setNodeText(SelectSingleNode(cells[0], "DATA5"), dataJson["data5"] || "N");
+    setNodeText(SelectSingleNode(cells[0], "DATA6"), dataJson["data6"] || "");
+    setNodeText(SelectSingleNode(cells[0], "DATA7"), dataJson["data7"] || "");
+    setNodeText(SelectSingleNode(cells[0], "DATA8"), dataJson["data8"] || "");
+    setNodeText(SelectSingleNode(cells[0], "DATA9"), dataJson["data9"] || "");
+    setNodeText(SelectSingleNode(cells[0], "DATA10"), dataJson["data10"] || "");
+    setNodeText(SelectSingleNode(cells[0], "DATA11"), dataJson["data11"] || "");
+    setNodeText(SelectSingleNode(cells[0], "DATA12"), dataJson["data12"] || "");
+    setNodeText(SelectSingleNode(cells[0], "DATA13"), dataJson["data13"] || "");
+
+    setNodeText(SelectSingleNode(cells[1], "VALUE"), UserLang === "1" ? dataJson["data10"] || "" : dataJson["data11"] || "");
+    
+    if (approvalFlag !== "G") {
+        setNodeText(SelectSingleNode(cells[2], "VALUE"), UserLang === "1" ? dataJson["data7"] || "" : dataJson["data13"] || "");
+    }
+
+    return resultXml;
+}
+
+function getReceptLastIdx(lv) {
+    var idx = lv.GetDataRows().filter(function(elem) {
+        return elem.id.indexOf("noItems") === -1;
+    }).length + 1;
+
+    return idx;
+}
+
+function checkDuplicationRecept(lv, addReceptId) {
+    var result = true;
+    var rows = lv.GetDataRows();
+
+    for (var i = 0, ilen = rows.length; i < ilen; i++) {
+        var row = rows[i];
+        if (row.getAttribute("DATA1") === addReceptId) {
+            result = false;
+            break;
+        }
+    }
+
+    return result;
 }

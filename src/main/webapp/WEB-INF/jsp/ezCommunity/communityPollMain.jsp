@@ -122,7 +122,7 @@
 			    <th style="width:170px;"><spring:message code='ezCommunity.t672' /></th>
 			    <th style="width:60px;"><spring:message code='ezCommunity.t674' /></th>
 			    <th style="width:60px;"><spring:message code='ezCommunity.t675' /></th>
-			    <th style="width:80px;"><spring:message code='ezCommunity.t676' /></th>
+			    <th style="width:60px; padding-left: 15px;"><spring:message code='ezCommunity.t676' /></th>
 			</tr>
 				<c:if test="${strXML eq ''}" >
 					<tr>

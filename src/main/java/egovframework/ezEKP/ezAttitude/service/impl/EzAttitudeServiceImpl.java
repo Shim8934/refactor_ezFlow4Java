@@ -379,7 +379,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public void updateAttitude(String attitudeId, String startDate, String endDate, String region,
-			String mobile, String bizSub, String content, String offset, String ip, String typeId, String dateType, String mode, AttitudeVO attVO, String adminId, MCommonVO info, MCommonVO userInfo, int tenantId, String companyId) throws Exception{
+			String mobile, String bizSub, String content, String offset, String ip, String typeId, String dateType, String mode, AttitudeVO attVO, String adminId, 
+			MCommonVO info, MCommonVO userInfo, int tenantId, String companyId, String latitude, String longitude) throws Exception{
 		LOGGER.debug("updateAttitude started");
 		
 		content = content.replaceAll("\'", "&#39;").replaceAll("(\r\n|\r|\n|\n\r)", " ");
@@ -398,6 +399,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("dateType", dateType);
 		map.put("tenantId", tenantId);
 		map.put("companyId", attVO.getCompanyId());
+		map.put("latitude", latitude);
+		map.put("longitude", longitude);
 		
 		if (mode.equals("admin")) {
 			map.put("modappl", "3");

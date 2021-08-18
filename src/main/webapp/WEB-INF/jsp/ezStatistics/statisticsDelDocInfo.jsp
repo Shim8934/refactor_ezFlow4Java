@@ -125,10 +125,10 @@ function DelDocInfoSave_onclick(delflag)
     var pContent = document.getElementById("txt_DelDocInfo").value.trim();
     if(!pContent && delflag == "Y")
     {
-        alert(strLang402);
+    	alert("<spring:message code='ezBoard.t999067'/>");
         return;
     }
-	
+    
 	var xmlhttp = createXMLHttpRequest();
 	var xmlpara = createXmlDom();
 	var objNode;
@@ -146,15 +146,22 @@ function DelDocInfoSave_onclick(delflag)
 	
 	xmlresult = xmlhttp.responseXML;
 	
-	if( xmlresult.xml != "" )
+	if( xmlresult.xml != "" && delflag == "Y") 
 	{
 		//console.log(xmlresult);
 		//if( xmlresult.documentElement.text == "TRUE" )
-		if(SelectNodes(xmlresult, "RESULT")[0].childNodes[0].nodeValue == "TRUE" )
-			alert("<spring:message code='ezTask.t99'/>");
+		if(SelectNodes(xmlresult, "RESULT")[0].childNodes[0].nodeValue == "TRUE")
+			alert("<spring:message code='ezPersonal.tt16'/>"); 
 		else
-			alert("실패 : " + SelectNodes(xmlresult, "RESULT")[0].childNodes[0].nodeValue);
+			alert("<spring:message code='ezApprovalG.t805'/> : " + SelectNodes(xmlresult, "RESULT")[0].childNodes[0].nodeValue);
 	}
+	
+	else
+	{
+		if(SelectNodes(xmlresult, "RESULT")[0].childNodes[0].nodeValue == "TRUE")
+			alert("<spring:message code='ezPersonal.t41'/>");
+	}
+	
 	window.opener.popupCallback({ flag: true, p_lang: '', mode: '' }); //Call callback function 
 	window.close();
 }

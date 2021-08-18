@@ -117,6 +117,22 @@
 		</isNotEmpty>
 	</sql>
 	
+	<!-- 2021-07-12 김은실 - 선택지가 3개 밖에 없어서.. 최대한 쿼리줄이고자 이렇게 짠건데, 더 추가된다면 아예 걍 바꿔주세요.ㅎㅎㅎ  여기서 변형하기에는 여간 복잡한게 아닐거에여ㅠ -->
+	<sql id="EzOrganAdminDAO.searchForQuery">
+		<isNotEqual property="searchForAll" compareValue="true" open="and (" close=")">
+			CN <isEqual property="retired" compareValue="false"> NOT </isEqual> IN 
+				(SELECT CN from TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantID#  AND PHYSICALDELIVERYOFFICENAME = #companyId#)
+			<isEqual property="isAnd" compareValue="true"> 
+				AND 
+			</isEqual>
+			<isEqual property="isAnd" compareValue="false"> 
+				OR 
+			</isEqual>
+			CN <isEqual property="stopped" compareValue="false"> NOT </isEqual> IN 
+				(SELECT USER_ID FROM TBL_USER_CONFIG WHERE TENANT_ID = #tenantID# AND PROPERTY_NAME = 'LoginStopUser')
+		</isNotEqual>
+	</sql>
+	
 	<sql id="EzOrganAdminDAO.searchQueryForLoginStop">
 		<isNotEmpty property="search_keycode" prepend="and">
 			<isNotEmpty property="search_keyword" >
@@ -3794,13 +3810,13 @@
 			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('001',3,'등록일',100,'TBL_RECORD','TBL_RECORD.RegisterDate','RegisterDate','dtDateTime','기록물 대장',null,'RegisterDate','登録日','注册',#tenantID#, #companyID#)
 			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
-			VALUES ('001',4,'문서번호',80,null,'CONCAT(CONCAT(TBL_RECORD.ProcessDeptName, ''-''), SUBSTR(TBL_RECORD.RegisterNo, -2))','DispRegisterNo','Default','기록물 대장',null,'Doc. No.','登録番号','註冊號',#tenantID#, #companyID#)
+			VALUES ('001',4,'문서번호',80,'TBL_ENDAPRDOCINFO','TBL_ENDAPRDOCINFO.DOCNO','DispRegisterNo','Default','기록물 대장',null,'Doc. No.','登録番号','註冊號',#tenantID#, #companyID#)
 			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('001',5,'첨부번호',55,'TBL_SEPERATEATTACH','TBL_SEPERATEATTACH.SeperateAttachNo','SeperateAttachNo','Default','기록물 대장',null,'SepAttachNo','添付番号','附件编号',#tenantID#, #companyID#)
 			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('001',6,'제목',200,'TBL_SEPERATEATTACH','TBL_SEPERATEATTACH.Title','RecTitle','Default','기록물 대장',null,'Title','見出し','标题',#tenantID#, #companyID#)
 			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
-			VALUES ('001',7,'분류번호',180,null,'CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(TRIM(TBL_CABINET.ProcessDeptCode),''-''),TBL_CABINET.TaskCode),''-''),ProductionYear),''-''),TRIM(LEADING''0'' FROM RegSerialNo)),''(''),TRIM(LEADING''0'' FROM VolumeNo)),'')'')','DispClassNo','Default','기록물 대장','기록물철 분류번호','DispClassNo','分類番号','分类编号',#tenantID#, #companyID#)
+			VALUES ('001',7,'분류번호',180,null,'CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(TRIM(TBL_CABINETCLASS.ProcessDeptCode),''-''),TBL_CABINETCLASS.TaskCode),''-''),ProductionYear),''-''),TRIM(LEADING''0'' FROM RegSerialNo)),''(''),TRIM(LEADING''0'' FROM VolumeNo)),'')'')','DispClassNo','Default','기록물 대장','기록물철 분류번호','DispClassNo','分類番号','分类编号',#tenantID#, #companyID#)
 			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('001',8,'결재권자',80,'TBL_RECORD','TBL_RECORD.AprMemberTitle','AprMemberTitle','Default','기록물 대장',null,'Approval person','決裁権者','审批',#tenantID#, #companyID#)
 			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
@@ -4310,6 +4326,8 @@
 		    VALUES (#companyID#, #tenantID#, 18, 1, 1, 18)
 		    INTO TBL_PORTAL_MENU_COMP (COMPANY_ID, TENANT_ID, MENU_ID, MENU_USED, COMPANY_LANG, COMPANY_ORDER) 
 		    VALUES (#companyID#, #tenantID#, 19, 1, 1, 19)
+		    INTO TBL_PORTAL_MENU_COMP (COMPANY_ID, TENANT_ID, MENU_ID, MENU_USED, COMPANY_LANG, COMPANY_ORDER) 
+		    VALUES (#companyID#, #tenantID#, 20, 0, 1, 20)
 	    SELECT
 	    	*
 	    FROM DUAL
@@ -4358,6 +4376,8 @@
 		    VALUES (18, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
 		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
 		    VALUES (19, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+		    VALUES (20, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
 	    SELECT
 	    	*
 	    FROM DUAL
@@ -4480,6 +4500,12 @@
 		    VALUES (19, 2, #companyID#, #tenantID#, 'Survey')
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
 		    VALUES (19, 3, #companyID#, #tenantID#, '電子アンケート')
+		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
+		    VALUES (20, 1, #companyID#, #tenantID#, '차량관리')
+		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
+		    VALUES (20, 2, #companyID#, #tenantID#, 'Car')
+		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
+		    VALUES (20, 3, #companyID#, #tenantID#, '自動車')
 		SELECT
 	    	*
 	    FROM DUAL
@@ -4878,6 +4904,16 @@
 	    ]]>
     </insert>
     
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_I33" parameterClass="Map">
+      <![CDATA[
+          INSERT INTO
+            TBL_CAR
+                (CAR_ID, CAR_NAME, CAR_NAME2, CAR_NM, CAR_GB, CAR_LEVEL, CAR_STEP, CAR_ACCESS, CAR_UPPER, OWNDEPTID, OWNDEPTNM, OWNDEPTNM2,OWNERID, OWNERNM, OWNERNM2, OWNERPOSITION, OWNERPOSITION2, OWNERCALL, CAR_REGISTER_DATE, DELFLAG, COMPANYID, TENANT_ID, CAR_URL, CAR_EXPLAIN) 
+          VALUES
+                (1,#companyName#,#companyName2#,'',1,0,1,null,0,null,null,null,null,null,null,null,null,null,null,0,#companyID#,#tenantID#,null,null)
+      ]]>
+   </insert>
+   
 	<delete id="EzOrganAdminDAO.retireDBData" parameterClass="Map">
 		<![CDATA[
 			DELETE
@@ -6160,6 +6196,7 @@
  			WHERE
  				tenant_id = #tenantID# AND PHYSICALDELIVERYOFFICENAME = #companyId#
  				<include refid="EzOrganAdminDAO.searchQuery"/>
+ 				<include refid="EzOrganAdminDAO.searchForQuery"/>
  			ORDER BY
  			<isNotEmpty property="sortColumn">
 		    	$orderbyData$,
@@ -6183,6 +6220,7 @@
             TBL_USERMASTER 
 		WHERE	tenant_id = #tenantID# AND PHYSICALDELIVERYOFFICENAME = #companyId#
   		<include refid="EzOrganAdminDAO.searchQuery"/>
+  		<include refid="EzOrganAdminDAO.searchForQuery"/>
 	</select>
 	
 	<insert id="EzOrganAdminDAO.insertDelUserDBData_I" parameterClass="Map">
@@ -6335,7 +6373,8 @@
 	<![CDATA[
 		SET
 			TITLE = #v_DISPLAYNAME#,
-			TITLE2 = #v_DISPLAYNAME2#
+			TITLE2 = #v_DISPLAYNAME2#,
+			UPDATEDT = #nowDate#
 		WHERE
 			EXTENSIONATTRIBUTE7 = #v_JOBID#
 	]]>
@@ -6344,7 +6383,8 @@
 	<![CDATA[
 		SET
 			EXTENSIONATTRIBUTE10 = #v_DISPLAYNAME#,
-			EXTENSIONATTRIBUTE102 = #v_DISPLAYNAME2#
+			EXTENSIONATTRIBUTE102 = #v_DISPLAYNAME2#,
+			UPDATEDT = #nowDate#
 		WHERE
 			EXTENSIONATTRIBUTE8 = #v_JOBID#
 	]]>

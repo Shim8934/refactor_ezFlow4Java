@@ -2222,7 +2222,7 @@
 			            pListViewJikwi.SetSelectFlag(false);
 			            pListViewJikwi.SetMulSelectable(true);
 			            pListViewJikwi.SetRowOnDblClick("InsertReceiver");
-			            pListViewJikwi.DataSource(loadXMLString(document.getElementById("listviewheader").innerHTML.toUpperCase()));
+			            pListViewJikwi.DataSource(loadXMLString(document.getElementById("listviewheaderJW").innerHTML.toUpperCase()));
 			            pListViewJikwi.DataBind("ListViewJikwi");
 			            pListViewJikwi.DataSource(loadXMLString(xmlHTTP.responseText));
 			            pListViewJikwi.RowDataBind();
@@ -2266,7 +2266,7 @@
 			            pListViewJikchek.SetSelectFlag(false);
 			            pListViewJikchek.SetMulSelectable(true);
 			            pListViewJikchek.SetRowOnDblClick("InsertReceiver");
-			            pListViewJikchek.DataSource(loadXMLString(document.getElementById("listviewheader").innerHTML.toUpperCase()));
+			            pListViewJikchek.DataSource(loadXMLString(document.getElementById("listviewheaderJC").innerHTML.toUpperCase()));
 			            pListViewJikchek.DataBind("ListViewJikchek");
 			            pListViewJikchek.DataSource(loadXMLString(xmlHTTP.responseText));
 			            pListViewJikchek.RowDataBind();
@@ -2300,11 +2300,21 @@
 	</head>
 	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
 		<%-- 직위, 직책용 리스트헤더 --%>
-		<xml id="listviewheader" style="display: none;">
+		<xml id="listviewheaderJW" style="display: none;">
 		  <LISTVIEWDATA>
 		    <HEADERS>
 		      <HEADER>
-		        <NAME><spring:message code='ezEmail.t586' /></NAME>
+		        <NAME><spring:message code='ezOrgan.csj04' /></NAME>
+		        <WIDTH>70</WIDTH>
+		      </HEADER>
+		    </HEADERS>
+		  </LISTVIEWDATA>
+		</xml>
+		<xml id="listviewheaderJC" style="display: none;">
+		  <LISTVIEWDATA>
+		    <HEADERS>
+		      <HEADER>
+		        <NAME><spring:message code='ezOrgan.csj17' /></NAME>
 		        <WIDTH>70</WIDTH>
 		      </HEADER>
 		    </HEADERS>

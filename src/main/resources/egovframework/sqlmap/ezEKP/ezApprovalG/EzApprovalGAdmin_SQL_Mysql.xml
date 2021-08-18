@@ -2771,7 +2771,8 @@
 				deptname,
 				deptname2,
 				companyid,
-				tenant_id)
+                tenant_id,
+                extreceptyn)
 			VALUES 
 				(#v_MAINID#,
 				(SELECT
@@ -2782,7 +2783,8 @@
 				#v_DEPTNAME#,
 				#v_DEPTNAME2#,
 				#v_COMPANYID#,
-				#tenantID#)
+                #tenantID#,
+                #v_EXTRECEPTYN#)
 		]]>
 	</insert>
 	
@@ -3912,6 +3914,19 @@
 	    ]]>
 	</update>
 
+	<delete id="EzApprovalGAdminDAO.removeMyTaskCode" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_MYTASKCODE
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				taskcode = #taskCode#
+	    ]]>
+	</delete>
+	
 	<update id="EzApprovalGAdmin.updateDeptInfo" parameterClass="Map">
 		<![CDATA[
 			UPDATE

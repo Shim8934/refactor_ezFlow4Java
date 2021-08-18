@@ -4896,5 +4896,23 @@ public class EzCommunityController extends EgovFileMngUtil{
 		logger.debug("getCommunityBoardItemCnt ended, result = " + result);
 		return result;
 	}
+	
+	/**
+	 * 2021-05-03 홍승비 - 해당 커뮤니티의 유형(승인여부)을 가져오는 함수 (ajax용)
+	 */
+	@RequestMapping(value = "/ezCommunity/getClubConfirmType.do", method = RequestMethod.GET)
+	@ResponseBody
+	public String getClubConfirmType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getClubConfirmType started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String code = request.getParameter("code");
+		String result = "";
+		
+		result = ezCommunityService.getClubConfirmType(code, userInfo.getTenantId());
+		
+		logger.debug("getClubConfirmType ended, result = " + result);
+		return result;
+	}
 }
 

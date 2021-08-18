@@ -138,8 +138,8 @@
 							  		<td>${LiteralTitle }</td>
 								</tr>
 								<tr>
-									<th nowrap style="height:27px" ><spring:message code='main.t78' /></th>
-									<td ><span id="email" style="cursor:pointer" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'" onClick="email_onclick()"><c:out value='${LiteralEmail}'/></span></td>
+									<th nowrap style="height:27px" ><spring:message code='ezOrgan.t1500' /></th>
+									<td >${LiteralRole }</td>
 						        </tr>
 						    </table>
 						    
@@ -148,6 +148,10 @@
 				</table>
 				
 				<table class="content" style="margin-top:10px" >
+					<tr>
+						<th><spring:message code='main.t78' /></th>
+						<td colspan="2" width="100%"><span id="email" style="cursor:pointer" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'" onClick="email_onclick()"><c:out value='${LiteralEmail}'/></span></td>
+					</tr>
 					<tr>
 						<%-- <th><spring:message code='main.t79' /></th> --%>
 						<th><spring:message code='ezPersonal.t177' /></th>
@@ -190,7 +194,7 @@
 					<tr>
 					  	<th><spring:message code='ezPersonal.t1820' /><br><spring:message code='main.t85' /></th>
 						<td colspan="2">
-							<div id="litrealInfo" style="WIDTH:100%;HEIGHT:80px;overflow:auto; line-height:18px; white-space:pre-wrap;">${LiteralInfo }</div>
+							<div id="litrealInfo" style="WIDTH:100%;HEIGHT:65px;overflow:auto; line-height:18px; white-space:pre-wrap;">${LiteralInfo }</div>
 					    </td>
 					</tr>
 				</table>

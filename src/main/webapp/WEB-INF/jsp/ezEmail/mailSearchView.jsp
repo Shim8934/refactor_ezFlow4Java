@@ -1,4 +1,4 @@
-﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+﻿﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
@@ -194,13 +194,16 @@
 				}
 		    	if (!TrimText(ALL.value)) {
 		    		if( $("#moreSearch").css("display") != "none"){
-			    		if (!TrimText(prekeywordDetail1.value) && !TrimText(prekeywordDetail2.value) && !TrimText(prekeywordDetail3.value) ) {
+			    		if (!TrimText(prekeywordDetail1.value) && !TrimText(prekeywordDetail2.value) && !TrimText(prekeywordDetail3.value) 
+			    				&& !this.usepostDate) {
 				    		alert(strLang254);
 				            return;
 			    		} 
 		    		} else {
-			    		alert(strLang254);
-			            return;
+		    			if (!this.usepostDate) {
+				    		alert(strLang254);
+				            return;
+		    			}
 		    		}
 		        } else {
 	        		searchCArray.push("ALL");

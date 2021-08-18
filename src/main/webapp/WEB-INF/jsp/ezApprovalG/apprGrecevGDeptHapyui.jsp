@@ -116,6 +116,7 @@
 			var orgCompanyID = "${userInfo.companyID}";
 			var ext = "mht";
 			var isHWP = "";
+			var signImageType = "<c:out value ='${signImageType}'/>";
 			
 			var isReDraft = '${isReDraft}';
 
@@ -915,6 +916,8 @@
     		        parameter[56] = limitDate;
 		        }
 
+		        parameter[61] = tempKeyword;
+		        
 		        if (tempItemCode != "")
 		            tempdocnumcode = tempItemCode;
 		

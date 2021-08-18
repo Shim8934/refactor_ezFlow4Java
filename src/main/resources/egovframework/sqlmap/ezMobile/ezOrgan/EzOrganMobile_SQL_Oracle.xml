@@ -144,7 +144,11 @@
 	            EXTENSIONATTRIBUTE7 ,
 	            EXTENSIONATTRIBUTE8 ,
 	            EXTENSIONATTRIBUTE9 ,
-	            EXTENSIONATTRIBUTE10 ,
+            	CASE #lang#
+                WHEN '1'
+                THEN EXTENSIONATTRIBUTE10
+                ELSE EXTENSIONATTRIBUTE102
+                END EXTENSIONATTRIBUTE10 ,
 	            EXTENSIONATTRIBUTE11 ,
 	            EXTENSIONATTRIBUTE12 ,
 	            EXTENSIONATTRIBUTE13 ,
@@ -339,14 +343,14 @@
 					B.CN as userID,
 				    A.DEPTID as deptID,
 				    CASE
-						WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
-	  					THEN DISPLAYNAME
-	  					ELSE DISPLAYNAME$lang$
+						WHEN (B.DISPLAYNAME$lang$ = '' OR B.DISPLAYNAME$lang$ IS NULL) 
+	  					THEN B.DISPLAYNAME
+	  					ELSE B.DISPLAYNAME$lang$
 	  				END userName,
-	  				(SELECT DISPLAYNAME FROM TBL_DEPTMASTER WHERE CN = #deptID#) as deptName,
+	  				D.DISPLAYNAME$lang$ as deptName,
 	  				TO_CHAR(A.TITLE),
-	  				MAIL,
-				    CONCAT(SUBSTR('0000000000', 1, 10 -LENGTH(NVL(ORDERBY, '0'))), NVL(ORDERBY, '0')) EXTENSIONATTRIBUTE15,
+	  				B.MAIL,
+				    CONCAT(SUBSTR('0000000000', 1, 10 -LENGTH(NVL(A.ORDERBY, '0'))), NVL(A.ORDERBY, '0')) EXTENSIONATTRIBUTE15,
 				    TO_CHAR(B.EXTENSIONATTRIBUTE2) as imageName,
 				    B.TENANT_ID,
 					'addJobUser' as TYPE
@@ -358,8 +362,14 @@
 					A.CN = B.CN
 				AND
 					A.TENANT_ID = B.TENANT_ID
+				JOIN
+					TBL_DEPTMASTER D
+				ON
+					A.DEPTID = D.CN
 				WHERE
-					A.DEPTID = #deptID#
+					(B.DISPLAYNAME$lang$ LIKE ('%' || #deptIDEscape# || '%') ESCAPE '\'
+				OR
+					D.DISPLAYNAME$lang$ LIKE ('%' || #deptIDEscape# || '%') ESCAPE '\')
 				AND
 					A.TENANT_ID = #tenantID#)
 			<![CDATA[		
@@ -442,14 +452,14 @@
 					B.CN as userID,
 				    A.DEPTID as deptID,
 				    CASE
-						WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
-	  					THEN DISPLAYNAME
-	  					ELSE DISPLAYNAME$lang$
+						WHEN (B.DISPLAYNAME$lang$ = '' OR B.DISPLAYNAME$lang$ IS NULL) 
+	  					THEN B.DISPLAYNAME
+	  					ELSE B.DISPLAYNAME$lang$
 	  				END userName,
-	  				(SELECT DISPLAYNAME FROM TBL_DEPTMASTER WHERE CN = #deptID#) as deptName,
+	  				D.DISPLAYNAME$lang$ as deptName,
 	  				TO_CHAR(A.TITLE),
-	  				MAIL,
-				    CONCAT(SUBSTR('0000000000', 1, 10 - LENGTH(NVL(ORDERBY, '0'))), NVL(ORDERBY, '0')) EXTENSIONATTRIBUTE15,
+	  				B.MAIL,
+				    CONCAT(SUBSTR('0000000000', 1, 10 - LENGTH(NVL(A.ORDERBY, '0'))), NVL(A.ORDERBY, '0')) EXTENSIONATTRIBUTE15,
 				    TO_CHAR(B.EXTENSIONATTRIBUTE2) as imageName,
 				    B.TENANT_ID,
 					'addJobUser' as TYPE
@@ -461,6 +471,10 @@
 					A.CN = B.CN
 				AND
 					A.TENANT_ID = B.TENANT_ID
+				JOIN
+					TBL_DEPTMASTER D
+				ON
+					A.DEPTID = D.CN
 				WHERE
 					A.DEPTID = #deptID#
 				AND

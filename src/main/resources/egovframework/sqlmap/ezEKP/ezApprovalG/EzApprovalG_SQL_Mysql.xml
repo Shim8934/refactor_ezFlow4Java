@@ -4458,9 +4458,9 @@
             ]]>	
             <isEqual property="v_USERFLAG" compareValue="admin">
              OR 
-             	(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$) AND TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014'))
-             OR 
-             	(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($ v_DEPTIDS$) AND TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015')
+             	(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
+                AND
+                TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015'))
             </isEqual>
             	 ) 
              ORDER BY PROCESSDATE $v_BASICORDER$
@@ -5137,20 +5137,34 @@
 <!-- 		{CALL EZSP_GETRECEIPTTEMPLETINFO(#v_FORMID#, #v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getReceiptTempletInfo" parameterClass="Map" resultClass="ApprGDeptTempletVO">
-		 SELECT 
-		 	* 
-	     FROM 
-	     	TBL_DEPTTEMPLET 
-	     WHERE  
-	     	TRIM(FORMID) = #v_FORMID#
-	     AND 
-	     	USERID = #v_USERID#
-	     AND
-	     	TENANT_ID = #v_TENANTID#
-	     AND
-        	COMPANYID = #companyID#
-	     ORDER BY 
-	     	APRDEPTSN
+        SELECT 
+            A.USERID, 
+            A.FORMID, 
+            A.APRDEPTSN, 
+            A.APRDEPTTEMPLETNAME, 
+            B.EXTRECEPTYN 
+        FROM 
+            TBL_DEPTTEMPLET A 
+        JOIN 
+            TBL_DEPTTEMPLETDETAIL B 
+        ON 
+            A.USERID = B.USERID 
+        AND 
+            A.FORMID = B.FORMID 
+        AND 
+            A.APRDEPTSN = B.APRDEPTSN 
+        WHERE 
+            A.FORMID = #v_FORMID#
+        AND 
+            A.USERID = #v_USERID#
+        AND 
+            A.TENANT_ID = #v_TENANTID#
+        AND 
+            A.COMPANYID = #companyID#
+        GROUP BY 
+            A.USERID, A.FORMID, A.APRDEPTSN, A.APRDEPTTEMPLETNAME, B.EXTRECEPTYN 
+        ORDER BY 
+            A.APRDEPTSN
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getReceiptTempletDetailInfo" parameterClass="Map" resultClass="ApprGDeptTempletVO"> -->
@@ -5180,16 +5194,26 @@
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getTempListDB" parameterClass="Map" resultClass="ApprGAdminReceiveVO" remapResults="true">
 		<isEqual property="v_MODE" compareValue="GROUP">
-			SELECT 
-				* 
-           	FROM 
-           		TBL_ADMINRECEIPTGROUP_MAIN
-           	WHERE
-           		TENANT_ID = #v_TENANTID#
-           	AND
-           		COMPANYID = #companyID# 
-           	ORDER BY 
-             	MAINID
+            SELECT 
+                A.MAINID, 
+                A.MAINNAME,
+                B.EXTRECEPTYN
+            FROM 
+                TBL_ADMINRECEIPTGROUP_MAIN A 
+            JOIN 
+                TBL_ADMINRECEIPTGROUP_SUB B 
+            ON 
+                A.MAINID = B.MAINID 
+            WHERE 
+                B.EXTRECEPTYN = #v_EXTRECEPTYN# 
+            AND
+                A.TENANT_ID = #v_TENANTID# 
+            AND
+                A.COMPANYID = #companyID# 
+            GROUP BY 
+                A.MAINID, A.MAINNAME, B.EXTRECEPTYN 
+            ORDER BY 
+                A.MAINID
 		</isEqual>
 		<isEqual property="v_MODE" compareValue="ITEM">
 			SELECT 
@@ -7173,34 +7197,40 @@
 <!-- 		{CALL EZSP_GETHISTORYFORATTACH(#v_DOCID#, #v_ORDEROPTION#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getHistoryForAttach" parameterClass="Map" resultClass="ApprGHistoryAttachVO">
-		SELECT 
-				DOCID, 
-				ATTACHFILESN, 
-				ATTACHFILENAME, 
-				ATTACHFILEDISPLAYNAME,
-	   			ATTACHFILEHREF, 
-	   			ATTACHFILESIZE, 
-	   			ATTACHUSERID, 
-	   			ATTACHUSERNAME, 
-	   			ATTACHUSERNAME2,
-	   			ATTACHUSERJOBTITLE, 
-	   			ATTACHUSERJOBTITLE2, 
-	   			ATTACHUSERDEPTID, 
-	   			ATTACHUSERDEPTNAME, 
-	   			ATTACHUSERDEPTNAME2, 
-	   			MODIFYDATE,
-	   			MODIFYSN, 
-	   			MODIFYFLAG, 
-	   			PAGENUM, 
-	   			CHKFLAG
+		(SELECT 
+				DISTINCT
+                    APR.DISPLAYNAME as DISPLAYNAME,
+                    HIS.DOCID, 
+				    HIS.ATTACHFILESN, 
+    				HIS.ATTACHFILENAME, 
+    				HIS.ATTACHFILEDISPLAYNAME,
+    	   			HIS.ATTACHFILEHREF, 
+    	   			HIS.ATTACHFILESIZE, 
+    	   			HIS.ATTACHUSERID, 
+    	   			HIS.ATTACHUSERNAME, 
+    	   			HIS.ATTACHUSERNAME2,
+    	   			HIS.ATTACHUSERJOBTITLE, 
+    	   			HIS.ATTACHUSERJOBTITLE2, 
+    	   			HIS.ATTACHUSERDEPTID, 
+    	   			HIS.ATTACHUSERDEPTNAME, 
+    	   			HIS.ATTACHUSERDEPTNAME2, 
+    	   			HIS.MODIFYDATE,
+    	   			HIS.MODIFYSN, 
+    	   			HIS.MODIFYFLAG, 
+    	   			HIS.PAGENUM, 
+    	   			HIS.CHKFLAG
 	   	FROM 
-	   			TBL_HISTORYATTACHINFO 
+	   			TBL_HISTORYATTACHINFO HIS
+        JOIN
+                TBL_APRATTACHINFO APR
+        ON
+                HIS.DOCID = APR.DOCID AND HIS.COMPANYID = APR.COMPANYID AND HIS.ATTACHFILEDISPLAYNAME = APR.ATTACHFILENAME                
 	   	WHERE 
-	   			DOCID = #v_DOCID#
+	   			HIS.DOCID = #v_DOCID#
 	   	AND
-	   			TENANT_ID = #v_TENANTID#
+	   			HIS.TENANT_ID = #v_TENANTID#
 	   	AND
-	   			COMPANYID = #companyID#
+	   			HIS.COMPANYID = #companyID#
 	   	<isGreaterThan property="v_ORDEROPTIONLENGTH" compareValue="0">
    		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="10">
    		<isEqual property="v_ORDEROPTIONVALUE" compareValue="modifydate">
@@ -7209,7 +7239,7 @@
    		</isEqual>
    		<isNotEqual property="v_ORDEROPTIONVALUE" compareValue="aprmembersn">
 	   		ORDER BY 
-	   			$v_ORDEROPTION$, MODIFYDATE DESC' 
+	   			$v_ORDEROPTION$, MODIFYDATE DESC
    		</isNotEqual>
    		</isGreaterEqual>
    		<isLessThan property="v_ORDEROPTIONLENGTH" compareValue="10">
@@ -7221,6 +7251,65 @@
    			ORDER BY 
    				MODIFYDATE DESC
    		</isLessEqual>
+   		)
+   		
+   		UNION
+   		
+   		(SELECT 
+				DISTINCT
+                    APR.DISPLAYNAME as DISPLAYNAME,
+                    HIS.DOCID, 
+				    HIS.ATTACHFILESN, 
+    				HIS.ATTACHFILENAME, 
+    				HIS.ATTACHFILEDISPLAYNAME,
+    	   			HIS.ATTACHFILEHREF, 
+    	   			HIS.ATTACHFILESIZE, 
+    	   			HIS.ATTACHUSERID, 
+    	   			HIS.ATTACHUSERNAME, 
+    	   			HIS.ATTACHUSERNAME2,
+    	   			HIS.ATTACHUSERJOBTITLE, 
+    	   			HIS.ATTACHUSERJOBTITLE2, 
+    	   			HIS.ATTACHUSERDEPTID, 
+    	   			HIS.ATTACHUSERDEPTNAME, 
+    	   			HIS.ATTACHUSERDEPTNAME2, 
+    	   			HIS.MODIFYDATE,
+    	   			HIS.MODIFYSN, 
+    	   			HIS.MODIFYFLAG, 
+    	   			HIS.PAGENUM, 
+    	   			HIS.CHKFLAG
+	   	FROM 
+	   			TBL_HISTORYATTACHINFO HIS
+        JOIN
+                TBL_ENDATTACHINFO APR
+        ON
+                HIS.DOCID = APR.DOCID AND HIS.COMPANYID = APR.COMPANYID AND HIS.ATTACHFILEDISPLAYNAME = APR.ATTACHFILENAME                
+	   	WHERE 
+	   			HIS.DOCID = #v_DOCID#
+	   	AND
+	   			HIS.TENANT_ID = #v_TENANTID#
+	   	AND
+	   			HIS.COMPANYID = #companyID#
+	   	<isGreaterThan property="v_ORDEROPTIONLENGTH" compareValue="0">
+   		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="10">
+   		<isEqual property="v_ORDEROPTIONVALUE" compareValue="modifydate">
+	   		 ORDER BY 
+	   		 	$v_ORDEROPTION$ 
+   		</isEqual>
+   		<isNotEqual property="v_ORDEROPTIONVALUE" compareValue="aprmembersn">
+	   		ORDER BY 
+	   			$v_ORDEROPTION$, MODIFYDATE DESC
+   		</isNotEqual>
+   		</isGreaterEqual>
+   		<isLessThan property="v_ORDEROPTIONLENGTH" compareValue="10">
+   		 ORDER BY 
+	   		 	$v_ORDEROPTION$, MODIFYDATE DESC
+   		</isLessThan>
+   		</isGreaterThan>
+   		<isLessEqual property="v_ORDEROPTIONLENGTH" compareValue="0">
+   			ORDER BY 
+   				MODIFYDATE DESC
+   		</isLessEqual>
+   		)
 	</select>
 <!-- 	<procedure id="EzApprovalG.doApproveLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO"> -->
 <!-- 		{CALL EZSP_DOAPPROVE_LINEINFO(#v_DOCID#, #v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -7415,27 +7504,36 @@
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.doSendDocReceiptInfo" parameterClass="Map" resultClass="ApprGReceiptVO">
 		SELECT 
-				 RECEIPTPOINTID ,
-	             RECEIPTPOINTNAME ,
-	             RECEIPTPOINTNAME2 ,
-	             RECEIPTMEMBERID ,
-	             RECEIPTMEMBERNAME ,
-	             RECEIPTMEMBERNAME2 ,
-	             RECEIPTMEMBERJOBTITLE ,
-	             RECEIPTMEMBERJOBTITLE2 ,
-	             EXTRECEPTEMAIL 
+            DOCID, 
+            RECEIPTPOINTID, 
+            RECEIPTPOINTNAME, 
+            EXTRECEPTYN, 
+            PROCESSYN, 
+            PROCESSSN, 
+            CANEDITYN, 
+            EXTRECEPTEMAIL, 
+            RECEIPTMEMBERID, 
+            RECEIPTMEMBERNAME, 
+            PROCESSDATE, 
+            RECEIPTMEMBERJOBTITLE, 
+            DEPTMEMBERSN, 
+            RECEIPTPOINTNAME2, 
+            RECEIPTMEMBERJOBTITLE2, 
+            RECEIPTMEMBERNAME2, 
+            ROUTEYN, 
+            COMPANYID
 	     FROM 
 	     		 TBL_RECEIPTPOINTINFO 
 	     WHERE  
 	     		 DOCID = #v_DOCID#
 	     AND 
 	     		 PROCESSSN = 1
-	     AND 
-	     	     EXTRECEPTYN = 'N'
 	     AND
 	     		 TENANT_ID = #v_TENANTID#
 	     AND
 	     		 COMPANYID = #companyID#
+	     ORDER BY 
+	             DEPTMEMBERSN 
 	</select>
 	
 	<select id="EzApprovalG.doSendDocReceiptInfo2" parameterClass="Map" resultClass="ApprGReceiptVO">
@@ -8517,12 +8615,8 @@
 	      		OR 
 	      			(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
 	         	AND 
-	         		TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014'))
-	         	OR 
-	         		(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
-	         	AND 
-	         		 TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015')
-	      	</isEqual>
+					TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015'))	      	
+            </isEqual>
 	      	<isEqual property="v_aprFlag" compareValue="G">
 		     	OR
 		     	((  TBL_APRDOCINFO.WRITERID = #v_USERID# AND TBL_APRDOCINFO.WRITERDEPTID = #v_DEPTID# ) 
@@ -11559,19 +11653,12 @@
 	   			(((TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# AND TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#)
 	   		AND 
 	   			(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'))
-	   			
    		]]>
    		<isEqual property="v_USERFLAG" compareValue="admin">
-   			OR 
-   				(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
-      		AND 
-      			TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014'))
-      		OR 
-      			(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
-      		AND 
-      			TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015')
-      		AND	
-		   		TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
+            OR
+            (TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
+            AND
+            TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015'))
    		</isEqual>
    		<isEqual property="v_aprFlag" compareValue="G">
 	     	OR
@@ -15197,10 +15284,10 @@
 	      		TBL_APRRECEIPTPROCESSINFO.COMPANYID = #companyID#
 	      			]]>
 	     <isEqual property="v_SUSINADMIN" compareValue="Y">
-	     OR 
-	     	(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)  AND  TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014')) 
-          OR 
-          	(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$) AND   TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015')
+             OR
+             (TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
+             AND
+             TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015'))
 	     </isEqual>
 	     <isEqual property="v_aprFlag" compareValue="G">
 	     	OR
@@ -32905,8 +32992,7 @@
 	   						#v_DEPTIDS[]#
 	   					</iterate>
 	   				AND 
-	   					(TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014') OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015')
-	   				)
+	   					TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015'))
 	   		</isEqual>
 	   		<isEqual property="v_aprFlag" compareValue="G">
 		     	OR
@@ -34206,4 +34292,112 @@
         AND 
             COMPANYID = #companyID#
 	</update>
+    
+    <select id="EzApprovalG.selectDisbandGroupReceipt" parameterClass="Map" resultClass="ApprGReceiptVO">
+        SELECT 
+	        #v_DOCID# AS DOCID, 
+	        DEPTID AS RECEIPTPOINTID, 
+	        DEPTNAME AS RECEIPTPOINTNAME, 
+	        #v_CURRRECEIPT.extReceptYN# AS EXTRECEPTYN, 
+	        #v_CURRRECEIPT.processYN# AS PROCESSYN, 
+	        #v_CURRRECEIPT.processSN# AS PROCESSSN, 
+	        #v_CURRRECEIPT.canEditYN# AS CANEDITYN, 
+	        #v_CURRRECEIPT.extRecepteMail# AS EXTRECEPTEMAIL, 
+	        #v_CURRRECEIPT.receiptMemberID# AS RECEIPTMEMBERID, 
+	        #v_CURRRECEIPT.receiptMemberName# AS RECEIPTMEMBERNAME, 
+	        #v_CURRRECEIPT.processDate# AS PROCESSDATE, 
+	        #v_CURRRECEIPT.receiptMemberJobTitle# AS RECEIPTMEMBERJOBTITLE, 
+	        #v_CURRRECEIPT.deptMemberSN# AS DEPTMEMBERSN, 
+	        DEPTNAME2 AS RECEIPTPOINTNAME2, 
+	        #v_CURRRECEIPT.receiptMemberJobTitle2# AS RECEIPTMEMBERJOBTITLE2, 
+	        #v_CURRRECEIPT.receiptMemberName2# AS RECEIPTMEMBERNAME2, 
+	        #v_CURRRECEIPT.routeYN# AS ROUTEYN, 
+	        #v_TENANTID# AS TENANT_ID, 
+	        #companyID# AS COMPANYID
+        FROM 
+            TBL_ADMINRECEIPTGROUP_SUB
+        WHERE 
+            MAINID = #v_MAINID# 
+        AND 
+            COMPANYID = #companyID# 
+        AND 
+            TENANT_ID = #v_TENANTID# 
+        ORDER BY 
+            SUBID
+    </select>
+    
+    <insert id="EzApprovalG.insertDisbandGroupReceipt" parameterClass="Map">
+        INSERT INTO TBL_RECEIPTPOINTINFO (DOCID, RECEIPTPOINTID, RECEIPTPOINTNAME, EXTRECEPTYN, PROCESSYN, PROCESSSN, CANEDITYN, EXTRECEPTEMAIL, RECEIPTMEMBERID, RECEIPTMEMBERNAME, PROCESSDATE, RECEIPTMEMBERJOBTITLE, DEPTMEMBERSN, RECEIPTPOINTNAME2, RECEIPTMEMBERJOBTITLE2, RECEIPTMEMBERNAME2, ROUTEYN, TENANT_ID, COMPANYID)
+        VALUES 
+        <iterate property="v_NEWRECEIPTS" conjunction=",">
+            (
+                #v_DOCID#,
+                #v_NEWRECEIPTS[].receiptPointID#,
+                #v_NEWRECEIPTS[].receiptPointName#,
+                #v_NEWRECEIPTS[].extReceptYN#,
+                #v_NEWRECEIPTS[].processYN#,
+                #v_NEWRECEIPTS[].processSN#,
+                #v_NEWRECEIPTS[].canEditYN#,
+                #v_NEWRECEIPTS[].extRecepteMail#,
+                #v_NEWRECEIPTS[].receiptMemberID#,
+                #v_NEWRECEIPTS[].receiptMemberName#,
+                #v_NEWRECEIPTS[].processDate#,
+                #v_NEWRECEIPTS[].receiptMemberJobTitle#,
+                #v_NEWRECEIPTS[].deptMemberSN#,
+                #v_NEWRECEIPTS[].receiptPointName2#,
+                #v_NEWRECEIPTS[].receiptMemberJobTitle2#,
+                #v_NEWRECEIPTS[].receiptMemberName2#,
+                #v_NEWRECEIPTS[].routeYN#,
+                #v_TENANTID#,
+                #companyID#
+            )
+        </iterate>
+    </insert>
+    
+    <select id="EzApprovalG.getReceiptInfoIng" parameterClass="Map" resultClass="HashMap">
+        <isEqual property="v_TYPE" compareValue="one">
+            SELECT 
+                ROW_NUMBER() OVER() AS SN, 
+                RECEIPTPOINTID, 
+                RECEIPTPOINTNAME$v_LANG$ AS DISPLAYRECEIPTPOINTNAME,
+                RECEIPTPOINTNAME, 
+                RECEIPTPOINTNAME2,
+                RECEIPTMEMBERNAME$v_LANG$ AS DISPLAYRECEIPTMEMBERNAME,
+                RECEIPTMEMBERNAME,
+                RECEIPTMEMBERNAME2
+            FROM 
+                TBL_RECEIPTPOINTINFO 
+            WHERE 
+                DOCID = #v_DOCID# 
+            AND 
+                RECEIPTPOINTID = #v_RECEIPTID# 
+            AND 
+                TENANT_ID = #v_TENANTID# 
+            AND 
+                COMPANYID = #companyID# 
+            ORDER BY 
+                DEPTMEMBERSN
+        </isEqual>
+        <isEqual property="v_TYPE" compareValue="group">
+            SELECT 
+                ROW_NUMBER() OVER() AS SN, 
+                DEPTID AS RECEIPTPOINTID, 
+                DEPTNAME$v_LANG$ AS DISPLAYRECEIPTPOINTNAME,
+                DEPTNAME AS RECEIPTPOINTNAME, 
+                DEPTNAME2 AS RECEIPTPOINTNAME2,
+                '' AS DISPLAYRECEIPTMEMBERNAME,
+                '' AS RECEIPTMEMBERNAME,
+                '' AS RECEIPTMEMBERNAME2
+            FROM 
+                TBL_ADMINRECEIPTGROUP_SUB 
+            WHERE 
+                MAINID = #v_MAINID# 
+            AND 
+                TENANT_ID = #v_TENANTID# 
+            AND 
+                COMPANYID = #companyID# 
+            ORDER BY 
+                SUBID
+        </isEqual>
+    </select>
 </sqlMap>

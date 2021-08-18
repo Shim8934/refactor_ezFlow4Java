@@ -1067,7 +1067,8 @@ public class EzEmailAdminController {
 	@RequestMapping(value = "/admin/ezEmail/mailBoxQuotaUpdate.do", method = RequestMethod.GET)
 	public String mailBoxQuotaUpdate(@CookieValue("loginCookie") String loginCookie,
 			@RequestParam(required = false) String searchKeycode,
-			@RequestParam(required = false) String searchKeyword, HttpServletRequest req) throws Exception{
+			@RequestParam(required = false) String searchKeyword,
+			@RequestParam(required = false) boolean[] searchFor, HttpServletRequest req) throws Exception{
 		logger.debug("mailBoxQuotaUpdate started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
@@ -1098,7 +1099,7 @@ public class EzEmailAdminController {
 		// 전체사용자 검색후 update보다 검색된 사용자만 update하도록 수정
 		// List<OrganUserVO> vo = ezOrganAdminService.getAllUserCnList(tenantID);
 		List<OrganUserVO> vo = ezOrganAdminService.getUserList(userInfo.getTenantId(), startRow, 
-				    maxItemPerPage, searchKeycode, searchKeyword, companyId, "", "");
+				    maxItemPerPage, searchKeycode, searchKeyword, companyId, "", "", searchFor);
 
 		for (OrganUserVO user : vo) {
 
@@ -1134,7 +1135,8 @@ public class EzEmailAdminController {
 			@RequestParam(required = false) String searchKeycode,
 			@RequestParam(required = false) String searchKeyword,
 			@RequestParam(required = false) String sortColumn,
-			@RequestParam(required = false) String sortType) throws Exception {
+			@RequestParam(required = false) String sortType,
+			@RequestParam(required = false) boolean[] searchFor) throws Exception {
 		logger.debug("mailBoxQuotaManageList started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
@@ -1174,8 +1176,8 @@ public class EzEmailAdminController {
 			}
 			
 			userCnList = ezOrganAdminService.getUserList(userInfo.getTenantId(), startRow, 
-				    maxItemPerPage, searchKeycode, searchKeyword, companyId, sortColumn, sortType);
-			itemCnt = ezOrganAdminService.getUserCount(userInfo.getTenantId(), searchKeycode, searchKeyword, companyId);
+				    maxItemPerPage, searchKeycode, searchKeyword, companyId, sortColumn, sortType, searchFor);
+			itemCnt = ezOrganAdminService.getUserCount(userInfo.getTenantId(), searchKeycode, searchKeyword, searchFor, companyId);
 		} catch (Exception ex) {
 			userCnList = new ArrayList<>();
 			itemCnt = 0;
@@ -1269,6 +1271,7 @@ public class EzEmailAdminController {
 			@RequestParam(required = false) String searchKeyword,
 			@RequestParam(required = false) String sortColumn,
 			@RequestParam(required = false) String sortType,
+			@RequestParam(required = false) boolean[] searchFor,
 			HttpServletResponse response) throws Exception {
 		logger.debug("mailQuotaExcelExport started.");
 
@@ -1289,9 +1292,9 @@ public class EzEmailAdminController {
 
 		// 모든 사용자의 목록을 가져온다.
 		List<OrganUserVO> userCnList = ezOrganAdminService.getUserList(Integer.valueOf(userInfo.getTenantId()), 
-									   startRow, maxItemPerPage, searchKeycode, searchKeyword, companyId, sortColumn, sortType);
+									   startRow, maxItemPerPage, searchKeycode, searchKeyword, companyId, sortColumn, sortType, searchFor);
 		
-		int totalCount = ezOrganAdminService.getUserCount(userInfo.getTenantId(), searchKeycode, searchKeyword, companyId);
+		int totalCount = ezOrganAdminService.getUserCount(userInfo.getTenantId(), searchKeycode, searchKeyword, searchFor, companyId);
 		
 		List<ArrayList<String>> userList = new ArrayList<ArrayList<String>>();
 		

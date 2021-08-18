@@ -503,7 +503,7 @@
 		            var ListViewLen = pAPRTemplist.GetSelectedRows();
 		
 		            if (ListViewLen.length < 1) {
-		                var pAlertContent = linealt15;
+		                var pAlertContent = "<spring:message code='ezApprovalG.smb01'/>";;
 		                OpenAlertUI(pAlertContent);
 		                return;
 		            }
@@ -511,7 +511,7 @@
 		            p_CheckAprDeptTempletSN = ListViewLen[0].getAttribute("DATA1");
 		
 		            if (p_CheckAprDeptTempletSN == "") {
-		                var pAlertContent = linealt15;
+		                var pAlertContent = "<spring:message code='ezApprovalG.smb01'/>";
 		                OpenAlertUI(pAlertContent);
 		                return;
 		            }

@@ -356,7 +356,7 @@
 
     		            if (pItemID != "") {
    		                    checkpassword_dialogArguments[1] = DeleteItem_onclick_Complete;
-   		                    var OpenWin = window.open("/ezCommunity/checkPassword.do?itemID=" + encodeURIComponent(pItemID), "checkPassword", GetOpenWindowfeature(340, 200));
+   		                    var OpenWin = window.open("/ezCommunity/checkPassword.do?itemID=" + encodeURIComponent(pItemID), "checkPassword", GetOpenWindowfeature(470, 200));
    		                    
    		                    try {
    		                    	OpenWin.focus();
@@ -377,7 +377,7 @@
 
         		            if (pItemID != "") {
        		                    checkpassword_dialogArguments[1] = DeleteItem_onclick_Complete;
-       		                    var OpenWin = window.open("/ezCommunity/checkPassword.do?itemID=" + encodeURIComponent(pItemID), "checkPassword", GetOpenWindowfeature(340, 200));
+       		                    var OpenWin = window.open("/ezCommunity/checkPassword.do?itemID=" + encodeURIComponent(pItemID), "checkPassword", GetOpenWindowfeature(470, 200));
        		                    
        		                    try {
        		                    	OpenWin.focus();

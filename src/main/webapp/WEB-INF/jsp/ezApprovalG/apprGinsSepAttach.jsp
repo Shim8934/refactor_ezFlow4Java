@@ -110,31 +110,32 @@
 		
 		        Headers = createNodeAndAppandNode(oList, ListViewData, Headers, "HEADERS");
 		        Header = createNodeAndAppandNode(oList, Headers, Header, "HEADER");     
-		        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t439'/>");
+		        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t439'/>"); // 순번
 		        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "40");
 		
 		        Header = createNodeAndAppandNode(oList, Headers, Header, "HEADER");     
-		        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t106'/>");
+		        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t106'/>"); // 제목
 		        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "150");
+		        createNodeAndAppandNodeText(oList, Header, node, "COLNAME", "TITLE");
 		
 		        Header = createNodeAndAppandNode(oList, Headers, Header, "HEADER");     
-		        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t874'/>");
+		        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t874'/>"); // 기록물철명
 		        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "150");
 		
 		        Header = createNodeAndAppandNode(oList, Headers, Header, "HEADER");    
-		        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t859'/>");
+		        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t859'/>"); // 등록구분
 		        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "120");
 		
 		        Header = createNodeAndAppandNode(oList, Headers, Header, "HEADER");     
-		        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t979'/>");
+		        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t979'/>"); // 쪽수
 		        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "40");
 		
 		        Header = createNodeAndAppandNode(oList, Headers, Header, "HEADER");     
-		        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t1028'/>");
+		        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t1028'/>"); // 시청각기록물 형태
 		        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "120");
 		
 		        Header = createNodeAndAppandNode(oList, Headers, Header, "HEADER");     
-		        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t1029'/>");
+		        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t1029'/>"); // 시청각기록물 내용요약
 		        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "220");
 		
 		        Rows = createNodeAndAppandNode(oList, ListViewData, Rows, "ROWS");
@@ -223,6 +224,7 @@
 		        Header = createNodeAndAppandNode(oList, Headers, Header, "HEADER");     
 		        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t106'/>");
 		        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "200");
+		        createNodeAndAppandNodeText(oList, Header, node, "COLNAME", "TITLE");
 		
 		        Header = createNodeAndAppandNode(oList, Headers, Header, "HEADER");    
 		        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t874'/>");
@@ -286,7 +288,8 @@
 		        SetAttribute(objRow, "DATA2", SelectSingleNodeValue(InfoXml.documentElement, "REGTYPE"));  
 		        SetAttribute(objRow, "DATA3", SelectSingleNodeValue(InfoXml.documentElement, "AVTYPE"));  
 
-		        objRow.cells[1].innerHTML = Replace2HTML(SelectSingleNodeValue(InfoXml.documentElement, "TITLE"));  
+		        objRow.cells[1].innerText = (SelectSingleNodeValue(InfoXml.documentElement, "TITLE"));
+		        objRow.cells[1].title = (SelectSingleNodeValue(InfoXml.documentElement, "TITLE")); // 분리첨부 제목이 길어도 전체 확인이 가능하도록 타이틀(툴팁) 추가
 		        objRow.cells[2].innerHTML = SelectSingleNodeValue(InfoXml.documentElement, "CABINETNAME");  
 		        objRow.cells[3].innerHTML = SelectSingleNodeValue(InfoXml.documentElement, "REGTYPEDESC");
 		        

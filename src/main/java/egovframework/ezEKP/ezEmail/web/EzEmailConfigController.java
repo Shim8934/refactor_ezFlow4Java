@@ -2734,7 +2734,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 					String dlName = commonUtil.cleanValue(dlVo.getName());
 					String dlExplaination = commonUtil.cleanValue(dlVo.getExplaination());
 					String dlMail = commonUtil.cleanValue(dlVo.getMail());
-					String dlOwnerName = commonUtil.cleanValue(ownerInfo.getDisplayName());
+					String dlOwnerName = (ownerInfo == null || ownerInfo.getDisplayName() == null) ? "" : commonUtil.cleanValue(ownerInfo.getDisplayName());
 					
 					// commonUtil.cleanValue()
 					if (showDLListType.equals("setting")) { // 메일 환경설정

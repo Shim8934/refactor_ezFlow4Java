@@ -419,7 +419,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		logger.debug("type="+type);
 		
-        ezOrganAdminDao.moveDBDataForJMocha(map);
+        /*ezOrganAdminDao.moveDBDataForJMocha(map);*/
         
     	if (type.toLowerCase().equals("group")) {
     		OrganDeptVO dept = ezOrganAdminDao.moveDBData_S(map);
@@ -576,7 +576,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("timeUTC", timeUTC);
 		
 	    ezOrganAdminDao.retireDBData_I(map);
-	    ezOrganAdminDao.retireDBData(map);
+	    /*ezOrganAdminDao.retireDBData(map);*/
 	    ezOrganAdminDao.retireDBData_D3(map);
 	    
 	    /**
@@ -801,13 +801,15 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				
 				//회사등록시 근태설정(연차설정관리) 기본값 insert
 				ezOrganAdminDao.insertCompanyInfo_IJHS1(map1);
+				//차량관리 기본값 insert
+				ezOrganAdminDao.insertCompanyInfo_I33(map1);
 				
             // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
             } catch (Exception e) {
                 e.printStackTrace();
-                
+                /*
                 map.put("v_CLASS", "group");
-                ezOrganAdminDao.deleteDBDataForJMocha(map);
+                ezOrganAdminDao.deleteDBDataForJMocha(map);*/
                 
                 throw e;
             }			
@@ -1166,7 +1168,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	    	//사용자를 삭제 할 때, 대상의 정보를 저장한다. 2018-06-04 홍대표
 	    	ezOrganAdminDao.insertDelUserDBData_I(map);
 	    	
-	        ezOrganAdminDao.deleteDBDataForJMocha(map);
+	        /*ezOrganAdminDao.deleteDBDataForJMocha(map);*/
      
 	        ezOrganAdminDao.deleteDBData_D1(map);
 	        ezOrganAdminDao.deleteDBData_D4(map);
@@ -1426,20 +1428,28 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	// 사용자 이름,부서 목록을 반환한다.
     @Override
     public List<OrganUserVO> getUserList(int tenantID,int startPage, int maxItemPerPage,
-    									 String keycode,String keyword,String companyId, String sortColumn, String sortType) throws Exception {     
+    									 String keycode,String keyword,String companyId, String sortColumn, String sortType, boolean[] searchFor) throws Exception {     
     	logger.debug("getUserList started");
+    	if(searchFor == null) {
+    		searchFor = new boolean[] {true, true, true}; 
+    	}
     	
     	Map<String, Object> params = new HashMap<String, Object>();
     	
     	params.put("tenantID", tenantID);
 		params.put("v_start", startPage);
-		params.put("v_end",   startPage + maxItemPerPage - 1);
+		params.put("v_end", (!searchFor[0] && !searchFor[1] && !searchFor[2])? 0 : startPage + maxItemPerPage - 1);
 		params.put("pageCount", maxItemPerPage);
 		params.put("search_keycode", keycode);
 		params.put("search_keyword", keyword);
 		params.put("companyId", companyId);
 		params.put("sortColumn", sortColumn);      
 		params.put("sortType", sortType);
+		params.put("searchForAll", searchFor[0] && searchFor[1] && searchFor[2]);
+		params.put("isAnd", (searchFor[0] && !searchFor[1] && !searchFor[2]) 
+					    || (!searchFor[0] && !(searchFor[1] && searchFor[2])));
+		params.put("retired", searchFor[1]);
+		params.put("stopped", searchFor[2]);
 		
 		String orderByData = "";
 		if(!sortColumn.equals("")){
@@ -1463,8 +1473,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 
     // 사용자 이름,부서 목록개수를 반환한다.
     @Override
-    public int getUserCount(int tenantID, String keycode,String keyword,String companyId) throws Exception {     
+    public int getUserCount(int tenantID, String keycode, String keyword, boolean[] searchFor, String companyId) throws Exception {     
     	logger.debug("getUserCount started");
+    	if(searchFor == null) {
+    		searchFor = new boolean[] {true, true, true}; 
+    	}
    		
     	Map<String, Object> params = new HashMap<String, Object>();
     	
@@ -1473,7 +1486,13 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		params.put("search_keyword", keyword);
 		params.put("companyId", companyId);
 		
-		int userCount = ezOrganAdminDao.getUserCount(params);
+		params.put("searchForAll", searchFor[0] && searchFor[1] && searchFor[2]);
+		params.put("isAnd", (searchFor[0] && !searchFor[1] && !searchFor[2]) 
+					    || (!searchFor[0] && !(searchFor[1] && searchFor[2])));
+		params.put("retired", searchFor[1]);
+		params.put("stopped", searchFor[2]);
+		
+		int userCount = (!searchFor[0] && !searchFor[1] && !searchFor[2])? 0 : ezOrganAdminDao.getUserCount(params);
 		
 		logger.debug("getUserCount ended. userCount=" + userCount);
     	
@@ -1595,6 +1614,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_SORT", sort);
 		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
+		
+		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		date.setTimeZone(TimeZone.getTimeZone("GMT"));
+		String nowDate = date.format(new Date());
+		map.put("nowDate", nowDate);
 		
 		try {
 			ezOrganAdminDao.updateTitle(map);	//TBL_USER_JOBMASTER

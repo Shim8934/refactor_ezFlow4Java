@@ -150,7 +150,7 @@
 	    		}
 	    	} else {
 	    		if (taskCode != "" && itemName != "") {
-	    			$("#taskCode_span").text(taskCode + "(" + itemName + ")");
+	    			$("#taskCode_span").text(taskCode + "(" + replaceEntityCodeToStr(itemName) + ")");
 	    		}
 	    		if (securityCode != "") {
 	    			var	securityText = securityCode.substring(0, 1) + "<spring:message code='ezApprovalG.t991'/>"

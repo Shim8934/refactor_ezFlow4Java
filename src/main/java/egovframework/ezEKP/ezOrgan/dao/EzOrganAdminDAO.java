@@ -291,7 +291,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		return getRetireListCountForLocal(map);       	    
 	}
 
-    private void insertDBData_companyForJMocha(Map<String, Object> map) throws Exception {
+    /*private void insertDBData_companyForJMocha(Map<String, Object> map) throws Exception {
         int tenantId = (Integer)map.get("v_TENANT_ID");        
         String companyId = (String)map.get("v_CN");
         String displayName = (String)map.get("v_DISPLAYNAME");
@@ -336,14 +336,14 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         if (reasonCode != 0) {
             throw new Exception("Adding Company Failed!");
         }
-    }
+    }*/
 	
     private void insertDBData_companyForLocal(Map<String, Object> map) throws Exception {
         insert("EzOrganAdminDAO.insertDBData_company", map);
     }
 	
 	public void insertDBData_company(Map<String, Object> map) throws Exception {        
-        insertDBData_companyForJMocha(map);
+        /*insertDBData_companyForJMocha(map);*/
 
         try {
             insertDBData_companyForLocal(map);
@@ -352,14 +352,14 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         	logger.debug("insertDBData_company insert fail");
             e.printStackTrace();
             
-            map.put("v_CLASS", "group");
-            deleteDBDataForJMocha(map);
+            /*map.put("v_CLASS", "group");
+            deleteDBDataForJMocha(map);*/
             
             throw e;
         }
 	}
 
-    private void insertDBData_deptForJMocha(Map<String, Object> map) throws Exception {
+    /*private void insertDBData_deptForJMocha(Map<String, Object> map) throws Exception {
         int tenantId = (Integer)map.get("v_TENANT_ID");        
         String deptId = (String)map.get("v_CN");
         String displayName = (String)map.get("v_DISPLAYNAME");
@@ -419,7 +419,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         if (reasonCode != 0) {
             throw new Exception("Adding Department Failed!");
         }
-    }
+    }*/
 	
     private void insertDBData_deptForLocal(Map<String, Object> map) throws Exception {
     	SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -431,7 +431,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     }
 	
 	public void insertDBData_dept(Map<String, Object> map) throws Exception {
-	    insertDBData_deptForJMocha(map);
+	   /* insertDBData_deptForJMocha(map);*/
 	   
         try {
             insertDBData_deptForLocal(map);
@@ -446,9 +446,9 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
         } catch (Exception e) {
             e.printStackTrace();
-            
+            /*
             map.put("v_CLASS", "group");
-            deleteDBDataForJMocha(map);
+            deleteDBDataForJMocha(map);*/
             
             throw e;	            
         }
@@ -462,7 +462,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		update("EzOrganAdminDAO.updateDBData_deptOrderIsNull", map);
 	}
 
-    private void insertDBData_userForJMocha(Map<String, Object> map) throws Exception {
+    /*private void insertDBData_userForJMocha(Map<String, Object> map) throws Exception {
         int tenantId = (Integer)map.get("v_TENANT_ID");        
         String userId = (String)map.get("v_CN");
         String displayName = (String)map.get("v_DISPLAYNAME");
@@ -550,14 +550,14 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         if (reasonCode != 0) {
             throw new Exception("Adding User Failed!");
         }
-    }
+    }*/
 	
     private void insertDBData_userForLocal(Map<String, Object> map) throws Exception {
         insert("EzOrganAdminDAO.insertDBData_user", map);
     }
 	
 	public void insertDBData_user(Map<String, Object> map) throws Exception {
-	    insertDBData_userForJMocha(map);
+	   /* insertDBData_userForJMocha(map);*/
 	   
         try {
             insertDBData_userForLocal(map);
@@ -569,9 +569,9 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
         } catch (Exception e) {
             e.printStackTrace();
-            
+            /*
             map.put("v_CLASS", "user");
-            deleteDBDataForJMocha(map);
+            deleteDBDataForJMocha(map);*/
             
             throw e;                
         }            
@@ -589,7 +589,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		update("EzOrganAdminDAO.updateDBData_userOrderIsNull", map);
 	}
 	
-    private void updateDBData_companyForJMocha(Map<String, Object> map) throws Exception {
+    /*private void updateDBData_companyForJMocha(Map<String, Object> map) throws Exception {
         int tenantId = (Integer)map.get("v_TENANT_ID");        
         String companyId = (String)map.get("v_CN");
         String displayName = (String)map.get("v_DISPLAYNAME");
@@ -629,19 +629,19 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         if (reasonCode != 0) {
             throw new Exception("Updating Company Failed!");
         }                
-    }
+    }*/
     
     private void updateDBData_companyForLocal(Map<String, Object> map) throws Exception {
         update("EzOrganAdminDAO.updateDBData_company", map);
     }
     	
 	public void updateDBData_company(Map<String, Object> map) throws Exception {        
-	    updateDBData_companyForJMocha(map);
+	    /*updateDBData_companyForJMocha(map);*/
 	    
 	    updateDBData_companyForLocal(map);       
 	}
 	
-    private void updateDBData_deptForJMocha(OrganDeptVO vo) throws Exception {
+    /*private void updateDBData_deptForJMocha(OrganDeptVO vo) throws Exception {
         logger.debug("updateDBData_deptForJMocha started. tenantId=" + vo.getTenantId() + ",deptId=" + vo.getCn());
 
         String param1 = "tenantId=" + vo.getTenantId();
@@ -682,7 +682,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         if (reasonCode != 0) {
             throw new Exception("Updating Dept Failed!");
         }                
-    }
+    }*/
 	
     private void updateDBData_deptForLocal(OrganDeptVO vo) throws Exception {
         logger.debug("updateDBData_deptForLocal started. tenantId=" + vo.getTenantId() + ",deptId=" + vo.getCn());
@@ -693,12 +693,12 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     }
     	
 	public void updateDBData_dept(OrganDeptVO vo) throws Exception {        
-	    updateDBData_deptForJMocha(vo);
+	    /*updateDBData_deptForJMocha(vo);*/
 	    
 	    updateDBData_deptForLocal(vo);       
 	}
 
-    private void updateDBData_userForJMocha(OrganUserVO vo) throws Exception {
+    /*private void updateDBData_userForJMocha(OrganUserVO vo) throws Exception {
         logger.debug("updateDBData_userForJMocha started. tenantId=" + vo.getTenantId() + ",userId=" + vo.getCn());
 
         String param1 = "tenantId=" + vo.getTenantId();
@@ -826,14 +826,14 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         if (reasonCode != 0) {
             throw new Exception("Updating User Failed!");
         }        
-    }
+    }*/
 	
     private void updateDBData_userForLocal(OrganUserVO vo) throws Exception {
         update("EzOrganAdminDAO.updateDBData_user", vo);
     }
 	
 	public void updateDBData_user(OrganUserVO vo) throws Exception {
-	    updateDBData_userForJMocha(vo);
+	    /*updateDBData_userForJMocha(vo);*/
  	    
         updateDBData_userForLocal(vo);
         // AD에도 내용을 수정
@@ -862,7 +862,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         update("EzOrganAdminDAO.updateProperty_addJob", map);
 	}
 
-    private void restoreRetireEntryForJMocha(Map<String, Object> map) throws Exception {
+    /*private void restoreRetireEntryForJMocha(Map<String, Object> map) throws Exception {
         int tenantId = (Integer)map.get("v_TENANT_ID");        
         String userId = (String)map.get("v_CN");
         String parentCn = (String)map.get("v_PARENTCN");
@@ -894,14 +894,14 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         }                       
                 
         logger.debug("restoreRetireEntryForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
-    }
+    }*/
 	
     private void restoreRetireEntryForLocal(Map<String, Object> map) throws Exception {
         moveGroupUser_U(map);
     }
 	
 	public void restoreRetireEntry(Map<String, Object> map) throws Exception{
-	    restoreRetireEntryForJMocha(map);
+	    /*restoreRetireEntryForJMocha(map);*/
 	    
     	try {
     		restoreRetireEntryForLocal(map);
@@ -916,14 +916,14 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     			restoreUserInAD(ctx, map);
     		}
     	} catch (Exception e) {
-    		// Local에서의 복원 작업이 실패하면 JMocha 테이블에서 다시 퇴직처리를 한다.
-    		retireDBDataForJMocha(map);
+    		/*// Local에서의 복원 작업이 실패하면 JMocha 테이블에서 다시 퇴직처리를 한다.
+    		retireDBDataForJMocha(map);*/
     		
     		throw e;
     	}
 	}
 
-    public void deleteDBDataForJMocha(Map<String, Object> map) throws Exception {
+    /*public void deleteDBDataForJMocha(Map<String, Object> map) throws Exception {
         int tenantId = (Integer)map.get("v_TENANT_ID");        
         String cn = (String)map.get("v_CN");
         String targetClass = (String)map.get("v_CLASS");
@@ -973,19 +973,17 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
                 throw new Exception("Deleting User Failed!");
             }
         }        
-    }
+    }*/
 	
     private void deleteDBDataForLocal(Map<String, Object> map) throws Exception {
         delete("EzOrganAdminDAO.deleteDBData", map);
     }
 	
 	public void deleteDBData(Map<String, Object> map) throws Exception {
-	    deleteDBDataForJMocha(map);
-	    
 	    deleteDBDataForLocal(map);       
 	}
 
-    public void moveDBDataForJMocha(Map<String, Object> map) throws Exception {
+    /*public void moveDBDataForJMocha(Map<String, Object> map) throws Exception {
         int tenantId = (Integer)map.get("v_TENANT_ID");        
         String parentCn = (String)map.get("v_PARENTCN");
         String cn = (String)map.get("v_CN");
@@ -1037,19 +1035,19 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
                 throw new Exception("Moving User Failed!");
             }
         }                
-    }
+    }*/
 	
     private void moveDBDataForLocal(Map<String, Object> map) throws Exception {
         delete("EzOrganAdminDAO.moveDBData", map);
     }
 	
 	public void moveDBData(Map<String, Object> map) throws Exception {	    
-	    moveDBDataForJMocha(map);
+	   /* moveDBDataForJMocha(map);*/
 	    
 	    moveDBDataForLocal(map);       
 	}
 
-    private void retireDBDataForJMocha(Map<String, Object> map) throws Exception {
+    /*private void retireDBDataForJMocha(Map<String, Object> map) throws Exception {
         int tenantId = (Integer)map.get("v_TENANT_ID");        
         String userId = (String)map.get("v_CN");
         
@@ -1079,11 +1077,11 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         }                       
                 
         logger.debug("retireDBDataForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);        
-    }
+    }*/
 		
-	public void retireDBData(Map<String, Object> map) throws Exception {
+	/*public void retireDBData(Map<String, Object> map) throws Exception {
 	    retireDBDataForJMocha(map);
-	}
+	}*/
 	
     private void setAddJobForLocal(Map<String, Object> map) throws Exception {
         delete("EzOrganAdminDAO.setAddJob", map);
@@ -1439,6 +1437,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	insert("EzOrganAdminDAO.insertCompanyInfo_I32", map);
 	}
     
+	public void insertCompanyInfo_I33(Map<String, Object> map) {
+		insert("EzOrganAdminDAO.insertCompanyInfo_I33", map);
+	}
+	
     public void insertCompanyInfo_IJHS1(Map<String, Object> map) throws Exception {
     	insert("EzOrganAdminDAO.insertCompanyInfo_IJHS1", map);
     }
@@ -1635,7 +1637,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	container.put(new BasicAttribute( "sAMAccountName", map.get("v_CN") ));
     	container.put(new BasicAttribute( "displayName", map.get("v_DISPLAYNAME").toString().trim() ));
     	container.put(new BasicAttribute( "description", map.get("v_DISPLAYNAME").toString().trim() ));
-    	container.put(new BasicAttribute( "groupType", Integer.toString( UNIVERSAL_GROUP + SECURITY_ENABLED ) ));
+    	container.put(new BasicAttribute( "groupType", Integer.toString( ACCOUNT_GROUP + SECURITY_ENABLED ) ));
     	    	
 
     	if (!map.get("v_EXTATTR4").toString().equalsIgnoreCase("")) {

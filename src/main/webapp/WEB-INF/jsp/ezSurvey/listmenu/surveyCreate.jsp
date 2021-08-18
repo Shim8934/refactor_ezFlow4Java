@@ -104,7 +104,15 @@
 				<script type="text/javascript">SurveyCreate.start();</script>
 			</c:otherwise>
 		</c:choose>
-		
+
+	<c:if test="${not empty survey}">
+		<script>
+			$(window).on('beforeunload', function ()
+			{
+                fetch("/ezSurvey/changeSurveyState.do?surveyId=${survey.surveyId}");
+			});
+		</script>
+	</c:if>
 	</body>
 </html>
 

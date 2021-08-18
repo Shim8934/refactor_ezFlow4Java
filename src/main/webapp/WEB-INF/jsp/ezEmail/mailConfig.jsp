@@ -190,8 +190,74 @@
 				}
 			}
 		    
+			function mailbox_getUserKey() {
+		    	var userKey = "";
+		    	
+		    	$.ajax({
+		    		type : "POST",
+		    		url : "/ezEmail/getUserKey.do",
+		    		async : false,
+		    		success : function(result) {
+		    			userKey = result;
+		    		}
+		    	});
+		    	
+		    	return userKey;
+		    }
+		   
+		    function mailbox_export_start(pwd) {
+				var encryptPw = (typeof pwd != "undefined") ? pwd : "";
+		    	socketUserkey = mailbox_getUserKey();
+		    	
+		    	var requestUrl = "/ezEmail/mailboxExportZip.do";
+		    	
+	            if (typeof(shareId) != "undefined" && shareId != "") {
+	            	requestUrl += "?shareId=" + encodeURIComponent(shareId);
+		    	}
+	            
+	            ShowMailProgressNew();
+	            ShowPercent(0);
+	            mailboxProgressFun(true, socketUserkey); // progress percent
+	            
+		    	$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : true,
+					url : requestUrl,
+					data : { folderPath : selectFolderName, userkey : socketUserkey},
+					success : function(result) {
+						if (result == "") {
+							alert("<spring:message code='ezEmail.lhm33' />");
+						} else if (result == "CANCEL") {
+							console.log('User Cancel');
+						} else {
+							
+							if (useEncryptZipForEmail == 'YES' && encryptPw != ""){
+								ShowPercent(enc);
+							}
+							
+							var fullpath = "/ezEmail/downloadMailboxZip.do?folderName="
+									+ encodeURIComponent("<c:out value='${folderName}'/>")
+									+ "&temp=" + result + "&encryptPw=" + encodeURIComponent(encryptPw)
+									+ "&userkey=" + encodeURIComponent(socketUserkey);
+							
+							if (typeof(shareId) != "undefined" && shareId != "") {
+								fullpath += "&shareId=" + encodeURIComponent(shareId);
+					    	}
+							
+							AttachDownFrame.location.href = fullpath;
+							AttachDownFrame.target = "_blank";
+			          
+						}
+					}, complete : function() {
+		            	HiddenMailProgressNew();
+			            mailboxProgressFun(false); // progress percent
+					}
+				});
+		    }
+		 
 		    // 메일박스 내보내기
-		    function mailbox_export_start(pwd){
+		    function mailbox_export_start2(pwd){
 		    	
 		    	// 웹소켓 연결
 	            webSocket= new WebSocket(host);

@@ -31,9 +31,11 @@ import com.google.gson.Gson;
 
 import egovframework.let.utl.rest.callback.HttpEntityRequestCallback;
 
+/** ezFlow 내부의 GW 와의 통신을 쉽게 하기 위한 유틸리티 */
 @Component
 public class Rest {
 
+	/** GW 컨트롤러를 별도로 사용하는 모듈들이 나열된다. */
 	public enum Module {
 		ATTITUDE("config.attitudeGwServerURL"),
 		CABINET("config.cabinetGwServerURL"),
@@ -150,6 +152,15 @@ public class Rest {
 			return this;
 		}
 
+		/** 쿼리 파라미터를 추가한다. */
+		public RestBuilder queryParams(Map<?, ?> map) {
+			for (Map.Entry<?, ?> entry : map.entrySet()) {
+				queryParams.put(entry.getKey().toString(), new Object[] { entry.getValue() });
+			}
+
+			return this;
+		}
+
 		/** body에 json 파라미터를 추가한다. */
 		@SuppressWarnings("unchecked")
 		public RestBuilder jsonParam(String name, Object value) {
@@ -191,17 +202,22 @@ public class Rest {
 			return (JSONObject) new JSONParser().parse(exchangeBody(String.class));
 		}
 
+		/** Rest API를 호출하여 결과를 T 타입의 인스턴스로 넘긴다. */
+		public <T> T exchangeBody(Class<T> clazz) throws Exception {
+			return exchange(clazz).getBody();
+		}
+
+		/** Rest API를 호출하여 결과를 Result 인스턴스로 넘긴다. */
+		public Result exchangeResult() throws Exception {
+			return exchangeBody(Result.class);
+		}
+
 		/**
 		 * Rest API를 호출하여 결과를 ResponseEntity 인스턴스로 넘긴다.<br>
 		 * 스테이터스 코드나 헤더를 참조해야하는 일이 있을 수 있어 exchangeBody 와 구분지었다.
 		 */
 		public ResponseEntity<JSONObject> exchange() throws Exception {
 			return exchange(JSONObject.class);
-		}
-
-		/** Rest API를 호출하여 결과를 T 타입의 인스턴스로 넘긴다. */
-		public <T> T exchangeBody(Class<T> clazz) throws Exception {
-			return exchange(clazz).getBody();
 		}
 
 		/**

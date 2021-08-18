@@ -657,10 +657,103 @@
 
 		leftResize();
 		
-		settingPortalInterval();
+		setPortalRefresh();
 	});
 	
-	var settingPortalInterval = function () {
+	var refreshInterval = "<c:out value='${usePortalAutoRefreshInterval}'/>";
+	var pRefreshInterval = 0;
+	var pRefreshIntervalTimerId = 0; // interval id
+	var pRefreshTimeOutTimerId = 0; // setTimeout id
+	var pNextRefreshTime = 0;
+	
+	var setPortalRefresh = function() { // set 포탈 자동 새로고침
+		if (refreshInterval == null || refreshInterval == "0") { return; }
+		
+		pRefreshInterval = parseInt(refreshInterval) * 60000;
+		setRefreshTimer();
+		
+		if ('hidden' in document) {
+			document.addEventListener('visibilitychange', onVisibilityChange);
+			nextRefreshTime();
+		}
+	}
+	
+	var setRefreshTimer = function() { // set 새로고침 Interval
+		if (pRefreshIntervalTimerId != 0) {
+			clearInterval(pRefreshIntervalTimerId);
+			pRefreshIntervalTimerId = 0;
+		}
+		
+		if (pRefreshInterval != 0) {
+			pRefreshIntervalTimerId = setInterval(function() {
+				refreshPage();
+			}, pRefreshInterval);
+		}
+	}
+	
+	var onVisibilityChange = function() {
+		 var remainingTime = pNextRefreshTime - getCurrentTime();
+		
+		 if (!document.hidden) { // 페이지 상태가 보임으로 변경될 때의 처리
+			if (remainingTime <= 0) { // 다음 번 갱신 시간이 이미 지났으면 즉시 목록 갱신을 수행하고 갱신 타이머를 설정한다.
+				refreshPage();
+			} else { // 다음 번 갱신 시간이 아직 남아 있으면 해당 시간에 갱신이 되도록 타이머를 등록한다.
+				pRefreshTimeOutTimerId = setTimeout(function() {
+					refreshPage();
+				}, remainingTime);
+			}			 
+		 } else { // 페이지 상태가 숨김으로 변경될 때의 처리   
+            if (pRefreshIntervalTimerId != 0) { // interval 목록 갱신 타이머를 제거한다.
+                clearInterval(pRefreshIntervalTimerId);
+                pRefreshIntervalTimerId = 0;
+            }
+		 
+		 	if (pRefreshTimeOutTimerId != 0) { // setTimeout 제거
+		 		clearTimeout(pRefreshTimeOutTimerId);
+		 		pRefreshTimeOutTimerId = 0;
+		 	}
+		 }
+	}
+	
+	var nextRefreshTime = function() { // 다음 새로고침 시각 구하기
+		pNextRefreshTime = getCurrentTime() + pRefreshInterval;
+	}
+	
+	var refreshPage = function () { // 포탈 로드
+		var request = new XMLHttpRequest();
+		request.open('GET', '/ezNewPortal/getPortalInfo.do' , false);
+		request.setRequestHeader('Content-Type', 'application/json');
+		
+		request.onload = function() {
+			if (request.status >= 200 && request.status < 400) {
+				if (request.responseText == null) {
+					return;
+				}
+				
+				var result = JSON.parse(request.responseText);
+				var refreshTheme = result.usedTheme;
+				var refreshFrame = result.usedFrame;
+				
+				if (refreshTheme == usedTheme && frameId == refreshFrame) {
+					parent.document.getElementById("mainFrame").contentWindow.location.reload(true);
+				} else {
+					parent.document.getElementById("mainFrame").contentWindow.location.reload(true);
+				}
+			}
+		};
+
+		request.onerror = function() {
+		  // There was a connection error of some sort
+		};
+		
+		request.send();
+	}
+	
+	function getCurrentTime() {
+        return new Date().getTime();		        
+    }
+	
+	/* var settingPortalInterval = function () {
 		var refreshInterval = "<c:out value='${usePortalAutoRefreshInterval}'/>";
 		
 		if (refreshInterval != null && refreshInterval != "0") {
@@ -688,7 +781,7 @@
 							var useApproval = result.useApproval;
 							var useSchedule = result.useSchedule;
 							var useAttitude = result.useAttitude;
-							refreshPortlet(useQuestion, useCircular, useMail, useApproval, useSchedule, useAttitude); */
+							refreshPortlet(useQuestion, useCircular, useMail, useApproval, useSchedule, useAttitude); /
 						} else {
 							parent.document.getElementById("mainFrame").contentWindow.location.reload(true);
 						}
@@ -702,7 +795,7 @@
 				request.send();
 			}, Number(refreshInterval) * 60000);
 		}
-	}
+	} */
 	
 	var tryCount = 0;
 	

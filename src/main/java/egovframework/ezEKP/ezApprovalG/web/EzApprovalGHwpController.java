@@ -1182,6 +1182,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String bigSizeAttachDownloadLimitCount = ezCommonService.getTenantConfig("ApprBigSizeAttachDownloadLimitCount", userInfo.getTenantId()); // 전자결재 대용량 첨부파일 다운로드 횟수제한
 		String bigAttachDownloadDay = ezCommonService.getTenantConfig("BigSizeApprAttachDelDay", userInfo.getTenantId()); // 전자결재 대용량 첨부파일 보존기간
 		String bigAttachDownloadPeriod = EgovDateUtil.getToday("/") + " ~ " + EgovDateUtil.addDay(EgovDateUtil.getToday("/"), Integer.parseInt(bigAttachDownloadDay), "yyyy/MM/dd");
+		
+		String preSusinGroupStr = ezApprovalGService.getCode2Name("A53", "001", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("hwpToolbar", hwpToolbar);
@@ -1224,6 +1226,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		
 		// 비전자문서의 기안 시 파라미터 오류 방지
 		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
+		model.addAttribute("preSusinGroupStr", preSusinGroupStr);
 
 		LOGGER.debug("draftuiWHWP ended");
 		
@@ -1364,6 +1367,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String bigAttachDownloadDay = ezCommonService.getTenantConfig("BigSizeApprAttachDelDay", userInfo.getTenantId()); // 전자결재 대용량 첨부파일 보존기간
 		String bigAttachFileMinSaveDate = ezApprovalGService.getAttachFileMinSaveDate(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		String bigAttachDownloadPeriod = bigAttachFileMinSaveDate + " ~ " + EgovDateUtil.addDay(bigAttachFileMinSaveDate, Integer.parseInt(bigAttachDownloadDay), "yyyy/MM/dd");
+		
+		String preSusinGroupStr = ezApprovalGService.getCode2Name("A53", "001", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
         
         model.addAttribute("approvalFlag", approvalFlag);
         model.addAttribute("approvalPWD", approvalPWD);
@@ -1409,6 +1414,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("bigAttachDownloadPeriod", bigAttachDownloadPeriod); // 다운로드 기간
 		model.addAttribute("bigAttachDownloadDay", bigAttachDownloadDay); // 보관되는 일수
 		model.addAttribute("bigSizeAttachDownloadLimitCount", bigSizeAttachDownloadLimitCount); // 다운로드 횟수
+		model.addAttribute("preSusinGroupStr", preSusinGroupStr);
 		
 		LOGGER.debug("approvuiWHWP ended");
 		

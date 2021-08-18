@@ -750,8 +750,180 @@
 
 			}
 		    
+		    function mailbox_getUserKey() {
+		    	var userKey = "";
+		    	
+		    	$.ajax({
+		    		type : "POST",
+		    		url : "/ezEmail/getUserKey.do",
+		    		async : false,
+		    		success : function(result) {
+		    			userKey = result;
+		    		}
+		    	});
+		    	
+		    	return userKey;
+		    }
+		   
+		    function mailbox_export_start(pwd) {
+				var encryptPw = (typeof pwd != "undefined") ? pwd : "";
+		    	socketUserkey = mailbox_getUserKey();
+		    	
+		    	var requestUrl = "/ezEmail/mailboxExportZip.do";
+		    	
+	            if (typeof(shareId) != "undefined" && shareId != "") {
+	            	requestUrl += "?shareId=" + encodeURIComponent(shareId);
+		    	}
+	            
+	            ShowMailProgressNew();
+	            ShowPercent(0);
+	            mailboxProgressFun(true, socketUserkey); // progress percent
+	            
+		    	$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : true,
+					url : requestUrl,
+					data : { folderPath : "<c:out value='${url}'/>", userkey : socketUserkey},
+					success : function(result) {
+						if (result == "") {
+							alert("<spring:message code='ezEmail.lhm33' />");
+						} else if (result == "CANCEL") {
+							console.log('User Cancel');
+						} else {
+							
+							if (useEncryptZipForEmail == 'YES' && encryptPw != ""){
+								ShowPercent(enc);
+							}
+							
+							var fullpath = "/ezEmail/downloadMailboxZip.do?folderName="
+									+ encodeURIComponent("<c:out value='${folderName}'/>")
+									+ "&temp=" + result + "&encryptPw=" + encodeURIComponent(encryptPw)
+									+ "&userkey=" + encodeURIComponent(socketUserkey);
+							
+							if (typeof(shareId) != "undefined" && shareId != "") {
+								fullpath += "&shareId=" + encodeURIComponent(shareId);
+					    	}
+							
+							AttachDownFrame.location.href = fullpath;
+							AttachDownFrame.target = "_blank";
+			          
+						}
+					}, complete : function() {
+		            	HiddenMailProgressNew();
+			            mailboxProgressFun(false); // progress percent
+					}
+				});
+		    }
+		    
+		 	// 메일박스 가져오기
+			function mailbox_attach_import(pwd, tempId, userkey) {
+				var encryptPw = (typeof pwd != "undefined") ? pwd : "";
+		    	var path = (typeof tempId != "undefined") ? tempId : "";
+		    	var tempname = "";
+	            socketUserkey = mailbox_getUserKey();
+		        
+				if (encryptPw == "") {
+	        		tempname =	document.importMailboxform.file1.value;
+					
+	        		if (tempname == "") {
+						return;
+					}
+	        		
+					var last = tempname.split(".").length;
+					var extension = tempname.split(".")[last - 1];
+	
+					if (extension.toUpperCase() != "ZIP") {
+						alert("<spring:message code='ezEmail.lhm34' />");
+						return;
+					}
+				}
+			
+	            var curr = "";
+	            
+	        	ShowMailProgressNew();
+	            if (path != "") {
+	            	ShowPercent(dec);
+	            } else {
+		            ShowPercent(uploading);
+	            }
+	            mailboxProgressFun(true, socketUserkey);
+            	
+	            var frm = document.getElementById("importMailboxform");
+	            var requestUrl = "/ezEmail/mailboxImportZip.do?folderPath="
+					+ encodeURIComponent("<c:out value='${url}'/>") 
+					+ "&userkey=" + encodeURIComponent(socketUserkey)
+					+ "&encryptPw=" + encodeURIComponent(encryptPw)
+					+ "&tempId=" + encodeURIComponent(path);
+		        
+		        if (typeof(shareId) != "undefined" && shareId != "") {
+		        	requestUrl += "&shareId=" + encodeURIComponent(shareId);
+		    	}
+	            
+				frm.action = requestUrl;
+				frm.submit();
+			}
+		 	
+			// 유진-리소스확인
+	        function mailboxImportComplete(result, tempId, userkey) {
+				HiddenMailProgressNew();
+				mailboxProgressFun(false);
+				
+				if (result == "NOTSUPPORT"){ // 암호화된 파일 지원하지 않음
+					alert("<spring:message code='ezEmail.kyj08' />");
+					document.importMailboxform.file1.value = "";
+ 					MailListRefresh(); 
+				}
+				
+				if (result == "NOT" && tempId == "NONE") { // 암호화된 파일이므로 옵션창 활성화
+					mailImportOption_onClick();
+				}
+				
+				if (result == "NOT" && tempId != "NONE") { // 암호화된 파일이므로 옵션창 활성화
+					mailImportOption_onClick(tempId, userkey);
+					document.importMailboxform.file1.value = "";
+				}
+
+				if (result == "DIFF") { // 암호가 다름
+					alert("<spring:message code='ezEmail.lhm51' />"); 
+					mailImportOption_onClick(tempId, userkey);
+					document.importMailboxform.file1.value = "";
+				}
+				
+				if (result == "ERROR") { // 에러발생
+					alert("<spring:message code='ezEmail.lhm35' />");
+					document.importMailboxform.file1.value = "";
+					MailListRefresh();
+				}
+				
+				if (result == "ABORT") { // marformd 에러  
+					alert("<spring:message code='ezEmail.kyj15' />");
+					document.importMailboxform.file1.value = "";
+					MailListRefresh();
+				}
+				
+				if (result == "ZEROEML") { // eml파일이 없을 경우
+					alert("<spring:message code='ezEmail.kyj16' />");
+					document.importMailboxform.file1.value = "";
+					MailListRefresh();
+				}
+
+				if (result == "NO_APPEND") { // 메일용량 초과시
+					alert("<spring:message code='ezEmail.ksa16' />");
+					document.importMailboxform.file1.value = "";
+					MailListRefresh();
+				}
+				
+				if (result == "OK") {
+					document.importMailboxform.file1.value = "";
+					MailListRefresh(); 
+					location.reload();
+				}
+				
+			}
+		    
 		    // 메일박스 내보내기
-		    function mailbox_export_start(pwd){
+		    function mailbox_export_start2(pwd){
 		    	
 		    	// 웹소켓 연결
 	            webSocket= new WebSocket(host);
@@ -841,7 +1013,7 @@
 		    }
 			
 			// 메일박스 가져오기
-			function mailbox_attach_import(pwd, tempId, userkey) {
+			function mailbox_attach_import2(pwd, tempId, userkey) {
 	        
 				console.log('mailbox_attach_import started.');
 				
@@ -942,7 +1114,7 @@
 	        }
 			
 	        // 유진-리소스확인
-	        function mailboxImportComplete(result, tempId, userkey) {
+	        function mailboxImportComplete2(result, tempId, userkey) {
 
 	        	webSocket.close();
 				HiddenMailProgressNew();
@@ -1406,8 +1578,14 @@
 									<select name="select" class="text" id="selectDetail3" style="height: 25px;margin-right: 3px;width: 86px;">
 										<option value="SUBJECT"><spring:message code="ezEmail.t98" /></option> 
 										<option value="CONTENT"><spring:message code="ezEmail.t649" /></option> 
-										<option selected value="FROM"><spring:message code="ezEmail.t161" /></option> 
-										<option value="RECEIVE"><spring:message code="ezEmail.t651" /></option> 
+										<c:if test="${isSentItems != true}">
+											<option selected value="FROM"><spring:message code="ezEmail.t161" /></option> 
+											<option value="RECEIVE"><spring:message code="ezEmail.t651" /></option> 
+										</c:if>
+										<c:if test="${isSentItems == true}">
+											<option value="FROM"><spring:message code="ezEmail.t161" /></option> 
+											<option selected value="RECEIVE"><spring:message code="ezEmail.t651" /></option> 
+										</c:if>
 										<option value="FILE"><spring:message code="ezEmail.pyy12" /></option> 
 									</select>
 								</li>
@@ -1831,7 +2009,7 @@
 			this.usepostDate = true;
 		}
     	
-   		if (!TrimText(prekeywordDetail1.value) && !TrimText(prekeywordDetail2.value) && !TrimText(prekeywordDetail3.value) ) {
+   		if (!TrimText(prekeywordDetail1.value) && !TrimText(prekeywordDetail2.value) && !TrimText(prekeywordDetail3.value) && !this.usepostDate ) {
     		alert(strLang254);
             return;
    		} 

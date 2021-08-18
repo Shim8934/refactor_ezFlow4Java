@@ -66,32 +66,32 @@ img { border:0px;}
 
 /* layout */
 #cmhome_type1 {
-	width:900px;
-	margin:20px auto 0px;
+	width:1200px;
+	margin:20px auto 20px;
 	padding:10px 10px 20px 10px;
 	border:1px solid #9fabb7;
 	overflow:hidden;
 	background:#fff;
 }
 #cmhome_type2 {
-	width:900px;
-	margin:20px auto 0px;
+	width:1200px;
+	margin:20px auto 20px;
 	padding:10px 10px 20px 10px;
 	border:1px solid #b6dbe5;
 	overflow:hidden;
 	background:#fff;
 }
 #cmhome_type3 {
-	width:900px;
-	margin:20px auto 0px;
+	width:1200px;
+	margin:20px auto 20px;
 	padding:10px 10px 20px 10px;
 	border:1px solid #b7a9a5;
 	overflow:hidden;
 	background:#fff;
 }
 #cmhome_type4 {
-	width:900px;
-	margin:20px auto 0px;
+	width:1200px;
+	margin:20px auto 20px;
 	padding:10px 10px 20px 10px;
 	border:3px solid #c0c9be;
 	overflow:hidden;
@@ -99,8 +99,8 @@ img { border:0px;}
 }
 
 #cmhome_type5 {
-	width:900px;
-	margin:20px auto 0px;
+	width:1200px;
+	margin:20px auto 20px;
 	padding:10px 10px 20px 10px;
 	border:1px solid #a6a6a6;
 	overflow:hidden;
@@ -124,7 +124,7 @@ img { border:0px;}
 .cmhome_right {
 	float:right;
 	margin:0px;
-	width:700px;
+	width:1000px;
 }
 
 
@@ -1315,7 +1315,7 @@ _list li {
 /*  common-board */
 .board_area {
 	clear:both;
-	margin:50px 5px 0px 0px;
+	margin:35px 10px 0px 7px;
 	padding:0px;
 	overflow:hidden;
 }
@@ -1324,17 +1324,17 @@ _list li {
 .f_left {
 	clear:both;
 	float:left;
-	width:335px;
+	width:440px;
 }
 .f_right {
 	float:right;
-	width:335px;
+	width:440px;
 }
 
 .f_right + .f_right {
 	clear:both;
 	float:right;
-	width:335px;
+	width:440px;
 }
 
 /* btype_list */
@@ -1385,7 +1385,7 @@ _list li {
 /* 2018-12-20 김민성 - 폰트 변경으로 인한 width 조절 */
 .btype_list ul li .txt {
 	float:left;
-	width:71%;
+	width:79%;
 	white-space:nowrap; 
 	overflow:hidden; 
 	text-overflow:ellipsis;

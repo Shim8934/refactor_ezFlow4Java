@@ -302,6 +302,7 @@ public class EzCommonController extends EgovFileMngUtil{
 		String literalPhoto = "";
 		String literalDept = "";
 		String literalTitle = "";
+		String literalRole = "";
 		String literalCompany = "";
 		String literalMobile = "";
 		String literalHomePhone = "";
@@ -315,7 +316,7 @@ public class EzCommonController extends EgovFileMngUtil{
 		String literalExtensionPhone = "";
 		String literalOfficeMobile = "";
 		
-		String proplist = "EXTENSIONATTRIBUTE2;COMPANY;DESCRIPTION;DISPLAYNAME;TITLE;MAIL;TELEPHONENUMBER;MOBILE;INFO;HOMEPHONE;FACSIMILETELEPHONENUMBER;POSTALCODE;STREETADDRESS;DEPARTMENT";
+		String proplist = "EXTENSIONATTRIBUTE2;COMPANY;DESCRIPTION;DISPLAYNAME;TITLE;MAIL;TELEPHONENUMBER;MOBILE;INFO;HOMEPHONE;FACSIMILETELEPHONENUMBER;POSTALCODE;STREETADDRESS;DEPARTMENT;EXTENSIONATTRIBUTE10";
 		
 		if (request.getParameter("id") != null) {
 			id = request.getParameter("id");
@@ -457,16 +458,19 @@ public class EzCommonController extends EgovFileMngUtil{
 							literalDept = xmldom2.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
 							literalTitle= xmldom2.getElementsByTagName("TITLE").item(0).getTextContent();		
 							literalCompany = xmldom2.getElementsByTagName("COMPANY").item(0).getTextContent();
+							literalRole= xmldom2.getElementsByTagName("EXTENSIONATTRIBUTE10").item(0).getTextContent();		
 						} else {
 							literalDept = xmldom.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
 							literalTitle= xmldom.getElementsByTagName("TITLE").item(0).getTextContent();
 							literalCompany = xmldom.getElementsByTagName("COMPANY").item(0).getTextContent();
+							literalRole= xmldom.getElementsByTagName("EXTENSIONATTRIBUTE10").item(0).getTextContent();
 						}
 						
 					} else {
 						literalCompany = xmldom.getElementsByTagName("COMPANY").item(0).getTextContent();
 						literalDept = xmldom.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
 						literalTitle= xmldom.getElementsByTagName("TITLE").item(0).getTextContent();
+						literalRole= xmldom.getElementsByTagName("EXTENSIONATTRIBUTE10").item(0).getTextContent();
 					}
 					
 					if (!xmldom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().equals("") && xmldom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().contains(".")) {
@@ -579,6 +583,7 @@ public class EzCommonController extends EgovFileMngUtil{
 		model.addAttribute("LiteralPhoto", literalPhoto);
 		model.addAttribute("LiteralDept", literalDept);
 		model.addAttribute("LiteralTitle", literalTitle);
+		model.addAttribute("LiteralRole", literalRole);
 		model.addAttribute("LiteralCompany", literalCompany);
 		model.addAttribute("LiteralMobile", literalMobile);
 		model.addAttribute("LiteralHomePhone", literalHomePhone);

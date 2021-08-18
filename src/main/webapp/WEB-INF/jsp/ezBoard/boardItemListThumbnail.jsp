@@ -456,6 +456,17 @@
 	                    ifrmPreViewH_photo.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022'/>";
 	                firstFlag = true;
 	            }
+
+				/* 2021-08-12 김성준 썸네일, 영상 미독 게시물 게시일 내려쓰기 되는 현상 수정 */
+				for(i=0; i<document.getElementById("BoardList_BODY").childNodes.length; i++) {
+					for(j=0; j<document.getElementById("BoardList_BODY").childNodes.item(i).childNodes.length; j++){
+						if(document.getElementById("BoardList_BODY").childNodes.item(i).childNodes.item(j).textContent.length>15
+								&&document.getElementById("BoardList_BODY").childNodes.item(i).childNodes.item(j).offsetWidth<=108) {
+							document.getElementById("BoardList_BODY").childNodes.item(i).childNodes.item(j).style.paddingRight = "3px";
+						}
+					}
+				}
+
 	            endtime = new Date().getTime();
 	            document.getElementById("runtime").innerHTML = "RunTime : <span style='color:black;font-weight:bold'>" + (endtime - starttime) / 1000 + "</span> Sec";
 		    }
@@ -569,24 +580,24 @@
 		        	var selectSearch = document.getElementById('selectType');
 	                if (selectSearch.item(0).selected) {
 	                    TYPE += "TITLE;";
-	                    DATA += "<TITLE>" + document.getElementById("txt_keyword").value + "</TITLE>";
+	                    DATA += "<TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE>";
 	                }
 	                else if (selectSearch.item(1).selected) {
 	                    TYPE += "WRITERNAME;";
-	                    DATA += "<WRITERNAME>" + document.getElementById("txt_keyword").value + "</WRITERNAME>";
+	                    DATA += "<WRITERNAME><![CDATA[" + MakeXMLString(document.getElementById("txt_keyword").value) + "]]></WRITERNAME>";
 	                }
 		        }
 		        else {
 		            if (document.getElementById("txtTitle").value != "")		// DocTitle
 		            {
 		                TYPE += "TITLE;";
-		                DATA += "<TITLE>" + document.getElementById("txtTitle").value + "</TITLE>";
+		                DATA += "<TITLE><![CDATA[" + document.getElementById("txtTitle").value + "]]></TITLE>";
 		            }
 		
 		            if (document.getElementById("txtWriterName").value != "")		// DrafterName
 		            {
 		                TYPE += "WRITERNAME;";
-		                DATA += "<WRITERNAME>" + document.getElementById("txtWriterName").value + "</WRITERNAME>";
+		                DATA += "<WRITERNAME><![CDATA[" + MakeXMLString(document.getElementById("txtWriterName").value) + "]]></WRITERNAME>";
 		            }
 		
 		            /* if (document.getElementById("txtAbstract").value != "")		// ABSTRACT
@@ -598,13 +609,13 @@
 		            if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "")		// StartDate
 		            {
 		                TYPE += "STARTDATE;";
-		                DATA += "<STARTDATE>" + $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + "</STARTDATE>";
+		                DATA += "<STARTDATE><![CDATA[" + $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + "]]></STARTDATE>";
 		            }
 		
 		            if ($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "")		// EndDate
 		            {
 		                TYPE += "ENDDATE;";
-		                DATA += "<ENDDATE>" + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + "</ENDDATE>";
+		                DATA += "<ENDDATE><![CDATA[" + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + "]]></ENDDATE>";
 		            }
 		        }
 		        SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";

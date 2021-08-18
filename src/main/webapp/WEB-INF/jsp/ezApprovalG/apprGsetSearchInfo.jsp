@@ -1114,8 +1114,8 @@
 				<tr>
 				    <th ><spring:message code='ezApprovalG.psb1334'/></th>
 				    <td >
-				        <input type="text" id="Sdatepickerrec" style="width:80px;text-align:center">&nbsp;~
-				        <input type="text" id="Edatepickerrec" style="width:80px;text-align:center">
+				        <input type="text" id="Sdatepickerrec" style="width:80px;text-align:center" readonly>&nbsp;~
+				        <input type="text" id="Edatepickerrec" style="width:80px;text-align:center" readonly>
 				    </td>
 			 	</tr>
 			 	<tr style="display:none;">

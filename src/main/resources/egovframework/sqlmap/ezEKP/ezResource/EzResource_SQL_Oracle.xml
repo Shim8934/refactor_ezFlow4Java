@@ -1089,8 +1089,6 @@
     		FROM
     			TBL_RS_BRD 
     		WHERE
-    			BRD_UPPER = #v_P_ClassGB#
-    		AND
     			BRD_COMPANY = #v_P_CompanyID#
     		AND
     			TENANT_ID = #tenantID#	
@@ -2284,45 +2282,69 @@
 		]]>
 	</select>
 	
-	<select id="EzResourceDAO.getTargetResourceOrder" parameterClass="map" resultClass="String">
+	<select id="EzResourceDAO.getTargetResourceOrder" parameterClass="map" resultClass="HashMap">
 			<isEqual property="status" compareValue="up">
 			<![CDATA[
 				select 
-					max(brd_id) brd_id
+					brd_id, brd_step
 				from 
 					tbl_rs_brd
 				where
+					brd_step = (select 
+									max(brd_step)
+								from
+									 tbl_rs_brd
+								where
+									tenant_id = #tenantId#
+								and
+									brd_company = #brd_company#
+								and
+									brd_upper = #upperResourceId#
+								and
+									brd_step < #brd_step#
+								and
+									brd_gb = '2'
+								)
+				and
 					tenant_id = #tenantId#
 				and
 					brd_company = #brd_company#	 		
 				and
 					brd_upper = #upperResourceId#
 				and
-					brd_step < #brd_step#
-				and
 					brd_gb = '2'
-				group by
-					brd_upper
 			]]>
 			</isEqual>
 			<isEqual property="status" compareValue="down">
 			<![CDATA[
 				select 
-					min(brd_id) brd_id
+					brd_id, brd_step
 	            from 
 					tbl_rs_brd
 				where
+					brd_step = (select 
+									min(brd_step)
+								from
+									 tbl_rs_brd
+								where
+									tenant_id = #tenantId#
+								and
+									brd_company = #brd_company#
+								and
+									brd_upper = #upperResourceId#
+								and
+									brd_step > #brd_step#
+								and
+									brd_gb = '2'
+								)
+				and
 					tenant_id = #tenantId#
 				and
 					brd_company = #brd_company#	 		
 				and
 					brd_upper = #upperResourceId#
 				and
-					brd_step > #brd_step#
-				and
 					brd_gb = '2'
-				group by
-					brd_upper
 			]]>
 			</isEqual>
 	</select>
