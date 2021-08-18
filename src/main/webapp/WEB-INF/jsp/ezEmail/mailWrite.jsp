@@ -195,7 +195,7 @@
         var pickerData = "";
      	// 웹폴더첨부를 위한 파라미터 설정
 		pickerData = {
-				'confirmBT' : doPolarisFileUpload_ConfirmHandler, 	// 웹폴더첨부 확인 시 실행할 함수
+				'confirmBT' : fileUpload_ConfirmHandler, 	// 웹폴더첨부 확인 시 실행할 함수
 				'cancelBT' : webFolderCancelBT 						// 웹폴더첨부 취소 시 실행할 함수
 		};
      	
@@ -2302,9 +2302,7 @@
 	    	filePick.open(pickerData);
 	    }
 	    
-		function doPolarisFileUpload_ConfirmHandler(selectedFileInfo) {
-	        // HTTP download for polaris files
-	        
+		function fileUpload_ConfirmHandler(selectedFileInfo) {
 	        var webFolderFileList = JSON.parse(selectedFileInfo.fileList);
 	    	var webFolderFileListCnt = webFolderFileList.length;
 	    	
