@@ -906,6 +906,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("useShowAllCompanies", "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useShowAllCompanies", userInfo.getTenantId())));
 
 		logger.debug("personSearchPrint ended");
 		return "/ezPersonal/persPersonSearchPrint";
