@@ -379,6 +379,7 @@
 				OpenInformationUI(pMsg, btncallback_onclick_Complete);
 		    }
 		    function btncallback_onclick_Complete(ans) {
+				DivPopUpHidden();
 		        if (ans) {
 		            doCancel();
 		        }
