@@ -3044,11 +3044,11 @@ function makeReceptListview(dataJson) {
      */
 
     var resultXml = "";
-    if(approvalFlag === "G") {
-    	resultXml = loadXMLFile(strLangEtcFile1);
-    } else {
+    //if(approvalFlag === "G") {
+    //	resultXml = loadXMLFile(strLangEtcFile1);
+    //} else {
     	resultXml = loadXMLFile(strLangEtcFileliban1);
-    }
+    //}
 
     var cells = SelectNodes(resultXml, "LISTVIEWDATA/ROWS/ROW/CELL");
 
