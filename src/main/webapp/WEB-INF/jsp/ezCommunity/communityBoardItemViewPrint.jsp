@@ -248,9 +248,12 @@
 		    		<!-- 작성자&부서 -->
 		    		<tr>
 		    			<th style="width:10%;"><spring:message code = 'ezCommunity.t138' /></th> 
-				        <td id="WriteUserNM" style="CURSOR: pointer;white-space:nowrap;width:40%;"><div id = title style="vertical-align:middle;width:100%; white-space:pre-line;" onClick=''><c:out value = '${item.writerName}' /></div></td>
-		    			<th style="width:10%;"><spring:message code = 'ezCommunity.t932' /></th> 
-				        <td id="User_DeptNM" style="padding-right:10px;white-space:nowrap;width:40%;"><span><c:out value = '${item.writerDeptName }' /></span></td>
+				        <td id="WriteUserNM" style="CURSOR: pointer;white-space:nowrap;width:40%;" <c:if test="${boardInfo.gubun == '2' }">colspan="3"</c:if>><div id = title style="vertical-align:middle;width:100%; white-space:pre-line;" onClick=''><c:out value = '${item.writerName}' /></div></td>
+				        <%-- 부서명은 익명게시판이 아닌 경우에만 표출 --%>
+				        <c:if test="${boardInfo.gubun != '2' }">
+		    				<th style="width:10%;"><spring:message code = 'ezCommunity.t932' /></th> 
+				        	<td id="User_DeptNM" style="padding-right:10px;white-space:nowrap;width:40%;"><span><c:out value = '${item.writerDeptName }' /></span></td>
+				        </c:if>
 		    		</tr>
 		    		<!-- 직위&전화번호 -->
 		    		<c:choose>
