@@ -241,7 +241,7 @@
 	                    strTarget = "target=''";
 	                }
 	                
-	                strAttach += "<li>";
+	                strAttach += "<li style='display:inline-block;'>";
 	                strAttach += "<span id='MailAttachDownloadItems' name='MailAttachDownloadItems' onclick=\"DownloadFile('/ezBoard/getBoardAttachInfo.do?type=BOARD&itemID=" + encodeURIComponent(getNodeText(SelectSingleNode(xmldomNodes[i], "ItemID"))) + "&attID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "GUID")) + "')\"><img style='cursor:pointer;vertical-align:middle' src='/images/icon_adddownload.gif' width='16' height='16' /></span>";
 	                strAttach += "&nbsp;";
 	                strAttach += "<span onmouseover=\"this.style.color='#164aad'\" onmouseout=\"this.style.color='#666'\" style='cursor: pointer; color: rgb(102, 102, 102);'>";
@@ -250,7 +250,7 @@
 	                strAttach += "<a name='filename' href='/ezBoard/getBoardAttachInfo.do?type=BOARD&itemID=" + encodeURIComponent(getNodeText(SelectSingleNode(xmldomNodes[i], "ItemID"))) + "&attID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "GUID"))
 	                + "' filePath='" + filepathHTMLEscape + "' fileNameAttr='" + filenameAttr + "' realFileName='" + filename + "'>" + filename + " (" + filesize + ")</a>";	                
 	              	strAttach += "</span>";
-	                strAttach += "</li>";
+	                strAttach += "</li><br>";
 	            }
 	            strAttach += "</ul></div>";
 	            return strAttach;
