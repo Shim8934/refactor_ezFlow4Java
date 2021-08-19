@@ -898,7 +898,7 @@
 			<tr>
 				<th><spring:message code='ezCommunity.t434'/></th>
 				<td>
-					<input class="inputText" type="text" id="Sdatepicker" oninput="this.value=this.value.replace(/[^0-9.\-]/g, '').replace(/(\..*)\./g, '$1');"  style="width:80px;text-align:center"> ~ <input class="inputText" type="text" id="Edatepicker" oninput="this.value=this.value.replace(/[^0-9.\-]/g, '').replace(/(\..*)\./g, '$1');"  style="width:80px;text-align:center">&nbsp;
+					<input class="inputText" type="text" id="Sdatepicker" readonly  style="width:80px;text-align:center"> ~ <input class="inputText" type="text" id="Edatepicker" readonly style="width:80px;text-align:center">&nbsp;
 					<a class="imgbtn imgbck"><span onClick= "btn_PostDate_Clear()" popupLocation='bottomright'><spring:message code='ezCommunity.t444'/></span></a>&nbsp;<a class="imgbtn imgbck"><span onClick="search()"><spring:message code='ezCommunity.t31'/></span></a>
 				</td>
 			</tr>
