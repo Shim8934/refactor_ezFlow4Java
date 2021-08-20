@@ -1591,7 +1591,7 @@
 		]]>
 	</select>	
 	
-	<select id="EzBoardAdminDAO.getBackGroundImage"  resultMap="backGroundImage">
+	<select id="EzBoardAdminDAO.getBackGroundImage"  resultMap="backGroundImage" parameterClass="BoardBackgroundVO">
 		<![CDATA[
 			SELECT 
 				backgroundid,
