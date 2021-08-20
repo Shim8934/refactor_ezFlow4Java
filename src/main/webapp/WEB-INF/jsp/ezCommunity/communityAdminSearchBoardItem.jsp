@@ -846,7 +846,7 @@
 		  	<tr>
 			    <th  ><spring:message code = 'ezCommunity.t434' /></th>
 			    <td>
-					<input type="text" id="Sdatepicker" style="width:80px;text-align:center"></span> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center"></span> &nbsp;&nbsp; <a class="imgbtn"><span onClick= "btn_PostDate_Clear()"><spring:message code = 'ezCommunity.t444' /></span></a>&nbsp;<a class="imgbtn"><span onClick="search()"><spring:message code = 'ezCommunity.t31' /></span></a>&nbsp;<a class="imgbtn" name="Submit2" onClick="javascript:DeleteItem_onclick()"><span><spring:message code = 'ezCommunity.t208' /></span></a>
+					<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly></span> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly></span> &nbsp;&nbsp; <a class="imgbtn"><span onClick= "btn_PostDate_Clear()"><spring:message code = 'ezCommunity.t444' /></span></a>&nbsp;<a class="imgbtn"><span onClick="search()"><spring:message code = 'ezCommunity.t31' /></span></a>&nbsp;<a class="imgbtn" name="Submit2" onClick="javascript:DeleteItem_onclick()"><span><spring:message code = 'ezCommunity.t208' /></span></a>
 				</td>
 		  	</tr>
 		</table>

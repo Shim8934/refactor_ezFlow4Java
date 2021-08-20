@@ -1147,7 +1147,7 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return String.valueOf(select("EzCommunityDAO.getOneLineReplyCount", map));
 	}
 	// 2018-02-06 김보미 - 조회자 수
-	public int getReaderListCount(Map<String, Object> map) {
+	public int getReaderListCount(Map<String, Object> map) throws Exception {
 		return (int) select("EzCommunityDAO.getReaderListCount", map);
 	}
 	
@@ -1156,26 +1156,31 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	}
 
 	//2018-04-10 홍승비 - 커뮤니티 생성 시 logo와 thumbnail분리	
-	public void commMakeOkSet3Update(Map<String, Object> map) {
+	public void commMakeOkSet3Update(Map<String, Object> map) throws Exception {
 		update("EzCommunityDAO.commMakeOkSet3Update", map);
 	}
-	public void commMakeOkSet4Update(Map<String, Object> map) {
+	public void commMakeOkSet4Update(Map<String, Object> map) throws Exception {
 		update("EzCommunityDAO.commMakeOkSet4Update", map);	
 	}
 	//커뮤니티 관리자>상단 이미지, 썸네일 분리 
-	public void adminLogoOkUpdate2(Map<String, Object> map) {
+	public void adminLogoOkUpdate2(Map<String, Object> map) throws Exception {
 		update("EzCommunityDAO.adminLogoOkUpdate2", map);
 	}
-	public void adminLogoOkUpdate3(Map<String, Object> map) {
+	public void adminLogoOkUpdate3(Map<String, Object> map) throws Exception {
 		update("EzCommunityDAO.adminLogoOkUpdate3", map);
 	}
-	public CommunityClubVO adminLogoGet2(Map<String, Object> map) {
+	public CommunityClubVO adminLogoGet2(Map<String, Object> map) throws Exception {
 		return (CommunityClubVO) select("EzCommunityDAO.adminLogoGet2", map);
 	}
 
 	/* 2021-06-28 홍승비 - 커뮤니티 게시물의 답변 개수 리턴 */
-	public int bbsGetReplyItemCnt(Map<String, Object> map) {
+	public int bbsGetReplyItemCnt(Map<String, Object> map) throws Exception {
 		return (int) select("EzCommunityDAO.bbsGetReplyItemCnt", map);
+	}
+
+	/* 2021-08-17 홍승비 - 커뮤니티의 유형(승인여부) 리턴 */
+	public String getClubConfirmType(Map<String, Object> map) throws Exception {
+		return (String) select("EzCommunityDAO.getClubConfirmType", map);
 	}
 
 }

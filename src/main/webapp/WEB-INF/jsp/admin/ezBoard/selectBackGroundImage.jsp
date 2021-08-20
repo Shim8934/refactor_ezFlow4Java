@@ -41,11 +41,17 @@
 				var filetxt = file1val.substring(file1val.lastIndexOf("\\")+1, file1val.lenght);
 				var check = false;
 		        check = compareExtension(check, extension);		         
-
+		        
+		        // IE에서 파일의 변경 이벤트 중복 감지 대응
+		        if (file1val == "") {
+		        	 document.getElementById("file1").value = "";
+		        	 document.getElementById("saveFileName").value = "";
+		        	 return false;
+		        }
 		        if (!check) {
 		        	 document.getElementById("file1").value = "";
 		        	 document.getElementById("saveFileName").value = "";
-		        	 alert("이미지 파일을 선택해주세요.");
+		        	 alert("<spring:message code='main.t4000'/>");
 		        	 return false;
 		        }
 		        var guid = "{" + GetGUID() + "}";

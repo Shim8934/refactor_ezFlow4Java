@@ -314,7 +314,8 @@
 						break;
 						
 					case 4:
-						if ("${club.c_ClubConfirmType}" == '3') {
+						var cofirmType = getClubConfirmType(code);
+						if (cofirmType == "3") {
 							url = "/ezCommunity/adminMemPermit.do?code=" + code;
 						} else {
 							alert("<spring:message code = 'ezCommunity.t486' />");								
@@ -366,6 +367,27 @@
 				$("#treeUL").html(treeXML);
 				
 			}
+			
+			/* 2021-08-17 홍승비 - 커뮤니티 유형 (승인여부) 체크를 위한 ajax 동작 추가 (기본정보 수정 후 좌측메뉴 갱신 불가능하기 때문) */
+			function getClubConfirmType(pCode) {
+				var returnVal = "";
+				
+				$.ajax({
+					type : "GET",
+					async : false,
+					url : "/ezCommunity/getClubConfirmType.do",
+					dataType : "text",
+					data : {
+						code : pCode
+					},
+					success: function(result) {
+						returnVal = result;
+					}
+				});
+
+				return returnVal;
+			}
+			
 		</script>
 		
 	</head>

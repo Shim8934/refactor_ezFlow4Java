@@ -120,8 +120,14 @@
 	
 		                var Sub_TR2 = document.createElement("TR");
 		                var Sub_TD2 = document.createElement("TD");
+						var descriptionValue = MakeXMLString(M_TR.getAttribute("_DATA5"));
+						<c:if test="${useShowAllCompanies}">
+							if (pSeach) {
+								descriptionValue += " (<spring:message code='ezPersonal.t67'/>: " + MakeXMLString(M_TR.getAttribute("_DATA7")) + ")";
+							}
+						</c:if>
 		                Sub_TD2.style.textAlign = "left";
-		                Sub_TD2.innerHTML = M_TR.getAttribute("_DATA5");
+		                Sub_TD2.innerHTML = descriptionValue;
 		                Sub_TR2.appendChild(Sub_TD2);
 	
 		                var Sub_TR3 = document.createElement("TR");
@@ -197,7 +203,17 @@
 	
 		                    var M_TR_TD4 = document.createElement("TD");
 		                    M_TR_TD4.innerHTML = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");
-	
+
+							<c:if test="${useShowAllCompanies}">
+								var companyTd = document.createElement("TD");
+								companyTd.style.overflow = "hidden";
+								companyTd.style.textOverflow = "ellipsis";
+								companyTd.style.whiteSpace = "nowrap";
+								companyTd.style.width = "110px";
+								companyTd.innerHTML = M_TR.getAttribute("_DATA7");
+								M_TR.appendChild(companyTd);
+							</c:if>
+
 		                    M_TR.appendChild(M_TR_TD1);
 		                    M_TR.appendChild(M_TR_TD2);
 		                    M_TR.appendChild(M_TR_TD3);
@@ -254,6 +270,9 @@
           </table>
           <table style="width:100%;height:100%; border:1px solid #ddd;display:none;" id="Print_Search_txtlist_table" class="mainlist" > 
               <tr>
+                  <c:if test="${useShowAllCompanies}">
+                      <td style="width:110px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t67'/></td>
+                  </c:if>
                   <td style="width:110px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t305'/></td>
                   <td style="width:90px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t304'/></td>
                   <td style="width:80px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t69'/></td>

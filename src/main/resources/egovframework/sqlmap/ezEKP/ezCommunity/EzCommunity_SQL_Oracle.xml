@@ -7815,4 +7815,18 @@
  				ITEMID = #v_pItemID#
  		]]>
  	</select>
+ 	
+	<select id="EzCommunityDAO.getClubConfirmType" parameterClass="Map" resultClass="String">
+ 		<![CDATA[
+ 			SELECT
+ 				C_CLUBCONFIRMTYPE
+ 			FROM
+ 				TBL_C_CLUB
+ 			WHERE
+ 				TENANT_ID = #v_TENANTID#
+ 			AND
+ 				C_CLUBNO = #v_CODE#
+ 		]]>
+ 	</select>
+ 	
 </sqlMap>

@@ -1428,20 +1428,9 @@
 	            
 	            
 	            for (var i = 0; i < listContentArry.length; i++) {
-	            	if (keyword.value == "") {
-		            	for (var j = 0; j < 3; j++) {
-		            		if (document.getElementById(listContentArry[i]).childNodes[j]) {
-		            			document.getElementById(listContentArry[i]).childNodes[j].style.backgroundColor = m_strColorDefault;
-		            		}
-		            	}
-	            	} else {
-		            	for (var j = 0; j < 4; j++) {
-		            		if (document.getElementById(listContentArry[i]).childNodes[j]) {
-		            			document.getElementById(listContentArry[i]).childNodes[j].style.backgroundColor = m_strColorDefault;
-		            		}
-		            	}
-	            	}
-	            	
+					Array.prototype.slice.call(document.getElementById(listContentArry[i]).querySelectorAll("td")).forEach(function(it) {
+						it.style.backgroundColor = m_strColorDefault;
+					});
 	            }
 	            listContentArry = [];
 	            
@@ -1939,6 +1928,9 @@
 			                document.getElementById("txtlist_table").style.display = "none";
 			                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang_2 + "" + "&nbsp;&nbsp;<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span>";
 			                SelectDeptNM.setAttribute("countinfo", "1")
+							<c:if test="${useShowAllCompanies eq 'YES'}">
+								resizeWindowWidth();
+							</c:if>
 			            }
 		            }
 		        }
@@ -2033,8 +2025,14 @@
 		
 		                var Sub_TR2 = document.createElement("TR");
 		                var Sub_TD2 = document.createElement("TD");
+						var descriptionValue = MakeXMLString(M_TR.getAttribute("_DATA5"));
+						<c:if test="${useShowAllCompanies eq 'YES'}">
+							if (pSeach) {
+								descriptionValue += " (<spring:message code='ezPersonal.t67'/>: " + MakeXMLString(M_TR.getAttribute("_DATA7")) + ")";
+							}
+						</c:if>
 		                Sub_TD2.style.textAlign = "left";
-		                Sub_TD2.innerHTML = M_TR.getAttribute("_DATA5");
+		                Sub_TD2.innerHTML = descriptionValue;
 		                Sub_TR2.appendChild(Sub_TD2);
 		
 		                var Sub_TR3 = document.createElement("TR");
@@ -2138,7 +2136,17 @@
 	                        M_TR_TD4.style.overflow = "hidden";
 	                        M_TR_TD4.style.textOverflow = "ellipsis";
 	                        M_TR_TD4.style.whiteSpace = "nowrap";
-		
+
+							<c:if test="${useShowAllCompanies eq 'YES'}">
+								var companyTd = document.createElement("TD");
+								companyTd.style.overflow = "hidden";
+								companyTd.style.textOverflow = "ellipsis";
+								companyTd.style.whiteSpace = "nowrap";
+								companyTd.style.width = "110px";
+								companyTd.innerHTML = M_TR.getAttribute("_DATA7");
+								M_TR.appendChild(companyTd);
+							</c:if>
+
 		                    M_TR.appendChild(M_TR_TD1);
 		                    M_TR.appendChild(M_TR_TD2);
 		                    M_TR.appendChild(M_TR_TD3);
@@ -3976,7 +3984,16 @@
 
 	        	distributionListSet(dlList_URL + param);
 	        }
-	        
+
+			<c:if test="${useShowAllCompanies eq 'YES'}">
+				var companySearchWidth = 1115;
+
+				function resizeWindowWidth() {
+					if (pListType == "TXT" && issearch && window.innerWidth <= companySearchWidth) {
+						window.resizeTo(window.outerWidth - window.innerWidth + companySearchWidth, window.outerHeight);
+					}
+				}
+			</c:if>
 	    </script>
 	</head>
 	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
@@ -4065,7 +4082,7 @@
 		</div>
 	    <table style="width:100%;">
 	        <tr>
-	            <td style="vertical-align: top; width: 70.5%;">
+	            <td style="vertical-align: top;">
 	            	<div class="portlet_tabpart01" style="margin:0px;">
 	            		<div class="portlet_tabpart01_top" id="tab1" style="margin-bottom:3px;">
 	            			<p id="orgTabButton">
@@ -4145,7 +4162,7 @@
 	                                        <div id="TreeView" style="width: 220px; height: 474px; overflow-x: auto; overflow-y: auto;" ></div>
 	                                    </td>
 	                                    <td></td>
-	                                    <td class="listview" style="width: 66.5%" id="orglistView">
+	                                    <td class="listview" style="min-width: 66.5%" id="orglistView">
 	                                        <table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
 	                                            <tr style="height:35px">
 	                                                <th style="white-space:normal;background-color: white;border-top:1px solid #ddd;border-bottom:1px solid #eaeaea">
@@ -4169,6 +4186,9 @@
 	                                            </table>
 	                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="Search_txtlist_table" class="mainlist">
 	                                                <tr>
+														<c:if test="${useShowAllCompanies eq 'YES'}">
+															<td style="width: 110px; color:#333;background-color: #f1f3f5" class="td_gray"><spring:message code='ezPersonal.t67' /></td>
+														</c:if>
 	                                                    <td style="width: 110px; color:#333;background-color: #f1f3f5" class="td_gray"><spring:message code='ezEmail.t26' /></td>
 	                                                    <td style="width: 90px; color:#333;background-color: #f1f3f5" class="td_gray"><spring:message code='ezEmail.t31' /></td>
 	                                                    <td style="width: 80px; color:#333;background-color: #f1f3f5" class="td_gray"><spring:message code='ezEmail.t28' /></td>
@@ -4338,7 +4358,7 @@
 	                    </tr>
 	                </table>
 	            </td>
-	             <td style="vertical-align: top;<c:if test="${type eq 'auto'}">display:none;</c:if>">
+	             <td style="vertical-align: top;width: 280px;<c:if test="${type eq 'auto'}">display:none;</c:if>">
 	                <table id="listType1" style="margin-top:1px;">
 	                    <tr id="ListMsgTo">
 	                        <td style="width: 30px; text-align: center;">
