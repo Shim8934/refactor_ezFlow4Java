@@ -507,6 +507,11 @@
 			            }
 		            }
 		            
+			        /* 2021-08-20 홍승비 - 가변결재선을 사용하는 수신문의 경우, 접수기안 시 서명 이전에 SignCount를 한번 더 체크하도록 수정 */
+			        if ($("#message").contents().find("#autoLine").length > 0 ) {
+			        	SignCount = getSignCountForAutoLine();
+			        }
+		            
 		            var rtnSignInfo;
 		            var fields = message.GetFieldsList();
 		            var field = message.GetListItem(fields, "doctitle");
@@ -524,10 +529,11 @@
 		            try {
 		                var pSusinNextSN = 0;
 		
-		                if (pSusinSN)
+		                if (pSusinSN) {
 		                    pSusinNextSN = parseInt(pSusinSN, 10) + 1;
-		                else
+		                } else {
 		                    pSusinNextSN = 1;
+		                }
 		                
 		                var fieldname = pSusinNextSN + "sign1";
 		                if (message.GetListItem(fields, fieldname) && CheckDeptLinesXML == "") {
@@ -643,7 +649,7 @@
 		                return;
 		            }
 		        }
-		
+		        
 		        if (SignCount >= 1) {
 					if (LastSignSN == 1) {
 						var rtnVal = ExcuteInfo("LAST_SIGN_BEFORE");
@@ -736,7 +742,7 @@
 		                            return;
 		                        }
 		                    }
-		                    if (LastSignSN == 1)
+		                    if (LastSignSN == 1) {
 		                        pAlertContent = "<spring:message code='ezApprovalG.t1697'/>";
 		                      	//2019-05-02 김보미 : 근태관리 연동양식일 경우 추가 - 접수자 전결
 		                        if (CurAprType == "<spring:message code='ezApprovalG.t25'/>" && document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
@@ -748,8 +754,9 @@
 			    					
 			    		        	attitude_annual_conn(pOrgDocID);
 			    		        }
-		                    else
+		                    } else {
 		                        pAlertContent = "<spring:message code='ezApprovalG.t1698'/>";
+		                    }
 		                    OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
 		                    chkOK = true;
 		                }

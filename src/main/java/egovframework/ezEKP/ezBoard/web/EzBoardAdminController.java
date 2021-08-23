@@ -522,6 +522,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String type = boardBackgroundVO.getType() != null ? boardBackgroundVO.getType() : "NEW";
 		
 		boardBackgroundVO.setTenantID(userInfo.getTenantId());
+		boardBackgroundVO.setCompanyID(userInfo.getCompanyID());
 		
 		if (type.equals("UPT")) {
 			List<BoardBackgroundVO> list = ezBoardAdminService.getBackGroundImage(boardBackgroundVO);

@@ -4,7 +4,16 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code="ezBoard.t5000" /></title>
+		<title>
+		<c:choose>
+			<c:when test="${type == 'UPT'}">
+				<spring:message code="ezBoard.HSBBg01" />
+			</c:when>
+			<c:otherwise>
+				<spring:message code="ezBoard.t5000" />
+			</c:otherwise>
+		</c:choose>
+		</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css" />	    
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>    
@@ -130,8 +139,15 @@
 			}
 	    </script>
 	</head>
-	<body class="popup" style="overflow:hidden">		
-		<h1><spring:message code="ezBoard.t5000"/></h1>
+	<body class="popup" style="overflow:hidden">
+		<c:choose>
+			<c:when test="${type == 'UPT'}">
+				<h1><spring:message code="ezBoard.HSBBg01" /></h1>
+			</c:when>
+			<c:otherwise>
+				<h1><spring:message code="ezBoard.t5000" /></h1>
+			</c:otherwise>
+		</c:choose>
 		<div id="close">
             <ul>
                 <li><span onclick="return window.close();"></span></li>
