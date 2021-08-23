@@ -71,12 +71,10 @@ import kr.dogfoot.hwplib.object.summaryInformation.SummaryInformation;
 import kr.dogfoot.hwplib.reader.HWPReader; 
 import kr.dogfoot.hwplib.writer.HWPWriter; 
  
-
-
 import org.apache.commons.codec.binary.Base64; 
 import org.apache.commons.io.FileUtils; 
-import org.apache.commons.lang3.ObjectUtils; 
-import org.apache.commons.lang3.StringUtils; 
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray; 
 import org.json.simple.JSONObject; 
 import org.json.simple.parser.JSONParser; 
@@ -2975,7 +2973,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String getAprLineInfo(String docID, String userID, String formID, String companyID, String lang, int tenantID, String offset, String reDraftFlag, String isUsed, String beforeDocID, String mode, String docState) throws Exception {
 		logger.debug("getAprLineInfo started.");
 		logger.debug("docID = " + docID + " || userID = " + userID + " || formID = " + formID + " || reDraftFlag = " + reDraftFlag + " || lang = " + lang + " || offset = " + offset + " || mode = " + mode + " || docState = " + docState);
-		
+
+        if (commonUtil.getDatabaseType().equalsIgnoreCase("oracle") && StringUtils.defaultString(docState).isEmpty()) {
+            docState = " ";
+        }
+                
 		StringBuilder resultXML = new StringBuilder();
 		String listString = getListHeader("013", companyID, lang, tenantID);
 		
