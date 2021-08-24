@@ -30,6 +30,7 @@
 			var strLang3 = "<spring:message code = 'ezPersonal.t10001' />";
 			var strLang4 = "<spring:message code = 'ezPersonal.t223' />";
 			var strLang5 = "<spring:message code = 'ezQuestion.t312' />";
+			var blankstr = "<spring:message code = 'main.kms4' />";
 
 			window.onload = function () {
 				ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = strLanghyh2;
