@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezWebFolder.web;
 
+import static org.apache.commons.lang3.StringUtils.defaultString;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -709,9 +711,9 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		return type;
 	}
 
-	@RequestMapping(value="/admin/ezWebFolder/getFileLogs.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/admin/ezWebFolder/getFileLogs.do", method = RequestMethod.POST)
 	@ResponseBody
-	public JSONObject getFileLogs(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+	public JSONObject getFileLogs(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getFileLogs start");
 		LoginSimpleVO user     = commonUtil.userInfoSimple(loginCookie);
 		JSONObject resultCheck = (JSONObject) checkWfAdmin(request, user.getId());
@@ -725,55 +727,43 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String column        = request.getParameter("column");
 		String order         = request.getParameter("order");
 		String listCnt       = request.getParameter("listCntSize");
-		String startDate     = request.getParameter("startDate")  != null ? request.getParameter("startDate")  : "";
-		String endDate       = request.getParameter("endDate")    != null ? request.getParameter("endDate")    : "";
-		String fileExt       = request.getParameter("fileExt")    != null ? request.getParameter("fileExt")    : "";
-		String fileName      = request.getParameter("fileName")   != null ? request.getParameter("fileName")   : "";
-		String userName      = request.getParameter("userName")   != null ? request.getParameter("userName")   : "";
-		String fileType      = request.getParameter("fileType")   != null ? request.getParameter("fileType")   : "";
-		String actionType    = request.getParameter("actionType") != null ? request.getParameter("actionType") : "";
-		String sortType    	 = request.getParameter("sortType")   != null ? request.getParameter("sortType")   : "";
-		String sortColumn    = request.getParameter("sortColumn") != null ? request.getParameter("sortColumn") : "";
-		String adminFlag     = request.getParameter("adminFlag")  != null ? request.getParameter("adminFlag")  : "";
-		String folderId      = request.getParameter("folderId")   != null ? request.getParameter("folderId")   : "";
+		String startDate     = defaultString(request.getParameter("startDate"));
+		String endDate       = defaultString(request.getParameter("endDate"));
+		String fileExt       = defaultString(request.getParameter("fileExt"));
+		String fileName      = defaultString(request.getParameter("fileName"));
+		String userName      = defaultString(request.getParameter("userName"));
+		String fileType      = defaultString(request.getParameter("fileType"));
+		String actionType    = defaultString(request.getParameter("actionType"));
+		String sortType    	 = defaultString(request.getParameter("sortType"));
+		String sortColumn    = defaultString(request.getParameter("sortColumn"));
+		String adminFlag     = defaultString(request.getParameter("adminFlag"));
+		String folderId      = defaultString(request.getParameter("folderId"));
 		
 		logger.debug("Current page: " + currPage + " || CompanyId: " + companyId + " || Column: " + column + " || Order: " + order + " || ListCount: " + listCnt + " || StartDate: " + startDate 
 				+ " || EndDate: " + endDate + " || File ext: " + fileExt + " || File Name: " + fileName + " || UserName: " + userName 
 				+ " || File Type: " + fileType + " || Action Type: " + actionType + " || folderId:" + folderId);
 		
-		String gwServerUrl   = config.getProperty("config.webFolderGwServerURL");
-		String url           = gwServerUrl + "/rest/ezwebfolderadmin/filehistorylist";
-		
-		HttpHeaders headers  = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("userId", user.getId())
-										.queryParam("companyId", companyId)
-										.queryParam("startDate", startDate)
-										.queryParam("fileExt", fileExt)
-										.queryParam("fileName", fileName)
-										.queryParam("fileType", fileType)
-										.queryParam("userName", userName)
-										.queryParam("currentPage", currPage)
-										.queryParam("column", column)
-										.queryParam("order", order)
-										.queryParam("listCnt", listCnt)
-										.queryParam("actionType", actionType)
-										.queryParam("endDate", endDate)
-										.queryParam("sortType", sortType)
-										.queryParam("sortColumn", sortColumn)
-										.queryParam("adminFlag", adminFlag)
-										.queryParam("folderId", folderId);
-		
-		RestTemplate rest             = new RestTemplate();
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-		JSONParser jp                 = new JSONParser();
-		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
-		
+		JSONObject resultBody = rest.gateway(Module.WEBFOLDER, request)
+				.url("/rest/ezwebfolderadmin/filehistorylist")
+				.queryParam("userId", user.getId())
+				.queryParam("companyId", companyId)
+				.queryParam("startDate", startDate)
+				.queryParam("fileExt", fileExt)
+				.queryParam("fileName", fileName)
+				.queryParam("fileType", fileType)
+				.queryParam("userName", userName)
+				.queryParam("currentPage", currPage)
+				.queryParam("column", column)
+				.queryParam("order", order)
+				.queryParam("listCnt", listCnt)
+				.queryParam("actionType", actionType)
+				.queryParam("endDate", endDate)
+				.queryParam("sortType", sortType)
+				.queryParam("sortColumn", sortColumn)
+				.queryParam("adminFlag", adminFlag)
+				.queryParam("folderId", folderId)
+				.exchangeBody();
+
 		logger.debug("getFileLogs end");
 		return resultBody;
 	}
