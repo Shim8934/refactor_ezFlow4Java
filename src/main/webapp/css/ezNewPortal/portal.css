@@ -1326,3 +1326,6 @@ ul, li { margin-top:0; margin-bottom:0px; }
 .topsearch_btn {width:39px; height:34px; border:none;}
 
 .collaborate_list .listtype_txt span.date { width: 65px; }
+
+/* 2021-08-25 김성준 - 전자설문 팝업 작성자와 종료일 가운데 정렬*/
+.popup_noticeLayout .popup_noticeList .popuplist tr td:not(:first-child){text-align: center;}
