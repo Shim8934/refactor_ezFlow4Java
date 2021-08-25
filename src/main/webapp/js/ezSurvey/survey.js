@@ -3285,7 +3285,12 @@ var SurveyCreate     = function() {
 					logic = SurveyMessages.strNoLogic;
 				}
 				
-				$("#slt" + id + i).val(logicNum).prop("selected", true).css("display", "none");
+				// logicNum = -1인 경우, 분기없음 선택되도록 수정
+				if (logicNum = -1) {
+					$("#slt" + id + i).val("").prop("selected", true).css("display", "none");
+				} else {
+					$("#slt" + id + i).val(logicNum).prop("selected", true).css("display", "none");
+				}
 				$("#sltVal" + id + i).text(logic).css("dispaly", "");
 			}
 		}
@@ -3347,7 +3352,11 @@ var SurveyCreate     = function() {
 			$("#slidLogicInput" + id).val(logicPoint).css("display", "none");
 			$("#LogicPoint" + id).text(logicPoint).css("display", "");
 			
-			$("#slt" + id).val(logicNum).prop("selected", true).css("display", "none");
+			if (logicNum = -1) {
+				$("#slt" + id).val("").prop("selected", true).css("display", "none");
+			} else {
+				$("#slt" + id).val(logicNum).prop("selected", true).css("display", "none");
+			}
 			$("#sltVal" + id).text(logic).css("dispaly", "");
 		}
 	}
@@ -3398,7 +3407,11 @@ var SurveyCreate     = function() {
 				$("#frstBtnGrp" + id).css("display", "none");
 				$("#thrdBtnGrp" + id).css("display", "");
 				
-				$("#slt" + id + i).val(logicNum).prop("selected", true).css("display", "none");
+				if (logicNum = -1) {
+					$("#slt" + id + i).val("").prop("selected", true).css("display", "none");
+				} else {
+					$("#slt" + id + i).val(logicNum).prop("selected", true).css("display", "none");
+				}
 				$("#sltVal" + id + i).text(logic).css("dispaly", "");
 			}
 		}
@@ -3413,7 +3426,11 @@ var SurveyCreate     = function() {
 		for (var i = 0; i < opt.length; i++) {
 			var logicNum = qstnOpt[i]['logic'];
 
-			!isNaN(logicNum) ? $("#slt" + id + i).val(logicNum).prop("selected", true).css("display", "") : $("#slt" + id + i).val('').prop("selected", true).css("display", "");  
+			if (!isNaN(logicNum) && logicNum != -1) { // 분기없음 대응 코드 추가
+				$("#slt" + id + i).val(logicNum).prop("selected", true).css("display", "");
+			} else {
+				$("#slt" + id + i).val('').prop("selected", true).css("display", "");
+			}
 			$("#sltVal" + id + i).css("display", "none");
 		}
 	}
@@ -3457,7 +3474,12 @@ var SurveyCreate     = function() {
 		$("#LogicPoint" + id).css("display", "none");
 		
 		$("#sltVal" + id).css("display", "none");
-		$("#slt" + id).val(logicNum).prop("selected", true).css("display", "");
+		
+		if (!isNaN(logicNum) && logicNum != -1) {
+			$("#slt" + id).val(logicNum).prop("selected", true).css("display", "");
+		} else {
+			$("#slt" + id).val("").prop("selected", true).css("display", "");
+		}
 	}
 	
 	// slider 질문 객체, ui에 분기 번호 추가
@@ -3507,7 +3529,12 @@ var SurveyCreate     = function() {
 		for (var i = 0; i < RowLength; i++) {
 			var logicNum = qstnOpt[i]['logic'];
 			
-			!isNaN(logicNum) ? $("#slt" + id + i).val(logicNum).prop("selected", true).css("display", "") : $("#slt" + id + i).val('').prop("selected", true).css("display", "");
+			if (!isNaN(logicNum) && logicNum != -1) {
+				$("#slt" + id + i).val(logicNum).prop("selected", true).css("display", "");
+			} else {
+				$("#slt" + id + i).val('').prop("selected", true).css("display", "");
+			}
+			
 			$("#sltVal" + id + i).css("display", "none");
 		}
 	}
