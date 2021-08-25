@@ -184,13 +184,13 @@
 	                <td colspan="2" style="padding: 0">
 	                    <table style="width:100%">
 	                        <tr class="primary">
-	                            <th><c:out value='${langPrimary }' /></th>
+	                            <th><c:out value='${langPrimary }' /><span style="color:red"> *</span></th>
 	                            <td>
 	                                <input type="text" class="inputText" name="clubName" size="80" maxlength="50" style="width: 100%;box-sizing:border-box;-moz-box-sizing:border-box;">
 								</td>
 	                        </tr>
 	                        <tr class="secondary">
-	                            <th><c:out value='${langSecondary} ' /></th>
+	                            <th><c:out value='${langSecondary} ' /><span style="color:red"> *</span></th>
 	                            <td>
 	                                <input type="text" class="inputText" name="clubName2" maxlength="50" style="WIDTH: 100%;box-sizing:border-box;-moz-box-sizing:border-box;">
 								</td>
@@ -199,7 +199,7 @@
 	                </td>
 	            </tr>
 	            <tr style="height:60px">
-	                <th style="height:40px;"><spring:message code='ezCommunity.t11' /></th>
+	                <th style="height:40px;"><spring:message code='ezCommunity.t11' /><span style="color:red"> *</span></th>
 	                <td style="white-space:nowrap;border-right:0px"><span id="idSpan">${idSpanValue }</span></td>
 	                <td style="padding: 5px;padding-right:25px;white-space:nowrap;border-left:0px">
 	                	<%-- <div><spring:message code='ezCommunity.t1013' /></div> --%>
@@ -267,7 +267,7 @@
 	                </td>
 	            </tr>
 	            <tr>
-	                <th><spring:message code='ezCommunity.t1529' /><spring:message code='ezCommunity.t18' /></th>
+	                <th style="padding-left: 5px; padding-right: 5px;"><spring:message code='ezCommunity.t1529' /><spring:message code='ezCommunity.t18' /><span style="color:red"> *</span></th>
 	                <td colspan="2">
 	                    <textarea name="intro" maxlength="2000" style="height: 120px; width: 99.5%;box-sizing:border-box;-moz-box-sizing:border-box;resize:none;margin:5px"></textarea>
 					</td>
