@@ -131,7 +131,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			}
 		}
 		
-		for(int i=1; i<map.size(); i++) {
+		for(int i=1; i<=map.size(); i++) {
 			Map<String, Object> answerMap = new HashMap<String, Object>();
 			answerMap.put("result", i);
 			answerMap.put("answer", map.get("answer"+(i)));
