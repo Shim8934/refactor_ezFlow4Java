@@ -224,7 +224,7 @@ public class EzEmailAsync {
 					sb.append("<span>새로운 설문이 추가되었습니다.</span><br><br>");
 					sb.append("<span>- 제목       : </span>");
 					sb.append("<span id='survey_a' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('../ezSurvey/surveyDetail.do?itemId=" + surveyId + "', '', 'width=835, height=900, scrollbars=yes, resizable=yes')\">");
-					sb.append(title + "</span><br>");
+					sb.append(commonUtil.cleanValue(title) + "</span><br>");
 					sb.append("<span>- 작성자    : " + creatorName + "</span><br>");
 					sb.append("<span>- 설문종료일 : " + endDateString + "</span>" + realTimeZone + "<br>");
 				}

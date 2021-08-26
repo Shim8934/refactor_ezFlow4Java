@@ -142,7 +142,7 @@
 			var customAlignMenu = ['about','print','undo','redo','text_paste','textFormatCopy','textFormatPaste','link','unlink','image','symbol','horizontal','numbered_list','bullet_list','outdent','indent',
 								   'table','table_insert_left','table_insert_right','table_insert_top','table_insert_bottom','table_remove_col','table_remove_row','table_remove_table',
 								   'table_merge','table_split_col','table_split_row','cell_horizontal_size','cell_vertical_size','table_background_color','table_border_style','align_left','align_center','align_right','align_justify','paragraph_margin',
-								   'template','heading','fontFamily','fontSize','line_height','bold','italic','underline','strikeThrough','remove_format','color','backgroundColor', 'border_visualize'];
+								   'heading','fontFamily','fontSize','line_height','bold','italic','underline','strikeThrough','remove_format','color','backgroundColor', 'border_visualize'];
 			
 			// 메일 부재중설정, 커뮤니티 포토게시판일 경우 이미지 업로드 아이콘 제거
 			if (type == "MAILOUTOFOFFICE" || type == "COMMUNITYPHOTO") {
@@ -203,14 +203,6 @@
 				}
 			}
 			
-			// 템플릿 설정
-			var templateList = [{
-				name : 'Default Template', 
-				items : [{name : 'Meeting log', type : 'url', value : '/js/ezEditor/kukudocsEditor/template/meeting_log.html'},
-						 {name : 'Report', type : 'url', value : '/js/ezEditor/kukudocsEditor/template/report.html'},
-						 {name : 'Vacation', type : 'url', value : '/js/ezEditor/kukudocsEditor/template/vacation.html'}]
-			}];
-			
 		    //Color Picker 값 수정
 		    var colorPicker = {
 		        simpleColor :   ["ffffff", "000000", "eeece1", "1f497d", "4f81bd", "c0504d", "9bbb59", "8064a2", "4bacc6", "f79646"],
@@ -246,7 +238,6 @@
 	            useOnlyTableContentMenu : true,
 	            useNoneBorderVisualize : true,
 	            publicPathURL : '/js/ezEditor/kukudocsEditor/',
-	            templateList : templateList,
 	            defaultEditorStylePath :'/js/ezEditor/kukudocsEditor/stylesheets/editor_style.css',
 	            loadingImageURL : '/js/ezEditor/kukudocsEditor/images/load.gif',
 	            errorImageURL : '/js/ezEditor/kukudocsEditor/images/error.png',

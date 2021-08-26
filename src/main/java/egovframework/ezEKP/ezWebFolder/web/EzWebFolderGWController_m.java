@@ -1053,7 +1053,7 @@ public class EzWebFolderGWController_m {
 			result.put("code", 2);
 		}
 
-		logger.debug(String.format("result: %s", result.toJSONString()));
+		logger.debug("result: {}", result);
 		logger.debug("G/W WEBFOLDER [DELETE /rest/ezwebfolder/users/{userId}/favorite] ended.");
 		return result;
 	}

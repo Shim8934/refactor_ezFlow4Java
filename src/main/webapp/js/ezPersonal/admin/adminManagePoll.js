@@ -386,6 +386,10 @@ var del_poll = function() {
 					checkFlag = false;
 				}
 				itemseq=0;
+				//2021-08-24 김성준 - 관리자 빠른설문 삭제 후 미리보기 남아있는 부분 수정
+				var doc = window.document;
+				doc.getElementById("ifrmPreViewH").innerText = "";
+				doc.getElementById("ifrmPreViewH").src = blankstr;
 				showPreview(isPreview, 0);
 				rowList = [];
 				makelist();
