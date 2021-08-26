@@ -942,7 +942,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		vo.setWidth(Integer.parseInt(jObj.get("width").toString()));
 		vo.setHeight(Integer.parseInt(jObj.get("height").toString()));
 		vo.setPosition(jObj.get("position").toString());
-		vo.setContent(jObj.get("content").toString());
+		vo.setContent(jObj.get("content").toString().replaceAll("\"", "&#034;"));
 		vo.setSkinValue(Integer.parseInt(jObj.get("skinValue").toString()));
 		 ObjectMapper mapper = new ObjectMapper();
 		List<PersonalPopupUserVO> authList = mapper.convertValue(jObj.get("authList"), new TypeReference<List<PersonalPopupUserVO>>() {});
