@@ -1754,7 +1754,9 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
                 }
                 
                 if (TempQuery.indexOf("FORMID;") != -1) {
-                    ReturnQuery += " AND TBL_ENDAPRDOCINFO.FormID = '" + xmldomsub.getElementsByTagName("FORMID").item(0).getTextContent() + "' ";
+					//2021-08-26 김성준 개인문서함 폼양식명으로 검색하도록 수정
+					//ReturnQuery += " AND TBL_ENDAPRDOCINFO.FormID = '" + xmldomsub.getElementsByTagName("FORMID").item(0).getTextContent() + "' ";
+					ReturnQuery += " AND TBL_EXPENDAPRDOCINFO.FormName = '" + xmldomsub.getElementsByTagName("FORMID").item(0).getTextContent() + "' ";
                 }
                 if (p_UserLang.equals("2")) {
                     if (TempQuery.indexOf("WRITERDEPTNAME;") != -1) {
