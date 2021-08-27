@@ -6,7 +6,7 @@
 <html>
 
 <head>
-	<title><spring:message code="ezSurvey.t34"/></title>
+	<title><spring:message code="ezSurvey.t01"/></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link rel="stylesheet" type="text/css" href="${util.addVer('ezSurvey.css', 'msg')                      }">
 	<link rel="stylesheet" type="text/css" href="${util.addVer('/css/jquery-ui.css')                       }">
