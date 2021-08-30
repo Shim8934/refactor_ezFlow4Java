@@ -136,7 +136,8 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck, Method)
     }
 
     if (type == "callback") Subject = strLang1111;
-    else if (type == "susin") Subject = strLang1112;
+    /* 2021-08-27 홍승비 - 수신메일 알림의 경우 서버단에서 수신자 리스트를 취합하여 스케줄러 또는 즉시 발송되도록 수정되었으므로, 개별 메일 발송 동작은 주석처리함 (insertSendDocDB, sendSusinMail 참조) */
+    else if (type == "susin") {Subject = strLang1112; return;}
     else if (type == "daeree") Subject = strLang1113;
     else if (type == "bansong") Subject = strLang1114;
     else if (type == "opinion") Subject = strLang1123;

@@ -741,10 +741,11 @@ var SurveyCreate     = function() {
 		return returnValue;
 	}
 	
-	function showUserInfoFromId(userId) {
+	/* 2021-08-27 홍승비 - 직위/직책/권한그룹인 경우 이름만 표출하도록 수정 (함수에서 이름을 그대로 전달하여 표출) */
+	function showUserInfoFromId(userId, userType, userName) {
 		var feature = "height=500px, width=420px, status=no, toolbar=no, menubar=no,location=no, resizable=1";
 		feature = feature + getOpenWindowfeature(420, 500);
-		userWindow = window.open("/ezCommon/showPersonInfo.do?id=" + userId, "userInfo", feature);
+		userWindow = window.open("/ezCommon/showPersonInfo.do?id=" + userId + "&userType=" + userType + "&userName=" + userName, "userInfo", feature);
 	}
 	
 	function closeAllPopups() {
@@ -775,8 +776,9 @@ var SurveyCreate     = function() {
 			var imgElmt  = document.createElement("img");
 			var divideSpan = document.createElement("span");
 			uElmt.setAttribute("role", userArr[i]["userId"]);
+			uElmt.setAttribute("type", userArr[i]["userType"]);
 			uElmt.textContent    = userArr[i]["userName"];
-			uElmt.onclick        = (function(userId){return function() {showUserInfoFromId(userId);};})(userArr[i]["userId"]);
+			uElmt.onclick        = (function(userId, userType, userName){return function() {showUserInfoFromId(userId, userType, userName);};})(userArr[i]["userId"], userArr[i]["userType"], userArr[i]["userName"]);
 			imgElmt.onclick      = (function(userId, userType){return function() {removeUser(this, userId, userType);};})(userArr[i]["userId"], userArr[i]["userType"]);
 			spanElmt.className   = "rlSpanBnk";
 			divideSpan.textContent = ";";
@@ -3789,9 +3791,9 @@ var SurveyCreate     = function() {
 					var spanElmt = document.createElement("span");
 					spanElmt.textContent = userList[i]["userName"];
 					spanElmt.className   = "user-inf";
-					spanElmt.onclick     = (function(userId) {
-						return function() {SurveyCreate.showUser(userId);};
-					})(userList[i]["userId"]);
+					spanElmt.onclick     = (function(userId, userType, userName) {
+						return function() {SurveyCreate.showUser(userId, userType, userName);};
+					})(userList[i]["userId"], userList[i]["userType"], userList[i]["userName"]);
 					
 					surveyUserElmt.appendChild(spanElmt);
 					
@@ -3818,7 +3820,7 @@ var SurveyCreate     = function() {
 				spanElmt2.textContent = "[" + SurveyMessages.strTotal + " " + userList.length + " " + SurveyMessages.strUser3 + "]";
 				spanElmt3.className   = "user-more";
 				spanElmt3.onclick     = function(e) {SurveyCreate.userMore()};
-				spanElmt1.onclick     = function(e) {SurveyCreate.showUser(userList[0]["userId"]);};
+				spanElmt1.onclick     = function(e) {SurveyCreate.showUser(userList[0]["userId"], userList[0]["userType"], userList[0]["userName"]);};
 				
 				surveyUserElmt.appendChild(spanElmt1);
 				surveyUserElmt.appendChild(spanElmt2);
@@ -3832,9 +3834,9 @@ var SurveyCreate     = function() {
 					var trElmt      = document.createElement("tr");
 					var tdElmt1     = document.createElement("td");
 					var tdElmt2     = document.createElement("td");
-					tdElmt1.onclick = (function(userId) {
-						return function() {SurveyCreate.showUser(userId);};
-					})(userList[i]["userId"]);
+					tdElmt1.onclick = (function(userId, userType, userName) {
+						return function() {SurveyCreate.showUser(userId, userType, userName);};
+					})(userList[i]["userId"], userList[i]["userType"], userList[i]["userName"]);
 					
 					tdElmt1.textContent = userList[i]["userName"];
 					tdElmt2.textContent = getUserType(userList[i]["userType"]);
