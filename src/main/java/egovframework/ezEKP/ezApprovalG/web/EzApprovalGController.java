@@ -5537,8 +5537,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String realPath = commonUtil.getRealPath(request);
 		String docID = xmlDom.getElementsByTagName("PDOCID").item(0).getTextContent().trim();
 		String zipFileName = xmlDom.getElementsByTagName("PTITLE").item(0).getTextContent().replace("\\", "").replace("/", "").replace(":", "").replace("?", "").
-                replace('"' + "", "").replace("*", "").replace("<", "").replace(">", "").replace("|", "");
-		String path = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());;
+                replace('"' + "", "").replace("*", "").replace("<", "").replace(">", "").replace("|", "").replaceAll("\\t", " ");
+		String path = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
 		String path2 = realPath + commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
 		String separators = "\\|\\|\\|";
 		String[] fileTypes = xmlDom.getElementsByTagName("PTYPEINFO").item(0).getTextContent().split(separators);
@@ -5591,7 +5591,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			
 			//2019.04.01 천성준 - 기존에 있던 replace로직 통합 겸 중복검사한 첨부파일이름 재입력
 			for (int i = 0; i < tmpAry.size(); i++) {
-				fileNames[i] = tmpAry.get(i).replace("\\", "").replace("/", "").replace(":", "").replace("?", "").replace('"' + "", "").replace("*", "").replace("<", "").replace(">", "").replace("|", "");
+				fileNames[i] = tmpAry.get(i).replace("\\", "").replace("/", "").replace(":", "").replace("?", "").replace('"' + "", "").replace("*", "").replace("<", "").replace(">", "").replace("|", "").replaceAll("\\t", " ");
 			}
 			
 			for (int k = 0; k < filePaths.length; k++) {
