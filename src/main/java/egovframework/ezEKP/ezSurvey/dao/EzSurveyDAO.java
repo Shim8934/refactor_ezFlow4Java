@@ -251,4 +251,9 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 	public void deleteRespondents(Map<String, Object> map) {
 		delete("EzSurveyDAO.deleteRespondents", map);
 	}
+
+	/* 2021-08-30 홍승비 - 전자설문 대상자가 사간겸직자인 경우, 해당 부서ID를 조건으로 레코드를 리턴 */
+	public SimpleUserVO getSurveyUserInfoAddJob(Map<String, Object> map) {
+		return (SimpleUserVO)select("EzSurveyDAO.getSurveyUserInfoAddJob", map);
+	}
 }
