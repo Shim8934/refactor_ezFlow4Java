@@ -2484,4 +2484,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void createTblCarForm() throws Exception {
 		ezCommonDAO.createTblCarForm();
 	}
+	
+	@Override
+	public void addViewTaskOldFlag() throws Exception {
+		ezCommonDAO.addViewTaskOldFlag();
+		ezCommonDAO.addSViewTaskOldFlag();
+	}
 }

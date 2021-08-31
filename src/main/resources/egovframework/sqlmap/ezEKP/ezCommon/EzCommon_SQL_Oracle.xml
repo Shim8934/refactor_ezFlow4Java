@@ -4140,5 +4140,134 @@
 		  )
 	</statement>
 	
+	<select id="EzCommonDAO.checkViewTaskOldFlagTop" resultClass="Integer">
+		SELECT 
+			OLDFLAG_TOP
+		FROM 
+			VTASKCLASS
+		WHERE 
+		     ROWNUM = 1
+	</select>
+	<select id="EzCommonDAO.checkSViewTaskOldFlagTop" resultClass="Integer">
+		SELECT 
+			OLDFLAG_TOP
+		FROM 
+			SVTASKCLASS
+		WHERE 
+		     ROWNUM = 1
+	</select>
+	
+	<statement id="EzCommonDAO.addViewTaskOldFlags">
+		<![CDATA[
+	       CREATE OR REPLACE VIEW
+				vtaskclass AS
+		    SELECT 
+		        tbl_taskcategory.CATEGORYCODE AS CATEGORYCODE,
+		        tbl_taskcategory.NAME AS CNAME,
+		        tbl_taskcategory.NAME2 AS CNAME2,
+		        tbl_taskmiddlecategory.MCATEGORYCODE AS MCATEGORYCODE,
+		        tbl_taskmiddlecategory.NAME AS MCNAME,
+		        tbl_taskmiddlecategory.NAME2 AS MCNAME2,
+		        tbl_tasksubcategory.SUBCATEGORYCODE AS SUBCATEGORYCODE,
+		        tbl_tasksubcategory.NAME AS SCNAME,
+		        tbl_tasksubcategory.NAME2 AS SCNAME2,
+		        tbl_taskcode.TASKCODE AS TASKCODE,
+		        tbl_taskcode.TASKNAME AS TASKNAME,
+		        tbl_taskcode.TASKNAME2 AS TASKNAME2,
+		        tbl_taskcode.KEEPINGPERIOD AS KEEPINGPERIOD,
+		        tbl_taskcode.DISPLAYRECFLAG AS DISPLAYRECFLAG,
+		        tbl_taskcode.SPECIALCATALOGFLAG AS SPECIALCATALOGFLAG,
+		        tbl_taskcode.SC1 AS SC1,
+		        tbl_taskcode.SC2 AS SC2,
+		        tbl_taskcode.SC3 AS SC3,
+		        tbl_taskcode.TEMPFLAG AS TEMPFLAG,
+		        tbl_taskcode.COMPANYID AS COMPANYID,
+		        tbl_taskcode.TENANT_ID AS TENANT_ID,
+		        tbl_task_deptinfo.PROCESSDEPTCODE AS PROCESSDEPTCODE,
+		        tbl_task_deptinfo.PROCESSDEPTNAME AS PROCESSDEPTNAME,
+		        tbl_task_deptinfo.PROCESSDEPTNAME2 AS PROCESSDEPTNAME2,
+		        tbl_taskcode.KEEPINGMETHOD AS KEEPINGMETHOD,
+		        tbl_taskcode.KEEPINGPLACE AS KEEPINGPLACE,
+		        tbl_taskcode.DISPLAYRECTRASTIME AS DISPLAYRECTRASTIME,
+		        tbl_task_deptinfo.DELFLAG AS DELFLAG,
+		        tbl_taskcategory.OLDFLAG AS OLDFLAG_TOP,
+		        tbl_taskmiddlecategory.OLDFLAG AS OLDFLAG_MID,
+		        tbl_tasksubcategory.OLDFLAG AS OLDFLAG_SUB
+		    FROM
+		        ((((tbl_taskcategory
+		        JOIN tbl_taskmiddlecategory ON (tbl_taskcategory.CATEGORYCODE = tbl_taskmiddlecategory.CATEGORYCODE
+		            AND tbl_taskcategory.TENANT_ID = tbl_taskmiddlecategory.TENANT_ID
+		            AND tbl_taskcategory.COMPANYID = tbl_taskmiddlecategory.COMPANYID))
+		        JOIN tbl_tasksubcategory ON (tbl_taskmiddlecategory.MCATEGORYCODE = tbl_tasksubcategory.MCATEGORYCODE
+		            AND tbl_taskmiddlecategory.TENANT_ID = tbl_tasksubcategory.TENANT_ID
+		            AND tbl_taskmiddlecategory.COMPANYID = tbl_tasksubcategory.COMPANYID))
+		        JOIN tbl_taskcode ON (tbl_tasksubcategory.SUBCATEGORYCODE = tbl_taskcode.SUBCATEGORYCODE
+		            AND tbl_tasksubcategory.TENANT_ID = tbl_taskcode.TENANT_ID
+		            AND tbl_tasksubcategory.COMPANYID = tbl_taskcode.COMPANYID
+		            AND tbl_taskcode.DELFLAG = '0'))
+		        LEFT JOIN tbl_task_deptinfo ON (tbl_taskcode.TASKCODE = tbl_task_deptinfo.TASKCODE
+		            AND tbl_taskcode.TENANT_ID = tbl_task_deptinfo.TENANT_ID
+		            AND tbl_taskcode.COMPANYID = tbl_task_deptinfo.COMPANYID))
+		    WHERE
+		        tbl_task_deptinfo.DELFLAG = '0'
+		            OR tbl_task_deptinfo.DELFLAG IS NULL
+		            OR tbl_task_deptinfo.DELFLAG = '2'
+		]]>
+    </statement>
+    <statement id="EzCommonDAO.addSViewTaskOldFlags">
+	    <![CDATA[
+	        CREATE OR REPLACE VIEW
+				svtaskclass AS
+		    SELECT 
+		        tbl_taskcategory.CATEGORYCODE AS CATEGORYCODE,
+		        tbl_taskcategory.NAME AS CNAME,
+		        tbl_taskcategory.NAME2 AS CNAME2,
+		        tbl_taskmiddlecategory.MCATEGORYCODE AS MCATEGORYCODE,
+		        tbl_taskmiddlecategory.NAME AS MCNAME,
+		        tbl_taskmiddlecategory.NAME2 AS MCNAME2,
+		        tbl_tasksubcategory.SUBCATEGORYCODE AS SUBCATEGORYCODE,
+		        tbl_tasksubcategory.NAME AS SCNAME,
+		        tbl_tasksubcategory.NAME2 AS SCNAME2,
+		        tbl_taskcode.TASKCODE AS TASKCODE,
+		        tbl_taskcode.TASKNAME AS TASKNAME,
+		        tbl_taskcode.TASKNAME2 AS TASKNAME2,
+		        tbl_taskcode.KEEPINGPERIOD AS KEEPINGPERIOD,
+		        tbl_taskcode.DISPLAYRECFLAG AS DISPLAYRECFLAG,
+		        tbl_taskcode.SPECIALCATALOGFLAG AS SPECIALCATALOGFLAG,
+		        tbl_taskcode.TEMPFLAG AS TEMPFLAG,
+		        tbl_taskcode.COMPANYID AS COMPANYID,
+		        tbl_taskcode.TENANT_ID AS TENANT_ID,
+		        tbl_task_deptinfo.PROCESSDEPTCODE AS PROCESSDEPTCODE,
+		        tbl_task_deptinfo.PROCESSDEPTNAME AS PROCESSDEPTNAME,
+		        tbl_task_deptinfo.PROCESSDEPTNAME2 AS PROCESSDEPTNAME2,
+		        tbl_taskcode.KEEPINGMETHOD AS KEEPINGMETHOD,
+		        tbl_taskcode.KEEPINGPLACE AS KEEPINGPLACE,
+		        tbl_taskcode.DISPLAYRECTRASTIME AS DISPLAYRECTRASTIME,
+		        tbl_taskcode.ISPUBLIC AS ISPUBLIC,
+		        tbl_taskcode.ITEMSECURITY AS ITEMSECURITY,
+		        tbl_task_deptinfo.DELFLAG AS DELFLAG,
+		        tbl_taskcategory.OLDFLAG AS OLDFLAG_TOP,
+		        tbl_taskmiddlecategory.OLDFLAG AS OLDFLAG_MID,
+		        tbl_tasksubcategory.OLDFLAG AS OLDFLAG_SUB
+		    FROM
+		        ((((tbl_taskcategory
+		        JOIN tbl_taskmiddlecategory ON (tbl_taskcategory.CATEGORYCODE = tbl_taskmiddlecategory.CATEGORYCODE
+		            AND tbl_taskcategory.TENANT_ID = tbl_taskmiddlecategory.TENANT_ID
+		            AND tbl_taskcategory.COMPANYID = tbl_taskmiddlecategory.COMPANYID))
+		        JOIN tbl_tasksubcategory ON (tbl_taskmiddlecategory.MCATEGORYCODE = tbl_tasksubcategory.MCATEGORYCODE
+		            AND tbl_taskmiddlecategory.TENANT_ID = tbl_tasksubcategory.TENANT_ID
+		            AND tbl_taskmiddlecategory.COMPANYID = tbl_tasksubcategory.COMPANYID))
+		        JOIN tbl_taskcode ON (tbl_tasksubcategory.SUBCATEGORYCODE = tbl_taskcode.SUBCATEGORYCODE
+		            AND tbl_tasksubcategory.TENANT_ID = tbl_taskcode.TENANT_ID
+		            AND tbl_tasksubcategory.COMPANYID = tbl_taskcode.COMPANYID))
+		        LEFT JOIN tbl_task_deptinfo ON (tbl_taskcode.TASKCODE = tbl_task_deptinfo.TASKCODE
+		            AND tbl_taskcode.TENANT_ID = tbl_task_deptinfo.TENANT_ID
+		            AND tbl_taskcode.COMPANYID = tbl_task_deptinfo.COMPANYID))
+		    WHERE
+		        tbl_task_deptinfo.DELFLAG = '0'
+		            OR tbl_task_deptinfo.DELFLAG IS NULL
+		            OR tbl_task_deptinfo.DELFLAG = '2'
+		]]>
+    </statement>
 	
 </sqlMap>

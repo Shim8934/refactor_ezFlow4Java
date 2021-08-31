@@ -5126,6 +5126,8 @@
 		    		TENANT_ID = #tenantID#
 		    AND
 		    		COMPANYID = #companyID#
+		    AND
+		    		OLDFLAG_TOP IS NULL
 		    ORDER BY 
 		    		CATEGORYCODE
 		</isEmpty>
@@ -5148,13 +5150,17 @@
 					  AND
 					  	A.CATEGORYCODE = B.CATEGORYCODE 
 					  AND
-					  	A.MCATEGORYCODE != B.CATEGORYCODE ) as ISLEAF	
+					  	A.MCATEGORYCODE != B.CATEGORYCODE
+					 AND
+		    			A.OLDFLAG_MID IS NULL) as ISLEAF	
 		    FROM 
 		    		VTASKCLASS B
 		    WHERE  
 		    		B.TENANT_ID = #tenantID#
 		    AND
 		    		B.COMPANYID = #companyID#
+		    AND
+		    		B.OLDFLAG_TOP IS NULL
 		    ORDER BY 
 		    		CATEGORYCODE
 		</isNotEmpty>
@@ -5181,6 +5187,8 @@
             		TENANT_ID = #tenantID#
             AND
 		    		COMPANYID = #companyID#
+		    AND
+		    		OLDFLAG_MID IS NULL
         	ORDER BY 
         			MCATEGORYCODE
 		</isEmpty>
@@ -5203,7 +5211,9 @@
 					  AND
 					  	A.MCATEGORYCODE = B.MCATEGORYCODE 
 					  AND
-					  	A.SUBCATEGORYCODE != B.MCATEGORYCODE ) as ISLEAF
+					  	A.SUBCATEGORYCODE != B.MCATEGORYCODE
+					 AND
+		    			A.OLDFLAG IS NULL) as ISLEAF
         	FROM 
         			VTASKCLASS B
        		WHERE  
@@ -5214,6 +5224,8 @@
             		B.TENANT_ID = #tenantID#
             AND
 		    		B.COMPANYID = #companyID#
+		    AND
+		    		B.OLDFLAG_MID IS NULL
         	ORDER BY 
         			MCATEGORYCODE
 		</isNotEmpty>
@@ -5240,7 +5252,9 @@
 	            AND
 	            	TENANT_ID = #tenantID#    
 	            AND	
-	            	COMPANYID = #companyID#   	
+	            	COMPANYID = #companyID#
+	            AND
+		    		OLDFLAG_SUB IS NULL
 	            ORDER BY 
 	           		SUBCATEGORYCODE
 			</isEqual>
@@ -5261,7 +5275,9 @@
 	           AND
 	               TENANT_ID = #tenantID#  
 	           AND	
-	               COMPANYID = #companyID#  
+	               COMPANYID = #companyID#
+	          	AND
+		    		OLDFLAG_SUB IS NULL
 	           ORDER BY 
 	           	   SUBCATEGORYCODE
 			</isNotEqual>
@@ -5284,7 +5300,9 @@
             AND
             	TENANT_ID = #tenantID#    
             AND	
-            	COMPANYID = #companyID#   	
+            	COMPANYID = #companyID#
+            AND
+		    	OLDFLAG_SUB IS NULL
             ORDER BY 
            		SUBCATEGORYCODE
 		</isNotEmpty>		
@@ -6639,6 +6657,18 @@
 				NOT ( TBL_CABINET.CabinetTransferFlag = '2' AND CONFIRMFLAG = '0' )
 		AND 
 				TBL_CABINETCLASS.TERMINATEFLAG = '0'
+		AND
+			((VTASKCLASS.CATEGORYCODE = VTASKCLASS.MCATEGORYCODE AND VTASKCLASS.MCATEGORYCODE = VTASKCLASS.SUBCATEGORYCODE
+				AND OLDFLAG_TOP IS NULL)
+			OR
+			(VTASKCLASS.CATEGORYCODE != VTASKCLASS.MCATEGORYCODE AND VTASKCLASS.MCATEGORYCODE = VTASKCLASS.SUBCATEGORYCODE
+				AND OLDFLAG_TOP IS NULL
+				AND OLDFLAG_MID IS NULL)
+			OR
+			(VTASKCLASS.CATEGORYCODE != VTASKCLASS.MCATEGORYCODE AND VTASKCLASS.MCATEGORYCODE != VTASKCLASS.SUBCATEGORYCODE
+				AND OLDFLAG_TOP IS NULL
+				AND OLDFLAG_MID IS NULL
+				AND OLDFLAG_SUB IS NULL))
 		AND 
 				TBL_MYTASKCODE.CN = #v_USERID#
 		AND
@@ -6700,6 +6730,18 @@
 				TBL_CABINETCLASS.DelFlag = '0'
 			AND 
 				NOT ( TBL_CABINET.CabinetTransferFlag = '2' AND CONFIRMFLAG = '0' )
+			AND
+				((SVTASKCLASS.CATEGORYCODE = SVTASKCLASS.MCATEGORYCODE AND SVTASKCLASS.MCATEGORYCODE = SVTASKCLASS.SUBCATEGORYCODE
+					AND OLDFLAG_TOP IS NULL)
+				OR
+				(SVTASKCLASS.CATEGORYCODE != SVTASKCLASS.MCATEGORYCODE AND SVTASKCLASS.MCATEGORYCODE = SVTASKCLASS.SUBCATEGORYCODE
+					AND OLDFLAG_TOP IS NULL
+					AND OLDFLAG_MID IS NULL)
+				OR
+				(SVTASKCLASS.CATEGORYCODE != SVTASKCLASS.MCATEGORYCODE AND SVTASKCLASS.MCATEGORYCODE != SVTASKCLASS.SUBCATEGORYCODE
+					AND OLDFLAG_TOP IS NULL
+					AND OLDFLAG_MID IS NULL
+					AND OLDFLAG_SUB IS NULL))
 			AND 
 				TBL_MYTASKCODE.CN = #v_USERID#
 			AND
