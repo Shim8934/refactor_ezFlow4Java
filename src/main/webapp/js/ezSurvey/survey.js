@@ -221,6 +221,7 @@ var SurveyCreate     = function() {
 			surveyObj['questions'] = [];
 			changeSurveyState();
 			window.parent.frames["left"].surveyId = -1;
+			window.parent.frames["left"].isInCreateSurvey = false; // 신규 설문 생성 취소
 			window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=processing";
 		}
 	}
@@ -302,6 +303,7 @@ var SurveyCreate     = function() {
 		switch(code) {
 			case 0 : alert(SurveyMessages.strSaveDraft);
 					 window.parent.frames["left"].surveyId = -1;
+					 window.parent.frames["left"].isInCreateSurvey = false; // 신규 설문 임시저장 완료
 					 window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=draft";
 					 break;
 			case 1 : alert(SurveyMessages.strParamErr) ; break;
@@ -315,6 +317,7 @@ var SurveyCreate     = function() {
 		switch(code) {
 			case 0 : window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=processing";
 					 window.parent.frames["left"].surveyId = -1;
+					 window.parent.frames["left"].isInCreateSurvey = false; // 신규 설문 생성 완료
 					 break;
 			case 1 : alert(SurveyMessages.strParamErr); break;
 			case 2 : alert(SurveyMessages.strError)   ; break;
@@ -741,10 +744,11 @@ var SurveyCreate     = function() {
 		return returnValue;
 	}
 	
-	function showUserInfoFromId(userId) {
+	/* 2021-08-27 홍승비 - 직위/직책/권한그룹인 경우 이름만 표출하도록 수정 (함수에서 이름을 그대로 전달하여 표출), 사간겸직 대응 추가 */
+	function showUserInfoFromId(userId, userType, userName, deptId) {
 		var feature = "height=500px, width=420px, status=no, toolbar=no, menubar=no,location=no, resizable=1";
 		feature = feature + getOpenWindowfeature(420, 500);
-		userWindow = window.open("/ezCommon/showPersonInfo.do?id=" + userId, "userInfo", feature);
+		userWindow = window.open("/ezCommon/showPersonInfo.do?id=" + userId + "&userType=" + userType + "&userName=" + userName + "&dept=" + deptId, "userInfo", feature);
 	}
 	
 	function closeAllPopups() {
@@ -775,8 +779,9 @@ var SurveyCreate     = function() {
 			var imgElmt  = document.createElement("img");
 			var divideSpan = document.createElement("span");
 			uElmt.setAttribute("role", userArr[i]["userId"]);
+			uElmt.setAttribute("type", userArr[i]["userType"]);
 			uElmt.textContent    = userArr[i]["userName"];
-			uElmt.onclick        = (function(userId){return function() {showUserInfoFromId(userId);};})(userArr[i]["userId"]);
+			uElmt.onclick        = (function(userId, userType, userName, deptId){return function() {showUserInfoFromId(userId, userType, userName, deptId);};})(userArr[i]["userId"], userArr[i]["userType"], userArr[i]["userName"], userArr[i]["deptId"]);
 			imgElmt.onclick      = (function(userId, userType){return function() {removeUser(this, userId, userType);};})(userArr[i]["userId"], userArr[i]["userType"]);
 			spanElmt.className   = "rlSpanBnk";
 			divideSpan.textContent = ";";
@@ -3285,7 +3290,12 @@ var SurveyCreate     = function() {
 					logic = SurveyMessages.strNoLogic;
 				}
 				
-				$("#slt" + id + i).val(logicNum).prop("selected", true).css("display", "none");
+				// logicNum = -1인 경우, 분기없음 선택되도록 수정
+				if (logicNum = -1) {
+					$("#slt" + id + i).val("").prop("selected", true).css("display", "none");
+				} else {
+					$("#slt" + id + i).val(logicNum).prop("selected", true).css("display", "none");
+				}
 				$("#sltVal" + id + i).text(logic).css("dispaly", "");
 			}
 		}
@@ -3347,7 +3357,11 @@ var SurveyCreate     = function() {
 			$("#slidLogicInput" + id).val(logicPoint).css("display", "none");
 			$("#LogicPoint" + id).text(logicPoint).css("display", "");
 			
-			$("#slt" + id).val(logicNum).prop("selected", true).css("display", "none");
+			if (logicNum = -1) {
+				$("#slt" + id).val("").prop("selected", true).css("display", "none");
+			} else {
+				$("#slt" + id).val(logicNum).prop("selected", true).css("display", "none");
+			}
 			$("#sltVal" + id).text(logic).css("dispaly", "");
 		}
 	}
@@ -3398,7 +3412,11 @@ var SurveyCreate     = function() {
 				$("#frstBtnGrp" + id).css("display", "none");
 				$("#thrdBtnGrp" + id).css("display", "");
 				
-				$("#slt" + id + i).val(logicNum).prop("selected", true).css("display", "none");
+				if (logicNum = -1) {
+					$("#slt" + id + i).val("").prop("selected", true).css("display", "none");
+				} else {
+					$("#slt" + id + i).val(logicNum).prop("selected", true).css("display", "none");
+				}
 				$("#sltVal" + id + i).text(logic).css("dispaly", "");
 			}
 		}
@@ -3413,7 +3431,11 @@ var SurveyCreate     = function() {
 		for (var i = 0; i < opt.length; i++) {
 			var logicNum = qstnOpt[i]['logic'];
 
-			!isNaN(logicNum) ? $("#slt" + id + i).val(logicNum).prop("selected", true).css("display", "") : $("#slt" + id + i).val('').prop("selected", true).css("display", "");  
+			if (!isNaN(logicNum) && logicNum != -1) { // 분기없음 대응 코드 추가
+				$("#slt" + id + i).val(logicNum).prop("selected", true).css("display", "");
+			} else {
+				$("#slt" + id + i).val('').prop("selected", true).css("display", "");
+			}
 			$("#sltVal" + id + i).css("display", "none");
 		}
 	}
@@ -3457,7 +3479,12 @@ var SurveyCreate     = function() {
 		$("#LogicPoint" + id).css("display", "none");
 		
 		$("#sltVal" + id).css("display", "none");
-		$("#slt" + id).val(logicNum).prop("selected", true).css("display", "");
+		
+		if (!isNaN(logicNum) && logicNum != -1) {
+			$("#slt" + id).val(logicNum).prop("selected", true).css("display", "");
+		} else {
+			$("#slt" + id).val("").prop("selected", true).css("display", "");
+		}
 	}
 	
 	// slider 질문 객체, ui에 분기 번호 추가
@@ -3507,7 +3534,12 @@ var SurveyCreate     = function() {
 		for (var i = 0; i < RowLength; i++) {
 			var logicNum = qstnOpt[i]['logic'];
 			
-			!isNaN(logicNum) ? $("#slt" + id + i).val(logicNum).prop("selected", true).css("display", "") : $("#slt" + id + i).val('').prop("selected", true).css("display", "");
+			if (!isNaN(logicNum) && logicNum != -1) {
+				$("#slt" + id + i).val(logicNum).prop("selected", true).css("display", "");
+			} else {
+				$("#slt" + id + i).val('').prop("selected", true).css("display", "");
+			}
+			
 			$("#sltVal" + id + i).css("display", "none");
 		}
 	}
@@ -3762,9 +3794,9 @@ var SurveyCreate     = function() {
 					var spanElmt = document.createElement("span");
 					spanElmt.textContent = userList[i]["userName"];
 					spanElmt.className   = "user-inf";
-					spanElmt.onclick     = (function(userId) {
-						return function() {SurveyCreate.showUser(userId);};
-					})(userList[i]["userId"]);
+					spanElmt.onclick     = (function(userId, userType, userName, deptId) {
+						return function() {SurveyCreate.showUser(userId, userType, userName, deptId);};
+					})(userList[i]["userId"], userList[i]["userType"], userList[i]["userName"], userList[i]["deptId"]);
 					
 					surveyUserElmt.appendChild(spanElmt);
 					
@@ -3791,7 +3823,7 @@ var SurveyCreate     = function() {
 				spanElmt2.textContent = "[" + SurveyMessages.strTotal + " " + userList.length + " " + SurveyMessages.strUser3 + "]";
 				spanElmt3.className   = "user-more";
 				spanElmt3.onclick     = function(e) {SurveyCreate.userMore()};
-				spanElmt1.onclick     = function(e) {SurveyCreate.showUser(userList[0]["userId"]);};
+				spanElmt1.onclick     = function(e) {SurveyCreate.showUser(userList[0]["userId"], userList[0]["userType"], userList[0]["userName"], userList[0]["deptId"]);};
 				
 				surveyUserElmt.appendChild(spanElmt1);
 				surveyUserElmt.appendChild(spanElmt2);
@@ -3805,9 +3837,9 @@ var SurveyCreate     = function() {
 					var trElmt      = document.createElement("tr");
 					var tdElmt1     = document.createElement("td");
 					var tdElmt2     = document.createElement("td");
-					tdElmt1.onclick = (function(userId) {
-						return function() {SurveyCreate.showUser(userId);};
-					})(userList[i]["userId"]);
+					tdElmt1.onclick = (function(userId, userType, userName, deptId) {
+						return function() {SurveyCreate.showUser(userId, userType, userName, deptId);};
+					})(userList[i]["userId"], userList[i]["userType"], userList[i]["userName"], userList[0]["deptId"]);
 					
 					tdElmt1.textContent = userList[i]["userName"];
 					tdElmt2.textContent = getUserType(userList[i]["userType"]);

@@ -5537,8 +5537,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String realPath = commonUtil.getRealPath(request);
 		String docID = xmlDom.getElementsByTagName("PDOCID").item(0).getTextContent().trim();
 		String zipFileName = xmlDom.getElementsByTagName("PTITLE").item(0).getTextContent().replace("\\", "").replace("/", "").replace(":", "").replace("?", "").
-                replace('"' + "", "").replace("*", "").replace("<", "").replace(">", "").replace("|", "");
-		String path = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());;
+                replace('"' + "", "").replace("*", "").replace("<", "").replace(">", "").replace("|", "").replaceAll("\\t", " ");
+		String path = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
 		String path2 = realPath + commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
 		String separators = "\\|\\|\\|";
 		String[] fileTypes = xmlDom.getElementsByTagName("PTYPEINFO").item(0).getTextContent().split(separators);
@@ -5591,7 +5591,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			
 			//2019.04.01 천성준 - 기존에 있던 replace로직 통합 겸 중복검사한 첨부파일이름 재입력
 			for (int i = 0; i < tmpAry.size(); i++) {
-				fileNames[i] = tmpAry.get(i).replace("\\", "").replace("/", "").replace(":", "").replace("?", "").replace('"' + "", "").replace("*", "").replace("<", "").replace(">", "").replace("|", "");
+				fileNames[i] = tmpAry.get(i).replace("\\", "").replace("/", "").replace(":", "").replace("?", "").replace('"' + "", "").replace("*", "").replace("<", "").replace(">", "").replace("|", "").replaceAll("\\t", " ");
 			}
 			
 			for (int k = 0; k < filePaths.length; k++) {
@@ -11321,5 +11321,18 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	    logger.debug("getBujaeInfo ended.");
 	    
 	    return result;
+	}
+	
+	/* 2021-08-25 홍승비 - 개인병렬협조/합의자의 반송 시 처리 타입을 리턴 (1:반송해도 다음 결재권자에게 진행문서로 전달      2:한 명이라도 반송한 경우 원 기안자에게 반송) */
+	@RequestMapping(value = "/ezApprovalG/getPersonalAgreeReturnType.do", method = RequestMethod.GET, produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getPersonalAgreeReturnType(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception{
+		logger.debug("getPersonalAgreeReturnType started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String result = ezCommonService.getTenantConfig("PersonalAgreeReturnType", userInfo.getTenantId());
+		
+		logger.debug("getPersonalAgreeReturnType ended, result = " + result);
+		return result;
 	}
 }
