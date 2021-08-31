@@ -340,6 +340,7 @@ public interface EzCommonService {
     public void createTblCarAttach() throws Exception;
     
     public void createTblCarForm() throws Exception;
+
+	public void addViewTaskOldFlag() throws Exception;
     
-	
 }

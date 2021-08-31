@@ -2119,5 +2119,26 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblCarForm");
 		}
 	}
+
+	// 분류코드체계 (대분류, 중분류, 소분류) 별 삭제여부 플래그 추가
+	public void addViewTaskOldFlag() { // vtaskclass
+		try {
+			select("EzCommonDAO.checkViewTaskOldFlagTop");
+		} catch (Exception e) {
+			logger.debug("vtaskclass OLDFLAG_TOP doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addViewTaskOldFlags");
+		}
+	}
+	
+	public void addSViewTaskOldFlag() { // svtaskclass
+		try {
+			select("EzCommonDAO.checkSViewTaskOldFlagTop");
+		} catch (Exception e) {
+			logger.debug("svtaskclass OLDFLAG_TOP doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addSViewTaskOldFlags");
+		}
+	}
     
 }
