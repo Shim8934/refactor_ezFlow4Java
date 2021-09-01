@@ -966,10 +966,10 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 			String fileId = (String) file.get("FILE_ID");
 			String filePath = (String) file.get("FILE_PATH");
 			Path path = Paths.get(realPath, filePath);
-			byte[] bytes = Files.readAllBytes(path);
+			byte[] bytes = commonUtil.readBytesFromFile(path);
 			byte[] result = transformFunc.apply(bytes);
 
-			Files.write(path, result, StandardOpenOption.TRUNCATE_EXISTING);
+			commonUtil.writeBytesToFile(path, result);
 			updateFunc.accept(fileId, tenantId);
 		}
 	}
@@ -1167,8 +1167,8 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 				boolean requireKlibTransformation = isEncryptionFolder && !isEncryptedFile;
 
 				if (requireKlibTransformation) {
-					byte[] bytes = Files.readAllBytes(srcFile.toPath());
-					Files.write(destFile.toPath(), klibUtil.encrypt(bytes));
+					byte[] bytes = commonUtil.readBytesFromFile(srcFile.toPath());
+					commonUtil.writeBytesToFile(destFile.toPath(), klibUtil.encrypt(bytes));
 				} else {
 					FileUtils.copyFile(srcFile, destFile);
 				}

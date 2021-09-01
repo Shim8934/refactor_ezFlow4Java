@@ -1657,10 +1657,8 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			Files.createDirectories(destPath.getParent());
 
 			if (requireEncryption) {
-				byte[] bytes = Files.readAllBytes(sourcePath);
-				Files.write(destPath, kilbUtil.encrypt(bytes),
-						StandardOpenOption.CREATE,
-						StandardOpenOption.TRUNCATE_EXISTING);
+				byte[] bytes = commonUtil.readBytesFromFile(sourcePath);
+				commonUtil.writeBytesToFile(destPath, kilbUtil.encrypt(bytes));
 			} else {
 				Files.copy(sourcePath, destPath, StandardCopyOption.REPLACE_EXISTING);
 			}
@@ -1710,10 +1708,8 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				if (isEncryptionFolder && !isEncryptedFile) {
 					Path sourcePath = Paths.get(servletContext.getRealPath(commonUtil.detectPathTraversal(file.getFilePath())));
 
-					byte[] bytes = Files.readAllBytes(sourcePath);
-					Files.write(sourcePath, kilbUtil.encrypt(bytes),
-							StandardOpenOption.CREATE,
-							StandardOpenOption.TRUNCATE_EXISTING);
+					byte[] bytes = commonUtil.readBytesFromFile(sourcePath);
+					commonUtil.writeBytesToFile(sourcePath, kilbUtil.encrypt(bytes));
 
 					insertEncryptedFile(file.getFileId(), tenantId);
 				} else if (useRename && isEncryptedFile) {
@@ -1793,8 +1789,8 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				boolean requireKlibTransformation = isEncryptionFolder && !isEncryptedFile;
 
 				if (requireKlibTransformation) {
-					byte[] bytes = Files.readAllBytes(srcFile.toPath());
-					Files.write(destFile.toPath(), kilbUtil.encrypt(bytes));
+					byte[] bytes = commonUtil.readBytesFromFile(srcFile.toPath());
+					commonUtil.writeBytesToFile(destFile.toPath(), kilbUtil.encrypt(bytes));
 				} else {
 					FileUtils.copyFile(srcFile, destFile);
 				}
@@ -2172,9 +2168,9 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		if (requireEncryption) {
 			String realPath = servletContext.getRealPath("");
 			Path path = Paths.get(realPath, newFilePath);
-			byte[] encryptedBytes = klibUtil.encrypt(Files.readAllBytes(path));
+			byte[] encryptedBytes = klibUtil.encrypt(commonUtil.readBytesFromFile(path));
 
-			Files.write(path, encryptedBytes, StandardOpenOption.TRUNCATE_EXISTING);
+			commonUtil.writeBytesToFile(path, encryptedBytes);
 		}
 
 		if (isEncryptionFolder || isEncryptedVersion || isEncryptedLatestVersion) {
@@ -2336,7 +2332,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			long contentLength;
 
 			if (isEncrypted) {
-				byte[] decryptedBytes = klibUtil.decrypt(Files.readAllBytes(file.toPath()));
+				byte[] decryptedBytes = klibUtil.decrypt(commonUtil.readBytesFromFile(file.toPath()));
 				IOUtils.write(decryptedBytes, response.getOutputStream());
 				contentLength = decryptedBytes.length;
 				decryptedBytes = null;
