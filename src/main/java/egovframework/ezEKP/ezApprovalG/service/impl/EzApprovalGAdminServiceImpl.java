@@ -2264,7 +2264,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			sb.append("<ID" + list.indexOf(vo) + ">");
 			sb.append(commonUtil.cleanValue(vo.getFormContUserDepID()));
 			sb.append("</ID" + list.indexOf(vo) + ">");
-			sb.append("<NAME" + list.indexOf(vo) + ">");
+			sb.append("<NAME" + list.indexOf(vo) + "><![CDATA[");
 			
 			if (!lang.equals("2")) {
 				sb.append(ezOrganService.getPropertyValue(vo.getFormContUserDepID(), "displayname", tenantID));
@@ -2272,7 +2272,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				sb.append(ezOrganService.getPropertyValue(vo.getFormContUserDepID(), "displayname2", tenantID));
 			}
 			
-			sb.append("</NAME" + list.indexOf(vo) + ">");
+			sb.append("]]></NAME" + list.indexOf(vo) + ">");
 		}
 		
 		sb.append("</PARAMETER>");
