@@ -147,7 +147,7 @@
 		    /* 2018-05-10 홍승비 - 게시물 저장 시 JSleep 함수 미사용 */
 		    function SaveItem() {
 				if(document.getElementById('txtPhotoFile').value==""){
-					alert("<spring:message code = 'main.t4000' />");
+					alert("<spring:message code = 'ezBoard.t454' />");
 					return;
 				}
 		    	var strArray = document.getElementById('txtPhotoFile').value.split('.'); 
