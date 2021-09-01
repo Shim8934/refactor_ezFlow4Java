@@ -2925,15 +2925,13 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 					Path reformHtmlPath = Paths.get(reformFilePrefix + ".html");
 					Path reformFunctionPath = Paths.get(reformFilePrefix + ".js");
 
-					OpenOption[] openOptions = { StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING };
-
-					Files.write(reformMhtPath, reformMht.getBytes(), openOptions);
-					Files.write(reformHtmlPath, reformHtml.getBytes(), openOptions);
+					commonUtil.writeBytesToFile(reformMhtPath, reformMht.getBytes());
+					commonUtil.writeBytesToFile(reformHtmlPath, reformHtml.getBytes());
 
 					if (reformFunction == null || reformFunction.trim().isEmpty()) {
 						Files.deleteIfExists(reformFunctionPath);
 					} else {
-						Files.write(reformFunctionPath, reformFunction.getBytes(), openOptions);
+						commonUtil.writeBytesToFile(reformFunctionPath, reformFunction.getBytes());
 					}
 				}
 			} catch (Exception e) {

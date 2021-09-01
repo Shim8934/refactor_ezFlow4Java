@@ -4666,7 +4666,7 @@ public class EzPMSGWController {
 			int fileSize = (int) file.length();
 
 			if (fileSize > 0) {
-				byte[] bytes = Files.readAllBytes(Paths.get(realPath));
+				byte[] bytes = commonUtil.readBytesFromFile(Paths.get(realPath));
 
 				JSONObject data = new JSONObject();
 

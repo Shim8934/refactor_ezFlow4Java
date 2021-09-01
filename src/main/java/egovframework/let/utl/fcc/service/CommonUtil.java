@@ -23,9 +23,11 @@ import java.beans.PropertyDescriptor;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -36,6 +38,7 @@ import java.net.URI;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.text.DecimalFormat;
 import java.text.Normalizer;
@@ -294,6 +297,52 @@ public class CommonUtil {
 		return src;
 	}
     
+	public byte[] readBytesFromFile(Path path) throws IOException {
+		String pathStr = path.toString();
+
+		logger.debug("readBytesFromFile path=" + pathStr);
+
+		File file = new File(pathStr);
+		byte[] content = new byte[(int)file.length()];
+		FileInputStream fin = null;		
+
+		try {
+			fin = new FileInputStream(file);
+			fin.read(content);
+		} catch (IOException e) {		
+			throw e;
+		} finally {
+			if (fin != null) {
+				fin.close();
+			}
+		}
+
+		logger.debug("readBytesFromFile ended. path=" + pathStr);
+
+		return content;
+    }
+
+    public void writeBytesToFile(Path path, byte[] content) throws IOException {
+		String pathStr = path.toString();
+
+		logger.debug("writeBytesToFile path=" + pathStr);
+
+		FileOutputStream fout = null;
+
+		try {
+			fout = new FileOutputStream(pathStr);
+			fout.write(content);
+		} catch (IOException e) {		
+			throw e;
+		} finally {
+			if (fout != null) {
+				fout.close();
+			}
+		}
+
+		logger.debug("writeBytesToFile ended. path=" + pathStr);
+	}
+
 	public LoginVO userInfo(String loginCookie){
 		if (StringUtils.isEmpty(loginCookie)) {
 			return null;
@@ -2506,7 +2555,7 @@ public class CommonUtil {
 			if ((filePathFlag.equals("webfolder") && ezWebFolderService.isEncryptedFilePath(filePath)) || (filePathFlag.equals("approval") && fileExtension.equals(EzApprovalGKlibService.ENCRYPTED_FILE_EXT))) {
 				logger.debug("fileOldPath=" + filePath);
 				logger.debug("pdfFilePath=" + pdfFilePath);
-				byte[] encryptedBytes = Files.readAllBytes(file.toPath());
+				byte[] encryptedBytes = readBytesFromFile(file.toPath());
 				byte[] decryptedBytes = kilbUtil.decrypt(encryptedBytes);
 				inputStream = new ByteArrayInputStream(decryptedBytes);
 				

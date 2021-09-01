@@ -903,7 +903,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	@Override
 	public String loadMHTFile(String strMHTpath) throws Exception{
 		String strMhtData = "";
-		byte[] fileBytes = Files.readAllBytes(Paths.get(commonUtil.detectPathTraversal(strMHTpath.trim())));
+		byte[] fileBytes = commonUtil.readBytesFromFile(Paths.get(commonUtil.detectPathTraversal(strMHTpath.trim())));
 
 		// klib 복호화
 		if (strMHTpath.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {

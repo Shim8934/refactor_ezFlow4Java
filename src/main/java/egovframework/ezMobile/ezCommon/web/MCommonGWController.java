@@ -88,7 +88,7 @@ public class MCommonGWController {
 			int fSize = (int)file.length();
 			
 			if (fSize > 0) {
-				byte[] bytes = Files.readAllBytes(Paths.get(filePath));
+				byte[] bytes = commonUtil.readBytesFromFile(Paths.get(filePath));
 				
 				if (filePath.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
 					bytes = klibUtil.decrypt(bytes);
@@ -230,7 +230,7 @@ public class MCommonGWController {
 			int fSize = (int)file.length();
 			
 			if (fSize > 0) {
-				byte[] bytes = Files.readAllBytes(Paths.get(filePath));
+				byte[] bytes = commonUtil.readBytesFromFile(Paths.get(filePath));
 				
 				if (filePath.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
 					bytes = klibUtil.decrypt(bytes);

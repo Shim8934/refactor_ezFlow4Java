@@ -437,7 +437,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 				
 				// KLIB 복호화
 				if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
-					byte[] orgBytes = Files.readAllBytes(orgFile.toPath());
+					byte[] orgBytes = commonUtil.readBytesFromFile(orgFile.toPath());
 					FileUtils.writeByteArrayToFile(newFile, klibUtil.decrypt(orgBytes));
 				} else {
 					FileUtils.copyFile(orgFile, newFile);
@@ -828,7 +828,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 
 				// 2018.06.21 - KLIB으로 암호화된 파일일 때는 복호화 하여 저장
 				if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
-					byte[] encryptedBytes = Files.readAllBytes(orgFile.toPath());
+					byte[] encryptedBytes = commonUtil.readBytesFromFile(orgFile.toPath());
 					orgFileInputStream = new ByteArrayInputStream(klibUtil.decrypt(encryptedBytes));
 				} else {
 					orgFileInputStream = new FileInputStream(orgFile);
@@ -1048,7 +1048,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 				saveFileName += "." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT;
 			}
 			
-			Files.write(Paths.get(commonUtil.detectPathTraversal(saveFileName)), documentBytes, StandardOpenOption.TRUNCATE_EXISTING);
+			commonUtil.writeBytesToFile(Paths.get(commonUtil.detectPathTraversal(saveFileName)), documentBytes);
 
 			result = "SUCCESS";
 		} catch (Exception e) {
@@ -1607,7 +1607,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 				
 				// KLIB 복호화
 				if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
-					byte[] orgBytes = Files.readAllBytes(orgFile.toPath());
+					byte[] orgBytes = commonUtil.readBytesFromFile(orgFile.toPath());
 					FileUtils.writeByteArrayToFile(newFile, klibUtil.decrypt(orgBytes));
 				} else {
 					FileUtils.copyFile(orgFile, newFile);
@@ -1715,7 +1715,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 
 				// 2018.06.21 - KLIB으로 암호화된 파일일 때는 복호화 하여 저장
 				if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
-					byte[] encryptedBytes = Files.readAllBytes(orgFile.toPath());
+					byte[] encryptedBytes = commonUtil.readBytesFromFile(orgFile.toPath());
 					orgFileInputStream = new ByteArrayInputStream(klibUtil.decrypt(encryptedBytes));
 				} else {
 					orgFileInputStream = new FileInputStream(orgFile);
