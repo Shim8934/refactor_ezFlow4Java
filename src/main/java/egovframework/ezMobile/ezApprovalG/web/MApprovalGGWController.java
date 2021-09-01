@@ -1096,4 +1096,50 @@ public class MApprovalGGWController {
 		return result;
 	}
 	
+	/**
+	 * 모바일 G/W 전자결재 [GET] 전자결재문서 접근가능여부 리턴 
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/mobile/ezapproval/docs/{docId}/checkAccessYNG", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject checkAccessYNG(@PathVariable String docId, HttpServletRequest request) {
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/checkAccessYNG] started.");
+
+		JSONObject result = new JSONObject();
+		
+		try {
+			String userID = request.getParameter("userID");
+			String companyID = request.getParameter("companyID");
+			String lang = request.getParameter("lang");
+			int tenantID = Integer.parseInt(request.getParameter("tenantID"));
+			String accessInfo = request.getParameter("accessInfo");
+			String serverName = request.getHeader("x-user-host");
+			String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
+			String pass = "";
+			
+			MCommonVO userInfo = mOptionService.commonInfo(serverName, userID);
+			
+			if (companyID != null && !companyID.equals("") && !companyID.equals(userInfo.getCompanyId())) {
+				userInfo.setCompanyId(companyID);
+			}
+			
+			if (userInfo.getRollInfo().indexOf("c=1") == -1) {
+				pass = ezApprovalGService.getAccessYNG(docId, userID, accessInfo, companyID, lang, userInfo.getTenantId(), approvalFlag);
+			} else {
+				pass = "<RESULT>TRUE</RESULT>";
+			}
+			
+			result.put("status", "ok");
+			result.put("code", "0");
+			result.put("data", pass);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", "1");
+		}
+
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/checkAccessYNG] ended.");
+		
+		return result;
+	}
+	
+	
 }
