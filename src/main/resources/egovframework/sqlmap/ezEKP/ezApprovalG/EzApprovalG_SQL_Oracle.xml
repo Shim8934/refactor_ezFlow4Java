@@ -31889,7 +31889,7 @@
 			* 
 		FROM(
 				SELECT 
-					A.* 
+					row_number() over(ORDER BY NULL) as rnum, A.* 
 			  FROM (
 							SELECT 
 								DISTINCT TBL_ENDAPRDOCINFO.DOCID, 
@@ -32233,12 +32233,16 @@
 							   		ORDER BY 
 							   				ENDDATE DESC  , DOCNO DESC
 							   	</isEmpty>
-								<isNotEqual property="alFlag" compareValue="1">
-							   	LIMIT #v_PAGESIZE#
+								 ) A 
+							   	<isNotEqual property="alFlag" compareValue="1">
+							   	<![CDATA[
+						   		WHERE
+						   			ROWNUM <= #v_PAGESIZE#
+							    ]]>
 								</isNotEqual>
-							   	 ) A 
-							   	 LIMIT #v_PAGESIZE3#, #v_PAGESIZE2#
 							   	 	) B
+						   	 	WHERE
+						   	 		B.rnum >= #v_PAGESIZE3#+1
 <!-- 				<isEqual property="approvalFlag" compareValue="Y"> -->
 <!-- 				INNER JOIN TBL_CODELIST B   -->
 <!-- 				ON A.DOCTYPE = B.CODE2 -->
@@ -32267,8 +32271,10 @@
 	</select>
 	<select id ="EzApprovalG.getSearchDocListCountForOpenGov" parameterClass="Map" resultClass="int">
 	<![CDATA[
+		SELECT COUNT(*)
+		FROM (
 		SELECT 
-			COUNT(DISTINCT TBL_ENDAPRDOCINFO.DOCID,TBL_ENDAPRDOCINFO.COMPANYID)
+			DISTINCT TBL_ENDAPRDOCINFO.DOCID,TBL_ENDAPRDOCINFO.COMPANYID
    		FROM 
    			TBL_ENDAPRDOCINFO 
    		LEFT OUTER JOIN 
@@ -32501,6 +32507,7 @@
    		AND 
    			TBL_ENDAPRLINEINFO.APRMEMBERNAME = #v_APPROVUSER#
    		</isNotEmpty>
+   		)
 	</select>
 	<select id="EzApprovalG.getOpenGovInfoForUpdate" parameterClass="Map" resultClass="ApprGOpenGovInfoVO">
 		SELECT
@@ -32563,7 +32570,7 @@
 			REASON = #reason#,
 			OPENLIMITDATE = #limitDate#,
 			SENDFLAG = 'N',
-			UPDATEDATE = TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+			UPDATEDATE = SYSDATE
 		WHERE
 			DOCID = #docID#
 		AND
@@ -32649,7 +32656,7 @@
 			#modifierName#,
 			#sn#,
 			#modifierDeptName#,
-			#modifyDate#,
+			TO_DATE(#modifyDate#, 'YYYY-MM-DD HH24:MI:SS'),
 			#modifyReason#,
 			#tenantID#,
 			#companyID#,

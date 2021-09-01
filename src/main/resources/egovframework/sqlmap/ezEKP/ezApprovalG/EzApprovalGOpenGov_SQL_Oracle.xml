@@ -230,14 +230,14 @@
 
 	<select id="EzApprovalGOpenGov.getResendDate" resultClass="String">
 		SELECT
-			TO_DATE(senddate)
+			TO_CHAR(senddate, 'YYYY-MM-DD')
 		FROM
 			TBL_GOVSENDDOCHISTORY
 		WHERE
 			sendflag = 'N'
 	</select>
 
-	<select id="EzApprovalGOpenGov.getOpenGovResendCsv" resultClass="String">
+	<select id="EzApprovalGOpenGov.getOpenGovResendCsv" resultClass="ApprGOpenGovCsvVO">
 		<![CDATA[
  			SELECT
 				TBL_OPENGOVDOCINFO.docid,
@@ -249,7 +249,7 @@
 				'' AS "n7",
 				TBL_ENDAPRDOCINFO.doctitle,
 				'' AS "n9",
-				TO_DATE(TBL_OPENGOVDOCINFO.createdate, 'YYYYMMDDHH24MISS') AS createdate,
+				TBL_OPENGOVDOCINFO.createdate AS createdate,
 				#companyNum# AS companycode,
 				#companyName# AS companyname,
 				TBL_ENDAPRDOCINFO.writerdeptid,
@@ -348,11 +348,11 @@
 			LEFT OUTER JOIN
 				(SELECT
 					docid,
-					LISTAGG(attach, '') AS attach
+					LISTAGG(attach, '') WITHIN GROUP(ORDER BY attach) AS attach
 				FROM
 					(SELECT
 						TBL_OPENGOVFILEINFO.docid,
- 						(':첨부:'||TBL_OPENGOVFILEINFO.docid||sn||':'||attachfilename||':'||NVL(attachfilesize, '1024')||':'||sn-1||':'||fileopenflag) AS attach
+ 						(':첨부:'||TBL_OPENGOVFILEINFO.docid||sn||':'||attachfilename||':'||NVL(attachfilesize, '1024')||':'||(sn-1)||':'||fileopenflag) AS attach
 					FROM
 						TBL_OPENGOVFILEINFO
 					INNER JOIN
@@ -373,6 +373,11 @@
     			TBL_OPENGOVDOCINFO.docid = FILEATTACHLIST.docid
     		WHERE
     			(TBL_ENDAPRDOCINFO.docstate <> '011' OR TBL_ENDAPRDOCINFO.docstate IS NULL)
-		]]>
+    		AND
+    		    TO_DATE(TBL_OPENGOVDOCINFO.CREATEDATE) IN
+			]]>
+		    <iterate property="resendDate" conjunction="," open="(" close=")">
+		        #resendDate[]#
+		    </iterate>
 	</select>
 </sqlMap>
