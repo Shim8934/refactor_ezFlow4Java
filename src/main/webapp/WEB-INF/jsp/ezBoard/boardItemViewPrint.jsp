@@ -20,12 +20,16 @@
 				margin-bottom: 0px;
 			}
 			#txtContent h1, #txtContent h2 , #txtContent h3 , #txtContent h4 , #txtContent h5 , #txtContent h6 {
-				font-size:revert;
-				margin:revert;
-				line-height:revert;
-				color:revert;
-				height:revert;
+				margin-left:0px;
+				margin-right:0px;
+				color:#000000;
 			}
+			#txtContent h1 {font-size:2em; margin-top:0.67em; margin-bottom:0.67em;}
+			#txtContent h2  {font-size:1.5em; margin-top:0.83em; margin-bottom:0.83em;}
+			#txtContent h3 {font-size:1.17em; margin-top:1em; margin-bottom:1em;}
+			#txtContent h4 {font-size:1em; margin-top:1.33em; margin-bottom:1.33em;}
+			#txtContent h5 {font-size:0.83em; margin-top:1.67em; margin-bottom:1.67em;}
+			#txtContent h6 {font-size:0.67em; margin-top:2.33em; margin-bottom:2.33em;}
     	</style>
 		<script>
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
