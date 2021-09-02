@@ -246,6 +246,8 @@
         	} else {
         		openLimitDate = $("#idDatepickerForOpenGov").val();
         	}
+        } else {
+        	openLimitDate = "";
         }
         
         if (updateOpenGovInfo() == "TRUE") {
