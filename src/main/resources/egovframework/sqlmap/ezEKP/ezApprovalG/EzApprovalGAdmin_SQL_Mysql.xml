@@ -4910,18 +4910,16 @@
 	</select>
 	<update id="EzApprovalGAdminDAO.resendOpenGov" parameterClass="Map">
 		UPDATE
-			TBL_OPENGOVDOCINFO
+			TBL_GOVSENDDOCHISTORY
 		SET
 			SENDFLAG = 'N'
 		WHERE
-			TENANT_ID = #tenantID#
-		AND
-			COMPANYID = #companyID#
-		AND
 		<![CDATA[
-			CREATEDATE <=  STR_TO_DATE(#endTime#, '%Y-%m-%d %H:%i:%S')
+			SENDDATE
+		BETWEEN
+			STR_TO_DATE(#endTime#, '%Y-%m-%d %H:%i:%S')
 		AND
-			CREATEDATE >=  STR_TO_DATE(#startTime#, '%Y-%m-%d %H:%i:%S')
+			STR_TO_DATE(#startTime#, '%Y-%m-%d %H:%i:%S')
 		]]>
 	</update>
 

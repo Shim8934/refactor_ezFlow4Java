@@ -4463,14 +4463,14 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("resendOpenGov started.");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
-		String resendDate = request.getParameter("resendDate");
+		String resendStartDate = request.getParameter("resendStartDate");
+		String resendEndDate = request.getParameter("resendEndDate");
 		
-		String resendStartTime = resendDate + " 00:00:01";
-		String resendEndTime = resendDate + " 23:59:59";
+		String resendStartTime = resendStartDate + " 00:00:01";
+		String resendEndTime = resendEndDate + " 23:59:59";
 		
+		logger.debug("resend period : " + resendStartDate + " ~ " + resendEndDate);
 		ezApprovalGAdminService.resendOpenGov(resendStartTime, resendEndTime, userInfo.getTenantId(), userInfo.getCompanyID());
-		
-		logger.debug(resendEndTime);
 		
 		logger.debug("resendOpenGov ended.");
 	}
