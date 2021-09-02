@@ -2650,10 +2650,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (isEncryptedByKlib) {
 				Path targetPath = Paths.get(commonUtil.detectPathTraversal(target));
 				
-				byte[] targetBytes = Files.readAllBytes(targetPath);
+				byte[] targetBytes = commonUtil.readBytesFromFile(targetPath);
 				byte[] decryptBytes = klibUtil.decrypt(targetBytes);
 				
-				Files.write(targetPath, decryptBytes, StandardOpenOption.TRUNCATE_EXISTING);
+				commonUtil.writeBytesToFile(targetPath, decryptBytes);
 			}
 		}
 		
@@ -18435,7 +18435,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			File src = new File(commonUtil.detectPathTraversal(source));
 			File des = new File(commonUtil.detectPathTraversal(target));
 			
-			byte[] descryptedBytes = klibUtil.decrypt(Files.readAllBytes(src.toPath()));
+			byte[] descryptedBytes = klibUtil.decrypt(commonUtil.readBytesFromFile(src.toPath()));
 			ByteArrayInputStream inputStream = new ByteArrayInputStream(descryptedBytes);
 			
 			Files.copy(inputStream, des.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -28776,7 +28776,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 						// 2018.08.26 KLIB 복호화
 						if (strPath.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
-							bytes = Files.readAllBytes(file.toPath());
+							bytes = commonUtil.readBytesFromFile(file.toPath());
 							bytes = klibUtil.decrypt(bytes);
 						} else {
                         
@@ -31381,10 +31381,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (isEncryptedByKlib) {
 				Path targetPath = Paths.get(commonUtil.detectPathTraversal(target));
 				
-				byte[] targetBytes = Files.readAllBytes(targetPath);
+				byte[] targetBytes = commonUtil.readBytesFromFile(targetPath);
 				byte[] decryptBytes = klibUtil.decrypt(targetBytes);
 				
-				Files.write(targetPath, decryptBytes, StandardOpenOption.TRUNCATE_EXISTING);
+				commonUtil.writeBytesToFile(targetPath, decryptBytes);
 			}
 		}
 		

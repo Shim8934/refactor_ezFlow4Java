@@ -665,7 +665,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			Path reformMhtPath = reformDirectory.resolve(formID + "_FORMBuilder.mht");
 			
 			if (Files.exists(reformFunctionPath)) {
-				String reformFunctionStr = new String(Files.readAllBytes(reformFunctionPath));
+				String reformFunctionStr = new String(commonUtil.readBytesFromFile(reformFunctionPath));
 				
 				model.addAttribute("reformFunction", reformFunctionStr);
 			}

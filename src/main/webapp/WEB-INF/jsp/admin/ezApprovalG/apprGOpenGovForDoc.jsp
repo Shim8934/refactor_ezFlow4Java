@@ -174,6 +174,7 @@
 	            		apprToMonth : SearchCond[13],
 	            		apprToDay : SearchCond[14],
 	            		formID : SearchCond[15],
+	            		formName : SearchCond[16],
 	            		deptName1 : SearchCond[17],
 	            		deptName2 : SearchCond[17],
 	            		pageNum : pageNum,
@@ -892,10 +893,10 @@
 		            var DocList = new ListView();
 		            DocList.LoadFromID("DocList");
 		            var oArrRows = DocList.GetSelectedRows();
-		            var pCurSelRow = oArrRows[0];
-			        var viewDocID = pCurSelRow.getAttribute("DATA1");
-			        var viewURL = pCurSelRow.getAttribute("DATA2");
 		            if (oArrRows.length > 0) {
+		            	var pCurSelRow = oArrRows[0];
+			        	var viewDocID = pCurSelRow.getAttribute("DATA1");
+			       	 	var viewURL = pCurSelRow.getAttribute("DATA2");
 		            	OrgDocid = pCurSelRow.getAttribute("DATA5");
 		            	ViewDoc_onclick(viewDocID, viewURL);
 		            } else {
@@ -1003,7 +1004,7 @@
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 	        else {
-	            OpenAlertUI("<spring:message code='ezApprovalG.t632'/>");
+	        	alert("<spring:message code='ezApprovalG.t632'/>");
 	        }
 	    }
 	
@@ -1040,7 +1041,7 @@
 				}
 			}
 			else {
-				OpenAlertUI("<spring:message code='ezApprovalG.t632'/>");
+				alert("<spring:message code='ezApprovalG.t632'/>");
 			}
 		}
 		</script>
