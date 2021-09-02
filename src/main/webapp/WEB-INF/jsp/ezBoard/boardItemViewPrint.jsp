@@ -19,6 +19,13 @@
 				margin-top: 0px;
 				margin-bottom: 0px;
 			}
+			#txtContent h1, #txtContent h2 , #txtContent h3 , #txtContent h4 , #txtContent h5 , #txtContent h6 {
+				font-size:revert;
+				margin:revert;
+				line-height:revert;
+				color:revert;
+				height:revert;
+			}
     	</style>
 		<script>
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
@@ -212,7 +219,7 @@
 		    }
 		    function displaytable() {
 		        if(message.document.body.innerHTML != "")
-		            document.getElementById("contenttable").innerHTML = message.document.body.innerHTML;
+		            document.getElementById("txtContent").innerHTML = message.document.body.innerHTML;
 		    }
 		    
 		    /* 2021-08-12 홍승비 - 익명게시물 게시자명 특문처리 추가 */
@@ -369,7 +376,7 @@
 		  </tr>
 		    <tr>
 		    <td class="pad1" style="height:100%;">
-		        <div id ="contenttable" class ="viewbox" style="border:1px solid #ddd"></div>
+		        <div id ="txtContent" class ="viewbox" style="border:1px solid #ddd; margin-left:0px; margin-right:0px;"></div>
 		    </td> 
 		  </tr>
 		  </table>

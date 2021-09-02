@@ -23,6 +23,13 @@
 				background-color:#f1f8ff;
 				border:1px solid #6793d8;
 			}
+			#txtContent h1, #txtContent h2 , #txtContent h3 , #txtContent h4 , #txtContent h5 , #txtContent h6 {
+				font-size:revert;
+				margin:revert;
+				line-height:revert;
+				color:revert;
+				height:revert;
+			}
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
