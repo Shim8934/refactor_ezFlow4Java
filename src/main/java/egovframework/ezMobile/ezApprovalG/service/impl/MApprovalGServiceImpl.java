@@ -1536,4 +1536,21 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 			return result;
 		}
 		
+	@Override
+	public HashMap<String, Object> getAprMemberBySn(String docID, String aprMemberSN, String lang, String companyID, int tenantID) throws Exception {
+		LOGGER.debug("getAprMemberBySn started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_DOCID", docID);
+		map.put("v_APRMEMBERSN", aprMemberSN);
+		map.put("v_LANG", lang);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		HashMap<String, Object> result = mApprovalGDAO.getAprMemberBySn(map);
+		
+		LOGGER.debug("getAprMemberBySn ended");
+		return result;
+	}
+		
 }

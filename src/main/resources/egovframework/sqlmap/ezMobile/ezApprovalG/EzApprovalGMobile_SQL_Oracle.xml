@@ -2561,4 +2561,21 @@
 			  SUBSTR(	to_char(SYSDATE, 'YYYY/MM/DD'), 1, 10)
 		)
 	</insert>
+	
+	<select id ="MApprovalG.getAprMemberBySn" parameterClass="map" resultClass="HashMap">
+      	SELECT 
+      		APRMEMBERID,
+      		NVL(APRMEMBERNAME$v_LANG$, '') AS APRMEMBERNAME
+      	FROM 
+      		TBL_APRLINEINFO
+		WHERE 
+			DOCID = #v_DOCID#
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #v_COMPANYID#
+		AND
+			APRMEMBERSN = #v_APRMEMBERSN#
+	</select>
+	
 </sqlMap>

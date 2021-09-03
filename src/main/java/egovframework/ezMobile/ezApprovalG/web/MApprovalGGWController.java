@@ -12,6 +12,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.security.PrivateKey;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -1141,5 +1142,40 @@ public class MApprovalGGWController {
 		return result;
 	}
 	
-	
+	/**
+	 * 모바일 G/W 전자결재 [GET] 전달받은 문서ID, 결재순번으로 현재 결재자가 대리결재를 진행하는지 확인 -> 대리결재라면 원결재자의 이름을 리턴하고 아니라면 공백을 리턴
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/mobile/ezapproval/docs/{docId}/checkProxyDoc", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject checkProxyDoc(@PathVariable String docId, HttpServletRequest request) {
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/checkProxyDoc] started.");
+
+		JSONObject result = new JSONObject();
+		
+		try {
+			String userID = request.getParameter("userID");
+			String companyID = request.getParameter("companyID");
+			String lang = request.getParameter("lang");
+			int tenantID = Integer.parseInt(request.getParameter("tenantID"));
+			String aprMemberSN = request.getParameter("aprMemberSN");
+			String orgAprUserName = "";
+			
+			HashMap<String, Object> orgAprUserInfo = mApprovalGService.getAprMemberBySn(docId, aprMemberSN, commonUtil.getMultiData(lang, tenantID), companyID, tenantID);
+			
+			if (!orgAprUserInfo.get("APRMEMBERID").equals(userID)) {
+				orgAprUserName = orgAprUserInfo.get("APRMEMBERNAME").toString();
+			}
+			
+			result.put("status", "ok");
+			result.put("code", "0");
+			result.put("data", orgAprUserName);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", "1");
+		}
+
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/checkProxyDoc] ended.");
+		
+		return result;
+	}
 }
