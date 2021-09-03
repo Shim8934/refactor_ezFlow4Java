@@ -216,6 +216,7 @@
 					//end
 				}
 	
+				// 부서 특수문자가 c:out으로 한번 파싱되었으므로, 표출 시에는 다시 특수문자를 변환함
 				if (personid != "" && personid != creatorid) {
 					document.getElementById("personlist").innerHTML = personname + " (" + persondept + ")";
 
@@ -225,8 +226,8 @@
 					g_person["name1"][0] = personname;
 					g_person["name2"][0] = personname2;
 					g_person["id"][0] = personid;
-					g_person["deptname"][0] = persondept;
-					g_person["deptname2"][0] = persondept2;
+					g_person["deptname"][0] = ConvMakeXMLString(persondept);
+					g_person["deptname2"][0] = ConvMakeXMLString(persondept2);
 					g_person["email"][0] = personemail;
 				}
 
@@ -645,6 +646,18 @@
 		        evt.stopPropagation();
 		        evt.preventDefault();
 		    }
+	        
+		    /* 2021-09-03 홍승비 - 부서명 특문처리 추가 */
+		    function ConvMakeXMLString(str) {
+		        str = ReplaceText(str, "&lt;", "<");
+		        str = ReplaceText(str, "&gt;", ">");
+		        str = ReplaceText(str, "&#039;", "'");
+		        str = ReplaceText(str, "&#034;", "\"");
+		  		str = ReplaceText(str, "&#92;", "\\");
+		  	    str = ReplaceText(str, "&amp;", "&");
+		        return str;
+		    }
+		    
 		</script>
 	</head>
 	<body class="popup" style="overflow: hidden;">
