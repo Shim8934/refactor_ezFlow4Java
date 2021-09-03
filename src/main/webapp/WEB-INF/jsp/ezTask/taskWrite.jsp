@@ -561,7 +561,36 @@
 				var nodes;
 				nodes = dadiframe.filelist.childNodes;
 				for (i = 1; i < nodes.length; i++) {
-					filehtml = filehtml + "<span><input type='checkbox'><img src='/images/email/mail_006.gif'> " + getNodeText(nodes[i].childNodes[1]) + "&nbsp;&nbsp;<br></span>";
+					var fileName = getNodeText(nodes[i].childNodes[1]);
+					var strFileExt = fileName.substr(fileName.lastIndexOf('.')).toLowerCase();
+			        if (strFileExt == ".xls" || strFileExt == ".doc" || strFileExt == ".ppt" ||
+			            strFileExt == ".eml" || strFileExt == ".pdf" || strFileExt == ".hwp" ||
+			            strFileExt == ".ppt" || strFileExt == ".docx" || strFileExt == ".pptx" ||
+			            strFileExt == ".xlsx" || strFileExt == ".rtf") {
+			        }
+					
+			        var fileImage = "";
+		            if (strFileExt.indexOf(".jpg") != -1 || strFileExt.indexOf(".jpeg") != -1 || strFileExt.indexOf(".bmp") != -1 || strFileExt.indexOf(".gif") != -1 || strFileExt.indexOf(".png") != -1 || strFileExt.indexOf(".tif") != -1 || strFileExt.indexOf(".tiff") != -1) {
+		                fileImage = "/images/image.png";
+		            } else if (strFileExt.indexOf(".doc") != -1 || strFileExt.indexOf(".docx") != -1) {
+		                fileImage = "/images/doc.png";
+		            } else if (strFileExt.indexOf(".xls") != -1 || strFileExt.indexOf(".xlsx") != -1) {
+		                fileImage = "/images/xls.png";
+		            } else if (strFileExt.indexOf(".ppt") != -1 || strFileExt.indexOf(".pptx") != -1 || strFileExt.indexOf(".pps") != -1 || strFileExt.indexOf(".ppsx") != -1) {
+		                fileImage = "/images/ppt.png";
+		            } else if (strFileExt.indexOf(".txt") != -1) {
+		                fileImage = "/images/txt.png";
+		            } else if (strFileExt.indexOf(".zip") != -1) {
+		                fileImage = "/images/zip.png";
+		            } else if (strFileExt.indexOf(".pdf") != -1) {
+		                fileImage = "/images/pdf.png";
+		            } else if (strFileExt.indexOf(".ecm") != -1) {
+		                fileImage = "/images/ecm.png";
+		            } else {
+		                fileImage = "/images/email/mail_006.gif";
+		            }
+		            
+					filehtml = filehtml + "<span><img src='" + fileImage + "'> " + getNodeText(nodes[i].childNodes[1]) + "&nbsp;&nbsp;<br></span>";
 				}
 				
 				document.getElementById("printAttach").innerHTML = filehtml;
