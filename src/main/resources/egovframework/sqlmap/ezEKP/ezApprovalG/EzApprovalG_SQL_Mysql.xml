@@ -32488,6 +32488,7 @@
 			TBL_OPENGOVDOCINFO
 		SET
 			OPENFLAG = #openFlag#,
+			LISTOPENFLAG = #openGovListFlag#,
 			BASIS = #basis#,
 			REASON = #reason#,
 			OPENLIMITDATE = #limitDate#,
