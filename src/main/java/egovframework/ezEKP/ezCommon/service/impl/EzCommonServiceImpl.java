@@ -1188,7 +1188,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
 		map.put("tenantID", tenantID);
 		map.put("userID", userID);
-		map.put("isMobile", deviceType.isMobile() && !isMobileIntegratedMultiLogin(companyId, tenantID));
+		map.put("mobileFlag", deviceType.isMobile() && !isMobileIntegratedMultiLogin(companyId, tenantID));
 
 		return Optional.ofNullable(ezCommonDAO.selectMultiLoginUser(map)).orElse("");
 	}
