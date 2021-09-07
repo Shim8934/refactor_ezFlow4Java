@@ -252,13 +252,15 @@
 						<%-- <th style="width:10%;"><spring:message code='ezBoard.t289'/></th>
 						<td id="User_DeptNM" style="width:40%; white-space:nowrap">&nbsp;${boardItem.writerDeptName}</td> --%>
 		        	</tr>
-		        	<!-- 직위&사내전화 -->
-		        	<%-- <tr>
+		        	<!-- 직위&사내전화 (익명게시판이 아닌 경우에만 표출) -->
+		        	<c:if test="${boardInfo.guBun != '2'}">
+		        	<tr>
 		        		<th><spring:message code='ezBoard.t290'/></th>
 						<td id="User_JobTitle" style="width:40%; white-space:nowrap;">&nbsp;${boardItem.extensionAttribute3}<div></div></td>
 						<th><spring:message code='ezPersonal.t177'/></th>
 						<td id="Telephone" style="width:40%; white-space:nowrap">&nbsp;${boardItem.extensionAttribute4}</td>
-		        	</tr> --%>
+		        	</tr>
+		        	</c:if>
 		        	<!-- 게시일&게시종료일 -->
 		        	<tr>
 						<th><spring:message code='ezBoard.t224'/></th>
