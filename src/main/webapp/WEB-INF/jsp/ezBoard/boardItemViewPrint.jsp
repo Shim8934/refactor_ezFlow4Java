@@ -245,12 +245,20 @@
 		  <tr>
 		    <td>
 		        <table class="content" style="width:100%;">
-		        	<!-- 게시자&부서 -->
+		        	<!-- 게시자&부서 (부서의 경우 익명게시판이 아닐때만 표출) -->
 		        	<tr>
-		        		<th style="width:10%;"><spring:message code='ezBoard.t223'/></th>
-						<td id="WriteUserNM" style="width:40%; white-space:nowrap" colspan=4></td>
-						<%-- <th style="width:10%;"><spring:message code='ezBoard.t289'/></th>
-						<td id="User_DeptNM" style="width:40%; white-space:nowrap">&nbsp;${boardItem.writerDeptName}</td> --%>
+		        	<c:choose>
+		        		<c:when test="${boardInfo.guBun != '2'}">
+			        		<th style="width:10%;"><spring:message code='ezBoard.t223'/></th>
+							<td id="WriteUserNM" style="width:40%; white-space:nowrap"></td>
+							<th style="width:10%;"><spring:message code='ezBoard.t289'/></th>
+							<td id="User_DeptNM" style="width:40%; white-space:nowrap">&nbsp;${boardItem.writerDeptName}</td>
+						</c:when>
+						<c:otherwise>
+							<th style="width:10%;"><spring:message code='ezBoard.t223'/></th>
+							<td id="WriteUserNM" style="width:40%; white-space:nowrap" colspan=4></td>
+						</c:otherwise>
+					</c:choose>
 		        	</tr>
 		        	<!-- 직위&사내전화 (익명게시판이 아닌 경우에만 표출) -->
 		        	<c:if test="${boardInfo.guBun != '2'}">
