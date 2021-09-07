@@ -63,8 +63,6 @@ public class EzApprovalGOpenGovScheduler {
             dirFile.mkdirs();
         }
 
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(csvFilePath.toFile()), "euc-kr"));
-
         List<String> csvList = ezApprovalGOpenGovService.getOpenGovCsv();
         List<String> resendCSVList = ezApprovalGOpenGovService.getOpenGovResendCsv();
 
@@ -72,9 +70,10 @@ public class EzApprovalGOpenGovScheduler {
             logger.debug("makeOpenGovCSV ended csv Size : 0");
             logger.debug("makeOpenGovCSV ended");
 
-            bw.close();
             return;
         }
+        
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(csvFilePath.toFile()), "euc-kr"));
 
         //발송
         for (String csv : Optional.ofNullable(csvList).orElse(Collections.emptyList())) {
