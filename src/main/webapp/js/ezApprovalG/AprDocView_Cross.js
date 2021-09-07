@@ -82,7 +82,11 @@ function LoadpzFormDocInfo_Complete(Ans) {
     DivPopUpHidden();
     if (Ans) {
         //openOpinionViewUI();
-    	openOpinionUI_New("Show");
+    	if (ListTypeValue == "99") { // 회람수신함 및 공람할문서의 경우, 문서보기 페이지에서도 의견 작성 가능
+	        openOpinionUI_New("");
+        } else {
+        	openOpinionUI_New("Show");
+        }
     }
 }
 
