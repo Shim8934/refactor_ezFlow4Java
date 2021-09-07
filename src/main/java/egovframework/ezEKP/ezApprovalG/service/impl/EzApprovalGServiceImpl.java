@@ -8964,6 +8964,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultXML.append("<WIDTH>" + listXML.getElementsByTagName("WIDTH").item(k).getTextContent() + "</WIDTH>");
 			resultXML.append("<COLNAME>" + listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + "</COLNAME>");
 			
+			/* 2021-09-07 홍승비 - 전자결재 첨부파일 레이어 팝업 > 첨부파일명 표출 시 원본 파일명이 아닌 DISPLAYNAME을 표출하도록 수정 */
+			if (listXML.getElementsByTagName("COLNAME").item(k).getTextContent().equalsIgnoreCase("ATTACHFILENAME")) {
+				listXML.getElementsByTagName("COLNAME").item(k).setTextContent("DISPLAYNAME");
+			}
+			
 			if (!sortHeader.equals("") && sortHeader.equals(listXML.getElementsByTagName("NAME").item(k).getTextContent())) {
 				if (sortOption.equals("")) {
 					orderOption1 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " ";
