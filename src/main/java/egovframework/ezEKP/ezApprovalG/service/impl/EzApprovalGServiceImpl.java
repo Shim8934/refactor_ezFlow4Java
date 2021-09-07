@@ -21368,9 +21368,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		map.put("v_TENANTID", tenantID);
 		map.put("companyID", companyID);
+		
 		// 해당 문서에 저장된 의견 정보 리스트 추출
 		List<ApprGOpinionVO> apprGAprLineVOList = ezApprovalGDAO.getOpinionInfo(map);
-		logger.debug("apprGAprLineVOList param : v_DOCID =" + docID + "v_MODE =" + mode + "v_ORDEROPTION =" + orderOption1 + "v_TENANTID=" + tenantID);
+		logger.debug("apprGAprLineVOList param : v_DOCID =" + docID + ", v_MODE =" + mode + ", v_ORDEROPTION =" + orderOption1 + ", v_TENANTID=" + tenantID);
 		
 		StringBuffer sb = new StringBuffer();
 		sb.append("<DATA>");
