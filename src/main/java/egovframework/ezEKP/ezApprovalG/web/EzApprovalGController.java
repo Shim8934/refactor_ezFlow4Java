@@ -1448,7 +1448,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		Path reformHtmlRelativePath = realPath.resolve("." + reformHtmlRelativePathStr);
 				
 		if (Files.exists(reformHtmlRelativePath)) {
-			reformBody = new String(Files.readAllBytes(reformHtmlRelativePath));
+			reformBody = new String(commonUtil.readBytesFromFile(reformHtmlRelativePath));
 		}
 		
 		if (Files.exists(realPath.resolve("." + reformFunctionRelativePathStr))) {
@@ -3420,7 +3420,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					
 					try {
 						File sourceFile = new File(commonUtil.detectPathTraversal(realPath + filePathsArr[i])); // 다운받기 위한 원본 파일의 경로
-						byte[] fileBytes = Files.readAllBytes(sourceFile.toPath());
+						byte[] fileBytes = commonUtil.readBytesFromFile(sourceFile.toPath());
 						
 						// fileNamesArr는 확장자를 포함함
 						if (fileNamesArr[i].endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
@@ -5658,7 +5658,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					fileExt = filePaths[k].substring(0, filePaths[k].lastIndexOf("."));
 					fileExt = fileExt.substring(fileExt.lastIndexOf(".") + 1);
 					// 암호화된 파일의 바이트를 읽어온 후 복호화
-					byte[] encryptedFileBytes = Files.readAllBytes(new File(commonUtil.detectPathTraversal(realPath + filePaths[k])).toPath());
+					byte[] encryptedFileBytes = commonUtil.readBytesFromFile(new File(commonUtil.detectPathTraversal(realPath + filePaths[k])).toPath());
 					// 인풋스트림에서 복호화한 바이트 배열을 쓰도록 한다.
 					inpStream = new ByteArrayInputStream(klibUtil.decrypt(encryptedFileBytes));
 				} else {
@@ -5932,7 +5932,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				
 				// KLIB 복호화
 				if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
-					byte[] orgBytes = Files.readAllBytes(orgFile.toPath());
+					byte[] orgBytes = commonUtil.readBytesFromFile(orgFile.toPath());
 					FileUtils.writeByteArrayToFile(newFile, klibUtil.decrypt(orgBytes));
 				} else {
 					FileUtils.copyFile(orgFile, newFile);
@@ -6505,7 +6505,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				
 				// KLIB 복호화
 				if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
-					byte[] orgBytes = Files.readAllBytes(orgFile.toPath());
+					byte[] orgBytes = commonUtil.readBytesFromFile(orgFile.toPath());
 					FileUtils.writeByteArrayToFile(newFile, klibUtil.decrypt(orgBytes));
 				} else {
 					FileUtils.copyFile(orgFile, newFile);
@@ -9791,7 +9791,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				if (useKlibBackup) {
 					Path backupDir = Paths.get(realPath, uploadApprovalRoot, companyId, EzApprovalGKlibService.BACKUP_DIR_NAME, "doc", oldYear, docDirName, "history");
 					Files.createDirectories(backupDir);
-					Files.write(backupDir.resolve(fileName), fileBytes, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+					commonUtil.writeBytesToFile(backupDir.resolve(fileName), fileBytes);
 				}
 				
 				fileBytes = klibUtil.encrypt(fileBytes);
@@ -9799,7 +9799,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 			
 			Path outputFile = Paths.get(commonUtil.detectPathTraversal(realPath + dirPath + commonUtil.separator + fileName));
-			Files.write(outputFile, fileBytes, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+			commonUtil.writeBytesToFile(outputFile, fileBytes);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

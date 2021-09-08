@@ -60,13 +60,32 @@
 			 $(function () {
 		        	if (document.getElementById("resendChk").checked){
 		        		$("#idDatepicker").attr('disabled',false);
+		        		$("#idDatepicker2").attr('disabled',false);
 		        	} else {
 		        		$("#idDatepicker").attr('disabled',true);
+		        		$("#idDatepicker2").attr('disabled',true);
 		        	}
 		        	
 		        	
-	        		var date = new Date(startDateTime);
+	        		//var date = new Date(startDateTime);
+	        		var date = new Date();
+	        		date.setDate(date.getDate() - 1);
 		        	$("#idDatepicker").datepicker({
+		        		maxDate : date,
+			            changeMonth: true,
+			            changeYear: true,
+			            autoSize: true,
+			            showOn: "both",
+			            buttonImage: "/images/ImgIcon/calendar-month.png",
+			            buttonImageOnly: true,
+			            onSelect : function(dateText, inst) {
+			            	var nowSDate = dateText.split('-');
+			            	var nowSDate2 = new Date(nowSDate[0], nowSDate[1]-1, nowSDate[2]);
+
+			            	$("#idDatepicker2").datepicker('option', 'minDate', nowSDate2);
+			            }
+			        });
+		        	$("#idDatepicker2").datepicker({
 		        		maxDate : date,
 			            changeMonth: true,
 			            changeYear: true,
@@ -174,6 +193,7 @@
 	            		apprToMonth : SearchCond[13],
 	            		apprToDay : SearchCond[14],
 	            		formID : SearchCond[15],
+	            		formName : SearchCond[16],
 	            		deptName1 : SearchCond[17],
 	            		deptName2 : SearchCond[17],
 	            		pageNum : pageNum,
@@ -892,10 +912,10 @@
 		            var DocList = new ListView();
 		            DocList.LoadFromID("DocList");
 		            var oArrRows = DocList.GetSelectedRows();
-		            var pCurSelRow = oArrRows[0];
-			        var viewDocID = pCurSelRow.getAttribute("DATA1");
-			        var viewURL = pCurSelRow.getAttribute("DATA2");
 		            if (oArrRows.length > 0) {
+		            	var pCurSelRow = oArrRows[0];
+			        	var viewDocID = pCurSelRow.getAttribute("DATA1");
+			       	 	var viewURL = pCurSelRow.getAttribute("DATA2");
 		            	OrgDocid = pCurSelRow.getAttribute("DATA5");
 		            	ViewDoc_onclick(viewDocID, viewURL);
 		            } else {
@@ -908,7 +928,9 @@
 		    function initdatepicker() {
 	    	$("#idDatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 	        $("#idDatepicker").datepicker('setDate', new Date(startDateTime.substring(0, 10)));
-
+	        $("#idDatepicker2").datepicker("option", "dateFormat", "yy-mm-dd");
+	        $("#idDatepicker2").datepicker('setDate', new Date(startDateTime.substring(0, 10)));
+	        
 			$.datepicker.regional["<spring:message code='main.t0619' />"] = {
 				closeText: "<spring:message code='main.t3' />",
 				prevText: "<spring:message code='main.t0604' />",
@@ -946,37 +968,55 @@
 		function resendChk_onClick() {
 			if (document.getElementById("resendChk").checked) {
 				document.getElementById("idDatepicker").disabled = "";
+				document.getElementById("idDatepicker2").disabled = ""
 				document.getElementById("tbresend").style.display = "";
 			} else {
 				document.getElementById("idDatepicker").disabled = "disabled";
+				document.getElementById("idDatepicker2").disabled = "disabled";
 				document.getElementById("tbresend").style.display = "none";
 			}
 		}
 		
 		function resend_onclick() {
 			var resendDate = document.getElementById("idDatepicker").value.substring(0, 10);
+			var resendDate2 = document.getElementById("idDatepicker2").value.substring(0, 10);
 			var checkDate = new Date(resendDate);
+			var checkDate2 = new Date(resendDate2);
 			var today = new Date();
-			var todayCheck = today.getYear() + "-" + today.getMonth() + "-" + today.getDate();
-			var resendCheck = checkDate.getYear() + "-" + checkDate.getMonth() + "-" + checkDate.getDate();
+			var todayCheck = today.getFullYear() + "-" + today.getMonth() + "-" + today.getDate();
+			var resendCheck = checkDate.getFullYear() + "-" + checkDate.getMonth() + "-" + checkDate.getDate();
+			var resendCheck2 = checkDate2.getFullYear() + "-" + checkDate2.getMonth() + "-" + checkDate2.getDate();
+			
+			var diffDate = checkDate2 - checkDate;
+			diffDate = parseInt(diffDate / (24 * 60 * 60 * 1000))
 			
 			if (checkDate > new Date() || todayCheck == resendCheck) {
 				alert("오늘 이전의 날짜를 선택해주세요.");
 				return;
 			}
 			
-			$.ajax({
-				type : "POST",
-            	url : "/admin/ezApprovalG/resendOpenGov.do",
-            	async : true,
-            	dataType : "text",
-            	data : {
-            		resendDate : resendDate
-            	},
-            	success : function(result) {
-            		alert("재전송이 완료되었습니다.");
-            	}
-			})
+			if(diffDate > 31) {
+				alert('재전송 기간은 30일까지 가능합니다.');
+				return;
+			}
+			
+			if(confirm('해당 기간의 문서를 재전송 하시겠습니까?')) {
+				$.ajax({
+					type : "POST",
+	            	url : "/admin/ezApprovalG/resendOpenGov.do",
+	            	async : true,
+	            	dataType : "text",
+	            	data : {
+	            		resendStartDate : resendDate,
+	            		resendEndDate : resendDate2
+	            	},
+	            	success : function(result) {
+	            		alert("재전송이 완료되었습니다.\n전송 결과는 익일 확인 가능합니다.");
+	            	}
+				})
+			} else {
+				return;
+			}
 		}
 		
 	    var changeOpenGovInfo_cross_dialogArguments = new Array();
@@ -1003,7 +1043,7 @@
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 	        else {
-	            OpenAlertUI("<spring:message code='ezApprovalG.t632'/>");
+	        	alert("<spring:message code='ezApprovalG.t632'/>");
 	        }
 	    }
 	
@@ -1040,7 +1080,7 @@
 				}
 			}
 			else {
-				OpenAlertUI("<spring:message code='ezApprovalG.t632'/>");
+				alert("<spring:message code='ezApprovalG.t632'/>");
 			}
 		}
 		</script>
@@ -1084,6 +1124,7 @@
                  </li>
 	            <li style="border:0px;line-height:35px;margin-right:5px">
                  <input readonly="readonly" id='idDatepicker' style="PADDING-BOTTOM: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px; PADDING-TOP: 2px; WIDTH: 80px;height:27px">
+                  ~ <input readonly="readonly" id='idDatepicker2' style="PADDING-BOTTOM: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px; PADDING-TOP: 2px; WIDTH: 80px;height:27px">
                  </li>
 	            <li id="tbresend" style="display:none"><span id="resend" onclick="return resend_onclick()" >재전송</span></li>
 	        </ul>

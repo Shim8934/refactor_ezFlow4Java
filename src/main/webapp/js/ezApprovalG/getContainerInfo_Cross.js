@@ -228,6 +228,8 @@ function GetDocSearch() {
 	    }
 	    xmlhttp.onreadystatechange = getsearchDocListS_after;		
 	    xmlhttp.send(xmlpara);
+	    
+	    listLoading(false);
 	} else {
 	        for (i = 0; i < condition.length - 1 ; i++) {
 	        if (typeof(condition[i]) == "undefined")
@@ -265,7 +267,7 @@ function GetDocSearch() {
 	    xmlhttp.onreadystatechange = getsearchDocList_after;		
 	    xmlhttp.send(xmlpara);
 		
-			listLoading(false);
+		listLoading(false);
 	}
 
     //ShowMailProgress();

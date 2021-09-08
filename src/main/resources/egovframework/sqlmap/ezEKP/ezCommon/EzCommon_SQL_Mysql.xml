@@ -3964,7 +3964,7 @@
 
 	<statement id="EzCommonDAO.addViewTaskOldFlags">
 		<![CDATA[
-	       CREATE OR REPLACE VIEW
+	       ALTER VIEW
 				`vtaskclass` AS
 		    SELECT 
 		        `tbl_taskcategory`.`CATEGORYCODE` AS `CATEGORYCODE`,
@@ -4021,7 +4021,7 @@
     </statement>
     <statement id="EzCommonDAO.addSViewTaskOldFlags">
 	    <![CDATA[
-	        CREATE OR REPLACE VIEW
+	        ALTER VIEW
 				`svtaskclass` AS
 		    SELECT 
 		        `tbl_taskcategory`.`CATEGORYCODE` AS `CATEGORYCODE`,

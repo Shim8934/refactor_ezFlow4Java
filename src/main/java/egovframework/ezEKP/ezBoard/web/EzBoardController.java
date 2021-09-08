@@ -8816,7 +8816,7 @@ public class EzBoardController extends EgovFileMngUtil{
 					
 					try {
 						File sourceFile = new File(commonUtil.detectPathTraversal(fullFilePath + fileNamesUIDArr[i]));
-						byte[] fileBytes = Files.readAllBytes(sourceFile.toPath());
+						byte[] fileBytes = commonUtil.readBytesFromFile(sourceFile.toPath());
 						
 						if (fileNamesUIDArr[i].endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
 							fileBytes = klibUtil.decrypt(fileBytes);

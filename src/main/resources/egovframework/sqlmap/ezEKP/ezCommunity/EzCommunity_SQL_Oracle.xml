@@ -161,7 +161,7 @@
  					AND
  						A.tenant_id = #tenantID#
  					ORDER BY
- 						A.treevieworder ASC
+ 						A.treevieworder*1 ASC
  				]]>
             </isEqual>
             
@@ -209,7 +209,7 @@
 					AND
  						A.tenant_id = #tenantID#
  					ORDER BY
- 						A.treevieworder ASC
+ 						A.treevieworder*1 ASC
  				]]>
             </isNotEqual>
 		</isEqual>
@@ -236,7 +236,7 @@
  	            AND
  	            	A.tenant_id = #tenantID#
  	            ORDER BY
- 	            	A.treevieworder ASC
+ 	            	A.treevieworder*1 ASC
  	        ]]>
    		</isNotEqual>
 	</select>
@@ -6552,7 +6552,7 @@
 				#v_BOARDNAME#,
 				#v_BOARDNAME2#,
 				(SELECT
-					CASE WHEN MAX(TCB.TREEVIEWORDER) IS NULL THEN 1 ELSE MAX(TCB.TREEVIEWORDER) + 1 END
+					CASE WHEN MAX(TCB.TREEVIEWORDER*1) IS NULL THEN 1 ELSE MAX(TCB.TREEVIEWORDER*1) + 1 END
 				FROM
 					TBL_COMM_BOARDINFO TCB
 				WHERE

@@ -1232,11 +1232,11 @@ function getDocInfo() {
             */
 
             if (useOpenGov == "YES") {
-                basis = SelectSingleNodeValueNew(result, "DATA/BASIS");
-                reason = SelectSingleNodeValueNew(result, "DATA/REASON");
-                listOpenFlag = SelectSingleNodeValueNew(result, "DATA/LISTOPENFLAG");
-                fileOpenFlagList = SelectSingleNodeValueNew(result, "DATA/FILEOPENFLAGLIST");
-                limitDate = SelectSingleNodeValueNew(result, "DATA/LIMITDATE");
+                basis = SelectSingleNodeValueNew(xmldoc, "DATA/BASIS");
+                reason = SelectSingleNodeValueNew(xmldoc, "DATA/REASON");
+                listOpenFlag = SelectSingleNodeValueNew(xmldoc, "DATA/LISTOPENFLAG");
+                fileOpenFlagList = SelectSingleNodeValueNew(xmldoc, "DATA/FILEOPENFLAGLIST");
+                limitDate = SelectSingleNodeValueNew(xmldoc, "DATA/LIMITDATE");
             }
         }
     } catch (e) {

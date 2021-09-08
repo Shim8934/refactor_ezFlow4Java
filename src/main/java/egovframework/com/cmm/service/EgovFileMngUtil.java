@@ -267,7 +267,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 			File file = new File(filePath);
 			file.getParentFile().mkdirs();
 			byte[] encryptedBytes = klibUtil.encrypt(multipartFile.getBytes());
-			Files.write(file.toPath(), encryptedBytes);
+			commonUtil.writeBytesToFile(file.toPath(), encryptedBytes);
 		} catch (Exception ex) {
 			LOGGER.debug("ex: ", ex);
 		}
@@ -586,7 +586,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 		long fSize = file.length();
 		
 		if (fSize > 0) {
-		    byte[] encryptedBytes = Files.readAllBytes(file.toPath());
+		    byte[] encryptedBytes = commonUtil.readBytesFromFile(file.toPath());
 		    byte[] decryptedBytes = klibUtil.decrypt(encryptedBytes);
 		    
 		    try (ByteArrayInputStream in = new ByteArrayInputStream(decryptedBytes)) {
