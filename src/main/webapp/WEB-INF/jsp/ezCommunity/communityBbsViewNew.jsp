@@ -237,7 +237,6 @@
 		          			</c:if>
 						</ul>
 					</div>
-					
 					<div id="close">
 						<ul>
 					    	<li><span onclick="btnClose_onclick()" ></span></li>
