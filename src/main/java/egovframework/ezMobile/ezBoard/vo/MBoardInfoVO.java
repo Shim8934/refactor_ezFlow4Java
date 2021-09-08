@@ -125,6 +125,11 @@ public class MBoardInfoVO {
 	private String type;
 	/** 2018-10-25 홍승비 - 그룹사게시판 체크용 isAllGroupBoard 추가*/
 	private String isAllGroupBoard;
+	/** 2021-09-08 홍승비 - 회사ID 추가*/
+	private String companyID;
+	/** 2021-09-08 홍승비 - 메일알림 관련 플래그 추가 */
+	private String mailFG_Post; // 게시알림
+	private String mailFG_Mod; // 수정알림
 	
 	@Override
 	public String toString() {
@@ -530,6 +535,24 @@ public class MBoardInfoVO {
 	}
 	public void setIsAllGroupBoard(String isAllGroupBoard) {
 		this.isAllGroupBoard = isAllGroupBoard;
+	}
+	public String getCompanyID() {
+		return companyID;
+	}
+	public void setCompanyID(String companyID) {
+		this.companyID = companyID;
+	}
+	public String getMailFG_Post() {
+		return mailFG_Post;
+	}
+	public void setMailFG_Post(String mailFG_Post) {
+		this.mailFG_Post = mailFG_Post;
+	}
+	public String getMailFG_Mod() {
+		return mailFG_Mod;
+	}
+	public void setMailFG_Mod(String mailFG_Mod) {
+		this.mailFG_Mod = mailFG_Mod;
 	}
 	
 }
