@@ -880,7 +880,9 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			vo = ezPersonalAdminService.getPopupInfo(itemSeq, userInfo.getTenantId());
 			vo.setItemSeq(Integer.parseInt(itemSeq));
 			// &quot의 경우 FE에서 string을 감쌀 때 쌍따옴표를 사용하고 있기 때문에 따옴표로 변경
-			vo.setContent(vo.getContent().replace("\r\n", "").replace("\n", "").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\'").replace("&apos;", "\'"));
+			vo.setContent(vo.getContent().replace("\r\n", "").replace("\n", "")
+//					.replace("&lt;", "<").replace("&gt;", ">")
+					.replace("&quot;", "\'").replace("&apos;", "\'"));
 			
 			//
 			String startDate = vo.getStartDate();
@@ -942,7 +944,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		vo.setWidth(Integer.parseInt(jObj.get("width").toString()));
 		vo.setHeight(Integer.parseInt(jObj.get("height").toString()));
 		vo.setPosition(jObj.get("position").toString());
-		vo.setContent(jObj.get("content").toString().replaceAll("\"", "&#034;"));
+		vo.setContent(jObj.get("content").toString());
 		vo.setSkinValue(Integer.parseInt(jObj.get("skinValue").toString()));
 		 ObjectMapper mapper = new ObjectMapper();
 		List<PersonalPopupUserVO> authList = mapper.convertValue(jObj.get("authList"), new TypeReference<List<PersonalPopupUserVO>>() {});
@@ -1002,8 +1004,10 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		vo = ezPersonalAdminService.getPopupInfo(itemSeq, userInfo.getTenantId());
 		vo.setStartDate(commonUtil.getDateStringInUTC(vo.getStartDate(), userInfo.getOffset(), false));
 		vo.setEndDate(commonUtil.getDateStringInUTC(vo.getEndDate(), userInfo.getOffset(), false));
-		String content = vo.getContent().replace("\r\n", "").replace("\n", "").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("&apos;", "\'");
-		
+		String content = vo.getContent().replace("\r\n", "").replace("\n", "")
+				//2021-09-09 김성준 <test>같은 문자를 태그로 인식해서, 표출되지 않아 주석처리함
+				//.replace("&lt;", "<").replace("&gt;", ">")
+				.replace("&quot;", "\"").replace("&apos;", "\'");
 		
 		if (userInfo.getPrimary().equals("2") && !vo.getTitle2().equals("")) {
 			title = vo.getTitle2();
@@ -1676,8 +1680,10 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		vo = ezPersonalAdminService.getPopupInfo(itemSeq, userInfo.getTenantId());
 		vo.setStartDate(commonUtil.getDateStringInUTC(vo.getStartDate(), userInfo.getOffset(), false));
 		vo.setEndDate(commonUtil.getDateStringInUTC(vo.getEndDate(), userInfo.getOffset(), false));
-		String content = vo.getContent().replace("\r\n", "").replace("\n", "").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("&apos;", "\'");
-		
+		String content = vo.getContent().replace("\r\n", "").replace("\n", "")
+				//2021-09-09 김성준 <test>같은 문자를 태그로 인식해서, 표출되지 않아 주석처리함
+				//.replace("&lt;", "<").replace("&gt;", ">")
+				.replace("&quot;", "\"").replace("&apos;", "\'");
 		
 		if (userInfo.getPrimary().equals("2") && !vo.getTitle2().equals("")) {
 			title = vo.getTitle2();

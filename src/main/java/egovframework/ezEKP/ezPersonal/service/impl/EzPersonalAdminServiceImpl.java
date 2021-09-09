@@ -491,7 +491,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		map.put("v_pPosition", vo.getPosition());
 		map.put("v_pTitle", vo.getTitle());
 		map.put("v_pTitle2", vo.getTitle2());
-		map.put("v_pContent", vo.getContent().replace("\"", "\'"));
+		map.put("v_pContent", vo.getContent());
 		map.put("tenantID", tenantID);
 		map.put("skinValue", vo.getSkinValue());
 		int itemSeq = ezPersonalAdminDAO.insertPopup(map);
@@ -515,7 +515,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		map.put("v_pPosition", vo.getPosition());
 		map.put("v_pTitle", vo.getTitle());
 		map.put("v_pTitle2", vo.getTitle2());
-		map.put("v_pContent", vo.getContent().replace("\"", "\'"));
+		map.put("v_pContent", vo.getContent());
 		map.put("tenantID", tenantID);
 		map.put("skinValue", vo.getSkinValue());
 
