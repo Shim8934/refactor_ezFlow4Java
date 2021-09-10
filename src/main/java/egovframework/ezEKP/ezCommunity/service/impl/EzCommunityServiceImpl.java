@@ -904,19 +904,48 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 						File thumbnailFile = new File(pAttachPath);
 						file.transferTo(thumbnailFile);
 						
+						String extension = pFileName.substring(pFileName.lastIndexOf(".") + 1, pFileName.length());
 						BufferedImage inputImage = ImageIO.read(thumbnailFile);
 						BufferedImage outputImage = null;
+						BufferedImage outputImageS = null;
 						Graphics2D saveImage = null;
-						//썸네일 생성		
-						outputImage= new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
+						
+						// 기존 이미지가 파일 형태로 업로드되었으므로, 다시 이미지 형태로 저장
+						if (inputImage.getType() == 0 || extension.equals("png")) { // 일부 png 파일의 경우, type값이 0으로 넘어오거나 검은색으로 저장된다.
+							outputImage = new BufferedImage(inputImage.getWidth(), inputImage.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
+						} else {
+							outputImage = new BufferedImage(inputImage.getWidth(), inputImage.getHeight(), inputImage.getType());
+						}
 						saveImage = outputImage.createGraphics();
+						saveImage.drawImage(inputImage, 0, 0, inputImage.getWidth(), inputImage.getHeight(), null);
+						
+						String tempFilaPath = pDirPath + "tempUploadFile" + commonUtil.separator + pUploadSN + pFileName.substring(pFileName.lastIndexOf("."));
+						tempFilaPath = commonUtil.detectPathTraversal(tempFilaPath);
+						
+						File tempFile = new File(tempFilaPath);
+						ImageIO.write(outputImage, "png", tempFile);
+						
+						// 썸네일 생성
+						if (inputImage.getType() == 0 || extension.equals("png")) {
+							outputImageS = new BufferedImage(100, 100, BufferedImage.TYPE_4BYTE_ABGR);
+						} else {
+							outputImageS = new BufferedImage(100, 100, inputImage.getType());
+						}
+						saveImage = outputImageS.createGraphics();
 						saveImage.drawImage(inputImage, 0, 0, 100, 100, null);
 						
 						String tempThumbFilaPath = pDirPath + "tempUploadFile" + commonUtil.separator + "s_" + pUploadSN + pFileName.substring(pFileName.lastIndexOf("."));
 						tempThumbFilaPath = commonUtil.detectPathTraversal(tempThumbFilaPath);
 						
 						File tempTumbbail = new File(tempThumbFilaPath);
-						ImageIO.write(outputImage, "png", tempTumbbail);
+						ImageIO.write(outputImageS, "png", tempTumbbail);
+						
+						inputImage.flush();
+						inputImage = null;
+						outputImage.flush();
+						outputImage = null;
+						outputImageS.flush();
+						outputImageS = null;
 						
 						resultUpload = "true";
 					}
