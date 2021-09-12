@@ -101,17 +101,20 @@
 	            }
 	        }
 	
+	        /* 2021-09-12 홍승비 - 일정관리 보기창 본문 리사이즈 조정 */
 	        window.onresize = function () {
-	            if (document.all.message.style.width != document.body.clientWidth - 25)
-	                document.all.message.style.width = document.body.clientWidth - 25;
-	
-	            if ((scheduletype != "1" && scheduletype != "6" && scheduletype != "7") || (scheduletype != "7" && scheduletype != "1")) {
-	                if (document.getElementById('managespan') && (scheduletype != "1" && scheduletype != "6" && scheduletype != "9")) {
-	                    document.getElementById("messagetd").style.height = document.body.clientHeight - 250 + "PX";
-	                }
-	            } else {
-	                document.getElementById("messagetd").style.height = document.body.clientHeight - 298 + "PX";
-	            }
+	            // width 속성은 css의 calc로 처리함
+				var addHeight = 0;
+	        	var contentHeight = document.documentElement.clientHeight - 269; // 일정그룹명, 참석자 tr이 없는 기본 본문 높이
+	        	if (document.getElementById("scheduleGroupInfoTR") != null) { // 일정그룹명 tr
+	        		addHeight += 30
+	        	}
+	        	if (document.getElementById("LabelAttendant") != null) { // 참석자 tr
+	        		addHeight += 30;
+	        	}
+	            
+            	document.getElementById("message").style.height = (contentHeight - addHeight) + "PX";
+                document.getElementById("messagetd").style.height = (contentHeight - addHeight) + "PX";
 	        }
 	        
 		    window.onbeforeunload = function () {
@@ -693,7 +696,7 @@
 	                <td style="height:20px">
 	                    <table style="width:100%" class="popuplist">	                         
 	                        <c:if test="${scheduleInfo.scheduleType == '7'}">
-	                        	<tr>
+	                        	<tr id ="scheduleGroupInfoTR">
 		                            <th style="white-space:nowrap">
 		                                <spring:message code='ezSchedule.jjh04' />
 		                            </th>
@@ -813,7 +816,7 @@
 	            </tr>
 	            <tr>
 	                <td class="pad1" style="vertical-align: top; height: 100%" id="messagetd">
-	                    <iframe id="message" style="border: #ddd 1px solid; padding-left: 5px; overflow: auto;width: 99.1%; padding-top: 6px; height: 370px; background-color: white"></iframe>	                    
+	                    <iframe id="message" style="border: #ddd 1px solid; padding-left: 5px; overflow: auto;width: calc(100% - 7px); padding-top: 6px; height: 370px; background-color: white"></iframe>	                    
 	                </td>
 	            </tr>
 	            <tr>
