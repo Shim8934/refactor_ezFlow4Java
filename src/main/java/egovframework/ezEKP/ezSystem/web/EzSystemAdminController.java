@@ -133,8 +133,11 @@ public class EzSystemAdminController {
 			useModuleUsage = "NO";
 		}
 		
+		String useSystemMonitor = ezCommonService.getTenantConfig("useSystemMonitor", userInfo.getTenantId());
+		
 		model.addAttribute("useIPAccessMenu", useIPAccessMenu);
 		model.addAttribute("useModuleUsage", useModuleUsage);
+		model.addAttribute("useSystemMonitor", useSystemMonitor);		
 		
 		logger.debug("useIPAccessMenu=" + useIPAccessMenu);
 		
