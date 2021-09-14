@@ -667,7 +667,9 @@
 		    function cmdOK_onclick(ContainerID, ContName, SubQuery, shareUserId) {
 		    	if(!shareUserId){
 		    		shareUserId = "";
-		    	}
+		    	}else{
+		    	    PresentOpen = "APPROVAL";
+		        }
 		        if (PresentOpen != "CONTAINER") {
 		            PresentOpen = "CONTAINER";
 	                window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURI(ContainerID) + "&sQuery="+ escape(SubQuery) + "&tmpValue=" + encodeURI(ContName) + "&ENDAPRTYPE=" + strAprType40 + "&ENDAPRSTATE=" + strAprState2 + "&shareUserId=" + shareUserId;

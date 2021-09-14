@@ -7372,7 +7372,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					containers.append(", '" + apprGLeftVOList.get(k).getContainerID() + "'");
 				}
 			}
-			contID = containers.toString();
+			//contID = containers.toString();
 			model.addAttribute("share", "share");
 		}
 		
