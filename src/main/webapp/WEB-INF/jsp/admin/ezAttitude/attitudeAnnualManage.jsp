@@ -268,6 +268,11 @@
 	    	function getAnnualList() {
 		    	var startDate = $("#Sdatepicker").val();
 		    	var endDate = $("#Edatepicker").val();
+	    		
+	    		if (startDate > endDate) {
+					alert("<spring:message code='ezAttitude.t131' />");
+		            return;
+				}
 		    	
 	    		$.ajax({
 	    			data : "GET",
