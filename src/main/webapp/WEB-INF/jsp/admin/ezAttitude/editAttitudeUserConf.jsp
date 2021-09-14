@@ -83,6 +83,11 @@
 				gubun = "1";
 			}
 			
+			if (workStartTime > workEndTime) {
+				alert("<spring:message code='ezAttitude.t131' />");
+	            return;
+			}
+			
 			$.ajax({
    				type:"post",
    				dataType:"text",
