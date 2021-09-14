@@ -2140,5 +2140,9 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addSViewTaskOldFlags");
 		}
 	}
-    
+
+	@SuppressWarnings("unchecked")
+	public List<Map<String, Object>> getTenantConfigList(Map<String, Object> map) throws Exception{
+		return (List<Map<String, Object>>) list("EzCommonDAO.getTenantConfigList", map);
+	}
 }

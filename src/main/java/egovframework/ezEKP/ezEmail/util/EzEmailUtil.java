@@ -469,7 +469,7 @@ public class EzEmailUtil {
 					name = ia.getAddress();
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+//				e.printStackTrace();
 				
 				// 현대오일뱅크" <HyundaiOilbank@oilbankcard.com> 와 같이 "가 하나만 있는 경우
 				// 예외가 발생하는데 이와 같은 경우에 대한 부가적인 처리를 수행한다.
@@ -495,7 +495,7 @@ public class EzEmailUtil {
 				InternetAddress ia = new InternetAddress(internetAddressStr);
 				address = ia.getAddress();
 			} catch (Exception e) {
-				e.printStackTrace();
+//				e.printStackTrace();
 				
 				// 현대오일뱅크" <HyundaiOilbank@oilbankcard.com> 와 같이 "가 하나만 있는 경우
 				// 예외가 발생하는데 이와 같은 경우에 대한 부가적인 처리를 수행한다.
