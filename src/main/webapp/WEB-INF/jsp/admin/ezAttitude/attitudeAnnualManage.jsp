@@ -396,7 +396,7 @@
 	    		});
 	    		
 	    		if (resultHtml == "") {
-	    			resultHtml = "<tr id='List_TR_noItems' class='tr_noItems'><td colspan='7' style='text-align:center'><spring:message code='ezAttitude.t130' /></td></tr>";	
+	    			resultHtml = "<tr id='List_TR_noItems' class='tr_noItems'><td colspan='10' style='text-align:center'><spring:message code='ezAttitude.t130' /></td></tr>";	
 	    		}
 	    		
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
