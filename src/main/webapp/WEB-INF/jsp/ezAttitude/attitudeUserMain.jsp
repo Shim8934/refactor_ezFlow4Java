@@ -346,7 +346,7 @@
 				if (deptFlag != "true") {
 					if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
 						$("#attiTableListTB th:eq(5)").css("border-right-color","#e4e8ec");
-						$("#attiTableListTB th:eq(6)").css("width","12px");
+						//$("#attiTableListTB th:eq(6)").css("width","12px");
 					}
 				}
 			});
@@ -1867,8 +1867,8 @@
 	    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%'></td>";
 	    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%'></td>";
 	    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%'></td>";
-	    			tbodyHtml += "<td class='borderLeft textLeft td_day3' style='width:20%'></td>";
-	    			tbodyHtml += "<td class='borderLeft textLeft'></td>";
+	    			tbodyHtml += "<td class='borderLeft textCenter td_day3' style='width:20%'></td>";
+	    			tbodyHtml += "<td class='borderLeft textCenter' style='width:32%'></td>";
 	    			tbodyHtml += "</tr>";
 	    		}
 
@@ -2443,7 +2443,7 @@
 					<th style='width:12%'><spring:message code='ezAttitude.t134'/></th>
 					<th style='width:20%'><spring:message code='ezAttitude.t149'/></th>
 					<th style="width:32%; border-right-color:transparent"><spring:message code='ezAttitude.t46'/></th>
-					<th style='width:8px;border-left:0px;'>&nbsp;</th>
+					<th style='border-left:0px;width: 7px;'>&nbsp;</th>
 				</tr> 
 			</table>
 			
