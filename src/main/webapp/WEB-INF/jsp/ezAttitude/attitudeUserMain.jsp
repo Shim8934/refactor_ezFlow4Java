@@ -1867,8 +1867,8 @@
 	    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%'></td>";
 	    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%'></td>";
 	    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%'></td>";
-	    			tbodyHtml += "<td class='borderLeft textCenter td_day3' style='width:20%'></td>";
-	    			tbodyHtml += "<td class='borderLeft textCenter' style='width:32%'></td>";
+	    			tbodyHtml += "<td class='borderLeft textLeft td_day3' style='width:20%'></td>";
+	    			tbodyHtml += "<td class='borderLeft textLeft' style='width:32%'></td>";
 	    			tbodyHtml += "</tr>";
 	    		}
 
@@ -2441,8 +2441,8 @@
 					<th style='width:12%'><spring:message code='ezAttitude.t232'/></th>
 					<th style='width:12%'><spring:message code='ezAttitude.t233'/></th> 
 					<th style='width:12%'><spring:message code='ezAttitude.t134'/></th>
-					<th style='width:20%'><spring:message code='ezAttitude.t149'/></th>
-					<th style="width:32%; border-right-color:transparent"><spring:message code='ezAttitude.t46'/></th>
+					<th style='width:20%;padding-left: 20px;'><spring:message code='ezAttitude.t149'/></th>
+					<th style="width:32%; border-right-color:transparent;padding-left: 20px;"><spring:message code='ezAttitude.t46'/></th>
 					<th style='border-left:0px;width: 7px;'>&nbsp;</th>
 				</tr> 
 			</table>
