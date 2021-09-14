@@ -1430,7 +1430,7 @@ function event_getDeptFullTree() {
             var treeView = new TreeView();
             treeView.SetID("tvTreeView2");
             treeView.SetUseAgency(true);
-            treeView.SetRequestData("RequestData");
+            treeView.SetRequestData("RequestData2");
             treeView.SetUseSusinColor4AprG(true);
             treeView.SetNodeClick("TreeViewNodeClick2");
             treeView.SetNodeDblClick("TreeViewNodeDbClick");
