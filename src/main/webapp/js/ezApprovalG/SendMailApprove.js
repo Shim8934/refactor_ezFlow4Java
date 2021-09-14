@@ -674,7 +674,7 @@ function SendMailToDrafter() {
     var Drafter     = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[14]));
     var pDocTitle   = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[7]));    
     var NextUser = pwriterID;
-    var startDate = GetDocInfoData("END", "ENDDATE");
+    var startDate = GetDocInfoData("END", "STARTDATE");
     getOpinionInfo(pDocID, "END");
     sendmail(NextUser, pDocTitle, Drafter, startDate, "approve_complete", "");
 }
