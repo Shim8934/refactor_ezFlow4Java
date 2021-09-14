@@ -137,6 +137,9 @@
 		        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#Edatepicker").datepicker('setDate', EDate);
 		        
+		        $("input[id=Stimepicker]").attr("oninput", "this.value=this.value.replace(/[^0-9.\:]/g, '')");
+		        $("input[id=Etimepicker]").attr("oninput", "this.value=this.value.replace(/[^0-9.\:]/g, '')");
+		        
 		        if (type == 2 || type == 3 || type == 5) {
 			        $('#Stimepicker').timepicker();
 			        $('#Stimepicker').timepicker('setTime', SDate);
