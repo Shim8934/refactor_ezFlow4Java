@@ -4074,5 +4074,21 @@
 		            OR `tbl_task_deptinfo`.`DELFLAG` = '2'
 		]]>
     </statement>
+
+	<select id="EzCommonDAO.getTenantConfigList" parameterClass="map" resultClass="HashMap">
+		SELECT
+			property_name,
+			property_value
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			tenant_id = #tenantID#
+		AND
+			property_name
+		IN
+			<iterate property="property_names" open="(" close=")" conjunction=",">
+				#property_names[]#
+			</iterate>
+	</select>
 	
 </sqlMap>

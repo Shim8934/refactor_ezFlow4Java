@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezCommon.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -342,5 +343,6 @@ public interface EzCommonService {
     public void createTblCarForm() throws Exception;
 
 	public void addViewTaskOldFlag() throws Exception;
-    
+
+	public HashMap<String, Object> getTenantConfigList(List<String> propertyNames, int tenantID) throws Exception;
 }
