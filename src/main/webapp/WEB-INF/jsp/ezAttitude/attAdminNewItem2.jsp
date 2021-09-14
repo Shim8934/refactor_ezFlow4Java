@@ -99,7 +99,7 @@
 					uploadEDate = pEndDate;					
 		        } else if (!modFirstFlag) {
 		        	uploadSDate = startDate;
-		        	uploadEDate = endDate == "" ? startDate.split(" ")[0] + " 23:59:59" : endDate;
+		        	uploadEDate = endDate == "" ? startDate.split(" ")[0] + " 23:30:00" : endDate;
 		        } else {
 					uploadSDate = date + " " + nowTime[0] + ":00:00";
 					uploadEDate = date + " " + nowTime[0] + ":30:00";
