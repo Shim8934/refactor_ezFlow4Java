@@ -3102,6 +3102,14 @@
 			VALUES ('083',7,'생성일자',140,null,'CreateDate',null,null,'원문공개문서함','생성일자','생성일자','생성일자','생성일자',#tenantID#, #companyID#)
 			INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID)
 			VALUES ('083',8,'작성자',100,null,'WriterName',null,null,'원문공개문서함','작성자','작성자','작성자','작성자',#tenantID#, #companyID#)
+			INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID)
+			VALUES ('083',9,'기안부서',140,null,'WriterDeptName',null,null,'원문공개문서함','기안부서','기안부서','기안부서','기안부서',#tenantID#, #companyID#)
+			INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID)
+			VALUES ('084',1,'변경자 부서',180,null,'ModifierDeptName',null,null,'원문공개문서함 수정이력','변경자 부서','변경자 부서','변경자 부서','변경자 부서',#tenantID#, #companyID#)
+			INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID)
+			VALUES ('084',2,'변경자',180,null,'ModifierName',null,null,'원문공개문서함 수정이력','변경자','변경자','변경자','변경자',#tenantID#, #companyID#)
+			INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID)
+			VALUES ('084',3,'변경일',100,null,'ModifyDate',null,null,'원문공개문서함 수정이력','변경일','변경일','변경일','변경일',#tenantID#, #companyID#)
 		SELECT *
 		FROM   DUAL
                
