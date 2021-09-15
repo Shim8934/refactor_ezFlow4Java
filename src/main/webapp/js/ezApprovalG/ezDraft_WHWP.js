@@ -1152,19 +1152,23 @@ function openOpinionUI_New(pOpinionType) {
 
 function openOpinionUI_New_Complete(ret) {
 	DivPopUpHidden();
-	if (ret != "cancel" && ret != undefined) {
-	    var objXML = loadXMLString(ret);
-	    
-	    var NodeList = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW");
-	    if (NodeList.length != 0) {
+	if(ret == "Clear"){
+		pHasOpinionYN = "N";
+		ret = "cancel";
+	} else if (ret == "cancel"){
+
+	} else {
+		var objXML = loadXMLString(ret);
+
+		var NodeList = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW");
+		if (NodeList.length != 0) {
 			pHasOpinionYN = "Y";
-	    } else {
+		} else {
 			pHasOpinionYN = "N";
 			ret = "cancel";
-	    }
-	    makeOpinionList(objXML);
-    }
-	
+		}
+		makeOpinionList(objXML);
+	}
     return ret;
 }
 
