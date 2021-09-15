@@ -1523,13 +1523,14 @@ function btnSetRecUserRole_onclick() {
     var DocList = new ListView();  
     DocList.LoadFromID("DocList");
     var selRow = DocList.GetSelectedRows();
-    var selDocIDs 	= new Array();
-    var pRecIDs		= new Array();
-    var pSepAttNos	= new Array();
+    var selDocIDs 	= [];
+    var pRecIDs		= [];
+    var pSepAttNos	= [];
     
     if (selRow.length > 0) {
     	var strSepAttDocs = "";
     	var strSelDocs = "";
+        var arrSelDocs = [];
     	
     	for (var i = 0; i < selRow.length; i++) {
     		// 분리첨부등록, DocID여부 체크
@@ -1546,7 +1547,10 @@ function btnSetRecUserRole_onclick() {
     			var rtnXml = GetRecViewerInfo(selRow[i].getAttribute("DATA6"), selRow[i].getAttribute("DATA8"));
     			
     			if (SelectSingleNode(SelectSingleNode(rtnXml.documentElement, "LISTVIEWDATA"), "ROWS") != null) {
-    				strSelDocs += selRow[i].childNodes.item(4).getAttribute("title") + ", ";
+                    var tempDocNo = selRow[i].querySelector('[headername="DISPREGISTERNO"]');
+                    if(!!tempDocNo) {
+                        arrSelDocs.push(tempDocNo.innerText);
+                    }
     			}
     		}
     		
@@ -1561,8 +1565,14 @@ function btnSetRecUserRole_onclick() {
     	SetRecUserRolePara[0] = pRecIDs;	
     	SetRecUserRolePara[1] = pSepAttNos;	
     	SetRecUserRolePara[2] = DeptID;
-    	if (selDocIDs.length > 1 && strSelDocs != ""){
-    		strSelDocs = strSelDocs.substring(0,strSelDocs.length - 2) + strLangPgb01;
+        var length = arrSelDocs.length;
+    	if (length > 0){
+            for (var j = 0; j < 4; j++) {
+                strSelDocs += arrSelDocs[j] + ", ";
+                if(j === 1 && length > 2) strSelDocs += "<br>";
+            }
+            if(length > 4) strSelDocs += " ...";
+    		strSelDocs += "<br>" + strLangPgb01;
     		OpenInformationUI(strSelDocs, btnSetRecUserRole_onclick_Complete);
     	} else {
     		SetRecUserRole(SetRecUserRolePara);
