@@ -55,7 +55,7 @@ public class EzApprovalGOpenGovScheduler {
         int tenantID = list.get(0).getTenantId();
 
         Path csvPath = Paths.get(config.getProperty("openGov_root"),"fileroot", Integer.toString(tenantID), "files", "openGovCsv" , "send");
-        Path csvFilePath = csvPath.resolve("WMPUAA$CG174000001937$PIINFOLIST" + config.getProperty("config.companyNum") + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyyMMddHHmm"),"235|+09:00", true));
+        Path csvFilePath = csvPath.resolve("WMPUAA$CG174000001937$PIINFOLIST" + config.getProperty("config.companyNum") + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyyMMddHHmm"),"235|+09:00", true) + ".csv");
 
         File dirFile = csvPath.toFile();
 
