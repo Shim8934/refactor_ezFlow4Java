@@ -311,6 +311,8 @@
             OpenAlertUI(pAlertContent);
             btn_AttachAdd.disabled = false;
         } else {
+            pFileName = ReplaceHTML(pFileName);
+            pFileLocation = ReplaceHTML(pFileLocation);
             Resultxml = AddAttachFileInfoXmlParsing(pFileName, pFileSize, pFileLocation)
         }
     }
