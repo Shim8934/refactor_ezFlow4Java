@@ -963,7 +963,7 @@ function btnSearchDept_onClick() {
             var rgParams = new Array();
             rgParams["addrBook"] = xmlDOM;
             rgParams["deptid"] = "";
-            if (CrossYN() && ext !='hwp') {
+            if (CrossYN()) {
                 checkname2_cross_dialogArguments[0] = rgParams;
                 checkname2_cross_dialogArguments[1] = btnSearchDept_onClick_Complete2;
 
