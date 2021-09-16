@@ -1659,13 +1659,13 @@
                 }
 	    		
 	    		if (IsSkipDrafter == "FALSE") {
-                	if (nonElecRec != "Y") {
+                	//if (nonElecRec != "Y") {
 	                    //var ret;
 	                    var parameter = new Array();
 	
 	                    parameter[0] = pDocID;
 	                    openSignUI(parameter);
-                	}
+                	//}
                 } else {
                 	GetHTML(saveDraftInfo);
                 }
