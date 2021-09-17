@@ -10938,11 +10938,11 @@
 	            	TBL_RECORD.COMPANYID = TBL_RECROLEINFO.COMPANYID	            	
 	            WHERE  
 	            	( TBL_RECROLEINFO.SeperateAttachNo = '00' )
-	            AND 
-	            	( TBL_RECROLEINFO.UserID = #v_USERID# )
-	            AND 
-	            	( TBL_RECROLEINFO.UserRight = '1' )
-	            AND 
+	           AND
+	            	(( TBL_RECROLEINFO.UserID = #v_USERID# AND TBL_RECROLEINFO.UserRight = '1' )
+	                OR
+	            	 (TBL_RECROLEINFO.UserID = 'All_User' AND TBL_RECROLEINFO.UserRight = '2'))
+	            AND
 	            	TBL_RECORD.DocID = #v_DOCID#
 	            AND
 					TBL_RECORD.TENANT_ID = #v_TENANTID#

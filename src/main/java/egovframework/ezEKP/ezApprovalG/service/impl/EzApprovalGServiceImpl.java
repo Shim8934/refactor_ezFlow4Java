@@ -35,8 +35,9 @@ import java.util.LinkedList;
 import java.util.List; 
 import java.util.Locale; 
 import java.util.Map; 
-import java.util.Properties; 
-import java.util.regex.Matcher; 
+import java.util.Properties;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern; 
  
 
@@ -75,7 +76,8 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils; 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.json.simple.JSONArray; 
+import org.apache.commons.lang3.time.StopWatch;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject; 
 import org.json.simple.parser.JSONParser; 
 import org.jsoup.Jsoup; 
@@ -22523,16 +22525,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		map.put("v_UserName2", messageSource.getMessage("ezApprovalG.hyj01", locale));
 		ezApprovalGDAO.deleteRecRoleInfo(map);
-		
-		if(Flag.equals("0")) {
-			map.put("v_UserRight", "1");
+		int length = xmlDom.getElementsByTagName("USER").getLength();
+
+		if(Flag.equals("0")) {	// 비공개에 상관없이 모든 유저 열람권한
+			map.put("v_UserRight", "2");
 			ezApprovalGDAO.insertRecRoleInfo(map);
-		}else {
+		} else if(length > 0){	// 열람권한 지정시
 			map.put("v_UserRight", "0");
 			ezApprovalGDAO.insertRecRoleInfo(map);
+		} else {	//기본 상태
+			map.put("v_UserRight", "1");
+			ezApprovalGDAO.insertRecRoleInfo(map);
 		}
-		
-		for( int i=0; i<xmlDom.getElementsByTagName("USER").getLength(); i++) {
+
+		for(int i = 0; i< length; i++) {
 			map.put("v_UserID", xmlDom.getElementsByTagName("ID").item(i).getTextContent());
 			map.put("v_UserName", xmlDom.getElementsByTagName("NAME").item(i).getTextContent());
 			map.put("v_UserName2", xmlDom.getElementsByTagName("NAME2").item(i).getTextContent());

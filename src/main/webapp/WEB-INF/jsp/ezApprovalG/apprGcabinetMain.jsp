@@ -97,7 +97,7 @@
 				var WriterID = null;
 				var WriterDeptID = null;
 		        var shareDeptId = "${shareDeptId}";
-				
+
 		        document.onselectstart = function () { return false; };
 		
 		        window.onload = function () {

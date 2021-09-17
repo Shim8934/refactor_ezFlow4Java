@@ -115,13 +115,14 @@
             document.getElementsByName("rdoRecRole")[0].checked = true;
             document.getElementsByName("rdoRecRole")[1].checked = false;
         } */
-        
-        if (AllAllowed == "0") {
-        	document.getElementById("roleCheck1").innerHTML = "";
-        	document.getElementById("roleCheck2").innerHTML = "(○)";
-        } else {
-        	document.getElementById("roleCheck1").innerHTML = "(○)";
+
+        if (AllAllowed == "2") {
+        	document.getElementById("roleCheck1").innerHTML = "(✔)";
         	document.getElementById("roleCheck2").innerHTML = "";
+			document.getElementById("rdoRecRole1").click();
+        } else {
+        	document.getElementById("roleCheck1").innerHTML = "";
+        	document.getElementById("roleCheck2").innerHTML = "(✔)";
         }
         
         var LVXml = createXmlDom();
@@ -316,21 +317,28 @@
         window.close();
     }
     function cmdConfirm_onclick() {
-        var userlist = new ListView();
+		// 2021-09-17 모든 이용자 열람과 열람가능 이용자 지정 기능 분리 - 박기범
+		// 이용자 지정 기능시 유저 없을 경우에는 default 상태,
+		// 모든 이용자 열람가능 상태일때는 결재선 상관없이 모두 열람 가능하도록 변경
+		var userlist = new ListView();
         userlist.LoadFromID("lvSelUserList");
+		var count = 0;
 
         var totalRows = userlist.GetDataRows();
         if (document.getElementsByName("rdoRecRole")[1].checked) {
-            if (totalRows.length < 1 || totalRows[0].id.indexOf("noItems") > -1) {
+			if(count > 0 && totalRows[0].id.indexOf("noItems") > -1) {
+				count = totalRows.length;
+			}
+            /*if (totalRows.length < 1 || totalRows[0].id.indexOf("noItems") > -1) {
                 alert("<spring:message code='ezApprovalG.t1158'/>");
    	            return;
-            }
+            }*/
         }
-        if (SaveRecUserRole()) {
+        if (SaveRecUserRole(count)) {
             window.close();
         }
     }
-    function SaveRecUserRole() {
+    function SaveRecUserRole(count) {
         var xmlhttpSuccess = 0;
         
 		// 2020-11-12 박기범 - 멀티 열람권한 설정인 경우 가능하게 for문 추가
@@ -348,7 +356,7 @@
 	        createNodeAndInsertText(xmlpara, objNode, "RECID", g_RecIDs[i]);
 	        createNodeAndInsertText(xmlpara, objNode, "SEPATTNO", g_SepAttNos[i]);
 	
-	        if (document.getElementsByName("rdoRecRole")[1].checked) {
+	        if (document.getElementsByName("rdoRecRole")[1].checked && count > 0) {
 	            var objUserInfoXml = GetSelUserInfo();	
 	            xmlpara.documentElement.appendChild(objUserInfoXml.documentElement);
 	        }
