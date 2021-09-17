@@ -1526,7 +1526,7 @@ function btnSetRecUserRole_onclick() {
     var selDocIDs 	= [];
     var pRecIDs		= [];
     var pSepAttNos	= [];
-    
+
     if (selRow.length > 0) {
     	var strSepAttDocs = "";
     	var strSelDocs = "";
@@ -1566,10 +1566,11 @@ function btnSetRecUserRole_onclick() {
     	SetRecUserRolePara[1] = pSepAttNos;	
     	SetRecUserRolePara[2] = DeptID;
         var length = arrSelDocs.length;
-    	if (length > 0){
-            for (var j = 0; j < 4; j++) {
+    	if (selRow.length > 1 && length > 0){
+            for (var j = 0; j < length; j++) {
                 strSelDocs += arrSelDocs[j] + ", ";
                 if(j === 1 && length > 2) strSelDocs += "<br>";
+                if(j === 3) break;
             }
             if(length > 4) strSelDocs += " ...";
     		strSelDocs += "<br>" + strLangPgb01;
