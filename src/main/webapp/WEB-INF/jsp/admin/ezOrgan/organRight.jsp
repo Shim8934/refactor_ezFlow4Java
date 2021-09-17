@@ -1822,7 +1822,7 @@
 						listview.LoadFromID("lvUserList");
 
 						// 전체페이지 처리
-						var totCount = result.getElementsByTagName('TOTALCOUNT')[0].innerHTML;
+						var totCount = $(result.getElementsByTagName('TOTALCOUNT')[0]).text();
 						totalPage = Math.ceil((totCount)/ pageListCnt);
 						if(totalPage == 0) {
 							totalPage = 1;
