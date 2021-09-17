@@ -1439,6 +1439,8 @@
 
    			        if (tempItemCode != "")
    			            tempdocnumcode = tempItemCode;
+   			        
+   			     	parameter[61] = tempKeyword;
                        
                     ezapprovalinfo_dialogArguments[0] = parameter;
    		            ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
