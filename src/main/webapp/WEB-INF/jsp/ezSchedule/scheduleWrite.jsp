@@ -84,7 +84,9 @@
 	                document.getElementById("HolderWriteTr2").style.display = "none";
 
                     if (scheduletype != '1') {
-                        document.getElementById("HolderEdit2").style.display = "none";
+                    	if(document.getElementById("HolderEdit2") != null){
+							document.getElementById("HolderEdit2").style.display = "none";
+						}
                     }
 
 	                /* if (scheduletype == "7") {
