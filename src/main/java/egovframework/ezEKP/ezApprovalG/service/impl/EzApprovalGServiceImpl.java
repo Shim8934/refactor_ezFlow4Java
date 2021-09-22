@@ -18583,7 +18583,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			// useEzTalkNotification이 YES일 때는 ezTalk으로 결재 알림을 보낸다.
 			if (useEzTalkNotification.equals("YES")) {
-				ezEmailService.addEzTalkNotification(nextUserID, notyStr, docTitle, "2");
+				ezEmailService.addEzTalkNotification(nextUserID, notyStr, docTitle, "2", null);
 			}
 		}
 		logger.debug("sendMsg ended");

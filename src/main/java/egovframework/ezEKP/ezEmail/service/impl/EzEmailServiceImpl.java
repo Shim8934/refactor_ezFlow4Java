@@ -2060,7 +2060,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 	
 	@Override
-	public boolean addEzTalkNotification(String userId, String senderName, String subject, String type) {
+	public boolean addEzTalkNotification(String userId, String senderName, String subject, String type, String linkURL) {
 		logger.debug("addEzTalkNotification started. userId=" + userId + ",senderName=" + senderName + ",type=" + type);
 		
 		boolean returnValue = false;
@@ -2071,6 +2071,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 			senderName = senderName != null ? senderName : "";
 			subject = subject != null ? subject : "";
 			type = type != null ? type : "";
+			linkURL = linkURL != null ? linkURL : "";
 			
 			String userIdParam = "userId=" + userId;
 			String senderNameParam = "senderName=" + URLEncoder.encode(senderName, "UTF-8");
@@ -2078,6 +2079,11 @@ public class EzEmailServiceImpl implements EzEmailService {
 			String typeParam = "type=" + type;
 			
 			String inputParams = userIdParam + "&" + senderNameParam + "&" + subjectParam + "&" + typeParam;
+
+			if (!linkURL.isEmpty()) {
+				String linkURLParam = "linkURL=" + URLEncoder.encode(linkURL, "UTF-8");
+				inputParams += "&" + linkURLParam;
+			}
 	
 			logger.debug("inputParams=" + inputParams);
 			
