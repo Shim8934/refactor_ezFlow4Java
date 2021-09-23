@@ -224,6 +224,9 @@
 			                window.opener.refresh_onclick();
 			            } catch (e) {
 			            }
+						if(parent.opener.search != undefined){
+							parent.opener.search('skip');
+						}
 			            window.close();
 				    }
 				}

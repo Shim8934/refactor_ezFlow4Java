@@ -459,6 +459,10 @@
 		                        window.opener.refresh_onclick();
 		                    } catch (e) {
 		                    }
+
+							if(parent.opener.search != undefined){
+								parent.opener.search('skip');
+							}
 		                    
 		                    window.close();
 		                }
@@ -493,7 +497,6 @@
 		                    window.opener.refresh_onclick();
 		                } catch (e) {
 		                }
-		                
 
 	                    //2019.03.04 유은정 - 게시판 적용
 	                    if (parent.opener != null && parent.opener.getNoticePortletList != undefined) {
@@ -522,6 +525,10 @@
 	                 	
 			            if (parent.opener.getBoardList_NewBoardSTD != undefined) {
 							parent.opener.getBoardList_NewBoardSTD();
+						}
+
+						if(parent.opener.search != undefined){
+							parent.opener.search('skip');
 						}
 			            
 		                window.close();
@@ -569,6 +576,9 @@
 		            window.opener.refresh_onclick();
 		        } catch (e) {
 		        }
+				if(parent.opener.search != undefined){
+					parent.opener.search('skip');
+				}
 		        window.close();
 		    }
 		 	 //강민수92
