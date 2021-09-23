@@ -417,6 +417,8 @@
 	            endtime = new Date().getTime();
 	            document.getElementById("runtime").innerHTML = "RunTime : <span style='color:black;font-weight:bold'>" + (endtime - starttime) / 1000 + "</span> Sec";
 	            scroll();
+
+				Window_resize();
 		    }
 		
 		
