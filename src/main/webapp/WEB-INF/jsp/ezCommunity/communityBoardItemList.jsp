@@ -774,28 +774,28 @@
 							</c:otherwise>
 						</c:choose>
 					</c:if>
-					
+
 					<c:choose>
 						<c:when test="${pSortBy == 'A.WriterName'}">
-							<th style="cursor:pointer"  width="80" onClick="SortPage('A.WriterName desc')"><spring:message code='ezCommunity.t445' /><img src="/images/view-sortup.gif" width="9" height="9"></th>
+							<th style="cursor:pointer"  width="120" onClick="SortPage('A.WriterName desc')"><spring:message code='ezCommunity.t445' /><img src="/images/view-sortup.gif" width="9" height="9"></th>
 						</c:when>
 						<c:when test="${pSortBy == 'A.WriterName desc'}">
-							<th style="cursor:pointer"  width="80" onClick="SortPage('A.WriterName')"><spring:message code='ezCommunity.t445' /><img src="/images/view-sortdown.gif" width="9" height="9"></th>
+							<th style="cursor:pointer"  width="120" onClick="SortPage('A.WriterName')"><spring:message code='ezCommunity.t445' /><img src="/images/view-sortdown.gif" width="9" height="9"></th>
 						</c:when>
 						<c:otherwise>
-							<th style="cursor:pointer"  width="80" onClick="SortPage('A.WriterName')"><spring:message code='ezCommunity.t445' /></th>
+							<th style="cursor:pointer"  width="120" onClick="SortPage('A.WriterName')"><spring:message code='ezCommunity.t445' /></th>
 						</c:otherwise>
 					</c:choose>
 					
 					<c:choose>
 						<c:when test="${pSortBy == 'A.WriteDate'}">
-							<th style="cursor:pointer"  width="80" onClick="SortPage('A.WriteDate desc')"><spring:message code='ezCommunity.t209' /><img src="/images/view-sortup.gif" width="9" height="9"></th>
+							<th style="cursor:pointer"  width="120" onClick="SortPage('A.WriteDate desc')"><spring:message code='ezCommunity.t209' /><img src="/images/view-sortup.gif" width="9" height="9"></th>
 						</c:when>
 						<c:when test="${pSortBy == 'A.WriteDate desc'}">
-							<th style="cursor:pointer"  width="80" onClick="SortPage('A.WriteDate')"><spring:message code='ezCommunity.t209' /><img src="/images/view-sortdown.gif" width="9" height="9"></th>
+							<th style="cursor:pointer"  width="120" onClick="SortPage('A.WriteDate')"><spring:message code='ezCommunity.t209' /><img src="/images/view-sortdown.gif" width="9" height="9"></th>
 						</c:when>
 						<c:otherwise>
-							<th style="cursor:pointer"  width="80" onClick="SortPage('A.WriteDate')"><spring:message code='ezCommunity.t209' /></th>
+							<th style="cursor:pointer"  width="120" onClick="SortPage('A.WriteDate')"><spring:message code='ezCommunity.t209' /></th>
 						</c:otherwise>
 					</c:choose>
 					
