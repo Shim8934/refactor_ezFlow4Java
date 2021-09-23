@@ -3615,6 +3615,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				
 				String tempItem = itemListArray[i].split(",")[0];
 				
+				BoardListVO boardListTempVO = getItemInfo(mode, tempItem, userInfo.getLang(), userInfo.getTenantId());
+				if (boardListTempVO != null) {
+					logger.debug("deleteItem itemID = " + boardListTempVO.getItemID() + " / title = " + boardListTempVO.getTitle());
+				}
+				
 				if (mode != null && mode.equals("temp")) {
 					deleteTempItem(tempItem, boardID, realPath, userInfo.getTenantId());
 				} else {

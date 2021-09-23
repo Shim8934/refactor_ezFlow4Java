@@ -810,7 +810,8 @@
 	                    CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
 	                    A.WRITERNAME$lang$ WRITERNAME,
 	                    A.CONTENTLOCATION,
-	                    C.MAIL
+	                    C.MAIL,
+	                    A.ITEMID
 	                FROM 
 	                	TBL_Board_Item A
 	                JOIN 
@@ -835,7 +836,9 @@
 				<![CDATA[
 					SELECT 
 						BOARDID, 
-	                    CONTENTLOCATION 
+	                    CONTENTLOCATION,
+	                    ITEMID,
+	                    TITLE
 	              	FROM 
 	              		TBL_Board_Item_temp 
 	              	WHERE  
@@ -854,7 +857,8 @@
 	                    A.BOARDID BOARDID  ,
 	                    CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
 	                    A.WRITERNAME$lang$ WRITERNAME,
-	                    A.CONTENTLOCATION
+	                    A.CONTENTLOCATION,
+	                    A.ITEMID
 	                FROM 
 	                	TBL_Board_Item A
 	                JOIN 
@@ -873,7 +877,9 @@
 				<![CDATA[
 					SELECT 
 						BOARDID, 
-	                    CONTENTLOCATION 
+	                    CONTENTLOCATION,
+	                    ITEMID,
+	                    TITLE
 	              	FROM 
 	              		TBL_Board_Item_temp 
 	              	WHERE  
