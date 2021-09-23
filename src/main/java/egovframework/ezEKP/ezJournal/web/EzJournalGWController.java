@@ -1248,7 +1248,7 @@ public class EzJournalGWController {
 			int fileSize = (int)file.length();
 			
 			if (fileSize > 0) {
-				byte[] bytes = Files.readAllBytes(Paths.get(pDirTempPath + ".zip"));
+				byte[] bytes = commonUtil.readBytesFromFile(Paths.get(pDirTempPath + ".zip"));
 				
 				JSONObject data = new JSONObject();
 				
@@ -1302,7 +1302,7 @@ public class EzJournalGWController {
 			int fileSize = (int)file.length();
 			
 			if (fileSize > 0) {
-				byte[] bytes = Files.readAllBytes(Paths.get(fullFilePath));
+				byte[] bytes = commonUtil.readBytesFromFile(Paths.get(fullFilePath));
 				
 				JSONObject data = new JSONObject();
 				

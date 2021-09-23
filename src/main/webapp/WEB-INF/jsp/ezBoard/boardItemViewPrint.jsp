@@ -19,6 +19,17 @@
 				margin-top: 0px;
 				margin-bottom: 0px;
 			}
+			#txtContent h1, #txtContent h2 , #txtContent h3 , #txtContent h4 , #txtContent h5 , #txtContent h6 {
+				margin-left:0px;
+				margin-right:0px;
+				color:#000000;
+			}
+			#txtContent h1 {font-size:2em; margin-top:0.67em; margin-bottom:0.67em;}
+			#txtContent h2  {font-size:1.5em; margin-top:0.83em; margin-bottom:0.83em;}
+			#txtContent h3 {font-size:1.17em; margin-top:1em; margin-bottom:1em;}
+			#txtContent h4 {font-size:1em; margin-top:1.33em; margin-bottom:1.33em;}
+			#txtContent h5 {font-size:0.83em; margin-top:1.67em; margin-bottom:1.67em;}
+			#txtContent h6 {font-size:0.67em; margin-top:2.33em; margin-bottom:2.33em;}
     	</style>
 		<script>
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
@@ -212,7 +223,7 @@
 		    }
 		    function displaytable() {
 		        if(message.document.body.innerHTML != "")
-		            document.getElementById("contenttable").innerHTML = message.document.body.innerHTML;
+		            document.getElementById("txtContent").innerHTML = message.document.body.innerHTML;
 		    }
 		    
 		    /* 2021-08-12 홍승비 - 익명게시물 게시자명 특문처리 추가 */
@@ -234,20 +245,30 @@
 		  <tr>
 		    <td>
 		        <table class="content" style="width:100%;">
-		        	<!-- 게시자&부서 -->
+		        	<!-- 게시자&부서 (부서의 경우 익명게시판이 아닐때만 표출) -->
 		        	<tr>
-		        		<th style="width:10%;"><spring:message code='ezBoard.t223'/></th>
-						<td id="WriteUserNM" style="width:40%; white-space:nowrap" colspan=4></td>
-						<%-- <th style="width:10%;"><spring:message code='ezBoard.t289'/></th>
-						<td id="User_DeptNM" style="width:40%; white-space:nowrap">&nbsp;${boardItem.writerDeptName}</td> --%>
+		        	<c:choose>
+		        		<c:when test="${boardInfo.guBun != '2'}">
+			        		<th style="width:10%;"><spring:message code='ezBoard.t223'/></th>
+							<td id="WriteUserNM" style="width:40%; white-space:nowrap"></td>
+							<th style="width:10%;"><spring:message code='ezBoard.t289'/></th>
+							<td id="User_DeptNM" style="width:40%; white-space:nowrap">&nbsp;${boardItem.writerDeptName}</td>
+						</c:when>
+						<c:otherwise>
+							<th style="width:10%;"><spring:message code='ezBoard.t223'/></th>
+							<td id="WriteUserNM" style="width:40%; white-space:nowrap" colspan=4></td>
+						</c:otherwise>
+					</c:choose>
 		        	</tr>
-		        	<!-- 직위&사내전화 -->
-		        	<%-- <tr>
+		        	<!-- 직위&사내전화 (익명게시판이 아닌 경우에만 표출) -->
+		        	<c:if test="${boardInfo.guBun != '2'}">
+		        	<tr>
 		        		<th><spring:message code='ezBoard.t290'/></th>
 						<td id="User_JobTitle" style="width:40%; white-space:nowrap;">&nbsp;${boardItem.extensionAttribute3}<div></div></td>
 						<th><spring:message code='ezPersonal.t177'/></th>
 						<td id="Telephone" style="width:40%; white-space:nowrap">&nbsp;${boardItem.extensionAttribute4}</td>
-		        	</tr> --%>
+		        	</tr>
+		        	</c:if>
 		        	<!-- 게시일&게시종료일 -->
 		        	<tr>
 						<th><spring:message code='ezBoard.t224'/></th>
@@ -369,7 +390,7 @@
 		  </tr>
 		    <tr>
 		    <td class="pad1" style="height:100%;">
-		        <div id ="contenttable" class ="viewbox" style="border:1px solid #ddd"></div>
+		        <div id ="txtContent" class ="viewbox" style="border:1px solid #ddd; margin-left:0px; margin-right:0px;"></div>
 		    </td> 
 		  </tr>
 		  </table>

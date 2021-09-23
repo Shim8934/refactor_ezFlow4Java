@@ -903,7 +903,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	@Override
 	public String loadMHTFile(String strMHTpath) throws Exception{
 		String strMhtData = "";
-		byte[] fileBytes = Files.readAllBytes(Paths.get(commonUtil.detectPathTraversal(strMHTpath.trim())));
+		byte[] fileBytes = commonUtil.readBytesFromFile(Paths.get(commonUtil.detectPathTraversal(strMHTpath.trim())));
 
 		// klib 복호화
 		if (strMHTpath.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
@@ -1188,7 +1188,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
 		map.put("tenantID", tenantID);
 		map.put("userID", userID);
-		map.put("isMobile", deviceType.isMobile() && !isMobileIntegratedMultiLogin(companyId, tenantID));
+		map.put("mobileFlag", deviceType.isMobile() && !isMobileIntegratedMultiLogin(companyId, tenantID));
 
 		return Optional.ofNullable(ezCommonDAO.selectMultiLoginUser(map)).orElse("");
 	}
@@ -2483,5 +2483,27 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	@Override
 	public void createTblCarForm() throws Exception {
 		ezCommonDAO.createTblCarForm();
+	}
+	
+	@Override
+	public void addViewTaskOldFlag() throws Exception {
+		ezCommonDAO.addViewTaskOldFlag();
+		ezCommonDAO.addSViewTaskOldFlag();
+	}
+
+	@Override
+	public HashMap<String, Object> getTenantConfigList(List<String> propertyNames, int tenantID) throws Exception {
+		HashMap<String, Object> resultMap = new HashMap<>();
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("property_names", propertyNames);
+		map.put("tenantID" , tenantID);
+
+		List<Map<String, Object>> tenantConfigList = ezCommonDAO.getTenantConfigList(map);
+
+		for (Map<String, Object> configMap : tenantConfigList) {
+			resultMap.put(String.valueOf(configMap.get("property_name")),configMap.get("property_value"));
+		}
+
+		return resultMap;
 	}
 }

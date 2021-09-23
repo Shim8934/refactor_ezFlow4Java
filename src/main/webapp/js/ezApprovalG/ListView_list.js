@@ -1658,6 +1658,10 @@ function tr_selectBlock(pRowID, pTableID) {
         }
 
         objTr = null;
+        // 2020-11-13 : 체크박스 추가 -박기범-
+        var rowCheckBox = document.getElementById(strID.split("_")[0] + "_TD_CheckBox_" + strID.split("_")[2]);
+        if (rowCheckBox != null)
+            rowCheckBox.checked = true;
     }
 }
 

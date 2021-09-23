@@ -35,8 +35,9 @@ import java.util.LinkedList;
 import java.util.List; 
 import java.util.Locale; 
 import java.util.Map; 
-import java.util.Properties; 
-import java.util.regex.Matcher; 
+import java.util.Properties;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern; 
  
 
@@ -75,7 +76,8 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils; 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.json.simple.JSONArray; 
+import org.apache.commons.lang3.time.StopWatch;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject; 
 import org.json.simple.parser.JSONParser; 
 import org.jsoup.Jsoup; 
@@ -2650,10 +2652,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (isEncryptedByKlib) {
 				Path targetPath = Paths.get(commonUtil.detectPathTraversal(target));
 				
-				byte[] targetBytes = Files.readAllBytes(targetPath);
+				byte[] targetBytes = commonUtil.readBytesFromFile(targetPath);
 				byte[] decryptBytes = klibUtil.decrypt(targetBytes);
 				
-				Files.write(targetPath, decryptBytes, StandardOpenOption.TRUNCATE_EXISTING);
+				commonUtil.writeBytesToFile(targetPath, decryptBytes);
 			}
 		}
 		
@@ -8963,6 +8965,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultXML.append("<NAME>" + listXML.getElementsByTagName("NAME").item(k).getTextContent() + "</NAME>");
 			resultXML.append("<WIDTH>" + listXML.getElementsByTagName("WIDTH").item(k).getTextContent() + "</WIDTH>");
 			resultXML.append("<COLNAME>" + listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + "</COLNAME>");
+			
+			/* 2021-09-07 홍승비 - 전자결재 첨부파일 레이어 팝업 > 첨부파일명 표출 시 원본 파일명이 아닌 DISPLAYNAME을 표출하도록 수정 */
+			if (listXML.getElementsByTagName("COLNAME").item(k).getTextContent().equalsIgnoreCase("ATTACHFILENAME")) {
+				listXML.getElementsByTagName("COLNAME").item(k).setTextContent("DISPLAYNAME");
+			}
 			
 			if (!sortHeader.equals("") && sortHeader.equals(listXML.getElementsByTagName("NAME").item(k).getTextContent())) {
 				if (sortOption.equals("")) {
@@ -18435,7 +18442,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			File src = new File(commonUtil.detectPathTraversal(source));
 			File des = new File(commonUtil.detectPathTraversal(target));
 			
-			byte[] descryptedBytes = klibUtil.decrypt(Files.readAllBytes(src.toPath()));
+			byte[] descryptedBytes = klibUtil.decrypt(commonUtil.readBytesFromFile(src.toPath()));
 			ByteArrayInputStream inputStream = new ByteArrayInputStream(descryptedBytes);
 			
 			Files.copy(inputStream, des.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -18576,7 +18583,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			// useEzTalkNotification이 YES일 때는 ezTalk으로 결재 알림을 보낸다.
 			if (useEzTalkNotification.equals("YES")) {
-				ezEmailService.addEzTalkNotification(nextUserID, notyStr, docTitle, "2");
+				ezEmailService.addEzTalkNotification(nextUserID, notyStr, docTitle, "2", null);
 			}
 		}
 		logger.debug("sendMsg ended");
@@ -21368,9 +21375,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		map.put("v_TENANTID", tenantID);
 		map.put("companyID", companyID);
+		
 		// 해당 문서에 저장된 의견 정보 리스트 추출
 		List<ApprGOpinionVO> apprGAprLineVOList = ezApprovalGDAO.getOpinionInfo(map);
-		logger.debug("apprGAprLineVOList param : v_DOCID =" + docID + "v_MODE =" + mode + "v_ORDEROPTION =" + orderOption1 + "v_TENANTID=" + tenantID);
+		logger.debug("apprGAprLineVOList param : v_DOCID =" + docID + ", v_MODE =" + mode + ", v_ORDEROPTION =" + orderOption1 + ", v_TENANTID=" + tenantID);
 		
 		StringBuffer sb = new StringBuffer();
 		sb.append("<DATA>");
@@ -22517,16 +22525,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		map.put("v_UserName2", messageSource.getMessage("ezApprovalG.hyj01", locale));
 		ezApprovalGDAO.deleteRecRoleInfo(map);
-		
-		if(Flag.equals("0")) {
-			map.put("v_UserRight", "1");
+		int length = xmlDom.getElementsByTagName("USER").getLength();
+
+		if(Flag.equals("0")) {	// 비공개에 상관없이 모든 유저 열람권한
+			map.put("v_UserRight", "2");
 			ezApprovalGDAO.insertRecRoleInfo(map);
-		}else {
+		} else if(length > 0){	// 열람권한 지정시
 			map.put("v_UserRight", "0");
 			ezApprovalGDAO.insertRecRoleInfo(map);
+		} else {	//기본 상태
+			map.put("v_UserRight", "1");
+			ezApprovalGDAO.insertRecRoleInfo(map);
 		}
-		
-		for( int i=0; i<xmlDom.getElementsByTagName("USER").getLength(); i++) {
+
+		for(int i = 0; i< length; i++) {
 			map.put("v_UserID", xmlDom.getElementsByTagName("ID").item(i).getTextContent());
 			map.put("v_UserName", xmlDom.getElementsByTagName("NAME").item(i).getTextContent());
 			map.put("v_UserName2", xmlDom.getElementsByTagName("NAME2").item(i).getTextContent());
@@ -28776,7 +28788,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 						// 2018.08.26 KLIB 복호화
 						if (strPath.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
-							bytes = Files.readAllBytes(file.toPath());
+							bytes = commonUtil.readBytesFromFile(file.toPath());
 							bytes = klibUtil.decrypt(bytes);
 						} else {
                         
@@ -31381,10 +31393,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (isEncryptedByKlib) {
 				Path targetPath = Paths.get(commonUtil.detectPathTraversal(target));
 				
-				byte[] targetBytes = Files.readAllBytes(targetPath);
+				byte[] targetBytes = commonUtil.readBytesFromFile(targetPath);
 				byte[] decryptBytes = klibUtil.decrypt(targetBytes);
 				
-				Files.write(targetPath, decryptBytes, StandardOpenOption.TRUNCATE_EXISTING);
+				commonUtil.writeBytesToFile(targetPath, decryptBytes);
 			}
 		}
 		
@@ -33235,7 +33247,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			StringBuilder contentBuilder = new StringBuilder("<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td>");
 			contentBuilder.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj17", locale) + ": " + vo.getDocTitle() + "</span><br>");
 			contentBuilder.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj18", locale) + ": " + vo.getWriterName() + "</span><br>");
-			contentBuilder.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj19", locale) + ": " + vo.getStartDate() + "</span><br>");
+			contentBuilder.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj19", locale) + ": " + commonUtil.getDateStringInUTC(convertDate(vo.getStartDate()), userInfo.getOffset(), false) + "</span><br>");
 			contentBuilder.append("</td></tr></table>");
 			
 			// String content = "<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td><span>제&nbsp;&nbsp;목: " + vo.getDocTitle() + "</span><br><span>기안자:" + vo.getWriterName() + "</span><br><span>기안일: " + vo.getStartDate() + "</span><br></td></tr></table>";

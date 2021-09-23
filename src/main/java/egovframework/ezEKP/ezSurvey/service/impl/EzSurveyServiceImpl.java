@@ -1505,11 +1505,17 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	private void setSurveyUserInfo(SurveyParticipantVO participant, String primary) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", participant.getCompanyId());
+		map.put("deptID", participant.getDeptId());
 		map.put("tenantId", participant.getTenantId());
 		map.put("userId", participant.getUserId());
 		map.put("primary", primary);
 		
+		/* 2021-08-30 홍승비 - 전자설문 대상자에 사간겸직자가 포함되는 경우 대응 */
 		SimpleUserVO user = ezSurveyDAO.getSurveyUserInfo(map);
+		if (user == null) {
+			user = ezSurveyDAO.getSurveyUserInfoAddJob(map);
+		}
+		
 		participant.setDeptId(user.getDeptId());
 		participant.setDeptName(user.getDeptName());
 		participant.setDeptName1(user.getDeptName());

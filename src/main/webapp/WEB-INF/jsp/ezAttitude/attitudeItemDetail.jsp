@@ -113,7 +113,7 @@
 								try {
 									window.opener.getList();
 								} catch (e) {
-									window.opener.getAttitudeMainList();
+									window.opener.getAttitudeCheckList();
 								}
 								window.close();
 							} else {

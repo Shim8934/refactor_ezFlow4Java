@@ -134,7 +134,7 @@
 	        <tr>
 	        	<th style="width:200px; text-align:center"><spring:message code='ezAttitude.t248' /></th>
 	            <td>
-	            	<input id="changeReason" name="changeReason" type="text" style="width:100%;padding-bottom: 5px;" value="">
+	            	<input id="changeReason" name="changeReason" type="text" style="width:100%;padding-bottom: 5px;" value="" maxlength="200">
 	            </td>
 	        </tr>
 	    </table>

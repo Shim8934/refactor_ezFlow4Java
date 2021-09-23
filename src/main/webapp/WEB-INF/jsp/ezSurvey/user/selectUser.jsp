@@ -405,6 +405,7 @@
         		+ "<span id='countInfo'></span>";
 	            SelectDeptNM.setAttribute("countinfo", "")
 	            displayUserList(nodeIdx.GetNodeData("CN"));
+	            p_ListOrderObject = null; // 부서 클릭 시 기존에 선택된 사용자 tr정보를 초기화
 	        }
 	
 	        function displayUserList(DeptID) {
@@ -1214,8 +1215,8 @@
 	            var pparsingXML2 = "";
 	            var strSIP = "";
 				
-	            if (m_selectedTree == orglistView) {
-		            if (p_ListOrderObject == null || p_ListOrderObject == "") {
+	            if (m_selectedTree == orglistView) { // 조직도 탭 (사원, 부서, 회사)
+		            if (p_ListOrderObject == null || p_ListOrderObject == "") { // 선택된 부서 또는 회사가 존재하는 경우 (사용자 TR은 선택되지 않음)
 		                var organTree = new TreeView();
 		                
 		                organTree.LoadFromID("FromTreeView");
@@ -1274,13 +1275,13 @@
 		                        document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
 		                        document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
 		                    }
-		                } 
+		                }
 		            } else {
-		                if (listContentArry != "") {
+		                if (listContentArry != "") { // 선택된 사용자 TR이 존재하는 경우
 		                    for (var i = 0; i < listContentArry.length; i++) {
 		                        var strId = document.getElementById(listContentArry[i]).getAttribute("_data2");
 		                        var strName = document.getElementById(listContentArry[i]).getAttribute("_data4");
-		                        var deptId = document.getElementById(listContentArry[i]).getAttribute("_data5");
+		                        var deptId = document.getElementById(listContentArry[i]).getAttribute("_data10");
 		                        var email = document.getElementById(listContentArry[i]).getAttribute("_data3");
 		                        var userName2 = document.getElementById(listContentArry[i]).getAttribute("_data12");
 		                        var userName1 = document.getElementById(listContentArry[i]).getAttribute("_data11");
@@ -1335,7 +1336,7 @@
 		                                document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
 		                                document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
 		                            }
-		                        } 
+		                        }
 		                    }
 		                } else {
 		                	var organTree = new TreeView();

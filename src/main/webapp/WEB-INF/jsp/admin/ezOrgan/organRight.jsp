@@ -34,6 +34,7 @@
 			var pageNum = 1;
 			var PageSize = 15;
 			var exportingExcel = false;
+			var pageListCnt = 50; // 한페이지에 보여질 리스트 개수
 			
 		    document.onselectstart = function(){
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA"){
@@ -662,8 +663,8 @@
 							listview.LoadFromID("lvUserList");
 	
 							// 전체페이지 처리
-							var totCount = result.getElementsByTagName('TOTALCOUNT')[0].innerHTML;
-							totalPage = Math.ceil((totCount)/10);
+							var totCount = $(result.getElementsByTagName('TOTALCOUNT')[0]).text();
+							totalPage = Math.ceil((totCount)/ pageListCnt);
 							if(totalPage == 0) {
 								totalPage = 1;
 							}
@@ -1821,8 +1822,8 @@
 						listview.LoadFromID("lvUserList");
 
 						// 전체페이지 처리
-						var totCount = result.getElementsByTagName('TOTALCOUNT')[0].innerHTML;
-						totalPage = Math.ceil((totCount)/10);
+						var totCount = $(result.getElementsByTagName('TOTALCOUNT')[0]).text();
+						totalPage = Math.ceil((totCount)/ pageListCnt);
 						if(totalPage == 0) {
 							totalPage = 1;
 						}

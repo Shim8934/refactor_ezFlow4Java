@@ -115,7 +115,7 @@
 	            </c:if>
 	            <h2><span id="MULTILOGIN" style="display:inline-block;width:100%;" onClick="menu_change('MULTILOGIN')" ><spring:message code="ezSystem.kbh08" /></span></h2>
 	            <h2><span id="PASSWORDPOLICY" style="display:inline-block;width:100%;" onClick="menu_change('PASSWORDPOLICY')" ><spring:message code='ezSystem.ksaPwPolicy01' /></span></h2>
-	            <c:if test="${cChk == '1' }">
+	            <c:if test="${cChk == '1' && useSystemMonitor != 'NO'}">
 	            <h2><span id="SYSMONITOR" style="display:inline-block;width:100%;" onClick="menu_change('SYSMONITOR')" ><spring:message code='ezSystem.pjg08' /></span></h2>
 	            </c:if>
 	            <c:if test="${useModuleUsage == 'YES'}">

@@ -55,15 +55,13 @@ public class EzApprovalGOpenGovScheduler {
         int tenantID = list.get(0).getTenantId();
 
         Path csvPath = Paths.get(config.getProperty("openGov_root"),"fileroot", Integer.toString(tenantID), "files", "openGovCsv" , "send");
-        Path csvFilePath = csvPath.resolve("WMPUAA$CG174000001937$PIINFOLIST" + config.getProperty("config.companyNum") + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyyMMddHHmm"),"235|+09:00", true));
+        Path csvFilePath = csvPath.resolve("WMPUAA$CG174000001937$PIINFOLIST" + config.getProperty("config.companyNum") + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyyMMddHHmm"),"235|+09:00", true) + ".csv");
 
         File dirFile = csvPath.toFile();
 
         if (!dirFile.exists()) {
             dirFile.mkdirs();
         }
-
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(csvFilePath.toFile()), "euc-kr"));
 
         List<String> csvList = ezApprovalGOpenGovService.getOpenGovCsv();
         List<String> resendCSVList = ezApprovalGOpenGovService.getOpenGovResendCsv();
@@ -72,9 +70,10 @@ public class EzApprovalGOpenGovScheduler {
             logger.debug("makeOpenGovCSV ended csv Size : 0");
             logger.debug("makeOpenGovCSV ended");
 
-            bw.close();
             return;
         }
+        
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(csvFilePath.toFile()), "euc-kr"));
 
         //발송
         for (String csv : Optional.ofNullable(csvList).orElse(Collections.emptyList())) {

@@ -744,6 +744,9 @@ function CalMonthDataBind(oAppointment) {
             oSpan.className = "department";
         }
         
+        /* 2021-09-07 홍승비 - 일정관리 월보기 시 각 일정제목에 말줄임표 적용 */
+        oTd.style.textOverflow = "ellipsis";
+        
         for (var i = 0; i < publicIds.length; i++) {
         	if (oAppointment.OwnerID == publicIds[i].id) {
         		oTd.className = "calendar_data_public_department";

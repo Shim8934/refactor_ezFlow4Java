@@ -6169,14 +6169,14 @@ public class EzBoardController extends EgovFileMngUtil{
 				uniqueName = guid + "." + extension;
 				thumbnailName = "s_" + guid + "." + extension;
 				
-				writeUploadedFile(multiFile.get(i), uniqueName, serverPath);
+				writeUploadedFile(multiFile.get(i), uniqueName, serverPath); // 원본 파일을 업로드한 뒤, 아래 코드에서 이미지 형식으로 변환함
 				fileLocation = uniqueName;
 				File imageFile = new File(commonUtil.detectPathTraversal(serverPath + uniqueName));	
 				
 				int nImgWidth = 0;
 				int nImgHeight = 0;
 				
-				if (imageFile.exists()) {			
+				if (imageFile.exists()) {
 					BufferedImage bi = ImageIO.read(imageFile);		
 					
 					nImgWidth = bi.getWidth();
@@ -6192,18 +6192,37 @@ public class EzBoardController extends EgovFileMngUtil{
 					}
 					
 					BufferedImage bufferedImage = null;
+					BufferedImage bufferedImageS = null;
 					
-					if(extension.toUpperCase().equals("TIF") || extension.toUpperCase().equals("TIFF")) {
+					if (extension.toUpperCase().equals("TIF") || extension.toUpperCase().equals("TIFF")) {
 						extension = "png";
 					}
+					
+					// 기존 이미지가 파일 형태로 업로드되었으므로, 다시 이미지 형태로 저장
+					if (bi.getType() == 0 || extension.equals("png")) { // 일부 png 파일의 경우, type값이 0으로 넘어오거나 검은색으로 저장된다.
+						bufferedImage = new BufferedImage(bi.getWidth(), bi.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
+					} else {
+						bufferedImage = new BufferedImage(bi.getWidth(), bi.getHeight(), bi.getType());
+					}
+					bufferedImage.createGraphics().drawImage(bi, 0, 0, bi.getWidth(), bi.getHeight(), null);
+					isImage = ImageIO.write(bufferedImage, extension, new File(commonUtil.detectPathTraversal(serverPath + uniqueName)));
+					
+					// 썸네일 저장
 					/* 2019-10-21 홍승비 - png파일의 경우, 썸네일 이미지 저장 시 타입을 TYPE_4BYTE_ABGR로 고정 */
 					if (bi.getType() == 0 || extension.equals("png")) { // 일부 png 파일의 경우, type값이 0으로 넘어오거나 검은색으로 저장된다.
-						bufferedImage = new BufferedImage(nWidth, nHeight, BufferedImage.TYPE_4BYTE_ABGR);
+						bufferedImageS = new BufferedImage(nWidth, nHeight, BufferedImage.TYPE_4BYTE_ABGR);
 					} else {
-						bufferedImage = new BufferedImage(nWidth, nHeight, bi.getType());
+						bufferedImageS = new BufferedImage(nWidth, nHeight, bi.getType());
 					}
-					bufferedImage.createGraphics().drawImage(bi, 0, 0, nWidth, nHeight, null);
-					isImage = ImageIO.write(bufferedImage, extension, new File(commonUtil.detectPathTraversal(serverPath + thumbnailName)));
+					bufferedImageS.createGraphics().drawImage(bi, 0, 0, nWidth, nHeight, null);
+					isImage = ImageIO.write(bufferedImageS, extension, new File(commonUtil.detectPathTraversal(serverPath + thumbnailName)));
+					
+					bi.flush();
+					bi = null;
+					bufferedImage.flush();
+					bufferedImage = null;
+					bufferedImageS.flush();
+					bufferedImageS = null;
 				}
 				
 				if(isImage) {
@@ -8816,7 +8835,7 @@ public class EzBoardController extends EgovFileMngUtil{
 					
 					try {
 						File sourceFile = new File(commonUtil.detectPathTraversal(fullFilePath + fileNamesUIDArr[i]));
-						byte[] fileBytes = Files.readAllBytes(sourceFile.toPath());
+						byte[] fileBytes = commonUtil.readBytesFromFile(sourceFile.toPath());
 						
 						if (fileNamesUIDArr[i].endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
 							fileBytes = klibUtil.decrypt(fileBytes);

@@ -71,7 +71,10 @@
 				apprflag,
 				apprmailflag,
 				attributeyn,
-				tenant_id
+				tenant_id,
+				COMPANYID,
+				MAILFG_POST,
+				MAILFG_MOD
             FROM 
                 TBL_BOARD_BOARDINFO 
 			WHERE  

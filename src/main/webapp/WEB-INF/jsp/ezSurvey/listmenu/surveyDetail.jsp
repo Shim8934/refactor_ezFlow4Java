@@ -12,7 +12,20 @@
 	<link rel="stylesheet" type="text/css" href="${util.addVer('/css/jquery-ui.css')                       }">
 	<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
 	<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/dateControls/demos.css')        }">
-	
+	<style type="text/css">
+		#ppContent h1, #ppContent h2 , #ppContent h3 , #ppContent h4 , #ppContent h5 , #ppContent h6 {
+			margin-left:0px;
+			margin-right:0px;
+			color:#000000;
+		}
+		#ppContent h1 {font-size:2em; margin-top:0.67em; margin-bottom:0.67em;}
+		#ppContent h2  {font-size:1.5em; margin-top:0.83em; margin-bottom:0.83em;}
+		#ppContent h3 {font-size:1.17em; margin-top:1em; margin-bottom:1em;}
+		#ppContent h4 {font-size:1em; margin-top:1.33em; margin-bottom:1.33em;}
+		#ppContent h5 {font-size:0.83em; margin-top:1.67em; margin-bottom:1.67em;}
+		#ppContent h6 {font-size:0.67em; margin-top:2.33em; margin-bottom:2.33em;}
+	</style>
+		
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js'   )}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.js'        )}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezSurvey/jquery.ddslick.min.js')}"></script>
@@ -67,7 +80,7 @@
 		<div id="svTitle" class="survey-title"><c:out value="${survey.title}"></c:out><span class="srvyTitle_info" id="surveyInfBttn"><img src="/images/ezSurvey/srvyTitle_info.png"></span></div>
 		
 		<div id="svPurpose" class="svPurpose">
-			<div id="ppContent" class="ppContent">${survey.purpose}</div>
+			<div id="ppContent" class="ppContent" style="font-family:${defaultFontFamily}; font-size:${defaultFontSize};">${survey.purpose}</div>
 			<div class="survey-otherinf">
 				<table class="content surveyDtl">
 					<tr>

@@ -4716,6 +4716,21 @@
 			COMPANYID = #companyID#
 	</delete>
 		
+	<update id="EzApprovalGAdminDAO.resendOpenGov" parameterClass="Map">
+		UPDATE
+			TBL_GOVSENDDOCHISTORY
+		SET
+			SENDFLAG = 'N'
+		WHERE
+		<![CDATA[
+			SENDDATE
+		BETWEEN
+			TO_DATE(#startTime#, 'YYYY-MM-DD HH24:MI:SS')
+		AND 
+			TO_DATE(#endTime#, 'YYYY-MM-DD HH24:MI:SS')
+		]]>
+	</update>	
+	
 	<select id="EzApprovalGAdminDAO.getOpenGovModifyHistory" parameterClass="Map" resultClass="ApprGOpenGovModifyHistoryVO" remapResults="true">
 		SELECT
 			DOCID, MODIFIERNAME, MODIFIERDEPTNAME, MODIFYDATE, SN

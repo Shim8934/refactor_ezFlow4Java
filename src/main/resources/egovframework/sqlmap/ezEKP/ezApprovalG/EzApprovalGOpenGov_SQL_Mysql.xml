@@ -149,7 +149,9 @@
 					CONCAT(
 						'본문:',
 						TBL_OPENGOVDOCINFO.docid,
-						':결재본문.mht:',
+						':',
+						TBL_ENDAPRDOCINFO.doctitle,
+						'.mht:',
 						IFNULL(TBL_OPENGOVDOCINFO.docsize, '60112'),
 						':0:',
 						CASE WHEN openflag = '3' THEN 'N' ELSE 'Y' END,
@@ -260,7 +262,7 @@
 			sendflag = 'N'
 	</select>
 
-	<select id="EzApprovalGOpenGov.getOpenGovResendCsv" resultClass="String">
+	<select id="EzApprovalGOpenGov.getOpenGovResendCsv" resultClass="ApprGOpenGovCsvVO">
 		<![CDATA[
 			SELECT
 				TBL_OPENGOVDOCINFO.docid,
@@ -312,7 +314,9 @@
 					CONCAT(
 						'본문:',
 						TBL_OPENGOVDOCINFO.docid,
-						':결재본문.mht:',
+						':',
+						TBL_ENDAPRDOCINFO.doctitle,
+						'.mht:',
 						IFNULL(TBL_OPENGOVDOCINFO.docsize, '60112'),
 						':0:',
 						CASE WHEN openflag = '3' THEN 'N' ELSE 'Y' END,
@@ -409,6 +413,11 @@
     			TBL_OPENGOVDOCINFO.docid = FILEATTACHLIST.docid
     		WHERE
     			(TBL_ENDAPRDOCINFO.docstate <> '011' OR TBL_ENDAPRDOCINFO.docstate IS NULL)
-		]]>
+    		AND
+    		    DATE(TBL_OPENGOVDOCINFO.CREATEDATE) IN
+			]]>
+		    <iterate property="resendDate" conjunction="," open="(" close=")">
+		        DATE_FORMAT(#resendDate[]#, '%Y-%m-%d')
+		    </iterate>
 	</select>
 </sqlMap>
