@@ -292,9 +292,9 @@
                     //hideProgress();
 
                     if (message.FieldExist("sealsign")) {
-                        var tmpSUrl = GetDocumentElement("surl", false);
+                        var tmpSUrl = GetDocumentElement(message, "surl");
 
-                        if (typeof tmpSurl !== "undefined" && tmpSUrl != "") {
+                        if (tmpSUrl != "") {
                             if (tmpSUrl == "/files/upload_approvalG/sealImg/nostamp.gif")
                                 NostampFlag = true;
                             else
@@ -784,7 +784,7 @@
                 return;
             }
 
-            //if (!stampFlag && !NostampFlag) {
+            if (!stampFlag && !NostampFlag) {
                 var DeptSealXML = GetDeptSealInfo();
                 var CompSealXML = GetSealInfo();
                 var sealType = "";
@@ -811,14 +811,14 @@
                 selectSeal_cross_dialogArguments[1] = SealXML; // 관인정보 XML
                 selectSeal_cross_dialogArguments[2] = Stamp_OpenUI_complete; // 관인 선택 후 레이어팝업 종료 시 동작할 함수
                 DivPopUpShow(350, 290, "/ezApprovalG/selectSeal.do");
-/*            } else {
+            } else {
                 if (message.FieldExist("sealsign")) {
                     message.PutFieldText("sealsign", "");
                     message.SetFieldBackImage("sealsign", "");
                 }
                 stampFlag = false;
                 NostampFlag = false;
-            }*/
+            }
         }
 
         function Stamp_OpenUI(Ans) {
@@ -851,10 +851,6 @@
             // field = message.GetListItem(fields, "sealsign");
             
             if (message.FieldExist("sealsign") && SealCheck != "false") {
-                if (message.FieldExist("noseal")) {
-                    message.PutFieldText("noseal", "");
-                    message.SetFieldBackImage("noseal", "");
-                }
                 var signWidth = getPixel(SealWidth) + "px";
                 var signHeight = getPixel(SealHeight) + "px";
                 strimg = "<img src='" + encodeURI(SealHref) + "' border=0 embedding='1' ";
@@ -863,9 +859,9 @@
 
                 message.PutFieldText("sealsign", "");
                 message.SetFieldBackImage("sealsign", document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(SealHref), 5);
-                SetDocumentElement("surl", SealHref);
-                SetDocumentElement("swidth", SealWidth);
-                SetDocumentElement("sheight", SealHeight);
+                SetDocumentElement(message, "surl", SealHref);
+                SetDocumentElement(message, "swidth", SealWidth);
+                SetDocumentElement(message, "sheight", SealHeight);
                 stampFlag = true;
                 NostampFlag = false;
             }
@@ -879,38 +875,34 @@
         
         function btnNoStamp_onclick() {
             var strimg;
-            if (!message.FieldExist("noseal")) {
+            if (!message.FieldExist("sealsign")) {
                 var pAlertContent =  "<spring:message code='ezApprovalG.t201'/><BR><spring:message code='ezApprovalG.t191'/>";
                 OpenAlertUI(pAlertContent);
                 return;
             }
 
-           // if (!NostampFlag && !stampFlag) {
+            if (!NostampFlag && !stampFlag) {
                 var SealHref = "/files/sealImg/nostamp.gif"
                 var SealWidth = 30;
                 var SealHeight = 10;
 
-                if (message.FieldExist("noseal")) {
-                    if (message.FieldExist("sealsign")) {
-                        message.PutFieldText("sealsign", "");
-                        message.SetFieldBackImage("sealsign", "");
-                    }
-                    message.PutFieldText("noseal", "");
-                    message.SetFieldBackImage("noseal", document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(SealHref), 6);
-                    SetDocumentElement("surl", SealHref);
-                    SetDocumentElement("swidth", SealWidth);
-                    SetDocumentElement("sheight", SealHeight);
+                if (message.FieldExist("sealsign")) {
+                    message.PutFieldText("sealsign", "");
+                    message.SetFieldBackImage("sealsign", document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(SealHref), 6);
+                    SetDocumentElement(message, "surl", SealHref);
+                    SetDocumentElement(message, "swidth", SealWidth);
+                    SetDocumentElement(message, "sheight", SealHeight);
                     NostampFlag = true;
                     stampFlag = false;
                 }
-/*            } else {
-                if (message.FieldExist("noseal")) {
-                    message.PutFieldText("noseal", "");
-                    message.SetFieldBackImage("noseal", "");
+            } else {
+                if (message.FieldExist("sealsign")) {
+                    message.PutFieldText("sealsign", "");
+                    message.SetFieldBackImage("sealsign", "");
                 }
                 NostampFlag = false;
                 stampFlag = false;
-            }*/
+            }
         }
 
         function getPixel(pLength) {
