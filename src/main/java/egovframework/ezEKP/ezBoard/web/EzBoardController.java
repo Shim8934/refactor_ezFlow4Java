@@ -4776,14 +4776,16 @@ public class EzBoardController extends EgovFileMngUtil{
 		String realPath = commonUtil.getRealPath(request);
 		
 		itemList = request.getParameter("itemList");
-		mode = request.getParameter("mode");
+		mode = request.getParameter("mode") != null ? request.getParameter("mode") : "";
 		boardID = request.getParameter("boardID");
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
+		logger.debug("deleteItem mode = " + mode + " / boardID = " + boardID + " / boardName = " + boardInfo.getBoardName());
+		
 		String result = ezBoardService.deleteItem(itemList, mode, boardID, realPath, userInfo, boardInfo);
 
-		logger.debug("deleteItem ended");
+		logger.debug("deleteItem ended, userID = " + userInfo.getId());
 		return result;
 	}
 	
