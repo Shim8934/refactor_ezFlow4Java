@@ -5787,6 +5787,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
             if (tempQuery.indexOf("FORMID;") != -1) {
                 returnQuery += " AND TBL_APRDOCINFO.FormID = '" + xmlDomSub.getElementsByTagName("FORMID").item(0).getTextContent() + "' ";
             }
+
+            if (tempQuery.indexOf("FORMNAME;") != -1) {
+                returnQuery += " AND TBL_EXPAPRDOCINFO.FORMNAME LIKE '%" + xmlDomSub.getElementsByTagName("FORMNAME").item(0).getTextContent() + "%' ";
+            }
             
             if (tempQuery.indexOf("KAPR;") != -1) {
                 returnQuery += " AND TBL_EXPAPRDOCINFO.keyword LIKE '%" + xmlDomSub.getElementsByTagName("KEYWORD").item(0).getTextContent() + "%' ";
