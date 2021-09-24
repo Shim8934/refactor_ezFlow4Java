@@ -1811,7 +1811,7 @@
 		        initdatepicker();
 		        document.getElementById("taSummery").value = "";
 
-		        if (vSecurity.trim() == "")
+		        if (vSecurity.trim() == "" || vSecurity.trim() == "999")
 		            document.getElementById("selSecLevel").options[0].selected = true;
 		        else
 		            document.getElementById("selSecLevel").value = vSecurity;
