@@ -486,6 +486,10 @@
 	            	
 	            	// 2019-04-19 김민성 - 자원 동시에 예약 시 모든 자원 예약 후 화면 새로고침 되도록 수정
 	            	if (!setApprovFlag) {
+	            		/* 2021-09-07 홍승비 - 자원예약 및 수정동작 완료 시 알러트 메세지 표출 (타 모듈과 동일하게) */
+	            		if (cmd == "add" || cmd == "mod") {
+	            			alert(strLangHSB01);
+	            		}
 			            parent.opener.getPersPortlet();
 	        		    window.close();
 	        		}
@@ -704,9 +708,9 @@
 	          				<th> <spring:message code="ezResource.t197"/></th>
 	          				<td width="100%" colspan="3" id="Td_StartDate" style="overflow:hidden;">
 	          					<input type="checkbox" id="AllDay" <c:if test="${allDay eq '1' && dayView ne 0}">checked</c:if> onClick="display_time_Unshow()" /><spring:message code="ezResource.t211"/>
-	          					<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />
+	          					<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" readonly="readonly"/>
 	           						~
-	           					<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />
+	           					<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" readonly="readonly"/>
 	          				</td>
 	        			</tr>
 				        <tr>

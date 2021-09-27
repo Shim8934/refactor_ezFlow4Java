@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import egovframework.ezMobile.ezApprovalG.vo.*;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
+
 import org.json.simple.JSONObject;
 
 public interface MApprovalGService {
@@ -60,5 +61,7 @@ public interface MApprovalGService {
 	public JSONObject gwDraft(JSONObject data, String realPath, MCommonVO userInfo) throws Exception;
 	
 	public List<HashMap> checkChangeDocInfo(HashMap<String, Object> params) throws Exception;
+
+	public HashMap<String, Object> getAprMemberBySn(String docID, String aprMemberSN, String lang, String companyID, int tenantID) throws Exception;
 	
 }

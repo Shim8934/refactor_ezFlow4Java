@@ -1522,7 +1522,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				}
 			}
 		}
+		String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", userInfo.getTenantId());
 		
+		model.addAttribute("useWebfolder", useWebfolder);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		
@@ -3281,7 +3283,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				        
 				        // 2018.07.05 - ezd 파일은 복호화하여 넣는다. (KLIB)
 				        if (f.toString().endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
-				        	byte[] fileBytes = Files.readAllBytes(f.toPath());
+				        	byte[] fileBytes = commonUtil.readBytesFromFile(f.toPath());
 				        	byte[] decryptedBytes = klibUtil.decrypt(fileBytes);
 				        	
 				        	messageBodyPart.setDataHandler(new DataHandler(new ByteArrayDataSource(decryptedBytes, "application/octet-stream")));

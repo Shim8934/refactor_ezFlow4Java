@@ -1,5 +1,5 @@
 -- 최초작성: 솔루션1팀 김은실(2021-01-26 15:00)
--- 최근수정: 솔루션1팀 김은실(2021-08-09 18:00)
+-- 최근수정: 솔루션1팀 김은실(2021-09-15 17:30)
 -- (나중에 프로시저로 만들어서 돌려도 좋을듯 합니다. :DBMS_OUTPUT.PUT_LINE('~을 확인해주세요.'))
 
 -- ※오라클 버전 알아보기
@@ -156,7 +156,6 @@ select * from v_addjobmaster a where not exists (select 1 from v_deptmaster wher
 -- select * from v_addjobmaster a where not exists (select 1 from v_deptmaster where dept_id = a.dept_id and Upper(use_yn) = 'Y') and Upper(a.use_yn) = 'Y'; -- 부서테이블에 없는/폐지 부서를 가진 사용자
 -- select distinct dept_id from -- 부서 개수만 보기
 select * from v_addjobmaster a join v_usermaster u on (a.user_id = u.user_id and a.dept_id = u.dept_id);    -- 원부서에 겸직하는 사용자
-select user_id, dept_id, count(*) from v_addjobmaster group by user_id, dept_id having count(*) > 1;        -- 한 부서에 두 번이상 겸직하는 사용자
 -- (select * from v_addjobmaster where (user_id, dept_id) in (select user_id, dept_id from v_addjobmaster group by user_id, dept_id having count(*) > 1) order by user_id;   -- pk 중복 확인.)
 -- select * from v_addjobmaster where (user_id, dept_id) in
 --               (select user_id, dept_id from v_addjobmaster group by user_id, dept_id having count(*) > 1);  -- 눈으로 확인하기(:렉 걸릴 수 있음.)
@@ -169,7 +168,18 @@ select user_id, dept_id, count(*) from v_addjobmaster group by user_id, dept_id 
 --             
 --             sourceAddJobList.remove(i);
 -- 
--- 한 부서에 두 번이상 겸직하는 사용자: -->>>> PM님
+select user_id, dept_id, count(*) from v_addjobmaster group by user_id, dept_id having count(*) > 1;        -- 한 부서에 두 번이상 겸직하는 사용자
+-- (case 5) 한 부서에 두 번이상 겸직하는 사용자
+-- 최초로 작업되었던 사이트는: 강남대학교
+-- 최근에는: 가천대학교 (전자결재 + 조직도만 사용)
+-- 
+-- 조직도는 제가 수아씨가 만든거 체리픽해서 적용은했는데
+-- 가천대 할때는 ezFlow에다가 커밋을 세개 정도 가져왔어요
+-- 수아씨가 개발한걸 적용만 했더니 잘 되더라구여 그렇게 해결한거였어요
+-- 
+-- 전자결재는 누가 지원해줘야돼요
+-- 표준에 적용되지 않아서 무조건 추가 개발을 해야되는건이라
+-- 네네 팀장님이랑 한번 얘기해보세염
 
 -- --------------------------------------
 

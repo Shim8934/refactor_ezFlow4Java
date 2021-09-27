@@ -1,11 +1,15 @@
 package egovframework.ezEKP.ezCommon.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
 import egovframework.ezEKP.ezSystem.vo.CountryVO;
@@ -318,6 +322,8 @@ public interface EzCommonService {
 	
 	public void insertApprSatViewerConfig() throws Exception;
 
+	public JSONObject attachWebFolderFile(JSONArray fileListJson, LoginVO userInfo, String param, HttpServletRequest request);
+
 	public void addBoardMailFGColumn() throws Exception;
 
 	public void addCommNoticeUpperNoColumn() throws Exception;
@@ -335,6 +341,8 @@ public interface EzCommonService {
     public void createTblCarAttach() throws Exception;
     
     public void createTblCarForm() throws Exception;
-    
-	
+
+	public void addViewTaskOldFlag() throws Exception;
+
+	public HashMap<String, Object> getTenantConfigList(List<String> propertyNames, int tenantID) throws Exception;
 }

@@ -1444,6 +1444,8 @@
 						
 						if (hasTaskAttach == 'Y') {
 							document.getElementById('attachedfileDIV').innerHTML = taskAttachList
+				    	} else {
+				    		document.getElementById('attachedfileDIV').innerHTML = "";
 				    	}
 					},
 					error : function(jqXHR, textStatus, errorThrown) {

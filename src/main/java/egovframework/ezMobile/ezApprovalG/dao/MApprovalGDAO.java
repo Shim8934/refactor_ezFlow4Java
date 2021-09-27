@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import egovframework.ezMobile.ezApprovalG.vo.*;
+
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
@@ -194,6 +195,11 @@ public class MApprovalGDAO extends EgovAbstractDAO {
 	
 	public void saveAttachInfo(Map<String, Object> map) throws Exception {
 		insert("MApprovalG.saveAttachInfo", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public HashMap<String, Object> getAprMemberBySn(Map<String, Object> map) throws Exception {
+		return (HashMap<String, Object>) select("MApprovalG.getAprMemberBySn", map);
 	}
 	
 }

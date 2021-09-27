@@ -659,6 +659,7 @@
 		        var tempfilesize = 0;
 		        var tempbigfilesize = 0;
 		        var bigFileCheck = false;
+		        var newBigAttachCount = 0;
 
 		        for (var i = 0; i < attachFileXml.getElementsByTagName("ROW").length; i++) {
 		            var filelistsize = Number(getNodeText(attachFileXml.getElementsByTagName("DATA6").item(i)));
@@ -669,8 +670,9 @@
 		            } else {
 		                tempfilesize += filelistsize;
 		            }
+		            newBigAttachCount++;
 		        }
-
+		        
 		        if (isbigyn == "Y") {
 		            bigFileCheck = true;
 		        }
@@ -714,6 +716,9 @@
 		        }
 
 		        if (bigFileCheck) {
+		        	if(!bigFileAttachCountCheck(newBigAttachCount)) {
+		        		return;
+		        	}
 		            var bigFileAttachChk = confirm(window.parent.BigSizeAttachMBSize + "MB" + strLang78 + window.parent._pBigAttachDownloadDay + strLang26 + strLang79);
 		            
 		            if (!bigFileAttachChk) {
@@ -832,7 +837,10 @@
 		        }
 		        return true;
 		    }
-		    
+		
+		    function filePicker() {
+		    	window.parent.filePickerOpen();
+		    }
 		</script>
 	</head>  
     <body ondragover ="defaultenter(event)" ondragenter ="defaultenter(event)" style="overflow:hidden">   
@@ -841,6 +849,9 @@
                 <a class="imgbtn imgbck" onclick="btnfileup()"><span><spring:message code='ezEmail.t677' /></span></a>
                 <a class="imgbtn imgbck" id="btnBigFileUpload" onclick="btnfileup_big()"><span><spring:message code='ezEmail.t663' /></span></a>
                 <a class="imgbtn imgbck" onclick="btnfiledel()"><span><spring:message code='ezEmail.t678' /></span></a>   
+                <c:if test="${useWebfolder == 'YES'}">
+                	<a class="imgbtn imgbck" onclick="filePicker()" style="display:none"><span><spring:message code='ezWebFolder.pyy02' /></span></a>   
+                </c:if>
             </span>
             <div id="progdiv" class="progarea" style="display:none">
              	<P class="prog_bar"><span id="prog_bar" style="width:0%"></span></P> <span class="prog_num"><strong id ="prog_num">0</strong>%</span>

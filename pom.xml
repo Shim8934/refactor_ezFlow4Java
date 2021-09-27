@@ -471,6 +471,27 @@
 			<scope>system</scope>
 			<systemPath>${webappLib}/WF3JavaClient-3.0.36.jar</systemPath>
 		</dependency>
+
+		<dependency>
+			<groupId>com.twelvemonkeys.imageio</groupId>
+			<artifactId>imageio-jpeg</artifactId>
+			<version>3.7.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.twelvemonkeys.imageio</groupId>
+			<artifactId>imageio-tiff</artifactId>
+			<version>3.7.0</version>
+		</dependency>
+
+		<!--
+        Optional dependency. Needed only if you deploy ImageIO plugins as part of a web app.
+        Make sure you add the IIOProviderContextListener to your web.xml, see above.
+        -->
+		<dependency>
+			<groupId>com.twelvemonkeys.servlet</groupId>
+			<artifactId>servlet</artifactId>
+			<version>3.7.0</version>
+		</dependency>
 	</dependencies>
 
     <build>

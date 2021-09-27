@@ -233,7 +233,7 @@
 			<ul>
 				<li><span onClick="return btnAdd_onclick()" ><spring:message code = 'ezApprovalG.t1261' /></span></li>
 				<li><span onClick="return btnInfo_onclick()"><spring:message code = 'ezApprovalG.t1284' /></span></li>
-				<li><span onClick="return btnDel_onclick()"><spring:message code = 'ezApprovalG.t266' /></span></li>
+				<li><span class="icon16 icon16_delete" onClick="return btnDel_onclick()"></span></li>
 			</ul>
 		</div>
 

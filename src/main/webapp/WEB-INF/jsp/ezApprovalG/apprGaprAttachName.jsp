@@ -22,7 +22,7 @@
 		    var storeExp;
 		    function btn_SaveAprDeptTempletName_onclick() {
 		        var p_AprDeptTempletName = txtPageNum.value;
-		        var p_DisplayName = txtDisplayName.value + storeExp;
+		        var p_DisplayName = txtDisplayName.value;
 		        if (p_AprDeptTempletName.length > 0) {
 		            var strMatch = p_AprDeptTempletName.match(/^[0-9]+$/);
 		            if (!strMatch) {
@@ -51,15 +51,16 @@
 		            return;
 		        }
 
-		        if (!p_DisplayName == "") {
+		        if (!p_DisplayName) {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t291'/>";
 		            OpenAlertUI(pAlertContent);
 		            txtDisplayName.focus();
 		            return;
 		        }
+
 		        ret[0] = "OK";
 		        ret[1] = p_AprDeptTempletName;
-		        ret[2] = p_DisplayName;
+		        ret[2] = p_DisplayName + storeExp;;
 		
 		        if (ReturnFunction != null) {
 		            ReturnFunction(ret);

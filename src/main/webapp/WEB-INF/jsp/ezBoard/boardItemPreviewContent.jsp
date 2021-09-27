@@ -23,6 +23,17 @@
 				background-color:#f1f8ff;
 				border:1px solid #6793d8;
 			}
+			#txtContent h1, #txtContent h2 , #txtContent h3 , #txtContent h4 , #txtContent h5 , #txtContent h6 {
+				margin-left:0px;
+				margin-right:0px;
+				color:#000000;
+			}
+			#txtContent h1 {font-size:2em; margin-top:0.67em; margin-bottom:0.67em;}
+			#txtContent h2  {font-size:1.5em; margin-top:0.83em; margin-bottom:0.83em;}
+			#txtContent h3 {font-size:1.17em; margin-top:1em; margin-bottom:1em;}
+			#txtContent h4 {font-size:1em; margin-top:1.33em; margin-bottom:1.33em;}
+			#txtContent h5 {font-size:0.83em; margin-top:1.67em; margin-bottom:1.67em;}
+			#txtContent h6 {font-size:0.67em; margin-top:2.33em; margin-bottom:2.33em;}
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -241,7 +252,7 @@
 	                    strTarget = "target=''";
 	                }
 	                
-	                strAttach += "<li>";
+	                strAttach += "<li style='display:inline-block;'>";
 	                strAttach += "<span id='MailAttachDownloadItems' name='MailAttachDownloadItems' onclick=\"DownloadFile('/ezBoard/getBoardAttachInfo.do?type=BOARD&itemID=" + encodeURIComponent(getNodeText(SelectSingleNode(xmldomNodes[i], "ItemID"))) + "&attID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "GUID")) + "')\"><img style='cursor:pointer;vertical-align:middle' src='/images/icon_adddownload.gif' width='16' height='16' /></span>";
 	                strAttach += "&nbsp;";
 	                strAttach += "<span onmouseover=\"this.style.color='#164aad'\" onmouseout=\"this.style.color='#666'\" style='cursor: pointer; color: rgb(102, 102, 102);'>";
@@ -250,7 +261,7 @@
 	                strAttach += "<a name='filename' href='/ezBoard/getBoardAttachInfo.do?type=BOARD&itemID=" + encodeURIComponent(getNodeText(SelectSingleNode(xmldomNodes[i], "ItemID"))) + "&attID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "GUID"))
 	                + "' filePath='" + filepathHTMLEscape + "' fileNameAttr='" + filenameAttr + "' realFileName='" + filename + "'>" + filename + " (" + filesize + ")</a>";	                
 	              	strAttach += "</span>";
-	                strAttach += "</li>";
+	                strAttach += "</li><br>";
 	            }
 	            strAttach += "</ul></div>";
 	            return strAttach;

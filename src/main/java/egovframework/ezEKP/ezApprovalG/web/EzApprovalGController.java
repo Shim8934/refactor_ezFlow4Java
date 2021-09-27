@@ -1448,7 +1448,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		Path reformHtmlRelativePath = realPath.resolve("." + reformHtmlRelativePathStr);
 				
 		if (Files.exists(reformHtmlRelativePath)) {
-			reformBody = new String(Files.readAllBytes(reformHtmlRelativePath));
+			reformBody = new String(commonUtil.readBytesFromFile(reformHtmlRelativePath));
 		}
 		
 		if (Files.exists(realPath.resolve("." + reformFunctionRelativePathStr))) {
@@ -3420,7 +3420,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					
 					try {
 						File sourceFile = new File(commonUtil.detectPathTraversal(realPath + filePathsArr[i])); // 다운받기 위한 원본 파일의 경로
-						byte[] fileBytes = Files.readAllBytes(sourceFile.toPath());
+						byte[] fileBytes = commonUtil.readBytesFromFile(sourceFile.toPath());
 						
 						// fileNamesArr는 확장자를 포함함
 						if (fileNamesArr[i].endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
@@ -5537,8 +5537,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String realPath = commonUtil.getRealPath(request);
 		String docID = xmlDom.getElementsByTagName("PDOCID").item(0).getTextContent().trim();
 		String zipFileName = xmlDom.getElementsByTagName("PTITLE").item(0).getTextContent().replace("\\", "").replace("/", "").replace(":", "").replace("?", "").
-                replace('"' + "", "").replace("*", "").replace("<", "").replace(">", "").replace("|", "");
-		String path = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());;
+                replace('"' + "", "").replace("*", "").replace("<", "").replace(">", "").replace("|", "").replaceAll("\\t", " ");
+		String path = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
 		String path2 = realPath + commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
 		String separators = "\\|\\|\\|";
 		String[] fileTypes = xmlDom.getElementsByTagName("PTYPEINFO").item(0).getTextContent().split(separators);
@@ -5591,7 +5591,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			
 			//2019.04.01 천성준 - 기존에 있던 replace로직 통합 겸 중복검사한 첨부파일이름 재입력
 			for (int i = 0; i < tmpAry.size(); i++) {
-				fileNames[i] = tmpAry.get(i).replace("\\", "").replace("/", "").replace(":", "").replace("?", "").replace('"' + "", "").replace("*", "").replace("<", "").replace(">", "").replace("|", "");
+				fileNames[i] = tmpAry.get(i).replace("\\", "").replace("/", "").replace(":", "").replace("?", "").replace('"' + "", "").replace("*", "").replace("<", "").replace(">", "").replace("|", "").replaceAll("\\t", " ");
 			}
 			
 			for (int k = 0; k < filePaths.length; k++) {
@@ -5658,7 +5658,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					fileExt = filePaths[k].substring(0, filePaths[k].lastIndexOf("."));
 					fileExt = fileExt.substring(fileExt.lastIndexOf(".") + 1);
 					// 암호화된 파일의 바이트를 읽어온 후 복호화
-					byte[] encryptedFileBytes = Files.readAllBytes(new File(commonUtil.detectPathTraversal(realPath + filePaths[k])).toPath());
+					byte[] encryptedFileBytes = commonUtil.readBytesFromFile(new File(commonUtil.detectPathTraversal(realPath + filePaths[k])).toPath());
 					// 인풋스트림에서 복호화한 바이트 배열을 쓰도록 한다.
 					inpStream = new ByteArrayInputStream(klibUtil.decrypt(encryptedFileBytes));
 				} else {
@@ -5786,6 +5786,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
             
             if (tempQuery.indexOf("FORMID;") != -1) {
                 returnQuery += " AND TBL_APRDOCINFO.FormID = '" + xmlDomSub.getElementsByTagName("FORMID").item(0).getTextContent() + "' ";
+            }
+
+            if (tempQuery.indexOf("FORMNAME;") != -1) {
+                returnQuery += " AND TBL_EXPAPRDOCINFO.FORMNAME LIKE '%" + xmlDomSub.getElementsByTagName("FORMNAME").item(0).getTextContent() + "%' ";
             }
             
             if (tempQuery.indexOf("KAPR;") != -1) {
@@ -5932,7 +5936,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				
 				// KLIB 복호화
 				if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
-					byte[] orgBytes = Files.readAllBytes(orgFile.toPath());
+					byte[] orgBytes = commonUtil.readBytesFromFile(orgFile.toPath());
 					FileUtils.writeByteArrayToFile(newFile, klibUtil.decrypt(orgBytes));
 				} else {
 					FileUtils.copyFile(orgFile, newFile);
@@ -6505,7 +6509,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				
 				// KLIB 복호화
 				if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
-					byte[] orgBytes = Files.readAllBytes(orgFile.toPath());
+					byte[] orgBytes = commonUtil.readBytesFromFile(orgFile.toPath());
 					FileUtils.writeByteArrayToFile(newFile, klibUtil.decrypt(orgBytes));
 				} else {
 					FileUtils.copyFile(orgFile, newFile);
@@ -7372,7 +7376,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					containers.append(", '" + apprGLeftVOList.get(k).getContainerID() + "'");
 				}
 			}
-			contID = containers.toString();
+			//contID = containers.toString();
 			model.addAttribute("share", "share");
 		}
 		
@@ -9791,7 +9795,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				if (useKlibBackup) {
 					Path backupDir = Paths.get(realPath, uploadApprovalRoot, companyId, EzApprovalGKlibService.BACKUP_DIR_NAME, "doc", oldYear, docDirName, "history");
 					Files.createDirectories(backupDir);
-					Files.write(backupDir.resolve(fileName), fileBytes, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+					commonUtil.writeBytesToFile(backupDir.resolve(fileName), fileBytes);
 				}
 				
 				fileBytes = klibUtil.encrypt(fileBytes);
@@ -9799,7 +9803,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 			
 			Path outputFile = Paths.get(commonUtil.detectPathTraversal(realPath + dirPath + commonUtil.separator + fileName));
-			Files.write(outputFile, fileBytes, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+			commonUtil.writeBytesToFile(outputFile, fileBytes);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -11321,5 +11325,18 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	    logger.debug("getBujaeInfo ended.");
 	    
 	    return result;
+	}
+	
+	/* 2021-08-25 홍승비 - 개인병렬협조/합의자의 반송 시 처리 타입을 리턴 (1:반송해도 다음 결재권자에게 진행문서로 전달      2:한 명이라도 반송한 경우 원 기안자에게 반송) */
+	@RequestMapping(value = "/ezApprovalG/getPersonalAgreeReturnType.do", method = RequestMethod.GET, produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getPersonalAgreeReturnType(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception{
+		logger.debug("getPersonalAgreeReturnType started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String result = ezCommonService.getTenantConfig("PersonalAgreeReturnType", userInfo.getTenantId());
+		
+		logger.debug("getPersonalAgreeReturnType ended, result = " + result);
+		return result;
 	}
 }

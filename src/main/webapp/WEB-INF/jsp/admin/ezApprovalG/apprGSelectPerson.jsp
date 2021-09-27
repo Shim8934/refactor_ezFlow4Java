@@ -344,7 +344,7 @@
 		        var tr = listview.GetSelectedRows();
 		        var length = tr.length;
 		        if (length == 0) {
-		            alert("<spring:message code='ezPersonal.t65'/>");
+		            alert("<spring:message code='ezResource.t169'/>");
 		            return;
 		        }
 		        if (length > 1) {

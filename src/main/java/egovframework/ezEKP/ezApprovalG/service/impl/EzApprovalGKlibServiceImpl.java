@@ -349,7 +349,7 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 			}
 
 			// 파일의 바이트를 읽음
-			byte[] fileBytes = Files.readAllBytes(file);
+			byte[] fileBytes = commonUtil.readBytesFromFile(file);
 			// 바이트 암호화
 			byte[] encryptedBytes = klibUtil.encrypt(fileBytes);
 
@@ -358,7 +358,7 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 			Path encryptedFile = Paths.get(encryptedFileHref);
 
 			// 암호화한 바이트를 .ezd 파일로 저장
-			Files.write(encryptedFile, encryptedBytes);
+			commonUtil.writeBytesToFile(encryptedFile, encryptedBytes);
 
 			// 원본 파일 삭제
 			Files.delete(file);

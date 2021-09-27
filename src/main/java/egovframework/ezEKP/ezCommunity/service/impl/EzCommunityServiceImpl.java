@@ -904,19 +904,48 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 						File thumbnailFile = new File(pAttachPath);
 						file.transferTo(thumbnailFile);
 						
+						String extension = pFileName.substring(pFileName.lastIndexOf(".") + 1, pFileName.length());
 						BufferedImage inputImage = ImageIO.read(thumbnailFile);
 						BufferedImage outputImage = null;
+						BufferedImage outputImageS = null;
 						Graphics2D saveImage = null;
-						//썸네일 생성		
-						outputImage= new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
+						
+						// 기존 이미지가 파일 형태로 업로드되었으므로, 다시 이미지 형태로 저장
+						if (inputImage.getType() == 0 || extension.equals("png")) { // 일부 png 파일의 경우, type값이 0으로 넘어오거나 검은색으로 저장된다.
+							outputImage = new BufferedImage(inputImage.getWidth(), inputImage.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
+						} else {
+							outputImage = new BufferedImage(inputImage.getWidth(), inputImage.getHeight(), inputImage.getType());
+						}
 						saveImage = outputImage.createGraphics();
+						saveImage.drawImage(inputImage, 0, 0, inputImage.getWidth(), inputImage.getHeight(), null);
+						
+						String tempFilaPath = pDirPath + "tempUploadFile" + commonUtil.separator + pUploadSN + pFileName.substring(pFileName.lastIndexOf("."));
+						tempFilaPath = commonUtil.detectPathTraversal(tempFilaPath);
+						
+						File tempFile = new File(tempFilaPath);
+						ImageIO.write(outputImage, "png", tempFile);
+						
+						// 썸네일 생성
+						if (inputImage.getType() == 0 || extension.equals("png")) {
+							outputImageS = new BufferedImage(100, 100, BufferedImage.TYPE_4BYTE_ABGR);
+						} else {
+							outputImageS = new BufferedImage(100, 100, inputImage.getType());
+						}
+						saveImage = outputImageS.createGraphics();
 						saveImage.drawImage(inputImage, 0, 0, 100, 100, null);
 						
 						String tempThumbFilaPath = pDirPath + "tempUploadFile" + commonUtil.separator + "s_" + pUploadSN + pFileName.substring(pFileName.lastIndexOf("."));
 						tempThumbFilaPath = commonUtil.detectPathTraversal(tempThumbFilaPath);
 						
 						File tempTumbbail = new File(tempThumbFilaPath);
-						ImageIO.write(outputImage, "png", tempTumbbail);
+						ImageIO.write(outputImageS, "png", tempTumbbail);
+						
+						inputImage.flush();
+						inputImage = null;
+						outputImage.flush();
+						outputImage = null;
+						outputImageS.flush();
+						outputImageS = null;
 						
 						resultUpload = "true";
 					}
@@ -1237,7 +1266,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String mode = request.getParameter("mode");
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
-		String subject = request.getParameter("pollSubject").replaceAll("\r\n", " ");
+		String subject = request.getParameter("pollSubject");//.replaceAll("\r\n", " ");
 		/*String selRes = request.getParameter("selRes");
 		String sel = request.getParameter("sel");*/
 		String selType = request.getParameter("selType");
@@ -1630,8 +1659,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		/* 2020-05-26 홍승비 - 설문 등록자의 이름이 우측 하단으로 내려가는 경우, UI가 깨지지 않도록 이름 전체를 하단에 표출 */
 		//2018-07-03 김보미 - 제목th에 너비 추가
 		if (managerVO.getPollSubject().indexOf("\r\n") >= 0) {
-			strHTML.append("<th align=\"left\" class='pollTitle' title = \"" + commonUtil.cleanValue(managerVO.getPollSubject()) + "\">" + egovMessageSource.getMessage("ezCommunity.t686", userInfo.getLocale()) + "<br/>&nbsp;&nbsp;" + commonUtil.cleanValue(managerVO.getPollSubject().replaceAll("\r\n", "<br/>&nbsp;&nbsp;")) + "</th>");
-			strHTML.append("<th align=\"right\" class='pollWriter'><span>" + egovMessageSource.getMessage("ezCommunity.t687", userInfo.getLocale()) + "<br/>&nbsp;&nbsp;</span><div class='pollWriterName'>" + name + "</div></th>");
+			strHTML.append("<th align=\"left\" class='pollTitle' title = \"" + commonUtil.cleanValue(managerVO.getPollSubject()) + "\">" + egovMessageSource.getMessage("ezCommunity.t686", userInfo.getLocale()) + commonUtil.cleanValue(managerVO.getPollSubject()) + "</th>");
+			strHTML.append("<th align=\"right\" class='pollWriter'><span>" + egovMessageSource.getMessage("ezCommunity.t687", userInfo.getLocale()) + "</span><div class='pollWriterName'>" + name + "</div></th>");
 		} else {
 			strHTML.append("<th align=\"left\" class='pollTitle' title = \"" + commonUtil.cleanValue(managerVO.getPollSubject()) + "\">" + egovMessageSource.getMessage("ezCommunity.t686", userInfo.getLocale()) + commonUtil.cleanValue(managerVO.getPollSubject()) + "</th>");
 			strHTML.append("<th align=\"right\" class='pollWriter'><span>" + egovMessageSource.getMessage("ezCommunity.t687", userInfo.getLocale()) + "</span><div class='pollWriterName'>" + name + "</div></th>");
@@ -1744,46 +1773,54 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		int iOutputCount = 0;
 		
-		for(CommunityCClubUserVO user : userList) {
-		/*	if (userList.indexOf(user) + 1 <= (curPage - 1) * comNoPerPage) {
-				continue;
+		/* 2021-08-17 홍승비 - 데이터가 없는 경우 tr 추가 */
+		if (userList ==  null || userList.size() == 0) {
+			sb.append("<tr>");
+			sb.append("<td colspan=\"7\" style=\"width:100%; height:30px; text-align:center;\">" + egovMessageSource.getMessage("ezOrgan.hdp25", userInfo.getLocale()) + "</td>");
+			sb.append("</tr>");
+		}
+		else {
+			for (CommunityCClubUserVO user : userList) {
+			/*	if (userList.indexOf(user) + 1 <= (curPage - 1) * comNoPerPage) {
+					continue;
+				}
+				
+				if (iOutputCount > comNoPerPage) {
+					break;
+				}*/
+				iOutputCount++;
+				
+				if (iOutputCount > comNoPerPage * curPage) {
+	        		break;
+	        	}
+	
+	        	if (iOutputCount > comNoPerPage * curPage - 10) {
+					CommunityMemberInfoVO memberInfo = commViewMemberGet3(user.getC_ID().trim(), user.getCompanyID(), primary, userInfo.getTenantId());
+					
+					sb.append("<tr>");
+					sb.append("<td style=\"width:55; height:23; align:center;\">" + (userList.indexOf(user) + 1) + "</td>");
+					sb.append("<td>");
+					
+					if (user.getC_ID().trim().equals(strSysopID)) {
+						sb.append("<img style='margin-right:3px' src=\"/images/i_master.gif\" border=\"0\" alt=\"" + egovMessageSource.getMessage("ezCommunity.t513", userInfo.getLocale()) + "\" align=\"absmiddle\" WIDTH=\"15\" HEIGHT=\"9\">");
+					}
+					
+					// CommunityMemberInfoVO를 수정해서 부서ID를 가져오도록 하자.
+					sb.append("<a href=\"javascript:openinfo1('" + code + "','" + user.getC_ID().trim() + "','" + user.getCompanyID() + "','" + user.getDeptID() + "');\" valign=\"bottom\">" + commonUtil.cleanValue(memberInfo.getUserName()) + "</a></td>");
+					// 가입한 당시 겸직한 부서이름(deptName)/또는 겸직하지 않은 상태의 부서이름을 나타낸다. 쿼리 내부에서 다국어 처리한 것(case~primary)임.
+					sb.append("<td>" + commonUtil.cleanValue(user.getDeptName()) + "</td>");
+					sb.append("<td>" + commonUtil.cleanValue(user.getC_ID().trim()) + "</td>");
+					sb.append("<td>" + user.getC_inDate().substring(0, 10) + "</td>");
+					sb.append("<td>");
+					
+					if (user.getC_lastDate() != null) {
+						sb.append(user.getC_lastDate().substring(0, 10));
+					}
+					
+					sb.append("</td>");
+					sb.append("<td style=\"align:center\">" + user.getC_visited() + egovMessageSource.getMessage("ezCommunity.t728", userInfo.getLocale()) + "</td></tr>");
+	        	}
 			}
-			
-			if (iOutputCount > comNoPerPage) {
-				break;
-			}*/
-			iOutputCount++;
-			
-			if (iOutputCount > comNoPerPage * curPage) {
-        		break;
-        	}
-
-        	if (iOutputCount > comNoPerPage * curPage - 10) {
-				CommunityMemberInfoVO memberInfo = commViewMemberGet3(user.getC_ID().trim(), user.getCompanyID(), primary, userInfo.getTenantId());
-				
-				sb.append("<tr>");
-				sb.append("<td style=\"width:55; height:23; align:center;\">" + (userList.indexOf(user) + 1) + "</td>");
-				sb.append("<td>");
-				
-				if (user.getC_ID().trim().equals(strSysopID)) {
-					sb.append("<img style='margin-right:3px' src=\"/images/i_master.gif\" border=\"0\" alt=\"" + egovMessageSource.getMessage("ezCommunity.t513", userInfo.getLocale()) + "\" align=\"absmiddle\" WIDTH=\"15\" HEIGHT=\"9\">");
-				}
-				
-				// CommunityMemberInfoVO를 수정해서 부서ID를 가져오도록 하자.
-				sb.append("<a href=\"javascript:openinfo1('" + code + "','" + user.getC_ID().trim() + "','" + user.getCompanyID() + "','" + user.getDeptID() + "');\" valign=\"bottom\">" + commonUtil.cleanValue(memberInfo.getUserName()) + "</a></td>");
-				// 가입한 당시 겸직한 부서이름(deptName)/또는 겸직하지 않은 상태의 부서이름을 나타낸다. 쿼리 내부에서 다국어 처리한 것(case~primary)임.
-				sb.append("<td>" + commonUtil.cleanValue(user.getDeptName()) + "</td>");
-				sb.append("<td>" + commonUtil.cleanValue(user.getC_ID().trim()) + "</td>");
-				sb.append("<td>" + user.getC_inDate().substring(0, 10) + "</td>");
-				sb.append("<td>");
-				
-				if (user.getC_lastDate() != null) {
-					sb.append(user.getC_lastDate().substring(0, 10));
-				}
-				
-				sb.append("</td>");
-				sb.append("<td style=\"align:center\">" + user.getC_visited() + egovMessageSource.getMessage("ezCommunity.t728", userInfo.getLocale()) + "</td></tr>");
-        	}
 		}
 		
 		return sb.toString();
@@ -7741,5 +7778,16 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		logger.debug("getReaderListCount ended");
 		return ezCommunityDAO.bbsGetReplyItemCnt(map);
+	}
+	
+	public String getClubConfirmType(String code, int tenantID) throws Exception {
+		logger.debug("getClubConfirmType started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_CODE", code);
+		map.put("v_TENANTID", tenantID);
+		
+		logger.debug("getClubConfirmType ended");
+		return ezCommunityDAO.getClubConfirmType(map);
 	}
 }

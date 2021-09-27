@@ -55,7 +55,7 @@
 		        }
 		        catch (e) { }
 		        document.getElementById("pMessageContent").innerHTML = RetValue;
-		
+
 		        if (MACSAFARIYN())
 		            window.resizeTo(330, 251);
 		    }

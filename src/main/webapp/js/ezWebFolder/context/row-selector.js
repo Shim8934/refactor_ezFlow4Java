@@ -58,7 +58,7 @@ var rowContext = (function() {
 			for (var i = startIndex; i <= endIndex; i++) {
 				setSelectState(rows[i], true);
 				if ((typeof filePickArr) != "undefined"){
-					selectedFileList(rowElement);
+					selectedFileList(rows[i]);
 				}	
 			}
 			

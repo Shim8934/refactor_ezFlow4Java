@@ -20,6 +20,8 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.KlibUtil;
 
 import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -901,7 +903,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	@Override
 	public String loadMHTFile(String strMHTpath) throws Exception{
 		String strMhtData = "";
-		byte[] fileBytes = Files.readAllBytes(Paths.get(commonUtil.detectPathTraversal(strMHTpath.trim())));
+		byte[] fileBytes = commonUtil.readBytesFromFile(Paths.get(commonUtil.detectPathTraversal(strMHTpath.trim())));
 
 		// klib 복호화
 		if (strMHTpath.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
@@ -1186,7 +1188,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
 		map.put("tenantID", tenantID);
 		map.put("userID", userID);
-		map.put("isMobile", deviceType.isMobile() && !isMobileIntegratedMultiLogin(companyId, tenantID));
+		map.put("mobileFlag", deviceType.isMobile() && !isMobileIntegratedMultiLogin(companyId, tenantID));
 
 		return Optional.ofNullable(ezCommonDAO.selectMultiLoginUser(map)).orElse("");
 	}
@@ -2401,6 +2403,43 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 	
 	@Override
+	public JSONObject attachWebFolderFile(JSONArray fileListJson, LoginVO loginVO, String param, HttpServletRequest request) {
+		
+		JSONObject resultJson = new JSONObject();
+		String downloadDIR = "";
+		if (param == ""){
+			param = "upload_mail.ROOT";
+		} else if(param.equals("BOARD")){
+			param = "upload_board.ROOT";
+		} else if(param.equals("APR")){
+			param = "upload_approvalG.ROOT";
+		} else if(param.equals("COMMUNITY")){
+			param = "upload_community.ROOT";
+		} else if(param.equals("TASK")){
+			param = "upload_task.ROOT";
+		} else if(param.equals("SCHEDULE")){
+			param = "upload_schedule.ROOT";
+		}
+		String realPath = commonUtil.getRealPath(request);
+		String paramPath = commonUtil.getUploadPath(param, loginVO.getTenantId());
+		
+		downloadDIR = paramPath + "/tempWebfolderFileUpload/";
+		
+		String status = "OK";
+		List<String> downloadPath = new ArrayList<String>();
+		
+		try {
+			downloadPath = commonUtil.attachWebFolderFile(fileListJson, downloadDIR, loginVO, realPath);
+		} catch (Exception e) {
+			e.printStackTrace();
+			status = "ERROR";
+		}
+		resultJson.put("status", status);
+		resultJson.put("downloadPath", downloadPath);
+				
+		return resultJson;
+	}
+	
 	public void addBoardMailFGColumn() throws Exception {
 		ezCommonDAO.addBoardMailFGColumn();
 	}
@@ -2444,5 +2483,27 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	@Override
 	public void createTblCarForm() throws Exception {
 		ezCommonDAO.createTblCarForm();
+	}
+	
+	@Override
+	public void addViewTaskOldFlag() throws Exception {
+		ezCommonDAO.addViewTaskOldFlag();
+		ezCommonDAO.addSViewTaskOldFlag();
+	}
+
+	@Override
+	public HashMap<String, Object> getTenantConfigList(List<String> propertyNames, int tenantID) throws Exception {
+		HashMap<String, Object> resultMap = new HashMap<>();
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("property_names", propertyNames);
+		map.put("tenantID" , tenantID);
+
+		List<Map<String, Object>> tenantConfigList = ezCommonDAO.getTenantConfigList(map);
+
+		for (Map<String, Object> configMap : tenantConfigList) {
+			resultMap.put(String.valueOf(configMap.get("property_name")),configMap.get("property_value"));
+		}
+
+		return resultMap;
 	}
 }

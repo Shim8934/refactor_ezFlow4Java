@@ -13,6 +13,19 @@
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/dateControls/demos.css')        }">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezSurvey/jquery.qtip.css')            }">
+		<style type="text/css">
+			#cf-purpose h1, #cf-purpose h2 , #cf-purpose h3 , #cf-purpose h4 , #cf-purpose h5 , #cf-purpose h6 {
+				margin-left:0px;
+				margin-right:0px;
+				color:#000000;
+			}
+			#cf-purpose h1 {font-size:2em; margin-top:0.67em; margin-bottom:0.67em;}
+			#cf-purpose h2  {font-size:1.5em; margin-top:0.83em; margin-bottom:0.83em;}
+			#cf-purpose h3 {font-size:1.17em; margin-top:1em; margin-bottom:1em;}
+			#cf-purpose h4 {font-size:1em; margin-top:1.33em; margin-bottom:1.33em;}
+			#cf-purpose h5 {font-size:0.83em; margin-top:1.67em; margin-bottom:1.67em;}
+			#cf-purpose h6 {font-size:0.67em; margin-top:2.33em; margin-bottom:2.33em;}
+		</style>
 		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}   "></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.js')     }   "></script>
@@ -104,7 +117,15 @@
 				<script type="text/javascript">SurveyCreate.start();</script>
 			</c:otherwise>
 		</c:choose>
-		
+
+	<c:if test="${not empty survey}">
+		<script>
+			$(window).on('beforeunload', function ()
+			{
+                fetch("/ezSurvey/changeSurveyState.do?surveyId=${survey.surveyId}");
+			});
+		</script>
+	</c:if>
 	</body>
 </html>
 

@@ -1288,6 +1288,11 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			ezApprovalGAdminDAO.removeTaskCode2(map1);
 			ezApprovalGAdminDAO.removeAutoDoc(map1);
 			
+			if (approvalFlag.equals("S")) {
+				ezApprovalGAdminDAO.removeMyTaskCode(map1);
+				logger.debug("removeMyTaskCode success.");
+			}
+			
 			logger.debug("removeTaskCode1,2 ended.");
 			logger.debug("removeTaskCode ended.");
 			
@@ -2259,7 +2264,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			sb.append("<ID" + list.indexOf(vo) + ">");
 			sb.append(commonUtil.cleanValue(vo.getFormContUserDepID()));
 			sb.append("</ID" + list.indexOf(vo) + ">");
-			sb.append("<NAME" + list.indexOf(vo) + ">");
+			sb.append("<NAME" + list.indexOf(vo) + "><![CDATA[");
 			
 			if (!lang.equals("2")) {
 				sb.append(ezOrganService.getPropertyValue(vo.getFormContUserDepID(), "displayname", tenantID));
@@ -2267,7 +2272,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				sb.append(ezOrganService.getPropertyValue(vo.getFormContUserDepID(), "displayname2", tenantID));
 			}
 			
-			sb.append("</NAME" + list.indexOf(vo) + ">");
+			sb.append("]]></NAME" + list.indexOf(vo) + ">");
 		}
 		
 		sb.append("</PARAMETER>");
@@ -2920,15 +2925,13 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 					Path reformHtmlPath = Paths.get(reformFilePrefix + ".html");
 					Path reformFunctionPath = Paths.get(reformFilePrefix + ".js");
 
-					OpenOption[] openOptions = { StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING };
-
-					Files.write(reformMhtPath, reformMht.getBytes(), openOptions);
-					Files.write(reformHtmlPath, reformHtml.getBytes(), openOptions);
+					commonUtil.writeBytesToFile(reformMhtPath, reformMht.getBytes());
+					commonUtil.writeBytesToFile(reformHtmlPath, reformHtml.getBytes());
 
 					if (reformFunction == null || reformFunction.trim().isEmpty()) {
 						Files.deleteIfExists(reformFunctionPath);
 					} else {
-						Files.write(reformFunctionPath, reformFunction.getBytes(), openOptions);
+						commonUtil.writeBytesToFile(reformFunctionPath, reformFunction.getBytes());
 					}
 				}
 			} catch (Exception e) {

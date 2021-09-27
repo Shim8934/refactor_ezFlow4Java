@@ -5321,6 +5321,8 @@
 		    		TENANT_ID = #tenantID#
 		    AND
 		    		COMPANYID = #companyID#
+		    AND
+		    		OLDFLAG_TOP IS NULL
 		    ORDER BY 
 		    		CATEGORYCODE
 		</isEmpty>
@@ -5343,13 +5345,17 @@
 					  AND
 					  	A.CATEGORYCODE = B.CATEGORYCODE 
 					  AND
-					  	A.MCATEGORYCODE != B.CATEGORYCODE ) as ISLEAF	
+					  	A.MCATEGORYCODE != B.CATEGORYCODE
+					 AND
+		    			A.OLDFLAG_MID IS NULL) as ISLEAF
 		    FROM 
 		    		VTASKCLASS B
 		    WHERE  
 		    		B.TENANT_ID = #tenantID#
 		    AND
 		    		B.COMPANYID = #companyID#
+		    AND
+		    		B.OLDFLAG_TOP IS NULL
 		    ORDER BY 
 		    		CATEGORYCODE
 		</isNotEmpty>
@@ -5376,6 +5382,8 @@
             		TENANT_ID = #tenantID#
             AND
 		    		COMPANYID = #companyID#
+		    AND
+		    		OLDFLAG_MID IS NULL
         	ORDER BY 
         			MCATEGORYCODE
 		</isEmpty>
@@ -5398,7 +5406,9 @@
 					  AND
 					  	A.MCATEGORYCODE = B.MCATEGORYCODE 
 					  AND
-					  	A.SUBCATEGORYCODE != B.MCATEGORYCODE ) as ISLEAF
+					  	A.SUBCATEGORYCODE != B.MCATEGORYCODE
+					 AND
+		    			A.OLDFLAG IS NULL) as ISLEAF
         	FROM 
         			VTASKCLASS B
        		WHERE  
@@ -5409,6 +5419,8 @@
             		B.TENANT_ID = #tenantID#
             AND
 		    		B.COMPANYID = #companyID#
+		    AND
+		    		B.OLDFLAG_MID IS NULL
         	ORDER BY 
         			MCATEGORYCODE
 		</isNotEmpty>
@@ -5435,7 +5447,9 @@
 	            AND
 	            	TENANT_ID = #tenantID#    
 	            AND	
-	            	COMPANYID = #companyID#   	
+	            	COMPANYID = #companyID# 
+	            AND
+		    		OLDFLAG_SUB IS NULL
 	            ORDER BY 
 	           		SUBCATEGORYCODE
 			</isEqual>
@@ -5456,7 +5470,9 @@
 	           AND
 	               TENANT_ID = #tenantID#  
 	           AND	
-	               COMPANYID = #companyID#  
+	               COMPANYID = #companyID# 
+	          	AND
+		    		OLDFLAG_SUB IS NULL
 	           ORDER BY 
 	           	   SUBCATEGORYCODE
 			</isNotEqual>
@@ -5479,7 +5495,9 @@
             AND
             	TENANT_ID = #tenantID#    
             AND	
-            	COMPANYID = #companyID#   	
+            	COMPANYID = #companyID#
+            AND
+		    	OLDFLAG_SUB IS NULL
             ORDER BY 
            		SUBCATEGORYCODE
 		</isNotEmpty>
@@ -6875,6 +6893,18 @@
 				NOT ( TBL_CABINET.CabinetTransferFlag = '2' AND CONFIRMFLAG = '0' )
 			AND 
 				TBL_CABINETCLASS.TERMINATEFLAG = '0'
+			AND
+				((VTASKCLASS.CATEGORYCODE = VTASKCLASS.MCATEGORYCODE AND VTASKCLASS.MCATEGORYCODE = VTASKCLASS.SUBCATEGORYCODE
+					AND OLDFLAG_TOP IS NULL)
+				OR
+				(VTASKCLASS.CATEGORYCODE != VTASKCLASS.MCATEGORYCODE AND VTASKCLASS.MCATEGORYCODE = VTASKCLASS.SUBCATEGORYCODE
+					AND OLDFLAG_TOP IS NULL
+					AND OLDFLAG_MID IS NULL)
+				OR
+				(VTASKCLASS.CATEGORYCODE != VTASKCLASS.MCATEGORYCODE AND VTASKCLASS.MCATEGORYCODE != VTASKCLASS.SUBCATEGORYCODE
+					AND OLDFLAG_TOP IS NULL
+					AND OLDFLAG_MID IS NULL
+					AND OLDFLAG_SUB IS NULL))
 			AND 
 				TBL_MYTASKCODE.CN = #v_USERID#
 			AND
@@ -6935,6 +6965,18 @@
 				TBL_CABINETCLASS.DelFlag = '0'
 			AND 
 				NOT ( TBL_CABINET.CabinetTransferFlag = '2' AND CONFIRMFLAG = '0' )
+			AND
+				((SVTASKCLASS.CATEGORYCODE = SVTASKCLASS.MCATEGORYCODE AND SVTASKCLASS.MCATEGORYCODE = SVTASKCLASS.SUBCATEGORYCODE
+					AND OLDFLAG_TOP IS NULL)
+				OR
+				(SVTASKCLASS.CATEGORYCODE != SVTASKCLASS.MCATEGORYCODE AND SVTASKCLASS.MCATEGORYCODE = SVTASKCLASS.SUBCATEGORYCODE
+					AND OLDFLAG_TOP IS NULL
+					AND OLDFLAG_MID IS NULL)
+				OR
+				(SVTASKCLASS.CATEGORYCODE != SVTASKCLASS.MCATEGORYCODE AND SVTASKCLASS.MCATEGORYCODE != SVTASKCLASS.SUBCATEGORYCODE
+					AND OLDFLAG_TOP IS NULL
+					AND OLDFLAG_MID IS NULL
+					AND OLDFLAG_SUB IS NULL))
 			AND 
 				TBL_MYTASKCODE.CN = #v_USERID#
 			AND
@@ -7197,7 +7239,7 @@
 <!-- 		{CALL EZSP_GETHISTORYFORATTACH(#v_DOCID#, #v_ORDEROPTION#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getHistoryForAttach" parameterClass="Map" resultClass="ApprGHistoryAttachVO">
-		SELECT 
+		(SELECT 
 				DISTINCT
                     APR.DISPLAYNAME as DISPLAYNAME,
                     HIS.DOCID, 
@@ -7239,7 +7281,7 @@
    		</isEqual>
    		<isNotEqual property="v_ORDEROPTIONVALUE" compareValue="aprmembersn">
 	   		ORDER BY 
-	   			$v_ORDEROPTION$, MODIFYDATE DESC' 
+	   			$v_ORDEROPTION$, MODIFYDATE DESC
    		</isNotEqual>
    		</isGreaterEqual>
    		<isLessThan property="v_ORDEROPTIONLENGTH" compareValue="10">
@@ -7251,6 +7293,65 @@
    			ORDER BY 
    				MODIFYDATE DESC
    		</isLessEqual>
+   		)
+   		
+   		UNION
+   		
+   		(SELECT 
+				DISTINCT
+                    APR.DISPLAYNAME as DISPLAYNAME,
+                    HIS.DOCID, 
+				    HIS.ATTACHFILESN, 
+    				HIS.ATTACHFILENAME, 
+    				HIS.ATTACHFILEDISPLAYNAME,
+    	   			HIS.ATTACHFILEHREF, 
+    	   			HIS.ATTACHFILESIZE, 
+    	   			HIS.ATTACHUSERID, 
+    	   			HIS.ATTACHUSERNAME, 
+    	   			HIS.ATTACHUSERNAME2,
+    	   			HIS.ATTACHUSERJOBTITLE, 
+    	   			HIS.ATTACHUSERJOBTITLE2, 
+    	   			HIS.ATTACHUSERDEPTID, 
+    	   			HIS.ATTACHUSERDEPTNAME, 
+    	   			HIS.ATTACHUSERDEPTNAME2, 
+    	   			HIS.MODIFYDATE,
+    	   			HIS.MODIFYSN, 
+    	   			HIS.MODIFYFLAG, 
+    	   			HIS.PAGENUM, 
+    	   			HIS.CHKFLAG
+	   	FROM 
+	   			TBL_HISTORYATTACHINFO HIS
+        JOIN
+                TBL_ENDATTACHINFO APR
+        ON
+                HIS.DOCID = APR.DOCID AND HIS.COMPANYID = APR.COMPANYID AND HIS.ATTACHFILEDISPLAYNAME = APR.ATTACHFILENAME                
+	   	WHERE 
+	   			HIS.DOCID = #v_DOCID#
+	   	AND
+	   			HIS.TENANT_ID = #v_TENANTID#
+	   	AND
+	   			HIS.COMPANYID = #companyID#
+	   	<isGreaterThan property="v_ORDEROPTIONLENGTH" compareValue="0">
+   		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="10">
+   		<isEqual property="v_ORDEROPTIONVALUE" compareValue="modifydate">
+	   		 ORDER BY 
+	   		 	$v_ORDEROPTION$ 
+   		</isEqual>
+   		<isNotEqual property="v_ORDEROPTIONVALUE" compareValue="aprmembersn">
+	   		ORDER BY 
+	   			$v_ORDEROPTION$, MODIFYDATE DESC
+   		</isNotEqual>
+   		</isGreaterEqual>
+   		<isLessThan property="v_ORDEROPTIONLENGTH" compareValue="10">
+   		 ORDER BY 
+	   		 	$v_ORDEROPTION$, MODIFYDATE DESC
+   		</isLessThan>
+   		</isGreaterThan>
+   		<isLessEqual property="v_ORDEROPTIONLENGTH" compareValue="0">
+   			ORDER BY 
+   				MODIFYDATE DESC
+   		</isLessEqual>
+   		)
 	</select>
 <!-- 	<procedure id="EzApprovalG.doApproveLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO"> -->
 <!-- 		{CALL EZSP_DOAPPROVE_LINEINFO(#v_DOCID#, #v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -11071,9 +11172,9 @@
 	            WHERE  
 	            	( TBL_RECROLEINFO.SeperateAttachNo = '00' )
 	            AND 
-	            	( TBL_RECROLEINFO.UserID = #v_USERID# )
-	            AND 
-	            	( TBL_RECROLEINFO.UserRight = '1' )
+	            	(( TBL_RECROLEINFO.UserID = #v_USERID# AND TBL_RECROLEINFO.UserRight = '1' )
+	                OR
+	            	 (TBL_RECROLEINFO.UserID = 'All_User' AND TBL_RECROLEINFO.UserRight = '2'))
 	            AND 
 	            	TBL_RECORD.DocID = #v_DOCID#
 	            AND
@@ -26766,9 +26867,9 @@
    	<insert id="EzApprovalG.insertDocSendAprAttachInfo" parameterClass="Map">
    		INSERT INTO
    				TBL_APRATTACHINFO 
-   		(     DocID,    AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
+   		(     DocID,    AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID, ISBIGATTACH, ISBIGATTACHDEL, SAVEDATE) 
    		(SELECT 
-   			#v_NEWID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID
+   			#v_NEWID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID, ISBIGATTACH, ISBIGATTACHDEL, SAVEDATE
    		 FROM 
              TBL_APRATTACHINFO A 
          WHERE 
@@ -26782,9 +26883,9 @@
    	<insert id="EzApprovalG.insertDocSendAprAttachInfo2" parameterClass="Map">
    		INSERT INTO
    				TBL_APRATTACHINFO 
-   		(     DocID,    AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
+   		(     DocID,    AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID, ISBIGATTACH, ISBIGATTACHDEL, SAVEDATE) 
    		(SELECT 
-   			#v_NEWID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID
+   			#v_NEWID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID, ISBIGATTACH, ISBIGATTACHDEL, SAVEDATE
    		 FROM 
              TBL_ENDATTACHINFO A 
          WHERE 
@@ -27151,9 +27252,9 @@
    	<insert id="EzApprovalG.insertGongRamSaveAprAttachInfo" parameterClass="Map"> 
    		INSERT INTO 
    			TBL_APRATTACHINFO 
-   		(DocID, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle, AttachUserJobTitle2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
+   		(DocID, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle, AttachUserJobTitle2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID, ISBIGATTACH, ISBIGATTACHDEL, SAVEDATE) 
    		(SELECT 
-            #v_gongRamDocID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle, AttachUserJobTitle2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+            #v_gongRamDocID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle, AttachUserJobTitle2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID, ISBIGATTACH, ISBIGATTACHDEL, SAVEDATE 
          FROM 
          	TBL_APRATTACHINFO A 
          WHERE 
@@ -32387,6 +32488,7 @@
 			TBL_OPENGOVDOCINFO
 		SET
 			OPENFLAG = #openFlag#,
+			LISTOPENFLAG = #openGovListFlag#,
 			BASIS = #basis#,
 			REASON = #reason#,
 			OPENLIMITDATE = #limitDate#,

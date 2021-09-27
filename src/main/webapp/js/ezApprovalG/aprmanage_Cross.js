@@ -1513,12 +1513,7 @@ function getAprDocAproveInfo(tr) {
         } else if (pListTypeValue == "21") {
         	pFlag = "TMP";
         } else if (pListTypeValue == "10" || pListTypeValue == "99") {
-        	if (approvalFlag == "S") {
-        		pDocID = GetAttribute(tr, "DATA2");
-        		pFlag = "END";
-        	} else {
-        		pFlag = "APR";
-        	}
+        	pFlag = "APR";
     	} else {
     		pFlag = "APR";
     	}

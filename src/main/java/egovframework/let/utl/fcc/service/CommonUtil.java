@@ -23,9 +23,11 @@ import java.beans.PropertyDescriptor;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -36,6 +38,7 @@ import java.net.URI;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.text.DecimalFormat;
 import java.text.Normalizer;
@@ -79,6 +82,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -144,6 +148,35 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+	/*
+	Copyright (c) 2008-2020, Harald Kuhr
+		All rights reserved.
+
+		Redistribution and use in source and binary forms, with or without
+		modification, are permitted provided that the following conditions are met:
+
+		o Redistributions of source code must retain the above copyright notice, this
+		list of conditions and the following disclaimer.
+
+		o Redistributions in binary form must reproduce the above copyright notice,
+		this list of conditions and the following disclaimer in the documentation
+		and/or other materials provided with the distribution.
+
+		o Neither the name of the copyright holder nor the names of its
+		contributors may be used to endorse or promote products derived from
+		this software without specific prior written permission.
+
+		THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+		AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+		IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+		DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+		FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+		DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+		SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+		CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+		OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+		OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+	*/
 @Component
 public class CommonUtil {
 	
@@ -264,6 +297,52 @@ public class CommonUtil {
 		return src;
 	}
     
+	public byte[] readBytesFromFile(Path path) throws IOException {
+		String pathStr = path.toString();
+
+		logger.debug("readBytesFromFile path=" + pathStr);
+
+		File file = new File(pathStr);
+		byte[] content = new byte[(int)file.length()];
+		FileInputStream fin = null;		
+
+		try {
+			fin = new FileInputStream(file);
+			fin.read(content);
+		} catch (IOException e) {		
+			throw e;
+		} finally {
+			if (fin != null) {
+				fin.close();
+			}
+		}
+
+		logger.debug("readBytesFromFile ended. path=" + pathStr);
+
+		return content;
+    }
+
+    public void writeBytesToFile(Path path, byte[] content) throws IOException {
+		String pathStr = path.toString();
+
+		logger.debug("writeBytesToFile path=" + pathStr);
+
+		FileOutputStream fout = null;
+
+		try {
+			fout = new FileOutputStream(pathStr);
+			fout.write(content);
+		} catch (IOException e) {		
+			throw e;
+		} finally {
+			if (fout != null) {
+				fout.close();
+			}
+		}
+
+		logger.debug("writeBytesToFile ended. path=" + pathStr);
+	}
+
 	public LoginVO userInfo(String loginCookie){
 		if (StringUtils.isEmpty(loginCookie)) {
 			return null;
@@ -2476,7 +2555,7 @@ public class CommonUtil {
 			if ((filePathFlag.equals("webfolder") && ezWebFolderService.isEncryptedFilePath(filePath)) || (filePathFlag.equals("approval") && fileExtension.equals(EzApprovalGKlibService.ENCRYPTED_FILE_EXT))) {
 				logger.debug("fileOldPath=" + filePath);
 				logger.debug("pdfFilePath=" + pdfFilePath);
-				byte[] encryptedBytes = Files.readAllBytes(file.toPath());
+				byte[] encryptedBytes = readBytesFromFile(file.toPath());
 				byte[] decryptedBytes = kilbUtil.decrypt(encryptedBytes);
 				inputStream = new ByteArrayInputStream(decryptedBytes);
 				
@@ -2584,5 +2663,59 @@ public class CommonUtil {
 		}
 
 		return value;
+	}
+	
+	public List<String> attachWebFolderFile(JSONArray jsonArr, String downloadDIR, LoginVO userInfo, String realPath) throws Exception {
+ 		logger.debug("attachWebFolderFile start.");
+		
+ 		JSONObject fileInfo = null;
+		String fileName = "";
+		String filePath = ""; 
+		int size = 0;
+		
+		List<String> fileDownPath = new ArrayList<String>();
+			
+		try {
+ 			for (int i=0; i <jsonArr.size(); i++){
+				fileInfo 	= (JSONObject) jsonArr.get(i);
+				fileName 	= fileInfo.get("fileName").toString() ;
+				filePath 	= fileInfo.get("filePath").toString() ;
+				size 		= Integer.parseInt(fileInfo.get("fileSize").toString());
+				String FileRealName = filePath.split("/")[filePath.split("/").length-1];
+				
+				String newFilePath = realPath + downloadDIR + FileRealName;
+				File newAttachFile = new File(newFilePath); 
+				File oldFile = new File(realPath + filePath);
+				FileUtils.copyFile(oldFile, newAttachFile);
+				fileDownPath.add(downloadDIR + FileRealName);
+
+			}
+			logger.debug("attachWebFolderFile copy complete.");
+		} catch (Exception e) {
+			for (int i = 0 ; i < fileDownPath.size() ; i++){
+				File file = new File(fileDownPath.get(i));
+				file.delete();
+			}
+			fileDownPath.clear();
+			e.printStackTrace();
+		} 
+		
+		logger.debug("attachWebFolderFile end.");
+		return fileDownPath;
+	}
+	
+	public void renameFileForOverwrite(String sourceFile, String destFile) throws Exception{
+		try {
+			File sFile = new File(sourceFile);
+			File dFile = new File(destFile);
+			
+			dFile.getParentFile().mkdirs();
+			logger.debug("renameFileForOverwrite-sFile:" + sourceFile + ",size:" +sFile.length());
+			
+			sFile.renameTo(dFile);
+			logger.debug("renameFileForOverwrite-dFile:" + sourceFile + ",size:" +dFile.length());
+		} catch (Exception ex) {
+			logger.debug("ex: {}", ex);
+		}
 	}
 }

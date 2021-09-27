@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezWebFolder.web;
 
+import static org.apache.commons.lang3.StringUtils.defaultString;
+
 import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.List;
@@ -43,9 +45,14 @@ import egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO.Type;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.rest.Rest;
+import egovframework.let.utl.rest.Rest.Module;
 
 @Controller
 public class EzWebFolderController_m {
+
+	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderController_m.class);
+
 	@Autowired
 	private CommonUtil commonUtil;
 	
@@ -63,9 +70,10 @@ public class EzWebFolderController_m {
 	
 	@Resource(name = "egovMessageSource")
 	private EgovMessageSource egovMessageSource;
-	
-	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderController_m.class);
-	
+
+	@Autowired
+	private Rest rest;
+
 	@RequestMapping(value="/ezWebFolder/webfolderSharingList.do", method = RequestMethod.GET)
 	public String webfolderSharingList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -622,60 +630,59 @@ public class EzWebFolderController_m {
 	@RequestMapping(value = "/ezWebFolder/getFavorites.do", method = RequestMethod.POST)
 	public @ResponseBody JSONObject getFavorites(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getFavorites started.");
-		
-		LoginSimpleVO user	= commonUtil.userInfoSimple(loginCookie);
 
-		Map<String, Object> param = new HashMap<>();
-		// search info
-		param.put("searchExt", orElse(request.getParameter("searchExt"), ""));
-		param.put("searchFileName", orElse(request.getParameter("searchFileName"), ""));
-		param.put("searchCreatorName", orElse(request.getParameter("searchCreatorName"), ""));
-		param.put("searchFileType", orElse(request.getParameter("searchFileType"), ""));
-		param.put("searchStartDate", orElse(request.getParameter("searchStartDate"), ""));
-		param.put("searchEndDate", orElse(request.getParameter("searchEndDate"), ""));
-		// limit info
-		param.put("startIndex", orElse(request.getParameter("startIndex"), "0"));
-		param.put("listCount", orElse(request.getParameter("listCount"), "0"));
-		param.put("sortType", orElse(request.getParameter("sortType") , ""));
-		param.put("sortColumn", orElse(request.getParameter("sortColumn") , ""));
-		
-		JSONObject result = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + user.getId() + "/favorites", param, request, "get", null);
-		
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+
+		JSONObject result = rest.gateway(Module.WEBFOLDER, request)
+				.url("/rest/ezwebfolder/users/{0}/favorites", user.getId())
+				// search info
+				.queryParam("searchExt", defaultString(request.getParameter("searchExt")))
+				.queryParam("searchFileName", defaultString(request.getParameter("searchFileName")))
+				.queryParam("searchCreatorName", defaultString(request.getParameter("searchCreatorName")))
+				.queryParam("searchFileType", defaultString(request.getParameter("searchFileType")))
+				.queryParam("searchStartDate", defaultString(request.getParameter("searchStartDate")))
+				.queryParam("searchEndDate", defaultString(request.getParameter("searchEndDate")))
+				// limit info
+				.queryParam("startIndex", defaultString(request.getParameter("startIndex"), "0"))
+				.queryParam("listCount", defaultString(request.getParameter("listCount"), "0"))
+				.queryParam("sortType", defaultString(request.getParameter("sortType")))
+				.queryParam("sortColumn", defaultString(request.getParameter("sortColumn")))
+				.exchangeBody();
+
 		logger.debug("getFavorites ended.");
 		return result;
 	}
-	
+
 	@RequestMapping(value = "/ezWebFolder/addFavorite.do", method = RequestMethod.POST)
-	public @ResponseBody JSONObject addFavorite(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public @ResponseBody JSONObject addFavorite(@CookieValue("loginCookie") String loginCookie,
+			@RequestParam(required = false) String fileList, @RequestParam(required = false) String folderList, HttpServletRequest request) throws Exception {
 		logger.debug("addFavorite started.");
-		
-		LoginSimpleVO user	= commonUtil.userInfoSimple(loginCookie);
-		String fileList = orElse(request.getParameter("fileList"), "");
-		String folderList = orElse(request.getParameter("folderList"), "");
-		
-		Map<String, Object> param = new HashMap<>();
-		// target info
-		param.put("fileList", fileList);
-		param.put("folderList", folderList);
-		
-		JSONObject result = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + user.getId() + "/favorite", param, request, "post", null);
-		
+
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+
+		JSONObject result = rest.gateway(Module.WEBFOLDER, request)
+				.post().url("/rest/ezwebfolder/users/{0}/favorite", user.getId())
+				.queryParam("fileList", fileList)
+				.queryParam("folderList", folderList)
+				.exchangeBody();
+
 		logger.debug("addFavorite ended.");
 		return result;
 	}
-	
+
 	@RequestMapping(value = "/ezWebFolder/deleteFavorite.do", method = RequestMethod.POST)
-	public @ResponseBody JSONObject deleteFavorite(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public @ResponseBody JSONObject deleteFavorite(@CookieValue("loginCookie") String loginCookie,
+			@RequestParam(required = false) String fileList, @RequestParam(required = false) String folderList, HttpServletRequest request) throws Exception {
 		logger.debug("deleteFavorite started.");
-		
+
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		
-		Map<String, Object> param = new HashMap<>();
-		param.put("fileList", orElse(request.getParameter("fileList"), ""));
-		param.put("folderList", orElse(request.getParameter("folderList"), ""));
-		
-		JSONObject result = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + user.getId() + "/favorite", param, request, "delete", null);
-		
+
+		JSONObject result = rest.gateway(Module.WEBFOLDER, request)
+				.delete().url("/rest/ezwebfolder/users/{0}/favorite", user.getId())
+				.queryParam("fileList", fileList)
+				.queryParam("folderList", folderList)
+				.exchangeBody();
+
 		logger.debug("deleteFavorite ended.");
 		return result;
 	}

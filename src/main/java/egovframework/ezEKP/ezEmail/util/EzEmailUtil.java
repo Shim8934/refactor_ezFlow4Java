@@ -469,7 +469,7 @@ public class EzEmailUtil {
 					name = ia.getAddress();
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+//				e.printStackTrace();
 				
 				// 현대오일뱅크" <HyundaiOilbank@oilbankcard.com> 와 같이 "가 하나만 있는 경우
 				// 예외가 발생하는데 이와 같은 경우에 대한 부가적인 처리를 수행한다.
@@ -495,7 +495,7 @@ public class EzEmailUtil {
 				InternetAddress ia = new InternetAddress(internetAddressStr);
 				address = ia.getAddress();
 			} catch (Exception e) {
-				e.printStackTrace();
+//				e.printStackTrace();
 				
 				// 현대오일뱅크" <HyundaiOilbank@oilbankcard.com> 와 같이 "가 하나만 있는 경우
 				// 예외가 발생하는데 이와 같은 경우에 대한 부가적인 처리를 수행한다.
@@ -3025,7 +3025,11 @@ public class EzEmailUtil {
 				}
 				p = mp.getBodyPart(index[i]);
 				if ((p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) || 
-						p.isMimeType("message/rfc822")) {
+						p.isMimeType("message/rfc822")
+					// 2021-08-12 김은실 - EzEmailUtil.getBodyInfo()_(1909)조건 추가함. : 료비에서 온 메일 중에 related 파트안에 인라인으로 첨부파일이 있는 메일이 있음. (-이하 생략-)
+					// line:(1766, 1846, 1871, 1950) 조건이 더 있긴하지만, 사례eml이 없어 섣불리 추가하기 어려움. 추후에 발견되는 대로 테스트 후 추가하는 것이 좋지 않을까하여 둠.
+					|| ((p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.INLINE) || ((MimePart)p).getContentID() != null)
+					&& !(p.isMimeType("application/*") && ((MimePart)p).getContentID() == null))) {
 					mp.removeBodyPart(index[i]);
 				}
 			}

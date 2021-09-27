@@ -37,6 +37,7 @@ import egovframework.ezEKP.ezSchedule.vo.AttendantListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleReceiveListVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezSchedule.service.MScheduleService;
@@ -382,11 +383,19 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	        	pDeptAdmin = "Y";
 	        } else if (info.getRollInfo().contains("g=1")) {
 	        	pDeptAdmin = "Y";
-	        } 
+	        }
 
+			/* 2021-09-01 홍승비 - 비서인 경우 대상자 정보 추가 (쿼리 내부에서 다국어 처리하여 가져옴) */
+			List<ScheduleSecretaryVO> sList = ezScheduleService.getPublicScheduleSec(userId, primary, info.getTenantId(), info.getCompanyId());
+			
 			if (primary.equals("1")) {
 				//개인일정
 				sb.append("<option value='1;;" + userId + "'" + ">" + egovMessageSource.getMessage("ezSchedule.t372", locale) + " " + info.getUserName() + "</option>");
+				
+				//비서일정
+				for (ScheduleSecretaryVO vo : sList) {
+					sb.append("<option value='1;;" + vo.getSecId() + "'" + ">" + egovMessageSource.getMessage("ezSchedule.t372", locale) + " " + commonUtil.cleanValue(vo.getSecName()) + "</option>");
+            	}
 				
 				if (pCompanyAdmin.equals("Y") || pDeptAdmin.equals("Y")) {
 					//부서일정				
@@ -400,6 +409,11 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			} else {
 				//개인일정
 				sb.append("<option value='1;;" + userId + "'" + ">" + egovMessageSource.getMessage("ezSchedule.t372", locale) + " " + info.getUserName2() + "</option>");
+				
+				//비서일정
+				for (ScheduleSecretaryVO vo : sList) {
+					sb.append("<option value='1;;" + vo.getSecId() + "'" + ">" + egovMessageSource.getMessage("ezSchedule.t372", locale) + " " + commonUtil.cleanValue(vo.getSecName()) + "</option>");
+            	}
 				
 				if (pCompanyAdmin.equals("Y") || pDeptAdmin.equals("Y")) {
 					//부서일정

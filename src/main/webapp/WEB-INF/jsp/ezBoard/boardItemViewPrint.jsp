@@ -19,6 +19,17 @@
 				margin-top: 0px;
 				margin-bottom: 0px;
 			}
+			#txtContent h1, #txtContent h2 , #txtContent h3 , #txtContent h4 , #txtContent h5 , #txtContent h6 {
+				margin-left:0px;
+				margin-right:0px;
+				color:#000000;
+			}
+			#txtContent h1 {font-size:2em; margin-top:0.67em; margin-bottom:0.67em;}
+			#txtContent h2  {font-size:1.5em; margin-top:0.83em; margin-bottom:0.83em;}
+			#txtContent h3 {font-size:1.17em; margin-top:1em; margin-bottom:1em;}
+			#txtContent h4 {font-size:1em; margin-top:1.33em; margin-bottom:1.33em;}
+			#txtContent h5 {font-size:0.83em; margin-top:1.67em; margin-bottom:1.67em;}
+			#txtContent h6 {font-size:0.67em; margin-top:2.33em; margin-bottom:2.33em;}
     	</style>
 		<script>
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
@@ -35,7 +46,7 @@
 		    var eOneline = "<c:out value='${oneLine}'/>";
 		    var eAttach = "<c:out value='${attach}'/>";
 			var strWriterID = "${boardItem.writerID}";
-			var strWriterName = "${boardItem.writerName}";
+			var strWriterName = ConvMakeXMLString("<c:out value='${boardItem.writerName}'/>"); // 익명게시판의 게시자명 특문처리 대응
 			var strWriterDeptName = "${boardItem.writerDeptName}";
 			var strWriterCompanyName = "${boardItem.writerCompanyName}";
 			var strWriteDate = "${boardItem.writeDate}";
@@ -93,7 +104,8 @@
 		        }
 		        
 		        myVar = setInterval(function () { DocumentComplate(); }, 2000);
-		       
+		        
+		        document.getElementById("WriteUserNM").innerText = " " + strWriterName;
 		    };
 		
 		    function DocumentComplate() {
@@ -130,13 +142,59 @@
 		        var filename = "";
 		        var strAttach = "";
 		        var xmldomNodes = SelectNodes(xmldom, "NODES/NODE");
+		        var attachFileDiv = document.getElementById("lstAttachLink");
+		        
 		        for (var i = 0; i < xmldomNodes.length; i++) {
+					var span = document.createElement("SPAN");
+					var img = document.createElement("IMG");
+		                
 		            filepath = getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath"));
 		            filename = getNodeText(SelectSingleNode(xmldomNodes[i], "FileName"));
 		            filesize = getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize"));
-		            strAttach = strAttach + filename + "&nbsp;(" + filesize + ")<br>";
+		            strAttach = " " + filename + " (" + filesize + ")";
+		            
+		            var strTarget = "target=''";
+		            var strFileExt = filename.substr(filename.lastIndexOf('.')).toLowerCase();
+		            if (strFileExt == ".xls" || strFileExt == ".doc" || strFileExt == ".ppt" ||
+		               strFileExt == ".eml" || strFileExt == ".pdf" || strFileExt == ".hwp" ||
+		               strFileExt == ".ppt" || strFileExt == ".docx" || strFileExt == ".pptx" ||
+		               strFileExt == ".xlsx" || strFileExt == ".rtf") {
+		                strTarget = "target=''";
+		            }
+		            
+		            if (strFileExt.indexOf(".jpg") != -1 || strFileExt.indexOf(".jpeg") != -1 || strFileExt.indexOf(".bmp") != -1 || strFileExt.indexOf(".gif") != -1 || strFileExt.indexOf(".png") != -1 || strFileExt.indexOf(".tif") != -1 || strFileExt.indexOf(".tiff") != -1) {
+		                fileImage = "/images/image.png";
+		            } else if (strFileExt.indexOf(".doc") != -1 || strFileExt.indexOf(".docx") != -1) {
+		                fileImage = "/images/doc.png";
+		            } else if (strFileExt.indexOf(".xls") != -1 || strFileExt.indexOf(".xlsx") != -1) {
+		                fileImage = "/images/xls.png";
+		            } else if (strFileExt.indexOf(".ppt") != -1 || strFileExt.indexOf(".pptx") != -1 || strFileExt.indexOf(".pps") != -1 || strFileExt.indexOf(".ppsx") != -1) {
+		                fileImage = "/images/ppt.png";
+		            } else if (strFileExt.indexOf(".txt") != -1) {
+		                fileImage = "/images/txt.png";
+		            } else if (strFileExt.indexOf(".zip") != -1) {
+		                fileImage = "/images/zip.png";
+		            } else if (strFileExt.indexOf(".pdf") != -1) {
+		                fileImage = "/images/pdf.png";
+		            } else if (strFileExt.indexOf(".ecm") != -1) {
+		                fileImage = "/images/ecm.png";
+		            } else {
+		                fileImage = "/images/email/mail_006.gif";
+		            }
+		            
+	                img.src = fileImage;
+                    
+	                var attachNameSpan = document.createElement("SPAN");
+	                attachNameSpan.innerText = strAttach;
+	                
+	                var br = document.createElement("BR");
+	
+	                span.appendChild(img);
+	                span.appendChild(attachNameSpan);
+	                span.appendChild(br);
+	
+	                attachFileDiv.appendChild(span);
 		        }
-		        document.getElementById('lstAttachLink').innerHTML = strAttach;
 		    }
 		    
 		    /* 2018-06-29 홍승비 - 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정 */
@@ -165,8 +223,20 @@
 		    }
 		    function displaytable() {
 		        if(message.document.body.innerHTML != "")
-		            document.getElementById("contenttable").innerHTML = message.document.body.innerHTML;
+		            document.getElementById("txtContent").innerHTML = message.document.body.innerHTML;
 		    }
+		    
+		    /* 2021-08-12 홍승비 - 익명게시물 게시자명 특문처리 추가 */
+		    function ConvMakeXMLString(str) {
+		        str = ReplaceText(str, "&lt;", "<");
+		        str = ReplaceText(str, "&gt;", ">");
+		        str = ReplaceText(str, "&#039;", "'");
+		        str = ReplaceText(str, "&#034;", "\"");
+		  		str = ReplaceText(str, "&#92;", "\\");
+		  	    str = ReplaceText(str, "&amp;", "&");
+		        return str;
+		    }
+		    
 		</script>
 	</head>
 	<!-- 2018-02-01 김보미 - 게시물 상세 테이블 컬럼 조정. -->
@@ -175,20 +245,30 @@
 		  <tr>
 		    <td>
 		        <table class="content" style="width:100%;">
-		        	<!-- 게시자&부서 -->
+		        	<!-- 게시자&부서 (부서의 경우 익명게시판이 아닐때만 표출) -->
 		        	<tr>
-		        		<th style="width:10%;"><spring:message code='ezBoard.t223'/></th>
-						<td id="WriteUserNM" style="width:40%; white-space:nowrap" colspan=4>&nbsp;<c:out value="${boardItem.writerName}"/></td>
-						<%-- <th style="width:10%;"><spring:message code='ezBoard.t289'/></th>
-						<td id="User_DeptNM" style="width:40%; white-space:nowrap">&nbsp;${boardItem.writerDeptName}</td> --%>
+		        	<c:choose>
+		        		<c:when test="${boardInfo.guBun != '2'}">
+			        		<th style="width:10%;"><spring:message code='ezBoard.t223'/></th>
+							<td id="WriteUserNM" style="width:40%; white-space:nowrap"></td>
+							<th style="width:10%;"><spring:message code='ezBoard.t289'/></th>
+							<td id="User_DeptNM" style="width:40%; white-space:nowrap">&nbsp;${boardItem.writerDeptName}</td>
+						</c:when>
+						<c:otherwise>
+							<th style="width:10%;"><spring:message code='ezBoard.t223'/></th>
+							<td id="WriteUserNM" style="width:40%; white-space:nowrap" colspan=4></td>
+						</c:otherwise>
+					</c:choose>
 		        	</tr>
-		        	<!-- 직위&사내전화 -->
-		        	<%-- <tr>
+		        	<!-- 직위&사내전화 (익명게시판이 아닌 경우에만 표출) -->
+		        	<c:if test="${boardInfo.guBun != '2'}">
+		        	<tr>
 		        		<th><spring:message code='ezBoard.t290'/></th>
 						<td id="User_JobTitle" style="width:40%; white-space:nowrap;">&nbsp;${boardItem.extensionAttribute3}<div></div></td>
 						<th><spring:message code='ezPersonal.t177'/></th>
 						<td id="Telephone" style="width:40%; white-space:nowrap">&nbsp;${boardItem.extensionAttribute4}</td>
-		        	</tr> --%>
+		        	</tr>
+		        	</c:if>
 		        	<!-- 게시일&게시종료일 -->
 		        	<tr>
 						<th><spring:message code='ezBoard.t224'/></th>
@@ -310,7 +390,7 @@
 		  </tr>
 		    <tr>
 		    <td class="pad1" style="height:100%;">
-		        <div id ="contenttable" class ="viewbox" style="border:1px solid #ddd"></div>
+		        <div id ="txtContent" class ="viewbox" style="border:1px solid #ddd; margin-left:0px; margin-right:0px;"></div>
 		    </td> 
 		  </tr>
 		  </table>

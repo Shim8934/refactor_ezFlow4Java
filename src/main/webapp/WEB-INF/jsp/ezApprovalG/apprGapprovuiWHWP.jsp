@@ -636,7 +636,7 @@
                 var rtnAttachXML = loadXMLString(approveResult);
 	                
 	            var attachTotalSize = getNodeText(rtnAttachXML.getElementsByTagName("TOTALSIZE").item(0));
-	                
+
                 if(getNodeText(rtnAttachXML.getElementsByTagName("FLAG").item(0)) == "Y") {
                     OpenAlertUI("외부발송문서 총 첨부용량은 최대 6MB 입니다" + "<br>" + "첨부용량을 줄여주시기 바랍니다.");
                     return;
@@ -1152,6 +1152,17 @@
 			            setNodeText(btnEdit.childNodes[0], "<spring:message code='ezApprovalG.t42'/>");
 			            GetHTML(beforeHWPBody);
 			        } else {
+						if (message.FieldExist("doctitle")) {
+							pDocTitle = trim(message.GetFieldText("doctitle"));
+						} else {
+							pDocTitle = "<spring:message code='ezApprovalG.t1394'/>";
+						}
+
+						if (pDocTitle == "") {
+							var pAlertContent = "<spring:message code='ezApprovalG.t1491'/>";
+							OpenAlertUI(pAlertContent);
+							return;
+						}
 			            var pInformationContent = "<spring:message code='ezApprovalG.t43'/>";
 				        var Ans = OpenInformationUI(pInformationContent, btnEdit_onclick_Complete);
 			        }
@@ -1439,6 +1450,8 @@
 
    			        if (tempItemCode != "")
    			            tempdocnumcode = tempItemCode;
+   			        
+   			     	parameter[61] = tempKeyword;
                        
                     ezapprovalinfo_dialogArguments[0] = parameter;
    		            ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;

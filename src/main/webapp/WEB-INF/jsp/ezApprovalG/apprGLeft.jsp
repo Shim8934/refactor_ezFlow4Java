@@ -121,7 +121,7 @@
 		        initUserRoleinfo();
 		        
 		        var idx = "4", navigation_info = "<spring:message code='ezApprovalG.t102'/>";
-		        if(approvalFlag == "S") {
+		        //if(approvalFlag == "S") {
 		        	Tree_setconfig();
 		            var xmlDom2 = createXmlDom();
 		            xmlDom2 = loadXMLString("${userCont}");
@@ -143,7 +143,7 @@
 						node[i].setAttribute("TITLE", node[i].innerText);
 					} 
 
-		        } 
+		       // } 
 			        if (parseInt(pListTypeValue) < 10) {
 			            window.open("/ezApprovalG/aprManage.do?listType=" + pListTypeValue + "&subQuery=", "right");
 			
@@ -216,7 +216,9 @@
 	            
 	            var node = document.getElementById(pNodeID);
 		        var title2 = node.getElementsByClassName("node_div");
+		        if(title2[0] !=null ){
 		        var nodeLevel = title2[0].getAttribute("nodelevel");
+		        }
 		        
 		        if(nodeLevel > 9) {
 		        	nodeLevel = 9;
@@ -224,9 +226,11 @@
 		        for(var i=0; i<title2.length; i++) {
 		        	var title3 = title2[i].getElementsByClassName("node_normal");
 		        	//title3[0].setAttribute("TITLE", title3[0].innerHTML); 
+		        	if(title3[0] !=null ){
 		        	title3[0].style.width = 145 - 16*(nodeLevel-1) +'px';
 		        	//title3[0].style.textOverflow = 'ellipsis';
 		        	//title3[0].style.overflow = 'hidden';
+		        	}
 		        }
 	        }
 		    
@@ -663,7 +667,9 @@
 		    function cmdOK_onclick(ContainerID, ContName, SubQuery, shareUserId) {
 		    	if(!shareUserId){
 		    		shareUserId = "";
-		    	}
+		    	}else{
+		    	    PresentOpen = "APPROVAL";
+		        }
 		        if (PresentOpen != "CONTAINER") {
 		            PresentOpen = "CONTAINER";
 	                window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURI(ContainerID) + "&sQuery="+ escape(SubQuery) + "&tmpValue=" + encodeURI(ContName) + "&ENDAPRTYPE=" + strAprType40 + "&ENDAPRSTATE=" + strAprState2 + "&shareUserId=" + shareUserId;
@@ -1290,10 +1296,11 @@
 			        		<span class="h2Title" onclick="openFolder('USERSHARE');"><spring:message code='ezApprovalG.apprLeft02'/></span>
 			        	</h2>
 						<ul class="lnbUL off" id="USERSHAREUL">
+							<div id="UserShare_0">
 				          	<c:forEach var="userShare" items="${userShareList}" varStatus="status">				          	
 								<img id="imgNode_UserShare_${status.index}" border="0" src="/images/OrganTree_cross/plus.gif" onclick="treeicon_toggle('UserShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_UserShare_${status.index}');" style="width: 18px;height: 18px;cursor: pointer;margin-left: 10px;">
 								<img id="subImgNode_UserShare_${status.index}" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;" class="mCS_img_loaded">
-								<span id="spn_UserShare_${status.index}" class="node_normal" style="cursor: pointer; width: 135px;" title='<c:out value="${userShare.shareName }"></c:out>'><c:out value="${userShare.shareName }"></c:out></span>
+								<span id="spn_UserShare_${status.index}" class="node_normal" onclick="treeicon_toggle('UserShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_UserShare_${status.index}');" style="cursor: pointer; width: 135px;" title='<c:out value="${userShare.shareName }"></c:out>'><c:out value="${userShare.shareName }"></c:out></span>
 								<div id="UserShare_${status.index}_sub" style="display:none;">
 <%-- 					    			<div class="node_div" id="DeptShare_${status.index}_0" nodename="결재진행문서" nodelevel="1" endnode="true" value="결재진행문서" isleaf="TRUE" expanded="FALSE" style="white-space: nowrap;"> --%>
 <!-- 										<img border="0" class="DOT" src="/images/OrganTree/dot_end.gif" style="width: 18px; height: 18px;"> -->
@@ -1309,6 +1316,7 @@
 									</div>
 								</div>
 				          	</c:forEach>
+				          	</div>
 			          	</ul>
 		          	</c:if>
 		          	<c:if test="${fn:length(deptShareList) > 0 }">
@@ -1394,10 +1402,11 @@
 			        		<span class="h2Title" onclick="openFolder('USERSHARE');">개인공유함</span>
 			        	</h2>
 						<ul class="lnbUL off" id="USERSHAREUL">
+							<div id="UserShare_0">
 				          	<c:forEach var="userShare" items="${userShareList}" varStatus="status">				          	
 								<img id="imgNode_UserShare_${status.index}" border="0" src="/images/OrganTree_cross/plus.gif" onclick="treeicon_toggle('UserShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_UserShare_${status.index}');" style="width: 18px;height: 18px;cursor: pointer;margin-left: 10px;">
 								<img id="subImgNode_UserShare_${status.index}" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;" class="mCS_img_loaded">
-								<span id="spn_UserShare_${status.index}" class="node_normal" style="cursor: pointer; width: 135px;" title='<c:out value="${userShare.shareName }"></c:out>'><c:out value="${userShare.shareName }"></c:out></span>
+								<span id="spn_UserShare_${status.index}" class="node_normal" onclick="treeicon_toggle('UserShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_UserShare_${status.index}');" style="cursor: pointer; width: 135px;" title='<c:out value="${userShare.shareName }"></c:out>'><c:out value="${userShare.shareName }"></c:out></span>
 								<div id="UserShare_${status.index}_sub" style="display:none;">
 <%-- 					    			<div class="node_div" id="DeptShare_${status.index}_0" nodename="결재진행문서" nodelevel="1" endnode="true" value="결재진행문서" isleaf="TRUE" expanded="FALSE" style="white-space: nowrap;"> --%>
 <!-- 										<img border="0" class="DOT" src="/images/OrganTree/dot_end.gif" style="width: 18px; height: 18px;"> -->
@@ -1413,6 +1422,7 @@
 									</div>
 								</div>
 				          	</c:forEach>
+				          	</div>
 			          	</ul>
 		          	</c:if>
 		          	<c:if test="${fn:length(deptShareList) > 0 }">

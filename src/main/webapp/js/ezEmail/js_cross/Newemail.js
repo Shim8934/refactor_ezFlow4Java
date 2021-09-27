@@ -1536,7 +1536,7 @@ function s4() {
     return ((CustomRandom() * 0x10000) | 0).toString(16).substring(1);
 };
 
-var ReadMailOpenNewWin;
+var ReadMailOpenNewWin;	
 function callMsgDlg(szContentClass, Href) {
     if (szContentClass == "IPM.Appointment") {
         var xmlHTTP = createXMLHttpRequest();
@@ -1557,14 +1557,14 @@ function callMsgDlg(szContentClass, Href) {
         return;
     }
     var pheight = window.screen.availHeight;
-    var conHeight = pheight * 0.8;
+    var conHeight = 720;
     var pwidth = window.screen.availWidth;
     var conWidth = pwidth * 0.8;
     if (conWidth > 890)
         conWidth = 890;
     var pTop = (pheight - conHeight) / 2;
     var pLeft = (pwidth - 890) / 2;
-    var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+    var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1";
     if (!g_bdraft) {
         var pURI = "/ezEmail/mailRead.do?iptURL=" + encodeURIComponent(Href) + "&PNFlag=Y&CONTENTCLASS=" + encodeURIComponent(szContentClass);
         

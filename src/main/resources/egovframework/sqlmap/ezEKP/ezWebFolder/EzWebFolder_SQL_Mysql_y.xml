@@ -1715,11 +1715,13 @@
 			FROM 
 				TBL_WEBFOLDER_FILE
 			WHERE 
-				(FOLDER_ID = #folderId# 
-				AND 
-				FILE_ID = #fileId#)
-				$query$
+				TENANT_ID = #tenantId# 
+			AND
+				FILE_ID IN 
 		]]>
+		<iterate property="fileList" open="(" close=")" conjunction=",">
+			#fileList[]#
+		</iterate>
 	</select>
     <select id="EzWebFolderDAO_y.getWebFolderUserGroupList" parameterClass="Map" resultClass="String">
     	<![CDATA[
@@ -1793,7 +1795,7 @@
 					</iterate>
 				AND 
 					folder.USE_STATUS = 'Y'
-				ORDER BY folder.FOLDER_NAME1
+				ORDER BY folder.folder_level, folder.FOLDER_NAME1
 			</isNotEqual>
 	    	<isEqual property="folderType" compareValue="S">
 	    		SELECT 

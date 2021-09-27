@@ -2096,7 +2096,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("code", code);
 		model.addAttribute("userLevel", userLevel);
 		model.addAttribute("disable", disable);
-		model.addAttribute("strXML", strXML); //.replaceAll("&lt;br&gt;", "&nbsp"));
+		model.addAttribute("strXML", strXML.replaceAll("(\r\n|\r|\n|\n\r)", " ")); //.replaceAll("&lt;br&gt;", "&nbsp"));
 //		model.addAttribute("chCommunityAdmin", userInfo.getRollInfo().indexOf("t=1"));
 		
 		return "ezCommunity/communityPollMain";
@@ -4894,6 +4894,24 @@ public class EzCommunityController extends EgovFileMngUtil{
 		result = ezCommunityService.categoryListItemCntGet(code, userInfo.getTenantId());
 		
 		logger.debug("getCommunityBoardItemCnt ended, result = " + result);
+		return result;
+	}
+	
+	/**
+	 * 2021-05-03 홍승비 - 해당 커뮤니티의 유형(승인여부)을 가져오는 함수 (ajax용)
+	 */
+	@RequestMapping(value = "/ezCommunity/getClubConfirmType.do", method = RequestMethod.GET)
+	@ResponseBody
+	public String getClubConfirmType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getClubConfirmType started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String code = request.getParameter("code");
+		String result = "";
+		
+		result = ezCommunityService.getClubConfirmType(code, userInfo.getTenantId());
+		
+		logger.debug("getClubConfirmType ended, result = " + result);
 		return result;
 	}
 }

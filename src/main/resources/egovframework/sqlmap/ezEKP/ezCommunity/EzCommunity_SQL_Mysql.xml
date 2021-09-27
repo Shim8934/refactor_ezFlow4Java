@@ -161,7 +161,7 @@
  					AND
  						A.tenant_id = #tenantID#
  					ORDER BY
- 						A.treevieworder ASC
+ 						A.treevieworder*1 ASC
  				]]>
             </isEqual>
             
@@ -209,7 +209,7 @@
 					AND
  						A.tenant_id = #tenantID#
  					ORDER BY
- 						A.treevieworder ASC
+ 						A.treevieworder*1 ASC
  				]]>
             </isNotEqual>
 		</isEqual>
@@ -236,7 +236,7 @@
  	            AND
  	            	A.tenant_id = #tenantID#
  	            ORDER BY
- 	            	A.treevieworder ASC
+ 	            	A.treevieworder*1 ASC
  	        ]]>
    		</isNotEqual>
 	</select>
@@ -6400,7 +6400,7 @@
 				#v_BOARDNAME#,
 				#v_BOARDNAME2#,
 				(SELECT
-					CASE WHEN MAX(TCB.TREEVIEWORDER) IS NULL THEN 1 ELSE MAX(TCB.TREEVIEWORDER) + 1 END
+					CASE WHEN MAX(TCB.TREEVIEWORDER*1) IS NULL THEN 1 ELSE MAX(TCB.TREEVIEWORDER*1) + 1 END
 				FROM
 					TBL_COMM_BOARDINFO TCB
 				WHERE
@@ -7661,4 +7661,18 @@
  				ITEMID = #v_pItemID#
  		]]>
  	</select>
+ 	
+	<select id="EzCommunityDAO.getClubConfirmType" parameterClass="Map" resultClass="String">
+ 		<![CDATA[
+ 			SELECT
+ 				C_CLUBCONFIRMTYPE
+ 			FROM
+ 				TBL_C_CLUB
+ 			WHERE
+ 				TENANT_ID = #v_TENANTID#
+ 			AND
+ 				C_CLUBNO = #v_CODE#
+ 		]]>
+ 	</select>
+ 	
 </sqlMap>

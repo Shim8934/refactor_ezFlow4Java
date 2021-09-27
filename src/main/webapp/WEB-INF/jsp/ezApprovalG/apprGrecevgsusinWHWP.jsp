@@ -1556,7 +1556,7 @@
 		    
 		    	if (ret != undefined && ret[0] == "OK") {
 		            try {
-		            	message.EditMode(2);
+		            	//message.EditMode(2);
 		                if (pGubun != "5" && pGubun != "7" && pGubun != "10" && pGubun != "12") {
 		                    if (ret[1] != false) {
 		                    	$.ajax({

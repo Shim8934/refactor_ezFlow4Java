@@ -515,6 +515,10 @@
 	            	
 	            	// 2019-04-19 김민성 - 자원 동시에 예약 시 모든 자원 예약 후 화면 새로고침 되도록 수정
 	            	if (!setApprovFlag) {
+	            		/* 2021-09-07 홍승비 - 자원예약 및 수정동작 완료 시 알러트 메세지 표출 (타 모듈과 동일하게) */
+	            		if (cmd == "add" || cmd == "mod") {
+	            			alert(strLangHSB01);
+	            		}
 	        		    window_onUnload();
 	        		    window.close();
 	        		}

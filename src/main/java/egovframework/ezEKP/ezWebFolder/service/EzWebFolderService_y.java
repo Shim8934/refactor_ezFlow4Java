@@ -109,7 +109,7 @@ public interface EzWebFolderService_y {
 	
 	public String folderIdByUserIdAndFolderType(String userId, int tenantId, String folderType) throws Exception ;
 
-	public ArrayList<Map<String, Object>> selectWebfolderFiletoAnother(String userId, ArrayList<String> param) throws Exception;
+	public ArrayList<Map<String, Object>> selectWebfolderFiletoAnother(String userId, ArrayList<String> param, int tenantId) throws Exception;
 
 	public List<String> getjikWiChekAddjobList(int tenantId, String userId, String compId) throws Exception;
 

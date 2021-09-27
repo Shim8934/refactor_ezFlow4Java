@@ -90,10 +90,12 @@
 	                _draftUser = GetAttribute(tr, "DATA3");
 				    DelFlag = GetAttribute(tr, "DELFLAG");
 	                
-	                if(DelFlag == "Y") {
+	                if (DelFlag == "Y") {
+                		$("#btnDelete").removeClass();
                 		$("#btnDelete").text("<spring:message code='ezApprovalG.kms0002'/>");
-                	}else{
-                		$("#btnDelete").text("<spring:message code='ezApprovalG.kms0001'/>");
+                	} else {
+                		$("#btnDelete").addClass("icon16 icon16_delete");
+                		$("#btnDelete").text("");
                 	}
 	                
 				    switch (jobState) {
@@ -113,6 +115,9 @@
 				            Recipent_onclick();
 				            break;
 				    }
+				} else {
+					$("#btnDelete").addClass("icon16 icon16_delete");
+            		$("#btnDelete").text("");
 				}
 				
 	            /* 2021-03-24 홍승비 - 제목 클릭 시 원클릭 이벤트로 전자결재 읽기, 결재 팝업창을 표출 */
@@ -216,7 +221,7 @@
 				    result['delFlag'] = true;
 				    
 				    
-				    console.log(result);
+				   // console.log(result);
 				    
 				    var DocList = new ListConstr(result);
 				}
@@ -239,17 +244,21 @@
 	                
 				    DelFlag = GetAttribute(tr, "DELFLAG");
 	                
-	                if(DelFlag == "Y") {
+	                if (DelFlag == "Y") {
+	                	$("#btnDelete").removeClass();
                 		$("#btnDelete").text("<spring:message code='ezApprovalG.kms0002'/>");
-                	}else{
-                		$("#btnDelete").text("<spring:message code='ezApprovalG.kms0001'/>");
+                	} else {
+                		$("#btnDelete").addClass("icon16 icon16_delete");
+                		$("#btnDelete").text("");
                 	}
-	                
 	            }
 	            else {
 	                DocID = "";
 	                pURL = "";
 	                _draftUser = "";
+	                
+	                $("#btnDelete").addClass("icon16 icon16_delete");
+            		$("#btnDelete").text("");
 	            }
 
 	            getDataInfo();
@@ -690,7 +699,8 @@
 				if (pCompanyID != document.getElementById("ListCompany").value) {
 				    pCompanyID = document.getElementById("ListCompany").value;
 				    pChackYN = "FALSE";
-				
+				    pageNum = "1"; // 회사 선택 시 페이징 초기화
+				    
 				    GetDocList();
 				}
 			}
@@ -949,10 +959,20 @@
 	            GetDocList();
 	        }
 	        
-	        
+			/* 2021-08-17  홍승비 - 현재 선택된 문서가 없다면 삭제사유 팝업 표출하지 않도록 수정 */	        
 		    function btnDelete_onclick() {
-		    	PopupCenter("/admin/ezApprovalG/statisticsDelDocInfo.do?DocID=" + escape(DocID) ,"",520,350)
+		    	var SelList = new ListConstr();
+				SelList.LoadFromID("DocList");
+				var oArrRows = SelList.GetSelectedRows();
+				
+				if (oArrRows.length != 0) {
+		    		PopupCenter("/admin/ezApprovalG/statisticsDelDocInfo.do?DocID=" + escape(DocID) ,"",520,350);
+				} else {
+					alert("<spring:message code = 'ezApprovalG.t360' />");
+					return;
+				}
 		    }
+			
 		    function popupCallback(obj) {
 				if(obj.flag == true) {
 					GetDocList();
@@ -1013,7 +1033,7 @@
 		            	<option value="ALL"><spring:message code ='ezApprovalG.kmsg01'/></option>
 		        	</select>
 		        </li>
-		        <li id="tbtnDelete"><span id="btnDelete" onclick="return btnDelete_onclick(1)"><spring:message code='ezApprovalG.t266'/></span></li>
+		        <li id="tbtnDelete"><span class="icon16 icon16_delete" id="btnDelete" onclick="return btnDelete_onclick(1)"></span></li>
 	        </ul>
 	    </div>
 	

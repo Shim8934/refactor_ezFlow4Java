@@ -1541,6 +1541,13 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
+		/* 2021-08-12 홍승비 - 임시보관함에서 접근한 경우의 분기 추가 (페이지 제한 없이 이미지 가져오도록) */
+		if (pStartRow < 0 && pEndRow == 0) {
+			map.put("v_ISTEMPITEM", "Y");
+		} else {
+			map.put("v_ISTEMPITEM", "N");
+		}
+		
 		map.put("v_pItemID", itemID);
 		map.put("v_pBoardID", boardID);
 		map.put("v_pStartRow", pStartRow);
@@ -3607,6 +3614,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				itemListArray = new HashSet<String>(Arrays.asList(itemListArray)).toArray(new String[0]);
 				
 				String tempItem = itemListArray[i].split(",")[0];
+				
+				BoardListVO boardListTempVO = getItemInfo(mode, tempItem, userInfo.getLang(), userInfo.getTenantId());
+				if (boardListTempVO != null) {
+					logger.debug("deleteItem itemID = " + boardListTempVO.getItemID() + " / title = " + boardListTempVO.getTitle());
+				}
 				
 				if (mode != null && mode.equals("temp")) {
 					deleteTempItem(tempItem, boardID, realPath, userInfo.getTenantId());

@@ -227,6 +227,9 @@ function PreviewRayerChange_photo(pGubun) {
             document.getElementById("MailListRayer").style.width = "100%";
             /* 2018-04-25 홍승비 - 크로스 브라우징 중복 코드 삭제 */
             document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
+
+
+
             /* 2019-04-11 홍승비 - 앨범형식 보기 시 사용하지 않는 div 분기처리 */
             // if (document.getElementById("BoardList_BODY") != null) {
             // 	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";

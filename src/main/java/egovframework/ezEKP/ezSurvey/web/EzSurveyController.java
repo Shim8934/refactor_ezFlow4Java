@@ -271,8 +271,14 @@ public class EzSurveyController extends EgovFileMngUtil {
 			return "ezSurvey/surveyAccessDenied";
 		}
 		
+		String defaultFontFamily = egovMessageSource.getMessage("main.t246", user.getLocale());
+		String defaultFontSize = "13px";
+		
 		model.addAttribute("user", user.getId());
 		model.addAttribute("mode", mode);
+		model.addAttribute("defaultFontFamily", defaultFontFamily);
+		model.addAttribute("defaultFontSize", defaultFontSize);
+		
 		logger.debug("jspGetSurveyDetail ended");
 		
 		return "ezSurvey/listmenu/surveyDetail";

@@ -1232,11 +1232,11 @@ function getDocInfo() {
             */
 
             if (useOpenGov == "YES") {
-                basis = SelectSingleNodeValueNew(result, "DATA/BASIS");
-                reason = SelectSingleNodeValueNew(result, "DATA/REASON");
-                listOpenFlag = SelectSingleNodeValueNew(result, "DATA/LISTOPENFLAG");
-                fileOpenFlagList = SelectSingleNodeValueNew(result, "DATA/FILEOPENFLAGLIST");
-                limitDate = SelectSingleNodeValueNew(result, "DATA/LIMITDATE");
+                basis = SelectSingleNodeValueNew(xmldoc, "DATA/BASIS");
+                reason = SelectSingleNodeValueNew(xmldoc, "DATA/REASON");
+                listOpenFlag = SelectSingleNodeValueNew(xmldoc, "DATA/LISTOPENFLAG");
+                fileOpenFlagList = SelectSingleNodeValueNew(xmldoc, "DATA/FILEOPENFLAGLIST");
+                limitDate = SelectSingleNodeValueNew(xmldoc, "DATA/LIMITDATE");
             }
         }
     } catch (e) {
@@ -1566,7 +1566,7 @@ function SaveApproveInfo(pApproveFlag) {
     createNodeAndInsertText(xmlpara, objNode, "DOCSTATE", getNodeText(objNodes[4]));
     createNodeAndInsertText(xmlpara, objNode, "FUNCTIONTYPE", "002");
     createNodeAndInsertText(xmlpara, objNode, "HREF", getNodeText(objNodes[6]));
-
+    
     var field = message.GetListItem(fields, "doctitle");
     pDocTitle = field.textContent;
     createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", pDocTitle);
@@ -1610,8 +1610,16 @@ function SaveApproveInfo(pApproveFlag) {
     			var field = message.GetListItem(fields, "docnumber");
     			if (field) {
     				var forTest = getfieldValue(field).slice(-1);
+    				
+    				/* 2021-08-25 홍승비 - 개인병렬협조/합의자가 반송하는 경우, 테넌트 컨피그 PersonalAgreeReturnType를 체크하여 DOCNO 뒤의 '-' 문자를 지우거나 유지함 */
     				if (getfieldValue(field).slice(-1) == "-") {
-    					createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field).substring(0, getfieldValue(field).length - 1));
+    					// PersonalAgreeReturnType값이 1인 경우, 개인병렬협조/합의자가 반송해도 다음 결재권자에게 문서를 전달하며 결재가 가능하다.
+    					var personalAgreeReturnType = getPersonalAgreeReturnType();
+    					if (pAprLineType == "009" && personalAgreeReturnType.trim() == "1") {
+    						createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
+    					} else {
+    						createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field).substring(0, getfieldValue(field).length - 1));
+    					}
     				} else {
     					createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
     				}
@@ -4311,3 +4319,21 @@ function setFormAprOption(){
     if(formAprOption.indexOf("_a3_"))  //문서첨부
         setMenuBar("btnAprDocAttach", false);	
 }
+
+function getPersonalAgreeReturnType() {
+	var result = "";
+	
+   $.ajax({
+		type : "GET",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getPersonalAgreeReturnType.do",
+		data : {},
+		success: function(resultVal){
+			result = resultVal;
+		}        			
+	});
+   
+   return result;
+}
+

@@ -9,6 +9,19 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/previewBoard.css')}" type="text/css">
+		<style type="text/css">
+			#txtContent h1, #txtContent h2 , #txtContent h3 , #txtContent h4 , #txtContent h5 , #txtContent h6 {
+				margin-left:0px;
+				margin-right:0px;
+				color:#000000;
+			}
+			#txtContent h1 {font-size:2em; margin-top:0.67em; margin-bottom:0.67em;}
+			#txtContent h2  {font-size:1.5em; margin-top:0.83em; margin-bottom:0.83em;}
+			#txtContent h3 {font-size:1.17em; margin-top:1em; margin-bottom:1em;}
+			#txtContent h4 {font-size:1em; margin-top:1.33em; margin-bottom:1.33em;}
+			#txtContent h5 {font-size:0.83em; margin-top:1.67em; margin-bottom:1.67em;}
+			#txtContent h6 {font-size:0.67em; margin-top:2.33em; margin-bottom:2.33em;}
+		</style>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
@@ -45,12 +58,41 @@
 			            for (var i = 1; i < tmeptr.length; i++) {
 			                var span = document.createElement("SPAN");
 			                var img = document.createElement("IMG");
-			                img.src = "/images/email/mail_006.gif";
-			
 			                var a = document.createElement("A");
 		                    var filename = GetChildNodes(tmeptr[i])[1].textContent;
 		                    var filesize = GetChildNodes(tmeptr[i])[2].textContent;
 		                    a.innerHTML = MakeXMLString(filename) + " (" + filesize + ")";
+		                    
+				            var strTarget = "target=''";
+				            var strFileExt = filename.substr(filename.lastIndexOf('.')).toLowerCase();
+				            if (strFileExt == ".xls" || strFileExt == ".doc" || strFileExt == ".ppt" ||
+				               strFileExt == ".eml" || strFileExt == ".pdf" || strFileExt == ".hwp" ||
+				               strFileExt == ".ppt" || strFileExt == ".docx" || strFileExt == ".pptx" ||
+				               strFileExt == ".xlsx" || strFileExt == ".rtf") {
+				                strTarget = "target=''";
+				            }
+				            
+				            if (strFileExt.indexOf(".jpg") != -1 || strFileExt.indexOf(".jpeg") != -1 || strFileExt.indexOf(".bmp") != -1 || strFileExt.indexOf(".gif") != -1 || strFileExt.indexOf(".png") != -1 || strFileExt.indexOf(".tif") != -1 || strFileExt.indexOf(".tiff") != -1) {
+				                fileImage = "/images/image.png";
+				            } else if (strFileExt.indexOf(".doc") != -1 || strFileExt.indexOf(".docx") != -1) {
+				                fileImage = "/images/doc.png";
+				            } else if (strFileExt.indexOf(".xls") != -1 || strFileExt.indexOf(".xlsx") != -1) {
+				                fileImage = "/images/xls.png";
+				            } else if (strFileExt.indexOf(".ppt") != -1 || strFileExt.indexOf(".pptx") != -1 || strFileExt.indexOf(".pps") != -1 || strFileExt.indexOf(".ppsx") != -1) {
+				                fileImage = "/images/ppt.png";
+				            } else if (strFileExt.indexOf(".txt") != -1) {
+				                fileImage = "/images/txt.png";
+				            } else if (strFileExt.indexOf(".zip") != -1) {
+				                fileImage = "/images/zip.png";
+				            } else if (strFileExt.indexOf(".pdf") != -1) {
+				                fileImage = "/images/pdf.png";
+				            } else if (strFileExt.indexOf(".ecm") != -1) {
+				                fileImage = "/images/ecm.png";
+				            } else {
+				                fileImage = "/images/email/mail_006.gif";
+				            }
+				            
+			                img.src = fileImage;
 		                    
 			                var br = document.createElement("BR");
 			

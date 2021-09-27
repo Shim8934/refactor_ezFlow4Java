@@ -527,7 +527,7 @@
 		</isNotEmpty>
 	</select>
 	
-	<select id="EzBoardDAO.photoViewDB" parameterClass="Map" resultMap="photoViewDB">
+	<select id="EzBoardDAO.photoViewDB" parameterClass="Map" resultMap="photoViewDB" remapResults="true">
 		<![CDATA[
     		  SELECT 
                 IMAGEID ,
@@ -545,9 +545,13 @@
               	BoardID = #v_pBoardID#
               ORDER BY 
               	IMAGEID ASC
+		]]>
+		<isEqual property="v_ISTEMPITEM" compareValue="N">
+		<![CDATA[
               LIMIT
               	#limit#, #rowCount#
 		]]>
+		</isEqual>
 	</select>
 	
 	<select id="EzBoardDAO.photoViewDBCount" parameterClass="Map" resultClass="Integer">
@@ -806,7 +810,8 @@
 	                    CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
 	                    A.WRITERNAME$lang$ WRITERNAME,
 	                    A.CONTENTLOCATION,
-	                    C.MAIL
+	                    C.MAIL,
+	                    A.ITEMID
 	                FROM 
 	                	TBL_Board_Item A
 	                JOIN 
@@ -831,7 +836,9 @@
 				<![CDATA[
 					SELECT 
 						BOARDID, 
-	                    CONTENTLOCATION 
+	                    CONTENTLOCATION,
+	                    ITEMID,
+	                    TITLE
 	              	FROM 
 	              		TBL_Board_Item_temp 
 	              	WHERE  
@@ -850,7 +857,8 @@
 	                    A.BOARDID BOARDID  ,
 	                    CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
 	                    A.WRITERNAME$lang$ WRITERNAME,
-	                    A.CONTENTLOCATION
+	                    A.CONTENTLOCATION,
+	                    A.ITEMID
 	                FROM 
 	                	TBL_Board_Item A
 	                JOIN 
@@ -869,7 +877,9 @@
 				<![CDATA[
 					SELECT 
 						BOARDID, 
-	                    CONTENTLOCATION 
+	                    CONTENTLOCATION,
+	                    ITEMID,
+	                    TITLE
 	              	FROM 
 	              		TBL_Board_Item_temp 
 	              	WHERE  

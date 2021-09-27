@@ -1680,6 +1680,10 @@ function setBtnEnable() {
 			btnReturn.style.display = "";
 			btnAssign.style.display = "";
 			btnDistribute.style.display = "";
+		} else if (pAprState === "013") {
+			btnReturn.style.display = "";
+			btnAssign.style.display = "";
+			btnDistribute.style.display = "";
 		}
 	}
 }

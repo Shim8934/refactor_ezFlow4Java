@@ -788,7 +788,12 @@ function aprLineAddDeptUser(mode, xmlData) {
 	            }
 	        }
 	        if (DuplicateFlag) {
-	            var pAlertContent = strLangS824;
+	            var pAlertContent;
+                if (approvalFlag == "G") {
+                    pAlertContent = strLang824;
+                } else {
+                    pAlertContent = strLangS824;
+                }
 	            OpenAlertUI(pAlertContent);
 	            continue;
 	        }

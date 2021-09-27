@@ -472,7 +472,7 @@
 		            }
 		        }
 		        if (MHTLoadComplete != "true") {
-		            alert("<spring:message code='ezBoard.t368' />");
+		            alert("<spring:message code='ezBoard.t377' />");
 		            return;
 		        }
 		

@@ -270,6 +270,7 @@
 	                    ContainerID = LoadContID;
 	                    subCondition = "";
 	                    GetDocSearch();
+	                    getDataInfo();
 	                }
 					
                     // 대리결재자 설정에 따른, 버튼 활성화
