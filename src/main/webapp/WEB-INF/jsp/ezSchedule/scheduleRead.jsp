@@ -404,9 +404,12 @@
 	        }
 	        
 	        function makeRepetitionScheduleString(startDate, endDate, repetitionInfo) {
-	        	var repeatinfo = strLang33;
+	        	var repeatinfo = '';
 				var info = repetitionInfo.split("|");
 				var repetitionType = info[2];
+				if(repetitionType){
+					repeatinfo = strLang33;
+				}
 				
 				switch (repetitionType) {
 					case "0":
