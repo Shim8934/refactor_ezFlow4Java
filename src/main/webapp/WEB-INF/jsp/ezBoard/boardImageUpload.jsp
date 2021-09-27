@@ -61,7 +61,8 @@
 		        if (!check) {
 		        	document.getElementById("file1").value = "";
 		        	savefilename = "";
-		        	alert("upload error");	
+		        	alert("<spring:message code ='ezBoard.hsbImg01' />");
+					return;
 		        }
 		
 		        var fd = new FormData();

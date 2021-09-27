@@ -1501,7 +1501,8 @@
 		
 		    function search() {
 		        if (document.getElementById("txt_keyword").value != "") {
-		            pageNum = 1;
+					// 2021-09-27 기록물대장 검색시 페이지 변경되지 않는 버그 수정
+		            curpage = 1;
 		        }
 		        else {
 		            alert("<spring:message code='ezApprovalG.t1160'/>");
