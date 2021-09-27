@@ -1365,6 +1365,8 @@ function SaveDraftDocInfo_ilban(pState)
 	createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", arr_userinfo[12]);
 	createNodeAndInsertText(xmlpara, objNode, "ITEMNAME2", tempItemName2);
 	
+	createNodeAndInsertText(xmlpara, objNode, "PASSAPRLINE", passAprLine);
+
 	/*
 	 * 2018-06-14 천성준
 	 * 비전자문서 데이터 세팅 메소드
