@@ -83,7 +83,7 @@
 	                document.getElementById("HolderWriteTr1").style.display = "none";
 	                document.getElementById("HolderWriteTr2").style.display = "none";
 
-                    if (scheduletype != '1') {
+                    if (scheduletype != '1' && document.getElementById("HolderEdit2")) {
                         document.getElementById("HolderEdit2").style.display = "none";
                     }
 
