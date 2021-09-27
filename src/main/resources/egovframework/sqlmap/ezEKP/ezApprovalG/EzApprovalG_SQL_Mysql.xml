@@ -7241,7 +7241,7 @@
 	<select id="EzApprovalG.getHistoryForAttach" parameterClass="Map" resultClass="ApprGHistoryAttachVO">
 		(SELECT 
 				DISTINCT
-                    APR.DISPLAYNAME as DISPLAYNAME,
+                    HIS.ATTACHUSERNAME as DISPLAYNAME,
                     HIS.DOCID, 
 				    HIS.ATTACHFILESN, 
     				HIS.ATTACHFILENAME, 
@@ -7263,10 +7263,6 @@
     	   			HIS.CHKFLAG
 	   	FROM 
 	   			TBL_HISTORYATTACHINFO HIS
-        JOIN
-                TBL_APRATTACHINFO APR
-        ON
-                HIS.DOCID = APR.DOCID AND HIS.COMPANYID = APR.COMPANYID AND HIS.ATTACHFILEDISPLAYNAME = APR.ATTACHFILENAME                
 	   	WHERE 
 	   			HIS.DOCID = #v_DOCID#
 	   	AND
