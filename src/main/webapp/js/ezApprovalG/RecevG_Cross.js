@@ -537,7 +537,7 @@ function getExtInfo() {
             }
 
             if (pomit == "true") {
-                field = message.GetListItem(fields, "noseal");
+                field = message.GetListItem(fields, "sealsign");
                 if (field) {
                     var signWidth = 105;
                     var signHeight = 35;
