@@ -1214,7 +1214,7 @@ public class EzEmailAdminController {
 			
 			quaList.add(0, userId);
 			quaList.add(1, displayname);
-			quaList.add(2, department);
+			quaList.add(2, department.replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
 			long mailboxUsage = 0;
 			long mailboxQuota = 0;
 
