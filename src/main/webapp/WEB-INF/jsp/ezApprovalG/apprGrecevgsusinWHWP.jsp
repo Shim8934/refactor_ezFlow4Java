@@ -1801,7 +1801,7 @@
 				var keywordXml = loadXMLString(GetDocumentElement("CONNROOT", true));
 				var connNodes = SelectNodes(keywordXml, "CONNROOT/conn");
 
-				if (connNodes) {
+				if (connNodes.length>0) {
 					if (g_DraftFlag === "REDRAFT") {
 						OpenAlertUI("연동문서는 다시 접수할 수 없습니다.<br/>문서보기 창으로 이동합니다.", function() {
 							var url = "/ezApprovalG/ezviewAprWHWP.do" +
@@ -1870,6 +1870,7 @@
 	                        <c:choose>
 		                        <c:when test="${isNonElecRec eq 'Y'}">
 			                        <li id="btnDel"><span onclick="return btnDel_onclick()">삭제</span></li>
+			                        <li id="btnReturn" style="display: none"><span onclick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>
 		                        </c:when>
 		                        <c:otherwise>
 			                        <li id="btnReturn" style="display: none"><span onclick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>
