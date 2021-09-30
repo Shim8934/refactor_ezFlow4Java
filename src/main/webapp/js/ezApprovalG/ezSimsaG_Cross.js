@@ -255,29 +255,29 @@ function makeXML(newDocID) {
 	        setNodeText(Nodes.item(0), "");
 	    }
 
-	    var Nodes = eNodes.getElementsByTagName("seal");
-	    if (NostampFlag) {
-	        Nodes.item(0).setAttribute("omit", "true");
-	    }
-	    else {
-	        field = message.GetListItem(fields, "sealsign");
-	        if (field) {
-	            if (field.childNodes.length > 0) {
-	                Nodes.item(0).setAttribute("omit", "false");
-	                var objChildNodes;
-	                objChildNodes = createNodeAndAppandNodeText(sihangXML, Nodes.item(0), objChildNodes, "img", "")
-	                sealPath = GetAttribute(field,"surl");
+        field = message.GetListItem(fields, "sealsign");
+        if (field) {
+            if (field.childNodes.length > 0) {
+	            var Nodes = eNodes.getElementsByTagName("seal");
+                if (NostampFlag) {
+                    Nodes.item(0).setAttribute("omit", "true");
+                } else {
+                    Nodes.item(0).setAttribute("omit", "false");
+                }
+                
+                var objChildNodes;
+                objChildNodes = createNodeAndAppandNodeText(sihangXML, Nodes.item(0), objChildNodes, "img", "")
+                sealPath = GetAttribute(field,"surl");
 
-	                var len = sealPath.lastIndexOf("/");
-	                var filelength = sealPath.length - (len + 1);
-	                sealName = sealPath.substr(len + 1, filelength);
-	                objChildNodes.setAttribute("src", sealName);
-	                objChildNodes.setAttribute("alt", strLang178);
-	                objChildNodes.setAttribute("height", Conversion(Number(field.childNodes.item(0).height)).toString() + "mm");
-	                objChildNodes.setAttribute("width", Conversion(Number(field.childNodes.item(0).width)).toString() + "mm");
-	            }
-	        }
-	    }
+                var len = sealPath.lastIndexOf("/");
+                var filelength = sealPath.length - (len + 1);
+                sealName = sealPath.substr(len + 1, filelength);
+                objChildNodes.setAttribute("src", sealName);
+                objChildNodes.setAttribute("alt", strLang178);
+                objChildNodes.setAttribute("height", Conversion(Number(field.childNodes.item(0).height)).toString() + "mm");
+                objChildNodes.setAttribute("width", Conversion(Number(field.childNodes.item(0).width)).toString() + "mm");
+            }
+        }
 
 	    var Nodes = eNodes.getElementsByTagName("approvalinfo");
 	    var LineNode = getLineInfo();

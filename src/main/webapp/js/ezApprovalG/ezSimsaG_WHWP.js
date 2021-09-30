@@ -326,29 +326,29 @@ function makeXML(newDocID) {
     	setNodeText(Nodes.item(0), "");
 	}
 
-	var Nodes = eNodes.getElementsByTagName("seal");
-    if (NostampFlag) {
-    	SetAttribute(Nodes[0], "omit", "true");
-    } else {
-        if (message.FieldExist("sealsign")) {
-			sealPath = GetDocumentElement("surl", false);
-            if (sealPath != "") {
-            	SetAttribute(Nodes[0], "omit", "false");
-            	
-				var tempNode2; 
-				tempNode2 = createNodeAndAppandNodeText(sihangXML, Nodes.item(0), tempNode2, "img", "")
-				
-				var len = sealPath.lastIndexOf("/");
-				var filelength = sealPath.length - (len + 1);  
-				
-				sealName = sealPath.substr(len + 1, filelength);
-				SetAttribute(tempNode2, "src", trim_Cross(sealName));
-				SetAttribute(tempNode2, "alt", strLang178);
-				SetAttribute(tempNode2, "height", GetDocumentElement("sheight", false) + "mm");
-				SetAttribute(tempNode2, "width", GetDocumentElement("swidth", false) + "mm");
-			}
-		}
-	}
+    if (message.FieldExist("sealsign")) {
+        sealPath = GetDocumentElement("surl", false);
+        if (sealPath != "") {
+	        var Nodes = eNodes.getElementsByTagName("seal");
+            if (NostampFlag) {
+                SetAttribute(Nodes[0], "omit", "true");
+            } else {
+                SetAttribute(Nodes[0], "omit", "false");
+            }
+            
+            var tempNode2; 
+            tempNode2 = createNodeAndAppandNodeText(sihangXML, Nodes.item(0), tempNode2, "img", "")
+            
+            var len = sealPath.lastIndexOf("/");
+            var filelength = sealPath.length - (len + 1);  
+            
+            sealName = sealPath.substr(len + 1, filelength);
+            SetAttribute(tempNode2, "src", trim_Cross(sealName));
+            SetAttribute(tempNode2, "alt", strLang178);
+            SetAttribute(tempNode2, "height", GetDocumentElement("sheight", false) + "mm");
+            SetAttribute(tempNode2, "width", GetDocumentElement("swidth", false) + "mm");
+        }
+    }
 
 	var Nodes = eNodes.getElementsByTagName("approvalinfo");
 	var LineNode = getLineInfo();

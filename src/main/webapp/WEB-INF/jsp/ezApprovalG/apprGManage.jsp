@@ -827,7 +827,7 @@
 	                                    var docID = tempStr[tempStr.length - 1].replace(AttachUrlA2, '');
 	                                    var openLocation;
 	                                    
-	                                    if (AttachUrlA2 == ".hwp") {
+	                                    if (AttachUrlA2 == "hwp") {
 	                                    	if(useWebHWP == "NO") {
 		                                    	if (isIE()) {
 		                                    		openLocation = "/ezApprovalG/ezViewEnd_HWP.do";

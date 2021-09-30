@@ -1320,7 +1320,10 @@ public class EzTaskController extends EgovFileMngUtil {
 				int status = ezTaskService.getStatusOfRepTask(vo.getTaskID(), realDate, tenantID);
 				vo.setTaskStatus(status);				
     			int completionPercentage = ezTaskService.selectCompletionOfRepTask(vo.getTaskID(), realDate, tenantID);
-    			vo.setCompleteRate(completionPercentage);  	
+    			//2021-09-28 남학선 해당로직이 서비스에서 반복업무 완료율을 가져오는 로직과 겹쳐서 덮어씌우는 문제가 생김 일단 분기를 만들되 필요하면 지우거나 수정
+    			if(vo.getCompleteRate() == 0){
+					vo.setCompleteRate(completionPercentage);
+				}
 			}
     		//end
     		

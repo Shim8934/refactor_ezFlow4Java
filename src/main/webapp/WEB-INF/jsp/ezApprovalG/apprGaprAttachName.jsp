@@ -51,7 +51,7 @@
 		            return;
 		        }
 
-		        if (!p_DisplayName) {
+		        if (p_DisplayName.split(".")[0].trim() == '') {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t291'/>";
 		            OpenAlertUI(pAlertContent);
 		            txtDisplayName.focus();

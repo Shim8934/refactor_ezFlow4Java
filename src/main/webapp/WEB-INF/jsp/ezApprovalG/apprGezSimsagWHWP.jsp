@@ -292,7 +292,7 @@
                     //hideProgress();
 
                     if (message.FieldExist("sealsign")) {
-                        var tmpSUrl = GetDocumentElement(message, "surl");
+                        var tmpSUrl = GetDocumentElement("surl");
 
                         if (tmpSUrl != "") {
                             if (tmpSUrl == "/files/upload_approvalG/sealImg/nostamp.gif")
@@ -859,9 +859,9 @@
 
                 message.PutFieldText("sealsign", "");
                 message.SetFieldBackImage("sealsign", document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(SealHref), 5);
-                SetDocumentElement(message, "surl", SealHref);
-                SetDocumentElement(message, "swidth", SealWidth);
-                SetDocumentElement(message, "sheight", SealHeight);
+                SetDocumentElement("surl", SealHref);
+                SetDocumentElement("swidth", SealWidth);
+                SetDocumentElement("sheight", SealHeight);
                 stampFlag = true;
                 NostampFlag = false;
             }
@@ -889,9 +889,9 @@
                 if (message.FieldExist("sealsign")) {
                     message.PutFieldText("sealsign", "");
                     message.SetFieldBackImage("sealsign", document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(SealHref), 6);
-                    SetDocumentElement(message, "surl", SealHref);
-                    SetDocumentElement(message, "swidth", SealWidth);
-                    SetDocumentElement(message, "sheight", SealHeight);
+                    SetDocumentElement("surl", SealHref);
+                    SetDocumentElement("swidth", SealWidth);
+                    SetDocumentElement("sheight", SealHeight);
                     NostampFlag = true;
                     stampFlag = false;
                 }

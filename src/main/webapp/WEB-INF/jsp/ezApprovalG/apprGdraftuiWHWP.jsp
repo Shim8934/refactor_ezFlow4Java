@@ -169,6 +169,7 @@
 	        var useRedraftOpinionKeep = "<c:out value='${useRedraftOpinionKeep}'/>";
 	        var formAprOption = "<c:out value='${formAprOption}'/>";
 	        var rtnSignInfo;
+	        var passAprLine = "";
 	        var useWebHWP = "<c:out value ='${useWebHWP}'/>";
 	        var pConnKey = "<c:out value ='${connKey}'/>";
 	        var pConnFormCode = "<c:out value ='${connFormCode}'/>";
@@ -822,7 +823,12 @@
                         }
                         else {
                             Gyuljedate = GetDocInfoData("APR", "STARTDATE");
-                            sendAlertMail("APR", 1, "DRAFT");
+                            CurrentAprType = "001";
+	                        CurrentAprUserID = pUserID;
+	                        
+                            if (passAprLine != "Y") {	 //기결재통과 알림메일은 자바단에서 구현
+                            	sendAlertMail("APR", 1, "DRAFT");
+                            }
                         }
 
                         UpdateLineHistory();
@@ -1310,6 +1316,7 @@
 			        if (pGubun == undefined)
 			            pGubun = CheckGubun;
 			        
+			        parameter[60] = passAprLine;
 			        parameter[61] = tempKeyword;
 			        
 			        ezapprovalinfo_dialogArguments[0] = parameter;
@@ -1387,6 +1394,8 @@
 		            setPublicFlag();
 		            SummaryFlag = true;
 		            
+		            passAprLine = ret[32];
+
 		            if (nonElecRec == "Y") {
 		            	nonElecRecInfoXml = ret[23];
 		            	nonSepAttachLVXml = ret[24];
@@ -1650,13 +1659,13 @@
                 }
 	    		
 	    		if (IsSkipDrafter == "FALSE") {
-                	if (nonElecRec != "Y") {
+                	//if (nonElecRec != "Y") {
 	                    //var ret;
 	                    var parameter = new Array();
 	
 	                    parameter[0] = pDocID;
 	                    openSignUI(parameter);
-                	}
+                	//}
                 } else {
                 	GetHTML(saveDraftInfo);
                 }

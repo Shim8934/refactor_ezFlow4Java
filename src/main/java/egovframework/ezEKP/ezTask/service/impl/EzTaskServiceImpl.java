@@ -673,7 +673,12 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		
 								if (generated) {
 									count++;								
-									String calcuDate = nsdf.format(date_cal.getTime());									
+									String calcuDate = nsdf.format(date_cal.getTime());
+
+									//2021-09-29 남학선 반복업무 검색시 달성율이 나타나지 않아서 해당 날짜의 완료율을 검색한 후 넣어줌
+									String convertDate = calcuDate + " 00:00:00";
+									int comRate = selectCompletionOfRepTask(vo.getTaskID(), convertDate, tenantID);
+									vo.setCompleteRate(comRate);
 		
 									//if (calcuDate.compareTo(startDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {	
 									if ((date_cal.compareTo(sDate_cal) >= 0) && (date_cal.compareTo(eDate_cal) <= 0)) {
@@ -723,6 +728,11 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 								if (maxCount == count) break;
 								
 									String calcuDate = nsdf.format(date_cal.getTime());
+
+									//2021-09-29 남학선 반복업무 검색시 달성율이 나타나지 않아서 해당 날짜의 완료율을 검색한 후 넣어줌
+									String convertDate = calcuDate + " 00:00:00";
+									int comRate = selectCompletionOfRepTask(vo.getTaskID(), convertDate, tenantID);
+									vo.setCompleteRate(comRate);
 									
 									//if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(orgEndDate.substring(0,10)) <= 0) {	
 									if(info[0].equals("0")){
@@ -811,6 +821,11 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 									count++;
 		
 									String calcuDate = nsdf.format(newCal.getTime());
+
+									//2021-09-29 남학선 반복업무 검색시 달성율이 나타나지 않아서 해당 날짜의 완료율을 검색한 후 넣어줌
+									String convertDate = calcuDate + " 00:00:00";
+									int comRate = selectCompletionOfRepTask(vo.getTaskID(), convertDate, tenantID);
+									vo.setCompleteRate(comRate);
 									
 									//if (calcuDate.compareTo(startDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {
 									if ((newCal.compareTo(sDate_cal) >= 0) && (newCal.compareTo(eDate_cal) <= 0)) {
@@ -881,6 +896,11 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 									count++;
 									
 									String calcuDate = nsdf.format(newCal.getTime());
+
+									//2021-09-29 남학선 반복업무 검색시 달성율이 나타나지 않아서 해당 날짜의 완료율을 검색한 후 넣어줌
+									String convertDate = calcuDate + " 00:00:00";
+									int comRate = selectCompletionOfRepTask(vo.getTaskID(), convertDate, tenantID);
+									vo.setCompleteRate(comRate);
 									
 									//if (calcuDate.compareTo(startDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {
 									if ((newCal.compareTo(sDate_cal) >= 0) && (newCal.compareTo(eDate_cal) <= 0)) {

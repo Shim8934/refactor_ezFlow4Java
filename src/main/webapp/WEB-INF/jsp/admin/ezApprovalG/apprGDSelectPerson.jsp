@@ -343,11 +343,11 @@
 		        var tr = listview.GetSelectedRows();
 		        var length = tr.length;
 		        if (length == 0) {
-		            alert("<spring:message code='ezPersonal.t65'/>");
+		            alert("<spring:message code='main.t0630'/>");
 		            return;
 		        }
 		        if (length > 1) {
-		            alert("<spring:message code='ezPersonal.t66'/>");
+		            alert("<spring:message code='ezApprovalG.admin.NHS01'/>");
 		            return;
 		        }
 		        var selRow = tr[0];
