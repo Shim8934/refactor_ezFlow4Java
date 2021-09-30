@@ -3434,6 +3434,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public List<String> getFileOpenFlagList(Map<String, Object> map) throws Exception {
 		return (List<String>) list("EzApprovalG.getFileOpenFlagList", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> getFileOpenSNList(Map<String, Object> map) throws Exception {
+		return (List<String>) list("EzApprovalG.getFileOpenSNList", map);
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<ApprGDocListForOpenGovVO> getSearchDocListForOpenGov(Map<String, Object> map) throws Exception {
