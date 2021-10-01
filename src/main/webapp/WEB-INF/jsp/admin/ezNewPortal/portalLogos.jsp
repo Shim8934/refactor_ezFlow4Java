@@ -258,7 +258,7 @@
 					}
 					
 					var request = new XMLHttpRequest();
-					request.open("DELETE", "/admin/ezNewPortal/deleteLogo.do", true);
+					request.open("POST", "/admin/ezNewPortal/deleteLogo.do", true);
 					request.setRequestHeader('content-type', 'application/json');
 	    
 					request.onload = function() {
