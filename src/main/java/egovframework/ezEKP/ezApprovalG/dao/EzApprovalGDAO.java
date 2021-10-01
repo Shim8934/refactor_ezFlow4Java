@@ -3708,4 +3708,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
     public List<Map<String, Object>> getReceiptInfoIng(Map<String, Object> map) throws Exception {
         return (List<Map<String, Object>>) list("EzApprovalG.getReceiptInfoIng", map);
     }
+
+	public void updateHistoryAttachInfo(Map<String, Object> map) {
+		update("EzApprovalG.updateHistoryAttachInfo", map);		
+	}
 }

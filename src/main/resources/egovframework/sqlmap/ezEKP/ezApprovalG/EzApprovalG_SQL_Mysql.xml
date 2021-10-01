@@ -34439,4 +34439,21 @@
                 SUBID
         </isEqual>
     </select>
+    
+    <update id="EzApprovalG.updateHistoryAttachInfo" parameterClass="Map">
+	 	UPDATE 
+	 		TBL_HISTORYATTACHINFO
+        SET 
+        	ATTACHFILEDISPLAYNAME = #v_DISPLAYNAME#
+        WHERE  
+        	DOCID = #v_DOCID#
+        AND 
+        	ATTACHFILENAME = #v_ATTACHFILENAME#
+        AND
+        	ATTACHFILESN = #v_ATTACHFILESN#
+        AND
+   			TENANT_ID = #v_TENANTID#
+   		AND
+   			COMPANYID = #companyID#
+	</update>
 </sqlMap>

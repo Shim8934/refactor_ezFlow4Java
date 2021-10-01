@@ -9165,6 +9165,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 				
 				ezApprovalGDAO.insertAprAttachInfo(map);
+				ezApprovalGDAO.updateHistoryAttachInfo(map);
 				ezApprovalGDAO.updateAttachFileInfo(map);
 
 				if (config.getProperty("config.useOpenGov").equals("YES")) {
