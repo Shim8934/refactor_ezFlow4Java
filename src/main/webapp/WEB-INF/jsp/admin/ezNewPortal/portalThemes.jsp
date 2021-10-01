@@ -525,7 +525,7 @@
 			}
 			
    			var request = new XMLHttpRequest();
-   			request.open('PATCH','/admin/ezNewPortal/checkThemeAuths.do');
+   			request.open('POST','/admin/ezNewPortal/checkThemeAuths.do');
 			request.setRequestHeader('Content-Type', 'application/json');
    			
 			request.onload = function() {
@@ -559,7 +559,7 @@
 			}
 			
 			var request = new XMLHttpRequest();
-			request.open('PATCH', '/admin/ezNewPortal/updateThemeInfo.do', true);
+			request.open('POST', '/admin/ezNewPortal/updateThemeInfo.do', true);
 			request.setRequestHeader('Content-Type', 'application/json');
 			
 			request.onload = function() {
@@ -623,7 +623,7 @@
 			}
 			
 			var request = new XMLHttpRequest();
-			request.open('PATCH', '/admin/ezNewPortal/updateCompanyDefaultTheme.do', true);
+			request.open('POST', '/admin/ezNewPortal/updateCompanyDefaultTheme.do', true);
 			request.setRequestHeader('Content-Type', 'application/json');
 			request.onload = function() {
 				getThemes();
@@ -800,7 +800,7 @@
 			}
 			
 			var request = new XMLHttpRequest();
-			request.open('PATCH', '/admin/ezNewPortal/updateThemePortletUsed.do', true);
+			request.open('POST', '/admin/ezNewPortal/updateThemePortletUsed.do', true);
 			request.setRequestHeader('Content-Type', 'application/json');
 			
 			request.onload = function() {
