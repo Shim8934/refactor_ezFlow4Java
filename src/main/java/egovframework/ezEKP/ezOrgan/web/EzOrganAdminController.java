@@ -151,6 +151,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.createJMochaMailSignatureTemplate();
 	    	ezCommonService.createJobMasterTable();
 	    	ezCommonService.addUserMasterPasswordUpdateDT();
+	    	ezCommonService.addUserMasterPhotoUpdateDT(); // 2021-09-10 김은실 - 메신저/인사 연동 효율성을 위한: 프로필사진 업데이트시각(PHOTO_UPDATEDT) 컬럼 추가
 	    	ezCommonService.addJobMasterJobID();
 	    	ezCommonService.createWebfolderToken();
 	    	ezCommonService.addJmochaMailGenenalPreviewMailImage();
@@ -247,6 +248,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.createTblCarAcl(); // 2021-07-12 차량관리 테이블 추가
 	    	ezCommonService.createTblCarAttach(); // 2021-07-12 차량관리 테이블 추가
 	    	ezCommonService.createTblCarForm(); // 2021-07-12 차량관리 테이블 추가
+    		ezCommonService.addBoardMailFGColumn(); // 2021-06-21 홍승비 - 게시판 메일알림 옵션 추가
+    		ezCommonService.addCommNoticeUpperNoColumn(); // 2021-06-28 홍승비 - 커뮤니티 공지사항 부모게시물 정보 칼럼 추가
+    		ezCommonService.alterTblAprReceiptProcessInfoAddColumn(); // 2021-06-29 - 수신결재정보 테이블 오리지날 docid 컬럼 추가 
+    		ezCommonService.alterTblDocDeliveryAddColumn(); // 2021-06-29 - 배부테이블에 대내/대외 여부 컬럼 추가
+    		ezCommonService.addTblAdminReceiptGroupSubExtReceptYnColumn(); // 2021-06-29 수신처그룹 멤버 테이블에 외부/내부 수신여부 컬럼 추가
+    		ezCommonService.addViewTaskOldFlag(); // 2021-08-31 홍승비 - 전자결재 분류코드체계 뷰에 삭제여부(OLDFLAG) 칼럼 추가 (VTASKCLASS, SVTASKCLASS)
 	    	
 	    	// webfolder
 	    	ezCommonService.addWebfolderUserSubdeptPermittedColumn(); 	//2020-10-19 김은실 - 웹폴더 > 하위부서 허용 여부 추가
@@ -259,14 +266,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.addWebfolderLogHistory(); 					// 2020-01-20 웹폴더 파일 이력관리 컬럼추가 
 	    	ezCommonService.createWebfolderNoInherit(); 				// 권한비상속			
     		ezCommonService.alterWebfolderApplyHistoryAddColumn();
-    		
-    		ezCommonService.addBoardMailFGColumn(); // 2021-06-21 홍승비 - 게시판 메일알림 옵션 추가
-    		ezCommonService.addCommNoticeUpperNoColumn(); // 2021-06-28 홍승비 - 커뮤니티 공지사항 부모게시물 정보 칼럼 추가
-    		
-    		ezCommonService.alterTblAprReceiptProcessInfoAddColumn(); // 2021-06-29 - 수신결재정보 테이블 오리지날 docid 컬럼 추가 
-    		ezCommonService.alterTblDocDeliveryAddColumn(); // 2021-06-29 - 배부테이블에 대내/대외 여부 컬럼 추가
-    		ezCommonService.addTblAdminReceiptGroupSubExtReceptYnColumn(); // 2021-06-29 수신처그룹 멤버 테이블에 외부/내부 수신여부 컬럼 추가
-    		ezCommonService.addViewTaskOldFlag(); // 2021-08-31 홍승비 - 전자결재 분류코드체계 뷰에 삭제여부(OLDFLAG) 칼럼 추가 (VTASKCLASS, SVTASKCLASS)
     	} catch (Exception e) {
     		e.printStackTrace();
     	}
@@ -4295,6 +4294,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    String tempFilePath = thumpPath + tempFilename; 
 	    String newFilePath = thumpPath + newFileName;
 	    vo.setExtensionAttribute2(newFileName);
+	    vo.setDoUpdatePhoto(true);		// 2021-09-12 김은실 - 메신저/인사 연동 효율성을 위한: 프로필사진 업데이트시각(PHOTO_UPDATEDT) 업데이트
 	    String result = "";
 	    JSONObject resultMap = new JSONObject();
 	    

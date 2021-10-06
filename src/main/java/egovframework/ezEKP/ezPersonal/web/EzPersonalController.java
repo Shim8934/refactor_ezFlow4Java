@@ -1606,7 +1606,7 @@ public class EzPersonalController extends EgovFileMngUtil {
         String nowDate = date.format(new Date()); 
 
         // 비즈메카톡과의 프로필 사진 연동을 위해 updateDT 필드를 갱신한다.
-        ezOrganAdminService.updateProperty(userInfo.getId(), "updateDT", nowDate, "user", userInfo.getTenantId());
+        ezOrganAdminService.updateProperty(userInfo.getId(), "photo_updateDT", nowDate, "user", userInfo.getTenantId());
 		
         String useBizmekaTalk = ezCommonService.getTenantConfig("UseBizmekaTalk", userInfo.getTenantId());
         
