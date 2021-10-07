@@ -12222,7 +12222,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					makeXMLString(makeListField(docXML.getElementsByTagName("APRMEMBERNAME2").item(0).getTextContent())) + "</USERNAME2><COMPANYID>" + 
 					makeXMLString(makeListField(docXML.getElementsByTagName("COMPANYID").item(0).getTextContent())) + "</COMPANYID><DOCNUMZEROCNT>" + 
 					getDocNumZeroCnt(docXML.getElementsByTagName("COMPANYID").item(0).getTextContent(), tenantID) + "</DOCNUMZEROCNT><APRMEMBERSN>" +
-					makeXMLString(makeListField(docXML.getElementsByTagName("APRMEMBERSN").item(0).getTextContent())) + "</APRMEMBERSN></NEXTDOCINFO>";
+					makeXMLString(makeListField(docXML.getElementsByTagName("APRMEMBERSN").item(0).getTextContent())) + "</APRMEMBERSN><NONELECREC>" +
+					makeXMLString(makeListField(checkNonElecRec(docXML.getElementsByTagName("ORGDOCID").item(0).getTextContent(), companyID, tenantID))) + "</NONELECREC></NEXTDOCINFO>";
 			
 			if (allApproveYN.equals("Y")) {
 				boolean breakFlag = false;
@@ -12250,7 +12251,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							makeXMLString(getExtendedFileName(makeListField(docXML.getElementsByTagName("HREF").item(breakPoint).getTextContent()))) + "</EXTENDEDNAME><COMPANYID>" + 
 							makeXMLString(makeListField(docXML.getElementsByTagName("COMPANYID").item(0).getTextContent())) + "</COMPANYID><DOCNUMZEROCNT>" + 
 							getDocNumZeroCnt(docXML.getElementsByTagName("COMPANYID").item(0).getTextContent(), tenantID) + "</DOCNUMZEROCNT><APRMEMBERSN>" +
-							makeXMLString(makeListField(docXML.getElementsByTagName("APRMEMBERSN").item(0).getTextContent())) + "</APRMEMBERSN></NEXTDOCINFO>";
+							makeXMLString(makeListField(docXML.getElementsByTagName("APRMEMBERSN").item(0).getTextContent())) + "</APRMEMBERSN><NONELECREC>" +
+					        makeXMLString(makeListField(checkNonElecRec(docXML.getElementsByTagName("ORGDOCID").item(0).getTextContent(), companyID, tenantID))) + "</NONELECREC></NEXTDOCINFO>";
 				}
 			} 
 		}
