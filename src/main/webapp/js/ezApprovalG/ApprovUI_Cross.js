@@ -4028,6 +4028,7 @@ function getNextDocInfo() {
             docNumZeroCnt = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "DOCNUMZEROCNT"));
             orgCompanyID = pCompanyID;
             wAprMemberSN = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "APRMEMBERSN"));
+            nonElecRec = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "NONELECREC"));
         }
     } catch (e) { }
 }
