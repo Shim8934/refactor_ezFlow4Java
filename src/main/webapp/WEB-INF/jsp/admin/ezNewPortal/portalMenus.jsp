@@ -504,7 +504,7 @@
 			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
 			
 			var request = new XMLHttpRequest();
-			request.open('PATCH', '/admin/ezNewPortal/updateMenu.do', true);
+			request.open('POST', '/admin/ezNewPortal/updateMenu.do', true);
 			request.setRequestHeader('content-type', 'application/json');
 			
 			request.onload = function() { 
@@ -735,7 +735,7 @@
 				var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
 				
 				var request = new XMLHttpRequest();
-				request.open('DELETE', '/admin/ezNewPortal/deleteMenu.do', true);
+				request.open('POST', '/admin/ezNewPortal/deleteMenu.do', true);
 				request.setRequestHeader('content-type', 'application/json');
 				
 				request.onload = function() { getMenus(); }
@@ -782,7 +782,7 @@
 			
 			//ajax로 메뉴 순서지정
 			var request = new XMLHttpRequest();
-			request.open('PATCH', '/admin/ezNewPortal/updateMenuOrder.do', true);
+			request.open('POST', '/admin/ezNewPortal/updateMenuOrder.do', true);
 			request.setRequestHeader('content-type', 'application/json');
 			
 			request.onload = function() { }

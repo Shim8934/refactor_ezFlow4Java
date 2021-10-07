@@ -439,6 +439,17 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 
+	/* 2021-09-10 김은실 - 메신저/인사 연동 효율성을 위한: 프로필사진 업데이트시각(PHOTO_UPDATEDT) 컬럼 추가 */
+	public void addUserMasterPhotoUpdateDT() throws Exception {
+		try {
+			select("EzCommonDAO.checkUserMasterPhotoUpdateDT");
+		} catch (Exception e) {
+			logger.debug("tbl_usermaster PHOTO_UPDATEDT column doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addUserMasterPhotoUpdateDT");
+		}
+	}
+
 	public void addJobMasterJobID() throws Exception {
 		try {
 			select("EzCommonDAO.checkAddJobMasterJobID");

@@ -190,12 +190,12 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
                 var FileExt = getOriginalFileExtension(FilePath);
                 var isKlibFile = FilePath.lastIndexOf(".ezd") === FilePath.length - 4;
             	var FileDocID = trim_Cross(FilePath.substr(FilePath.length - (isKlibFile ? 28: 24), 20).toLowerCase());
-                var FileName = trim_Cross(getNodeText(GetChildNodes(xmlRtn[i])[1]));
+                var FileName = escapeHtml(trim_Cross(getNodeText(GetChildNodes(xmlRtn[i])[1])));
                 var OpenLocation = "";
                 if (FileDocID == "" && FilePath == "") {
                 	strDocAttach = strDocAttach + "<a style='cursor:pointer' onclick=\"OpenAttachAlertUI('" + strLang260 + "')\">";
                 	strDocAttach = strDocAttach + "<IMG SRC='/images/attach-small.gif' border='0'>";
-                    strDocAttach = strDocAttach + getNodeText(GetChildNodes(xmlRtn[i])[1]) + "</a> &nbsp; ";
+                    strDocAttach = strDocAttach + FileName + "</a> &nbsp; ";
                 } else if (FileExt == "hwp") {
                 	//2018-09-12 천성준 - mht결재문서에 hwp문서를 문서첨부 하고 IE가 아닌 chrome으로 mht결재문서를 문서보기 하면 알럿이 뜨면서 첨부파일 정보가 공백이 되어서 IE검사 주석처리함. 대신 문서보기 하단 문서첨부를 클릭해서 열때 hwp이면 IE검사를 하게 로직 추가함
                 	/*if (isIE()) {
@@ -224,14 +224,14 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
                 	}
                 	strDocAttach = strDocAttach + "<a style='cursor:pointer' onclick=\"openAttachView('" + openLocation + "', '', 973, 570)\">";
                 	strDocAttach = strDocAttach + "<IMG SRC='/images/attach-small.gif' border='0'>";
-                	strDocAttach = strDocAttach + getNodeText(GetChildNodes(xmlRtn[i])[1]) + "</a> &nbsp; ";
+                	strDocAttach = strDocAttach + FileName + "</a> &nbsp; ";
                 	
                 } else {
                     openLocation = "/ezApprovalG/contDocView.do";
                     openLocation = openLocation + "?docID=" + escapenew(FileDocID) + "&docHref=" + escapenew(FilePath) + "&formID=&orgDocID=";
                     strDocAttach = strDocAttach + "<a style='cursor:pointer' onclick=\"openAttachView('" + openLocation + "', '', 973, 570)\">";
                     strDocAttach = strDocAttach + "<IMG SRC='/images/attach-small.gif' border='0'>";
-                    strDocAttach = strDocAttach + getNodeText(GetChildNodes(xmlRtn[i])[1]) + "</a> &nbsp; ";
+                    strDocAttach = strDocAttach + FileName + "</a> &nbsp; ";
                 }
                 
                 /* 2020-11-17 홍승비 - 일반첨부와 문서첨부 영역의 분리 */
@@ -371,4 +371,17 @@ function attach_Download() {
 		alert(strLangHSBAt12);
 		return;
 	}
+}
+
+function escapeHtml(text) {
+    var map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        '"': '&#034;',
+        "'": '&#039;'
+    };
+
+    return text.replace(/[&<>"']/g, function(m) { return map[m]; });
 }

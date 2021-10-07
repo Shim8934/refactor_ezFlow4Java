@@ -4128,12 +4128,11 @@
 	</update>
 	
 	<update id="EzOrganAdminDAO.updateDBData_user" parameterClass="OrganUserVO">
-		<![CDATA[
 			UPDATE
 				TBL_USERMASTER
      		SET
-     			updatedt = #nowDate#
-     	]]>	
+     			<isEqual property="doUpdatePhoto" compareValue="false"> <![CDATA[updatedt = #nowDate#]]></isEqual> <!-- boolean이라 객체 생성하면 false로 기본값 -->
+     			<isEqual property="doUpdatePhoto" compareValue="true"> <![CDATA[photo_updatedt = #nowDate#]]></isEqual>
 		<dynamic>
 	  		<isNotNull property="displayName" prepend=","> <![CDATA[displayName = #displayName#]]></isNotNull>
 	  		<isNotNull property="displayName2" prepend=","> <![CDATA[displayName2 = #displayName2#]]></isNotNull>

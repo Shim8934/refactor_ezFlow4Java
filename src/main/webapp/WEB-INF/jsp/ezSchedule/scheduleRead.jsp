@@ -832,7 +832,7 @@
 	                            <td class="pos1">
 	                                <div id="attachedfileDIV" style="margin-top: 0px; overflow: auto; padding-top: 0px;height: 50px;" align="left">
 	                                    <c:forEach var="item" items="${attachList}" varStatus="status">
-	                                    	<div style="margin-top:3px;height:20px">
+	                                    	<div style="margin-top:3px;height:auto;">
 	                                    		<c:set var="imagePath" value="/images/file.gif" />
 	                                    		<input type="checkbox" filename="${item.fileEncodeName}" filepath="${item.filePath}">
 	                                    		<c:if test="${item.fileType == 'jpg' || item.fileType == 'jpeg' || item.fileType == 'bmp' || item.fileType == 'gif' || item.fileType == 'png' || item.fileType == 'tif' || item.fileType == 'tiff'}">

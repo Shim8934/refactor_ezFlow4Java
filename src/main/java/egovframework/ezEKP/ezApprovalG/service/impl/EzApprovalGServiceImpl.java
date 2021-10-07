@@ -9165,6 +9165,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 				
 				ezApprovalGDAO.insertAprAttachInfo(map);
+				ezApprovalGDAO.updateHistoryAttachInfo(map);
 				ezApprovalGDAO.updateAttachFileInfo(map);
 
 				if (config.getProperty("config.useOpenGov").equals("YES")) {
@@ -31552,8 +31553,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		ezApprovalGDAO.insertOpenGovDocInfo(map);
 		
 		if (!publicity.substring(0,1).equals("1")) {
-			for (int i = 0 ; i <fileOpenFlagList.length(); i++) {
-				map.put("sn", i + 1);
+			List<String> fileSnList = ezApprovalGDAO.getFileOpenSNList(map);
+			for (int i = 0 ; i <fileSnList.size(); i++) {
+				map.put("sn", fileSnList.get(i));
 				map.put("fileOpenFlag", Character.toString(fileOpenFlagList.charAt(i)));
 				ezApprovalGDAO.updateFileOpenFlag(map);
 			}
@@ -32024,8 +32026,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         ezApprovalGDAO.updateOpenGovDocInfo(map);
 
         if (publicity.substring(0, 1).equals("2")) {
-            for (int i = 0; i < fileOpenFlagList.length(); i++) {
-                map.put("sn", i + 1);
+        	List<String> fileSnList = ezApprovalGDAO.getFileOpenSNList(map);
+            for (int i = 0; i < fileSnList.size(); i++) {
+                map.put("sn", fileSnList.get(i));
                 map.put("fileOpenFlag", Character.toString(fileOpenFlagList.charAt(i)));
                 ezApprovalGDAO.updateFileOpenFlag(map);
             }

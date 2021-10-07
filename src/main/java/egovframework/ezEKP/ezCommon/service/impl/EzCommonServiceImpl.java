@@ -1306,6 +1306,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 
 	@Override
+	public void addUserMasterPhotoUpdateDT() throws Exception {
+		ezCommonDAO.addUserMasterPhotoUpdateDT();
+	}
+
+	@Override
 	public void addJmochaMailGenenalPreviewMailImage() throws Exception {
 		ezCommonDAO.addJmochaMailGenenalPreviewMailImage();
 	}

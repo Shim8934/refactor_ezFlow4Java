@@ -25,7 +25,7 @@ function updatePortletOrderUser(usedTheme) {
 	
 	//ajax로 순서 변경
 	$.ajax({
-		type : "PATCH",
+		type : "POST",
 		url : "/ezNewPortal/updatePortletOrderUser.do",
 		contentType : "application/json",
 		dataType : "text",

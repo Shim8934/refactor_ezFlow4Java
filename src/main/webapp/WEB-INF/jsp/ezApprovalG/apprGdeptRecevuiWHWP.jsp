@@ -683,7 +683,10 @@
 		            }
 		        	
 		        	if(hesongok) {
-		            	SendMailToDrafter_Hesong();
+		        		var writerID = GetDocInfoData("APR", "writerid");
+						var writerName = GetDocInfoData("APR", "writername");
+						var docTitle = GetDocInfoData("APR", "doctitle");
+		            	SendMailToDrafter_Hesong(writerID, writerName, docTitle);
 		            	hesongok = setHeSongDocInfo();
 		        	}
 		        }

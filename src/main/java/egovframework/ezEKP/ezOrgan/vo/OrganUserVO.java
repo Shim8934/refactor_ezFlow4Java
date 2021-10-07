@@ -127,6 +127,9 @@ public class OrganUserVO {
 	/** 회사전화 */
 	private String officeMobile;
 
+	/** 프로필사진 날짜를 업데이트할 것 인지 flag */
+	private boolean doUpdatePhoto;
+
 	public String getJobID() {
 		return jobID;
 	}
@@ -621,6 +624,14 @@ public class OrganUserVO {
 
 	public void setOfficeMobile(String officeMobile) {
 		this.officeMobile = officeMobile;
+	}
+
+	public boolean getDoUpdatePhoto() {
+		return doUpdatePhoto;
+	}
+
+	public void setDoUpdatePhoto(boolean doUpdatePhoto) {
+		this.doUpdatePhoto = doUpdatePhoto;
 	}
 
 }
