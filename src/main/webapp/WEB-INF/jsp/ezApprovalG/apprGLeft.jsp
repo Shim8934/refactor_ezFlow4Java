@@ -1117,7 +1117,12 @@
 	        				companyName2 : CompanyName2
 	        		},
 	        		success: function(xml){
-	        		}        			
+	        			/* 2021-10-07 홍승비 - 부재자설정 후 겸직 셀렉트박스에서 겸직정보 변경 시 undefined 알러트 메세지 발생하지 않도록 수정 */
+	        			// 좌측 페이지가 먼저 갱신되므로, 우측 페이지가 갱신되기 전에 겸직정보 파라미터를 사용하지 않도록 공백으로 처리함
+	        			if (typeof(parent.frames["right"].arr_userinfo[7]) != "undefined") {
+	        				parent.frames["right"].arr_userinfo[7] = "";
+	        			}
+	        		}
 	        	});
 		    }
 		    

@@ -8862,6 +8862,7 @@
 	FROM (
 		SELECT 
 			DOCID, 
+			ORGDOCID, 
 			APRMEMBERID, 
 			APRMEMBERNAME, 
 			APRMEMBERNAME2, 
@@ -8917,6 +8918,7 @@
   
 		SELECT     
 		  	DOCID,     
+		  	ORGDOCID,     
 		  	APRMEMBERID,     
 		  	APRMEMBERNAME,     
 		  	APRMEMBERNAME2,     

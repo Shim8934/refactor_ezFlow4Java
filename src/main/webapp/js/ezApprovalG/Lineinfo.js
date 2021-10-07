@@ -4776,3 +4776,97 @@ function list2_onSel_DBclick_audit(table_id) {
         }
     }
 }
+
+function btnReceiptSearchDept_onClick() {
+    try{
+        var tmpDeptName = document.getElementById("textUser2").value;
+        if (tmpDeptName.length == 0) {
+            var pAlertContent = strLang240;
+            document.getElementById("textUser2").focus();
+            OpenAlertUI(pAlertContent);
+            return;
+        }
+
+        var xmlDOM, adCount;
+        $.ajax({
+            type : "POST",
+            dataType : "text",
+            async : false,
+            url : "/ezOrgan/getSearchList.do",
+            data : {
+                search : "EXACT_EXTENSIONATTRIBUTE2::" + CompanyID + ";;displayname::" + tmpDeptName,
+                cell   : "extensionAttribute3;displayname;extensionAttribute9;",
+                prop   : "",
+                type   : "group"
+            },
+            success: function(xml){
+                document.getElementById("textUser2").focus();
+                xmlDOM = loadXMLString(xml);
+                adCount = xmlDOM.getElementsByTagName("ROW").length;
+            },
+            error : function(error){
+                document.getElementById("textUser").focus();
+                alert(strLang241 + error.responseText);
+            }
+        });
+
+        if (adCount == 0) {
+            var pAlertContent = strLang242;
+            OpenAlertUI(pAlertContent);
+            return;
+        }
+        else if (adCount == 1) {
+            g_xmlHTTP = createXMLHttpRequest();
+
+            var strQuery = "<DATA><DEPTID>" + getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]) +
+                "</DEPTID><TOPID>" + CompanyID + "</TOPID><PROP>extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName</PROP></DATA>";
+            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
+            g_xmlHTTP.onreadystatechange = event_getReceiptDeptFullTree;
+            g_xmlHTTP.send(strQuery);
+        }
+        else {
+            var rgParams = new Array();
+            rgParams["addrBook"] = xmlDOM;
+            rgParams["deptid"] = "";
+            
+            checkname2_cross_dialogArguments[0] = rgParams;
+            checkname2_cross_dialogArguments[1] = btnReceiptSearchDept_onClick_Complete2;
+
+            DivPopUpShow(609, 372, "/ezPersonal/checkName2.do");
+        }
+
+    }catch(e){}
+}
+
+function btnReceiptSearchDept_onClick_Complete2(rgParams) {
+    DivPopUpHidden();
+    if (rgParams["deptid"] != "") {
+        g_xmlHTTP = createXMLHttpRequest();
+        var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + CompanyID + "</TOPID><PROP>extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName</PROP></DATA>";
+        g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
+        g_xmlHTTP.onreadystatechange = event_getReceiptDeptFullTree;
+        g_xmlHTTP.send(strQuery);
+    }
+}
+
+function event_getReceiptDeptFullTree() {
+    if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
+        if (g_xmlHTTP.statusText == "OK") {
+            document.getElementById('TreeView2').innerHTML = "";
+            var treeView = new TreeView();
+            treeView.SetID("tvTreeView2");
+            treeView.SetUseAgency(true);
+            treeView.SetUseSusinColor4AprG(true);
+            treeView.SetRequestData("RequestData2");
+            treeView.SetNodeClick("TreeViewNodeClick2");
+            treeView.DataSource(loadXMLString(g_xmlHTTP.responseText));
+            treeView.DataBind("TreeView2");
+
+            treeViewScrollTo("tvTreeView2");   //2020-04-24 : 선택된 노드로 트리뷰 커서 이동
+        }
+        else {
+            alert(strLang249 + g_xmlHTTP.statusText);
+            g_xmlHTTP = null;
+        }
+    }
+}

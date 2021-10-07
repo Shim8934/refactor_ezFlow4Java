@@ -562,6 +562,24 @@
 			PASSWORD_UPDATEDT DATE DEFAULT NULL
 	</statement>
 	
+	<select id="EzCommonDAO.checkUserMasterPhotoUpdateDT" resultClass="String">
+		<![CDATA[
+			SELECT 
+				PHOTO_UPDATEDT
+			FROM 
+				TBL_USERMASTER
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.addUserMasterPhotoUpdateDT"> 
+		ALTER TABLE 
+			TBL_USERMASTER
+		ADD 
+			PHOTO_UPDATEDT DATE DEFAULT NULL
+	</statement>
+
 	<insert id="EzCommonDAO.insertUseSession" parameterClass="Map">
 		INSERT INTO tbl_tenant_config
 		(tenant_id, property_name, property_value, description, config_name, regdate, config_type)

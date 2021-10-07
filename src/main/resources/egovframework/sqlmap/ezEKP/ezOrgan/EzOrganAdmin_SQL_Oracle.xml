@@ -5928,12 +5928,11 @@
 	</update>
 	
 	<update id="EzOrganAdminDAO.updateDBData_user" parameterClass="OrganUserVO">
-		<![CDATA[
 			UPDATE
 				TBL_USERMASTER
      		SET
-     			updatedt = to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS')
-     	]]>	
+     			<isEqual property="doUpdatePhoto" compareValue="false"> <![CDATA[updatedt = to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS')]]></isEqual> <!-- boolean이라 객체 생성하면 false로 기본값 -->
+     			<isEqual property="doUpdatePhoto" compareValue="true"> <![CDATA[photo_updatedt = to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS')]]></isEqual>
 		<dynamic>
 	  		<isNotNull property="displayName" prepend=","> <![CDATA[displayName = #displayName#]]></isNotNull>
 	  		<isNotNull property="displayName2" prepend=","> <![CDATA[displayName2 = #displayName2#]]></isNotNull>
@@ -5943,6 +5942,7 @@
 	  		<isNotNull property="extensionAttribute6" prepend=","> <![CDATA[extensionAttribute6 = #extensionAttribute6#]]></isNotNull>
 	  		<isNotNull property="extensionAttribute14" prepend=","> <![CDATA[extensionAttribute14 = #extensionAttribute14#]]></isNotNull>
 	  		<isNotNull property="extensionAttribute10" prepend=","> <![CDATA[extensionAttribute10 = #extensionAttribute10#]]></isNotNull>
+	  		<isNotNull property="extensionAttribute11" prepend=","> <![CDATA[extensionAttribute11 = #extensionAttribute11#]]></isNotNull>
 	  		<isNotNull property="extensionAttribute1" prepend=","> <![CDATA[extensionAttribute1 = #extensionAttribute1#]]></isNotNull>
 	  		<isNotNull property="extensionAttribute2" prepend=","> <![CDATA[extensionAttribute2 = #extensionAttribute2#]]></isNotNull>
 	  		<isNotNull property="extensionAttribute3" prepend=","> <![CDATA[extensionAttribute3 = #extensionAttribute3#]]></isNotNull>

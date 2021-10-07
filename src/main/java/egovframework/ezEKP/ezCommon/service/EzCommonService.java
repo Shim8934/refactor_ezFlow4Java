@@ -115,6 +115,8 @@ public interface EzCommonService {
 
 	public void addUserMasterPasswordUpdateDT() throws Exception;
 	
+	public void addUserMasterPhotoUpdateDT() throws Exception;
+
 	public void addUserMasterMailBoxQuota() throws Exception;
 
 	public void addPortalThemePortletIsFixed() throws Exception;
