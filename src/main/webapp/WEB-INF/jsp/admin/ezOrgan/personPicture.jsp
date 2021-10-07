@@ -218,11 +218,10 @@
 						if(status != "OK"){
 							alert("<spring:message code='ezOrgan.t119' />");
 						}else{
-							fileName = data.fileName;
 							if (ReturnFunction != null){
-				                ReturnFunction(fileName);
+				                ReturnFunction(data.fileName, fileName);
 							}else{
-				                window.returnValue = fileName;
+				                window.returnValue = data.fileName;
 							}
 				            window.close();
 						}
