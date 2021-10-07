@@ -559,7 +559,7 @@
 		            document.getElementById("userPhotoYN").value = ret;
 
 		            // 2021-10-07 김은실 - (경기대학교) [QC149] 관리자>조직도>조직도관리>사진변경>기존이미지 남아있음 수정 (CrossYN()를 쓰기에는 IE전체가 그런 것 같음. + 11버전은 msie이 없어서 구분이 안됨.)
-		            if (/WOW/i.test(navigator.userAgent)) {
+		            if (/WOW|MSIE/i.test(navigator.userAgent)) {
 			            UserPhotoDiv.innerHTML = "<img style='width:119px; height:128px;' SRC='/admin/ezOrgan/getPersonalInfo.do?fileName=" + viewTmp + "' />";
 		            } else {
 			            UserPhotoDiv.innerHTML = "<img style='width:119px; height:128px;' SRC='/admin/ezOrgan/getPersonalInfo.do?fileName=" + ret + "' />";
