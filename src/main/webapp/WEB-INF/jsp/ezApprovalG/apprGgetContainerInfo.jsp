@@ -948,6 +948,10 @@
 		        	} else {
 						alert("<spring:message code='ezApprovalG.t1519'/>");
 		        	}
+		        } else {
+		        	var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
+					alert(pAlertContent);
+		            return;
 		        }
 	        }
 	        var enforceDocID = "";
