@@ -1111,8 +1111,6 @@ public class CommonUtil {
 	 * @throws Exception
 	 */
 	public String getTodayUTCTime(String format) throws Exception {
-		logger.debug("getTodayUTCTime started");
-		
 		ZoneId utc = ZoneId.of("UTC");
 		ZonedDateTime getTime = ZonedDateTime.of(LocalDateTime.now(utc), utc);
 		
@@ -1130,8 +1128,6 @@ public class CommonUtil {
 		}
 		
 		String today = getTime.format(formatter);
-		
-		logger.debug("getTodayUTCTime ended");
 		
 		return today;
 	}

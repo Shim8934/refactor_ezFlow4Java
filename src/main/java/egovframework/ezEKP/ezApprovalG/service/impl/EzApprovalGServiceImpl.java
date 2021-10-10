@@ -8897,8 +8897,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String getDocHrefYear(String docID, String companyID, int tenantID) throws Exception {
-		logger.debug("getDocHrefYear started");
-
 		String rtnValue = commonUtil.getTodayUTCTime("yyyy");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -8916,15 +8914,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 
-		logger.debug("getDocHrefYear ended");
-		
 		return rtnValue;
 	}
 
 	@Override
 	public String getDocDir(String docID) throws Exception {
-		logger.debug("getDocDir started");
-
 		String tempHref = "";
 		
 		if (docID.length() == 0) {
@@ -8932,8 +8926,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		} else {
 			tempHref = String.valueOf((Integer.parseInt(docID.substring(docID.length() - 3, docID.length())) % 1000));
 		}
-
-		logger.debug("getDocDir ended");
 		
 		return tempHref;
 	}
