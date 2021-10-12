@@ -702,7 +702,10 @@
 				<c:if test="${boardInfo.gubun != '2' && pBoardID != '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}'}">
 					<li><span onClick="CopyItem_onclick()"><spring:message code='ezCommunity.t911' /></span></li>
 				</c:if>
-				<li><span onClick="ReservationItem_onclick()"><spring:message code='ezCommunity.t913' /></span></li>
+				<%-- 2021-10-12 홍승비 - 예약게시 버튼은 익명게시판에서 표출하지 않도록 수정 (포토게시판처럼 예약게시 기능이 없는 게시판이라면 버튼도 표출하지 않도록 스펙 통일) --%>
+				<c:if test="${boardInfo.gubun != '2'}">
+					<li><span onClick="ReservationItem_onclick()"><spring:message code='ezCommunity.t913' /></span></li>
+				</c:if>
 				<c:if test="${boardInfo.read_FG == 'true' && pBoardID != '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}' }">
 					<li onClick="search_onclick()"><span class="icon16 icon16_search"></span></li>
 				</c:if>
