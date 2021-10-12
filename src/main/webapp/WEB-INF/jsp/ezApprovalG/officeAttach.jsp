@@ -125,7 +125,7 @@
 	        	var pagesIndexOf3 = pagesURL2.indexOf("=")+1;
 	        	var pages = pagesURL2.substr(pagesIndexOf3); // PDF 페이지 수
 	        	
-	        	var fileIndexOf = imgURL.indexOf("filenm");  // 이미지 filenm을 for문에서 대입해서 넣어주기위해 이미지URL을 자르기 위한 index값
+	        	var fileIndexOf = imgURL.indexOf("filename");  // 이미지 filenm을 for문에서 대입해서 넣어주기위해 이미지URL을 자르기 위한 index값
 	        	var fileURL = imgURL.substr(fileIndexOf);
 	        	var fileIndexOf2 = fileURL.indexOf(".png");
 	        	
@@ -141,11 +141,11 @@
 	        		var fileNm;
 	        		
 	        		if(i<10){
-		        		fileNm = "filenm=0000" + i;
+		        		fileNm = "filename=0000" + i;
 	        		}else if(i<100){
-	        			fileNm = "filenm=000" + i;
+	        			fileNm = "filename=000" + i;
 	        		}else{
-	        			fileNm = "filenm=00" + i;
+	        			fileNm = "filename=00" + i;
 	        		}
 	        		
 	        		imgSrc.src = imgURLF + fileNm + imgURLL;
