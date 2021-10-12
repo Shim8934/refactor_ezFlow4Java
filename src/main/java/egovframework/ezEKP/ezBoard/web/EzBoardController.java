@@ -7695,21 +7695,25 @@ public class EzBoardController extends EgovFileMngUtil{
         	}
         	
         	String mail = "";
+        	String toName = vo.getAccessName();
         	
+        	/* 2021-10-12 홍승비 - 게시판 관리자 권한자에게 게시알림메일 발송 시 현재의 이름을 사용 (괄호 안의 부서명 제거 > 일반 사용자에 대한 게시알림메일의 받는사람 형식과 통일) */
         	try {
         		OrganUserVO AccessUserInfo = ezOrganAdminService.getUserInfo(vo.getAccessID(), userInfo.getPrimary(), userInfo.getTenantId());
         		
         		mail = AccessUserInfo.getMail();
+        		toName = AccessUserInfo.getDisplayName();
 				logger.debug("user sendMail");
 			} catch (Exception e) {
 				OrganDeptVO accessDeptInfo = ezOrganService.getDeptInfo(vo.getAccessID(), userInfo.getPrimary(), userInfo.getTenantId());
 				
 				mail = accessDeptInfo.getMail();
+				toName = accessDeptInfo.getDisplayName(); // 관리자 권한자가 부서인 경우에도 현재 부서명을 가져옴
 				logger.debug("dept sendMail");
 			}
         	
         	InternetAddress to = new InternetAddress();
-        	to.setPersonal(vo.getAccessName(), "UTF-8");
+        	to.setPersonal(toName, "UTF-8");
         	to.setAddress(mail);
         	
         	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
