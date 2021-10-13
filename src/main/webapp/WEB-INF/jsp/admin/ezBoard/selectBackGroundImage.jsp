@@ -22,6 +22,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery.form.js')}"></script>
 		<script type="text/javascript" language="javascript">
 			var pSaveFileData = new FormData(); // 저장버튼 클릭 시 전달할 파일 폼데이터
+			var pSaveFileName = "";
 			
 			$(document).ready(function(){				
 				if("<c:out value='${fileName}'/>" != "") { // 등록된 이미지 수정 시 기본 설정 (type : UPT)
@@ -31,10 +32,7 @@
 					document.getElementById("UploadSliderImage").style.display = "";
 					document.getElementById("UploadSliderImage").src = path;
 					
-					pSaveFileData.set("width", "720");
-					pSaveFileData.set("height", "<c:out value='${height}'/>");
-					pSaveFileData.set("type", "<c:out value='${type}'/>");
-					pSaveFileData.set("backgroundID", "<c:out value='${backgroundID}'/>");
+					pSaveFileData = new FormData(document.getElementById("form"));
 				}
 			});
 			
@@ -93,15 +91,9 @@
 			            document.getElementById("saveFileName").value = fileName;	
 			            document.getElementById("filetxt").value = filetxt;
 			            
-			            /* 2021-10-13 홍승비 - 배경이미지 업로드 성공 시, 실제로 저장 버튼을 눌렀을 때 서버로 전송할 파일 데이터를 저장 (기존 form 데이터 전부 전달) */
-			            pSaveFileData.set("file1", document.getElementById("form").file1.files[0]);
-			            pSaveFileData.set("filetxt", filetxt);
-			            //pSaveFileData.set("backgroundID", document.getElementById("backgroundID").value); // 수정 시 기존 값 사용, 신규 등록 시 btnSave_click에서 생성함
-			            pSaveFileData.set("saveFileName", fileName);
-			            pSaveFileData.set("guid", guid);
-			            pSaveFileData.set("type", document.getElementById("type").value);
-			            pSaveFileData.set("width", "720");
-			            pSaveFileData.set("height", height);
+			            /* 2021-10-13 홍승비 - 배경이미지 업로드 성공 시, 실제로 저장 버튼을 눌렀을 때 서버로 전송할 파일 데이터를 저장 (현재의 form 데이터를 기록) */
+			            pSaveFileData = new FormData(document.getElementById("form"));
+			            pSaveFileName = fileName;
 					},
 					error : function(){
 						alert("upload error");		
@@ -121,22 +113,28 @@
 		    }
 			
 			function btnSave_click(){
+				// 신규 이미지 추가 > 파일 등록 취소 시 onchange가 동작하여 saveFileName값이 공백이 되므로, 업로드 성공 시 pSaveFileName에 저장한 값을 사용
+				if (pSaveFileName == "" && document.getElementById("type").value != "UPT") {
+					alert("<spring:message code='main.t4000'/>");
+		            return;
+		        }
 				if (document.getElementById("imagewidth").value < 1 || isNaN(document.getElementById("imagewidth").value) 
 						|| document.getElementById("imageheight").value < 1 || isNaN(document.getElementById("imageheight").value)) {
-		            return;
-		        }
-				// 이미지 추가 > 파일 등록 취소 시 onchange가 동작하여 saveFileName값이 공백이 되므로, pSaveFileData에 저장된 값을 사용
-				if ((pSaveFileData.get("saveFileName") == "" || pSaveFileData.get("saveFileName") == null) && (document.getElementById("type").value != "UPT")) {
+					alert("<spring:message code='main.t4001'/>");
 		            return;
 		        }
 				
-				pSaveFileData.set("height", document.getElementById("imageheight").value); // 서버로 전달할 파일데이터의 세로값 수정 (사용자의 입력이 가능)
+				 // 서버로 전달할 파일데이터의 가로, 세로값 최종 설정
+				pSaveFileData.append("pWidth", document.getElementById("imagewidth").value);
+				pSaveFileData.append("pHeight", document.getElementById("imageheight").value);
 				
-				// backgroundID가 없는 경우 신규 생성 분기
+				// backgroundID 최종 설정
 				if ($("#backgroundID").val() == "") {
 					var guid = "{" + GetGUID() + "}";
 					$("#backgroundID").val(guid);
-					pSaveFileData.set("backgroundID", guid);
+					pSaveFileData.append("pBackgroundID", guid);
+				} else {
+					pSaveFileData.append("pBackgroundID", $("#backgroundID").val());
 				}
 				
 				$.ajax({
