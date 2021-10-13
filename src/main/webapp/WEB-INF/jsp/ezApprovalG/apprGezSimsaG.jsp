@@ -1873,7 +1873,7 @@
 	            		pElem.innerHTML = tableElement.outerHTML;
 	            		pElem.setAttribute("align", tableElement.getAttribute("align"));
 	            		tableElement.parentNode.insertBefore(pElem, tableElement);
-	            		tableElement.parentNode.removeChild();
+	            		tableElement.parentNode.removeChild(tableElement);
 	            	}
 	            }
 		    }
