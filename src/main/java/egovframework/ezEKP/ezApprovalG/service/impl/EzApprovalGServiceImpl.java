@@ -24348,7 +24348,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		strXML.append("<CABINETID>" + docXML.getElementsByTagName("CABINETID").item(0).getTextContent() + "</CABINETID>");  
 		strXML.append("<CABCLASSNO>" + docXML.getElementsByTagName("CABINETCLASSNO").item(0).getTextContent() + "</CABCLASSNO>");  
 		strXML.append("<TASKCODE>" + docXML.getElementsByTagName("TASKCODE").item(0).getTextContent() + "</TASKCODE>"); 
-		strXML.append("<TITLE>" + docXML.getElementsByTagName("TITLE").item(0).getTextContent() + "</TITLE>"); 
+		strXML.append("<TITLE><![CDATA[" + docXML.getElementsByTagName("TITLE").item(0).getTextContent() + "]]></TITLE>"); 
 		strXML.append("<RECTYPECODE>" + docXML.getElementsByTagName("RECTYPECODE").item(0).getTextContent() + "</RECTYPECODE>"); 
 		strXML.append("<RECTYPEDES>" + getRecordTypeString(docXML.getElementsByTagName("RECTYPECODE").item(0).getTextContent(),companyID,langType, tenantID) + "</RECTYPEDES>"); 	
 		strXML.append("<KEEPPERIOD>" + docXML.getElementsByTagName("KEEPINGPERIOD").item(0).getTextContent() + "</KEEPPERIOD>"); 
