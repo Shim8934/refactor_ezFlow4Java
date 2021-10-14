@@ -78,7 +78,7 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		
 		return afterList;
 	}
-
+	
 	@Override
 	public void updateSysParam(int tenantID, List<Map<String, String>> list, Locale locale, String companyID) throws Exception {
 		logger.debug("updateSysParam started. tenantID=" + tenantID);

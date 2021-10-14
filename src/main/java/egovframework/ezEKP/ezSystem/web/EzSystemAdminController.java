@@ -47,6 +47,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.HandlerMapping;
+import org.stringtemplate.v4.compiler.CodeGenerator.region_return;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -159,6 +160,7 @@ public class EzSystemAdminController {
 		
 		Map<String, String> configMap = new HashMap<String, String>();
 		List<SysParamVO> configList = ezSystemAdminService.getSysParam(userInfo.getTenantId());
+		String systemDomain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		int licensedUserCount = 0;
 		
 		for (SysParamVO param : configList) {
@@ -166,23 +168,9 @@ public class EzSystemAdminController {
 			
 			if (param.getName().equals("LicenseKey")) {
 				String licenseKey = param.getValue();
-				
-				if (licenseKey != null && !licenseKey.equals("")) {
-					try {
-						// 라이센스키를 복호화한다.
-						licenseKey = egovFileScrty.decryptAES(licenseKey);
-						
-						String items[] = licenseKey.split(":");
-						
-						if (items.length >= 2) {
-							licensedUserCount = Integer.parseInt(items[1]);
-						}						
-					} catch (Exception e) {
-					}					
-				}
+				licensedUserCount = Integer.parseInt(getLicenseDomainAndCount(licenseKey).get(1));
 			}
 		}
-
 		if (configMap.get("useSession") == null || configMap.get("useSession").equals("")) {
 			configMap.put("useSession", "0");
 		}
@@ -227,30 +215,92 @@ public class EzSystemAdminController {
 		model.addAttribute("usePortalAutoRefreshInterval", usePortalAutoRefreshInterval);
 		model.addAttribute("useExternalMailServer", useExternalMailServer);
 		model.addAttribute("usePortal", usePortal);
+		model.addAttribute("systemDomain", systemDomain);
 		
 		logger.debug("systemMainMenu ended");
 		
 		return "/ezSystem/systemMainMenu";
 	}
 		
-	@RequestMapping(value="/admin/ezSystem/updateSysParam.do", method = RequestMethod.POST, produces="application/json;charset=utf-8")
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/admin/ezSystem/updateSysParam.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	@ResponseBody
-	public String updateSysParam(@CookieValue("loginCookie") String loginCookie, Model model, @RequestBody List<Map<String, String>> list) throws Exception {
+	public JSONObject updateSysParam(@CookieValue("loginCookie") String loginCookie, Model model,
+			@RequestBody List<Map<String, String>> list) throws Exception {
+		
 		logger.debug("started updateSysParam controller.");
+		
+		JSONObject obj = new JSONObject();
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
-		
-		if (userInfo == null) {
-			return "{\"msg\":\"fail\"}";
-		}
-		
-		try {
-			ezSystemAdminService.updateSysParam(userInfo.getTenantId(), list, userInfo.getLocale(), userInfo.getCompanyID());
-		} catch (Exception e) {
-			return "{\"msg\":\"fail\"}";			
+		int tenantId = (userInfo == null) ? -1 : userInfo.getTenantId();
+
+		if (tenantId == -1) {
+			obj.put("msg", "fail");
+			return obj;
+		} else {
+			String systemDomain = ezCommonService.getTenantConfig("DomainName", tenantId);
+			String msg = "";
+			String licenseDomain = "";
+
+			for (Map<String, String> param : list) {
+				if ("LicenseKey".equals(param.get("name"))) {
+					String licenseKey = param.get("value");
+					licenseDomain = getLicenseDomainAndCount(licenseKey).get(0);
+					break;
+				}
+			}
+			
+			if (!(licenseDomain.equals(systemDomain)) && !(licenseDomain.isEmpty())) {	//20211005 이희원 - 라이센스도메인과 시스템도메인 비교해서 유효성검사
+				obj.put("licenseDomain", licenseDomain);
+				obj.put("msg", "domainFail");
+				return obj;
+			} else {
+				try {
+					ezSystemAdminService.updateSysParam(userInfo.getTenantId(), list, userInfo.getLocale(),
+							userInfo.getCompanyID());
+					msg = "success";
+				} catch (Exception e) {
+					msg = "fail";
+				}
+			}
+
+			obj.put("msg", msg);
 		}
 		
 		logger.debug("ended updateSysParam controller.");
-		return "{\"msg\":\"success\"}";		
+		
+		return obj;
+	}
+
+	// 20211005 이희원 - 라이센스키를 복호화하여 도메인과 카운트 추출
+	public ArrayList<String> getLicenseDomainAndCount(String licenseKey) throws Exception {
+
+		logger.debug("getLicenseDomainAndCount started");
+
+		ArrayList<String> decryptResult = new ArrayList<>();
+		String licenseDomain = "";
+		String licensedUserCount = "0";
+		
+		if ((licenseKey != null) && !(licenseKey.equals(""))) {
+			try {
+				licenseKey = egovFileScrty.decryptAES(licenseKey);
+				String items[] = licenseKey.split(":");
+
+				if (items.length >= 2) {
+					licenseDomain = items[0];
+					licensedUserCount = items[1];
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		decryptResult.add(licenseDomain);
+		decryptResult.add(licensedUserCount);
+		
+		logger.debug("getLicenseDomainAndCount ended");
+
+		return decryptResult;
 	}
 	
 	/**
