@@ -2917,6 +2917,10 @@ function AprLineAddDoc24(selNode) {
 	createNodeAndAppandNodeText(ResultXml, Header, HData, "NAME", "수신자명");
 	createNodeAndAppandNodeText(ResultXml, Header, HData, "WIDTH", "200");
 	
+	Header = createNodeAndAppandNode(ResultXml, Headers, Header, "HEADER");
+	createNodeAndAppandNodeText(ResultXml, Header, HData, "NAME", "수신자성명");
+	createNodeAndAppandNodeText(ResultXml, Header, HData, "WIDTH", "200");
+	
 	//ROW만들기
 	Rows = createNodeAndAppandNode(ResultXml, Root, Rows, "ROWS");
 	Row = createNodeAndAppandNode(ResultXml, Rows, Row, "ROW");
@@ -2942,6 +2946,9 @@ function AprLineAddDoc24(selNode) {
 	Cell = createNodeAndAppandNode(ResultXml, Row, Cell, "CELL");
 	createNodeAndAppandNodeText(ResultXml, Cell, Value, "VALUE", selNode.GetNodeData("nodename"));
 	
+	Cell = createNodeAndAppandNode(ResultXml, Row, Cell, "CELL");
+	createNodeAndAppandNodeText(ResultXml, Cell, Value, "VALUE", "");
+
 	var InitTr = listView.GetDataRows();
 	var MaxID = 0;
 	var CurID = 0;
