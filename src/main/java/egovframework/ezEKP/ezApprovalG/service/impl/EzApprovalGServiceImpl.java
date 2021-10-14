@@ -15083,7 +15083,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			
 			if (rtnVal) {
-				subSQL = doApproveEnd(docID, dirPath, deptID, sendFlag, companyID, userInfo.getTenantId());
+                if (nonElecRecXML.trim().equals("")) {
+				    subSQL = doApproveEnd(docID, dirPath, deptID, sendFlag, companyID, userInfo.getTenantId());
+                }
 
                 String nowDateTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", false);
                 map.put("nowDateTime", nowDateTime);
@@ -15098,7 +15100,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                     ezApprovalGDAO.updateOpenGovDocInfoComp_createDate(map);
                 }
 
-				if (subSQL.toUpperCase().equals("FALSE")) {
+				if (subSQL.toUpperCase().equals("FALSE") &&nonElecRecXML.trim().equals("")) {
 					rtnVal = false;
 				}
 				
@@ -15109,7 +15111,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			
 			if (ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId()).equals("G")) {
-				if (rtnVal) {
+				if (rtnVal && nonElecRecXML.trim().equals("")) {
 					subSQL = setCabinetRec(docID, companyID, lang , nonElecRecXML, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
 					
 					if (subSQL.toUpperCase().equals("FALSE")) {
@@ -15123,7 +15125,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			
 			if (rtnVal) {
-				subSQL = deleteDocInfo(docID, "QUERY", companyID , userInfo.getTenantId());
+                if (nonElecRecXML.trim().equals("")) {
+                    subSQL = deleteDocInfo(docID, "QUERY", companyID, userInfo.getTenantId());
+                }else {
+                    subSQL = deleteDocInfo(docID, "MUST", companyID , userInfo.getTenantId());
+                }
 				
 				if (subSQL.toUpperCase().equals("FALSE")) {
 					rtnVal = false;
