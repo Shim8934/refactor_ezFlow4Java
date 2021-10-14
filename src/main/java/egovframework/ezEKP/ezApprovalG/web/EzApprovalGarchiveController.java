@@ -661,7 +661,8 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		String cabClassID = oCXml.getElementsByTagName("CABCLASSID").item(0).getTextContent().trim(); 
 		String cabTitle = oCXml.getElementsByTagName("CABTITLE").item(0).getTextContent().trim();
 		String specialRecCode = oCXml.getElementsByTagName("SPECIALRECCODE").item(0).getTextContent().trim();
-		String publicCode = oCXml.getElementsByTagName("PUBLICCODE").item(0).getTextContent().trim();
+		String publicCode = oCXml.getElementsByTagName("PUBLICCODE").item(0).getTextContent().trim(); // 대민공개
+		String publicCode2 = oCXml.getElementsByTagName("PUBLICCODE2").item(0).getTextContent().trim(); // 공개여부
 		String limitRange = oCXml.getElementsByTagName("LIMITRANGE").item(0).getTextContent().trim();
 		String confirmFlag = oCXml.getElementsByTagName("CONFIRMFLAG").item(0).getTextContent().trim();
 		String catatransFlag = oCXml.getElementsByTagName("CATATRANSFLAG").item(0).getTextContent().trim();
@@ -695,6 +696,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		model.addAttribute("cabTitle", cabTitle);
 		model.addAttribute("specialRecCode", specialRecCode);
 		model.addAttribute("publicCode", publicCode);
+		model.addAttribute("publicCode2", publicCode2);
 		model.addAttribute("limitRange", limitRange);
 		model.addAttribute("confirmFlag", confirmFlag);
 		model.addAttribute("catatransFlag", catatransFlag);
