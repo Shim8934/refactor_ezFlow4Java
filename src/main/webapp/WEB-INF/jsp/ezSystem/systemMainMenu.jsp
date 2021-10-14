@@ -55,7 +55,7 @@
 				});
 				
 				// 파라미터 체크로직 인덱스가 아닌 이름으로 찾도록 수정. 2020-03-04 홍대표.
-				if(!checkParamValid(paramArray)) {
+				if (!checkParamValid(paramArray)) {
 					return;					
 				}
 				
@@ -67,14 +67,18 @@
 					processData : true, 
 					contentType : "application/json; charset=UTF-8", 
 					data :jsonStr,
-					success : function(data){
-						if(data.msg=='success'){
+					success : function(data){ 
+						switch (data.msg) {
+						case 'success':
 							alert("<spring:message code='main.sp10'/>");
-							
 							window.location.href='/admin/ezSystem/systemMainMenu.do';
-						}
-						if(data.msg=='fail'){
+							break;
+						case 'fail':
 							alert("<spring:message code='main.sp12'/>");
+							break;
+						case 'domainFail':
+							alert("<spring:message code='ezSystem.lhy001'/> \n<spring:message code='ezSystem.lhy002'/> " + data.licenseDomain + "\n<spring:message code='ezSystem.lhy003'/> ${systemDomain}");
+							break;
 						}
 					},
 					error : function(e) {

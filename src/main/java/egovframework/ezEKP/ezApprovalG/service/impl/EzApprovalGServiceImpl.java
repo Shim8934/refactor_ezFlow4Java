@@ -8897,8 +8897,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String getDocHrefYear(String docID, String companyID, int tenantID) throws Exception {
-		logger.debug("getDocHrefYear started");
-
 		String rtnValue = commonUtil.getTodayUTCTime("yyyy");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -8916,15 +8914,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 
-		logger.debug("getDocHrefYear ended");
-		
 		return rtnValue;
 	}
 
 	@Override
 	public String getDocDir(String docID) throws Exception {
-		logger.debug("getDocDir started");
-
 		String tempHref = "";
 		
 		if (docID.length() == 0) {
@@ -8932,8 +8926,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		} else {
 			tempHref = String.valueOf((Integer.parseInt(docID.substring(docID.length() - 3, docID.length())) % 1000));
 		}
-
-		logger.debug("getDocDir ended");
 		
 		return tempHref;
 	}
@@ -12222,7 +12214,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					makeXMLString(makeListField(docXML.getElementsByTagName("APRMEMBERNAME2").item(0).getTextContent())) + "</USERNAME2><COMPANYID>" + 
 					makeXMLString(makeListField(docXML.getElementsByTagName("COMPANYID").item(0).getTextContent())) + "</COMPANYID><DOCNUMZEROCNT>" + 
 					getDocNumZeroCnt(docXML.getElementsByTagName("COMPANYID").item(0).getTextContent(), tenantID) + "</DOCNUMZEROCNT><APRMEMBERSN>" +
-					makeXMLString(makeListField(docXML.getElementsByTagName("APRMEMBERSN").item(0).getTextContent())) + "</APRMEMBERSN></NEXTDOCINFO>";
+					makeXMLString(makeListField(docXML.getElementsByTagName("APRMEMBERSN").item(0).getTextContent())) + "</APRMEMBERSN><NONELECREC>" +
+					makeXMLString(makeListField(checkNonElecRec(docXML.getElementsByTagName("ORGDOCID").item(0).getTextContent(), companyID, tenantID))) + "</NONELECREC></NEXTDOCINFO>";
 			
 			if (allApproveYN.equals("Y")) {
 				boolean breakFlag = false;
@@ -12250,7 +12243,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							makeXMLString(getExtendedFileName(makeListField(docXML.getElementsByTagName("HREF").item(breakPoint).getTextContent()))) + "</EXTENDEDNAME><COMPANYID>" + 
 							makeXMLString(makeListField(docXML.getElementsByTagName("COMPANYID").item(0).getTextContent())) + "</COMPANYID><DOCNUMZEROCNT>" + 
 							getDocNumZeroCnt(docXML.getElementsByTagName("COMPANYID").item(0).getTextContent(), tenantID) + "</DOCNUMZEROCNT><APRMEMBERSN>" +
-							makeXMLString(makeListField(docXML.getElementsByTagName("APRMEMBERSN").item(0).getTextContent())) + "</APRMEMBERSN></NEXTDOCINFO>";
+							makeXMLString(makeListField(docXML.getElementsByTagName("APRMEMBERSN").item(0).getTextContent())) + "</APRMEMBERSN><NONELECREC>" +
+					        makeXMLString(makeListField(checkNonElecRec(docXML.getElementsByTagName("ORGDOCID").item(0).getTextContent(), companyID, tenantID))) + "</NONELECREC></NEXTDOCINFO>";
 				}
 			} 
 		}

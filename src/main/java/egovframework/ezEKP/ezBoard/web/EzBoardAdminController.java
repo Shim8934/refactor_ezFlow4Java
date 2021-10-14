@@ -620,6 +620,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 				
 				boardBackgroundVO.setOrgFileName(file.getOriginalFilename());
 				boardBackgroundVO.setSaveFileName(fileName);
+				boardBackgroundVO.setWidth(request.getParameter("pWidth"));
+				boardBackgroundVO.setHeight(request.getParameter("pHeight"));
+				boardBackgroundVO.setBackgroundID(request.getParameter("pBackgroundID"));
 			} catch (Exception e) {
 				logger.error("EzBoardAdmin :: saveBackGroungImage");
 			}

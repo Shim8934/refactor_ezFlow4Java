@@ -754,9 +754,14 @@
 			    					
 			    		        	attitude_annual_conn(pOrgDocID);
 			    		        }
+		                        
+		                        SendMailToDrafter();
 		                    } else {
+								/* 2021-10-14 홍승비 - 수신문서 접수(=수신부서 내부기안 시작) 시에도 다음 결재자에게 메일 발송 */
+								sendAlertMail("APR", "1", "RECEV_END");
 		                        pAlertContent = "<spring:message code='ezApprovalG.t1698'/>";
 		                    }
+		                    
 		                    OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
 		                    chkOK = true;
 		                }
@@ -813,7 +818,7 @@
 		                        return;
 		                    }
 		                }
-		
+		                
 		                pAlertContent = "<spring:message code='ezApprovalG.t1506'/>";
 		                OpenAlertUI(pAlertContent);
 		                chkOK = true;

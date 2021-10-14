@@ -993,6 +993,13 @@
 				    	</c:otherwise>
 				    </c:choose>					    
 				</tr>
+				
+				<c:set var="count" value="${totalCount}" />
+				    <c:if test="${count eq 0 }" >
+					    <tr>
+						    <td align="center" colspan="7"><spring:message code='ezBoard.t281'/></td>
+					    </tr>
+				    </c:if>
 			</table>
 		</table>
 		<div id="tblPageRayer" style="margin-top:10px"></div>

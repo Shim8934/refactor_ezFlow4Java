@@ -153,9 +153,35 @@
 				<td bgcolor="#f7f7f7" height="23"><spring:message code='ezApprovalG.t875'/></td>
 				<td id="tdKeepMethod" colspan="3">&nbsp;${specialRecCode}
 			</tr>
+			<%-- 2021-10-14 홍승비 - 기록물 등록정보 출력 시 대민공개(공개/비공개/부분공개)와 공개여부(공개/비공개) 분리, 기록물 등록정보창과 출력창의 표출방식 통일 --%>
+			<tr bgcolor="#ffffff">
+				<td bgcolor="#f7f7f7" height="23"><spring:message code='ezApprovalG.kes06'/></td>
+				<td id="tdPublic" colspan="3">
+				<c:choose>
+					<c:when test="${publicCode == 'ALL'}">
+						&nbsp;<spring:message code='ezApprovalG.t47'/>
+					</c:when>
+					<c:when test="${publicCode == 'LINE'}">
+						&nbsp;<spring:message code='ezApprovalG.t46'/>
+					</c:when>
+					<c:otherwise>
+						&nbsp;<spring:message code='ezApprovalG.t150'/>
+					</c:otherwise>
+				</c:choose>
+				</td>
+			</tr>
 			<tr bgcolor="#ffffff">
 				<td bgcolor="#f7f7f7" height="23"><spring:message code='ezApprovalG.t109'/></td>
-				<td id="tdKeepPlace" colspan="3">&nbsp;${publicCode}</td>
+				<td id="tdPublicYn" colspan="3">
+				<c:choose>
+					<c:when test="${publicCode2 == 'N'}">
+						&nbsp;<spring:message code='ezApprovalG.t46'/>
+					</c:when>
+					<c:otherwise>
+						&nbsp;<spring:message code='ezApprovalG.t47'/>
+					</c:otherwise>
+				</c:choose>
+				</td>
 			</tr>
 			<tr bgcolor="#ffffff">
 				<td bgcolor="#f7f7f7" height="23"><spring:message code='ezApprovalG.t876'/></td>

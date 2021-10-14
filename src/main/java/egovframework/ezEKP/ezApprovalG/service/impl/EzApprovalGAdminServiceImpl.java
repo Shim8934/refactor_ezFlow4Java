@@ -3194,7 +3194,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 					doc = commonUtil.convertStringToDocument(formAutoRule);
 					
 					map = new HashMap<String, Object>();
-					map.put("formID", formID);
+					map.put("formID", result);
 					map.put("companyID", companyID);
 					map.put("tenantID", userInfo.getTenantId());
 
@@ -3220,7 +3220,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 					doc = commonUtil.convertStringToDocument(formAutoRuleLine);
 					
 					map = new HashMap<String, Object>();
-					map.put("formID", formID);
+					map.put("formID", result);
 					map.put("companyID", companyID);
 					map.put("tenantID", userInfo.getTenantId());
 
@@ -3252,7 +3252,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			if (!recevGroupXML.equals("")) {
 				map = new HashMap<String, Object>();
-				map.put("v_PFORMID", formID);
+				map.put("v_PFORMID", result);
 				map.put("companyID", companyID);
 				map.put("tenantID", userInfo.getTenantId());
 				map.put("approvalFlag", approvalFlag);
