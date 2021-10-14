@@ -14801,9 +14801,9 @@
 	     		COMPANYID = #companyID#
 	</delete>
 	<update id="EzApprovalG.updateSerialNo" parameterClass="Map">
-		 UPDATE 
+		 UPDATE
 		 		TBL_SERIALNUMGEN
-	     SET 
+	     SET
 	     		RegSerialNo = #v_CurSN# + 1
 	     WHERE  
 	     		Type1 = (
@@ -34435,8 +34435,32 @@
         AND
         	ATTACHFILESN = #v_ATTACHFILESN#
         AND
-   			TENANT_ID = #v_TENANTID#
+           TENANT_ID = #v_TENANTID#
    		AND
    			COMPANYID = #companyID#
 	</update>
+
+    <update id="EzApprovalG.updateEndAprDocInfoCont" parameterClass="Map">
+        UPDATE
+            TBL_ENDAPRDOCINFO
+        SET
+            CONTAINERID = NULL
+        WHERE
+            TENANT_ID = #v_TENANTID#
+          AND
+            COMPANYID = #companyID#
+          AND
+            DOCID = #v_DOCID#
+    </update>
+
+    <delete id="EzApprovalG.deleteEndAprLineInfo" parameterClass="Map">
+        DELETE
+            TBL_ENDAPRLINEINFO
+        WHERE
+            TENANT_ID = #v_TENANTID#
+          AND
+            COMPANYID = #companyID#
+          AND
+            DOCID = #v_DOCID#
+    </delete>
 </sqlMap>

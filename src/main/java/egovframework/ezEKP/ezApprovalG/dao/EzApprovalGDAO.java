@@ -3717,4 +3717,12 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void updateHistoryAttachInfo(Map<String, Object> map) {
 		update("EzApprovalG.updateHistoryAttachInfo", map);		
 	}
+
+    public void deleteEndAprLineInfo(Map<String, Object> map) throws Exception {
+        delete("EzApprovalG.deleteEndAprLineInfo", map);
+    }
+
+    public void updateEndAprDocInfoCont(Map<String, Object> map) throws Exception {
+	    update("EzApprovalG.updateEndAprDocInfoCont", map);
+    }
 }
