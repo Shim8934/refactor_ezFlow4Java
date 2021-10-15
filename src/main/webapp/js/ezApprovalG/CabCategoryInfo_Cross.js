@@ -326,14 +326,14 @@ function OpenTaskFindWin(opentype, CompleteFunction) {
         }
         
         if (opentype == undefined)
-            DivPopUpShow(330, 205, url);
+            DivPopUpShow(460, 205, url);
         else {
-            var OpenWin = window.open(url, "FindTask_Cross", GetOpenWindowfeature(330, 205));
+            var OpenWin = window.open(url, "FindTask_Cross", GetOpenWindowfeature(460, 205));
             try { OpenWin.focus(); } catch (e) { }
         }
     }
     else {
-        var feature = "dialogWidth:360px;dialogHeight:205px;scroll:no;resizable:no;status:no; help:no;edge:sunken ";
+        var feature = "dialogWidth:460px;dialogHeight:205px;scroll:no;resizable:no;status:no; help:no;edge:sunken ";
         if (url != "")
             var rtn = window.showModalDialog(url, para, feature);
         if (rtn[0] == "TRUE") {
