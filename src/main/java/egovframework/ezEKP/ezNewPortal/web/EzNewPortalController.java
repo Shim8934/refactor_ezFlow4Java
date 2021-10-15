@@ -477,6 +477,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			model.addAttribute("userId", userId);
 			model.addAttribute("usePortalAutoRefreshInterval", data.get("usePortalAutoRefreshInterval"));
 			model.addAttribute("userLang", userInfo.getPrimary());
+			model.addAttribute("userLang2", userInfo.getLang());
 			
 			//if (useEzWorkspace) {
 				model.addAttribute("workspaceHostUrl", data.get("workspaceHostUrl"));

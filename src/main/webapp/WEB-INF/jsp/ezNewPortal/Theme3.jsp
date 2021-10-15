@@ -119,6 +119,7 @@
  	var WorkspaceUrl = "${workspaceHostUrl}"; // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
     var workspaceContextRootUrl = "${workspaceContextRootUrl}";
     var userLang = "<c:out value='${userLang}'/>";
+    var userLang2 = "<c:out value='${userLang2}'/>";
  	
  	var quickLinkPage = {
  		current: 1,
@@ -153,7 +154,15 @@
  			
  			var spanText = document.createElement('span');
  			spanText.classList.add('txt');
- 			spanText.textContent = item.quickLinkName;
+ 			
+ 			/* 2021-10-15 홍승비 - 퀵링크 다국어 처리 추가 */
+ 			if (userLang2 == "2") { // 영어
+ 				spanText.textContent = item.quickLinkName2;
+ 			} else if (userLang2 == "3") { // 일본어
+ 				spanText.textContent = item.quickLinkName3;
+ 			} else { // 기본 언어
+ 				spanText.textContent = item.quickLinkName;
+ 			}
  			
  			li.appendChild(spanIcon);
  			li.appendChild(spanText);
