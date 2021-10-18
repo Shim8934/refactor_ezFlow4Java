@@ -34473,4 +34473,28 @@
    		AND
    			COMPANYID = #companyID#
 	</update>
+
+    <update id="EzApprovalG.updateEndAprDocInfoCont" parameterClass="Map">
+        UPDATE
+            TBL_ENDAPRDOCINFO
+        SET
+            CONTAINERID = NULL
+        WHERE
+            TENANT_ID = #v_TENANTID#
+          AND
+            COMPANYID = #companyID#
+          AND
+            DOCID = #v_DOCID#
+    </update>
+
+    <delete id="EzApprovalG.deleteEndAprLineInfo" parameterClass="Map">
+        DELETE
+        TBL_ENDAPRLINEINFO
+        WHERE
+            TENANT_ID = #v_TENANTID#
+        AND
+        COMPANYID = #companyID#
+        AND
+        DOCID = #v_DOCID#
+    </delete>
 </sqlMap>
