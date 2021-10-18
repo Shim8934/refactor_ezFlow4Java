@@ -3,6 +3,9 @@ package egovframework.com.cmm.interceptor;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Properties;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
@@ -63,58 +66,96 @@ public class WebfolderAuthenticInterceptor extends WebContentInterceptor {
 		} else if (mobileClientServerURL != null){			
 			if (mobileClientServerURL.contains(ip)) {				
 				return true;
-			} else {
-				boolean result = false; 
+			} 
+
+            String[] allowedIPAddresses = mobileClientServerURL.split(",");
+            Set<String> allowedIPAddressSet = new HashSet<String>();
+            Set<String> rejectedIPAddressSet = new HashSet<String>();
+            
+            for (int i = 0; i < allowedIPAddresses.length; i++) {
+            	String ipAddress = allowedIPAddresses[i].trim();
+            	
+            	// -10.0.1.1 과 같이 -로 시작하는 IP 주소는 거부한다.
+            	// 10.0과 같이 IP 대역으로 허용할 때 그 중 예외로 하고 싶은 IP 주소를 지정한다.
+            	// 쿠버네티스 환경에서 Pod로부터 접속하는 것이 아니라 Pod가 실행 중인 Node로부터
+            	// 접근할 때 클라이언트 주소가 gateway 주소로 나타나는 경우가 있어 이를 제외하기 위해 추가함
+            	if (ipAddress.startsWith("-")) {
+            		rejectedIPAddressSet.add(ipAddress.substring(1));
+            	} else {
+            		allowedIPAddressSet.add(ipAddress);
+            	}
+            }
+			                        
+            if (rejectedIPAddressSet.contains(ip)) {
+            	logger.debug("rejectedIPAddressSet=" + rejectedIPAddressSet + ",ip=" + ip + " rejected");
+            	 
+            	return false;
+            }
+            
+        	boolean isRemoteIpBelongToIpRange = false;
+        	Iterator<String> iter = allowedIPAddressSet.iterator();
+        	
+        	while (iter.hasNext()) {
+        		if (ip.startsWith(iter.next())) {
+        			isRemoteIpBelongToIpRange = true;
+        			break;
+        		}
+        	}
+            
+        	if (isRemoteIpBelongToIpRange) {
+        		return true;
+        	}        				
+
+			boolean result = false; 
+			
+			try {
+				JSONObject requestObject = new JSONObject();
+				String key = request.getHeader("key");
+				JSONParser parser = new JSONParser();
+				requestObject = (JSONObject)parser.parse(key);
 				
-				try {
-					JSONObject requestObject = new JSONObject();
-					String key = request.getHeader("key");
-					JSONParser parser = new JSONParser();
-					requestObject = (JSONObject)parser.parse(key);
-					
-					String userId = requestObject.get("userid") != null ? (String)requestObject.get("userid") : "";
-					String token = requestObject.get("token") != null ? (String)requestObject.get("token") : "";
-					int tenantId = 0;
-					
-					if (token.equals("")) {
-						try (PrintWriter writer = response.getWriter();) {
-							JSONObject obj = new JSONObject();
-							obj.put("status", "no-token");
-							writer.println(obj.toString());
-							response.setContentType("application/json;charset=utf-8");
-						} catch (IOException e1) {
-							e1.printStackTrace();
-						}
-						return result;
-					}
-					
-					int count = webfolder.existsTokenCheck(userId, token, tenantId);
-					
-					if (count > 0) {
-						result =  true;
-					} else {
-						try (PrintWriter writer = response.getWriter();) {
-							JSONObject obj = new JSONObject();
-							obj.put("status", "auth-fail");
-							writer.println(obj.toString());
-							response.setContentType("application/json;charset=utf-8");
-						} catch (IOException e1) {
-							e1.printStackTrace();
-						}
-					}
-				} catch (Exception e) {
+				String userId = requestObject.get("userid") != null ? (String)requestObject.get("userid") : "";
+				String token = requestObject.get("token") != null ? (String)requestObject.get("token") : "";
+				int tenantId = 0;
+				
+				if (token.equals("")) {
 					try (PrintWriter writer = response.getWriter();) {
 						JSONObject obj = new JSONObject();
-						obj.put("status", "error");
+						obj.put("status", "no-token");
+						writer.println(obj.toString());
+						response.setContentType("application/json;charset=utf-8");
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+					return result;
+				}
+				
+				int count = webfolder.existsTokenCheck(userId, token, tenantId);
+				
+				if (count > 0) {
+					result =  true;
+				} else {
+					try (PrintWriter writer = response.getWriter();) {
+						JSONObject obj = new JSONObject();
+						obj.put("status", "auth-fail");
 						writer.println(obj.toString());
 						response.setContentType("application/json;charset=utf-8");
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
 				}
-				
-				return result;
+			} catch (Exception e) {
+				try (PrintWriter writer = response.getWriter();) {
+					JSONObject obj = new JSONObject();
+					obj.put("status", "error");
+					writer.println(obj.toString());
+					response.setContentType("application/json;charset=utf-8");
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 			}
+			
+			return result;
 		} else {			
 			return false;
 		}

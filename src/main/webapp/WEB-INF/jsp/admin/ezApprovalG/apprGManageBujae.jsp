@@ -681,7 +681,7 @@
 				<c:if test="${approvalFlag =='G'}">
 					<div>▒&nbsp;<spring:message code='ezPersonal.t55'/></div>
 					<div style="margin-top:3px">▒&nbsp;<spring:message code='ezPersonal.t56'/></div>
-					<div style="margin-top:3px">▒&nbsp;<spring:message code='ezPersonal.t57'/></div>
+					<div style="margin-top:3px"> &nbsp; &nbsp; <spring:message code='ezPersonal.t57'/></div>
 				    <div style="margin-top:3px">▒&nbsp;<spring:message code='ezPersonal.t58'/></div>
 			    </c:if>
 			    <c:if test="${approvalFlag !='G'}">

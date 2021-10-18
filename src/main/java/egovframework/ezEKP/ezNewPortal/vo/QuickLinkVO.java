@@ -3,6 +3,8 @@ package egovframework.ezEKP.ezNewPortal.vo;
 public class QuickLinkVO {
 
 	private String quickLinkName; //퀵링크 이름
+	private String quickLinkName2; //퀵링크 이름 영어
+	private String quickLinkName3; //퀵링크 이름 일본어
 	private String linkType; //퀵링크 링크 유형
 	private String linkTypeUrl; //퀵링크 유형 url
 	private String url; //퀵링크 url
@@ -46,6 +48,19 @@ public class QuickLinkVO {
 	public void setViewflag(String viewflag) {
 		this.viewflag = viewflag;
 	}
+	public String getQuickLinkName2() {
+		return quickLinkName2;
+	}
+	public void setQuickLinkName2(String quickLinkName2) {
+		this.quickLinkName2 = quickLinkName2;
+	}
+	public String getQuickLinkName3() {
+		return quickLinkName3;
+	}
+	public void setQuickLinkName3(String quickLinkName3) {
+		this.quickLinkName3 = quickLinkName3;
+	}
+	
 	@Override
 	public String toString() {
 		return "QuickLinkVO [quickLinkName=" + quickLinkName + ", linkType=" + linkType + ", linkTypeUrl=" + linkTypeUrl
