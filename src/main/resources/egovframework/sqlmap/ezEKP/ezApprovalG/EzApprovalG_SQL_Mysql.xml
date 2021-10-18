@@ -34488,7 +34488,7 @@
     </update>
 
     <delete id="EzApprovalG.deleteEndAprLineInfo" parameterClass="Map">
-        DELETE
+        DELETE FROM
         TBL_ENDAPRLINEINFO
         WHERE
             TENANT_ID = #v_TENANTID#
