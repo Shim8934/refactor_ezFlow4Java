@@ -349,6 +349,9 @@
             pCurSelRow[0].childNodes[1].innerHTML = retValue[2];
 //             pCurSelRow[0].childNodes[3].innerHTML = retValue[1];
             SetAttribute(pCurSelRow[0], "DATA12", retValue[2]);
+        } 
+        else if (retValue[0] == "cancel") {
+        	// 기록물 대장등록 > 첨부파일 첨부 후 이름변경 > 이름변경 취소 시 아무 동작 없도록 수정
         }
         else {
 	        var pAlertContent = "<spring:message code='ezApprovalG.t282'/>" + "<br>" + "<spring:message code='ezApprovalG.t283'/>";
