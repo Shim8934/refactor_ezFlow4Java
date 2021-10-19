@@ -1147,8 +1147,8 @@ function chk_Passwd(pUserID, CompleteFunction) {
     }
 
     ezchkpasswd_cross_dialogArguments[2] = true;
-    var url = "/ezApprovalG/ezchkPasswd.do";
-    var OpenWin = window.open(url, "ezchkPasswd_Cross", GetOpenWindowfeature(350, 225));
+    var url = "/ezApprovalG/ezchkPasswd.do?mode=SEC";
+    var OpenWin = window.open(url, "ezchkPasswd_Cross", GetOpenWindowfeature(460, 225)); // 결재완료문서/부서문서함 리스트에서 보안결재문서 접근
     try { OpenWin.focus(); } catch (e) { }
 }
 //END

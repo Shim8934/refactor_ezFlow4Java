@@ -4729,14 +4729,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 * 전자결재G 결재시 암호입력 호출 Method
 	 */
 	@RequestMapping(value = "/ezApprovalG/ezchkPasswd.do", method = RequestMethod.GET)
-	public String ezchkPasswd(Model model) throws Exception {
+	public String ezchkPasswd(Model model, HttpServletRequest request) throws Exception {
 		logger.debug("ezchkPasswd started");
 
 		String publicModulus = egovFileScrty.getPbm();
 		String publicExponent = "10001";
+		String mode = request.getParameter("mode") != null ? request.getParameter("mode") : "";
 		
 		model.addAttribute("publicModulus", publicModulus);
         model.addAttribute("publicExponent", publicExponent);
+        model.addAttribute("mode", mode);
         
         logger.debug("ezchkPasswd ended");
         

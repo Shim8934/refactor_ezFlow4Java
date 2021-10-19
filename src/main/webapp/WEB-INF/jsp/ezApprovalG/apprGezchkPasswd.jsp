@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -18,6 +19,7 @@
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var gUserID = "";
 		    var rsa = new RSAKey();
+		    var mode = "<c:out value='${mode}'/>";
 		    
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -104,6 +106,12 @@
 		    var winFlag;
 		    window.onload = function () {
 		    	document.getElementById('inpPassword').focus();
+		    	
+				/* 2021-10-19 홍승비 - 결재완료문서/부서문서함/기록물대장 리스트 > 보안결재문서 여는 경우 메세지의 폰트 크기와 색깔 수정 */
+ 		    	if (mode == "SEC") {
+		    		document.getElementById("h2Msg").style.fontSize = "14px";
+		    		document.getElementById("h2Msg").style.color = "#ff3030";
+		    	}
 		    	
 		        var ua = navigator.userAgent;
 		        rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
@@ -214,7 +222,7 @@
                 <li><span id="btn_OpinionCANCEL" onClick="return btn_OpinionCANCEL_onclick();"></span></li>
             </ul>
         </div>
-		<h2 style="font-weight: normal;margin-top:20px">▒&nbsp;<spring:message code='ezApprovalG.t1746'/></h2>
+		<h2 id="h2Msg" style="font-weight: normal;margin-top:20px;">▒&nbsp;<spring:message code='ezApprovalG.t1746'/></h2>
 		<div class="nobox"><input type="password" class="textarea" id="inpPassword" name="inpPassword" style="WIDTH:100%;height:25px;border:1px solid #ccc" onkeypress="password_OnKeyPress(event)"></div>
 		
 		<div class="btnposition btnpositionNew">
