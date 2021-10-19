@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -1185,6 +1186,13 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		
 		String preSusinGroupStr = ezApprovalGService.getCode2Name("A53", "001", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 
+		String beforeUrl = "";
+		String beforeDocID = ObjectUtils.defaultIfNull(request.getParameter("beforeDocID"), "");
+		String isUsed = ObjectUtils.defaultIfNull(request.getParameter("isUsed"), "");
+		if (!beforeDocID.isEmpty()) {
+			beforeUrl = ezApprovalGService.getDocHref(beforeDocID, "END", "", "", userInfo.getCompanyID(), userInfo.getTenantId());
+		}
+		
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("hwpToolbar", hwpToolbar);
 		model.addAttribute("approvalPWD", approvalPWD);
@@ -1211,6 +1219,9 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
 		model.addAttribute("useOpenGov", config.getProperty("config.useOpenGov"));
 		model.addAttribute("useRedraftOpinionKeep", useRedraftOpinionKeep);
+		model.addAttribute("beforeUrl", beforeUrl);
+		model.addAttribute("beforeDocID", beforeDocID);
+		model.addAttribute("isUsed", isUsed);
 		//결재 세부정보
 		String formId = ezApprovalGService.getFormId(formURL);
 		String formAprOption = ezApprovalGService.getFormAprOptionInfo(formId, "FORM", userInfo.getCompanyID(), userInfo.getTenantId());
