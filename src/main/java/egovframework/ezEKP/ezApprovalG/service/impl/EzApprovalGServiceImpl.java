@@ -15109,13 +15109,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			
 			if (ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId()).equals("G")) {
-				if (rtnVal && nonElecRecXML.trim().equals("")) {
-					subSQL = setCabinetRec(docID, companyID, lang , nonElecRecXML, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
-					
-					if (subSQL.toUpperCase().equals("FALSE")) {
-						rtnVal = false;
-					} 
-				}
+                subSQL = setCabinetRec(docID, companyID, lang , nonElecRecXML, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
+
+                if (subSQL.toUpperCase().equals("FALSE")) {
+                    rtnVal = false;
+                }
 			} 
 			
 			if (rtnVal) {
