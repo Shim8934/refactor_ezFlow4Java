@@ -292,7 +292,8 @@
 				</div> --%>
 			</aside>
 		</div>
-		<section class="section_main">
+		<%-- 2021-10-20 홍승비 - 테마1에서 가장 아래 포틀릿의 하단 그림자 css가 잘리므로, 패딩 추가 --%>
+		<section class="section_main" style="padding-bottom: 6px;">
 			<div id="portletArea" class="portlet_area">
 			</div>
 		</section>
