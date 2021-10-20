@@ -269,7 +269,7 @@ function openLinkDetail(item, itemId) {
 	linksHTML += "</tr>";
 	linksHTML += "<tr>";
 	linksHTML += "<th class='quickLinkTH'>" + strLangkhj14 + "</th>";
-	linksHTML += "<td class='menuInput'><span id='div_Size'>Width <input type='text' id='txt_Width' class='popInput' style='width:50px;' disabled> Height <input type='text' id='txt_Height' class='popInput' style='width:50px;' disabled></span></td>";
+	linksHTML += "<td class='menuInput'><span id='div_Size'>Width <input type='text' id='txt_Width' class='popInput' style='width:50px;' onKeyup='this.value=this.value.replace(/[^0-9]/g,\"\");' disabled> Height <input type='text' id='txt_Height' class='popInput' style='width:50px;' onKeyup='this.value=this.value.replace(/[^0-9]/g,\"\");' disabled></span></td>";
 	linksHTML += "</tr>";
 	linksHTML += "</table>";
 	linksHTML += "<table class='quickTable02' border='0' cellpadding='0' cellspacing='0'>";
