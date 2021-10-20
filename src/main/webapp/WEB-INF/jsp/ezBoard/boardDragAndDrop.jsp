@@ -11,6 +11,7 @@
 			border: 1px solid #d2d2d2;
 			}
 		</style>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
 		<script type="text/javascript">
@@ -177,6 +178,13 @@
 		        var filecnt = document.getElementById("filelist").childNodes.length;
 		        var pBoardID = window.parent.pBoardID;
 		        var strRet = "";
+		        var checkedFileCnt = $("input[name='fileSelect']:checked").length; // 실제로 삭제하기 위해 체크된 파일 갯수
+		        
+		        if (checkedFileCnt <= 0) {
+					alert("<spring:message code='ezJournal.t163'/>");
+		        	return;
+		        }
+		        
 		        for (var i = 1; i < filecnt; i++) {
 		            if (document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].checked == true) {
 		                var pAttachDelSN;
