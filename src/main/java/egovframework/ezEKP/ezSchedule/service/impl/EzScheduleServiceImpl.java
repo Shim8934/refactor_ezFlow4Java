@@ -254,7 +254,10 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		map.put("v_PKEYWORD", keyword);
 		map.put("v_OFFSETMIN", offSetMin);
 		map.put("v_TENANTID", tenantId);
-		map.put("v_SEARCHTITLE", searchTitle);
+		/* 2021-10-20 홍승비 - 일정의 제목, 위치 검색조건 나눠지도록 수정 (v_SEARCHTITLE값이 존재하면 항상 제목 조건을 추가하게 됨) */
+		if (!filter.equalsIgnoreCase("location")) {
+			map.put("v_SEARCHTITLE", searchTitle);
+		}
 		map.put("v_COMPANYID", companyID);
 		map.put("v_USERID", userID);
 		map.put("v_DEPTID", deptID);
