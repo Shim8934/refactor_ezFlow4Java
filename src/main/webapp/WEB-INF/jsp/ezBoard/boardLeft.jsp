@@ -1128,7 +1128,7 @@
 		       			     	document.write("<span>");
 		       			     	document.write("<span class='sub_iconLNB tree_arrow_up'></span>");
 		       			     	document.write("<span id='TreeCtr" + i + "' class='h2Title' value='" + $(this).find("DATA1").text() + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + $(this).find("DATA1").text()
-		               					+ "\")'>" + $(this).find("DATA2").text() + "</span>");
+		               					+ "\")'>" + MakeXMLString($(this).find("DATA2").text()) + "</span>");
 		       			     	document.write("</span>");
 		           				/* document.write("<div id='TreeCtr" + i + "' class='groupBoard' value='" + $(this).find("DATA1").text() + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + $(this).find("DATA1").text()
 		           					+ "\")'>" + $(this).find("DATA2").text() + "</div>"); */ 
