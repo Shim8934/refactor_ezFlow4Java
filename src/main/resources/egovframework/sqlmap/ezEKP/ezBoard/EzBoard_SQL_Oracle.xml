@@ -827,7 +827,7 @@
 		]]>
 	</select>
 	
-	<select id="EzBoardDAO.getItemInfo" parameterClass="Map" resultClass="BoardListVO">
+	<select id="EzBoardDAO.getItemInfo" parameterClass="Map" resultClass="BoardListVO" remapResults="true">
 		<isEmpty property="mode">
 			<isNotEmpty property="tempString">
 				<![CDATA[
