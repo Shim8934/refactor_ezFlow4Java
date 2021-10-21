@@ -1056,7 +1056,7 @@ function btnViewRecInfo_onclick() {
 
         viewrecinfo_cross_dialogArguments[0] = para;
 
-        var OpenWin = window.open(url, "ViewRecInfo_Cross", GetOpenWindowfeature(640, 560));
+        var OpenWin = window.open(url, "ViewRecInfo_Cross", GetOpenWindowfeature(640, 562));
         try { OpenWin.focus(); } catch (e) { }
     }
     else {

@@ -156,7 +156,7 @@
 		}
 		</script>
 		</HEAD>
-		<body class="popup" style="OVERFLOW:hidden">
+		<body class="popup" style="overflow-x:hidden; overflow-y:auto;">
 		<h1><spring:message code='ezApprovalG.t9992'/></h1> 
 		
 		<div id="close"><ul><li id=btnClose ><span onClick="return btnClose_onclick()"></span></li></ul></div>
@@ -182,9 +182,9 @@
 		        </tr>
 		        <tr> 
 		            <th><spring:message code='ezApprovalG.t445'/></th>
-		            <td id="tdDrafter" style="padding-right:15px;width:200px;white-space:nowrap">&nbsp;</td>
+		            <td id="tdDrafter" style="padding-right:15px;width:200px;white-space:pre-wrap;">&nbsp;</td>
 		            <th><spring:message code='ezApprovalG.t862'/></th>
-		            <td id="tdApprover" style="padding-right:15px;width:200px;white-space:nowrap">&nbsp;</td>
+		            <td id="tdApprover" style="padding-right:15px;width:200px;white-space:pre-wrap;">&nbsp;</td>
 		        </tr>
 		        <tr> 
 		            <th><spring:message code='ezApprovalG.t831'/></th>
