@@ -84,7 +84,13 @@
 	            try {
 	                var pPos1 = pDocHref.lastIndexOf("/");
 	                pDocID = pDocHref.substring(pPos1 + 1).split("-")[0];
-	                pDocTitle = getNodeText(message.document.getElementById("doctitle")).trim();
+	                
+	                /* 2021-10-21 홍승비 - 문서 저장 시 원본문서, 현재문서 제목 구분하도록 수정 */
+	                if (pDocHref == pDocHrefBefore) {
+	                	pDocTitle = getNodeText(message.document.getElementById("doctitle")).trim();
+	                } else {
+	                	pDocTitle = getNodeText(message2.document.getElementById("doctitle")).trim();
+	                }
 	            } catch (e) {
 	                pDocTitle = "No Title";
 	                pDocID = "No DocID";
