@@ -1002,7 +1002,8 @@ function ListView() {
                     	oText = document.createTextNode(strValue);
                     	objTd.appendChild(oText);
                     }
-                    else if (colNameUpperCase == "DISPCLASSNO" || colNameUpperCase == "ATTACHUSERDEPTNAME") { // 분류번호, 첨부자의 부서명에 특수문자 포함되는 경우를 위한 분기
+                	 // 분류번호, 첨부자의 부서명, 배부과, 처리과에 특수문자 포함되는 경우를 위한 분기
+                    else if (colNameUpperCase == "DISPCLASSNO" || colNameUpperCase == "ATTACHUSERDEPTNAME" || colNameUpperCase == "ORGAN" || colNameUpperCase == "MANAGEDEPT") {
                     	objTd.title = ConvMakeXMLString(strValue);
                     	oText = document.createTextNode(ConvMakeXMLString(strValue));
                     	objTd.appendChild(oText);
@@ -1013,7 +1014,7 @@ function ListView() {
                     	objTd.appendChild(oText);
                     }
                     else {
-                    	oText = document.createTextNode(ConvMakeXMLString(strValue));
+                    	oText = document.createTextNode(strValue);
                         objTd.appendChild(oText);
                     }
                 }
