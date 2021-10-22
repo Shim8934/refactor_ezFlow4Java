@@ -9573,7 +9573,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					}
 					resultXML.append("<DATA15><![CDATA[" + makeListField(docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent()) + "]]></DATA15>");
 					resultXML.append("<DATA16><![CDATA[" + makeListField(docXML.getElementsByTagName("PUBLICITYYN").item(k).getTextContent()).trim() + "]]></DATA16>");
-					
+					resultXML.append("<DATA17><![CDATA[" + makeListField(docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent()).trim() + "]]></DATA17>");
+
 					if (docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent().equals("011") ) {
 						//docID = makeListField(docXML.getElementsByTagName("DOCID").item(k).getTextContent());
 						//docList = getLineInfo(docID, "END", "", recordListVO.getCompanyID(), tenantID);

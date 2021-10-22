@@ -273,6 +273,9 @@
 		            getDocInfo();
 		            setAttachInfo(pDocID, "APR", lstAttachLink);
 		            GetExchInfo();
+		            if(nonElecRec=="Y"){
+						getNonElecInfoSusinInit();
+					}
 		
 		            if (pDocHref != "") {
 		            	var URL;

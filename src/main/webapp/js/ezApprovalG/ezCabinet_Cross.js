@@ -285,8 +285,16 @@ function ezCabMunuCtl(MenuType, selRow) {
             if (document.querySelector("#tdichange_Rec") && document.querySelector("#tdichangeS_Rec")) {
                 var seperateAttachNo = GetAttribute(selRow, "DATA8");
                 var rejectFlag = GetAttribute(selRow, "DATA13");
+                var docType = GetAttribute(selRow, "DATA17");
+                var docState = GetAttribute(selRow, "DATA15");
                 if (isDrafter(WriterID, WriterDeptID) && seperateAttachNo === "00" && rejectFlag === "0") {
-                    SendOfferCheckBtn(GetAttribute(selRow, "DATA1"), arr_userinfo[1]);
+                    if (docType === "003" && docState === "001") {
+                        SetMenuBtn("tdichange_Rec", "none");
+                        SetMenuBtn("tdichangeS_Rec", "none");
+                        SetMenuBtn("tdReSend", "");
+                    } else {
+                        SendOfferCheckBtn(GetAttribute(selRow, "DATA1"), arr_userinfo[1]);
+                    }
                 } else {
                     SetMenuBtn("tdichange_Rec", "none");
                     SetMenuBtn("tdichangeS_Rec", "none");
