@@ -1447,6 +1447,7 @@
 		        idistbox_onclick();
 		    }
 		
+		    var pSaveDocID = ""; // 통합PC저장을 위한 전역변수
 		    function TotalSave_onclick() {
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
@@ -1468,9 +1469,39 @@
 		                    return "";
 		                }
 		            }
-		            pDocID = tr[0].getAttribute("DATA1");
+		            pSaveDocID = tr[0].getAttribute("DATA1");
 		        }
-		
+		        
+		        /* 2021-10-21 홍승비 - 결재완료문서 통합 PC 저장 시 보안결재 확인동작 추가 */
+				if (tr[0].getAttribute("DATA14") != "" && tr[0].getAttribute("DATA14") >= GetTodayDate()) {
+		            if (CheckAprLine(tr[0].getAttribute("DATA1")) == "TRUE") {
+		            	chk_Passwd(UserID, chk_Passwd_CompleteSave);
+		            } else {
+		                OpenAlertUI(strLang580,"OPEN","");
+		                return;
+		            }
+		        } else {
+		        	TotalSave_onclick_complete(pSaveDocID);
+		        }
+		    }
+		    
+		    // 통합 PC 저장 시 보안결재 > 패스워드 확인 후 동작
+			function chk_Passwd_CompleteSave(Rtn) {
+		        if (Rtn == "FALSE") {
+		            var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
+		            OpenAlertUI(pAlertContent);
+		        }
+		        else if (Rtn == "cancel") {
+		            var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
+		            OpenAlertUI(pAlertContent);
+		        }
+		        else {
+		        	TotalSave_onclick_complete(pSaveDocID);
+		        }
+		    }
+		    
+		    // 실제 통합 PC 저장 동작 분리 (기록물대장)
+		    function TotalSave_onclick_complete(pDocID) {
 		        var url = "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=END";
 		        var feature = "status=no,help=no,scroll=no,edge=sunken,width=580px,height=480px";
 		        feature = feature + GetOpenPosition(580, 480);
