@@ -69,7 +69,13 @@ public class Rest {
 
 	/** GW 호출을 위한 빌더를 반환한다. */
 	public RestBuilder gateway(Module module, String serverName) {
-		return new RestBuilder(config.getProperty(module.configKey), serverName);
+		return new RestBuilder(config.getProperty(module.configKey))
+				.header("Accept", MediaType.APPLICATION_JSON_VALUE)
+				.header("x-user-host", serverName);
+	}
+
+	public RestBuilder builder() {
+		return new RestBuilder("");
 	}
 
 	/**
@@ -87,11 +93,12 @@ public class Rest {
 		private Map<String, Object[]> queryParams = new HashMap<>();
 		private Object body = null;
 
-		private RestBuilder(String prefixUrl, String serverName) {
-			this.prefixUrl = prefixUrl;
+		private RestBuilder() {
+			prefixUrl = "";
+		}
 
-			headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-			headers.set("x-user-host", serverName);
+		private RestBuilder(String prefixUrl) {
+			this.prefixUrl = prefixUrl;
 		}
 
 		/** URL을 설정한다. */
