@@ -1530,8 +1530,8 @@ function setDocNumFormat(pPrefix)
 	
     if (message.FieldExist("receiptnumber")) {
         if (message.GetFieldText("receiptnumber") != "") {
+            SetDocumentElement("receiptnumber", message.GetFieldText("receiptnumber"));
         }
-        //SetDocumentElement(message, "receiptnumber", message.GetFieldText("receiptnumber"));
 
         message.PutFieldText("receiptnumber", "");
     }
