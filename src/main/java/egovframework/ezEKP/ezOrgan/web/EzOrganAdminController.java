@@ -3400,7 +3400,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 									
 			JSONObject obj = invokeEzTalkSyncServer(userInfo.getTenantId());
 
-			if ((boolean) obj.get("result") && "0".equals(obj.get("resultCode"))) {
+			if ((boolean) obj.get("result") && 0 == (int) obj.get("resultCode")) {
 				returnValue = "OK";
 			}
 		} catch (Exception e) {
