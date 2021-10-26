@@ -630,24 +630,38 @@
 			]]>
 		</isEqual>
 		<isNotEqual property="v_PROPNAME" compareValue="updateDT">
-			<![CDATA[
-			UPDATE
-				TBL_USERMASTER
-			SET 
-			    $v_PROPNAME$ = #v_PROPVALUE#
-			    
-			]]>
-			<isEqual property="v_PROPNAME" compareValue="EXTENSIONATTRIBUTE15">
+			<isEqual property="v_PROPNAME" compareValue="photo_updateDT">
 				<![CDATA[
-					, UPDATEDT = TO_DATE(#nowDate#, 'yyyy-MM-dd HH24:MI:SS')
+				UPDATE
+					TBL_USERMASTER
+				SET 
+				    $v_PROPNAME$ = TO_DATE(#v_PROPVALUE#, 'yyyy-MM-dd HH24:MI:SS')
+				WHERE
+					CN = #v_CN#
+				AND
+					TENANT_ID = #v_TENANT_ID#
 				]]>
 			</isEqual>
-			<![CDATA[
-			WHERE
-				CN = #v_CN#
-			AND
-				TENANT_ID = #v_TENANT_ID#
-			]]>
+			<isNotEqual property="v_PROPNAME" compareValue="photo_updateDT">
+				<![CDATA[
+				UPDATE
+					TBL_USERMASTER
+				SET 
+				    $v_PROPNAME$ = #v_PROPVALUE#
+				    
+				]]>
+				<isEqual property="v_PROPNAME" compareValue="EXTENSIONATTRIBUTE15">
+					<![CDATA[
+						, UPDATEDT = TO_DATE(#nowDate#, 'yyyy-MM-dd HH24:MI:SS')
+					]]>
+				</isEqual>
+				<![CDATA[
+				WHERE
+					CN = #v_CN#
+				AND
+					TENANT_ID = #v_TENANT_ID#
+				]]>
+			</isNotEqual>
 		</isNotEqual>
 	</update>
 	
