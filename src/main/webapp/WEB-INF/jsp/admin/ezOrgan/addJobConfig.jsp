@@ -760,13 +760,15 @@
 		            listview.LoadFromID("lvUserList");
 		            var UserAddjoblistview = new ListView();
 		            UserAddjoblistview.LoadFromID("lvAddjobList");
-		            var bFlag = UserAddjoblistview.ExistRow("data1", dept[0]);
+		        	var bFlag = UserAddjoblistview.ExistRow2({"data1":dept[0], "data6":jobID}); // 원부서 체크도 필요 (추후 추가 예정)
+		            /* var bFlag = UserAddjoblistview.ExistRow("data1", dept[0]);
 		            
 		            if (!bFlag) {
     		            var cn = GetAttribute(p_ListOrderObject, "_data2");
     		            var orgDeptId = getDeptId(cn);
     		            bFlag = dept[0] == orgDeptId ? true : false;
-		        	}
+		        	} */
+		        	
 		            
 		            if (bFlag) {
 		                alert(strLang25);
