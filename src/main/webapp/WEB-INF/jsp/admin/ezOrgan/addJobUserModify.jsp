@@ -707,6 +707,10 @@
 		    }
 		    
 		    function getDeptId(userId) {
+		        return getEntryInfo(userId, "department");
+		    }
+		    
+		    function getEntryInfo(userId, propStr) {
 		        var ReceiveDocument = "";
 
 		        try {
@@ -718,14 +722,14 @@
 		        		url : "/admin/ezOrgan/getEntryInfo.do",
 		        		data : {
 		        			cn 	  : userId,
-		        			prop  : "department"
+		        			prop  : propStr
 		        		},
 		        		success: function(xml){
 		        			result = xml;
 		        		}        			
 		        	});
 		        	
-		            ReceiveDocument = SelectSingleNodeValueNew(loadXMLString(result), "DATA/DEPARTMENT");
+		            ReceiveDocument = SelectSingleNodeValueNew(loadXMLString(result), "DATA/" + propStr.toUpperCase());
 		        } catch (e) {
 		        } 
 		        
@@ -762,12 +766,20 @@
  				listview.LoadFromID("lvUserList");
  				var UserAddjoblistview = new ListView();
  				UserAddjoblistview.LoadFromID("lvAddjobList");
- 				var bFlag = UserAddjoblistview.ExistRow("data1", dept[0]);
+ 				var bFlag = UserAddjoblistview.ExistRow2({"data1":dept[0], "data6":jobID});
+	        	
+	        	if (!bFlag) { // 원부서의 직위 체크
+					var orgJobId = getEntryInfo(cn, "extensionAttribute7");
+	        		var orgDeptId = getDeptId(cn);
+					var orgJobId = getEntryInfo(cn, "extensionAttribute7");
+		            bFlag = ((dept[0] == orgDeptId) && (jobID == orgJobId)) ? true : false;
+	        	}
+ 				/* var bFlag = UserAddjoblistview.ExistRow("data1", dept[0]);
 
  				if (!bFlag) {
  					var orgDeptId = getDeptId(cn);
  					bFlag = dept[0] == orgDeptId ? true : false;
- 				}
+ 				} */
 
  				if (bFlag) {
 					var url = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent(strLang25) + "&MESSAGE=" + encodeURIComponent(strLang25) + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
