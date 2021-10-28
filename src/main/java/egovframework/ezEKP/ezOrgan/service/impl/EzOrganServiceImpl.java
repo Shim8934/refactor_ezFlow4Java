@@ -407,7 +407,8 @@ public class EzOrganServiceImpl implements EzOrganService {
 		List<OrganDeptVO> list = ezOrganDAO.getDeptMemberList(map);
 		
 		int memberCount = 0;		
-		String[] memberInfo = new String[list.size()];
+		List<String> memberInfo = new ArrayList<String>();
+		//String[] memberInfo = new String[list.size()];
 		
 		for (int i = 0; i < list.size(); i++) {
 			StringBuilder sb = new StringBuilder();
@@ -421,6 +422,8 @@ public class EzOrganServiceImpl implements EzOrganService {
         		map1.put("v_DEPTCD", pDeptID);
         		map1.put("v_LANGDATA", pLangCode);
         		map1.put("v_TENANT_ID", tenantID);
+        		map1.put("IS_ADDJOB", obj.getIsAddjob());
+        		map1.put("JOBID", obj.getJobId());
         		
         		// 사원의 상세 정보를 가져온다.
         		Object userVO = ezOrganDAO.getTBLUserMaster(map1);        		
@@ -441,7 +444,8 @@ public class EzOrganServiceImpl implements EzOrganService {
             
             String cn = obj.getCn();
 
-            memberInfo[memberCount] = getMemberInfo(sb.toString(), pCellList, pPropList, cn, obj.getType());
+            //memberInfo[memberCount] = getMemberInfo(sb.toString(), pCellList, pPropList, cn, obj.getType());
+            memberInfo.add(getMemberInfo(sb.toString(), pCellList, pPropList, cn, obj.getType()) );
             memberCount++;
         }
 		
@@ -449,10 +453,10 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map2.put("v_TENANT_ID", tenantID);
 		
         StringBuilder memberlist = new StringBuilder("<LISTVIEWDATA><ROWS>");
-        
-        for (int i = 0; i < memberCount; i++) {
+        memberlist.append(String.join("", memberInfo));
+        /*for (int i = 0; i < memberCount; i++) {
             memberlist.append(memberInfo[i]);
-        }
+        }*/
         
         memberlist.append("</ROWS></LISTVIEWDATA>");
         
@@ -497,6 +501,8 @@ public class EzOrganServiceImpl implements EzOrganService {
         		map1.put("v_DEPTCD", pDeptID);
         		map1.put("v_LANGDATA", pLangCode);
         		map1.put("v_TENANT_ID", tenantID);
+        		map1.put("IS_ADDJOB", obj.getIsAddjob());
+        		map1.put("JOBID", obj.getJobId());
         		
         		// 사원의 상세 정보를 가져온다.
         		Object userVO = ezOrganDAO.getTBLUserMaster(map1);        		
@@ -852,7 +858,9 @@ public class EzOrganServiceImpl implements EzOrganService {
 					map1.put("v_CN", organVO.getCn());
 	        		map1.put("v_DEPTCD", organVO.getDisplayName());
 	        		map1.put("v_LANGDATA", primary);
-	        		map1.put("v_TENANT_ID", tenantID);
+	        		map1.put("v_TENANT_ID", tenantID); 
+            		map1.put("IS_ADDJOB", organVO.getIsAddjob());
+            		map1.put("JOBID", organVO.getJobId());
 	        		
 	        		result = ezOrganDAO.getTBLUserMaster(map1);	        		
 	        	}else{
@@ -993,7 +1001,9 @@ public class EzOrganServiceImpl implements EzOrganService {
 					map1.put("v_CN", organVO.getCn());
 	        		map1.put("v_DEPTCD", organVO.getDisplayName());
 	        		map1.put("v_LANGDATA", primary);
-	        		map1.put("v_TENANT_ID", tenantID);
+	        		map1.put("v_TENANT_ID", tenantID); 
+            		map1.put("IS_ADDJOB", organVO.getIsAddjob());
+            		map1.put("JOBID", organVO.getJobId());
 	        		
 	        		result = ezOrganDAO.getTBLUserMaster(map1);	        		
 	        	}else{
@@ -1166,6 +1176,8 @@ public class EzOrganServiceImpl implements EzOrganService {
         				map1.put("v_DEPTCD", organVO.getDisplayName());
         				map1.put("v_LANGDATA", pLangCode);
         				map1.put("v_TENANT_ID", tenantID);
+                		map1.put("IS_ADDJOB", organVO.getIsAddjob());
+                		map1.put("JOBID", organVO.getJobId());
 
         				result = ezOrganDAO.getTBLUserMaster(map1);                 
         			} else {
@@ -2218,7 +2230,9 @@ public class EzOrganServiceImpl implements EzOrganService {
 					map1.put("v_CN", organVO.getCn());
 	        		map1.put("v_DEPTCD", organVO.getDisplayName());
 	        		map1.put("v_LANGDATA", primary);
-	        		map1.put("v_TENANT_ID", tenantID);
+	        		map1.put("v_TENANT_ID", tenantID); 
+	        		map1.put("IS_ADDJOB", organVO.getIsAddjob());
+	        		map1.put("JOBID", organVO.getJobId());
 	        		
 	        		result = ezOrganDAO.getTBLUserMaster(map1);	        		
 	        	}else{

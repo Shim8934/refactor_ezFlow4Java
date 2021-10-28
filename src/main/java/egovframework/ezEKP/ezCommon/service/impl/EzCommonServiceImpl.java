@@ -2511,4 +2511,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
 		return resultMap;
 	}
+	
+	@Override
+	public void alterTblAddjobMaster() throws Exception {
+		ezCommonDAO.alterTblAddjobMaster();
+	}
 }

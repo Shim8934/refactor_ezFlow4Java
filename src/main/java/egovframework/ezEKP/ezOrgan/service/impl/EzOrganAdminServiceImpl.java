@@ -281,7 +281,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			result = "SAME";
 		} else {
 			// 2019-01-08 천성준 - 사원이동 시, 사원이 이동하려는 부서에 겸직이 되어있는지 체크하는 로직 추가 
-			List<OrganUserVO> userAddJobList = getUserAddJobList(cn, "1", tenantID);
+			/*List<OrganUserVO> userAddJobList = getUserAddJobList(cn, "1", tenantID);
 			if (userAddJobList != null && userAddJobList.size() > 0) {
 				String gyumJikDeptID = "";
 				for (int i = 0; i < userAddJobList.size(); i++) {
@@ -292,7 +292,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 						return result;
 					}
 				}
-			}
+			}*/
 			
 			OrganDeptVO parentDept = ezOrganService.getDeptInfo(parentCn, "1", tenantID);
 			String compId = "";
@@ -1328,6 +1328,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
         logger.debug("deleteJob started");
         logger.debug("userID=" + userID + ",titleInfo=" + titleInfo + ",tenantID=" + tenantID);
         
+        OrganUserVO userVO = getUserInfo(userID, "1", tenantID);
+        String userDept = userVO.getDepartment();
+        
         String pDeptID = "";
         
         if (!titleInfo.equals("")) {
@@ -1343,8 +1346,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
                 String groupAddr = pDeptID + "@" + domain;
                 String mailAddr = userID + "@" + domain;
                 
-                int rc = ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
-                
+                int rc = (userDept.equals(pDeptID)) ? 0 : ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
                 logger.debug("updateGroupDel rc=" + rc);
                 
                 if (rc != -100) { // updateGroupDel 성공(부모그룹이나 자식 주소를 찾지 못해도 성공으로 봄. 어차피 삭제하려는 것이므로.)

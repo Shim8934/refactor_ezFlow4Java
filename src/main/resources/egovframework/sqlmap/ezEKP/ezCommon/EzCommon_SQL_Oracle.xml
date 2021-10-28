@@ -4303,4 +4303,20 @@
 				#property_names[]#
 			</iterate>
 	</select>
+
+	<select id="EzCommonDAO.chkAddjobMasterJobIdIsPrimary" resultClass="String">
+		SELECT COLUMN_NAME
+		FROM USER_CONS_COLUMNS 
+		WHERE TABLE_NAME = 'TBL_ADDJOBMASTER' AND COLUMN_NAME = 'JOBID' AND CONSTRAINT_NAME = 
+		(SELECT CONSTRAINT_NAME FROM USER_CONSTRAINTS WHERE TABLE_NAME = 'TBL_ADDJOBMASTER' AND CONSTRAINT_TYPE = 'P')
+	</select>
+	
+	<statement id="EzCommonDAO.dropAddjobMasterPrimary">
+		ALTER TABLE TBL_ADDJOBMASTER DROP PRIMARY KEY
+	</statement>
+	
+	<statement id="EzCommonDAO.addAddjobMasterPrimary">
+		ALTER TABLE TBL_ADDJOBMASTER ADD PRIMARY KEY (CN, DEPTID, TENANT_ID, JOBID)
+	</statement>
+	
 </sqlMap>

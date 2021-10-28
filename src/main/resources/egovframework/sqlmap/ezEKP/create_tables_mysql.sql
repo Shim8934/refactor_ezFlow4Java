@@ -2281,7 +2281,7 @@ CREATE TABLE `tbl_addjobmaster` (
   `JOBID` varchar(100) DEFAULT NULL,
   `PROXY` varchar(200) DEFAULT NULL,
   `MANUAL_FLAG` varchar(4) DEFAULT NULL,
-  PRIMARY KEY (`CN`,`DEPTID`,`TENANT_ID`)
+  PRIMARY KEY (`CN`,`DEPTID`,`TENANT_ID`,`JOBID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
