@@ -786,11 +786,22 @@ function callSearchController() {
 					pagenation(pageObj(listCnt));
 				}
 				
-				//전체 검색량
-				if(approvalList !== undefined && boardList !== undefined && webfolderList !== undefined) {
-					var totalCount = approvalList.totcnt*1 + boardList.totcnt*1 + webfolderList.totcnt*1;
-					$("#totalCnt").empty().append(totalCount);				
+				var totalCount = 0;
+
+				if (approvalList) {
+					totalCount += approvalList.totcnt;
 				}
+
+				if (boardList) {
+					totalCount += boardList.totcnt;
+				}
+
+				if (webfolderList) {
+					totalCount += webfolderList.totcnt;
+				}
+
+				//전체 검색량
+				$("#totalCnt").empty().append(totalCount);
 			},
 			beforeSend : function() {
 				setTimeout(function(){ //순식간에 나오는 데이터들은 딱히 보여줄 필요가 없을 것 같아서 settimeout 처리
