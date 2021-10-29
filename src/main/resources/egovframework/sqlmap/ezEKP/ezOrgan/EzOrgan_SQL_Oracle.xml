@@ -580,7 +580,7 @@
                                             	DISPLAYNAME  ,
                                       		SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
                                       		'USER' TYPE,
-											EXTENSIONATTRIBUTE7 jobid,
+											TO_CHAR(EXTENSIONATTRIBUTE7) jobid,
 											'' isaddjob  
                                			FROM
                                				TBL_USERMASTER 
@@ -691,7 +691,7 @@
 	                                 	DISPLAYNAME  ,
 	                                 	SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
 	                                     'USER' TYPE,
-										EXTENSIONATTRIBUTE7 jobid,
+										TO_CHAR(EXTENSIONATTRIBUTE7) jobid,
 										'' isaddjob  
 	                       FROM
 	                            		TBL_USERMASTER 
@@ -1382,7 +1382,7 @@
 	            EXTENSIONATTRIBUTE3 ,
 	            EXTENSIONATTRIBUTE4 ,
 	            (CASE WHEN EXTENSIONATTRIBUTE5 IS NULL
-				THEN CAST('' AS VARCHAR(200))
+				THEN CAST('' AS NVARCHAR2(200))
 				ELSE EXTENSIONATTRIBUTE5 END) AS EXTENSIONATTRIBUTE5 ,
 	            EXTENSIONATTRIBUTE6 ,
 	            EXTENSIONATTRIBUTE7 ,
@@ -1476,7 +1476,7 @@
              A.EXTENSIONATTRIBUTE2 ,
              A.EXTENSIONATTRIBUTE3 ,
              A.EXTENSIONATTRIBUTE4 ,
-             CAST(B.PROXY AS VARCHAR(200)) AS EXTENSIONATTRIBUTE5 ,
+             CAST(B.PROXY AS NVARCHAR2(200)) AS EXTENSIONATTRIBUTE5 ,
              A.EXTENSIONATTRIBUTE6 ,
              A.EXTENSIONATTRIBUTE7 ,
              A.EXTENSIONATTRIBUTE8 ,
