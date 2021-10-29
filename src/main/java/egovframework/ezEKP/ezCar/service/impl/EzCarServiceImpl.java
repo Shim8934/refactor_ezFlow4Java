@@ -230,8 +230,11 @@ public class EzCarServiceImpl extends EgovAbstractServiceImpl implements EzCarSe
 		if(strAccessFlag.equals("0")) {
 			String jobs = getAddJob(pUserID, tenantID);
 			String jobss = "";
-			if(jobs != null && jobs != ""){ //겸직정보가있으면
-				String jobArr[] = jobs.split(";"); //겸직부서 정보를 배열로 담는다 ex);sfctest01:사원:사원  [,sfctest01:tk]
+			if(jobs != null && jobs != ""){ //겸직정보가있으면 
+				if("".equals(jobs)) {
+					jobss = "'"+pUserID+"','"+pDeptID+"','everyone'";
+				}
+				else{String jobArr[] = jobs.split(";"); //겸직부서 정보를 배열로 담는다 ex);sfctest01:사원:사원  [,sfctest01:tk]
 				for(int i=0; i<jobArr.length; i++){
 					if(jobArr[i].equals("")||jobArr[i]==null)
 						continue;
@@ -241,6 +244,7 @@ public class EzCarServiceImpl extends EgovAbstractServiceImpl implements EzCarSe
 				}
 				jobss = jobss.substring(0, jobss.length()-1);//마지막 쉼표 자르기
 				jobss = jobss+",'"+pUserID+"','"+pDeptID+"','everyone'";
+				}
 			}else{ //겸직정보없으면
 				jobss = "'"+pUserID+"','"+pDeptID+"','everyone'";
 			}
