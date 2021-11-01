@@ -4197,7 +4197,7 @@ function setDocNumFormat(pPrefix) {
                 	break;
                 	
                 case "YM":
-                    var tempYear = d.getFullYear().substr(2);
+                    var tempYear = d.getFullYear().toString().substr(2);
                     numHeader += (org_Header[index] == tempYear ? tempYear : org_Header[index]);
                     
                 	var mmonth = d.getMonth() + 1;
@@ -4338,3 +4338,55 @@ function getPersonalAgreeReturnType() {
    return result;
 }
 
+// 문서번호의 @DP, @dp에서 필요한 부서명 리턴
+function getDeptSymbol(DeptID, DeptName) {
+	var result = "";
+	var dataNodes;
+	var RtnVal;
+	
+	if(approvalFlag == "S") {
+		$.ajax({
+			type : "POST",
+			dataType : "text",
+			async : false,
+			url : "/ezApprovalG/getChaebunDept.do",
+			data : {
+				deptID : DeptID,
+				orgCompanyID : orgCompanyID
+			},
+			success: function(xml){
+				result = xml;
+				if(result != null) {
+					dataNodes = GetChildNodes(loadXMLString(result).documentElement);
+					DeptName = getNodeText(dataNodes[0]);
+					RtnVal = getNodeText(dataNodes[1]);
+				}
+			}        			
+		});
+	} else {
+		$.ajax({
+			type : "POST",
+			dataType : "text",
+			async : false,
+			url : "/ezOrgan/getADInfos.do",
+			data : {
+				cn : DeptID,
+				prop : "extensionAttribute6",
+				cate  : "group"
+			},
+			success: function(xml){
+				result = xml;
+			}        			
+		});
+	
+		dataNodes = GetChildNodes(loadXMLString(result).documentElement);
+		RtnVal = getNodeText(dataNodes[0]);
+	}
+	
+    if (RtnVal == "") {
+        return DeptName;
+    }
+    else {
+        return RtnVal;
+    }
+}

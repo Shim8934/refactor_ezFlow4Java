@@ -141,6 +141,7 @@
 		    var pSignImage_Size = "<c:out value ='${signImageSize}'/>";
 		    var pADMIN = "N";
 		    var docNumZeroCnt = "<c:out value ='${docNumZeroCnt}'/>";
+		    var DeptSymbol; // 문서채번 시 사용되는 부서명 관련 변수
 		  	//회람
 			var type = "ING";
 			var pGongRamDocID = "";
@@ -415,6 +416,7 @@
 		            getDocInfo();
 		            setAttachInfo(pDocID, "APR", lstAttachLink);
 		            GetExchInfo();
+		            DeptSymbol = getDeptSymbol(arr_userinfo[4], replaceEntityCodeToStr(arr_userinfo[5]));
 		            
 			    	if (nonElecRec == "Y") {
 				        getNonElecInfoSusinInit();
