@@ -714,19 +714,16 @@ public class EzCommonController extends EgovFileMngUtil{
 	}
 	//2019-09-20 메신저 다운로드 추가
 	@RequestMapping(value = "/ezCommon/talkDownloadAttach.do", method = RequestMethod.GET)
-	public void talkDownloadAttach(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public void talkDownloadAttach(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("talkDownloadAttach started");
 
-		String filePath = request.getParameter("filePath");
-		String fileName = "";
+		// 20211102 조진호 - 경기대학교 웹취약점(모의해킹) 체크 결과에 따른 조치. 기존 filePath는 get parameter로 받아와 경로가 보였지만 이 부분을 서버에서 처리하는 방식으로 수정
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String filePath = ezCommonService.getTenantConfig("talkFilePath", userInfo.getTenantId());
+		String fileName = filePath.substring(filePath.lastIndexOf(commonUtil.separator) + 1); 
 		String realPath = commonUtil.getRealPath(request);
-		
-		if (request.getParameter("fileName") != null) {
-			fileName = request.getParameter("fileName");
-		} else {
-			fileName = filePath.substring(filePath.lastIndexOf(commonUtil.separator) + 1); 
-		}
-		
+
 		downFile(request, response, realPath + filePath, fileName);
 		
 		logger.debug("talkDownloadAttach ended");
