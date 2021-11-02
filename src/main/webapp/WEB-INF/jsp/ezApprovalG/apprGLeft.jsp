@@ -1172,6 +1172,14 @@
 	        $( window ).resize(function() {
 	        	leftResize();
         	});
+
+			function openergetDocInfo() {
+				try {
+					window.parent.frames.right.openergetDocInfo();
+				} catch (e) {
+					console.log(e);
+				}
+			}
 		</script>
 	</head>
 	<body ondragstart="return false" onselectstart="return false" class="newLeft">

@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezResource.web;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.Properties;
 import java.util.UUID;
 
 import javax.annotation.Resource;
+import javax.imageio.ImageIO;
 import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -2819,6 +2821,8 @@ public class EzResourceController extends EgovFileMngUtil {
         pFileName = pFileName.replace("%2b", "+");
         pFileName = pFileName.replace("%3b", ";");
         
+        String extension = pFileName.substring(pFileName.lastIndexOf(".") + 1, pFileName.length());
+        String pFileNameOnly = pFileName.substring(0, pFileName.lastIndexOf("."));
         String pDirPath = commonUtil.getUploadPath("upload_resource.ROOT", userInfo.getTenantId());
 
         pDirPath = realPath + pDirPath;
@@ -2844,14 +2848,39 @@ public class EzResourceController extends EgovFileMngUtil {
     	fileSize = multiFile.getSize();
         String newFileName = pUploadSN;
         
-        writeUploadedFile(multiFile, newFileName + pFileName, pDirPath + "tempUploadFile");            		
-        	
+        writeUploadedFile(multiFile, newFileName + pFileName, pDirPath + "tempUploadFile"); // 원본 파일을 업로드한 뒤, 아래 코드에서 이미지 형식으로 변환함
+        
+        /* 2021-10-26 홍승비 - 자원등록 시 TIF, TIFF 이미지 제대로 표출되지 않는 오류 수정 (PNG로 치환) */
+        File imageFile = new File(commonUtil.detectPathTraversal(pDirPath + "tempUploadFile" + commonUtil.separator + newFileName + pFileName));
+        
+		if (imageFile.exists()) {
+			BufferedImage bi = ImageIO.read(imageFile);		
+			BufferedImage bufferedImage = null;
+			
+			if (extension.toUpperCase().equals("TIF") || extension.toUpperCase().equals("TIFF")) {
+				extension = "png";
+			}
+			
+			// 기존 이미지가 파일 형태로 업로드되었으므로, 다시 이미지 형태로 저장
+			if (bi.getType() == 0 || extension.equals("png")) { // 일부 png 파일의 경우, type값이 0으로 넘어오거나 검은색으로 저장되는 것을 방지
+				bufferedImage = new BufferedImage(bi.getWidth(), bi.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
+			} else {
+				bufferedImage = new BufferedImage(bi.getWidth(), bi.getHeight(), bi.getType());
+			}
+			bufferedImage.createGraphics().drawImage(bi, 0, 0, bi.getWidth(), bi.getHeight(), null);
+			ImageIO.write(bufferedImage, extension, new File(commonUtil.detectPathTraversal(pDirPath + "tempUploadFile" + commonUtil.separator + newFileName + pFileNameOnly + "." + extension)));
+			
+			bi.flush();
+			bi = null;
+			bufferedImage.flush();
+			bufferedImage = null;
+		}
+		
 		strXML.append("<DATA><![CDATA[" + newFileName + "]]></DATA>");
-		strXML.append("<DATA2><![CDATA[" + pFileName + "]]></DATA2>");
+		strXML.append("<DATA2><![CDATA[" + pFileNameOnly + "." + extension + "]]></DATA2>");
 		strXML.append("<DATA3><![CDATA[" + fileSize + "]]></DATA3>");
 		strXML.append("<DATA4><![CDATA[" + "]]></DATA4>");
 		strXML.append("<DATA5><![CDATA[OK]]></DATA5>");
-        
         strXML.append("</NODES></ROOT>");
         
 		logger.debug("uploadItemAttach End");

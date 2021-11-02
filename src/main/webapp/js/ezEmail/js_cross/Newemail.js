@@ -1023,9 +1023,9 @@ function event_xmlhttp_mailPreview_Complete() {
             }
             
             if(pFromname == ""){
-            	pMailSenderHtml = pOCS + "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pFromemail) + "' onclick='show_personinfo(\"" + pFromemail + "\")'>&nbsp;" + pFromname + " " + "</span>";
+            	pMailSenderHtml = pOCS + "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pFromemail) + "' onclick='show_personinfo(\"" + pFromemail + "\")'>&nbsp;</span>";
             } else {
-            	pMailSenderHtml = pOCS + "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pFromemail) + "' onclick='show_personinfo(\"" + pFromemail + "\")'>\"" + pFromname +" " + "\"</span>";
+            	pMailSenderHtml = pOCS + "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pFromemail) + "' onclick='show_personinfo(\"" + pFromemail + "\")'>\"" + pFromname + "\"</span>";
             	
             	if (useCountryIP == "YES" ) {
             		pMailSenderHtml += "<span title=" + pCountryName + ">"

@@ -704,7 +704,11 @@
 		    }
 		    
 		    function getDeptId(userId) {
-		        var ReceiveDocument = "";
+		        return getEntryInfo(userId, "department");
+		    }
+		    
+		    function getEntryInfo(userId, propStr) {
+		    	var ReceiveDocument = "";
 
 		        try {
 		        	var result = "";
@@ -715,14 +719,14 @@
 		        		url : "/admin/ezOrgan/getEntryInfo.do",
 		        		data : {
 		        			cn 	  : userId,
-		        			prop  : "department"
+		        			prop  : propStr
 		        		},
 		        		success: function(xml){
 		        			result = xml;
 		        		}        			
 		        	});
 		        	
-		            ReceiveDocument = SelectSingleNodeValueNew(loadXMLString(result), "DATA/DEPARTMENT");
+		            ReceiveDocument = SelectSingleNodeValueNew(loadXMLString(result), "DATA/" + propStr.toUpperCase());
 		        } catch (e) {
 		        } 
 		        
@@ -760,16 +764,26 @@
 		            listview.LoadFromID("lvUserList");
 		            var UserAddjoblistview = new ListView();
 		            UserAddjoblistview.LoadFromID("lvAddjobList");
-		            var bFlag = UserAddjoblistview.ExistRow("data1", dept[0]);
+		        	var bFlag = UserAddjoblistview.ExistRow2({"data1":dept[0], "data6":jobID});
+		        	
+		        	if (!bFlag) { // 원부서의 직위 체크
+		        		var cn = GetAttribute(p_ListOrderObject, "_data2");
+		        		var orgDeptId = getDeptId(cn);
+						var orgJobId = getEntryInfo(cn, "extensionAttribute7");
+    		            bFlag = ((dept[0] == orgDeptId) && (jobID == orgJobId)) ? true : false;
+		        	}
+		        	
+		            /* var bFlag = UserAddjoblistview.ExistRow("data1", dept[0]);
 		            
 		            if (!bFlag) {
     		            var cn = GetAttribute(p_ListOrderObject, "_data2");
     		            var orgDeptId = getDeptId(cn);
     		            bFlag = dept[0] == orgDeptId ? true : false;
-		        	}
-		            
+		        	} */
+		        	
 		            if (bFlag) {
 		                alert(strLang25);
+		                return;
 		            } else {
 		            	var compName = new Array();
 				        $.ajax({

@@ -144,6 +144,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
+			e.printStackTrace();
 		}
 		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/list/users/{userId}] ended.");
 		

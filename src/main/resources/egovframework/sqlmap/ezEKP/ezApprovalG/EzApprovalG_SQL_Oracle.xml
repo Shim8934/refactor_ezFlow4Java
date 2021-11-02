@@ -6338,6 +6338,8 @@
 								OR 
 							  TBL_EXPENDAPRDOCINFO.SecurityCode IS NULL ) 
 					</isNotEqual>
+					AND
+						TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
 				</isEqual>
                 <isEqual property="listFlag" compareValue="23">
                     AND 

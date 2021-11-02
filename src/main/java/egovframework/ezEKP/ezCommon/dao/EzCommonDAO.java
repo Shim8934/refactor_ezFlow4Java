@@ -2156,4 +2156,19 @@ public class EzCommonDAO extends EgovAbstractDAO {
 	public List<Map<String, Object>> getTenantConfigList(Map<String, Object> map) throws Exception{
 		return (List<Map<String, Object>>) list("EzCommonDAO.getTenantConfigList", map);
 	}
+	
+	public void alterTblAddjobMaster() {
+		try {
+			if(select("EzCommonDAO.chkAddjobMasterJobIdIsPrimary") == null) {
+				update("EzCommonDAO.dropAddjobMasterPrimary");
+				logger.debug("addjobMaster drop primary.");
+				update("EzCommonDAO.addAddjobMasterPrimary");
+				logger.debug("addjobMaster add primary.");
+			}
+		} catch (Exception e) {
+			logger.debug("alterTblAddjobMaster ERROR...");
+			e.printStackTrace();
+		}
+	}
+	
 }

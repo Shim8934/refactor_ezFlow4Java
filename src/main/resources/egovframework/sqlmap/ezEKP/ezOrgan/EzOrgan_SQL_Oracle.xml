@@ -14,12 +14,19 @@
 		<result property="type" 								column="type" 						    columnIndex="4"/>		
 	</resultMap>
 	
+	<resultMap id="deptTreeInfoAddjob" class="OrganDeptVO" extends="deptTreeInfo">
+		<result property="isAddjob" 							column="isAddjob" 					nullValue=""/>
+		<result property="jobId" 								column="jobId" 						nullValue=""/>		
+	</resultMap>
+	
 	<resultMap id="deptMemberInfo" class="OrganDeptVO">
 		<result property="cn" 									column="cn" 							columnIndex="1"/>
 		<result property="mail" 								column="mail" 							columnIndex="2"/>		
 		<result property="displayName" 					        column="displayName" 			        columnIndex="3"/>
 		<result property="extensionAttribute15" 			    column="extensionAttribute15"	        columnIndex="4"/>
 		<result property="type" 								column="type" 						    columnIndex="5"/>		
+		<result property="isAddjob" 							column="isAddjob" 						columnIndex="6"	 nullValue=""/>
+		<result property="jobId" 								column="jobId" 						    columnIndex="7"  nullValue=""/>			
 	</resultMap>
 	
 	<resultMap id="deptSubTreeInfo" class="OrganDeptVO">
@@ -316,7 +323,9 @@
                        			END
                        				DISPLAYNAME  ,
                        			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
-                       			'user' TYPE  
+                       			'user' TYPE,
+                                extensionattribute7 JOBID,
+                                '' ISADDJOB
                        		FROM
                        			TBL_USERMASTER 
                        		WHERE
@@ -340,7 +349,9 @@
                        			END
                        				DISPLAYNAME  , 
                                 SUBSTR('0000000000', 1, 10 - LENGTH(NVL(B.ORDERBY, '0'))) || NVL(B.ORDERBY, '0') EXTENSIONATTRIBUTE15  ,
-                       			'user' TYPE  
+                       			'user' TYPE,
+						        b.jobid JOBID,
+                                'Y' ISADDJOB  
                   			FROM
                   				TBL_ADDJOBMASTER B
                   			JOIN
@@ -372,7 +383,9 @@
                        			END
                        				DISPLAYNAME  ,
                        			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
-                       			'user' TYPE  
+                       			'user' TYPE,
+                                extensionattribute7 JOBID,
+                                '' ISADDJOB  
                        		FROM
                        			TBL_USERMASTER 
                        		WHERE
@@ -398,7 +411,9 @@
                        			END
                        				DISPLAYNAME  , 
                                 SUBSTR('0000000000', 1, 10 - LENGTH(NVL(B.ORDERBY, '0'))) || NVL(B.ORDERBY, '0') EXTENSIONATTRIBUTE15  ,
-                       			'user' TYPE  
+                       			'user' TYPE,
+						        b.jobid JOBID,
+                                'Y' ISADDJOB  
                   			FROM
                   				TBL_ADDJOBMASTER B
                   			JOIN
@@ -428,7 +443,9 @@
                      	END
                      		DISPLAYNAME  ,
                      	SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
-                     	'dept' TYPE  
+                     	'dept' TYPE,
+				        '' JOBID,
+                        '' ISADDJOB  
                    FROM
                    	TBL_DEPTMASTER 
                   	WHERE
@@ -458,7 +475,9 @@
                           			END
                           				DISPLAYNAME  ,
                           			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
-                           			'user' TYPE  
+                           			'user' TYPE,
+						        	EXTENSIONATTRIBUTE7 JOBID,
+                                	'' ISADDJOB  
                           		FROM
                           			TBL_USERMASTER 
                           		WHERE
@@ -484,7 +503,9 @@
                           			END
                           				DISPLAYNAME  ,
                           			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(B.ORDERBY, '0'))) || NVL(B.ORDERBY, '0') EXTENSIONATTRIBUTE15  ,
-                          			'user' TYPE  
+                          			'user' TYPE,
+						        	B.JOBID JOBID,
+                                	'Y' ISADDJOB  
                           		FROM
                           			TBL_ADDJOBMASTER B
                           		JOIN
@@ -508,7 +529,9 @@
                           			END
                           				DISPLAYNAME  ,
                           			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
-                           			'dept' TYPE  
+                           			'dept' TYPE,
+						        	'' JOBID,
+                                	'' ISADDJOB
                           		FROM
                           			TBL_DEPTMASTER 
                           		WHERE
@@ -523,7 +546,7 @@
  		</isEqual>
 	</select> 
 		
-	<select id="EzOrganDAO.getDeptMemberListPage" parameterClass="Map" resultMap="deptTreeInfo" remapResults="true">
+	<select id="EzOrganDAO.getDeptMemberListPage" parameterClass="Map" resultMap="deptTreeInfoAddjob" remapResults="true">
 		<isEqual property="v_CLASS" compareValue="user">
 			<![CDATA[
 				SELECT
@@ -533,7 +556,9 @@
                                	CN ,
                                	DISPLAYNAME ,
                                	EXTENSIONATTRIBUTE15 ,
-                               	TYPE 
+                               	TYPE,
+								jobid,
+								isaddjob 
                         	FROM (			SELECT
                         					CN ,
                                       		CASE #v_LANGDATA#
@@ -546,7 +571,9 @@
                                             END
                                             	DISPLAYNAME  ,
                                       		SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
-                                      		'USER' TYPE  
+                                      		'USER' TYPE,
+											TO_CHAR(EXTENSIONATTRIBUTE7) jobid,
+											'' isaddjob  
                                			FROM
                                				TBL_USERMASTER 
                                 		WHERE
@@ -571,7 +598,9 @@
                                             END
                                             	DISPLAYNAME  ,
                                       		SUBSTR('0000000000', 1, 10 - LENGTH(NVL(B.ORDERBY, '0'))) || NVL(B.ORDERBY, '0') EXTENSIONATTRIBUTE15  ,
-                                      		'USER' TYPE  
+                                      		'USER' TYPE,
+											b.jobid jobid,
+											'Y' isaddjob  
                                			FROM
                                				TBL_ADDJOBMASTER B
                                			JOIN
@@ -609,7 +638,9 @@
 	                    END
 	                    	DISPLAYNAME  ,
 	                        SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
-	                        'DEPT' TYPE  
+	                        'DEPT' TYPE,
+							'' jobid,
+							'' isaddjob  
 	            	FROM
 	            		TBL_DEPTMASTER 
 	                WHERE
@@ -635,7 +666,9 @@
 	 					CN,
 	                    DISPLAYNAME,
 	                    EXTENSIONATTRIBUTE15,
-	                    TYPE
+	                    TYPE,
+	                    JOBID,
+	                    ISADDJOB
 	 				FROM ( 	SELECT
 	 								CN ,
 	                                 CASE
@@ -649,7 +682,9 @@
 	                                 END
 	                                 	DISPLAYNAME  ,
 	                                 	SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
-	                                     'USER' TYPE  
+	                                     'USER' TYPE,
+										TO_CHAR(EXTENSIONATTRIBUTE7) jobid,
+										'' isaddjob  
 	                       FROM
 	                            		TBL_USERMASTER 
 	                       WHERE
@@ -674,7 +709,9 @@
 	                                 END
 	                                 	DISPLAYNAME  ,
 	                                 	SUBSTR('0000000000', 1, 10 - LENGTH(NVL(B.ORDERBY, '0'))) || NVL(B.ORDERBY, '0') EXTENSIONATTRIBUTE15  ,
-	                                     'USER' TYPE  
+	                                     'USER' TYPE,
+										b.jobid jobid,
+										'Y' isaddjob  
 	                       FROM
 	                              	TBL_ADDJOBMASTER B
 	                       JOIN
@@ -697,7 +734,9 @@
 	                                 END
 	                                 	DISPLAYNAME  ,
 	                                 SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
-	                                 'DEPT' TYPE  
+	                                 'DEPT' TYPE,
+									 '' jobid,
+									 '' isaddjob  
 	                       FROM
 	                             	TBL_DEPTMASTER 
 	                       WHERE
@@ -1020,7 +1059,7 @@
 		</isNotEqual>
 	</select>
 
-	<select id="EzOrganDAO.getTBLUserMaster" parameterClass="Map" resultMap="userInfo">
+	<select id="EzOrganDAO.getTBLUserMaster2" parameterClass="Map" resultMap="userInfo">
 		<![CDATA[
 			SELECT
 				CN ,
@@ -1260,6 +1299,202 @@
             AND
             	B.TENANT_ID = #v_TENANT_ID#	
 		]]>
+	</select>
+	
+	<select id="EzOrganDAO.getTBLUserMaster" parameterClass="Map" resultMap="userInfo">
+		<isEmpty property="IS_ADDJOB">
+		<![CDATA[
+			SELECT
+				CN ,
+             	CASE
+             		#v_LANGDATA#
+                WHEN
+                	'1'
+                THEN
+                	DISPLAYNAME
+                ELSE
+                	DISPLAYNAME2
+                END
+                	DISPLAYNAME  ,
+             	DISPLAYNAME DISPLAYNAME1  ,
+             	DISPLAYNAME2 ,
+             	MAIL ,
+             	DEPARTMENT ,
+             	CASE
+             		#v_LANGDATA#
+                WHEN
+                	'1'
+                THEN
+                	DESCRIPTION
+                ELSE
+                	DESCRIPTION2
+                END
+                	DESCRIPTION  ,
+             	DESCRIPTION DESCRIPTION1  ,
+             	DESCRIPTION2 ,
+             	PHYSICALDELIVERYOFFICENAME ,
+             	CASE
+             		#v_LANGDATA#
+                WHEN
+                	'1'
+                THEN
+                	COMPANY
+                ELSE
+                	COMPANY2
+                END
+                	COMPANY  ,
+             	COMPANY COMPANY1  ,
+             	COMPANY2 ,
+             	CASE
+             		#v_LANGDATA#
+                WHEN
+                	'1'
+                THEN
+                	TITLE
+                ELSE
+                	TITLE2
+                END
+                	TITLE  ,
+             	TITLE TITLE1  ,
+             	TITLE2 TITLE2  ,
+             	TELEPHONENUMBER ,
+             	HOMEPHONE ,
+             	MOBILE ,
+	            FACSIMILETELEPHONENUMBER ,
+	            STREETADDRESS ,
+	            INFO ,
+	            EXTENSIONATTRIBUTE1 ,
+	            EXTENSIONATTRIBUTE2 ,
+	            EXTENSIONATTRIBUTE3 ,
+	            EXTENSIONATTRIBUTE4 ,
+	            (CASE WHEN EXTENSIONATTRIBUTE5 IS NULL
+				THEN CAST('' AS NVARCHAR2(200))
+				ELSE EXTENSIONATTRIBUTE5 END) AS EXTENSIONATTRIBUTE5 ,
+	            EXTENSIONATTRIBUTE6 ,
+	            EXTENSIONATTRIBUTE7 ,
+	            EXTENSIONATTRIBUTE8 ,
+	            EXTENSIONATTRIBUTE9 ,
+	            EXTENSIONATTRIBUTE10 ,
+	            EXTENSIONATTRIBUTE11 ,
+	            EXTENSIONATTRIBUTE12 ,
+	            EXTENSIONATTRIBUTE13 ,
+	            EXTENSIONATTRIBUTE14 ,
+	            EXTENSIONATTRIBUTE15 ,
+	            ADSPATH ,
+	            UPDATEDT ,
+	            'user' TYPE  ,
+	            SIPURI ,
+	            POSITIONCD ,
+	            'user' USERTYPE
+	        FROM
+	        	TBL_USERMASTER 
+	       WHERE
+	       		CN = #v_CN#
+           AND
+           		DEPARTMENT = #v_DEPTCD#
+           AND
+           		TENANT_ID = #v_TENANT_ID#	
+        ]]>	
+        </isEmpty>	
+           		
+        <isNotEmpty property="IS_ADDJOB">
+		<![CDATA[   		
+			SELECT
+				A.CN ,
+            CASE
+            	#v_LANGDATA#
+            WHEN
+            	'1'
+            THEN
+            	A.DISPLAYNAME
+            ELSE
+            	A.DISPLAYNAME2
+            END
+            	DISPLAYNAME  ,
+             A.DISPLAYNAME DISPLAYNAME1  ,
+             A.DISPLAYNAME2 ,
+             A.MAIL ,
+             C.CN DEPARTMENT  ,
+             CASE
+             	#v_LANGDATA#
+             WHEN
+             	'1'
+             THEN
+             	C.DISPLAYNAME
+             ELSE
+             	C.DISPLAYNAME2
+             END
+             	DESCRIPTION  ,
+	         C.DISPLAYNAME DESCRIPTION1  ,
+     	     C.DISPLAYNAME2 DESCRIPTION2  ,
+          	 A.PHYSICALDELIVERYOFFICENAME ,
+             CASE
+             	#v_LANGDATA#
+             WHEN
+             	'1'
+             THEN
+             	C.EXTENSIONATTRIBUTE3
+             ELSE
+             	C.COMPNM2
+             END
+             	COMPANY  ,
+             C.EXTENSIONATTRIBUTE3 COMPANY1  ,
+             C.COMPNM2 COMPANY2  ,
+             CASE
+             	#v_LANGDATA#
+             WHEN
+             	'1'
+             THEN
+             	B.TITLE
+             ELSE
+             	B.TITLE2
+             END
+             	TITLE  ,
+             B.TITLE TITLE1  ,
+             B.TITLE2 TITLE2  ,
+             A.TELEPHONENUMBER ,
+             A.HOMEPHONE ,
+             A.MOBILE ,
+             A.FACSIMILETELEPHONENUMBER ,
+             A.STREETADDRESS ,
+             A.INFO ,
+             A.EXTENSIONATTRIBUTE1 ,
+             A.EXTENSIONATTRIBUTE2 ,
+             A.EXTENSIONATTRIBUTE3 ,
+             A.EXTENSIONATTRIBUTE4 ,
+             CAST(B.PROXY AS NVARCHAR2(200)) AS EXTENSIONATTRIBUTE5 ,
+             A.EXTENSIONATTRIBUTE6 ,
+             A.EXTENSIONATTRIBUTE7 ,
+             A.EXTENSIONATTRIBUTE8 ,
+             A.EXTENSIONATTRIBUTE9 ,
+             A.EXTENSIONATTRIBUTE10 ,
+             A.EXTENSIONATTRIBUTE11 ,
+             A.EXTENSIONATTRIBUTE12 ,
+             A.EXTENSIONATTRIBUTE13 ,
+             A.EXTENSIONATTRIBUTE14 ,
+             A.EXTENSIONATTRIBUTE15 ,
+             A.ADSPATH ,
+             A.UPDATEDT ,
+             'user' TYPE  ,
+             SIPURI ,
+             B.POSITIONCD ,
+	         'addJob' USERTYPE
+        	FROM
+        		TBL_ADDJOBMASTER B
+            JOIN
+            	TBL_USERMASTER A   ON B.CN = A.CN AND B.TENANT_ID = A.TENANT_ID
+           	JOIN
+           		TBL_DEPTMASTER C   ON C.CN = B.DEPTID AND C.TENANT_ID = B.TENANT_ID
+       		WHERE
+       			B.CN = #v_CN#
+            AND
+            	B.DEPTID = #v_DEPTCD#
+            AND
+            	B.TENANT_ID = #v_TENANT_ID#	
+            AND
+            	B.JOBID = #JOBID#
+		]]>
+		</isNotEmpty>
 	</select>
 
 	<select id="EzOrganDAO.getUserInfo" parameterClass="Map" resultClass="OrganUserVO">
@@ -1564,7 +1799,7 @@
 		]]>
 	</select>
 	
-	<select id="EzOrganDAO.organSearch" parameterClass="Map" resultMap="deptTreeInfo">
+	<select id="EzOrganDAO.organSearch" parameterClass="Map" resultMap="deptTreeInfoAddjob">
 		<isEqual property="type" compareValue="U">
 			SELECT * FROM(
 
@@ -1573,7 +1808,9 @@
 				department as displayName,
 				n'' as extensionAttribute15,
 				'user' as type,
-				displayname as NAME			
+				displayname as NAME,
+                extensionAttribute7 JOBID,
+                '' ISADDJOB 			
 			FROM 
 	    		TBL_USERMASTER A 
             $strSQL$
@@ -1603,7 +1840,9 @@
 		      		deptid as displayName,
 		      		n'' as extensionAttribute15,
 		      		'user' as type,
-					displayname as NAME	
+					displayname as NAME,
+	                A.JOBID JOBID,
+	                'Y' ISADDJOB	
 		      	FROM	
 					TBL_USERMASTER B INNER JOIN TBL_ADDJOBMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID 
 	            $strGyumjikForOracle$ 
@@ -1631,7 +1870,9 @@
 					n'' as displayName,
 					n'' as extensionAttribute15,
 					'group' as type,
-					displayname as NAME
+					displayname as NAME,
+	                '' JOBID,
+	                '' ISADDJOB
 				FROM
 					TBL_DEPTMASTER 
                 $strSQL$ 
@@ -1653,7 +1894,9 @@
 	    		cn,
 	    		n'' as displayName,
 	    		n'' as extensionAttribute15,
-	    		'group' as type
+	    		'group' as type,
+                '' JOBID,
+                '' ISADDJOB
 	    	FROM
 	    		TBL_DEPTMASTER 
             $strSQL$ 
@@ -1663,7 +1906,7 @@
 	    </isEqual>
 	</select>
 
-	<select id="EzOrganDAO.organSearchListPage" parameterClass="Map" resultMap="deptTreeInfo">
+	<select id="EzOrganDAO.organSearchListPage" parameterClass="Map" resultMap="deptTreeInfoAddjob">
 		<isEqual property="type" compareValue="U">
 			<![CDATA[
 				 SELECT 
@@ -1674,7 +1917,9 @@
 						cn, 
 						displayName,
 						extensionAttribute15, 
-						type 
+						type,
+						jobid,
+						isaddjob 
 			          FROM 
 			          	(SELECT  
 			             	cn, 
@@ -1682,7 +1927,9 @@
 			                department as displayName, 
 			                '' as extensionAttribute15,
 			                '0' as addJobflag,
-			                'user' as type 
+			                'user' as type,
+			                extensionattribute7 JOBID,
+			                '' ISADDJOB 
 			             FROM  
 			             	TBL_USERMASTER A
                          $strSQL$
@@ -1707,7 +1954,9 @@
 							deptid as displayName ,
 							'' as extensionAttribute15,
 							'1' as addJobflag,
-							'user' as type
+							'user' as type,
+			                a.jobid JOBID,
+			                'Y' ISADDJOB
 						FROM
 							TBL_USERMASTER b
 						INNER JOIN
@@ -1737,7 +1986,9 @@
 					cn,
 					department as displayName,
 					'' as extensionAttribute15,
-					'user' as type				
+					'user' as type,
+	                extensionAttribute7 JOBID,
+	                '' ISADDJOB				
 				FROM 
 					TBL_USERMASTER A
 					$strSQL$
@@ -1757,7 +2008,9 @@
 					A.cn,
 					deptid as displayName,
 					'' as extensionAttribute15,
-					'user' as type
+					'user' as type,
+	                b.jobid JOBID,
+	                '' ISADDJOB
 				FROM
 					TBL_USERMASTER B
 				INNER JOIN
@@ -1776,7 +2029,9 @@
 						CN,
 						'' as displayName,
 						'' as extensionAttribute15,
-						'group' as type
+						'group' as type,
+		                '' JOBID,
+		                '' ISADDJOB
 					FROM
 						TBL_DEPTMASTER $strSize$ 
 					AND CN NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
@@ -1796,7 +2051,9 @@
 		    		cn,
 		    		'' as displayName,
 		    		'' as extensionAttribute15,
-		    		'group' as type
+		    		'group' as type,
+	                '' JOBID,
+	                '' ISADDJOB
 		    	FROM
 		    		TBL_DEPTMASTER 
 	            $strSQL$ 

@@ -347,4 +347,6 @@ public interface EzCommonService {
 	public void addViewTaskOldFlag() throws Exception;
 
 	public HashMap<String, Object> getTenantConfigList(List<String> propertyNames, int tenantID) throws Exception;
+
+	public void alterTblAddjobMaster() throws Exception;
 }

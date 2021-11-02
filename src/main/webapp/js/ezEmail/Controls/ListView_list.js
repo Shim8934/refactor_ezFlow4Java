@@ -69,6 +69,7 @@ function ListView() {
     this.GetSelectedRowID = GetSelectedRowID;
     this.CreateTabelCell = CreateTabelCell;
     this.ExistRow = ExistRow;
+    this.ExistRow2 = ExistRow2;
     this.RowDataBind = RowDataBind;
     this.SetUseOCS = SetUseOCS;
     this.SetTitle = SetTitle;
@@ -790,6 +791,40 @@ function ListView() {
         }
         return bFlag;
     }
+    
+    function ExistRow2(chkJson) {
+        var bFlag = false;
+        var oList = document.getElementById(_thisID);
+        if (!oList)
+            return bFlag;
+        
+        var arrRow = GetDataRows();
+        var chkJsonSize = Object.keys(chkJson).length;
+        
+        if (arrRow != null) {
+            for (var i = 0; i < arrRow.length; i++) {
+            	var nowArrRow = arrRow[i];
+            	var strAttribute = "";
+            	var miCheck = 0;
+            	
+            	$.each(chkJson, function (i, e) {
+            		strAttribute = GetAttribute(nowArrRow, i);
+            		
+            		if (strAttribute.toUpperCase() == e.toUpperCase()) {
+            			miCheck++;
+            		}
+            	});
+            	
+            	if (chkJsonSize <= miCheck) {
+            		bFlag = true;
+            		break;
+            	}
+            } // for end
+        } // if end
+        
+        return bFlag;
+    }
+    
     function AddRow(pIdx) {
         var oList = document.getElementById(_thisID);
         if (!oList)
