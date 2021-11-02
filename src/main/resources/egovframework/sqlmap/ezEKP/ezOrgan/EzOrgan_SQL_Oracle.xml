@@ -332,7 +332,7 @@
                        				DISPLAYNAME  ,
                        			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
                        			'user' TYPE,
-                                extensionattribute7 JOBID,
+                                TO_CHAR(extensionattribute7) JOBID,
                                 '' ISADDJOB
                        		FROM
                        			TBL_USERMASTER 
@@ -392,7 +392,7 @@
                        				DISPLAYNAME  ,
                        			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
                        			'user' TYPE,
-                                extensionattribute7 JOBID,
+                                TO_CHAR(extensionattribute7) JOBID,
                                 '' ISADDJOB  
                        		FROM
                        			TBL_USERMASTER 
@@ -484,7 +484,7 @@
                           				DISPLAYNAME  ,
                           			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
                            			'user' TYPE,
-						        	EXTENSIONATTRIBUTE7 JOBID,
+						        	TO_CHAR(EXTENSIONATTRIBUTE7) JOBID,
                                 	'' ISADDJOB  
                           		FROM
                           			TBL_USERMASTER 
@@ -1823,7 +1823,7 @@
 				n'' as extensionAttribute15,
 				'user' as type,
 				displayname as NAME,
-                extensionAttribute7 JOBID,
+                TO_CHAR(extensionAttribute7) JOBID,
                 '' ISADDJOB 			
 			FROM 
 	    		TBL_USERMASTER A 
@@ -1942,7 +1942,7 @@
 			                '' as extensionAttribute15,
 			                '0' as addJobflag,
 			                'user' as type,
-			                extensionattribute7 JOBID,
+			                TO_CHAR(extensionattribute7) JOBID,
 			                '' ISADDJOB 
 			             FROM  
 			             	TBL_USERMASTER A
@@ -2001,7 +2001,7 @@
 					department as displayName,
 					'' as extensionAttribute15,
 					'user' as type,
-	                extensionAttribute7 JOBID,
+	                TO_CHAR(extensionAttribute7) JOBID,
 	                '' ISADDJOB				
 				FROM 
 					TBL_USERMASTER A
