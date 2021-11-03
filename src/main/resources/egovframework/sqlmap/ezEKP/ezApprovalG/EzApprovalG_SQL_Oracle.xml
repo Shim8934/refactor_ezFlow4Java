@@ -28841,9 +28841,12 @@
 		SELECT 
 			COUNT(CABINETID) 
 		FROM 
-			TBL_EXPAPRDOCINFO 
+			TBL_EXPAPRDOCINFO A
+			LEFT JOIN TBL_APRDOCINFO B
+			ON A.DOCID = B.DOCID 
 		WHERE 
-			CABINETID = #v_CABINETID#) cnt 
+			CABINETID = #v_CABINETID#
+			AND B.DOCSTATE != '015') cnt
 	</select>
 		
 	<select id="EzApprovalG.getLastDocDate" parameterClass="map" resultClass="String">
