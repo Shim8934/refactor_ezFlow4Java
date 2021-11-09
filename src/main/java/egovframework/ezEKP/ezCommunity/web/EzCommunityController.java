@@ -4563,8 +4563,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
 		CommunityBoardItemVO item = ezCommunityService.getItemXML(boardID, itemID, userInfo);
 		
-		if (EgovDateUtil.getDaysDiff(item.getParentWriteDate().substring(0, 10), item.getWriteDate().substring(0, 10)) > 0) {
-//			item.setWriteDate(commonUtil.getDateStringInUTC(item.getParentWriteDate(), userInfo.getOffset(), false));
+		if (item.getParentWriteDate().compareTo(item.getWriteDate()) > 0) {
 			item.setWriteDate(item.getParentWriteDate());
 		}
 		

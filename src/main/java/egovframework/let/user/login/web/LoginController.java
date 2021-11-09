@@ -190,6 +190,8 @@ public class LoginController {
 		model.addAttribute("logoUrl", logo);
 		model.addAttribute("usePasswordReset", usePasswordReset);
 		CommonUtil.addXUACompatibleHeaderToResponse(request, response);
+		response.setHeader("Cache-Control", "no-store");
+		response.setHeader("Pragma", "no-cache");
 		
     	return "/user/login/login";
     

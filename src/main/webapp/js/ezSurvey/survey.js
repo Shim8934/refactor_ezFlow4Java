@@ -3094,7 +3094,8 @@ var SurveyCreate     = function() {
 				var question = qstnList[i];
 				var qstnId = question.level;
 				var qstnType = question.type;
-				var wrapper = $("<div class='prevQsWrapper' id='prevQstn" + qstnId + "'type='" + qstnType + "'></div>");
+				var qstnSkip = question.skip; // 단일분기의 경우, 해당 질문 답변 시 대상 분기 질문 활성화 (skip = -1인 경우 단일분기 없음 / 항목 별 분기는 존재 가능함)
+				var wrapper = $("<div class='prevQsWrapper' id='prevQstn" + qstnId + "'type='" + qstnType + "' skip='" + qstnSkip + "'></div>");
 				
 				var header = prevQsHeader(question, qstnList, step);
 				var prevQsOpt = $("<div class='prevQsOpt'></div>");
