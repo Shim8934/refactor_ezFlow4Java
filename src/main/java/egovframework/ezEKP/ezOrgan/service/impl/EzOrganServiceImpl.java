@@ -2298,6 +2298,21 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 	
 	@Override
+	public String updateAddJobProxy(String userID, String proxyInfo, int tenantID, String dept, String jobId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("tenantID", tenantID);
+		map.put("userID", userID);
+		map.put("proxyInfo", proxyInfo);
+		map.put("dept", dept);
+		map.put("jobId", jobId);
+		
+		ezOrganDAO.updateAddJobProxy(map);
+		
+        return "OK";	
+	}
+	
+	@Override
 	public String getAddJobProxy(String id, String dept, int tenantId) throws Exception {
 		logger.debug("getAddJobProxy started");
 		Map<String, Object> map = new HashMap<String, Object>();

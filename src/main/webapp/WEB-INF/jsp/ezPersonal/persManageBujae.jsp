@@ -97,6 +97,31 @@
 		            		}
 		            	}
 		            });
+		            /* $.each($('tr[id^=TR_Appoint]'), function(i, item) {
+		            	var deptId1 = $(this).attr("deptId");
+		            	$.each($('tr[id^=TR_Appoint]'), function(j, item2) {
+		            		var deptId2 = $(this).attr("deptId");
+		            		if(i<j) {
+		            			if(deptId1 == deptId2) {
+		            				$('tr[id^=TR_Appoint_'+(j+1)+']').attr("removeTr", "Y");
+		            				$('tr[id^=TR_Select_'+(j+1)+']').attr("removeTr", "Y");
+		            			}
+		            		}
+		            	});
+		            });
+		            $.each($('tr[id^=TR_Appoint]'), function(i, item) {
+		            	if($(this).attr("removeTr") ==  "Y") {
+		            		$(this).remove();
+		            		$('tr[id^=TR_Select_'+(i+1)+']').remove();
+		            	}
+		            });
+		            $.each($('tr[id^=TR_Appoint]'), function(i, item) {
+		            	$(this).attr("id", "TR_Appoint_"+(i+1));
+		            });
+		            $.each($('tr[id^=TR_Select]'), function(i, item) {
+		            	$(this).attr("id", "TR_Select_"+(i+1));
+		            }); */
+		            
 		            gIsAppoint = "1";
 		        }
 		        if (proxystartdate != "") {
@@ -375,6 +400,7 @@
 			        	//proxy = 아이디 + ':' + 이름 + ':' + 부서 + pProxy;
 			        	jo.count = i;
 			        	jo.deptId = $(this).attr('deptId');	// 본부서,겸직부서
+			        	jo.jobId = ($(this).attr('jobId') == undefined) ? $(this).attr('title') : $(this).attr('jobId');
 			        	jo.proxy = proxy;
 			        	
 			        	formArray.push(jo);
@@ -567,7 +593,7 @@
 						<input type="text" name="TextName_1" id="TextName_1" Width="120" value="${textName}" deptId="" userId="" ReadOnly />
 						<a class="imgbtn imgbck" style="vertical-align:middle"><span onclick="gIsAppoint = '1';select_person('', 'TextName_1')"><spring:message code='ezPersonal.t32'/></span></a> 
 		                <a class="imgbtn imgbck" style="vertical-align:middle"><span onClick="gIsAppoint = '2';document.getElementById('TextName_1').value=''; $('#TextName_1').attr('check','clear'); $('#TextName_${status.count+1}').attr('deptId', ''); $('#TextName_${status.count+1}').attr('userId', ''); $('#TR_Select_${status.count+1}').show();"><spring:message code='ezPersonal.t33'/></span></a>
-		                ${userInfo.deptName}
+		                ${userInfo.deptName} [${userInfo.title}]
 					</td>
 				</tr>
 				<%-- <c:if test="${fn:indexOf(fn:toLowerCase(userInfo.rollInfo), 'a=1;') > -1}">
@@ -609,7 +635,7 @@
 								<OPTION value="b11"><spring:message code='ezPersonal.b11'/></OPTION>
 								<OPTION value="b12"><spring:message code='ezPersonal.b12'/></OPTION>
 							</SELECT>
-							${userInfo.deptName}
+							${userInfo.deptName} [${userInfo.title}]
 						</td>
 					</tr>
 				</c:if>
@@ -632,18 +658,18 @@
 								<OPTION value="b11"><spring:message code='ezPersonal.b11'/></OPTION>
 								<OPTION value="b12"><spring:message code='ezPersonal.b12'/></OPTION>
 							</SELECT>
-							${userInfo.deptName}
+							${userInfo.deptName} [${userInfo.title}]
 						</td>
 					</tr>
 				</c:if>
 				<c:forEach var="addJob" items="${addJobList}" varStatus="status">
-					<tr id="TR_Appoint_${status.count+1}" deptId="${addJob.department}">
+					<tr id="TR_Appoint_${status.count+1}" deptId="${addJob.department}" jobId="${addJob.jobID}">
 						<th><spring:message code='ezPersonal.t31'/></th>
 						<td>
 							<input type="text" name="TextName_${status.count+1}" id="TextName_${status.count+1}" Width="120" value="" deptId="" userId="" ReadOnly />
 							<a class="imgbtn imgbck" style="vertical-align:middle"><span onclick="gIsAppoint = '1';select_person('', 'TextName_${status.count+1}');"><spring:message code='ezPersonal.t32'/></span></a> 
 			                <a class="imgbtn imgbck" style="vertical-align:middle"><span onClick="gIsAppoint = '2';document.getElementById('TextName_${status.count+1}').value=''; $('#TextName_${status.count+1}').attr('check','clear'); $('#TextName_${status.count+1}').attr('deptId', ''); $('#TextName_${status.count+1}').attr('userId', ''); $('#TR_Select_${status.count+1}').show();""><spring:message code='ezPersonal.t33'/></span></a>
-			                ${addJob.description}
+			                ${addJob.description} [${addJob.title}]
 						</td>
 					</tr>
 					<%-- <c:if test="${fn:indexOf(fn:toLowerCase(userInfo.rollInfo), 'a=1;') > -1}">
@@ -685,7 +711,7 @@
 									<OPTION value="b11"><spring:message code='ezPersonal.b11'/></OPTION>
 									<OPTION value="b12"><spring:message code='ezPersonal.b12'/></OPTION>
 								</SELECT>
-								${addJob.description}
+								${addJob.description} [${addJob.title}]
 							</td>
 						</tr>
 					</c:if>
@@ -708,7 +734,7 @@
 									<OPTION value="b11"><spring:message code='ezPersonal.b11'/></OPTION>
 									<OPTION value="b12"><spring:message code='ezPersonal.b12'/></OPTION>
 								</SELECT>
-								${addJob.description}
+								${addJob.description} [${addJob.title}]
 							</td>
 						</tr>
 					</c:if>

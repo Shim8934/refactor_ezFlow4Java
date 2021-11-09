@@ -21492,6 +21492,25 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 //			} else {
 //				deptIDs += "'" + deptID + "'";
 //			}
+			
+			/* 중복겸직사용 > 중복부서에 부재자설정시 설정된 부재자 결재할문서에 문서 중복제거 */
+			/*for(int i=0; i<proxyList.size(); i++) {
+				String proxyListId = proxyList.get(i).getId();
+				String proxyListDept = proxyList.get(i).getDept();
+				
+				for(int j=0; j<proxyList.size(); j++) {
+					String proxyListId2 = proxyList.get(j).getId();
+					String proxyListDept2 = proxyList.get(j).getDept();
+					
+					if(i!=j) {
+						if(proxyListId.equals(proxyListId2) && proxyListDept.equals(proxyListDept2)) {
+							proxyList.remove(j);
+							--i;
+							--j;
+						}
+					}
+				}
+			}*/
 		}
 		
 		String basicOrder = getCode2Name("A18", "001", companyID, userLang, tenantID);

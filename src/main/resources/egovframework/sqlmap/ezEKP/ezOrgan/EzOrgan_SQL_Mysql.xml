@@ -2293,6 +2293,9 @@
 			AND
 				DEPTID = #dept#
 		]]>
+		<isNotEmpty property="jobId">
+			AND JOBID = #jobId#
+		</isNotEmpty>
 	</update>
 	
 	<select id="EzOrganDAO.getAddJobProxy" parameterClass="Map" resultClass="String">
