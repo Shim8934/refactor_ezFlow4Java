@@ -305,6 +305,10 @@
 											VAPRDOINGDOCLIST  
 										WHERE 
 											APRMEMBERID = #proxyList[].id#
+										AND
+											APRMEMBERDEPTID = #proxyList[].dept#
+                						AND
+                							APRMEMBERJOBTITLE = #proxyList[].title#
 										<![CDATA[
 										AND 
 											APRTYPE <> '015'
@@ -345,6 +349,8 @@
 												APRMEMBERID = #proxyList[].id#
 											AND
 												aprmemberdeptid = #proxyList[].dept#
+                							AND
+                								APRMEMBERJOBTITLE = #proxyList[].title#
 											AND
 												(aprstate = '002' OR aprstate = '005' OR aprstate = '000')
 											AND
@@ -384,6 +390,10 @@
 											VENDCHAMJODOCINFO 
 										WHERE 
 											APRMEMBERID = #proxyList[].id#
+										AND
+											APRMEMBERDEPTID = #proxyList[].dept#
+                						AND
+                							APRMEMBERJOBTITLE = #proxyList[].title#
 										AND 
 											APRTYPE <> '015'
 										AND
@@ -423,6 +433,8 @@
 															aprmemberid = #proxyList[].id#
 														AND
 															aprmemberdeptid = #proxyList[].dept#
+                										AND
+                											APRMEMBERJOBTITLE = #proxyList[].title#
 														AND	
 															APRTYPE = '007'
 														AND 
@@ -13152,6 +13164,10 @@
 				VAPRDOINGDOCLIST  
 			WHERE 
 				APRMEMBERID = #proxyList[].id#
+			AND
+				APRMEMBERDEPTID = #proxyList[].dept#
+            AND
+            	APRMEMBERJOBTITLE = #proxyList[].title#
 			<![CDATA[
 			AND 
 				APRTYPE <> '015'
@@ -13190,7 +13206,10 @@
 					tbl_aprlineinfo
 				WHERE
 					APRMEMBERID = #proxyList[].id#
-                AND APRMEMBERDEPTID = #proxyList[].dept#
+                AND
+                	APRMEMBERDEPTID = #proxyList[].dept#
+            	AND
+            		APRMEMBERJOBTITLE = #proxyList[].title#
                 AND
 								(aprstate = '002' OR aprstate = '005' OR aprstate = '000')
 							AND
@@ -13229,6 +13248,10 @@
 				VENDCHAMJODOCINFO 
 			WHERE 
 				APRMEMBERID = #proxyList[].id#
+			AND
+				APRMEMBERDEPTID = #proxyList[].dept#
+            AND
+            	APRMEMBERJOBTITLE = #proxyList[].title#
 			AND 
 				APRTYPE <> '015'
 			AND
@@ -13268,6 +13291,8 @@
 								APRMEMBERID = #proxyList[].id#
 							AND
 								APRMEMBERDEPTID = #proxyList[].dept#
+            				AND
+            					APRMEMBERJOBTITLE = #proxyList[].title#
 							AND
 								APRTYPE = '007'
 							AND
@@ -31292,7 +31317,8 @@
 		  SELECT 
 		  		cn as id,
 		  		department as dept,
-		  		extensionattribute5 as bujaeInfo
+		  		extensionattribute5 as bujaeInfo,
+		  		title
 		  FROM 
 		  		TBL_USERMASTER
 		  WHERE 
@@ -31304,7 +31330,8 @@
 		  SELECT 
 		  		cn as id,
 		  		deptid as dept,
-		  		proxy as bujaeInfo
+		  		proxy as bujaeInfo,
+		  		title
 		  FROM 
 		  		TBL_ADDJOBMASTER
 		  WHERE 
@@ -32805,6 +32832,11 @@
 								<iterate property="proxyList" open="(" close=")" conjunction=",">
 									#proxyList[].dept#
 								</iterate>
+							AND
+								L.aprmemberjobtitle IN
+								<iterate property="proxyList" open="(" close=")" conjunction=",">
+									#proxyList[].title#
+								</iterate>
 							)
 					</isNotEmpty>
 				)
@@ -32868,6 +32900,11 @@
 								L.APRMEMBERDEPTID IN
 								<iterate property="proxyList" open="(" close=")" conjunction=",">
 									#proxyList[].dept#
+								</iterate>
+							AND
+								L.aprmemberjobtitle IN
+								<iterate property="proxyList" open="(" close=")" conjunction=",">
+									#proxyList[].title#
 								</iterate>
 							)
 					</isNotEmpty>
@@ -33521,6 +33558,11 @@
 								<iterate property="proxyList" open="(" close=")" conjunction=",">
 									#proxyList[].dept#
 								</iterate>
+							AND
+								L.aprmemberjobtitle IN
+								<iterate property="proxyList" open="(" close=")" conjunction=",">
+									#proxyList[].title#
+								</iterate>
 							)
 					</isNotEmpty>
 				)
@@ -33584,6 +33626,11 @@
 								L.APRMEMBERDEPTID IN
 								<iterate property="proxyList" open="(" close=")" conjunction=",">
 									#proxyList[].dept#
+								</iterate>
+							AND
+								L.aprmemberjobtitle IN
+								<iterate property="proxyList" open="(" close=")" conjunction=",">
+									#proxyList[].title#
 								</iterate>
 							)
 					</isNotEmpty>

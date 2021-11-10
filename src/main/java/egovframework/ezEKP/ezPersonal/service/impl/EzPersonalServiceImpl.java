@@ -738,7 +738,7 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 				result = ezOrganService.updateProperty(userInfo.getId(), "extensionAttribute5", jo.get("proxy").toString(), pClass, userInfo.getTenantId());
 			} else {
 				jo = (JSONObject)ja.get(i);
-				result = ezOrganService.updateAddJobProxy(userInfo.getId(), jo.get("proxy").toString(), userInfo.getTenantId(), jo.get("deptId").toString());
+				result = ezOrganService.updateAddJobProxy(userInfo.getId(), jo.get("proxy").toString(), userInfo.getTenantId(), jo.get("deptId").toString(), jo.get("jobId").toString());
 			}
 		}
 		

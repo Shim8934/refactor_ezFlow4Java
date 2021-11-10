@@ -106,4 +106,6 @@ public interface EzOrganService {
 	
 	/* 2020-10-22 홍승비 - 전달한 필드(칼럼)에 대응하는 값을 TBL_DEPTMASTER 테이블에서 가져오는 메서드 */
 	public String getPropertyValueForDept(String fieldName, String deptID, int tenantID) throws Exception;
+
+	public String updateAddJobProxy(String userID, String proxyInfo, int tenantID, String dept, String jobId) throws Exception;
 }
