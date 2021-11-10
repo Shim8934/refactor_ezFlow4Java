@@ -1178,9 +1178,10 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	    	
 	        /*ezOrganAdminDao.deleteDBDataForJMocha(map);*/
      
-	        ezOrganAdminDao.deleteDBData_D1(map);
-	        ezOrganAdminDao.deleteDBData_D4(map);
-	        ezOrganAdminDao.deleteDBData_D5(map);
+	        ezOrganAdminDao.deleteDBData_D1(map); // TBL_USERMASTER
+	        ezOrganAdminDao.deleteDBData_D4(map); // TBL_ADDJOBMASTER
+	        ezOrganAdminDao.deleteDBData_D5(map); // TBL_USERMASTER_RETIRE
+	        ezOrganAdminDao.deleteDBData_D6(map); // 2021-11-10 이사라 : TBL_USER_CONFIG
 	        
 		    /**
 		     * Active Directory

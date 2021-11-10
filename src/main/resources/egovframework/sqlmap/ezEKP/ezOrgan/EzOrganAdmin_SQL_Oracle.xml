@@ -268,6 +268,18 @@
             	TENANT_ID = #v_TENANT_ID#	
 		]]>
 	</delete>
+	
+	<!-- 2021-11-10 이사라 :  user 계정 삭제 시 TBL_USER_CONFIG에서 user 관련 정보 일괄삭제  -->
+	<delete id="EzOrganAdminDAO.deleteDBData_D6" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_USER_CONFIG
+            WHERE
+            	USER_ID = #v_CN#
+            AND
+            	TENANT_ID = #v_TENANT_ID#
+		]]>
+	</delete>
 		
 	<!-- <procedure id="EzOrganAdminDAO.moveDBData" parameterClass="Map">
 		<![CDATA[
