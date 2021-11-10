@@ -240,11 +240,19 @@
               			WHERE
               				EXTENSIONATTRIBUTE1 = #v_CN#
         ]]>
-              			<isEmpty property="isOrgan">
-              				<![CDATA[
-		              			AND
-		              				EXTENSIONATTRIBUTE2 <> CN
-		              		]]>
+        				<isNotEmpty property="isCompanyTree">
+              				<![CDATA[ 
+		              			 AND 
+		              			 	EXTENSIONATTRIBUTE2 = CN
+		              		]]> 
+              			</isNotEmpty>
+              			<isEmpty property="isCompanyTree">
+	              			<isEmpty property="isOrgan">
+	              				<![CDATA[
+			              			AND
+			              				EXTENSIONATTRIBUTE2 <> CN
+			              		]]>
+	              			</isEmpty>
               			</isEmpty>
               			
               			<isEmpty property="displayTrashDept">
@@ -1056,6 +1064,12 @@
 		       AND
 		       		TENANT_ID = #v_TENANT_ID#		
 			]]>
+			<isNotEmpty property="isCompanyTree">
+   				<![CDATA[
+      			 AND 
+      			 	EXTENSIONATTRIBUTE2 = CN
+      			]]>	
+   			</isNotEmpty>
 		</isNotEqual>
 	</select>
 

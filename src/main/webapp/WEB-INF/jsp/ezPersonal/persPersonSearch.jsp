@@ -41,9 +41,11 @@
 	    	var strLang2 = "<spring:message code='ezPersonal.t1003'/>";
 	    	var strLang39 = "<spring:message code='ezPersonal.t10000'/>";
 	    	var strLang40 = "<spring:message code='ezPersonal.t10001'/>";
-	    	
 	    	/* 2020-11-09 홍승비 - XSS 처리를 위한 c:out과 역 인코딩 추가 */
 	    	var strSearch = ConvMakeXMLString("<c:out value='${searchString}'/>");
+	    	var useShowAllCompanies = "${useShowAllCompanies}";
+	    	var selTab = "";
+	        var selSpan = "";
 
 	    	var CurPage = "1";
 
@@ -63,23 +65,71 @@
 		            window.resizeTo(770, 595);
 	        	}
 	        	ListTypeChangeIcon();
-	        	try {
+	        	
+	        	orgTabButton_onClick();
+	        	// orgTreeViewListSet();
+		        ChangeListView_onClick(getOrganListType());
+	    	}  
+
+	     	function tabover(tabObj) {
+	        	tabObj.setAttribute("class", "tabon");
+	        }
+	        function tabout(tabObj) {
+	        	if (tabObj.id != selSpan) {
+	        		tabObj.setAttribute("class", "");
+	        	}
+	        }
+	        
+	     	function methodForTabAction(target) {
+            	var tabIds = ["orgTabButton", "orgJobMasterTabButton1", "orgJobMasterTabButton2"]
+            	var targetTab = tabIds[target-1];
+            	
+            	$.each(tabIds, function(i,d) {
+        			var setVal = targetTab == d ? "tabon" : "";
+        			document.getElementById(d).children[0].className = setVal;
+        		})
+            }
+	     	
+	     	function orgTabButton_onClick() {
+		    	methodForTabAction(1);
+		        selTab = "orglistView";
+		        selSpan = "orgSpan";
+		        
+		        $(".txtlist_DeptTD").css("display", "none");
+		        $(".txtlist_DeptTD").css("padding-left", "4px");
+		        $(".mainlist tr td:nth-child(2)").css("padding-left", "15px");
+		        
+		        clearOrgTab("org");
+		        m_selectedTree = orglistView;
+		        orgTreeViewListSet();
+		    }
+	     	
+	     	function orgJobMasterTabButton_onClick(tabType) { // 조직도(직위, 직책)
+	        	var tabNum = tabType == 1 ? 2 : 3; // 1=직위, 2=직책
+	        	methodForTabAction(tabNum);
+	        	selTab = "orgJobMstListView" + tabType;
+		        selSpan = "orgJobMstSpan" + tabType;
+		        
+		        $(".txtlist_DeptTD").css("display", "table-cell");
+		        $(".txtlist_DeptTD").css("padding-left", "15px");
+		        $(".mainlist tr td:nth-child(2)").css("padding-left", "4px");
+		        
+		        clearOrgTab("orgJobMst");
+		        m_selectedTree = orglistView;
+		        orgJobMasterListSet(tabType);
+	        }
+	    	
+	     	function orgTreeViewListSet() {
+	     		try {
+	     			var topData = useShowAllCompanies == "YES" ? "Top/organ" : "Top";
+	     			
 		            var xmlpara = createXmlDom();
 	            	var xmlTree = createXmlDom();
 	            	var xmlHTTP = createXMLHttpRequest();
 	            	var objNode;
 	            	createNodeInsert(xmlpara, objNode, "DATA");
 	            	createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${userInfo.deptID}");	            	
-	            	
-	                <c:choose>
-	                <c:when test="${useShowAllCompanies eq 'YES'}">
-	                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top/organ");
-	                </c:when>
-	                <c:otherwise>
-	                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
-	                </c:otherwise>
-	                </c:choose>
-	            	
+	                createNodeAndInsertText(xmlpara, objNode, "TOPID", topData);
 	            	createNodeAndInsertText(xmlpara, objNode, "PROP", "");
 	            	xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	            	xmlHTTP.send(xmlpara);
@@ -96,12 +146,10 @@
 	            	treeView.DataBind("TreeView");
 					
 		        } catch (ErrMsg) {
-	            	alert(" TreeViewinitialize : " + ErrMsg.description);
+	            	alert("TreeViewinitialize : " + ErrMsg.description);
 	        	}
-		        
-		        ChangeListView_onClick(getOrganListType());
-	    	}  
-	    	
+	     	} 
+	     	 
 	    	function RequestData(pNodeID, pTreeID) {
 		        var TreeIdx = pNodeID;
 		        var treeNode = new TreeNode();
@@ -541,6 +589,17 @@
 	                        M_TR_TD3.style.textOverflow = "ellipsis";
 	                        M_TR_TD3.style.whiteSpace = "nowrap";
 
+							if (selTab.indexOf("orgJobMstListView") > -1) {
+								var M_TR_DEPT_TD = document.createElement("TD");
+								M_TR_DEPT_TD.style.overflow = "hidden";
+								M_TR_DEPT_TD.style.textOverflow = "ellipsis";
+								M_TR_DEPT_TD.style.whiteSpace = "nowrap";
+								M_TR_DEPT_TD.style.width = "110px";
+								M_TR_DEPT_TD.innerHTML = M_TR.getAttribute("_DATA5");
+								
+			                    M_TR.appendChild(M_TR_DEPT_TD);
+							}
+	                	    
 		                    M_TR.appendChild(M_TR_TD1);
 	                    	M_TR.appendChild(M_TR_TD2);
 	                    	M_TR.appendChild(M_TR_TD3);
@@ -956,7 +1015,11 @@
 	            	if(issearch) {
 		                search_click();
 	            	} else {
-		                displayUserList();
+	            		 if (selTab.indexOf("orgJobMstListView") > -1) {
+                        	orgJobMstUserList();
+                        } else {
+	                    	displayUserList();
+                        }
 	            	}
 	        	}
 	    	}
@@ -1051,6 +1114,172 @@
 					}
 				}
 			</c:if>
+			
+			function firefoxinnerText(obj)
+			{
+			    if (navigator.userAgent.indexOf("Firefox")>-1) {
+		             var val = obj.innerHTML;
+		             val = val.replace(/&nbsp;/ig," ");
+		             val = val.replace(/<br>/ig,"\n");
+		             val = val.replace(/<br[^>]+>/ig,"\n");
+		             val = val.replace(/<[^>]+>/g,"");
+		         }
+		         else
+		         {
+		            val = obj.innerText;
+		         }
+		         return val;
+			}
+			
+			function orgJobMasterListSet(type) {
+	        	try {
+	        		var pType = type == 1 ? "POS" : "TIT";
+	        		
+	                var xmlpara = createXmlDom();
+	                var xmlTree = createXmlDom();
+	                var xmlHTTP = createXMLHttpRequest();
+	                var objNode;
+	                var topID = useShowAllCompanies == "YES" ? "Top/organ" : "Top";
+	                
+	                createNodeInsert(xmlpara, objNode, "DATA");
+	                createNodeAndInsertText(xmlpara, objNode, "COMID", "");
+	                createNodeAndInsertText(xmlpara, objNode, "TOPID", topID);
+	                createNodeAndInsertText(xmlpara, objNode, "PROP", "mail");
+	                createNodeAndInsertText(xmlpara, objNode, "TYPE", pType);
+	                
+	                xmlHTTP.open("POST", "/ezOrgan/getCompanyJobTreeInfo.do", false);
+	                xmlHTTP.send(xmlpara);
+	                xmlTree = loadXMLString(xmlHTTP.responseText);
+	                var treeXML = loadXMLFile("/xml/common/organtree_config3.xml");
+
+	                var treeView = new TreeView();
+	                treeView.SetConfig(treeXML);
+	                treeView.SetID("FromTreeView");
+	                treeView.SetUseAgency(true);
+	                treeView.SetRequestData("orgJobMstCompanyClick"); 
+	                treeView.SetNodeClick("orgJobMstClick");
+	                treeView.DataSource(xmlTree);
+	                treeView.DataBind("TreeView");
+	            }
+	            catch (ErrMsg) {
+	                alert("TreeViewinitialize : " + ErrMsg.description);
+	            }
+	        }
+	        
+	        function orgJobMstClick(i) {
+	        	CurPage = "1";
+	        	var thisNode = document.getElementById(i);
+	        	var thisNode_jobChk = thisNode.getAttribute("isjob");
+	        	listContentArry = new Array();
+	        
+	        	if (thisNode_jobChk != null && thisNode_jobChk) {
+	        		orgJobMstUserList();
+	        	} else { // company
+		        	document.getElementById("SelectDeptNM").innerHTML = "";
+	                pListXML_Info = "";
+	                DisplayUserImageList();
+	        	}
+	        }
+	        
+	        function orgJobMstUserList() {
+	        	var treeView = new TreeView();
+	            treeView.LoadFromID("FromTreeView");
+	            var treeViewSelectNode = treeView.GetSelectNode();
+	            
+        		var jobId = treeViewSelectNode.GetNodeData("cn");
+        		var comId = treeViewSelectNode.GetNodeData("comid");
+        		var jobType = treeViewSelectNode.GetNodeData("jobtype");
+        		var jobName = treeViewSelectNode.GetNodeData("value");
+        		
+				$.ajax({
+					type : "POST",
+					url : "/ezOrgan/getJobMasterMemberList.do",
+					dataType : "text",
+					data : {
+						type : jobType,
+						jobID : jobId,
+						pageNum : CurPage,
+						cell : "company;description;displayName;title;telephoneNumber", 
+						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department",
+						searchType : "",
+						searchValue : "",
+						comID : comId
+					}, success : function(result) {
+						pListXML_Info = loadXMLString(result);
+		        		var totalCnt = pListXML_Info.getElementsByTagName("TOTALCOUNT")[0].textContent;
+		        		
+						document.getElementById("SelectDeptNM").innerHTML 
+							= "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px; \" >"
+			            	+ "<span id='spn_deptName' title='" + jobName + "'>" + jobName + "</span>"
+			            	+ "<span id='countInfo'>&nbsp;<span class='countColor'> " + totalCnt + "</span></span>";
+						
+		                pSeach = false;
+		                DisplayUserImageList();
+		                makePageSelPage();
+					}, error : function (error) {
+						alert("error : " + error);
+					}
+				});
+	        }
+	       
+	        function orgJobMstCompanyClick(pNodeID, pTreeID) {
+				var TreeIdx = pNodeID;
+	            var treeNode = new TreeNode();
+	            treeNode.LoadFromID(TreeIdx);
+	            var deptID = treeNode.GetNodeData("CN");
+	            GetCompanySubTreeInfo(deptID, TreeIdx);
+	        }
+	        
+	        function GetCompanySubTreeInfo(comID, TreeIdx) {
+	        	var jobMstType = selTab == "orgJobMstListView1" ? "POS" : "TIT";
+	        	
+	            var xmlHTTP = createXMLHttpRequest();
+	            var xmlRtn = createXmlDom();
+	            var xmlpara = createXmlDom();
+	            var objNode;
+	            createNodeInsert(xmlpara, objNode, "DATA");
+	            createNodeAndInsertText(xmlpara, objNode, "COMID", comID);
+	            createNodeAndInsertText(xmlpara, objNode, "TYPE", jobMstType);
+	            xmlHTTP.open("POST", "/ezOrgan/getJobMasterTreeInfo.do", false);
+	            xmlHTTP.send(xmlpara);
+	            xmlRtn = loadXMLString(xmlHTTP.responseText);
+	            if (SelectNodes(xmlRtn, "NODES/NODE/VALUE").length > 0) {
+	                if (CrossYN()) {
+	                    xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].appendChild(xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].getElementsByTagName("VALUE")[0]);
+	                }
+	                else {
+	                    xmlRtn.selectNodes("NODES/NODE")[0].appendChild(xmlRtn.selectNodes("NODES/NODE/VALUE")[0]);
+	                }
+	            }
+	            var treeView = new TreeView();
+	            treeView.LoadFromID("FromTreeView");
+	            treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
+	        }
+	        
+	        function clearOrgTab(type) { // org or orgJobMst
+	        	document.getElementById('TreeView').innerHTML = "";
+	        	document.getElementById("SelectDeptNM").innerHTML = "";
+                
+                document.getElementById("keyword").value = "";
+                issearch = false;
+                
+                var hide_orgJobMstSearchOpt = [
+                    {"name":"title", "usedefault":"1", "msg":"<spring:message code='ezAddress.t359'/>"},
+                	{"name":"description", "usedefault":"1", "msg":"<spring:message code='ezAddress.t54'/>"},
+                ];
+                var setDisplay = type == "org" ? "" : "none";
+                document.getElementById("search_deptDiv").style.display = setDisplay;  
+                
+                $.each(hide_orgJobMstSearchOpt, function(i,e) {
+                	var searchOpt = $("#search_type option[value='"+e.name+"']");
+               		if (type == "org" && searchOpt.length < 1) {
+                   		var tempOpt = "<option value="+e.name+" usedefault="+e.usedefault+">"+e.msg+"</option>";
+                   		$(tempOpt).insertAfter("#search_type option[value='displayname']");
+                   	} else if (type == "orgJobMst") {
+                   		searchOpt.remove();
+                   	}
+                });
+	        }
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden;">
@@ -1069,12 +1298,24 @@
       			selToggleList(document.getElementById("menu"), "ul", "li", "0");
   			</script>
   			<div style="width: 100%;">
-        	<div class="portlet_tabpart03" style="background-color:#f8f8fa; border: 1px solid #dedede; border-bottom: 0px; padding-top: 6px;">
+  			<!-- tab -->
+  			<div class="portlet_tabpart01_top" id="tab1" style="margin-top:25px">
+       			<p id="orgTabButton" src="/images/tab_org.gif">
+       				<span id="orgSpan" onclick="orgTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)" class="tabon">조직도</span>
+       			</p>
+       			<p id="orgJobMasterTabButton1">
+       				<span id="orgJobMstSpan1" onclick="orgJobMasterTabButton_onClick(1)" onmouseover="tabover(this)" onmouseout="tabout(this)" class="">조직도(직위)</span>
+       			</p>
+       			<p id="orgJobMasterTabButton2">
+       				<span id="orgJobMstSpan2" onclick="orgJobMasterTabButton_onClick(2)" onmouseover="tabover(this)" onmouseout="tabout(this)" class="">조직도(직책)</span>
+       			</p>
+       		</div>
+        	<div class="portlet_tabpart03" style="margin-top:0; background-color:#f8f8fa; border: 1px solid #dedede; border-bottom: 0px; padding-top: 6px;">
 	            <div class="portlet_tabpart03_top" id="tab1" style="border-bottom: 0px; height: 28px;">
     	           <table style="width:100%;">
 						<tr>
 	                        <td>
-    	                        <div style="margin-left:7px;">
+    	                        <div id="search_deptDiv" style="margin-left:7px;">
         		                    <input id="deptkeyword" value="" onKeyPress="onkey_down(event)" style="width:120px; height: 22px;">
                 			            <a class="imgbtn"><span onClick="deptsearch_click()"><spring:message code='ezPersonal.t71'/></span></a>
 	                            </div>
@@ -1110,7 +1351,7 @@
           			<div style="width:298px;height:80vh;overflow-x:auto;overflow-y:auto;" id="TreeView" ></div>
       			</td>
       			<td></td>
-      			<td class="listview" style="min-width:58.5%;">
+      			<td class="listview" style="min-width:58.5%;" id="orglistView">
           			<table style="width:100%;margin-top:-1px;"  class="popup_mainlist" > 
               			<tr>
                   			<th style="white-space:normal;background-color: white;border-top:0px solid #ddd;border-bottom:1px solid #eaeaea">
@@ -1125,7 +1366,8 @@
           			<div style="vertical-align:top;height:67vh;overflow:auto;width:100%;" id="txtlist_Layer">   
           				<table style="width:100%;border:1px solid #ddd;display:none;" id="txtlist_table" class="mainlist" > 
               				<tr>
-                  				<td style="width:150px;color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezPersonal.t304'/></td>
+              					<td style="width:110px;color:#333;background-color: #f8f8fa" class="td_gray txtlist_DeptTD"><spring:message code='ezPersonal.t305'/></td>
+                  				<td style="width:110px;color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezPersonal.t304'/></td>
                   				<td style="width:80px;color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezPersonal.t69'/></td>
                   				<td class="td_gray" style="color:#333;background-color: #f8f8fa"><spring:message code='ezPersonal.t177'/></td>
               				</tr>

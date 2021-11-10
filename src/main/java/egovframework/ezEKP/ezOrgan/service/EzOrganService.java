@@ -108,4 +108,11 @@ public interface EzOrganService {
 	public String getPropertyValueForDept(String fieldName, String deptID, int tenantID) throws Exception;
 
 	public String updateAddJobProxy(String userID, String proxyInfo, int tenantID, String dept, String jobId) throws Exception;
+
+	public String getCompanyJobTreeInfo(String type, String pComID, String pTopID, String pPropList, String primary, int tenantID) throws Exception;
+	
+	public String getJobMasterTreeInfo(String type, String pComID, String lang, int tenantID) throws Exception;
+	
+	public String getJobMasterMemberList(String type, String jobID, String celllist, String proplist, String pageSize, String pageNum, String searchType, String searchValue, String primary, String companyID, int tenantID) throws Exception;
+
 }

@@ -29,9 +29,11 @@ import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -54,6 +56,9 @@ public class EzOrganServiceImpl implements EzOrganService {
     
 	@Resource(name = "EzCommonService")
 	private EzCommonService ezCommonService;
+
+	@Autowired
+	private EzOrganAdminDAO ezOrganAdminDao;
 	
 	@Autowired
 	private Properties globals;
@@ -517,7 +522,6 @@ public class EzOrganServiceImpl implements EzOrganService {
         		Object userVO = ezOrganDAO.getTBLDeptMaster(map1);
                 sb.append(commonUtil.getQueryResult(userVO));
             }
-            
             sb.append("</DATA>");
             
             String cn = obj.getCn();
@@ -2347,5 +2351,251 @@ public class EzOrganServiceImpl implements EzOrganService {
         logger.debug("getPropertyValueForDept ended.");
         
         return ezOrganDAO.getPropertyValue_S5(map);
+	}
+
+	public String getCompanyJobTreeInfo(String type, String pComID, String pTopID, String pPropList, String primary, int tenantID) throws Exception {
+	    logger.debug("getCompanyJobTreeInfo started.");
+	    logger.debug("type=" + type + ", pComID=" + pComID + ", pTopID=" + pTopID + ", pPropList=" + pPropList + ", primary=" + primary
+	    		+ ", tenantID=" + tenantID);
+	    
+	    String [] adminOrganChk = pTopID.split("/"); // 관리자 페이지  > 조직도, 겸직, 권한 관리에서 topId + "/organ" 붙임
+	    pTopID = (adminOrganChk.length > 1) ? adminOrganChk[0] : pTopID;
+	    pComID = (pComID.equals("")) ? pTopID : pComID; // pComID가 비어 있는 경우엔 Top ID로 처리한다.
+		
+		OrganDeptVO vo = null;
+		String prevDeptID = "";
+        String comInfo = "";
+        String comID = pComID;               
+        
+        do {
+        	// 회사의 자식 회사 목록을 가져온다.
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("v_CN", comID);
+			map.put("v_LANGDATA", primary);
+			map.put("v_TENANT_ID", tenantID);
+			map.put("isCompanyTree", "Y");
+			
+			List<OrganDeptVO> list = ezOrganDAO.getDeptTreeInfo(map); 
+        	String childNodeInfoStr = "";
+			
+			for (OrganDeptVO childObj : list) {
+				if (childObj.getType().equalsIgnoreCase("dept")) {
+					// 자식 회사의 상세 정보가져오기
+					Map<String, Object> map1 = new HashMap<String, Object>();	
+					map1.put("v_CN", childObj.getCn());
+					map1.put("v_LANGDATA", primary);
+					map1.put("v_TENANT_ID", tenantID);
+					map1.put("isCompanyTree", "Y");
+					
+					OrganDeptVO result = ezOrganDAO.getTBLDeptMaster(map1);
+					childNodeInfoStr += getCompanyJobTreeNodeInfo(result, pComID, prevDeptID, comInfo, pPropList, type, tenantID);
+				}
+			}
+			
+			// 현재 부서의 자식 부서들의 정보를 XML String으로 생성한다.
+			StringBuilder comlist = new StringBuilder("<NODES>");
+			comlist.append(childNodeInfoStr);
+			comlist.append("</NODES>");	
+	        comInfo = comlist.toString();	
+	        prevDeptID = comID;
+	        logger.debug("prevDeptID=" + prevDeptID);
+				        
+			// 지정된 부서 자체의 상세 정보를 가지고 온다
+	        Map<String, Object> map2 = new HashMap<String, Object>();				
+			map2.put("v_CN", comID);
+			map2.put("v_LANGDATA", primary);
+			map2.put("v_TENANT_ID", tenantID);
+	        vo = ezOrganDAO.getTBLDeptMaster(map2);
+	        
+	        // 지정된 부서의 부모 부서 ID를 구한다.
+	        if (!comID.equalsIgnoreCase(pTopID)) {
+	        	if (comID.equalsIgnoreCase("top")) {
+	        		comID = "";
+	        	} else {
+	        		comID = getPropertyValue(comID, "extensionAttribute1", tenantID);         
+	        	}
+	        }
+	        logger.debug("comID=" + comID);
+
+	        // 부모 부서가 있는 경우 부모 부서로 이동하여 처리를 반복한다. 
+        } while (!prevDeptID.equalsIgnoreCase(pTopID) && !comID.equals(""));
+		
+        comInfo = "<TREEVIEWDATA>" + getTreeNodeInfo(vo, comID, prevDeptID, comInfo, pPropList, "") + "</TREEVIEWDATA>";
+        
+        logger.debug("comInfo=" + comInfo);
+        logger.debug("getCompanyJobTreeInfo ended.");
+        
+        return comInfo;
+	}
+	
+	@Override
+	public String getJobMasterTreeInfo(String type, String companyID, String lang, int tenantID) throws Exception {
+		logger.debug("getJobMasterTreeInfo started.");
+	    logger.debug("type=" + type + ",companyID=" + companyID + ",lang=" + lang + ",tenantID=" + tenantID);
+	    
+	    String tenantDomain = ezCommonService.getTenantConfig("DomainName", tenantID);
+	    
+	    Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TYPE", type);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		List<OrganJobVO> list = ezOrganAdminDao.getTitleList(map);
+
+		StringBuilder jobInfo = new StringBuilder("<NODES>");
+
+		for (OrganJobVO obj : list) {
+			String objDisplayName = lang.equals("1") ? obj.getDisplayName() : obj.getDisplayName2();
+			String jobMailAttr = "__" + obj.getJobID() + "@" + tenantDomain;
+			
+			jobInfo.append("<NODE>");
+				jobInfo.append("<VALUE>" + commonUtil.cleanValue(objDisplayName) + "</VALUE>");
+				jobInfo.append("<CN>" + commonUtil.cleanValue(obj.getJobID()) + "</CN>");
+				jobInfo.append("<COMID>" + commonUtil.cleanValue(obj.getCompanyID()) + "</COMID>");
+				jobInfo.append("<JOBTYPE>" + commonUtil.cleanValue(type) + "</JOBTYPE>");
+				jobInfo.append("<MAIL>" + commonUtil.cleanValue(jobMailAttr) + "</MAIL>"); // __직위아이디@테넌트 도메인
+				jobInfo.append("<ISJOB>true</ISJOB>");
+				jobInfo.append("<ISLEAF>TRUE</ISLEAF>");
+			jobInfo.append("</NODE>");
+		}
+		jobInfo.append("</NODES>");   
+
+        logger.debug("jobInfo=" + jobInfo);
+        logger.debug("getJobMasterTreeInfo ended.");
+        
+		return jobInfo.toString();
+	}
+
+	@Override
+	public String getJobMasterMemberList(String type, String jobID, String celllist, String proplist, String pageSize, String pageNum, 
+			String searchType, String searchValue, String primary, String companyID, int tenantID) throws Exception {
+		logger.debug("getJobMasterMemberList started.");
+		
+		StringBuilder userInfo = new StringBuilder();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TYPE", type);
+		map.put("v_JOBID", jobID);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		if (!pageNum.equals("") && !pageSize.equals("")) {
+			int pPageSize = Integer.parseInt(pageSize);
+			int pPageNum = Integer.parseInt(pageNum);
+			pPageNum = (pPageNum * pPageSize) - pPageSize;
+			logger.debug("getJobMasterMemberList pageSize : " + pPageSize + " pageNum : " + pPageNum);
+			
+			map.put("v_PAGESIZE", pPageSize);
+			map.put("v_PAGENUM", pPageNum);
+		}
+		
+		if (!searchType.equals("") && !searchValue.equals("")) {
+			if (searchType.equalsIgnoreCase("displayname")) {
+				String v_subQuery = primary.equals("1") ? " DISPLAYNAME " : " DISPLAYNAME2 ";
+				v_subQuery += " LIKE '%" + searchValue.trim() + "%' ";
+				
+				if (globals.getProperty("Globals.DbType").equals("oracle")) {
+					v_subQuery += " ESCAPE '\\' ";
+				}
+
+				map.put("v_SUBQUERY", "WHERE " + v_subQuery);
+			}
+		}
+		
+		List<OrganUserVO> userList = ezOrganAdminDao.getTitleUserList(map);
+		int totalCnt = ezOrganAdminDao.getTitleUserListCnt(map);
+		String getMemberInfoStr = "";
+		
+		if (userList != null && userList.size() > 0) {
+			for (OrganUserVO obj : userList) {
+				String tmpUserType = obj.getUserType();
+				tmpUserType = (tmpUserType != null && tmpUserType.equalsIgnoreCase("addJob")) ? "Y" : "";
+				
+				Map<String, Object> userMap = new HashMap<String, Object>();
+				userMap.put("v_CN", obj.getCn());
+				userMap.put("v_DEPTCD", obj.getDepartment());
+				userMap.put("v_LANGDATA", primary);
+				userMap.put("v_TENANT_ID", tenantID);
+				userMap.put("IS_ADDJOB", tmpUserType);
+				userMap.put("JOBID", jobID);
+				Object userVO = ezOrganDAO.getTBLUserMaster(userMap);  
+				
+				StringBuilder userSb = new StringBuilder();
+				userSb.append("<DATA>");        		
+                userSb.append(commonUtil.getQueryResult(userVO));
+				userSb.append("</DATA>"); 
+				
+				getMemberInfoStr += getMemberInfo(userSb.toString(), celllist, proplist, obj.getCn(), "USER");
+			}
+		}
+		
+		userInfo.append("<LISTVIEWDATA><TOTALCOUNT>"+totalCnt+"</TOTALCOUNT><ROWS>");
+		userInfo.append(getMemberInfoStr);
+		userInfo.append("</ROWS></LISTVIEWDATA>");
+
+		logger.debug("getJobMasterMemberList ended.");
+		return userInfo.toString();	
+	};
+	
+	private String getCompanyJobTreeNodeInfo(OrganDeptVO vo, String pOrgComID, String pPrevDeptID, String pDeptInfo, String pPropList, String jobType, int tenantId) throws Exception {
+		logger.debug("getCompanyJobTreeNodeInfo started");
+		
+		StringBuilder nodeInfo = new StringBuilder();
+		nodeInfo.append("<NODE>");
+		nodeInfo.append("<VALUE>" + commonUtil.cleanValue(vo.getDeptNM()) + "</VALUE>");
+		nodeInfo.append("<CN>" + vo.getCn() + "</CN>");
+	
+		if (!pPropList.equals("")) {					
+			pPropList = convertAddandConvert("group", pPropList);
+			
+			String[] proplist = pPropList.split(";");						
+
+			// 속성 목록에 있는 각 속성과 이름이 동일한 필드의 값을 부서의 vo 객체로부터 가져와 XML String 형태로 구성한다.
+			for (String propname : proplist) {
+				Field field = vo.getClass().getDeclaredField(propname);
+            	field.setAccessible(true);					
+             	
+				nodeInfo.append("<" + propname.toUpperCase() + ">"
+				                    + (field.get(vo) != null ? commonUtil.cleanValue(String.valueOf(field.get(vo))) : "") 
+				                    + "</" + propname.toUpperCase() + ">");
+			}
+		}
+		
+		// 회사의 직위 또는 직책 개수를 구한다
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TYPE", jobType);
+		map.put("v_COMPANYID", vo.getCn());
+		map.put("v_TENANTID", tenantId);
+		int cnt = ezOrganAdminDao.getTitleListCnt(map);
+		String isLeafValue = cnt > 0 ? "FALSE" : "TRUE";
+		
+	    nodeInfo.append("<ISLEAF>" + isLeafValue + "</ISLEAF>");
+		
+		if (vo.getCn() != null) {
+			if (vo.getExtensionAttribute2() != null) {
+			    // 현재 처리하는 부서가 회사일 경우 회사 아이콘이 표시되도록 한다.
+				if (vo.getCn().equalsIgnoreCase(vo.getExtensionAttribute2())){
+			        nodeInfo.append("<SETNODEICONBYNAME>ICONCOMP</SETNODEICONBYNAME>");
+				}
+			}
+			
+			if (pPrevDeptID != null) {
+			    // 현재 부서의 직전에 처리했던 자식 부서의 XML String 정보를 추가한다. 
+			    if (vo.getCn().toLowerCase().equals(pPrevDeptID.toLowerCase()) && !pDeptInfo.equals("<NODES></NODES>")){
+			        nodeInfo.append("<EXPANDED>TRUE</EXPANDED>" + pDeptInfo);
+			    }
+			}
+			
+			if (pOrgComID != null) {
+			    // 사용자가 최초로 지정한 부서가 선택되도록 한다.
+			    if (vo.getCn().equalsIgnoreCase(pOrgComID)){
+			        nodeInfo.append("<SELECT/>");
+			    }
+			}
+		}
+	    nodeInfo.append("</NODE>");
+
+		logger.debug("getCompanyJobTreeNodeInfo ended");;
+	    return nodeInfo.toString();
 	}
 }
