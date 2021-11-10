@@ -4913,5 +4913,23 @@ public class EzCommunityController extends EgovFileMngUtil{
 		logger.debug("getClubConfirmType ended, result = " + result);
 		return result;
 	}
+	
+	/**
+	 * 2021-11-09 홍승비 - 커뮤니티 게시판에 자신이 읽지 않은 신규 게시물 존재 여부를 표출 (ajax)
+	 * */
+	@RequestMapping(value = "/ezCommunity/getIsNewItemExists.do", method = RequestMethod.GET)
+	@ResponseBody
+	public String getIsNewItemExists(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getIsNewItemExists started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String boardID = request.getParameter("boardID");
+		String result = "";
+		
+		result = ezCommunityService.getIsNewItemExists(boardID, userInfo.getId(), userInfo.getTenantId());
+		
+		logger.debug("getIsNewItemExists ended, result = " + result);
+		return result;
+	}
 }
 
