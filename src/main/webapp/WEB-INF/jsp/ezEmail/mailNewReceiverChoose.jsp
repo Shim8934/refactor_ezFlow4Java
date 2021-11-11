@@ -91,7 +91,7 @@
 	        var mailMaxReceiverCount = parseInt("${mailMaxReceiverCount}");
 	        var useUserDefinedDL = "${useUserDefinedDL}";
 	        var useShowAllCompanies = "${useShowAllCompanies}";
-	        var useOrgListCheckBox = false;
+	        var useOrgListCheckBox = JSON.parse("${useOrgListCheckBox}");
 	        var receiverListId = "";
 	        
 	        document.onselectstart = function () {
@@ -163,7 +163,7 @@
 	                document.body.style.UserSelect = 'none';
 	            }
 	            
-	            useOrgListCheckBox = type == "auto" ? false : true; // 도착한 메일전달 페이지에서는 체크박스 표시 안함
+	            useOrgListCheckBox = (!useOrgListCheckBox || type == "auto") ? false : true; // 도착한 메일전달 페이지에서는 체크박스 표시 안함
 	            if (useOrgListCheckBox) { // table header에 체크박스 td 추가
 	            	// ####### 조직도
 	            	var addTD = document.createElement("TD");
@@ -4295,6 +4295,11 @@
                 	{"name":"title", "usedefault":"1", "msg":"<spring:message code='ezEmail.t28' />"},
                 	{"name":"description", "usedefault":"1", "msg":"<spring:message code='ezEmail.t26' />"},
                 ];
+                
+                // 부서선택 버튼명 변경
+                var deptSelectBtnNm = selTab == "orglistView" ? "<spring:message code='ezEmail.t596' />" : selTab == "orgJobMstListView1" 
+                		? "<spring:message code='ezOrgan.ksaOrganList04' />" : "<spring:message code='ezOrgan.ksaOrganList05' />";
+                $("#dept_select > span").text(deptSelectBtnNm);
                 
                 $.each(hide_orgJobMstSearchOpt, function(i,e) {
                 	var searchOpt = $("#search_type option[value='"+e.name+"']");

@@ -712,6 +712,8 @@ public class EzAddressController{
 		String useOcs = config.getProperty("config.USE_OCS");
 		String mailMaxReceiverCount = ezCommonService.getTenantConfig("mailMaxReceiverCount", userInfo.getTenantId());
 		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+		String useOrgListCheckBox = ezCommonService.getTenantConfig("useOrgListCheckBox", userInfo.getTenantId()); // 조직도 체크박스 사용여부
+		useOrgListCheckBox = (useOrgListCheckBox != null && useOrgListCheckBox.equalsIgnoreCase("YES")) ? "true" : "false";
 		
 		if (mailMaxReceiverCount.equals("")) {
 			mailMaxReceiverCount = "200";
@@ -752,6 +754,7 @@ public class EzAddressController{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("mailMaxReceiverCount", mailMaxReceiverCount);
 		model.addAttribute("primaryLang", primaryLang);
+		model.addAttribute("useOrgListCheckBox", useOrgListCheckBox);
 		
 		String useShowAllCompanies = ezCommonService.getTenantConfig("useShowAllCompanies", userInfo.getTenantId());
 		model.addAttribute("useShowAllCompanies", useShowAllCompanies);
@@ -759,7 +762,7 @@ public class EzAddressController{
 		logger.debug("addressWriteGroup ended.");
 		logger.debug("addressId=" + addressId + ",folderId=" + folderId + ",ownerId=" + ownerId + ",folderType=" + folderType
 				 + ",changeKey=" + changeKey + ",userNM=" + userNM + ",userNM2=" + userNM2 + ",useOcs=" + useOcs
-				 + ",userInfo=" + userInfo + ",mailMaxReceiverCount=" + mailMaxReceiverCount);
+				 + ",userInfo=" + userInfo + ",mailMaxReceiverCount=" + mailMaxReceiverCount + ",useOrgListCheckBox=" + useOrgListCheckBox);
 		
 		return "ezAddress/addressWriteGroup";
 	}

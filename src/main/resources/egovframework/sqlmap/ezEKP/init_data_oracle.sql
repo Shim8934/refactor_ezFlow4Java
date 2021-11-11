@@ -275,6 +275,8 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useApprImageConvert', '전자결재 첨부파일 이미지 변환솔루션 사용', '0', '전자결재 첨부파일 이미지 변환솔루션 사용  여부  1: 사용 0: 사용안함 (default : 0)', TO_DATE('2021-06-15 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '전자결재');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'apprConvertExt', '이미지 변환솔루션 사용할 전자결재 첨부파일 확장자 모음', 'xlsx:xls:pdf:hwp:doc', '이미지 변환할 확장자 모음 (default : xlsx, xls, pdf, hwp, doc) / 구분자 : ', TO_DATE('2021-06-15 00:00:00','yyyy-mm-dd hh24:mi:ss'), '전자결재');
 
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useOrgListCheckBox', '조직도 리스트 체크박스 표시', 'NO', '조직도 리스트 체크박스 표시 (메일,주소록) (default:NO)', TO_DATE('2021-11-10 00:00:00','yyyy-mm-dd hh24:mi:ss'), '메일');
+
 INSERT INTO TBL_COMPANY_CONFIG (TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE) VALUES (0, 'Top', 'useCopyright', 'NO');
 INSERT INTO TBL_COMPANY_CONFIG (TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE) VALUES (0, 'Top', 'ExpirePassPeriod', '0');
 INSERT INTO TBL_COMPANY_CONFIG (TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE) VALUES (0, 'Top', 'MaxAllowedCountOfLoginFail', '0');

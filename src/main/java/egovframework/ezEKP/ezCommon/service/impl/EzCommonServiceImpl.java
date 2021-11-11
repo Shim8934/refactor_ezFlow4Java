@@ -1787,6 +1787,16 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("config_type","메일");
 			put("property","USEDELETEMAILBLOB"); // property_name
 		}});
+		test.put("useOrgListCheckBox", new HashMap<String, Object>(){{
+			put("tenantID", 0);
+			put("confName","useOrgListCheckBox"); // property_name
+			put("property_value","NO");
+			put("config_name","조직도 리스트 체크박스 표시");
+			put("regdate","2021-11-10 00:00:00");
+			put("description","조직도 리스트 체크박스 표시 (메일,주소록) (default:NO)");
+			put("config_type","메일");
+			put("property","USEORGLISTCHECKBOX"); // property_name
+		}});
 		
 		
 		Iterator<String> keys = test.keySet().iterator();

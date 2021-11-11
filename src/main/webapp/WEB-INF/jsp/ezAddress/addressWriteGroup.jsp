@@ -73,7 +73,7 @@
 	        var receiverCount = 0;
 	        var mailMaxReceiverCount = parseInt("${mailMaxReceiverCount}");
 	        var useShowAllCompanies = "${useShowAllCompanies}";
-	        var useOrgListCheckBox = true; // 사조그룹
+	        var useOrgListCheckBox = JSON.parse("${useOrgListCheckBox}"); // 사조그룹 
 	        
 	        document.onselectstart = function () { return false; };
 	        window.onload = function () {
