@@ -53,6 +53,15 @@
 		                    	<spring:message code='ezSystem.ksaPwPolicy25' />
 		                </td>
 		            </tr>
+		            <tr>
+		                <th><spring:message code='ezSystem.ls01' /></th>
+		                <td>
+		                    <select id="ProhUsePrevPwd" onchange="prohUsePrevPwd_onChange(this)">
+		                        <option value="yes"><spring:message code='ezSystem.hsb01' /></option>
+		                        <option value="no" checked><spring:message code='ezSystem.hsb02' /></option>
+		                    </select>
+		                </td>
+		            </tr>
 		        </tbody>
 		    </table>
 		</div>
@@ -168,6 +177,10 @@
         document.getElementById("UseMaxLoginFailCount").value = useMaxLoginCount_Val; // 암호 최대 오류 횟수 사용여부
         document.getElementById("MaxLoginFailCount").value = maxLoginFailNum_Val; // 암호 최대 오류 횟수 n번
         
+        var prohUsePrevPwd = data.useChkPrevPwd; // 2021-11-10 이사라 : 가장 최근 암호 사용 금지 여부
+        var prohUsePrevPwd_Val = prohUsePrevPwd == "NO" ? "no" : "yes";
+        document.getElementById("ProhUsePrevPwd").value = prohUsePrevPwd_Val;
+
         var usePwPatternPolicy = data.usePasswordPatternPolicy; // 암호 패턴 사용 여부
        	var usePwPatternPolicy_Val = usePwPatternPolicy == "NO" ? "notuse" : "use"; 
        	document.getElementById("UsePatternPolicy").value = usePwPatternPolicy_Val;
@@ -262,7 +275,8 @@
 	
 	function initContent() {
          UseMaxPeriod_onChange(document.getElementById("UseMaxPeriod"));
-         UseMaxLoginFailCount_onChange(document.getElementById("UseMaxLoginFailCount"))
+         UseMaxLoginFailCount_onChange(document.getElementById("UseMaxLoginFailCount"));
+         ProhUsePrevPwd_onChange(document.getElementById("ProhUsePrevPwd")); // 2021-11-10 이사라
          UsePatternPolicy_onChange(document.getElementById("UsePatternPolicy"));
          UseEngType_onChange(document.getElementById("UseEngType"));
 
@@ -401,6 +415,7 @@
 		
 		var setUsePeriod = document.getElementById("UseMaxPeriod").value == "use" ? document.getElementById("MaxPeriodNumber").value : "0";
 	    var setLoginFailCnt= document.getElementById("UseMaxLoginFailCount").value == "use" ? document.getElementById("MaxLoginFailCount").value : "0";
+	    var setProhUsePrevPwd = document.getElementById("ProhUsePrevPwd").value == "yes" ? "YES" : "NO"; // 2021-11-10 이사라
 		var setUsePatternPolicy = document.getElementById("UsePatternPolicy").value == "use" ? "YES" : "NO";
 		
 		var data = new Object();
@@ -408,6 +423,7 @@
 		data.setConfig = [
 		              	{name : "ExpirePassPeriod", value : setUsePeriod},
 		              	{name : "MaxAllowedCountOfLoginFail", value : setLoginFailCnt},
+		              	{name : "useChkPrevPwd", value : setProhUsePrevPwd}, // 2021-11-10 이사라
 		              	{name : "UsePasswordPatternPolicy", value : setUsePatternPolicy}
 		               ];
 		data.patternType = {"useEngType" : document.getElementById("UseEngType").value == "use" ? "Y" : "N",

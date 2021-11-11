@@ -1025,6 +1025,22 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		return ezCommonDAO.getTenantIdByDomainName(map);
 	}
 
+	/* 2021-11-01 이사라 : 가장최근에 사용했던 비밀번호 유효성 검사 */
+	public String getPrevPwd(int tenantID, String userID) throws Exception {
+		return getUserConfigInfo(tenantID, userID, "prevPwd");
+	}
+	
+	public int setPrevPwd(int tenantID, String userID, String propertyValue) throws Exception {
+		String proValue = getUserConfigInfo(tenantID, userID, "prevPwd");
+		
+		if (!proValue.isEmpty()) {
+			return updateUserConfigInfo(tenantID, userID, "prevPwd", propertyValue);
+		} else {
+			insertUserConfigInfo(tenantID, userID, "prevPwd", propertyValue);
+			return 0;
+		}
+	}
+	
 	@Override
 	public String getUserConfigInfo(int tenantID, String userID, String propertyName) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1788,7 +1804,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("property","USEDELETEMAILBLOB"); // property_name
 		}});
 		
-		
 		Iterator<String> keys = test.keySet().iterator();
         while( keys.hasNext() ){
         	try {
@@ -1846,6 +1861,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		list.add(new HashMap<String, String>(){{ put("name","ExpirePassPeriod"); put("value","0"); }});
 		list.add(new HashMap<String, String>(){{ put("name","MaxAllowedCountOfLoginFail"); put("value","0"); }});
 		list.add(new HashMap<String, String>(){{ put("name","UsePasswordPatternPolicy"); put("value","NO"); }});
+		// 2021-11-09 이사라 : 가장 최근 사용한 암호 재사용
+		list.add(new HashMap<String, String>(){{ put("name","useChkPrevPwd"); put("value","NO"); }});
 		     
 		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
 		

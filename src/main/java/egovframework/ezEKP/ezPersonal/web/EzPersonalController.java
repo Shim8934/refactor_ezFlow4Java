@@ -1403,7 +1403,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 		logger.debug("changePassword started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
-		int tenantID = userInfo.getTenantId();        
+		int tenantID = userInfo.getTenantId();
+		String companyID = userInfo.getCompanyID();
 		
 		logger.debug("tenantID=" + tenantID);       
 		
@@ -1416,10 +1417,23 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String oldPassword = xmlDom.getElementsByTagName("OLDPASSWORD").item(0).getTextContent();
 		String newPassword = xmlDom.getElementsByTagName("NEWPASSWORD").item(0).getTextContent();
 		
-		int checkResult = ezPersonalService.checkPassword(userInfo.getId(), EgovFileScrty.decryptRsa(pk, oldPassword), tenantID);
-		if (checkResult != 1) {
+		/* 2021-10-26 이사라 : prev비번과 새비번 비교 추가 */
+		// company option check 
+		boolean useCkhPrevPwd = false;
+		
+		if (ezCommonService.getCompanyConfig(tenantID, companyID, "useChkPrevPwd").equalsIgnoreCase("YES")) {
+			useCkhPrevPwd = true;
+    	}
+		
+		int checkResult = ezPersonalService.checkPassword(userInfo.getId(), EgovFileScrty.decryptRsa(pk, oldPassword), tenantID, companyID, EgovFileScrty.decryptRsa(pk, newPassword), useCkhPrevPwd);
+		
+		if (checkResult == 0) { // 0: 현비번과 db비번이 일치하지 않음(실패) 1 : 일치 (성공)
 			return "CHKERROR";
 		}
+		
+		if (checkResult == 2) { // 2 : prev비번이 새비번과 일치 (실패)
+			return "PREVERROR";
+		} 
 		
 		// dhlee
 		String domain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
