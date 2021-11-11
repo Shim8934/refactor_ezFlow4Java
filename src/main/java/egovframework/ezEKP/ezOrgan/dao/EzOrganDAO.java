@@ -421,4 +421,9 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	public String getAddJobProxy(Map<String, Object> map) throws Exception {
 		return (String) select("EzOrganDAO.getAddJobProxy", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<OrganUserVO> getOrgUserInfo(Map<String, Object> map) {
+		 return (List<OrganUserVO>) list("EzOrganDAO.getOrgUserInfo", map);
+	}
 }

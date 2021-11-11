@@ -75,6 +75,7 @@ import kr.dogfoot.hwplib.writer.HWPWriter;
 import org.apache.commons.codec.binary.Base64; 
 import org.apache.commons.io.FileUtils; 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.json.simple.JSONArray;
@@ -13635,7 +13636,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						subTitleFlag = false;
 						
 						for (int k = 0; k < userDIDs.length; k++) {
-							if (userDIDs[k].trim().equals(userDeptID.trim()) && userDNames[k].trim().equals(userDeptName.trim()) && userDNames2[k].trim().equals(userDeptName2.trim()) 
+							if (userDIDs[k].trim().equals(userDeptID.trim()) && userDNames[k].trim().equals(StringEscapeUtils.unescapeHtml3(userDeptName.trim())) && userDNames2[k].trim().equals(StringEscapeUtils.unescapeHtml3(userDeptName2.trim())) 
 									&& userCompanyIDs[k].trim().equals(userCompanyID.trim()) && userTitles[k].trim().equals(userJobTitle.trim()) && userTitles2[k].trim().equals(userJobTitle2.trim())){
 								subTitleFlag = true;
 							}

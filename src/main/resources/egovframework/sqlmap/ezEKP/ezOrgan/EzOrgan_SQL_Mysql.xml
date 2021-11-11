@@ -2308,6 +2308,21 @@
 		AND
 			TENANT_ID = #tenantID#		
 		AND
-			DEPTID = #dept#		
+			DEPTID = #dept#
+		<isNotEmpty property="title">
+			AND TITLE = #title#
+		</isNotEmpty>		
+	</select>
+	
+	<select id="EzOrganDAO.getOrgUserInfo" parameterClass="Map" resultClass="OrganUserVO">
+		SELECT 
+			CN
+			,DEPARTMENT
+			,TITLE
+        FROM TBL_USERMASTER 
+       	WHERE 1=1
+        AND CN = #userID#
+        AND TENANT_ID = #tenantID#
+        AND PHYSICALDELIVERYOFFICENAME = #companyID# 
 	</select>
 </sqlMap>
