@@ -392,6 +392,7 @@
 		        treeView.DataBind(obj + "obj");
 		        
 		        applyEllipsis();
+		        applyIsNewIconAll();
 		    }
 		    
 		    function SetTreeConfig() {
@@ -422,7 +423,7 @@
 						returnVal = loadXMLString(result.result);
 					}
 		    	});
-
+		    	
 		        return returnVal;
 		    }
 		    
@@ -438,6 +439,7 @@
 		        treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
 		        
 		        applyEllipsis();
+		        applyIsNewIconAll();
 		    }
 		    
 		    function TreeCtrl_onNodeClick(pNodeID, pTreeID) {
@@ -465,6 +467,7 @@
 		            }
 		            
 		            applyEllipsis();
+		            applyIsNewIconAll();
 		            
 		            document.getElementById("rightfrm").style.height = "659px";
 		            if (chkPhotoBrd != "3") {
@@ -891,6 +894,37 @@
 	        		}
 	        	});
 	        }
+	        
+	        /* 2021-11-09 홍승비 - 커뮤니티 게시판에 자신이 읽지 않은 신규 게시물 존재 여부를 표출 ('N' 아이콘) */
+	        function applyIsNewIconAll() {
+	        	var onH2 = $("h2.on"); // 현재 열려있는 하위게시판들에 대해 신규 게시물 존재 여부를 체크
+	        	
+	        	if (onH2.length > 0) {
+	        		$("#" + onH2.attr("treectrl") + "obj").find(".node_div").each(function(index, element) {
+		        		var boardID = $(element).attr("data1");
+		        		var nodeID = $(element).attr("id");
+		        		var spanNodeID = "spn_" + nodeID;
+		        		var spanImgNodeID = "img_" + nodeID;
+		        		
+		        		$.ajax({
+				    		type : "GET",
+				    		url : "/ezCommunity/getIsNewItemExists.do",
+				    		async : true,
+				    		data : {
+				    			boardID : boardID
+				    		},
+				    		success: function (result) { // Y, N
+				    			if (result == "Y" && $("#" + spanImgNodeID).length < 1) { // 게시판명 span 영역에 아이콘 추가 또는 제거
+				    				$("#" + spanNodeID).append(" <img id='" + spanImgNodeID + "' src='/images/kr/community/communityPortlet_iconnew.gif' style='vertical-align:bottom;'>");
+				    			} else if (result != "Y" && $("#" + spanImgNodeID).length > 0) {
+				    				$("#" + spanImgNodeID).remove();
+				    			}
+				    		}
+				    	});
+		        	});
+		        }
+	        }
+	        
 		</script>
 	</head>
 	

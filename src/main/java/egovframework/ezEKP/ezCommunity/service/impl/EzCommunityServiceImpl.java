@@ -2685,7 +2685,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         
         return result.toString();
 	}
-
+	
 	@Override
 	public CommunityBoardPropertyVO getBoardInfo(LoginVO userInfo, String pBoardID) throws Exception {
 		CommunityBoardPropertyVO boardInfo = new CommunityBoardPropertyVO();
@@ -7789,5 +7789,28 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		logger.debug("getClubConfirmType ended");
 		return ezCommunityDAO.getClubConfirmType(map);
+	}
+	
+	/* 2021-11-09 홍승비 - 주어진 커뮤니티 게시판 ID에 대해 자신이 읽지 않은 게시물이 있는지 반환 (Y/N) */
+	@Override
+	public String getIsNewItemExists(String boardID, String userID, int tenantID) throws Exception {
+		logger.debug("getIsNewItemExists started");
+		String isNewItemExists = "N";
+		int cnt = 0;
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_BOARDID", boardID);
+		map.put("v_USERID", userID);
+		map.put("v_TENANTID", tenantID);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		
+		cnt = ezCommunityDAO.getIsNewItemCnt(map);
+		
+		if (cnt > 0) { // 읽지 않은 게시물이 존재한다면 Y 반환
+			isNewItemExists = "Y";
+		}
+		
+		logger.debug("getIsNewItemExists ended");
+		return isNewItemExists;
 	}
 }

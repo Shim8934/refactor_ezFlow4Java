@@ -1183,4 +1183,9 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (String) select("EzCommunityDAO.getClubConfirmType", map);
 	}
 
+	/* 2021-11-09 홍승비 - 주어진 커뮤니티 게시판 ID에 대해 자신이 읽지 않은 게시물이 있는지 반환 */
+	public int getIsNewItemCnt(Map<String, Object> map) throws Exception {
+		return (int) select("EzCommunityDAO.getIsNewItemCnt", map);
+	}
+
 }
