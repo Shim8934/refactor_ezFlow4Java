@@ -6957,7 +6957,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                         docResult += "<REGISTERTYPE>" + apprGRecordTempVO.get(0).getRegisterType() + "</REGISTERTYPE>"; 
                         docResult += "<REGISTERDATE>" + apprGRecordTempVO.get(0).getRegisterDate() + "</REGISTERDATE>"; 
                         docResult += "<REGISTERYEAR>" + apprGRecordTempVO.get(0).getRegisterYear() + "</REGISTERYEAR>"; 
-                        docResult += "<EXECUTEDATE>" + apprGRecordTempVO.get(0).getExecuteDate() + "</EXECUTEDATE>"; 
+                        	if(apprGRecordTempVO.get(0).getExecuteDate()==null) {
+                        		docResult += "<EXECUTEDATE>" + "" + "</EXECUTEDATE>";
+                        	}else {
+                        		docResult += "<EXECUTEDATE>" + apprGRecordTempVO.get(0).getExecuteDate() + "</EXECUTEDATE>";
+                        	}
                         docResult += "<TITLE>" + apprGRecordTempVO.get(0).getTitle() + "</TITLE>"; 
                         docResult += "<APRMEMBERTITLE>" + apprGRecordTempVO.get(0).getAprMemberTitle() + "</APRMEMBERTITLE>"; 
                         docResult += "<APRMEMBERTITLE2>" + apprGRecordTempVO.get(0).getAprMemberTitle2() + "</APRMEMBERTITLE2>"; 
