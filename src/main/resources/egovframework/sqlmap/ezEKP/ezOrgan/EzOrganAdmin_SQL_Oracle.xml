@@ -6446,7 +6446,7 @@
 		SET
 			TITLE = #v_DISPLAYNAME#,
 			TITLE2 = #v_DISPLAYNAME2#,
-			UPDATEDT = #nowDate#
+			UPDATEDT = TO_DATE(#nowDate#, 'yyyy-MM-dd HH24:MI:SS')
 		WHERE
 			EXTENSIONATTRIBUTE7 = #v_JOBID#
 	]]>
