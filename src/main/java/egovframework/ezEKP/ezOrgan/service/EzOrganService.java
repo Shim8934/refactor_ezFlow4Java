@@ -101,6 +101,8 @@ public interface EzOrganService {
 	public String updateAddJobProxy(String id, String proxyInfo, int tenantId, String dept) throws Exception;
 
 	public String getAddJobProxy(String id, String dept, int tenantId) throws Exception;
+	
+	public String getAddJobProxy(String id, String dept, String title, int tenantId) throws Exception;
 
 	public OrganUserVO getUserInfo(String id, String lang, int tenantId) throws Exception;
 	
@@ -114,5 +116,7 @@ public interface EzOrganService {
 	public String getJobMasterTreeInfo(String type, String pComID, String lang, int tenantID) throws Exception;
 	
 	public String getJobMasterMemberList(String type, String jobID, String celllist, String proplist, String pageSize, String pageNum, String searchType, String searchValue, String primary, String companyID, int tenantID) throws Exception;
+	
+	public List<OrganUserVO> getOrgUserInfo(String userID, int tenantID, String companyID) throws Exception;
 
 }

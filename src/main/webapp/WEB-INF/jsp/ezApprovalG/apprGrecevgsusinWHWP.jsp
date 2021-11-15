@@ -126,6 +126,7 @@
 		    var useWebHWP = "YES";
 		    var imgCheck = true;
 			//원문정보공개
+			var useOpenGov = "<c:out value='${useOpenGov}' />";
 			var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate="";
 			
 			var useRedraftOpinionKeep = "<c:out value='${useRedraftOpinionKeep}'/>";
@@ -266,7 +267,8 @@
 		    }
 		
 		    window.onresize = function () {
-	        	var mHeight = document.documentElement.clientHeight - 172 - document.getElementById("message").offsetTop + "px";
+	       		document.getElementById("messageWHWPEditor").style.height = document.documentElement.clientHeight - 150 + "px";
+	       		var mHeight = document.documentElement.clientHeight - 110 - document.getElementById("messageWHWPEditor").offsetTop + "px";
 	       		message.Resize(mHeight);
 	        }
 		    
@@ -475,9 +477,9 @@
 				
 		        //2018-10-15 반송 후 배부된 문서의 접수번호 초기화
 				//2021-01-28 문서번호 초기화시 @dp-@YY-@nn으로 수정
-		        if (pDraftFlag == "REDRAFT" || pDraftFlag == "SUSIN") {
-		        	message.PutFieldText("receiptnumber", "@dp-@YY-@nn");
-		        }
+		        // if (pDraftFlag == "REDRAFT" || pDraftFlag == "SUSIN") {
+		        // 	message.PutFieldText("receiptnumber", "@dp-@YY-@nn");
+		        // }
 		        
 		        //message.MoveToField("doctitle");
 		        message.ScrollPosInfo(0, 0);
@@ -1527,15 +1529,19 @@
 			        parameter[51] = sepAttachCheckYN; // 분첨 확인여부
 		        }
 			    
-		        parameter[52] = basis;
-		        parameter[53] = reason;
-		        parameter[54] = listOpenFlag;
-		        parameter[55] = fileOpenFlagList;
-		        parameter[56] = limitDate;
+			    if (useOpenGov == "YES") {
+			        parameter[52] = basis;
+			        parameter[53] = reason;
+			        parameter[54] = listOpenFlag;
+			        parameter[55] = fileOpenFlagList;
+			        parameter[56] = limitDate;
+			    }
 			    
 			    if (tempItemCode != "") {
 			        tempdocnumcode = tempItemCode;
 			    }
+			    
+			    parameter[61] = tempKeyword;
 			    
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
@@ -1635,6 +1641,31 @@
 				            	sepAttachCheckYN = ret[26];
 				            	setNonElecRecInfo_whwp(nonElecRecInfoXml);
 				            }
+			                
+			             	// 접수문서의 경우 원문공개 대상은 아니지만 결재 진행시 오류 발생으로 데이터는 넣도록 수정
+			                if (useOpenGov == "YES") {
+	                            $.ajax({
+	                                type : "POST",
+	                                dataType : "text",
+	                                async : false,
+	                                url : "/ezApprovalG/openGovInfoSave.do",
+	                                data : {
+	                                    openGovListFlag : ret[27],
+	                                    fileOpenFlagList : ret[28],
+	                                    basis : ret[29],
+	                                    reason : ret[30],
+	                                    publicity : ret[11],
+	                                    docID : pDocID,
+	                                    limitDate : ret[31]
+	                                }
+	                            });
+
+	                            listOpenFlag = ret[27];
+	                            fileOpenFlagList = ret[28];
+	                            basis = ret[29];
+	                            reason = ret[30];
+	                            limitDate = ret[31];
+							}
 		                } else {
 		                	tempKeep = ret[16];
 		                	tempItemName = ret[17];
@@ -1897,7 +1928,7 @@
 	            </td>
 	        </tr>
 	        <tr>
-	            <td style="padding-bottom:10px;height:800px;" >
+	            <td style="padding-bottom:10px;height:800px;" id="messageWHWPEditor" >
 		    		<iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="/ezApprovalG/WHWPEditor.do" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 	            </td>
 	        </tr>

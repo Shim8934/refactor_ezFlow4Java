@@ -127,6 +127,9 @@
 <script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyFile.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezSurvey/survey.js')}    "></script>
 <script type="text/javascript">
+	/* 2021-10-28 홍승비 - 초기 표출 시 다른 분기처리를 위하여 전역변수 설정 */
+	var isFirstEvent = true; // 초기 슬라이드값은 반드시 최소값이므로, 비활성화 방지용 변수
+	
 	$(function() {
 		var survey       = ${survey};
 		var surveyId     = survey.surveyId;
@@ -162,9 +165,11 @@
 					
 					SurveyCreate.setQsForm(0);
 					
-					if (data["firstpath"]) {
+					/* 2021-10-27 홍승비 - 전자설문 분기처리 전체적으로 수정 (firstpath 사용하지 않고 페이지 내부의 함수로 처리) */
+	 				/*	if (data["firstpath"]) {
 						toggleQuestionList(JSON.parse(JSON.stringify(data["firstpath"])));
-					}
+					} */
+					toggleQuestionList_New("1"); // 가장 첫번째 질문인 "prevQstn1"을 의미함 (첫번째 질문은 반드시 활성화됨)
 				},
 				error : function(error) {
 					alert(SurveyMessages.strError);
@@ -476,6 +481,7 @@
 			}
 		}
 		
+		/* 2021-10-27 홍승비 - 질문 응답에 변경이 일어나는 경우, 새로운 분기처리 함수 동작 */
 		function userEvent() {
 			SurveyCreate.changeMode(true); //change download mode
 			getQuestions();
@@ -486,21 +492,23 @@
 			window.addEventListener("resize", function(e) {setBodyHeight();}, false);
 			document.getElementById("surveyInfBttn").onclick = function(e) {toggleSurveyInformation();};
 			
-			// 단일 선택 질문 버튼 클릭 이벤트
+			// 단일 선택 질문 버튼 클릭 이벤트 (type 1)
 			$(".prevQsArea").on("click", ".optRdo", function() {
 				var prId     = parseInt($(this).parents(".prevQsWrapper").attr("id").replace("prevQstn", ""));
 				var logicNum = parseInt($(this).attr("logic"));
 				
-				if (!isNaN(logicNum) && logicNum != -1 && logicmap) {processLogicNode(prId, logicNum);}
+				//if (!isNaN(logicNum) && logicNum != -1 && logicmap) {processLogicNode(prId, logicNum);}
+				toggleQuestionList_New(prId);
 			});
-			// 드롭다운 질문 셀렉트 박스 이벤트
+			// 드롭다운 질문 셀렉트 박스 이벤트 (type 9)
 			$(".prevQsArea").on("change", ".dropdown-wrap", function() {
 				var prId     = parseInt($(this).parents(".prevQsWrapper").attr("id").replace("prevQstn", ""));
 				var logicNum = parseInt($("select[name=drdw" + prId + "] option:selected").attr("logic"));
-				if (!isNaN(logicNum) && logicNum != -1 && logicmap) {processLogicNode(prId, logicNum);}
+				//if (!isNaN(logicNum) && logicNum != -1 && logicmap) {processLogicNode(prId, logicNum);}
+				toggleQuestionList_New(prId);
 			});
 			
-			// 슬라이드 질문 슬라이드값 변경 이벤트
+			// 슬라이드 질문 슬라이드값 변경 이벤트 (type 7)
 			$(".prevQsArea").on("change", ".slider-range", function() {
 				var outputElmt         = this.parentElement.parentElement.querySelector("output[class='slider-output']");
 				outputElmt.textContent = this.value;
@@ -510,17 +518,43 @@
 				var logicPoint = parseInt($("#slider" + prId).attr("logicPoint"));
 				var currentVal = parseInt(this.value);
 				
-				if (!isNaN(logicNum) && logicNum != -1 && logicmap) {
+/* 				if (!isNaN(logicNum) && logicNum != -1 && logicmap) {
 					if (currentVal >= logicPoint) {
 						processLogicNode(prId, logicNum);
 					}
 					else {
 						processLogicNode(prId, prId + 1);
 					}
-				}
+				} */
+				
+				toggleQuestionList_New(prId);
 			});
-			
-			// ranking 셀렉트 박스 옵션 선택시 값 비교
+			// 다중선택 질문 버튼 클릭 이벤트 (type 2)
+			$(".prevQsArea").on("click", ".optChb", function() {
+				var prId     = parseInt($(this).parents(".prevQsWrapper").attr("id").replace("prevQstn", ""));
+				toggleQuestionList_New(prId);
+			});
+			// 행렬 단일선택 질문 버튼 클릭 이벤트 (type 3)
+			$(".prevQsArea").on("click", ".matrix input:radio", function() {
+				var prId     = parseInt($(this).parents(".prevQsWrapper").attr("id").replace("prevQstn", ""));
+				toggleQuestionList_New(prId);
+			});
+			// 행렬 다중선택 질문 버튼 클릭 이벤트 (type 4)
+			$(".prevQsArea").on("click", ".matrix input:checkbox", function() {
+				var prId     = parseInt($(this).parents(".prevQsWrapper").attr("id").replace("prevQstn", ""));
+				toggleQuestionList_New(prId);
+			});
+			// 단답형 입력 이벤트 (type 5)
+			$(".prevQsArea").on("keyup", ".shortanswer", function() {
+				var prId     = parseInt($(this).parents(".prevQsWrapper").attr("id").replace("prevQstn", ""));
+				toggleQuestionList_New(prId);
+			});
+			// 문장형 입력 이벤트 (type 6)
+			$(".prevQsArea").on("keyup", ".paragraph", function() {
+				var prId     = parseInt($(this).parents(".prevQsWrapper").attr("id").replace("prevQstn", ""));
+				toggleQuestionList_New(prId);
+			});
+			// ranking 셀렉트 박스 옵션 선택시 값 비교 (type 8)
 			$(".prevQsArea").on("change", "select[name^=ranking]", function() {
 				var length = $(this).parents(".ranking-wrap").find(".ranking-select").length;
 				var id = $(this).parents(".prevQsWrapper").attr("id").replace("prevQstn", "");
@@ -540,7 +574,10 @@
 						$("select[name=ranking" + id + orders + "]").val("").prop("selected", true);
 					}
 				}
+				
+				toggleQuestionList_New(parseInt(id));
 			});
+			
 			// 설문 정보 버튼 클릭 이벤트
 			$("#surveyInfBttn").click(function() {
 				var infoElmt = $("#upage-ul");
@@ -567,6 +604,7 @@
 
 			// 20.05.06 강승구 : 설문응답여부에 따른 처리 코드추가
 			checkQuestionAnswer();
+			isFirstEvent = false;
 		}
 		// 첨부파일 리스트 나타내기
 		function showAttachList() {
@@ -1290,5 +1328,374 @@
             }
         })
 	});
+	
+	/* 2021-10-27 홍승비 - 전자설문 분기처리 전체적으로 수정 */
+	function toggleQuestionList_New(startID) { // startID는 현재 선택한 질문을 의미함 (prevQstn을 공백으로 치환한 숫자값만을 전달)
+		var allQuestionWrapper = $(".prevQsWrapper"); // 질문 하나마다 래퍼 클래스 덩어리째로 가져온다. type값을 가지고 있으며, 하위에 질문 세부항목이 존재하여 find로 접근이 가능하다.
+		
+		// 분기처리 이전, 해당 질문 다음 순서인 모든 질문을 임시로 활성화시킨다. (설문종료 이후 다시 다른 분기를 선택하는 경우 대응)
+		// 아래 each 루프를 돌면서 비활성/활성이 다시 설정된다.
+		enableAllQuestion("prevQstn" + startID);
+		
+		// 실제 접근이 가능한 질문들. each 루프를 돌며 startID와 같거나 큰 값일때만 동작한다. (분기설정은 자신 이후의 질문만 대상자로 선택 가능하므로)
+		allQuestionWrapper.each (function(index, element) {
+			var id = $(this).attr("id"); // prevQstn1과 같은 질문 래퍼 클래스의 아이디
+			
+			if (id.replace("prevQstn", "") >= parseInt(startID)) { // 자신과 같거나 그 이후의 질문인 경우, 아래 코드를 실행
+				var type = $(this).attr("type"); // 설문 유형
+				var skip = $(this).attr("skip"); // 단일분기가 설정된 설문의 경우, 대상 분기 설문 순서값 (id에서 prevQstn 없앤 값이랑 동일)
+				
+				// 단일분기가 존재하는 경우
+				if (skip != "-1") {
+					// 현재 질문에 유효한 답변이 존재하지 않는다면, 목표 분기 질문을 비활성화시킨다.
+					// 체크박스, 라디오 : 체크된 값이 존재하는지 여부
+					// 단일, 문장 : 입력한 값이 존재하는지 여부 (공백이 아닌 경우)
+					// 슬라이드 : 무조건 초기 값이 존재하므로, 항상 목표 분기를 활성화함
+					// 순위 : 모든 순위를 선택했는지 여부
+					// 셀렉트 옵션 : 선택한 값이 있는지 여부
+					if (isResponseExist(id, type) == false) {
+						if (skip != "0") {
+							disableQuestion("prevQstn" + skip); // 목표 단일분기질문 비활성화
+						}
+					} else {
+						if (skip == "0") { // 설문종료
+							disableAllQuestion(id);
+						} else { // 목표 단일분기질문 활성화
+							enableQuestion("prevQstn" + skip);
+						}
+					}
+				}
+				// 하위 항목에 세부 분기가 존재하는 경우, 또는 특정 값 이상인 경우 이동하는 슬라이드 질문의 경우 분기처리
+				// logic이 0인 경우 설문종료이므로, 자신 이후의 모든 질문을 disabled 처리
+				// logic이 -1이면 분기없음이므로 이후 처리 없음
+				else { // skip == -1
+					if (type == "1") { // 단일선택
+						var qstOptions = $(this).find("[name = 'qstn" + startID + "opt'][logic != '-1']"); // 분기가 설정된 세부 라디오 항목이 존재
+						if (qstOptions.length > 0) {
+							qstOptions.each (function(index, element) {
+								if ($(this).attr("logic") != "0") { // 해당 목표 분기 비활성화 또는 활성화
+									if ($(this).prop("checked") == false) {
+										disableQuestion("prevQstn" + $(this).attr("logic"));
+									} else {
+										enableQuestion("prevQstn" + $(this).attr("logic"));
+									}
+								} else { // 설문종료
+									if ($(this).prop("checked") == true) {
+										disableAllQuestion(id);
+									}
+								}
+							});
+						}
+					} else if (type == "7") { // 슬라이드
+						var sliderRange = $(this).find(".slider-range"); // 슬라이더 값
+						var sliderOut = $(this).find(".slider-output[logic != '-1']"); // 분기 등 설정값
+						if (sliderOut.length > 0) {
+							if (sliderOut.attr("logic") != "0") { // 해당 목표 분기 비활성화 또는 활성화
+								if (parseInt(sliderRange.val()) < parseInt(sliderOut.attr("logicpoint"))) { // 특정 값 이상인 경우 목표 분기 활성화
+									disableQuestion("prevQstn" + sliderOut.attr("logic"));
+								} else { // 특정 값 미만인 경우 목표 분기 비활성화
+									enableQuestion("prevQstn" + sliderOut.attr("logic"));
+								}
+							} else { // 특정 값 이상인 경우 설문종료
+								if (parseInt(sliderRange.val()) >= parseInt(sliderOut.attr("logicpoint"))) {
+									disableAllQuestion(id);
+								}
+							}
+						}
+					} else if (type == "9") { // 드롭다운
+						var qstOptions = $(this).find("option[logic != '-1']"); // 분기가 설정된 세부 옵션 항목이 존재  (가장 첫번째 옵션의 경우, 디폴트 옵션이므로 logic undefined 체크 진행)
+						if (qstOptions.length > 0) {
+							qstOptions.each (function(index, element) {
+								if (typeof($(this).attr("logic")) != "undefined") {
+									if ($(this).attr("logic") != "0") { // 해당 목표 분기 비활성화 또는 활성화
+										if ($(this).prop("selected") == false) {
+											disableQuestion("prevQstn" + $(this).attr("logic"));
+										} else {
+											enableQuestion("prevQstn" + $(this).attr("logic"));
+										}
+									} else { // 설문종료
+										if ($(this).prop("selected") == true) {
+											disableAllQuestion(id);
+										}
+									}
+								}
+							});
+						}
+					}
+				}
+				// 분기 설정이 아예 없는 경우, 아무 동작 없음 + 현재 선택한 질문 이전의 질문에 대해서는 처리하지 않는다.
+			}
+		});
+	}
+	
+	/* 2021-10-27 홍승비 - 단일분기 질문에 대하여 현재 질문에 유효한 응답이 존재하는지 체크하는 함수 (true/false) */
+	function isResponseExist(qstWrapperID, type) {
+		var result = false;
+		var qstWrapper = $("#" + qstWrapperID);
+		
+		if (type == "1" || type == "2" || type == "3" || type == "4") { // 단일선택, 다중선택, 행렬(단일/다중)
+			if (qstWrapper.find("input:checked").length > 0) {
+				result = true;
+			}
+		} else if (type == "5") { // 단답형
+			if (qstWrapper.find("input").val() != "") {
+				result = true;
+			}
+		} else if (type == "6") { // 문장형
+			if (qstWrapper.find("textarea").val() != "") {
+				result = true;
+			}
+		} else if (type == "7") { // 슬라이드 (무조건 기본 값이 존재하므로, 항상 true를 반환)
+			result = true;
+		} else if (type == "8") { // 순위 (모든 순위가 선택된 경우에만 유효하다고 판단)
+			var isNotSelected = false;
+			qstWrapper.find("select").each (function(index, element) {
+				if ($(this).prop("selectedIndex") == 0) {
+					isNotSelected = true; // 순위 중 하나라도 선택되지 않은 경우(첫번째 placeholder 역할인 옵션이 선택된 경우) 유효하지 않음
+				}
+			});
+			if (isNotSelected == false) {
+				result = true;
+			}
+		} else if (type == "9") { // 드롭다운
+			if (qstWrapper.find("select").prop("selectedIndex") > 0) {
+				result = true;
+			}
+		}
+		
+		return result;
+	}
+	
+	/* 2021-10-27 홍승비 - 질문 비활성화 함수 분리 (래퍼 ID를 전달하여 해당 질문을 disable 처리, 선택한 응답 해제) */
+	function disableQuestion(qstWrapperID) {
+		var allQuestionWrapper = $(".prevQsWrapper");
+		var qstLevel = parseInt(qstWrapperID.replace("prevQstn", ""));
+		var qstWrapper = $("#" + qstWrapperID);
+		
+		// 설문 비활성화가 가능한 상태인지 다시 한번 체크 (자신의 상위 분기 질문에 대한 응답이 유효하지 않은 상태여야 함)
+		// 상위 분기 부모 중 하나라도 유효한 응답을 가지고 있다면 비활성화 불가능
+		// 예) 1번 질문에 5번 질문 단일분기 설정 + 3번 질문에 5번 질문 단일분기 설정
+		//	=> 1번이나 3번 질문 중 유효한 응답이 하나라도 존재한다면 5번은 비활성화 불가능
+		var parentResponseExist = false;
+		var parentWrapper1 = $(".prevQsWrapper[skip = '" + qstLevel + "']") // 상위 단일분기
+		var parentWrapper2 = allQuestionWrapper.find("[logic = '" + qstLevel + "']").parents(".prevQsWrapper"); // 상위 항목별 세부분기
+		
+		if (parentWrapper1.length > 0) {
+			parentWrapper1.each (function(index, element) {
+				var id = $(this).attr("id");
+				var type = $(this).attr("type");
+				if (isResponseExist(id, type) == true) { // 단일분기에 대해 유효한 응답이 존재하는지 체크
+					parentResponseExist = true;
+				}
+			});
+		}
+		if (parentWrapper2.length > 0) {
+			parentWrapper2.each (function(index, element) {
+				var id = $(this).attr("id");
+				var type = $(this).attr("type");
+				
+				// 항목 별 세부분기 > 질문의 유형 별로 응답이 유효한지 체크
+				if (type == "1") { // 단일선택
+					if ($(this).find(".optRdo[logic='" + qstLevel + "']:checked").length > 0) {
+						parentResponseExist = true;
+					}
+				} else if (type == "7") { // 슬라이드
+					var sliderVal = $(this).find("slider-range").val();
+					var sliderLogicPoint = $(this).find("slider-output").attr("logicpoint");
+					if (sliderVal >= sliderLogicPoint) {
+						parentResponseExist = true;
+					}
+				} else if (type == "9") { // 드롭박스
+					var logicNum = $(this).find("select option:selected").attr("logic");
+					// 선택된 셀렉트 옵션 값의 목표 분기가 비활성화할 질문의 순서와 일치한다면 비활성화 불가능 
+					if (typeof(logicNum) != "undefined" && qstLevel == logicNum) {
+						parentResponseExist = true;
+					}
+				}
+			});
+		}
+		// 자신을 하위 분기로 지정한 상위 분기 질문이 하나라도 존재 + 해당 상위 분기가 유효한 응답을 가지고 있다면 비활성화 중단
+		if ((parentWrapper1.length > 0 || parentWrapper2.length > 0) && parentResponseExist == true) {
+			return;
+		}
+		
+		if (qstWrapper.length > 0) {
+			var type = qstWrapper.attr("type");
+			var checkMask = $("#mask" + qstLevel).length;
+			
+			if (checkMask == 0) { // 비활성화 영역이 없는 경우에만 새로 만들어서 붙여준다.
+				var mask = $("<div class='mask' id='mask" + qstLevel + "'></div>");
+				var wrapper = $("#prevQstn" + qstLevel);
+				var height = wrapper.height();
+				var width = wrapper.width();
+				wrapper.prepend(mask);
+				
+				$("#mask" + qstLevel).css({"height": height, "width": width, "background-color": "gray", "opacity": "0.3", "position" : "absolute"});
+				
+				// 비활성화한 해당 질문에 응답이 존재하면 없애기 (슬라이드의 경우 값 초기화)
+				if (type == "1" || type == "2" || type == "3" || type == "4") { // 단일선택, 다중선택, 행렬(단일/다중)
+					qstWrapper.find("input").prop("checked", false); // 체크박스 맟 라디오 체크된 값 일괄해제
+				} else if (type == "5") { // 단답형
+					qstWrapper.find("input").val("");
+				} else if (type == "6") { // 문장형
+					qstWrapper.find("textarea").val("");
+				} else if (type == "7") { // 슬라이드
+					var minVal = qstWrapper.find(".slider-range").attr("min");
+					qstWrapper.find(".slider-range").val(minVal);
+					qstWrapper.find(".slider-output").text("");
+				} else if (type == "8" || type == "9") { // 순위, 드롭다운
+					qstWrapper.find("select").prop("selectedIndex", 0);
+				}
+			}
+		}
+	}
+	
+	/* 2021-10-27 홍승비 - 질문 활성화 함수 분리 (래퍼 ID를 전달하여 해당 질문을 enable 처리) */
+	function enableQuestion(qstWrapperID) {
+		var qstLevel = parseInt(qstWrapperID.replace("prevQstn", ""));
+		var maskDiv = $("#prevQstn" + qstLevel).find("#mask" + qstLevel);
+		
+		if (maskDiv.length > 0) {
+			maskDiv.remove();
+		}
+	}
+	
+	/* 2021-10-27 홍승비 - 자신 이후의 모든 설문 비활성화 처리 (설문종료) */
+	function disableAllQuestion(qstWrapperID) {
+		var allQuestionWrapper = $(".prevQsWrapper");
+		var qstLevel = parseInt(qstWrapperID.replace("prevQstn", ""));
+		
+		for (var  i = qstLevel + 1; i <= allQuestionWrapper.length; i++) {
+			var qstWrapper = $("#prevQstn" + i);
+			
+			if (qstWrapper.length > 0) {
+				var type = qstWrapper.attr("type");
+				var checkMask = $("#mask" + i).length;
+				
+				if (checkMask == 0) { // 비활성화 영역이 없는 경우에만 새로 만들어서 붙여준다.
+					var mask = $("<div class='mask' id='mask" + i + "'></div>");
+					var wrapper = $("#prevQstn" + i);
+					var height = wrapper.height();
+					var width = wrapper.width();
+					wrapper.prepend(mask);
+					
+					$("#mask" + i).css({"height": height, "width": width, "background-color": "gray", "opacity": "0.3", "position" : "absolute"});
+					
+					// 비활성화한 해당 질문에 응답이 존재하면 없애기 (슬라이드의 경우 값 초기화)
+					if (type == "1" || type == "2" || type == "3" || type == "4") { // 단일선택, 다중선택, 행렬(단일/다중)
+						qstWrapper.find("input").prop("checked", false); // 체크박스 맟 라디오 체크된 값 일괄해제
+					} else if (type == "5") { // 단답형
+						qstWrapper.find("input").val("");
+					} else if (type == "6") { // 문장형
+						qstWrapper.find("textarea").val("");
+					} else if (type == "7") { // 슬라이드
+						var minVal = qstWrapper.find(".slider-range").attr("min");
+						qstWrapper.find(".slider-range").val(minVal);
+					} else if (type == "8" || type == "9") { // 순위, 드롭다운
+						qstWrapper.find("select").prop('selectedIndex', 0);
+					}
+				}
+			}
+		}
+	}
+	
+	/* 2021-10-28 홍승비 - 자신 이후의 모든 설문 활성화 처리 (*설문종료 이후 다시 다른 선택지 선택하는 경우* 대응을 위한 함수) */
+	function enableAllQuestion(qstWrapperID) {
+		var allQuestionWrapper = $(".prevQsWrapper");
+		var qstLevel = parseInt(qstWrapperID.replace("prevQstn", ""));
+		var qstWrapper = $("#" + qstWrapperID);
+		var type = qstWrapper.attr("type");
+		var canEnableAll = false; // 모든 설문 활성화 가능한지 1차 체크
+		
+		if (type == "1" || type == "3") { // 단일선택, 행렬(단일)
+			// 설문종료 이외에 체크된 값이 있는가?
+			if (qstWrapper.find("input:checked").length > 0) {
+				canEnableAll = true;
+			}
+		}
+		else if (type == "2" || type == "4") { // 다중선택, 행렬(다중)
+			// 모든 선택지가 선택 해제되어있는가?
+			if (qstWrapper.find("input:checked").length == 0) {
+				canEnableAll = true;
+			}
+		} else if (type == "5") { // 단답형
+			 // 응답이 공백인가?
+			if (qstWrapper.find("input").val() == "") {
+				canEnableAll = true;
+			}
+		} else if (type == "6") { // 문장형
+			// 응답이 공백인가?
+			if (qstWrapper.find("textarea").val() == "") {
+				canEnableAll = true;
+			}
+		} else if (type == "7") { // 슬라이드
+			var minVal = qstWrapper.find(".slider-range").attr("min"); // 특정 값 미만인가?
+			var logicPoint = qstWrapper.find(".slider-output").attr("logicpoint");
+			if (isFirstEvent == false && qstWrapper.find(".slider-range").val() < logicPoint) { // 초기 표출 시에는 해당 동작 없음
+				canEnableAll = true;
+			}
+		} else if (type == "8" || type == "9") { // 순위, 드롭다운
+			// 설문종료 이외에 체크된 값이 있는가? (0번 인덱스 제외)
+			if (qstWrapper.find("select").prop("selectedIndex") != 0) {
+				canEnableAll = true;
+			}
+		}
+		
+		// 모든 설문 활성화 가능한지 1차 체크 확인
+		if (canEnableAll == true) {
+			for (var  i = qstLevel + 1; i <= allQuestionWrapper.length; i++) {
+				var qstWrapper = $("#prevQstn" + i);
+				var maskDiv = qstWrapper.find("#mask" + i);
+				
+				// 자신을 하위 분기로 지정한 상위 분기 질문이 없는 경우, 계속 활성화 진행
+				// 자신을 하위 분기로 지정한 상위 분기 질문이 존재 + 상위 분기가 유효한 응답을 가지고 있지 않다면 활성화 중단
+				// 상위 분기 부모가 여럿일 수 있으며, 그 중 하나라도 유효한 응답을 가지고 있다면 활성화 진행
+				var parentResponseExist = false;
+				var parentWrapper1 = $(".prevQsWrapper[skip = '" + i + "']") // 상위 단일분기
+				var parentWrapper2 = allQuestionWrapper.find("[logic = '" + i + "']").parents(".prevQsWrapper"); // 상위 항목별 세부분기
+				
+				if (parentWrapper1.length > 0) {
+					parentWrapper1.each (function(index, element) {
+						var id = $(this).attr("id");
+						var type = $(this).attr("type");
+						if (isResponseExist(id, type) == true) {
+							parentResponseExist = true;
+						}
+					});
+				}
+				if (parentWrapper2.length > 0) {
+					parentWrapper2.each (function(index, element) {
+						var id = $(this).attr("id");
+						var type = $(this).attr("type");
+						
+						// 질문의 유형 별로 응답이 유효한지 체크 (항목 별 세부분기)
+						if (type == "1") { // 단일선택
+							if ($(this).find(".optRdo[logic='" + i + "']:checked").length > 0) {
+								parentResponseExist = true;
+							}
+						} else if (type == "7") { // 슬라이드
+							var sliderVal = $(this).find("slider-range").val();
+							var sliderLogicPoint = $(this).find("slider-output").attr("logicpoint");
+							if (sliderVal >= sliderLogicPoint) {
+								parentResponseExist = true;
+							}
+						} else if (type == "9") { // 드롭박스
+							var logicNum = $(this).find("select option:selected").attr("logic");
+							if (typeof(logicNum) != "undefined" && qstLevel == logicNum) {
+								parentResponseExist = true;
+							}
+						}
+					});
+				}
+				// 자신을 하위 분기로 지정한 상위 분기 질문이 없거나, 상위 분기가 유효한 응답을 가지고 있다면 활성화 진행
+				if ((parentWrapper1.length == 0 && parentWrapper2.length == 0) || parentResponseExist == true) {
+					if (maskDiv.length > 0) {
+						maskDiv.remove();
+					}
+				}
+			}
+		}
+	}
+	
 </script>
 </html>

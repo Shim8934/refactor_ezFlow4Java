@@ -81,6 +81,7 @@
 		    var pDocTitle = "";
 		    var pFormID = "";
 		    var drafterDeptid = "";
+		    var drafterDeptName = ""; // 기안자 부서명
 		    var pMaxFileSize = "5";
 		    var LastSignNo;
 		    var AppendFileAttach = "";
@@ -141,6 +142,7 @@
 		    var pSignImage_Size = "<c:out value ='${signImageSize}'/>";
 		    var pADMIN = "N";
 		    var docNumZeroCnt = "<c:out value ='${docNumZeroCnt}'/>";
+		    var DeptSymbol; // 문서채번 시 사용되는 부서명 관련 변수
 		  	//회람
 			var type = "ING";
 			var pGongRamDocID = "";
@@ -415,6 +417,7 @@
 		            getDocInfo();
 		            setAttachInfo(pDocID, "APR", lstAttachLink);
 		            GetExchInfo();
+		            DeptSymbol = getDeptSymbol(drafterDeptid, drafterDeptName); // 양식상의 문서번호 표출 시 기안자의 부서명을 유지
 		            
 			    	if (nonElecRec == "Y") {
 				        getNonElecInfoSusinInit();
@@ -2362,7 +2365,7 @@
 		  		<img id="next" border="0" src="/images/icviewer_next.png" width="25" height="25" onClick="nextClick()" style="cursor:pointer; position: relative; top: 13px;">
 		  		<img id="nextAll" border="0" src="/images/icviewer_n_next.png" width="25" height="25" onClick="nextClickAll()" style="cursor:pointer; position: relative; top: 13px;">
 		  		<img id="officeBar2" src="/images/icviewer_bar.png" style="position: relative; top: 13px;">
-		  		<img src="/images/icviewer_expend.png" class="allImg" id="all" onclick="allImg(this)" style="cursor:pointer; position: relative; top: 13px;"" width="25" height="25">
+		  		<img src="/images/icviewer_expend.png" class="allImg" id="all" onclick="allImg(this)" style="cursor:pointer; position: relative; top: 13px;" width="25" height="25">
 			</div>
 		</div>
 		  </td>

@@ -75,6 +75,7 @@ import kr.dogfoot.hwplib.writer.HWPWriter;
 import org.apache.commons.codec.binary.Base64; 
 import org.apache.commons.io.FileUtils; 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.json.simple.JSONArray;
@@ -6939,6 +6940,44 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			String docResult = getDocInfoSP(orgUID, docID, docNO, companyID, result, retNum, strLang, userID, orgDeptID, orgName, orgName2, userInfo.getTenantId());
 			
+			Document paramXMLForNonElec = commonUtil.convertStringToDocument(docResult); 
+			 
+            if(null != paramXMLForNonElec.getElementsByTagName("ORGDOCID")){ 
+                String orgDocId = paramXMLForNonElec.getElementsByTagName("ORGDOCID").item(0).getTextContent(); 
+                if(null != orgDocId && !orgDocId.equals("")){ 
+                    Map<String, Object> map = new HashMap<String, Object>(); 
+                    map.put("orgDocID", orgDocId); 
+                    map.put("companyID", companyID); 
+                    map.put("tenantID", userInfo.getTenantId()); 
+ 
+                    List<ApprGRecordTempVO> apprGRecordTempVO = ezApprovalGDAO.getNonElecInfoSusinInit(map); 
+ 
+                    if(apprGRecordTempVO.size() > 0){ 
+                        docResult += "<NONELECREC>Y</NONELECREC>"; 
+                        docResult += "<REGISTERTYPE>" + apprGRecordTempVO.get(0).getRegisterType() + "</REGISTERTYPE>"; 
+                        docResult += "<REGISTERDATE>" + apprGRecordTempVO.get(0).getRegisterDate() + "</REGISTERDATE>"; 
+                        docResult += "<REGISTERYEAR>" + apprGRecordTempVO.get(0).getRegisterYear() + "</REGISTERYEAR>"; 
+                        	if(apprGRecordTempVO.get(0).getExecuteDate()==null) {
+                        		docResult += "<EXECUTEDATE>" + "" + "</EXECUTEDATE>";
+                        	}else {
+                        		docResult += "<EXECUTEDATE>" + apprGRecordTempVO.get(0).getExecuteDate() + "</EXECUTEDATE>";
+                        	}
+                        docResult += "<TITLE>" + apprGRecordTempVO.get(0).getTitle() + "</TITLE>"; 
+                        docResult += "<APRMEMBERTITLE>" + apprGRecordTempVO.get(0).getAprMemberTitle() + "</APRMEMBERTITLE>"; 
+                        docResult += "<APRMEMBERTITLE2>" + apprGRecordTempVO.get(0).getAprMemberTitle2() + "</APRMEMBERTITLE2>"; 
+                        docResult += "<DRAFTERNAME>" + apprGRecordTempVO.get(0).getDrafterName() + "</DRAFTERNAME>"; 
+                        docResult += "<DRAFTERNAME2>" + apprGRecordTempVO.get(0).getDrafterName2() + "</DRAFTERNAME2>"; 
+                        docResult += "<RECEIPTMEMBER>" + apprGRecordTempVO.get(0).getReceiptMemberName() + "</RECEIPTMEMBER>"; 
+                        docResult += "<RECEIPTMEMBER2>" + apprGRecordTempVO.get(0).getReceiptMemberName2() + "</RECEIPTMEMBER2>"; 
+                        docResult += "<SENDINGMEMBER>" + apprGRecordTempVO.get(0).getSendingMemberName() + "</SENDINGMEMBER>"; 
+                        docResult += "<DELIVERYNO>" + apprGRecordTempVO.get(0).getDeliveryNO() + "</DELIVERYNO>"; 
+                        docResult += "<ORIGINREGSN>" + apprGRecordTempVO.get(0).getProduceDeptRegNO() + "</ORIGINREGSN>"; 
+                        docResult += "<ELECTRONICRECFLAG>" + apprGRecordTempVO.get(0).getElectronicRecFlag() + "</ELECTRONICRECFLAG>"; 
+                        docResult += "<NONELECREC_CABINETID>" + apprGRecordTempVO.get(0).getCabinetID() + "</NONELECREC_CABINETID>"; 
+                    } 
+                } 
+            }
+			
 			docResult = "<PARAMETER>" + docResult + "</PARAMETER>";
 			
 			if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007") && result.equals("A")) {
@@ -13601,7 +13640,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						subTitleFlag = false;
 						
 						for (int k = 0; k < userDIDs.length; k++) {
-							if (userDIDs[k].trim().equals(userDeptID.trim()) && userDNames[k].trim().equals(userDeptName.trim()) && userDNames2[k].trim().equals(userDeptName2.trim()) 
+							if (userDIDs[k].trim().equals(userDeptID.trim()) && userDNames[k].trim().equals(StringEscapeUtils.unescapeHtml3(userDeptName.trim())) && userDNames2[k].trim().equals(StringEscapeUtils.unescapeHtml3(userDeptName2.trim())) 
 									&& userCompanyIDs[k].trim().equals(userCompanyID.trim()) && userTitles[k].trim().equals(userJobTitle.trim()) && userTitles2[k].trim().equals(userJobTitle2.trim())){
 								subTitleFlag = true;
 							}

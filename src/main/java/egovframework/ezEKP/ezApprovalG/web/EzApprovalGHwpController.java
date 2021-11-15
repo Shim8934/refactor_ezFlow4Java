@@ -1778,6 +1778,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("useExternalMailServer", useExternalMailServer);
 		model.addAttribute("pSusinAdmin", pSusinAdmin);
 		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
+		model.addAttribute("useOpenGov", config.getProperty("config.useOpenGov"));
 		
 		// 대용량첨부 관련 정보
 		model.addAttribute("bigAttachDownloadPeriod", bigAttachDownloadPeriod); // 다운로드 기간

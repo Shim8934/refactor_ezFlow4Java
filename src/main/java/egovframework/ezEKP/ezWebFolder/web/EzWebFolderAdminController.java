@@ -609,6 +609,9 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		headers.set("x-user-host", request.getServerName());
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
+		LoginVO userInfo = commonUtil.getUserForGw(user.getId(), request.getServerName());
+		String primary   = userInfo.getPrimary();
+
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("type", type)
 										.queryParam("companyId", companyId)
@@ -616,6 +619,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 										.queryParam("searchOption", searchOpt)
 										.queryParam("column", column)
 										.queryParam("order", order)
+										.queryParam("primary", primary)
 										.queryParam("currentPage", currPage);
 		
 		RestTemplate rest             = new RestTemplate();

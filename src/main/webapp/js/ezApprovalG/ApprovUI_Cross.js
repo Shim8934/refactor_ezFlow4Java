@@ -1311,8 +1311,10 @@ function getApprovInfo() {
         document.getElementById("APRLINEINFO").dataSource = xmlpara;
 
         var dataNodes = GetElementsByTagName(xmlpara, "DATA6");
+        var dataNodes2 = GetElementsByTagName(xmlpara, "DATA15"); // 기안자 부서명
         var lastIdx = dataNodes.length;
         drafterDeptid = getNodeText(dataNodes[lastIdx - 1]);
+        drafterDeptName = getNodeText(dataNodes2[lastIdx - 1]);
         
         aprDocTimeStamp = getNodeText(SelectSingleNodeNew(result, "APROVEDATA/APRDOCTIMESTAMP"));
 
@@ -4128,11 +4130,9 @@ function setDocNumFormat(pPrefix) {
     var Header, Tail;
     var i;
     var d = new Date();
-
     var numHeader = "";
 
     var fields = message.GetFieldsList();
-
     var field = message.GetListItem(fields, pPrefix + "docnumber");
     
     if (!field) {
@@ -4140,15 +4140,17 @@ function setDocNumFormat(pPrefix) {
     }
     
     var fieldValue = message.DocumentBodyGetAttribute("orgdocnum", 0);
-
+    var fieldValue2 = getNodeText(field); // docnumber값은 td 내부의 텍스트로 존재
+    
     Arr_Header = fieldValue.split("-");
-    org_Header = field.split("-");
+    org_Header = fieldValue2.split("-");
     
     Arr_Header.forEach(function(item, index) {
     	if (!item.indexOf('@')) {
     		//@ exist
     		Header = item.replace("@", "");
 
+    		// 부서명은 기안 시점의 기안부서명을 유지
             switch (Header) {
                 case "DP":
                     numHeader += DeptSymbol;
@@ -4158,14 +4160,18 @@ function setDocNumFormat(pPrefix) {
                     numHeader += DeptSymbol;
                     break;
 
+                /* 2021-11-15 홍승비 - 문서번호의 년-월-일 형식은 최종결재일을 기준으로 표출하도록 수정함 (항상 최신 일자를 표출) */
                 case "YY":
-                    var tempYear = d.getFullYear();
-                    numHeader += (org_Header[index] == tempYear ? tempYear : org_Header[index]);
+                	// 기존에는 기산일 고려하여 기안 시점의 년도를 표출하였으나, 최종결재일 기준으로 표출하도록 스펙이 확정되었음 (일련번호는 기산일 고려하여 기존 스펙대로 생성됨)
+                    var tempYear = d.getFullYear().toString();
+                    //numHeader += (org_Header[index] == tempYear ? tempYear : org_Header[index]);
+                    numHeader += tempYear;
                     break;
                     
                 case "yy":
-                    var tempYear = d.getFullYear().substr(2);
-                    numHeader += (org_Header[index] == tempYear ? tempYear : org_Header[index]);
+                    var tempYear = d.getFullYear().toString().substr(2);
+                    //numHeader += (org_Header[index] == tempYear ? tempYear : org_Header[index]);
+                    numHeader += tempYear;
                     break;
 
                 case "MM":
@@ -4197,8 +4203,9 @@ function setDocNumFormat(pPrefix) {
                 	break;
                 	
                 case "YM":
-                    var tempYear = d.getFullYear().substr(2);
-                    numHeader += (org_Header[index] == tempYear ? tempYear : org_Header[index]);
+                    var tempYear = d.getFullYear().toString().substr(2);
+                    //numHeader += (org_Header[index] == tempYear ? tempYear : org_Header[index]);
+                    numHeader += tempYear;
                     
                 	var mmonth = d.getMonth() + 1;
                     if (parseInt(mmonth) < 10) mmonth = "0" + mmonth;
@@ -4338,3 +4345,55 @@ function getPersonalAgreeReturnType() {
    return result;
 }
 
+// 문서번호의 @DP, @dp에서 필요한 부서명 리턴
+function getDeptSymbol(DeptID, DeptName) {
+	var result = "";
+	var dataNodes;
+	var RtnVal;
+	
+	if(approvalFlag == "S") {
+		$.ajax({
+			type : "POST",
+			dataType : "text",
+			async : false,
+			url : "/ezApprovalG/getChaebunDept.do",
+			data : {
+				deptID : DeptID,
+				orgCompanyID : orgCompanyID
+			},
+			success: function(xml){
+				result = xml;
+				if(result != null) {
+					dataNodes = GetChildNodes(loadXMLString(result).documentElement);
+					DeptName = getNodeText(dataNodes[0]);
+					RtnVal = getNodeText(dataNodes[1]);
+				}
+			}        			
+		});
+	} else {
+		$.ajax({
+			type : "POST",
+			dataType : "text",
+			async : false,
+			url : "/ezOrgan/getADInfos.do",
+			data : {
+				cn : DeptID,
+				prop : "extensionAttribute6",
+				cate  : "group"
+			},
+			success: function(xml){
+				result = xml;
+			}        			
+		});
+	
+		dataNodes = GetChildNodes(loadXMLString(result).documentElement);
+		RtnVal = getNodeText(dataNodes[0]);
+	}
+	
+    if (RtnVal == "") {
+        return DeptName;
+    }
+    else {
+        return RtnVal;
+    }
+}

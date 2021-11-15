@@ -5565,7 +5565,7 @@
 		</isNotEmpty>
     	<isNotEmpty property="v_APPROVUSER"> 
    		AND 
-   			TBL_ENDAPRLINEINFO.APRMEMBERNAME LIKE '%$v_APPROVUSER%$'
+   			TBL_ENDAPRLINEINFO.APRMEMBERNAME LIKE '%$v_APPROVUSER$%'
    		</isNotEmpty>
 		<isNotEmpty property="v_SUBQUERY">
 			<![CDATA[

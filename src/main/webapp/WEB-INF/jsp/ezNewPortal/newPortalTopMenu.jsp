@@ -323,10 +323,8 @@
 		
 		//2019-09-20 메신저 다운로드 추가
 		var talkDowmClick = function () {
-			if ("${talkFilePath}" != "") {
-				var DownloadUrl = "/ezCommon/talkDownloadAttach.do?filePath=" + "${talkFilePath}";
-				AttachDownFrame.location.href = DownloadUrl;				
-			}
+			// 20211102 조진호 - 경기대학교 웹취약점(모의해킹) 체크 결과에 따른 조치. 기존 filePath는 get parameter로 받아와 경로가 보였지만 이 부분을 서버에서 처리하는 방식으로 수정
+			AttachDownFrame.location.href = "/ezCommon/talkDownloadAttach.do";				
 		}
 		
 		/* 2019-01-04 김민성 - 웹도움말 팝업창으로 변경 */

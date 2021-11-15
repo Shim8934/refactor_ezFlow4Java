@@ -31,31 +31,31 @@
 
 			function OK_Click(){
 				if (NewPassword.value.trim() == "") {
-					alert("<spring:message code='ezOrgan.t229' />");
+					alert("<spring:message code='ezOrgan.t229' />"); 
 					document.getElementById('NewPassword').focus();
 					return;
 				}
-
+				
 				var checkPw = type == "shared" ? sharedMailCheckPassword(NewPassword.value) : CheckPassword(NewPassword.value, companyID);
 		        if (!checkPw || checkPw != "OK"){
 		        	if (checkPw == "ERROR") {
 		        		alert("<spring:message code='ezSystem.ksaPwPolicy34'/>");
 		        	} else {
-		        		alert("<spring:message code='ezSystem.ksaPwPolicy35'/>");
+		        		alert("<spring:message code='ezSystem.ksaPwPolicy35'/>"); 
 		        	}
 		        	
 		        	document.getElementById('NewPassword').focus();
 		        	return;
 		        }
 
-				if (NewPassword.value != ConfirmPassword.value) {
+				if (NewPassword.value != ConfirmPassword.value) { 
 					alert("<spring:message code='ezOrgan.t230' />");
 					document.getElementById('ConfirmPassword').focus();
 					return;
 				}
 
 				if (ReturnFunction != null) {
-					ReturnFunction(NewPassword.value);
+					ReturnFunction(NewPassword.value); 
 				} else {
 					window.returnValue = NewPassword.value;
 				}
@@ -76,7 +76,7 @@
 				<li><span onclick="window.close()"></span></li>
 			</ul>
 		</div>
-		<div id="pwPolicyExplain" style="margin-top: 5px; color: #393939;"><span>${pwPolicyExplain }</span></div>
+		<div id="pwPolicyExplain" style="margin-top: 5px; color: #393939;"><span>${pwPolicyExplain }</span></div> <!-- el로 값 통째로 넣어줌 -->
 		<table class="content" style="margin-top: 3px"> 
 			<tr>
 				<th><spring:message code="ezOrgan.t232" /></th>

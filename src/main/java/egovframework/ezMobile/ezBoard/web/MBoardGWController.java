@@ -1251,7 +1251,7 @@ public class MBoardGWController {
      */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/sendmail/admin", method= RequestMethod.POST, produces="application/json;charset=utf-8")
-	public Object sendBoardAlertMailAdmin(@PathVariable String boardId, HttpServletRequest request, Locale locale) throws Exception {		
+	public Object sendBoardAlertMailAdmin(@PathVariable String boardId, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/movie/boards/{boardId}/sendmail/admin] started.");
 		
 		JSONObject result = new JSONObject();
@@ -1264,6 +1264,7 @@ public class MBoardGWController {
 			MCommonVO info = mOptionService.commonInfo(serverName, userID);
 			MOptionVO mobileInfo = mOptionService.optionInfo(userID, info.getTenantId());
 			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
+			Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(info.getLang()));
 			
 			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
 			String userEmail = userID + "@" + domainName;
@@ -1368,7 +1369,7 @@ public class MBoardGWController {
      */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/sendmail", method= RequestMethod.POST, produces="application/json;charset=utf-8")
-	public Object sendBoardAlertMail(@PathVariable String boardId, HttpServletRequest request, Locale locale) throws Exception {		
+	public Object sendBoardAlertMail(@PathVariable String boardId, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/movie/boards/{boardId}/sendmail] started.");
 		
 		JSONObject result = new JSONObject();
@@ -1384,6 +1385,7 @@ public class MBoardGWController {
 			MOptionVO mobileInfo = mOptionService.optionInfo(userID, info.getTenantId());
 			int tenantID = info.getTenantId();
 			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), tenantID);
+			Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(info.getLang()));
 			
 			String domainName = ezCommonService.getTenantConfig("DomainName", tenantID);
 			String userEmail = userID + "@" + domainName;

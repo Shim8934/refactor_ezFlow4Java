@@ -7829,4 +7829,40 @@
  		]]>
  	</select>
  	
+ 	 <select id="EzCommunityDAO.getIsNewItemCnt" parameterClass="Map" resultClass="Integer">
+ 		<![CDATA[
+ 			SELECT
+ 				COUNT(ITEMID)
+ 			FROM
+ 				TBL_COMM_ITEM I
+ 			WHERE
+ 				TENANT_ID = #v_TENANTID#
+ 			AND
+ 				BOARDID = #v_BOARDID#
+ 			AND
+ 				NOT EXISTS (
+ 					SELECT
+ 						USERID
+ 					FROM
+ 						TBL_COMM_ITEM_READ R
+ 					WHERE 
+						I.TENANT_ID = R.TENANT_ID
+					AND
+						I.BOARDID = R.BOARDID
+					AND 
+						I.ITEMID = R.ITEMID
+ 					AND
+						TENANT_ID = #v_TENANTID#
+		 			AND
+		 				BOARDID = #v_BOARDID#
+		 			AND
+		 				R.USERID = #v_USERID#
+ 				)
+			AND
+ 				STARTDATE <= #nowDate#
+ 			AND
+ 				ENDDATE > #nowDate#
+ 		]]>
+ 	</select>
+ 	
 </sqlMap>

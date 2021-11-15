@@ -280,7 +280,12 @@
 					} catch(e) {}
 				}
 				window.opener.location.reload(true);
-		        
+				
+				/* 2021-11-09 홍승비 - 커뮤니티 팝업홈의 좌측 게시판 신규 게시물 아이콘 갱신 */
+				if (window.opener.parent.location.href.indexOf("ezCommunity/commHome/popupCommHome.do") > -1 && typeof(window.opener.parent.applyIsNewIconAll) == "function") {
+					window.opener.parent.applyIsNewIconAll();
+				}
+				
 		        xmlhttp = null;
 		        xmlDom = null;
 		    }
