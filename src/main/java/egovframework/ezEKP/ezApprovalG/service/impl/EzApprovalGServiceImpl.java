@@ -75,6 +75,7 @@ import kr.dogfoot.hwplib.writer.HWPWriter;
 import org.apache.commons.codec.binary.Base64; 
 import org.apache.commons.io.FileUtils; 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.json.simple.JSONArray;
@@ -6956,7 +6957,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                         docResult += "<REGISTERTYPE>" + apprGRecordTempVO.get(0).getRegisterType() + "</REGISTERTYPE>"; 
                         docResult += "<REGISTERDATE>" + apprGRecordTempVO.get(0).getRegisterDate() + "</REGISTERDATE>"; 
                         docResult += "<REGISTERYEAR>" + apprGRecordTempVO.get(0).getRegisterYear() + "</REGISTERYEAR>"; 
-                        docResult += "<EXECUTEDATE>" + apprGRecordTempVO.get(0).getExecuteDate() + "</EXECUTEDATE>"; 
+                        	if(apprGRecordTempVO.get(0).getExecuteDate()==null) {
+                        		docResult += "<EXECUTEDATE>" + "" + "</EXECUTEDATE>";
+                        	}else {
+                        		docResult += "<EXECUTEDATE>" + apprGRecordTempVO.get(0).getExecuteDate() + "</EXECUTEDATE>";
+                        	}
                         docResult += "<TITLE>" + apprGRecordTempVO.get(0).getTitle() + "</TITLE>"; 
                         docResult += "<APRMEMBERTITLE>" + apprGRecordTempVO.get(0).getAprMemberTitle() + "</APRMEMBERTITLE>"; 
                         docResult += "<APRMEMBERTITLE2>" + apprGRecordTempVO.get(0).getAprMemberTitle2() + "</APRMEMBERTITLE2>"; 
@@ -13635,7 +13640,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						subTitleFlag = false;
 						
 						for (int k = 0; k < userDIDs.length; k++) {
-							if (userDIDs[k].trim().equals(userDeptID.trim()) && userDNames[k].trim().equals(userDeptName.trim()) && userDNames2[k].trim().equals(userDeptName2.trim()) 
+							if (userDIDs[k].trim().equals(userDeptID.trim()) && userDNames[k].trim().equals(StringEscapeUtils.unescapeHtml3(userDeptName.trim())) && userDNames2[k].trim().equals(StringEscapeUtils.unescapeHtml3(userDeptName2.trim())) 
 									&& userCompanyIDs[k].trim().equals(userCompanyID.trim()) && userTitles[k].trim().equals(userJobTitle.trim()) && userTitles2[k].trim().equals(userJobTitle2.trim())){
 								subTitleFlag = true;
 							}

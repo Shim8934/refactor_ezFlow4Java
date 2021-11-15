@@ -617,15 +617,25 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		return days;
 	}
 	
-	public int checkPassword (String pCN, String pPassword, int tenantID) throws Exception {
+	/* 2021-10-26 이사라 : 새비번이 prev비번과 일치하는지 chk 추가 */
+	@Override
+	public int checkPassword (String pCN, String pPassword, int tenantID, String companyID, String npPassword, boolean useCkhPrevPwd) throws Exception {
 		logger.debug("checkPassword started");
 
 		pPassword = EgovFileScrty.encryptPassword(pPassword, pCN);
+		npPassword = EgovFileScrty.encryptPassword(npPassword, pCN); // 새비번 추가
 		
 		int pResult = 0;
 		
-		if (ezPersonalDAO.getPassword(pCN, tenantID).equals(pPassword)) {
+		if (ezPersonalDAO.getPassword(pCN, tenantID).equals(pPassword)) { // 현비번 compaing with db현비번
 			pResult = 1;
+			
+			// company option on/off check
+			if (useCkhPrevPwd) {
+				if (npPassword.equals(ezCommonService.getPrevPwd(tenantID, pCN))) { // 새비번 comparing with prev비번
+					pResult = 2; 
+				}
+	    	}	
 		} else {
 			pResult = 0;
 		}
