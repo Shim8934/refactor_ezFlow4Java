@@ -3419,7 +3419,15 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 
 		return result;
 	}
-	
+
+	public JSONObject invokeEzTalkSyncServerForSingle(String cn, int tenantId) throws Exception {
+		String ezTalkServerUrl = ezCommonService.getTenantConfig("ezTalkSyncServerUrlForSingle", tenantId);
+		JSONObject result = rest.builder().post().url(ezTalkServerUrl).jsonParam("userId", cn).exchangeBody();
+		logger.debug("ezTalkSyncServerForSingle getWebServerResult={}", result);
+
+		return result;
+	}
+
 	/**
 	 * ezSyncServer를 호출하여 인사 정보를 동기화한다.
 	 */
