@@ -158,6 +158,11 @@ function Save_OneLineReply() {
 		success: function(){
 			getBoardComment();
 			$('#txtPassWord').val("");
+			
+			/* 2021-11-15 홍승비 - 게시판의 옵션에 따라 댓글 알림메일 발송 (비동기식, 백그라운드 동작) */
+			 if (mailFG_Comment == "Y") {
+             	sendCommBoardAlertMail("comment", pBoardID, pItemID);
+             }
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			alert("ajax error");
@@ -366,4 +371,19 @@ function deleteBoardComment(obj) {
 /* 2018-07-02 홍승비 - 작성자 정보 표시 시 부서정보 파라미터 추가 */
 function OpenUserInfo(pUserID, pDeptID) {
     var result = GetOpenWindow("/ezCommon/showPersonInfo.do?id=" + pUserID + "&dept=" + pDeptID, "UserInfo", 420, 450, "NO");
+}
+
+/* 2021-11-15 홍승비 - 게시판 메일알림 함수 추가, 비동기로 백그라운드 동작 */
+function sendCommBoardAlertMail(pMode, pBoardID, pItemID) {
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : true,
+		url : "/ezCommunity/sendCommBoardAlertMail.do",
+		data : {
+			mode : pMode,
+			boardID : pBoardID,
+			itemID : pItemID
+		}
+	});
 }

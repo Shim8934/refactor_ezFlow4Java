@@ -2171,4 +2171,26 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
+	/* 2021-11-12 홍승비 - 커뮤니티 게시판 메일알림 옵션 추가 (게시/수정/댓글알림)  */
+	public void addCommMailFGColumn() {
+		try {
+			select("EzCommonDAO.checkCommMailFG_PostColumn");
+		} catch (Exception e) {
+			logger.debug("TBL_Comm_BoardInfo MailFG_Post column doesn't exist. creating the column...");
+			update("EzCommonDAO.addCommMailFG_PostColumn");
+		}
+		try {
+			select("EzCommonDAO.checkCommMailFG_ModColumn");
+		} catch (Exception e) {
+			logger.debug("TBL_Comm_BoardInfo MailFG_Mod column doesn't exist. creating the column...");
+			update("EzCommonDAO.addCommMailFG_ModColumn");
+		}
+		try {
+			select("EzCommonDAO.checkCommMailFG_CommentColumn");
+		} catch (Exception e) {
+			logger.debug("TBL_Comm_BoardInfo MailFG_Comment column doesn't exist. creating the column...");
+			update("EzCommonDAO.addCommMailFG_CommentColumn");
+		}
+	}
+	
 }

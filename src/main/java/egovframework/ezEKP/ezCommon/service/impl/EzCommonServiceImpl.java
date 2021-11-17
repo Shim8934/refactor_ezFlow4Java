@@ -2533,4 +2533,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void alterTblAddjobMaster() throws Exception {
 		ezCommonDAO.alterTblAddjobMaster();
 	}
+	
+	@Override
+	public void addCommMailFGColumn() throws Exception {
+		ezCommonDAO.addCommMailFGColumn();
+	}
 }
