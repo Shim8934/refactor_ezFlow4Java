@@ -66,6 +66,25 @@
         <property name="maxActive" value="500"/>
         <property name="maxWait" value="20000"/>        
     </bean>
+
+    <!-- Tibero -->
+    <bean id="dataSource-tibero-jndi" class="org.springframework.jndi.JndiObjectFactoryBean" lazy-init="true">
+        <property name="jndiName" value="${Globals.jndiName}"/>
+    </bean>
+    
+    <bean id="dataSource-tibero" class="org.apache.commons.dbcp.BasicDataSource" lazy-init="true" destroy-method="close">
+        <property name="driverClassName" value="${Globals.DriverClassName}"/>
+        <property name="url" value="${Globals.Url}" />
+        <property name="username" value="${Globals.UserName}"/>
+        <property name="password" value="${Globals.Password}"/>
+        <property name="validationQuery" value="select 1 from dual"></property>
+        <property name="validationQueryTimeout" value="5"></property>
+        <property name="timeBetweenEvictionRunsMillis" value="300000"/>
+        <property name="minEvictableIdleTimeMillis" value="300000"/>
+        <property name="testWhileIdle" value="true"/>        
+        <property name="maxActive" value="500"/>
+        <property name="maxWait" value="20000"/>     
+    </bean>
     
     <!-- Altibase -->
     <!--<bean id="dataSource-altibase" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
@@ -74,15 +93,6 @@
         <property name="username" value="${Globals.UserName}"/>
         <property name="password" value="${Globals.Password}"/>
         <property name="maxActive" value="10"/>
-        <property name="validationQuery" value="select 1 from dual"></property>
-    </bean>-->
-
-    <!-- Tibero -->
-    <!--<bean id="dataSource-tibero" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-        <property name="driverClassName" value="${Globals.DriverClassName}"/>
-        <property name="url" value="${Globals.Url}" />
-        <property name="username" value="${Globals.UserName}"/>
-        <property name="password" value="${Globals.Password}"/>
         <property name="validationQuery" value="select 1 from dual"></property>
     </bean>-->
 	

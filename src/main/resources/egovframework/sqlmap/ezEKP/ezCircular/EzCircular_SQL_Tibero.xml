@@ -1,0 +1,2705 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezCircular">
+	<typeAlias alias="CircularConfigVO"				type="egovframework.ezEKP.ezCircular.vo.CircularConfigVO"/>
+    <typeAlias alias="CircularListVO"            	type="egovframework.ezEKP.ezCircular.vo.CircularListVO"/>
+	<typeAlias alias="CircularDeptVO"				type="egovframework.ezEKP.ezCircular.vo.CircularDeptVO"/>
+    <typeAlias alias="CircularAttachVO"        		type="egovframework.ezEKP.ezCircular.vo.CircularAttachVO"/>
+    <typeAlias alias="CircularMemberVO"     		type="egovframework.ezEKP.ezCircular.vo.CircularMemberVO"/>
+    <typeAlias alias="CircularFolderVO"     		type="egovframework.ezEKP.ezCircular.vo.CircularFolderVO"/>
+    <typeAlias alias="CircularCommentVO"     		type="egovframework.ezEKP.ezCircular.vo.CircularCommentVO"/>
+    <typeAlias alias="CircularListHeaderVO" 		type="egovframework.ezEKP.ezCircular.vo.CircularListHeaderVO"/>
+	<typeAlias alias="CircularConfirmVO" 		type="egovframework.ezEKP.ezCircular.vo.CircularConfirmVO"/>
+	
+    <select id="EzCircularDAO.getCircularList_Config" resultClass="CircularConfigVO">
+	   <![CDATA[
+		    SELECT
+				listcnt,
+				ispreview,
+				previewlistvalue,
+				previewcontentvalue
+			FROM
+				TBL_CIRCULAR_OPTION
+			WHERE
+				tenantid = #v_TENANTID#
+			AND
+				memberid = #v_MEMBERID#
+		]]>
+	</select>
+	
+	<select id="EzCircularDAO.getCircularConfig" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				memberid
+			FROM
+				TBL_CIRCULAR_OPTION
+			WHERE
+				tenantid = #v_TENANTID#
+			AND
+				memberid = #v_MEMBERID#
+		]]>
+	</select>
+    
+    <select id="EzCircularDAO.getCircularList" resultClass="CircularListVO" >
+        <![CDATA[
+            SELECT
+				*
+			FROM
+            (SELECT AAA.*, rownum as rNum FROM 
+            (SELECT
+                A.circularid,
+                A.importance,
+                A.hasfile,
+                A.status,
+                B.updateStatus,
+                A.title,
+                A.memberid,
+                A.membername,
+                TO_CHAR(TO_DATE(A.regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS regdate,
+                B.status AS confirmstatus,
+                NVL(TO_CHAR(TO_DATE(B.confirmdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS confirmdate,
+                NVL(TO_CHAR(TO_DATE(B.updatedate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS updatedate,
+                NVL(C.confirmcount, '0') AS confirmcount,
+				D.confirmtotalcount,
+				B.commentStatus,
+				B.shareStatus,
+				(case when commentStatus = 1 or shareStatus = 1 then 1 else 0 end) as totalstatus
+            FROM
+                TBL_CIRCULAR A
+            JOIN
+            	TBL_CIRCULAR_USER B
+            ON
+            	A.circularid = B.circularid
+            AND
+                A.tenantid = B.tenantid
+			LEFT JOIN
+				(SELECT
+					DISTINCT BB.circularid,
+					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, NULL, BB.circularid))) AS confirmCount
+				FROM
+					TBL_CIRCULAR AA
+				JOIN
+					TBL_CIRCULAR_USER BB
+				ON
+					AA.circularid = BB.circularid
+				AND
+					AA.tenantid = BB.tenantid
+				WHERE
+					BB.status = 1
+				AND
+					BB.tenantid = #tenantID#
+				GROUP BY
+					BB.circularid) C
+			ON
+				A.circularid = C.circularid
+			LEFT JOIN
+				(SELECT
+					DISTINCT BB.circularid,
+					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, NULL, BB.circularid))) AS confirmtotalcount
+				FROM
+					TBL_CIRCULAR AA
+				JOIN
+					TBL_CIRCULAR_USER BB
+				ON
+					AA.circularid = BB.circularid
+				AND
+					AA.tenantid = BB.tenantid
+				WHERE
+					BB.tenantid = #tenantID#
+				GROUP BY
+					BB.circularid) D
+			ON
+				A.circularid = D.circularid
+            WHERE
+            	(B.status = 0 OR B.commentstatus = 1 OR B.sharestatus = 1)
+            AND
+            	A.status <> '2'
+            AND
+				B.updatestatus IN (0, 1)
+            AND 
+            	B.companyid = #companyID#
+		]]>
+		
+		<isNotEqual property="searchValue" compareValue="">
+        	<isEqual property="searchType" compareValue="subject">
+	        	<![CDATA[
+	        		AND
+	        			A.title LIKE '%'||#searchValue#||'%'
+	        	]]>
+        	</isEqual>
+        	
+        	<isEqual property="searchType" compareValue="writer">
+	        	<![CDATA[
+	        		AND
+	        			A.membername LIKE '%'||#searchValue#||'%'
+	        	]]>
+        	</isEqual>
+        </isNotEqual>
+		
+		<isNotEqual property="sdate" compareValue="">	
+			<![CDATA[
+	            AND
+	            	TO_DATE(#sdate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) <= TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')
+	            AND
+	            	TO_DATE(#edate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) > TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')        
+	        ]]>
+	    </isNotEqual>
+	        
+		<![CDATA[
+            AND
+                B.memberid = #memberID#
+            AND
+                A.tenantid = #tenantID#
+        ]]>
+        <isNotEqual property="orderCell" compareValue="">
+        	<![CDATA[    
+				
+            	order by  
+	            	$orderOption1$
+	           
+            ]]>
+      	</isNotEqual>
+       
+        <isEqual property="orderCell" compareValue="">
+        	<![CDATA[
+		      
+        		order by     
+	            	B.updatedate DESC,
+	            	totalstatus DESC,
+	            	A.regdate DESC
+        
+            ]]>
+        </isEqual>    
+        <![CDATA[        
+        )AAA
+        WHERE 
+            rownum <= (#limit# + #rowCount#)
+        )
+        
+        WHERE 
+            rNum >= (#limit# + 1)
+        ]]>
+    </select>
+	
+    <select id="EzCircularDAO.getCircularListCount" parameterClass="Map" resultClass="Integer" >
+        <![CDATA[
+        	SELECT
+                COUNT(DISTINCT A.circularid) CNT
+            FROM
+                TBL_CIRCULAR A
+            JOIN
+            	TBL_CIRCULAR_USER B
+            ON
+            	A.circularid = B.circularid
+            AND
+                A.tenantid = B.tenantid
+            WHERE
+            	(B.status = 0 OR B.commentstatus = 1 OR B.sharestatus = 1)
+            AND
+            	A.status <> 2
+            AND
+				B.updatestatus IN (0, 1)
+            AND
+                B.memberid = #memberID#
+            AND
+                A.tenantid = #tenantID#
+            AND
+            	A.companyid = #companyID#
+        ]]>
+        
+        <isNotEqual property="searchValue" compareValue="">
+        	<isEqual property="searchType" compareValue="subject">
+	        	<![CDATA[
+	        		AND
+	        			A.title LIKE '%'||#searchValue#||'%'
+	        	]]>
+        	</isEqual>
+        	
+        	<isEqual property="searchType" compareValue="writer">
+	        	<![CDATA[
+	        		AND
+	        			A.membername LIKE '%'||#searchValue#||'%'
+	        	]]>
+        	</isEqual>
+        </isNotEqual>
+        
+        <isNotEqual property="sdate" compareValue="">	
+			<![CDATA[
+	            AND
+	            	TO_DATE(#sdate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) <= TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')
+	            AND
+	            	TO_DATE(#edate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) > TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')       
+	        ]]>
+	    </isNotEqual>
+    </select>
+  
+    <select id="EzCircularDAO.getCircular" resultClass="CircularListVO" >
+        <![CDATA[
+            SELECT
+                A.circularid,
+                A.importance,
+                A.hasfile,
+                A.status,
+                A.title,
+                A.memberid,
+                TO_CHAR(TO_DATE(A.regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS regdate,
+                TO_CHAR(TO_DATE(A.enddate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS enddate,
+                A."option",
+                A."content",
+                A.memberName,
+                NVL(C.confirmcount, '0') AS confirmcount,
+				D.confirmtotalcount,
+				B.status confirmstatus,
+				B.updateStatus,
+				B.commentStatus,
+				B.shareStatus,
+				A.companyId,
+				(SELECT extensionattribute2 FROM TBL_USERMASTER F WHERE A.memberid = F.cn AND A.tenantid = F.tenant_id) as userImageFile
+            FROM
+                TBL_CIRCULAR A
+			JOIN
+				TBL_CIRCULAR_USER B
+			ON
+				A.circularid = B.circularid
+			AND
+				A.tenantid = B.tenantid
+            LEFT JOIN
+            	TBL_USERMASTER C
+            ON
+            	A.MEMBERID = C.CN
+            LEFT JOIN
+				(SELECT
+					DISTINCT BB.circularid,
+					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, NULL, BB.circularid))) AS confirmCount
+				FROM
+					TBL_CIRCULAR AA
+				JOIN
+					TBL_CIRCULAR_USER BB
+				ON
+					AA.circularid = BB.circularid
+				AND
+					AA.tenantid = BB.tenantid
+				WHERE
+					BB.status = 1
+				AND
+					BB.tenantid = #tenantID#
+				GROUP BY
+					BB.circularid) C
+			ON
+				A.circularid = C.circularid
+			LEFT JOIN
+				(SELECT
+					DISTINCT BB.circularid,
+					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, NULL, BB.circularid))) AS confirmtotalcount
+				FROM
+					TBL_CIRCULAR AA
+				JOIN
+					TBL_CIRCULAR_USER BB
+				ON
+					AA.circularid = BB.circularid
+				AND
+					AA.tenantid = BB.tenantid
+				WHERE
+					BB.tenantid = #tenantID#
+				GROUP BY
+					BB.circularid) D
+			ON
+				A.circularid = D.circularid
+            WHERE
+                A.circularid = #circularID#
+            AND
+            	B.memberid = #memberID#
+            AND
+                A.tenantid = #tenantID#
+        ]]>
+         <!--    GROUP BY
+            	A.circularid -->
+    </select>
+
+    <select id="EzCircularDAO.getCircularUserList" resultClass="CircularListVO" >
+        <![CDATA[
+            SELECT
+                A.circularuserid,
+                A.circularid,
+                A.memberid,
+                A.membername,
+                A.membername2,
+                A.status,
+                NVL(TO_CHAR(TO_DATE(A.confirmdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS confirmdate,
+                A.updatestatus,
+                A.updatedate,
+                A.commentstatus,
+                A.tenantid,
+                B.cn,
+                B.displayname,
+                B.displayname2,
+                B.mail
+            FROM
+				TBL_CIRCULAR_USER A
+			LEFT JOIN
+				TBL_USERMASTER B
+			ON
+				A.memberid = B.cn
+			AND
+				A.tenantid = B.tenant_id
+            WHERE
+                circularid = #circularID#
+            AND
+                tenantid = #tenantID#
+        ]]>
+        
+       	<isNotEqual property="searchValue" compareValue="">
+       		<isEqual property="searchType" compareValue="userID">
+       			<![CDATA[
+					AND
+						B.displayname LIKE '%'||#searchValue#||'%'
+				]]>
+       		</isEqual>
+		</isNotEqual>
+		
+				<!-- FIELD(A.memberid, (SELECT memberID FROM TBL_CIRCULAR WHERE circularid = #circularID#)) DESC, 
+				A.memberid ASC-->
+		<![CDATA[
+			ORDER BY
+				DECODE(A.memberid, (SELECT memberID FROM TBL_CIRCULAR WHERE circularid = #circularID#), 1, 2),
+				A.memberid ASC
+		]]>
+    </select>
+    
+    <select id="EzCircularDAO.getCircularDeptUserList" resultClass="CircularListVO" >
+        <![CDATA[
+            SELECT
+                A.memberid,
+                A.membername,
+                A.membername2,
+                B.title
+            FROM
+                TBL_CIRCULAR_BMUSER A
+            JOIN
+            	TBL_CIRCULAR_BM B
+            ON
+            	A.circularbmid = B.circularbmid
+            WHERE
+                A.circularbmid = #circularBMId#
+            AND
+                A.tenantid = #tenantID#     
+        ]]>
+    </select>
+    
+    <select id="EzCircularDAO.getAttachList" parameterClass="Map" resultClass="CircularAttachVO">
+        <![CDATA[                   
+            SELECT 
+                circularfileid,
+                filesize,
+                filename,
+                filepath
+            FROM 
+                TBL_CIRCULAR_FILE 
+            WHERE  
+                circularid = #circularID#
+            AND
+                tenantid = #tenantID#            
+        ]]>     
+    </select>
+
+    
+    <select id="EzCircularDAO.getcircularDeptList" parameterClass="Map" resultClass="CircularDeptVO">
+        <![CDATA[
+          select 
+            d.circularbmid, 
+            d.title,
+            d.regDate, 
+            e.membername,
+            d.memberNameCount 
+        from
+            (SELECT
+                A.circularbmid,
+                A.title,
+				TO_CHAR(TO_DATE(A.regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS regdate, 
+            (SELECT
+                COUNT(*) - 1 
+             FROM
+                TBL_CIRCULAR_BMUSER B
+             WHERE
+                B.circularbmid = A.circularBMID) membernamecount
+             FROM
+                TBL_CIRCULAR_BM A
+            
+            WHERE
+                A.memberid = #memberID#
+            AND
+                A.tenantid = #tenantID#
+            AND
+            	A.companyid = #companyID# ) d
+        join (        
+        select c.circularBMID, c.membername 
+        from
+        (SELECT circularBMID, membername FROM
+                (SELECT
+                    row_number() over(Partition by circularbmid ORDER BY membername) as rNum, circularbmid, membername
+                FROM
+                    TBL_CIRCULAR_BMUSER B
+            ) WHERE rNum = 1)  c) e
+         on e.circularbmid = d.circularbmid 
+        ]]>
+    </select>
+
+    <select id="EzCircularDAO.getMemberName" parameterClass="map" resultClass="CircularMemberVO">
+        <![CDATA[
+			SELECT
+				A.circularbmid,
+				A.memberid,
+				CC.company,
+    			CC.description,
+    			NVL(CC.title, ' ') as title,
+				A.membername,
+				CC.mail
+			FROM
+				TBL_CIRCULAR_BMUSER A
+			LEFT JOIN
+				( SELECT 
+						BB.*, ROW_NUMBER() OVER (PARTITION BY BB.CN ORDER BY ROWNUM) CNT 
+			      FROM ( 
+			      		SELECT 
+			                D.CN, D.DISPLAYNAME, D.COMPANY, D.title, D.MAIL, D.DESCRIPTION
+			            FROM 
+			                TBL_USERMASTER D
+			            WHERE 
+			                D.TENANT_ID = #tenantID# AND D.PHYSICALDELIVERYOFFICENAME = #companyID#
+			            UNION ALL
+			            SELECT 
+			                B.cn, B.DISPLAYNAME, C.EXTENSIONATTRIBUTE3 as COMPANY, a.title, b.mail, C.DISPLAYNAME AS DESCRIPTION
+			            FROM 
+			                TBL_USERMASTER B 
+			            INNER JOIN 
+			                TBL_ADDJOBMASTER A 
+			            ON 
+			                A.CN = B.CN 
+			            AND 
+			                A.TENANT_ID = B.TENANT_ID       
+			            RIGHT JOIN 
+			                TBL_DEPTMASTER C
+			            ON 
+			                A.DEPTID = C.CN
+			            AND 
+			                B.TENANT_ID = C.TENANT_ID   
+			            WHERE 
+			                A.TENANT_ID = #tenantID# AND C.EXTENSIONATTRIBUTE2 = #companyID#) BB
+			        ) CC
+			ON
+				A.memberid = CC.cn
+			WHERE
+				CC.CNT = '1' 
+			AND
+				A.circularbmid = #circularBMId#
+			AND
+				A.tenantid = #tenantID#
+        ]]>
+    </select>
+    
+    <select id="EzCircularDAO.checkUpdateStatus" resultClass="Integer" >
+        <![CDATA[
+			SELECT
+				COUNT(circularid)
+			FROM
+				TBL_CIRCULAR_USER
+			WHERE
+				updatestatus = 1
+			AND
+				circularid = #circularID#
+			AND
+				memberid = #memberID#
+			AND
+				tenantid = #tenantID#      
+        ]]>
+    </select>
+  
+    <select id="EzCircularDAO.getCircularCompleteList" resultClass="CircularListVO" >
+        <![CDATA[
+			SELECT 
+				*
+			FROM
+			(SELECT AAA.*, rownum as rNum FROM
+			(SELECT
+				A.circularid,
+				A.importance,
+				A.hasfile,
+				A.status,
+				A.title,
+				A.memberid,
+				A.membername,
+				TO_CHAR(TO_DATE(A.regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS regdate,
+				B.status AS confirmstatus,
+				NVL(TO_CHAR(TO_DATE(B.confirmdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS confirmdate,
+				NVL(TO_CHAR(TO_DATE(B.updatedate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS updatedate,
+				B.updatestatus,
+                NVL(C.confirmcount, '0') AS confirmcount,
+				D.confirmtotalcount
+							
+			FROM
+				TBL_CIRCULAR A
+			JOIN
+				TBL_CIRCULAR_USER B
+			ON
+				A.circularid = B.circularid
+			AND
+				A.tenantid = B.tenantid
+			LEFT JOIN
+				(SELECT
+					DISTINCT BB.circularid,
+					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, NULL, BB.circularid))) AS confirmCount
+				FROM
+					TBL_CIRCULAR AA
+				JOIN
+					TBL_CIRCULAR_USER BB
+				ON
+					AA.circularid = BB.circularid
+				AND
+					AA.tenantid = BB.tenantid
+				WHERE
+					BB.status = 1
+				AND
+					BB.tenantid = #TENANTID#
+				GROUP BY
+					BB.circularid) C
+			ON
+				A.circularid = C.circularid
+			LEFT JOIN
+				(SELECT
+					DISTINCT BB.circularid,
+					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, NULL, BB.circularid))) AS confirmtotalcount
+				FROM
+					TBL_CIRCULAR AA
+				JOIN
+					TBL_CIRCULAR_USER BB
+				ON
+					AA.circularid = BB.circularid
+				AND
+					AA.tenantid = BB.tenantid
+				WHERE
+					BB.tenantid = #TENANTID#
+				GROUP BY
+					BB.circularid) D
+			ON
+				A.circularid = D.circularid
+			WHERE
+				A.STATUS <> '2'
+			AND
+				B.updatestatus IN (0, 1)
+			AND
+				B.memberid = #memberID#
+			AND
+				A.memberid <> #memberID#
+			AND
+				A.tenantid = #tenantID#
+			AND
+				A.companyid = #companyID#
+		]]>
+		
+		<isNotEqual property="searchValue" compareValue="">
+        	<isEqual property="searchType" compareValue="subject">
+	        	<![CDATA[
+	        		AND
+	        			A.title LIKE '%'||#searchValue#||'%'
+	        	]]>
+        	</isEqual>
+        	<isEqual property="searchType" compareValue="writer">
+	        	<![CDATA[
+	        		AND
+	        			A.membername LIKE '%'||#searchValue#||'%'
+	        	]]>
+        	</isEqual>
+        </isNotEqual>
+        
+        <isNotEqual property="sdate" compareValue="">	
+			<![CDATA[
+	            AND
+	            	TO_DATE(#sdate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) <= TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')
+	            AND
+	            	TO_DATE(#edate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) > TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')
+	        ]]>
+	       
+	    </isNotEqual>
+	   
+		<isNotEqual property="orderCell" compareValue="">
+        	<![CDATA[
+				
+        		ORDER BY
+            		$orderOption1$
+				
+            ]]>
+        </isNotEqual>
+        
+        <isEqual property="orderCell" compareValue="">
+        	<![CDATA[
+			
+        		ORDER BY
+            		A.regdate DESC
+			
+            ]]>
+        </isEqual>
+	
+	        
+		<![CDATA[
+	       )AAA
+	       WHERE
+				rownum <= (#limit# + #rowCount#)     
+	       )
+	       WHERE
+				rNum >= (#limit# + 1)      
+        ]]>
+	      
+        
+    </select> 
+   
+    <select id="EzCircularDAO.getCircularCompleteListCount" parameterClass="Map" resultClass="Integer" >
+        <![CDATA[
+        	SELECT
+                COUNT(DISTINCT A.CIRCULARID) cnt
+            FROM
+                TBL_CIRCULAR A
+            JOIN
+            	TBL_CIRCULAR_USER B
+            ON
+            	A.circularid = B.circularid
+            AND
+                A.tenantid = B.tenantid
+            WHERE
+            	A.STATUS <> '2'
+            AND
+            	B.updatestatus IN (0, 1)
+            AND
+                B.memberid = #memberID#
+            AND
+				A.memberid <> #memberID#
+            AND
+                A.tenantid = #tenantID#
+			AND
+            	A.companyid = #companyID#
+        ]]>
+        
+        <isNotEqual property="searchValue" compareValue="">
+        	<isEqual property="searchType" compareValue="subject">
+	        	<![CDATA[
+	        		AND
+	        			A.title LIKE '%'||#searchValue#||'%'
+	        	]]>
+        	</isEqual>
+        	
+        	<isEqual property="searchType" compareValue="writer">
+	        	<![CDATA[
+	        		AND
+	        			A.membername LIKE '%'||#searchValue#||'%'
+	        	]]>
+        	</isEqual>
+        </isNotEqual>
+        
+        <isNotEqual property="sdate" compareValue="">	
+			<![CDATA[
+	            AND
+	            	TO_DATE(#sdate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) <= TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')
+	            AND
+	            	TO_DATE(#edate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) > TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')
+	        ]]>
+	    </isNotEqual>
+    </select>
+    
+    <select id="EzCircularDAO.getCircularTempListCount" parameterClass="Map" resultClass="Integer" >
+        <![CDATA[
+            SELECT
+                NVL(COUNT(DISTINCT A.circularid), 0) cnt
+            FROM
+                TBL_CIRCULAR A
+			JOIN
+                TBL_CIRCULAR_USER B
+            ON
+            	A.circularid = B.circularid
+            AND
+            	A.tenantid = B.tenantid
+            WHERE
+            	A.status = 2
+            AND
+             	B.updatestatus IN (0, 1)
+            AND
+                A.memberid = #memberID#
+            AND
+                A.tenantid = #tenantID#
+            AND
+            	A.companyid = #companyID#
+        ]]>
+        
+        <isNotEqual property="searchValue" compareValue="">
+        	<isEqual property="searchType" compareValue="subject">
+	        	<![CDATA[
+	        		AND
+	        			A.title LIKE '%'||#searchValue#||'%'
+	        	]]>
+        	</isEqual>
+        	
+        	<isEqual property="searchType" compareValue="writer">
+	        	<![CDATA[
+	        		AND
+	        			A.membername LIKE '%'||#searchValue#||'%'
+	        	]]>
+        	</isEqual>
+        </isNotEqual>
+        
+        <isNotEqual property="sdate" compareValue="">	
+			<![CDATA[
+	            AND
+	            	TO_DATE(#sdate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) <= TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')
+	            AND
+	            	TO_DATE(#edate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) > TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')
+	        ]]>
+	    </isNotEqual>
+    </select>
+  
+    <select id="EzCircularDAO.getCircularTempList" resultClass="CircularListVO" >
+        <![CDATA[
+            SELECT 
+				*
+			FROM
+            (SELECT AAA.*, rownum as rNum FROM
+            (SELECT
+                DISTINCT A.circularid, 
+                A.importance,
+                A.hasfile,
+                A.status,
+                A.title,
+                A.memberid,
+                A.membername,
+                B.status AS confirmstatus,
+                TO_CHAR(TO_DATE(A.regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS regdate,
+                NVL(TO_CHAR(TO_DATE(B.confirmdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS confirmdate,
+                NVL(TO_CHAR(TO_DATE(B.updatedate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS updatedate,
+                NVL(C.confirmcount, '0') AS confirmcount,
+				D.confirmtotalcount,
+				A.regdate as aRegdate
+				
+            FROM
+                TBL_CIRCULAR A
+            JOIN
+            	TBL_CIRCULAR_USER B
+            ON
+            	A.circularid = B.circularid
+            AND
+                A.tenantid = B.tenantid
+			LEFT JOIN
+				(SELECT
+					DISTINCT BB.circularid,
+					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, NULL, BB.circularid))) AS confirmcount
+				FROM
+					TBL_CIRCULAR AA
+				JOIN
+					TBL_CIRCULAR_USER BB
+				ON
+					AA.circularid = BB.circularid
+				AND
+					AA.tenantid = BB.tenantid
+				WHERE
+					BB.status = 1
+				AND
+					BB.tenantid = #tenantID#
+				GROUP BY
+					BB.circularid) C
+			ON
+				A.circularid = C.circularid
+			LEFT JOIN
+				(SELECT
+					DISTINCT BB.circularid,
+					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, NULL, BB.circularid))) AS confirmtotalcount
+				FROM
+					TBL_CIRCULAR AA
+				JOIN
+					TBL_CIRCULAR_USER BB
+				ON
+					AA.circularid = BB.circularid
+				AND
+					AA.tenantid = BB.tenantid
+				WHERE
+					BB.tenantid = #tenantID#
+				GROUP BY
+					BB.circularid) D
+			ON
+				A.circularid = D.circularid
+            WHERE
+            	A.status = 2
+            AND
+             	B.updatestatus IN (0, 1)
+             AND
+            	A.companyid =#companyID#
+		]]>
+		
+		<isNotEqual property="searchValue" compareValue="">
+        	<isEqual property="searchType" compareValue="subject">
+	        	<![CDATA[
+	        		AND
+	        			A.title LIKE '%'||#searchValue#||'%'
+	        	]]>
+        	</isEqual>
+        	<isEqual property="searchType" compareValue="writer">
+	        	<![CDATA[
+	        		AND
+	        			A.membername LIKE '%'||#searchValue#||'%'
+	        	]]>
+        	</isEqual>
+        </isNotEqual>
+        
+        <isNotEqual property="sdate" compareValue="">	
+			<![CDATA[
+	            AND
+	            	TO_DATE(#sdate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) <= TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')
+	            AND
+	            	TO_DATE(#edate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) > TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')    
+	        ]]>
+	    </isNotEqual>
+        
+		<![CDATA[
+            AND
+                A.memberid = #memberID#
+            AND
+                A.tenantid = #tenantID#
+        ]]>
+        
+           <!--  GROUP BY
+            	A.circularID -->
+        <isNotEqual property="orderCell" compareValue="">
+        	<![CDATA[    
+		
+        		order by 
+            	$orderOption1$
+      
+            ]]>
+        </isNotEqual>
+        
+        <isEqual property="orderCell" compareValue="">
+        	<![CDATA[    
+	
+            	order by 	
+            	A.regdate DESC
+		        
+            ]]>
+        </isEqual>
+              
+        
+       	<![CDATA[	
+           )AAA
+           WHERE
+	            rownum <= (#limit# + #rowCount#)
+           )
+           WHERE
+	            rNum >= (#limit# + 1) 
+       ]]>
+    </select>
+
+    <select id="EzCircularDAO.getTopFolder" parameterClass="Map" resultClass="CircularFolderVO" >
+        <![CDATA[
+            SELECT
+                *
+            FROM
+                TBL_CIRCULAR_FOLDER
+            WHERE
+            	memberid = #memberId#
+            AND
+                tenantid = #tenantId#      
+            AND
+                companyid = #companyID#
+        ]]>
+    </select>
+    
+    <select id="EzCircularDAO.getMyCircularListCount" parameterClass="Map" resultClass="Integer" >
+        <![CDATA[
+			SELECT
+				COUNT(DISTINCT A.circularid) cnt
+			FROM
+				TBL_CIRCULAR A
+			JOIN
+				TBL_CIRCULAR_USER B
+			ON
+				A.circularid = B.circularid
+			AND
+				A.tenantid = B.tenantid
+			WHERE
+				A.status <> 2
+			AND
+				B.UPDATESTATUS IN (0, 1)
+			AND
+				A.memberid = b.memberid
+			AND
+				A.memberid = #memberID#
+			AND
+				A.tenantid = #tenantID#
+			AND
+				A.companyid = #companyID#
+		]]>
+         
+		<isNotEqual property="searchValue" compareValue="">
+			<isEqual property="searchType" compareValue="subject">
+	        	<![CDATA[
+	        		AND
+	        			A.title LIKE '%'||#searchValue#||'%'
+	        	]]>
+        	</isEqual>
+        	<isEqual property="searchType" compareValue="writer">
+	        	<![CDATA[
+	        		AND
+	        			A.membername LIKE '%'||#searchValue#||'%'
+	        	]]>
+        	</isEqual>
+		</isNotEqual>
+		
+        <isNotEqual property="sdate" compareValue="">	
+			<![CDATA[
+	            AND
+	            	TO_DATE(#sdate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) <= TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')
+	            AND
+	            	TO_DATE(#edate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) > TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')     
+	        ]]>
+	    </isNotEqual>
+    </select>
+  
+    <select id="EzCircularDAO.getMyCircularList" resultClass="CircularListVO" >
+        <![CDATA[
+			SELECT 
+				*
+			
+			FROM
+			(SELECT AAA.*, rownum as rNum FROM
+			(SELECT
+				A.circularid,
+				A.importance,
+				A.hasfile,
+				A.status,
+				A.title,
+				A.memberid,
+				A.membername,
+				TO_CHAR(TO_DATE(A.regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS regdate,
+				B.status AS confirmstatus,
+				NVL(TO_CHAR(TO_DATE(B.confirmdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS confirmdate,
+				NVL(TO_CHAR(TO_DATE(B.updatedate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS updatedate,
+				B.updatestatus,
+				NVL(C.confirmcount, '0') AS confirmcount,
+				D.confirmtotalcount
+				
+		
+			FROM
+				TBL_CIRCULAR A
+			JOIN
+				TBL_CIRCULAR_USER B
+			ON
+				A.circularid = B.circularid
+			AND
+				A.tenantid = B.tenantid
+			LEFT JOIN
+				(SELECT
+					DISTINCT BB.circularid,
+					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, NULL, BB.circularid))) AS confirmCount
+				FROM
+					TBL_CIRCULAR AA
+				JOIN
+					TBL_CIRCULAR_USER BB
+				ON
+					AA.circularid = BB.circularid
+				AND
+					AA.tenantid = BB.tenantid
+				WHERE
+					BB.status = 1
+				AND
+					BB.tenantid = #tenantID#
+				GROUP BY
+					BB.circularid) C
+			ON
+				A.circularid = C.circularid
+			LEFT JOIN
+				(SELECT
+					DISTINCT BB.circularid,
+					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, NULL, BB.circularid))) AS confirmtotalcount
+				FROM
+					TBL_CIRCULAR AA
+				JOIN
+					TBL_CIRCULAR_USER BB
+				ON
+					AA.circularid = BB.circularid
+				AND
+					AA.tenantid = BB.tenantid
+				WHERE
+					BB.tenantid = #tenantID#
+				GROUP BY
+					BB.circularid) D
+			ON
+				A.circularid = D.circularid
+			WHERE
+				A.memberid = #memberID#
+			AND
+				A.memberid = B.memberid	
+			AND
+				A.tenantid = #tenantID# 
+			AND
+				A.status <> 2
+			AND
+				A.companyid = #companyID#
+		]]>
+		
+		<isNotEqual property="searchValue" compareValue="">
+        	<isEqual property="searchType" compareValue="subject">
+	        	<![CDATA[
+	        		AND
+	        			A.title LIKE '%'||#searchValue#||'%'
+	        	]]>
+        	</isEqual>
+        	<isEqual property="searchType" compareValue="writer">
+	        	<![CDATA[
+	        		AND
+	        			A.membername LIKE '%'||#searchValue#||'%'
+	        	]]>
+        	</isEqual>
+        </isNotEqual>
+        
+        <isNotEqual property="sdate" compareValue="">	
+			<![CDATA[
+	            AND
+	            	TO_DATE(#sdate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) <= TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')
+	            AND
+	            	TO_DATE(#edate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) > TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')
+	        ]]>
+	    </isNotEqual>
+        
+			<!-- GROUP BY
+				A.circularid -->
+		<![CDATA[
+			AND
+				B.updatestatus IN (0, 1)
+			
+		]]>
+		
+		<isNotEqual property="orderCell" compareValue="">
+        	<![CDATA[    
+	       		ORDER BY 
+				
+            		$orderOption1$
+
+            ]]>
+        </isNotEqual>
+        
+        <isEqual property="orderCell" compareValue="">
+        	<![CDATA[
+		
+        		order by 
+        			A.regdate DESC
+		       
+        	]]>
+        </isEqual>
+		<![CDATA[ 		
+				
+			)AAA
+			WHERE
+				rownum <= (#limit# + #rowCount#)
+			)
+			WHERE
+				rNum >= (#limit# + 1) 
+			
+		]]>
+    </select>
+
+    <select id="EzCircularDAO.getFolderInfo" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				circularfoldername
+			FROM
+				TBL_CIRCULAR_FOLDER
+			WHERE
+				circularfolderid = #folderId#
+			AND
+				memberid = #memberId#
+			AND
+				tenantid = #tenantId#
+		]]>
+	</select>
+	
+	<select id="EzCircularDAO.getCircularTDList" resultClass="CircularListVO" >
+        <![CDATA[
+           SELECT
+           	 	*
+           FROM
+           (SELECT AAA.*, rownum as rNum FROM
+           (SELECT
+                A.circularid,
+                A.importance,
+                A.hasfile,
+                A.status,
+                A.title,
+                A.memberid,
+                A.membername,
+                NVL(TO_CHAR(TO_DATE(A.regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS regdate,
+                B.status AS confirmstatus,
+                NVL(TO_CHAR(TO_DATE(B.confirmdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS confirmdate,
+                NVL(TO_CHAR(TO_DATE(B.updatedate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS updatedate,
+				NVL(C.confirmcount, '0') AS confirmcount,
+				D.confirmtotalcount,
+                B.updatestatus
+                
+      
+            FROM
+                TBL_CIRCULAR A
+			JOIN
+                TBL_CIRCULAR_USER B
+			ON
+				A.circularid = B.circularid
+			AND
+				A.tenantid = B.tenantid
+			LEFT JOIN
+				(SELECT
+					DISTINCT BB.circularid,
+					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, NULL, BB.circularid))) AS confirmCount
+				FROM
+					TBL_CIRCULAR AA
+				JOIN
+					TBL_CIRCULAR_USER BB
+				ON
+					AA.circularid = BB.circularid
+				AND
+					AA.tenantid = BB.tenantid
+				WHERE
+					BB.status = 1
+				AND
+					BB.tenantid = #tenantID#
+				GROUP BY
+					BB.circularid) C
+			ON
+				A.circularid = C.circularid
+			LEFT JOIN
+				(SELECT
+					DISTINCT BB.circularid,
+					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, NULL, BB.circularid))) AS confirmtotalcount
+				FROM
+					TBL_CIRCULAR AA
+				JOIN
+					TBL_CIRCULAR_USER BB
+				ON
+					AA.circularid = BB.circularid
+				AND
+					AA.tenantid = BB.tenantid
+				WHERE
+					BB.tenantid = #tenantID#
+				GROUP BY
+					BB.circularid) D
+			ON
+				A.circularid = D.circularid
+            WHERE
+            	((B.updatestatus = '2' AND A.memberid = #memberID#) OR (B.updatestatus = '2' AND B.memberid = #memberID# AND B.deletestatus = 0))
+            AND
+            	B.memberID = #memberID#
+            AND
+                A.tenantid = #tenantID#
+            AND
+            	A.companyid = #companyID#
+		]]>
+		
+		<isNotEqual property="searchValue" compareValue="">
+        	<isEqual property="searchType" compareValue="subject">
+	        	<![CDATA[
+	        		AND
+	        			A.title LIKE '%'||#searchValue#||'%'
+	        	]]>
+        	</isEqual>
+        	
+        	<isEqual property="searchType" compareValue="writer">
+	        	<![CDATA[
+	        		AND
+	        			A.membername LIKE '%'||#searchValue#||'%'
+	        	]]>
+        	</isEqual>
+        </isNotEqual>
+				        
+           <!--  GROUP BY
+				A.circularid -->
+        <![CDATA[
+				
+		]]>
+        
+        <isNotEqual property="orderCell" compareValue="">
+        	<![CDATA[    
+           
+        		order by 
+       	     		$orderOption1$
+     		
+            ]]>
+        </isNotEqual>
+        
+        <isEqual property="orderCell" compareValue="">
+        	<![CDATA[    
+	            
+            	order by 
+            		A.regdate DESC
+      		
+            ]]>
+        </isEqual>
+       	<![CDATA[		
+				
+				
+		)AAA
+		WHERE
+           	rownum <= (#limit# + #rowCount#)
+        )
+		WHERE
+           	rNum >= (#limit# + 1)
+		
+        ]]>
+    </select>
+	
+	<select id="EzCircularDAO.getCircularTDListCount" parameterClass="Map" resultClass="Integer" >
+        <![CDATA[
+            SELECT
+                COUNT(DISTINCT A.circularid) CNT
+            FROM
+                TBL_CIRCULAR A
+			JOIN
+				TBL_CIRCULAR_USER B
+			ON
+				A.circularid = B.circularid
+			AND
+				A.tenantid = B.tenantid
+            WHERE
+            	((B.updatestatus = '2' AND A.memberid = #memberID#) OR (B.updatestatus = '2' AND B.memberid = #memberID# AND B.deletestatus = 0))
+            AND
+            	B.memberID = #memberID#
+            AND
+                A.tenantid = #tenantID#
+            AND
+            	A.companyid = #companyID#
+        ]]>
+        
+        <isNotEqual property="searchValue" compareValue="">
+        	<isEqual property="searchType" compareValue="subject">
+	        	<![CDATA[
+	        		AND
+	        			A.title LIKE '%'||#searchValue#||'%'
+	        	]]>
+        	</isEqual>
+        	<isEqual property="searchType" compareValue="writer">
+	        	<![CDATA[
+	        		AND
+	        			A.membername LIKE '%'||#searchValue#||'%'
+	        	]]>
+        	</isEqual>
+        </isNotEqual>
+    </select>
+
+    <select id="EzCircularDAO.getFolderCircularListCount" parameterClass="Map" resultClass="Integer" >
+        <![CDATA[
+			SELECT 
+				COUNT(DISTINCT A.circularid) cnt
+			FROM
+				TBL_CIRCULAR A
+			JOIN
+				(SELECT * FROM TBL_CIRCULAR_LINK WHERE memberid = #memberID#) B
+			ON
+				A.circularid = B.circularid
+			JOIN
+				TBL_CIRCULAR_FOLDER C
+			ON
+				B.circularfolderid = C.circularfolderid
+			JOIN
+				TBL_CIRCULAR_USER D
+			ON
+				A.circularid = D.circularid
+			AND
+				D.memberid = #memberID#	
+			WHERE
+		]]> 
+		
+		<isNotEqual property="folderID" compareValue="">
+			<![CDATA[
+				B.circularfolderid = #folderID#
+			 AND
+			]]>
+		</isNotEqual>
+		
+        <isNotEqual property="searchValue" compareValue="">
+        	<isEqual property="searchType" compareValue="subject">
+	        	<![CDATA[
+						A.title LIKE '%'||#searchValue#||'%'
+	        		AND
+	        	]]>
+        	</isEqual>
+        	
+        	<isEqual property="searchType" compareValue="writer">
+	        	<![CDATA[
+	        			A.membername LIKE '%'||#searchValue#||'%'
+	        		AND
+	        	]]>
+        	</isEqual>
+        </isNotEqual>
+        
+        <isNotEqual property="sdate" compareValue="">	
+			<![CDATA[
+	            	TO_DATE(#sdate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) <= TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')
+	            AND
+	            	TO_DATE(#edate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) > TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')
+	        	AND
+	        ]]>
+	    </isNotEqual>
+        
+        <![CDATA[
+                 D.updatestatus = '3'  
+             AND
+                 A.tenantid = #tenantID#
+		]]>
+    </select>
+    
+    <select id="EzCircularDAO.getFolderCircularList" resultClass="CircularListVO" >
+        <![CDATA[
+			SELECT 
+				*
+			FROM
+			(SELECT AAA.*, rownum as rNum FROM
+			(SELECT
+				distinct A.circularid,
+				A.importance,
+				A.hasfile,
+				A.status,
+				A.title,
+				A.memberid,
+				A.membername,
+				NVL(TO_CHAR(TO_DATE(A.regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS regdate,
+				d.status as confirmstatus,
+				NVL(TO_CHAR(TO_DATE(D.confirmdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS confirmdate,
+				D.updatestatus,
+				NVL(E.confirmcount, '0') AS confirmcount,
+				F.confirmtotalcount,
+				A.regdate as regg
+		
+			FROM
+				TBL_CIRCULAR A
+			JOIN
+				(SELECT * FROM TBL_CIRCULAR_LINK WHERE memberid = #memberID#) B
+			ON
+				A.circularid = B.circularid
+			JOIN
+				TBL_CIRCULAR_FOLDER C
+			ON
+				B.circularfolderid = C.circularfolderid
+			JOIN
+				TBL_CIRCULAR_USER D
+			ON
+				A.circularid = D.circularid
+			LEFT JOIN
+				(SELECT
+					DISTINCT BB.circularid,
+					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, NULL, BB.circularid))) AS confirmCount
+				FROM
+					TBL_CIRCULAR AA
+				JOIN
+					TBL_CIRCULAR_USER BB
+				ON
+					AA.circularid = BB.circularid
+				AND
+					AA.tenantid = BB.tenantid
+				WHERE
+					BB.status = 1
+				AND
+					BB.tenantid = #tenantID#
+				GROUP BY
+					BB.circularid) E
+			ON
+				A.circularid = E.circularid
+			LEFT JOIN
+				(SELECT
+					DISTINCT BB.circularid,
+					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, NULL, BB.circularid))) AS confirmtotalcount
+				FROM
+					TBL_CIRCULAR AA
+				JOIN
+					TBL_CIRCULAR_USER BB
+				ON
+					AA.circularid = BB.circularid
+				AND
+					AA.tenantid = BB.tenantid
+				WHERE
+					BB.tenantid = #tenantID#
+				GROUP BY
+					BB.circularid) F
+			ON
+				A.circularid = F.circularid
+			WHERE
+		]]>
+		
+		<isNotEqual property="folderID" compareValue="">
+			<![CDATA[
+				B.circularfolderid = #folderID#
+			AND
+			]]>
+		</isNotEqual>
+		
+        <isNotEqual property="searchValue" compareValue="">
+        	<isEqual property="searchType" compareValue="subject">
+	        	<![CDATA[
+	        			A.title LIKE '%'||#searchValue#||'%'
+	        		AND
+	        	]]>
+        	</isEqual>
+        	<isEqual property="searchType" compareValue="writer">
+	        	<![CDATA[
+	        			A.membername LIKE '%'||#searchValue#||'%'
+	        		AND
+	        	]]>
+        	</isEqual>
+        </isNotEqual>
+        
+        <isNotEqual property="sdate" compareValue="">	
+			<![CDATA[
+            	TO_DATE(#sdate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) <= TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')
+            AND
+            	TO_DATE(#edate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60) > TO_DATE(A.regdate , 'YYYY-MM-DD HH24:MI:SS')
+            AND
+	        ]]>
+	    </isNotEqual>
+	    
+        <![CDATA[
+				D.memberid = #memberID#
+			AND
+				D.updatestatus = '3'  
+			AND
+				A.tenantid = #tenantID#
+			AND
+				A.companyid = #companyID#
+		]]>
+        
+        <isNotEqual property="orderCell" compareValue="">
+        	<![CDATA[    
+			
+        		order by 
+            		$orderOption1$
+		       
+            ]]>
+        </isNotEqual>
+        
+        <isEqual property="orderCell" compareValue="">
+        	<![CDATA[    
+			
+        		order by 
+            		A.regdate DESC
+		       
+            ]]>
+        </isEqual>
+        
+		<![CDATA[ 
+				
+			)AAA
+			WHERE
+				rownum <= (#limit# + #rowCount#)
+			
+			)
+		
+			WHERE
+				rNum >= (#limit# + 1)
+		]]>
+    </select>
+
+    <select id="EzCircularDAO.getAttachInfo" parameterClass="Map" resultClass="CircularAttachVO">
+		<![CDATA[
+			SELECT 
+				filepath, 
+				filename 
+			FROM 
+				TBL_CIRCULAR_FILE
+			WHERE 
+				tenantid = #tenantID#
+			AND
+				circularfileid = #circularFileID#
+		]]>
+	</select>
+	
+	<select id="EzCircularDAO.getCircularStatus" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				STATUS
+			FROM
+				TBL_CIRCULAR_USER
+			WHERE
+				circularid = #circularID#
+			AND
+				memberid = #memberID#	
+			AND
+				tenantid = #tenantID#
+		]]>
+	</select>
+	
+	<select id="EzCircularDAO.getUserList" parameterClass="Map" resultClass="CircularListVO">
+		<![CDATA[
+			SELECT 
+				cn AS memberid, displayname AS membername, displayname2 AS membername2
+			FROM 
+				TBL_USERMASTER
+			WHERE
+				cn = #memberID# 
+			AND
+				tenant_id = #tenantID#
+		]]>
+	</select>
+	
+	<select id="EzCircularDAO.getListHeader" parameterClass="Map" resultClass="CircularListHeaderVO">
+		<![CDATA[
+			SELECT 
+				NVL(CASE #lang# WHEN '1' THEN name1 WHEN '2' THEN name2 WHEN '3' THEN name3 WHEN '4' THEN name4 END, ' ') name,
+				width,
+				colname
+			FROM 
+				TBL_CIRCULAR_LISTOPTION
+			WHERE
+				listtype = #listType#
+			AND
+				tenantid = #tenantID#
+			ORDER BY
+				sn
+		]]>
+	</select>
+
+	<select id="EzCircularDAO.getCircularComment" parameterClass="Map" resultClass="CircularCommentVO" remapResults="true">
+		<isEqual property="commentType" compareValue="totalComment">
+			<![CDATA[
+				SELECT
+					circularid,
+					circularcommentid,
+					circularuserid,
+					circularcomment,
+					memberid,
+					membername,
+					TO_CHAR(TO_DATE(regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS regdate,
+					status,
+					tenantid
+				FROM
+					TBL_CIRCULAR_COMMENT
+				WHERE
+					circularid = #circularID#
+				AND
+					tenantid = #tenantID#
+			]]>
+			
+			<isNotEqual property="searchValue" compareValue="">
+				<isEqual property="searchType" compareValue="content" prepend="AND ">
+					<![CDATA[
+						circularcomment LIKE '%'||#searchValue#||'%'
+					]]>
+				</isEqual>
+				<isEqual property="searchType" compareValue="userID" prepend="AND">
+					<![CDATA[
+						membername LIKE '%'||#searchValue#||'%'
+					]]>
+				</isEqual>
+			</isNotEqual>
+		</isEqual>
+		
+		<isEqual property="commentType" compareValue="myComment">
+			<![CDATA[
+				SELECT
+					A.circularid,
+					A.circularcommentid,
+					A.circularuserid,
+					A.circularcomment,
+					A.memberid,
+					A.membername,
+					TO_CHAR(TO_DATE(A.regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS regdate,
+					A.status,
+					B.status AS confirmStatus,
+					A.tenantid
+				FROM
+					TBL_CIRCULAR_COMMENT A
+				JOIN
+					TBL_CIRCULAR_COMMENTSTATE B
+				ON
+					A.circularcommentid = B.circularcommentid
+				AND
+					A.tenantid = B.tenantid
+				WHERE
+					A.circularid = #circularID#
+				AND
+					B.memberid = #circularUserID#
+				AND
+					A.tenantid = #tenantID#
+			]]>
+			
+			<isNotEqual property="searchValue" compareValue="">
+				<isEqual property="searchType" compareValue="userID" prepend="AND ">
+					<![CDATA[
+						A.membername LIKE '%'||#searchValue#||'%'
+					]]>
+				</isEqual>
+				
+				<isEqual property="searchType" compareValue="content" prepend="AND ">
+					<![CDATA[
+						A.circularcomment LIKE '%'||#searchValue#||'%'
+					]]>
+				</isEqual>
+			</isNotEqual>
+			
+			<![CDATA[
+				ORDER BY
+					B.updateDate DESC
+			]]>
+			
+		</isEqual>
+	</select>
+	
+	<select id="EzCircularDAO.getCommentStateID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				circularcommentstateid
+			FROM
+				TBL_CIRCULAR_COMMENTSTATE
+			WHERE
+				circularcommentid = #circularCommentID#
+			AND
+				memberid = #memberID#
+			AND
+				tenantid = #tenantID#
+		]]>
+	</select>
+
+	<select id="EzCircularDAO.getCircularCommentUserList" parameterClass="Map" resultClass="CircularCommentVO">
+		<![CDATA[
+			SELECT
+				B.cn AS memberid,
+				B.displayName AS membername,
+				B.displayName2 AS membername2,
+				B.mail AS mail
+			FROM
+				TBL_CIRCULAR_USER A
+			LEFT JOIN
+				TBL_USERMASTER B
+			ON
+				A.memberid = B.cn
+			AND
+				A.tenantid = B.tenant_id
+			WHERE
+				A.circularid = #circularID#
+			AND
+				A.tenantid = #tenantID#
+		]]>
+		
+		<isEqual property="type" compareValue="circularComment">
+			<![CDATA[
+				AND
+					A.memberid = #memberID#
+			]]>
+		</isEqual>
+		<isEqual property="type" compareValue="circularUser">
+			<![CDATA[
+				AND
+					A.status = 0
+			]]>
+		</isEqual>
+	</select>
+
+	<select id="EzCircularDAO.getCommentCount" parameterClass="Map" resultClass="Integer">
+		<isEqual property="type" compareValue="totalComment">
+			<![CDATA[
+				SELECT
+					NVL(COUNT(*), 0) cnt
+				FROM
+					TBL_CIRCULAR_COMMENT
+				WHERE
+					circularid = #circularID#
+				AND
+					((status = 1 AND (circularuserid = #memberID# OR memberid = #memberID#)) OR (status = 0))
+				AND
+					tenantid = #tenantID#
+			]]>
+		</isEqual>
+		<isEqual property="type" compareValue="myComment">
+			<![CDATA[
+				SELECT
+					NVL(COUNT(B.circularcommentstateid), 0) cnt
+				FROM
+					TBL_CIRCULAR_COMMENT A
+				JOIN
+					TBL_CIRCULAR_COMMENTSTATE B
+				ON
+					A.circularcommentid = B.circularcommentid
+				AND
+					A.tenantid = B.tenantid
+				WHERE
+					A.circularid = #circularID#
+				AND
+					B.memberid = #memberID#
+				AND
+					B.status = 0
+				AND
+					B.tenantid = #tenantID#
+			]]>
+		</isEqual>
+	</select>
+
+	<select id="EzCircularDAO.getListCount" parameterClass="Map" resultClass="Integer">
+		<isEqual property="listType" compareValue="newCircular">
+			<![CDATA[
+				SELECT
+					NVL(COUNT(DISTINCT A.circularid), 0) cnt
+				FROM
+					TBL_CIRCULAR A
+				JOIN
+					TBL_CIRCULAR_USER B
+				ON
+					A.circularid = B.circularid
+				AND
+					A.tenantid = B.tenantid
+				AND
+					A.companyid = B.companyid
+				WHERE
+					(B.status = 0 OR B.commentstatus = 1 OR B.sharestatus = 1)
+				AND
+					A.status <> 2
+				AND
+					B.updatestatus IN (0, 1)
+				AND
+					B.memberid = #userID#
+				AND
+					A.tenantid = #tenantID#
+				AND
+					A.companyid = #companyID#
+			]]>
+		</isEqual>
+		<isEqual property="listType" compareValue="circularComplete">
+			<![CDATA[
+				SELECT
+					NVL(COUNT(DISTINCT A.circularid), 0) cnt
+				FROM
+					TBL_CIRCULAR A
+				JOIN
+					TBL_CIRCULAR_USER B
+				ON
+					A.circularid = B.circularid
+				AND
+					A.tenantid = B.tenantid
+				WHERE
+					A.status <> '2'
+				AND
+					B.updatestatus IN (0, 1)
+				AND
+					B.memberid = #userID#
+				AND
+					A.memberid <> #userID#
+				AND
+					A.tenantid = #tenantID#
+			]]>
+		</isEqual>
+		<isEqual property="listType" compareValue="myCircular">
+			<![CDATA[
+				SELECT
+					NVL(COUNT(DISTINCT A.circularid), 0) cnt
+				FROM
+					TBL_CIRCULAR A
+				JOIN
+					TBL_CIRCULAR_USER B
+				ON
+					A.circularid = B.circularid
+				AND
+					A.tenantid = B.tenantid
+				WHERE
+					A.status <> 2
+				AND
+					B.UPDATESTATUS IN (0, 1)
+				AND
+					A.memberid = b.memberid
+				AND
+					A.memberid = #userID#
+				AND
+					A.tenantid = #tenantID#
+				AND
+					A.companyid = #companyID#
+			]]>
+		</isEqual>
+		<isEqual property="listType" compareValue="circularTemp">
+			<![CDATA[
+				SELECT
+					NVL(COUNT(DISTINCT A.circularid), 0) cnt
+				FROM
+					TBL_CIRCULAR A
+				JOIN
+					TBL_CIRCULAR_USER B
+				ON
+					A.circularid = B.circularid
+				AND
+					A.tenantid = B.tenantid
+				WHERE
+					A.status = 2
+				AND
+					B.updatestatus IN (0, 1)
+				AND
+					A.memberid = #userID#
+				AND
+					A.tenantid = #tenantID#
+			]]>
+		</isEqual>
+		<isEqual property="listType" compareValue="deleteCircular">
+			<![CDATA[
+				SELECT
+					NVL(COUNT(DISTINCT A.circularid), 0) cnt
+				FROM
+					TBL_CIRCULAR A
+				JOIN
+					TBL_CIRCULAR_USER B
+				ON
+					A.circularid = B.circularid
+				AND
+					A.tenantid = B.tenantid
+				WHERE
+					(B.updatestatus = '2' AND A.memberid = #userID#) OR (B.updatestatus = '2' AND B.memberid = #userID# AND B.deletestatus = 0)
+				AND
+					A.tenantid = #tenantID#
+			]]>
+		</isEqual>
+	</select>
+
+    <select id="EzCircularDAO.confirmFolderCheck" parameterClass="Map" resultClass="Integer">
+    	<![CDATA[
+    		SELECT
+    			NVL(COUNT(*), 0) AS cnt
+			FROM
+				TBL_CIRCULAR_LINK
+			WHERE
+				circularID = #circularID#
+			AND
+				memberID = #memberID#
+			AND
+				tenantID = #tenantID#
+    	]]>
+    </select>
+    
+    <select id="EzCircularDAO.getCommentStatus" parameterClass="Map" resultClass="CircularListVO">
+		<![CDATA[
+			SELECT 
+				B.status AS commentstatus
+			FROM 
+				TBL_CIRCULAR_COMMENT A
+			JOIN
+				TBL_CIRCULAR_COMMENTSTATE B
+			ON
+				A.circularcommentid = B.circularcommentid
+			WHERE
+				A.circularid = #circularID#
+			AND
+				B.memberid = #memberID#
+			AND
+				A.tenantid = #tenantID#	
+		]]>
+	</select>
+
+	<select id="EzCircularDAO.checkFolder" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(circularlinkid)
+			FROM
+				TBL_CIRCULAR_link
+			WHERE
+				circularfolderid = #folderID#
+			AND
+				memberid = #memberID#
+			AND
+				tenantid = #tenantID#
+		]]>
+	</select>
+	
+	<select id="EzCircularDAO.getConfirmMember" resultClass="CircularConfirmVO" >
+		<![CDATA[
+			SELECT *
+			    FROM (
+			        SELECT rownum as rnum, A.memberid, CC.displayname, CC.description, CC.company, CC.title, 
+			            NVL(A.confirmdate, ' ') AS confirmdate, CC.DEPTID
+			        FROM 
+			            TBL_CIRCULAR_USER A
+			        RIGHT JOIN 
+			             ( SELECT 
+			                 BB.*, ROW_NUMBER() OVER (PARTITION BY BB.CN ORDER BY ROWNUM) CNT 
+			               FROM ( 
+			                SELECT 
+								D.CN, D.DISPLAYNAME, D.COMPANY, D.title, D.MAIL, D.DESCRIPTION, D.DEPARTMENT AS DEPTID
+							FROM 
+								TBL_USERMASTER D
+							WHERE 
+								D.TENANT_ID = #tenantID# AND D.PHYSICALDELIVERYOFFICENAME = #companyID#
+							UNION ALL
+							SELECT 
+								B.cn, B.DISPLAYNAME, C.EXTENSIONATTRIBUTE3 as COMPANY, a.title, b.mail, C.DISPLAYNAME AS DESCRIPTION, A.DEPTID
+							FROM 
+								TBL_USERMASTER B 
+							INNER JOIN 
+								TBL_ADDJOBMASTER A 
+							ON 
+								A.CN = B.CN 
+							AND 
+								A.TENANT_ID = B.TENANT_ID       
+							RIGHT JOIN 
+								TBL_DEPTMASTER C
+							ON 
+								A.DEPTID = C.CN
+							AND 
+								B.TENANT_ID = C.TENANT_ID   
+							WHERE 
+								A.TENANT_ID = #tenantID# AND C.EXTENSIONATTRIBUTE2 = #companyID# ) BB
+			            ) CC
+			        ON 
+			            A.memberid = CC.cn
+			        AND
+			            CC.CNT = '1'
+			        WHERE 
+			            A.CIRCULARID=#circularID# AND A.TENANTID=#tenantID# AND A.STATUS = '1'  
+			        AND
+			            a.memberid <> ( SELECT 
+			                                            memberId 
+			                                    FROM 
+			                                        TBL_CIRCULAR 
+			                                    WHERE 
+			                                        circularId = #circularID# )
+			        ORDER BY 
+			            A.confirmdate desc ) 
+				WHERE rnum between #start#+1 and #perCount#+#start#
+		]]>
+	</select>
+	
+	<select id="EzCircularDAO.getConfirmMemberCount" parameterClass="Map" resultClass="int">
+		<![CDATA[
+			SELECT 
+				count(memberid)
+			FROM 
+				TBL_CIRCULAR_USER A
+			RIGHT JOIN 
+				TBL_USERMASTER B
+			ON 
+				A.memberid = B.cn
+			WHERE 
+				A.CIRCULARID=#circularID# AND A.TENANTID=#tenantID# AND A.STATUS = '1' and A.TENANTID=B.tenant_id 
+			AND
+				 a.memberid <> ( SELECT 
+											memberId 
+										FROM 
+											TBL_CIRCULAR 
+										WHERE 
+											circularId = #circularID# )
+		]]>
+	</select>
+	
+	<select id="EzCircularDAO.getCircularUserDeptId" parameterClass="Map" resultClass="CircularMemberVO">
+		<![CDATA[
+			SELECT 
+				BB.department, BB.company
+			FROM (
+				SELECT 
+					A.*, ROW_NUMBER() OVER (PARTITION BY A.CN ORDER BY ROWNUM) CNT
+				FROM ( 
+					SELECT 
+						D.CN, D.DEPARTMENT, D.PHYSICALDELIVERYOFFICENAME as companyid, D.TENANT_ID, D.company
+					FROM 
+						TBL_USERMASTER D
+					WHERE 
+						D.CN = #circularUserID# and D.tenant_id = #tenantID# and D.PHYSICALDELIVERYOFFICENAME =  #companyID#
+					UNION ALL
+					SELECT 
+						B.cn, A.DEPTID, C.EXTENSIONATTRIBUTE2, A.TENANT_ID, C.EXTENSIONATTRIBUTE3
+					FROM 
+						TBL_USERMASTER B 
+					INNER JOIN 
+						TBL_ADDJOBMASTER A 
+					ON 
+						A.CN = B.CN 
+					AND 
+						A.TENANT_ID = B.TENANT_ID       
+					RIGHT JOIN 
+						TBL_DEPTMASTER C
+					ON 
+						A.DEPTID = C.CN
+					AND 
+						B.TENANT_ID = C.TENANT_ID
+					WHERE 
+            			A.CN = #circularUserID# and A.tenant_id = #tenantID# and C.EXTENSIONATTRIBUTE2 = #companyID#) A
+					) BB
+			WHERE 
+				BB.CNT = '1'
+		]]>
+	</select> 
+
+    <insert id="EzCircularDAO.insertCircular" parameterClass="Map">
+        <![CDATA[
+            INSERT INTO TBL_CIRCULAR
+                (circularid, title, importance, "option", "content", hasfile, status, memberid, membername, membername2, regdate, enddate, tenantid, companyID)
+            VALUES
+                ((select (case when max(circularid) is null then 1 else max(circularid)+1 end) from tbl_circular), #title#, #importance#, #option#, #content#, #hasFile#, #status#, #memberID#, #memberName#, #memberName2#, #regDate#, #endDate#, #tenantID#, #companyID#)
+        ]]>
+        
+        <selectKey keyProperty="circularid" resultClass="Integer" >
+			SELECT max(circularid) from tbl_circular
+		</selectKey> 
+    </insert>
+  
+    <insert id="EzCircularDAO.insertCircularUser" parameterClass="Map">
+        <![CDATA[
+            INSERT INTO TBL_CIRCULAR_USER
+                (circularuserid, circularid, memberid, membername, membername2, status, confirmdate, updatestatus, tenantid, companyid)
+            VALUES
+                ((select (case when max(circularuserid) is null then 1 else max(circularuserid)+1 end) from tbl_circular_user) ,#circularID#, #memberID#, #memberName#, #memberName2#, #status#, #confirmDate#, #updateStatus#, #tenantID#, #companyID#)
+        ]]>
+    </insert>
+  
+    <insert id="EzCircularDAO.insertCircularAttach" parameterClass="map">
+        <![CDATA[
+            INSERT INTO TBL_CIRCULAR_FILE
+                (circularfileid, circularid, filename, filesize, filepath, tenantid) 
+            VALUES
+                ((select (case when max(circularfileID) is null then 1 else max(circularfileID)+1 end) from tbl_circular_file), #circularID#, #fileName#, #fileSize#, #filePath#, #tenantID#)
+        ]]>
+    </insert>
+
+    <insert id="EzCircularDAO.setCircularList_Config_I" parameterClass="CircularConfigVO">
+        <![CDATA[
+            INSERT INTO TBL_CIRCULAR_OPTION
+            	(circularoptionid, memberid, listcnt,  ispreview,  previewlistvalue, previewcontentvalue,  tenantid)
+            VALUES
+            	((select (case when max(circularOptionID) is null then 1 else max(circularOptionID)+1 end) from tbl_circular_option), #memberID#, #listCnt#, #isPreview#, #previewListValue#, #previewContentValue#, #tenantID#)
+        ]]>
+    </insert>
+    
+    <insert id="EzCircularDAO.setCircularDeptSave" parameterClass="Map">
+        <![CDATA[
+			INSERT INTO TBL_CIRCULAR_BM
+				(circularbmid, title, memberid, regdate, tenantid, companyid)
+			VALUES 
+				((select (case when max(circularbmid) is null then 1 else max(circularbmid)+1 end) from tbl_circular_bm), #title#, #userID#, #nowDate#, #tenantID#, #companyID#)
+        ]]>
+        
+        <selectKey resultClass="String">
+			SELECT max(circularBMid) from tbl_circular_bm
+		</selectKey> 
+    </insert>
+    
+    <insert id="EzCircularDAO.setCircularMemberList" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_CIRCULAR_BMUSER 
+				(circularbmuserid, circularbmid, memberid, membername, membername2, tenantid)
+			SELECT
+				(select (case when max(circularbmuserid) is null then 1 else max(circularbmuserid)+1 end) from tbl_circular_bmuser),
+				#circularBMId#,
+				cn,
+				displayname,
+				displayname2,
+				tenant_id
+			FROM
+				TBL_USERMASTER
+			WHERE
+				cn = #memberID#
+			AND
+				tenant_id = #tenantID#
+		]]>
+    </insert>
+     
+    <insert id="EzCircularDAO.setCircularConfig2" parameterClass="Map">
+        <![CDATA[
+			INSERT INTO TBL_CIRCULAR_OPTION 
+				(circularoptionid, memberid, listcnt, ispreview, previewlistvalue, previewcontentvalue, tenantid)
+			VALUES 
+				((select (case when max(circularoptionid) is null then 1 else max(circularoptionid)+1 end) from tbl_circular_option), #v_MEMBERID#, #v_LISTCOUNT#, #v_PREVIEW#, '50', '50', #v_TENANTID#)
+		]]>
+    </insert>
+    
+    <insert id="EzCircularDAO.circularFolderAdd" parameterClass="map">
+        <![CDATA[
+            INSERT INTO TBL_CIRCULAR_FOLDER
+                (circularfolderid, circularfoldername, memberid, regdate, tenantid, companyid) 
+            VALUES 
+                ((select (case when max(circularfolderid) is null then 1 else max(circularfolderid)+1 end) from tbl_circular_folder), #folderName#, #memberId#, #regDate#, #tenantId#, #companyID#)
+        ]]>
+    </insert>
+    
+    <insert id="EzCircularDAO.moveCircular2" parameterClass="map">
+        <![CDATA[
+            INSERT INTO TBL_CIRCULAR_LINK
+                (circularlinkid, circularfolderid, circularid, memberid, tenantid) 
+            VALUES 
+                ((select (case when max(circularlinkid) is null then 1 else max(circularlinkid)+1 end) from tbl_circular_link), #folderId#, #circularId#, #memberId#, #tenantId#)
+        ]]>
+    </insert>
+
+	<insert id="EzCircularDAO.insertComment" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_CIRCULAR_COMMENT
+				(circularcommentid, circularid, circularuserid, circularcomment, memberid, membername, membername2, regdate, status, tenantid)
+            VALUES
+                ((select (case when max(circularcommentid) is null then 1 else max(circularcommentid)+1 end)from tbl_circular_comment), #circularID#, #circularUserID#, #circularComment#, #memberID#, #memberName#, #memberName2#, #nowDate#, #status#, #tenantID#)
+		]]>
+		
+		<selectKey keyProperty="circularcommentid" resultClass="String">
+			select max(circularcommentid) from tbl_circular_comment 
+		</selectKey> 
+	</insert>
+	
+	<insert id="EzCircularDAO.insertCommentState" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_CIRCULAR_COMMENTSTATE
+				(circularcommentstateid, circularcommentid, memberid, status, updateDate, tenantid)
+            VALUES
+                ((select (case when max(circularcommentstateid) is null then 1 else max(circularcommentstateid)+1 end) from tbl_circular_commentstate), #circularCommentID#, #memberID#, #status#, #nowDate#, #tenantID#)
+		]]>
+	</insert>
+
+    <update id="EzCircularDAO.modifyCircular" parameterClass="Map">
+        <![CDATA[
+            UPDATE
+                TBL_CIRCULAR
+            SET
+                title = #title#,
+                importance = #importance#,
+                "option" = #option#,
+                "content" = #content#,
+                hasfile = #hasFile#,
+				regdate = #regDate#
+            WHERE 
+                circularid = #circularID#
+            AND
+                tenantid = #tenantID#      
+        ]]>
+    </update>
+  
+    <update id="EzCircularDAO.setCircularConfig" parameterClass="Map">
+        <![CDATA[
+            UPDATE
+                TBL_CIRCULAR_OPTION
+            SET 
+                listcnt = #v_LISTCOUNT#,
+                ispreview = #v_PREVIEW#
+            WHERE  
+                tenantid = #v_TENANTID#
+            AND
+                memberid = #v_MEMBERID#
+        ]]>
+    </update>
+
+    <update id="EzCircularDAO.updateUpdateStatus" parameterClass="Map">
+        <![CDATA[
+            UPDATE
+	            TBL_CIRCULAR_USER
+	        SET
+	            updatestatus = 1
+	        WHERE 
+	            circularid = #circularID#
+	        AND
+	        	updatestatus = 0
+	        AND
+	            memberid = #memberID#
+	        AND
+	            tenantid = #tenantID#
+        ]]>
+    </update>
+    
+    <update id="EzCircularDAO.updateConfirmStatus" parameterClass="Map">
+        <![CDATA[
+            UPDATE
+                TBL_CIRCULAR_USER
+            SET
+                status = #status#,
+            	confirmdate = #confirmDate#
+            WHERE 
+                circularid = #circularID#
+            AND
+            	memberid = #memberID#
+            AND
+                tenantid = #tenantID#
+        ]]>
+    </update>
+  
+    <update id="EzCircularDAO.setCircularList_Config_U" parameterClass="CircularConfigVO">
+        <![CDATA[ 
+			UPDATE
+				TBL_CIRCULAR_OPTION
+			SET
+				listcnt = #listCnt#,
+				ispreview = #isPreview#,
+				previewlistvalue = #previewListValue#,
+				previewcontentvalue = #previewContentValue#
+			WHERE
+				tenantid = #tenantID#
+			AND
+				memberid = #memberID#
+        ]]>   
+    </update>
+  
+    <update id="EzCircularDAO.setCircularList_Config2_U" parameterClass="Map">
+		<isEqual property="v_PREVIEWMODE" compareValue="OFF">
+			<![CDATA[
+				UPDATE
+					TBL_CIRCULAR_OPTION
+				SET 
+					ispreview = 0
+				WHERE  
+					tenantid = #v_TENANTID#
+				AND
+					memberid = #v_USERID#
+			]]>
+		</isEqual>
+		
+		<isEqual property="v_PREVIEWMODE" compareValue="W">
+			<![CDATA[
+				UPDATE
+					TBL_CIRCULAR_OPTION
+				SET 
+					ispreview = 2,
+					previewlistvalue = #v_LIST#,
+					previewcontentvalue = #v_CONTENT#,
+					listcnt = #v_LISTCNT#
+				WHERE
+					tenantid = #v_TENANTID#
+				AND  
+					memberid = #v_USERID#
+			]]>
+		</isEqual>
+		<isEqual property="v_PREVIEWMODE" compareValue="H">
+			<![CDATA[
+				UPDATE
+					TBL_CIRCULAR_OPTION
+				SET 
+					ispreview = 1,
+					previewlistvalue = #v_LIST#,
+					previewcontentvalue = #v_CONTENT#,
+					listcnt = #v_LISTCNT#
+				WHERE
+					tenantid = #v_TENANTID#
+				AND  
+					memberid = #v_USERID#
+			]]>
+		</isEqual>
+    </update>
+    
+    <update id="EzCircularDAO.updateCircularDept" parameterClass="map">
+        <![CDATA[
+			UPDATE
+				TBL_CIRCULAR_BM
+			SET
+				title = #title#,
+				regdate = #nowDate#
+			WHERE
+				circularbmid = #circularBMId#
+			AND
+				tenantid = #tenantID#
+			AND
+				memberid = #userID#
+        ]]>
+    </update>
+    
+    <update id="EzCircularDAO.circularClose" parameterClass="Map">
+        <![CDATA[
+			UPDATE
+				TBL_CIRCULAR
+			SET
+				status = '1',
+				endDate = #endDate#
+			WHERE 
+				circularid = #circularID#
+			AND
+				tenantid = #tenantID#      
+        ]]>
+    </update>
+    
+    <update id="EzCircularDAO.circularFolderModify" parameterClass="Map">
+        <![CDATA[
+        	UPDATE
+				TBL_CIRCULAR_FOLDER
+			SET
+				circularfoldername = #folderName#,
+				regdate = #regDate#
+			WHERE
+				circularfolderid = #folderId#
+			AND
+				memberid = #memberId#    
+			AND
+				tenantid = #tenantId#      
+        ]]>
+    </update>
+    
+    <update id="EzCircularDAO.tempDeleteCircular" parameterClass="Map">
+        <![CDATA[
+        	UPDATE
+				TBL_CIRCULAR_USER
+			SET
+				updatestatus = '2'
+			WHERE 
+				circularid = #circularID#
+			AND
+				memberid IN (' ', #memberID#)
+			AND
+				tenantid = #tenantID#
+        ]]>
+    </update>
+    
+    <update id="EzCircularDAO.moveCircular" parameterClass="Map">
+        <![CDATA[
+			UPDATE
+				TBL_CIRCULAR_USER
+			SET
+				updatestatus = #updateStatus#
+			WHERE 
+				circularid = #circularId#
+			AND
+				memberid = #memberId# 
+			AND
+				tenantid = #tenantId#
+        ]]>
+    </update>
+    
+    <update id="EzCircularDAO.updateFolderId" parameterClass="Map">
+        <![CDATA[
+			UPDATE
+				TBL_CIRCULAR_LINK
+			SET
+				circularfolderid = #folderId#
+			WHERE 
+				circularid = #circularId#
+			AND
+				memberid = #memberId#
+			AND
+				tenantid = #tenantId#
+        ]]>
+    </update>
+    
+    <update id="EzCircularDAO.updateCircularStatus" parameterClass="Map">
+        <![CDATA[
+			UPDATE
+				TBL_CIRCULAR_USER
+			SET
+				updatestatus = (SELECT
+									*
+								FROM
+									(SELECT
+										B.status as updatestatus
+									FROM
+										TBL_CIRCULAR_USER B
+									WHERE
+										B.circularid = #circularID#
+									AND
+										B.memberid = #memberID#	
+									AND
+										B.tenantid = #tenantID#))
+			WHERE
+				circularid = #circularID#
+			AND
+				memberid = #memberID#
+			AND
+				tenantid = #tenantID#
+        ]]>
+    </update>
+
+    <update id="EzCircularDAO.updateCircularCommentStatus" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_CIRCULAR_USER
+			SET
+				commentStatus = #commentStatus#,
+				shareStatus = #commentStatus#,
+				deleteStatus = #deleteStatus#
+		]]>
+		
+		<isEqual property="commentStatus" compareValue="1" prepend=",">
+			<![CDATA[
+				updatedate = #nowDate#
+			]]>
+		</isEqual>
+		
+		<isNotEqual property="commentStatus" compareValue="1" prepend=",">
+			<![CDATA[
+				updatedate = null
+			]]>
+		</isNotEqual>
+		
+		<![CDATA[
+			WHERE
+				circularid = #circularID#
+			AND
+				memberid = #memberID#
+			AND
+				tenantid = #tenantID#
+		]]>
+	</update>
+	
+	<update id="EzCircularDAO.updateCommentState" parameterClass="Map">
+		<isEqual property="status" compareValue="1">
+			<![CDATA[
+				UPDATE
+					TBL_CIRCULAR_COMMENTSTATE
+				SET
+					status = #status#,
+					confirmDate = #nowDate#
+				WHERE
+					circularcommentid IN (SELECT
+											circularCommentID
+										FROM
+											TBL_CIRCULAR_COMMENT
+										WHERE
+											circularid = #circularID#
+										)
+				AND
+					status = 0
+				AND
+					memberID = #memberID#
+				AND
+					tenantid = #tenantID#
+			]]>
+		</isEqual>
+		
+		<isEqual property="status" compareValue="0">
+			<![CDATA[
+				UPDATE
+					TBL_CIRCULAR_COMMENTSTATE
+				SET
+					status = #status#,
+					updateDate = #nowDate#
+				WHERE
+					circularcommentid = #circularCommentID#
+				AND
+					memberID = #memberID#
+				AND
+					tenantid = #tenantID#
+			]]>
+		</isEqual>
+	</update>
+
+	<update id="EzCircularDAO.updateCircularShareStatus">
+		<![CDATA[
+			UPDATE
+				TBL_CIRCULAR_USER
+			SET
+				shareStatus = #shareStatus#,
+				deleteStatus = #deleteStatus#
+		]]>
+		
+		<isEqual property="shareStatus" compareValue="1" prepend=",">
+			<![CDATA[
+				updatedate = #nowDate#
+			]]>
+		</isEqual>
+		
+		<isNotEqual property="shareStatus" compareValue="1" prepend=",">
+			<![CDATA[
+				updatedate = null
+			]]>
+		</isNotEqual>
+		
+		<![CDATA[
+			WHERE
+				circularid = #circularID#
+			AND
+				memberid = #memberID#
+			AND
+				tenantid = #tenantID#
+		]]>
+	</update>
+	
+	<update id="EzCircularDAO.updateDeleteFlag">
+		<![CDATA[
+			UPDATE
+				TBL_CIRCULAR_USER
+			SET
+				deletestatus = 1
+			WHERE
+				circularid = #circularID#
+			AND
+				memberid = #userID#
+			AND
+				tenantid = #tenantID#
+		]]>
+	</update>
+	
+	<update id="EzCircularDAO.updateCircular" parameterClass="Map">
+        <![CDATA[
+            UPDATE
+                TBL_CIRCULAR
+            SET
+                title = #title#,
+                importance = #importance#,
+                "option" = #option#,
+                "content" = #content#,
+                hasfile = #hasFile#,
+                status = #status#,
+                regdate = #regDate#
+            WHERE 
+                circularid = #circularID#
+            AND
+                tenantid = #tenantID#      
+        ]]>
+    </update>
+    
+    <update id="EzCircularDAO.updateStatus" parameterClass="Map">
+        <![CDATA[
+            UPDATE
+	            TBL_CIRCULAR_USER
+	        SET
+	            status = 0
+	        WHERE 
+	            circularid = #circularID#
+	        AND
+	        	updatestatus = 0
+	        AND
+	            tenantid = #tenantID#
+        ]]>
+    </update>
+    
+<!--     <update id="EzCircularDAO.updateCircularAttach" parameterClass="Map">
+        <![CDATA[
+            UPDATE
+	            TBL_CIRCULAR_FILE
+	        SET
+	            FILENAME = #fileName#,
+	            FILESIZE = #fileSize#,
+	            FILEPATH = #filePath#
+	        WHERE 
+	            circularid = #circularID#
+	        AND
+	            tenantid = #tenantID#
+        ]]>
+    </update> -->
+    
+    <update id="EzCircularDAO.restoreCircular" parameterClass="Map">
+    	<![CDATA[
+    		UPDATE
+    			TBL_CIRCULAR_USER
+    		SET
+    			deletestatus = 0,
+    			updatestatus = (SELECT
+                     			   *
+                   				 FROM
+                     			   (SELECT
+                         			   decode((SELECT
+                                      			  COUNT(circularID)
+			                                   FROM
+			                                      TBL_CIRCULAR_LINK
+			                                   WHERE
+			                                      circularid = #circularID#
+			                                   AND
+			                                      memberid = #memberID#
+			                                   AND
+			                                      tenantid = #tenantID#)
+                                    , 0, (SELECT
+                                            status
+                                          FROM
+                                            TBL_CIRCULAR_USER
+                                          WHERE
+                                            circularID = #circularID#
+                                          AND
+                                            memberid = #memberID#
+                                          AND
+                                            tenantid = #tenantID#), 3)
+                               from dual ))
+    		WHERE
+    			circularid = #circularID#
+    		AND
+    			memberID = #memberID#
+    		AND
+    			tenantid = #tenantID#
+    	]]>
+    </update>
+
+    <delete id="EzCircularDAO.deleteCircular" parameterClass="Map">
+        <![CDATA[
+			DELETE FROM
+				TBL_CIRCULAR
+			WHERE
+				circularid = #circularID#
+			AND
+				tenantid = #tenantID#
+        ]]>
+    </delete>
+  
+    <delete id="EzCircularDAO.deleteCircularUser" parameterClass="Map">
+        <![CDATA[
+			DELETE FROM
+				TBL_CIRCULAR_USER
+			WHERE
+				circularid = #circularID#
+			AND    
+				tenantid = #tenantID#
+        ]]>
+    </delete>
+
+	<delete id="EzCircularDAO.circularDeptDel" parameterClass="map">
+		<![CDATA[
+			DELETE FROM
+				TBL_CIRCULAR_BM
+			WHERE
+				circularbmid = #circularBMId#
+			AND
+				tenantid = #tenantID#
+		]]>
+	</delete>
+  
+    <delete id="EzCircularDAO.deleteCircularAttach" parameterClass="map">
+        <![CDATA[
+			DELETE FROM
+				TBL_CIRCULAR_FILE
+			WHERE
+				circularid = #circularID#
+			AND
+				tenantid = #tenantID#
+      	]]>   
+  	</delete>
+  
+	<delete id="EzCircularDAO.deleteCircularMemberList" parameterClass="Map">
+	  	<![CDATA[
+			DELETE FROM
+				TBL_CIRCULAR_BMUSER
+			WHERE
+				circularbmid = #circularBMId#
+			AND
+				tenantid = #tenantID#
+	    ]]>
+	</delete>
+	
+	<delete id="EzCircularDAO.circularDeleteFolder" parameterClass="map">
+		<![CDATA[
+			DELETE FROM
+				TBL_CIRCULAR_FOLDER
+			WHERE
+				circularfolderid = #deleteFolderId#
+			AND
+				memberid = #memberId#	
+			AND
+				tenantid = #tenantId#
+		]]>
+	</delete>
+	
+	<delete id="EzCircularDAO.moveCircular3" parameterClass="map">
+		<![CDATA[
+			DELETE FROM
+				TBL_CIRCULAR_LINK
+			WHERE
+				circularid = #circularID#
+			AND
+				memberid = #memberID#
+			AND
+				tenantid = #tenantID#
+		]]>
+	</delete>
+
+	<delete id="EzCircularDAO.deleteCommentState" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_CIRCULAR_COMMENTSTATE
+			WHERE
+				circularcommentID = #circularCommentID#
+			AND
+				tenantid = #tenantID#
+		]]>
+	</delete>
+	
+	<delete id="EzCircularDAO.deleteCircularComment" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_CIRCULAR_COMMENT
+			WHERE
+				circularID = #circularID#
+			AND
+				circularcommentID = #circularCommentID#
+			AND
+				memberid = #memberID#
+			AND
+				tenantid = #tenantID#
+		]]>
+	</delete> 
+
+</sqlMap>

@@ -1,7 +1,116 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN"
-    "http://www.ibatis.com/dtd/sql-map-config-2.dtd">
+    "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
 
-<sqlMapConfig>	
-	<sqlMap resource="egovframework/sqlmap/let/user/login/EgovLoginUsr_SQL_Tibero.xml"/>	
+<sqlMapConfig>
+	<!-- 1.사용자 모듈관리 SQL쿼리 XML -->
+	
+	<!-- 로그인 -->
+	<sqlMap resource="egovframework/sqlmap/let/user/login/EgovLoginUsr_SQL_Tibero.xml"/>
+	<!-- 게시판 -->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezBoard/EzBoard_SQL_Tibero.xml"/>
+	<!-- 조직도 -->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezOrgan/EzOrgan_SQL_Tibero.xml"/>
+	<!-- 설문조사 -->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezQuestion/EzQuestion_SQL_Tibero.xml"/>
+	<!-- 투표 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezPoll/EzPoll_SQL_Tibero.xml"/>
+	<!-- 이메일 -->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezEmail/EzEmail_SQL_Tibero.xml"/>
+	<!-- 공통 -->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezCommon/EzCommon_SQL_Tibero.xml"/>
+	<!-- 자원관리 -->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezResource/EzResource_SQL_Tibero.xml"/>
+	<!-- 주소록 -->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezAddress/EzAddress_SQL_Tibero.xml"/>
+	<!-- 커뮤니티 -->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezCommunity/EzCommunity_SQL_Tibero.xml"/>
+	<!-- 전자결재G -->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezApprovalG/EzApprovalG_SQL_Tibero.xml"/>
+	<!-- 전자결재G KLIB -->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezApprovalG/EzApprovalGKlib_SQL_Tibero.xml"/>
+	<!-- 전자결재G OpenGov -->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezApprovalG/EzApprovalGOpenGov_SQL_Tibero.xml"/>
+	<!-- 전자결재G Conn -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezApprovalG/EzApprovalGConn_SQL_Tibero.xml"/>
+	<!-- 스케쥴 -->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezSchedule/EzSchedule_SQL_Tibero.xml"/>
+	<!-- 포탈 -->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezPortal/EzPortal_SQL_Tibero.xml"/>
+	<!-- 퍼스널 -->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezPersonal/EzPersonal_SQL_Tibero.xml"/>
+	<!-- 회람판 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezCircular/EzCircular_SQL_Tibero.xml"/>
+    <!-- 업무관리 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezTask/EzTask_SQL_Tibero.xml"/>
+	<!-- 웹폴더 -->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezWebFolder/EzWebFolder_SQL_Tibero.xml"/>
+    <!-- 웹폴더 _y -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezWebFolder/EzWebFolder_SQL_Tibero_y.xml"/>
+	<!-- 웹폴더 (이효민, 조영훈, 서재원) -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezWebFolder/EzWebFolder_SQL_Tibero_m.xml"/>
+	<!-- 모바일 Tibero -->
+    <sqlMap resource="egovframework/sqlmap/ezMobile/ezOption/EzOptionMobile_SQL_Tibero.xml"/>
+    <!-- 사다리게임-->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezLadder/EzLadder_SQL_Tibero.xml"/>
+     <!--업무일지 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezJournal/EzJournal_SQL_Tibero.xml"/>
+	<!-- 케비닛 -->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezCabinet/EzCabinet_SQL_Tibero.xml"/>
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezCabinet/EzCabinet_SQL_Tibero_h.xml"/>
+    <!-- 전자 설문 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezSurvey/EzSurvey_SQL_Tibero.xml"/>
+    <!--근태관리 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezAttitude/EzAttitude_SQL_Tibero.xml"/>
+	<!-- 포탈개인화 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezNewPortal/EzNewPortal_SQL_Tibero.xml"/>
+    <!-- 메모 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezMemo/EzMemo_SQL_Tibero.xml"/>
+    <!-- 문서24 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezDoc24/EzDoc24_SQL_Tibero.xml"/>
+   <!-- 차량 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezCar/EzCar_SQL_Tibero.xml"/>
+	<!-- 2.관리자 모듈관리 SQL쿼리 XML -->
+	
+	<!-- 게시판 관리자 -->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezBoard/EzBoardAdmin_SQL_Tibero.xml"/>
+	<!-- 조직도 관리자 -->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezOrgan/EzOrganAdmin_SQL_Tibero.xml"/>
+	<!-- 전자결재G 관리자-->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezApprovalG/EzApprovalGAdmin_SQL_Tibero.xml"/>
+	<!-- 자원관리 관리자-->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezResource/EzResourceAdmin_SQL_Tibero.xml"/>
+	<!-- 커뮤니티 관리자 -->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezCommunity/EzCommunityAdmin_SQL_Tibero.xml"/>
+	<!-- 포탈 관리자-->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezPortal/EzPortalAdmin_SQL_Tibero.xml"/>
+	<!-- 초기화면 관리자-->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezPersonal/EzPersonalAdmin_SQL_Tibero.xml"/>
+	<!-- 통계 -->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezStatistics/EzStatisticsAdmin_SQL_Tibero.xml"/>
+	<!-- 스케쥴 -->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezSchedule/EzScheduleAdmin_SQL_Tibero.xml"/>
+	<!-- 시스템 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezSystem/EzSystemAdmin_SQL_Tibero.xml"/>
+	<!-- 웹폴더 -->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezWebFolder/EzWebFolderAdmin_SQL_Tibero.xml"/>
+	<!-- 케비닛 -->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezCabinet/EzCabinetAdmin_SQL_Tibero.xml"/>
+	<!-- 근태관리 -->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezAttitude/EzAttitudeAdmin_SQL_Tibero.xml"/>
+	<!-- 포탈개인화 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezNewPortal/EzNewPortalAdmin_SQL_Tibero.xml"/>
+	<!-- 오라클 모바일 자원관리 -->
+	<sqlMap resource="egovframework/sqlmap/ezMobile/ezResource/EzResourceMobile_SQL_Tibero.xml"/>
+	<!-- 전자결재 -->
+    <sqlMap resource="egovframework/sqlmap/ezMobile/ezApprovalG/EzApprovalGMobile_SQL_Tibero.xml"/>
+	<!-- 게시판 -->
+	<sqlMap resource="egovframework/sqlmap/ezMobile/ezBoard/EzBoardMobile_SQL_Tibero.xml"/>
+	<!-- 일정관리 -->
+	<sqlMap resource="egovframework/sqlmap/ezMobile/ezSchedule/EzScheduleMobile_SQL_Tibero.xml"/>
+	<!-- 조직도,직원조회 -->
+    <sqlMap resource="egovframework/sqlmap/ezMobile/ezOrgan/EzOrganMobile_SQL_Tibero.xml"/>
+    <!-- 차량관리 관리자 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezCar/EzCarAdmin_SQL_Tibero.xml"/>
+	
 </sqlMapConfig>
