@@ -355,5 +355,7 @@ public interface EzCommonService {
 	public int setPrevPwd(int tenantID, String pCN, String propertyValue) throws Exception;
 	
 	public void addCommMailFGColumn() throws Exception;
+
+	public void addSurveySubDeptYNColumn() throws Exception;
 	
 }

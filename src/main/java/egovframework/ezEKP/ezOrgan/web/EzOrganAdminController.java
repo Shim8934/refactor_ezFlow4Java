@@ -256,6 +256,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     		ezCommonService.addTblAdminReceiptGroupSubExtReceptYnColumn(); // 2021-06-29 수신처그룹 멤버 테이블에 외부/내부 수신여부 컬럼 추가
     		ezCommonService.addViewTaskOldFlag(); // 2021-08-31 홍승비 - 전자결재 분류코드체계 뷰에 삭제여부(OLDFLAG) 칼럼 추가 (VTASKCLASS, SVTASKCLASS)
     		ezCommonService.addCommMailFGColumn(); // 2021-11-12 홍승비 - 커뮤니티 게시판 메일알림 옵션 추가 (게시/수정/댓글알림) 
+    		ezCommonService.addSurveySubDeptYNColumn(); // 2021-11-17 홍승비 - 전자설문 대상자 하위부서 허용여부 플래그 추가 (Y/N)
 	    	
 	    	// webfolder
 	    	ezCommonService.addWebfolderUserSubdeptPermittedColumn(); 	//2020-10-19 김은실 - 웹폴더 > 하위부서 허용 여부 추가

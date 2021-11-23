@@ -4371,4 +4371,22 @@
 		)
     </statement>
     
+       <select id="EzCommonDAO.checkSurveySubDeptYNColumn">
+        <![CDATA[
+            SELECT 
+                SUBDEPTYN
+            FROM 
+                TBL_SURVEY_PARTICIPANT
+            WHERE
+				ROWNUM = 1
+        ]]>
+    </select>
+    <statement id="EzCommonDAO.addSurveySubDeptYNColumn">
+        ALTER TABLE 
+        	TBL_SURVEY_PARTICIPANT 
+		ADD (
+			SUBDEPTYN CHAR(1 CHAR) DEFAULT 'N'
+		)
+    </statement>
+    
 </sqlMap>

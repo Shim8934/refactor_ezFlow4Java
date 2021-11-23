@@ -57,6 +57,7 @@ public interface EzSurveyService {
 	//Get survey List
 	List<SurveyVO> getTodaySurveyList(int offset);
 	List<SurveyParticipantVO> getSurveyParticipantListForMail(long surveyId, String companyId, int tenantId);
+	List<SurveyParticipantVO> getSurveySubDeptListForMail(long surveyId, String companyId, int tenantId);
 	void updateMailSentFlag(long surveyId, int mailSentFlag, String companyId, int tenantId) throws Exception;
 	JSONObject checkRespondent(Long surveyId, LoginVO userInfo);
 	int getSurveyIngCnt(MCommonVO userInfo);
