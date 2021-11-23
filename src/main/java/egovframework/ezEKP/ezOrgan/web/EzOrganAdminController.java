@@ -2292,16 +2292,19 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    
 		String companyID = request.getParameter("companyID");
 		String strLang = userInfo.getPrimary();
+		String searchType = request.getParameter("searchType");
+		String searchValue = request.getParameter("searchValue");
 			
 		int currentPage = Integer.parseInt(request.getParameter("page")); 
 		int pageSize = Integer.parseInt(request.getParameter("pageSize"));
 		int startRow = (pageSize * (currentPage - 1)) + 1;
 		int endRow = pageSize * currentPage;
 		
+		searchValue = searchValue.replace("%", "\\%").replace("_", "\\_");
 		
-		int totalCount = ezOrganAdminService.getAddJobCount(companyID, tenantID, strLang);
+		int totalCount = ezOrganAdminService.getAddJobCount(companyID, searchType, searchValue, tenantID, strLang);
 		
-		List<OrganUserVO> list = ezOrganAdminService.getAddJobList(companyID, strLang, tenantID, totalCount, pageSize, startRow, endRow);
+		List<OrganUserVO> list = ezOrganAdminService.getAddJobList(companyID, strLang, searchType, searchValue, tenantID, totalCount, pageSize, startRow, endRow);
 		
 		logger.debug("companyID=" + companyID  + ",strLang=" + strLang + ",currentPage=" + currentPage
                 + ",pageSize=" + pageSize + ",startRow=" + startRow + ",endRow=" + endRow

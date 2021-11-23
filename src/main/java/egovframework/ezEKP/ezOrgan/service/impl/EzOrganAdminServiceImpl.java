@@ -117,7 +117,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 	
 	@Override
-	public List<OrganUserVO> getAddJobList(String companyID, String strLang, int tenantID, int totalCount, int pageSize, int startRow, int endRow) throws Exception {
+	public List<OrganUserVO> getAddJobList(String companyID, String strLang, String searchType, String searchValue, int tenantID, int totalCount, int pageSize, int startRow, int endRow) throws Exception {
 	    logger.debug("getAddJobList started");
 	    logger.debug("companyID=" + companyID + ",strLang=" + strLang + ",tenantID=" + tenantID);
 	    
@@ -132,7 +132,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_ENDROW", endRow);
 		map.put("v_STARTNUM", startRow - 1);
         map.put("v_COUNT", endRow - startRow + 1);
-		
+        map.put("searchType", searchType);
+        map.put("searchValue", searchValue);
+        
 		List<OrganUserVO> addJobList = ezOrganAdminDao.getAddJobList(map);
 		
 		logger.debug("getAddJobList ended");
@@ -1860,7 +1862,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public int getAddJobCount(String companyID, int tenantId, String strLang) throws Exception {
+	public int getAddJobCount(String companyID, String searchType, String searchValue, int tenantId, String strLang) throws Exception {
 		logger.debug("getAddJobCount started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1868,6 +1870,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANT_ID", tenantId);
 		map.put("strLang", strLang);
+		map.put("searchType", searchType);
+		map.put("searchValue", searchValue);
 
 		logger.debug("getAddJobCount ended");
 		return ezOrganAdminDao.getAddJobCount(map);
