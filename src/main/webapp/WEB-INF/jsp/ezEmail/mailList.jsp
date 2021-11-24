@@ -1483,6 +1483,7 @@
 						dataType : "json", 
 		    			async : true,
 		    			success : function(data) {
+							if (!psSetTimeFlag) { return; }
 		    				var pg = data.progress;
 		    				
 		    				if (pg > -1 && pg <= 100) {

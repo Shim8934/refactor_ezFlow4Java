@@ -1252,6 +1252,10 @@ function MailListRefreshByTimeout() {
 }
 
 function MailListRefresh() {
+	if (window.psSetTimeFlag) {
+		return;
+	}
+
 	ContextMenuHidden();
 
 	if (typeof(shareId) != "undefined" && shareId != "") {
