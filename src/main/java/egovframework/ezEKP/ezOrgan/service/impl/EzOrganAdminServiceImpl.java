@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.lang.reflect.Field;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -48,6 +49,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganGroupVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezPersonal.dao.EzPersonalDAO;
 import egovframework.ezEKP.ezResource.dao.EzResourceAdminDAO;
 import egovframework.let.user.login.dao.LoginDAO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -94,6 +96,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     
 	@Resource(name="EzResourceAdminDAO")
 	private EzResourceAdminDAO ezResourceAdminDAO;
+	
+    @Autowired
+    private EzPersonalDAO ezPersonalDAO; // 2021-11-01 이사라 추가
     
 	@Override
 	public List<OrganDeptVO> getCompanyList(String lang, int tenantID) throws Exception {
@@ -112,7 +117,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 	
 	@Override
-	public List<OrganUserVO> getAddJobList(String companyID, String strLang, int tenantID, int totalCount, int pageSize, int startRow, int endRow) throws Exception {
+	public List<OrganUserVO> getAddJobList(String companyID, String strLang, String searchType, String searchValue, int tenantID, int totalCount, int pageSize, int startRow, int endRow) throws Exception {
 	    logger.debug("getAddJobList started");
 	    logger.debug("companyID=" + companyID + ",strLang=" + strLang + ",tenantID=" + tenantID);
 	    
@@ -127,7 +132,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_ENDROW", endRow);
 		map.put("v_STARTNUM", startRow - 1);
         map.put("v_COUNT", endRow - startRow + 1);
-		
+        map.put("searchType", searchType);
+        map.put("searchValue", searchValue);
+        
 		List<OrganUserVO> addJobList = ezOrganAdminDao.getAddJobList(map);
 		
 		logger.debug("getAddJobList ended");
@@ -494,6 +501,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		loginVO.setId(cn);
 		loginVO.setPassword(pwd);
 		loginVO.setTenantId(tenantID);
+		
+		// 2021-11-09 이사라 : 현재암호 가장최근 암호로 저장
+		ezCommonService.setPrevPwd(tenantID, cn, ezPersonalDAO.getPassword(cn, tenantID));
 		
 		loginDAO.updatePassword(loginVO);
 		
@@ -1170,9 +1180,10 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	    	
 	        /*ezOrganAdminDao.deleteDBDataForJMocha(map);*/
      
-	        ezOrganAdminDao.deleteDBData_D1(map);
-	        ezOrganAdminDao.deleteDBData_D4(map);
-	        ezOrganAdminDao.deleteDBData_D5(map);
+	        ezOrganAdminDao.deleteDBData_D1(map); // TBL_USERMASTER
+	        ezOrganAdminDao.deleteDBData_D4(map); // TBL_ADDJOBMASTER
+	        ezOrganAdminDao.deleteDBData_D5(map); // TBL_USERMASTER_RETIRE
+	        ezOrganAdminDao.deleteDBData_D6(map); // 2021-11-10 이사라 : TBL_USER_CONFIG
 	        
 		    /**
 		     * Active Directory
@@ -1851,7 +1862,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public int getAddJobCount(String companyID, int tenantId, String strLang) throws Exception {
+	public int getAddJobCount(String companyID, String searchType, String searchValue, int tenantId, String strLang) throws Exception {
 		logger.debug("getAddJobCount started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1859,6 +1870,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANT_ID", tenantId);
 		map.put("strLang", strLang);
+		map.put("searchType", searchType);
+		map.put("searchValue", searchValue);
 
 		logger.debug("getAddJobCount ended");
 		return ezOrganAdminDao.getAddJobCount(map);

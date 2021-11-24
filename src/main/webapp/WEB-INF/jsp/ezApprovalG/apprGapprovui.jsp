@@ -81,6 +81,7 @@
 		    var pDocTitle = "";
 		    var pFormID = "";
 		    var drafterDeptid = "";
+		    var drafterDeptName = ""; // 기안자 부서명
 		    var pMaxFileSize = "5";
 		    var LastSignNo;
 		    var AppendFileAttach = "";
@@ -416,7 +417,7 @@
 		            getDocInfo();
 		            setAttachInfo(pDocID, "APR", lstAttachLink);
 		            GetExchInfo();
-		            DeptSymbol = getDeptSymbol(arr_userinfo[4], replaceEntityCodeToStr(arr_userinfo[5]));
+		            DeptSymbol = getDeptSymbol(drafterDeptid, drafterDeptName); // 양식상의 문서번호 표출 시 기안자의 부서명을 유지
 		            
 			    	if (nonElecRec == "Y") {
 				        getNonElecInfoSusinInit();

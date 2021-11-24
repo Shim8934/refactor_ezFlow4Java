@@ -77,6 +77,7 @@
 			var checkpassword_dialogArguments = new Array();
 			var delpReplyID;
 			var rsa = new RSAKey();
+			var mailFG_Comment = "<c:out value = '${boardInfo.mailFG_Comment}'/>"; // 댓글알림
 			
 			$(document).ready(function(){
 				rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);

@@ -4122,4 +4122,70 @@
 		ALTER TABLE TBL_ADDJOBMASTER ADD CONSTRAINT PRIMARY KEY (CN, DEPTID, TENANT_ID, JOBID)
 	</statement>
 	
+	<select id="EzCommonDAO.checkCommMailFG_PostColumn">
+        <![CDATA[
+            SELECT 
+                MAILFG_POST
+            FROM 
+                TBL_COMM_BOARDINFO
+            LIMIT 1
+        ]]>
+    </select>
+    <statement id="EzCommonDAO.addCommMailFG_PostColumn">
+        ALTER TABLE 
+        	TBL_COMM_BOARDINFO 
+		ADD (
+			MAILFG_POST VARCHAR(2) DEFAULT NULL
+		)
+    </statement>
+    <select id="EzCommonDAO.checkCommMailFG_ModColumn">
+        <![CDATA[
+            SELECT 
+                MAILFG_MOD
+            FROM 
+                TBL_COMM_BOARDINFO
+            LIMIT 1
+        ]]>
+    </select>
+    <statement id="EzCommonDAO.addCommMailFG_ModColumn">
+        ALTER TABLE 
+        	TBL_COMM_BOARDINFO 
+		ADD (
+			MAILFG_MOD VARCHAR(2) DEFAULT NULL
+		)
+    </statement>
+    <select id="EzCommonDAO.checkCommMailFG_CommentColumn">
+        <![CDATA[
+            SELECT 
+                MAILFG_COMMENT
+            FROM 
+                TBL_COMM_BOARDINFO
+            LIMIT 1
+        ]]>
+    </select>
+    <statement id="EzCommonDAO.addCommMailFG_CommentColumn">
+        ALTER TABLE 
+        	TBL_COMM_BOARDINFO 
+		ADD (
+			MAILFG_COMMENT VARCHAR(2) DEFAULT NULL
+		)
+    </statement>
+    
+    <select id="EzCommonDAO.checkSurveySubDeptYNColumn">
+        <![CDATA[
+            SELECT 
+                SUBDEPTYN
+            FROM 
+                TBL_SURVEY_PARTICIPANT
+            LIMIT 1
+        ]]>
+    </select>
+    <statement id="EzCommonDAO.addSurveySubDeptYNColumn">
+        ALTER TABLE 
+        	TBL_SURVEY_PARTICIPANT 
+		ADD (
+			SUBDEPTYN VARCHAR(2) DEFAULT 'N'
+		)
+    </statement>
+	
 </sqlMap>

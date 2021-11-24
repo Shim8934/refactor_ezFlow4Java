@@ -1188,4 +1188,9 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (int) select("EzCommunityDAO.getIsNewItemCnt", map);
 	}
 
+	/* 2021-11-16 홍승비 - 특정 사용자가 해당 커뮤니티에 가입 승인된 상태(permit != 0)인지 카운트 반환 */
+	public int checkUserInCommunity(Map<String, Object> map) throws Exception {
+		return (int) select("EzCommunityDAO.checkUserInCommunity", map);
+	}
+
 }
