@@ -1311,6 +1311,23 @@ CREATE TABLE `jmocha_user_distribution_mem` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `jmocha_user_dist_apply`
+--
+
+DROP TABLE IF EXISTS `jmocha_user_dist_apply`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `jmocha_user_dist_apply` (
+  `DOMAIN_NAME` varchar(100) NOT NULL,
+  `USER_NAME` varchar(100) NOT NULL,
+  `APPLICANT_ID` varchar(100) NOT NULL,
+  `APPLICANT_DATE` date NOT NULL,
+  PRIMARY KEY (`DOMAIN_NAME`,`USER_NAME`,`APPLICANT_ID`),
+  KEY `foreign_keys_index` (`DOMAIN_NAME`,`USER_NAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `jmocha_user_local_info`
 --
 

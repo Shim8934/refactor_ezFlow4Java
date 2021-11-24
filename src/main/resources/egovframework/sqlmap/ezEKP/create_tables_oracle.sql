@@ -1168,6 +1168,16 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"REG_DATE" DATE DEFAULT NULL
    ) ;
 --------------------------------------------------------
+--  DDL for Table JMOCHA_USER_DIST_APPLY
+--------------------------------------------------------  
+
+   CREATE TABLE "JMOCHA_USER_DIST_APPLY" 
+   (	"DOMAIN_NAME" NVARCHAR2(100) NOT NULL ENABLE, 
+	"USER_NAME" NVARCHAR2(100) NOT NULL ENABLE, 
+	"APPLICANT_ID" NVARCHAR2(100) NOT NULL ENABLE, 
+	"APPLICANT_DATE" DATE DEFAULT NULL
+   ) ;
+--------------------------------------------------------
 --  DDL for Table JMOCHA_USER_LOCAL_INFO
 --------------------------------------------------------
 
@@ -9605,6 +9615,12 @@ CREATE TABLE "TBL_CAR_FORM" (
   CREATE UNIQUE INDEX "PK_JMOCHA_USER_DIST_MEM" ON "JMOCHA_USER_DISTRIBUTION_MEM" ("DOMAIN_NAME", "USER_NAME", "MEMBER_ID") 
   ;
 --------------------------------------------------------
+--  DDL for Index PK_JMOCHA_USER_DIST_APPLY
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_JMOCHA_USER_DIST_APPLY" ON "JMOCHA_USER_DIST_APPLY" ("DOMAIN_NAME", "USER_NAME", "APPLICANT_ID") 
+  ;
+--------------------------------------------------------
 --  DDL for Index PK_JMOCHA_USER_LOCAL_INFO
 --------------------------------------------------------
 
@@ -13460,7 +13476,12 @@ ALTER TRIGGER "TRG_TBL_TASKCOMMENT" ENABLE;
   ALTER TABLE "JMOCHA_USER_DISTRIBUTION_MEM" MODIFY ("USER_NAME" NOT NULL ENABLE);
   ALTER TABLE "JMOCHA_USER_DISTRIBUTION_MEM" MODIFY ("MEMBER_ID" NOT NULL ENABLE);
   ALTER TABLE "JMOCHA_USER_DISTRIBUTION_MEM" ADD CONSTRAINT "PK_JMOCHA_USER_DIST_MEM" PRIMARY KEY ("DOMAIN_NAME", "USER_NAME", "MEMBER_ID")
-  USING INDEX  ENABLE;
+  USING INDEX  ENABLE; 
+--------------------------------------------------------
+--  Constraints for Table JMOCHA_USER_DISTRIBUTION_MEM
+--------------------------------------------------------
+  
+  ALTER TABLE "JMOCHA_USER_DIST_APPLY" ADD CONSTRAINT "PK_JMOCHA_USER_DIST_APPLY" PRIMARY KEY ("DOMAIN_NAME", "USER_NAME", "APPLICANT_ID")
 --------------------------------------------------------
 --  Constraints for Table JMOCHA_USER_LOCAL_INFO
 --------------------------------------------------------
