@@ -4474,7 +4474,7 @@
                 AND
                 TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
                 AND
-                PROCESSORID IS NULL)
+                PROCESSORID = '')
             </isEqual>
             	 ) 
              ORDER BY PROCESSDATE $v_BASICORDER$
@@ -8669,7 +8669,9 @@
 	      		OR 
 	      			(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
 	         	AND 
-					TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015'))
+					TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
+            	AND
+                    PROCESSORID = '')
             </isEqual>
 	      	<isEqual property="v_aprFlag" compareValue="G">
 		     	OR
@@ -11716,7 +11718,9 @@
             AND
             TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
             AND
-            PROCESSORID IS NULL)
+            PROCESSORID = '')
+            AND
+                TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
    		</isEqual>
    		<isEqual property="v_aprFlag" compareValue="G">
 	     	OR
@@ -15357,7 +15361,9 @@
              OR
              (TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
              AND
-             TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015'))
+             TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
+             AND
+             PROCESSORID = '')
 	     </isEqual>
 	     <isEqual property="v_aprFlag" compareValue="G">
 	     	OR
@@ -17259,7 +17265,7 @@
                 AND 
                 	TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
                 AND
-                    PROCESSORID IS NULL)
+                    PROCESSORID = '')
 			</isEqual>
 				)
 		</isEqual>
@@ -33083,7 +33089,7 @@
 	   				AND 
 	   					TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
                     AND
-                        PROCESSORID IS NULL)
+                        PROCESSORID = '')
 	   		</isEqual>
 	   		<isEqual property="v_aprFlag" compareValue="G">
 		     	OR
