@@ -16454,11 +16454,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("<DOCID>" + docID + "</DOCID>");
 		resultXML.append("<REGSN><![CDATA[" + regSN + "]]></REGSN>");
 		resultXML.append("<CABINETID><![CDATA[" + cabinetID + "]]></CABINETID>");
-		if (title.length() > 50) {
-			resultXML.append("<TITLE><![CDATA[" + title.substring(0, 50) + "]]></TITLE>");
-		} else {
-			resultXML.append("<TITLE><![CDATA[" + title + "]]></TITLE>");
-		}
+		resultXML.append("<TITLE><![CDATA[" + title + "]]></TITLE>");
 		resultXML.append("<DEPTCODE>" + deptCode + "</DEPTCODE>");
 		resultXML.append("<DEPTNAME><![CDATA[" + deptName + "]]></DEPTNAME>");
 		resultXML.append("<DEPTNAME2><![CDATA[" + deptName2 + "]]></DEPTNAME2>");
