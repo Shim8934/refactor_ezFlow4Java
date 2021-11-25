@@ -610,11 +610,11 @@
 			        			alert("<spring:message code='ezOrgan.t302' />");
 			        		} else if (result.resultCode === "DUPLICATE") {
 			        			alert("<spring:message code='ezEmail.sharedMailbox15' />");
-			        		} else if (result == "NO_LICENSE_KEY") {
+			        		} else if (result.resultCode == "NO_LICENSE_KEY") {
  								alert("<spring:message code='ezOrgan.x0010' />");
- 							} else if (result == "INVALID_LICENSE_KEY") {
+ 							} else if (result.resultCode == "INVALID_LICENSE_KEY") {
  								alert("<spring:message code='ezOrgan.x0011' />");
- 							} else if (result == "MAX_USER_REACHED") {
+ 							} else if (result.resultCode == "MAX_USER_REACHED") {
  								alert("<spring:message code='ezOrgan.x0012' />");
 			        		} else {
 			        			alert("<spring:message code='ezEmail.sharedMailbox07' />");
