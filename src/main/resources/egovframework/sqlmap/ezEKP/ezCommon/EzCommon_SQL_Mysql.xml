@@ -4170,5 +4170,22 @@
 			MAILFG_COMMENT VARCHAR(2) DEFAULT NULL
 		)
     </statement>
+    
+    <select id="EzCommonDAO.checkSurveySubDeptYNColumn">
+        <![CDATA[
+            SELECT 
+                SUBDEPTYN
+            FROM 
+                TBL_SURVEY_PARTICIPANT
+            LIMIT 1
+        ]]>
+    </select>
+    <statement id="EzCommonDAO.addSurveySubDeptYNColumn">
+        ALTER TABLE 
+        	TBL_SURVEY_PARTICIPANT 
+		ADD (
+			SUBDEPTYN VARCHAR(2) DEFAULT 'N'
+		)
+    </statement>
 	
 </sqlMap>

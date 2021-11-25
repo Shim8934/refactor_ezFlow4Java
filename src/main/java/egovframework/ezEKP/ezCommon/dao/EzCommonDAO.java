@@ -2192,5 +2192,15 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addCommMailFG_CommentColumn");
 		}
 	}
+
+	/* 2021-11-17 홍승비 - 전자설문 대상자 하위부서 허용여부 플래그 추가 (Y/N) */
+	public void addSurveySubDeptYNColumn() {
+		try {
+			select("EzCommonDAO.checkSurveySubDeptYNColumn");
+		} catch (Exception e) {
+			logger.debug("tbl_survey_participant SubDeptYN column doesn't exist. creating the column...");
+			update("EzCommonDAO.addSurveySubDeptYNColumn");
+		}
+	}
 	
 }

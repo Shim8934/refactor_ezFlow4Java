@@ -2538,4 +2538,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addCommMailFGColumn() throws Exception {
 		ezCommonDAO.addCommMailFGColumn();
 	}
+	
+	@Override
+	public void addSurveySubDeptYNColumn() throws Exception {
+		ezCommonDAO.addSurveySubDeptYNColumn();
+	}
 }
