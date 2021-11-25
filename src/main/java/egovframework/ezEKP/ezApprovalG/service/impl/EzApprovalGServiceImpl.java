@@ -75,6 +75,7 @@ import kr.dogfoot.hwplib.writer.HWPWriter;
 import org.apache.commons.codec.binary.Base64; 
 import org.apache.commons.io.FileUtils; 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.json.simple.JSONArray;
@@ -6956,7 +6957,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                         docResult += "<REGISTERTYPE>" + apprGRecordTempVO.get(0).getRegisterType() + "</REGISTERTYPE>"; 
                         docResult += "<REGISTERDATE>" + apprGRecordTempVO.get(0).getRegisterDate() + "</REGISTERDATE>"; 
                         docResult += "<REGISTERYEAR>" + apprGRecordTempVO.get(0).getRegisterYear() + "</REGISTERYEAR>"; 
-                        docResult += "<EXECUTEDATE>" + apprGRecordTempVO.get(0).getExecuteDate() + "</EXECUTEDATE>"; 
+                        	if(apprGRecordTempVO.get(0).getExecuteDate()==null) {
+                        		docResult += "<EXECUTEDATE>" + "" + "</EXECUTEDATE>";
+                        	}else {
+                        		docResult += "<EXECUTEDATE>" + apprGRecordTempVO.get(0).getExecuteDate() + "</EXECUTEDATE>";
+                        	}
                         docResult += "<TITLE>" + apprGRecordTempVO.get(0).getTitle() + "</TITLE>"; 
                         docResult += "<APRMEMBERTITLE>" + apprGRecordTempVO.get(0).getAprMemberTitle() + "</APRMEMBERTITLE>"; 
                         docResult += "<APRMEMBERTITLE2>" + apprGRecordTempVO.get(0).getAprMemberTitle2() + "</APRMEMBERTITLE2>"; 
@@ -13635,7 +13640,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						subTitleFlag = false;
 						
 						for (int k = 0; k < userDIDs.length; k++) {
-							if (userDIDs[k].trim().equals(userDeptID.trim()) && userDNames[k].trim().equals(userDeptName.trim()) && userDNames2[k].trim().equals(userDeptName2.trim()) 
+							if (userDIDs[k].trim().equals(userDeptID.trim()) && userDNames[k].trim().equals(StringEscapeUtils.unescapeHtml3(userDeptName.trim())) && userDNames2[k].trim().equals(StringEscapeUtils.unescapeHtml3(userDeptName2.trim())) 
 									&& userCompanyIDs[k].trim().equals(userCompanyID.trim()) && userTitles[k].trim().equals(userJobTitle.trim()) && userTitles2[k].trim().equals(userJobTitle2.trim())){
 								subTitleFlag = true;
 							}
@@ -14356,7 +14361,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						map3.put("v_APRSTATE", staASJinHang);
 						absentReason = getBujaeInfo(docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), userInfo.getTenantId(), userInfo.getOffset(), companyID);
 						
-						if (absentReason.trim().equals("")) {
+						if (absentReason.trim().equals("") || k == dlength-1) {
 							ezApprovalGDAO.updateAprLineInfo(map3);
 							
 							sendMsg(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), "ING", companyID, lang, userInfo.getTenantId());
@@ -14375,72 +14380,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 								ezApprovalGDAO.updateAprLineInfo3(map3);
 								
 		                        k += 1;
-		                        if(k == dlength){
-		                        	String docNumZeroCnt = getDocNumZeroCnt(companyID, userInfo.getTenantId());
-		                        	String approveRet = getApproveDocInfo(userInfo, docID, companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), "APR", "");
-		                			Document aprXML = commonUtil.convertStringToDocument(approveRet);
-		                			
-		                			String drafterDept = aprXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent();
-		                			String docNO = aprXML.getElementsByTagName("DOCNO").item(0).getTextContent();
-		                        	
-		                        	String ret = getCabinetNum(drafterDept, "", companyID, userInfo.getTenantId(), userInfo.getOffset());
-		            				
-		            				logger.debug("serialNum = " + ret);
-		            				
-		            				Document docXML3 = commonUtil.convertStringToDocument(ret);
-		            				String cabinetSN = docXML3.getElementsByTagName("RESULT").item(0).getTextContent();
-		            				
-		            				
-		            				Map<String, Object> map4 = new HashMap<String, Object>();
-		            				map4.put("companyID", companyID);
-		            				map4.put("v_DOCID", docID);
-		            				map4.put("v_TENANTID", userInfo.getTenantId());
-		            				map4.put("v_FLAG", "APR");
-		            				String docHref = ezApprovalGDAO.getDocInfoHref(map);
-		            				
-		            				String loadMht = ezCommonService.loadMHTFile(userInfo.getRealPath() + docHref); // 결재문서 가져오기
-		            				// HTML -> MHT
-		            				String content = ezCommonService.startMHT2HTML(userInfo.getRealPath() + commonUtil.getUploadPath("config.LocalPath", userInfo.getTenantId()), loadMht, userInfo.getRealPath() + commonUtil.getUploadPath("config.LocalPath", userInfo.getTenantId()), userInfo.getRealPath(), userInfo.getLocale(), "", "");
-		            				//HTML 파싱 document 클래스 겹쳐서 임포트 못함
-		            				org.jsoup.nodes.Document doc = Jsoup.parse(content);
-		            				
-		            				//0박아주는거 하면된다
-		            				if (!ret.equals("") && doc.getElementById("docnumber") != null) {
-		            					docNO = docNO + createDocNO(cabinetSN , docNumZeroCnt);
-		            					
-		            					map4.put("v_DOCNO", docNO);
-		            					map4.put("v_FIRSTFLAG8", true);
-		            					ezApprovalGDAO.updateAprDocInfo(map4);
-		            					doc.getElementById("docnumber").text(docNO);
-		            					
-		            					if (doc.getElementById("enforcedate") != null) {
-		            						doc.getElementById("enforcedate").text(commonUtil.getTodayUTCTime("yyyy-MM-dd").replace("-", "."));
-		            					}
-		            					
-		            					String retNum = getNDigitNum(cabinetSN, 6);
-		            					
-		            					doc.body().attr("regnumbercode", retNum);
-		            					doc.body().attr("deptid", drafterDept);
-		            				}
-		            				
-		            				String tempHtml = doc.outerHtml();
-		            				
-		            				try (OutputStream outputStream = new FileOutputStream(new File(commonUtil.detectPathTraversal(userInfo.getRealPath() + docHref))); 
-		            					OutputStreamWriter output = new OutputStreamWriter(outputStream);) {
-		            					String convertedMHT = ezCommonService.startHtml2Mht(tempHtml, userInfo.getRealPath(), userInfo.getLocale());
-		            					
-		            					output.write(convertedMHT);
-		            				} catch (FileNotFoundException fnfe) {
-		            					logger.debug("fnfe: {}", fnfe);
-		            				} catch (IOException ioe) {
-		            					logger.debug("ioe: {}", ioe);
-		            				} catch (Exception e) {
-		            					logger.debug("e: {}", e);
-		            				}
-		            				
-		            				doDocComplete(docID, userID, userName, userName2, dirPath, deptID, proxyUserID, companyID, lang, userInfo, curDocNum, nonElecRecXML);
-		            				
-		                        }
 							}
 						}
 						

@@ -246,12 +246,13 @@
 			     }
 			    
 				function PassWordChange() {
+					// 현재비밀번호가 없을 때
 			    	if (document.getElementById('txtOldPassword').value == "") {
 						alert("<spring:message code='ezPersonal.t947'/>");
 					    document.all['txtOldPassword'].focus();
 					    return;
 					}
-			    	
+			    	// 새 비밀번호가 없을 때
 			    	if (document.getElementById('txtNewPassword').value == "") {
 			        	//alert("<spring:message code='ezPersonal.t195'/>");
 			            alert("<spring:message code='main.jjh01'/>");
@@ -278,6 +279,7 @@
 				        return;
 				    }
 	
+			        // 현재 비밀번호와 새 비밀번호가 동일 한 경우
 			        if (document.getElementById('txtOldPassword').value == document.getElementById('txtNewPassword').value) {
 			            alert("<spring:message code='ezPersonal.t194'/>");
 				        document.all['txtNewPassword'].focus();
@@ -316,6 +318,8 @@
 				            window.top.location.href = '/user/login/actionLogout.do';
 			            } else if (xmlHTTP.responseText == "CHKERROR") {    
 			                alert("<spring:message code='ezPersonal.t946'/>");
+			            } else if (xmlHTTP.responseText == "PREVERROR") {    
+			                alert("<spring:message code='ezOrgan.ls01'/>"); // 2021-10-26 이사라 : 최근사용 비밀번호는 사용할 수 없는 로직 추가
 				        } else {
 				            alert("<spring:message code='ezPersonal.t198'/>");
 				        }

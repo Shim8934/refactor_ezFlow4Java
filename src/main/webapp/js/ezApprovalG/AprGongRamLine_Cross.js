@@ -750,8 +750,31 @@ function getUserInDept(dept) {
 		},
 		success: function(xml) {
 			//console.log("row xml : " + xml);
+			var objXml = createXmlDom();
 			xml = loadXMLString(xml);
-			aprLineAddDeptUser("PERSON", xml);
+			// 중복공람자를 제외한다
+			var listViewDataNode = objXml.createElement("LISTVIEWDATA");
+			var rowsNode = objXml.createElement("ROWS");
+			var rows = xml.getElementsByTagName("ROW");
+			for(var i=0; i<rows.length; i++) {
+				var isDup = false;
+				var userId01 = rows[i].getElementsByTagName("CELL")[0].getElementsByTagName("DATA2")[0].textContent;
+				for(var j=0; j<rowsNode.getElementsByTagName("ROW").length; j++) {
+					var userId02 = rowsNode.getElementsByTagName("ROW")[j].getElementsByTagName("CELL")[0].getElementsByTagName("DATA2")[0].textContent;
+					if(userId01 == userId02) {
+						isDup = true;
+					}
+				}
+				if(!isDup) {
+					rowsNode.appendChild(rows[i]);
+					i--;
+				}
+			}
+			listViewDataNode.appendChild(rowsNode);
+			objXml.appendChild(listViewDataNode);
+			//aprLineAddDeptUser("PERSON", xml);
+			//중복제거된 xml로 대체
+			aprLineAddDeptUser("PERSON", objXml);
 		}		
 	});
 }

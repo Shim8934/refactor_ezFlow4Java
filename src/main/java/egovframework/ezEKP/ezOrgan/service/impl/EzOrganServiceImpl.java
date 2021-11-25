@@ -2348,4 +2348,28 @@ public class EzOrganServiceImpl implements EzOrganService {
         
         return ezOrganDAO.getPropertyValue_S5(map);
 	}
+	
+	public List<OrganUserVO> getOrgUserInfo(String userID, int tenantID, String companyID) throws Exception {
+		logger.debug("getOrgUserInfo started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
+		logger.debug("getOrgUserInfo ended");
+		
+		return ezOrganDAO.getOrgUserInfo(map);
+	}
+	
+	@Override
+	public String getAddJobProxy(String id, String dept, String title, int tenantId) throws Exception {
+		logger.debug("getAddJobProxy2 started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", id);
+		map.put("tenantID", tenantId);
+		map.put("dept", dept);
+		map.put("title", title);
+		logger.debug("getAddJobProxy2 ended");
+		
+		return ezOrganDAO.getAddJobProxy(map);
+	}
 }

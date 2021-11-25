@@ -4891,7 +4891,8 @@ public class EzEmailUtil {
 			sentDateStr = commonUtil.getDateStringInUTC(sentDateStr,loginInfo.getOffset(), false);		
 			dateStrExceptTime = sentDateStr.substring(0, 10);
 		}
-		
+		// 2021-11-24 이사라 : 보낸사람 이름에 파일명에 들어갈 수 없는 특수기호가 있을경우 "_"로 변경 - "/"로 인한 파일루트 생성문제 해결
+		senderName = senderName.replaceAll("[\\\\/:*?\"<>|]", "_").replaceAll("[\\t\\r\\n\\v\\f\\u00a0]", "");
 		subject = subject.replaceAll("[\\\\/:*?\"<>|]", "_").replaceAll("[\\t\\r\\n\\v\\f\\u00a0]", "");
 		// 20200317 조진호 - 기존에는 발신자_[발신자주소]_[날짜]_제목 에서 날짜를 맨 앞으로 순서를 변경
 		String fileName = dateStrExceptTime + "_" + senderName + "_[" + senderAddress + "]_" + subject ;

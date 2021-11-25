@@ -270,6 +270,18 @@
             	TENANT_ID = #v_TENANT_ID#	
 		]]>
 	</delete>
+
+	<!-- 2021-11-10 이사라 :  user 계정 삭제 시 TBL_USER_CONFIG에서 user 관련 정보 일괄삭제  -->
+	<delete id="EzOrganAdminDAO.deleteDBData_D6" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_USER_CONFIG
+            WHERE
+            	USER_ID = #v_CN#
+            AND
+            	TENANT_ID = #v_TENANT_ID#
+		]]>
+	</delete>
 		
 	<!-- <procedure id="EzOrganAdminDAO.moveDBData" parameterClass="Map">
 		<![CDATA[
@@ -3362,8 +3374,21 @@
                 CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                      
        		AND
        			TENANT_ID = #v_TENANT_ID#	
+		]]>
+			<isNotEmpty property="searchValue" prepend="AND">
+				<isEqual property="searchType" compareValue="cn">
+					cn LIKE CONCAT('%', #searchValue#, '%')
+				</isEqual>
+				<isEqual property="searchType" compareValue="displayname">
+					CASE IFNULL(#v_LANGDATA#, '1') WHEN '1' THEN displayname ELSE displayname2 END LIKE CONCAT('%', #searchValue#, '%')
+				</isEqual>
+				<isEqual property="searchType" compareValue="description">
+					CASE IFNULL(#v_LANGDATA#, '1') WHEN '1' THEN description ELSE description2 END LIKE CONCAT('%', #searchValue#, '%')
+				</isEqual>
+			</isNotEmpty>
+		<![CDATA[
       		ORDER BY
-      			DISPLAYNAME
+      			DISPLAYNAME,CN
       		LIMIT
       			#v_STARTNUM#, #v_COUNT#
 		]]>
@@ -3378,7 +3403,7 @@
 	<select id="EzOrganAdminDAO.getAddJobCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
-				COUNT (CN) 
+				COUNT(CN) 
         	FROM
         		TBL_USERMASTER 
 			WHERE
@@ -3389,9 +3414,18 @@
                 CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                      
        		AND
        			TENANT_ID = #v_TENANT_ID#	
-      		ORDER BY
-      			DISPLAYNAME
 		]]>
+			<isNotEmpty property="searchValue" prepend="AND">
+				<isEqual property="searchType" compareValue="cn">
+					cn LIKE CONCAT('%', #searchValue#, '%')
+				</isEqual>
+				<isEqual property="searchType" compareValue="displayname">	<!-- NULLIF(1,2): 1,2가 같으면 null. / (oracle)NVL=IFNULL(1,2): 1이 null이면 2. -->
+					CASE IFNULL(#strLang#, '1') WHEN '1' THEN displayname ELSE displayname2 END LIKE CONCAT('%', #searchValue#, '%')
+				</isEqual>
+				<isEqual property="searchType" compareValue="description">
+					CASE IFNULL(#strLang#, '1') WHEN '1' THEN description ELSE description2 END LIKE CONCAT('%', #searchValue#, '%')
+				</isEqual>
+			</isNotEmpty>
 	</select>
 	
 	<select id="EzOrganDAO.getProxyUserInfo" parameterClass="Map" resultClass="OrganProxyVO">

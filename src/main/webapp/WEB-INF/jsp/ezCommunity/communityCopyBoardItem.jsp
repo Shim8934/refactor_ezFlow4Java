@@ -41,6 +41,7 @@
 			//2018-07-13 김보미
     		var treeCtrl = "<c:out value='${treeCtrl}' />";
 			var xmlDom_treeview = createXmlDom();
+			var mailFG_Post = "<c:out value = '${mailFG_Post}'/>"; // 게시알림
 			
 			/* 2018-08-06 홍승비 - 커뮤니티 게시물 복사 팝업창 게시판과 같도록 UI 통일 */
 			var board_alertArguments = new Array();
@@ -102,6 +103,11 @@
 			   			if (result["ret"].indexOf("OK") > -1) {
 			   				var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezCommunity.t1051' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezCommunity.t1051'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 							DivPopUpShow(330, 205, pUrl);
+							
+							 /* 2021-11-19 홍승비 - 게시판의 옵션에 따라 게시알림메일 발송 (비동기식, 백그라운드 동작) */
+			                if (mailFG_Post == "Y") { // 복사 시 mode는 항상 new, 다중 복사 대응
+			                	sendCommBoardAlertMail("new", pDestBoardID, destItemIDList);
+			                }
 		 				} else {
 		 					var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezCommunity.t1052' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezCommunity.t1052'/>") + result["ret"] + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 							DivPopUpShow(330, 205, pUrl);
@@ -345,6 +351,29 @@
 			
 			    document.getElementById("TopBoardsList").innerHTML = strHTML;
 			}
+			
+			// 관리자단에서는 예약게시물이 검색되며, 복사도 가능하다. (게시일자는 현재 시간으로 들어가므로 알림메일 발송 진행)
+			 /* 2021-11-19 홍승비 - 게시판 메일알림 함수 추가, 비동기로 백그라운드 동작 (다중 복사 대응) */
+			function sendCommBoardAlertMail(pMode, pBoardID, pItemID) {
+				var itemList = pItemID.split(";");
+				 
+				for (var i = 0; i < itemList.length; i ++) {
+					if (itemList[i].trim() != "") {
+				        $.ajax({
+							type : "POST",
+							dataType : "text",
+							async : true,
+							url : "/ezCommunity/sendCommBoardAlertMail.do",
+							data : {
+								mode : pMode,
+								boardID : pBoardID,
+								itemID : itemList[i]
+							}
+						});
+					}
+				}
+			}
+			 
 		</script>
 	</head>
 	<body class = "popup">
