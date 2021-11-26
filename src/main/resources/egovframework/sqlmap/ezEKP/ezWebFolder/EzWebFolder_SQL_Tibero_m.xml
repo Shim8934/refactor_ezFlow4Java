@@ -1827,7 +1827,7 @@
 		<include refid="searchFavorite"/>
 		<![CDATA[
 				    ORDER BY
-				        RESULT.TEMP_TARGET_TYPE $orderByData$
+				        TEMP_TARGET_TYPE $orderByData$
 			    ) ORDER_RESULT
 			    WHERE ROWNUM <= (#startIndex# + #listCount#)
 			)

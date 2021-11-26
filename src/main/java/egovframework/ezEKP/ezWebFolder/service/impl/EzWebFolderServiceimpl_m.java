@@ -1397,10 +1397,12 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		String dbType = commonUtil.getDatabaseType();
 		
 		if (sortType.equals("")){
-			if(!dbType.equals("oracle")){
-				secondSort = ", RESULT.CREATE_DATE DESC" ;
-			} else {
+			if(dbType.equals("oracle")){
 				secondSort = "ASC, CREATE_DATE DESC" ;
+			} else if (dbType.equals("tibero")) {
+				secondSort = "ASC, CREATE_DATE DESC" ;
+			} else {
+				secondSort = ", RESULT.CREATE_DATE DESC" ;
 			}
 		} else {
 			if (sortColumn.equals("TARGET_ICON_URL") && sortType.equals("DESC")){
@@ -1409,10 +1411,12 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 				secondSort = ", " + sortColumn + " " + sortType;
 			}
 			
-			if(!dbType.equals("oracle")){
-				secondSort += ", RESULT.CREATE_DATE DESC" ;
-			} else {
+			if(dbType.equals("oracle")){
 				secondSort += ", CREATE_DATE DESC" ;
+			}  else if (dbType.equals("tibero")) {
+				secondSort += ", CREATE_DATE DESC" ;
+			} else {
+				secondSort += ", RESULT.CREATE_DATE DESC" ;
 			}
 		}
 		
