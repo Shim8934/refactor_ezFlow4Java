@@ -628,7 +628,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					sb.append("<ISLEAF>TRUE</ISLEAF>");
 				}
 				
-				sb.append("<VALUE>" + k.getName() + "</VALUE>");
+				sb.append("<VALUE><![CDATA[" + k.getName() + "]]></VALUE>");
 				sb.append("<DATA1>" + k.getCategoryCode() + "</DATA1>");
 				sb.append("<DATA2>" + (Integer.parseInt(level) + 1) + "</DATA2>");
 				sb.append("</NODE>");
