@@ -1311,11 +1311,6 @@
 			}
 			
 			function event_listContextMenuAndId(event){
-				// 가져오기 도중에 콘텍스트 메뉴 삭제 안되도록
-				if (psSetTimeFlag) {
-					return;
-				}
-
 		        if (currentMoverId != '') {
 		        	currentFixingId = document.getElementById(currentMoverId);
 		        } else {
@@ -1479,7 +1474,7 @@
 		    	var uk = userKey;
 		    	
 		    	pgSetTimeout = setTimeout(function getMailboxProgress() {
-		    		if (psSetTimeFlag) { return; }
+		    		if (!psSetTimeFlag) { return; }
 		    		
 		    		$.ajax({
 		    			type : "POST",
@@ -1488,7 +1483,7 @@
 						dataType : "json", 
 		    			async : true,
 		    			success : function(data) {
-							if (psSetTimeFlag) { return; }
+							if (!psSetTimeFlag) { return; }
 		    				var pg = data.progress;
 		    				
 		    				if (pg > -1 && pg <= 100) {
