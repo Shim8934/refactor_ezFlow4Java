@@ -1311,6 +1311,11 @@
 			}
 			
 			function event_listContextMenuAndId(event){
+				// 가져오기 도중에 콘텍스트 메뉴 삭제 안되도록
+				if (psSetTimeFlag) {
+					return;
+				}
+
 		        if (currentMoverId != '') {
 		        	currentFixingId = document.getElementById(currentMoverId);
 		        } else {
