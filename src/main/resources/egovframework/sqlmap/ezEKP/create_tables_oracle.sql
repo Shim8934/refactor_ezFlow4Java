@@ -8509,6 +8509,13 @@ CREATE TABLE "TBL_CAR_FORM" (
 	"TENANT_ID" NUMBER(7,0), 
 	"TYPE" VARCHAR2(50 BYTE)
    ) ;
+   
+   CREATE TABLE "TBL_WEBFOLDER_NO_INHERIT "
+   (
+			"FOLDER_ID" VARCHAR2(100 BYTE) NOT NULL,
+			"TENANT_ID" NUMBER(7, 0) NOT NULL,
+			CONSTRAINT WEBFOLDER_NO_INHERIT_PK PRIMARY KEY ("FOLDER_ID", "TENANT_ID")
+	);
 -----------------------	---------------------------------
 --  DDL for Table TBL_WEBFOLDER_APPLY_HISTORY
 --------------------------------------------------------

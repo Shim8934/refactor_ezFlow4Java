@@ -14208,6 +14208,12 @@ CREATE TABLE `tbl_webfolder_env` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='사용자 환경설정';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+DROP TABLE IF EXISTS `tbl_webfolder_no_inherit`;
+CREATE TABLE `tbl_webfolder_no_inherit` (
+  `FOLDER_ID` varchar(100) NOT NULL,
+  `TENANT_ID` int(7) NOT NULL,
+  PRIMARY KEY (`FOLDER_ID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
 --
 -- Table structure for table `tbl_webfolder_favor`
 --
