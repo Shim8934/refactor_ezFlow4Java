@@ -1495,7 +1495,7 @@
 		    					ShowPercent(pg);
 		    				}
 	    					if (pg < 100) { 
-	    						setTimeout(getMailboxProgress(), pgSetTime); 
+								setTimeout(getMailboxProgress, pgSetTime);
 	    					}
 		    			}, error : function(e) {
 		    				alert("error. " + e.status);
