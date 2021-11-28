@@ -4154,11 +4154,11 @@ public class EzPortalController extends EgovFileMngUtil {
 			String totalSearchURL = config.getProperty("config.totalSearchURL");
 			
 			try {
-				result = commonUtil.getJsonFromRestApi(totalSearchURL, "", null, req, "post", searchResult, 4, 8);
+				result = commonUtil.getJsonFromRestApi(totalSearchURL, "", null, req, "post", searchResult, 4000, 8000);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 				logger.debug("totalSearch retry...");
-				result = commonUtil.getJsonFromRestApi(totalSearchURL, "", null, req, "post", searchResult, 4, 8);
+				result = commonUtil.getJsonFromRestApi(totalSearchURL, "", null, req, "post", searchResult, 4000, 8000);
 			}
 			
 			logger.debug("result : {}", result);
