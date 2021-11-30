@@ -1856,17 +1856,31 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createtWebfolderFileUserTable");
 		}
 		
-		try {
-			update("EzCommonDAO.createWebfolderFolderUserSeq");
-		} catch (Exception e) {
-			logger.debug("createtWebfolderFolderUserSeq sequence exist.");
-		} 
+		if (dbType.equalsIgnoreCase("oracle")) {
+			try {
+				update("EzCommonDAO.createWebfolderFolderUserSeq");
+			} catch (Exception e) {
+				logger.debug("createWebfolderFolderUserSeq sequence exist.");
+			} 
 			
-		try {
-			update("EzCommonDAO.createWebfolderFileUserSeq");
-		} catch (Exception e) {
-			logger.debug("createtWebfolderFileUserSeq sequence exist.");
-		} 
+			try {
+				update("EzCommonDAO.createWebfolderFileUserSeq");
+			} catch (Exception e) {
+				logger.debug("createWebfolderFileUserSeq sequence exist.");
+			} 
+			
+			try {
+				update("EzCommonDAO.createWebfolderFolderIdSeq");
+			} catch (Exception e) {
+				logger.debug("createWebfolderFolderIdSeq sequence exist.");
+			} 
+			
+			try {
+				update("EzCommonDAO.createWebfolderFileIdSeq");
+			} catch (Exception e) {
+				logger.debug("createWebfolderFileIdSeq sequence exist.");
+			} 
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -1968,9 +1982,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 
 	public void addWebfolderLogHistory() {
 		try {
-			logger.debug("여기 오나요 checkWebfolderFileHistoryColumn");
             select("EzCommonDAO.checkWebfolderFileHistoryColumn");
-            logger.debug("여기 오나요 checkWebfolderFileHistoryColumn");
         } catch (Exception e) {
             logger.debug("tbl_webfolder_history file_id column doesn't exist. creating the column...");
             update("EzCommonDAO.addWebfolderLogHistory");

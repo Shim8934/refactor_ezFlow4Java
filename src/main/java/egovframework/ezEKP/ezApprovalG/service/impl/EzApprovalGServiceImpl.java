@@ -628,7 +628,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					sb.append("<ISLEAF>TRUE</ISLEAF>");
 				}
 				
-				sb.append("<VALUE>" + k.getName() + "</VALUE>");
+				sb.append("<VALUE><![CDATA[" + k.getName() + "]]></VALUE>");
 				sb.append("<DATA1>" + k.getCategoryCode() + "</DATA1>");
 				sb.append("<DATA2>" + (Integer.parseInt(level) + 1) + "</DATA2>");
 				sb.append("</NODE>");
@@ -16454,11 +16454,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("<DOCID>" + docID + "</DOCID>");
 		resultXML.append("<REGSN><![CDATA[" + regSN + "]]></REGSN>");
 		resultXML.append("<CABINETID><![CDATA[" + cabinetID + "]]></CABINETID>");
-		if (title.length() > 50) {
-			resultXML.append("<TITLE><![CDATA[" + title.substring(0, 50) + "]]></TITLE>");
-		} else {
-			resultXML.append("<TITLE><![CDATA[" + title + "]]></TITLE>");
-		}
+		resultXML.append("<TITLE><![CDATA[" + title + "]]></TITLE>");
 		resultXML.append("<DEPTCODE>" + deptCode + "</DEPTCODE>");
 		resultXML.append("<DEPTNAME><![CDATA[" + deptName + "]]></DEPTNAME>");
 		resultXML.append("<DEPTNAME2><![CDATA[" + deptName2 + "]]></DEPTNAME2>");
