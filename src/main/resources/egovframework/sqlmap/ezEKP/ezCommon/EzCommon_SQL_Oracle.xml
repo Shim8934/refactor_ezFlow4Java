@@ -4389,4 +4389,26 @@
 		)
     </statement>
     
+    <select id="EzCommonDAO.checkTblScheduleComplete">
+		<![CDATA[
+			SELECT
+				SCHEDULEID
+			FROM
+				TBL_SCHEDULE_COMPLETE
+			WHERE
+				ROWNUM = 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.createTblScheduleComplete"> 
+		CREATE TABLE TBL_SCHEDULE_COMPLETE (
+		    SCHEDULEID NUMBER(10) NOT NULL,
+		    REPEATCOUNT NUMBER(10) NOT NULL,
+			ISALLREP NCHAR(1) DEFAULT 'N',
+		    STARTDATE DATE NOT NULL,
+		    TENANT_ID NUMBER(5),
+		    COMPANYID VARCHAR2(40),
+		    CONSTRAINT TBL_SCHEDULE_COMPLETE_PK PRIMARY KEY (SCHEDULEID, REPEATCOUNT, ISALLREP, STARTDATE)
+		)
+	</statement>
+    
 </sqlMap>

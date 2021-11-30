@@ -2543,4 +2543,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addSurveySubDeptYNColumn() throws Exception {
 		ezCommonDAO.addSurveySubDeptYNColumn();
 	}
+	
+	@Override
+	public void createTblScheduleComplete() throws Exception {
+		ezCommonDAO.createTblScheduleComplete();
+	}
 }

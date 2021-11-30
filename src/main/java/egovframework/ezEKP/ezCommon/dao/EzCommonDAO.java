@@ -2202,5 +2202,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addSurveySubDeptYNColumn");
 		}
 	}
+
+	public void createTblScheduleComplete() {
+		try {
+			select("EzCommonDAO.checkTblScheduleComplete");
+		} catch (Exception e) {
+			logger.debug("TBL_SCHEDULE_COMPLETE doesn't exist. creating the table...");
+			update("EzCommonDAO.createTblScheduleComplete");
+		}
+	}
 	
 }

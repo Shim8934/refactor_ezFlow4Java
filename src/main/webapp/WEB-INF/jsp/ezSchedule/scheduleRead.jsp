@@ -55,6 +55,10 @@
 	        var startDate = "<c:out value='${scheduleInfo.startDate}' />";
 	        var endDate = "<c:out value='${scheduleInfo.endDate}' />";
 	        
+	        /* 2021-11-25 홍승비 - 일정완료 관련 데이터 추가 (반복일정 대응) */
+	        var repeatCount = "<c:out value='${repeatCount}' />";
+	        var repStartDate = "<c:out value='${repStartDate}' />";
+	        
 	        <%-- var parentid = "<%= _parentid %>"; --%>			
 			<%-- var admin = "<%= _admin %>"; --%>
 			<%-- var userid = "<%= userinfo.UserID %>"; --%>
@@ -273,7 +277,8 @@
 					data : { 
 						scheduleId : scheduleid,
 						selectDate : "${_date}",
-						startDate : "${scheduleInfo.startDate}"						
+						startDate : "${scheduleInfo.startDate}",
+						repeatCount : repeatCount
 					},
 					success: function() {
 						alert("<spring:message code='ezSchedule.t213' />");
@@ -299,12 +304,13 @@
 	            var pTop = (pheight - 760) / 2;
 	            var pLeft = (pwidth - 790) / 2;
 	            
+	            /* 2021-11-25 홍승비 - 일정 수정 시 반복일정의 repeatCount와 repStartDate를 전달 */
 	            if (CrossYN()) {
-	                win = window.open("/ezSchedule/scheduleWrite.do?id=" + encodeURIComponent(id) + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + pattern + "&pageFrom=" + pageFrom + "&otherid=" + _otherid, "",
-	                                    "height = 830px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+	                win = window.open("/ezSchedule/scheduleWrite.do?id=" + encodeURIComponent(id) + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + pattern + "&pageFrom=" + pageFrom + "&otherid=" + _otherid
+	                		+ "&repeatCount=" + repeatCount + "&repStartDate=" + encodeURIComponent(repStartDate), "", "height = 830px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	            } else {
-	            	win = window.open("/ezSchedule/scheduleWrite.do?id=" + encodeURIComponent(id) + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + pattern + "&pageFrom=" + pageFrom + "&otherid=" + _otherid, "",
-                            "height = 760px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+	            	win = window.open("/ezSchedule/scheduleWrite.do?id=" + encodeURIComponent(id) + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + pattern + "&pageFrom=" + pageFrom + "&otherid=" + _otherid
+	            			+ "&repeatCount=" + repeatCount + "&repStartDate=" + encodeURIComponent(repStartDate), "", "height = 760px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	            	/* if (pUse_Editor == "" || pUse_Editor == "CK") {
 	                    win = window.open("/ezSchedule/scheduleWrite.do?id=" + encodeURIComponent(id) + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + pattern + "&pageFrom=" + pageFrom + "&otherid=" + _otherid, "",
 	                                        "height = 760px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");

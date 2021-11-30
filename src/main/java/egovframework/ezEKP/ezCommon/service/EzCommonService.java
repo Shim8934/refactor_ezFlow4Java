@@ -357,5 +357,7 @@ public interface EzCommonService {
 	public void addCommMailFGColumn() throws Exception;
 
 	public void addSurveySubDeptYNColumn() throws Exception;
+
+	public void createTblScheduleComplete() throws Exception;
 	
 }

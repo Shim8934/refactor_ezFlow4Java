@@ -1701,6 +1701,8 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		ezScheduleDAO.deleteScheduleAttach(map);
 		ezScheduleDAO.deleteAttendant(map);
 		ezScheduleDAO.deleteSchedule(map);
+		/* 2021-11-26 홍승비 - 일정 삭제 시 일정완료 레코드도 삭제 */
+		ezScheduleDAO.deleteScheduleComplete(map);
 	}	
 
 	@Override
@@ -1808,6 +1810,8 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		if (status.equals("1")) {
 			ezScheduleDAO.insertAttendantSchedule(map);
 			ezScheduleDAO.insertAttendantScheduleDel(map);
+			/* 2021-11-29 홍승비 - 참석자 초대 수락 시, 부모 일정의 일정완료 레코드도 동일하게 삽입 */
+			ezScheduleDAO.insertAttendantScheduleComplete(map);
 		}
 	}
 
@@ -1845,6 +1849,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		map.put("v_TENANTID", tenantId);		
 		
 		ezScheduleDAO.deleteScheduleRepe(map);
+		ezScheduleDAO.deleteScheduleComplete(map); // 전체 반복일정 삭제 시 일정완료 레코드도 함께 삭제
 	}
 
 	@Override
@@ -2036,6 +2041,156 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		
 		ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content_, false);
 		
+	}
+	
+	/* 2021-11-25 홍승비 - 일정완료여부 데이터를 삽입하는 메서드 */
+	public void insertScheduleComplete(String scheduleId, String repeatCount, String isAllRep, String startdate, int tenantId, String companyID) throws Exception {
+		logger.debug("insertScheduleComplete started, scheduleId = " + scheduleId + " / repeatCount = " + repeatCount + " / isAllRep = " + isAllRep);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_SCHEDULEID", scheduleId);
+		map.put("v_REPEATCOUNT", repeatCount);
+		map.put("v_ISALLREP", isAllRep);
+		map.put("v_STARTDATE", startdate);
+		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
+		
+		// SCHEDULEID, REPEATCOUNT, ISALLREP, STARTDATE, TENANT_ID, COMPANYID값이 완전히 일치하는 기존 일정완료 레코드가 존재하는지 체크
+		int cnt = ezScheduleDAO.getScheduleCompleteCnt(map);
+		if (cnt < 1) { // 레코드가 존재하지 않는 경우에만 삽입
+			ezScheduleDAO.insertScheduleComplete(map);
+			logger.debug("insertScheduleComplete ended. (new record inserted)");
+		} else {
+			logger.debug("insertScheduleComplete ended. (record already exists, do nothing)");
+		}
+		
+		// 동일한 SCHEDULEID에 대하여 ISALLREP 칼럼값 중 'Y', 'N'이 모두 존재하는 경우(즉 현재 반복일정 완료 <-> 전체 반복일정 완료 간의 변경이 일어났을 때), 현재 삽입한 레코드를 제외한 다른 레코드를 전부 삭제
+		List<String> isAllRepList = ezScheduleDAO.getScheduleCompleteIsAllRep(map);
+		if (isAllRepList.contains("Y") && isAllRepList.contains("N")) {
+			ezScheduleDAO.deleteScheduleCompleteDiffCurr(map);
+		}
+	}
+	
+	/* 2021-11-25 홍승비 - 일정완료 데이터를 삭제하는 메서드 */
+	public void deleteScheduleComplete(String scheduleId, String repeatCount, String isAllRep, String startdate, int tenantId, String companyID) throws Exception {
+		logger.debug("deleteScheduleComplete started, scheduleId = " + scheduleId + " / repeatCount = " + repeatCount + " / isAllRep = " + isAllRep);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_SCHEDULEID", scheduleId);
+		map.put("v_REPEATCOUNT", repeatCount);
+		map.put("v_ISALLREP", isAllRep);
+		map.put("v_STARTDATE", startdate);
+		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
+		
+		// 단일 일정완료 레코드의 삭제
+		if (repeatCount.equals("0")) {
+			ezScheduleDAO.deleteScheduleComplete(map);
+		}
+		// 반복 일정완료 레코드의 삭제
+		else {
+			List<String> isAllRepList = ezScheduleDAO.getScheduleCompleteIsAllRep(map);
+			if (isAllRepList.contains("N")) { // 현재 반복일정 완료 해제
+				map.put("v_USECOND_REPCNT_SDATE_ISALLREP", "Y");
+				ezScheduleDAO.deleteScheduleComplete(map);
+			}
+			else if (isAllRepList.contains("Y")) { // 전체 반복일정 완료 해제
+				ezScheduleDAO.deleteScheduleComplete(map);
+			}
+		}
+		
+		logger.debug("deleteScheduleComplete ended.");
+	}
+	
+	/* 2021-11-26 홍승비 - 해당 반복일정의 일정완료 레코드 삭제 (전체 반복완료 레코드는 유지해야 하므로 삭제조건의 isAllRep값은 'N'으로 고정) */
+	public void deleteScheduleCompleteOneRep(String scheduleId, String repeatCount, String isAllRep, String startdate, int tenantId) throws Exception {
+		logger.debug("deleteScheduleCompleteOneRep started, scheduleId = " + scheduleId + " / repeatCount = " + repeatCount + " / startdate = " + startdate);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_SCHEDULEID", scheduleId);
+		map.put("v_REPEATCOUNT", repeatCount);
+		map.put("v_ISALLREP", isAllRep);
+		map.put("v_STARTDATE", startdate);
+		map.put("v_TENANTID", tenantId);
+		map.put("v_USECOND_REPCNT_SDATE_ISALLREP", "Y");
+		
+		ezScheduleDAO.deleteScheduleComplete(map);
+		
+		logger.debug("deleteScheduleCompleteOneRep ended.");
+	}
+	
+	/* 2021-11-26 홍승비 - 일정완료 레코드가 존재하는 경우, 해당 레코드의 ISALLREP 값을 리턴하는 메서드 */
+	public String getScheduleCompleteIsAllRep(String scheduleId, String repeatCount, String startdate, String dateType, int tenantId, String companyID) throws Exception {
+		logger.debug("getScheduleCompleteIsAllRep started, scheduleId = " + scheduleId + " / repeatCount = " + repeatCount + " / startdate = " + startdate);
+		
+		String result = "";
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_SCHEDULEID", scheduleId);
+		map.put("v_REPEATCOUNT", repeatCount);
+		map.put("v_STARTDATE", startdate);
+		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
+		
+		// 화면에 표출하기 위한 일정 리스트의 경우, 반복일정의 dateType이 3이 아니므로 repeatCount를 대신 사용한다. (repeatCount = 0인 경우 반드시 단일 일정)
+		if (dateType.equals("3") || !repeatCount.equals("0")) {
+			map.put("v_USECOND_REPCNT_SDATE", "Y");
+		}
+		
+		List<String> isAllRepList = ezScheduleDAO.getScheduleCompleteIsAllRep(map);
+		if (isAllRepList.size() > 0) {
+			if (isAllRepList.contains("Y")) {
+				result = "Y";
+			} else if (isAllRepList.contains("N")) {
+				result = "N";
+			}
+		}
+		// 반복일정인 경우, 해당 일정에 대한 일정완료 레코드가 없다면 전체 반복일정 완료 레코드를 확인한다. 
+		else if ((dateType.equals("3") || !repeatCount.equals("0")) && isAllRepList.size() <= 0) {
+			map.put("v_USECOND_REPCNT_SDATE", "N");
+			
+			List<String> isAllRepList2 = ezScheduleDAO.getScheduleCompleteIsAllRep(map);
+			if (isAllRepList2.size() > 0 && isAllRepList2.contains("Y")) {
+				result = "Y";
+			}
+		}
+		
+		logger.debug("getScheduleCompleteIsAllRep ended. isAllRep = " + result);
+		return result;
+	}
+	
+	/* 2021-11-26 홍승비 - 일정 리스트 데이터를 전달받아 일정완료 데이터를 추가 가공하여 리턴 */
+	public List<ScheduleInfoVO> applyScheduleCompleteData(List<ScheduleInfoVO> sList, String offset, int tenantId, String companyID) throws Exception {
+		logger.debug("applyScheduleCompleteData started. list size = " + sList.size());
+		List<ScheduleInfoVO> result = sList;
+		
+		if (sList.size() > 0) {
+			for (int i = 0; i < sList.size(); i++) {
+				String isAllRep = "";
+				ScheduleInfoVO tempVO  = sList.get(i);
+				
+				isAllRep = getScheduleCompleteIsAllRep(tempVO.getScheduleId(), String.valueOf(tempVO.getRepeatCount()), commonUtil.getDateStringInUTC(tempVO.getStartDate().substring(0, 19), offset, true), tempVO.getDateType(), tenantId, companyID) ;
+				
+				// 일정완료 레코드가 존재한다면, isAllRep값이 Y 또는 N이다.
+				if (!isAllRep.equals("")) {
+					sList.get(i).setCompleteFG("Y");
+					sList.get(i).setIsAllRep(isAllRep);
+					sList.get(i).setRepStartDate(tempVO.getStartDate().substring(0, 19));
+				}
+				// 공백이라면 일정완료 레코드가 없음
+				else {
+					sList.get(i).setCompleteFG("N");
+					sList.get(i).setIsAllRep("");
+					sList.get(i).setRepStartDate("");
+				}
+			}
+		}
+		
+		logger.debug("applyScheduleCompleteData ended.");
+		return result;
 	}
 }
 

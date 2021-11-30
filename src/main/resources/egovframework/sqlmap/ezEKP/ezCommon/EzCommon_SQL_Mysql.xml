@@ -4187,5 +4187,26 @@
 			SUBDEPTYN VARCHAR(2) DEFAULT 'N'
 		)
     </statement>
+    
+    <select id="EzCommonDAO.checkTblScheduleComplete">
+		<![CDATA[
+			SELECT
+				SCHEDULEID
+			FROM
+				TBL_SCHEDULE_COMPLETE
+			LIMIT 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.createTblScheduleComplete"> 
+		CREATE TABLE TBL_SCHEDULE_COMPLETE (
+		    SCHEDULEID BIGINT(10) NOT NULL,
+		    REPEATCOUNT BIGINT(10) NOT NULL,
+		    ISALLREP VARCHAR(2) NOT NULL DEFAULT 'N',
+		    STARTDATE DATETIME NOT NULL,
+		    TENANT_ID MEDIUMINT(5),
+		    COMPANYID VARCHAR(40),
+		    PRIMARY KEY (`SCHEDULEID`, `REPEATCOUNT`, `ISALLREP`, `STARTDATE`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+	</statement>
 	
 </sqlMap>

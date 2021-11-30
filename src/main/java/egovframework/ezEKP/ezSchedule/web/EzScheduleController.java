@@ -536,6 +536,8 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, "",userInfo.getTenantId(), companyID, userInfo.getId(), userInfo.getDeptID(), useAnnualScheduleYN);		
 		
+		/* 2021-11-26 홍승비 - 일정 리스트 데이터를 전달받아 일정완료 데이터를 추가 가공하여 리턴 */
+		sList = ezScheduleService.applyScheduleCompleteData(sList, userInfo.getOffset(), userInfo.getTenantId(), companyID);
 		
 		return sList;
 	}
@@ -1788,7 +1790,11 @@ public class EzScheduleController extends EgovFileMngUtil {
          
 		String _pattern = request.getParameter("pattern");
 		if (_pattern == null) _pattern = "";
-         
+		
+		/* 2021-11-25 홍승비 - 일정완료 관련 데이터 추가 */
+		String repeatCount = request.getParameter("repeatCount") != null ? request.getParameter("repeatCount") : "0";
+		String repStartDate = request.getParameter("repStartDate") != null ? request.getParameter("repStartDate") : "";
+		
         String userId = loginVO.getId();            
         String userName  = loginVO.getDisplayName1();
         String userName2 = loginVO.getDisplayName2();
@@ -2003,6 +2009,16 @@ public class EzScheduleController extends EgovFileMngUtil {
 
         UploadSDate = startDateTime;
         UploadEDate = endDateTime;
+        
+        /* 2021-11-26 홍승비 - 일정 수정 시, 일정완료 체크박스 값 표출하기 위해 플래그 전달 */
+        String isAllRep = "";
+        String completeFG = "N";
+        if (!_scheduleid.equals("")) {
+        	isAllRep = ezScheduleService.getScheduleCompleteIsAllRep(_scheduleid, repeatCount, commonUtil.getDateStringInUTC(repStartDate, loginVO.getOffset(), true), _datetype, loginVO.getTenantId(), loginVO.getCompanyID());
+        	if (!isAllRep.equals("")) { // 해당 일정에 대한 완료여부 레코드가 존재한다면 completeFG 설정
+        		completeFG = "Y";
+        	}
+        }
 
         model.addAttribute("userId", userId);
         model.addAttribute("userName", userName);
@@ -2040,6 +2056,10 @@ public class EzScheduleController extends EgovFileMngUtil {
         model.addAttribute("scheduleInfo", scheduleInfo);
         model.addAttribute("useAnyoneEdit", useAnyoneEdit);
         model.addAttribute("checkResourceTab", checkResourceTab);
+        model.addAttribute("repeatCount", repeatCount);
+        model.addAttribute("repStartDate", repStartDate);
+        model.addAttribute("isAllRep", isAllRep); // 일정완료 레코드의 전체반복일정 완료여부
+        model.addAttribute("completeFG", completeFG); // 일정완료 레코드 존재여부
 
    		return "/ezSchedule/scheduleWrite";
 	}	
@@ -2112,7 +2132,12 @@ public class EzScheduleController extends EgovFileMngUtil {
         String scheduletype	= doc.getElementsByTagName("SCHEDULETYPE").item(0).getTextContent();
         String importance	= doc.getElementsByTagName("IMPORTANCE").item(0).getTextContent();
         String ispublic		= doc.getElementsByTagName("ISPUBLIC").item(0).getTextContent();
-        String datetype		= doc.getElementsByTagName("DATETYPE").item(0).getTextContent();	        
+        String datetype		= doc.getElementsByTagName("DATETYPE").item(0).getTextContent();
+        /* 2021-11-25 홍승비 - 일정 수정 시 일정완료 관련 데이터 추가 */
+        String completeFG	= "";
+        String repeatCount	= "";
+        String repStartDate	= "";
+        String isAllRep		= "";
 
         if (scheduleid.equals("")) {
 	        //Set ownername and ownername2
@@ -2135,9 +2160,14 @@ public class EzScheduleController extends EgovFileMngUtil {
         }
         
         String pattern = "";       
-
+        
         if (scheduleid != null && !scheduleid.equals("")) {
         	pattern = doc.getElementsByTagName("PATTERN").item(0).getTextContent();
+        	
+        	// 일정완료 관련 데이터
+        	completeFG = doc.getElementsByTagName("COMPLETEFG").item(0) != null ? doc.getElementsByTagName("COMPLETEFG").item(0).getTextContent() : "N";
+            repeatCount = doc.getElementsByTagName("REPEATCOUNT").item(0) != null ? doc.getElementsByTagName("REPEATCOUNT").item(0).getTextContent() : "0";
+            isAllRep = doc.getElementsByTagName("ISALLREP").item(0) != null ? doc.getElementsByTagName("ISALLREP").item(0).getTextContent() : "N";
         }        
 
         String startdate = doc.getElementsByTagName("STARTDATE").item(0).getTextContent();
@@ -2215,6 +2245,21 @@ public class EzScheduleController extends EgovFileMngUtil {
 	    } else {
         	//updateSchedule
         	result = ezScheduleService.updateSchedule(scheduleid, creatorid, creatorname, creatorname2, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attach, defaultPath, loginVO.getTenantId(), loginVO.getCompanyID());
+        	
+        	/* 2021-11-25 홍승비 - 일정 수정 시 일정완료 데이터 삽입 또는 삭제 */
+            if (doc.getElementsByTagName("REPSTARTDATE").item(0) != null) {
+            	repStartDate = doc.getElementsByTagName("REPSTARTDATE").item(0).getTextContent();
+            	repStartDate = sdf.format(sdf.parse(repStartDate));
+            	repStartDate = commonUtil.getDateStringInUTC(repStartDate, loginVO.getOffset(), true);
+            } else {
+            	repStartDate = startdate;
+            }
+            
+            if (completeFG.equals("Y")) { // 일정완료 삽입
+            	ezScheduleService.insertScheduleComplete(scheduleid, repeatCount, isAllRep, repStartDate, loginVO.getTenantId(), loginVO.getCompanyID());
+            } else { // 일정완료 해제
+            	ezScheduleService.deleteScheduleComplete(scheduleid, repeatCount, isAllRep, repStartDate, loginVO.getTenantId(), loginVO.getCompanyID());
+            }
         }
 	    
 	    //KT텔레캅 통합알람 푸쉬 코드
@@ -2512,6 +2557,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
         int tenantId = loginVO.getTenantId();
         String companyID = loginVO.getCompanyID();
+        String repStartDate = "";
         
         //baonk 추가 2018-08-08
         String use_cabinet = ezCommonService.getTenantConfig("useCabinet", loginVO.getTenantId());
@@ -2534,21 +2580,25 @@ public class EzScheduleController extends EgovFileMngUtil {
         	_repeatcount = request.getParameter("repeatcount");
         	_date = request.getParameter("date");
         	//일정관리 참석자 초대메세지에서 반복일정 걸려있는 일정 조회 시, 회차랑 시작일자를 null로 받아와서 null검사 추가 #14484
-        	if (_repeatcount == null)
+        	if (_repeatcount == null) {
         		_repeatcount = "1";
-        	if (_date == null)
+        	}
+        	if (_date == null) {
         		_date = vo.getStartDate().substring(0,10);
-        	
+        	}
         	if (vo.getRepetition().split("\\|")[1].equals("1")) {
         		dateString = msg.getMessage("ezSchedule.t343", locale) + " (" + _repeatcount + msg.getMessage("ezSchedule.t329", locale) + " " + _date + " (" + msg.getMessage("ezSchedule.t280", locale);
         	} else {
         		dateString = msg.getMessage("ezSchedule.t343", locale) + " (" + _repeatcount + msg.getMessage("ezSchedule.t329", locale) + " " + _date + " " 
         					+ vo.getStartDate().substring(11, 16) + " ~ " + vo.getEndDate().substring(11, 16);        		
-        	}        	
+        	}
+        	repStartDate = _date + " " + vo.getStartDate().substring(11, 16);
         } else if (vo.getDateType().equals("2")){
-        	dateString = vo.getStartDate().substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", locale) + " ~ " + vo.getEndDate().substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", locale);        	
+        	dateString = vo.getStartDate().substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", locale) + " ~ " + vo.getEndDate().substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", locale);
+        	repStartDate = vo.getStartDate().substring(0,16);
         } else {
         	dateString = vo.getStartDate().substring(0,16) + " ~ " + vo.getEndDate().substring(0,16);
+        	repStartDate = vo.getStartDate().substring(0,16);
         }
         
         //자원예약 정보
@@ -2649,6 +2699,8 @@ public class EzScheduleController extends EgovFileMngUtil {
         model.addAttribute("_editPosible", _editPosible);
         model.addAttribute("useCabinet", use_cabinet); // 캐비넷 추가 baonk 2018-08-08
         model.addAttribute("userInfo", loginVO);
+        model.addAttribute("repeatCount", _repeatcount); // 반복일정의 경우 반복횟수
+        model.addAttribute("repStartDate", repStartDate); // 반복일정의 경우 해당 반복의 시작날짜 + 시간 (YYYY-MM-DD HH:mm)
         
 		return "ezSchedule/scheduleRead";
 	}
@@ -2710,13 +2762,17 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		String scheduleId = request.getParameter("scheduleId");
 		String selectDate = request.getParameter("selectDate");
-		String startDate = request.getParameter("startDate");		
+		String startDate = request.getParameter("startDate");
 		String realStartDate = selectDate + "" + startDate.substring(10, 16);		
+		String repeatCount = request.getParameter("repeatCount");	
 
 		String realDate = commonUtil.getDateStringInUTC(realStartDate, loginSimpleVO.getOffset(), true);
 
 		//일정데이터 삭제
 		ezScheduleService.insertScheduleRepeDel(scheduleId, realDate, loginSimpleVO.getTenantId(), loginSimpleVO.getCompanyID());
+		
+		/* 2021-11-26 홍승비 - 해당 반복일정의 일정완료 레코드 삭제 (전체 반복완료의 경우 해당 일정 하나만 삭제되더라도 유지해야 하므로, isAllRep 조건은 'N'으로 고정) */
+		ezScheduleService.deleteScheduleCompleteOneRep(scheduleId, repeatCount, "N", realDate, loginSimpleVO.getTenantId());
 	}
 	
 	/**
