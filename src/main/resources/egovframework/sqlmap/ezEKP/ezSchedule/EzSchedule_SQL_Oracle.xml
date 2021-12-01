@@ -1734,7 +1734,8 @@
 					(S.SCHEDULEID =  #v_SCHEDULEID# OR S.PARENTID =  #v_SCHEDULEID#)
 				AND
 					S.TENANT_ID = #v_TENANTID#
-				)
+			)
+				
    		]]>
 	</insert>
 	<delete id="EzScheduleDAO.deleteScheduleComplete" parameterClass="Map">
@@ -1772,13 +1773,24 @@
 	<delete id="EzScheduleDAO.deleteScheduleCompleteDiffCurr" parameterClass="Map">
 		<![CDATA[
 			DELETE FROM
-				TBL_SCHEDULE_COMPLETE
+				TBL_SCHEDULE_COMPLETE C
 			WHERE
-				SCHEDULEID = #v_SCHEDULEID#
+				SCHEDULEID IN (
+					SELECT
+						SCHEDULEID
+					FROM
+						TBL_SCHEDULE S
+					WHERE
+						(S.SCHEDULEID =  #v_SCHEDULEID# OR S.PARENTID =  #v_SCHEDULEID#)
+					AND
+						S.TENANT_ID = C.TENANT_ID
+					AND
+						S.COMPANYID = C.COMPANYID	
+				)
 			AND
-				ISALLREP != #v_ISALLREP#
+				C.ISALLREP != #v_ISALLREP#
        		AND
-       			TENANT_ID = #v_TENANTID#
+       			C.TENANT_ID = #v_TENANTID#
    		]]>
 	</delete>
 	
