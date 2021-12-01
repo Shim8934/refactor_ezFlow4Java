@@ -13940,10 +13940,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_USERID", userID);
 			map.put("v_SN", sn);
+			map.put("v_PSN", sn);
 			map.put("v_DOCID", oldDocID);
 			map.put("companyID", companyID);
 			map.put("v_TENANTID", tenantID);
 			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+
+			// [경기대학교] 2021.12.01 - 강승구 : 임시저장시 저장이 안되는 오류수정
+			ezApprovalGDAO.deleteTmpReceiptPointInfo(map);
+			ezApprovalGDAO.deleteTmpAprOpinionInfo(map);
+			ezApprovalGDAO.deleteTmpAprDocAttachInfo(map);
+			ezApprovalGDAO.deleteTmpAttachInfo(map);
+			ezApprovalGDAO.deleteTmpExpAprLine(map);
+			ezApprovalGDAO.deleteTmpAprLineInfo(map);
+			ezApprovalGDAO.deleteTmpExpAprDocInfo(map);
 
 			ezApprovalGDAO.insertTmpReceiptPointInfo(map);
 			ezApprovalGDAO.insertTmpAprOpinionInfo(map);
