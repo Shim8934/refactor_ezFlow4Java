@@ -1821,7 +1821,7 @@
 	
 	<insert id="EzScheduleDAO.insertAttendantScheduleComplete" parameterClass="Map">
 		<![CDATA[
-			INSERT INTO
+			INSERT IGNORE INTO
 				TBL_SCHEDULE_COMPLETE (
 					SCHEDULEID, REPEATCOUNT, ISALLREP, STARTDATE, TENANT_ID, COMPANYID
 				)
