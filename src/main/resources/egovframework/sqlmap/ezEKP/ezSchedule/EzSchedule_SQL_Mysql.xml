@@ -1798,20 +1798,30 @@
 	<!-- 현재 반복일정 완료와 전체 반복일정 완료 간의 변경이 일어났을 때는 동일한 SCHEDULEID에 대하여 현재 삽입한 레코드를 제외한 다른 레코드(ISALLREP != #v_ISALLREP#)를 전부 삭제 -->
 	<delete id="EzScheduleDAO.deleteScheduleCompleteDiffCurr" parameterClass="Map">
 		<![CDATA[
-			DELETE FROM
-				TBL_SCHEDULE_COMPLETE
-			WHERE
-				SCHEDULEID = #v_SCHEDULEID#
+			DELETE
+				C
+			FROM
+				TBL_SCHEDULE_COMPLETE C
+			INNER JOIN
+				TBL_SCHEDULE S
+			ON
+				(S.SCHEDULEID = C.SCHEDULEID OR S.PARENTID = C.SCHEDULEID)
 			AND
-				ISALLREP != #v_ISALLREP#
+				S.TENANT_ID = C.TENANT_ID
+			AND
+				S.COMPANYID = C.COMPANYID	
+			WHERE
+				(S.SCHEDULEID =  #v_SCHEDULEID# OR S.PARENTID =  #v_SCHEDULEID#)
+			AND
+				C.ISALLREP != #v_ISALLREP#
        		AND
-       			TENANT_ID = #v_TENANTID#
+       			C.TENANT_ID = #v_TENANTID#
    		]]>
 	</delete>
 	
 	<insert id="EzScheduleDAO.insertAttendantScheduleComplete" parameterClass="Map">
 		<![CDATA[
-			INSERT INTO
+			INSERT IGNORE INTO
 				TBL_SCHEDULE_COMPLETE (
 					SCHEDULEID, REPEATCOUNT, ISALLREP, STARTDATE, TENANT_ID, COMPANYID
 				)
