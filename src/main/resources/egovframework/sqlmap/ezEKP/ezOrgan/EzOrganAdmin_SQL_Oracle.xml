@@ -7210,10 +7210,10 @@
 		<isNotEmpty property="search_keycode" prepend="and">
 			<isNotEmpty property="search_keyword" >
 					<isEqual property="search_keycode" compareValue="GROUPNAME">
-						GROUP_NAME LIKE CONCAT('%', #search_keyword#,'%')
+						GROUP_NAME LIKE ('%' || #search_keyword# || '%')
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="CREATEID">
-						CREATE_ID LIKE CONCAT('%', #search_keyword#,'%')
+						CREATE_ID LIKE ('%' || #search_keyword# || '%')
 					</isEqual>
 
 			</isNotEmpty>
@@ -7240,10 +7240,10 @@
         <isNotEmpty property="search_keycode" prepend="and">
 			<isNotEmpty property="search_keyword" >
 					<isEqual property="search_keycode" compareValue="GROUPNAME">
-						GROUP_NAME LIKE CONCAT('%', #search_keyword#,'%')
+						GROUP_NAME LIKE ('%' || #search_keyword# || '%')
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="CREATEID">
-						CREATE_ID LIKE CONCAT('%', #search_keyword#,'%')
+						CREATE_ID LIKE ('%' || #search_keyword# || '%')
 					</isEqual>
 
 			</isNotEmpty>
