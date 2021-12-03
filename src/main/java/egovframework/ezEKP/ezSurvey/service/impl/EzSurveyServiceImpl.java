@@ -540,6 +540,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				JSONObject userObj             = (JSONObject)users.get(i);
 				String userType                = userObj.get("userType").toString();
 				String userDeptId              = userObj.get("deptId").toString();
+				String subDeptYN			   = userObj.get("subDeptYN") != null ? userObj.get("subDeptYN").toString() : "N";
 				SurveyParticipantVO surveyUser = new SurveyParticipantVO();
 				surveyUser.setSurveyId(crrSurveyId);
 				surveyUser.setCompanyId(companyId);
@@ -552,7 +553,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				surveyUser.setDeptName1(userObj.get("deptName1").toString());
 				surveyUser.setDeptName2(userObj.get("deptName2").toString());
 				surveyUser.setEmail(userObj.get("email").toString());
-				surveyUser.setSubDeptYN(userObj.get("subDeptYN").toString());
+				surveyUser.setSubDeptYN(subDeptYN);
 				totalUsers.add(surveyUser);
 				
 				// 하위부서 허용여부 추가로 인해 회사도 부서로 취급함 (하위부서 허용여부가 '허용'인 경우에만 회사 소속 모든 사원 포함, '불가'라면 부서 리스트에 추가)
