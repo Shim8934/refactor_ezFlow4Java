@@ -246,7 +246,15 @@ public class MLoginGWController {
     		    				// 20210426 조진호 - pin login 처리 부분. 사용자가 입력한 pin과 DB에 저장된 pin 값이 일치하면 pinLoginAuth를 true로 전환
     		    				
     		    				String userInputPin = EgovFileScrty.decryptRsa(pk, request.getParameter("encryptPin") == null ? "" : request.getParameter("encryptPin"));
-    		    				userInputPin = EgovFileScrty.encryptPassword(userInputPin, uid);
+    		    				
+    		    				// 20210715 조진호 = input Pin이 OK 인 것은 생체인식에 성공한 것으로 처리
+    		    				if (userInputPin.equalsIgnoreCase("OK")) {
+    		    					userInputPin = String.valueOf(resultObj.get("pin"));
+    		    				}
+    		    				else {
+    		    					userInputPin = EgovFileScrty.encryptPassword(userInputPin, uid);
+    		    				}
+    		    				
     		    				String authPin = String.valueOf(resultObj.get("pin"));
     		    				
     		    				if (!userInputPin.equals("") && !authPin.equals("") && authPin.equals(userInputPin)) {

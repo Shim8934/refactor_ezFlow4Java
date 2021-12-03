@@ -252,7 +252,7 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 			JSONParser parser = new JSONParser();
 			jsonObject = (JSONObject)parser.parse(strJson);
 	        
-	        if (!jsonObject.get("resultCode").equals("OK") || ((Long)jsonObject.get("reasonCode")).intValue() != 0) {
+	        if (!jsonObject.get("resultCode").equals("OK")) {
 	        	throw new Exception("JGwServer ERROR");
 	        }
 		} catch (Exception e) {
