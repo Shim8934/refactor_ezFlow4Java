@@ -899,12 +899,21 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);		//updateDate위한 현재시간
 		int levelDistance          = parentFolder.getFolderLevel() + 1 - folder.getFolderLevel();
 		
-		// TODO: 현재 query상에서 .S 형태로 돌아와서 해놓은것이지만 다른 형식으로 돌아올때에는 수정필요함.
-		SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");						// db에서 가져온 folder의 timeUTC를 적용한 -9시간
-	    Date date1 = formatter2.parse(folder.getCreateDate());												// folder의 creatreDate를 가져와서 date방식으로 format
-	
-	    SimpleDateFormat targetDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");					// 우리가 지원하는 형식으로 다시 포맷
-	    String timeUTCCreate	   = commonUtil.getDateStringInUTC(targetDateFormat.format(date1), offset, true);	// timeUTC 적용
+		String createDate = "";
+		
+		if (folder.getCreateDate().contains(".0")){
+			// TODO: 현재 query상에서 .S 형태로 돌아와서 해놓은것이지만 다른 형식으로 돌아올때에는 수정필요함.
+			SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");						// db에서 가져온 folder의 timeUTC를 적용한 -9시간
+			Date date1 = formatter2.parse(folder.getCreateDate());																							// folder의 creatreDate를 가져와서 date방식으로 format
+			logger.debug("date1:"+date1 + ",folderCreateDate:"+folder.getCreateDate());
+			
+			SimpleDateFormat targetDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");					// 우리가 지원하는 형식으로 다시 포맷
+			createDate = targetDateFormat.format(date1);
+		} else {
+			createDate = folder.getCreateDate();
+		}
+		
+	    String timeUTCCreate	   = commonUtil.getDateStringInUTC(createDate, offset, true);	// timeUTC 적용
 		
 	    // /* 회사폴더, 부서폴더/개인폴더 로 구분하기 위해서 이동시킬때에도 folderUser를 삭제하지 않도록 한다.
 		if (folder.getFolderLevel() == 1 && parentFolder.getFolderType().equals("C")) {
