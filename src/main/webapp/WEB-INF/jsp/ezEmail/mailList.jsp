@@ -1745,6 +1745,10 @@
                     		<option VALUE="PREVIEW"><spring:message code="ezEmail.t843" /></option>
                     		<option VALUE="UNREAD"><spring:message code="ezEmail.t519" /></option>
                     		<option VALUE="RECEIV"><spring:message code="ezEmail.t66" /></option>
+						<c:if test="${isSentItems != true}">
+                    		<option VALUE="INTERNAL"><spring:message code="ezEmail.kes003" /></option>
+                    		<option VALUE="EXTERNAL"><spring:message code="ezEmail.kes004" /></option>
+						</c:if>
                     	</select>
 	                </td>
                   </tr>

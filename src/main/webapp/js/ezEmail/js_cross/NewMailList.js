@@ -21,7 +21,6 @@ var GroupSubjectImg ="/images/ImgIcon/groupsubject.gif";
 var GroupColor = "#666666";
 var pSearchListCount = 0;
 
-
 function HeaderIni(HeaderObject) {
     MakeHeaderHTML(HeaderObject);
 }
@@ -202,7 +201,8 @@ function drag(ev) {
 
 var xmlhttp_MailReceiverList = null;
 function MakeListInfoHTML(ConentObject) {
-    if (p_ListorderValue == "" || p_ListorderValue == "RECEIV" || p_ListorderValue == "UNREAD" || p_ListorderValue == "GROUPSUBLIST") {
+    if (p_ListorderValue == "" || p_ListorderValue == "RECEIV" || p_ListorderValue == "UNREAD" || p_ListorderValue == "GROUPSUBLIST"
+    	 || p_ListorderValue == "INTERNAL" || p_ListorderValue == "EXTERNAL") {
     	try {
             var XmlList = GetList_HTTP.responseXML;
             
@@ -1185,6 +1185,16 @@ function on_changeView(listtypeValue) {
             p_ListorderValue = "RECEIV";
             p_ListOrderby = "http://schemas.microsoft.com/exchange/date-iso";
             p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile2.xml";
+            break;
+        case "INTERNAL":
+            p_ListorderType = "INTERNAL";
+            p_ListorderValue = "INTERNAL";
+            searchMode = true;
+            break;
+        case "EXTERNAL":
+            p_ListorderType = "EXTERNAL";
+            p_ListorderValue = "EXTERNAL";
+            searchMode = true;
             break;
     }
     if (p_ListorderValue != "SENT" && p_ListorderValue != "SUBJECT" && p_ListorderValue != "RECEIV") {

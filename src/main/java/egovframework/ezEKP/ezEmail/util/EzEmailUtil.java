@@ -2803,10 +2803,18 @@ public class EzEmailUtil {
 		String andorStatus = "andorStatus=";
 		String attachStatus = "attachStatus=";
 		
+		String mailInnerDomainParam = "&inexternalFilter=&mailInnerDomainStr=";
+
 		if(extraMap != null){
 			logger.debug("extraMAP is not null.extraMap:" + extraMap);
 			andorStatus += extraMap.get("andorStatus") == "" ? "and" : extraMap.get("andorStatus");
 			attachStatus += extraMap.get("attachStatus") == "" ? "all" :  extraMap.get("attachStatus");
+
+			//2020-07-16 김은실 - (사조그룹)내부·외부필터 상태값 및 내부기준 도메인
+			if (extraMap.get("inexternalFilter") != null && extraMap.get("mailInnerDomainStr") != null) {
+				mailInnerDomainParam = "&inexternalFilter=" + URLEncoder.encode((String)extraMap.get("inexternalFilter"), "UTF-8");
+				mailInnerDomainParam += "&mailInnerDomainStr=" + URLEncoder.encode((String)extraMap.get("mailInnerDomainStr"), "UTF-8");
+			}
 		}
 		
 		String searchFieldParam = "";
@@ -2831,7 +2839,7 @@ public class EzEmailUtil {
 				+ searchValueParam + "&" + startDateParam + "&" + endDateParam 
 				+ "&" + isUnreadOnlyParam + "&" + isImportantOnlyParam + "&" + searchSubFolderParam
 				+ "&" + sortTypeParam + "&" + isAscendingParam + "&" + startIndexParam + "&" + listCountParam
-				+ "&" + attachStatus + "&" + andorStatus;
+				+ "&" + attachStatus + "&" + andorStatus + mailInnerDomainParam;
 		
 		logger.debug("inputParams=" + inputParams);
 
@@ -2906,11 +2914,19 @@ public class EzEmailUtil {
 		
 		String andorStatus = "andorStatus=";
 		String attachStatus = "attachStatus=";
+
+		String mailInnerDomainParam = "&inexternalFilter=&mailInnerDomainStr=";
 		
 		if(extraMap != null){
 			logger.debug("extraMAP is not null.extraMap:" + extraMap);
 			andorStatus += extraMap.get("andorStatus") == "" ? "and" : extraMap.get("andorStatus");
 			attachStatus += extraMap.get("attachStatus") == "" ? "all" :  extraMap.get("attachStatus");
+
+			//2020-07-16 김은실 - (사조그룹)내부·외부필터 상태값 및 내부기준 도메인
+			if (extraMap.get("inexternalFilter") != null && extraMap.get("mailInnerDomainStr") != null) {
+				mailInnerDomainParam = "&inexternalFilter=" + URLEncoder.encode((String)extraMap.get("inexternalFilter"), "UTF-8");
+				mailInnerDomainParam += "&mailInnerDomainStr=" + URLEncoder.encode((String)extraMap.get("mailInnerDomainStr"), "UTF-8");
+			}
 		}
 		
 		String includeContentParam = "includeContent=" + includeContent;
@@ -2937,7 +2953,7 @@ public class EzEmailUtil {
 				+ searchValueParam + "&" + startDateParam + "&" + endDateParam 
 				+ "&" + isUnreadOnlyParam + "&" + isImportantOnlyParam + "&" + searchSubFolderParam
 				+ "&" + sortTypeParam + "&" + isAscendingParam + "&" + startIndexParam + "&" + listCountParam
-				+ "&" + attachStatus + "&" + andorStatus + "&" + includeContentParam;
+				+ "&" + attachStatus + "&" + andorStatus + "&" + includeContentParam + mailInnerDomainParam;
 		
 		logger.debug("inputParams=" + inputParams);
 

@@ -846,6 +846,17 @@ public class EzEmailMailListController {
 			extraMap.put("andorStatus", andorStatus);
 			extraMap.put("attachStatus", attachStatus);
 
+			//2020-07-16 김은실 - (사조그룹)내부·외부필터 내부기준 도메인
+			if (sortType.indexOf("INTERNAL") >= 0 || sortType.indexOf("EXTERNAL") >= 0) {
+				String inexternalFilter = sortType.indexOf("INTERNAL") >= 0? "internal" : "external";
+				String mailInnerDomainStr = ezCommonService.getTenantConfig("MailInnerDomain", userInfo.getTenantId());
+
+				extraMap.put("inexternalFilter", inexternalFilter);
+				extraMap.put("mailInnerDomainStr", mailInnerDomainStr.isEmpty()? domainName : mailInnerDomainStr);
+
+				logger.debug("inexternalFilter=" + inexternalFilter + ", mailInnerDomainStr=" + mailInnerDomainStr);
+			}
+
 			if (useRDBOnlyMailList.equals("YES")) {
 				int mailboxMailCount = 0;
 				int mailboxUnreadMailCount = 0;				
