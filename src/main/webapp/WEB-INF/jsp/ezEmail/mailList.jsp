@@ -1749,6 +1749,7 @@
                     		<option VALUE="INTERNAL"><spring:message code="ezEmail.kes003" /></option>
                     		<option VALUE="EXTERNAL"><spring:message code="ezEmail.kes004" /></option>
 						</c:if>
+                    		<option VALUE="SECUREMAIL"><spring:message code="ezEmail.lhm63" /></option>
                     	</select>
 	                </td>
                   </tr>

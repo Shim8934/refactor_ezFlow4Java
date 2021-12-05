@@ -202,7 +202,7 @@ function drag(ev) {
 var xmlhttp_MailReceiverList = null;
 function MakeListInfoHTML(ConentObject) {
     if (p_ListorderValue == "" || p_ListorderValue == "RECEIV" || p_ListorderValue == "UNREAD" || p_ListorderValue == "GROUPSUBLIST"
-    	 || p_ListorderValue == "INTERNAL" || p_ListorderValue == "EXTERNAL") {
+    	 || p_ListorderValue == "INTERNAL" || p_ListorderValue == "EXTERNAL" || p_ListorderValue == "SECUREMAIL") {
     	try {
             var XmlList = GetList_HTTP.responseXML;
             
@@ -949,6 +949,9 @@ function GetListInfo(HeaderObject, ContentObject) {
     
     createNodeAndInsertText(xmlpara, objNode, "VIEWSELECTINDEX", document.getElementById("select").selectedIndex);
     
+    var secureMailFilter = document.getElementById("select").value == "SECUREMAIL" ? 1 : 0;
+    createNodeAndInsertText(xmlpara, objNode, "SECUREMAILFILTER", secureMailFilter);
+
     var _url = "/ezEmail/mailGetList.do";
     
     if (typeof(shareId) != "undefined" && shareId != "") {
@@ -1196,6 +1199,11 @@ function on_changeView(listtypeValue) {
             p_ListorderValue = "EXTERNAL";
             searchMode = true;
             break;
+        case "SECUREMAIL":
+        	p_ListorderType = "SECUREMAIL";
+        	p_ListorderValue = "SECUREMAIL";
+        	searchMode = true;
+        	break;
     }
     if (p_ListorderValue != "SENT" && p_ListorderValue != "SUBJECT" && p_ListorderValue != "RECEIV") {
         if (pPreviewShow_HOW == "H") {
