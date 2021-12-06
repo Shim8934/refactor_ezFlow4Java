@@ -784,6 +784,10 @@ public class EzEmailMailListController {
 			if (sortType.indexOf("\"urn:schemas:httpmail:read\" = false") >= 0) {
 				isUnreadOnly = true;
 			}
+
+			if (sortType.indexOf("IMPORTANT") >= 0) {
+				isImportantOnly = true;
+			}
 					
 			logger.debug("isUnreadOnly=" + isUnreadOnly + ", isImportantOnly=" + isImportantOnly);
 			

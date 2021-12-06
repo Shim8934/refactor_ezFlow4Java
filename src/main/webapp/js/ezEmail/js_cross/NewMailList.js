@@ -202,7 +202,7 @@ function drag(ev) {
 var xmlhttp_MailReceiverList = null;
 function MakeListInfoHTML(ConentObject) {
     if (p_ListorderValue == "" || p_ListorderValue == "RECEIV" || p_ListorderValue == "UNREAD" || p_ListorderValue == "GROUPSUBLIST"
-    	 || p_ListorderValue == "INTERNAL" || p_ListorderValue == "EXTERNAL" || p_ListorderValue == "SECUREMAIL") {
+    	 || p_ListorderValue == "INTERNAL" || p_ListorderValue == "EXTERNAL" || p_ListorderValue == "SECUREMAIL" || p_ListorderValue == "IMPORTANT") {
     	try {
             var XmlList = GetList_HTTP.responseXML;
             
@@ -1202,6 +1202,11 @@ function on_changeView(listtypeValue) {
         case "SECUREMAIL":
         	p_ListorderType = "SECUREMAIL";
         	p_ListorderValue = "SECUREMAIL";
+        	searchMode = true;
+        	break;
+        case "IMPORTANT":
+        	p_ListorderType = "IMPORTANT";
+        	p_ListorderValue = "IMPORTANT";
         	searchMode = true;
         	break;
     }
