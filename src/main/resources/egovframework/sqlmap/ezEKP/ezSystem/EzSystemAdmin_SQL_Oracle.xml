@@ -274,7 +274,7 @@
 	
 	<insert id="EzSystemAdminDAO.insertIPBand" parameterClass="Map">
 		<selectKey resultClass="int" keyProperty="id">
-			SELECT TBL_ACCESS_IP_SEQ2.NEXTVAL FROM SYS.DUAL
+			SELECT TBL_ACCESS_IP_SEQ2.NEXTVAL FROM DUAL
 		</selectKey>
 		<![CDATA[
 			INSERT INTO 
@@ -387,7 +387,7 @@
 	
 	<insert id="EzSystemAdminDAO.insertAccessId" parameterClass="Map">
 		<selectKey resultClass="int" keyProperty="id">
-			SELECT TBL_ACCESS_ID_SEQ2.NEXTVAL FROM SYS.DUAL
+			SELECT TBL_ACCESS_ID_SEQ2.NEXTVAL FROM DUAL
 		</selectKey>
 		<![CDATA[
 			INSERT INTO 
