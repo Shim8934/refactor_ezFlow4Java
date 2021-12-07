@@ -18320,7 +18320,7 @@ SELECT
             AND d.COMPANYID = a.COMPANYID)) 
     WHERE 
         b.APRSTATE = '010' 
-            AND b.APRTYPE = '015'
+            AND b.APRTYPE = '015';
 
 --------------------------------------------------------
 --  VIEW_EZBOARDSTD
