@@ -134,7 +134,8 @@
 
 			function CheckIfCanWrite(pBoardID) {
 				var boardInfo;
-				var access = "";
+				var access = "-1";
+				var writeFG = "false";
 				
 				$.ajax({
 					type : "GET",
@@ -147,6 +148,7 @@
 						if (typeof(result["boardInfo"]) != "undefined") {
 							boardInfo = result["boardInfo"];
 							access = boardInfo["access_"];
+							writeFG = boardInfo["write_FG"];
 						}
 					},
 					error: function(e) {
@@ -154,7 +156,7 @@
 					}
 				});
 				
-				if(access != "-1") {
+				if (access != "-1" && writeFG == "true") {
 					return true;
 				} else {
 					return false;
