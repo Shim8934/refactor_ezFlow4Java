@@ -1553,6 +1553,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		participant.setUserName2(user.getUserName2());
 	}
 	
+	/* 2021-12-07 홍승비 - 전자설문 대상자가 부서인 경우, 삭제한 부서 정보에 접근하지 않도록 수정 */
 	private void setSurveyDeptInfo(SurveyParticipantVO participant, String primary) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", participant.getTenantId());
@@ -1560,14 +1561,16 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		map.put("primary", primary);
 		
 		SimpleDeptVO dept = ezSurveyDAO.getSurveyDeptInfo(map);
-		participant.setDeptId(dept.getDeptId());
-		participant.setDeptName(dept.getDeptName());
-		participant.setDeptName1(dept.getDeptName());
-		participant.setDeptName2(dept.getDeptName2());
-		participant.setEmail(dept.getMail());
-		participant.setUserName(dept.getDeptName());
-		participant.setUserName1(dept.getDeptName());
-		participant.setUserName2(dept.getDeptName2());
+		if (dept != null) {
+			participant.setDeptId(dept.getDeptId());
+			participant.setDeptName(dept.getDeptName());
+			participant.setDeptName1(dept.getDeptName());
+			participant.setDeptName2(dept.getDeptName2());
+			participant.setEmail(dept.getMail());
+			participant.setUserName(dept.getDeptName());
+			participant.setUserName1(dept.getDeptName());
+			participant.setUserName2(dept.getDeptName2());
+		}
 	}
 	
 	private List<SimpleUserVO> getAllMembersOfCompany(String companyId, String primary, int tenantId) {
