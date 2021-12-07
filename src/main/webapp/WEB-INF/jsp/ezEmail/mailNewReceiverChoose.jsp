@@ -4404,7 +4404,8 @@
 		    	if (!useOrgListCheckBox) {return; }
 		    	
 				if (receiverListId == listid) { 
-					$("#"+ele.id+ " .checkUser:input").prop("checked", true);
+					$("#"+ele.id+ " > .checkUser:input").prop("checked", true);
+					$("#"+ele.id+ " > .checkDept:input").prop("checked", true);
 
 					var selectTreeId = m_selectedTree.id;
 					if (selectTreeId == "orglistView") { // 조직도, 직위, 직책 사용자 리스트에 겸직이 있을 경우. 겸직도 체크
