@@ -586,7 +586,8 @@ public class EzOrganController {
 	    	LoginVO userInfo = commonUtil.userInfo(loginCookie);
 	        int tenantID = userInfo.getTenantId();        
 	        String primary = userInfo.getPrimary();
-	        logger.debug("tenantID=" + tenantID + ", primary=" + primary);       
+	        String companyId = userInfo.getCompanyID();
+	        logger.debug("tenantID=" + tenantID + ", primary=" + primary + ", companyId=" + companyId);  
 			
 			Document doc = commonUtil.convertStringToDocument(data);
 			String comID = doc.getElementsByTagName("COMID").item(0).getTextContent();
@@ -594,6 +595,8 @@ public class EzOrganController {
 	        String propList = doc.getElementsByTagName("PROP").item(0).getTextContent();
 	        String type = doc.getElementsByTagName("TYPE").item(0).getTextContent(); // pos(직위), tit(직책)
 	        type = type.equalsIgnoreCase("pos") ? "001" : "002";
+
+	        comID = (topID.split("/").length > 1) ? topID.split("/")[0] : comID.equals("") ? companyId : comID;
 	        logger.debug("comID=" + comID + ",topID=" + topID + ",propList=" + propList + ",type=" + type);
 
 	        comInfo = ezOrganService.getCompanyJobTreeInfo(type, comID, topID, propList, primary, tenantID);

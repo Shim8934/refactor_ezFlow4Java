@@ -2358,16 +2358,14 @@ public class EzOrganServiceImpl implements EzOrganService {
 	    logger.debug("type=" + type + ", pComID=" + pComID + ", pTopID=" + pTopID + ", pPropList=" + pPropList + ", primary=" + primary
 	    		+ ", tenantID=" + tenantID);
 	    
-	    String [] adminOrganChk = pTopID.split("/"); // 관리자 페이지  > 조직도, 겸직, 권한 관리에서 topId + "/organ" 붙임
-	    pTopID = (adminOrganChk.length > 1) ? adminOrganChk[0] : pTopID;
-	    pComID = (pComID.equals("")) ? pTopID : pComID; // pComID가 비어 있는 경우엔 Top ID로 처리한다.
-		
 		OrganDeptVO vo = null;
 		String prevDeptID = "";
         String comInfo = "";
         String comID = pComID;               
         
-        do {
+        String childNodeInfoStr = "";
+	        
+        if (pTopID.split("/").length > 1) { // Top/Organ : 전체회사 출력
         	// 회사의 자식 회사 목록을 가져온다.
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_CN", comID);
@@ -2376,7 +2374,6 @@ public class EzOrganServiceImpl implements EzOrganService {
 			map.put("isCompanyTree", "Y");
 			
 			List<OrganDeptVO> list = ezOrganDAO.getDeptTreeInfo(map); 
-        	String childNodeInfoStr = "";
 			
 			for (OrganDeptVO childObj : list) {
 				if (childObj.getType().equalsIgnoreCase("dept")) {
@@ -2390,35 +2387,23 @@ public class EzOrganServiceImpl implements EzOrganService {
 					OrganDeptVO result = ezOrganDAO.getTBLDeptMaster(map1);
 					childNodeInfoStr += getCompanyJobTreeNodeInfo(result, pComID, prevDeptID, comInfo, pPropList, type, tenantID);
 				}
-			}
+			} 
+        }
 			
-			// 현재 부서의 자식 부서들의 정보를 XML String으로 생성한다.
-			StringBuilder comlist = new StringBuilder("<NODES>");
-			comlist.append(childNodeInfoStr);
-			comlist.append("</NODES>");	
-	        comInfo = comlist.toString();	
-	        prevDeptID = comID;
-	        logger.debug("prevDeptID=" + prevDeptID);
+		// 현재 부서의 자식 부서들의 정보를 XML String으로 생성한다.
+		StringBuilder comlist = new StringBuilder("<NODES>");
+		comlist.append(childNodeInfoStr);
+		comlist.append("</NODES>");	
+        comInfo = comlist.toString();	
+        prevDeptID = comID;
+        logger.debug("prevDeptID=" + prevDeptID);
 				        
-			// 지정된 부서 자체의 상세 정보를 가지고 온다
-	        Map<String, Object> map2 = new HashMap<String, Object>();				
-			map2.put("v_CN", comID);
-			map2.put("v_LANGDATA", primary);
-			map2.put("v_TENANT_ID", tenantID);
-	        vo = ezOrganDAO.getTBLDeptMaster(map2);
-	        
-	        // 지정된 부서의 부모 부서 ID를 구한다.
-	        if (!comID.equalsIgnoreCase(pTopID)) {
-	        	if (comID.equalsIgnoreCase("top")) {
-	        		comID = "";
-	        	} else {
-	        		comID = getPropertyValue(comID, "extensionAttribute1", tenantID);         
-	        	}
-	        }
-	        logger.debug("comID=" + comID);
-
-	        // 부모 부서가 있는 경우 부모 부서로 이동하여 처리를 반복한다. 
-        } while (!prevDeptID.equalsIgnoreCase(pTopID) && !comID.equals(""));
+		// 지정된 부서 자체의 상세 정보를 가지고 온다
+        Map<String, Object> map2 = new HashMap<String, Object>();				
+		map2.put("v_CN", comID);
+		map2.put("v_LANGDATA", primary);
+		map2.put("v_TENANT_ID", tenantID);
+        vo = ezOrganDAO.getTBLDeptMaster(map2);
 		
         comInfo = "<TREEVIEWDATA>" + getTreeNodeInfo(vo, comID, prevDeptID, comInfo, pPropList, "") + "</TREEVIEWDATA>";
         
