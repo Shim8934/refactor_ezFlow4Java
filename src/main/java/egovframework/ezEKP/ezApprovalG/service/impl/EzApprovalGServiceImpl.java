@@ -20,7 +20,8 @@ import java.nio.file.Files;
 import java.nio.file.Path; 
 import java.nio.file.Paths; 
 import java.nio.file.StandardCopyOption; 
-import java.nio.file.StandardOpenOption; 
+import java.nio.file.StandardOpenOption;
+import java.sql.SQLTransactionRollbackException;
 import java.text.SimpleDateFormat; 
 import java.time.LocalDateTime; 
 import java.time.ZoneId; 
@@ -17509,41 +17510,40 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	
 	// 정주환 수신처 스케쥴러
 	@Override
-	public void doSusinSchedule() throws Exception {
+	public List<HashMap<String,Object>> susinScheduleList() throws Exception {
+		return ezApprovalGDAO.getSendDocList();
+	}
+	
+	@Override
+	public void doSusinSchedule(HashMap<String,Object> map) throws Exception {
 		logger.debug("doSusinSchedule started");
-		List<HashMap<String,Object>> sendDocList = ezApprovalGDAO.getSendDocList();
-		if(sendDocList != null) {
-			for(int i = 0 ; i < sendDocList.size(); i++) {
-				HashMap<String,Object> map = sendDocList.get(i);
-				String docid = map.get("DOCID").toString();
-				String companyID = map.get("COMPANYID").toString();
-				int tenantID = Integer.parseInt(map.get("TENANTID").toString());
-				String result = doSendDocSchedule(
-						docid,
-						map.get("DEPTID").toString(),
-						map.get("DIRPATH").toString(),
-						map.get("DOCSTATE").toString(),
-						companyID,
-						map.get("LANG").toString(),
-						tenantID
-						);
-				if("TRUE".equals(result)) {
-					map.put("v_DOCID", docid);
-					map.put("companyID", companyID);
-					map.put("v_TENANTID", tenantID);
-					map.put("TENANTID", tenantID); // organ쪽 DAO에서 사용하기 위한 테넌트 파라미터
-					List<ApprGDocListVO> writer = ezApprovalGDAO.sendoffercheck_enddocinfo(map);
-					
-					LoginVO tempLoginVO = new LoginVO();
-					tempLoginVO.setId(writer.get(0).getWriterID());
-					tempLoginVO.setTenantId(tenantID);
-					tempLoginVO.setDn("NOPASSWORD");
-					
-					LoginVO userInfo = loginService.selectUser(tempLoginVO);
-					sendSusinMail(map, userInfo);
-					ezApprovalGDAO.deleteSendDocList(map);
-				}
-			}
+		String docid = map.get("DOCID").toString();
+		String companyID = map.get("COMPANYID").toString();
+		int tenantID = Integer.parseInt(map.get("TENANTID").toString());
+		String result = doSendDocSchedule(
+				docid,
+				map.get("DEPTID").toString(),
+				map.get("DIRPATH").toString(),
+				map.get("DOCSTATE").toString(),
+				companyID,
+				map.get("LANG").toString(),
+				tenantID
+				);
+		if("TRUE".equals(result)) {
+			map.put("v_DOCID", docid);
+			map.put("companyID", companyID);
+			map.put("v_TENANTID", tenantID);
+			map.put("TENANTID", tenantID); // organ쪽 DAO에서 사용하기 위한 테넌트 파라미터
+			List<ApprGDocListVO> writer = ezApprovalGDAO.sendoffercheck_enddocinfo(map);
+			
+			LoginVO tempLoginVO = new LoginVO();
+			tempLoginVO.setId(writer.get(0).getWriterID());
+			tempLoginVO.setTenantId(tenantID);
+			tempLoginVO.setDn("NOPASSWORD");
+			
+			LoginVO userInfo = loginService.selectUser(tempLoginVO);
+			sendSusinMail(map, userInfo);
+			ezApprovalGDAO.deleteSendDocList(map);
 		}
 			
 		logger.debug("doSusinSchedule ended");
@@ -17551,7 +17551,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	
 	public String doSendDocSchedule(String docID, String deptID, String dirPath, String docState, String companyID, String lang, int tenantID) throws Exception {
 		logger.debug("doSendDocSchedule started");
-		
 		boolean rtnVal = true;
 		String subSQL = "";
 		Document receiptXML = null;
@@ -33277,7 +33276,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ApprGDocListVO vo = docInfo.get(0);
 			
 			// 다국어처리, 폰트 스타일 등 수정
-			Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(userInfo.getLang()));
+			Locale locale = new Locale("ko");
+//			Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(userInfo.getLang()));
 			String subject = messageSource.getMessage("ezEmail.csj02", locale) + " " + vo.getDocTitle(); // [수신문서도착알림] + DOCTITLE
 			StringBuilder contentBuilder = new StringBuilder("<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td>");
 			contentBuilder.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj17", locale) + ": " + vo.getDocTitle() + "</span><br>");
