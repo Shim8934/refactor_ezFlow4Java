@@ -570,10 +570,6 @@
 		        m_selectedTree = orglistView;
 		        AddrSearch.style.display = "none";
 		        
-		        $(".txtlist_DeptTD").css("display", "none");
-		        $(".txtlist_DeptTD").css("padding-left", "4px");
-		        $(".mainlist tr td:nth-child(2)").css("padding-left", "15px");
-		        
 		        orgTreeViewListSet();
 		    }
 		    
@@ -2316,6 +2312,13 @@
 		                changeCheckBox();
 		            }
 		
+		        }
+		        
+		        if (selTab == "orglistView" && $(".txtlist_DeptTD").length > 0) {
+		        	$(".txtlist_DeptTD").css("display", "none");
+			        $(".txtlist_DeptTD").css("padding-left", "4px");
+
+			        $(".mainlist > tbody > tr:first-child > td:nth-child(2)").css("padding-left", "15px");
 		        }
 		    }
 	        function show_member() {

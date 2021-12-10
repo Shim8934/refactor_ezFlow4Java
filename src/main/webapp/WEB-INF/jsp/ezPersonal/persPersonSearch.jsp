@@ -95,10 +95,6 @@
 		        selTab = "orglistView";
 		        selSpan = "orgSpan";
 		        
-		        $(".txtlist_DeptTD").css("display", "none");
-		        $(".txtlist_DeptTD").css("padding-left", "4px");
-		        $(".mainlist tr td:nth-child(2)").css("padding-left", "15px");
-		        
 		        clearOrgTab("org");
 		        m_selectedTree = orglistView;
 		        orgTreeViewListSet();
@@ -781,6 +777,12 @@
 	                	}
 	            	}
 	        	}
+
+		        if (selTab == "orglistView" && $(".txtlist_DeptTD").length > 0) {
+			        $(".txtlist_DeptTD").css("display", "none");
+			        $(".txtlist_DeptTD").css("padding-left", "4px");
+			        $(".mainlist tr td:nth-child(2)").css("padding-left", "15px");
+		        }
 	    	}
 	    	
 	    	function deptsearch_click_Complete() {

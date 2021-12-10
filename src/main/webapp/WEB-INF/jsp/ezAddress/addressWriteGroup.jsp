@@ -1507,6 +1507,12 @@
 	                }
 	
 	            }
+	            
+	            if (selSpan == "orgSpan" && $(".txtlist_DeptTD").length > 0) {
+		        	$(".txtlist_DeptTD").css("display", "none");
+
+			        $(".mainlist > tbody > tr:first-child > td:nth-child(2)").css("padding-left", "15px");
+		        }
 	        }
 	
 	        function orgTabButton_onClick() {
@@ -1519,8 +1525,6 @@
 	            document.getElementById("ManualView").style.display = "none";
 	            document.getElementById("TreeViewPane").style.display = "";
 	            document.getElementById("subtitle").innerText = "<spring:message code='ezAddress.t351' />";
-
-		        $(".txtlist_DeptTD").css("display", "none");
 		        
 	            clearOrgTab("org");
 	            
