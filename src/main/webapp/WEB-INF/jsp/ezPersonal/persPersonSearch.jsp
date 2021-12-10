@@ -1309,7 +1309,7 @@
        				<span id="orgJobMstSpan1" onclick="orgJobMasterTabButton_onClick(1)" onmouseover="tabover(this)" onmouseout="tabout(this)" class=""><spring:message code="ezOrgan.ksaOrganList01"/></span>
        			</p>
        			<p id="orgJobMasterTabButton2">
-       				<span id="orgJobMstSpan2" onclick="orgJobMasterTabButton_onClick(2)" onmouseover="tabover(this)" onmouseout="tabout(this)" class="">조직도(직책)</span><spring:message code="ezOrgan.ksaOrganList02"/>
+       				<span id="orgJobMstSpan2" onclick="orgJobMasterTabButton_onClick(2)" onmouseover="tabover(this)" onmouseout="tabout(this)" class=""><spring:message code="ezOrgan.ksaOrganList02"/></span>
        			</p>
        		</div>
         	<div class="portlet_tabpart03" style="margin-top:0; background-color:#f8f8fa; border: 1px solid #dedede; border-bottom: 0px; padding-top: 6px;">
