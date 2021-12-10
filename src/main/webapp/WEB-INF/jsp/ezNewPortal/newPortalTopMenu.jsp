@@ -343,10 +343,10 @@
 		var employeeSearch = function () {
 			var height = window.screen.availHeight;
 			var width = window.screen.availWidth;
-			var top = (height - 560) / 2;
+			var top = (height - 600) / 2;
 			var left = (width - 750) / 2;
 			var url = '/ezPersonal/personSearch.do';
-			var option = 'height=560px,width=750px,top=' + top + ',left = ' + left + ',status = no, toolbar=no, menubar=no, location=no, resizable=0';
+			var option = 'height=600px,width=750px,top=' + top + ',left = ' + left + ',status = no, toolbar=no, menubar=no, location=no, resizable=0';
 			
 			window.open(url, "", option);
 		}
