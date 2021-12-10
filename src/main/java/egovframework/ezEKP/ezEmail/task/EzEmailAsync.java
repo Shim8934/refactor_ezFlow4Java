@@ -2,9 +2,11 @@ package egovframework.ezEKP.ezEmail.task;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.mail.Flags;
@@ -206,7 +208,9 @@ public class EzEmailAsync {
 			e.printStackTrace();
 		}
 
-		for(int i = 0; i < userList.size(); i++) {
+		/* 2021-11-18 홍승비 - 전자설문 메일발송 대상자 중복제거 Set 추가 */
+		Set<String> mailSendSet = new HashSet<String>();
+		for (int i = 0; i < userList.size(); i++) {
 			try {
 				SurveyParticipantVO userinfo = userList.get(i);
 				String userAccount = userinfo.getEmail();
@@ -241,7 +245,11 @@ public class EzEmailAsync {
 				toMember.setAddress(user);
 				toMember.setPersonal(toMemberName);
 				
-				ezEmailService.sendMail(user, jspw, locale, from, new InternetAddress[]{ toMember }, null, null, subject, content.toString(), false, EmailImportance.NORMAL);
+				// 메일을 발송하지 않은 대상에게만 메일을 발송한 뒤, set에 저장한다.
+				if (!mailSendSet.contains(user)) {
+					ezEmailService.sendMail(user, jspw, locale, from, new InternetAddress[]{ toMember }, null, null, subject, content.toString(), false, EmailImportance.NORMAL);
+					mailSendSet.add(user);
+				}
 				
 			} catch (Exception e) {
 				e.printStackTrace();

@@ -190,6 +190,7 @@
 	                var userName2 = listUser[i].userName2;
 	                var deptName1 = listUser[i].deptName1;
 	                var deptName2 = listUser[i].deptName2;
+	                var subDeptYN = listUser[i].subDeptYN;
 
 	                var strName = "";
                 	strName = userName;
@@ -205,7 +206,9 @@
 	                    pparsingXML = pparsingXML + "<userName2>" + userName2 + "</userName2>";
 	                    pparsingXML = pparsingXML + "<userName1>" + userName1 + "</userName1>";
 	                    pparsingXML = pparsingXML + "<deptName2>" + deptName2 + "</deptName2>";
-	                    pparsingXML = pparsingXML + "<deptName1>" + deptName1 + "</deptName1></CELL></ROW>";
+	                    pparsingXML = pparsingXML + "<deptName1>" + deptName1 + "</deptName1>";
+	                    pparsingXML = pparsingXML + "<SUBDEPTYN>" + subDeptYN + "</SUBDEPTYN>"; // 하위부서 허용여부 데이터 추가
+	                    pparsingXML = pparsingXML + "</CELL></ROW>";
 	                } else if (userType == "dept" || userType == "comp") {
 	                	pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
 	                    pparsingXML = pparsingXML + "<DATA2>" + escapeHtml(strName) + "</DATA2>";
@@ -215,7 +218,9 @@
                         pparsingXML = pparsingXML + "<userName2>" + escapeHtml(strName) + "</userName2>";
                         pparsingXML = pparsingXML + "<userName1>" + escapeHtml(strName) + "</userName1>";
                         pparsingXML = pparsingXML + "<deptName2>" + escapeHtml(strName) + "</deptName2>";
-                        pparsingXML = pparsingXML + "<deptName1>" + escapeHtml(strName) + "</deptName1></CELL></ROW>";
+                        pparsingXML = pparsingXML + "<deptName1>" + escapeHtml(strName) + "</deptName1>";
+                        pparsingXML = pparsingXML + "<SUBDEPTYN>" + subDeptYN + "</SUBDEPTYN>";
+	                    pparsingXML = pparsingXML + "</CELL></ROW>";
 	                } else if (userType == "jikwi") {
 	                	pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" +  strId + "</DATA1>";
 	                    // 직위명 추가
@@ -232,6 +237,7 @@
 						} else {
 							pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t28' /> : " + strName + "</VALUE>";
 						}
+						pparsingXML = pparsingXML + "<SUBDEPTYN>" + subDeptYN + "</SUBDEPTYN>";
 						pparsingXML = pparsingXML + "</CELL></ROW>";
 	                	
 	                } else if (userType == "jikchek") {
@@ -250,6 +256,7 @@
 						} else {
 							pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t281' /> : " + strName + "</VALUE>";
 						}
+						pparsingXML = pparsingXML + "<SUBDEPTYN>" + subDeptYN + "</SUBDEPTYN>";
 						pparsingXML = pparsingXML + "</CELL></ROW>";
 	                } else if (userType == "group") {
 	                	pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" +  strId + "</DATA1>";
@@ -260,7 +267,9 @@
                         pparsingXML = pparsingXML + "<userName2>" +  strName + "</userName2>";
                         pparsingXML = pparsingXML + "<userName1>" +  strName + "</userName1>";
                         pparsingXML = pparsingXML + "<deptName2>" +  strName + "</deptName2>";
-                        pparsingXML = pparsingXML + "<deptName1>" +  strName + "</deptName1></CELL></ROW>";
+                        pparsingXML = pparsingXML + "<deptName1>" +  strName + "</deptName1>";
+                        pparsingXML = pparsingXML + "<SUBDEPTYN>" + subDeptYN + "</SUBDEPTYN>";
+	                    pparsingXML = pparsingXML + "</CELL></ROW>";
 	                }
 	                
 	                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
@@ -331,7 +340,7 @@
 	                    listview.SetSelectFlag(false);
 	                    listview.SetMulSelectable(false);
 	                    listview.SetRowOnDblClick("DeleteReceiver");
-// 	                    listview.SetRowOnClick("SelectReceiverWindow");
+ 	                    listview.SetRowOnClick("SelectReceiverWindow");
 	                    listview.DataSource(Resultxml);
 	                    listview.RowDataBind();
 	
@@ -354,7 +363,7 @@
 	            listview.SetSelectFlag(false);
 	            listview.SetMulSelectable(true);
 	            listview.SetRowOnDblClick("DeleteReceiver");
-// 	            listview.SetRowOnClick("SelectReceiverWindow");
+ 	            listview.SetRowOnClick("SelectReceiverWindow");
 	            listview.DataSource(loadXMLString("<LISTVIEWDATA></LISTVIEWDATA>"));
 	            listview.DataBind(pListView);
 	            listview.RowDataBind();
@@ -723,11 +732,9 @@
 	            }
 	            
 	            var popupUserList = [];
-	            
 	            var userListText = "";
 
 	            saveSelectUsers();
-	            
 				window.close();
 	        }
 	
@@ -764,7 +771,7 @@
                 var deptName1 	= trElmt.getAttribute("deptName1");
                 var deptName2 	= trElmt.getAttribute("deptName2");
                 var deptId 		= trElmt.getAttribute("deptId");
-                
+                var subDeptYN 		= trElmt.getAttribute("SUBDEPTYN"); // 하위부서 허용여부 데이터 추가
                 
 	    		if (userType != "user") {
 	    			email = "";
@@ -774,7 +781,8 @@
 	    			deptId    : deptId 		, userName  : userName,
 	    			deptName  : userName 	, userName1 : userName1,
 	    			userName2 : userName2	, deptName1 : deptName1,
-	    			deptName2 : deptName2	, email     : email
+	    			deptName2 : deptName2	, email     : email,
+	    			subDeptYN : subDeptYN
 	    		}
 	    		
 	    		return userInfo;
@@ -1246,7 +1254,9 @@
                             pparsingXML = pparsingXML + "<userName2>" + MakeXMLString(strName) + "</userName2>";
                             pparsingXML = pparsingXML + "<userName1>" + MakeXMLString(strName) + "</userName1>";
                             pparsingXML = pparsingXML + "<deptName2>" + MakeXMLString(strName) + "</deptName2>";
-                            pparsingXML = pparsingXML + "<deptName1>" + MakeXMLString(strName) + "</deptName1></CELL></ROW>";
+                            pparsingXML = pparsingXML + "<deptName1>" + MakeXMLString(strName) + "</deptName1>";
+                            pparsingXML = pparsingXML + "<SUBDEPTYN>N</SUBDEPTYN>"; // 하위부서 허용여부 기본값 'N'으로 삽입
+                            pparsingXML = pparsingXML + "</CELL></ROW>";
 		                    pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 		                    Resultxml = loadXMLString(pparsingXML2);
 		
@@ -1306,7 +1316,9 @@
 		                            pparsingXML = pparsingXML + "<userName2>" + MakeXMLString(userName2) + "</userName2>";
 		                            pparsingXML = pparsingXML + "<userName1>" + MakeXMLString(userName1) + "</userName1>";
 		                            pparsingXML = pparsingXML + "<deptName2>" + MakeXMLString(deptName2) + "</deptName2>";
-		                            pparsingXML = pparsingXML + "<deptName1>" + MakeXMLString(deptName1) + "</deptName1></CELL></ROW>";
+		                            pparsingXML = pparsingXML + "<deptName1>" + MakeXMLString(deptName1) + "</deptName1>";
+		                            pparsingXML = pparsingXML + "<SUBDEPTYN>N</SUBDEPTYN>";
+		                            pparsingXML = pparsingXML + "</CELL></ROW>";
 		                            
 		                            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 		                            Resultxml = loadXMLString(pparsingXML2);
@@ -1370,6 +1382,7 @@
 			                    pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strId) + "</DATA1>";
 			                    pparsingXML = pparsingXML + "<DATA2>" + MakeXMLString(strName) + "</DATA2>";
 			                    pparsingXML = pparsingXML + "<DATA4>comp</DATA4>";
+			                    pparsingXML = pparsingXML + "<SUBDEPTYN>N</SUBDEPTYN>";
 			                    pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
 			                    pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 			                    Resultxml = loadXMLString(pparsingXML2);
@@ -1445,6 +1458,7 @@
 								} else {
 									pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t28' /> : " + MakeXMLString(strName) + "</VALUE>";
 								}
+								pparsingXML = pparsingXML + "<SUBDEPTYN>N</SUBDEPTYN>";
 								pparsingXML = pparsingXML + "</CELL></ROW>";
 								
         	                   // pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t28' /> : " + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
@@ -1522,6 +1536,7 @@
 								} else {
 									pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t281' /> : " + MakeXMLString(strName) + "</VALUE>";
 								}
+								pparsingXML = pparsingXML + "<SUBDEPTYN>N</SUBDEPTYN>";
 								pparsingXML = pparsingXML + "</CELL></ROW>";
 								
     	                      // pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t281' /> : " + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
@@ -1585,7 +1600,9 @@
 	                            pparsingXML = pparsingXML + "<userName2>" + MakeXMLString(strName) + "</userName2>";
 	                            pparsingXML = pparsingXML + "<userName1>" + MakeXMLString(strName) + "</userName1>";
 	                            pparsingXML = pparsingXML + "<deptName2>" + MakeXMLString(strName) + "</deptName2>";
-	                            pparsingXML = pparsingXML + "<deptName1>" + MakeXMLString(strName) + "</deptName1></CELL></ROW>";
+	                            pparsingXML = pparsingXML + "<deptName1>" + MakeXMLString(strName) + "</deptName1>";
+	                            pparsingXML = pparsingXML + "<SUBDEPTYN>N</SUBDEPTYN>";
+	                            pparsingXML = pparsingXML + "</CELL></ROW>";
 	                            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                            Resultxml = loadXMLString(pparsingXML2);
 	
@@ -2134,7 +2151,8 @@
                 if (window.event.keyCode == "13")
                     inputAddress();
             }
-	        /*
+	        
+	        /* 2021-11-17 홍승비 - 전자설문 대상자 우측테이블 TR 클릭 시 하위부서 허용여부 활성화 */
 	        function SelectReceiverWindow() {
 	        	var listview = new ListView();
                 listview.LoadFromID("MsgToList");
@@ -2143,20 +2161,20 @@
 				if (arrRows == "") {
 					return;
 				} else {
-					if (arrRows[0].getAttribute("DATA4") == "ORGAN" || arrRows[0].getAttribute("DATA4") == "DEPT") {
+					// 회사, 부서인 경우에만 하위부서 허용여부 선택가능
+					if (arrRows[0].getAttribute("DATA4") == "comp" || arrRows[0].getAttribute("DATA4") == "dept") {
 						document.getElementById("admin_OK").disabled = false;
 						document.getElementById("admin_NO").disabled = false;
-						var _data5 = arrRows[0].getAttribute("DATA5");
+						var subDeptYN = arrRows[0].getAttribute("SUBDEPTYN"); // 하위부서 허용여부 Y/N
 
-						if (_data5 == "Y" || _data5 == "true") {
+						if (subDeptYN == "Y") {
 							document.getElementById("admin_OK").checked = true;
 							document.getElementById("admin_NO").checked = false;
 						} else {
 							document.getElementById("admin_OK").checked = false;
 							document.getElementById("admin_NO").checked = true;
-							arrRows[0].setAttribute("DATA5", "N");
 						}
-					} else {
+					} else { // 개인, 직위, 직책, 권한그룹은 하위부서 허용여부 선택불가(N으로 고정)
 						document.getElementById("admin_OK").disabled = true;
 						document.getElementById("admin_OK").checked = false;
 						document.getElementById("admin_NO").disabled = true;
@@ -2172,7 +2190,7 @@
 					srcElementID = e.target.id;
 				}
 
-				var checkFlag = "Y";
+				var checkFlag = "N";
 				if (srcElementID == "admin_OK") {
 					document.getElementById("admin_OK").checked = true;
 					document.getElementById("admin_NO").checked = false;
@@ -2187,13 +2205,18 @@
 				pListViewDL.LoadFromID("MsgToList");
 				var arrRows = pListViewDL.GetSelectedRows();
 				
-				if (arrRows == "")
+				// 여러 Row를 선택하여 하위부서 허용여부를 설정할 경우, 부서/회사만 변경사항을 적용
+				if (arrRows == "") {
 					return;
-				
-				arrRows[0].setAttribute("DATA5", checkFlag);
-
+				} else {
+					for (var i = 0; i < arrRows.length; i++) {
+						if (arrRows[i].getAttribute("DATA4") == "comp" || arrRows[i].getAttribute("DATA4") == "dept") {
+							arrRows[i].setAttribute("SUBDEPTYN", checkFlag);
+						}
+					}
+				}
 			}
-	        */
+	        
 	        function jikwiTabButton_onClick() {
 		    	selSpan = "jikweeSpan";
 		    	methodForTabAction(2);
@@ -2506,9 +2529,22 @@
 		                            <h2 id="ToTitle" class="receiver_tltype01" style="cursor: pointer;">
 		                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezSurvey.t69' /></span>
 		                            </h2>
-		                            <div class="receiver_borderbox" style="">
-		                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event, this)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 501px; overflow: auto;" ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
+		                            <div class="receiver_borderbox" style="border-bottom:none;">
+		                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event, this)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 471px; overflow: auto;" ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
 		                            </div>
+		                            
+									<%-- 하위부서 허용/불가여부 선택 부분 --%>
+									<table class="content" style="width: 100%;">
+						            	<tbody>
+						                	<tr>
+						                    	<th><spring:message code='ezBoard.t999025' /></th>
+						                    	<td>
+							                        <input type="checkbox" id="admin_OK" onclick="checkbox_onclick(event)">&nbsp;<spring:message code='ezBoard.t95' />
+							                        <input type="checkbox" id="admin_NO" onclick="checkbox_onclick(event)">&nbsp;<spring:message code='ezBoard.t96' />
+							                    </td>
+						                	</tr>
+						            	</tbody>
+						        	</table>
 		                            
 		                        </td>
 		                    </tr>

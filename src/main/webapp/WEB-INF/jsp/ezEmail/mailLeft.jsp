@@ -275,10 +275,10 @@
         		}
 	           
         		 if (usePreviewSubTree == "YES" && previewSubTree == "Y") {
-		            var treeArrNum = $('.tree_plus').length;
+		            var treeArrNum = $('#' + treeviewStr + ' .tree_plus').length;
 
 		          	while(treeArrNum > 0) {
-		        	    var getSubtree = $('.tree_plus').eq(0).attr('name');
+		        	    var getSubtree = $('#' + treeviewStr + ' .tree_plus').eq(0).attr('name');
 		        	    var idx = getSubtree.split(treeviewStr + '_img_');
 		        	    
 		        	    if (typeof idx[1] != "undefined") {
@@ -288,7 +288,7 @@
 		        	    	treeArrNum--;
 		        	    }
 		          	}
-		          	treeArrNum = $('.tree_plus').length;
+		          	treeArrNum = $('#' + treeviewStr + ' .tree_plus').length;
 		          	if(treeArrNum > 0){
 		          		previewSubTreeCall();
 		          	}

@@ -345,47 +345,81 @@
 		    	var gyumjikArray = extensionattribute4.split(";");
 				var deptPathCodeArray = deptPathCode.split(",");
 				var deptId = deptPathCodeArray[deptPathCodeArray.length-1];
+				var title = "";
+				var addJobXml = createXmlDom();
+				
+				$.ajax({
+					type : "POST"
+					,dataType : "text"
+					,url : "/admin/ezOrgan/getEntryInfo.do"
+					,async : false
+					,data : {
+						cn : arr_userinfo[1]
+						,prop : "department;title;extensionAttribute5"
+						,pMode : "user"
+					}
+				})
+				.success(function(result) {
+					var xmlDom = loadXMLString(result);
+					deptId = SelectSingleNodeValueNew(xmlDom, "DATA/DEPARTMENT").trim();
+					title = SelectSingleNodeValueNew(xmlDom, "DATA/TITLE").trim();
+					extensionattribute5 = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE5").trim();
+				})
+				.fail(function(fail) {
+					console.log("apprGManage > /admin/ezOrgan/getEntryInfo.do > fail => ", fail);
+					alert("<spring:message code='ezTask.t200913'/>");
+					return;
+				});
+				
+				if(absenceAllClear == "YES" || (arr_userinfo[4] == deptId && arr_userinfo[13] == title)) {
+	        		extensionattribute5 = "";
+    			}
 		    	
 		    	jo.count = index;
 	        	jo.deptId = deptId	// 본직
 	        	jo.proxy = extensionattribute5;
 	        	
 	        	formArray.push(jo);
-	        	
-	        	if(extensionattribute4 != "" && extensionattribute4 != undefined && extensionattribute4 != null) {
-	        		if(absenceAllClear == "YES") {
-	        			jo.proxy = "";
-	        			for(var i=0; i<gyumjikArray.length; i++) {
-							var gyumjikArray2 = gyumjikArray[i].split(":");
-							jo = new Object();
-							
-							jo.count = i+1;
-				        	jo.deptId = gyumjikArray2[0]	// 겸직부서
-				        	jo.proxy = "";
-				        	
-				        	formArray.push(jo);
-						}
-		        	} else {
-		        		if(deptId == arr_userinfo[4]) {
-		        			jo.proxy = "";
-		        		} else {
-		        			jo = new Object();
-			        		jo.count = index+1;
-				        	jo.deptId = arr_userinfo[4]	// 현재 접근부서
-				        	jo.proxy = "";
-				        	
-				        	formArray.push(jo);
-		        		}
-		        	}
-	        	}
-				
-	        	else {
-	        		if(deptId == arr_userinfo[4]) {
-	        			jo.proxy = "";
-	        			formArray.push(jo);
-	        		}
-	        	}
-	        	
+		        
+	        	$.ajax({
+		    		type : "POST"
+		    		,dataType : "text"
+		    		,async : false
+		    		,url : "/admin/ezOrgan/getUserAddJobList.do"
+		    		,data : {
+		    			cn : arr_userinfo[1]
+		    		}
+		    	})
+		    	.success(function(res) {
+		    		addJobXml = loadXMLString(res);
+		    	})
+		    	.fail(function(fail) {
+		    		console.log("apprGManage > /admin/ezOrgan/getUserAddJobList.do > fail => ", fail);
+		    		alert("<spring:message code='ezTask.t200913'/>");
+					return;
+		    	});
+		         
+	        	var rows = addJobXml.getElementsByTagName("ROW");
+	    		for(var i=0; i<rows.length; i++) {
+	    			var getUserId = rows[i].getElementsByTagName("CN")[0].textContent;
+	    			var getDeptId = rows[i].getElementsByTagName("DEPARTMENT")[0].textContent;
+	    			var getTitle = rows[i].getElementsByTagName("TITLE")[0].textContent;
+	    			var getJobId = rows[i].getElementsByTagName("JOBID")[0].textContent;
+	    			var getProxy = rows[i].getElementsByTagName("EXTENSIONATTRIBUTE5")[0].textContent;
+	    			
+	    			if(absenceAllClear == "YES" || (arr_userinfo[4] == getDeptId && arr_userinfo[13] == getTitle)) {
+	    				getProxy = "";
+	    			}
+					jo = new Object();
+	    			
+					jo.count = i+1;
+		        	jo.deptId = getDeptId	// 겸직부서
+		        	jo.proxy = getProxy;
+		        	jo.jobId = getJobId;
+		        	
+		        	formArray.push(jo);
+	    		}
+	    		
 		        $.ajax({
 		    		type : "POST",
 		    		dataType : "text",

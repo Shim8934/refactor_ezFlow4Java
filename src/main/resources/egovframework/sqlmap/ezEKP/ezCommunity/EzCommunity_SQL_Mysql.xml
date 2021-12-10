@@ -6587,7 +6587,10 @@
 				deleteafter = #v_pDeleteAfter#,
 				boardcolor = #v_pBoardColor#,
 				versionuse = #v_pVersionUse#,
-				checkuse = #v_pCheckUse#
+				checkuse = #v_pCheckUse#,
+				MAILFG_POST = #v_pMailFG_Post#,
+				MAILFG_MOD = #v_pMailFG_Mod#,
+				MAILFG_COMMENT = #v_pMailFG_Comment#
 			WHERE
 				boardid = #v_pBoardID#
 			AND
@@ -7177,7 +7180,10 @@
 				checkuse,
 				showposition,
 				sn,
-				tenant_id
+				tenant_id,
+				MAILFG_POST,
+				MAILFG_MOD,
+				MAILFG_COMMENT
 			FROM
 	        	TBL_COMM_BOARDINFO
 			WHERE
@@ -7549,28 +7555,23 @@
 	<select id="EzCommunityDAO.sendReplyNoticeMail" parameterClass="Map" resultClass="OrganUserVO">
 		<![CDATA[
 			SELECT
-				writerID AS cn,
-				IFNULL((SELECT
-							mail
-						FROM
-							TBL_USERMASTER A
-						JOIN
-							TBL_COMM_ITEM B
-						ON
-							A.cn = B.writerID
-						WHERE
-							A.tenant_ID = #tenantID#
-						AND
-							B.itemID = #itemID#), '') AS mail,
-				writerName AS displayName
+				WRITERID AS CN,
+		        IFNULL(MAIL, '') AS MAIL,
+		        WRITERNAME AS DISPLAYNAME
 			FROM
-				TBL_COMM_ITEM
+				TBL_COMM_ITEM C
+			INNER JOIN
+				TBL_USERMASTER U
+			ON
+				C.WRITERID = U.CN
+			AND
+				C.TENANT_ID = U.TENANT_ID
 			WHERE
-				tenant_ID = #tenantID#
+				C.TENANT_ID = #tenantID#
 			AND
-				boardID = #boardID#
+				BOARDID = #boardID#
 			AND
-				itemID = #itemID#
+				ITEMID = #itemID#
 		]]>
 	</select>
 
@@ -7710,5 +7711,22 @@
  				ENDDATE > #nowDate#
  		]]>
  	</select>
+ 	
+ 	<select id="EzCommunityDAO.checkUserInCommunity" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(C_ID)
+			FROM
+				TBL_C_CLUBUSER
+			WHERE
+				C_CLUBNO = #v_C_CLUBNO#
+			AND
+				C_ID = #v_C_ID#
+			AND
+				TENANT_ID = #v_TENANT_ID#
+			AND
+				PERMIT != 0
+		]]>
+	</select>
  	
 </sqlMap>

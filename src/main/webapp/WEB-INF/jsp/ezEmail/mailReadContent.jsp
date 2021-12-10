@@ -65,7 +65,7 @@
 		        		$("#normalScreen").find('*').each(function() {
 							var position = $(this).css('position');
 							
-							if (position == 'absolute' || position == 'fixed') {
+							if (position == 'fixed') {
 								$(this).css('position', '');
 							}
 						});

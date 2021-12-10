@@ -4466,13 +4466,15 @@
             AND 
             	(((TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# AND TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#)
             AND 
-            	(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'))
+            	(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '011'))
             ]]>	
             <isEqual property="v_USERFLAG" compareValue="admin">
              OR 
              	(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
                 AND
-                TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015'))
+                TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
+                AND
+                PROCESSORID = '')
             </isEqual>
             	 ) 
              ORDER BY PROCESSDATE $v_BASICORDER$
@@ -5059,7 +5061,7 @@
 <!-- 	<procedure id="EzApprovalG.getFormRecvAprDB" parameterClass="Map" resultClass="ApprGReceiptVO"> -->
 <!-- 		{CALL EZSP_GETFORMRECVAPR(#v_FORMID#, #v_USERID#, #v_FLAG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzApprovalG.getFormRecvAprDB" parameterClass="Map" resultClass="ApprGReceiptVO">
+	<select id="EzApprovalG.getFormRecvAprDB" parameterClass="Map" resultClass="ApprGReceiptVO" remapResults="true">
 		<isEqual property="v_FLAG" compareValue="1">
 			SELECT 
 				DEPTID ,
@@ -8657,7 +8659,7 @@
 	      		AND 
 	      			(((TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# AND TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#)
 	      		AND 
-	      			(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'))
+	      			(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '011'))
 	      		AND
 	      			TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
 	      		AND
@@ -8667,7 +8669,9 @@
 	      		OR 
 	      			(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
 	         	AND 
-					TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015'))	      	
+					TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
+				AND
+					PROCESSORID = '')
             </isEqual>
 	      	<isEqual property="v_aprFlag" compareValue="G">
 		     	OR
@@ -9400,7 +9404,7 @@
 <!-- 	<procedure id="EzApprovalG.getInnerLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO"> -->
 <!-- 		{CALL EZSP_GETINNERLINEINFO(#v_DOCID#, #v_DOCSTATE#, #v_DEPTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzApprovalG.getInnerLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO">
+	<select id="EzApprovalG.getInnerLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO" remapResults="true">
 		<isEqual property="v_DOCSTATE" compareValue="000">
 		 SELECT 
 		 		DOCID DOCID  ,
@@ -11706,13 +11710,17 @@
 	   		AND 
 	   			(((TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# AND TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#)
 	   		AND 
-	   			(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'))
+	   			(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '011'))
    		]]>
    		<isEqual property="v_USERFLAG" compareValue="admin">
             OR
             (TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
             AND
-            TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015'))
+            TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
+            AND
+            PROCESSORID = '')
+            AND
+                TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
    		</isEqual>
    		<isEqual property="v_aprFlag" compareValue="G">
 	     	OR
@@ -15343,7 +15351,9 @@
 	      			AND 
 	      				(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012'
 	      			OR 
-	      				 TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'))
+	      				 TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'
+	      			OR 
+	      				 TBL_APRRECEIPTPROCESSINFO.APRSTATE = '011'))
 	      	AND
 	      		TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
 	      	AND
@@ -15353,7 +15363,9 @@
              OR
              (TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
              AND
-             TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015'))
+             TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
+             AND
+             PROCESSORID = '')
 	     </isEqual>
 	     <isEqual property="v_aprFlag" compareValue="G">
 	     	OR
@@ -17219,7 +17231,9 @@
                 AND 
                 	(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012'
                 OR 
-                	TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'))
+                	TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'
+                OR
+                    TBL_APRRECEIPTPROCESSINFO.APRSTATE = '011'))
                 AND 
                 	TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
                 AND
@@ -17253,11 +17267,9 @@
 			 	OR 
 			 		(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN (#v_DEPTIDS#)
                 AND 
-                	TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014'))
-                OR 
-                	(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN (#v_DEPTIDS#)
-              	AND 
-              		TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015')
+                	TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
+                AND
+                    PROCESSORID = '')
 			</isEqual>
 				)
 		</isEqual>
@@ -33068,7 +33080,7 @@
 		   		AND 
 		   			(((TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# AND TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#)
 		   		AND 
-		   			(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'))
+		   			(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '011'))
 		   			
 	   		<isEqual property="v_USERFLAG" compareValue="admin">
 	   			OR 
@@ -33079,7 +33091,9 @@
 	   						#v_DEPTIDS[]#
 	   					</iterate>
 	   				AND 
-	   					TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015'))
+	   					TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
+                    AND
+                        PROCESSORID = '')
 	   		</isEqual>
 	   		<isEqual property="v_aprFlag" compareValue="G">
 		     	OR

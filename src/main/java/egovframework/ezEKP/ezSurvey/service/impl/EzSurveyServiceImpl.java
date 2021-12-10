@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -534,11 +535,12 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		}
 		
 		//Add survey users
-		if (userFlag == 1) {
+		if (userFlag == 1) { // 대상자 지정 설문인 경우
 			for (int i = 0; i < users.size(); i++) {
 				JSONObject userObj             = (JSONObject)users.get(i);
 				String userType                = userObj.get("userType").toString();
 				String userDeptId              = userObj.get("deptId").toString();
+				String subDeptYN			   = userObj.get("subDeptYN") != null ? userObj.get("subDeptYN").toString() : "N";
 				SurveyParticipantVO surveyUser = new SurveyParticipantVO();
 				surveyUser.setSurveyId(crrSurveyId);
 				surveyUser.setCompanyId(companyId);
@@ -551,12 +553,14 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				surveyUser.setDeptName1(userObj.get("deptName1").toString());
 				surveyUser.setDeptName2(userObj.get("deptName2").toString());
 				surveyUser.setEmail(userObj.get("email").toString());
+				surveyUser.setSubDeptYN(subDeptYN);
 				totalUsers.add(surveyUser);
 				
-				if (userType.equals("comp")) {
+				// 하위부서 허용여부 추가로 인해 회사도 부서로 취급함 (하위부서 허용여부가 '허용'인 경우에만 회사 소속 모든 사원 포함, '불가'라면 부서 리스트에 추가)
+				if (userType.equals("comp") && surveyUser.getSubDeptYN().equals("Y")) {
 					userCompanyId = userDeptId;
 				}
-				else if (userType.equals("dept")) {
+				else if (userType.equals("dept") || (userType.equals("comp") && surveyUser.getSubDeptYN().equals("N"))) {
 					deptList.add(userDeptId);
 				}
 				else if (userType.equals("jikwi")) {
@@ -571,7 +575,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				}
 			}
 		}
-		else {
+		else { // 전체 대상 설문인 경우
 			OrganDeptVO company            = ezOrganService.getDeptInfo(companyId, primary, tenantId);
 			SurveyParticipantVO surveyUser = new SurveyParticipantVO();
 			surveyUser.setSurveyId(crrSurveyId);
@@ -585,15 +589,16 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			surveyUser.setDeptName1(company.getDisplayName1());
 			surveyUser.setDeptName2(company.getDisplayName2());
 			surveyUser.setEmail(company.getMail());
+			surveyUser.setSubDeptYN("Y"); // 전체 대상이므로 하위부서 허용여부 Y(회사 소속의 모든 개인이 대상자임)
 			totalUsers.add(surveyUser);
 			userCompanyId = companyId;
 		}
 		
 		//Get total users of the survey
-		if (!userCompanyId.equals("")) {
+		if (!userCompanyId.equals("")) { // 전체 대상 설문인 경우, 해당 회사의 모든 사원을 대상자로 삽입
 			setUsers.addAll(getAllMembersOfCompany(userCompanyId, primary, tenantId));
 		}
-		else {
+		else { // 대상자 지정 설문인 경우, 대상자를 찾아 삽입
 			if (deptList.size() > 0) {
 				setUsers.addAll(getDeptMemberList(null, deptList, primary, 0, 0, tenantId));
 			}
@@ -645,8 +650,15 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				
 				if(mailSentFlag == 0) {
 					logger.debug("start send mail");
+					List<SurveyParticipantVO> sendMailList = new ArrayList<SurveyParticipantVO>();
 					List<SurveyParticipantVO> userList = getSurveyParticipantListForMail(crrSurveyId, companyId, tenantId);
-					ezEmailAsync.sendMail(userList, survey, offset);
+					/* 2021-11-18 홍승비 - 대상자가 부서(회사)인 경우, 하위부서 허용여부를 체크하여 메일 발송 대상자 추가 (중복 제거된 개인 단위 VO) */
+					List<SurveyParticipantVO> subDeptList = getSurveySubDeptListForMail(crrSurveyId, companyId, tenantId);
+					
+					sendMailList.addAll(userList);
+					sendMailList.addAll(subDeptList);
+					
+					ezEmailAsync.sendMail(sendMailList, survey, offset);
 					updateMailSentFlag(crrSurveyId, 1, companyId, tenantId);
 				}
 				
@@ -831,6 +843,21 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		List<String> userDeptList = ezSurveyDAO.getUserDepartmentIdList(map);
 		map.put("deptList", userDeptList);
+		
+		/* 2021-11-18 홍승비 - 전자설문 하위부서 허용여부 체크 > 사용자 직속부서, 겸직부서의 모든 상위부서ID를 전달  */
+		List<String> userAllDeptPath = ezSurveyDAO.getUserAllDepartmentIdList(map);
+		List<String> userAllDeptList = new ArrayList<String>();
+		Set<String> userAllDeptSet = new HashSet<String>();
+		
+		// 상위부서를 전부 포함하는 부서ID+회사ID를 리스트에 담아 쿼리에 전달함 (중복은 set으로 제거)
+		if (userAllDeptPath.size() > 0) {
+			for (int i = 0; i < userAllDeptPath.size(); i++) {
+				userAllDeptSet.addAll(Arrays.asList(userAllDeptPath.get(i).split(",")));
+			}
+		}
+		userAllDeptList.addAll(userAllDeptSet);
+		map.put("allDeptList", userAllDeptList);
+		
 		List<Long> result         = ezSurveyDAO.getReceivedSurveyList(map);
 		Set<Long> setSurveyIds    = new HashSet<>(result);
 		result.clear();
@@ -1526,6 +1553,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		participant.setUserName2(user.getUserName2());
 	}
 	
+	/* 2021-12-07 홍승비 - 전자설문 대상자가 부서인 경우, 삭제한 부서 정보에 접근하지 않도록 수정 */
 	private void setSurveyDeptInfo(SurveyParticipantVO participant, String primary) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", participant.getTenantId());
@@ -1533,14 +1561,16 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		map.put("primary", primary);
 		
 		SimpleDeptVO dept = ezSurveyDAO.getSurveyDeptInfo(map);
-		participant.setDeptId(dept.getDeptId());
-		participant.setDeptName(dept.getDeptName());
-		participant.setDeptName1(dept.getDeptName());
-		participant.setDeptName2(dept.getDeptName2());
-		participant.setEmail(dept.getMail());
-		participant.setUserName(dept.getDeptName());
-		participant.setUserName1(dept.getDeptName());
-		participant.setUserName2(dept.getDeptName2());
+		if (dept != null) {
+			participant.setDeptId(dept.getDeptId());
+			participant.setDeptName(dept.getDeptName());
+			participant.setDeptName1(dept.getDeptName());
+			participant.setDeptName2(dept.getDeptName2());
+			participant.setEmail(dept.getMail());
+			participant.setUserName(dept.getDeptName());
+			participant.setUserName1(dept.getDeptName());
+			participant.setUserName2(dept.getDeptName2());
+		}
 	}
 	
 	private List<SimpleUserVO> getAllMembersOfCompany(String companyId, String primary, int tenantId) {
@@ -1564,14 +1594,47 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 
 	@Override
 	public List<SurveyParticipantVO> getSurveyParticipantListForMail(long surveyId, String companyId, int tenantId) {
-		logger.debug("getTodaySurveyList started.");
+		logger.debug("getSurveyParticipantListForMail started.");
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("surveyId", surveyId);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		
-		logger.debug("getTodaySurveyList ended.");
+		logger.debug("getSurveyParticipantListForMail ended.");
 		return ezSurveyDAO.getSurveyParticipantListForMail(map);
+	}
+	
+	/* 2021-11-22 홍승비 - 특정 전자설문ID에 대하여 하위부서 허용여부가 Y인 부서/회사 소속원들을 리턴 */
+	@Override
+	public List<SurveyParticipantVO> getSurveySubDeptListForMail(long surveyId, String companyId, int tenantId) {
+		logger.debug("getSurveySubDeptListForMail started.");
+		
+		List<SurveyParticipantVO> result = new ArrayList<SurveyParticipantVO>();
+		Set<SurveyParticipantVO> tempSet = new HashSet<SurveyParticipantVO>();
+		
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_SURVEYID", surveyId);
+		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyId);
+		
+		// 특정 전자설문ID에 대하여 하위부서 허용여부가 Y인 부서/회사 대상자 ID 리스트로 리턴
+		List<String> allSubDeptIDList = ezSurveyDAO.getSurveySubDeptListForMail(map);
+		if (allSubDeptIDList.size() > 0) {
+			// 해당 부서/회사ID를 상위부서로 가지는 하위부서 소속원들을 result에 포함 (겸직자 포함)
+			for (int i = 0; i < allSubDeptIDList.size(); i++) {
+				map.put("v_UPPERDEPTID", allSubDeptIDList.get(i));
+				
+				List<SurveyParticipantVO> lowerDeptVO = ezSurveyDAO.getSurveyLowerDeptUsersForMail(map);
+				if (lowerDeptVO.size() > 0) {
+					tempSet.addAll(lowerDeptVO);
+				}
+			}
+		}
+		
+		result.addAll(tempSet);
+		
+		logger.debug("getSurveySubDeptListForMail ended.");
+		return result;
 	}
 	
 	@Override
@@ -1621,7 +1684,20 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		List<String> userDeptList = ezSurveyDAO.getUserDepartmentIdList(map);
 		map.put("deptList", userDeptList);
-
+		
+		/* 2021-11-19 홍승비 - 전자설문 하위부서 허용여부 체크 > 사용자 직속부서, 겸직부서의 모든 상위부서ID를 전달  */
+		List<String> userAllDeptPath = ezSurveyDAO.getUserAllDepartmentIdList(map);
+		List<String> userAllDeptList = new ArrayList<String>();
+		Set<String> userAllDeptSet = new HashSet<String>();
+		
+		if (userAllDeptPath.size() > 0) {
+			for (int i = 0; i < userAllDeptPath.size(); i++) {
+				userAllDeptSet.addAll(Arrays.asList(userAllDeptPath.get(i).split(",")));
+			}
+		}
+		userAllDeptList.addAll(userAllDeptSet);
+		map.put("allDeptList", userAllDeptList);
+		
 		String offset = userInfo.getOffSet();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String timeUTC = commonUtil.getDateStringInUTC(formatter.format(new Date()), offset, true);
