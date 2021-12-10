@@ -439,6 +439,12 @@
 		    }
 		    
 		    function returnvalue(strXML) {
+		    	/* 2021-12-08 홍승비 - 동영상 게시물 동영상 업로드 시 서버단에서도 이미지 확장자 체크 진행 */
+				if (strXML == "UPLOAD_EXT_ERROR") {
+			        alert("<spring:message code ='ezAttitude.t260' />"); // 허용하지 않는 확장자입니다.
+					return;
+				}
+		    	
 		        ImgaeReturnXml = loadXMLString(strXML);
 		        var nodes = SelectNodes(ImgaeReturnXml, "ROOT/NODES/NODE");
 		        

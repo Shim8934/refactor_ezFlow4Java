@@ -2537,6 +2537,16 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String currentDate = commonUtil.getTodayUTCTime("yyyyMMddHHmmss");
 		String fileExt = multiFile.getOriginalFilename().substring(multiFile.getOriginalFilename().lastIndexOf("."));
 		
+		/* 2021-12-08 홍승비 - 전자결재 관인대장, 부서직인대장 업로드 시 서버단에서도 이미지 확장자 체크 진행 */
+		String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
+		logger.debug("sealImageUpload file extension is : " + fileExt.substring(1));
+		if (commonUtil.checkImgExtension(fileExt.substring(1)) == false || (!useExtension.equals("*") && useExtension.toLowerCase().indexOf(fileExt.substring(1).toLowerCase()) < 0)) {
+			logger.debug("sealImageUpload failed, checkImgExtension return false");
+			
+			model.addAttribute("msg", "UPLOAD_EXT_ERROR");
+			return "json";
+		}
+		
 		File dir = new File(commonUtil.detectPathTraversal(realPath + dirPath));
 		
         if (!dir.exists()) {
@@ -2555,6 +2565,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("fileName", fileName);
 		model.addAttribute("path", dirPath + commonUtil.separator);
+		model.addAttribute("msg", "OK");
 		
 		logger.debug("sealImageUpload ended.");
 		

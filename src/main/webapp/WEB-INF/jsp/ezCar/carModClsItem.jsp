@@ -241,17 +241,24 @@
          var xhr = new XMLHttpRequest();
          function btn_AttachAdd_onclick() {
             var extension = document.getElementById("file1").value;
-               extension = extension.substring(extension.lastIndexOf(".") + 1, extension.length);
+			extension = extension.substring(extension.lastIndexOf(".") + 1, extension.length);
             var check = false;
-              check = compareExtension(check, extension);
+			check = compareExtension(check, extension);
               
-              // 첨부파일 확장자 체크(이미지만 가능)
-              if (!check) {
-                 document.getElementById("file1").files[0] = "";
-                 alert("<spring:message code='ezCommunity.lhj03'/>");
-                 return;
-              }
+			// 첨부파일 확장자 체크(이미지만 가능)
+             if (!check) {
+                document.getElementById("file1").files[0] = "";
+                alert("<spring:message code='ezCommunity.lhj03'/>");
+                return;
+             }
               
+			/* 2021-12-08 홍승비 - 차량등록 이미지 업로드 시 서버단에서도 이미지 확장자 체크 진행 (실제 파일 업로드 이전에 ajax로 체크) */
+			if (checkImgExtension(extension) == "UPLOAD_EXT_ERROR") {
+				document.getElementById("file1").files[0] = "";
+				alert("<spring:message code ='ezAttitude.t260' />"); // 허용하지 않는 확장자입니다.
+				return;
+			}
+			
               var filelist = document.getElementById("file1").files;
               
              // 이미지 크기 2MB 제한 체크
@@ -333,6 +340,7 @@
                }
             }
          }
+         
       </script>
    </head>
    <body class="popup"  style="height:100%">

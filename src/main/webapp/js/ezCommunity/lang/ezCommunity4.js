@@ -47,3 +47,6 @@ var strLangLHM01 = "자를 넘을 수 없습니다.";
 
 //2018-01-12 강민수92
 var strLang85 = "그림파일을 업로드 해야 합니다.";
+
+/* 2021-12-09 홍승비 - 확장자 관련 메세지 추가 */
+var srtLangHSBEx01 = "Unacceptable extension.";

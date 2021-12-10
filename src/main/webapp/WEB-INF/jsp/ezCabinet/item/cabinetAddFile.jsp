@@ -49,6 +49,7 @@
 		<input type="file" id="fileBttn" multiple="multiple" style="display: none;">
 		<iframe name="attachFrame" id="attachFrame" style="display: none;"></iframe>
 		
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezCabinet.lang', 'msg')          }"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetFile.js')   }"></script>

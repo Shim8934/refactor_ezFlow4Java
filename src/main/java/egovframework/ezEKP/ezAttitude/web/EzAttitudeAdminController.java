@@ -2377,6 +2377,19 @@ public class EzAttitudeAdminController {
 		Map<String, MultipartFile> files = request.getFileMap();
 		MultipartFile tempFile =  files.get("excelFile");
 		
+		/* 2021-12-09 홍승비 - 파일 업로드 시 서버단에서도 확장자 체크 진행 */
+		String fileExt = tempFile.getOriginalFilename().substring(tempFile.getOriginalFilename().lastIndexOf(".") + 1);
+		String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
+		
+		if (!fileExt.equals("xls") || (!useExtension.equals("*") && useExtension.toLowerCase().indexOf(fileExt.toLowerCase()) < 0)) {
+			LOGGER.debug("annualExcelUpload ended, xls check failed");
+			
+			String resultStr = "{\"status\":\"UPLOAD_EXT_ERROR\"}";
+			JSONParser jp         = new JSONParser();
+			JSONObject resultBody = (JSONObject) jp.parse(resultStr);
+			return resultBody;
+		}
+		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = "";
 		url = gwServerUrl + "/rest/ezattitude/annualExcelUpload";

@@ -44,3 +44,6 @@ var strLangkhj28 = "우수사원을 등록해주세요.";
 var strLangkhj29 = "중복 등록 또는 등록 실패입니다.";
 var strLangkhj30 = "저장했습니다.";
 var strLangkhj31 = "삭제하는 도중 오류 발생.";
+
+/* 2021-12-09 홍승비 - 확장자 관련 메세지 추가 */
+var srtLangHSBEx01 = "허용하지 않는 확장자입니다.";

@@ -771,5 +771,53 @@ public class EzCommonController extends EgovFileMngUtil{
 		result.put("fileList", jsonArr);
 		logger.debug("attachWebFolderFile ended.");
 		return result;
-	}	
+	}
+	
+	/**
+	 * 2021-12-09 홍승비 - 파일 업로드 시 확장자 체크 메서드 분리 (ajax 호출용, USE_FileExtension만 체크)
+	 * */
+	@RequestMapping(value = "/ezCommon/checkUseFileExtension.do", method = RequestMethod.GET)
+	@ResponseBody
+	public String checkUseFileExtension(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+		logger.debug("checkUseFileExtension started.");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
+		String fileExt = request.getParameter("fileExt");
+		String result = "";
+		
+		logger.debug("checkUseFileExtension file extension is : " + fileExt);
+		if (!useExtension.equals("*") && useExtension.toLowerCase().indexOf(fileExt.toLowerCase()) < 0) {
+			result = "UPLOAD_EXT_ERROR";
+		} else {
+			result = "OK";
+		}
+		
+		logger.debug("checkUseFileExtension ended, result = " + result);
+		return result;
+	}
+	
+	/**
+	 * 2021-12-09 홍승비 - 이미지 업로드 시 확장자 체크 메서드 분리 (ajax 호출용, USE_FileExtension을 포함)
+	 * */
+	@RequestMapping(value = "/ezCommon/checkImgExtension.do", method = RequestMethod.GET)
+	@ResponseBody
+	public String checkImgExtension(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+		logger.debug("checkImgExtension started.");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
+		String fileExt = request.getParameter("fileExt");
+		String result = "";
+		
+		logger.debug("checkImgExtension file extension is : " + fileExt);
+		if (commonUtil.checkImgExtension(fileExt) == false || (!useExtension.equals("*") && useExtension.toLowerCase().indexOf(fileExt.toLowerCase()) < 0)) {
+			result = "UPLOAD_EXT_ERROR";
+		} else {
+			result = "OK";
+		}
+		
+		logger.debug("checkImgExtension ended, result = " + result);
+		return result;
+	}
 }

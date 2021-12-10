@@ -1969,3 +1969,37 @@ function getControlList() {
 
 	return controls;
 }
+
+/* 2021-12-09 홍승비 - 파일 업로드 시 서버단에서 USE_FileExtension 확장자 체크하는 함수 추가 */
+function checkUseFileExtension(pFileExt) {
+	var res = "";
+	
+	$.ajax({
+		type : "GET",
+		async : false,
+		data : {fileExt : pFileExt},
+		url : "/ezCommon/checkUseFileExtension.do",
+		success : function(result) {
+			res = result;
+		},
+		error : function(){}
+	});
+	return res;
+}
+
+/* 2021-12-09 홍승비 - 이미지 업로드 시 서버단에서 확장자 체크하는 함수 추가 (USE_FileExtension 체크 포함) */
+function checkImgExtension(pFileExt) {
+	var res = "";
+	
+	$.ajax({
+		type : "GET",
+		async : false,
+		data : {fileExt : pFileExt},
+		url : "/ezCommon/checkImgExtension.do",
+		success : function(result) {
+			res = result;
+		},
+		error : function(){}
+	});
+	return res;
+}

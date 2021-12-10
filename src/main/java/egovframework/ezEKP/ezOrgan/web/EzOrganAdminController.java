@@ -2164,9 +2164,17 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			logger.debug("## " + multiFile.getName());
 			fileName = fileName.replace("+", "%2b");
 			fileName = fileName.replace(";", "%3b");
-			String extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.lastIndexOf(".") + 1 + 3);
+			String extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
 
-			logger.debug("file extension is : " + extension);
+			/* 2021-12-08 홍승비 - 전자결재 서명 업로드 시 서버단에서도 이미지 확장자 체크 진행 */
+			String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
+			logger.debug("signImangeUpload file extension is : " + extension);
+			if (commonUtil.checkImgExtension(extension) == false || (!useExtension.equals("*") && useExtension.toLowerCase().indexOf(extension.toLowerCase()) < 0)) {
+				logger.debug("signImangeUpload failed, checkImgExtension return false");
+				
+				return "UPLOAD_EXT_ERROR";
+			}
+			
 			fileName = commonUtil.detectPathTraversal(userID + "_" + guid + ".");
 
 			if (mode.equals("PICTURE")) {

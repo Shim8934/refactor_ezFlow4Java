@@ -431,6 +431,14 @@ function btn_AttachAdd_onclick() {
 	document.getElementById("cnt").value = document.getElementById("form").file1.files.length;
 	guid = "{" + GetGUID() + "}";
 	
+	/* 2021-12-09 홍승비 - 퀵링크 이미지 업로드 시 서버단에서도 이미지 확장자 체크 진행 */
+	var fileName = document.getElementById("form").file1.files[0].name;
+	var extension = fileName.substring(fileName.lastIndexOf('.') + 1, fileName.lenght);
+	if (checkImgExtension(extension) == "UPLOAD_EXT_ERROR") {
+		alert(srtLangHSBEx01); // 허용하지 않는 확장자입니다.
+		return false;
+	}
+	
 	var frm = document.getElementById('form');
 	frm.action = "/admin/ezPersonal/typeImageUpload.do?QId=" + encodeURIComponent(guid);
 	frm.submit();

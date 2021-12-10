@@ -100,5 +100,9 @@ var CabinetMessages = {
 	strUploading : "아직 업로드 되지 않은 파일이 있습니다.",
 	strUpCancel  : "업로드가 사용자에 의해 취소되었거나 브라우저가 연결을 끊었습니다.",
 	strUpFolder  : "폴더는 업로드 할 수 없습니다.",
-	strDelete4   : "선택한 공유자 삭제하시겠습니까?"
+	strDelete4   : "선택한 공유자 삭제하시겠습니까?",
+	
+	/* 2021-12-09 홍승비 - 확장자 관련 메세지 추가 */
+	srtLangHSBEx01 : "허용하지 않는 확장자입니다.",
+	srtLangHSBEx02 : "업로드 제한 확장자 파일이 있습니다."
 }

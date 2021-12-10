@@ -120,9 +120,9 @@
 	            }
 	            if (fileval != "") {
 	                var filename = fileval.substring(fileval.lastIndexOf("\\") + 1, fileval.length);
-	                var extension = fileval.split(".");
+	                var extension = filename.substring(filename.lastIndexOf(".") + 1, filename.length);
 	                var check = "false";
-	                check = compareExtension(check, extension[extension.length - 1]);
+	                check = compareExtension(check, extension);
 	                
 	                if (check == "false") {
 	                    alert(filename + strLang40);
@@ -130,6 +130,14 @@
 	                    document.getElementById(printspanid).innerText = "";
 	                    return;
 	                }
+	                
+	                /* 2021-12-08 홍승비 - 커뮤니티 상단/썸네일 이미지 업로드 시 서버단에서도 이미지 확장자 체크 진행 */
+	                if (checkImgExtension(extension) == "UPLOAD_EXT_ERROR") {
+						document.getElementById(fileid).value = "";
+						document.getElementById(printspanid).innerText = "";
+						alert("<spring:message code ='ezAttitude.t260' />"); // 허용하지 않는 확장자입니다.
+						return ;
+					}
 	                
 	                document.getElementById(printspanid).innerText = filename;
 	            } else {

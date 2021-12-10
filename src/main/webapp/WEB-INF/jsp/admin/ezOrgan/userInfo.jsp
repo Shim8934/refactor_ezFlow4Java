@@ -293,22 +293,24 @@
 		        }
 		    }
 		    function Tab1_NewTabIni(pTabNodeID) {
-		        for (var i = 0; i < document.getElementById(pTabNodeID).childNodes.length; i++) {
-		            if (document.getElementById(pTabNodeID).childNodes[i].nodeName == "P") {
-		                if (document.getElementById(pTabNodeID).childNodes[i].childNodes[0].nodeName == "SPAN") {
-		                    document.getElementById(pTabNodeID).childNodes[i].childNodes[0].onmouseover = function () { Tab1_MouserOver(this); };;
-		                    document.getElementById(pTabNodeID).childNodes[i].childNodes[0].onmouseout = function () { Tab1_MouserOut(this); };;
-		                    document.getElementById(pTabNodeID).childNodes[i].childNodes[0].onclick = function () { Tab1_MouseClick(this); };;
-
-		                    if (Tab1_flag) {
-		                        document.getElementById(pTabNodeID).childNodes[i].childNodes[0].className = "tabon";
-		                        Tab1_SelectID = document.getElementById(pTabNodeID).childNodes[i].childNodes[0].id;
-		                        Tab1_flag = false;
-		                    }
-
-		                }
-		            }
-		        }
+		    	if (document.getElementById(pTabNodeID) != null) {
+			        for (var i = 0; i < document.getElementById(pTabNodeID).childNodes.length; i++) {
+			            if (document.getElementById(pTabNodeID).childNodes[i].nodeName == "P") {
+			                if (document.getElementById(pTabNodeID).childNodes[i].childNodes[0].nodeName == "SPAN") {
+			                    document.getElementById(pTabNodeID).childNodes[i].childNodes[0].onmouseover = function () { Tab1_MouserOver(this); };;
+			                    document.getElementById(pTabNodeID).childNodes[i].childNodes[0].onmouseout = function () { Tab1_MouserOut(this); };;
+			                    document.getElementById(pTabNodeID).childNodes[i].childNodes[0].onclick = function () { Tab1_MouseClick(this); };;
+	
+			                    if (Tab1_flag) {
+			                        document.getElementById(pTabNodeID).childNodes[i].childNodes[0].className = "tabon";
+			                        Tab1_SelectID = document.getElementById(pTabNodeID).childNodes[i].childNodes[0].id;
+			                        Tab1_flag = false;
+			                    }
+	
+			                }
+			            }
+			        }
+		    	}
 		    }
 		    
 		    function Check_ID(pValue) {

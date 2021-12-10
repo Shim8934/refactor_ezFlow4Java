@@ -44,3 +44,6 @@ var strLangkhj28 = "登録できます";
 var strLangkhj29 = "重複登録であるか、登録に失敗しました。";
 var strLangkhj30 = "保存しました。";
 var strLangkhj31 = "エラーが発生しました。";
+
+/* 2021-12-09 홍승비 - 확장자 관련 메세지 추가 */
+var srtLangHSBEx01 = "非対応拡張子です。";

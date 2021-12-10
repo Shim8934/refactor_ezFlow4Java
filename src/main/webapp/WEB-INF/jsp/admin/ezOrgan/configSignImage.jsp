@@ -226,6 +226,12 @@
 		                alert("<spring:message code='main.t4000'/>");
 		                return;
 		            }
+		            /* 2021-12-09 홍승비 - 서명 이미지 업로드 시 서버단에서도 이미지 확장자 체크 진행 (실제 파일 업로드 이전에 ajax로 체크) */
+					if (checkImgExtension(extension) == "UPLOAD_EXT_ERROR") {
+						document.getElementById("file1").value = "";
+						alert("<spring:message code ='ezAttitude.t260' />"); // 허용하지 않는 확장자입니다.
+						return;
+					}
 		            
 		            var fd = new FormData();
 		            
