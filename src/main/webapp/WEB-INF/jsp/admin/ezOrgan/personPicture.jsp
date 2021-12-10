@@ -151,7 +151,13 @@
 				    if (!check) {
 		    		    alert("<spring:message code='ezPersonal.t206'/>" + " <spring:message code='ezPersonal.t200'/>");
 		        		document.getElementById("file1").value = "";
-		    		} else {
+		    		}
+					/* 2021-12-09 홍승비 - 사원 이미지 업로드 시 서버단에서도 이미지 확장자 체크 진행 (실제 파일 업로드 이전에 ajax로 체크) */
+					else if (checkImgExtension(extension) == "UPLOAD_EXT_ERROR") {
+						document.getElementById("file1").value = "";
+						alert("<spring:message code ='ezAttitude.t260' />"); // 허용하지 않는 확장자입니다.
+					}
+					else {
 			            var fd = new FormData();		            
 			            fd.append("file1", document.getElementById("form").file1.files[0]);
 			          

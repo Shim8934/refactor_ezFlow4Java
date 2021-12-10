@@ -109,6 +109,11 @@
 	    	    }
 	    	    
 	    	    rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
+	    	    
+	    	    /* 2021-11-10 홍승비 - 커뮤니티 팝업홈의 좌측 게시판 신규 게시물 아이콘 갱신 */
+				if (window.opener.parent.location.href.indexOf("ezCommunity/commHome/popupCommHome.do") > -1 && typeof(window.opener.parent.applyIsNewIconAll) == "function") {
+					window.opener.parent.applyIsNewIconAll(); // 리스트, 팝업홈 메인에서 읽기창 접근
+				}
 	    	}
 			
 	    	/* 2018-08-03 홍승비 - 커뮤니티 게시물(포토게시물 제외) 리사이즈 수정*/
@@ -202,6 +207,12 @@
 									}
 								}
 			 			    	window.opener.location.reload(true);
+			 			    	
+			 			    	/* 2021-11-10 홍승비 - 커뮤니티 팝업홈의 좌측 게시판 신규 게시물 아이콘 갱신 */
+			 					if (window.opener.parent.location.href.indexOf("ezCommunity/commHome/popupCommHome.do") > -1 && typeof(window.opener.parent.applyIsNewIconAll) == "function") {
+			 						window.opener.parent.applyIsNewIconAll();
+			 					}
+			 			    	
 			 			    } catch (e) {
 			 			    }
 			 			    
@@ -230,6 +241,11 @@
 							}
 						}
 	 			    	window.opener.refresh_onclick();
+	 			    	
+	 			    	/* 2021-11-10 홍승비 - 커뮤니티 팝업홈의 좌측 게시판 신규 게시물 아이콘 갱신 */
+	 					if (window.opener.parent.location.href.indexOf("ezCommunity/commHome/popupCommHome.do") > -1 && typeof(window.opener.parent.applyIsNewIconAll) == "function") {
+	 						window.opener.parent.applyIsNewIconAll();
+	 					}
 	 			    } catch (e) {
 	 			    }
 	 			    
@@ -280,6 +296,11 @@
 	            xmlhttp = null;
 	            try {
 	            	window.opener.location.reload(true);
+	            	
+ 			    	/* 2021-11-10 홍승비 - 커뮤니티 팝업홈의 좌측 게시판 신규 게시물 아이콘 갱신 */
+ 					if (window.opener.parent.location.href.indexOf("ezCommunity/commHome/popupCommHome.do") > -1 && typeof(window.opener.parent.applyIsNewIconAll) == "function") {
+ 						window.opener.parent.applyIsNewIconAll();
+ 					}
 	            } catch (e) {
 	            }
 	            window.close();

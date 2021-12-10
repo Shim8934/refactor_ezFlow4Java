@@ -100,12 +100,16 @@
 	   					ShowMailProgress();
 					},
 					success : function(data) {
-	            		if (data.status+"" == "ok") {
+	            		if (data.status + "" == "ok") {
 	            			alert(data.data+"");
 	            			opener.getAnnualList();
 	            			HiddenMailProgress();
 	   						window.close();
+	            		} else if (data.status + "" == "UPLOAD_EXT_ERROR") {
+	            			HiddenMailProgress();
+	            			alert("<spring:message code='ezAttitude.t260' />");
 	            		} else {
+	            			HiddenMailProgress();
 	            			alert("<spring:message code='ezAttitude.t175' />");
 	            		}
 	            	},

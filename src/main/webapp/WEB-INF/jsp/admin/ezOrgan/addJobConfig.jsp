@@ -781,6 +781,9 @@
     		            bFlag = dept[0] == orgDeptId ? true : false;
 		        	} */
 		        	
+		        	// 중복겸직가능
+		        	bFlag = false;
+		        	
 		            if (bFlag) {
 		                alert(strLang25);
 		                return;

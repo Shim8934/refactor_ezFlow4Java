@@ -305,6 +305,10 @@
 											VAPRDOINGDOCLIST  
 										WHERE 
 											APRMEMBERID = #proxyList[].id#
+										AND
+											APRMEMBERDEPTID = #proxyList[].dept#
+                						AND
+                							APRMEMBERJOBTITLE = #proxyList[].title#
 										<![CDATA[
 										AND 
 											APRTYPE <> '015'
@@ -345,6 +349,8 @@
 												APRMEMBERID = #proxyList[].id#
 											AND
 												aprmemberdeptid = #proxyList[].dept#
+                							AND
+                								APRMEMBERJOBTITLE = #proxyList[].title#
 											AND
 												(aprstate = '002' OR aprstate = '005' OR aprstate = '000')
 											AND
@@ -384,6 +390,10 @@
 											VENDCHAMJODOCINFO 
 										WHERE 
 											APRMEMBERID = #proxyList[].id#
+										AND
+											APRMEMBERDEPTID = #proxyList[].dept#
+                						AND
+                							APRMEMBERJOBTITLE = #proxyList[].title#
 										AND 
 											APRTYPE <> '015'
 										AND
@@ -423,6 +433,8 @@
 															aprmemberid = #proxyList[].id#
 														AND
 															aprmemberdeptid = #proxyList[].dept#
+                										AND
+                											APRMEMBERJOBTITLE = #proxyList[].title#
 														AND	
 															APRTYPE = '007'
 														AND 
@@ -4262,13 +4274,15 @@
             AND 
             	(((TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# AND TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#)
             AND 
-            	(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'))
+            	(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '011'))
             ]]>	
             <isEqual property="v_USERFLAG" compareValue="admin">
-             OR 
-             	(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
+                OR
+                (TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
                 AND
-                    TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
+                TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
+                AND
+                PROCESSORID IS NULL)
             </isEqual>
             	 ) ORDER BY PROCESSDATE $v_BASICORDER$
 		</isEqual>
@@ -8262,7 +8276,7 @@
 						SELECT 
 							TBL_APRDOCINFO.ORGDOCID,
 		      				TBL_APRDOCINFO.HREF, 
-		      				TBL_APRDOCINFO.HASOPINIONYN, 
+		      				TBL_APRDOCINFO.HASOPINIONYN,
 		      				TBL_APRDOCINFO.HASATTACHYN,
 		      				TBL_APRDOCINFO.ISPUBLIC,
 		      				TBL_APRDOCINFO.DOCTYPE, 
@@ -8389,7 +8403,7 @@
 	      		AND 
 	      			(((TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# AND TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#)
 	      		AND 
-	      			(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'))
+	      			(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '011'))
 	      		AND
 	      			TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
 	      		AND
@@ -8399,11 +8413,9 @@
 	      		OR 
 	      			(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
 	         	AND 
-	         		TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014'))
-	         	OR 
-	         		(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
-	         	AND 
-	         		 TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015')
+	         		TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
+	         	AND
+                    PROCESSORID IS NULL)
 	      	</isEqual>
 	      	<isEqual property="v_aprFlag" compareValue="G">
 		     	OR
@@ -11468,16 +11480,18 @@
 	   		AND 
 	   			(((TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# AND TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#)
 	   		AND 
-	   			(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'))
+	   			(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '011'))
 	   			
    		]]>
    		<isEqual property="v_USERFLAG" compareValue="admin">
-   			OR 
-   				(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
+            OR
+                (TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
+            AND
+             TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
                 AND
-                    TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015'))
-      		AND	
-		   		TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
+                    PROCESSORID IS NULL)
+            AND
+                TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
    		</isEqual>
    		<isEqual property="v_aprFlag" compareValue="G">
 	     	OR
@@ -13152,6 +13166,10 @@
 				VAPRDOINGDOCLIST  
 			WHERE 
 				APRMEMBERID = #proxyList[].id#
+			AND
+				APRMEMBERDEPTID = #proxyList[].dept#
+            AND
+            	APRMEMBERJOBTITLE = #proxyList[].title#
 			<![CDATA[
 			AND 
 				APRTYPE <> '015'
@@ -13190,7 +13208,10 @@
 					tbl_aprlineinfo
 				WHERE
 					APRMEMBERID = #proxyList[].id#
-                AND APRMEMBERDEPTID = #proxyList[].dept#
+                AND
+                	APRMEMBERDEPTID = #proxyList[].dept#
+            	AND
+            		APRMEMBERJOBTITLE = #proxyList[].title#
                 AND
 								(aprstate = '002' OR aprstate = '005' OR aprstate = '000')
 							AND
@@ -13229,6 +13250,10 @@
 				VENDCHAMJODOCINFO 
 			WHERE 
 				APRMEMBERID = #proxyList[].id#
+			AND
+				APRMEMBERDEPTID = #proxyList[].dept#
+            AND
+            	APRMEMBERJOBTITLE = #proxyList[].title#
 			AND 
 				APRTYPE <> '015'
 			AND
@@ -13268,6 +13293,8 @@
 								APRMEMBERID = #proxyList[].id#
 							AND
 								APRMEMBERDEPTID = #proxyList[].dept#
+            				AND
+            					APRMEMBERJOBTITLE = #proxyList[].title#
 							AND
 								APRTYPE = '007'
 							AND
@@ -15077,17 +15104,21 @@
 	      			AND 
 	      				(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012'
 	      			OR 
-	      				 TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'))
+	      				 TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'
+	      			OR 
+	      				 TBL_APRRECEIPTPROCESSINFO.APRSTATE = '011'))
 	      	AND
 	      		TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
 			AND
 	      		TBL_APRRECEIPTPROCESSINFO.COMPANYID = #companyID#
 	      			]]>
 	     <isEqual property="v_SUSINADMIN" compareValue="Y">
-	     OR 
-	     	(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)  AND  TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014')) 
-          OR 
-          	(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$) AND   TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015')
+             OR
+             (TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
+             AND
+             TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
+             AND
+             PROCESSORID IS NULL)
 	     </isEqual>
 	     <isEqual property="v_aprFlag" compareValue="G">
 	     	OR
@@ -16938,7 +16969,9 @@
                 AND 
                 	(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012'
                 OR 
-                	TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'))
+                	TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'
+                OR
+                    TBL_APRRECEIPTPROCESSINFO.APRSTATE = '011'))
                 AND 
                 	TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
 				AND
@@ -16972,7 +17005,10 @@
 			 	OR
 			 		(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN (#v_DEPTIDS#)
                 AND
-                    TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015'))
+                    TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
+                AND
+                    PROCESSORID IS NULL
+                )
 			</isEqual>
 				)
 		</isEqual>
@@ -31292,7 +31328,8 @@
 		  SELECT 
 		  		cn as id,
 		  		department as dept,
-		  		extensionattribute5 as bujaeInfo
+		  		extensionattribute5 as bujaeInfo,
+		  		title
 		  FROM 
 		  		TBL_USERMASTER
 		  WHERE 
@@ -31304,7 +31341,8 @@
 		  SELECT 
 		  		cn as id,
 		  		deptid as dept,
-		  		proxy as bujaeInfo
+		  		proxy as bujaeInfo,
+		  		title
 		  FROM 
 		  		TBL_ADDJOBMASTER
 		  WHERE 
@@ -32805,6 +32843,11 @@
 								<iterate property="proxyList" open="(" close=")" conjunction=",">
 									#proxyList[].dept#
 								</iterate>
+							AND
+								L.aprmemberjobtitle IN
+								<iterate property="proxyList" open="(" close=")" conjunction=",">
+									#proxyList[].title#
+								</iterate>
 							)
 					</isNotEmpty>
 				)
@@ -32868,6 +32911,11 @@
 								L.APRMEMBERDEPTID IN
 								<iterate property="proxyList" open="(" close=")" conjunction=",">
 									#proxyList[].dept#
+								</iterate>
+							AND
+								L.aprmemberjobtitle IN
+								<iterate property="proxyList" open="(" close=")" conjunction=",">
+									#proxyList[].title#
 								</iterate>
 							)
 					</isNotEmpty>
@@ -33063,7 +33111,7 @@
 		   		AND 
 		   			(((TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# AND TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#)
 		   		AND 
-		   			(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'))
+		   			(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '011'))
 		   			
 	   		<isEqual property="v_USERFLAG" compareValue="admin">
 	   			OR 
@@ -33073,8 +33121,11 @@
 	   					<iterate property="v_DEPTIDS" open="(" close=")" conjunction=",">
 	   						#v_DEPTIDS[]#
 	   					</iterate>
-                        AND
-                            TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015'))
+	   				AND
+	   					TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
+                    AND
+                        PROCESSORID IS NULL
+	   				)
 	   		</isEqual>
 	   		<isEqual property="v_aprFlag" compareValue="G">
 		     	OR
@@ -33521,6 +33572,11 @@
 								<iterate property="proxyList" open="(" close=")" conjunction=",">
 									#proxyList[].dept#
 								</iterate>
+							AND
+								L.aprmemberjobtitle IN
+								<iterate property="proxyList" open="(" close=")" conjunction=",">
+									#proxyList[].title#
+								</iterate>
 							)
 					</isNotEmpty>
 				)
@@ -33584,6 +33640,11 @@
 								L.APRMEMBERDEPTID IN
 								<iterate property="proxyList" open="(" close=")" conjunction=",">
 									#proxyList[].dept#
+								</iterate>
+							AND
+								L.aprmemberjobtitle IN
+								<iterate property="proxyList" open="(" close=")" conjunction=",">
+									#proxyList[].title#
 								</iterate>
 							)
 					</isNotEmpty>

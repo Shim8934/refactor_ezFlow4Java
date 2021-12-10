@@ -358,17 +358,25 @@
 		    
 		    //이미지 파일 컨트롤러에 보내기
 		    function btn_attach(){
-		    	var extension = document.getElementById("file1").value.split('.');
-		    	console.log(extension);
+		    	var extension = document.getElementById("file1").value;
+		    	extension = extension.substring(extension.lastIndexOf(".") + 1, extension.length);
 		    	
 		    	if (extension.length >= 2) {
 			        var check = false;
-			        check = compareExtension(check, extension[1]);
+			        check = compareExtension(check, extension);
 			        
 			       if (!check) {
 			            alert("<spring:message code = 'ezPersonal.t206' />" + " <spring:message code = 'ezPersonal.t200' />");
 			            document.getElementById("file1").value = "";
+			            return;
 			        }
+			       
+			       /* 2021-12-09 홍승비 - 슬라이드 이미지 업로드 시 서버단에서도 이미지 확장자 체크 진행 */
+	   				if (checkImgExtension(extension) == "UPLOAD_EXT_ERROR") {
+	   					alert("<spring:message code ='ezAttitude.t260' />"); // 허용하지 않는 확장자입니다.
+	   					document.getElementById("file1").value = "";
+	   					return;
+	   				}
 			        
 			        var frm = document.getElementById('form');
 			        
@@ -839,7 +847,7 @@
 	   
 		<iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 	     <form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm" style="width:1px;height:1px">
-	        <input type="file" name="file1" id="file1" onchange="btn_attach()" style="display: none;" multiple="false" />
+	        <input type="file" name="file1" id="file1" onchange="btn_attach()" style="display: none;" multiple="false" accept="image/*" />
 	        <input type="hidden" name="boardid" id="boardid" />
 	        <input type="hidden" name="maxsize" id="maxsize" />
 	        <input type="hidden" name="mode" id="mode" value="SLIDERIMAGE"/>

@@ -20,6 +20,7 @@
 		var versionuse = "${boardProp.versionUse}";
 		var checkUse = "${boardProp.checkUse}";
 		var iMenuNum = 1;
+		var guBun = "<c:out value='${boardProp.gubun}'/>";
 		
 		//ShowModalDialog Chrome 적용
 		(function() {
@@ -100,6 +101,33 @@
 			};
 		})();
 		
+		$(document).ready(function() {
+			/* 2021-11-15 홍승비 - 게시판 일반설정 초기 로딩 시 게시판 유형별로 메알알림 옵션 설정 */
+			if (guBun == "3") { // 포토게시판은 답변메일 사용불가
+				document.getElementById("chkNotify").checked = false;
+				document.getElementById("chkMailFGPost").disabled = false;
+				document.getElementById("chkMailFGMod").disabled = false;
+				document.getElementById("chkMailFGComment").disabled = false;
+				document.getElementById("chkNotify").disabled = true;
+			}
+			else if (guBun == "2") { // 익명게시판은 모든 알림 사용불가
+				document.getElementById("chkMailFGPost").checked = false;
+				document.getElementById("chkMailFGMod").checked = false;
+				document.getElementById("chkMailFGComment").checked = false;
+				document.getElementById("chkNotify").checked = false;
+				document.getElementById("chkMailFGPost").disabled = true;
+				document.getElementById("chkMailFGMod").disabled = true;
+				document.getElementById("chkMailFGComment").disabled = true;
+				document.getElementById("chkNotify").disabled = true;
+			}
+			else { // 일반, 그룹게시판은 모든 알림 사용가능
+				document.getElementById("chkMailFGPost").disabled = false;
+				document.getElementById("chkMailFGMod").disabled = false;
+				document.getElementById("chkMailFGComment").disabled = false;
+				document.getElementById("chkNotify").disabled = false;
+			}
+		});
+		
 		function hasSpecialCharacters(str) {
 			for(var i=0; i<str.length; i++) {
 	            if(str.charCodeAt(i) == 40 || str.charCodeAt(i) == 41 || str.charCodeAt(i) == 91 || str.charCodeAt(i) == 93 || str.charCodeAt(i) == 38 || str.charCodeAt(i) == 47) {
@@ -160,14 +188,32 @@
 			var Expires = "";
 			var gubun = "";
 			var replynotify = "";
+			var mailFG_Post = "";
+			var mailFG_Mod = "";
+			var mailFG_Comment = "";
 			
-			if(chkNotify.checked) {
+			if (chkNotify.checked) { // 답변알림
 				replynotify = "1";
 			} else {
 				replynotify = "0";
 			}
+			if (document.getElementById("chkMailFGPost").checked) { // 게시알림
+				mailFG_Post = "Y";
+			} else {
+				mailFG_Post = "N";
+			}
+			if (document.getElementById("chkMailFGMod").checked) { // 수정알림
+				mailFG_Mod = "Y";
+			} else {
+				mailFG_Mod = "N";
+			}
+			if (document.getElementById("chkMailFGComment").checked) { // 댓글알림
+				mailFG_Comment = "Y";
+			} else {
+				mailFG_Comment = "N";
+			}
 
-			if(chkGroupBoard.checked) {
+			if (chkGroupBoard.checked) {
 				gubun = "1";
 			} else if(chkAnonyBoard.checked) {
 				gubun = "2";
@@ -177,7 +223,7 @@
 				gubun = "0";
 			}
 
-			if(chkPermanent.checked) {
+			if (chkPermanent.checked) {
 				Expires = "-1";
 			} else {
 				Expires = txtExpires.value;
@@ -222,6 +268,9 @@
         				itemExpires : Expires,
         				gubun : gubun,
         				replyNotify : replynotify,
+        				mailFG_Post : mailFG_Post,
+        				mailFG_Mod : mailFG_Mod,
+        				mailFG_Comment : mailFG_Comment,
         				deleteAfter : iDeleteAfter,
         				boardColor : encodeURIComponent(brd_color),
         				versionUse : versionuse,
@@ -307,7 +356,7 @@
 		    	document.getElementById("chkGroupBoard").checked = false;
 		    }
 		    
-			if (chkNotify.checked  && chkPhotoBoard.checked) {
+/* 			if (chkNotify.checked  && chkPhotoBoard.checked) {
 				alert("<spring:message code = 'ezCommunity.t374' />");
 			    target.checked = false;
 				return;
@@ -317,6 +366,31 @@
 				alert("<spring:message code = 'ezCommunity.t375' />");
 			    target.checked = false;
 				return;
+			} */
+			
+			/* 2021-11-12 홍승비 - 메일알림 옵션 분리, 게시판 유형 별 사용불가 메일알림은 알러트가 아닌 disable로 처리 */
+			if (target.id == "chkPhotoBoard" && target.checked) { // 포토게시판은 답변메일 사용불가
+				document.getElementById("chkNotify").checked = false;
+				document.getElementById("chkMailFGPost").disabled = false;
+				document.getElementById("chkMailFGMod").disabled = false;
+				document.getElementById("chkMailFGComment").disabled = false;
+				document.getElementById("chkNotify").disabled = true;
+			}
+			else if (target.id == "chkAnonyBoard" && target.checked) { // 익명게시판은 모든 알림 사용불가
+				document.getElementById("chkMailFGPost").checked = false;
+				document.getElementById("chkMailFGMod").checked = false;
+				document.getElementById("chkMailFGComment").checked = false;
+				document.getElementById("chkNotify").checked = false;
+				document.getElementById("chkMailFGPost").disabled = true;
+				document.getElementById("chkMailFGMod").disabled = true;
+				document.getElementById("chkMailFGComment").disabled = true;
+				document.getElementById("chkNotify").disabled = true;
+			}
+			else { // 일반, 그룹게시판은 모든 알림 사용가능
+				document.getElementById("chkMailFGPost").disabled = false;
+				document.getElementById("chkMailFGMod").disabled = false;
+				document.getElementById("chkMailFGComment").disabled = false;
+				document.getElementById("chkNotify").disabled = false;
 			}
 		}
 		
@@ -608,17 +682,47 @@
 				<td><input type="text" id="txtURL" style="width:100%" value="${boardProp.url}" maxlength="150"></td>
 			</tr>
 			<tr style="${_style}">
-				<th><spring:message code = 'ezCommunity.t406' /></th>
+			<%-- 2021-11-12 홍승비 - 메일알림 옵션 분리, 게시/수정/댓글알림 추가 --%>
+				<th><spring:message code = 'ezBoard.HSBMail00' /></th>
 				<td>
 					<c:choose>
-						<c:when test="${boardProp.replyNotify == '1' }">
-							<input type=checkbox id="chkNotify" onClick="checkboardtype(event)" checked>
-							<spring:message code = 'ezCommunity.t407' />
+						<c:when test="${boardProp.mailFG_Post == 'Y' }">
+							<input type=checkbox id="chkMailFGPost" checked>
+							<spring:message code = 'ezBoard.HSBMail01' />
 						</c:when>
-						
 						<c:otherwise>
-							<input type=checkbox id="chkNotify" onClick="checkboardtype(event)">
-      						<spring:message code = 'ezCommunity.t407' />
+							<input type=checkbox id="chkMailFGPost">
+      						<spring:message code = 'ezBoard.HSBMail01' />
+						</c:otherwise>
+					</c:choose>
+					<c:choose>
+						<c:when test="${boardProp.mailFG_Mod == 'Y' }">
+							<input type=checkbox id="chkMailFGMod" checked>
+							<spring:message code = 'ezBoard.HSBMail02' />
+						</c:when>
+						<c:otherwise>
+							<input type=checkbox id="chkMailFGMod">
+      						<spring:message code = 'ezBoard.HSBMail02' />
+						</c:otherwise>
+					</c:choose>
+					<c:choose>
+						<c:when test="${boardProp.mailFG_Comment == 'Y' }">
+							<input type=checkbox id="chkMailFGComment" checked>
+							<spring:message code = 'ezBoard.HSBMail03' />
+						</c:when>
+						<c:otherwise>
+							<input type=checkbox id="chkMailFGComment">
+      						<spring:message code = 'ezBoard.HSBMail03' />
+						</c:otherwise>
+					</c:choose>
+					<c:choose>
+						<c:when test="${boardProp.replyNotify == '1' }">
+							<input type=checkbox id="chkNotify" checked>
+							<spring:message code = 'ezBoard.HSBMail04' />
+						</c:when>
+						<c:otherwise>
+							<input type=checkbox id="chkNotify">
+      						<spring:message code = 'ezBoard.HSBMail04' />
 						</c:otherwise>
 					</c:choose>
 				</td>

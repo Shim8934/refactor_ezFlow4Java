@@ -83,6 +83,7 @@
 		    var hideSusin = "<c:out value = '${hideSusin}'/>";
 		    var whoKyulYN = "<c:out value = '${whoKyulYN}'/>";
 		    var useWebHWP = "<c:out value = '${useWebHWP}'/>";
+		    var userTitle = "<c:out value = '${userInfo.title}'/>";
 		    
 		    $(function () {
 		      	if(approvalFlag == "G") {
@@ -93,11 +94,20 @@
 	        		$(".approval").css("display","");
 	        	}
 		      	
-		        if ("<c:out value = '${isSubTitle}'/>" == "true")
-		            $("#country_id").selectbox();
-		            $(".sbHolder").each(function (index) {
-		                $(this).addClass('instance');
-		            });
+		        if ("<c:out value = '${isSubTitle}'/>" == "true") {
+		        	$("#country_id option").each(function (i) {
+		        		var optionVal = this.value.split("|");
+		        		if(pDeptID == optionVal[0] && userTitle == optionVal[2]) {
+		        			$(this).attr("selected", "selected");
+		        		} else {
+		        			$(this).removeAttr("selected");
+		        		}
+		        	});
+		        	$("#country_id").selectbox();
+		        }
+	            $(".sbHolder").each(function (index) {
+	                $(this).addClass('instance');
+	            });
 		         //19.08.05 김보미 - 마우스 클릭시 볼드체   
 		         $(document).on("click", "span.list_text", function(){
 		        	 $("#left li").removeClass("on");
@@ -1081,7 +1091,7 @@
 		    var arr_userinfo = new Array();
 		    function ChangeSubtitle(obj) {
 		        var UseSelectTitle = obj.getAttribute("href").split("#")[1].split("|");
-		        if ("<c:out value = '${userInfo.deptID}'/>" != UseSelectTitle[0]) {
+		        if ("<c:out value = '${userInfo.deptID}'/>" != UseSelectTitle[0] || userTitle != UseSelectTitle[2]) {
 		            arr_userinfo[4] = UseSelectTitle[0];
 		            arr_userinfo[5] = UseSelectTitle[1];
 		            arr_userinfo[3] = UseSelectTitle[2];

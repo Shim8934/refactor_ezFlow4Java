@@ -276,12 +276,6 @@
 	</select>
 	
 	<insert id="EzWebFolderDAO_y.insertRootFolder" parameterClass="Map">
-		<selectKey keyProperty="id" resultClass="Integer">
-			SELECT NVL(MAX(to_number(FOLDER_ID)), 0) + 1
-			FROM TBL_WEBFOLDER_FOLDER 
-			WHERE TENANT_ID = #tenantId# 
-		</selectKey>
-		
 	    INSERT INTO TBL_WEBFOLDER_FOLDER (
 	    	FOLDER_ID,                 FOLDER_NAME1,              FOLDER_NAME2,
 	    	FOLDER_TYPE,               FOLDER_PATH,               FOLDER_STEP,
@@ -291,7 +285,7 @@
 	    	UPDATE_DATE,               COMPANY_ID,                TENANT_ID
 	    )
 	    SELECT
-	    	#id#,                      DISPLAYNAME,               DISPLAYNAME2,
+	    	SEQ_FOLDERID.NEXTVAL,                      DISPLAYNAME,               DISPLAYNAME2,
 	    	#folderType#,              '|' || #id# || '|',    	  0,
 	    	0,                         'root',                    'Y',
 	    	#ownerId#,                 #userId#,                  TO_DATE(#timeUTC#,'YYYY-MM-DD HH24:MI:SS'),
@@ -305,6 +299,9 @@
 		</isNotEqual>
 		WHERE CN = #ownerId#
 		AND TENANT_ID = #tenantId#
+		<selectKey keyProperty="id" resultClass="Integer">
+				SELECT SEQ_FOLDERID.currval as newFolderId FROM dual
+		</selectKey>
 	</insert>
 	
 	<select id="EzWebFolderDAO_y.getUserFolderTree" resultMap="folderTreeVO" parameterClass="Map">

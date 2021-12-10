@@ -532,11 +532,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		Document doc = commonUtil.convertStringToDocument(result);
 		
 		String userRealDeptId = ezOrganService.getUserOrgDeptId(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+		List<OrganUserVO> orgUserInfolist = ezOrganService.getOrgUserInfo(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+		String userRealTitle = orgUserInfolist.get(0).getTitle();
 		
-		if (userInfo.getDeptID().equals(userRealDeptId)) {
+		if (userInfo.getDeptID().equals(userRealDeptId) && userInfo.getTitle().equals(userRealTitle)) {
 			buJaeInfo = doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent();
 		} else {
-			buJaeInfo = ezOrganService.getAddJobProxy(userInfo.getId(), userInfo.getDeptID(), userInfo.getTenantId());
+			//buJaeInfo = ezOrganService.getAddJobProxy(userInfo.getId(), userInfo.getDeptID(), userInfo.getTenantId());
+			buJaeInfo = ezOrganService.getAddJobProxy(userInfo.getId(), userInfo.getDeptID(), userInfo.getTitle(), userInfo.getTenantId());
 		}
 		
 		if(shareUserId != null && !shareUserId.equals("")){

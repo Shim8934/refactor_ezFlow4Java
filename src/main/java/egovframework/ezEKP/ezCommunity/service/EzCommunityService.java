@@ -383,4 +383,7 @@ public interface EzCommunityService {
 
 	public String getClubConfirmType(String code, int tenantID) throws Exception;
 
+	public String getIsNewItemExists(String boardID, String userID, int tenantID) throws Exception;
+
+	public boolean checkUserInCommunity(String clubNo, String userID, int tenantID) throws Exception;
 }

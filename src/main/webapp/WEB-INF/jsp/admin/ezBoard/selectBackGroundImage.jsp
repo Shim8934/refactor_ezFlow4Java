@@ -68,13 +68,21 @@
 		        	 alert("<spring:message code='main.t4000'/>");
 		        	 return false;
 		        }
+				/* 2021-12-08 홍승비 - 게시판 배경이미지 업로드 시 서버단에서도 이미지 확장자 체크 진행 (실제 파일 업로드 이전에 ajax로 체크) */
+				if (checkImgExtension(extension) == "UPLOAD_EXT_ERROR") {
+					document.getElementById("file1").value = "";
+					document.getElementById("saveFileName").value = "";
+					alert("<spring:message code ='ezAttitude.t260' />"); // 허용하지 않는 확장자입니다.
+					return false;
+				}
+				
 		        var guid = "{" + GetGUID() + "}";
-		        document.form.guid.value = guid;	       
+		        document.form.guid.value = guid;
 		        
 		        $('#form').ajaxSubmit({
 		        	type : 'POST',
 					dataType : 'text',
-		        	url : "/admin/ezBoard/uploadBackGroundImage.do",					
+		        	url : "/admin/ezBoard/uploadBackGroundImage.do",
 					success : function(result) {
 						var splitData = result.split(",");						
 						var filePath = splitData[0];
@@ -157,8 +165,9 @@
 						 
 				         window.close();
 					}
-				}); 
+				});
 			}
+			
 	    </script>
 	</head>
 	<body class="popup" style="overflow:hidden">

@@ -349,4 +349,15 @@ public interface EzCommonService {
 	public HashMap<String, Object> getTenantConfigList(List<String> propertyNames, int tenantID) throws Exception;
 
 	public void alterTblAddjobMaster() throws Exception;
+	
+	public String getPrevPwd(int tenantID, String pCN) throws Exception;
+	
+	public int setPrevPwd(int tenantID, String pCN, String propertyValue) throws Exception;
+	
+	public void addCommMailFGColumn() throws Exception;
+
+	public void addSurveySubDeptYNColumn() throws Exception;
+
+	public void createTblScheduleComplete() throws Exception;
+	
 }

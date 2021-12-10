@@ -107,6 +107,8 @@
 			var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");
 			var defaultFontAndSize  = "${defaultFontAndSize}";
 			var mailShareId = "<c:out value = '${mailShareId}'/>";
+			var mailFG_Post = "<c:out value = '${boardInfo.mailFG_Post}'/>"; // 게시알림
+			var mailFG_Mod = "<c:out value = '${boardInfo.mailFG_Mod}'/>"; // 수정알림
 			
 			<c:if test="${isCrossBrowser != true}">
 			    var objMHT = new ActiveXObject("MhtFormat.Convert");
@@ -559,11 +561,12 @@
 		                    xmlhttp = null;
 		                } */
 		                
+		                // 답변알림메일 발송 뒤 연결되는 동작이 없으므로 비동기(async : true) 처리
 		                if (pMode == "reply") {
 		                	$.ajax({
 						    	type : "POST",
 						    	url : "/ezCommunity/sendReplyNoticeMail.do",
-						    	async : false,
+						    	async : true,
 						    	data : {boardID : pBoardID,
 					    				itemID : newID,
 					    				itemTreeID : strUpperItemIDTree},
@@ -571,6 +574,13 @@
 						    	success : function (result) {
 						    	}
 						    });
+		                }
+		                
+		                /* 2021-11-15 홍승비 - 게시판의 옵션에 따라 게시/수정 알림메일 발송 (비동기식, 백그라운드 동작) */
+		                if (pMode == "new" && mailFG_Post == "Y") {
+		                	sendCommBoardAlertMail(pMode, pBoardID, newID);
+		                } else if (pMode == "modify" && mailFG_Mod == "Y") {
+		                	sendCommBoardAlertMail(pMode, pBoardID, strItemID);
 		                }
 		                
 		                alert("<spring:message code='ezCommunity.t282'/>");
@@ -591,6 +601,11 @@
 							} catch(e) {}
 						}
 						window.opener.location.reload(true);
+						
+						/* 2021-11-09 홍승비 - 커뮤니티 팝업홈의 좌측 게시판 신규 게시물 아이콘 갱신 */
+						if (window.opener.parent.location.href.indexOf("ezCommunity/commHome/popupCommHome.do") > -1 && typeof(window.opener.parent.applyIsNewIconAll) == "function") {
+							window.opener.parent.applyIsNewIconAll();
+						}
 					}
 					saveFlag = false;
 					
@@ -925,6 +940,21 @@
 			    		pCntDom.innerText = result;
 			    	}
 			    });
+	        }
+	        
+	        /* 2021-11-15 홍승비 - 게시판 메일알림 함수 추가, 비동기로 백그라운드 동작 */
+	        function sendCommBoardAlertMail(pMode, pBoardID, pItemID) {
+		        $.ajax({
+					type : "POST",
+					dataType : "text",
+					async : true,
+					url : "/ezCommunity/sendCommBoardAlertMail.do",
+					data : {
+						mode : pMode,
+						boardID : pBoardID,
+						itemID : pItemID
+					}
+				});
 	        }
 		</script>
 

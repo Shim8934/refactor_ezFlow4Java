@@ -101,9 +101,16 @@ public interface EzOrganService {
 	public String updateAddJobProxy(String id, String proxyInfo, int tenantId, String dept) throws Exception;
 
 	public String getAddJobProxy(String id, String dept, int tenantId) throws Exception;
+	
+	public String getAddJobProxy(String id, String dept, String title, int tenantId) throws Exception;
 
 	public OrganUserVO getUserInfo(String id, String lang, int tenantId) throws Exception;
 	
 	/* 2020-10-22 홍승비 - 전달한 필드(칼럼)에 대응하는 값을 TBL_DEPTMASTER 테이블에서 가져오는 메서드 */
 	public String getPropertyValueForDept(String fieldName, String deptID, int tenantID) throws Exception;
+
+	public String updateAddJobProxy(String userID, String proxyInfo, int tenantID, String dept, String jobId) throws Exception;
+	
+	public List<OrganUserVO> getOrgUserInfo(String userID, int tenantID, String companyID) throws Exception;
+
 }

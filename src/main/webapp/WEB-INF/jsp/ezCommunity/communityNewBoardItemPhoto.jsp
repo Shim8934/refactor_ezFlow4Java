@@ -59,7 +59,9 @@
 			var PhotoBoard = "Y";
 		    var flag = false;
 		    var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");
-		    var endDateTime = "<c:out value = '${endDateTime}' />"
+		    var endDateTime = "<c:out value = '${endDateTime}' />";
+			var mailFG_Post = "<c:out value = '${boardInfo.mailFG_Post}'/>"; // 게시알림
+			var mailFG_Mod = "<c:out value = '${boardInfo.mailFG_Mod}'/>"; // 수정알림
 		    
 		    window.onresize = function () {
 		        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 160 + "PX";
@@ -260,6 +262,13 @@
 		        if (xmlhttp.responseText == "OK") {
 		            xmlhttp = null;
 		            xmlDom = null;
+		            
+	                /* 2021-11-15 홍승비 - 게시판의 옵션에 따라 게시/수정 알림메일 발송 (비동기식, 백그라운드 동작) */
+	                if (pMode == "new" && mailFG_Post == "Y") {
+	                	sendCommBoardAlertMail(pMode, pBoardID, newID);
+	                } else if (pMode == "modify" && mailFG_Mod == "Y") {
+	                	sendCommBoardAlertMail(pMode, pBoardID, strItemID);
+	                }
 
 	                alert("<spring:message code = 'ezCommunity.t282' />");
 	                document.getElementById("menu").style.display = "none";
@@ -280,7 +289,12 @@
 					} catch(e) {}
 				}
 				window.opener.location.reload(true);
-		        
+				
+				/* 2021-11-09 홍승비 - 커뮤니티 팝업홈의 좌측 게시판 신규 게시물 아이콘 갱신 */
+				if (window.opener.parent.location.href.indexOf("ezCommunity/commHome/popupCommHome.do") > -1 && typeof(window.opener.parent.applyIsNewIconAll) == "function") {
+					window.opener.parent.applyIsNewIconAll();
+				}
+				
 		        xmlhttp = null;
 		        xmlDom = null;
 		    }
@@ -441,6 +455,21 @@
 			    		pCntDom.innerText = result;
 			    	}
 			    });
+	        }
+	        
+	        /* 2021-11-15 홍승비 - 게시판 메일알림 함수 추가, 비동기로 백그라운드 동작 */
+	        function sendCommBoardAlertMail(pMode, pBoardID, pItemID) {
+		        $.ajax({
+					type : "POST",
+					dataType : "text",
+					async : true,
+					url : "/ezCommunity/sendCommBoardAlertMail.do",
+					data : {
+						mode : pMode,
+						boardID : pBoardID,
+						itemID : pItemID
+					}
+				});
 	        }
 		</script>
 		

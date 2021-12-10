@@ -77,6 +77,10 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 		return (List<String>)list("EzSurveyDAO.getUserDepartmentIdList", map);
 	}
 	
+	public List<String> getUserAllDepartmentIdList(Map<String, Object> map) {
+		return (List<String>)list("EzSurveyDAO.getUserAllDepartmentIdList", map);
+	}
+	
 	public List<Long> getReceivedSurveyList(Map<String, Object> map) {
 		return (List<Long>)list("EzSurveyDAO.getReceivedSurveyList", map);
 	}
@@ -228,6 +232,16 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 		return (List<SurveyParticipantVO>) list("EzSurveyDAO.getSurveyParticipantListForMail", map);
 	}
 	
+	/* 2021-11-18 홍승비 - 대상자가 부서/회사인 경우, 하위부서 허용여부가 Y인 부서/회사ID를 리턴 */
+	public List<String> getSurveySubDeptListForMail(Map<String, Object> map) {
+		return (List<String>) list("EzSurveyDAO.getSurveySubDeptListForMail", map);
+	}
+	
+	/* 2021-11-18 홍승비 - 전달받은 부서/회사ID를 상위부서로 가지는 하위부서 소속원들을 리턴 */
+	public List<SurveyParticipantVO> getSurveyLowerDeptUsersForMail(Map<String, Object> map) {
+		return (List<SurveyParticipantVO>) list("EzSurveyDAO.getSurveyLowerDeptUsersForMail", map);
+	}
+	
 	public int getMailSentFlag(SurveyVO survey) {
 		return (int) select("EzSurveyDAO.getMailSentFlag", survey);
 	}
@@ -256,4 +270,5 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 	public SimpleUserVO getSurveyUserInfoAddJob(Map<String, Object> map) {
 		return (SimpleUserVO)select("EzSurveyDAO.getSurveyUserInfoAddJob", map);
 	}
+
 }

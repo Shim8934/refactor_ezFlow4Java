@@ -63,8 +63,9 @@
 	        var bigAttachDownloadDay = "<c:out value ='${bigAttachDownloadDay}'/>";
 	        var bigSizeAttachDownloadLimitCount = "<c:out value ='${bigSizeAttachDownloadLimitCount}'/>";
 			
-			window.onresize = function () {
-	        	var mHeight = document.documentElement.clientHeight - 172 - document.getElementById("message").offsetTop + "px";
+	        window.onresize = function () {
+	       		document.getElementById("messageWHWPEditor").style.height = document.documentElement.clientHeight - 150 + "px";
+	       		var mHeight = document.documentElement.clientHeight - 110 - document.getElementById("messageWHWPEditor").offsetTop + "px";
 	       		message.Resize(mHeight);
 	        }
 	
@@ -582,7 +583,9 @@
 	                        <c:if test="${useBoard == 'YES' }">
 	                        <li id="btnBoard"><span onclick="return NewItem_onclick()"><spring:message code='ezApprovalG.t1514'/></span></li>
 	                        </c:if>
+	                        <c:if test="${formID != '2018000000'}">
 	                        <li id="btnReuse"><span onClick="return btnReuse_onclick('reuse')"><spring:message code='ezApprovalG.t990048'/></span></li>
+	                        </c:if>
 	                        <li id="btnPrint"><span class="icon16 popup_icon16_print" onclick="return btnPrint_onclick()"></span></li>
 	                    	<c:if test="${useExternalMailServer == 'NO' }">
 	                        <li id="btnMail"><span class="icon16 popup_icon16_mail_gray" onclick="return btnMail_onclick()"></span></li>
@@ -604,7 +607,7 @@
 	            </td>
 	        </tr>
 	        <tr>
-	            <td style="padding-bottom:10px;height:800px;" >
+	            <td style="padding-bottom:10px;height:800px;" id="messageWHWPEditor">
 		    		<iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="/ezApprovalG/WHWPEditor.do" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 	            </td>
 	        </tr>

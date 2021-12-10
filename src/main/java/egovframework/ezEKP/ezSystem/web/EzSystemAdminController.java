@@ -1620,6 +1620,8 @@ public class EzSystemAdminController {
 		expirePassPeriod = expirePassPeriod.equals("") ? "0" : expirePassPeriod;
 		String maxAllowedCountOfLoginFail = ezCommonService.getCompanyConfig(tenantId, companyId, "MaxAllowedCountOfLoginFail"); // 암호 최대 오류 횟수
 		maxAllowedCountOfLoginFail = maxAllowedCountOfLoginFail.equals("") ? "0" : maxAllowedCountOfLoginFail;
+		String useChkPrevPwd = ezCommonService.getCompanyConfig(tenantId, companyId, "useChkPrevPwd"); // 2021-11-10 이사라 : 가장 최근 암호 사용 금지 여부
+		useChkPrevPwd = useChkPrevPwd.equals("") ? "NO" : useChkPrevPwd;
 		String usePasswordPatternPolicy = ezCommonService.getCompanyConfig(tenantId, companyId, "UsePasswordPatternPolicy"); // 암호 정책관리 사용여부
 		usePasswordPatternPolicy = usePasswordPatternPolicy.equals("") ? "NO" : usePasswordPatternPolicy;
 		logger.debug("expirePassPeriod=" + expirePassPeriod + ", maxAllowedCountOfLoginFail=" + maxAllowedCountOfLoginFail 
@@ -1629,6 +1631,7 @@ public class EzSystemAdminController {
 
 		returnMap.put("expirePassPeriod", expirePassPeriod);
 		returnMap.put("maxAllowedCountOfLoginFail", maxAllowedCountOfLoginFail);
+		returnMap.put("useChkPrevPwd", useChkPrevPwd); // 2021-11-10 이사라 : 추가
 		returnMap.put("usePasswordPatternPolicy", usePasswordPatternPolicy);
 		returnMap.put("pwPolicyMap", pwPolicyMap);
 		logger.debug("return :: " + returnMap.toString());
