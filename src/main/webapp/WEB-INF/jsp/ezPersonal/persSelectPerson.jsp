@@ -222,7 +222,7 @@
 		    		url : "/ezOrgan/getSearchList.do",
 		    		data : {
 		    			search : document.getElementById("search_type").value + "::" + document.getElementById("keyword").value.trim(),
-		    			cell   : "company;description;displayname;title;telephonenumber",
+		    			cell   : "company;description;displayname;title;telephonenumber;extensionAttribute5",
 		    			prop   : "department",
 		    			type   : "user"
 		    		},
@@ -453,7 +453,7 @@
 		        <WIDTH>50</WIDTH>
 		      </HEADER>
 		      <HEADER>
-		        <NAME><spring:message code='ezPersonal.t70'/></NAME>
+		        <NAME><spring:message code='ezPersonal.t177'/></NAME>
 		        <WIDTH>70</WIDTH>
 		      </HEADER>
 		      <HEADER>
@@ -507,12 +507,12 @@
 				            <option selected value="displayname"><spring:message code='ezPersonal.t9'/></option>
 				            <option value="description"><spring:message code='ezPersonal.t7'/></option>
 				            <option value="title"><spring:message code='ezPersonal.t69'/></option>
-				            <option value="telephonenumber"><spring:message code='ezPersonal.t70'/></option>
+				            <option value="telephonenumber"><spring:message code='ezPersonal.t177'/></option>
 				            <option value="mobile"><spring:message code='ezPersonal.t72'/></option>
 				            <option value="HomePhone"><spring:message code='ezPersonal.t73'/></option>
 				            <option value="facsimileTelephoneNumber"><spring:message code='ezPersonal.t74'/></option>
 				            <option value="mail"><spring:message code='ezPersonal.t75'/></option>
-				            <option value="streetAddress"><spring:message code='ezPersonal.t76'/></option>
+				            <option value="streetAddress" style="display:none"><spring:message code='ezPersonal.t76'/></option>
 				        </select>
 				        <input type="text" id="keyword" onKeyPress="search_press(event)" style="width:130px; height:22px;" maxLength="50">
 				        <a class="imgbtn" style="margin-right:5px;"><span onClick="search_click()"><spring:message code='ezPersonal.t83'/></span></a>

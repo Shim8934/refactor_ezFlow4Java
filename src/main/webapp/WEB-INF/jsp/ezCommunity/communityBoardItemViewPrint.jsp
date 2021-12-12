@@ -131,8 +131,28 @@
 			            strTarget = "target=''";
 			        }
 					
-			        strAttach = strAttach + "<input type='checkbox' name='fileSelect' value='" + filename + "' filehref=\"/ezCommunity/getCommunityAttachInfo.do?fileName=" + encodeURIComponent(filename) + "&filePath=" + encodeURIComponent(filepath)  + "\">";
-	                strAttach = strAttach + "<img src='/images/email/mail_006.gif'> <a href=/ezCommunity/getCommunityAttachInfo.do?fileName=" + encodeURIComponent(filename) + "&filePath=" + encodeURIComponent(filepath) + ">";
+		            if (strFileExt.indexOf(".jpg") != -1 || strFileExt.indexOf(".jpeg") != -1 || strFileExt.indexOf(".bmp") != -1 || strFileExt.indexOf(".gif") != -1 || strFileExt.indexOf(".png") != -1 || strFileExt.indexOf(".tif") != -1 || strFileExt.indexOf(".tiff") != -1) {
+		                fileImage = "/images/image.png";
+		            } else if (strFileExt.indexOf(".doc") != -1 || strFileExt.indexOf(".docx") != -1) {
+		                fileImage = "/images/doc.png";
+		            } else if (strFileExt.indexOf(".xls") != -1 || strFileExt.indexOf(".xlsx") != -1) {
+		                fileImage = "/images/xls.png";
+		            } else if (strFileExt.indexOf(".ppt") != -1 || strFileExt.indexOf(".pptx") != -1 || strFileExt.indexOf(".pps") != -1 || strFileExt.indexOf(".ppsx") != -1) {
+		                fileImage = "/images/ppt.png";
+		            } else if (strFileExt.indexOf(".txt") != -1) {
+		                fileImage = "/images/txt.png";
+		            } else if (strFileExt.indexOf(".zip") != -1) {
+		                fileImage = "/images/zip.png";
+		            } else if (strFileExt.indexOf(".pdf") != -1) {
+		                fileImage = "/images/pdf.png";
+		            } else if (strFileExt.indexOf(".ecm") != -1) {
+		                fileImage = "/images/ecm.png";
+		            } else {
+		                fileImage = "/images/email/mail_006.gif";
+		            }
+		            
+			        /* strAttach = strAttach + "<input type='checkbox' name='fileSelect' value='" + filename + "' filehref=\"/ezCommunity/getCommunityAttachInfo.do?fileName=" + encodeURIComponent(filename) + "&filePath=" + encodeURIComponent(filepath)  + "\">"; */
+	                strAttach = strAttach + "<img src='" + fileImage + "'> <a href=/ezCommunity/getCommunityAttachInfo.do?fileName=" + encodeURIComponent(filename) + "&filePath=" + encodeURIComponent(filepath) + ">";
 	                strAttach = strAttach + filename + "&nbsp;(" + filesize + ")</a><br>";
 			    }
 				
@@ -228,9 +248,12 @@
 		    		<!-- 작성자&부서 -->
 		    		<tr>
 		    			<th style="width:10%;"><spring:message code = 'ezCommunity.t138' /></th> 
-				        <td id="WriteUserNM" style="CURSOR: pointer;white-space:nowrap;width:40%;"><div id = title style="vertical-align:middle;width:115px;height:17px;overflow-y:auto;" onClick=''><c:out value = '${item.writerName}' /></div></td>
-		    			<th style="width:10%;"><spring:message code = 'ezCommunity.t932' /></th> 
-				        <td id="User_DeptNM" style="padding-right:10px;white-space:nowrap;width:40%;"><span><c:out value = '${item.writerDeptName }' /></span></td>
+				        <td id="WriteUserNM" style="CURSOR: pointer;white-space:nowrap;width:40%;" <c:if test="${boardInfo.gubun == '2' }">colspan="3"</c:if>><div id = title style="vertical-align:middle;width:100%; white-space:pre-line;" onClick=''><c:out value = '${item.writerName}' /></div></td>
+				        <%-- 부서명은 익명게시판이 아닌 경우에만 표출 --%>
+				        <c:if test="${boardInfo.gubun != '2' }">
+		    				<th style="width:10%;"><spring:message code = 'ezCommunity.t932' /></th> 
+				        	<td id="User_DeptNM" style="padding-right:10px;white-space:nowrap;width:40%;"><span><c:out value = '${item.writerDeptName }' /></span></td>
+				        </c:if>
 		    		</tr>
 		    		<!-- 직위&전화번호 -->
 		    		<c:choose>
@@ -312,8 +335,8 @@
 		    	<td style="height:20px">
 		    		<table class="content">
 					    <tr>
-					        <th style="border-bottom: none; font-weight: bold;"><spring:message code = 'ezBoard.jjh06' /></th>
-					        <td style="height:50px;border-bottom: none;"><div id="onelinereplylist" style="height:auto; background-color:white;text-align:left"></div></td>
+					        <th class="boardItemViewPrint_cssThEn" style="border-bottom: none; font-weight: bold;"><spring:message code = 'ezBoard.jjh06' /></th>
+					        <td class="boardItemViewPrint_cssTdEn" style="height:50px;border-bottom: none;"><div id="onelinereplylist" style="height:auto; background-color:white;text-align:left"></div></td>
 					    </tr>
 				    </table>
 				</td>
@@ -322,8 +345,8 @@
 		    	<td style="height:20px;" >
 		    		<table class="file">
 				        <tr>
-				        	<th style="border-top: none;"><spring:message code = 'ezCommunity.t141' /></th>
-					        <td style="width:100%;height:100%;border-top: none;"><div id="lstAttachLink" style="margin-top:0px;padding-top:0px;background-color:white;height:auto;text-align:left "></div></td>
+				        	<th class="boardItemViewPrint_cssThEn" style="border-top: none;"><spring:message code = 'ezCommunity.t141' /></th>
+					        <td class="boardItemViewPrint_cssTdEn" style="width:100%;height:100%;border-top: none;"><div id="lstAttachLink" style="margin-top:0px;padding-top:0px;background-color:white;height:auto;text-align:left "></div></td>
 				          	<td id="ItemLevel" style="display:none"></td>
 				        </tr>
 					</table>

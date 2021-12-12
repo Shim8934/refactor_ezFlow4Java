@@ -693,7 +693,7 @@ function attach_click(para) {
 }
 
 function Send_onClick() {
-    if (eSubject.value == "") {
+    if (eSubject.value.trim() == "") {
         alert(strLang92);
         eSubject.focus();
         return;
@@ -2414,9 +2414,9 @@ function GetBoardItemInfo_New3(pBoardID, pItemID, pFont) {
         htmlData = ReplaceText(htmlData, "<TD class=FIELD", "<TD");
         document.getElementById("bodyValue").innerHTML = "<DIV style='LINE-HEIGHT: 15pt' ><br /><br /><DIV id='MailSign'></div><br /></DIV>" +
         	"<br><br><hr></hr><DIV style='font-family:"+ pFont + "'><B>" + strLang118 + "</B>" + PostDate + "<br><B>" + strLang119 + "</B>" + Sender +
-        	"<br><B>" + strLang120 + "</B>" + eSubject.value + "<br><br></DIV>" + htmlData;
+        	"<br><B>" + strLang120 + "</B>" + MakeXMLString(eSubject.value) + "<br><br></DIV>" + htmlData;
 
-        xmlHTTP.open("GET", "/ezCommunity/getItemAttachments.do?itemID=" + pItemID, false);
+        xmlHTTP.open("GET", "/ezCommunity/getItemAttachments.do?itemID=" + encodeURIComponent(pItemID), false);
         xmlHTTP.send();
         var ReturnXML = loadXMLString(xmlHTTP.responseText);
         var AttachRows = SelectNodes(ReturnXML, "NODES/NODE");

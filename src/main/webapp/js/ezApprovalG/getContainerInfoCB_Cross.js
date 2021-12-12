@@ -35,7 +35,7 @@ function getDataInfo() {
     DocList.LoadFromID("DocList");
     var selRow = DocList.GetSelectedRows()[0];
     //DocList_Flag 지워도 되면 삭제
-    if (DocList_Flag == "RECORD") {
+    if (DocList_Flag == "RECORD" && selRow != undefined) {
         if (trim_Cross(selRow.getAttribute("DATA14")) != "null" && trim_Cross(selRow.getAttribute("DATA14")) != "" && trim_Cross(selRow.getAttribute("DATA14")) >= GetTodayDate()) {
             if (CheckAprLine(selRow.getAttribute("DATA1")) != "TRUE") {
                 getdoclistSub_after("NOTPERMISSION");
@@ -272,6 +272,7 @@ function GetDocDeliveryList(g_DeliverySearchParamXml) {
     }
 
     createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID);
+    createNodeAndInsertText(xmlpara, objNode, "EXTRECEPTYN", g_sFlag === "m03" ? "N" : "Y");
     g_szParamXml = getXmlString(xmlpara);
    
     g_DeliveryXmlhttp = createXMLHttpRequest();
@@ -484,5 +485,26 @@ function processRowClick(tr) {
         }
     } else if (DocList_Flag == "CABINET") {
         ChkCabRoleInfo(tr);
-    }
+    } else if (DocList_Flag == "Delivery") {
+        DocID = GetAttribute(tr,"DATA1");
+        pURL = GetAttribute(tr,"DATA2");
+        
+		switch (jobState) {
+            case "ATTACH":
+                Attach_onclick();
+                break;
+
+            case "OPINION":
+                Opinion_onclick();
+                break;
+
+            case "APPROVAL":
+                Approval_onclick();
+                break;
+
+            case "RECIPENT":
+                Recipent_onclick()
+                break;
+        }
+	}
 }

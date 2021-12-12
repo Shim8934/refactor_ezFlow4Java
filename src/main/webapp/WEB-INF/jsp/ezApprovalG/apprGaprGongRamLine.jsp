@@ -503,7 +503,7 @@
 		            var ListViewLen = pAPRTemplist.GetSelectedRows();
 		
 		            if (ListViewLen.length < 1) {
-		                var pAlertContent = linealt15;
+		                var pAlertContent = "<spring:message code='ezApprovalG.smb01'/>";;
 		                OpenAlertUI(pAlertContent);
 		                return;
 		            }
@@ -511,7 +511,7 @@
 		            p_CheckAprDeptTempletSN = ListViewLen[0].getAttribute("DATA1");
 		
 		            if (p_CheckAprDeptTempletSN == "") {
-		                var pAlertContent = linealt15;
+		                var pAlertContent = "<spring:message code='ezApprovalG.smb01'/>";
 		                OpenAlertUI(pAlertContent);
 		                return;
 		            }
@@ -1207,9 +1207,9 @@
 	                	<table style="width:100%;table-layout: fixed">
 	                    	<tr>
 	                            <td style="text-align: left; height: 30px;">
-									<input id="textUser" style="height:22px" name="textUser" onkeypress="return textUser_onkeypress()" tabindex="1">&nbsp;<a class="imgbtn imgbck" style="vertical-align: middle;"><span id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()"><spring:message code='ezApprovalG.t234'/></span></a>
-									<a class="imgbtn imgbck" style="vertical-align: middle;"><span onclick="return btnAprLineSearchDept_onClick()" ><spring:message code='ezApprovalG.t250'/></span></a>
-	                            	<a class="imgbtn imgbck" style="vertical-align: middle;"><span id="btn_addDept" onclick="return btn_addDepartment()"><spring:message code='ezApproval.t1101'/></span></a>
+									<input id="textUser" style="height:22px" name="textUser" onkeypress="return textUser_onkeypress()" tabindex="1">&nbsp;<a class="imgbtn imgbck"><span id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()"><spring:message code='ezApprovalG.t234'/></span></a>
+									<a class="imgbtn imgbck"><span onclick="return btnAprLineSearchDept_onClick()" ><spring:message code='ezApprovalG.t250'/></span></a>
+	                            	<a class="imgbtn imgbck"><span id="btn_addDept" onclick="return btn_addDepartment()"><spring:message code='ezApproval.t1101'/></span></a>
 	                            </td>
 	                        </tr>
 	                    </table>
@@ -1262,7 +1262,7 @@
 <!-- 	                </div> -->
 <!-- 	            </td> -->
 	            <td style="vertical-align: top;">
-	                <h2 class="h2_dot">
+	                <h2 class="h2_dot" style="margin-left: 5px;">
 	                	<c:if test="${approvalFlag == 'G'}">
 		            		<spring:message code='ezApprovalG.t1689'/>
 				    	</c:if>
@@ -1276,16 +1276,16 @@
 	                            <img src="/images/ImgIcon/next.gif" height="16" alt="<spring:message code='ezApprovalG.pjj29'/>" style="vertical-align: middle" /></span></a>
 	                	</div>
 	                </h2>
-	                <div class="listview" style="margin-top: 11px; margin-left: 1px">
+	                <div class="listview" style="margin-top: 11px; margin-left: 5px">
 	                <c:if test="${approvalFlag == 'S'}">
 	                    <div id="APRLINE" style="overflow: auto; border: 0px solid #ddd; width: 730px; height: 550px; background-color: #ffffff;"></div>
 	                </c:if>
 	                <c:if test="${approvalFlag == 'G'}">
-	                    <div id="APRLINE" style="overflow: auto; border: 0px solid #ddd; width: 750px; height: 550px; background-color: #ffffff;"></div>
+	                    <div id="APRLINE" style="overflow: auto; border: 0px solid #ddd; width: 781px; height: 550px; background-color: #ffffff;"></div>
 	                </c:if>
 	                </div>
 	                <div style="text-align: right; padding:4px 0px 0px 0px">
-	                	<a class="imgbtn imgbck" style="padding-right: 5px; margin-top: 5px;">
+	                	<a class="imgbtn imgbck">
 	                    	<span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')">
 	                    		<c:if test="${approvalFlag == 'G'}">
 		                    		<spring:message code='ezApprovalG.t6000'/>

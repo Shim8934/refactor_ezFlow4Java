@@ -24,12 +24,15 @@
 		var mode           = "<c:out value='${mode}'/>";
 		var functionType   = "";
 		var targetId 	   = "";
+		var adminCheck     = "<c:out value='${mode}'/>";
+		var folderType     = "<c:out value='${type}'/>";
 		
 		window.onbeforeunload = function() {
 			parent.closeAllPopup();
 		}
 		
 		window.onload = function () {
+			document.getElementsByName('treeType')[0].checked=true;
 			getData();
 		};
 		
@@ -57,6 +60,10 @@
 						case 0: 
 							var result     = data.folderTree;
 							currentFolders = data.currentFolders;
+							
+							if(adminCheck == "admin"){
+								data.folderTree.listSubFolders = null;
+							}
 							
 							renderData(result, (type == "dept" || type == "share") ? "0" : "1");
 							break;
@@ -182,6 +189,7 @@
 			//Check if already in arrSubFolder
 			var uniqueId = obj.getAttribute("id");
 			var level = obj.getAttribute("level");
+			var type       = document.querySelector('input[name=treeType]:checked').value;
 			
 			if (arrSubFolder.indexOf(uniqueId) != -1) {
 				var childElmt = obj.parentElement.lastElementChild;
@@ -206,7 +214,9 @@
 					url: "/admin/ezWebFolder/getSubFolderTree.do",
 					data: {
 						"folderId" : uniqueId,
-						"mode"     : mode
+						"mode"     : mode,
+						"type"     : type,
+						"adminCheck" : adminCheck
 					},
 					dataType: "JSON",
 					async: true,
@@ -273,6 +283,7 @@
 			wClose();
 		}
 		
+		<c:if test="${isPermittedCopy}">
 		function fileCopy() {
 			var type = document.querySelector('input[name=treeType]:checked').value;
 			
@@ -380,7 +391,9 @@
 				}
 			});
 		}
+		</c:if>
 		
+		<c:if test="${isPermittedMove}">
 		function fileMove() {
 			var type = document.querySelector('input[name=treeType]:checked').value;
 			
@@ -396,6 +409,11 @@
 			
 			if (currentFolders.indexOf(selectedFolder) > -1) {
 				alert("<spring:message code='ezWebFolder.t210'/>");
+				return;
+			}
+			
+			if (parent.hasContainsReplyFiles && parent.hasContainsReplyFiles(fileList.split(","))) {
+				alert("<spring:message code='webfolder.reply.move'/>");
 				return;
 			}
 			
@@ -492,6 +510,7 @@
 				}
 			});
 		}
+		</c:if>
 	</script>
 </head>
 <body class="popup" style="overflow: hidden;">
@@ -513,9 +532,11 @@
 			</select>
 		</c:if>
 		<div style="position: absolute; top: 0px; right: 0px;">
-			<input name="treeType" id="radio1" type="radio" value="comp" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="getData();"><label for="radio1"><span> <spring:message code="ezWebFolder.t233"/></span></label>
-			<input name="treeType" id="radio2" type="radio" value="dept" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="getData();"><label for="radio2"><span> <spring:message code="ezWebFolder.t234"/></span></label>
-			<c:if test="${mode == 'normal'}">
+			<c:if test="${folderType == 'C'}">
+				<input name="treeType" id="radio1" type="radio" value="comp" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="getData();"><label for="radio1"><span> <spring:message code="ezWebFolder.t233"/></span></label>
+			</c:if>
+			<c:if test="${folderType != 'C'}">
+				<input name="treeType" id="radio2" type="radio" value="dept" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="getData();"><label for="radio2"><span> <spring:message code="ezWebFolder.t234"/></span></label>
 				<input name="treeType" id="radio3" type="radio" value="user" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="getData();"><label for="radio3"><span> <spring:message code="ezWebFolder.t235"/></span></label>
 				<input name="treeType" id="radio4" type="radio" value="share" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="getData();"><label for="radio4"><span> <spring:message code="ezWebFolder.t266"/></span></label>
 			</c:if>
@@ -524,10 +545,12 @@
 	<div style="margin: 0px 10px 10px 10px; border: 1px solid #ddd; min-height: 330px; height: 330px; overflow: auto; padding: 5px 0px 0px 5px; white-space: nowrap;" id="folderTree"></div>
 	
 	<div class="btnpositionNew">
-		<c:if test="${type ne 'copy'}">
+		<c:if test="${type ne 'copy' and isPermittedMove}">
 			<a id="btnSave" class="imgbtn" onClick="fileMove();"><span><spring:message code='ezWebFolder.t121'/></span></a>
 		</c:if>
-		<a id="btnCancel" class="imgbtn" onClick="fileCopy();"><span><spring:message code='ezWebFolder.t122'/></span></a>
+		<c:if test="${isPermittedCopy}">
+			<a id="btnCancel" class="imgbtn" onClick="fileCopy();"><span><spring:message code='ezWebFolder.t122'/></span></a>
+		</c:if>
 	</div>
 	
 </body>

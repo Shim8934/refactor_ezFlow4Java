@@ -364,10 +364,6 @@
                     URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(docHref);
                     message.Open(URL, "", "", function (res) { 
                     	if (res.result) {
-    	                    if (pFormID == "") {
-    	                        btnSave.style.display = "none";
-    	                    }
-    	
     	                    setAttachInfo(pDocID, "END", lstAttachLink);
     	
     	                    var Rtnval = CheckOpinionInfo();

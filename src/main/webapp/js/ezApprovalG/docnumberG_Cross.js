@@ -342,7 +342,28 @@ function getDocNumberNew(pDeptID, pPrefix, docNumZeroCnt) {
         	
         	fractionsymbol = field.textContent;
 			if (pDraftFlag == "HABYUI" || pDraftFlag == "HAPYUI") {
-				fractionsymbol = arr_userinfo[5] + "-";
+				if(approvalFlag == "S") {
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezApprovalG/getChaebunDept.do",
+						data : {
+							deptID : pDeptID,
+							orgCompanyID : orgCompanyID
+						},
+						success: function(xml){
+							result = xml;
+							if(result != null) {
+								dataNodes = GetChildNodes(loadXMLString(result).documentElement);
+								fractionsymbol = getNodeText(dataNodes[0]) + "-";
+								pDeptID = getNodeText(dataNodes[2]);
+							}
+						}        			
+					});
+				} else {
+					fractionsymbol = arr_userinfo[5] + "-";
+				}
 			}
         	
         	var result = getCabinetSN(pDeptID);

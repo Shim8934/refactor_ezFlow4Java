@@ -199,9 +199,14 @@ function ezCabMunuCtl(MenuType, selRow) {
                 if (typeof (tdbtnViewRecReadHist) != "undefined" && typeof (tdbtnViewRecReadHist) != "unknown") {
                 document.getElementById("tdbtnViewRecReadHist").style.display = "none";
                 }
-                if (typeof (tdbtnSetRecRole) != "undefined" && typeof (tdbtnSetRecRole) != "unknown") {
-                document.getElementById("tdbtnSetRecRole").style.display = "none";
-                }
+            }
+            
+            if (typeof (tdbtnSetRecRole) != "undefined" && typeof (tdbtnSetRecRole) != "unknown") {
+            	if (g_bRecAdmin || AdminYN == "TRUE" || g_bDeptCharger) {
+	                document.getElementById("tdbtnSetRecRole").style.display = "";
+            	} else {
+            		document.getElementById("tdbtnSetRecRole").style.display = "none";
+            	}
             }
             
             if (typeof (tdNotify_Rec) != "undefined" && typeof (tdNotify_Rec) != "unknown") {
@@ -1451,8 +1456,10 @@ function btnSearchRec_onclick(opnOption,opentype) {
 
     if (typeof (opnOption) == "undefined") opnOption = "0";
     para[3] = opnOption;	
-    para[4] = g_sFlag;	
-    para[5] = szRoleInfo;	
+    if(opnOption == "0") {
+    	para[4] = g_sFlag;
+    	para[5] = szRoleInfo;
+    }
 
     var url = "/ezApprovalG/searchRec.do";
 
@@ -1686,7 +1693,7 @@ function makePageSelPage(pTotalCnt) {
             document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;font-weight:bold;'>" + pTotalCnt + "</span>&nbsp;/ " + period;
 
         if (g_sFlag === "UNTREATED") {
-            parent.frames["left"].document.getElementById("countUntreated").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
+            parent.frames["left"].document.getElementById("COUNTUNTREATED").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
         }
     }
 

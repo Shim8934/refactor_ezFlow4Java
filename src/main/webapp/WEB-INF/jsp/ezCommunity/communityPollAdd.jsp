@@ -479,7 +479,7 @@
 	            </tr>
 	            <tr>
 	                <th rowspan="1"><spring:message code='ezCommunity.t612' /></th>
-	                <td><input class="inputText" type="text" id="Sdatepicker" style="width:80px;text-align:center" > ~ <input class="inputText" type="text" id="Edatepicker" style="width:80px;text-align:center" ></td>
+	                <td><input class="inputText" type="text" id="Sdatepicker" readonly style="width:80px;text-align:center" > ~ <input class="inputText" type="text" id="Edatepicker" readonly style="width:80px;text-align:center" ></td>
 	            </tr>
 	        </table>
 		</form>    

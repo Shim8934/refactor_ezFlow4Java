@@ -186,6 +186,12 @@
 		                    pDocSN = tmpDocSN;
 		            }
 		        }
+		        temppDocSN = pDocSN;
+		        
+		        /* 2021-07-02 홍승비 - 합의문 회송 시 신규 의견창 사용 */
+		        openOpinionUI_New("HeSong", btnReturn_onclick_Complete);
+		        
+		        /*
 		        var parameter = new Array();
 		        parameter[0] = pDocID;
 		        parameter[1] = "HeSong";
@@ -204,6 +210,7 @@
 		        apropinion_cross_dialogArguments[1] = btnReturn_onclick_Complete;
 		
 		        DivPopUpShow(530, 520, "/ezApprovalG/aprOpinion.do");
+		        */
 		    }
 			
 		    function btnReturn_onclick_Complete(ret) {
@@ -256,7 +263,8 @@
 			                    Ans = OpenInformationUI(pInformationContent);
 			
 			                    if (Ans) {
-			                        openOpinionUI("Display");
+			                        //openOpinionUI("Display");
+			                    	openOpinionUI_New("");
 			                    }
 			                }
 			            } else if (pDraftFlag == "SUSIN" || pDraftFlag == "GONGRAM") {
@@ -275,7 +283,8 @@
 			                    Ans = OpenInformationUI(pInformationContent);
 			
 			                    if (Ans) {
-			                        openOpinionUI("Display");
+			                        //openOpinionUI("Display");
+			                        openOpinionUI_New("");
 			                    }
 			
 			                }
@@ -296,7 +305,8 @@
 			                    pInformationContent = "<spring:message code='ezApprovalG.t126'/><br> <spring:message code='ezApprovalG.t125'/>";
 			                    Ans = OpenInformationUI(pInformationContent);
 			                    if (Ans) {
-			                        openOpinionUI("Display");
+			                        //openOpinionUI("Display");
+			                    	openOpinionUI_New("");
 			                    }
 			                }
 			            }
@@ -808,7 +818,8 @@
 			// 첨언창 오픈 함수
 			function btnOpinion_onclick()
 			{
-				var ret = openOpinionUI("N");
+				//var ret = openOpinionUI("N");
+				openOpinionUI_New("");
 			}
 			
 			//프린트 
@@ -1019,6 +1030,8 @@
 			        parameter[56] = limitDate;
 		        }
 		        
+				parameter[61] = tempKeyword;
+		        
 		        if (tempItemCode != "")
 		            tempdocnumcode = tempItemCode;
 		
@@ -1171,10 +1184,20 @@
 		  </tr>
 		  <tr>
 		    <td style="height:20px">
-		        <table class="file">
+		        <table class="file" style="height:80px;">
 		            <tr>
-		              <th id="btn_Attach"><spring:message code='ezApprovalG.t65'/></th>
-		              <td ><div id="lstAttachLink"></div></td>
+		              <th><spring:message code='ezApprovalG.t65'/></th>
+		              <td style=" width:62%; border-right:1px solid #d5d5d5;">
+                      	<div id="lstAttachLink" style="height:70px;"></div>
+                      	<iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0" style="display: none;"></iframe>
+		              </td>
+		              <td style=" width:30%;">
+						<div id="lstAttachLinkDoc" style="height:70px;"></div>
+		              </td>
+		              <td class="pos2" style="width:8%; background:#fffcfa;">
+						<a class="imgbtn imgbck" style="width:60px;"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
+						<a class="imgbtn imgbck" style="width:60px"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a> 
+		              </td>
 		            </tr>
 		        </table>
 		    </td>

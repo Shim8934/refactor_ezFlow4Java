@@ -131,7 +131,7 @@
 				var str = "";
 				
 				str += '<li onclick=\'opendocview("'+ object.docID +'", "'+ object.href +'", "'+ object.aprMemberID +'", "'+ object.aprMemberName +'", "'+ object.aprMemberDeptID +'", "'+ object.docState +'", "'+ object.functionType +'", "'+ object.companyID +'")\'>';
-				str += '	<span class="txt">'+ object.docTitle +'</span>';
+				str += '	<span class="txt">'+ ConvertCharToEntityReference(object.docTitle) +'</span>';
 				str += '	<span class="date">'+ object.startDate.substr(5, 11).replace(/-/gi,'.')+'</span>';				
 				str += '	<span class="name">'+ object.writerName +'</span>';
 				str += '</li>';

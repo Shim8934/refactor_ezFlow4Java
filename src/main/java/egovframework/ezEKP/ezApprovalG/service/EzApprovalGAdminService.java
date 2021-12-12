@@ -44,7 +44,7 @@ public interface EzApprovalGAdminService {
 	
 	public String getReceiveGroupInfo(String pid, String mode,	String companyID, String lang, int tenantID, String offset, String approvalFlag) throws Exception;
 	
-	public String insertReceiveGroupItemInfo(String groupID, String deptID,	String deptName, String deptName2, String pCompanyID, String companyID, int tenantID) throws Exception;
+	public String insertReceiveGroupItemInfo(String groupID, String deptID,	String deptName, String deptName2, String pCompanyID, String companyID, int tenantID, String extReceptYn) throws Exception;
 	
 	public String updateReceiveGroupItemInfo(String groupID, String deptID,	String deptName, String deptName2, String pCompanyID, String companyID, int tenantID) throws Exception;
 	
@@ -259,4 +259,8 @@ public interface EzApprovalGAdminService {
 	public String xlsSetGroupWithExcel(String loginCookie, MultipartHttpServletRequest request) throws Exception;
 
 	public String xlsxSetGroupWithExcel(String loginCookie, MultipartHttpServletRequest request) throws Exception;
+	
+	public String getChaebunDeptList(String deptID, String companyID, LoginVO userInfo) throws Exception;
+
+	public String setChaebunDeptList(Document doc, LoginVO userInfo) throws Exception;
 }

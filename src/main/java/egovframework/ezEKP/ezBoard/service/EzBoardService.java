@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.w3c.dom.Document;
 
@@ -369,4 +370,12 @@ public interface EzBoardService {
 	/* 2021-01-06 홍승비 - 게시물의 읽음여부 판별 시, 현재 사용자가 읽은 게시물을 셀렉트하도록 수정 */
 	public int getReaderListCount2(String boardID, String itemID, String userID, int tenantID) throws Exception;
 	
+	/* 2021-06-23 홍승비 - 그룹권한을 포함하여 ACCESSID에 대한 게시판 접근 + 리스트보기 권한을 리스트로 리턴하는 메서드 (QNA게시판은 관리자권한 체크) */
+	public List<String> getBoardAccessListViewFG(String boardID, String gubun, String userDeptPath, int tenantID, int isDept, int isEqualDept) throws Exception;
+
+	/* 2021-06-23 홍승비 - 게시/수정알림 메일 발송을 위한 사용자 정보를 map 리스트로 리턴하는 메서드 */
+	public List<HashMap<String, String>> getBoardUserInfoForMailSend(String isAllGroupBoard, String primary, String companyID, int tenantID) throws Exception;
+	
+	/* 2021-06-23 홍승비 - 댓글알림 메일 발송을 위한 사용자 정보를 map으로 리턴하는 메서드 */
+	public List<HashMap<String, String>> getCommentNoticeMail(String boardID, String itemID, String lang, int tenantID) throws Exception;
 }

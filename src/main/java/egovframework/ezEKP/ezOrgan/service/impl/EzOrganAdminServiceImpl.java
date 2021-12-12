@@ -1,10 +1,16 @@
 package egovframework.ezEKP.ezOrgan.service.impl;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
@@ -12,12 +18,22 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.naming.directory.DirContext;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
@@ -25,6 +41,7 @@ import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.service.PreResult;
 import egovframework.ezEKP.ezOrgan.util.ADConnection;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganGroupVO;
@@ -69,6 +86,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     @Autowired
     private ADConnection conn;
     
+	@Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource;
+	
    	@Autowired
 	private Properties globals;
     
@@ -399,7 +419,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		logger.debug("type="+type);
 		
-        ezOrganAdminDao.moveDBDataForJMocha(map);
+        /*ezOrganAdminDao.moveDBDataForJMocha(map);*/
         
     	if (type.toLowerCase().equals("group")) {
     		OrganDeptVO dept = ezOrganAdminDao.moveDBData_S(map);
@@ -556,7 +576,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("timeUTC", timeUTC);
 		
 	    ezOrganAdminDao.retireDBData_I(map);
-	    ezOrganAdminDao.retireDBData(map);
+	    /*ezOrganAdminDao.retireDBData(map);*/
 	    ezOrganAdminDao.retireDBData_D3(map);
 	    
 	    /**
@@ -589,7 +609,33 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	public int userCheck(String cn, int tenantID) throws Exception {
 		return ezOrganAdminDao.userCheck(cn, tenantID);
 	}
-	
+
+	@Override
+	public PreResult checkDuplicateId(String cn, String employeeNumber, int tenantId) throws Exception {
+		if (ezOrganAdminDao.userCheck(cn, tenantId) > 0) {
+			return PreResult.PRE;
+		}
+
+		return checkDuplicateLoginId(cn, employeeNumber, tenantId);
+	}
+
+	@Override
+	public PreResult checkDuplicateLoginId(String cn, String employeeNumber, int tenantId) throws Exception {
+		if (!"yes".equalsIgnoreCase(ezCommonService.getTenantConfig("UseEmpNumberLogin", tenantId))) {
+			return PreResult.NONE;
+		}
+
+		if (ezOrganAdminDao.isDuplicateLoginId(cn, cn, tenantId)) {
+			return PreResult.PRE_CN;
+		}
+
+		if (StringUtils.isNotEmpty(employeeNumber) && ezOrganAdminDao.isDuplicateLoginId(cn, employeeNumber, tenantId)) {
+			return PreResult.PRE_EMPLOYEE_NUMBER;
+		}
+
+		return PreResult.NONE;
+	}
+
 	@Override
 	public int getRetireListCount(int pPage, int pPageRow, int tenantID, String searchStartDate, String searchEndDate, String searchKeycode, String searchKeyword, String searchCompanyID) throws Exception {
 	    logger.debug("getRetireListCount started");
@@ -755,13 +801,15 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				
 				//회사등록시 근태설정(연차설정관리) 기본값 insert
 				ezOrganAdminDao.insertCompanyInfo_IJHS1(map1);
+				//차량관리 기본값 insert
+				ezOrganAdminDao.insertCompanyInfo_I33(map1);
 				
             // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
             } catch (Exception e) {
                 e.printStackTrace();
-                
+                /*
                 map.put("v_CLASS", "group");
-                ezOrganAdminDao.deleteDBDataForJMocha(map);
+                ezOrganAdminDao.deleteDBDataForJMocha(map);*/
                 
                 throw e;
             }			
@@ -1120,7 +1168,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	    	//사용자를 삭제 할 때, 대상의 정보를 저장한다. 2018-06-04 홍대표
 	    	ezOrganAdminDao.insertDelUserDBData_I(map);
 	    	
-	        ezOrganAdminDao.deleteDBDataForJMocha(map);
+	        /*ezOrganAdminDao.deleteDBDataForJMocha(map);*/
      
 	        ezOrganAdminDao.deleteDBData_D1(map);
 	        ezOrganAdminDao.deleteDBData_D4(map);
@@ -1380,20 +1428,28 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	// 사용자 이름,부서 목록을 반환한다.
     @Override
     public List<OrganUserVO> getUserList(int tenantID,int startPage, int maxItemPerPage,
-    									 String keycode,String keyword,String companyId, String sortColumn, String sortType) throws Exception {     
+    									 String keycode,String keyword,String companyId, String sortColumn, String sortType, boolean[] searchFor) throws Exception {     
     	logger.debug("getUserList started");
+    	if(searchFor == null) {
+    		searchFor = new boolean[] {true, true, true}; 
+    	}
     	
     	Map<String, Object> params = new HashMap<String, Object>();
     	
     	params.put("tenantID", tenantID);
 		params.put("v_start", startPage);
-		params.put("v_end",   startPage + maxItemPerPage - 1);
+		params.put("v_end", (!searchFor[0] && !searchFor[1] && !searchFor[2])? 0 : startPage + maxItemPerPage - 1);
 		params.put("pageCount", maxItemPerPage);
 		params.put("search_keycode", keycode);
 		params.put("search_keyword", keyword);
 		params.put("companyId", companyId);
 		params.put("sortColumn", sortColumn);      
 		params.put("sortType", sortType);
+		params.put("searchForAll", searchFor[0] && searchFor[1] && searchFor[2]);
+		params.put("isAnd", (searchFor[0] && !searchFor[1] && !searchFor[2]) 
+					    || (!searchFor[0] && !(searchFor[1] && searchFor[2])));
+		params.put("retired", searchFor[1]);
+		params.put("stopped", searchFor[2]);
 		
 		String orderByData = "";
 		if(!sortColumn.equals("")){
@@ -1417,8 +1473,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 
     // 사용자 이름,부서 목록개수를 반환한다.
     @Override
-    public int getUserCount(int tenantID, String keycode,String keyword,String companyId) throws Exception {     
+    public int getUserCount(int tenantID, String keycode, String keyword, boolean[] searchFor, String companyId) throws Exception {     
     	logger.debug("getUserCount started");
+    	if(searchFor == null) {
+    		searchFor = new boolean[] {true, true, true}; 
+    	}
    		
     	Map<String, Object> params = new HashMap<String, Object>();
     	
@@ -1427,7 +1486,13 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		params.put("search_keyword", keyword);
 		params.put("companyId", companyId);
 		
-		int userCount = ezOrganAdminDao.getUserCount(params);
+		params.put("searchForAll", searchFor[0] && searchFor[1] && searchFor[2]);
+		params.put("isAnd", (searchFor[0] && !searchFor[1] && !searchFor[2]) 
+					    || (!searchFor[0] && !(searchFor[1] && searchFor[2])));
+		params.put("retired", searchFor[1]);
+		params.put("stopped", searchFor[2]);
+		
+		int userCount = (!searchFor[0] && !searchFor[1] && !searchFor[2])? 0 : ezOrganAdminDao.getUserCount(params);
 		
 		logger.debug("getUserCount ended. userCount=" + userCount);
     	
@@ -1549,6 +1614,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_SORT", sort);
 		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
+		
+		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		date.setTimeZone(TimeZone.getTimeZone("GMT"));
+		String nowDate = date.format(new Date());
+		map.put("nowDate", nowDate);
 		
 		try {
 			ezOrganAdminDao.updateTitle(map);	//TBL_USER_JOBMASTER
@@ -2181,6 +2251,194 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		logger.debug("getTitleInfo_group ended.");
 		return vo;
 	}
+	
+	// 관리자 > 조직도 > 엑셀내려받기 :사용자 목록
+	@Override
+	public List<OrganUserVO> getExportUserList(String primary, String companyId, int tenantId) throws Exception {
+		logger.debug("getExportUserList start");
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("primary",  primary);
+		map.put("companyId",  companyId);
+		map.put("tenantId",  tenantId);
+		
+		logger.debug("getExportUserList end");
+		return ezOrganAdminDao.getExportUserList(map);
+	}
+	
+	@Override
+	public String createExcelUsers(String realPath, String dirPath, List<OrganUserVO> exportUserlist, String primary, Locale locale) throws Exception {
+		logger.debug("createExcelUsers start");
+		Date date                  = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		String fileName            = egovMessageSource.getMessage("ezOrgan.t72", locale).trim() + "_" + formatter.format(date) + ".xlsx";
+		String filePath            = dirPath + fileName;
+		File file                  = new File(dirPath);
+		File file2                 = new File(filePath);
+		
+		// temp 폴더가 없는 경우: 만들거나(mkdir), 폴더 안을 깨끗히 비운다.
+		if (file == null || !file.exists()) {
+			file.mkdirs();
+		}
+		else {
+			FileUtils.cleanDirectory(file); 
+		}
+		
+		// 같은 이름의 파일이 있을 경우: "파일(2).xlsx"으로 만든다.
+		if (file2.exists()) {
+			int pos         = fileName.lastIndexOf('.');
+			String extend   = fileName.substring(pos + 1);
+			String mainName = fileName.substring(0, pos);
+			int k           = 1;
+			fileName        = mainName + "(" + Integer.toString(k) + ")." + extend;
+			filePath        = dirPath + fileName;
+			file2           = new File(filePath);
+			
+			while (file2.exists()) {
+				fileName = mainName + "(" + Integer.toString(++k) + ")." + extend;
+				filePath = dirPath + fileName;
+			}
+		}
+		
+		// 엑셀 파일 생성(workbook). 시트 이름은(sheet1): "ezOrgan.t72"
+		FileOutputStream fileOut = null;
+		Workbook workbook = new XSSFWorkbook();
+		
+		Sheet sheet1 = workbook.createSheet(egovMessageSource.getMessage("ezOrgan.t72", locale).trim());
+		sheet1.setDefaultRowHeight((short)500);
+		
+		//Set style
+		CellStyle centerStyle = workbook.createCellStyle();
+		centerStyle.setWrapText(false);
+		centerStyle.setAlignment(CellStyle.ALIGN_CENTER);
+		centerStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+		
+		CellStyle centerStyle2 = workbook.createCellStyle();
+		centerStyle2.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+		
+		CellStyle centerStyle3 = workbook.createCellStyle();
+		centerStyle3.setAlignment(CellStyle.ALIGN_LEFT);
+		centerStyle3.setIndention((short)3);
+		centerStyle3.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+		
+		//sheet1.setColumnWidth(0, 8 * 256);
+		
+		//Process first row
+		Row rowhead1 = sheet1.createRow(0);
+		
+		rowhead1.createCell(0).setCellValue(egovMessageSource.getMessage("ezPersonal.t67", locale).trim());
+		rowhead1.createCell(1).setCellValue(egovMessageSource.getMessage("ezOrgan.t68", locale).trim());
+		rowhead1.createCell(2).setCellValue(egovMessageSource.getMessage("ezAttitude.t218", locale).trim());
+		rowhead1.createCell(3).setCellValue(egovMessageSource.getMessage("ezOrgan.t67", locale).trim());
+		rowhead1.createCell(4).setCellValue(egovMessageSource.getMessage("ezPersonal.t75", locale).trim());
+		rowhead1.createCell(5).setCellValue(egovMessageSource.getMessage("ezOrgan.t69", locale).trim());
+		rowhead1.createCell(6).setCellValue(egovMessageSource.getMessage("ezOrgan.t1500", locale).trim());
+		
+		rowhead1.getCell(0).setCellStyle(centerStyle);
+		rowhead1.getCell(1).setCellStyle(centerStyle);
+		rowhead1.getCell(2).setCellStyle(centerStyle);
+		rowhead1.getCell(3).setCellStyle(centerStyle);
+		rowhead1.getCell(4).setCellStyle(centerStyle);
+		rowhead1.getCell(5).setCellStyle(centerStyle);
+		rowhead1.getCell(6).setCellStyle(centerStyle);
+		
+		int i = 1;
+		
+		// 액셀 라이브러리가 지원하는 row수: 65536건
+		for (OrganUserVO exportUser : exportUserlist) {
+			Row newRow1 = sheet1.createRow(i);
+			
+			newRow1.createCell(0).setCellValue(exportUser.getCompany());
+			newRow1.createCell(1).setCellValue(exportUser.getDescription());
+			newRow1.createCell(2).setCellValue(exportUser.getCn());
+			newRow1.createCell(3).setCellValue(exportUser.getDisplayName());
+			newRow1.createCell(4).setCellValue(exportUser.getMail());
+			newRow1.createCell(5).setCellValue(exportUser.getTitle());
+			newRow1.createCell(6).setCellValue(exportUser.getExtensionAttribute10());
+			
+			newRow1.getCell(0).setCellStyle(centerStyle2);
+			newRow1.getCell(1).setCellStyle(centerStyle2);
+			newRow1.getCell(2).setCellStyle(centerStyle2);
+			newRow1.getCell(3).setCellStyle(centerStyle2);
+			newRow1.getCell(4).setCellStyle(centerStyle2);
+			newRow1.getCell(5).setCellStyle(centerStyle2);
+			newRow1.getCell(6).setCellStyle(centerStyle2);
+			
+			i++;
+		}
+		
+		sheet1.setColumnWidth(0, ((int)(15 * 1.14388)) * 256);
+		sheet1.setColumnWidth(1, ((int)(25 * 1.14388)) * 256);
+		sheet1.setColumnWidth(2, ((int)(15 * 1.14388)) * 256);
+		sheet1.setColumnWidth(3, ((int)(15 * 1.14388)) * 256);
+		sheet1.setColumnWidth(4, ((int)(45 * 1.14388)) * 256);
+		sheet1.setColumnWidth(5, ((int)(15 * 1.14388)) * 256);
+		sheet1.setColumnWidth(6, ((int)(15 * 1.14388)) * 256);
+		
+//		sheet1.autoSizeColumn(0);
+		
+		try {
+			fileOut = new FileOutputStream(filePath);
+			workbook.write(fileOut);
+			fileOut.close();
+		}
+		catch (Exception e) {
+			throw e;
+		}
+		finally {
+			fileOut.close();
+			workbook.close();
+		}
+		logger.debug("createExcelUsers end");
+		return fileName;
+	}
+
+	@Override
+	public void getExcelFile(String fileName, String realPath, String userAgent, HttpServletResponse response, int tenantId) throws Exception {
+		String _fileName = CommonUtil.getEncodedFileNameForDownload(userAgent, fileName);
+		String dirPath   = commonUtil.getUploadPath("upload_ezOrgan.ROOT", tenantId) + commonUtil.separator;
+		dirPath          = realPath + dirPath + "temp" + commonUtil.separator;
+		File file        = new File(dirPath + commonUtil.detectPathTraversal(fileName));
+		
+		if (!file.exists()) {
+			throw new FileNotFoundException(fileName);
+		}
+	
+		if (!file.isFile()) {
+			throw new FileNotFoundException(fileName);
+		}
+		
+		BufferedInputStream in = null;
+		
+		try {
+			in              = new BufferedInputStream(new FileInputStream(file));
+			String mimetype = "application/octet-stream";
+			
+			response.setBufferSize(2048);		// BUFF_SIZE: 2048 (extends EgovFileMngUtil) 
+			response.setContentType(mimetype);
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + _fileName + "\"");
+			response.setContentLength((int)file.length());
+			
+			FileCopyUtils.copy(in, response.getOutputStream());
+		}
+		finally {
+			if (in != null) {
+				try {
+					in.close();
+				} catch (Exception ignore) {
+					logger.debug("IGNORED: {}", ignore.getMessage());
+				}
+			}
+			
+			try {
+				file = new File(dirPath + fileName);
+				file.delete();
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
 
 	@Override
 	public List<OrganGroupVO> getGroupListBoard(int tenantID, String companyID, String isAllGroupBoard) throws Exception{
@@ -2324,4 +2582,5 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		logger.debug("getAutoDeleteOfRetireUserList ended.");
 		return result;
 	}
+
 }

@@ -254,3 +254,6 @@ var strLang337 = "Approval has been denied."
 
 //2020-01-03
 var strLangkmsr04 = "윤 ";
+
+//2021-05-04
+var strLang340 = "End time is earlier than today.";

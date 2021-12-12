@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-	<title>Insert title here</title>
+	<title></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}" type="text/css">
 	<script type="text/javascript" src="${util.addVer('ezWebFolder.e1', 'msg')}"></script>	
@@ -31,6 +31,7 @@
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/share.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/selectUsers.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/popup.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
     <script type="text/javascript">
 		var file 		 = new Array();
 		var strShared1	= messages.strLang2;
@@ -49,6 +50,7 @@
 		var resultErr3 = "<spring:message code='ezWebFolder.t300'/>";
 		var resultErr4 = "<spring:message code='ezWebFolder.t249'/>";
 		var resultErr5 = "<spring:message code='ezWebFolder.t250'/>";
+		var resultErr6 = "<spring:message code='ezWebFolder.kes014'/>";
 		var functionType = "";
 		var inputNameDlg_cross_dialogArguments = new Array();
 		var parentId = "<c:out value='${parentId}'/>";
@@ -58,6 +60,27 @@
 		var _cellInfo        = {};
 		var sortColumn = null;
 		var sortType = null;
+		var containsReplyFiles = [];
+		var contextClickedTr = null;
+		// 회사 폴더별 관리자 지원 기능 
+		var firstLevelFolderId	= "";
+		var userManager = {
+				targetId: "",
+				targetType: ""
+		};
+		var selectXhr         	= null;
+		var authListUser		= [];
+		var strictAuthList		= [];
+		var addUser    			= [];
+		var deleteUser    		= [];
+		var subFolderType 		= "0";
+		var uploadLimit = "<c:out value='${uploadLimit}' />";
+		<c:if test="${ folderManager eq '1' }">
+		// 담당자로 지정된 폴더들
+		var managedFolderList = ${managedFolderList};
+		</c:if>
+		var uploadIng = false;
+		var uploadIngStatusMessage = "<spring:message code='uploadIngStatusMessage'/>";
 		
 		// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 		window.onresize = function () {
@@ -81,6 +104,9 @@
 			if (allFileFlag == "all") {
 				$('#upload').css('display','none');
 				$('#newFolder').css('display','none');
+				if (folderType == 'C') {
+					$('#SearchOption').css('display','none');
+				}
 			}
 			getFileList(folderId);
 			
@@ -89,8 +115,9 @@
 				onFileTypeChange("");
 			});
 			
-			pagination.setPageChangeEventHandler(function() {
-				getFileList(folderId);
+			pagination.setPageChangeEventHandler(function(currentPage, listSize, fldId) {
+				var getFldId = (typeof fldId == "undefined") ? folderId : fldId;
+				getFileList(getFldId);
 			});
 			
 			capacity.setFolderIdProvider(function() {
@@ -130,7 +157,7 @@
 				pagination.setListSize(this.value);
 				refreshView();
 			});
-			
+
 			// datepicker setup
 			$(".datepicker").datepicker({
 				changeMonth: true,
@@ -217,14 +244,15 @@
 	    	}
 	    	
 	    	searchRequirement = searchContext.getCurrentRequirement();
-	    	folderId = a;
+//	    	folderId = a;
 	    	showProgress();
 			$.ajax ({
 				type:"POST",
 				async: true,
 				url : "/ezWebFolder/fileList.do",
 				data : { 
-					 "folderId"   		: folderId,
+//					 "folderId"   		: folderId,
+					 "folderId"   		: a,
 					 "folderType" 		: folderType,
 					 "currPage"   		: pagination.currentPage(),
 					 "listCount"  		: pagination.listSize(),
@@ -242,7 +270,17 @@
 				dataType: "JSON",
 				success : function (data) {
 					hideProgress();
-					successFile(data);
+					successFile(data, a);
+					if(folderType == 'C' && data.status != "error"){
+						folderId = a;
+						containsReplyFiles = data.data.containsReplyFiles;
+						managedFolderList = data.data.managedFolderList;
+						mailsendBtn(data.data.folderLevel);
+						/* 
+						document.getElementById("userManagerBtn").style.display =
+							checkIsManager(folderId) ? "" : "none";
+						 */
+					}
 				},
 				error : function(error) {
 					hideProgress();
@@ -250,7 +288,14 @@
 			});
 		}
 	    
-		function successFile(data) {
+	    function mailsendBtn(folderLevel) {
+	    	if ($("#sendingMail").length > 0) {
+	    		var displayVal = (isNaN(parseInt(folderLevel)) || folderLevel != 1 || !checkIsManager(folderId)) ? "none" : "block";
+				$("#sendingMail").css("display", displayVal);	    		
+	    	}
+	    }
+	    
+		function successFile(data, fldId) {
 			if (data.status == "error") {
 				if (data.code == 1) {
 					console.log("<spring:message code='ezWebFolder.t306' />");
@@ -263,6 +308,9 @@
 					return;
 				}
 			}
+			
+			folderId = (typeof fldId == "undefined") ? folderId : fldId;
+			
 			userId = data.data.userId;
 			var result = data.data;
 			
@@ -270,6 +318,9 @@
 			var fldCnt = result.fldCnt;
 			
 			var folderPath = result.folderPath;
+			if (folderType == 'C') {
+				firstLevelFolderId = result.folderPath.split("|")[2];
+			}
 			var originalPath = result.originalPath;
 			var folderUpp = result.folderUpp;
 			var dragDropAreaElmt = document.getElementById("dragDropArea");
@@ -282,6 +333,11 @@
 			if (folderUpp == 'root' && folderType == 'C') {
 				$('#upload').css('display','none');
 				$('#newFolder').css('display','none');		
+				$('#SearchOption').css('display','none');	
+				$('#rename').css('display','none');
+				$('#moveButton').css('display','none');
+				$('#moveMenu').css('display','none');
+				$('#delete').css('display','none');
 				dragDropAreaElmt.ondragenter = function(e) {
 					e.stopPropagation();e.preventDefault();
 				};
@@ -293,7 +349,14 @@
 				};
 			} else {
 				$('#upload').css('display','inline');
-				$('#newFolder').css('display','inline');				
+				$('#newFolder').css('display','inline');	
+				$('#rename').css('display','inline');
+				$('#moveButton').css('display','inline');
+				$('#moveMenu').css('display','');
+				$('#delete').css('display','inline');
+				if (folderType == 'C') {
+					$('#SearchOption').css('display','inline');				
+				}
 				dragDropAreaElmt.ondragenter = function(e) {onDragEnter(e)};
 				dragDropAreaElmt.ondragover  = function(e) {onDragOver(e)};
 				dragDropAreaElmt.ondrop      = function(e) {onDrop(e)};
@@ -383,11 +446,11 @@
 		}
 		
 		function nameFileList(param) {
-			folderId = param;
+			// folderId = param;
 			searchContext.clearRequirement();
 			$("#idSelect").val("");
-			onFileTypeChange("");
-			selectLeftFolder(folderId);
+			onFileTypeChange("", param);
+			selectLeftFolder(param);
 		}
 		
 		function renderData(result) {
@@ -436,11 +499,27 @@
 						style.textAlign = "center";
 					});
 
+					if (folderType == 'C') {
+						// 2020.11.03 강승구 : '제목'컬럼 좌측정렬 추가
+						setStyles([tdElmt4], function(style) {
+							style.textAlign = "left";
+						});
+
+						var fileName = result[i]["fileName"];
+						var depth = result[i]["depth"];
+						var isExpired = result[i]["expired"];
+						var encryptedFlag = result[i]["encryptedFlag"];
+					}
 					trElmt.setAttribute("class", "bnkWebFolder");
 					trElmt.setAttribute("targetId", result[i]["fileId"]);
 					trElmt.setAttribute("targetType", result[i]["fileTypeName"] == 'folder' ? 'D' : 'F');
 					trElmt.setAttribute("targetCreater", result[i]["createId"]);
 					trElmt.setAttribute("targetPath", result[i]["filePosition"]);
+					if (folderType == 'C') {
+						trElmt.setAttribute("encryptedFlag", encryptedFlag);
+						trElmt.setAttribute("depth", depth);
+						trElmt.setAttribute("expired", isExpired);
+					}
 					
 					if (result[i]["targetType"]) {
 						trElmt.setAttribute("targetFunction", resultJson["folderType"]);
@@ -453,9 +532,14 @@
 						trElmt.setAttribute("targetCreater", result[i]["creatorId"]);
 					}
 					trElmt.addEventListener("click", function(event) {rowContext.onRowClick(event, this);});
+					trElmt.addEventListener("contextmenu", openContextMenu);
 					
 					if (result[i]["fileTypeName"] != 'folder') {
 						trElmt.addEventListener("dblclick", function(event) {
+							/* if (this.getAttribute("encryptedFlag") == "1") {
+								unidocsWebViewer(event);
+							} else {
+							} */
 							downloadFileByDbClick(event);
 							rowContext.setSelectState(this, true);
 						});
@@ -470,6 +554,11 @@
 					inputElmt.addEventListener("dblclick", function(event) { event.stopPropagation(); });
 					
 					tdElmt1.appendChild(inputElmt);
+					tdElmt1.addEventListener("click", function(event) { 
+						this.firstChild.click();
+						event.stopPropagation();
+					});
+					
 					
 					var faImgElmt = document.createElement("img");
 					faImgElmt.setAttribute("class", "none-drag");
@@ -493,8 +582,33 @@
 					fileIconElmt.src = result[i]["fileIconUrl"];
 					tdElmt3.appendChild(fileIconElmt);
 					
+					
 					tdElmt4.textContent = result[i]["fileName"];
 					tdElmt4.setAttribute("title", result[i]["fileName"]);
+					
+					var fileExt = result[i]["fileExt"];
+					if (fileExt) {
+						tdElmt4.setAttribute("ext", fileExt);
+					}
+					
+					if (folderType == 'C') {
+						if (depth > 1) {
+							var additional = "↪ ";
+	
+							for (var j = 0; j < depth - 1; j++) {
+								additional = " " + additional;
+							}
+	
+							tdElmt4.innerHTML = additional + tdElmt4.innerHTML;
+						} else if (isExpired && (result[i]["folderPath"].match(/\|/g) || []).length  == 3) {
+							// 회의실 만료된거임
+							tdElmt4.innerHTML += "<span style='color:red;font-weight:bold;'>&nbsp;<spring:message code='webfolder.meeting.expired'/></span>";
+						}
+	
+						if (encryptedFlag == 1) {
+							tdElmt4.innerHTML = "<img src='/images/email/secureMail/security_icon.gif' width='12' /> " + tdElmt4.innerHTML;
+						}
+					}
 					
 					if(result[i]["typeId"] == "folder") {
 						tdElmt5.textContent = ' - ';
@@ -533,8 +647,13 @@
 					
 					if(result[i]["typeId"] == "folder") {
 						trElmt.ondblclick = function() {
-							selectLeftFolder(this.getAttribute("targetId"));
-							getFileList(this.getAttribute("targetId"));
+						//	if (folderType == 'C') {
+								nameFileList(this.getAttribute("targetId"))
+						//	} else {
+						//		folderId = this.getAttribute("targetId");
+						//		selectLeftFolder(this.getAttribute("targetId"));
+						//		getFileList(this.getAttribute("targetId"));
+						//	}
 						};
 					}
 					
@@ -547,7 +666,9 @@
 					trElmt.appendChild(tdElmt7);
 					trElmt.appendChild(tdElmt8);
 					trElmt.appendChild(tdElmt9);
-					trElmt.appendChild(tdElmt10);
+					if (folderType != 'C') {
+						trElmt.appendChild(tdElmt10);
+					}
 					
 					tableList.appendChild(trElmt);
 				}
@@ -639,9 +760,9 @@
 			getFileList(folderId);
 		}
        
-		function onFileTypeChange(value) {
+		function onFileTypeChange(value, fldId) {
 			searchContext.setFileType(value);
-			pagination.setPage(1);
+			pagination.setPage(1, false, fldId);
 		}
        
 		function downloadFileByDbClick(event) {
@@ -652,10 +773,88 @@
 			var filesList    = [];
 			filesList.push(fileFolderId);
 			
-			var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + filesList.toString();
-			AttachDownFrame.location.href = downloadUrl;
+			if (folderType == 'C') {
+				$.ajax({
+					type: "POST",
+					url: "/ezWebFolder/selectedFolderCheckPermission.do",
+					data: {
+						"fileId" : fileFolderId.toString()
+					},
+					dataType: "JSON",
+					async: true,
+					success : function(data) {
+						var result = data.status;
+						
+						if (result != "ok" && data.code == "3") {
+							alert(messages.strLang25);
+						} else if (data.code == "1") {
+							alert(messages.strLang7);
+						} else {
+							var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + filesList.toString();
+							AttachDownFrame.location.href = downloadUrl;
+						}
+					},
+					error : function(error) {
+						alert(messages.strLang7 + error);
+					}
+				});
+			} else {
+				var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + filesList.toString();
+				AttachDownFrame.location.href = downloadUrl;
+			}
+			
 		}
 		
+		function unidocsWebViewer(event){
+			var trElmt = event.currentTarget;
+			var targetCreator = trElmt.getAttribute("targetcreater");
+
+			if (targetCreator === userId && !confirm(messages.webviewerConfirm)) {
+				downloadFileByDbClick(event);
+				return;
+			}
+
+			event.stopPropagation();
+			event.preventDefault();
+			var fileId = trElmt.getAttribute("targetId");
+			
+			unidocsWebViewerOpen(fileId);
+		}
+		
+		function unidocsWebViewerOpen(fileId) {
+			showLoading();
+
+			$.ajax({
+				type: "POST",
+				async: true,
+				url: "/ezWebFolder/webfolderFileDownForUnidocs.do",
+				data: JSON.stringify({
+					"folderId": folderId,
+					"fileId": fileId
+				}),
+				contentType: "application/json; charset=UTF-8",
+				dataType: "JSON",
+				success: function(result) {
+					if (result.status == "OK") {
+						var unidocsUrl = result.url + result.encData;
+						window.open(unidocsUrl, '_blank');
+					} else if (result.code == -1) {
+						alert("<spring:message code='webfolder.wfjob.notsupport' />");
+					} else if (result.code == 3) {
+						alert(messages.strLang25);
+					} else {
+						alert("<spring:message code='ezWebFolder.t305' />");
+					}
+				},
+				error: function(error) {
+					alert("<spring:message code='ezWebFolder.t305' />");
+				},
+				complete: function() {
+					hideLoading();
+				}
+			});
+		}
+
 		function openLeftPanel() {
 			var leftFrame = window.parent.frames["left"].document;
 			var blockLeft = leftFrame.getElementById("bnkBlockLeft");
@@ -674,17 +873,38 @@
 		}
 		
 		function showProgress() {
-			var CurrentHeight = document.documentElement.clientHeight;
-			var CurrenWidth = document.documentElement.clientWidth;
-			document.getElementById("progressPanel").style.top = (CurrentHeight / 2) + "px";
-			document.getElementById("progressPanel").style.left = (CurrenWidth / 2) - 100 + "px";
-		    document.getElementById("progressPanel").style.display = "block";
+			if (folderType == 'C') {
+				listLoading(true);
+			} else {
+				var CurrentHeight = document.documentElement.clientHeight;
+				var CurrenWidth = document.documentElement.clientWidth;
+				document.getElementById("progressPanel").style.top = (CurrentHeight / 2) + "px";
+				document.getElementById("progressPanel").style.left = (CurrenWidth / 2) - 100 + "px";
+			    document.getElementById("progressPanel").style.display = "block";
+			}
 		}
         
         function hideProgress() {
-        	document.getElementById("progressPanel").style.display = "none";
+			if (folderType == 'C') {
+				listLoading(false);
+			} else {
+	        	document.getElementById("progressPanel").style.display = "none";
+			}
         }
         
+		function showLoading() {
+			openLeftPanel();
+			document.getElementById("webFolderRightPanel").style.display = "block";
+			document.getElementById("webFolderRightPanel").style.background = "rgba(0,0,0,0.5)";
+			showProgress();
+		}
+
+		function hideLoading() {
+			hideProgress();
+			document.getElementById("webFolderRightPanel").style.display = "none";
+			closeLeftPanel();
+		}
+
         function selectLeftFolder(targetID) {
         	window.parent.frames["left"].selectFolder(targetID);
         }
@@ -710,7 +930,222 @@
 	        	}
         	}
         }
+
+		function hasContainsReplyFiles(fileIds) {
+			if (!window.containsReplyFiles) {
+				return false;
+			}
+
+			for (var i = 0; i < fileIds.length; i++) {
+				for (var j = 0; j < containsReplyFiles.length; j++) {
+					if (fileIds[i] == containsReplyFiles[j]) {
+						return true;
+					}
+				}
+			}
+
+			return false;
+		}
+
+		// 2020-12-10 김은실 - (카이스트)회사 폴더별 관리자 지원 기능 
+		function checkIsManager(folderId) {
+			if (folderType != 'C' || !window.managedFolderList) {
+				return false;
+			}
+			
+			// 담당 1레벨 폴더 안으로 들어 왔으면 true
+			if (managedFolderList.indexOf(firstLevelFolderId) > -1) {
+				return true;
+			}
+			
+			// 파라미터로 넘어온 폴더가 담당하는 폴더인 경우 true
+			if (typeof(folderId) === "string") {
+				// 문자열이면 바로 검사
+				return managedFolderList.indexOf(folderId) > -1;
+			} else if (typeof(folderId) === "object") {
+				// 배열이면 반복문 검사
+				for (var i = 0; i < folderId.length; i++) {
+					if (managedFolderList.indexOf(folderId[i]) > -1) {
+						return true;
+					}
+				}
+			}
+			
+			return false;
+		}
+		
+		function getUsersPage_manager() {
+			authListUser = [];			
+			addUser      = [];
+			deleteUser   = [];
+			var url 	 = "";
+			if (selectXhr) {
+				selectXhr.abort();
+			}
+			
+			var selectedRows = rowContext.getSelectedRows();
+
+			if (selectedRows.length < 1 || selectedRows.length > 1) {
+				alert(messages.strLang39);
+				return;
+			}
+
+			var targetRow = selectedRows[0];
+			var targetId = targetRow.getAttribute("targetid");
+			var targetType = targetRow.getAttribute("targettype");
+			if (Number(targetRow.getAttribute("depth")) > 1) {
+				alert("<spring:message code='ezWebFolder.kes019'/>");
+				return;
+			}
+			if (!checkIsManager(targetId) && targetRow.getAttribute("targetcreater") != userId) {
+				alert("<spring:message code='ezWebFolder.kes020' />");
+				return;
+			}
+
+			if (targetType == "D"){
+				url = "/admin/ezWebFolder/getFolderUsers.do"; 
+			} else {
+				url = "/admin/ezWebFolder/getFileUsers.do";
+			}
+			
+			data = {
+				"fileId"	: targetId,
+				"folderId"	: targetId,
+				"folderManager" : "${folderManager}"
+			}
+
+			// global
+			userManager.targetId = targetId;
+			userManager.targetType = targetType;
+
+			selectXhr = $.ajax({
+				type: "POST",
+				url: url,
+				data: data,
+				dataType: "JSON",
+				async: true,
+				success : function(data) {
+					var code = data.code;
+					
+					switch(code) {
+						case 0:
+							var folderUsers = data.folderUsers;
+							if(folderUsers != null && folderUsers.length != 0) {
+								for (var i = 0; i < folderUsers.length ; i++) {
+									if(folderUsers[i]["folderManager"]) {
+										continue;
+									}
+									var auth         		= {};
+									auth["userId"]   		= folderUsers[i]["userId"];
+									auth["userName"] 		= "<spring:message code='main.t0619' />" == "ko" ? folderUsers[i]["displayName1"] : folderUsers[i]["displayName2"];
+									auth["userType"]   		= folderUsers[i]["userType"];
+									auth["subdeptPermitted"]= folderUsers[i]["subdeptPermitted"];
+									auth["sn"] 		 		= i;
+									auth["folderManager"]	= folderUsers[i]["folderManager"];
+									auth["displayDeptName"] = "<spring:message code='main.t0619' />" == "ko" ? folderUsers[i]["displayDeptName1"] : folderUsers[i]["displayDeptName2"];
+									authListUser.push(auth);
+								}
+								strictAuthList 		= authListUser;
+							}
+							menu_SelectRange("${companyId}", 0);
+							break;
+						case 1:
+							alert("<spring:message code='ezWebFolder.t306'/>");
+							break;
+						case 2:
+							alert("<spring:message code='ezWebFolder.t305'/>");
+							break;
+						case 3:
+							alert("<spring:message code='ezWebFolder.t300' />");
+							break;
+					}
+				},
+				error : function(error) {
+					if (error.statusText == "abort") {
+						return;
+					}
         
+					alert("<spring:message code='ezWebFolder.t134'/>" + error);
+				},
+				complete: function() {
+					selectXhr = null;
+				}
+			});
+		}
+		
+		function saveChanges_manager(returnMsg) { // returnMsg == ture ? return message : alert message;
+			if(addUser.length == 0 && deleteUser.length == 0) {
+				return;
+			}
+			
+			var strAuthListUser = (typeof authListUser == "string")? authListUser : JSON.stringify(authListUser);
+			var ajaxData = {
+					"currFolderId"  : folderId,
+					"targetId"   	: userManager.targetId,
+					"targetType" 	: userManager.targetType,
+					"folderUsers" 	: strAuthListUser,
+					"addUser" 		: convertJSONToJSONStr(addUser),
+					"deleteUser" 	: convertJSONToJSONStr(deleteUser),
+					"subFolderType"	: subFolderType,
+					"folderManager" : "${folderManager}"
+				};
+	   		var reMsg = "";
+			
+			$.ajax({
+				type: "POST",
+				url: "/ezWebFolder/changeUserFileORFolder.do",
+				data: ajaxData,
+				dataType: "JSON",
+				async: false,
+				success: function(data) {
+					var code = data.code;
+					
+					switch(parseInt(code)) {
+						case 0: 
+							reMsg = "<spring:message code='ezWebFolder.t182'/>";
+							//alert("<spring:message code='ezWebFolder.t182'/>");
+							break;
+						case 1:
+							reMsg = "<spring:message code='ezWebFolder.t306'/>";
+							//alert("<spring:message code='ezWebFolder.t306'/>");
+							break;
+						case 2:
+							reMsg = "<spring:message code='ezWebFolder.t305'/>";
+							//alert("<spring:message code='ezWebFolder.t305'/>");
+							break;
+						case 3:
+							reMsg = "<spring:message code='ezWebFolder.t300' />";
+							//alert("<spring:message code='ezWebFolder.t300' />");
+							break;
+						case 8:
+							reMsg = messages.resultErrDuplicateRename;
+							//alert(messages.resultErrDuplicateRename);
+							break;
+					}
+				},
+				error: function (xhr, status, e){
+					reMsg = "<spring:message code='ezWebFolder.t134'/>";
+					//alert("<spring:message code='ezWebFolder.t134'/>");
+				}
+			});
+
+			
+			if (returnMsg) {
+				return reMsg;
+			} else {
+				alert(reMsg);
+			}
+		}
+		
+		function convertJSONToJSONStr(obj) {
+			var returnStr = obj;
+			if (typeof returnStr != "string") {
+				var tmp = obj.length == 0 ? [] : obj;
+				returnStr = JSON.stringify(tmp);
+			}
+			
+			return returnStr;
+		}
     </script>
 </head>
 <body class="mainbody" style="padding-bottom:10px;">
@@ -742,22 +1177,42 @@
 			<ul>
 				<li class="important"><span onclick="buttons.fileDownload()"><spring:message code='ezWebFolder.t186' /></span></li>
 				<li class="important" id="upload"><span onclick="buttons.fileUpload()"><spring:message code='ezWebFolder.t187' /></span></li>
+				<c:if test="${usePreview}">
+					<li id="previewButton"><span onclick="buttons.filePreview()"><spring:message code='main.t4009' /></span></li>
+				</c:if>
 				<li id ="newFolder"><span onclick="buttons.newFolder()"><spring:message code='ezWebFolder.t255' /></span></li>
-				<li><span onclick="buttons.fileRename()"><spring:message code='ezWebFolder.t508' /></span></li>
+				<li id="rename"><span onclick="buttons.fileRename()"><spring:message code='ezWebFolder.t508' /></span></li>
+		<c:choose>
+			<c:when test="${folderType eq 'C'}">
+				<li id="moveButton"><span onclick="buttons.fileMoveAndCopy()"><spring:message code='ezWebFolder.t251' /></span></li>
+				<c:if test="${useVersionHistory}">
+					<li><span onclick="buttons.openFileVersionHistory()"><spring:message code='webfolder.version.button' /></span></li>
+				</c:if>
+					<li id="userManagerBtn"><span onclick="getUsersPage_manager()"><spring:message code='ezWebFolder.kes013' /></span></li>
+					<li><span class="icon16 icon16_star" onclick="favoriteContext.toggleAll()" title="<spring:message code='ezWebFolder.t216' />"></span></li>
+				<li id="SearchOption" mode="off" onclick="doLayerPopup(this)"><span class="icon16 icon16_search" title="<spring:message code='ezWebFolder.t123' />"></span></li>
+				<li id="delete"><span class="icon16 icon16_delete" onclick="buttons.fileDelete()" title="<spring:message code='ezWebFolder.t111' />"></span></li>
+			</c:when>
+			<c:otherwise>
 				<li><span onclick="buttons.fileMoveAndCopy()"><spring:message code='ezWebFolder.t251' /></span></li>
+				<c:if test="${useVersionHistory}">
+					<li><span onclick="buttons.openFileVersionHistory()"><spring:message code='webfolder.version.button' /></span></li>
+				</c:if>
 				<li><span onclick="shareContext.addShareView()"><spring:message code='ezWebFolder.t254' /></span></li>			
 				<!-- <li><img src="/images/i_bar.gif" /></li> -->
 				<li><span class="icon16 icon16_star" onclick="favoriteContext.toggleAll()"></span></li>
-	<%-- 			<li id=""><a onClick=""     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t272'/></span></a></li> --%>
-				<!-- <li><img src="/images/i_bar.gif"></li> -->
+			</c:otherwise>
+		</c:choose>
+		<c:if test="${folderType ne 'C'}">
 				<li id="SearchOption" mode="off" onclick="doLayerPopup(this)"><span class="icon16 icon16_search"></span></li>
 				<li><span class="icon16 icon16_delete" onclick="buttons.fileDelete()"></span></li>
 				<!-- <li><img src="/images/i_bar.gif"></li> -->
+		</c:if>
 	<!-- 			<li id=""><a onClick="folder_Manage()"style="margin-top: 3px;"><span>폴더관리</span></a></li> -->
 				<li><span class="icon16 icon16_refresh" onclick="refreshView()"></span></li>
 				<!-- <li><img src="/images/i_bar.gif" /></li> -->
 				<!-- <li style="float:right;border:0px;background-color: white"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv" /></li> -->
-				<div class="sub_frameIcon" style="float:right">
+				<div class="sub_frameIcon" style="float:right" id="wfOptionDiv">
 					<div class="sub_frameIconUL02">
 					  	<p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="webfolderlistoptiondiv"></span></p>  
 					</div>
@@ -828,7 +1283,9 @@
 							<th class="wfFileUploadDate headListClick" headers="CREATE_DATE"><spring:message code='ezWebFolder.t190'/></th><!-- 등록일 -->
 							<th class="wfFileUpdateDate headListClick" headers="UPDATE_DATE"><spring:message code='ezWebFolder.t198'/></th><!-- 갱신일 -->
 							<th class="wfFilePath 		" headers="FILE_PATH"><spring:message code='ezWebFolder.t199'/></th><!-- 위치 -->
+						<c:if test="${folderType ne 'C'}">
 							<th class="wfFileShare 		headListClick" style="text-align: center;" headers="FILESHARE_STATUS"><spring:message code='ezWebFolder.t278'/></th><!-- 공유상태 -->
+						</c:if>
 						</tr>
 					</thead>
 				</table>
@@ -890,11 +1347,30 @@
 			</table>
 		</div>
 	</div>	
+<c:if test="${folderType eq 'C'}">
+	<%@ include file="/WEB-INF/jsp/ezWebFolder/component/downloadOptionPopup.jsp" %>
+</c:if>
 	<div style="width:200px;height:110px; border-radius:8px;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="progressPanel">
 	    <img src="/images/email/progress_img.gif" style="padding-top:20px;"/>
 	</div>
+<c:if test="${folderType eq 'C'}">
+	<div id="listload_div" class="loadingBox2" style="display:none; z-index:7500;">
+		<div class="loader loader-3">
+			<div class="dot dot1"></div>
+			<div class="dot dot2"></div>
+			<div class="dot dot3"></div>
+			<div class="dot dot4"></div>
+		</div>
+	</div>
+</c:if>
 	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 		<iframe src="" style="border:none;" id="iFrameLayer"></iframe>
 	</div>
+<c:if test="${folderType eq 'C'}">
+	<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:5000;display:none;" id="webFolderRightPanel">&nbsp;</div>
+	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/selectUsers.js')}"></script>
+</c:if>
+	<%@ include file="/WEB-INF/jsp/ezWebFolder/component/contextMenu.jsp" %>
+	<%@ include file="/WEB-INF/jsp/ezWebFolder/webFolderApplyPopUp.jsp" %>
 </body>
 </html>

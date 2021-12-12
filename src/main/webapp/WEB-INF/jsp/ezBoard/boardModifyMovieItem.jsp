@@ -36,6 +36,7 @@
 	         }  
 	    </style>
         <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+        <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachMain_CK.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachItem_CK.js')}"></script>
@@ -52,6 +53,8 @@
 	        var pItemID = "${itemID}";
 	        var pGubun = "${guBun}";
 	        var pNoneActiveX = "YES";
+	        var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
+	        
 	        function window_onload() {
 	            var ua = navigator.userAgent;
 	            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
@@ -155,7 +158,10 @@
                 xmlhttp.send(xmldom);
 
                 if (xmlhttp.responseText == "OK") {
+                	sendBoardAlertMail("modify", pBoardID, pItemID, isAllGroupBoard); // 창이 닫히기 전 지연 시간이 필요하므로 alert 이전에 동작시킴
+                	
                     alert("<spring:message code='ezBoard.hsb08'/>");
+                    
                     window.opener.window_reload();
                     window.close();
                 }
@@ -203,6 +209,23 @@
 			    
 			 	return canvas.toDataURL();
 			}
+		    
+		    /* 2021-06-22 홍승비 - 게시판 메일알림 함수 추가, 비동기로 백그라운드 동작 */
+	        function sendBoardAlertMail(pMode, pBoardID, pItemID, pIsAllGroupBoard) {
+		        $.ajax({
+					type : "POST",
+					dataType : "text",
+					async : true,
+					url : "/ezBoard/sendBoardAlertMail.do",
+					data : {
+						mode : pMode,
+						boardID : pBoardID,
+						itemID : pItemID,
+						isAllGroupBoard : pIsAllGroupBoard
+					}
+				});
+	        }
+		    
    		</script>
 	</head>
 	<body class="popup" onLoad="window_onload()" style="overflow:hidden;">

@@ -45,12 +45,41 @@
 			            for (var i = 1; i < tmeptr.length; i++) {
 			                var span = document.createElement("SPAN");
 			                var img = document.createElement("IMG");
-			                img.src = "/images/email/mail_006.gif";
-			
 			                var a = document.createElement("A");
 		                    var filename = GetChildNodes(tmeptr[i])[1].textContent;
 		                    var filesize = GetChildNodes(tmeptr[i])[2].textContent;
 		                    a.innerHTML = MakeXMLString(filename) + " (" + filesize + ")";
+		                    
+				            var strTarget = "target=''";
+				            var strFileExt = filename.substr(filename.lastIndexOf('.')).toLowerCase();
+				            if (strFileExt == ".xls" || strFileExt == ".doc" || strFileExt == ".ppt" ||
+				               strFileExt == ".eml" || strFileExt == ".pdf" || strFileExt == ".hwp" ||
+				               strFileExt == ".ppt" || strFileExt == ".docx" || strFileExt == ".pptx" ||
+				               strFileExt == ".xlsx" || strFileExt == ".rtf") {
+				                strTarget = "target=''";
+				            }
+				            
+				            if (strFileExt.indexOf(".jpg") != -1 || strFileExt.indexOf(".jpeg") != -1 || strFileExt.indexOf(".bmp") != -1 || strFileExt.indexOf(".gif") != -1 || strFileExt.indexOf(".png") != -1 || strFileExt.indexOf(".tif") != -1 || strFileExt.indexOf(".tiff") != -1) {
+				                fileImage = "/images/image.png";
+				            } else if (strFileExt.indexOf(".doc") != -1 || strFileExt.indexOf(".docx") != -1) {
+				                fileImage = "/images/doc.png";
+				            } else if (strFileExt.indexOf(".xls") != -1 || strFileExt.indexOf(".xlsx") != -1) {
+				                fileImage = "/images/xls.png";
+				            } else if (strFileExt.indexOf(".ppt") != -1 || strFileExt.indexOf(".pptx") != -1 || strFileExt.indexOf(".pps") != -1 || strFileExt.indexOf(".ppsx") != -1) {
+				                fileImage = "/images/ppt.png";
+				            } else if (strFileExt.indexOf(".txt") != -1) {
+				                fileImage = "/images/txt.png";
+				            } else if (strFileExt.indexOf(".zip") != -1) {
+				                fileImage = "/images/zip.png";
+				            } else if (strFileExt.indexOf(".pdf") != -1) {
+				                fileImage = "/images/pdf.png";
+				            } else if (strFileExt.indexOf(".ecm") != -1) {
+				                fileImage = "/images/ecm.png";
+				            } else {
+				                fileImage = "/images/email/mail_006.gif";
+				            }
+				            
+			                img.src = fileImage;
 		                    
 			                var br = document.createElement("BR");
 			
@@ -123,7 +152,7 @@
 		                	if (paremtElement[0].type == "radio" || paremtElement[0].type == "checkbox") {
 		                    	WriterValue = WriterValue.substring(0, WriterValue.length - 1);
 		                	}
-		                    document.getElementById("extensionAttribute" + (i + 6)).innerHTML = WriterValue;
+		                    document.getElementById("extensionAttribute" + (i + 6)).innerText = WriterValue;
 		                }
 		            }
 		        }
@@ -243,11 +272,8 @@
 <!-- 			          <td id="Telephone" style="width:200px"></td> -->
 <!-- 			        </tr> -->
 <%-- 		        </c:if> --%>
-		        <tr>
-		          <th><spring:message code='ezBoard.t291'/></th>
-		          <td id="cTitle" style="WORD-WRAP: break-word" colSpan="5"><div id="txtTitle" style="OVERFLOW-Y: auto; WIDTH: 100%; vertical-align: middle"></div></td>
-		        </tr>
-<!-- 		        추가 항목이 있을 경우 -->
+
+	<!-- 		        추가 항목이 있을 경우 -->
 	       			<c:forEach var="boardAttributeVO" items="${boardAttributeListVO}" step="1" varStatus="status">
 	       				<tr>
 	       					<c:choose>
@@ -275,6 +301,10 @@
 	       				</tr>
 	       			</c:forEach>
 	<!-- 	          추가 항목이 있을 경우 끝 -->
+		        <tr>
+		          <th><spring:message code='ezBoard.t291'/></th>
+		          <td id="cTitle" style="WORD-WRAP: break-word" colSpan="5"><div id="txtTitle" style="OVERFLOW-Y: auto; WIDTH: 100%; vertical-align: middle"></div></td>
+		        </tr>
 			      </table>
 		      </td>
 		  </tr>

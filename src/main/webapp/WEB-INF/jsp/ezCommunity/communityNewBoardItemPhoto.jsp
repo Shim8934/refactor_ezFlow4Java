@@ -146,13 +146,20 @@
 	
 		    /* 2018-05-10 홍승비 - 게시물 저장 시 JSleep 함수 미사용 */
 		    function SaveItem() {
+				if(document.getElementById('txtPhotoFile').value==""){
+					alert("<spring:message code = 'main.t4000' />");
+					return;
+				}
 		    	var strArray = document.getElementById('txtPhotoFile').value.split('.'); 
 		    	var mimeType = strArray[strArray.length-1].toLowerCase();
-		    	if (mimeType != "gif" && mimeType != "jpg" && mimeType != "png" && mimeType != "jpeg" && mimeType != "bmp") {
-		    		alert(strLang85);
+		    	var check = false;
+		    	check = compareExtension(check, mimeType);
+		    	
+		    	if (!check) {
+		    		alert("<spring:message code ='ezBoard.hsbImg01' />");
 		    		return;
-		    	} 
-
+		        }
+		    	
 		        if(MHTLoadComplete != "true") {
 		            alert("<spring:message code = 'ezCommunity.t1138' />");
 		            return;
@@ -261,6 +268,17 @@
 		        } else {
 		            alert("<spring:message code = 'ezCommunity.t283' />");
 		        }
+		        
+				// 게시물 작성창을 게시물 리스트에서 호출한 경우, 부모창의 카운트 새로고침 추가
+				if (window.opener.location.href.indexOf("ezCommunity/boardItemListPhoto.do") > -1) {
+					try {
+						var cntDom = window.opener.parent.document.getElementById("itemcnt");
+						var code = window.opener.parent.code;
+						if (typeof(cntDom) != "undefined" && cntDom != null && typeof(code) != "undefined" && code != null) {
+							reloadLeftCount(code, cntDom);
+						}
+					} catch(e) {}
+				}
 				window.opener.location.reload(true);
 		        
 		        xmlhttp = null;
@@ -334,6 +352,9 @@
 		            } else if (SelectSingleNodeValue(nodes[i], "RESULTUPLOADA") == "overflow") {
 		                alert(strLang8 + AttachLimit + "MB" + strLang9);		                
 		                return;
+		            } else if (SelectSingleNodeValue(nodes[i], "RESULTUPLOADA") == "denied") {
+		                alert(strLang75);		                
+		                return;
 		            } else {
 		                alert(filename + " <spring:message code = 'ezCommunity.lhj08' />" + "\n\n" + result);
 		            }
@@ -394,6 +415,33 @@
 		        	return strRet;
 		        }
 		    }
+		    
+		    /* 2021-04-27 홍승비 - 이미지파일 확장자체크 추가 */
+		    function compareExtension(check, extension) {
+	    		var filterExtension = new Array("jpe", "jpg", "jpeg", "gif", "png", "bmp", "ico", "svg", "svgz", "tif", "tiff", "ai", "drw", "pct", "psp", "xcf", "psd", "raw");
+	    		for (var i = 0; i < filterExtension.length; i++) {
+	        		if (extension.toLowerCase() == filterExtension[i]) {
+	            		check = true;
+	            		break;
+	        		}
+	    		}
+	    		return check;
+			}
+		    
+	        /* 2021-05-03 홍승비 - 게시물 리스트에서 게시물을 등록한 경우, 커뮤니티 팝업홈 좌측 전체 게시물 개수 갱신 */
+	        function reloadLeftCount(pCode, pCntDom) {
+            	$.ajax({
+			    	type : "GET",
+			    	url : "/ezCommunity/getCommunityBoardItemCnt.do",
+			    	async : false,
+			    	data : {
+			    		code : pCode
+			    	},
+			    	success : function (result) {
+			    		pCntDom.innerText = result;
+			    	}
+			    });
+	        }
 		</script>
 		
 	</head>
@@ -445,7 +493,7 @@
 		
 		<div id="txtAttachList"></div>
 		<form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezCommunity/upload.do">
-			<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="display:none" />
+			<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="display:none;" accept="image/*" />
 			<input type="hidden" name="boardID" id="boardID" />
 			<input type="hidden" name="maxSize" id="maxSize" />
 			<input type="hidden" name="mode" id="mode" />

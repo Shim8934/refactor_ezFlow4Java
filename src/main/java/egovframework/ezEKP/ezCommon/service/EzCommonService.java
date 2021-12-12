@@ -7,6 +7,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
 import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -14,6 +17,14 @@ import egovframework.let.user.login.vo.TenantServerNameVO;
 import egovframework.let.user.login.vo.TenantVO;
 
 public interface EzCommonService {
+
+	public enum Device {
+		PC, MOBILE;
+
+		public boolean isMobile() {
+			return this == MOBILE;
+		}
+	}
 
 	public String startHtml2Mht(String strHTML, String realPath, Locale locale) throws Exception;
 	
@@ -63,11 +74,11 @@ public interface EzCommonService {
 
 	public void deleteCompanyConfig(int tenantId, String companyId, String propertyName) throws Exception;
 	
-	public void setMultiLoginUser(int tenantID, String userID, String loginTime) throws Exception;
+	public void setMultiLoginUser(int tenantID, String companyId, String userID, String loginTime, Device deviceType) throws Exception;
 	
-	public String selectMultiLoginTime(int tenantID, String userID) throws Exception;
+	public String selectMultiLoginTime(int tenantID, String companyId, String userID, Device deviceType) throws Exception;
 	
-	public boolean matchMultiLoginTime(int tenantID, String userID, String loginTime) throws Exception;
+	public boolean matchMultiLoginTime(int tenantID, String companyId, String userID, String loginTime, Device deviceType) throws Exception;
 	
 	public void createTblUserMultiLogin() throws Exception;
 
@@ -274,9 +285,61 @@ public interface EzCommonService {
 	public void createTblYearlyDocCount() throws Exception;
 
 	public void insertChartPortletInfo() throws Exception;
+
+	void addTblUserMultiLoginMobileFlagColumn() throws Exception;
 	
 	public void createMailTemplateSequence() throws Exception;
 
 	public void createJmochaMailboxProgress() throws Exception;
+	
+	public void addWebfolderUserSubdeptPermittedColumn() throws Exception;
+	
+	public void addWebfolderUserFolderManagerColumn() throws Exception;
+	
+	public void createWebfolderFileUserTable();
+	
+	public void insertApprContainterConfig() throws Exception;
+	
+	// webfolder
+	public List<String> getPermissionGroupIdListOfUser(String userId, String deptId, String companyId, int tenantId) throws Exception;
+	
+	public void createTblWebfolderApplyHistroy() throws Exception;
+	
+	public void checkWebfolderEncryptTable() throws Exception;
+	
+	public void checkWebfolderVersionTable() throws Exception;
+	
+	void createWebfolderHierarchicalColumns();
+
+	public void addWebfolderLogHistory() throws Exception;
+	
+	void createWebfolderNoInherit();
+	
+	public void alterWebfolderApplyHistoryAddColumn() throws Exception;
+	
+	public void createSerialnumgenGrant() throws Exception;
+	
+	public void insertApprSatViewerConfig() throws Exception;
+
+	public JSONObject attachWebFolderFile(JSONArray fileListJson, LoginVO userInfo, String param, HttpServletRequest request);
+
+	public void addBoardMailFGColumn() throws Exception;
+
+	public void addCommNoticeUpperNoColumn() throws Exception;
+	
+	public void alterTblAprReceiptProcessInfoAddColumn() throws Exception;
+	
+	public void alterTblDocDeliveryAddColumn() throws Exception;
+	
+    public void addTblAdminReceiptGroupSubExtReceptYnColumn() throws Exception;
+    
+    public void createTblCar() throws Exception;
+    
+    public void createTblCarAcl() throws Exception;
+    
+    public void createTblCarAttach() throws Exception;
+    
+    public void createTblCarForm() throws Exception;
+    
 	
 }

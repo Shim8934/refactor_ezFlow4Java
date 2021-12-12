@@ -75,7 +75,7 @@
 			    
 			    if (useReSend == "YES" && sentItems.toUpperCase() == "TRUE") {
 		    		$('#liReSend').css('display', 'block');
-		    	} 
+		   		}
 			    
 			    if (g_notiSSO == "1")
 				{

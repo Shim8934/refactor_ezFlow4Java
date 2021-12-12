@@ -266,7 +266,7 @@
 	            
 	            var _img = document.createElement("img");
 	            _img.id = "coplogo";
-	            _img.style.width = "auto";
+	            _img.style.width = "1200px";
 	            _img.style.height = "100px";
 
 	            if (SelectSingleNodeValueNew(xmldom, "DATA/C_LOGO").indexOf("default_logo_type") > -1) {
@@ -958,7 +958,7 @@
     		<div class="cmhome_right">
         		<div id="copmaindesc" class="introduce">
             		<span class="bgimg"></span>
-            		<p id="copdesc"></p>
+            		<p id="copdesc" style="white-space:pre;"></p>
 		        </div>
         		<div id="mainboard" style="height:560px; overflow:auto; display:none;"></div>
         		<iframe id="rightfrm" style="width:100%; height:560px; border:0; display:none" frameborder="0"></iframe>

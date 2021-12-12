@@ -299,6 +299,9 @@ function Save_OneLineReply() {
 			if (window.location.href.indexOf("/ezBoard/boardItemPreviewContent.do") > -1 || window.location.href.indexOf("/ezBoard/boardItemPreViewPhotoContent.do") > -1 || window.location.href.indexOf("/ezBoard/boardItemPreViewMovieContent.do") > -1) {
 				window.parent.getBoardList();
 			}
+			
+			/* 2021-06-23 홍승비 - 댓글알림 기능 추가 (댓글알림 시에 그룹사게시판 여부 파라미터는 필요없음) */
+			sendBoardAlertMail("comment", pBoardID, pItemID, "");
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			alert("ajax error");
@@ -337,4 +340,20 @@ function DivPopUpHidden2() {
         document.getElementById("iFramePanel2").style.display = "none";
         document.getElementById("iFrameLayer2").src = "/blank.htm";
     } catch (e) {}
+}
+
+/* 2021-06-22 홍승비 - 게시판 메일알림 함수 추가, 비동기로 백그라운드 동작 */
+function sendBoardAlertMail(pMode, pBoardID, pItemID, pIsAllGroupBoard) {
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : true,
+		url : "/ezBoard/sendBoardAlertMail.do",	        			
+		data : {
+			mode : pMode,
+			boardID : pBoardID,
+			itemID : pItemID,
+			isAllGroupBoard : pIsAllGroupBoard
+		}    			
+	});
 }

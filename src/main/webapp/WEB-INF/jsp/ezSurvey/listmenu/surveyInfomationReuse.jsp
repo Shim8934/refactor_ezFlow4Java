@@ -6,7 +6,8 @@
 <div class="surveyinfo-wrap">
 	<div class="survey-nminfo">
 		<div>
-			<input id="info-input-ttl" class="info-input-ttl" placeholder="<spring:message code='ezSurvey.t39'/>" value="${survey.title}">
+			<%-- <input id="info-input-ttl" class="info-input-ttl" placeholder="<spring:message code='ezSurvey.t39'/>" value="${survey.title}"> --%>
+			<input id="info-input-ttl" class="info-input-ttl" placeholder="<spring:message code='ezSurvey.t39'/>" value="<c:out value="${survey.title}"/>"> 
 		</div>
 		
 		<div class="survey-otherinf">
@@ -23,7 +24,7 @@
 						<span class='period-span'><spring:message code="ezSurvey.t44"/></span>
 						<c:choose>
 							<c:when test="${survey.resultPublicFlag == 0}"><input class="date-input" value="" tabindex="1" disabled></c:when>
-							<c:otherwise><input class="date-input" value="0" tabindex="1"></c:otherwise>
+							<c:otherwise><input class="date-input" value="${survey.openDays}" tabindex="1"></c:otherwise>
 						</c:choose>
 						<span><spring:message code="ezSurvey.t45"/></span>
 					</td>

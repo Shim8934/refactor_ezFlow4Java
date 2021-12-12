@@ -10,8 +10,9 @@ function btn_AttachAdd_onclick() {
     if( document.getElementById("cnt").value > 0) {
     	var formData = new FormData();
        	
+    	// 특수문자 파싱 이후 파일명 길이를 기준으로 체크
        	$.each($('#file1')[0].files, function(i, file) {
-       		if (file.name.length > attachFileNameMaxLength) {
+       		if (MakeXMLString(file.name).length > attachFileNameMaxLength) {
        			alert(strLang84 + attachFileNameMaxLength + strLangLHM01);
        			return;
        		} else {
@@ -157,11 +158,12 @@ function btn_AttachDel_onclick()
 
 			    for (var k = 0; k < multi_cnt; k++) 
 		        {
-
-		            if (document.getElementsByName("fileSelect")[k].checked) 
+			    	var fileSelectNode = document.getElementsByName("fileSelect")[k];
+		            if (fileSelectNode.checked) 
 		            {
-		                pAttachDelFileName = document.getElementsByName("fileSelect")[k].value;
-		                is_newfile = GetAttribute(document.getElementsByName("fileSelect")[k], "newfile");
+		            	fileSelectNode.parentNode.removeChild(fileSelectNode.nextSibling);
+		            	pAttachDelFileName = fileSelectNode.value;
+		                is_newfile = GetAttribute(fileSelectNode, "newfile");
 		                pNewNodeName = pNewNodeName + pAttachDelFileName + "*)[_-";
 
 		                Rtnval = "TRUE";
@@ -191,6 +193,9 @@ function btn_AttachDel_onclick()
 				    alert(pAlertContent);
 			    }
 		    }
+	    }else{
+		    	var pAlertContent = "" +strLang89 + "";
+		    	alert(pAlertContent);
 	    }
 	}
 	catch(ErrMsg)

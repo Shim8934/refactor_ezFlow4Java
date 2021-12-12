@@ -21,7 +21,9 @@
 		    var pUse_Editor = "<c:out value='${useEditor}'/>";
 		    var pNoneActiveX = "<c:out value='${noneActiveX}'/>";
 		    var getMemo = "<c:out value='${getsMemo}'/>";
+		    /* 2021-06-24 김은실 - var address가 쓰이는 것 같지 않은데 메모에 Enter가 있는 경우 불필요하게 에러가 남.
 		    var address = "<c:out value='${addressInfo}'/>"
+		     */
 		    
 		    window.onload = function () {
 		        var name = '<c:out value="${addressInfo.sName}"/>';
@@ -29,7 +31,13 @@
 				document.getElementById("TextName").innerText = name;		        		        
 		        document.getElementById("TextName").title = name;
 		        
-		    	getMemo = getMemo.replace(/&lt;br&gt;/gi, "\n").replace(/\\\\/gi, "\\"); 
+		        // 2021-06-24 김은실 - 대체 어디서 변경하는 지를 모르겠는데(핸들러??) 특수문자가 변경됨. &'"<> → &amp;&#039;&#034;&lt;&gt;
+		    	getMemo = getMemo.replace(/&amp;#92;n/gi, "\n").replace(/\\\\/gi, "\\")
+								 .replace(/&amp;/gi, "&")
+								 .replace(/&#039;/gi, "'")
+								 .replace(/&#034;/gi, '\"')
+								 .replace(/&lt;/gi, "<")
+								 .replace(/&gt;/gi, ">"); 
 		        document.getElementById("TextMemo").innerText = getMemo;
 		    }
 		    
@@ -249,7 +257,7 @@
 		          </tr>
 		          <tr>
 		            <th><spring:message code='ezAddress.t91' /></th>
-		            <td colSpan="3" style="height:50px;overflow:auto;"><div style="height:85px;overflow:auto"><span id="TextMemo" style="width:100%;height:60px" TextMode="MultiLine"><c:out value='${addressInfo.sMemo}' /></span></div></td>
+		            <td colSpan="3" style="height:50px;overflow:auto;"><div style="height:85px;overflow:auto"><span id="TextMemo" style="width:100%;height:60px" TextMode="MultiLine"></span></div></td>
 		          </tr>
 		        </table>
 		  </div>

@@ -8,6 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 		<style>
 			.mainlist tr th { border-top:0px }
 
@@ -32,6 +33,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeView.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeViewCtrl_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/apprGReceiveGroup.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script src="${util.addVer('/js/ezApprovalG/Lineinfo.js')}" type="text/javascript"></script>
@@ -49,6 +51,9 @@
 		    $(document).ready(function(){
 		    	document.getElementById("SCompID").value = "<c:out value='${companyID}'/>";
 		    	initializeApprGReceoveGroup();
+		    	
+                // 외부수신처 비동기로 호출
+                initReceptOuter();
 		    });
 		    
 		    function Tree_setconfig() {
@@ -206,25 +211,36 @@
 		            alert(pAlertContent);
 		            return;
 		        }
+		        
+                var currDiv = document.querySelector(".tabon").getAttribute("divname");
+                if (currDiv === "ReceptOrgan") {
+                    if (isExistDept(true)) {
+                        var pAlertContent = "외부 수신자가 존재합니다.\n내부 수신자와 외부 수신자는 동시에 등록할 수 없습니다.";
+                        alert(pAlertContent);
+                        return;
+                    }
 
-		        treeView.LoadFromID("FromTreeView");
-		        var nodeIdx = treeView.GetSelectNode();
-		        var treeNode = new TreeNode();
-		        treeNode.LoadFromID(nodeIdx.NodeID);
-
-		        if (nodeIdx.NodeID != null) {
-		            var DuplicateFlag = DuplicateAprDeptCheck(treeNode.GetNodeData("CN"));
-		            
-		            if (DuplicateFlag) {
-		                AprLineAddDept(nodeIdx.NodeID);
-		            } else {
-		                var pAlertContent = "<spring:message code='ezApprovalG.t317'/>";
-		            	//2016-05-13 장진혁과장 -- UI 팝업창 alert로 교체
-		                //OpenAlertUI(pAlertContent);
-		                alert(pAlertContent);
-		                return;
-		            }
-		        }
+			        treeView.LoadFromID("FromTreeView");
+			        var nodeIdx = treeView.GetSelectNode();
+			        var treeNode = new TreeNode();
+			        treeNode.LoadFromID(nodeIdx.NodeID);
+	
+			        if (nodeIdx.NodeID != null) {
+			            var DuplicateFlag = DuplicateAprDeptCheck(treeNode.GetNodeData("CN"));
+			            
+			            if (DuplicateFlag) {
+			                AprLineAddDept(nodeIdx.NodeID);
+			            } else {
+			                var pAlertContent = "<spring:message code='ezApprovalG.t317'/>";
+			            	//2016-05-13 장진혁과장 -- UI 팝업창 alert로 교체
+			                //OpenAlertUI(pAlertContent);
+			                alert(pAlertContent);
+			                return;
+			            }
+			        }
+                } else if (currDiv === "ReceptOuter") {
+                    AprDeptOuterAdd_onclick();
+                }
 		    }
 		    
 		    function deleteGroupSubiteminfo(selRow) {
@@ -347,6 +363,10 @@
 		    }
 		    
 		    function Updategroupmaininfo() {
+				if(!document.getElementById("pGroupName").value){
+					alert("<spring:message code='ezApprovalG.t1562'/>");
+					return;
+				}
 		        $.ajax({
 		        	type : "POST",
 		        	dataType : "html",
@@ -480,15 +500,26 @@
 	                return;
 	            }
 	            
-	            treeView.LoadFromID("FromTreeView");
-	            var nodeIdx = treeView.GetSelectNode();
-	            var treeNode = new TreeNode();
-	            treeNode.LoadFromID(nodeIdx.NodeID);
-
-	            if (nodeIdx.NodeID != null) {
-	                chkAllDept(treeNode.GetNodeData("CN"), treeNode.GetNodeData("DISPLAYNAME1"), treeNode.GetNodeData("DISPLAYNAME2"), treeNode.GetNodeData("EXTENSIONATTRIBUTE2"));
-	                getAdminReceivItem(p_groupid);
-	            }
+                var currDiv = document.querySelector(".tabon").getAttribute("divname");
+                if (currDiv === "ReceptOrgan") {
+                    if (isExistDept(true)) {
+                        var pAlertContent = "외부 수신자가 존재합니다.\n내부 수신자와 외부 수신자는 동시에 등록할 수 없습니다.";
+                        alert(pAlertContent);
+                        return;
+                    }
+	            
+		            treeView.LoadFromID("FromTreeView");
+		            var nodeIdx = treeView.GetSelectNode();
+		            var treeNode = new TreeNode();
+		            treeNode.LoadFromID(nodeIdx.NodeID);
+	
+		            if (nodeIdx.NodeID != null) {
+		                chkAllDept(treeNode.GetNodeData("CN"), treeNode.GetNodeData("DISPLAYNAME1"), treeNode.GetNodeData("DISPLAYNAME2"), treeNode.GetNodeData("EXTENSIONATTRIBUTE2"));
+		                getAdminReceivItem(p_groupid);
+		            }
+                } else if (currDiv === "ReceptOuter") {
+                    AprDeptOuterAddAll_onclick();
+                }
 	        }
 	        
 	        function chkAllDept(aDeptID, aDeptName, aDeptName2, aCompanyID) {
@@ -735,8 +766,20 @@
         	<tr>
             	<td style="vertical-align: top;">
                  	<%-- <h2><spring:message code='ezApprovalG.t232'/></h2> --%>
-                	<h2 class="h2_dot" style="padding-top:0px"><spring:message code='ezApprovalG.t232'/></h2>
-                	<div class="box" style="overflow: auto; height: 320px; width: 360px;" id="TreeView" onrequestdata="RequestData()" onnodeselect="TreeViewNodeClick()" onnodedblclick="TreeView.toggle(TreeView.selectedIndex)"></div>
+                    <div class="portlet_tabpart01" style="margin: 0;">
+                        <div id="tab" class="portlet_tabpart01_top">
+                            <p><span id="tab1" divname="ReceptOrgan" class="tabon" onclick="clickTab(event)"><spring:message code='ezApprovalG.t232'/></span></p>
+							<c:if test="${approvalFlag eq 'G'}">
+	                            <p><span id="tab2" divname="ReceptOuter" onclick="clickTab(event)">외부</span></p>
+							</c:if>
+                        </div>
+                    </div>
+                    <div id="ReceptOrgan">
+                        <div class="box" style="overflow: auto; height: 594px; width: 360px;" id="TreeView" onrequestdata="RequestData()" onnodeselect="TreeViewNodeClick()" onnodedblclick="TreeView.toggle(TreeView.selectedIndex)"></div>
+                    </div>
+                    <div id="ReceptOuter" style="display: none;">
+                        <div class="box" style="overflow: auto; height: 594px; width: 360px;" id="TreeView2"></div>
+                    </div>
             	</td>
             	<td style="width: 30px; text-align: center;">
                 	<img src="/images/arr_right.gif" onclick="return insertCont_onclick()" style="cursor: pointer">
@@ -752,12 +795,12 @@
 						</c:when>
 						<c:otherwise>
 							<%-- <h2><spring:message code='ezApprovalG.t53'/></h2> --%>
-							<h2 class="h2_dot" style="padding-top:0px"><spring:message code='ezApprovalG.t53'/></h2>
+							<h2 class="h2_dot" style="padding-top:0px;height: 25px;"><spring:message code='ezApprovalG.t53'/></h2>
 						</c:otherwise>
 					</c:choose>
                 	
                 	<div class="listview">
-                    	<div id="lvtDeptSelect" style="border: 0px solid #ddd; OVERFLOW-Y: auto; OVERFLOW-X: hidden; BACKGROUND-COLOR: #ffffff; Width: 360px; Height: 320px; font-size: 9pt" onselchanged="return lvtDeptSelect_SelChange()" onrowdblclick="return lvtDeptSelect_rowdblclick()"></div>
+                    	<div id="lvtDeptSelect" style="border: 0px solid #ddd; OVERFLOW-Y: auto; OVERFLOW-X: hidden; BACKGROUND-COLOR: #ffffff; Width: 360px; Height: 598px; font-size: 9pt" onselchanged="return lvtDeptSelect_SelChange()" onrowdblclick="return lvtDeptSelect_rowdblclick()"></div>
                 	</div>
             	</td>
         	</tr>

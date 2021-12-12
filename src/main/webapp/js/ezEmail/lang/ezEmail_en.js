@@ -1,6 +1,6 @@
-﻿var strLang1 = "There are no items to show in this view.";
+﻿﻿var strLang1 = "There are no items to show in this view.";
 var strLang2 = "Can not display folder. Internal server error occurred.";
-var strLang3 = "";
+var strLang3 = "It is a variable that has a view type.";
 var strLang4 = "Deleted Items";
 var strLang5 = "Error occurred while moving message.";
 var strLang6 = "Error occurred while deleting message.";
@@ -60,7 +60,7 @@ var strLang75 = "The total size of general attachment files can not exceed ";
 var strLang76 = "MB.";
 var strLang77 = "It will be sent by big e-mail sending, if a attachment file size is larger than ";
 var strLang78 = ".\nIt will be deleted the attachment files of big e-mail after ";
-var strLang79 = ".";
+var strLang79 = "days.";
 var strLang80 = " - Uploading. ";
 var strLang84 = " - Error occurred while uploading.\nServer Error";
 var strLang85 = " - Error occurred while uploading.";
@@ -94,7 +94,7 @@ var strLang119 = "Writer : ";
 var strLang120 = "Subject : ";
 var strLang121 = "Post sending : ";
 var strLang122 = "The attachment files of big e-mail (It will be deleted after ";
-var strLang123 = ".)";
+var strLang123 = "days.)";
 var strLang124 = "No subject -- compose message";
 var strLang125 = "Compose message";
 var strLang126 = "Group message";
@@ -300,10 +300,12 @@ var strLangKYJ03 = "Spaces can not be entered."
 var strLangLSD02 = "The non-members of the department.";
 var strLangJYH01 = "Not selected mail.";
 var strLangKSA01 = "(The same email address is already stored : \n %s)";
+var strLangKSA02 = "You do not have permission to send mail.";
+var strLangPYY01 = "Please select a mail account to be automatically forwarded.";
 
 /* 2018-07-03 홍승비 - 승인게시물, 커뮤니티 답변메일 companyID 관련 처리*/
-var strLangHSB01 = "이 게시물은 ";
-var strLangHSB02 = "에서 열람하실 수 있습니다.";
+var strLangHSB01 = "This post can be viewed on ";
+var strLangHSB02 = ".";
 
 /* 2018-11-22 이효진 주소록 등록, 수정 시 메시지 통일  번역 -> message property */
 var strLangLHJ01 = "You can only be created department administrator.";

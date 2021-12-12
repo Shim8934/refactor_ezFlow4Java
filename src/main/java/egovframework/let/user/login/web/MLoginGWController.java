@@ -14,6 +14,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezCommon.service.EzCommonService.Device;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
@@ -45,6 +48,7 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
+import egovframework.let.utl.fcc.service.Offset;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 /** 
  * @Description [Controller] 모바일 - 로그인
@@ -165,11 +169,11 @@ public class MLoginGWController {
     			
     			return result;
     		} else {
-        		String ipip = request.getHeader("ip") == null ? ClientUtil.getClientIP(request) : request.getHeader("ip");
-        		resultVO.setIp(ipip);
-        		LOGGER.debug("ipipipipipip = " + ipip);
-        		LOGGER.debug("ipipipipipip1 = " + request.getHeader("ip"));
-        		LOGGER.debug("ipipipipipip2 = " + ClientUtil.getClientIP(request));
+				String ip = request.getHeader("ip") == null ? ClientUtil.getClientIP(request) : request.getHeader("ip");
+				resultVO.setIp(ip);
+
+				LOGGER.debug("request.getHeader: {}, ClientUtil.getClientIP: {}, finally ip: {}",
+						request.getHeader("ip"), ClientUtil.getClientIP(request), ip);
         		
     			// 로그인 후 IP 주소 체크
 				boolean ipAddressChk = ipAccessCheck(resultVO);
@@ -306,7 +310,6 @@ public class MLoginGWController {
     			// 사용자 ID를 사용해 로그인하는 경우
     			if (uid.equals(resultVO.getId())) {
     				loginVO.setId(uid);
-    				
     				if (pinLoginAuth) { // pinLogin 인증 통과
     					loginVO.setDn("NOPASSWORD");
     				}
@@ -315,7 +318,19 @@ public class MLoginGWController {
     		        	loginVO.setPassword(pwd);
     		            loginVO.setDn("PASSWORD");
     				}
-		            
+
+		            String chkADpass = "";
+		            // AD를 사용하는 경우 AD의 암호화 비교한 값을 구한다.
+		            if (ezCommonService.getTenantConfig("USE_AD", tenantId).equalsIgnoreCase("YES")) {
+		            	// true 이면 그룹웨어 암호 변경
+		            	// false 이면 그냥 로그인 금지
+		            	chkADpass = loginService.chkADAndUpdatePassword(uid, rpwd, tenantId);	            	
+		            	
+		            	if (chkADpass.equalsIgnoreCase("false")) {
+		            		// vo의 password에 null 값을 넣어서 selectUser에서 무조건 암호가 틀리게 한다.
+		            		loginVO.setPassword(null);	            		
+		            	}
+		            }
 		            // 암호가 맞는 지 확인한다.
 		            resultVO = loginService.selectUser(loginVO);
     			// 사원번호를 사용해 로그인하는 경우
@@ -529,6 +544,45 @@ public class MLoginGWController {
         						useSecurity = mOptionVO.getUseSecurity();
         						returnValue = commonUtil.getTwoLetterLangFromLangNum(lang);
         					}
+
+							// PC 첫 로그인에서 비밀번호만 변경하고 재로그인을 하지 않았을 때
+							// TBL_USERLOCALINFO 테이블에 값이 없어서 모바일 rest 호출시 mOptionService.commonInfoWeb 를 사용하는
+							// 모듈들에서 에러가 발생하게 된다. 체크 후 넣어주는 로직!
+							if (StringUtils.isEmpty(ezCommonService.selectUserGetLang(uid, tenantId))) {
+								//UsePrimaryLangOnly가 YES일 때는 무조건 PrimaryLang 언어로 설정한다.
+								if (config.getProperty("config.UsePrimaryLangOnly").equals("YES")) {
+									if (primaryLang.equals("1")) {
+										acceptLanguage = "ko";
+									} else if (primaryLang.equals("3")) {
+										acceptLanguage = "ja";
+									}
+								}
+
+								String pcLang;
+
+								if (acceptLanguage != null) {
+									pcLang = acceptLanguage.substring(0, 2);
+									//이유는 정확히 알 수 없지만 로그를 확인한 결과 윗 라인에서 acceptLanguage가 null인 경우가 발생하여 추가함.
+								} else {
+									pcLang = commonUtil.getTwoLetterLangFromLangNum(primaryLang);
+								}
+
+								pcLang = commonUtil.getLangNumFromTwoLetterLang(pcLang);
+
+								//브라우저 언어가 한국어/일본어가 아닐 경우 시스템 언어로 설정(영어/중국어 추후 지원)
+								if (pcLang.equals("")) {
+									pcLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+								}
+
+								String primaryTimeZone = ezCommonService.getTenantConfig("PrimaryTimeZone", tenantId);
+
+								if (primaryTimeZone.equals("")) {
+									primaryTimeZone = Offset.KST;
+								}
+
+								ezCommonService.insertTblUserLocalInfo(uid, primaryTimeZone, pcLang, tenantId);
+							}
+
         					// 20180711 조진호 - 로그인 성공시 로그인실패 횟수 초기화
         					ezCommonService.updateUserConfigInfo(tenantId, uid, "LoginFailCount", "0");
         					
@@ -538,7 +592,16 @@ public class MLoginGWController {
         					String useShareApproval = ezCommonService.getTenantConfig("useShareApproval", tenantId);
         					/* 2019-08-30 김수아 - 모바일 세션 시간 config - useMobileSession */
         					String useSessionMobile = ezCommonService.getTenantConfig("useSessionMobile", tenantId);
-        					
+
+							// 모바일 중복로그인 처리
+							String useMultiLogin = ezCommonService.getCompanyConfig(tenantId, companyId, "useMultiLogin");
+							String multiLoginTime = "";
+
+							if ("NO".equalsIgnoreCase(useMultiLogin)) {
+								multiLoginTime = String.valueOf(System.currentTimeMillis());
+								commonUtil.setLoginUsers(tenantId, companyId, uid, multiLoginTime, Device.MOBILE);
+							}
+
         					Map<String, Object> map = new HashMap<String, Object>();
         					map.put("uid", uid);
         					map.put("ip", mIp);
@@ -553,6 +616,7 @@ public class MLoginGWController {
         					map.put("primaryLang", primaryLang);
         					map.put("rollInfo", resultVO.getRollInfo());
         					map.put("useSessionMobile", useSessionMobile);    				
+        					map.put("multiLoginTime", multiLoginTime);
         					
         					// LoginCookieSSO는 모바일용 쿠키가 아니라 웹버전 연동 쿠키임
         					Map<String, Object> mapSSO = new HashMap<String, Object>();
@@ -700,11 +764,11 @@ public class MLoginGWController {
     			
     			return result;
     		} else {
-        		String ipip = request.getHeader("ip") == null ? ClientUtil.getClientIP(request) : request.getHeader("ip");
-        		resultVO.setIp(ipip);
-        		LOGGER.debug("ipipipipipip = " + ipip);
-        		LOGGER.debug("ipipipipipip1 = " + request.getHeader("ip"));
-        		LOGGER.debug("ipipipipipip2 = " + ClientUtil.getClientIP(request));
+				String ip = request.getHeader("ip") == null ? ClientUtil.getClientIP(request) : request.getHeader("ip");
+				resultVO.setIp(ip);
+
+				LOGGER.debug("request.getHeader: {}, ClientUtil.getClientIP: {}, finally ip: {}",
+						request.getHeader("ip"), ClientUtil.getClientIP(request), ip);
         		
     			// 로그인 후 IP 주소 체크
 				boolean ipAddressChk = ipAccessCheck(resultVO);
@@ -1050,6 +1114,36 @@ public class MLoginGWController {
     	return result;
     }
     
+	@RequestMapping(value="/mobile/ezUser/login/users/{userId}/multilogin", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject validMultiLogin(@PathVariable String userId, @RequestParam String multiLoginTime, HttpServletRequest request) throws Exception {
+		LOGGER.debug("validMultiLogin started.");
+
+		Map<String, String> result = new HashMap<>();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int tenantId = userInfo.getTenantId();
+			String companyId = userInfo.getCompanyID();
+
+			// 중복로그인 자체를 허용하거나 multiLoginTime이 동일하다면 유효함
+			boolean allowMultiLogin = "YES".equalsIgnoreCase(ezCommonService.getCompanyConfig(tenantId, companyId, "useMultiLogin"));
+			boolean isValid = allowMultiLogin || ezCommonService.matchMultiLoginTime(tenantId, companyId, userId, multiLoginTime, Device.MOBILE);
+
+			result.put("status", isValid ? "ok" : "error");
+			result.put("code", "0");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", "1");
+			result.put("data", "server error: " + e.getMessage());
+		}
+
+		LOGGER.debug("validMultiLogin ended.");
+
+		return new JSONObject(result);
+	}
+
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezUser/login/users/{userId}/valid", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject valid(@PathVariable String userId, HttpServletRequest request, Locale locale) throws Exception {

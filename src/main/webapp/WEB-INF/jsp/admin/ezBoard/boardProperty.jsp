@@ -120,7 +120,13 @@
 	                }
 	                else if ($("#chkAnonyBoard").is(":checked")) {
 	                	$("#chkNotify").prop("disabled", true);
+						$("#chkMailFG_Post").prop("disabled", true);
+						$("#chkMailFG_Mod").prop("disabled", true);
+						$("#chkMailFG_Comment").prop("disabled", true);
 	                	$("#chkNotify").prop("checked", false);
+	                	$("#chkMailFG_Post").prop("checked", false);
+	                    $("#chkMailFG_Mod").prop("checked", false);
+	                    $("#chkMailFG_Comment").prop("checked", false);
 	                }
 	                /* 2018-07-13 홍승비 - 일반설정 화면 온로드 시 URL게시판 구분 추가 */
 	                else if ($("#chkURLBoard").is(":checked")) {
@@ -131,12 +137,18 @@
 	                    document.getElementById("attachLimitTr").style.display = "none";
 	                    
 	                    $("#chkNotify").prop("disabled", true);
+	                    $("#chkMailFG_Post").prop("disabled", true);
+	                    $("#chkMailFG_Mod").prop("disabled", true);
+	                    $("#chkMailFG_Comment").prop("disabled", true);
 	                    $("#chkbackgroundimage").prop("disabled", true);
 	                    $("#chkform").prop("disabled", true);
 	                    $("#chkApprBoard").prop("disabled", true);
 	                    $("#chkBoardLike").prop("disabled", true);
 	                    
 	                    $("#chkNotify").prop("checked", false);
+	                    $("#chkMailFG_Post").prop("checked", false);
+	                    $("#chkMailFG_Mod").prop("checked", false);
+	                    $("#chkMailFG_Comment").prop("checked", false);
 	                    $("#chkbackgroundimage").prop("checked", false);
 	                    $("#chkform").prop("checked", false);
 	                    $("#chkApprBoard").prop("checked", false);
@@ -178,11 +190,29 @@
 	            var Expires = "";
 	            var gubun = "";
 	            var replynotify = "";
+	            var mailFG_Post = "";
+	            var mailFG_Mod = "";
+	            var mailFG_Comment = "";
 
 	            if ($("#chkNotify").is(":checked")) {
-	                replynotify = "1"
+	                replynotify = "1";
 	            } else {
 	                replynotify = "0";
+	            }
+	            if ($("#chkMailFG_Post").is(":checked")) {
+	            	mailFG_Post = "Y";
+	            } else {
+	            	mailFG_Post = "N";
+	            }
+	            if ($("#chkMailFG_Mod").is(":checked")) {
+	            	mailFG_Mod = "Y";
+	            } else {
+	            	mailFG_Mod = "N";
+	            }
+	            if ($("#chkMailFG_Comment").is(":checked")) {
+	            	mailFG_Comment = "Y";
+	            } else {
+	            	mailFG_Comment = "N";
 	            }
 
 	           /*  if ($("#chkGroupBoard").is(":checked")) {
@@ -346,7 +376,8 @@
 	            		formFlag:FormFlag, oneLineReply:oneLineReply, apprFlag:APPRFLAG, orgApprFlag:orgAPPRFLAG,
 	            		apprUserList:ApprUserList, apprMailFlag:APPRMAILFLAG, parentBoardID : parentBoardID,
 	            		likeFlag:useBoardLike, noticeBoardMod:pNoticeBoardMod,
-						tabBoardMod1:ptabBoardMod1,tabBoardMod2:ptabBoardMod2,tabBoardMod3:ptabBoardMod3
+						tabBoardMod1:ptabBoardMod1,tabBoardMod2:ptabBoardMod2,tabBoardMod3:ptabBoardMod3,
+						mailFG_Post : mailFG_Post, mailFG_Mod : mailFG_Mod, mailFG_Comment : mailFG_Comment
 	            	},
 	            	success : function(){
 	            		alert("<spring:message code='ezBoard.t79'/>");
@@ -481,6 +512,9 @@
                     document.getElementById("trAttribute").style.display = "none";
                     
 					$("#chkNotify").prop("disabled", true);
+					$("#chkMailFG_Post").prop("disabled", true);
+					$("#chkMailFG_Mod").prop("disabled", true);
+					$("#chkMailFG_Comment").prop("disabled", true);
 					$("#chkbackgroundimage").prop("disabled", true);
 					$("#chkform").prop("disabled", true);
 					$("#chkApprBoard").prop("disabled", true);
@@ -498,6 +532,9 @@
                     document.getElementById("chkbackgroundimage").checked = false;
                     document.getElementById("chkform").checked = false;
                     document.getElementById("chkNotify").checked = false;
+                    document.getElementById("chkMailFG_Post").checked = false;
+                    document.getElementById("chkMailFG_Mod").checked = false;
+                    document.getElementById("chkMailFG_Comment").checked = false;
                     document.getElementById("chkBoardLike").checked = false;
                    // document.getElementById("chkOneLine").checked = false;
                     document.getElementById("chkOneLineBottom").checked = false;
@@ -512,6 +549,9 @@
                     document.getElementById("trAttribute").style.display = "";
                     
                     $("#chkNotify").prop("disabled", false);
+                    $("#chkMailFG_Post").prop("disabled", false);
+                    $("#chkMailFG_Mod").prop("disabled", false);
+                    $("#chkMailFG_Comment").prop("disabled", false);
 					$("#chkbackgroundimage").prop("disabled", false);
 					$("#chkform").prop("disabled", false);
 					
@@ -535,8 +575,21 @@
 	             if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true || chkAnonyBoard.checked == true || chkMovieBoard.checked == true) {
 	                $("#chkNotify").prop("disabled", true);
 	                document.getElementById("chkNotify").checked = false;
+	                
+	                // 게시알림, 수정알림, 댓글알림 메일은 익명게시판/URL게시판일때만 설정 불가능
+	                if (chkAnonyBoard.checked == true) {
+	                	$("#chkMailFG_Post").prop("disabled", true);
+	                	$("#chkMailFG_Mod").prop("disabled", true);
+	                	$("#chkMailFG_Comment").prop("disabled", true);
+		                document.getElementById("chkMailFG_Post").checked = false;
+		                document.getElementById("chkMailFG_Mod").checked = false;
+		                document.getElementById("chkMailFG_Comment").checked = false;
+	                }
 	            } else if (chkURLBoard.checked == false) {
 	                $("#chkNotify").prop("disabled", false);
+	                $("#chkMailFG_Post").prop("disabled", false);
+                    $("#chkMailFG_Mod").prop("disabled", false);
+                    $("#chkMailFG_Comment").prop("disabled", false);
 	            }
 	            
 	            if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true || chkMovieBoard.checked == true) {
@@ -795,7 +848,7 @@
 	    </style>
 	</head>	
 	<c:if test="${adminType != 'y'}">
-		<body class="mainbody"><h1><spring:message code="ezBoard.t60"/></h1>
+		<body class="mainbody"><h1><spring:message code="ezBoard.t60_1"/></h1>
 	</c:if>	
 	<c:if test="${adminType == 'y'}">
 		<body class="tabbody" style="margin-top:10px; margin-bottom: 15px; overflow-y:auto;">
@@ -996,12 +1049,6 @@
 	        		<span style="display:inline-block;"><input type="checkbox" id="chkBoardLike"><spring:message code="ezBoard.hsb10" />&nbsp;</span>
 	        		<span style="display:inline-block;"><input type="checkbox" id="chkbackgroundimage" onclick="checkboardtype()" /><spring:message code="ezBoard.t5011_1" />&nbsp;</span>
 	        		<span style="display:inline-block;"><input type="checkbox" id="chkform" onclick="checkboardtype()" /><spring:message code="ezBoard.t999027" />&nbsp;</span>
-	        		<c:if test="${model.replyNotify == '1'}">	            	
-	                	<span style="display:inline-block;"><input type="checkbox" id="chkNotify" onclick="checkboardtype()" checked /><spring:message code="ezBoard.t168" />&nbsp;</span>
-	                </c:if>
-	                <c:if test="${model.replyNotify != '1'}">	                   
-	                	<span style="display:inline-block;"><input type="checkbox" id="chkNotify" onclick="checkboardtype()" /><spring:message code="ezBoard.t168" />&nbsp;</span>
-	                </c:if>
 	        	</td>
 	        </tr>
 	        
@@ -1020,6 +1067,37 @@
 	                <span id="selectedTarget" style="vertical-align: middle;display:none;"></span>
 	                <div class="listview" style="height:100px;overflow-y:auto;overflow-x:hidden;" id="AccessList"></div>
 	            </td>
+	        </tr>
+	        
+	        <%-- 2021-06-21 홍승비 - 메일알림 옵션 분리, 게시알림 / 수정알림 / 댓글알림 추가 --%>
+			<tr id="boardMailOptionTR" style="${style}">
+	        	<th><spring:message code="ezBoard.HSBMail00" /></th>
+	        	<td>
+	        		<c:if test="${model.mailFG_Post == 'Y'}">	
+	                	<span style="display:inline-block;"><input type="checkbox" id="chkMailFG_Post" onclick="checkboardtype()" checked /><spring:message code="ezBoard.HSBMail01" />&nbsp;</span>
+	                </c:if>
+	                <c:if test="${model.mailFG_Post != 'Y'}">
+	                	<span style="display:inline-block;"><input type="checkbox" id="chkMailFG_Post" onclick="checkboardtype()" /><spring:message code="ezBoard.HSBMail01" />&nbsp;</span>
+	                </c:if>
+					<c:if test="${model.mailFG_Mod == 'Y'}">
+	                	<span style="display:inline-block;"><input type="checkbox" id="chkMailFG_Mod" onclick="checkboardtype()" checked /><spring:message code="ezBoard.HSBMail02" />&nbsp;</span>
+	                </c:if>
+	                <c:if test="${model.mailFG_Mod != 'Y'}">
+	                	<span style="display:inline-block;"><input type="checkbox" id="chkMailFG_Mod" onclick="checkboardtype()" /><spring:message code="ezBoard.HSBMail02" />&nbsp;</span>
+	                </c:if>
+					<c:if test="${model.mailFG_Comment == 'Y'}">
+	                	<span style="display:inline-block;"><input type="checkbox" id="chkMailFG_Comment" onclick="checkboardtype()" checked /><spring:message code="ezBoard.HSBMail03" />&nbsp;</span>
+	                </c:if>
+	                <c:if test="${model.mailFG_Comment != 'Y'}">
+	                	<span style="display:inline-block;"><input type="checkbox" id="chkMailFG_Comment" onclick="checkboardtype()" /><spring:message code="ezBoard.HSBMail03" />&nbsp;</span>
+	                </c:if>
+	        		<c:if test="${model.replyNotify == '1'}">
+	                	<span style="display:inline-block;"><input type="checkbox" id="chkNotify" onclick="checkboardtype()" checked /><spring:message code="ezBoard.HSBMail04" />&nbsp;</span>
+	                </c:if>
+	                <c:if test="${model.replyNotify != '1'}">
+	                	<span style="display:inline-block;"><input type="checkbox" id="chkNotify" onclick="checkboardtype()" /><spring:message code="ezBoard.HSBMail04" />&nbsp;</span>
+	                </c:if>
+	        	</td>
 	        </tr>
 	        
 			<%-- 2019-11-05 홍승비 - 댓글의 옵션처리 추가 --%>

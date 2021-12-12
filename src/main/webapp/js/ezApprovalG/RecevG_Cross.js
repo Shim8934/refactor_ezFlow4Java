@@ -1290,8 +1290,9 @@ function SetDocInfo() {
 			docID : pDocID,
 			publicFlag : pPublicFlag,
 			docNo : pDocNo,
-			docNumCode : pDocNumCode,
-			orgDocNumCode : pOrgDocNumCode,
+			docNumCode : pOrgDocNumCode,
+			// docNumCode : pDocNumCode,
+			// orgDocNumCode : pOrgDocNumCode,
 			mode : "I",
 			fileType : "mht"
 		},

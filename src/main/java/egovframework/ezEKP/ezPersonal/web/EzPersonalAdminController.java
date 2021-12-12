@@ -546,10 +546,10 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			result.append("<VALUE>" + commonUtil.cleanValue(vo.getPollTitle()) + "</VALUE>");		// title
 			result.append("</CELL>");
 			result.append("<CELL>");
-			result.append("<VALUE>" + commonUtil.getDateStringInUTC(vo.getStartDate(), userInfo.getOffset(), false).substring(0, 10) + "</VALUE>");	// startDate
+			result.append("<VALUE>" + vo.getStartDate().substring(0, 10) + "</VALUE>");	// startDate
 			result.append("</CELL>");
 			result.append("<CELL>");
-			result.append("<VALUE>" + commonUtil.getDateStringInUTC(vo.getEndDate(), userInfo.getOffset(), false).substring(0, 10) + "</VALUE>");
+			result.append("<VALUE>" + vo.getEndDate().substring(0, 10) + "</VALUE>");
 			result.append("</CELL>");
 
 			// 진행여부
@@ -827,11 +827,11 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			result.append("</CELL>");
 			
 			result.append("<CELL>");
-			result.append("<VALUE>" + commonUtil.getDateStringInUTC(vo.getStartDate(), userInfo.getOffset(), false).substring(0, 10) + "</VALUE>");
+			result.append("<VALUE>" + vo.getStartDate().substring(0, 10) + "</VALUE>");
 			result.append("</CELL>");
 			
 			result.append("<CELL>");
-			result.append("<VALUE>" + commonUtil.getDateStringInUTC(vo.getEndDate(), userInfo.getOffset(), false).substring(0, 10) + "</VALUE>");
+			result.append("<VALUE>" + vo.getEndDate().substring(0, 10) + "</VALUE>");
 			result.append("</CELL>");
 			
 			result.append("<CELL>");
@@ -1047,11 +1047,12 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		logger.debug("year: " + year);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userPrimaryLang = userInfo.getPrimary();
 		
 		List<PersonalEmpMonthVO> list = ezPersonalAdminService.getEmpMonth(year, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		for (PersonalEmpMonthVO vo : list) {
-			if (userInfo.getPrimary().equals("2")) {
+			if (!userPrimaryLang.equals("1")) {
 				vo.setDisplayName(vo.getDisplayName2());
 				vo.setTitle(vo.getTitle2());
 				vo.setDescription(vo.getDescription2());

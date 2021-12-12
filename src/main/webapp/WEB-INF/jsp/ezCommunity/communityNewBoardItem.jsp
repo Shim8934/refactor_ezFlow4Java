@@ -579,13 +579,23 @@
 		            }
 		            
 		            /* 2020-09-08 홍승비 - 메일 읽기 창에서 커뮤니티에 게시하는 경우, 새로고침 하지 않도록 수정 */
-		            if (window.opener.location.href.indexOf("ezEmail") == -1) {
-		            	window.opener.location.reload(true);
-		            }
+					if (window.opener.location.href.indexOf("ezEmail") == -1) {
+						// 게시물 작성창을 게시물 리스트에서 호출한 경우, 부모창의 카운트 새로고침 추가
+						if (window.opener.location.href.indexOf("ezCommunity/boardItemList.do") > -1 || window.opener.location.href.indexOf("ezCommunity/searchBoardItem.do") > -1) {
+							try {
+								var cntDom = window.opener.parent.document.getElementById("itemcnt");
+								var code = window.opener.parent.code;
+								if (typeof(cntDom) != "undefined" && cntDom != null && typeof(code) != "undefined" && code != null) {
+									reloadLeftCount(code, cntDom);
+								}
+							} catch(e) {}
+						}
+						window.opener.location.reload(true);
+					}
 					saveFlag = false;
 					
 		            window.close();
-		        } else {
+				} else {
 		            saveFlag = false;
 		            alert("<spring:message code='ezCommunity.t283'/> " + xmlhttp.responseText);
 		        }
@@ -828,7 +838,10 @@
 		                        	replyHeader += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;<spring:message code='ezCommunity.t1161' /></B>-----</p>";
 		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t1162' /></B>" + tempWriteDate + "</p>";
 		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t1163' /></B>" + strWriterName + "(" + strWriterTitle + "," + strWriterDeptName + "," + strWriterCompanyName + ")</p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t885' /></B>" + ConvMakeXMLString("<c:out value = '${item.title}' />") + "</p>";
+		                        	// 2021-06-22 김은실 - htmlData 이후 => 에디터에 옮겨지면서, 특수문자<>와 영문 혼용 시 태그로 인식함. 특수코드로(&lt; 등) 보내면 -> 에디터에서 알아서 변경하기 때문에, 특수코드로 보내는 것이 나음. 
+		                        	//					에디터에 따라 다를 경우, 경우를 나눠 추가작업을 요망.
+		                        	// replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t885' /></B>" + ConvMakeXMLString("<c:out value = '${item.title}' />") + "</p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t885' /></B><c:out value = '${item.title}' /></p>";
 		                        	replyHeader += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
 		                        	htmlData = replyHeader + htmlData;
 	                            
@@ -837,7 +850,7 @@
 		                        	replyHeader += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;<spring:message code='ezCommunity.t1161' /></B>-----</p>";
 		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t1162' /></B>" + strWriteDate + "</p>";
 		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t1163' /></B>" + strWriterName + "</p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t885' /></B>" + ConvMakeXMLString("<c:out value = '${item.title}' />") + "</p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t885' /></B><c:out value = '${item.title}' /></p>";
 		                        	replyHeader += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
 		                        	htmlData = replyHeader + htmlData;
 	                            }
@@ -871,7 +884,7 @@
                 for (var i = 0; i < nodes.length; i++) {
                     if (SelectSingleNodeValue(nodes[i], "RESULTUPLOADA") == "true") {
                         if (SelectSingleNodeValue(nodes[i], "FILESIZE") == 0) {
-                            alert(SelectSingleNodeValue(nodes[i], "PFILENAME") + strLang6);
+                            alert(strLang1);
                             return;
                         }
                     } else if (SelectSingleNodeValue(nodes[i], "RESULTUPLOADA") == "overflow") {
@@ -898,6 +911,21 @@
 		        evt.stopPropagation();
 		        evt.preventDefault();
 		    }
+	        
+	        /* 2021-05-03 홍승비 - 게시물 리스트에서 게시물을 등록한 경우, 커뮤니티 팝업홈 좌측 전체 게시물 개수 갱신 */
+	        function reloadLeftCount(pCode, pCntDom) {
+            	$.ajax({
+			    	type : "GET",
+			    	url : "/ezCommunity/getCommunityBoardItemCnt.do",
+			    	async : false,
+			    	data : {
+			    		code : pCode
+			    	},
+			    	success : function (result) {
+			    		pCntDom.innerText = result;
+			    	}
+			    });
+	        }
 		</script>
 
 		<script type="text/javascript" FOR="EzHTTPTrans" EVENT="AttachAddFile(filename)">
@@ -961,8 +989,8 @@
 										</c:otherwise>
 									</c:choose> 
 									<span id="reservation_date">
-										<input type="text" id="Sdatepicker" style="width: 80px; text-align: center" />
-										<input id="Stimepicker" type="text" class="time" style="width: 43px; margin-left: 10px; text-align: center;" /> 
+										<input type="text" id="Sdatepicker" oninput="this.value=this.value.replace(/[^0-9.\-]/g, '').replace(/(\..*)\./g, '$1');" style="width: 80px; text-align: center" />
+										<input id="Stimepicker" type="text" class="time" oninput="this.value=this.value.replace(/[^0-9.\:]/g, '').replace(/(\..*)\./g, '$1');" style="width: 43px; margin-left: 10px; text-align: center;" /> 
 										<a class="imgbtn imgbck" style="margin-top: 2px;">
 											<span onclick="btn_PostDate_Clear()" popuplocation='topright'><spring:message code='ezCommunity.t444' /></span>
 										</a>
@@ -979,7 +1007,7 @@
 											id="ChkPermanence" name="ChkPermanence"
 											onclick="return ChkPermanent()" checked>
 										<spring:message code='ezCommunity.t930' /></span>
-										<span id="Makedate"><input type="text" id="Edatepicker"
+										<span id="Makedate"><input type="text" id="Edatepicker" readonly="readonly"
 											style="width: 80px; text-align: center"></span>
 									</c:when>
 									<c:otherwise>
@@ -987,7 +1015,7 @@
 											id="ChkPermanence" name="ChkPermanence"
 											onclick="return ChkPermanent()">
 										<spring:message code='ezCommunity.t930' /></span>
-										<span id="Makedate"><input type="text" id="Edatepicker"
+										<span id="Makedate"><input type="text" id="Edatepicker" readonly="readonly"
 											style="width: 80px; text-align: center"></span>
 									</c:otherwise>
 								</c:choose></td>

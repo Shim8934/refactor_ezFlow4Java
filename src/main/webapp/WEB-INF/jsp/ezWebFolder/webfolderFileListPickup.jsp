@@ -32,6 +32,11 @@
 		.wfFileFavorite .wfFileCreator .wfFilePath .wfFileShare {
 			display:none;
 		}
+		.wfFilecheck 		{min-width:10px; width:5%;}
+		.wfFileType 		{min-width:10px; width:7%;}
+		.wfFileName 		{min-width:10px; width:59%;}
+		.wfFileSize 		{min-width:10px; width:12%;}
+		.wfFileUpdateDate 	{min-width:10px; width:15%;}
 	</style>	
 	
     <script type="text/javascript">
@@ -45,7 +50,7 @@
 		var strSuccess  = "<spring:message code='ezWebFolder.t27' />";
 		var pEnd =10;
 		var folderId = "<c:out value='${folderId}'/>";
-		var folderType = "<c:out value='${folderType}'/>";
+		var folderType = "C";
 		var allFileFlag = "${allFileFlag}";
 		var resultErr1 = "<spring:message code='ezWebFolder.t306'/>";
 		var resultErr2 = "<spring:message code='ezWebFolder.t305'/>";
@@ -63,6 +68,10 @@
 		var sortType = null;
 		var filePickArr = new Array();
 		var filePickObj = new Object();
+		var folderInfo = '${folderInfo}';
+		var jsonFolderInfo = JSON.parse(folderInfo);
+		var selectFileList = new Array();
+		var rootFolderId = "";
 		
 		document.onselectstart = function() {return false;};
 		
@@ -71,6 +80,13 @@
 		}
 		
 		window.onload = function() {
+// 			$("#dragDropArea").css("height",  window.innerHeight);
+			
+	        for(var i=0; i<jsonFolderInfo.length; i++){
+	        	var option = "<option value='" + jsonFolderInfo[i].FOLDER_ID 
+	        		+ "'>" + jsonFolderInfo[i].FOLDER_NAME + "</option>";
+	        	$('#taskRootFolder').append(option);
+	        }
 			getFileList(folderId);
 			
 			searchContext.setSearchStartEventHandler(function() {
@@ -82,6 +98,9 @@
 				getFileList(folderId);
 			});
 			
+			// 하나씩만 선택됨
+// 			rowContext.setSingleMode();
+
 			var listHeader = document.getElementsByClassName("headListClick");
 			for(var i = 0 ; i <listHeader.length; i++) {
 				listHeader[i].addEventListener("click", function(event) {
@@ -168,20 +187,28 @@
             try { OpenWin.focus(); } catch (e) { }
         }
 	    
-	    function getFileList(a){
+	    function getFileList(newFolderId){
+	    	var oldFolderId = folderId;
+	    	folderId = newFolderId;
 	    	if(folderId == "") {
 	    		alert(messages.strLang14);
 	    		return;
 	    	}
 	    	
+	    	// 공유받은폴더를 folderId가 없는 이름을 임의로 S라고 지정
+	    	if (folderType == "S" && folderId == "S") {
+				url = "/ezWebFolder/getSharedList.do";
+			} else {
+				url = "/ezWebFolder/fileList.do";
+			}
+	    	
 	    	searchRequirement = searchContext.getCurrentRequirement();
-	    	folderId = a;
 			$.ajax ({
 				type:"POST",
 				async: true,
-				url : "/ezWebFolder/fileList.do",
+				url : url,
 				data : { 
-					 "folderId"   		: folderId,
+					 "folderId"   		: newFolderId,
 					 "folderType" 		: folderType,
 					 "currPage"   		: pagination.currentPage(),
 					 "listCount"  		: pagination.listSize(),
@@ -198,14 +225,15 @@
 					},
 				dataType: "JSON",
 				success : function (data) {
-					successFile(data);
+					successFile(data, newFolderId, oldFolderId);
+					document.getElementById("countSpan").style.display = "none";
 				},
 				error : function(error) {
 				}
 			});
 		}
 	    
-		function successFile(data) {
+		function successFile(data, newFolderId, oldFolderId) {
 			if (data.status == "error") {
 				if (data.code == 1) {
 					console.log("<spring:message code='ezWebFolder.t306' />");
@@ -214,10 +242,12 @@
 					alert("<spring:message code='ezWebFolder.t305' />");
 					return;
 				} else if (data.code == 3) {
+					folderId = oldFolderId;
 					alert("<spring:message code='ezWebFolder.t300' />");
 					return;
 				}
 			}
+			folderId = newFolderId;
 			userId = data.data.userId;
 			var result = data.data;
 			
@@ -228,10 +258,18 @@
 			var originalPath = result.originalPath;
 			var folderUpp = result.folderUpp;
 			var dragDropAreaElmt = document.getElementById("dragDropArea");
-			filelist = result.fileList;
+			var filelist = [];
+			if (folderType == "S" && folderId == "S") {
+				filelist = result.list;
+				pagination.setListSize(result.listCount);
+				pagination.setAmount(result.totalCount);
+			} else {
+				filelist = result.fileList;
+				pagination.setListSize(result.listCount);
+				pagination.setAmount(result.totalRows);
+				
+			}
 			
-			pagination.setListSize(result.listCount);
-			pagination.setAmount(result.totalRows);
 			pagination.build();
 			
 			$('#tblFileList tr td').parent().remove();
@@ -239,10 +277,7 @@
 			parentId = data.data.folderUpp;
 			
 			namePath(folderPath, originalPath);
-			document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp; " + messages.strLang15 + " <span style='color:#017BEC;'>" + fldCnt +" </span>"
-			 + " / " + messages.strLang16 + " <span style='color:#017BEC;'> " 
-				+ fileCnt +" </span>";
-			$("#listcount").val(result.listCount).prop("selected", true);
+
 			(function() {
 				var webfolderList_BODYHeight = document.getElementById("dragDropArea").clientHeight;
 				var webfolderDivHeight = document.getElementById("tblFileList").clientHeight;
@@ -258,7 +293,7 @@
 						
 							var lastTh = $("#tblFileList1 tr th").last();
 							lastTh.attr("id", "forScroll");
-							lastTh.css("width", "9px");
+							lastTh.css("width", "15px");
 							
 					}
 				}
@@ -277,70 +312,85 @@
 			var detailName;
 			var imgElmt;
 			var length;
-			
-			folderPath = folderPath.substring(1, folderPath.length - 1);
-			originPath = folderPath.split("|");
-			path = originalPath.split("/");
-			
 			$('#originalPath').empty();
-			orginalPathElmt.appendChild(nameTag);
-			length = path.length - 1;
 			
-			for (var i = 0; i < length; i++) {
+			// 공유받은 폴더는 폴더명이 없으므로 임의로 이름 생성 
+			if (folderType == "S") {
+				orginalPathElmt.appendChild(nameTag);
 				detailName  = document.createElement("div");
 				var divName = document.createElement("div");
 				
+				detailName.id = "aName";
 				detailName.className = "aName";
-				detailName.id = originPath[i];
 				detailName.onclick = function() {
-					nameFileList(this.id);
+					radioOnclick('S');
 				};
 				
-				divName.textContent = path[i] ;
-				divName.setAttribute("title", path[i]);
+				divName.textContent ="<spring:message code='ezWebFolder.t214' /> " + " / " ;
+				divName.setAttribute("title",  "<spring:message code='ezWebFolder.t214' /> " );
 				/* 2018-05-07 장진혁 - 상단 폰트사이즈 15px로 조정 */
 				divName.setAttribute("style", "font-size:15px; padding-right:3px;");
 				detailName.appendChild(divName);
 				nameTag.appendChild(detailName);
-				
-				/* root 폴더 업로드기능이 적용되지 않았을 시 name path 
-				if(length == 1) {
-					var divSeparator = document.createElement("div");
-					divSeparator.setAttribute("class", "separator");
-					divSeparator.textContent =  " > " + messages.strLang17 + " "; // 모든파일
-					nameTag.appendChild(divSeparator);
-				}
-				
-				if (i != length - 1) {
-					var divSeparator = document.createElement("div");
-					divSeparator.textContent = " > ";
-					divSeparator.setAttribute("class", "separator");
-					nameTag.appendChild(divSeparator);
-				}
-				*/
-				
-				if (allFileFlag == "all") {
-					var divSeparator = document.createElement("div");
-					divSeparator.setAttribute("class", "separator");
-					divSeparator.textContent =  " > " + messages.strLang17 + " "; // 모든파일
-					nameTag.appendChild(divSeparator);
-				} else {
-					var divSeparator = document.createElement("div");
-					if (i != length - 1) {
-						divSeparator.textContent = " > ";
-					}
-					divSeparator.setAttribute("class", "separator");
-					nameTag.appendChild(divSeparator);
-				}
 			}
+			
+			if (folderPath) {
+				folderPath = folderPath.substring(1, folderPath.length - 1);
+				originPath = folderPath.split("|");
+				path = originalPath.split("/");
+				
+				orginalPathElmt.appendChild(nameTag);
+				length = path.length - 1;
+				
+				for (var i = 0; i < length; i++) {
+					detailName  = document.createElement("div");
+					var divName = document.createElement("div");
+					
+					detailName.className = "aName";
+					detailName.id = originPath[i];
+					detailName.onclick = function() {
+						nameFileList(this.id);
+					};
+					
+					divName.textContent = path[i] ;
+					divName.setAttribute("title", path[i]);
+					/* 2018-05-07 장진혁 - 상단 폰트사이즈 15px로 조정 */
+					divName.setAttribute("style", "font-size:15px; padding-right:3px;");
+					var parentId = ""
+					if (i == 0) {
+						parentId = "root";
+						rootFolderId = originPath[i];
+					} else {
+					 	parentId = originPath[i-1];
+					}
+					divName.setAttribute("parentId", parentId);
+					detailName.appendChild(divName);
+					nameTag.appendChild(detailName);
+					
+					if (allFileFlag == "all") {
+						var divSeparator = document.createElement("div");
+						divSeparator.setAttribute("class", "separator");
+						divSeparator.textContent =  " > " + messages.strLang17 + " "; // 모든파일
+						nameTag.appendChild(divSeparator);
+					} else {
+						var divSeparator = document.createElement("div");
+						if (i != length - 1) {
+							divSeparator.textContent = " > ";
+						}
+						divSeparator.setAttribute("class", "separator");
+						nameTag.appendChild(divSeparator);
+					}
+				}
+			} 
 		}
 		
 		function nameFileList(param) {
-			folderId = param;
 			searchContext.clearRequirement();
 			$("#idSelect").val("");
-			onFileTypeChange("");
-// 			selectLeftFolder(folderId);
+			getFileList(param);
+			if (folderType == "C" && param == rootFolderId){
+				$("#taskRootFolder").val(folderId).prop("selected",true);
+			}
 		}
 		
 		function renderData(result) {
@@ -390,6 +440,9 @@
 					trElmt.setAttribute("targetCreater", result[i]["createId"]);
 					trElmt.setAttribute("targetPath", result[i]["filePosition"]);
 					
+					var encryptedFlag = result[i]["encryptedFlag"];
+					trElmt.setAttribute("encryptedFlag", encryptedFlag);
+
 					if (result[i]["targetType"]) {
 						trElmt.setAttribute("targetFunction", resultJson["folderType"]);
 					}
@@ -400,7 +453,7 @@
 					} else {
 						trElmt.setAttribute("targetCreater", result[i]["creatorId"]);
 					}
-					if(result[i]["typeId"] != "folder") {
+					if(result[i]["fileExt"] != "folder") {
 						trElmt.addEventListener("click", function(event) {rowContext.onRowClick(event, this);});
 					}
 					
@@ -413,12 +466,13 @@
 					inputElmt.addEventListener("dblclick", function(event) { event.stopPropagation(); });
 					
 					var selectedFileCheck = folderId + "/" + result[i]["fileId"];
+
 					if (filePickArr.indexOf(selectedFileCheck) > -1){
 						inputElmt.setAttribute("checked", true);
 						trElmt.setAttribute("class", "bnkWebFolder2");
 					}
 					
-					if (result[i]["typeId"] != "folder") {
+					if (result[i]["fileExt"] != "folder") {
 						tdElmt1.appendChild(inputElmt);
 					}
 					
@@ -427,12 +481,17 @@
 					fileIconElmt.src = result[i]["fileIconUrl"];
 					tdElmt3.appendChild(fileIconElmt);
 					
-					tdElmt4.textContent = result[i]["fileName"];
-					tdElmt4.setAttribute("title", result[i]["fileName"]);
+					var fileName = result[i]["fileName"];
+					tdElmt4.setAttribute("title", fileName);
+					tdElmt4.textContent = fileName;
 					
-					if(result[i]["typeId"] == "folder") {
+					if (encryptedFlag == 1) {
+						tdElmt4.innerHTML = "<img src='/images/email/secureMail/security_icon.gif' width='12' /> " + tdElmt4.innerHTML;
+					}
+					
+					if(result[i]["fileExt"] == "folder") {
 						tdElmt5.textContent = ' - ';
-					}else {
+					} else {
 						tdElmt5.textContent = getFileSize(result[i]["fileSize"]);
 					}
 					
@@ -452,10 +511,10 @@
 						});
 					} 
 					
-					if(result[i]["typeId"] == "folder") {
+					if(result[i]["fileExt"] == "folder") {
 						trElmt.ondblclick = function() {
-// 							selectLeftFolder(this.getAttribute("targetId"));
-							getFileList(this.getAttribute("targetId"));
+							shareedFolderClick(this);
+							nameFileList(this.getAttribute("targetId"));
 						};
 					}
 					
@@ -579,9 +638,118 @@
         	window.parent.fileListPick.event.cancel();
 	    }
         function confirm() {
-        	window.parent.fileListPick.event.confirm(filePickArr);
+			if (selectFileList.length == 0) {
+				alert("<spring:message code='ezWebFolder.t108' />");
+				return;
+			}
+
+        	var trElmt       = event.currentTarget;
+			var filesList    = [];
+// 			filesList.push(filePickArr);
+			filesList.push(selectFileList);
+
+			var selectedRows = rowContext.getSelectedRows();
+			for (var i = 0; i < selectedRows.length; i++) {
+				if (selectedRows[i].getAttribute("encryptedFlag") == 1) {
+					alert("<spring:message code='webfolder.encrypted.approve.attach' />");
+					return;
+				}
+			}
+			
+			$.ajax({
+				type: "POST",
+				url: "/ezWebFolder/checkPermission_y.do",
+				data: {
+					"fileList" : filesList.toString(),
+					"folderList" : ""
+				},
+				dataType: "JSON",
+				async: true,
+				success : function(data) {
+					var result = data.status;
+					
+					if (result != "ok" && data.code == "3") {
+						alert(messages.strLang25);
+					} else if (data.code == "1") {
+						alert(messages.strLang7);
+					} else {
+			        	window.parent.fileListPick.event.confirm(filePickArr);
+					}
+				},
+				error : function(error) {
+					alert(messages.strLang7 + error);
+				}
+			});
 	    }
-        
+	    
+	    function radioOnclick(obj) {
+	    	folderType = obj;
+	    	document.getElementById("searchFileName").value = "";
+	    	$("#idSelect").val("").prop("selected",true);
+	    	searchContext.clearRequirement();
+			if (folderType == "S") {
+		    	folderId = "S";
+			}
+			// folderType 별 최상위 폴더들 정보
+			$.ajax({
+				type: "GET",
+				url: "/ezWebFolder/webfolderAuthFolderList.do",
+				data: {
+					"folderType" : obj,
+					"allFileFlag" : "N",
+					"parentId": ""
+				},
+				dataType: "JSON",
+				async: true,
+				success : function(data) {
+					var result = data.status;
+					
+					if (result != "ok" && data.code == "3") {
+						alert(messages.strLang25);
+					} else if (data.code == "1") {
+						alert(messages.strLang7);
+					} else {
+						jsonFolderInfo = data.folderInfo;
+			        	$('#taskRootFolder').empty();
+			        	if (jsonFolderInfo.length == 0) {
+			        		$("#taskRootFolder").css("visibility","hidden");
+			        	} else {
+			        		$("#taskRootFolder").css("visibility","visible");
+			        		if (folderType == "S") {
+					        	var option = "<option value='S"
+					        		+ "'>" + "<spring:message code='ezWebFolder.t214' />" + "</option>";
+					        	$('#taskRootFolder').append(option);
+			        		}
+							for(var i=0; i<jsonFolderInfo.length; i++){
+					        	var option = "<option value='" + jsonFolderInfo[i].FOLDER_ID 
+					        		+ "'>" + jsonFolderInfo[i].FOLDER_NAME + "</option>";
+					        	$('#taskRootFolder').append(option);
+					        }
+			        	}
+			        	
+						if (folderType == "S") {
+							getFileList("S");
+						} else {
+							getFileList(data.folderId);
+						}
+					}
+				},
+				error : function(error) {
+					alert(messages.strLang7 + error);
+				}
+			});
+		}
+	    function shareedFolderClick(obj){
+			if ((folderType == "S" && folderId == "S") || (folderType == "C" && folderId == rootFolderId)) {
+		    	$("#taskRootFolder").val(obj.getAttribute("targetid")).prop("selected",true);
+			}
+	    }
+	    
+	    function enterkey(obj) { 
+	    	if (window.event.keyCode == 13) { 
+	    		search('basic');
+	    	}
+	    }
     </script>
 </head>
 	<body style="overflow:hidden;" class="popup">
@@ -591,33 +759,21 @@
                 <li><span onclick="cancel()"></span></li>
             </ul>
         </div>
-		<h1 style="height:36px;">
-		<c:choose>
-			<c:when test="${folderType eq 'C'}">
-				<spring:message code='ezWebFolder.t11' />
-			</c:when>
-			<c:when test="${folderType eq 'D'}">
-				<spring:message code='ezWebFolder.t12' />
-			</c:when>
-			<c:when test="${folderType eq 'U'}">
-				<spring:message code='ezWebFolder.t13' />
-			</c:when>
-		</c:choose>
-		<span id="mailBoxInfo"></span>
-		<div id="capacity-wrapper">
-			<div class="progressbar">
-				<div id="capacity-bar" class="proggress"></div>
-			</div>
-			<span id="capacity-percent"></span>
+		<select class="select" id="taskRootFolder" onchange="getFileList(this.value)" style="margin-top: -6px;margin-left: 6px; max-width: 400px;">
+		</select>
+		<div style="position: absolute; top: 54px; right: 10px;">
+			<input name="treeType" id="radio1" type="radio" value="C" checked style="margin:0px;padding:0px;width:13px;height:17px;vertical-align: middle" onclick="radioOnclick('C');"><label for="radio1"><span> <spring:message code='ezWebFolder.t233'/></span></label>
+			<input name="treeType" id="radio2" type="radio" value="D"         style="margin:0px;padding:0px;width:13px;height:17px;vertical-align: middle" onclick="radioOnclick('D');"><label for="radio2"><span> <spring:message code='ezWebFolder.t234'/></span></label>
+			<input name="treeType" id="radio3" type="radio" value="U"         style="margin:0px;padding:0px;width:13px;height:17px;vertical-align: middle" onclick="radioOnclick('U');"><label for="radio3"><span> <spring:message code='ezWebFolder.t235'/></span></label>
+			<input name="treeType" id="radio4" type="radio" value="S"         style="margin:0px;padding:0px;width:13px;height:17px;vertical-align: middle" onclick="radioOnclick('S');"><label for="radio4"><span> <spring:message code='ezWebFolder.t266'/></span></label>
 		</div>
-	</h1>
 	<div id="pageArea">
 		<div style="height:40px;">
 			<div style="font-size: 24px;font-weight: bold;font-weight: bold; padding: 8px 4px 0px;" id ="originalPath" ></div>
 		</div>
 		<div id="mainmenu">
 			<ul>
-				<input type="text" id="searchFileName" style="float:left;margin-right:3px;height:31px;" value="" name="searchFileName" placeholder="<spring:message code='ezWebFolder.t523' />">
+				<input type="text" id="searchFileName"  onkeyup="enterkey(this)" style="float:left;margin-right:3px;margin-left:5px;height:31px;" value="" name="searchFileName" placeholder="<spring:message code='ezWebFolder.t523' />">
 <!-- 				<input type="text" id="searchFileName" style="float:left;margin-right:3px;height:31px;" value="" name="searchFileName" placeholder="파일명 검색"> -->
 				<li id="SearchOption" mode="off" onclick="search('basic')"><span class="icon16 icon16_search"></span></li>
 				<li><span class="icon16 icon16_refresh" onclick="refreshView()"></span></li>
@@ -650,7 +806,7 @@
 				<table class="mainlist" style="width:100%"  id="tblFileList1">
 					<thead id ="BoardList_THEAD">
 						<tr>
-							<th class="wfFilecheck " style="text-align: center;" ><input type="checkbox" onchange="rowContext.selectAll(this.checked)" id="_checkAll"></th>
+							<th class="wfFilecheck " style="text-align: center;" ><input type="checkbox" onchange="rowContext.selectAll(this.checked)" id="_checkAll" style="display:none;"></th>
 							<th class="wfFileType 		headListClick" style="text-align: center;" headers="TYPE_ICON"><spring:message code='ezWebFolder.t188'/></th><!-- 유형 -->
 							<th class="wfFileName 		headListClick" headers="FILE_NAME"><spring:message code='ezWebFolder.t156'/></th><!-- 이름 -->
 							<th class="wfFileSize 		headListClick" style="text-align: center;" headers="FILE_SIZE"><spring:message code='ezWebFolder.t157'/></th><!-- 파일크기 -->
@@ -658,7 +814,7 @@
 						</tr>
 					</thead>
 				</table>
-				<div id="dragDropArea"  style="overflow-y:auto;white-space:nowrap;height:290px;">
+				<div id="dragDropArea"  style="overflow-y:auto;white-space:nowrap;height:295px;">
 					<table class="mainlist" style="width: 100%;margin:0px 0px 0px !important; white-space:nowrap;" id="tblFileList">
 				
 					</table>

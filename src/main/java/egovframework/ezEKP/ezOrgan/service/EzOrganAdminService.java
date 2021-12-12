@@ -1,6 +1,9 @@
 package egovframework.ezEKP.ezOrgan.service;
 
 import java.util.List;
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletResponse;
 
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganGroupVO;
@@ -40,6 +43,10 @@ public interface EzOrganAdminService {
 	public int companyChildCheck(String cn, int tenantID) throws Exception;
 	
 	public int userCheck(String cn, int tenantID) throws Exception;
+
+	PreResult checkDuplicateId(String cn, String employeeNumber, int tenantId) throws Exception;
+
+	PreResult checkDuplicateLoginId(String cn, String employeeNumber, int tenantId) throws Exception;
 	
 	public int getRetireListCount(int pPage, int pPageRow, int tenantID, String searchStartDate, String searchEndDate, String searchKeycode, String searchKeyword, String searchCompanyID) throws Exception;
 
@@ -83,9 +90,9 @@ public interface EzOrganAdminService {
 	public void syncWithBizmekaTalkAccounts(int tenantID) throws Exception;
 	
 	public List<OrganUserVO> getUserList(int tenantID, int startPage, int maxItemPerPage, String keycode,String keyword,
-			String companyId, String sortColumn, String sortType) throws Exception;
+			String companyId, String sortColumn, String sortType, boolean[] searchFor) throws Exception;
 	
-	public int getUserCount(int tenantID,String keycode,String keyword,String companyId) throws Exception;
+	public int getUserCount(int tenantID, String keycode, String keyword, boolean[] searchFor, String companyId) throws Exception;
 	
 	public void updateProperty(String cn, String column, String number, String pClass, int tenantID, String mCondition) throws Exception;
 	
@@ -136,6 +143,12 @@ public interface EzOrganAdminService {
 	public String getTitleList_group(String type, String companyID, int tenantID, String lang) throws Exception;
 	
 	public OrganJobVO getTitleInfo_group(String type, String jobID, String companyID, int tenantID) throws Exception;
+
+	public List<OrganUserVO> getExportUserList(String primary, String companyId, int tenantId) throws Exception;
+	
+	public String createExcelUsers(String realPath, String dirPath, List<OrganUserVO> exportUserlist, String primary, Locale locale) throws Exception;
+	
+	public void getExcelFile(String fileName, String realPath, String userAgent, HttpServletResponse response, int tenantId) throws Exception;
 
 	public String getTitleListBoard(String type, String companyID, int tenantID, String lang) throws Exception;
 	

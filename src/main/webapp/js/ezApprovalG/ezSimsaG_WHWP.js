@@ -331,7 +331,7 @@ function makeXML(newDocID) {
     	SetAttribute(Nodes[0], "omit", "true");
     } else {
         if (message.FieldExist("sealsign")) {
-			sealPath = GetDocumentElement(message, "surl");
+			sealPath = GetDocumentElement("surl", false);
             if (sealPath != "") {
             	SetAttribute(Nodes[0], "omit", "false");
             	
@@ -344,8 +344,8 @@ function makeXML(newDocID) {
 				sealName = sealPath.substr(len + 1, filelength);
 				SetAttribute(tempNode2, "src", trim_Cross(sealName));
 				SetAttribute(tempNode2, "alt", strLang178);
-				SetAttribute(tempNode2, "height", GetDocumentElement(message, "sheight", false) + "mm");
-				SetAttribute(tempNode2, "width", GetDocumentElement(message, "swidth", false) + "mm");
+				SetAttribute(tempNode2, "height", GetDocumentElement("sheight", false) + "mm");
+				SetAttribute(tempNode2, "width", GetDocumentElement("swidth", false) + "mm");
 			}
 		}
 	}
@@ -385,9 +385,9 @@ function makeXML(newDocID) {
 				tempNode3 = createNodeAndAppandNodeText(sihangXML, tempNode2, tempNode3, "date", "");
 			} else {
                 if (message.FieldExist("sign" + SignSN)) {
-					var signPath = GetDocumentElement(message, "sign" + SignSN);
+					var signPath = GetDocumentElement("sign" + SignSN, false);
 							
-                    if (signPath != "") {
+                    if (!!signPath) {
                     	var tempNode3;
 						tempNode3 = createNodeAndAppandNodeText(sihangXML, tempNode2, tempNode3, "signimage", "");
 
@@ -473,7 +473,7 @@ function makeXML(newDocID) {
 			
 
             if (message.FieldExist("habyuisign" + SignSN)) {
-				var signPath = GetDocumentElement(message, "habyuisign" + SignSN);
+				var signPath = GetDocumentElement("habyuisign" + SignSN, false);
 				
                 if (signPath != "") {
                 	var tempNode3;
@@ -633,9 +633,9 @@ function makeXML(newDocID) {
 	var Nodes = eNodes.getElementsByTagName("sendinfo");
 	//한글기안기 심볼, 로고 이미지 경로 하드코딩 추후 유동적으로 사용할 수 있도록 수정필요 2019-11-25 홍대표.
 	//로고와 심볼 파일을 ex) fileroot/0/files/upload_approvalG\Top/ 에 위치시킴
-	SetDocumentElement(message, "symbolurl", "");
+	SetDocumentElement("symbolurl", "");
     if (message.FieldExist("symbol")) {
-		symbolName = GetDocumentElement(message, "symbolurl");
+		symbolName = GetDocumentElement("symbolurl", false);
 		
         if (symbolName != "") {
         	var tempNode2;
@@ -676,9 +676,9 @@ function makeXML(newDocID) {
 	var Nodes = eNodes.getElementsByTagName("sendinfo");
 	//한글기안기 심볼, 로고 이미지 경로 하드코딩 추후 유동적으로 사용할 수 있도록 수정필요 2019-11-25 홍대표.
 	//로고와 심볼 파일을 ex) fileroot/0/files/upload_approvalG\Top/ 에 위치시킴
-	SetDocumentElement(message, "logourl", "logo.gif");
+	SetDocumentElement("logourl", "logo.gif");
     if (message.FieldExist("logo")) {
-		logoName = GetDocumentElement(message, "logourl");
+		logoName = GetDocumentElement("logourl", false);
 		
         if (logoName != "") {
         	var tempNode2;

@@ -162,13 +162,13 @@
 	                if (gubun == "2") {
 	                	if(CrossYN()) {
 	                		checkpassword_dialogArguments[1] = btn_Delete_Onclick_Complete;
-	                        var OpenWin = window.open("/ezCommunity/checkPassword.do?itemID=" + encodeURIComponent(pItemID), "CheckPassWord", GetOpenWindowfeature(340, 200));
+	                        var OpenWin = window.open("/ezCommunity/checkPassword.do?itemID=" + encodeURIComponent(pItemID), "CheckPassWord", GetOpenWindowfeature(470, 200));
 	                        try {
 	                        	OpenWin.focus();
 	                        } catch (e) { }
 	                	} else {
-	                		var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
-		                    feature = feature + GetShowModalPosition(330, 200);
+	                		var feature = "status:no;dialogWidth:470px;dialogHeight:200px;help:no;scroll:no";
+		                    feature = feature + GetShowModalPosition(470, 200);
 		                    var ret = window.showModalDialog("/ezCommunity/checkPassword.do?itemID=" + encodeURIComponent(pItemID), "", feature);
 
 	                		if (typeof (ret) == "undefined") {
@@ -193,6 +193,14 @@
 			 			    xmlhttp = null;
 			 			    
 			 			    try {
+								// 게시물 보기창에서 삭제한 경우, 부모창의 카운트 새로고침 추가
+								if (window.opener.location.href.indexOf("ezCommunity/boardItemList.do") > -1 || window.opener.location.href.indexOf("ezCommunity/searchBoardItem.do") > -1) {
+									var cntDom = window.opener.parent.document.getElementById("itemcnt");
+									var code = window.opener.parent.code;
+									if (typeof(cntDom) != "undefined" && cntDom != null && typeof(code) != "undefined" && code != null) {
+										reloadLeftCount(code, cntDom);
+									}
+								}
 			 			    	window.opener.location.reload(true);
 			 			    } catch (e) {
 			 			    }
@@ -214,6 +222,13 @@
 	 			    xmlhttp = null;
 	 			    
 	 			    try {
+						if (window.opener.location.href.indexOf("ezCommunity/boardItemList.do") > -1 || window.opener.location.href.indexOf("ezCommunity/searchBoardItem.do") > -1) {
+							var cntDom = window.opener.parent.document.getElementById("itemcnt");
+							var code = window.opener.parent.code;
+							if (typeof(cntDom) != "undefined" && cntDom != null && typeof(code) != "undefined" && code != null) {
+								reloadLeftCount(code, cntDom);
+							}
+						}
 	 			    	window.opener.refresh_onclick();
 	 			    } catch (e) {
 	 			    }
@@ -302,11 +317,11 @@
 	            	if (CrossYN()) {
 						checkpassword_dialogArguments = new Array();
 	                    checkpassword_dialogArguments[1] = btn_Modify_Onclick_Complete;
-	                    var OpenWin = window.open("/ezCommunity/checkPassword.do?itemID=" + encodeURIComponent(pItemID), "CheckPassWord", GetOpenWindowfeature(340, 200));
+	                    var OpenWin = window.open("/ezCommunity/checkPassword.do?itemID=" + encodeURIComponent(pItemID), "CheckPassWord", GetOpenWindowfeature(470, 200));
 	                    try { OpenWin.focus(); } catch (e) { }
 	            	} else {
-	 					var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
-	                    feature = feature + GetShowModalPosition(330, 200);
+	 					var feature = "status:no;dialogWidth:470px;dialogHeight:200px;help:no;scroll:no";
+	                    feature = feature + GetShowModalPosition(470, 200);
 	                    var ret = window.showModalDialog("/ezCommunity/checkPassword.do?itemID=" + encodeURIComponent(pItemID), "", feature);
 	                    
 	                    if (typeof (ret) == "undefined") {
@@ -871,6 +886,22 @@
 				var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=no, scrollbars=yes";
 				return feature;
 			}
+			
+	        /* 2021-05-03 홍승비 -  커뮤니티 팝업홈 좌측 전체 게시물 개수 갱신 */
+	        function reloadLeftCount(pCode, pCntDom) {
+            	$.ajax({
+			    	type : "GET",
+			    	url : "/ezCommunity/getCommunityBoardItemCnt.do",
+			    	async : false,
+			    	data : {
+			    		code : pCode
+			    	},
+			    	success : function (result) {
+			    		pCntDom.innerText = result;
+			    	}
+			    });
+	        }
+	        
 		</script>
 	</head>
 	<body class = "popup">
@@ -976,23 +1007,17 @@
 	                        	</c:when>
 	                        	
 	                        	<c:otherwise>
-	                        		<td id="Td7" style="white-space: nowrap; width:40%">
+	                        		<td id="Td7" style="white-space: nowrap; width:40%" colspan="3">
 	                            		<div id="Div2" style="vertical-align: middle; height: 16px; overflow-y: auto;"><c:out value='${item.writerName}' /></div>
 	                            	</td>
 	                        	</c:otherwise>
 	                        </c:choose>
 	                        <!-- 작성자 end -->
-							<!-- 부서명 -->
-		                    <th style="width:10%"><spring:message code='ezCommunity.t959'/></th>
-	                        <c:choose>
-	                        	<c:when test="${boardInfo.gubun != '2' }">
+							<!-- 부서명 (익명게시판이 아닌 경우에만 표출) -->
+	                        <c:if test="${boardInfo.gubun != '2' }">
+	                        		<th style="width:10%"><spring:message code='ezCommunity.t959'/></th>
 	                        		<td id="Td1" style="white-space: nowrap; width: 40%;"><span><c:out value='${item.writerDeptName}' /></span></td>
-	                        	</c:when>
-	                        	
-	                        	<c:otherwise>
-	                        		<td id="Td2" style="white-space: nowrap; width: 40%;"><span>&nbsp;</span></td>
-	                        	</c:otherwise>
-	                        </c:choose>
+	                        </c:if>
 	                        <!-- 부서명 end -->
 		                </tr>
 		                

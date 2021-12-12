@@ -216,20 +216,25 @@ function boxNameCheck(displayNumber) {
 
 // 편지지함 삭제 버튼 클릭 시
 function deleteLetterBox() {
+	if (selectNode == null || typeof selectNode == "undefined") {return; }
+	
 	var letter = selectNode.node;
 	var letterBoxNo = letter.id;
 	var realCheck = false;
 	
-	if (letterBoxNo == result[0].letterBoxNo) { //treeCollection[0].id == 
-		alert(letterStr23);
-		return;
-	} else if (addCheck == -1) { // 편지지함 추가중
+	if (addCheck == -1) { // 편지지함 추가중
 		if (confirm(letterStr24)){
 			addCheck = 0;
 			$('#divTree').jstree().delete_node($('#temp'));
+			$("#display, #display2").val("");
+			selectNode = null;
 			
 			$(".jstree-clicked").click();
+			
 		}
+	} else if (letterBoxNo == result[0].letterBoxNo) { //treeCollection[0].id == 
+		alert(letterStr23);
+		return;
 	} else if (letter.children.length !== 0) {
 		alert(letterStr25);
 		return;

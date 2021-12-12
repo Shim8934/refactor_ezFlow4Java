@@ -238,19 +238,33 @@ function setRecevInfo(ret) {
 		
         if (recipflag) {
             if (getNodeText(dataNodes[3]) == "Y") {
-					precipent = getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);
-					precipents = getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);
+				if (getNodeText(dataNodes[1]).indexOf(preSusinGroupStr) == 0) {
+					precipent = strLang92;
+					precipents = (getNodeText(dataNodes[7]) ? getNodeText(dataNodes[7]) + " " : "") + getNodeText(dataNodes[0]);
+				} else {
+					precipent = (getNodeText(dataNodes[7]) ? getNodeText(dataNodes[7]) + " " : "") + getNodeText(dataNodes[0]);
+					precipents = (getNodeText(dataNodes[7]) ? getNodeText(dataNodes[7]) + " " : "") + getNodeText(dataNodes[0]);
+				}
 					recipflag = false;	
 				}
             else {
                 if (isExtDoc == "Y") {
-						precipent = getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);
-						precipents = getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);				
-						recipflag = false;	
+					if (getNodeText(dataNodes[1]).indexOf(preSusinGroupStr) == 0) {
+						precipent = strLang92;
+						precipents = (getNodeText(dataNodes[7]) ? getNodeText(dataNodes[7]) + " " : "") + getNodeText(dataNodes[0]);				
+					} else {
+						precipent = (getNodeText(dataNodes[7]) ? getNodeText(dataNodes[7]) + " " : "") + getNodeText(dataNodes[0]);
+						precipents = (getNodeText(dataNodes[7]) ? getNodeText(dataNodes[7]) + " " : "") + getNodeText(dataNodes[0]);				
 					}
-                else {
+						recipflag = false;	
+				} else {
+					if (getNodeText(dataNodes[1]).indexOf(preSusinGroupStr) == 0) {
+						precipent = strLang92;
+						precipents = getNodeText(dataNodes[0]);			
+					} else {
 						precipent = getNodeText(dataNodes[0]);
 						precipents = getNodeText(dataNodes[0]);			
+					}
 						recipflag = false;	
 					}
 				}
@@ -260,12 +274,12 @@ function setRecevInfo(ret) {
 			precipent = strLang92;
 			
 			if(getNodeText(dataNodes[3]) == "Y")
-				precipents = precipents + "," + getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);
+				precipents = precipents + ", " + (getNodeText(dataNodes[7]) ? getNodeText(dataNodes[7]) + " " : "") + getNodeText(dataNodes[0]);
             else {
 				if(isExtDoc == "Y")
-					precipents = precipents + "," + getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]); 
+					precipents = precipents + ", " + (getNodeText(dataNodes[7]) ? getNodeText(dataNodes[7]) + " " : "") + getNodeText(dataNodes[0]); 
 				else
-					precipents = precipents + "," + getNodeText(dataNodes[0]);
+					precipents = precipents + ", " + getNodeText(dataNodes[0]);
 			}
 		}		
 	}
@@ -274,7 +288,7 @@ function setRecevInfo(ret) {
         if (precipent == strLang92) {
         	message.PutFieldText("recipient", precipent);
 
-            if (SummaryOuterReceiverList != "") {
+            if (!!SummaryOuterReceiverList) {
                 if (message.FieldExist("recipients")) {
                 	message.PutFieldText("recipients", SummaryOuterReceiverList);
                     if (message.FieldExist("hrecipients"))
@@ -720,7 +734,10 @@ function openFormUI_complete(ret) {
 			tempdocnumcode = strLang107;
 			
 			tempSecurityDate = "";
-			
+
+			//2021-04-19 남학선 의견입력 후 양식선택시 양식 데이터는 초기화 되지만 의견 flag값이 그대로'Y'로 남아있는 문제 수정
+			pHasOpinionYN = "N";
+
 			var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(pFormHref);
             message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null); 
   		}
@@ -1332,7 +1349,7 @@ function SaveDraftDocInfo_ilban(pState)
 	createNodeAndInsertText(xmlpara, objNode, "ORGDOCNUMCODE", "");
 
 	var g_SepAttachLVXml = "";
-	g_SepAttachLVXml = GetDocumentElement(message, "sepattachlvxml", true);
+	g_SepAttachLVXml = GetDocumentElement("sepattachlvxml", true);
 	if (!g_SepAttachLVXml)
 	    createNodeAndInsertText(xmlpara, objNode, "SEPERATEATTACHXML", "");
 	else
@@ -1792,7 +1809,7 @@ function SaveTMPDocInfo(AutoSave, Saveflag, pState, phtml) {
         createNodeAndInsertText(xmlpara, objNode, "DRAFTFLAG", DraftFlag);
 
         var g_SepAttachLVXml = "";
-        g_SepAttachLVXml = GetDocumentElement(message, "sepattachlvxml", true);
+        g_SepAttachLVXml = GetDocumentElement("sepattachlvxml", true);
         if (!g_SepAttachLVXml)
             createNodeAndInsertText(xmlpara, objNode, "SEPERATEATTACHXML", "");
         else

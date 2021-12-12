@@ -721,7 +721,11 @@ function getBirthdayEmployeesList() {
 			
 			var birth = birthdayMonth;
 			
-			if (birth < 10) {
+			if (userLang == '2') { 
+				var monthMsg = "January;February;March;April;May;June;July;August;September;October;November;December";
+			    var monthStr = monthMsg.split(";");
+				birth = monthStr[birth-1] + " ";
+			} else if (birth < 10) {
 				birth = "0" + birth;
 			}
 			
@@ -753,7 +757,7 @@ function getBirthdayEmployeesList() {
 				
 				for (var i = 0; i< resultCount; i++) {
 					var userInfo = birthdayList[i];
-					$("#B" + userInfo.userId).on("click", {"userId" : userInfo.userId}, openUserInfo);
+					$("#B" + userInfo.userId.replace(/[^\w\s]/gi, '\\$&')).on("click", {"userId" : userInfo.userId}, openUserInfo);
 				}
 				}else{
 					getBirthdayEmployeesLists(birthdayList, resultCount, resultMaxCount, chkList);
@@ -800,7 +804,7 @@ function getBirthdayEmployeesLists(birthdayList, resultCount, resultMaxCount, ch
 		
 		for (var i = chkList; i< chkListMax; i++) {
 			var userInfo = birthdayList[i];
-			$("#B" + userInfo.userId).on("click", {"userId" : userInfo.userId}, openUserInfo);
+			$("#B" + userInfo.userId.replace(/[^\w\s]/gi, '\\$&')).on("click", {"userId" : userInfo.userId}, openUserInfo);
 		}
 	}else{
 		for (var i = chkList; i < resultMaxCount; i++) {
@@ -820,7 +824,7 @@ function getBirthdayEmployeesLists(birthdayList, resultCount, resultMaxCount, ch
 		
 		for (var i = chkList; i< resultMaxCount; i++) {
 			var userInfo = birthdayList[i];
-			$("#B" + userInfo.userId).on("click", {"userId" : userInfo.userId}, openUserInfo);
+			$("#B" + userInfo.userId.replace(/[^\w\s]/gi, '\\$&')).on("click", {"userId" : userInfo.userId}, openUserInfo);
 		}
 	}
 		
@@ -987,8 +991,8 @@ function addAttitude(obj, themeId) {
 				if(outAtt == 0 && outAtt2 == 0){ //전날 퇴근이 없고 오늘 날짜로 퇴근이 없는 경우
 					getAttitudeList(themeId);
 					pTypeId = "A25";
-				}else {
-					alert(messages.strLang33);
+				}else { //전날 출,퇴근 기록이 있고 아직 출근을 안찍은 경우
+					alert(messages.strLang3);
 					return;
 				}
 			}else { //전날 출근이 없는 경우

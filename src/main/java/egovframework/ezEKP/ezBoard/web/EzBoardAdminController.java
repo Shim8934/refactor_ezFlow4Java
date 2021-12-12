@@ -522,6 +522,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String type = boardBackgroundVO.getType() != null ? boardBackgroundVO.getType() : "NEW";
 		
 		boardBackgroundVO.setTenantID(userInfo.getTenantId());
+		boardBackgroundVO.setCompanyID(userInfo.getCompanyID());
 		
 		if (type.equals("UPT")) {
 			List<BoardBackgroundVO> list = ezBoardAdminService.getBackGroundImage(boardBackgroundVO);
@@ -954,12 +955,13 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<ROWS>");
 		
+		// 확장컬럼 저장 시 이미 MakeXMLString()을 사용하여 XML에 대응하도록 파싱한 COLNAME과 VALUE를 저장하므로, 가져올 때 cleanValue 처리가 필요하지 않음
 		if (list != null) {
 			for (int i = 0; i < list.size(); i++) {
 				BoardAttributeVO obj = list.get(i);
 				sb.append("<ROW>");
-				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(obj.getColName1()) + "</VALUE><DATA1>" + obj.getTableCol() + "</DATA1></CELL>");
-				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(obj.getColName2()) + "</VALUE></CELL>");
+				sb.append("<CELL><VALUE>" + obj.getColName1() + "</VALUE><DATA1>" + obj.getTableCol() + "</DATA1></CELL>");
+				sb.append("<CELL><VALUE>" + obj.getColName2() + "</VALUE></CELL>");
 				sb.append("<CELL><VALUE>" + obj.getMust() + "</VALUE></CELL>");
 				sb.append("<CELL><VALUE>" + obj.getColType() + "</VALUE></CELL>");
 				sb.append("<CELL><VALUE>" + commonUtil.makeListField(obj.getValue()) + "</VALUE></CELL>");
@@ -993,17 +995,18 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 				BoardAttributeVO obj = list.get(i);
 				sb.append("<ROW>");
 				
+				// 확장컬럼 리스트헤더 저장 시 이미 MakeXMLString()을 사용하여 XML에 대응하도록 파싱한 COLNAME과 VALUE를 저장하므로, 가져올 때 cleanValue 처리가 필요하지 않음
 				if (userInfo.getLang().equals("1")) {
-					sb.append("<CELL><VALUE>" + commonUtil.cleanValue(obj.getColName1()) + "</VALUE><DATA1>" + obj.getSn() + "</DATA1></CELL>");
+					sb.append("<CELL><VALUE>" + obj.getColName1() + "</VALUE><DATA1>" + obj.getSn() + "</DATA1></CELL>");
 				} else if (userInfo.getLang().equals("2")) {
-					sb.append("<CELL><VALUE>" + commonUtil.cleanValue(obj.getColName2()) + "</VALUE><DATA1>" + obj.getSn() + "</DATA1></CELL>");
+					sb.append("<CELL><VALUE>" + obj.getColName2() + "</VALUE><DATA1>" + obj.getSn() + "</DATA1></CELL>");
 				} else if (userInfo.getLang().equals("3")) {
-					sb.append("<CELL><VALUE>" + commonUtil.cleanValue(obj.getColName3()) + "</VALUE><DATA1>" + obj.getSn() + "</DATA1></CELL>");
+					sb.append("<CELL><VALUE>" + obj.getColName3() + "</VALUE><DATA1>" + obj.getSn() + "</DATA1></CELL>");
 				} else if (userInfo.getLang().equals("4")) {
-					sb.append("<CELL><VALUE>" + commonUtil.cleanValue(obj.getColName4()) + "</VALUE><DATA1>" + obj.getSn() + "</DATA1></CELL>");
+					sb.append("<CELL><VALUE>" + obj.getColName4() + "</VALUE><DATA1>" + obj.getSn() + "</DATA1></CELL>");
 				}
 				
-				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(obj.getColName2()) + "</VALUE></CELL>");
+				sb.append("<CELL><VALUE>" + obj.getColName2() + "</VALUE></CELL>");
 				sb.append("<CELL><VALUE>" + obj.getValue() + "</VALUE></CELL>");
 				sb.append("</ROW>");
 			}

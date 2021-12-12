@@ -6,6 +6,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	   	<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
+	   	<link rel="stylesheet" href="${util.addVer('ezWebFolder.e1', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}" type="text/css">	        
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -23,6 +24,18 @@
 			.mCustomScrollBox{ /* contains plugin's markup */
 				height: 93%;
 			}
+			.lnbUL li {
+/* 				margin: 0px 0px 0px 10px; */
+			}
+			.jstree-default-small .jstree-node {
+			    min-height: 18px;
+			    line-height: 18px;
+			    margin-left: 7px;
+			    padding-left: 7px;
+		    }
+		    .lnbUL {
+		    	overflow : auto;
+		    }
 	    </style>
 		<script type="text/javascript" >
 		    var companyFolderId = "";
@@ -39,6 +52,8 @@
 		    var allFileFlag = "N";
 		    var parentId = "";
 		    var selectFolderData = "";
+		    var warningFlag = "N";
+		    var folderListCount = "${folderListCount}";
 		    
 			document.onselectstart = function() {
 				return false;
@@ -56,6 +71,11 @@
 		        $(".webfolderListBox").mCustomScrollbar({
 	        		theme : "dark"
 	        	});
+
+				$(document).on("click", "span.list_text", function(){
+		        	 $("#left li").removeClass("on");
+		        	 $(this).parent().addClass("on");
+		         });
 			});
 		    
 		    function refreshView(){
@@ -86,6 +106,12 @@
 						},
 					dataType: "JSON",
 					success : function (data) {
+						/* var listSize = data.data.length;
+						if (obj == 'C' && listSize == 1) {
+							openWebFolderRightWarning();
+							return;
+						} */
+
 						var firstNode = "#" + folderId;
 						
 						$($element).on('loaded.jstree', function() {
@@ -250,12 +276,37 @@
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 		    
-		    function getFileList(folderId) {
+		    function getFileList(a) {
 		    	if (parentId == "#") {
 		    		parentId = "root";
 		    	}
-		    	window.parent.frames["right"].location.href = "/ezWebFolder/main.do?folderId="+folderId+"&folderType="+folderType+"&allFileFlag="+allFileFlag+"&parentId="+parentId;
-		    	allFileFlag = "N";
+		    	$.ajax({
+					type: "POST",
+					url: "/ezWebFolder/selectedFolderCheckPermission.do",
+					data: {
+						"folderId" : a
+					},
+					dataType: "JSON",
+					async: true,
+					success : function(data) {
+						var result = data.status;
+						
+						if (result == "ok") {
+							folderId = a;
+					    	window.parent.frames["right"].location.href = "/ezWebFolder/main.do?folderId="+folderId+"&folderType="+folderType+"&allFileFlag="+allFileFlag+"&parentId="+parentId;
+					    	allFileFlag = "N";
+						} else {
+							alert("<spring:message code='ezWebFolder.t300'/>");
+							return;
+						}
+						
+					},
+					error : function(error) {
+// 						alert("에러");
+						return;
+					}
+		    	});
+		    	
 		   	}
 		    
 		    function getSharedList() {
@@ -306,7 +357,12 @@
 			}
 			
 			function leftResize(){
-	        	$(".webfolderListBox").height(window.innerHeight);
+				var webfolderListBoxOT_Height = 0;
+				$.each($(".webfolderListBoxOT"), function(i,e) {
+					webfolderListBoxOT_Height += e.offsetHeight;
+				});
+				
+	        	$(".webfolderListBox").height(window.innerHeight - webfolderListBoxOT_Height);
 	        }
 	        
 	        $( window ).resize(function() {
@@ -328,6 +384,8 @@
 	        			folderList('D');
 	        		} else if (val01 == "personal") {
 	        			folderList('U');
+	        		} else if (val01 == "share") {
+	        			getSharedList();
 	        		} 
 	        	} else {
 	        		$("#"+val01+"H2").attr("class", "off");
@@ -378,10 +436,26 @@
 				allFileFlag = "all";
 				getFileList(folderId);
 			}
+			
+			// 해당폴더가 없음 화면
+			function openWebFolderRightWarning() {
+				warningFlag = "Y";
+				window.parent.frames["right"].location.href = "/ezWebFolder/openWebFolderRightWarning.do";
+			}
+
+			function appliWebFolder() {
+				if (typeof window.parent.frames["right"].applicationPopUp === "function") { 
+					window.parent.frames["right"].applicationPopUp();
+				}
+			}
+			
+			function fileTransactionHistory(obj) {
+				window.parent.frames["right"].location.href = "/admin/ezWebFolder/webfolderAdminFileHistory.do?adminFlag=user";
+			}
 		</script>
 	</head>
 	<style>
-		.jstree-span-title {display:inline-block; text-overflow:ellipsis; overflow-x:hidden; margin-left:3px}
+		.jstree-span-title {display:inline-block; margin-left:3px}
 	</style>
 	<body class="newLeft">
 		<div id="left" class="lnb" style="overflow: auto">
@@ -389,6 +463,12 @@
 	        <!-- <div class="lnb_btn_hidden"></div> lnb 숨기기 버튼-->
 	    	<div class="left_title" title="<spring:message code='ezWebFolder.t10' />"><spring:message code='ezWebFolder.t10' />
 	        	<span class="sub_iconLNB tree_leftconfig" onclick="wfConfig();" title="<spring:message code="ezWebFolder.t236" />"></span>
+	        </div>
+	        <div class="btn_writeBox webfolderListBoxOT" style="height: auto;">
+	        	<p class="btn_write01" onclick="appliWebFolder()" style="min-height: 30px; height: auto;">
+	        		<span class="sub_iconLNB tree_write"></span>
+	        		<spring:message code="ezWebFolder.ksa18"/>
+	        	</p>
 	        </div>
 	        <div class="webfolderListBox" style="overflow:hidden; padding-right: 0;">
 		        <h2 class="on" id="companyH2">
@@ -420,6 +500,9 @@
                    	<li><span class="sub_iconLNB tree_board_star"></span><span class="list_text" onclick="moveFavorPage();"><spring:message code='ezWebFolder.t216'/></span></li>
                    	<li><span class="sub_iconLNB tree_delete"></span><span class="list_text" onclick="getTrashCanList();"><spring:message code='ezWebFolder.t269'/></span></li>
                    	<li><span class="sub_iconLNB tree_manage" style="float:left"></span><span class="list_text" onClick="folder_Manage()"><spring:message code='ezWebFolder.t268'/></span></li>
+                   	<c:if test="${folderListCount > 0}">                   	
+						<li><span class="sub_iconLNB tree_dot_li"></span><span class="list_text" onclick="fileTransactionHistory(this);"><spring:message code='ezWebFolder.t128'/></span></li>
+	         		</c:if>
 <!--                    	웹폴더 관리자 사용자화면에서 제거  -->
 <%--                    	<c:if test="${isWfAdmin == '1'}"> --%> 
 <%-- 						<li><span class="sub_iconLNB tree_appr_department"></span><span class="list_text" onclick="wfAdministrator();"><spring:message code="ezWebFolder.t25" /></span></li><!-- 웹폴더 관리자 --> --%>

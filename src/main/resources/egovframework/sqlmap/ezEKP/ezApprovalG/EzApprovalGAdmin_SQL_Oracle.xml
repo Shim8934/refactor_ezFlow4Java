@@ -960,7 +960,8 @@
 					TBL_AUTODOCNUM_ITEM.useFlag,
 					TBL_AUTODOCNUM_ITEM.keepPeriodCode,
 					aproption,
-					SIHANGTYPE
+					SIHANGTYPE,
+					formxslt
 				FROM
 					TBL_FORMINFO
 				JOIN 
@@ -1727,7 +1728,8 @@
 				aprOption,
 				tenant_id,
 				companyid,
-                SIHANGTYPE)
+                SIHANGTYPE,
+				formxslt)
 			VALUES
 				(#v_PFORMCONTAINERID#,
 				#v_PFORMID#,
@@ -1742,7 +1744,8 @@
 				#v_formAprOption#,
 				#tenantID#,
 				#companyID#,
-                #v_FORMSIHANGTYPE#)
+                #v_FORMSIHANGTYPE#,
+				#v_FORMXSLT#)
 		]]>
 	</insert>
 
@@ -1762,7 +1765,8 @@
 				formversion = formversion + 1,
 				aprOption = #v_formAprOption#,
 				passaprlineflag = #v_PPASSAPRLINEFLAG#,
-                SIHANGTYPE = #v_FORMSIHANGTYPE#
+                SIHANGTYPE = #v_FORMSIHANGTYPE#,
+				formxslt = #v_FORMXSLT#
 			WHERE
 				tenant_id = #tenantID#
 			AND
@@ -2758,7 +2762,8 @@
 				deptname,
 				deptname2,
 				companyid,
-				tenant_id)
+                tenant_id,
+                extreceptyn)
 			VALUES 
 				(#v_MAINID#,
 				(SELECT
@@ -2769,7 +2774,8 @@
 				#v_DEPTNAME#,
 				#v_DEPTNAME2#,
 				#v_COMPANYID#,
-				#tenantID#)
+                #tenantID#,
+                #v_EXTRECEPTYN#)
 		]]>
 	</insert>
 	
@@ -3890,6 +3896,19 @@
 				taskcode = #taskCode#
 	    ]]>
 	</update>
+	
+	<delete id="EzApprovalGAdminDAO.removeMyTaskCode" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_MYTASKCODE
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				taskcode = #taskCode#
+	    ]]>
+	</delete>
 
 	<update id="EzApprovalGAdmin.updateDeptInfo" parameterClass="Map">
 		<![CDATA[
@@ -5396,8 +5415,7 @@
 								   		 NVL(TBL_EXPENDAPRDOCINFO.SECURITYAPPROVAL,'') AS SECURITYAPPROVAL,
 								   		 TBL_ENDAPRDOCINFO.COMPANYID,
 								   		 TBL_DEPTMASTER.EXTENSIONATTRIBUTE3 companyName,
-										  TBL_DEPTMASTER.COMPNM2 companyName2
-
+										 TBL_DEPTMASTER.COMPNM2 companyName2
 							   	FROM 
 							   			 TBL_ENDAPRDOCINFO 
 							   	LEFT OUTER JOIN 
@@ -5482,40 +5500,37 @@
 								AND 
 									TBL_ENDAPRLINEINFO.APRMEMBERNAME LIKE '%$v_APPROVUSER%$' 
 							    GROUP BY 
-							      	TBL_ENDAPRDOCINFO.DOCID, 
-							      	TBL_ENDAPRDOCINFO.DOCTYPE,
-							      	TBL_ENDAPRDOCINFO.DOCSTATE, 
-							      	TBL_ENDAPRDOCINFO.FUNCTIONTYPE, 
-							      	TBL_ENDAPRDOCINFO.HASATTACHYN,
-							      	TBL_ENDAPRDOCINFO.HASOPINIONYN,
-							      	TBL_ENDAPRDOCINFO.HREF,
-							      	TBL_ENDAPRDOCINFO.DOCTITLE, 
-							      	TBL_ENDAPRDOCINFO.DOCNO, 
-							      	TBL_ENDAPRDOCINFO.HASATTACHYN,
-							      	TBL_ENDAPRDOCINFO.HASOPINIONYN, 
-							      	TBL_ENDAPRDOCINFO.STARTDATE, 
-							      	TBL_ENDAPRDOCINFO.ENDDATE,
-							      	TBL_ENDAPRDOCINFO.WRITERID, 
-							      	TBL_ENDAPRDOCINFO.WRITERNAME, 
-							      	TBL_ENDAPRDOCINFO.WRITERNAME2, 
-							      	TBL_ENDAPRDOCINFO.WRITERNAME, 
-							      	TBL_ENDAPRDOCINFO.WRITERJOBTITLE, 
-							      	TBL_ENDAPRDOCINFO.WRITERJOBTITLE2, 
-							      	TBL_ENDAPRDOCINFO.WRITERJOBTITLE,
-							      	TBL_ENDAPRDOCINFO.WRITERDEPTID, 
-							      	TBL_ENDAPRDOCINFO.WRITERDEPTNAME, 
-							      	TBL_ENDAPRDOCINFO.WRITERDEPTNAME2, 
-							      	TBL_ENDAPRDOCINFO.WRITERDEPTNAME,
-							      	TBL_ENDAPRDOCINFO.FORMID, 
-							      	TBL_ENDAPRDOCINFO.CONTAINERID, 
-							      	TBL_EXPENDAPRDOCINFO.FORMNAME, 
-							      	TBL_EXPENDAPRDOCINFO.FORMNAME2, 
-							      	TBL_EXPENDAPRDOCINFO.FORMNAME,
-							      	TBL_EXPENDAPRDOCINFO.STATUS,
-							      	TBL_ENDAPRDOCINFO.ORGDOCID, 
-							      	TBL_ENDAPRDOCINFO.ISPUBLIC, 
-							      	TBL_EXPENDAPRDOCINFO.EDMSYN,
-							      	TBL_EXPENDAPRDOCINFO.SECURITYAPPROVAL
+							      	TBL_ENDAPRDOCINFO.DOCID,
+									TBL_ENDAPRDOCINFO.DOCTYPE,
+									TBL_ENDAPRDOCINFO.DOCSTATE,
+									TBL_ENDAPRDOCINFO.FUNCTIONTYPE,
+									TBL_ENDAPRDOCINFO.HREF,
+									TBL_ENDAPRDOCINFO.DOCTITLE,
+									TBL_ENDAPRDOCINFO.DOCNO,
+									TBL_ENDAPRDOCINFO.HASATTACHYN,
+									TBL_ENDAPRDOCINFO.HASOPINIONYN,
+									TBL_ENDAPRDOCINFO.STARTDATE,
+									TBL_ENDAPRDOCINFO.ENDDATE,
+									TBL_ENDAPRDOCINFO.WRITERID,
+									TBL_ENDAPRDOCINFO.WRITERNAME,
+									TBL_ENDAPRDOCINFO.WRITERNAME2,
+									TBL_ENDAPRDOCINFO.WRITERJOBTITLE,
+									TBL_ENDAPRDOCINFO.WRITERJOBTITLE2, 
+									TBL_ENDAPRDOCINFO.WRITERDEPTID,
+									TBL_ENDAPRDOCINFO.WRITERDEPTNAME,
+									TBL_ENDAPRDOCINFO.WRITERDEPTNAME2, 
+									TBL_ENDAPRDOCINFO.FORMID,
+									TBL_ENDAPRDOCINFO.CONTAINERID,
+									TBL_EXPENDAPRDOCINFO.FORMNAME, 
+									TBL_EXPENDAPRDOCINFO.FORMNAME2, 
+									TBL_EXPENDAPRDOCINFO.STATUS,
+									TBL_ENDAPRDOCINFO.ORGDOCID, 
+									TBL_ENDAPRDOCINFO.ISPUBLIC, 
+									TBL_EXPENDAPRDOCINFO.EDMSYN,
+									TBL_EXPENDAPRDOCINFO.SECURITYAPPROVAL,
+									TBL_ENDAPRDOCINFO.COMPANYID,
+									TBL_DEPTMASTER.EXTENSIONATTRIBUTE3,
+									TBL_DEPTMASTER.COMPNM2
 							   	</isNotEmpty>						   	
 							   	<isNotEmpty property="v_ORDEROPTION">
 							   		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="7">
@@ -5784,6 +5799,77 @@
 			tbl_deptmaster
 		WHERE
 			cn = #deptId#
+	</select>
+	
+	
+	<resultMap id="getDeptList" class="java.util.LinkedHashMap">
+		<result property="DEPTID"				column="DEPTID" />
+		<result property="DEPTNAME"				column="DEPTNAME" />
+	</resultMap>
+	<select id="EzApprovalGAdminDAO.getChaebunDeptList" parameterClass="Map" resultMap="getDeptList">
+		SELECT
+			DEPTID,
+			DEPTNAME
+		FROM
+			TBL_SERIALNUMGEN_GRANT
+		WHERE
+			GRANTDEPTID = #v_DEPTID#
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #v_COMPANYID#
+	</select>
+	
+	<insert id="EzApprovalGAdminDAO.insertChaebunDeptList" parameterClass="Map">
+		INSERT INTO TBL_SERIALNUMGEN_GRANT
+			(IDX,
+			 DEPTID,
+			 DEPTNAME,
+			 GRANTDEPTID,
+			 GRANTDEPTNAME,
+			 TENANT_ID,
+			 COMPANYID)
+		VALUES
+			(SEQ_SERIALNUMGEN_GRANT_IDX.NEXTVAL,
+			 #v_DEPTID#,
+			 #v_DEPTNAME#,
+			 #v_GRANTDEPTID#,
+			 #v_GRANTDEPTNAME#,
+			 #v_TENANTID#,
+			 #v_COMPANYID#)
+	</insert>
+	
+	<delete id="EzApprovalGAdminDAO.deleteChaebunDeptList" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_SERIALNUMGEN_GRANT
+        	WHERE
+        		GRANTDEPTID = #v_DEPTID#
+        	AND
+        		TENANT_ID = #v_TENANTID#
+        	AND
+        		COMPANYID = #v_COMPANYID#
+		]]>
+	</delete>
+		
+	<select id="EzApprovalGAdminDAO.checkChaebunDeptList" parameterClass="Map" resultClass="String">
+		SELECT
+			DEPTNAME
+		FROM
+			TBL_SERIALNUMGEN_GRANT
+		WHERE
+			DEPTID IN
+		<iterate property="v_DEPTIDS" open="(" close=")" conjunction=",">
+			#v_DEPTIDS[]#
+		</iterate>
+		<![CDATA[
+		AND
+			GRANTDEPTID <> #v_DEPTID#
+		AND
+    		TENANT_ID = #v_TENANTID#
+		AND
+    		COMPANYID = #v_COMPANYID#
+    	]]>
 	</select>
 </sqlMap>
 

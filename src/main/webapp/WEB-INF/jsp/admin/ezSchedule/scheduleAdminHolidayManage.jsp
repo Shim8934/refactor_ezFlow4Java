@@ -53,6 +53,7 @@
 		    		dataType : "json",
 		    		async : true,
 		    		url : holiday_url,
+		    		cache:false,
 		    		data : {
 		    			COMPANYID  : COMPANYID,		    			
 		    			holidayType : holidayType,
@@ -574,6 +575,7 @@
 		    		type : "GET",
 		    		dataType : "json",
 		    		async : true,
+		    		cache : false,
 		    		url : "/ezSchedule/scheduleGetHolidayJsonYear.do",
 		    		data : {
 		    			COMPANYID  : COMPANYID,		    			

@@ -10,6 +10,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezBoard/common.js')}"></script>
 		<style>
 	        .viewbox {
 				line-height:20px;
@@ -34,7 +35,7 @@
 		    var eOneline = "<c:out value='${oneLine}'/>";
 		    var eAttach = "<c:out value='${attach}'/>";
 			var strWriterID = "${boardItem.writerID}";
-			var strWriterName = "${boardItem.writerName}";
+			var strWriterName = ConvMakeXMLString("<c:out value='${boardItem.writerName}'/>"); // 익명게시판의 게시자명 특문처리 대응
 			var strWriterDeptName = "${boardItem.writerDeptName}";
 			var strWriterCompanyName = "${boardItem.writerCompanyName}";
 			var strWriteDate = "${boardItem.writeDate}";
@@ -92,7 +93,8 @@
 		        }
 		        
 		        myVar = setInterval(function () { DocumentComplate(); }, 2000);
-		       
+		        
+		        document.getElementById("WriteUserNM").innerText = " " + strWriterName;
 		    };
 		
 		    function DocumentComplate() {
@@ -129,13 +131,59 @@
 		        var filename = "";
 		        var strAttach = "";
 		        var xmldomNodes = SelectNodes(xmldom, "NODES/NODE");
+		        var attachFileDiv = document.getElementById("lstAttachLink");
+		        
 		        for (var i = 0; i < xmldomNodes.length; i++) {
+					var span = document.createElement("SPAN");
+					var img = document.createElement("IMG");
+		                
 		            filepath = getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath"));
 		            filename = getNodeText(SelectSingleNode(xmldomNodes[i], "FileName"));
 		            filesize = getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize"));
-		            strAttach = strAttach + filename + "&nbsp;(" + filesize + ")<br>";
+		            strAttach = " " + filename + " (" + filesize + ")";
+		            
+		            var strTarget = "target=''";
+		            var strFileExt = filename.substr(filename.lastIndexOf('.')).toLowerCase();
+		            if (strFileExt == ".xls" || strFileExt == ".doc" || strFileExt == ".ppt" ||
+		               strFileExt == ".eml" || strFileExt == ".pdf" || strFileExt == ".hwp" ||
+		               strFileExt == ".ppt" || strFileExt == ".docx" || strFileExt == ".pptx" ||
+		               strFileExt == ".xlsx" || strFileExt == ".rtf") {
+		                strTarget = "target=''";
+		            }
+		            
+		            if (strFileExt.indexOf(".jpg") != -1 || strFileExt.indexOf(".jpeg") != -1 || strFileExt.indexOf(".bmp") != -1 || strFileExt.indexOf(".gif") != -1 || strFileExt.indexOf(".png") != -1 || strFileExt.indexOf(".tif") != -1 || strFileExt.indexOf(".tiff") != -1) {
+		                fileImage = "/images/image.png";
+		            } else if (strFileExt.indexOf(".doc") != -1 || strFileExt.indexOf(".docx") != -1) {
+		                fileImage = "/images/doc.png";
+		            } else if (strFileExt.indexOf(".xls") != -1 || strFileExt.indexOf(".xlsx") != -1) {
+		                fileImage = "/images/xls.png";
+		            } else if (strFileExt.indexOf(".ppt") != -1 || strFileExt.indexOf(".pptx") != -1 || strFileExt.indexOf(".pps") != -1 || strFileExt.indexOf(".ppsx") != -1) {
+		                fileImage = "/images/ppt.png";
+		            } else if (strFileExt.indexOf(".txt") != -1) {
+		                fileImage = "/images/txt.png";
+		            } else if (strFileExt.indexOf(".zip") != -1) {
+		                fileImage = "/images/zip.png";
+		            } else if (strFileExt.indexOf(".pdf") != -1) {
+		                fileImage = "/images/pdf.png";
+		            } else if (strFileExt.indexOf(".ecm") != -1) {
+		                fileImage = "/images/ecm.png";
+		            } else {
+		                fileImage = "/images/email/mail_006.gif";
+		            }
+		            
+	                img.src = fileImage;
+                    
+	                var attachNameSpan = document.createElement("SPAN");
+	                attachNameSpan.innerText = strAttach;
+	                
+	                var br = document.createElement("BR");
+	
+	                span.appendChild(img);
+	                span.appendChild(attachNameSpan);
+	                span.appendChild(br);
+	
+	                attachFileDiv.appendChild(span);
 		        }
-		        document.getElementById('lstAttachLink').innerHTML = strAttach;
 		    }
 		    
 		    /* 2018-06-29 홍승비 - 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정 */
@@ -155,7 +203,7 @@
 		        var temp;
 		        for (var i = 0; i < xmldom.getElementsByTagName("REPLYID").length; i++) {
 		            temp = i + 1;
-		                strHTML += "<font color=blue>" + temp.toString() + ". " + "<span><font color=blue>" + getNodeText(xmldom.getElementsByTagName("USERNAME").item(i)) + "</font></span>(" + getNodeText(xmldom.getElementsByTagName("WRITEDATE").item(i)) + ")" + " : </font>" + getNodeText(xmldom.getElementsByTagName("CONTENT").item(i)) + "<br>";
+		                strHTML += "<font color=blue>" + temp.toString() + ". " + "<span><font color=blue>" + getNodeText(xmldom.getElementsByTagName("USERNAME").item(i)) + "</font></span>(" + getNodeText(xmldom.getElementsByTagName("WRITEDATE").item(i)).substr(0, 16) + ")" + " : </font>" + getNodeText(xmldom.getElementsByTagName("CONTENT").item(i)) + "<br>";
 		        }
 
 		        if (i == 0)
@@ -166,6 +214,18 @@
 		        if(message.document.body.innerHTML != "")
 		            document.getElementById("contenttable").innerHTML = message.document.body.innerHTML;
 		    }
+		    
+		    /* 2021-08-12 홍승비 - 익명게시물 게시자명 특문처리 추가 */
+		    function ConvMakeXMLString(str) {
+		        str = ReplaceText(str, "&lt;", "<");
+		        str = ReplaceText(str, "&gt;", ">");
+		        str = ReplaceText(str, "&#039;", "'");
+		        str = ReplaceText(str, "&#034;", "\"");
+		  		str = ReplaceText(str, "&#92;", "\\");
+		  	    str = ReplaceText(str, "&amp;", "&");
+		        return str;
+		    }
+		    
 		</script>
 	</head>
 	<!-- 2018-02-01 김보미 - 게시물 상세 테이블 컬럼 조정. -->
@@ -177,17 +237,17 @@
 		        	<!-- 게시자&부서 -->
 		        	<tr>
 		        		<th style="width:10%;"><spring:message code='ezBoard.t223'/></th>
-						<td id="WriteUserNM" style="width:40%; white-space:nowrap">&nbsp;<c:out value="${boardItem.writerName}"/></td>
-						<th style="width:10%;"><spring:message code='ezBoard.t289'/></th>
-						<td id="User_DeptNM" style="width:40%; white-space:nowrap">&nbsp;${boardItem.writerDeptName}</td>
+						<td id="WriteUserNM" style="width:40%; white-space:nowrap" colspan=4></td>
+						<%-- <th style="width:10%;"><spring:message code='ezBoard.t289'/></th>
+						<td id="User_DeptNM" style="width:40%; white-space:nowrap">&nbsp;${boardItem.writerDeptName}</td> --%>
 		        	</tr>
 		        	<!-- 직위&사내전화 -->
-		        	<tr>
+		        	<%-- <tr>
 		        		<th><spring:message code='ezBoard.t290'/></th>
 						<td id="User_JobTitle" style="width:40%; white-space:nowrap;">&nbsp;${boardItem.extensionAttribute3}<div></div></td>
 						<th><spring:message code='ezPersonal.t177'/></th>
 						<td id="Telephone" style="width:40%; white-space:nowrap">&nbsp;${boardItem.extensionAttribute4}</td>
-		        	</tr>
+		        	</tr> --%>
 		        	<!-- 게시일&게시종료일 -->
 		        	<tr>
 						<th><spring:message code='ezBoard.t224'/></th>
@@ -241,7 +301,7 @@
 					<!-- 제목 -->
 		            <tr>
 	                  <th><spring:message code='ezBoard.t291'/></th>
-	                  <td id="cTitle" style="WORD-WRAP: break-word;" colspan="6">&nbsp;${boardItem.title} </td>
+	                  <td id="cTitle" style="WORD-WRAP: break-word;" colspan="6">&nbsp;<c:out value="${boardItem.title}"/></td>
 		            </tr>
 		      </table>
 <!-- 		<table class="layout">  -->
@@ -318,8 +378,8 @@
 		        <td style="height:30px">
 		          <table class="file2" style="height:100%;">
 		            <tr>
-		              <th style="height:100%; "><spring:message code='ezBoard.jjh06'/></th>
-		              <td style="height:100%; width:100%; "><div id="onelinereplylist" style="OVERFLOW:visible;  background-color:white; text-align:left"></div></td>
+		              <th class="boardItemViewPrint_cssThEn" style="height:100%; "><spring:message code='ezBoard.jjh06'/></th>
+		              <td class="boardItemViewPrint_cssTdEn" style="height:100%; width:100%; "><div id="onelinereplylist" style="OVERFLOW:visible;  background-color:white; text-align:left"></div></td>
 		            </tr>
 		          </table>
 		        </td>
@@ -330,8 +390,8 @@
 		        <td style="height:20px" class="pad1">
 		          <table class="file2" style="height:100%">
 		            <tr>
-		              <th style="height:100%; "><spring:message code='ezBoard.t10025'/></th>
-		              <td style="width:100%; height:100%; "><div id="lstAttachLink" style="padding-top:3px;padding-bottom:3px;padding-left:3px;OVERFLOW:visible;  background-color:white; text-align:left"></div></td>
+		              <th class="boardItemViewPrint_cssThEn" style="height:100%; "><spring:message code='ezBoard.t10025'/></th>
+		              <td class="boardItemViewPrint_cssTdEn" style="width:100%; height:100%; "><div id="lstAttachLink" style="padding-top:3px;padding-bottom:3px;padding-left:3px;OVERFLOW:visible;  background-color:white; text-align:left"></div></td>
 		              <td id="ItemLevel" style="display:none"></td>
 		            </tr>
 		          </table>

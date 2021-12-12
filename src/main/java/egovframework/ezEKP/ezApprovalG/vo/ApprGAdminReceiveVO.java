@@ -15,8 +15,8 @@ public class ApprGAdminReceiveVO {
 	private String deptName2;
 	/** 수신처 그룹 회사ID */
 	private String companyID;
-	
-	
+    /** 수신처 내부/외부 플래그 */
+    private String extReceptYn;	
 	
 	public String getMainID() {
 		return mainID;
@@ -60,5 +60,11 @@ public class ApprGAdminReceiveVO {
 	public void setCompanyID(String companyID) {
 		this.companyID = companyID;
 	}
+    public String getExtReceptYn() {
+        return extReceptYn;
+    }
+    public void setExtReceptYn(String extReceptYn) {
+        this.extReceptYn = extReceptYn;
+    }
 	
 }

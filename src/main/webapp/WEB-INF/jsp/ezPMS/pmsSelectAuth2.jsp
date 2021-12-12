@@ -310,7 +310,7 @@
 								                            <option value="HomePhone"><spring:message code='ezOrgan.t97'/></option>
 								                            <option value="facsimileTelephoneNumber"><spring:message code='ezOrgan.t98'/></option>
 								                            <option value="mail"><spring:message code='ezOrgan.t99'/></option>
-								                            <option value="streetAddress"><spring:message code='ezOrgan.t100'/></option>
+								                            <option value="streetAddress" style="display:none"><spring:message code='ezOrgan.t100'/></option>
 				                                        </select>
 				                                        <input id="keyword" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){search_click(); return false;}" value="" style="width: 130px; margin: 0px;" />
 				                                        <a class="imgbtn"><span onclick="search_click()"><spring:message code='ezOrgan.t101'/></span></a>

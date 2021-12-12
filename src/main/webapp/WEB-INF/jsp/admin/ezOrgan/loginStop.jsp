@@ -104,11 +104,15 @@
 		            	document.getElementById("loginStop_ifrm").src = "/admin/ezOrgan/normalUserList.do";
 		            	document.getElementById("stopBtn").style.display = "";
 		            	document.getElementById("releaseBtn").style.display = "none";
+		            	document.getElementById("searchKeyword").value = "";
+		            	document.getElementById("searchKeycode").value = "userName";
 		            	break;
 		            case "tagsub2":
 		            	document.getElementById("loginStop_ifrm").src = "/admin/ezOrgan/stopUserList.do";
 		            	document.getElementById("stopBtn").style.display = "none";
 		            	document.getElementById("releaseBtn").style.display = "";
+		            	document.getElementById("searchKeyword").value = "";
+		            	document.getElementById("searchKeycode").value = "userName";
 		            	break;
 		        }
 	        }

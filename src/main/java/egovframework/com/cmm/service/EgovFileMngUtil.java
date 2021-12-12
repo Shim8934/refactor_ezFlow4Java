@@ -80,7 +80,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 	private CommonUtil commonUtil;
     
     @Autowired
-    private KlibUtil klibUtil;
+    protected KlibUtil klibUtil;
     
     /**
      * 첨부파일에 대한 목록 정보를 취득한다.
@@ -253,7 +253,27 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 			LOGGER.debug("ex: {}", ex);
 		}
 	}
-
+	
+	/**
+	 * 절대 경로로 첨부파일을 klib 암호화하여 서버에 저장한다.
+	 *
+	 * @param multipartFile
+	 * @param filePath
+	 * @throws Exception
+	 */
+	protected void writeUploadedFileEncryptKlib(MultipartFile multipartFile, String filePath) {
+		try {
+			LOGGER.debug("writeUploadedFileEncryptKlib: {}", filePath);
+			File file = new File(filePath);
+			file.getParentFile().mkdirs();
+			byte[] encryptedBytes = klibUtil.encrypt(multipartFile.getBytes());
+			Files.write(file.toPath(), encryptedBytes);
+		} catch (Exception ex) {
+			LOGGER.debug("ex: ", ex);
+		}
+	}
+	
+	
     /**
      * 서버의 파일을 다운로드한다.
      *

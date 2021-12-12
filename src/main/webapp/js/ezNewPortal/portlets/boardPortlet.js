@@ -26,6 +26,7 @@ function getBoardList(data, portletId) {
 		var item = boardList[i];
 		boardHTML += "<li onclick='openDoc_section3_Type(\"" + item.itemID + "\", \"" + item.guBun + "\", \"" + item.boardID + "\")'>";
 		var startDate = item.startDate;
+		startDate = startDate.replace("-","/");
 		var writeDate = new Date(startDate);
 		
 		if (today < writeDate) {

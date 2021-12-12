@@ -279,6 +279,8 @@
 					alert("<spring:message code='ezTask.t193' />");
 				}
 			});
+	     	// 2021-04-09 김은실 - 검색 시 PressShiftKey = true 되는 현상(commit 6c23f8716 참조): 모든 search_click()에 적용. 
+            PressShiftKey = false;
 	    }
 	
 	    var rgParams = new Array();
@@ -1310,7 +1312,7 @@
 		                                                    <option value="officeMobile" usedefault="0"><spring:message code='main.ksa03' /></option>
 		                                                    </c:if>
 	                                                        <option value="mail" usedefault="0"><spring:message code='ezTask.t1002' /></option>
-	                                                        <option value="streetAddress" usedefault="0"><spring:message code='ezTask.t1003' /></option>
+	                                                        <option value="streetAddress" usedefault="0" style="display:none"><spring:message code='ezTask.t1003' /></option>
 	                                                    </select>
 	                                                    <input id="keyword" value="" onkeyup="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px; height:22px">
 	                                                    <a class="imgbtn"><span onclick="search_click('search')"><spring:message code='ezTask.t183' /></span></a>
@@ -1348,7 +1350,7 @@
 	                                                <tr>
 	                                                    <td style="width: 150px;color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezTask.t17' /></td>
 	                                                    <td style="width: 130px;color:#333;background-color: #f8f8fa"><spring:message code='ezTask.t201' /></td>
-	                                                    <td class="td_gray" style="color:#333;background-color: #f8f8fa"><spring:message code='ezTask.t202' /></td>
+	                                                    <td class="td_gray" style="color:#333;background-color: #f8f8fa"><spring:message code='ezTask.t1000' /></td>
 	                                                </tr>
 	                                            </table>
 	                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="Search_txtlist_table" class="mainlist">
@@ -1356,7 +1358,7 @@
 	                                                    <td style="width: 130px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezTask.t15' /></td>
 	                                                    <td style="width: 90px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezTask.t17' /></td>
 	                                                    <td style="width: 90px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezTask.t201' /></td>
-	                                                    <td class="td_gray" style="color:#333;background-color: #f8f8fa"><spring:message code='ezTask.t202' /></td>
+	                                                    <td class="td_gray" style="color:#333;background-color: #f8f8fa"><spring:message code='ezTask.t1000' /></td>
 	                                                </tr>
 	                                            </table>
 	                                        </div>

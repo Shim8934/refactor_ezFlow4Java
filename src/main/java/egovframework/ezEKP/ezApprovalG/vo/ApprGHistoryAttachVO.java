@@ -40,6 +40,15 @@ public class ApprGHistoryAttachVO {
 	/** 사용안함*/
 	private String chkFlag;
 	
+	/** 첨부파일이력 임시 조회용 변수 추가  */
+	private String displayName;
+	
+	public String getDisplayName() {
+		return displayName;
+	}
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
 	public String getDocID() {
 		return docID;
 	}

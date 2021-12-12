@@ -29,6 +29,10 @@
 	cursor:pointer
 }
 
+#webfolderResult tr{
+	cursor:pointer
+}
+
 #selectedRow {
 	background-color : rgb(237, 244, 253)
 }
@@ -167,6 +171,7 @@ $(document).ready(function(){
     if(!isTop) {
     	$("#approvalResult").append(noData());
     	$("#boardResult").append(noData());
+    	$("#webfolderResult").append(noData());
     }
     
     $("#tblPageRayer").css("display", "none");
@@ -211,6 +216,28 @@ $(document).ready(function(){
     	}
     });
     /* 게시판 관련 이벤트 끝 */
+    
+    /* 웹폴더 관련 이벤트 시작 */
+    if ("<c:out value='${useWebfolder}' />" == "YES") {
+	    $("#webfolderResult").delegate("tr", "click", function(){
+			selectTR(this);
+	    });
+	    
+	    $("#webfolderResult").delegate("tr", "mouseover", function(){
+			mouseoverTR(this);
+	    });
+	    
+	    $("#webfolderResult").delegate("tr", "mouseout", function(){
+			$("#mouseoverRow").prop("id", "");
+	    });      
+	    
+	    $("#webfolderResult").delegate("tr", "dblclick", function(){
+	    	if(this.id !== "noData") {
+	    		dblClickWebfolder($(this).attr("fileId"));
+	    	}
+	    });
+    }
+    /* 웹폴더 관련 이벤트 끝 */
     
     /* pagenation 관련 이벤트 시작 */
     $("#pagenavi").delegate("#pageCnt", "click", function() {
@@ -333,35 +360,7 @@ function dblClickBoard(boardID, itemID) {
 	var popupH = "";
 	var popupW = "";
 	
-/* 	$(boardList).each(function() {
-		if(this.BoardID === boardID && this.ItemID === itemID) {
-			gubun = this.GUBUN;
-		}
-	});
-	
-	console.log(boardList); */
-	
-	/**
-		게시판 읽기 권한 체크
-	*/
-	/* $.ajax({
-		method: "POST",
-		url: "/ezPortal/chkBoardReadAuthor.do",
-		type: "json",
-		async: false,
-		contentType: "application/json",
-		data : JSON.stringify({
-			boardID: boardID,
-			itemID : itemID
-		}),
-		success: function (result) {
-			readAuthor = result;
-		}
-	}); */
-	
 	readAuthor = "true";
-	
-	//readAuthor = "true";
 	
 	if(readAuthor === "true") {
 		boardList.filter(function(e){
@@ -436,6 +435,36 @@ function dblClickApproval(docID) {
 }
 
 /**
+ * 	웹폴더 더블클릭 액션 (파일 다운로드)
+ */
+function dblClickWebfolder(fileId) {
+	$.ajax({
+		type: "POST",
+		url: "/ezWebFolder/selectedFolderCheckPermission.do",
+		data: {
+			"fileId" : fileId
+		},
+		dataType: "JSON",
+		async: true,
+		success : function(data) {
+			var result = data.status;
+			
+			if (result != "ok" && data.code == "3") {
+				alert(messages.strLang25);
+			} else if (data.code == "1") {
+				alert(messages.strLang7);
+			} else {
+				var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + fileId;
+				AttachDownFrame.location.href = downloadUrl;
+			}
+		},
+		error : function(error) {
+			alert(messages.strLang7 + error);
+		}
+	});
+}
+
+/**
  	mouseover
  */
 function mouseoverTR(tr) {
@@ -476,6 +505,11 @@ function selectAllTab() {
 	$("#totalCntPrint").css("display", "block");
 	$("#approvalListDiv").css("display", "");
 	$("#boardListDiv").css("display", "");
+	
+	if ("<c:out value='${useWebfolder}' />" == "YES") {
+		$("#webfolderListDiv").css("display", "");
+	}
+	
 	$(".moreResult").css("display", "");
 	$("#tblPageRayer").css("display", "none");
 	
@@ -495,17 +529,31 @@ function selectOtherTab(tabId) {
 	if(tabId === "approval") {
 		$("#approvalListDiv").css("display", "");	
 		$("#boardListDiv").css("display", "none");
+		if ("<c:out value='${useWebfolder}' />" == "YES") {
+			$("#webfolderListDiv").css("display", "none");
+		}
 		$(".moreResult").css("display", "none");
 		$("#tblPageRayer").css("display", "");
 		
 		totalSearch.data.type = "approval";
 	} else if (tabId === "board") {
+		$("#approvalListDiv").css("display", "none");
 		$("#boardListDiv").css("display", "");
-		$("#approvalListDiv").css("display", "none");	
+		if ("<c:out value='${useWebfolder}' />" == "YES") {
+			$("#webfolderListDiv").css("display", "none");
+		}
 		$(".moreResult").css("display", "none");
 		$("#tblPageRayer").css("display", "");
 		
 		totalSearch.data.type = "board";
+	} else if (tabId === "webfolder") {
+		$("#approvalListDiv").css("display", "none");
+		$("#boardListDiv").css("display", "none");
+		$("#webfolderListDiv").css("display", "");
+		$(".moreResult").css("display", "none");
+		$("#tblPageRayer").css("display", "");
+		
+		totalSearch.data.type = "webfolder";
 	}
 	// '더보기' 페이지에선 10개씩 뿌리기	
 	totalSearch.data.automax = "10";          // 한 페이지에 출력하는 갯수.
@@ -547,7 +595,7 @@ function btn_searchStart() {
 	var startDate = "";
 	var endDate = "";
 	var searchRange="";
-	var type = totalSearch.data.type == undefined? "all" : totalSearch.data.type; //전체검색 || 전자결재 || 게시판
+	var type = totalSearch.data.type == undefined? "all" : totalSearch.data.type; //전체검색 || 전자결재 || 게시판 || 2021-06-17 웹폴더 추가
 	/**
 		검색기간 확인
 	*/
@@ -658,25 +706,31 @@ function callSearchController() {
 				
 				var approvalList;
 				var boardList;
+				var webfolderList;
 				
 				if (data.type == "all") {
 					for (var i = 0; i < res.result.length; i++) {
 						if (res.result[i].type == "board") {
 							boardList = res.result[i];
-						} else {
+						} else if (res.result[i].type == "approval"){
 							approvalList = res.result[i];
+						} else if (res.result[i].type == "webfolder"){
+							webfolderList = res.result[i];
 						}
 					}
 				} else if (data.type == "board") {
 					boardList = res.result[0];
-				} else {
+				} else if (data.type == "approval") {
 					approvalList = res.result[0];
+				} else if (data.type == "webfolder") {
+					webfolderList = res.result[0];
 				}
 				
 				var listCnt = 1;
 				
 				$("#approvalResult").empty();
 				$("#boardResult").empty();	
+				$("#webfolderResult").empty();	
 				
 				//리스트에 출력하는 로직.
 				if(approvalList !== undefined && approvalList.doc.length > 0) {
@@ -684,10 +738,7 @@ function callSearchController() {
  					$(approvalList.doc).each(function(i, e){
 						$("#approvalResult").append(approvalDataAssembler(this));
 					});
-/* 					approvalList.list.map(function(e){
-						$("#approvalResult").append(approvalDataAssembler(e));
-					}); */
-					
+ 					
 					//리스트 갯수
 					listCnt = approvalList.totcnt*1;
 					
@@ -704,10 +755,6 @@ function callSearchController() {
 						$("#boardResult").append(boardDataAssembler(this));
 					});
 					
-/* 					boardList.list.map(function(e){
-						$("#boardResult").append(boardDataAssembler(e));
-					}); */
-					
 					//리스트 갯수
 					listCnt = boardList.totcnt*1;
 					
@@ -718,14 +765,30 @@ function callSearchController() {
 					$("#boardResult").append(noData());
 				}
 				
+				if(webfolderList != undefined && webfolderList.doc.length > 0) {
+					$("#webfolderResultCnt").empty().append(webfolderList.totcnt);
+ 					$(webfolderList.doc).each(function(i, e){
+						$("#webfolderResult").append(webfolderDataAssembler(this));
+					});
+					
+					//리스트 갯수
+					listCnt = webfolderList.totcnt*1;
+					
+					//결과 담아두기.
+					totalSearch.webfolder = webfolderList.doc;				
+				} else {
+					$("#webfolderResultCnt").empty().append("0");
+					$("#webfolderResult").append(noData());
+				}
+				
 				if (data.type !== "all") {
 					// pagenation.
 					pagenation(pageObj(listCnt));
 				}
 				
 				//전체 검색량
-				if(approvalList !== undefined && boardList !== undefined) {
-					var totalCount = approvalList.totcnt*1 + boardList.totcnt*1;
+				if(approvalList !== undefined && boardList !== undefined && webfolderList !== undefined) {
+					var totalCount = approvalList.totcnt*1 + boardList.totcnt*1 + webfolderList.totcnt*1;
 					$("#totalCnt").empty().append(totalCount);				
 				}
 			},
@@ -817,6 +880,36 @@ function approvalDataAssembler(data) {
 	return str;
 }
 
+/**
+	웹폴더 리스트 출력
+*/
+function webfolderDataAssembler(data) {
+	var str = "";
+	
+	str += "<tr fileId='"+ data.fileId +"'>";
+	str += "<td>"+ data.folderName1 + "</td>";
+	str += "<td>"+ data.fileName + "</td>";
+	str += "<td>"+ data.writerDeptName + "</td>";
+	str += "<td>"+ data.writerName + "</td>";
+	
+	var endDate = data.writeDate;
+	var endDateStr = endDate.substring(0,4); //년도
+	endDateStr += "-" + endDate.substring(4,6); //월
+	endDateStr += "-" + endDate.substring(6,8); //일
+	
+	str += "<td>"+ endDateStr + "</td>";
+	str += "<td>"+ getfileSize(data.fileSize) + "</td>";
+
+	str += "</tr>";
+	
+	return str;
+}
+
+function getfileSize(x) {
+	var s = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB'];
+	var e = Math.floor(Math.log(x) / Math.log(1024));
+	return (x / Math.pow(1024, e)).toFixed(1) + " " + s[e];
+}
 
 /*
  *	검색범위 설정 
@@ -936,8 +1029,8 @@ function ConvMakeXMLString(str) {
     str = ReplaceText(str, "&gt;", ">");
     str = ReplaceText(str, "&#039;", "'");
     str = ReplaceText(str, "&#034;", "\"");
-    str = ReplaceText(str, "&amp;", "&");	    
 	str = ReplaceText(str, "&#92;", "\\");
+    str = ReplaceText(str, "&amp;", "&");	    
     return str;
 }
 
@@ -997,10 +1090,13 @@ function ConvMakeXMLString(str) {
                         <spring:message code="ezTotalSearch.t0013" />&nbsp;&nbsp;&nbsp;&nbsp;
                         <input type="checkbox" name="chkContentsRange" id="chkContentsRange" value="CONTENTS" onclick="chkSearchRange(this.value);">
                         <spring:message code="ezTotalSearch.t0014" />&nbsp;&nbsp;&nbsp;&nbsp;
-                        <input type="checkbox" name="chkAttachsRange" id="chkAttachsRange" value="ATTACH" onclick="chkSearchRange(this.value);">
-                        <spring:message code="ezTotalSearch.t0015" />&nbsp;&nbsp;&nbsp;&nbsp;
                         <input type="checkbox" name="chkWriterRange" id="chkWriterRange" value="WRITER" onclick="chkSearchRange(this.value);">
-                        <spring:message code="ezTotalSearch.t0008" />
+                        <spring:message code="ezTotalSearch.t0008" />&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="checkbox" name="chkAttachsRange" id="chkAttachsRange" value="ATTACH" onclick="chkSearchRange(this.value);">
+                        <spring:message code="ezTotalSearch.t0015" />&nbsp;
+                        <c:if test="${useWebfolder == 'YES'}">
+                        	<font class="point5"><spring:message code="ezTotalSearch.t0039" /></font>
+                        </c:if>
                     </span>
                 </td>
             </tr>
@@ -1026,6 +1122,9 @@ function ConvMakeXMLString(str) {
                 <p><span id="all" class=""><spring:message code="ezTotalSearch.t0012" /></span></p>
                 <p><span id="approval" class=""><spring:message code="ezTotalSearch.t0018" /></span></p>
                 <p><span id="board" class=""><spring:message code="ezTotalSearch.t0019" /></span></p>
+                <c:if test="${useWebfolder == 'YES'}">
+                	<p><span id="webfolder" class=""><spring:message code="ezTotalSearch.t0035" /></span></p>
+                </c:if>
             </div>
         </div>
 
@@ -1065,7 +1164,7 @@ function ConvMakeXMLString(str) {
 	                        <th id="" class="h5_center" width="15%" height="15px"><spring:message code="ezTotalSearch.t0023" /></th>
 	                        <th id="" class="h5_center" width="15%" height="15px"><spring:message code="ezTotalSearch.t0024" /></th>
 	                        <th id="" class="h5_center" width="10%" height="15px"><spring:message code="ezTotalSearch.t0025" /></th>
-	                        <th id="" class="h5_center" width="50px" height="15px"><spring:message code="ezTotalSearch.t0026" /></th>
+	                        <th id="" class="h5_center" width="70px" height="15px"><spring:message code="ezTotalSearch.t0026" /></th>
 	                    </tr>
 	                </thead>
 	                <tbody id ="approvalResult" style="background-color: rgb(255, 255, 255);"></tbody>
@@ -1106,7 +1205,7 @@ function ConvMakeXMLString(str) {
 	                        <th id="" class="h5_center" width="15%" height="15px"><spring:message code="ezTotalSearch.t0023" /></th>
 	                        <th id="" class="h5_center" width="15%" height="15px"><spring:message code="ezTotalSearch.t0008" /></th>
 	                        <th id="" class="h5_center" width="10%" height="15px"><spring:message code="ezTotalSearch.t0009" /></th>
-	                        <th id="" class="h5_center" width="50px" height="15px"><spring:message code="ezTotalSearch.t0015" /></th>
+	                        <th id="" class="h5_center" width="70px" height="15px"><spring:message code="ezTotalSearch.t0015" /></th>
 	                    </tr>
 	                </thead>
 	                <tbody id="boardResult" style="background-color: rgb(255, 255, 255);"></tbody>
@@ -1125,6 +1224,49 @@ function ConvMakeXMLString(str) {
 	        </div>
         </div>
         <!-- //게시판 -->
+        <c:if test="${useWebfolder == 'YES'}">
+        <!-- 웹폴더 -->
+        <div id="webfolderListDiv">
+	        <table cellspacing="0" cellpadding="7" width="100%" border="0" class="divAprList" id="webfolderMenulist">
+	            <tbody>
+	                <tr>
+	                    <td>
+	                        <img src="/images/totalsearch/total_search_icon01.png" width="16" height="16" style="vertical-align:middle;" />
+	                        <b><spring:message code="ezTotalSearch.t0035" /></b> <spring:message code="ezTotalSearch.t0028" /> (<span class="point5" id="webfolderResultCnt">0</span><spring:message code="ezTotalSearch.t0032" />)
+	                    </td>
+	                </tr>
+	            </tbody>
+	        </table>
+	        <div id="">
+	            <table id="webfolderTable" cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" rowonclick="" rowondblclick="" width="100%" border="0" class="mainlist">
+	                <thead id="">
+	                    <tr id="">
+	                        <!-- <th id="" class="h4_center" bgcolor="#CCCCCC" width="30px" height="15px">번호</th> -->
+	                        <th id="" class="h5_center" width="200px" height="15px"><spring:message code="ezTotalSearch.t0033" /></th>
+	                        <th id="" class="h5_center" width="auto" height="15px"><spring:message code="ezTotalSearch.t0038" /></th>
+	                        <th id="" class="h5_center" width="15%" height="15px"><spring:message code="ezTotalSearch.t0023" /></th>
+	                        <th id="" class="h5_center" width="15%" height="15px"><spring:message code="ezTotalSearch.t0036" /></th>
+	                        <th id="" class="h5_center" width="10%" height="15px"><spring:message code="ezTotalSearch.t0037" /></th>
+	                        <th id="" class="h5_center" width="70px" height="15px"><spring:message code="ezTotalSearch.t0034" /></th>
+	                    </tr>
+	                </thead>
+	                <tbody id="webfolderResult" style="background-color: rgb(255, 255, 255);"></tbody>
+	            </table>
+	        </div>
+	        <div id="moreWebfolderResult" class="moreResult" style="">
+	            <table cellspacing="0" cellpadding="0" border="0" width="100%">
+	                <tbody>
+	                    <tr>
+	                        <td align="right" height="23px">
+	                            <a onclick="clickTab('webfolder')"><img src="/images/totalsearch/total_search_icon02.png" width="16" height="16" style="vertical-align:top; border:0px none;" /><spring:message code="ezTotalSearch.t0027" /></a>
+	                        </td>
+	                    </tr>
+	                </tbody>
+	            </table>
+	        </div>
+        </div>
+        <!-- //웹폴더 -->
+        </c:if>
         <br />
         <br>
         <div id="tblPageRayer">
@@ -1138,5 +1280,6 @@ function ConvMakeXMLString(str) {
 			</span>
 		</span>
 	</div>
+	<iframe name="AttachDownFrame" id="AttachDownFrame" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" style="display:none"></iframe>
 </body>
 </html>

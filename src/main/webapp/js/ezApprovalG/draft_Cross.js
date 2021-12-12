@@ -1506,19 +1506,33 @@ function setRecevInfo(ret) {
 
         if (recipflag) {
             if (getNodeText(dataNodes[3]) == "Y") {
-                precipent = getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);
-                precipents = getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);
+                if (getNodeText(dataNodes[1]).indexOf(preSusinGroupStr) == 0) {
+                    precipent = strLangS68;
+                    precipents = (getNodeText(dataNodes[7]) ? getNodeText(dataNodes[7]) + " " : "") + getNodeText(dataNodes[0]);
+                } else {
+                    precipent = (getNodeText(dataNodes[7]) ? getNodeText(dataNodes[7]) + " " : "") + getNodeText(dataNodes[0]);
+                    precipents = (getNodeText(dataNodes[7]) ? getNodeText(dataNodes[7]) + " " : "") + getNodeText(dataNodes[0]);
+                }
                 recipflag = false;
-            }
-            else {
+            } else {
                 if (isExtDoc == "Y") {
-                    precipent = getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);
-                    precipents = getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);
+                    if (getNodeText(dataNodes[1]).indexOf(preSusinGroupStr) == 0) {
+                        precipent = strLangS68;
+                        precipents = (getNodeText(dataNodes[7]) ? getNodeText(dataNodes[7]) + " " : "") + getNodeText(dataNodes[0]);
+                    } else {
+                        precipent = (getNodeText(dataNodes[7]) ? getNodeText(dataNodes[7]) + " " : "") + getNodeText(dataNodes[0]);
+                        precipents = (getNodeText(dataNodes[7]) ? (getNodeText(dataNodes[7]) ? getNodeText(dataNodes[7]) + " " : "") : "") + getNodeText(dataNodes[0]);
+                    }
                     recipflag = false;
                 }
                 else {
-                    precipent = getNodeText(dataNodes[0]);
-                    precipents = getNodeText(dataNodes[0]);
+                    if (getNodeText(dataNodes[1]).indexOf(preSusinGroupStr) == 0) {
+                        precipent = strLangS68;
+                        precipents = getNodeText(dataNodes[0]);
+                    } else {
+                        precipent = getNodeText(dataNodes[0]);
+                        precipents = getNodeText(dataNodes[0]);
+                    }
                     recipflag = false;
                 }
             }
@@ -1527,12 +1541,12 @@ function setRecevInfo(ret) {
             precipent = strLangS68;
 
             if (getNodeText(dataNodes[3]) == "Y")
-                precipents = precipents + "," + getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);
+                precipents = precipents + ", " + (getNodeText(dataNodes[7]) ? getNodeText(dataNodes[7]) + " " : "") + getNodeText(dataNodes[0]);
             else {
                 if (isExtDoc == "Y")
-                    precipents = precipents + "," + getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);
+                    precipents = precipents + ", " + (getNodeText(dataNodes[7]) ? getNodeText(dataNodes[7]) + " " : "") + getNodeText(dataNodes[0]);
                 else
-                    precipents = precipents + "," + getNodeText(dataNodes[0]);
+                    precipents = precipents + ", " + getNodeText(dataNodes[0]);
             }
         }
     }
@@ -1919,10 +1933,13 @@ function SendDraftMappingSign(ret) {
 //        		message.GetListItem(fields, "1sign1").height = "65";
 //      	}
 //     }
+        var signWidth = 0;
+        var signHeight = 0;
+        if (field) {
+        	signWidth = parseInt(field.offsetWidth) - 4;
+            signHeight = parseInt(field.offsetHeight) - 4;	
+        }
         
-        var signWidth = parseInt(field.offsetWidth) - 4;
-        var signHeight = parseInt(field.offsetHeight) - 4;
-
         var field = message.GetListItem(fields, pseumyungcell);
         if (field) {
             setNodeText(field , getNodeText(field) + PositionText);
@@ -2258,6 +2275,7 @@ function openFormUI_Complete(ret) {
             tempItemName = "";
             tempdocnumcode = strLang107;
             tempSecurityDate = "";
+            pHasOpinionYN = "N";			// 2021-04-29 김민성 - 기안 > 양식선택시 기존에 의견이 있었던 경우 값이 안바뀌는 오류 수정 
 
             message.Set_EditorContentURL(pFormHref);
             
@@ -3820,25 +3838,48 @@ function CheckMem(DeptID) {
 }
 function getDeptSymbol(DeptID, DeptName) {
 	var result = "";
+	var dataNodes;
+	var RtnVal;
 	
-	$.ajax({
-		type : "POST",
-		dataType : "text",
-		async : false,
-		url : "/ezOrgan/getADInfos.do",
-		data : {
-			cn : DeptID,
-			prop : "extensionAttribute6",
-			cate  : "group"
-		},
-		success: function(xml){
-			result = xml;
-		}        			
-	});
+	if(approvalFlag == "S") {
+		$.ajax({
+			type : "POST",
+			dataType : "text",
+			async : false,
+			url : "/ezApprovalG/getChaebunDept.do",
+			data : {
+				deptID : DeptID,
+				orgCompanyID : orgCompanyID
+			},
+			success: function(xml){
+				result = xml;
+				if(result != null) {
+					dataNodes = GetChildNodes(loadXMLString(result).documentElement);
+					DeptName = getNodeText(dataNodes[0]);
+					RtnVal = getNodeText(dataNodes[1]);
+				}
+			}        			
+		});
+	} else {
+		$.ajax({
+			type : "POST",
+			dataType : "text",
+			async : false,
+			url : "/ezOrgan/getADInfos.do",
+			data : {
+				cn : DeptID,
+				prop : "extensionAttribute6",
+				cate  : "group"
+			},
+			success: function(xml){
+				result = xml;
+			}        			
+		});
 	
-    var dataNodes = GetChildNodes(loadXMLString(result).documentElement);
-    var RtnVal = getNodeText(dataNodes[0]);
-
+		dataNodes = GetChildNodes(loadXMLString(result).documentElement);
+		RtnVal = getNodeText(dataNodes[0]);
+	}
+	
     if (RtnVal == "") {
         return DeptName;
     }

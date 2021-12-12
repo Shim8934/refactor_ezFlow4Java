@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -27,9 +28,11 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
+import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
 import egovframework.ezMobile.ezApprovalG.service.MApprovalGService;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
 import egovframework.ezMobile.ezBoard.service.MBoardService;
@@ -39,12 +42,14 @@ import egovframework.ezMobile.ezEmail.service.MEmailService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
+import egovframework.ezMobile.ezPortal.vo.MPortalMailTimeLineVO;
 import egovframework.ezMobile.ezPortal.vo.MPortalTimeLineVO;
 import egovframework.ezMobile.ezResource.service.MResourceService;
 import egovframework.ezMobile.ezResource.vo.MResourceScheduleVO;
 import egovframework.ezMobile.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezMobile.ezSchedule.service.MScheduleService;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.utl.collection.ChainMap;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 /** 
@@ -93,7 +98,10 @@ public class MPortalGWController extends EgovFileMngUtil {
 	
 	@Resource(name = "EzCommonService")
     private EzCommonService ezCommonService;
-	
+
+	@Autowired
+	private EzWebFolderService_y ezWebFolderService_y;
+
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
 	
@@ -178,20 +186,29 @@ public class MPortalGWController extends EgovFileMngUtil {
 					locale = new Locale("ja");
 				}
 				
-				if(useExternalMailServer.equalsIgnoreCase("NO")) {
-				JSONArray mailList = mEmailService.getMainMailList(info, locale, "isUnreadOnly", listCnt);
-				
-				//안읽은메일 리스트 카운트
-				int mailCnt = 0;
-				
-				if (mailAccess.equals("true")) {
-					mailList = mEmailService.getMainMailList(info, locale, "isUnreadOnly", listCnt);
-					mailCnt = mEmailService.getMainMailUnreadCount(info, locale);
+				if (useExternalMailServer.equalsIgnoreCase("NO")) {
+					JSONArray mailList = mEmailService.getMainMailList(info, locale, "isUnreadOnly", listCnt);
+
+					//안읽은메일 리스트 카운트
+					int mailCnt = 0;
+
+					if ("true".equals(mailAccess)) {
+						mailList = mEmailService.getMainMailList(info, locale, "isUnreadOnly", listCnt);
+						mailCnt = mEmailService.getMainMailUnreadCount(info, locale);
+
+						// 메일 중요도 색깔 구하기
+						// jgw 요청은 비싸니깐 먼저 중요도 높음 메일이 있는지 체크
+						if (mailList.stream().anyMatch(mail -> ((JSONObject) mail).get("importance").equals(2))) {
+							String importanceColor = Optional.ofNullable(ezEmailService.getMailColor(info.getTenantId()))
+									.map(MailColorVO::getImportanceColor).orElse("#ff0000");
+							dataObject.put("importanceColor", importanceColor);
+						}
+					}
+
+					dataObject.put("mailList", mailList);
+					dataObject.put("mailCnt", mailCnt + "");
 				}
-				
-				dataObject.put("mailList", mailList);
-				dataObject.put("mailCnt", mailCnt+"");
-				}
+
 				/* 2018-07-03 홍승비 - 조건에 companyID 추가 필요 */
 				//새게시물 리스트
 				List<MBoardNewListVO> boardList = new ArrayList<MBoardNewListVO>();
@@ -266,18 +283,34 @@ public class MPortalGWController extends EgovFileMngUtil {
 				if (mailAccess.equals("true") && useExternalMailServer.equalsIgnoreCase("NO")) {
 					//메일 조인
 					List<Map<String, String>> mailList = ezEmailService.getMailListT(userInfo, jspw, sessionDate, Integer.parseInt(listCnt));
+					boolean hasHighImportance = false;
 					
 					for (Map<String, String> maps : mailList) {
-						MPortalTimeLineVO mPortalTimeLineVO = new MPortalTimeLineVO();
+						MPortalMailTimeLineVO mPortalTimeLineVO = new MPortalMailTimeLineVO();
+						String importance = maps.get("importance");
+
+						if ("2".equals(importance)) {
+							hasHighImportance = true;
+						}
+
 						mPortalTimeLineVO.setTitle(maps.get("subject"));
 						mPortalTimeLineVO.setStartDate(maps.get("receivedDate"));
 						mPortalTimeLineVO.setModule("2");
 						mPortalTimeLineVO.setWriterName(maps.get("sender"));
 						mPortalTimeLineVO.setMailID(maps.get("uid"));
+						mPortalTimeLineVO.setImportance(importance);
 						
 						mPortalTimeLineVOs.add(mPortalTimeLineVO);
 					}
 					
+					// 메일 중요도 색상
+					// jgw 요청은 비싸니깐 먼저 중요도 높음 메일이 있는지 체크
+					if (hasHighImportance) {
+						String importanceColor = Optional.ofNullable(ezEmailService.getMailColor(info.getTenantId()))
+								.map(MailColorVO::getImportanceColor).orElse("#ff0000");
+						dataObject.put("importanceColor", importanceColor);
+					}
+
 					LOGGER.debug("## 메일 소요시간(초.0f) : " + (System.currentTimeMillis() - startTime)/1000.0f + "초");
 				}
 				
@@ -401,7 +434,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 		
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezPortal/{menu}/footer-list/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject portalFooterList(@PathVariable String menu, @PathVariable String userId, HttpServletRequest request, Locale locale) throws Exception {
+	public JSONObject portalFooterList(@PathVariable String menu, @PathVariable String userId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("portalFooterList Start");
 		
 		JSONObject result = new JSONObject();
@@ -414,6 +447,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 			int tenantId = info.getTenantId();
 			MOptionVO mobileInfo = mOptionService.optionInfo(userId, tenantId);
 			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
+			Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(info.getLang()));
 			
 			if (menu.equals("etc")) {
 				//게시판 풋터리스트
@@ -423,12 +457,12 @@ public class MPortalGWController extends EgovFileMngUtil {
 				String langStr = request.getParameter("langStr");
 				//자원관리 풋터리스트				
 				List<MResourceScheduleVO> resourceFooterList = mResourceService.getResFavoriteList(userId, info.getCompanyId(), tenantId, langStr);
-				
 				/* 2019-05-09 홍승비 - useLoginCookieSSO 여부 파라미터 추가 */
 				String useLoginCookieSSO = ezCommonService.getTenantConfig("useLoginCookieSSO", tenantId);
 
 				dataObject.put("boardFooterList", boardFooterList);
 				dataObject.put("resourceFooterList", resourceFooterList);
+				dataObject.put("webfolderFooterList", getWebfolderFooters(userId, info.getDeptId(), info.getCompanyId(), primary, locale, tenantId));
 				dataObject.put("useLoginCookieSSO", useLoginCookieSSO);
 			} else if (menu.equals("board")) {
 				//게시판 풋터리스트
@@ -444,12 +478,16 @@ public class MPortalGWController extends EgovFileMngUtil {
 				//자원관리 풋터리스트				
 				List<MResourceScheduleVO> resourceFooterList = mResourceService.getResFavoriteList(userId, info.getCompanyId(), tenantId, langStr);
 				dataObject.put("resourceFooterList", resourceFooterList);
+			} else if (menu.equals("webfolder")) {
+				// 웹폴더 풋터리스트
+				dataObject.put("webfolderFooterList", getWebfolderFooters(userId, info.getDeptId(), info.getCompanyId(), primary, locale, tenantId));
 			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", dataObject);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");		
@@ -459,7 +497,25 @@ public class MPortalGWController extends EgovFileMngUtil {
 		
 		return result;
 	}
-	
+
+	private List<Map<String, Object>> getWebfolderFooters(String userId, String deptId, String companyId, String primary, Locale locale, int tenantId) throws Exception {
+		List<Map<String, Object>> footers = new ArrayList<>(6);
+
+		getWebfolderFooter("company", userId, deptId, companyId, primary, tenantId, "C", "ezWebFolder.t11", locale).ifPresent(footers::add);
+		getWebfolderFooter("department", userId, deptId, companyId, primary, tenantId, "D", "ezWebFolder.t12", locale).ifPresent(footers::add);
+		getWebfolderFooter("user", userId, deptId, companyId, primary, tenantId, "U", "ezWebFolder.t13", locale).ifPresent(footers::add);
+		footers.add(ChainMap.of("pageType", "shared").add("title", egovMessageSource.getMessage("ezWebFolder.t214", locale)));
+		footers.add(ChainMap.of("pageType", "sharing").add("title", egovMessageSource.getMessage("ezWebFolder.t267", locale)));
+		footers.add(ChainMap.of("pageType", "favorite").add("title", egovMessageSource.getMessage("ezWebFolder.t281", locale)));
+
+		return footers;
+	}
+
+	private Optional<Map<String, Object>> getWebfolderFooter(String pageType, String userId, String deptId, String companyId, String primary, int tenantId, String folderType, String messageKey, Locale locale) throws Exception {
+		return ezWebFolderService_y.getFolderTree(userId, deptId, companyId, folderType, primary, tenantId, "").stream()
+				.findFirst().map(folder -> ChainMap.of("pageType", pageType).add("id", folder.getId()).add("title", egovMessageSource.getMessage(messageKey, locale)));
+	}
+
 	/**
 	 * 모바일 G/W 포탈 [GET] 왼쪽 유저정보 
 	 */
@@ -579,7 +635,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 			String serverName = request.getHeader("x-user-host");			
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
-			String menuCodeStr = "approval,mail,schedule,board,resource,workspace,address";
+			String menuCodeStr = "approval,mail,schedule,board,resource,workspace,address,webfolder";
 			String[] menuCodeArr = menuCodeStr.split(",");
 			ArrayList<String> menuCodeList =  new ArrayList<>(Arrays.asList(menuCodeArr));
 			int tenantId = info.getTenantId();
@@ -603,6 +659,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 				case "schedule" :
 				case "board" :
 				case "resource" : 
+				case "webfolder" :
 					footerAccessCount = access? footerAccessCount + 1 : footerAccessCount;
 					portalAccessCount = access? portalAccessCount + 1 : portalAccessCount;
 					

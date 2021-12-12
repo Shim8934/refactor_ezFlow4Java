@@ -454,6 +454,26 @@
 		</isNotNull>
 	</select>
 	
+	<select id="EzCommunityDAO.bbsGetReplyItemCnt"					parameterClass="Map"		resultClass="Integer">
+		<![CDATA[
+			SELECT
+				IFNULL(COUNT(*), 0)
+			FROM
+				TBL_C_BOARD
+			WHERE
+				REF = (SELECT
+								REF
+							FROM
+								TBL_C_BOARD
+							WHERE
+								NO = #v_NO# AND TENANT_ID = #v_TENANTID#)
+			AND
+				UPPERNO = #v_NO#
+			AND
+				TENANT_ID = #v_TENANTID#
+		]]>
+	</select>
+	
 <!-- 	<procedure id="EzCommunityDAO.commMakeOkGet1"				parameterClass="Map"		resultClass="CommunityClubVO"> -->
 <!-- 		{CALL EZSP_COMM_MAKE_OK_GET1(#v_CLUBNAME#, #v_C_CATE_A#, #v_C_CATE_B#, #v_C_CATE_C#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
@@ -2462,9 +2482,9 @@
 			SELECT
 				A.itemid,
 				A.writerid,
-				A.writername$v_USERINFO_LANG$,
-				A.writerdeptname$v_USERINFO_LANG$,
-				A.writercompanyname$v_USERINFO_LANG$,
+				A.writername$v_USERINFO_LANG$ as writername,
+				A.writerdeptname$v_USERINFO_LANG$ as writerdeptname,
+				A.writercompanyname$v_USERINFO_LANG$ as writercompanyname,
 				A.startdate,
 				DATE_ADD(DATE_FORMAT(A.writedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS writedate,
 				A.parentwritedate,
@@ -4462,7 +4482,7 @@
 			FROM
 				TBL_COMM_ITEM
 			WHERE
-				upperitemidtree LIKE CONCAT('%', #v_pItemID#, '%')
+				upperitemidtree LIKE CONCAT('%', ( SELECT upperitemidtree FROM TBL_COMM_ITEM WHERE itemid = #v_pItemID# ), '%')
 			AND
 				itemid <> #v_pItemID#
 			AND
@@ -5173,6 +5193,12 @@
 			</isNotEqual>
 		</isEqual>
 		
+		<isEqual property="v_BNAME" compareValue="TBL_C_BOARD">
+			<isNotEmpty property="v_NO">
+				UPPERNO,
+			</isNotEmpty>
+		</isEqual>
+		
 		<![CDATA[
 			$v_MAXIDFIELDNAME$,
 			content,
@@ -5200,6 +5226,12 @@
 				#v_NEWSTEP#,
 				#v_NEWLEVEL#
 			</isNotEqual>
+		</isEqual>
+		
+		<isEqual property="v_BNAME" compareValue="TBL_C_BOARD">
+			<isNotEmpty property="v_NO">
+				,#v_NO#
+			</isNotEmpty>
 		</isEqual>
 		
 		<![CDATA[
@@ -7629,4 +7661,18 @@
  				ITEMID = #v_pItemID#
  		]]>
  	</select>
+ 	
+	<select id="EzCommunityDAO.getClubConfirmType" parameterClass="Map" resultClass="String">
+ 		<![CDATA[
+ 			SELECT
+ 				C_CLUBCONFIRMTYPE
+ 			FROM
+ 				TBL_C_CLUB
+ 			WHERE
+ 				TENANT_ID = #v_TENANTID#
+ 			AND
+ 				C_CLUBNO = #v_CODE#
+ 		]]>
+ 	</select>
+ 	
 </sqlMap>

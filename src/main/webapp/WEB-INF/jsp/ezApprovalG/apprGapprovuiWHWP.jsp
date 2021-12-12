@@ -158,6 +158,7 @@
 	        var bigAttachDownloadPeriod = "<c:out value ='${bigAttachDownloadPeriod}'/>";
 	        var bigAttachDownloadDay = "<c:out value ='${bigAttachDownloadDay}'/>";
 	        var bigSizeAttachDownloadLimitCount = "<c:out value ='${bigSizeAttachDownloadLimitCount}'/>";
+			var preSusinGroupStr = "<c:out value ='${preSusinGroupStr}'/>";
 	        
 		    function getNextDocList() {
 		        NextDocID = "";
@@ -238,9 +239,9 @@
 				        tempString = tempString.replace("\n", "");
 				        var pAlertContent = tempString + "<br><spring:message code='ezApprovalG.t3'/>";
 		            }
-		            OpenAlertUI(pAlertContent);
-		            window.parent.close();
-		            btnClose_onclick();
+			        OpenAlertUI(pAlertContent, btnClose_onclick); // 알림창 확인 시 문서창 닫도록 수정
+		            //window.parent.close();
+		            //btnClose_onclick();
 		        }
 		        else {
 		            if (NextDocExtended.substring(NextDocExtended.lastIndexOf(".") + 1).toLowerCase() != "hwp") {
@@ -1315,7 +1316,7 @@
 				    }
 			
 			        var g_SepAttachLVXml = "";
-			        g_SepAttachLVXml = GetDocumentElement(message, "sepattachlvxml", true);
+			        g_SepAttachLVXml = GetDocumentElement("sepattachlvxml", true);
 			        if (!g_SepAttachLVXml)
 			            g_SepAttachLVXml = "";
 			
@@ -1334,7 +1335,7 @@
 			        DivPopUpHidden();
 			        if (rtn[0] == "TRUE") {
 			            g_SepAttachLVXml = rtn[1];
-			            SetDocumentElement(message, "sepattachlvxml", g_SepAttachLVXml)
+			            SetDocumentElement("sepattachlvxml", g_SepAttachLVXml)
 			        }
 			    }
 			    

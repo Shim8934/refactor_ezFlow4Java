@@ -400,6 +400,10 @@
 		            OpenAlertUI("<spring:message code = 'ezApprovalG.t745' />");
 		            return;
 		        }
+				if (trim(document.getElementById("tbTaskName2").value) == "") {
+					OpenAlertUI("<spring:message code = 'ezApprovalG.t745' />");
+					return;
+				}
 
 		        if (approvalFlag == 'G' && trim(document.getElementById("tbTaskDesc").value) == "") {
 		            OpenAlertUI("<spring:message code = 'ezApprovalG.t746' />");
@@ -631,11 +635,11 @@
 	        	<c:choose>
 	        		<c:when test="${approvalFlag == 'S' }">
 			        	<th><spring:message code = 'ezApprovalG.t1641' />(${primary }) <span style="color:red">*</span></th>
-						<td><input type="text" id="tbTaskName" name="tbTaskName" style="WIDTH: 100%; box-sizing: border-box; -moz-box-sizing: border-box;" maxlength="20"></td>
+						<td><input type="text" id="tbTaskName" name="tbTaskName" style="WIDTH: 100%; box-sizing: border-box; -moz-box-sizing: border-box;" maxlength="30"></td>
 	        		</c:when>
 	        		<c:otherwise>
        					<th><spring:message code = 'ezApprovalG.t597' />(${primary }) <span style="color:red">*</span></th>
-	            		<td><input type="text" id="tbTaskName" name="tbTaskName" style="WIDTH: 100%; box-sizing: border-box; -moz-box-sizing: border-box;" maxlength="20"></td>
+	            		<td><input type="text" id="tbTaskName" name="tbTaskName" style="WIDTH: 100%; box-sizing: border-box; -moz-box-sizing: border-box;" maxlength="30"></td>
 	        		</c:otherwise>
 	        	</c:choose>
 	        </tr>

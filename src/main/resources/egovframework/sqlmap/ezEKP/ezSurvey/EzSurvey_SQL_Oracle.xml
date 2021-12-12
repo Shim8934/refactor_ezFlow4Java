@@ -800,16 +800,16 @@
 				user_id as creatorId,
 				user_name1 as creatorName1,
 				user_name2 as creatorName2,
-				date_add(start_date, interval #offset# minute)  as startDate,
-				date_add(end_date, interval #offset# minute)    as endDate,
+				TO_date(start_date, 'yyyy-mm-dd hh24:mi:ss') + #offset# /(24*60) as startDate,
+				TO_date(end_date, 'yyyy-mm-dd hh24:mi:ss') + #offset# /(24*60)   as endDate,
 				tenant_id as tenantId,
 				company_id as companyId
 			from
 				tbl_survey
 			where
-				date_add(start_date, interval #offset# minute) <= current_date
+				TO_date(start_date, 'yyyy-mm-dd hh24:mi:ss') + #offset# /(24*60) <= current_date
 			and
-				date_add(end_date, interval #offset# minute) >= current_date
+				TO_date(end_date, 'yyyy-mm-dd hh24:mi:ss') + #offset# /(24*60) >= current_date
 		 	and
 		 		use_status = 1
 		 	and
@@ -1111,6 +1111,9 @@
 			tenant_id
 		from tbl_survey_participant 
 			where survey_id = #surveyId# and company_id = #companyId# and tenant_id = #tenantId#
+			and ( (user_type = 'user' and user_id in (select cn from tbl_usermaster where tenant_id = #tenantId#)) 
+				or
+				  user_type != 'user' )
 	</select>
 	
 	<delete id="EzSurveyDAO.deleteSurveyUsers" parameterClass="SurveyVO">

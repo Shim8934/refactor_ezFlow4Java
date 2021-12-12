@@ -832,6 +832,11 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		List<SurveyParticipantVO> listUsers = ezSurveyDAO.getSurveyUsers(map);
 		
 		for (SurveyParticipantVO surveyParticipant : listUsers) {
+			// 일반 모드에서는 사용자 정보를 가져올 필요가 없음
+			if(mode.equals("normal")) {
+				break;
+			}
+			
 			String userType = surveyParticipant.getUserType();
 			
 			if (userType != null) {

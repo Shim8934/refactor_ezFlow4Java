@@ -74,8 +74,8 @@
 			}
 			.topInfoP input[type="checkbox"] {
 				margin: 11px 5px 0px 0px;
-				width: 13px;
-				height: 13px;
+				/* width: 13px;
+				height: 13px; */
 				vertical-align: top;
 			}
 			.albumThumbImg {
@@ -456,6 +456,17 @@
 	                    ifrmPreViewH_photo.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022'/>";
 	                firstFlag = true;
 	            }
+
+				/* 2021-08-12 김성준 썸네일, 영상 미독 게시물 게시일 내려쓰기 되는 현상 수정 */
+				for(i=0; i<document.getElementById("BoardList_BODY").childNodes.length; i++) {
+					for(j=0; j<document.getElementById("BoardList_BODY").childNodes.item(i).childNodes.length; j++){
+						if(document.getElementById("BoardList_BODY").childNodes.item(i).childNodes.item(j).textContent.length>15
+								&&document.getElementById("BoardList_BODY").childNodes.item(i).childNodes.item(j).offsetWidth<=108) {
+							document.getElementById("BoardList_BODY").childNodes.item(i).childNodes.item(j).style.paddingRight = "3px";
+						}
+					}
+				}
+
 	            endtime = new Date().getTime();
 	            document.getElementById("runtime").innerHTML = "RunTime : <span style='color:black;font-weight:bold'>" + (endtime - starttime) / 1000 + "</span> Sec";
 		    }
@@ -496,35 +507,39 @@
                 
                	var rowCnt = GetElementsByTagName(xmlDoc, "ROW").length;
                 var listXML = "";
-                /* 2020-05-04 홍승비 - 앨범형식 보기 시 특수문자 파싱 추가 */
-                for (var i = 0; i < rowCnt; i++) {
-                	var title= GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "TITLE")[0].textContent;
-                	title = MakeXMLString(title);
-                	var boardID = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA1")[0].textContent;
-                	var itemID = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA2")[0].textContent;
-                	var writerID = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA3")[0].textContent;
-                	var isNew = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA4")[0].textContent;
-                	var imgSrc = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA5")[0].textContent;
-                	var readFlag = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA8")[0].textContent;
-                	
-                	listXML += "<div class='boardAlbumDiv' onclick='selectAlbumDiv(this); ItemPreviewRead_AlbumClick(this);' ondblclick='ItemRead_onclick(this)' data1='" + boardID + "' data2='" + itemID + "'>";
-                	listXML += "<p class='topInfoP'><input type='checkbox' id='" + itemID + "," + writerID + ";' onclick='selectAlbumCheckBox(this, event)'>";
-                	listXML += "<span style='font-size:13px;'>";
-                	
-                	if (readFlag == "0") {
-                		listXML += "<span class='albumTitle' style='font-size:13px; font-weight:bold;'>";
-                	} else {
-                		listXML += "<span class='albumTitle' style='font-size:13px;'>";
-                	}
-                	
-					if (isNew == "Y") {
-						listXML+= "<img src='/images/i_new.gif' style='vertical-align:middle;margin:0px 5px 0px 2px'/>";
-					}
-                	listXML += title + "</span></p>";
-                	
-                	listXML += "<p style='text-align:center; overflow:hidden;'><img class='albumThumbImg' src='" + imgSrc + "'/></p>";
-                	listXML += "</div>";
-                }
+				if (rowCnt === 0) {
+					listXML = "<span style='display: block;text-align: center;margin-top: 50px;'><spring:message code='ezBoard.t281'/></span>";
+				} else {
+					/* 2020-05-04 홍승비 - 앨범형식 보기 시 특수문자 파싱 추가 */
+					for (var i = 0; i < rowCnt; i++) {
+						var title= GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "TITLE")[0].textContent;
+						title = MakeXMLString(title);
+						var boardID = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA1")[0].textContent;
+						var itemID = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA2")[0].textContent;
+						var writerID = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA3")[0].textContent;
+						var isNew = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA4")[0].textContent;
+						var imgSrc = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA5")[0].textContent;
+						var readFlag = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA8")[0].textContent;
+						
+						listXML += "<div class='boardAlbumDiv' onclick='selectAlbumDiv(this); ItemPreviewRead_AlbumClick(this);' ondblclick='ItemRead_onclick(this)' data1='" + boardID + "' data2='" + itemID + "'>";
+						listXML += "<p class='topInfoP'><input type='checkbox' id='" + itemID + "," + writerID + ";' onclick='selectAlbumCheckBox(this, event)'>";
+						listXML += "<span style='font-size:13px;'>";
+						
+						if (readFlag == "0") {
+							listXML += "<span class='albumTitle' style='font-size:13px; font-weight:bold;'>";
+						} else {
+							listXML += "<span class='albumTitle' style='font-size:13px;'>";
+						}
+						
+						if (isNew == "Y") {
+							listXML+= "<img src='/images/i_new.gif' style='vertical-align:middle;margin:0px 5px 0px 2px'/>";
+						}
+						listXML += title + "</span></p>";
+						
+						listXML += "<p style='text-align:center; overflow:hidden;'><img class='albumThumbImg' src='" + imgSrc + "'/></p>";
+						listXML += "</div>";
+					} 
+				}
                 
                 document.getElementById("lvBoardList").innerHTML = listXML;
                 
@@ -565,24 +580,24 @@
 		        	var selectSearch = document.getElementById('selectType');
 	                if (selectSearch.item(0).selected) {
 	                    TYPE += "TITLE;";
-	                    DATA += "<TITLE>" + document.getElementById("txt_keyword").value + "</TITLE>";
+	                    DATA += "<TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE>";
 	                }
 	                else if (selectSearch.item(1).selected) {
 	                    TYPE += "WRITERNAME;";
-	                    DATA += "<WRITERNAME>" + document.getElementById("txt_keyword").value + "</WRITERNAME>";
+	                    DATA += "<WRITERNAME><![CDATA[" + MakeXMLString(document.getElementById("txt_keyword").value) + "]]></WRITERNAME>";
 	                }
 		        }
 		        else {
 		            if (document.getElementById("txtTitle").value != "")		// DocTitle
 		            {
 		                TYPE += "TITLE;";
-		                DATA += "<TITLE>" + document.getElementById("txtTitle").value + "</TITLE>";
+		                DATA += "<TITLE><![CDATA[" + document.getElementById("txtTitle").value + "]]></TITLE>";
 		            }
 		
 		            if (document.getElementById("txtWriterName").value != "")		// DrafterName
 		            {
 		                TYPE += "WRITERNAME;";
-		                DATA += "<WRITERNAME>" + document.getElementById("txtWriterName").value + "</WRITERNAME>";
+		                DATA += "<WRITERNAME><![CDATA[" + MakeXMLString(document.getElementById("txtWriterName").value) + "]]></WRITERNAME>";
 		            }
 		
 		            /* if (document.getElementById("txtAbstract").value != "")		// ABSTRACT
@@ -594,13 +609,13 @@
 		            if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "")		// StartDate
 		            {
 		                TYPE += "STARTDATE;";
-		                DATA += "<STARTDATE>" + $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + "</STARTDATE>";
+		                DATA += "<STARTDATE><![CDATA[" + $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + "]]></STARTDATE>";
 		            }
 		
 		            if ($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "")		// EndDate
 		            {
 		                TYPE += "ENDDATE;";
-		                DATA += "<ENDDATE>" + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + "</ENDDATE>";
+		                DATA += "<ENDDATE><![CDATA[" + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + "]]></ENDDATE>";
 		            }
 		        }
 		        SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";

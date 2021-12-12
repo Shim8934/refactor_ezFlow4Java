@@ -51,3 +51,5 @@ var strLang85 = "그림파일을 업로드 해야 합니다.";
 var strLang86 = "My 커뮤니티가 없습니다";
 var strLang87 = "커뮤니티에 가입해 보세요";
 var strLang88 = "개설된 커뮤니티가 없습니다";
+
+var strLang89 = "삭제 할 파일을 선택해 주세요.";

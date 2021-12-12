@@ -10,6 +10,7 @@
 	<typeAlias alias="webFolderSimpleShareVO"    type="egovframework.ezEKP.ezWebFolder.vo.SimpleShareVO"/>
 	<typeAlias alias="webFolderShareSubVO"       type="egovframework.ezEKP.ezWebFolder.vo.ShareSubVO"/>
 	<typeAlias alias="webFolderFolderTreeVO"     type="egovframework.ezEKP.ezWebFolder.vo.FolderTreeVO"/>
+	<typeAlias alias="OrganUserVO" 				 type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>
 	
 	<!-- TrashFile resultMap -->
 	<resultMap id="trashCanVO" class="webFolderTrashCanVO">
@@ -26,6 +27,7 @@
 		<result property="updateDate"      column="UPDATE_DATE"        columnIndex="11"/>
 		<result property="fileFolderId"    column="FILE_FOLDER_ID"     columnIndex="12"/>
 		<result property="folderUpper"     column="FOLDER_UPPER"       columnIndex="13"/>
+		<result property="version"         column="VERSION"            columnIndex="14"/>
 	</resultMap>
 	
 	<!-- FavoriteFile resultMap -->
@@ -42,6 +44,10 @@
 		<result property="creatorName"		column="CREATOR_NAME"	 />
 		<result property="createDate"		column="CREATE_DATE"	 />
 		<result property="tenantId"			column="TENANT_ID"		 />
+		<result property="encryptedFlag"	column="ENCRYPTED_FLAG"	 />
+		<result property="depth"			column="DEPTH"			 />
+		<result property="folderId"			column="FOLDER_ID"		 />
+		<result property="folderType"		column="FOLDER_TYPE"	 />
 	</resultMap>
 
 	<!-- ShareFile resultMap -->
@@ -118,35 +124,61 @@
 		<result property="folderStatus"     column="USE_STATUS" 	 columnIndex="2" 	/>
 		<result property="folderPath"       column="FOLDER_PATH"	 columnIndex="3" 	/>
 	</resultMap>
+	
+	<resultMap id="applicationHistoryList" class="HashMap">
+		<result property="applyId"      column="APPLY_ID"      columnIndex="1" javaType="String"  />
+		<result property="folderName"    column="FOLDER_NAME"      columnIndex="2" javaType="String"  />
+		<result property="applicationDate"    column="APPLICATION_DATE"      columnIndex="3" javaType="String"  />
+		<result property="applicantName"    column="APPLICANTNAME"      columnIndex="4" javaType="String"  />
+		<result property="masterName"    column="MASTERNAME"      columnIndex="5" javaType="String"  />
+		<result property="masterCnt"    column="MASTERCNT"      columnIndex="6" javaType="String"  />
+		<result property="approvalStatus"     column="APPROVAL_STATUS"       columnIndex="7" javaType="String"  />
+	</resultMap>
+	
+	<resultMap id="applicationHistory" class="HashMap">
+		<result property="applyId"      column="APPLY_ID"      columnIndex="1" javaType="String"  />
+		<result property="folderName"    column="FOLDER_NAME"      columnIndex="2" javaType="String"  />
+		<result property="applicationDate"    column="APPLICATION_DATE"      columnIndex="3" javaType="String"  />
+		<result property="content"    column="CONTENT"      columnIndex="4" javaType="String"  />
+		<result property="approvalStatusUpdateDt"     column="APPROVAL_STATUS_UPDATEDT"       columnIndex="5" javaType="String"  />
+		<result property="companyId"     column="COMPANY_ID"       columnIndex="6" javaType="String"  nullValue=""/>
+	</resultMap>
+	
+	<resultMap id="applicationHistoryMember" class="HashMap">
+		<result property="memberName"      column="MEMBER_NAME"      columnIndex="1" javaType="String"  />
+		<result property="memberItem"    column="MEMBER_ITEM"      columnIndex="2" javaType="String"  />
+		<result property="memberType"        column="MEMBER_TYPE"        columnIndex="3" javaType="String"  />
+		<result property="memberId"        column="MEMBER_ID"        columnIndex="4" javaType="String"  />
+	</resultMap>
 
 	<sql id="searchTerm">
-		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
+		<isNotEmpty property="searchFileType" prepend="AND">
 				<![CDATA[
 					FT2.TYPE_NAME = #searchFileType#
 				]]>
-		</isNotEqual>
-		<isNotEqual property="searchExt" compareValue="" prepend="AND">
+		</isNotEmpty>
+		<isNotEmpty property="searchExt" prepend="AND">
 				<![CDATA[
 					DF.FILE_EXT LIKE CONCAT ('%', #searchExt#, '%')
 				]]>
-		</isNotEqual>
-		<isNotEqual property="searchFileName" compareValue="" prepend="AND">
+		</isNotEmpty>
+		<isNotEmpty property="searchFileName" prepend="AND">
 				<![CDATA[
 					DF.FILE_NAME1 LIKE CONCAT ('%', #searchFileName#, '%') OR DF.FILE_NAME2 LIKE CONCAT ('%', #searchFileName#, '%')
 				]]>
-		</isNotEqual>
-		<isNotEqual property="searchCreatorName" compareValue="" prepend="AND">
+		</isNotEmpty>
+		<isNotEmpty property="searchCreatorName" prepend="AND">
 				<![CDATA[
 					DF.CREATE_NAME1 LIKE CONCAT ('%', #searchCreatorName#, '%') OR DF.CREATE_NAME2 LIKE CONCAT ('%', #searchCreatorName#, '%')
 				]]>
-		</isNotEqual>
-		<isNotEqual property="searchStartDate" compareValue="">
-			<isNotEqual property="searchEndDate" compareValue="" prepend="AND">
+		</isNotEmpty>
+		<isNotEmpty property="searchStartDate">
+			<isNotEmpty property="searchEndDate" prepend="AND">
 				<![CDATA[
 					(DF.CREATE_DATE >= STR_TO_DATE(#searchStartDate#, '%Y-%m-%d %H:%i:%s') AND DF.CREATE_DATE <= STR_TO_DATE(#searchEndDate#, '%Y-%m-%d %H:%i:%s'))
 				]]>
-			</isNotEqual>
-		</isNotEqual>
+			</isNotEmpty>
+		</isNotEmpty>
 	</sql>
 	
 	<sql id ="searchTrashCanFile">
@@ -224,33 +256,33 @@
 	</sql>
 
 	<sql id="searchFavorite">
-		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
+		<isNotEmpty property="searchFileType" prepend="AND">
 				<![CDATA[
 					TYPE_NAME = #searchFileType#
 				]]>
-		</isNotEqual>
-		<isNotEqual property="searchExt" compareValue="" prepend="AND">
+		</isNotEmpty>
+		<isNotEmpty property="searchExt" prepend="AND">
 				<![CDATA[
 					TARGET_EXT LIKE CONCAT ('%', #searchExt#, '%')
 				]]>
-		</isNotEqual>
-		<isNotEqual property="searchFileName" compareValue="" prepend="AND">
+		</isNotEmpty>
+		<isNotEmpty property="searchFileName" prepend="AND">
 				<![CDATA[
 					(RESULT.TARGET_NAME_1 LIKE CONCAT ('%', #searchFileName#, '%') OR RESULT.TARGET_NAME_2 LIKE CONCAT ('%', #searchFileName#, '%'))
 				]]>
-		</isNotEqual>
-		<isNotEqual property="searchCreatorName" compareValue="" prepend="AND">
+		</isNotEmpty>
+		<isNotEmpty property="searchCreatorName" prepend="AND">
 				<![CDATA[
 					(RESULT.CREATE_NAME1 LIKE CONCAT ('%', #searchCreatorName#, '%') OR RESULT.CREATE_NAME2 LIKE CONCAT ('%', #searchCreatorName#, '%'))
 				]]>
-		</isNotEqual>
-		<isNotEqual property="searchStartDate" compareValue="">
-			<isNotEqual property="searchEndDate" compareValue="" prepend="AND">
+		</isNotEmpty>
+		<isNotEmpty property="searchStartDate">
+			<isNotEmpty property="searchEndDate" prepend="AND">
 				<![CDATA[
 					(RESULT.CREATE_DATE >= STR_TO_DATE(#searchStartDate#, '%Y-%m-%d %H:%i:%s') AND RESULT.CREATE_DATE <= STR_TO_DATE(#searchEndDate#, '%Y-%m-%d %H:%i:%s'))
 				]]>
-			</isNotEqual>
-		</isNotEqual>
+			</isNotEmpty>
+		</isNotEmpty>
 	</sql>
 	
 	<select id="EzWebFolderDAO_m.getShareFolderTree" parameterClass="Map" resultMap="folderTreeVO">
@@ -1308,7 +1340,8 @@
 		            FOLDER.CREATE_NAME2 AS CREATE_NAME2,
 		            '' AS FILE_FOLDER_ID,
 		            FOLDER.FOLDER_UPPER as FOLDER_UPPER,
-		             '0' AS SLEVEL
+		             '0' AS SLEVEL,
+		             0 AS VERSION
 				FROM
 					tbl_webfolder_folder AS FOLDER
 					LEFT JOIN TBL_WEBFOLDER_FILETYPE as FILE_TYPE
@@ -1341,7 +1374,8 @@
 	            FILES.CREATE_NAME1 AS CREATE_NAME2,
 	            FILES.FOLDER_ID AS FILE_FOLDER_ID,
 	            '' as FOLDER_UPPER,
-	            '1' AS SLEVEL
+	            '1' AS SLEVEL,
+	            0 AS VERSION
 			FROM
 				tbl_webfolder_file AS FILES
 				LEFT JOIN TBL_WEBFOLDER_FILETYPE as FILE_TYPE
@@ -1355,11 +1389,48 @@
 			AND
 				FILES.DELETER_ID = #userId#
 		]]>
+		<include refid="searchTrashCanFile"/>
 		
+		<isEqual property="useVersionHistory" compareValue="true">
+				UNION
+			SELECT
+				distinct
+				FILES.FILE_id       AS TRASHCAN_ID,
+				CONCAT(FILES.FILE_NAME, ' (', HISTORY.VERSION, '.0)')	AS TRASHCAN_NAME,
+				FOLDER.FOLDER_PATH 	AS TRASHCAN_PATH,
+				CASE WHEN FILE_TYPE.TYPE_ICON IS NULL
+				THEN (SELECT TYPE_ICON FROM TBL_WEBFOLDER_FILETYPE WHERE FILE_EXT = 'unknown' AND TENANT_ID = #tenantId#)
+				ELSE FILE_TYPE.TYPE_ICON
+				END  AS TRASHCAN_ICON_URL,
+				FILES.FILE_EXT		AS TRASHCAN_EXT,
+				HISTORY.FILE_SIZE 	AS TRASHCAN_SIZE,
+				DATE_FORMAT(DATE_ADD(FILES.CREATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS CREATE_DATE,
+				DATE_FORMAT(DATE_ADD(HISTORY.UPDATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS UPDATE_DATE,
+				FILES.CREATE_NAME1 AS CREATE_NAME1,
+				FILES.CREATE_NAME1 AS CREATE_NAME2,
+				FILES.FOLDER_ID AS FILE_FOLDER_ID,
+				'' as FOLDER_UPPER,
+				'1' AS SLEVEL,
+				HISTORY.VERSION
+			FROM
+				tbl_webfolder_file_history AS HISTORY
+				LEFT JOIN tbl_webfolder_file AS FILES
+					ON FILES.FILE_ID = HISTORY.FILE_ID AND FILES.TENANT_ID = HISTORY.TENANT_ID
+				LEFT JOIN TBL_WEBFOLDER_FILETYPE as FILE_TYPE
+					ON FILE_TYPE.TYPE_ID = FILES.TYPE_ID AND FILES.TENANT_ID = FILE_TYPE.TENANT_ID
+				LEFT JOIN TBL_WEBFOLDER_FOLDER FOLDER
+					ON FILES.FOLDER_ID = FOLDER.FOLDER_ID AND FILES.TENANT_ID = FOLDER.TENANT_ID
+			WHERE
+				HISTORY.USE_STATUS = 'T'
+			AND
+				HISTORY.TENANT_ID = #tenantId#
+			AND
+				HISTORY.DELETER_ID = #userId#
+		</isEqual>
+
 		<include refid="searchTrashCanFile"/>
 	 	<![CDATA[
 				) A
-			GROUP BY A.TRASHCAN_ID
 			ORDER BY SLEVEL
 		]]>
 		<isNotEqual property="orderByData" compareValue="">
@@ -1440,11 +1511,35 @@
 		</isNotEqual>
 	</delete>
 	
+	<delete id="EzWebFolderDAO_m.deleteFileUser" parameterClass="Map">
+		<![CDATA[
+			DELETE
+			FROM
+				TBL_WEBFOLDER_FILEUSER
+			WHERE
+				FILE_ID    = #fileId#
+			AND
+				TENANT_ID  = #tenantId#
+		]]>
+	</delete>
+	
 	<delete id="EzWebFolderDAO_m.deleteFolder" parameterClass="Map" >
 	<![CDATA[
 			DELETE
 			FROM
 				TBL_WEBFOLDER_FOLDER
+			WHERE
+				TENANT_ID = #tenantId# 
+			AND
+				FOLDER_ID = #folderId#
+		]]>
+	</delete>
+	
+	<delete id="EzWebFolderDAO_m.deleteFolderUser" parameterClass="Map" >
+		<![CDATA[
+			DELETE
+			FROM
+				TBL_WEBFOLDER_FOLDERUSER
 			WHERE
 				TENANT_ID = #tenantId# 
 			AND
@@ -1559,7 +1654,7 @@
 		]]>
 		<isNull property="isContainsSubList">
 			<![CDATA[
-				'1' AS FAVORITE_STATUS
+				'1' AS FAVORITE_STATUS,
 			]]>
 		</isNull>
 		<isNotNull property="isContainsSubList">
@@ -1567,9 +1662,13 @@
 				CASE WHEN THIS_FAVOR.TARGET_ID IS NULL
 					THEN '0'
 					ELSE '1'
-				END AS FAVORITE_STATUS
+				END AS FAVORITE_STATUS,
 			]]>
 		</isNotNull>
+				RESULT.ENCRYPTED_FLAG,
+				RESULT.DEPTH,
+				RESULT.FOLDER_ID,
+				RESULT.FOLDER_TYPE
 		<![CDATA[
 			FROM (
 				SELECT
@@ -1587,7 +1686,11 @@
 					FILES.CREATE_DATE,
 					FILES.TENANT_ID,
 					FILES.USE_STATUS,
-					1 AS TEMP_TARGET_TYPE
+					1 AS TEMP_TARGET_TYPE,
+					NVL2(ENC.FILE_ID, 1, 0) AS ENCRYPTED_FLAG,
+					FILES.DEPTH,
+					FILES.FOLDER_ID,
+					FOLDER.FOLDER_TYPE
 				FROM
 					TBL_WEBFOLDER_FILE FILES
 					INNER JOIN
@@ -1595,6 +1698,11 @@
 					ON
 						FOLDER.FOLDER_ID = FILES.FOLDER_ID
 						AND FOLDER.TENANT_ID = FILES.TENANT_ID
+					LEFT JOIN
+						TBL_WEBFOLDER_ENCRYPTED_FILE ENC
+					ON
+						ENC.FILE_ID = FILES.FILE_ID
+						AND ENC.TENANT_ID = FILES.TENANT_ID
 					
 				UNION
 					
@@ -1602,7 +1710,7 @@
 					FOLDER.FOLDER_ID 	AS TARGET_ID,
 					FOLDER.FOLDER_NAME1 AS TARGET_NAME_1,
 					FOLDER.FOLDER_NAME2 AS TARGET_NAME_2,
-					CONCAT('D_', FOLDER.FOLDER_TYPE) AS TARGET_TYPE,
+					'D' AS TARGET_TYPE,
 					SUB_FILETYPE.TYPE_ID,
 					FOLDER.FOLDER_PATH	AS TARGET_PATH,
 					SUB_FILETYPE.FILE_EXT AS TARGET_EXT,
@@ -1613,7 +1721,11 @@
 					FOLDER.CREATE_DATE,
 					FOLDER.TENANT_ID,
 					FOLDER.USE_STATUS,
-					0 AS TEMP_TARGET_TYPE
+					0 AS TEMP_TARGET_TYPE,
+					0 AS ENCRYPTED_FLAG,
+					1 AS DEPTH,
+					FOLDER.FOLDER_ID,
+					FOLDER.FOLDER_TYPE
 				FROM
 					TBL_WEBFOLDER_FOLDER FOLDER
 					INNER JOIN
@@ -1924,17 +2036,41 @@
 		<include refid="searchTrashCanFolder"/>
 	</select>
 	
+	<select id="EzWebFolderDAO_m.getTrashVersionCount" resultClass="Integer">
+		SELECT
+			COUNT(HISTORY.FILE_ID)
+		FROM
+			TBL_WEBFOLDER_FILE_HISTORY HISTORY
+			LEFT JOIN TBL_WEBFOLDER_FILE FILES
+				ON FILES.FILE_ID = HISTORY.FILE_ID AND FILES.TENANT_ID = HISTORY.TENANT_ID
+			LEFT JOIN TBL_WEBFOLDER_FILETYPE FILE_TYPE
+				ON FILE_TYPE.TYPE_ID = FILES.TYPE_ID AND FILES.TENANT_ID = FILE_TYPE.TENANT_ID
+			LEFT JOIN TBL_WEBFOLDER_FOLDER FOLDER
+				ON FILES.FOLDER_ID = FOLDER.FOLDER_ID AND FILES.TENANT_ID = FOLDER.TENANT_ID
+		WHERE
+			HISTORY.USE_STATUS = 'T'
+		AND
+			HISTORY.TENANT_ID = #tenantId#
+		AND
+			HISTORY.DELETER_ID = #userId#
+		<include refid="searchTrashCanFile"/>
+	</select>
+
 	<update id="EzWebFolderDAO_m.moveFile" parameterClass="Map">
 			UPDATE
 				TBL_WEBFOLDER_FILE
 			SET
-			<isNotEmpty property="newName">
-				FILE_NAME = #newName#,
-			</isNotEmpty>
 				FOLDER_ID = #folderId#,
 				USE_STATUS = 'Y',
 				UPDATE_DATE = #timeUTC#,
-				DELETER_ID = null
+			<isNotEmpty property="newName">
+				FILE_NAME = #newName#,
+			</isNotEmpty>
+				DELETER_ID = null,
+				DEPTH = 1,
+				ROOT_ID = FILE_ID,
+				PARENT_ID = FILE_ID,
+				HIERARCHICAL_PATH = FILE_ID
 			WHERE
 				FILE_ID = #fileId#
 			AND
@@ -1978,4 +2114,133 @@
 				TENANT_ID = #tenantId#
 	    ]]>
 	</select>
+	
+	<insert id="EzWebFolderDAO_m.insertWebFolderApplyHistory" parameterClass="Map">
+		<![CDATA[ 
+			INSERT INTO
+				TBL_WEBFOLDER_APPLY_HISTORY 
+			(APPLY_ID, TENANT_ID, COMPANY_ID, FOLDER_NAME, CONTENT, APPLICATION_DATE)
+				VALUES
+			(#applyId#, #tenantId#, #companyId#, #folderName#, #content#, now())
+		]]>
+	</insert>
+	
+	<insert id="EzWebFolderDAO_m.insertWebFolderApplyHistoryMember" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_WEBFOLDER_APPLY_HIST_MEM 
+			(APPLY_ID, MEMBER_ID, MEMBER_NAME, MEMBER_TYPE, MEMBER_ITEM)
+				VALUES
+			(#applyId#, #memberId#, #memberName#, #memberType#, #memberItem#)
+		]]>
+	</insert>
+	
+	<sql id="getWebFolderApplyHistroyQuery">
+		<![CDATA[
+			FROM 
+				TBL_WEBFOLDER_APPLY_HISTORY h
+				JOIN 
+				(
+					SELECT 
+						min(APPLY_ID) AS APPLY_ID, min(MEMBER_NAME) AS member_name, MEMBER_ITEM, count(*) AS cnt
+					FROM 
+						TBL_WEBFOLDER_APPLY_HIST_MEM
+					WHERE MEMBER_ITEM IN ('ms')
+					GROUP BY MEMBER_ITEM, APPLY_ID
+				) ms
+				ON h.APPLY_ID = ms.APPLY_ID 
+				JOIN 
+				TBL_WEBFOLDER_APPLY_HIST_MEM a
+				ON ms.APPLY_ID = a.APPLY_ID 
+			WHERE 
+				a.MEMBER_ITEM = 'a'
+			AND h.TENANT_ID = #tenantId#
+			AND h.COMPANY_ID = #companyId#
+			ORDER BY APPLICATION_DATE desc
+		]]>
+	</sql>
+	
+	<select id="EzWebFolderDAO_m.getWebFolderApplyHistoryCount" parameterClass="Map" resultClass="Integer">
+		SELECT 
+			count(*)
+		<include refid="getWebFolderApplyHistroyQuery" />
+	</select>
+	
+	<select id="EzWebFolderDAO_m.getWebFolderApplyHistoryList" parameterClass="Map" resultMap="applicationHistoryList">
+		<![CDATA[
+				SELECT 
+					h.APPLY_ID, h.FOLDER_NAME, DATE_FORMAT(h.APPLICATION_DATE, '%Y-%m-%d %H:%i') as APPLICATION_DATE, a.MEMBER_NAME AS applicantName,
+					ms.member_name AS masterName, ms.cnt AS masterCnt, h.APPROVAL_STATUS
+		]]>
+				<include refid="getWebFolderApplyHistroyQuery" />
+		<![CDATA[	
+				LIMIT #startList#,#endList#
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO_m.getWebFolderApplyHistory" parameterClass="Map" resultMap="applicationHistory">
+		<![CDATA[
+			SELECT
+				APPLY_ID,  FOLDER_NAME, CONTENT, 
+				DATE_FORMAT(APPLICATION_DATE, '%Y-%m-%d %H:%i') AS APPLICATION_DATE, DATE_FORMAT(APPROVAL_STATUS_UPDATEDT, '%Y-%m-%d %H:%i') AS APPROVAL_STATUS_UPDATEDT, COMPANY_ID
+			FROM 
+				TBL_WEBFOLDER_APPLY_HISTORY
+			WHERE 
+				APPLY_ID = #applyId#		
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO_m.getWebFolderApplyHistoryMember" parameterClass="Map" resultMap="applicationHistoryMember">
+		<![CDATA[
+			SELECT 
+				m.MEMBER_NAME, m.MEMBER_ITEM, m.MEMBER_TYPE, m.MEMBER_ID
+			FROM 
+				TBL_WEBFOLDER_APPLY_HISTORY h
+			JOIN
+				TBL_WEBFOLDER_APPLY_HIST_MEM m
+			ON  h.APPLY_ID = m.APPLY_ID 
+			WHERE  
+				h.APPLY_ID = #applyId#
+			ORDER BY (
+				CASE (m.MEMBER_TYPE)
+				WHEN 'USER' THEN 1 
+				WHEN 'DEPT' THEN 2 
+				WHEN 'JIKWI' THEN 3 
+				WHEN 'JIKCHEK' THEN 4 
+				ELSE 5
+			END)
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO_m.getWebFolderAdminUserList" parameterClass="Map" resultClass="OrganUserVO">
+		<![CDATA[
+			SELECT 
+				* 
+			FROM
+				TBL_USERMASTER
+			WHERE 
+				PHYSICALDELIVERYOFFICENAME = #companyId#
+				AND EXTENSIONATTRIBUTE1 LIKE '%;wf=1%'
+		]]>
+	</select>
+	
+	<delete id="EzWebFolderDAO_m.deleteWebFolderApplyHistory">
+		DELETE FROM TBL_WEBFOLDER_APPLY_HISTORY
+		WHERE APPLY_ID = #applyId#
+	</delete>
+	
+	<delete id="EzWebFolderDAO_m.deleteWebFolderApplyHistoryMember">
+		DELETE FROM TBL_WEBFOLDER_APPLY_HIST_MEM
+		WHERE APPLY_ID = #applyId#
+	</delete>
+	
+	<update id="EzWebFolderDAO_m.changeWebFolderAppliApprovalStatus" parameterClass="Map">
+		UPDATE 
+			TBL_WEBFOLDER_APPLY_HISTORY 
+		SET 
+			APPROVAL_STATUS	 = #status#,
+			APPROVAL_STATUS_UPDATEDT = now()
+		WHERE 
+			APPLY_ID = #applyId#
+	</update>
 </sqlMap>

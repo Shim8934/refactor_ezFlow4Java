@@ -2771,7 +2771,8 @@
 				deptname,
 				deptname2,
 				companyid,
-				tenant_id)
+                tenant_id,
+                extreceptyn)
 			VALUES 
 				(#v_MAINID#,
 				(SELECT
@@ -2782,7 +2783,8 @@
 				#v_DEPTNAME#,
 				#v_DEPTNAME2#,
 				#v_COMPANYID#,
-				#tenantID#)
+                #tenantID#,
+                #v_EXTRECEPTYN#)
 		]]>
 	</insert>
 	
@@ -3912,6 +3914,19 @@
 	    ]]>
 	</update>
 
+	<delete id="EzApprovalGAdminDAO.removeMyTaskCode" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_MYTASKCODE
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				taskcode = #taskCode#
+	    ]]>
+	</delete>
+	
 	<update id="EzApprovalGAdmin.updateDeptInfo" parameterClass="Map">
 		<![CDATA[
 			UPDATE
@@ -5991,5 +6006,73 @@
 			tbl_deptmaster
 		WHERE
 			cn = #deptId#
+	</select>
+	
+	<resultMap id="getDeptList" class="java.util.LinkedHashMap">
+		<result property="DEPTID"				column="DEPTID" />
+		<result property="DEPTNAME"				column="DEPTNAME" />
+	</resultMap>
+	<select id="EzApprovalGAdminDAO.getChaebunDeptList" parameterClass="Map" resultMap="getDeptList">
+		SELECT
+			DEPTID,
+			DEPTNAME
+		FROM
+			TBL_SERIALNUMGEN_GRANT
+		WHERE
+			GRANTDEPTID = #v_DEPTID#
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #v_COMPANYID#
+	</select>
+	
+	<insert id="EzApprovalGAdminDAO.insertChaebunDeptList" parameterClass="Map">
+		INSERT INTO TBL_SERIALNUMGEN_GRANT
+			(DEPTID,
+			 DEPTNAME,
+			 GRANTDEPTID,
+			 GRANTDEPTNAME,
+			 TENANT_ID,
+			 COMPANYID)
+		VALUES
+			(#v_DEPTID#,
+			 #v_DEPTNAME#,
+			 #v_GRANTDEPTID#,
+			 #v_GRANTDEPTNAME#,
+			 #v_TENANTID#,
+			 #v_COMPANYID#)
+	</insert>
+	
+	<delete id="EzApprovalGAdminDAO.deleteChaebunDeptList" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_SERIALNUMGEN_GRANT
+        	WHERE
+        		GRANTDEPTID = #v_DEPTID#
+        	AND
+        		TENANT_ID = #v_TENANTID#
+        	AND
+        		COMPANYID = #v_COMPANYID#
+		]]>
+	</delete>
+	
+	<select id="EzApprovalGAdminDAO.checkChaebunDeptList" parameterClass="Map" resultClass="String">
+		SELECT
+			DEPTNAME
+		FROM
+			TBL_SERIALNUMGEN_GRANT
+		WHERE
+			DEPTID IN
+		<iterate property="v_DEPTIDS" open="(" close=")" conjunction=",">
+			#v_DEPTIDS[]#
+		</iterate>
+		<![CDATA[
+		AND
+			GRANTDEPTID <> #v_DEPTID#
+		AND
+    		TENANT_ID = #v_TENANTID#
+		AND
+    		COMPANYID = #v_COMPANYID#
+    	]]>
 	</select>
 </sqlMap>

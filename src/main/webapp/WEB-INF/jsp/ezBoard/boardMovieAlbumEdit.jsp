@@ -4,6 +4,7 @@
 	<head>
 	    <title><spring:message code='ezBoard.t1005'/></title>
 		<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
 		    var pBoardID = "";
@@ -11,7 +12,9 @@
 		    var pTitle = "";
 		    var pContent = "";
 		    var pMode = "";
+		    var isAllGroupBoard = "";
 		    var ReturnFunction;
+		    
 		    window.onload = function () {
 		        try {
 		            ReturnFunction = parent.photoalbumedit_dialogArguments[1];
@@ -20,12 +23,14 @@
 		            pTitle = parent.photoalbumedit_dialogArguments[0][2];
 		            pContent = parent.photoalbumedit_dialogArguments[0][3];
 		            pMode = parent.photoalbumedit_dialogArguments[0][4];
+		            isAllGroupBoard = parent.photoalbumedit_dialogArguments[0][5];
 		        } catch (e) {
 		            pBoardID = dialogArguments[0];
 		            pItemID = dialogArguments[1];
 		            pTitle = dialogArguments[2];
 		            pContent = dialogArguments[3];
 		            pMode = dialogArguments[4];
+		            isAllGroupBoard = dialogArguments[5];
 		        }
 		
 		        try {
@@ -51,6 +56,12 @@
 		    function updatealbum() {
 		        var pTitle = document.getElementById("title").value;
 		        var pContent = document.getElementById("content").value;
+		        
+		        if (!pTitle) {
+		        	   alert("<spring:message code='ezBoard.t390'/>");
+		        	   document.getElementById("title").focus();
+		        	   return;
+		        }
 		
 		        var xmlhttp = createXMLHttpRequest();
 		        var xmldom = createXmlDom();
@@ -73,6 +84,8 @@
 		        xmlhttp.send(xmldom);
 		        
 		        if (xmlhttp.responseText == "OK") {
+		        	sendBoardAlertMail("modify", pBoardID, pItemID, isAllGroupBoard);
+		        	
 		            alert("<spring:message code='ezBoard.t1015'/>");
 		            if (CrossYN())
 		                ReturnFunction(xmlhttp.responseText);
@@ -91,7 +104,23 @@
 		        else
 		            window.close();
 		    }
-		
+		    
+		    /* 2021-06-22 홍승비 - 게시판 메일알림 함수 추가, 비동기로 백그라운드 동작 */
+	        function sendBoardAlertMail(pMode, pBoardID, pItemID, pIsAllGroupBoard) {
+		        $.ajax({
+					type : "POST",
+					dataType : "text",
+					async : true,
+					url : "/ezBoard/sendBoardAlertMail.do",
+					data : {
+						mode : pMode,
+						boardID : pBoardID,
+						itemID : pItemID,
+						isAllGroupBoard : pIsAllGroupBoard
+					}
+				});
+	        }
+	        
 		</script>
 	</head>
 	<body class="popup">

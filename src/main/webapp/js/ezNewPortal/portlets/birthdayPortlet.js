@@ -49,7 +49,11 @@ function getBirthdayList() {
 			
 			var birth = ptlBirthMonth;
 			
-			if (birth < 10) {
+			if (userLang == '2') {
+				var monthMsg = "January;February;March;April;May;June;July;August;September;October;November;December";
+			    var monthStr = monthMsg.split(";");
+				birth = monthStr[birth-1] + " ";
+			} else if (birth < 10) {
 				birth = "0" + birth;
 			}
 			
@@ -80,7 +84,7 @@ function getBirthdayList() {
 				
 				for (var i = 0; i< resultCount; i++) {
 					var userInfo = birthdayList[i];
-					$("#P" + userInfo.userId).on("click", {"userId" : userInfo.userId}, openUserInfo);
+					$("#P" + userInfo.userId.replace(/[^\w\s]/gi, '\\$&')).on("click", {"userId" : userInfo.userId}, openUserInfo);
 				}
 			} else {
 				$("#nodata_NewBirthday").css("display", "");

@@ -93,6 +93,7 @@
 		    arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2}'/>";
 		    arr_userinfo[17]  = "<c:out value = '${userInfo.primary}'/>";
 		    var pCompanyID = "<c:out value = '${userInfo.companyID}'/>";
+		    var companyID = "<c:out value = '${userInfo.companyID}'/>";
 		    var pSummery = "", pSpecialRecordCode = "", pPublicityCode = "", pPublicityYN = "", pLimitRange = "", pPageNum = "1";
 		    var cabinetID = "";
 		    var TaskCode = "";
@@ -506,6 +507,11 @@
 			            }
 		            }
 		            
+			        /* 2021-08-20 홍승비 - 가변결재선을 사용하는 수신문의 경우, 접수기안 시 서명 이전에 SignCount를 한번 더 체크하도록 수정 */
+			        if ($("#message").contents().find("#autoLine").length > 0 ) {
+			        	SignCount = getSignCountForAutoLine();
+			        }
+		            
 		            var rtnSignInfo;
 		            var fields = message.GetFieldsList();
 		            var field = message.GetListItem(fields, "doctitle");
@@ -523,10 +529,11 @@
 		            try {
 		                var pSusinNextSN = 0;
 		
-		                if (pSusinSN)
+		                if (pSusinSN) {
 		                    pSusinNextSN = parseInt(pSusinSN, 10) + 1;
-		                else
+		                } else {
 		                    pSusinNextSN = 1;
+		                }
 		                
 		                var fieldname = pSusinNextSN + "sign1";
 		                if (message.GetListItem(fields, fieldname) && CheckDeptLinesXML == "") {
@@ -642,7 +649,7 @@
 		                return;
 		            }
 		        }
-		
+		        
 		        if (SignCount >= 1) {
 					if (LastSignSN == 1) {
 						var rtnVal = ExcuteInfo("LAST_SIGN_BEFORE");
@@ -735,7 +742,7 @@
 		                            return;
 		                        }
 		                    }
-		                    if (LastSignSN == 1)
+		                    if (LastSignSN == 1) {
 		                        pAlertContent = "<spring:message code='ezApprovalG.t1697'/>";
 		                      	//2019-05-02 김보미 : 근태관리 연동양식일 경우 추가 - 접수자 전결
 		                        if (CurAprType == "<spring:message code='ezApprovalG.t25'/>" && document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
@@ -747,8 +754,9 @@
 			    					
 			    		        	attitude_annual_conn(pOrgDocID);
 			    		        }
-		                    else
+		                    } else {
 		                        pAlertContent = "<spring:message code='ezApprovalG.t1698'/>";
+		                    }
 		                    OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
 		                    chkOK = true;
 		                }
@@ -1272,8 +1280,9 @@
 		        Resultxml = Resultxml + "<COLUMN>1</COLUMN>";
 		        Resultxml = Resultxml + "<COLUMN>" + MakeXMLString(DisplayName) + "</COLUMN>";
 		        Resultxml = Resultxml + "<COLUMN>" + MakeXMLString(Position) + "</COLUMN>";
-		
-		        Resultxml = Resultxml + "<COLUMN>" + MakeXMLString(DeptName) + "</COLUMN>";
+		        
+		        /* 2021-06-03 홍승비 - 부서명에 특수문자를 허용 + c:out 처리되었으므로 특수문자 역 인코딩 및 CDATA 처리 진행 */
+		        Resultxml = Resultxml + "<COLUMN><![CDATA[" + ConvMakeXMLString(DeptName) + "]]></COLUMN>";
 		
 		        Resultxml = Resultxml + "<COLUMN>" + "<spring:message code='ezApprovalG.t25'/>" + "</COLUMN>";
 		        Resultxml = Resultxml + "<COLUMN>" + "<spring:message code='ezApprovalG.t1422'/>" + "</COLUMN>";
@@ -1292,8 +1301,8 @@
 		        Resultxml = Resultxml + "<DATA name='AprState'>" + strAprState2 + "</DATA>";
 		        Resultxml = Resultxml + "<DATA name='PMemberName'>" + MakeXMLString(arr_userinfo[11]) + "</DATA>";
 		        Resultxml = Resultxml + "<DATA name='SMemberName'>" + MakeXMLString(arr_userinfo[12]) + "</DATA>";
-		        Resultxml = Resultxml + "<DATA name='PMemberDeptName'>" + MakeXMLString(arr_userinfo[15]) + "</DATA>";
-		        Resultxml = Resultxml + "<DATA name='SMemberDeptName'>" + MakeXMLString(arr_userinfo[16]) + "</DATA>";
+		        Resultxml = Resultxml + "<DATA name='PMemberDeptName'><![CDATA[" + ConvMakeXMLString(arr_userinfo[15]) + "]]></DATA>";
+		        Resultxml = Resultxml + "<DATA name='SMemberDeptName'><![CDATA[" + ConvMakeXMLString(arr_userinfo[16]) + "]]></DATA>";
 		        Resultxml = Resultxml + "<DATA name='PMemberJobTitle'>" + MakeXMLString(arr_userinfo[13]) + "</DATA>";
 		        Resultxml = Resultxml + "<DATA name='SMemberJobTitle'>" + MakeXMLString(arr_userinfo[14]) + "</DATA>";
 		
@@ -1618,6 +1627,7 @@
 		        }
 		        
 		        parameter[60] = passAprLine;
+		        parameter[61] = tempKeyword;
 		        
 		        if (tempItemCode != "")
 		            tempdocnumcode = tempItemCode;
@@ -1629,7 +1639,7 @@
 		        	alert("<spring:message code='ezApprovalG.pjg04'/>");
 		        	window.close();
 		        } else {
-		        	var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType, "ezApprovalInfo", GetOpenWindowfeature(1144, 750));
+		        	var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType, "ezApprovalInfo", GetOpenWindowfeature(1194, 750));
 		        	try { OpenWin.focus(); } catch (e) { }
 		        }
 
@@ -1720,7 +1730,7 @@
 				            	nonSepAttachLVXml = ret[24];
 				            	g_szSCListXml = ret[25];
 				            	sepAttachCheckYN = ret[26];
-				            	setNonElecRecInfo(nonElecRecInfoXml);
+				            	setNonElecRecInfo_mht(nonElecRecInfoXml);
 				            }
 
 				            if (useOpenGov == "YES") {
@@ -1903,6 +1913,18 @@
 			function btnConn_onclick() {
 				ExcuteInfo("INIT");
 			}
+			
+		    /* 2021-06-03 홍승비 - 특수문자 역인코딩 처리 */
+		    function ConvMakeXMLString(str) {
+		        str = ReplaceText(str, "&lt;", "<");
+		        str = ReplaceText(str, "&gt;", ">");
+		        str = ReplaceText(str, "&#039;", "'");
+		        str = ReplaceText(str, "&#034;", "\"");
+		        str = ReplaceText(str, "&#92;", "\\");
+		  	    str = ReplaceText(str, "&amp;", "&");	    
+		        return str;
+		    }
+		    
 		</script>
 	</head>
 	<body class="popup" style="height:100%;">

@@ -29,7 +29,7 @@
 .webfolderBttn3 span {color: #666; display:inline-block; border:1px solid #ccc; border-radius:3px; padding:0px 10px; height:30px; font-size:12px; letter-spacing:-1; vertical-align:top; line-height:30px; text-align: center;}
 
 .webfolderImg {width: 18px; height: 18px;}
-.spanName {height: 22px; line-height: 22px; color: #666666; padding-top: 1px; font-size: 12px; vertical-align: top; cursor: pointer; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent; display:inline-block; width:80%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.spanName {height: 22px; line-height: 22px; color: #666666; padding-top: 1px; font-size: 12px; vertical-align: top; cursor: pointer; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent; display:inline-block; white-space:nowrap;}
 .spanName3 {height: 22px; line-height: 22px; color: #666666; padding-top: 1px; font-size: 12px; vertical-align: top; cursor: pointer; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent; display:inline-block; white-space:nowrap; overflow:hidden;}
 
 .webfolderMinus {width: 18px; height: 18px; cursor: pointer;}
@@ -133,7 +133,7 @@ body[favoritemode] #layer_Viewpopup {top:90px !important;}
 #left ol.on {padding : 0px 0px 0px 5px;}
 #left ol li {padding : 1px 0px 0px 5px;}
 /* 2018-08-23 홍승비 - 웹폴더 폴더명 ellipsis 작업 */
-.webfolderTree {min-height:200px; font-size: 20px; overflow-x: hidden; padding-bottom:3px;padding-top:5px;}
+.webfolderTree {min-height:200px; font-size: 20px; padding-bottom:3px;padding-top:5px;}
 
 .spanDown, .spanUp {cursor:pointer; border-radius: 50%; border: 0px; text-align: center; line-height: 14px; margin-top: -1px; position: relative; width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-left: 2px;}
 .spanDown:before {display: inline-block; content: ""; transition: transform .15s linear; font-size: 23px; color: #aeaeae; border-color: #333 transparent; border-style: solid; border-width: 5px 4px 0px; position: absolute; top: 50%; left: 50%; margin-left: -4px; margin-top: -2px;}

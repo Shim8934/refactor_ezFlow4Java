@@ -646,6 +646,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		String curPage = "";
 		String adminFg = "";
 		//String chkCtrl = "";
+		String selectedResourceId = "";
 		int pageSize = 15;
 		int totalCnt = 0;
 		int totalPage = 0;
@@ -665,6 +666,9 @@ public class EzResourceController extends EgovFileMngUtil {
 		}
 		if (req.getParameter("goToPage") != null) {
 			curPage = req.getParameter("goToPage");
+		}
+		if (req.getParameter("selectedResourceId") != null) {
+			selectedResourceId = req.getParameter("selectedResourceId");
 		}
 		adminFg = ezResourceService.getAdminFlag(userInfo.getCompanyID(), brdID, userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID());
 
@@ -737,6 +741,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("adminFg", adminFg);
 		model.addAttribute("totalCnt", totalCnt);
 		model.addAttribute("start", start);
+		model.addAttribute("selectedResourceId", selectedResourceId);
 		
 		return "/ezResource/resViewResList";
 	}

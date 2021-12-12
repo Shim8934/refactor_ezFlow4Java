@@ -79,11 +79,11 @@
 	    	var msgRtn = "";
 	    	var SdateNow = ""; 
 	    	var EdateNow = ""; 
-	    	var title = "${title}";
 	    	var allDay = "${allDay}";//"1":하루종일
 	    	var timeSelect = false;
 	    	var userDisplayName2 = "${userInfo.displayName2}";
 	    	var repetition = "";
+	    	var offSetMin = "<c:out value='${offSetMin}'/>";
 	    	
 	    	// 메인페이지의 onload실행과 initLoad함수의 실행 속도 차이로 setTimeout함수 사용
 	    	var onloadflag = false;
@@ -113,7 +113,6 @@
 	        	if (cmd == "mod") {
 	        		/* 2018-07-10 김민성 - 자원 수정시 특수문자 처리 */
 	            	document.getElementById("importance1").value = "${importance}";
-	            	document.getElementById("title").value = title;
 	            	
 	            	if(allDay == "1") {
 	            		document.getElementById("AllDay").checked = true;
@@ -218,12 +217,12 @@
 	    	}
 		    
 		    window.onunload = function () {
-		        try {
-		            m_Arguments = opener.schedule_add_ck_dialogArguments[0];
-		            opener.close();
-		        }
-		        catch (e) {
-		        }
+		        // try {
+		        //     m_Arguments = opener.schedule_add_ck_dialogArguments[0];
+		        //     opener.close();
+		        // }
+		        // catch (e) {
+		        // }
 		    }
 		    
 		    $(function () {
@@ -479,7 +478,8 @@
 	        	} else {
 	        		if (!AllDayCheckStartEndDateTime()) {
 	        			// 2018-10-02 김민성 - 자원 반복예약 시 회수 설정 시 끝날짜 무시하도록 수정
-	        			if($("#EndTimeSet").checked == true) {		
+	        			// 2020-04-15 장세원 - 자원 하루종일 예약시 종료일이 시작일 전일경우 return
+	        			if($("#EndTimeSet").checked == true || $("#EndTimeSet").checked == undefined) {		
 		        			alert("" + strLang139 + "");			
 		        			return;
 	        			}
@@ -496,10 +496,16 @@
 	        	}
 
 	        	if (check == true) {
-	            	// 일정관리 동시 등록
 	            	if (cmd == "add") {
+	            		// 일정관리 동시 등록
 		            	if(document.getElementById("useSchedule").checked == true) {
-		            		SaveScheduleId = saveSchedule();
+		            		// 일정 > 이전날짜 등록기능 자원예약시에도 적용
+		            		if (CheckPreviously()) {
+		            			alert(strLang340);
+		            			return;
+		            		} else {
+		            			SaveScheduleId = saveSchedule();
+		            		}
 		            	}
 	            	}
 	            	
@@ -514,6 +520,30 @@
 	        		}
 	    	    }
 	        	return check;
+	    	}
+	    	
+	    	function CheckPreviously() {
+	    	    var rtv = false;
+
+	    	    $.ajax({
+	    			type : "GET",
+	    			dataType : "text",
+	    			async : false,
+	    			cache : false,
+	    			url : "/ezSchedule/scheduleGetRegi.do",
+	    			data : {
+	    				COMPANYID  : ss_companyID		    			
+	    			},
+	    			success: function(text) {
+	    				if (text == "2") {		// 1일때 사용, 2일때 사용안함
+	    					if ($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() < utcDate(offSetMin)) {					
+	    						rtv = true;
+	    					}
+	    				}
+	    			}
+	    	    });
+
+	    	    return rtv;    
 	    	}
 	    	
 	    	function saveSchedule() {
@@ -603,7 +633,13 @@
 		                	window.opener.location.reload();
 		            	} catch (e) {}
 	            	}
-	        	}
+	        	} else {
+					if (window.opener != null && window.opener.name == "left" && g_fromStr == "schedule" && trim(s_userID) != "") {
+		            	try {
+			                window.opener.parent.right.btnRefresh_onclick();
+		            	} catch (e) {}
+					}
+				}
 	    	}
 
             //2018-08-28 김보미 - 현재시간으로 설정
@@ -783,7 +819,7 @@
 						</tr>
 						<tr>
 	         				<th> <spring:message code="ezResource.t224"/></th>
-	         				<td colspan="3"><input type="text" id="title" name="title" maxlength="100"  style="width: 100%" />          </td>		<!-- 2018-07-13 김민성 - 자원예약 이름 글자수 제한 25->100자로 변경 -->
+	         				<td colspan="3"><input type="text" id="title" name="title" maxlength="100"  style="width: 100%" value="<c:out value='${title}' />" />          </td>		<!-- 2018-07-13 김민성 - 자원예약 이름 글자수 제한 25->100자로 변경 -->
 	       				</tr>
 	       				<c:if test="${useSchedule && cmdStr eq 'add'}">
 	       				<tr>

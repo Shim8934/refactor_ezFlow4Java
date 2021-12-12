@@ -1,3 +1,13 @@
+var uploadData = {
+	uploadableFiles: [],
+	duplicateInfoArray: [],
+	// 다운로드 모드 설정, false 일반 다운로드로 작동, true 뷰어로 작동
+	noDownloadChecked: false,
+	// 답변 파일
+	isReply: false,
+	parentId: null
+}
+
 function onDragEnter(evt) {
 	evt.dataTransfer.dropEffect = "copy";
 	evt.stopPropagation();
@@ -19,6 +29,9 @@ function onDrop(evt) {
 		
 		if (evt.dataTransfer.items == undefined || evt.dataTransfer.items == null) {
 			
+			if (window.folderLevel) {
+				if (folderLevel == "0" && folderType == "company"){ return; } 
+			}
 			if (evt.dataTransfer.files.length == 0) {
 				alert(messages.strLangDragNDrop);
 				return;
@@ -44,6 +57,11 @@ function onDrop(evt) {
 		    	if (entry.isFile) {
 		    		var filelist = (evt == undefined) ? document.getElementById("file").files : evt.dataTransfer.files;
 		    		
+		    		
+		    		if (window.folderLevel) {
+						if (folderLevel == "0" && folderType == "company"){ return; } 
+					}
+		    		
 		    		if (filelist.length == 0) {
 		    			return;
 		    		}
@@ -62,6 +80,10 @@ function onDrop(evt) {
 	} else {
 		var filelist = (evt == undefined) ? document.getElementById("file").files : evt.dataTransfer.files;
 		
+		if (window.folderLevel) {
+			if (folderLevel == "0" && folderType == "company"){ return; } 
+		}
+		
 		if (filelist.length == 0) {
 			return;
 		}
@@ -76,10 +98,11 @@ function onDrop(evt) {
 }
 
 function fileupload() {	
+	if (uploadIng) {
+		alert(uploadIngStatusMessage);
+		return;
+	}
 	var progress_bar_id = '#progress-wrp';
-	var fd              = new FormData();
-	fd.append("folderId", folderId); //baonk 2018/02/09
-	
 	// 2018.11.28 파일명 중복 체크 -------------
 	
 	// 업로드 가능한 파일들
@@ -88,7 +111,38 @@ function fileupload() {
 	var duplicateInfoArray = [];
 	// FileList to Array
 	var tempFileArray = Array.prototype.slice.call(file);
+
+	// 1회 업로드 용량 체크
+	if (window.uploadLimit) {
+		var totalSize = 0;
+		var fileNameOverByte = false;
+		// reduce를 쓰고 싶은데 length가 1이면 계산이 안 됨 코드가 길어져서 포이치로 일단,,
+		tempFileArray.forEach(function(fileObj) { 
+			totalSize += fileObj.size;
+			if (fileObj.name.byteLength() > 200) {
+				alert(resultErr6 + ' : "' + fileObj.name + '"');
+				fileNameOverByte = true;
+				return;
+			}
+		});
+		
+		if (fileNameOverByte) {
+			return;
+		}
+		
+		if (window.uploadLimit < totalSize) {
+			alert(resultErr4);
+			return;
+		}
+	}
 	
+	try {
+		openLeftPanel();
+		document.getElementById("webFolderRightPanel").style.display = "block";
+		document.getElementById("webFolderRightPanel").style.background = "rgba(0,0,0,0.5)";
+		showProgress();
+	} catch (ignore) {}
+
 	$.ajax({
 		url: "/ezWebFolder/getDuplicateFiles.do",
 		type: "POST",
@@ -126,7 +180,7 @@ function fileupload() {
 							duplicateInfo.newDate = fileObj.lastModified || fileObj.lastModifiedDate;
 							duplicateInfo.newSize = fileObj.size;
 							
-							if (duplicateInfo.newDate instanceof Date) {
+							if (duplicateInfo.newDate instanceof Date || duplicateInfo.newDate.getTime) {
 								duplicateInfo.newDate = duplicateInfo.newDate.getTime();
 							}
 						}
@@ -146,6 +200,12 @@ function fileupload() {
 		}
 	});
 	
+	try {
+		closeLeftPanel();
+		hideProgress();
+		document.getElementById("webFolderRightPanel").style.display = "none";
+	} catch (ignore) {}
+	
 	// 2018.11.28 파일명 중복 체크 -------------
 	
 	// 중복된 파일들만 있다면
@@ -154,19 +214,44 @@ function fileupload() {
 		duplicateFile.process({
 			workType: "upload",
 			infoArray: duplicateInfoArray,
-			folderId: folderId
+			folderId: folderId,
+			isReply: uploadData.isReply,
+			parentId: uploadData.parentId
 		});
+		
+		clearUploadData();
 		
 		return;
 	}
 	
-	for (var i = 0; i < uploadableFiles.length; i++) {
-		fd.append("fileToUpload", uploadableFiles[i]);
+	uploadData.uploadableFiles = uploadableFiles;
+	uploadData.duplicateInfoArray = duplicateInfoArray;
+	
+//	if (subTypeC === "task") {
+//		doLayerPopupDownloadOption();
+//		return;
+//	}
+
+	realUpload();
+}
+
+function realUpload() {
+	var fd              = new FormData();
+	fd.append("folderId", folderId); //baonk 2018/02/09
+	fd.append("encrypt", uploadData.noDownloadChecked);
+	
+	for (var i = 0; i < uploadData.uploadableFiles.length; i++) {
+		fd.append("fileToUpload", uploadData.uploadableFiles[i]);
+	}
+	
+	if (uploadData.isReply) {
+		fd.append("parentId", uploadData.parentId);
 	}
 	
 	var dragZone = document.getElementById("dragDropArea");
 	var height   = dragZone.clientHeight;
 	dragZone.style.height = height - 34 + "px";
+	uploadIng = true; 
 	
 	$.ajax({
 		url : "/ezWebFolder/uploadFile.do",
@@ -183,8 +268,15 @@ function fileupload() {
 			
 			switch(code) {
 				case 0:
+					// 파일 확장자 에러 메세지
+					var failureList = data.failureList;
+					if (failureList && failureList.length > 0) {
+						for (var i = 0; i < failureList.length; i++) {
+							alert(messages.extensionError + failureList[i].name);
+						}
+					}
 					// 중복되는 파일이 없으면 작업 완료 얼럿트 띄움
-					if (duplicateInfoArray.length === 0) {
+					else if (uploadData.duplicateInfoArray.length === 0) {
 						alert(strSuccess);
 					}
 					
@@ -213,13 +305,18 @@ function fileupload() {
 	})
 	.complete(function(res){
 		ajaxUploadComplete();
+		uploadIng = false;
 		
 		// 이름 중복된 파일 처리
 		duplicateFile.process({
 			workType: "upload",
-			infoArray: duplicateInfoArray,
-			folderId: folderId
+			infoArray: uploadData.duplicateInfoArray,
+			folderId: folderId,
+			isReply: uploadData.isReply,
+			parentId: uploadData.parentId
 		});
+
+		clearUploadData();
 	});
 }
 
@@ -297,3 +394,34 @@ function scroll() {
 		lastTh.css("display", "none");
 	}*/
 }
+
+function clearUploadData() {
+	uploadData.uploadableFiles = [];
+	uploadData.duplicateInfoArray = [];
+	uploadData.isReply = false;
+	uploadData.parentId = null;
+}
+
+function uploadReply(parentId, files) {
+	// global variable
+	file = files;
+	uploadData.isReply = true;
+	uploadData.parentId = parentId;
+
+	closeAllPopup();
+	fileupload();
+}
+
+String.prototype.byteLength = function() {
+    var l= 0;
+     
+    for(var idx=0; idx < this.length; idx++) {
+        var c = escape(this.charAt(idx));
+         
+        if( c.length==1 ) l ++;
+        else if( c.indexOf("%u")!=-1 ) l += 2;
+        else if( c.indexOf("%")!=-1 ) l += c.length/3;
+    }
+     
+    return l;
+};

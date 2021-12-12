@@ -422,7 +422,7 @@
 					<li><span onClick="goPage(2)" ><spring:message code='ezCommunity.t168' /></span></li>
 				</c:if>
 				<div style="float:right;margin-top:5px;">
-					<select name="s_radio" id ="s_radio" style="vertical-align: middle; height: 24px !important; margin-top:1px">
+					<select name="s_radio" id ="s_radio" style="vertical-align: middle; height: 24px !important; margin-top:1px; text-align-last: center; height: 24px !important; -webkit-appearance: auto; padding: 0px; ">
 						<option selected value="titleContent" ><spring:message code='ezCommunity.t585' /></option>
 						<option value="writer"><spring:message code='ezCommunity.t445' /></option>
 					</select>

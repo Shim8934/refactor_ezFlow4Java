@@ -1349,7 +1349,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 				}	
 			}			
 			
-			sList = ezScheduleService.getScheduleList(indiList, pidList, filter.trim(), utcStartTime, utcEndTime, startDate, endDate, keyword.trim(), offSetMin, "", loginVO.getTenantId(), loginVO.getCompanyID(), loginVO.getId(), loginVO.getDeptID(), useAnnualScheduleYN);
+			sList = ezScheduleService.getScheduleList(indiList, pidList, filter.trim(), utcStartTime, utcEndTime, startDate, endDate, keyword.trim(), offSetMin, keyword.trim(), loginVO.getTenantId(), loginVO.getCompanyID(), loginVO.getId(), loginVO.getDeptID(), useAnnualScheduleYN);
 			
 			Collections.sort(sList, new EzScheduleCompareUtilPublic());
 			
@@ -1627,6 +1627,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		model.addAttribute("scheduleConfigVO", scheduleConfigVO);
 		model.addAttribute("displayName1", loginVO.getDisplayName1());
 		model.addAttribute("displayName2", loginVO.getDisplayName2());
+		model.addAttribute("lang", loginVO.getPrimary());
 		
 		return "/ezSchedule/scheduleConfig";
 	}

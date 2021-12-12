@@ -317,7 +317,10 @@
 	                	document.getElementById("Search_txtlist_table").style.display = "";
 	                	document.getElementById("txtlist_table").style.display = "none";
 	                	document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<span id='spn_deptName'>" + strLang2 + "</span>" + "<span id='countInfo' style='color:#017BEC;'>&nbsp;&nbsp;<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span></span>";
-	                	SelectDeptNM.setAttribute("countinfo", "1")
+	                	SelectDeptNM.setAttribute("countinfo", "1");
+						<c:if test="${useShowAllCompanies eq 'YES'}">
+							resizeWindowWidth();
+						</c:if>
 	            	}
 	        	}
 	        	
@@ -327,6 +330,7 @@
 		                MainTable.setAttribute("class", pListType == "IMG" ? "organwrap" : "organwrap_list");
 	    	            MainTable.setAttribute("cellspacing", "0");
 	        	        MainTable.setAttribute("cellpadding", "0");
+						MainTable.setAttribute("style", "width:98%");
 	        	        
 		                if (pListType == "IMG") {
 	                	    MainTable.style.marginTop = "5px";
@@ -357,6 +361,7 @@
 
 	                	var M_TR_TD = document.createElement("TD");
 	                	M_TR_TD.setAttribute("class", "pictd");
+						M_TR_TD.setAttribute("width", "98.5px");
 	                	var M_TR_DIV = document.createElement("DIV");
 	                	M_TR_DIV.setAttribute("class", "pic");
 	                	
@@ -371,7 +376,7 @@
 	                	M_TR.appendChild(M_TR_TD);
 
 	                	var M_TR_TD2 = document.createElement("TD");
-	                	M_TR_TD2.style.width = "300px";
+	                	M_TR_TD2.style.width = "100%";
 
 	                	var M_TR_TDS_Table = document.createElement("TABLE");
 	                	M_TR_TDS_Table.setAttribute("class", "organinfo");
@@ -396,8 +401,14 @@
 
 	                	var Sub_TR2 = document.createElement("TR");
 	                	var Sub_TD2 = document.createElement("TD");
+						var descriptionValue = MakeXMLString(M_TR.getAttribute("_DATA5"));
+						<c:if test="${useShowAllCompanies eq 'YES'}">
+							if (pSeach) {
+								descriptionValue += " (<spring:message code='ezPersonal.t67'/>: " + MakeXMLString(M_TR.getAttribute("_DATA7")) + ")";
+							}
+						</c:if>
 	                	Sub_TD2.style.textAlign = "left";
-	                	Sub_TD2.innerHTML = MakeXMLString(M_TR.getAttribute("_DATA5"));
+	                	Sub_TD2.innerHTML = descriptionValue;
 	                	Sub_TR2.appendChild(Sub_TD2);
 
 	                	var Sub_TR3 = document.createElement("TR");
@@ -475,10 +486,26 @@
 	                        
 	                        jobName += M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
 	                        M_TR_TD3.innerHTML = jobName;
-	                    	M_TR_TD3.style.width = "80px";
+	                        M_TR_TD3.style.overflow = "hidden";
+	                        M_TR_TD3.style.textOverflow = "ellipsis";
+	                        M_TR_TD3.style.whiteSpace = "nowrap";
+	                    	M_TR_TD3.style.width = "70px";
 
 		                    var M_TR_TD4 = document.createElement("TD");
 							M_TR_TD4.innerHTML = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");
+	                    	M_TR_TD4.style.overflow = "hidden";
+	                    	M_TR_TD4.style.textOverflow = "ellipsis";
+	                    	M_TR_TD4.style.whiteSpace = "nowrap";
+
+							<c:if test="${useShowAllCompanies eq 'YES'}">
+								var companyTd = document.createElement("TD");
+								companyTd.style.overflow = "hidden";
+								companyTd.style.textOverflow = "ellipsis";
+								companyTd.style.whiteSpace = "nowrap";
+								companyTd.style.width = "110px";
+								companyTd.innerHTML = M_TR.getAttribute("_DATA7");
+								M_TR.appendChild(companyTd);
+							</c:if>
 		                    
 	                    	M_TR.appendChild(M_TR_TD1);
 	                    	M_TR.appendChild(M_TR_TD2);
@@ -504,9 +531,15 @@
 	                        
 	                        jobName += M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
 	                        M_TR_TD2.innerHTML = jobName;
+	                        M_TR_TD2.style.overflow = "hidden";
+	                        M_TR_TD2.style.textOverflow = "ellipsis";
+	                        M_TR_TD2.style.whiteSpace = "nowrap";
 
 	            	        var M_TR_TD3 = document.createElement("TD");
 	                	    M_TR_TD3.innerHTML = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");
+	                        M_TR_TD3.style.overflow = "hidden";
+	                        M_TR_TD3.style.textOverflow = "ellipsis";
+	                        M_TR_TD3.style.whiteSpace = "nowrap";
 
 		                    M_TR.appendChild(M_TR_TD1);
 	                    	M_TR.appendChild(M_TR_TD2);
@@ -557,7 +590,7 @@
 					method : 'POST',
 					dataType : "text",
 					data : {
-						search : document.getElementById("search_type").value + "::" + keyword.value,
+						search : document.getElementById("search_type").value + "::" + encodeURIComponent(keyword.value),
 						cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value,
 						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;userType",
 						page : CurPage ,
@@ -566,8 +599,8 @@
 		                </c:if>		        			
 						type : "user"
 					} ,
-   					success : function(xml) {
-   						event_displayUserList2(loadXMLString(xml));
+					success : function(xml) {
+						event_displayUserList2(loadXMLString(xml));
 					},
 					error : function(jqXHR, textStatus, errorThrown) {
 						alert("<spring:message code="ezResource.t2"/>" + textStatus);
@@ -622,7 +655,7 @@
 					method : 'POST',
 					dataType : "text",
 					async : false,
-					data : {search : "displayname::" + document.all("deptkeyword").value, 
+					data : {search : "displayname::" + encodeURIComponent(document.all("deptkeyword").value), 
 					    cell : "extensionAttribute3;displayname;extensionAttribute9;", 
 					    prop : "", 
 		        	    <c:if test="${useShowAllCompanies eq 'YES'}">
@@ -1004,18 +1037,27 @@
 			    str = ReplaceText(str, "&gt;", ">");
 			    str = ReplaceText(str, "&#039;", "'");
 			    str = ReplaceText(str, "&#034;", "\"");
-			    str = ReplaceText(str, "&amp;", "&");	    
 				str = ReplaceText(str, "&#92;", "\\");
+			    str = ReplaceText(str, "&amp;", "&");	    
 			    return str;
 			}
-			
+
+			<c:if test="${useShowAllCompanies eq 'YES'}">
+				var companySearchWidth = 920;
+
+				function resizeWindowWidth() {
+					if (pListType == "TXT" && issearch && window.innerWidth <= companySearchWidth) {
+						window.resizeTo(window.outerWidth - window.innerWidth + companySearchWidth, window.outerHeight);
+					}
+				}
+			</c:if>
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden;">
 		<div id="normalScreen">
   			<div id="menu">
     			<ul>
-      				<li><span onClick="Listprint()"><spring:message code='ezPersonal.t1005'/></span></li>
+      				<li><span class="icon16 popup_icon16_print" onClick="Listprint()"></span></li>
     			</ul>
   			</div>
   			<div id="close">
@@ -1026,7 +1068,7 @@
   			<script type="text/javascript" >
       			selToggleList(document.getElementById("menu"), "ul", "li", "0");
   			</script>
-  			<div style="width: 730px;">
+  			<div style="width: 100%;">
         	<div class="portlet_tabpart03" style="background-color:#f8f8fa; border: 1px solid #dedede; border-bottom: 0px; padding-top: 6px;">
 	            <div class="portlet_tabpart03_top" id="tab1" style="border-bottom: 0px; height: 28px;">
     	           <table style="width:100%;">
@@ -1041,7 +1083,6 @@
                            		<div style="float:right;margin-right:7px;">
                             		<select id="search_type" style="height: 22px;">
                             			<option selected value="displayname" usedefault="1"><spring:message code='ezPersonal.t9'/></option>
-                            			<option value="description" usedefault="1"><spring:message code='ezPersonal.t7'/></option>
                             			<option value="title" usedefault="1"><spring:message code='ezPersonal.t69'/></option>
                             			<option value="info" usedefault="0"><spring:message code='ezPersonal.t1820'/></option> 
                             			<option value="telephonenumber" usedefault="1"><spring:message code='ezPersonal.t177'/></option>
@@ -1053,7 +1094,7 @@
                                         <option value="extensionPhone" usedefault="0"><spring:message code='main.ksa02' /></option>
                                         <option value="officeMobile" usedefault="0"><spring:message code='main.ksa03' /></option>
                                         </c:if>
-                            			<option value="streetAddress" usedefault="0"><spring:message code='ezPersonal.t180'/></option>
+                            			<option value="streetAddress" usedefault="0" style="display:none"><spring:message code='ezPersonal.t180'/></option>
                             		</select>
                             		<input id="keyword" value="" onKeyPress="search_press(event)" onmousedown="keyword_Clear();" style="width:120px;margin:0px;height: 22px;">
                             			<a class="imgbtn"><span onclick="search_click('search')"><spring:message code='ezPersonal.t83'/></span></a>
@@ -1066,11 +1107,11 @@
 		  <table>
     		<tr>
       			<td class="box">
-          			<div style="width:298px;height:450px;overflow-x:auto;overflow-y:auto;" id="TreeView" ></div>
+          			<div style="width:298px;height:80vh;overflow-x:auto;overflow-y:auto;" id="TreeView" ></div>
       			</td>
       			<td></td>
-      			<td class="listview" style="width:426px;">
-          			<table style="width:425px;margin-top:-1px;"  class="popup_mainlist" > 
+      			<td class="listview" style="min-width:58.5%;">
+          			<table style="width:100%;margin-top:-1px;"  class="popup_mainlist" > 
               			<tr>
                   			<th style="white-space:normal;background-color: white;border-top:0px solid #ddd;border-bottom:1px solid #eaeaea">
                       			<span id="SelectDeptNM" style="font-weight: normal; width: 359px; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;padding-top: 3px;padding-left: 3px;"></span>
@@ -1081,7 +1122,7 @@
                   			</th>
               			</tr>              
           			</table>
-          			<div style="vertical-align:top;height:375px;overflow:auto;width:425px;" id="txtlist_Layer">   
+          			<div style="vertical-align:top;height:67vh;overflow:auto;width:100%;" id="txtlist_Layer">   
           				<table style="width:100%;border:1px solid #ddd;display:none;" id="txtlist_table" class="mainlist" > 
               				<tr>
                   				<td style="width:150px;color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezPersonal.t304'/></td>
@@ -1091,6 +1132,9 @@
           				</table>
           				<table style="width:100%;border:1px solid #ddd;display:none;" id="Search_txtlist_table" class="mainlist" > 
               				<tr>
+								<c:if test="${useShowAllCompanies eq 'YES'}">
+									<td style="width:130px;color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezPersonal.t67'/></td>
+								</c:if>
                   				<td style="width:130px;color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezPersonal.t305'/></td>
                   				<td style="width:90px;color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezPersonal.t304'/></td>
                   				<td style="width:90px;color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezPersonal.t69'/></td>
@@ -1098,7 +1142,7 @@
               				</tr>
           				</table>
           			</div>
-		  			<div style="vertical-align:top;text-align:center;height:375px;overflow:auto;display:none;width:425px;" id="DeptUserImgList"></div>
+		  			<div style="vertical-align:top;text-align:center;height:67vh;overflow:auto;display:none;width:100%;" id="DeptUserImgList"></div>
           			<div id="tblPageRayer" style="text-align:center;"></div>
     			</tr>
     			<tr>
@@ -1118,6 +1162,9 @@
           	</table>
           	<table style="width:100%;height:auto; border:1px solid #ddd;display:none;" id="Print_Search_txtlist_table" class="mainlist" > 
             	<tr>
+					<c:if test="${useShowAllCompanies eq 'YES'}">
+						<td style="width:110px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t67'/></td>
+					</c:if>
                 	<td style="width:110px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t305'/></td>
 					<td style="width:90px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t304'/></td>
                   	<td style="width:80px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t69'/></td>

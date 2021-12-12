@@ -1,5 +1,6 @@
 package egovframework.ezMobile.ezApprovalG.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -119,4 +120,80 @@ public class MApprovalGDAO extends EgovAbstractDAO {
 	public int updateAbsenteeAddJobInfo(Map<String, Object> map) throws Exception {
 		return update("MApprovalG.updateAbsenteeAddJobInfo", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public HashMap<String, Object> getLastDocInfo(Map<String, Object> map) throws Exception {
+		return (HashMap<String, Object>) select("MApprovalG.getLastDocInfo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<HashMap> checkChangeDocInfo(Map<String, Object> map) throws Exception {
+		return (List<HashMap>) list("MApprovalG.checkChangeDocInfo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public HashMap<String, Object> getEndDocInfo(Map<String, Object> map) throws Exception {
+		return (HashMap<String, Object>) select("MApprovalG.getEndDocInfo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public HashMap<String, Object> getEndDocInfoEx(Map<String, Object> map) throws Exception {
+		return (HashMap<String, Object>) select("MApprovalG.getEndDocInfoEx", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<HashMap> getEndDocLineInfo(Map<String, Object> map) throws Exception {
+		return (List<HashMap>) list("MApprovalG.getEndDocLineInfo", map);
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public List<HashMap> getEndDocLineInfoEx(Map<String, Object> map) throws Exception {
+		return (List<HashMap>) list("MApprovalG.getEndDocLineInfoEx", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<HashMap> getEndReceiptDocInfo(Map<String, Object> map) throws Exception {
+		return (List<HashMap>) list("MApprovalG.getEndReceiptDocInfo", map);
+	}
+	
+	public int updateDocInfo(Map<String, Object> map) throws Exception {
+		return update("MApprovalG.updateDocInfo", map);
+	}
+	
+	public int updateDocInfoEx(Map<String, Object> map) throws Exception {
+		return update("MApprovalG.updateDocInfoEx", map);
+	}
+	
+	public void insertDocLineInfo(Map<String, Object> map) throws Exception {
+		insert("MApprovalG.insertDocLineInfo", map);
+	}
+	
+	public void insertDocLineInfoEx(Map<String, Object> map) throws Exception {
+		insert("MApprovalG.insertDocLineInfoEx", map);
+	}
+	
+	public void insertDocRecvInfo(Map<String, Object> map) throws Exception {
+		insert("MApprovalG.insertDocRecvInfo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<HashMap> informationSchemaColumns(Map<String, Object> map) throws Exception {
+		return (List<HashMap>) list("MApprovalG.informationSchemaColumns", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public HashMap<String, Object> getFormInfo(Map<String, Object> map) throws Exception {
+		return (HashMap<String, Object>) select("MApprovalG.formInfo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public HashMap<String, Object> getUserInfo(Map<String, Object> map) throws Exception {
+		return (HashMap<String, Object>) select("MApprovalG.getUserInfo", map);
+	}
+	
+	public void saveAttachInfo(Map<String, Object> map) throws Exception {
+		insert("MApprovalG.saveAttachInfo", map);
+	}
+	
 }

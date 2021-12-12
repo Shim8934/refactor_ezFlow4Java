@@ -182,10 +182,10 @@
 		                    
 	                        if(getNodeText(GetChildNodes(nodes[i])[0]) == "USER"){
 	                        	pparsingXML = pparsingXML + "<DATA6>" + getNodeText(GetChildNodes(nodes[i])[4]) + "</DATA6>";
-	                            pparsingXML = pparsingXML + "<VALUE>" + getNodeText(GetChildNodes(nodes[i])[2]) + "</VALUE></CELL></ROW>";
+	                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(getNodeText(GetChildNodes(nodes[i])[2])) + "</VALUE></CELL></ROW>";
 	                        } else if (getNodeText(GetChildNodes(nodes[i])[0]) == "DEPT"){
 	                        	pparsingXML = pparsingXML + "<DATA6>" + getNodeText(GetChildNodes(nodes[i])[4]) + "</DATA6>";
-	                            pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + getNodeText(GetChildNodes(nodes[i])[2]) + "</VALUE></CELL></ROW>";
+	                            pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + MakeXMLString(getNodeText(GetChildNodes(nodes[i])[2])) + "</VALUE></CELL></ROW>";
 	                        } else if (getNodeText(GetChildNodes(nodes[i])[0]) == "JIKWI") {
 	                        	pparsingXML = pparsingXML + "<DATA6>" + getNodeText(GetChildNodes(nodes[i])[3]) + "</DATA6>";
 	                        	
@@ -424,7 +424,7 @@
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : true,
 		        	data : {
-		        		search : document.all("search_type").value + "::" + document.all("keyword").value, 
+		        		search : document.all("search_type").value + "::" + encodeURIComponent(document.all("keyword").value), 
 		        		cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value, 
 		        		prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department", 
 		        		type : "user"
@@ -464,6 +464,8 @@
 	            else {
 	                usedefault = GetAttribute(document.getElementById("search_type").options[document.getElementById("search_type").selectedIndex], "usedefault");
 	            }
+		     	// 2021-04-09 김은실 - 검색 시 PressShiftKey = true 되는 현상(commit 6c23f8716 참조): 모든 search_click()에 적용. 
+	            PressShiftKey = false;
 	
 	        }
 	        
@@ -489,7 +491,7 @@
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : false,
 		        	data : {
-		        		search : "displayname::" + searchWord, 
+		        		search : "displayname::" + encodeURIComponent(searchWord), 
 		        		cell : "extensionAttribute3;displayName;extensionAttribute9;", 
 		        		prop : "cn", 
 		        		type : "group"
@@ -596,7 +598,7 @@
 	        	var strName = document.getElementById("TextName").value.trim();
 	        	
 	            if (strName == "") {
-	                alert("<spring:message code='ezEmail.t22' />");
+	                alert("<spring:message code='ezEmail.ksa17' />");
 	                document.getElementById("TextName").focus();
 	                return;
 	            }
@@ -632,7 +634,7 @@
 	            xmlHTTP.send(xmlDom);
 	            
 	            if (xmlHTTP.status == 200 && xmlHTTP.responseText == "OK") {
-	            	alert("<spring:message code='ezEmail.t24' />");
+	            	alert("<spring:message code='ezEmail.ksa18' />");
 	            	
 	                if (ReturnFunction != null) {
 	                    ReturnFunction(1);
@@ -644,7 +646,7 @@
 	            } else if (xmlHTTP.status == 200 && xmlHTTP.responseText == "GROUP_NAME") {
 	            	alert("<spring:message code='ezEmail.lhm11' />");
 	            } else {
-	            	alert("<spring:message code='ezEmail.t23' />");
+	            	alert("<spring:message code='ezEmail.ksa19' />");
 	            }
 	        }
 	
@@ -1436,7 +1438,7 @@
 		            xmlHTTP.send("");
 		            
 		            if (xmlHTTP.status != 200) {
-			            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.statusText);
+			            alert("<spring:message code='ezEmail.ksa19' />" + xmlHTTP.statusText);
 		            } else {
 		            	document.getElementById("ListViewJikwi").innerHTML = "";
 			            var pListViewJikwi = new ListView();
@@ -1444,7 +1446,7 @@
 			            pListViewJikwi.SetSelectFlag(false);
 			            pListViewJikwi.SetMulSelectable(true);
 			            pListViewJikwi.SetRowOnDblClick("InsertReceiver");
-			            pListViewJikwi.DataSource(loadXMLString(document.getElementById("listviewheader").innerHTML.toUpperCase()));
+			            pListViewJikwi.DataSource(loadXMLString(document.getElementById("listviewheaderJW").innerHTML.toUpperCase()));
 			            pListViewJikwi.DataBind("ListViewJikwi");
 			            pListViewJikwi.DataSource(loadXMLString(xmlHTTP.responseText));
 			            pListViewJikwi.RowDataBind();
@@ -1453,7 +1455,7 @@
 		            
 		            xmlHTTP = null;
 		        } catch (e) {
-		            alert("<spring:message code='ezEmail.t574' />" + e.description);
+		            alert("<spring:message code='ezEmail.ksa19' />" + e.description);
 		            xmlHTTP = null;
 		            return;
 		        }
@@ -1478,7 +1480,7 @@
 		            xmlHTTP.send("");
 		            
 		            if (xmlHTTP.status != 200) {
-			            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.statusText);
+			            alert("<spring:message code='ezEmail.ksa19' />" + xmlHTTP.statusText);
 		            } else {
 		            	document.getElementById("ListViewJikchek").innerHTML = "";
 			            var pListViewJikchek = new ListView();
@@ -1486,7 +1488,7 @@
 			            pListViewJikchek.SetSelectFlag(false);
 			            pListViewJikchek.SetMulSelectable(true);
 			            pListViewJikchek.SetRowOnDblClick("InsertReceiver");
-			            pListViewJikchek.DataSource(loadXMLString(document.getElementById("listviewheader").innerHTML.toUpperCase()));
+			            pListViewJikchek.DataSource(loadXMLString(document.getElementById("listviewheaderJC").innerHTML.toUpperCase()));
 			            pListViewJikchek.DataBind("ListViewJikchek");
 			            pListViewJikchek.DataSource(loadXMLString(xmlHTTP.responseText));
 			            pListViewJikchek.RowDataBind();
@@ -1495,7 +1497,7 @@
 		            
 		            xmlHTTP = null;
 		        } catch (e) {
-		            alert("<spring:message code='ezEmail.t574' />" + e.description);
+		            alert("<spring:message code='ezEmail.ksa19' />" + e.description);
 		            xmlHTTP = null;
 		            return;
 		        }
@@ -2308,7 +2310,7 @@
 			            xmlHTTP.send("");
 			            
 			            if (xmlHTTP.status != 200) {
-				            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.statusText);
+				            alert("<spring:message code='ezEmail.ksa19' />" + xmlHTTP.statusText);
 			            } else {
 			            	document.getElementById("ListViewJikwi").innerHTML = "";
 				            var pListViewJikwi = new ListView();
@@ -2316,7 +2318,7 @@
 				            pListViewJikwi.SetSelectFlag(false);
 				            pListViewJikwi.SetMulSelectable(true);
 				            pListViewJikwi.SetRowOnDblClick("InsertReceiver");
-				            pListViewJikwi.DataSource(loadXMLString(document.getElementById("listviewheader").innerHTML.toUpperCase()));
+				            pListViewJikwi.DataSource(loadXMLString(document.getElementById("listviewheaderJW").innerHTML.toUpperCase()));
 				            pListViewJikwi.DataBind("ListViewJikwi");
 				            pListViewJikwi.DataSource(loadXMLString(xmlHTTP.responseText));
 				            pListViewJikwi.RowDataBind();
@@ -2332,7 +2334,7 @@
 			            xmlHTTP.send("");
 			            
 			            if (xmlHTTP.status != 200) {
-				            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.statusText);
+				            alert("<spring:message code='ezEmail.ksa19' />" + xmlHTTP.statusText);
 			            } else {
 			            	document.getElementById("ListViewJikchek").innerHTML = "";
 				            var pListViewJikchek = new ListView();
@@ -2340,7 +2342,7 @@
 				            pListViewJikchek.SetSelectFlag(false);
 				            pListViewJikchek.SetMulSelectable(true);
 				            pListViewJikchek.SetRowOnDblClick("InsertReceiver");
-				            pListViewJikchek.DataSource(loadXMLString(document.getElementById("listviewheader").innerHTML.toUpperCase()));
+				            pListViewJikchek.DataSource(loadXMLString(document.getElementById("listviewheaderJC").innerHTML.toUpperCase()));
 				            pListViewJikchek.DataBind("ListViewJikchek");
 				            pListViewJikchek.DataSource(loadXMLString(xmlHTTP.responseText));
 				            pListViewJikchek.RowDataBind();
@@ -2352,7 +2354,7 @@
 	        		
 		        	
 		        } catch (e) {
-		            alert("<spring:message code='ezEmail.t574' />" + e.description);
+		            alert("<spring:message code='ezEmail.ksa19' />" + e.description);
 		            xmlHTTP = null;
 		            return;
 		        }
@@ -2361,11 +2363,21 @@
     	</script>
 	</head>
 	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
-		<xml id="listviewheader" style="display: none;">
+		<xml id="listviewheaderJW" style="display: none;">
 		  <LISTVIEWDATA>
 		    <HEADERS>
 		      <HEADER>
-		        <NAME><spring:message code='ezEmail.t586' /></NAME>
+		        <NAME><spring:message code='ezOrgan.csj04' /></NAME>
+		        <WIDTH>40</WIDTH>
+		      </HEADER>
+		    </HEADERS>
+		  </LISTVIEWDATA>
+		</xml>
+		<xml id="listviewheaderJC" style="display: none;">
+		  <LISTVIEWDATA>
+		    <HEADERS>
+		      <HEADER>
+		        <NAME><spring:message code='ezOrgan.csj17' /></NAME>
 		        <WIDTH>40</WIDTH>
 		      </HEADER>
 		    </HEADERS>
@@ -2426,7 +2438,7 @@
 		                                                        <option value="HomePhone" usedefault="0"><spring:message code='ezEmail.t29' /></option>
 		                                                        <option value="facsimileTelephoneNumber" usedefault="0"><spring:message code='ezEmail.t99000047' /></option>
 		                                                        <option value="mail" usedefault="0"><spring:message code='ezEmail.t99000048' /></option>
-		                                                        <option value="streetAddress" usedefault="0"><spring:message code='ezEmail.t99000049' /></option>
+		                                                        <option value="streetAddress" usedefault="0" style="display:none"><spring:message code='ezEmail.t99000049' /></option>
 		                                                    </select>
 		                                                    <input id="keyword" value="" onkeypress="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px;height:22px">
 		                                                    <a class="imgbtn"><span onclick="search_click('search')"><spring:message code='ezEmail.t37' /></span></a>

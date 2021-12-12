@@ -17,7 +17,8 @@ function getAprLinefor(mode, docid) {
 			docID : docid,
 			mode  : mode,
 			orgCompanyID : orgCompanyID,
-			proxyUserFlag : ""
+			proxyUserFlag : "",
+			isMailSendFlag : "Y"
 		},
 		success: function(text){
 			result = text;
@@ -64,6 +65,10 @@ function SendMailApproveMember(aprLineList,  aprsn, pdrafttitle, pdraftname, pdr
     var nextID = "";
     var sn = objNodes.length - aprsn - 1;
     var nextMethod = ""
+
+    if (!!isNextBujea(aprLineList, sn)) {
+        sn -= 1;
+    }
     
     if (sn >= 0) {
         nextMethod = trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[sn])[0])[11]));
@@ -79,6 +84,24 @@ function SendMailApproveMember(aprLineList,  aprsn, pdrafttitle, pdraftname, pdr
         }
         continusendMail(nextMethod, aprLineList, sn);
     }
+}
+
+function isNextBujea(aprLineList, sn) {
+    if (sn < 0) {
+        return "";
+    }
+
+    var nextUser = SelectNodes(aprLineList, "LISTVIEWDATA/ROWS/ROW")[sn];
+    var nextUserID = getNodeText(GetElementsByTagName(nextUser, "DATA4")[0]);
+    var nextUserDeptID = getNodeText(GetElementsByTagName(nextUser, "DATA6")[0]);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("get", "/ezApprovalG/getBujaeInfo.do?userID=" + nextUserID + "&deptID=" + nextUserDeptID, false);
+    xhr.send();
+
+    var res = xhr.responseText;
+
+    return res;
 }
 
 function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck, Method) {
@@ -130,11 +153,11 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck, Method)
     	if (Method != "007") {
     		if (docExt == "hwp") {
     			if(useWebHWP == "YES")
-    				Approv_a += "<span style='font-weight:bold;'>" + Drafter + "</span>"+ "<span>" + strLangSpjj34 + "</span>" + "<a id='approv_a' href ='"+window.location.protocol + "//" + window.location.host+"/ezApprovalG/approvuiWHWP.do?docID="+pDocID+"&id="+id+"&name="+javaURLEncode(to.split(",")[0])+"&deptID="+deptid+"&allFlag=0&mailchk=Y" + (orgCompanyID == undefined ? "" : "&orgCompanyID=" + orgCompanyID) + "' onclick ='javascript:mail_link();' style='cursor: pointer; color: blue;' target='_blank'><br>"+ strLangSpjj33 + "</a><br><br><span style='font-weight:bold;'>" + strLangjjh04 + "</span><br>";
+    				Approv_a += "<span style='font-weight:bold;'>" + Drafter + "</span>"+ "<span>" + strLangSpjj34 + "</span>" + "<a id='approv_a' href ='"+window.location.protocol + "//" + window.location.host+"/ezApprovalG/approvuiWHWP.do?docID="+pDocID+"&id="+id+"&name="+javaURLEncode(to.split(",")[0])+"&deptID="+deptid+"&allFlag=0&mailchk=Y" + (orgCompanyID == undefined ? "" : "&orgCompanyID=" + orgCompanyID) + "'"+ "data-id='" + pDocID + "'"+ "data-comp='" + orgCompanyID + "' onclick ='javascript:mail_link();' style='cursor: pointer; color: blue;' target='_blank'><br>"+ strLangSpjj33 + "</a><br><br><span style='font-weight:bold;'>" + strLangjjh04 + "</span><br>";
     			else
-    				Approv_a += "<span style='font-weight:bold;'>" + Drafter + "</span>"+ "<span>" + strLangSpjj34 + "</span>" + "<a id='approv_a' href ='"+window.location.protocol + "//" + window.location.host+"/ezApprovalG/approvuiHWP.do?docID="+pDocID+"&id="+id+"&name="+javaURLEncode(to.split(",")[0])+"&deptID="+deptid+"&allFlag=0&mailchk=Y" + (orgCompanyID == undefined ? "" : "&orgCompanyID=" + orgCompanyID) + "' onclick ='javascript:mail_link();' style='cursor: pointer; color: blue;' target='_blank'><br>"+ strLangSpjj33 + "</a><br><br><span style='font-weight:bold;'>" + strLangjjh04 + "</span><br>";
+    				Approv_a += "<span style='font-weight:bold;'>" + Drafter + "</span>"+ "<span>" + strLangSpjj34 + "</span>" + "<a id='approv_a' href ='"+window.location.protocol + "//" + window.location.host+"/ezApprovalG/approvuiHWP.do?docID="+pDocID+"&id="+id+"&name="+javaURLEncode(to.split(",")[0])+"&deptID="+deptid+"&allFlag=0&mailchk=Y" + (orgCompanyID == undefined ? "" : "&orgCompanyID=" + orgCompanyID) + "'"+ "data-id='" + pDocID + "'"+ "data-comp='" + orgCompanyID + "' onclick ='javascript:mail_link();' style='cursor: pointer; color: blue;' target='_blank'><br>"+ strLangSpjj33 + "</a><br><br><span style='font-weight:bold;'>" + strLangjjh04 + "</span><br>";
     		} else {
-    			Approv_a += "<span style='font-weight:bold;'>" + Drafter + "</span>"+ "<span>" + strLangSpjj34 + "</span>" + "<a id='approv_a' href ='"+window.location.protocol + "//" + window.location.host+"/ezApprovalG/approvui.do?docID="+pDocID+"&id="+id+"&name="+javaURLEncode(to.split(",")[0])+"&deptID="+deptid+"&allFlag=0&mailchk=Y" + (orgCompanyID == undefined ? "" : "&orgCompanyID=" + orgCompanyID) + "' onclick ='javascript:mail_link();' style='cursor: pointer; color: blue;' target='_blank'><br>"+ strLangSpjj33 + "</a><br><br><span style='font-weight:bold;'>" + strLangjjh04 + "</span><br>";
+    			Approv_a += "<span style='font-weight:bold;'>" + Drafter + "</span>"+ "<span>" + strLangSpjj34 + "</span>" + "<a id='approv_a' href ='"+window.location.protocol + "//" + window.location.host+"/ezApprovalG/approvui.do?docID="+pDocID+"&id="+id+"&name="+javaURLEncode(to.split(",")[0])+"&deptID="+deptid+"&allFlag=0&mailchk=Y" + (orgCompanyID == undefined ? "" : "&orgCompanyID=" + orgCompanyID) + "'"+ "data-id='" + pDocID + "'"+ "data-comp='" + orgCompanyID + "' onclick ='javascript:mail_link();' style='cursor: pointer; color: blue;' target='_blank'><br>"+ strLangSpjj33 + "</a><br><br><span style='font-weight:bold;'>" + strLangjjh04 + "</span><br>";
     		}
     	}
     }
@@ -162,12 +185,13 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck, Method)
     
     console.log("Approv_a  : "+Approv_a)
     
+    // 메일 발송 이후 동기적인 추가 동작이 존재하지 않으므로 비동기처리 (async = true)
     try {
         var Result = "";
         $.ajax({
     		type : "POST",
     		dataType : "text",
-    		async : false,
+    		async : true,
     		data : {
     			Content : Content,
     			Subject : Subject,

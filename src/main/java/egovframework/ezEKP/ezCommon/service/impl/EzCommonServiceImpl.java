@@ -20,6 +20,8 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.KlibUtil;
 
 import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -1146,67 +1148,84 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		logger.debug("deleteCompanyConfig ended");
 	}
 	
+	// 중복로그인 시간 갱신
 	@Override
-	public void setMultiLoginUser(int tenantID, String userID, String loginTime) throws Exception {
+	public void setMultiLoginUser(int tenantID, String companyId, String userID, String loginTime, Device deviceType) throws Exception {
 		logger.debug("insertMultiLoginUser started");
-		
-		//멀티로그인 시간을 비교해서 이전 이용자가 없다면 인서트
-		//이전 이용자가 있다면 업데이트한다 
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		
+
+		if (deviceType.isMobile()) {
+			logger.debug("isMobile");
+		}
+
+		boolean isMobileIntegrated = isMobileIntegratedMultiLogin(companyId, tenantID);
+		Map<String, Object> map = new HashMap<>();
+
 		map.put("tenantID", tenantID);
 		map.put("userID", userID);
 		map.put("loginTime", loginTime);
-		
+		map.put("isMobileIntegrated", isMobileIntegrated);
+		map.put("mobileFlag", deviceType.isMobile() && !isMobileIntegrated ? 1 : 0);
+
 		try {
 			ezCommonDAO.deleteMultiLoginUser(map);
 			ezCommonDAO.insertMultiLoginUser(map);
 		} catch (DeadlockLoserDataAccessException e) {
 			//데드락이 발생하면 실패한 작업 다시 실행
-			
+
 			Thread.sleep(1000);
-			
+
 			ezCommonDAO.deleteMultiLoginUser(map);
 			ezCommonDAO.insertMultiLoginUser(map);
 		}
-		
+
 		logger.debug("insertMultiLoginUser ended");
 	}
-	
+
+	// PC 중복로그인 시간 가져오기
 	@Override
-	public String selectMultiLoginTime(int tenantID, String userID) throws Exception {
-		
+	public String selectMultiLoginTime(int tenantID, String companyId, String userID, Device deviceType) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+
 		map.put("tenantID", tenantID);
 		map.put("userID", userID);
-		
+		map.put("isMobile", deviceType.isMobile() && !isMobileIntegratedMultiLogin(companyId, tenantID));
+
 		return Optional.ofNullable(ezCommonDAO.selectMultiLoginUser(map)).orElse("");
 	}
-	
+
+	// PC 중복로그인 본인확인
 	@Override
-	public boolean matchMultiLoginTime(int tenantID, String userID, String loginTime) throws Exception {
+	public boolean matchMultiLoginTime(int tenantID, String companyId, String userID, String loginTime, Device deviceType) throws Exception {
 		logger.debug("matchMultiLoginTime started");
-		
-		// 멀티 로그인 시간을 비교해서 새로운 로그인 유저가 없다면 true 새로운 로그인 유저가 있다면 false
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		
+
+		if (deviceType.isMobile()) {
+			logger.debug("isMobile");
+		}
+
+		// 멀티로그인 시간을 비교해서 새로운 로그인 유저가 없다면 true 새로운 로그인 유저가 있다면 false
+		Map<String, Object> map = new HashMap<>();
+
 		map.put("tenantID", tenantID);
 		map.put("userID", userID);
-		
-		String pre_loginTime = Optional.ofNullable(ezCommonDAO.selectMultiLoginUser(map)).orElse("");
-		
+		map.put("mobileFlag", deviceType.isMobile() && !isMobileIntegratedMultiLogin(companyId, tenantID) ? 1 : 0);
+
+		String previousLoginTime = Optional.ofNullable(ezCommonDAO.selectMultiLoginUser(map)).orElse("");
+
 		logger.debug("matchMultiLoginTime ended");
-		
-		if(loginTime.equals(pre_loginTime)) {
-			return true;
-		} else {
-			return false;
-		}
+
+		return loginTime.equals(previousLoginTime);
 	}
-	
+
+	/**
+	 * 중복로그인 체크를 PC와 Mobile에 대해 통합적으로 진행합니다.<br>
+	 * 즉, true라면 다른 기기에서의 로그인을 제한합니다. (PC, Mobile 총 1개 허용)<br>
+	 * false라면 각각 체크합니다. (PC 1개, Mobile 1개 허용)<br>
+	 * useMobileIntergratedMultiLogin 테넌트 콘피그의 옵션을 가져옵니다.
+	 */
+	private boolean isMobileIntegratedMultiLogin(String companyId, int tenantId) throws Exception {
+		return "YES".equalsIgnoreCase(getCompanyConfig(tenantId, companyId, "useMobileIntergratedMultiLogin"));
+	}
+
 	@Override
 	public void createTblUserMultiLogin() throws Exception {
 		ezCommonDAO.createTblUserMultiLogin();
@@ -2225,7 +2244,36 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addScheduleMailNotiConfig() throws Exception {
 		ezCommonDAO.addScheduleMailNotiConfig();
 	}
+	
+	@Override
+	public void insertApprContainterConfig() throws Exception {
+		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+		
+		for (TenantVO tenantVo : tenantIdList) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("tenantID", tenantVo.getTenantId());
+			
+			ezCommonDAO.insertApprContainterConfig(map);
+		}
+	}
 
+	/* 2020-10-19 김은실 - 웹폴더 > 하위부서 허용 여부 추가 */
+	@Override
+	public void addWebfolderUserSubdeptPermittedColumn() throws Exception {
+		ezCommonDAO.addWebfolderUserSubdeptPermittedColumn();
+	}
+	
+	/* 2020-12-08 김은실 - [카이스트] 웹폴더 > 폴더 담당자 추가 */
+	@Override
+	public void addWebfolderUserFolderManagerColumn() throws Exception {
+		ezCommonDAO.addWebfolderUserFolderManagerColumn();
+	}
+	
+	@Override
+	public void createWebfolderFileUserTable() {
+		ezCommonDAO.createWebfolderFileUserTable();
+	}
+	
 	@Override
     public void createTblYearlyDocCount() throws Exception {
 	    ezCommonDAO.createTblYearlyDocCount();
@@ -2268,6 +2316,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     }
 
 	@Override
+	public void addTblUserMultiLoginMobileFlagColumn() throws Exception {
+		ezCommonDAO.addTblUserMultiLoginMobileFlagColumn();
+	}
+
+	@Override
 	public void createMailTemplateSequence() throws Exception {
 		ezCommonDAO.createMailTemplateSequence();
 	}
@@ -2275,5 +2328,160 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	@Override
 	public void createJmochaMailboxProgress() throws Exception {
 		ezCommonDAO.createMailboxProgressTable();
+	}
+	
+	// webfolder
+	@Override
+	public List<String> getPermissionGroupIdListOfUser(String userId, String deptId, String companyId, int tenantId) throws Exception {
+		logger.debug("getPermissionGroupIdListOfUser started. userId=" + userId);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("userId", userId);
+		map.put("deptId", deptId);		
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		logger.debug("getPermissionGroupIdListOfUser ended.");
+		
+		return ezCommonDAO.getPermissionGroupIdListOfUser(map);				
+	}
+	
+	@Override
+    public void createTblWebfolderApplyHistroy() throws Exception {
+    	ezCommonDAO.createTblWebfolderApplyHistroy();
+    }
+	
+	/* 2020-10-19 웹폴더 KLIB 암호화 테이블 */
+	@Override
+	public void checkWebfolderEncryptTable() throws Exception {
+		ezCommonDAO.checkWebfolderEncryptTable();
+	}
+	
+	/* 2020-10-19 웹폴더 버전관리 */
+	@Override
+	public void checkWebfolderVersionTable() throws Exception {
+		ezCommonDAO.checkWebfolderVersionTable();
+	}
+	
+	/* 2020-11-25 웹폴더 답글 파일 컬럼 추가 */
+	@Override
+	public void createWebfolderHierarchicalColumns() {
+		ezCommonDAO.createWebfolderHierarchicalColumns();
+	}
+
+	@Override
+	public void addWebfolderLogHistory() throws Exception {
+		ezCommonDAO.addWebfolderLogHistory();
+	}
+	
+	@Override
+	public void createWebfolderNoInherit() {
+		ezCommonDAO.createWebfolderNoInherit();
+	}
+	
+	@Override
+    public void alterWebfolderApplyHistoryAddColumn() throws Exception {
+    	ezCommonDAO.alterWebfolderApplyHistoryAddColumn();
+    }
+	
+	@Override
+	public void createSerialnumgenGrant() throws Exception {
+		ezCommonDAO.createSerialnumgenGrant();
+	}
+	
+	@Override
+	public void insertApprSatViewerConfig() throws Exception {
+		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+		
+		for (TenantVO tenantVo : tenantIdList) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("tenantID", tenantVo.getTenantId());
+			
+			ezCommonDAO.insertApprSatViewerConfig(map);
+		}
+	}
+	
+	@Override
+	public JSONObject attachWebFolderFile(JSONArray fileListJson, LoginVO loginVO, String param, HttpServletRequest request) {
+		
+		JSONObject resultJson = new JSONObject();
+		String downloadDIR = "";
+		if (param == ""){
+			param = "upload_mail.ROOT";
+		} else if(param.equals("BOARD")){
+			param = "upload_board.ROOT";
+		} else if(param.equals("APR")){
+			param = "upload_approvalG.ROOT";
+		} else if(param.equals("COMMUNITY")){
+			param = "upload_community.ROOT";
+		} else if(param.equals("TASK")){
+			param = "upload_task.ROOT";
+		} else if(param.equals("SCHEDULE")){
+			param = "upload_schedule.ROOT";
+		}
+		String realPath = commonUtil.getRealPath(request);
+		String paramPath = commonUtil.getUploadPath(param, loginVO.getTenantId());
+		
+		downloadDIR = paramPath + "/tempWebfolderFileUpload/";
+		
+		String status = "OK";
+		List<String> downloadPath = new ArrayList<String>();
+		
+		try {
+			downloadPath = commonUtil.attachWebFolderFile(fileListJson, downloadDIR, loginVO, realPath);
+		} catch (Exception e) {
+			e.printStackTrace();
+			status = "ERROR";
+		}
+		resultJson.put("status", status);
+		resultJson.put("downloadPath", downloadPath);
+				
+		return resultJson;
+	}
+	
+	public void addBoardMailFGColumn() throws Exception {
+		ezCommonDAO.addBoardMailFGColumn();
+	}
+	
+	@Override
+	public void addCommNoticeUpperNoColumn() throws Exception {
+		ezCommonDAO.addCommNoticeUpperNoColumn();
+	}
+
+    @Override
+    public void alterTblAprReceiptProcessInfoAddColumn() throws Exception {
+        ezCommonDAO.alterTblAprReceiptProcessInfoAddColumn();
+    }
+    
+    @Override
+    public void alterTblDocDeliveryAddColumn() throws Exception {
+        ezCommonDAO.alterTblDocDeliveryAddColumn();
+        ezCommonDAO.insertTblCodelistA54002();
+    }
+    
+    @Override
+    public void addTblAdminReceiptGroupSubExtReceptYnColumn() throws Exception {
+        ezCommonDAO.addTblAdminReceiptGroupSubExtReceptYnColumn();
+    }
+
+	@Override
+	public void createTblCar() throws Exception {
+		ezCommonDAO.createTblCar();
+	}
+
+	@Override
+	public void createTblCarAcl() throws Exception {
+		ezCommonDAO.createTblCarAcl();
+	}
+
+	@Override
+	public void createTblCarAttach() throws Exception {
+		ezCommonDAO.createTblCarAttach();
+	}
+
+	@Override
+	public void createTblCarForm() throws Exception {
+		ezCommonDAO.createTblCarForm();
 	}
 }

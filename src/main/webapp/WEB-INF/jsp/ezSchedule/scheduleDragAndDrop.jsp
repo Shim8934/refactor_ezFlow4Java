@@ -39,7 +39,7 @@
 		            evt.preventDefault();
 		        }
 		        if (isfileup) {
-		            alert(strLang258);
+		            //alert(strLang258);
 		            return;
 		        }
 		        var filelist;
@@ -144,6 +144,7 @@
 	
 		    function filechange(e) {
 		        onDrop();
+		        e.target.value = '';
 		    }
 	
 		    function btnfiledel() {

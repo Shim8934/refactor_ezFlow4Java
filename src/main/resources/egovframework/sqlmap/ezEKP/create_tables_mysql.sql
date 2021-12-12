@@ -8216,7 +8216,7 @@ CREATE TABLE `tbl_notification` (
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANYID` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`ITEMSEQ`),
-  UNIQUE KEY `IDX_TBL_NOTIFICATION` (`TENANT_ID`,`ITEMSEQ`)
+  UNIQUE KEY `IDX_TBL_NOTIFICATION` (`TENANT_ID`,`COMPANYID`,`ITEMSEQ`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -11857,6 +11857,90 @@ CREATE TABLE `tbl_schistory_rec` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+DROP TABLE IF EXISTS `tbl_car`;
+CREATE TABLE `tbl_car` (
+  `CAR_ID` bigint(10) NOT NULL,
+  `CAR_NAME` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `CAR_NAME2` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `CAR_NM` varchar(40) NOT NULL DEFAULT '0',
+  `CAR_GB` varchar(2) DEFAULT NULL,
+  `CAR_LEVEL` bigint(10) DEFAULT 0,
+  `CAR_STEP` bigint(10) DEFAULT NULL,
+  `CAR_ACCESS` varchar(2000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `CAR_UPPER` bigint(10) DEFAULT NULL,
+  `OWNDEPTID` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `OWNDEPTNM` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `OWNDEPTNM2` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `OWNERID` varchar(2000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `OWNERNM` varchar(32) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `OWNERNM2` varchar(32) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `OWNERPOSITION` varchar(20) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `OWNERPOSITION2` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `OWNERCALL` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `CAR_REGISTER_DATE` varchar(16) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `DELFLAG` varchar(2) NOT NULL,
+  `COMPANYID` varchar(40) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+  `CAR_URL` varchar(40) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `CAR_EXPLAIN` varchar(40) CHARACTER SET utf8mb4 DEFAULT NULL,
+  PRIMARY KEY (`TENANT_ID`,`CAR_ID`,`COMPANYID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `tbl_car_acl`;
+CREATE TABLE `tbl_car_acl` (
+  `CAR_ID` varchar(40) NOT NULL,
+  `MEMBER_NAM` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `MEMBER_ID` varchar(80) NOT NULL,
+  `ACCESS_LVL` varchar(2) DEFAULT NULL,
+  `DEPT_YN` varchar(2) DEFAULT NULL,
+  `SDA_YN` varchar(2) DEFAULT NULL,
+  `COMPANYID` varchar(40) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`TENANT_ID`,`CAR_ID`,`MEMBER_ID`,`COMPANYID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `tbl_car_attach`;
+CREATE TABLE `tbl_car_attach` (
+  `ATTACHID` bigint(10) NOT NULL AUTO_INCREMENT,
+  `CAR_ID` varchar(40) NOT NULL,
+  `FILESIZE` bigint(10) NOT NULL,
+  `FILENAME` varchar(500) NOT NULL,
+  `FILEPATH` varchar(500) NOT NULL,
+  `COMPANYID` varchar(40) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  PRIMARY KEY (`ATTACHID`,`TENANT_ID`,`COMPANYID`)
+) ENGINE=InnoDB AUTO_INCREMENT=93 DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `tbl_car_form`;
+CREATE TABLE `tbl_car_form` (
+  `CAR_FORM_ID` bigint(40) NOT NULL,
+  `CAR_ID` varchar(40) NOT NULL,
+  `REGISTER_ID` varchar(80) NOT NULL,
+  `REGISTER_DATE` date DEFAULT NULL,
+  `REV_DATE` date DEFAULT NULL,
+  `REV_TIME` varchar(45) DEFAULT NULL,
+  `REV_TIME2` varchar(45) DEFAULT NULL,
+  `DRIVER_DEPTNAME` varchar(80) DEFAULT NULL,
+  `DRIVER_NAME` varchar(80) DEFAULT NULL,
+  `B_DEPT_ID` varchar(100) DEFAULT NULL,
+  `B_DEPART_TIME` varchar(16) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `B_DISTANCE` varchar(40) NOT NULL DEFAULT '0',
+  `DRIVE_PURPOSE` varchar(200) DEFAULT NULL,
+  `DRIVE_POINT` varchar(100) DEFAULT NULL,
+  `A_ARRIVE_TIME` varchar(16) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `A_DISTANCE` varchar(40) DEFAULT NULL,
+  `A_DISTANCE_AUTO` varchar(40) DEFAULT NULL,
+  `A_DISTANCE_COMMUTE` varchar(40) DEFAULT NULL,
+  `A_DISTANCE_WORK` varchar(40) DEFAULT NULL,
+  `A_DISTANCE_ETC` varchar(40) DEFAULT NULL,
+  `A_SUBMIT_FLAG` varchar(2) DEFAULT NULL,
+  `COMPANYID` varchar(40) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+  `CAR_REGISTER_NO` bigint(20) NOT NULL,
+  `DELFLAG` varchar(2) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`CAR_FORM_ID`,`CAR_ID`,`COMPANYID`,`TENANT_ID`,`CAR_REGISTER_NO`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --
 -- Table structure for table `tbl_sealdeptinfo`
 --
@@ -13393,7 +13477,8 @@ CREATE TABLE `tbl_user_multilogin` (
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `USER_ID` varchar(80) NOT NULL DEFAULT '',
   `LOGIN_TIME` varchar(15) NOT NULL,
-  PRIMARY KEY (`USER_ID`,`TENANT_ID`)
+  `MOBILE_FLAG` tinyint(1) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`USER_ID`,`TENANT_ID`, `MOBILE_FLAG`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -13994,6 +14079,54 @@ CREATE TABLE `tbl_weather_user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `tbl_webfolder_apply_hist_mem`
+--
+
+DROP TABLE IF EXISTS `tbl_webfolder_apply_hist_mem`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_webfolder_apply_hist_mem` (
+  `APPLY_ID` varchar(40) NOT NULL,
+  `MEMBER_ID` varchar(80) NOT NULL,
+  `MEMBER_NAME` varchar(200) NOT NULL,
+  `MEMBER_TYPE` varchar(10) NOT NULL,
+  `MEMBER_ITEM` varchar(10) NOT NULL,
+  PRIMARY KEY (`APPLY_ID`,`MEMBER_ID`,`MEMBER_TYPE`,`MEMBER_ITEM`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_webfolder_apply_history`
+--
+
+DROP TABLE IF EXISTS `tbl_webfolder_apply_history`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_webfolder_apply_history` (
+  `APPLY_ID` varchar(40) NOT NULL,
+  `TENANT_ID` int(5) DEFAULT NULL,
+  `COMPANY_ID` varchar(80) NOT NULL,
+  `FOLDER_NAME` varchar(200) NOT NULL,
+  `CONTENT` varchar(1000) DEFAULT NULL,
+  `APPLICATION_DATE` datetime DEFAULT NULL,
+  `APPROVAL_STATUS` varchar(10) DEFAULT NULL,
+  `APPROVAL_STATUS_UPDATEDT` datetime DEFAULT NULL,
+  PRIMARY KEY (`APPLY_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
 --
 -- Table structure for table `tbl_webfolder_config`
 --
@@ -14010,6 +14143,35 @@ CREATE TABLE `tbl_webfolder_config` (
   `DEPARTMENT_TOTAL_LIMIT` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`COMPANY_ID`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='웹폴더 기본설정';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_webfolder_enc_folder`
+--
+
+DROP TABLE IF EXISTS `tbl_webfolder_enc_folder`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_webfolder_enc_folder` (
+  `FOLDER_ID` int(11) NOT NULL,
+  `TENANT_ID` int(7) NOT NULL,
+  PRIMARY KEY (`FOLDER_ID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_webfolder_encrypted_file`
+--
+
+DROP TABLE IF EXISTS `tbl_webfolder_encrypted_file`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_webfolder_encrypted_file` (
+  `FILE_ID` int(11) NOT NULL,
+  `VERSION` mediumint(5) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  PRIMARY KEY (`FILE_ID`,`VERSION`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -14036,7 +14198,7 @@ DROP TABLE IF EXISTS `tbl_webfolder_favor`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_webfolder_favor` (
-  `TARGET_ID` varchar(100) NOT NULL COMMENT '대상 아이디(폴더 또는 파일)',
+  `TARGET_ID` int(11) NOT NULL COMMENT '대상 아이디(폴더 또는 파일)',
   `USER_ID` varchar(80) NOT NULL COMMENT '사용자 아이디',
   `TARGET_TYPE` varchar(50) NOT NULL COMMENT '유형 폴더:FOLDER, 파일:FILE',
   `CREATE_DATE` datetime NOT NULL COMMENT '생성일',
@@ -14053,14 +14215,14 @@ DROP TABLE IF EXISTS `tbl_webfolder_file`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_webfolder_file` (
-  `FILE_ID` varchar(100) NOT NULL COMMENT '파일 아이디',
+  `FILE_ID` int(11) NOT NULL AUTO_INCREMENT COMMENT '파일 아이디',
   `FILE_NAME` varchar(250) NOT NULL COMMENT '파일 이름',
   `FILE_PATH` varchar(250) NOT NULL COMMENT '파일 경로',
   `FILE_SIZE` bigint(20) NOT NULL COMMENT '파일 크기',
   `TYPE_ID` varchar(100) NOT NULL COMMENT '파일 유형 아이디',
   `DOWN_COUNT` bigint(20) NOT NULL DEFAULT 0 COMMENT '다운로드 카운트',
   `FILE_EXT` varchar(10) NOT NULL COMMENT '파일 확장자명',
-  `FOLDER_ID` varchar(50) NOT NULL COMMENT '상위 폴더 아이디',
+  `FOLDER_ID` int(11) NOT NULL COMMENT '상위 폴더 아이디',
   `USE_STATUS` varchar(250) NOT NULL COMMENT '사용여부 사용:Y , 미사용: N, 휴지통: T',
   `CREATE_ID` varchar(80) NOT NULL COMMENT '생성자 아이디',
   `CREATE_NAME1` varchar(120) NOT NULL COMMENT '생성자 이름',
@@ -14070,8 +14232,37 @@ CREATE TABLE `tbl_webfolder_file` (
   `UPDATE_DATE` datetime NOT NULL COMMENT '수정일',
   `DELETER_ID` varchar(100) DEFAULT NULL COMMENT '삭제한 사람',
   `TENANT_ID` mediumint(5) unsigned NOT NULL COMMENT '테넌트 아이디',
-  PRIMARY KEY (`FILE_ID`,`TENANT_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='웹폴더 파일';
+  `VERSION` mediumint(5) NOT NULL DEFAULT 1,
+  `DEPTH` int(7) NOT NULL DEFAULT 1,
+  `ROOT_ID` varchar(100) DEFAULT NULL,
+  `PARENT_ID` varchar(100) DEFAULT NULL,
+  `HIERARCHICAL_PATH` varchar(300) DEFAULT NULL,
+  PRIMARY KEY (`FILE_ID`,`TENANT_ID`),
+  KEY `INDEX_FOLDER_ID` (`FOLDER_ID` ASC)
+) ENGINE=InnoDB AUTO_INCREMENT=10000000 DEFAULT CHARSET=utf8 COMMENT='웹폴더 파일';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_webfolder_file_history`
+--
+
+DROP TABLE IF EXISTS `tbl_webfolder_file_history`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_webfolder_file_history` (
+  `FILE_ID` int(11) NOT NULL,
+  `VERSION` mediumint(5) NOT NULL DEFAULT 1,
+  `FILE_PATH` varchar(250) NOT NULL,
+  `FILE_SIZE` bigint(20) NOT NULL,
+  `USE_STATUS` varchar(250) NOT NULL DEFAULT 'Y',
+  `UPDATE_DATE` datetime NOT NULL,
+  `UPDATE_ID` varchar(80) NOT NULL,
+  `UPDATE_NAME` varchar(120) NOT NULL,
+  `UPDATE_NAME2` varchar(120) DEFAULT NULL,
+  `DELETER_ID` varchar(100) DEFAULT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  PRIMARY KEY (`FILE_ID`,`VERSION`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -14093,6 +14284,29 @@ CREATE TABLE `tbl_webfolder_filetype` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_webfolder_fileuser`
+--
+
+DROP TABLE IF EXISTS `tbl_webfolder_fileuser`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_webfolder_fileuser` (
+  `SEQ_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `FILE_ID` int(11) NOT NULL,
+  `USER_ID` varchar(100) NOT NULL,
+  `USER_TYPE` varchar(50) NOT NULL,
+  `CREATE_ID` varchar(100) NOT NULL,
+  `CREATE_DATE` date NOT NULL,
+  `COMPANY_ID` varchar(50) NOT NULL,
+  `TENANT_ID` int(7) NOT NULL,
+  `SUBDEPT_PERMITTED` int(11) DEFAULT 0,
+  PRIMARY KEY (`SEQ_ID`,`TENANT_ID`),
+  KEY `INDEX_FILE_ID` (`FILE_ID` ASC),
+  KEY `INDEX_USER_ID` (`USER_ID` ASC)
+) ENGINE=InnoDB AUTO_INCREMENT=10000000 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tbl_webfolder_folder`
 --
 
@@ -14100,7 +14314,7 @@ DROP TABLE IF EXISTS `tbl_webfolder_folder`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_webfolder_folder` (
-  `FOLDER_ID` varchar(100) NOT NULL COMMENT '폴더아이디',
+  `FOLDER_ID` int(11) NOT NULL AUTO_INCREMENT COMMENT '폴더아이디',
   `FOLDER_NAME1` varchar(200) NOT NULL COMMENT '폴더이름',
   `FOLDER_NAME2` varchar(200) DEFAULT NULL COMMENT '폴더이름2',
   `FOLDER_TYPE` varchar(50) NOT NULL COMMENT '폴더유형 회사:C, 부서: D, 개인: U',
@@ -14119,9 +14333,9 @@ CREATE TABLE `tbl_webfolder_folder` (
   `COMPANY_ID` varchar(100) NOT NULL COMMENT '회사 아이디',
   `DELETER_ID` varchar(100) DEFAULT NULL COMMENT '삭제한 사람',
   `TENANT_ID` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
-  PRIMARY KEY (`TENANT_ID`,`FOLDER_ID`),
+  PRIMARY KEY (`FOLDER_ID`,`TENANT_ID`),
   KEY `index2` (`TENANT_ID`,`OWNER_ID`,`FOLDER_UPPER`,`FOLDER_TYPE`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='웹폴더 폴더';
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='웹폴더 폴더';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -14132,18 +14346,20 @@ DROP TABLE IF EXISTS `tbl_webfolder_folderuser`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_webfolder_folderuser` (
-  `SEQ_ID` varchar(100) NOT NULL COMMENT '생성 순번',
+  `SEQ_ID` int(11) NOT NULL AUTO_INCREMENT COMMENT '생성 순번',
   `USER_ID` varchar(100) NOT NULL COMMENT '사용자 아이디',
   `USER_TYPE` varchar(50) NOT NULL COMMENT '사용자 타입 부서: DEPT, 사원:USER ',
-  `FOLDER_ID` varchar(100) NOT NULL COMMENT '폴더 아이디',
+  `FOLDER_ID` int(11) NOT NULL COMMENT '폴더 아이디',
   `CREATE_ID` varchar(100) NOT NULL COMMENT '생성자 아이디',
   `CREATE_DATE` datetime NOT NULL COMMENT '생성일',
   `COMPANY_ID` varchar(50) NOT NULL COMMENT '회사 아이디',
   `TENANT_ID` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+  `SUBDEPT_PERMITTED` int(11) DEFAULT 0 COMMENT '하위부서 허용 여부 (false:0/null, true:1)',
+  `FOLDER_MANAGER` int(11) DEFAULT 0,
   PRIMARY KEY (`SEQ_ID`,`TENANT_ID`),
   KEY `IDX_USER_ID` (`USER_ID`),
-  KEY `IDX_FOLDER_ID` (`FOLDER_ID`)  
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='웹폴더 폴더 사용자';
+  KEY `IDX_FOLDER_ID` (`FOLDER_ID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='웹폴더 폴더 사용자';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -14166,6 +14382,14 @@ CREATE TABLE `tbl_webfolder_log` (
   `CREATE_DATE` datetime DEFAULT NULL COMMENT '생성일',
   `COMPANY_ID` varchar(200) DEFAULT NULL COMMENT '회사 아이디',
   `TENANT_ID` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+  `FILE_ID` varchar(100) DEFAULT NULL,
+  `VERSION` int(7) DEFAULT NULL,
+  `FOLDER_ID` varchar(100) DEFAULT NULL,
+  `FOLDER_NAME` varchar(200) DEFAULT NULL,
+  `FOLDER_PATH` varchar(200) DEFAULT NULL,
+  `FOLDER_PATH_NAME` varchar(500) DEFAULT NULL,
+  `TOP_FOLDER_ID` varchar(100) DEFAULT NULL,
+  `TOP_FOLDER_NAME` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`LOG_ID`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='웹폴더 사용 로그';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -14206,9 +14430,7 @@ CREATE TABLE `tbl_webfolder_share_hide` (
   `USER_NAME2` varchar(120) NOT NULL,
   `HIDE_DATE` datetime NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
-  PRIMARY KEY (`SEQ_ID`,`TENANT_ID`),
-  KEY `tbl_webfolder_share_del_fk_idx` (`SHARE_ID`,`TENANT_ID`),
-  CONSTRAINT `fk_webfolder_share_hide` FOREIGN KEY (`SHARE_ID`, `TENANT_ID`) REFERENCES `tbl_webfolder_share` (`SHARE_ID`, `TENANT_ID`) ON DELETE CASCADE ON UPDATE NO ACTION
+  PRIMARY KEY (`SEQ_ID`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -14871,3 +15093,168 @@ CREATE TABLE `tbl_susinschedule` (
   `LANG` varchar(10) DEFAULT NULL,
   `TENANTID` mediumint(5) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE OR REPLACE VIEW VIEW_EZWEBFOLDER AS
+SELECT
+F.FILE_ID 										AS FILEID,
+F.FILE_NAME 									AS FILENAME, 
+CONCAT('/volumes/shared/ezFlow',F.FILE_PATH) 	AS FILEPATH, 
+F.FILE_SIZE 									AS FILESIZE, 
+
+F.CREATE_ID 									AS WRITERID,
+F.CREATE_NAME1 									AS WRITERNAME, 
+F.CREATE_NAME2 									AS WRITERNAME2, 
+fld.COMPANY_ID 									AS COMPANYID,
+
+DEPT.CN											AS WRITERDEPTID, 
+DEPT.DISPLAYNAME								AS WRITERDEPTNAME, 
+DEPT.DISPLAYNAME2								AS WRITERDEPTNAME2,
+F.CREATE_DATE 									AS WRITERDATE, 
+F.FOLDER_ID 									AS FOLDERID, 
+F.TENANT_ID 									AS TENANTID,
+FLD.FOLDER_TYPE									AS FOLDERTYPE, 
+FLD.FOLDER_NAME1								AS FOLDERNAME1, 
+FLD.FOLDER_NAME2								AS FOLDERNAME2
+
+FROM TBL_WEBFOLDER_FILE F 
+INNER JOIN TBL_WEBFOLDER_FOLDER FLD ON FLD.FOLDER_ID = F.FOLDER_ID AND FLD.TENANT_ID = F.TENANT_ID
+INNER JOIN TBL_USERMASTER USER ON USER.CN = F.CREATE_ID AND USER.TENANT_ID = F.TENANT_ID
+INNER JOIN TBL_DEPTMASTER DEPT ON DEPT.CN = USER.DEPARTMENT AND USER.TENANT_ID = DEPT.TENANT_ID
+WHERE FLD.USE_STATUS = 'Y' AND F.USE_STATUS = 'Y';
+
+/*웹폴더 통합검색  증분색인쿼리*/
+CREATE TABLE SEARCH_INDEX_WEBFOLDER(
+	ID int NOT NULL AUTO_INCREMENT
+    ,FILEID INT(11) NOT NULL 
+    ,GUBUN varchar(4) NOT NULL
+    ,INSERTDATE DATETIME NOT null
+    ,STATUS VARCHAR(4) NOT NULL
+    ,TENANT_ID mediumint(5) NOT NULL
+    ,PRIMARY KEY (ID)
+);
+
+/*웹폴더 통합검색  권한쿼리*/
+CREATE OR REPLACE VIEW VIEW_WEBFOLDERPERMISSIONS AS
+select  file.file_id as file_id, 
+ifNUll(user_id, owner_id) as cn
+from tbl_webfolder_file file inner join tbl_webfolder_folder folder on file.folder_id = folder.folder_id
+left outer join tbl_webfolder_fileuser user on file.file_id = user.file_id where (folder.folder_type = 'U' or (folder.folder_type ='C' and user_type = 'user'))
+
+UNION 
+select  user.file_id as file_id, u.cn as cn from tbl_webfolder_file file inner join tbl_webfolder_fileuser user 
+on file.file_id = user.file_id 
+inner join tbl_usermaster u on u.department = user.user_id
+where user_type = 'dept'
+
+UNION 
+select  user.file_id as file_id, addjob.cn as cn from tbl_webfolder_file file inner join tbl_webfolder_fileuser user 
+on file.file_id = user.file_id 
+inner join tbl_addjobmaster addjob on addjob.deptid = user.user_id
+where user_type = 'dept'
+
+UNION
+select  user.file_id as file_id, u.cn as cn from tbl_webfolder_file file inner join tbl_webfolder_fileuser user 
+on file.file_id = user.file_id 
+inner join tbl_usermaster u on u.PHYSICALDELIVERYOFFICENAME = user.user_id
+where user_type = 'dept'
+
+UNION
+select f.file_id as file_id, addjob.cn as cn
+from tbl_addjobmaster as addjob inner join tbl_webfolder_fileuser as fu on fu.user_id = addjob.jobid 
+and fu.user_type = 'JIKWI'
+inner join tbl_webfolder_file f on fu.file_id = f.file_id
+
+UNION
+select f.file_id as file_id, u.cn as cn
+from tbl_usermaster as u inner join tbl_webfolder_fileuser as fu on fu.user_id = u.extensionattribute7
+and fu.user_type = 'JIKWI'
+inner join tbl_webfolder_file f on fu.file_id = f.file_id
+
+UNION
+select f.file_id as file_id, u.cn as cn
+from tbl_usermaster as u inner join tbl_webfolder_fileuser as fu on fu.user_id = u.extensionattribute8
+and fu.user_type = 'JIKCHEK'
+inner join tbl_webfolder_file f on fu.file_id = f.file_id
+
+UNION
+select file_id as file_id, member_id as cn  FROM tbl_permissiongroupinfo as p inner join tbl_webfolder_fileuser as fu 
+on fu.user_id = p.group_id where fu.user_type = 'group'
+and p.member_type = 'user' 
+
+UNION
+select file_id, u.cn FROM tbl_permissiongroupinfo as p inner join tbl_webfolder_fileuser as fu 
+on fu.user_id = p.group_id inner join tbl_usermaster u on u.extensionattribute8 = member_id 
+where fu.user_type = 'group' and p.member_type = 'JIKCHEK'  
+
+UNION
+select file_id, u.cn FROM tbl_permissiongroupinfo as p inner join tbl_webfolder_fileuser as fu 
+on fu.user_id = p.group_id inner join tbl_usermaster u on u.extensionattribute7 = member_id 
+where fu.user_type = 'group' and p.member_type = 'JIKWI'  
+
+UNION
+select file_id, u.cn FROM tbl_permissiongroupinfo as p inner join tbl_webfolder_fileuser as fu 
+on fu.user_id = p.group_id inner join tbl_addjobmaster u on u.jobid = member_id 
+where fu.user_type = 'group' and p.member_type = 'JIKWI'  
+
+UNION
+select file_id, u.cn from tbl_webfolder_fileuser as fu inner join tbl_permissiongroupinfo as p
+on p.group_id = fu.user_id inner join tbl_usermaster u
+on u.department = p.member_id
+where p.member_type = 'dept' and user_type = 'group' and sub_dept_yn = 'N'  
+
+UNION
+select file_id, u.cn from tbl_webfolder_fileuser as fu inner join tbl_permissiongroupinfo as p
+on p.group_id = fu.user_id inner join tbl_addjobmaster u
+on u.deptid = p.member_id
+where p.member_type = 'dept' and user_type = 'group' and sub_dept_yn = 'N'  
+
+UNION
+select deptlist.file_id as file_id, u.cn as cn from tbl_usermaster u inner join (
+	select cn, dept_cd_path, tenant_id , deptInfo.file_id as file_id 
+    from 
+	(
+		select group_id, file_id, group_concat(dept_cd_path separator '|' )as deptpath from tbl_deptmaster dept 
+        inner join(
+			select member_id, group_id, file_id, user_id from 
+			(select member_id, group_id from tbl_permissiongroupinfo where member_type = 'dept' and SUB_DEPT_YN = 'Y') p 
+			inner join tbl_webfolder_fileuser fu on fu.user_id = p.group_id and fu.user_type = 'group'
+		) pandd
+		on dept.cn = pandd.member_id
+	) as deptInfo
+
+	inner join tbl_deptmaster where dept_cd_path regexp deptInfo.deptpath
+) as deptlist
+on deptlist.cn = u.department 
+
+union
+select deptlist.file_id as file_id, u.cn as cn from tbl_addjobmaster u inner join (
+	select cn, dept_cd_path, tenant_id , deptInfo.file_id as file_id 
+    from 
+	(
+		select group_id, file_id, group_concat(dept_cd_path separator '|' )as deptpath from tbl_deptmaster dept 
+        inner join(
+			select member_id, group_id, file_id, user_id from 
+			(select member_id, group_id from tbl_permissiongroupinfo where member_type = 'dept' and SUB_DEPT_YN = 'Y') p 
+			inner join tbl_webfolder_fileuser fu on fu.user_id = p.group_id and fu.user_type = 'group'
+		) pandd
+		on dept.cn = pandd.member_id
+	) as deptInfo
+
+	inner join tbl_deptmaster where dept_cd_path regexp deptInfo.deptpath
+) as deptlist
+on deptlist.cn = u.deptid
+
+union
+select distinct f.file_id as file_id ,folderInfo.user_id as cn
+ from tbl_webfolder_file f 
+inner join (
+ select fld.folder_id as folder_id, folder.folder_path as folder_path3, folder.user_id as user_id
+ from (
+  select fldu.folder_id as folder_id, fldu.user_id  as user_id,  replace(folder_path ,'|','\\|') as folder_path 
+  from tbl_webfolder_folder fld inner join tbl_webfolder_folderuser fldu 
+  on fld.folder_id = fldu.folder_id and fldu.FOLDER_MANAGER = 1 AND FOLDER_TYPE = 'C'
+  and fldu.tenant_id = fld.tenant_id 
+ ) as folder
+inner join tbl_webfolder_folder fld 
+on fld.folder_path regexp folder.folder_path ) as folderInfo 
+on f.folder_id = folderInfo.folder_id;

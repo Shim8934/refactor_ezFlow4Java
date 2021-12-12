@@ -129,7 +129,7 @@
 					url : "/ezBoard/imageViewList.do",
 					data : { boardID   : pBoardID, 
 							 itemID    : strItemID,
-							 page      : "1"
+							 page      : "0"
 						   },
 					success: function(result){
 						ImageViewTable(result);
@@ -559,7 +559,7 @@
 		                }
 		                if (pMode == "reply") {
 		                	xmlhttp = createXMLHttpRequest();
-						    xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(strItemID) + "&itemTreeID=" + strUpperItemIDTree, false);
+						    xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(strItemID) + "&itemTreeID=" + encodeURIComponent(strUpperItemIDTree), false);
 						    xmlhttp.send();
 						    xmlhttp = null;
 		                }
@@ -633,7 +633,11 @@
 	                    alert("" + strLang8 + "" + AttachLimit + "MB" + strLang9 + "");
 	                    return;
 	                }
-	
+	                
+	                if (getNodeText(GetChildNodes(nodes[i])[1]) == "Not Image file") {
+	                	alert("<spring:message code ='ezBoard.jsw.01' />");
+		                return;
+		            }
 	                var rtnMode = getNodeText(GetChildNodes(nodes[i])[5]);
 	                var imgFileName = getNodeText(GetChildNodes(nodes[i])[0]);
 	                var localFileName = getNodeText(GetChildNodes(nodes[i])[2]);

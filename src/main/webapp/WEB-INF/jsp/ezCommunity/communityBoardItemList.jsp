@@ -164,9 +164,9 @@
 					
 					if (gubun != '2') {
 						listXML += "<TD class='"+ urgency + " " + bClass + "'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterDeptname").trim() + "</TD>";
-                        listXML += "<TD class='"+ urgency + " " + bClass + "'><div style='cursor:pointer' onclick='MemberInfo_onclick(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterDeptID").trim() + "\")'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterName").trim() + "</div></TD>";
+                        listXML += "<TD class='"+ urgency + " " + bClass + "'><div style='cursor:pointer' onclick='MemberInfo_onclick(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterDeptID").trim() + "\")'>" + MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterName").trim()) + "</div></TD>";
 					} else {
-                        listXML += "<TD class='"+ urgency + " " + bClass + "'><div onclick='MemberInfo_onclick(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterDeptID").trim() + "\")'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterName").trim() + "</div></TD>";
+                        listXML += "<TD class='"+ urgency + " " + bClass + "'><div onclick='MemberInfo_onclick(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterDeptID").trim() + "\")'>" + MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterName").trim()) + "</div></TD>";
 					}
 					
 					listXML += "<TD class='"+ urgency + " " + bClass + "'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriteDate").split(' ')[0] + "</TD>";
@@ -264,7 +264,7 @@
     		
     		var checkpassword_dialogArguments = new Array();
     		
-    		function DeleteItem_onclick() {	
+    		function DeleteItem_onclick() {
     			if (UserLevel == "0" || UserLevel == "9" || Delete_FG != "true") {
     				alert("<spring:message code='ezCommunity.t431' />");
     				return;
@@ -296,7 +296,7 @@
 
     		            if (pItemID != "") {
    		                    checkpassword_dialogArguments[1] = DeleteItem_onclick_Complete;
-   		                    var OpenWin = window.open("/ezCommunity/checkPassword.do?itemID=" + encodeURIComponent(pItemID), "checkPassword", GetOpenWindowfeature(340, 200));
+   		                    var OpenWin = window.open("/ezCommunity/checkPassword.do?itemID=" + encodeURIComponent(pItemID), "checkPassword", GetOpenWindowfeature(470, 200));
    		                    
    		                    try {
    		                    	OpenWin.focus();
@@ -366,6 +366,16 @@
     				data : {itemList : strListInfo}
     			});
 
+				// 게시물 리스트에서 게시물 삭제 시 팝업홈 좌측 전체 카운트 새로고침 추가
+				if (window.location.href.indexOf("ezCommunity/boardItemList.do") > -1  || window.location.href.indexOf("ezCommunity/searchBoardItem.do") > -1) {
+					try {
+						var cntDom = window.parent.document.getElementById("itemcnt");
+						var code = window.parent.code;
+						if (typeof(cntDom) != "undefined" && cntDom != null && typeof(code) != "undefined" && code != null) {
+							reloadLeftCount(code, cntDom);
+						}
+					} catch(e) {}
+				}
     			refresh_onclick();
     		}
 
@@ -663,6 +673,20 @@
     			window.location.href = "/ezCommunity/searchBoardItem.do?boardID=" + encodeURIComponent(pBoardID) + "&orgBoardParameters=" + encodeURIComponent(OrgBoardParameters) + "&code=" + encodeURIComponent(code);
     		}
 
+	        /* 2021-05-03 홍승비 - 게시물 리스트에서 게시물을 삭제한 경우, 커뮤니티 팝업홈 좌측 전체 게시물 개수 갱신 */
+	        function reloadLeftCount(pCode, pCntDom) {
+            	$.ajax({
+			    	type : "GET",
+			    	url : "/ezCommunity/getCommunityBoardItemCnt.do",
+			    	async : false,
+			    	data : {
+			    		code : pCode
+			    	},
+			    	success : function (result) {
+			    		pCntDom.innerText = result;
+			    	}
+			    });
+	        }
     	</script>    
         
 	</head>

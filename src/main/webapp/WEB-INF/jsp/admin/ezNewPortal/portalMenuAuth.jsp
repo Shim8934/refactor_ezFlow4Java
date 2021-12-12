@@ -77,7 +77,7 @@
 									                            <option value="HomePhone"><spring:message code='ezOrgan.t97'/></option>
 									                            <option value="facsimileTelephoneNumber"><spring:message code='ezOrgan.t98'/></option>
 									                            <option value="mail"><spring:message code='ezOrgan.t99'/></option>
-									                            <option value="streetAddress"><spring:message code='ezOrgan.t100'/></option>
+									                            <option value="streetAddress" style="display:none"><spring:message code='ezOrgan.t100'/></option>
 					                                        </select>
 					                                        <input id="keyword" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){fn_serach('search'); return false;}" value="" style="width: 130px; margin: 0px;height:22px" />
 					                                        <a class="imgbtn"><span onclick="fn_serach('search')"><spring:message code='ezOrgan.t101'/></span></a>

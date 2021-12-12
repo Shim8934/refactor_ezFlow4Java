@@ -457,6 +457,26 @@
 		</isNotNull>
 	</select>
 	
+	<select id="EzCommunityDAO.bbsGetReplyItemCnt"					parameterClass="Map"		resultClass="Integer">
+		<![CDATA[
+			SELECT
+				NVL(COUNT(*), 0)
+			FROM
+				TBL_C_BOARD
+			WHERE
+				REF = (SELECT
+								REF
+							FROM
+								TBL_C_BOARD
+							WHERE
+								NO = #v_NO# AND TENANT_ID = #v_TENANTID#)
+			AND
+				UPPERNO = #v_NO#
+			AND
+				TENANT_ID = #v_TENANTID#
+		]]>
+	</select>
+	
 <!-- 	<procedure id="EzCommunityDAO.commMakeOkGet1"				parameterClass="Map"		resultClass="CommunityClubVO"> -->
 <!-- 		{CALL EZSP_COMM_MAKE_OK_GET1(#v_CLUBNAME#, #v_C_CATE_A#, #v_C_CATE_B#, #v_C_CATE_C#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
@@ -780,7 +800,7 @@
 			<![CDATA[
 				ORDER BY
 					A.parentwritedate DESC,
-					A.upperitemidtree,
+					TO_CHAR(A.upperitemidtree),
 					A.itemlevel
 				)
 			]]>
@@ -4593,7 +4613,7 @@
 			FROM
 				TBL_COMM_ITEM
 			WHERE
-				upperitemidtree LIKE '%'||#v_pItemID#||'%'
+				upperitemidtree LIKE '%'|| ( SELECT upperitemidtree FROM TBL_COMM_ITEM WHERE itemid = #v_pItemID# ) ||'%'
 			AND
 				itemid <> #v_pItemID#
 			AND
@@ -5316,6 +5336,12 @@
 			</isNotEqual>
 		</isEqual>
 		
+		<isEqual property="v_BNAME" compareValue="TBL_C_BOARD">
+			<isNotEmpty property="v_NO">
+				UPPERNO,
+			</isNotEmpty>
+		</isEqual>
+		
 		<![CDATA[
 			$v_MAXIDFIELDNAME$,
 			content,
@@ -5345,7 +5371,13 @@
 				#v_NEWLEVEL#
 			</isNotEqual>
 		</isEqual>
-		
+	
+		<isEqual property="v_BNAME" compareValue="TBL_C_BOARD">
+			<isNotEmpty property="v_NO">
+				,#v_NO#
+			</isNotEmpty>
+		</isEqual>
+			
 		<![CDATA[
 			,#v_NUMBER#,
 			#v_TEXTCONTENT#,
@@ -7783,4 +7815,18 @@
  				ITEMID = #v_pItemID#
  		]]>
  	</select>
+ 	
+	<select id="EzCommunityDAO.getClubConfirmType" parameterClass="Map" resultClass="String">
+ 		<![CDATA[
+ 			SELECT
+ 				C_CLUBCONFIRMTYPE
+ 			FROM
+ 				TBL_C_CLUB
+ 			WHERE
+ 				TENANT_ID = #v_TENANTID#
+ 			AND
+ 				C_CLUBNO = #v_CODE#
+ 		]]>
+ 	</select>
+ 	
 </sqlMap>

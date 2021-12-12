@@ -102,13 +102,17 @@ function liniReceptGroup() {
 }
 //############################################################################################################################################# 수신처 그룹 리스트 적용
 function GetReceptGroupList() {
+    var param = new FormData();
+    param.append("extReceptYn", isOuterForm ? "Y" : "N");
+    
     xmlhttp = null;
     xmlhttp = createXMLHttpRequest();
 
     xmlhttp.open("Post", "/ezApprovalG/getReceptGroupList.do", true);
-    xmlhttp.send();
+    xmlhttp.send(param);
     xmlhttp.onreadystatechange = event_GetReceptGroupList;
 }
+
 function event_GetReceptGroupList()
 {   
     if(xmlhttp == null || xmlhttp.readyState != 4) return;
@@ -133,208 +137,159 @@ function event_GetReceptGroupList()
         alert(" GetReceptGroupList : " + ErrMsg.description);
     }
 }
-function btn_GroupReceptAdd_onclick(){
-    var liveView = new ListView();
-    liveView.SetID("lvRecGroupList");
-    var pCurSelRow = liveView.GetSelectedRows();
-    if (pCurSelRow.length != 0) {
-        if (SusinGroupUseFlag != "Y") {
-            AprLineAddDeptGroup();
+
+function btn_GroupReceptAdd_onclick(flag){
+    var lv = new ListView();
+    lv.LoadFromID("lvRecGroupList")
+    var curSelRows = lv.GetSelectedRows();
+
+    if (curSelRows.length > 0) {
+        if (flag === "each") {
+            var lv2 = new ListView();
+            lv2.LoadFromID("lvRecGroupDetail")
+            var curSelMemberRows = lv2.GetDataRows();
+            addSusinGroupMember(curSelMemberRows);
+        } else if (flag === "group") {
+            var curSelRow = curSelRows[0];
+            addSusinGroup(curSelRow);
         }
-        else {
-            AddGroupReceptADD(pCurSelRow[0].getAttribute("DATA1"));
-        }
+    } else {
+        alert("수신처그룹을 선택하세요.");
     }
 }
 
-function AprLineAddDeptGroup() {
-    var Resultxml = "";
-    Resultxml.async = false;
-    if(approvalFlag == "G") {
-    	Resultxml = loadXMLFile(strLangEtcFile1);
-    } else {
-    	Resultxml = loadXMLFile(strLangEtcFileliban1);
-    }	
+function addSusinGroup(row) {
+    var groupId = preSusinGroupStr + row.getAttribute("DATA1");
+    var groupName = row.getAttribute("DATA2");
+    var extReceptYn = row.getAttribute("DATA3");
 
+    addGroupToRecept(groupId, groupName, groupName, extReceptYn);
+}
+
+function addGroupToRecept(groupId, groupName, groupName2, extReceptYn) {
     var listview = new ListView();
     listview.LoadFromID("lvRECEPTLIST");
 
-    DeptAddIndex = listview.GetRowCount();
-    if (DeptAddIndex == 1) {
-        var tr = listview.GetDataRows();
-        if (tr[0].id.indexOf("noItems") > 0)
-            DeptAddIndex = 0;
+    var idx = getReceptLastIdx(listview);
+
+    if (idx > 1) {
+        var notSameRecept = listview.GetDataRows().some(function(data) {
+            return data.getAttribute("DATA3") !== extReceptYn;
+        });
+        if (notSameRecept) {
+            OpenAlertUI(strLang973);
+            return;
+        }
     }
-    DeptAddIndex = DeptAddIndex + 1;
-    var objNodes = SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW/CELL");
 
-    var listview2 = new ListView();
-    listview2.LoadFromID("lvRecGroupList");
-
-    if (listview.ExistRow("DATA1", "SG_" + listview2.GetSelectedRows()[0].getAttribute("DATA1"))) {
-        OpenAlertUI(strLang166);
+    if (listview.ExistRow("DATA1", groupId)) {
+        OpenAlertUI(strLang247);
         return;
     }
 
-    setNodeText(GetChildNodes(objNodes[0])[0], DeptAddIndex);
-    setNodeText(GetChildNodes(objNodes[0])[1], "SG_" + listview2.GetSelectedRows()[0].getAttribute("DATA1"));
-    setNodeText(GetChildNodes(objNodes[0])[2], pDocID);
-    setNodeText(GetChildNodes(objNodes[0])[3], "N");
-    setNodeText(GetChildNodes(objNodes[0])[4], "N");
-    setNodeText(GetChildNodes(objNodes[0])[5], "N");
-    setNodeText(GetChildNodes(objNodes[0])[6], companyID);
-    setNodeText(GetChildNodes(objNodes[0])[7], "");
-    setNodeText(GetChildNodes(objNodes[0])[8], "");
-    setNodeText(GetChildNodes(objNodes[0])[9], "");
-    setNodeText(GetChildNodes(objNodes[0])[10], listview2.GetSelectedRows()[0].getAttribute("DATA2"));
-    setNodeText(GetChildNodes(objNodes[0])[11], listview2.GetSelectedRows()[0].getAttribute("DATA2"));
-    setNodeText(GetChildNodes(objNodes[1])[0], listview2.GetSelectedRows()[0].getAttribute("DATA2"));
+    var addRowXml = makeReceptListview({
+        data0: idx,
+        data1: groupId,
+        data2: pDocID,
+        data3: extReceptYn,
+        data4: "N",
+        data5: "N",
+        data6: extReceptYn === "N" ? companyID : "",
+        data7: "",
+        data8: "",
+        data9: "",
+        data10: groupName,
+        data11: groupName2,
+        data12: "",
+        data13: ""
+    });
 
-    var tr = listview.GetSelectedRows();
-    var InitTr = listview.GetDataRows();
-
-    var MaxID = 0;
-    for (var j = 0; j < InitTr.length; j++) {
-        var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
-        if (MaxID < curnum)
-            MaxID = curnum;
+    if (idx === 1) {
+        listview.DataSource(addRowXml);
+        listview.RowDataBind();
+    } else {
+        var newTr = listview.AddRow(0);
+        SetAttribute(newTr, "id", "lvRECEPTLIST_TR_" + (idx - 1));
+        listview.AddDataRow(newTr, addRowXml);
     }
-
-    if (tr.length == 0) {
-        if (InitTr.length == 0 || InitTr[0].id.indexOf("noItems") > 0) {
-            document.getElementById('RECEPTLIST').innerHTML = "";
-            var listview = new ListView();
-            listview.SetID("lvRECEPTLIST");
-            listview.SetSelectFlag(false);
-            listview.SetHeightFree(true);
-            listview.SetRowOnDblClick("AprDeptDel_onclick");
-            listview.DataSource(Resultxml);
-            listview.DataBind("RECEPTLIST");
-        }
-        else {
-            var objTr = listview.AddRow(0);
-            SetAttribute(objTr, "id", "lvRECEPTLIST" + "_TR_" + eval(MaxID + 1));
-            listview.AddDataRow(objTr, Resultxml.documentElement.getElementsByTagName("ROW")[0]);
-
-        }
-    }
-    else {
-        var objTr = listview.AddRow(0);
-        SetAttribute(objTr, "id", "lvRECEPTLIST" + "_TR_" + eval(MaxID + 1));
-        listview.AddDataRow(objTr, Resultxml.documentElement.getElementsByTagName("ROW")[0]);
-    }
-    DeptAddIndex = DeptAddIndex + 1;
 }
 
-function AddGroupReceptADD(p_AprLineTempletID) {
-	var result = "";
-	$.ajax({
-		type : "POST",
-		dataType : "text",
-		async : false,
-		url : "/ezApprovalG/getReceptGroupADDTo.do",
-		data : {
-				groupID : p_AprLineTempletID
-				},
-		success: function(text){
-			result = text;
-			
-			document.getElementById('RECEPTLIST').innerHTML = "";
-			var listview = new ListView();
-            listview.SetID("lvRECEPTLIST");
-            listview.SetSelectFlag(false);
-            listview.SetHeightFree(true);
-            listview.SetRowOnDblClick("AprDeptDel_onclick");
-            listview.DataSource(loadXMLString(result));
-            listview.DataBind("RECEPTLIST");
-		}        			
-	});
-	
-    /*var ResultXML = loadXMLString(result);
-    
-    if (SelectNodes(ResultXML, "LISTVIEWDATA/ROWS/ROW").length > 0) {
-        var listview = new ListView();
-        listview.LoadFromID("lvRECEPTLIST");
-        var objHeaderXML = SelectNodes(ResultXML, "LISTVIEWDATA/HEADERS").item(0);
-        var objRowsCnt = SelectNodes(ResultXML, "LISTVIEWDATA/ROWS/ROW").length;
-        for (var RowsCnt = 0; RowsCnt < objRowsCnt; RowsCnt++) {
+function addSusinGroupMember(rows) {
+    var groupMemberIds = [];
+    var groupMemberNames = [];
+    var groupMemberName2s = [];
+    var groupMemberExtReceptYns = [];
 
-            DeptAddIndex = listview.GetRowCount();
-            if (DeptAddIndex == 1) {
-                var tr = listview.GetDataRows();
-                if (tr[0].id.indexOf("noItems") > 0)
-                    DeptAddIndex = 0;
-            }
-            DeptAddIndex = DeptAddIndex + 1;
+    for (var i = 0, ilen = rows.length; i < ilen; i++) {
+        var row = rows[i];
 
-            var NodeXmlPara = createXmlDom();
-            var objNode, objHeaders, objNodes;
-            objNode = createNodeInsert(NodeXmlPara, objNode, "LISTVIEWDATA");
-            objNode.appendChild(objHeaderXML);
-            objNodes = createNodeAndInsertText(NodeXmlPara, objNodes, "ROWS", "");
-            objNodes.appendChild(SelectNodes(ResultXML, "LISTVIEWDATA/ROWS/ROW").item(0));
-            setNodeText(SelectNodes(NodeXmlPara, "LISTVIEWDATA/ROWS/ROW/CELL/VALUE")[0], DeptAddIndex);
+        groupMemberIds.push(row.getAttribute("DATA1"));
+        groupMemberNames.push(row.getAttribute("DATA2"));
+        groupMemberName2s.push(row.getAttribute("DATA3"));
+        groupMemberExtReceptYns.push(row.getAttribute("DATA6"));
+    }
 
-            if (DuplicateAddGroupReceptCheck(getNodeText(SelectNodes(NodeXmlPara, "LISTVIEWDATA/ROWS/ROW/CELL/DATA1")[0]))) {
-                var tmptr = listview.GetSelectedRows();
-                var InitTr = listview.GetDataRows();
-
-                var MaxID = 0;
-                for (var j = 0; j < InitTr.length; j++) {
-                    var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
-                    if (MaxID < curnum)
-                        MaxID = curnum;
-                }
-
-                if (tmptr.length == 0) {
-                    if (InitTr.length == 0) {
-                        document.getElementById('RECEPTLIST').innerHTML = "";
-                        var listview = new ListView();
-                        listview.SetID("lvRECEPTLIST");
-                        listview.SetSelectFlag(false);
-                        listview.SetHeightFree(true);
-                        listview.SetMulSelectable(false);
-                        listview.SetRowOnDblClick("AprDeptDel_onclick");
-                        listview.DataSource(NodeXmlPara);
-                        listview.DataBind("RECEPTLIST");
-
-                    } else {
-
-                        var objTr = listview.AddRow(0);
-                        SetAttribute(objTr, "id", "lvRECEPTLIST" + "_TR_" + eval(MaxID + 1));
-                        listview.AddDataRow(objTr, NodeXmlPara);
-
-                    }
-                }
-                else {
-                    var objTr = listview.AddRow(0);
-                    SetAttribute(objTr, "id", "lvRECEPTLIST" + "_TR_" + eval(MaxID + 1));
-                    listview.AddDataRow(objTr, NodeXmlPara);
-                }
-                DeptAddIndex = DeptAddIndex + 1;
-                NodeXmlPara = null;
-            }
-        }
-
-    }*/
+    addGroupMemberToRecept(groupMemberIds, groupMemberNames, groupMemberName2s, groupMemberExtReceptYns);
 }
-function DuplicateAddGroupReceptCheck(APRDEPT) {
+
+function addGroupMemberToRecept(groupMemberIds, groupMemberNames, groupMemberName2s, groupMemberExtReceptYns) {
     var listview = new ListView();
     listview.LoadFromID("lvRECEPTLIST");
-    var AprDeptList = listview.GetDataRows();
-    var AprDeptListLen = AprDeptList.length;
-    var i;
 
-    for (i = 0; i < AprDeptListLen; i++) {
-        if (AprDeptList[0].getAttribute("DATA1") == null) {
-            return true; break;
-        }
-        if (AprDeptList[i].getAttribute("DATA1") == APRDEPT) {
-            return false;
-            break;
+    var idx = getReceptLastIdx(listview);
+
+    if (idx > 1) {
+        var notSameRecept = listview.GetDataRows().some(function(data) {
+            return data.getAttribute("DATA3") !== groupMemberExtReceptYns[0];
+        });
+        if (notSameRecept) {
+            OpenAlertUI(strLang973);
+            return;
         }
     }
-    return true;
+
+    var addRowsXml = createXmlDom();
+    var rowsNode = createNodeInsert(addRowsXml, null, "ROWS");
+
+    for (var i = 0, tempI = 0, ilen = groupMemberIds.length; i < ilen; i++) {
+        if (checkDuplicationRecept(listview, groupMemberIds[i])) {
+            var addRowXml = makeReceptListview({
+                data0: idx + tempI++,
+                data1: groupMemberIds[i],
+                data2: pDocID,
+                data3: groupMemberExtReceptYns[i],
+                data4: "N",
+                data5: "N",
+                data6: groupMemberExtReceptYns[i] === "N" ? companyID : "",
+                data7: "",
+                data8: "",
+                data9: "",
+                data10: groupMemberNames[i],
+                data11: groupMemberName2s[i],
+                data12: "",
+                data13: ""
+            });
+    
+            if (rowsNode.firstChild) {
+                rowsNode.insertBefore(SelectNodes(addRowXml, "LISTVIEWDATA/ROWS/ROW")[0], rowsNode.firstChild);
+            } else {
+                rowsNode.appendChild(SelectNodes(addRowXml, "LISTVIEWDATA/ROWS/ROW")[0]);
+            }
+        }
+    }
+
+    if (idx === 1) {
+        listview.DataSource(addRowsXml);
+        listview.RowDataBind();
+    } else {
+        var rows = SelectNodes(addRowsXml, "ROWS/ROW");
+
+        for (var i = rows.length - 1, tempIdx = idx; i >= 0; i--, tempIdx++) {
+            var newTr = listview.AddRow(0);
+            SetAttribute(newTr, "id", "lvRECEPTLIST_TR_" + (tempIdx - 1));
+            listview.AddDataRow(newTr, rows[i]);
+        }
+    }
 }
 //############################################################################################################################################# 수신처 그룹 리스트 클릭 이벤트
 function lvRecGroupList_onSel_Click() {
@@ -517,6 +472,14 @@ function btn_AprDeptTempletSave_onclick(mode) {
     
     if (ListViewLen.length == 0 || GetAttribute(ListViewLen[0], "id") == "lvRECEPTLIST_TR_noItems") {
 		OpenAlertUI(strLangS957);
+        return;
+    }
+
+    var hasSusinGroup = ListViewLen.some(function(data) {
+        return data.getAttribute("DATA1").indexOf(preSusinGroupStr) === 0;
+    });
+    if (hasSusinGroup) {
+		OpenAlertUI("수신처그룹은 즐겨찾기에 추가할 수 없습니다.");
         return;
     }
 

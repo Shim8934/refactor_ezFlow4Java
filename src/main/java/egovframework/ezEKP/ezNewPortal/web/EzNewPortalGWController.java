@@ -2158,7 +2158,7 @@ public class EzNewPortalGWController {
 			//tenant config가 NO인 경우 관리자 메뉴 관리에서도 나오면 안됨
 			//컨피그 : useQuestion(전자설문), useMemo(메모), useLadder(사다리게임), useCabinet(캐비닛), 
 			//		 useBallotSystem(투표), USE_JOURNAL(업무일지), USE_CIRCULAR(회람판), USE_ATTITUDE(근태관리)
-			//		 useWebfolder(웹폴더),  USE_ezPMS(프로젝트관리), USE_COMMUNITY(커뮤니티)
+			//		 useWebfolder(웹폴더),  USE_ezPMS(프로젝트관리), USE_COMMUNITY(커뮤니티), UseCar(차량관리)
 			String useQuestion = ezCommonService.getTenantConfig("useQuestion", tenantId);
 			String useSurvey = ezCommonService.getTenantConfig("useSurvey", tenantId);
 			String useMemo = ezCommonService.getTenantConfig("useMemo", tenantId);
@@ -2177,6 +2177,7 @@ public class EzNewPortalGWController {
 			String useResource = ezCommonService.getTenantConfig("useResource", tenantId);
 			String useBoard = ezCommonService.getTenantConfig("useBoard", tenantId);
 			String useToDo = ezCommonService.getTenantConfig("useToDo", tenantId);
+			String useCar = ezCommonService.getTenantConfig("useCar", tenantId);
 			
 			if (useAttitude == null || useAttitude.equals("")) {
 				useAttitude = "NO";
@@ -2244,6 +2245,9 @@ public class EzNewPortalGWController {
 			
 			if (useToDo == null || useToDo.equals("")) {
 				useToDo = "YES";
+			}
+			if (useCar == null || useCar.equals("")) {
+				useCar = "YES";
 			}
 			
 			if (useQuestion.equals("NO")) {
@@ -2313,6 +2317,10 @@ public class EzNewPortalGWController {
 			
 			if (useToDo.equals("NO")) {
 				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("task")));
+			}
+			
+			if (useCar.equals("NO")) {
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("car")));
 			}
 			
 			result.put("status", "ok");
@@ -4563,13 +4571,13 @@ public class EzNewPortalGWController {
 				
 				for (int k = 0; k < docXML.getDocumentElement().getChildNodes().getLength(); k++) {
 					if (k==0) {
-						appr1 = docXML.getElementsByTagName("COUNT").item(k).getTextContent();
+						appr1 = docXML.getElementsByTagName("COUNT1").item(0).getTextContent();
 					} else if (k==1) {
-						appr2 = docXML.getElementsByTagName("COUNT").item(k).getTextContent();
+						appr2 = docXML.getElementsByTagName("COUNT2").item(0).getTextContent();
 					} else if (k==2) {
-						appr3 = docXML.getElementsByTagName("COUNT").item(k).getTextContent();
+						appr3 = docXML.getElementsByTagName("COUNT3").item(0).getTextContent();
 					} else if (k==3) {
-						appr4 = docXML.getElementsByTagName("COUNT").item(k).getTextContent();
+						appr4 = docXML.getElementsByTagName("COUNT4").item(0).getTextContent();
 					} else if (k>3) {
 						break;
 					}
@@ -5105,7 +5113,7 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			JSONObject data = new JSONObject();
 			
-			String folderId = ezWebFolderService_y.folderIdByUserIdAndFolderType(userId, tenantId);
+			String folderId = ezWebFolderService_y.folderIdByUserIdAndFolderType(userId, tenantId, "U");
 			
 			List<FileVO> webFolderFileList = ezNewPortalService.getWebFolderFileList(folderId, tenantId);
 			data.put("fileList", webFolderFileList);
@@ -5415,7 +5423,7 @@ public class EzNewPortalGWController {
 				
 				for (HashMap<String, Object> hashMap : tabBoardIdList) {
 					String tabBoardId = hashMap.get("BOARDID").toString();
-					String tabBoardName = hashMap.get("BOARDNAME").toString();
+					String tabBoardName = portletLang.equals("1") ? hashMap.get("BOARDNAME").toString() : hashMap.get("BOARDNAME2").toString();
 					// 탭게시판 권한 체크
 					boolean accessCheckSub = boardAuthCheck(tabBoardId, deptPath, tenantId, companyId, deptId, userId, rollInfo);
 					

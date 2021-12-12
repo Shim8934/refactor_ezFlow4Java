@@ -61,7 +61,7 @@
 		</script>
 	</head>
 	<body class = "cmhome_body">
-		<form name = "poll_res_ok" action = "/ezCommunity/pollResOk.do" method = "post">
+		<form name = "poll_res_ok" action = "/ezCommunity/pollResOk.do" method = "post" onsubmit="return false">
 			<input type = "hidden" name = "code" value = "${code}" />
 			<input type = "hidden" name = "pollManagerID" value = "${pollManagerID}" />
 			<input type = "hidden" name = "pollState" value = "${pollState}" />

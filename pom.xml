@@ -17,8 +17,8 @@
 	</licenses>
 
 	<properties>
-		<spring.maven.artifact.version>4.2.9.RELEASE</spring.maven.artifact.version>
-		<egovframework.rte.version>3.5.0</egovframework.rte.version>
+		<spring.maven.artifact.version>4.3.25.RELEASE</spring.maven.artifact.version>
+		<egovframework.rte.version>3.10.0</egovframework.rte.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <webappLib>${basedir}/src/main/webapp/WEB-INF/lib</webappLib>
 	</properties>
@@ -455,6 +455,42 @@
 		    <groupId>com.samaxes.filter</groupId>
 		    <artifactId>cachefilter</artifactId>
 		    <version>2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.unidocs.cipher</groupId>
+			<artifactId>cipher</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${webappLib}/com.unidocs.cipher.jar</systemPath>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.unidocs.workflow</groupId>
+			<artifactId>WF3javaclient</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${webappLib}/WF3JavaClient-3.0.36.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>com.twelvemonkeys.imageio</groupId>
+			<artifactId>imageio-jpeg</artifactId>
+			<version>3.7.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.twelvemonkeys.imageio</groupId>
+			<artifactId>imageio-tiff</artifactId>
+			<version>3.7.0</version>
+		</dependency>
+
+		<!--
+        Optional dependency. Needed only if you deploy ImageIO plugins as part of a web app.
+        Make sure you add the IIOProviderContextListener to your web.xml, see above.
+        -->
+		<dependency>
+			<groupId>com.twelvemonkeys.servlet</groupId>
+			<artifactId>servlet</artifactId>
+			<version>3.7.0</version>
 		</dependency>
 	</dependencies>
 

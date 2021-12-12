@@ -488,7 +488,11 @@
 	                    if (parent.opener != null && parent.opener.getNoticePortletList != undefined) {
 	                    	parent.opener.getNoticePortletList();
 	                    }
-	                    
+
+	                    if (window.opener != null && window.opener.getBoardList != undefined) {
+							window.opener.getBoardList();
+	                    }
+
 	                 	// 게시판 포틀릿 리스트 업데이트 되도록 수정
 			            if (parent.opener.getBoardPortletInfo != undefined) {
 			            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
@@ -1320,6 +1324,7 @@
 					type : "GET",
 					dataType : "text",
 					async : false,
+					cache : false,
 					url : "/ezBoard/getLikeCount.do",
 					data : {
 						itemID : pItemID
@@ -1362,8 +1367,8 @@
 		        str = ReplaceText(str, "&gt;", ">");
 		        str = ReplaceText(str, "&#039;", "'");
 		        str = ReplaceText(str, "&#034;", "\"");
-		  	    str = ReplaceText(str, "&amp;", "&");	    
 		  		str = ReplaceText(str, "&#92;", "\\");
+		  	    str = ReplaceText(str, "&amp;", "&");
 		        return str;
 		    }
 		    
@@ -1432,7 +1437,9 @@
 			                    	</c:if>
 			                    	<li ID='btn_Delete'><span class="icon16 popup_icon16_delete" onclick='btn_Delete_Onclick()'></span></li>
 		                        	<li ID='btn_Print'><span class="icon16 popup_icon16_print" onclick='btn_Print_Onclick()'></span></li>
+		                        	<c:if test="${useExternalMailServer eq 'NO' }">
 		                        	<li ID='btn_Mail' ><span class="icon16 popup_icon16_mail_gray" onclick='mail_boarditem()' ></span></li>
+		                        	</c:if>
 			        			</c:when>
 			        			<c:otherwise>
 				        			<!--		강민수92	   -->
@@ -1600,19 +1607,19 @@
 					                <td colspan="5">
 					                	<c:choose>
 					                		<c:when test="${boardAttr.tableCol == 'extensionAttribute6'}">
-					                			${boardItem.extensionAttribute6}
+					                			<c:out value="${boardItem.extensionAttribute6}"/>
 					                		</c:when>
 					                		<c:when test="${boardAttr.tableCol == 'extensionAttribute7'}">
-					                			${boardItem.extensionAttribute7}
+					                			<c:out value="${boardItem.extensionAttribute7}"/>
 					                		</c:when>
 					                		<c:when test="${boardAttr.tableCol == 'extensionAttribute8'}">
-					                			${boardItem.extensionAttribute8}
+					                			<c:out value="${boardItem.extensionAttribute8}"/>
 					                		</c:when>
 					                		<c:when test="${boardAttr.tableCol == 'extensionAttribute9'}">
-					                			${boardItem.extensionAttribute9}
+					                			<c:out value="${boardItem.extensionAttribute9}"/>
 					                		</c:when>
 					                		<c:when test="${boardAttr.tableCol == 'extensionAttribute10'}">
-					                			${boardItem.extensionAttribute10}
+					                			<c:out value="${boardItem.extensionAttribute10}"/>
 					                		</c:when>
 					                		<c:otherwise></c:otherwise>
 					                	</c:choose>

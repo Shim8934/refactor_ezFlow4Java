@@ -617,6 +617,8 @@ function selFirstRow(Resultxml) {
     var tr = oArrRows[0];
 
     if (oArrRows.length != 0) {
+    	document.getElementById("tbtnExcel").style.display = "";
+    	document.getElementById("tbtnExcelAll").style.display = "";
         DocID = tr.getAttribute("DATA1");
         pURL = tr.getAttribute("DATA2");
         WriterID = tr.getAttribute("DATA3");
@@ -662,12 +664,13 @@ function selFirstRow(Resultxml) {
 
         document.getElementById("tSearchCondi").style.display = "";
         document.getElementById("tViewDoc").style.display = "";
-        if(share || share == 'share'){
+        if((share || share == 'share') || DocListType == "UserContDocList"){
         	document.getElementById("tbtnExcel").style.display = "none";
         	document.getElementById("tbtnExcelAll").style.display = "none";
         	document.getElementById("tbtnRegUserCont").style.display = "none";
         	document.getElementById("tenforce").style.display = "none";
             document.getElementById("tresend").style.display = "none";
+            document.getElementById("tbtnSelContainer").style.display = "none";
         }
 
         if (approvalFlag == "G") {
@@ -687,6 +690,14 @@ function selFirstRow(Resultxml) {
         document.getElementById("tbtnExcelAll").style.display = "none";
         if (approvalFlag == "G") {
         	document.getElementById("tDocInfo").style.display = "none";
+        }
+        if(DocListType == "UserContDocList"){
+            document.getElementById("tbtnExcel").style.display = "none";
+            document.getElementById("tbtnExcelAll").style.display = "none";
+            document.getElementById("tbtnRegUserCont").style.display = "none";
+            document.getElementById("tenforce").style.display = "none";
+            document.getElementById("tresend").style.display = "none";
+            document.getElementById("tbtnSelContainer").style.display = "none";
         }
     }
 

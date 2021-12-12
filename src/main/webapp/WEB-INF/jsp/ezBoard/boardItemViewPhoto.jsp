@@ -101,6 +101,8 @@
 		        var imgWidth = "57px";
 		        var imgHeight = "37px";
 		        var rsa = new RSAKey();
+		        var imageContentArray = new Array();
+		        var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
 
 		        window.onload = function () {
 		            imageViewInit();
@@ -298,6 +300,10 @@
 			            //2019.03.04 유은정 - 포토갤러리 포틀릿에도 리스트 업데이트 되도록 수정
 						if (parent.opener != null && parent.opener.photoBoardMovePage != undefined) {
 							parent.opener.photoBoardMovePage(null);
+						}
+
+						if (window.opener != null && window.opener.getBoardList != undefined) {
+							window.opener.getBoardList();
 						}
 			            
 			            // 게시판 포틀릿 리스트 업데이트 되도록 수정
@@ -527,6 +533,7 @@
 		        function ImageMain(imagefilename)
 		        {
 		            imageonmouse(imagefilename.id);
+		            var index = Number(imagefilename.id.substring(imagefilename.id.length-1));
 		
 		            var mainfilename = imagefilename.src;
 		            if (imagefilename.src.indexOf("s_") > -1) {
@@ -538,7 +545,8 @@
 		            document.getElementById("mainimages").style.display = "none";
 		            document.getElementById("mainimages").src = mainfilename;
 		            document.getElementById("mainimages").name = imagefilename.name;
-		            document.getElementById("MainContent").innerHTML = MakeXMLString(imagefilename.title);
+		            //document.getElementById("MainContent").innerHTML = MakeXMLString(imagefilename.title);
+		            document.getElementById("MainContent").innerHTML = MakeXMLString(imageContentArray[index].title);
 		
 		            imageloding();
 		        }
@@ -698,7 +706,7 @@
 		                    pleft = (pwidth - swidth) / 2;
 				            ptop = (pheight - sheight) / 2;
 				          
-		                    window.open("/ezBoard/boardItemDelete.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID) + "&mod=" + pMod, "", "height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft + ",status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		                    window.open("/ezBoard/boardItemDelete.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID) + "&mod=" + pMod + "&isAllGroupBoard=" + isAllGroupBoard, "", "height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft + ",status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		                }
 		            }
 		            else {
@@ -706,7 +714,7 @@
 						swidth = 460;
 		            	
 						if (gubun == 3) { // 포토게시판 (메인이미지 사용 안함)
-							sheight = 360;
+							sheight = 475;
 						} else { // 썸네일게시판 (메인이미지 사용함)
 							sheight = 475;
 						}
@@ -838,6 +846,8 @@
 		                pListImage += getNodeText(xmldom.getElementsByTagName("FILEPATH")[i]) + ";";
 		                pImageID += getNodeText(xmldom.getElementsByTagName("IMAGEID")[i]) + ";";
 		                resultimage += getNodeText(xmldom.getElementsByTagName("IMAGEPATH")[i]);
+		                
+		                imageContentArray.push({title:getNodeText(xmldom.getElementsByTagName("FILECONTENT")[i])});
 		            }
 		
 		            ImageCount = xmldom.getElementsByTagName("ROW").length;
@@ -929,6 +939,7 @@
 		            params[1] = pItemID;
 		            params[2] = document.getElementById("title").textContent;
 		            params[3] = document.getElementById("Div2").textContent;
+		            params[5] = isAllGroupBoard;
 		            if (CrossYN()) {
 		                photoalbumedit_dialogArguments[0] = params;
 		                photoalbumedit_dialogArguments[1] = btn_albumEdit_Complete;
@@ -1461,6 +1472,7 @@
 						type : "GET",
 						dataType : "text",
 						async : false,
+						cache : false,
 						url : "/ezBoard/getLikeCount.do",
 						data : {
 							itemID : pItemID
@@ -1496,6 +1508,7 @@
 			    		refreshFlag = "N";
 			    	}
 			    }
+		        
 		</script>
 	</head>
 	<body  id="bodyPopup" class="popup" style="overflow:hidden; height:100%;">
@@ -1612,7 +1625,7 @@
 		        </tr>
 		        <tr>
 		        	<td class="MainContentTD" style="padding:10px 0px; height:83px; text-align:center" colspan="3">
-		            	<div id="MainContent" style="height:60px; padding-left:23%; padding-right:24%;white-space: pre-wrap;"></div>
+		            	<div id="MainContent" style="height:60px; padding-left:23%; padding-right:24%;white-space: pre-wrap; overflow: auto;"></div>
 		            </td>
 		        </tr>
 			<%-- 2019-04-05 홍승비 - 본문, 사진소개 하단에 좋아요 버튼 추가 --%>

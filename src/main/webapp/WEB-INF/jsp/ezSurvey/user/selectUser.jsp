@@ -161,6 +161,18 @@
 	    		addUserToSelectList(listUser);
 	    	}
 	        
+	        function escapeHtml(text) {
+	    	    var map = {
+	    	        '&': '&amp;',
+	    	        '<': '&lt;',
+	    	        '>': '&gt;',
+	    	        '"': '&quot;',
+	    	        "'": '&#039;'
+	    	    };
+
+	    	    return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+	    	}
+	        
 	        var addUserToSelectList = function(listUser) {
 	        	var listUserLength = listUser.length;
 	        	
@@ -196,14 +208,14 @@
 	                    pparsingXML = pparsingXML + "<deptName1>" + deptName1 + "</deptName1></CELL></ROW>";
 	                } else if (userType == "dept" || userType == "comp") {
 	                	pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
-	                    pparsingXML = pparsingXML + "<DATA2>" + strName + "</DATA2>";
+	                    pparsingXML = pparsingXML + "<DATA2>" + escapeHtml(strName) + "</DATA2>";
 	                    pparsingXML = pparsingXML + "<DATA4>dept</DATA4>";
-	                    pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + strName + "</VALUE>";
-	                    pparsingXML = pparsingXML + "<deptId>" + strId + "</deptId>";
-                        pparsingXML = pparsingXML + "<userName2>" + strName + "</userName2>";
-                        pparsingXML = pparsingXML + "<userName1>" + strName + "</userName1>";
-                        pparsingXML = pparsingXML + "<deptName2>" + strName + "</deptName2>";
-                        pparsingXML = pparsingXML + "<deptName1>" + strName + "</deptName1></CELL></ROW>";
+	                    pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + escapeHtml(strName) + "</VALUE>";
+	                    pparsingXML = pparsingXML + "<deptId>" + escapeHtml(strId) + "</deptId>";
+                        pparsingXML = pparsingXML + "<userName2>" + escapeHtml(strName) + "</userName2>";
+                        pparsingXML = pparsingXML + "<userName1>" + escapeHtml(strName) + "</userName1>";
+                        pparsingXML = pparsingXML + "<deptName2>" + escapeHtml(strName) + "</deptName2>";
+                        pparsingXML = pparsingXML + "<deptName1>" + escapeHtml(strName) + "</deptName1></CELL></ROW>";
 	                } else if (userType == "jikwi") {
 	                	pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" +  strId + "</DATA1>";
 	                    // 직위명 추가
@@ -570,6 +582,8 @@
 	            else {
 	                usedefault = GetAttribute(document.getElementById("search_type").options[document.getElementById("search_type").selectedIndex], "usedefault");
 	            }
+		     	// 2021-04-09 김은실 - 검색 시 PressShiftKey = true 되는 현상(commit 6c23f8716 참조): 모든 search_click()에 적용. 
+	            PressShiftKey = false;
 	
 	        }
 	        
@@ -2208,7 +2222,7 @@
 			            pListViewJikwi.SetSelectFlag(false);
 			            pListViewJikwi.SetMulSelectable(true);
 			            pListViewJikwi.SetRowOnDblClick("InsertReceiver");
-			            pListViewJikwi.DataSource(loadXMLString(document.getElementById("listviewheader").innerHTML.toUpperCase()));
+			            pListViewJikwi.DataSource(loadXMLString(document.getElementById("listviewheaderJW").innerHTML.toUpperCase()));
 			            pListViewJikwi.DataBind("ListViewJikwi");
 			            pListViewJikwi.DataSource(loadXMLString(xmlHTTP.responseText));
 			            pListViewJikwi.RowDataBind();
@@ -2252,7 +2266,7 @@
 			            pListViewJikchek.SetSelectFlag(false);
 			            pListViewJikchek.SetMulSelectable(true);
 			            pListViewJikchek.SetRowOnDblClick("InsertReceiver");
-			            pListViewJikchek.DataSource(loadXMLString(document.getElementById("listviewheader").innerHTML.toUpperCase()));
+			            pListViewJikchek.DataSource(loadXMLString(document.getElementById("listviewheaderJC").innerHTML.toUpperCase()));
 			            pListViewJikchek.DataBind("ListViewJikchek");
 			            pListViewJikchek.DataSource(loadXMLString(xmlHTTP.responseText));
 			            pListViewJikchek.RowDataBind();
@@ -2286,11 +2300,21 @@
 	</head>
 	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
 		<%-- 직위, 직책용 리스트헤더 --%>
-		<xml id="listviewheader" style="display: none;">
+		<xml id="listviewheaderJW" style="display: none;">
 		  <LISTVIEWDATA>
 		    <HEADERS>
 		      <HEADER>
-		        <NAME><spring:message code='ezEmail.t586' /></NAME>
+		        <NAME><spring:message code='ezOrgan.csj04' /></NAME>
+		        <WIDTH>70</WIDTH>
+		      </HEADER>
+		    </HEADERS>
+		  </LISTVIEWDATA>
+		</xml>
+		<xml id="listviewheaderJC" style="display: none;">
+		  <LISTVIEWDATA>
+		    <HEADERS>
+		      <HEADER>
+		        <NAME><spring:message code='ezOrgan.csj17' /></NAME>
 		        <WIDTH>70</WIDTH>
 		      </HEADER>
 		    </HEADERS>
@@ -2356,7 +2380,7 @@
 			                                                    <option value="officeMobile" usedefault="0"><spring:message code='main.ksa03' /></option>
 			                                                    </c:if>
 		                                                        <option value="mail" usedefault="0"><spring:message code='ezEmail.t99000048' /></option>
-		                                                        <option value="streetAddress" usedefault="0"><spring:message code='ezEmail.t99000049' /></option>
+		                                                        <option value="streetAddress" usedefault="0" style="display:none"><spring:message code='ezEmail.t99000049' /></option>
 		                                                    </select>
 		                                                    <input id="keyword" value="" onkeypress="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px;height:22px">
 		                                                    <a class="imgbtn"><span onclick="search_click('search')"><spring:message code='ezEmail.t37' /></span></a>

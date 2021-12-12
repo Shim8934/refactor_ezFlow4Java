@@ -43,7 +43,7 @@
 	        if(approvalFlag == "G") {
         		$(".approvalG").css("display","");
         		$(".approval").css("display","none");
-        		$("#summary_txta").css("width", "388px").css("height", "90px");
+        		$("#summary_txta").css("width", "388px").css("height", "82px");
         	} else {
         		$(".approvalG").css("display","none");
         		$(".approval").css("display","");
@@ -81,7 +81,7 @@
 	    	            else
 	    	                specialText = specialText + ",  " + "<spring:message code='ezApprovalG.t986'/>";
 	    	        }
-	    	        if (specialRecordCode.substring(3, 4) == "Y") {
+	    	        if (specialRecordCode.substring(4, 5) == "Y") {
 	    	            if (specialText == "")
 	    	                specialText = specialText + "<spring:message code='ezApprovalG.t1207'/>";
 	    	            else
@@ -150,7 +150,7 @@
 	    		}
 	    	} else {
 	    		if (taskCode != "" && itemName != "") {
-	    			$("#taskCode_span").text(taskCode + "(" + itemName + ")");
+	    			$("#taskCode_span").text(taskCode + "(" + replaceEntityCodeToStr(itemName) + ")");
 	    		}
 	    		if (securityCode != "") {
 	    			var	securityText = securityCode.substring(0, 1) + "<spring:message code='ezApprovalG.t991'/>"

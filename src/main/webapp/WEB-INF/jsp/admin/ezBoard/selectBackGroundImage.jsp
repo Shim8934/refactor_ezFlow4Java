@@ -4,7 +4,16 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code="ezBoard.t5000" /></title>
+		<title>
+		<c:choose>
+			<c:when test="${type == 'UPT'}">
+				<spring:message code="ezBoard.HSBBg01" />
+			</c:when>
+			<c:otherwise>
+				<spring:message code="ezBoard.t5000" />
+			</c:otherwise>
+		</c:choose>
+		</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css" />	    
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>    
@@ -41,10 +50,18 @@
 				var filetxt = file1val.substring(file1val.lastIndexOf("\\")+1, file1val.lenght);
 				var check = false;
 		        check = compareExtension(check, extension);		         
-
+		        
+		        // IE에서 파일의 변경 이벤트 중복 감지 대응
+		        if (file1val == "") {
+		        	 document.getElementById("file1").value = "";
+		        	 document.getElementById("saveFileName").value = "";
+		        	 return false;
+		        }
 		        if (!check) {
 		        	 document.getElementById("file1").value = "";
 		        	 document.getElementById("saveFileName").value = "";
+		        	 alert("<spring:message code='main.t4000'/>");
+		        	 return false;
 		        }
 		        var guid = "{" + GetGUID() + "}";
 		        document.form.guid.value = guid;	       
@@ -122,8 +139,15 @@
 			}
 	    </script>
 	</head>
-	<body class="popup" style="overflow:hidden">		
-		<h1><spring:message code="ezBoard.t5000"/></h1>
+	<body class="popup" style="overflow:hidden">
+		<c:choose>
+			<c:when test="${type == 'UPT'}">
+				<h1><spring:message code="ezBoard.HSBBg01" /></h1>
+			</c:when>
+			<c:otherwise>
+				<h1><spring:message code="ezBoard.t5000" /></h1>
+			</c:otherwise>
+		</c:choose>
 		<div id="close">
             <ul>
                 <li><span onclick="return window.close();"></span></li>

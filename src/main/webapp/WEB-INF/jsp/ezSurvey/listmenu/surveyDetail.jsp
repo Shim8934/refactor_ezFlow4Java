@@ -26,7 +26,7 @@
 				<c:if test="${(survey.draftFlag ne 1) && (participation eq 'yes') && (resStatus ne true) || (survey.multiAnswerFlag ne 0)}">
 					<li class="off"><span id="saveResult"><spring:message code="ezSurvey.t17"/></span></li>
 				</c:if>
-				<c:if test="${empty mode and user == creator.id}">
+				<c:if test="${user == creator.id}">
 					<li class="off"><span id="suvyDlt"><spring:message code="ezSurvey.t21"/></span></li>
 				</c:if>
 				<c:if test="${(survey.draftFlag ne 1) && (participation eq 'yes') && (survey.multiAnswerFlag eq 0) && (resStatus eq true)}">
@@ -77,7 +77,7 @@
 						</td>
 						<th class="left-Th"><spring:message code="ezSurvey.t94"/></th> <%-- create date setting --%>
 						<td class="right-Td">
-							<div class="surveyinf-divcf"><c:out value="${fn:substring(survey.createDate, 0, 19)}"/></div>
+							<div class="surveyinf-divcf"><c:out value="${fn:substring(survey.createDate, 0, 16)}"/></div> <%--16을 19로 변경하면 초까지 표기--%>
 						</td>
 					</tr>
 					<tr>
@@ -1046,7 +1046,7 @@
 			alert(SurveyMessages.strDel);
 			if (window.opener && window.opener.openSurveyPopup)    {window.opener.openSurveyPopup("", 600, 600, 0, window.opener.surveyPopupIndex);}
 			
-			if (window.opener.getPotletSurveyList != undefined) {
+			if (window.opener != null && window.opener.getPotletSurveyList != undefined) {
 				 window.opener.getPotletSurveyList();
 				 // 일단 현 상황에 맞춰 주석처리
 				 // 나중에 필요하면 주석 풀면 됌
@@ -1054,8 +1054,13 @@
 				 window.close();
 			 }
 			
-			if (window.opener.SurveyItem) {window.opener.SurveyItem.reload();}
-			window.close();
+			//2021-04-20 김정언 - (#76806) 설문 > 미리보기화면에서는 삭제버튼없고, 읽기창에선 삭제버튼있음
+			if(window.opener != null) {				
+				if (window.opener.SurveyItem) {window.opener.SurveyItem.reload();}
+				window.close();
+			} else {
+				window.parent.SurveyItem.reload();
+			}
 		}
 		
 		function makeAjaxCall(ajaxData, ajaxType, ajaxUrl, handleSuccess, handleError, asyncMode, moreParam) {
@@ -1223,6 +1228,54 @@
 			var selectedValue = $("select[name = drdw" + id + "]").val();
 			return selectedValue;
 		}
+		
+		/* 2021-05-27 전자설문 이미지 확대 개선 */
+		$(document).on("mouseenter mouseleave", ".qstnImg", function(event) {
+            event.target.style.backgroundUrl = event.target.src;
+            event.target.style.backgroundRepeat = "no-repeat";
+            
+            // 이미지 파일이 아닌, 다른 첨부로 인한 이미지가 있는 경우 확대 안 시키기 위해!
+            if (event.target.src.indexOf("/images/ezSurvey/pdf.png") != -1) {
+                return;
+            }
+            
+            if (event.type == "mouseenter") {
+                console.log("imgEnter");
+                event.target.style.transform = "translate(150px, 0) scale(4)";
+                event.target.style.opacity = 1;
+                event.target.style.zIndex = 1;
+                event.target.style.transition = "all 0.5s";
+            }
+            else {
+                console.log("imgLeave");
+                event.target.style.transform = "none";
+                event.target.style.zIndex = 0;
+                event.target.style.transition = "all 0.5s";
+            }
+        })
+        
+        $(document).on("mouseenter mouseleave", ".optImg", function(event) {
+            event.target.style.backgroundUrl = event.target.src;
+            event.target.style.backgroundRepeat = "no-repeat";
+            
+            if (event.target.src.indexOf("/images/ezSurvey/pdf.png") != -1) {
+                return;
+            }
+            
+            if (event.type == "mouseenter") {
+                console.log("imgEnter");
+                event.target.style.transform = "translate(50px, -50px) scale(5)";
+                event.target.style.opacity = 1;
+                event.target.style.zIndex = 1;
+                event.target.style.transition = "all 0.5s";
+            }
+            else {
+                console.log("imgLeave");
+                event.target.style.transform = "none";
+                event.target.style.zIndex = 0;
+                event.target.style.transition = "all 0.5s";
+            }
+        })
 	});
 </script>
 </html>

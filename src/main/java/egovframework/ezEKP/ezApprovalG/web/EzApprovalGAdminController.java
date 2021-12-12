@@ -77,6 +77,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1706,8 +1707,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 //		부서의회사아이디가 아닌 상위셀렉트박스의 회사아이디를 사용
 //		String pCompanyID = request.getParameter("node5");
 		String deptName2 = request.getParameter("node6");
+		String extReceptYn = StringUtils.defaultString(request.getParameter("node7"), "N");
 		
-		String result = ezApprovalGAdminService.insertReceiveGroupItemInfo(groupID, deptID, deptName, deptName2, companyID, companyID, userInfo.getTenantId());
+		String result = ezApprovalGAdminService.insertReceiveGroupItemInfo(groupID, deptID, deptName, deptName2, companyID, companyID, userInfo.getTenantId(), extReceptYn);
 		
 		logger.debug("setGroupSubItemInfo ended.");
 		
@@ -4265,8 +4267,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			}
 		}
 		
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("list", resultList);
+		model.addAttribute("approvalFlag", approvalFlag);
 		
 		logger.debug("docNumZeroCnt ended");
 		return "/admin/ezApprovalG/apprGDocNumZeroCnt";
@@ -5146,6 +5151,38 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 
 		logger.debug("setGroupWithExcel ended.");
 
+		return result;
+	}
+	
+	@RequestMapping(value = "/admin/ezApprovalG/getChaebunDeptList.do", produces = "text/html;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String getChaebunDeptList(@CookieValue("loginCookie") String loginCookie, @RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("getChaebunDeptList started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		Document doc = commonUtil.convertStringToDocument(data);
+		String deptID = doc.getDocumentElement().getChildNodes().item(0).getTextContent();
+		String companyID = doc.getDocumentElement().getChildNodes().item(1).getTextContent();
+		
+		String result = ezApprovalGAdminService.getChaebunDeptList(deptID, companyID, userInfo);
+		
+		logger.debug("getChaebunDeptList ended.");
+		return result;
+	}
+	
+	@RequestMapping(value = "/admin/ezApprovalG/setChaebunDeptList.do", produces = "text/html;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String setChaebunDeptList(@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlPara, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("setChaebunDeptList started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		Document doc = commonUtil.convertStringToDocument(xmlPara);
+		
+		String result = ezApprovalGAdminService.setChaebunDeptList(doc, userInfo);
+		
+		logger.debug("setChaebunDeptList ended.");
 		return result;
 	}
 }

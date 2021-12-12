@@ -34,8 +34,14 @@
 						flag = "name";
 					}
 					
-					window.location.href="/ezCommunity/adminMemberList.do?code=" + '<c:out value="${code}"/>' + "&mode=${mode}&flag=" + flag + "&ser=" + searchText;
+					window.location.href="/ezCommunity/adminMemberList.do?code=" + '<c:out value="${code}"/>' + "&mode=${mode}&flag=" + encodeURI(flag) + "&ser=" + encodeURI(searchText);
 				}
+			}
+			
+			function search() {
+				if (window.event.keyCode == "13") {
+					sendit();
+		        }
 			}
 		</script>
 		
@@ -72,7 +78,7 @@
 	        		<label class="radioTypeText"><spring:message code = 'ezCommunity.t508' /></label>
 	        		<input type="radio" id="searchName" value="name" name="flag" checked style="margin:0px 0px -2px 3px">
 	        		<label class="radioTypeText"><spring:message code = 'ezCommunity.t509' /></label>
-	        		<input style="height:22px" id ="ser" type="text">
+	        		<input style="height:22px" id ="ser" type="text" onkeypress="search()">
 	        		<a class="imgbtn imgbck" style="vertical-align: middle;margin-top:2px"><span onClick="sendit()"><spring:message code = 'ezCommunity.t31' /></span></a>
 	        	</td>
 	    	</tr>

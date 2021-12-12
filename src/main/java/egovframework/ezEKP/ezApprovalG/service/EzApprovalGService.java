@@ -114,7 +114,7 @@ public interface EzApprovalGService {
 
     public String getReceiptTempletDetailInfo(String formID, String userID, String aprSN, String companyID, String lang, int tenantID, String offSet, String approvalFlag) throws Exception;
 
-    public String getTempList(String companyID, String lang, int tenantID) throws Exception;
+    public String getTempList(String companyID, String lang, int tenantID, String extReceptYn) throws Exception;
 
     public String getTempList2(String groupID, String companyID, String lang, int tenantID) throws Exception;
 
@@ -295,7 +295,7 @@ public interface EzApprovalGService {
 
     public String getUncompleteDocCount(String deptID, String companyID, String cabinetID, int tenantID) throws Exception;
     
-    public String getUncompleteDocList(String deptID, String companyID, String cabinetID, int tenantID, String userLang) throws Exception;
+    public String getUncompleteDocList(String deptID, String companyID, String cabinetID, int tenantID, String userLang, LoginVO userInfo) throws Exception;
 
     public String transferCabinet(Document xmlDom, int tenantID) throws Exception;
     
@@ -316,9 +316,9 @@ public interface EzApprovalGService {
 
     public String endCabProduce(String cabClassNo, String flag, String companyID, int tenantID) throws Exception;
 
-    public String mobileSrvConn(String userID, String result, String formID, String keyVal, String docID, String orgUID, String strLang, String companyID, HttpServletRequest request, LoginVO userInfo, String mode) throws Exception;
+    public String mobileSrvConn(String userID, String result, String formID, String keyVal, String docID, String orgUID, String strLang, String companyID, HttpServletRequest request, LoginVO userInfo, String mode, String aprMemberSN) throws Exception;
 
-    public String mobileSrvConn_HWP(String userID, String result, String formID, String keyVal, String docID, String orgUID, String langType, String companyID, HttpServletRequest request, LoginVO userInfo, String mode) throws Exception;
+    public String mobileSrvConn_HWP(String userID, String result, String formID, String keyVal, String docID, String orgUID, String langType, String companyID, HttpServletRequest request, LoginVO userInfo, String mode, String aprMemberSN) throws Exception;
 
     public String reqDelayCabEndY(String cabClassList, String flag, String companyID, int tenantID) throws Exception;
 
@@ -374,7 +374,7 @@ public interface EzApprovalGService {
 
     public String changeRecordInfo(Document xmlDom, String lang, String offset, int tenantID) throws Exception;
 
-    public String getDeliveryList(String p_DeptID, String pPageSize, String pPageNum, String pOrderCell, String pOrderOption, String pQuery, String companyID, String lang, String deptcode, String deptcode2, String title, String sregdate, String eregdate, String debenturer, String isdocprint, int tenantID, String offset) throws Exception;
+    public String getDeliveryList(String p_DeptID, String pPageSize, String pPageNum, String pOrderCell, String pOrderOption, String pQuery, String companyID, String lang, String deptcode, String deptcode2, String title, String sregdate, String eregdate, String debenturer, String isdocprint, String extReceptYN, LoginVO userInfo) throws Exception;
 
     public String getNewID(String companyID, int tenantID) throws Exception;
 
@@ -756,4 +756,13 @@ public interface EzApprovalGService {
 
 	// 정주환 수신처 스케쥴러
 	public void doSusinSchedule() throws Exception;
+
+	/* 2021-04-19 홍승비 - 문서의 ORGDOCID를 리턴하는 ajax용 함수 추가 (mode에 따라서 진행문서, 완료문서 분기) */
+	public String getOrgDocIDByMode(String docID, String mode, String orgCompanyID, int tenantID) throws Exception;
+	
+	public String getChaebunDept(String deptId, String orgCompanyID, int tenantID) throws Exception;
+	
+	public String getBujaeInfo(String userID, String deptID, int tenantID, String offset, String companyID) throws Exception;
+	
+	public List<Map<String, Object>> getReceiptInfoIng(String docId, String receiptId, LoginVO userInfo) throws Exception;
 }

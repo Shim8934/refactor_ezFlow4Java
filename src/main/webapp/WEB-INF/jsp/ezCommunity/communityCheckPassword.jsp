@@ -131,13 +131,13 @@
 		  	</tr>
 		</table>
 		
-		<table width="300" border="0" cellpadding="3" cellspacing="0" bordercolor="b6b6b6" style="border-collapse:collapse;margin-top:10px;margin-left:10px"> 
+		<table width="300" border="0" cellpadding="3" cellspacing="0" bordercolor="b6b6b6" style="border-collapse:collapse;margin-top:10px;margin-left:10px;margin-bottom:5px;"> 
 			<tr> 
 		    	<td class="subtxt"><spring:message code = 'ezCommunity.t107' /></td> 
 		  	</tr> 
 		</table> 
 		
-		<table width="300" border="1" cellpadding="3" cellspacing="0" bordercolor="b6b6b6" bgcolor="f5f5f5" style="border-collapse:collapse;margin-left:10px;margin-bottom:10px"> 
+		<table width="400" border="1" cellpadding="3" cellspacing="0" bordercolor="b6b6b6" bgcolor="f5f5f5" style="border-collapse:collapse;margin-left:10px;margin-bottom:10px"> 
 			<tr> 
 		    	<td align="center"><INPUT type="password" class="textarea" id="inpPassword" name="inpPassword" style="WIDTH:100%"> </td> 
 		  	</tr> 

@@ -10,7 +10,33 @@
 	<context:component-scan base-package="egovframework">
 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
 	</context:component-scan>
-	
+
+	<!-- 게이트웨이 호출을 위한 커넥션 풀 기반 RestTemplate 빈 생성 -->
+	<bean id="requestConfigBuilder" class="org.apache.http.client.config.RequestConfig" factory-method="custom">
+		<property name="connectTimeout" value="${config.restConnectTimeout}" />
+		<property name="socketTimeout" value="${config.restSocketTimeout}" />
+	</bean>
+
+	<bean id="requestConfig" factory-bean="requestConfigBuilder" factory-method="build" />
+
+	<bean id="httpClientBuilder" class="org.apache.http.impl.client.HttpClientBuilder" factory-method="create">
+		<property name="defaultRequestConfig" ref="requestConfig" />
+	</bean>
+
+	<bean id="httpClient" factory-bean="httpClientBuilder" factory-method="build" />
+
+	<bean id="httpRequestFactory" class="org.springframework.http.client.HttpComponentsClientHttpRequestFactory">
+		<constructor-arg>
+			<ref bean="httpClient" />
+		</constructor-arg>
+	</bean>
+
+	<bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
+		<constructor-arg>
+			<ref bean="httpRequestFactory" />
+		</constructor-arg>
+	</bean>
+
 	<!--     JSON -->
     <bean id="json" class="org.springframework.web.servlet.view.json.MappingJackson2JsonView">
    		<property name="contentType" value="text/html; charset=UTF-8" /> 

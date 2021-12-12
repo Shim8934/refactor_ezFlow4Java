@@ -231,12 +231,15 @@
 			// 검색 버튼 클릭시 이벤트
 		    function search() {
 				$(function() {
-					
+					var reset = false;
+					/* 2021-07-12 김은실 - 관리자 > 메일박스용량관리 > 검색대상: 전체,퇴직자,정지자 구분: 입력한 내용이 없어도 구분만으로도 검색 가능.
 					if ($('#searchKeyword').val().trim() == "") {
+						reset = true;
 						alert("<spring:message code='ezEmail.t349'></spring:message>");
 					}
+					 */
 					
-		        	getUserList(1);
+		        	getUserList(1, reset);
 				});
 		    }
 			
@@ -252,18 +255,31 @@
 				getUserList(page);
 			}		
 		    
-		    function getUserList(pageNum){
+		    function getUserList(pageNum, reset){
 		    	$(function() {
 		    		
 		    		var selectOption = document.getElementById("searchKeycode");
 					var searchKeycode = selectOption.options[selectOption.selectedIndex].value;
 					var searchKeyword = document.getElementById("searchKeyword").value;
 					var companyIdChk = companyID;
+					// 2021-07-12 김은실 - 관리자 > 메일박스용량관리 > 검색대상: 전체,퇴직자,정지자 구분: 기본은 true.
+					var inOffice = document.getElementById("inOffice").checked;     
+					var retired = document.getElementById("retired").checked;
+					var stopped = document.getElementById("stopped").checked;
+					var searchFor = [inOffice == false? false : true, 
+									  retired == false? false : true, 
+									  stopped == false? false : true];
+					
+					if (reset) {
+						searchKeycode = selectOption.options[0].value;
+						searchKeyword = "";
+					}
 					
 					 if (pageNum == "-1") {
 						 var pageSize = "-1";
 						 var params = '&searchKeycode=' + searchKeycode + '&searchKeyword=' + searchKeyword;
 							params += '&pageNum=' + pageNum + '&pageSize=' + pageSize + '&companyId=' + companyIdChk + '&sortType=' + sortType + "&sortColumn=" + sortColumn;
+							params += '&searchFor=' + searchFor;
 
 						 var pURL = "/admin/ezEmail/mailBoxQuotaUpdate.do" + "?" + params;
 
@@ -278,6 +294,7 @@
 						 $.ajax({
 							 url: pURL,
 							 type: "GET",
+				    		 traditional : true,
 							 timeout: 180000,
 							 success: function() {
 								 var pURL = "/admin/ezEmail/statisticsListExcelExport.do" + "?" + params;
@@ -299,6 +316,7 @@
 			    			 url: pURL
 			    			,type: "POST"
 			    			,async: false
+			    			,traditional : true
 			    			,dataType: 'json'
 			    			,data: {
 			    					'searchKeycode' : searchKeycode,
@@ -306,7 +324,8 @@
 			    					'pageNum' : pageNum,
 			    					'companyId' : companyIdChk,
 			    					'sortColumn' : sortColumn,
-			    					'sortType' : sortType
+			    					'sortType' : sortType,
+			    					'searchFor' : searchFor
 			    				   }    
 			    			,success: function(res) {
 			    				var html = "";
@@ -331,7 +350,7 @@
 	   									html += "<tr>";
 			    						html += "   <td>" + j						   + "</td>";
 			    						html += "	<td title=\'" + i[1] + "'>" + i[1] + "</td>";
-			    						html += "	<td>" 		  + i[2] 			   + "</td>";
+			    						html += "	<td>" 		  + i[2].replaceAll("<", "&lt;").replaceAll(">", "&gt;"); 			   + "</td>";
 			    						html += "	<td>"         + Math.floor(i[3] / 1024) 			   + "</td>"; //사용량
 			    						html += "	<td>"         + Math.floor(i[4] / 1024) 			   + "</td>"; //총용량 
 			    						
@@ -466,7 +485,16 @@
 		<table style="width: 100%; background-color: #f8f8fa; border: 1px solid #ddd;">
 			<tr>
 				<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">
-					<span id="topmenu" style="width: 500px"><spring:message code="ezStatistics.t1062"></spring:message>&nbsp; <!-- 검색조건 -->
+					<span id="topmenu" style="width: 500px">
+						<spring:message code="ezWebFolder.t141"></spring:message><!-- 검색대상 -->
+							<input type="checkbox" id="inOffice" checked/>
+							<label for="inOffice"><spring:message code="ezEmail.kes038"></spring:message></label>
+							<input type="checkbox" id="retired" checked/>
+							<label for="retired"><spring:message code="ezEmail.kes039"></spring:message></label>
+							<input type="checkbox" id="stopped" checked/>
+							<label for="stopped"><spring:message code="ezEmail.kes040"></spring:message></label>
+							&nbsp; 
+						<spring:message code="ezStatistics.t1062"></spring:message>&nbsp; <!-- 검색조건 -->
 						<select id="searchKeycode" style="height:22px;"> 
 							<option value="userName"><spring:message code="ezStatistics.t1068"></spring:message></option> <!-- 이름 -->
 							<option value="deptName"><spring:message code="ezStatistics.t113"></spring:message></option> <!-- 부서 -->

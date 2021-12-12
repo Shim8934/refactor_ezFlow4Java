@@ -314,6 +314,7 @@ var SurveyCreate     = function() {
 		var code = data.code;
 		switch(code) {
 			case 0 : window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=processing";
+					 window.parent.frames["left"].surveyId = -1;
 					 break;
 			case 1 : alert(SurveyMessages.strParamErr); break;
 			case 2 : alert(SurveyMessages.strError)   ; break;
@@ -1228,7 +1229,7 @@ var SurveyCreate     = function() {
 		var wrapper      = $("<div class='qstnWrapper' id='" + qstId + "'></div>");
 		var quesDiv      = $("<div class='quesDiv'></div>");
 		var qstnRow      = $("<div class='qstnRow'></div>");
-		var questnTitle  = $("<input class='questnTitle' value='" + qstContent + "' maxLength='250' placeholder='" + SurveyMessages.strQsContent + "' />");
+		var questnTitle  = $("<input class='questnTitle' value='" + escapeHtml(qstContent) + "' maxLength='250' placeholder='" + SurveyMessages.strQsContent + "' />");
 		var ulToolTip    = $("<ul class='survey_atchBtn'></ul>");
 		var liAttImg     = $("<li class='off atchLiImg'><span class='survey_icon atchImg'></span></li>");
 		var liAttUrl     = $("<li class='off atchLiUrl'><span class=''>" + SurveyMessages.strAttUrl + "</span></li>");
@@ -2197,13 +2198,13 @@ var SurveyCreate     = function() {
 		sliderUnit.append(unitInput);
 		
 		var slidWrap   = $("<div class='silder-wrap'></div>");
-		var sliderLw   = $("<input type='input' class='slider-lw' value='" + lowest  + "'/>");
+		var sliderLw   = $("<input type='input' class='slider-lw' onKeyup=this.value=this.value.replace(/[^0-9]/g,''); value='" + lowest  + "'/>");
 		slidWrap.append(sliderLw);
 		
 		var slideMain = $("<input type='range' class='slider-main' value='0'/>");
 		slidWrap.append(slideMain);
 		
-		var sliderUp = $("<input type='input' class='slider-up' value='" + highest + "'/>");
+		var sliderUp = $("<input type='input' class='slider-up' onKeyup=this.value=this.value.replace(/[^0-9]/g,''); value='" + highest + "'/>");
 		
 		var lwUpDiv = $("<div><span class='slider-lwExp'>" + SurveyMessages.strSlider8 + "</span><span class='slider-upExp'>" + SurveyMessages.strSlider9 + "</span></div>")
 		
@@ -2900,6 +2901,18 @@ var SurveyCreate     = function() {
 		return options;
 	}
 	
+	function escapeHtml(text) {
+	    var map = {
+	        '&': '&amp;',
+	        '<': '&lt;',
+	        '>': '&gt;',
+	        '"': '&quot;',
+	        "'": '&#039;'
+	    };
+
+	    return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+	}
+	
 	// selection 질문의 보기 생성
 	function mkOpt(type, options) {
 		var optAtt    = "";
@@ -2912,7 +2925,7 @@ var SurveyCreate     = function() {
 		if (type == "other") {
 			opt = $("<div class='other'></div>");
 			if (options) {
-				textInput = $("<input class='textInput' type='text' value='" + options["content"] + "' maxlength='250' placeholder='" + SurveyMessages.strOther + "'/>");
+				textInput = $("<input class='textInput' type='text' value='" + escapeHtml(options["content"]) + "' maxlength='250' placeholder='" + SurveyMessages.strOther + "'/>");
 				optAtt    = options["attach"];
 			}
 			else {
@@ -2922,7 +2935,7 @@ var SurveyCreate     = function() {
 		else {
 			opt = $("<div class='optPart'></div>");
 			if (options) {
-				textInput = $("<input class='textInput' type='text' value='" + options["content"] + "' maxlength='250' placeholder='" + SurveyMessages.strContent + "' />");
+				textInput = $("<input class='textInput' type='text' value='" + escapeHtml(options["content"]) + "' maxlength='250' placeholder='" + SurveyMessages.strContent + "' />");
 				optAtt = options["attach"];
 			}
 			else {

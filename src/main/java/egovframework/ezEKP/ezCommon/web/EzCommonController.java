@@ -16,10 +16,14 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -298,6 +302,7 @@ public class EzCommonController extends EgovFileMngUtil{
 		String literalPhoto = "";
 		String literalDept = "";
 		String literalTitle = "";
+		String literalRole = "";
 		String literalCompany = "";
 		String literalMobile = "";
 		String literalHomePhone = "";
@@ -311,7 +316,7 @@ public class EzCommonController extends EgovFileMngUtil{
 		String literalExtensionPhone = "";
 		String literalOfficeMobile = "";
 		
-		String proplist = "EXTENSIONATTRIBUTE2;COMPANY;DESCRIPTION;DISPLAYNAME;TITLE;MAIL;TELEPHONENUMBER;MOBILE;INFO;HOMEPHONE;FACSIMILETELEPHONENUMBER;POSTALCODE;STREETADDRESS;DEPARTMENT";
+		String proplist = "EXTENSIONATTRIBUTE2;COMPANY;DESCRIPTION;DISPLAYNAME;TITLE;MAIL;TELEPHONENUMBER;MOBILE;INFO;HOMEPHONE;FACSIMILETELEPHONENUMBER;POSTALCODE;STREETADDRESS;DEPARTMENT;EXTENSIONATTRIBUTE10";
 		
 		if (request.getParameter("id") != null) {
 			id = request.getParameter("id");
@@ -453,16 +458,19 @@ public class EzCommonController extends EgovFileMngUtil{
 							literalDept = xmldom2.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
 							literalTitle= xmldom2.getElementsByTagName("TITLE").item(0).getTextContent();		
 							literalCompany = xmldom2.getElementsByTagName("COMPANY").item(0).getTextContent();
+							literalRole= xmldom2.getElementsByTagName("EXTENSIONATTRIBUTE10").item(0).getTextContent();		
 						} else {
 							literalDept = xmldom.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
 							literalTitle= xmldom.getElementsByTagName("TITLE").item(0).getTextContent();
 							literalCompany = xmldom.getElementsByTagName("COMPANY").item(0).getTextContent();
+							literalRole= xmldom.getElementsByTagName("EXTENSIONATTRIBUTE10").item(0).getTextContent();
 						}
 						
 					} else {
 						literalCompany = xmldom.getElementsByTagName("COMPANY").item(0).getTextContent();
 						literalDept = xmldom.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
 						literalTitle= xmldom.getElementsByTagName("TITLE").item(0).getTextContent();
+						literalRole= xmldom.getElementsByTagName("EXTENSIONATTRIBUTE10").item(0).getTextContent();
 					}
 					
 					if (!xmldom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().equals("") && xmldom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().contains(".")) {
@@ -575,6 +583,7 @@ public class EzCommonController extends EgovFileMngUtil{
 		model.addAttribute("LiteralPhoto", literalPhoto);
 		model.addAttribute("LiteralDept", literalDept);
 		model.addAttribute("LiteralTitle", literalTitle);
+		model.addAttribute("LiteralRole", literalRole);
 		model.addAttribute("LiteralCompany", literalCompany);
 		model.addAttribute("LiteralMobile", literalMobile);
 		model.addAttribute("LiteralHomePhone", literalHomePhone);
@@ -705,4 +714,48 @@ public class EzCommonController extends EgovFileMngUtil{
 		
 		logger.debug("talkDownloadAttach ended");
 	}
+
+	@RequestMapping(value="/ezCommon/attachWebFolderFile.do",method=RequestMethod.GET , produces = "application/json;charset=utf-8")
+	@ResponseBody
+	public JSONObject attachWebFolderFile(HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception {
+		logger.debug("attachWebFolderFile started.");
+		
+		JSONObject result = new JSONObject();
+		
+		LoginVO userInfo 				= commonUtil.userInfo(loginCookie);
+		String fileListStr             	= request.getParameter("fileList") == null ? null : request.getParameter("fileList");
+		String param 					= request.getParameter("param") == null ? "" : request.getParameter("param") ;
+
+		if (fileListStr == null){
+			result.put("status", "ERROR");
+			return result;
+		}
+		
+		JSONParser jp                 	= new JSONParser();
+		JSONArray fileListJson 			= (JSONArray) jp.parse(fileListStr);
+		
+		JSONObject returnData = ezCommonService.attachWebFolderFile(fileListJson, userInfo, param, request);
+		List<String> downloadPath = new ArrayList<String>();   
+		
+		if (!(returnData.get("status").toString()).equalsIgnoreCase("ERROR")){
+			downloadPath = (List<String>) returnData.get("downloadPath");
+		}
+		
+		JSONArray jsonArr = new JSONArray();
+		JSONObject json = null;
+		
+		if(downloadPath.size() == fileListJson.size()){
+			for(int i = 0; i < fileListJson.size(); i++){
+				json = new JSONObject((JSONObject)fileListJson.get(i));
+				json.remove("downloadLink");
+				json.put("downloadLink", downloadPath.get(i));
+				jsonArr.add(json);
+			}
+		}
+		
+		result.put("status", returnData.get("status"));
+		result.put("fileList", jsonArr);
+		logger.debug("attachWebFolderFile ended.");
+		return result;
+	}	
 }

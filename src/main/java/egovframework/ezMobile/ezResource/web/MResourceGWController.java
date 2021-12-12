@@ -1,5 +1,6 @@
 package egovframework.ezMobile.ezResource.web;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
+import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -92,7 +94,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
-			String langStr = request.getParameter("langStr");
+			String langStr = info.getLang();
 	    	String listCnt = "10";
 	    	
 	    	LOGGER.debug("userId : " + userId);
@@ -526,6 +528,16 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String startDate =  jsonObject.get("startDate").toString(); 
 			String scheduleId =  "";
 			String reFlag =  jsonObject.get("reFlag").toString();
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	    	Calendar cal = Calendar.getInstance();
+	    	cal.setTime(sdf.parse(endDate));
+	    	
+	    	if (cal.get(Calendar.HOUR) == 0 && cal.get(Calendar.MINUTE) == 0) {        		
+	    		cal.add(Calendar.MINUTE, -1);        		
+	    		endDate = sdf.format(cal.getTime());
+	    	}
+	    	endDate = sdf.format(sdf.parse(endDate));
 
 			writeDay = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
 			String utcStartDate = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);//DB저장시 true 조회시 false

@@ -13,6 +13,11 @@
     <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
     <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
     <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/fileFolderDrop.js')}"></script>
+    <style>
+		.spanName {
+			width: auto;
+		}
+	</style>
 	<script type="text/javascript">
 		var primary        = "<c:out value='${primary}'/>";
 		var folderId       = "<c:out value='${folderId}'/>";
@@ -20,6 +25,7 @@
 		var arrSubFolder   = [];
 		
 		window.onload = function () {
+			document.getElementsByName('treeType')[0].checked=true;
 			getData();
 		};
 		
@@ -192,7 +198,8 @@
 					type: "GET",
 					url: "/admin/ezWebFolder/getSubFolderTree.do",
 					data: {
-						"folderId" : uniqueId
+						"folderId" : uniqueId,
+						"adminCheck" : "admin"
 					},
 					dataType: "JSON",
 					async: true,
@@ -361,8 +368,12 @@
 				</c:forEach>
 		</select>
 		<div style="position: absolute; top: 0px; right: 0px;">
-			<input name="treeType" id="radio1" type="radio" value="comp" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onclick="change();"><label for="radio1"><span> <spring:message code="ezWebFolder.t233"/></span></label>
-			<input name="treeType" id="radio2" type="radio" value="dept"         style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onclick="change();"><label for="radio2"><span> <spring:message code="ezWebFolder.t234"/></span></label>
+			<c:if test="${folderType == 'C'}">
+				<input name="treeType" id="radio1" type="radio" value="comp" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onclick="change();"><label for="radio1"><span> <spring:message code="ezWebFolder.t233"/></span></label>
+			</c:if>
+			<c:if test="${folderType != 'C'}">
+				<input name="treeType" id="radio2" type="radio" value="dept"         style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onclick="change();"><label for="radio2"><span> <spring:message code="ezWebFolder.t234"/></span></label>
+			</c:if>
 		</div>
 	</div>
 	<div style="margin: 5px 10px 10px 10px; border: 1px solid #ddd; min-height: 350px; height: 350px; overflow: auto; padding: 5px 0px 0px 5px;" id="folderTree"></div>

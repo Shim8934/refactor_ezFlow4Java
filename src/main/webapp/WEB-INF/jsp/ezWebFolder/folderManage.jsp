@@ -9,6 +9,7 @@
 	<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
     <link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}" type="text/css">
     <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+    <script type="text/javascript" src="${util.addVer('ezWebFolder.e1', 'msg')}"></script>	
     <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
     <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
     <link rel="stylesheet" href="${util.addVer('/js/ezWebFolder/jsTree/dist/themes/default/style.css')}" />
@@ -38,6 +39,7 @@
 		var folderName2 = "";
 		var drawVolume = "";
 		var treeData;
+		var selectedFolderLevel = "";
 		
 		var inputNameDlg_cross_dialogArguments = new Array();
 		var moveCopyFolderDlg_cross_dialogArguments = [];
@@ -92,6 +94,7 @@
 						folderName1 = folderName1 != null ? data.node.original.folderName1 : "";
 						folderName2 = folderName2 != null ? data.node.original.folderName2 : "";
 						parent = data.node.original.parent;
+						selectedFolderLevel = data.node.original.folderLevel;
 					}).jstree({
 						'plugins': [ "core", "types", "json_data", "themes", "ui" ],
 						'core': {
@@ -197,25 +200,44 @@
 				}
 			}
 			
-			if (userId != createId) {
-				alert("<spring:message code='ezWebFolder.t258'/>");
-				return;
-			}
-			
-			var functionType = "update";
-			
-			if (folderId.indexOf("_") > -1) {
-				folderId = folderId.substring(0, folderId.indexOf("_"));
-			}
-			
-			inputNameDlg_cross_dialogArguments[0] = folderId;
-			inputNameDlg_cross_dialogArguments[1] = add_onclick_Complete;
-			inputNameDlg_cross_dialogArguments[2] = DivPopUpHidden;
-			inputNameDlg_cross_dialogArguments[3] = functionType;
-			inputNameDlg_cross_dialogArguments[4] = folderName1;
-			inputNameDlg_cross_dialogArguments[5] = folderName2;
-			DivPopUpShow(450, 200, "/ezWebFolder/fileRenameConfirm.do?fileId=0");
-			functionType = "";
+			$.ajax({
+				type: "POST",
+				url: "/ezWebFolder/checkPermission.do",
+				data: {
+					"folderList" : folderId
+				},
+				dataType: "JSON",
+				async: true,
+				success : function(data) {
+					var result = data.status;
+					
+					if (result != "ok") {
+						alert(messages.strLang42);
+					} else {
+						var functionType = "update";
+				
+						if (folderId.indexOf("_") > -1) {
+							folderId = folderId.substring(0, folderId.indexOf("_"));
+						}
+						
+						inputNameDlg_cross_dialogArguments.currentName = folderName1;
+						inputNameDlg_cross_dialogArguments[0] = folderId;
+						inputNameDlg_cross_dialogArguments[1] = add_onclick_Complete;
+						inputNameDlg_cross_dialogArguments[2] = DivPopUpHidden;
+						inputNameDlg_cross_dialogArguments[3] = functionType;
+						inputNameDlg_cross_dialogArguments[4] = folderName1;
+						inputNameDlg_cross_dialogArguments[5] = folderName2;
+						DivPopUpShow(450, 200, "/ezWebFolder/fileRenameConfirm.do?fileId=0");
+					}
+					
+				},
+				error : function(error) {
+					alert(messages.strLang7 + error);
+				},
+				complete: function() {
+					functionType = "";
+				}
+			});
 		}
 
 		function delete_onclick() {
@@ -244,20 +266,36 @@
 				}
 			}
 			
-			if (userId != createId) {
-				alert("<spring:message code='ezWebFolder.t260'/>");
-				return;
-			}
-			
-			if (folderId.indexOf("_") > -1) {
-				folderId = folderId.substring(0, folderId.indexOf("_"));
-			}
-			
-			deleteFolderDlg_cross_dialogArguments[0] = folderId;
-			deleteFolderDlg_cross_dialogArguments[1] = add_onclick_Complete;
-			console.log("folderId delete_onclick function" + folderId);
-			console.log("deleteFolderDlg_cross_dialogArguments delete_onclick function" + deleteFolderDlg_cross_dialogArguments[0]);
-			DivPopUpShow(335, 200, "/ezWebFolder/folderDelete.do");
+			$.ajax({
+				type: "POST",
+				url: "/ezWebFolder/checkPermission.do",
+				data: {
+					"folderList" : folderId,
+					"isRecursive" : true
+				},
+				dataType: "JSON",
+				async: true,
+				success : function(data) {
+					var result = data.status;
+
+					if (result != "ok") {
+						alert(messages.strLang41);
+					} else {
+						if (folderId.indexOf("_") > -1) {
+							folderId = folderId.substring(0, folderId.indexOf("_"));
+						}
+						
+						deleteFolderDlg_cross_dialogArguments[0] = folderId;
+						deleteFolderDlg_cross_dialogArguments[1] = add_onclick_Complete;
+						console.log("folderId delete_onclick function" + folderId);
+						console.log("deleteFolderDlg_cross_dialogArguments delete_onclick function" + deleteFolderDlg_cross_dialogArguments[0]);
+						DivPopUpShow(335, 200, "/ezWebFolder/folderDelete.do");
+					}
+				},
+				error : function(error) {
+					alert(messages.strLang7 + error);
+				}
+			});
 		}
 
 		function move_onclick() {
@@ -285,22 +323,55 @@
 					}
 				}
 			}
-			
-			if (userId != createId) {
-				alert("<spring:message code='ezWebFolder.t334'/>");
+
+			if (folderType == "C" && selectedFolderLevel == "1") {
+				alert("<spring:message code='ezWebFolder.t329'/>");
 				return;
 			}
 			
-			if (folderId.indexOf("_") > -1) {
-				folderId = folderId.substring(0, folderId.indexOf("_"));
+			if (folderType == "C") {
+				$.ajax({
+					type: "POST",
+					url: "/ezWebFolder/checkPermission.do",
+					data: {
+						"folderList" : folderId,
+						"isRecursive" : false
+					},
+					dataType: "JSON",
+					async: true,
+					success : function(data) {
+						var isPermitted = data.status == "ok";
+						if (!isPermitted) {
+							alert("<spring:message code='ezWebFolder.t334'/>");
+							return;
+						} else {
+							if (folderId.indexOf("_") > -1) {
+								folderId = folderId.substring(0, folderId.indexOf("_"));
+							}
+							
+							moveCopyFolderDlg_cross_dialogArguments[0] = folderId;
+							moveCopyFolderDlg_cross_dialogArguments[1] = "move";
+							moveCopyFolderDlg_cross_dialogArguments[2] = returnFunction;
+							moveCopyFolderDlg_cross_dialogArguments[3] = folderType;
+							console.log("folderId moveCopy_onclick function" + folderId);
+							console.log("moveCopyFolderDlg_cross_dialogArguments delete_onclick function" + moveCopyFolderDlg_cross_dialogArguments[0]);
+							DivPopUpShow(360, 470, "/ezWebFolder/folderMove.do");
+							
+						}
+					},
+					error : function(error) {
+						alert(messages.strLang7 + error);
+					}
+				});
+			} else {
+				moveCopyFolderDlg_cross_dialogArguments[0] = folderId;
+				moveCopyFolderDlg_cross_dialogArguments[1] = "move";
+				moveCopyFolderDlg_cross_dialogArguments[2] = returnFunction;
+				moveCopyFolderDlg_cross_dialogArguments[3] = folderType;
+				console.log("folderId moveCopy_onclick function" + folderId);
+				console.log("moveCopyFolderDlg_cross_dialogArguments delete_onclick function" + moveCopyFolderDlg_cross_dialogArguments[0]);
+				DivPopUpShow(360, 470, "/ezWebFolder/folderMove.do");
 			}
-			
-			moveCopyFolderDlg_cross_dialogArguments[0] = folderId;
-			moveCopyFolderDlg_cross_dialogArguments[1] = "move";
-			moveCopyFolderDlg_cross_dialogArguments[2] = returnFunction;
-			console.log("folderId moveCopy_onclick function" + folderId);
-			console.log("moveCopyFolderDlg_cross_dialogArguments delete_onclick function" + moveCopyFolderDlg_cross_dialogArguments[0]);
-			DivPopUpShow(360, 470, "/ezWebFolder/folderMove.do");
 		}
 
 		function copy_onclick() {
@@ -314,19 +385,60 @@
 				return;
 			}
 			
-			if (folderId.indexOf("_") > -1) {
-				folderId = folderId.substring(0, folderId.indexOf("_"));
+			if (folderType == "C" && selectedFolderLevel == "1") {
+				alert("<spring:message code='ezWebFolder.t329'/>");
+				return;
 			}
 			
-			moveCopyFolderDlg_cross_dialogArguments[0] = folderId;
-			moveCopyFolderDlg_cross_dialogArguments[1] = "copy";
-			moveCopyFolderDlg_cross_dialogArguments[2] = returnFunction;
-			DivPopUpShow(360, 470, "/ezWebFolder/folderMove.do");
+			if (folderType == "C") {
+				$.ajax({
+					type: "POST",
+					url: "/ezWebFolder/checkPermission.do",
+					data: {
+						"folderList" : folderId,
+						"isRecursive" : false
+					},
+					dataType: "JSON",
+					async: true,
+					success : function(data) {
+						var isPermitted = data.status == "ok";
+						if (!isPermitted) {
+// 							alert("<spring:message code='ezWebFolder.t334'/>");
+// 							return;
+						} else {
+							if (folderId.indexOf("_") > -1) {
+								folderId = folderId.substring(0, folderId.indexOf("_"));
+							}
+							
+							moveCopyFolderDlg_cross_dialogArguments[0] = folderId;
+							moveCopyFolderDlg_cross_dialogArguments[1] = "copy";
+							moveCopyFolderDlg_cross_dialogArguments[2] = returnFunction;
+							moveCopyFolderDlg_cross_dialogArguments[3] = folderType;
+							DivPopUpShow(360, 470, "/ezWebFolder/folderMove.do");
+							
+						}
+					},
+					error : function(error) {
+						alert(messages.strLang7 + error);
+					}
+				});
+			} else {
+				moveCopyFolderDlg_cross_dialogArguments[0] = folderId;
+				moveCopyFolderDlg_cross_dialogArguments[1] = "copy";
+				moveCopyFolderDlg_cross_dialogArguments[2] = returnFunction;
+				moveCopyFolderDlg_cross_dialogArguments[3] = folderType;
+				DivPopUpShow(360, 470, "/ezWebFolder/folderMove.do");
+			}
 		}
 		
 		function share_onclick() {
 			if (folderId == "") {
 				alert("<spring:message code='ezWebFolder.t337'/>");
+				return;
+			}
+			
+			if (folderType == "C"){
+				alert("<spring:message code='ezWebFolder.pyy01'/>");
 				return;
 			}
 			

@@ -1842,11 +1842,15 @@ public class EzEmailServiceImpl implements EzEmailService {
 	        	String subject = ezEmailUtil.getSubject(message);
 				subject = (subject != null) ? subject : "";
 	        	
+				EmailImportance importance = EmailImportance.byMessage(message);
+
 	        	Map<String, String> map = new HashMap<String, String>();
 	        	map.put("subject", subject);
 	        	map.put("sender", ezEmailUtil.getFromNameOrAddressOfMessage(message));
 	        	map.put("receivedDate", receivedDateStr);
 	        	map.put("uid", String.valueOf(uidFolder.getUID(message)));
+				// 중요도: low = 0, normal = 1, high = 2
+				map.put("importance", Integer.toString(importance.ordinal()));
 	        	
 	        	list.add(map);
 	        }

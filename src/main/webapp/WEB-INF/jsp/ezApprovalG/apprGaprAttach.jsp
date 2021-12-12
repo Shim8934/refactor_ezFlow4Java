@@ -174,7 +174,12 @@
 			    document.getElementById("docid").value =pDocID;
 			    document.getElementById("compid").value =  "<c:out value ='${userInfo.companyID}'/>";
 				Resultxml = InitAttach(pDocID);
-				
+
+				//2021-04-14 남학선 대용량첨부파일 용량제한이 0일때는 사용안하므로 버튼을 생략
+				if(bigSizeApprAttachLimit == "0"){
+					document.getElementById("btn_BigAttachAddA").style.display = "none";
+				}
+
 				totalSize = 0;
 				normalAttachSize = 0;
 				bigAttachSize = 0;
@@ -858,8 +863,13 @@
 		        	if (isBigAttachBtnClicked == true) {
 		        		bigFileCheck = true;
 		        	} else {
-		        		//bigFileCheck = confirm(apprAttachLimit + "MB" + strLangHSBAt00 + bigSizeApprAttachDelDay + strLang1030 + " " +strLangHSBAt01);
-		        		bigFileCheck = confirm(apprAttachLimit + "MB" + strLangHSBAt00);
+		        		if(bigSizeApprAttachLimit == "0"){
+		        			alert("일반첨부파일은 총" + apprAttachLimit + "MB까지 가능합니다.");
+		        			return false;
+						} else {
+							bigFileCheck = confirm(apprAttachLimit + "MB" + strLangHSBAt00);
+						}
+						//bigFileCheck = confirm(apprAttachLimit + "MB" + strLangHSBAt00 + bigSizeApprAttachDelDay + strLang1030 + " " +strLangHSBAt01);
 		        	}
 		        	
 		        	if (bigFileCheck != true) {
@@ -1255,11 +1265,9 @@
 		        <input id="file1" name="file1" type="file" onchange="onDrop()" multiple="multiple" style="margin-left:100px; display: none;">
 		        <a class="imgbtn"><label for="file1"><span id="btn_AttachAdd" onclick="isBigAttachButtonClick('N')" style="cursor:pointer"><spring:message code='ezApprovalG.t268'/></span></label></a>
 		        <%-- 2020-11-12 홍승비 - 대용량첨부기능 추가 --%>
-		        <c:if test="${isOuterForm eq false}">
-		        <a class="imgbtn"><label for="file1"><span id="btn_BigAttachAdd" onclick="isBigAttachButtonClick('Y')" style="cursor:pointer"><spring:message code='ezSystem.HSBAppr11'/></span></label></a>
+		        <a class="imgbtn" id = "btn_BigAttachAddA" style="<c:if test='${isOuterForm eq true}'>display:none</c:if>"><label for="file1"><span id="btn_BigAttachAdd" onclick="isBigAttachButtonClick('Y')" style="cursor:pointer"><spring:message code='ezSystem.HSBAppr11'/></span></label></a>
 		        <%-- 2020-11-17 홍승비 - 웹폴더첨부기능 추가 --%>
 				<a class="imgbtn" style="display:none;"><span id="btn_WebFolderAttachAdd" onclick="isBigAttachButtonClick('N'); filePicker();" style="cursor:pointer"><spring:message code='ezSystem.HSBAppr12'/></span></a>
-				</c:if>
 		        <a class="imgbtn"><span id="btn_AttachDel" onClick="return btn_AttachDel_onclick()"><spring:message code='ezApprovalG.t266'/></span></a>
 				<%-- 2020-03-19 홍승비 - 첨부파일 위/아래 이동버튼 추가 --%>
 		        <a class="imgbtn"><span id="btn_AttachMoveUp" onClick="return btn_AttachMoveUp_onclick()"><img src="/images/ImgIcon/prev.gif" alt="" style="vertical-align:middle;"></span></a>

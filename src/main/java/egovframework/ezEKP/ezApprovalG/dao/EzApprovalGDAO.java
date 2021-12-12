@@ -2382,6 +2382,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		update("EzApprovalG.updateTbExpendAprDocInfo", map);
 	}
 	
+	public void updateTbEndAprDocInfo(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.updateTbEndAprDocInfo", map);
+	}
+	
 	public void updateCabinetClass(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.updateCabinetClass", map);
 	}
@@ -3668,5 +3672,40 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void deleteSendDocList(HashMap<String, Object> map) throws Exception{
 		delete("EzApprovalG.deleteSendDocList", map);
 	}
+
+	public String getOrgDocIDByMode(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getOrgDocIDByMode", map);
+	}
 	
+	public String getChaebunDept(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getChaebunDept", map);
+	}
+
+	public void deleteDocDelivery(Map<String, Object> map) throws Exception {
+	    delete("EzApprovalG.deleteDocDelivery", map);
+	}
+	
+	public List<String> selectDuplicateRebebuDoc(Map<String, Object> map) throws Exception {
+	    return (List<String>) list("EzApprovalG.selectDuplicateRebebuDoc", map);
+	}
+	
+	public void insertMoveRebebuOpinion(Map<String, Object> map) throws Exception {
+	    insert("EzApprovalG.insertMoveRebebuOpinion", map);
+	}
+	
+	public void updateAprReceiptProcessInfoRootDocID(Map<String, Object> map) throws Exception {
+	    update("EzApprovalG.updateAprReceiptProcessInfoRootDocID", map);
+	}
+    
+    public List<ApprGReceiptVO> selectDisbandGroupReceipt(Map<String, Object> map) throws Exception {
+        return (List<ApprGReceiptVO>) list("EzApprovalG.selectDisbandGroupReceipt", map);
+    }
+    
+    public void insertDisbandGroupReceipt(Map<String, Object> map) throws Exception {
+        insert ("EzApprovalG.insertDisbandGroupReceipt", map);
+    }
+    
+    public List<Map<String, Object>> getReceiptInfoIng(Map<String, Object> map) throws Exception {
+        return (List<Map<String, Object>>) list("EzApprovalG.getReceiptInfoIng", map);
+    }
 }

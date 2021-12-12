@@ -1210,10 +1210,16 @@ function New_DrawAutoLine(ret, pDraftFlag) {
                     arrayReSign.set(SusinSN + "seumyung" + i, getNodeText(message.GetListItem(fields, SusinSN + "seumyung" + i)));
                 }
 
+                /* 2021-08-23 홍승비 - IE 브라우저에서 최초 결재선 생성 시 결재일자 undefiend로 삽입되는 오류 수정 */
                 field = message.GetListItem(fields, SusinSN + "seumyungdate" + i);
                 if (field) {
-                    arrayReSign.set(SusinSN + "seumyungdate" + i, getNodeText(message.GetListItem(fields, SusinSN + "seumyungdate" + i)));
+                	if (getNodeText(message.GetListItem(fields, SusinSN + "seumyungdate" + i)) == "undefined") {
+                		arrayReSign.set(SusinSN + "seumyungdate" + i, " ");
+                	} else {
+                		arrayReSign.set(SusinSN + "seumyungdate" + i, getNodeText(message.GetListItem(fields, SusinSN + "seumyungdate" + i)));
+                	}
                 }
+                
             }
 
             for (var i = 1; i <= reHabyCnt; i++) {
@@ -1570,9 +1576,14 @@ function New_DrawAutoLine(ret, pDraftFlag) {
 					setNodeText(field, arrayReSign.get(SusinSN + "seumyung" + i));
 				}
 				
+                /* 2021-08-23 홍승비 - IE 브라우저에서 최초 결재선 생성 시 양식에 결재일자 undefiend로 삽입되는 오류 수정 */
 				field = message.GetListItem(fields, SusinSN + "seumyungdate" + i);
 				if (field) {
-					setNodeText(field, arrayReSign.get(SusinSN + "seumyungdate" + i));
+					if (typeof(arrayReSign.get(SusinSN + "seumyungdate" + i)) == "undefined") {
+                		setNodeText(field, " ");
+                	} else {
+                		setNodeText(field, arrayReSign.get(SusinSN + "seumyungdate" + i));
+                	}
 				}
 			}
 			

@@ -656,7 +656,7 @@ var strLang941 = "Next"
 var strLang942 = "Total"
 var strLang943 = "-items"
 var strLang944 = "No data found.";
-var strLang945 = "Mastermind can not be deleted."
+var strLang945 = "Drafter can not be deleted."
 // TreeViewCtrl.js
 var strLang1001 = "Not exist selected items. Do you want to only document print?";
 var strLang1002 = "External recipients can not be saved.";
@@ -839,32 +839,32 @@ var strLangEtcAprType4 = "Decide arbitrarily"; // 문서 싸인칸에 표시하�
 var strLangEtcAprState4 = "Return"; // 문서 싸인칸에 표시하는 반송문자
 var strLangEtcFile1 = "/xml/ezApprovalG/TreeViewAddDept.xml"; // xml 파일 처리
 var strLangEtcFile2 = "/xml/ezApprovalG/TreeViewTmpAddDept.xml"; // xml 파일 처리
-var strLangEtcFileliban1 = "/xml/ezApproval/TreeViewAddDept.xml";
+var strLangEtcFileliban1 = "/xml/ezApproval/TreeViewAddDept2.xml";
 var strLang1101 = "So that there is no manager in department."
 var strLang1102 = "Can not register in Receiving department."
 var strLang1103 = "Hangul forms do not support the draft inside or recover."
 var strLangFromFile = "HWP is not supported (Draft / Re-draft)."
 
 /* 2015-06-30 표준모듈:추가 - KSK */
-var strLang1105 = "The department does not receive approval documents.<br>Can not be added.";
-var strLang1106 = "Please enter your search term.";
+var strLang1105 = "The department does not receive approval documents \n can not be added.";
+var strLang1106 = "Please enter a keyword.";
 var strLang1107 = "Sender";
 var strLang1108 = "Reviewer";
-var strLang1109 = "Mastermind";
-var strLang1110 = "One draft";
-var strLang1111 = "[Approval number of the notification document]";
-var strLang1112 = "[Incoming arrival announcement]";
-var strLang1113 = "[Specifying behalf gyeoljaeja Alert";
-var strLang1114 = "[Draft document conveying Alert";
-var strLang1115 = "[Caregiver newspaper Forward Alert";
-var strLang1116 = "[Payment completion notification]";
-var strLang1117 = "[Department receives payment completion notification]";
-var strLang1118 = "[Sihaengmun arrival announcement]";
-var strLang1119 = "[Bounce notifications review article]";
-var strLang1120 = "[Review article arrival announcement]";
-var strLang1121 = "[Hugyeol article arrival announcement]";
-var strLang1122 = "[Notification arrival Payment Document";
-var strLang1123 = "[Opinions more Notifications";
+var strLang1109 = "drafter";
+var strLang1110 = "draft date";
+var strLang1111 = "[Notice of recalim of Approval Doc]";
+var strLang1112 = "[Notice of receipt of Approval Doc]";
+var strLang1113 = "[Notice of designation of proxy authorization]";
+var strLang1114 = "[Notice of Draft Return]";
+var strLang1115 = "[Notice of send or receive doc]";
+var strLang1116 = "[Notice of Approval Completion Doc]";
+var strLang1117 = "[Notice of Receiving Department Approval Completion]";
+var strLang1118 = "[Notice of Enforced Doc arrival]";
+var strLang1119 = "[Notice of Return Review Doc]";
+var strLang1120 = "[Notice of Arrival of Review Doc]";
+var strLang1121 = "[Notice of Arrival of pre-approval Doc]";
+var strLang1122 = "[Notice of Approval Doc]";
+var strLang1123 = "[Comment notification]";
 var strLang1124 = "Title";
 
 /* 2016-09-05 js 한글 하드코딩 수정 */
@@ -888,72 +888,72 @@ var strLangS6 = "Bounce: signers";
 var strLangS26 = "Temporary code";
 var strLangS38 = "Type approval";
 var strLangS49 = "Title";
-var strLangS51 = "Consensus";
+var strLangS51 = "agreement";
 var strLangS53 = "Department agreed";
-var strLangS57 = "I approved";
+var strLangS57 = "approved";
 var strLangS61 = "Attention";
-var strLangS63 = "Prerequisites";
+var strLangS63 = "pre-approval";
 var strLangS64 = "Post -";
 var strLangS68 = "Reference destination";
 var strLangS70 = "Destination";
 var strLangS75 = "Draft: draft, received: susin";
 var strLangS76 = "Could not load the linked file.";
-var strLangS106 = "Payment order";
+var strLangS106 = "Order of Approval";
 var strLangS107 = "Name";
 var strLangS108 = "Department";
-var strLangS109 = "Payment Status";
-var strLangS110 = "Gyeoljaeil";
-var strLangS111 = "Receive one";
-var strLangS131 = "Receiving";
+var strLangS109 = "Approval Status";
+var strLangS110 = "Approval date";
+var strLangS111 = "Receive date";
+var strLangS131 = "Receive";
 var strLangS163 = "Error during the saving destination list";
 var strLangS214 = "Normal";
-var strLangS222 = "Twenty-four won does not exist in the department";
-var strLangS223 = "The department can not be registered in the payment line.";
-var strLangS224 = "Could not add participants payments.";
-var strLangS225 = "Is a division of another company.";
-var strLangS226 = "Can not be registered in the payment line.";
+var strLangS222 = "The employee does not exist in the department";
+var strLangS223 = "The department can not be registered in the approval line.";
+var strLangS224 = "Could not add approver.";
+var strLangS225 = "It's a division of another company.";
+var strLangS226 = "Can not be registered in the approval line.";
 var strLangS227 = "The department is already registered.";
-var strLangS228 = "Is already registered in the payment line.";
-var strLangS229 = "Are you sure you want to add the billing line?";
+var strLangS228 = "is already registered in the approval line.";
+var strLangS229 = "Are you sure you want to add the approval line?";
 var strLangS230 = "Order";
-var strLangS231 = "Gyeoljaeil City";
-var strLangS237 = "You can not change the payment line approvers";
-var strLangS239 = "Moderators can not change the payment line.";
-var strLangS241 = "Line of human settlement have progressed payment can not be changed.";
-var strLangS245 = "Moderators can not change the payment line.";
-var strLangS247 = "Hasilsu not delete the billing approver.";
-var strLangS249 = "Hasilsu not delete the payment facilitator.";
-var strLangS250 = "You can add your payment participant";
-var strLangS251 = "Does not exist.";
-var strLangS254 = "Gyeoljaeja final approval will not be good change.";
+var strLangS231 = "Approval date";
+var strLangS237 = "Approver cannot change the approval line";
+var strLangS239 = "The moderator cannot change the approval line.";
+var strLangS241 = "You cannot change the approve line of the person who has processed the approve.";
+var strLangS245 = "Moderators can not change the approval line.";
+var strLangS247 = "Can't delete approval approver.";
+var strLangS249 = "You cannot delete the approval moderator.";
+var strLangS250 = "You can add your approve participant";
+var strLangS251 = "no.";
+var strLangS254 = "The final approver cannot change the approve line.";
 var strLangS264 = "Pre-audit";
-var strLangS266 = "Is not specified in the payment line.";
+var strLangS266 = "is not specified in the approve line.";
 var strLangS267 = "Please check again.";
-var strLangS276 = "Payment can be Khan";
-var strLangS277 = "It is";
-var strLangS281 = "Khan will be agreed";
+var strLangS276 = "The number of approval field is ";
+var strLangS277 = "";
+var strLangS281 = "The number of agree field is ";
 var strLangS283 = "Department can not be designated as a department to an agreement.";
-var strLangS286 = "Please specify the final gyeoljaeja after jeongyeol.";
-var strLangS287 = "Jeongyeol can not come after the payment type other than the final gyeoljaeja."
-var strLangS288 = "You can not come to a settlement type of payment without jeongyeol None specified.";
-var strLangS289 = "Please specify the agreement since the last gyeoljaeja.";
-var strLangS290 = "Thank department could not come to an agreement later.";
-var strLangS291 = "Please specify the final gyeoljaeja after the check.";
-var strLangS294 = "Departmental agreement setting is incorrect.";
-var strLangS296 = "Payment methods";
+var strLangS286 = "Please specify the final approver after the pre-approval.";
+var strLangS287 = "After the pre-approval, the approval type other than the final approver cannot be made."
+var strLangS288 = "Can not come to a settlement type of no-approval without pre-approval.";
+var strLangS289 = "Please specify the final approver after agreement.";
+var strLangS290 = "Audit not possible after department agreement.";
+var strLangS291 = "Please specify the final approver after confirmation.";
+var strLangS294 = "The department agreement setting is invalid.";
+var strLangS296 = "This cannot be the way to Approval methods to";
 var strLangS297 = "No days";
-var strLangS303 = "Select the part-time department of the mastermind is invalid.";
+var strLangS303 = "Select the part-time department of the drafter is invalid.";
 var strLangS304 = "Please check again.";
 var strLangS385 = "Please select a document";
 var strLangS386 = "It has registered documents.";
 var strLangS387 = "Are you sure you want to remove the document from the document?";
-var strLangS506 = "If there is agreement on the payment line";
-var strLangS514 = "Mastermind";
+var strLangS506 = "If there is agreement on the approve line";
+var strLangS514 = "Drafter";
 var strLangS554 = "Please enter a keyword.";
 var strLangS574 = "Please choose a list.";
-var strLangS575 = "Mastermind can not be moved.";
+var strLangS575 = "Drafter can not be moved.";
 var strLangS576 = "You can not move.";
-var strLangS577 = "You can not move from jeongyeol state.";
+var strLangS577 = "Can't be moved from a pre-approval state.";
 var strLangS599 = "No classification code is specified.";
 var strLangS600 = "Please select a category code.";
 var strLangS601 = "Category code is already registered.";
@@ -972,15 +972,15 @@ var strLangS1114 = "If Compare this number forms the comparison value Please ent
 var strLangS1115 = "Department head";
 var strLangS1116 = "Top department heads";
 var strLangS1117 = "Second-level department head";
-var strLangS1118 = "Gradually top department heads";
-var strLangS1119 = "Cha Cha parent department head";
+var strLangS1118 = "Third-level department head";
+var strLangS1119 = "Fourth-level department head";
 var strLangS1120 = "Selected department heads";
 var strLangS1124 = "The registration document.";
 var strLangyjS1 = "Direct input";
 var strLangyjS2 = "Text";
 var strLangyjS3 = "Number";
 var strLangyjS4 = "Over";
-var strLangyjS5 = "The";
+var strLangyjS5 = "below";
 var strLangyjS6 = "Less than";
 var strLangyjS7 = "Out";
 var strLangyjS8 = "Equal";
@@ -988,7 +988,7 @@ var strLangyjS9 = "It contains";
 var strLangyjS10 = "Without";
 var strLangS194 = "Duplicate finder favorite people."
 var strLangS195 = "Please re-enter."
-var strLangSHJ1 = "Please specify the final gyeoljaeja future reference.";
+var strLangSHJ1 = "Please specify the final approver after reference.";
 
 var strLangS822 = "User already circulated the ship."
 var strLangS824 = "Circulating self Duplicate";
@@ -1017,9 +1017,9 @@ var strLangSpjj31 = "I approved the hugyeol.";
 var strLangSpjj32 = "There was an error in hugyeol approval."
 
 var strLangSpjj33 = "Shortcut approval documents";
-var strLangSpjj34 = "The settlement documents are drafted's arrived <br> To the payment, please click the link below.";
+var strLangSpjj34 = "'s approval document has arrived. <br> Click the link below for approval.";
 
-var strLang129 = "수신자"
+var strLang129 = "Recepient"
 
 //2018-06-27 강민수92
 var strLanggarm01 = "Please add a department."
@@ -1028,25 +1028,25 @@ var strLanggarm01 = "Please add a department."
 var strLangBae1 = "결재선을 재지정한 반송문서는 대장등록이 불가능합니다."
 
 //2018-08-21 김보미
-var strLangKBM01 = "기안자의 부서가 변경되었거나<br>겸직부서 선택이 잘못되었습니다.";
+var strLangKBM01 = "Drafter's dept is changed<br>or Invalid department selection.";
 
 //2018-09-12 천성준
 var strLangCSJ01 = "Document";
 
 //2018-10-16 배현상
-var strLangBae2 = "최종결재자의 결재유형에는 확인이 올 수 없습니다.";
+var strLangBae2 = "The final approver's approval type cannot be confirmed.";
 
 //2019-03-26 강민수92
-var strLanggarm02 = "기안창의 부서정보가";
-var strLanggarm03 = "부서로 되어있습니다. \n겸직부서를";
-var strLanggarm04 = "부서로 변경하시거나 기안창을 새로 띄워주시기바랍니다.";
-var strLanggarm05 = "부서로 되어있습니다. \n사용자의 부서가 변경되거나 겸직이 삭제되었으니 기안창을 새로 띄워주시기바랍니다.";
-var strLanggarm06 = "접수창의 부서정보가";
-var strLanggarm07 = "부서로 변경하시거나 접수창을 새로 띄워주시기바랍니다.";
-var strLanggarm08 = "부서로 되어있습니다. \n사용자의 부서가 변경되거나 겸직이 삭제되었으니 접수창을 새로 띄워주시기바랍니다.";
+var strLanggarm02 = "Current department information is ";
+var strLanggarm03 = "\n Change the concurrent department -";
+var strLanggarm04 = "or Please put up a new draft window.";
+var strLanggarm05 = "\n Your department has been changed or your concurrent position has been deleted.";
+var strLanggarm06 = "Current department information is ";
+var strLanggarm07 = "Please change to the department or open a new reception window.";
+var strLanggarm08 = "\n Your department has been changed or your concurrent position has been deleted.";
 
 //2019-04-15 천성준
-var strLangCSJ02 = "지정된 수신처에 포함된 <br>사원, 부서, 회사의 정보가 조직도와 일치하지 않습니다.<br>수신처를 다시 지정해주세요.";
+var strLangCSJ02 = "The destination information specified does not match the organization chart.<br>Please re-assign the receipt dept.";
 
 /* 2020-07-09 홍승비 - 결재문서 프린트를 위한 폰트 스타일 */
 var strLangHSBPR01 = "Arial";
@@ -1071,7 +1071,7 @@ var strLang947 = "Departments is unavailable as recipient. \nPlease check!";
 var strLang948 = "Departments unavailable as recipient will be automatically deleted. \nDo you wish to continue?"
 var strLang949 = "Receive Disabled department is duplicated. \nPlease check!"
 var strLang950 = "This Department cannot be a receiver. \nPlease check again."
-var strLang951 = "해당부서는 수신자로 지정할 수 없습니다. <br>확인하여 주십시요."
+var strLang951 = "The department cannot be designated as a recipient."
 	
 var strLang952 = "The location of the audit approval line cannot be changed.";
 var strLang953 = "Audit approval line cannot be deleted.";
@@ -1094,3 +1094,15 @@ var strLang957 = "Director";
 
 var strLangAdd00040 = "발신기관에서 보내온 본문정보가 잘못되었습니다. 재전송요청하시기 바랍니다.";
 var strLangAdd00041 = "본문정보중 이미지정보가 포함되어 있지않아서 제거 후 저장되었습니다.<br />접수 하시겠습니까?";
+
+var strLang960 = "Please select a shareholder to modify";
+var strLang961 = "Please select a shareholder to delete";
+var strLang962 = "Are you sure you want to delete it?";
+var strLang963 = "Deleted.";
+var strLang964 = "failed";
+
+var strLang970 = "Please select a target department";
+var strLang971 = "Please select a sub-department";
+var strLang972 = "Duplicate assigned department exists";
+
+var strLang973 = "internal recipient, External recipient and address of petitioner can not be specified at the same time."

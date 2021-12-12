@@ -6,7 +6,7 @@
 <html>
 	<head>
 	<c:if test ="${approvalFlag =='G'}">
-		<title><spring:message code='ezApprovalG.t308'/></title>
+		<title><spring:message code='ezApprovalG.kje01'/></title>
 	</c:if>
 	<c:if test = "${approvalFlag == 'S'}" >
 		<title><spring:message code='ezApprovalG.G0009'/></title>
@@ -92,7 +92,7 @@
 	<body class="popup">
 		<h1>	
 			<c:if test ="${approvalFlag =='G'}">
-				<spring:message code='ezApprovalG.t308'/>
+				<spring:message code='ezApprovalG.kje01'/>
 			</c:if>
 			<c:if test = "${approvalFlag == 'S'}" >
 				<spring:message code='ezApprovalG.G0009'/>

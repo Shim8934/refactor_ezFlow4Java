@@ -377,6 +377,10 @@ public interface EzCommunityService {
 
 	public String getOneLineReplyCount(String pBoardID, String pItemID,int tenantId) throws Exception;
 	
-	public int getReaderListCount(String boardID, String itemID, String userID, int tenantID) throws Exception;	
+	public int getReaderListCount(String boardID, String itemID, String userID, int tenantID) throws Exception;
+
+	public int bbsGetReplyItemCnt(String itemNo, int tenantId) throws Exception;
+
+	public String getClubConfirmType(String code, int tenantID) throws Exception;
 
 }

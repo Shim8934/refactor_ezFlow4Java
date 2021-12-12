@@ -51,7 +51,7 @@
 	    <script>
 	        var cn = "${cn}";
 	        var ua = navigator.userAgent.toLowerCase();
-	        var browserIE = (ua.indexOf("msie") != -1) ? true : false;
+	        var browserIE = (ua.indexOf("msie") != -1) || (ua.indexOf("trident") != -1) ? true : false;
 	        var pListType = "TXT";
 	        var pListXML_Info = null;
 	        var strLang1 = "<spring:message code='ezEmail.t10001' />";
@@ -427,8 +427,13 @@
 	        function search_press() {
 	            if (window.event.keyCode == "13") {
 	                search_click();
-	                event.cancelBubble = true;
-	                event.returnValue = false;
+	                window.event.cancelBubble = true;
+	                if (browserIE) {
+	                	event.preventDefault();	
+	                }
+	                else {
+	                	event.returnValue = false;
+	                }
 	            }
 	        }
 	
@@ -497,6 +502,8 @@
 	            else {
 	                usedefault = GetAttribute(document.getElementById("search_type").options[document.getElementById("search_type").selectedIndex], "usedefault");
 	            }
+		     	// 2021-04-09 김은실 - 검색 시 PressShiftKey = true 되는 현상(commit 6c23f8716 참조): 모든 search_click()에 적용. 
+	            PressShiftKey = false;
 	
 	        }
 	        
@@ -2055,7 +2062,7 @@
 			            pListViewJikwi.SetSelectFlag(false);
 			            pListViewJikwi.SetMulSelectable(true);
 			            pListViewJikwi.SetRowOnDblClick("InsertReceiver");
-			            pListViewJikwi.DataSource(loadXMLString(document.getElementById("listviewheader").innerHTML.toUpperCase()));
+			            pListViewJikwi.DataSource(loadXMLString(document.getElementById("listviewheaderJW").innerHTML.toUpperCase()));
 			            pListViewJikwi.DataBind("ListViewJikwi");
 			            pListViewJikwi.DataSource(loadXMLString(xmlHTTP.responseText));
 			            pListViewJikwi.RowDataBind();
@@ -2099,7 +2106,7 @@
 			            pListViewJikchek.SetSelectFlag(false);
 			            pListViewJikchek.SetMulSelectable(true);
 			            pListViewJikchek.SetRowOnDblClick("InsertReceiver");
-			            pListViewJikchek.DataSource(loadXMLString(document.getElementById("listviewheader").innerHTML.toUpperCase()));
+			            pListViewJikchek.DataSource(loadXMLString(document.getElementById("listviewheaderJC").innerHTML.toUpperCase()));
 			            pListViewJikchek.DataBind("ListViewJikchek");
 			            pListViewJikchek.DataSource(loadXMLString(xmlHTTP.responseText));
 			            pListViewJikchek.RowDataBind();
@@ -2133,11 +2140,21 @@
 	</head>
 	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
 		<%-- 직위, 직책용 리스트헤더 --%>
-		<xml id="listviewheader" style="display: none;">
+		<xml id="listviewheaderJW" style="display: none;">
 		  <LISTVIEWDATA>
 		    <HEADERS>
 		      <HEADER>
-		        <NAME><spring:message code='ezEmail.t586' /></NAME>
+		        <NAME><spring:message code='ezOrgan.csj04' /></NAME>
+		        <WIDTH>70</WIDTH>
+		      </HEADER>
+		    </HEADERS>
+		  </LISTVIEWDATA>
+		</xml>
+		<xml id="listviewheaderJC" style="display: none;">
+		  <LISTVIEWDATA>
+		    <HEADERS>
+		      <HEADER>
+		        <NAME><spring:message code='ezOrgan.csj17' /></NAME>
 		        <WIDTH>70</WIDTH>
 		      </HEADER>
 		    </HEADERS>
@@ -2199,7 +2216,7 @@
 		                                                        <option value="HomePhone" usedefault="0"><spring:message code='ezEmail.t29' /></option>
 		                                                        <option value="facsimileTelephoneNumber" usedefault="0"><spring:message code='ezEmail.t99000047' /></option>
 		                                                        <option value="mail" usedefault="0"><spring:message code='ezEmail.t99000048' /></option>
-		                                                        <option value="streetAddress" usedefault="0"><spring:message code='ezEmail.t99000049' /></option>
+		                                                        <option value="streetAddress" usedefault="0" style="display:none"><spring:message code='ezEmail.t99000049' /></option>
 		                                                    </select>
 		                                                    <input id="keyword" value="" onkeypress="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px;height:22px">
 		                                                    <a class="imgbtn"><span onclick="search_click('search')"><spring:message code='ezEmail.t37' /></span></a>

@@ -456,7 +456,7 @@
 	            ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 		        
 	            var url = "/ezApprovalG/ezApprovalInfo.do?guBun=" + pGubun + "&ext=" + "mht";
-	            var result = GetOpenWindow(url, "ezApprovalInfo", 1144, 750, "NO");
+	            var result = GetOpenWindow(url, "ezApprovalInfo", 1200, 750, "NO");
 	        }
 	        function btnApprovalInfo_Complete(RtnVal)
 	        {

@@ -20,13 +20,13 @@ var capacity = (function() {
 	}
 	
 	function trimDecimal(number) {
-		var str = number.toFixed(1);
+		/*var str = number.toFixed(1);
 		var decimalIndex = str.indexOf(".0");
 	
 		if (decimalIndex > -1) {
 			return str.substr(0, decimalIndex);
-		}
-		
+		}*/
+		var str = Math.floor(number);
 		return str;
 	}
 	
@@ -38,6 +38,7 @@ var capacity = (function() {
 			loadEventListener = listener;
 		},
 		load: function() {
+			if (Boolean(folderIdProvider())) {
 			$.ajax({
 				type: "POST",
 				async: true,
@@ -84,6 +85,7 @@ var capacity = (function() {
 					});
 				}
 			});
+			}
 		}
 	}
 })();

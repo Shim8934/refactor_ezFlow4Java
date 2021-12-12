@@ -906,6 +906,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("useShowAllCompanies", "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useShowAllCompanies", userInfo.getTenantId())));
 
 		logger.debug("personSearchPrint ended");
 		return "/ezPersonal/persPersonSearchPrint";
@@ -1190,6 +1191,10 @@ public class EzPersonalController extends EgovFileMngUtil {
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		
+		OrganUserVO userVO = ezOrganService.getUserInfo(userInfo.getId(), userInfo.getPrimary(), userInfo.getTenantId());
+		String userManualFlag = userVO.getManualFlag();
+		logger.debug("userManualFlag={}", userManualFlag);
+		
 		String companyID = userInfo.getCompanyID();
 		logger.debug("companyID=" + companyID);
 		
@@ -1271,6 +1276,13 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String pwPolicyExplain = commonUtil.getPwPolicyExplain(companyID, userInfo.getTenantId(), locale);
 		boolean useOnlyInnerMail = "yes".equalsIgnoreCase(ezCommonService.getTenantConfig("UseOnlyInnerMail", userInfo.getTenantId()));
 		
+		// 2021-05-26 김민성 - office 사용시 사용자 비밀번호관리탭 제외
+		String ezOffice365Auth = ezCommonService.getTenantConfig("ezOffice365Auth", userInfo.getTenantId());
+		if (ezOffice365Auth == null || ezOffice365Auth.equals("")) {
+			ezOffice365Auth = "NO";
+		}
+		model.addAttribute("ezOffice365Auth", ezOffice365Auth);
+		
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("txtInfo", pInfo);
 		model.addAttribute("labelCompany", labelCompany);
@@ -1304,6 +1316,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("companyID", companyID);
 		model.addAttribute("pwPolicyExplain", pwPolicyExplain);
 		model.addAttribute("useOnlyInnerMail", useOnlyInnerMail);
+		model.addAttribute("userManualFlag", userManualFlag);
 		
 		logger.debug("changePersonInfo ended");
 		return "/ezPersonal/persChangePersonInfo";

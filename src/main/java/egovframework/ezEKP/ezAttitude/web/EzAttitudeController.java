@@ -732,6 +732,9 @@ public class EzAttitudeController {
 		
 		model.addAttribute("userInfo", userInfo);
 		
+		String attitudeMapApiKey = ezCommonService.getTenantConfig("attitudeMapApiKey", userInfo.getTenantId());
+		model.addAttribute("attitudeMapApiKey", attitudeMapApiKey);
+		
 		LOGGER.debug("/ezAttitude/attitudeUserMain ended");
 		return "/ezAttitude/attitudeUserMain";
 	}
@@ -2240,6 +2243,9 @@ public class EzAttitudeController {
 		model.addAttribute("deptFlag", "true");
 		model.addAttribute("adminFlag", adminFlag);
 		model.addAttribute("displayFlag", displayFlag);
+		
+		String attitudeMapApiKey = ezCommonService.getTenantConfig("attitudeMapApiKey", userInfo.getTenantId());
+		model.addAttribute("attitudeMapApiKey", attitudeMapApiKey);
 		
 		LOGGER.debug("attitudeUserMain ended");
 		return "/ezAttitude/attitudeUserMain";

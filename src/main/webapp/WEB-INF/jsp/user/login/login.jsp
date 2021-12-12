@@ -6,7 +6,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html>
-	<head>
+	<head> 
 		<title>::: ezEKP Java :::</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />		
 		<link href="${util.addVer('/css/login.css')}" rel="stylesheet" type="text/css" />
@@ -193,7 +193,10 @@
 					$("#exDiv").show(function() {						
 						$("#txtOldPassword").focus();
 					});
-			    }				
+			    }
+				
+				// 하단의 연도 문자열 표출
+				makeRightsYearString();
 			}
 			
 			function setting_click() {
@@ -384,6 +387,15 @@
 		        });	 
 			}
 			
+			/* 2021-04-09 홍승비 - 로그인 페이지의 연도 자동 업데이트 */
+			function makeRightsYearString() {
+				var date = new Date();
+				var year = date.getFullYear();
+				var rightsYearString = "ⓒ 2000-" + year + ". KAONi Co., Ltd. All rights reserved.";
+				
+				document.getElementById("rightsYearP").innerText = rightsYearString;
+			}
+			
 		</script>
 	</head>	
 	<body class="login_body" onload="fnInit()">
@@ -421,7 +433,7 @@
 	                            </p>
 	                            </c:if>
                         	</div>
-	                        <p class="address">ⓒ 2000-2020. KAONi Co., Ltd. All rights reserved.</p>
+	                        <p class="address" id="rightsYearP"></p>
 	                    </fieldset>
 	                    <input type="hidden" name="message" value="${message}" />		                    
 				    </form>
@@ -572,9 +584,9 @@
 	                <li><a rel="modal:close"><span></span></a></li>
 	            </ul>
 	        </div>
-			<div class="warning_wrap" style="padding-left:20px">
-				<p style="border:0px" id="imgMnt4"></p>
-		        <dl>
+			<div class="warning_wrap" style="padding-left:80px">
+				<p style="border:0px; padding-left: 30px;" id="imgMnt4"></p>
+		        <dl style="margin-top: 23px; margin-left: 50px;">
 					<dt id="layerTitle1" class="layerTitle"><spring:message code="ezOrgan.hdp14" /></dt>
 		            <dd><spring:message code="ezOrgan.hdp15" /></dd>
 		            <dd><spring:message code="ezOrgan.hdp16" /></dd>

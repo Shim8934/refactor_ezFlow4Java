@@ -263,6 +263,8 @@ function getdocinfolist(i) {
     //요약을 넣어야됨
     document.getElementById("taSummery").value = vSummery;
 //    GetExtraDocInfo();
+    
+    document.querySelector("input[name=keyword]").value = pkeyword;
 }
 
 function Draftinfo_reload() {

@@ -5,7 +5,9 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezWebFolder.vo.FavoriteVO;
+import egovframework.ezEKP.ezWebFolder.vo.FolderTreeVO;
 import egovframework.ezEKP.ezWebFolder.vo.ShareSubVO;
 import egovframework.ezEKP.ezWebFolder.vo.ShareVO;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleShareVO;
@@ -16,8 +18,8 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 @SuppressWarnings("unchecked")
 public class EzWebFolderDAO_m extends EgovAbstractDAO {
 	
-	public List<Map<String, Object>> getShareFolderTree(Map<String, Object> map) {
-		return (List<Map<String, Object>>) list("EzWebFolderDAO_m.getShareFolderTree", map);
+	public List<FolderTreeVO> getShareFolderTree(Map<String, Object> map) {
+		return (List<FolderTreeVO>) list("EzWebFolderDAO_m.getShareFolderTree", map);
 	}
 	
 	public List<ShareVO> getSharingList(Map<String, Object> map) {
@@ -149,8 +151,16 @@ public class EzWebFolderDAO_m extends EgovAbstractDAO {
 		return  delete ("EzWebFolderDAO_m.deleteFile", map); 
 	}
 	
+	public int deleteFileUser(Map<String, Object> map) {
+		return  delete ("EzWebFolderDAO_m.deleteFileUser", map); 
+	}
+	
 	public int deleteFolder (Map<String, Object> map) {
 		return delete("EzWebFolderDAO_m.deleteFolder", map);
+	}
+	
+	public int deleteFolderUser (Map<String, Object> map) {
+		return delete("EzWebFolderDAO_m.deleteFolderUser", map);
 	}
 	
 	public List <String> selectAllFilesInFolder (Map<String, Object> map) {
@@ -181,6 +191,10 @@ public class EzWebFolderDAO_m extends EgovAbstractDAO {
 		return (Integer) select("EzWebFolderDAO_m.getTrashFolderCount", map);
 	}
 	
+	public int getTrashVersionCount(Map<String, Object> map) {
+		return (Integer) select("EzWebFolderDAO_m.getTrashVersionCount", map);
+	}
+
 	public void moveFile(Map<String, Object> map) {
 		update("EzWebFolderDAO_m.moveFile", map);
 	}
@@ -191,5 +205,45 @@ public class EzWebFolderDAO_m extends EgovAbstractDAO {
 	
 	public List<Map<String,String>> selectSubFolders(Map<String, Object> map) {
 		return (List<Map<String, String>>) list("EzWebFolderDAO_m.selectSubFolders", map);
+	}
+	
+	public void insertWebFolderApplyHistory(Map<String, Object> map) {
+		insert("EzWebFolderDAO_m.insertWebFolderApplyHistory", map);
+	}
+	
+	public void insertWebFolderApplyHistoryMember(Map<String, Object> map) {
+		insert("EzWebFolderDAO_m.insertWebFolderApplyHistoryMember", map);
+	}
+
+	public int getWebFolderApplyHistoryListCount(Map<String, Object> map) {
+		return (int) select("EzWebFolderDAO_m.getWebFolderApplyHistoryCount", map);
+	}
+
+	public List<Map<String, String>> getWebFolderApplyHistoryList(Map<String, Object> map) {
+		return (List<Map<String, String>>) list("EzWebFolderDAO_m.getWebFolderApplyHistoryList", map);
+	}
+
+	public Map<String, String> getWebFolderApplyHistory(Map<String, Object> map) {
+		return (Map<String, String>) select("EzWebFolderDAO_m.getWebFolderApplyHistory", map);
+	}
+
+	public List<Map<String, String>> getWebFolderApplyHistoryMember(Map<String, Object> map) {
+		return (List<Map<String, String>>) list("EzWebFolderDAO_m.getWebFolderApplyHistoryMember", map);
+	}
+
+	public List<OrganUserVO> getWebFolderAdminUserList(Map<String, Object> map) {
+		return (List<OrganUserVO>) list("EzWebFolderDAO_m.getWebFolderAdminUserList", map);
+	}
+
+	public void deleteWebFolderApplyHistory(Map<String, Object> map) {
+		delete("EzWebFolderDAO_m.deleteWebFolderApplyHistory", map);
+	}
+
+	public void deleteWebFolderApplyHistoryMember(Map<String, Object> map) {
+		delete("EzWebFolderDAO_m.deleteWebFolderApplyHistoryMember", map);
+	}
+	
+	public void changeWebFolderAppliApprovalStatus(Map<String, Object> map) {
+		update("EzWebFolderDAO_m.changeWebFolderAppliApprovalStatus", map);
 	}
 }

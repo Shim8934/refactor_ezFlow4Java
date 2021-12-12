@@ -658,7 +658,7 @@ public class EzCommunityController extends EgovFileMngUtil{
         model.addAttribute("strXML", strXML);
         model.addAttribute("totalCount", totalCount);
         model.addAttribute("totalPage", totalPage);
-        model.addAttribute("boardName", boardInfo.getBoardName());
+        model.addAttribute("boardName", userInfo.getLang().equals("1") ? boardInfo.getBoardName() : boardInfo.getBoardName2());
         model.addAttribute("title", title);
         model.addAttribute("writerName", writerName);
         model.addAttribute("abstracts", abstracts);
@@ -1800,7 +1800,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			level = request.getParameter("level");
 			ref = request.getParameter("ref");
 			
-			if (request.getParameter("no") != null) {
+			if (request.getParameter("no") != null) { // mode = write인 경우, 답변 작성일때 no가 존재함
 				no = request.getParameter("no");
 			}
 			if (request.getParameter("pagec") != null) {
@@ -1906,8 +1906,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		logger.debug("bbsDelOk started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String code = "";
+		String code = ""; // 사실상 전달되지 않는 파라미터
 		int adminCheck = 0;
+		int replyItemCnt = 0;
 		
 		String itemNo = request.getParameter("itemNo");
 		String goToPage = request.getParameter("goToPage");
@@ -1919,7 +1920,16 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		CommunityCBoardVO board = ezCommunityService.bbsDelOkGet(bName, itemNo, code, userInfo.getTenantId());
 		
-		if (board.getId().trim().equals(userInfo.getId()) || adminCheck == 1 || userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+		/* 2021-06-25 홍승비 - 커뮤니티 공지사항 삭제 시, 답변이 존재한다면 삭제하지 못하도록 수정 */
+		if (bName.toUpperCase().equals("TBL_C_BOARD")) {
+			replyItemCnt = ezCommunityService.bbsGetReplyItemCnt(itemNo, userInfo.getTenantId());
+		}
+		
+		if (replyItemCnt > 0) { // 답변이 존재하는 경우
+			logger.debug("bbsDelOk reply exists.");
+			
+			return "REPLYCNT";
+		} else if (board.getId().trim().equals(userInfo.getId()) || adminCheck == 1 || userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
 			logger.debug("bbsDelOk ended.");
 			
 			return ezCommunityService.bbsDelOk(userInfo, request, board, itemNo, goToPage, bName, adminCheck, userInfo.getTenantId());
@@ -4869,5 +4879,40 @@ public class EzCommunityController extends EgovFileMngUtil{
     	return "/ezCommunity/communityBoardSelectForMail";
     }
     
+	/**
+	 * 2021-05-03 홍승비 - 해당 커뮤니티의 전체 게시물 개수를 가져오는 함수 (ajax용)
+	 */
+	@RequestMapping(value = "/ezCommunity/getCommunityBoardItemCnt.do", method = RequestMethod.GET)
+	@ResponseBody
+	public int getCommunityBoardItemCnt(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getCommunityBoardItemCnt started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String code = request.getParameter("code");
+		int result = 0;
+		
+		result = ezCommunityService.categoryListItemCntGet(code, userInfo.getTenantId());
+		
+		logger.debug("getCommunityBoardItemCnt ended, result = " + result);
+		return result;
+	}
+	
+	/**
+	 * 2021-05-03 홍승비 - 해당 커뮤니티의 유형(승인여부)을 가져오는 함수 (ajax용)
+	 */
+	@RequestMapping(value = "/ezCommunity/getClubConfirmType.do", method = RequestMethod.GET)
+	@ResponseBody
+	public String getClubConfirmType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getClubConfirmType started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String code = request.getParameter("code");
+		String result = "";
+		
+		result = ezCommunityService.getClubConfirmType(code, userInfo.getTenantId());
+		
+		logger.debug("getClubConfirmType ended, result = " + result);
+		return result;
+	}
 }
 

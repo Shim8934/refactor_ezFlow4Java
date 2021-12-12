@@ -130,6 +130,7 @@
 		    var extensionattribute5 = "<c:out value = '${userInfo.extensionattribute5}'/>";
 		    var absenceAllClear = "<c:out value = '${absenceAllClear}'/>";
 		    var deptPathCode = "<c:out value = '${userInfo.deptPathCode}'/>";
+		    var pNonElecRecType = "<c:out value = '${nonElecRecType}'/>";
 		    
 		    var selectcabinet_cross_dialogArguments = new Array();
 		    
@@ -197,7 +198,7 @@
 		
 		    function checkBujaeInfo_Complete(Rtnval) {
 		    	if (Rtnval == true) {
-	                //setBujaeOff();
+	                // setBujaeOff();
 	                saveBujaeUser();
 	                btnVisible('ok');
 	            }
@@ -378,6 +379,13 @@
 		        	}
 	        	}
 				
+	        	else {
+	        		if(deptId == arr_userinfo[4]) {
+	        			jo.proxy = "";
+	        			formArray.push(jo);
+	        		}
+	        	}
+	        	
 		        $.ajax({
 		    		type : "POST",
 		    		dataType : "text",
@@ -388,6 +396,8 @@
 		    				},
 		    		success: function(text){
 			            //alert("<spring:message code='ezPersonal.tt16'/>");
+			            // 2021-03-25 김민성 - 부재자 설정 해제시 부재자 정보 초기화
+			            arr_userinfo[7] = "";
 		    		},
 		    		error: function(){
 			            //alert("<spring:message code='ezPersonal.tt14'/>");
@@ -614,13 +624,13 @@
 		        var tr = oArrRows[0];
 		        ext =  tr.getAttribute("DATA3").substr(tr.getAttribute("DATA3").length - 3, tr.getAttribute("DATA3").length).toLowerCase();
 		        if (tr.length != 0) {
-		            if (pListTypeValue != "5") {
+		            //if (pListTypeValue != "5") {
 		                if (pDocInfoValue == "1")
 		                    getAprLine(tr);
 		                else {
 		                    getAprDocAproveInfo(tr);
 		                }
-		            }
+		            /* }
 		            else {
 		                if (tr) {
 		                    pDocID = tr.getAttribute("DATA1");
@@ -644,7 +654,7 @@
 		                            break;
 		                    }
 		                }
-		            }
+		            } */
 		            setbuttonenable();
 		            
 		            /* 2021-03-24 홍승비 - 제목 클릭 시 원클릭 이벤트로 전자결재 읽기, 결재 팝업창을 표출 */
@@ -770,6 +780,9 @@
 		                openUserInfo();
 		                break;
 		            case "2":
+						var url = "/ezApprovalG/ezReceiptInfoIng.do?docId=" + tr.getAttribute("DATA2") + "&receiptId=" + tr.getAttribute("DATA1") + "&receiptName=" + encodeURIComponent(tr.getAttribute("DATA10"));
+						var win = window.open(url, "", GetOpenWindowfeature(1155, 460, false));
+						try { win.focus(); } catch (e) {}
 		                break;
 		            case "4":
 		            	var AttachfilenameA1 = tr.cells[1].innerHTML;
@@ -2210,22 +2223,33 @@
 		    function initselyear() {
 		        $('#sel_year').selectmenu('close');
 		    }
+		    
+		    /*2021-04-07 홍승비 - MHT양식의 비전자문서등록 추가 */
 			<%-- 비전자문서 등록 --%>
 			function btnNonElecRec_onclick() {
-				if(useWebHWP == "NO") {
-					if (isIE()) {
-						var url = "/ezApprovalG/draftuiHWP.do?formURL=";
+				if (pNonElecRecType.toUpperCase() == "MHT") {
+					var url = "/ezApprovalG/draftui.do?formURL=";
+				    var form = "/files/upload_approvalG/form/2021000000.mht";
+				    var docInfo = "&draftFlag=DRAFT&formDocType=003&susinSN=0&docState=&listType=4&aprState=&isTmpDoc=&nonElecRec=Y";
+				   	window.open(url + form + docInfo, "", GetOpenWindowfeature(1145, 1000));
+				}
+				else { // 기존 HWP
+					if (useWebHWP == "NO") {
+						if (isIE()) {
+							var url = "/ezApprovalG/draftuiHWP.do?formURL=";
+						    var form = "/files/upload_approvalG/form/2018000000.hwp";
+						    var docInfo = "&draftFlag=DRAFT&formDocType=003&susinSN=0&docState=&listType=4&aprState=&isTmpDoc=&nonElecRec=Y";
+						   	window.open(url + form + docInfo, "", GetOpenWindowfeature(1145, 1000));
+		                } else {
+		                	alert("비전자문서 등록은 IE에서만 가능합니다.");
+		                }
+					}
+					else {
+						var url = "/ezApprovalG/draftuiWHWP.do?formURL=";
 					    var form = "/files/upload_approvalG/form/2018000000.hwp";
 					    var docInfo = "&draftFlag=DRAFT&formDocType=003&susinSN=0&docState=&listType=4&aprState=&isTmpDoc=&nonElecRec=Y";
 					   	window.open(url + form + docInfo, "", GetOpenWindowfeature(1145, 1000));
-	                } else {
-	                	alert("비전자문서 등록은 IE에서만 가능합니다.");
-	                }
-				} else {
-					var url = "/ezApprovalG/draftuiWHWP.do?formURL=";
-				    var form = "/files/upload_approvalG/form/2018000000.hwp";
-				    var docInfo = "&draftFlag=DRAFT&formDocType=003&susinSN=0&docState=&listType=4&aprState=&isTmpDoc=&nonElecRec=Y";
-				   	window.open(url + form + docInfo, "", GetOpenWindowfeature(1145, 1000));
+					}
 				}
 			}
 		    

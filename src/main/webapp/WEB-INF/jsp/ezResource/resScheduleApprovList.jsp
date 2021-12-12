@@ -396,11 +396,16 @@
 	    	var schedule_repetition_del_cross_dialogArguments = new Array();
 	    	var selrow;
 	    	function btn_Delete() {
+				var listview = new ListView();
+				listview.LoadFromID("ApprovListView");
+				selrow = listview.GetSelectedRows();
+
+				if(selrow.length <= 0){
+					alert("선택된 자원이 없습니다.");
+					return false;
+				}
+
 	    		if(confirm(strLang90)) {
-		        	var listview = new ListView();
-		        	listview.LoadFromID("ApprovListView");
-		        	selrow = listview.GetSelectedRows();
-	
 		        	var isRepetition = false;
 		        	for (var i = 0; i < selrow.length; i++) {
 			            var reFlagVal = selrow[i].getAttribute("DATA7");
@@ -915,21 +920,21 @@
 		</div>
 		<div class="portlet_tabpart03" style="background-color: #f8f8fa; border:1px solid #ddd;border-bottom:0px; padding:5px 0px 5px 5px">
     		<a class="imgbtn" style="padding-top:2px; cursor:default;"><span id="Span3"><spring:message code='ezEmail.t556'/></span></a>
-    		<input id="subject" type="text" style="width: 300px" />
+    		<input id="subject" type="text" style="width: 300px" onkeyup="if(event.keyCode == 13) getCalendarList('search');"/>
     		<c:if test="${pType eq 'User'}">
 	    		<a id="writername1" class="imgbtn" style="padding-top:2px; display:none;"><span id="Span2" onclick="seluser()"><spring:message code='ezResource.t2003'/></span></a>
-	    		<input id="writername" type="text" style="width: 80px; display:none;" value='<c:out value="${userInfo.displayName }"/>'/>
+	    		<input id="writername" type="text" style="width: 80px; display:none;" value='<c:out value="${userInfo.displayName }"/>' onkeyup="if(event.keyCode == 13) getCalendarList('search');"/>
 	    		<a id="writerdept1" class="imgbtn" style="padding-top:2px; display:none;"><span id="Span3" onclick="seldept()"><spring:message code='ezResource.t132'/></span></a>
-	    		<input id="writerdept" type="text" style="width: 120px; display:none;" value='<c:out value="${userInfo.deptName }"/>'/>
+	    		<input id="writerdept" type="text" style="width: 120px; display:none;" value='<c:out value="${userInfo.deptName }"/>' onkeyup="if(event.keyCode == 13) getCalendarList('search');"/>
 	    	</c:if>
 	    	<c:if test="${pType ne 'User'}">
 	    		<a id="writername1" class="imgbtn" style="padding-top:2px;"><span id="Span2" onclick="seluser()"><spring:message code='ezResource.t2003'/></span></a>
-	    		<input id="writername" type="text" style="width: 80px;"/>
+	    		<input id="writername" type="text" style="width: 80px;" onkeyup="if(event.keyCode == 13) getCalendarList('search');"/>
 	    		<!-- 2018.03.23 서주연 - #12122 부서명 출력 칸 width 늘림 -->
 	    		<a id="writerdept1" class="imgbtn" style="padding-top:2px;"><span id="Span3" onclick="seldept()"><spring:message code='ezResource.t132'/></span></a>
-	    		<input id="writerdept" type="text" style="width: 120px;"/>
+	    		<input id="writerdept" type="text" style="width: 120px;" onkeyup="if(event.keyCode == 13) getCalendarList('search');"/>
 	    	</c:if>
-    		<input type="text" id="Sdatepicker" style="width: 80px; text-align: center"> ~  <input type="text" id="Sdatepicker2" style="width: 80px; text-align: center">
+    		<input type="text" id="Sdatepicker" style="width: 80px; text-align: center" readonly> ~  <input type="text" id="Sdatepicker2" style="width: 80px; text-align: center" readonly>
        		<a class="imgbtn" style="padding-top:2px"><span id="btn_OK" onclick="getCalendarList('search')"><spring:message code='ezResource.t14'/></span></a>
 		</div>
 		<div id="ApprovList" style ="BORDER:0;WIDTH:100%; height:100%;border-top:0px;"></div>

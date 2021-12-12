@@ -110,6 +110,8 @@
 	   			} else {
 	   				alert("<spring:message code='ezSchedule.t8'/>")
 	   			}
+		     	// 2021-04-09 김은실 - 검색 시 PressShiftKey = true 되는 현상(commit 6c23f8716 참조): 모든 search_click()에 적용. 
+	            PressShiftKey = false;
 	   		}
 	   		
 	   		//eunjeong
@@ -705,7 +707,7 @@
 		                                                    <option value="officeMobile" usedefault="0"><spring:message code='main.ksa03' /></option>
 		                                                    </c:if>
 								                            <option value="mail"><spring:message code='ezOrgan.t99'/></option>
-								                            <option value="streetAddress"><spring:message code='ezOrgan.t100'/></option>
+								                            <option value="streetAddress" style="display:none"><spring:message code='ezOrgan.t100'/></option>
 				                                        </select>
 				                                        <input id="keyword" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){search_click(); return false;}" value="" style="width: 130px; margin: 0px;" />
 				                                        <a class="imgbtn"><span onclick="search_click()"><spring:message code='ezOrgan.t101'/></span></a>

@@ -354,7 +354,7 @@ var del_poll = function() {
 	});
 
 	if(!pollList) {
-		alert(strLanghyh3);
+		alert(strLanghyh2);
 		return;
 	}
 

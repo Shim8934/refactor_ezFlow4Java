@@ -405,7 +405,7 @@
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : true,
 		        	data : {
-		        		search : document.all("search_type").value + "::" + document.all("keyword").value, 
+		        		search : document.all("search_type").value + "::" + encodeURIComponent(document.all("keyword").value), 
 		        		cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value, 
 		        		prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department", 
 		        		type : "user"
@@ -445,6 +445,8 @@
 	            else {
 	                usedefault = GetAttribute(document.getElementById("search_type").options[document.getElementById("search_type").selectedIndex], "usedefault");
 	            }
+		     	// 2021-04-09 김은실 - 검색 시 PressShiftKey = true 되는 현상(commit 6c23f8716 참조): 모든 search_click()에 적용. 
+	            PressShiftKey = false;
 	
 	        }
 	        
@@ -470,7 +472,7 @@
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : false,
 		        	data : {
-		        		search : "displayname::" + searchWord, 
+		        		search : "displayname::" + encodeURIComponent(searchWord), 
 		        		cell : "extensionAttribute3;displayName;extensionAttribute9;", 
 		        		prop : "cn", 
 		        		type : "group"
@@ -1890,7 +1892,7 @@
 		                                                        <option value="HomePhone" usedefault="0"><spring:message code='ezEmail.t29' /></option>
 		                                                        <option value="facsimileTelephoneNumber" usedefault="0"><spring:message code='ezEmail.t99000047' /></option>
 		                                                        <option value="mail" usedefault="0"><spring:message code='ezEmail.t99000048' /></option>
-		                                                        <option value="streetAddress" usedefault="0"><spring:message code='ezEmail.t99000049' /></option>
+		                                                        <option value="streetAddress" usedefault="0" style="display:none"><spring:message code='ezEmail.t99000049' /></option>
 		                                                    </select>
 		                                                    <input id="keyword" value="" onkeypress="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px;height:22px">
 		                                                    <a class="imgbtn"><span onclick="search_click('search')"><spring:message code='ezEmail.t37' /></span></a>

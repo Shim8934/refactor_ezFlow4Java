@@ -189,7 +189,7 @@ public class EzAttitudeGWController {
 					if (startDate == null || startDate.equals("")) {
 						startDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false);						
 					}
-					ezAttitudeService.updateAttitude(checkAttitude, startDate, null, region, mobile, bizSub, content, offSet, "", typeId, dateType, mode, attVO, userId, info, info, info.getTenantId(), info.getCompanyId());
+					ezAttitudeService.updateAttitude(checkAttitude, startDate, null, region, mobile, bizSub, content, offSet, "", typeId, dateType, mode, attVO, userId, info, info, info.getTenantId(), info.getCompanyId(), "", "");
 				} else {
 					ezAttitudeService.insertAttitude(userId, info.getDeptId(), startDate, endDate, region, mobile, bizSub, content, "0", typeId, dateType, offSet, info.getCompanyId(), info.getTenantId(), mode, adminId, "0", "", "");					
 				}
@@ -274,7 +274,7 @@ public class EzAttitudeGWController {
 				checkAttitude = "dupl";
 			} else {
 				MCommonVO userInfo = mOptionService.commonInfoWeb(serverName, attitudeVO.getWriterId());
-				ezAttitudeService.updateAttitude(attitudeId, startDate, endDate, region, mobile, bizSub, content, info.getOffSet(), "", typeId, dateType, mode, attitudeVO, userId, info, userInfo, info.getTenantId(), info.getCompanyId());
+				ezAttitudeService.updateAttitude(attitudeId, startDate, endDate, region, mobile, bizSub, content, info.getOffSet(), "", typeId, dateType, mode, attitudeVO, userId, info, userInfo, info.getTenantId(), info.getCompanyId(), "", "");
 			}
 			
 			result.put("status", "ok");

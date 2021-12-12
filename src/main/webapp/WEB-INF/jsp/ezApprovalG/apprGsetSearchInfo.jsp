@@ -81,7 +81,7 @@
 			            window.resizeTo(510, 355);
 					} else {
 						if (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) {
-			            	window.resizeTo(510, 325);
+			            	window.resizeTo(510, 375);
 						} else {
 			            	window.resizeTo(510, 375);
 						}
@@ -91,7 +91,7 @@
 							resizeTo(510,445);
 					} else {
 						if (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) {
-							resizeTo(510,415);
+							resizeTo(510,445);
 						}
 					}
 				}
@@ -1114,8 +1114,8 @@
 				<tr>
 				    <th ><spring:message code='ezApprovalG.psb1334'/></th>
 				    <td >
-				        <input type="text" id="Sdatepickerrec" style="width:80px;text-align:center">
-				        <input type="text" id="Edatepickerrec" style="width:80px;text-align:center">
+				        <input type="text" id="Sdatepickerrec" style="width:80px;text-align:center" readonly>&nbsp;~
+				        <input type="text" id="Edatepickerrec" style="width:80px;text-align:center" readonly>
 				    </td>
 			 	</tr>
 			 	<tr style="display:none;">
@@ -1136,7 +1136,7 @@
 				  <tr style="display:none;">
 				    <th ><spring:message code='ezApprovalG.t1332'/></th>
 				    <td >
-				        <input type="text" id="Sdatepickerapr" style="width:80px;text-align:center" readonly>
+				        <input type="text" id="Sdatepickerapr" style="width:80px;text-align:center" readonly>&nbsp;~
 				        <input type="text" id="Edatepickerapr" style="width:80px;text-align:center" readonly>
 				    </td>
 				  </tr>
@@ -1155,7 +1155,7 @@
 				<tr style="display:none;">
 				    <th ><spring:message code='ezApprovalG.psb1334'/></th>
 				    <td >
-				        <input type="text" id="Sdatepickerrec" style="width:80px;text-align:center" readonly>
+				        <input type="text" id="Sdatepickerrec" style="width:80px;text-align:center" readonly>&nbsp;~
 				        <input type="text" id="Edatepickerrec" style="width:80px;text-align:center" readonly>
 				    </td>
 			 	</tr>
@@ -1177,7 +1177,7 @@
 				  <tr>
 				    <th ><spring:message code='ezApprovalG.t1332'/></th>
 				    <td >
-				        <input type="text" id="Sdatepickerapr" style="width:80px;text-align:center" readonly>
+				        <input type="text" id="Sdatepickerapr" style="width:80px;text-align:center" readonly>&nbsp;~
 				        <input type="text" id="Edatepickerapr" style="width:80px;text-align:center" readonly>
 				    </td>
 				  </tr>
@@ -1187,14 +1187,14 @@
 		  <tr id="displayTR1">
 		    <th ><spring:message code='ezApprovalG.t1334'/></th>
 		    <td >
-		        <input type="text" id="Sdatepickerend" style="width:80px;text-align:center" readonly>
+		        <input type="text" id="Sdatepickerend" style="width:80px;text-align:center" readonly>&nbsp;~
 		        <input type="text" id="Edatepickerend" style="width:80px;text-align:center" readonly>
 		    </td>
 		  </tr>
 		  <tr id="displayTR2">
 		    <th ><spring:message code='ezApprovalG.pjj32'/></th>
 		    <td >
-		        <input type="text" id="Sdatepickerapp" style="width:80px;text-align:center" readonly>
+		        <input type="text" id="Sdatepickerapp" style="width:80px;text-align:center" readonly>&nbsp;~
 		        <input type="text" id="Edatepickerapp" style="width:80px;text-align:center" readonly>
 		    </td>
 		      </tr>

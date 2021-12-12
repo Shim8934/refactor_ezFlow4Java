@@ -68,6 +68,9 @@
 						if (status == "1") {
 				            window.returnValue = "1";
 				            alert("<spring:message code='ezSchedule.t336'/>");
+				            ReturnFunction("success");
+				            window.location.reload(true);
+				            parent.document.location.reload(true);
 				        }
 				        else
 				            alert("<spring:message code='ezSchedule.t337'/>");

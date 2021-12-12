@@ -1,4 +1,4 @@
-TD,input, text, div,select, textarea,a{FONT-SIZE: 9pt;COLOR: #393939;FONT-FAMILY:  arial;}
+TD,input, text, div:not(.slick-slide.slick-current.slick-center, .adminTopTitle),select, textarea,a{FONT-SIZE: 9pt;COLOR: #393939;FONT-FAMILY:  arial;}
 input,SELECT{HEIGHT: 20px}
 .td{empty-cells:show}
 TEXTAREA{padding:5px}
@@ -124,7 +124,7 @@ A.top:hover{COLOR: #22427f;TEXT-DECORATION: none}
 #adminmenu li.on span{height:30px;line-height: 30px; color: rgb(0, 72, 149)}
 .adminsub{background-color:#f5f5f5;height:25px}
 
-TD,input, text, div:not(.slick-slide.slick-current.slick-center),select, textarea,a{FONT-SIZE: 9pt;COLOR: #393939;FONT-FAMILY: malgun gothic, arial,verdana;}
+TD,input, text, div:not(.slick-slide.slick-current.slick-center, .adminTopTitle),select, textarea,a{FONT-SIZE: 9pt;COLOR: #393939;FONT-FAMILY: malgun gothic, arial,verdana;}
 input,SELECT{HEIGHT: 20px}
 .td{empty-cells:show}
 TEXTAREA{padding:5px}

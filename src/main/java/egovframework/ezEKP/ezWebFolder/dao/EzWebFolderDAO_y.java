@@ -1,11 +1,13 @@
 package egovframework.ezEKP.ezWebFolder.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
+import egovframework.ezEKP.ezWebFolder.vo.FolderTreeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -18,20 +20,20 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 		return (int) select("EzWebFolderDAO_y.checkRootFolder", map);
 	}
 	
-	public String insertRootFolder(Map<String, Object> map) {
-		return (String) insert("EzWebFolderDAO_y.insertRootFolder", map);
+	public int insertRootFolder(Map<String, Object> map) {
+		return (int) insert("EzWebFolderDAO_y.insertRootFolder", map);
 	}
 	
-	public List<Map<String, Object>> getUserFolderTree(Map<String, Object> map) {
-		return (List<Map<String, Object>>) list("EzWebFolderDAO_y.getUserFolderTree",map);
+	public List<FolderTreeVO> getUserFolderTree(Map<String, Object> map) {
+		return (List<FolderTreeVO>) list("EzWebFolderDAO_y.getUserFolderTree",map);
 	}
 	
-	public List<Map<String, Object>> getDeptFolderTree(Map<String, Object> map) {
-		return (List<Map<String, Object>>) list("EzWebFolderDAO_y.getDeptFolderTree",map);
+	public List<FolderTreeVO> getDeptFolderTree(Map<String, Object> map) {
+		return (List<FolderTreeVO>) list("EzWebFolderDAO_y.getDeptFolderTree",map);
 	}
 	
-	public List<Map<String, Object>> getCompFolderTree(Map<String, Object> map) {
-		return (List<Map<String, Object>>) list("EzWebFolderDAO_y.getCompFolderTree",map);
+	public List<FolderTreeVO> getCompFolderTree(Map<String, Object> map) {
+		return (List<FolderTreeVO>) list("EzWebFolderDAO_y.getCompFolderTree",map);
 	}
 	
 	// fileList 가져오는 메소드
@@ -98,8 +100,12 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 		return (FolderVO) select("EzWebFolderDAO_y.folderDetailByFileId", map);
 	}
 
-	public String insertFolder(Map<String, Object> map) {
-		return  (String) insert("EzWebFolderDAO_y.insertFolder", map);
+	public int insertFolder(Map<String, Object> map) {
+		return  (int) insert("EzWebFolderDAO_y.insertFolder", map);
+	}
+	
+	public void updateFolderPath(Map<String, Object> map) {
+		insert("EzWebFolderDAO_y.updateFolderPath", map);
 	}
 
 	public LoginVO getUserInfo(Map<String, Object> map) {
@@ -153,6 +159,10 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 		return (int) select("EzWebFolderDAO_y.checkCompanyFolderPermission", map);
 	}
 	
+	public int checkCompanyFilePermission(Map<String, Object> map) {
+		return (int) select("EzWebFolderDAO_y.checkCompanyFilePermission", map);
+	}
+	
 	// 파일 상세 정보 탐색기지원
 	public FileVO getFileDetailForExplorer(Map<String, Object> map) {
 		return (FileVO) select("EzWebFolderDAO_y.getFileDetailForExplorer", map);
@@ -193,4 +203,31 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 	public String folderIdByUserIdAndFolderType (Map<String, Object> map) {
 		return (String) select("EzWebFolderDAO_y.folderIdByUserIdAndFolderType", map);
 	}
+
+	public ArrayList<Map<String, Object>> selectWebfolderFiletoAnother(Map<String, Object> map) {
+		return  (ArrayList<Map<String, Object>>) list("EzWebFolderDAO_y.selectWebfolderFiletoAnother", map);
+	}
+	
+	// 
+	public List<String> getWebFolderUserGroupList(Map<String, Object> map) {
+		return (List<String>) list("EzWebFolderDAO_y.getWebFolderUserGroupList", map);
+	}
+
+	public List<String> getjikWiChekAddjobList(Map<String, Object> map) {
+		return (List<String>) list("EzWebFolderDAO_y.getjikWiChekAddjobList", map);
+	}
+
+	public FileVO selectFileDetail(Map<String, Object> map) {
+		return (FileVO) select("EzWebFolderDAO_y.selectFileDetail", map);
+	}
+
+	// 안 쓰이는 건가..? 'EzWebFolderDAO_y.getFolderUser' - 0 matches in 'sqlmap'
+	public List<Map<String,String>> getFolderUser (Map<String, Object> map) {
+		return (List<Map<String, String>>) list("EzWebFolderDAO_y.getFolderUser", map);
+	}
+		
+	public List<Map<String, Object>> selectRootFolderListInfo (Map<String, Object> map) {
+		return (List<Map<String, Object>>) list("EzWebFolderDAO_y.getRootFolderListInfo",map);
+	}
+	
 }

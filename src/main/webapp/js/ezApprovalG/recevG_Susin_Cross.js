@@ -3266,3 +3266,32 @@ function SignSave() {
         xmlhttp.send(xmlpara);
     }
 }
+
+/* 2021-08-20 홍승비 - 결재 사인칸을 새로 카운트하는 함수 (가변결재선 사용 시 초기 접수문서의 수신결재자 SignCount가 0으로 유지되므로) */
+function getSignCountForAutoLine() {
+	try {
+		var resultCnt = 0;
+		var fields = message.GetFieldsList();
+		if (!fields) return;
+		
+		for (i = 0; i < fields.length; i++) {
+		    var field = fields[i];
+		    if (!field) return;
+		    
+		    if (pDraftFlag == "SUSIN" || pDocState == "011") {
+		        var pSignSusin = pSusinSN + "sign";
+		        if (field.id.substr(0, 5) == pSignSusin) {
+		        	resultCnt = resultCnt + 1;
+		        }
+		    } else {
+                if (field.id.substr(0, 4) == "sign") {
+                	resultCnt = resultCnt + 1;
+                }
+            }
+		}
+		
+		return resultCnt;
+	 } catch (e) {
+		 alert("getSignCountForAutoLine : " + e.description);
+	}
+}

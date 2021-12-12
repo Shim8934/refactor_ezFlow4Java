@@ -192,6 +192,9 @@
 		                case "m13":
 		                    OutSendList_onclick();
 		                    break;
+		                case "m14":
+		                    idistbox_onclick();
+		                    break;
 		                default:
 		                    RecordList_onclick();
 		                    break;
@@ -344,7 +347,7 @@
 		            }
 		        }
 		    function idistbox_onclick() {
-		        document.getElementById("imgTitle").innerHTML = "<spring:message code='ezApprovalG.t911'/>";
+		        document.getElementById("imgTitle").innerHTML = g_sFlag === "m03" ? "<spring:message code='ezApprovalG.t911'/>" : "<spring:message code='ezApprovalG.kbh08'/>";
 		        document.getElementById("imgTitle").style.display = "";
 		        SwapSubMenuDisplay("0");
 		
@@ -1388,6 +1391,19 @@
 		
 		    var ezreceivedistributeui_cross_dialogArguments = new Array();
 		    function btnBaeBu_onclick() {
+		    	var DocList = new ListView();
+				DocList.LoadFromID("DocList");
+				
+				var selRows = DocList.GetSelectedRows();
+		        if (selRows.length === 0) {
+		            var pAlertContent = "문서를 선택해주십시오.";
+		            alert(pAlertContent);
+		            return;
+				}
+
+				var selRow = selRows[0];
+				
+				var DocID = GetAttribute(selRow, "DATA1");
 		        if (DocID == "") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t99991'/>";
 		            OpenAlertUI(pAlertContent);

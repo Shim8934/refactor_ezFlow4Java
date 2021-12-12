@@ -3380,7 +3380,7 @@ input::-ms-clear {display: none;}
 /* question header panel */
 .question-panel{background:#f1f6fb; padding: 0px;}
 .question-header {display:block; height:40px; line-height:40px; padding:0px 0px;}
-.question-header .question-content {float:left; padding:0px 20px; cursor: default; font-size:14px; font-family:Malgun Gothic, "맑은 고딕";}
+.question-header .question-content {background:#f1f6fb;float:left; padding:0px 20px; cursor: default; font-size:14px; font-family:Malgun Gothic, "맑은 고딕";}
 .question-header .tooltip-bttns {float:right; padding: 0px 10px;}
 
 .question-header .imptt {color: rgba(255, 0, 0, 1); padding-left: 20px; margin-right: -15px; font-size: 16px; float: left;}
@@ -3523,7 +3523,7 @@ input[type=range]::-ms-tooltip {display: none;}
 .error_wrap{ overflow:hidden; border:1px solid #dedede; width:600px; margin:80px auto; padding:80px;}
 .error_wrap p{ margin:0px; padding:0px; font-family:Malgun Gothic; text-align:center;}
 .error_wrap dl{ margin:20px 0px 0px 40px;; padding:0px; line-height:40px; font-family:Malgun Gothic; text-align:center;}
-.error_wrap dt,dd{ margin:0px; padding:0px; letter-spacing:-1px;}
+.error_wrap dt,dd{ margin:0px; padding:0px; letter-spacing:0px;}
 .error_wrap dt{ font-size:26px; color:#333; padding:0px 0px 5px 0px;}
 .error_wrap dd{color:#666; font-size:18px; padding:0px 0px 0px 0px;}
 
@@ -3540,6 +3540,7 @@ input[type=range]::-ms-tooltip {display: none;}
 
 .tree_resource_refuse{background-position:-312px -52px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 자원관리 승인거절 아이콘 */
 .tree_resource_unused{background-position:-338px -52px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 자원관리 미사용 아이콘 */
+.tree_car{background-position:0px -280px; margin: 8px 0px 0px 0px; width:16px; height:16px; display:inline-block;} /* tree 차량 */
 
 .calendar_layer .text .td_list td.individual .resource_rental {background-image: url('/images/ezResource/state_rental.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px 0px 5px;}
 .calendar_layer .text .td_list td.individual .resource_return {background-image: url('/images/ezResource/state_return.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px 0px 5px;}

@@ -81,13 +81,15 @@
 								bName : bName,
 						},
 						success : function(result) {
-							if (result != "OK") {
-								alert("<spring:message code='ezCommunity.t203' />");
-							} else {
+							if (result == "REPLYCNT") {
+								alert("<spring:message code='ezCommunity.t425' />");
+							} else if (result == "OK") {
 								 alert("<spring:message code='ezCommunity.t204' />");
 			 		                //window.opener.parent.left.getBoardList();
 			 		                window.opener.location.reload(false);
 			 		                window.close();
+							} else {
+								alert("<spring:message code='ezCommunity.t203' />");
 							}
 						},
 						error : function(xhr, status, error) {
@@ -109,11 +111,24 @@
 		        window.close();
 		    }
 		    
+		    function unEscapeHtml(text) {
+		        var map = {
+		            '&amp;' : '&',
+		            '&lt;' : '<',
+		            '&gt;' : '>',
+		            '&#034;' : '"',
+		            '&#039;' : "'"
+		        };
+
+		        return text.replace(/&amp;|&lt;|&gt;|&#034;|&#039;/g, function(m) { return map[m]; });
+		    }
+		    
 		    /* 2019-02-20 홍승비 - 커뮤니티 CSRF 수정 (단순 호출 작동 시 get방식 사용 )*/
 		    function btn_Reply_Onclick() {
+		    	var strTitle = "<c:out value='${strTitle}' />";
 		    	window.location.href 
 		    		= "/ezCommunity/board/bbsEditNew.do?mode=write&bName=" + encodeURIComponent("${bName}") + "&no=" + encodeURIComponent("${grsNo}") +
-		    				"&head=" + encodeURIComponent("${strTitle}") + "&step=" + encodeURIComponent("${myStep}") + "&level=" + encodeURIComponent("${myLevel}") + 
+		    				"&head=" + encodeURIComponent(unEscapeHtml(strTitle)) + "&step=" + encodeURIComponent("${myStep}") + "&level=" + encodeURIComponent("${myLevel}") + 
 		    				"&ref=" + encodeURIComponent("${grsRef}") + "&pagec=" + encodeURIComponent("${pagec}");
 		    }
 				

@@ -32,7 +32,7 @@
 					success : function(result) {
 						var list = result.circularDeptList;
 						
-						if(lang == "2") {
+						if (lang == "2") {
 							circularDeptList = "<colgroup><col width='7%' /><col width='40%' /><col width='18%' /><col width='18%' /><col width='17%' /></colgroup>";
 						} else {
 							circularDeptList = "<colgroup><col width='7%' /><col width='47%' /><col width='18%' /><col width='15%' /><col width='13%' /></colgroup>";
@@ -54,7 +54,12 @@
 							
 							circularDeptList += "<tr id=" + vo.circularBMID + " style='cursor:pointer' onclick='event_click(this);' ondblclick='modify_circularDept(this);'>";
 							circularDeptList += "<td style='padding-left:5px;'><input class='myCheckbox' name='myCheckbox' value=" + vo.circularBMID + " type='checkbox' onclick='selectRow(this)'></td>";
-							circularDeptList += "<td class='title' style='color:gray;' title='" + title + "'>" + title + "</td>";
+							if (lang == "2") {
+								circularDeptList += "<td class='title' style='color:gray; width:40%;' title='" + title + "'>" + title + "</td>";
+							} else {
+								circularDeptList += "<td class='title' style='color:gray; width:47%;' title='" + title + "'>" + title + "</td>";
+							}
+							
 							circularDeptList += "<td style='color:gray;'>" + vo.regDate.substring(0,16) + "</td>";
 							
 							if (vo.memberNameCount == 0) {

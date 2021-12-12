@@ -114,6 +114,7 @@
 		    arr_userinfo[16]  = "<c:out value ='${userInfo.deptName2}'/>";
 		    arr_userinfo[17]  = "<c:out value ='${userInfo.primary}'/>";
 		    var pCompanyID = "<c:out value ='${userInfo.companyID}'/>";
+		    var companyID = "<c:out value = '${userInfo.companyID}'/>";
 		    var KuyjeType = "002";
 		    var signDateFormat = "<c:out value ='${optSignDateFormat}'/>";
 		    var isSplit = "<c:out value ='${optIsSplit}'/>";
@@ -190,6 +191,7 @@
 	        var bigAttachDownloadPeriod = "<c:out value ='${bigAttachDownloadPeriod}'/>";
 	        var bigAttachDownloadDay = "<c:out value ='${bigAttachDownloadDay}'/>";
 	        var bigSizeAttachDownloadLimitCount = "<c:out value ='${bigSizeAttachDownloadLimitCount}'/>";
+			var preSusinGroupStr = "<c:out value ='${preSusinGroupStr}'/>";
 	        
 		    window.onload = function () {
 		        if (allFlag == "2") {
@@ -199,11 +201,6 @@
 		    	if(approvalFlag == "G") {
 	        		$("#btnAddSepAttach").css("display","");
 	        	} 
-		    	
-		    	if (nonElecRec == "Y") {
-			        getNonElecInfoSusinInit();
-					document.getElementById("btnAddSepAttach").style.display = "none";
-		        }
 		    	
 		    	if(useExternalMailServer == "NO") {
 		    		$("#btnMail").css("display","");
@@ -343,9 +340,10 @@
 		                tempString = tempString.replace("\n", "");
 		                var pAlertContent = tempString + "<br>" + "<spring:message code='ezApprovalG.t3'/>";
 		            }
-		            OpenAlertUI(pAlertContent);
-		            window.parent.close();
-		            btnClose_onclick();
+		            
+					OpenAlertUI(pAlertContent, btnClose_onclick); // 알림창 확인 시 문서창 닫도록 수정
+		            //window.parent.close();
+		           // btnClose_onclick();
 		        } else {
 		            if(NextDocExtended.substring(NextDocExtended.lastIndexOf(".")+1) != "mht") {
 		                openOtherApprovUI();
@@ -416,7 +414,13 @@
 		            pUserID = pOrgAprUserID;
 		            getDocInfo();
 		            setAttachInfo(pDocID, "APR", lstAttachLink);
-		            GetExchInfo();		
+		            GetExchInfo();
+		            
+			    	if (nonElecRec == "Y") {
+				        getNonElecInfoSusinInit();
+						document.getElementById("btnAddSepAttach").style.display = "none";
+			        }
+		            
 		            if (pDocHref != "")
 		            {
 		                message.Set_EditorContentURL(pDocHref);
@@ -1717,11 +1721,13 @@
 		
 		        if (tempItemCode != "")
 		            tempdocnumcode = tempItemCode;
+		        
+		        parameter[61] = tempKeyword;
 		
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 
-		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&orgCompanyID=" + pCompanyID + "&docType=" + pDocType + "&formID=" + pFormID, "ezApprovalInfo", GetOpenWindowfeature(1144, 750));
+		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&orgCompanyID=" + pCompanyID + "&docType=" + pDocType + "&formID=" + pFormID, "ezApprovalInfo", GetOpenWindowfeature(1194, 750));
 		        
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
@@ -1849,6 +1855,8 @@
 				            	sepAttachCheckYN = ret[26];
 				            	if (ext == "hwp") {
 					            	setNonElecRecInfo(nonElecRecInfoXml);
+				            	} else {
+				            		setNonElecRecInfo_mht(nonElecRecInfoXml);
 				            	}
 				            }
 
@@ -2193,7 +2201,11 @@
 		        for (var i = 0; i < rows.length; i++) {
 		        	var dataNodes = GetChildNodes(rows[i]);
 			        objRow = createNodeAndAppandNode(xmlpara, objRoot, objRow, "ROW");
-					createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "NAME", SelectSingleNodeValue(dataNodes[1], "VALUE").trim() + (SelectSingleNodeValue(dataNodes[2], "VALUE").trim() == "" ? "<spring:message code='ezApprovalG.lhj18'/>" : ""));
+					if (getNodeText(dataNodes[1]).indexOf(preSusinGroupStr) == 0) {
+						createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "NAME", SelectSingleNodeValue(dataNodes[1], "VALUE").trim());
+					} else {
+						createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "NAME", SelectSingleNodeValue(dataNodes[1], "VALUE").trim() + (SelectSingleNodeValue(dataNodes[2], "VALUE").trim() == "" ? "<spring:message code='ezApprovalG.lhj18'/>" : ""));
+					}
 					createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "DEPTID", SelectSingleNodeValue(dataNodes[0], "DATA1").trim());
 					createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "DEPTNAME", SelectSingleNodeValue(dataNodes[0], "DATA2").trim());
 					createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "EXTRECEPTYN", SelectSingleNodeValue(dataNodes[0], "DATA3").trim());

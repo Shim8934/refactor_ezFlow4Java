@@ -23,7 +23,10 @@ import java.beans.PropertyDescriptor;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
@@ -32,6 +35,8 @@ import java.math.BigInteger;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.security.MessageDigest;
 import java.text.DecimalFormat;
 import java.text.Normalizer;
 import java.text.ParseException;
@@ -49,9 +54,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.TimeZone;
-import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -74,7 +79,10 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -90,6 +98,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -99,16 +108,26 @@ import org.springframework.web.util.WebUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
+import com.unidocs.workflow.client.WFJob;
+import com.unidocs.workflow.common.FileEx;
+import com.unidocs.workflow.common.JobResult;
+
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezCommon.service.EzCommonService.Device;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.vo.CountryVO;
+import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.utl.rest.Rest;
+import egovframework.let.utl.rest.Rest.Module;
+import egovframework.let.utl.rest.Result;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /*
@@ -126,6 +145,35 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+	/*
+	Copyright (c) 2008-2020, Harald Kuhr
+		All rights reserved.
+
+		Redistribution and use in source and binary forms, with or without
+		modification, are permitted provided that the following conditions are met:
+
+		o Redistributions of source code must retain the above copyright notice, this
+		list of conditions and the following disclaimer.
+
+		o Redistributions in binary form must reproduce the above copyright notice,
+		this list of conditions and the following disclaimer in the documentation
+		and/or other materials provided with the distribution.
+
+		o Neither the name of the copyright holder nor the names of its
+		contributors may be used to endorse or promote products derived from
+		this software without specific prior written permission.
+
+		THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+		AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+		IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+		DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+		FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+		DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+		SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+		CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+		OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+		OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+	*/
 @Component
 public class CommonUtil {
 	
@@ -165,6 +213,15 @@ public class CommonUtil {
 	@Resource(name = "EzNewPortalService")
 	private EzNewPortalService ezNewPortalService;
 	
+	@Autowired
+	private EzWebFolderService ezWebFolderService;
+	
+	@Autowired
+	private KlibUtil kilbUtil;
+	
+	@Autowired
+	private Rest rest;
+
 	/* File separator 공통 함수 */
 	public String separator = "/";
 	
@@ -238,6 +295,10 @@ public class CommonUtil {
 	}
     
 	public LoginVO userInfo(String loginCookie){
+		if (StringUtils.isEmpty(loginCookie)) {
+			return null;
+		}
+
 		try{
 			String decData = egovFileScrty.decryptAES(loginCookie);
 
@@ -1252,41 +1313,17 @@ public class CommonUtil {
 	}
 
 	/**
-	/*
 	 * 테넌트에 따른 설정정보 얻어오는 메서드
 	 */
 	public String getTenantConfigRest(String property, String userId, HttpServletRequest request) throws Exception {
+		Result result = rest.gateway(Module.JOURNAL, request)
+				.url("/rest/ezcommon/configs")
+				.queryParam("property", property)
+				.queryParam("userId", userId)
+				.exchangeResult();
 
-		String gwServerUrl = config.getProperty("config.journalGWServerURL");
-		String url = gwServerUrl + "/rest/ezcommon/configs";
-				
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-		        .queryParam("property", property)
-		        .queryParam("userId", userId);
-		
-		RestTemplate rest = new RestTemplate();
-		
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-		JSONParser jp = new JSONParser();
-		
-		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
-				
-		String status = resultBody.get("status").toString();
-		
-		String propertyValue = "";
-		if (status.equals("ok")) {
-			propertyValue = (String) resultBody.get("data");
-		}
-        
-        return propertyValue;
-    }
+		return result.succeeded() ? result.getData(String.class) : "";
+	}
 	
 	//html entity unescape 메서드 2018-04-06 강민수92
 	public String htmlUnescape(String html) throws Exception {
@@ -1768,8 +1805,8 @@ public class CommonUtil {
 		return strSize;
 	}
 	
-	public void setLoginUsers(int tenantID, String userID, String loginTime) throws Exception {
-		ezCommonService.setMultiLoginUser(tenantID, userID, loginTime);
+	public void setLoginUsers(int tenantID, String companyId, String userID, String loginTime, Device deviceType) throws Exception {
+		ezCommonService.setMultiLoginUser(tenantID, companyId, userID, loginTime, deviceType);
 	}
 	
 	public boolean checkMultiLogin(HttpServletRequest request, HttpServletResponse response) {
@@ -1810,7 +1847,7 @@ public class CommonUtil {
 					useMultiLogin = ezCommonService.getCompanyConfig(tenantID, companyID, "useMultiLogin");
 					
 					if(useMultiLogin.equalsIgnoreCase("NO")) {
-						result = ezCommonService.matchMultiLoginTime(tenantID, userID, multiLoginCookie.getValue());
+						result = ezCommonService.matchMultiLoginTime(tenantID, companyID, userID, multiLoginCookie.getValue(), Device.PC);
 					} 
 				} else {
 					if(multiLoginCookie != null) {
@@ -2375,4 +2412,261 @@ public class CommonUtil {
         
         return outputHtml;
     }
+    
+    /**
+	 * 유니닥스에서 파일을 내려받고 성공했는지 실패했는지 정보, 새로운 파일 path return 
+	 * @param filePath
+	 *  ex) /fileroot/0/files/upload_webfolder/file.pdf
+	 * @param realPath
+	 *  ex) E:/~~~ or /home/jmocha/~~~
+	 * @param filePathFlag 
+	 *  ex) webfolder
+	 * @param tenantId
+	 * @return JSON {
+	 * 	status : "ERROR" or "OK"
+	 *  path : 새로다운받아진 경로 + uuid.pdf
+	 * }
+	 */
+	@SuppressWarnings("unchecked")
+	public JSONObject unidocsFileDown(String filePath, String realPath, String filePathFlag, int tenantId){
+		InputStream inputStream = null;
+		OutputStream outputStream = null;
+		JSONObject result = new JSONObject();
+		String status = "ERROR";
+		int code = 0;
+		logger.debug("filePath=" + filePath + ",realPath=" + realPath + ",filePathFlag=" + filePathFlag + ",tenantId=" + tenantId);
+		
+		try {
+			String unidocsFilerootPath = ezCommonService.getTenantConfig("unidocsFilerootPath", tenantId);
+			File file       = new File(realPath + detectPathTraversal(filePath));
+			
+			MessageDigest md2 = MessageDigest.getInstance("MD5");
+			md2.update(filePath.getBytes());
+			byte mdDate2[] = md2.digest();
+			StringBuffer sb2 = new StringBuffer();
+			
+			for (int i = 0; i < mdDate2.length; i++) {
+				sb2.append(Integer.toHexString((int) mdDate2[i] & 0x00ff));
+			}
+			
+			String fileExtension = FilenameUtils.getExtension(file.getName());
+			String decryptFileName = sb2.toString() + "." + fileExtension;
+			String newFileName = sb2.toString() + ".pdf";
+			
+			// 전자결재의 경우 .hwp.ezd 형식으로 저장되기 때문에 .ezd 앞 마지막 확장자로 만들어줘야함
+			if(filePathFlag.equals("approval") && fileExtension.equals(EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+				String fileName = file.getName();
+				fileName = fileName.substring(0, fileName.lastIndexOf('.'));
+				String NewFileExtension = FilenameUtils.getExtension(fileName);
+				decryptFileName = sb2.toString() + "." + NewFileExtension;
+			}
+				
+			logger.debug("fileExtension=" + fileExtension + ",decryptFileName=" + decryptFileName + ",newFileName=" + newFileName);
+			
+			String stringPath = "";
+			switch (filePathFlag){
+				case "webfolder":
+					stringPath = "upload_webfolder.ROOT";
+					break;
+				// 다른 모듈 추가 	
+				case "approval":
+					stringPath = "upload_approvalG.ROOT";
+					break;
+				case "board":
+					stringPath = "upload_board.ROOT";
+					break;	
+				default:
+					stringPath = "upload_webfolder.ROOT";
+			}
+			
+			String pdfFilePath 	= getUploadPath(stringPath, tenantId) + separator + "unidocs_tempFolder" + separator;
+			String pdfFileAllPath 	= detectPathTraversal(pdfFilePath) + newFileName;
+			
+			File decryptFile 	= new File(realPath + pdfFilePath + "temp" + separator + decryptFileName);
+			if(!decryptFile.exists()){
+				decryptFile.getParentFile().mkdirs();
+			}
+				
+			File pdfFile 	= new File(realPath + pdfFileAllPath);
+			
+			if(pdfFile.exists() && !filePathFlag.equals("approval")){
+				if(pdfFile.getParentFile().exists()){
+					status = "OK";
+					result.put("path",  unidocsFilerootPath + pdfFileAllPath);
+					result.put("path2", pdfFileAllPath);
+					return result;
+				}
+			} else {
+				pdfFile.getParentFile().mkdirs();
+			}
+
+			outputStream = new FileOutputStream(decryptFile);
+			
+			// webfolder는 암호화 하는 폴더가 있기 때문에 klib 복호화 코드 추가 
+			if ((filePathFlag.equals("webfolder") && ezWebFolderService.isEncryptedFilePath(filePath)) || (filePathFlag.equals("approval") && fileExtension.equals(EzApprovalGKlibService.ENCRYPTED_FILE_EXT))) {
+				logger.debug("fileOldPath=" + filePath);
+				logger.debug("pdfFilePath=" + pdfFilePath);
+				byte[] encryptedBytes = Files.readAllBytes(file.toPath());
+				byte[] decryptedBytes = kilbUtil.decrypt(encryptedBytes);
+				inputStream = new ByteArrayInputStream(decryptedBytes);
+				
+				FileCopyUtils.copy(inputStream, outputStream);
+			} else {
+				Files.copy(file.toPath(), outputStream);
+			}
+			outputStream.close();
+
+			if(fileExtension.equalsIgnoreCase("pdf")){
+				FileCopyUtils.copy(decryptFile, pdfFile);
+				status = "OK";
+			} else {
+				JSONObject changePDFResult = changePDF(decryptFile.getPath(), pdfFile.getPath());
+
+				status = changePDFResult.get("status").toString().toUpperCase();
+				code = (int) changePDFResult.get("code");
+			}
+			
+			if (status.equalsIgnoreCase("ok")) {
+				result.put("path", unidocsFilerootPath + pdfFileAllPath);
+				result.put("path2", pdfFileAllPath);
+			}
+		} catch (Exception e) {
+			status = "error";
+			e.printStackTrace();
+		} finally {
+			if (inputStream != null) {
+				try {
+					inputStream.close();
+				} catch (Exception ignore) {
+					logger.debug("IGNORED: {}", ignore.getMessage());
+				}
+			}
+			if (outputStream != null) {
+				try {
+					outputStream.close();
+				} catch (Exception ignore) {
+					logger.debug("IGNORED: {}", ignore.getMessage());
+				}
+			}
+			result.put("status", status);
+			result.put("code", code);
+		}
+		
+		return result;
+	}
+	
+	public JSONObject changePDF (String srcFile, String savePath) {
+		logger.debug("[=================== Unidocs PDF Job Start ===================]");
+		logger.debug("srcFile=" + srcFile + ",savePath=" + savePath);
+		JSONObject result = new JSONObject();
+		WFJob job= null;
+		
+		String status = "";
+		int code = 0;
+		try {
+			job = new WFJob();
+			
+			FileEx srcPath = new FileEx(srcFile);
+			job.setJobBatch(true);
+			
+			JobResult jr = job.generatePDF(srcPath, savePath.substring(savePath.lastIndexOf(File.separator)).substring(1), 0);
+	
+			if(jr.getStatus() == JobResult.JOB_OK) {
+				logger.debug("PDF Convert Success : " + srcFile);
+				jr = job.getJobResult(); 
+				
+				FileEx[] out = jr.getOutFile();	
+				
+				for(int j=0; j< out.length; j++) {
+					out[j].saveToByStream(new File(savePath),true);
+				}
+				
+				status = "ok";
+			} else {
+				logger.debug("DOC TO PDF Fail");
+				status = "error";
+				code = jr.getErrCode();
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+			status = "error";
+		} finally {
+			try {
+				job.clearJobDirectory();  
+			} catch(Exception ee) {
+				ee.printStackTrace();
+			}
+		}
+		logger.debug("[==================== Unidocs PDF Job End ====================]");
+		result.put("status", status);
+		result.put("code", code);
+		return result;
+	}
+	
+	public String cleanValueUnescape(String pOrgString) {
+		String value = ""; 
+				
+		if (pOrgString != null) {
+			value = pOrgString.replaceAll("&amp;", "&").replaceAll("&lt;", "<").replaceAll("&gt;", ">");
+	        value = value.replaceAll("&#40;", "\\(").replaceAll("&#41;", "\\)");
+	        value = value.replaceAll("&#39;", "'");
+	        value = value.replaceAll("&quot;", "\"");
+		}
+
+		return value;
+	}
+	
+	public List<String> attachWebFolderFile(JSONArray jsonArr, String downloadDIR, LoginVO userInfo, String realPath) throws Exception {
+ 		logger.debug("attachWebFolderFile start.");
+		
+ 		JSONObject fileInfo = null;
+		String fileName = "";
+		String filePath = ""; 
+		int size = 0;
+		
+		List<String> fileDownPath = new ArrayList<String>();
+			
+		try {
+ 			for (int i=0; i <jsonArr.size(); i++){
+				fileInfo 	= (JSONObject) jsonArr.get(i);
+				fileName 	= fileInfo.get("fileName").toString() ;
+				filePath 	= fileInfo.get("filePath").toString() ;
+				size 		= Integer.parseInt(fileInfo.get("fileSize").toString());
+				String FileRealName = filePath.split("/")[filePath.split("/").length-1];
+				
+				String newFilePath = realPath + downloadDIR + FileRealName;
+				File newAttachFile = new File(newFilePath); 
+				File oldFile = new File(realPath + filePath);
+				FileUtils.copyFile(oldFile, newAttachFile);
+				fileDownPath.add(downloadDIR + FileRealName);
+
+			}
+			logger.debug("attachWebFolderFile copy complete.");
+		} catch (Exception e) {
+			for (int i = 0 ; i < fileDownPath.size() ; i++){
+				File file = new File(fileDownPath.get(i));
+				file.delete();
+			}
+			fileDownPath.clear();
+			e.printStackTrace();
+		} 
+		
+		logger.debug("attachWebFolderFile end.");
+		return fileDownPath;
+	}
+	
+	public void renameFileForOverwrite(String sourceFile, String destFile) throws Exception{
+		try {
+			File sFile = new File(sourceFile);
+			File dFile = new File(destFile);
+			
+			dFile.getParentFile().mkdirs();
+			logger.debug("renameFileForOverwrite-sFile:" + sourceFile + ",size:" +sFile.length());
+			
+			sFile.renameTo(dFile);
+			logger.debug("renameFileForOverwrite-dFile:" + sourceFile + ",size:" +dFile.length());
+		} catch (Exception ex) {
+			logger.debug("ex: {}", ex);
+		}
+	}
 }

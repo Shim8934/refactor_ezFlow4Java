@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezOrgan.web;
 
+import java.net.URLDecoder;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -318,7 +320,9 @@ public class EzOrganController {
 			companyId = "";
 		}
 
-		logger.debug("searchlist=" + searchlist + ",celllist=" + celllist + ",proplist=" + proplist
+		/* '직원조회 검색란 에서 @@검색시 검색 결과가 정상적으로 나오지 않음'과 관련된 내용으로 수정이 필요한 경우 
+		   searchlist의 검색어 부분을 앞단에서 넘길때 encodeURIComponent로 변환해서 넘기도록 수정필요 */
+		logger.debug("searchlist=" + URLDecoder.decode(searchlist, "utf-8") + ",celllist=" + celllist + ",proplist=" + proplist
 		        + ",listtype=" + listtype + ",lang=" + lang + ",page=" + page + ",companyId=" + companyId);
 		
 		if (page == null) {
