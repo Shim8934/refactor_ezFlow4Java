@@ -33230,8 +33230,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ApprGDocListVO vo = docInfo.get(0);
 			
 			// 다국어처리, 폰트 스타일 등 수정
-			Locale locale = new Locale("ko");
-//			Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(userInfo.getLang()));
+			Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(userInfo.getLang()));
 			String subject = messageSource.getMessage("ezEmail.csj02", locale) + " " + vo.getDocTitle(); // [수신문서도착알림] + DOCTITLE
 			StringBuilder contentBuilder = new StringBuilder("<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td>");
 			contentBuilder.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj17", locale) + ": " + vo.getDocTitle() + "</span><br>");

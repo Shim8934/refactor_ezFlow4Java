@@ -107,7 +107,7 @@ public class EzApprovalScheduler extends EgovFileMngUtil {
 			logger.debug("susinScheduler started.");
 			List<HashMap<String, Object>> susinScheduleList = null;
 			susinScheduleList = ezApprovalGService.susinScheduleList();
-			while(tryCnt++ < 10 && susinScheduleList.size() > 0) {
+			while(tryCnt++ < 10 && susinScheduleList != null && susinScheduleList.size() > 0) {
 				try {
 					for(int i = 0; i < susinScheduleList.size();) {
 						ezApprovalGService.doSusinSchedule(susinScheduleList.get(i));
