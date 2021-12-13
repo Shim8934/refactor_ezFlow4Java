@@ -5659,6 +5659,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String mailMaxReceiverCount = ezCommonService.getTenantConfig("mailMaxReceiverCount", userInfo.getTenantId());
 		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		String useUserDefinedDL = ezCommonService.getTenantConfig("useUserDefinedDL", userInfo.getTenantId()); // 사용자 정의 DL
+		String useOrgListCheckBox = ezCommonService.getTenantConfig("useOrgListCheckBox", userInfo.getTenantId()); // 조직도 체크박스 사용여부
+		useOrgListCheckBox = (useOrgListCheckBox != null && useOrgListCheckBox.equalsIgnoreCase("YES")) ? "true" : "false";
 		
 		if (mailMaxReceiverCount.equals("")) {
 			mailMaxReceiverCount = "200";
@@ -5673,6 +5675,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("mailMaxReceiverCount", mailMaxReceiverCount);
 		model.addAttribute("primaryLang", primaryLang);
 		model.addAttribute("useUserDefinedDL", useUserDefinedDL);
+		model.addAttribute("useOrgListCheckBox", useOrgListCheckBox);
 		
 		String useShowAllCompanies = ezCommonService.getTenantConfig("useShowAllCompanies", userInfo.getTenantId());
 		model.addAttribute("useShowAllCompanies", useShowAllCompanies);
