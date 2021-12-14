@@ -56,7 +56,7 @@
 		            <tr>
 		                <th><spring:message code='ezSystem.ls01' /></th>
 		                <td>
-		                    <select id="ProhUsePrevPwd" onchange="prohUsePrevPwd_onChange(this)">
+		                    <select id="ProhUsePrevPwd" >
 		                        <option value="yes"><spring:message code='ezSystem.hsb01' /></option>
 		                        <option value="no" checked><spring:message code='ezSystem.hsb02' /></option>
 		                    </select>
@@ -276,7 +276,6 @@
 	function initContent() {
          UseMaxPeriod_onChange(document.getElementById("UseMaxPeriod"));
          UseMaxLoginFailCount_onChange(document.getElementById("UseMaxLoginFailCount"));
-         ProhUsePrevPwd_onChange(document.getElementById("ProhUsePrevPwd")); // 2021-11-10 이사라
          UsePatternPolicy_onChange(document.getElementById("UsePatternPolicy"));
          UseEngType_onChange(document.getElementById("UseEngType"));
 
