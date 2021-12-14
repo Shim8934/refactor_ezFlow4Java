@@ -572,4 +572,97 @@ public class EzOrganController {
  		logger.debug("checkPasswordPolicy ended. chkPwPolicy=" + chkPwPolicy);
  		return chkPwPolicy;
  	}
+ 	
+ 	/**
+	 * 회사 트리를 XML 형식으로 반환한다. (조직도 직위, 직책)
+	 */
+	@RequestMapping(value = "/ezOrgan/getCompanyJobTreeInfo.do", method = RequestMethod.POST, produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String getCompanyJobTreeInfo(@CookieValue("loginCookie") String loginCookie, @RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	    logger.debug("getCompanyJobTreeInfo started.");
+	    
+	    String comInfo = null;
+	    try {
+	    	LoginVO userInfo = commonUtil.userInfo(loginCookie);
+	        int tenantID = userInfo.getTenantId();        
+	        String primary = userInfo.getPrimary();
+	        String companyId = userInfo.getCompanyID();
+	        logger.debug("tenantID=" + tenantID + ", primary=" + primary + ", companyId=" + companyId);  
+			
+			Document doc = commonUtil.convertStringToDocument(data);
+			String comID = doc.getElementsByTagName("COMID").item(0).getTextContent();
+	        String topID = doc.getElementsByTagName("TOPID").item(0).getTextContent();
+	        String propList = doc.getElementsByTagName("PROP").item(0).getTextContent();
+	        String type = doc.getElementsByTagName("TYPE").item(0).getTextContent(); // pos(직위), tit(직책)
+	        type = type.equalsIgnoreCase("pos") ? "001" : "002";
+
+	        comID = (topID.split("/").length > 1) ? topID.split("/")[0] : comID.equals("") ? companyId : comID;
+	        logger.debug("comID=" + comID + ",topID=" + topID + ",propList=" + propList + ",type=" + type);
+
+	        comInfo = ezOrganService.getCompanyJobTreeInfo(type, comID, topID, propList, primary, tenantID);
+	    } catch (Exception e) {
+	    	e.printStackTrace();
+	    }
+	    
+        logger.debug("getCompanyJobTreeInfo ended.");
+		return comInfo;
+	}
+	
+	/**
+	 * 회사의 직위 또는 직책 목록을 XML 형식으로 반환한다.
+	 */
+	@RequestMapping(value = "/ezOrgan/getJobMasterTreeInfo.do", method = RequestMethod.POST, produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String getJobMasterTreeInfo(@CookieValue("loginCookie") String loginCookie, @RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		logger.debug("getJobMasterTreeInfo started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String primary = userInfo.getPrimary();
+		int tenantID = userInfo.getTenantId();
+		
+		String jobInfo = "";
+
+		Document doc = commonUtil.convertStringToDocument(data);
+		String comID = doc.getElementsByTagName("COMID").item(0).getTextContent();        
+        String type = doc.getElementsByTagName("TYPE").item(0).getTextContent();
+        type = type.equalsIgnoreCase("pos") ? "001" : "002"; // pos, tit
+                
+        if (!comID.equalsIgnoreCase("Top")) { // top회사는 직위 직책 리스트 출력 안함
+        	jobInfo = ezOrganService.getJobMasterTreeInfo(type, comID, primary, tenantID);
+        }
+        
+        logger.debug("getJobMasterTreeInfo ended.");
+		return jobInfo;	
+	}
+	
+	/**
+	 * 직위 또는 직책 사용자 목록
+	 */
+	@RequestMapping(value = "/ezOrgan/getJobMasterMemberList.do", method = RequestMethod.POST, produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String getJobMasterMemberList(@CookieValue("loginCookie") String loginCookie, @RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		logger.debug("getJobMasterMemberList started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String primary = userInfo.getPrimary();
+		int tenantID = userInfo.getTenantId();
+		
+		String memInfo = "";
+		String type = request.getParameter("type");
+		String jobID = request.getParameter("jobID");
+		String pageSize = "50";
+		String celllist = request.getParameter("cell");
+		String proplist = request.getParameter("prop");
+		String pageNum = request.getParameter("pageNum");
+		String searchType = request.getParameter("searchType");
+		String searchValue = request.getParameter("searchValue");
+		String comID = request.getParameter("comID");
+		logger.debug("type=" + type + ", jobId=" + jobID + ", pageSize=" + pageSize + ", pageNum=" + pageNum + ", searchType=" + searchType 
+				+ ", searchValue=" + searchValue + ", comID=" + comID + ", celllist=" + celllist + ", proplist=" + proplist);
+		   
+		memInfo = ezOrganService.getJobMasterMemberList(type, jobID, celllist, proplist, pageSize, pageNum, searchType, searchValue, primary, comID, tenantID);
+        
+        logger.debug("getJobMasterMemberList ended");
+		return memInfo;	
+	}
 }

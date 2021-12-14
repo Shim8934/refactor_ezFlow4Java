@@ -15,6 +15,7 @@ function TreeNode() {
     this.NodeName = "";
     this.NodeLevel = 0;
     this.EndNode = "";
+    this.UseCheckBox = false;
 
     this.LoadFromID = LoadFromID;
     this.CreateTreeNode = CreateTreeNode;
@@ -191,6 +192,15 @@ function TreeNode() {
         }
 
         treeDiv.innerHTML += imgNode.outerHTML;
+        
+        if (this.UseCheckBox) {
+        	var inputCheckBoxNode = document.createElement("INPUT");
+        	inputCheckBoxNode.setAttribute("class","checkDept");
+        	inputCheckBoxNode.setAttribute("type","checkbox");
+        	inputCheckBoxNode.style.cssText = "width:15px; height:16px;";
+        	treeDiv.innerHTML += inputCheckBoxNode.outerHTML;
+        }
+        
         //
         //노드 아이콘 생성
         var subImgNode = document.createElement("IMG");
@@ -328,6 +338,7 @@ function TreeView() {
     this.SetNodeDblClick = SetNodeDblClick;
     this.SetRequestData = SetRequestData;
     this.SetUseAgency = SetUseAgency;
+    this.SetUseCheckBox = SetUseCheckBox;
 
     this.GetSelectNode = GetSelectNode;
     this.GetSelectNodeID = GetSelectNodeID;
@@ -353,6 +364,7 @@ function TreeView() {
     var _selectedNodeID = "";
     var _selectedNodeNM = "";
     var _useAgency = true;     // 하위노드 추가시 따로 셋팅하지 않은 페이지들이 많아 true로 변경 처리함. 2010.05.07
+    var _useCheckBox = false;
 
     /* Private Member 선언 끝 */
 
@@ -391,6 +403,11 @@ function TreeView() {
     //기관 표시유무 설정
     function SetUseAgency(pUseAgency) {
         _useAgency = pUseAgency;
+    }
+    
+    // 체크박스 사용여부
+    function SetUseCheckBox(pUseCheckBox) {
+    	_useCheckBox = pUseCheckBox;
     }
 
     //이미 만들어진 트리뷰 ID를 이용하여 트리뷰 객체 생성	
@@ -484,6 +501,7 @@ function TreeView() {
                 organNode.NodeID = strNodeID;
                 organNode.NodeName = strNodeNM;
                 organNode.NodeLevel = pLevel;
+                organNode.UseCheckBox = _useCheckBox;
 
                 //선택된 노드 알아내기
                 if (SelectSingleNode(arrNodes[i], "SELECT") != null) {

@@ -20,7 +20,8 @@ import java.nio.file.Files;
 import java.nio.file.Path; 
 import java.nio.file.Paths; 
 import java.nio.file.StandardCopyOption; 
-import java.nio.file.StandardOpenOption; 
+import java.nio.file.StandardOpenOption;
+import java.sql.SQLTransactionRollbackException;
 import java.text.SimpleDateFormat; 
 import java.time.LocalDateTime; 
 import java.time.ZoneId; 
@@ -17444,41 +17445,40 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	
 	// 정주환 수신처 스케쥴러
 	@Override
-	public void doSusinSchedule() throws Exception {
+	public List<HashMap<String,Object>> susinScheduleList() throws Exception {
+		return ezApprovalGDAO.getSendDocList();
+	}
+	
+	@Override
+	public void doSusinSchedule(HashMap<String,Object> map) throws Exception {
 		logger.debug("doSusinSchedule started");
-		List<HashMap<String,Object>> sendDocList = ezApprovalGDAO.getSendDocList();
-		if(sendDocList != null) {
-			for(int i = 0 ; i < sendDocList.size(); i++) {
-				HashMap<String,Object> map = sendDocList.get(i);
-				String docid = map.get("DOCID").toString();
-				String companyID = map.get("COMPANYID").toString();
-				int tenantID = Integer.parseInt(map.get("TENANTID").toString());
-				String result = doSendDocSchedule(
-						docid,
-						map.get("DEPTID").toString(),
-						map.get("DIRPATH").toString(),
-						map.get("DOCSTATE").toString(),
-						companyID,
-						map.get("LANG").toString(),
-						tenantID
-						);
-				if("TRUE".equals(result)) {
-					map.put("v_DOCID", docid);
-					map.put("companyID", companyID);
-					map.put("v_TENANTID", tenantID);
-					map.put("TENANTID", tenantID); // organ쪽 DAO에서 사용하기 위한 테넌트 파라미터
-					List<ApprGDocListVO> writer = ezApprovalGDAO.sendoffercheck_enddocinfo(map);
-					
-					LoginVO tempLoginVO = new LoginVO();
-					tempLoginVO.setId(writer.get(0).getWriterID());
-					tempLoginVO.setTenantId(tenantID);
-					tempLoginVO.setDn("NOPASSWORD");
-					
-					LoginVO userInfo = loginService.selectUser(tempLoginVO);
-					sendSusinMail(map, userInfo);
-					ezApprovalGDAO.deleteSendDocList(map);
-				}
-			}
+		String docid = map.get("DOCID").toString();
+		String companyID = map.get("COMPANYID").toString();
+		int tenantID = Integer.parseInt(map.get("TENANTID").toString());
+		String result = doSendDocSchedule(
+				docid,
+				map.get("DEPTID").toString(),
+				map.get("DIRPATH").toString(),
+				map.get("DOCSTATE").toString(),
+				companyID,
+				map.get("LANG").toString(),
+				tenantID
+				);
+		if("TRUE".equals(result)) {
+			map.put("v_DOCID", docid);
+			map.put("companyID", companyID);
+			map.put("v_TENANTID", tenantID);
+			map.put("TENANTID", tenantID); // organ쪽 DAO에서 사용하기 위한 테넌트 파라미터
+			List<ApprGDocListVO> writer = ezApprovalGDAO.sendoffercheck_enddocinfo(map);
+			
+			LoginVO tempLoginVO = new LoginVO();
+			tempLoginVO.setId(writer.get(0).getWriterID());
+			tempLoginVO.setTenantId(tenantID);
+			tempLoginVO.setDn("NOPASSWORD");
+			
+			LoginVO userInfo = loginService.selectUser(tempLoginVO);
+			sendSusinMail(map, userInfo);
+			ezApprovalGDAO.deleteSendDocList(map);
 		}
 			
 		logger.debug("doSusinSchedule ended");
@@ -17486,7 +17486,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	
 	public String doSendDocSchedule(String docID, String deptID, String dirPath, String docState, String companyID, String lang, int tenantID) throws Exception {
 		logger.debug("doSendDocSchedule started");
-		
 		boolean rtnVal = true;
 		String subSQL = "";
 		Document receiptXML = null;
@@ -17525,6 +17524,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String orgDocID = docID;
 		String tempOrgDocID = "";
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
+		List<Map<String,Object>> sendMsgList = new ArrayList<Map<String,Object>>();
 		
 		if (approvalFlag.equals("G")) {
 			// '완료된 문서'의 OrgDocID, 문서 상태(DOCSTATE) 리스트를 가져온다.
@@ -17753,12 +17753,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 										} 
 									}
 								}
+								Map<String,Object> map4 = new HashMap<String, Object>();
 								
-								if (receiptMemberID.trim().equals("")) {
-									sendRecvMsg(receiptPointID, docID, "SUSIN", receiptCompanyID, lang, tenantID);
-								} else {
-									sendMsg(docID, receiptMemberID, "SUSIN", receiptCompanyID, lang, tenantID);
-								}
+								map4.put("receiptPointID", receiptPointID);
+								map4.put("docID", docID);
+								map4.put("receiptMemberID", receiptMemberID);
+								map4.put("receiptCompanyID", receiptCompanyID);
+								map4.put("lang", lang);
+								map4.put("tenantID", tenantID);
+								sendMsgList.add(map4);
+//								if (receiptMemberID.trim().equals("")) {
+//									sendRecvMsg(receiptPointID, docID, "SUSIN", receiptCompanyID, lang, tenantID);
+//								} else {
+//									sendMsg(docID, receiptMemberID, "SUSIN", receiptCompanyID, lang, tenantID);
+//								}
 							}
 						}
 					}
@@ -17879,6 +17887,23 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							}
 						}
 					}
+				}
+			}
+		}
+		// 톡 알림발송 마지막으로 변경
+		if(rtnVal) {
+			for(int i = 0; i < sendMsgList.size(); i++) {
+				Map<String, Object> map2 = sendMsgList.get(i);
+				receiptMemberID = (String)map2.get("receiptMemberID");
+				receiptPointID = (String)map2.get("receiptPointID");
+				docID = (String)map2.get("docID");
+				receiptCompanyID = (String)map2.get("receiptCompanyID");
+				lang = (String)map2.get("lang");
+				tenantID = Integer.parseInt((String)map2.get("tenantID"));
+				if (receiptMemberID.trim().equals("")) {
+					sendRecvMsg(receiptPointID, docID, "SUSIN", receiptCompanyID, lang, tenantID);
+				} else {
+					sendMsg(docID, receiptMemberID, "SUSIN", receiptCompanyID, lang, tenantID);
 				}
 			}
 		}

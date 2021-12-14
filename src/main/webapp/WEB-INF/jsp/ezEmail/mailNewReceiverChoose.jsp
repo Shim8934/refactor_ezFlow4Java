@@ -51,7 +51,8 @@
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery.multipleSortable.js')}"></script>
 	    <script type="text/javascript">
-	        var m_tabDialogState = { "org": "select", "contact": "normal", "dl": "normal", "sharedMailbox": "normal" };
+	        var m_tabDialogState = { "org": "select", "contact": "normal", "dl": "normal", "sharedMailbox": "normal", 
+	        		"orgJobMst1": "normal", "orgJobMst2": "normal" };
 	        var m_receiverTitleList;
 	        var m_receiverWindowList;
 	        var m_titleNoneSelectedColor = "white";
@@ -89,6 +90,9 @@
 	        var groupAddressCountMap = {};
 	        var mailMaxReceiverCount = parseInt("${mailMaxReceiverCount}");
 	        var useUserDefinedDL = "${useUserDefinedDL}";
+	        var useShowAllCompanies = "${useShowAllCompanies}";
+	        var useOrgListCheckBox = JSON.parse("${useOrgListCheckBox}");
+	        var receiverListId = "";
 	        
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -158,6 +162,35 @@
 	                document.body.style.oUserSelect = 'none';
 	                document.body.style.UserSelect = 'none';
 	            }
+	            
+	            useOrgListCheckBox = (!useOrgListCheckBox || type == "auto") ? false : true; // 도착한 메일전달 페이지에서는 체크박스 표시 안함
+	            if (useOrgListCheckBox) { // table header에 체크박스 td 추가
+	            	// ####### 조직도
+	            	var addTD = document.createElement("TD");
+					addTD.style.cssText = "width: 15px; color:#333;background-color: #f1f3f5; padding:5px; ";
+					addTD.innerHTML = "<input type='checkbox' class='checkAll'>";  
+					
+					$("#txtlist_table tr:first-child").prepend(addTD.cloneNode(true));
+					$("#Search_txtlist_table tr:first-child").prepend(addTD.cloneNode(true));
+					
+					// ####### 주소록, 공용배포그룹, 공유사서함
+					var addHeader = document.createElement("HEADER");
+					var addHeaderInnerHtml = "<NAME></NAME><WIDTH>20</WIDTH><STYLE>padding:5px;</STYLE><ISCHECKBOX>TRUE</ISCHECKBOX>";
+					addHeader.innerHTML = addHeaderInnerHtml;
+					
+					var listViewHeaderXML = [listviewheader3,listviewheader4,listviewheader5];
+					$.each(listViewHeaderXML, function(i,e) {
+						var listViewHeader_Header = e.getElementsByTagName("headers")[0];
+						
+						var addHeaderClone = addHeader.cloneNode(true);
+						if (e.id == "listviewheader4") {
+							addHeaderClone.getElementsByTagName("WIDTH")[0].textContent = "10";
+						}
+						
+						listViewHeader_Header.insertBefore(addHeaderClone, listViewHeader_Header.firstChild);
+					});
+	            }
+	            
 	            m_receiverTitleList = new Array(ToTitle, CCTitle, BCCTitle);
 	            m_receiverWindowList = new Array(ListViewMsgTo, ListViewMsgCC, ListViewMsgBCC);
 	            recevieListview("MsgToList", "ListViewMsgTo");
@@ -178,47 +211,8 @@
 	            	} else {
 		                g_fnaddReceiver = window.dialogArguments["addReceiver"];
 	            	}
-	            try {
-	                var xmlpara = createXmlDom();
-	                var xmlTree = createXmlDom();
-	                var xmlHTTP = createXMLHttpRequest();
-	                var objNode;
-	                createNodeInsert(xmlpara, objNode, "DATA");
-	                createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${userInfo.deptID}");
-	                
-	                <c:choose>
-	                <c:when test="${useShowAllCompanies eq 'YES'}">
-	                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top/organ");
-	                </c:when>
-	                <c:otherwise>
-	                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
-	                </c:otherwise>
-	                </c:choose>
-	                
-	                createNodeAndInsertText(xmlpara, objNode, "PROP", "mail");
-	                xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
-	                xmlHTTP.send(xmlpara);
-	                xmlTree = loadXMLString(xmlHTTP.responseText);
-	                var treeXML = loadXMLFile("/xml/common/organtree_config3.xml");
-	                document.getElementById('TreeView').innerHTML = "";
-	                var treeView = new TreeView();
-	                treeView.SetConfig(treeXML);
-	                treeView.SetID("FromTreeView");
-	                treeView.SetUseAgency(true);
-	                treeView.SetRequestData("RequestData");
-	                treeView.SetNodeClick("TreeViewNodeClick");
-	                treeView.DataSource(xmlTree);
-	                treeView.DataBind("TreeView");
-	
-	                if (strSearch != "") {
-	                    document.getElementById('keyword').value = strSearch;
-	                    search_click();
-	                }
-	
-	            }
-	            catch (ErrMsg) {
-	                alert(" TreeViewinitialize : " + ErrMsg.description);
-	            }
+	            
+	            //orgTreeViewListSet();
 	            
 	            if ("${useSharedMailbox}" == "YES") {
 	            	document.getElementById("sharedMailboxTabButton").style.display = "";
@@ -347,6 +341,7 @@
                 	  }
                 	  
                 	  divListArry = [];
+                	  changeCheckBox();
                   }
                });
 	            
@@ -386,6 +381,7 @@
 		                treeView.SetConfig(treeXML);
 		                treeView.SetID("FromTreeView");
 		                treeView.SetUseAgency(true);
+		                treeView.SetUseCheckBox(useOrgListCheckBox);
 		                treeView.SetRequestData("RequestData");
 		                treeView.SetNodeClick("TreeViewNodeClick");
 		                treeView.DataSource(loadXMLString(g_xmlHTTP.responseText));
@@ -558,10 +554,12 @@
 		    	methodForTabAction(1);
 		        selTab = "orglistView";
 		        selSpan = "orgSpan";
-		        m_tabDialogState["org"] = "select";
-		        m_tabDialogState["contact"] = "normal";
-		        m_tabDialogState["dl"] = "normal";
-		        m_tabDialogState["sharedMailbox"] = "normal";
+		        
+		        $.each(m_tabDialogState, function(i,d) {
+        			var setVal = "org" == i ? "select" : "normal";
+        			m_tabDialogState[i] = setVal; 
+        		});
+		        clearOrgTab("org");
 		        TreeViewTD.style.display = "block";
 		        ListViewTD.style.display = "none";
 		        ListViewDLTD.style.display = "none";
@@ -571,7 +569,47 @@
 		        sharedMailboxMember.style.display = "none";
 		        m_selectedTree = orglistView;
 		        AddrSearch.style.display = "none";
+		        
+		        orgTreeViewListSet();
 		    }
+		    
+		    function orgTreeViewListSet() {
+		    	try {
+		    		var topIdData = useShowAllCompanies == "YES" ? "Top/organ" : "Top";
+		    		
+	                var xmlpara = createXmlDom();
+	                var xmlTree = createXmlDom();
+	                var xmlHTTP = createXMLHttpRequest();
+	                var objNode;
+	                createNodeInsert(xmlpara, objNode, "DATA");
+	                createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${userInfo.deptID}");
+	                createNodeAndInsertText(xmlpara, objNode, "TOPID", topIdData);
+	                createNodeAndInsertText(xmlpara, objNode, "PROP", "mail");
+	                xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
+	                xmlHTTP.send(xmlpara);
+	                xmlTree = loadXMLString(xmlHTTP.responseText);
+	                var treeXML = loadXMLFile("/xml/common/organtree_config3.xml");
+	                document.getElementById('TreeView').innerHTML = "";
+	                var treeView = new TreeView();
+	                treeView.SetConfig(treeXML);
+	                treeView.SetID("FromTreeView");
+	                treeView.SetUseAgency(true);
+	                treeView.SetUseCheckBox(useOrgListCheckBox);
+	                treeView.SetRequestData("RequestData");
+	                treeView.SetNodeClick("TreeViewNodeClick");
+	                treeView.DataSource(xmlTree);
+	                treeView.DataBind("TreeView");
+	
+	                if (strSearch != "") {
+	                    document.getElementById('keyword').value = strSearch;
+	                    search_click();
+	                }
+	            }
+	            catch (ErrMsg) {
+	                alert(" TreeViewinitialize : " + ErrMsg.description);
+	            }
+		    }
+		    
 		    var g_bContactLoaded = false;
 		    function contactTabButton_onClick() {
 		    	methodForTabAction(2);
@@ -581,10 +619,11 @@
 		            g_bContactLoaded = true;
 		            LoadAddressTree();
 		        }
-		        m_tabDialogState["org"] = "normal";
-		        m_tabDialogState["contact"] = "select";
-		        m_tabDialogState["dl"] = "normal";
-		        m_tabDialogState["sharedMailbox"] = "normal";
+		        
+		        $.each(m_tabDialogState, function(i,d) {
+        			var setVal = "contact" == i ? "select" : "normal";
+        			m_tabDialogState[i] = setVal; 
+        		});
 		        TreeViewTD.style.display = "none";
 		        ListViewTD.style.display = "block";
 		        ListViewDLTD.style.display = "none";
@@ -594,15 +633,19 @@
 		        sharedMailboxMember.style.display = "none";
 		        m_selectedTree = AddressListView;
 		        AddrSearch.style.display = "block";
+		        
+		        $(".checkAll").prop("checked", false);
 		    }
 		    function dlTabButton_onClick() {
 		    	methodForTabAction(3);
 		    	selTab = "DistributionList";
 		    	selSpan = "dlSpan";
-		        m_tabDialogState["org"] = "normal";
-		        m_tabDialogState["contact"] = "normal";
-		        m_tabDialogState["dl"] = "select";
-		        m_tabDialogState["sharedMailbox"] = "normal";
+		    	
+	    	 	$.each(m_tabDialogState, function(i,d) {
+        			var setVal = "dl" == i ? "select" : "normal";
+        			m_tabDialogState[i] = setVal; 
+        		});
+		    	
 		        TreeViewTD.style.display = "none";
 		        ListViewTD.style.display = "none";
 		        ListViewDLTD.style.display = "block";
@@ -624,10 +667,11 @@
 		    	methodForTabAction(5);
 		    	selTab = "sharedMailboxList";
 		    	selSpan = "sharedMailboxSpan";
-		        m_tabDialogState["org"] = "normal";
-		        m_tabDialogState["contact"] = "normal";
-		        m_tabDialogState["dl"] = "normal";
-		        m_tabDialogState["sharedMailbox"] = "select";
+		    	
+		    	$.each(m_tabDialogState, function(i,d) {
+        			var setVal = "sharedMailbox" == i ? "select" : "normal";
+        			m_tabDialogState[i] = setVal; 
+        		});
 		        TreeViewTD.style.display = "none";
 		        ListViewTD.style.display = "none";
 		        ListViewDLTD.style.display = "none";
@@ -651,6 +695,7 @@
 			            pListViewSharedMailbox.SetID("pListViewSharedMailbox");
 			            pListViewSharedMailbox.SetSelectFlag(false);
 			            pListViewSharedMailbox.SetMulSelectable(true);
+			            pListViewSharedMailbox.SetUseCheckBox(useOrgListCheckBox);
 			            pListViewSharedMailbox.SetRowOnDblClick("ListViewNodeDblClick");
 			            pListViewSharedMailbox.DataSource(loadXMLString(document.getElementById("listviewheader5").innerHTML.toUpperCase()));
 			            pListViewSharedMailbox.DataBind("ListViewSharedMailbox");
@@ -671,6 +716,8 @@
 			                    dataRows[i].ondragend = function (event) { event_listdragend(event); };
 			                }
 			            }
+			            
+			            changeCheckBox();
 		            }
 		            
 		            xmlHTTP = null;
@@ -731,6 +778,7 @@
 	            }
 	            var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
+                treeView.SetUseCheckBox(useOrgListCheckBox);
 	            treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
 	        }
 	        function confirm_onClick() {
@@ -755,7 +803,7 @@
 	            window.close();
 	        }
 	        function confirm_onClick_auto() {
-	            if (selTab == "orglistView") {
+	            if (selTab == "orglistView" || selTab.indexOf("orgJobMstListView") > -1) { // 조직도, 조직도(직위, 직책)
 	                if (listContentArry != "") {
 	                    var strEmail = document.getElementById(listContentArry[0]).getAttribute("_data3");
 	                }
@@ -909,7 +957,8 @@
 	                    return;
 	                }
 	            } catch (e) { }
-	
+				var al_Include = 0;
+	            
 	            if (m_selectedTree == AddressListView) {
 	                var pListViewDL = new ListView();
 	                pListViewDL.LoadFromID("Address");
@@ -922,7 +971,8 @@
 	                        var pAddressID = GetAttribute(arrRows[i], "DATA1");
 	                        var pAddressType = GetAttribute(arrRows[i], "DATA2");
 	                        var pAddressFolderType = GetAttribute(arrRows[i], "DATA4");
-	                        var strName = arrRows[i].cells[0].innerText
+	                        var strNameIndex = useOrgListCheckBox?1:0;
+	                        var strName = arrRows[i].cells[strNameIndex].innerText;
 	                        var strEmail = GetAttribute(arrRows[i], "DATA3");
 	                        pAddressID = pAddressID + "|!|" + pAddressFolderType;
 	                        if (strEmail.trim() == "") {
@@ -976,6 +1026,7 @@
 	                                pparsingXML = pparsingXML + "<DATA2>" + strEmail + "</DATA2>";
 	                            pparsingXML = pparsingXML + "<DATA3><![CDATA[" + MakeXMLString(strEmail) + "]]></DATA3>";
 	                            pparsingXML = pparsingXML + "<DATA4><![CDATA[" + MakeXMLString(pAddressID) + "]]></DATA4>";
+	                            pparsingXML = pparsingXML + "<DATA-TYPE>add</DATA-TYPE>";
 	                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
 	                            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                            Resultxml = loadXMLString(pparsingXML2);
@@ -1005,6 +1056,10 @@
 	                                document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
 	                                document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
 	                            }
+
+			                    InsertReceiver_CheckBox(listid, arrRows[i]);
+	                        } else {
+	                        	al_Include++;
 	                        }
 	                    }
 	                }
@@ -1063,6 +1118,7 @@
 	                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strName) + "</DATA1>";
 	                            pparsingXML = pparsingXML + "<DATA2>" + strEmail + "</DATA2>";
 	                            pparsingXML = pparsingXML + "<DATA3><![CDATA[" + MakeXMLString(strDeptNM) + "]]></DATA3>";
+	                            pparsingXML = pparsingXML + "<DATA-TYPE>dist</DATA-TYPE>";
 	                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
 	                            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                            Resultxml = loadXMLString(pparsingXML2);
@@ -1092,6 +1148,10 @@
 	                                document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
 	                                document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
 	                            }
+	                            
+			                    InsertReceiver_CheckBox(listid, arrRows[i]);
+	                        } else {
+	                        	al_Include++;
 	                        }
 	                    }
 	                }
@@ -1148,6 +1208,7 @@
 	                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strName) + "</DATA1>";
 	                            pparsingXML = pparsingXML + "<DATA2>" + strEmail + "</DATA2>";
 	                            pparsingXML = pparsingXML + "<DATA3><![CDATA[" + MakeXMLString(strDeptNM) + "]]></DATA3>";
+	                            pparsingXML = pparsingXML + "<DATA-TYPE>shared</DATA-TYPE>";
 	                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
 	                            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                            Resultxml = loadXMLString(pparsingXML2);
@@ -1177,6 +1238,10 @@
 	                                document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
 	                                document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
 	                            }
+	                            
+	                            InsertReceiver_CheckBox(listid, arrRows[i]);
+	                        } else {
+	                        	al_Include++;
 	                        }
 	                    }
 	                }
@@ -1233,6 +1298,7 @@
 	                        pparsingXML = pparsingXML + "<DATA2>" + strEmail + "</DATA2>";
 	                        pparsingXML = pparsingXML + "<DATA3><![CDATA[" + MakeXMLString(strDeptNM) + "]]></DATA3>";
 	                        pparsingXML = pparsingXML + "<DATA4>" + strSIP + "</DATA4>";
+                            pparsingXML = pparsingXML + "<DATA-TYPE>org</DATA-TYPE>";
 	                        pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strDeptNM) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
 	                        pparsingXML = pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	
@@ -1264,7 +1330,12 @@
 	                            document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
 	                            document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
 	                        }
-	                    }
+	                        
+	                        var currentContent = document.getElementById(nodeIdx.NodeID);
+	                        InsertReceiver_CheckBox(listid, currentContent);
+	                    } else {
+                        	al_Include++;
+                        }
 	                }
 	                else {
 	                    if (listContentArry != "") {
@@ -1322,6 +1393,7 @@
 	                                pparsingXML = pparsingXML + "<DATA2>" + strEmail + "</DATA2>";
 	                                pparsingXML = pparsingXML + "<DATA3><![CDATA[" + MakeXMLString(strDeptNM) + "]]></DATA3>";
 	                                pparsingXML = pparsingXML + "<DATA4>" + strSIP + "</DATA4>";
+	                                pparsingXML = pparsingXML + "<DATA-TYPE>org</DATA-TYPE>";
 	                                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
 	                                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                                Resultxml = loadXMLString(pparsingXML2);
@@ -1340,7 +1412,11 @@
 	                                MaxID++;
 	                                MaxCntNum++;
 	                                trSize++
-	                            }
+
+	                                InsertReceiver_CheckBox(listid, currentContent);
+	                            } else {
+		                        	al_Include++;
+		                        }
 	                        }
 	
 	                    }
@@ -1380,6 +1456,7 @@
 	                            pparsingXML = pparsingXML + "<DATA2>" + strEmail + "</DATA2>";
 	                            pparsingXML = pparsingXML + "<DATA3><![CDATA[" + MakeXMLString(strDeptNM) + "]]></DATA3>";
 	                            pparsingXML = pparsingXML + "<DATA4>" + strSIP + "</DATA4>";
+	                            pparsingXML = pparsingXML + "<DATA-TYPE>org</DATA-TYPE>";
 	                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
 	                            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                            Resultxml = loadXMLString(pparsingXML2);
@@ -1410,6 +1487,10 @@
 	                                document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
 	                                document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
 	                            }
+	                            
+	                            InsertReceiver_CheckBox(listid, p_ListOrderObject);
+	                        } else {
+	                        	al_Include++;
 	                        }
 	                    }
 	
@@ -1418,14 +1499,7 @@
 	            }
 	            
 	            var _td = document.getElementById("txtlist_table").childNodes[1].childNodes[0].childNodes;
-	            _tdlength = 0;
-	            
-	            for (var i = 0; i < _td.length; i++) {
-	            	if (_td[i].nodeName == "TD") {
-	            		_tdlength++;
-	            	}
-	            }
-	            
+	            _tdlength = document.getElementById("txtlist_table").childNodes[1].childNodes[0].children.length;
 	            
 	            for (var i = 0; i < listContentArry.length; i++) {
 					Array.prototype.slice.call(document.getElementById(listContentArry[i]).querySelectorAll("td")).forEach(function(it) {
@@ -1434,6 +1508,9 @@
 	            }
 	            listContentArry = [];
 	            
+	            if (al_Include > 0) {
+	            	alert("<spring:message code='ezOrgan.ksaOrganList03' />");
+	            }
 	            
 	            var listid = "";
 	            if (pListView.id == "ListViewMsgTo" || pListView == "MsgToList") {
@@ -1444,6 +1521,13 @@
 	            }
 	            else if (pListView.id == "ListViewMsgBCC" || pListView == "MsgBCCList") {
 	                listid = "MsgBCCList";
+	            }
+	        }
+	        
+	        function checkTest(chkEmail, listClass) {
+				if (useOrgListCheckBox) {
+	            	var test = $("." + listClass + " tr[_data3='"+chkEmail+"']");
+	            	console.log(test);
 	            }
 	        }
 	        
@@ -1515,6 +1599,8 @@
 	            	}
 	                
 	                selList.DeleteRow(arrRows[i].id);
+	                
+	                DeleteReceiver_CheckBox(listid, arrRows[i]);
 	            }
 	        }
 	        
@@ -1533,7 +1619,13 @@
 	                selectedWindow.style.backgroundColor = "white";
 	
 	            selectedWindow.normalColor = m_titleSelectedColor;
-	            m_selectedWindow = selectedWindow;
+	            
+	            if (m_selectedWindow != selectedWindow) {
+	            	m_selectedWindow = selectedWindow;
+	            	receiverListId = m_selectedWindow.getElementsByTagName("table")[0].id;
+	            	
+	            	changeCheckBox();
+	            }
 	        }
 	        
 	        var rgParams = new Array();
@@ -1636,6 +1728,7 @@
 	            p_ListOrderObject = "";
 	            var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
+	            treeView.SetUseCheckBox(useOrgListCheckBox);
 	            var nodeIdx = treeView.GetSelectNode();
 	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px; \" >"
 	            	+ "<span id='spn_deptName' title='" + nodeIdx.GetNodeData("VALUE") + "'>" + nodeIdx.GetNodeData("VALUE") + "</span>"
@@ -2137,6 +2230,13 @@
 	                        M_TR_TD4.style.textOverflow = "ellipsis";
 	                        M_TR_TD4.style.whiteSpace = "nowrap";
 
+	                        if (useOrgListCheckBox) {
+			                    var M_TR_TD_Chk = document.createElement("TD");
+			                    M_TR_TD_Chk.style.padding = "5px";
+			                    M_TR_TD_Chk.innerHTML = "<input type='checkbox' class='checkUser'/>";
+			                    M_TR.appendChild(M_TR_TD_Chk);
+		                    }
+
 							<c:if test="${useShowAllCompanies eq 'YES'}">
 								var companyTd = document.createElement("TD");
 								companyTd.style.overflow = "hidden";
@@ -2185,13 +2285,40 @@
 	                        M_TR_TD3.style.textOverflow = "ellipsis";
 	                        M_TR_TD3.style.whiteSpace = "nowrap";
 							
+		                    if (useOrgListCheckBox) {
+			                    var M_TR_TD_Chk = document.createElement("TD");
+			                    M_TR_TD_Chk.style.padding = "5px";
+			                    M_TR_TD_Chk.innerHTML = "<input type='checkbox' class='checkUser'/>";
+			                    M_TR.appendChild(M_TR_TD_Chk);
+		                    }
+		                    
+		                    if (selTab.indexOf("orgJobMstListView") > -1) {
+			                    var M_TR_DEPT_TD = document.createElement("TD");
+			                    M_TR_DEPT_TD.style.overflow = "hidden";
+			                    M_TR_DEPT_TD.style.textOverflow = "ellipsis";
+			                    M_TR_DEPT_TD.style.whiteSpace = "nowrap";
+			                    M_TR_DEPT_TD.style.width = "110px";
+			                    M_TR_DEPT_TD.innerHTML = M_TR.getAttribute("_DATA5");
+			                    
+			                    M_TR.appendChild(M_TR_DEPT_TD);
+		                    }
+		                    
 		                    M_TR.appendChild(M_TR_TD1);
 		                    M_TR.appendChild(M_TR_TD2);
 		                    M_TR.appendChild(M_TR_TD3);
 		                    document.getElementById("txtlist_table").getElementsByTagName("TBODY").item(0).appendChild(M_TR);
 		                }
+		                
+		                changeCheckBox();
 		            }
 		
+		        }
+		        
+		        if (selTab == "orglistView" && $(".txtlist_DeptTD").length > 0) {
+		        	$(".txtlist_DeptTD").css("display", "none");
+			        $(".txtlist_DeptTD").css("padding-left", "4px");
+
+			        $(".mainlist > tbody > tr:first-child > td:nth-child(2)").css("padding-left", "15px");
 		        }
 		    }
 	        function show_member() {
@@ -2396,6 +2523,7 @@
 	            addressList.SetHeightFree(true);
 	            addressList.SetMulSelectable(true);
 	            addressList.SetRowOnDblClick("ListViewNodeDblClick");
+	            addressList.SetUseCheckBox(useOrgListCheckBox);
 	            addressList.DataBind("AddressListView");
 	            addressList.DataSource(get_xmldom_addresslistview(xmlDom));
 	            addressList.RowDataBind();
@@ -2422,6 +2550,7 @@
 	            pageNum = page;
 	
 	            makePageSelPage();
+	            changeCheckBox();
 	        }
 	        function make_searchstring(orgStr) {
 	            return ReplaceText(ReplaceText(ReplaceText(ReplaceText(orgStr, "'", "''"), "\\[", "[[]"), "%", "[%]"), "_", "[_]");
@@ -2969,11 +3098,20 @@
 	            	console.error(" groupmember_click_Complete : " + e.description);
 	            }
 	        }
-	        function dept_select() {
-	            var organTree = new TreeView();
+	        function dept_select(obj) {
+	        	var organTree = new TreeView();
 	            organTree.LoadFromID("FromTreeView");
 	
 	            var nodeIdx = organTree.GetSelectNode();
+	            var checkBoxNodeIdx = "";
+	            if (typeof obj != "undefined") {
+	            	var selNodeID = obj.id;
+	                var selNode = new TreeNode();
+	                if (selNode.LoadFromID(selNodeID)) {
+	                	checkBoxNodeIdx = selNode;
+	                	nodeIdx = checkBoxNodeIdx;
+	                }
+	            }
 	
 	            if (nodeIdx != -1) {
 	                var IsInsert = CheckMailReceiver(nodeIdx.GetNodeData("MAIL"), "3");
@@ -2982,7 +3120,7 @@
 	                    var organTree = new TreeView();
 	                    organTree.LoadFromID("FromTreeView");
 	
-	                    var nodeIdx = organTree.GetSelectNode();
+	                    var nodeIdx = (typeof obj == "undefined") ? organTree.GetSelectNode() : checkBoxNodeIdx;
 	
 	                    var listid = "";
 	                    var strSIP = "";
@@ -3051,6 +3189,9 @@
 	                        document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
 	                        document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
 	                    }
+
+	                    var currentContent = document.getElementById(nodeIdx.NodeID);
+                        InsertReceiver_CheckBox(listid, currentContent);
 	                }
 	            }
 	        }
@@ -3164,6 +3305,7 @@
 	            addressList.SetSelectFlag(false);
 	            addressList.SetHeightFree(true);
 	            addressList.SetMulSelectable(true);
+	            addressList.SetUseCheckBox(useOrgListCheckBox);
 	            addressList.SetRowOnDblClick("ListViewNodeDblClick");
 	            addressList.DataSource(loadXMLString(document.getElementById("listviewheader4").innerHTML.toUpperCase()));
 	            addressList.DataBind("AddressListView");
@@ -3183,6 +3325,7 @@
 	            addressList = null;
 	            addrsearh = false;
 	            makePageSelPage();
+	            changeCheckBox();
 	        }
             var totalPage = "";
             var pageNum = "";
@@ -3681,10 +3824,15 @@
             function movePage2(newPage2) {
                 if (parseInt(newPage2) > 0 && parseInt(newPage2) <= parseInt(totalPage2)) {
                     CurPage = newPage2;
-                    if (issearch)
+                    if (issearch){
                         search_click();
-                    else
-                        displayUserList();
+                    }else {
+                        if (selTab.indexOf("orgJobMstListView") > -1) {
+                        	orgJobMstUserList();
+                        } else {
+	                    	displayUserList();
+                        }
+                    }
                 }
             }
             function prevPage_onclick2() {
@@ -3708,43 +3856,14 @@
                 }
             }
             function methodForTabAction(target) {
-            	var tab1 = document.getElementById("orgTabButton").children[0];
-            	var tab2 = document.getElementById("contactTabButton").children[0];
-            	var tab3 = document.getElementById("dlTabButton").children[0];
-            	var tab4 = document.getElementById("inputTabButton").children[0];
-            	var tab5 = document.getElementById("sharedMailboxTabButton").children[0];
+            	var tabIds = ["orgTabButton", "contactTabButton", "dlTabButton", "inputTabButton", "sharedMailboxTabButton",
+            	              "orgJobMasterTabButton1", "orgJobMasterTabButton2"]
+            	var targetTab = tabIds[target-1];
             	
-            	if (target == 1) {
-            		tab1.className = "tabon";
-            		tab2.className = "";
-            		tab3.className = "";
-            		tab4.className = "";
-            		tab5.className = "";
-            	} else if (target == 2) {
-            		tab1.className = "";
-            		tab2.className = "tabon";
-            		tab3.className = "";
-            		tab4.className = "";
-            		tab5.className = "";
-            	} else if (target == 3) {
-            		tab1.className = "";
-            		tab2.className = "";
-            		tab3.className = "tabon";
-            		tab4.className = "";
-            		tab5.className = "";
-            	} else if (target == 4) {
-            		tab1.className = "";
-            		tab2.className = "";
-            		tab3.className = "";
-            		tab4.className = "tabon";
-            		tab5.className = "";
-            	} else if (target == 5) {
-            		tab1.className = "";
-            		tab2.className = "";
-            		tab3.className = "";
-            		tab4.className = "";
-            		tab5.className = "tabon";
-            	}
+            	$.each(tabIds, function(i,d) {
+        			var setVal = targetTab == d ? "tabon" : "";
+        			document.getElementById(d).children[0].className = setVal;
+        		})
             }
             
 	        function setOrganListType(pListType) {
@@ -3898,6 +4017,7 @@
 			            pListViewDL.SetID("pListViewDL");
 			            pListViewDL.SetSelectFlag(false);
 			            pListViewDL.SetMulSelectable(true);
+			            pListViewDL.SetUseCheckBox(useOrgListCheckBox);
 			            pListViewDL.SetRowOnDblClick("ListViewNodeDblClick");
 			            pListViewDL.DataSource(loadXMLString(document.getElementById("listviewheader3").innerHTML.toUpperCase()));
 			            pListViewDL.DataBind("ListViewDL");
@@ -3918,6 +4038,8 @@
 			                    dataRows[i].ondragend = function (event) { event_listdragend(event); };
 			                }
 			            }
+			            
+			            changeCheckBox();
 		            }
 		            
 		            xmlHTTP = null;
@@ -3994,7 +4116,359 @@
 					}
 				}
 			</c:if>
-	    </script>
+	        
+	        function orgJobMasterTabButton_onClick(tabType) { // 조직도(직위, 직책)
+	        	var tabNum = tabType == 1 ? 6 : 7; // 1=직위, 2=직책
+	        	methodForTabAction(tabNum);
+	        	
+	        	selTab = "orgJobMstListView" + tabType;
+		        selSpan = "orgJobMstSpan" + tabType;
+		        
+		        $.each(m_tabDialogState, function(i,d) {
+        			var setVal = ("orgJobMst"+tabType) == i ? "select" : "normal";
+        			m_tabDialogState[i] = setVal;
+        		});
+		        clearOrgTab("orgJobMst");
+		        TreeViewTD.style.display = "block";
+		        ListViewTD.style.display = "none";
+		        ListViewDLTD.style.display = "none";
+		        ListViewSharedMailboxTD.style.display = "none";
+		        ListViewINPUT.style.display = "none";
+		        dlmember.style.display = "none";
+		        sharedMailboxMember.style.display = "none";
+		        AddrSearch.style.display = "none";
+		        m_selectedTree = orglistView;
+
+		        $(".txtlist_DeptTD").css("display", "table-cell");
+		        $(".txtlist_DeptTD").css("padding-left", "15px");
+		        $(".mainlist tr td:nth-child(2)").css("padding-left", "4px");
+		        
+		        orgJobMasterListSet(tabType);
+	        }
+	        
+	        function orgJobMasterListSet(type) {
+	        	try {
+	        		var pType = type == 1 ? "POS" : "TIT";
+	        		
+	                var xmlpara = createXmlDom();
+	                var xmlTree = createXmlDom();
+	                var xmlHTTP = createXMLHttpRequest();
+	                var objNode;
+	                var topID = useShowAllCompanies == "YES" ? "Top/organ" : "Top";
+	                
+	                createNodeInsert(xmlpara, objNode, "DATA");
+	                createNodeAndInsertText(xmlpara, objNode, "COMID", "");
+	                createNodeAndInsertText(xmlpara, objNode, "TOPID", topID);
+	                createNodeAndInsertText(xmlpara, objNode, "PROP", "mail");
+	                createNodeAndInsertText(xmlpara, objNode, "TYPE", pType);
+	                
+	                xmlHTTP.open("POST", "/ezOrgan/getCompanyJobTreeInfo.do", false);
+	                xmlHTTP.send(xmlpara);
+	                xmlTree = loadXMLString(xmlHTTP.responseText);
+	                var treeXML = loadXMLFile("/xml/common/organtree_config3.xml");
+	               
+
+	                var treeView = new TreeView();
+	                treeView.SetConfig(treeXML);
+	                treeView.SetID("FromTreeView");
+	                treeView.SetUseAgency(true);
+	                treeView.SetUseCheckBox(useOrgListCheckBox);
+	                treeView.SetRequestData("orgJobMstCompanyClick"); 
+	                treeView.SetNodeClick("orgJobMstClick");
+	                treeView.DataSource(xmlTree);
+	                treeView.DataBind("TreeView");
+	
+	                if (strSearch != "") {
+	                    document.getElementById('keyword').value = strSearch;
+	                    search_click();
+	                }
+	                
+	                changeCheckBox();
+	            }
+	            catch (ErrMsg) {
+	                alert("TreeViewinitialize : " + ErrMsg.description);
+	            }
+	        }
+	        
+	        function orgJobMstClick(i) {
+	        	CurPage = "1";
+	        	var thisNode = document.getElementById(i);
+	        	var thisNode_jobChk = thisNode.getAttribute("isjob");
+	        	listContentArry = new Array();
+	        
+	        	if (thisNode_jobChk != null && thisNode_jobChk) {
+	        		orgJobMstUserList();
+	        	} else { // company
+		        	document.getElementById("SelectDeptNM").innerHTML = "";
+	                pListXML_Info = "";
+	                DisplayUserImageList();
+	        	}
+	        }
+	        
+	        function orgJobMstUserList() {
+	        	var treeView = new TreeView();
+	            treeView.LoadFromID("FromTreeView");
+	            var treeViewSelectNode = treeView.GetSelectNode();
+	            
+        		var jobId = treeViewSelectNode.GetNodeData("cn");
+        		var comId = treeViewSelectNode.GetNodeData("comid");
+        		var jobType = treeViewSelectNode.GetNodeData("jobtype");
+        		var jobName = treeViewSelectNode.GetNodeData("value");
+        		
+				$.ajax({
+					type : "POST",
+					url : "/ezOrgan/getJobMasterMemberList.do",
+					dataType : "text",
+					data : {
+						type : jobType,
+						jobID : jobId,
+						pageNum : CurPage,
+						cell : "company;description;displayName;title;telephoneNumber", 
+						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;userType",
+						searchType : "",
+						searchValue : "",
+						comID : comId
+					}, success : function(result) {
+						pListXML_Info = loadXMLString(result);
+		        		var totalCnt = pListXML_Info.getElementsByTagName("TOTALCOUNT")[0].textContent;
+		        		
+						document.getElementById("SelectDeptNM").innerHTML 
+							= "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px; \" >"
+			            	+ "<span id='spn_deptName' title='" + jobName + "'>" + jobName + "</span>"
+			            	+ "<span id='countInfo'>&nbsp;<span class='countColor'> " + totalCnt + "</span></span>";
+						
+		                pSeach = false;
+		                DisplayUserImageList();
+		                makePageSelPage2();
+					}, error : function (error) {
+						alert("error : " + error);
+					}
+				});
+	        }
+	       
+	        function orgJobMstCompanyClick(pNodeID, pTreeID) {
+				var TreeIdx = pNodeID;
+	            var treeNode = new TreeNode();
+	            treeNode.LoadFromID(TreeIdx);
+	            var deptID = treeNode.GetNodeData("CN");
+	            GetCompanySubTreeInfo(deptID, TreeIdx);
+	        }
+	        
+	        function GetCompanySubTreeInfo(comID, TreeIdx) {
+	        	var jobMstType = selTab == "orgJobMstListView1" ? "POS" : "TIT";
+	        	
+	            var xmlHTTP = createXMLHttpRequest();
+	            var xmlRtn = createXmlDom();
+	            var xmlpara = createXmlDom();
+	            var objNode;
+	            createNodeInsert(xmlpara, objNode, "DATA");
+	            createNodeAndInsertText(xmlpara, objNode, "COMID", comID);
+	            createNodeAndInsertText(xmlpara, objNode, "TYPE", jobMstType);
+	            xmlHTTP.open("POST", "/ezOrgan/getJobMasterTreeInfo.do", false);
+	            xmlHTTP.send(xmlpara);
+	            xmlRtn = loadXMLString(xmlHTTP.responseText);
+	            if (SelectNodes(xmlRtn, "NODES/NODE/VALUE").length > 0) {
+	                if (CrossYN()) {
+	                    xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].appendChild(xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].getElementsByTagName("VALUE")[0]);
+	                }
+	                else {
+	                    xmlRtn.selectNodes("NODES/NODE")[0].appendChild(xmlRtn.selectNodes("NODES/NODE/VALUE")[0]);
+	                }
+	            }
+	            var treeView = new TreeView();
+	            treeView.LoadFromID("FromTreeView");
+                treeView.SetUseCheckBox(useOrgListCheckBox);
+	            treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
+	            
+	            changeCheckBox();
+	        }
+	        
+	        function clearOrgTab(type) { // org or orgJobMst
+	        	document.getElementById('TreeView').innerHTML = "";
+	        	document.getElementById("SelectDeptNM").innerHTML = "";
+                
+                var searchSelectObj = document.getElementById('search_type');
+                searchSelectObj.setAttribute("data-type", type);
+				
+                document.getElementById("keyword").value = "";
+                issearch = false;
+                
+                var hide_orgJobMstSearchOpt = [
+                	{"name":"extensionAttribute10", "usedefault":"1", "msg":"<spring:message code='ezEmail.t281' />"},
+                	{"name":"title", "usedefault":"1", "msg":"<spring:message code='ezEmail.t28' />"},
+                	{"name":"description", "usedefault":"1", "msg":"<spring:message code='ezEmail.t26' />"},
+                ];
+                
+                // 부서선택 버튼명 변경
+                var deptSelectBtnNm = selTab == "orglistView" ? "<spring:message code='ezEmail.t596' />" : selTab == "orgJobMstListView1" 
+                		? "<spring:message code='ezOrgan.ksaOrganList04' />" : "<spring:message code='ezOrgan.ksaOrganList05' />";
+                $("#dept_select > span").text(deptSelectBtnNm);
+                
+                $.each(hide_orgJobMstSearchOpt, function(i,e) {
+                	var searchOpt = $("#search_type option[value='"+e.name+"']");
+               		if (type == "org" && searchOpt.length < 1) {
+                   		var tempOpt = "<option value="+e.name+" usedefault="+e.usedefault+">"+e.msg+"</option>";
+                   		$(tempOpt).insertAfter("#search_type option[value='displayname']");
+                   	} else if (type == "orgJobMst") {
+                   		searchOpt.remove();
+                   	}
+                });
+	        }
+	        
+			var emailAttrArr = {
+	    		"orglistView":"_data3",
+	    		"AddressListView":"data3",
+	    		"ListViewDL":"data2",
+	    		"ListViewSharedMailbox":"data2"
+	    	};
+			
+			// 전체 선택
+			$(document).on("click", ".checkAll", function(obj) {
+				event.stopImmediatePropagation();
+				
+				var Is_checked = this.checked;
+				var selectTreeId = m_selectedTree.id;
+				var selectTR;
+				
+				if (Is_checked) {
+					selectTR = $("#"+selectTreeId+" tr["+emailAttrArr[selectTreeId]+"!=''] input:not('.checkAll')");
+				} else {
+					selectTR = $("#"+selectTreeId+" input:checked");
+				}
+				
+				$.each(selectTR, function (i, e) {
+					var thisParent = $(this).parents("tr")[0];
+					var thisParentEmail = getObjEmail(thisParent, "checkUser");
+					var IsInsert = CheckMailReceiver(thisParentEmail, "3");
+					
+					if ((Is_checked && !IsInsert) || (!Is_checked && IsInsert)) {
+						$(this).click();
+					}
+				});
+			});
+			
+			$(document).on("click", ".checkUser, .checkDept", function() {
+				event.stopImmediatePropagation();
+
+				var Is_checked = this.checked;
+				var thisClassName = this.className;
+
+				var thisParentTag = thisClassName == "checkUser" ? "tr" : "div";
+				var thisParent = $(this).parents(thisParentTag)[0];
+				var thisParentEmail = getObjEmail(thisParent, thisClassName);
+				var IsInsert = CheckMailReceiver(thisParentEmail, "3");
+				
+				var insertFunction = function() { thisClassName == "checkUser" ? ListViewNodeDblClick() : dept_select(thisParent) };
+				
+				if (Is_checked) {
+					if (!IsInsert) {
+						insertFunction();
+						
+						IsInsert = CheckMailReceiver(thisParentEmail, "3");
+						if (!IsInsert) {$(this).prop("checked", false);  }
+					} else {
+						$(this).prop("checked", false);
+		            	alert("<spring:message code='ezOrgan.ksaOrganList03' />");
+					}
+				} else {
+					if (IsInsert) { 
+						receiverList_Delete(thisParentEmail, thisClassName);
+					}
+				}
+			});
+
+			function getObjEmail(obj, type) {
+		    	var selectTreeId = m_selectedTree.id;
+				var emailAttr = type == "checkUser" ? emailAttrArr[selectTreeId] : "mail";
+				var emailStr = obj.getAttribute(emailAttr);
+				
+				var Is_addressGroupMail = (selectTreeId == "AddressListView" && obj.getAttribute("data2") == "mailgroup");
+				if (Is_addressGroupMail) { // 그룹 주소
+					var addressID = obj.getAttribute("data1");
+					var addressFolderType = obj.getAttribute("data4");
+					
+					emailStr = addressID + "|!|" + addressFolderType;
+				} 
+				
+				return emailStr;
+			}
+
+			function receiverList_Delete(objEmail, type) {
+				if (objEmail.indexOf("@") > -1) {
+					$("#"+receiverListId+" tr[data2='"+objEmail+"']").click();
+				} {
+					$("#"+receiverListId+" tr[data4='"+objEmail+"']").click(); // 그룹메일
+				}
+
+				DeleteReceiver(m_selectedWindow);
+			}
+			
+			function InsertReceiver_CheckBox(listid, ele) {
+		    	if (!useOrgListCheckBox) {return; }
+		    	
+				if (receiverListId == listid) { 
+					$("#"+ele.id+ " > .checkUser:input").prop("checked", true);
+					$("#"+ele.id+ " > .checkDept:input").prop("checked", true);
+
+					var selectTreeId = m_selectedTree.id;
+					if (selectTreeId == "orglistView") { // 조직도, 직위, 직책 사용자 리스트에 겸직이 있을 경우. 겸직도 체크
+	                 	var n_email = ele.getAttribute("_data3");
+                 		$("#"+selectTreeId+" tr[_data3='"+n_email+"'] input").prop("checked", true);		    		
+    		    	}
+                }
+			}
+
+			function DeleteReceiver_CheckBox(listid, ele) {
+		    	if (!useOrgListCheckBox) {return; }
+				
+				 if (receiverListId == listid) { 
+					var selectTreeId = m_selectedTree.id;
+			    	var emailAttr = emailAttrArr[selectTreeId];
+                 	var n_email = ele.getAttribute("data2");
+                 	
+                 	if (n_email == "mailgroup") {//주소록 그룹메일
+                 		var addrGroupMail_ID = ele.getAttribute("data4").split("|")[0];
+	                 	$("#" + selectTreeId + " tr[data1='"+addrGroupMail_ID+"'] input").prop("checked", false);
+                 	} else {
+	                 	$("#" + selectTreeId + " tr["+emailAttr+"='"+n_email+"'] input").prop("checked", false);
+                 	}
+                 	
+                 	if (selectTreeId == "orglistView") {
+                 		$("#FromTreeView div[mail='"+n_email+"'] > input").prop("checked", false);		    		
+    		    	}
+                 }
+			}
+			
+			// 수신자설정,탭 변경 시
+		    function changeCheckBox() {
+		    	if (!useOrgListCheckBox) {return; }
+		    	
+		    	var selectTreeId = m_selectedTree.id;
+		    	var emailAttr = emailAttrArr[selectTreeId];
+		    	
+		    	var receiverList = $("#" + receiverListId + " tbody tr");
+		    	
+		    	$("#" + selectTreeId + " input[type='checkbox']").prop("checked", false);
+		    	if (selectTreeId == "orglistView") {
+			    	$("#FromTreeView input[type='checkbox']").prop("checked", false);		    		
+		    	}
+		    	$.each(receiverList, function (i,e) {
+		    		var n_email = e.getAttribute("data2");
+		    		
+		    		if (n_email == "mailgroup") {//주소록 그룹메일
+                 		var addrGroupMail_ID = e.getAttribute("data4").split("|")[0];
+	                 	$("#" + selectTreeId + " tr[data1='"+addrGroupMail_ID+"'] input").prop("checked", true);
+                 	} else {
+	                 	$("#" + selectTreeId + " tr["+emailAttr+"='"+n_email+"'] input").prop("checked", true);
+                 	}
+		    		
+		    		if (selectTreeId == "orglistView") {
+				    	$("#FromTreeView div[mail='"+n_email+"'] > input").prop("checked", true);		    		
+			    	}
+		    	});
+		    }
+
+		</script>
 	</head>
 	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
 		<xml id="listviewheader" style="display: none;">
@@ -4038,7 +4512,7 @@
 		    <HEADERS>
 		      <HEADER>
 		        <NAME><spring:message code='ezEmail.t57' /></NAME>
-		        <WIDTH>70</WIDTH>
+		        <WIDTH></WIDTH>
 		      </HEADER>
 		    </HEADERS>
 		  </LISTVIEWDATA>
@@ -4056,7 +4530,7 @@
 		      </HEADER>
 		      <HEADER>
 		        <NAME>E-Mail</NAME>
-		        <WIDTH>100</WIDTH>
+		        <WIDTH></WIDTH>
 		      </HEADER>
 		    </HEADERS>
 		  </LISTVIEWDATA>
@@ -4066,7 +4540,7 @@
 		    <HEADERS>
 		      <HEADER>
 		        <NAME><spring:message code='ezEmail.sharedMailbox02' /></NAME>
-		        <WIDTH>70</WIDTH>
+		        <WIDTH></WIDTH>
 		      </HEADER>
 		    </HEADERS>
 		  </LISTVIEWDATA>
@@ -4087,6 +4561,12 @@
 	            		<div class="portlet_tabpart01_top" id="tab1" style="margin-bottom:3px;">
 	            			<p id="orgTabButton">
 	            				<span id="orgSpan" onclick="orgTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.t591' /></span>
+	            			</p>
+	            			<p id="orgJobMasterTabButton1">
+	            				<span id="orgJobMstSpan1" onclick="orgJobMasterTabButton_onClick(1)" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezOrgan.ksaOrganList01' /></span>
+	            			</p>
+	            			<p id="orgJobMasterTabButton2">
+	            				<span id="orgJobMstSpan2" onclick="orgJobMasterTabButton_onClick(2)" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezOrgan.ksaOrganList02' /></span>
 	            			</p>
 	            			<p id="contactTabButton">
 	            				<span id="contactSpan" onclick="contactTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.t592' /></span>
@@ -4125,7 +4605,7 @@
 	                                        <tr>
 	                                            <td>
 	                                                <div style="margin-left: 5px;">
-	                                                    <select id="search_type">
+	                                                    <select id="search_type" data-type="org">
 	                                                        <option selected value="displayname" usedefault="1"><spring:message code='ezEmail.t31' /></option>
 	                                                        <option value="description" usedefault="1"><spring:message code='ezEmail.t26' /></option>
 	                                                        <option value="title" usedefault="1"><spring:message code='ezEmail.t28' /></option>
@@ -4179,8 +4659,9 @@
 	                                        <div id="txtlist_Layer" style="vertical-align: top; width: 100%; height: 395px; overflow: auto;" >
 	                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
 	                                                <tr>
-	                                                    <td style="width: 150px;color:#333;background-color: #f1f3f5"><spring:message code='ezEmail.t31' /></td>
-	                                                    <td style="width: 130px;color:#333;background-color: #f1f3f5"><spring:message code='ezEmail.t28' /></td>
+	                                                    <td style="width: 100px;color:#333;background-color: #f1f3f5; display:none;"  class="txtlist_DeptTD"><spring:message code='ezEmail.t26' /></td>
+	                                                    <td style="width: 120px;color:#333;background-color: #f1f3f5"><spring:message code='ezEmail.t31' /></td>
+	                                                    <td style="width: 90px;color:#333;background-color: #f1f3f5"><spring:message code='ezEmail.t28' /></td>
 	                                                    <td style="color:#333;background-color: #f1f3f5"><spring:message code='ezEmail.t99000045' /></td>
 	                                                </tr>
 	                                            </table>
@@ -4309,7 +4790,7 @@
 	                                    </table>
 	                                </div>
 	                            </div>
-	                            <div style="width: 100%; height: 477px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewDL" class="border_gray">
+	                            <div style="width: 100%; height: 477px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewDL" class="border_gray" data-type="dist">
 	                            </div>
 	                        </td>
 	                    </tr>
@@ -4329,7 +4810,7 @@
 	                                    </table>
 	                                </div>
 	                            </div>
-	                            <div style="width: 100%; height: 477px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewSharedMailbox" class="border_gray">
+	                            <div style="width: 100%; height: 477px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewSharedMailbox" class="border_gray" data-type="shared">
 	                            </div>
 	                        </td>
 	                    </tr>

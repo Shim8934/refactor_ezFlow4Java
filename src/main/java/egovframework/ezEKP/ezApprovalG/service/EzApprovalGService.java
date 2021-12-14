@@ -23,6 +23,7 @@ import org.w3c.dom.Document;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -755,7 +756,7 @@ public interface EzApprovalGService {
 	public Map<String, Object> getDocProcessState(String docID, String orgDocID, LoginVO userInfo) throws Exception;
 
 	// 정주환 수신처 스케쥴러
-	public void doSusinSchedule() throws Exception;
+	public void doSusinSchedule(HashMap<String,Object> map) throws Exception;
 
 	/* 2021-04-19 홍승비 - 문서의 ORGDOCID를 리턴하는 ajax용 함수 추가 (mode에 따라서 진행문서, 완료문서 분기) */
 	public String getOrgDocIDByMode(String docID, String mode, String orgCompanyID, int tenantID) throws Exception;
@@ -765,4 +766,6 @@ public interface EzApprovalGService {
 	public String getBujaeInfo(String userID, String deptID, int tenantID, String offset, String companyID) throws Exception;
 	
 	public List<Map<String, Object>> getReceiptInfoIng(String docId, String receiptId, LoginVO userInfo) throws Exception;
+
+	public List<HashMap<String,Object>> susinScheduleList() throws Exception;
 }
