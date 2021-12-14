@@ -1484,7 +1484,7 @@
              </isNotEmpty>
      		ORDER BY
      			A.NotiNo ASC,
-     			A.ParentWriteDate ASC,
+     			A.ParentWriteDate DESC,
      			A.WriteDate DESC
        		LIMIT
        			#limit#, #rowCount#
@@ -2118,7 +2118,7 @@
 				A.APPRFLAG IS NULL
 			)
            	ORDER BY 
-           		NOTINO DESC,
+           		NOTINO ASC,
                 A.ParentWriteDate DESC,
                 A.WriteDate DESC
 		]]>

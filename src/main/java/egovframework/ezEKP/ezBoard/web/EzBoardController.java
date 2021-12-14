@@ -5371,7 +5371,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		StringBuilder resultBld = new StringBuilder();
 		resultBld.append("<LISTVIEWDATA><HEADERS><HEADER><NAME>" + egovMessageSource.getMessage("ezBoard.t208", userInfo.getLocale()) + "</NAME><WIDTH>70</WIDTH></HEADER></HEADERS><ROWS>");
 		
-		for (int i = nList.getLength() - 1; i >= 0; i--) {
+		// 공지사항의 기본 표출 순서는 작성일 내림차순 (최근 작성한 게시물이 상단에 위치)
+		for (int i = 0; i < nList.getLength(); i++) {
 			resultBld.append("<ROW><CELL><VALUE>" + commonUtil.cleanValue(doc.getElementsByTagName("TITLE").item(i).getTextContent()) + "</VALUE>");
 			resultBld.append("<DATA1><![CDATA[" + doc.getElementsByTagName("ITEMID").item(i).getTextContent() + "]]></DATA1></CELL></ROW>");
 		}
