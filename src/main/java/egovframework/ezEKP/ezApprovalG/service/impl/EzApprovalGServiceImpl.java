@@ -17524,6 +17524,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String orgDocID = docID;
 		String tempOrgDocID = "";
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
+		List<Map<String,Object>> sendMsgList = new ArrayList<Map<String,Object>>();
 		
 		if (approvalFlag.equals("G")) {
 			// '완료된 문서'의 OrgDocID, 문서 상태(DOCSTATE) 리스트를 가져온다.
@@ -17752,12 +17753,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 										} 
 									}
 								}
+								Map<String,Object> map4 = new HashMap<String, Object>();
 								
-								if (receiptMemberID.trim().equals("")) {
-									sendRecvMsg(receiptPointID, docID, "SUSIN", receiptCompanyID, lang, tenantID);
-								} else {
-									sendMsg(docID, receiptMemberID, "SUSIN", receiptCompanyID, lang, tenantID);
-								}
+								map4.put("receiptPointID", receiptPointID);
+								map4.put("docID", docID);
+								map4.put("receiptMemberID", receiptMemberID);
+								map4.put("receiptCompanyID", receiptCompanyID);
+								map4.put("lang", lang);
+								map4.put("tenantID", tenantID);
+								sendMsgList.add(map4);
+//								if (receiptMemberID.trim().equals("")) {
+//									sendRecvMsg(receiptPointID, docID, "SUSIN", receiptCompanyID, lang, tenantID);
+//								} else {
+//									sendMsg(docID, receiptMemberID, "SUSIN", receiptCompanyID, lang, tenantID);
+//								}
 							}
 						}
 					}
@@ -17878,6 +17887,23 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							}
 						}
 					}
+				}
+			}
+		}
+		// 톡 알림발송 마지막으로 변경
+		if(rtnVal) {
+			for(int i = 0; i < sendMsgList.size(); i++) {
+				Map<String, Object> map2 = sendMsgList.get(i);
+				receiptMemberID = (String)map2.get("receiptMemberID");
+				receiptPointID = (String)map2.get("receiptPointID");
+				docID = (String)map2.get("docID");
+				receiptCompanyID = (String)map2.get("receiptCompanyID");
+				lang = (String)map2.get("lang");
+				tenantID = Integer.parseInt((String)map2.get("tenantID"));
+				if (receiptMemberID.trim().equals("")) {
+					sendRecvMsg(receiptPointID, docID, "SUSIN", receiptCompanyID, lang, tenantID);
+				} else {
+					sendMsg(docID, receiptMemberID, "SUSIN", receiptCompanyID, lang, tenantID);
 				}
 			}
 		}

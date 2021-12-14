@@ -107,27 +107,21 @@ public class EzApprovalScheduler extends EgovFileMngUtil {
 			logger.debug("susinScheduler started.");
 			List<HashMap<String, Object>> susinScheduleList = null;
 			susinScheduleList = ezApprovalGService.susinScheduleList();
-			while(tryCnt++ < 10 && susinScheduleList != null && susinScheduleList.size() > 0) {
+			int idx = 0;
+			while(tryCnt++ < 3 && susinScheduleList != null && susinScheduleList.size() > 0) {
 				try {
-					for(int i = 0; i < susinScheduleList.size();) {
+					for(int i = idx; i < susinScheduleList.size();) {
 						ezApprovalGService.doSusinSchedule(susinScheduleList.get(i));
 						susinScheduleList.remove(i);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
-					if(tryCnt == 10) {
-						logger.debug("susinScheduler Retry 10 times failed!");
+					idx = idx + 1 >= susinScheduleList.size() ? 0 : idx + 1;
+					if(tryCnt == 3) {
+						logger.debug("susinScheduler Retry 3 times failed!");
 						return;
 					}
 					Thread.sleep(300);
-					try {
-						for(int i = 1; i < susinScheduleList.size();) {
-							ezApprovalGService.doSusinSchedule(susinScheduleList.get(i));
-							susinScheduleList.remove(i);
-						}
-					} catch (Exception e2) {
-						e2.printStackTrace();
-					}
 				}
 			}
 			logger.debug("susinScheduler ended.");
