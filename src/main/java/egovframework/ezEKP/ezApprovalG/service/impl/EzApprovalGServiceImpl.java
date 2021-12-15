@@ -17880,11 +17880,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							
 							ezApprovalGDAO.insertDocSendAprReceiptProcessInfo2(map);
 							
-							if (receiptMemberID.trim().equals("")) {
-								sendRecvMsg(receiptPointID, docID, "SUSIN", receiptCompanyID, lang, tenantID);
-							} else {
-								sendMsg(docID, receiptMemberID, "SUSIN", receiptCompanyID, lang, tenantID);
-							}
+							Map<String,Object> map4 = new HashMap<String, Object>();
+							
+							map4.put("receiptPointID", receiptPointID);
+							map4.put("docID", docID);
+							map4.put("receiptMemberID", receiptMemberID);
+							map4.put("receiptCompanyID", receiptCompanyID);
+							map4.put("lang", lang);
+							map4.put("tenantID", tenantID);
+							sendMsgList.add(map4);
+//							if (receiptMemberID.trim().equals("")) {
+//								sendRecvMsg(receiptPointID, docID, "SUSIN", receiptCompanyID, lang, tenantID);
+//							} else {
+//								sendMsg(docID, receiptMemberID, "SUSIN", receiptCompanyID, lang, tenantID);
+//							}
 						}
 					}
 				}
