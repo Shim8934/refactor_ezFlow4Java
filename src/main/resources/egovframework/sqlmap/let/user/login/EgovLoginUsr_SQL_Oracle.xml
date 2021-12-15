@@ -65,8 +65,8 @@
 			     	department,			     
 			     	description,
 			     	description2,
-			     	title,
-			     	title2,
+			     	NVL(title, ' ') AS title,
+			     	NVL(title2, ' ') AS title2,
 			     	physicaldeliveryofficename as companyid,
 			     	company,
 			     	company2,
@@ -104,14 +104,14 @@
 					d.displayname2 description2,
 					case u.department
 				    when TO_NCHAR(#deptID#)
-				    then u.title
+				    then NVL(u.title, ' ')
 				    else
 					(select title from tbl_addjobmaster where cn = #id# and deptid = #deptID# and tenant_id = #tenantId#)
 				    end
 				    as title,
 					case u.department
 				    when TO_NCHAR(#deptID#)
-				    then u.title2
+				    then NVL(u.title2, ' ')
 				    else
 					(select title2 from tbl_addjobmaster where cn = #id# and deptid = #deptID# and tenant_id = #tenantId#)
 				    end
@@ -166,8 +166,8 @@
 	                department,              
 	                description,
 	                description2,
-	                title,
-	                title2,
+	                NVL(title,' ') AS title,
+			     	NVL(title2, ' ') AS title2,
 	                physicaldeliveryofficename as companyid,
 	                company,
 	                company2,
@@ -205,14 +205,14 @@
 					d.displayname2 description2,
 					case u.department
 				    when TO_NCHAR(#deptID#)
-				    then u.title
+				    then NVL(u.title, ' ')
 				    else
 					(select title from tbl_addjobmaster where cn = #id# and deptid = #deptID# and tenant_id = #tenantId#)
 				    end
 				    as title,
 					case u.department
 				    when TO_NCHAR(#deptID#)
-				    then u.title2
+				    then NVL(u.title2, ' ')
 				    else
 					(select title2 from tbl_addjobmaster where cn = #id# and deptid = #deptID# and tenant_id = #tenantId#)
 				    end

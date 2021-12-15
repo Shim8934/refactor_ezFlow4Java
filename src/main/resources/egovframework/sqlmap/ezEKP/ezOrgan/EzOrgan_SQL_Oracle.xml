@@ -2486,11 +2486,12 @@
 		</isNotEmpty>	
 	</select>
 	
+	<!-- 2021-12-14 홍승비 - getOrgUserInfo 쿼리에 오라클을 위한 NVL 추가 --> 
 	<select id="EzOrganDAO.getOrgUserInfo" parameterClass="Map" resultClass="OrganUserVO">
 		SELECT 
 			CN
 			,DEPARTMENT
-			,TITLE
+			,NVL(TITLE, ' ')
         FROM TBL_USERMASTER 
        	WHERE 1=1
         AND CN = #userID#
