@@ -17894,12 +17894,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if(rtnVal) {
 			for(int i = 0; i < sendMsgList.size(); i++) {
 				Map<String, Object> map2 = sendMsgList.get(i);
-				receiptMemberID = (String)map2.get("receiptMemberID");
-				receiptPointID = (String)map2.get("receiptPointID");
-				docID = (String)map2.get("docID");
-				receiptCompanyID = (String)map2.get("receiptCompanyID");
-				lang = (String)map2.get("lang");
-				tenantID = Integer.parseInt((String)map2.get("tenantID"));
+				receiptMemberID = String.valueOf(map2.get("receiptMemberID"));
+				receiptPointID = String.valueOf(map2.get("receiptPointID"));
+				docID = String.valueOf(map2.get("docID"));
+				receiptCompanyID = String.valueOf(map2.get("receiptCompanyID"));
+				lang = String.valueOf(map2.get("lang"));
+				tenantID = Integer.parseInt(String.valueOf(map2.get("tenantID")));
 				if (receiptMemberID.trim().equals("")) {
 					sendRecvMsg(receiptPointID, docID, "SUSIN", receiptCompanyID, lang, tenantID);
 				} else {
