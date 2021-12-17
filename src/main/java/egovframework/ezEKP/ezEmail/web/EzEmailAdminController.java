@@ -2014,8 +2014,14 @@ public class EzEmailAdminController {
 				}
 			} else {
 				logger.debug("create sharedMailbox failed. addUser failed.");
-				
-				resultCode = "EMAIL_ERROR";
+				// 2021-12-16 이사라 : 오류 메시지 분리
+				if (rc == -2) {			// -2 : alias 이메일과 중복,
+					resultCode = "ALIAS_EMAIL_DUPLICATE";
+				} else if (rc == -1) {	// -1 : 사용자 이메일 중복 (tbl_usermaster와 중복체크)
+					resultCode = "EMAIL_DUPLICATE";
+				} else {
+					resultCode = "EMAIL_ERROR";
+				}
 				model.addAttribute("resultCode", resultCode);
 				logger.debug("addSharedMailbox ended. resultCode=" + resultCode);
 				return "json";

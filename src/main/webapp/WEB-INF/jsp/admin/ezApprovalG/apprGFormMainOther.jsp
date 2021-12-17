@@ -193,6 +193,10 @@
 		        	}
 		        }
 		        
+		        /* 2021-12-16 홍승비 - 양식타입 별 고정수신자 탭 표출 제어 (수신문, 시행문에서만 표출) */
+		         var selFormTypeVal = $("#selFormKind").val();
+		         changeSelFormKind(selFormTypeVal);
+		        
 	        	// IE scroll enable
 	        	if (document.body.scroll === "") {
 	        		document.body.scroll = "yes";
@@ -298,10 +302,6 @@
 		        			tbDescript.value = result.vo.formDescription;
 		        			selFormKind.value = result.vo.formDocType;
 		        			formURL = encodeURI(result.vo.formFileLocation);
-		        			
-		        			if (!(result.vo.formDocType == "003" || result.vo.formDocType == "004")) {
-			        			$("#ApvForm_sub5").hide();
-		        			}
 		        			
 		        			if (result.vo.formConnFlag == "Y") {
 			                    document.getElementById("setConnFlag").checked = true;
@@ -1143,19 +1143,44 @@
 		    	}
 		    }
 		    
-		    function changeSelFormKind(value) {
-		        if (!(value == "003" || value == "004")) {
-					$("#ApvForm_sub5").hide();		        
-		        } else {
-		        	$("#ApvForm_sub5").show();
-				}
-				
+		    /* 2021-12-16 홍승비 - 고정수신처 탭 표출이 S버전과 G버전에 대응하도록 분기 추가 (버전별로 수신문과 시행문의 코드값이 다름)  */
+			function changeSelFormKind(value) {
+		    	var selSihangTypeVal = $("#selSihangType").val();
+		    	
+		    	// G버전 시행문인 경우, 테넌트 컨피그를 확인하여 내부/외부 선택 셀렉트박스 제어
 				if (approvalFlag === "G" && receptGubunYN === "Y" && value === "001") {
 					document.querySelector("#selSihangType").style.display = "";
 				} else {
 					document.querySelector("#selSihangType").style.display = "none";
 				}
+		    	
+				// G버전 : 001이 시행문, 003이 수신문
+				if (approvalFlag == "G") { // 내부, 외부 선택 가능한 경우 (receptGubunYN === "Y") 내부시행문일때만 표출
+	 		        if ((value == "001" && receptGubunYN === "N") || (value == "001" && receptGubunYN === "Y" && selSihangTypeVal == "inner") || value == "003") {
+	 		        	$("#ApvForm_sub5").show();
+			        } else {
+			        	$("#ApvForm_sub5").hide();
+					}
+		        }
+		        else { // S버전 : 003이 수신문, 004가 시행문 (내부시행문만 존재)
+	 		        if (value == "003" || value == "004") {
+						$("#ApvForm_sub5").show();	
+			        } else {
+			        	$("#ApvForm_sub5").hide();
+					}
+		        }
 			}
+		    
+		    /* 2021-12-16 홍승비 - G버전 시행문 내부, 외부 선택 시 고정수신처 탭 표출 제어 (내부, 외부 선택 가능한 경우 내부시행문일때만 표출) */
+		    function changeSelSihangType(value) {
+		    	var selFormKindVal = $("#selFormKind").val();
+		    	
+		    	if (selFormKindVal == "001" && receptGubunYN === "Y" && value == "inner") {
+					$("#ApvForm_sub5").show();	
+		        } else {
+		        	$("#ApvForm_sub5").hide();
+				}
+		    }
 			
 			//양식 세부설정 기본값 설정
 			var aprtypeCheckBoxInt = new Array("_a1_", "_a2_", "_a3_");
@@ -1313,7 +1338,7 @@
                     <td style="width:40%;" colspan="5">
 						<div style="width: 100%; display: flex; justify-content: space-between;">
 							<select id="selFormKind" name="selFormKind" style="flex: 2;" onchange="changeSelFormKind(this.value)">${docType}</select>
-							<select id="selSihangType" name="selSihangType" style="flex: 1; margin-left: 2px; display:none;">
+							<select id="selSihangType" name="selSihangType" style="flex: 1; margin-left: 2px; display:none;" onchange="changeSelSihangType(this.value)">
 								<option value="inner" selected>내부</option>
 								<option value="outer">외부</option>
 							</select>
