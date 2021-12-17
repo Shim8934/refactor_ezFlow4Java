@@ -1696,7 +1696,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			}
 			
 			readNo = cBoardGet1.getReadNum();
-			strWriteDate = cBoardGet1.getWriteDay().trim();
+			strWriteDate = cBoardGet1.getWriteDay().trim().substring(0, 16);
 			
 			if (userInfo.getPrimary().equals("1")) {
 				strWriteName = cBoardGet1.getUserName();
