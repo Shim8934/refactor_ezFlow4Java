@@ -214,7 +214,7 @@
         </div>
 		<table style="margin-top: 5px;">
 			<tr>
-				<td style="width: 400px; vertical-align: top">
+				<td style="width: 438px; vertical-align: top">
 					<div id="divFromTreeView" style="vertical-align: top; padding-top: 5px; height: 480px; width: 100%; overflow-x: auto; overflow-y: auto; BORDER: #ddd 1px solid; BACKGROUND-COLOR: #ffffff"></div>
 				</td>
 			</tr>

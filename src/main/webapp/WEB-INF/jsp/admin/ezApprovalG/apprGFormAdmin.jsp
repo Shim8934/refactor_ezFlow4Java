@@ -628,10 +628,10 @@
 						formContMain_dialogArguments[0] = para;
 						formContMain_dialogArguments[1] = moveForm_onclick_Complete;
 		
-			            var moveForm_Cross = window.open(url, "SelectTaskCategory", GetOpenWindowfeature(430, 590));
+			            var moveForm_Cross = window.open(url, "SelectTaskCategory", GetOpenWindowfeature(460, 590));
 			            try { SelectTaskCategory_Cross.focus(); } catch (e) { }
 					} else {
-			            var retVal = window.showModalDialog(url, para, "dialogWidth:430px;dialogHeight:580px;status:no;help:no;scroll:no;edge:sunken");
+			            var retVal = window.showModalDialog(url, para, "dialogWidth:460px;dialogHeight:580px;status:no;help:no;scroll:no;edge:sunken");
 			            if (retVal[0] == "OK") {
 			                Tree_setconfig();
 			                InitFormCont();
