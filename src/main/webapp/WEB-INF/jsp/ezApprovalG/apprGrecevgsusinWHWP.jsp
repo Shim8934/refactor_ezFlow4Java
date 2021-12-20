@@ -76,7 +76,7 @@
 		    arr_userinfo[2]  = "<c:out value = '${userInfo.displayName1}'/>";
 		    arr_userinfo[3]  = "<c:out value = '${userInfo.title1}'/>";
 		    arr_userinfo[4]  = "<c:out value = '${userInfo.deptID}'/>";
-		    arr_userinfo[5]  = "<c:out value = '${userInfo.deptName1}'/>";
+		    arr_userinfo[5]  = "<c:out value = '${userInfo.deptName1}' escapeXml='false'/>";
 		    arr_userinfo[6]  = "<c:out value = '${userInfo.jikChek}'/>";
 		    arr_userinfo[8]  = "<c:out value = '${userInfo.email}'/>";             
 		    arr_userinfo[9]  = sCompanyID;
@@ -84,8 +84,8 @@
 		    arr_userinfo[12]  = "<c:out value = '${userInfo.displayName2}'/>";
 		    arr_userinfo[13]  = "<c:out value = '${userInfo.title1}'/>";
 		    arr_userinfo[14]  = "<c:out value = '${userInfo.title2}'/>";
-		    arr_userinfo[15]  = "<c:out value = '${userInfo.deptName1}'/>";
-		    arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2}'/>";		
+		    arr_userinfo[15]  = "<c:out value = '${userInfo.deptName1}' escapeXml='false'/>";
+		    arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2}' escapeXml='false'/>";		
 		    var pCompanyID = "<c:out value = '${userInfo.companyID}'/>";
 		    var companyID = "<c:out value = '${userInfo.companyID}'/>";
 		    var pSummery = "", pSpecialRecordCode = "", pPublicityCode = "", pPublicityYN = "", pLimitRange = "", pPageNum = "1";
