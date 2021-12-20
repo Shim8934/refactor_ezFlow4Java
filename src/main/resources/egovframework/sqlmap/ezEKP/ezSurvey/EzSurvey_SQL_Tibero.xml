@@ -457,6 +457,9 @@
 		) WHERE RNUM >= #startPoint# + 1
 		]]>
 		</isGreaterThan>
+		<isLessThan property="listCount" compareValue="1">
+			) k )
+		</isLessThan>
 	</select>
 	
 	<select id="EzSurveyDAO.getTotalSearchMembers" resultClass="Integer">

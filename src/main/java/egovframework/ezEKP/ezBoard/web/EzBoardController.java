@@ -2272,6 +2272,8 @@ public class EzBoardController extends EgovFileMngUtil{
 					
 					if (globals.getProperty("Globals.DbType").equals("oracle")) {
 						resultXML.append("<DATA6>" + commonUtil.cleanValue((String)boardThumbnailList.get(j).get("TO_CHAR(MAINCONTENT)")) + "</DATA6>");
+					} else if (globals.getProperty("Globals.DbType").equals("tibero")) {
+						resultXML.append("<DATA6>" + commonUtil.cleanValue((String)boardThumbnailList.get(j).get("TO_CHAR(MAINCONTENT)")) + "</DATA6>");
 					} else {
 						resultXML.append("<DATA6>" + commonUtil.cleanValue((String)boardThumbnailList.get(j).get("MAINCONTENT")) + "</DATA6>");
 					}
@@ -2701,6 +2703,8 @@ public class EzBoardController extends EgovFileMngUtil{
 					
 					if (globals.getProperty("Globals.DbType").equals("oracle")) {
 						resultXML.append("<DATA6>" + commonUtil.cleanValue((String)boardThumbnailList.get(j).get("TO_CHAR(MAINCONTENT)")) + "</DATA6>");
+					} else if (globals.getProperty("Globals.DbType").equals("tibero")) {
+						resultXML.append("<DATA6>" + commonUtil.cleanValue((String)boardThumbnailList.get(j).get("TO_CHAR(MAINCONTENT)")) + "</DATA6>");
 					} else {
 						resultXML.append("<DATA6>" + commonUtil.cleanValue((String)boardThumbnailList.get(j).get("MAINCONTENT")) + "</DATA6>");
 					}
@@ -2863,6 +2867,8 @@ public class EzBoardController extends EgovFileMngUtil{
 					
 					if (globals.getProperty("Globals.DbType").equals("oracle")) {
 						resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardSearchList.get(j).get("TO_CHAR(MAINCONTENT)")) + "</DATA12>");
+					} else if (globals.getProperty("Globals.DbType").equals("tibero")) {
+						resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardSearchList.get(j).get("TO_CHAR(MAINCONTENT)")) + "</DATA12>");
 					} else {
 						resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardSearchList.get(j).get("MAINCONTENT")) + "</DATA12>");
 					}
@@ -3013,6 +3019,8 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<DATA11>" + boardList.get(j).get("ONELINECNT") + "</DATA11>");
 					
 					if (globals.getProperty("Globals.DbType").equals("oracle")) {
+						resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardList.get(j).get("TO_CHAR(MAINCONTENT)")) + "</DATA12>");
+					} else if (globals.getProperty("Globals.DbType").equals("tibero")) {
 						resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardList.get(j).get("TO_CHAR(MAINCONTENT)")) + "</DATA12>");
 					} else {
 						resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardList.get(j).get("MAINCONTENT")) + "</DATA12>");
@@ -3181,6 +3189,8 @@ public class EzBoardController extends EgovFileMngUtil{
 						
 						if (globals.getProperty("Globals.DbType").equals("oracle")) {
 							resultXML.append("<DATA12>" + commonUtil.cleanValue((String)noticeList.get(k).get("TO_CHAR(MAINCONTENT)")) + "</DATA12>");
+						} else if (globals.getProperty("Globals.DbType").equals("tibero")) {
+							resultXML.append("<DATA12>" + commonUtil.cleanValue((String)noticeList.get(k).get("TO_CHAR(MAINCONTENT)")) + "</DATA12>");
 						} else {
 							resultXML.append("<DATA12>" + commonUtil.cleanValue((String)noticeList.get(k).get("MAINCONTENT")) + "</DATA12>");
 						}
@@ -3298,6 +3308,8 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<DATA11>" + ezBoardService.getOneLineCNT(boardListItem.get(j).get("ITEMID").toString(), userInfo.getTenantId()) + "</DATA11>");
 					
 					if (globals.getProperty("Globals.DbType").equals("oracle")) {
+						resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardListItem.get(j).get("TO_CHAR(MAINCONTENT)")) + "</DATA12>");
+					} else if (globals.getProperty("Globals.DbType").equals("tibero")) {
 						resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardListItem.get(j).get("TO_CHAR(MAINCONTENT)")) + "</DATA12>");
 					} else {
 						resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardListItem.get(j).get("MAINCONTENT")) + "</DATA12>");
@@ -8613,6 +8625,8 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<DATA11>" + boardSearchList.get(j).get("ONELINECNT") + "</DATA11>");
 					
 					if (globals.getProperty("Globals.DbType").equals("oracle")) {
+						resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardSearchList.get(j).get("TO_CHAR(MAINCONTENT)")) + "</DATA12>");
+					} else if (globals.getProperty("Globals.DbType").equals("tibero")) {
 						resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardSearchList.get(j).get("TO_CHAR(MAINCONTENT)")) + "</DATA12>");
 					} else {
 						resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardSearchList.get(j).get("MAINCONTENT")) + "</DATA12>");

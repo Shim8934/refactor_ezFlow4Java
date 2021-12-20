@@ -957,5 +957,88 @@
      	AND
      		COMPANYID = #companyID#
      </select>
+
+	<select id="EzPersonalDAO.getpopupPermitYN" parameterClass="Map" resultClass="Integer">
+     	<![CDATA[
+		SELECT
+			COUNT(user_id)
+		FROM
+			tbl_ps_popup_user
+		WHERE
+			itemseq = #itemSeq#
+		  AND
+			companyid = #companyId#
+		  AND
+			tenant_id = #tenantId#
+		  AND (
+				(user_type = 'USER' AND user_id = #userId#)
+				OR
+				(user_type = 'DEPT' AND subdept_permitted = 0 AND (user_id = #deptId# or user_id IN (SELECT deptid FROM tbl_addjobmaster WHERE cn = #userId# and tenant_id = #tenantId#)))
+				OR
+				(user_type = 'JIKWI' AND user_id IN
+										 (
+											 SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#
+										 )
+					)
+				OR
+				(user_type = 'JIKWI' AND user_id IN
+										 (
+											 SELECT jobid FROM tbl_addjobmaster WHERE cn = #userId# AND tenant_id = #tenantId#
+										 )
+					)
+				OR
+				(user_type = 'JIKCHEK' AND user_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#))
+			)
+		]]>
+     </select>
+	<!-- MySql 버젼 쿼리 수정 -->
+	<select id="EzPersonalDAO.getpopupPermitSubDeptYN" parameterClass="Map" resultClass="int">
+     	<![CDATA[
+		SELECT
+			COUNT(cn)
+		FROM
+			tbl_deptmaster
+		WHERE
+			REGEXP_LIKE(dept_cd_path,
+						(SELECT LISTAGG (dept_cd_path, '|') WITHIN GROUP (ORDER BY DEPT_CD_PATH) AS DEPT_CD_PATH
+							FROM tbl_deptmaster
+							WHERE cn IN (
+							SELECT user_id
+							FROM tbl_ps_popup_user
+							WHERE
+							itemseq = #itemSeq#
+							AND
+							user_type = 'DEPT'
+							AND
+							subdept_permitted = 1
+						)
+
+				)
+					)
+		  AND
+			(
+					cn = #deptId#
+					OR
+					cn IN (SELECT deptid FROM tbl_addjobmaster WHERE cn = #userId# and tenant_id = #tenantId#)
+				)
+		]]>
+     </select>
+
+	<select id="EzPersonalDAO.getPopupUserGroupList" parameterClass="Map" resultClass="String">
+     	<![CDATA[
+		SELECT
+			user_id
+		FROM
+			tbl_ps_popup_user
+		WHERE
+			itemseq = #itemSeq#
+		  AND
+			companyid = #companyId#
+		  AND
+			tenant_id = #tenantId#
+		  AND
+			user_type = 'GROUP'
+		]]>
+     </select>
 </sqlMap>
 
