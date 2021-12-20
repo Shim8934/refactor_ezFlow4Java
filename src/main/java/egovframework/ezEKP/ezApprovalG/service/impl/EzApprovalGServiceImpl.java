@@ -19322,7 +19322,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("docState", docState);
 			
 			/* 2020-08-04 홍승비 - 신규 양식 생성하여 처음 결재선 지정하고 기안하는 경우, 오라클에서 DOCSTATE값 NULL로 들어가서 터지는 오류 수정 */
-			if (commonUtil.getDatabaseType().equalsIgnoreCase("oracle") && (docState == null || docState.trim().equals(""))) {
+			if ((commonUtil.getDatabaseType().equalsIgnoreCase("oracle") || commonUtil.getDatabaseType().equalsIgnoreCase("tibero")) && (docState == null || docState.trim().equals(""))) {
 				map.put("docState", " "); // 임의로 공백문자 삽입
 			}
 			
