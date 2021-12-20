@@ -553,8 +553,8 @@
 		            document.getElementById("mainimages").style.display = "none";
 		            document.getElementById("mainimages").src = mainfilename;
 		            document.getElementById("mainimages").name = imagefilename.name;
-		            //document.getElementById("MainContent").innerHTML = MakeXMLString(imagefilename.title);
-		            document.getElementById("MainContent").innerHTML = MakeXMLString(imageContentArray[index].title);
+		            document.getElementById("MainContent").innerHTML = MakeXMLString(imagefilename.title);
+		            //document.getElementById("MainContent").innerHTML = MakeXMLString(imageContentArray[index].title);
 		
 		            imageloding();
 		        }
