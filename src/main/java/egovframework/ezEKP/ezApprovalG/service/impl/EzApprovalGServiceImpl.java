@@ -2239,7 +2239,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				extFileName = getExtendedFileName(apprGDocListVO.getHref());
 				docNumCode = deptID + getNDigitNum(sn, 6);
 				
-				docNo = commonUtil.cleanValue(deptName) + "-" + sn;
+				docNo = commonUtil.htmlUnescape(deptName) + "-" + sn;
 				//docNo = commonUtil.cleanValue(deptName) + "-" + createDocNO(sn , docNumZeroCnt); //문서채번 자릿수 맞춰주는거 혹시모르니까 구현만 해놈
 				
 				if (orgDocNumCode == null || orgDocNumCode.trim().equals("") || !gFlag.equals("G")) {
@@ -2248,7 +2248,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					//2018-10-04 배현상, companyid 병합에 따른 G버전 오류 개선(ORGCOMPANYID 추가)
 					String strXML = "<SIGNINFOS><SIGNINFO><DOCID>" + newDocID + 
 							"</DOCID><SIGNTYPE>TEXT</SIGNTYPE><SIGNNAME>docnumber" + 
-							"</SIGNNAME><CONTENT>" + docNo + "</CONTENT>" + 
+							"</SIGNNAME><CONTENT><![CDATA[" + docNo + "]]></CONTENT>" + 
 							"<ORGCOMPANYID></ORGCOMPANYID></SIGNINFO></SIGNINFOS>";
 					
 					Document xmlDom = commonUtil.convertStringToDocument(strXML);
