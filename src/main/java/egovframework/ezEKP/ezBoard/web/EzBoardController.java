@@ -9230,6 +9230,7 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		
+		String subDateFormat = "";
 		String mode = "new";
 		String adjacentItemsEnableFlag = ezCommonService.getTenantConfig("ADJACENT_ITEMS_ENABLE", userInfo.getTenantId());
 		String showAdjacent = request.getParameter("showAdjacent");
@@ -9312,8 +9313,10 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardInfo.setBoardName2(commonUtil.cleanValue(boardInfo.getBoardName2()));
 		}
 		
-		boardItem.setWriteDate(commonUtil.getDateStringInUTC(boardItem.getWriteDate(), userInfo.getOffset(), false));
+		subDateFormat = commonUtil.getDateStringInUTC(boardItem.getWriteDate(), userInfo.getOffset(), false);
+		boardItem.setWriteDate(subDateFormat.substring(0, subDateFormat.length()-3));
 		boardItem.setEndDate(commonUtil.getDateStringInUTC(boardItem.getEndDate(), userInfo.getOffset(), false));
+
 		boardItem.setParentWriteDate(commonUtil.getDateStringInUTC(boardItem.getParentWriteDate(), userInfo.getOffset(), false));
 		
 		//2017.12.29 강민수92 댓글 갯수 구하기
