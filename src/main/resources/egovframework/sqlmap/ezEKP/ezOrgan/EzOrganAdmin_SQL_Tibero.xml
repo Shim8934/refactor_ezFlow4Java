@@ -3886,7 +3886,7 @@
 			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('002',10,'등록일',70,'TBL_CABINET','TBL_CABINET.CreateDate','CreateDate','dtDate','기록물철 대장',null,'RegisterDate','登録日','注册',#tenantID#, #companyID#)
 			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
-			VALUES ('002',11,'이관여부',60,null,'미전송','TransferFlag','Default','기록물철 대장','이관여부','TransferFlag','移管有無','无论是转移',#tenantID#, #companyID#)
+			VALUES ('002',11,'이관여부',60,null,'''미전송''','TransferFlag','Default','기록물철 대장','이관여부','TransferFlag','移管有無','无论是转移',#tenantID#, #companyID#)
 			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('002',12,'연기신청',60,null,'Case TransDelayFlag When ''1'' Then ''Y'' Else ''N'' End','DelayFlag','Default','기록물철 대장','이관연기여부','DelayFlag','延期申請','延期请求',#tenantID#, #companyID#)
 			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
