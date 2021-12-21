@@ -477,9 +477,9 @@
 				
 		        //2018-10-15 반송 후 배부된 문서의 접수번호 초기화
 				//2021-01-28 문서번호 초기화시 @dp-@YY-@nn으로 수정
-		        // if (pDraftFlag == "REDRAFT" || pDraftFlag == "SUSIN") {
-		        // 	message.PutFieldText("receiptnumber", "@dp-@YY-@nn");
-		        // }
+		        if (pDraftFlag == "SUSIN" && nonElecRec == "Y" && !message.GetFieldText("receiptnumber")) {
+		        	message.PutFieldText("receiptnumber", "@dp-@YY-@nn");
+		        }
 		        
 		        //message.MoveToField("doctitle");
 		        message.ScrollPosInfo(0, 0);
