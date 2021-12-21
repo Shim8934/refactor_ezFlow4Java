@@ -1482,10 +1482,10 @@ function UpdateDocHistory(pHtml) {
         createNodeAndInsertText(xmlpara, objNode, "pUserName", arr_userinfo[11]);
         createNodeAndInsertText(xmlpara, objNode, "pUserJobTitle", arr_userinfo[13]);
         createNodeAndInsertText(xmlpara, objNode, "pUserDeptID", arr_userinfo[4]);
-        createNodeAndInsertText(xmlpara, objNode, "pUserDeptName", arr_userinfo[15]);
+        createNodeAndInsertText(xmlpara, objNode, "pUserDeptName", ConvMakeXMLString(arr_userinfo[15]));
         createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", arr_userinfo[12]);
         createNodeAndInsertText(xmlpara, objNode, "PUSERJOBTITLE2", arr_userinfo[14]);
-        createNodeAndInsertText(xmlpara, objNode, "PUSERDEPTNAME2", arr_userinfo[16]);
+        createNodeAndInsertText(xmlpara, objNode, "PUSERDEPTNAME2", ConvMakeXMLString(arr_userinfo[16]));
         createNodeAndInsertText(xmlpara, objNode, "ORGCOMPANYID", orgCompanyID);
         createNodeAndInsertText(xmlpara, objNode, "ISBEFOREDOC", "");
         createNodeAndInsertText(xmlpara, objNode, "BEFOREDOCURL", "");
