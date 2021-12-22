@@ -21785,13 +21785,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			 * cnt값이 0인경우 바이트, 1인경우 KB...
 			 * Math.pow를 통해 1024의 cnt승을 구한 뒤 최초 fieldValue를 나누는데 사용.
 			 * */
+			/* 2021-12-22 홍승비 - 전자결재 첨부문서 표출 시 용량 끝부분의 소수점을 제거(타 모듈과 통일), 단위 앞부분의 공백을 제거, bytes 단위는 B로 표출 */
 			int cnt = (int) (Math.log10(Double.parseDouble(fieldValue)) / Math.log10(1024));
-			String[] unit = {" bytes", " KB", " MB", " GB"};
+			String[] unit = {"B", "KB", "MB", "GB"};
 			
 			double filesize = Double.parseDouble(fieldValue) / Math.pow(1024, cnt);
-			fieldValue = String.format("%.1f",filesize);
+			//fieldValue = String.format("%.1f",filesize);
 			//rtnVal = fieldValue + " bytes";
-			rtnVal = fieldValue + unit[cnt];
+			rtnVal = (int)filesize + unit[cnt];
 			break;
 			
 		default : 
