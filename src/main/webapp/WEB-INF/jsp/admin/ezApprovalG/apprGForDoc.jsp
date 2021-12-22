@@ -522,8 +522,10 @@
 			        var openLocation = "";
 			        var ext = pURL.substr(pURL.length - 3, pURL.length).toLowerCase();
 			        
-			        // 2018.08.01 (KLIB) - ezd 확장자 처리
-			        if (ext == "hwp" || ext == "ezd") { //한글기안
+			     	// 2021.12.22 (KLIB) - ezd 확장자 처리
+			        ext = (ext == "ezd") ? pURL.substr(pURL.length - 7, 3).toLowerCase() : ext;
+			        
+			        if (ext == "hwp") { //한글기안
 			        	if(useWebHWP == "NO") {
 				        	if (isIE()) {
 					            openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
