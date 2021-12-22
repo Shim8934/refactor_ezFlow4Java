@@ -10987,7 +10987,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			attachJson = new JSONObject();
 			attachJson.put("fileOpenFlag", attach.getFileOpenFlag());
 			attachJson.put("sn", attach.getAttachFileSN());
-			attachJson.put("fileName", attach.getAttachFileName());
+			attachJson.put("fileName", attach.getDisplayName());
 			
 			String fileSize = attach.getAttachFileSize();
 			

@@ -326,7 +326,7 @@
 
         var totalRows = userlist.GetDataRows();
         if (document.getElementsByName("rdoRecRole")[1].checked) {
-			if(count > 0 && totalRows[0].id.indexOf("noItems") > -1) {
+			if(totalRows.length > 0 && totalRows[0].id.indexOf("noItems") < 1) {
 				count = totalRows.length;
 			}
             /*if (totalRows.length < 1 || totalRows[0].id.indexOf("noItems") > -1) {

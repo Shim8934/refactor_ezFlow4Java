@@ -266,8 +266,8 @@
 	
 	                objRow = createNodeAndAppandNode(xmlpara, objRoot, objRow, "ROW");
 	                custData = createNodeAndAppandNodeText(xmlpara, objRow, custData, "RECEIVEDEPTID", SelRow.getAttribute("DATA1"));
-	                custData = createNodeAndAppandNodeText(xmlpara, objRow, custData, "RECEIVEDEPTNAME", MakeXMLString(SelRow.getAttribute("DATA4")));
-	                custData = createNodeAndAppandNodeText(xmlpara, objRow, custData, "RECEIVEDEPTNAME2", MakeXMLString(SelRow.getAttribute("DATA5")));
+	                custData = createNodeAndAppandNodeText(xmlpara, objRow, custData, "RECEIVEDEPTNAME", SelRow.getAttribute("DATA4"));
+	                custData = createNodeAndAppandNodeText(xmlpara, objRow, custData, "RECEIVEDEPTNAME2", SelRow.getAttribute("DATA5"));
 	            }
 	            if ("<c:out value ='${mode}'/>" == "add") 
 	                xmlhttp.open("POST", "/ezApprovalG/addBebu.do", false);

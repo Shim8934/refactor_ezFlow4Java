@@ -247,7 +247,7 @@
 		    
 		    function sliderdelete() {
 		        if (tempid == "") {
-		        	alert("<spring:message code='ezBoard.t5005'/>");
+		        	alert("<spring:message code='ezBoard.jje01'/>");
 		           	return;
 		        }
 		        if (!confirm("<spring:message code='ezBoard.t197'/>"))
