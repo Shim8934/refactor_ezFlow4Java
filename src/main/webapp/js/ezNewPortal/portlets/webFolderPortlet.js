@@ -81,8 +81,9 @@ function getWebFolderFileList() {
 function setFileTypeTag(type) {
 	
 	var imgEl = document.createElement('img');
+	var pType = type.toLowerCase();
 	
-	switch (type) {
+	switch (pType) {
 		case "doc":
 		case "docx":
 			imgEl.src = '/images/ezNewPortal/word.png';
