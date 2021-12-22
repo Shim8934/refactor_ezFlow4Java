@@ -1459,7 +1459,7 @@
 		        }
 		        else {
 		            document.getElementById('ChkPermanence').checked = false;
-		            document.getElementById('Makedate').style.display = "inherit";
+		            //document.getElementById('Makedate').style.display = "inherit";
 		            //idDatepicker.vtLocalEndDate(AddDate(idDatepicker.vtLocalDate(), parseInt(ExpireDays)));
 		        }
 		    }
@@ -2216,7 +2216,7 @@
 	            </td>
 	        </tr>
         	<c:choose>
-        		<c:when test="${boardInfo.guBun != '3'}">
+        	<c:when test="${boardInfo.guBun != '3'}">
 	        <tr style="height: 20px">
 	            <td>
 	                <div class="portlet_tabpart03" style="margin:0px;border-top:0px;padding:0px;margin-bottom:4px">
@@ -2377,7 +2377,7 @@
 	                        <td>
 	                        	<c:choose>
 	                        	<%-- 2019-11-22 홍승비 - 임시저장한 게시물 재작성 시에도 게시만료일 설정 여부가 제대로 반영되도록 수정 --%>
-	                        		<c:when test="${(mode != 'modify' && mode != 'temp' && boardInfo.expireDays == '-1') || ((mode == 'modify' || mode == 'temp') && fn:substring(boardListVO.endDate, 0, 4) == '9999') || (url != '') }">
+	                        		<c:when test="${(mode != 'modify' && mode != 'temp' && boardInfo.expireDays == '-1') || ((mode == 'modify' || mode == 'temp') && fn:substring(boardListVO.endDate, 0, 4) == '9999')}">
 			                            <span id="Chkbox">
 			                                <span style="line-height: 20px; height: 20px; display: inline-block;">
 			                                    <input type="checkbox" id="ChkPermanence" name="ChkPermanence" onclick="return ChkPermanent()" checked style="margin-top:3px;"></span><span style="line-height: 21px; height: 12px; display: inline-block; margin-top: 3px;"><spring:message code='ezBoard.t433' /></span>
@@ -2467,7 +2467,7 @@
 	                            <table border="0">
 	                                <tr>
 	                                	<c:choose>
-	                                		<c:when test="${(mode != 'modify' && boardInfo.expireDays == '-1') || ((mode == 'modify' || mode == 'temp') && fn:substring(boardListVO.endDate, 0, 4) == '9999') || (url != '') }">
+	                                		<c:when test="${(mode != 'modify' && boardInfo.expireDays == '-1') || ((mode == 'modify' || mode == 'temp') && fn:substring(boardListVO.endDate, 0, 4) == '9999')}">
 			                                    <td style="width: 90px; white-space: nowrap" id="Chkbox">
 			                                        <input type="checkbox" id="ChkPermanence" name="ChkPermanence" onclick="return ChkPermanent()" checked style="margin-top:3px;"><spring:message code='ezBoard.t433' /></td>
 			                                    <td id="Makedate">
