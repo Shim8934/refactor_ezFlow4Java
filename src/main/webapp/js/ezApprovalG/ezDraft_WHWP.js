@@ -52,7 +52,7 @@ function GetDraftAprLineInfo(ret) {
 	objNodes = SelectNodes(xmldom, "LISTVIEWDATA/ROWS/ROW");
 	count = objNodes.length;
 	
-	for(i=1;i<20;i++)
+	for(i=1;i<60;i++)
 	{
 	   	name = "habyuisign" + i;
 		if (message.FieldExist(name) && ret[32] != "Y")
@@ -70,6 +70,10 @@ function GetDraftAprLineInfo(ret) {
 	  			message.PutFieldText(name, "");
 	  		
 	  		name = "habyuidate" + i;
+	  		if (message.FieldExist(name))
+	  			message.PutFieldText(name, "");
+	  		
+	  		name = "habyuija" + i;
 	  		if (message.FieldExist(name))
 	  			message.PutFieldText(name, "");
 	  	}
