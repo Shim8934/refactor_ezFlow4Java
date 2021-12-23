@@ -81,6 +81,7 @@ function putBansongSign()
 	return signInfo;   
 }
 
+var signInfo = [];
 var newSignInfo = [];
 function AprrovMappingSign(ret)
 {
