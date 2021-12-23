@@ -228,12 +228,18 @@ public class EzUCMessengerController {
 		    				//IP Address,  마지막 login시간 저장
 		    				loginService.updateUser(loginVO);
 		            		
+		    				// 2021-12-28 이사라 : 세션ID를 세션코드로 입력 
+		    	        	String sessionCode =  request.getSession().getId();
+		    	        	logger.debug("Login sessionCode = " + sessionCode);
+		    	        	
 		            		//접속 로그정보 저장
 							resultVO.setIp(ip);
 							resultVO.setAgent(agent);
 							resultVO.setOs(os);
 							resultVO.setBrowser(browser);
 							resultVO.setTenantId(tenantId);
+							resultVO.setStatus("Y");
+							resultVO.setSessionCode(sessionCode);
 			
 							if (resultVO.getTitle2() == null) {
 								resultVO.setTitle2("");
@@ -267,12 +273,18 @@ public class EzUCMessengerController {
 		    				//IP Address,  마지막 login시간 저장
 		    				loginService.updateUser(loginVO);
 		            		
+		    				// 2021-12-28 이사라 : 세션ID를 세션코드로 입력 
+		    	        	String sessionCode =  request.getSession().getId();
+		    	        	logger.debug("Login sessionCode = " + sessionCode);
+		    	        	
 		            		//접속 로그정보 저장
 							resultVO.setIp(ip);
 							resultVO.setAgent(agent);
 							resultVO.setOs(os);
 							resultVO.setBrowser(browser);
 							resultVO.setTenantId(tenantId);
+							resultVO.setStatus("Y");
+							resultVO.setSessionCode(sessionCode);
 			
 							if (resultVO.getTitle2() == null) {
 								resultVO.setTitle2("");
@@ -313,12 +325,18 @@ public class EzUCMessengerController {
 			    				//IP Address,  마지막 login시간 저장
 			    				loginService.updateUser(loginVO);
 			            		
+			    				// 2021-12-28 이사라 : 세션ID를 세션코드로 입력 
+			    	        	String sessionCode =  request.getSession().getId();
+			    	        	logger.debug("Login sessionCode = " + sessionCode);
+			    	        	
 			            		//접속 로그정보 저장
 								resultVO.setIp(ip);
 								resultVO.setAgent(agent);
 								resultVO.setOs(os);
 								resultVO.setBrowser(browser);
 								resultVO.setTenantId(tenantId);
+								resultVO.setStatus("Y");
+								resultVO.setSessionCode(sessionCode);
 				
 								if (resultVO.getTitle2() == null) {
 									resultVO.setTitle2("");
@@ -352,12 +370,18 @@ public class EzUCMessengerController {
 			    				//IP Address,  마지막 login시간 저장
 			    				loginService.updateUser(loginVO);
 			            		
+			    				// 2021-12-28 이사라 : 세션ID를 세션코드로 입력 
+			    	        	String sessionCode =  request.getSession().getId();
+			    	        	logger.debug("Login sessionCode = " + sessionCode);
+			    	        	
 			            		//접속 로그정보 저장
 								resultVO.setIp(ip);
 								resultVO.setAgent(agent);
 								resultVO.setOs(os);
 								resultVO.setBrowser(browser);
 								resultVO.setTenantId(tenantId);
+								resultVO.setStatus("Y");
+								resultVO.setSessionCode(sessionCode);
 				
 								if (resultVO.getTitle2() == null) {
 									resultVO.setTitle2("");

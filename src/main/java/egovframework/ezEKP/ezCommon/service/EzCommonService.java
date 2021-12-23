@@ -360,4 +360,5 @@ public interface EzCommonService {
 
 	public void createTblScheduleComplete() throws Exception;
 	
+	public void alterTblConnectionInfo() throws Exception;
 }

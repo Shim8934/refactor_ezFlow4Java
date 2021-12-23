@@ -2224,4 +2224,9 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
+	/* 2021-12-22 이사라 : 로그아웃시간, 상태 컬럼 추가  */
+	public void alterTblConnectionInfo() {
+		logger.debug("If disconnecttime and status columns doesn't exist in TBL_CONNECTION_INFO, creating the columns...");
+		update("EzCommonDAO.alterTblConnectionInfo");
+	}
 }

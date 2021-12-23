@@ -91,6 +91,10 @@ public class LoginVO implements Serializable {
 	private String os;
 	/** 사용자 접속 AGENT 정보 */
 	private String agent;
+	/** 사용자 접속 상태(성공: Y, 실패: N) */
+	private String status;
+	/** 사용자 접속 session id */
+	private String sessionCode;
 	/** RSA 암호화 ID 변수 */
 	private String encryptID;
 	/** RSA 암호화 password 변수 */
@@ -358,6 +362,18 @@ public class LoginVO implements Serializable {
 	}
 	public void setAgent(String agent) {
 		this.agent = agent;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public String getSessionCode() {
+		return sessionCode;
+	}
+	public void setSessionCode(String sessionCode) {
+		this.sessionCode = sessionCode;
 	}
 	public String getDeptPathCode() {
 		return deptPathCode;
