@@ -2559,4 +2559,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void createTblScheduleComplete() throws Exception {
 		ezCommonDAO.createTblScheduleComplete();
 	}
+
+	@Override
+	public void alterTblConnectionInfo() throws Exception {
+		ezCommonDAO.alterTblConnectionInfo();
+	}
 }

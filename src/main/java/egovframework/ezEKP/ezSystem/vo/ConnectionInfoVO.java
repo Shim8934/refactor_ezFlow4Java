@@ -3,7 +3,7 @@ package egovframework.ezEKP.ezSystem.vo;
 /** 
  * tbl_connection_info 로그인 정보 테이블
  * @author yjks
- * 
+ * 2021-12-21 이사라 추가 : disconnecttime, status
  */
 public class ConnectionInfoVO {
 	
@@ -22,10 +22,12 @@ public class ConnectionInfoVO {
 	private String connectip;
 	private String connectCountryName;
 	private String connectinfo; 
+	private String disconnecttime;
 	private String connecttime;
 	private String connectbrowser; 
 	private String connectos; 
 	private String connectagent; 
+	private String status;
 	private String tenant_id;
 	
 	/** */
@@ -97,7 +99,12 @@ public class ConnectionInfoVO {
 	public String getTimezone() {
 		return timezone;
 	}
-
+	public String getDisconnecttime() {
+		return disconnecttime;
+	}
+	public String getStatus() {
+		return status;
+	}
 	
 	public String getTime() {
 		return time;
@@ -173,6 +180,12 @@ public class ConnectionInfoVO {
 	}
 	public void setConnectCountryName(String connectCountryName) {
 		this.connectCountryName = connectCountryName;
+	}
+	public void setDisconnecttime(String disconnecttime) {
+		this.disconnecttime = disconnecttime;
+	}
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	
 	
