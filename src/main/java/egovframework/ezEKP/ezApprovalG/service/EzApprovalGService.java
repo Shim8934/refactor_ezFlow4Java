@@ -768,4 +768,6 @@ public interface EzApprovalGService {
 	public List<Map<String, Object>> getReceiptInfoIng(String docId, String receiptId, LoginVO userInfo) throws Exception;
 
 	public List<HashMap<String,Object>> susinScheduleList() throws Exception;
+
+    public String setSusinRollbackDocID(String beforeAprState, String docId, String orgDocId, LoginVO userInfo) throws Exception;
 }

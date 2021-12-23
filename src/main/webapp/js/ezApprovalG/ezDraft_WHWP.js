@@ -472,8 +472,10 @@ function SendDraftMappingSign(ret) {
 	if (message.FieldExist(pseumyungcell))
 		message.PutFieldText(pseumyungcell, message.GetFieldText(pseumyungcell) + PositionText);
 
-	if (message.FieldExist(pseumyungdatecell))
+	if (message.FieldExist(pseumyungdatecell)) {
 		message.PutFieldText(pseumyungdatecell, s);
+        rtnSignInfo.push(pseumyungdatecell);
+    }
 		
 	if(CurAprType == strAprType16) {			
 		if (message.FieldExist(psigncell)) {
@@ -488,6 +490,7 @@ function SendDraftMappingSign(ret) {
 				SignType[signCnt] = "IMAGE";
 				SignName[signCnt] = psigncell;
 				SignContent[signCnt] = ret + "::" + strLang7 + OpinionText;
+                rtnSignInfo.push(psigncell);
 							  	
 			  	//SetDocumentElement(HwpCtrl, psigncell, ret);
 			  	signCnt = signCnt + 1
@@ -503,6 +506,7 @@ function SendDraftMappingSign(ret) {
 				SignType[signCnt] = "TEXT";
 				SignName[signCnt] = psigncell;
 				SignContent[signCnt] = arr_userinfo[2] + strLang7 + OpinionText;
+                rtnSignInfo.push(psigncell);
 		  		
 		  		signCnt = signCnt + 1
 		  		SingFlag = false; 
@@ -524,6 +528,7 @@ function SendDraftMappingSign(ret) {
 			SignType[signCnt] = "TEXT";
 			SignName[signCnt] = psigncell;
 			SignContent[signCnt] = strLang6;
+            rtnSignInfo.push(psigncell);
 			
 			signCnt = signCnt + 1
 			SingFlag = false; 
@@ -551,6 +556,7 @@ function SendDraftMappingSign(ret) {
 				SignType[signCnt] = "IMAGE";
 				SignName[signCnt] = psigncell;
 				SignContent[signCnt] = ret + "::" + OpinionText;
+                rtnSignInfo.push(psigncell);
 				
 			  	//SetDocumentElement(HwpCtrl, psigncell, ret);
 			  	signCnt = signCnt + 1
@@ -572,14 +578,13 @@ function SendDraftMappingSign(ret) {
 		        SignType[signCnt] = "TEXT";
 		        SignName[signCnt] = psigncell;
 		        SignContent[signCnt] = arr_userinfo[2] + OpinionText;
+                rtnSignInfo.push(psigncell);
 			        
 			  	signCnt = signCnt + 1
 			  	SingFlag = false; 
 			}
 		}
 	}	
-    //return signInfo;	
-	rtnSignInfo = signInfo;
 	if(ret == "NAME") {
 		GetHTML(saveDraftInfo);
 	}
