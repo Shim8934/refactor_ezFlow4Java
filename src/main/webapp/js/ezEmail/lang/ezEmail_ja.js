@@ -323,6 +323,10 @@ var strLangHDP02 = "ダウンロード可能";
 var strLangHDP03 = "大容量添付は{0}個まで可能です。";
 var strLangHDP04 = "Drag＆Dropでファイルを追加および追加したファイルの並び順を変更できます。";
 
+var strLangKSA03 = "グループウェアの個人カレンダーに登録しますか?";
+var strLangKSA04 = "日程を保存しました。";
+var strLangKSA05 = "エラーが発生しました。";
+			
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")

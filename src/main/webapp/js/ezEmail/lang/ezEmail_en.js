@@ -323,6 +323,10 @@ var strLangHDP02 = "Downloadable";
 var strLangHDP03 = "Up to {0} files can be attached to a large file.";
 var strLangHDP04 = "You can drag and drop to add files and change the order of added files.";
 
+var strLangKSA03 = "Would you like to register for the groupware personal calendar?";
+var strLangKSA04 = "Successfully saved appointment.";
+var strLangKSA05 = "Error occured while saving appointment.";
+
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")

@@ -1232,6 +1232,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("Id", userInfo.getId());
 		model.addAttribute("memoFlag", memoFlag);
 		model.addAttribute("previewImageListHtml", bodyInfoList.get(5)); //이미지 미리보기 
+		model.addAttribute("isIcalMail", bodyInfoList.get(6)); // "" or "Y"
 		
 		model.addAttribute("previewMailImage", previewMailImage);
 		model.addAttribute("pReadFlag", pReadFlag);		
@@ -2875,6 +2876,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("previewImageListHtml", bodyInfoList.get(5)); //이미지 미리보기 
 		model.addAttribute("previewMailImage", previewMailImage);
 		model.addAttribute("unread", unread);
+		model.addAttribute("isIcalMail", bodyInfoList.get(6)); // "" or "Y"
 		
 		logger.debug("previewContent ended.");
 		
