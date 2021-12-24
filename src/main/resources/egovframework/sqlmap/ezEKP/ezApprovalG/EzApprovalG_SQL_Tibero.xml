@@ -33976,7 +33976,7 @@
 					TBL_EXPENDAPRDOCINFO
 				SET		
 						DELFLAG	=	NULL, 
-						SUMMARY = 	#v_SUMMARY#
+						SUMMARY = 	NULL
 				 WHERE  
 		     		DOCID = #v_DOCID#
 		     AND
