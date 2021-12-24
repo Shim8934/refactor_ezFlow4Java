@@ -603,7 +603,12 @@
 	
 			// btnApprove_onclick 시작
 			var approveResult;
+            var ingFlag = false;
 			function btnApprove_onclick() {
+                if (ingFlag) {
+                    return;
+                }
+                
 		    	$.ajax({
 		    		type : "POST",
 		    		dataType : "text",
@@ -616,17 +621,19 @@
 		    			approveResult = text;
 		    		}        			
 		    	});
-		    	
+
 	    		GetHTML2(Approve);
 		    }
 			 // btnApprove_onclick 끝
 				 
 			 function GetHTML(callback) {
-			    message.GetTextFile("HWP", "", function (data) { callback(data) });
+                ingFlag = true;
+			    message.GetTextFile("HWP", "", function (data) { ingFlag = false; callback(data); });
 			 }
 			 
 			 function GetHTML2(callback) {
-			    message.GetTextFile("HWPML2X", "", function (data) { callback(data) });
+                ingFlag = true;
+			    message.GetTextFile("HWPML2X", "", function (data) { ingFlag = false; callback(data); });
 			 }
 			 
 			 function SetHTML(data, callback) {

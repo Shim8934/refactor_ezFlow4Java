@@ -524,8 +524,13 @@
 			        alert("btnSetReceivLine_onclick : " + e.description);
 			    }
 			}
-		
+
+            var ingFlag = false;
 			function btnSendDraft_onclick() {
+                if (ingFlag) {
+                    return;
+                }
+                
 	        	var deptCheckFlag = checkDeptAndCabinetId();
 	        	
 				if (deptCheckFlag == "3") {
@@ -1812,7 +1817,8 @@
 	    	}
 	    	
 	    	function GetHTML(callback) {
-	            message.GetTextFile("HWP", "", function (data) { callback(data) });
+                ingFlag = true;
+	            message.GetTextFile("HWP", "", function (data) { ingFlag = false; callback(data); });
 	        }
 	    	
 	    	// 일반첨부, 대용량첨부파일 관련 가이드 메세지 추가
