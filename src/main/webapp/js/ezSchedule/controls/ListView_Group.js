@@ -1447,22 +1447,6 @@ function event_listclick(obj, event) {
 //2018-07-16 구해안
 // 2018-08-10 김민성 - 그룹 구성원 없을 시 alert
 function show_groupinfo2(obj) {
-   /* var listview = new ListView();
-    listview.LoadFromID("GroupListView");
-    
-    if(document.getElementById("HeaderAllCheckBox").checked) {
-        document.getElementById("HeaderAllCheckBox").checked = false;
-        event_HeaderCheckBoxClick(document.getElementById("HeaderAllCheckBox"));
-        listview.GetDataRows()[0].onclick();
-    } else {
-    	
-        if (listview.GetSelectedRows() == "") {
-            alert(strLang266);
-            return;
-        }
-        
-        listview.GetSelectedRows()[0].onclick();  
-    }*/
 	var checkRealID = "";
 	//var feature = GetOpenPosition(430, 370);
 	var feature = GetOpenPosition(540, 550);
@@ -1492,7 +1476,7 @@ function show_groupinfo2(obj) {
 		}else{
 			checkRealID = checkId[0].id.substring(0,checkId[0].id.length -1);
 			//window.open("/ezSchedule/scheduleGroupMember.do?groupID=" + checkRealID, "", "height = 370px, width = 460px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
-			window.open("/ezSchedule/scheduleGroupMember.do?groupID=" + checkRealID, "", "height = 550px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
+			window.open("/ezSchedule/scheduleGroupMember.do?groupID=" + checkRealID, "schedule_group_modify", "height = 550px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
 			return;
 		}
 	}else{

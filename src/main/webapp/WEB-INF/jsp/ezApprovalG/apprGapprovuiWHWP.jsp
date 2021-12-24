@@ -603,7 +603,12 @@
 	
 			// btnApprove_onclick 시작
 			var approveResult;
+            var ingFlag = false;
 			function btnApprove_onclick() {
+                if (ingFlag) {
+                    return;
+                }
+                
 		    	$.ajax({
 		    		type : "POST",
 		    		dataType : "text",
@@ -616,17 +621,19 @@
 		    			approveResult = text;
 		    		}        			
 		    	});
-		    	
+
 	    		GetHTML2(Approve);
 		    }
 			 // btnApprove_onclick 끝
 				 
 			 function GetHTML(callback) {
-			    message.GetTextFile("HWP", "", function (data) { callback(data) });
+                ingFlag = true;
+			    message.GetTextFile("HWP", "", function (data) { ingFlag = false; callback(data); });
 			 }
 			 
 			 function GetHTML2(callback) {
-			    message.GetTextFile("HWPML2X", "", function (data) { callback(data) });
+                ingFlag = true;
+			    message.GetTextFile("HWPML2X", "", function (data) { ingFlag = false; callback(data); });
 			 }
 			 
 			 function SetHTML(data, callback) {
@@ -853,19 +860,22 @@
 		            
 		            if (rtnVal != "TRUE") {
 		                if (pDraftFlag != "SUSIN") {
-		                    if (docAccess) {
-		                        rollbackDocNumber(drafterDeptid, pDocID);
-		                        docAccess = false;
-		                        if (fractionsymbol == "") {
-		                            var pAlertContent = "[<spring:message code='ezApprovalG.t1385'/>";
-						            OpenAlertUI(pAlertContent);
-						            setMenuDisable("btnApprove", false);
-						            return;
-						        }
-		                    }
-		                }
+                            if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
+                                if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
+                                    rollbackDocNumber(drafterDeptid, "doc", pDocID);
+                                }
+                            }
+		                } else {
+                            if (useReceiveDocNo == 'NO') {
+                                if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
+                                    if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
+                                        rollbackDocNumber(drafterDeptid, "receipt", pDocID);
+                                    }
+                                }
+                            }
+                        }
 		
-		                UndoSignInfo(signInfo);
+		                UndoSignInfo(newSignInfo);
 		                if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 		                    if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
 		                        var rtnVal = ExcuteInfo("END_FAIL", "")
@@ -888,6 +898,7 @@
 		                var pAlertContent = "[<spring:message code='ezApprovalG.t34'/>";
 				        OpenAlertUI(pAlertContent);
 				        setMenuDisable("btnApprove", false);
+                        GetHTML(before_SaveFile);
 				        return;
 				    } else {
 				    	UpdateLineHistory();

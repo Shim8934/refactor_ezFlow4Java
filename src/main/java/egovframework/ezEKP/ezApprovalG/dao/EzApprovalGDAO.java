@@ -3725,4 +3725,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
     public void updateEndAprDocInfoCont(Map<String, Object> map) throws Exception {
 	    update("EzApprovalG.updateEndAprDocInfoCont", map);
     }
+    
+    public void rollbackJubsuAprReceiptProcessInfo(Map<String, Object> map) throws Exception {
+	    update("EzApprovalG.rollbackJubsuAprReceiptProcessInfo", map);
+    }
 }

@@ -34552,4 +34552,20 @@
         AND
         DOCID = #v_DOCID#
     </delete>
+
+    <update id="EzApprovalG.rollbackJubsuAprReceiptProcessInfo" parameterClass="Map">
+        Update
+            TBL_APRRECEIPTPROCESSINFO
+        SET
+            ProcessDocID = #v_PROCESSDOCID# ,
+            AprState = #v_APRSTATE#
+        Where
+            DocID = #v_DOCID#
+          AND
+            ReceivedDeptID = #v_DEPTID#
+          AND
+            TENANT_ID = #v_TENANTID#
+          AND
+            COMPANYID = #companyID#
+    </update>
 </sqlMap>

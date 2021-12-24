@@ -312,6 +312,10 @@
                 objListView.DeleteRow(totalRows);
             }
         }
+        
+        if (objListView.GetRowCount() < 1 ) {
+    		setDeleteRow("lvSelUserList");
+    	}
     }
     function cmdCancel_onclick() {
         window.close();

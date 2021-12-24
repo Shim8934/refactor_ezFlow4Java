@@ -33359,4 +33359,32 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	    
 	    return receipts;
     }
+    
+    @Override
+    public String setSusinRollbackDocID(String beforeAprState, String docId, String orgDocId, LoginVO userInfo) throws Exception {
+        Map<String, Object> map = new HashMap<>();
+        map.put("v_PROCESSDOCID", null);
+        map.put("v_APRSTATE", beforeAprState);
+        map.put("v_DOCID", docId);
+        map.put("v_DEPTID", userInfo.getDeptID());
+        map.put("v_TENANTID", userInfo.getTenantId());
+        map.put("companyID", userInfo.getCompanyID());
+        
+        ezApprovalGDAO.rollbackJubsuAprReceiptProcessInfo(map);
+        
+        map.put("v_USERID", null);
+        map.put("v_DISPLAYNAME1", null);
+        map.put("v_DISPLAYNAME2", null);
+
+        ezApprovalGDAO.updateJubsuDocDelivery(map);
+        
+        map.put("v_ORGDOCID", orgDocId);
+        map.put("v_USERID", "012".equals(beforeAprState) ? userInfo.getId() : null);
+        map.put("v_PROCESSFLAG", "N");
+        map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+        
+        ezApprovalGDAO.updateSusinEndReceiptPointInfo(map);
+        
+        return "TRUE";
+    }
 }
