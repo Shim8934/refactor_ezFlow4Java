@@ -5013,9 +5013,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 			strURL = "<a id='community_a' style='color:blue;text-decoration:underline;cursor:pointer;' onclick=\"" + "item_View_New_Community('" + boardID + "', '" + itemID + "', '" + boardProperty.getC_ClubNo() + "'); return false;" + "\" href=\"_blank\" target=\"_blank\">";
 		}
 		
+		/* 2021-12-28 홍승비 - 커뮤니티 게시물 관련 알림메일에 커뮤니티명을 표출 */
 		if (pMode.equals("new")) { // 게시판 게시알림 (아래 게시판에 새 게시글이 게시되었습니다.)
 			bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.t250", userInfo.getLocale()) + "<br><br>");
-	        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t117", userInfo.getLocale()) + commonUtil.cleanValue(boardProperty.getBoardName()));
+			bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("main.t1006", userInfo.getLocale()) + " : " + commonUtil.cleanValue(boardProperty.getC_ClubName()));
+	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t117", userInfo.getLocale()) + commonUtil.cleanValue(boardProperty.getBoardName()));
 	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t118", userInfo.getLocale()) + itemVO.getWriteDate());
 	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t119", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + (userInfo.getTitle() == null || "null".equals(userInfo.getTitle()) ? "" : userInfo.getTitle()) + ", " + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
 	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t120", userInfo.getLocale()) + strURL + commonUtil.cleanValue(itemVO.getTitle()) + "</a>");
@@ -5025,7 +5027,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		else if (pMode.equals("modify")) { // 게시판 수정알림 (아래 게시판의 게시물이 수정되었습니다.)
 			bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.HSBMail05", userInfo.getLocale()) + "<br><br>");
-	        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t117", userInfo.getLocale()) + commonUtil.cleanValue(boardProperty.getBoardName()));
+			bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("main.t1006", userInfo.getLocale()) + " : " + commonUtil.cleanValue(boardProperty.getC_ClubName()));
+	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t117", userInfo.getLocale()) + commonUtil.cleanValue(boardProperty.getBoardName()));
 	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t118", userInfo.getLocale()) + itemVO.getWriteDate());
 	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t119", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + (userInfo.getTitle() == null || "null".equals(userInfo.getTitle()) ? "" : userInfo.getTitle()) + ", " + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
 	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t120", userInfo.getLocale()) + strURL + commonUtil.cleanValue(itemVO.getTitle()) + "</a>");
@@ -5035,7 +5038,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		else if (pMode.equals("comment")) { // 게시판 댓글알림 (아래 게시판의 게시물에 댓글이 등록되었습니다.)
 			bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.HSBMail06", userInfo.getLocale()) + "<br><br>");
-	        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t117", userInfo.getLocale()) + commonUtil.cleanValue(boardProperty.getBoardName()));
+			bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("main.t1006", userInfo.getLocale()) + " : " + commonUtil.cleanValue(boardProperty.getC_ClubName()));
+	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t117", userInfo.getLocale()) + commonUtil.cleanValue(boardProperty.getBoardName()));
 	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t118", userInfo.getLocale()) + itemVO.getWriteDate());
 	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t119", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + (userInfo.getTitle() == null || "null".equals(userInfo.getTitle()) ? "" : userInfo.getTitle()) + ", " + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
 	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t120", userInfo.getLocale()) + strURL + commonUtil.cleanValue(itemVO.getTitle()) + "</a>");
