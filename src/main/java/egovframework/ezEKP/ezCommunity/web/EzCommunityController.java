@@ -1503,7 +1503,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		CommunityBoardPropertyVO boardInfo;
 		
-		if(request.getParameter("comID") != null) {
+		if (request.getParameter("comID") != null) {
 			String pComID = request.getParameter("comID");
 			String strACLXML = ezCommunityService.getACL(userInfo.getId(), pComID, userInfo.getTenantId());
 			
@@ -1515,10 +1515,21 @@ public class EzCommunityController extends EgovFileMngUtil{
 			//logger.debug("pBoardID = " + pBoardID);
 			//logger.debug("userDeptPath = " + userDeptPath);
 			
-			for(String pAccessID : userDeptPath.split(",")) {
+			for (String pAccessID : userDeptPath.split(",")) {
 				boardInfo = ezCommunityService.brdGetACL(pBoardID, pAccessID, userInfo.getTenantId());
 				
 				if (boardInfo != null) {
+					/* 2021-12-27 홍승비 - 커뮤니티 게시물 복사, 메일을 커뮤니티 게시물로 게시 등 권한 체크 시 사용자 개인에 부여된 전체관리자/회사관리자권한을 체크하도록 수정 */
+					if (userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1) {
+						boardInfo.setAccess_FG("1");
+						boardInfo.setBoardAdmin_FG("true");
+						boardInfo.setListView_FG("true");
+						boardInfo.setRead_FG("true");
+						boardInfo.setWrite_FG("true");
+						boardInfo.setReply_FG("true");
+						boardInfo.setDelete_FG("true");
+					}
+					
 					model.addAttribute("boardInfo", boardInfo);
 					break;
 				}
