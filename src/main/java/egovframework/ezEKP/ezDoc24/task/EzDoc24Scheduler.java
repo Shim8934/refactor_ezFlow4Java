@@ -24,6 +24,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import com.google.gson.Gson;
@@ -51,51 +53,53 @@ public class EzDoc24Scheduler {
 	public void doc24Scheduler() throws Exception {
 		logger.debug("doc24Scheduler started.");
 		
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-		Calendar cal = Calendar.getInstance();
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+			Calendar cal = Calendar.getInstance();
+			
+			String dateString = sdf.format(cal.getTime()) + " 00:00:00"; 
+					
+			String jsonData = GetRecData(dateString);
+			
+			if (jsonData == null || jsonData.equals("")) {
+				jsonData = GetSampleRecData();
+			}
+			if (jsonData != null && !"".equals(jsonData.trim())) {
+				 Map<String,Object> map = JsonUtil.JsonToMap(jsonData);
 		
-		String dateString = sdf.format(cal.getTime()) + " 00:00:00"; 
-				
-		String jsonData = GetRecData(dateString);
-		
-		if (jsonData == null || jsonData.equals("")) {
-			jsonData = GetSampleRecData();
-		}
-		if (jsonData != null && !"".equals(jsonData.trim()))
-		{
-			 Map<String,Object> map = JsonUtil.JsonToMap(jsonData);
-	
-			 if (((Map<String, String>)map.get("header")).get("code").toString().equals("LNK000000"))
-			 {
-				 List<Object> datas = (List<Object>) map.get("result");
-				 
-				 if(datas != null) {
-					 for(int i = 0; i < datas.size(); i++) {
-						 boolean InsertFlag = false;
-						 Map<String, Object> data = (Map<String, Object>) datas.get(i);
-						 InsertFlag = SetRecParameterInfo(data);
-						 if(InsertFlag) {
-							 logger.debug("수신처 DB 성공  - 수신처 코드 : " + data.get("orgCd") + ", 사업장명 : " + data.get("cmpnyNm"), "");
-						 }else {
-							 logger.debug("수신처 DB 실패  - 수신처 코드 : " + data.get("orgCd") + ", 사업장명 : " + data.get("cmpnyNm"), "");
+				 if (((Map<String, Object>)map.get("header")).get("code").toString().equals("LNK000000")) {
+					 List<Map<String, Object>> datas = (List<Map<String, Object>>)map.get("result");
+					 
+					 if(datas != null) {
+						 for(int i = 0; i < datas.size(); i++) {
+							 boolean InsertFlag = false;
+							 Map<String, Object> data = (Map<String, Object>) datas.get(i);
+							 InsertFlag = SetRecParameterInfo(data);
+							 if(InsertFlag) {
+								 logger.debug("수신처 DB 성공  - 수신처 코드 : " + data.get("orgCd") + ", 사업장명 : " + data.get("cmpnyNm"), "");
+							 }else {
+								 logger.debug("수신처 DB 실패  - 수신처 코드 : " + data.get("orgCd") + ", 사업장명 : " + data.get("cmpnyNm"), "");
+							 }
 						 }
 					 }
+					 
+				 }else {
+					 logger.debug("********************  수신처 데이터 가져오기 작업 실패 ********************"); 
+					 logger.debug("err code : " + ((Map<String, Object>) map.get("header")).get("code").toString() + ", message : " + ((Map<String, Object>) map.get("header")).get("message").toString());
+					 logger.debug("********************  수신처 데이터 가져오기 작업 실패 ********************"); 
 				 }
-				 
-			 }else {
-				 logger.debug("********************  수신처 데이터 가져오기 작업 실패 ********************" + ((Map<String, Object>) map.get("header")).get("code").toString());
-			 }
-		}else {
-			logger.debug("********************  수신처 데이터 가져오기 작업 실패 ********************");
+			}else {
+				logger.debug("********************  수신처 데이터 가져오기 작업 실패 ********************");
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
 		}
 		
 		logger.debug("doc24Scheduler ended.");
 	}
-	protected boolean SetRecParameterInfo(Map<String, Object> data)
-	{
+	protected boolean SetRecParameterInfo(Map<String, Object> data) {
 		boolean retCheck = false;
-		try
-		{
+		try {
 			Map<String, Object> map = new HashMap<String, Object>();
 			String orgCd = data.get("orgCd").toString();
 			map.put("orgCd", data.get("orgCd"));
@@ -126,8 +130,7 @@ public class EzDoc24Scheduler {
 
 	private String GetRecData(String CurDate) {
 		String resultPost = null;
-        try
-        {
+        try {
         	LoginVO userInfo = new LoginVO();
         	userInfo.setTenantId(0);
         	userInfo.setCompanyID("");
@@ -139,21 +142,19 @@ public class EzDoc24Scheduler {
         	if(url == null || apiKey == null || url.equals("") || apiKey.equals("")) {
         		return null;
         	}
-            //postParams.Append("orgCd=" + "M999999");
-            postParams.append("batchDay=" + CurDate);
-            postParams.append("&deleteFlag = Y");
 
             HttpHeaders headers = new HttpHeaders();
     		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
     		headers.set("ContentType", "application/x-www-form-urlencoded");
     		headers.set("API_KEY", apiKey);
-    		Gson gson = new Gson();
-    		JSONObject jsonParam = gson.fromJson(gson.toJson(postParams), JSONObject.class);
-
-    		HttpEntity<?> entity = new HttpEntity<>(jsonParam, headers);
+    		
+    		MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
+    		map.add("batchDay", CurDate);
+    		map.add("deleteFlag", "Y");
+    		
+    		HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<MultiValueMap<String, String>>(map, headers);
     		
     		RestTemplate rest = new RestTemplate();
-    		
     		
     		ResponseEntity<JSONObject> result = rest.postForEntity(url, entity, JSONObject.class);
     		
