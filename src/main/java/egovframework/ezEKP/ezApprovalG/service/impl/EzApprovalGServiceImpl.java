@@ -1931,7 +1931,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getFormInfo(String formContID, String kind, String searchType, String searchName, String userID, String companyID, String lang, int tenantID) throws Exception {
+	public String getFormInfo(String formContID, String kind, String searchType, String searchName, String userID, String deptId, String companyID, String lang, int tenantID) throws Exception {
 		logger.debug("getFormInfo started.");
 
 		StringBuffer resultXML = new StringBuffer();
@@ -1956,7 +1956,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("</HEADERS>");
 		
 		String strMultiData = commonUtil.getMultiData(lang, tenantID);
-		String docList = getFormInfoDB(formContID, userID, kind, strMultiData, searchType, searchName, companyID, tenantID);
+		String docList = getFormInfoDB(formContID, userID, deptId, kind, strMultiData, searchType, searchName, companyID, tenantID);
 		
 		Document docXML = commonUtil.convertStringToDocument(docList);
 		int dlength = docXML.getElementsByTagName("ROW").getLength();
@@ -21229,7 +21229,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return ezApprovalGDAO.getCountChildFormCont(map);
 	}
 
-	public String getFormInfoDB(String formContID, String userID, String kind, String strMultiData, String searchType, String searchName, String companyID, int tenantID) throws Exception {
+	public String getFormInfoDB(String formContID, String userID, String deptId, String kind, String strMultiData, String searchType, String searchName, String companyID, int tenantID) throws Exception {
 		logger.debug("getFormInfoDB started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -21238,7 +21238,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_FORMKIND", kind);
 		map.put("v_LANGTYPE", strMultiData);
 		map.put("v_SEARCHTYPE", searchType);
-		
+		map.put("deptId", deptId);
+
 		if(globals.getProperty("Globals.DbType").equals("mysql")){
 			if (searchName.equals("_")) {
 				map.put("v_SEARCHNAME", "\"" + searchName);
