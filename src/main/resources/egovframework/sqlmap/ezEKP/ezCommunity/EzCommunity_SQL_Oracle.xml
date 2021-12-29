@@ -7310,7 +7310,7 @@
 	<select id="EzCommunityDAO.brdGetBoardProperty"				parameterClass="MAP"		resultClass="CommunityBoardPropertyVO">
 		<![CDATA[
 			SELECT 
-				c_clubno,
+				B.c_clubno,
 				TRIM(boardid) AS BOARDID,
 				boardname,
 				boardname2,
@@ -7332,16 +7332,23 @@
 				checkuse,
 				showposition,
 				sn,
-				tenant_id,
+				B.tenant_id,
 				MAILFG_POST,
 				MAILFG_MOD,
-				MAILFG_COMMENT
+				MAILFG_COMMENT,
+				C_CLUBNAME
 			FROM
-	        	TBL_COMM_BOARDINFO
+	        	TBL_COMM_BOARDINFO B
+			INNER JOIN
+	        	TBL_C_CLUB C
+	        ON
+	        	B.TENANT_ID = C.TENANT_ID
+	        AND
+	        	B.C_CLUBNO = C.C_CLUBNO
 			WHERE
-	       		boardid = #boardID#
+	       		B.boardid = #boardID#
 	       	AND
-	       		tenant_id = #tenantID#
+	       		B.tenant_id = #tenantID#
 		]]>
 	</select>
 	
