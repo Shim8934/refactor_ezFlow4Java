@@ -245,16 +245,16 @@ textarea {
 					alert("<spring:message code='ezCar.shb08' />");
 					return false;
 				}
+				if(document.getElementById('S3timepicker_'+str[i]).value < document.getElementById('S2timepicker_'+str[i]).value ){
+			    	alert("<spring:message code='ezCar.shb11' />"+i+"<spring:message code='ezCar.shb10' />");
+			   		return false;
+			    }
 			}
 		}
 		
 		for(var i=1; i<=startNum-1; i++){
 			if(document.getElementById('Etimepicker_'+str[i]).value < document.getElementById('Stimepicker_'+str[i]).value ){
 		    	alert("<spring:message code='ezCar.shb09' />"+i+"<spring:message code='ezCar.shb10' />");
-		    	return false;
-		    }
-		    if(document.getElementById('S3timepicker_'+str[i]).value < document.getElementById('S2timepicker_'+str[i]).value ){
-		    	alert("<spring:message code='ezCar.shb11' />"+i+"<spring:message code='ezCar.shb10' />");
 		    	return false;
 		    }
 		    if(parseInt(document.getElementById('adistance_'+str[i]).value) < parseInt(document.getElementById('bdistance_'+str[i]).value) ){
@@ -542,6 +542,7 @@ textarea {
 		var lo_table = document.getElementById("testTb");
 		var checkIndex = []; 
 		var obj_length = document.getElementsByName("chkbox").length;
+
 		  
 		var j = 0;
     	for (var i=0; i<obj_length; i++) {
@@ -559,6 +560,10 @@ textarea {
 				lo_table.deleteRow(checkIndex[i]-i);
 				startNum--; //행삭제될때 감소
 				document.getElementById("count").value = startNum;
+				if(startNum <= 2){
+					alert("<spring:message code='ezCar.smb17' />");
+					return;
+				}
 	    	}
 	    }
 
