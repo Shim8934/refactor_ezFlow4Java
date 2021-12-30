@@ -57,7 +57,7 @@ public class EzDoc24Scheduler {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 			Calendar cal = Calendar.getInstance();
 			
-			String dateString = sdf.format(cal.getTime()) + " 00:00:00"; 
+			String dateString = sdf.format(cal.getTime()); 
 					
 			String jsonData = GetRecData(dateString);
 			
@@ -136,7 +136,7 @@ public class EzDoc24Scheduler {
         	userInfo.setCompanyID("");
         	userInfo.setLang("1");
         	// 타겟이 되는 웹페이지 URL
-        	String url = ezApprovalGService.getOptionInfo("D24", "001", userInfo, "CODE");
+        	String url = ezApprovalGService.getOptionInfo("D24", "003", userInfo, "CODE");
         	String apiKey = ezApprovalGService.getOptionInfo("D24", "002", userInfo, "CODE");
         	StringBuilder postParams = new StringBuilder();
         	if(url == null || apiKey == null || url.equals("") || apiKey.equals("")) {
