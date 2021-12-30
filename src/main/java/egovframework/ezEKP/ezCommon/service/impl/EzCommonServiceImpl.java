@@ -2524,16 +2524,16 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 
 	@Override
-	public HashMap<String, Object> getTenantConfigList(int tenantID, String... propertyNames) throws Exception {
+	public HashMap<String, String> getTenantConfigList(int tenantID, String... propertyNames) throws Exception {
 
-		HashMap<String, Object> resultMap = new HashMap<>();
+		HashMap<String, String> resultMap = new HashMap<>();
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("property_names", propertyNames);
 		map.put("tenantID" , tenantID);
 
-		List<Map<String, Object>> tenantConfigList = ezCommonDAO.getTenantConfigList(map);
+		List<Map<String, String>> tenantConfigList = ezCommonDAO.getTenantConfigList(map);
 
-		for (Map<String, Object> configMap : tenantConfigList) {
+		for (Map<String, String> configMap : tenantConfigList) {
 			resultMap.put(String.valueOf(configMap.get("property_name")),configMap.get("property_value"));
 		}
 
