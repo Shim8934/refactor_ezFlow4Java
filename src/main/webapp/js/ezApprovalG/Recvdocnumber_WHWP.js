@@ -82,6 +82,7 @@ function setDocNumFormat() {
     message.PutFieldText("receiptnumber", numHeader);
     return true;
 }
+var docNumSn = "";
 function getRecvDocNumber(pDeptID, docNumZeroCnt) {
 	try {
         var name, docnumber;
@@ -175,6 +176,8 @@ function getRecvDocNumber(pDeptID, docNumZeroCnt) {
             			message.PutFieldText(name, fractionsymbol + tempNumString);
             			pDocNo = fractionsymbol + tempNumString;
             		}
+
+                    docNumSn = SN;
     				
                     SaveFile();
                     
@@ -199,21 +202,27 @@ function getRecvDocNumber(pDeptID, docNumZeroCnt) {
         }
     }
 }
-function rollbackDocNumber(pDeptID, pDocID) {
+function rollbackDocNumber(pDeptID, pPrefix, pDocID) {
     try {
         var name, docnumber;
         var rtnval;
-
-        name = "receiptnumber"
-        if (!message.FieldExist(name))
-            return;
-
-        docnumber = message.GetFieldText(name);
-        if (fractionsymbol == "") {
-            var tempList = docnumber.split("-");
-            fractionsymbol = tempList[0] + "-";
+        
+		if (!pPrefix) {
+			pPrefix = "doc";
+		}
+		name = pPrefix + "number";
+		
+        if (!message.FieldExist(name)) {
+            return true;
         }
+        
+        docnumber = message.GetFieldText(name);
         docnumber = docnumber.replace(fractionsymbol, "");
+
+        if (!docnumber || isNaN(Number(docnumber))) {
+            docnumber = docNumSn;
+            fractionsymbol.replace(docnumber, "");
+        }
 
         var result = "";
     	$.ajax({
@@ -238,9 +247,7 @@ function rollbackDocNumber(pDeptID, pDocID) {
         if (rtnval == "FALSE") {
             pDocNumCode = "";
             pDocNo = "";
-        }
-        else {
-            SaveFile();
+        } else {
             pDocNumCode = "";
             pDocNo = "";
         }

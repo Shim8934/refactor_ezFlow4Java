@@ -589,7 +589,7 @@
 		 			return;
 		 		}else{
 		 			checkRealID = checkId[0].id.substring(0,checkId[0].id.length -1);
-		 			window.open("/ezSchedule/scheduleGroupMember.do?groupID=" + checkRealID, "", "height = 550px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
+		 			window.open("/ezSchedule/scheduleGroupMember.do?groupID=" + checkRealID, "schedule_group_modify", "height = 550px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
 		 			return;
 		 		}
 		 	}else{

@@ -999,8 +999,8 @@
 	        
 	        function search(type) {
 	            if (type == "basic") {
-	            	if (document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == "" && $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == ""
-	            			&& $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
+	            	if (document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == "" && document.getElementById("txtContent").value == ""
+	            			&& $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
 		                alert("<spring:message code='ezBoard.t192' />");
 		                return;
 		            }
@@ -1038,24 +1038,33 @@
 					var selectSearch = document.getElementById('selectType');
 	                if (selectSearch.item(0).selected) {
 	                    TYPE += "TITLE;";
-	                    DATA += "<TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE>";
+	                    DATA += "<TITLE><![CDATA[" + document.getElementById("txt_keyword").value.replace("'", "''") + "]]></TITLE>";
 	                }
 	                else if (selectSearch.item(1).selected) {
 	                    TYPE += "WRITERNAME;";
-	                    DATA += "<WRITERNAME><![CDATA[" + MakeXMLString(document.getElementById("txt_keyword").value) + "]]></WRITERNAME>";
+	                    DATA += "<WRITERNAME><![CDATA[" + MakeXMLString(document.getElementById("txt_keyword").value.replace("'", "''")) + "]]></WRITERNAME>";
+	                }
+	                else if (selectSearch.item(2).selected) {
+	                    TYPE += "CONTENT;";
+	                    DATA += "<CONTENT><![CDATA[" + document.getElementById("txt_keyword").value.replace("'", "''") + "]]></CONTENT>";
 	                }
 	            }
 	            else {
 	                if (document.getElementById("txtTitle").value != "")		// DocTitle
 	                {
 	                    TYPE += "TITLE;";
-	                    DATA += "<TITLE><![CDATA[" + document.getElementById("txtTitle").value + "]]></TITLE>";
+	                    DATA += "<TITLE><![CDATA[" + document.getElementById("txtTitle").value.replace("'", "''") + "]]></TITLE>";
 	                }
+	                
+		        	if (document.getElementById("txtContent").value != "") {		// DocContent
+           			    TYPE += "CONTENT;";
+          		        DATA += "<CONTENT><![CDATA[" + document.getElementById("txtContent").value.replace("'", "''") + "]]></CONTENT>";
+		        	}
 	
 	                if (document.getElementById("txtAbstract").value != "")		// ABSTRACT
 	                {
 	                    TYPE += "ABSTRACT;";
-	                    DATA += "<ABSTRACT><![CDATA[" + document.getElementById("txtAbstract").value + "]]></ABSTRACT>";
+	                    DATA += "<ABSTRACT><![CDATA[" + document.getElementById("txtAbstract").value.replace("'", "''") + "]]></ABSTRACT>";
 	                }
 	
 	                if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "")		// StartDate
@@ -1158,6 +1167,7 @@
 	        	<select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
 		    		<option selected value="rad_Subject"><spring:message code='ezBoard.t208'/></option>
 		    		<option value="rad_Writer"><spring:message code='ezBoard.t223'/></option>
+		    		<option value="rad_Content"><spring:message code='ezBoard.garm01'/></option>
 		    	</select>
 			  <input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 	          <a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onClick="search('quick')"></a>
@@ -1295,7 +1305,11 @@
 			        <tr>
 			            <th style="text-align:center"><spring:message code='ezBoard.t208' /></th>
 			            <td><input type="text" id="txtTitle" style="width:100%" value=""></td>
-			        </tr>  
+			        </tr>
+					<tr>
+			            <th style="text-align:center"><spring:message code='ezBoard.garm01' /></th>
+			            <td><input type="text" id="txtContent" style="width:100%" value=""></td>
+			        </tr> 
 			         <tr>
 			            <th style="text-align:center"><spring:message code='ezBoard.t209' /></th>
 			            <td><input type="text" id="txtAbstract" style="width:100%" value=""></td>

@@ -184,6 +184,7 @@ function getDocNumber(pDeptID, pPrefix, docNumZeroCnt) {
     }
 }
 //문서 번호 작성 함수 (공공버전 일반버전 공통채번 소스개선) 2019-01-07 천성준
+var docNumSn = "";
 function getDocNumberNew(pDeptID, pPrefix, docNumZeroCnt) {
 	var name;
 	var rtnval;
@@ -283,6 +284,8 @@ function getDocNumberNew(pDeptID, pPrefix, docNumZeroCnt) {
 						}
 					}
 				}
+
+                docNumSn = SN;
 				
 				return true;
 			}
@@ -345,11 +348,17 @@ function rollbackDocNumber(pDeptID, pPrefix, pDocID) {
 		}
         name = pPrefix + "number";
         
-        if (!message.FieldExist(name))
+        if (!message.FieldExist(name)) {
             return true;
+        }
 
         docnumber = message.GetFieldText(name);
         docnumber = docnumber.replace(fractionsymbol, "");
+        
+        if (!docnumber || isNaN(Number(docnumber))) {
+            docnumber = docNumSn;
+            fractionsymbol.replace(docnumber, "");
+        }
 
     	var result = "";
     	
@@ -372,15 +381,21 @@ function rollbackDocNumber(pDeptID, pPrefix, pDocID) {
         rtnval = getNodeText(dataNodes[0]);
         
     	message.PutFieldText(name, fractionsymbol);
+        
+    	if (pPrefix === "doc" && message.FieldExist("enforcedate")) {
+    	    message.PutFieldText("enforcedate", "");
+        }
 
         if (rtnval == "FALSE") {
             DocNumCode = "";
-        }
-        else {
+        } else {
             DocNumCode = "";
         }
     } catch (e) {
 		message.PutFieldText(name, fractionsymbol);
+    	if (pPrefix === "doc" && message.FieldExist("enforcedate")) {
+    	    message.PutFieldText("enforcedate", "");
+        }
     }
 }
 

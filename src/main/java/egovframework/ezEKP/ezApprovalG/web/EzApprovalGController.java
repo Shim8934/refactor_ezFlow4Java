@@ -1078,7 +1078,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String kind = request.getParameter("kind");
 		String searchType = request.getParameter("searchType");
 		String searchName = request.getParameter("searchName");
-		String result = ezApprovalGService.getFormInfo(id.trim(), kind, searchType, searchName, userInfo.getId(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		String result = ezApprovalGService.getFormInfo(id.trim(), kind, searchType, searchName, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		
 		logger.debug("getForm ended.");
 		
@@ -11344,4 +11344,18 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("getPersonalAgreeReturnType ended, result = " + result);
 		return result;
 	}
+    
+	@RequestMapping(value = "/ezApprovalG/setSusinRollbackDocID.do", produces = "text/plain; charset=utf-8", method = RequestMethod.GET)
+    @ResponseBody
+	public String setSusinRollbackDocID(@CookieValue("loginCookie") String loginCookie, @RequestParam String beforeAprState, @RequestParam String docId, @RequestParam String orgDocId) throws Exception {
+        logger.debug("setSusinRollbackDocID started.");
+        
+        LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+        
+        String result = ezApprovalGService.setSusinRollbackDocID(beforeAprState, docId, orgDocId, userInfo);
+
+        logger.debug("setSusinRollbackDocID ended.");
+        
+	    return result;
+    }
 }

@@ -93,18 +93,20 @@ var playButton = document.getElementById("playButton");
 var titleDiv = document.getElementById("titleDiv");
 var layDiv = document.getElementById("layDIV");
 function videoHandler(e) {
-	if (e.type == 'playing') {
+	if (e.type == 'playing' ) {
 		// 재생 중 컨트롤 활성화, 버튼이미지+제목 안보임
-		video.setAttribute("controls","controls");
+		video.controls = true;
 		playButton.style.display = "none";
 		titleDiv.style.display = "none";
 		layDiv.classList.remove("sortablePortlet");
 	} else if (e.type == 'pause') {
-		// 정지 시 컨트롤 비활성화, 버튼이미지+제목 보임
-		video.removeAttribute("controls");
-		playButton.style.display = "block";
-		titleDiv.style.display = "inline-block";
-		layDiv.classList.add("sortablePortlet");
+		// 정지 시 컨트롤 비활성화, 버튼이미지+제목 보임 (하단의 progress bar를 이동하는 경우는 이벤트 제외)
+		if (video.seeking == false) {
+			video.controls = false;
+			playButton.style.display = "";
+			titleDiv.style.display = "";
+			layDiv.classList.add("sortablePortlet");
+		}
 	}
 }
 //동영상이 있는 경우에만 이벤트 리스너/핸들러 추가

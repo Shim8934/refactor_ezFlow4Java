@@ -387,7 +387,7 @@ function GetDraftAprLineInfo(ret) {
 	                fieldname = susinSN + "habyuipositon" + hidx;
 	                field = message.GetListItem(fields, fieldname);
 	                if (field) {
-	                    var jikweName = trim(field.textContent);
+	                    field.textContent = OrderJobtitle[i];
 	
 	                    if (OrderSuggester[i] == "Y")
 	                        field.textContent = strLang75 + field.textContent;

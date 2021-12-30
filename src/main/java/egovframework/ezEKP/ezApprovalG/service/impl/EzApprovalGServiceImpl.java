@@ -1931,7 +1931,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getFormInfo(String formContID, String kind, String searchType, String searchName, String userID, String companyID, String lang, int tenantID) throws Exception {
+	public String getFormInfo(String formContID, String kind, String searchType, String searchName, String userID, String deptId, String companyID, String lang, int tenantID) throws Exception {
 		logger.debug("getFormInfo started.");
 
 		StringBuffer resultXML = new StringBuffer();
@@ -1956,7 +1956,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("</HEADERS>");
 		
 		String strMultiData = commonUtil.getMultiData(lang, tenantID);
-		String docList = getFormInfoDB(formContID, userID, kind, strMultiData, searchType, searchName, companyID, tenantID);
+		String docList = getFormInfoDB(formContID, userID, deptId, kind, strMultiData, searchType, searchName, companyID, tenantID);
 		
 		Document docXML = commonUtil.convertStringToDocument(docList);
 		int dlength = docXML.getElementsByTagName("ROW").getLength();
@@ -21229,7 +21229,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return ezApprovalGDAO.getCountChildFormCont(map);
 	}
 
-	public String getFormInfoDB(String formContID, String userID, String kind, String strMultiData, String searchType, String searchName, String companyID, int tenantID) throws Exception {
+	public String getFormInfoDB(String formContID, String userID, String deptId, String kind, String strMultiData, String searchType, String searchName, String companyID, int tenantID) throws Exception {
 		logger.debug("getFormInfoDB started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -21238,7 +21238,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_FORMKIND", kind);
 		map.put("v_LANGTYPE", strMultiData);
 		map.put("v_SEARCHTYPE", searchType);
-		
+		map.put("deptId", deptId);
+
 		if(globals.getProperty("Globals.DbType").equals("mysql")){
 			if (searchName.equals("_")) {
 				map.put("v_SEARCHNAME", "\"" + searchName);
@@ -33358,5 +33359,33 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	    logger.debug("getReceiptInfoIng ended.");
 	    
 	    return receipts;
+    }
+    
+    @Override
+    public String setSusinRollbackDocID(String beforeAprState, String docId, String orgDocId, LoginVO userInfo) throws Exception {
+        Map<String, Object> map = new HashMap<>();
+        map.put("v_PROCESSDOCID", null);
+        map.put("v_APRSTATE", beforeAprState);
+        map.put("v_DOCID", docId);
+        map.put("v_DEPTID", userInfo.getDeptID());
+        map.put("v_TENANTID", userInfo.getTenantId());
+        map.put("companyID", userInfo.getCompanyID());
+        
+        ezApprovalGDAO.rollbackJubsuAprReceiptProcessInfo(map);
+        
+        map.put("v_USERID", null);
+        map.put("v_DISPLAYNAME1", null);
+        map.put("v_DISPLAYNAME2", null);
+
+        ezApprovalGDAO.updateJubsuDocDelivery(map);
+        
+        map.put("v_ORGDOCID", orgDocId);
+        map.put("v_USERID", "012".equals(beforeAprState) ? userInfo.getId() : null);
+        map.put("v_PROCESSFLAG", "N");
+        map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+        
+        ezApprovalGDAO.updateSusinEndReceiptPointInfo(map);
+        
+        return "TRUE";
     }
 }

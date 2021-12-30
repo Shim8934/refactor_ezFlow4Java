@@ -121,7 +121,7 @@
 		    var useReceiveDocNo = "<c:out value = '${useReceiveDocNo}'/>";
 		    var orgCompanyID = "";
 		    var docNumZeroCnt = "<c:out value = '${docNumZeroCnt}'/>";
-		    var rtnSignInfo = "";
+		    var rtnSignInfo = [];
 		    var SaveHtml = "";
 		    var useWebHWP = "YES";
 		    var imgCheck = true;
@@ -524,8 +524,13 @@
 			        alert("btnSetReceivLine_onclick : " + e.description);
 			    }
 			}
-		
+
+            var ingFlag = false;
 			function btnSendDraft_onclick() {
+                if (ingFlag) {
+                    return;
+                }
+                
 	        	var deptCheckFlag = checkDeptAndCabinetId();
 	        	
 				if (deptCheckFlag == "3") {
@@ -664,6 +669,8 @@
 	              //mht는 G일때만 수신채번하게 되잇는데
                 rtnval = getRecvDocNumber(arr_userinfo[4], docNumZeroCnt);
                 if (!rtnval) {
+                    UndoSignInfo(rtnSignInfo);
+                    
                     var pAlertContent = "[접수 문서번호]를 가져오지 못했습니다!";
                     OpenAlertUI(pAlertContent);
 
@@ -693,11 +700,16 @@
 	                      UndoSignInfo(rtnSignInfo);
 	
 	                      if (LastSignSN == 1) {
+	                          rollbackDocNumber(arr_userinfo[4], "receipt", pDocID);
+                              setSusinRollbackDocID();
+	                          
 	                          RtnVal = ExcuteInfo("END_FAIL")
 	                          if (!RtnVal) {
 	                              return;
 	                          }
 	                      }
+	                      
+	                      GetHTML(before_SaveFile);
 	
 	                    //   SetBtnStateTrue();
 	                      btnSendDraft.Enable = "true";
@@ -791,11 +803,17 @@
                     UndoSignInfo(rtnSignInfo);
                 	
                     if (LastSignSN == 1) {
+                        rollbackDocNumber(arr_userinfo[4], "receipt", pDocID);
+                        setSusinRollbackDocID();
+                        
                         RtnVal = ExcuteInfo("END_FAIL")
                         if (!RtnVal) {
                             return;
                         }
                     }
+                    
+                    GetHTML(before_SaveFile);
+                    
                     pAlertContent = "[<spring:message code='ezApprovalG.t1495'/>";
                     OpenAlertUI(pAlertContent);
                     return;
@@ -852,7 +870,7 @@
 					   }
 				   }
 
-                   rtnSignInfo = SendDraftMappingSign(ret);
+                   SendDraftMappingSign(ret);
 
 				   if (LastSignSN == 1) {
 					   var rtnVal = ExcuteInfo("LAST_SIGN_AFTER")
@@ -1799,7 +1817,8 @@
 	    	}
 	    	
 	    	function GetHTML(callback) {
-	            message.GetTextFile("HWP", "", function (data) { callback(data) });
+                ingFlag = true;
+	            message.GetTextFile("HWP", "", function (data) { ingFlag = false; callback(data); });
 	        }
 	    	
 	    	// 일반첨부, 대용량첨부파일 관련 가이드 메세지 추가
