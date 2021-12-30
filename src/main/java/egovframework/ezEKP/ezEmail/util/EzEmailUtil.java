@@ -1792,6 +1792,7 @@ public class EzEmailUtil {
 					previewImageListHtml += tempList.get(5);
 					filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
 					filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
+					isIcalMail += tempList.get(6);
 					
 					if (tempList.get(4).equals("OK")) {
 						isAttach = "OK";
@@ -1844,6 +1845,7 @@ public class EzEmailUtil {
 					previewImageListHtml += tempList.get(5);
 					filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
 					filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
+					isIcalMail += tempList.get(6);
 					
 					if (tempList.get(4).equals("OK")) {
 						isAttach = "OK";
@@ -1878,6 +1880,7 @@ public class EzEmailUtil {
 					previewImageListHtml += tempList.get(5);
 					filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
 					filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
+					isIcalMail += tempList.get(6);
 					
 					if (tempList.get(4).equals("OK")) {
 						isAttach = "OK";
@@ -1890,6 +1893,7 @@ public class EzEmailUtil {
 					pAttachListHtml += tempList.get(1);
 					filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
 					filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
+					isIcalMail += tempList.get(6);
 					
 					if (tempList.get(4).equals("OK")) {
 						isAttach = "OK";
@@ -1938,6 +1942,7 @@ public class EzEmailUtil {
 						previewImageListHtml += tempList.get(5);
 						filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
 						filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
+						isIcalMail += tempList.get(6);
 						
 						if (tempList.get(4).equals("OK")) {
 							isAttach = "OK";
@@ -1965,6 +1970,7 @@ public class EzEmailUtil {
 				previewImageListHtml += tempList.get(5);
 				filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
 				filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
+				isIcalMail += tempList.get(6);
 				
 				if (tempList.get(4).equals("OK")) {
 					isAttach = "OK";
@@ -1972,7 +1978,7 @@ public class EzEmailUtil {
 			}
 		} else if (part.isMimeType("text/calendar")) {
 			isIcalMail = "Y";
-			String icalHtml = getIcalMailPart(part, locale);
+			String icalHtml = getIcalMailPartHTML(part, locale);
  			htmlBody += icalHtml;
 		}
 		
@@ -5692,9 +5698,37 @@ public class EzEmailUtil {
     }
         
     /**
-     * 아이캘린더 - 메일 Multipart Ical 지원
+     * 아이캘린더 - 메일 text/calendar 파트 리턴
      */
-    public String getIcalMailPart(Part part, Locale locale) {
+    public Part getIcalMailPart(Part part) {
+    	Part rePart = null;
+    	
+    	try {
+    		if(part.isMimeType("multipart/alternative")){
+    			Multipart mp = (Multipart)part.getContent();
+    			int count = mp.getCount();
+    			Part p = null;
+    			
+    			for (int i = 0; i < count; i++) {
+    				p = mp.getBodyPart(i);
+    				rePart = getIcalMailPart(p);
+    				
+    				if (rePart != null) { break; }
+    			}
+        	} else if(part.isMimeType("text/calendar")) {
+        		rePart = part;
+        	}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    	
+    	return rePart;
+    }
+    
+    /**
+     * 아이캘린더 - 메일 Ical 지원
+     */
+    public String getIcalMailPartHTML(Part part, Locale locale) {
     	IcalVO vo = getIcalProperty(part);
     	vo.setLocale(locale);
     	

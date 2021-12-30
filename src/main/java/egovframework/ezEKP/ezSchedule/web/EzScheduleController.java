@@ -24,6 +24,7 @@ import javax.annotation.Resource;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Part;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -88,6 +89,7 @@ import net.fortuna.ical4j.filter.PeriodRule;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.Recur;
@@ -3828,13 +3830,17 @@ public class EzScheduleController extends EgovFileMngUtil {
 					message = ((IMAPFolder)f).getMessageByUID(uid);
 				}
 				
+				Part icalPart = null;
 				if (message == null) {
 					logger.error("Message not found. uid=" + uid);
-					reMsg = "ERROR_MESSAGE";
-				} else if (message.isMimeType("text/calendar")) {
+				} else {
+					icalPart = ezEmailUtil.getIcalMailPart(message);
+				}
+					
+				if (icalPart != null && icalPart.isMimeType("text/calendar")) {
 					
 					// icsImport.do
-					InputStream fin = message.getInputStream();
+					InputStream fin = icalPart.getInputStream();
 					try {
 			        	
 			    		CalendarBuilder cb = new CalendarBuilder();
@@ -3858,6 +3864,16 @@ public class EzScheduleController extends EgovFileMngUtil {
 								
 								Description decription = vEvent.getDescription();
 								String content         = (decription == null) ? "" : decription.getValue().trim(); 
+
+								if (decription == null) {
+									if (vEvent.getProperty("X-ALT-DESC") != null) {
+										Property pp      = vEvent.getProperty("X-ALT-DESC");
+										Parameter fmType = pp.getParameter(Parameter.FMTTYPE);
+										logger.debug("X-ALT-DESC;fmType={}", fmType.getValue());
+										
+										content = pp.getValue();
+									}
+								}
 								
 								String ispublic   = "";
 								String datetype   = "";
@@ -4094,17 +4110,22 @@ public class EzScheduleController extends EgovFileMngUtil {
 							}
 						}
 					} catch(ParserException e) {
+						reMsg = "ERROR";
 						logger.debug("Parse Error");
 						e.printStackTrace();
 					} catch(Exception e) {
+						reMsg = "ERROR";
 						logger.debug("Error");
 						e.printStackTrace();
 					} finally {
 						if (fin != null) { try { fin.close(); } catch (IOException e) {} }
 					}
+				} else {
+					reMsg = "ERROR_ICAL_PART";
 				}
 			}
 		} catch (MessagingException e) {
+			reMsg = "ERROR";
 			e.printStackTrace();
 		} finally {
 			if (ia != null) {
@@ -4112,7 +4133,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 			}
 		}
 
-		logger.debug("icsImportFromEmail ended.");
+		logger.debug("icsImportFromEmail ended. reMsg={}", reMsg);
 		return reMsg;
 	}
 	
