@@ -11,6 +11,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import com.google.gson.Gson;
@@ -88,23 +90,23 @@ public class EzDoc24ServiceImpl extends EgovFileMngUtil implements EzDoc24Servic
         	userInfo.setTenantId(0);
         	userInfo.setCompanyID("");
         	userInfo.setLang("1");
-        	String optionInfo = ezApprovalGService.getOptionInfo("D24", "002", userInfo, "CODE");
         	// 타겟이 되는 웹페이지 URL
         	String url = ezApprovalGService.getOptionInfo("D24", "001", userInfo, "CODE");
-        	if(optionInfo == null || url == null || optionInfo.equals("") || url.equals("")) {
+        	String apiKey = ezApprovalGService.getOptionInfo("D24", "002", userInfo, "CODE");
+        	
+        	if(apiKey == null || url == null || apiKey.equals("") || url.equals("")) {
         		return null;
         	}
-        	StringBuilder postParams = new StringBuilder();
-        	postParams.append("orgCd=" + orgcn);
 
             HttpHeaders headers = new HttpHeaders();
     		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
     		headers.set("ContentType", "application/x-www-form-urlencoded");
-    		headers.set("API_KEY", optionInfo);
-    		Gson gson = new Gson();
-    		JSONObject jsonParam = gson.fromJson(gson.toJson(postParams), JSONObject.class);
+    		headers.set("API_KEY", apiKey);
 
-    		HttpEntity<?> entity = new HttpEntity<>(jsonParam, headers);
+    		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+    		map.add("orgCd", orgcn);
+    		
+    		HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<MultiValueMap<String, String>>(map, headers);
     		
     		RestTemplate rest = new RestTemplate();
     		
