@@ -4436,6 +4436,30 @@
       				TBL_FORMINFO.COMPANYID = O.COMPANYID	     				
       			WHERE 
       				TBL_FORMUSERINFO.USERID = #v_USERID#
+                AND
+                    TBL_FORMINFO.FORMCONTID IN
+                    (SELECT
+                        FORMCONTID
+                    FROM
+                        TBL_FORMCONTUSERGROUP
+                    WHERE
+                        TENANT_ID = TBL_FORMINFO.TENANT_ID
+                    AND
+                        COMPANYID = TBL_FORMINFO.COMPANYID
+                    AND
+                        FORMCONTUSERDEPID = #deptId#
+                    UNION ALL
+                    SELECT
+                        FORMCONTID
+                    FROM
+                        TBL_FORMCONTAINER
+                    WHERE
+                        TENANT_ID = TBL_FORMINFO.TENANT_ID
+                    AND
+                        COMPANYID = TBL_FORMINFO.COMPANYID
+                    AND
+                        (FORMCONTOWNDEPID = 'ALL' or FORMCONTOWNDEPID = #deptId#)
+                    )
       			<isEqual property="v_FORMKIND" compareValue="000">
       			
       			</isEqual>

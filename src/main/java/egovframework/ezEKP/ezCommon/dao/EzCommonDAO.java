@@ -2165,8 +2165,8 @@ public class EzCommonDAO extends EgovAbstractDAO {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Map<String, Object>> getTenantConfigList(Map<String, Object> map) throws Exception{
-		return (List<Map<String, Object>>) list("EzCommonDAO.getTenantConfigList", map);
+	public List<Map<String, String>> getTenantConfigList(Map<String, Object> map) throws Exception{
+		return (List<Map<String, String>>) list("EzCommonDAO.getTenantConfigList", map);
 	}
 	
 	public void alterTblAddjobMaster() {

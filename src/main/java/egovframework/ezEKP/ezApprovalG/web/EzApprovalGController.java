@@ -1078,7 +1078,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String kind = request.getParameter("kind");
 		String searchType = request.getParameter("searchType");
 		String searchName = request.getParameter("searchName");
-		String result = ezApprovalGService.getFormInfo(id.trim(), kind, searchType, searchName, userInfo.getId(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		String result = ezApprovalGService.getFormInfo(id.trim(), kind, searchType, searchName, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		
 		logger.debug("getForm ended.");
 		
