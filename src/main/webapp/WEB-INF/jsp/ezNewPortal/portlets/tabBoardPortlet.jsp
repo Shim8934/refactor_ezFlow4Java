@@ -20,7 +20,7 @@
 				    <img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
 				</dd>
 		   </dl>
-		   <div id="notexistence">
+		   <div id="notexistence" class="portlet_list">
 				<dl class='nodata' id="notexistence">
                 	<dt><img src='/images/kr/main/noData_sIcon.png'></dt>
                 	<dd><spring:message code='ezNewPortal.t018' /></dd>
