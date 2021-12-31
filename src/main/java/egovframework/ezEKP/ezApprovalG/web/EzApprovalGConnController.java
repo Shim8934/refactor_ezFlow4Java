@@ -75,7 +75,7 @@ public class EzApprovalGConnController {
 
         // 파라미터 체크 (파라미터를 userid|deptid|companyid|keyid|formcode 로 넘겨준다고 가정) 
         connkey = new String(Base64.getDecoder().decode(URLDecoder.decode(connkey, charset)));
-        String [] connkeyArr = connkey.split("//|");
+        String [] connkeyArr = connkey.split("\\|");
         if (connkeyArr.length != 5) {
             throw new ArrayIndexOutOfBoundsException();
         }
@@ -100,9 +100,9 @@ public class EzApprovalGConnController {
         String docId = (String) connData.get("DOCID");
         
         String uiFlag = ezApprovalGConnService.getDocUiFlag(docId, tenantId, companyId);
-        if (userId.equals(connData.get("USERID")) || deptId.equals(connData.get("DEPTCD"))) { // 파라미터 유저정보와 인터페이스 디비 유저정보가 같은지 체크
+        if (!userId.equals(connData.get("USERID")) || !deptId.equals(connData.get("DEPTID"))) { // 파라미터 유저정보와 인터페이스 디비 유저정보가 같은지 체크
             uiFlag = "isBadUser";
-        } else if (deptId.equals(userInfo.getDeptID())) { // 겸직부서인지 체크 (겸직자 연동도 가능하게 하려면 따로 처리 필요) 
+        } else if (!deptId.equals(userInfo.getDeptID())) { // 파라미터 부서정보와 userinfo 부서정보가 같은지 체크 (겸직일경우도 있는데, 이에대한 처리는 따로 해야함)
             uiFlag = "isAddJob";
         }
         
