@@ -4128,9 +4128,11 @@ function setDocNumFormat(pPrefix) {
     var Header, Tail;
     var i;
     var d = new Date();
+
     var numHeader = "";
 
     var fields = message.GetFieldsList();
+
     var field = message.GetListItem(fields, pPrefix + "docnumber");
     
     if (!field) {
@@ -4138,10 +4140,9 @@ function setDocNumFormat(pPrefix) {
     }
     
     var fieldValue = message.DocumentBodyGetAttribute("orgdocnum", 0);
-    var fieldValue2 = getNodeText(field); // docnumber값은 td 내부의 텍스트로 존재
-    
+
     Arr_Header = fieldValue.split("-");
-    org_Header = fieldValue2.split("-");
+    org_Header = field.split("-");
     
     Arr_Header.forEach(function(item, index) {
     	if (!item.indexOf('@')) {
@@ -4158,13 +4159,12 @@ function setDocNumFormat(pPrefix) {
                     break;
 
                 case "YY":
-                	// 기존 문서번호의 년도와 현재 가져온 년도가 다르다면, 해당 년도를 사용 (문서 기안 또는 재기안 시점 기준의 년도)
-                    var tempYear = d.getFullYear().toString();
+                    var tempYear = d.getFullYear();
                     numHeader += (org_Header[index] == tempYear ? tempYear : org_Header[index]);
                     break;
                     
                 case "yy":
-                    var tempYear = d.getFullYear().toString().substr(2);
+                    var tempYear = d.getFullYear().substr(2);
                     numHeader += (org_Header[index] == tempYear ? tempYear : org_Header[index]);
                     break;
 
