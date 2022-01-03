@@ -7603,6 +7603,23 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 	}
 	
+	@RequestMapping(value = "/ezApprovalG/getReceiptHistoryInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String getReceiptHistoryInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("getReceiptHistoryInfo started");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String deptID = request.getParameter("deptID");
+		
+		String result = ezApprovalGService.getReceiptHistoryInfo(docID, deptID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+		
+		logger.debug("getReceiptHistoryInfo ended");
+		
+		return result;
+	}
+	
 	//2019-01-24 천성준 - 완료문서 문서정보 팝업UI 공공,일반버전 공통으로 소스구현
 	@RequestMapping(value = "/ezApprovalG/ezDocInfoView.do", method = RequestMethod.GET)
 	public String ezDocInfoView(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {

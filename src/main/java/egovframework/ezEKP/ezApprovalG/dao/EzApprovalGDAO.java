@@ -3729,4 +3729,27 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
     public void rollbackJubsuAprReceiptProcessInfo(Map<String, Object> map) throws Exception {
 	    update("EzApprovalG.rollbackJubsuAprReceiptProcessInfo", map);
     }
+    
+    public void saveFilterDataInfo(Map<String, Object> map) throws Exception {
+    	insert ("EzApprovalG.saveFilterDataInfo", map);
+    }
+    
+    // 문서24 관련 메서드
+    public String checkbtnReSend24Display(Map<String, Object> map) throws Exception {
+    	return (String) select("EzApprovalG.checkbtnReSend24Display", map);
+    }
+    
+    @SuppressWarnings("unchecked")
+	public Map<String, Object> getDoc24Info(Map<String, Object> map) throws Exception {
+    	return (Map<String, Object>) select("EzApprovalG.getDoc24Info", map);
+    }
+    
+	public void insertReciptInfoDoc24(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertReciptInfoDoc24", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Map<String, Object>> getReceiptHistoryInfo(Map<String, Object> map) throws Exception{
+		return (List<Map<String, Object>>) list("EzApprovalG.getReceiptHistoryInfo", map);
+	}
 }

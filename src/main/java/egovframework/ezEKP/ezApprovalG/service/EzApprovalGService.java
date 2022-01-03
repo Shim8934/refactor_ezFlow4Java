@@ -774,4 +774,13 @@ public interface EzApprovalGService {
     public String setSusinRollbackDocID(String beforeAprState, String docId, String orgDocId, LoginVO userInfo) throws Exception;
 
     public String getAccountingYear(String todayTime, String companyID, String langType, int tenantID) throws Exception;
+    
+    public void saveFilterDataInfo(String docID, String resultXML) throws Exception;
+    
+    public String checkbtnReSend24Display(String docID, String companyID, int tenantID) throws Exception;
+    public Map<String, Object> getDoc24Info(String docID, String companyID, int tenantID) throws Exception;
+    public void insertReciptInfoDoc24(String docID, String docDeptCode, String docDeptName, String companyId, int tenantId) throws Exception;
+
+	public String getReceiptHistoryInfo(String docID, String deptID, String companyID, String lang, int tenantID, String offset) throws Exception;
+    
 }

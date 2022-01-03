@@ -2290,4 +2290,21 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addSusinScheduleOffsetColumn");
 		}
 	}
+
+	public void insertReceiptHistoryListoption(Map<String, Object> map) throws Exception {
+		String companyId = checkReceiptHistoryListoption(map);
+		
+		try {
+			if (companyId == null) {
+				logger.debug("TBL_LISTOPTION data doesn't exist. insert the data of " + map.get("companyId") + "...");
+				insert("EzCommonDAO.insertReceiptHistoryListoption", map);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private String checkReceiptHistoryListoption(Map<String, Object> map) {
+		return (String) select("EzCommonDAO.checkReceiptHistoryListoption", map);
+	}
 }

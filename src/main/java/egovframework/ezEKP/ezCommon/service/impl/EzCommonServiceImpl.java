@@ -2656,4 +2656,18 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addSusinScheduleOffsetColumn() throws Exception {
 		ezCommonDAO.addSusinScheduleOffsetColumn();
 	}
+	
+	@Override
+	public void insertReceiptHistoryListoption() throws Exception {
+		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		for (CompanyInfoVO company : companyList) {
+			if (company.getCompanyId() != null) {
+				map.put("companyId", company.getCompanyId());
+				map.put("tenantId", company.getTenantId());
+				ezCommonDAO.insertReceiptHistoryListoption(map);
+			}
+		}
+	}
 }
