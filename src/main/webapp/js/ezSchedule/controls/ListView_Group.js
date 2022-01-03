@@ -1465,7 +1465,7 @@ function show_groupinfo2(obj) {
     }
 	
 	if(obj == 'show'){
-		var checkId = $('input:checked')
+		var checkId = $('#GroupListView tbody input:checked')
 		
 		if(checkId.length > 1){
 			alert(strLang276);
