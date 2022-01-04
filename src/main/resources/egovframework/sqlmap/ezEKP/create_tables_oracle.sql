@@ -501,7 +501,7 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
   CREATE TABLE "JAMES_RECIPIENT_REWRITE" 
    (	"DOMAIN_NAME" NVARCHAR2(100), 
 	"USER_NAME" NVARCHAR2(100), 
-	"TARGET_ADDRESS" VARCHAR2(4000 BYTE)
+	"TARGET_ADDRESS" CLOB
    ) ;
 --------------------------------------------------------
 --  DDL for Table JAMES_SUBSCRIPTION
