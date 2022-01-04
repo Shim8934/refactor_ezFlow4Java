@@ -11358,4 +11358,19 @@ public class EzApprovalGController extends EgovFileMngUtil{
         
 	    return result;
     }
+
+//	기산일 적용 년도 가져오기
+	@RequestMapping(value = "/ezApprovalG/getAccountingYear.do", produces = "text/plain; charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	public String getAccountingYear(@CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("getAccountingYear started.");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+
+		String result = ezApprovalGService.getAccountingYear(commonUtil.getTodayUTCTime(""), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+
+		logger.debug("getAccountingYear ended.");
+
+		return result;
+	}
 }

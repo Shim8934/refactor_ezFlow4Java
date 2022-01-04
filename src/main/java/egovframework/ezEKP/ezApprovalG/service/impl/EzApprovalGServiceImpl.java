@@ -2218,7 +2218,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String orgDocNumCode = "";
 		String docNumCode = "";
 		String extFileName = "";
-		//String docNumZeroCnt = getDocNumZeroCnt(companyID, tenantID); //문서채번 자릿수 맞춰주는거 혹시모르니까 구현만 해놈 
+		String docNumZeroCnt = getDocNumZeroCnt(companyID, tenantID); //문서채번 자릿수 맞춰주는거 혹시모르니까 구현만 해놈
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
@@ -2354,7 +2354,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         //hwp일 경우 대장등록전 문서에 새로운 문서번호 박아주기 | 2019-02-22 천성준 - mht일 경우 추가
         if (docNo != null && !docNo.trim().equals("")) {
         	String docFilePath = dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false).substring(0,4) + commonUtil.separator + getDocDir(newDocID) + commonUtil.separator + newDocID + "." + extFileName;
-        	
+
         	if (extFileName.equals("hwp")) {
 		        HWPFile hwpFile = HWPReader.fromFile(docFilePath);
 		        setHwpText("docnumber", docNo, hwpFile);
@@ -2373,10 +2373,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         	} else {
         		OutputStream outputStream = null;
         		OutputStreamWriter output = null;
-        		
+
         		String loadMht = ezCommonService.loadMHTFile(docFilePath);
         		String content = ezCommonService.startMHT2HTML(realPath + commonUtil.getUploadPath("config.LocalPath", tenantID), loadMht, realPath + commonUtil.getUploadPath("config.LocalPath", tenantID), realPath, locale, "", "");
-        		
+
         		org.jsoup.nodes.Document doc = Jsoup.parse(content);
         		doc.getElementById("docnumber").html(docNo);
         		
@@ -6494,6 +6494,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				receiveDept = aprXML.getElementsByTagName("RECEIPTDEPTID").item(0).getTextContent();
 				fileForder1 = aprXML.getElementsByTagName("HREF").item(0).getTextContent();
 				receiveDeptName = aprXML.getElementsByTagName("RECEIVEDDEPTNAME").item(0).getTextContent();
+
+                docNO = aprXML.getElementsByTagName("DOCNO").item(0).getTextContent();
 			} else {
 				/**
 				 * 진행되어야할 문서 (APRSTATE 002 : 진행 , 005 : 보류)의 정보 추출
@@ -6505,6 +6507,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				drafterDept = aprXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent();
 				fileForder1 = aprXML.getElementsByTagName("HREF").item(0).getTextContent();
 				drafterDeptName = aprXML.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent();
+
+                docNO = aprXML.getElementsByTagName("DOCNO").item(0).getTextContent();
 			}
 			
 			formURL = realPath + fileForder1;
@@ -6854,7 +6858,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						}
 						
 						if (findHwpField("docnumber", hwpFile)) {
-							docNO = getRecRegSNToName(strDeptName, createDocNO(cabinetSN , docNumZeroCnt), strDeptID, userInfo.getTenantId(), companyID);
+                            docNO = docNO + createDocNO(cabinetSN , docNumZeroCnt);
 							setHwpText("docnumber", docNO, hwpFile);
 						}
 						
@@ -6894,8 +6898,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						}
 						
 						if (findHwpField("receiptnumber", hwpFile)) {
-							docNO = getRecRegSNToName(strDeptName, createDocNO(cabinetSN , docNumZeroCnt), strDeptID, userInfo.getTenantId(), companyID);
-							setHwpText("receiptnumber", docNO, hwpFile);
+                            docNO = docNO + createDocNO(cabinetSN , docNumZeroCnt);
+                            setHwpText("receiptnumber", docNO, hwpFile);
 						}
 						
 						if (findHwpField("receiptdate", hwpFile)) {
@@ -7822,7 +7826,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 Document docXML = commonUtil.convertStringToDocument(ret);
                 cabinetSN = docXML.getElementsByTagName("RESULT").item(0).getTextContent();
                 if (!ret.equals("") && doc.getElementById("receiptnumber") != null) {
-                    docNO = getRecRegSNToName(strDeptName, createDocNO(cabinetSN , docNumZeroCnt), strDeptID, userInfo.getTenantId(), companyID);
+                    docNO = docNO + createDocNO(cabinetSN , docNumZeroCnt);
                     doc.getElementById("receiptnumber").text(docNO);
                     
                     if (doc.getElementById("receiptdate") != null) {
@@ -19825,6 +19829,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return getCabinetCode2Name("000", code, companyID, langType, tenantID);
 	}
 
+	@Override
 	public String getAccountingYear(String todayTime, String companyID, String langType, int tenantID) throws Exception {
 		logger.debug("getAccountingYear started");
 

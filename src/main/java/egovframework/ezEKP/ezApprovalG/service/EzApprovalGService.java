@@ -770,4 +770,6 @@ public interface EzApprovalGService {
 	public List<HashMap<String,Object>> susinScheduleList() throws Exception;
 
     public String setSusinRollbackDocID(String beforeAprState, String docId, String orgDocId, LoginVO userInfo) throws Exception;
+
+    public String getAccountingYear(String todayTime, String companyID, String langType, int tenantID) throws Exception;
 }

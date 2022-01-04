@@ -427,9 +427,11 @@
 		            {
 		                message.Set_EditorContentURL(pDocHref);
 				        setInitOpinion();
-		                if (pDraftFlag != "SUSIN") {
-			                setDocNumFormat(""); // 결재할문서 오픈 시, docnumber 필드 다시 그리는 로직.. 수정 필요
-		                }
+						// 기안할때만 일련변호 전까지 세팅해주고 그 이후엔 할 필요가 없음.
+						// 오류때문에 한다고는 하지만 그렇게 할 필요가 있나 싶음. 그리고 웹한글도 그런 로직은 없음.
+						// if (pDraftFlag != "SUSIN") {
+						//     setDocNumFormat(""); // 결재할문서 오픈 시, docnumber 필드 다시 그리는 로직.. 수정 필요
+						// }
 		            }
 		        }
 		    }
