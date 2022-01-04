@@ -3862,19 +3862,22 @@ public class EzScheduleController extends EgovFileMngUtil {
 								Location lo     = vEvent.getLocation();
 								String location = (lo == null) ? "" : substringData(lo.getValue().trim(), 50);
 								
-								Description decription = vEvent.getDescription();
-								String content         = (decription == null) ? "" : decription.getValue().trim(); 
-
-								if (decription == null) {
-									if (vEvent.getProperty("X-ALT-DESC") != null) {
-										Property pp      = vEvent.getProperty("X-ALT-DESC");
-										Parameter fmType = pp.getParameter(Parameter.FMTTYPE);
-										logger.debug("X-ALT-DESC;fmType={}", fmType.getValue());
-										
-										content = pp.getValue();
-									}
-								}
+								// 본문 =====================
+								String content       = "";
+								String altDescBody   = ""; 
 								
+								Property pp          = vEvent.getProperty("X-ALT-DESC");
+								if (pp != null) {
+									Parameter fmType = pp.getParameter(Parameter.FMTTYPE);
+									logger.debug("X-ALT-DESC;fmType={}", fmType.getValue());
+									
+									content = pp.getValue();
+								} else {
+									Description description = vEvent.getDescription();
+									
+									content = (description == null) ? "" : description.getValue();
+								}
+
 								String ispublic   = "";
 								String datetype   = "";
 								String repetition = "";

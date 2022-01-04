@@ -115,8 +115,8 @@ import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.Recur;
 import net.fortuna.ical4j.model.component.*;
 import net.fortuna.ical4j.model.property.Attendee;
+import net.fortuna.ical4j.model.property.Description;
 import net.fortuna.ical4j.model.property.RRule;
-import net.fortuna.ical4j.model.property.Uid;
 //import egovframework.let.utl.fcc.service.MyException;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.model.ZipParameters;
@@ -5741,6 +5741,9 @@ public class EzEmailUtil {
     	String summary     = vo.getSummaryStr().isEmpty() ? untitledMsg : vo.getSummaryStr();
     	String period      = getIcalPeriodStr(vo);
     	String location    = vo.getLocationStr();
+    	String descBody    = vo.getAltDescStr();
+    	       descBody    = (descBody == null || descBody.equals("")) ? vo.getDescriptionStr() : descBody;
+    	       
 		PropertyList<Attendee> attendeeList = vo.getAttendee();
     	
     	StringBuilder sb = new StringBuilder();
@@ -5754,6 +5757,7 @@ public class EzEmailUtil {
 	    	sb.append(".gw_ical_btns { margin-top: 10px } ");
 	    	sb.append(".gw_ical_attendee span:not(:last-child):after { content:', ' } ");
 	    	sb.append(".gw_ical_btns > button { margin-right: 5px; background: white; border: 1px solid #eee; cursor: pointer; min-width: 70px; box-sizing: border-box; padding: 8px 10px; } ");
+	    	sb.append(".gw_ical_desc { margin-top: 10px } ");
     	sb.append("</style>");
     	
     	sb.append("<div class='gw_ical_divWrap'>");
@@ -5788,6 +5792,10 @@ public class EzEmailUtil {
 						sb.append("</td>");
 					sb.append("</tr>");
 				sb.append("</table>");
+				// 본문
+				sb.append("<div class='gw_ical_desc'>");
+					sb.append(descBody);
+				sb.append("</div>");
 			sb.append("</div>"); // gw_ical_contents div END.
 		sb.append("</div>");
     	
@@ -5946,11 +5954,11 @@ public class EzEmailUtil {
 		String returnStr = "";
 		
 		switch (week) {
-			case "1" :  returnStr = "ezEmail.ical15"; break;
-			case "2" :  returnStr = "ezEmail.ical16"; break;
-			case "3" :  returnStr = "ezEmail.ical17"; break;
-			case "4" :  returnStr = "ezEmail.ical18"; break;
-			default  :  returnStr = "ezEmail.ical19"; break;
+			case "1" :  returnStr = "ezEmail.ical16"; break;
+			case "2" :  returnStr = "ezEmail.ical17"; break;
+			case "3" :  returnStr = "ezEmail.ical18"; break;
+			case "4" :  returnStr = "ezEmail.ical19"; break;
+			default  :  returnStr = "ezEmail.ical20"; break;
 		}
 		
 		returnStr = egovMessageSource.getMessage(returnStr, locale);
@@ -5988,6 +5996,8 @@ public class EzEmailUtil {
             	icalVO.setUid(vEvent.getUid());
             	icalVO.setrRule((RRule) vEvent.getProperty(Property.RRULE));
             	icalVO.setAttendee(vEvent.getProperties(Property.ATTENDEE));
+            	icalVO.setAltDesc(vEvent.getProperty("X-ALT-DESC"));
+            	icalVO.setDescription(vEvent.getDescription());
             }
 		} catch (Exception e) {
 			e.printStackTrace();

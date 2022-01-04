@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.Recur;
 import net.fortuna.ical4j.model.property.*;
@@ -13,6 +14,17 @@ public class IcalVO {
 	// 제목
 	private Summary summary;
 	private String summaryStr;
+	
+	// 본문     : X-ALT-DESC
+	private Property altDesc;
+	private String altDescStr;
+	
+	// 본문     : X-ALT-DESC;FMTTYPE
+	private Parameter fmType;
+	
+	// 본문     : DESCRIPTION
+	private Description description;
+	private String descriptionStr;
 
 	// 하루종일
 	private boolean dtAllDay;
@@ -62,6 +74,37 @@ public class IcalVO {
 	}
 	public void setSummaryStr(String summaryStr) {
 		this.summaryStr = summaryStr;
+	}
+	public Property getAltDesc() {
+		return altDesc;
+	}
+	public void setAltDesc(Property altDesc) {
+		this.altDesc = altDesc;
+		
+		if (altDesc != null) {
+			fmType = altDesc.getParameter(Parameter.FMTTYPE);
+			altDescStr = altDesc.getValue().replaceAll("\\;", ";");
+		}
+	}
+	public String getAltDescStr() {
+		return altDescStr;
+	}
+	public void setAltDescStr(String altDescStr) {
+		this.altDescStr = altDescStr;
+	}
+	public Description getDescription() {
+		return description;
+	}
+	public void setDescription(Description description) {
+		this.description = description;
+		
+		descriptionStr = (description != null) ? description.getValue() : "";
+	}
+	public String getDescriptionStr() {
+		return descriptionStr;
+	}
+	public void setDescriptionStr(String descriptionStr) {
+		this.descriptionStr = descriptionStr;
 	}
 	public boolean isDtAllDay() {
 		return dtAllDay;
