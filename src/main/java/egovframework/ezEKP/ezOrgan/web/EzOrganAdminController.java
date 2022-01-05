@@ -75,6 +75,8 @@ import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.rest.Rest;
+import egovframework.let.utl.rest.Result;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /** 
@@ -131,6 +133,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     
     @Autowired
 	private Properties globals;
+
+	@Autowired
+	private Rest rest;
 
     @PostConstruct
 	public void init() throws Exception {
@@ -3394,11 +3399,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			}
 									
 			JSONObject obj = invokeEzTalkSyncServer(userInfo.getTenantId());
-			
-			if (!obj.get("resultCode").equals("ERROR") && obj.get("resultCode") != null) {
+
+			if ((boolean) obj.get("result") && 0 == (Long) obj.get("resultCode")) {
 				returnValue = "OK";
 			}
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -3410,18 +3414,20 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	
 	public JSONObject invokeEzTalkSyncServer(int tenantId) throws Exception {
 		String ezTalkServerUrl = ezCommonService.getTenantConfig("ezTalkSyncServerUrl", tenantId);
-		String queryString = "/ezTalkSyncServer/syncAccounts";
-		String inputParams = "tenantId=" + tenantId;
-		
-		String resultCode = ezEmailUtil.getWebServiceResult(ezTalkServerUrl + queryString, inputParams);
-		
-		JSONParser parser = new JSONParser();
-		JSONObject obj = (JSONObject) parser.parse(resultCode);
-		logger.debug("ezTalkSyncServer getWebServerResult=" + obj.toJSONString());
+		JSONObject result = rest.builder().post().url(ezTalkServerUrl).exchangeBody();
+		logger.debug("ezTalkSyncServer getWebServerResult={}", result);
 
-		return obj;
+		return result;
 	}
-	
+
+	public JSONObject invokeEzTalkSyncServerForSingle(String cn, int tenantId) throws Exception {
+		String ezTalkServerUrl = ezCommonService.getTenantConfig("ezTalkSyncServerUrlForSingle", tenantId);
+		JSONObject result = rest.builder().post().url(ezTalkServerUrl).jsonParam("userId", cn).exchangeBody();
+		logger.debug("ezTalkSyncServerForSingle getWebServerResult={}", result);
+
+		return result;
+	}
+
 	/**
 	 * ezSyncServer를 호출하여 인사 정보를 동기화한다.
 	 */

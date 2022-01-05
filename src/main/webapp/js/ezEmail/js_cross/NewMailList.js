@@ -21,7 +21,6 @@ var GroupSubjectImg ="/images/ImgIcon/groupsubject.gif";
 var GroupColor = "#666666";
 var pSearchListCount = 0;
 
-
 function HeaderIni(HeaderObject) {
     MakeHeaderHTML(HeaderObject);
 }
@@ -202,7 +201,8 @@ function drag(ev) {
 
 var xmlhttp_MailReceiverList = null;
 function MakeListInfoHTML(ConentObject) {
-    if (p_ListorderValue == "" || p_ListorderValue == "RECEIV" || p_ListorderValue == "UNREAD" || p_ListorderValue == "GROUPSUBLIST") {
+    if (p_ListorderValue == "" || p_ListorderValue == "RECEIV" || p_ListorderValue == "UNREAD" || p_ListorderValue == "GROUPSUBLIST"
+    	 || p_ListorderValue == "INTERNAL" || p_ListorderValue == "EXTERNAL" || p_ListorderValue == "SECUREMAIL" || p_ListorderValue == "IMPORTANT") {
     	try {
             var XmlList = GetList_HTTP.responseXML;
             
@@ -949,6 +949,9 @@ function GetListInfo(HeaderObject, ContentObject) {
     
     createNodeAndInsertText(xmlpara, objNode, "VIEWSELECTINDEX", document.getElementById("select").selectedIndex);
     
+    var secureMailFilter = document.getElementById("select").value == "SECUREMAIL" ? 1 : 0;
+    createNodeAndInsertText(xmlpara, objNode, "SECUREMAILFILTER", secureMailFilter);
+
     var _url = "/ezEmail/mailGetList.do";
     
     if (typeof(shareId) != "undefined" && shareId != "") {
@@ -1186,6 +1189,26 @@ function on_changeView(listtypeValue) {
             p_ListOrderby = "http://schemas.microsoft.com/exchange/date-iso";
             p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile2.xml";
             break;
+        case "INTERNAL":
+            p_ListorderType = "INTERNAL";
+            p_ListorderValue = "INTERNAL";
+            searchMode = true;
+            break;
+        case "EXTERNAL":
+            p_ListorderType = "EXTERNAL";
+            p_ListorderValue = "EXTERNAL";
+            searchMode = true;
+            break;
+        case "SECUREMAIL":
+        	p_ListorderType = "SECUREMAIL";
+        	p_ListorderValue = "SECUREMAIL";
+        	searchMode = true;
+        	break;
+        case "IMPORTANT":
+        	p_ListorderType = "IMPORTANT";
+        	p_ListorderValue = "IMPORTANT";
+        	searchMode = true;
+        	break;
     }
     if (p_ListorderValue != "SENT" && p_ListorderValue != "SUBJECT" && p_ListorderValue != "RECEIV") {
         if (pPreviewShow_HOW == "H") {
@@ -1252,6 +1275,10 @@ function MailListRefreshByTimeout() {
 }
 
 function MailListRefresh() {
+	if (window.psSetTimeFlag) {
+		return;
+	}
+
 	ContextMenuHidden();
 
 	if (typeof(shareId) != "undefined" && shareId != "") {

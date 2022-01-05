@@ -4144,7 +4144,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		logger.debug("getTotalSearchList is started.");
 		
 		logger.debug("paramData : " + paramData.toString());
-		JSONObject result = new JSONObject();
+		JSONObject result;
 		
 		try{
 			userInfo = commonUtil.userInfo(loginCookie);
@@ -4153,11 +4153,20 @@ public class EzPortalController extends EgovFileMngUtil {
 			//접속하고자 하는 url.
 			String totalSearchURL = config.getProperty("config.totalSearchURL");
 			
-			result = commonUtil.getJsonFromRestApi(totalSearchURL, "", null, req, "post", searchResult);
+			try {
+				result = commonUtil.getJsonFromRestApi(totalSearchURL, "", null, req, "post", searchResult, 4000, 8000);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				logger.debug("totalSearch retry...");
+				result = commonUtil.getJsonFromRestApi(totalSearchURL, "", null, req, "post", searchResult, 4000, 8000);
+			}
 			
-			logger.debug("result : " + result.toJSONString());
-		} catch(Exception e) {
+			logger.debug("result : {}", result);
+		} catch (Exception e) {
 			e.printStackTrace();
+			Map<String, String> resultMap = new HashMap<>();
+			resultMap.put("error", "internal server error");
+			result = new JSONObject(resultMap);
 		}
 		
 		logger.debug("getTotalSearchList is ended.");

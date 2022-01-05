@@ -8,15 +8,14 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -27,16 +26,8 @@ import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.websocket.OnClose;
-import javax.websocket.OnError;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
-import javax.websocket.Session;
-import javax.websocket.server.PathParam;
-import javax.websocket.server.ServerEndpoint;
 
 import org.apache.commons.codec.binary.Base64;
 import org.json.simple.JSONArray;
@@ -1068,13 +1059,11 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				logger.error("Folder not found. folderPath=" + folderPath);
 			} else {
 				folder.open(Folder.READ_WRITE);
-				List<Message> messageList = new ArrayList<Message>();
+				List<Message> messageList = new LinkedList<>();
 				Message message = null;
 				int count = 0;
 				int emlCount = 0;
 				long lastTime = System.currentTimeMillis();
-	
-				JSONObject jsonObj = new JSONObject();
 				
 				if (zipFilePath != null) {
 					fis = new FileInputStream(zipFilePath);
@@ -1094,11 +1083,9 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 							throw new Exception("this is not eml file. fileName=" + ze.getName());
 						}
 	
-						if (count % 20 == 0) {
+						if (count % 50 == 0) {
 							folder.appendMessages(messageList.toArray(new Message[0]));
-							messageList = new ArrayList<Message>();
-	
-							System.gc();
+							messageList.clear();
 						}
 	
 						message = sa.readMimeMessage(zis);
@@ -1106,22 +1093,20 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 						messageList.add(message);
 						emlCount ++;
 					} catch (Exception e) {
+						e.printStackTrace();
 						String exceptionMessage = e.getMessage();
 						
 						if (exceptionMessage.contains("NO APPEND failed. Save failed.")) {
 							importState = "NO_APPEND";
 							break;
-						} else {
-							e.printStackTrace();
 						}
 					}
 	
 					// 진행율 클라이언트에게 전송
 					if (userkey != null) {
 						
-						int percent = (int)((double) count / (double) messageCount * 100.0);
 						long currTime = System.currentTimeMillis();
-						int interval = (int) (currTime - lastTime);
+						long interval = currTime - lastTime;
 	
 						/*jsonObj.clear();
 						jsonObj.put("status" , "progress"); 
@@ -1132,6 +1117,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 							String json2 = jsonObj.toJSONString();*/
 	
 							try {
+								int percent = (int)((double) count / (double) messageCount * 100.0);
 								int resultInt = ezEmailService.updateMailboxProgress(userkey, percent);
 								if (resultInt <= 0) { // websocket close되면 더 이상 실행하지 않도록. close될 때 mailboxProgress db 값을 삭제하기 때문에 0으로 close 여부 구분
 									throw new IllegalStateException();
@@ -1166,6 +1152,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				folder.close(true);
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			String exceptionMessage = e.getMessage();
 			
 			if (exceptionMessage != null) {
@@ -1198,12 +1185,10 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 					returnValue = "NO_APPEND";
 				} else {
 					returnValue = "ERROR";
-					e.printStackTrace();
 				}
 				
 			} else {
 				returnValue = "ERROR";
-				e.printStackTrace();
 			}
 			
 		} finally {

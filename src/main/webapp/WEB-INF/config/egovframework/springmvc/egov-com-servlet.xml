@@ -65,7 +65,7 @@
             <mvc:exclude-mapping path="/admin/ezApprovalG/componentListTransfer.do"/>
             <mvc:exclude-mapping path="/ezPortal/componentListTransfer.do"/>     
             <mvc:exclude-mapping path="/ezSystem/util/getSysInfo"/>   
-            <mvc:exclude-mapping path="/ezSystem/util/getSysMonitorInfo  "/>          
+            <mvc:exclude-mapping path="/ezSystem/util/getSysMonitorInfo" />
             <mvc:exclude-mapping path="/ezPortal/componentListTransfer.do"/>      
             <mvc:exclude-mapping path="/ezTalkGate/**"/>
             <mvc:exclude-mapping path="/ezConn/**"/>

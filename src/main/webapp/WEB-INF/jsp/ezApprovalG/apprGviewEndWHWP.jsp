@@ -133,7 +133,7 @@
 	
 			function QuitWindow() {
 			    menu.style.display = "none";
-			    OpenAlertUI("<spring:message code='ezApprovalG.t1443'/><br><spring:message code='ezApprovalG.t1444'/>");
+			    alert("<spring:message code='ezApprovalG.t1443'/>\n<spring:message code='ezApprovalG.t1444'/>");
 			    btnClose_onclick();
 			    window.close();
 			}
