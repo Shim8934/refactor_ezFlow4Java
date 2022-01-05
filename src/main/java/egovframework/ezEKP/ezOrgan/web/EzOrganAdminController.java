@@ -3387,17 +3387,17 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	@ResponseBody
 	public String syncWithBizmekaTalkAccounts(@CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("syncWithBizmekaTalkAccounts started.");
-		
+
 		String returnValue = "ERROR";
-		
+
 		try {
 			// 전체관리자 권한 체크
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
-			
+
 			if (userInfo.getRollInfo().indexOf("c=1") == -1) {
 				return returnValue;
 			}
-									
+
 			JSONObject obj = invokeEzTalkSyncServer(userInfo.getTenantId());
 
 			if ((boolean) obj.get("result") && 0 == (Long) obj.get("resultCode")) {
@@ -3406,9 +3406,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		logger.debug("syncWithBizmekaTalkAccounts ended.");
-		
+
 		return returnValue;
 	}
 	
