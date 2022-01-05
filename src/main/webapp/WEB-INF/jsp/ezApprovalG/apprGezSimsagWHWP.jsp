@@ -269,6 +269,7 @@
             try {
                 if (isTrue) {
                 	message.EditMode(0);
+                    message.SetViewProperties(2, 100);
                 	
                     ObjGPKI.ServerName = "ldap.gcc.go.kr";
 

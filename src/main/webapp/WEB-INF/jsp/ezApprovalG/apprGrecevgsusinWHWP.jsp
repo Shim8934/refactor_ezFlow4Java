@@ -474,6 +474,7 @@
 			    //HwpCtrl.SetImgReg();
 			    
 			    message.EditMode(0);
+				message.SetViewProperties(2, 100);
 				
 		        //2018-10-15 반송 후 배부된 문서의 접수번호 초기화
 				//2021-01-28 문서번호 초기화시 @dp-@YY-@nn으로 수정

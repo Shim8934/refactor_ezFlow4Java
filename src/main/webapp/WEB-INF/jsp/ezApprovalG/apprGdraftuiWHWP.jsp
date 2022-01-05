@@ -300,6 +300,7 @@
 	                    }
 	                    
 	                    message.EditMode(2);
+						message.SetViewProperties(2, 100);
 	                    message.MoveToField("doctitle");
 	                    message.ScrollPosInfo(0, 0);
 	                } else {
