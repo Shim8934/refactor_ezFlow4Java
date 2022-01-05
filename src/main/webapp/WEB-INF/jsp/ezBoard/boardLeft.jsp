@@ -404,6 +404,8 @@
 								rightFrame.src = "/ezBoard/boardItemListThumbnail.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
 				            } else if (gubun == 7) {
 				            	rightFrame.src = "/ezBoard/boardItemListMovie.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
+				            } else if (gubun == 8) {
+				            	rightFrame.src = "/ezBoard/boardItemViewHomePage.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
 				            } else {
 				                if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
 									rightFrame.src = "/ezBoard/boardItemList_new.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=N";
@@ -421,6 +423,8 @@
 			                    window.parent.frames["right"].location.href = "/ezBoard/boardItemListThumbnail.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
 			                } else if (gubun == 7) {
 			                	window.parent.frames["right"].location.href = "/ezBoard/boardItemListMovie.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
+				            } else if (gubun == 8) {
+			                	window.parent.frames["right"].location.href = "/ezBoard/boardItemViewHomePage.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
 				            } else {
 			                    if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
 			                        window.parent.frames["right"].location.href = "/ezBoard/boardItemList_new.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=N";
@@ -516,6 +520,8 @@
 							rightFrame.src = "/ezBoard/boardItemListThumbnail.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
 			            } else if (chkPhotoBrd == 7) {
 			            	rightFrame.src = "/ezBoard/boardItemListMovie.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
+			            } else if (chkPhotoBrd == 8) {
+			            	rightFrame.src = "/ezBoard/boardItemViewHomePage.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
 			            } else {
 			                if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
 								rightFrame.src = "/ezBoard/boardItemList_new.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=N";
@@ -532,6 +538,8 @@
 			                window.parent.frames["right"].location.href = "/ezBoard/boardItemListThumbnail.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
 			            } else if (chkPhotoBrd == 7) {
 		                	window.parent.frames["right"].location.href = "/ezBoard/boardItemListMovie.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
+			            } else if (chkPhotoBrd == 8) {
+		                	window.parent.frames["right"].location.href = "/ezBoard/boardItemViewHomePage.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
 			            } else {
 			                if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
 			                    window.parent.frames["right"].location.href = "/ezBoard/boardItemList_new.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=N";

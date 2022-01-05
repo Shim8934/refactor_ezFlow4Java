@@ -59,6 +59,12 @@
 				if (CheckIfCanWrite(SelectedBoardID) == false)
 				{
 					var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t354' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t354'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					
+					/* 2022-01-05 홍승비 - 홈페이지 게시판에 작성 시 알러트 메세지 추가 (홈페이지 게시판은 관리자만 작성이 가능합니다.) */
+					if (SelectedBoardType == "8") {
+						pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.HSBHp02' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.HSBHp02'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					}
+					
 					DivPopUpShow(330, 205, pUrl);
 					return;
 				}
@@ -104,7 +110,17 @@
 				xmlhttp.open("POST", "/ezBoard/getACL.do?boardID=" + encodeURIComponent(pBoardID), false);
 				xmlhttp.send();
 				var ret = xmlhttp.responseText;
-				 if (ret.indexOf("<WRITE>true</WRITE>") != -1 || ret.indexOf("<BOARDGROUPADMIN>OK</BOARDGROUPADMIN>") != -1) {
+				
+				/* 2022-01-05 홍승비 - 홈페이지 게시판의 경우, 관리자만 게시 가능 */
+				if (SelectedBoardType == "8") {
+					if (ret.indexOf("<BOARDGROUPADMIN>OK</BOARDGROUPADMIN>") == -1 && ret.indexOf("<BOARDADMIN>true</BOARDADMIN>") == -1) {
+						return false;						
+					} else {
+						return true;
+					}
+				}
+				
+				if (ret.indexOf("<WRITE>true</WRITE>") != -1 || ret.indexOf("<BOARDGROUPADMIN>OK</BOARDGROUPADMIN>") != -1) {
 		        	return true;
 		        } else {
 		        	return false;

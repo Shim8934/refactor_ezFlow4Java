@@ -129,8 +129,15 @@
 	                    $("#chkMailFG_Comment").prop("checked", false);
 	                }
 	                /* 2018-07-13 홍승비 - 일반설정 화면 온로드 시 URL게시판 구분 추가 */
-	                else if ($("#chkURLBoard").is(":checked")) {
-		            	document.getElementById("txtURL").style.display = "";
+	                /* 2021-12-31 홍승비 - 홈페이지 게시판 유형 추가 */
+	                else if ($("#chkURLBoard").is(":checked") || $("#chkHomePageBoard").is(":checked")) {
+	                	
+	                	if ($("#chkURLBoard").is(":checked")) {
+		            		document.getElementById("txtURL").style.display = "";
+	                	} else {
+	                		document.getElementById("txtURL").style.display = "none";
+	                	}
+	                	
 		            	document.getElementById("trAttribute").style.display = "none";
 	                    document.getElementById("expireTr").style.display = "none";
 	                    document.getElementById("deleteAfterTr").style.display = "none";
@@ -231,6 +238,8 @@
 	                gubun = "0";
 	            } else if ($("#chkMovieBoard").is(":checked")) {
 	            	gubun = "7";
+	            } else if ($("#chkHomePageBoard").is(":checked")) {
+	            	gubun = "8";
 	            }
 	            
 	            if ($("#chkbackgroundimage").is(":checked")) {
@@ -437,6 +446,7 @@
 	                chkQnABoard.checked = false;
 	                chkURLBoard.checked = false;
 	                chkMovieBoard.checked = false;
+	                chkHomePageBoard.checked = false;
 	            }
 	        /*     if (event.srcElement.id == "chkGroupBoard" && event.srcElement.checked) {
 	                chkGeneralBoard.checked = false;
@@ -454,6 +464,7 @@
 	                chkQnABoard.checked = false;
 	                chkURLBoard.checked = false;
 	                chkMovieBoard.checked = false;
+	                chkHomePageBoard.checked = false;
 	            }
 	            if (event.srcElement.id == "chkPhotoBoard" && event.srcElement.checked) {
 	                chkGeneralBoard.checked = false;
@@ -463,6 +474,7 @@
 	                chkQnABoard.checked = false;
 	                chkURLBoard.checked = false;
 	                chkMovieBoard.checked = false;
+	                chkHomePageBoard.checked = false;
 	            }
 	            if (event.srcElement.id == "chkThumbBoard" && event.srcElement.checked) {
 	                chkGeneralBoard.checked = false;
@@ -472,6 +484,7 @@
 	                chkQnABoard.checked = false;
 	                chkURLBoard.checked = false;
 	                chkMovieBoard.checked = false;
+	                chkHomePageBoard.checked = false;
 	            }
 	            /* 2018-11-05 홍승비 - 동영상게시판 구분 추가 */
 	            if (event.srcElement.id == "chkMovieBoard" && event.srcElement.checked) {
@@ -482,6 +495,7 @@
 	                chkThumbBoard.checked = false;
 	                chkQnABoard.checked = false;
 	                chkURLBoard.checked = false;
+	                chkHomePageBoard.checked = false;
 	            }
 	            if (event.srcElement.id == "chkQnABoard" && event.srcElement.checked) {
 	                chkGeneralBoard.checked = false;
@@ -491,6 +505,7 @@
 	                chkThumbBoard.checked = false;
 	                chkURLBoard.checked = false;
 	                chkMovieBoard.checked = false;
+	                chkHomePageBoard.checked = false;
 	            }
 	            /* 2018-07-13 홍승비 - URL게시판 구분 추가 */
                 if (event.srcElement.id == "chkURLBoard" && event.srcElement.checked) {
@@ -501,11 +516,29 @@
 	                chkThumbBoard.checked = false;
 	                chkQnABoard.checked = false;
 	                chkMovieBoard.checked = false;
+	                chkHomePageBoard.checked = false;
+	            }
+	            /* 2021-12-31 홍승비 - 홈페이지게시판 구분 추가 */
+                if (event.srcElement.id == "chkHomePageBoard" && event.srcElement.checked) {
+                	chkGeneralBoard.checked = false;
+	            //    chkGroupBoard.checked = false;
+	                chkAnonyBoard.checked = false;
+	                chkPhotoBoard.checked = false;
+	                chkThumbBoard.checked = false;
+	                chkQnABoard.checked = false;
+	                chkMovieBoard.checked = false;
+	                chkURLBoard.checked = false;
 	            }
 	            
-	            // URL 게시판이 체크된 경우, 옵션과 댓글의 사용여부를 전부 disabled 처리한다. (댓글은 '사용안함' 고정) 
-	             if (chkURLBoard.checked == true) {
-                    document.getElementById("txtURL").style.display = "";
+	            // URL게시판 또는 홈페이지게시판이 체크된 경우, 옵션과 댓글의 사용여부를 전부 disabled 처리한다. (댓글은 '사용안함' 고정) 
+	             if (chkURLBoard.checked == true || chkHomePageBoard.checked == true) {
+	            	 
+	            	 if (chkURLBoard.checked == true) {
+                    	document.getElementById("txtURL").style.display = "";
+	            	 } else {
+	            		 document.getElementById("txtURL").style.display = "none";
+	            	 }
+	            	 
                     document.getElementById("expireTr").style.display = "none";
                     document.getElementById("deleteAfterTr").style.display = "none";
                     document.getElementById("attachLimitTr").style.display = "none";
@@ -585,7 +618,7 @@
 		                document.getElementById("chkMailFG_Mod").checked = false;
 		                document.getElementById("chkMailFG_Comment").checked = false;
 	                }
-	            } else if (chkURLBoard.checked == false) {
+	            } else if (chkURLBoard.checked == false && chkHomePageBoard.checked == false) {
 	                $("#chkNotify").prop("disabled", false);
 	                $("#chkMailFG_Post").prop("disabled", false);
                     $("#chkMailFG_Mod").prop("disabled", false);
@@ -594,7 +627,7 @@
 	            
 	            if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true || chkMovieBoard.checked == true) {
 	                document.getElementById("trAttribute").style.display = "none";
-	            } else if (chkURLBoard.checked == false) {
+	            } else if (chkURLBoard.checked == false && chkHomePageBoard.checked == false) {
 	                document.getElementById("trAttribute").style.display = "";
 	            }
 	            
@@ -603,7 +636,7 @@
 					$("#chkform").prop("disabled", true);
 	                document.getElementById("chkbackgroundimage").checked = false;
 	                document.getElementById("chkform").checked = false;
-	            } else if (chkURLBoard.checked == false) {
+	            } else if (chkURLBoard.checked == false && chkHomePageBoard.checked == false) {
 	            	$("#chkbackgroundimage").prop("disabled", false);
 	            	$("#chkform").prop("disabled", false);
 	            }
@@ -1037,7 +1070,17 @@
 	                	URL<spring:message code="ezBoard.t0006"/>
 	                </c:if>
 	                 <%-- URL 필드를 게시판 구분 필드로 이동 --%>
-	                 <input type="text" id="txtURL" style="width: 73%;margin-left: 1.5px;margin-bottom: 1px;" value="<c:out value='${model.url}' />" />                
+	                 <input type="text" id="txtURL" style="width: 73%;margin-left: 1.5px;margin-bottom: 1px;" value="<c:out value='${model.url}' />" />
+					
+					<%-- 2018-07-13 홍승비 - 홈페이지게시판 구분 추가 --%>
+	                <c:if test="${model.guBun == '8' }">
+	                	<input type="checkbox" id="chkHomePageBoard" onclick="checkboardtype()" checked />
+	                	<spring:message code="ezBoard.HSBHp01" />
+	                </c:if>
+	                <c:if test="${model.guBun != '8'}">
+	                	<input type="checkbox" id="chkHomePageBoard" onclick="checkboardtype()" />
+	                	<spring:message code="ezBoard.HSBHp01"/>
+	                </c:if>
 	            </td>
 	        </tr>
 	        
