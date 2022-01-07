@@ -5529,31 +5529,57 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_DDeptCode", deptCode);
 		} 
 		
-		map.put("v_YEAR", commonUtil.getTodayUTCTime("yyyy"));
-		map.put("v_MONTH", String.format("%03d",Integer.parseInt(commonUtil.getTodayUTCTime("").substring(6,7))).toString());
-		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
-		
-		String curSN = ezApprovalGDAO.transferCabinetSn(map);
-		
-		if (curSN == null) {
-			curSN = "1";
-			map.put("v_RtnSN", curSN);
-			ezApprovalGDAO.insertTbSerialNumGen(map);
-		} else {
-			map.put("v_RtnSN", curSN);
-		}
-		
-		ezApprovalGDAO.updateTbSerialNumGen(map);
+//        String year = getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, "1", tenantID);
+//		map.put("v_YEAR", year);
+//		map.put("v_MONTH", String.format("%03d",Integer.parseInt(commonUtil.getTodayUTCTime("").substring(6,7))).toString());
+//		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+//		
+//		String curSN = ezApprovalGDAO.transferCabinetSn(map);
+//		
+//		if (curSN == null) {
+//			curSN = "1";
+//			map.put("v_RtnSN", curSN);
+//			ezApprovalGDAO.insertTbSerialNumGen(map);
+//		} else {
+//			map.put("v_RtnSN", curSN);
+//		}
+//		
+//		ezApprovalGDAO.updateTbSerialNumGen(map);
 		
 		StringBuffer rowID = new StringBuffer();
 		
 //				 인수기록물철 분류정보(TBCABINETCLASS)를 생성한다.
 		for (int j=0; j<numRows; j++) {
 			String cabList[] =cabIDList.split(",");
+            
+            Map<String, Object> serialNumMap = new HashMap<>();
+            serialNumMap.put("v_CABINETID", cabList[j].replace("'", "").trim());
+            serialNumMap.put("v_TENANTID", tenantID);
+            serialNumMap.put("companyID", companyID);
+            List<ApprGTaskVO> orgCabinet = ezApprovalGDAO.getCabinetInfo(serialNumMap);
+            
+            String productionDate = orgCabinet.get(0).getCreateDate();
+            String productionYear = getAccountingYear(productionDate, companyID, "1", tenantID);
+            map.put("v_YEAR", productionYear);
+            map.put("v_MONTH", String.format("%03d",Integer.parseInt(commonUtil.getTodayUTCTime("").substring(6,7))).toString());
+            map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+
+            String curSN = ezApprovalGDAO.transferCabinetSn(map);
+ 
+            if (curSN == null) {
+                curSN = "1";
+                map.put("v_RtnSN", curSN);
+                ezApprovalGDAO.insertTbSerialNumGen(map);
+            } else {
+                map.put("v_RtnSN", curSN);
+            }
+
+            ezApprovalGDAO.updateTbSerialNumGen(map);
+            
 			map.put("v_cabList",cabList[j]);
 			map.put("v_SN", j);
-			map.put("v_CNT", String.format("%06d", Integer.parseInt(curSN) + j));
-			map.put("v_CABINETCLASSNO", deptCode + taskCode + commonUtil.getTodayUTCTime("").substring(0,4) + String.format("%06d", Integer.parseInt(curSN) + j));
+			map.put("v_CNT", String.format("%06d", Integer.parseInt(curSN)));
+			map.put("v_CABINETCLASSNO", deptCode + taskCode + productionYear + String.format("%06d", Integer.parseInt(curSN) + j));
 			ezApprovalGDAO.insertTbCabinetClass(map);
 			ezApprovalGDAO.trigerTbCabinet(map);
 			ezApprovalGDAO.trigerTbCabRoleInfo(map);
