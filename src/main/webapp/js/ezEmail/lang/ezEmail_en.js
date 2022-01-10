@@ -1,4 +1,4 @@
-﻿﻿var strLang1 = "There are no items to show in this view.";
+﻿var strLang1 = "There are no items to show in this view.";
 var strLang2 = "Can not display folder. Internal server error occurred.";
 var strLang3 = "It is a variable that has a view type.";
 var strLang4 = "Deleted Items";

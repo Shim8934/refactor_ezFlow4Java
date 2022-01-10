@@ -1,4 +1,4 @@
-﻿﻿﻿var XmlHeader;
+﻿var XmlHeader;
 var XmlHeader_SUB;
 var BlockSize = 10;
 var p_ListOrderObject = null;
