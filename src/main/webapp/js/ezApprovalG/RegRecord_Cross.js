@@ -1,4 +1,4 @@
-﻿﻿﻿var g_CabListXml;
+﻿var g_CabListXml;
 var bSpecialFlag = "0";
 var g_szSCListXml = "";
 var g_arrSCName = new Array();

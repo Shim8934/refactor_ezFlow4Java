@@ -1,4 +1,4 @@
-﻿﻿var g_szAuthor = "";
+﻿var g_szAuthor = "";
 var SaveSendBoxFlag = "Y";
 var MDrafttitle = "";
 var MdraftName = "";
