@@ -14213,7 +14213,7 @@ CREATE TABLE `tbl_webfolder_no_inherit` (
   `FOLDER_ID` varchar(100) NOT NULL,
   `TENANT_ID` int(7) NOT NULL,
   PRIMARY KEY (`FOLDER_ID`,`TENANT_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 --
 -- Table structure for table `tbl_webfolder_favor`
 --
