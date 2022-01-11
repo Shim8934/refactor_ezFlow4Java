@@ -728,7 +728,7 @@
 	                                    var docID = tempStr[tempStr.length - 1].replace(AttachUrlA2, '');
 	                                    var openLocation;
 	                                    
-	                                    if (AttachUrlA2.lastIndexOf(".ezd") === AttachUrlA2.length - 5) {
+	                                    if (AttachUrlA2.lastIndexOf(".ezd")>0) {
 	                                    	docID = docID.substr(0, docID.lastIndexOf("."));
 	                                    	AttachUrlA2 = "." + getOriginalFileExtension(AttachUrlA1)
 	                                    }

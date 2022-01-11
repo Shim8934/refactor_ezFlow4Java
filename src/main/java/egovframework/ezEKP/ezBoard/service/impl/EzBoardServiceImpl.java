@@ -945,6 +945,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		} else {
 			if (globals.getProperty("Globals.DbType").equals("oracle")) {
 				orderOption1 = " TO_NUMBER(A.PARENTWRITEDATE) DESC, TO_CHAR(A.UPPERITEMIDTREE) ";
+			} else if (globals.getProperty("Globals.DbType").equals("tibero")) {
+				orderOption1 = " TO_NUMBER(A.PARENTWRITEDATE) DESC, TO_CHAR(A.UPPERITEMIDTREE) ";
 			} else {
 				orderOption1 = " A.PARENTWRITEDATE DESC, A.UPPERITEMIDTREE ";
 			}
@@ -994,6 +996,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		} else {
 			if (globals.getProperty("Globals.DbType").equals("oracle")) {
 				orderOption1 = " TO_NUMBER(A.PARENTWRITEDATE) DESC, TO_CHAR(A.UPPERITEMIDTREE) ";
+			} else if (globals.getProperty("Globals.DbType").equals("tibero")) {
+				orderOption1 = " TO_NUMBER(A.PARENTWRITEDATE) DESC, TO_CHAR(A.UPPERITEMIDTREE) ";
 			} else {
 				orderOption1 = " A.PARENTWRITEDATE DESC, A.UPPERITEMIDTREE ";
 			}
@@ -1032,6 +1036,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		} else {
 			if (globals.getProperty("Globals.DbType").equals("oracle")) {
 				boardListVO.setOrderBySub(" TO_NUMBER(A.PARENTWRITEDATE) DESC, TO_CHAR(A.UPPERITEMIDTREE) "); 
+			} else if (globals.getProperty("Globals.DbType").equals("tibero")) {
+				boardListVO.setOrderBySub(" TO_NUMBER(A.PARENTWRITEDATE) DESC, TO_CHAR(A.UPPERITEMIDTREE) ");
 			} else {
 				boardListVO.setOrderBySub(" A.PARENTWRITEDATE DESC, A.UPPERITEMIDTREE ");
 			}
@@ -1092,6 +1098,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		} else {
 			if (globals.getProperty("Globals.DbType").equals("oracle")) {
 				boardListVO.setOrderBySub(" TO_NUMBER(A.PARENTWRITEDATE) DESC, TO_CHAR(A.UPPERITEMIDTREE) "); 
+			} else if (globals.getProperty("Globals.DbType").equals("tibero")) {
+				boardListVO.setOrderBySub(" TO_NUMBER(A.PARENTWRITEDATE) DESC, TO_CHAR(A.UPPERITEMIDTREE) ");
 			} else {
 				boardListVO.setOrderBySub(" A.PARENTWRITEDATE DESC, A.UPPERITEMIDTREE ");
 			}
@@ -1137,6 +1145,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		} else {
 			if (globals.getProperty("Globals.DbType").equals("oracle")) {
 				boardListVO.setOrderBySub(" TO_NUMBER(A.PARENTWRITEDATE) DESC, TO_CHAR(A.UPPERITEMIDTREE) "); 
+			} else if (globals.getProperty("Globals.DbType").equals("tibero")) {
+				boardListVO.setOrderBySub(" TO_NUMBER(A.PARENTWRITEDATE) DESC, TO_CHAR(A.UPPERITEMIDTREE) ");
 			} else {
 				boardListVO.setOrderBySub(" A.PARENTWRITEDATE DESC, A.UPPERITEMIDTREE ");
 			}
@@ -4364,6 +4374,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		} else {
 			if (globals.getProperty("Globals.DbType").equals("oracle")) {
 				boardListVO.setOrderBySub(" TO_NUMBER(A.PARENTWRITEDATE) DESC, TO_CHAR(A.UPPERITEMIDTREE) "); 
+			} else if (globals.getProperty("Globals.DbType").equals("tibero")) {
+				boardListVO.setOrderBySub(" TO_NUMBER(A.PARENTWRITEDATE) DESC, TO_CHAR(A.UPPERITEMIDTREE) ");
 			} else {
 				boardListVO.setOrderBySub(" A.PARENTWRITEDATE DESC, A.UPPERITEMIDTREE ");
 			}

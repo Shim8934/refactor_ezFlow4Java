@@ -4274,15 +4274,13 @@
             AND 
             	(((TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# AND TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#)
             AND 
-            	(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '011'))
+            	(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'))
             ]]>	
             <isEqual property="v_USERFLAG" compareValue="admin">
-                OR
-                (TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
+             OR 
+             	(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
                 AND
-                TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
-                AND
-                PROCESSORID IS NULL)
+                    TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
             </isEqual>
             	 ) ORDER BY PROCESSDATE $v_BASICORDER$
 		</isEqual>
@@ -4436,30 +4434,6 @@
       				TBL_FORMINFO.COMPANYID = O.COMPANYID	     				
       			WHERE 
       				TBL_FORMUSERINFO.USERID = #v_USERID#
-                AND
-                    TBL_FORMINFO.FORMCONTID IN
-                    (SELECT
-                        FORMCONTID
-                    FROM
-                        TBL_FORMCONTUSERGROUP
-                    WHERE
-                        TENANT_ID = TBL_FORMINFO.TENANT_ID
-                    AND
-                        COMPANYID = TBL_FORMINFO.COMPANYID
-                    AND
-                        FORMCONTUSERDEPID = #deptId#
-                    UNION ALL
-                    SELECT
-                        FORMCONTID
-                    FROM
-                        TBL_FORMCONTAINER
-                    WHERE
-                        TENANT_ID = TBL_FORMINFO.TENANT_ID
-                    AND
-                        COMPANYID = TBL_FORMINFO.COMPANYID
-                    AND
-                        (FORMCONTOWNDEPID = 'ALL' or FORMCONTOWNDEPID = #deptId#)
-                    )
       			<isEqual property="v_FORMKIND" compareValue="000">
       			
       			</isEqual>
@@ -8300,7 +8274,7 @@
 						SELECT 
 							TBL_APRDOCINFO.ORGDOCID,
 		      				TBL_APRDOCINFO.HREF, 
-		      				TBL_APRDOCINFO.HASOPINIONYN,
+		      				TBL_APRDOCINFO.HASOPINIONYN, 
 		      				TBL_APRDOCINFO.HASATTACHYN,
 		      				TBL_APRDOCINFO.ISPUBLIC,
 		      				TBL_APRDOCINFO.DOCTYPE, 
@@ -8427,7 +8401,7 @@
 	      		AND 
 	      			(((TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# AND TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#)
 	      		AND 
-	      			(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '011'))
+	      			(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'))
 	      		AND
 	      			TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
 	      		AND
@@ -8437,9 +8411,11 @@
 	      		OR 
 	      			(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
 	         	AND 
-	         		TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
-	         	AND
-                    PROCESSORID IS NULL)
+	         		TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014'))
+	         	OR 
+	         		(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
+	         	AND 
+	         		 TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015')
 	      	</isEqual>
 	      	<isEqual property="v_aprFlag" compareValue="G">
 		     	OR
@@ -11504,18 +11480,16 @@
 	   		AND 
 	   			(((TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# AND TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#)
 	   		AND 
-	   			(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '011'))
+	   			(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'))
 	   			
    		]]>
    		<isEqual property="v_USERFLAG" compareValue="admin">
-            OR
-                (TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
-            AND
-             TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
+   			OR 
+   				(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
                 AND
-                    PROCESSORID IS NULL)
-            AND
-                TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
+                    TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015'))
+      		AND	
+		   		TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
    		</isEqual>
    		<isEqual property="v_aprFlag" compareValue="G">
 	     	OR
@@ -15128,21 +15102,17 @@
 	      			AND 
 	      				(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012'
 	      			OR 
-	      				 TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'
-	      			OR 
-	      				 TBL_APRRECEIPTPROCESSINFO.APRSTATE = '011'))
+	      				 TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'))
 	      	AND
 	      		TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
 			AND
 	      		TBL_APRRECEIPTPROCESSINFO.COMPANYID = #companyID#
 	      			]]>
 	     <isEqual property="v_SUSINADMIN" compareValue="Y">
-             OR
-             (TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
-             AND
-             TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
-             AND
-             PROCESSORID IS NULL)
+	     OR 
+	     	(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)  AND  TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014')) 
+          OR 
+          	(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$) AND   TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015')
 	     </isEqual>
 	     <isEqual property="v_aprFlag" compareValue="G">
 	     	OR
@@ -16993,9 +16963,7 @@
                 AND 
                 	(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012'
                 OR 
-                	TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'
-                OR
-                    TBL_APRRECEIPTPROCESSINFO.APRSTATE = '011'))
+                	TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'))
                 AND 
                 	TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
 				AND
@@ -17029,10 +16997,7 @@
 			 	OR
 			 		(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN (#v_DEPTIDS#)
                 AND
-                    TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
-                AND
-                    PROCESSORID IS NULL
-                )
+                    TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015'))
 			</isEqual>
 				)
 		</isEqual>
@@ -33135,7 +33100,7 @@
 		   		AND 
 		   			(((TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# AND TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#)
 		   		AND 
-		   			(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '011'))
+		   			(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'))
 		   			
 	   		<isEqual property="v_USERFLAG" compareValue="admin">
 	   			OR 
@@ -33145,11 +33110,8 @@
 	   					<iterate property="v_DEPTIDS" open="(" close=")" conjunction=",">
 	   						#v_DEPTIDS[]#
 	   					</iterate>
-	   				AND
-	   					TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
-                    AND
-                        PROCESSORID IS NULL
-	   				)
+                        AND
+                            TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015'))
 	   		</isEqual>
 	   		<isEqual property="v_aprFlag" compareValue="G">
 		     	OR
@@ -34553,62 +34515,4 @@
           AND
             DOCID = #v_DOCID#
     </delete>
-
-    <select id="EzApprovalG.getDocProcessState" parameterClass="Map" resultClass="HashMap">
-        SELECT
-            A.DOCSTATE, A.FUNCTIONTYPE, B.DOCSTATE AS PROCDOCSTATE, B.APRSTATE AS PROCAPRSTATE
-        FROM
-            TBL_APRDOCINFO A
-                JOIN
-            TBL_APRRECEIPTPROCESSINFO B
-            ON
-                    A.DOCID = B.DOCID
-                    AND
-                    A.COMPANYID = B.COMPANYID
-                    AND
-                    A.TENANT_ID = B.TENANT_ID
-        WHERE
-            B.DOCID = #v_DOCID#
-          AND
-            B.PARENTSDOCID = #v_ORGDOCID#
-          AND
-            A.TENANT_ID = #v_TENANTID#
-          AND
-            A.COMPANYID = #v_COMPANYID#
-    </select>
-    
-	<select id="EzApprovalG.getNextAprLineInfo" parameterClass="HashMap" resultClass="ApprGLineTempletVO">
-        SELECT 
-            APRMEMBERSN, 
-            APRTYPE, 
-            APRSTATE 
-        FROM 
-            TBL_APRLINEINFO
-        WHERE 
-            DOCID = #v_DOCID#
-        AND 
-            TENANT_ID = #v_TENANTID#
-        AND 
-            COMPANYID = #companyID#
-        AND 
-            APRMEMBERSN > #v_APRMEMBERSN#
-        ORDER BY 
-            APRMEMBERSN
-	</select>
-    
-    <update id="EzApprovalG.rollbackJubsuAprReceiptProcessInfo" parameterClass="Map">
-   		Update 
-   			TBL_APRRECEIPTPROCESSINFO 
-   		SET 
-   			ProcessDocID = #v_PROCESSDOCID# , 
-   			AprState = #v_APRSTATE#
-   		Where 
-   			DocID = #v_DOCID# 
-		AND 
-			ReceivedDeptID = #v_DEPTID#
-		AND 
-			TENANT_ID = #v_TENANTID#
-		AND 
-    		COMPANYID = #companyID#
-    </update>
 </sqlMap>

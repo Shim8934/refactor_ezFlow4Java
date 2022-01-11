@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezOptionMobile">
+
+	<typeAlias alias="MCommonVO" 					type="egovframework.ezMobile.ezOption.vo.MCommonVO"/>
+	<typeAlias alias="MOptionVO" 					type="egovframework.ezMobile.ezOption.vo.MOptionVO"/>
+	<typeAlias alias="MPortalTimeLineVO"			type="egovframework.ezMobile.ezPortal.vo.MPortalTimeLineVO"/>
+    
+    <resultMap class="MCommonVO" id="MCommonVO">
+      <result property="tenantId"			column="tenant_id"         					columnIndex="1"/>
+      <result property="lang"         	 	column="lang"         						columnIndex="2"/>
+      <result property="offSet"       		column="timeZone"        					columnIndex="3"/>
+      <result property="deptId"	       		column="department"        					columnIndex="4"/>
+      <result property="deptName"	     	column="description"        				columnIndex="5"/>
+      <result property="deptName2"	       	column="description2"      					columnIndex="6"/>
+      <result property="companyId"       	column="physicaldeliveryofficename"        	columnIndex="7"/>
+      <result property="companyName"       	column="company"        					columnIndex="8"/>
+      <result property="companyName2"      	column="company2"        					columnIndex="9"/>
+      <result property="userId"       		column="cn"        							columnIndex="10"/>
+      <result property="userName"       	column="displayName"        				columnIndex="11"/>
+      <result property="userName2"       	column="displayName2"        				columnIndex="12"/>
+      <result property="title"       		column="title"        						columnIndex="13"/>
+      <result property="title2"       		column="title2"		        				columnIndex="14"/>      
+      <result property="rollInfo"          	column="rollinfo"                       	columnIndex="15"/>
+      <result property="userFileUrl"       	column="userFileUrl"   						columnIndex="16"/>
+      <result property="email"       		column="email"   							columnIndex="17"/>
+    </resultMap>
+    
+    <resultMap class="MOptionVO" id="MOptionVO">
+      <result property="userId"				column="userId"         					columnIndex="1"/>
+      <result property="timeZone"          	column="timeZone"         					columnIndex="2"/>
+      <result property="lang"       		column="lang"        						columnIndex="3"/>
+      <result property="mainType"	      	column="mainType"        					columnIndex="4"/>
+      <result property="listCnt"	     	column="listCnt"        					columnIndex="5"/>      
+      <result property="useSecurity"       	column="useSecurity"        				columnIndex="6"/>
+      <result property="tenantId"       	column="tenant_id"        					columnIndex="7"/>     
+    </resultMap>
+    
+    <select id="EzOptionDAO.commonInfo" parameterClass="Map" resultMap="MCommonVO">
+    	<![CDATA[
+	    	SELECT
+	    		b.tenant_id,
+	    		a.lang,    	
+				a.timeZone,		    
+			    b.department,
+			    b.description,
+			    b.description2,
+			    b.physicaldeliveryofficename,
+			    b.company,
+			    b.company2,
+			    b.cn,
+			    b.displayName,
+			    b.displayName2,
+			    b.title,
+			    b.title2,
+                b.extensionattribute1 as rollinfo,
+                b.extensionattribute2 as userFileUrl,
+                b.mail as email,
+                b.telephonenumber
+			FROM
+				TBL_USERMOBILEINFO a right join TBL_USERMASTER b ON a.userid = b.cn AND a.tenant_id = b.tenant_id
+			WHERE
+				b.cn = #userId#
+			AND
+				b.tenant_id = (select tenant_id from TBL_TENANT_SERVERNAME WHERE server_name = #serverName#)
+		]]>		
+  	</select>
+  	
+  	<select id="EzOptionDAO.getTimeLineList" parameterClass="Map" resultClass="MPortalTimeLineVO">
+  		SELECT * FROM (
+   		<![CDATA[
+   			(SELECT 
+				DOCTITLE as title,
+				STARTDATE + #offset#/(24*60) AS STARTDATE,
+				1 as module,
+		]]>	
+				<isEqual property="primary" compareValue="1"> WRITERNAME, </isEqual>
+				<isNotEqual property="primary" compareValue="1"> WRITERNAME2 as WRITERNAME, </isNotEqual>
+		<![CDATA[
+				DOCID as APPRID,
+				APRMEMBERSN as APRMEMBERSN,
+				'' as BOARDID,
+				'' as BOARDITEMID,
+				TO_CHAR(URGENTAPPROVAL) as BOARDGUBUN,
+				'APR' as "MODE", 
+				ROW_NUMBER() OVER(ORDER BY STARTDATE DESC) rnum
+			FROM 
+				VAPRDOINGDOCLIST
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID IN (
+							SELECT 
+								EXTENSIONATTRIBUTE2 
+							FROM 
+								TBL_DEPTMASTER 
+							INNER JOIN 
+								TBL_ADDJOBMASTER 
+							ON
+								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+								AND 
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+							WHERE 
+								TBL_ADDJOBMASTER.TENANT_ID = #tenantID# 
+							AND 
+								TBL_ADDJOBMASTER.CN = #userID#
+							UNION ALL
+							SELECT 
+								PHYSICALDELIVERYOFFICENAME
+							FROM
+								TBL_USERMASTER
+							WHERE
+								CN = #userID#
+							AND
+								TENANT_ID = #tenantID# 
+							)
+			AND 
+				APRMEMBERID IN ($userIDS$)
+			AND 
+				APRTYPE <> '015' 
+			AND
+   				APRMEMBERSN <> 1
+   			AND
+				STARTDATE < TO_DATE(#sessionDate#, 'YYYY-MM-DD HH24:MI:SS'))
+			
+			UNION
+			
+   			(SELECT 
+				DOCTITLE as title,
+				STARTDATE + #offset#/(24*60) AS STARTDATE,
+				1 as module,
+		]]>	
+				<isEqual property="primary" compareValue="1"> WRITERNAME, </isEqual>
+				<isNotEqual property="primary" compareValue="1"> WRITERNAME2 as WRITERNAME, </isNotEqual>
+		<![CDATA[
+				DOCID as APPRID,
+				APRMEMBERSN as APRMEMBERSN,
+				'' as BOARDID,
+				'' as BOARDITEMID,
+				TO_CHAR(URGENTAPPROVAL) as BOARDGUBUN,
+				'END' as "MODE", 
+				ROW_NUMBER() OVER(ORDER BY STARTDATE DESC) rnum
+			FROM 
+				VENDCHAMJODOCINFO
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID IN (
+							SELECT 
+								EXTENSIONATTRIBUTE2 
+							FROM 
+								TBL_DEPTMASTER 
+							INNER JOIN 
+								TBL_ADDJOBMASTER 
+							ON
+								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+								AND 
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+							WHERE 
+								TBL_ADDJOBMASTER.TENANT_ID = #tenantID# 
+							AND 
+								TBL_ADDJOBMASTER.CN = #userID#
+							UNION ALL
+							SELECT 
+								PHYSICALDELIVERYOFFICENAME
+							FROM
+								TBL_USERMASTER
+							WHERE
+								CN = #userID#
+							AND
+								TENANT_ID = #tenantID# 
+							)
+			AND 
+				APRMEMBERID IN ($userIDS$)
+			AND 
+				APRTYPE <> '015' 
+			AND
+   				APRMEMBERSN <> 1
+   			AND
+				STARTDATE < TO_DATE(#sessionDate#, 'YYYY-MM-DD HH24:MI:SS'))
+			
+			UNION
+			
+			( SELECT 
+				A.TITLE,	
+				TO_DATE(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') + #offset#/(24*60) AS STARTDATE,
+				4 as module,
+		]]>		 
+				<isEqual property="primary" compareValue="1"> WRITERNAME, </isEqual>
+				<isNotEqual property="primary" compareValue="1"> WRITERNAME2 as WRITERNAME, </isNotEqual>
+		<![CDATA[		
+				'' as APPRID,
+				A.IMPORTANCE as APRMEMBERSN,
+				TO_CHAR(A.BOARDID),
+				TO_CHAR(A.ITEMID) as BOARDITEMID,
+				TO_CHAR(P.GUBUN) as BOARDGUBUN,
+				'' as "MODE", 
+				ROW_NUMBER() OVER(ORDER BY STARTDATE DESC) rnum
+			  FROM 
+				TBL_BOARD_ITEM A 
+			  INNER JOIN 
+					( SELECT 
+						BOARDID, 
+						BOARDNAME, 
+						BOARDNAME2,
+						TENANT_ID 
+					  FROM 
+						TBL_BOARD_MYBOARDS 
+					  WHERE   
+						TENANT_ID = #tenantID#
+					  AND
+						USERID = #userID# ) B 
+			  ON 
+				A.TENANT_ID = B.TENANT_ID
+			  AND
+				A.BOARDID = B.BOARDID                
+			  INNER JOIN 
+				TBL_BOARD_BOARDINFO P  
+			  ON 
+				A.TENANT_ID = P.TENANT_ID
+			  AND
+				A.BOARDID = P.BOARDID
+			  AND 
+				A.TENANT_ID = #tenantID#
+			  AND
+				(A.APPRFLAG = 'Y' 
+				 	OR 
+				 A.APPRFLAG IS NULL)
+			  AND
+			  	A.STARTDATE > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5, 'YYYY-MM-DD HH24:MI:SS')
+			  AND
+				A.STARTDATE < #sessionDate#
+			  AND
+			  	A.ENDDATE > #nowDate#	
+			  AND 
+                (NOT EXISTS
+		                (SELECT 
+		                  USERID 
+		                 FROM 
+		                  TBL_BOARD_ITEM_READ S 
+		                 WHERE 
+		                  S.TENANT_ID = A.TENANT_ID
+		                 AND
+		                  S.BOARDID = A.BOARDID 
+		                 AND 
+		                  S.ITEMID = A.ITEMID 
+		                 AND 
+		                  S.TENANT_ID = #tenantID#
+		                 AND
+		                  S.USERID = #userID# 
+		                 AND 
+		                  S.READDATE > TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5)))
+		                  )
+             WHERE
+			 	rnum <= #listCnt#
+		]]>
+  	</select>
+    
+  	<select id="EzOptionDAO.commonInfoWeb" parameterClass="Map" resultMap="MCommonVO">
+    	<![CDATA[
+	    	SELECT
+	    		b.tenant_id,
+	    		a.lang,    	
+				a.timeZone,		    
+			    b.department,
+			    b.description,
+			    b.description2,
+			    b.physicaldeliveryofficename,
+			    b.company,
+			    b.company2,
+			    b.cn,
+			    b.displayName,
+			    b.displayName2,
+			    b.title,
+			    b.title2,
+                b.extensionattribute1 as rollinfo,
+                b.extensionattribute2 as userFileUrl,
+                b.mail as email
+			FROM
+				TBL_USERLOCALINFO a right join TBL_USERMASTER b ON a.userid = b.cn AND a.tenant_id = b.tenant_id
+			WHERE
+				b.cn = #userId#
+			AND
+				b.tenant_id = (select tenant_id from TBL_TENANT_SERVERNAME WHERE server_name = #serverName#)
+		]]>		
+  	</select>
+  	
+  	<select id="EzOptionDAO.optionInfo" parameterClass="Map" resultMap="MOptionVO">
+    	<![CDATA[
+	    	SELECT
+	    		userId,
+	    		timeZone, 	
+				lang,
+			  	mainType,
+			    listCnt,			    
+			    useSecurity,
+			    tenant_id
+			FROM
+				TBL_USERMOBILEINFO
+			WHERE
+				userid = #userId#
+			AND
+				tenant_id = #tenantId#
+		]]>		
+  	</select>
+  	
+  	<insert id="EzOptionDAO.insertOption" parameterClass="Map">
+  		<![CDATA[
+			INSERT INTO TBL_USERMOBILEINFO(
+				userId,			timeZone, 			lang, 			mainType,			listCnt,		useSecurity,		tenant_id
+			) values (
+				#userId#,		#timeZone#,			#lang#,			#mainType#,			#listCnt#,		#useSecurity#,		#tenantId#
+			)
+   		]]>
+  	</insert>
+  	
+  	<update id="EzOptionDAO.updateOption" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBL_USERMOBILEINFO
+			SET 
+				LANG = #lang#	
+				,TIMEZONE = #timeZone#
+				,MAINTYPE = #mainType#
+				,LISTCNT = #listCnt#					
+				,USESECURITY = #useSecurity#	
+			WHERE 
+				USERID = #userId#
+			AND 
+				TENANT_ID = #tenantId#
+		]]>
+  	</update>
+  	
+</sqlMap>
+
