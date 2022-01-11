@@ -121,4 +121,6 @@
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezAttitude/EzAttitude_SQL_Mysql.xml"/>
     <!-- 근태관리 관리자모듈 xml -->
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezAttitude/EzAttitudeAdmin_SQL_Mysql.xml"/>
+    <!-- 관리자 main xml -->
+    <sqlMap resource="egovframework/sqlmap/let/main/EgovMainAdn_SQL_Mysql.xml"/>
 </sqlMapConfig>

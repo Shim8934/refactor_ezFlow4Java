@@ -53,6 +53,9 @@
 	    	case "LOGINHIST":
 	    		parent.frames[1].location.href = "/admin/ezSystem/systemLoginHist.do";
 	    		break;
+	    	case "ADMINACCESSHIST":
+	    		parent.frames[1].location.href = "/admin/ezSystem/systemAdminAccessHist.do";
+	    		break;
 	    	case "IPMANAGER":
 	    		parent.frames[1].location.href = "/admin/ezSystem/systemIPManager.do";
 	    		break;
@@ -110,16 +113,17 @@
 	            	<h2><span id="PARAMETER" style="display:inline-block;width:100%;" onClick="menu_change('PARAMETER')" ><spring:message code='main.kms1' /></span></h2>
 	            </c:if>
 	            <h2><span id="LOGINHIST" style="display:inline-block;width:100%;" onClick="menu_change('LOGINHIST')" ><spring:message code='ezSystem.x0021' /></span></h2>
+	            <h2><span id="ADMINACCESSHIST" style="display:inline-block;width:100%;" onClick="menu_change('ADMINACCESSHIST')" ><spring:message code='ezSystem.ls07' /></span></h2>
 	            <c:if test="${useIPAccessMenu == 'YES'}">
 	            	<h2><span id="IPMANAGER" style="display:inline-block;width:100%;" onClick="menu_change('IPMANAGER')" ><spring:message code='ezSystem.ksa02'/></span></h2>
 	            </c:if>
 	            <h2><span id="MULTILOGIN" style="display:inline-block;width:100%;" onClick="menu_change('MULTILOGIN')" ><spring:message code="ezSystem.kbh08" /></span></h2>
 	            <h2><span id="PASSWORDPOLICY" style="display:inline-block;width:100%;" onClick="menu_change('PASSWORDPOLICY')" ><spring:message code='ezSystem.ksaPwPolicy01' /></span></h2>
 	            <c:if test="${cChk == '1' && useSystemMonitor != 'NO'}">
-	            <h2><span id="SYSMONITOR" style="display:inline-block;width:100%;" onClick="menu_change('SYSMONITOR')" ><spring:message code='ezSystem.pjg08' /></span></h2>
+	            	<h2><span id="SYSMONITOR" style="display:inline-block;width:100%;" onClick="menu_change('SYSMONITOR')" ><spring:message code='ezSystem.pjg08' /></span></h2>
 	            </c:if>
 	            <c:if test="${useModuleUsage == 'YES'}">
-	            <h2><span id="MODMONITOR" style="display:inline-block;width:100%;" onClick="menu_change('MODMONITOR')" ><spring:message code='ezSystem.kbh21' /></span></h2>
+	            	<h2><span id="MODMONITOR" style="display:inline-block;width:100%;" onClick="menu_change('MODMONITOR')" ><spring:message code='ezSystem.kbh21' /></span></h2>
 	            </c:if>
             </div>
       	</div>

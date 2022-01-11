@@ -2229,4 +2229,9 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		logger.debug("If disconnecttime and status columns doesn't exist in TBL_CONNECTION_INFO, creating the columns...");
 		update("EzCommonDAO.alterTblConnectionInfo");
 	}
+
+	public void createTblAdminAccessInfo() {
+		logger.debug("If TBL_ADMIN_ACCESS_INFO doesn't exist, creating the table...");
+		update("EzCommonDAO.createTblAdminAccessInfo");
+	}
 }

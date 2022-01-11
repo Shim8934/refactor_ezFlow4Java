@@ -2564,4 +2564,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void alterTblConnectionInfo() throws Exception {
 		ezCommonDAO.alterTblConnectionInfo();
 	}
+
+	@Override
+	public void createTblAdminAccessInfo() throws Exception {
+		ezCommonDAO.createTblAdminAccessInfo();	
+	}
 }

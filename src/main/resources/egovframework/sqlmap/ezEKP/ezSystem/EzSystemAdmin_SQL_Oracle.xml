@@ -7,6 +7,7 @@
 	<typeAlias alias="IPBandVO" type="egovframework.ezEKP.ezSystem.vo.IPBandVO"/>
 	<typeAlias alias="AccessIdVO" type="egovframework.ezEKP.ezSystem.vo.AccessIdVO"/>
 	<typeAlias alias="PasswordPolicyVO" type="egovframework.ezEKP.ezSystem.vo.PasswordPolicyVO"/>
+	<typeAlias alias="MainVO" type="egovframework.let.main.vo.MainVO"/>
 	
 	<select id="EzSystemAdminDAO.getSysParam" parameterClass="Integer" resultClass="SysParamVO">
 		<![CDATA[
@@ -624,5 +625,142 @@
 		WHERE TENANT_ID = #tenantId# AND COMPANY_ID=#companyId#
 		]]>
 	</delete>
+	
+	<sql id="EzSystemAdminDAO.searchQuery2">
+		<isNotEmpty property="search_keycode" prepend="and">
+			<isNotEmpty property="search_keyword" >
+				<isEqual property="lang" compareValue="primary" >
+					<isEqual property="search_keycode" compareValue="1">
+						USERNM LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="2">
+						DEPTNM LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+					</isEqual>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="primary">
+					<isEqual property="search_keycode" compareValue="1">
+						USERNM2 LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="2">
+						DEPTNM2 LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+					</isEqual>
+				</isNotEqual>
+				<isEqual property="search_keycode" compareValue="3">
+					ACCESSIP LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+				</isEqual>
+				<isEqual property="search_keycode" compareValue="4">
+					ACCESSBROWSER LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+				</isEqual>
+				<isEqual property="search_keycode" compareValue="5">
+					ACCESSOS LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+				</isEqual>
+			</isNotEmpty>
+		</isNotEmpty>
+		<isNotEmpty property="search_keycodeForRoll" prepend="and">
+			<isEqual property="search_keycodeForRoll" compareValue="c=1">
+				ADMINTYPE LIKE '%c=1%'
+			</isEqual>	
+			<isEqual property="search_keycodeForRoll" compareValue="k=1">
+				ADMINTYPE LIKE '%k=1%'
+			</isEqual>
+		</isNotEmpty>
+		<isNotEmpty property="startDate" prepend="and">
+			<![CDATA[
+			TO_CHAR((ACCESSTIME + #offset# / (24 * 60)),'YYYY-MM-DD') >= #startDate# 
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="endDate" prepend="and">
+			<![CDATA[
+			TO_CHAR((ACCESSTIME + #offset# / (24 * 60)),'YYYY-MM-DD') <= #endDate#
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	<select id="EzSystemAdminDAO.getAdminAccessHist" parameterClass="map" resultClass="MainVO">
+		 	SELECT
+		 	 	X.rnum, 
+			    TO_CHAR((X.ACCESSTIME + #offset# / (24 * 60)),'YYYY-MM-DD HH24:MI:SS') AS ACCESSTIME,
+	            X."SEQUENCE",
+	            X.USERNM,
+	            X.USERNM2,
+	            X.DEPTNM,
+	            X.DEPTNM2,
+	            X.ACCESSIP,
+	            X.ACCESSBROWSER,
+	            X.ACCESSOS,
+				X.COMPANYID,
+				X.COMPANYNM,
+				X.COMPANYNM2,
+				X.USERID,
+				X.ADMINTYPE
+            FROM (
+				SELECT 
+			    	ROWNUM AS rnum,
+				    A.ACCESSTIME,
+					A."SEQUENCE",
+					A.USERNM,
+					A.USERNM2,
+					A.DEPTNM,
+					A.DEPTNM2,
+					A.ACCESSIP,
+					A.ACCESSBROWSER,
+					A.ACCESSOS,
+					A.COMPANYID,
+					A.COMPANYNM,
+					A.COMPANYNM2,
+					A.USERID,
+					A.ADMINTYPE
+				FROM 
+					(
+					SELECT  
+					    C.ACCESSTIME,
+						C."SEQUENCE",
+						C.USERNM,
+						C.USERNM2,
+						C.DEPTNM,
+						C.DEPTNM2,
+						C.ACCESSIP,
+						C.ACCESSBROWSER,
+						C.ACCESSOS,
+						C.COMPANYID,
+						C.COMPANYNM,
+						C.COMPANYNM2,
+						C.USERID,
+						C.ADMINTYPE
+					FROM 
+						TBL_ADMIN_ACCESS_INFO C
+					WHERE 
+						C.TENANT_ID=#v_tenantID#
+						$companyOracleStr$
+						<include refid="EzSystemAdminDAO.searchQuery2"/>
+						<isEqual property="search_keycode" compareValue="6">
+							AND C.USERID LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+						</isEqual>
+				    ORDER BY 
+				    	C."SEQUENCE" DESC
+					) A
+		<isNotEqual property="v_start" compareValue="-1">
+			<![CDATA[
+            	WHERE ROWNUM <= (#pageCount# + #v_start#)
+			]]>
+		</isNotEqual> 
+            	) X
+		<isNotEqual property="v_start" compareValue="-1">
+			<![CDATA[
+         	WHERE X.rnum >= (#v_start# + 1)
+			]]>
+		</isNotEqual>
+	</select>
+	
+	<select id="EzSystemAdminDAO.getAdminAccessHistCount" parameterClass="map" resultClass="int">
+		SELECT 	COUNT(SEQUENCE) 
+		FROM   	TBL_ADMIN_ACCESS_INFO C 
+		WHERE	C.TENANT_ID = #v_tenantID# 
+		$companyOracleStr$
+		<include refid="EzSystemAdminDAO.searchQuery2"/>
+		<isEqual property="search_keycode" compareValue="6">
+			AND C.USERID LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+		</isEqual>
+	</select>
 	
 </sqlMap>
