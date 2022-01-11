@@ -112,4 +112,6 @@
     <sqlMap resource="egovframework/sqlmap/ezMobile/ezOrgan/EzOrganMobile_SQL_Oracle.xml"/>
     <!-- 차량관리 관리자 -->
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezCar/EzCarAdmin_SQL_Oracle.xml"/>
+    <!-- 관리자 main xml -->
+    <sqlMap resource="egovframework/sqlmap/let/main/EgovMainAdn_SQL_Oracle.xml"/>
 </sqlMapConfig>

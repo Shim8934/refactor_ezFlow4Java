@@ -11,6 +11,7 @@ import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.PasswordPolicyVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
+import egovframework.let.main.vo.MainVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzSystemAdminDAO")
@@ -169,5 +170,13 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 
 	public int insertCompanyConfigParam(SysParamVO sysParamVO) throws Exception {
 		return update("EzSystemAdminDAO.insertCompanyConfigParam", sysParamVO);
+	}
+	@SuppressWarnings("unchecked")
+	public List<MainVO> getAdminAccessHist(Map<String, Object> map) throws Exception {
+		return (List<MainVO>) list("EzSystemAdminDAO.getAdminAccessHist", map);
+	}
+	
+	public int getAdminAccessHistCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzSystemAdminDAO.getAdminAccessHistCount", map); 
 	}
 }
