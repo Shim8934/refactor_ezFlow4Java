@@ -65,6 +65,16 @@
 				</isEqual>
 			</isNotEmpty>
 		</isNotEmpty>
+		<isNotEmpty property="search_keycodeForStatus" prepend="and">
+			<isEqual property="search_keycodeForStatus" compareValue="Y">
+				(	STATUS LIKE 'Y'
+				OR 	STATUS like ''
+				OR	STATUS IS NULL	)
+			</isEqual>
+			<isEqual property="search_keycodeForStatus" compareValue="N">
+				STATUS LIKE 'N'
+			</isEqual>
+		</isNotEmpty>
 		<isNotEmpty property="startDate" prepend="and">
 			<![CDATA[
 			DATE_FORMAT(DATE_ADD(DATE_FORMAT(CONNECTTIME,'%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d') >= #startDate# 
@@ -77,8 +87,10 @@
 		</isNotEmpty>
 	</sql>
 	
+	<!-- 2021-12-21 이사라 :  DISCONNECTTIME, STATUS 추가-->
 	<select id="EzSystemAdminDAO.getLoginHist" parameterClass="map" resultClass="ConnectionInfoVO">
 			SELECT  DATE_ADD(DATE_FORMAT(C.CONNECTTIME, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE) AS CONNECTTIME,
+					IFNULL(DATE_ADD(DATE_FORMAT(C.DISCONNECTTIME, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), "") AS DISCONNECTTIME,
 					C.SEQUENCE,
 					C.USERNM,
 					C.USERNM2,
@@ -90,13 +102,14 @@
 					C.COMPANYID,
 					C.COMPANYNM,
 					C.COMPANYNM2,
-					C.USERID
+					C.USERID,
+					C.STATUS
 			FROM 
-					TBL_CONNECTION_INFO C INNER JOIN TBL_USERLOCALINFO U
+					TBL_CONNECTION_INFO C <!-- INNER JOIN TBL_USERLOCALINFO U
 			ON 
-					C.USERID = U.USERID
+					C.USERID = U.USERID -->
 			WHERE 
-					C.TENANT_ID=#v_tenantID# AND U.TENANT_ID=#v_tenantID# 
+					C.TENANT_ID=#v_tenantID# <!--  AND U.TENANT_ID=#v_tenantID#  -->
 					<isNotEqual property="companyId" compareValue="Top/organ">
 						AND C.COMPANYID=#companyId#
 					</isNotEqual>
@@ -112,8 +125,10 @@
 		</isNotEqual>
 	</select>
 
+	<!-- 2021-12-21 이사라 :  DISCONNECTTIME, STATUS 추가-->
 	<select id="EzSystemAdminDAO.getLoginHistNotAdmin" parameterClass="map" resultClass="ConnectionInfoVO">
 			SELECT  DATE_ADD(DATE_FORMAT(C.CONNECTTIME, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE) AS CONNECTTIME,
+					IFNULL(DATE_ADD(DATE_FORMAT(C.DISCONNECTTIME, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), "") AS DISCONNECTTIME,
 					C.SEQUENCE,
 					C.USERNM,
 					C.USERNM2,
@@ -123,13 +138,14 @@
 					C.CONNECTBROWSER,
 					C.CONNECTOS,
 					C.COMPANYID,
-					C.USERID
+					C.USERID,
+					C.STATUS
 			FROM 
-					TBL_CONNECTION_INFO C INNER JOIN TBL_USERLOCALINFO U
+					TBL_CONNECTION_INFO C <!-- INNER JOIN TBL_USERLOCALINFO U
 			ON 
-					C.USERID = U.USERID
+					C.USERID = U.USERID -->
 			WHERE 
-					C.TENANT_ID=#v_tenantID# AND U.TENANT_ID=#v_tenantID# AND C.USERID=#userId# 
+					C.TENANT_ID=#v_tenantID# <!--  AND U.TENANT_ID=#v_tenantID# --> AND C.USERID=#userId# 
 					<isNotEqual property="companyId" compareValue="Top/organ">
 						AND C.COMPANYID=#companyId# 
 					</isNotEqual>

@@ -360,6 +360,7 @@ public class EzSystemAdminController {
 	@RequestMapping(value="/admin/ezSystem/systemLoginHistList.do", method = RequestMethod.POST)
 	public String systemLoginHistList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest req,
 			@RequestParam(required=false)String searchKeycode, @RequestParam(required=false)String searchKeyword,
+			@RequestParam(required=false)String searchKeycodeForStatus,
 			@RequestParam(required=false)String startDate, @RequestParam(required=false)String endDate) throws Exception {
 		
 		logger.debug("started systemLoginHistList controller.");
@@ -406,7 +407,7 @@ public class EzSystemAdminController {
 		
 		searchKeyword = searchKeyword.replace("%", "\\%").replace("_", "\\_");
 		List<ConnectionInfoVO> loginHistList = ezSystemAdminService.getLoginHist(Integer.valueOf(userInfo.getTenantId()), 
-				commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, sysLang, startDate, endDate, companyId);
+				commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, searchKeycodeForStatus, sysLang, startDate, endDate, companyId);
 		
 		// 로그인 ip의 국가를 표시하기 위함 
 		String systemLang = userInfo.getLang();
@@ -462,7 +463,7 @@ public class EzSystemAdminController {
 			
 		}
 			
-		int itemCnt = ezSystemAdminService.getLoginHistCount(userInfo.getTenantId(), commonUtil.getMinuteUTC(offset), searchKeycode, searchKeyword, sysLang, startDate, endDate, companyId);
+		int itemCnt = ezSystemAdminService.getLoginHistCount(userInfo.getTenantId(), commonUtil.getMinuteUTC(offset), searchKeycode, searchKeyword, searchKeycodeForStatus, sysLang, startDate, endDate, companyId);
 		
 		int totalPage = itemCnt / maxItemPerPage ;
 		
@@ -482,6 +483,7 @@ public class EzSystemAdminController {
 		model.addAttribute("itemCnt", itemCnt);
 		model.addAttribute("searchKeyword", searchKeyword);
 		model.addAttribute("searchKeycode", searchKeycode);
+		model.addAttribute("searchKeycodeForStatus", searchKeycodeForStatus);
 		model.addAttribute("startDate", startDate);
 		model.addAttribute("endDate", endDate);
 		
@@ -527,6 +529,7 @@ public class EzSystemAdminController {
 	@RequestMapping(value="/ezSystem/systemLoginHistList.do", method = RequestMethod.POST)
 	public String systemLoginHistListNotAdmin(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest req,
 			@RequestParam(required=false)String searchKeycode, @RequestParam(required=false)String searchKeyword,
+			@RequestParam(required=false)String searchKeycodeForStatus,
 			@RequestParam(required=false)String startDate, @RequestParam(required=false)String endDate) throws Exception {
 		
 		logger.debug("started systemLoginHistList controller.");
@@ -568,7 +571,7 @@ public class EzSystemAdminController {
 		}
 		searchKeyword = searchKeyword.replace("%", "\\%").replace("_", "\\_");
 		List<ConnectionInfoVO> loginHistList = ezSystemAdminService.getLoginHistNotAdmin(Integer.valueOf(userInfo.getTenantId()), 
-				commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, sysLang, 
+				commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, searchKeycodeForStatus, sysLang, 
 				startDate, endDate, companyId, userInfo.getId());
 		
 		// 로그인 ip의 국가를 표시하기 위함 
@@ -626,7 +629,7 @@ public class EzSystemAdminController {
 		}
 		
 		int itemCnt = ezSystemAdminService.getLoginHistCountNotAdmin(userInfo.getTenantId(), commonUtil.getMinuteUTC(offset), 
-				searchKeycode, searchKeyword, sysLang, startDate, endDate, companyId, userInfo.getId());
+				searchKeycode, searchKeyword, searchKeycodeForStatus, sysLang, startDate, endDate, companyId, userInfo.getId());
 		
 		int totalPage = itemCnt / maxItemPerPage ;
 		
@@ -646,6 +649,7 @@ public class EzSystemAdminController {
 		model.addAttribute("itemCnt", itemCnt);
 		model.addAttribute("searchKeyword", searchKeyword);
 		model.addAttribute("searchKeycode", searchKeycode);
+		model.addAttribute("searchKeycodeForStatus", searchKeycodeForStatus);
 		model.addAttribute("startDate", startDate);
 		model.addAttribute("endDate", endDate);
 		
@@ -656,10 +660,11 @@ public class EzSystemAdminController {
 	
 	/*
 	 * 엑셀 워크시트 생성 및 자동 다운로드 함수
+	 * 2021-12-30 이사라 : 로그아웃시간, 상태 추가
 	 */
 	@RequestMapping(value = "/admin/ezSystem/systemLoginHistExcelExport.do", method = RequestMethod.GET)
 	public void statisticsMailLogExcelExport(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request,
-			String searchKeycode, String searchKeyword, String startDate, String endDate, Locale locale, HttpServletResponse response)  throws Exception {
+			String searchKeycode, String searchKeyword, String searchKeycodeForStatus, String startDate, String endDate, Locale locale, HttpServletResponse response)  throws Exception {
 		logger.debug("systemLoginHistExcelExport controller started.");
 		
 		LoginVO userInfoUser = commonUtil.userInfo(loginCookie);
@@ -692,14 +697,14 @@ public class EzSystemAdminController {
 		int totalCount = 0;
 		if (config.equals("u")){
 			loginHistList = ezSystemAdminService.getLoginHistNotAdmin(Integer.valueOf(userInfoUser.getTenantId()), 
-					commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, sysLang, 
+					commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, searchKeycodeForStatus, sysLang, 
 					startDate, endDate, companyId, userInfoUser.getId());
 			totalCount = ezSystemAdminService.getLoginHistCountNotAdmin(userInfoUser.getTenantId(), commonUtil.getMinuteUTC(offset), 
-					searchKeycode, searchKeyword, sysLang, startDate, endDate, companyId, userInfoUser.getId());
+					searchKeycode, searchKeyword, searchKeycodeForStatus, sysLang, startDate, endDate, companyId, userInfoUser.getId());
 		} else {
 			loginHistList = ezSystemAdminService.getLoginHist(Integer.valueOf(userInfoUser.getTenantId()), 
-					commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, sysLang, startDate, endDate, companyId);
-			totalCount = ezSystemAdminService.getLoginHistCount(userInfoUser.getTenantId(), commonUtil.getMinuteUTC(offset), searchKeycode, searchKeyword, sysLang, startDate, endDate, companyId);
+					commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, searchKeycodeForStatus,sysLang, startDate, endDate, companyId);
+			totalCount = ezSystemAdminService.getLoginHistCount(userInfoUser.getTenantId(), commonUtil.getMinuteUTC(offset), searchKeycode, searchKeyword, searchKeycodeForStatus, sysLang, startDate, endDate, companyId);
 		}
 		
 		/* 엑셀 만들기 */
@@ -816,15 +821,23 @@ public class EzSystemAdminController {
 			
 			String userConnectIp = infoVo.getConnectip() + "(" + loginHistList.get(i-j).getConnectCountryName() + ")";
 			String userConnectTime = infoVo.getConnecttime();
+			String userDisconnectTime = infoVo.getDisconnecttime();
 			String userConnectBrowser = infoVo.getConnectbrowser();
 			String userConnectOS = infoVo.getConnectos();
+			String userStatus = infoVo.getStatus() == null ? "Y" : infoVo.getStatus();
+			
+			userStatus = userStatus.equals("Y") ? egovMessageSource.getMessage("ezSystem.ls04", locale) : egovMessageSource.getMessage("ezSystem.ls05", locale);
+			
+			//if (userStatus !) {
+				
+			//}
 			
 			String[] userHist = null;
 			
 			if (config.equals("u")){
-				userHist = new String [] {userName,userDeptName,userConnectIp,userConnectTime,userConnectBrowser,userConnectOS};
+				userHist = new String [] {userName,userDeptName,userConnectIp,userConnectTime,userDisconnectTime,userConnectBrowser,userConnectOS,userStatus};
 			} else {
-				userHist = new String [] {userName,userDeptName,userCompanyName,userConnectIp,userConnectTime,userConnectBrowser,userConnectOS};
+				userHist = new String [] {userName,userDeptName,userCompanyName,userConnectIp,userConnectTime,userDisconnectTime,userConnectBrowser,userConnectOS,userStatus};
 			}
 			
 			for (int k = 0; k < histHeaderLen; k ++) {

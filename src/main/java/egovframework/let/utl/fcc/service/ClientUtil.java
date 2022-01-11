@@ -134,6 +134,8 @@ public class ClientUtil {
 		     }else{
 	             if (agent.indexOf("Edge") > 0)
 	            	 result = "Edge";	        	 
+	             else if (agent.indexOf("Edg") > 0)	// 2021-12-24 이사라 : 웹헤더 Edg인 경우 발생하여 추가 
+	            	 result = "Edge";
 	             else if (agent.indexOf("Chrome") > 0)
 	            	 result = "Chrome";
 	             else if (agent.indexOf("Safari") > 0)
