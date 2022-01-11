@@ -1856,17 +1856,31 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createtWebfolderFileUserTable");
 		}
 		
-		try {
-			update("EzCommonDAO.createWebfolderFolderUserSeq");
-		} catch (Exception e) {
-			logger.debug("createtWebfolderFolderUserSeq sequence exist.");
-		} 
+		if (dbType.equalsIgnoreCase("oracle")) {
+			try {
+				update("EzCommonDAO.createWebfolderFolderUserSeq");
+			} catch (Exception e) {
+				logger.debug("createWebfolderFolderUserSeq sequence exist.");
+			} 
 			
-		try {
-			update("EzCommonDAO.createWebfolderFileUserSeq");
-		} catch (Exception e) {
-			logger.debug("createtWebfolderFileUserSeq sequence exist.");
-		} 
+			try {
+				update("EzCommonDAO.createWebfolderFileUserSeq");
+			} catch (Exception e) {
+				logger.debug("createWebfolderFileUserSeq sequence exist.");
+			} 
+			
+			try {
+				update("EzCommonDAO.createWebfolderFolderIdSeq");
+			} catch (Exception e) {
+				logger.debug("createWebfolderFolderIdSeq sequence exist.");
+			} 
+			
+			try {
+				update("EzCommonDAO.createWebfolderFileIdSeq");
+			} catch (Exception e) {
+				logger.debug("createWebfolderFileIdSeq sequence exist.");
+			} 
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -1968,9 +1982,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 
 	public void addWebfolderLogHistory() {
 		try {
-			logger.debug("여기 오나요 checkWebfolderFileHistoryColumn");
             select("EzCommonDAO.checkWebfolderFileHistoryColumn");
-            logger.debug("여기 오나요 checkWebfolderFileHistoryColumn");
         } catch (Exception e) {
             logger.debug("tbl_webfolder_history file_id column doesn't exist. creating the column...");
             update("EzCommonDAO.addWebfolderLogHistory");
@@ -2190,6 +2202,25 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		} catch (Exception e) {
 			logger.debug("TBL_Comm_BoardInfo MailFG_Comment column doesn't exist. creating the column...");
 			update("EzCommonDAO.addCommMailFG_CommentColumn");
+		}
+	}
+
+	/* 2021-11-17 홍승비 - 전자설문 대상자 하위부서 허용여부 플래그 추가 (Y/N) */
+	public void addSurveySubDeptYNColumn() {
+		try {
+			select("EzCommonDAO.checkSurveySubDeptYNColumn");
+		} catch (Exception e) {
+			logger.debug("tbl_survey_participant SubDeptYN column doesn't exist. creating the column...");
+			update("EzCommonDAO.addSurveySubDeptYNColumn");
+		}
+	}
+
+	public void createTblScheduleComplete() {
+		try {
+			select("EzCommonDAO.checkTblScheduleComplete");
+		} catch (Exception e) {
+			logger.debug("TBL_SCHEDULE_COMPLETE doesn't exist. creating the table...");
+			update("EzCommonDAO.createTblScheduleComplete");
 		}
 	}
 	

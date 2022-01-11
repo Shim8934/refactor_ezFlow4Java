@@ -2317,7 +2317,7 @@
 		SELECT 
 			USER_NAME
 		FROM 
-			JMOCHA_USER_DISTRIBUTION_APPLY
+			JMOCHA_USER_DIST_APPLY
 		LIMIT 1
 	</select>
 	
@@ -2345,7 +2345,7 @@
 	</statement>
 	
 	<statement id="EzCommonDAO.createUserDlApplyTable"> 
-		CREATE TABLE `jmocha_user_distribution_apply` (
+		CREATE TABLE `jmocha_user_dist_apply` (
 		  `DOMAIN_NAME` varchar(100) NOT NULL,
 		  `USER_NAME` varchar(100) NOT NULL,
 		  `APPLICANT_ID` varchar(100) NOT NULL,
@@ -4170,5 +4170,43 @@
 			MAILFG_COMMENT VARCHAR(2) DEFAULT NULL
 		)
     </statement>
+    
+    <select id="EzCommonDAO.checkSurveySubDeptYNColumn">
+        <![CDATA[
+            SELECT 
+                SUBDEPTYN
+            FROM 
+                TBL_SURVEY_PARTICIPANT
+            LIMIT 1
+        ]]>
+    </select>
+    <statement id="EzCommonDAO.addSurveySubDeptYNColumn">
+        ALTER TABLE 
+        	TBL_SURVEY_PARTICIPANT 
+		ADD (
+			SUBDEPTYN VARCHAR(2) DEFAULT 'N'
+		)
+    </statement>
+    
+    <select id="EzCommonDAO.checkTblScheduleComplete">
+		<![CDATA[
+			SELECT
+				SCHEDULEID
+			FROM
+				TBL_SCHEDULE_COMPLETE
+			LIMIT 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.createTblScheduleComplete"> 
+		CREATE TABLE TBL_SCHEDULE_COMPLETE (
+		    SCHEDULEID BIGINT(10) NOT NULL,
+		    REPEATCOUNT BIGINT(10) NOT NULL,
+		    ISALLREP VARCHAR(2) NOT NULL DEFAULT 'N',
+		    STARTDATE DATETIME NOT NULL,
+		    TENANT_ID MEDIUMINT(5),
+		    COMPANYID VARCHAR(40),
+		    PRIMARY KEY (`SCHEDULEID`, `REPEATCOUNT`, `ISALLREP`, `STARTDATE`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+	</statement>
 	
 </sqlMap>

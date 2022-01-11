@@ -99,6 +99,8 @@
 		        	dataType : "text",
 		        	url : "/admin/ezOrgan/getAddJobList.do",
 		        	data : {companyID : document.getElementById("ListCompany").value,
+		        			searchType : document.getElementById("searchType").value,
+		        			searchValue : document.getElementById("searchValue").value,
 		        			page      : CurPage,
 		        			pageSize  : pageSize},
 		        	success : function(xml){
@@ -971,6 +973,14 @@
 					$("#checkAll").prop("checked", false);
 				}
 			}
+			function searchList() {
+				CurPage = 1;
+				AddJob_List();
+			}
+		    function clearSearchVal () {
+		    	$("#searchValue").val("");
+		    }
+
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -1020,6 +1030,17 @@
 	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 	            	</c:forEach>
 	            </select>
+	            
+	            <span class="searchForm">
+	            	<select id="searchType" style="width:80px;height: 27px; margin-right: 0px; border: 1px solid #cbcbcb;">
+						<option selected="" value="displayname"><spring:message code='ezOrgan.t67' /></option>
+						<option value="cn"><spring:message code='ezOrgan.t218' /></option>
+						<option value="description"><spring:message code='ezOrgan.t68' /></option>
+					</select>
+					
+					<input id="searchValue" onkeypress="if(event.keyCode==13) {searchList(); return false;}" onfocus="clearSearchVal();" style="ime-mode: active;height: 27px;border: 1px solid #cbcbcb; border-right:0px;">
+					<a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onclick="searchList()"></a>
+				</span>
 		    </h1>
 		    <div id="mainmenu">
 		        <ul style="margin-top:15px">		            

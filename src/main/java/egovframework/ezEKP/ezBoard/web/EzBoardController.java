@@ -6097,10 +6097,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		String fileLocation = "";
 		String thumbnailName = "";
 		long fileSize = 0;
-		
 		boolean isImage = false;
-		
 		List<MultipartFile> multiFile = null;
+		String fileExt = "";
 		
 		if (mode.equals("PICTURE")) {
 			multiFile = request.getFiles("file1");
@@ -6133,6 +6132,25 @@ public class EzBoardController extends EgovFileMngUtil{
 			multiFile = request.getFiles("file1");
 			dirPath = realPath + commonUtil.getUploadPath("upload_personal.PHOTOTEMP", userInfo.getTenantId());
 			serverPath = dirPath + commonUtil.separator;
+		}
+		
+		/* 2021-12-08 홍승비 - 포토, 썸네일 게시물 이미지 업로드 시 서버단에서도 이미지 확장자 체크 진행 */
+		String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
+		boolean isExtOK = true;
+		for (int i = 0; i < multiFile.size(); i++) {
+			String orgName = multiFile.get(i).getOriginalFilename();
+			fileExt = orgName.substring(orgName.lastIndexOf(".") + 1, orgName.length());
+			logger.debug("imageUpload file extension is : " + fileExt);
+			
+			if (commonUtil.checkImgExtension(fileExt) == false || (!useExtension.equals("*") && useExtension.toLowerCase().indexOf(fileExt.toLowerCase()) < 0)) {
+				isExtOK = false;
+				break;
+			}
+		}
+		if (isExtOK == false) {
+			logger.debug("imageUpload failed, checkImgExtension return false");
+			
+			return "UPLOAD_EXT_ERROR;" + multiFile.size();	
 		}
 		
 		String uniqueName = "";
@@ -9046,8 +9064,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		String fileLocation = "";
 		String thumbnailName = "";
 		long fileSize = 0;
-		
 		MultipartFile multiFile = null;
+		String fileExt = "";
 		
 		if (mode.equals("MOVIE")) { // 동영상 업로드
 			multiFile = request.getFile("file1");
@@ -9075,6 +9093,18 @@ public class EzBoardController extends EgovFileMngUtil{
 			multiFile = request.getFile("file1");
 			dirPath = realPath + commonUtil.getUploadPath("upload_personal.PHOTOTEMP", userInfo.getTenantId());
 			serverPath = dirPath + commonUtil.separator;
+		}
+		
+		/* 2021-12-08 홍승비 - 동영상게시물 영상 업로드 시 서버단에서도 확장자 체크 진행 */
+		String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
+		String orgName = multiFile.getOriginalFilename();
+		fileExt = orgName.substring(orgName.lastIndexOf(".") + 1, orgName.length());
+		logger.debug("MovieUpload file extension is : " + fileExt);
+		
+		if (commonUtil.checkMovExtension(fileExt) == false || (!useExtension.equals("*") && useExtension.toLowerCase().indexOf(fileExt.toLowerCase()) < 0)) {
+			logger.debug("MovieUpload failed, checkMovExtension return false");
+			
+			return "UPLOAD_EXT_ERROR";
 		}
 		
 		String uniqueName = "";

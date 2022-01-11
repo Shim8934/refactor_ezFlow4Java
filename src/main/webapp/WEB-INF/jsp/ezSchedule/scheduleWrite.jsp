@@ -57,8 +57,11 @@
 	        var pDeptAdmin = "<c:out value='${pDeptAdmin}'/>";
 	        var offSetMin = "<c:out value='${offSetMin}'/>";
 	        var useAnyoneEdit = "<c:out value='${useAnyoneEdit}'/>";
+	        var repeatCount = "<c:out value='${repeatCount}'/>";
+	        var repStartDate = "<c:out value='${repStartDate}'/>";
 		    var timeCheck = false;
 		    var timeSelect = false;
+		    
 		    window.onload = function () {
 		        if (scheduleid != "" && otherid == "" && (scheduletype != "1" && scheduletype != "6")) {
 		            document.getElementById("1tab2").innerHTML = "<spring:message code='ezSchedule.t1031' />";
@@ -101,6 +104,8 @@
 		                allday_change();
 		                document.getElementById("periodblock").style.display = "";
 		                document.getElementById("repeatblock").style.display = "none";
+		                /* 2021-11-25 홍승비 - 일정완료 체크박스 표출에 대응하도록 기간TD의 스타일 조정 */
+		                document.getElementById("periodblockTD").style.width = "65%";
 		                show_repetition_info();
 		            } else if(datetype == "2") {
 		            	document.getElementById("alldaycheck").checked = true;
@@ -535,6 +540,21 @@
 	            }
 	            else obj.value = obj.value.replace(/[\a-zㄱ-ㅎㅏ-ㅣ가-힣]/g, '');
 	        }
+	        
+	        /* 2021-11-25 홍승비 - 반복일정 일정완료 체크박스 제어 함수 (체크박스는 하나만 체크 가능) */
+	        function completeFG_change(objID) {
+	        	if (objID == "completeFG_one") { // 단일 일정
+	        		document.getElementById("completeFG_repOne").checked = false;
+	        		document.getElementById("completeFG_repAll").checked = false;
+	        	} else if (objID == "completeFG_repOne") { // 현재 반복일정
+	        		document.getElementById("completeFG_one").checked = false;
+	        		document.getElementById("completeFG_repAll").checked = false;
+	        	} else if (objID == "completeFG_repAll") { // 전체 반복일정
+	        		document.getElementById("completeFG_one").checked = false;
+	        		document.getElementById("completeFG_repOne").checked = false;
+	        	}
+	        }
+	        
 	    </script>
 	</head>
 
@@ -593,32 +613,32 @@
 	                                	<c:if test="${scheduleId != ''}">
                                         <tr id="HolderEdit">
                                             <th><spring:message code='ezSchedule.t363'/></th>
-                                            <td colspan="2" id="LabelOwner">
+                                            <td colspan="3" id="LabelOwner">
                                                 ${strLabelOwner}
                                             </td>
                                         </tr>
                                         </c:if>
                                         <tr id="HolderWrite">
                                             <th><spring:message code='ezSchedule.t363'/></th>
-                                            <td colspan="2">
+                                            <td colspan="3">
                                             	<select name="ListOwnerID" id="ListOwnerID" onchange="ListOwnerID_Change()" style="height:24px;">${strOwnerID}</select>
                                             </td>
                                         </tr>
 	                                    <tr>
 	                                        <th><spring:message code='ezSchedule.t365'/></th>
-	                                        <td colspan="2">
+	                                        <td colspan="3">
 	                                        	<input name="TextLocation" type="text" maxlength="50" id="TextLocation" style="width:100%;" value="<c:out value='${scheduleInfo.location}' />" />
 	                                        </td>
 	                                    </tr>
 	                                    <tr>
 	                                        <th><spring:message code='ezSchedule.t366'/></th>
-	                                        <td colspan="2">
+	                                        <td colspan="3">
 	                                        	<input name="TextTitle" type="text" maxlength="100" id="TextTitle" style="width:100%;" value="<c:out value='${scheduleInfo.title}' />" />
 	                                        </td>
 	                                    </tr>
 	                                    <tr id="periodblockTR">
 	                                        <th><spring:message code='ezSchedule.t368'/></th>
-	                                        <td colspan="2">
+	                                        <td id="periodblockTD" <c:if test="${scheduleId != ''}">style="width:85%;"</c:if>>
 	                                        	<span id="periodblock">
 	                                            	<input name="checkbox" type="checkbox" id="alldaycheck" onclick="allday_change()" value="1">
 	                                            	<spring:message code='ezSchedule.t369'/>
@@ -630,6 +650,26 @@
 	                                            </span>
 	                                            <span id="repeatblock" style="DISPLAY: none"><spring:message code='ezSchedule.t343'/></span>
 	                                        </td>
+	                                        <%-- 2021-11-23 홍승비 - 일정완료 체크박스 추가 (단일, 반복일정 대응) --%>
+	                                        <c:if test="${scheduleId != ''}">
+											<th><spring:message code='ezSchedule.HSBCp01'/></th>
+	                                        <td>
+												<%-- 단일일정 수정 시 --%>
+	                                        	<span id="completeFG_oneSpan" <c:if test="${dateType != '1' && dateType != '2'}">style="display:none;"</c:if>>
+	                                            	<input name="checkbox" type="checkbox" id="completeFG_one" <c:if test="${completeFG == 'Y' && dateType != '3'}">checked</c:if>>
+	                                            	<spring:message code='ezSchedule.HSBCp02'/>
+	                                            </span>
+	                                            <%-- 반복일정 수정 시 (2021-11-25 기준으로 수정 시 pattern값은 0으로만 전달됨. 반복일정 수정 시 단일/전체 선택 기능이 없기 때문) --%>
+                                            	<span id="completeFG_repOneSpan" <c:if test="${dateType != '3' || pattern != '0'}">style="display:none;"</c:if>>
+                                            		<input name="checkbox" type="checkbox" id="completeFG_repOne" onclick="completeFG_change(this.id)" <c:if test="${completeFG == 'Y' && isAllRep == 'N' && dateType == '3'}">checked</c:if>>
+                                            		<spring:message code='ezSchedule.HSBCp03'/>
+                                            	</span>
+                                            	<span id="completeFG_repAllSpan" <c:if test="${dateType != '3' || pattern != '0'}">style="display:none;"</c:if>>
+                                            		<input name="checkbox" type="checkbox" id="completeFG_repAll" onclick="completeFG_change(this.id)" <c:if test="${completeFG == 'Y' && isAllRep == 'Y' && dateType == '3'}">checked</c:if>>
+                                            		<spring:message code='ezSchedule.HSBCp04'/>
+                                            	</span>
+	                                        </td>
+	                                        </c:if>
 	                                    </tr>
 	                                </table>
 	                            </div>

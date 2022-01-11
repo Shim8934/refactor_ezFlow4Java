@@ -1311,6 +1311,23 @@ CREATE TABLE `jmocha_user_distribution_mem` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `jmocha_user_dist_apply`
+--
+
+DROP TABLE IF EXISTS `jmocha_user_dist_apply`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `jmocha_user_dist_apply` (
+  `DOMAIN_NAME` varchar(100) NOT NULL,
+  `USER_NAME` varchar(100) NOT NULL,
+  `APPLICANT_ID` varchar(100) NOT NULL,
+  `APPLICANT_DATE` date NOT NULL,
+  PRIMARY KEY (`DOMAIN_NAME`,`USER_NAME`,`APPLICANT_ID`),
+  KEY `foreign_keys_index` (`DOMAIN_NAME`,`USER_NAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `jmocha_user_local_info`
 --
 
@@ -14191,6 +14208,12 @@ CREATE TABLE `tbl_webfolder_env` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='사용자 환경설정';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+DROP TABLE IF EXISTS `tbl_webfolder_no_inherit`;
+CREATE TABLE `tbl_webfolder_no_inherit` (
+  `FOLDER_ID` varchar(100) NOT NULL,
+  `TENANT_ID` int(7) NOT NULL,
+  PRIMARY KEY (`FOLDER_ID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
 --
 -- Table structure for table `tbl_webfolder_favor`
 --
@@ -15082,17 +15105,19 @@ CREATE TABLE `tbl_yearlydoccount`(
 
 -- Dump completed on 2020-05-12 16:36:39
 
-DROP TABLE IF EXISTS `tbl_susinschedule`;
+DROP TABLE IF EXISTS `TBL_SUSINSCHEDULE`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_susinschedule` (
+CREATE TABLE `TBL_SUSINSCHEDULE` (
   `DOCID` varchar(80) NOT NULL,
   `DEPTID` varchar(80) DEFAULT NULL,
   `DIRPATH` varchar(1020) DEFAULT NULL,
   `DOCSTATE` varchar(12) DEFAULT NULL,
   `COMPANYID` varchar(20) DEFAULT NULL,
   `LANG` varchar(10) DEFAULT NULL,
-  `TENANTID` mediumint(5) DEFAULT NULL
+  `TENANTID` mediumint(5) DEFAULT NULL,
+  PRIMARY KEY (`DOCID`,`COMPANYID`,`TENANTID`),
+  UNIQUE KEY `IDX_TBL_SUSINSCHEDULE` (`DOCID`,`TENANTID`,`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE OR REPLACE VIEW VIEW_EZWEBFOLDER AS

@@ -256,6 +256,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     		ezCommonService.addTblAdminReceiptGroupSubExtReceptYnColumn(); // 2021-06-29 수신처그룹 멤버 테이블에 외부/내부 수신여부 컬럼 추가
     		ezCommonService.addViewTaskOldFlag(); // 2021-08-31 홍승비 - 전자결재 분류코드체계 뷰에 삭제여부(OLDFLAG) 칼럼 추가 (VTASKCLASS, SVTASKCLASS)
     		ezCommonService.addCommMailFGColumn(); // 2021-11-12 홍승비 - 커뮤니티 게시판 메일알림 옵션 추가 (게시/수정/댓글알림) 
+    		ezCommonService.addSurveySubDeptYNColumn(); // 2021-11-17 홍승비 - 전자설문 대상자 하위부서 허용여부 플래그 추가 (Y/N)
+    		ezCommonService.createTblScheduleComplete(); // 2021-11-23 홍승비 - 일정 완료여부 레코드 저장 테이블 추가
 	    	
 	    	// webfolder
 	    	ezCommonService.addWebfolderUserSubdeptPermittedColumn(); 	//2020-10-19 김은실 - 웹폴더 > 하위부서 허용 여부 추가
@@ -2162,9 +2164,17 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			logger.debug("## " + multiFile.getName());
 			fileName = fileName.replace("+", "%2b");
 			fileName = fileName.replace(";", "%3b");
-			String extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.lastIndexOf(".") + 1 + 3);
+			String extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
 
-			logger.debug("file extension is : " + extension);
+			/* 2021-12-08 홍승비 - 전자결재 서명 업로드 시 서버단에서도 이미지 확장자 체크 진행 */
+			String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
+			logger.debug("signImangeUpload file extension is : " + extension);
+			if (commonUtil.checkImgExtension(extension) == false || (!useExtension.equals("*") && useExtension.toLowerCase().indexOf(extension.toLowerCase()) < 0)) {
+				logger.debug("signImangeUpload failed, checkImgExtension return false");
+				
+				return "UPLOAD_EXT_ERROR";
+			}
+			
 			fileName = commonUtil.detectPathTraversal(userID + "_" + guid + ".");
 
 			if (mode.equals("PICTURE")) {
@@ -2291,16 +2301,19 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    
 		String companyID = request.getParameter("companyID");
 		String strLang = userInfo.getPrimary();
+		String searchType = request.getParameter("searchType");
+		String searchValue = request.getParameter("searchValue");
 			
 		int currentPage = Integer.parseInt(request.getParameter("page")); 
 		int pageSize = Integer.parseInt(request.getParameter("pageSize"));
 		int startRow = (pageSize * (currentPage - 1)) + 1;
 		int endRow = pageSize * currentPage;
 		
+		searchValue = searchValue.replace("%", "\\%").replace("_", "\\_");
 		
-		int totalCount = ezOrganAdminService.getAddJobCount(companyID, tenantID, strLang);
+		int totalCount = ezOrganAdminService.getAddJobCount(companyID, searchType, searchValue, tenantID, strLang);
 		
-		List<OrganUserVO> list = ezOrganAdminService.getAddJobList(companyID, strLang, tenantID, totalCount, pageSize, startRow, endRow);
+		List<OrganUserVO> list = ezOrganAdminService.getAddJobList(companyID, strLang, searchType, searchValue, tenantID, totalCount, pageSize, startRow, endRow);
 		
 		logger.debug("companyID=" + companyID  + ",strLang=" + strLang + ",currentPage=" + currentPage
                 + ",pageSize=" + pageSize + ",startRow=" + startRow + ",endRow=" + endRow

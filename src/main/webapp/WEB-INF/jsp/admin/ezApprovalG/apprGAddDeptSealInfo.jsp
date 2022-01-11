@@ -249,8 +249,16 @@
 			            	success : function(result) {
 			            		fileName = result["fileName"];
 			            		dirPath = result["path"];
+			            		msg = result["msg"];
 			            		
 			            		try {
+			            			if (msg == "UPLOAD_EXT_ERROR") {
+										var pInformationString = "<spring:message code = 'ezAttitude.t260' />";
+										OpenAlertUI(pInformationString);
+										
+										return;
+			            			}
+			            			
 				            		if (fileName.length > 1000) {
 				                        var pInformationString = imgName + "<spring:message code = 'ezApprovalG.t1246' />";
 				                        OpenAlertUI(pInformationString);

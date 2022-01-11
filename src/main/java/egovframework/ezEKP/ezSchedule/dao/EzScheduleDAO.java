@@ -311,5 +311,31 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	public void setScheduleMailNotiConfig(Map<String, Object> map) throws Exception {
 		update("EzScheduleDAO.setScheduleMailNotiConfig", map);
 	}
+
+	/* 2021-11-25 홍승비 - 일정완료 레코드가 존재하는지 카운트를 반환하는 쿼리 */
+	public int getScheduleCompleteCnt(Map<String, Object> map) throws Exception {
+		return (int) select("EzScheduleDAO.getScheduleCompleteCnt", map);
+	}
+	/* 2021-11-25 홍승비 - 일정완료 레코드 신규 삽입 쿼리 */
+	public void insertScheduleComplete(Map<String, Object> map) throws Exception {
+		insert("EzScheduleDAO.insertScheduleComplete", map);
+	}
+	/* 2021-11-25 홍승비 - 일정완료 레코드의 전체 반복일정 칼럼 리턴 쿼리 */
+	@SuppressWarnings("unchecked")
+	public List<String> getScheduleCompleteIsAllRep(Map<String, Object> map) throws Exception {
+		return (List<String>) list("EzScheduleDAO.getScheduleCompleteIsAllRep", map);
+	}
+	/* 2021-11-25 홍승비 - 특정(단일) 일정 또는 전체 일정 삭제 조건이 분기처리된 삭제 쿼리 */
+	public void deleteScheduleComplete(Map<String, Object> map) throws Exception {
+		delete("EzScheduleDAO.deleteScheduleComplete", map);
+	}
+	/* 2021-11-25 홍승비 - SCHEDULEID, TENANT_ID, COMPANYID가 일치하는 일정완료 레코드 중에서 현재 삽입한 레코드 이외의 레코드를 모두 삭제 */
+	public void deleteScheduleCompleteDiffCurr(Map<String, Object> map) throws Exception {
+		delete("EzScheduleDAO.deleteScheduleCompleteDiffCurr", map);
+	}
+	/* 2021-11-29 홍승비 - 참석자 초대 수락 시, 부모 일정의 일정완료 레코드도 동일하게 삽입 */
+	public void insertAttendantScheduleComplete(Map<String, Object> map) throws Exception {
+		insert("EzScheduleDAO.insertAttendantScheduleComplete", map);
+	}
 }
 

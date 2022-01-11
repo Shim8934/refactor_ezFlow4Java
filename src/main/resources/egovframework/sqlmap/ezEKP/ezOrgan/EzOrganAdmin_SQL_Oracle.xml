@@ -3846,7 +3846,7 @@
 			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('001',3,'등록일',100,'TBL_RECORD','TBL_RECORD.RegisterDate','RegisterDate','dtDateTime','기록물 대장',null,'RegisterDate','登録日','注册',#tenantID#, #companyID#)
 			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
-			VALUES ('001',4,'문서번호',80,'TBL_ENDAPRDOCINFO','TBL_ENDAPRDOCINFO.DOCNO','DispRegisterNo','Default','기록물 대장',null,'Doc. No.','登録番号','註冊號',#tenantID#, #companyID#)
+			VALUES ('001',4,'문서번호',100,null,'CONCAT(CONCAT(TBL_RECORD.ProcessDeptName, ''-''), SUBSTR(TBL_RECORD.RegisterNo, -6))','DispRegisterNo','Default','기록물 대장',null,'Doc. No.','登録番号','註冊號',#tenantID#, #companyID#)
 			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('001',5,'첨부번호',55,'TBL_SEPERATEATTACH','TBL_SEPERATEATTACH.SeperateAttachNo','SeperateAttachNo','Default','기록물 대장',null,'SepAttachNo','添付番号','附件编号',#tenantID#, #companyID#)
 			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
@@ -5088,6 +5088,19 @@
 							CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                                
 						AND
 							TENANT_ID = #v_TENANT_ID#
+		]]>
+						<isNotEmpty property="searchValue" prepend="AND">
+							<isEqual property="searchType" compareValue="cn">
+								cn LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
+							</isEqual>
+							<isEqual property="searchType" compareValue="displayname">
+								CASE NVL(#v_LANGDATA#, '1') WHEN '1' THEN displayname ELSE displayname2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
+							</isEqual>
+							<isEqual property="searchType" compareValue="description">
+								CASE NVL(#v_LANGDATA#, '1') WHEN '1' THEN description ELSE description2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
+							</isEqual>
+						</isNotEmpty>
+		<![CDATA[
 						ORDER BY
 							DISPLAYNAME,CN
 						) WHERE ROWNUM <= #v_ENDROW#
@@ -5106,7 +5119,7 @@
 	<select id="EzOrganAdminDAO.getAddJobCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
-				COUNT (CN) 
+				COUNT(CN) 
 			FROM
 				TBL_USERMASTER 
 			WHERE
@@ -5117,9 +5130,18 @@
 				CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                      
 			AND
 				TENANT_ID = #v_TENANT_ID#
-			ORDER BY
-				DISPLAYNAME
 		]]>
+			<isNotEmpty property="searchValue" prepend="AND">
+				<isEqual property="searchType" compareValue="cn">
+					cn LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
+				</isEqual>
+				<isEqual property="searchType" compareValue="displayname">
+					CASE NVL(#strLang#, '1') WHEN '1' THEN displayname ELSE displayname2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
+				</isEqual>
+				<isEqual property="searchType" compareValue="description">
+					CASE NVL(#strLang#, '1') WHEN '1' THEN description ELSE description2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
+				</isEqual>
+			</isNotEmpty>
 	</select>
 
 	<select id="EzOrganDAO.getProxyUserInfo" parameterClass="Map" resultClass="OrganProxyVO">
@@ -7188,10 +7210,10 @@
 		<isNotEmpty property="search_keycode" prepend="and">
 			<isNotEmpty property="search_keyword" >
 					<isEqual property="search_keycode" compareValue="GROUPNAME">
-						GROUP_NAME LIKE CONCAT('%', #search_keyword#,'%')
+						GROUP_NAME LIKE ('%' || #search_keyword# || '%')
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="CREATEID">
-						CREATE_ID LIKE CONCAT('%', #search_keyword#,'%')
+						CREATE_ID LIKE ('%' || #search_keyword# || '%')
 					</isEqual>
 
 			</isNotEmpty>
@@ -7218,10 +7240,10 @@
         <isNotEmpty property="search_keycode" prepend="and">
 			<isNotEmpty property="search_keyword" >
 					<isEqual property="search_keycode" compareValue="GROUPNAME">
-						GROUP_NAME LIKE CONCAT('%', #search_keyword#,'%')
+						GROUP_NAME LIKE ('%' || #search_keyword# || '%')
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="CREATEID">
-						CREATE_ID LIKE CONCAT('%', #search_keyword#,'%')
+						CREATE_ID LIKE ('%' || #search_keyword# || '%')
 					</isEqual>
 
 			</isNotEmpty>

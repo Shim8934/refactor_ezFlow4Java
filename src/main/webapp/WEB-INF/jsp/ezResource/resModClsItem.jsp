@@ -272,6 +272,13 @@
 		        	return;
 		        }
 		        
+		        /* 2021-12-09 홍승비 - 자원 이미지 업로드 시 서버단에서도 이미지 확장자 체크 진행 (실제 파일 업로드 이전에 ajax로 체크) */
+				if (checkImgExtension(extension) == "UPLOAD_EXT_ERROR") {
+					document.getElementById("file1").files[0] = "";
+					alert("<spring:message code ='ezAttitude.t260' />"); // 허용하지 않는 확장자입니다.
+					return;
+				}
+		        
 		        var filelist = document.getElementById("file1").files;
 		        
 		    	// 이미지 크기 2MB 제한 체크
@@ -318,6 +325,13 @@
 		        	alert("<spring:message code='ezCommunity.lhj03'/>");
 		        	return;
 		        }
+		        
+		        /* 2021-12-09 홍승비 - 자원 이미지 업로드 시 서버단에서도 이미지 확장자 체크 진행 (실제 파일 업로드 이전에 ajax로 체크) */
+				if (checkImgExtension(extension) == "UPLOAD_EXT_ERROR") {
+					document.getElementById("file2").files[0] = "";
+					alert("<spring:message code ='ezAttitude.t260' />"); // 허용하지 않는 확장자입니다.
+					return;
+				}
 		        
 		        var filelist = document.getElementById("file2").files;
 		        

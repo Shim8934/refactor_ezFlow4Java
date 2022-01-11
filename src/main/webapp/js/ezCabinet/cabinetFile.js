@@ -42,8 +42,25 @@ var CabinetFile = function() {
 		
 		if (filelist.length == 0) {return;}
 		
+		/* 2021-12-09 홍승비 - 캐비닛 모듈 파일 업로드 시 서버단에서도 유효 확장자 체크 진행 */
+		var isExtOK = true;
 		for (var i = 0; i < filelist.length; i++) {
-			fileupload(filelist[i]);
+			var fileName = filelist[i].name;
+			var extension = fileName.substring(fileName.lastIndexOf('.') + 1, fileName.lenght);
+			var extChkResult = checkUseFileExtension(extension);
+			if (extChkResult == "UPLOAD_EXT_ERROR") {
+				isExtOK = false;
+			} else {
+				fileupload(filelist[i]); // 다중 업로드 시에도 유효 확장자라면 업로드 진행
+			}
+		}
+		
+		if (isExtOK == false) {
+			if (filelist.length > 1) {
+				alert(CabinetMessages.srtLangHSBEx02) ; // 업로드 제한 확장자 파일이 있습니다.
+			} else {
+				alert(CabinetMessages.srtLangHSBEx01) ; // 허용하지 않는 확장자입니다.
+			}
 		}
 		
 		if (!evt) {document.getElementById("fileBttn").value = null;}

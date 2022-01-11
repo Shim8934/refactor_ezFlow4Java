@@ -127,6 +127,7 @@ function ListView() {
     this.SetDebugMode = SetDebugMode;
     this.toString = ListView_ToString;
     this.SetHeightFree = SetHeightFree;
+    this.SetUseCheckBox = SetUseCheckBox;
     /* Public Member 선언 끝 */
 
     /* Private Member 선언 시작 */
@@ -155,6 +156,7 @@ function ListView() {
     var _Align = new Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     var _ListType = 0;
     var _SetHeightFree = false;
+    var _UseCheckBox = false;
     /* Private Member 선언 끝 */
 
     //ID 지정
@@ -271,6 +273,10 @@ function ListView() {
         _SetHeightFree = pSetHeightFree;
     }
     
+    // 체크박스 사용여부
+    function SetUseCheckBox(pUseCheckBox) { 
+    	_UseCheckBox = pUseCheckBox;
+    }
 
     //이미 만들어진 리스트뷰 ID를 이용하여 리스트뷰 객체 생성	
     function LoadFromID(pTableID) {
@@ -500,6 +506,8 @@ function ListView() {
                 if(strColName == "DocTitle")
                     _titleIdx = i;
                 
+                var strIsCheckBox = SelectSingleNodeValue(oHeaders[i], "ISCHECKBOX");
+                
                 var objTd = document.createElement("TH");
 
                 objTd.id = _thisID + "_TH_" + i;
@@ -565,6 +573,15 @@ function ListView() {
                 //objTd.setAttribute("height", "30px");
 
                 var oText = document.createTextNode(strName);
+                
+                if (strIsCheckBox != "" && _UseCheckBox) {
+            		var inputChkBox = document.createElement("input");
+            		inputChkBox.type = "checkbox";
+            		inputChkBox.className = "checkAll";
+            		
+            		oText = inputChkBox;
+                }
+                
                 objTd.appendChild(oText);
                 objTr.appendChild(objTd);
 
@@ -832,6 +849,13 @@ function ListView() {
             }
 
             oTbody.appendChild(objTr);
+            
+            if (_UseCheckBox) {
+                var M_TR_TD_Chk = document.createElement("TD");
+                M_TR_TD_Chk.style.padding = "5px";
+                M_TR_TD_Chk.innerHTML = "<input type='checkbox' class='checkUser' />";
+                objTr.appendChild(M_TR_TD_Chk);
+            }
 
             for (var j = 0; j < oCells.length; j++) {
                 var strValue = SelectSingleNodeValue(oCells[j], "VALUE");

@@ -374,6 +374,20 @@ function save_schedule(pageFrom)
 		}
 	}
 	
+	/* 2021-11-25 홍승비 - 일정 수정 시, 일정 완료여부 파라미터 전달 */
+	if (scheduleid != "") {
+		if (document.getElementById("completeFG_one").checked == true || document.getElementById("completeFG_repOne").checked == true) { // 단일 일정, 현재 반복일정
+			createNodeAndInsertText(xmlDom, objNode, "COMPLETEFG", "Y");
+			createNodeAndInsertText(xmlDom, objNode, "ISALLREP", "N");
+    	}
+		else if (document.getElementById("completeFG_repAll").checked == true) { // 전체 반복일정
+    		createNodeAndInsertText(xmlDom, objNode, "COMPLETEFG", "Y");
+    		createNodeAndInsertText(xmlDom, objNode, "ISALLREP", "Y");
+    	}
+		createNodeAndInsertText(xmlDom, objNode, "REPEATCOUNT", repeatCount); // 단일 일정인 경우 0, 반복 일정인 경우 해당 반복 카운트
+		createNodeAndInsertText(xmlDom, objNode, "REPSTARTDATE", repStartDate);
+	}
+	
 	xmlHTTP.open("POST", "/ezSchedule/scheduleSave.do?pageFrom=" + pageFrom, false);
 	xmlHTTP.send(xmlDom);
 	
@@ -773,7 +787,7 @@ var g_sdate = null;
 var g_edate = null;
 var schedule_repetition_cross_dialogArguments = new Array();
 function config_repeat()
-{	
+{
 	var args = new Array();	
 	if(pattern == "1")
 	{
@@ -842,6 +856,16 @@ function config_repeat_Complete(rtn) {
         	$('#Stimepicker').timepicker('setTime', startTime);
         	$('#Etimepicker').timepicker('setTime', endTime);
     	}
+        
+        /* 2021-11-25 홍승비 - 일정 수정 시 반복을 제거한 경우 단일일정 -> 일정완료 TD는 '완료'만 표출 */
+        if (scheduleid != "") {
+        	document.getElementById("periodblockTD").style.width = "85%";
+        	document.getElementById("completeFG_oneSpan").style.display = "";
+        	document.getElementById("completeFG_repOneSpan").style.display = "none";
+        	document.getElementById("completeFG_repAllSpan").style.display = "none";
+        	document.getElementById("completeFG_repOne").checked = false;
+        	document.getElementById("completeFG_repAll").checked = false;
+        }
     }
     else {
         g_sdate = rtn["SDATE"];
@@ -849,6 +873,16 @@ function config_repeat_Complete(rtn) {
         repetition = rtn["REPETITION"];
         show_repetition_info();
         document.getElementById("repeatinfo").innerHTML = rtn["REPDISPLAY"];
+        
+        /* 2021-11-25 홍승비 - 일정 수정 시 반복을 설정한 경우 전체 반복일정 수정으로 취급 -> 일정완료 TD는 '전체 반복일정'만 표출 */
+        if (scheduleid != "") {
+        	document.getElementById("periodblockTD").style.width = "65%";
+        	document.getElementById("completeFG_oneSpan").style.display = "none";
+        	document.getElementById("completeFG_repOneSpan").style.display = "none";
+        	document.getElementById("completeFG_repAllSpan").style.display = "";
+        	document.getElementById("completeFG_one").checked = false;
+        	document.getElementById("completeFG_repOne").checked = false;
+        }
     }
 }
 

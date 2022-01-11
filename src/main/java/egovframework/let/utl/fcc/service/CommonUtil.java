@@ -84,6 +84,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -2713,5 +2714,29 @@ public class CommonUtil {
 		} catch (Exception ex) {
 			logger.debug("ex: {}", ex);
 		}
+	}
+	
+	/** 2021-12-08 홍승비 - 이미지 파일 확장자 체크용 공통 메서드 추가 */
+	public boolean checkImgExtension(String fileExt) {
+		boolean result = false;
+		String[] imgExts = {"jpe", "jpg", "jpeg", "gif", "png", "bmp", "ico", "svg", "svgz", "tif", "tiff", "ai", "drw", "pct", "psp", "xcf", "psd", "raw"};
+		
+		if (fileExt != null && ArrayUtils.contains(imgExts, fileExt)) {
+			result = true;
+		}
+		
+		return result;
+	}
+	
+	/** 2021-12-08 홍승비 - HTML5 지원 웹 동영상 파일 확장자 체크용 공통 메서드 추가 */
+	public boolean checkMovExtension(String fileExt) {
+		boolean result = false;
+		String[] movExts = {"mp4", "ogg", "webm"};
+		
+		if (fileExt != null && ArrayUtils.contains(movExts, fileExt)) {
+			result = true;
+		}
+		
+		return result;
 	}
 }

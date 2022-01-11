@@ -1477,17 +1477,21 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 * 게시판 복사화면 호출함수
 	 */
 	@RequestMapping(value = "/ezCommunity/copyBoardItem.do", method = RequestMethod.GET)
-	public String copyBoardItem(Model model, HttpServletRequest request) {
+	public String copyBoardItem(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String pItemIDList = request.getParameter("itemIDList");
 		String pBoardID = request.getParameter("boardID");
 		String code = request.getParameter("code");
 		//2018-07-13 김보미 - 파라메터 추가
 		String treeCtrl = request.getParameter("treeCtrl");
 		
+		CommunityBoardPropertyVO boardProperty = ezCommunityService.getBoardProperty(pBoardID, userInfo.getTenantId());
+		
 		model.addAttribute("itemIDList", pItemIDList);
 		model.addAttribute("boardID", pBoardID);
 		model.addAttribute("code", code);
 		model.addAttribute("treeCtrl", treeCtrl);
+		model.addAttribute("mailFG_Post", boardProperty.getMailFG_Post()); // 복사 시 게시알림메일 플래그 체크
 		return "ezCommunity/communityCopyBoardItem";
 	}
 	
@@ -4955,14 +4959,14 @@ public class EzCommunityController extends EgovFileMngUtil{
 		if ((pMode.equals("new") && boardProperty.getMailFG_Post() != null && boardProperty.getMailFG_Post().equals("Y")) || (pMode.equals("modify") && boardProperty.getMailFG_Mod() != null && boardProperty.getMailFG_Mod().equals("Y"))) {
 			List<CommunityClubVO> list = ezCommunityService.adminNoticeMailOkGet2(boardProperty.getC_ClubNo(), userInfo.getTenantId());
 			
-			for (CommunityClubVO vo : list) {
-				if (vo.getEmail() != null) {
-		        	InternetAddress to1 = new InternetAddress();
-		        	to1.setPersonal(vo.getUserName(), "UTF-8");
-		        	to1.setAddress(vo.getEmail());
-		        	to.add(to1);
-		        }
-			}
+				for (CommunityClubVO vo : list) {
+					if (vo.getEmail() != null) {
+			        	InternetAddress to1 = new InternetAddress();
+			        	to1.setPersonal(vo.getUserName(), "UTF-8");
+			        	to1.setAddress(vo.getEmail());
+			        	to.add(to1);
+			        }
+				}
 		}
 		// 게시물 댓글 알림에 대한 수신인 ID 리턴 (댓글이 달린 게시물의 작성자)
 		else if (pMode.equals("comment") && boardProperty.getMailFG_Comment() != null && boardProperty.getMailFG_Comment().equals("Y")) {
