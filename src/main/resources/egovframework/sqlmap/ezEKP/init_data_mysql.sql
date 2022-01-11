@@ -502,7 +502,7 @@ INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMP
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A30','0  ','문서채번룰','1','문서채번시 적용되는 룰 정의','Doc. numbering rule','문서채번룰','문서채번룰','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A30','001','11S','1','x1 - 채번범위 (0:전체, 1:부서별, 2:양시함별) x2 - 분류기호 사용여부(0:사용안함, 1:사용함) x3 - 초기화 시점 (N: 초기화안함, M: 월별, Y:년별)','11S','11S','11S','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A30','002','0000','1','문서번호 FORMAT','0000','0000','0000','Top',0);
-INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A30','003','2','1','회계종료월 (예: 2007.3~2008.2 이 회계년도이면 2를 넣는다. 1~12월이면 0을 넣는다)로 채번 및 기록물등록년도에 이용된다','2','2','2','Top',0);
+INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A30','003','0','1','회계종료월 (예: 2007.3~2008.2 이 회계년도이면 2를 넣는다. 1~12월이면 0을 넣는다)로 채번 및 기록물등록년도에 이용된다','0','0','0','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A31','0  ','결재처리제한','0','결재처리 되지 않는 문서리스트 제한','Restrict approval','결재처리제한','결재처리제한','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A31','001','3','0','N일 이상 지체되는 결재문서','3','3','3','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A32','0  ','전결처리방법','0','전결처리방법 정의','Arbitrary decision','전결처리방법','전결처리방법','Top',0);

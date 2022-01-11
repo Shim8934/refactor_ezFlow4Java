@@ -1656,7 +1656,7 @@
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('A30','002','0000','1','문서번호 FORMAT','0000','0000','0000',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
-			VALUES ('A30','003','2','1','회계종료월 (예: 2007.3~2008.2 이 회계년도이면 2를 넣는다. 1~12월이면 0을 넣는다)로 채번 및 기록물등록년도에 이용된다','2','2','2',#tenantID#, #companyID#)
+			VALUES ('A30','003','0','1','회계종료월 (예: 2007.3~2008.2 이 회계년도이면 2를 넣는다. 1~12월이면 0을 넣는다)로 채번 및 기록물등록년도에 이용된다','0','0','0',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('A31','0  ','결재처리제한','0','결재처리 되지 않는 문서리스트 제한','결재처리제한','결재처리제한','결재처리제한',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
