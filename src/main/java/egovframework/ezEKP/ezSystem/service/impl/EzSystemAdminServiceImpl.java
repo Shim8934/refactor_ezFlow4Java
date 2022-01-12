@@ -909,14 +909,14 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 	public List<MainVO> getAdminAccessHist(int tenantID, String offset, int startPage, int maxItemPerPage, String keycode, 
 			String keyword, String keycodeForRoll, String lang, String startDate, String endDate, String companyId) throws Exception {
 
-		logger.debug("getAdminAccessHist started. tenantID : " + tenantID);
+		logger.debug("getAdminAccessHist started. tenantID : {}", tenantID);
 		
 		String companyOracleStr = "";
-		if (companyId != null && !companyId.equals("Top/organ")) {
+		if (!"Top/organ".equals(companyId)) {
 			companyOracleStr = " AND C.COMPANYID ='" + companyId + "'";
 		}
 		
-		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> params = new HashMap<>();
 		params.put("v_tenantID", tenantID);
 		params.put("offset", offset);
 		params.put("v_start", startPage);
@@ -939,14 +939,14 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 	@Override
 	public int getAdminAccessHistCount(int tenantID, String offset, String keycode, String keyword, String keycodeForRoll, String lang, String startDate, String endDate, String companyId) throws Exception {
 		
-		logger.debug("getAdminAccessHistCount started. tenantID : " + tenantID);
+		logger.debug("getAdminAccessHistCount started. tenantID : {}", tenantID);
 
 		String companyOracleStr = "";
-		if (companyId != null && !companyId.equals("Top/organ")) {
+		if (!"Top/organ".equals(companyId)) {
 			companyOracleStr = " AND C.COMPANYID ='" + companyId + "'";
 		}
 		
-		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> params = new HashMap<>();
 		params.put("v_tenantID", tenantID);
 		params.put("offset", offset);
 		params.put("search_keycode", keycode);

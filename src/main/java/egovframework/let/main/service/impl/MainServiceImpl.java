@@ -32,7 +32,7 @@ import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 @Service("mainService")
 public class MainServiceImpl extends EgovAbstractServiceImpl implements MainService {
 
-    private static final Logger logger = LoggerFactory.getLogger(MainServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MainServiceImpl.class);
             
     @Resource(name="mainDAO")
     private MainDAO mainDAO;
