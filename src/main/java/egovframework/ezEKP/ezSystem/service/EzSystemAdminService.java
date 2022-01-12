@@ -47,8 +47,8 @@ public interface EzSystemAdminService {
 	public Map<String, Object> getPwPolicy(int tenantId, String companyId) throws Exception;
 	public void updateCompanyConfigParam(int tenantID, List<Map<String, String>> list, String companyID) throws Exception;
 	public int updatePwPolicy(int tenantId, String companyId, Map<String, String> patternTypeMap, List<Map<String, Object>> PwPolicyPatternList) throws Exception;
-	public List<MainVO> getAdminAccessHist(int tenantID, String offset, int startPage, int maxItemPerPage, 
+	List<MainVO> getAdminAccessHist(int tenantID, String offset, int startPage, int maxItemPerPage,
 			String keyword, String keycode, String keycodeForRoll, String lang, String startDate, String endDate, String companyId) throws Exception;
-	public int getAdminAccessHistCount(int tenantID, String offset, String keyword, String keycode, String keycodeForRoll,
+	int getAdminAccessHistCount(int tenantID, String offset, String keyword, String keycode, String keycodeForRoll,
 			String lang, String startDate, String endDate, String companyId) throws Exception;
 }

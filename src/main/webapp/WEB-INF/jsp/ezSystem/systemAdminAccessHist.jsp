@@ -390,7 +390,7 @@
 					var params = 'startDate=' + searchStartTime	+ '&endDate=' + searchEndTime;
 					params += '&searchKeycode=' + searchKeycode + '&searchKeyword=' + searchKeyword;
 					params += '&searchKeycodeForRoll=' + searchKeycodeForRoll;
-					params += '&pageNum=' + pageNum + '&pageSize='	+ pageSize + '&companyId='	+ companyID +'&config=a';
+					params += '&pageNum=' + pageNum + '&pageSize='	+ pageSize + '&companyId='	+ companyID;
 					var pURL = "/admin/ezSystem/systemAccessHistExcelExport.do" + "?" + params;
 					saveExcel.location.href = pURL;
 				} else {
@@ -545,25 +545,16 @@
 	</head>
 	<body class="mainbody">
 		<h1><spring:message code="ezSystem.ls07"></spring:message><span id="listInfo"></span></h1>
-		<%-- <div id=""> <!-- mainmenu -->
-		    <span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
-			    <select id="ListCompany" onChange="selectCompanyID()">
-		        	<c:forEach var="item" items="${list}">
-	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-	            	</c:forEach>
-			    </select><br /><br />
-		    </span>
-		</div> --%>
 		<table style="width: 100%; background-color: #f8f8f8; border-top: 1px solid #e8e8e8; border-bottom: 1px solid #e8e8e8;">
 			<tr>
 				<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">
 					<span id="topmenu" style="width: 500px">&nbsp;<spring:message code='ezStatistics.t195'/> :
 		            <select style="height:24px" id="ListCompany" name="SCompID" onchange="selectCompanyID()">
-		           		<c:if test="${isMasterAdmin eq 'y'}">
-		           			<option value="Top/organ"><spring:message code="ezPoll.t237"/></option>
+						<c:if test="${isMasterAdmin}">
+							<option value="Top/organ"><spring:message code="ezPoll.t237"/></option>
 		           		</c:if>
 		           		<c:forEach var="item" items="${list}">
-			            		<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+							<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 		            	</c:forEach>
 		            </select>&nbsp;
 					<span id="topmenu" style="width: 500px"><spring:message code='ezSystem.x0032'/> : &nbsp; 
@@ -582,7 +573,7 @@
 						<select id="searchKeycode"> 
 							<option value="1"><spring:message code="ezStatistics.t1068"></spring:message></option>
 							<option value="2"><spring:message code="ezSystem.x0023"></spring:message></option>
-							<%-- 
+							<%-- 표준에서는 이름/부서만 검색조건으로 제공 but id, ip, 브라우저, os 조건이 필요할 경우 주석 해제
 							<option value="6"><spring:message code="ezOrgan.t218"></spring:message></option>
 							<option value="3"><spring:message code="ezSystem.x0024"></spring:message></option>
 							<option value="4"><spring:message code="ezSystem.x0026"></spring:message></option>

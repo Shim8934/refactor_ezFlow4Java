@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 @Repository("mainDAO")
 public class MainDAO extends EgovAbstractDAO {
 
-    private static final Logger logger = LoggerFactory.getLogger(MainDAO.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MainDAO.class);
         
 	/**
 	 * 관리자 접속 로그를 입력한다

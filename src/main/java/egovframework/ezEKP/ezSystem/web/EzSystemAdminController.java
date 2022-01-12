@@ -1763,30 +1763,27 @@ public class EzSystemAdminController {
 		}
 		
 		String companyId = userInfo.getCompanyID();
+		int tenantId = userInfo.getTenantId();
 		
-		String LoginMailLogKeepPeriod = ezCommonService.getTenantConfig("LoginMailLogKeepPeriod", userInfo.getTenantId());
-		LoginMailLogKeepPeriod = LoginMailLogKeepPeriod.equals("") ? "3" : LoginMailLogKeepPeriod;
+		String loginMailLogKeepPeriod = ezCommonService.getTenantConfig("LoginMailLogKeepPeriod", tenantId);
+		loginMailLogKeepPeriod = loginMailLogKeepPeriod.equals("") ? "3" : loginMailLogKeepPeriod;
 		
 		String mailLogKeepPeriodMessage = egovMessageSource.getMessage("ezStatistics.t1065", locale);
-		mailLogKeepPeriodMessage = String.format(mailLogKeepPeriodMessage, LoginMailLogKeepPeriod);
+		mailLogKeepPeriodMessage = String.format(mailLogKeepPeriodMessage, loginMailLogKeepPeriod);
 		
 		model.addAttribute("mailLogKeepPeriodMessage", mailLogKeepPeriodMessage);
 		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), tenantId);
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		int j = 0;
+		boolean isMasterAdmin = userInfo.getRollInfo().contains("c=1");
 		
 		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);			
+			OrganDeptVO vo = list.get(i);
 
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
+			if (isMasterAdmin || vo.getCn().equals(companyId)) {
 				resultList.add(j++, vo);
 			}
-		}
-		
-		String isMasterAdmin = "";
-		if (userInfo.getRollInfo().indexOf("c=1") != -1) { // 전체관리자
-			isMasterAdmin = "y";
 		}
 		
 		model.addAttribute("list", resultList);
@@ -1812,6 +1809,7 @@ public class EzSystemAdminController {
 		logger.debug("started systemAdminAccessHistList controller.");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		int tenantId = userInfo.getTenantId();
 		
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
@@ -1820,7 +1818,7 @@ public class EzSystemAdminController {
 		String offset = userInfo.getOffset();
 		String currPage = req.getParameter("pageNum");
 		
-		if (currPage == null || currPage.equals("")) {
+		if (StringUtils.isBlank(currPage)) {
 			currPage = "1";
 		}
 		
@@ -1845,23 +1843,23 @@ public class EzSystemAdminController {
 		//String companyId = userInfo.getCompanyID();
 		logger.debug("companyId : " + companyId);
 
-		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 
 		if (userInfo.getLang().equals(sysLang))  {
 			sysLang = "primary";
 		}
 		
 		searchKeyword = searchKeyword.replace("%", "\\%").replace("_", "\\_");
-		List<MainVO> adminAccessHistList = ezSystemAdminService.getAdminAccessHist(Integer.valueOf(userInfo.getTenantId()), 
+		List<MainVO> adminAccessHistList = ezSystemAdminService.getAdminAccessHist(Integer.valueOf(tenantId),
 				commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, searchKeycodeForRoll, sysLang, startDate, endDate, companyId);
 		
 		// 로그인 ip의 국가를 표시하기 위함 
 		String systemLang = userInfo.getLang();
 		String systemCountryName = "";
-		String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", userInfo.getTenantId());
+		String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", tenantId);
 		
-		for(int i= 0; i < adminAccessHistList.size(); i++){
-			String ip = adminAccessHistList.get(i).getAccessip();
+		for (MainVO vo : adminAccessHistList) {
+			String ip = vo.getAccessip();
 			String countryName = "";
 			String countryCode = "";
 			
@@ -1904,10 +1902,10 @@ public class EzSystemAdminController {
 				countryName = localeCountry.getDisplayCountry(localeCountry);
 				countryName = countryName.replaceAll(" ", "");
 			}
-			adminAccessHistList.get(i).setCountryName(countryName);
+			vo.setCountryName(countryName);
 		}
 			
-		int itemCnt = ezSystemAdminService.getAdminAccessHistCount(userInfo.getTenantId(), commonUtil.getMinuteUTC(offset), searchKeycode, searchKeyword, searchKeycodeForRoll, sysLang, startDate, endDate, companyId);
+		int itemCnt = ezSystemAdminService.getAdminAccessHistCount(tenantId, commonUtil.getMinuteUTC(offset), searchKeycode, searchKeyword, searchKeycodeForRoll, sysLang, startDate, endDate, companyId);
 		
 		int totalPage = itemCnt / maxItemPerPage ;
 		
@@ -1940,12 +1938,13 @@ public class EzSystemAdminController {
 	 * 2022-01-11 이사라
 	 */
 	@RequestMapping(value = "/admin/ezSystem/systemAccessHistExcelExport.do", method = RequestMethod.GET)
-	public void statisticsAdminAccessLogExcelExport(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request,
+	public void statisticsAdminAccessLogExcelExport(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			String searchKeycode, String searchKeyword, String searchKeycodeForRoll, String startDate, String endDate, Locale locale, HttpServletResponse response)  throws Exception {
 		logger.debug("systemAccessHistExcelExport controller started.");
 		
 		LoginVO userInfoUser = commonUtil.userInfo(loginCookie);
 		
+		int tenantId = userInfoUser.getTenantId();
 		String offset = userInfoUser.getOffset();
 		String currPage = request.getParameter("pageNum");
 		
@@ -1957,7 +1956,7 @@ public class EzSystemAdminController {
 		}
 
 		String companyId = request.getParameter("companyId"); // 선택된 회사
-		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfoUser.getTenantId());
+		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 
 		if (userInfoUser.getLang().equals(sysLang))  {
 			sysLang = "primary";
@@ -1967,9 +1966,9 @@ public class EzSystemAdminController {
 		List<MainVO> accessHistList = new ArrayList<MainVO>();
 		int totalCount = 0;
 		
-		accessHistList = ezSystemAdminService.getAdminAccessHist(Integer.valueOf(userInfoUser.getTenantId()), 
+		accessHistList = ezSystemAdminService.getAdminAccessHist(Integer.valueOf(tenantId), 
 				commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, searchKeycodeForRoll, sysLang, startDate, endDate, companyId);
-		totalCount = ezSystemAdminService.getAdminAccessHistCount(userInfoUser.getTenantId(), commonUtil.getMinuteUTC(offset), searchKeycode, searchKeyword, searchKeycodeForRoll, sysLang, startDate, endDate, companyId);
+		totalCount = ezSystemAdminService.getAdminAccessHistCount(tenantId, commonUtil.getMinuteUTC(offset), searchKeycode, searchKeyword, searchKeycodeForRoll, sysLang, startDate, endDate, companyId);
 		
 		
 		/* 엑셀 만들기 */
@@ -2019,7 +2018,7 @@ public class EzSystemAdminController {
 		
 		String systemLang = userInfoUser.getLang();
 		String systemCountryName = "";
-		String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", userInfoUser.getTenantId());
+		String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", tenantId);
 		
 		for (int i = 2; i < totalCount + 2; i++) {
 			row = sheet.createRow(i);
