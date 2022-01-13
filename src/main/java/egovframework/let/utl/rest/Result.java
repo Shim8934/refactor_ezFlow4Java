@@ -178,4 +178,9 @@ public class Result {
 		return !succeeded();
 	}
 
+	@Override
+	public String toString() {
+		return "Result [status=" + status + ", code=" + code + ", data=" + data + "]";
+	}
+
 }

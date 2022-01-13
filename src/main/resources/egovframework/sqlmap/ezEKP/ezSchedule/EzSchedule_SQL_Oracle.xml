@@ -316,7 +316,7 @@
             </isNotEmpty> 
             <isNotEmpty property="v_PKEYWORD">
             and
-            	$v_PFILTER$ like '%' || (REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_')) || '%'
+            	$v_PFILTER$ like '%' || (REPLACE(REPLACE(#v_PKEYWORD#,'%','\%'),'_','\_')) || '%'
             </isNotEmpty>
             <![CDATA[
             )

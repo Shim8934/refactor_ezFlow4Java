@@ -399,6 +399,7 @@
 		                OpenAllApproveFlag();
 		
 		            message.EditMode(0);
+					message.SetViewProperties(2, 100);
 		            message.ScrollPosInfo(0, 0);
 		            
 		            window.onresize();

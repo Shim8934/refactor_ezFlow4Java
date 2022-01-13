@@ -1,0 +1,1416 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezPersonalAdmin">
+	<typeAlias	alias="PersonalNoticeVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO"/>
+	<typeAlias  alias="PersonalQuickLinkVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalQuickLinkVO"/>
+	<typeAlias  alias="PersonalLightPollVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO"/>
+	<typeAlias  alias="PersonalPopupVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO"/>
+	<typeAlias  alias="PersonalEmpMonthVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalEmpMonthVO"/>
+	<typeAlias  alias="PersonalSliderImageVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO"/>
+	<typeAlias  alias="PersonalLightPollConfigVO" 		type="egovframework.ezEKP.ezPersonal.vo.PersonalLightPollConfigVO"/>
+	<typeAlias  alias="PersonalPopopConfigVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalPopopConfigVO"/>
+    <typeAlias  alias="PersonalPopupUserVO"             type="egovframework.ezEKP.ezPersonal.vo.PersonalPopupUserVO"/>
+	
+	<resultMap class="PersonalNoticeVO" id="personalNoticeVO">
+		<result property="title"						column="TITLE"					columnIndex="1"/>
+		<result property="title2"						column="TITLE2"					columnIndex="2"/>
+		<result property="postDate"						column="POSTDATE"				columnIndex="3"/>
+		<result property="content"						column="CONTENT"				columnIndex="4"		javaType="String"	jdbcType="CLOB"/>
+		<result property="itemSeq"						column="ITEMSEQ"				columnIndex="5"/>
+	</resultMap>
+	
+	<resultMap class="PersonalPopupVO" id="personalPopupVO">
+		<result property="title"						column="TITLE"					columnIndex="1"/>
+		<result property="title2"						column="TITLE2"					columnIndex="2"/>
+		<result property="content"						column="CONTENT"				columnIndex="3"		javaType="String"	jdbcType="CLOB"/>
+		<result property="startDate"					column="STARTDATE"				columnIndex="4"/>
+		<result property="endDate"						column="ENDDATE"				columnIndex="5"/>
+		<result property="width"						column="WIDTH"					columnIndex="6"/>
+		<result property="height"						column="HEIGHT"					columnIndex="7"/>
+		<result property="position"						column="POSITION"				columnIndex="8"/>
+		<result property="skinValue"					column="SKINVALUE"				columnIndex="9"/>
+	</resultMap>
+	
+	<select id="EzPersonalAdmin.EZSP_GETNOTICEINFO" parameterClass="Map"		resultMap="personalNoticeVO">
+		<![CDATA[
+			SELECT
+				TITLE ,
+             	TITLE2 ,
+             	POSTDATE ,
+             	CONTENT,
+             	ITEMSEQ
+        	FROM
+        		TBL_PS_NOTICE 
+       		WHERE
+       			ITEMSEQ = #v_pItemSeq#
+       		AND
+       			TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<select id="EzPersonalAdmin.EZSP_GETPOPUPINFO" parameterClass="Map"		resultMap="personalPopupVO">
+		<![CDATA[
+			SELECT
+				TITLE ,
+             	TITLE2 ,
+             	CONTENT ,
+             	WIDTH ,
+             	HEIGHT ,
+             	POSITION ,
+             	STARTDATE ,
+             	ENDDATE,
+             	SKINVALUE 
+        	FROM
+        		TBL_PS_POPUP 
+       		WHERE
+       			ITEMSEQ = #v_pItemSeq#
+       		AND
+       			TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<select id="EzPersonalAdmin.EZSP_GETNOTICELIST" parameterClass="Map"		resultClass="PersonalNoticeVO">
+		<isEqual property="v_pStart" compareValue="0">
+			<![CDATA[
+				SELECT
+					* 
+           		FROM
+           			( 	SELECT
+           					ITEMSEQ ,
+                    		POSTDATE ,
+                    		TITLE ,
+                    		TITLE2 
+           				FROM
+           					TBL_PS_NOTICE 
+          				WHERE
+          					COMPANYID = #v_pCompanyID#
+          				AND
+          					TENANT_ID = #tenantID#	
+           				ORDER BY
+	           				ITEMSEQ DESC )
+    	       	WHERE
+        	   		ROWNUM <= #v_pCount#
+			]]>
+		</isEqual>
+		<isNotEqual property="v_pStart" compareValue="0">
+			<![CDATA[
+				SELECT
+					* 
+           		FROM
+           			( 	SELECT
+           					ITEMSEQ ,
+                         	POSTDATE ,
+                         	TITLE ,
+                         	TITLE2 
+           				FROM
+           					( 	SELECT
+           							 * 
+                    			FROM
+                    				( 	SELECT
+                    						ITEMSEQ ,
+                                  			POSTDATE ,
+                                  			TITLE ,
+                                  			TITLE2 
+                  						FROM
+                  							TBL_PS_NOTICE 
+                   						WHERE
+                   							CompanyID = #v_pCompanyID#
+                   						AND
+                   							TENANT_ID = #tenantID#	
+                    					ORDER BY
+                    						ITEMSEQ ASC )
+                    			WHERE
+                    				ROWNUM <= #v_pTotal# - #v_pStart# ) temp
+           				ORDER BY
+           					ITEMSEQ DESC )
+           		WHERE
+           			ROWNUM <= #v_pCount#
+			]]>
+		</isNotEqual>
+	</select>
+	
+	 <select id="EzPersonalAdmin.EZSP_GETPOLLLIST" parameterClass="Map"		resultClass="PersonalLightPollVO">
+		<isEqual property="v_pStart" compareValue="0">
+			<![CDATA[
+				SELECT
+					* 
+				FROM
+					( 	SELECT
+							ITEMSEQ ,
+							POLLTITLE ,
+							POLLTITLE2 ,
+							STARTDATE ,
+							ENDDATE ,
+							(
+								CASE
+									WHEN (STARTDATE <= TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE > TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')) THEN 1
+									ELSE 0
+								END 
+							) PROGRESS
+						FROM
+							TBL_PS_LIGHTPOLL 
+						WHERE
+							COMPANYID = UPPER(#v_pCompanyID#)
+						AND
+							TENANT_ID = #tenantID#	
+						ORDER BY ITEMSEQ DESC )
+					WHERE ROWNUM <= #v_pCount#
+			]]>
+		</isEqual>
+		<isNotEqual property="v_pStart" compareValue="0">
+			<![CDATA[
+				SELECT
+					* 
+				FROM (
+						SELECT
+							ITEMSEQ ,
+							POLLTITLE ,
+							POLLTITLE2 ,
+							STARTDATE ,
+							ENDDATE ,
+							PROGRESS
+						FROM ( SELECT
+									* 
+								FROM ( SELECT
+											ITEMSEQ ,
+											POLLTITLE ,
+											POLLTITLE2 ,
+											STARTDATE ,
+											ENDDATE ,
+											(
+												CASE
+													WHEN (STARTDATE <= TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE > TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')) THEN 1
+													ELSE 0
+												END
+											) PROGRESS
+										FROM
+											TBL_PS_LIGHTPOLL 
+										WHERE
+											COMPANYID = UPPER(#v_pCompanyID#)
+										AND
+											TENANT_ID = #tenantID#	
+										ORDER BY
+											ITEMSEQ ASC )
+										WHERE
+											ROWNUM <= #v_pTotal# - #v_pStart# ) temp
+								ORDER BY ITEMSEQ DESC )
+				WHERE
+					ROWNUM <= #v_pCount#
+			]]>
+		</isNotEqual>
+	</select> 
+	
+	<!-- 18-05-10 김민성 - 슬라이드 이미지 검색시 URL 추가 -->
+	<select id="EzPersonalAdmin.EZSP_GETSLIDERLIST" parameterClass="Map"		resultClass="PersonalSliderImageVO">
+		<isEqual property="v_MODE" compareValue="ADMIN">
+			<isEmpty property="v_SLIDERID">
+				<![CDATA[
+					SELECT
+						SLIDERID ,
+                   		SLIDERNAME ,
+                   		SLIDERNAME2 ,
+                   		IMAGEPATH ,
+                   		REGUSERID ,
+                   		REGDATE ,
+                   		SN ,
+                   		ISUSE ,
+                   		URL
+              		FROM
+              			TBL_PS_SLIDERIMAGE 
+             		WHERE
+             			COMPANYID = #v_COMPANYID#
+             		AND
+             			TENANT_ID = #tenantID#
+             		AND
+						IMAGEPATH like '%SLIDERIMAGE%'	
+              		ORDER BY
+              			SN
+				]]>
+			</isEmpty>
+			
+			<isNotEmpty property="v_SLIDERID">
+				<![CDATA[
+					SELECT
+						SLIDERID ,
+                   		SLIDERNAME ,
+                   		SLIDERNAME2 ,
+                   		IMAGEPATH ,
+                   		REGUSERID ,
+                   		REGDATE ,
+                   		SN ,
+                   		ISUSE ,
+                   		NVL(URL, ' ')
+              		FROM
+              			TBL_PS_SLIDERIMAGE 
+             		WHERE
+             			COMPANYID = #v_COMPANYID#
+                    AND
+                    	SLIDERID = #sliderID#
+                    AND
+                    	TENANT_ID = #tenantID#	
+              		ORDER BY
+              			SN
+				]]>
+			</isNotEmpty>
+	
+		</isEqual>
+		<isNotEqual property="v_MODE" compareValue="ADMIN">
+			<![CDATA[
+				SELECT
+					SLIDERID ,
+                	SLIDERNAME ,
+                	SLIDERNAME2 ,
+                	IMAGEPATH ,
+                	REGUSERID ,
+                	REGDATE ,
+                	SN ,
+                	ISUSE ,
+                	URL
+           		FROM
+           			TBL_PS_SLIDERIMAGE 
+          		WHERE
+          			COMPANYID = #v_COMPANYID#
+                AND
+                	ISUSE = 1
+                AND
+                	TENANT_ID = #tenantID#
+                AND
+					IMAGEPATH like '%SLIDERIMAGE%'
+           		ORDER BY
+           			SN
+			]]>
+		</isNotEqual>
+	</select>
+	
+	<select id="EzPersonalAdmin.EZSP_GETQUICKLINK" parameterClass="Map" resultClass="PersonalQuickLinkVO">
+		<![CDATA[
+			SELECT
+				QUICKLINKID ,
+             	QUICKLINKNAME ,
+             	QUICKLINKNAME2 ,
+             	QUICKLINKNAME3 ,
+             	LINKTYPE ,
+             	LINKTYPEURL,
+             	URL ,
+             	REGUSERID ,
+             	SIZE_ 
+        	FROM
+        		TBL_PS_QUICKLINK 
+       		WHERE
+       			QUICKLINKID = #v_QUICKLINKID#
+       		AND
+       			TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<select id="EzPersonalAdmin.EZSP_GETQUICKLINK_ACL" parameterClass="Map"		resultClass="PersonalQuickLinkVO">
+		<![CDATA[
+			(SELECT
+				QUICKLINKID ,
+             	ACCESSID ,
+             	(U.DISPLAYNAME || '(' || DESCRIPTION || ')') AS ACCESSNAME ,
+             	(U.DISPLAYNAME2 || '(' || DESCRIPTION2 || ')') AS ACCESSNAME2 ,
+             	VIEW_FLAG 
+        	FROM
+        		TBL_PS_QUICKLINK_ACL P
+        	INNER JOIN
+        		TBL_USERMASTER U
+			ON
+				P.TENANT_ID = U.TENANT_ID
+			AND
+				P.ACCESSID = U.CN
+       		WHERE
+       			QUICKLINKID = #v_QUICKLINKID#
+       		AND
+       			P.TENANT_ID = #tenantID#)
+       			
+       		UNION
+       		
+			(SELECT
+				QUICKLINKID ,
+             	ACCESSID ,
+             	D.DISPLAYNAME AS ACCESSNAME ,
+             	D.DISPLAYNAME2 AS ACCESSNAME2 ,
+             	VIEW_FLAG 
+        	FROM
+        		TBL_PS_QUICKLINK_ACL P
+        	INNER JOIN
+        		TBL_DEPTMASTER D
+			ON
+				P.TENANT_ID = D.TENANT_ID
+			AND
+				P.ACCESSID = D.CN
+       		WHERE
+       			QUICKLINKID = #v_QUICKLINKID#
+       		AND
+       			P.TENANT_ID = #tenantID#)
+		]]>
+	</select>
+	
+	<select id="EzPersonalAdmin.EZSP_GETPOLLRESULT" parameterClass="Map"		resultClass="PersonalLightPollVO">
+		<![CDATA[
+			SELECT
+				RESULT ,
+             	COUNT(RESULT)  COUNT  
+        	FROM
+        		TBL_PS_LIGHTPOLLRESULT 
+       		WHERE
+       			ITEMSEQ = #v_pItemSeq#
+       		AND
+       			TENANT_ID = #tenantID#	
+        	GROUP BY
+        		RESULT
+        	ORDER BY
+        		RESULT
+		]]>
+	</select>
+	
+	<select id="EzPersonalAdmin.EZSP_GETPOLLINFO" parameterClass="Map"		resultClass="PersonalLightPollVO">
+		<![CDATA[
+			SELECT
+				ITEMSEQ ,
+             	STARTDATE ,
+	            NVL(ENDDATE, '1900-01-01') EndDate  ,
+	            POLLSELECTIONCOUNT ,
+	            POLLTITLE ,
+	            POLLTITLE2 ,
+	            ANSWER1 ,
+	            ANSWER2 ,
+	            ANSWER3 ,
+	            ANSWER4 ,
+	            ANSWER5 ,
+	            ANSWER6 ,
+	            ANSWER7 ,
+	            ANSWER8 ,
+	            ANSWER9 ,
+	            ANSWER10 
+	        FROM 
+				TBL_PS_LIGHTPOLL 
+	       	WHERE
+				ITEMSEQ = #v_pItemSeq#
+			AND
+				TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<select id="EzPersonalAdmin.EZSP_GETPOPUPLIST" parameterClass="Map"		resultClass="PersonalPopupVO">
+		<isEqual property="v_pStart" compareValue="0">
+			<![CDATA[
+				SELECT
+					* 
+				FROM
+					( 	SELECT
+							ITEMSEQ,
+							TITLE,
+							TITLE2,
+							STARTDATE,
+							ENDDATE,
+							WIDTH,
+							HEIGHT,
+							POSITION,
+							INUSE,
+							(
+								CASE
+									WHEN 
+										(STARTDATE <= TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE >= TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'))
+									THEN
+										1
+									ELSE
+										0
+								END
+							) PROGRESS
+						FROM
+							TBL_PS_POPUP 
+						WHERE
+							COMPANYID = #v_pCompanyID#
+						AND
+							TENANT_ID = #tenantID#	
+						ORDER BY ITEMSEQ DESC )
+				WHERE 
+					ROWNUM <= #v_pCount#
+			]]>
+		</isEqual>
+		<isNotEqual property="v_pStart" compareValue="0">
+			<![CDATA[
+				SELECT
+					* 
+				FROM ( 	SELECT
+							ITEMSEQ,
+							TITLE,
+							TITLE2,
+							STARTDATE,
+							ENDDATE,
+							WIDTH,
+							HEIGHT,
+							POSITION,
+							INUSE,
+							(
+								CASE
+									WHEN 
+										(STARTDATE <= TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE >= TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'))
+									THEN
+										1
+									ELSE
+										0
+								END
+							) PROGRESS
+						FROM (	SELECT
+									* 
+								FROM (	SELECT
+											ITEMSEQ,
+											TITLE,
+											TITLE2,
+											STARTDATE,
+											ENDDATE,
+											WIDTH,
+											HEIGHT,
+											POSITION,
+											INUSE
+										FROM
+											TBL_PS_POPUP 
+										WHERE
+											COMPANYID = #v_pCompanyID#
+										AND
+											TENANT_ID = #tenantID#
+										ORDER BY
+											ITEMSEQ ASC	)
+								WHERE
+									ROWNUM <= #v_pTotal# - #v_pStart# ) temp
+						ORDER BY
+							ITEMSEQ DESC )
+				WHERE
+					ROWNUM <= #v_pCount#
+			]]>
+		</isNotEqual>
+	</select>
+	
+	<select id="EzPersonalAdmin.EZSP_GETEMPLOYEEMONTH" parameterClass="Map"		resultClass="PersonalEmpMonthVO">
+		<![CDATA[
+			SELECT
+				A.CN ,
+				NVL(B.DISPLAYNAME, A.DISPLAYNAME) DISPLAYNAME,
+				NVL(B.DISPLAYNAME2, A.DISPLAYNAME2) DISPLAYNAME2,
+				A.DEPARTMENT ,
+				A.DESCRIPTION ,
+				A.DESCRIPTION2 ,
+				A.COMPANY ,
+				A.COMPANY2 ,
+				A.TITLE ,
+				A.TITLE2 ,
+				B.EXTENSIONATTRIBUTE2 FILEPATH ,
+				A.TERM
+			FROM
+				TBL_PS_EMPMONTH A
+			JOIN
+				TBL_USERMASTER B
+			ON
+				A.CN = B.CN
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			WHERE
+				A.PHYSICALDELIVERYOFFICENAME = #v_pCompanyID#
+			AND
+				A.TENANT_ID = #tenantID#
+			AND
+				TERM LIKE CONCAT(#v_pYear#, '%')
+		]]>
+	</select>
+	
+	<select id="EzPersonalAdmin.EZSP_GETQUICKLINKLIST"  parameterClass="Map" resultClass="PersonalQuickLinkVO">
+		<![CDATA[
+			SELECT
+				QUICKLINKID ,
+				CASE
+					WHEN #lang# = '1' THEN QUICKLINKNAME
+					WHEN #lang# = '2' THEN QUICKLINKNAME2
+					ELSE QUICKLINKNAME3
+				END AS QUICKLINKNAME ,
+	            LINKTYPE ,
+	            LINKTYPEURL ,
+	            URL ,
+	            REGDATE ,
+	            MODIDATE ,
+	            REGUSERID ,
+	            CASE WHEN #lang# = '1' THEN U.DISPLAYNAME ELSE U.DISPLAYNAME2 END AS DISPLAYNAME
+        	FROM
+        		TBL_PS_QUICKLINK Q
+            JOIN
+            	TBL_USERMASTER U
+            ON
+            	Q.RegUserID = U.CN
+            AND
+            	Q.TENANT_ID = U.TENANT_ID
+            WHERE
+                Q.TENANT_ID = #tenantID#
+            AND
+                U.PHYSICALDELIVERYOFFICENAME = #companyID#
+            ORDER BY
+                Q.LINKORDER ASC                
+		]]>
+	</select>
+	
+	<select id="EzPersonalAdmin.EZSP_GETNOTICECOUNT" parameterClass="Map"		resultClass="Integer">
+		<isEqual property="v_pMode" compareValue="A">
+			<![CDATA[
+				SELECT
+					COUNT(ITEMSEQ)
+           		FROM
+           			TBL_PS_NOTICE 
+          		WHERE
+          			COMPANYID = #v_pCompanyID#
+          		AND
+          			TENANT_ID = #tenantID#	
+			]]>
+		</isEqual>
+		<isNotEqual property="v_pMode" compareValue="A">
+			<![CDATA[
+				SELECT
+					COUNT(ITEMSEQ)
+           		FROM
+           			TBL_PS_NOTICE 
+          		WHERE
+          			COMPANYID = #v_pCompanyID#
+                OR
+                	COMPANYID = 'Top'
+                AND
+                	TENANT_ID = #tenantID# 	
+			]]>
+		</isNotEqual>
+	</select>
+	
+	<select id="EzPersonalAdmin.EZSP_GETPOLLCOUNT" parameterClass="Map"		resultClass="Integer">
+		<isEqual property="v_pMode" compareValue="A">
+			<![CDATA[
+					SELECT
+						COUNT(ITEMSEQ)
+	           		FROM
+	           			TBL_PS_LIGHTPOLL 
+	          		WHERE
+	          			COMPANYID = UPPER(#v_pCompanyID#)
+	          		AND
+	          			TENANT_ID = #tenantID#	
+			]]>
+		</isEqual>
+		<isNotEqual property="v_pMode" compareValue="A">
+			<![CDATA[
+				SELECT
+					COUNT(ITEMSEQ)
+           		FROM
+           			TBL_PS_LIGHTPOLL 
+          		WHERE
+          			COMPANYID = UPPER(#v_pCompanyID#)
+                OR
+                	COMPANYID = 'Top'
+                AND
+                	TENANT_ID = #tenantID#	
+			]]>
+		</isNotEqual>
+	</select>
+	
+	 <insert id="EzPersonalAdmin.EZSP_INSERTNOTICE" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_PS_NOTICE
+     			( ITEMSEQ, COMPANYID, TITLE, TITLE2, CONTENT, POSTDATE, TENANT_ID )
+     		VALUES
+     			( SEQ_TBL_PS_NOTICE_ITEMSEQ.NEXTVAL, #companyID#, #v_pTitle#, #v_pTitle2#, #v_pContent#, to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'), #tenantID# )
+		]]>
+	</insert>
+	
+	<insert id="EzPersonalAdmin.EZSP_SETQUICKLINKITEM_I" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_PS_QUICKLINK
+        		( QUICKLINKID, QUICKLINKNAME, QUICKLINKNAME2, QUICKLINKNAME3, QUICKLINKNAME4, LINKTYPE, LINKTYPEURL, URL, REGDATE, REGUSERID, SIZE_, LINKORDER, TENANT_ID )
+        	VALUES
+        		( #v_QUICKLINKID#, #v_QUICKLINKNAME#, #v_QUICKLINKNAME2#, #v_QUICKLINKNAME3#, ' ', #v_LINKTYPE#, #v_LINKTYPEURL#, #v_URL#, #v_NOWDATE#, #v_REGUSERID#, #v_SIZE#, #LINKORDER#, #tenantID# )
+		]]>
+	</insert>
+	
+	<update id="EzPersonalAdmin.EZSP_SETQUICKLINKITEM_U" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_PS_QUICKLINK
+         	SET
+         		QUICKLINKNAME = #v_QUICKLINKNAME#,
+             	QUICKLINKNAME2 = #v_QUICKLINKNAME2#,
+             	QUICKLINKNAME3 = #v_QUICKLINKNAME3#,
+             	LINKTYPE = #v_LINKTYPE#,
+             	LINKTYPEURL = #v_LINKTYPEURL#,
+             	URL = #v_URL#,
+             	MODIDATE = #v_NOWDATE#,
+             	SIZE_ = #v_SIZE#
+       		WHERE
+       			QUICKLINKID = #v_QUICKLINKID#
+       		AND
+       			TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<delete id="EzPersonalAdmin.EZSP_SETQUICKLINK_ACL_D" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_PS_QUICKLINK_ACL
+	       WHERE
+	       		QUICKLINKID = #v_QUICKLINKID#
+	       	AND
+	       		TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<insert id="EzPersonalAdmin.EZSP_SETQUICKLINK_ACL_I" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_PS_QUICKLINK_ACL
+        		( QUICKLINKID, ACCESSID, ACCESSNAME, ACCESSNAME2, VIEW_FLAG, TENANT_ID )
+        	VALUES
+        		( #v_QUICKLINKID#, #v_ACCESSID#, #v_ACCESSNAME#, #v_ACCESSNAME2#, #v_VIEW_FLAG#, #tenantID# )
+		]]>
+	</insert>
+	
+	<update id="EzPersonalAdmin.EZSP_UPDATENOTICE" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_PS_NOTICE
+      		SET
+      			TITLE = #v_pTitle#,
+          		TITLE2 = #v_pTitle2#,
+          		CONTENT = #v_pContent#
+    		WHERE
+    			ITEMSEQ = #v_pItemSeq#
+    		AND
+    			TENANT_ID = #tenantID#	
+		]]>
+	</update>
+
+	<update id="EzPersonalAdmin.EZSP_INSERTPOLL_U1" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_PS_LIGHTPOLL
+			SET
+				ENDDATE = TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+			WHERE
+				ITEMSEQ = (
+							SELECT
+								ITEMSEQ
+							FROM (
+								SELECT
+									ITEMSEQ
+								FROM
+									TBL_PS_LIGHTPOLL
+								WHERE
+									TENANT_ID = #tenantID#
+								AND
+									(STARTDATE <= TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE >= TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'))
+								AND
+									ROWNUM = 1
+								ORDER BY
+									ITEMSEQ 
+								DESC
+								)
+							)
+    		AND
+    			TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<update id="EzPersonalAdmin.EZSP_INSERTPOLL_U2" parameterClass="Map"> 
+		<![CDATA[
+			UPDATE
+				TBL_PS_LIGHTPOLL
+			SET
+				ENDDATE = TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+			WHERE
+				ITEMSEQ = (
+							SELECT
+								ITEMSEQ
+							FROM (
+								SELECT
+									ITEMSEQ
+								FROM
+									TBL_PS_LIGHTPOLL
+								WHERE
+									TENANT_ID = #tenantID#
+								AND
+									(STARTDATE <= TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE >= TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'))
+								AND
+									ROWNUM = 1
+								ORDER BY
+									ITEMSEQ 
+								DESC
+								)
+							)
+			AND
+				CompanyID = #v_pCompanyID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</update>
+	
+	<insert id="EzPersonalAdmin.EZSP_INSERTPOLL_I1" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_PS_LIGHTPOLL
+				( ITEMSEQ, COMPANYID, STARTDATE, ENDDATE, POLLSELECTIONCOUNT, POLLTITLE, POLLTITLE2, ANSWER1, ANSWER2, ANSWER3, ANSWER4, ANSWER5, ANSWER6, ANSWER7, ANSWER8, ANSWER9, ANSWER10, TENANT_ID )
+			VALUES
+				( SEQ_TBL_PS_LIGHTPOLL_ITEMSEQ.NEXTVAL, #v_pCompanyID#, TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS'), TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS'), #v_pSelectionCount#, #v_pPollTitle#, #v_pPollTitle2#, #v_pAnswer1#, #v_pAnswer2#, #v_pAnswer3#, #v_pAnswer4#, #v_pAnswer5#, #v_pAnswer6#, #v_pAnswer7#, #v_pAnswer8#, #v_pAnswer9#, #v_pAnswer10#, #tenantID# )
+		]]>
+	</insert>
+	
+	<insert id="EzPersonalAdmin.EZSP_INSERTPOLL_I2" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_PS_LIGHTPOLL
+				( ITEMSEQ, COMPANYID, STARTDATE, ENDDATE, POLLSELECTIONCOUNT, POLLTITLE, POLLTITLE2, ANSWER1, ANSWER2, ANSWER3, ANSWER4, ANSWER5, ANSWER6, ANSWER7, ANSWER8, ANSWER9, ANSWER10, TENANT_ID )
+			VALUES
+				( SEQ_TBL_PS_LIGHTPOLL_ITEMSEQ.NEXTVAL, UPPER(#v_pCompanyID#), TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS'), TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS'), #v_pSelectionCount#, #v_pPollTitle#, #v_pPollTitle2#, #v_pAnswer1#, #v_pAnswer2#, #v_pAnswer3#, #v_pAnswer4#, #v_pAnswer5#, #v_pAnswer6#, #v_pAnswer7#, #v_pAnswer8#, #v_pAnswer9#, #v_pAnswer10#, #tenantID# )
+		]]>
+	</insert>
+	
+	<insert id="EzPersonalAdmin.EZSP_INSERTPOPUP" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_PS_POPUP
+				( ITEMSEQ, COMPANYID, STARTDATE, ENDDATE, WIDTH, HEIGHT, POSITION, TITLE, TITLE2, CONTENT, TENANT_ID, INUSE, SKINVALUE)
+			VALUES 
+				( SEQ_TBL_PS_POPUP_ITEMSEQ.NEXTVAL, #v_pCompanyID#, TO_DATE(#v_pStartDate#,'YYYY-MM-DD HH24:MI:SS'), TO_DATE(#v_pEndDate#,'YYYY-MM-DD HH24:MI:SS'), #v_pWidth#, #v_pHeight#, #v_pPosition#, #v_pTitle#, #v_pTitle2#, #v_pContent#, #tenantID#, 1, #skinValue# )
+		]]>
+        <selectKey keyProperty="menuId" resultClass="Integer">
+            SELECT
+                SEQ_TBL_PS_POPUP_ITEMSEQ.CURRVAL
+            FROM
+                DUAL
+        </selectKey>		
+	</insert>
+	
+	<update id="EzPersonalAdmin.EZSP_UPDATEPOPUP" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_PS_POPUP
+      		SET
+      			STARTDATE = TO_DATE(#v_pStartDate#,'YYYY-MM-DD HH24:MI:SS'),
+          		ENDDATE = TO_DATE(#v_pEndDate#,'YYYY-MM-DD HH24:MI:SS'),
+          		WIDTH = #v_pWidth#,
+          		HEIGHT = #v_pHeight#,
+          		POSITION = #v_pPosition#,
+          		TITLE = #v_pTitle#,
+          		TITLE2 = #v_pTitle2#,
+          		CONTENT = #v_pContent#,
+				SKINVALUE = #skinValue#
+    		WHERE
+    			ITEMSEQ = #v_pItemSeq#
+    		AND
+    			TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<insert id="EzPersonalAdmin.EZSP_SETEMPLOYEEMONTH_I" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_PS_EMPMONTH
+        		( CN, DISPLAYNAME, DISPLAYNAME2, DEPARTMENT, DESCRIPTION, DESCRIPTION2, PHYSICALDELIVERYOFFICENAME, COMPANY, COMPANY2, TITLE, TITLE2, TERM, DATE_, TENANT_ID)
+        		( 	SELECT
+	        			CN ,
+	                 	DISPLAYNAME ,
+	                 	DISPLAYNAME2 ,
+	                 	DEPARTMENT ,
+	                 	DESCRIPTION ,
+	                 	DESCRIPTION2 ,
+	                 	PHYSICALDELIVERYOFFICENAME ,
+	                 	COMPANY ,
+	                 	COMPANY2 ,
+	                 	TITLE ,
+	                 	TITLE2 ,
+	                 	#v_pTerm# ,
+	                 	to_date('$v_pTerm$', 'YYYY-MM') ,
+	                 	TENANT_ID
+          			FROM
+          				TBL_USERMASTER
+           			WHERE
+           				CN = #v_pUserID#
+                    AND
+                    	DEPARTMENT = #v_pDeptID#
+                    AND
+                    	TENANT_ID = #tenantID#
+                    AND
+                        PHYSICALDELIVERYOFFICENAME = #companyID#    	
+          		UNION 
+          			SELECT
+          				B.CN ,
+                 		B.DISPLAYNAME ,
+                 		B.DISPLAYNAME2 ,
+                 		C.CN ,
+                 		C.DISPLAYNAME ,
+                 		C.DISPLAYNAME2 ,
+                 		C.EXTENSIONATTRIBUTE2 AS PHYSICALDELIVERYOFFICENAME ,
+                 		C.EXTENSIONATTRIBUTE3 AS COMPANY ,
+                 		COMPNM2 AS COMPANY2 ,
+                 		A.TITLE ,
+                 		A.TITLE2 ,
+                 		#v_pTerm# ,
+                 		to_date('$v_pTerm$', 'YYYY-MM') ,
+                 		A.TENANT_ID
+          			FROM
+          				TBL_ADDJOBMASTER A
+                 	JOIN
+                 		TBL_USERMASTER B
+                 	ON
+                 		A.CN = B.CN 
+                    AND
+                      A.TENANT_ID = B.TENANT_ID
+                 	JOIN
+                 		TBL_DEPTMASTER C
+                 	ON
+                 		A.DEPTID = C.CN
+                    AND
+                        A.TENANT_ID = C.TENANT_ID
+           			WHERE
+           				B.CN = #v_pUserID#
+                    AND
+                    	A.DEPTID = #v_pDeptID#
+                    AND
+                    	A.TENANT_ID = #tenantID#
+                    AND
+                        C.EXTENSIONATTRIBUTE2 = #companyID# )
+		]]>
+	</insert>
+	
+	<delete id="EzPersonalAdmin.EZSP_SETEMPLOYEEMONTH_D" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_PS_EMPMONTH
+	  	    WHERE
+	  	    	TERM = #v_pTerm#
+            AND
+                PHYSICALDELIVERYOFFICENAME = #companyID#    
+	  	    AND
+	  	    	TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<select id="EzPersonalAdmin.EZSP_SETSLIDERIMAGE_S" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(*)  
+		    FROM
+		    	TBL_PS_SLIDERIMAGE
+		    WHERE
+	  	    	TENANT_ID = #tenantID#	
+	  	    AND
+				IMAGEPATH like '%SLIDERIMAGE%'
+		]]>
+	</select>
+	
+	<insert id="EzPersonalAdmin.EZSP_SETSLIDERIMAGE_I" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_PS_SLIDERIMAGE
+        		( SLIDERID, SLIDERNAME, SLIDERNAME2, FILENAME, IMAGEPATH, REGUSERID, REGDATE, COMPANYID, ISUSE, SN, TENANT_ID, URL )
+        	VALUES
+        		( #v_SLIDERID#, #v_SLIDERNAME#, #v_SLIDERNAME2#, #v_FILENAME#, #v_IMAGEPATH#, #v_REGUSERID#, #v_REGDATE#, #v_COMPANYID#, #v_ISUSE#, #count# + 1, #tenantID#, #v_URL# )
+		]]>
+	</insert>
+	
+	<update id="EzPersonalAdmin.EZSP_SETSLIDERIMAGE_U" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_PS_SLIDERIMAGE
+         	SET
+         		SLIDERNAME = #v_SLIDERNAME#,
+             	SLIDERNAME2 = #v_SLIDERNAME2#,
+             	FILENAME = #v_FILENAME#,
+             	IMAGEPATH = #v_IMAGEPATH#,
+             	URL = #v_URL#
+       		WHERE
+       			SLIDERID = #v_SLIDERID#
+       		AND
+       			TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<update id="EzPersonalAdmin.EZSP_STATUSCHANGESLIDER" parameterClass="Map">
+		<isEqual property="v_MODE" compareValue="U">
+			<![CDATA[
+				 UPDATE
+				 	TBL_PS_SLIDERIMAGE
+         		SET
+         			ISUSE = #v_VALUE#
+       			WHERE
+       				SLIDERID = #v_SLIDERID#
+       			AND
+       				TENANT_ID = #tenantID#	
+			]]>
+		</isEqual>
+		<isNotEqual property="v_MODE" compareValue="U">
+			<![CDATA[
+				 UPDATE
+				 	TBL_PS_SLIDERIMAGE
+         		SET
+         			SN = #v_VALUE#
+       			WHERE
+       				SLIDERID = #v_SLIDERID#
+       			AND
+       				TENANT_ID = #tenantID#	
+			]]>
+		</isNotEqual>
+	</update>
+	
+	<delete id="EzPersonalAdmin.EZSP_DELETENOTICE" parameterClass="Map">
+		<![CDATA[
+			 DELETE
+			 	TBL_PS_NOTICE
+    		WHERE
+    			ITEMSEQ = #v_pItemSeq#
+    		AND
+    			TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<delete id="EzPersonalAdmin.EZSP_DELETEPOLL_D" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_PS_LIGHTPOLL
+    		WHERE
+    			ITEMSEQ = #v_pItemSeq#
+    		AND
+    			TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<delete id="EzPersonalAdmin.EZSP_DELETEPOLL" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_PS_LIGHTPOLLRESULT
+		    WHERE
+		    	ITEMSEQ = #v_pItemSeq#
+		    AND
+		    	TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<delete id="EzPersonalAdmin.EZSP_DELETEPOPUP" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_PS_POPUP
+    		WHERE
+    			ITEMSEQ = #v_pItemSeq#
+    		AND
+    			TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<delete id="EzPersonalAdmin.EZSP_DELSLIDERIMAGE_D" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_PS_SLIDERIMAGE
+   			WHERE
+   				SLIDERID = #v_SLIDERID#
+   			AND
+   				TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+  
+	<statement id="EzPersonalAdmin.EZSP_DELSLIDERIMAGE">
+		<![CDATA[
+			MERGE INTO
+				TBL_PS_SLIDERIMAGE 
+      		USING (	SELECT
+      						TBL_PS_SLIDERIMAGE.ROWID row_id, TEMPTABLE.SN
+      					FROM
+      						TBL_PS_SLIDERIMAGE 
+             			JOIN ( SELECT
+             						 SLIDERID , ROW_NUMBER() OVER ( ORDER BY SN  ) SN  
+                    			FROM
+                    				TBL_PS_SLIDERIMAGE  ) TEMPTABLE 
+                    	ON
+                    		TBL_PS_SLIDERIMAGE.SliderID = TEMPTABLE.SLIDERID ) src
+      		ON
+      			( TBL_PS_SLIDERIMAGE.ROWID = src.row_id )
+      		WHEN
+      			MATCHED THEN UPDATE SET SN = src.SN		
+		]]>
+	</statement>
+	
+	<delete id="EzPersonalAdmin.delQuickLink_D" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_PS_QUICKLINK_ACL
+		    WHERE
+		    	QUICKLINKID = #v_QUICKLINKID#
+		    AND
+		    	TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<delete id="EzPersonalAdmin.delQuickLink" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_PS_QUICKLINK
+		    WHERE
+		    	QUICKLINKID = #v_QUICKLINKID#
+		    AND
+		    	TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<delete id="EzPersonalAdmin.deleteQuickLinkID" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				 TBL_PS_QUICKLINK_ACL
+			WHERE
+				QUICKLINKID = #quickLinkID#
+			AND
+				TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<select id="EzPersonalAdmin.EZSP_getLightPollConfig" parameterClass="Map"	resultClass="PersonalLightPollConfigVO">
+		<![CDATA[
+			SELECT
+				LIGHTPOLLOPTIONID, USERID, ISPREVIEW, TENANTID
+			FROM
+				TBL_PS_LIGHTPOLL_OPTION
+			WHERE
+				USERID = #userId#
+			AND
+				TENANTID = #tenantId#
+		]]>
+	</select>
+	
+	<insert id="EzPersonalAdmin.EZSP_insertLightPollConfig" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_PS_LIGHTPOLL_OPTION
+				(LIGHTPOLLOPTIONID, USERID, ISPREVIEW, TENANTID)
+			VALUES
+				(#lightpollOptionId# ,#userId#, 0, #tenantId# )
+		]]>
+		<selectKey keyProperty="lightpollOptionId" resultClass="Integer" type="pre">
+			<![CDATA[
+				SELECT 
+					NVL(MAX(LIGHTPOLLOPTIONID) + 1,1) 
+				FROM 
+					TBL_PS_LIGHTPOLL_OPTION
+			]]>	
+		</selectKey>
+	</insert>
+	
+	<update id="EzPersonalAdmin.EZSP_setLightPollConfig" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_PS_LIGHTPOLL_OPTION
+			SET
+				ISPREVIEW = #isPreview#
+			WHERE
+				USERID = #userId#
+			AND
+				TENANTID = #tenantId#	
+		]]>
+	</update>
+	
+	<select id="EzPersonalAdmin.EZSP_getPopupConfig" parameterClass="Map"	resultClass="PersonalPopopConfigVO">
+		<![CDATA[
+			SELECT
+				POPUPOPTIONID, USERID, ISPREVIEW, TENANTID
+			FROM
+				TBL_PS_POPUP_OPTION
+			WHERE
+				USERID = #userId#
+			AND
+				TENANTID = #tenantId#
+		]]>
+	</select>
+	
+	<insert id="EzPersonalAdmin.EZSP_insertPopupConfig" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_PS_POPUP_OPTION
+				(POPUPOPTIONID, USERID, ISPREVIEW, TENANTID)
+			VALUES
+				(#popupOptionId# ,#userId#, 0, #tenantId# )
+		]]>
+		<selectKey keyProperty="popupOptionId" resultClass="Integer" type="pre">
+			<![CDATA[
+				SELECT 
+					NVL(MAX(POPUPOPTIONID)+1,1) 
+				FROM 
+					TBL_PS_POPUP_OPTION
+			]]>	
+		</selectKey>
+	</insert>
+	
+	<update id="EzPersonalAdmin.EZSP_setPopupConfig" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_PS_POPUP_OPTION
+			SET
+				ISPREVIEW = #isPreview#
+			WHERE
+				USERID = #userId#
+			AND
+				TENANTID = #tenantId#	
+		]]>
+	</update>
+	
+	<select id="EzPersonalAdmin.EZSP_GETPOPUPCOUNT" parameterClass="Map"	resultClass="Integer">
+		<isEqual property="v_pMode" compareValue="A">
+			<![CDATA[
+				SELECT
+					COUNT(ITEMSEQ)
+				FROM
+					TBL_PS_POPUP 
+				WHERE
+					COMPANYID = #v_pCompanyID#
+				AND
+					TENANT_ID = #tenantID#	
+			]]>
+		</isEqual>
+		<isNotEqual property="v_pMode" compareValue="A">
+			<![CDATA[
+				SELECT
+					COUNT(ITEMSEQ)
+				FROM
+					TBL_PS_POPUP 
+				WHERE
+					COMPANYID = #v_pCompanyID#
+				OR
+					COMPANYID = 'Top'
+				AND
+					TENANT_ID = #tenantID#	
+			]]>
+		</isNotEqual>
+	</select>
+	
+	<update id="EzPersonalAdmin.EZSP_SETPOPUPUSE" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_PS_POPUP
+			SET
+				INUSE = #inUse#
+			WHERE
+				ITEMSEQ = #itemSeq#
+			AND
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+		]]>
+	</update>
+
+	<update id="EzPersonalAdmin.EZSP_UPDATEPOLL_U1" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_PS_LIGHTPOLL
+			SET
+				STARTDATE = TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
+			,
+				ENDDATE = TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+			,
+				POLLSELECTIONCOUNT = #v_pSelectionCount#
+			,
+				POLLTITLE = #v_pPollTitle#
+			,
+				POLLTITLE2 = #v_pPollTitle2#
+			,
+				ANSWER1 = #v_pAnswer1#
+			,
+				ANSWER2 = #v_pAnswer2#
+			,
+				ANSWER3 = #v_pAnswer3#
+			,
+				ANSWER4 = #v_pAnswer4#
+			,
+				ANSWER5 = #v_pAnswer5#
+			,
+				ANSWER6 = #v_pAnswer6#
+			,
+				ANSWER7 = #v_pAnswer7#
+			,
+				ANSWER8 = #v_pAnswer8#
+			,
+				ANSWER9 = #v_pAnswer9#
+			,
+				ANSWER10 = #v_pAnswer10#
+			WHERE
+				ITEMSEQ = #itemSeq#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</update>
+
+	<update id="EzPersonalAdmin.EZSP_UPDATEPOLL_U2" parameterClass="Map"> 
+		<![CDATA[
+			UPDATE
+				TBL_PS_LIGHTPOLL
+			SET
+				STARTDATE = TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
+			,
+				ENDDATE = TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+			,
+				POLLSELECTIONCOUNT = #v_pSelectionCount#
+			,
+				POLLTITLE = #v_pPollTitle#
+			,
+				POLLTITLE2 = #v_pPollTitle2#
+			,
+				ANSWER1 = #v_pAnswer1#
+			,
+				ANSWER2 = #v_pAnswer2#
+			,
+				ANSWER3 = #v_pAnswer3#
+			,
+				ANSWER4 = #v_pAnswer4#
+			,
+				ANSWER5 = #v_pAnswer5#
+			,
+				ANSWER6 = #v_pAnswer6#
+			,
+				ANSWER7 = #v_pAnswer7#
+			,
+				ANSWER8 = #v_pAnswer8#
+			,
+				ANSWER9 = #v_pAnswer9#
+			,
+				ANSWER10 = #v_pAnswer10#
+			WHERE
+				ITEMSEQ = #itemSeq#
+			AND
+				TENANT_ID = #tenantID#
+			AND
+				CompanyID = #v_pCompanyID#	
+		]]>
+	</update>
+
+	<delete id="EzPersonalAdmin.EZSP_UPDATE_RESULT" parameterClass="Map" >
+		<![CDATA[
+			DELETE FROM
+				TBL_PS_LIGHTPOLLRESULT
+			WHERE
+				ITEMSEQ = #itemSeq#
+			AND
+				TENANT_ID = #tenantID#
+			AND
+				RESULT IN ($sbQuery$)
+		]]>
+	</delete>
+
+	<select id="EzPersonalAdmin.EZSP_CheckJoinPoll" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				TBL_PS_LIGHTPOLLRESULT
+			WHERE
+				ITEMSEQ = #itemSeq#
+			AND
+				USERID = #userId#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
+	
+	<update id="EzPersonalAdmin.EZSP_SETQUICKLINKITEM_ORDER" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_PS_QUICKLINK
+			SET
+				LINKORDER = #v_LINKORDER#
+			WHERE
+				QUICKLINKID = #v_QUICKLINKID#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
+	<select id="EzPersonalAdmin.EZSP_GETQUICKLINKMAXORDER" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				NVL(MAX(LINKORDER), 0) + 1
+			FROM
+				TBL_PS_QUICKLINK Q
+			JOIN
+				TBL_USERMASTER U
+			ON
+				Q.RegUserID = U.CN
+			AND
+				Q.TENANT_ID = U.TENANT_ID
+			WHERE
+				Q.TENANT_ID = #tenantID#
+			AND
+				U.PHYSICALDELIVERYOFFICENAME = #companyID#
+		]]>
+	</select>
+
+	<update id="EzPersonalAdmin.EZSP_SETSLIDERIMAGEITEM_ORDER" parameterClass="Map">
+		<![CDATA[
+				UPDATE
+					TBL_PS_SLIDERIMAGE
+				SET
+					SN = #v_SN#
+				WHERE
+					SLIDERID = #v_SLIDERID#
+				AND
+					TENANT_ID = #tenantId#
+		]]>
+	</update>
+    <update id="EzPersonalAdmin.updatePopupUser" parameterClass="Map">
+        <![CDATA[
+            MERGE INTO TBL_PS_POPUP_USER
+                USING DUAL ON
+                    (itemseq = #itemSeq# and subdept_permitted = #subdeptPermitted# and sn = #sn#)
+                WHEN MATCHED THEN UPDATE SET
+                    user_id = #userId#, user_type = #userType#, tenant_id = #tenantId#, companyid = #companyId#                 
+                WHEN NOT MATCHED THEN
+                    INSERT 
+                        (itemseq, user_id, user_type, tenant_id, companyid, subdept_permitted, sn)
+                    VALUES
+                        (#itemSeq#, #userId#, #userType#, #tenantId#, #companyId#, #subdeptPermitted#, #sn#)
+        ]]>
+    </update>
+    
+    <select id="EzPersonalAdmin.getPopupUserList" parameterClass="Map" resultClass="PersonalPopupUserVO">
+        <![CDATA[
+            SELECT
+                A.itemseq,
+                A.user_id as userid,
+                A.user_type as usertype,
+                CASE 
+                    WHEN user_type = 'USER'
+                        THEN NVL((SELECT displayname$lang$ FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND cn = user_id), '')
+                    WHEN user_type = 'DEPT' 
+                        THEN NVL((SELECT displayname$lang$ FROM TBL_DEPTMASTER WHERE tenant_id = #tenantId# AND extensionattribute2 = #companyId# AND cn = user_id), '')
+                    WHEN user_type = 'JIKWI'
+                        THEN NVL((SELECT displayname$lang$ FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantId# AND companyid = #companyId# AND jobid = user_id AND type = '001'), '')
+                    WHEN user_type = 'JIKCHEK'
+                        THEN NVL((SELECT displayname$lang$ FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantId# AND companyid = #companyId# AND jobid = user_id AND type = '002'), '')
+                    WHEN user_type = 'GROUP'
+                        THEN NVL((SELECT group_name FROM tbl_permissiongrouplist WHERE tenant_id = #tenantId# AND company_id = #companyId# AND group_id = user_id), '')
+                END AS username,
+                A.tenant_id as tenantid,
+                A.companyid,
+                A.subdept_permitted as subdeptPermitted,
+                A.sn
+            FROM
+                TBL_PS_POPUP_USER A
+            WHERE
+                A.itemseq = #itemSeq#
+            AND
+                A.tenant_id = #tenantId#
+            AND
+                A.companyid = #companyId#
+            ORDER BY
+                A.sn
+        ]]>
+    </select>
+    
+    <delete id="EzPersonalAdmin.deletePopupUser" parameterClass="Map">
+        <![CDATA[
+            DELETE FROM
+                TBL_PS_POPUP_USER
+            WHERE
+                itemseq = #v_pItemSeq#
+            AND
+                tenant_id = #tenantID#
+        ]]>
+    </delete>
+</sqlMap>

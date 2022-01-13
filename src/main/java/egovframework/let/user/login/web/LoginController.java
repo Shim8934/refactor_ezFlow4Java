@@ -364,6 +364,16 @@ public class LoginController {
     			}
         	} else {
         		actionLogout(request, response, model);
+        		
+        		// 2021-12-29 이사라 : ip 주소 check 실패인 경우 접속실패 로그 저장
+				resultVO.setStatus("N");
+
+				if (resultVO.getTitle2() == null) {
+					resultVO.setTitle2("");
+				}
+				
+				loginService.insertLog(resultVO);
+        		
         		return "cmm/error/accessBlock";
         	}
 			
@@ -410,13 +420,18 @@ public class LoginController {
         	// masteradmin의 암호로 로그인 가능하여 masteradmin 암호가 맞는 경우
         	// usermaster 테이블의 ip정보/loginCount는 업데이트하지 않고 접속 로그정보만 저장한다.
         	if (masteradminLogin) {
+        		// 2021-12-23 이사라 : 세션ID를 세션코드로 입력 
+	        	String sessionCode =  request.getSession().getId();
+	        	logger.debug("Login sessionCode = " + sessionCode);
+	        	
         		//접속 로그정보 저장
         		resultVO.setIp(ClientUtil.getClientIP(request));
     			resultVO.setAgent(ClientUtil.getClientInfo(request, "agent"));
     			resultVO.setOs(ClientUtil.getClientInfo(request, "os"));
     			resultVO.setBrowser(ClientUtil.getClientInfo(request, "browser"));
     			resultVO.setTenantId(tenantId);
-				
+    			resultVO.setStatus("Y");
+    			resultVO.setSessionCode(sessionCode);
 
 				if (resultVO.getTitle2() == null) {
 					resultVO.setTitle2("");
@@ -503,6 +518,20 @@ public class LoginController {
     	        	if (useLoginStop != null && useLoginStop.equals("YES")) {
     	        		int flag = checkStopUser(tenantId, resultVO.getId());
     	        		if(flag > 0) {
+    	        			// 2021-12-21 이사라 : 접속 실패 로그정보 저장
+    						resultVO.setIp(ClientUtil.getClientIP(request));
+    						resultVO.setAgent(ClientUtil.getClientInfo(request, "agent"));
+    						resultVO.setOs(ClientUtil.getClientInfo(request, "os"));
+    						resultVO.setBrowser(ClientUtil.getClientInfo(request, "browser"));
+    						resultVO.setTenantId(tenantId);
+    						resultVO.setStatus("N");
+    		
+    						if (resultVO.getTitle2() == null) {
+    							resultVO.setTitle2("");
+    						}
+    						
+    						loginService.insertLog(resultVO);
+    						
     	        			model.addAttribute("message", "stopUser");
     	        			return "forward:/user/login/login.do";
     	        		}
@@ -514,6 +543,20 @@ public class LoginController {
     				if (diff <= 0 && !passwordUpdateNextTime.equals("YES")) {				
     					String pwPolicyExplain = commonUtil.getPwPolicyExplain(companyId, tenantId, locale);
     					
+    					// 2021-12-29 이사라 : 접속 실패 로그정보 저장
+						resultVO.setIp(ClientUtil.getClientIP(request));
+						resultVO.setAgent(ClientUtil.getClientInfo(request, "agent"));
+						resultVO.setOs(ClientUtil.getClientInfo(request, "os"));
+						resultVO.setBrowser(ClientUtil.getClientInfo(request, "browser"));
+						resultVO.setTenantId(tenantId);
+						resultVO.setStatus("N");
+		
+						if (resultVO.getTitle2() == null) {
+							resultVO.setTitle2("");
+						}
+						
+						loginService.insertLog(resultVO);
+						
     					model.addAttribute("isExpireDate", "Y");
     					model.addAttribute("userId", _uid);
     					model.addAttribute("encryptID", loginVO.getEncryptID());
@@ -530,12 +573,18 @@ public class LoginController {
     					//IP Address,  마지막 login시간 저장
     					loginService.updateUser(loginVO);
     					
+    					// 2021-12-23 이사라 : 세션ID를 세션코드로 입력 
+    		        	String sessionCode =  request.getSession().getId();
+    		        	logger.debug("Login sessionCode = " + sessionCode);
+    		        	
     					//접속 로그정보 저장
     					resultVO.setIp(ip);
     					resultVO.setAgent(ClientUtil.getClientInfo(request, "agent"));
     					resultVO.setOs(ClientUtil.getClientInfo(request, "os"));
     					resultVO.setBrowser(ClientUtil.getClientInfo(request, "browser"));
     					resultVO.setTenantId(tenantId);
+    					resultVO.setStatus("Y");
+    					resultVO.setSessionCode(sessionCode);
     	
     					if (resultVO.getTitle2() == null) {
     						resultVO.setTitle2("");
@@ -571,6 +620,21 @@ public class LoginController {
             		//User has been blocked
         			//Show block message
                 	model.addAttribute("message", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] {numberOfLoginFailPermit}, locale));
+                	
+                	// 2021-12-21 이사라 : 접속 로그정보 저장 (실패)
+                	resultVO.setIp(ClientUtil.getClientIP(request));
+					resultVO.setAgent(ClientUtil.getClientInfo(request, "agent"));
+					resultVO.setOs(ClientUtil.getClientInfo(request, "os"));
+					resultVO.setBrowser(ClientUtil.getClientInfo(request, "browser"));
+					resultVO.setTenantId(tenantId);
+					resultVO.setStatus("N");
+	
+					if (resultVO.getTitle2() == null) {
+						resultVO.setTitle2("");
+					}
+					
+					loginService.insertLog(resultVO);
+					
                 	return "forward:/user/login/login.do";
             	}
         	}
@@ -579,6 +643,25 @@ public class LoginController {
         } else {     	
         	logger.debug("_uid=" + _uid + ",password is wrong.");
         			
+        	// 2021-12-21 이사라 : 접속 로그정보 저장 (실패)
+        	loginVO.setId(_uid);
+    		loginVO.setTenantId(tenantId);
+        	loginVO.setDn("NOPASSWORD");
+        	resultVO = loginService.selectUser(loginVO);
+        	
+			resultVO.setIp(ClientUtil.getClientIP(request));
+			resultVO.setAgent(ClientUtil.getClientInfo(request, "agent"));
+			resultVO.setOs(ClientUtil.getClientInfo(request, "os"));
+			resultVO.setBrowser(ClientUtil.getClientInfo(request, "browser"));
+			resultVO.setTenantId(tenantId);
+			resultVO.setStatus("N");
+
+			if (resultVO.getTitle2() == null) {
+				resultVO.setTitle2("");
+			}
+			
+			loginService.insertLog(resultVO);
+        	
         	//Check login state of the user 
         	int check = checkState(tenantId, _uid, numberOfLoginFailPermit);
         	String errorMsg1 = "";
@@ -882,6 +965,7 @@ public class LoginController {
 	public String actionLogout(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
         String serverName = request.getServerName();
         int tenantId = loginService.getTenantId(serverName);
+		LoginVO loginVO = new LoginVO();
         
     	Cookie[] cookies = request.getCookies();
     	
@@ -919,9 +1003,18 @@ public class LoginController {
         	return "redirect:https://login.microsoftonline.com/common/oauth2/v2.0/logout?post_logout_redirect_uri=" + redirectUri;         	
         }
         
+        // 2021-12-23 이사라 : 세션ID를 세션코드로 입력
+        String sessionCode =  request.getSession().getId();
+    	logger.debug("Logout sessionCode = " + sessionCode);
+    	
         // 2018.10.22 이석화 추가 - 세션 제거 
        	request.getSession().invalidate();
 
+       	// 2021-12-23 이사라 : 로그아웃시간 기록
+       	loginVO.setTenantId(tenantId);
+       	loginVO.setSessionCode(sessionCode);
+       	loginService.updateLog(loginVO);
+       	
        	return "redirect:/user/login/login.do"; 
     }
     
@@ -935,6 +1028,14 @@ public class LoginController {
 					) throws Exception {
     	logger.debug("redirectUri=" + redirectUri);
     	
+    	String serverName = request.getServerName();         
+        int tenantId = loginService.getTenantId(serverName);
+        LoginVO loginVO = new LoginVO();
+        
+        // 2021-12-23 이사라 : 세션ID를 세션코드로 입력
+        String sessionCode =  request.getSession().getId();
+        logger.debug("Login sessionCode = " + sessionCode);
+		
     	Cookie[] cookies = request.getCookies();
     	
     	if (cookies != null) {
@@ -951,6 +1052,11 @@ public class LoginController {
     	
     	request.getSession().invalidate();
     	
+    	// 2021-12-23 이사라 : 로그아웃시간 기록
+    	loginVO.setTenantId(tenantId);
+       	loginVO.setSessionCode(sessionCode);
+       	loginService.updateLog(loginVO);
+       	
     	if (request.getParameter("multiLoginFlag") != null) {
 //    		rttr.addFlashAttribute("message", message);
     		rttr.addFlashAttribute("multiLoginFlag", request.getParameter("multiLoginFlag"));

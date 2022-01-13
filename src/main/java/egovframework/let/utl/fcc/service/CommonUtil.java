@@ -88,6 +88,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -1646,12 +1648,24 @@ public class CommonUtil {
 	
 	/**
 	 * 레스트 API에서 제이슨 오브젝트 넘겨 받는 메서드
+	 * 
 	 * @param resteUrl
 	 * @param param
 	 * @param request
 	 * @return
 	 */
-	public JSONObject getJsonFromRestApi(String gwServerUrl, String restUrl, Map<String, Object> param, HttpServletRequest request, String methodType, JSONObject jsonParam){
+	public JSONObject getJsonFromRestApi(String gwServerUrl, String restUrl, Map<String, Object> param, HttpServletRequest request, String methodType, JSONObject jsonParam) {
+		return getJsonFromRestApi(gwServerUrl, restUrl, param, request, methodType, jsonParam, -1, -1);
+	}
+
+	/**
+	 * 레스트 API에서 제이슨 오브젝트 넘겨 받는 메서드
+	 * @param resteUrl
+	 * @param param
+	 * @param request
+	 * @return
+	 */
+	public JSONObject getJsonFromRestApi(String gwServerUrl, String restUrl, Map<String, Object> param, HttpServletRequest request, String methodType, JSONObject jsonParam, int connectionTimeout, int readTimeout) {
 		logger.debug("getJsonFromRestApi started.");
 		String url = gwServerUrl + restUrl ;
 		
@@ -1673,6 +1687,11 @@ public class CommonUtil {
 		
 		if (methodType.equals("patch")) {
 			ClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+			rest = new RestTemplate(httpRequestFactory);
+		} else if (connectionTimeout > 0 || readTimeout > 0) {
+			HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+			httpRequestFactory.setConnectTimeout(connectionTimeout);
+			httpRequestFactory.setReadTimeout(readTimeout);
 			rest = new RestTemplate(httpRequestFactory);
 		} else {
 			rest = new RestTemplate();
@@ -1714,7 +1733,7 @@ public class CommonUtil {
 		logger.debug("getJsonFromRestApi ended.");
 		return resultBody;
 	}
-	
+
 	public JSONObject getJsonFromMemoRestApi(String restUrl, Map<String, Object> param, HttpServletRequest request, String methodType, JSONObject jsonParam){
 		logger.debug("getJsonFromMemoRestApi started");
 		String gwServerUrl = config.getProperty("config.memoGwServerURL");

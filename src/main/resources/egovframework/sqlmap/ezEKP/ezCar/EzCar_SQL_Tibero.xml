@@ -1,0 +1,1172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="ezCar">
+	<typeAlias alias="CarGetAdmSubClsTreeVO"    type="egovframework.ezEKP.ezCar.vo.CarGetAdmSubClsTreeVO" />
+	<typeAlias alias="ResCarListVO" 			type="egovframework.ezEKP.ezCar.vo.CarBrdListVO" />
+	<typeAlias alias="CarBrdVO" 			type="egovframework.ezEKP.ezCar.vo.CarBrdVO" />
+	<typeAlias alias="CarFormListVO" 			type="egovframework.ezEKP.ezCar.vo.CarFormListVO" />
+	<typeAlias  alias="ResGetClsAclListVO" 					type="egovframework.ezEKP.ezResource.vo.ResGetClsAclListVO"/>
+    <typeAlias  alias="ResGetAdminFlagVO" 						type="egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO"/>
+    
+    
+	<resultMap class="CarGetAdmSubClsTreeVO" id="carGetAdmSubClsTreeVO">
+		<result property="carID" column="CAR_ID" columnIndex="1" />
+		<result property="carName" column="CAR_NAME" columnIndex="2" />
+		<result property="carName2" column="CAR_NAME2" columnIndex="3" />
+		<result property="carLevel" column="CAR_LEVEL" columnIndex="4"
+			nullValue="0" />
+		<result property="carStep" column="CAR_STEP" columnIndex="5" />
+		<!-- <result property="brdPostterm" column="BRD_POSTTERM" columnIndex="6"/> -->
+		<result property="carUpper" column="CAR_UPPER" columnIndex="7" />
+		<result property="carGb" column="CAR_GB" columnIndex="8" />
+		<result property="carUrl" column="CAR_URL" columnIndex="9" />
+		<result property="carExplain" column="CAR_EXPLAIN" columnIndex="10" />
+		<result property="carAccess" column="CAR_ACCESS" columnIndex="11" />
+		<!-- <result property="attachSize" column="ATTACH_SIZE" columnIndex="12"/> -->
+		<result property="subClsCnt" column="SUB_CLSCNT" columnIndex="13" />
+		<result property="subResCnt" column="SUB_RESCNT" columnIndex="14" />
+		<result property="accessLvl" column="ACCESS_LVL" columnIndex="15" />
+		<!-- <result property="approveFlag" column="APPROVEFLAG" columnIndex="16"/> -->
+	</resultMap>
+
+	<resultMap class="ResCarListVO" id="resCarListVO">
+		<result property="companyID" column="COMPANYID" columnIndex="3" />
+		<result property="carGb" column="CAR_GB" columnIndex="6" />
+		<result property="carID" column="CAR_ID" columnIndex="8" />
+		<result property="carLevel" column="CAR_LEVEL" columnIndex="9"
+			nullValue="0" />
+		<result property="carName" column="CAR_NAME" columnIndex="10" />
+		<result property="carStep" column="CAR_STEP" columnIndex="13" />
+		<result property="carUpper" column="CAR_UPPER" columnIndex="14" />
+		<result property="carUrl" column="CAR_URL" columnIndex="15"
+			nullValue="" />
+		<result property="car_register_date" column="CAR_REGISTER_DATE"
+			columnIndex="16" />
+		<result property="ownerCall" column="OWNERCALL" columnIndex="19"
+			nullValue="" />
+		<result property="ownerID" column="OWNERID" columnIndex="20" />
+		<result property="ownerNm" column="OWNERNM" columnIndex="21" />
+	</resultMap>
+
+	<resultMap class="CarBrdVO" id="carBrdVO">
+		<result property="carID" column="CAR_ID" columnIndex="1" />
+		<result property="carName" column="CAR_NAME" columnIndex="2" />
+		<result property="carName2" column="CAR_NAME2" columnIndex="3" />
+		<result property="ownDeptID" column="OWNDEPTID" columnIndex="5" />
+		<result property="ownDeptNm" column="OWNDEPTNM" columnIndex="6" />
+		<result property="ownDeptNm2" column="OWNDEPTNM2" columnIndex="7" />
+		<result property="ownerID" column="OWNERID" columnIndex="8" />
+		<result property="ownerNm" column="OWNERNM" columnIndex="9" />
+		<result property="ownerNm2" column="OWNERNM2" columnIndex="10" />
+		<result property="ownerPosition" column="OWNERPOSITION"
+			columnIndex="11" />
+		<result property="ownerPosition2" column="OWNERPOSITION2"
+			columnIndex="12" nullValue="NULL" />
+		<result property="ownerCall" column="OWNERCALL" columnIndex="13" />
+		<result property="car_register_date" column="CAR_REGISTER_DATE"
+			columnIndex="15" />
+		<result property="carAccess" column="CAR_ACCESS" columnIndex="18" />
+		<result property="car_nm" column="CAR_NM" columnIndex="18" />
+	</resultMap>
+
+	<resultMap class="CarFormListVO" id="carFormListVO">
+		<result property="car_form_id" column="CAR_FORM_ID"
+			columnIndex="1" />
+		<result property="car_id" column="CAR_ID" columnIndex="2" />
+		<result property="register_id" column="REGISTER_ID"
+			columnIndex="3" />
+		<result property="driver_name" column="DRIVER_NAME"
+			columnIndex="4" />
+		<result property="driver_deptname" column="DRIVER_DEPTNAME"
+			columnIndex="5" />
+		<result property="register_date" column="REGISTER_DATE"
+			columnIndex="6" />
+		<result property="b_depart_time" column="B_DEPART_TIME"
+			columnIndex="8" />
+		<result property="b_distance" column="B_DISTANCE" columnIndex="9" />
+		<result property="drive_purpose" column="DRIVE_PURPOSE"
+			columnIndex="10" />
+		<result property="drive_point" column="DRIVE_POINT"
+			columnIndex="11" nullValue="NULL" />
+		<result property="a_arrive_time" column="A_ARRIVE_TIME"
+			columnIndex="12" />
+		<result property="a_distance" column="A_DISTANCE" columnIndex="13" />
+		<result property="a_distance_auto" column="A_DISTANCE_AUTO"
+			columnIndex="14" />
+		<result property="a_distance_commute" column="A_DISTANCE_COMMUTE"
+			columnIndex="15" />
+		<result property="a_distance_work" column="A_DISTANCE_WORK"
+			columnIndex="16" />
+		<result property="a_distance_etc" column="A_DISTANCE_ETC"
+			columnIndex="17" />
+		<result property="a_submit_flag" column="A_SUBMIT_FLAG"
+			columnIndex="18" />
+		<result property="delflag" column="DELFLAG" columnIndex="19" />
+		<result property="companyid" column="COMPANYID" columnIndex="20" />
+		<result property="tenant_id" column="TENANT_ID" columnIndex="21" />
+		<result property="car_register_no" column="CAR_REGISTER_NO"
+			columnIndex="22" />
+		<result property="rev_time" column="REV_TIME" columnIndex="23" />
+		<result property="rev_time2" column="REV_TIME2" columnIndex="24" />
+		<result property="rev_date" column="REV_DATE" columnIndex="25" />
+
+	</resultMap>
+
+	<resultMap class="CarFormListVO" id="carFormListVO2">
+		<result property="car_form_id" column="CAR_FORM_ID"
+			columnIndex="1" />
+		<result property="register_id" column="REGISTER_ID"
+			columnIndex="2" />
+		<result property="register_date" column="REGISTER_DATE"
+			columnIndex="3" />
+		<result property="register_deptname" column="REGISTER_DEPTNAME"
+			columnIndex="4" />
+		<result property="register_name" column="REGISTER_NAME"
+			columnIndex="5" />
+		<result property="rev_date" column="REV_DATE"
+			columnIndex="6" />
+	</resultMap>
+	
+	<resultMap class="CarFormListVO" id="carFormListVO3">
+		<result property="car_form_id" column="CAR_FORM_ID"
+			columnIndex="1" />
+		<result property="register_id" column="REGISTER_ID"
+			columnIndex="2" />
+		<result property="register_date" column="REGISTER_DATE"
+			columnIndex="3" />
+		<result property="register_deptname" column="REGISTER_DEPTNAME"
+			columnIndex="4" />
+		<result property="register_name" column="REGISTER_NAME"
+			columnIndex="5" />
+		<result property="rev_date" column="REV_DATE"
+			columnIndex="6" />
+		<result property="rev_time" column="REV_TIME"
+			columnIndex="7" />
+		<result property="rev_time2" column="REV_TIME2"
+			columnIndex="8" />
+	</resultMap>
+	
+	<resultMap class="ResGetClsAclListVO" 	id="resGetClsAclListVO">
+		<result property="deptYn"					column="DEPT_YN"				columnIndex="1" nullValue=""/>
+		<result property="sdaYn"					column="SDA_YN"					columnIndex="2" nullValue=""/>
+		<result property="memberNam"				column="MEMBER_NAM"			    columnIndex="3" nullValue=""/>
+		<result property="memberID"				    column="MEMBER_ID"				columnIndex="4" nullValue=""/>
+		<result property="accessLvl"				column="ACCESS_LVL"			    columnIndex="5" nullValue=""/>
+	</resultMap>
+	
+	<resultMap class="ResGetAdminFlagVO" 		    id="resGetAdminFlagVO">
+		<result property="memberID"			    column="MEMBER_ID"				columnIndex="1"/>
+		<result property="accessLvl"			column="ACCESS_LVL"			    columnIndex="2"/>
+	</resultMap>
+
+	<!-- <parameterMap class="map" id="deptAccessLvlParam"> <parameter property="IN_DEPT_CN" 
+		jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/> <parameter property="IN_TENANT_ID" 
+		jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/> <parameter property="IN_BRD_ID" 
+		jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/> <parameter property="OUT_RESULT_ACL" 
+		jdbcType="VARCHAR" javaType="java.lang.String" mode="OUT"/> </parameterMap> 
+		<procedure id="EzResourceDAO.getDeptAccessLvl" parameterMap="deptAccessLvlParam"> 
+		<![CDATA[ {CALL GETRESOURCEACL(?,?,?,?)} ]]> </procedure> -->
+
+	<select id="EzCarDAO.getAdmSubClsTreeUser" parameterClass="Map"
+		resultMap="carGetAdmSubClsTreeVO">
+		<isEmpty property="v_P_ParentID">
+			<![CDATA[
+				SELECT A.CAR_ID CAR_ID,
+						   A.CAR_NAME CAR_NAME,
+ 						   A.CAR_NAME2 CAR_NAME2,
+						   A.CAR_LEVEL CAR_LEVEL,
+						   A.CAR_STEP CAR_STEP,
+                    	   A.CAR_UPPER CAR_UPPER,
+                    	   A.CAR_GB CAR_GB,
+                    	   A.CAR_URL,
+						   A.CAR_EXPLAIN,
+                    	   A.CAR_ACCESS CAR_ACCESS,
+                  	   ( SELECT NVL(COUNT(CAR_ID), 0) 
+                         FROM TBL_CAR 
+                         WHERE CAR_UPPER = A.CAR_ID
+                     	 AND COMPANYID = #v_P_CompanyID#
+                     	 AND CAR_GB = '1'
+                     	 AND DELFLAG = 0
+                     	 AND TENANT_ID = #tenantID# ) SUB_CLSCNT,
+                   	   ( SELECT NVL(COUNT(CAR_ID), 0) 
+                   		 FROM TBL_CAR 
+                 		 WHERE  CAR_UPPER = A.CAR_ID
+                         AND COMPANYID = #v_P_CompanyID#
+                         AND CAR_GB = '2'
+                         AND DELFLAG = 0
+                         AND TENANT_ID = #tenantID# )SUB_RESCNT,
+                   	   '0' ACCESS_LVL
+				FROM TBL_CAR A
+            	WHERE  CAR_ID = 1
+				AND COMPANYID = #v_P_CompanyID#
+				AND TENANT_ID = #tenantID# 
+				AND A.DELFLAG = 0
+ 				
+			]]>
+		</isEmpty>
+		<isNotEmpty property="v_P_ParentID">
+			<isEqual property="v_P_TreeType" compareValue="0">
+				<isEqual property="v_P_ParentID" compareValue="1">
+				<![CDATA[
+				SELECT B.CAR_ID, B.CAR_NAME, B.CAR_NAME2, B.CAR_LEVEL, B.CAR_STEP, B.CAR_UPPER, B.CAR_GB, B.CAR_URL, B.CAR_EXPLAIN, B.CAR_ACCESS, B.SUB_CLSCNT, B.SUB_RESCNT, B.ACCESS_LVL
+				FROM 
+				(
+					SELECT A.CAR_ID CAR_ID,
+						   A.CAR_NAME CAR_NAME,
+ 						   A.CAR_NAME2 CAR_NAME2,
+						   A.CAR_LEVEL CAR_LEVEL,
+						   A.CAR_STEP CAR_STEP,
+                    	   A.CAR_UPPER CAR_UPPER,
+                    	   A.CAR_GB CAR_GB,
+                    	   A.CAR_URL,
+						   A.CAR_EXPLAIN,
+                    	   A.CAR_ACCESS CAR_ACCESS,
+						   ( SELECT NVL(COUNT(CAR_ID), 0) 
+							 FROM TBL_CAR 
+                    		 WHERE  CAR_UPPER = A.CAR_ID
+                    		 AND COMPANYID = #v_P_CompanyID#
+                    		 AND CAR_GB = '1'
+                    		 AND DELFLAG = 0
+            				 AND TENANT_ID = #tenantID# )SUB_CLSCNT,
+						   ( SELECT NVL(COUNT(CAR_ID) , 0) 
+							 FROM TBL_CAR 
+							 WHERE  CAR_UPPER = A.CAR_ID
+							 AND COMPANYID = #v_P_CompanyID#
+							 AND CAR_GB = '2' 
+							 AND TENANT_ID = #tenantID#
+							 AND DELFLAG = 0
+							 ]]>
+							<![CDATA[
+							  ) SUB_RESCNT,
+						   '0' ACCESS_LVL
+					FROM TBL_CAR A
+					WHERE CAR_Upper = NVL(#v_P_ParentID#,0)
+					AND COMPANYID = #v_P_CompanyID#
+					AND TENANT_ID = #tenantID#
+					AND A.DELFLAG = 0
+					ORDER BY CAR_GB, CAR_STEP)B JOIN TBL_CAR_ACL C 
+					ON B.CAR_ID = C.CAR_ID
+ 					AND C.MEMBER_ID IN ($jobss$)
+ 					GROUP BY B.CAR_ID, B.CAR_NAME, B.CAR_NAME2, B.CAR_LEVEL, B.CAR_STEP, B.CAR_UPPER, B.CAR_GB, B.CAR_URL, B.CAR_EXPLAIN, B.CAR_ACCESS, B.SUB_CLSCNT, B.SUB_RESCNT, B.ACCESS_LVL
+				]]>
+				</isEqual>
+				<isNotEqual property="v_P_ParentID" compareValue="1"> 
+					<![CDATA[
+					SELECT A.CAR_ID CAR_ID,
+						   A.CAR_NAME CAR_NAME,
+ 						   A.CAR_NAME2 CAR_NAME2,
+						   A.CAR_LEVEL CAR_LEVEL,
+						   A.CAR_STEP CAR_STEP,
+                    	   A.CAR_UPPER CAR_UPPER,
+                    	   A.CAR_GB CAR_GB,
+                    	   A.CAR_URL,
+						   A.CAR_EXPLAIN,
+                    	   A.CAR_ACCESS CAR_ACCESS,
+						   ( SELECT NVL(COUNT(CAR_ID), 0) 
+							 FROM TBL_CAR 
+                    		 WHERE  CAR_UPPER = A.CAR_ID
+                    		 AND COMPANYID = #v_P_CompanyID#
+                    		 AND CAR_GB = '1'
+                    		 AND DELFLAG = 0
+            				 AND TENANT_ID = #tenantID# ) SUB_CLSCNT,
+						   ( SELECT NVL(COUNT(CAR_ID) , 0) 
+							 FROM TBL_CAR 
+							 WHERE  CAR_UPPER = A.CAR_ID
+							 AND COMPANYID = #v_P_CompanyID#
+							 AND CAR_GB = '2' 
+							 AND TENANT_ID = #tenantID#
+							 AND DELFLAG = 0
+							 ]]>
+							<![CDATA[
+							  ) SUB_RESCNT,
+						   '0' ACCESS_LVL
+					FROM TBL_CAR A
+					WHERE CAR_UPPER = NVL(#v_P_ParentID#,0)
+					AND COMPANYID = #v_P_CompanyID#
+					AND TENANT_ID = #tenantID#
+					AND A.DELFLAG = 0
+					ORDER BY CAR_GB, CAR_STEP
+				]]>
+				</isNotEqual>
+			</isEqual>
+			<isNotEqual property="v_P_TreeType" compareValue="0"> 
+				<isEqual property="v_P_ParentID" compareValue="1">
+				<![CDATA[
+				SELECT B.CAR_ID, B.CAR_NAME, B.CAR_NAME2, B.CAR_LEVEL, B.CAR_STEP, B.CAR_UPPER, B.CAR_GB, B.CAR_URL, B.CAR_EXPLAIN, B.CAR_ACCESS, B.SUB_CLSCNT, B.SUB_RESCNT, B.ACCESS_LVL
+				FROM 
+				(
+					SELECT A.CAR_ID CAR_ID,
+						   A.CAR_NAME CAR_NAME,
+ 						   A.CAR_NAME2 CAR_NAME2,
+						   A.CAR_LEVEL CAR_LEVEL,
+						   A.CAR_STEP CAR_STEP,
+						   A.CAR_UPPER CAR_UPPER,
+						   A.CAR_GB CAR_GB,
+						   A.CAR_ACCESS CAR_ACCESS,
+						   ( SELECT NVL(COUNT(CAR_ID), 0) 
+							 FROM TBL_CAR 
+							 WHERE CAR_UPPER = A.CAR_ID
+							 AND COMPANYID = #v_P_CompanyID#
+							 AND CAR_GB = '1' 
+							 AND DELFLAG = 0
+							 AND TENANT_ID = #tenantID# ) SUB_CLSCNT,
+						   ( SELECT NVL(COUNT(CAR_ID) , 0) 
+							 FROM TBL_CAR
+							 WHERE  CAR_UPPER = A.CAR_ID
+							 AND COMPANYID = #v_P_CompanyID#
+							 AND CAR_GB = '1'
+							 AND DELFLAG = 0 
+							 AND TENANT_ID = #tenantID# ) SUB_RESCNT,
+						   '0' ACCESS_LVL,
+						   CAR_URL,
+						   CAR_EXPLAIN
+					FROM TBL_CAR A
+					WHERE CAR_Upper = NVL(#v_P_ParentID#,0)
+					AND COMPANYID = #v_P_CompanyID#
+					AND CAR_GB = '1'
+					AND TENANT_ID = #tenantID#
+					AND A.DELFLAG = 0
+					ORDER BY CAR_STEP )B JOIN TBL_CAR_ACL C 
+					ON B.CAR_ID = C.CAR_ID
+ 					AND C.MEMBER_ID IN ($jobss$)
+ 					GROUP BY B.CAR_ID, B.CAR_NAME, B.CAR_NAME2, B.CAR_LEVEL, B.CAR_STEP, B.CAR_UPPER, B.CAR_GB, B.CAR_URL, B.CAR_EXPLAIN, B.CAR_ACCESS, B.SUB_CLSCNT, B.SUB_RESCNT, B.ACCESS_LVL
+				]]>
+				</isEqual>
+				<isNotEqual property="v_P_ParentID" compareValue="1"> 
+					<![CDATA[
+					SELECT A.CAR_ID CAR_ID,
+						   A.CAR_NAME CAR_NAME,
+ 						   A.CAR_NAME2 CAR_NAME2,
+						   A.CAR_LEVEL CAR_LEVEL,
+						   A.CAR_STEP CAR_STEP,
+						   A.CAR_UPPER CAR_UPPER,
+						   A.CAR_GB CAR_GB,
+						   A.CAR_ACCESS CAR_ACCESS,
+						   ( SELECT NVL(COUNT(CAR_ID) , 0) 
+							 FROM TBL_CAR 
+							 WHERE CAR_UPPER = A.CAR_ID
+							 AND COMPANYID = #v_P_CompanyID#
+							 AND Car_GB = '1' 
+							 AND DELFLAG = 0
+							 AND TENANT_ID = #tenantID# ) SUB_CLSCNT,
+						   ( SELECT NVL(COUNT(CAR_ID), 0) 
+							 FROM TBL_CAR 
+							 WHERE  CAR_UPPER = A.CAR_ID
+							 AND COMPANYID = #v_P_CompanyID#
+							 AND CAR_GB = '1'
+							 AND DELFLAG = 0 
+							 AND TENANT_ID = #tenantID# ) SUB_RESCNT,
+						   '0' ACCESS_LVL,
+						   CAR_URL,
+						   CAR_EXPLAIN
+					FROM TBL_CAR A
+					WHERE CAR_UPPER = NVL(#v_P_ParentID#,0)
+					AND COMPANYID = #v_P_CompanyID#
+					AND CAR_GB = '1'
+					AND TENANT_ID = #tenantID#
+					AND A.DELFLAG = 0
+					ORDER BY CAR_STEP
+				]]>
+				</isNotEqual>
+			</isNotEqual>
+		</isNotEmpty>
+	</select>
+	<select id="EzCarDAO.getAdmSubClsTree" parameterClass="Map"
+		resultMap="carGetAdmSubClsTreeVO">
+		<isEmpty property="v_P_ParentID">
+			<![CDATA[
+				SELECT A.CAR_ID car_id ,
+						   A.CAR_NAME car_name ,
+ 						   A.CAR_NAME2 car_name2 ,
+						   A.CAR_LEVEL car_level ,
+						   A.CAR_STEP car_step ,
+                    	   A.CAR_UPPER car_upper ,
+                    	   A.CAR_GB car_gb ,
+                    	   A.CAR_URL,
+						   A.CAR_EXPLAIN,
+                    	   A.CAR_ACCESS car_access ,
+                  	   ( SELECT NVL(COUNT(CAR_ID) , 0) 
+                         FROM TBL_CAR 
+                         WHERE CAR_UPPER = A.CAR_ID
+                     	 AND COMPANYID = #v_P_CompanyID#
+                     	 AND CAR_GB = '1'
+                     	 AND DELFLAG = 0
+                     	 AND TENANT_ID = #tenantID# ) sub_clscnt ,
+                   	   ( SELECT NVL(COUNT(CAR_ID) , 0) 
+                   		 FROM TBL_CAR 
+                 		 WHERE  CAR_UPPER = A.CAR_ID
+                         AND COMPANYID = #v_P_CompanyID#
+                         AND CAR_GB = '2'
+                         AND DELFLAG = 0
+                         AND TENANT_ID = #tenantID# ) sub_rescnt ,
+                   	   '0' Access_Lvl 
+				FROM TBL_CAR A
+            	WHERE  CAR_ID = 1
+				AND COMPANYID = #v_P_CompanyID#
+				AND TENANT_ID = #tenantID# 
+				AND A.DELFLAG = 0
+			]]>
+		</isEmpty>
+		<isNotEmpty property="v_P_ParentID">
+			<isEqual property="v_P_TreeType" compareValue="0">
+				<![CDATA[
+				SELECT A.CAR_ID car_id ,
+						   A.CAR_NAME car_name ,
+ 						   A.CAR_NAME2 car_name2 ,
+						   A.CAR_LEVEL car_level ,
+						   A.CAR_STEP car_step ,
+                    	   A.CAR_UPPER car_upper ,
+                    	   A.CAR_GB car_gb ,
+                    	   A.CAR_URL,
+						   A.CAR_EXPLAIN,
+                    	   A.CAR_ACCESS car_access ,
+						   ( SELECT NVL(COUNT(CAR_ID) , 0) 
+							 FROM TBL_CAR 
+                    		 WHERE  CAR_UPPER = A.CAR_ID
+                    		 AND COMPANYID = #v_P_CompanyID#
+                    		 AND CAR_GB = '1'
+                    		 AND DELFLAG = 0
+            				 AND TENANT_ID = #tenantID# ) sub_clscnt ,
+						   ( SELECT NVL(COUNT(CAR_ID) , 0) 
+							 FROM TBL_CAR 
+							 WHERE  CAR_UPPER = A.CAR_ID
+							 AND COMPANYID = #v_P_CompanyID#
+							 AND CAR_GB = '2' 
+							 AND TENANT_ID = #tenantID#
+							 AND DELFLAG = 0
+							 ]]>
+							<![CDATA[
+							  ) sub_rescnt ,
+						   '0' Access_Lvl
+					FROM TBL_CAR A
+					WHERE CAR_Upper = NVL(#v_P_ParentID#,0)
+					AND COMPANYID = #v_P_CompanyID#
+					AND TENANT_ID = #tenantID#
+					AND A.DELFLAG = 0
+					ORDER BY CAR_GB, CAR_Step
+				]]>
+			</isEqual>
+			<isNotEqual property="v_P_TreeType" compareValue="0"> 
+				<![CDATA[
+				SELECT A.CAR_ID car_id ,
+						   A.CAR_NAME car_name ,
+ 						   A.CAR_NAME2 car_name2 ,
+						   A.CAR_LEVEL car_level ,
+						   A.CAR_STEP car_step ,
+						   A.CAR_UPPER car_upper ,
+						   A.CAR_GB car_gb ,
+						   A.CAR_ACCESS car_access ,
+						   ( SELECT NVL(COUNT(CAR_ID) , 0) 
+							 FROM TBL_CAR 
+							 WHERE CAR_UPPER = A.CAR_ID
+							 AND COMPANYID = #v_P_CompanyID#
+							 AND Car_GB = '1' 
+							 AND DELFLAG = 0
+							 AND TENANT_ID = #tenantID# ) sub_clscnt ,
+						   ( SELECT NVL(COUNT(CAR_ID) , 0) 
+							 FROM TBL_CAR 
+							 WHERE  CAR_UPPER = A.CAR_ID
+							 AND COMPANYID = #v_P_CompanyID#
+							 AND Car_GB = '1'
+							 AND DELFLAG = 0 
+							 AND TENANT_ID = #tenantID# ) sub_rescnt ,
+						   '0' Access_Lvl,
+						   CAR_URL,
+						   CAR_EXPLAIN
+					FROM TBL_CAR A
+					WHERE Car_Upper = NVL(#v_P_ParentID#,0)
+					AND COMPANYID = #v_P_CompanyID#
+					AND Car_GB = '1'
+					AND TENANT_ID = #tenantID#
+					AND A.DELFLAG = 0
+					ORDER BY Car_Step
+				]]>
+			</isNotEqual>
+		</isNotEmpty>
+	</select>
+
+
+	<select id="EzCarDAO.getSubClsTree" parameterClass="Map"
+		resultMap="carGetAdmSubClsTreeVO">
+		<isEmpty property="v_P_ParentID">
+			<![CDATA[
+				SELECT A.CAR_ID car_id ,
+						   A.CAR_NAME car_name ,
+ 						   A.CAR_NAME2 car_name2 ,
+						   A.CAR_LEVEL car_level ,
+						   A.CAR_STEP car_step ,
+                    	   A.CAR_UPPER car_upper ,
+                    	   A.CAR_GB car_gb ,
+                    	   A.CAR_URL,
+						   A.CAR_EXPLAIN,
+                    	   A.CAR_ACCESS car_access ,
+                    ( SELECT
+                        NVL(COUNT(CAR_ID) , 0) 
+                      FROM
+                        TBL_CAR
+                      WHERE
+                        CAR_UPPER = A.CAR_ID
+                      AND
+                        COMPANYID = #v_P_COMPANYID#
+                      AND
+                        CAR_GB = '1'
+                      AND
+                		DELFLAG = 0
+                      AND
+                        TENANT_ID = #tenantID# ) SUB_CLSCNT ,
+                    ( SELECT
+                      	NVL(COUNT(CAR_ID) , 0) 
+                      FROM
+                      	TBL_CAR 
+                      WHERE
+                      	CAR_UPPER = A.CAR_ID
+                      AND
+                      	COMPANYID = #v_P_COMPANYID#
+                      AND
+                      	CAR_GB = '2'
+                      AND
+                		DELFLAG = 0
+                      AND
+                      	TENANT_ID = #tenantID# ) SUB_RESCNT ,
+                    '0' ACCESS_LVL 
+                FROM
+                	TBL_CAR A
+                WHERE
+                	A.CAR_ID = 1
+                AND
+                	A.COMPANYID = #v_P_COMPANYID#
+                AND 
+                	A.TENANT_ID = #tenantID#
+                AND
+                    A.DELFLAG = 0
+			]]>
+		</isEmpty>
+		<isNotEmpty property="v_P_ParentID">
+			<![CDATA[
+				SELECT
+         	        DISTINCT(CAR_ID) ,
+      				A.CAR_NAME car_name ,
+ 					A.CAR_NAME2 car_name2 ,
+					A.CAR_LEVEL car_level ,
+				    A.CAR_STEP car_step ,
+                    A.CAR_UPPER car_upper ,
+                    A.CAR_GB car_gb ,
+                    A.CAR_URL,
+					A.CAR_EXPLAIN,
+                    A.CAR_ACCESS car_access ,
+      				(SELECT
+                         NVL(COUNT(CAR_ID), 0)
+                     FROM
+                         TBL_CAR  
+      				 WHERE
+                         CAR_UPPER = A.CAR_ID
+      				 AND
+                         COMPANYID = #v_P_COMPANYID#
+      				 AND
+                         CAR_GB = '1'
+      				 AND
+                         TENANT_ID = #tenantID#) AS SUB_CLSCNT, 
+      				 (SELECT
+                        NVL(COUNT(CAR_ID), 0)
+                      FROM
+                        TBL_CAR  
+      				  WHERE
+                         CAR_UPPER = A.CAR_ID
+      				  AND
+                         COMPANYID = #v_P_COMPANYID#
+      				  AND
+                         CAR_GB = '2'
+                      AND
+               			 DELFLAG = 0
+      				  AND
+                         TENANT_ID = #tenantID#) AS SUB_RESCNT, 
+      				'' AS ACCESS_LVL
+      			FROM
+                	TBL_CAR A
+                
+      			WHERE
+                	A.CAR_UPPER = #v_P_PARENTID#
+      			AND
+                	A.COMPANYID = #v_P_COMPANYID#
+      			AND
+                	A.CAR_GB = '1'
+      			AND
+                	A.TENANT_ID = #tenantID#
+                AND
+                    A.DELFLAG = 0   
+      			UNION
+          
+      			SELECT
+             	    DISTINCT(CAR_ID) ,
+      				A.CAR_NAME car_name ,
+ 					A.CAR_NAME2 car_name2 ,
+					A.CAR_LEVEL car_level ,
+					A.CAR_STEP car_step ,
+                    A.CAR_UPPER car_upper ,
+                    A.CAR_GB car_gb ,
+                    A.CAR_URL,
+					A.CAR_EXPLAIN,
+                    A.CAR_ACCESS car_access ,
+					0 AS SUB_CLSCNT, 
+					0 AS SUB_RESCNT, 
+					'' AS ACCESS_LVL
+      			FROM
+                    TBL_CAR A
+      			WHERE
+                    A.COMPANYID = #v_P_COMPANYID#
+      			AND
+                    A.CAR_GB = '2'
+      			AND
+                    A.TENANT_ID = #tenantID#
+                AND 
+                    A.DELFALG = 0
+      			ORDER BY
+                    CAR_GB, CAR_STEP
+			]]>
+		</isNotEmpty>
+	</select>
+
+
+	<select id="EzCarDAO.getTotalCnt" parameterClass="Map"
+		resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(CAR_ID) cnt 
+			FROM
+				TBL_CAR 
+			WHERE  
+				CAR_UPPER = #carID#
+            AND
+            	COMPANYID = #companyID#
+            AND
+                DELFLAG = 0
+		]]>
+	</select>
+
+
+	<select id="EzCarDAO.getCarList" parameterClass="Map" resultMap="resCarListVO">
+		<![CDATA[
+			SELECT
+				COMPANYID, 
+                CAR_GB, CAR_ID, CAR_LEVEL, CAR_NAME, OWNERID, OWNERNM,
+                CAR_STEP, CAR_UPPER, CAR_URL, OWNERCALL,
+                (SUBSTR(CAR_REGISTER_DATE, 1, 4)|| '-' || SUBSTR(CAR_REGISTER_DATE, 5, 2) || '-'||  SUBSTR(CAR_REGISTER_DATE, 7, 2)) CAR_REGISTER_DATE
+			FROM
+				TBL_CAR  
+			WHERE
+				CAR_UPPER = #carID#
+			AND
+				CAR_GB = '2' 
+			AND
+				COMPANYID = #companyID#
+			AND
+				TENANT_ID = #tenantID#
+			AND 
+			    DELFLAG = 0
+			ORDER BY CAR_STEP
+			
+		]]>
+	</select>
+
+	<update id="EzCarDao.deleteCar" parameterClass="map">
+		<![CDATA[
+			update
+				tbl_car
+			set
+				delflag = 1
+			where  
+	   			car_id = #carID#
+	   		and
+	   			tenant_id = #tenantId#
+	   		and 
+	   		    companyid = #companyID#
+		]]>
+	</update>
+
+	<select id="EzCarDAO.addCarData_S1" parameterClass="Map"
+		resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				(NVL(MAX(car_ID) , 0) + 1)
+   			FROM
+   				TBL_CAR 
+   			WHERE
+	   			TENANT_ID = #tenantID# 
+		]]>
+	</select>
+
+	<select id="EzCarDAO.addCarData_S2" parameterClass="Map"
+		resultClass="Integer">
+		<![CDATA[
+			SELECT
+				(CAR_LEVEL + 1)
+    		FROM 
+    			TBL_CAR 
+    		WHERE  
+    			CAR_ID = #v_P_ClassGB#
+    		AND 
+    			COMPANYID = #v_P_CompanyID#
+    		AND
+    			TENANT_ID = #tenantID#	
+		]]>
+	</select>
+
+	<select id="EzCarDAO.addCarData_S3" parameterClass="Map"
+		resultClass="Integer">
+		<![CDATA[
+			SELECT
+				(NVL(MAX(Car_Step) , 0) + 1)
+    		FROM
+    			TBL_CAR
+    		WHERE
+    			CAR_UPPER = #v_P_ClassGB#
+    		AND
+    			COMPANYID = #v_P_CompanyID#
+    		AND
+    			TENANT_ID = #tenantID#	
+		]]>
+	</select>
+
+	<insert id="EzCarDAO.addCarData" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_CAR ( 
+				CAR_UPPER, OWNDEPTID, OWNDEPTNM, OWNERID, OWNERNM, OWNERPOSITION, OWNERCALL, CAR_NAME, COMPANYID, 
+				CAR_ID, CAR_GB, CAR_LEVEL, CAR_STEP, CAR_REGISTER_DATE,  CAR_URL, CAR_ACCESS,   
+				CAR_NAME2, OWNDEPTNM2, OWNERNM2, OWNERPOSITION2, TENANT_ID, DELFLAG, CAR_NM
+			)
+        	VALUES ( 
+        		#v_P_ClassGB#, #v_P_ODeptID#, #v_P_ODeptNm#, #v_P_OwnerID#, #v_P_OwnerNm#, #v_P_OwnerPos#, #v_P_OwnerCall#, #v_P_Brd_NM#,   #v_P_CompanyID#, 
+        		#carID#, #v_Brd_GB#, #v_Brd_Level#, #v_Brd_Step#, TO_CHAR(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYYMMDD'), '', #v_Brd_Access#, 
+      			#v_P_Brd_NM2#, #v_P_ODeptNm2#, #v_P_OwnerNm2#, #v_P_OwnerPos2#, #tenantID#, 0, #car_nm#
+			)
+		]]>
+	</insert>
+
+	<insert id="EzCarDAO.addAttachFile" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_CAR_ATTACH ( 
+				ATTACHID, CAR_ID, FILESIZE, FILENAME, FILEPATH, COMPANYID, TENANT_ID
+			)
+        	VALUES ( 
+        		(SELECT NVL(MAX(attachID)+1,0) FROM TBL_CAR_ATTACH), #carID#, #fileSize#, #fileName#, #filePath#, #companyID#, #tenantID#
+			)
+		]]>
+	</insert>
+
+	<insert id="EzCarDAO.addCarForm" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_CAR_FORM ( 
+				REGISTER_ID, TENANT_ID, REGISTER_DATE, CAR_ID, CAR_FORM_ID, REV_DATE, REV_TIME, REV_TIME2, DRIVER_DEPTNAME, DRIVER_NAME, 
+				B_DEPART_TIME, B_DISTANCE, DRIVE_PURPOSE, DRIVE_POINT,  A_ARRIVE_TIME, A_DISTANCE,   
+				A_DISTANCE_AUTO, A_DISTANCE_COMMUTE, A_DISTANCE_WORK, A_DISTANCE_ETC, CAR_REGISTER_NO, A_SUBMIT_FLAG, COMPANYID, DELFLAG
+			)
+        	VALUES ( 
+        		#register_id#,#tenant_id#,TO_DATE(#register_date#,'YY/MM/DD'),#carID#,#car_form_id#,TO_DATE(#rev_date#,'YY/MM/DD'),#rev_time#,#rev_time2#,#driver_deptname#,#driver_name#,
+        		#b_depart_time#,#b_distance#,#drive_purpose#,#drive_point#,#a_arrive_time#,#a_distance#,
+        		#a_distance_auto#,#a_distance_commute#,#a_distance_work#,#a_distance_etc#,#car_register_no#, #control#, #companyID#, 0
+			)
+		]]>
+	</insert>
+
+	<select id="EzCarDAO.getBrd" parameterClass="Map" resultMap="carBrdVO">
+		<![CDATA[
+			SELECT
+				CAR_ID , 
+             	CAR_NAME ,
+             	CAR_NAME2 ,
+             	OWNDEPTID ,
+             	OWNDEPTNM ,
+             	OWNDEPTNM2 ,
+             	OWNERID ,
+             	OWNERNM ,
+             	OWNERNM2 ,
+             	OWNERPOSITION ,
+             	OWNERPOSITION2 ,
+             	OWNERCALL ,
+             	(SUBSTR(CAR_REGISTER_DATE, 1, 4)|| '-' || SUBSTR(CAR_REGISTER_DATE, 5, 2) || '-'||  SUBSTR(CAR_REGISTER_DATE, 7, 2)) CAR_REGISTER_DATE ,
+             	CAR_ACCESS,
+             	CAR_NM 
+        	FROM
+        		TBL_CAR 
+			WHERE
+				CAR_ID = #carID#
+       		AND
+				COMPANYID = #companyID#
+       		AND
+       			CAR_GB = '2'
+       		AND
+       			TENANT_ID = #tenantID#	 
+		]]>
+	</select>
+
+	<select id="EzCarDAO.getAttachList" parameterClass="Map"
+		resultClass="String">
+        <![CDATA[
+        	SELECT
+	        	FILEPATH
+	        FROM 
+	        	TBL_CAR_ATTACH 
+			WHERE
+				CAR_ID = #carID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				TENANT_ID = #tenantID# 
+			ORDER BY 
+				ATTACHID ASC
+        ]]>
+	</select>
+	
+	<select id="EzCarDAO.getAddJob" parameterClass="Map"
+		resultClass="String">
+        <![CDATA[
+        	SELECT
+	        	EXTENSIONATTRIBUTE4 
+	        FROM 
+	        	TBL_USERMASTER 
+	        WHERE 
+	        	CN=#userID#
+	        AND
+	        	TENANT_ID=#tenantID#
+        ]]>
+	</select>
+
+	<select id="EzCarDAO.getCarFormList" parameterClass="Map"
+		resultMap="carFormListVO2">
+		<![CDATA[
+		SELECT C.REGISTER_DATE, C.REV_DATE, C.REGISTER_ID, C.CAR_FORM_ID, C.REGISTER_DEPTNAME, C.REGISTER_NAME
+		FROM(
+			SELECT
+				ROW_NUMBER() OVER(PARTITION BY A.CAR_FORM_ID ORDER BY A.CAR_FORM_ID) AS ROW_NUM, TO_CHAR(A.REGISTER_DATE, 'YYYY-MM-DD') AS REGISTER_DATE, A.REV_DATE, A.REGISTER_ID, A.CAR_FORM_ID, B.DESCRIPTION AS REGISTER_DEPTNAME, B.DISPLAYNAME AS REGISTER_NAME
+			FROM
+				TBL_CAR_FORM A, TBL_USERMASTER B  
+			WHERE
+				A.REGISTER_ID = B.CN
+			AND
+				A.CAR_ID = #carID#
+			AND
+				A.COMPANYID = #companyID#
+			AND
+				A.TENANT_ID = #tenantID#
+			AND 
+			    A.DELFLAG = 0
+			AND 
+			    A.REV_DATE >= TO_DATE(#currentDate#, 'YYYYMM') AND A.REV_DATE < TO_DATE(#currentEndDate#, 'YYYYMM')
+			)C
+		WHERE C.ROW_NUM = 1
+			
+		]]>
+	</select>
+<!-- 	<select id="EzCarDAO.getCarFormList" parameterClass="Map"
+		resultMap="carFormListVO2">
+		<![CDATA[
+			SELECT
+				TO_CHAR(A.REGISTER_DATE, 'YYYY-MM-DD') AS REGISTER_DATE, A.REV_DATE, A.REGISTER_ID, A.CAR_FORM_ID, B.DESCRIPTION AS REGISTER_DEPTNAME, B.DISPLAYNAME AS REGISTER_NAME, A.REGISTER_ID AS REGISTER_ID
+			FROM
+				TBL_CAR_FORM A, TBL_USERMASTER B  
+			WHERE
+				A.REGISTER_ID = B.CN
+			AND
+				A.CAR_ID = #carID#
+			AND
+				A.COMPANYID = #companyID#
+			AND
+				A.TENANT_ID = #tenantID#
+			AND 
+			    A.DELFLAG = 0
+			AND 
+			    A.REV_DATE >= TO_DATE(#currentDate#, 'YYYYMM') AND A.REV_DATE < TO_DATE(#currentEndDate#, 'YYYYMM')
+			GROUP BY A.REGISTER_DATE,A.REV_DATE, A.REGISTER_ID, A.CAR_FORM_ID, B.DESCRIPTION, B.DISPLAYNAME, A.REGISTER_ID
+			ORDER BY A.CAR_FORM_ID
+			
+		]]>
+	</select> -->
+	
+	<select id="EzCarDAO.getCarForm3" parameterClass="Map"
+		resultMap="carFormListVO3">
+		<![CDATA[
+			SELECT
+				A.REGISTER_DATE,A.REV_DATE,A.REV_TIME,A.REV_TIME2, A.REGISTER_ID, A.CAR_FORM_ID, B.DESCRIPTION AS REGISTER_DEPTNAME, B.DISPLAYNAME AS REGISTER_NAME, A.REGISTER_ID AS REGISTER_ID
+			FROM
+				TBL_CAR_FORM A, TBL_USERMASTER B  
+			WHERE
+				A.REGISTER_ID = B.CN
+			AND
+				A.CAR_ID = #carID#
+			AND
+				A.COMPANYID = #companyID#
+			AND
+				A.TENANT_ID = #tenantID#
+			AND 
+				A.CAR_FORM_ID != #carFormID#
+			AND 
+			    A.DELFLAG = 0
+			AND 
+		        A.REV_DATE >= TO_DATE(#yearMonth#, 'YYYYMM') AND A.REV_DATE < TO_DATE(#yearMonthEnd#, 'YYYYMM')
+			    
+			ORDER BY A.CAR_FORM_ID
+			
+		]]>
+	</select>
+
+	<update id="EzCarDAO.modifyCarData" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_CAR
+      		SET 
+      			OWNDEPTID = #v_P_ODeptID#,
+          		OWNDEPTNM = #v_P_ODeptNm#,
+          		OWNERID = #v_P_OwnerID#,
+          		OWNERNM = #v_P_OwnerNm#,
+          		OWNERCALL = #v_P_OwnerCall#,
+          		CAR_NAME = #v_P_Brd_NM#,
+          		CAR_NAME2 = #v_P_Brd_NM2#,
+          		CAR_NM = #car_nm#
+    		WHERE
+    			CAR_ID = #v_P_Brd_ID#
+    		AND
+    			COMPANYID = #v_P_CompanyID#
+    		AND
+    			TENANT_ID = #tenantID#	
+		]]>
+	</update>
+
+	<update id="EzCarDAO.modifyCarForm" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_CAR_FORM
+      		SET 
+      			DELFLAG = 1,
+          		CAR_FORM_ID = #car_form_id2#,
+          		REGISTER_DATE = TO_DATE(#currentDate#,'YY/MM/DD')
+    		WHERE
+    			CAR_ID = #carID#
+    		AND
+    			COMPANYID = #companyID#
+    		AND
+    			TENANT_ID = #tenantID#	
+    		AND
+    		    CAR_FORM_ID = #car_form_id#
+		]]>
+	</update>
+
+	<delete id="EzCarDAO.delAttachFile" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_CAR_ATTACH 
+   			WHERE
+   				CAR_ID = #carID#
+   			AND
+   				COMPANYID = #companyID#
+   			AND
+   				TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+
+
+	<select id="EzCarDAO.getBrdCnt" parameterClass="Map"
+		resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(CAR_ID) cnt 
+			FROM
+				TBL_CAR 
+			WHERE  
+				CAR_UPPER = #v_PBRDID#
+            AND
+            	CAR_GB = '2'
+            AND
+            	COMPANYID = #v_PCOMPANYID#
+            AND
+            	TENANT_ID = #tenantID#	
+		]]>
+	</select>
+
+	<select id="EzCarDAO.getBrdList" parameterClass="Map" resultMap="resCarListVO">
+		<![CDATA[
+			SELECT
+				COMPANYID, 
+                CAR_GB, CAR_ID, CAR_LEVEL, CAR_NAME, OWNERID, OWNERNM,
+                CAR_STEP, CAR_UPPER, CAR_URL, OWNERCALL,
+                (SUBSTR(CAR_REGISTER_DATE, 1, 4)|| '-' || SUBSTR(CAR_REGISTER_DATE, 5, 2) || '-'||  SUBSTR(CAR_REGISTER_DATE, 7, 2)) CAR_REGISTER_DATE 
+			FROM
+				TBL_CAR  
+			WHERE
+				CAR_UPPER = #carID#
+			AND
+				CAR_GB = '2' 
+			AND
+				COMPANYID = #companyID#
+			AND
+				TENANT_ID = #tenantID#
+			AND 
+			    DELFLAG = 0
+			ORDER BY CAR_STEP
+		]]>
+	</select>
+
+	<select id="EzCarDAO.getMaxCarFormId" parameterClass="Map"
+		resultClass="Integer">
+		<![CDATA[
+			SELECT
+				(NVL(MAX(CAR_FORM_ID) , 0) + 1)
+			FROM
+				TBL_CAR_FORM 
+			WHERE  
+				CAR_ID = #carID#
+            AND
+            	COMPANYID = #companyID#
+            AND
+            	TENANT_ID = #tenantID#	
+		]]>
+	</select>
+
+	<select id="EzCarDAO.getCarForm" parameterClass="Map" resultMap="carFormListVO">
+		<![CDATA[
+			SELECT
+				CAR_FORM_ID, CAR_ID, REGISTER_ID, DRIVER_NAME, DRIVER_DEPTNAME, TO_CHAR(REGISTER_DATE,'YYYY-MM-DD') REGISTER_DATE, B_DEPART_TIME, B_DISTANCE, DRIVE_PURPOSE, NVL(DRIVE_POINT,' ') DRIVE_POINT, REV_TIME, REV_TIME2, TO_CHAR(REV_DATE,'YYYY-MM-DD') REV_DATE,
+				A_ARRIVE_TIME, A_DISTANCE, A_DISTANCE_AUTO, A_DISTANCE_COMMUTE, A_DISTANCE_WORK, A_DISTANCE_ETC, A_SUBMIT_FLAG, DELFLAG, COMPANYID, TENANT_ID, CAR_REGISTER_NO
+			FROM
+				TBL_CAR_FORM A 
+			WHERE
+				A.CAR_ID = #carID#
+			AND
+				A.CAR_FORM_ID = #car_form_id#
+			AND
+				A.COMPANYID = #companyID#
+			AND
+				A.TENANT_ID = #tenantID#
+			AND 
+			    A.DELFLAG = 0
+			ORDER BY A.CAR_REGISTER_NO
+			
+		]]>
+	</select>
+
+	<update id="EzCarDao.deleteCarForm" parameterClass="map">
+		<![CDATA[
+			update
+				tbl_car_form
+			set
+				delflag = 1
+			where  
+	   			car_id = #carID#
+	   		and
+	   			car_form_id = #car_form_id#
+	   		and
+	   			tenant_id = #tenantId#
+	   		and 
+	   		    companyid = #companyID#
+		]]>
+	</update>
+
+	<select id="EzCarDAO.getCarForm2" parameterClass="Map"
+		resultMap="carFormListVO">
+		<![CDATA[
+			SELECT
+				CAR_FORM_ID, CAR_ID, REGISTER_ID, DRIVER_NAME, DRIVER_DEPTNAME, REGISTER_DATE, B_DEPART_TIME, B_DISTANCE, DRIVE_PURPOSE, DRIVE_POINT, REV_TIME, REV_TIME2, TO_CHAR(REV_DATE,'YYYY-MM-DD') REV_DATE,
+				A_ARRIVE_TIME, A_DISTANCE, A_DISTANCE_AUTO, A_DISTANCE_COMMUTE, A_DISTANCE_WORK, A_DISTANCE_ETC, A_SUBMIT_FLAG, DELFLAG, COMPANYID, TENANT_ID, CAR_REGISTER_NO
+			FROM
+				TBL_CAR_FORM A 
+			WHERE
+				A.CAR_ID = #carID#
+			AND 
+			    A.REV_DATE >= TO_DATE(#yearMonth#, 'YYYYMM') AND A.REV_DATE < TO_DATE(#yearMonthEnd#, 'YYYYMM')
+			AND
+				A.COMPANYID = #companyID#
+			AND
+				A.TENANT_ID = #tenantID#
+			AND 
+			    A.DELFLAG = 0
+			ORDER BY A.REV_DATE, A.REV_TIME
+			
+		]]>
+	</select>
+	
+	
+	
+	<select id="EzCarDAO.getAclTblBrd_S3" parameterClass="Map" 	resultClass="String">
+	<![CDATA[
+			SELECT
+				ACCESS_LVL
+            FROM 
+            	TBL_CAR_ACL 
+            WHERE  
+            	COMPANYID = #v_PCOMPANYID#
+            AND 
+            	CAR_ID = #v_BRD_UPPER#
+            AND
+            	MEMBER_ID = #v_PUSERID#
+            AND
+            	TENANT_ID = #tenantID#	
+		]]>	
+	</select>
+
+
+
+<select id="EzCarDAO.getDeptAcl" parameterClass="Map"  resultMap="resGetClsAclListVO">
+		<![CDATA[
+			SELECT
+				DEPT_YN , 
+				SDA_YN ,
+				MEMBER_NAM ,
+				MEMBER_ID ,
+				ACCESS_LVL 
+        	FROM
+        		TBL_CAR_ACL 
+       		WHERE
+       			CAR_ID = #v_BRD_UPPER#
+       		AND
+       			COMPANYID = #v_PCOMPANYID#
+       		AND 
+       			TENANT_ID = #tenantID#	
+       		AND
+       			SDA_Yn = 'Y'
+       		AND
+       			MEMBER_ID in ( $v_PUSERID$ )
+		]]>
+	</select>
+
+<select id="EzCarDAO.getAdmFlag" parameterClass="Map" resultMap="resGetAdminFlagVO">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+			(	SELECT
+					member_id, access_lvl 
+	      		FROM
+	      			TBL_CAR_ACL 
+	      		WHERE
+	      			companyid = #companyID#
+	      		AND
+	      			CAR_ID = #resID#
+				AND
+					( MEMBER_ID = #memberID#
+				OR
+						MEMBER_ID = 'everyone' )
+	            AND
+	                TENANT_ID = #tenantID#
+	            ORDER BY
+	            	ACCESS_LVL	ASC)
+	         WHERE
+	         	ROWNUM = 1
+		]]>
+	</select>
+	
+	<select id="EzCarDAO.getCarUpper"  parameterClass="Map" 	resultClass="String">
+	<![CDATA[
+			SELECT
+				CAR_UPPER
+            FROM 
+            	TBL_CAR 
+            WHERE  
+            	COMPANYID = #companyID#
+            AND 
+            	CAR_ID = #carID#
+            AND
+            	TENANT_ID = #tenantID#	
+		]]>	
+	</select>
+	
+</sqlMap>

@@ -264,20 +264,22 @@
 		    }
 		    
 		    function FieldsAvailable(isTrue) {
-		    	 try {                
-		             if (isTrue) {
-						 message.EditMode(1);	// 0:읽기 전용, 1:일반 편집모드, 2:양식 모드, 16:배포용 문서
-						 var docElemInfo = message.WHWP_GetDocumentElement();
-						 txt_OpinionContent.value = docElemInfo[0];
-						 txt_OpinionContent1.value = docElemInfo[1];
-						 txt_OpinionContent2.value = docElemInfo[2];
+		    	try {                
+		            if (isTrue) {
+						message.EditMode(1);	// 0:읽기 전용, 1:일반 편집모드, 2:양식 모드, 16:배포용 문서
+						message.SetViewProperties(2, 100);
+
+						var docElemInfo = message.WHWP_GetDocumentElement();
+						txt_OpinionContent.value = docElemInfo[0];
+						txt_OpinionContent1.value = docElemInfo[1];
+						txt_OpinionContent2.value = docElemInfo[2];
 		                //  if (document.getElementById("setConnFlag").checked) {
 		                //      //ConnInfoXmlRead();
 		                //  }
-		              }
-		         } catch (e) {
-		             alert("FieldsAvailable() :: " + e);
-		         }
+		            }
+		        } catch (e) {
+		            alert("FieldsAvailable() :: " + e);
+		        }
 		    }
 		
 		    function Attribute_Write(value) {

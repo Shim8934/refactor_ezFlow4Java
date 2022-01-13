@@ -5761,9 +5761,12 @@ CREATE TABLE `tbl_connection_info` (
   `CONNECTIP` varchar(200) DEFAULT NULL,
   `CONNECTINFO` varchar(200) DEFAULT NULL,
   `CONNECTTIME` datetime DEFAULT NULL,
+  `DISCONNECTTIME` datetime DEFAULT NULL,
   `CONNECTBROWSER` varchar(40) DEFAULT NULL,
   `CONNECTOS` varchar(80) DEFAULT NULL,
   `CONNECTAGENT` varchar(1000) DEFAULT NULL,
+  `STATUS` varchar(1) DEFAULT NULL,
+  `SESSIONCODE` varchar(80) DEFAULT NULL,
   `TENANT_ID` decimal(22,0) NOT NULL DEFAULT 0,
   PRIMARY KEY (`SEQUENCE`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -14213,7 +14216,7 @@ CREATE TABLE `tbl_webfolder_no_inherit` (
   `FOLDER_ID` varchar(100) NOT NULL,
   `TENANT_ID` int(7) NOT NULL,
   PRIMARY KEY (`FOLDER_ID`,`TENANT_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 --
 -- Table structure for table `tbl_webfolder_favor`
 --

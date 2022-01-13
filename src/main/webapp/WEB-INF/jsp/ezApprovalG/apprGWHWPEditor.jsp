@@ -418,6 +418,20 @@
 	       function SaveDocument(fileName, fileType, callback) {
 	            HwpCtrl.SaveDocument(fileName, fileType, callback);
 	        }
+
+			/**
+			 * [View의 상태 정보]
+			 * 조판 부호, 화면 확대 비율과 같은 view에 관련된 정보를 나타낸다. 
+			 * ParameterSet의 형식은 ParameterSet/ViewProperties 참조.
+			 * 	 - zoomType : 화면 확대 종류(0 - 사용자정의, 1 - 쪽맞춤, 2 - 폭맞춤, 3 - 여러쪽)
+			 * 	 - zoomRatio : 화면 확대 비율(10 ~ 500 (단위 %)) - 화면 확대 종류가 "사용자 정의"인 경우만 사용가능
+			 */
+			function SetViewProperties(zoomType, zoomRatio) {
+				var vp = HwpCtrl.CreateSet("ViewProperties");
+				vp.SetItem("ZoomType", zoomType);		//	화면 확대 종류
+				vp.SetItem("ZoomRatio", zoomRatio);		// 	화면 확대 비율
+				HwpCtrl.ViewProperties = vp;
+			}
 		</script>
 	</head>
 	<body style="padding: 0; margin: 0;">

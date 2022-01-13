@@ -1,0 +1,1866 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="ezStatisticsAdmin">
+	<typeAlias  alias="StatDailyDocCountLogVO" 	type="egovframework.ezEKP.ezStatistics.vo.StatDailyDocCountLogVO"/>
+	<typeAlias  alias="StatApprVO" 				type="egovframework.ezEKP.ezStatistics.vo.StatApprVO"/>
+	<typeAlias  alias="StatConnVO" 				type="egovframework.ezEKP.ezStatistics.vo.StatConnVO"/>
+	
+	<resultMap class="StatConnVO" id="StatConnInfoVO">
+		<result property="day"			column="DAY"				/>
+		<result property="connectCnt"			column="CONNECTCNT"				columnIndex="2"/>
+		<result property="date"					column="DATE_"					columnIndex="3"/>
+		<result property="total"				column="TOTAL"					/>
+	</resultMap>
+	
+	<select id="EzStatisticsAdminDAO.getTimeList_F" parameterClass="StatApprVO" resultClass="StatDailyDocCountLogVO">
+		<![CDATA[
+			SELECT 
+				REGDATE, 
+				B.FORMID,	
+				A.FORMNAME AS FORMINFO,
+         		CASE  
+         			WHEN DRAFTENDCNT > 0 
+         			THEN ROUND(DTIME / DRAFTENDCNT, 2)
+         			ELSE 0 
+         		END AS DTIME
+         	FROM 
+         		TBL_FORMINFO A  
+         	LEFT OUTER JOIN
+         		( SELECT 
+         				SUBSTR(REGDATE,0,7) AS REGDATE, 
+         				FORMID, 
+         				SUM(DRAFTENDCNT) AS DRAFTENDCNT, 
+         				SUM(DRAFTTIME * DRAFTENDCNT)  AS DTIME,
+         				TENANT_ID,
+         				COMPANYID
+         		  FROM  
+         		  		TBL_DAILYFORMCOUNTLOG 
+         		  WHERE 
+         		  		TENANT_ID = #tenantID#
+         		  AND
+         		  		COMPANYID = #company#
+         		  AND
+         		  		REGDATE >=  #startDate# 
+         		  AND 
+         		  		REGDATE <= #endDate#
+         		  GROUP BY 
+         		  		SUBSTR(REGDATE,0,7), 
+         		  		FORMID,
+         		  		TENANT_ID,
+         		  		COMPANYID ) B  
+         	ON 
+         		A.TENANT_ID = B.TENANT_ID
+         	AND
+         		A.COMPANYID = B.COMPANYID
+         	AND
+         		A.FORMID = B.FORMID
+         	INNER JOIN 
+         		TBL_FORMCONTAINER C 
+         	ON 
+         		A.TENANT_ID = C.TENANT_ID
+         	AND
+         		A.COMPANYID = C.COMPANYID
+         	AND
+         		A.FORMCONTID = C.FORMCONTID
+         	WHERE
+         		A.TENANT_ID = #tenantID#
+         	AND 
+         		A.COMPANYID = #company#
+         	AND 
+         		REGDATE IS NOT NULL 
+         	AND 
+         		DTIME != 0 
+         	AND 
+         		B.FORMID = #searchID#
+         	ORDER BY 
+         		B.FORMID, 
+         		REGDATE, 
+         		DTIME DESC
+		]]>
+	</select>
+	
+	<select id="EzStatisticsAdminDAO.getTimeList_D" parameterClass="StatApprVO" resultClass="StatDailyDocCountLogVO">
+		<![CDATA[
+			SELECT 
+				REGDATE ,
+                A.CN ,
+                A.DISPLAYNAME , 
+                NVL(DRAFTENDCNT, 0) DRAFTENDCNT  ,
+                CASE 
+                    WHEN DRAFTENDCNT > 0 
+                    THEN ROUND(DTIME / DRAFTENDCNT, 2)
+                	ELSE 0
+                END DTIME  
+           	FROM 
+           		TBL_DEPTMASTER A
+            LEFT JOIN 
+            	( SELECT 
+            			SUBSTR(REGDATE, 0, 7) REGDATE  ,
+            			DEPTID ,
+                        SUM(DRAFTENDCNT)  DRAFTENDCNT  ,
+                        SUM(DRAFTTIME * DRAFTENDCNT)  DTIME,
+                        TENANT_ID,
+                        COMPANYID
+                  FROM 
+                  		TBL_DAILYDOCCOUNTLOG 
+                  WHERE 
+                  		TENANT_ID = #tenantID#
+                  AND
+                  		COMPANYID = #company#
+                  AND
+                  		REGDATE >= #startDate#
+                  AND 
+                  		REGDATE <= #endDate#
+                  GROUP BY 
+                  		SUBSTR(REGDATE, 0, 7),
+                  		DEPTID,
+                  		TENANT_ID,
+                  		COMPANYID ) B   
+            ON 
+            	B.TENANT_ID = A.TENANT_ID
+            AND
+            	B.COMPANYID = A.EXTENSIONATTRIBUTE2
+            AND
+            	B.DEPTID = A.CN
+          	WHERE
+          		A.TENANT_ID = #tenantID#
+          	AND  
+				A.EXTENSIONATTRIBUTE2 = #company#
+          	AND  
+          		B.DEPTID = #searchID#
+            AND 
+            	DTIME != '0'
+            AND 
+            	REGDATE IS NOT NULL
+           	ORDER BY 
+           		A.CN,
+                REGDATE,
+                DTIME DESC
+		]]>
+	</select>
+	
+	<select id="EzStatisticsAdminDAO.getTimeList_U" parameterClass="StatApprVO" resultClass="StatDailyDocCountLogVO">
+		<![CDATA[
+			SELECT 
+				REGDATE ,
+                A.CN ,
+                A.DISPLAYNAME ,
+                NVL(DRAFTENDCNT, 0) DRAFTENDCNT  ,
+                CASE
+                	WHEN DRAFTENDCNT > 0 
+                    THEN ROUND(DTIME / DRAFTENDCNT, 2)
+                	ELSE 0
+                END DTIME  
+           	FROM 
+           		TBL_USERMASTER A
+            JOIN 
+            	( SELECT 
+            			SUBSTR(REGDATE, 0, 7) REGDATE  ,
+                        USERID ,
+                        SUM(DRAFTENDCNT)  DRAFTENDCNT  ,
+                        SUM(DRAFTTIME * DRAFTENDCNT)  DTIME,
+                        TENANT_ID,
+                        COMPANYID
+                  FROM 
+                  		TBL_DAILYDOCCOUNTLOG 
+                  WHERE
+                  		TENANT_ID = #tenantID#
+                  AND  
+                  		COMPANYID = #company#
+                  AND  
+                  		REGDATE >= #startDate#
+                  AND 
+                  		REGDATE <= #endDate#
+                  GROUP BY 
+                  		SUBSTR(REGDATE, 0, 7),
+                  		USERID,
+                  		TENANT_ID,
+                  		COMPANYID ) B   
+            ON 
+            	B.TENANT_ID = A.TENANT_ID
+            AND
+            	B.COMPANYID = A.PHYSICALDELIVERYOFFICENAME
+            AND
+            	B.USERID = A.CN
+          	WHERE
+          		A.TENANT_ID = #tenantID#
+          	AND  
+          		B.COMPANYID = #company#
+          	AND  
+          		B.USERID = #searchID#
+            AND 
+            	B.DTIME != 0
+            AND 
+            	REGDATE IS NOT NULL
+           	ORDER BY 
+           		A.CN,
+                REGDATE,
+                DTIME DESC
+		]]>
+	</select>
+	
+	<select id="EzStatisticsAdminDAO.getCountList_F" parameterClass="StatApprVO" resultClass="StatDailyDocCountLogVO">
+		<![CDATA[
+			SELECT 
+				REGDATE ,
+				B.FORMID, 
+				A.FORMNAME AS FORMINFO,   
+				NVL(DRAFTCNT, 0) AS DRAFTCNT, 
+				NVL(DRAFTINGCNT, 0) AS DRAFTINGCNT, 
+				NVL(DRAFTENDCNT, 0) AS DRAFTENDCNT, 
+				NVL(RETURNCNT, 0) AS RETURNCNT
+            FROM 
+            	TBL_FORMINFO A  
+            LEFT OUTER JOIN
+            	( SELECT 
+            			SUBSTR(REGDATE,0,7) AS REGDATE, 
+            			FORMID, 
+            			SUM(DRAFTINGCNT + DRAFTENDCNT + RETURNCNT) AS DRAFTCNT, 
+            			SUM(DRAFTINGCNT + SUSININGCNT) AS  DRAFTINGCNT, 
+            			SUM(DRAFTENDCNT + SUSINENDCNT) AS DRAFTENDCNT, 
+            			SUM(RETURNCNT) AS RETURNCNT,
+            			TENANT_ID,
+            			COMPANYID
+            	  FROM 
+            	  		TBL_DAILYFORMCOUNTLOG
+            	  WHERE 
+            	  		TENANT_ID = #tenantID#
+            	  AND
+            	  		COMPANYID = #company#
+            	  AND
+            	  		REGDATE >= #startDate# 
+            	  AND 
+            	  		REGDATE <= #endDate#
+            	  GROUP BY 
+            	  		SUBSTR(REGDATE,0,7), 
+            	  		FORMID,
+            	  		TENANT_ID,
+            	  		COMPANYID ) B  
+            ON 
+            	A.TENANT_ID = B.TENANT_ID
+            AND
+            	A.COMPANYID = B.COMPANYID
+            AND
+            	A.FORMID = B.FORMID
+            INNER JOIN 
+            	TBL_FORMCONTAINER C  
+            ON 
+            	A.TENANT_ID = C.TENANT_ID
+            AND
+            	A.COMPANYID = C.COMPANYID
+            AND
+            	A.FORMCONTID = C.FORMCONTID
+            WHERE
+            	A.TENANT_ID = #tenantID#
+            AND
+            	A.COMPANYID = #company#
+            AND
+            	REGDATE IS NOT NULL 
+            AND 
+            	B.FORMID = #searchID# 
+            AND 
+            	(DRAFTCNT != 0 OR DRAFTINGCNT != 0 OR DRAFTENDCNT != 0 OR RETURNCNT != 0)
+            ORDER BY 
+            	FORMID, 
+            	REGDATE, 
+            	DRAFTCNT DESC
+		]]>
+	</select>
+	
+	<select id="EzStatisticsAdminDAO.getCountList_U" parameterClass="StatApprVO" resultClass="StatDailyDocCountLogVO">
+		<![CDATA[
+			SELECT 
+				REGDATE ,
+                A.DISPLAYNAME ,
+                NVL(DRAFTCNT, 0) DRAFTCNT  ,
+                NVL(DRAFTINGCNT, 0) DRAFTINGCNT  ,
+                NVL(DRAFTENDCNT, 0) DRAFTENDCNT  ,
+                NVL(RETURNCNT, 0) RETURNCNT  ,
+                A.CN 
+            FROM 
+            	TBL_USERMASTER A
+            JOIN 
+            	( SELECT 
+            		SUBSTR(REGDATE, 0, 7) REGDATE  ,
+                    USERID ,
+                    SUM(DRAFTINGCNT + DRAFTENDCNT + RETURNCNT)  DRAFTCNT  ,
+                    SUM(DRAFTINGCNT + SUSININGCNT)  DRAFTINGCNT  ,
+                    SUM(DRAFTENDCNT + SUSINENDCNT)  DRAFTENDCNT  ,
+                    SUM(RETURNCNT)  RETURNCNT,
+                    TENANT_ID,
+                    COMPANYID
+                  FROM 
+                  	TBL_DAILYDOCCOUNTLOG 
+                  WHERE  
+                  	TENANT_ID = #tenantID#
+                  AND
+                  	COMPANYID = #company#
+                  AND
+                  	REGDATE >= #startDate#
+                  AND 
+                  	REGDATE <= #endDate#
+                  GROUP BY 
+                  	SUBSTR(REGDATE, 0, 7),
+                  	USERID,
+                  	TENANT_ID,
+                  	COMPANYID ) B   
+             ON 
+             	B.TENANT_ID = A.TENANT_ID
+             AND
+             	B.COMPANYID = A.PHYSICALDELIVERYOFFICENAME
+             AND
+             	B.USERID = A.CN
+             AND 
+             	REGDATE IS NOT NULL
+             WHERE  
+             	A.TENANT_ID = #tenantID#
+             AND
+             	B.COMPANYID = #company#
+             AND
+             	B.USERID = #searchID#
+             AND 
+             	( DRAFTCNT != 0 OR DRAFTINGCNT != 0 OR DRAFTENDCNT != 0 OR RETURNCNT != 0 )
+             ORDER BY 
+             	USERID,
+             	REGDATE,
+                DRAFTCNT DESC
+		]]>
+	</select>
+	
+	<select id="EzStatisticsAdminDAO.getCountList_D" parameterClass="StatApprVO" resultClass="StatDailyDocCountLogVO">
+		<![CDATA[
+			SELECT 
+				REGDATE ,
+                A.DISPLAYNAME ,
+                NVL(DRAFTCNT, 0) DRAFTCNT  ,
+                NVL(DRAFTINGCNT, 0) DRAFTINGCNT  ,
+                NVL(DRAFTENDCNT, 0) DRAFTENDCNT  ,
+                NVL(RETURNCNT, 0) RETURNCNT  ,
+                A.CN  
+           	FROM 
+           		TBL_DEPTMASTER A
+            LEFT JOIN 
+            	( SELECT 
+            			SUBSTR(REGDATE, 0, 7) REGDATE  ,
+                        DEPTID ,
+                        SUM(DRAFTINGCNT + DRAFTENDCNT + RETURNCNT)  DRAFTCNT  ,
+                        SUM(DRAFTINGCNT + SUSININGCNT)  DRAFTINGCNT  ,
+                        SUM(DRAFTENDCNT + SUSINENDCNT)  DRAFTENDCNT  ,
+                        SUM(RETURNCNT)  RETURNCNT,
+                        TENANT_ID,
+                        COMPANYID
+                  FROM 
+                  		TBL_DAILYDOCCOUNTLOG 
+                  WHERE 
+                  		TENANT_ID = #tenantID#
+                  AND
+                  		COMPANYID = #company#
+                  AND
+                  		REGDATE >= #startDate#
+                  AND 
+                  		REGDATE <= #endDate#
+                  GROUP BY 
+                  		SUBSTR(REGDATE, 0, 7),
+                  		DEPTID,
+                  		TENANT_ID,
+                  		COMPANYID ) B   
+            ON 
+            	B.TENANT_ID = A.TENANT_ID
+            AND
+            	B.COMPANYID = A.EXTENSIONATTRIBUTE2
+            AND
+            	B.DEPTID = A.CN
+          	WHERE
+          		A.TENANT_ID = #tenantID#
+          	AND
+          		A.EXTENSIONATTRIBUTE2 = #company#
+          	AND  
+          		REGDATE IS NOT NULL
+            AND 
+            	A.CN = #searchID#
+            AND 
+            	( DRAFTCNT != 0 OR DRAFTINGCNT != 0 OR DRAFTENDCNT != 0 OR RETURNCNT != 0 )
+           	ORDER BY 
+           		CN,
+                REGDATE,
+                DRAFTCNT DESC
+		]]>
+	</select>
+	
+	<select id="EzStatisticsAdminDAO.getFormInfo" parameterClass="StatApprVO" resultClass="StatDailyDocCountLogVO">
+		<![CDATA[
+			SELECT
+				A.FORMID, 
+   				CASE  
+   				WHEN #lang# = 1 THEN B.FORMNAME
+   				ELSE B.FORMNAME2 
+   				END AS FORMINFO
+   			FROM 
+   				TBL_DAILYFORMCOUNTLOG A 
+   			JOIN 
+   				TBL_FORMINFO B
+   			ON 
+   				A.TENANT_ID = B.TENANT_ID
+   			AND
+   				A.COMPANYID = B.COMPANYID
+   			AND
+   				A.FORMID = B.FORMID
+   			JOIN 
+   				TBL_FORMCONTAINER C  
+   			ON 
+   				A.TENANT_ID = C.TENANT_ID
+   			AND
+   				A.COMPANYID = C.COMPANYID
+   			AND
+   				A.FORMCONTID = C.FORMCONTID
+   			WHERE  
+   				A.TENANT_ID = #tenantID#
+   			AND
+   				A.COMPANYID = #company#
+   			AND
+   				REGDATE >= #startDate#
+   			AND 
+   				REGDATE <= #endDate# 
+   			$searchList$ 
+   			GROUP BY 
+   				A.FORMID, 
+   				B.FORMNAME, 
+   				B.FORMNAME2
+   			ORDER BY 
+   				B.FORMNAME, 
+   				B.FORMNAME2
+		]]>
+	</select>
+	
+	<select id="EzStatisticsAdminDAO.getSearchList_F" parameterClass="StatApprVO" resultClass="StatDailyDocCountLogVO">
+		<![CDATA[
+			SELECT 
+				B.FORMID, 
+				A.FORMNAME AS FORMINFO,   
+				NVL(DRAFTCNT, 0) AS DRAFTCNT, 
+				NVL(DRAFTINGCNT, 0) AS DRAFTINGCNT, 
+				NVL(DRAFTENDCNT, 0) AS DRAFTENDCNT, 
+				NVL(RETURNCNT, 0) AS RETURNCNT,
+            	NVL(DRAFTEND, 0) AS DRAFTEND,
+       			CASE  
+       				WHEN DRAFTEND > 0 
+       				THEN ROUND( DTIME / DRAFTEND,2)
+       				ELSE 0 
+       			END AS DTIME
+            FROM 
+            	TBL_FORMINFO A  
+            LEFT OUTER JOIN
+            	( SELECT 
+            			FORMID, 
+            			SUM(DRAFTINGCNT + DRAFTENDCNT + RETURNCNT) AS DRAFTCNT, 
+            			SUM(DRAFTINGCNT + SUSININGCNT) AS  DRAFTINGCNT, 
+            			SUM(DRAFTENDCNT + SUSINENDCNT) AS DRAFTENDCNT, 
+            			SUM(RETURNCNT) AS RETURNCNT,
+            			SUM(DRAFTENDCNT) AS DRAFTEND, SUM(DRAFTTIME * DRAFTENDCNT)  AS DTIME,
+            			TENANT_ID,
+            			COMPANYID
+            	  FROM 
+            	  		TBL_DAILYFORMCOUNTLOG
+            	  WHERE 
+            	  		TENANT_ID = #tenantID#
+            	  AND
+            	  		COMPANYID = #company#
+            	  AND
+            	  		REGDATE >= #startDate# 
+            	  AND 
+            	  		REGDATE <= #endDate#
+            	  GROUP BY 
+            	  		FORMID,
+            	  		TENANT_ID,
+            	  		COMPANYID ) B  
+            ON 
+            	A.TENANT_ID = B.TENANT_ID
+            AND
+            	A.COMPANYID = B.COMPANYID
+            AND
+            	A.FORMID = B.FORMID
+            INNER JOIN 
+            	TBL_FORMCONTAINER C  
+            ON 
+            	A.TENANT_ID = C.TENANT_ID
+            AND
+            	A.COMPANYID = C.COMPANYID
+            AND
+            	A.FORMCONTID = C.FORMCONTID
+            WHERE 
+            	A.TENANT_ID = #tenantID#
+            AND 
+            	A.COMPANYID = #company#
+           	AND
+            	(DRAFTCNT != 0 OR DRAFTINGCNT != 0 OR DRAFTENDCNT != 0 OR RETURNCNT != 0)
+            AND 
+            	A.FORMID = #searchID#
+            ORDER BY 
+            	FORMID, 
+            	DRAFTCNT DESC
+		]]>
+	</select>
+	
+	<select id="EzStatisticsAdminDAO.getSearchList_D" parameterClass="StatApprVO" resultClass="StatDailyDocCountLogVO">
+		<![CDATA[
+			SELECT 
+				A.DISPLAYNAME ,
+                NVL(DRAFTCNT, 0) DRAFTCNT  ,
+                NVL(DRAFTINGCNT, 0) DRAFTINGCNT  ,
+                NVL(DRAFTENDCNT, 0) DRAFTENDCNT  ,
+                NVL(RETURNCNT, 0) RETURNCNT  ,
+                A.CN ,
+                NVL(DRAFTEND, 0) DRAFTEND  ,
+                CASE 
+                    WHEN DRAFTEND > 0 
+                    THEN ROUND(DTIME / DRAFTEND, 2)
+                	ELSE 0
+                END DTIME  
+           	FROM 
+           		TBL_DEPTMASTER A
+            LEFT JOIN 
+            	( SELECT 
+            			DEPTID ,
+            			SUM(DRAFTINGCNT + DRAFTENDCNT + RETURNCNT)  DRAFTCNT  ,
+                        SUM(DRAFTINGCNT + SUSININGCNT)  DRAFTINGCNT  ,
+                        SUM(DRAFTENDCNT + SUSINENDCNT)  DRAFTENDCNT  ,
+                        SUM(RETURNCNT)  RETURNCNT  ,
+                        SUM(DRAFTENDCNT)  DRAFTEND  ,
+                        SUM(DRAFTTIME * DRAFTENDCNT)  DTIME,
+                        TENANT_ID,
+                        COMPANYID
+                  FROM 
+                  		TBL_DAILYDOCCOUNTLOG 
+                  WHERE  
+                  		TENANT_ID = #tenantID#
+                  AND
+                  		COMPANYID = #company#
+                  AND
+                  		REGDATE >= #startDate#
+                  AND 
+                  		REGDATE <= #endDate#
+                  GROUP BY 
+                  		DEPTID,
+                  		TENANT_ID,
+                  		COMPANYID ) B   
+            ON 
+            	B.TENANT_ID = A.TENANT_ID
+           	AND
+            	B.COMPANYID = A.EXTENSIONATTRIBUTE2
+           	AND
+            	B.DEPTID = A.CN
+          	WHERE
+          		A.TENANT_ID = #tenantID#
+          	AND 
+            	A.EXTENSIONATTRIBUTE2 = #company#
+          	AND  
+          		( DRAFTCNT != 0 OR DRAFTINGCNT != 0 OR DRAFTENDCNT != 0 OR RETURNCNT != 0 )
+            AND 
+            	B.DEPTID = #searchID#
+            ORDER BY 
+            	CN,
+                DRAFTCNT DESC
+		]]>
+	</select>
+	
+	<select id="EzStatisticsAdminDAO.getSearchList_U" parameterClass="StatApprVO" resultClass="StatDailyDocCountLogVO">
+		<![CDATA[
+            SELECT 
+            	A.DISPLAYNAME ,
+                NVL(DRAFTCNT, 0) DRAFTCNT  ,
+                NVL(DRAFTINGCNT, 0) DRAFTINGCNT  ,
+                NVL(DRAFTENDCNT, 0) DRAFTENDCNT  ,
+                NVL(RETURNCNT, 0) RETURNCNT  ,
+                A.CN ,
+                NVL(DRAFTEND, 0) DRAFTEND  ,
+                CASE 
+                    WHEN DRAFTEND > 0 
+                    THEN ROUND(DTIME / DRAFTEND, 2)
+                	ELSE 0
+                END DTIME  
+           	FROM 
+           		TBL_USERMASTER A
+            JOIN 
+            	( SELECT 
+            			USERID ,
+                        SUM(DRAFTINGCNT + DRAFTENDCNT + RETURNCNT)  DRAFTCNT  ,
+                        SUM(DRAFTINGCNT + SUSININGCNT)  DRAFTINGCNT  ,
+                        SUM(DRAFTENDCNT + SUSINENDCNT)  DRAFTENDCNT  ,
+                        SUM(RETURNCNT)  RETURNCNT  ,
+                        SUM(DRAFTENDCNT)  DRAFTEND  ,
+                        SUM(DRAFTTIME * DRAFTENDCNT)  DTIME,
+                        TENANT_ID,
+                        COMPANYID
+                  FROM 
+                  		TBL_DAILYDOCCOUNTLOG 
+                  WHERE
+                  		TENANT_ID = #tenantID#
+                  AND  
+                  		COMPANYID = #company#
+                  AND  
+                  		REGDATE >= #startDate#
+                  AND 
+                  		REGDATE <= #endDate#
+                  GROUP BY 
+                  		USERID,
+                  		TENANT_ID,
+                  		COMPANYID ) B   
+            ON 
+            	B.TENANT_ID = A.TENANT_ID
+            AND
+            	B.COMPANYID = A.PHYSICALDELIVERYOFFICENAME
+            AND
+            	B.USERID = A.CN
+            WHERE
+            	A.TENANT_ID = #tenantID#
+            AND 
+            	A.PHYSICALDELIVERYOFFICENAME = #company#
+            AND 
+            	( DRAFTCNT != '0' OR DRAFTINGCNT != '0' OR DRAFTENDCNT != '0' OR RETURNCNT != '0' )
+            AND 
+            	B.USERID = #searchID#
+            ORDER BY 
+            	USERID,
+                DRAFTCNT DESC
+		]]>
+	</select>
+	
+	<select id="EzStatisticsAdminDAO.getMainList" parameterClass="StatApprVO" resultClass="StatDailyDocCountLogVO">
+		<![CDATA[
+			SELECT 
+				SUBSTR(REGDATE, 0, 7) REGDATE  ,
+             	SUM(DRAFTINGCNT + DRAFTENDCNT + RETURNCNT)  DRAFTCNT  ,
+             	SUM(DRAFTINGCNT + SUSININGCNT)  DRAFTINGCNT  ,
+             	SUM(DRAFTENDCNT + SUSINENDCNT)  DRAFTENDCNT  ,
+             	SUM(RETURNCNT)  RETURNCNT  
+        	FROM 
+        		TBL_DAILYDOCCOUNTLOG B
+            JOIN 
+            	TBL_DEPTMASTER A   
+            ON 
+            	B.TENANT_ID = A.TENANT_ID
+            AND
+            	B.COMPANYID = A.EXTENSIONATTRIBUTE2
+            AND
+            	B.DeptID = A.CN
+       		WHERE  
+       			A.TENANT_ID = #tenantID#
+       		AND
+       			A.EXTENSIONATTRIBUTE2 = #company#
+       		AND
+       			REGDATE >= #startDate#
+            AND 
+            	REGDATE <= #endDate#
+            AND 
+            	A.EXTENSIONATTRIBUTE2 = #company#
+        	GROUP BY 
+        		SUBSTR(REGDATE, 0, 7)
+        	 ORDER BY 
+        	 	REGDATE
+		]]>
+	</select>
+	
+	<select id="EzStatisticsAdminDAO.getConnInfo" parameterClass="StatApprVO" resultMap="StatConnInfoVO">
+		<![CDATA[
+		    SELECT 
+		    	* 
+        	FROM 
+        		( SELECT 
+        			  'DAY' DAY  ,
+        	   	      COUNT(SEQUENCE)  CONNECTCNT  ,
+                	  TO_CHAR(CONNECTTIME + ($offSet$/24), 'hh24') DATE_  ,
+                      ( SELECT 
+                      		COUNT(SEQUENCE)  
+                      	FROM 
+                      		TBL_CONNECTION_INFO 
+                        WHERE
+                            CONNECTTIME >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
+                        AND 
+                        	CONNECTTIME < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+    			        AND 
+	            		    TRIM(COMPANYID) = #company#
+    			        AND 
+	            		    TENANT_ID = #tenantID# ) TOTAL
+              	  FROM 
+              	  		TBL_CONNECTION_INFO 
+            	  WHERE  
+            	   		CONNECTTIME >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
+                  AND 
+                   		CONNECTTIME < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+                  AND 
+                		TRIM(COMPANYID) = #company#	
+                  AND
+                		TENANT_ID = #tenantID#
+           	      GROUP BY 
+           	      		TO_CHAR(CONNECTTIME + $offSet$/24, 'hh24')
+           	      
+           	      UNION ALL 
+           	      
+           	      SELECT 
+           	      	  'TOTAL' TOTAL  , 
+           	          COUNT(SEQUENCE)  CONNECTCNT  ,
+           	          TO_CHAR(CONNECTTIME+$offSet$/24, 'hh24') DATE_  ,
+           	          0 
+           	      FROM 
+           	      	  TBL_CONNECTION_INFO
+           	      WHERE
+ 		              TRIM(COMPANYID) = #company#	
+           	      AND
+ 		              TENANT_ID = #tenantID#
+           	      GROUP BY 
+           	      	  TO_CHAR(CONNECTTIME+$offSet$/24, 'hh24') ) A
+        	ORDER BY 
+        		A.DATE_,
+           	    A.DAY
+           	    
+           	
+		]]>
+	</select>
+	
+	<select id="EzStatisticsAdminDAO.getConnBrowser" parameterClass="StatApprVO" resultClass="StatConnVO">
+		<![CDATA[
+			SELECT 
+				COUNT(SEQUENCE)  CONNECTCNT  ,
+            	CONNECTBROWSER ,
+             	( SELECT 
+             		 COUNT(SEQUENCE)  CONNECTCNT  
+               	  FROM 
+               	  	 TBL_CONNECTION_INFO 
+               	  WHERE  
+               	     CONNECTTIME >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
+                  AND 
+                  	 CONNECTTIME < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS') 
+                  AND 
+                  	 TRIM(COMPANYID) = #company#
+                  AND 
+                  	 TENANT_ID = #tenantID# ) TOTAL  
+			FROM 
+        	    TBL_CONNECTION_INFO 
+      		WHERE  
+      			CONNECTTIME >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
+            AND 
+            	CONNECTTIME < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+            AND 
+                TRIM(COMPANYID) = #company#	
+            AND 
+                TENANT_ID = #tenantID#	
+      		GROUP BY 
+      			CONNECTBROWSER
+        	ORDER BY 
+        		COUNT(SEQUENCE)  DESC
+		]]>
+	</select>
+	
+	<select id="EzStatisticsAdminDAO.getConnOS" parameterClass="StatApprVO" resultClass="StatConnVO">
+		<![CDATA[
+			SELECT 
+				'OS' TYPE  ,
+              	COUNT(SEQUENCE)  CONNECTCNT  ,
+             	CONNECTOS ,
+             	( SELECT 
+             		  COUNT(SEQUENCE)  
+              	  FROM 
+              	  	  TBL_CONNECTION_INFO 
+                  WHERE  
+                  	  CONNECTTIME >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
+                  AND 
+                  	  CONNECTTIME < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS') 
+                  AND 
+                  	  TRIM(COMPANYID) = #company#
+                  AND 
+                  	  TENANT_ID = #tenantID#) TOTAL  
+            FROM 
+            	TBL_CONNECTION_INFO 
+       		WHERE  
+       			CONNECTTIME >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
+            AND 
+            	CONNECTTIME < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+            AND 
+                TRIM(COMPANYID) = #company#
+            AND 
+                TENANT_ID = #tenantID#
+        	GROUP BY 
+        		CONNECTOS
+      
+      		UNION ALL
+      		 
+      		SELECT 
+      		    'BIT' TYPE  ,
+            	COUNT(SEQUENCE)  CONNECTCNT  ,
+            	'64BIT' CONNECTOS  ,
+             	0 TOTAL  
+        	FROM 
+        		TBL_CONNECTION_INFO 
+       		WHERE  
+       			CONNECTAGENT LIKE '%WOW64%'
+            AND 
+            	CONNECTTIME >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
+            AND 
+            	CONNECTTIME < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+            AND 
+                TRIM(COMPANYID) = #company#
+            AND 
+                TENANT_ID = #tenantID#
+      		UNION ALL
+      		 
+      		SELECT 
+      			'BIT' TYPE  ,
+            	COUNT(SEQUENCE)  CONNECTCNT  ,
+             	'32BIT' CONNECTOS  ,
+             	0 TOTAL  
+        	FROM 
+        		TBL_CONNECTION_INFO  
+       		WHERE  
+       			CONNECTAGENT NOT LIKE '%WOW64%'
+            AND 
+            	CONNECTTIME >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
+            AND 
+            	CONNECTTIME < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+            AND 
+                TRIM(COMPANYID) = #company#	
+            AND 
+                TENANT_ID = #tenantID#	
+        	ORDER BY 
+        		TYPE DESC,
+                CONNECTCNT DESC
+		]]>
+	</select>
+	
+	<insert id="EzStatisticsAdminDAO.insertDailyDocCountLog" parameterClass="StatApprVO">
+		<![CDATA[
+			INSERT INTO TBL_DAILYDOCCOUNTLOG ( 
+				REGDATE, DEPTID, DEPTNAME, USERID, USERNAME, DRAFTINGCNT, DRAFTENDCNT, DRAFTTIME, SUSININGCNT, SUSINENDCNT, SUSINTIME, RETURNCNT, TENANT_ID, COMPANYID
+			)
+     		( SELECT 
+     			#today# ,
+              	DEPARTMENT ,
+              	DESCRIPTION ,
+              	CN , 
+              	DISPLAYNAME ,
+              	DINGCNT ,
+              	DENDCNT ,
+              	DENDTIME ,
+              	SINGCNT ,
+              	SENDCNT ,
+              	SENDTIME ,
+              	RETUNCNT,
+              	TENANT_ID ,
+              	COMPANYID 
+       		  FROM 
+       		  	   ( SELECT 
+       		  			 CN ,
+	                     DISPLAYNAME ,
+	                     DESCRIPTION ,
+	                     DEPARTMENT  ,
+	                     NVL(DINGCNT, 0) DINGCNT  ,
+	                     NVL(SINGCNT, 0) SINGCNT  ,
+	                     NVL(DENDCNT, 0) DENDCNT  ,
+	                     NVL(SENDCNT, 0) SENDCNT  ,
+	                     NVL(DENDTIME, 0) DENDTIME  ,
+	                     NVL(SENDTIME, 0) SENDTIME  ,
+	                     NVL(RETUNCNT, 0) RETUNCNT  ,
+	                     TBA.TENANT_ID,
+	                     TBA.COMPANYID
+              		 FROM 
+              		 	  ( SELECT 
+              		 			CN ,
+	                            DISPLAYNAME ,
+	                            DESCRIPTION ,
+	                            DEPARTMENT ,
+	                            TENANT_ID ,
+	                            PHYSICALDELIVERYOFFICENAME AS COMPANYID
+                     		FROM 
+                     			TBL_USERMASTER ) TBA 
+                     LEFT JOIN 
+                     	  ( SELECT 
+                     			WRITERID WRITERIDA  ,
+                                WRITERDEPTID WRITERDEPTIDA  ,
+                                NVL(COUNT(*) , 0) DINGCNT  ,
+                                TENANT_ID,
+                                COMPANYID
+                            FROM 
+                            	TBL_APRDOCINFO 
+                            WHERE  
+                            	DOCSTATE = '001'
+                            AND 
+                            	STARTDATE IS NOT NULL
+                            AND 
+                            	STARTDATE >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
+                            AND 
+                            	STARTDATE < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+                            GROUP BY 
+                            	WRITERID,
+                            	WRITERDEPTID,
+                            	TENANT_ID,
+                                COMPANYID ) TBB   
+                     ON 
+                     		TBA.TENANT_ID = TBB.TENANT_ID
+                     AND
+                     		TBA.COMPANYID = TBB.COMPANYID
+                     AND
+                     		TBA.CN = TBB.WRITERIDA
+                     LEFT JOIN 
+                     	  ( SELECT 
+                     			WRITERID WRITERIDA  ,
+                                WRITERDEPTID WRITERDEPTIDA  ,
+                                NVL(COUNT(*) , 0) SINGCNT  ,
+                                TENANT_ID,
+                                COMPANYID
+                            FROM 
+                            	TBL_APRDOCINFO 
+                            WHERE  
+                            	DOCSTATE = '011'
+                            AND 
+                            	STARTDATE IS NOT NULL
+                            AND 
+                            	STARTDATE >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
+                            AND 
+                            	STARTDATE < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+                            GROUP BY 
+                            	WRITERID,
+                            	WRITERDEPTID,
+                            	TENANT_ID,
+                                COMPANYID ) TBB2   
+                     ON 
+                     		TBA.TENANT_ID = TBB2.TENANT_ID
+                     AND
+                     		TBA.COMPANYID = TBB2.COMPANYID
+                     AND
+                     		TBA.CN = TBB2.WRITERIDA
+                     LEFT JOIN 
+                     	  ( SELECT 
+                     	  		WRITERID WRITERIDB  ,
+                                WRITERDEPTID WRITERDEPTIDB  ,
+                                NVL(COUNT(*) , 0) DENDCNT  ,
+                                ROUND(AVG(ENDDATE - STARTDATE), 2) DENDTIME,
+                                TENANT_ID  ,
+                                COMPANYID
+                            FROM 
+                            	TBL_ENDAPRDOCINFO
+                            WHERE  
+                            	DOCSTATE = '001'
+                            AND 
+                            	ENDDATE >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
+                            AND 
+                            	ENDDATE < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+                            GROUP BY 
+                            	WRITERID,
+                            	WRITERDEPTID,
+                            	TENANT_ID,
+                                COMPANYID ) TBC 
+                     ON 
+                    		TBA.TENANT_ID = TBC.TENANT_ID
+                     AND
+                     		TBA.COMPANYID = TBC.COMPANYID
+                     AND
+                     		TBA.CN = TBC.WRITERIDB
+                     LEFT JOIN 
+                     	  ( SELECT 
+                     	  		WRITERID WRITERIDB  ,
+                                WRITERDEPTID WRITERDEPTIDB  ,
+                                NVL(COUNT(*) , 0) SENDCNT  ,
+                                ROUND(AVG(ENDDATE - STARTDATE), 2) SENDTIME  ,
+                                TENANT_ID,
+                                COMPANYID
+                            FROM 
+                            	TBL_ENDAPRDOCINFO 
+                            WHERE  
+                            	DOCSTATE = '011'
+                            AND 
+                            	ENDDATE >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
+                            AND 
+                            	ENDDATE < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+                            GROUP BY 
+                            	WRITERID,
+                            	WRITERDEPTID,
+                            	TENANT_ID,
+                                COMPANYID ) TBC2 
+                     ON 
+                     		TBA.TENANT_ID = TBC2.TENANT_ID
+                     AND
+                     		TBA.COMPANYID = TBC2.COMPANYID
+                     AND
+                     		TBA.CN = TBC2.WRITERIDB
+                     LEFT JOIN 
+                     	  ( SELECT 
+                     	  		WRITERID WRITERIDC  ,
+                                WRITERDEPTID WRITERDEPTIDC  ,
+                                NVL(COUNT(*) , 0) RETUNCNT  ,
+                                TENANT_ID,
+                                COMPANYID
+                            FROM 
+                            	TBL_APRDOCINFO 
+                            WHERE  
+                            	FUNCTIONTYPE = '004'
+                            AND 
+                            	STARTDATE IS NOT NULL
+                            AND 
+                            	STARTDATE >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
+                            AND 
+                            	STARTDATE < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+                            GROUP BY 
+                            	WRITERID,
+                            	WRITERDEPTID,
+                            	TENANT_ID,
+                                COMPANYID ) TBD   
+                     ON 
+                     		TBA.TENANT_ID = TBD.TENANT_ID
+                     AND
+                     		TBA.COMPANYID = TBD.COMPANYID
+                     AND
+                     		TBA.CN = TBD.WRITERIDC ) AA )
+		]]>
+	</insert>
+	
+	<insert id="EzStatisticsAdminDAO.insertDailyFormCountLog" parameterClass="StatApprVO">
+		<![CDATA[
+			INSERT INTO TBL_DAILYFORMCOUNTLOG ( 
+				REGDATE, FORMID, FORMNAME, FORMCONTID, FORMCONTNAME, DRAFTINGCNT, DRAFTENDCNT, DRAFTTIME, SUSININGCNT, SUSINENDCNT, SUSINTIME, RETURNCNT, TENANT_ID, COMPANYID 
+			)
+     		( 
+     			SELECT 
+     				#today# ,
+              		FORMID ,
+	              	FORMNAME ,
+	              	FORMCONTID ,
+	              	FORMCONTNAME ,
+	              	DINGCNT ,
+	              	DENDCNT ,
+	              	DENDTIME ,
+	              	SINGCNT ,
+	              	SENDCNT ,
+	              	SENDTIME ,
+	              	RETUNCNT ,
+	              	AA.TENANT_ID,
+					COMPANYID
+       			FROM 
+       				( SELECT 
+       					FORMCONTID ,
+                     	FORMCONTNAME ,
+                     	FORMID ,
+                     	FORMNAME ,
+                     	NVL(DINGCNT, 0) DINGCNT  ,
+                     	NVL(SINGCNT, 0) SINGCNT  ,
+                     	NVL(DENDCNT, 0) DENDCNT  ,
+                     	NVL(SENDCNT, 0) SENDCNT  ,
+                     	NVL(RETUNCNT, 0) RETUNCNT  ,
+                     	NVL(DENDTIME, 0) DENDTIME  ,
+                     	NVL(SENDTIME, 0) SENDTIME  ,
+                     	TBA.TENANT_ID  ,
+						TBA.COMPANYID
+              		  FROM 
+              		  	( SELECT 
+              		  		A.FORMCONTID FORMCONTID  ,
+                            B.FORMCONTNAME FORMCONTNAME  ,
+                            FORMID ,
+                            FORMNAME ,
+                            A.TENANT_ID ,
+                            A.COMPANYID
+	                      FROM 
+	                     	TBL_FORMINFO A
+	                      JOIN 
+	                     	TBL_FORMCONTAINER B
+	                      ON 
+	                      	A.TENANT_ID = B.TENANT_ID
+	                      AND
+	                     	A.FORMCONTID = B.FORMCONTID
+	                     AND
+	                     	A.COMPANYID = B.COMPANYID ) TBA 
+		                  LEFT JOIN 
+		                  	( SELECT 
+		                  		FORMID FORMIDA  ,
+                                NVL(COUNT(*) , 0) DINGCNT,
+                                TENANT_ID  ,
+								COMPANYID
+                              FROM 
+                              	TBL_APRDOCINFO 
+                              WHERE  
+                              	DOCSTATE = '001'
+                              AND 
+                              	STARTDATE IS NOT NULL
+                              AND 
+                              	STARTDATE >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
+                              AND 
+                              	STARTDATE < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+                              GROUP BY 
+                              	FORMID,
+                              	TENANT_ID,
+								COMPANYID ) TBB   
+                          ON 
+                          	TBA.TENANT_ID = TBB.TENANT_ID
+                          AND
+                          	TBA.COMPANYID = TBB.COMPANYID
+                          AND
+                          	TBA.FORMID = TBB.FORMIDA
+                     	  LEFT JOIN 
+                     	  	( SELECT 
+                     	  		FORMID FORMIDA  ,
+                                NVL(COUNT(*) , 0) SINGCNT  ,
+                                TENANT_ID ,
+								COMPANYID
+                              FROM 
+                              	TBL_APRDOCINFO 
+                              WHERE  
+                              	DOCSTATE = '011'
+                              AND 
+                              	STARTDATE IS NOT NULL
+                              AND 
+                              	STARTDATE >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
+                              AND 
+                              	STARTDATE < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+                              GROUP BY 
+                              	FORMID,
+                              	TENANT_ID,
+                              	COMPANYID ) TBB2 
+                      	  ON 
+                      	  	TBA.TENANT_ID = TBB2.TENANT_ID
+                          AND
+                      	  	TBA.COMPANYID = TBB2.COMPANYID
+                          AND
+                      	  	TBA.FORMID = TBB2.FORMIDA
+                     	  LEFT JOIN 
+                     	  	( SELECT 
+                     	  		FORMID FORMIDB  ,
+                                NVL(COUNT(*) , 0) DENDCNT  ,
+                                ROUND(AVG(ENDDATE - STARTDATE), 2) DENDTIME  ,
+                                TENANT_ID ,
+								COMPANYID
+                              FROM 
+                              	TBL_ENDAPRDOCINFO 
+                              WHERE  
+                              	DOCSTATE = '001'
+                              AND 
+                              	ENDDATE >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
+                              AND 
+                              	ENDDATE < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+                              GROUP BY 
+                              	FORMID,
+                              	TENANT_ID,
+                              	COMPANYID ) TBC 
+                      	  ON 
+                      	  	TBA.TENANT_ID = TBC.TENANT_ID
+                          AND
+                      	  	TBA.COMPANYID = TBC.COMPANYID
+                          AND
+                      	  	TBA.FORMID = TBC.FORMIDB
+                     	  LEFT JOIN 
+                     	  	( SELECT 
+                     	  		FORMID FORMIDB  ,
+                                NVL(COUNT(*) , 0) SENDCNT  ,
+                                ROUND(AVG(ENDDATE - STARTDATE), 2) SENDTIME,
+                                TENANT_ID ,
+								COMPANYID
+                              FROM 
+                              	TBL_ENDAPRDOCINFO 
+                              WHERE  
+                              	DOCSTATE = '011'
+                              AND 
+                              	ENDDATE >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
+                              AND 
+                              	ENDDATE < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+                              GROUP BY 
+                              	FORMID,
+                              	TENANT_ID,
+                              	COMPANYID ) TBC2 
+                      	  ON 
+                      	  	TBA.TENANT_ID = TBC2.TENANT_ID
+                          AND
+                      	  	TBA.COMPANYID = TBC2.COMPANYID
+                          AND
+                      	  	TBA.FORMID = TBC2.FORMIDB
+                     	  LEFT JOIN 
+                     	  	( SELECT 
+                     	  		FORMID FORMIDA  ,
+                                NVL(COUNT(*) , 0) RETUNCNT  ,
+                                TENANT_ID,
+								COMPANYID
+                              FROM 
+                              	TBL_APRDOCINFO 
+                              WHERE  
+                              	FUNCTIONTYPE = '004'
+                              AND
+                              	STARTDATE IS NOT NULL 
+                              AND 
+                              	STARTDATE >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
+                              AND 
+                              	STARTDATE < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+                              GROUP BY 
+                              	FORMID,
+                              	TENANT_ID,
+                              	COMPANYID ) TBD   
+                          ON 
+                          	TBA.TENANT_ID = TBD.TENANT_ID
+                          AND
+                            TBA.COMPANYID = TBD.COMPANYID
+                          AND
+                            TBA.FORMID = TBD.FORMIDA ) AA )
+                            ]]>
+	</insert>
+	<delete id="EzStatisticsAdminDAO.deleteDailyDocCountLog" parameterClass="StatApprVO">
+		<![CDATA[
+			DELETE FROM TBL_DAILYDOCCOUNTLOG
+			WHERE
+				regdate = #today#
+		]]>
+	</delete>
+	
+	<delete id="EzStatisticsAdminDAO.deleteDailyFormCountLog" parameterClass="StatApprVO">
+		<![CDATA[
+			DELETE FROM TBL_DAILYFORMCOUNTLOG
+			WHERE
+				regdate = #today#
+		]]>
+	</delete>
+	
+	<insert id="EzStatisticsAdminDAO.insertCustomDocBatch" >
+	<![CDATA[
+	
+		
+		INSERT INTO TBL_DAILYDOCCOUNTLOG ( 
+						REGDATE, DEPTID, DEPTNAME, USERID, USERNAME, DRAFTINGCNT, DRAFTENDCNT, DRAFTTIME, SUSININGCNT, SUSINENDCNT, SUSINTIME, RETURNCNT, TENANT_ID, COMPANYID
+					)
+		        
+		 (SELECT 
+     			TODAY ,
+              	DEPARTMENT ,
+              	DESCRIPTION ,
+              	CN , 
+              	DISPLAYNAME ,
+              	DINGCNT ,
+              	DENDCNT ,
+              	DENDTIME ,
+              	SINGCNT ,
+              	SENDCNT ,
+              	SENDTIME ,
+              	RETUNCNT ,
+              	TENANT_ID ,
+              	COMPANYID 
+       		  FROM 
+       		  	   ( SELECT 
+				   
+				
+						 CN ,
+	                   DISPLAYNAME ,
+	                   DESCRIPTION ,
+	                   DEPARTMENT  ,
+	                     NVL(DINGCNT, 0) DINGCNT  ,
+	                     NVL(SINGCNT, 0) SINGCNT  ,
+	                     NVL(DENDCNT, 0) DENDCNT  ,
+	                     NVL(SENDCNT, 0) SENDCNT  ,
+	                     NVL(DENDTIME, 0) DENDTIME  ,
+	                     NVL(SENDTIME, 0) SENDTIME  ,
+	                     NVL(RETUNCNT, 0) RETUNCNT  ,
+	                     TENANT_ID ,
+	                     COMPANYID , 
+
+                         TODAY
+              		 FROM 
+              		 	  						  
+						  ( 
+							
+							select 
+								TBA.CN, 
+								TSB.DISPLAYNAME, 
+								TSB.DESCRIPTION, 
+								TBA.DEPARTMENT, 
+								TBA.TENANT_ID, 
+								TBA.COMPANYID, 
+								DINGCNT  ,
+								SINGCNT  ,
+								DENDCNT  ,
+								SENDCNT  ,
+								DENDTIME  ,
+								SENDTIME  ,
+								RETUNCNT  ,
+                                TBA.TODAY
+							
+							from 
+								(SELECT 
+									TAS.CN, 
+									
+									TAS.DEPARTMENT, 
+									TAS.TENANT_ID, 
+									TAS.COMPANYID, 
+									TAS.TODAY
+								FROM
+									(SELECT 
+											WRITERID CN, 
+											
+											
+											WRITERDEPTID DEPARTMENT, 
+											TENANT_ID TENANT_ID, 
+											COMPANYID, 
+											TO_CHAR(STARTDATE, 'YY-MM-DD') TODAY
+										FROM 
+											TBL_APRDOCINFO
+										WHERE
+											STARTDATE is not null
+										AND
+											WRITERID is not null
+										AND
+											WRITERDEPTID is not null
+																													
+									UNION
+										SELECT 
+											WRITERID, 
+											
+											WRITERDEPTID, 
+											TENANT_ID, 
+											COMPANYID,
+											TO_CHAR(ENDDATE, 'YY-MM-DD') TODAY
+											
+										FROM 
+											TBL_ENDAPRDOCINFO
+										WHERE
+											ENDDATE is not null
+										AND
+											WRITERID is not null
+										AND
+											WRITERDEPTID is not null
+										
+									) TAS
+									
+									GROUP BY CN, DEPARTMENT, TENANT_ID, COMPANYID, TODAY
+									 
+										
+								) TBA 
+									
+						  JOIN
+							
+									TBL_USERMASTER TSB
+								ON
+									TBA.TENANT_ID = TSB.TENANT_ID
+								AND
+									TBA.COMPANYID = TSB.PHYSICALDELIVERYOFFICENAME
+								AND 
+									TBA.CN = TSB.CN       
+                            
+                            
+                                
+                                
+                     LEFT JOIN
+
+
+					 
+                     	  ( SELECT 
+                     			WRITERID WRITERIDA  ,
+                                WRITERDEPTID WRITERDEPTIDA  ,
+								
+								
+                                NVL(COUNT(*) , 0) DINGCNT  ,
+                                TENANT_ID ,
+                                COMPANYID ,
+                                TO_CHAR(STARTDATE, 'YY-MM-DD') NOWDATE
+                            FROM 
+                            	TBL_APRDOCINFO 
+                            WHERE  
+                            	DOCSTATE = '001'
+                            AND 
+                            	STARTDATE IS NOT NULL
+                            
+                            GROUP BY 
+                            	WRITERID,
+                            	WRITERDEPTID,
+                            	TENANT_ID,
+                                COMPANYID,
+                                TO_CHAR(STARTDATE, 'YY-MM-DD')) TBB   
+                     ON 
+                     		TBA.TENANT_ID = TBB.TENANT_ID
+                     AND
+                     		TBA.COMPANYID = TBB.COMPANYID
+                     AND
+                     		TBA.CN = TBB.WRITERIDA
+					 AND	
+							TBA.DEPARTMENT = TBB.WRITERDEPTIDA
+					 AND
+							TBA.TODAY = TBB.NOWDATE
+                     LEFT JOIN 
+                     	  ( SELECT 
+                     			WRITERID WRITERIDA  ,
+                                WRITERDEPTID WRITERDEPTIDA2  ,
+                                NVL(COUNT(*) , 0) SINGCNT  ,
+                                TENANT_ID ,
+                                COMPANYID ,
+                                TO_CHAR(STARTDATE, 'YY-MM-DD') NOWDATE
+                            FROM 
+                            	TBL_APRDOCINFO 
+                            WHERE  
+                            	DOCSTATE = '011'
+                            AND 
+                            	STARTDATE IS NOT NULL
+                           
+                            GROUP BY 
+                            	WRITERID,
+                            	WRITERDEPTID,
+                            	TENANT_ID,
+                                COMPANYID,
+                                TO_CHAR(STARTDATE, 'YY-MM-DD')) TBB2   
+                     ON 
+                     		TBA.TENANT_ID = TBB2.TENANT_ID
+                     AND
+                     		TBA.COMPANYID = TBB2.COMPANYID
+                     AND
+                     		TBA.CN = TBB2.WRITERIDA
+					 AND	
+							TBA.DEPARTMENT = TBB2.WRITERDEPTIDA2
+					 AND
+							TBA.TODAY = TBB2.NOWDATE
+                     LEFT JOIN 
+                     	  ( SELECT 
+                     	  		WRITERID WRITERIDB  ,
+                                WRITERDEPTID WRITERDEPTIDB  ,
+                                NVL(COUNT(*) , 0) DENDCNT  ,
+                                ROUND(AVG(ENDDATE - STARTDATE), 2) DENDTIME,
+                                TENANT_ID ,
+                                COMPANYID ,
+                                TO_CHAR(ENDDATE, 'YY-MM-DD') NOWDATE
+                            FROM 
+                            	TBL_ENDAPRDOCINFO
+                            WHERE  
+                            	DOCSTATE = '001'
+                            
+                            GROUP BY 
+                            	WRITERID,
+                            	WRITERDEPTID,
+                            	TENANT_ID,
+                                COMPANYID,
+                                TO_CHAR(ENDDATE, 'YY-MM-DD')) TBC 
+                     ON 
+                    		TBA.TENANT_ID = TBC.TENANT_ID
+                     AND
+                     		TBA.COMPANYID = TBC.COMPANYID
+                     AND
+                     		TBA.CN = TBC.WRITERIDB
+					 AND	
+							TBA.DEPARTMENT = TBC.WRITERDEPTIDB
+					 AND
+							TBA.TODAY = TBC.NOWDATE
+                     LEFT JOIN 
+                     	  ( SELECT 
+                     	  		WRITERID WRITERIDB  ,
+                                WRITERDEPTID WRITERDEPTIDB2  ,
+                                NVL(COUNT(*) , 0) SENDCNT  ,
+                                ROUND(AVG(ENDDATE - STARTDATE), 2) SENDTIME,
+                                TENANT_ID ,
+                                COMPANYID ,
+                                TO_CHAR(ENDDATE, 'YY-MM-DD') NOWDATE
+                            FROM 
+                            	TBL_ENDAPRDOCINFO 
+                            WHERE  
+                            	DOCSTATE = '011'
+                            
+                            GROUP BY 
+                            	WRITERID,
+                            	WRITERDEPTID,
+                            	TENANT_ID,
+                                COMPANYID,
+                                TO_CHAR(ENDDATE, 'YY-MM-DD')) TBC2 
+                     ON 
+                     		TBA.TENANT_ID = TBC2.TENANT_ID
+                     AND
+                     		TBA.COMPANYID = TBC2.COMPANYID
+                     AND
+                     		TBA.CN = TBC2.WRITERIDB
+					 AND	
+							TBA.DEPARTMENT = TBC2.WRITERDEPTIDB2
+					 AND
+							TBA.TODAY = TBC2.NOWDATE
+                     LEFT JOIN 
+                     	  ( SELECT 
+                     	  		WRITERID WRITERIDC  ,
+                                WRITERDEPTID WRITERDEPTIDC  ,
+                                NVL(COUNT(*) , 0) RETUNCNT  ,
+                                TENANT_ID ,
+                                COMPANYID ,
+                                TO_CHAR(STARTDATE, 'YY-MM-DD') NOWDATE
+                            FROM 
+                            	TBL_APRDOCINFO 
+                            WHERE  
+                            	FUNCTIONTYPE = '004'
+                            AND 
+                            	STARTDATE IS NOT NULL
+                            
+                            GROUP BY 
+                            	WRITERID,
+                            	WRITERDEPTID,
+                            	TENANT_ID,
+                                COMPANYID,
+                                TO_CHAR(STARTDATE, 'YY-MM-DD')) TBD   
+                     ON 
+                     		TBA.TENANT_ID = TBD.TENANT_ID
+                     AND
+                     		TBA.COMPANYID = TBD.COMPANYID
+                     AND
+                     		TBA.CN = TBD.WRITERIDC 
+                     AND	
+							TBA.DEPARTMENT = TBD.WRITERDEPTIDC
+					 AND
+							TBA.TODAY = TBD.NOWDATE ) AA) asd)
+                            
+						
+                            
+						
+	]]>
+	</insert>
+	
+	
+	<insert id="EzStatisticsAdminDAO.insertCustomFormBatch" >
+		<![CDATA[
+	
+			INSERT INTO TBL_DAILYFORMCOUNTLOG ( 
+				REGDATE, FORMID, FORMNAME, FORMCONTID, FORMCONTNAME, DRAFTINGCNT, DRAFTENDCNT, DRAFTTIME, SUSININGCNT, SUSINENDCNT, SUSINTIME, RETURNCNT, TENANT_ID, COMPANYID 
+			)
+     		
+     			(SELECT 
+     				TODAY ,
+              		FORMID ,
+	              	FORMNAME ,
+	              	FORMCONTID ,
+	              	FORMCONTNAME ,
+	              	DINGCNT ,
+	              	DENDCNT ,
+	              	DENDTIME ,
+	              	SINGCNT ,
+	              	SENDCNT ,
+	              	SENDTIME ,
+	              	RETUNCNT ,
+	              	TENANT_ID ,
+	              	COMPANYID
+       			FROM 
+       				( SELECT 
+       					FORMCONTID ,
+                     	FORMCONTNAME ,
+                     	FORMID ,
+                     	FORMNAME ,
+                     	NVL(DINGCNT, 0) DINGCNT  ,
+                     	NVL(SINGCNT, 0) SINGCNT  ,
+                     	NVL(DENDCNT, 0) DENDCNT  ,
+                     	NVL(SENDCNT, 0) SENDCNT  ,
+                     	NVL(RETUNCNT, 0) RETUNCNT  ,
+                     	NVL(DENDTIME, 0) DENDTIME  ,
+                     	NVL(SENDTIME, 0) SENDTIME  ,
+                     	TENANT_ID  ,
+                     	COMPANYID ,
+                        TODAY
+              		  FROM 
+              		  	( 
+							SELECT
+								TSC.FORMCONTID, 
+                                TBA.FORMID, 
+                                TSB.FORMNAME, 
+                                TSC.FORMCONTNAME, 
+                                TBA.TENANT_ID, 
+                                TBA.COMPANYID, 
+                                TBA.TODAY,
+								DINGCNT  ,
+								SINGCNT  ,
+								DENDCNT  ,
+								SENDCNT  ,
+								RETUNCNT  ,
+								DENDTIME  ,
+								SENDTIME                                  
+							FROM 
+								(
+									SELECT 
+										FORMID, 
+										TENANT_ID, 
+										COMPANYID,
+										TODAY
+                                    FROM
+										(SELECT 
+												
+												FORMID, 
+												TENANT_ID, 
+												COMPANYID, 
+												TO_CHAR(STARTDATE, 'YY-MM-DD') TODAY
+										FROM 
+												TBL_APRDOCINFO
+										WHERE
+												STARTDATE is not null
+										AND
+												FORMID is not null
+										
+																					
+										UNION
+											SELECT 
+												
+												FORMID, 
+												TENANT_ID, 
+												COMPANYID,
+												TO_CHAR(ENDDATE, 'YY-MM-DD') TODAY
+												
+											FROM 
+												TBL_ENDAPRDOCINFO
+											WHERE
+												ENDDATE is not null
+											AND
+												FORMID is not null
+											
+										)AA
+									GROUP BY FORMID, TENANT_ID, COMPANYID, TODAY
+							) TBA
+                                
+							JOIN
+								TBL_FORMINFO TSB
+                            ON
+								TBA.TENANT_ID = TSB.TENANT_ID
+							AND
+								TBA.COMPANYID = TSB.COMPANYID
+							AND 
+								TBA.FORMID = TSB.FORMID
+							                                                            
+	                      JOIN 
+								TBL_FORMCONTAINER TSC
+                          ON
+								TBA.TENANT_ID = TSC.TENANT_ID
+							AND
+								TBA.COMPANYID = TSC.COMPANYID
+							AND 
+								TSB.FORMCONTID = TSC.FORMCONTID
+							
+		                  LEFT JOIN 
+		                  	( SELECT 
+		                  		FORMID FORMIDA  ,
+                                NVL(COUNT(*) , 0) DINGCNT ,
+                                TENANT_ID ,
+                                COMPANYID ,
+                                TO_CHAR(STARTDATE, 'YY-MM-DD') NOWDATE
+                              FROM 
+                              	TBL_APRDOCINFO 
+                              WHERE  
+                              	DOCSTATE = '001'
+                              AND 
+                              	STARTDATE IS NOT NULL
+                              GROUP BY 
+                              	FORMID,
+                              	TENANT_ID,
+                              	COMPANYID,
+                                TO_CHAR(STARTDATE, 'YY-MM-DD')) TBB   
+                          ON 
+                          	TBA.TENANT_ID = TBB.TENANT_ID
+                          AND
+                          	TBA.COMPANYID = TBB.COMPANYID
+                          AND
+                          	TBA.FORMID = TBB.FORMIDA
+                          AND
+							TBA.TODAY = TBB.NOWDATE   
+                     	  
+                          LEFT JOIN 
+                     	  	( SELECT 
+                     	  		FORMID FORMIDA  ,
+                                NVL(COUNT(*) , 0) SINGCNT  ,
+                                TENANT_ID ,
+                                COMPANYID , 
+                                TO_CHAR(STARTDATE, 'YY-MM-DD') NOWDATE
+                              FROM 
+                              	TBL_APRDOCINFO 
+                              WHERE  
+                              	DOCSTATE = '011'
+                              AND 
+                              	STARTDATE IS NOT NULL
+                              GROUP BY 
+                              	FORMID,
+                              	TENANT_ID,
+                              	COMPANYID, 
+                                TO_CHAR(STARTDATE, 'YY-MM-DD')) TBB2 
+                      	  ON 
+                      	  	TBA.TENANT_ID = TBB2.TENANT_ID
+                      	  AND
+                      	  	TBA.COMPANYID = TBB2.COMPANYID
+                          AND
+                      	  	TBA.FORMID = TBB2.FORMIDA
+						  AND
+							TBA.TODAY = TBB2.NOWDATE
+                     	  LEFT JOIN 
+                     	  	( SELECT 
+                     	  		FORMID FORMIDB  ,
+                                NVL(COUNT(*) , 0) DENDCNT  ,
+                               ROUND(AVG(ENDDATE - STARTDATE), 2) DENDTIME ,
+                                TENANT_ID ,
+                                COMPANYID ,
+                                TO_CHAR(ENDDATE, 'YY-MM-DD') NOWDATE
+                              FROM 
+                              	TBL_ENDAPRDOCINFO 
+                              WHERE  
+                              	DOCSTATE = '001'
+                              GROUP BY 
+                              	FORMID,
+                              	TENANT_ID,
+                              	COMPANYID,
+                                TO_CHAR(ENDDATE, 'YY-MM-DD')) TBC 
+                      	  ON 
+                      	  	TBA.TENANT_ID = TBC.TENANT_ID
+                      	  AND
+                      	  	TBA.COMPANYID = TBC.COMPANYID
+                          AND
+                      	  	TBA.FORMID = TBC.FORMIDB
+						  AND
+							TBA.TODAY = TBC.NOWDATE
+                     	  LEFT JOIN 
+                     	  	( SELECT 
+                     	  		FORMID FORMIDB  ,
+                                NVL(COUNT(*) , 0) SENDCNT  ,
+                                ROUND(AVG(ENDDATE - STARTDATE), 2) SENDTIME ,
+                                TENANT_ID ,
+                                COMPANYID ,
+                                TO_CHAR(ENDDATE, 'YY-MM-DD') NOWDATE
+                              FROM 
+                              	TBL_ENDAPRDOCINFO 
+                              WHERE  
+                              	DOCSTATE = '011'
+                              GROUP BY 
+                              	FORMID,
+                              	TENANT_ID,
+                              	COMPANYID,
+                                TO_CHAR(ENDDATE, 'YY-MM-DD')) TBC2 
+                      	  ON 
+                      	  	TBA.TENANT_ID = TBC2.TENANT_ID
+                      	  AND
+                      	  	TBA.COMPANYID = TBC2.COMPANYID
+                          AND
+                      	  	TBA.FORMID = TBC2.FORMIDB
+						  AND
+							TBA.TODAY = TBC2.NOWDATE
+                     	  LEFT JOIN 
+                     	  	( SELECT 
+                     	  		FORMID FORMIDA  ,
+                                NVL(COUNT(*) , 0) RETUNCNT  ,
+                                TENANT_ID ,
+                                COMPANYID ,
+                                TO_CHAR(STARTDATE, 'YY-MM-DD') NOWDATE
+                              FROM 
+                              	TBL_APRDOCINFO 
+                              WHERE  
+                              	FUNCTIONTYPE = '004'
+                              AND
+                              	STARTDATE IS NOT NULL 
+                              GROUP BY 
+                              	FORMID,
+                              	TENANT_ID,
+                              	COMPANYID,
+                                TO_CHAR(STARTDATE, 'YY-MM-DD')) TBD   
+                          ON 
+                          	TBA.TENANT_ID = TBD.TENANT_ID
+                          AND
+                            TBA.COMPANYID = TBD.COMPANYID
+                          AND
+                            TBA.FORMID = TBD.FORMIDA 
+						  AND
+							TBA.TODAY = TBD.NOWDATE) AA) asd)
+                            
+                            
+                            
+		]]>
+	</insert>
+	<delete id="EzStatisticsAdminDAO.deleteCustomDocBatch" >
+		DELETE FROM TBL_DAILYDOCCOUNTLOG
+	</delete>
+	<delete id="EzStatisticsAdminDAO.deleteCustomFormBatch" >
+		DELETE FROM TBL_DAILYFORMCOUNTLOG
+	</delete>
+
+	<insert id="EzStatisticsAdminDAO.insertYearlyDocCount" parameterClass="StatApprVO">
+		<![CDATA[
+		INSERT INTO TBL_YEARLYDOCCOUNT (DOC_COUNT,
+										MONTH_TYPE,
+										DOC_TYPE,
+										CREATE_ID,
+										TENANT_ID,
+										COMPANYID)
+			(
+				SELECT
+					COUNT(DOCID)  AS DOC_COUNT,
+					CASE TO_CHAR((ENDDATE + 9 / 24), 'YYYY')
+						WHEN TO_CHAR(SYSDATE, 'YYYY')
+							THEN TO_CHAR((ENDDATE + 9 / 24), 'FMMM')
+						ELSE TO_CHAR(TO_CHAR((ENDDATE + 9 / 24), 'MM') -12)
+						END MONTH_TYPE,
+					'OUTRECEIVE'  AS DOC_TYPE,
+					'masteradmin' AS CREATE_ID,
+					0             AS TENANT_ID,
+					'Top'         AS COMPANYID
+				FROM TBL_ENDAPRDOCINFO
+				WHERE DOCSTATE = '011'
+					AND FORMID = '9999999999'
+					AND TO_CHAR((ENDDATE + 9 / 24), 'YYYYMM') >= TO_CHAR(ADD_MONTHS(SYSDATE,-11), 'YYYYMM')
+				GROUP BY
+					CASE TO_CHAR((ENDDATE + 9 / 24), 'YYYY')
+					WHEN TO_CHAR(SYSDATE, 'YYYY')
+					   THEN TO_CHAR((ENDDATE + 9 / 24), 'FMMM')
+					ELSE TO_CHAR(TO_CHAR((ENDDATE + 9 / 24), 'MM') -12) END
+				UNION ALL
+				SELECT
+					COUNT(A.DOCID)  AS DOC_COUNT,
+					CASE TO_CHAR((A.ENDDATE + 9 / 24), 'YYYY')
+						WHEN TO_CHAR(SYSDATE, 'YYYY')
+							THEN TO_CHAR((A.ENDDATE + 9 / 24), 'FMMM')
+						ELSE TO_CHAR(TO_CHAR((A.ENDDATE + 9 / 24), 'MM') -12)
+						END MONTH_TYPE,
+					'OUTSEND'		AS DOC_TYPE,
+					'masteradmin' 	AS CREATE_ID,
+					0             	AS TENANT_ID,
+					'Top'         	AS COMPANYID
+				FROM TBL_ENDAPRDOCINFO A
+                	INNER JOIN TBL_ENDRECEIPTPOINTINFO R on A.DOCID = R.DOCID
+				WHERE R.RECEIPTPOINTID NOT LIKE 'ADDRESS%'
+					AND R.EXTRECEPTYN = 'Y'
+					AND R.PROCESSYN IN ('A', 'E', 'H', 'I', 'R', 'S', 'T', 'V', 'Y')
+				GROUP BY
+					CASE TO_CHAR((A.ENDDATE + 9 / 24), 'YYYY')
+					WHEN TO_CHAR(SYSDATE, 'YYYY')
+					   THEN TO_CHAR((A.ENDDATE + 9 / 24), 'FMMM')
+					ELSE TO_CHAR(TO_CHAR((A.ENDDATE + 9 / 24), 'MM') -12) END
+				UNION ALL
+				SELECT
+					COUNT(DOCID)  AS DOC_COUNT,
+					CASE TO_CHAR((ENDDATE + 9 / 24), 'YYYY')
+						WHEN TO_CHAR(SYSDATE, 'YYYY')
+							THEN TO_CHAR((ENDDATE + 9 / 24), 'FMMM')
+							ELSE TO_CHAR(TO_CHAR((ENDDATE + 9 / 24), 'MM') -12)
+					END MONTH_TYPE,
+					'INSEND'      AS DOC_TYPE,
+					'masteradmin' AS CREATE_ID,
+					0             AS TENANT_ID,
+					'Top'         AS COMPANYID
+				FROM TBL_ENDAPRDOCINFO
+				WHERE FORMID NOT IN (
+					SELECT FORMID
+					FROM tbl_forminfo
+					WHERE FORMNAME
+						NOT IN (
+							'기안(원외)',
+							'기안(유통원외)',
+							'감사(원외)',
+							'감사(유통원외)',
+							'서면결의서',
+							'회의록'
+						)
+				)
+				AND TO_CHAR((ENDDATE + 9 / 24), 'YYYYMM') >= TO_CHAR(ADD_MONTHS(SYSDATE,-11), 'YYYYMM')
+				GROUP  BY  CASE TO_CHAR((ENDDATE + 9 / 24), 'YYYY')
+				    WHEN TO_CHAR(SYSDATE, 'YYYY')
+						THEN TO_CHAR((ENDDATE + 9 / 24), 'FMMM')
+						ELSE TO_CHAR(TO_CHAR((ENDDATE + 9 / 24), 'MM') -12) END
+			)
+		]]>
+	</insert>
+
+	<delete id="EzStatisticsAdminDAO.deleteYearlyDocCount">
+		DELETE
+		FROM TBL_YEARLYDOCCOUNT
+	</delete>
+
+	<select id="EzStatisticsAdminDAO.getYearlyDocCount" parameterClass="Map" resultClass="HashMap">
+		SELECT
+			DOC_COUNT,
+			DOC_TYPE,
+			MONTH_TYPE
+		FROM
+			TBL_YEARLYDOCCOUNT
+		WHERE
+			TENANT_ID = #tenantID#
+		  AND
+			COMPANYID = #companyID#
+	</select>
+</sqlMap>

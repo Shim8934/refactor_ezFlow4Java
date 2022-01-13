@@ -189,7 +189,7 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 
 	@Override
 	public List<ConnectionInfoVO> getLoginHist(int tenantID, String offset, int startPage, int maxItemPerPage, String keycode, 
-			String keyword, String lang, String startDate, String endDate, String companyId) throws Exception {
+			String keyword, String keycodeForStatus, String lang, String startDate, String endDate, String companyId) throws Exception {
 
 		logger.debug("getLoginHist started. tenantID : " + tenantID);
 		
@@ -205,21 +205,22 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		params.put("pageCount", maxItemPerPage);
 		params.put("search_keycode", keycode);
 		params.put("search_keyword", keyword);
+		params.put("search_keycodeForStatus", keycodeForStatus);
 		params.put("lang", lang); // primary:기본명 / 1:영문명
 		params.put("startDate", startDate);
 		params.put("endDate", endDate);
 		params.put("companyId", companyId);
 		params.put("companyOracleStr", companyOracleStr);
 
-		List<ConnectionInfoVO> list = ezSystemAdminDAO.getLoginHist(params);
 		logger.debug("getLoginHist ended.");
+		List<ConnectionInfoVO> list = ezSystemAdminDAO.getLoginHist(params);
 		
 		return list;
 	}
 	
 	@Override
 	public List<ConnectionInfoVO> getLoginHistNotAdmin(int tenantID, String offset, int startPage, int maxItemPerPage, String keycode, 
-			String keyword, String lang, String startDate, String endDate, String companyId, String userId) throws Exception {
+			String keyword, String keycodeForStatus, String lang, String startDate, String endDate, String companyId, String userId) throws Exception {
 		
 		logger.debug("getLoginHist started. tenantID : " + tenantID);
 		
@@ -235,6 +236,7 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		params.put("pageCount", maxItemPerPage);
 		params.put("search_keycode", keycode);
 		params.put("search_keyword", keyword);
+		params.put("search_keycodeForStatus", keycodeForStatus);
 		params.put("lang", lang); // primary:기본명 / 1:영문명
 		params.put("startDate", startDate);
 		params.put("endDate", endDate);
@@ -249,7 +251,7 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 	}
 
 	@Override
-	public int getLoginHistCount(int tenantID, String offset, String keycode, String keyword, String lang, String startDate, String endDate, String companyId) throws Exception {
+	public int getLoginHistCount(int tenantID, String offset, String keycode, String keyword, String keycodeForStatus, String lang, String startDate, String endDate, String companyId) throws Exception {
 		
 		logger.debug("getLoginHistCount started. tenantID : " + tenantID);
 
@@ -263,6 +265,7 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		params.put("offset", offset);
 		params.put("search_keycode", keycode);
 		params.put("search_keyword", keyword);
+		params.put("search_keycodeForStatus", keycodeForStatus);
 		params.put("lang", lang);
 		params.put("startDate", startDate);
 		params.put("endDate", endDate);
@@ -275,7 +278,7 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 	}
 	
 	@Override
-	public int getLoginHistCountNotAdmin(int tenantID, String offset, String keycode, String keyword, String lang, 
+	public int getLoginHistCountNotAdmin(int tenantID, String offset, String keycode, String keyword, String keycodeForStatus, String lang, 
 			String startDate, String endDate, String companyId, String userId) throws Exception {
 		
 		logger.debug("getLoginHistCount started. tenantID : " + tenantID);
@@ -290,6 +293,7 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		params.put("offset", offset);
 		params.put("search_keycode", keycode);
 		params.put("search_keyword", keyword);
+		params.put("search_keycodeForStatus", keycodeForStatus);
 		params.put("lang", lang);
 		params.put("startDate", startDate);
 		params.put("endDate", endDate);

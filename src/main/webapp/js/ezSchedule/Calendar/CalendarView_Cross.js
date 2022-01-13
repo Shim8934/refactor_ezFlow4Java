@@ -1,4 +1,4 @@
-﻿﻿var DefaultView = 0;
+﻿var DefaultView = 0;
 var sStartDate, sEndDate;
 var typeCal = 0;
 //2018-06-08 구해안 mini에서 호출하는 부분 삭제하고 직접 호출

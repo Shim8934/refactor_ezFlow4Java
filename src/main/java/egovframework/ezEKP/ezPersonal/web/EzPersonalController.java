@@ -1346,7 +1346,7 @@ public class EzPersonalController extends EgovFileMngUtil {
         
         if (useBizmekaTalk.equals("YES")) {
         	try {
-        		ezOrganAdminController.invokeEzTalkSyncServer(userInfo.getTenantId());
+        		ezOrganAdminController.invokeEzTalkSyncServerForSingle(userInfo.getId(), userInfo.getTenantId());
         	} catch (Exception e) {
         		e.printStackTrace();
         	}
@@ -1384,7 +1384,7 @@ public class EzPersonalController extends EgovFileMngUtil {
         
         if (useBizmekaTalk.equals("YES")) {
         	try {
-        		ezOrganAdminController.invokeEzTalkSyncServer(userInfo.getTenantId());
+        		ezOrganAdminController.invokeEzTalkSyncServerForSingle(userInfo.getId(), userInfo.getTenantId());
         	} catch (Exception e) {
         		e.printStackTrace();
         	}
@@ -1626,7 +1626,7 @@ public class EzPersonalController extends EgovFileMngUtil {
         
         if (useBizmekaTalk.equals("YES")) {
         	try {
-        		ezOrganAdminController.invokeEzTalkSyncServer(userInfo.getTenantId());
+        		ezOrganAdminController.invokeEzTalkSyncServerForSingle(userInfo.getId(), userInfo.getTenantId());
         	} catch (Exception e) {
         		e.printStackTrace();
         	}

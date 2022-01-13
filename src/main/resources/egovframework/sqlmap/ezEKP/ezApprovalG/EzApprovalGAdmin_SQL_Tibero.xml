@@ -1,0 +1,5891 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezApprovalGAdmin">
+	<typeAlias alias="ApprGDocStateVO"				type="egovframework.ezEKP.ezApprovalG.vo.ApprGDocStateVO" />
+	<typeAlias alias="ApprGTaskDeptInfoVO"			type="egovframework.ezEKP.ezApprovalG.vo.ApprGTaskDeptInfoVO" />
+	<typeAlias alias="ApprGTaskCodeHistoryVO"		type="egovframework.ezEKP.ezApprovalG.vo.ApprGTaskCodeHistoryVO" />
+	<typeAlias alias="ApprGSealInfoVO"				type="egovframework.ezEKP.ezApprovalG.vo.ApprGSealInfoVO" />
+	<typeAlias alias="ApprGAutoRuleVO" 				type="egovframework.ezEKP.ezApprovalG.vo.ApprGAutoRuleVO"/>
+	<typeAlias alias="ApprGContInfoVO" 				type="egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO"/>
+	<typeAlias alias="ApprGFormConnInfoVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGFormConnInfoVO"/>
+	<typeAlias alias="ApprGOpenGovModifyHistoryVO"  type="egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovModifyHistoryVO"/>
+	<typeAlias alias="KEDAuthorUserInfo" 			type="egovframework.ezEKP.ezApprovalG.vo.KEDAuthorUserInfo"/>
+	<typeAlias alias="KEDSharedUserInfo" 			type="egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo"/>
+	<typeAlias  alias="ApprGDocListVO" 					type="egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO"/>
+
+	<!-- <procedure id="EzApprovalGAdmin.getContainerInfoManage" parameterClass="Map" 
+		resultClass="ApprGLeftVO"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_GETCONTAINERINFOMANAGE(#v_DEPTID#, 
+		#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.getContainerInfoManage"
+		parameterClass="Map" resultClass="ApprGContInfoVO">
+		<![CDATA[
+			SELECT
+				TBL_CONTAINER.containerid,
+				TBL_CONTAINER.containertypeid,
+				TBL_CONTAINER.containerowndepid,
+				TBL_CONTAINERTYPE.containertypename,
+				TBL_CONTAINERTYPE.containertypename2
+			FROM
+				TBL_CONTAINER
+			JOIN
+				TBL_CONTAINERTYPE
+			ON
+				TBL_CONTAINER.containertypeid = TBL_CONTAINERTYPE.containertypeid
+			AND
+				TBL_CONTAINER.tenant_id = TBL_CONTAINERTYPE.tenant_id
+			AND
+				TBL_CONTAINER.companyid = TBL_CONTAINERTYPE.companyid
+			WHERE
+				TBL_CONTAINER.tenant_id = #tenantID#
+			AND
+				TBL_CONTAINER.companyid = #companyID#
+			AND
+				containerowndepid = #v_DEPTID#
+		]]>
+	</select>
+
+	<!-- <procedure id="EzApprovalGAdmin.getContainerToDocStateInfo" parameterClass="Map" 
+		resultClass="ApprGDocStateVO"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_GETCONTAINERTODOCSTATEINF(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.getContainerToDocStateInfo" parameterClass="Map" resultClass="ApprGDocStateVO" remapResults="true">
+		<isEqual property="approvalFlag" compareValue="S">
+			<![CDATA[
+				SELECT
+					TBL_CONTAINERTODOCSTATE.containertypeid,
+					TBL_CODELIST.code2 DocumentState,
+					TBL_CONTAINERTYPE.containertypename,
+					TBL_CONTAINERTYPE.containertypename2,
+					TBL_CODELIST.name DOCUMENTSTATENAME,
+					TBL_CODELIST.name2 DOCUMENTSTATENAME2,
+					TBL_CODELIST.name3 DOCUMENTSTATENAME3,
+					TBL_CODELIST.name4 DOCUMENTSTATENAME4  
+				FROM
+					TBL_CODELIST
+				LEFT JOIN
+					TBL_CONTAINERTODOCSTATE
+				ON
+					TBL_CONTAINERTODOCSTATE.tenant_id = TBL_CODELIST.tenant_id
+				AND
+					TBL_CONTAINERTODOCSTATE.companyid = TBL_CODELIST.companyid
+				AND
+					TBL_CONTAINERTODOCSTATE.documentstate = TBL_CODELIST.code2
+				LEFT JOIN
+					TBL_CONTAINERTYPE
+				ON
+					TBL_CONTAINERTODOCSTATE.tenant_id = TBL_CONTAINERTYPE.tenant_id
+				AND
+					TBL_CONTAINERTODOCSTATE.companyid = TBL_CONTAINERTYPE.companyid
+				AND
+					TBL_CONTAINERTODOCSTATE.containertypeid = TBL_CONTAINERTYPE.containertypeid
+				WHERE
+					TBL_CODELIST.tenant_id = #tenantID#
+				AND
+					TBL_CODELIST.companyid = #companyID#
+				AND
+					TBL_CODELIST.code1 = 'SA02'
+				AND
+					TBL_CODELIST.isuse = '1'
+				ORDER BY
+					TBL_CONTAINERTODOCSTATE.documentstate
+			]]>
+		</isEqual>
+		<isEqual property="approvalFlag" compareValue="G">
+			<![CDATA[
+				SELECT
+					TBL_CONTAINERTODOCSTATE.containertypeid,
+					TBL_CODELIST.code2 DocumentState,
+					TBL_CONTAINERTYPE.containertypename,
+					TBL_CONTAINERTYPE.containertypename2,
+					TBL_CODELIST.name DOCUMENTSTATENAME,
+					TBL_CODELIST.name2 DOCUMENTSTATENAME2,
+					TBL_CODELIST.name3 DOCUMENTSTATENAME3,
+					TBL_CODELIST.name4 DOCUMENTSTATENAME4  
+				FROM
+					TBL_CODELIST
+				LEFT JOIN
+					TBL_CONTAINERTODOCSTATE
+				ON
+					TBL_CONTAINERTODOCSTATE.tenant_id = TBL_CODELIST.tenant_id
+				AND
+					TBL_CONTAINERTODOCSTATE.companyid = TBL_CODELIST.companyid
+				AND
+					TBL_CONTAINERTODOCSTATE.documentstate = TBL_CODELIST.code2
+				LEFT JOIN
+					TBL_CONTAINERTYPE
+				ON
+					TBL_CONTAINERTODOCSTATE.tenant_id = TBL_CONTAINERTYPE.tenant_id
+				AND
+					TBL_CONTAINERTODOCSTATE.companyid = TBL_CONTAINERTYPE.companyid
+				AND
+					TBL_CONTAINERTODOCSTATE.containertypeid = TBL_CONTAINERTYPE.containertypeid
+				WHERE
+					TBL_CODELIST.tenant_id = #tenantID#
+				AND
+					TBL_CODELIST.companyid = #companyID#
+				AND
+					TBL_CODELIST.code1 = 'A02'
+				AND
+					TBL_CODELIST.isuse = '1'
+				ORDER BY
+					TBL_CONTAINERTODOCSTATE.documentstate
+			]]>
+		</isEqual>
+	</select>
+
+	<!-- <procedure id="EzApprovalGAdmin.getContainerUseDeptInfo" parameterClass="Map" 
+		resultClass="ApprGLeftVO"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_GETCONTAINERUSEDEPTINFO(#v_CONTID#, 
+		#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.getContainerUseDeptInfo"
+		parameterClass="Map" resultClass="ApprGContInfoVO">
+		<![CDATA[
+			SELECT 
+				containerid,
+				usedepid as usedeptid,
+				(SELECT displayname FROM TBL_DEPTMASTER T1 WHERE T1.tenant_id = #tenantID# AND cn = A.usedepid) as containerTypeName,
+				(SELECT displayname2 FROM TBL_DEPTMASTER T2 WHERE T2.tenant_id = #tenantID# AND cn = A.usedepid) as containerTypeName2
+			FROM
+				TBL_CONTAINERUSEDEP A
+			WHERE
+				A.tenant_id = #tenantID#
+			AND
+				A.companyid = #companyID#
+			AND
+				containerid = #v_CONTID#
+		]]>
+	</select>
+
+	<!-- <procedure id="EzApprovalGAdmin.getTaskInSubCategoryForManage" parameterClass="Map" 
+		resultClass="ApprGTaskVO"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_GETTASKINSUBCATEGORYFORMA(#v_SUBCATECODE#, 
+		#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.getTaskInSubCategoryForManage" parameterClass="Map" resultClass="ApprGTaskVO" remapResults="true">
+		<isEqual property="approvalFlag" compareValue="G">
+			<![CDATA[
+				SELECT
+					taskcode,
+					keepingperiod,
+					tempflag,
+					displayrecflag,
+					specialcatalogflag,
+					sc1,
+					sc2,
+					sc3,
+					keepingmethod,
+					keepingplace,
+					taskname,
+					taskname2,
+					subcategorycode,
+					itemSecurity,
+					isPublic
+				FROM
+					TBL_TASKCODE
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					subcategorycode = #v_SUBCATECODE#
+				AND
+					delflag = '0'
+				ORDER BY
+					taskcode
+			]]>
+		</isEqual>
+		<isEqual property="approvalFlag" compareValue="S">
+			<![CDATA[
+				SELECT
+					taskcode,
+					keepingperiod,
+					tempflag,
+					displayrecflag,
+					specialcatalogflag,
+					sc1,
+					sc2,
+					sc3,
+					keepingmethod,
+					keepingplace,
+					taskname,
+					taskname2,
+					C.subcategorycode,
+					C.NAME$lang$,
+					itemSecurity,
+					isPublic,
+					(SELECT
+				    	CONCAT(CABINETCLASSNO, '001')
+				     FROM
+				     	TBL_CABINETCLASS A
+				     WHERE
+				     	A.TENANT_ID = #tenantID#
+				     AND
+				     	A.COMPANYID = #companyID#
+				     AND
+				     	A.TASKCODE = B.TASKCODE ) CABINETID 
+				FROM
+					TBL_TASKCODE B
+				JOIN
+					TBL_TASKSUBCATEGORY C
+				ON
+					B.TENANT_ID = C.TENANT_ID
+				AND
+					B.COMPANYID = C.COMPANYID
+				AND
+					B.SUBCATEGORYCODE = C.SUBCATEGORYCODE
+				WHERE
+					B.tenant_id = #tenantID#
+				AND
+					B.companyid = #companyID#
+				AND
+					B.subcategorycode = #v_SUBCATECODE#
+				AND
+					delflag = '0'
+				ORDER BY
+					taskcode
+			]]>
+		</isEqual>
+	</select>
+
+	<!-- <procedure id="EzApprovalGAdmin.getTaskInfo" parameterClass="Map" resultClass="ApprGTaskVO"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_GETTASKINFO(#v_DEPTCODE#, #v_TASKCODE#, 
+		#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.getTaskInfo" parameterClass="Map"
+		resultClass="ApprGTaskVO">
+		<![CDATA[
+			SELECT
+				TBL_TASKCODE.taskcode,
+				TBL_TASKCODE.taskname,
+				NVL(TBL_TASKCODE.taskname2, TBL_TASKCODE.TASKNAME) AS TASKNAME2,
+				TBL_TASKCODE.keepingperiod,
+				TBL_TASKCODE.creationdate CREATEDATE,
+				TBL_TASKCODE.kpreason,
+				TBL_TASKCODE.keepingmethod,
+				TBL_TASKCODE.keepingplace,
+				TBL_TASKCODE.itemSecurity,
+				TBL_TASKCODE.ispublic,
+				TBL_TASKCODE.displayrecflag,
+				TBL_TASKCODE.displayrectrastime,
+				TBL_TASKCODE.exdisplayfrequency,
+				TBL_TASKCODE.specialcatalogflag,
+				TBL_TASKCODE.sc1,
+				TBL_TASKCODE.sc2,
+				TBL_TASKCODE.sc3,
+				TBL_TASKCODE.displayusage,
+				TBL_TASKCODE.description,
+				TBL_TASKCODE.tempflag,
+				TBL_TASK_DEPTINFO.processdate,
+				TBL_TASK_DEPTINFO.applydate
+			FROM
+				TBL_TASKCODE
+			LEFT OUTER JOIN
+				TBL_TASK_DEPTINFO
+			ON
+				TBL_TASKCODE.tenant_id = TBL_TASK_DEPTINFO.tenant_id
+			AND
+				TBL_TASKCODE.companyid = TBL_TASK_DEPTINFO.companyid
+			AND
+				TBL_TASKCODE.taskcode = TBL_TASK_DEPTINFO.taskcode
+			WHERE
+				TBL_TASKCODE.tenant_id = #tenantID#
+			AND
+				TBL_TASKCODE.companyid = #companyID#
+			AND
+				TBL_TASKCODE.taskcode = #v_TASKCODE#
+		]]>
+
+		<isNotEqual property="v_DEPTCODE" compareValue="">
+			<![CDATA[
+				AND
+					TRIM(TBL_TASK_DEPTINFO.processdeptcode) = #v_DEPTCODE#
+			]]>
+		</isNotEqual>
+	</select>
+
+	<!-- <procedure id="EzApprovalGAdmin.getTaskCode" parameterClass="Map" resultClass="ApprGTaskVO"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_GETTASKCODE(#v_TASKCODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.getTaskCode" parameterClass="Map"
+		resultClass="ApprGTaskVO">
+		<![CDATA[
+			SELECT
+				taskcode,
+				taskname,
+				taskname2,
+				keepingperiod,
+				kpreason,
+				keepingmethod,
+				keepingplace,
+				displayrecflag,
+				displayrectrastime,
+				exdisplayfrequency,
+				specialcatalogflag,
+				sc1,
+				sc2,
+				sc3,
+				displayusage,
+				description,
+				subcategorycode
+			FROM
+				TBL_TASKCODE
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				taskcode = #v_TASKCODE#
+		]]>
+	</select>
+
+	<!-- <procedure id="EzApprovalGAdmin.getTaskName" parameterClass="Map" -->
+	<!-- resultClass="ApprGTaskVO"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_GETTASKNAME(#v_TASKCODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.getTaskName" parameterClass="Map"
+		resultClass="ApprGTaskVO">
+		<![CDATA[
+			SELECT
+				taskname,
+				taskname2
+			FROM
+				TBL_TASKCODE
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				taskcode = #v_TASKCODE#
+		]]>
+	</select>
+
+	<!-- <procedure id="EzApprovalGAdmin.getTaskFullList" -->
+	<!-- parameterClass="Map" resultClass="ApprGTaskVO"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_GETTASKFULLLIST(#v_DEPTCODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.getTaskFullList" parameterClass="Map"
+		resultClass="ApprGTaskVO">
+		<![CDATA[
+			SELECT
+				processdeptcode,
+				processdeptname,
+				NVL(processdeptname2, PROCESSDEPTNAME) AS PROCESSDEPTNAME2,
+				categorycode,
+				cname,
+				NVL(cname2,CNAME) AS CNAME2,
+				mcategorycode,
+				mcname,
+				NVL(mcname2, MCNAME) AS MCNAME2,
+				subcategorycode,
+				scname,
+				NVL(scname2, SCNAME) AS SCNAME2,
+				taskcode,
+				taskname,
+				NVL(taskname2, TASKNAME) AS TASKNAME2,
+				keepingperiod,
+				keepingmethod,
+				keepingplace,
+				displayrecflag,
+				displayrectrastime,
+				specialcatalogflag,
+				sc1,
+				sc2,
+				sc3,
+				tempflag
+			FROM
+				VTASKCLASS
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+		]]>
+
+		<isNotEqual property="v_DEPTCODE" compareValue="">
+			<![CDATA[
+				AND
+					(TRIM(processdeptcode) = #v_DEPTCODE#
+					OR
+						taskcode LIKE 'ZZ%'
+					OR
+						taskcode = '99999999')
+			]]>
+		</isNotEqual>
+		
+		<![CDATA[
+			ORDER BY
+				taskcode ASC
+		]]>
+	</select>
+
+	<!-- <procedure id="EzApprovalGAdmin.getTaskCodeDeptInfo" -->
+	<!-- parameterClass="Map" resultClass="ApprGTaskDeptInfoVO"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_GETTASKCODEDEPTINFO(#v_TASKCODE#, 
+		#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.getTaskCodeDeptInfo"
+		parameterClass="Map" resultClass="ApprGTaskDeptInfoVO">
+		<![CDATA[
+			SELECT
+				processdeptcode,
+				processdeptname,
+				processdeptname2
+			FROM
+				TBL_TASK_DEPTINFO
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				taskcode = #v_TASKCODE#
+			AND
+				delflag = '0'
+			ORDER BY
+				processdeptcode
+		]]>
+	</select>
+
+	<!-- <procedure id="EzApprovalGAdmin.getSealList" parameterClass="Map" -->
+	<!-- resultClass="ApprGSealInfoVO"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_GETSEALLIST(#v_LISTFLAG#, #v_PMULTIDATA#, 
+		#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.getSealList" parameterClass="Map"
+		resultClass="ApprGSealInfoVO">
+		<isEqual property="v_PMULTIDATA" compareValue="1">
+			<isEqual property="v_LISTFLAG" compareValue="ADMIN">
+				<![CDATA[
+					SELECT
+						sealnum,
+						sealname,
+						sealpath,
+						sealwidth,
+						sealheight,
+						TO_CHAR(regdate, 'YYYY-MM-DD HH24:MI:SS') REGDATE,
+						TO_CHAR(deldate, 'YYYY-MM-DD HH24:MI:SS') DELDATE,
+						reguserid,
+						regusername
+					FROM
+						TBL_SEALINFO
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					ORDER BY
+						regdate DESC
+				]]>
+			</isEqual>
+
+			<isNotEqual property="v_LISTFLAG" compareValue="ADMIN">
+				<![CDATA[
+					SELECT
+						sealnum,
+						sealname,
+						sealpath,
+						sealwidth,
+						sealheight,
+						TO_CHAR(regdate, 'YYYY-MM-DD HH24:MI:SS') REGDATE,
+						TO_CHAR(deldate, 'YYYY-MM-DD HH24:MI:SS') DELDATE,
+						reguserid,
+						regusername
+					FROM
+						TBL_SEALINFO
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						deldate IS NULL
+					ORDER BY
+						regdate DESC      
+				]]>
+			</isNotEqual>
+		</isEqual>
+
+		<isNotEqual property="v_PMULTIDATA" compareValue="1">
+			<isEqual property="v_LISTFLAG" compareValue="ADMIN">
+				<![CDATA[
+					SELECT
+						sealnum,
+						sealname,
+						sealpath,
+						sealwidth,
+						sealheight,
+						TO_CHAR(regdate, 'YYYY-MM-DD HH24:MI:SS') REGDATE,
+						TO_CHAR(deldate, 'YYYY-MM-DD HH24:MI:SS') DELDATE,
+						reguserid,
+						NVL(regusername2, REGUSERNAME) REGUSERNAME
+					FROM
+						TBL_SEALINFO
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					ORDER BY
+						regdate DESC
+				]]>
+			</isEqual>
+
+			<isNotEqual property="v_LISTFLAG" compareValue="ADMIN">
+				<![CDATA[
+					SELECT
+						sealnum,
+						sealname,
+						sealpath,
+						sealwidth,
+						sealheight,
+						TO_CHAR(regdate, 'YYYY-MM-DD HH24:MI:SS') REGDATE,
+						TO_CHAR(deldate, 'YYYY-MM-DD HH24:MI:SS') DELDATE,
+						reguserid,
+						NVL(regusername2, REGUSERNAME) REGUSERNAME
+					FROM
+						TBL_SEALINFO
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						deldate IS NULL
+					ORDER BY
+						regdate DESC
+				]]>
+			</isNotEqual>
+		</isNotEqual>
+	</select>
+
+	<!-- <procedure id="EzApprovalGAdmin.getSealDeptList" -->
+	<!-- parameterClass="Map" resultClass="ApprGSealInfoVO"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_GETSEALDEPTLIST(#v_LISTFLAG#, #v_DEPTID#, 
+		#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.getSealDeptList" parameterClass="Map"
+		resultClass="ApprGSealInfoVO">
+		<isEqual property="v_LISTFLAG" compareValue="ADMIN">
+			<![CDATA[
+				SELECT
+					sealnum,
+					sealname,
+					sealpath,
+					sealwidth,
+					sealheight,
+					TO_CHAR(regdate, 'YYYY-MM-DD HH24:MI:SS') REGDATE,
+					TO_CHAR(deldate, 'YYYY-MM-DD HH24:MI:SS') DELDATE,
+					reguserid,
+					regusername,
+					regusername2
+				FROM
+					TBL_SEALDEPTINFO
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					deptid = #v_DEPTID#
+				ORDER BY
+					regdate DESC
+			]]>
+		</isEqual>
+
+		<isNotEqual property="v_LISTFLAG" compareValue="ADMIN">
+			<![CDATA[
+				SELECT
+					sealnum,
+					sealname,
+					sealpath,
+					sealwidth,
+					sealheight,
+					TO_CHAR(regdate, 'YYYY-MM-DD HH24:MI:SS') REGDATE,
+					TO_CHAR(deldate, 'YYYY-MM-DD HH24:MI:SS') DELDATE,
+					reguserid,
+					regusername,
+					regusername2
+				FROM
+					TBL_SEALDEPTINFO
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					deldate IS NULL
+				AND
+					deptid = #v_DEPTID#
+				ORDER BY
+					REGDATE DESC
+			]]>
+		</isNotEqual>
+	</select>
+
+	<!-- <procedure id="EzApprovalGAdmin.searchManageAprDocList" -->
+	<!-- parameterClass="Map" resultClass="ApprGAprDocInfoVO"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_SEARCHMANAGEAPRDOCLIST(#v_SUBQUERY#, 
+		#v_PAGESIZE#, #v_PAGESIZE2#, #v_ORDEROPTION#, #v_ORDEROPTION2#, #v_DOCNUMBER#, 
+		#v_DOCTITLE#, #v_DRAFTER#, #v_DRAFTER2#, #v_DEPTNAME#, #v_DEPTNAME2#, #v_FORMID#, 
+		#v_DOCSTATE#, #v_STARTDATE1#, #v_STARTDATE2#, #v_ENDDATE1#, #v_ENDDATE2#, 
+		#v_LANGTYPE#, #v_APPROVUSER#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.searchManageAprDocList"
+		parameterClass="Map" resultClass="ApprGDocListVO">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				(SELECT
+					A.*
+				FROM
+					(SELECT
+						*
+					FROM
+						(SELECT
+							rownum as rnum,
+							aa.*
+						FROM
+							(SELECT
+								TBL_APRDOCINFO.docid,
+								formid,
+								orgdocid,
+								doctype,
+								docstate,
+								functiontype,
+								href,
+								doctitle,
+								docno,
+								hasattachyn,
+								hasopinionyn,
+								TO_CHAR(startdate, 'YYYY-MM-DD HH24:MI:SS') AS STARTDATE,
+								TO_CHAR(enddate, 'YYYY-MM-DD HH24:MI:SS') AS ENDDATE,
+								writerid,
+								writername,
+								NVL(writername2, WRITERNAME) AS WRITERNAME2,
+								writerjobtitle,
+								NVL(writerjobtitle2, WRITERJOBTITLE) AS WRITERJOBTITLE2,
+								writerdeptid,
+								writerdeptname,
+								NVL(writerdeptname2,WRITERDEPTNAME) AS WRITERDEPTNAME2,
+								ispublic,
+								securitycode,
+								storageperiod,
+								keyword,
+								formname,
+								NVL(formname2,FORMNAME) AS FORMNAME2,
+								itemcode,
+								itemname,
+								NVL(itemname2, ITEMNAME) AS ITEMNAME2,
+								urgentapproval,
+								tempattribute,
+								status,
+								specialrecordcode,
+								publicitycode,
+								limitrange,
+								pagenum,
+								cabinetid,
+								taskcode,
+								docnumcode,
+								orgdocnumcode,
+								seperateattachxml,
+								summary,
+								TBL_APRDOCINFO.TENANT_ID
+							FROM
+								TBL_APRDOCINFO
+							RIGHT OUTER JOIN
+								(SELECT
+									DISTINCT docid,
+									tenant_id,
+									companyid
+								FROM
+									TBL_APRLINEINFO
+								WHERE
+									tenant_id = #tenantID#
+								AND
+									companyid = #companyID#
+		]]>
+
+		<isNotEqual property="v_APPROVUSER" compareValue="">
+			<![CDATA[
+				AND
+					TBL_APRLINEINFO.aprmembername = #v_APPROVUSER#
+			]]>
+		</isNotEqual>
+		
+		<![CDATA[
+				) aaa
+			ON
+				TBL_APRDOCINFO.tenant_id = aaa.tenant_id
+			AND
+				TBL_APRDOCINFO.companyid = aaa.companyid
+			AND
+				TBL_APRDOCINFO.docid = aaa.docid
+			INNER JOIN
+				TBL_EXPAPRDOCINFO
+			ON
+				TBL_APRDOCINFO.tenant_id = TBL_EXPAPRDOCINFO.tenant_id
+			AND
+				TBL_APRDOCINFO.companyid = TBL_EXPAPRDOCINFO.companyid
+			AND
+				TBL_APRDOCINFO.docid = TBL_EXPAPRDOCINFO.docid
+			WHERE
+				(functiontype IS NOT NULL)
+			AND
+				functiontype != '010'
+			AND
+				(startdate IS NOT NULL)
+		]]>
+
+		<isNotEqual property="v_DOCNUMBER" compareValue="">
+			<![CDATA[
+				AND
+					docno LIKE '%' || #v_DOCNUMBER# || '%'
+			]]>
+		</isNotEqual>
+
+		<isNotEqual property="v_DOCTITLE" compareValue="">
+			<![CDATA[
+				AND
+					doctitle LIKE '%' || #v_DOCTITLE# || '%'
+			]]>
+		</isNotEqual>
+
+		<isNotEqual property="v_DRAFTER" compareValue="">
+			<![CDATA[
+				AND
+					writername$v_LANGTYPE$ LIKE '%' || #v_DRAFTER# || '%'
+			]]>
+		</isNotEqual>
+
+		<isNotEqual property="v_DEPTNAME" compareValue="">
+			<![CDATA[
+				AND
+					writerdeptname$v_LANGTYPE$ LIKE '%' || #v_DEPTNAME# || '%'
+			]]>
+		</isNotEqual>
+
+		<isNotEqual property="v_FORMID" compareValue="">
+			<![CDATA[
+				AND
+					formid = #v_FORMID#
+			]]>
+		</isNotEqual>
+
+		<isNotEmpty property="v_FORMNAME">
+			AND 
+				(FORMNAME LIKE '%$v_FORMNAME$%' OR FORMNAME2 LIKE '%$v_FORMNAME$%')
+		</isNotEmpty>
+		<isNotEmpty property="v_KEYWORD">
+			AND
+				KEYWORD LIKE CONCAT('%', #v_KEYWORD#, '%')
+		</isNotEmpty>
+
+		<isNotEqual property="v_DOCSTATE" compareValue="">
+			<![CDATA[
+				AND
+					docstate = #v_DOCSTATE#
+			]]>
+		</isNotEqual>
+
+		<isNotEqual property="v_STARTDATE1" compareValue="">
+			<![CDATA[
+				AND
+					TO_CHAR(startdate, 'YYYY-MM-DD HH24:MI:SS') >= #v_STARTDATE1#
+			]]>
+		</isNotEqual>
+
+		<isNotEqual property="v_STARTDATE2" compareValue="">
+			<![CDATA[
+				AND
+					TO_CHAR(startdate, 'YYYY-MM-DD HH24:MI:SS') <= #v_STARTDATE2#
+			]]>
+		</isNotEqual>
+
+		<isNotEqual property="v_ENDDATE1" compareValue="">
+			<![CDATA[
+				AND
+					TO_CHAR(enddate, 'YYYY-MM-DD HH24:MI:SS') >= #v_ENDDATE1#   
+			]]>
+		</isNotEqual>
+
+		<isNotEqual property="v_ENDDATE2" compareValue="">
+			<![CDATA[
+				AND
+					TO_CHAR(enddate, 'YYYY-MM-DD HH24:MI:SS') <= #v_ENDDATE2#
+			]]>
+		</isNotEqual>
+
+		<isNotEqual property="v_SUBQUERY" compareValue="">
+			<![CDATA[
+				AND
+					$v_SUBQUERY$
+			]]>
+		</isNotEqual>
+
+		<isNotEqual property="v_ORDEROPTION" compareValue="">
+			<isEqual property="v_ORDEROPTION" compareValue="StartDate">
+				<![CDATA[
+					ORDER BY
+						#v_ORDEROPTION#
+				]]>
+			</isEqual>
+
+			<isNotEqual property="v_ORDEROPTION" compareValue="StartDate">
+				<![CDATA[
+					ORDER BY
+						#v_ORDEROPTION#,
+						startdate DESC
+				]]>
+			</isNotEqual>
+		</isNotEqual>
+
+		<isEqual property="v_ORDEROPTION" compareValue="">
+			<![CDATA[
+				ORDER BY
+					startdate DESC
+			]]>
+		</isEqual>
+		
+		<![CDATA[
+					) aa
+				)
+			WHERE
+				rnum <= #v_PAGESIZE#) A
+		]]>
+
+		<isNotEqual property="v_ORDEROPTION2" compareValue="">
+			<isEqual property="v_ORDEROPTION2" compareValue="StartDate">
+				<![CDATA[
+					ORDER BY
+						#v_ORDEROPTION2#
+				]]>
+			</isEqual>
+
+			<isNotEqual property="v_ORDEROPTION2" compareValue="StartDate">
+				<![CDATA[
+					ORDER BY
+						#v_ORDEROPTION2#,
+						startdate
+				]]>
+			</isNotEqual>
+		</isNotEqual>
+
+		<isEqual property="v_ORDEROPTION2" compareValue="">
+			<![CDATA[
+				ORDER BY
+					startdate
+			]]>
+		</isEqual>
+		
+		<![CDATA[
+				)
+			WHERE
+				rownum <= #v_PAGESIZE2#
+			ORDER BY
+				startdate DESC
+		]]>
+	</select>
+
+	<!-- <procedure id="EzApprovalGAdmin.getGroupDept" parameterClass="Map" -->
+	<!-- resultClass="ApprGFormVO"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_GETFORMCONTAINERUSEGROUP(#v_FORMCONTID#, 
+		#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.getGroupDept" parameterClass="Map"
+		resultClass="ApprGFormVO">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				TBL_FORMCONTUSERGROUP
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				formcontid = #v_FORMCONTID#
+		]]>
+	</select>
+
+	<!-- <procedure id="EzApprovalGAdmin.getFormContent" -->
+	<!-- parameterClass="Map" resultClass="ApprGFormVO"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_GETFORMCONTENT(#v_PFORMID#, #v_PLANG#, 
+		#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.getFormContent" parameterClass="Map"
+		resultClass="ApprGFormVO" remapResults="true">
+		<isEqual property="approvalFlag" compareValue="S">
+			<![CDATA[
+				SELECT
+					formcontid,
+					TBL_FORMINFO.formid,
+					formname,
+					formname2,
+					formdoctype,
+					formdescription,
+					formfilelocation,
+					formconnflag,
+					passaprlineflag,
+					TBL_AUTODOCNUM_ITEM.keepPeriod,
+					TBL_AUTODOCNUM_ITEM.securityLevel,
+					TBL_AUTODOCNUM_ITEM.isPublic,
+					TBL_AUTODOCNUM_ITEM.itemCode,
+					TBL_AUTODOCNUM_ITEM.itemName,
+					TBL_AUTODOCNUM_ITEM.itemName2,
+					TBL_AUTODOCNUM_ITEM.useFlag,
+					TBL_AUTODOCNUM_ITEM.keepPeriodCode,
+					aproption,
+					SIHANGTYPE,
+					formxslt
+				FROM
+					TBL_FORMINFO
+				JOIN 
+	            	TBL_AUTODOCNUM_ITEM   
+	            ON 
+	            	TBL_FORMINFO.tenant_id = TBL_AUTODOCNUM_ITEM.tenant_id
+	            AND
+	            	TBL_FORMINFO.companyid = TBL_AUTODOCNUM_ITEM.companyid
+	            AND
+	            	TBL_FORMINFO.formid = TBL_AUTODOCNUM_ITEM.formid
+				WHERE
+					TBL_FORMINFO.tenant_id = #tenantID#
+				AND
+					TBL_FORMINFO.companyid = #companyID#
+				AND
+					TBL_FORMINFO.formid = #v_PFORMID#
+			]]>
+		</isEqual>
+		<isEqual property="approvalFlag" compareValue="G">
+			<![CDATA[
+				SELECT
+					formcontid,
+					formid,
+					formname,
+					formname2,
+					formdoctype,
+					formdescription,
+					formfilelocation,
+					formconnflag,
+					aproption ,
+					passaprlineflag,
+					SIHANGTYPE
+				FROM
+					TBL_FORMINFO
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					formid = #v_PFORMID#
+			]]>
+		</isEqual>
+	</select>
+
+	<!-- <procedure id="EzApprovalGAdmin.getFormRecvAdmin" -->
+	<!-- parameterClass="Map" resultClass="ApprGFormVO"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_GETFORMRECVADMIN(#v_FORMID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.getFormRecvAdmin" parameterClass="Map"
+		resultClass="ApprGFormVO" remapResults="true">
+		<isEqual property="approvalFlag" compareValue="S">
+		<![CDATA[
+			SELECT
+				deptid,
+				deptname,
+				userid
+			FROM
+				TBL_FORMRECV
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				formid = #v_FORMID#
+			ORDER BY
+				deptsn
+		]]>
+		</isEqual>
+		<isEqual property="approvalFlag" compareValue="G">
+			<![CDATA[
+				SELECT
+					deptid,
+					deptname
+				FROM
+					TBL_FORMRECV
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					formid = #v_FORMID#
+				ORDER BY
+					deptsn
+			]]>
+		</isEqual>		
+	</select>
+
+	<!-- <procedure id="EzApprovalGAdmin.getTaskCategotyTree" -->
+	<!-- remapResults="true" parameterClass="Map" resultClass="ApprGTaskVO"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_GETTASKCATEGORYTREE(#v_CATETYPE#, 
+		#v_PARENTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.getTaskCategotyTree" remapResults="true"
+		parameterClass="Map" resultClass="ApprGTaskVO">
+		<isEqual property="v_CATETYPE" compareValue="1">
+			<![CDATA[
+				SELECT
+					categorycode,
+					name,
+					NVL(name2, NAME) NAME2,
+					description,
+					'1' CATEGORYTYPE,
+					'ROOT'
+					FROM
+						TBL_TASKCATEGORY
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						oldflag IS NULL
+			]]>
+		</isEqual>
+		<isEqual property="v_CATETYPE" compareValue="2">
+			<isEqual property="approvalFlag" compareValue="S">
+				<![CDATA[
+					SELECT
+						mcategorycode,
+						name,
+						NVL(name2, NAME) NAME2,
+						description,
+						'2' CATEGORYTYPE,
+						categorycode 
+					FROM
+						TBL_TASKMIDDLECATEGORY
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						categorycode = #v_PARENTID#
+					AND
+						mcategorycode != #v_PARENTID#
+					AND
+						oldflag IS NULL
+				]]>
+			</isEqual>
+			<isEqual property="approvalFlag" compareValue="G">
+				<![CDATA[
+					SELECT
+						mcategorycode,
+						name,
+						NVL(name2, NAME) NAME2,
+						description,
+						'2' CATEGORYTYPE,
+						categorycode 
+					FROM
+						TBL_TASKMIDDLECATEGORY
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						categorycode = #v_PARENTID#
+					AND
+						oldflag IS NULL
+				]]>
+			</isEqual>
+		</isEqual>
+		<isEqual property="v_CATETYPE" compareValue="3">
+			<isEqual property="approvalFlag" compareValue="S">
+				<![CDATA[
+					SELECT
+						subcategorycode,
+						name,
+						NVL(name2, NAME) NAME2,
+						description,
+						'3' CATEGORYTYPE,
+						mcategorycode
+					FROM
+						TBL_TASKSUBCATEGORY
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						mcategorycode = #v_PARENTID#
+					AND
+						subcategorycode != #v_PARENTID#
+					AND
+						oldflag IS NULL
+				]]>
+			</isEqual>
+			<isEqual property="approvalFlag" compareValue="G">
+				<![CDATA[
+					SELECT
+						subcategorycode,
+						name,
+						NVL(name2, NAME) NAME2,
+						description,
+						'3' CATEGORYTYPE,
+						mcategorycode
+					FROM
+						TBL_TASKSUBCATEGORY
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						mcategorycode = #v_PARENTID#
+					AND
+						oldflag IS NULL
+				]]>
+			</isEqual>
+		</isEqual>
+	</select>
+
+	<!-- <procedure id="EzApprovalGAdmin.getReceiveGroupInfo" -->
+	<!-- remapResults="true" parameterClass="Map" resultClass="ApprGAdminReceiveVO"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_GETRECEIVEGROUPINFO(#v_MAINID#, 
+		#v_MODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.getReceiveGroupInfo" remapResults="true" parameterClass="Map" resultClass="ApprGAdminReceiveVO">
+		<isEqual property="v_MODE" compareValue="ITEM">
+			<![CDATA[
+				SELECT
+					*
+				FROM
+					TBL_ADMINRECEIPTGROUP_SUB 
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					mainid = #v_MAINID#
+				ORDER BY
+					subid
+			]]>
+		</isEqual>
+		<isEqual property="v_MODE" compareValue="JOIN">
+			<![CDATA[
+				SELECT
+					DISTINCT TBL_ADMINRECEIPTGROUP_MAIN.mainid,
+					TBL_ADMINRECEIPTGROUP_MAIN.mainname
+				FROM
+					TBL_ADMINRECEIPTGROUP_MAIN
+				JOIN
+					TBL_ADMINRECEIPTGROUP_SUB
+				ON
+					TBL_ADMINRECEIPTGROUP_MAIN.tenant_id = TBL_ADMINRECEIPTGROUP_SUB.tenant_id
+				AND
+					TBL_ADMINRECEIPTGROUP_MAIN.companyid = TBL_ADMINRECEIPTGROUP_SUB.companyid
+				AND
+					TBL_ADMINRECEIPTGROUP_MAIN.mainid = TBL_ADMINRECEIPTGROUP_SUB.mainid
+				WHERE
+					TBL_ADMINRECEIPTGROUP_MAIN.tenant_id = #tenantID#
+				AND
+					TBL_ADMINRECEIPTGROUP_MAIN.companyid = #companyID#
+				ORDER BY
+					TBL_ADMINRECEIPTGROUP_MAIN.mainid
+			]]>
+		</isEqual>
+		<isNotEqual property="v_MODE" compareValue="ITEM">
+			<isNotEqual property="v_MODE" compareValue="JOIN">
+				<![CDATA[
+					SELECT
+						*
+					FROM
+						TBL_ADMINRECEIPTGROUP_MAIN
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					ORDER BY
+						mainid
+				]]>
+			</isNotEqual>
+		</isNotEqual>
+
+	</select>
+
+	<!-- <procedure id="EzApprovalGAdmin.getTaskHistory" remapResults="true" -->
+	<!-- parameterClass="Map" resultClass="ApprGTaskCodeHistoryVO"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_GETTASKHISTORY(#v_TASKCODE#, #v_LANGTYPE#, 
+		#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.getTaskHistory" remapResults="true"
+		parameterClass="Map" resultClass="ApprGTaskCodeHistoryVO">
+		<isEqual property="v_LANGTYPE" compareValue="1">
+			<isNotEqual property="v_TASKCODE" compareValue="">
+				<![CDATA[
+					SELECT
+						applydate,
+						taskcode,
+						taskname,
+						changefactor,
+						beforevalue,
+						aftervalue
+					FROM
+						TBL_TASKCODEHISTORY
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						taskcode = #v_TASKCODE#
+					ORDER BY
+						sn DESC
+				]]>
+			</isNotEqual>
+			<isEqual property="v_TASKCODE" compareValue="">
+				<![CDATA[
+					SELECT
+						*
+					FROM
+						(SELECT
+							applydate,
+							taskcode,
+							taskname,
+							taskname2,
+							changefactor,
+							beforevalue,
+							aftervalue
+						FROM
+							TBL_TASKCODEHISTORY
+						WHERE
+							tenant_id = #tenantID#
+						AND
+							companyid = #companyID#
+						ORDER BY
+							sn DESC)
+					WHERE
+						ROWNUM <= 100
+				]]>
+			</isEqual>
+		</isEqual>
+		<isNotEqual property="v_LANGTYPE" compareValue="1">
+			<isNotEqual property="v_TASKCODE" compareValue="">
+				<![CDATA[
+					SELECT
+						applydate,
+						taskcode,
+						NVL(taskname2, TASKNAME) TASKNAME,
+						NVL(changefactor2, CHANGEFACTOR) CHANGEFACTOR,
+						beforevalue,
+						aftervalue2 AFTERVALUE
+					FROM
+						TBL_TASKCODEHISTORY
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						taskcode = #v_TASKCODE#
+					ORDER BY
+						sn DESC
+				]]>
+			</isNotEqual>
+			<isEqual property="v_TASKCODE" compareValue="">
+				<![CDATA[
+					SELECT
+						*
+					FROM
+						(SELECT
+							applydate,
+							taskcode,
+							NVL(taskname2, TASKNAME) TASKNAME,
+							NVL(changefactor2, CHANGEFACTOR) CHANGEFACTOR,
+							beforevalue,
+							aftervalue2 AFTERVALUE
+						FROM
+							TBL_TASKCODEHISTORY
+						WHERE
+							tenant_id = #tenantID#
+						AND
+							companyid = #companyID#
+						ORDER BY
+							sn DESC)
+					WHERE
+						ROWNUM <= 100
+				]]>
+			</isEqual>
+		</isNotEqual>
+	</select>
+
+	<!-- <procedure id="EzApprovalGAdmin.getDeptTranSendDocCount" -->
+	<!-- remapResults="true" parameterClass="Map" resultClass="ApprGReceiveDocVO"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_GETDEPTTRANSENDDOCCOUNT(#v_MODE#, 
+		#v_FROM#, #v_TO#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.getDeptTranSendDocCount"
+		remapResults="true" parameterClass="Map" resultClass="ApprGReceiveDocVO">
+		<isEqual property="v_LANGTYPE" compareValue="1">
+			<isEqual property="v_MODE" compareValue="SEND">
+				<![CDATA[
+					SELECT
+						sentdeptid,
+						sentdeptname,
+						NVL(COUNT(sentdeptid), 0) APRCOUNT
+					FROM
+						TBL_ENDRECEIPTPROCESSINFO
+					WHERE
+						docstate = '011'
+					AND
+						processdate >= TO_DATE(#v_FROM#, 'YYYY-MM-DD HH24:MI:SS')
+					AND
+						processdate < TO_DATE(#v_TO#, 'YYYY-MM-DD HH24:MI:SS')
+					AND
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					GROUP BY
+						sentdeptid,
+						sentdeptname
+					ORDER BY
+						sentdeptname
+				]]>
+			</isEqual>
+			<isEqual property="v_MODE" compareValue="RECV">
+				<![CDATA[
+					SELECT
+						receiveddeptid ,
+						receiveddeptname ,
+						NVL(COUNT(receiveddeptid), 0) APRCOUNT
+					FROM
+						TBL_ENDRECEIPTPROCESSINFO
+					WHERE
+						docstate = '011'
+					AND
+						processdate >= TO_DATE(#v_FROM#, 'YYYY-MM-DD HH24:MI:SS')
+					AND
+						processdate < TO_DATE(#v_TO#, 'YYYY-MM-DD HH24:MI:SS')
+					AND
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					GROUP BY
+						receiveddeptid,
+						receiveddeptname
+					ORDER BY
+						receiveddeptname
+				]]>
+			</isEqual>
+			<isNotEqual property="v_MODE" compareValue="SEND">
+				<isNotEqual property="v_MODE" compareValue="RECV">
+					<![CDATA[
+						SELECT
+							sentdeptid ,
+							sentdeptname,
+							receiveddeptid,
+							receiveddeptname,
+							NVL(COUNT(sentdeptid), 0) APRCOUNT
+						FROM
+							TBL_ENDRECEIPTPROCESSINFO
+						WHERE
+							docstate = '011'
+						AND
+							processdate >= TO_DATE(#v_FROM#, 'YYYY-MM-DD HH24:MI:SS')
+						AND
+							processdate < TO_DATE(#v_TO#, 'YYYY-MM-DD HH24:MI:SS')
+						AND
+							tenant_id = #tenantID#
+						AND
+							companyid = #companyID#
+						GROUP BY
+							sentdeptid,
+							sentdeptname,
+							receiveddeptid,
+							receiveddeptname
+						ORDER BY
+							sentdeptname,
+							receiveddeptname
+                   ]]>
+				</isNotEqual>
+			</isNotEqual>
+		</isEqual>
+		<isNotEqual property="v_LANGTYPE" compareValue="1">
+			<isEqual property="v_MODE" compareValue="SEND">
+				<![CDATA[
+					SELECT
+						sentdeptid,
+						sentdeptname2 SENTDEPTNAME,
+						NVL(COUNT(sentdeptid), 0) APRCOUNT
+					FROM
+						TBL_ENDRECEIPTPROCESSINFO
+					WHERE
+						docstate = '011'
+					AND
+						receivesn = '2'
+					AND
+						processdate >= TO_DATE(#v_FROM#, 'YYYY-MM-DD HH24:MI:SS')
+					AND
+						processdate < TO_DATE(#v_TO#, 'YYYY-MM-DD HH24:MI:SS')
+					AND
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					GROUP BY
+						sentdeptid,
+						sentdeptname2
+					ORDER BY
+						sentdeptname2
+				]]>
+			</isEqual>
+			<isEqual property="v_MODE" compareValue="RECV">
+				<![CDATA[
+					SELECT
+						receiveddeptid,
+						receiveddeptname2 RECEIVEDDEPTNAME,
+						COUNT(receiveddeptid) APRCOUNT
+					FROM
+						TBL_ENDRECEIPTPROCESSINFO
+					WHERE
+						docstate = '011'
+					AND
+						processdate >= TO_DATE(#v_FROM#, 'YYYY-MM-DD HH24:MI:SS')
+					AND
+						processdate < TO_DATE(#v_TO#, 'YYYY-MM-DD HH24:MI:SS')
+					AND
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					GROUP BY
+						receiveddeptid,
+						receiveddeptname2
+					ORDER BY
+						receiveddeptname2
+				]]>
+			</isEqual>
+			<isNotEqual property="v_MODE" compareValue="SEND">
+				<isNotEqual property="v_MODE" compareValue="RECV">
+					<![CDATA[
+						SELECT
+							sentdeptid,
+							sentdeptname2 SENTDEPTNAME,
+							receiveddeptid,
+							receiveddeptname2 RECEIVEDDEPTNAME,
+							NVL(COUNT(sentdeptid), 0) APRCOUNT
+						FROM
+							TBL_ENDRECEIPTPROCESSINFO
+						WHERE
+							docstate = '011'
+						AND
+							processdate >= TO_DATE(#v_FROM#, 'YYYY-MM-DD HH24:MI:SS')
+						AND
+							processdate < TO_DATE(#v_TO#, 'YYYY-MM-DD HH24:MI:SS')
+						AND
+							tenant_id = #tenantID#
+						AND
+							companyid = #companyID#
+						GROUP BY
+							sentdeptid,
+							sentdeptname2,
+							receiveddeptid,
+							receiveddeptname2
+						ORDER BY
+							sentdeptname2,
+							receiveddeptname2
+					]]>
+				</isNotEqual>
+			</isNotEqual>
+		</isNotEqual>
+	</select>
+
+	<!-- <procedure id="EzApprovalGAdmin.getUserDocCount" -->
+	<!-- remapResults="true" parameterClass="Map" resultClass="ApprGAprLineVO"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_GETUSERDOCCOUNT(#v_APRTYPE#, #v_FROM#, 
+		#v_TO#, #v_STRLANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.getUserDocCount" parameterClass="Map" resultClass="ApprGAprLineVO" remapResults="true">
+		<isEqual property="approvalFlag" compareValue="S">
+			<![CDATA[
+				SELECT
+					APRMEMBERDEPTID,
+					APRMEMBERID,
+					APRMEMBERNAME$v_STRLANG$ AS APRMEMBERNAME,
+					APRMEMBERDEPTNAME$v_STRLANG$ AS APRMEMBERDEPTNAME,
+	   				APRMEMBERJOBTITLE$v_STRLANG$ AS APRMEMBERJOBTITLE,
+	   				APRTYPE, 
+	   				C.NAME$v_LANG$ AS APRTYPENAME,
+	   				COUNT(APRMEMBERID) AS APRCOUNT
+	   			FROM 
+	   				TBL_ENDAPRLINEINFO E
+	   			INNER JOIN
+	   				TBL_CODELIST C
+	   			ON 
+	   				E.TENANT_ID = C.TENANT_ID
+	   			AND
+	   				E.COMPANYID = C.COMPANYID
+	   			AND
+	   				E.APRTYPE = C.CODE2
+	   			WHERE
+	   				E.TENANT_ID = #tenantID#
+	   			AND
+	   				E.COMPANYID = #companyID#
+	   			AND
+	   				C.CODE1 = 'SA03' 
+	   			AND
+					processdate >= TO_DATE(#v_FROM#, 'YYYY-MM-DD HH24:MI:SS')
+				AND
+					processdate < TO_DATE(#v_TO#, 'YYYY-MM-DD HH24:MI:SS')
+	   			GROUP BY
+	   				APRMEMBERDEPTID,
+	   				APRMEMBERID,
+	   				APRMEMBERNAME$v_STRLANG$,
+	   				APRMEMBERDEPTNAME$v_STRLANG$,
+	   				APRMEMBERJOBTITLE$v_STRLANG$,
+	   				APRTYPE,
+	   				C.NAME$v_LANG$
+			]]>
+			<isEqual property="userFlag" compareValue="1">
+				ORDER BY
+					APRTYPE,
+					APRMEMBERDEPTNAME,
+					APRMEMBERNAME
+			</isEqual>
+			<isEqual property="userFlag" compareValue="2">
+				ORDER BY
+					APRMEMBERDEPTNAME,
+					APRMEMBERNAME,
+					APRTYPE
+			</isEqual>
+			<isEqual property="userFlag" compareValue="3">
+				ORDER BY
+					APRMEMBERNAME,
+					APRMEMBERDEPTNAME,
+					APRTYPE
+			</isEqual>
+		</isEqual>
+		<isEqual property="approvalFlag" compareValue="G">
+			<![CDATA[
+				SELECT
+					aprmemberdeptid,
+					aprmemberid,
+					aprmembername$v_STRLANG$,
+					aprmemberdeptname$v_STRLANG$,
+					aprmemberjobtitle$v_STRLANG$,
+					NVL(COUNT(aprmemberid), 0) AS APRCOUNT
+				FROM
+					TBL_ENDAPRLINEINFO
+				WHERE
+					aprtype = #v_APRTYPE#
+				AND
+					processdate >= TO_DATE(#v_FROM#, 'YYYY-MM-DD HH24:MI:SS')
+				AND
+					processdate < TO_DATE(#v_TO#, 'YYYY-MM-DD HH24:MI:SS')
+				AND
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				GROUP BY
+					aprmemberdeptid,
+					aprmemberid,
+					aprmembername$v_STRLANG$,
+					aprmemberdeptname$v_STRLANG$,
+					aprmemberjobtitle$v_STRLANG$
+				ORDER BY
+					aprmemberdeptname$v_STRLANG$,
+					aprmembername$v_STRLANG$
+			]]>
+		</isEqual>
+	</select>
+
+	<!-- <procedure id="EzApprovalGAdmin.deleteContainerType" -->
+	<!-- parameterClass="Map" resultClass="String"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_DELETECONTAINERTYPE(#v_CONTTYPEID#, 
+		#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.deleteContainerTypeSelect"
+		parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				NVL(COUNT(TBL_CONTAINER.containerid), 0)
+			FROM
+				TBL_CONTAINER
+			JOIN
+				TBL_CONTAINERTYPE
+			ON
+				TBL_CONTAINER.tenant_id = TBL_CONTAINERTYPE.tenant_id
+			AND
+				TBL_CONTAINER.companyid = TBL_CONTAINERTYPE.companyid
+			AND
+				TBL_CONTAINER.containertypeid = TBL_CONTAINERTYPE.containertypeid
+			WHERE
+				TBL_CONTAINER.tenant_id = #tenantID#
+			AND
+				TBL_CONTAINER.companyid = #companyID# 
+			AND
+				TBL_CONTAINER.containertypeid = #v_CONTTYPEID#
+				
+		]]>
+	</select>
+
+	<delete id="EzApprovalGAdmin.deleteContainerTypeDelete1"
+		parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_CONTAINERTODOCSTATE
+        	WHERE
+        		tenant_id = #tenantID#
+        	AND
+        		companyid = #companyID#
+        	AND
+        		containertypeid = #v_CONTTYPEID#
+		]]>
+	</delete>
+
+	<delete id="EzApprovalGAdmin.deleteContainerTypeDelete2"
+		parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_CONTAINERTYPE
+        	WHERE
+        		tenant_id = #tenantID#
+        	AND
+        		companyid = #companyID#
+        	AND
+        		containertypeid = #v_CONTTYPEID#
+		]]>
+	</delete>
+
+	<!-- <procedure id="EzApprovalGAdmin.setFormData" parameterClass="Map" -->
+	<!-- resultClass="String"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_SETFORMDATA(#iv_PFORMID#, #v_PFORMCONTAINERID#, 
+		#v_PFORMFORMAT#, #v_PYEAR#, #v_PFORMNAME#, #v_PFORMNAME2#, #v_PFORMDESCRIPT#, 
+		#v_PFORMKIND#, #v_PCOMPANYID#, #v_PFORMCONNFLAG#, #v_PFORMRECVGROUPDATA#, 
+		#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.setFormDataSelect" parameterClass="Map"
+		resultClass="String">
+		<![CDATA[
+			SELECT
+				MAX(formid)
+			FROM
+				TBL_FORMINFO
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				formid != '9999999999'
+		]]>
+	</select>
+
+	<insert id="EzApprovalGAdmin.setFormDataInsert1" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_FORMINFO
+				(formcontid,
+				formid,
+				formname,
+				formname2,
+				formdoctype,
+				formdescription,
+				formfilelocation,
+				formconnflag,
+				reformflag,
+				passaprlineflag,
+				aprOption,
+				tenant_id,
+				companyid,
+                SIHANGTYPE,
+				formxslt)
+			VALUES
+				(#v_PFORMCONTAINERID#,
+				#v_PFORMID#,
+				#v_PFORMNAME#,
+				#v_PFORMNAME2#,
+				#v_PFORMKIND#,
+				#v_PFORMDESCRIPT#,
+				#v_PURL#,
+				#v_PFORMCONNFLAG#,
+				#v_PREFORMFLAG#,
+				#v_PPASSAPRLINEFLAG#,
+				#v_formAprOption#,
+				#tenantID#,
+				#companyID#,
+                #v_FORMSIHANGTYPE#,
+				#v_FORMXSLT#)
+		]]>
+	</insert>
+
+	<update id="EzApprovalGAdmin.setFormDataUpdate" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_FORMINFO
+			SET
+				formcontid = #v_PFORMCONTAINERID#,
+				formname = #v_PFORMNAME#,
+				formname2 = #v_PFORMNAME2#,
+				formdoctype = #v_PFORMKIND#,
+				formdescription = #v_PFORMDESCRIPT#,
+				formfilelocation = #v_PURL#,
+				formconnflag = #v_PFORMCONNFLAG#,
+				reformflag = #v_PREFORMFLAG#,
+				formversion = formversion + 1,
+				aprOption = #v_formAprOption#,
+				passaprlineflag = #v_PPASSAPRLINEFLAG#,
+                SIHANGTYPE = #v_FORMSIHANGTYPE#,
+				formxslt = #v_FORMXSLT#
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#				
+			AND
+				formid = #v_PFORMID#
+		]]>
+	</update>
+
+	<delete id="EzApprovalGAdmin.setFormDataDelete" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_FORMRECV
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				formid = #v_PFORMID#
+		]]>
+	</delete>
+
+	<insert id="EzApprovalGAdmin.setFormDataInsert2" parameterClass="Map">
+		<isEqual property="approvalFlag" compareValue="S">
+			<![CDATA[
+				INSERT INTO TBL_FORMRECV
+					(formid,
+					deptid,
+					deptsn,
+					deptname,
+					userid,
+					companyid,
+					tenant_id)
+				VALUES
+					(#v_PFORMID#,
+					#deptID#,
+					#deptSN#,
+					#deptName#,
+					#userID#,
+					#companyID#,
+					#tenantID#)
+			]]>
+		</isEqual>
+		<isEqual property="approvalFlag" compareValue="G">
+			<![CDATA[
+				INSERT INTO TBL_FORMRECV
+					(formid,
+					deptid,
+					deptsn,
+					deptname,
+					companyid,
+					tenant_id)
+				VALUES
+					(#v_PFORMID#,
+					#deptID#,
+					#deptSN#,
+					#deptName#,
+					#companyID#,
+					#tenantID#)
+			]]>
+		</isEqual>
+	</insert>
+	
+	<update id="EzApprovalGAdminDAO.updateAutoDoc" parameterClass="Map">
+		UPDATE 
+			TBL_AUTODOCNUM_ITEM
+		SET
+			ITEMNAME = #v_TASKNAME#,
+			KEEPPERIOD = (SELECT 
+							SUBSTR(NAME$lang$, INSTR(NAME$lang$, ';', 1, 1)+1, INSTR(NAME$lang$, ';', 1, 2) - INSTR(NAME$lang$, ';', 1, 1)-1) AS NAME
+						FROM 
+							TBL_CODELIST 
+						WHERE 
+							tenant_id = #tenantID#
+						AND
+							companyid = #companyID#
+						AND
+							code1 = 'SA52'
+						AND
+							SUBSTR(NAME$lang$, INSTR(NAME, ';', 1, 2)+1) = #v_KEEPINGPERIOD#),
+			KEEPPERIODCODE = #v_KEEPINGPERIOD#,
+			SECURITYLEVEL = #itemSecurity#,
+			ISPUBLIC = #isPublic#
+		WHERE
+			ITEMCODE = #v_TASKCODE#
+		AND
+			COMPANYID = #companyID#
+		AND
+			TENANT_ID = #tenantID#
+	</update>
+	
+	<update id="EzApprovalGAdminDAO.removeAutoDoc" parameterClass="Map">
+		UPDATE 
+			TBL_AUTODOCNUM_ITEM
+		SET
+			USEFLAG = 'N'
+		WHERE
+			ITEMCODE = #taskCode#
+		AND
+			COMPANYID = #companyID#
+		AND
+			TENANT_ID = #tenantID#
+	</update>
+
+	<insert id="EzApprovalGAdminDAO.setAutoDocNum" parameterClass="Map">
+		<selectKey keyProperty="id" resultClass="String">
+			SELECT 
+				'OK' 
+        	FROM 
+        		DUAL
+       		WHERE 
+       			EXISTS ( SELECT 
+       						formid 
+                      	 FROM 
+                      	 	TBL_AUTODOCNUM_ITEM 
+                       	 WHERE  
+                       	 	tenant_id = #tenantID#
+                       	 AND
+                       	 	companyid = #companyID#
+                       	 AND
+                       	 	formid = #v_PFORMID# )
+		</selectKey>
+		
+		<isEqual property="id" compareValue="OK">
+			UPDATE
+				TBL_AUTODOCNUM_ITEM
+         	SET 
+         		keepperiod = #keepPeriod#,
+             	keepperiodcode = #keepPeriodCode#,
+             	securitylevel = #securityLevel#,
+             	ispublic = #isPublic#,
+             	itemcode = #tbItemCode#,
+             	itemname = #tbItemName#,
+             	itemname2 = #tbItemName2#,
+             	useflag = #useFlag#
+       		WHERE  
+       			tenant_id = #tenantID#
+       		AND
+       			companyid = #companyID#
+       		AND
+       			formid = #v_PFORMID#
+		</isEqual>
+		
+		<isNotEqual property="id" compareValue="OK">
+			INSERT INTO TBL_AUTODOCNUM_ITEM
+				(formid,
+				keepperiod,
+				securitylevel,
+				ispublic,
+				itemcode,
+				itemname,
+				itemname2,
+				useflag,
+				keepperiodcode,
+				companyid,
+				tenant_id)
+        	VALUES
+        		(#v_PFORMID#,
+        		#keepPeriod#,
+        		#securityLevel#,
+        		#isPublic#,
+        		#tbItemCode#,
+        		#tbItemName#,
+        		#tbItemName2#,
+        		#useFlag#,
+        		#keepPeriodCode#,
+        		#companyID#,
+        		#tenantID#)
+		</isNotEqual>
+	</insert>
+	
+	<!-- <procedure id="EzApprovalGAdmin.setContainerIDForDoc1" -->
+	<!-- parameterClass="Map" resultClass="String"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_SETCONTAINERIDFORDOC1(#v_CONTTYPEID#, 
+		#v_DEPTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.setContainerIDForDoc1"
+		parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				containerid
+			FROM
+				TBL_CONTAINER
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				containertypeid = #v_CONTTYPEID#
+			AND
+				containerowndepid = (SELECT containerowndepid FROM TBL_CONTAINER WHERE containerID = #v_DEPTID# AND tenant_id = #tenantID# AND  companyid = #companyID#)
+		]]>
+	</select>
+
+	<!-- <procedure id="EzApprovalGAdmin.getTaskCategoryDuplicate" -->
+	<!-- parameterClass="Map" resultClass="Integer"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_GETTASKCATEGORYDUPLICATE(#v_CATETYPE#, 
+		#v_CATECODE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.getTaskCategoryDuplicate"
+		remapResults="true" parameterClass="Map" resultClass="Integer">
+		<isEqual property="v_CATETYPE" compareValue="1">
+			<![CDATA[
+				SELECT
+					NVL(COUNT(categorycode), 0)
+				FROM
+					TBL_TASKCATEGORY
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					categorycode = #v_CATECODE#
+			]]>
+		</isEqual>
+		<isEqual property="v_CATETYPE" compareValue="2">
+			<![CDATA[
+				SELECT
+					NVL(COUNT(mcategorycode), 0)
+				FROM
+					TBL_TASKMIDDLECATEGORY
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					mcategorycode = #v_CATECODE#
+					
+			]]>
+		</isEqual>
+		<isEqual property="v_CATETYPE" compareValue="3">
+			<![CDATA[
+				SELECT
+					NVL(COUNT(subcategorycode), 0)
+				FROM
+					TBL_TASKSUBCATEGORY
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					subcategorycode = #v_CATECODE#
+			]]>
+		</isEqual>
+	</select>
+
+	<!-- <procedure id="EzApprovalGAdmin.getTaskCategoryNodeExist" -->
+	<!-- parameterClass="Map" resultClass="Integer"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_GETTASKCATEGORYNODEEXIST(#v_CATETYPE#, 
+		#v_CATECODE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.getTaskCategoryNodeExist"
+		remapResults="true" parameterClass="Map" resultClass="Integer">
+		<isEqual property="approvalFlag" compareValue="G">
+			<isEqual property="v_CATETYPE" compareValue="1">
+				<![CDATA[
+					SELECT
+						NVL(COUNT(mcategorycode), 0)
+					FROM
+						TBL_TASKMIDDLECATEGORY
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#   
+					AND
+						categorycode = #v_CATECODE#
+					AND
+						oldflag IS NULL
+				]]>
+			</isEqual>
+			<isEqual property="v_CATETYPE" compareValue="2">
+				<![CDATA[
+					SELECT
+						NVL(COUNT(subcategorycode), 0)
+					FROM
+						TBL_TASKSUBCATEGORY
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						mcategorycode = #v_CATECODE#
+					AND
+						oldflag IS NULL
+				]]>
+			</isEqual>
+			<isEqual property="v_CATETYPE" compareValue="3">
+				<![CDATA[
+					SELECT
+						NVL(COUNT(taskcode), 0)
+					FROM
+						TBL_TASKCODE
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						subcategorycode = #v_CATECODE#
+					AND
+						delflag = '0'
+				]]>
+			</isEqual>
+		</isEqual>
+		<isEqual property="approvalFlag" compareValue="S">
+			<isEqual property="v_CATETYPE" compareValue="1">
+				<![CDATA[
+					SELECT
+						NVL(COUNT(mcategorycode), 0)
+					FROM
+						TBL_TASKMIDDLECATEGORY
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#   
+					AND
+						categorycode = #v_CATECODE#
+					AND
+						mcategorycode != #v_CATECODE#
+					AND
+						oldflag IS NULL
+				]]>
+			</isEqual>
+			<isEqual property="v_CATETYPE" compareValue="2">
+				<![CDATA[
+					SELECT
+						NVL(COUNT(subcategorycode), 0)
+					FROM
+						TBL_TASKSUBCATEGORY
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						mcategorycode = #v_CATECODE#
+					AND
+						subcategorycode != #v_CATECODE#
+					AND
+						oldflag IS NULL
+				]]>
+			</isEqual>
+			<isEqual property="v_CATETYPE" compareValue="3">
+				<![CDATA[
+					SELECT
+						NVL(COUNT(taskcode), 0)
+					FROM
+						TBL_TASKCODE
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						subcategorycode = #v_CATECODE#
+					AND
+						delflag = '0'
+				]]>
+			</isEqual>
+		</isEqual>
+	</select>
+
+	<!-- <procedure id="EzApprovalGAdmin.getTaskCodeDuplicate" -->
+	<!-- parameterClass="Map" resultClass="Integer"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_GETTASKCODEDUPLICATE(#v_TASKCODE#, 
+		#v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.getTaskCodeDuplicate"
+		parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				NVL(COUNT(taskcode), 0)
+			FROM
+				TBL_TASKCODE
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				taskcode = #v_TASKCODE#
+		]]>
+	</select>
+
+	<!-- <procedure id="EzApprovalGAdmin.getTaskCodeNodeExist" -->
+	<!-- parameterClass="Map" resultClass="Integer"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_GETTASKCODENODEEXIST(#v_TASKCODE#, 
+		#v_DEPTID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.getTaskCodeNodeExist" parameterClass="Map" resultClass="Integer">
+	<![CDATA[
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_CABINETCLASS
+		INNER JOIN
+			TBL_CABINET
+		ON
+			TBL_CABINETCLASS.CABINETCLASSNO = TBL_CABINET.CABINETCLASSNO
+		AND
+			TBL_CABINETCLASS.COMPANYID = TBL_CABINET.COMPANYID
+		AND
+			TBL_CABINETCLASS.TENANT_ID = TBL_CABINET.TENANT_ID
+		WHERE
+			TBL_CABINETCLASS.COMPANYID = #companyID#
+		AND
+			TBL_CABINETCLASS.TENANT_ID = #tenantID#
+		AND
+			TBL_CABINETCLASS.TASKCODE = #v_TASKCODE#
+		AND
+			TBL_CABINET.DELETEDATE IS NULL
+		AND
+			TBL_CABINET.DELFLAG = '0'
+	]]>
+		<isNotEqual property="v_DEPTID" compareValue="">
+		<![CDATA[
+			AND
+				TRIM(PROCESSDEPTCODE) = #v_DEPTID#
+		]]>
+		</isNotEqual>
+	</select>
+
+	<!-- <procedure id="EzApprovalGAdmin.getTaskCodeDeptCnt" -->
+	<!-- parameterClass="Map" resultClass="Integer"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_GETTASKCODEDEPTCNT(#v_TASKCODE#, 
+		#v_DEPTCODE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.getTaskCodeDeptCnt" parameterClass="Map"
+		resultClass="Integer">
+		<![CDATA[
+			SELECT
+				NVL(COUNT(taskcode), 0)
+			FROM
+				TBL_TASK_DEPTINFO 
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				taskcode = #v_TASKCODE#
+			AND
+				RTRIM(processdeptcode) = #v_DEPTCODE#
+		]]>
+	</select>
+
+	<!-- <procedure id="EzApprovalGAdmin.searchManageAprDocListCount" -->
+	<!-- parameterClass="Map" resultClass="Integer"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_SEARCHMANAGEAPRDOCLISTCOU(#v_SUBQUERY#, 
+		#v_DOCNUMBER#, #v_DOCTITLE#, #v_DRAFTER#, #v_DRAFTER2#, #v_DEPTNAME#, #v_DEPTNAME2#, 
+		#v_FORMID#, #v_DOCSTATE#, #v_STARTDATE1#, #v_STARTDATE2#, #v_ENDDATE1#, #v_ENDDATE2#, 
+		#v_LANGTYPE#, #v_APPROVUSER#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.searchManageAprDocListCount"
+		parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				NVL(COUNT(DISTINCT TBL_APRDOCINFO.docid), 0)
+			FROM
+				TBL_APRDOCINFO
+			RIGHT OUTER JOIN
+				(SELECT
+					DISTINCT docid,
+					companyid,
+					tenant_id
+				FROM
+					TBL_APRLINEINFO
+				WHERE
+					TBL_APRLINEINFO.tenant_id = #tenantID#
+				AND
+					TBL_APRLINEINFO.companyid = #companyID#
+					
+		]]>
+
+		<isNotEqual property="v_APPROVUSER" compareValue="">
+			<![CDATA[
+				AND
+					TBL_APRLINEINFO.aprmembername = #v_APPROVUSER#
+			]]>
+		</isNotEqual>
+		
+		<![CDATA[
+				) aaa
+			ON
+				TBL_APRDOCINFO.tenant_id = aaa.tenant_id
+			AND
+				TBL_APRDOCINFO.companyid = aaa.companyid
+			AND
+				TBL_APRDOCINFO.docid = aaa.docid
+			INNER JOIN
+				TBL_EXPAPRDOCINFO 
+			ON
+				TBL_APRDOCINFO.tenant_id = TBL_EXPAPRDOCINFO.tenant_id
+			AND
+				TBL_APRDOCINFO.companyid = TBL_EXPAPRDOCINFO.companyid
+			AND
+				TBL_APRDOCINFO.docid = TBL_EXPAPRDOCINFO.docid
+			WHERE
+				TBL_APRDOCINFO.tenant_id = #tenantID#
+			AND
+				TBL_APRDOCINFO.companyid = #companyID#
+			AND
+				(functiontype IS NOT NULL)
+			AND
+				 functiontype != '010'				
+			AND
+				(startdate IS NOT NULL)
+		]]>
+
+		<isNotEqual property="v_DOCNUMBER" compareValue="">
+			<![CDATA[
+				AND
+					docno LIKE '%' || #v_DOCNUMBER# || '%'   
+			]]>
+		</isNotEqual>
+		<isNotEqual property="v_DOCTITLE" compareValue="">
+			<![CDATA[
+				AND
+					doctitle LIKE '%' || #v_DOCTITLE# || '%'
+			]]>
+		</isNotEqual>
+		<isNotEqual property="v_DRAFTER" compareValue="">
+			<![CDATA[
+				AND
+					writername$v_LANGTYPE$ LIKE '%' || #v_DRAFTER# || '%'
+			]]>
+		</isNotEqual>
+		<isNotEqual property="v_DEPTNAME" compareValue="">
+			<![CDATA[
+				AND
+					writerdeptname$v_LANGTYPE$ LIKE '%' || #v_DEPTNAME# || '%'
+			]]>
+		</isNotEqual>
+		<isNotEqual property="v_FORMID" compareValue="">
+			<![CDATA[
+				AND
+					formid = #v_FORMID#
+			]]>
+		</isNotEqual>
+		<isNotEmpty property="v_FORMNAME">
+			AND 
+				(FORMNAME LIKE '%$v_FORMNAME$%' OR FORMNAME2 LIKE '%$v_FORMNAME$%')
+		</isNotEmpty>
+		<isNotEmpty property="v_KEYWORD">
+			AND
+				KEYWORD LIKE CONCAT('%', #v_KEYWORD#, '%')
+		</isNotEmpty>
+		<isNotEqual property="v_DOCSTATE" compareValue="">
+			<![CDATA[
+				AND
+					docstate = #v_DOCSTATE#
+			]]>
+		</isNotEqual>
+		<isNotEqual property="v_STARTDATE1" compareValue="">
+			<![CDATA[
+				AND
+					TO_CHAR(startdate, 'YYYY-MM-DD HH24:MI:SS') >= #v_STARTDATE1#
+			]]>
+		</isNotEqual>
+		<isNotEqual property="v_STARTDATE2" compareValue="">
+			<![CDATA[
+				AND
+					TO_CHAR(startdate, 'YYYY-MM-DD HH24:MI:SS') <= #v_STARTDATE2#   
+			]]>
+		</isNotEqual>
+		<isNotEqual property="v_ENDDATE1" compareValue="">
+			<![CDATA[
+				AND
+					TO_CHAR(enddate, 'YYYY-MM-DD HH24:MI:SS') >= #v_ENDDATE1#   
+			]]>
+		</isNotEqual>
+		<isNotEqual property="v_ENDDATE2" compareValue="">
+			<![CDATA[
+				AND
+					TO_CHAR(enddate, 'YYYY-MM-DD HH24:MI:SS') <= #v_ENDDATE2#   
+			]]>
+		</isNotEqual>
+		<isNotEqual property="v_SUBQUERY" compareValue="">
+			<![CDATA[
+				AND
+					$v_SUBQUERY$
+			]]>
+		</isNotEqual>
+	</select>
+
+	<select id="EzApprovalGAdminDAO.getCodeType" parameterClass="Map" resultClass="ApprGLeftVO">
+		<isEqual property="lang" compareValue="1">
+		<![CDATA[
+			SELECT
+				code2,
+				CASE #primary# WHEN '1' THEN name WHEN '2' THEN name2 END AS NAME 
+			FROM 
+				TBL_CODELIST 
+			WHERE 
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				code1 = #code1# 
+			AND 
+				isuse = '1' 
+			ORDER BY 
+				code2
+		]]>
+		</isEqual>
+		<isNotEqual property="lang" compareValue="1">
+		<![CDATA[
+			SELECT
+				code2,
+				NAME$lang$ AS NAME 
+			FROM 
+				TBL_CODELIST 
+			WHERE 
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				code1 = #code1# 
+			AND 
+				isuse = '1' 
+			ORDER BY 
+				code2
+		]]>
+		</isNotEqual>
+	</select>
+	
+	<select id="EzApprovalGAdminDAO.getFormAprRule" parameterClass="Map" resultClass="ApprGAutoRuleVO">
+		<![CDATA[
+			SELECT 
+				formid,
+             	autorulesn,
+             	autoruleguid,
+             	checkfieldtype,
+             	checkfield,
+             	operatortype,
+             	operator,
+             	condtype,
+             	condvalue,
+             	condvaluedeptid,
+             	doctype 
+        	FROM 
+        		TBL_FORM_AUTORULE 
+       		WHERE  
+       			TENANT_ID = #tenantID#
+       		AND
+       			COMPANYID = #companyID#
+       		AND
+       			FORMID = #formID#
+        	ORDER BY 
+        		AUTORULESN
+		]]>
+	</select>
+	
+	<select id="EzApprovalGAdminDAO.getFormAprRuleLine" parameterClass="Map" resultClass="ApprGAutoRuleVO">
+		<![CDATA[
+			SELECT 
+				FORMID,
+             	AUTORULEGUID,
+             	APRMEMBERSN,
+             	APRTYPE,
+             	APRSTATE,
+             	APRMEMBERID,
+             	APRMEMBERISDEPTYN,
+             	APRMEMBERNAME,
+             	APRMEMBERNAME2,
+             	APRMEMBERJOBTITLE,
+	            APRMEMBERJOBTITLE2,
+             	APRMEMBERDEPTID,
+    	        APRMEMBERDEPTNAME,
+        	    APRMEMBERDEPTNAME2,
+            	APRMEMBERLDAPPATH,
+             	RECEIVEDDATE,
+             	PROCESSDATE,
+             	REASONDONOTAPPROV,
+             	ISPROPOSERYN,
+             	ISBRIEFUSERYN
+            FROM 
+            	TBL_FORM_AUTORULELINE 
+	        WHERE  
+	        	TENANT_ID = #tenantID#
+	        AND
+	        	COMPANYID = #companyID#
+	        AND
+	        	FORMID = #formID#
+        	ORDER BY 
+        		AUTORULEGUID,
+                APRMEMBERSN DESC
+		]]>
+	</select>
+	
+	<select id="EzApprovalGAdminDAO.getSpecialContList" parameterClass="Map" resultClass="ApprGContInfoVO">
+		<![CDATA[
+			SELECT 
+				deptid,
+             	conttype,
+             	sn,
+             	contname,
+             	subquery
+        	FROM 
+        		TBL_SPECIALCONTAINERINFO
+       		WHERE  
+       			tenant_id = #tenantID#
+       		AND
+       			companyid = #companyID#
+       		AND
+       			deptid = #deptID#
+        	ORDER BY
+        		conttype,
+                sn
+		]]>
+	</select>
+	
+	<select id="EzApprovalGAdminDAO.getSpecialContInfoContTypeName" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				containertypename$lang$ as containerTypeName
+			FROM
+				TBL_CONTAINERTYPE
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				containertypeid = #contType#
+		]]>
+	</select>
+	
+	<select id="EzApprovalGAdminDAO.getSpecialContInfo" parameterClass="Map" resultClass="ApprGContInfoVO">
+		<![CDATA[
+			SELECT 
+				deptid,
+        		conttype,
+        		sn,
+        		contname,
+        		subquery 
+   			FROM 
+   				TBL_SPECIALCONTAINERINFO 
+  			WHERE
+  				tenant_id = #tenantID#
+  			AND
+  				companyid = #companyID#
+  			AND  
+  				deptid = #deptID#
+           	AND 
+           		conttype = #contType#
+           	AND 
+           		sn = #sn#
+		]]>
+	</select>
+	
+	<select id="EzApprovalGAdminDAO.getSpecialContInfoFormName" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				CONCAT(CONCAT(formid,';'), NVL(formname$lang$, formname)) AS FORMIDNAME 
+			FROM 
+				TBL_FORMINFO  
+			WHERE 
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+			  	$subQuery$
+		]]>
+	</select>
+	
+	<insert id="EzApprovalGAdminDAO.insertSpecialContInfo" parameterClass="ApprGContInfoVO">
+		<selectKey keyProperty="sn" resultClass="String">
+			<![CDATA[
+				SELECT 
+					CASE
+						WHEN MAX(sn) IS NULL
+						THEN 1
+						ELSE MAX(sn) + 1
+					END SN
+        		FROM 
+        			TBL_SPECIALCONTAINERINFO 
+       			WHERE
+       				tenant_id = #tenantID#
+       			AND
+       				companyid = #companyID#
+       			AND  
+       				deptid = #deptID#
+                AND 
+                	conttype = #contType#
+			]]>
+		</selectKey>
+		
+		<![CDATA[
+			INSERT INTO TBL_SPECIALCONTAINERINFO
+				(deptid,
+				conttype,
+				sn,
+				contname,
+				subquery,
+				companyid,
+				tenant_id)
+			VALUES
+				(#deptID#,
+				#contType#,
+				#sn#,
+				#contName#,
+				#subQuery#,
+				#companyID#,
+				#tenantID#) 
+		]]>
+	</insert>
+	
+	<delete id="EzApprovalGAdminDAO.deleteSpecialContInfo" parameterClass="ApprGContInfoVO">
+		<![CDATA[
+			DELETE FROM
+				TBL_SPECIALCONTAINERINFO 
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				deptid = #deptID#
+			AND
+				conttype = #contType#
+			AND
+				sn = #sn#
+		]]>
+	</delete>
+	
+	<update id="EzApprovalGAdminDAO.changeSpecialContSN1" parameterClass="ApprGContInfoVO">
+		<![CDATA[
+			UPDATE
+				TBL_SPECIALCONTAINERINFO
+      		SET 
+      			sn = '0'
+    		WHERE  
+    			tenant_id = #tenantID#
+    		AND
+    			companyid = #companyID#
+    		AND
+    			deptid = #deptID#
+     		AND 
+     			conttype = #contType#
+     		AND 
+     			sn = #sn#
+		]]>
+	</update>
+	
+	<update id="EzApprovalGAdminDAO.changeSpecialContSN2" parameterClass="ApprGContInfoVO">
+		<![CDATA[
+			UPDATE
+				TBL_SPECIALCONTAINERINFO
+      		SET 
+      			sn = #sn#
+    		WHERE
+    			tenant_id = #tenantID#
+    		AND
+    			companyid = #companyID#
+    		AND  
+    			deptid = #deptID#
+     		AND 
+     			conttype = #contType2#
+     		AND 
+     			sn = #sn2#
+		]]>
+	</update>
+	
+	<update id="EzApprovalGAdminDAO.changeSpecialContSN3" parameterClass="ApprGContInfoVO">
+		<![CDATA[
+			UPDATE
+				TBL_SPECIALCONTAINERINFO
+         	SET 
+         		sn = #sn2#
+       		WHERE
+       			tenant_id = #tenantID#
+    		AND
+    			companyid = #companyID#
+    		AND  
+       			deptid = #deptID#
+        	AND 
+        		conttype = #contType#
+        	AND 
+        		sn = '0'
+		]]>
+	</update>
+	
+	<insert id="EzApprovalGAdmin.insertEditApproDoc" parameterClass="Map">
+		<![CDATA[
+		INSERT INTO 
+			tbl_editapprdoc (
+				DOCID, 
+				BEFOREHTML, 
+				AFTERHTML, 
+				USERID, 
+				MODIFYDATE, 
+				TENANT_ID, 
+				COMPANYID
+				)
+		VALUES (
+				#v_DOCID#, 
+				#v_BEFOREHTML#, 
+				#v_AFTERHTML#, 
+				#v_USERID#, 
+				#v_MODIFYDATE#, 
+				#v_TENANTID#, 
+				#v_COMPANYID#
+				)
+		]]>				
+	</insert>
+	
+	<!-- <procedure id="EzApprovalGAdmin.insertContainerType" -->
+	<!-- parameterClass="Map"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_INSERTCONTAINERTYPE(#v_CONTTYPENAME#, 
+		#v_CONTTYPENAME2#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<insert id="EzApprovalGAdmin.insertContainerType"
+		parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_CONTAINERTYPE
+				(containertypeid,
+				containertypename,
+				containertypename2,
+				companyid,
+				tenant_id)
+			VALUES 
+				((SELECT
+					NVL(MAX(CAST(TRIM(containertypeid) as NUMBER)), 1000) + 10
+				FROM
+					TBL_CONTAINERTYPE
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#),
+				#v_CONTTYPENAME#,
+				#v_CONTTYPENAME2#,
+				#companyID#,
+				#tenantID#)
+		]]>
+	</insert>
+
+	<!-- <procedure id="EzApprovalGAdmin.deleteContainer" -->
+	<!-- parameterClass="Map"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_DELETECONTAINER(#v_CONTID#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<delete id="EzApprovalGAdmin.deleteContainer1" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_CONTAINERUSEDEP
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				containerid = #v_CONTID#
+		]]>
+	</delete>
+
+	<delete id="EzApprovalGAdmin.deleteContainer2" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_CONTAINER
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				containerid = #v_CONTID#
+		]]>
+	</delete>
+
+	<!-- <procedure id="EzApprovalGAdmin.insertReceiveGroupItemInfo" -->
+	<!-- parameterClass="Map"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_INSERTRECEIVEGROUPITEMINF(#v_MAINID#, 
+		#v_DEPTID#, #v_DEPTNAME#, #v_DEPTNAME2#, #v_COMPANYID#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<insert id="EzApprovalGAdmin.insertReceiveGroupItemInfo"
+		parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_ADMINRECEIPTGROUP_SUB
+				(mainid,
+				subid,
+				deptid,
+				deptname,
+				deptname2,
+				companyid,
+                tenant_id,
+                extreceptyn)
+			VALUES 
+				(#v_MAINID#,
+				(SELECT
+					NVL(MAX(subid), 0) + 1
+				FROM
+					TBL_ADMINRECEIPTGROUP_SUB),
+				#v_DEPTID#,
+				#v_DEPTNAME#,
+				#v_DEPTNAME2#,
+				#v_COMPANYID#,
+                #tenantID#,
+                #v_EXTRECEPTYN#)
+		]]>
+	</insert>
+	
+	<update id="EzApprovalGAdmin.updateReceiveGroupItemInfo" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_ADMINRECEIPTGROUP_SUB
+			SET
+				deptname = #deptName#,
+				deptname2 = #deptName2#
+			WHERE 
+				tenant_id = #tenantID#
+			AND
+				companyID = #companyID#
+			AND
+				mainid = #mainID#
+			AND
+				deptid = #deptID#
+		]]>
+	</update>
+
+	<!-- <procedure id="EzApprovalGAdmin.deleteReceiveGroupItemInfo" -->
+	<!-- parameterClass="Map"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_DELETERECEIVEGROUPITEMINF(#v_SUBID#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<delete id="EzApprovalGAdmin.deleteReceiveGroupItemInfo"
+		parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_ADMINRECEIPTGROUP_SUB
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				subid = #v_SUBID#
+		]]>
+	</delete>
+
+	<!-- <procedure id="EzApprovalGAdmin.updateReceiveGroupInfo" -->
+	<!-- parameterClass="Map"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_UPDATERECEIVEGROUPINFO(#v_MAINID#, 
+		#v_MAINNAME#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<update id="EzApprovalGAdmin.updateReceiveGroupInfo"
+		parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_ADMINRECEIPTGROUP_MAIN
+			SET
+				mainname = #v_MAINNAME#
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				mainid = #v_MAINID#
+		]]>
+	</update>
+
+	<!-- <procedure id="EzApprovalGAdmin.insertReceiveGroupInfo" -->
+	<!-- parameterClass="Map"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_INSERTRECEIVEGROUPINFO(#v_MAINNAME#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<insert id="EzApprovalGAdmin.insertReceiveGroupInfo"
+		parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_ADMINRECEIPTGROUP_MAIN
+				(mainid,
+				mainname,
+				companyid,
+				tenant_id)
+			VALUES
+				(SEQ_TBL_ADMINRECEIPTGROUP_MAIN.NEXTVAL,
+				#v_MAINNAME#,
+				#companyID#,
+				#tenantID#)
+		]]>
+	</insert>
+
+	<!-- <procedure id="EzApprovalGAdmin.deleteReceiveGroupInfo" -->
+	<!-- parameterClass="Map"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_DELETERECEIVEGROUPINFO(#v_MAINID#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<delete id="EzApprovalGAdmin.deleteReceiveGroupInfo"
+		parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_ADMINRECEIPTGROUP_MAIN
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				mainid = #v_MAINID#
+		]]>
+	</delete>
+
+	<!-- <procedure id="EzApprovalGAdmin.setTaskCategory" -->
+	<!-- parameterClass="Map"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_SETTASKCATEGORY(#v_MODE#, #v_CATETYPE#, 
+		#v_CATECODE#, #v_NAME#, #v_NAME2#, #v_DESC#, #v_CODE#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<insert id="EzApprovalGAdmin.setTaskCategoryInsert"
+		parameterClass="Map">
+		<isEqual property="v_CATETYPE" compareValue="1">
+			<![CDATA[
+				INSERT INTO TBL_TASKCATEGORY
+					(categorycode,
+					name,
+					name2,
+					description,
+					oldflag,
+					companyid,
+					tenant_id)
+				VALUES
+					(#v_CATECODE#,
+					#v_NAME#,
+					#v_NAME2#,
+					#v_DESC#,
+					NULL,
+					#companyID#,
+					#tenantID#)
+			]]>
+		</isEqual>
+		<isEqual property="v_CATETYPE" compareValue="2">
+			<![CDATA[
+				INSERT INTO TBL_TASKMIDDLECATEGORY
+					(mcategorycode,
+					name,
+					name2,
+					description,
+					categorycode,
+					oldflag,
+					companyid,
+					tenant_id)
+				VALUES 
+					(#v_CATECODE#,
+					#v_NAME#,
+					#v_NAME2#,
+					#v_DESC#,
+					#v_CODE#,
+					NULL,
+					#companyID#,
+					#tenantID#)
+			]]>
+		</isEqual>
+		<isEqual property="v_CATETYPE" compareValue="3">
+			<![CDATA[
+				INSERT INTO TBL_TASKSUBCATEGORY
+					(subcategorycode,
+					name,
+					name2,
+					description,
+					mcategorycode,
+					oldflag,
+					companyid,
+					tenant_id)
+				VALUES 
+					(#v_CATECODE#,
+					#v_NAME#,
+					#v_NAME2#,
+					#v_DESC#,
+					#v_CODE#,
+					NULL,
+					#companyID#,
+					#tenantID#)
+			]]>
+		</isEqual>
+	</insert>
+
+	<update id="EzApprovalGAdmin.setTaskCategoryUpdate"
+		parameterClass="Map">
+		<isEqual property="v_CATETYPE" compareValue="1">
+			<![CDATA[
+				UPDATE
+					TBL_TASKCATEGORY
+				SET
+					name = #v_NAME#,
+					name2 = #v_NAME2#,
+					description = #v_DESC#
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					categorycode = #v_CATECODE#
+			]]>
+		</isEqual>
+		<isEqual property="v_CATETYPE" compareValue="2">
+			<isEqual property="approvalFlag" compareValue="S">
+				<![CDATA[
+					UPDATE
+						TBL_TASKMIDDLECATEGORY
+					SET
+						name = #v_NAME#,
+						name2 = #v_NAME2#,
+						description = #v_DESC#
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						mcategorycode = #v_CATECODE#
+				]]>
+			</isEqual>
+			<isEqual property="approvalFlag" compareValue="G">
+				<![CDATA[
+					UPDATE
+						TBL_TASKMIDDLECATEGORY
+					SET
+						name = #v_NAME#,
+						name2 = #v_NAME2#,
+						description = #v_DESC#,
+						categorycode = #v_CODE#
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						mcategorycode = #v_CATECODE#
+				]]>
+			</isEqual>
+		</isEqual>
+		<isEqual property="v_CATETYPE" compareValue="3">
+			<isEqual property="approvalFlag" compareValue="S">
+				<![CDATA[
+					UPDATE
+						TBL_TASKSUBCATEGORY
+					SET
+						name = #v_NAME#,
+						name2 = #v_NAME2#,
+						description = #v_DESC#
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						subcategorycode = #v_CATECODE#
+				]]>
+			</isEqual>
+			<isEqual property="approvalFlag" compareValue="G">
+				<![CDATA[
+					UPDATE
+						TBL_TASKSUBCATEGORY
+					SET
+						name = #v_NAME#,
+						name2 = #v_NAME2#,
+						description = #v_DESC#,
+						mcategorycode = #v_CODE#
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						subcategorycode = #v_CATECODE#
+				]]>
+			</isEqual>
+		</isEqual>
+	</update>
+
+	<!-- <procedure id="EzApprovalGAdmin.removeTaskCategory" -->
+	<!-- parameterClass="Map"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_REMOVETASKCATEGORY(#v_CATETYPE#, 
+		#v_CATECODE#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<update id="EzApprovalGAdmin.removeTaskCategory" parameterClass="Map">
+		<isEqual property="v_CATETYPE" compareValue="1">
+			<![CDATA[
+				UPDATE
+					TBL_TASKCATEGORY
+				SET
+					oldflag = 'Y'
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					categorycode = #v_CATECODE#
+			]]>
+		</isEqual>
+		<isEqual property="v_CATETYPE" compareValue="2">
+			<![CDATA[
+				UPDATE
+					TBL_TASKMIDDLECATEGORY
+				SET
+					oldflag = 'Y'
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					mcategorycode = #v_CATECODE#
+			]]>
+		</isEqual>
+		<isEqual property="v_CATETYPE" compareValue="3">
+			<![CDATA[
+				UPDATE
+					TBL_TASKSUBCATEGORY
+				SET
+					oldflag = 'Y'
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					subcategorycode = #v_CATECODE#
+			]]>
+		</isEqual>
+	</update>
+
+	<!-- <procedure id="EzApprovalGAdmin.deleteSealInfo" -->
+	<!-- parameterClass="Map"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_DELETESEALINFO(#v_SEALNUM#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<update id="EzApprovalGAdmin.deleteSealInfo" parameterClass="Map">
+		<isEqual property="v_SEALNUM" compareValue="">
+			<![CDATA[
+				UPDATE
+					TBL_SEALINFO
+				SET
+					deldate = TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS')
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					deldate IS NULL
+			]]>
+		</isEqual>
+		<isNotEqual property="v_SEALNUM" compareValue="">
+			<![CDATA[
+				UPDATE
+					TBL_SEALINFO
+				SET
+					deldate = TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS')
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					sealnum = #v_SEALNUM#
+			]]>
+		</isNotEqual>
+	</update>
+
+	<!-- <procedure id="EzApprovalGAdmin.deleteSealDeptInfo" -->
+	<!-- parameterClass="Map"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_DELETESEALDEPTINFO(#v_SEALNUM#, 
+		#v_DEPTID#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<update id="EzApprovalGAdmin.deleteSealDeptInfo" parameterClass="Map">
+		<isEqual property="v_SEALNUM" compareValue="">
+			<![CDATA[
+				UPDATE
+					TBL_SEALDEPTINFO
+				SET
+					deldate = TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS')
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					deldate IS NULL
+				AND
+					deptid = #v_DEPTID#
+			]]>
+		</isEqual>
+		<isNotEqual property="v_SEALNUM" compareValue="">
+			<![CDATA[
+				UPDATE
+					TBL_SEALDEPTINFO
+				SET
+					deldate = TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS')
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					sealnum = #v_SEALNUM#
+				AND
+					deptid = #v_DEPTID#
+			]]>
+		</isNotEqual>
+	</update>
+
+	<!-- <procedure id="EzApprovalGAdmin.insertSealInfo" -->
+	<!-- parameterClass="Map"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_INSERTSEALINFO(#v_SEALNUM#, #v_SEALNAME#, 
+		#v_SEALPATH#, #v_SEALWIDTH#, #v_SEALHEIGHT#, #v_REGUSERID#, #v_REGUSERNAME#, 
+		#v_REGUSERNAME2#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.insertSealInfoSelect"
+		parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				NVL(COUNT(sealnum), 0)
+			FROM
+				TBL_SEALINFO 
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				sealnum = #v_SEALNUM#
+		]]>
+	</select>
+
+	<insert id="EzApprovalGAdmin.insertSealInfoInsert"
+		parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_SEALINFO
+				(sealnum,
+				sealname,
+				sealpath,
+				sealwidth,
+				sealheight,
+				regdate,
+				deldate,
+				reguserid,
+				regusername,
+				regusername2,
+				companyid,
+				tenant_id)
+       		 VALUES
+				((SELECT
+					NVL(MAX(sealnum), 0) + 1
+				FROM
+					TBL_SEALINFO
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#),
+				#v_SEALNAME#,
+				#v_SEALPATH#,
+				#v_SEALWIDTH#,
+				#v_SEALHEIGHT#,
+				TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS'),
+				NULL,
+				#v_REGUSERID#,
+				#v_REGUSERNAME#,
+				#v_REGUSERNAME2#,
+				#companyID#,
+				#tenantID#)
+		]]>
+	</insert>
+
+	<update id="EzApprovalGAdmin.insertSealInfoUpdate"
+		parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_SEALINFO
+			SET
+				sealname = #v_SEALNAME#,
+				sealpath = #v_SEALPATH#,
+				sealwidth = #v_SEALWIDTH#,
+				sealheight = #v_SEALHEIGHT#,
+				reguserid = #v_REGUSERID#,
+				regusername = #v_REGUSERNAME#,
+				regusername2 = #v_REGUSERNAME2#
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				sealnum = #v_SEALNUM#
+		]]>
+	</update>
+
+	<!-- <procedure id="EzApprovalGAdmin.insertDeptSealInfo" -->
+	<!-- parameterClass="Map"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_INSERTSEALDELTINFO(#v_SEALNUM#, 
+		#v_DEPTID#, #v_SEALNAME#, #v_SEALPATH#, #v_SEALWIDTH#, #v_SEALHEIGHT#, #v_REGUSERID#, 
+		#v_REGUSERNAME#, #v_REGUSERNAME2#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.insertDeptSealInfoSelect"
+		parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				NVL(COUNT(sealnum), 0)
+			FROM
+				TBL_SEALDEPTINFO
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				sealnum = #v_SEALNUM#
+			AND
+				deptid = #v_DEPTID#
+		]]>
+	</select>
+
+	<insert id="EzApprovalGAdmin.insertDeptSealInfoInsert"
+		parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_SEALDEPTINFO
+				(sealnum,
+				deptid,
+				sealname,
+				sealpath,
+				sealwidth,
+				sealheight,
+				regdate,
+				deldate,
+				reguserid,
+				regusername,
+				regusername2,
+				companyid,
+				tenant_id)
+			VALUES
+				((SELECT
+					NVL(MAX(sealnum) , 0) + 1
+				FROM
+					TBL_SEALDEPTINFO
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					deptid = #v_DEPTID#),
+				#v_DEPTID#,
+				#v_SEALNAME#,
+				#v_SEALPATH#,
+				#v_SEALWIDTH#,
+				#v_SEALHEIGHT#,
+				TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS'),
+				NULL,
+				#v_REGUSERID#,
+				#v_REGUSERNAME#,
+				#v_REGUSERNAME2#,
+				#companyID#,
+				#tenantID#)
+		]]>
+	</insert>
+
+	<update id="EzApprovalGAdmin.insertDeptSealInfoUpdate"
+		parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_SEALDEPTINFO
+			SET
+				sealname = #v_SEALNAME#,
+				sealpath = #v_SEALPATH#,
+				sealwidth = #v_SEALWIDTH#,
+				sealheight = #v_SEALHEIGHT#,
+				reguserid = #v_REGUSERID#,
+				regusername = #v_REGUSERNAME#,
+				regusername2 = #v_REGUSERNAME2#
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				sealnum = #v_SEALNUM#
+			AND
+				deptid = #v_DEPTID#
+		]]>
+	</update>
+
+	<!-- <procedure id="EzApprovalGAdmin.setFormOrder" parameterClass="Map"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_SETFORMORDER(#v_pFORMIDLIST#, #v_pFORMLISTCOUNT#, 
+		#v_pFORMCONTID#, #cv_1#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<update id="EzApprovalGAdmin.setFormOrder" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+ 				TBL_FORMINFO
+			SET
+				formorder = #order#
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				formid = #v_pFormID#
+			AND
+				formcontid = #v_pFormContID#
+		]]>
+	</update>
+
+	<!-- <procedure id="EzApprovalGAdmin.deleteFormContainer" -->
+	<!-- parameterClass="Map"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_DELETEFORMCONTAINER(#v_FORMCONTID#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<delete id="EzApprovalGAdmin.deleteFormContainer1"
+		parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_FORMCONTUSERGROUP
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				formcontid = #v_FORMCONTID#
+		]]>
+	</delete>
+	<delete id="EzApprovalGAdmin.deleteFormContainer2"
+		parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_FORMCONTAINER
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				formcontid = #v_FORMCONTID#
+		]]>
+	</delete>
+
+	<!-- <procedure id="EzApprovalGAdmin.deleteForm" parameterClass="Map"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_DELETEFORM(#v_FORMID#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<delete id="EzApprovalGAdmin.deleteForm1" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_FORMINFO
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				formid = #v_FORMID#
+		]]>
+	</delete>
+	<delete id="EzApprovalGAdmin.deleteForm2" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_FORMUSERINFO
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				formid = #v_FORMID#
+		]]>
+	</delete>
+
+	<!-- <procedure id="EzApprovalGAdmin.setContainerIDForDoc2" -->
+	<!-- parameterClass="Map"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_SETCONTAINERIDFORDOC2(#v_DOCID#, 
+		#v_CONTID#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<update id="EzApprovalGAdmin.setContainerIDForDoc2"
+		parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_ENDAPRDOCINFO
+			SET
+				containerid = #v_CONTID#
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				docid = #v_DOCID#
+		]]>
+	</update>
+
+	<!-- <procedure id="EzApprovalGAdmin.insertFormContainerConti" -->
+	<!-- parameterClass="String" resultClass="String"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZSP_INSERTFORMCONTAINER_CONTI(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.insertFormContainerConti"
+		parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				MAX(formcontid)  
+			FROM
+				TBL_FORMCONTAINER
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+		]]>
+	</select>
+
+	<select id="EzApprovalGAdmin.getContTypeInfo" parameterClass="Map"
+		resultClass="ApprGContInfoVO">
+		<![CDATA[
+			SELECT 
+				containertypeid,
+				containertypename,
+				containertypename2
+        	FROM 
+        		TBL_CONTAINERTYPE
+        	WHERE
+        		tenant_id = #tenantID#
+        	AND
+        		companyid = #companyID#
+        	ORDER BY
+        		TO_NUMBER(containertypeid)	
+	    ]]>
+	</select>
+
+	<select id="EzApprovalGAdmin.insertContainerContID"
+		parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				NVL(MAX(containerid), '0000000000') as contid
+        	FROM
+        		TBL_CONTAINER
+        	WHERE
+        		tenant_id = #tenantID#
+        	AND
+        		companyid = #companyID#
+	    ]]>
+	</select>
+
+	<insert id="EzApprovalGAdmin.insertContainerDocState"
+		parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_CONTAINERTODOCSTATE
+				(containertypeid,
+				documentstate,
+				companyid,
+				tenant_id)
+			VALUES
+				(#data1#,
+				#data2#,
+				#companyID#,
+				#tenantID#)
+	    ]]>
+	</insert>
+
+	<insert id="EzApprovalGAdmin.insertContainer" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_CONTAINER
+				(containerid,
+				containertypeid,
+				containerowndepid,
+				companyid,
+				tenant_id)
+			VALUES
+				(#contID#,
+				#contType#,
+				#deptID#,
+				#companyID#,
+				#tenantID#)
+	    ]]>
+	</insert>
+
+	<insert id="EzApprovalGAdmin.insertContainerUseDep"
+		parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_CONTAINERUSEDEP
+				(containerid,
+				usedepid,
+				companyid,
+				tenant_id)
+			VALUES
+				(#contID#,
+				#deptID#,
+				#companyID#,
+				#tenantID#)
+	    ]]>
+	</insert>
+
+	<insert id="EzApprovalGAdmin.setTaskHistory" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_TASKCODEHISTORY
+				(sn,
+				applydate,
+				taskcode,
+				taskname,
+				taskname2,
+				changefactor,
+				changefactor2,
+				beforevalue,
+				aftervalue,
+				aftervalue2,
+				companyid,
+				tenant_id)
+			VALUES
+				(SEQ_TBL_TASKCODEHISTORY.nextval,
+				TO_DATE(#v_APPLYDATE#, 'YYYY-MM-DD HH24:MI:SS'),
+				#v_TASKCODE#,
+				#v_TASKNAME#,
+				#v_TASKNAME2#,
+				#v_CHANGEFACTOR#,
+				#v_CHANGEFACTOR2#,
+				#v_BEFOREVALUE#,
+				#v_AFTERVALUE#,
+				#v_AFTERVALUE2#,
+				#companyID#,
+				#tenantID#)
+	    ]]>
+	</insert>
+
+	<insert id="EzApprovalGAdmin.insertTaskCode" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_TASKCODE
+				(taskcode,
+				taskname,
+				taskname2,
+				keepingperiod,
+				creationdate,
+				kpreason,
+				keepingmethod,
+				keepingplace,
+				displayrecflag,
+				displayrectrastime,
+				exdisplayfrequency,
+				specialcatalogflag,
+				sc1,
+				sc2,
+				sc3,
+				displayusage,
+				description,
+				subcategorycode,
+				itemsecurity,
+				ispublic,
+				companyid,
+				tenant_id)
+			VALUES
+				(#v_TASKCODE#,
+				#v_TASKNAME#,
+				#v_TASKNAME2#,
+				#v_KEEPINGPERIOD#,
+				TO_DATE(#v_CREATIONDATE#, 'YYYY-MM-DD HH24:MI:SS'),
+				#v_KPREASON#,
+				#v_KEEPINGMETHOD#,
+				#v_KEEPINGPLACE#,
+				#v_DISPLAYRECFLAG#,
+				#v_DISPLAYRECTRASTIME#,
+				#v_EXDISPLAYFREQUENCY#,
+				#v_SPECIALCATALOGFLAG#,
+				#v_SC1#,
+				#v_SC2#,
+				#v_SC3#,
+				#v_DISPLAYUSAGE#,
+				#v_DESCRIPTION#,
+				#v_SUBCATEGORYCODE#,
+				#itemSecurity#,
+				#isPublic#,
+				#companyID#,
+				#tenantID#)
+	    ]]>
+	</insert>
+
+	<insert id="EzApprovalGAdmin.insertDeptInfo" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_TASK_DEPTINFO(
+				createdate,
+				description,
+				processdeptname,
+				processdeptname2,
+				tasktransferflag,
+				tdeptcode,
+				processdeptcode,
+				processdate,
+				applydate,
+				taskcode,
+				delflag,
+				deletedate,
+				organcode,
+				companyid,
+				tenant_id
+			)
+			SELECT
+				creationdate,
+				NULL,
+				#deptName#,
+				#deptName2#,
+				'0',
+				NULL,
+				#deptCode#,
+				#v_pNow1#,
+				#v_pNow2#,
+				taskcode,
+				'0',
+				NULL,
+				NULL,
+				companyid,
+				tenant_id
+			FROM
+				TBL_TASKCODE
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				taskcode = #taskCode#
+	    ]]>
+	</insert>
+
+	<insert id="EzApprovalGAdmin.insertFormContainer"
+		parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_FORMCONTAINER
+				(formcontid,
+				formcontname,
+				formcontname2,
+				formcontowndepid,
+				formcontparents,
+				formcontdescription,
+				companyid,
+				tenant_id)
+			VALUES
+				(#contID#,
+				#contName#,
+				#contName2#,
+				#contDept#,
+				#contParent#,
+				#contDescript#,
+				#companyID#,
+				#tenantID#)
+	    ]]>
+	</insert>
+
+	<insert id="EzApprovalGAdmin.insertFormContainerGroup"
+		parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_FORMCONTUSERGROUP
+				(formcontid,
+				formcontuserdepid,
+				companyid,
+				tenant_id)
+			VALUES
+				(#contID#,
+				#deptID#,
+				#companyID#,
+				#tenantID#)
+	    ]]>
+	</insert>
+	
+	<insert id="EzApprovalGAdminDAO.insertAutoRule" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_FORM_AUTORULE
+				(formid,
+				autorulesn,
+				autoruleguid,
+				checkfieldtype,
+				checkfield,
+				operatortype,
+				operator,
+				condtype,
+				condvalue,
+				condvaluedeptid,
+				doctype,
+				companyid,
+				tenant_id)
+			VALUES
+				(#formID#,
+				#autoRuleSN#,
+				#autoRuleGUID#,
+				#checkFieldType#,
+				#checkField#,
+				#operatorType#,
+				#operator#,
+				#condType#,
+				#condValue#,
+				#condValueDeptID#,
+				#docType#,
+				#companyID#,
+				#tenantID#)
+		]]>
+	</insert>
+	
+	<insert id="EzApprovalGAdminDAO.insertAutoRuleLine" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_FORM_AUTORULELINE
+				(formid,
+				autoruleguid,
+				aprmembersn,
+				aprtype,
+				aprstate,
+				aprmemberid,
+				aprmemberisdeptyn,
+				aprmembername,
+				aprmembername2,
+				aprmemberjobtitle,
+				aprmemberjobtitle2,
+				aprmemberdeptid,
+				aprmemberdeptname,
+				aprmemberdeptname2,
+				aprmemberldappath,
+				receiveddate,
+				processdate,
+				reasondonotapprov,
+				isproposeryn,
+				isbriefuseryn,
+				companyid,
+				tenant_id)
+			VALUES
+				(#formID#,
+				#autoRuleGUID#,
+				#aprMemberSN#,
+				#aprType#,
+				#aprState#,
+				#aprMemberID#,
+				#aprMemberIsDeptYN#,
+				#aprMemberName#,
+				#aprMemberName2#,
+				#aprMemberJobTitle#,
+				#aprMemberJobTitle2#,
+				#aprMemberDeptID#,
+				#aprMemberDeptName#,
+				#aprMemberDeptName2#,
+				#aprMemberLdapPath#,
+				#receiveDate#,
+				#processDate#,
+				#reasonDoNotApprov#,
+				#isProposerYN#,
+				#isBriefUserYN#,
+				#companyID#,
+				#tenantID#)
+		]]>
+	</insert>
+
+	<update id="EzApprovalGAdmin.updateContainer" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_CONTAINER
+			SET
+				containertypeid = #contType#,
+				containerowndepid = #deptID#
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				containerid = #contID#
+	    ]]>
+	</update>
+
+	<update id="EzApprovalGAdmin.updateTaskCode" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_TASKCODE
+			SET
+				taskname = #v_TASKNAME#,
+				taskname2 = #v_TASKNAME2#,
+				keepingperiod = #v_KEEPINGPERIOD#,
+				kpreason = #v_KPREASON#,
+				keepingmethod = #v_KEEPINGMETHOD#,
+				keepingplace = #v_KEEPINGPLACE#,
+				displayrecflag = #v_DISPLAYRECFLAG#,
+				displayrectrastime = #v_DISPLAYRECTRASTIME#,
+				exdisplayfrequency = #v_EXDISPLAYFREQUENCY#,
+				specialcatalogflag = #v_SPECIALCATALOGFLAG#,
+				sc1 = #v_SC1#,
+				sc2 = #v_SC2#,
+				sc3 = #v_SC3#,
+				displayusage = #v_DISPLAYUSAGE#,
+				description = #v_DESCRIPTION#,
+				subcategorycode = #v_SUBCATEGORYCODE#,
+				itemsecurity = #itemSecurity#,
+				ispublic = #isPublic#
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				taskcode = #v_TASKCODE#
+	    ]]>
+	</update>
+
+	<update id="EzApprovalGAdmin.removeTaskCode1" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_TASKCODE
+			SET
+				delflag = '1'
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				taskcode = #taskCode#
+	    ]]>
+	</update>
+
+	<update id="EzApprovalGAdmin.removeTaskCode2" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_TASK_DEPTINFO
+			SET
+				delflag = '1',
+				deletedate = TO_DATE(#now#, 'YYYY-MM-DD HH24:MI:SS')
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				taskcode = #taskCode#
+	    ]]>
+	</update>
+	
+	<delete id="EzApprovalGAdminDAO.removeMyTaskCode" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_MYTASKCODE
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				taskcode = #taskCode#
+	    ]]>
+	</delete>
+
+	<update id="EzApprovalGAdmin.updateDeptInfo" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_TASK_DEPTINFO
+			SET
+				processDate = #v_pNow1#,
+				processDeptName = #deptName#,
+				processDeptName2 = #deptName2#,
+				delFlag = '0',
+				deletedate = NULL
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				taskcode = #taskCode#
+			AND
+				TRIM(processdeptcode) = #deptCode#
+	    ]]>
+	</update>
+
+	<update id="EzApprovalGAdmin.removeDeptInfo" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBL_TASK_DEPTINFO
+			SET
+				processdate = #v_pNow1#,
+				delflag = '1',
+				deletedate = TO_DATE(#v_pNow2#, 'YYYY-MM-DD HH24:MI:SS')
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid=  #companyID#
+			AND
+				taskcode = #taskCode#
+			AND
+				TRIM(processdeptcode) = #deptCode#
+	    ]]>
+	</update>
+
+	<update id="EzApprovalGAdmin.updateFormContainer"
+		parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_FORMCONTAINER
+			SET
+				formcontname = #contName#,
+				formcontname2 = #contName2#,
+				formcontowndepid = #contDept#,
+				formcontparents = #contParent#,
+				formcontdescription = #contDescript#
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				formcontid = #contID#
+	    ]]>
+	</update>
+
+	<delete id="EzApprovalGAdmin.deleteContainerUseDep"
+		parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+        		TBL_CONTAINERUSEDEP
+        	WHERE
+        		tenant_id = #tenantID#
+        	AND
+        		companyid = #companyID#
+        	AND
+        		containerID = #contID#
+	    ]]>
+	</delete>
+
+	<delete id="EzApprovalGAdmin.deleteFormContUserGroup"
+		parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+        		TBL_FORMCONTUSERGROUP
+        	WHERE
+        		tenant_id = #tenantID#
+        	AND
+        		companyid = #companyID#
+        	AND
+        		formcontid = #contID#
+	    ]]>
+	</delete>
+
+	<delete id="EzApprovalGAdmin.deleteContainerDocState"
+		parameterClass="Map">
+		<![CDATA[
+			DELETE FROM 
+        		TBL_CONTAINERTODOCSTATE
+        	WHERE
+        		tenant_id = #tenantID#
+        	AND
+        		companyid = #companyID#
+        		
+	    ]]>
+	</delete>
+	
+	<delete id="EzApprovalGAdminDAO.deleteAutoRule" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_FORM_AUTORULE
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				formid = #formID#
+		]]>
+	</delete>
+	
+	<delete id="EzApprovalGAdminDAO.deleteAutoRuleLine" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_FORM_AUTORULELINE
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				formid = #formID#
+		]]>
+	</delete>
+
+	<select id="EzApprovalGAdmin.getFormProperty" parameterClass="Map"
+		resultClass="ApprGFormVO">
+		<![CDATA[
+			SELECT
+				sn,
+				code,
+				id,
+				name
+			FROM
+				TBL_FORMPROPERTY
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				uppercode = #upperCode#
+		]]>
+	</select>
+
+	<update id="EzApprovalGAdmin.formMove" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_FORMINFO
+			SET
+				formcontid = #selContID#,
+				formorder = (SELECT
+								NVL(MAX(formorder), 0) + 1
+							FROM
+								TBL_FORMINFO
+							WHERE
+								tenant_id = #tenantID#
+							AND
+								companyid = #companyID#
+							AND
+								formcontid = #selContID#)
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				formcontid = #contID#
+			AND
+				formid = #formID#
+		]]>
+	</update>
+	
+	<select id ="EzApprovalGAdmin.getAdminListHeader" parameterClass="Map" resultClass="ApprGListHeaderVO">
+		<![CDATA[
+			SELECT 
+				name,
+				name2,
+				name3,
+				name4, 
+				tablename
+	      	FROM 
+	      		TBL_LISTOPTION 
+	      	WHERE 
+	      		tenant_id = #tenantID#
+	      	AND
+	      		companyid = #companyID#
+	      	AND
+	      		listtype = #v_LISTTYPE#
+	      	AND 
+	      		dtype IS NULL
+	      	ORDER BY sn 
+		]]>
+	</select>
+	
+	<update id="EzApprovalGAdminDAO.moveAllDocListF" parameterClass="Map">
+		<![CDATA[
+			update tbl_expendaprdocinfo
+			set
+				orgcontid = #sourceContID#
+			where
+				tenant_id = #tenantID#
+			and
+				companyid = #companyID#
+			and	 
+				docid in (
+							select 
+								a.docid 
+							from 
+							  	tbl_endaprdocinfo a 
+							where
+							  	a.tenant_id = #tenantID#
+							and
+							  	a.companyid = #companyID#
+							and
+							  	a.containerid = #sourceContID# )
+		]]>	
+	</update>
+	
+	<update id="EzApprovalGAdminDAO.moveAllDocListS" parameterClass="Map">
+		<![CDATA[
+			update tbl_endaprdocinfo 
+			set 
+				containerid = #targetContID#
+			where 
+				tenant_id = #tenantID#
+			and
+				companyid = #companyID#
+			and
+				containerid = #sourceContID# 
+		]]>
+	</update>
+	
+	<update id="EzApprovalGAdminDAO.moveDocListF" parameterClass="Map">
+		<![CDATA[
+			update tbl_endaprdocinfo 
+			set 
+				containerid = #targetContID#
+			where
+				tenant_id = #tenantID#
+			and
+				companyid = #companyID#
+			and
+				containerid = #sourceContID#
+			and
+				docid in ( $subQuery$ ) 
+		]]>
+	</update>
+	
+	<update id="EzApprovalGAdminDAO.moveDocListS" parameterClass="Map">
+		<![CDATA[
+			update tbl_expendaprdocinfo 
+			set 
+				orgcontid = #sourceContID#
+			where
+				tenant_id = #tenantID#
+			and
+				companyid = #companyID#
+			and
+				docid in ( $subQuery$ ) 
+		]]>
+	</update>
+	
+	<update id="EzApprovalGAdminDAO.deleteAllDocList" parameterClass="Map">
+		update tbl_expendaprdocinfo 
+		set 
+			delflag = 'Y'
+		where
+			tenant_id = #tenantID#
+		and
+			companyid = #companyID#
+		and	 
+			docid in ( 
+						select	
+							docid
+						from
+						  	tbl_endaprdocinfo
+						where
+							tenant_id = #tenantID#
+						and
+						  	companyid = #companyID#
+						and
+						  	containerid = #contID#
+						<isNotEmpty property="startPeriod">
+							<![CDATA[
+								and 
+									enddate >= #startDate# 
+								and 
+									enddate <= #endDate# 
+							]]>
+						</isNotEmpty> )
+		and
+			delflag is null
+		<isNotEmpty property="storagePeriod" prepend="AND">
+			storageperiod = #storagePeriod#
+		</isNotEmpty> 
+	</update>
+	
+	<update id="EzApprovalGAdminDAO.deleteDocList" parameterClass="Map">
+		<![CDATA[
+			update tbl_expendaprdocinfo
+			set
+				delflag = 'Y'
+			where
+				tenant_id = #tenantID#
+		  	and
+		  		companyid = #companyID#
+		  	and
+		  		docid in ( $subQuery$ )
+		]]>
+	</update>
+	
+	<select id="EzApprovalGAdminDAO.checkContainer" parameterClass="Map" resultClass="int">
+		<![CDATA[
+			SELECT 
+				count(*)
+			FROM 
+				TBL_CONTAINER 
+			WHERE 
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				containertypeid = #contType#
+			AND
+				containerowndepid = #deptID#
+		]]>
+	</select>
+	
+	<select id="EzApprovalGAdminDAO.getFormConnInfo" resultClass="ApprGFormConnInfoVO">
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_FORMCONNINFO 
+		]]>
+	</select>
+	
+	<select id="EzApprovalGAdminDAO.getParentContName" parameterClass="Map" resultClass="String">
+		SELECT
+			FORMCONTNAME,
+			CASE #v_LANG# WHEN '1' THEN FORMCONTNAME 
+				          WHEN '2' THEN FORMCONTNAME END AS FORMCONTNAME 
+		FROM
+			TBL_FORMCONTAINER
+		WHERE
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #v_COMPANYID#
+		AND
+			FORMCONTID = #v_PARENTID#
+	</select>
+
+	<update id="EzApprovalGAdminDAO.deleteDocListjson" parameterClass="Map">
+		<![CDATA[
+			update tbl_expendaprdocinfo
+			set
+				delflag = 'Y'
+			where
+				tenant_id = #tenantID#
+		  	and
+		  		companyid = #companyID#
+		  	and
+		  		docid = #docid#
+		  	and 
+		  		delflag is null
+		]]>
+	</update>
+	
+	<select id="EzApprovalGAdminDAO.getContDocListjson" parameterClass="Map" resultClass="ApprGDocListVO">
+				SELECT 
+					* 
+				FROM (
+							SELECT  
+  								ROWNUM AS RNUM,
+                                B.DOCID,
+                                B.DOCTYPE,  
+                                B.DOCSTATE,  
+                                B.FUNCTIONTYPE,  
+                                B.HREF,  
+                                B.DOCTITLE,  
+                                B.DOCNO,  
+                                B.HASATTACHYN,  
+                                B.HASOPINIONYN,  
+                                B.STARTDATE,  
+                                ENDDATE, 
+                                B.WRITERID,  
+                                B.WRITERNAME,  
+                                B.WRITERNAME2,  
+                                B.WRITERJOBTITLE,  
+                                B.WRITERJOBTITLE2,  
+                                B.WRITERDEPTID,  
+                                B.WRITERDEPTNAME2,  
+                                B.WRITERDEPTNAME,  
+                                B.FORMID,  
+                                B.CONTAINERID,  
+                                B.FORMNAME,  
+                                B.FORMNAME2,  
+                                B.STATUS,  
+                                B.ORGDOCID,  
+                                B.ISPUBLIC,  
+                                B.EDMSYN,  
+                                B.SECURITYAPPROVAL,
+                                B.DOCSTATENAME
+						FROM (
+								SELECT 
+									 DISTINCT TBL_ENDAPRDOCINFO.DOCID, 
+									 		  TBL_ENDAPRDOCINFO.DOCTYPE,
+				   							  TBL_ENDAPRDOCINFO.DOCSTATE, 
+				   							  TBL_ENDAPRDOCINFO.FUNCTIONTYPE, 
+				   							  TBL_ENDAPRDOCINFO.HREF, 
+				   							  TBL_ENDAPRDOCINFO.DOCTITLE,
+				   							  TBL_ENDAPRDOCINFO.DOCNO, 
+				   							  TBL_ENDAPRDOCINFO.HASATTACHYN, 
+				   							  TBL_ENDAPRDOCINFO.HASOPINIONYN,
+				   							  TBL_ENDAPRDOCINFO.STARTDATE, 
+				   							 TO_CHAR(TBL_ENDAPRDOCINFO.ENDDATE+#v_OFFSET#/(24*60),  
+                                         		'YYYY-MM-DD HH24:MI:SS') ENDDATE,  
+				   							  TBL_ENDAPRDOCINFO.WRITERID,
+				   							  TBL_ENDAPRDOCINFO.WRITERNAME,
+				   							  TBL_ENDAPRDOCINFO.WRITERNAME2, 
+				   							  TBL_ENDAPRDOCINFO.WRITERJOBTITLE, 
+				   							  TBL_ENDAPRDOCINFO.WRITERJOBTITLE2, 
+				   							  TBL_ENDAPRDOCINFO.WRITERDEPTID, 
+				   							  TBL_ENDAPRDOCINFO.WRITERDEPTNAME2,
+				   							  TBL_ENDAPRDOCINFO.WRITERDEPTNAME, 
+				   							  TBL_ENDAPRDOCINFO.FORMID, 
+				   							  TBL_ENDAPRDOCINFO.CONTAINERID,
+				   							  TBL_EXPENDAPRDOCINFO.FORMNAME, 
+				   							  TBL_EXPENDAPRDOCINFO.FORMNAME2, 
+				   							  TBL_EXPENDAPRDOCINFO.STATUS, 
+				   							  TBL_ENDAPRDOCINFO.ORGDOCID,
+				   							  TBL_ENDAPRDOCINFO.ISPUBLIC, 
+				   							  TBL_EXPENDAPRDOCINFO.EDMSYN, 
+				   							  (CASE WHEN TBL_EXPENDAPRDOCINFO.SECURITYAPPROVAL IS NULL THEN ''
+				   							  	   ELSE TBL_EXPENDAPRDOCINFO.SECURITYAPPROVAL
+				   							  END)  AS SECURITYAPPROVAL,
+							   				  CASE 
+				                                  WHEN $v_PSTRLANG$ = '1' THEN C.name 
+				                                  WHEN $v_PSTRLANG$ = '2' THEN C.name2 
+				                                  WHEN $v_PSTRLANG$ = '3' THEN C.name3 
+				                                  WHEN $v_PSTRLANG$ = '4' THEN C.name4 
+			                                  end AS DOCSTATENAME
+				   						FROM 
+				   							  TBL_ENDAPRDOCINFO 
+				   						LEFT OUTER JOIN 
+				   							  TBL_ENDAPRLINEINFO 
+				   						ON 
+				   							  TBL_ENDAPRDOCINFO.DOCID = TBL_ENDAPRLINEINFO.DOCID
+				   						AND
+				   							  TBL_ENDAPRDOCINFO.TENANT_ID = TBL_ENDAPRLINEINFO.TENANT_ID
+				   						AND
+				   							  TBL_ENDAPRDOCINFO.COMPANYID = TBL_ENDAPRLINEINFO.COMPANYID
+				   					    INNER JOIN 
+				   					    	TBL_CODELIST C 
+                               			ON 
+                               				TBL_ENDAPRDOCINFO.DOCSTATE = C.CODE2 
+		                                AND 
+		                                	TBL_ENDAPRDOCINFO.TENANT_ID = C.TENANT_ID 
+		                                AND 
+		                                	TBL_ENDAPRDOCINFO.COMPANYID = C.COMPANYID 
+                       					INNER JOIN 
+                       						TBL_CODELIST D 
+                               			ON 
+                               				TBL_ENDAPRDOCINFO.FUNCTIONTYPE = D.CODE2 
+                                  		AND 
+                                  			TBL_ENDAPRDOCINFO.TENANT_ID = D.TENANT_ID 
+                                  		AND 
+                                  			TBL_ENDAPRDOCINFO.COMPANYID = D.COMPANYID 
+				   						INNER JOIN 
+				   							  TBL_EXPENDAPRDOCINFO 
+				   						ON 
+				   							  TBL_ENDAPRDOCINFO.DOCID = TBL_EXPENDAPRDOCINFO.DOCID
+				   						AND
+				   							  TBL_ENDAPRDOCINFO.TENANT_ID = TBL_EXPENDAPRDOCINFO.TENANT_ID
+				   						AND
+				   							  TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
+				   						LEFT OUTER JOIN 
+				   							  TBL_ENDRECEIPTPOINTINFO E 
+                                    	ON 
+                                    		  TBL_ENDAPRDOCINFO.DOCID = E.DOCID 
+                                        AND 
+                                        	  TBL_ENDAPRDOCINFO.TENANT_ID = E.TENANT_ID 
+                                        AND 
+                                        	  TBL_ENDAPRDOCINFO.COMPANYID = E.COMPANYID 									
+										WHERE
+									<isNotEmpty property="v_CONTID">
+										<isEqual property="v_CONTID" compareValue="ADMIN">
+												  CONTAINERID IS NOT NULL
+										</isEqual>
+										<isNotEqual property="v_CONTID" compareValue="ADMIN">
+										 		  CONTAINERID IN (#v_CONTID#)
+										    AND
+										</isNotEqual>
+									</isNotEmpty>
+										 
+											C.CODE1 = 'SA02' 
+                       					AND 
+                       						D.CODE1 = 'A04' 
+									    AND 
+									  		  TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL 		
+									<isNotEqual property="v_USERSECCODE" compareValue="0">
+										<![CDATA[
+										AND 
+											#v_USERSECCODE# <= TBL_EXPENDAPRDOCINFO.SECURITYCODE
+										]]>
+									</isNotEqual>
+									<isNotEmpty property="v_SUBQUERY">
+										AND 
+											$v_SUBQUERY$
+									</isNotEmpty>	
+										AND
+											TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+										AND
+											TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+									<isEmpty property="v_ORDEROPTION">
+										ORDER BY 
+											ENDDATE DESC
+									</isEmpty>
+									 <![CDATA[
+							   	 ) B 
+							   	 WHERE ROWNUM <=#v_PAGESIZE3#+#v_PAGESIZE2#
+							   	 	) A WHERE A.RNUM > #v_PAGESIZE3#
+							   	 
+									  ]]>
+	</select>
+	
+	<select id="EzApprovalGAdminDAO.getDeleteDocListjson" parameterClass="Map" resultClass="ApprGDocListVO">
+			SELECT
+				*
+					FROM
+					(
+				SELECT
+				     ROWNUM AS RNUM,
+				     A.DOCID, 
+				     A.DOCNO, 
+				     A.DOCTITLE, 
+				     WRITERDEPTNAME, 
+				     A.WRITERNAME, 
+				     A.DELETEUSERID, 
+				     ENDDATE, 
+				     RECEIPTPOINTNAME, 
+				     A.HASATTACHYN, 
+				     A.ISPUBLIC, 
+				     A.FORMNAME, 
+				     A.DOCSTATENAME
+				 FROM
+				 (
+				SELECT 
+				DISTINCT
+				TBL_DOCDELETEHISTORY.DOCID, 
+				TBL_DOCDELETEHISTORY.DOCNO, 
+				TBL_DOCDELETEHISTORY.DOCTITLE, 
+				TBL_DOCDELETEHISTORY.DEPTNAME AS WRITERDEPTNAME, 
+				TBL_DOCDELETEHISTORY.WRITERNAME, 
+				TBL_DOCDELETEHISTORY.DELETEUSERID, 
+				TBL_DOCDELETEHISTORY.DELETETIME AS ENDDATE,
+				TBL_DOCDELETEHISTORY.DELETEUSERID AS RECEIPTPOINTNAME,
+				TBL_ENDAPRDOCINFO.HASATTACHYN,
+				TBL_ENDAPRDOCINFO.ISPUBLIC,
+				TBL_EXPENDAPRDOCINFO.FORMNAME,
+				CASE 
+	                WHEN $v_PSTRLANG$ = '1' THEN C.name 
+	                WHEN $v_PSTRLANG$ = '2' THEN C.name2 
+	                WHEN $v_PSTRLANG$ = '3' THEN C.name3 
+	                WHEN $v_PSTRLANG$ = '4' THEN C.name4 
+	                END AS DOCSTATENAME
+				FROM 
+					TBL_DOCDELETEHISTORY 
+				INNER JOIN 
+					TBL_ENDAPRDOCINFO 
+				ON 
+					TBL_DOCDELETEHISTORY.DOCID = TBL_ENDAPRDOCINFO.DOCID 
+				AND 
+					TBL_DOCDELETEHISTORY.TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID 
+				AND 
+					TBL_DOCDELETEHISTORY.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID
+				INNER JOIN 
+					TBL_EXPENDAPRDOCINFO 
+				ON 
+				    TBL_ENDAPRDOCINFO.DOCID = TBL_EXPENDAPRDOCINFO.DOCID
+				AND
+				    TBL_ENDAPRDOCINFO.TENANT_ID = TBL_EXPENDAPRDOCINFO.TENANT_ID
+				AND
+				    TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
+			    INNER JOIN 
+			    	TBL_CODELIST C 
+				ON 
+					TBL_ENDAPRDOCINFO.DOCSTATE = C.CODE2 
+			    AND 
+			    	TBL_ENDAPRDOCINFO.TENANT_ID = C.TENANT_ID 
+				AND 
+					TBL_ENDAPRDOCINFO.COMPANYID = C.COMPANYID 
+	      		INNER JOIN 
+	      			TBL_CODELIST D 
+				ON 
+					TBL_ENDAPRDOCINFO.FUNCTIONTYPE = D.CODE2 
+				AND 
+					TBL_ENDAPRDOCINFO.TENANT_ID = D.TENANT_ID 
+				AND 
+					TBL_ENDAPRDOCINFO.COMPANYID = D.COMPANYID
+				LEFT OUTER JOIN 
+					TBL_ENDRECEIPTPOINTINFO E 
+				ON 
+					TBL_ENDAPRDOCINFO.DOCID = E.DOCID 
+				AND 
+					TBL_ENDAPRDOCINFO.TENANT_ID = E.TENANT_ID 
+				AND 
+					TBL_ENDAPRDOCINFO.COMPANYID = E.COMPANYID
+				WHERE 
+					C.CODE1 = 'SA02' 
+				AND 
+					D.CODE1 = 'A04'  
+			<isNotEmpty property="v_SUBQUERY">
+			AND
+				$v_SUBQUERY$
+			</isNotEmpty>
+			<![CDATA[
+			AND
+				TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+			AND
+				TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+			ORDER BY 
+				ENDDATE DESC) A WHERE ROWNUM <= #v_PAGESIZE3#+#v_PAGESIZE2#
+				) B WHERE B.RNUM > #v_PAGESIZE3#
+			]]>
+	</select>
+	
+	<select id="EzApprovalGAdminDAO.getContDocListCountjson" parameterClass="Map" resultClass="int">
+		SELECT 
+			COUNT(DISTINCT TBL_ENDAPRDOCINFO.DOCID)
+   		FROM 
+   			TBL_ENDAPRDOCINFO 
+   		LEFT OUTER JOIN 
+   			TBL_ENDAPRLINEINFO 
+   		ON 
+   			TBL_ENDAPRDOCINFO.DOCID = TBL_ENDAPRLINEINFO.DOCID
+   		AND
+   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_ENDAPRLINEINFO.TENANT_ID
+   		AND
+   			TBL_ENDAPRDOCINFO.COMPANYID = TBL_ENDAPRLINEINFO.COMPANYID
+   		INNER JOIN 
+   			TBL_EXPENDAPRDOCINFO 
+   		ON 
+   			TBL_ENDAPRDOCINFO.DOCID = TBL_EXPENDAPRDOCINFO.DOCID
+   		AND
+   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_EXPENDAPRDOCINFO.TENANT_ID
+   		AND		
+   		   	TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
+		<isNotEmpty property="v_CONTID">
+			<isEqual property="v_CONTID" compareValue="ADMIN">
+				WHERE 
+					  CONTAINERID IS NOT NULL
+			</isEqual>
+			<isNotEqual property="v_CONTID" compareValue="ADMIN">
+			 	WHERE 	
+			 		  CONTAINERID IN (#v_CONTID#)
+			</isNotEqual>
+		</isNotEmpty>
+		AND 
+			TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
+		<isNotEqual property="v_USERSECCODE" compareValue="0">
+			<![CDATA[
+			AND 
+				#v_USERSECCODE# <= TBL_EXPENDAPRDOCINFO.SECURITYCODE
+			]]>
+		</isNotEqual>
+		<isNotEmpty property="v_SUBQUERY">
+			AND 
+				$v_SUBQUERY$
+		</isNotEmpty>
+		AND
+			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+		AND
+			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+			
+	</select>
+	
+	<select id="EzApprovalGAdminDAO.getDeletetDocListCountjson" parameterClass="Map" resultClass="int">
+		SELECT COUNT(*) 
+		FROM 
+			TBL_DOCDELETEHISTORY 
+		INNER JOIN 
+		 	TBL_ENDAPRDOCINFO 
+		 ON 
+		 	TBL_DOCDELETEHISTORY.DOCID = TBL_ENDAPRDOCINFO.DOCID 
+		 AND 
+			TBL_DOCDELETEHISTORY.TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID 
+		 AND 
+		 	TBL_DOCDELETEHISTORY.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID
+		 <isNotEmpty property="v_SUBQUERY">
+		AND
+			$v_SUBQUERY$
+		</isNotEmpty>
+		AND
+			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+		AND
+			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+	</select>
+	
+	<insert id="EzApprovalGAdmin.insertShareDocDir" parameterClass="Map">
+		INSERT INTO TBL_SHARE_DOC_DIR(OWNER_ID, SHARE_ID, SHARE_TYPE, TENANT_ID, OWNER_TYPE)
+		<iterate property="shareList" conjunction="UNION ALL">
+			SELECT #ownerId#, #shareList[].shareId#, #shareList[].shareType#, #tenantId#,  #ownerType# FROM DUAL
+		</iterate>
+	</insert>
+	
+	<delete id="EzApprovalGAdmin.deleteShareDocDir" parameterClass="Map">
+		DELETE FROM 
+			TBL_SHARE_DOC_DIR
+		WHERE
+			OWNER_ID = #ownerId#
+		AND
+			TENANT_ID = #tenantId# 
+	</delete>
+	
+	<select id="EzApprovalGAdmin.getShareDocDirOwnerList" parameterClass="Map" resultClass="KEDAuthorUserInfo">
+		SELECT
+			DISTINCT
+			A.OWNER_ID as ownerId, 
+			CASE 
+				WHEN A.OWNER_TYPE = 'U'
+		        THEN B.DISPLAYNAME
+		        WHEN A.OWNER_TYPE = 'D'
+		        THEN C.DISPLAYNAME
+		        END AS ownerName,
+			A.OWNER_TYPE as ownerType
+		FROM
+			TBL_SHARE_DOC_DIR A
+		LEFT JOIN
+			TBL_USERMASTER B
+		ON 
+			(A.OWNER_ID = B.CN AND A.TENANT_ID = B.TENANT_ID)
+		LEFT JOIN
+			TBL_DEPTMASTER C
+		ON 
+			(A.OWNER_ID = C.CN AND A.TENANT_ID = C.TENANT_ID)
+		WHERE
+			A.TENANT_ID = #tenantId#
+	</select>
+	
+	<select id="EzApprovalGAdmin.getShareDocDirShareList" parameterClass="Map" resultClass="KEDSharedUserInfo">
+		SELECT
+			A.SHARE_ID as shareId, 
+			CASE 
+				WHEN A.SHARE_TYPE = 'U'
+		        THEN B.DISPLAYNAME
+		        WHEN A.SHARE_TYPE = 'D'
+		        THEN C.DISPLAYNAME
+		        END AS shareName,
+			A.SHARE_TYPE as shareType
+		FROM
+			TBL_SHARE_DOC_DIR A
+		LEFT JOIN
+			TBL_USERMASTER B
+		ON 
+			(A.SHARE_ID = B.CN AND A.TENANT_ID = B.TENANT_ID)
+		LEFT JOIN
+			TBL_DEPTMASTER C
+		ON 
+			(A.SHARE_ID = C.CN AND A.TENANT_ID = C.TENANT_ID)
+		WHERE	
+			A.OWNER_ID = #ownerId#
+		AND
+			A.TENANT_ID = #tenantId#
+	</select>
+	
+	<insert id="EzApprovalGAdmin.insertDelDoc" parameterClass="Map">
+		<![CDATA[
+		INSERT INTO TBL_DOCDELETEHISTORY
+			( DOCID, 
+			  DOCNO,
+			  DOCTITLE,
+			  DEPTNAME,
+			  WRITERNAME,
+			  DELETEUSERID,
+			  DELETETIME,
+			  TENANT_ID,
+			  COMPANYID )
+		  VALUES
+			  ( #docid#,
+			    #docno#,
+			    #doctitle#,
+			    #deptname#,
+			    #writername#,
+			    #deluserid#,
+			    TO_DATE(#deleteday#, 'YYYY-MM-DD HH24:MI:SS'),
+			    #tenantID#,
+			    #companyID# )
+		]]>				
+	</insert>
+	
+	<insert id="EzApprovalGAdmin.insertOfficeFormFlag" parameterClass="Map">
+		INSERT INTO TBL_FORM_OFFICE
+		VALUES(#v_PFORMID#, #tenantID#, #companyID#)
+	</insert>
+	
+	<delete id="EzApprovalGAdmin.deleteOfficeFormFlag">
+		DELETE FROM TBL_FORM_OFFICE
+		WHERE
+			FORMID = #v_PFORMID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+	</delete>
+		
+	<update id="EzApprovalGAdminDAO.resendOpenGov" parameterClass="Map">
+		UPDATE
+			TBL_GOVSENDDOCHISTORY
+		SET
+			SENDFLAG = 'N'
+		WHERE
+		<![CDATA[
+			SENDDATE
+		BETWEEN
+			TO_DATE(#startTime#, 'YYYY-MM-DD HH24:MI:SS')
+		AND 
+			TO_DATE(#endTime#, 'YYYY-MM-DD HH24:MI:SS')
+		]]>
+	</update>	
+	
+	<select id="EzApprovalGAdminDAO.getOpenGovModifyHistory" parameterClass="Map" resultClass="ApprGOpenGovModifyHistoryVO" remapResults="true">
+		SELECT
+			DOCID, MODIFIERNAME, MODIFIERDEPTNAME, MODIFYDATE, SN
+		FROM
+			TBL_OPENGOVMODIFYHISTORY
+		WHERE
+			DOCID = #docID#
+		AND
+			TENANTID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+		ORDER BY
+			SN DESC
+	</select>
+	<select id="EzApprovalGAdminDAO.getOpenGovModifyHistoryReason" parameterClass="Map" resultClass="String">
+		SELECT
+			MODIFYREASON
+		FROM
+			TBL_OPENGOVMODIFYHISTORY
+		WHERE
+			DOCID = #docID#
+		AND
+			SN = #sn#
+		AND
+			TENANTID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+	</select>
+	
+	<select id="EzApprovalGAdminDAO.cntAttachLimit" parameterClass="Map" resultClass="int">
+		<![CDATA[
+			SELECT
+				COUNT(ATTACHLIMITCNT)
+			FROM 
+				TBL_APRATTACHLIMIT 
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #v_COMPANYID#
+		]]>
+	</select>
+	
+	<select id="EzApprovalGAdminDAO.getAttachLimit" parameterClass="Map" resultClass="int">
+		<![CDATA[
+			SELECT
+				NVL(ATTACHLIMITCNT, -1)  
+			FROM 
+				TBL_APRATTACHLIMIT 
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #v_COMPANYID#
+		]]>
+	</select>
+	
+	<insert id="EzApprovalGAdminDAO.saveAttachLimit" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_APRATTACHLIMIT
+				(ATTACHLIMITCNT,
+				COMPANYID,
+				TENANT_ID)
+			VALUES
+				(#v_ATTACHLIMIT#,
+				#v_COMPANYID#,
+				#v_TENANTID#)
+		]]>
+	</insert>
+	
+	<update id="EzApprovalGAdminDAO.updateAttachLimit" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_APRATTACHLIMIT
+			SET
+				ATTACHLIMITCNT = #v_ATTACHLIMIT#
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #v_COMPANYID#
+		]]>
+	</update>
+	
+	<delete id="EzApprovalGAdminDAO.deleteAttachLimit" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_APRATTACHLIMIT
+        	WHERE
+        		TENANT_ID = #v_TENANTID#
+        	AND
+        		COMPANYID = #v_COMPANYID#
+		]]>
+	</delete>
+	
+	<select id="EzApprovalGAdminDAO.getSendOutDocListCount" parameterClass="Map" resultClass="int">
+		SELECT 
+			COUNT(TBL_ENDAPRDOCINFO.DOCID)
+	   	FROM 
+	   		TBL_ENDAPRDOCINFO 
+	   	INNER JOIN 
+	   		TBL_EXPENDAPRDOCINFO 
+	   	ON 
+	   		TBL_EXPENDAPRDOCINFO.DOCID = TBL_ENDAPRDOCINFO.DOCID
+		AND
+	   		TBL_EXPENDAPRDOCINFO.TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID
+	   	AND	
+	   		TBL_EXPENDAPRDOCINFO.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID
+	   	INNER JOIN 
+	   		TBL_ENDRECEIPTPOINTINFO 
+	   	ON 
+	   		TBL_ENDAPRDOCINFO.DOCID = TBL_ENDRECEIPTPOINTINFO.DOCID
+		AND
+	   		TBL_ENDAPRDOCINFO.TENANT_ID = TBL_ENDRECEIPTPOINTINFO.TENANT_ID
+	   	AND
+	   		TBL_ENDAPRDOCINFO.COMPANYID = TBL_ENDRECEIPTPOINTINFO.COMPANYID
+	   	WHERE 
+	   		TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL 
+		AND 
+			TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTID
+	   	<isEqual property="v_MODELENGTH" compareValue="2">
+	   	NOT
+	   	</isEqual>
+	   	LIKE 'Address%' AND TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
+	   	<isEqual property="v_MODELENGTH" compareValue="2">
+	   	AND TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y')
+	   	</isEqual>
+	   	<isNotEqual  property="v_MODELENGTH" compareValue="2">
+	   	AND TBL_ENDRECEIPTPOINTINFO.PROCESSYN = UPPER(#v_MODE#)
+	   	</isNotEqual>
+	   	 AND
+	   		TBL_EXPENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+		 AND
+	   	 	TBL_EXPENDAPRDOCINFO.COMPANYID = #companyID#	
+	   	 <isGreaterThan property="v_SPSUBQUERYLENGTH" compareValue="0"> 
+			AND
+				$v_SPSUBQUERY$
+		</isGreaterThan>
+	</select>
+	
+	<select id="EzApprovalGAdminDAO.getSendOutDocList" parameterClass="Map" resultClass="ApprGDocListVO">
+		<![CDATA[
+		SELECT * FROM (
+		SELECT * FROM (
+		SELECT * FROM (
+			SELECT 
+				TBL_ENDAPRDOCINFO.DOCID,
+		   		TBL_ENDAPRDOCINFO.ORGDOCID, 
+		   		TBL_ENDAPRDOCINFO.DOCTYPE,
+		   		TBL_ENDAPRDOCINFO.DOCSTATE, 
+		   		TBL_ENDAPRDOCINFO.FUNCTIONTYPE,
+		   		TBL_ENDAPRDOCINFO.HREF, 
+		   		TBL_ENDAPRDOCINFO.DOCTITLE, 
+		   		TBL_ENDAPRDOCINFO.DOCNO,
+		   		TBL_ENDAPRDOCINFO.HASATTACHYN, 
+		   		TBL_ENDAPRDOCINFO.HASOPINIONYN,
+		   		TBL_ENDAPRDOCINFO.STARTDATE, 
+		   		TBL_ENDAPRDOCINFO.ENDDATE,
+		   		TBL_ENDAPRDOCINFO.WRITERID, 
+		   		TBL_ENDAPRDOCINFO.WRITERNAME, 
+		   		TBL_ENDAPRDOCINFO.WRITERNAME2,     
+		   		TBL_ENDAPRDOCINFO.WRITERJOBTITLE, 
+		   		TBL_ENDAPRDOCINFO.WRITERJOBTITLE2, 
+		   		TBL_ENDAPRDOCINFO.WRITERDEPTID,    
+		   		TBL_ENDAPRDOCINFO.WRITERDEPTNAME, 
+		   		TBL_ENDAPRDOCINFO.WRITERDEPTNAME2, 
+		   		TBL_ENDAPRDOCINFO.FORMID,    
+		   		TBL_ENDAPRDOCINFO.CONTAINERID, 
+		   		TBL_ENDAPRDOCINFO.ISPUBLIC,    
+		   		TBL_EXPENDAPRDOCINFO.FORMNAME, 
+		   		TBL_EXPENDAPRDOCINFO.FORMNAME2, 
+		   		TBL_EXPENDAPRDOCINFO.URGENTAPPROVAL,    
+		   		TBL_EXPENDAPRDOCINFO.EDMSYN, 
+		   		TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTNAME,  
+		   		TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTNAME2,  
+		   		TBL_ENDRECEIPTPOINTINFO.PROCESSYN,
+		   		'' as FILENAME,
+		   		'' as FOLDERNAME,
+		   		'' as SENDSTATE,
+		   		'' as FILESTATE
+		   	FROM 
+		   		TBL_ENDAPRDOCINFO 
+		   	INNER JOIN 
+		   		TBL_EXPENDAPRDOCINFO 
+		   	ON 
+		   		TBL_EXPENDAPRDOCINFO.DOCID = TBL_ENDAPRDOCINFO.DOCID
+		   	AND
+		   		TBL_EXPENDAPRDOCINFO.TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID
+		   	AND
+		   		TBL_EXPENDAPRDOCINFO.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID		   		
+		   	INNER JOIN 
+		   		TBL_ENDRECEIPTPOINTINFO 
+		   	ON 
+		   		TBL_ENDAPRDOCINFO.DOCID = TBL_ENDRECEIPTPOINTINFO.DOCID
+		   	AND
+		   		TBL_ENDAPRDOCINFO.TENANT_ID = TBL_ENDRECEIPTPOINTINFO.TENANT_ID
+		   	AND
+		   		TBL_ENDAPRDOCINFO.COMPANYID = TBL_ENDRECEIPTPOINTINFO.COMPANYID		   		
+		   	AND 
+		   		TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL 
+		   	AND
+		   		TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+		   	AND
+		   		TBL_ENDAPRDOCINFO.COMPANYID = #companyID#		   		
+		   	]]>
+<!-- 		   	AND  -->
+<!-- 		   		TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTID -->
+		   
+<!-- 		   	<isEqual property="v_MODELENGTH" compareValue="2"> -->
+<!-- 		   	NOT -->
+<!-- 		   	</isEqual> -->
+<!-- 		   	 LIKE  -->
+<!-- 		   	 	'Address%'  -->
+		   	 AND 
+		   	 	TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
+		   	<isEqual property="v_MODELENGTH" compareValue="2">
+		   	 AND 
+		   	 	TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y')
+		   	</isEqual>
+<!-- 		   	<isNotEqual property="v_MODELENGTH" compareValue="2"> -->
+<!-- 		   	 AND  -->
+<!-- 		   	 	TBL_ENDRECEIPTPOINTINFO.PROCESSYN = UPPER(#v_MODE#) -->
+<!-- 		   	</isNotEqual>  -->
+		   	<isGreaterThan property="v_SPSUBQUERYLENGTH" compareValue="0"> 
+			AND
+				$v_SPSUBQUERY$
+			</isGreaterThan>		   	
+		   	<isNotEmpty property="v_ORDEROPTION">
+		   		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="7">
+		   		<isEqual property="v_ORDEROPTIONVALUE" compareValue="enddate">
+		   		ORDER BY 
+		   			$v_ORDEROPTION$ 
+		   		</isEqual>
+		   		<isNotEqual property="v_ORDEROPTIONVALUE" compareValue="enddate">
+		   		ORDER BY 
+		   			$v_ORDEROPTION$, ENDDATE $v_BASICORDER$
+		   		</isNotEqual>
+		   		</isGreaterEqual>
+		   		<isLessThan property="v_ORDEROPTIONLENGTH" compareValue="7">
+		   		ORDER BY 
+		   			$v_ORDEROPTION$, ENDDATE $v_BASICORDER$
+		   		</isLessThan>
+		   	</isNotEmpty>
+		   	<isEmpty property="v_ORDEROPTION">
+		   		ORDER BY 
+		   				ENDDATE $v_BASICORDER$
+		   	</isEmpty>
+		   	<![CDATA[
+		   	)A 
+		   		WHERE 
+		   			ROWNUM <= #v_PAGESIZE# )B
+		   	]]>
+		   	<isNotEmpty property="v_ORDEROPTION">
+		   		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="7">
+		   		<isEqual property="v_ORDEROPTIONVALUE" compareValue="enddate">
+		   			ORDER BY 
+		   				$v_ORDEROPTION2$
+		   		</isEqual>
+		   		<isNotEqual property="v_ORDEROPTIONVALUE" compareValue="enddate">
+		   			ORDER BY 
+		   				$v_ORDEROPTION2$, ENDDATE $v_BASICORDER2$
+		   		</isNotEqual>
+		   		</isGreaterEqual>
+		   		<isLessThan property="v_ORDEROPTIONLENGTH" compareValue="7">
+		   			ORDER BY 
+		   				$v_ORDEROPTION2$, ENDDATE $v_BASICORDER2$
+		   		</isLessThan>
+		   	</isNotEmpty>
+		   	<isEmpty property="v_ORDEROPTION">
+		   	 ORDER BY 
+		   	 	ENDDATE $v_BASICORDER2$
+		   	</isEmpty>
+		   	<![CDATA[
+		   	)C 
+		   	WHERE ROWNUM <= #v_PAGESIZE2# 
+		   	]]>
+	</select>
+
+	<select id="EzApprovalGAdminDAO.checkSendOutInfoTable" parameterClass="Map" resultClass="Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			ALL_TABLES
+		WHERE 
+			TABLE_NAME = #V_TABLE#
+	</select>
+	
+	<select id="EzApprovalGAdminDAO.selectSendOutInfo" parameterClass="Map" resultClass="HashMap">
+		SELECT
+			DOCID,
+			FILENAME,
+			FOLDERNAME,
+			FILESTATE,
+			SENDSTATE,
+			WRITERID,
+			WRITERNAME,
+			WRITERDEPTID,
+			WRITERDEPTNAME,
+			CREATEDATE,
+			UPDATEDATE,
+			TENANT_ID,
+			COMPANYID
+		FROM
+			TBL_SENDOUTINFO
+		LIMIT 1			
+	</select>
+	
+	<insert id="EzApprovalGAdminDAO.insertSendOutInfo" parameterClass="Map">
+		INSERT INTO TBL_SENDOUTINFO
+		(
+		    IDEX,
+			DOCID,
+			FILENAME,
+			FOLDERNAME,
+			FILESTATE,
+			SENDSTATE,
+			WRITERID,
+			WRITERNAME,
+			WRITERDEPTID,
+			WRITERDEPTNAME,
+			CREATEDATE,
+			UPDATEDATE,
+			TENANT_ID,
+			COMPANYID
+		)
+		VALUES
+		(
+			SENDOUTINFO_SEQ.NEXTVAL
+			#V_DOCID#,
+			#V_FILENAME#,
+			#V_FOLDERNAME#,
+			#V_FILESTATE#,
+			#V_SENDSTATE#,
+			#V_WRITERID#,
+			#V_WRITERNAME#,
+			#V_WRITERDEPTID#,
+			#V_WRITERDEPTNAME#,
+			NOW(),
+			NOW(),
+			#V_TENANT_ID#,
+			#V_COMPANYID#
+		)
+	</insert>
+	
+	<update id="EzApprovalGAdminDAO.updateSendOutInfo" parameterClass="Map">
+		UPDATE TBL_SENDOUTINFO
+			SET 
+			FOLDERNAME = #V_FOLDERNAME#,
+			FILESTATE = #V_FILESTATE#,
+			SENDSTATE = #V_SENDSTATE#,
+			UPDATEDATE = NOW()
+		WHERE 
+			IDEX = (SELECT max(IDEX) from TBL_SENDOUTINFO where FILENAME = #V_FILENAME# AND FILESTATE = 'success')
+		AND
+			DOCID = #V_DOCID#	
+	</update>
+	
+	<select id="EzApprovalGAdminDAO.getSendOutDocListCount_file" parameterClass="Map" resultClass="int">
+		SELECT 
+			COUNT(TBL_ENDAPRDOCINFO.DOCID)
+	   	FROM 
+	   		TBL_ENDAPRDOCINFO 
+	   	INNER JOIN 
+	   		TBL_EXPENDAPRDOCINFO 
+	   	ON 
+	   		TBL_EXPENDAPRDOCINFO.DOCID = TBL_ENDAPRDOCINFO.DOCID
+		AND
+	   		TBL_EXPENDAPRDOCINFO.TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID
+	   	AND	
+	   		TBL_EXPENDAPRDOCINFO.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID
+	   	INNER JOIN 
+	   		TBL_ENDRECEIPTPOINTINFO 
+	   	ON 
+	   		TBL_ENDAPRDOCINFO.DOCID = TBL_ENDRECEIPTPOINTINFO.DOCID
+		AND
+	   		TBL_ENDAPRDOCINFO.TENANT_ID = TBL_ENDRECEIPTPOINTINFO.TENANT_ID
+	   	AND
+	   		TBL_ENDAPRDOCINFO.COMPANYID = TBL_ENDRECEIPTPOINTINFO.COMPANYID
+	   	WHERE 
+	   		TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL 
+		AND 
+			TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTID
+	   	<isEqual property="v_MODELENGTH" compareValue="2">
+	   	NOT
+	   	</isEqual>
+	   	LIKE 'Address%' AND TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
+	   	<isEqual property="v_MODELENGTH" compareValue="2">
+	   	AND TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y')
+	   	</isEqual>
+	   	<isNotEqual  property="v_MODELENGTH" compareValue="2">
+	   	AND TBL_ENDRECEIPTPOINTINFO.PROCESSYN = UPPER(#v_MODE#)
+	   	</isNotEqual>
+	   	 AND
+	   		TBL_EXPENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+		 AND
+	   	 	TBL_EXPENDAPRDOCINFO.COMPANYID = #companyID#	
+	   	 <isGreaterThan property="v_SPSUBQUERYLENGTH" compareValue="0"> 
+			AND
+				$v_SPSUBQUERY$
+		</isGreaterThan>
+	</select>
+	
+	<select id="EzApprovalGAdminDAO.getSendOutDocList_file" parameterClass="Map" resultClass="ApprGDocListVO">
+		<![CDATA[
+		SELECT * FROM (
+		SELECT * FROM (
+		SELECT * FROM (
+			SELECT 
+				TBL_ENDAPRDOCINFO.DOCID,
+		   		TBL_ENDAPRDOCINFO.ORGDOCID, 
+		   		TBL_ENDAPRDOCINFO.DOCTYPE,
+		   		TBL_ENDAPRDOCINFO.DOCSTATE, 
+		   		TBL_ENDAPRDOCINFO.FUNCTIONTYPE,
+		   		TBL_ENDAPRDOCINFO.HREF, 
+		   		TBL_ENDAPRDOCINFO.DOCTITLE, 
+		   		TBL_ENDAPRDOCINFO.DOCNO,
+		   		TBL_ENDAPRDOCINFO.HASATTACHYN, 
+		   		TBL_ENDAPRDOCINFO.HASOPINIONYN,
+		   		TBL_ENDAPRDOCINFO.STARTDATE, 
+		   		TBL_ENDAPRDOCINFO.ENDDATE,
+		   		TBL_ENDAPRDOCINFO.WRITERID, 
+		   		TBL_ENDAPRDOCINFO.WRITERNAME, 
+		   		TBL_ENDAPRDOCINFO.WRITERNAME2,     
+		   		TBL_ENDAPRDOCINFO.WRITERJOBTITLE, 
+		   		TBL_ENDAPRDOCINFO.WRITERJOBTITLE2, 
+		   		TBL_ENDAPRDOCINFO.WRITERDEPTID,    
+		   		TBL_ENDAPRDOCINFO.WRITERDEPTNAME, 
+		   		TBL_ENDAPRDOCINFO.WRITERDEPTNAME2, 
+		   		TBL_ENDAPRDOCINFO.FORMID,    
+		   		TBL_ENDAPRDOCINFO.CONTAINERID, 
+		   		TBL_ENDAPRDOCINFO.ISPUBLIC,    
+		   		TBL_EXPENDAPRDOCINFO.FORMNAME, 
+		   		TBL_EXPENDAPRDOCINFO.FORMNAME2, 
+		   		TBL_EXPENDAPRDOCINFO.URGENTAPPROVAL,    
+		   		TBL_EXPENDAPRDOCINFO.EDMSYN, 
+		   		TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTNAME,  
+		   		TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTNAME2,  
+		   		TBL_ENDRECEIPTPOINTINFO.PROCESSYN,
+		   		TBL_SENDOUTINFO.FILENAME,
+		   		TBL_SENDOUTINFO.FOLDERNAME,
+		   		TBL_SENDOUTINFO.SENDSTATE,
+		   		TBL_SENDOUTINFO.FILESTATE
+		   	FROM 
+		   		TBL_ENDAPRDOCINFO 
+		   	INNER JOIN 
+		   		TBL_EXPENDAPRDOCINFO 
+		   	ON 
+		   		TBL_EXPENDAPRDOCINFO.DOCID = TBL_ENDAPRDOCINFO.DOCID
+		   	AND
+		   		TBL_EXPENDAPRDOCINFO.TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID
+		   	AND
+		   		TBL_EXPENDAPRDOCINFO.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID
+		   	LEFT JOIN
+		   		TBL_SENDOUTINFO
+		   	ON
+		   		TBL_SENDOUTINFO.IDEX = (SELECT MAX(IDEX) FROM TBL_SENDOUTINFO WHERE DOCID = TBL_ENDAPRDOCINFO.DOCID)			   		
+		    AND
+		   		TBL_SENDOUTINFO.TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID
+		   	AND
+		   		TBL_SENDOUTINFO.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID 
+		   	INNER JOIN 
+		   		TBL_ENDRECEIPTPOINTINFO 
+		   	ON 
+		   		TBL_ENDAPRDOCINFO.DOCID = TBL_ENDRECEIPTPOINTINFO.DOCID
+		   	AND
+		   		TBL_ENDAPRDOCINFO.TENANT_ID = TBL_ENDRECEIPTPOINTINFO.TENANT_ID
+		   	AND
+		   		TBL_ENDAPRDOCINFO.COMPANYID = TBL_ENDRECEIPTPOINTINFO.COMPANYID		   		
+		   	AND 
+		   		TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL 
+		   	AND
+		   		TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+		   	AND
+		   		TBL_ENDAPRDOCINFO.COMPANYID = #companyID#		   		
+		   	]]>
+<!-- 		   	AND  -->
+<!-- 		   		TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTID -->
+		   
+<!-- 		   	<isEqual property="v_MODELENGTH" compareValue="2"> -->
+<!-- 		   	NOT -->
+<!-- 		   	</isEqual> -->
+<!-- 		   	 LIKE  -->
+<!-- 		   	 	'Address%'  -->
+		   	 AND 
+		   	 	TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
+		   	<isEqual property="v_MODELENGTH" compareValue="2">
+		   	 AND 
+		   	 	TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y')
+		   	</isEqual>
+<!-- 		   	<isNotEqual property="v_MODELENGTH" compareValue="2"> -->
+<!-- 		   	 AND  -->
+<!-- 		   	 	TBL_ENDRECEIPTPOINTINFO.PROCESSYN = UPPER(#v_MODE#) -->
+<!-- 		   	</isNotEqual>  -->
+		   	<isGreaterThan property="v_SPSUBQUERYLENGTH" compareValue="0"> 
+			AND
+				$v_SPSUBQUERY$
+			</isGreaterThan>		   	
+		   	<isNotEmpty property="v_ORDEROPTION">
+		   		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="7">
+		   		<isEqual property="v_ORDEROPTIONVALUE" compareValue="enddate">
+		   		ORDER BY 
+		   			$v_ORDEROPTION$ 
+		   		</isEqual>
+		   		<isNotEqual property="v_ORDEROPTIONVALUE" compareValue="enddate">
+		   		ORDER BY 
+		   			$v_ORDEROPTION$, ENDDATE $v_BASICORDER$
+		   		</isNotEqual>
+		   		</isGreaterEqual>
+		   		<isLessThan property="v_ORDEROPTIONLENGTH" compareValue="7">
+		   		ORDER BY 
+		   			$v_ORDEROPTION$, ENDDATE $v_BASICORDER$
+		   		</isLessThan>
+		   	</isNotEmpty>
+		   	<isEmpty property="v_ORDEROPTION">
+		   		ORDER BY 
+		   				ENDDATE $v_BASICORDER$
+		   	</isEmpty>
+		   	<![CDATA[
+		   	)A 
+		   		WHERE 
+		   			ROWNUM <= #v_PAGESIZE# )B
+		   	]]>
+		   	<isNotEmpty property="v_ORDEROPTION">
+		   		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="7">
+		   		<isEqual property="v_ORDEROPTIONVALUE" compareValue="enddate">
+		   			ORDER BY 
+		   				$v_ORDEROPTION2$
+		   		</isEqual>
+		   		<isNotEqual property="v_ORDEROPTIONVALUE" compareValue="enddate">
+		   			ORDER BY 
+		   				$v_ORDEROPTION2$, ENDDATE $v_BASICORDER2$
+		   		</isNotEqual>
+		   		</isGreaterEqual>
+		   		<isLessThan property="v_ORDEROPTIONLENGTH" compareValue="7">
+		   			ORDER BY 
+		   				$v_ORDEROPTION2$, ENDDATE $v_BASICORDER2$
+		   		</isLessThan>
+		   	</isNotEmpty>
+		   	<isEmpty property="v_ORDEROPTION">
+		   	 ORDER BY 
+		   	 	ENDDATE $v_BASICORDER2$
+		   	</isEmpty>
+		   	<![CDATA[
+		   	)C 
+		   	WHERE ROWNUM <= #v_PAGESIZE2# 
+		   	]]>
+	</select>
+	
+		
+	<select id="EzApprovalGAdminDAO.selectSendOutInfoList" parameterClass="Map" resultClass="HashMap">
+		SELECT
+			DOCID,
+			FILENAME,
+			FOLDERNAME,
+			FILESTATE,
+			SENDSTATE,
+			WRITERID,
+			WRITERNAME,
+			WRITERDEPTID,
+			WRITERDEPTNAME,
+			CREATEDATE,
+			UPDATEDATE,
+			TENANT_ID,
+			COMPANYID
+		FROM
+			TBL_SENDOUTINFO
+		WHERE
+			FILESTATE = #V_FILESTATE#			
+	</select>
+	<select id ="EzApprovalGAdminDAO.getSearchDocListCount" parameterClass="Map" resultClass="int" remapResults="true">
+	<![CDATA[
+		SELECT 
+			COUNT(DOCID)
+		FROM
+		(
+		SELECT	
+			DISTINCT TBL_ENDAPRDOCINFO.DOCID,TBL_ENDAPRDOCINFO.COMPANYID
+   		FROM 
+   			TBL_ENDAPRDOCINFO 
+   		LEFT OUTER JOIN 
+   			TBL_ENDAPRLINEINFO 
+   		ON 
+   			TBL_ENDAPRDOCINFO.DOCID = TBL_ENDAPRLINEINFO.DOCID
+   		AND 
+   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_ENDAPRLINEINFO.TENANT_ID
+   		AND	
+   			TBL_ENDAPRDOCINFO.COMPANYID = TBL_ENDAPRLINEINFO.COMPANYID
+   		INNER JOIN 
+   			TBL_EXPENDAPRDOCINFO 
+   		ON 
+   			TBL_ENDAPRDOCINFO.DOCID = TBL_EXPENDAPRDOCINFO.DOCID
+   		AND
+   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_EXPENDAPRDOCINFO.TENANT_ID
+   		AND
+   			TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
+   			]]>		 	
+   		WHERE 
+   			1 = 1
+		<isNotEmpty property="v_STARTDATE1"> 
+   		<![CDATA[
+ 			AND   
+				STARTDATE >= TO_DATE(#v_STARTDATE1#, 'YYYY-MM-DD HH24:MI:SS')   
+    		]]>  
+   		</isNotEmpty>
+   		<isNotEmpty property="v_STARTDATE2"> 
+   		<![CDATA[
+    		 AND  
+     		 	STARTDATE <= TO_DATE(#v_STARTDATE2#, 'YYYY-MM-DD HH24:MI:SS')
+ 		 ]]>  
+		</isNotEmpty> 
+   		<isNotEmpty property="v_ENDDATE1"> 
+   		<![CDATA[
+  		 AND   
+    		  	ENDDATE >= TO_DATE(#v_ENDDATE1#, 'YYYY-MM-DD HH24:MI:SS')
+    		 ]]> 
+   		</isNotEmpty>
+   		<isNotEmpty property="v_ENDDATE2">  
+  		<![CDATA[
+     		AND  
+   			ENDDATE <= TO_DATE(#v_ENDDATE2#, 'YYYY-MM-DD HH24:MI:SS')   
+     		 ]]>  
+  		</isNotEmpty>       
+   		<isNotEmpty property="v_DOCNUMBER"> 
+   		 AND 
+   		 	DOCNO LIKE '%$v_DOCNUMBER$%'
+   		</isNotEmpty>
+   		<isNotEmpty property="v_DOCTITLE"> 
+   		 AND 
+   		 	DOCTITLE LIKE '%$v_DOCTITLE$%'
+   		</isNotEmpty>
+   		<isNotEmpty property="v_DRAFTER"> 
+   		AND 
+   			WRITERNAME$v_MULTIDATALANG$ LIKE '%$v_DRAFTER$%' 
+   		</isNotEmpty>
+   		<isNotEmpty property="v_DEPTNAME"> 
+   		 AND 
+   		 	WRITERDEPTNAME$v_MULTIDATALANG$ LIKE '%$v_DEPTNAME$%'
+   		</isNotEmpty>
+   		<isNotEmpty property="v_FORMID"> 
+   		 AND 
+   		 	FORMID = #v_FORMID#
+   		</isNotEmpty>
+		<isNotEmpty property="v_FORMNAME">
+		AND
+			(FORMNAME LIKE '%$v_FORMNAME$%' OR FORMNAME2 LIKE '%$v_FORMNAME$%')
+		</isNotEmpty>
+   		 AND 
+   			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+		 AND
+		    TBL_ENDAPRDOCINFO.COMPANYID = #companyID# 
+    	<isNotEmpty property="v_APPROVUSER"> 
+   		AND 
+   			TBL_ENDAPRLINEINFO.APRMEMBERNAME LIKE '%$v_APPROVUSER$%'
+   		</isNotEmpty>
+		<isNotEmpty property="v_SUBQUERY">
+			<![CDATA[
+				AND
+					$v_SUBQUERY$
+			]]>
+		</isNotEmpty>
+   		)
+	</select>
+	
+	<select id="EzApprovalGAdminDAO.getSearchDocList" parameterClass="Map" resultClass="ApprGDocListVO" remapResults="true">
+		SELECT 
+			* 
+		FROM(
+				SELECT 
+					row_number() over(ORDER BY NULL) as rnum,
+					A.* 
+			  	FROM (
+							SELECT 
+								DISTINCT TBL_ENDAPRDOCINFO.DOCID, 
+										 TBL_ENDAPRDOCINFO.DOCTYPE,
+					   				     TBL_ENDAPRDOCINFO.DOCSTATE, 
+					   				     TBL_ENDAPRDOCINFO.FUNCTIONTYPE, 
+					   				     TBL_ENDAPRDOCINFO.HREF,
+					   					 TBL_ENDAPRDOCINFO.DOCTITLE, 
+					   					 TBL_ENDAPRDOCINFO.DOCNO, 
+					   					 TBL_ENDAPRDOCINFO.HASATTACHYN,
+					   					 TBL_ENDAPRDOCINFO.HASOPINIONYN, 
+					   					 TBL_ENDAPRDOCINFO.STARTDATE, 
+					   					 TBL_ENDAPRDOCINFO.ENDDATE,
+								   		 TBL_ENDAPRDOCINFO.WRITERID, 
+								   		 TBL_ENDAPRDOCINFO.WRITERNAME, 
+								   		 NVL(TBL_ENDAPRDOCINFO.WRITERNAME2, TBL_ENDAPRDOCINFO.WRITERNAME) AS WRITERNAME2, 
+								   		 TBL_ENDAPRDOCINFO.WRITERJOBTITLE, 
+								   		 NVL(TBL_ENDAPRDOCINFO.WRITERJOBTITLE2, TBL_ENDAPRDOCINFO.WRITERJOBTITLE) AS WRITERJOBTITLE2,
+								   		 TBL_ENDAPRDOCINFO.WRITERDEPTID, 
+								   		 TBL_ENDAPRDOCINFO.WRITERDEPTNAME, 
+								   		 NVL(TBL_ENDAPRDOCINFO.WRITERDEPTNAME2, TBL_ENDAPRDOCINFO.WRITERDEPTNAME) AS WRITERDEPTNAME2, 
+								   		 TBL_ENDAPRDOCINFO.FORMID, 
+								   		 TBL_ENDAPRDOCINFO.CONTAINERID, 
+								   		 TBL_EXPENDAPRDOCINFO.FORMNAME, 
+								   		 NVL(TBL_EXPENDAPRDOCINFO.FORMNAME2, TBL_EXPENDAPRDOCINFO.FORMNAME) AS FORMNAME2, 
+								   		 TBL_EXPENDAPRDOCINFO.STATUS,
+								   		 TBL_ENDAPRDOCINFO.ORGDOCID, 
+								   		 TBL_ENDAPRDOCINFO.ISPUBLIC, 
+								   		 TBL_EXPENDAPRDOCINFO.EDMSYN,
+								   		 NVL(TBL_EXPENDAPRDOCINFO.SECURITYAPPROVAL,'') AS SECURITYAPPROVAL,
+								   		 TBL_ENDAPRDOCINFO.COMPANYID,
+								   		 TBL_DEPTMASTER.EXTENSIONATTRIBUTE3 companyName,
+										 TBL_DEPTMASTER.COMPNM2 companyName2,
+										 TBL_EXPENDAPRDOCINFO.DELFLAG
+							   	FROM 
+							   			 TBL_ENDAPRDOCINFO 
+							   	LEFT OUTER JOIN 
+							   			 TBL_ENDAPRLINEINFO 
+							   	ON 
+							   			 TBL_ENDAPRDOCINFO.DOCID = TBL_ENDAPRLINEINFO.DOCID
+							   	AND 
+							   			 TBL_ENDAPRDOCINFO.TENANT_ID = TBL_ENDAPRLINEINFO.TENANT_ID
+							   	AND 
+							   			 TBL_ENDAPRDOCINFO.COMPANYID = TBL_ENDAPRLINEINFO.COMPANYID
+							   	INNER JOIN 
+							   			 TBL_EXPENDAPRDOCINFO 
+							   	ON 
+							   			 TBL_ENDAPRDOCINFO.DOCID = TBL_EXPENDAPRDOCINFO.DOCID
+							   	AND
+							   			 TBL_ENDAPRDOCINFO.TENANT_ID = TBL_EXPENDAPRDOCINFO.TENANT_ID
+					   			AND
+							   			 TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
+							   	INNER JOIN
+							   			TBL_DEPTMASTER
+							   	ON
+							   			TBL_ENDAPRDOCINFO.COMPANYID = TBL_DEPTMASTER.CN
+							   	AND
+							   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_DEPTMASTER.TENANT_ID		 
+							   	WHERE 
+							   		1 = 1
+		    					<isNotEmpty property="v_STARTDATE1">
+							   	 	 AND 
+							   	 	 	   STARTDATE >= TO_DATE(#v_STARTDATE1#, 'YYYY-MM-DD HH24:MI:SS')
+							   	</isNotEmpty>
+							   	<isNotEmpty property="v_STARTDATE2">
+							   	<![CDATA[
+							   	 	 AND 
+							   	 		   STARTDATE <= TO_DATE(#v_STARTDATE2#, 'YYYY-MM-DD HH24:MI:SS')
+							   	 ]]>
+							   	</isNotEmpty>
+							   	<isNotEmpty property="v_ENDDATE1">
+							   	 	 AND 
+							   	 	       ENDDATE >= TO_DATE(#v_ENDDATE1#, 'YYYY-MM-DD HH24:MI:SS')
+							   	</isNotEmpty>
+							   	<isNotEmpty property="v_ENDDATE2">
+							   	<![CDATA[
+							   	 	 AND 
+							   	 	 		ENDDATE <= TO_DATE(#v_ENDDATE2#, 'YYYY-MM-DD HH24:MI:SS')
+							   	 ]]>
+							   	</isNotEmpty>				 
+							   	<isNotEmpty property="v_DOCNUMBER">
+							   	 	AND 
+							   	 		 DOCNO LIKE '%$v_DOCNUMBER$%'
+							   	</isNotEmpty>
+							   	<isNotEmpty property="v_DOCTITLE">
+							   	 	AND 
+							   	 		 DOCTITLE LIKE '%$v_DOCTITLE$%'
+							   	</isNotEmpty>
+							   	<isNotEmpty property="v_DRAFTER">
+							   	 	 AND 
+							   	 	 	 WRITERNAME$v_MULTIDATALANG$ LIKE '%$v_DRAFTER$%'
+							   	</isNotEmpty>
+							   	<isNotEmpty property="v_DEPTNAME">
+							   	 	AND 
+							   	 		 WRITERDEPTNAME$v_MULTIDATALANG$ LIKE '%$v_DEPTNAME$%'
+							   	</isNotEmpty>
+							   	<isNotEmpty property="v_FORMID">
+							   	 	AND 
+							   	 	      FORMID = $v_FORMID$
+							   	</isNotEmpty>
+								<isNotEmpty property="v_FORMNAME">
+							   	 	AND
+										(FORMNAME LIKE '%$v_FORMNAME$%' OR FORMNAME2 LIKE '%$v_FORMNAME$%')
+							   	</isNotEmpty>
+								<isNotEmpty property="v_SUBQUERY">
+									<![CDATA[
+										AND
+											$v_SUBQUERY$
+									]]>
+								</isNotEmpty>
+							   		AND
+							    		 TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+							    	AND
+		    							TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+							   	<isNotEmpty property="v_APPROVUSER" >
+								AND 
+									TBL_ENDAPRLINEINFO.APRMEMBERNAME LIKE '%$v_APPROVUSER$%' 
+							    GROUP BY 
+							      	TBL_ENDAPRDOCINFO.DOCID,
+									TBL_ENDAPRDOCINFO.DOCTYPE,
+									TBL_ENDAPRDOCINFO.DOCSTATE,
+									TBL_ENDAPRDOCINFO.FUNCTIONTYPE,
+									TBL_ENDAPRDOCINFO.HREF,
+									TBL_ENDAPRDOCINFO.DOCTITLE,
+									TBL_ENDAPRDOCINFO.DOCNO,
+									TBL_ENDAPRDOCINFO.HASATTACHYN,
+									TBL_ENDAPRDOCINFO.HASOPINIONYN,
+									TBL_ENDAPRDOCINFO.STARTDATE,
+									TBL_ENDAPRDOCINFO.ENDDATE,
+									TBL_ENDAPRDOCINFO.WRITERID,
+									TBL_ENDAPRDOCINFO.WRITERNAME,
+									TBL_ENDAPRDOCINFO.WRITERNAME2,
+									TBL_ENDAPRDOCINFO.WRITERJOBTITLE,
+									TBL_ENDAPRDOCINFO.WRITERJOBTITLE2, 
+									TBL_ENDAPRDOCINFO.WRITERDEPTID,
+									TBL_ENDAPRDOCINFO.WRITERDEPTNAME,
+									TBL_ENDAPRDOCINFO.WRITERDEPTNAME2, 
+									TBL_ENDAPRDOCINFO.FORMID,
+									TBL_ENDAPRDOCINFO.CONTAINERID,
+									TBL_EXPENDAPRDOCINFO.FORMNAME, 
+									TBL_EXPENDAPRDOCINFO.FORMNAME2, 
+									TBL_EXPENDAPRDOCINFO.STATUS,
+									TBL_ENDAPRDOCINFO.ORGDOCID, 
+									TBL_ENDAPRDOCINFO.ISPUBLIC, 
+									TBL_EXPENDAPRDOCINFO.EDMSYN,
+									TBL_EXPENDAPRDOCINFO.SECURITYAPPROVAL,
+									TBL_ENDAPRDOCINFO.COMPANYID,
+									TBL_DEPTMASTER.EXTENSIONATTRIBUTE3,
+									TBL_DEPTMASTER.COMPNM2
+							   	</isNotEmpty>						   	
+							   	<isNotEmpty property="v_ORDEROPTION">
+							   		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="7">
+							   			<isEqual property="v_ORDEROPTIONVALUE"  compareValue="enddate">
+							   				ORDER BY 
+							   						$v_ORDEROPTION$ , DOCNO DESC
+							   			</isEqual>
+							   			<isNotEqual property="v_ORDEROPTIONVALUE"  compareValue="enddate">
+							   	 			ORDER BY
+							   	 			 		$v_ORDEROPTION$ , ENDDATE DESC
+							   			</isNotEqual>
+							   		</isGreaterEqual>
+							   		<isLessThan  property="v_ORDEROPTIONLENGTH" compareValue="7">
+							   			ORDER BY 
+							   					$v_ORDEROPTION$ , ENDDATE DESC
+							   		</isLessThan>
+							   	</isNotEmpty>
+							   	<isEmpty property="v_ORDEROPTION">
+							   		ORDER BY 
+							   				ENDDATE DESC , DOCNO DESC
+							   	</isEmpty>
+							   	<![CDATA[
+							   	 ) A 
+							   	 ]]>
+							   	 <isNotEqual property="alFlag" compareValue="1">
+							   	 <![CDATA[
+							   	 	WHERE 
+							   	 		ROWNUM <= #v_PAGESIZE#
+							   	 ]]>	
+							   	 </isNotEqual>
+							   	 <![CDATA[
+							   	 		) X
+							   		 WHERE 
+							   		 	X.rnum >= #v_PAGESIZE3#+1
+							   	 ]]>
+				<isNotEmpty property="v_ORDEROPTION2">
+				<isGreaterEqual property="v_ORDEROPTIONLENGTH2" compareValue="7">
+				<isEqual property="v_ORDEROPTIONVALUE2" compareValue="enddate">
+					 ORDER BY 
+					 		$v_ORDEROPTION2$ , DOCNO
+				</isEqual>
+				<isNotEqual property="v_ORDEROPTIONVALUE2" compareValue="enddate">
+					 ORDER BY 
+					 		$v_ORDEROPTION2$, ENDDATE
+				</isNotEqual>
+				</isGreaterEqual>
+				<isLessThan property="v_ORDEROPTIONLENGTH2" compareValue="7">
+					ORDER BY 
+							$v_ORDEROPTION2$, ENDDATE
+				</isLessThan>
+				</isNotEmpty>
+				<isEmpty property="v_ORDEROPTION2">
+				 ORDER BY 
+				 		ENDDATE , DOCNO
+				</isEmpty>
+	</select>
+	
+	<resultMap id="auditApprLine" class="java.util.LinkedHashMap">
+		<result property="AUDITAPPRLINEID"		column="AUDITAPPRLINEID" />
+		<result property="USERID"				column="USERID" />
+		<result property="VALUE"				column="VALUE"				nullValue="" />
+		<result property="ORDERBY"				column="ORDERBY" />
+		<result property="INSERTDATE"			column="INSERTDATE"			nullValue="" />
+		<result property="TENANT_ID"			column="TENANT_ID" />
+		<result property="USERNM"				column="USERNM" />
+		<result property="POSITION"				column="POSITION"			nullValue="" />
+		<result property="DEPTNM"				column="DEPTNM"				nullValue="" />
+		<result property="MAIL"					column="MAIL"				nullValue="" />
+		<result property="TELEPHONENUMBER"		column="TELEPHONENUMBER"	nullValue="" />
+		<result property="COMPANY"				column="COMPANY" />
+		<result property="DEPTID"				column="DEPTID" />
+		<result property="DEPTNM"				column="DEPTNM" />
+		
+		<result property="USERNM2"				column="USERNM2"			nullValue="" />
+		<result property="DEPTNM2"				column="DEPTNM2"			nullValue="" />
+		<result property="TITLE"				column="TITLE"				nullValue="" />
+	</resultMap>
+	<select id="EzApprovalGAdmin.getAuditApprLineList" parameterClass="Map" resultMap="auditApprLine">
+		SELECT
+			ROWNUM, TB.*
+		FROM (
+			SELECT
+				A.AUDITAPPRLINEID,
+				A.USERID,
+				<isEqual property="value" compareValue="userId">
+					A.USERID AS VALUE,
+				</isEqual>
+				<isEqual property="value" compareValue="userNm">
+					B.DISPLAYNAME AS VALUE,
+				</isEqual>
+				A.ORDERBY,
+				A.INSERTDATE,
+				A.TENANT_ID,
+				A.COMPANYID,
+				B.DISPLAYNAME AS USERNM,
+				B.EXTENSIONATTRIBUTE10 AS POSITION,
+				B.MAIL,
+				B.TELEPHONENUMBER,
+				B.COMPANY,
+				C.CN AS DEPTID,
+				C.DISPLAYNAME AS DEPTNM,
+				
+				B.DISPLAYNAME2 AS USERNM2,
+				C.DISPLAYNAME2 AS DEPTNM2,
+				'' AS TITLE
+			FROM
+				TBL_AUDITAPPRLINE A INNER JOIN TBL_USERMASTER B
+			ON
+				A.USERID = B.CN
+			INNER JOIN
+				TBL_DEPTMASTER C
+			ON
+				A.DEPTID = C.CN
+			LEFT OUTER JOIN
+				TBL_USERMASTER_RETIRE D
+			ON
+				B.CN = D.CN
+			WHERE
+				1=1
+			AND
+				A.AUDITAPPRLINEID = #auditApprLineId#
+			AND
+				A.TENANT_ID = #tenantId#
+			AND
+				A.COMPANYID = #companyId#
+			AND
+				D.CN IS NULL
+			ORDER BY
+				ORDERBY ASC
+		) TB
+		WHERE ROWNUM BETWEEN #startRow# AND #endRow#
+	</select>
+	
+	<select id="EzApprovalGAdminDAO.getAuditApprLineListCnt" parameterClass="Map" resultClass="java.lang.Integer">
+		SELECT
+			COUNT(1)
+		FROM
+			TBL_AUDITAPPRLINE A INNER JOIN TBL_USERMASTER B
+		ON
+			A.USERID = B.CN
+		INNER JOIN
+			TBL_DEPTMASTER C
+		ON
+			A.DEPTID = C.CN
+		LEFT OUTER JOIN
+			TBL_USERMASTER_RETIRE D
+		ON
+			B.CN = D.CN
+		WHERE
+			1=1
+		AND
+			A.AUDITAPPRLINEID = #auditApprLineId#
+		AND
+			A.TENANT_ID = #tenantId#
+		AND
+			A.COMPANYID = #companyId#
+		AND
+			D.CN IS NULL
+	</select>
+	
+	<delete id="EzApprovalGAdminDAO.getAuditApprLineListDel" parameterClass="Map">
+		DELETE FROM
+			TBL_AUDITAPPRLINE
+       	WHERE
+       		AUDITAPPRLINEID = #auditApprLineId#
+	</delete>
+	
+	<insert id="EzApprovalGAdminDAO.getAuditApprLineListIns" parameterClass="Map">
+		INSERT INTO TBL_AUDITAPPRLINE (
+			AUDITAPPRLINEID,
+			USERID,
+			DEPTID,
+			ORDERBY,
+			INSERTDATE,
+			TENANT_ID,
+			COMPANYID
+		) VALUES (
+			#auditApprLineId#,
+			#userId#,
+			#deptId#,
+			#orderBy#,
+			SYSDATE,
+			#tenantId#,
+			#companyId#
+		)
+	</insert>
+	
+	<resultMap id="auditStatisticsDocList" class="java.util.LinkedHashMap">
+		<result property="docId"				column="docId" />
+		<result property="writerDeptName"		column="writerDeptName"		nullValue="" />
+		<result property="docNo"				column="docNo"				nullValue="" />
+		<result property="docTitle"				column="docTitle"			nullValue="" />
+		<result property="processDate"			column="processDate"		nullValue="" />
+		<!-- <result property="startDate"			column="startDate"			nullValue="" /> -->
+		<result property="endDate"				column="endDate"			nullValue="" />
+		<result property="aprMemberName"		column="aprMemberName"		nullValue="" />
+		<result property="content"				column="content"			nullValue=""	jdbcType="CLOB"	javaType="String" />
+	</resultMap>
+	<select id="EzApprovalGAdmin.getAuditStatisticsDocList" parameterClass="Map" resultMap="auditStatisticsDocList">
+		SELECT
+			A.DOCID
+			,A.WRITERDEPTNAME
+			,A.DOCNO
+			,A.DOCTITLE
+			,TO_CHAR(TB.PROCESSDATE+$offsetMin$/(24*60), 'YYYY-MM-DD AM HH:MI:SS') AS PROCESSDATE
+			,TO_CHAR(A.STARTDATE+$offsetMin$/(24*60), 'YYYY-MM-DD AM HH:MI:SS') AS STARTDATE
+			,TO_CHAR(A.ENDDATE+$offsetMin$/(24*60), 'YYYY-MM-DD AM HH:MI:SS') AS ENDDATE
+			,TB.APRMEMBERNAME
+			,D.CONTENT
+		FROM TBL_ENDAPRDOCINFO A INNER JOIN (SELECT
+												B.DOCID
+												,B.APRMEMBERSN
+												,C.APRMEMBERNAME
+												,C.PROCESSDATE
+											FROM (SELECT
+													DOCID
+													,MAX(APRMEMBERSN) AS APRMEMBERSN
+												FROM TBL_ENDAPRLINEINFO
+												WHERE APRTYPE = '005'
+												<isEqual property="idx" compareValue="0">
+													AND APRMEMBERID IN (SELECT CN FROM TBL_USERMASTER WHERE EXTENSIONATTRIBUTE1 LIKE '%s=1%')
+												</isEqual>
+												<isGreaterEqual property="idx" compareValue="1">
+													<isLessEqual property="idx" compareValue="3">
+														AND APRMEMBERID IN (SELECT USERID FROM TBL_AUDITAPPRLINE WHERE ORDERBY = TO_NUMBER(#idx#))
+													</isLessEqual>
+												</isGreaterEqual>
+												GROUP BY DOCID) B INNER JOIN TBL_ENDAPRLINEINFO C 
+												ON B.DOCID = C.DOCID 
+												AND B.APRMEMBERSN = C.APRMEMBERSN
+											) TB ON A.DOCID = TB.DOCID
+		LEFT OUTER JOIN TBL_ENDAPROPINIONINFO D ON A.DOCID = D.DOCID
+		WHERE 1=1
+		<![CDATA[
+			AND A.STARTDATE >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')-$offsetMin$/(24*60)
+			AND A.ENDDATE <= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')-$offsetMin$/(24*60)
+		]]>
+		AND A.TENANT_ID = #tenantId#
+		AND A.COMPANYID = #companyId#
+		ORDER BY A.DOCID ASC
+	</select>
+
+	<insert id="EzApprovalGAdmin.insertReceiveGroupSubWithExcel" parameterClass="Map">
+		INSERT INTO TBL_ADMINRECEIPTGROUP_SUB
+			(mainid,
+			 subid,
+			 deptid,
+			 deptname,
+			 deptname2,
+			 companyid,
+			 tenant_id)
+		VALUES
+			(SEQ_TBL_ADMINRECEIPTGROUP_MAIN.CURRVAL,
+			 (SELECT NVL(MAX(subid), 0) + 1 FROM TBL_ADMINRECEIPTGROUP_SUB),
+			 #deptId#,
+			 (SELECT DISPLAYNAME FROM tbl_deptmaster WHERE cn = #deptId#),
+			 (SELECT DISPLAYNAME2 FROM tbl_deptmaster WHERE cn = #deptId#),
+			 #companyId#,
+			 #tenantId#)
+	</insert>
+
+	<select id="EzApprovalGAdminDAO.checkDeptId" parameterClass="String" resultClass="Integer">
+		SELECT
+			count(cn)
+		FROM
+			tbl_deptmaster
+		WHERE
+			cn = #deptId#
+	</select>
+	
+	
+	<resultMap id="getDeptList" class="java.util.LinkedHashMap">
+		<result property="DEPTID"				column="DEPTID" />
+		<result property="DEPTNAME"				column="DEPTNAME" />
+	</resultMap>
+	<select id="EzApprovalGAdminDAO.getChaebunDeptList" parameterClass="Map" resultMap="getDeptList">
+		SELECT
+			DEPTID,
+			DEPTNAME
+		FROM
+			TBL_SERIALNUMGEN_GRANT
+		WHERE
+			GRANTDEPTID = #v_DEPTID#
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #v_COMPANYID#
+	</select>
+	
+	<insert id="EzApprovalGAdminDAO.insertChaebunDeptList" parameterClass="Map">
+		INSERT INTO TBL_SERIALNUMGEN_GRANT
+			(IDX,
+			 DEPTID,
+			 DEPTNAME,
+			 GRANTDEPTID,
+			 GRANTDEPTNAME,
+			 TENANT_ID,
+			 COMPANYID)
+		VALUES
+			(SEQ_SERIALNUMGEN_GRANT_IDX.NEXTVAL,
+			 #v_DEPTID#,
+			 #v_DEPTNAME#,
+			 #v_GRANTDEPTID#,
+			 #v_GRANTDEPTNAME#,
+			 #v_TENANTID#,
+			 #v_COMPANYID#)
+	</insert>
+	
+	<delete id="EzApprovalGAdminDAO.deleteChaebunDeptList" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_SERIALNUMGEN_GRANT
+        	WHERE
+        		GRANTDEPTID = #v_DEPTID#
+        	AND
+        		TENANT_ID = #v_TENANTID#
+        	AND
+        		COMPANYID = #v_COMPANYID#
+		]]>
+	</delete>
+		
+	<select id="EzApprovalGAdminDAO.checkChaebunDeptList" parameterClass="Map" resultClass="String">
+		SELECT
+			DEPTNAME
+		FROM
+			TBL_SERIALNUMGEN_GRANT
+		WHERE
+			DEPTID IN
+		<iterate property="v_DEPTIDS" open="(" close=")" conjunction=",">
+			#v_DEPTIDS[]#
+		</iterate>
+		<![CDATA[
+		AND
+			GRANTDEPTID <> #v_DEPTID#
+		AND
+    		TENANT_ID = #v_TENANTID#
+		AND
+    		COMPANYID = #v_COMPANYID#
+    	]]>
+	</select>
+</sqlMap>
+

@@ -1,4 +1,4 @@
-﻿﻿var g_szSCListXml = "";
+﻿var g_szSCListXml = "";
 var g_arrSCName = new Array();
 
 function InitSCInfo_Mod(oSCNode) {

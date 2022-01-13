@@ -1,0 +1,1864 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezPoll">
+
+    <typeAlias  alias="PollAnswerVO"            	   type="egovframework.ezEKP.ezPoll.vo.PollAnswerVO"/>
+    <typeAlias  alias="PollQuestionVO"                 type="egovframework.ezEKP.ezPoll.vo.PollQuestionVO"/>
+    <typeAlias  alias="PollCommentVO"           	   type="egovframework.ezEKP.ezPoll.vo.PollCommentVO"/>
+    <typeAlias  alias="PollUserAnswerVO"               type="egovframework.ezEKP.ezPoll.vo.PollUserAnswerVO"/>
+    <typeAlias  alias="PollQuestionStatusVO"           type="egovframework.ezEKP.ezPoll.vo.PollQuestionStatusVO"/>
+    <typeAlias  alias="PollUserVO"   				   type="egovframework.ezEKP.ezPoll.vo.PollUserVO"/>
+    <typeAlias  alias="loginVO"                 	   type="egovframework.let.user.login.vo.LoginVO"/>
+
+    <!-- question resultMap -->
+    <resultMap id="pollQuestion" class="PollQuestionVO">
+        <result property="qstId"                column="id"                        columnIndex="1"  />               
+        <result property="tenantId"         	column="tenant_id"                 columnIndex="2"  />
+        <result property="content"         		column="content"               	   columnIndex="3"   			jdbcType="CLOB" 			javaType="java.lang.String"/>
+        <result property="multiSelect"          column="multi_select"              columnIndex="4"  />
+        <result property="createDate"           column="create_date"               columnIndex="5"	/>
+        <result property="startDate"            column="start_date"                columnIndex="6"	/>
+        <result property="endDate"            	column="end_date"              	   columnIndex="7"  />
+        <result property="target"               column="target"                    columnIndex="8"  />
+        <result property="title"               	column="title"                     columnIndex="9"	/>
+        <result property="secretVote"           column="secret_vote"               columnIndex="10"  />
+        <result property="creator"           	column="creator"                   columnIndex="11"	/>
+        <result property="creatorName1"         column="creator_name1"             columnIndex="12" />
+        <result property="creatorName2"         column="creator_name2"             columnIndex="13" />
+        <result property="creatorDept"          column="creator_dept"              columnIndex="14" />
+        <result property="filePath"          	column="file_path"                 columnIndex="15" 			jdbcType="CLOB" 			javaType="java.lang.String"/>
+        <result property="resultFirst"          column="result_first"              columnIndex="16" />
+        <result property="isMofifying"          column="is_modifying"              columnIndex="17" />
+        <result property="setDate"          	column="set_date"              	   columnIndex="18" />
+        <result property="isSorting"          	column="is_sorting"                columnIndex="19" />
+        <result property="isSelOnlyOnce"        column="is_selonlyonce"            columnIndex="20" />
+        <result property="sendPostNotice"   	column="sendpostnotice"		   	   columnIndex="21" />
+        <result property="openToAll" 			column="opentoall"		  	 	   columnIndex="22" />
+        <result property="companyId" 			column="companyid"		  	 	   columnIndex="23" />
+    </resultMap>    
+    
+    <resultMap id="pollAnswer" class="PollAnswerVO">
+        <result property="ansId"                column="id"                         columnIndex="1"/>
+        <result property="qstId"             	column="qst_id"                   	columnIndex="2"/>
+        <result property="tenantId"         	column="tenant_id"                	columnIndex="3"/>
+        <result property="content"         		column="content"               		columnIndex="4"/>
+        <result property="votesNumber"         	column="votes_num"               	columnIndex="5"/>
+        <result	property="filePath"				column="file_path"					columnIndex="6"				jdbcType="CLOB" 			javaType="java.lang.String"/>
+    </resultMap>    
+    
+    <resultMap id="pollComment" class="PollCommentVO">
+        <result property="cmtId"                column="id"                         columnIndex="1"/>
+        <result property="qstId"             	column="qst_id"                   	columnIndex="2"/>
+        <result property="tenantId"         	column="tenant_id"                	columnIndex="3"/>
+        <result property="userId"         		column="user_id"               		columnIndex="4"/>
+        <result property="userName1"         	column="user_name1"               	columnIndex="5"/>
+        <result property="userName2"         	column="user_name2"               	columnIndex="6"/>
+        <result property="textContent"         	column="text_content"               columnIndex="7"				nullValue=""/>        
+        <result property="imageAttach"         	column="image_type"               	columnIndex="8"				nullValue=""/>
+        <result property="fileAttach"         	column="file_type"               	columnIndex="9"				nullValue=""/>
+        <result property="fileName"         	column="file_name"               	columnIndex="10"			nullValue=""/>        
+        <result property="filePath"         	column="file_path"               	columnIndex="11"			nullValue=""/>
+        <result property="cmtTime"         		column="cmt_time"               	columnIndex="12"/>
+		<result property="deptId"         		column="dept_id"               		columnIndex="13"/>
+    </resultMap>    
+	
+	<resultMap id="pollUserAnswer" class="PollUserAnswerVO">
+        <result property="ansId"                column="ans_id"                     columnIndex="1"/>
+        <result property="qstId"             	column="qst_id"                   	columnIndex="2"/>
+        <result property="userId"             	column="user_id"                   	columnIndex="3"/>
+        <result property="tenantId"         	column="tenant_id"                	columnIndex="4"/>
+        <result property="userName1"         	column="user_name1"                	columnIndex="5"/>
+        <result property="userName2"         	column="user_name2"                	columnIndex="6"/>
+        <result property="voteDate"         	column="vote_date"               	columnIndex="7"/>
+		<result property="deptId"         		column="dept_id"               		columnIndex="8"/>
+    </resultMap>   
+    
+    <resultMap id="pollQuestionStatus" class="PollQuestionStatusVO">
+    	<result property="qstId"             	column="qst_id"                   	columnIndex="1"/>
+    	<result property="userId"             	column="user_id"                   	columnIndex="2"/>
+        <result property="tenantId"         	column="tenant_id"                	columnIndex="3"/>
+        <result property="seen"                	column="seen"                       columnIndex="4"/>   
+        <result property="comment"         		column="comment"                	columnIndex="5"/>
+        <result property="hide"         		column="hide"               	    columnIndex="6"/>
+		<result property="deptId"         		column="dept_id"               	    columnIndex="7"/>
+    </resultMap>  
+    
+    <resultMap id="pollUser" class="PollUserVO">
+    	<result property="qstId"             	column="qst_id"                   	columnIndex="1"/>
+    	<result property="userId"             	column="user_id"                   	columnIndex="2"/>
+        <result property="tenantId"         	column="tenant_id"                	columnIndex="3"/>
+        <result property="userType"         	column="user_type"                	columnIndex="4"/>
+		<result property="companyId" 			column="companyid"		  	 	   	columnIndex="5"/>
+    </resultMap>  
+    
+    <resultMap id="login" class="egovframework.let.user.login.vo.LoginVO">
+        <result property="id"                   column="cn"                         columnIndex="1"/>
+        <result property="password"             column="password"                   columnIndex="2"/>
+        <result property="displayName1"         column="displayname"                columnIndex="3"/>
+        <result property="displayName2"         column="displayname2"               columnIndex="4"      nullValue=""/>
+        <result property="deptID"               column="department"                 columnIndex="5"/>
+        <result property="deptName1"            column="description"                columnIndex="6"/>
+        <result property="deptName2"            column="description2"               columnIndex="7"      nullValue=""/>
+        <result property="title1"               column="title"                      columnIndex="8"/>
+        <result property="title2"               column="title2"                     columnIndex="9"      nullValue=""/>
+        <result property="companyID"            column="companyid"                  columnIndex="10"/>
+        <result property="companyName1"         column="company"                    columnIndex="11"/>
+        <result property="companyName2"         column="company2"                   columnIndex="12"     nullValue=""/>      
+        <result property="updateDT"             column="updatedt"                   columnIndex="13"/>
+        <result property="rollInfo"             column="rollinfo"                   columnIndex="14"/>
+        <result property="phone"                column="telephonenumber"            columnIndex="15"/>
+        <result property="email"                column="mail"                       columnIndex="16"/>
+        <result property="jikChek"              column="jikchek"                    columnIndex="17"/>
+        <result property="tenantId"             column="tenant_id"                  columnIndex="18"/>
+        <result property="deptPathCode"         column="deptPathCode"               columnIndex="19"/>
+        <result property="primary"              column="primaryLang"                columnIndex="20"/>
+        <result property="gyumJik"              column="gyumJik"                	columnIndex="21"/>
+        <result property="userFileUrl"          column="userFileUrl"                columnIndex="22"/>
+        <result property="sabun"              	column="sabun"                		columnIndex="23"/>
+    </resultMap>
+     
+    <insert id="EzPollDAO.insertQuestion" parameterClass="Map">      	
+        <selectKey keyProperty="v_temp" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					1 
+        		FROM
+        			DUAL
+       			WHERE
+       				NOT EXISTS (SELECT
+     								ID ,                               		
+                               		TENANT_ID 
+                        			FROM
+                        				TBL_VOTE_QUESTION 
+                         			WHERE
+                         				ID = #id#
+                                   	AND
+                                   		TENANT_ID = #tenant_id#
+								)
+			]]>
+		</selectKey>   
+		<isEqual property="v_temp" compareValue="1">     
+        	<![CDATA[
+	            INSERT INTO TBL_VOTE_QUESTION(
+	                ID,        			TENANT_ID,         CONTENT,        		MULTI_SELECT,       CREATE_DATE,
+	                START_DATE,         END_DATE,          TARGET,              TITLE,          	SECRET_VOTE,        
+	                CREATOR,			CREATOR_NAME1,	   CREATOR_NAME2,	    CREATOR_DEPT,		FILE_PATH,
+	                RESULT_FIRST,		SET_DATE,		   IS_SORTING,			IS_SELONLYONCE,		SENDPOSTNOTICE,
+	                OPENTOALL,			COMPANYID
+	            )
+	            VALUES(
+	                #id#,          	 	#tenant_id#,        #content#,          #multi_select#,     #create_date#,
+	                #start_date#,       #end_date#,         #target#,           #title#,     		#secret_vote#,
+	                #creator#,		    #creator_name1#,	#creator_name2#,	#creator_dept#,		#file_path#,
+	                #result_first#,		#set_date#,			#is_sorting#,		#is_selonlyonce#,	#sendpostnotice#,
+					#opentoall#, 		#companyid#
+            )  
+        	]]>
+        </isEqual>
+        <isNotEqual property="v_temp" compareValue="1">
+        	<![CDATA[
+	            UPDATE 
+	            	TBL_VOTE_QUESTION
+	            SET 
+	            	 CONTENT 			= #content#,
+	            	 MULTI_SELECT 		= #multi_select#,
+	            	 CREATE_DATE		= #create_date#,
+	            	 START_DATE			= #start_date#,
+	            	 END_DATE			= #end_date#, 
+	            	 TARGET				= #target#, 
+	            	 TITLE				= #title#,  
+	            	 SECRET_VOTE		= #secret_vote#,
+	            	 CREATOR			= #creator#,
+	            	 CREATOR_NAME1		= #creator_name1#,
+	            	 CREATOR_NAME2		= #creator_name2#,
+	            	 CREATOR_DEPT		= #creator_dept#,
+	            	 FILE_PATH			= #file_path#,
+	            	 RESULT_FIRST		= #result_first#,
+	            	 SET_DATE			= #set_date#,
+	            	 IS_SORTING			= #is_sorting#,
+            	 	 IS_SELONLYONCE		= #is_selonlyonce#,
+            	 	 SENDPOSTNOTICE		= #sendpostnotice#,
+            	 	 OPENTOALL			= #opentoall#
+	            WHERE
+	            		ID				= #id#
+	            	AND
+	            		TENANT_ID		= #tenant_id#
+            ]]> 
+        </isNotEqual>       
+    </insert>
+    
+    <insert id="EzPollDAO.addAnswerAndUser" parameterClass="Map">  
+	    <![CDATA[
+	            INSERT INTO TBL_VOTE_USER_AND_ANSWER(
+	                ANS_ID,        		QST_ID,		    USER_ID,          TENANT_ID, 		USER_NAME1,	      USER_NAME2,	   VOTE_DATE,
+	                DEPT_ID
+	            )
+	            VALUES(
+	                #opt_id#,          	#qst_id#, 		#user_id#,        #tenant_id#,		#user_name1#,	  #user_name2#,	   #vote_date#,
+	                (SELECT DEPT_ID FROM TBL_VOTE_QUESTION_RELATED WHERE TENANT_ID = #tenant_id# AND QST_ID = #qst_id# AND USER_ID = #user_id#)
+	            )  
+	   ]]> 
+    </insert>  
+    
+   	<insert id="EzPollDAO.insertQustReceivers" parameterClass="Map">  
+        <selectKey keyProperty="v_temp1" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					1 
+        		FROM
+        			DUAL
+       			WHERE
+       				NOT EXISTS (SELECT
+     								QST_ID , 
+     								USER_ID ,                              		
+                               		TENANT_ID 
+                        			FROM
+                        				TBL_VOTE_USER_AND_QUESTION
+                         			WHERE
+                         					QST_ID		= #qst_id#
+                         				AND
+                         					USER_ID 	= #user_id#
+                                   		AND
+                                   			TENANT_ID 	= #tenant_id#
+								)
+			]]>
+		</selectKey>   
+		<isEqual property="v_temp1" compareValue="1">     
+        	<![CDATA[
+	            INSERT INTO TBL_VOTE_USER_AND_QUESTION(
+	                QST_ID,        			USER_ID,		    TENANT_ID,          USER_TYPE,
+	                COMPANYID,				DEPT_ID
+	            )
+	            VALUES(
+	                #qst_id#,          	 	#user_id#, 			#tenant_id#,       #type#,
+	                #companyid#,			#dept_id#
+	            )  
+        	]]>
+        </isEqual>
+        <isNotEqual property="v_temp1" compareValue="1">
+        	<![CDATA[
+	            UPDATE 
+	            	TBL_VOTE_USER_AND_QUESTION
+	            SET 
+	            	 USER_TYPE	 		= #type#
+
+	            WHERE
+	            		QST_ID			= #qst_id#
+	            	AND
+	            		USER_ID 		= #user_id#
+	            	AND
+	            		TENANT_ID		= #tenant_id#
+            ]]> 
+        </isNotEqual>       
+    </insert>   
+    
+    <insert id="EzPollDAO.insertOption" parameterClass="Map">  
+        <selectKey keyProperty="v_temp" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					1 
+        		FROM
+        			DUAL
+       			WHERE
+       				NOT EXISTS (SELECT
+     								ID , 
+     								QST_ID ,     								                              		
+                               		TENANT_ID 
+                        			FROM
+                        				TBL_VOTE_ANSWER
+                         			WHERE
+                         					ID			= #id#
+                         				AND
+                         					QST_ID		= #qst_id#
+                                   		AND
+                                   			TENANT_ID 	= #tenant_id#
+								)
+			]]>
+		</selectKey>   
+		<isEqual property="v_temp" compareValue="1">     
+        	<![CDATA[
+	            INSERT INTO TBL_VOTE_ANSWER(
+	               ID, 				QST_ID,        		TENANT_ID,          CONTENT, 		    VOTES_NUM,
+	               FILE_PATH
+	            )
+	            VALUES(
+	               #id#,          	 #qst_id#, 			#tenant_id#,       #content#,			#vote_number#,
+	               #filePath#
+	            )  
+        	]]>
+        </isEqual>
+        <isNotEqual property="v_temp" compareValue="1">
+        	<![CDATA[
+	            UPDATE 
+	            	TBL_VOTE_ANSWER
+	            SET 
+	            	 CONTENT	 		= #content#,
+	            	 VOTES_NUM			= #vote_number#, 
+	            	 FILE_PATH			= #filePath# 
+
+	            WHERE
+	            		QST_ID			= #qst_id#
+	            	AND
+	            		ID 				= #id#
+	            	AND
+	            		TENANT_ID		= #tenant_id#
+            ]]> 
+        </isNotEqual>       
+    </insert>
+    
+    <insert id="EzPollDAO.insertCmt" parameterClass="Map"> 
+        	<![CDATA[
+	            INSERT INTO TBL_VOTE_COMMENT(
+	               ID, 	   QST_ID,     TENANT_ID,    USER_ID, 	 USER_NAME1,	 USER_NAME2,	TEXT_CONTENT, 	  IMAGE_TYPE, 	  FILE_TYPE,      FILE_NAME,  	   FILE_PATH,     CMT_TIME,
+	               DEPT_ID 
+	            )
+	            VALUES( 
+	               #id#,   #qst_id#,   #tenant_id#,  #user_id#,	 #user_name1#,	 #user_name2#,	#text_content#,  #image_type#,   #file_type#,    #file_name#,	  #file_path#,   #cmt_time#,
+	               (SELECT DEPT_ID FROM TBL_VOTE_QUESTION_RELATED WHERE TENANT_ID = #tenant_id# AND QST_ID = #qst_id# AND USER_ID = #user_id#)
+	            )  
+        	]]>
+         
+    </insert>
+
+    <select id="EzPollDAO.getQuestionSeq" resultClass="String">             
+		<![CDATA[
+			SELECT 
+				NVL(MAX(ID),-1) as maxno
+			FROM 
+				TBL_VOTE_QUESTION
+			WHERE  
+				TENANT_ID = #tenantID#	
+		]]>		
+    </select>   
+    
+    <select id="EzPollDAO.getModifyingUser" resultClass="String">             
+		<![CDATA[
+			SELECT 
+				USER_ID
+			FROM 
+				TBL_VOTE_QUESTION_RELATED
+			WHERE
+				QST_ID = #qst_id#
+			AND
+				TENANT_ID = #tenant_id#	
+			AND 
+				MODIFYING = 1
+		]]>		
+    </select>  
+    
+   	<select id="EzPollDAO.getListOfUserIdForQst" resultClass="String">             
+		<![CDATA[
+			SELECT 
+				USER_ID
+			FROM 
+				TBL_VOTE_USER_AND_QUESTION
+			WHERE  
+				TENANT_ID = #tenantID#	
+			AND
+				QST_ID    = #qst_id#
+			AND 
+				USER_TYPE = #type#
+		]]>			
+    </select> 
+    
+    <select id="EzPollDAO.getListOfUserForQst" resultClass="PollUserVO">
+        <![CDATA[
+                SELECT
+                        QST_ID as qstid,
+                        USER_ID as userid,
+                        TENANT_ID as tenantid,
+                        USER_TYPE as usertype,
+                        COMPANYID as companyid,
+                        DEPT_ID as deptid
+                FROM
+                        TBL_VOTE_USER_AND_QUESTION
+                WHERE
+                        TENANT_ID = #tenantID#
+                AND
+                        QST_ID    = #qst_id#
+                AND
+                        USER_TYPE = #type#
+        ]]>
+    </select>
+    
+    <select id="EzPollDAO.checkTargetOfQst" resultClass="Integer">             
+		<![CDATA[
+			SELECT 
+				TARGET
+			FROM 
+				TBL_VOTE_QUESTION
+			WHERE  
+				TENANT_ID = #tenantID#	
+			AND
+				ID    = #qst_id#
+		]]>			
+    </select>
+          
+    <select id="EzPollDAO.getNumberOfSeenUsers" resultClass="String">
+		<![CDATA[
+			SELECT 
+				USER_ID
+			FROM 
+				TBL_VOTE_QUESTION_RELATED
+			WHERE  
+				TENANT_ID = #tenant_id#	
+			AND
+				QST_ID    = #qst_id#
+			AND 
+				SEEN	  = 1
+		]]>			
+    </select> 
+     
+    <select id="EzPollDAO.getQuestionsTest" resultClass="PollQuestionVO">   
+		<![CDATA[
+			SELECT 
+				a.ID AS qstid,
+				a.TENANT_ID AS tenantid,
+				a.CONTENT AS content,
+				a.MULTI_SELECT AS multiselect,
+				a.CREATE_DATE AS createdate,
+				a.START_DATE AS startdate,
+				a.END_DATE AS enddate,
+				a.TARGET AS target,
+				a.TITLE AS title,
+				a.SECRET_VOTE AS secretvote,
+				a.CREATOR AS creator,
+				a.CREATOR_NAME1 AS creatorname1,
+				a.CREATOR_NAME2 AS creatorname2,
+				a.FILE_PATH AS filepath,
+				a.RESULT_FIRST AS resultfirst,
+				a.IS_MODIFYING AS ismodifying,
+				a.SET_DATE AS setdate,
+				a.IS_SORTING AS inssorting,
+				a.IS_SELONLYONCE AS isselonlyonce,
+				a.SENDPOSTNOTICE AS sendpostnotice,
+				a.OPENTOALL AS opentoall,
+				((SELECT COUNT(ID) FROM TBL_VOTE_COMMENT WHERE QST_ID = a.ID and TENANT_ID = #tenant_id#)) AS CMTCNT
+			FROM 
+				TBL_VOTE_QUESTION a
+			WHERE  
+				a.ID
+			IN
+				(
+					SELECT 
+						QST_ID
+					FROM
+						TBL_VOTE_USER_AND_QUESTION
+					WHERE
+						(
+								USER_TYPE = 'user'
+							AND
+								USER_ID   = #user_id#
+						)	
+					OR
+						(
+								USER_TYPE = 'company'
+							AND
+							(
+									USER_ID   = #company_id#
+								OR
+									USER_ID IN (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN IN (SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE TENANT_ID = #tenant_id# AND CN = #user_id#))
+							)
+						) 
+					OR
+						(
+								USER_TYPE = 'dept'
+							AND
+								USER_ID 
+								IN
+									(
+										SELECT 
+											CN
+										FROM
+											TBL_DEPTMASTER
+										WHERE
+											(												
+													CN IN 
+															(
+		]]>	
+														<iterate conjunction="," property="deptArr">
+														<![CDATA[
+															#deptArr[]#
+														]]>
+														</iterate>
+		<![CDATA[
+															)	
+												OR 
+													CN = 'Top'
+												OR
+													CN IN (SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE CN = #user_id#)										
+											)
+										AND
+											TENANT_ID = #tenant_id#
+									)
+						)				
+					AND
+						TENANT_ID = #tenant_id#
+				)
+			AND
+				a.TENANT_ID = #tenant_id#	
+		]]>								
+		<isEqual property="mode" compareValue="sub" prepend="AND">
+			<![CDATA[
+				a.TITLE LIKE '%' ||#search_str#|| '%'				
+			]]>
+		</isEqual>	
+		<isEqual property="mode" compareValue="wri" prepend="AND">
+			<isEqual property="primary" compareValue="1" >
+				<![CDATA[
+					a.CREATOR_NAME1 LIKE '%' ||#search_str#|| '%'						
+				]]>
+			</isEqual>	
+			<isNotEqual property="primary" compareValue="1">
+				<![CDATA[
+	        		a.CREATOR_NAME2 LIKE '%' ||#search_str#|| '%'				
+		        ]]>
+			 </isNotEqual>
+		</isEqual>		
+    </select> 
+    
+    <select id="EzPollDAO.getAllQuestions" resultClass="PollQuestionVO">   
+		<![CDATA[
+			SELECT DISTINCT
+				a.ID AS qstid,
+				a.TENANT_ID AS tenantid,
+				TO_CHAR(a.CONTENT) AS content,
+				a.MULTI_SELECT AS multiselect,
+				a.CREATE_DATE AS createdate,
+				a.START_DATE AS startdate,
+				a.END_DATE AS enddate,
+				a.TARGET AS target,
+				a.TITLE AS title,
+				a.SECRET_VOTE AS secretvote,
+				a.CREATOR AS creator,
+				a.CREATOR_NAME1 AS creatorname1,
+				a.CREATOR_NAME2 AS creatorname2,
+				TO_CHAR(a.FILE_PATH) AS filepath,
+				a.RESULT_FIRST AS resultfirst,
+				a.IS_MODIFYING AS ismodifying,
+				a.SET_DATE AS setdate,
+				a.IS_SORTING AS inssorting,
+				a.IS_SELONLYONCE AS isselonlyonce,
+				a.SENDPOSTNOTICE AS sendpostnotice,
+				a.OPENTOALL AS opentoall,
+				((SELECT COUNT(ID) FROM TBL_VOTE_COMMENT WHERE QST_ID = a.ID and TENANT_ID = #tenant_id#)) AS CMTCNT
+			FROM 
+				TBL_VOTE_QUESTION a
+			JOIN
+				TBL_VOTE_USER_AND_QUESTION b
+			ON
+				a.ID = b.QST_ID	
+			AND
+				a.TENANT_ID = b.TENANT_ID
+			WHERE 
+				a.TENANT_ID = #tenant_id#
+			AND
+			(
+					a.COMPANYID = #companyid#
+				OR
+					b.USER_ID IN (SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE CN = #user_id# AND tenant_id = #tenant_id#)
+				OR
+					b.USER_ID IN (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN IN (SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE TENANT_ID = #tenant_id# AND CN = #user_id#))
+			)
+		]]>	
+		<isEqual property="mode" compareValue="sub" prepend="AND">
+			<![CDATA[
+				a.TITLE LIKE '%' ||#search_str#|| '%'				
+			]]>
+		</isEqual>	
+		<isEqual property="mode" compareValue="wri" prepend="AND">
+			<isEqual property="primary" compareValue="1" >
+				<![CDATA[
+					a.CREATOR_NAME1 LIKE '%' ||#search_str#|| '%'						
+				]]>
+			</isEqual>	
+			<isNotEqual property="primary" compareValue="1">
+				<![CDATA[
+	        		a.CREATOR_NAME2 LIKE '%' ||#search_str#|| '%'				
+		        ]]>
+			 </isNotEqual>
+		</isEqual>			
+    </select>     
+    
+    <select id="EzPollDAO.getOwnQuestions" resultMap="pollQuestion">   
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_VOTE_QUESTION
+			WHERE  
+				CREATOR = #user_id#
+			AND
+				TENANT_ID = #tenant_id#	
+			AND
+				COMPANYID = #companyid#	
+		]]>	
+		<isEqual property="mode" compareValue="sub" prepend="AND">
+			<![CDATA[
+				TITLE LIKE '%' ||#search_str#|| '%'				
+			]]>
+		</isEqual>	
+		<isEqual property="mode" compareValue="wri" prepend="AND">
+			<isEqual property="primary" compareValue="1" >
+				<![CDATA[
+					CREATOR_NAME1 LIKE '%' ||#search_str#|| '%'						
+				]]>
+			</isEqual>	
+			<isNotEqual property="primary" compareValue="1">
+				<![CDATA[
+	        		CREATOR_NAME2 LIKE '%' ||#search_str#|| '%'				
+		        ]]>
+			 </isNotEqual>
+		</isEqual>		
+    </select>  
+    
+    <select id="EzPollDAO.getListOptionsOfQst" resultMap="pollAnswer">   
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_VOTE_ANSWER
+			WHERE  
+				QST_ID = #qst_id#
+			AND
+				TENANT_ID = #tenant_id#	
+		]]>				
+    </select>    
+    
+    <select id="EzPollDAO.getListCmtOfQst" resultMap="pollComment">   
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_VOTE_COMMENT
+			WHERE  
+				QST_ID = #qst_id#
+			AND
+				TENANT_ID = #tenant_id#	
+		]]>				
+    </select>   
+    
+    <select id="EzPollDAO.getPollUserAndAnswer" resultMap="pollUserAnswer">   
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_VOTE_USER_AND_ANSWER
+			WHERE  
+				QST_ID = #qst_id#
+			AND
+				TENANT_ID = #tenant_id#	
+		]]>				
+    </select>  
+    
+    <select id="EzPollDAO.getSpecificPollUserAndAnswer" resultMap="pollUserAnswer">   
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_VOTE_USER_AND_ANSWER
+			WHERE
+				ANS_ID = #opt_id#
+			AND 
+				QST_ID = #qst_id#
+			AND
+				USER_ID = #user_id#
+			AND
+				TENANT_ID = #tenant_id#
+		]]>				
+    </select>  
+    
+    <select id="EzPollDAO.getListVotedUsersForAnswer" resultMap="pollUserAnswer">   
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_VOTE_USER_AND_ANSWER
+			WHERE  
+				ANS_ID = #opt_id#
+			AND
+				QST_ID = #qst_id#
+			AND
+				TENANT_ID = #tenant_id#	
+		]]>				
+    </select>         
+      
+    <select id="EzPollDAO.getHiddenQuestionIds" resultClass="Integer">             
+		<![CDATA[
+			SELECT 
+				a.QST_ID
+			FROM  
+				TBL_VOTE_QUESTION_RELATED a
+			JOIN
+				TBL_VOTE_USER_AND_QUESTION b
+			ON
+				a.QST_ID = b.QST_ID
+			AND
+				a.TENANT_ID = b.TENANT_ID
+			WHERE  
+				a.TENANT_ID = #tenant_id#	
+			AND
+			(
+					a.COMPANYID = #companyid#
+				OR
+					b.USER_ID IN (SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE CN = #user_id# AND tenant_id = #tenant_id#)
+			)
+			AND
+				a.USER_ID   = #user_id#
+			AND 
+				a.HIDE 	  = 1
+		]]>			
+    </select>   
+    
+    <insert id="EzPollDAO.insertHiddenQuestion" parameterClass="Map">      	
+        <selectKey keyProperty="v_temp" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					1 
+        		FROM
+        			DUAL
+       			WHERE
+       				NOT EXISTS (SELECT
+     								QST_ID ,
+     								USER_ID ,                               		
+                               		TENANT_ID
+                        			FROM
+                        				TBL_VOTE_QUESTION_RELATED 
+                         			WHERE
+                         				QST_ID = #qst_id#
+                                   	AND
+                                   		USER_ID = #user_id#
+                                   	AND
+                                   		TENANT_ID = #tenant_id#
+								)
+			]]>
+		</selectKey>   
+		<isEqual property="v_temp" compareValue="1">     
+        	<![CDATA[
+	            INSERT INTO TBL_VOTE_QUESTION_RELATED(
+	                QST_ID,        	USER_ID,          TENANT_ID,        SEEN,       	"COMMENT",      "HIDE",			MODIFYING,
+	                DEPT_ID
+	            )
+	            VALUES(
+	                #qst_id#,       #user_id#,        #tenant_id#,       0,        		 0,    		   1,			   0,
+	                #dept_id#
+            )  
+        	]]>
+        </isEqual>
+        
+        <isNotEqual property="v_temp" compareValue="1">
+        	<![CDATA[
+	            UPDATE 
+	            	TBL_VOTE_QUESTION_RELATED
+	            SET 
+	            	 HIDE = 1
+	            WHERE
+        			 QST_ID = #qst_id#
+                AND
+                  	 USER_ID = #user_id#
+                AND
+                  	 TENANT_ID = #tenant_id#
+            ]]> 
+        </isNotEqual>        
+    </insert>    
+    
+    <insert id="EzPollDAO.insertModifyingQuestion" parameterClass="Map">      	
+        <selectKey keyProperty="v_temp" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					1 
+        		FROM
+        			DUAL
+       			WHERE
+       				NOT EXISTS (SELECT
+     								QST_ID ,
+     								USER_ID ,                               		
+                               		TENANT_ID
+                        			FROM
+                        				TBL_VOTE_QUESTION_RELATED 
+                         			WHERE
+                         				QST_ID = #qst_id#
+                                   	AND
+                                   		USER_ID = #user_id#
+                                   	AND
+                                   		TENANT_ID = #tenant_id#
+								)
+			]]>
+		</selectKey>   
+		<isEqual property="v_temp" compareValue="1">     
+        	<![CDATA[
+	            INSERT INTO TBL_VOTE_QUESTION_RELATED(
+	                QST_ID,        	USER_ID,          TENANT_ID,        SEEN,       	"COMMENT",      "HIDE",			MODIFYING,
+	                COMPANYID,		DEPT_ID
+	            )
+	            VALUES(
+	                #qst_id#,       #user_id#,        #tenant_id#,       0,        		 0,    		   0,			   1,
+	                #companyid#,	#dept_id#
+            )  
+        	]]>
+        </isEqual>
+        
+        <isNotEqual property="v_temp" compareValue="1">
+        	<![CDATA[
+	            UPDATE 
+	            	TBL_VOTE_QUESTION_RELATED
+	            SET 
+	            	 MODIFYING = 1
+	            WHERE
+        			 QST_ID = #qst_id#
+                AND
+                  	 USER_ID = #user_id#
+                AND
+                  	 TENANT_ID = #tenant_id#
+            ]]> 
+        </isNotEqual>        
+    </insert>     
+      
+    <update id="EzPollDAO.updateModifyingQuestionRelatedStatus" parameterClass="Map">
+   		<![CDATA[
+	            UPDATE 
+	            	TBL_VOTE_QUESTION_RELATED
+	            SET 
+	            	 MODIFYING = 0
+	            WHERE
+        			 QST_ID = #qst_id#
+                AND
+                  	 USER_ID = #user_id#
+                AND
+                  	 TENANT_ID = #tenant_id#
+		]]>
+    </update>   
+    
+    <update id="EzPollDAO.unhideQuestion" parameterClass="Map">
+   		<![CDATA[
+	            UPDATE 
+	            	TBL_VOTE_QUESTION_RELATED
+	            SET 
+	            	 HIDE = 0
+	            WHERE
+        			 QST_ID = #qst_id#
+                AND
+                  	 USER_ID = #user_id#
+                AND
+                  	 TENANT_ID = #tenant_id#
+		]]>
+    </update>   
+   
+    <insert id="EzPollDAO.insertSeenQuestion" parameterClass="Map">      	
+        <selectKey keyProperty="v_temp" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					1 
+        		FROM
+        			DUAL
+       			WHERE
+       				NOT EXISTS (SELECT
+     								QST_ID ,
+     								USER_ID ,                               		
+                               		TENANT_ID
+                        			FROM
+                        				TBL_VOTE_QUESTION_RELATED 
+                         			WHERE
+                         				QST_ID = #qst_id#
+                                   	AND
+                                   		USER_ID = #user_id#
+                                   	AND
+                                   		TENANT_ID = #tenant_id#
+								)
+			]]>
+		</selectKey>   
+		<isEqual property="v_temp" compareValue="1">  
+			<!-- 개인이나 회사가 대상자로 선택됐을 때 -->  
+			<isNotEmpty property="userType"> 
+        	<![CDATA[
+	            INSERT INTO TBL_VOTE_QUESTION_RELATED(
+	                QST_ID,        	USER_ID,          TENANT_ID,        SEEN,       	"COMMENT",      "HIDE",			MODIFYING,
+	            	COMPANYID,		DEPT_ID
+	            )
+	            VALUES(
+	                #qst_id#,       #user_id#,        #tenant_id#,        1,        	  0,    		 0,			   0,
+	                #companyid#,	
+        	]]>
+        		<isEqual property="userType" compareValue="user"><![CDATA[ #userDept# ]]></isEqual>
+        		<isEqual property="userType" compareValue="company"><![CDATA[ #dept_id# ]]></isEqual>
+            	)  
+			</isNotEmpty>
+			
+			<!-- 부서가 대상자로 선택됐을 때 -->
+			<isEmpty property="userType">
+			<![CDATA[
+	            INSERT INTO TBL_VOTE_QUESTION_RELATED(
+	                QST_ID,        	USER_ID,          TENANT_ID,        SEEN,       	"COMMENT",      "HIDE",			MODIFYING,
+	                COMPANYID,		DEPT_ID
+	            )
+	            VALUES(
+	                #qst_id#,       #user_id#,        #tenant_id#,        1,        	  0,    		 0,			   0,
+	                #companyid#,
+	                (SELECT 
+					  CASE
+					  WHEN USER_ID IS NULL
+					  THEN
+						  (SELECT DEPTID FROM TBL_ADDJOBMASTER a JOIN TBL_VOTE_USER_AND_QUESTION b ON a.TENANT_ID = b.TENANT_ID AND b.QST_ID = #qst_id# AND a.CN = #user_id# AND a.TENANT_ID = #tenant_id# WHERE ROWNUM <= 1)
+					  ELSE
+					  	UNISTR(USER_ID)
+					  END
+					FROM 
+						TBL_VOTE_USER_AND_QUESTION
+					RIGHT OUTER JOIN
+						DUAL
+					ON 
+						TENANT_ID = #tenant_id#
+			        AND
+						QST_ID = #qst_id# 
+					AND 
+        	]]>
+						USER_ID IN ( 
+							<iterate property="deptPathArr" conjunction=","><![CDATA[ #deptPathArr[]# ]]></iterate> 
+						)
+					)
+					
+            	) 
+			</isEmpty>
+        </isEqual>
+        
+         <isNotEqual property="v_temp" compareValue="1">
+        	<![CDATA[
+	            UPDATE 
+	            	TBL_VOTE_QUESTION_RELATED
+	            SET 
+	            	 SEEN = 1
+	            WHERE
+        			 QST_ID = #qst_id#
+                AND
+                  	 USER_ID = #user_id#
+                AND
+                  	 TENANT_ID = #tenant_id#
+            ]]> 
+        </isNotEqual>       
+    </insert>    
+    
+    <insert id="EzPollDAO.insertCommentQuestion" parameterClass="Map">      	
+        <selectKey keyProperty="v_temp" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					1 
+        		FROM
+        			DUAL
+       			WHERE
+       				NOT EXISTS (SELECT
+     								QST_ID ,
+     								USER_ID ,                               		
+                               		TENANT_ID
+                        			FROM
+                        				TBL_VOTE_QUESTION_RELATED 
+                         			WHERE
+                         				QST_ID = #qst_id#
+                                   	AND
+                                   		USER_ID = #user_id#
+                                   	AND
+                                   		TENANT_ID = #tenant_id#
+								)
+			]]>
+		</selectKey>   
+		<isEqual property="v_temp" compareValue="1">     
+        	<![CDATA[
+	            INSERT INTO TBL_VOTE_QUESTION_RELATED(
+	                QST_ID,        	USER_ID,          TENANT_ID,        SEEN,       	"COMMENT",      "HIDE",      MODIFYING
+	            )
+	            VALUES(
+	                #qst_id#,       #user_id#,        #tenant_id#,       0,        		   1,      		0,		    0		 
+            )  
+        	]]>
+        </isEqual>
+        <isNotEqual property="v_temp" compareValue="1">
+        	<![CDATA[
+	            UPDATE 
+	            	TBL_VOTE_QUESTION_RELATED
+	            SET 
+	            	COMMENT = 1
+	            WHERE
+        			 QST_ID = #qst_id#
+                AND
+                  	 USER_ID = #user_id#
+                AND
+                  	 TENANT_ID = #tenant_id#
+            ]]> 
+        </isNotEqual>   
+    </insert>    
+   
+    <select id="EzPollDAO.getQuestionByIdAndTenantId" resultMap="pollQuestion">   
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_VOTE_QUESTION
+			WHERE  
+				ID = #qst_id#
+			AND
+				TENANT_ID = #tenant_id#		
+		]]>				
+    </select>  
+   
+    <select id="EzPollDAO.getAnswerByIdAndQstId" resultMap="pollAnswer">   
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_VOTE_ANSWER
+			WHERE  
+				ID = #opt_id#
+			AND
+				QST_ID = #qst_id#
+			AND
+				TENANT_ID = #tenant_id#		
+		]]>				
+    </select>  
+   
+   <delete id="EzPollDAO.deleteQuestions" parameterClass="Map">
+   		<![CDATA[
+			DELETE FROM
+				TBL_VOTE_QUESTION
+          	WHERE
+          		ID = #qst_id#
+			AND
+				TENANT_ID = #tenant_id#	
+		]]>
+   </delete>
+   
+   <delete id="EzPollDAO.deleteUserAndAnswer" parameterClass="Map">
+   		<![CDATA[
+			DELETE FROM
+				TBL_VOTE_USER_AND_ANSWER
+          	WHERE
+          		QST_ID = #qst_id#
+			AND
+				TENANT_ID = #tenant_id#	
+		]]>
+   </delete>
+   
+   <delete id="EzPollDAO.deleteModifyingQuestionRelatedStatus" parameterClass="Map">
+   		<![CDATA[
+			DELETE FROM
+				TBL_VOTE_QUESTION_RELATED
+	        WHERE
+        			 QST_ID = #qst_id#
+                AND
+                  	 USER_ID = #user_id#
+                AND
+                  	 TENANT_ID = #tenant_id#
+		]]>
+   </delete>   
+
+   <delete id="EzPollDAO.deleteQuestionRelated" parameterClass="Map">
+   		<![CDATA[
+			DELETE FROM
+				TBL_VOTE_QUESTION_RELATED
+          	WHERE
+          		QST_ID = #qst_id#
+			AND
+				TENANT_ID = #tenant_id#	
+		]]>
+   </delete>
+   
+   <delete id="EzPollDAO.deleteAnswers" parameterClass="Map">
+   		<![CDATA[
+			DELETE FROM
+				TBL_VOTE_ANSWER
+          	WHERE
+          		QST_ID = #qst_id#
+			AND
+				TENANT_ID = #tenant_id#	
+		]]>
+   </delete>
+   
+   <delete id="EzPollDAO.deleteCommentOfQst" parameterClass="Map">
+   		<![CDATA[
+			DELETE FROM
+				TBL_VOTE_COMMENT
+          	WHERE
+          		QST_ID = #qst_id#
+			AND
+				TENANT_ID = #tenant_id#	
+		]]>
+   </delete>
+   
+   <delete id="EzPollDAO.deleteSpecificCmt" parameterClass="Map">
+   		<![CDATA[
+			DELETE FROM
+				TBL_VOTE_COMMENT
+          	WHERE
+          		ID		  = #id#
+          	AND
+          		QST_ID 	  = #qst_id#
+			AND
+				TENANT_ID = #tenant_id#	
+		]]>
+   </delete>
+   
+   <delete id="EzPollDAO.deleteUserAndQuestion" parameterClass="Map">
+   		<![CDATA[
+			DELETE FROM
+				TBL_VOTE_USER_AND_QUESTION
+          	WHERE
+          		QST_ID = #qst_id#
+			AND
+				TENANT_ID = #tenant_id#	
+		]]>
+   </delete>
+
+   <delete id="EzPollDAO.removeAnswerAndUser" parameterClass="Map">
+   		<![CDATA[
+			DELETE FROM
+				TBL_VOTE_USER_AND_ANSWER
+          	WHERE
+          		ANS_ID = #opt_id#
+			AND
+				QST_ID = #qst_id#	
+			AND
+				USER_ID = #user_id#	
+			AND
+				TENANT_ID = #tenant_id#	
+		]]>
+   </delete>
+   
+   <update id="EzPollDAO.updateNumberOfVotesForAnswer" parameterClass="Map">
+   		<![CDATA[
+				UPDATE 
+	            	TBL_VOTE_ANSWER
+	            SET 
+	            	 VOTES_NUM 		= VOTES_NUM + #value#
+	            WHERE
+	            		ID			= #opt_id#
+	            	AND
+	            		QST_ID		= #qst_id#
+	            	AND
+	            		TENANT_ID	= #tenant_id#
+		]]>
+   </update>  
+   
+   <update id="EzPollDAO.updateEndDateForQst" parameterClass="Map">
+   		<![CDATA[
+				UPDATE 
+	            	TBL_VOTE_QUESTION
+	            SET 
+	            	 END_DATE 		= #end_date#
+	            WHERE
+	            		ID			= #qst_id#
+	            	AND
+	            		TENANT_ID	= #tenant_id#
+		]]>
+   </update>   
+   
+   <update id="EzPollDAO.updateModifyingQuestion" parameterClass="Map">
+   		<![CDATA[
+				UPDATE 
+	            	TBL_VOTE_QUESTION
+	            SET 
+	            	 IS_MODIFYING 	= #value#
+	            WHERE
+	            		ID			= #qst_id#
+	            	AND
+	            		TENANT_ID	= #tenant_id#
+		]]>
+   </update>  
+    
+   <update id="EzPollDAO.updateCmt" parameterClass="Map">
+   		<![CDATA[
+				UPDATE 
+	            	TBL_VOTE_COMMENT
+	            SET 
+	            	 TEXT_CONTENT 	= #text_content#,
+	            	 IMAGE_TYPE		= #image_type#,
+	            	 FILE_TYPE		= #file_type#,
+	            	 FILE_NAME		= #file_name#,	
+	            	 FILE_PATH		= #file_path#
+	            WHERE
+	            		ID			= #id#
+	            	AND
+	            		QST_ID		= #qst_id#
+	            	AND
+	            		TENANT_ID	= #tenant_id#
+		]]>
+   </update>   
+   
+   <select id="EzPollDAO.checkUsingFile" resultClass="Integer">   
+		<![CDATA[
+			SELECT 
+				count(*)
+			FROM 
+				TBL_VOTE_ANSWER
+			WHERE  
+				TENANT_ID = #tenant_id#		
+			AND
+				TO_CHAR(FiLE_PATH) = #file_path#
+		]]>				
+    </select>  
+   
+   <select id="EzPollDAO.checkQstUsingFile" resultClass="Integer">   
+		<![CDATA[
+			SELECT 
+				count(*)
+			FROM 
+				TBL_VOTE_QUESTION
+			WHERE  
+				TENANT_ID = #tenant_id#		
+			AND
+				ID <> #qst_id#		
+			AND
+				TO_CHAR(FiLE_PATH) like '%' ||#file_path#|| '%'
+		]]>				
+    </select>  
+
+   <select id="EzPollDAO.getQuestionFileById" parameterClass="Map" resultClass="String">   
+		<![CDATA[
+			SELECT 
+				FILE_PATH
+			FROM 
+				TBL_VOTE_QUESTION
+			WHERE  
+				TENANT_ID 	= #tenant_id#
+			AND
+				ID			= #qst_id#
+		]]>				
+    </select>  
+   
+   <select id="EzPollDAO.getAnswerFilesByQstId" parameterClass="Map" resultClass="String">   
+		<![CDATA[
+			SELECT 
+				FILE_PATH
+			FROM 
+				TBL_VOTE_ANSWER
+			WHERE  
+				TENANT_ID 	= #tenant_id#
+			AND
+				QST_ID		= #qst_id#
+			AND
+				FILE_PATH IS NOT NULL
+		]]>				
+    </select>  
+
+   <select id="EzPollDAO.getCommentFilesByQstId" parameterClass="Map" resultClass="String">   
+		<![CDATA[
+			SELECT 
+				FILE_PATH
+			FROM 
+				TBL_VOTE_COMMENT
+			WHERE  
+				TENANT_ID 	= #tenant_id#
+			AND
+				QST_ID		= #qst_id#
+			AND
+				LENGTH(FILE_PATH) > 0
+		]]>				
+    </select>  
+    
+   <select id="EzPollDAO.getCommentImgFilesByQstId" parameterClass="Map" resultClass="String">   
+		<![CDATA[
+			SELECT 
+				FILE_TYPE
+			FROM 
+				TBL_VOTE_COMMENT
+			WHERE  
+				TENANT_ID 	= #tenant_id#
+			AND
+				QST_ID		= #qst_id#
+			AND
+				LENGTH(FILE_TYPE) > 0
+		]]>				
+    </select>  
+    
+    <select id="EzPollDAO.getListOfUserIdForQstByQstId" resultMap="pollUser">             
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_VOTE_USER_AND_QUESTION
+			WHERE  
+				TENANT_ID = #tenantID#	
+			AND
+				QST_ID    = #qst_id#
+		]]>			
+    </select>
+    
+    <update id="EzPollDAO.updateQuestionEndDate" parameterClass="Map">
+   		<![CDATA[
+	            UPDATE 
+	            	TBL_VOTE_QUESTION
+	            SET 
+	            	 END_DATE = #end_date#
+	            WHERE
+        			 QST_ID = #qst_id#
+                AND
+                  	 USER_ID = #user_id#
+                AND
+                  	 TENANT_ID = #tenant_id#
+		]]>
+    </update>   
+    
+    <select id="EzPollDAO.getOpenToAllQuestion" resultMap="pollQuestion">   
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_VOTE_QUESTION
+			WHERE  
+				TENANT_ID = #tenant_id#
+			AND
+				OPENTOALL = 1
+			AND
+				COMPANYID = #companyid#
+		]]>				
+    </select>
+       
+    <select id="EzPollDAO.getInfoOfSeenUsers" resultMap="login">
+		<![CDATA[
+			SELECT
+				a.user_id AS CN,
+				b.password,
+				NVL(b.displayname, a.user_id) AS DISPLAYNAME,
+				NVL(b.displayname2, a.user_id) AS DISPLAYNAME2,
+				a.dept_id as department,              
+				b.description,
+				b.description2,
+				b.title,
+				b.title2,
+				b.companyid,
+				b.company,
+				b.company2,
+				b.updatedt,
+				b.rollinfo,
+				b.telephonenumber,
+				b.mail,
+				b.jikchek,
+				a.tenant_id,
+				b.deptPathCode,
+				b.primaryLang,
+				b.gyumJik,
+				b.userFileUrl,
+				b.sabun
+			FROM
+				(
+					SELECT 
+						QST_ID,
+						USER_ID,
+						TENANT_ID,
+						DEPT_ID
+					FROM 
+						TBL_VOTE_QUESTION_RELATED
+					WHERE  
+						TENANT_ID = #tenant_id#
+					AND
+						QST_ID = #qst_id#
+					AND
+						SEEN = 1
+				) a
+			LEFT JOIN
+				(
+					SELECT 
+						a.cn,  
+			            a.password,
+						a.displayname,
+						a.displayname2,
+						a.department,              
+						a.description,
+						a.description2,
+						a.title,
+						a.title2,
+						a.physicaldeliveryofficename as companyid,
+						a.company,
+						a.company2,
+						a.updatedt,
+						a.extensionattribute1 as rollinfo,
+						a.telephonenumber,
+						a.mail,
+						a.extensionattribute10 as jikchek,
+						a.tenant_id,
+						(SELECT 'top,Top,'|| dept_cd_path FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
+						(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+						a.extensionattribute4 as gyumJik,
+						a.extensionattribute2 as userFileUrl,
+						a.extensionattribute14 as sabun
+					FROM 
+						TBL_USERMASTER a
+					JOIN
+						TBL_DEPTMASTER d
+					ON
+						a.TENANT_ID = d.TENANT_ID
+					AND
+						a.DEPARTMENT = d.CN
+					WHERE 
+						a.tenant_id = #tenant_id#
+					AND
+						d.EXTENSIONATTRIBUTE2 = #companyid#
+					AND 
+               			a.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenant_id#)
+					union all
+					SELECT 
+						a.cn,  
+			            a.password,
+						a.displayname,
+						a.displayname2,
+						a.department,              
+						a.description,
+						a.description2,
+						a.title,
+						a.title2,
+						a.physicaldeliveryofficename as companyid,
+						a.company,
+						a.company2,
+						a.updatedt,
+						a.extensionattribute1 as rollinfo,
+						a.telephonenumber,
+						a.mail,
+						a.extensionattribute10 as jikchek,
+						a.tenant_id,
+						(SELECT 'top,Top,'|| dept_cd_path FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
+						(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+						a.extensionattribute4 as gyumJik,
+						a.extensionattribute2 as userFileUrl,
+						a.extensionattribute14 as sabun
+					FROM 
+						TBL_USERMASTER_RETIRE a
+					JOIN
+						TBL_DEPTMASTER d
+					ON
+						a.TENANT_ID = d.TENANT_ID
+					AND
+						a.DEPARTMENT = d.CN
+					WHERE 
+						a.tenant_id = #tenant_id#
+					AND
+						d.EXTENSIONATTRIBUTE2 = #companyid#
+				UNION ALL
+					SELECT 
+						a.cn,  
+			            a.password,
+						a.displayname,
+						a.displayname2,
+						a.department,              
+						a.description,
+						a.description2,
+						a.title,
+						a.title2,
+						a.physicaldeliveryofficename as companyid,
+						a.company,
+						a.company2,
+						a.updatedt,
+						a.extensionattribute1 as rollinfo,
+						a.telephonenumber,
+						a.mail,
+						a.extensionattribute10 as jikchek,
+						a.tenant_id,
+						(SELECT 'top,Top,'|| dept_cd_path FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
+						(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+						a.extensionattribute4 as gyumJik,
+						a.extensionattribute2 as userFileUrl,
+						a.extensionattribute14 as sabun
+					FROM 
+						TBL_USERMASTER_DELETE a
+					JOIN
+						TBL_DEPTMASTER d
+					ON
+						a.TENANT_ID = d.TENANT_ID
+					AND
+						a.DEPARTMENT = d.CN
+					WHERE 
+						a.tenant_id = #tenant_id#
+					AND
+						d.EXTENSIONATTRIBUTE2 = #companyid#
+					AND 
+                		a.cn NOT IN (SELECT cn FROM TBL_USERMASTER WHERE TENANT_ID = #tenant_id#)
+				) b
+				ON
+				a.USER_ID = b.cn
+
+		]]>			
+    </select> 
+    
+    <select id="EzPollDAO.getAllUsersForQst" resultMap="pollUser">         
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_VOTE_USER_AND_QUESTION
+			WHERE  
+				TENANT_ID = #tenant_id#	
+			AND
+				QST_ID    = #qst_id#
+		]]>			
+    </select>
+    
+    <select id="EzPollDAO.getUserInfoMRD" resultMap="login">
+		<![CDATA[
+			SELECT
+				a.CN AS CN,
+				a.password,
+				a.NVL(displayname, CN) AS DISPLAYNAME,
+				a.NVL(displayname2, CN) AS DISPLAYNAME2,
+				a.department,              
+				a.description,
+				a.description2,
+				a.title,
+				a.title2,
+				a.companyid,
+				a.company,
+				a.company2,
+				a.updatedt,
+				a.rollinfo,
+				a.telephonenumber,
+				a.mail,
+				a.jikchek,
+				a.tenant_id,
+				(SELECT 'top,Top,'|| dept_cd_path FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
+				(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+				a.extensionattribute4 as gyumJik,
+				a.extensionattribute2 as userFileUrl,
+				a.extensionattribute14 as sabun
+			FROM
+				(
+					SELECT 
+						a.CN AS CN,
+						a.password,
+						a.NVL(displayname, CN) AS DISPLAYNAME,
+						a.NVL(displayname2, CN) AS DISPLAYNAME2,
+						a.department,              
+						a.description,
+						a.description2,
+						a.title,
+						a.title2,
+						a.companyid,
+						a.company,
+						a.company2,
+						a.updatedt,
+						a.rollinfo,
+						a.telephonenumber,
+						a.mail,
+						a.jikchek,
+						a.tenant_id,
+						(SELECT 'top,Top,'|| dept_cd_path FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
+						(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+						a.extensionattribute4 as gyumJik,
+						a.extensionattribute2 as userFileUrl,
+						a.extensionattribute14 as sabun
+					FROM 
+						TBL_USERMASTER a
+					WHERE 
+						tenant_id = #tenant_id#
+					AND 
+                		a.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenant_id#)
+				UNION ALL
+					SELECT 
+						a.CN AS CN,
+						a.password,
+						a.NVL(displayname, CN) AS DISPLAYNAME,
+						a.NVL(displayname2, CN) AS DISPLAYNAME2,
+						a.department,              
+						a.description,
+						a.description2,
+						a.title,
+						a.title2,
+						a.companyid,
+						a.company,
+						a.company2,
+						a.updatedt,
+						a.rollinfo,
+						a.telephonenumber,
+						a.mail,
+						a.jikchek,
+						a.tenant_id,
+						(SELECT 'top,Top,'|| dept_cd_path FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
+						(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+						a.extensionattribute4 as gyumJik,
+						a.extensionattribute2 as userFileUrl,
+						a.extensionattribute14 as sabun
+					FROM 
+						TBL_USERMASTER_RETIRE a
+					WHERE 
+						tenant_id = #tenant_id#
+				UNION ALL
+					SELECT 
+						a.CN AS CN,
+						a.password,
+						a.NVL(displayname, CN) AS DISPLAYNAME,
+						a.NVL(displayname2, CN) AS DISPLAYNAME2,
+						a.department,              
+						a.description,
+						a.description2,
+						a.title,
+						a.title2,
+						a.companyid,
+						a.company,
+						a.company2,
+						a.updatedt,
+						a.rollinfo,
+						a.telephonenumber,
+						a.mail,
+						a.jikchek,
+						a.tenant_id,
+						(SELECT 'top,Top,'|| dept_cd_path FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
+						(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+						a.extensionattribute4 as gyumJik,
+						a.extensionattribute2 as userFileUrl,
+						a.extensionattribute14 as sabun
+					FROM 
+						TBL_USERMASTER_DELETE a
+					WHERE 
+						tenant_id = #tenant_id#
+					AND 
+                		a.cn NOT IN (SELECT cn FROM TBL_USERMASTER WHERE TENANT_ID = #tenant_id#)
+				) a
+				JOIN
+					TBL_DEPTMASTER d
+				ON
+					a.TENANT_ID = d.TENANT_ID
+				AND
+					a.DEPARTMENT = d.CN
+				WHERE 
+					a.tenant_id = #tenant_id#
+				AND
+					d.EXTENSIONATTRIBUTE2 = #companyid#
+		]]>	
+		<dynamic prepend="AND">
+		(
+			<isNotEmpty property="userList" prepend="AND">
+				a.CN IN (
+				<iterate conjunction="," property="userList">
+				<![CDATA[
+					#userList[]#
+				]]>
+				</iterate>
+				)
+			</isNotEmpty>
+			<isNotEmpty property="deptUserList">
+				<iterate property="deptUserList" prepend="OR">
+				<![CDATA[
+					a.CN IN (
+					SELECT 
+						CN 
+					FROM
+						TBL_USERMASTER 
+					WHERE 
+					(
+						DEPARTMENT in (SELECT CN FROM TBL_DEPTMASTER WHERE CN = #deptUserList[]# OR DEPT_CD_PATH LIKE '%,'||#deptUserList[]#||',%' OR DEPT_CD_PATH LIKE #deptUserList[]#||',%')
+					OR
+						CN in (SELECT CN FROM TBL_ADDJOBMASTER WHERE TENANT_ID = #tenant_id# AND DEPTID = #deptUserList[]#)
+					)
+					AND
+						TENANT_ID = #tenant_id#
+					AND 
+              			CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenant_id#)
+				)
+				]]>
+				</iterate>
+			</isNotEmpty>
+		)
+		</dynamic>	
+    </select>
+    
+    <select id="EzPollDAO.getUserInfoM" resultMap="login">
+    	<isEmpty property="companyUser">
+    	<![CDATA[
+		SELECT
+			*
+		FROM (
+			SELECT 
+				ROW_NUMBER() OVER (PARTITION BY a.CN ORDER BY ROWNUM) CNT,
+				a.cn,
+				a.password,
+				a.displayname,
+				a.displayname2,
+				(CASE
+				WHEN a.DEPARTMENT IN (SELECT USER_ID FROM TBL_VOTE_USER_AND_QUESTION WHERE TENANT_ID = #tenant_id# AND QST_ID = #qst_id#)
+				THEN a.DEPARTMENT
+				ELSE c.DEPTID
+				END
+				)AS department,
+				a.description,
+				a.description2,
+				a.title,
+				a.title2,
+				a.physicaldeliveryofficename as companyid,
+				a.company,
+				a.company2,
+				a.updatedt,
+				a.extensionattribute1 as rollinfo,
+				a.telephonenumber,
+				a.mail,
+				a.extensionattribute10 as jikchek,
+				a.tenant_id,
+				(SELECT 'top,Top,'|| dept_cd_path FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
+				(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+				a.extensionattribute4 as gyumJik,
+				a.extensionattribute2 as userFileUrl,
+				a.extensionattribute14 as sabun
+			FROM 
+				TBL_USERMASTER a
+			JOIN
+				TBL_DEPTMASTER d
+			ON
+				a.TENANT_ID = d.TENANT_ID
+			AND
+				a.DEPARTMENT = d.CN
+			LEFT JOIN
+				TBL_ADDJOBMASTER c
+			ON
+				c.CN = a.CN
+			AND
+				a.TENANT_ID = c.TENANT_ID
+			AND
+				c.DEPTID IN (SELECT CN from TBL_DEPTMASTER WHERE EXTENSIONATTRIBUTE2 = #companyid#)
+			WHERE 
+				a.tenant_id = #tenant_id#
+			AND 
+              	a.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenant_id#)
+		]]>
+    	</isEmpty>
+		<isNotEmpty property="companyUser">
+		<![CDATA[
+		SELECT
+			*
+		FROM (
+			SELECT 
+				ROW_NUMBER() OVER (PARTITION BY a.CN ORDER BY ROWNUM) CNT,
+				a.cn,
+				a.password,
+				a.displayname,
+				a.displayname2,
+				(
+				CASE
+				WHEN a.PHYSICALDELIVERYOFFICENAME = #companyUser#
+				THEN a.DEPARTMENT
+				ELSE c.DEPTID
+				END
+				) as department,              
+				a.description,
+				a.description2,
+				a.title,
+				a.title2,
+				a.physicaldeliveryofficename as companyid,
+				a.company,
+				a.company2,
+				a.updatedt,
+				a.extensionattribute1 as rollinfo,
+				a.telephonenumber,
+				a.mail,
+				a.extensionattribute10 as jikchek,
+				a.tenant_id,
+				(SELECT 'top,Top,'|| dept_cd_path FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
+				(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+				a.extensionattribute4 as gyumJik,
+				a.extensionattribute2 as userFileUrl,
+				a.extensionattribute14 as sabun
+			FROM 
+				TBL_USERMASTER a
+			JOIN
+				TBL_DEPTMASTER d
+			ON
+				a.TENANT_ID = d.TENANT_ID
+			AND
+				a.DEPARTMENT = d.CN
+			LEFT JOIN
+				TBL_ADDJOBMASTER c
+			ON
+				c.CN = a.CN
+			AND
+				a.TENANT_ID = c.TENANT_ID
+			AND
+				c.DEPTID IN (SELECT CN from TBL_DEPTMASTER WHERE EXTENSIONATTRIBUTE2 = #companyUser#)
+			WHERE 
+				a.tenant_id = #tenant_id#
+			AND 
+              	a.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenant_id#)
+		]]>	
+    	</isNotEmpty>	
+		<dynamic prepend="AND">
+		(
+			<isNotEmpty property="userList" prepend="AND">
+				a.CN IN (
+				<iterate conjunction="," property="userList">
+				<![CDATA[
+					#userList[]#
+				]]>
+				</iterate>
+				)
+			</isNotEmpty>
+			<isNotEmpty property="deptUserList">
+				<iterate property="deptUserList" prepend="OR" conjunction="OR">
+				<![CDATA[
+				a.CN IN (
+					SELECT 
+						CN 
+					FROM 
+						TBL_USERMASTER 
+					WHERE
+					(
+						DEPARTMENT in (SELECT CN FROM TBL_DEPTMASTER WHERE CN = #deptUserList[]# OR DEPT_CD_PATH LIKE '%,'||#deptUserList[]#||',%' OR DEPT_CD_PATH LIKE #deptUserList[]#||',%')
+					OR
+						CN IN (SELECT CN FROM TBL_ADDJOBMASTER WHERE TENANT_ID = #tenant_id# AND DEPTID = #deptUserList[]#)
+					)
+					AND
+						TENANT_ID = #tenant_id#
+					AND 
+              			CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenant_id#)
+				)
+				]]>
+				</iterate>
+			</isNotEmpty>
+			<isNotEmpty property="companyUser">
+				<![CDATA[
+				a.CN IN (
+					SELECT 
+						ua.CN
+					FROM
+					(
+						SELECT CN FROM TBL_USERMASTER WHERE TENANT_ID = #tenant_id# AND PHYSICALDELIVERYOFFICENAME = #companyUser#
+						UNION ALL
+						SELECT CN FROM TBL_ADDJOBMASTER WHERE DEPTID IN (SELECT CN  FROM TBL_DEPTMASTER WHERE EXTENSIONATTRIBUTE2 = #companyUser# AND TENANT_ID = #tenant_id#) AND TENANT_ID = #tenant_id#
+					) ua
+				)
+				]]>
+			</isNotEmpty>
+			)
+		</dynamic>
+		)
+		WHERE
+			CNT = 1
+    </select>
+    
+    <select id="EzPollDAO.getQuestionRelatedDept" resultClass="String">
+    <![CDATA[
+    	SELECT
+    		DEPT_ID 
+    	FROM 
+    		TBL_VOTE_QUESTION_RELATED
+    	WHERE 
+    		TENANT_ID = #tenant_id#
+    	AND
+    		QST_ID = #qst_id#
+    	AND
+    		USER_ID = #user_id#
+    ]]>
+    </select>
+    
+    <select id="EzPollDAO.getIsQuestionUser" resultClass="PollUserVO">
+    <![CDATA[
+    	SELECT 
+    		USER_ID AS userId,
+		    USER_TYPE AS userType,
+		    DEPT_ID AS deptId
+		FROM
+			TBL_VOTE_USER_AND_QUESTION 
+		WHERE 
+			TENANT_ID = #tenant_id#
+        AND
+			QST_ID = #qst_id# 
+		AND 
+		(
+			USER_ID = #user_id#
+		OR
+			USER_ID = #companyid#
+		) 
+    ]]>
+    </select>
+</sqlMap>

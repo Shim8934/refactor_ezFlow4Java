@@ -102,6 +102,9 @@
 	            
 		        if (pSaveInterval != 0) {
 		        	refreshIntervalTimerId = setInterval(function() {
+						if (parent.right.psSetTimeFlag) {
+							return;
+						}
 
 		        		getUnreadCountAll();
 		                recordNextMailListRefreshTime();
@@ -511,6 +514,10 @@
                     dataType: "json",
                     data : JSON.stringify(requestData),
                     success : function(result) {
+						if (parent.right.psSetTimeFlag) {
+							return;
+						}
+
                     	try {
 	                    	if (result.resultCode === "OK") {
 	                    		var unreadCountMap = result.unreadCountMap;
