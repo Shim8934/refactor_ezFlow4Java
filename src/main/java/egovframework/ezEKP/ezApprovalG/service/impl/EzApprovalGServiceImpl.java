@@ -7388,6 +7388,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			receiveDept = aprXML.getElementsByTagName("RECEIPTDEPTID").item(0).getTextContent();
 			fileForder1 = aprXML.getElementsByTagName("HREF").item(0).getTextContent();
 			receiveDeptName = aprXML.getElementsByTagName("RECEIVEDDEPTNAME").item(0).getTextContent();
+
+            docNO = aprXML.getElementsByTagName("DOCNO").item(0).getTextContent();
 		} else {
 			/**
 			 * 진행되어야할 문서 (APRSTATE 002 : 진행 , 005 : 보류)의 정보 추출
