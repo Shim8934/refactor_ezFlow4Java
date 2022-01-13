@@ -884,7 +884,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
      
         logger.debug("docID = " + docID + ", mode =" + mode + ", tenantID=" + tenantID);       
 		// c=1 : 전체관리자, k=1 : 회사관리자, f=1 : 문서조회관리자
-		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("ff=1")) {
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("ff=1")) {
 			if (mode.toUpperCase().equals("APR") || mode.toUpperCase().equals("TMP")) {
 				if (docID != null && !docID.equals("")) {
 //					String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1", tenantID, userInfo.getOffset());
@@ -3212,7 +3212,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("fileName : " + fileName);
 
 		//관리자는 권한 제한없도록 추가
-		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+		if (userInfo.getRollInfo().indexOf("c=1") > -1) {
 			
 			result = "PERMISSION";
 		} else {
@@ -6522,7 +6522,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 		}
 		
-		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("ff=1")) {
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("ff=1")) {
 			if (docID != null && !docID.equals("")) {
 				String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1", userInfo.getTenantId(), userInfo.getOffset());
 				String[] proxyUserArray = proxyUser.split(",");
