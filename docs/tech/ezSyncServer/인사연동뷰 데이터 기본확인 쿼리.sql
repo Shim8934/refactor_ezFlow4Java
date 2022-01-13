@@ -6,6 +6,7 @@
 SELECT banner FROM  V$VERSION;
 
 -- 뷰테이블 이름이 정확한지 (v_usermaster, v_deptmaster, v_addjobmaster)
+-- 만약 코드에 뷰테이블 이름 수정 시: MIS.v_usermaster 와 같이 타 계정입력해도 잘 가져옴.
 select * from v_usermaster;
 select * from v_deptmaster;
 select * from v_addjobmaster;
@@ -37,6 +38,12 @@ select * from v_usermaster u where Upper(use_yn) = 'Y' and NOT EXISTS (select 1 
 select * from v_usermaster u where Upper(use_yn) = 'Y' and EXISTS (select 1 from v_deptmaster where dept_id = u.dept_id and Upper(use_yn) = 'N');  -- 사용 중인 사용자가 폐지부서에 속한 경우 
 -- select distinct dept_id from -- 부서 개수만 보기
 select * from v_usermaster where email_address is null;
+-- String accountEmailAddress = cn + "@" + domain;
+-- ...
+-- // 이메일 주소가 지정되지 않은 경우에는 계정 주소와 동일하게 취급한다.
+-- if (emailAddress.isEmpty()) {
+-- 		emailAddress = accountEmailAddress;
+-- }
 select * from v_usermaster where title is null;
 -- 2020.04 직위 NN 주석.
 -- source 유저증 직위가 한명이라도 존재하지 않을시에  에러를 내고 노티메일 발송
@@ -56,8 +63,9 @@ select office_phone from v_usermaster;
 select fax from v_usermaster;
 select updatedt from v_usermaster;
 select profile_image from v_usermaster;
+-- (BLOB으로 프로필을 받을 경우: ezFlow와 같이 fileroot 링크를 미리 걸어주어야 한다. 만약 못걸었다면 후에 걸고, upload_personal 폴더를 같은 위치에 옮기면 됨.)
 select profile_image_url from v_usermaster;
-select birthdate from v_usermaster;     -- (yyyy-mm-dd)
+select birthdate from v_usermaster;     -- (yyyy-mm-dd이 아닐경우: 생일자 인식이 제대로 안됨.)
 -- desc v_usermaster;
 select data_type, char_length from all_tab_columns where Lower(table_name) = 'v_usermaster' and Lower(column_name) = 'birthdate';   -- BirthDate의 형식이 date로 되어있진 않은지: varchar(20)
                                                                                                                                     -- mariaDB는 다른 듯..?
@@ -95,7 +103,7 @@ select * from v_deptmaster where parent_dept_id is null;    -- 최상위부서 확인(c
 -- [mariaDB]
 -- select * from v_deptmaster where parent_dept_id is null or parent_dept_id = '';
 
-select count(parent_dept_id) from v_deptmaster d where not exists (select 1 from v_deptmaster where dept_id = d.parent_dept_id);  -- 부서테이블에 없는 부서를 상위부서로 참조하진 않는지(= 0)
+select count(parent_dept_id) from v_deptmaster d where not exists (select 1 from v_deptmaster where dept_id = d.parent_dept_id) and parent_dept_id is not null;  -- 부서테이블에 없는 부서를 상위부서로 참조하진 않는지(= 0)
 
 select count(*) from v_deptmaster;
 select count(*) from v_deptmaster start with parent_dept_id is null connect by prior dept_id = parent_dept_id;  -- 연결이 끊기는 부서는 없는지(= select count(*) from v_deptmaster) 
@@ -155,19 +163,17 @@ select * from v_addjobmaster a where not exists (select 1 from v_usermaster wher
 select * from v_addjobmaster a where not exists (select 1 from v_deptmaster where dept_id = a.dept_id and Upper(use_yn) = 'Y'); -- 부서테이블에 없는/폐지 부서를 가진 사용자
 -- select * from v_addjobmaster a where not exists (select 1 from v_deptmaster where dept_id = a.dept_id and Upper(use_yn) = 'Y') and Upper(a.use_yn) = 'Y'; -- 부서테이블에 없는/폐지 부서를 가진 사용자
 -- select distinct dept_id from -- 부서 개수만 보기
-select * from v_addjobmaster a join v_usermaster u on (a.user_id = u.user_id and a.dept_id = u.dept_id);    -- 원부서에 겸직하는 사용자
--- (select * from v_addjobmaster where (user_id, dept_id) in (select user_id, dept_id from v_addjobmaster group by user_id, dept_id having count(*) > 1) order by user_id;   -- pk 중복 확인.)
--- select * from v_addjobmaster where (user_id, dept_id) in
---               (select user_id, dept_id from v_addjobmaster group by user_id, dept_id having count(*) > 1);  -- 눈으로 확인하기(:렉 걸릴 수 있음.)
--- (case 3) 원부서에 겸직하는 사용자 
--- 자동으로 겸직레코드는 삭제하는 코드가 존재함. (고객사에서 동의하는지..?)
--- (EzSyncServerSTD.java> )
--- (2233) // 겸직 부서와 원부서가 동일한 경우는 겸직 정보를 제거한다.
---         if (addJobDeptId.equals(sourceDeptId)) {
---             LOGGER.debug(cn + "," + addJobDeptId + " 겸직부서와 원부서가 동일함.");
---             
---             sourceAddJobList.remove(i);
+select * from v_addjobmaster a join v_usermaster u on (a.user_id = u.user_id and a.dept_id = u.dept_id);    -- 원부서에 겸직하는 사용자 (허용함으로 변경.)
+-- commit 804b469e0f47ee6674e9eaa3b9d33cb5f799fcb6
+-- Author: Eunsil <hosea0301@kaoni.com>
+-- Date:   Fri Oct 29 02:21:24 2021 +0900
 -- 
+--     (ezSync) 한 부서에 여러번 겸직하는 경우 처리
+-- 
+--     - 원부서겸직 로직 삭제
+--     - (ezFlow) 82fc8c5..176ad6e
+--        suasua <tndk19@kaoni.com> 20210215..20211027
+
 select user_id, dept_id, count(*) from v_addjobmaster group by user_id, dept_id having count(*) > 1;        -- 한 부서에 두 번이상 겸직하는 사용자
 -- (case 5) 한 부서에 두 번이상 겸직하는 사용자
 -- 최초로 작업되었던 사이트는: 강남대학교
@@ -189,9 +195,9 @@ select * from v_usermaster u join v_deptmaster d on (regexp_substr(u.email_addre
 select a.user_id AS user_id_1, a.user_name, a.email_address, a.dept_id, '||',
 b.user_id AS user_id_2, b.user_name, b.email_address, b.dept_id
 from v_usermaster a join v_usermaster b on (a.user_id = regexp_substr(b.email_address,'[^@]+') and a.user_id != b.user_id);    --  user_id != email_address
-select * from v_usermaster u where exists (select 1 from v_usermaster where user_id = regexp_substr(u.email_address,'[^@]+') and
-    -- email_address not like '%@kangnam.ac.kr' or 
-    email_address is null);                                                                              -- email_address is null의 이메일 생성시 != 기존 email_address
+select * from v_usermaster u where exists (select 1 from v_usermaster where user_id = regexp_substr(u.email_address,'[^@]+')
+    -- and email_address not like '%@kangnam.ac.kr'
+	);                                                                              -- email_address is null의 이메일 생성시 != 기존 email_address
 -- ( [mariaDB]도 REGEXP_SUBSTR(subject,pattern) :10.0.5 이상부터 지원 (옵션 사용가능한지는 잘 모르겠음.. 참고: https://mariadb.com/kb/en/regexp_substr/) )
 
 -- (case 1) user_id == email_address 같은 것이 있을 때: 
