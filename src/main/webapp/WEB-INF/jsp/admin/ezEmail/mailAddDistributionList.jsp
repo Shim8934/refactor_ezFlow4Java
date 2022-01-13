@@ -75,7 +75,8 @@
 	        var m_orgImg = { "normal": "/images/tab_org1.gif", "select": "/images/tab_org.gif" };
 	        var m_dlImg = { "normal": "/imagefs/tab_dl1.gif", "select": "/images/tab_dl.gif" };
 	        var m_contactImg = { "normal": "/images/tab_addr1.gif", "select": "/images/tab_addr.gif" };
-	        var m_tabDialogState = { "org": "select", "contact": "normal", "dl": "normal" };
+	        var m_tabDialogState = { "org": "select", "contact": "normal", "dl": "normal",
+	        		"orgJobMst1": "normal", "orgJobMst2": "normal" };
 	        var ua = navigator.userAgent;
 	        var companyId = "<c:out value='${companyId}'/>";
 	        var selSpan = "";
@@ -93,6 +94,7 @@
 	        var userDl_ownerId =  "${ownerId}";
 	        var userDl_ownerId_temp =  "${userId}";
 	        var userDl_ownerName = "${ownerName}";
+	        var useShowAllCompanies = "${useShowAllCompanies}";
 	        
 	        window.onload = function () {
 	            try {
@@ -139,7 +141,7 @@
 	            	endDateCheckBox_Click($endDateCheckBox);
 	            }
 	            
-	            var xmlpara = createXmlDom();
+	            /* var xmlpara = createXmlDom();
                 var xmlTree = createXmlDom();
                 var xmlHTTP = createXMLHttpRequest();
                 var objNode;
@@ -183,7 +185,7 @@
 	                    alert("<spring:message code='ezEmail.t13' />" + xmlHTTP.statusText);
 	                    xmlHTTP = null;
 	                }
-	            }
+	            } */
 	            orgTabButton_onClick();
 	            
 	            if ("${cn}" != "") {
@@ -259,6 +261,18 @@
 		                        	pparsingXML = pparsingXML + "<DATA3>" + node3 + "</DATA3>";
 		                            pparsingXML = pparsingXML + "<DATA4>DIRECT</DATA4>";
 		                            pparsingXML = pparsingXML + "<VALUE>" + node2 + "(" + node3 + ")" + "</VALUE></CELL></ROW>";
+		                        	break;
+	                        	
+		                        case "jobmst" :
+			                    	var node6 = MakeXMLString(getNodeText(GetChildNodes(nodes[i])[6])); //title
+			                    	
+		                        	jobmstValTmp  = (node6 === "001") ? "<spring:message code='main.t77' />" : "<spring:message code='ezPersonal.t175' />";
+		                        	jobmstValTmp += " : ";
+		                        	
+		                        	pparsingXML = pparsingXML + "<DATA3>" + node3 + "</DATA3>";
+		                            pparsingXML = pparsingXML + "<DATA4>JOBMST</DATA4>";
+		                            pparsingXML = pparsingXML + "<JOBTYPE>" + node6 + "</JOBTYPE>";
+		                            pparsingXML = pparsingXML + "<VALUE>" + jobmstValTmp + node2 + "</VALUE></CELL></ROW>";
 		                        	break;
 
 		                        default :
@@ -761,6 +775,8 @@
 		                createNodeAndInsertText(xmlDom, objNode, "DIRECTMAIL", memberList.item(i).getAttribute("data3"));
 		                createNodeAndInsertText(xmlDom, objNode, "DIRECTNAME", memberList.item(i).getAttribute("data1"));
 	            		
+	            	} else if (type == "JOBMST") {
+		                createNodeAndInsertText(xmlDom, objNode, "MEMBERID", memberList.item(i).getAttribute("data3"));
 	            	} else {
 		                createNodeAndInsertText(xmlDom, objNode, "MEMBERID", memberList.item(i).getAttribute("data1"));
 	            	}
@@ -1027,6 +1043,17 @@
 	                        var M_TR_TD3 = document.createElement("TD");
 	                        M_TR_TD3.innerHTML = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");
 	
+	                        if (selTab.indexOf("orgJobMstListView") > -1) {
+			                    var M_TR_DEPT_TD = document.createElement("TD");
+			                    M_TR_DEPT_TD.style.overflow = "hidden";
+			                    M_TR_DEPT_TD.style.textOverflow = "ellipsis";
+			                    M_TR_DEPT_TD.style.whiteSpace = "nowrap";
+			                    M_TR_DEPT_TD.style.width = "110px";
+			                    M_TR_DEPT_TD.innerHTML = M_TR.getAttribute("_DATA5");
+			                    
+			                    M_TR.appendChild(M_TR_DEPT_TD);
+		                    }
+	                        
 	                        M_TR.appendChild(M_TR_TD1);
 	                        M_TR.appendChild(M_TR_TD2);
 	                        M_TR.appendChild(M_TR_TD3);
@@ -1034,6 +1061,12 @@
 	                    }
 	                }
 	            }
+	            
+	            if (selSpan == "orgSpan" && $(".txtlist_DeptTD").length > 0) {
+		        	$(".txtlist_DeptTD").css("display", "none");
+
+			        $(".mainlist > tbody > tr:first-child > td:nth-child(2)").css("padding-left", "15px");
+		        }
 	        }
 	
 	        var m_strColorSelect = "#f1f8ff";
@@ -1231,6 +1264,9 @@
 		                var nodeIdx = organTree.GetSelectNode();
 		                var strId = nodeIdx.GetNodeData("CN");
 		                var strName = nodeIdx.NodeName;
+		                var strMail = nodeIdx.GetNodeData("mail");
+		                var isJob = nodeIdx.GetNodeData("isjob"); // 조직도(직위, 직책)
+			            var isJobType = nodeIdx.GetNodeData("jobtype"); // 직위:001, 직책:002
 						
 		                var listid = "MsgToList";
 		                var getlistview = new ListView();
@@ -1238,12 +1274,25 @@
 		                var bFlag = getlistview.ExistRow("data1", strId);
 		                
 		                if (!bFlag) {
+			            	var valueStr = "<spring:message code='ezEmail.t15' />";
+			            	var data3Str = "";
+			            	var data4Str = "ORGAN";
+			            	
+			            	if (isJob === 'true') {
+			            		valueStr  = (isJobType === '001') ? "<spring:message code='main.t77' />" : "<spring:message code='ezPersonal.t175' />";
+			            		valueStr += " : ";
+			            		data4Str  = "JOBMST";
+			            		data3Str  = "<DATA3>" + strMail + "</DATA3>";
+			            		data3Str += "<JOBTYPE>" + isJobType + "</JOBTYPE>";
+			            	}
+		                	
 		                    pparsingXML2 = "";
 		                    pparsingXML = "";
 		                    pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 		                    pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strId) + "</DATA1>";
-		                    pparsingXML = pparsingXML + "<DATA4>ORGAN</DATA4>";
-		                    pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' />" + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
+		                    pparsingXML = pparsingXML + "<DATA4>" + data4Str + "</DATA4>";
+		                    pparsingXML = pparsingXML + data3Str;
+		                    pparsingXML = pparsingXML + "<VALUE>" + valueStr + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
 		                    pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 		                    Resultxml = loadXMLString(pparsingXML2);
 		
@@ -1327,6 +1376,9 @@
 			                var nodeIdx = organTree.GetSelectNode();
 		                	var strId = nodeIdx.GetNodeData("CN");
 			                var strName = nodeIdx.NodeName;
+			                var strMail = nodeIdx.GetNodeData("mail");
+			                var isJob = nodeIdx.GetNodeData("isjob"); // 조직도(직위, 직책)
+				            var isJobType = nodeIdx.GetNodeData("jobtype"); // 직위:001, 직책:002
 			                
 			                var listid = "MsgToList";
 			                var getlistview = new ListView();
@@ -1334,12 +1386,25 @@
 			                var bFlag = getlistview.ExistRow("data1", strId);
 			                
 		                    if (!bFlag) {
+		    	            	var valueStr = "<spring:message code='ezEmail.t15' />";
+		    	            	var data3Str = "";
+		    	            	var data4Str = "ORGAN";
+		    	            	
+		    	            	if (isJob === 'true') {
+		    	            		valueStr  = (isJobType === '001') ? "<spring:message code='main.t77' />" : "<spring:message code='ezPersonal.t175' />";
+		    	            		valueStr += " : ";
+		    	            		data4Str  = "JOBMST";
+		    	            		data3Str  = "<DATA3>" + strMail + "</DATA3>";
+		    	            		data3Str += "<JOBTYPE>" + isJobType + "</JOBTYPE>";
+		    	            	}
+		    	            	
 		                    	pparsingXML2 = "";
 			                    pparsingXML = "";
 			                    pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 			                    pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strId) + "</DATA1>";
-			                    pparsingXML = pparsingXML + "<DATA4>ORGAN</DATA4>";
-			                    pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' />" + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
+			                    pparsingXML = pparsingXML + "<DATA4>" + data4Str + "</DATA4>";
+			                    pparsingXML = pparsingXML + data3Str;
+			                    pparsingXML = pparsingXML + "<VALUE>" + valueStr + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
 			                    pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 			                    Resultxml = loadXMLString(pparsingXML2);
 			
@@ -1626,6 +1691,7 @@
 		        m_tabDialogState["dl"] = "normal";
 		        
 		        ImageUpdate();
+		        clearOrgTab("org");
 		        
 		        TreeViewTD.style.display = "block";
 		        ListViewTD.style.display = "none";
@@ -1635,6 +1701,52 @@
 		        dlmember.style.display = "none";
 		        m_selectedTree = orglistView;
 		        AddrSearch.style.display = "none";
+		        
+		        var xmlpara = createXmlDom();
+                var xmlTree = createXmlDom();
+                var xmlHTTP = createXMLHttpRequest();
+                var objNode;
+                
+                createNodeInsert(xmlpara, objNode, "DATA");
+                <c:choose>
+                <c:when test="${cChk == '1'}">
+                createNodeAndInsertText(xmlpara, objNode, "DEPTID", companyId);
+                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top/organ");
+                createNodeAndInsertText(xmlpara, objNode, "PROP", "mail");
+                createNodeAndInsertText(xmlpara, objNode, "ADMINDIST", "false");
+                createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true");
+                </c:when>
+                <c:otherwise>
+                createNodeAndInsertText(xmlpara, objNode, "DEPTID", companyId);
+                createNodeAndInsertText(xmlpara, objNode, "TOPID", companyId);
+                createNodeAndInsertText(xmlpara, objNode, "PROP", "mail");
+                createNodeAndInsertText(xmlpara, objNode, "ADMINDIST", "true");
+                createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true");
+                </c:otherwise>
+                </c:choose>
+                
+	            xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
+	            xmlHTTP.send(xmlpara);
+	            ListTypeChangeIcon();
+	            
+	            if (xmlHTTP != null && xmlHTTP.readyState == 4) {
+	                if (xmlHTTP.status == 200) {
+	                    var xmlTree = loadXMLString(xmlHTTP.responseText);
+	                    var treeXML = loadXMLFile("/xml/common/organtree_config3.xml");
+	                    var treeView = new TreeView();
+	                    treeView.SetConfig(treeXML);
+	                    treeView.SetID("FromTreeView");
+	                    treeView.SetUseAgency(true);
+	                    treeView.SetRequestData("RequestData");
+	                    treeView.SetNodeClick("TreeViewNodeClick");
+	                    treeView.DataSource(xmlTree);
+	                    treeView.DataBind("TreeView");
+	                }
+	                else {
+	                    alert("<spring:message code='ezEmail.t13' />" + xmlHTTP.statusText);
+	                    xmlHTTP = null;
+	                }
+	            }
 		    }
 	        
 	        var g_bContactLoaded = false;
@@ -1981,6 +2093,9 @@
 	           
 	            var strId = nodeIdx.GetNodeData("CN");
 	            var strName = nodeIdx.NodeName;
+	            var strMail = nodeIdx.GetNodeData("mail");
+	            var isJob = nodeIdx.GetNodeData("isjob"); // 조직도(직위, 직책)
+	            var isJobType = nodeIdx.GetNodeData("jobtype"); // 직위:001, 직책:002
 	           
 	            var pparsingXML = "";
 	            var getlistview = new ListView();
@@ -1988,12 +2103,25 @@
 	            var bFlag = getlistview.ExistRow("data1", strId);
 				
 	            if (!bFlag) {
+	            	var valueStr = "<spring:message code='ezEmail.t15' />";
+	            	var data3Str = "";
+	            	var data4Str = "ORGAN";
+	            	
+	            	if (isJob === 'true') {
+	            		valueStr  = (isJobType === '001') ? "<spring:message code='main.t77' />" : "<spring:message code='ezPersonal.t175' />";
+	            		valueStr += " : ";
+	            		data4Str  = "JOBMST";
+	            		data3Str  = "<DATA3>" + strMail + "</DATA3>";
+	            		data3Str += "<JOBTYPE>" + isJobType + "</JOBTYPE>";
+	            	}
+	            	
                     pparsingXML2 = "";
                     pparsingXML = "";
                     pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
                     pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strId) + "</DATA1>";
-                    pparsingXML = pparsingXML + "<DATA4>ORGAN</DATA4>";
-                    pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' />" + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
+                    pparsingXML = pparsingXML + "<DATA4>" + data4Str + "</DATA4>";
+                    pparsingXML = pparsingXML + data3Str;
+                    pparsingXML = pparsingXML + "<VALUE>" + valueStr + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
                     pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
                     Resultxml = loadXMLString(pparsingXML2);
 
@@ -2071,7 +2199,20 @@
 	        }
 	        
 	        function methodForTabAction(target) {
-            	var tab1 = document.getElementById("orgTabButton").children[0];
+	        	var tabIds = ["orgTabButton", "contactTabButton", "dlTabButton", "inputTabButton", "userDlApplyButton",
+	        	              "orgJobMasterTabButton1", "orgJobMasterTabButton2"];
+            	var targetTab = tabIds[target-1];
+            	
+            	$.each(tabIds, function(i,d) {
+        			var setVal = targetTab == d ? "tabon" : "";
+        			var tmp = document.getElementById(d);
+        				
+        			if (tmp != null) {
+        				tmp.children[0].className = setVal;
+        			}
+        		});
+	        	
+            	/* var tab1 = document.getElementById("orgTabButton").children[0];
             	var tab2 = document.getElementById("contactTabButton").children[0];
             	var tab3 = document.getElementById("dlTabButton").children[0];
             	var tab4 = document.getElementById("inputTabButton").children[0];
@@ -2110,7 +2251,7 @@
                 		tab4.className = "";
                 		tab5.className = "tabon";
             		}
-            	}
+            	} */
 	        }
        	 	var PressShiftKey = false;
    		    var PressCtrlKey = false;
@@ -3101,6 +3242,191 @@
 	            tempStr = ReplaceText(tempStr, ">", "&gt;");
 	            return tempStr;
 	        }
+	        
+	        
+	        function orgJobMasterTabButton_onClick(tabType) { // 조직도(직위, 직책) tabType::1=직위, 2=직책
+	        	var tabNum = tabType == 1 ? 6 : 7;
+	        	methodForTabAction(tabNum);
+		        
+	        	selTab = "orgJobMstListView" + tabType;
+		        selSpan = "orgJobMstSpan" + tabType;
+		        m_selectedTree = orglistView;
+	        	
+	        	$.each(m_tabDialogState, function(i,d) {
+        			var setVal = ("orgJobMst"+tabType) == i ? "select" : "normal";
+        			m_tabDialogState[i] = setVal;
+        		});
+	        	
+	            ImageUpdate();
+	            
+		        ListViewTD.style.display = "none";
+		        ListViewINPUT.style.display = "none";
+		        ListViewDLTD.style.display = "none";
+		        TreeViewTD.style.display = "block";
+
+		        dlmember.style.display = "none";
+		        AddrSearch.style.display = "none";
+		        $(".txtlist_DeptTD").css("display", "table-cell");
+		        
+	            clearOrgTab("orgJobMst");
+		        orgJobMasterListSet(tabType);
+	        }
+	        
+	        function clearOrgTab(type) { // org or orgJobMst
+	        	document.getElementById('TreeView').innerHTML = "";
+	        	document.getElementById("SelectDeptNM").innerHTML = "";
+                
+                var searchSelectObj = document.getElementById('search_type');
+                searchSelectObj.setAttribute("data-type", type);
+				
+                document.getElementById("keyword").value = "";
+                issearch = false;
+                
+                var hide_orgJobMstSearchOpt = [
+					{"name":"extensionAttribute10", "usedefault":"1", "msg":"<spring:message code='ezEmail.t281' />"},
+                	{"name":"title", "usedefault":"1", "msg":"<spring:message code='ezAddress.t359'/>"},
+                    {"name":"description", "usedefault":"1", "msg":"<spring:message code='ezAddress.t54'/>"},
+                ];
+                
+             	// 부서선택 버튼명 변경
+                var deptSelectBtnNm = selTab == "orglistView" ? "<spring:message code='ezEmail.t596' />" : selTab == "orgJobMstListView1" 
+                		? "<spring:message code='ezOrgan.ksaOrganList04' />" : "<spring:message code='ezOrgan.ksaOrganList05' />";
+                $("#dept_select > span").text(deptSelectBtnNm);
+                                           
+                $.each(hide_orgJobMstSearchOpt, function(i,e) {
+                	var searchOpt = $("#search_type option[value='"+e.name+"']");
+               		if (type == "org" && searchOpt.length < 1) {
+                   		var tempOpt = "<option value="+e.name+" usedefault="+e.usedefault+">"+e.msg+"</option>";
+                   		$(tempOpt).insertAfter("#search_type option[value='displayname']");
+                   	} else if (type == "orgJobMst") {
+                   		searchOpt.remove();
+                   	}
+                });
+	        }
+	        
+	        function orgJobMasterListSet(type) {
+	        	try {
+	        		var pType = type == 1 ? "POS" : "TIT";
+	        		
+	                var xmlpara = createXmlDom();
+	                var xmlTree = createXmlDom();
+	                var xmlHTTP = createXMLHttpRequest();
+	                var objNode;
+	                var topID = useShowAllCompanies == "YES" ? "Top/organ" : "Top";
+	                
+	                createNodeInsert(xmlpara, objNode, "DATA");
+	                createNodeAndInsertText(xmlpara, objNode, "COMID", "");
+	                createNodeAndInsertText(xmlpara, objNode, "TOPID", topID);
+	                createNodeAndInsertText(xmlpara, objNode, "PROP", "mail");
+	                createNodeAndInsertText(xmlpara, objNode, "TYPE", pType);
+	                
+	                xmlHTTP.open("POST", "/ezOrgan/getCompanyJobTreeInfo.do", false);
+	                xmlHTTP.send(xmlpara);
+	                xmlTree = loadXMLString(xmlHTTP.responseText);
+	                var treeXML = loadXMLFile("/xml/common/organtree_config3.xml");
+
+	                var treeView = new TreeView();
+	                treeView.SetConfig(treeXML);
+	                treeView.SetID("FromTreeView");
+	                treeView.SetUseAgency(true);
+	                treeView.SetRequestData("orgJobMstCompanyClick"); 
+	                treeView.SetNodeClick("orgJobMstClick");
+	                treeView.DataSource(xmlTree);
+	                treeView.DataBind("TreeView");
+	        	}
+	            catch (ErrMsg) {
+	                alert("TreeViewinitialize : " + ErrMsg.description);
+	            }
+	        }
+	        
+	        function orgJobMstClick(i) {
+	        	CurPage = "1";
+	        	var thisNode = document.getElementById(i);
+	        	var thisNode_jobChk = thisNode.getAttribute("isjob");
+	        	listContentArry = new Array();
+	        
+	        	if (thisNode_jobChk != null && thisNode_jobChk) {
+	        		orgJobMstUserList();
+	        	} else { // company
+		        	document.getElementById("SelectDeptNM").innerHTML = "";
+	                pListXML_Info = "";
+	                DisplayUserImageList();
+	        	}
+	        }
+	        
+	        function orgJobMstUserList() {
+	        	var treeView = new TreeView();
+	            treeView.LoadFromID("FromTreeView");
+	            var treeViewSelectNode = treeView.GetSelectNode();
+	            
+        		var jobId = treeViewSelectNode.GetNodeData("cn");
+        		var comId = treeViewSelectNode.GetNodeData("comid");
+        		var jobType = treeViewSelectNode.GetNodeData("jobtype");
+        		var jobName = treeViewSelectNode.GetNodeData("value");
+        		
+				$.ajax({
+					type : "POST",
+					url : "/ezOrgan/getJobMasterMemberList.do",
+					dataType : "text",
+					data : {
+						type : jobType,
+						jobID : jobId,
+						pageNum : CurPage,
+						cell : "company;description;displayName;title;telephoneNumber", 
+						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department",
+						searchType : "",
+						searchValue : "",
+						comID : comId
+					}, success : function(result) {
+						pListXML_Info = loadXMLString(result);
+		        		var totalCnt = pListXML_Info.getElementsByTagName("TOTALCOUNT")[0].textContent;
+		        		
+						document.getElementById("SelectDeptNM").innerHTML 
+							= "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px; \" >"
+			            	+ "<span id='spn_deptName' title='" + jobName + "'>" + jobName + "</span>"
+			            	+ "<span id='countInfo'>&nbsp;<span class='countColor'> " + totalCnt + "</span></span>";
+						
+		                pSeach = false;
+		                DisplayUserImageList();
+					}, error : function (error) {
+						alert("error : " + error);
+					}
+				});
+	        }
+	        function orgJobMstCompanyClick(pNodeID, pTreeID) {
+				var TreeIdx = pNodeID;
+	            var treeNode = new TreeNode();
+	            treeNode.LoadFromID(TreeIdx);
+	            var deptID = treeNode.GetNodeData("CN");
+	            GetCompanySubTreeInfo(deptID, TreeIdx);
+	        }
+	        
+	        function GetCompanySubTreeInfo(comID, TreeIdx) {
+	        	var jobMstType = (selTab == "orgJobMstListView1") ? "POS" : "TIT";
+	        	
+	            var xmlHTTP = createXMLHttpRequest();
+	            var xmlRtn = createXmlDom();
+	            var xmlpara = createXmlDom();
+	            var objNode;
+	            createNodeInsert(xmlpara, objNode, "DATA");
+	            createNodeAndInsertText(xmlpara, objNode, "COMID", comID);
+	            createNodeAndInsertText(xmlpara, objNode, "TYPE", jobMstType);
+	            xmlHTTP.open("POST", "/ezOrgan/getJobMasterTreeInfo.do", false);
+	            xmlHTTP.send(xmlpara);
+	            xmlRtn = loadXMLString(xmlHTTP.responseText);
+	            if (SelectNodes(xmlRtn, "NODES/NODE/VALUE").length > 0) {
+	                if (CrossYN()) {
+	                    xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].appendChild(xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].getElementsByTagName("VALUE")[0]);
+	                }
+	                else {
+	                    xmlRtn.selectNodes("NODES/NODE")[0].appendChild(xmlRtn.selectNodes("NODES/NODE/VALUE")[0]);
+	                }
+	            }
+	            var treeView = new TreeView();
+	            treeView.LoadFromID("FromTreeView");
+	            treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
+	        }
+	        
     	</script>
 	</head>
 	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
@@ -3259,6 +3585,12 @@
 		            			<p id="orgTabButton">
 		            				<span id="orgSpan" onclick="orgTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.t591' /></span>
 		            			</p>
+		            			<p id="orgJobMasterTabButton1">
+		            				<span id="orgJobMstSpan1" onclick="orgJobMasterTabButton_onClick(1)" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezOrgan.ksaOrganList01' /></span>
+		            			</p>
+		            			<p id="orgJobMasterTabButton2">
+		            				<span id="orgJobMstSpan2" onclick="orgJobMasterTabButton_onClick(2)" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezOrgan.ksaOrganList02' /></span>
+		            			</p>
 		            			<p id="contactTabButton">
 	            					<span id="contactSpan" onclick="contactTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.t592' /></span>
 	            				</p>
@@ -3334,8 +3666,9 @@
 		                                        <div style="vertical-align: top; height: 426px; overflow: auto; width: 446px;" id="txtlist_Layer">
 		                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
 		                                                <tr>
-		                                                    <td style="width: 150px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t31' /></td>
-		                                                    <td style="width: 130px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t28' /></td>
+		                                                	<td style="width: 110px; color:#333;background-color: #f8f8fa; display:none" class="td_gray txtlist_DeptTD"><spring:message code='ezAddress.t54' /></td>
+		                                                    <td style="width: 110px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t31' /></td>
+		                                                    <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t28' /></td>
 		                                                    <td class="td_gray" style="font-weight: bold;"><spring:message code='ezEmail.t99000045' /></td>
 		                                                </tr>
 		                                            </table>

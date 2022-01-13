@@ -6373,6 +6373,30 @@
 			(SEQ_TBL_USER_JOBMASTER.NEXTVAL, #v_TYPE#, #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_USEFLAG#, #v_SORT#, SYSDATE, #v_COMPANYID#, #v_TENANTID#)
 	]]>
 	</insert>
+	<select id="EzOrganAdminDAO.selectTitleByJobID" parameterClass="Map" resultClass="OrganJobVO" remapResults="true">
+		SELECT 
+			JOBID,
+			TYPE, 
+			CN, 
+			CASE
+            	#v_LANGDATA#
+            WHEN '1'
+            THEN
+            	DISPLAYNAME
+            ELSE
+            	DISPLAYNAME2
+            END DISPLAYNAME,
+			USEFLAG, 
+			SORT, 
+			CREATEDATE,
+			COMPANYID
+		FROM 
+			TBL_USER_JOBMASTER
+		WHERE 
+			JOBID = #v_JOBID#
+		AND 
+			TENANT_ID = #v_TENANTID#
+	</select>
 	<select id="EzOrganAdminDAO.selectTitleList" parameterClass="Map" resultClass="OrganJobVO" remapResults="true">
 		SELECT 
 			JOBID,

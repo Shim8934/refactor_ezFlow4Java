@@ -58,6 +58,7 @@ import egovframework.ezEKP.ezEmail.vo.MailSignatureTemplateVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -278,6 +279,7 @@ public class EzEmailAdminController {
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
 		LoginVO userVO = commonUtil.userInfo(loginCookie);
 		String useUserDefinedDL = ezCommonService.getTenantConfig("useUserDefinedDL", userVO.getTenantId());
+		String useShowAllCompanies = ezCommonService.getTenantConfig("useShowAllCompanies", userVO.getTenantId());
 		if (auth == null) {
 			if (!useUserDefinedDL.equalsIgnoreCase("YES")) {
 				return "cmm/error/adminDenied";
@@ -293,7 +295,10 @@ public class EzEmailAdminController {
 		String useOcs = config.getProperty("config.USE_OCS");
 		String companyId = request.getParameter("companyId");
 		String userDL =  request.getParameter("userDL");
-		if (userDL == null ) { userDL = ""; }
+		if (userDL == null ) { 
+			userDL = ""; 
+			useShowAllCompanies = "YES"; // 20220111 관리자페이지에서는 모든 회사 리스트 조회가능   사용자정의DL의 경우만 useShowAllCompanies 처리
+		}
 		String offsetMin = commonUtil.getMinuteUTC(auth.getOffset());
 		
 		int tenantId = auth.getTenantId();
@@ -352,6 +357,7 @@ public class EzEmailAdminController {
 		model.addAttribute("offsetMin", offsetMin);
 		model.addAttribute("userId", auth.getId());
 		model.addAttribute("userName", userVO.getDisplayName());
+		model.addAttribute("useShowAllCompanies", useShowAllCompanies);
 		
 		model.addAttribute("ownerId", ownerId);
 		model.addAttribute("ownerName", ownerName);
@@ -427,7 +433,17 @@ public class EzEmailAdminController {
 			Map<String,String> distributionSubMap = null;
 			
 			for (int i = 0; i < memberIdList.getLength(); i++) {
-				memberList.add(memberIdList.item(i).getTextContent());
+				String memberIdItem = memberIdList.item(i).getTextContent();
+				
+				/* = 공용배포그룹 조직도(직위)(직책) 탭 추가 =
+				 * DL 구성원에 추가된 직위/직책은 memberIdList에 메일주소형태로 들어온다 (__직위아이디@도메인명)
+				 * memberList에는 메일아이디만 들어가야하기 때문에 @도메인명 을 분리해준다
+				 */
+				if (memberIdItem.indexOf("@") > -1) {
+					memberIdItem = memberIdItem.substring(0, memberIdItem.indexOf("@"));
+				}
+				
+				memberList.add(memberIdItem);
 			}
 			
 			// 주소록 distributionSubList에 추가
@@ -537,6 +553,7 @@ public class EzEmailAdminController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String domain = ezCommonService.getTenantConfig("DomainName",
 				userInfo.getTenantId());
+		String userLang = userInfo.getPrimary();
 
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String cn = doc.getElementsByTagName("CN").item(0).getTextContent();
@@ -630,7 +647,7 @@ public class EzEmailAdminController {
 						sb.append("</ROW>");
 						}
 
-				} else if (pClass.equals("user")) {
+				} else if (pClass.equals("user")) { // user or jobmst
 					OrganUserVO user = ezOrganAdminService.getUserInfo(pCn,
 							userInfo.getPrimary(), userInfo.getTenantId());
 					if (user != null) {
@@ -653,7 +670,36 @@ public class EzEmailAdminController {
 								+ commonUtil.cleanValue(user.getTitle())
 								+ "</TITLE>");
 						sb.append("</ROW>");
-					} 
+					} else {
+						String jobId        = pCn.split("__")[1]; // 직위/직책의 경우 메일아이디가 (__직위아이디)이기 때문에 (__)를 제외하여 직위아이디를 구한다
+						OrganJobVO jobVO    = ezOrganAdminService.getTitleByJobID(jobId, userLang, userInfo.getTenantId());
+						
+						if (jobVO != null && !jobVO.getJobID().equals("")) {
+							String jobType    = jobVO.getType(); // 001직위, 002직책
+							String jobMail    = pCn + "@" + pCnDomain;
+							String jobTitle   = jobType.equals("001") ? "main.t77" : "ezPersonal.t175"; 
+							String jobClass   = "jobmst";
+							logger.debug("jobType={}, jobMail={}", jobType, jobMail);
+							
+							sb.append("<ROW>");
+							sb.append("<CLASS>" + jobClass + "</CLASS>");
+							sb.append("<CN>" + commonUtil.cleanValue(jobVO.getJobID()) + "</CN>");
+							sb.append("<DISPLAYNAME>"
+									+ commonUtil.cleanValue(jobVO.getDisplayName())
+									+ "</DISPLAYNAME>");
+							sb.append("<MAIL>"
+									+ commonUtil.cleanValue(jobMail)
+									+ "</MAIL>");
+							sb.append("<COMPANY></COMPANY>");
+							sb.append("<DEPT>"
+									+ egovMessageSource.getMessage(jobTitle, locale)
+									+ "</DEPT>");
+							sb.append("<TITLE>" // 구성원 목록 TR ATTRIBUTE JOBTYPE으로 사용
+									+ jobType
+									+ "</TITLE>");
+							sb.append("</ROW>");
+						}
+					}
 				} else {//distribution_sub에서 가져오기(주소록, 직접입력)
 					MailDistributionVO distributionSubVO = ezEmailService.getDistributionSub(cn, pCn, companyId, userInfo.getTenantId());
 					

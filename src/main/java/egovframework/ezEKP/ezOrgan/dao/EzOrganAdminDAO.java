@@ -2209,6 +2209,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     public void setTitle(Map<String, Object> map) throws Exception {
     	insert("EzOrganAdminDAO.insertTitle", map);
     }
+
+	public OrganJobVO getTitleByJobID(Map<String, Object> map) throws Exception {
+		return (OrganJobVO) select("EzOrganAdminDAO.selectTitleByJobID", map);
+	}
     
     @SuppressWarnings("unchecked")
 	public List<OrganJobVO> getTitleList(Map<String, Object> map) throws Exception {
