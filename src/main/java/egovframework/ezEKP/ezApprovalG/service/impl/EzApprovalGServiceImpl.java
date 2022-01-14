@@ -33366,6 +33366,22 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("getChaebunDept ended.");
 		return chaebunDept;
 	}
+
+	@Override
+	public int isMyDeptDeliveryDoc(String deptId, String docId, String orgCompanyID, int tenantID) throws Exception {
+		logger.debug("isMyDeptDeliveryDoc started.");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_DEPTID", deptId);
+		map.put("companyID", orgCompanyID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_DOCID", docId);
+
+		int resultCnt = ezApprovalGDAO.updateDeliveryListCount(map);
+
+		logger.debug("isMyDeptDeliveryDoc ended.");
+		return resultCnt;
+	}
 	
 	@Override
 	public List<Map<String, Object>> getReceiptInfoIng(String docId, String receiptId, LoginVO userInfo) throws Exception {
