@@ -3756,10 +3756,7 @@ function findAddress(emailAddress, addrList) {
 }
 
 function isEmailFormat(mailAddr) {
-    var splitArr = mailAddr.split("@");
-    if (splitArr.length != 2) return false;
-
-    return true;
+	return /^[-A-Za-z0-9_]+[-A-Za-z0-9_.]*[@]{1}[-A-Za-z0-9_]+[-A-Za-z0-9_.]*[.]{1}[A-Za-z]{2,5}$/.test(mailAddr);
 }
 
 function MakeXmlNode(xmldoc, root, key, value) {
