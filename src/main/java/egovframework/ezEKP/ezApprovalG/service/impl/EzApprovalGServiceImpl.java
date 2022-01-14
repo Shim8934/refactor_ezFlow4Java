@@ -5558,8 +5558,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             serialNumMap.put("companyID", companyID);
             List<ApprGTaskVO> orgCabinet = ezApprovalGDAO.getCabinetInfo(serialNumMap);
             
-            String productionDate = orgCabinet.get(0).getCreateDate();
-            String productionYear = getAccountingYear(productionDate, companyID, "1", tenantID);
+            String productionYear = orgCabinet.get(0).getProductionYear();
             map.put("v_YEAR", productionYear);
             map.put("v_MONTH", String.format("%03d",Integer.parseInt(commonUtil.getTodayUTCTime("").substring(6,7))).toString());
             map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
