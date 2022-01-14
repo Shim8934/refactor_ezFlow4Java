@@ -1396,6 +1396,16 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
+	public void createAdminAccessIpTable() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblAdminAccessIpTable");
+		} catch (Exception e) {
+			logger.debug("tbl_admin_access_ip table doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblAdminAccessIpTable");
+		}
+	}
+
 	public void insertReBebuOpinionCode(Map<String, Object> map) {
 		String companyId = checkReBebuOpinionCode(map);
 		

@@ -76,6 +76,151 @@
 		    <bean class="egovframework.com.cmm.interceptor.AuthenticInterceptor" />
         </mvc:interceptor>
         
+        <mvc:interceptor>
+            <mvc:mapping path="/admin/main.do"/>
+            <!-- Top Menu -->
+            <mvc:mapping path="/admin/top.do"/>
+            <mvc:mapping path="/admin/ezPersonal/personalMain.do"/>
+            <mvc:mapping path="/admin/ezOrgan/organMain.do"/>
+            <mvc:mapping path="/admin/ezApproval/apprMain.do"/>
+            <mvc:mapping path="/admin/ezApprovalG/apprGMain.do"/>
+            <mvc:mapping path="/admin/ezBoard/boardMain.do"/>
+            <mvc:mapping path="/admin/ezCommunity/communityMain.do"/>
+            <mvc:mapping path="/admin/ezSchedule/scheduleMain.do"/>
+            <mvc:mapping path="/ezStatistics/statisticsMain.do"/>
+            <mvc:mapping path="/admin/ezNewPortal/portalMain.do"/>
+            <mvc:mapping path="/admin/ezResource/resourceMain.do"/>
+            <mvc:mapping path="/Myoffice/ezDocManagement/Admin/DocAdmin_index.html"/>
+            <mvc:mapping path="/myoffice/ezKMS/admin/index_admin.aspx"/>
+            <mvc:mapping path="/Myoffice/ezDMS/admin/index_admin.aspx"/>
+            <mvc:mapping path="index_approval_Proc.htm"/>
+            <mvc:mapping path="index_mobileMgmt.htm"/>
+            <mvc:mapping path="/admin/ezSystem/systemMain.do"/>
+            <mvc:mapping path="/admin/ezJournal/journalMain.do"/>
+            <mvc:mapping path="/myoffice/ezStatistics/ezLog/index_Log.aspx"/>
+            <mvc:mapping path="/admin/ezPMS/pmsMain.do"/>
+            <mvc:mapping path="/admin/ezAttitude/attitudeMain.do"/>
+            <mvc:mapping path="/admin/ezCabinet/cabinetAdminMain.do"/>
+            <mvc:mapping path="/admin/ezEmail/adminMailMain.do"/>
+            <mvc:mapping path="/admin/ezWebFolder/webFolderMain.do"/>
+            <!-- Left Menu -->
+            	<!-- 포탈 -->
+            	<mvc:mapping path="/admin/ezNewPortal/portalThemes.do"/>
+            	<mvc:mapping path="/admin/ezNewPortal/portalMenus.do"/>
+				<mvc:mapping path="/admin/ezNewPortal/portalPortlets.do"/>
+				<mvc:mapping path="/admin/ezNewPortal/portalLogos.do"/>
+				<mvc:mapping path="/admin/ezPersonal/manageNotice.do"/>
+				<mvc:mapping path="/myoffice/ezPersonal/Link/ManageCompanyLink_Cross.aspx"/>
+				<mvc:mapping path="/myoffice/ezPersonal/Link/ManageCompanyLink.aspx"/>
+				<mvc:mapping path="/admin/ezPersonal/managePoll.do"/>
+				<mvc:mapping path="/admin/ezPersonal/managePopup.do"/>
+				<mvc:mapping path="/myoffice/ezPersonal/SuperPersonal/ManageSuperPersonal.aspx"/>
+				<mvc:mapping path="/admin/ezPersonal/employeeOfMonth.do"/>
+				<mvc:mapping path="/admin/ezPersonal/manageQuickLink.do"/>
+				<mvc:mapping path="/admin/ezPersonal/sliderImages.do"/>
+            	<!-- 조직도 -->
+            	<mvc:mapping path="/admin/ezOrgan/organRight.do"/>
+				<mvc:mapping path="/admin/ezOrgan/retireUserManage.do"/>
+				<mvc:mapping path="/admin/ezOrgan/permissionsList.do"/>
+				<mvc:mapping path="/admin/ezOrgan/addJobList.do"/>
+				<mvc:mapping path="/admin/ezOrgan/jobInfoList.do"/>
+				<mvc:mapping path="/admin/ezOrgan/loginStop.do"/>
+				<mvc:mapping path="/admin/ezOrgan/groupList.do"/>
+            	<!-- 메일 -->
+            	<mvc:mapping path="/admin/ezEmail/mailDistributionList.do"/>
+				<mvc:mapping path="/admin/ezEmail/mailDefaultQuota.do"/>
+				<mvc:mapping path="/myoffice/ezEmail/Admin/mail_spamfilter_category.aspx"/>
+				<mvc:mapping path="/myoffice/ezEmail/Admin/FormMaker.aspx"/>
+				<mvc:mapping path="/myoffice/ezEmail/Admin/FormMaker_Cross.aspx"/>
+				<mvc:mapping path="/myoffice/ezEmail/Admin/mail_approve_category.aspx"/>
+				<mvc:mapping path="/myoffice/ezEmail/Admin/Right_DLSendManage.aspx"/>
+				<mvc:mapping path="/myoffice/ezEmail/Admin/Right_DLSentItems.aspx"/>
+				<mvc:mapping path="/admin/ezEmail/mailConfigColor.do"/>
+				<mvc:mapping path="/myoffice/ezEmail/Admin/Right_LargeSizeMailManage.aspx"/>
+				<mvc:mapping path="/admin/ezSystem/systemMainMenu.do"/>
+				<mvc:mapping path="/myoffice/ezEmail/Admin/mail_DLMailConfig.aspx"/>
+				<mvc:mapping path="/myoffice/ezEmail/DLmail_list.aspx"/>
+				<mvc:mapping path="/admin/ezEmail/mailQuotaList.do"/>
+				<mvc:mapping path="/ezStatistics/statisticsMailMain.do"/>
+				<mvc:mapping path="/ezStatistics/statisticsMailDept.do"/>
+				<mvc:mapping path="/ezStatistics/statisticsMailUser.do"/>
+				<mvc:mapping path="/ezStatistics/statisticsQuantityDept.do"/>
+				<mvc:mapping path="/ezStatistics/statisticsQuantityUser.do"/>
+				<mvc:mapping path="/ezStatistics/statisticsMailRecieveLogList.do"/>
+				<mvc:mapping path="/ezStatistics/statisticsMailSendLogList.do"/>
+				<mvc:mapping path="/admin/ezEmail/letterMain.do"/>
+				<mvc:mapping path="/admin/ezEmail/signatureMain.do"/>
+				<mvc:mapping path="/admin/ezEmail/showSharedMailboxList.do"/>
+				<mvc:mapping path="/admin/ezEmail/mailCopyright.do"/>
+				<mvc:mapping path="/admin/ezEmail/multiDomain.do"/>
+				<mvc:mapping path="/admin/ezEmail/companyMultiDomain.do"/>
+            	<!-- 일정관리 -->
+	            <mvc:mapping path="/admin/ezSchedule/scheduleAdminShareManage.do"/>
+				<mvc:mapping path="/admin/ezSchedule/scheduleAdminShareManage.do"/>
+				<mvc:mapping path="/admin/ezSchedule/scheduleAdminHolidayTab.do"/>
+				<mvc:mapping path="/admin/ezSchedule/scheduleAdminLunarUse.do"/>
+				<mvc:mapping path="/admin/ezSchedule/scheduleAdminRegi.do"/>
+            	<!-- 게시판 -->
+            	<mvc:mapping path="/admin/ezBoard/boardGroupCreate.do"/>
+				<mvc:mapping path="/admin/ezBoard/boardCreate.do"/>
+				<mvc:mapping path="/admin/ezBoard/boardOrder.do"/>
+				<mvc:mapping path="/admin/ezBoard/boardMove.do"/>
+				<mvc:mapping path="/admin/ezBoard/boardDelete.do"/>
+				<mvc:mapping path="/admin/ezBoard/boardProperty.do"/>
+				<mvc:mapping path="/admin/ezBoard/boardACL.do"/>
+				<mvc:mapping path="/admin/ezBoard/boardBackGround.do"/>
+            	<!-- 전자결재 -->
+            	<mvc:mapping path="/admin/ezApprovalG/formAdmin.do"/>
+				<mvc:mapping path="/admin/ezApprovalG/apprGMCont.do"/>
+				<mvc:mapping path="/admin/ezApprovalG/apprGMoveContainer.do"/>
+				<mvc:mapping path="/admin/ezApprovalG/docDelete.do"/>
+				<mvc:mapping path="/admin/ezApprovalG/apprGReceiveGroup.do"/>
+				<mvc:mapping path="/admin/ezApprovalG/apprGTaskCodeManage.do"/>
+				<mvc:mapping path="/admin/ezApprovalG/taskAdminDept.do"/>
+				<mvc:mapping path="/admin/ezApprovalG/manageSeal.do"/>
+				<mvc:mapping path="/admin/ezApprovalG/manageDeptSeal.do"/>
+				<mvc:mapping path="/admin/ezApprovalG/manageSendInfo.do"/>
+				<mvc:mapping path="/admin/ezApprovalG/statistics.do"/>
+				<mvc:mapping path="/admin/ezApprovalG/forAprDoc.do"/>
+				<mvc:mapping path="/admin/ezApprovalG/forDoc.do"/>
+				<mvc:mapping path="/admin/ezApprovalG/adminBujae.do"/>
+				<mvc:mapping path="/admin/ezApprovalG/docNumZeroCnt.do"/>
+				<mvc:mapping path="/admin/ezApprovalG/openGovForDoc.do"/>
+				<mvc:mapping path="/admin/ezApprovalG/enforceSihangSeal.do"/>
+            	<!-- 커뮤니티 -->
+            	<mvc:mapping path="/admin/ezCommunity/searchKey.do"/>
+				<mvc:mapping path="/admin/ezCommunity/bbsList.do"/>
+				<mvc:mapping path="/admin/ezCommunity/applicationList.do"/>
+            	<!-- 자원관리 -->
+            	<mvc:mapping path="gwBoardListRegSubBoard.do"/>
+				<mvc:mapping path="gwBoardListRegComBoard.do"/>
+				<mvc:mapping path="gwBoardPostRegBoardRightMain.do"/>
+				<mvc:mapping path="gwBoardPostRegBoardOrder.do"/>
+				<mvc:mapping path="gwBoardPostBoardMove.do"/>
+				<mvc:mapping path="gwBoardPostBoardDel.do"/>
+				<mvc:mapping path="gwboardGetItemMoveSearch.do"/>
+				<mvc:mapping path="gwboardGetItemMoveSearch.do"/>
+				<mvc:mapping path="gwBoardPostRegGongjiBoard.do"/>
+            	<!-- 시스템 -->
+            	<mvc:mapping path="/admin/ezSystem/systemMainMenu.do"/>
+				<mvc:mapping path="/admin/ezSystem/systemLoginHist.do"/>
+				<mvc:mapping path="/admin/ezSystem/systemIPManager.do"/>
+				<mvc:mapping path="/admin/ezSystem/sysREST.do"/>
+				<mvc:mapping path="/admin/ezSystem/systemModuleMonitor.do"/>
+				<mvc:mapping path="/admin/ezSystem/multiLoginManager.do"/>
+				<mvc:mapping path="/admin/ezSystem/systemAdminIPManager.do"/>
+            	<!-- 통계 -->
+	            <mvc:mapping path="/ezStatistics/statisticsPerSonalMain.do"/>
+				<mvc:mapping path="/ezStatistics/statisticsMailMain.do"/>
+				<mvc:mapping path="/ezStatistics/statisticsApprMain.do"/>
+				<mvc:mapping path="PageLog/PageLog_Main.aspx"/>
+				<mvc:mapping path="WebLog_Statistics/WebLog_Main.asp"/>
+				<mvc:mapping path="/ezStatistics/statisticsAttitudeMain.do"/>
+            <!-- adminAccessBlockPage -->
+            <mvc:exclude-mapping path="/admin/accessBlockToAdmin.do"/>
+		    <bean class="egovframework.com.cmm.interceptor.AdminAccessInterceptor" />
+        </mvc:interceptor>
+        
         <mvc:interceptor>            
             <mvc:mapping path="/mobile/**"/>
             <mvc:mapping path="/rest/**"/>

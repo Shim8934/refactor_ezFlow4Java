@@ -1,5 +1,51 @@
 package egovframework.ezEKP.ezCommon.service.impl;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import javax.annotation.Resource;
+import javax.net.ssl.*;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DeadlockLoserDataAccessException;
+import org.springframework.stereotype.Service;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
@@ -1703,6 +1749,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.createRsFavoriteTable();
 	}
 
+	@SuppressWarnings("serial")
 	@Override
 	public void createUserDistributionTable() {
 		ezCommonDAO.createUserDistributionTable();
@@ -1710,7 +1757,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	
 	@SuppressWarnings("serial")
 	@Override
-	public void insertTblTenantConfig(String configName) throws Exception {
+	public void insertTblTenantConfig() throws Exception {
 		logger.debug("insertTest started");
 		Map<String, Map<String, Object>> test = new HashMap<String,  Map<String, Object>>();
 		test.put("mailConfirm", new HashMap<String, Object>(){{
@@ -1812,6 +1859,16 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("description","조직도 리스트 체크박스 표시 (메일,주소록) (default:NO)");
 			put("config_type","메일");
 			put("property","USEORGLISTCHECKBOX"); // property_name
+		}});
+		test.put("adminIpAccess", new HashMap<String, Object>(){{
+			put("tenantID", 0);
+			put("confName","useAdminIPAccess"); // property_name
+			put("property_value","NO");
+			put("config_name","관리자 IP 제한");
+			put("regdate","2020-04-27 00:00:00");
+			put("description","관리자 페이지 IP 제한(default: NO)");
+			put("config_type","시스템");
+			put("property","useAdminIPAccess"); // property_name
 		}});
 		
 		Iterator<String> keys = test.keySet().iterator();
@@ -1945,6 +2002,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 	
 	@Override
+	public void createAdminAccessIpTable() throws Exception {
+		ezCommonDAO.createAdminAccessIpTable();
+	}
+
+	@Override
 	public void insertReBebuOpinionCode() throws Exception {
 		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -2038,7 +2100,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void addDocStateIntoLastDeptLines() throws Exception {
 	    ezCommonDAO.addDocStateIntoLastDeptLines();
     }
-    
+
+    @Override
 	public void insertAlternateHolidayAttitudeType() {
 		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();		
 
