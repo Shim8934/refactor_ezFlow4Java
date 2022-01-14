@@ -920,6 +920,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 							}
 						}
 					}
+
+					//해당문서가 우리 부서의 배부대장에 있는 문서인지 확인
+					if (checkPermission) {
+						int deliveryCount = ezApprovalGService.isMyDeptDeliveryDoc(userInfo.getDeptID(), docID, userInfo.getCompanyID(), userInfo.getTenantId());
+						if(deliveryCount > 0){
+							checkPermission = false;
+						}
+					}
 					
 					if (checkPermission) {
 						String checkMode = "";
@@ -3251,6 +3259,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 			
 			logger.debug("docStatus = " + docStatus + "|| result = " + result);
+		}
+
+		//해당문서가 우리 부서의 배부대장에 있는 문서인지 확인
+		if (result.equals("NOTPERMISSION")) {
+			int deliveryCount = ezApprovalGService.isMyDeptDeliveryDoc(userInfo.getDeptID(), docID, userInfo.getCompanyID(), userInfo.getTenantId());
+			if(deliveryCount > 0){
+				result = "";
+			}
 		}
 		
 		/* 

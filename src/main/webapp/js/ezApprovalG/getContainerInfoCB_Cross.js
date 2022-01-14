@@ -44,6 +44,23 @@ function getDataInfo() {
         }
     }
 
+    var nowMode = "END";
+    if (DocList_Flag != "TMP" && DocList_Flag != "END_RECORD" && DocList_Flag != "APR_RECORD") {
+        $.ajax({
+            type : "POST",
+            dataType : "text",
+            async : false,
+            url : "/ezApprovalG/getLineMode.do",
+            data : {
+                docID : DocID,
+                orgCompanyID : CompanyID
+            },
+            success: function(xml){
+                nowMode = xml;
+            }
+        });
+    }
+
     switch (jobState) {
         case "ATTACH":
         	pUrl = "/ezApprovalG/getTotalAttachInfo.do";
@@ -69,7 +86,7 @@ function getDataInfo() {
 		url : pUrl,
 		data : {
 				docID : DocID,
-				mode  : "END",
+				mode  : nowMode,
 				publicityYN : publicityYN
 				},
 		success: function(xml){

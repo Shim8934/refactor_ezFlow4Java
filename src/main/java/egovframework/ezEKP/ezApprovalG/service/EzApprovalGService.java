@@ -764,6 +764,8 @@ public interface EzApprovalGService {
 	public String getChaebunDept(String deptId, String orgCompanyID, int tenantID) throws Exception;
 	
 	public String getBujaeInfo(String userID, String deptID, int tenantID, String offset, String companyID) throws Exception;
+
+    public int isMyDeptDeliveryDoc(String deptId, String docId, String orgCompanyID, int tenantID) throws Exception;
 	
 	public List<Map<String, Object>> getReceiptInfoIng(String docId, String receiptId, LoginVO userInfo) throws Exception;
 
