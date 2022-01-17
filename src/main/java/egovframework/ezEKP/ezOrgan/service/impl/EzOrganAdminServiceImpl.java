@@ -1540,6 +1540,24 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		return rtnVal;
 	}
 	
+	/**
+	 * tbl_user_jobmaster - jobID로 직위/직책 조회
+	 */
+	@Override 
+	public OrganJobVO getTitleByJobID(String jobID, String lang, int tenantID) throws Exception {
+		logger.debug("getTitleByJobID started.");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_JOBID", jobID);
+		map.put("v_LANGDATA", lang);
+		map.put("v_TENANTID", tenantID);
+		
+		OrganJobVO jobVO = ezOrganAdminDao.getTitleByJobID(map);
+		
+		logger.debug("getTitleByJobID ended.");
+		return jobVO;
+	}
+	
 	@Override
 	public String getTitleList(String type, String companyID, int tenantID) throws Exception {
 		logger.debug("getTitlePageList started.");

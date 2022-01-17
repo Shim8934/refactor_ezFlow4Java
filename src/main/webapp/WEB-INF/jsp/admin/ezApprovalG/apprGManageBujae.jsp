@@ -253,6 +253,7 @@
 			        userid = rtnValue.split(":")[0];
 			        document.getElementById("TextName").value = rtnValue.split(":")[1];
 			        deptid = rtnValue.split(":")[2];
+			        document.getElementById("TR_Absentreason").style.display = "none";
 			    }
 			    if (typeof (rtnValue) != "undefined" && type_Complete == "Proxy") {
 			        proxyuserid = rtnValue.split(":")[0];
@@ -341,9 +342,8 @@
     					
 						if (approvalFlag == "G") {
 							if(!result.bReasonFlag){
-								document.getElementById("absentreason").style.display = "";
+								document.getElementById("TR_Absentreason").style.display = "none";
 								document.getElementById("TR_Appoint").style.display = "";
-								document.getElementById("absentreason").value = "";
 							}else{
 								document.getElementById("absentreason").style.display = "";
 								document.getElementById("absentreason").value = result.bReason;
@@ -721,7 +721,7 @@
 					<td>
 						<input type="text" name="TextName" id="TextName" Width="120" value="" ReadOnly />
 						&nbsp;<a class="imgbtn imgbck" style="vertical-align:middle"><span onclick="gIsAppoint = '1';select_person('')"><spring:message code='ezPersonal.t32'/></span></a> 
-		                <a class="imgbtn imgbck" style="vertical-align:middle"><span onClick="gIsAppoint = '2';document.getElementById('TextName').value=''; $('#TextName').attr('check','clear')"><spring:message code='ezPersonal.t33'/></span></a>
+		                <a class="imgbtn imgbck" style="vertical-align:middle"><span onClick="gIsAppoint = '2';document.getElementById('TextName').value=''; $('#TextName').attr('check','clear'); document.getElementById('TR_Absentreason').style.display = '';"><spring:message code='ezPersonal.t33'/></span></a>
 					</td>
 				</tr>
 				<tr id="proxyOutput"></tr>
@@ -736,7 +736,7 @@
 				    </tr>
 				</c:if> --%>
 				<c:if test="${approvalFlag eq 'G'}">
-					<tr>
+					<tr id="TR_Absentreason">
 						<th><spring:message code='ezPersonal.t42'/></th>
 						<td>
 							<SELECT id="absentreason" onchange="return Sel_Change();"><!-- ezOrgan, ezPersonal 등 resource b1~b12 통일함 -->
@@ -758,7 +758,7 @@
 					</tr>
 				</c:if>
 				<c:if test="${approvalFlag eq 'S'}">
-					<tr style="display: none;">
+					<tr id="TR_Absentreason" style="display: none;">
 						<th><spring:message code='ezPersonal.t42'/></th>
 						<td>
 							<SELECT id="absentreason" onchange="return Sel_Change();"><!-- ezOrgan, ezPersonal 등 resource b1~b12 통일함 -->

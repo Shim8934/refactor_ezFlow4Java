@@ -1952,6 +1952,23 @@
 						DATA += "<KEYWORD>" + SearchCond[24].slice(5) + "</KEYWORD>";
 					}
 
+					if (typeof (condition[25]) != "undefined" && condition[25] != "") {
+						TYPE += "RECVSTARTDATE;"
+						DATA += "<RECVSTARTDATE>" + condition[25] + "</RECVSTARTDATE>";
+					}
+					if (typeof (condition[26]) != "undefined" && condition[26] != "") {
+						TYPE += "RECVENDDATE;"
+						DATA += "<RECVENDDATE>" + condition[26] + "</RECVENDDATE>";
+					}
+					if (typeof (condition[27]) != "undefined" && condition[27] != "") {
+						TYPE += "SENTDEPTNAME;"
+						DATA += "<SENTDEPTNAME>" + condition[27] + "</SENTDEPTNAME>";
+					}
+					if (typeof (condition[28]) != "undefined" && condition[28] != "") {
+						TYPE += "RECEIVEDDEPTNAME;"
+						DATA += "<RECEIVEDDEPTNAME>" + condition[28] + "</RECEIVEDDEPTNAME>";
+					}
+
 					SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
 			        
 				} else {

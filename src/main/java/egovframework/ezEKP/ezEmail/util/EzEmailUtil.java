@@ -2722,8 +2722,10 @@ public class EzEmailUtil {
 				+ ",isImportantOnly=" + isImportantOnly + ",sortType=" + sortType + ",isAscending=" + isAscending + ",startIndex=" + startIndex
 				+ ",listCount=" + listCount + ",extraMap=" + extraMap);
 		
+		boolean useSecureMailFilter = extraMap != null && (boolean) extraMap.getOrDefault("useSecureMailFilter", false);
+
 		Map<String, Object> resultMap = getMailListFromJGw(userAccount, folderPath, searchField, searchValue, startDate, endDate, 
-				isUnreadOnly, isImportantOnly, searchSubFolder, sortType, isAscending, startIndex, listCount, extraMap);
+				isUnreadOnly, isImportantOnly, searchSubFolder, sortType, isAscending, startIndex, listCount, extraMap, useSecureMailFilter);
 		
 		List<String> mailList = (List<String>) resultMap.get("mailList");
 		
@@ -2801,7 +2803,8 @@ public class EzEmailUtil {
 			boolean isAscending,
 			int startIndex,
 			int listCount,
-			Map<String, Object> extraMap
+			Map<String, Object> extraMap,
+			boolean useSecureMailFilter
 			) throws Exception {
 		logger.debug("getMailUidListFromJGw started.");
 		logger.debug("userAccount=" + userAccount + ",folderPath=" + folderPath + ",searchField=" + searchField 
@@ -2828,10 +2831,19 @@ public class EzEmailUtil {
 		String andorStatus = "andorStatus=";
 		String attachStatus = "attachStatus=";
 		
+		String mailInnerDomainParam = "&inexternalFilter=&mailInnerDomainStr=";
+		String isSecureMail = "&isSecureMail=" + useSecureMailFilter;
+
 		if(extraMap != null){
 			logger.debug("extraMAP is not null.extraMap:" + extraMap);
 			andorStatus += extraMap.get("andorStatus") == "" ? "and" : extraMap.get("andorStatus");
 			attachStatus += extraMap.get("attachStatus") == "" ? "all" :  extraMap.get("attachStatus");
+
+			//2020-07-16 김은실 - (사조그룹)내부·외부필터 상태값 및 내부기준 도메인
+			if (extraMap.get("inexternalFilter") != null && extraMap.get("mailInnerDomainStr") != null) {
+				mailInnerDomainParam = "&inexternalFilter=" + URLEncoder.encode((String)extraMap.get("inexternalFilter"), "UTF-8");
+				mailInnerDomainParam += "&mailInnerDomainStr=" + URLEncoder.encode((String)extraMap.get("mailInnerDomainStr"), "UTF-8");
+			}
 		}
 		
 		String searchFieldParam = "";
@@ -2856,7 +2868,7 @@ public class EzEmailUtil {
 				+ searchValueParam + "&" + startDateParam + "&" + endDateParam 
 				+ "&" + isUnreadOnlyParam + "&" + isImportantOnlyParam + "&" + searchSubFolderParam
 				+ "&" + sortTypeParam + "&" + isAscendingParam + "&" + startIndexParam + "&" + listCountParam
-				+ "&" + attachStatus + "&" + andorStatus;
+				+ "&" + attachStatus + "&" + andorStatus + mailInnerDomainParam + isSecureMail;
 		
 		logger.debug("inputParams=" + inputParams);
 
@@ -2931,11 +2943,21 @@ public class EzEmailUtil {
 		
 		String andorStatus = "andorStatus=";
 		String attachStatus = "attachStatus=";
+
+		String mailInnerDomainParam = "&inexternalFilter=&mailInnerDomainStr=";
+		String isSecureMail = "&isSecureMail=";
 		
 		if(extraMap != null){
 			logger.debug("extraMAP is not null.extraMap:" + extraMap);
 			andorStatus += extraMap.get("andorStatus") == "" ? "and" : extraMap.get("andorStatus");
 			attachStatus += extraMap.get("attachStatus") == "" ? "all" :  extraMap.get("attachStatus");
+			isSecureMail += extraMap.get("useSecureMailFilter");
+
+			//2020-07-16 김은실 - (사조그룹)내부·외부필터 상태값 및 내부기준 도메인
+			if (extraMap.get("inexternalFilter") != null && extraMap.get("mailInnerDomainStr") != null) {
+				mailInnerDomainParam = "&inexternalFilter=" + URLEncoder.encode((String)extraMap.get("inexternalFilter"), "UTF-8");
+				mailInnerDomainParam += "&mailInnerDomainStr=" + URLEncoder.encode((String)extraMap.get("mailInnerDomainStr"), "UTF-8");
+			}
 		}
 		
 		String includeContentParam = "includeContent=" + includeContent;
@@ -2962,7 +2984,7 @@ public class EzEmailUtil {
 				+ searchValueParam + "&" + startDateParam + "&" + endDateParam 
 				+ "&" + isUnreadOnlyParam + "&" + isImportantOnlyParam + "&" + searchSubFolderParam
 				+ "&" + sortTypeParam + "&" + isAscendingParam + "&" + startIndexParam + "&" + listCountParam
-				+ "&" + attachStatus + "&" + andorStatus + "&" + includeContentParam;
+				+ "&" + attachStatus + "&" + andorStatus + "&" + includeContentParam + mailInnerDomainParam + isSecureMail;
 		
 		logger.debug("inputParams=" + inputParams);
 

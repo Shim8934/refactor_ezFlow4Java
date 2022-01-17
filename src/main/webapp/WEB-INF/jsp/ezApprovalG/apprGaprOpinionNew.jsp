@@ -29,8 +29,8 @@
 		var pUserTitle = "<c:out value='${userInfo.title1}'/>";
 		var pUserTitle2 = "<c:out value='${userInfo.title2}'/>";
 		var pUserDeptID = "<c:out value='${userInfo.deptID}'/>";
-		var pUserDeptName = "<c:out value='${userInfo.deptName1}'/>";
-		var pUserDeptName2 = "<c:out value='${userInfo.deptName2}'/>";
+		var pUserDeptName = "<c:out value='${userInfo.deptName1}' escapeXml='false'/>";
+		var pUserDeptName2 = "<c:out value='${userInfo.deptName2}' escapeXml='false'/>";
 		var pUserDisplayName = "<c:out value='${userInfo.displayName1}'/>";
 		var pUserDisplayName2 = "<c:out value='${userInfo.displayName2}'/>";
 		var pUserCompanyID = "<c:out value='${userInfo.companyID}'/>";

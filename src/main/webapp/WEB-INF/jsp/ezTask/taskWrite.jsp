@@ -530,23 +530,6 @@
 				}
 	
 				setNodeText(document.getElementById("printImportance"), importantname);
-	
-				switch (taskstatus) {
-					case "1":
-						taskstatus = "<spring:message code = 'ezTask.t97' />";
-						break;
-					case "2":
-						taskstatus = "<spring:message code = 'ezTask.t98' />";
-						break;
-					case "3":
-						taskstatus = "<spring:message code = 'ezTask.t99' />";
-						break;
-					case "4":
-						taskstatus = "<spring:message code = 'ezTask.t100' />";
-						break;
-				}
-
-				setNodeText(document.getElementById("printStatus"), taskstatus);
 				
 				var printdate;
 				
@@ -1158,14 +1141,6 @@
 				<tr>
 					<th><spring:message code='ezTask.t156' /></th>
 					<td><div id="printImportance"></div></td>
-				</tr>
-				<tr>
-					<th><spring:message code='ezTask.t217' /></th>
-					<td><div id="printStatus"></div></td>
-				</tr>
-				<tr>
-					<th><spring:message code='ezTask.t120' /></th>
-					<td><div id="printCompleteRate"></div></td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezTask.t218' /></th>

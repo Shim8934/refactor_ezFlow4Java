@@ -1931,7 +1931,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getFormInfo(String formContID, String kind, String searchType, String searchName, String userID, String companyID, String lang, int tenantID) throws Exception {
+	public String getFormInfo(String formContID, String kind, String searchType, String searchName, String userID, String deptId, String companyID, String lang, int tenantID) throws Exception {
 		logger.debug("getFormInfo started.");
 
 		StringBuffer resultXML = new StringBuffer();
@@ -1956,7 +1956,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("</HEADERS>");
 		
 		String strMultiData = commonUtil.getMultiData(lang, tenantID);
-		String docList = getFormInfoDB(formContID, userID, kind, strMultiData, searchType, searchName, companyID, tenantID);
+		String docList = getFormInfoDB(formContID, userID, deptId, kind, strMultiData, searchType, searchName, companyID, tenantID);
 		
 		Document docXML = commonUtil.convertStringToDocument(docList);
 		int dlength = docXML.getElementsByTagName("ROW").getLength();
@@ -2218,7 +2218,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String orgDocNumCode = "";
 		String docNumCode = "";
 		String extFileName = "";
-		//String docNumZeroCnt = getDocNumZeroCnt(companyID, tenantID); //문서채번 자릿수 맞춰주는거 혹시모르니까 구현만 해놈 
+		String docNumZeroCnt = getDocNumZeroCnt(companyID, tenantID); //문서채번 자릿수 맞춰주는거 혹시모르니까 구현만 해놈
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
@@ -2239,7 +2239,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				extFileName = getExtendedFileName(apprGDocListVO.getHref());
 				docNumCode = deptID + getNDigitNum(sn, 6);
 				
-				docNo = commonUtil.cleanValue(deptName) + "-" + sn;
+				docNo = commonUtil.htmlUnescape(deptName) + "-" + sn;
 				//docNo = commonUtil.cleanValue(deptName) + "-" + createDocNO(sn , docNumZeroCnt); //문서채번 자릿수 맞춰주는거 혹시모르니까 구현만 해놈
 				
 				if (orgDocNumCode == null || orgDocNumCode.trim().equals("") || !gFlag.equals("G")) {
@@ -2248,7 +2248,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					//2018-10-04 배현상, companyid 병합에 따른 G버전 오류 개선(ORGCOMPANYID 추가)
 					String strXML = "<SIGNINFOS><SIGNINFO><DOCID>" + newDocID + 
 							"</DOCID><SIGNTYPE>TEXT</SIGNTYPE><SIGNNAME>docnumber" + 
-							"</SIGNNAME><CONTENT>" + docNo + "</CONTENT>" + 
+							"</SIGNNAME><CONTENT><![CDATA[" + docNo + "]]></CONTENT>" + 
 							"<ORGCOMPANYID></ORGCOMPANYID></SIGNINFO></SIGNINFOS>";
 					
 					Document xmlDom = commonUtil.convertStringToDocument(strXML);
@@ -2354,7 +2354,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         //hwp일 경우 대장등록전 문서에 새로운 문서번호 박아주기 | 2019-02-22 천성준 - mht일 경우 추가
         if (docNo != null && !docNo.trim().equals("")) {
         	String docFilePath = dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false).substring(0,4) + commonUtil.separator + getDocDir(newDocID) + commonUtil.separator + newDocID + "." + extFileName;
-        	
+
         	if (extFileName.equals("hwp")) {
 		        HWPFile hwpFile = HWPReader.fromFile(docFilePath);
 		        setHwpText("docnumber", docNo, hwpFile);
@@ -2373,10 +2373,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         	} else {
         		OutputStream outputStream = null;
         		OutputStreamWriter output = null;
-        		
+
         		String loadMht = ezCommonService.loadMHTFile(docFilePath);
         		String content = ezCommonService.startMHT2HTML(realPath + commonUtil.getUploadPath("config.LocalPath", tenantID), loadMht, realPath + commonUtil.getUploadPath("config.LocalPath", tenantID), realPath, locale, "", "");
-        		
+
         		org.jsoup.nodes.Document doc = Jsoup.parse(content);
         		doc.getElementById("docnumber").html(docNo);
         		
@@ -5529,31 +5529,56 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_DDeptCode", deptCode);
 		} 
 		
-		map.put("v_YEAR", commonUtil.getTodayUTCTime("yyyy"));
-		map.put("v_MONTH", String.format("%03d",Integer.parseInt(commonUtil.getTodayUTCTime("").substring(6,7))).toString());
-		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
-		
-		String curSN = ezApprovalGDAO.transferCabinetSn(map);
-		
-		if (curSN == null) {
-			curSN = "1";
-			map.put("v_RtnSN", curSN);
-			ezApprovalGDAO.insertTbSerialNumGen(map);
-		} else {
-			map.put("v_RtnSN", curSN);
-		}
-		
-		ezApprovalGDAO.updateTbSerialNumGen(map);
+//        String year = getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, "1", tenantID);
+//		map.put("v_YEAR", year);
+//		map.put("v_MONTH", String.format("%03d",Integer.parseInt(commonUtil.getTodayUTCTime("").substring(6,7))).toString());
+//		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+//		
+//		String curSN = ezApprovalGDAO.transferCabinetSn(map);
+//		
+//		if (curSN == null) {
+//			curSN = "1";
+//			map.put("v_RtnSN", curSN);
+//			ezApprovalGDAO.insertTbSerialNumGen(map);
+//		} else {
+//			map.put("v_RtnSN", curSN);
+//		}
+//		
+//		ezApprovalGDAO.updateTbSerialNumGen(map);
 		
 		StringBuffer rowID = new StringBuffer();
 		
 //				 인수기록물철 분류정보(TBCABINETCLASS)를 생성한다.
 		for (int j=0; j<numRows; j++) {
 			String cabList[] =cabIDList.split(",");
+            
+            Map<String, Object> serialNumMap = new HashMap<>();
+            serialNumMap.put("v_CABINETID", cabList[j].replace("'", "").trim());
+            serialNumMap.put("v_TENANTID", tenantID);
+            serialNumMap.put("companyID", companyID);
+            List<ApprGTaskVO> orgCabinet = ezApprovalGDAO.getCabinetInfo(serialNumMap);
+            
+            String productionYear = orgCabinet.get(0).getProductionYear();
+            map.put("v_YEAR", productionYear);
+            map.put("v_MONTH", String.format("%03d",Integer.parseInt(commonUtil.getTodayUTCTime("").substring(6,7))).toString());
+            map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+
+            String curSN = ezApprovalGDAO.transferCabinetSn(map);
+ 
+            if (curSN == null) {
+                curSN = "1";
+                map.put("v_RtnSN", curSN);
+                ezApprovalGDAO.insertTbSerialNumGen(map);
+            } else {
+                map.put("v_RtnSN", curSN);
+            }
+
+            ezApprovalGDAO.updateTbSerialNumGen(map);
+            
 			map.put("v_cabList",cabList[j]);
 			map.put("v_SN", j);
-			map.put("v_CNT", String.format("%06d", Integer.parseInt(curSN) + j));
-			map.put("v_CABINETCLASSNO", deptCode + taskCode + commonUtil.getTodayUTCTime("").substring(0,4) + String.format("%06d", Integer.parseInt(curSN) + j));
+			map.put("v_CNT", String.format("%06d", Integer.parseInt(curSN)));
+			map.put("v_CABINETCLASSNO", deptCode + taskCode + productionYear + String.format("%06d", Integer.parseInt(curSN) + j));
 			ezApprovalGDAO.insertTbCabinetClass(map);
 			ezApprovalGDAO.trigerTbCabinet(map);
 			ezApprovalGDAO.trigerTbCabRoleInfo(map);
@@ -6468,6 +6493,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				receiveDept = aprXML.getElementsByTagName("RECEIPTDEPTID").item(0).getTextContent();
 				fileForder1 = aprXML.getElementsByTagName("HREF").item(0).getTextContent();
 				receiveDeptName = aprXML.getElementsByTagName("RECEIVEDDEPTNAME").item(0).getTextContent();
+
+                docNO = aprXML.getElementsByTagName("DOCNO").item(0).getTextContent();
 			} else {
 				/**
 				 * 진행되어야할 문서 (APRSTATE 002 : 진행 , 005 : 보류)의 정보 추출
@@ -6479,6 +6506,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				drafterDept = aprXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent();
 				fileForder1 = aprXML.getElementsByTagName("HREF").item(0).getTextContent();
 				drafterDeptName = aprXML.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent();
+
+                docNO = aprXML.getElementsByTagName("DOCNO").item(0).getTextContent();
 			}
 			
 			formURL = realPath + fileForder1;
@@ -6828,7 +6857,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						}
 						
 						if (findHwpField("docnumber", hwpFile)) {
-							docNO = getRecRegSNToName(strDeptName, createDocNO(cabinetSN , docNumZeroCnt), strDeptID, userInfo.getTenantId(), companyID);
+                            docNO = docNO + createDocNO(cabinetSN , docNumZeroCnt);
 							setHwpText("docnumber", docNO, hwpFile);
 						}
 						
@@ -6868,8 +6897,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						}
 						
 						if (findHwpField("receiptnumber", hwpFile)) {
-							docNO = getRecRegSNToName(strDeptName, createDocNO(cabinetSN , docNumZeroCnt), strDeptID, userInfo.getTenantId(), companyID);
-							setHwpText("receiptnumber", docNO, hwpFile);
+                            docNO = docNO + createDocNO(cabinetSN , docNumZeroCnt);
+                            setHwpText("receiptnumber", docNO, hwpFile);
 						}
 						
 						if (findHwpField("receiptdate", hwpFile)) {
@@ -7358,6 +7387,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			receiveDept = aprXML.getElementsByTagName("RECEIPTDEPTID").item(0).getTextContent();
 			fileForder1 = aprXML.getElementsByTagName("HREF").item(0).getTextContent();
 			receiveDeptName = aprXML.getElementsByTagName("RECEIVEDDEPTNAME").item(0).getTextContent();
+
+            docNO = aprXML.getElementsByTagName("DOCNO").item(0).getTextContent();
 		} else {
 			/**
 			 * 진행되어야할 문서 (APRSTATE 002 : 진행 , 005 : 보류)의 정보 추출
@@ -7796,7 +7827,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 Document docXML = commonUtil.convertStringToDocument(ret);
                 cabinetSN = docXML.getElementsByTagName("RESULT").item(0).getTextContent();
                 if (!ret.equals("") && doc.getElementById("receiptnumber") != null) {
-                    docNO = getRecRegSNToName(strDeptName, createDocNO(cabinetSN , docNumZeroCnt), strDeptID, userInfo.getTenantId(), companyID);
+                    docNO = docNO + createDocNO(cabinetSN , docNumZeroCnt);
                     doc.getElementById("receiptnumber").text(docNO);
                     
                     if (doc.getElementById("receiptdate") != null) {
@@ -9909,20 +9940,41 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
 				resultXML.append("<VALUE><![CDATA["+ getListField(fieldName, fieldValue, companyID, lang, tenantID, offset) + "]]></VALUE>");
 				
+				/* 2021-12-15 홍승비 - 문서첨부 데이터를 가져오는 경우 S버전과 G버전의 속성 차이를 구분하도록 수정 */
 				if (p == 0) {
-					resultXML.append("<DATA1><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHDOCURL").item(k).getTextContent()) + "]]></DATA1>");
-					resultXML.append("<DATA2><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHSN").item(k).getTextContent()) + "]]></DATA2>");
-					resultXML.append("<DATA3><![CDATA[" + makeListField(docXML.getElementsByTagName("DOCID").item(k).getTextContent()) + "]]></DATA3>");
-					resultXML.append("<DATA4><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERID").item(k).getTextContent()) + "]]></DATA4>");
-					resultXML.append("<DATA5><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERJOBTITLE").item(k).getTextContent()) + "]]></DATA5>");
-					resultXML.append("<DATA6><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTID").item(k).getTextContent()) + "]]></DATA6>");
-					resultXML.append("<DATA7><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTNAME").item(k).getTextContent()) + "]]></DATA7>");
-					resultXML.append("<DATA8><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERNAME").item(k).getTextContent()) + "]]></DATA8>");
-					resultXML.append("<DATA9><![CDATA[" + makeListField(docXML.getElementsByTagName("SUBATTACHYN").item(k).getTextContent()) + "]]></DATA9>");
-					resultXML.append("<DATA10><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHDOCNAME").item(k).getTextContent()) + "]]></DATA10>");
-					resultXML.append("<DATA11><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERNAME2").item(k).getTextContent()) + "]]></DATA11>");
-					resultXML.append("<DATA12><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERJOBTITLE2").item(k).getTextContent()) + "]]></DATA12>");
-					resultXML.append("<DATA13><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTNAME2").item(k).getTextContent()) + "]]></DATA13>");
+					if (approvalFlag.equals("G")) {
+						resultXML.append("<DATA1><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHDOCURL").item(k).getTextContent()) + "]]></DATA1>");
+						resultXML.append("<DATA2><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHSN").item(k).getTextContent()) + "]]></DATA2>");
+						resultXML.append("<DATA3><![CDATA[" + makeListField(docXML.getElementsByTagName("DOCID").item(k).getTextContent()) + "]]></DATA3>");
+						resultXML.append("<DATA4><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERID").item(k).getTextContent()) + "]]></DATA4>");
+						resultXML.append("<DATA5><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERJOBTITLE").item(k).getTextContent()) + "]]></DATA5>");
+						resultXML.append("<DATA6><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTID").item(k).getTextContent()) + "]]></DATA6>");
+						resultXML.append("<DATA7><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTNAME").item(k).getTextContent()) + "]]></DATA7>");
+						resultXML.append("<DATA8><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERNAME").item(k).getTextContent()) + "]]></DATA8>");
+						resultXML.append("<DATA9><![CDATA[" + makeListField(docXML.getElementsByTagName("SUBATTACHYN").item(k).getTextContent()) + "]]></DATA9>");
+						resultXML.append("<DATA10><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHDOCNAME").item(k).getTextContent()) + "]]></DATA10>");
+						resultXML.append("<DATA11><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERNAME").item(k).getTextContent()) + "]]></DATA11>");
+						resultXML.append("<DATA12><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERNAME2").item(k).getTextContent()) + "]]></DATA12>");
+						resultXML.append("<DATA13><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERJOBTITLE").item(k).getTextContent()) + "]]></DATA13>");
+						resultXML.append("<DATA14><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERJOBTITLE2").item(k).getTextContent()) + "]]></DATA14>");
+						resultXML.append("<DATA15><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTNAME").item(k).getTextContent()) + "]]></DATA15>");
+						resultXML.append("<DATA16><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTNAME2").item(k).getTextContent()) + "]]></DATA16>");
+					}
+					else {
+						resultXML.append("<DATA1><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHDOCURL").item(k).getTextContent()) + "]]></DATA1>");
+						resultXML.append("<DATA2><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHSN").item(k).getTextContent()) + "]]></DATA2>");
+						resultXML.append("<DATA3><![CDATA[" + makeListField(docXML.getElementsByTagName("DOCID").item(k).getTextContent()) + "]]></DATA3>");
+						resultXML.append("<DATA4><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERID").item(k).getTextContent()) + "]]></DATA4>");
+						resultXML.append("<DATA5><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERJOBTITLE").item(k).getTextContent()) + "]]></DATA5>");
+						resultXML.append("<DATA6><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTID").item(k).getTextContent()) + "]]></DATA6>");
+						resultXML.append("<DATA7><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTNAME").item(k).getTextContent()) + "]]></DATA7>");
+						resultXML.append("<DATA8><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERNAME").item(k).getTextContent()) + "]]></DATA8>");
+						resultXML.append("<DATA9><![CDATA[" + makeListField(docXML.getElementsByTagName("SUBATTACHYN").item(k).getTextContent()) + "]]></DATA9>");
+						resultXML.append("<DATA10><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHDOCNAME").item(k).getTextContent()) + "]]></DATA10>");
+						resultXML.append("<DATA11><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERNAME2").item(k).getTextContent()) + "]]></DATA11>");
+						resultXML.append("<DATA12><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERJOBTITLE2").item(k).getTextContent()) + "]]></DATA12>");
+						resultXML.append("<DATA13><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTNAME2").item(k).getTextContent()) + "]]></DATA13>");
+					}
 				}
 				resultXML.append("</CELL>");
 			}
@@ -17524,6 +17576,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String orgDocID = docID;
 		String tempOrgDocID = "";
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
+		List<Map<String,Object>> sendMsgList = new ArrayList<Map<String,Object>>();
 		
 		if (approvalFlag.equals("G")) {
 			// '완료된 문서'의 OrgDocID, 문서 상태(DOCSTATE) 리스트를 가져온다.
@@ -17752,12 +17805,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 										} 
 									}
 								}
+								Map<String,Object> map4 = new HashMap<String, Object>();
 								
-								if (receiptMemberID.trim().equals("")) {
-									sendRecvMsg(receiptPointID, docID, "SUSIN", receiptCompanyID, lang, tenantID);
-								} else {
-									sendMsg(docID, receiptMemberID, "SUSIN", receiptCompanyID, lang, tenantID);
-								}
+								map4.put("receiptPointID", receiptPointID);
+								map4.put("docID", docID);
+								map4.put("receiptMemberID", receiptMemberID);
+								map4.put("receiptCompanyID", receiptCompanyID);
+								map4.put("lang", lang);
+								map4.put("tenantID", tenantID);
+								sendMsgList.add(map4);
+//								if (receiptMemberID.trim().equals("")) {
+//									sendRecvMsg(receiptPointID, docID, "SUSIN", receiptCompanyID, lang, tenantID);
+//								} else {
+//									sendMsg(docID, receiptMemberID, "SUSIN", receiptCompanyID, lang, tenantID);
+//								}
 							}
 						}
 					}
@@ -17871,13 +17932,39 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							
 							ezApprovalGDAO.insertDocSendAprReceiptProcessInfo2(map);
 							
-							if (receiptMemberID.trim().equals("")) {
-								sendRecvMsg(receiptPointID, docID, "SUSIN", receiptCompanyID, lang, tenantID);
-							} else {
-								sendMsg(docID, receiptMemberID, "SUSIN", receiptCompanyID, lang, tenantID);
-							}
+							Map<String,Object> map4 = new HashMap<String, Object>();
+							
+							map4.put("receiptPointID", receiptPointID);
+							map4.put("docID", docID);
+							map4.put("receiptMemberID", receiptMemberID);
+							map4.put("receiptCompanyID", receiptCompanyID);
+							map4.put("lang", lang);
+							map4.put("tenantID", tenantID);
+							sendMsgList.add(map4);
+//							if (receiptMemberID.trim().equals("")) {
+//								sendRecvMsg(receiptPointID, docID, "SUSIN", receiptCompanyID, lang, tenantID);
+//							} else {
+//								sendMsg(docID, receiptMemberID, "SUSIN", receiptCompanyID, lang, tenantID);
+//							}
 						}
 					}
+				}
+			}
+		}
+		// 톡 알림발송 마지막으로 변경
+		if(rtnVal) {
+			for(int i = 0; i < sendMsgList.size(); i++) {
+				Map<String, Object> map2 = sendMsgList.get(i);
+				receiptMemberID = String.valueOf(map2.get("receiptMemberID"));
+				receiptPointID = String.valueOf(map2.get("receiptPointID"));
+				docID = String.valueOf(map2.get("docID"));
+				receiptCompanyID = String.valueOf(map2.get("receiptCompanyID"));
+				lang = String.valueOf(map2.get("lang"));
+				tenantID = Integer.parseInt(String.valueOf(map2.get("tenantID")));
+				if (receiptMemberID.trim().equals("")) {
+					sendRecvMsg(receiptPointID, docID, "SUSIN", receiptCompanyID, lang, tenantID);
+				} else {
+					sendMsg(docID, receiptMemberID, "SUSIN", receiptCompanyID, lang, tenantID);
 				}
 			}
 		}
@@ -19251,7 +19338,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("docState", docState);
 			
 			/* 2020-08-04 홍승비 - 신규 양식 생성하여 처음 결재선 지정하고 기안하는 경우, 오라클에서 DOCSTATE값 NULL로 들어가서 터지는 오류 수정 */
-			if (commonUtil.getDatabaseType().equalsIgnoreCase("oracle") && (docState == null || docState.trim().equals(""))) {
+			if ((commonUtil.getDatabaseType().equalsIgnoreCase("oracle") || commonUtil.getDatabaseType().equalsIgnoreCase("tibero")) && (docState == null || docState.trim().equals(""))) {
 				map.put("docState", " "); // 임의로 공백문자 삽입
 			}
 			
@@ -19743,6 +19830,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return getCabinetCode2Name("000", code, companyID, langType, tenantID);
 	}
 
+	@Override
 	public String getAccountingYear(String todayTime, String companyID, String langType, int tenantID) throws Exception {
 		logger.debug("getAccountingYear started");
 
@@ -21173,7 +21261,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return ezApprovalGDAO.getCountChildFormCont(map);
 	}
 
-	public String getFormInfoDB(String formContID, String userID, String kind, String strMultiData, String searchType, String searchName, String companyID, int tenantID) throws Exception {
+	public String getFormInfoDB(String formContID, String userID, String deptId, String kind, String strMultiData, String searchType, String searchName, String companyID, int tenantID) throws Exception {
 		logger.debug("getFormInfoDB started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -21182,7 +21270,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_FORMKIND", kind);
 		map.put("v_LANGTYPE", strMultiData);
 		map.put("v_SEARCHTYPE", searchType);
-		
+		map.put("deptId", deptId);
+
 		if(globals.getProperty("Globals.DbType").equals("mysql")){
 			if (searchName.equals("_")) {
 				map.put("v_SEARCHNAME", "\"" + searchName);
@@ -21729,13 +21818,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			 * cnt값이 0인경우 바이트, 1인경우 KB...
 			 * Math.pow를 통해 1024의 cnt승을 구한 뒤 최초 fieldValue를 나누는데 사용.
 			 * */
+			/* 2021-12-22 홍승비 - 전자결재 첨부문서 표출 시 용량 끝부분의 소수점을 제거(타 모듈과 통일), 단위 앞부분의 공백을 제거, bytes 단위는 B로 표출 */
 			int cnt = (int) (Math.log10(Double.parseDouble(fieldValue)) / Math.log10(1024));
-			String[] unit = {" bytes", " KB", " MB", " GB"};
+			String[] unit = {"B", "KB", "MB", "GB"};
 			
 			double filesize = Double.parseDouble(fieldValue) / Math.pow(1024, cnt);
-			fieldValue = String.format("%.1f",filesize);
+			//fieldValue = String.format("%.1f",filesize);
 			//rtnVal = fieldValue + " bytes";
-			rtnVal = fieldValue + unit[cnt];
+			rtnVal = (int)filesize + unit[cnt];
 			break;
 			
 		default : 
@@ -33275,6 +33365,22 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("getChaebunDept ended.");
 		return chaebunDept;
 	}
+
+	@Override
+	public int isMyDeptDeliveryDoc(String deptId, String docId, String orgCompanyID, int tenantID) throws Exception {
+		logger.debug("isMyDeptDeliveryDoc started.");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_DEPTID", deptId);
+		map.put("companyID", orgCompanyID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_DOCID", docId);
+
+		int resultCnt = ezApprovalGDAO.updateDeliveryListCount(map);
+
+		logger.debug("isMyDeptDeliveryDoc ended.");
+		return resultCnt;
+	}
 	
 	@Override
 	public List<Map<String, Object>> getReceiptInfoIng(String docId, String receiptId, LoginVO userInfo) throws Exception {
@@ -33301,5 +33407,33 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	    logger.debug("getReceiptInfoIng ended.");
 	    
 	    return receipts;
+    }
+    
+    @Override
+    public String setSusinRollbackDocID(String beforeAprState, String docId, String orgDocId, LoginVO userInfo) throws Exception {
+        Map<String, Object> map = new HashMap<>();
+        map.put("v_PROCESSDOCID", null);
+        map.put("v_APRSTATE", beforeAprState);
+        map.put("v_DOCID", docId);
+        map.put("v_DEPTID", userInfo.getDeptID());
+        map.put("v_TENANTID", userInfo.getTenantId());
+        map.put("companyID", userInfo.getCompanyID());
+        
+        ezApprovalGDAO.rollbackJubsuAprReceiptProcessInfo(map);
+        
+        map.put("v_USERID", null);
+        map.put("v_DISPLAYNAME1", null);
+        map.put("v_DISPLAYNAME2", null);
+
+        ezApprovalGDAO.updateJubsuDocDelivery(map);
+        
+        map.put("v_ORGDOCID", orgDocId);
+        map.put("v_USERID", "012".equals(beforeAprState) ? userInfo.getId() : null);
+        map.put("v_PROCESSFLAG", "N");
+        map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+        
+        ezApprovalGDAO.updateSusinEndReceiptPointInfo(map);
+        
+        return "TRUE";
     }
 }

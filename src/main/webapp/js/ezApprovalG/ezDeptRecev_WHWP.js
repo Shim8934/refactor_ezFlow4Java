@@ -1888,11 +1888,11 @@ function setDocNumFormat(pPrefix)
 				break;
 
 			case "YY":
-				numHeader = numHeader + d.getYear() + Tail 
+				numHeader = numHeader + getAccountingYear() + Tail
 				break;
 
 			case "yy":
-				var yyear = d.getYear()
+				var yyear = getAccountingYear()
 				numHeader = numHeader + yyear.toString().substr(2) + Tail
 				break;
 

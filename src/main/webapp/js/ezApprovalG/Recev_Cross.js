@@ -2258,11 +2258,11 @@ function SaveDraftDocInfo() {
 	                            break;
 
 	                        case "YY":
-	                            numHeader += d.getFullYear();
+	                            numHeader += getAccountingYear();
 	                            break;
 	                            
 	                        case "yy":
-	                            var yyear = d.getFullYear();
+	                            var yyear = getAccountingYear();
 	                            numHeader += yyear.toString().substr(2);
 	                            break;
 

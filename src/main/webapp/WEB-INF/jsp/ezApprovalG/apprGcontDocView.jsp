@@ -79,7 +79,7 @@
 	        var bigSizeAttachDownloadLimitCount = "<c:out value ='${bigSizeAttachDownloadLimitCount}'/>";
 			
 		    $(function () {
-			    if ("${pass}" != "<RESULT>TRUE</RESULT>" && abtnReusedmin != 'Y') {
+			    if ("${pass}" != "<RESULT>TRUE</RESULT>") {
 		    		QuitWindow();
 			    }
 			    

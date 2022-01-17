@@ -81,7 +81,6 @@
 		    var pDocTitle = "";
 		    var pFormID = "";
 		    var drafterDeptid = "";
-		    var drafterDeptName = ""; // 기안자 부서명
 		    var pMaxFileSize = "5";
 		    var LastSignNo;
 		    var AppendFileAttach = "";
@@ -417,7 +416,7 @@
 		            getDocInfo();
 		            setAttachInfo(pDocID, "APR", lstAttachLink);
 		            GetExchInfo();
-		            DeptSymbol = getDeptSymbol(drafterDeptid, drafterDeptName); // 양식상의 문서번호 표출 시 기안자의 부서명을 유지
+		            DeptSymbol = getDeptSymbol(arr_userinfo[4], replaceEntityCodeToStr(arr_userinfo[5]));
 		            
 			    	if (nonElecRec == "Y") {
 				        getNonElecInfoSusinInit();
@@ -428,9 +427,11 @@
 		            {
 		                message.Set_EditorContentURL(pDocHref);
 				        setInitOpinion();
-		                if (pDraftFlag != "SUSIN") {
-			                setDocNumFormat(""); // 결재할문서 오픈 시, docnumber 필드 다시 그리는 로직.. 수정 필요
-		                }
+						// 기안할때만 일련변호 전까지 세팅해주고 그 이후엔 할 필요가 없음.
+						// 오류때문에 한다고는 하지만 그렇게 할 필요가 있나 싶음. 그리고 웹한글도 그런 로직은 없음.
+						// if (pDraftFlag != "SUSIN") {
+						//     setDocNumFormat(""); // 결재할문서 오픈 시, docnumber 필드 다시 그리는 로직.. 수정 필요
+						// }
 		            }
 		        }
 		    }
@@ -2365,7 +2366,7 @@
 		  		<img id="next" border="0" src="/images/icviewer_next.png" width="25" height="25" onClick="nextClick()" style="cursor:pointer; position: relative; top: 13px;">
 		  		<img id="nextAll" border="0" src="/images/icviewer_n_next.png" width="25" height="25" onClick="nextClickAll()" style="cursor:pointer; position: relative; top: 13px;">
 		  		<img id="officeBar2" src="/images/icviewer_bar.png" style="position: relative; top: 13px;">
-		  		<img src="/images/icviewer_expend.png" class="allImg" id="all" onclick="allImg(this)" style="cursor:pointer; position: relative; top: 13px;" width="25" height="25">
+		  		<img src="/images/icviewer_expend.png" class="allImg" id="all" onclick="allImg(this)" style="cursor:pointer; position: relative; top: 13px;"" width="25" height="25">
 			</div>
 		</div>
 		  </td>

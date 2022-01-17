@@ -616,6 +616,10 @@
  								alert("<spring:message code='ezOrgan.x0011' />");
  							} else if (result.resultCode == "MAX_USER_REACHED") {
  								alert("<spring:message code='ezOrgan.x0012' />");
+			        		} else if (result.resultCode == "ALIAS_EMAIL_DUPLICATE") { 	// 2021-12-16 이사라 : 에러코드 추가
+			        			alert("<spring:message code='ezEmail.sharedMailbox15' />");
+			        		} else if (result.resultCode == "EMAIL_DUPLICATE") { 		// 2021-12-16 이사라 : 에러코드 추가
+			        			alert("<spring:message code='ezEmail.sharedMailbox15' />");
 			        		} else {
 			        			alert("<spring:message code='ezEmail.sharedMailbox07' />");
 			        		}

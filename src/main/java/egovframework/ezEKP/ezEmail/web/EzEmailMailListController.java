@@ -287,6 +287,8 @@ public class EzEmailMailListController {
 		String endDate = doc.getElementsByTagName("ENDDATE").item(0).getTextContent();
 		String andorStatus = doc.getElementsByTagName("ANDORSTATUS").item(0).getTextContent();
 		String attachStatus = doc.getElementsByTagName("ATTACHSTATUS").item(0).getTextContent();
+		// 2020-08-20 (사조그룹) 보안메일 필터링
+		String useSecureMailFilter = doc.getElementsByTagName("SECUREMAILFILTER").item(0).getTextContent();
 		
 		NodeList  nListCategory = doc.getElementsByTagName("CATEGORY");
 		NodeList  nListKeyword = doc.getElementsByTagName("KEYWORD");
@@ -310,7 +312,7 @@ public class EzEmailMailListController {
 		logger.debug("userId=" + userInfo.getId() + ",tenantId=" + userInfo.getTenantId() + ",serverName=" + userInfo.getServerName() 
 		            + ",folderId=" + folderId + ",sortType=" + sortType + ",start=" + start + ",end=" + end
 					+ ",search=" + search + ",viewSelectIndex=" + viewSelectIndex 
-					+ ",startDate=" + startDate + ",endDate=" + endDate);
+					+ ",startDate=" + startDate + ",endDate=" + endDate + ",useSecureMailFilter=" + useSecureMailFilter);
 		
 		String returnData = "";
 		
@@ -389,6 +391,7 @@ public class EzEmailMailListController {
 			Map<String, Object> extraMap = new HashMap<String, Object>();
 			extraMap.put("andorStatus", andorStatus);
 			extraMap.put("attachStatus", attachStatus);
+			extraMap.put("useSecureMailFilter", useSecureMailFilter.equals("1"));
 			
 			messages = ezEmailUtil.searchFolder(ia, userEmail, folder, categoryArray, keywordArray, startDateObj, endDateObj, false, 
 					isUnreadOnly, isImportantOnly, sortTypeSpecifier, isAscending, startNo, listCount, false, extraMap, userInfo.getTenantId());
@@ -702,6 +705,8 @@ public class EzEmailMailListController {
 		String end = doc.getElementsByTagName("END").item(0).getTextContent();
 		String search = doc.getElementsByTagName("SEARCH").item(0).getTextContent();
 		String viewSelectIndex = doc.getElementsByTagName("VIEWSELECTINDEX").item(0).getTextContent();
+		// 2020-08-20 (사조그룹) 보안메일 필터링
+		String useSecureMailFilter = doc.getElementsByTagName("SECUREMAILFILTER").item(0).getTextContent();
 		String useCountryIP = ezCommonService.getTenantConfig("useCountryIP", userInfo.getTenantId());
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
 		String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", userInfo.getTenantId());
@@ -758,7 +763,8 @@ public class EzEmailMailListController {
 		
 		logger.debug("userId=" + userInfo.getId() + ",userEmail=" + userEmail + ",tenantId=" + userInfo.getTenantId() + ",serverName=" + userInfo.getServerName() 
 		            + ",folderId=" + folderId + ",sortType=" + sortType + ",start=" + start + ",end=" + end
-					+ ",search=" + search + ",viewSelectIndex=" + viewSelectIndex + ",useCountryIP=" + useCountryIP);
+					+ ",search=" + search + ",viewSelectIndex=" + viewSelectIndex + ",useCountryIP=" + useCountryIP
+					+ ",useSecureMailFilter=" + useSecureMailFilter);
 		
 		String returnData = "";
 				
@@ -777,6 +783,10 @@ public class EzEmailMailListController {
 			
 			if (sortType.indexOf("\"urn:schemas:httpmail:read\" = false") >= 0) {
 				isUnreadOnly = true;
+			}
+
+			if (sortType.indexOf("IMPORTANT") >= 0) {
+				isImportantOnly = true;
 			}
 					
 			logger.debug("isUnreadOnly=" + isUnreadOnly + ", isImportantOnly=" + isImportantOnly);
@@ -845,6 +855,18 @@ public class EzEmailMailListController {
 			Map<String, Object> extraMap = new HashMap<String, Object>();
 			extraMap.put("andorStatus", andorStatus);
 			extraMap.put("attachStatus", attachStatus);
+			extraMap.put("useSecureMailFilter", useSecureMailFilter.equals("1"));
+
+			//2020-07-16 김은실 - (사조그룹)내부·외부필터 내부기준 도메인
+			if (sortType.indexOf("INTERNAL") >= 0 || sortType.indexOf("EXTERNAL") >= 0) {
+				String inexternalFilter = sortType.indexOf("INTERNAL") >= 0? "internal" : "external";
+				String mailInnerDomainStr = ezCommonService.getTenantConfig("MailInnerDomain", userInfo.getTenantId());
+
+				extraMap.put("inexternalFilter", inexternalFilter);
+				extraMap.put("mailInnerDomainStr", mailInnerDomainStr.isEmpty()? domainName : mailInnerDomainStr);
+
+				logger.debug("inexternalFilter=" + inexternalFilter + ", mailInnerDomainStr=" + mailInnerDomainStr);
+			}
 
 			if (useRDBOnlyMailList.equals("YES")) {
 				int mailboxMailCount = 0;

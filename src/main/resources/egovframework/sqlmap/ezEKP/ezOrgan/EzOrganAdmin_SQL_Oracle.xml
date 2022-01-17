@@ -630,24 +630,38 @@
 			]]>
 		</isEqual>
 		<isNotEqual property="v_PROPNAME" compareValue="updateDT">
-			<![CDATA[
-			UPDATE
-				TBL_USERMASTER
-			SET 
-			    $v_PROPNAME$ = #v_PROPVALUE#
-			    
-			]]>
-			<isEqual property="v_PROPNAME" compareValue="EXTENSIONATTRIBUTE15">
+			<isEqual property="v_PROPNAME" compareValue="photo_updateDT">
 				<![CDATA[
-					, UPDATEDT = TO_DATE(#nowDate#, 'yyyy-MM-dd HH24:MI:SS')
+				UPDATE
+					TBL_USERMASTER
+				SET 
+				    $v_PROPNAME$ = TO_DATE(#v_PROPVALUE#, 'yyyy-MM-dd HH24:MI:SS')
+				WHERE
+					CN = #v_CN#
+				AND
+					TENANT_ID = #v_TENANT_ID#
 				]]>
 			</isEqual>
-			<![CDATA[
-			WHERE
-				CN = #v_CN#
-			AND
-				TENANT_ID = #v_TENANT_ID#
-			]]>
+			<isNotEqual property="v_PROPNAME" compareValue="photo_updateDT">
+				<![CDATA[
+				UPDATE
+					TBL_USERMASTER
+				SET 
+				    $v_PROPNAME$ = #v_PROPVALUE#
+				    
+				]]>
+				<isEqual property="v_PROPNAME" compareValue="EXTENSIONATTRIBUTE15">
+					<![CDATA[
+						, UPDATEDT = TO_DATE(#nowDate#, 'yyyy-MM-dd HH24:MI:SS')
+					]]>
+				</isEqual>
+				<![CDATA[
+				WHERE
+					CN = #v_CN#
+				AND
+					TENANT_ID = #v_TENANT_ID#
+				]]>
+			</isNotEqual>
 		</isNotEqual>
 	</update>
 	
@@ -1642,7 +1656,7 @@
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('A30','002','0000','1','문서번호 FORMAT','0000','0000','0000',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
-			VALUES ('A30','003','2','1','회계종료월 (예: 2007.3~2008.2 이 회계년도이면 2를 넣는다. 1~12월이면 0을 넣는다)로 채번 및 기록물등록년도에 이용된다','2','2','2',#tenantID#, #companyID#)
+			VALUES ('A30','003','0','1','회계종료월 (예: 2007.3~2008.2 이 회계년도이면 2를 넣는다. 1~12월이면 0을 넣는다)로 채번 및 기록물등록년도에 이용된다','0','0','0',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('A31','0  ','결재처리제한','0','결재처리 되지 않는 문서리스트 제한','결재처리제한','결재처리제한','결재처리제한',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
@@ -6359,6 +6373,30 @@
 			(SEQ_TBL_USER_JOBMASTER.NEXTVAL, #v_TYPE#, #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_USEFLAG#, #v_SORT#, SYSDATE, #v_COMPANYID#, #v_TENANTID#)
 	]]>
 	</insert>
+	<select id="EzOrganAdminDAO.selectTitleByJobID" parameterClass="Map" resultClass="OrganJobVO" remapResults="true">
+		SELECT 
+			JOBID,
+			TYPE, 
+			CN, 
+			CASE
+            	#v_LANGDATA#
+            WHEN '1'
+            THEN
+            	DISPLAYNAME
+            ELSE
+            	DISPLAYNAME2
+            END DISPLAYNAME,
+			USEFLAG, 
+			SORT, 
+			CREATEDATE,
+			COMPANYID
+		FROM 
+			TBL_USER_JOBMASTER
+		WHERE 
+			JOBID = #v_JOBID#
+		AND 
+			TENANT_ID = #v_TENANTID#
+	</select>
 	<select id="EzOrganAdminDAO.selectTitleList" parameterClass="Map" resultClass="OrganJobVO" remapResults="true">
 		SELECT 
 			JOBID,
@@ -6432,7 +6470,7 @@
 		SET
 			TITLE = #v_DISPLAYNAME#,
 			TITLE2 = #v_DISPLAYNAME2#,
-			UPDATEDT = #nowDate#
+			UPDATEDT = TO_DATE(#nowDate#, 'yyyy-MM-dd HH24:MI:SS')
 		WHERE
 			EXTENSIONATTRIBUTE7 = #v_JOBID#
 	]]>

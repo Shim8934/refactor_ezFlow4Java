@@ -4209,4 +4209,15 @@
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
 	</statement>
 	
+    <statement id="EzCommonDAO.alterTblConnectionInfo">
+		ALTER TABLE 
+			TBL_CONNECTION_INFO
+		ADD 
+		IF NOT EXISTS
+		(
+			DISCONNECTTIME 		DATETIME 	DEFAULT NULL,
+			STATUS				VARCHAR(1)	DEFAULT NULL,
+			SESSIONCODE			VARCHAR(80)	DEFAULT NULL
+		)
+    </statement>
 </sqlMap>

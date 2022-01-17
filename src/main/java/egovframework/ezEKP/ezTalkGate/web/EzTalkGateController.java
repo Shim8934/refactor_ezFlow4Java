@@ -301,6 +301,29 @@ public class EzTalkGateController {
 					logger.debug("stoped user: {}", orgId);
 					logger.debug("ezTalkGateMain ended.");
 
+					// 2021-12-28 이사라 : 로그인 실패 로그 저장
+					LoginVO setVo = new LoginVO();
+					setVo.setId(orgId);
+					setVo.setTenantId(tenantId);
+					setVo.setDn("NOPASSWORD");
+					
+					LoginVO user = loginService.selectUser(setVo);
+					
+					if (user != null && user.getId() != null && !user.getId().equals("")) { 
+						user.setIp(ClientUtil.getClientIP(request));
+						user.setAgent(ClientUtil.getClientInfo(request, "agent"));
+						user.setOs(ClientUtil.getClientInfo(request, "os"));
+						user.setBrowser(ClientUtil.getClientInfo(request, "browser"));
+						user.setTenantId(tenantId);
+						user.setStatus("N");
+						
+						if (user.getTitle2() == null) {
+							user.setTitle2("");
+						}
+						
+						loginService.insertLog(user);
+					}
+					
 					return "cmm/error/stopedUserDenied";
 				}
 			}
@@ -319,11 +342,21 @@ public class EzTalkGateController {
 			
 			LoginVO vo = loginService.selectUser(setVo);
 			
+			// 2021-12-28 이사라 : 세션ID를 세션코드로 입력 
+        	String sessionCode =  request.getSession().getId();
+        	logger.debug("Login sessionCode = " + sessionCode);
+        	
 			vo.setIp(ClientUtil.getClientIP(request));
 			vo.setAgent(ClientUtil.getClientInfo(request, "agent"));
 			vo.setOs(ClientUtil.getClientInfo(request, "os"));
 			vo.setBrowser(ClientUtil.getClientInfo(request, "browser"));
 			vo.setTenantId(tenantId);
+			vo.setStatus("Y");
+			vo.setSessionCode(sessionCode);
+			
+			if (vo.getTitle2() == null) {
+				vo.setTitle2("");
+			}
 			
 			loginService.insertLog(vo);
 			

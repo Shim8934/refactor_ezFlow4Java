@@ -167,8 +167,8 @@
 			var newpDocID = "";
 	        var useRedraftOpinionKeep = "<c:out value='${useRedraftOpinionKeep}'/>";
 	        var formAprOption = "<c:out value='${formAprOption}'/>";
-	        var rtnSignInfo;
 	        var passAprLine = "";
+	        var rtnSignInfo = [];
 	        var useWebHWP = "<c:out value ='${useWebHWP}'/>";
 	        var pConnKey = "<c:out value ='${connKey}'/>";
 	        var pConnFormCode = "<c:out value ='${connFormCode}'/>";
@@ -300,6 +300,7 @@
 	                    }
 	                    
 	                    message.EditMode(2);
+						message.SetViewProperties(2, 100);
 	                    message.MoveToField("doctitle");
 	                    message.ScrollPosInfo(0, 0);
 	                } else {
@@ -543,7 +544,12 @@
 	        }
 	
 	        var sendDraftResult = "";
+	        var ingFlag = false;
 	        function btnSendDraft_onclick() {
+	            if (ingFlag) {
+                    return;
+                }
+	            
 	        	var deptCheckFlag = checkDeptAndCabinetId();
 	        	
 				if (deptCheckFlag == "3") {
@@ -578,7 +584,6 @@
 	        // sendDraft 시작
 	        function sendDraft(strClone) {
 	        	var strBytes = parseInt(getByteLength(strClone));
-		    	console.log(strBytes);
 		    	
 		    	var rtnAttachXML = loadXMLString(sendDraftResult);
 				
@@ -898,11 +903,13 @@
 	        // saveDraftInfo 끝
 	        
 	        function GetHTML(callback) {
-	            message.GetTextFile("HWP", "", function (data) { callback(data) });
+                ingFlag = true;
+	            message.GetTextFile("HWP", "", function (data) { ingFlag = false; callback(data); });
 	        }
 	        
 	        function GetHTML2(callback) {
-	            message.GetTextFile("HWPML2X", "", function (data) { callback(data) });
+                ingFlag = true;
+	            message.GetTextFile("HWPML2X", "", function (data) { ingFlag = false; callback(data); });
 	        }
 	        
 		    function Complete_Draft() {

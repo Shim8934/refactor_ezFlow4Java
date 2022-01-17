@@ -1,4 +1,4 @@
-﻿﻿var wTable;
+﻿var wTable;
 var xmlhttp;
 var delFlag = false;
 

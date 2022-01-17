@@ -694,13 +694,13 @@ function callSearchController() {
 				console.log(res);
 				
 				if (res == null) {
-					alert("에러가 발생하였습니다.");
+					alert("서버 에러가 발생하였습니다.\n재시도 후 증상이 계속되면 관리자에게 문의하시기 바랍니다.");
 					return;
 				}
 				
 				if (res.error != null) {
 					console.log(res.error);
-					alert("에러가 발생하였습니다.");
+					alert("서버 에러가 발생하였습니다.\n재시도 후 증상이 계속되면 관리자에게 문의하시기 바랍니다.");
 					return;
 				}
 				
@@ -786,11 +786,22 @@ function callSearchController() {
 					pagenation(pageObj(listCnt));
 				}
 				
-				//전체 검색량
-				if(approvalList !== undefined && boardList !== undefined && webfolderList !== undefined) {
-					var totalCount = approvalList.totcnt*1 + boardList.totcnt*1 + webfolderList.totcnt*1;
-					$("#totalCnt").empty().append(totalCount);				
+				var totalCount = 0;
+
+				if (approvalList) {
+					totalCount += approvalList.totcnt;
 				}
+
+				if (boardList) {
+					totalCount += boardList.totcnt;
+				}
+
+				if (webfolderList) {
+					totalCount += webfolderList.totcnt;
+				}
+
+				//전체 검색량
+				$("#totalCnt").empty().append(totalCount);
 			},
 			beforeSend : function() {
 				setTimeout(function(){ //순식간에 나오는 데이터들은 딱히 보여줄 필요가 없을 것 같아서 settimeout 처리
@@ -804,6 +815,9 @@ function callSearchController() {
 				$(".wrap-loading").addClass('display_none');	
 				$(".wrap-loading", parent.frames['left'].document).addClass('display_none');
 				totalSearch.data.btnStart = undefined;
+			},
+			error: function() {
+				alert("서버 에러가 발생하였습니다.\n재시도 후 증상이 계속되면 관리자에게 문의하시기 바랍니다.");
 			}
 		});	
 	

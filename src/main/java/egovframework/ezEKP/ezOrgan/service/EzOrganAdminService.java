@@ -97,6 +97,8 @@ public interface EzOrganAdminService {
 	public void updateProperty(String cn, String column, String number, String pClass, int tenantID, String mCondition) throws Exception;
 	
 	public String setTitle(String type, String cn, String displayName, String displayName2, String useFlag, int sort, String companyID, int tenantID) throws Exception;
+
+	public OrganJobVO getTitleByJobID(String jobID, String lang, int tenantID) throws Exception;
 	
 	public String getTitleList(String type, String companyID, int tenantID) throws Exception;
 	

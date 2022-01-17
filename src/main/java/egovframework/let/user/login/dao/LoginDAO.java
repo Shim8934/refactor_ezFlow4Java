@@ -114,6 +114,14 @@ public class LoginDAO extends EgovAbstractDAO {
     	insertLogForLocal(vo);       
     }
 
+    private void updateLogForLocal(LoginVO vo) throws Exception {
+        update("loginDAO.updateLog", vo);
+    }
+    
+    public void updateLog(LoginVO vo) throws Exception {
+    	updateLogForLocal(vo);
+    }
+    
 	@SuppressWarnings("unchecked")
 	public List<String> getUserIDList() throws Exception{
 		return (List<String>) list("loginDAO.getUserIDList");

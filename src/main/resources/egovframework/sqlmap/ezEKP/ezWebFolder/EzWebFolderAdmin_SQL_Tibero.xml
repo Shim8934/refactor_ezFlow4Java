@@ -1,0 +1,1458 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="ezWebFolderAdmin">
+	<typeAlias  alias="WebfolderConfigVO"           type="egovframework.ezEKP.ezWebFolder.vo.WebfolderConfigVO"/>
+	<typeAlias  alias="UserCapacityVO"              type="egovframework.ezEKP.ezWebFolder.vo.UserCapacityVO"   />
+	<typeAlias  alias="FileLogVO"                   type="egovframework.ezEKP.ezWebFolder.vo.FileLogVO"        />
+	<typeAlias  alias="webFolderFolderSimpleVO"      type="egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO"/>
+	<typeAlias  alias="webFolderSimpleFileVO"          	type="egovframework.ezEKP.ezWebFolder.vo.FileVO"/>
+	
+	<!-- FileType resultMap -->
+    <resultMap id="folderSimpleVO" class="webFolderFolderSimpleVO">
+        <result property="folderId"             column="FOLDER_ID"               columnIndex="1" />              
+        <result property="folderName"         	column="FOLDER_NAME1"             columnIndex="2" />
+		<result property="folderLevel"         	column="FOLDER_LEVEL"            columnIndex="3" />
+    </resultMap>
+    
+    <resultMap id="fileSimpleVO" class="webFolderSimpleFileVO">
+        <result property="fileId"               column="FILE_ID"                 columnIndex="1"/>                                                             
+        <result property="createDate"           column="CREATE_DATE"             columnIndex="2"/>                                                      
+        <result property="createId"             column="CREATE_ID"            	 columnIndex="3"/>                                                    
+    </resultMap>
+    
+	<sql id="getCapacityQuery">
+		<![CDATA[
+			SELECT
+				RESULT.*
+			FROM (
+			SELECT
+				MAIN.CN,
+				MAIN.FOLDER_TYPE AS TYPE,
+				MAIN.COMPANY_ID,
+				MAIN.TENANT_ID,
+		]]>
+		<isEqual property="primary" compareValue="1">
+				MAIN.FOLDER_NAME1 AS DISPLAY_NAME,
+				COMPANY_JOIN.DISPLAYNAME AS COMPANY_NAME,
+				DEPTMASTER.DISPLAYNAME AS DEPARTMENT_NAME,
+				USERMASTER.TITLE AS JOB_TITLE,
+		</isEqual>
+		<isNotEqual property="primary" compareValue="1">
+				MAIN.FOLDER_NAME2 AS DISPLAY_NAME,
+				COMPANY_JOIN.DISPLAYNAME2 AS COMPANY_NAME,
+				DEPTMASTER.DISPLAYNAME2 AS DEPARTMENT_NAME,
+				USERMASTER.TITLE2 AS JOB_TITLE,
+		</isNotEqual>
+		<![CDATA[
+				NVL(
+					CUSTOM_CONFIG.TOTAL_CAPACITY,
+					NVL(
+						CASE
+							WHEN MAIN.FOLDER_TYPE = 'U'
+							THEN CONFIG.USER_TOTAL_LIMIT
+							WHEN MAIN.FOLDER_TYPE = 'D'
+							THEN CONFIG.DEPARTMENT_TOTAL_LIMIT
+							WHEN MAIN.FOLDER_TYPE = 'C'
+							THEN CONFIG.COMPANY_TOTAL_LIMIT
+						END,
+						NVL(
+							CASE
+								WHEN MAIN.FOLDER_TYPE = 'U'
+								THEN TENANT_DEFAULT_CONFIG.USER_TOTAL_LIMIT
+								WHEN MAIN.FOLDER_TYPE = 'D'
+								THEN TENANT_DEFAULT_CONFIG.DEPARTMENT_TOTAL_LIMIT
+								WHEN MAIN.FOLDER_TYPE = 'C'
+								THEN TENANT_DEFAULT_CONFIG.COMPANY_TOTAL_LIMIT
+							END,
+							0
+						)
+					)
+				) AS TOTAL_CAPACITY,
+				(
+					SELECT
+						NVL(SUM(FILES.FILE_SIZE), 0)
+					FROM
+						TBL_WEBFOLDER_FILE FILES
+							JOIN
+								TBL_WEBFOLDER_FOLDER FOLDER2
+							ON
+								FILES.TENANT_ID = FOLDER2.TENANT_ID
+							AND
+								FILES.FOLDER_ID = FOLDER2.FOLDER_ID
+					WHERE
+						FILES.TENANT_ID = FOLDER.TENANT_ID
+					AND
+					(
+						(
+							FOLDER2.FOLDER_PATH LIKE FOLDER.FOLDER_PATH || '%'
+						AND
+							FILES.USE_STATUS = 'Y'						
+						)
+		]]>
+		<isEqual property="type" compareValue="U">
+		<![CDATA[
+						OR (
+							FILES.DELETER_ID = MAIN.CN
+						AND
+							FILES.USE_STATUS <> 'Y'
+						)
+		]]>
+		</isEqual>
+					)
+				) AS TOTAL_USED,
+			(      SELECT       
+								NVL(COUNT(FILES.FILE_SIZE), 0)      
+									FROM       TBL_WEBFOLDER_FILE FILES        
+									JOIN         TBL_WEBFOLDER_FOLDER FOLDER2        ON         FILES.TENANT_ID = FOLDER2.TENANT_ID        
+									AND         FILES.FOLDER_ID = FOLDER2.FOLDER_ID     
+									WHERE       FILES.TENANT_ID = FOLDER.TENANT_ID     
+									AND     
+									(      
+										(        
+											FOLDER2.FOLDER_PATH LIKE FOLDER.FOLDER_PATH || '%'      
+												AND        FILES.USE_STATUS = 'Y'             )           
+
+		<isEqual property="type" compareValue="U">
+		<![CDATA[
+						OR (
+							FILES.DELETER_ID = MAIN.CN
+						AND
+							FILES.USE_STATUS <> 'Y'
+						)
+		]]>
+		</isEqual>
+					)     
+				) AS TOTAL_COUNT 									
+			FROM
+		<isEqual property="type" compareValue="C">
+				(
+					SELECT
+						CN,
+						'C' AS FOLDER_TYPE,
+						EXTENSIONATTRIBUTE2 AS COMPANY_ID,
+						TENANT_ID,
+						DISPLAYNAME AS FOLDER_NAME1,
+						DISPLAYNAME2 AS FOLDER_NAME2
+					FROM
+						TBL_DEPTMASTER
+					WHERE
+						TENANT_ID = #tenantId#
+					AND
+						DEPTLEVEL = 1
+				<isNotEmpty property="companyId">
+					AND
+						EXTENSIONATTRIBUTE2 = #companyId#
+				</isNotEmpty>
+				) MAIN
+		</isEqual>
+		<isEqual property="type" compareValue="D">
+				(
+					SELECT
+						CN,
+						'D' AS FOLDER_TYPE,
+						EXTENSIONATTRIBUTE2 AS COMPANY_ID,
+						TENANT_ID,
+						DISPLAYNAME AS FOLDER_NAME1,
+						DISPLAYNAME2 AS FOLDER_NAME2
+					FROM
+						TBL_DEPTMASTER
+					WHERE
+						TENANT_ID = #tenantId#
+				<isNotEmpty property="companyId">
+					AND
+						EXTENSIONATTRIBUTE2 = #companyId#
+				</isNotEmpty>
+				    AND 
+				        DEPT_CD_PATH NOT LIKE '%shared_mailbox%' 
+				    AND 
+				    	DEPT_CD_PATH NOT LIKE '%trash%'
+				) MAIN
+		</isEqual>
+		<isEqual property="type" compareValue="U">
+				(
+					SELECT
+						CN,
+						'U' AS FOLDER_TYPE,
+						PHYSICALDELIVERYOFFICENAME AS COMPANY_ID,
+						TENANT_ID,
+						DISPLAYNAME AS FOLDER_NAME1,
+						DISPLAYNAME2 AS FOLDER_NAME2
+					FROM
+						TBL_USERMASTER
+					WHERE
+						TENANT_ID = #tenantId#
+				<isNotEmpty property="companyId">
+					AND
+						PHYSICALDELIVERYOFFICENAME = #companyId#
+				</isNotEmpty>
+					 AND 
+				        DEPARTMENT NOT LIKE '%shared_mailbox%' 
+				     AND 
+				     	DEPARTMENT NOT LIKE '%trash%'
+				) MAIN
+		</isEqual>
+		<![CDATA[
+				LEFT JOIN TBL_WEBFOLDER_FOLDER FOLDER
+					ON
+						FOLDER.TENANT_ID = MAIN.TENANT_ID
+					AND
+						FOLDER.OWNER_ID = MAIN.CN
+					AND
+						FOLDER.FOLDER_UPPER = 'root'
+					AND
+						FOLDER.FOLDER_TYPE = MAIN.FOLDER_TYPE
+				LEFT JOIN TBL_WEBFOLDER_CONFIG TENANT_DEFAULT_CONFIG
+					ON
+						MAIN.TENANT_ID = TENANT_DEFAULT_CONFIG.TENANT_ID
+					AND
+						TENANT_DEFAULT_CONFIG.COMPANY_ID = '*'
+				LEFT JOIN TBL_WEBFOLDER_CONFIG CONFIG
+					ON
+						CONFIG.COMPANY_ID = MAIN.COMPANY_ID
+					AND
+						CONFIG.TENANT_ID = MAIN.TENANT_ID
+				LEFT JOIN TBL_WEBFOLDER_USER CUSTOM_CONFIG
+					ON
+						MAIN.FOLDER_TYPE <> 'C'
+					AND
+						CUSTOM_CONFIG.CN = MAIN.CN
+					AND
+						CUSTOM_CONFIG.TYPE = MAIN.FOLDER_TYPE
+					AND
+						CUSTOM_CONFIG.TENANT_ID = MAIN.TENANT_ID
+				LEFT JOIN TBL_USERMASTER USERMASTER
+					ON
+						MAIN.FOLDER_TYPE = 'U'
+					AND
+						MAIN.CN = USERMASTER.CN
+					AND
+						MAIN.TENANT_ID = USERMASTER.TENANT_ID
+				LEFT JOIN TBL_DEPTMASTER DEPTMASTER
+					ON
+						MAIN.TENANT_ID = DEPTMASTER.TENANT_ID
+					AND (
+						(
+							MAIN.FOLDER_TYPE = 'U'
+						AND
+							USERMASTER.DEPARTMENT = DEPTMASTER.CN
+						) OR (
+							MAIN.FOLDER_TYPE <> 'U'
+						AND
+							MAIN.CN = DEPTMASTER.CN
+						))
+				LEFT JOIN TBL_DEPTMASTER COMPANY_JOIN
+					ON
+						MAIN.COMPANY_ID = COMPANY_JOIN.CN
+					AND
+						COMPANY_JOIN.DEPTLEVEL = 1
+					AND
+						MAIN.TENANT_ID = COMPANY_JOIN.TENANT_ID
+			) RESULT
+		]]>
+	</sql>
+	
+	<sql id="capacitySearchCondition">
+		<isNotNull property="searchOption">
+			<!-- displayname (사용자이름, 부서이름, 회사이름) -->
+			<isEqual property="searchOption" compareValue="displayName">
+				<![CDATA[
+					WHERE DISPLAY_NAME LIKE CONCAT(CONCAT('%', #searchKeyword#), '%')
+				]]>
+			</isEqual>
+			<!-- 사용자 부서 검색 -->
+			<isEqual property="searchOption" compareValue="deptName">
+				<![CDATA[
+					WHERE DEPARTMENT_NAME LIKE CONCAT(CONCAT('%', #searchKeyword#), '%')
+				]]>
+			</isEqual>
+		</isNotNull>
+	</sql>
+	
+	<sql id="fileHistoryCondition">
+		WHERE
+				l.COMPANY_ID = #companyId#
+			AND
+				l.TENANT_ID  = #tenantId#
+		<isEqual property="fileType" compareValue="2" prepend="AND">
+			<![CDATA[
+				t.TYPE_NAME = 'document'
+			]]> 
+		</isEqual>
+		<isEqual property="fileType" compareValue="3" prepend="AND">
+			<![CDATA[
+				t.TYPE_NAME = 'music'
+			]]> 
+		</isEqual>
+		<isEqual property="fileType" compareValue="4" prepend="AND">
+			<![CDATA[
+				t.TYPE_NAME = 'video'
+			]]> 
+		</isEqual>
+		<isEqual property="fileType" compareValue="5" prepend="AND">
+			<![CDATA[
+				t.TYPE_NAME = 'image'
+			]]> 
+		</isEqual>
+		<isEqual property="fileType" compareValue="6" prepend="AND">
+			<![CDATA[
+				t.TYPE_NAME = 'zip'
+			]]>
+		</isEqual>
+		<isEqual property="fileType" compareValue="7" prepend="AND">
+			<![CDATA[
+				t.TYPE_NAME is null
+			]]>
+		</isEqual>
+		
+		<isEqual property="searchChk" compareValue="1">
+			<isNotEqual property="fileExt" compareValue="" prepend="AND">
+				<![CDATA[
+					(LOWER(l.FILE_EXT) LIKE CONCAT(CONCAT('%', LOWER(#fileExt#)), '%') ESCAPE '\')
+				]]>
+			</isNotEqual>
+			
+			<isNotEqual property="fileName" compareValue="" prepend="AND">
+				<![CDATA[
+					l.FILE_NAME LIKE CONCAT(CONCAT('%', #fileName#), '%') ESCAPE '\'
+				]]>
+			</isNotEqual>
+			
+			<isNotEqual property="userName" compareValue="" prepend="AND">
+				<isEqual property="primary" compareValue="1">
+					<![CDATA[
+						l.CREATE_NAME1 LIKE CONCAT(CONCAT('%', #userName#), '%') ESCAPE '\'
+					]]>
+				</isEqual>
+				<isEqual property="primary" compareValue="2">
+					<![CDATA[
+						l.CREATE_NAME2 LIKE CONCAT(CONCAT('%', #userName#), '%') ESCAPE '\'
+					]]>
+				</isEqual>
+			</isNotEqual>
+			
+			<isNotEqual property="startDate" compareValue="" prepend="AND">
+				<![CDATA[
+					(l.CREATE_DATE >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') AND l.CREATE_DATE <= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS'))
+				]]>
+			</isNotEqual>
+			
+			<isNotEqual property="actionType" compareValue="M" prepend="AND">
+				<![CDATA[
+					l.LOG_TYPE = #actionType#
+				]]>
+			</isNotEqual>
+		</isEqual>
+	</sql>
+	
+	<sql id="upperFolderFolderUser">
+		SELECT 
+			<isEqual property="type_f" compareValue="D">
+			SEQ_FOLDERUSER.NEXTVAL,			
+			#targetId#,
+			FOLDER_MANAGER,
+			</isEqual>
+			<isEqual property="type_f" compareValue="F">
+			SEQ_FILEUSER.NEXTVAL,			
+			#targetId#,
+			</isEqual>
+			USER_ID,			
+			USER_TYPE, 		
+			CREATE_ID,	
+			CREATE_DATE, 		
+			COMPANY_ID, 		
+			TENANT_ID,
+			SUBDEPT_PERMITTED 
+		<isEqual property="copyType" compareValue="copy">
+		FROM 
+			TBL_WEBFOLDER_FILEUSER 
+		WHERE 
+			FILE_ID = #upperId# AND TENANT_ID = #tenantId# 
+		</isEqual>
+		<isEmpty property="copyType">
+		FROM 
+			TBL_WEBFOLDER_FOLDERUSER 
+		WHERE 
+			FOLDER_ID = #upperFolderId# AND TENANT_ID = #tenantId# AND FOLDER_MANAGER = 0 
+		</isEmpty>
+	</sql>
+	
+	<!-- WebfolderConfig resultMap -->
+	<resultMap id="webfolderConfigVO" class="WebfolderConfigVO">
+		<result property="tenantId"             column="TENANT_ID" />
+		<result property="companyId"            column="COMPANY_ID" />
+		<result property="uploadLimit"          column="UPLOAD_LIMIT" />
+		<result property="companyTotalLimit"    column="COMPANY_TOTAL_LIMIT" />
+		<result property="departmentTotalLimit" column="DEPARTMENT_TOTAL_LIMIT" />
+		<result property="userTotalLimit"       column="USER_TOTAL_LIMIT" />
+	</resultMap>
+	
+	<!-- UserCapacity resultMap -->
+	<resultMap id="userCapacityVO" class="UserCapacityVO">
+<!-- 		<result property="cn"                   column="CN"/> -->
+<!-- 		<result property="type"                 column="TYPE"/> -->
+<!-- 		<result property="totalCapacity"        column="TOTAL_CAPACITY"/> -->
+<!-- 		<result property="companyId"            column="COMPANY_ID"/> -->
+<!-- 		<result property="totalUsed"            column="TOTAL_USED"/> -->
+<!-- 		<result property="tenantId"             column="TENANT_ID"/> -->
+		<result property="cn"                  column="CN" />
+		<result property="type"                column="TYPE" />
+		<result property="displayName"         column="DISPLAY_NAME" />
+<!-- 		<result property="departmentId"        column="DEPARTMENT_ID"          columnIndex="3"  /> -->
+		<result property="departmentName"      column="DEPARTMENT_NAME" />
+		<result property="companyName"         column="COMPANY_NAME" />
+		<result property="totalCapacity"       column="TOTAL_CAPACITY" />
+		<result property="jobTitle"            column="JOB_TITLE" />
+		<result property="totalUsed"           column="TOTAL_USED" />
+		<result property="companyId"           column="COMPANY_ID" />
+		<result property="tenantId"            column="TENANT_ID" />
+		<result property="totalCount"			column="TOTAL_COUNT"/>
+	</resultMap>
+	
+	<!-- FileLog resultMap -->
+	<resultMap id="fileLogVO" class="FileLogVO">
+		<result property="logId"               column="LOG_ID"                  columnIndex="1"  />
+		<result property="fileType"            column="FILE_TYPE"               columnIndex="2"  />
+		<result property="fileName"            column="FILE_NAME"               columnIndex="3"  />
+		<result property="fileSize"            column="FILE_SIZE"               columnIndex="4"  />
+		<result property="fileExt"             column="FILE_EXT"                columnIndex="5"  />
+		<result property="logType"             column="LOG_TYPE"                columnIndex="6"  />
+		<result property="createId"            column="CREATE_ID"               columnIndex="7"  />
+		<result property="createName1"         column="CREATE_NAME1"            columnIndex="8"  />
+		<result property="createName2"         column="CREATE_NAME2"            columnIndex="9"  />
+		<result property="createDate"          column="CREATE_DATE"             columnIndex="10" />
+		<result property="companyId"           column="COMPANY_ID"              columnIndex="11" />
+		<result property="tenantId"            column="TENANT_ID"               columnIndex="12" />
+		
+		<result property="fileId"	           column="FILE_ID"               	columnIndex="13" />
+		<result property="version"	           column="VERSION"               	columnIndex="14" />
+		<result property="folderId"	           column="FOLDER_ID"               columnIndex="15" />
+		<result property="folderName"	       column="FOLDER_NAME"             columnIndex="16" />
+		<result property="folderPath"	       column="FOLDER_PATH"             columnIndex="17" />
+		<result property="folderPathName"	   column="FOLDER_PATH_NAME"        columnIndex="18" />
+		<result property="topFolderId"         column="TOP_FOLDER_ID"           columnIndex="19" />
+		<result property="topFolderName"       column="TOP_FOLDER_NAME"         columnIndex="20" />
+	</resultMap>
+	
+	<select id="EzWebFolderAdminDAO.existCompany" resultClass="Integer">
+		SELECT
+			COUNT(CN)
+		FROM
+			TBL_DEPTMASTER
+		WHERE
+			CN = #companyId#
+		AND
+			DEPTLEVEL = 1
+		AND
+			TENANT_ID = #tenantId#
+	</select>
+	
+	<insert id="EzWebFolderAdminDAO.saveEveryCompanyConfig" parameterClass="Map">
+		<selectKey keyProperty="v_temp" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					1
+				FROM
+					DUAL
+				WHERE
+					NOT EXISTS (SELECT
+									COMPANY_ID,
+									TENANT_ID
+									FROM
+										TBL_WEBFOLDER_CONFIG
+									WHERE
+										COMPANY_ID = '*'
+									AND
+										TENANT_ID = #tenantId#
+								)
+			]]>
+		</selectKey>
+		<isEqual property="v_temp" compareValue="1">
+			<![CDATA[
+				INSERT INTO TBL_WEBFOLDER_CONFIG (
+					TENANT_ID, COMPANY_ID, UPLOAD_LIMIT, COMPANY_TOTAL_LIMIT, DEPARTMENT_TOTAL_LIMIT, USER_TOTAL_LIMIT
+				)
+				VALUES (
+					#tenantId#, '*', #uploadLimit#, #companyLimit#, #departmentLimit#, #userLimit#
+				)
+			]]>
+		</isEqual>
+		<isNotEqual property="v_temp" compareValue="1">
+			<![CDATA[
+				UPDATE
+					TBL_WEBFOLDER_CONFIG
+				SET
+					UPLOAD_LIMIT = #uploadLimit#,
+					COMPANY_TOTAL_LIMIT = #companyLimit#,
+					DEPARTMENT_TOTAL_LIMIT = #departmentLimit#,
+					USER_TOTAL_LIMIT = #userLimit#
+				WHERE
+					COMPANY_ID = '*'
+				AND
+					TENANT_ID = #tenantId#
+			]]>
+		</isNotEqual>
+	</insert>
+	
+	<insert id="EzWebFolderAdminDAO.saveConfig" parameterClass="Map">
+		<selectKey keyProperty="v_temp" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					1
+				FROM
+					DUAL
+				WHERE
+					NOT EXISTS (SELECT
+									COMPANY_ID,
+									TENANT_ID
+									FROM
+										TBL_WEBFOLDER_CONFIG
+									WHERE
+										COMPANY_ID = #companyId#
+									AND
+										TENANT_ID = #tenantId#
+								)
+			]]>
+		</selectKey>
+		<isEqual property="v_temp" compareValue="1">
+			<![CDATA[
+				INSERT INTO TBL_WEBFOLDER_CONFIG (
+					TENANT_ID, COMPANY_ID, UPLOAD_LIMIT, COMPANY_TOTAL_LIMIT, DEPARTMENT_TOTAL_LIMIT, USER_TOTAL_LIMIT
+				)
+				VALUES (
+					#tenantId#, #companyId#, #uploadLimit#, #companyLimit#, #departmentLimit#, #userLimit#
+				)
+			]]>
+		</isEqual>
+		<isNotEqual property="v_temp" compareValue="1">
+			<![CDATA[
+				UPDATE
+					TBL_WEBFOLDER_CONFIG
+				SET
+					UPLOAD_LIMIT = #uploadLimit#,
+			]]>
+				<isNotEmpty property="companyLimit">
+					COMPANY_TOTAL_LIMIT = #companyLimit#,
+				</isNotEmpty>
+			<![CDATA[
+					DEPARTMENT_TOTAL_LIMIT = #departmentLimit#,
+					USER_TOTAL_LIMIT = #userLimit#
+				WHERE
+					COMPANY_ID = #companyId#
+				AND
+					TENANT_ID = #tenantId#
+			]]>
+		</isNotEqual>
+	</insert>
+	
+	<select id="EzWebFolderAdminDAO.getEveryCompanyConfig" resultMap="webfolderConfigVO">
+		<![CDATA[
+			SELECT
+				CONFIG.TENANT_ID,
+				CONFIG.COMPANY_ID,
+				CONFIG.UPLOAD_LIMIT,
+				CONFIG.COMPANY_TOTAL_LIMIT,
+				CONFIG.DEPARTMENT_TOTAL_LIMIT,
+				CONFIG.USER_TOTAL_LIMIT
+			FROM
+				TBL_WEBFOLDER_CONFIG CONFIG
+			WHERE
+				CONFIG.COMPANY_ID = '*'
+			AND
+				CONFIG.TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
+	<select id="EzWebFolderAdminDAO.getWebfolderConfig" resultMap="webfolderConfigVO">
+		<![CDATA[
+			SELECT
+				ALLCOMPANY.TENANT_ID,
+				#companyId# AS COMPANY_ID,
+				NVL(CONFIG.UPLOAD_LIMIT, ALLCOMPANY.UPLOAD_LIMIT) AS UPLOAD_LIMIT,
+				NVL(CONFIG.COMPANY_TOTAL_LIMIT, ALLCOMPANY.COMPANY_TOTAL_LIMIT) AS COMPANY_TOTAL_LIMIT,
+				NVL(CONFIG.DEPARTMENT_TOTAL_LIMIT, ALLCOMPANY.DEPARTMENT_TOTAL_LIMIT) AS DEPARTMENT_TOTAL_LIMIT,
+				NVL(CONFIG.USER_TOTAL_LIMIT, ALLCOMPANY.USER_TOTAL_LIMIT) AS USER_TOTAL_LIMIT
+			FROM
+				TBL_WEBFOLDER_CONFIG ALLCOMPANY
+				LEFT JOIN
+					TBL_WEBFOLDER_CONFIG CONFIG
+				ON
+					CONFIG.TENANT_ID = ALLCOMPANY.TENANT_ID
+				AND
+					CONFIG.COMPANY_ID = #companyId#
+			WHERE
+				ALLCOMPANY.COMPANY_ID = '*'
+			AND
+				ALLCOMPANY.TENANT_ID  = #tenantId#
+		]]>
+	</select>
+	
+	<insert id="EzWebFolderAdminDAO.setCapacity" parameterClass="Map">
+		<selectKey keyProperty="v_temp" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					1
+				FROM
+					DUAL
+				WHERE
+					NOT EXISTS (SELECT
+									USERS.COMPANY_ID,
+									USERS.TENANT_ID
+									FROM
+										TBL_WEBFOLDER_USER USERS
+									WHERE
+										USERS.CN = #cn#
+									AND
+										USERS.TYPE = #type#
+									AND
+										USERS.TENANT_ID = #tenantId#
+								)
+			]]>
+		</selectKey>
+		<isEqual property="v_temp" compareValue="1">
+			<![CDATA[
+				INSERT INTO TBL_WEBFOLDER_USER (
+					CN, TYPE, TOTAL_CAPACITY, COMPANY_ID, TENANT_ID
+				)
+				VALUES (
+					#cn#, #type#, #value#, #companyId#, #tenantId#
+				)
+			]]>
+		</isEqual>
+		<isNotEqual property="v_temp" compareValue="1">
+			<![CDATA[
+				UPDATE
+					TBL_WEBFOLDER_USER
+				SET
+					TOTAL_CAPACITY = #value#
+				WHERE
+					CN = #cn#
+				AND
+					TYPE = #type#
+				AND
+					TENANT_ID = #tenantId#
+			]]>
+		</isNotEqual>
+	</insert>
+	
+	<insert id="EzWebFolderAdminDAO.setCapacityForCompany" parameterClass="Map">
+		<selectKey keyProperty="v_temp" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					1
+				FROM
+					DUAL
+				WHERE
+					NOT EXISTS (SELECT
+									CONFIG.COMPANY_ID,
+									CONFIG.TENANT_ID
+									FROM
+										TBL_WEBFOLDER_CONFIG CONFIG
+									WHERE
+										CONFIG.TENANT_ID = #tenantId#
+									AND
+										CONFIG.COMPANY_ID = #cn#
+								)
+			]]>
+		</selectKey>
+		<isEqual property="v_temp" compareValue="1">
+			<![CDATA[
+				INSERT INTO TBL_WEBFOLDER_CONFIG (
+					TENANT_ID, COMPANY_ID, COMPANY_TOTAL_LIMIT
+				) VALUES (
+					#tenantId#, #cn#, #value#
+				)
+			]]>
+		</isEqual>
+		<isNotEqual property="v_temp" compareValue="1">
+			<![CDATA[
+				UPDATE
+					TBL_WEBFOLDER_CONFIG
+				SET
+					COMPANY_TOTAL_LIMIT = #value#
+				WHERE
+					COMPANY_ID = #cn#
+				AND
+					TENANT_ID = #tenantId#
+			]]>
+		</isNotEqual>
+	</insert>
+	
+	<delete id="EzWebFolderAdminDAO.deleteCapacities" parameterClass="Map">
+		<isEqual property="type" compareValue="C">
+			UPDATE
+				TBL_WEBFOLDER_CONFIG
+			SET
+				COMPANY_TOTAL_LIMIT = NULL
+			WHERE
+				TENANT_ID = #tenantId#
+			AND
+				COMPANY_ID IN
+				<iterate property="list" open="(" close=")" conjunction=",">
+					#list[]#
+				</iterate>
+		</isEqual>
+		<isNotEqual property="type" compareValue="C">
+			DELETE FROM
+				TBL_WEBFOLDER_USER
+			WHERE
+				TENANT_ID = #tenantId#
+			AND
+				TYPE = #type#
+			AND
+				CN IN
+				<iterate property="list" open="(" close=")" conjunction=",">
+					#list[]#
+				</iterate>
+		</isNotEqual>
+	</delete>
+	
+	<select id="EzWebFolderAdminDAO.getCapacityList" resultMap="userCapacityVO">
+		SELECT
+			*
+		FROM
+		(SELECT
+			RESULT2.*, ROWNUM AS RNUM
+		FROM
+		(
+		<include refid="getCapacityQuery"/>
+		<include refid="capacitySearchCondition"/>
+		<isNotEqual property="realColumn" compareValue="">
+			ORDER BY
+				$realColumn$ $order$,
+				DEPARTMENT_NAME ASC,
+				DISPLAY_NAME ASC
+		</isNotEqual>
+		<isEqual property="realColumn" compareValue="">
+			ORDER BY
+				DEPARTMENT_NAME ASC,
+				DISPLAY_NAME ASC
+		</isEqual>
+		<![CDATA[
+			) RESULT2
+			WHERE
+				ROWNUM <= #startPoint# + #pageSize#
+			)
+			WHERE
+				RNUM >= #startPoint# + 1
+		]]>
+	</select>
+	
+	<select id="EzWebFolderAdminDAO.getTotalCapacityCount" resultClass="Integer">
+		SELECT
+			COUNT(CN)
+		FROM (
+			<include refid="getCapacityQuery"/>
+			<include refid="capacitySearchCondition"/>
+		)
+	</select>
+	
+	<select id="EzWebFolderAdminDAO.getCapacity" resultMap="userCapacityVO">
+		<include refid="getCapacityQuery"/>
+		<![CDATA[
+			WHERE
+				CN = #cn#
+		]]>
+	</select>
+	
+	<select id="EzWebFolderAdminDAO.getCapacityForFolderId" resultMap="userCapacityVO">
+		<include refid="getCapacityQuery"/>
+		<![CDATA[
+			WHERE
+				FOLDER.FOLDER_ID = #folderId#
+		]]>
+	</select>
+	
+<!-- 	<select id="EzWebFolderAdminDAO.getUserCapacity" resultMap="userCapacityVO"> -->
+<!-- 		<![CDATA[ -->
+<!-- 			SELECT -->
+<!-- 				U.CN                                                                                        AS CN, -->
+<!-- 				CASE WHEN #primary# = '1' THEN U.DISPLAYNAME ELSE U.DISPLAYNAME2 END                        AS DISPLAY_NAME, -->
+<!-- 				U.DEPARTMENT                                                                                AS DEPARTMENT_ID, -->
+<!-- 				CASE WHEN #primary# = '1' THEN U.DESCRIPTION ELSE U.DESCRIPTION2 END                        AS DEPARTMENT_NAME, -->
+<!-- 				U.PHYSICALDELIVERYOFFICENAME                                                                AS COMPANY_ID, -->
+<!-- 				CASE WHEN #primary# = '1' THEN U.COMPANY ELSE U.COMPANY2 END                                AS COMPANY_NAME, -->
+<!-- 				CASE WHEN W.TOTAL_CAPACITY IS NOT NULL THEN W.TOTAL_CAPACITY ELSE NVL(C.TOTAL_LIMIT, 0) END AS TOTAL_CAPACITY, -->
+<!-- 				CASE WHEN #primary# = '1' THEN U.TITLE ELSE U.TITLE2 END                                    AS JOB_TITLE, -->
+<!-- 				( -->
+<!-- 					SELECT NVL(SUM(F.FILE_SIZE), 0) -->
+<!-- 						FROM -->
+<!-- 							TBL_WEBFOLDER_FILE F -->
+<!-- 						WHERE -->
+<!-- 							F.TENANT_ID = #tenantId# -->
+<!-- 						AND -->
+<!-- 							F.CREATE_ID = #userId# -->
+<!-- 				)                                                                            AS TOTAL_USED, -->
+<!-- 				U.TENANT_ID                                                                  AS TENANT_ID -->
+<!-- 			FROM -->
+<!-- 				TBL_USERMASTER U -->
+<!-- 								LEFT JOIN TBL_WEBFOLDER_USER W ON U.CN = W.CN AND U.TENANT_ID = W.TENANT_ID -->
+<!-- 								LEFT JOIN TBL_WEBFOLDER_CONFIG C ON U.PHYSICALDELIVERYOFFICENAME = C.COMPANY_ID AND U.TENANT_ID = C.TENANT_ID -->
+<!-- 			WHERE -->
+<!-- 				U.CN        = #userId# -->
+<!-- 			AND -->
+<!-- 				U.TENANT_ID = #tenantId# -->
+<!-- 		]]> -->
+<!-- 	</select> -->
+	
+<!-- 	<select id="EzWebFolderAdminDAO.getListUserCapacity" resultMap="userCapacityVO"> -->
+<!-- 		<![CDATA[ -->
+<!-- 			SELECT -->
+<!-- 				* -->
+<!-- 			FROM -->
+<!-- 				( -->
+<!-- 					SELECT -->
+<!-- 						k.*, ROWNUM AS RNUM -->
+<!-- 					FROM -->
+<!-- 						( -->
+<!-- 							SELECT -->
+<!-- 								U.CN                                                                                        AS CN, -->
+<!-- 								CASE WHEN #primary# = '1' THEN U.DISPLAYNAME ELSE U.DISPLAYNAME2 END                        AS DISPLAY_NAME, -->
+<!-- 								U.DEPARTMENT                                                                                AS DEPARTMENT_ID, -->
+<!-- 								CASE WHEN #primary# = '1' THEN U.DESCRIPTION ELSE U.DESCRIPTION2 END                        AS DEPARTMENT_NAME, -->
+<!-- 								U.PHYSICALDELIVERYOFFICENAME                                                                AS COMPANY_ID, -->
+<!-- 								CASE WHEN #primary# = '1' THEN U.COMPANY ELSE U.COMPANY2 END                                AS COMPANY_NAME, -->
+<!-- 								CASE WHEN W.TOTAL_CAPACITY IS NOT NULL THEN W.TOTAL_CAPACITY ELSE NVL(C.TOTAL_LIMIT, 0) END AS TOTAL_CAPACITY, -->
+<!-- 								CASE WHEN #primary# = '1' THEN U.TITLE ELSE U.TITLE2 END                                    AS JOB_TITLE, -->
+<!-- 								( -->
+<!-- 									SELECT NVL(SUM(F.FILE_SIZE), 0) -->
+<!-- 										FROM -->
+<!-- 											TBL_WEBFOLDER_FILE F -->
+<!-- 										WHERE -->
+<!-- 											F.TENANT_ID = #tenantId# -->
+<!-- 										AND -->
+<!-- 											F.CREATE_ID = U.CN -->
+<!-- 								)                                                                            AS TOTAL_USED, -->
+<!-- 								U.TENANT_ID                                                                  AS TENANT_ID -->
+<!-- 							FROM -->
+<!-- 								TBL_USERMASTER U -->
+<!-- 												LEFT JOIN TBL_WEBFOLDER_USER W ON U.CN = W.CN AND U.TENANT_ID = W.TENANT_ID -->
+<!-- 												LEFT JOIN TBL_WEBFOLDER_CONFIG C ON U.PHYSICALDELIVERYOFFICENAME = C.COMPANY_ID AND U.TENANT_ID = C.TENANT_ID -->
+<!-- 						]]> -->
+<!-- 					<include refid="userCapacityCondition"/> -->
+					
+<!-- 					<isNotEqual property="realColmn" compareValue=""> -->
+<!-- 						ORDER BY -->
+<!-- 							$realColmn$ $order$, -->
+<!-- 							DEPARTMENT_NAME ASC, -->
+<!-- 							DISPLAY_NAME ASC -->
+<!-- 					</isNotEqual> -->
+<!-- 					<isEqual property="realColmn" compareValue=""> -->
+<!-- 						<![CDATA[ -->
+<!-- 						ORDER BY -->
+<!-- 							DEPARTMENT_NAME ASC, -->
+<!-- 							DISPLAY_NAME ASC -->
+<!-- 						]]> -->
+<!-- 					</isEqual> -->
+<!-- 					<![CDATA[ -->
+<!-- 						) k -->
+<!-- 					WHERE -->
+<!-- 						ROWNUM <= #startPoint# + #pageSize# -->
+<!-- 				) -->
+<!-- 			WHERE -->
+<!-- 				RNUM >= #startPoint# + 1 -->
+<!-- 		]]> -->
+<!-- 	</select> -->
+	
+<!-- 	<select id="EzWebFolderAdminDAO.getTotalListUserCapacity" resultClass="Integer"> -->
+<!-- 		<![CDATA[ -->
+<!-- 			SELECT -->
+<!-- 				COUNT(*) -->
+<!-- 			FROM -->
+<!-- 				TBL_USERMASTER U -->
+<!-- 								LEFT JOIN TBL_WEBFOLDER_USER W ON U.CN = W.CN AND U.TENANT_ID = W.TENANT_ID -->
+<!-- 								LEFT JOIN TBL_WEBFOLDER_CONFIG C ON U.PHYSICALDELIVERYOFFICENAME = C.COMPANY_ID AND U.TENANT_ID = C.TENANT_ID -->
+<!-- 		]]> -->
+<!-- 		<include refid="userCapacityCondition"/> -->
+<!-- 	</select> -->
+	<!--  mysql은 주석처리 되어있어 함께 주석추가
+	<insert id="EzWebFolderAdminDAO.updateNewAmount" parameterClass="Map">
+		<selectKey keyProperty="v_temp" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					1
+				FROM
+					DUAL
+				WHERE
+					NOT EXISTS (SELECT
+									COMPANY_ID,
+									TENANT_ID
+									FROM
+										TBL_WEBFOLDER_USER
+									WHERE
+										CN        = #userId#
+									AND
+										TENANT_ID = #tenantId#
+								)
+			]]>
+		</selectKey>
+		<isEqual property="v_temp" compareValue="1">
+			<![CDATA[
+				INSERT INTO TBL_WEBFOLDER_USER (
+					CN,          TOTAL_CAPACITY,       COMPANY_ID,       TENANT_ID
+				)
+				VALUES (
+					#userId#,    #totalCapacity#,      #companyId#,      #tenantId#
+				)
+			]]>
+		</isEqual>
+		<isNotEqual property="v_temp" compareValue="1">
+			<![CDATA[
+				UPDATE
+					TBL_WEBFOLDER_USER
+				SET
+					TOTAL_CAPACITY = #totalCapacity#
+				WHERE
+					CN             = #userId#
+				AND
+					TENANT_ID      = #tenantId#
+			]]>
+		</isNotEqual>
+	</insert>
+	 -->
+	<select id="EzWebFolderAdminDAO.getListFileLogs" resultMap="fileLogVO">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				(
+					SELECT
+						k.*, ROWNUM AS RNUM
+					FROM
+						(
+							SELECT
+								l.LOG_ID                                                         AS LOG_ID,
+								CASE
+									WHEN t.TYPE_ICON IS NOT NULL
+										THEN t.TYPE_ICON 
+										ELSE (SELECT TYPE_ICON FROM TBL_WEBFOLDER_FILETYPE WHERE FILE_EXT = 'unknown' AND TENANT_ID = #tenantId#) 
+								END                                                              AS FILE_TYPE,
+								l.FILE_NAME                                                      AS FILE_NAME,
+								l.FILE_SIZE                                                      AS FILE_SIZE,
+								l.FILE_EXT                                                       AS FILE_EXT,
+								l.LOG_TYPE                                                       AS LOG_TYPE,
+								l.CREATE_ID                                                      AS CREATE_ID,
+								l.CREATE_NAME1                                                   AS CREATE_NAME1,
+								l.CREATE_NAME2                                                   AS CREATE_NAME2,
+								(l.CREATE_DATE + #offset#/(24*60))                               AS CREATE_DATE,
+								l.COMPANY_ID                                                     AS COMPANY_ID,
+								l.TENANT_ID                                                      AS TENANT_ID, 
+								NVL(l.FILE_ID,'')												 AS FILE_ID,
+								NVL(l.VERSION, 0)												 AS VERSION,
+								NVL(l.FOLDER_ID, '')											 AS FOLDER_ID,
+								NVL(l.FOLDER_NAME, '')											 AS FOLDER_NAME,
+								NVL(l.FOLDER_PATH, '')											 AS FOLDER_PATH,
+								NVL(l.FOLDER_PATH_NAME, '')										 AS FOLDER_PATH_NAME,
+								NVL(l.TOP_FOLDER_ID, '')										 AS TOP_FOLDER_ID,
+								NVL(l.TOP_FOLDER_NAME, '')										 AS TOP_FOLDER_NAME
+								
+							FROM
+								TBL_WEBFOLDER_LOG l LEFT JOIN TBL_WEBFOLDER_FILETYPE t ON LOWER(l.FILE_EXT) = LOWER(t.FILE_EXT) AND l.TENANT_ID = t.TENANT_ID
+						]]>
+						<include refid="fileHistoryCondition"/>
+						<isEqual property="adminFlag" compareValue="user">
+							AND TOP_FOLDER_ID = #folderId# 
+						</isEqual>
+						<![CDATA[
+							ORDER BY
+						]]>
+						<isNotEqual property="sortColumn" compareValue="">
+							$orderByData$,
+						</isNotEqual>	
+						<isNotEqual property="realColmn" compareValue="">
+							$realColmn$ $order$,
+							l.CREATE_DATE DESC,
+							TO_NUMBER(l.LOG_ID) DESC
+						</isNotEqual>
+						<isEqual property="realColmn" compareValue="">
+							<![CDATA[
+								l.CREATE_DATE DESC,
+								TO_NUMBER(l.LOG_ID) DESC
+							]]>
+						</isEqual>
+	<isNotEqual property="pageSize" compareValue="0">
+						<![CDATA[
+						) k
+					WHERE
+						ROWNUM <= #startPoint# + #pageSize#
+				)
+			WHERE
+				RNUM >= #startPoint# + 1
+		]]>
+	</isNotEqual>
+	<isEqual property="pageSize" compareValue="0">
+						<![CDATA[
+						) k
+					)
+		]]>
+	</isEqual>
+	</select>
+	
+	<select id="EzWebFolderAdminDAO.getTotalFileLogs" resultClass="Integer">
+		<![CDATA[
+			SELECT COUNT(*) FROM TBL_WEBFOLDER_LOG l LEFT JOIN TBL_WEBFOLDER_FILETYPE t ON LOWER(l.FILE_EXT) = LOWER(t.FILE_EXT) AND l.TENANT_ID = t.TENANT_ID
+		]]>
+		<include refid="fileHistoryCondition"/>
+		<isEqual property="adminFlag" compareValue="user">
+			AND TOP_FOLDER_ID = #folderId# 
+		</isEqual>
+	</select>
+	
+	<insert id="EzWebFolderAdminDAO.insertFileLog" parameterClass="Map">
+		<selectKey keyProperty="v_temp" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					1
+				FROM
+					DUAL
+				WHERE
+					NOT EXISTS (SELECT
+									LOG_ID,
+									TENANT_ID
+									FROM
+										TBL_WEBFOLDER_LOG
+									WHERE
+										LOG_ID = #logId#
+									AND
+										TENANT_ID = #tenantId#
+								)
+			]]>
+		</selectKey>
+		<isEqual property="v_temp" compareValue="1">
+			<![CDATA[
+				INSERT INTO TBL_WEBFOLDER_LOG (
+					LOG_ID,         FILE_TYPE,         FILE_NAME,           FILE_SIZE,          FILE_EXT,
+					LOG_TYPE,       CREATE_ID,         CREATE_NAME1,        CREATE_NAME2,       CREATE_DATE,
+					COMPANY_ID,     TENANT_ID, 		   FILE_ID, 			VERSION, 			FOLDER_ID, 
+					FOLDER_NAME, 	FOLDER_PATH, 	   FOLDER_PATH_NAME,	TOP_FOLDER_ID, 		TOP_FOLDER_NAME
+				)
+				VALUES (
+					#logId#,        #fileType#,        #fileName#,          #fileSize#,         #fileExt#,
+					#logType#,      #createId#,        #createName1#,       #createName2#,      TO_DATE(#createDate#,'yyyy-mm-dd hh24:mi:ss'),
+					#companyId#,    #tenantId#, 	   #fileId#, 			#version#, 			#folderId#, 
+					#folderName#, 	#folderPath#, 	   #folderPathName#,	#topFolderId#, 		#topFolderName#
+				)
+			]]>
+		</isEqual>
+		<isNotEqual property="v_temp" compareValue="1">
+			<![CDATA[
+				UPDATE
+					TBL_WEBFOLDER_LOG
+				SET
+					FILE_TYPE       = #fileType#,
+					FILE_NAME       = #fileName#,
+					FILE_SIZE       = #fileSize#,
+					FILE_EXT        = #fileExt#,
+					LOG_TYPE        = #logType#,
+					CREATE_ID       = #createId#,
+					CREATE_NAME1    = #createName1#,
+					CREATE_NAME2    = #createName2#,
+					CREATE_DATE     = TO_DATE(#createDate#,'yyyy-mm-dd hh24:mi:ss'),
+					COMPANY_ID      = #companyId#
+				WHERE
+						LOG_ID      = #logId#
+					AND
+						TENANT_ID   = #tenantId#
+			]]>
+		</isNotEqual>
+	</insert>
+	
+	<insert id="EzWebFolderAdminDAO.insertFolder" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_WEBFOLDER_FOLDER (
+				FOLDER_ID,          FOLDER_NAME1,         FOLDER_NAME2,         FOLDER_TYPE,          FOLDER_PATH,
+				FOLDER_STEP,        FOLDER_LEVEL,         FOLDER_UPPER,         USE_STATUS,           OWNER_ID,
+				CREATE_ID,          CREATE_DATE,          CREATE_NAME1,         CREATE_NAME2,         UPDATE_ID,
+				UPDATE_DATE,        COMPANY_ID,           DELETER_ID,           TENANT_ID
+			)
+			VALUES (
+				SEQ_FOLDERID.nextval, #folerName1#,         #folerName2#,         #folderType#,        #folderPath#,
+				#folderStep#,         #folderLevel#,        #folderUpper#,        #useStatus#,         #ownerId#,
+				#createId#,           TO_DATE(#createDate#,'yyyy-mm-dd hh24:mi:ss'),         #createName1#,        #createName2#,       #updateId#,
+				TO_DATE(#updateDate#,'yyyy-mm-dd hh24:mi:ss'),       #companyId#,          #deleterId#,          #tenantId#
+			)
+		]]>
+		<selectKey keyProperty="newFolderId" resultClass="Integer">
+			SELECT SEQ_FOLDERID.currval as newFolderId FROM dual
+		</selectKey>
+	</insert>
+	<insert id="EzWebFolderAdminDAO.updateFolder" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_WEBFOLDER_FOLDER
+			SET
+				FOLDER_NAME1    = #folerName1#,
+				FOLDER_NAME2    = #folerName2#,
+				FOLDER_TYPE     = #folderType#,
+				FOLDER_PATH     = #folderPath#,
+				FOLDER_STEP     = #folderStep#,
+				FOLDER_LEVEL    = #folderLevel#,
+				FOLDER_UPPER    = #folderUpper#,
+				USE_STATUS      = #useStatus#,
+				OWNER_ID        = #ownerId#,
+				CREATE_ID       = #createId#,
+				CREATE_DATE     = TO_DATE(#createDate#, 'YYYY-MM-DD HH24:MI:SS'),
+				CREATE_NAME1    = #createName1#,
+				CREATE_NAME2    = #createName2#,
+				UPDATE_ID       = #updateId#,
+				UPDATE_DATE     = TO_DATE(#updateDate#, 'YYYY-MM-DD HH24:MI:SS'),
+				COMPANY_ID      = #companyId#,
+				DELETER_ID      = #deleterId#
+			WHERE
+					FOLDER_ID   = #folderId#
+				AND
+					TENANT_ID   = #tenantId#
+		]]>
+		<selectKey keyProperty="newFolderId" resultClass="Integer">
+			SELECT FOLDER_ID as newFolderId FROM TBL_WEBFOLDER_FOLDER WHERE FOLDER_ID = #folderId# AND TENANT_ID = #tenantId#
+		</selectKey>
+	</insert>
+	
+	<insert id="EzWebFolderAdminDAO.insertFolder2" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_WEBFOLDER_FOLDER (
+				FOLDER_ID,          FOLDER_NAME1,         FOLDER_NAME2,         FOLDER_TYPE,          FOLDER_PATH,
+				FOLDER_STEP,        FOLDER_LEVEL,         FOLDER_UPPER,         USE_STATUS,           OWNER_ID,
+				CREATE_ID,          CREATE_DATE,          CREATE_NAME1,         CREATE_NAME2,         UPDATE_ID,
+				UPDATE_DATE,        COMPANY_ID,           TENANT_ID
+			)
+			VALUES (
+				SEQ_FOLDERID.nextval, #folerName1#,         #folerName2#,         #folderType#,        #folderPath#,
+				#folderStep#,         #folderLevel#,        #folderUpper#,        #useStatus#,         #ownerId#,
+				#createId#,         TO_DATE(#createDate#,'yyyy-mm-dd hh24:mi:ss'),         #createName1#,        #createName2#,       #updateId#,
+				TO_DATE(#updateDate#,'yyyy-mm-dd hh24:mi:ss'),       #companyId#,                 #tenantId#
+			)
+		]]>
+		<selectKey keyProperty="newFolderId" resultClass="Integer">
+			SELECT SEQ_FOLDERID.currval as newFolderId FROM DUAL
+		</selectKey>
+	</insert>
+	<insert id="EzWebFolderAdminDAO.updateFolder2" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_WEBFOLDER_FOLDER
+			SET
+				FOLDER_NAME1 = #folerName1#,
+				FOLDER_NAME2 = #folerName2#,
+				UPDATE_ID    = #updateId#,
+				UPDATE_DATE  = TO_DATE(#updateDate#,'yyyy-mm-dd hh24:mi:ss'),
+				DELETER_ID   = #deleterId#
+			WHERE
+				FOLDER_NAME1 = #folerName1#
+			AND
+				FOLDER_NAME2 = #folerName2#
+			AND
+				OWNER_ID     = #ownerId#
+			AND
+				COMPANY_ID   = #companyId#
+			AND
+				TENANT_ID    = #tenantId#
+		]]>
+		<selectKey keyProperty="newFolderId" resultClass="Integer">
+			SELECT FOLDER_ID as newFolderId FROM TBL_WEBFOLDER_FOLDER WHERE FOLDER_ID = #folderId# AND TENANT_ID = #tenantId#
+		</selectKey>
+	</insert>
+	
+	<insert id="EzWebFolderAdminDAO.insertFolderUser" parameterClass="Map">
+		<selectKey keyProperty="v_temp" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					1
+				FROM
+					DUAL
+				WHERE
+					NOT EXISTS (SELECT
+									SEQ_ID,
+									TENANT_ID
+									FROM
+										TBL_WEBFOLDER_FOLDERUSER
+									WHERE
+										SEQ_ID    = #seqId#
+									AND
+										TENANT_ID = #tenantId#
+								)
+			]]>
+		</selectKey>
+		<isEqual property="v_temp" compareValue="1">
+			<![CDATA[
+				INSERT INTO TBL_WEBFOLDER_FOLDERUSER (
+					SEQ_ID,            USER_ID,               USER_TYPE,            FOLDER_ID,           CREATE_ID,
+					CREATE_DATE,       COMPANY_ID,            TENANT_ID,			SUBDEPT_PERMITTED,	 FOLDER_MANAGER
+				)
+				VALUES (
+					SEQ_FOLDERUSER.NEXTVAL,           #userId#,              #userType#,            #folderId#,          #createId#,
+					TO_DATE(#createDate#,'yyyy-mm-dd hh24:mi:ss'),      #companyId#,           #tenantId#,			 #subdeptPermitted#,		#folderManager#
+				)
+			]]>
+		</isEqual>
+		<isNotEqual property="v_temp" compareValue="1">
+			<![CDATA[
+				UPDATE
+					TBL_WEBFOLDER_FOLDERUSER
+				SET
+					USER_ID         = #userId#,
+					USER_TYPE       = #userType#,
+					FOLDER_ID       = #folderId#,
+					CREATE_ID       = #createId#,
+					CREATE_DATE     = TO_DATE(#createDate#,'yyyy-mm-dd hh24:mi:ss'),
+					COMPANY_ID      = #companyId#
+				WHERE
+						SEQ_ID      = #seqId#
+					AND
+						TENANT_ID   = #tenantId#
+			]]>
+		</isNotEqual>
+	</insert>
+	
+	<delete id="EzWebFolderAdminDAO.deleteFolderUsers" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_WEBFOLDER_FOLDERUSER
+			WHERE
+				FOLDER_ID = #folderId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+		<isNotEmpty property="folderManager">
+			AND
+				FOLDER_MANAGER = #folderManager#
+		</isNotEmpty>
+	</delete>
+	
+	<select id="EzWebFolderAdminDAO.findFileFolderUserCurrVal">
+			SELECT
+			<isEqual property="type_f" compareValue="D">
+			SEQ_FOLDERUSER.CURRVAL			
+			</isEqual>
+			<isEqual property="type_f" compareValue="F">
+			SEQ_FILEUSER.CURRVAL
+			</isEqual>	
+			FROM DUAL		
+	</select>
+	
+	<insert id="EzWebFolderAdminDAO.insertFileFolderUser" parameterClass="Map">
+			INSERT INTO     
+			<isEqual property="type_f" compareValue="D">
+			TBL_WEBFOLDER_FOLDERUSER 
+			(SEQ_ID, FOLDER_ID, FOLDER_MANAGER, USER_ID, USER_TYPE, CREATE_ID, CREATE_DATE, COMPANY_ID, TENANT_ID, SUBDEPT_PERMITTED )
+			</isEqual>
+			<isEqual property="type_f" compareValue="F">
+			TBL_WEBFOLDER_FILEUSER 
+			(SEQ_ID, FILE_ID, USER_ID, USER_TYPE, CREATE_ID, CREATE_DATE, COMPANY_ID, TENANT_ID, SUBDEPT_PERMITTED)
+			</isEqual>
+			(
+				<include refid="upperFolderFolderUser"/>
+			)
+	</insert>
+	
+	<delete id="EzWebFolderAdminDAO.deleteFolderUsersOfChief" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_WEBFOLDER_FOLDERUSER
+			WHERE
+				USER_ID   = #userId#
+			AND
+				USER_TYPE = 'chief'
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</delete>
+	
+	<update id="EzWebFolderAdminDAO.moveListSubFolders" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				tbl_webfolder_folder
+			SET
+				FOLDER_TYPE  = #folderType#,
+				UPDATE_DATE  = TO_DATE(#updateTime#,'yyyy-mm-dd hh24:mi:ss'),
+				UPDATE_ID    = #userId#,
+				OWNER_ID     = #ownerId#,
+				FOLDER_PATH  = replace(FOLDER_PATH, #oldPath#, #newPath#),
+				FOLDER_LEVEL = FOLDER_LEVEL + #levelDistance#
+			WHERE
+				FOLDER_PATH like concat(concat(#oldPath#, '_'), '%')
+			AND
+				TENANT_ID    = #tenantId#
+		]]>
+	</update>
+	
+	<select id="EzWebFolderAdminDAO.getFolderSize" resultClass="Double">
+		SELECT
+			NVL(SUM(f.FILE_SIZE), 0)
+		FROM
+			TBL_WEBFOLDER_FILE f JOIN TBL_WEBFOLDER_FOLDER u ON f.TENANT_ID = u.TENANT_ID AND f.FOLDER_ID = u.FOLDER_ID
+		WHERE
+			u.FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
+		AND
+			f.USE_STATUS = 'Y'
+		AND
+			f.TENANT_ID = #tenantId#
+	</select>
+	
+	<delete id="EzWebFolderAdminDAO.deleteFolderUsersByUserId" parameterClass="Map">
+			DELETE FROM
+				TBL_WEBFOLDER_FOLDERUSER
+			WHERE
+				USER_ID = #userId#
+		<isNotEmpty property="userType">
+			AND
+				LOWER(USER_TYPE) = LOWER(#userType#)
+		</isNotEmpty>
+		<isEqual property="userType" compareValue="JIKWI">
+			AND
+				COMPANY_ID = #companyId#
+		</isEqual>
+		<isEqual property="userType" compareValue="JIKCHEK">
+			AND
+				COMPANY_ID = #companyId#
+		</isEqual>
+			AND
+				TENANT_ID = #tenantId#
+	</delete>
+	
+	<select id="EzWebFolderAdminDAO.getSubFolderIdList" resultClass="String">
+		SELECT 
+			SEQ_ID 
+		FROM 
+			TBL_WEBFOLDER_FOLDER F INNER JOIN TBL_WEBFOLDER_FOLDERUSER FU 
+		ON 
+			F.FOLDER_ID = FU.FOLDER_ID
+		WHERE 
+			F.FOLDER_PATH LIKE #folderPath#
+		AND 
+			USE_STATUS = 'Y' 
+		AND 
+			USER_ID IN 
+		<iterate property="idList" open="(" close=")" conjunction=",">
+			#idList[]#
+		</iterate>
+		<isNotEqual property="type" compareValue="">
+			AND 
+				FOLDER_MANAGER = #type#
+		</isNotEqual>
+	</select>
+	
+	<delete id="EzWebFolderAdminDAO.deleteSelectedFolderUser" parameterClass="Map">
+			DELETE FROM
+				TBL_WEBFOLDER_FOLDERUSER
+			WHERE
+				SEQ_ID IN 
+					<iterate property="seqIdList" open="(" close=")" conjunction=",">
+						#seqIdList[]#
+					</iterate>
+			AND 
+				TENANT_ID = #tenantId#
+			AND 
+				FOLDER_MANAGER = #folderManger#
+	</delete>
+
+	<delete id="EzWebFolderAdminDAO.deleteSelectedFileUser" parameterClass="Map">
+			DELETE FROM
+				TBL_WEBFOLDER_FILEUSER
+			WHERE
+				USER_ID IN 
+					<iterate property="idList" open="(" close=")" conjunction=",">
+						#idList[]#
+					</iterate>
+			AND 
+				FILE_ID = #fileId# 
+			AND 
+				TENANT_ID = #tenantId#
+	</delete>
+
+	<select id="EzWebFolderAdminDAO.selectSubAllFolder" resultMap="folderSimpleVO">
+		SELECT 
+			FOLDER_ID, 
+			FOLDER_NAME1,
+			FOLDER_LEVEL
+		FROM 
+			TBL_WEBFOLDER_FOLDER
+		WHERE 
+			FOLDER_PATH LIKE #folderPath#
+		AND 
+			TENANT_ID = #tenantId#
+	</select>
+
+	<sql id="getAllSubFilePath">
+		SELECT F.FILE_ID, F.FILE_PATH
+		FROM TBL_WEBFOLDER_FOLDER D
+		
+		RIGHT JOIN TBL_WEBFOLDER_FILE F
+		ON D.FOLDER_ID = F.FOLDER_ID
+		AND D.TENANT_ID = F.TENANT_ID
+		
+		LEFT JOIN TBL_WEBFOLDER_ENCRYPTED_FILE E
+		ON F.FILE_ID = E.FILE_ID
+		AND F.TENANT_ID = E.TENANT_ID
+		
+		WHERE D.FOLDER_PATH LIKE #folderPath# || '%'
+		AND D.TENANT_ID = #tenantId#
+	</sql>
+	
+	<select id="EzWebFolderAdminDAO.getDecryptedAllSubFilePath" resultClass="java.util.HashMap">
+		<include refid="getAllSubFilePath" />
+		AND E.FILE_ID IS NULL
+	</select>
+
+	<select id="EzWebFolderAdminDAO.getEncryptedAllSubFilePath" resultClass="java.util.HashMap">
+		<include refid="getAllSubFilePath" />
+		AND E.FILE_ID IS NOT NULL
+	</select>
+	
+	<select id="EzWebFolderAdminDAO.getFolderIdsByManagerUserId" parameterClass="Map" resultClass="String" >
+		SELECT FOLDER_ID
+		FROM TBL_WEBFOLDER_FOLDER 
+		JOIN TBL_WEBFOLDER_FOLDERUSER 
+		USING(FOLDER_ID, COMPANY_ID, TENANT_ID)
+		
+		WHERE FOLDER_MANAGER = 1 
+		AND USER_ID = #userId#
+		<isNotEmpty property="folderId">
+			AND FOLDER_ID = ( SELECT REGEXP_SUBSTR(FOLDER_PATH,'[^|]+',1,2) 
+          	 				  FROM TBL_WEBFOLDER_FOLDER 
+          	 				  WHERE FOLDER_ID = #folderId# 
+								AND TENANT_ID = #tenantId# )
+		</isNotEmpty>
+		AND FOLDER_TYPE = 'C' 
+		AND USE_STATUS = 'Y' 
+		AND TENANT_ID = #tenantId#
+		
+		<isNotEmpty property="companyId">
+			AND COMPANY_ID = #companyId# 
+		</isNotEmpty>
+		<isEmpty property="companyId">
+			AND (COMPANY_ID, TENANT_ID) IN (SELECT PHYSICALDELIVERYOFFICENAME, TENANT_ID FROM TBL_USERMASTER WHERE CN = #userId#)
+		</isEmpty>
+	</select>
+	
+	<select id="EzWebFolderAdminDAO.getTopFoldersByManagerUserId" parameterClass="Map" resultClass="String" >
+		SELECT FOLDER_ID
+		FROM TBL_WEBFOLDER_FOLDER
+		JOIN TBL_WEBFOLDER_FOLDERUSER
+		USING(FOLDER_ID, COMPANY_ID, TENANT_ID)
+		WHERE FOLDER_MANAGER = 1
+		AND USER_ID = #userId#
+		AND FOLDER_LEVEL = 1
+		AND FOLDER_TYPE = 'C'
+		AND USE_STATUS = 'Y'
+		AND TENANT_ID = #tenantId#
+	</select>
+
+	<select id="EzWebFolderAdminDAO.folderInFileList" parameterClass="Map" resultMap = "fileSimpleVO">
+		SELECT 
+			f.FILE_ID AS FILE_ID, f.CREATE_DATE AS CREATE_DATE, f.CREATE_ID AS CREATE_ID 
+		FROM 
+			TBL_WEBFOLDER_FILE f INNER JOIN TBL_WEBFOLDER_FOLDER fld ON f.FOLDER_ID = fld.FOLDER_ID 
+		WHERE 
+		<isEqual property="subFolderType" compareValue="1">
+			fld.FOLDER_PATH LIKE CONCAT(#folderPath#, '%') 
+		</isEqual>
+		<isEqual property="subFolderType" compareValue="0">
+			fld.FOLDER_PATH LIKE #folderPath# 
+		</isEqual>
+		AND 
+			f.use_status = 'Y' and fld.use_status = 'Y'
+		AND 
+			f.TENANT_ID = #tenantId# 
+	</select>
+</sqlMap>

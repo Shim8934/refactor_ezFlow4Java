@@ -498,11 +498,16 @@ public class EzConnController {
 						LoginVO user = getUserInfoById(userId, tenantId);
 						
 						if (user != null && user.getId() != null && !user.getId().equals("")) { 
+							// 2021-12-29 이사라 : 세션코드 입력 추가
+							String sessionCode = request.getSession().getId();
+							logger.debug("timeStamp vailable, sessionCode : " + sessionCode);
+							user.setSessionCode(sessionCode);
 							user.setIp(ClientUtil.getClientIP(request));
 							user.setAgent(ClientUtil.getClientInfo(request, "agent"));
 							user.setOs(ClientUtil.getClientInfo(request, "os"));
 							user.setBrowser(ClientUtil.getClientInfo(request, "browser"));
 							user.setTenantId(tenantId);
+							user.setStatus("Y");
 							
 							// sso 접속시에도 로그인 이력 남도록 추가 
 							loginService.insertLog(user);
@@ -513,6 +518,19 @@ public class EzConnController {
 						}
 					} else {
 						logger.debug("timeStamp expired");
+						// 2021-12-28 이사라 : 로그인 실패 시 이력 남도록 추가 
+						LoginVO user = getUserInfoById(userId, tenantId);
+						
+						if (user != null && user.getId() != null && !user.getId().equals("")) { 
+							user.setIp(ClientUtil.getClientIP(request));
+							user.setAgent(ClientUtil.getClientInfo(request, "agent"));
+							user.setOs(ClientUtil.getClientInfo(request, "os"));
+							user.setBrowser(ClientUtil.getClientInfo(request, "browser"));
+							user.setTenantId(tenantId);
+							user.setStatus("N");
+							 
+							loginService.insertLog(user);
+						}
 					}
 				}
 			}

@@ -1509,7 +1509,12 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	 * 기본 Distinguished Name
     	 * */
     	String searchBase = "OU=" + config.getProperty("config.Company_Name") + ", OU=TopGroup, DC=" 
-    				+ config.getProperty("config.Common_Name1")+ ", DC="+ config.getProperty("config.Common_Name2");     	
+    				+ config.getProperty("config.Common_Name1");
+
+    	String splitDC[] = config.getProperty("config.Common_Name2").split("\\.");
+    	for (String dn : splitDC) {
+    		searchBase += ", DC=" + dn;
+    	}
     	logger.debug("searchBase : " + searchBase);
     	
     	String filter = "(&(objectClass="+ type +")("+ column +"="+ value +")(cn=*))";
@@ -1571,7 +1576,13 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	 * 기본 Distinguished Name
     	 * */
     	String defaultPath = "OU=" + config.getProperty("config.Company_Name") + ",OU=TopGroup,DC=" 
-    				+ config.getProperty("config.Common_Name1")+ ",DC="+ config.getProperty("config.Common_Name2");
+    				+ config.getProperty("config.Common_Name1");
+
+    	String splitDC[] = config.getProperty("config.Common_Name2").split("\\.");
+    	for (String dn : splitDC) {
+    		defaultPath += ", DC=" + dn;
+    	}
+    			
     	logger.debug("searchBase : " + defaultPath);
     	/**
     	 * 검색에 사용될 filter
@@ -1623,10 +1634,14 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     public void insertDeptInAD(DirContext ctx, Map<String, Object> map) throws Exception {
     	logger.debug("insertDeptInAD started.");
     	
-    	//        	String organDN = ", OU=user, OU=jongcomp, OU=TopGroup, DC=syl2017, DC=dev";
     	String baseDN = ", OU=부서, OU=" + config.getProperty("config.Company_Name") +
-    					", OU=TopGroup, DC="+ config.getProperty("config.Common_Name1") + ", DC=" + config.getProperty("config.Common_Name2") ;
+    			", OU=TopGroup, DC=" + config.getProperty("config.Common_Name1");
 
+		String splitDC[] = config.getProperty("config.Common_Name2").split("\\.");
+    	for (String dn : splitDC) {
+    		baseDN += ", DC=" + dn;
+    	}
+    	
     	    	
     	baseDN = "cn="+ map.get("v_CN").toString() + baseDN;
     	logger.debug("<<<baseDN : " + baseDN);
@@ -1815,9 +1830,13 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     public void insertUserInAD(DirContext ctx, Map<String, Object> map) throws Exception {
     	logger.debug("insertUserInAD started.");    	
     	
-    	String baseDN = ", OU=" + config.getProperty("config.Company_Name") + ", OU=TopGroup, DC=" 	+ config.getProperty("config.Common_Name1") 
-    			+ ", DC=" + config.getProperty("config.Common_Name2");
+    	String baseDN = ", OU=" + config.getProperty("config.Company_Name") + ", OU=TopGroup, DC=" 	+ config.getProperty("config.Common_Name1");
     	
+		String splitDC[] = config.getProperty("config.Common_Name2").split("\\.");
+    	for (String dn : splitDC) {
+    		baseDN += ", DC=" + dn;
+    	}
+
     	Attributes container = new BasicAttributes(true);
     	Attribute objClasses = new BasicAttribute("objectClass");
     	
@@ -1957,7 +1976,12 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	} else if (passBy.equalsIgnoreCase("retire")) {
     		//현재의 dn을 retire쪽으로 변경
     		String retireDN = "CN="+ vo.getCn() + ",OU=Retire,OU="+config.getProperty("config.Company_Name")+",OU=TopGroup,DC="
-    				+config.getProperty("config.Common_Name1")+",DC="+config.getProperty("config.Common_Name2");
+    				+config.getProperty("config.Common_Name1");
+
+    		String splitDC[] = config.getProperty("config.Common_Name2").split("\\.");
+	    	for (String dn : splitDC) {
+	    		retireDN += ", DC=" + dn;
+	    	}
     		
     		logger.debug("retireDN : " + retireDN);
     		ctx.rename(getDN, retireDN);	
@@ -1969,7 +1993,12 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     		 * */
     		String curDN = getADdata(ctx, vo.getCn(), "user", "dn");
     		String movDN = "CN="+ vo.getCn() + ",OU=사용자,OU="+config.getProperty("config.Company_Name")+",OU=TopGroup,DC="
-    				+config.getProperty("config.Common_Name1")+",DC="+config.getProperty("config.Common_Name2");
+    				+config.getProperty("config.Common_Name1");
+			String splitDC[] = config.getProperty("config.Common_Name2").split("\\.");
+	    	for (String dn : splitDC) {
+	    		movDN += ", DC=" + dn;
+	    	}
+	    	
     		logger.debug("curDN : " + curDN);
     		logger.debug("movDN: " + movDN);
     		// 여기
@@ -2180,6 +2209,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     public void setTitle(Map<String, Object> map) throws Exception {
     	insert("EzOrganAdminDAO.insertTitle", map);
     }
+
+	public OrganJobVO getTitleByJobID(Map<String, Object> map) throws Exception {
+		return (OrganJobVO) select("EzOrganAdminDAO.selectTitleByJobID", map);
+	}
     
     @SuppressWarnings("unchecked")
 	public List<OrganJobVO> getTitleList(Map<String, Object> map) throws Exception {

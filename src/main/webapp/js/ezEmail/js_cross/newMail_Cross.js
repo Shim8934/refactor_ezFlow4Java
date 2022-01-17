@@ -1,4 +1,4 @@
-﻿﻿var regex = /[\u0000-\u0008\u000B-\u000C\u000E-\u001F]/g;
+﻿var regex = /[\u0000-\u0008\u000B-\u000C\u000E-\u001F]/g;
 var emailFlag=false;
 function MailToMe_Onclick() {
     var checked = document.getElementById('toMe').checked;
@@ -3756,10 +3756,7 @@ function findAddress(emailAddress, addrList) {
 }
 
 function isEmailFormat(mailAddr) {
-    var splitArr = mailAddr.split("@");
-    if (splitArr.length != 2) return false;
-
-    return true;
+	return /^[-A-Za-z0-9_]+[-A-Za-z0-9_.]*[@]{1}[-A-Za-z0-9_]+[-A-Za-z0-9_.]*[.]{1}[A-Za-z]{2,5}$/.test(mailAddr);
 }
 
 function MakeXmlNode(xmldoc, root, key, value) {

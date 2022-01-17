@@ -2003,3 +2003,19 @@ function checkImgExtension(pFileExt) {
 	});
 	return res;
 }
+
+/* 2022-01-03 박성빈 채변 년도 기산일에 맞춰 가져오기 */
+function getAccountingYear() {
+    var res = "";
+
+    $.ajax({
+        type : "GET",
+        async : false,
+        url : "/ezApprovalG/getAccountingYear.do",
+        success : function(result) {
+            res = result;
+        },
+        error : function(){}
+    });
+    return res;
+}

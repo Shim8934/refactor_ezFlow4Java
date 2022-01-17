@@ -1549,9 +1549,9 @@
 					}
 		            
 		            if (radiosearch.value == "rad_Subject") {
-		                g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE>" + document.getElementById("txt_keyword").value + "</TITLE><REGTYPE></REGTYPE><SREGDATE></SREGDATE><EREGDATE></EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
+		                g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE><REGTYPE></REGTYPE><SREGDATE></SREGDATE><EREGDATE></EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
 		            } else if (radiosearch.value == "rad_Writer") {
-		                g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE></SREGDATE><EREGDATE></EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER>" + document.getElementById("txt_keyword").value + "</DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
+		                g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE></SREGDATE><EREGDATE></EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER><![CDATA[" + document.getElementById("txt_keyword").value + "]]></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
 		            }
 		            
 		            switch (ListTypeFlag) {
@@ -1575,10 +1575,10 @@
 		            var radiosearch = document.getElementById('selectType');
 		
 		            if (radiosearch.value == "rad_Subject") {
-		                g_CabSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE>" + document.getElementById("txt_keyword").value + "</TITLE><TASKCODE></TASKCODE><SPRODUCEY></SPRODUCEY><EPRODUCEY></EPRODUCEY><SENDY></SENDY><EENDY></EENDY><RECTYPECODE></RECTYPECODE><KEEPPERIOD></KEEPPERIOD><KEEPMETHOD></KEEPMETHOD><KEEPPLACE></KEEPPLACE><CHARGER></CHARGER><TRANSEXPIRE/><TRANSFLAG/><RECEIVEDCAB/><GIVECAB/></SEARCHPARAM>";
+		                g_CabSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE><TASKCODE></TASKCODE><SPRODUCEY></SPRODUCEY><EPRODUCEY></EPRODUCEY><SENDY></SENDY><EENDY></EENDY><RECTYPECODE></RECTYPECODE><KEEPPERIOD></KEEPPERIOD><KEEPMETHOD></KEEPMETHOD><KEEPPLACE></KEEPPLACE><CHARGER></CHARGER><TRANSEXPIRE/><TRANSFLAG/><RECEIVEDCAB/><GIVECAB/></SEARCHPARAM>";
 		            }
 		            else if (radiosearch.value == "rad_Writer") {
-		                g_CabSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE></TITLE><TASKCODE></TASKCODE><SPRODUCEY></SPRODUCEY><EPRODUCEY></EPRODUCEY><SENDY></SENDY><EENDY></EENDY><RECTYPECODE></RECTYPECODE><KEEPPERIOD></KEEPPERIOD><KEEPMETHOD></KEEPMETHOD><KEEPPLACE></KEEPPLACE><CHARGER>" + document.getElementById("txt_keyword").value + "</CHARGER><TRANSEXPIRE/><TRANSFLAG/><RECEIVEDCAB/><GIVECAB/></SEARCHPARAM>";
+		                g_CabSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE></TITLE><TASKCODE></TASKCODE><SPRODUCEY></SPRODUCEY><EPRODUCEY></EPRODUCEY><SENDY></SENDY><EENDY></EENDY><RECTYPECODE></RECTYPECODE><KEEPPERIOD></KEEPPERIOD><KEEPMETHOD></KEEPMETHOD><KEEPPLACE></KEEPPLACE><CHARGER><![CDATA[" + document.getElementById("txt_keyword").value + "]]></CHARGER><TRANSEXPIRE/><TRANSFLAG/><RECEIVEDCAB/><GIVECAB/></SEARCHPARAM>";
 		            }
 		
 		            switch (ListTypeFlag) {
@@ -1602,10 +1602,10 @@
 		            var radiosearch = document.getElementById('selectType');
 		
 		            if (radiosearch.value == "rad_Subject") {
-		                g_DeliverySearchParamXml = "<SEARCHPARAM><DEPTCODE></DEPTCODE><DEPTCODE2>" + DeptID + "</DEPTCODE2><TITLE>" + document.getElementById("txt_keyword").value + "</TITLE><SREGDATE></SREGDATE><EREGDATE></EREGDATE><DEBENTURER></DEBENTURER></SEARCHPARAM>";
+		                g_DeliverySearchParamXml = "<SEARCHPARAM><DEPTCODE></DEPTCODE><DEPTCODE2>" + DeptID + "</DEPTCODE2><TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE><SREGDATE></SREGDATE><EREGDATE></EREGDATE><DEBENTURER></DEBENTURER></SEARCHPARAM>";
 		            }
 		            else if (radiosearch.value == "rad_Writer") {
-		                g_DeliverySearchParamXml = "<SEARCHPARAM><DEPTCODE></DEPTCODE><DEPTCODE2>" + DeptID + "</DEPTCODE2><TITLE></TITLE><SREGDATE></SREGDATE><EREGDATE></EREGDATE><DEBENTURER>" + document.getElementById("txt_keyword").value + "</DEBENTURER></SEARCHPARAM>";
+		                g_DeliverySearchParamXml = "<SEARCHPARAM><DEPTCODE></DEPTCODE><DEPTCODE2>" + DeptID + "</DEPTCODE2><TITLE></TITLE><SREGDATE></SREGDATE><EREGDATE></EREGDATE><DEBENTURER><![CDATA[" + document.getElementById("txt_keyword").value + "]]></DEBENTURER></SEARCHPARAM>";
 		            }
 		
 		            GetDocDeliveryList(g_DeliverySearchParamXml);

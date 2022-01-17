@@ -884,7 +884,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
      
         logger.debug("docID = " + docID + ", mode =" + mode + ", tenantID=" + tenantID);       
 		// c=1 : 전체관리자, k=1 : 회사관리자, f=1 : 문서조회관리자
-		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("ff=1")) {
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("ff=1")) {
 			if (mode.toUpperCase().equals("APR") || mode.toUpperCase().equals("TMP")) {
 				if (docID != null && !docID.equals("")) {
 //					String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1", tenantID, userInfo.getOffset());
@@ -918,6 +918,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 									}
 								}
 							}
+						}
+					}
+
+					//해당문서가 우리 부서의 배부대장에 있는 문서인지 확인
+					if (checkPermission) {
+						int deliveryCount = ezApprovalGService.isMyDeptDeliveryDoc(userInfo.getDeptID(), docID, userInfo.getCompanyID(), userInfo.getTenantId());
+						if(deliveryCount > 0){
+							checkPermission = false;
 						}
 					}
 					
@@ -1078,7 +1086,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String kind = request.getParameter("kind");
 		String searchType = request.getParameter("searchType");
 		String searchName = request.getParameter("searchName");
-		String result = ezApprovalGService.getFormInfo(id.trim(), kind, searchType, searchName, userInfo.getId(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		String result = ezApprovalGService.getFormInfo(id.trim(), kind, searchType, searchName, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		
 		logger.debug("getForm ended.");
 		
@@ -3212,7 +3220,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("fileName : " + fileName);
 
 		//관리자는 권한 제한없도록 추가
-		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+		if (userInfo.getRollInfo().indexOf("c=1") > -1) {
 			
 			result = "PERMISSION";
 		} else {
@@ -3251,6 +3259,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 			
 			logger.debug("docStatus = " + docStatus + "|| result = " + result);
+		}
+
+		//해당문서가 우리 부서의 배부대장에 있는 문서인지 확인
+		if (result.equals("NOTPERMISSION")) {
+			int deliveryCount = ezApprovalGService.isMyDeptDeliveryDoc(userInfo.getDeptID(), docID, userInfo.getCompanyID(), userInfo.getTenantId());
+			if(deliveryCount > 0){
+				result = "";
+			}
 		}
 		
 		/* 
@@ -6522,7 +6538,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 		}
 		
-		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("ff=1")) {
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("ff=1")) {
 			if (docID != null && !docID.equals("")) {
 				String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1", userInfo.getTenantId(), userInfo.getOffset());
 				String[] proxyUserArray = proxyUser.split(",");
@@ -10987,7 +11003,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			attachJson = new JSONObject();
 			attachJson.put("fileOpenFlag", attach.getFileOpenFlag());
 			attachJson.put("sn", attach.getAttachFileSN());
-			attachJson.put("fileName", attach.getAttachFileName());
+			attachJson.put("fileName", attach.getDisplayName());
 			
 			String fileSize = attach.getAttachFileSize();
 			
@@ -11342,6 +11358,35 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String result = ezCommonService.getTenantConfig("PersonalAgreeReturnType", userInfo.getTenantId());
 		
 		logger.debug("getPersonalAgreeReturnType ended, result = " + result);
+		return result;
+	}
+    
+	@RequestMapping(value = "/ezApprovalG/setSusinRollbackDocID.do", produces = "text/plain; charset=utf-8", method = RequestMethod.GET)
+    @ResponseBody
+	public String setSusinRollbackDocID(@CookieValue("loginCookie") String loginCookie, @RequestParam String beforeAprState, @RequestParam String docId, @RequestParam String orgDocId) throws Exception {
+        logger.debug("setSusinRollbackDocID started.");
+        
+        LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+        
+        String result = ezApprovalGService.setSusinRollbackDocID(beforeAprState, docId, orgDocId, userInfo);
+
+        logger.debug("setSusinRollbackDocID ended.");
+        
+	    return result;
+    }
+
+//	기산일 적용 년도 가져오기
+	@RequestMapping(value = "/ezApprovalG/getAccountingYear.do", produces = "text/plain; charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	public String getAccountingYear(@CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("getAccountingYear started.");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+
+		String result = ezApprovalGService.getAccountingYear(commonUtil.getTodayUTCTime(""), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+
+		logger.debug("getAccountingYear ended.");
+
 		return result;
 	}
 }

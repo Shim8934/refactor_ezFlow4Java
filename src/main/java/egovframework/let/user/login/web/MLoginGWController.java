@@ -170,6 +170,10 @@ public class MLoginGWController {
     			return result;
     		} else {
 				String ip = request.getHeader("ip") == null ? ClientUtil.getClientIP(request) : request.getHeader("ip");
+				String agent = request.getHeader("agent") == null ? ClientUtil.getClientInfo(request, "agent") : request.getHeader("agent");
+				String os = request.getHeader("os") == null ? ClientUtil.getClientInfo(request, "os") : request.getHeader("os");
+				String browser = request.getHeader("browser") == null ? ClientUtil.getClientInfo(request, "browser") : request.getHeader("browser");
+				
 				resultVO.setIp(ip);
 
 				LOGGER.debug("request.getHeader: {}, ClientUtil.getClientIP: {}, finally ip: {}",
@@ -184,6 +188,19 @@ public class MLoginGWController {
 	    			result.put("code", "7");			
 	    			result.put("data", "user does not exist");
 	    			
+	    			// 2021-12-29 이사라 : ip 주소 check 실패인 경우 접속실패 로그 저장
+					resultVO.setAgent(agent);
+					resultVO.setOs(os);
+					resultVO.setBrowser(browser);
+					resultVO.setTenantId(tenantId);
+					resultVO.setStatus("N");
+
+					if (resultVO.getTitle2() == null) {
+						resultVO.setTitle2("");
+					}
+					
+					loginService.insertLog(resultVO);
+					
 	    			return result;
 				}
     			
@@ -203,6 +220,20 @@ public class MLoginGWController {
     					result.put("status", "error");
     					result.put("code", "6");
     					result.put("data", "cannot use mobile login.");
+    					
+    					// 2021-12-29 이사라 : 접속 실패 로그 저장 - 모바일 사용금지 설정 
+    					resultVO.setIp(ip);
+    					resultVO.setAgent(agent);
+    					resultVO.setOs(os);
+    					resultVO.setBrowser(browser);
+    					resultVO.setTenantId(tenantId);
+    					resultVO.setStatus("N");
+
+    					if (resultVO.getTitle2() == null) {
+    						resultVO.setTitle2("");
+    					}
+    					
+    					loginService.insertLog(resultVO);
     					
     					return result;
     				} else {
@@ -226,6 +257,20 @@ public class MLoginGWController {
     							result.put("code", "6");			
     							result.put("data", "this device cannot use.");
     							
+    							// 2021-12-29 이사라 : 접속 실패 로그 저장 - 접속한 디바이스 사용금지
+    	    					resultVO.setIp(ip);
+    	    					resultVO.setAgent(agent);
+    	    					resultVO.setOs(os);
+    	    					resultVO.setBrowser(browser);
+    	    					resultVO.setTenantId(tenantId);
+    	    					resultVO.setStatus("N");
+
+    	    					if (resultVO.getTitle2() == null) {
+    	    						resultVO.setTitle2("");
+    	    					}
+    	    					
+    	    					loginService.insertLog(resultVO);
+    	    					
     							return result;
     						} else { 
     							// 0이지만 그전 사용자의 config 확인
@@ -242,6 +287,20 @@ public class MLoginGWController {
     		    					result.put("status", "error");
     		    					result.put("code", "6");
     		    					result.put("data", "cannot use mobile login.");
+    		    					
+    		    					// 2021-12-29 이사라 : 접속 실패 로그 저장 - 모바일 사용설정 금지 oldUserId
+    		    					resultVO.setIp(ip);
+    		    					resultVO.setAgent(agent);
+    		    					resultVO.setOs(os);
+    		    					resultVO.setBrowser(browser);
+    		    					resultVO.setTenantId(tenantId);
+    		    					resultVO.setStatus("N");
+
+    		    					if (resultVO.getTitle2() == null) {
+    		    						resultVO.setTitle2("");
+    		    					}
+    		    					
+    		    					loginService.insertLog(resultVO);
     		    					
     		    					return result;
     		    				}
@@ -325,6 +384,20 @@ public class MLoginGWController {
         					result.put("code", "8");			
         					result.put("data", "stopUser");
         					
+        					// 2021-12-28 이사라 : 접속로그 실패 저장
+    						resultVO.setIp(ip);
+    						resultVO.setAgent(agent);
+    						resultVO.setOs(os);
+    						resultVO.setBrowser(browser);
+    						resultVO.setTenantId(tenantId);
+    						resultVO.setStatus("N");
+    		
+    						if (resultVO.getTitle2() == null) {
+    							resultVO.setTitle2("");
+    						}
+    						
+    						loginService.insertLog(resultVO);
+    						
         					return result;
     	        		}
     	        	}
@@ -338,6 +411,20 @@ public class MLoginGWController {
         				
         				if (resultVO.getLoginCnt() == 0) {
         					LOGGER.debug("isFirstLogin");
+        					
+        					// 2021-12-28 이사라 : 접속로그 실패 저장
+    						resultVO.setIp(ip);
+    						resultVO.setAgent(agent);
+    						resultVO.setOs(os);
+    						resultVO.setBrowser(browser);
+    						resultVO.setTenantId(tenantId);
+    						resultVO.setStatus("N");
+    		
+    						if (resultVO.getTitle2() == null) {
+    							resultVO.setTitle2("");
+    						}
+    						
+    						loginService.insertLog(resultVO);
         					
         					result.put("status", "error");
         					result.put("code", "4");			
@@ -379,6 +466,20 @@ public class MLoginGWController {
         				if (diff <= 0) {
         					LOGGER.debug("isExpireDate");
         					
+        					// 2021-12-28 이사라 : 접속로그 실패 저장
+    						resultVO.setIp(ip);
+    						resultVO.setAgent(agent);
+    						resultVO.setOs(os);
+    						resultVO.setBrowser(browser);
+    						resultVO.setTenantId(tenantId);
+    						resultVO.setStatus("N");
+    		
+    						if (resultVO.getTitle2() == null) {
+    							resultVO.setTitle2("");
+    						}
+    						
+    						loginService.insertLog(resultVO);
+        					
         					result.put("status", "error");
         					result.put("code", "5");			
         					result.put("data", "isExpireDate");
@@ -411,12 +512,18 @@ public class MLoginGWController {
         					//IP Address,  마지막 login시간 저장
         					loginService.updateUser(loginVO);
         					
+        					// 2021-12-28 이사라 : 세션ID를 세션코드로 입력 
+        					String sessionCode = request.getHeader("mSessionId") == null ? ClientUtil.getClientIP(request) : request.getHeader("mSessionId");
+        		        	LOGGER.debug("Login sessionCode = " + sessionCode);
+        		        	
         					//접속 로그정보 저장
         					resultVO.setIp(mIp);
         					resultVO.setAgent(mAgent);
         					resultVO.setOs(mOs);
         					resultVO.setBrowser(mBrowser);
         					resultVO.setTenantId(tenantId);
+        					resultVO.setStatus("Y");
+        					resultVO.setSessionCode(sessionCode);
         					
         					if(resultVO.getTitle2() == null){
         						resultVO.setTitle2("");
@@ -583,12 +690,43 @@ public class MLoginGWController {
         					return result;
         				}
                 	} else {
+                		// 2021-12-29 이사라 : 접속로그 실패 저장
+						resultVO.setIp(ip);
+						resultVO.setAgent(agent);
+						resultVO.setOs(os);
+						resultVO.setBrowser(browser);
+						resultVO.setTenantId(tenantId);
+						resultVO.setStatus("N");
+		
+						if (resultVO.getTitle2() == null) {
+							resultVO.setTitle2("");
+						}
+						
+						loginService.insertLog(resultVO);
                 		result.put("status", "error");
 	        			result.put("code", "3");
     					result.put("data", egovMessageSource.getMessageExtend("fail.mobile.common.login.block", new Object[] {numberOfLoginFailPermit}, locale));
     					return result;
                 	}
     			} else {
+    				// 2021-12-29 이사라 : 접속 실패 로그정보 저장
+    				loginVO.setId(uid);
+    	    		loginVO.setTenantId(tenantId);
+    	        	loginVO.setDn("NOPASSWORD");
+    	        	resultVO = loginService.selectUser(loginVO);
+    	        	
+    				resultVO.setIp(ip);
+    				resultVO.setAgent(agent);
+    				resultVO.setOs(os);
+    				resultVO.setBrowser(browser);
+    				resultVO.setStatus("N");
+
+    				if (resultVO.getTitle2() == null) {
+    					resultVO.setTitle2("");
+    				}
+    				
+    				loginService.insertLog(resultVO);
+    				
     				//Check login state of the user 
     	        	int check = checkState(tenantId, uid, numberOfLoginFailPermit);
     	        	String errorMsg1 = "";
@@ -657,6 +795,54 @@ public class MLoginGWController {
 		}    	      
     }
     
+    // 
+    /**
+  	 * 모바일 G/W 사용자 [GET] 로그아웃
+  	 * 2021-12-27 이사라  
+  	 */
+      @SuppressWarnings("unchecked")
+  	  @RequestMapping(value="/mobile/ezUser/logout/sessions/{mSessionId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")    
+      public JSONObject logout(@PathVariable String mSessionId, HttpServletRequest request, Locale locale) throws Exception {
+      	LOGGER.debug("=========================================== G/W logout ============================================");
+      	
+      	JSONObject result = new JSONObject();
+      	String serverName = request.getHeader("x-user-host");
+		int tenantId = loginService.getTenantId(serverName);
+		LoginVO loginVO = new LoginVO ();
+      	
+      	try {
+      		if (mSessionId == null || mSessionId.equals("")) {
+      			LOGGER.debug("invalid mSessionId= " + mSessionId);
+      			
+      			result.put("status", "error");
+      			result.put("code", "2");			
+      			result.put("data", "invalid code");
+      			
+      		    return result;
+      		}
+      		       	
+           	loginVO.setSessionCode(mSessionId);
+           	loginVO.setTenantId(tenantId);
+           	LOGGER.debug("G/W logout sessionCode : " + mSessionId);
+           	
+           	loginService.updateLog(loginVO);
+      		
+           	result.put("status", "ok");
+  			result.put("code", "0");			
+  			result.put("data", "logout success");
+  			
+      		return result;
+      		
+      	} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", "1");			
+			result.put("data", "fail");
+			
+			return result;
+      	}
+    }
+      
     @SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezUser/loginFromAzure/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")    
     public JSONObject loginFromAzure(@PathVariable String userId, HttpServletRequest request, Locale locale) throws Exception {
@@ -702,6 +888,9 @@ public class MLoginGWController {
     			return result;
     		} else {
 				String ip = request.getHeader("ip") == null ? ClientUtil.getClientIP(request) : request.getHeader("ip");
+				String agent = request.getHeader("agent") == null ? ClientUtil.getClientInfo(request, "agent") : request.getHeader("agent");
+				String os = request.getHeader("os") == null ? ClientUtil.getClientInfo(request, "os") : request.getHeader("os");
+				String browser = request.getHeader("browser") == null ? ClientUtil.getClientInfo(request, "browser") : request.getHeader("browser");
 				resultVO.setIp(ip);
 
 				LOGGER.debug("request.getHeader: {}, ClientUtil.getClientIP: {}, finally ip: {}",
@@ -716,6 +905,19 @@ public class MLoginGWController {
 	    			result.put("code", "7");			
 	    			result.put("data", "user does not exist");
 	    			
+	    			// 2021-12-29 이사라 : ip 주소 check 실패인 경우 접속실패 로그 저장
+					resultVO.setAgent(agent);
+					resultVO.setOs(os);
+					resultVO.setBrowser(browser);
+					resultVO.setTenantId(tenantId);
+					resultVO.setStatus("N");
+
+					if (resultVO.getTitle2() == null) {
+						resultVO.setTitle2("");
+					}
+					
+					loginService.insertLog(resultVO);
+					
 	    			return result;
 				}
     			
@@ -735,6 +937,20 @@ public class MLoginGWController {
     					result.put("status", "error");
     					result.put("code", "6");
     					result.put("data", "cannot use mobile login.");
+    					
+    					// 2021-12-29 이사라 : 접속 실패 로그 저장 - 모바일 사용금지 설정 
+    					resultVO.setIp(ip);
+    					resultVO.setAgent(agent);
+    					resultVO.setOs(os);
+    					resultVO.setBrowser(browser);
+    					resultVO.setTenantId(tenantId);
+    					resultVO.setStatus("N");
+
+    					if (resultVO.getTitle2() == null) {
+    						resultVO.setTitle2("");
+    					}
+    					
+    					loginService.insertLog(resultVO);
     					
     					return result;
     				} else {
@@ -758,6 +974,20 @@ public class MLoginGWController {
     							result.put("code", "6");			
     							result.put("data", "this device cannot use.");
     							
+    							// 2021-12-29 이사라 : 접속 실패 로그 저장 - 접속한 디바이스 사용금지
+    	    					resultVO.setIp(ip);
+    	    					resultVO.setAgent(agent);
+    	    					resultVO.setOs(os);
+    	    					resultVO.setBrowser(browser);
+    	    					resultVO.setTenantId(tenantId);
+    	    					resultVO.setStatus("N");
+
+    	    					if (resultVO.getTitle2() == null) {
+    	    						resultVO.setTitle2("");
+    	    					}
+    	    					
+    	    					loginService.insertLog(resultVO);
+    	    					
     							return result;
     						} else { 
     							// 0이지만 그전 사용자의 config 확인
@@ -774,6 +1004,20 @@ public class MLoginGWController {
     		    					result.put("status", "error");
     		    					result.put("code", "6");
     		    					result.put("data", "cannot use mobile login.");
+    		    					
+    		    					// 2021-12-29 이사라 : 접속 실패 로그 저장 - 모바일 사용설정 금지 oldUserId
+    		    					resultVO.setIp(ip);
+    		    					resultVO.setAgent(agent);
+    		    					resultVO.setOs(os);
+    		    					resultVO.setBrowser(browser);
+    		    					resultVO.setTenantId(tenantId);
+    		    					resultVO.setStatus("N");
+
+    		    					if (resultVO.getTitle2() == null) {
+    		    						resultVO.setTitle2("");
+    		    					}
+    		    					
+    		    					loginService.insertLog(resultVO);
     		    					
     		    					return result;
     		    				}
@@ -797,22 +1041,8 @@ public class MLoginGWController {
 	    			}
 	    		}
 	    		
-	    		// 사용자정지 여부를 체크
-	        	String useLoginStop = ezCommonService.getTenantConfig("useLoginStop", tenantId);
-	        	
-	        	if (useLoginStop != null && useLoginStop.equals("YES")) {
-	        		int flag = checkStopUser(tenantId, resultVO.getId());
-	        		if(flag > 0) {
-	        			LOGGER.debug("stopUser");
-	        			result.put("status", "error");
-    					result.put("code", "8");			
-    					result.put("data", "stopUser");
-    					
-    					return result;
-	        		}
-	        	}
-				                	
-		    	String mIp = request.getHeader("ip");
+	    		// 2021-12-23 이사라 : 접속 로그 저장을 위해 순서 변경
+	    		String mIp = request.getHeader("ip");
 		    	String mAgent = request.getHeader("agent");
 		    	String mBrowser = request.getHeader("browser");
 		    	String mOs = request.getHeader("os");
@@ -835,15 +1065,74 @@ public class MLoginGWController {
 		    	
 				loginVO.setIp(mIp);
 				
+	    		// 사용자정지 여부를 체크
+	        	String useLoginStop = ezCommonService.getTenantConfig("useLoginStop", tenantId);
+	        	
+	        	if (useLoginStop != null && useLoginStop.equals("YES")) {
+	        		int flag = checkStopUser(tenantId, resultVO.getId());
+	        		if(flag > 0) {
+	        			LOGGER.debug("stopUser");
+	        			result.put("status", "error");
+    					result.put("code", "8");			
+    					result.put("data", "stopUser");
+    					
+    					// 2021-12-23 이사라 : 접속 실패 로그정보 저장
+    					resultVO.setIp(mIp);
+    					resultVO.setAgent(mAgent);
+    					resultVO.setOs(mOs);
+    					resultVO.setBrowser(mBrowser);
+    					resultVO.setTenantId(tenantId);
+    					resultVO.setStatus("N");
+    					
+    					if(resultVO.getTitle2() == null){
+    						resultVO.setTitle2("");
+    					}
+    					
+    					loginService.insertLog(resultVO);
+    					
+    					return result;
+	        		}
+	        	}
+				/*                	
+		    	String mIp = request.getHeader("ip");
+		    	String mAgent = request.getHeader("agent");
+		    	String mBrowser = request.getHeader("browser");
+		    	String mOs = request.getHeader("os");
+		    	
+		    	if (mIp == null) {
+		    		mIp = ClientUtil.getClientIP(request);
+		    	}
+		    	
+		    	if (mAgent == null) {
+		    		mAgent = ClientUtil.getClientInfo(request, "agent");
+		    	}
+		    	
+		    	if (mBrowser == null) {
+		    		mBrowser = ClientUtil.getClientInfo(request, "browser");
+		    	}
+		    	
+		    	if (mOs == null) {
+		    		mOs = ClientUtil.getClientInfo(request, "os");
+		    	}
+		    	
+				loginVO.setIp(mIp);
+				*/
+	        	
 				//IP Address,  마지막 login시간 저장
 				loginService.updateUser(loginVO);
 				
+				// 2021-12-28 이사라 : 세션ID를 세션코드로 입력 
+				String sessionCode = request.getHeader("mSessionId") == null ? ClientUtil.getClientIP(request) : request.getHeader("mSessionId");
+	        	LOGGER.debug("Login sessionCode = " + sessionCode);
+	        	
 				//접속 로그정보 저장
 				resultVO.setIp(mIp);
 				resultVO.setAgent(mAgent);
 				resultVO.setOs(mOs);
 				resultVO.setBrowser(mBrowser);
 				resultVO.setTenantId(tenantId);
+				resultVO.setStatus("Y");
+				resultVO.setSessionCode(sessionCode);
 				
 				if(resultVO.getTitle2() == null){
 					resultVO.setTitle2("");

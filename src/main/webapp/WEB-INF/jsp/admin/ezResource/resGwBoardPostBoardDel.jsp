@@ -13,7 +13,7 @@
 			.warningbox .warningimg{margin:0px; padding:0px 0px 0px 40px; float:left;}
 			.warningbox .warningDL{margin:0px; padding:0px 0px 0px 30px; float:left; overflow:hidden;}
 			.warningbox .warningDL dt{margin:0px; padding:12px 0px 5px 0px; font-size:24px; font-weight:bold; color:#3d8fea; letter-spacing:-1px;}
-			.warningbox .warningDL dd{margin:0px; padding:0px; font-size:20px; color:#333; letter-spacing:-1px;}
+			.warningbox .warningDL dd{margin:0px; padding:0px; font-size:20px; color:#333; letter-spacing:-1px; width:408px;}
 			.warningbox .warningDL dd span{ font-size:20px; font-weight:bold;}
     		/* .warningbox01 { width:500px; margin:0 auto; border:1px solid #dedede; background:#f8f8fa;}
 			.warningbox02 { width:430px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 15px 25px;}

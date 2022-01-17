@@ -1,1 +1,0 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="GetDoc24DeptInfo.aspx.cs" Inherits="Kaoni.ezStandard.GetDoc24DeptInfo" %>

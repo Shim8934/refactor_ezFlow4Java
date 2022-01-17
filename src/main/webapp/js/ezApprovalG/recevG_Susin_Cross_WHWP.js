@@ -1234,6 +1234,7 @@ function SendDraftMappingSign(ret) {
                     //message.BodySetAttribute(psigncell, escape(ret));
                     signCnt = signCnt + 1;
                     SingFlag = true;
+                    rtnSignInfo.push(psigncell);
                 }
                 else {
                     strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + arr_userinfo[2] + "</P>";
@@ -1244,6 +1245,7 @@ function SendDraftMappingSign(ret) {
                     SignContent[signCnt] = strLang7 + OpinionText + strimg;
                     signCnt = signCnt + 1;
                     SingFlag = false;
+                    rtnSignInfo.push(psigncell);
                 }
             }
             DekyulFlag = true;
@@ -1270,6 +1272,7 @@ function SendDraftMappingSign(ret) {
                 SignContent[signCnt] = strLangAprType4;
                 signCnt = signCnt + 1;
                 SingFlag = false;
+                rtnSignInfo.push(psigncell);
             }
         }
         else if (DekyulFlag) {
@@ -1302,6 +1305,7 @@ function SendDraftMappingSign(ret) {
                     //message.BodySetAttribute(psigncell, escape(ret));
                     signCnt = signCnt + 1;
                     SingFlag = true;
+                    rtnSignInfo.push(psigncell);
                 }
                 else {
                     if (field) {
@@ -1319,6 +1323,7 @@ function SendDraftMappingSign(ret) {
                         SignContent[signCnt] = OpinionText + strimg;
                         signCnt = signCnt + 1;
                         SingFlag = false;
+                        rtnSignInfo.push(psigncell);
                     }
                 }
             }
@@ -2413,6 +2418,19 @@ function setSusinUpdataDocID() {
 
     } catch (e) {
         alert("setSusinUpdataDocID : " + e.description);
+    }
+}
+
+function setSusinRollbackDocID() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("get", "/ezApprovalG/setSusinRollbackDocID.do?beforeAprState=" + pAprState + "&docId=" + pDocID + "&orgDocId=" + pOrgDocID);
+    xhr.send();
+    
+    xhr.onload = function() {
+        var res = xhr.responseText;
+        if (res !== "TRUE") {
+            OpenAlertUI("오류가 발생했지만 접수정보를 되돌리는데 실패했습니다!");
+        }
     }
 }
 

@@ -1,4 +1,4 @@
-﻿﻿var xmlHTTPAddressList = null;
+﻿var xmlHTTPAddressList = null;
 var ListXML = null;
 function View_Change() {
     listContentArry = new Array();

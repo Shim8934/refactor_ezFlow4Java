@@ -109,7 +109,7 @@
 	        	}
 
 	        	if (intChkCnt == 0) {
-		            alert(strMsg + "\n" + "<spring:message code='ezResource.t350' />");
+		            alert(strMsg + "<spring:message code='ezResource.t350' />");
 		        } else if (intChkCnt > 0) {
 
 		            if (!confirm("<spring:message code='ezResource.t351' />")) {

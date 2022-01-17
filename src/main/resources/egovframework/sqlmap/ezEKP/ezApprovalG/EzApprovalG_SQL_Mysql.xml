@@ -4611,8 +4611,8 @@
 					ELSE 'N'
 				END AS OFFICEFLAG		
 				FROM 
-					TBL_FORMINFO 
-				INNER JOIN 
+					TBL_FORMINFO
+				INNER JOIN
 					TBL_FORMUSERINFO 
       			ON 
       				TBL_FORMINFO.FORMID = TBL_FORMUSERINFO.FORMID
@@ -4630,6 +4630,30 @@
       				TBL_FORMINFO.COMPANYID = O.COMPANYID	
       			WHERE 
       				TBL_FORMUSERINFO.USERID = #v_USERID#
+      			AND
+      			   TBL_FORMINFO.FORMCONTID IN
+      			        (SELECT
+      			                FORMCONTID
+      			        FROM
+      			             TBL_FORMCONTUSERGROUP
+      			        WHERE
+      			              TENANT_ID = TBL_FORMINFO.TENANT_ID
+      			          AND
+      			              COMPANYID = TBL_FORMINFO.COMPANYID
+      			          AND
+      			              FORMCONTUSERDEPID = #deptId#
+                        UNION ALL
+                        SELECT
+                               FORMCONTID
+      			        FROM
+      			             TBL_FORMCONTAINER
+                        WHERE
+                            TENANT_ID = TBL_FORMINFO.TENANT_ID
+                        AND
+                            COMPANYID = TBL_FORMINFO.COMPANYID
+                        AND
+                            (FORMCONTOWNDEPID = 'ALL' or FORMCONTOWNDEPID = #deptId#)
+      			            )
       			<isEqual property="v_FORMKIND" compareValue="000">
       			
       			</isEqual>
@@ -34552,4 +34576,20 @@
         AND
         DOCID = #v_DOCID#
     </delete>
+
+    <update id="EzApprovalG.rollbackJubsuAprReceiptProcessInfo" parameterClass="Map">
+        Update
+            TBL_APRRECEIPTPROCESSINFO
+        SET
+            ProcessDocID = #v_PROCESSDOCID# ,
+            AprState = #v_APRSTATE#
+        Where
+            DocID = #v_DOCID#
+          AND
+            ReceivedDeptID = #v_DEPTID#
+          AND
+            TENANT_ID = #v_TENANTID#
+          AND
+            COMPANYID = #companyID#
+    </update>
 </sqlMap>

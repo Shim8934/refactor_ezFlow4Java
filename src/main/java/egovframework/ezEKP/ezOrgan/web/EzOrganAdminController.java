@@ -75,6 +75,8 @@ import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.rest.Rest;
+import egovframework.let.utl.rest.Result;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /** 
@@ -131,6 +133,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     
     @Autowired
 	private Properties globals;
+
+	@Autowired
+	private Rest rest;
 
     @PostConstruct
 	public void init() throws Exception {
@@ -258,6 +263,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     		ezCommonService.addCommMailFGColumn(); // 2021-11-12 홍승비 - 커뮤니티 게시판 메일알림 옵션 추가 (게시/수정/댓글알림) 
     		ezCommonService.addSurveySubDeptYNColumn(); // 2021-11-17 홍승비 - 전자설문 대상자 하위부서 허용여부 플래그 추가 (Y/N)
     		ezCommonService.createTblScheduleComplete(); // 2021-11-23 홍승비 - 일정 완료여부 레코드 저장 테이블 추가
+    		ezCommonService.alterTblConnectionInfo();	// 2021-12-22 이사라 : 로그아웃시간, 상태 컬럼 추가
 	    	
 	    	// webfolder
 	    	ezCommonService.addWebfolderUserSubdeptPermittedColumn(); 	//2020-10-19 김은실 - 웹폴더 > 하위부서 허용 여부 추가
@@ -3382,46 +3388,47 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	@ResponseBody
 	public String syncWithBizmekaTalkAccounts(@CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("syncWithBizmekaTalkAccounts started.");
-		
+
 		String returnValue = "ERROR";
-		
+
 		try {
 			// 전체관리자 권한 체크
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
-			
+
 			if (userInfo.getRollInfo().indexOf("c=1") == -1) {
 				return returnValue;
 			}
-									
+
 			JSONObject obj = invokeEzTalkSyncServer(userInfo.getTenantId());
-			
-			if (!obj.get("resultCode").equals("ERROR") && obj.get("resultCode") != null) {
+
+			if ((boolean) obj.get("result") && 0 == (Long) obj.get("resultCode")) {
 				returnValue = "OK";
 			}
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		logger.debug("syncWithBizmekaTalkAccounts ended.");
-		
+
 		return returnValue;
 	}
 	
 	public JSONObject invokeEzTalkSyncServer(int tenantId) throws Exception {
 		String ezTalkServerUrl = ezCommonService.getTenantConfig("ezTalkSyncServerUrl", tenantId);
-		String queryString = "/ezTalkSyncServer/syncAccounts";
-		String inputParams = "tenantId=" + tenantId;
-		
-		String resultCode = ezEmailUtil.getWebServiceResult(ezTalkServerUrl + queryString, inputParams);
-		
-		JSONParser parser = new JSONParser();
-		JSONObject obj = (JSONObject) parser.parse(resultCode);
-		logger.debug("ezTalkSyncServer getWebServerResult=" + obj.toJSONString());
+		JSONObject result = rest.builder().post().url(ezTalkServerUrl).exchangeBody();
+		logger.debug("ezTalkSyncServer getWebServerResult={}", result);
 
-		return obj;
+		return result;
 	}
-	
+
+	public JSONObject invokeEzTalkSyncServerForSingle(String cn, int tenantId) throws Exception {
+		String ezTalkServerUrl = ezCommonService.getTenantConfig("ezTalkSyncServerUrlForSingle", tenantId);
+		JSONObject result = rest.builder().post().url(ezTalkServerUrl).jsonParam("userId", cn).exchangeBody();
+		logger.debug("ezTalkSyncServerForSingle getWebServerResult={}", result);
+
+		return result;
+	}
+
 	/**
 	 * ezSyncServer를 호출하여 인사 정보를 동기화한다.
 	 */

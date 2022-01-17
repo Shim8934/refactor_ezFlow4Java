@@ -31,11 +31,11 @@ function init(initDataSetFunc, returnDataSetFunc) {
 }
 
 function clickBtnOk(returnDataSetFunc) {
+    var retXmlStr = "";
     if(returnDataSetFunc && typeof returnDataSetFunc === "function") {
-        makeDataSet(returnDataSetFunc);
+        retXmlStr = makeDataSet(returnDataSetFunc);
     }
-
-    var retXmlStr = makeDataSet(returnDataSetFunc);
+    
     orgWin.postMessage(retXmlStr, "*");
 }
 

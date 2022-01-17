@@ -2165,8 +2165,8 @@ public class EzCommonDAO extends EgovAbstractDAO {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Map<String, Object>> getTenantConfigList(Map<String, Object> map) throws Exception{
-		return (List<Map<String, Object>>) list("EzCommonDAO.getTenantConfigList", map);
+	public List<Map<String, String>> getTenantConfigList(Map<String, Object> map) throws Exception{
+		return (List<Map<String, String>>) list("EzCommonDAO.getTenantConfigList", map);
 	}
 	
 	public void alterTblAddjobMaster() {
@@ -2224,4 +2224,9 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
+	/* 2021-12-22 이사라 : 로그아웃시간, 상태 컬럼 추가  */
+	public void alterTblConnectionInfo() {
+		logger.debug("If disconnecttime and status columns doesn't exist in TBL_CONNECTION_INFO, creating the columns...");
+		update("EzCommonDAO.alterTblConnectionInfo");
+	}
 }

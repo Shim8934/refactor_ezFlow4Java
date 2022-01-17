@@ -1,4 +1,4 @@
-﻿﻿﻿function OpenInformationUI(pInformationContent)
+﻿function OpenInformationUI(pInformationContent)
 {
 	var parameter = pInformationContent;
 	var url = "/myoffice/ezCommunity/htm/ezAPROPINION.aspx";

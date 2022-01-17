@@ -1,4 +1,4 @@
-﻿﻿var PreviewH_Move = false;
+﻿var PreviewH_Move = false;
 function PreviewH_onMouserDown(e) {
     curevent = (typeof event == 'undefined' ? e : event)
 

@@ -1,4 +1,4 @@
-﻿﻿﻿var g_searchHttp = null;
+﻿var g_searchHttp = null;
 var g_progresswin = null;
 
 function showProgress() {

@@ -198,6 +198,12 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 
 
 	@Override
+	public void updateLog(LoginVO vo) throws Exception {
+		loginDAO.updateLog(vo);		
+	}
+	
+	
+	@Override
 	public List<String> getUserIDList() throws Exception {
 		return loginDAO.getUserIDList();
 	}

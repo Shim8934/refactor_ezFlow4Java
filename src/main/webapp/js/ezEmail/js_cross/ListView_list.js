@@ -1,4 +1,4 @@
-﻿﻿var PressCtrlKey = false;
+﻿var PressCtrlKey = false;
 var PressShiftKey = false;
 var m_strColorSelect =  "#f1f8ff";
 var m_strColorDefault =  "#FFFFFF";

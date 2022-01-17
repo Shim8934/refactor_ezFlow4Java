@@ -4663,6 +4663,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		    		        	ezEmailUtil.setSecureMailFlag(secureMessage, true);
 		    		        	secureMessage.setFlag(Flags.Flag.SEEN, true);
 		    		        	
+								// mailetcontainer.xml에서 JMochaSecureMail 사용시 X-JMocha-Secure-Mail-ID 사라짐 -> 보안메일 필터링 SECURE_FLAG를 추가하기 위해 헤더 속성 필요.
+								secureMessage.setHeader("X-JMocha-Secure-Mail", "true");
+
 			            		// 편지함 용량 초과 메세지 확인을 위해 임시저장
 	    	                    // 본래는 임시보관함에 미리 저장해두고 성공했을 시 임시보관함에 있는 메일을 보낸메일함으로 복사하였으나
 	    			            // 보낸메일함에 바로 저장하는 것으로 변경함.

@@ -150,6 +150,7 @@
 							message.Clear();
 				        }
 					    message.EditMode(0);
+						message.SetViewProperties(2, 100);
 					    message.ScrollPosInfo(0, 0);
 					    
 					    window.onresize();
@@ -348,20 +349,34 @@
 	            var MemberList = loadXMLString(GetCurrentlinelist)
 	            var pDocTitle = message.GetFieldText("doctitle").trim();
 	            var objNodes = SelectNodes(MemberList, "LISTVIEWDATA/ROWS/ROW");
+	            var pDraftDate = GetDocInfoData("APR", "STARTDATE"); // 메일 발송 시 회수일시가 아닌 기안일시를 사용
 	            g_szUserID = pUserID;
 	            g_senderinfo = "";
+	            
 	            for (i = 0; i < objNodes.length; i++) {
 	                var nowstate = getNodeText(GetChildNodes(GetChildNodes(SelectNodes(MemberList, "LISTVIEWDATA/ROWS/ROW")[i])[0])[12]);
 	                var LineUserID = getNodeText(GetChildNodes(GetChildNodes(SelectNodes(MemberList, "LISTVIEWDATA/ROWS/ROW")[i])[0])[4]);
 	                var LineSN = getNodeText(GetChildNodes(GetChildNodes(SelectNodes(MemberList, "LISTVIEWDATA/ROWS/ROW")[i])[0])[0]);
 	                if (nowstate == "002" || nowstate == "003") {
 	                    if (LineSN != "1") {
-	                        sendmail(LineUserID, pDocTitle, arr_userinfo[2], js_yyyy_mm_dd_hh_mm_ss(), "callback", "", true)
+	                        sendmail(LineUserID, pDocTitle, arr_userinfo[2], pDraftDate, "callback", "", true)
 	                    }
 	                }
 
 	            }
 			}
+		    
+		    function js_yyyy_mm_dd_hh_mm_ss() {
+	            now = new Date();
+	            year = "" + now.getFullYear();
+	            month = "" + (now.getMonth() + 1); if (month.length == 1) { month = "0" + month; }
+	            day = "" + now.getDate(); if (day.length == 1) { day = "0" + day; }
+	            hour = "" + now.getHours(); if (hour.length == 1) { hour = "0" + hour; }
+	            minute = "" + now.getMinutes(); if (minute.length == 1) { minute = "0" + minute; }
+	            second = "" + now.getSeconds(); if (second.length == 1) { second = "0" + second; }
+	            return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
+	        }
+		    
 			//2019-05-03 김보미 - 근태관리 연동
 			function attitude_annual_conn(docId) {		 		
 				$.ajax({ 			
