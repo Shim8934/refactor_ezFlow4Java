@@ -1403,6 +1403,18 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("tbl_admin_access_ip table doesn't exist. creating the table...");
 			
 			update("EzCommonDAO.createTblAdminAccessIpTable");
+			
+			if (dbType.equalsIgnoreCase("oracle")) {
+				try {
+					int cnt = (int) select("EzCommonDAO.checkTblAdminAccessIpSequence");
+					if (cnt < 1) {throw new Exception(); }
+				} catch (Exception ee) {
+					ee.printStackTrace();
+					logger.debug("TBL_ADMIN_ACCESS_IP Sequence doesn't exist. creating the Sequence...");
+					
+					update("EzCommonDAO.createTblAdminAccessIpSequence");
+				}
+			}
 		}
 	}
 

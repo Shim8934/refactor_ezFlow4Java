@@ -2721,7 +2721,7 @@
 			FROM 
 				TBL_ADMIN_ACCESS_IP
 			WHERE
-			    rownum = 1
+			    rownum <= 1
 		]]>
 	</select>
 	
@@ -2734,6 +2734,20 @@
 		  	"EXPLANATION" NVARCHAR2(200) DEFAULT NULL,
 		  	CONSTRAINT "PK2_TBL_ADMIN_ACCESS_IP" PRIMARY KEY ("IPNO")
 		)
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblAdminAccessIpSequence" resultClass="int">
+		SELECT
+			COUNT(SEQUENCE_NAME)
+		FROM 
+			USER_SEQUENCES
+		WHERE 
+			SEQUENCE_NAME = 'TBL_ADMIN_ACCESS_IP_SEQ2'
+	</select>
+	
+	<statement id="EzCommonDAO.createTblAdminAccessIpSequence">
+		CREATE SEQUENCE "TBL_ADMIN_ACCESS_IP_SEQ2"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE
+
 	</statement>
 
 	<select id="EzCommonDAO.checkReBebuOpinionCode" parameterClass="Map" resultClass="String">
