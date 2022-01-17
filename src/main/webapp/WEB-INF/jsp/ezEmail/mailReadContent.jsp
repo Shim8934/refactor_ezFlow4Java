@@ -460,6 +460,20 @@
 			</script> 
 	</head>
 	<body style="margin-left:10px;margin-top:10px" onload="javascript:window_onload()">
+		<!-- ical -->
+		<c:if test="${isIcalMail == 'Y'}">
+			<div style="margin: 10px 0; padding: 0px; clear: both; overflow: hidden;">
+				<ul style="padding: 10px; margin: 0px; list-style: none; border-top: 1px solid #e5e5e5; border-bottom: 1px solid #e5e5e5;">
+					<li>
+						<span title="<spring:message code='ezEmail.ical01' />" onClick="addIcalSchedule(g_paramURL, shareId)" onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='rgb(102, 102, 102)'" 
+						style="display: inline-block; cursor: pointer; color: rgb(102, 102, 102);font-size: 12px;background: rgb(255, 255, 255);border-width: 1px;border-style: solid;border-color: rgb(199, 199, 199) rgb(199, 199, 199) rgb(144, 145, 147);padding: 3px;letter-spacing: -0.5px;">
+							<span style="cursor:pointer; width: 19px;height: 19px;background-image: url(/images/kr/left/sub_iconLNB.png);float: left;background-position: 0px -50px;" class="imgSpan"></span>
+							<span style="height: 19px;display: inline;line-height: 19px;"><spring:message code='ezEmail.ical01' /></span>
+						</span>  
+					</li>
+				</ul>
+			</div>
+		</c:if> 
 		<span id="ContentClassbtn" style="float:right;display:none;" >
 			<img src='/images/mtgrsp-accept.gif' width="20" height="20" title="<spring:message code='ezEmail.t901' />" onclick="Schedule_btn('ACCEPT');" style='cursor:pointer;' />
 			<img src='/images/mtgrsp-tent.gif' width="20" height="20" title="<spring:message code='ezEmail.t903' />" onclick="Schedule_btn('TENT');" style='cursor:pointer;' />

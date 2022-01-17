@@ -23,6 +23,8 @@ import java.security.KeyFactory;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.RSAPublicKeySpec;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -101,9 +103,20 @@ import egovframework.ezEKP.ezAddress.service.EzAddressService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
+import egovframework.ezEKP.ezEmail.vo.IcalVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
+import net.fortuna.ical4j.data.CalendarBuilder;
+import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyList;
+import net.fortuna.ical4j.model.Recur;
+import net.fortuna.ical4j.model.component.*;
+import net.fortuna.ical4j.model.property.Attendee;
+import net.fortuna.ical4j.model.property.Description;
+import net.fortuna.ical4j.model.property.RRule;
 //import egovframework.let.utl.fcc.service.MyException;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.model.ZipParameters;
@@ -1033,6 +1046,7 @@ public class EzEmailUtil {
 		String filecnt = "0";
 		String isAttach = "";
 		String previewImageListHtml = "";
+		String isIcalMail = "";
 		
 		logger.debug("contentType=" + part.getContentType());
 		logger.debug("disposition=" + part.getDisposition());
@@ -1778,6 +1792,7 @@ public class EzEmailUtil {
 					previewImageListHtml += tempList.get(5);
 					filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
 					filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
+					isIcalMail += tempList.get(6);
 					
 					if (tempList.get(4).equals("OK")) {
 						isAttach = "OK";
@@ -1830,6 +1845,7 @@ public class EzEmailUtil {
 					previewImageListHtml += tempList.get(5);
 					filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
 					filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
+					isIcalMail += tempList.get(6);
 					
 					if (tempList.get(4).equals("OK")) {
 						isAttach = "OK";
@@ -1864,6 +1880,7 @@ public class EzEmailUtil {
 					previewImageListHtml += tempList.get(5);
 					filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
 					filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
+					isIcalMail += tempList.get(6);
 					
 					if (tempList.get(4).equals("OK")) {
 						isAttach = "OK";
@@ -1876,6 +1893,7 @@ public class EzEmailUtil {
 					pAttachListHtml += tempList.get(1);
 					filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
 					filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
+					isIcalMail += tempList.get(6);
 					
 					if (tempList.get(4).equals("OK")) {
 						isAttach = "OK";
@@ -1924,6 +1942,7 @@ public class EzEmailUtil {
 						previewImageListHtml += tempList.get(5);
 						filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
 						filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
+						isIcalMail += tempList.get(6);
 						
 						if (tempList.get(4).equals("OK")) {
 							isAttach = "OK";
@@ -1951,11 +1970,16 @@ public class EzEmailUtil {
 				previewImageListHtml += tempList.get(5);
 				filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
 				filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
+				isIcalMail += tempList.get(6);
 				
 				if (tempList.get(4).equals("OK")) {
 					isAttach = "OK";
 				}
 			}
+		} else if (part.isMimeType("text/calendar")) {
+			isIcalMail = "Y";
+			String icalHtml = getIcalMailPartHTML(part, locale);
+ 			htmlBody += icalHtml;
 		}
 		
 		resultList.add(htmlBody);
@@ -1964,6 +1988,7 @@ public class EzEmailUtil {
 		resultList.add(filecnt);
 		resultList.add(isAttach);
 		resultList.add(previewImageListHtml);
+		resultList.add(isIcalMail);
 			
 		return resultList;
 	}
@@ -5693,5 +5718,322 @@ public class EzEmailUtil {
     	logger.debug("getSMTPServer ended.");
     	return reSMTPAccess;
     }
+        
+    /**
+     * 아이캘린더 - 메일 text/calendar 파트 리턴
+     */
+    public Part getIcalMailPart(Part part) {
+    	Part rePart = null;
+    	
+    	try {
+    		if(part.isMimeType("multipart/alternative")){
+    			Multipart mp = (Multipart)part.getContent();
+    			int count = mp.getCount();
+    			Part p = null;
+    			
+    			for (int i = 0; i < count; i++) {
+    				p = mp.getBodyPart(i);
+    				rePart = getIcalMailPart(p);
+    				
+    				if (rePart != null) { break; }
+    			}
+        	} else if(part.isMimeType("text/calendar")) {
+        		rePart = part;
+        	}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    	
+    	return rePart;
+    }
+    
+    /**
+     * 아이캘린더 - 메일 Ical 지원
+     */
+    public String getIcalMailPartHTML(Part part, Locale locale) {
+    	IcalVO vo = getIcalProperty(part);
+    	vo.setLocale(locale);
+    	
+    	String periodTit        = egovMessageSource.getMessage("ezEmail.ical03", locale); // 시간
+    	String locationTit      = egovMessageSource.getMessage("ezEmail.ical04", locale); // 장소
+    	String attendeeTit      = egovMessageSource.getMessage("ezEmail.ical05", locale); // 참석자
+    	String untitledMsg      = egovMessageSource.getMessage("ezEmail.ical02", locale); // 제목없음
+    	String fontFamilyMsg    = egovMessageSource.getMessage("main.t246", locale); 
+    	
+    	String summary     = vo.getSummaryStr().isEmpty() ? untitledMsg : vo.getSummaryStr();
+    	String period      = getIcalPeriodStr(vo);
+    	String location    = vo.getLocationStr();
+    	String descBody    = vo.getAltDescStr();
+    	       descBody    = (descBody == null || descBody.equals("")) ? vo.getDescriptionStr() : descBody;
+    	       
+		PropertyList<Attendee> attendeeList = vo.getAttendee();
+    	
+    	StringBuilder sb = new StringBuilder();
+    	
+    	sb.append("<style>");
+	    	sb.append(".gw_ical_divWrap { width: 98%; min-height: 120px; background: #fbfbfb; border-style: solid; border-width: 1px 0 1px 0; "
+	    			+ "border-color: #e5e5e5; box-sizing: border-box; padding: 20px 10px; font-size: 13px; font-family: " + fontFamilyMsg + "}");
+	    	sb.append(".gw_ical_divWrap > p { line-height: 25px; } ");
+	    	sb.append(".gw_ical_contents > table tr > td:first-child { min-width: 60px; padding-right: 10px; } ");
+	    	sb.append(".gw_ical_summary { font-size: larger; padding-bottom: 10px; } ");
+	    	sb.append(".gw_ical_btns { margin-top: 10px } ");
+	    	sb.append(".gw_ical_attendee span:not(:last-child):after { content:', ' } ");
+	    	sb.append(".gw_ical_btns > button { margin-right: 5px; background: white; border: 1px solid #eee; cursor: pointer; min-width: 70px; box-sizing: border-box; padding: 8px 10px; } ");
+	    	sb.append(".gw_ical_desc { margin-top: 10px } ");
+    	sb.append("</style>");
+    	
+    	sb.append("<div class='gw_ical_divWrap'>");
+			sb.append("<div class='gw_ical_contents'>");
+				// 일정 제목
+				sb.append("<div class='gw_ical_summary'>");
+					sb.append("<img class='ui-datepicker-trigger' src='/images/ImgIcon/calendar-month.png' alt='' title='' style='margin-right: 10px;'>");
+					sb.append(summary);
+				sb.append("</div>");
+				// 시간, 장소, 참석자
+				sb.append("<table>");
+					sb.append("<tr class='gw_ical_period'>");
+						sb.append("<td>").append(periodTit).append("</td>");
+						sb.append("<td>").append(period).append("</td>");
+					sb.append("</tr>");
+
+					sb.append("<tr class='gw_ical_location'>");
+						sb.append("<td>").append(locationTit).append("</td>");
+						sb.append("<td>").append(location).append("</td>");
+					sb.append("</tr>");
+					
+					sb.append("<tr class='gw_ical_attendee'>");
+						sb.append("<td>").append(attendeeTit).append("</td>");
+						sb.append("<td>");
+							for (Attendee attendee : attendeeList) {
+								String mailto = attendee.getCalAddress().getSchemeSpecificPart().toString();
+								String cn = attendee.getParameter(Parameter.CN).getValue();
+								
+								String spanTmp = String.format("<span title='%s'>%s</span>", mailto, cn);
+								sb.append(spanTmp);
+							}
+						sb.append("</td>");
+					sb.append("</tr>");
+				sb.append("</table>");
+				// 본문
+				sb.append("<div class='gw_ical_desc'>");
+					sb.append(descBody);
+				sb.append("</div>");
+			sb.append("</div>"); // gw_ical_contents div END.
+		sb.append("</div>");
+    	
+    	return sb.toString();
+    }
+
+    /**
+     * 아이캘린더 - 기간 및 시간 조합
+     */
+    public String getIcalPeriodStr(IcalVO vo) {
+    	String periodStr     = "";
+		String recurStr      = "";
+		
+		Recur recur       = vo.getRecur();
+		int recurCount    = 0;
+		Locale locale     = vo.getLocale();
+		Date sDate        = vo.getDtStartDate();
+		Date eDate        = vo.getDtEndDate();
+		boolean isAllDay  = vo.isDtAllDay();
+		
+		if (recur != null) {
+			recurCount       = recur.getCount();
+			
+			String freq      =    recur.getFrequency(); // DAILY WEEKLY MONTHLY YEARLY
+			int interval     =    recur.getInterval();
+			String dayList        =   (recur.getDayList() != null) ? recur.getDayList().toString() : ""; // MO,TU,WE,TH,FR,SA,SU
+			String setPosList     =   (recur.getSetPosList() != null) ? recur.getSetPosList().toString() : ""; // 1, 2, 3, 4, -1
+			String monthDayList   =   (recur.getMonthDayList() != null) ? recur.getMonthDayList().toString() : "";
+			String monthList      =   (recur.getMonthList() != null) ? recur.getMonthList().toString() : "";
+			
+			String freqMsg       = ""; // 매일, 매주, 매월, 매년
+			String intervalMsg   = ""; // %s일마다, %s주마다, %s달마다, %s년마다
+			String monthMsg      = egovMessageSource.getMessage("ezEmail.ical10", locale); // %s월
+			String monthDayMsg   = egovMessageSource.getMessage("ezEmail.ical11", locale); // %s일
+			
+			
+			switch (freq) {
+				case "DAILY":
+					
+					freqMsg = egovMessageSource.getMessage("ezEmail.ical06", locale);
+					intervalMsg = egovMessageSource.getMessage("ezEmail.ical12", locale);
+					
+					break;
+				case "WEEKLY":
+					
+					freqMsg = egovMessageSource.getMessage("ezEmail.ical07", locale);
+					intervalMsg = egovMessageSource.getMessage("ezEmail.ical13", locale);
+					
+					break;
+				case "MONTHLY":
+					
+					freqMsg = egovMessageSource.getMessage("ezEmail.ical08", locale);
+					intervalMsg = egovMessageSource.getMessage("ezEmail.ical14", locale);
+					
+					break;
+				default : // YEARLY
+					
+					freqMsg = egovMessageSource.getMessage("ezEmail.ical09", locale);
+					intervalMsg = egovMessageSource.getMessage("ezEmail.ical15", locale);
+					
+					break;
+			}
+			
+			// ex) 매년 or 2년마다
+			if (interval > 0) {
+				recurStr = String.format(intervalMsg, interval);
+			} else {
+				recurStr = freqMsg;
+			}
+			
+			// ex) 12월
+			if (!monthList.isEmpty()) {
+				recurStr += " " + String.format(monthMsg, monthList);
+			}
+
+			// ex) 30일
+			if (!monthDayList.isEmpty()) {
+				recurStr += " " + String.format(monthDayMsg, monthDayList);
+			}
+			
+			// ex) 마지막주 (수)
+			if (!dayList.isEmpty()) {
+				if (!setPosList.isEmpty()) {
+					recurStr += " " + icalWeekToString(setPosList, locale);
+				}
+				
+				recurStr += "(" + icalDayToString(dayList, TextStyle.NARROW, locale) + ")";
+			}
+			
+			periodStr += recurStr;
+		} // recur if End
+    	
+		
+		String sDateStr = "";
+		String sHourStr = "";
+		String eDateStr = "";
+		String eHourStr = "";
+		String timeZone = new SimpleDateFormat("(z)", locale).format(sDate);
+		
+		if (recurStr.isEmpty()) {
+	    	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd (E)", locale);
+	    	sDateStr = dateFormat.format(sDate);
+	    	eDateStr = dateFormat.format(eDate);
+	    	
+	    	// 하루종일이거나 시작날짜와 종료날짜가 같으면 종료날짜 empty String
+	    	eDateStr = (isAllDay || sDateStr.equals(eDateStr)) ? "" : eDateStr ;
+		}
+		
+		if (!isAllDay) {
+	    	SimpleDateFormat hourFormat = new SimpleDateFormat("a hh:mm", locale);
+	    	sHourStr = hourFormat.format(sDate);
+	    	eHourStr = hourFormat.format(eDate);
+		}
+	    
+		String sTmp = sDateStr + " " + sHourStr;
+		String eTmp = eDateStr + " " + eHourStr;
+
+		String dateTmp = (eTmp.trim().isEmpty()) ? sTmp : sTmp + " ~ " + eTmp;
+			   dateTmp += timeZone;
+		
+	   periodStr += dateTmp;
+        
+        // ex) (10회)
+        if (recurCount > 0) {
+        	periodStr += String.format(egovMessageSource.getMessage("ezEmail.ical21", locale), recurCount);
+        }
+    	
+    	return periodStr;
+    }
+
+	private String icalDayToString(String day, TextStyle textStyle, Locale locale) {
+		if (day.isEmpty()) {return ""; }
+
+		String[] dayArr    =   day.split(",");
+		String[] reDayArr  =   new String[dayArr.length];
+		DayOfWeek dayTmp;
+		
+		for (int i = 0; i < dayArr.length; i++) {
+			switch(dayArr[i]) {
+				case "MO" : dayTmp = DayOfWeek.MONDAY; break;
+				case "TU" : dayTmp = DayOfWeek.TUESDAY; break;
+				case "WE" : dayTmp = DayOfWeek.WEDNESDAY; break;
+				case "TH" : dayTmp = DayOfWeek.THURSDAY; break;
+				case "FR" : dayTmp = DayOfWeek.FRIDAY; break;
+				case "SA" : dayTmp = DayOfWeek.SATURDAY; break;
+				default   : dayTmp = DayOfWeek.SUNDAY; break;
+			}
+			
+			reDayArr[i] = dayTmp.getDisplayName(TextStyle.NARROW, locale);
+		}
+		
+		return String.join(",", reDayArr);
+	}
+	
+	private String icalWeekToString(String week, Locale locale) {
+		String returnStr = "";
+		
+		switch (week) {
+			case "1" :  returnStr = "ezEmail.ical16"; break;
+			case "2" :  returnStr = "ezEmail.ical17"; break;
+			case "3" :  returnStr = "ezEmail.ical18"; break;
+			case "4" :  returnStr = "ezEmail.ical19"; break;
+			default  :  returnStr = "ezEmail.ical20"; break;
+		}
+		
+		returnStr = egovMessageSource.getMessage(returnStr, locale);
+		
+		return returnStr;
+	}
+    
+    /**
+     * 아이캘린더 - IcalVO 리턴
+     */
+	public IcalVO getIcalProperty(Part part) {
+    	logger.debug("getIcalProperty started.");
+    	
+    	IcalVO icalVO = new IcalVO();
+
+    	InputStream is = null;
+    	
+    	try {
+    		if (!part.isMimeType("text/calendar")) { throw new Exception("IS_NOT_text/calendar"); }
+        	
+        	is = getContentInputStream(part); 
+        	
+    		CalendarBuilder cb = new CalendarBuilder();
+    		net.fortuna.ical4j.model.Calendar cal = cb.build(is);
+    		
+            ComponentList<CalendarComponent> compVEVENT = cal.getComponents(net.fortuna.ical4j.model.Component.VEVENT);
+            for (CalendarComponent cp : compVEVENT) {
+            	VEvent vEvent = (VEvent) cp;
+            	
+            	icalVO.setSummary(vEvent.getSummary());
+            	icalVO.setDtStart(vEvent.getStartDate());
+            	icalVO.setDtEnd(vEvent.getEndDate());
+            	icalVO.setLocation(vEvent.getLocation());
+            	icalVO.setOrganizer(vEvent.getOrganizer());
+            	icalVO.setUid(vEvent.getUid());
+            	icalVO.setrRule((RRule) vEvent.getProperty(Property.RRULE));
+            	icalVO.setAttendee(vEvent.getProperties(Property.ATTENDEE));
+            	icalVO.setAltDesc(vEvent.getProperty("X-ALT-DESC"));
+            	icalVO.setDescription(vEvent.getDescription());
+            }
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (is != null) {
+				try {
+					is.close();
+				} catch (Exception e) {}
+			}
+		}
+    	
+    	logger.debug("getIcalProperty ended.");
+    	return icalVO;
+    }
+    
 }
 

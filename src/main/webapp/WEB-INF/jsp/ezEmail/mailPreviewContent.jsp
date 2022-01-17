@@ -467,6 +467,22 @@
 	            ${pAttachListHtml}
 			</ul>
 		</div>
+		
+		<!-- ical -->
+		<c:if test="${isIcalMail == 'Y'}">
+			<div style="margin-bottom: 10px; margin: -8px; padding: 0px; clear: both; overflow: hidden;">
+				<ul style="padding: 10px; margin: 0px; list-style: none; border-bottom: 1px solid #e5e5e5;">
+					<li>
+						<span title="<spring:message code='ezEmail.ical01' />" onClick="addIcalSchedule(g_paramURL, shareId)" onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='rgb(102, 102, 102)'" 
+						style="display: inline-block; cursor: pointer; color: rgb(102, 102, 102);font-size: 12px;background: rgb(255, 255, 255);border-width: 1px;border-style: solid;border-color: rgb(199, 199, 199) rgb(199, 199, 199) rgb(144, 145, 147);padding: 3px;letter-spacing: -0.5px;">
+							<span style="cursor:pointer; width: 19px;height: 19px;background-image: url(/images/kr/left/sub_iconLNB.png);float: left;background-position: 0px -50px;" class="imgSpan"></span>
+							<span style="height: 19px;display: inline;line-height: 19px;"><spring:message code='ezEmail.ical01' /></span>
+						</span>  
+					</li>
+				</ul>
+			</div>
+		</c:if>
+		
 		<div id="MailBigAttachRayer" class="previewmail_addfile">
 		</div>
 		<div style="display:inline-block; font-size: 12px; font-family: 'malgun gothic', 'arial', 'verdana';">

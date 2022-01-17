@@ -1314,3 +1314,27 @@ function mail_link(){
     }
     
 }
+
+function addIcalSchedule(pURL, shareId) {
+	if (confirm(strLangKSA03)) {
+		$.ajax({
+		  type : "post",
+		  url : "/ezSchedule/icsImportFromEmail.do",
+		  data : {
+			  "pURL" : encodeURIComponent(pURL),
+			  "shareId" : encodeURIComponent(shareId)
+		  },
+		  success : function(result){ 
+			  if (result != "OK") {
+				  alert(strLangKSA05 + " : " + result);
+			  } else {
+				  alert(strLangKSA04);
+			  }
+		  },
+		  error: function(error){
+			  alert(strLangKSA05);
+		  }
+	   });
+	}
+}
+
