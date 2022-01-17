@@ -103,6 +103,7 @@
             <mvc:mapping path="/admin/ezCabinet/cabinetAdminMain.do"/>
             <mvc:mapping path="/admin/ezEmail/adminMailMain.do"/>
             <mvc:mapping path="/admin/ezWebFolder/webFolderMain.do"/>
+            <mvc:mapping path="/admin/ezCar/carMain.do"/>
             <!-- Left Menu -->
             	<!-- 포탈 -->
             	<mvc:mapping path="/admin/ezNewPortal/portalThemes.do"/>
