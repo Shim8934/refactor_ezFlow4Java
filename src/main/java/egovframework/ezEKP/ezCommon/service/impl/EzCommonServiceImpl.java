@@ -2569,4 +2569,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void createTblAdminAccessInfo() throws Exception {
 		ezCommonDAO.createTblAdminAccessInfo();	
 	}
+	
+	@Override
+	public void createMailOutOfOfficeTemplate()  throws Exception {
+		logger.debug("createMailOutOfOfficeTemplate started.");
+		ezCommonDAO.createMailOutOfOfficeTemplate();
+		logger.debug("createMailOutOfOfficeTemplate ended.");
+	}
 }

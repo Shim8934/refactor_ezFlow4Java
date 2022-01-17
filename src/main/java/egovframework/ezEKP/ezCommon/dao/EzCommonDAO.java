@@ -2234,4 +2234,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		logger.debug("If TBL_ADMIN_ACCESS_INFO doesn't exist, creating the table...");
 		update("EzCommonDAO.createTblAdminAccessInfo");
 	}
+
+	public void createMailOutOfOfficeTemplate() throws Exception {
+		try {
+			select("EzCommonDAO.checkMailOutOfOfficeTemplate");
+		} catch (Exception e) {
+			logger.debug("tbl_password_policy doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createMailOutOfOfficeTemplate");
+		}
+	}
 }

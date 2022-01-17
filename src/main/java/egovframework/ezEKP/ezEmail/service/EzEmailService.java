@@ -11,6 +11,8 @@ import javax.mail.internet.InternetAddress;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import com.google.gson.JsonArray;
+
 import egovframework.ezEKP.ezEmail.util.EmailImportance;
 import egovframework.ezEKP.ezEmail.vo.MailBlobVO;
 import egovframework.ezEKP.ezEmail.vo.MailCancelVO;
@@ -176,4 +178,9 @@ public interface EzEmailService {
 	public int updateMailboxProgress(String userKey, int percent) throws Exception;
 	public int getMailboxProgress(String userKey) throws Exception;
 	public int delMailboxProgress(String userKey) throws Exception;
+	
+	public JSONArray getMailOutOfOfficeTemplateList(String userEmail) throws Exception;
+	public JSONObject getMailOutOfOfficeTemplate(String userEmail, String displayName) throws Exception;
+	public int deleteMailOutOfOfficeTemplate(String userEmail, String displayName) throws Exception;
+	public int saveMailOutOfOfficeTemplate(String userEmail, String modDisplayName, String displayName, String content, String type) throws Exception;
 }

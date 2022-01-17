@@ -363,4 +363,6 @@ public interface EzCommonService {
 	public void alterTblConnectionInfo() throws Exception;
 	
 	public void createTblAdminAccessInfo() throws Exception;
+	
+	public void createMailOutOfOfficeTemplate() throws Exception;
 }

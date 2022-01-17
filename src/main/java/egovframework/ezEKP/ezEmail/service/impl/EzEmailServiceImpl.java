@@ -40,6 +40,7 @@ import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
+import com.google.gson.JsonArray;
 import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -4542,4 +4543,128 @@ public class EzEmailServiceImpl implements EzEmailService {
 		return resultInt;
 	}
 
+	@Override
+	public JSONArray getMailOutOfOfficeTemplateList(String userEmail) throws Exception {
+		logger.debug("getMailOutOfOfficeTemplateList started.");
+		logger.debug("userEmail=" + userEmail);
+		
+		JSONArray jsonArr = new JSONArray();
+		
+		String inputParams = "userId=" + URLEncoder.encode(userEmail, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getMailOutOfOfficeTemplateList";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			String resultCode = (String)responseObj.get("resultCode");
+
+			if (resultCode.equalsIgnoreCase("OK")) {
+				JSONArray resultArray = (JSONArray)responseObj.get("result");
+
+				if (resultArray != null && resultArray.size() > 0) {
+					jsonArr = resultArray;
+				}
+			}				
+		}	
+		
+		logger.debug("getMailOutOfOfficeTemplateList ended.");
+		return jsonArr;
+	}
+
+	@Override
+	public JSONObject getMailOutOfOfficeTemplate(String userEmail, String displayName) throws Exception {
+		logger.debug("getMailOutOfOfficeTemplate started.");
+		logger.debug("userEmail=" + userEmail + ", displayName=" + displayName);
+		
+		JSONObject resultObj = null;
+		
+		String inputParams = "userId=" + URLEncoder.encode(userEmail, "UTF-8")
+				+ "&displayName=" + URLEncoder.encode(displayName, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getMailOutOfOfficeTemplate";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			String resultCode = (String)responseObj.get("resultCode");
+
+			if (resultCode.equalsIgnoreCase("OK")) {
+				if ((JSONObject)responseObj.get("result") != null) {
+					resultObj = (JSONObject) responseObj.get("result");
+				}
+			}				
+		}
+
+		logger.debug("getMailOutOfOfficeTemplate ended.");
+		return resultObj;
+	}
+
+	@Override
+	public int saveMailOutOfOfficeTemplate(String userEmail, String modDisplayName, String displayName, String content, String type) throws Exception {
+		logger.debug("saveMailOutOfOfficeTemplate started.");
+		logger.debug("userEmail=" + userEmail + ", modDisplayName=" + modDisplayName + ", displayName=" + displayName + ", content=" + content);
+		
+		int resultInt = -100;
+		
+		String inputParams = "userId=" + URLEncoder.encode(userEmail, "UTF-8")
+				+ "&modDisplayName=" + URLEncoder.encode(modDisplayName, "UTF-8")
+				+ "&displayName=" + URLEncoder.encode(displayName.trim(), "UTF-8")
+				+ "&content=" + URLEncoder.encode(content, "UTF-8")
+				+ "&type=" + URLEncoder.encode(type, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/setOutOfOfficeTemplate";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			String resultCode = (String)responseObj.get("resultCode");
+
+			if (resultCode.equalsIgnoreCase("OK")) {
+				resultInt = ((Long)responseObj.get("reasonCode")).intValue(); 
+			}				
+		}
+
+		logger.debug("saveMailOutOfOfficeTemplate ended.");
+		return resultInt;
+	}
+	
+	@Override
+	public int deleteMailOutOfOfficeTemplate(String userEmail, String displayName) throws Exception {
+		logger.debug("deleteMailOutOfOfficeTemplate started.");
+		logger.debug("userEmail=" + userEmail + ", displayName=" + displayName);
+		
+		int resultInt = -100;
+		
+		String inputParams = "userId=" + URLEncoder.encode(userEmail, "UTF-8")
+				+ "&displayName=" + URLEncoder.encode(displayName, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/delMailOutOfOfficeTemplate";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			String resultCode = (String)responseObj.get("resultCode");
+
+			if (resultCode.equalsIgnoreCase("OK")) {
+				resultInt = ((Long)responseObj.get("reasonCode")).intValue(); 
+			}				
+		}
+
+		logger.debug("deleteMailOutOfOfficeTemplate ended.");
+		return resultInt;
+	}
+	
 }

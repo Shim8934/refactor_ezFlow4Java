@@ -1656,6 +1656,10 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				 + ",gExternalAudience=" + gExternalAudience + ",gInternal=" + gInternal + ",gExternal=" + gExternal
 				 + ",useOnlyInnerMail=" + useOnlyInnerMail);
 		
+		JSONArray jsonArr = ezEmailService.getMailOutOfOfficeTemplateList(userId); 
+		logger.debug("jsonArr = " + jsonArr);
+		
+		model.addAttribute("templateList", jsonArr);
 		model.addAttribute("offsetMin", offsetMin);
 		model.addAttribute("gOofState", gOofState);
 		model.addAttribute("gStartDate", gStartDate);
@@ -2870,6 +2874,155 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		logger.debug("jsonArr" , returnJsonArr);
 		logger.debug("folderQuotaList ended.");
 		return returnJsonArr.toString();
+	}
+	
+	/**
+	 * 메일 부재중 설정 
+	 * - 부재중 설정, 부재중 설정 템플릿 메뉴 포함된 메인 화면
+	 */
+	@RequestMapping(value="/ezEmail/mailOutOfOfficeMain.do", method = RequestMethod.GET)
+	public String mailOutOfOfficeMain(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailOutOfOfficeMain start-ended");
+		return "ezEmail/mailOutOfOfficeMain";
+	}
+	
+	/**
+	 * 메일 부재중 설정 
+	 * - 부재중 설정 템플릿 메뉴 화면
+	 */
+	@RequestMapping(value="/ezEmail/mailOutOfOfficeTemplate.do", method = RequestMethod.GET)
+	public String mailOutOfOfficeTemplate(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailOutOfOfficeTemplate started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantId = userInfo.getTenantId();
+		
+		String domain = ezCommonService.getTenantConfig("domainName", tenantId);
+		
+		String userEmail = userInfo.getId() + "@" + domain;
+		logger.debug("userEmail=" + userEmail);
+		
+		JSONArray jsonArr = ezEmailService.getMailOutOfOfficeTemplateList(userEmail);
+		logger.debug("jsonArr = " + jsonArr);
+		
+		model.addAttribute("templateList", jsonArr);
+		
+		logger.debug("mailOutOfOfficeTemplate ended.");		
+		return "ezEmail/mailOutOfOfficeTemplate";
+	}
+	
+	/**
+	 * 메일 부재중 설정 템플릿 가져오기(리스트)
+	 */
+	@RequestMapping(value="/ezEmail/getMailOutOfOfficeTemplateList.do", method=RequestMethod.POST)
+	@ResponseBody
+	public JSONArray getMailOutOfOfficeTemplateList(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("getMailOutOfOfficeTemplateList started.");
+	
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantId = userInfo.getTenantId();
+
+		String domain = ezCommonService.getTenantConfig("domainName", tenantId);
+		String userEmail = userInfo.getId() + "@" + domain;
+		logger.debug("tenantId=" + tenantId + ", domain=" + domain + ", userEmai=" + userEmail);
+		
+		JSONArray jsonArr = ezEmailService.getMailOutOfOfficeTemplateList(userEmail); 
+		logger.debug("jsonArr = " + jsonArr);
+		
+		logger.debug("getMailOutOfOfficeTemplateList ended.");		
+		return jsonArr;
+	}
+	
+	/**
+	 * 메일 부재중 설정 템플릿 가져오기(개별)
+	 */
+	@RequestMapping(value="/ezEmail/getMailOutOfOfficeTemplate.do", method=RequestMethod.POST)
+	@ResponseBody
+	public JSONObject getMailOutOfOfficeTemplate(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("getMailOutOfOfficeTemplate started.");
+	
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantId = userInfo.getTenantId();
+		
+		String domain = ezCommonService.getTenantConfig("domainName", tenantId);
+		
+		String userEmail = userInfo.getId() + "@" + domain;
+		String displayName = request.getParameter("displayName");
+		logger.debug("userEmail=" + userEmail + ", displayName=" + displayName);
+		
+		JSONObject oootemplate = ezEmailService.getMailOutOfOfficeTemplate(userEmail, displayName);
+		
+		logger.debug("getMailOutOfOfficeTemplate started.");
+		return oootemplate;
+	}
+	
+	/**
+	 * 메일 부재중 설정 템플릿 저장 함수
+	 */
+	@RequestMapping(value="/ezEmail/saveMailOutOfOfficeTemplate.do", method=RequestMethod.POST)
+	@ResponseBody
+	public String saveMailOutOfOfficeTemplate(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("saveMailOutOfOfficeTemplate started.");
+
+		String returnValue = "ERROR";
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantId = userInfo.getTenantId();
+
+		String domain = ezCommonService.getTenantConfig("domainName", tenantId);
+		String userEmail = userInfo.getId() + "@" + domain;
+		logger.debug("tenantId=" + tenantId + ", domain=" + domain + ", userEmai=" + userEmail);
+
+		String modDiplayName = request.getParameter("modDisplayName");
+		String displayName = request.getParameter("displayName");
+		String content = request.getParameter("content");
+		String type = request.getParameter("type");
+		type = type == null ? "add" : "mod";
+		modDiplayName = type.equals("add") ? "" : modDiplayName;
+		logger.debug("modDiplayName=" + modDiplayName + ", displayName=" + displayName + ", type=" + type);
+		
+		if (displayName == null || content == null) {
+			returnValue = "DATA_ERROR";
+		} else {
+			int reseanCode = ezEmailService.saveMailOutOfOfficeTemplate(userEmail, modDiplayName, displayName, content, type);
+			returnValue = reseanCode == -2 ? "DUPLICATE_NAME" : reseanCode != 0 ? "ERROR" : "OK";
+		}
+
+		logger.debug("returnValue=" + returnValue);
+		logger.debug("saveMailOutOfOfficeTemplate ended.");
+		
+		return returnValue;
+
+	}
+	
+	/**
+	 * 메일 부재중 설정 템플릿 삭제 함수
+	 */
+	@RequestMapping(value="/ezEmail/deleteMailOutOfOfficeTemplate.do", method=RequestMethod.POST)
+	@ResponseBody
+	public String deleteMailOutOfOfficeTemplate(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("deleteMailOutOfOfficeTemplate started.");
+
+		String returnValue = "ERROR";
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantId = userInfo.getTenantId();
+		
+		String domain = ezCommonService.getTenantConfig("domainName", tenantId);
+		
+		String userEmail = userInfo.getId() + "@" + domain;
+		String displayName = request.getParameter("displayName");
+		logger.debug("userEmail=" + userEmail + ", displayName=" + displayName);
+		
+		if (displayName == null || displayName.trim().equals("") || displayName.equals("none")) {
+			logger.debug("Template DisplayName error.");
+		}
+		
+		int reseanCode = ezEmailService.deleteMailOutOfOfficeTemplate(userEmail, displayName);
+		returnValue = reseanCode != 0 ? "ERROR" : "OK";
+		
+		logger.debug("deleteMailOutOfOfficeTemplate started.");
+		return returnValue;
 	}
 	
 }
