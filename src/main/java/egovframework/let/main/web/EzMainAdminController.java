@@ -16,6 +16,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.main.service.MainService;
 import egovframework.let.main.vo.MainVO;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.user.login.service.LoginService;
 import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -32,6 +33,9 @@ public class EzMainAdminController {
 	
 	@Resource(name="mainService")
 	private MainService mainService;
+
+	@Resource(name = "loginService")
+	private LoginService loginService;
 	
     @Resource(name="egovMessageSource")
     private EgovMessageSource egovMessageSource;    
@@ -44,15 +48,29 @@ public class EzMainAdminController {
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		String uid = user.getId();
 		int tenantId = user.getTenantId();
-	    
-        adminVO.setUserid(uid);
-		adminVO.setTenant_id(tenantId);
-		adminVO.setAccessip(ClientUtil.getClientIP(request));
-		adminVO.setAccessagent(ClientUtil.getClientInfo(request, "agent"));
-		adminVO.setAccessos(ClientUtil.getClientInfo(request, "os"));
-		adminVO.setAccessbrowser(ClientUtil.getClientInfo(request, "browser"));
-		
-		mainService.insertAdminLog(adminVO);
+
+		// 전체관리자와 회사관리자 외 다른 관리자는 제외
+		LoginVO loginVO = new LoginVO();
+
+		loginVO.setId(uid);
+		loginVO.setTenantId(tenantId);
+		loginVO.setDn("NOPASSWORD");
+
+		LoginVO resultVO = loginService.selectUser(loginVO);
+
+		boolean rollC = resultVO.getRollInfo().contains("c=1");
+		boolean rollK = resultVO.getRollInfo().contains("k=1");
+
+		if (rollC || rollK) {
+			adminVO.setUserid(uid);
+			adminVO.setTenant_id(tenantId);
+			adminVO.setAccessip(ClientUtil.getClientIP(request));
+			adminVO.setAccessagent(ClientUtil.getClientInfo(request, "agent"));
+			adminVO.setAccessos(ClientUtil.getClientInfo(request, "os"));
+			adminVO.setAccessbrowser(ClientUtil.getClientInfo(request, "browser"));
+
+			mainService.insertAdminLog(adminVO);
+		}
 		
 		return "admin/adminMain";
 	}

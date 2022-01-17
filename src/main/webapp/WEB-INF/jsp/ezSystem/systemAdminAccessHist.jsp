@@ -605,11 +605,7 @@
             <img src="/images/email/progress_img.gif" style="padding-top:20px;">
             <div id="progressNum" style="padding-top:10px;vertical-align: middle; font-weight: bold; font-size: 1.2em;"></div>
         </div>
-		<table style="margin: 10px 0px;">
-			<tr>
-				<td width="98%" style="color: #333;">▒ ${mailLogKeepPeriodMessage}</td>
-			</tr>
-		</table>
+			<br>
 		<div id="contentlist" style="width:100%; overflow: auto;">	
 			<table class="mainlist" style="width:100%;">
 				<thead style="">
