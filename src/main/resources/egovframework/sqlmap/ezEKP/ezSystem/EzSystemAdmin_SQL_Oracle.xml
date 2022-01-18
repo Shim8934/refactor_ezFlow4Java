@@ -545,6 +545,7 @@
 	<select id="EzSystemAdminDAO.getAdminAccessIPBand" parameterClass="Integer" resultClass="IPBandVO">
 		<![CDATA[
 			SELECT
+				IPNO, 
 				IPADDRESS,
 				ALLOW_ACCESS AS "ACCESS",
 				EXPLANATION

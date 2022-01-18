@@ -36,6 +36,7 @@ public class IPBandVO {
 	}
 	
 	public void setExplanation(String explanation) {
+		if (explanation==null) { explanation = ""; }
 		this.explanation = explanation;
 	}
 
