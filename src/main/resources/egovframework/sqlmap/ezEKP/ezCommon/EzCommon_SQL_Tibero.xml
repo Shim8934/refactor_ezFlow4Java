@@ -4371,4 +4371,23 @@
 		)
     </statement>
     
+	<select id="EzCommonDAO.checkMailOutOfOfficeTemplate" resultClass="String">
+		<![CDATA[
+			SELECT 
+				USER_ID
+			FROM 
+				JMOCHA_MAIL_OUTOFOFFICE_TEM
+			WHERE
+			    rownum = 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.createMailOutOfOfficeTemplate"> 
+		CREATE TABLE JMOCHA_MAIL_OUTOFOFFICE_TEM (
+			USER_ID NVARCHAR2(100) NOT NULL,
+			DISPLAYNAME NVARCHAR2(40) NOT NULL,
+			CONTENT LONG,
+			CONSTRAINT "JMOCHA_MAIL_OOO_TEM_PK" PRIMARY KEY (USER_ID, DISPLAYNAME)
+		)
+	</statement>
+	
 </sqlMap>

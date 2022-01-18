@@ -78,7 +78,9 @@
 		}
 		
 		function del_option(opt_val) {
-			templateSelect.querySelector("option:checked").remove();
+			// IE에서 remove() 를 지원하지 않아 아래처럼 수정
+			var selectOpt = templateSelect.querySelector("option:checked");
+			selectOpt.parentElement.removeChild(selectOpt);
 			templateSelect.querySelector("option[id='noneOption']").selected = true;
 			selectOOOTemplate();
 		}

@@ -14549,6 +14549,17 @@ CREATE TABLE `tbl_webfolder_user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='웹폴더 사용자';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+-- 
+-- Table structure for table `jmocha_mail_outofoffice_tem`
+--
+DROP TABLE IF EXISTS `jmocha_mail_outofoffice_tem`;
+CREATE TABLE `jmocha_mail_outofoffice_tem` (
+  `USER_ID` varchar(100) NOT NULL,
+  `DISPLAYNAME` varchar(45) NOT NULL,
+  `CONTENT` longtext CHARACTER SET utf8mb4 NOT NULL,
+  PRIMARY KEY (`USER_ID`,`DISPLAYNAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --
 -- Temporary view structure for view `vaprdoingdoclist`
 --

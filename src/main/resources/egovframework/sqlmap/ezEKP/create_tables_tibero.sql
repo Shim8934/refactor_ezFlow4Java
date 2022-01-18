@@ -8524,6 +8524,16 @@ CREATE TABLE "TBL_CAR_FORM" (
 	"MEMBER_TYPE" NVARCHAR2(10), 
 	"MEMBER_ITEM" NVARCHAR2(10)
    ) ;
+-------------------------------------------------------- 
+--  DDL for Table JMOCHA_MAIL_OUTOFOFFICE_TEM
+--------------------------------------------------------
+
+  CREATE TABLE "JMOCHA_MAIL_OUTOFOFFICE_TEM" 
+   (	
+    "USER_ID" NVARCHAR2(100), 
+	"DISPLAYNAME" NVARCHAR2(40), 
+	"CONTENT" LONG
+   ); 
 --------------------------------------------------------
 --  DDL for Sequence DBOBJECTID_SEQUENCE
 --------------------------------------------------------
@@ -12129,6 +12139,12 @@ CREATE TABLE "TBL_CAR_FORM" (
 --------------------------------------------------------
 
   CREATE INDEX "U_JMS_PTN_USER_NAME" ON "JAMES_SUBSCRIPTION" ("USER_NAME", "MAILBOX_NAME") 
+  ;
+-------------------------------------------------------- 
+--  DDL for Index JMOCHA_MAIL_OOO_TEM_PK
+--------------------------------------------------------
+
+  CREATE INDEX "JMOCHA_MAIL_OOO_TEM_PK" ON "JMOCHA_MAIL_OUTOFOFFICE_TEM" ("USER_ID", "DISPLAYNAME")
   ;
 --------------------------------------------------------
 --  DDL for Trigger TRG_TBL_ADMINRECEIPTGROUP_MAIN

@@ -4254,12 +4254,12 @@
 			SELECT 
 				TENANT_ID
 			FROM 
-				JMOCHA_MAIL_OUTOFOFFICE_TEMPLATE
+				JMOCHA_MAIL_OUTOFOFFICE_TEM
 			LIMIT 1
 		]]>
 	</select>
 	<statement id="EzCommonDAO.createMailOutOfOfficeTemplate"> 
-		CREATE TABLE `jmocha_mail_outofoffice_template` (
+		CREATE TABLE `jmocha_mail_outofoffice_tem` (
 		  `USER_ID` varchar(100) NOT NULL,
 		  `DISPLAYNAME` varchar(45) NOT NULL,
 		  `CONTENT` LONGTEXT NULL,
