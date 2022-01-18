@@ -7020,7 +7020,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	/**
 	 * 메일 템플릿 리스트 가져오기
 	 */
-	@RequestMapping(value="/ezEmail/getUserMailTemplateList.do", method = RequestMethod.POST)
+	@RequestMapping(value="/ezEmail/getUserMailTemplateList.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	@ResponseBody
 	public String getUserMailTemplateList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
 		logger.debug("getUserMailTemplateList started.");
@@ -7040,7 +7040,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	/**
 	 * 메일 템플릿 개별 가져오기
 	 */
-	@RequestMapping(value="/ezEmail/getUserMailTemplate.do", method = RequestMethod.POST)
+	@RequestMapping(value="/ezEmail/getUserMailTemplate.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	@ResponseBody
 	public String getUserMailTemplate(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
 		logger.debug("getUserMailTemplate started.");

@@ -8580,6 +8580,18 @@ CREATE TABLE "TBL_CAR_FORM" (
 	"DISPLAYNAME" NVARCHAR2(40), 
 	"CONTENT" LONG
    );   
+-------------------------------------------------------- 
+--  DDL for Table JMOCHA_USER_MAIL_TEMPLATE
+--------------------------------------------------------
+
+  CREATE TABLE "JMOCHA_USER_MAIL_TEMPLATE" 
+   (	"USER_ID" NVARCHAR2(100), 
+	"DISPLAYNAME" NVARCHAR2(100), 
+	"TEMPLATE_ID" NVARCHAR2(510), 
+	"REGDATE" DATE, 
+	"EDITORTYPE" NVARCHAR2(5), 
+	"CONTENT" LONG
+   ) ;
 --------------------------------------------------------
 --  DDL for Sequence DBOBJECTID_SEQUENCE
 --------------------------------------------------------
@@ -12208,6 +12220,12 @@ CREATE TABLE "TBL_CAR_FORM" (
 --------------------------------------------------------
 
   CREATE INDEX "JMOCHA_MAIL_OOO_TEM_PK" ON "JMOCHA_MAIL_OUTOFOFFICE_TEM" ("USER_ID", "DISPLAYNAME")
+  ;
+-------------------------------------------------------- 
+--  DDL for Index JMOCHA_USER_MAIL_TEMPLATE_PK
+--------------------------------------------------------
+
+  CREATE INDEX "JMOCHA_USER_MAIL_TEMPLATE_PK" ON "JMOCHA_USER_MAIL_TEMPLATE" ("USER_ID", "DISPLAYNAME") 
   ;
 --------------------------------------------------------
 --  DDL for Trigger TRG_TBL_ADMINRECEIPTGROUP_MAIN
@@ -17917,6 +17935,15 @@ ALTER TRIGGER "TRG_TBL_TASKCOMMENT" ENABLE;
   ALTER TABLE "TBL_WEBFOLDER_USER" MODIFY ("TYPE" NOT NULL ENABLE);
   ALTER TABLE "TBL_WEBFOLDER_USER" ADD PRIMARY KEY ("CN", "TENANT_ID", "TYPE")
   USING INDEX  ENABLE;
+-------------------------------------------------------- 
+--  Constraints for Table JMOCHA_USER_MAIL_TEMPLATE
+--------------------------------------------------------
+
+  ALTER TABLE "JMOCHA_USER_MAIL_TEMPLATE" MODIFY ("USER_ID" NOT NULL ENABLE);
+  ALTER TABLE "JMOCHA_USER_MAIL_TEMPLATE" MODIFY ("DISPLAYNAME" NOT NULL ENABLE);
+  ALTER TABLE "JMOCHA_USER_MAIL_TEMPLATE" MODIFY ("TEMPLATE_ID" NOT NULL ENABLE);
+  ALTER TABLE "JMOCHA_USER_MAIL_TEMPLATE" ADD CONSTRAINT "JMOCHA_USER_MAIL_TEMPLATE_PK" PRIMARY KEY ("USER_ID", "DISPLAYNAME")
+  USING INDEX ENABLE;  
 --------------------------------------------------------
 --  Ref Constraints for Table TBL_WEBFOLDER_SHARE_HIDE
 --------------------------------------------------------

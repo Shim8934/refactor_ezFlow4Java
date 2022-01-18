@@ -14560,6 +14560,20 @@ CREATE TABLE `jmocha_mail_outofoffice_tem` (
   PRIMARY KEY (`USER_ID`,`DISPLAYNAME`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- 
+-- Table structure for table `jmocha_user_mail_template`
+--
+DROP TABLE IF EXISTS `jmocha_user_mail_template`;
+CREATE TABLE `jmocha_user_mail_template` (
+  `USER_ID` varchar(100) NOT NULL,
+  `DISPLAYNAME` varchar(45) NOT NULL,
+  `TEMPLATE_ID` varchar(510) NOT NULL,
+  `REGDATE` datetime NOT NULL,
+  `EDITORTYPE` varchar(5) DEFAULT NULL,
+  `CONTENT` longtext DEFAULT NULL,
+  PRIMARY KEY (`USER_ID`,`DISPLAYNAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 --
 -- Temporary view structure for view `vaprdoingdoclist`
 --

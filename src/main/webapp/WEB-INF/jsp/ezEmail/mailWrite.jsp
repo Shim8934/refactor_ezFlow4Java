@@ -67,7 +67,7 @@
         </c:if>
 	    <script type="text/javascript">
 	    $(document).ready(function() {
-	    	window.resizeTo(940, window.outerHeight);
+	    	window.resizeTo(990, window.outerHeight);
         });
 	    
 	    var g_szAuthor = "";
