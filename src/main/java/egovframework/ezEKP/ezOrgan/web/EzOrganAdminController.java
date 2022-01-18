@@ -144,6 +144,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.createMailTemplateSequence();
     		ezCommonService.createJmochaMailboxProgress();
 	    	ezCommonService.alterTblAddjobMaster();
+	    	ezCommonService.createUserMailTemplate(); // 2020-07-27 김수아 - 메일 템플릿 테이블 생성
 	    	ezCommonService.createMailOutOfOfficeTemplate(); // 2020-07-17 김수아 - 부재중 설정 템플릿 테이블 생성
 	    	ezCommonService.createTblCompanyConfig();
 	    	ezCommonService.createReformFlagColumn();
@@ -1525,6 +1526,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         
         logger.debug("tenantID=" + tenantID + ",cnList=" + cnList);
 	    
+        String realPath = commonUtil.getRealPath(request);
+        
 		String cn[] = cnList.split(",");
 		String result = "OK";
 		
@@ -1687,6 +1690,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				// 해당 사용자의 메일자동삭제 설정을 모두 제거한다. -1 = error
 	    		rc = ezEmailService.deleteMailDeleteForUser(mailAddr);
 	    		logger.debug("deleteMailDeleteForUser rc=" + rc);
+	    		
+				// 해당 사용자의 메일 템플릿을 모두 제거한다
+	    		rc = ezEmailService.deleteUserMailTemplate(mailAddr, "", "all", realPath, tenantID);
+	    		logger.debug("deleteMailUserTemplate rc=" + rc);
 			}
 			// dhlee - end
 		}		

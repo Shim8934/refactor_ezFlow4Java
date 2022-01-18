@@ -18,6 +18,8 @@ import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -70,6 +72,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.jsoup.Jsoup;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6993,5 +6997,197 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         logger.debug("setBigAttachCountInfo ended.");
         
 		return "";
+	}
+	
+	/**
+	 * 메일 템플릿 팝업
+	 */
+	@RequestMapping(value="/ezEmail/userMailTemplateMain.do", method = RequestMethod.GET)
+	public String userMailTemplateMain() throws Exception{
+		logger.debug("userMailTemplateMain start-ended");
+		return "ezEmail/mailTemplateMain";
+	}
+
+	/**
+	 * 메일 템플릿 저장 팝업
+	 */
+	@RequestMapping(value="/ezEmail/saveUserMailTemplateMain.do", method = RequestMethod.GET)
+	public String saveUserMailTemplateMain() throws Exception{
+		logger.debug("saveUserMailTemplateMain start-ended");
+		return "ezEmail/mailTemplateAdd";
+	}
+
+	/**
+	 * 메일 템플릿 리스트 가져오기
+	 */
+	@RequestMapping(value="/ezEmail/getUserMailTemplateList.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String getUserMailTemplateList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
+		logger.debug("getUserMailTemplateList started.");
+		
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		int tenantId = loginInfo.getTenantId();
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userEmail = loginInfo.getId() + "@" + domainName;
+		logger.debug("tenantId=" + tenantId + ", domainName=" + domainName + ", userEmail=" + userEmail);
+		
+		JSONArray jsonArr = ezEmailService.getUserMailTemplateList(userEmail);
+		
+		logger.debug("getUserMailTemplateList ended.");
+		return jsonArr.toString();
+	}
+
+	/**
+	 * 메일 템플릿 개별 가져오기
+	 */
+	@RequestMapping(value="/ezEmail/getUserMailTemplate.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String getUserMailTemplate(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
+		logger.debug("getUserMailTemplate started.");
+		
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		int tenantId = loginInfo.getTenantId();
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userEmail = loginInfo.getId() + "@" + domainName;
+		logger.debug("tenantId=" + tenantId + ", domainName=" + domainName + ", userEmail=" + userEmail);
+		
+		String templateId = request.getParameter("templateId");
+		templateId = templateId == null ? "" : templateId;
+		logger.debug("templateId=" + templateId);
+		
+		JSONObject jsonObj = ezEmailService.getUserMailTemplate(userEmail, templateId);
+		
+		logger.debug("getUserMailTemplate ended.");
+		return jsonObj.toJSONString();
+	}
+	
+	/**
+	 * 메일 템플릿 미리보기
+	 */
+	@RequestMapping(value="/ezEmail/userMailTemplatePreview.do", method = RequestMethod.GET)
+	public String userMailTemplatePreview(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("userMailTemplatePreview started.");
+		
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		int tenantId = loginInfo.getTenantId();
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userEmail = loginInfo.getId() + "@" + domainName;
+		logger.debug("tenantId=" + tenantId + ", domainName=" + domainName + ", userEmail=" + userEmail);
+		
+		String templateId = request.getParameter("templateId");
+		templateId = templateId == null ? "" : templateId;
+		logger.debug("templateId=" + templateId);
+		
+		JSONObject jsonObj = ezEmailService.getUserMailTemplate(userEmail, templateId);
+		
+		model.addAttribute("templateObj", jsonObj);
+		
+		logger.debug("userMailTemplatePreview ended.");
+		return "ezEmail/mailTemplatePreview";
+	}
+	
+	/**
+	 * 메일 템플릿 삭제
+	 */
+	@RequestMapping(value="/ezEmail/deleteUserMailTemplate.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String deleteUserMailTemplate(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
+		logger.debug("deleteUserMailTemplate started.");
+
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		int tenantId = loginInfo.getTenantId();
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userEmail = loginInfo.getId() + "@" + domainName;
+		logger.debug("tenantId=" + tenantId + ", domainName=" + domainName + ", userEmail=" + userEmail);
+		
+		String templateId = request.getParameter("templateId");
+		templateId = templateId == null ? "" : templateId;
+		logger.debug("templateId=" + templateId);
+		
+		String realPath = commonUtil.getRealPath(request);
+		
+		int resultInt = ezEmailService.deleteUserMailTemplate(userEmail, templateId, "indiviaul", realPath, tenantId);
+		String returnStr = resultInt == 0 ? "OK" : "ERROR";
+		
+		logger.debug("deleteUserMailTemplate ended.");
+		return returnStr;
+	}
+	
+	/**
+	 * 메일 템플릿 저장
+	 */
+	@RequestMapping(value="/ezEmail/saveUserMailTemplate.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String saveUserMailTemplate(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
+		logger.debug("saveUserMailTemplate started.");
+		
+		String returnStr = "ERROR";
+		
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		int tenantId = loginInfo.getTenantId();
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userEmail = loginInfo.getId() + "@" + domainName;
+		logger.debug("tenantId=" + tenantId + ", domainName=" + domainName + ", userEmail=" + userEmail);
+
+		String displayName = request.getParameter("displayName");
+		displayName = displayName == null ? "" : displayName;
+		String content = request.getParameter("content");
+		content = content == null ? "" : content;
+		String editorType = request.getParameter("editorType"); // 0:html, 1:plain
+		logger.debug("displayName=" + displayName + ", content=" + content, ", editorType=" + editorType);
+		
+		String realPath = commonUtil.getRealPath(request);
+		String templateId = UUID.randomUUID().toString();
+		if (editorType.equals("0")) {
+			content = userMailTemplateContent(content, realPath, tenantId, userEmail, templateId);     
+		}
+		
+		int resultInt = ezEmailService.saveUserMailTemplate(userEmail, displayName, content, templateId, editorType);
+		returnStr = resultInt == 0 ? "OK" : resultInt == -2 ? "DUPLICATE" : "ERROR";
+		
+		logger.debug("saveUserMailTemplate ended.");
+		return returnStr;
+	}
+	
+	public String userMailTemplateContent(String htmlContent, String realPath, int tenantId, String userEmail, String templateId) throws Exception {
+		logger.debug("userMailTemplateContent started.");
+		
+		String uploadMailTemplatePath = commonUtil.getUploadPath("upload_mail.MAILTEMPLATE", tenantId);
+		String mailTemplatePath = uploadMailTemplatePath + "/" + userEmail + "/" + templateId;
+		logger.debug("realPath=" + realPath + ", mailTemplatePath=" + mailTemplatePath);
+		
+		org.jsoup.nodes.Document doc = Jsoup.parseBodyFragment(htmlContent);
+		Elements imagesEle = doc.getElementsByTag("img");
+		
+		if (imagesEle != null && imagesEle.size() > 0) {
+			logger.debug("imagesEle size=" + imagesEle.size());
+			File mailTemplateFolder = new File(realPath + mailTemplatePath);
+			FileUtils.forceMkdir(mailTemplateFolder);
+			
+			for (org.jsoup.nodes.Element img : imagesEle) {
+				try {
+					String sourceFilePath = img.attr("src");
+					
+					Path sourceFile = Paths.get(sourceFilePath);
+					String fileType = Files.probeContentType(sourceFile).replace("\\", "/").split("/")[1];
+					String fileName = UUID.randomUUID() + "." + fileType;
+
+					String destFilePath = mailTemplatePath + "/" + fileName;
+					logger.debug("sourceFilePath=" + sourceFilePath + ", destFilePath=" + destFilePath);
+					
+					File srcFile = new File(realPath + "/" + sourceFilePath);
+					File destFile = new File(realPath + "/" + destFilePath);
+					FileUtils.copyFile(srcFile, destFile);
+					
+					img.attr("src", destFilePath);
+				} catch (Exception e) {
+					logger.debug("userMailTemplateContent Error.");
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		logger.debug("userMailTemplateContent ended.");
+		return doc.body().toString();
 	}
 }

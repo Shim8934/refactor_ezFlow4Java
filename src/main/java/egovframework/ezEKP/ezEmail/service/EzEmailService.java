@@ -183,4 +183,10 @@ public interface EzEmailService {
 	public JSONObject getMailOutOfOfficeTemplate(String userEmail, String displayName) throws Exception;
 	public int deleteMailOutOfOfficeTemplate(String userEmail, String displayName) throws Exception;
 	public int saveMailOutOfOfficeTemplate(String userEmail, String modDisplayName, String displayName, String content, String type) throws Exception;
+	
+	public JSONArray getUserMailTemplateList(String userEmail) throws Exception;
+	public JSONObject getUserMailTemplate(String userEmail, String templateId) throws Exception;
+	public int saveUserMailTemplate(String userEmail, String displayName, String content, String templateId, String editorType) throws Exception;
+	public int deleteUserMailTemplate(String userEmail, String templateId, String type, String realPath, int tenantId) throws Exception;
+	
 }

@@ -30,6 +30,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -4667,4 +4668,140 @@ public class EzEmailServiceImpl implements EzEmailService {
 		return resultInt;
 	}
 	
+	@Override
+	public JSONArray getUserMailTemplateList(String userEmail) throws Exception {
+		logger.debug("getUserMailTemplateList started.");
+		logger.debug("userEmail=" + userEmail);
+
+		JSONArray jsonArr = new JSONArray();
+		
+		String inputParams = "userId=" + URLEncoder.encode(userEmail, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/JMochaLetter/selectUserMailTemplateList";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			String resultCode = (String)responseObj.get("resultCode");
+
+			if (resultCode.equalsIgnoreCase("OK")) {
+				JSONArray resultArray = (JSONArray)responseObj.get("result");
+
+				if (resultArray != null && resultArray.size() > 0) {
+					jsonArr = resultArray;
+				}
+			}				
+		}
+		
+		logger.debug("getUserMailTemplateList ended.");
+		return jsonArr;
+	}
+
+	@Override
+	public JSONObject getUserMailTemplate(String userEmail, String templateId) throws Exception {
+		logger.debug("getUserMailTemplate started.");
+		logger.debug("userEmail=" + userEmail + ", templateId=" + templateId);
+		
+		JSONObject resultObj = null;
+		
+		String inputParams = "userId=" + URLEncoder.encode(userEmail, "UTF-8")
+				+ "&templateId=" + URLEncoder.encode(templateId, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/JMochaLetter/selectUserMailTemplate";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			String resultCode = (String)responseObj.get("resultCode");
+
+			if (resultCode.equalsIgnoreCase("OK")) {
+				if ((JSONObject)responseObj.get("result") != null) {
+					resultObj = (JSONObject) responseObj.get("result");
+				}
+			}				
+		}
+
+		logger.debug("getUserMailTemplate ended.");
+		return resultObj;
+	}
+
+	@Override
+	public int saveUserMailTemplate(String userEmail, String displayName, String content, String templateId, String editorType) throws Exception {
+		logger.debug("saveUserMailTemplate started.");
+		logger.debug("userEmail=" + userEmail + ", displayName=" + displayName + ", content=" + content, ", templateId=" + templateId
+				+ ", editorType=" + editorType);
+		
+		int resultInt = -100; // 0:성공, -1:실패, -2:이름중복
+		
+		String inputParams = "userId=" + URLEncoder.encode(userEmail, "UTF-8")
+				+ "&displayName=" + URLEncoder.encode(displayName, "UTF-8")
+				+ "&content=" + URLEncoder.encode(content, "UTF-8")
+				+ "&templateId=" + URLEncoder.encode(templateId, "UTF-8")
+				+ "&editorType=" + URLEncoder.encode(editorType, "UTF-8");
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/JMochaLetter/setUserMailTemplate";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			String resultCode = (String)responseObj.get("resultCode");
+
+			if (resultCode.equalsIgnoreCase("OK")) {
+				resultInt = ((Long)responseObj.get("reasonCode")).intValue(); 
+			}			
+		}
+
+		logger.debug("saveUserMailTemplate ended.");
+		return resultInt;
+	}
+
+	// type = all(전체), indivisual(개별)
+	@Override
+	public int deleteUserMailTemplate(String userEmail, String templateId, String type, String realPath, int tenantId) throws Exception {
+		logger.debug("deleteUserMailTemplate started.");
+		logger.debug("userEmail=" + userEmail + ", templateId=" + templateId + ", type=" + type, ", tenantId=" + tenantId);
+		
+		int resultInt = -100; // 0:성공, -1:실패
+		
+		String inputParams = "userId=" + URLEncoder.encode(userEmail, "UTF-8")
+				+ "&templateId=" + URLEncoder.encode(templateId, "UTF-8")
+				+ "&type=" + URLEncoder.encode(type, "UTF-8");
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/JMochaLetter/delUserMailTemplate";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			String resultCode = (String)responseObj.get("resultCode");
+
+			if (resultCode.equalsIgnoreCase("OK")) {
+				// 이미지 삭제
+				String uploadMailTemplatePath = commonUtil.getUploadPath("upload_mail.MAILTEMPLATE", tenantId);
+				String mailTemplatePath = uploadMailTemplatePath + "/" + userEmail;
+				mailTemplatePath += type.equalsIgnoreCase("all") ? "" :	"/" + templateId;
+
+				try {
+					File testFile = new File(realPath + mailTemplatePath);
+					FileUtils.deleteDirectory(testFile);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+				resultInt = ((Long)responseObj.get("reasonCode")).intValue();
+			}				
+		}
+
+		logger.debug("deleteUserMailTemplate ended.");
+		return resultInt;
+	}
 }

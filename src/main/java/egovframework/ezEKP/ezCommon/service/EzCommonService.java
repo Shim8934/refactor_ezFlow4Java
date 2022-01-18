@@ -365,4 +365,6 @@ public interface EzCommonService {
 	public void createTblAdminAccessInfo() throws Exception;
 	
 	public void createMailOutOfOfficeTemplate() throws Exception;
+	
+	public void createUserMailTemplate() throws Exception;
 }

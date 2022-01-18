@@ -2576,4 +2576,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.createMailOutOfOfficeTemplate();
 		logger.debug("createMailOutOfOfficeTemplate ended.");
 	}
+
+	@Override
+	public void createUserMailTemplate() throws Exception {
+		logger.debug("createUserMailTemplate started.");
+		ezCommonDAO.createUserMailTemplate();
+		logger.debug("createUserMailTemplate ended.");
+	}
 }

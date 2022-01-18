@@ -2244,4 +2244,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createMailOutOfOfficeTemplate");
 		}
 	}
+
+	public void createUserMailTemplate() throws Exception {
+		try {
+			select("EzCommonDAO.checkUserMailTemplate");
+		} catch (Exception e) {
+			logger.debug("jmocha_user_mail_template doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createUserMailTemplate");
+		}
+	}
 }
