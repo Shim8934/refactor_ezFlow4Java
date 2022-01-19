@@ -4252,7 +4252,7 @@
 	<select id="EzCommonDAO.checkMailOutOfOfficeTemplate" resultClass="String">
 		<![CDATA[
 			SELECT 
-				TENANT_ID
+				USER_ID
 			FROM 
 				JMOCHA_MAIL_OUTOFOFFICE_TEM
 			LIMIT 1

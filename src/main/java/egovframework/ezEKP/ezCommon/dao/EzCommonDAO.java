@@ -2239,7 +2239,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		try {
 			select("EzCommonDAO.checkMailOutOfOfficeTemplate");
 		} catch (Exception e) {
-			logger.debug("tbl_password_policy doesn't exist. creating the table...");
+			logger.debug("jmocha_mail_outofoffice_tem doesn't exist. creating the table...");
 			
 			update("EzCommonDAO.createMailOutOfOfficeTemplate");
 		}
