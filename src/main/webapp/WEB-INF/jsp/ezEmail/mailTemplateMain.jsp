@@ -159,6 +159,8 @@
 				if (templateId !== undefined) {
 		    		url = "/ezEmail/userMailTemplatePreview.do?" + "templateId=" + encodeURIComponent(templateId);  
 		    		window.open(url,"_blank","width=890, height=660");
+		    	} else {
+		    		alert("<spring:message code='ezEmail.kasMailTemplate17' />");
 		    	}
 		    }
 			
@@ -201,6 +203,8 @@
 							}
 						});
 					}
+		    	} else {
+		    		alert("<spring:message code='ezEmail.kasMailTemplate17' />");
 		    	}
 		    }
 			
