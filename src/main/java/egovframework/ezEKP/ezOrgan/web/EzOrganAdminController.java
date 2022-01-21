@@ -264,6 +264,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     		ezCommonService.addSurveySubDeptYNColumn(); // 2021-11-17 홍승비 - 전자설문 대상자 하위부서 허용여부 플래그 추가 (Y/N)
     		ezCommonService.createTblScheduleComplete(); // 2021-11-23 홍승비 - 일정 완료여부 레코드 저장 테이블 추가
     		ezCommonService.alterTblConnectionInfo();	// 2021-12-22 이사라 : 로그아웃시간, 상태 컬럼 추가
+    		ezCommonService.createTblAdminAccessInfo();	// 2022-01-06 이사라 - 관리자 메뉴 접속 히스토리 테이블 추가
 	    	
 	    	// webfolder
 	    	ezCommonService.addWebfolderUserSubdeptPermittedColumn(); 	//2020-10-19 김은실 - 웹폴더 > 하위부서 허용 여부 추가

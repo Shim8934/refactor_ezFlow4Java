@@ -510,6 +510,15 @@
 			<artifactId>servlet</artifactId>
 			<version>3.7.0</version>
 		</dependency>
+		
+		
+		<!-- https://mvnrepository.com/artifact/org.ehcache/jcache -->
+		<dependency>
+		    <groupId>org.ehcache</groupId>
+		    <artifactId>jcache</artifactId>
+		    <version>1.0.1</version>
+		</dependency>
+
 	</dependencies>
 
     <build>

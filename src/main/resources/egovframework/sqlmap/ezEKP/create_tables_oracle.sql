@@ -3385,6 +3385,32 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"TENANT_ID" NUMBER DEFAULT 0
    ) ;
 --------------------------------------------------------
+--  DDL for Table TBL_ADMIN_ACCESS_INFO
+--------------------------------------------------------
+
+  CREATE TABLE "TBL_ADMIN_ACCESS_INFO" 
+   (	"SEQUENCE" NUMBER(19,0), 
+	"USERID" NVARCHAR2(50), 
+	"USERNM" NVARCHAR2(100), 
+	"USERNM2" NVARCHAR2(100), 
+	"DEPTID" CHAR(50 CHAR), 
+	"DEPTNM" NVARCHAR2(100), 
+	"DEPTNM2" NVARCHAR2(100), 
+	"TITLE" NVARCHAR2(100), 
+	"TITLE2" NVARCHAR2(100), 
+	"COMPANYID" CHAR(50 CHAR), 
+	"COMPANYNM" NVARCHAR2(100), 
+	"COMPANYNM2" NVARCHAR2(100), 
+	"ACCESSIP" VARCHAR2(50 CHAR), 
+	"ACCESSINFO" VARCHAR2(50 CHAR), 
+	"ACCESSTIME" DATE, 
+	"ACCESSBROWSER" CHAR(10 CHAR), 
+	"ACCESSOS" CHAR(20 CHAR), 
+	"ACCESSAGENT" NVARCHAR2(500),
+	"ADMINTYPE" NVARCHAR2(200),
+	"TENANT_ID" NUMBER DEFAULT 0
+   ) ;   
+--------------------------------------------------------
 --  DDL for Table TBL_CONTAINER
 --------------------------------------------------------
 
@@ -8690,6 +8716,11 @@ CREATE TABLE "TBL_CAR_FORM" (
 
    CREATE SEQUENCE  "SEQ_TBL_CONNECTION_INFO"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
 --------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_ADMIN_ACCESS_INFO
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_ADMIN_ACCESS_INFO"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
 --  DDL for Sequence SEQ_TBL_C_BOARD
 --------------------------------------------------------
 
@@ -10007,6 +10038,12 @@ CREATE TABLE "TBL_CAR_FORM" (
 
   CREATE UNIQUE INDEX "PK_TBL_CONNECTION_INFO" ON "TBL_CONNECTION_INFO" ("SEQUENCE") 
   ;
+--------------------------------------------------------
+--  DDL for Index PK_TBL_ADMIN_ACCESS_INFO
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_TBL_ADMIN_ACCESS_INFO" ON "TBL_ADMIN_ACCESS_INFO" ("SEQUENCE") 
+  ;  
 --------------------------------------------------------
 --  DDL for Index PK_TBL_C_BOARD
 --------------------------------------------------------
@@ -14870,6 +14907,15 @@ ALTER TRIGGER "TRG_TBL_TASKCOMMENT" ENABLE;
   ALTER TABLE "TBL_CONNECTION_INFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "TBL_CONNECTION_INFO" MODIFY ("USERID" NOT NULL ENABLE);
   ALTER TABLE "TBL_CONNECTION_INFO" MODIFY ("SEQUENCE" NOT NULL ENABLE);
+--------------------------------------------------------
+--  Constraints for Table TBL_ADMIN_ACCESS_INFO
+--------------------------------------------------------
+
+  ALTER TABLE "TBL_ADMIN_ACCESS_INFO" ADD CONSTRAINT "PK_TBL_ADMIN_ACCESS_INFO" PRIMARY KEY ("SEQUENCE")
+  USING INDEX  ENABLE;
+  ALTER TABLE "TBL_ADMIN_ACCESS_INFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
+  ALTER TABLE "TBL_ADMIN_ACCESS_INFO" MODIFY ("USERID" NOT NULL ENABLE);
+  ALTER TABLE "TBL_ADMIN_ACCESS_INFO" MODIFY ("SEQUENCE" NOT NULL ENABLE);  
 --------------------------------------------------------
 --  Constraints for Table TBL_CONTAINER
 --------------------------------------------------------

@@ -10,6 +10,7 @@ import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.ModuleSizeVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
+import egovframework.let.main.vo.MainVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzSystemAdminService {
@@ -46,4 +47,8 @@ public interface EzSystemAdminService {
 	public Map<String, Object> getPwPolicy(int tenantId, String companyId) throws Exception;
 	public void updateCompanyConfigParam(int tenantID, List<Map<String, String>> list, String companyID) throws Exception;
 	public int updatePwPolicy(int tenantId, String companyId, Map<String, String> patternTypeMap, List<Map<String, Object>> PwPolicyPatternList) throws Exception;
+	List<MainVO> getAdminAccessHist(int tenantID, String offset, int startPage, int maxItemPerPage,
+			String keyword, String keycode, String keycodeForRoll, String lang, String startDate, String endDate, String companyId) throws Exception;
+	int getAdminAccessHistCount(int tenantID, String offset, String keyword, String keycode, String keycodeForRoll,
+			String lang, String startDate, String endDate, String companyId) throws Exception;
 }

@@ -43,6 +43,7 @@ import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.ModuleSizeVO;
 import egovframework.ezEKP.ezSystem.vo.PasswordPolicyVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
+import egovframework.let.main.vo.MainVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -904,4 +905,61 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		logger.debug("updateCompanyConfig ended. tenantID=" + tenantID);
 	}
 	
+	@Override
+	public List<MainVO> getAdminAccessHist(int tenantID, String offset, int startPage, int maxItemPerPage, String keycode, 
+			String keyword, String keycodeForRoll, String lang, String startDate, String endDate, String companyId) throws Exception {
+
+		logger.debug("getAdminAccessHist started. tenantID : {}", tenantID);
+		
+		String companyOracleStr = "";
+		if (!"Top/organ".equals(companyId)) {
+			companyOracleStr = " AND C.COMPANYID ='" + companyId + "'";
+		}
+		
+		Map<String, Object> params = new HashMap<>();
+		params.put("v_tenantID", tenantID);
+		params.put("offset", offset);
+		params.put("v_start", startPage);
+		params.put("pageCount", maxItemPerPage);
+		params.put("search_keycode", keycode);
+		params.put("search_keyword", keyword);
+		params.put("search_keycodeForRoll", keycodeForRoll);
+		params.put("lang", lang); // primary:기본명 / 1:영문명
+		params.put("startDate", startDate);
+		params.put("endDate", endDate);
+		params.put("companyId", companyId);
+		params.put("companyOracleStr", companyOracleStr);
+
+		logger.debug("getAdminAccessHist ended.");
+		List<MainVO> list = ezSystemAdminDAO.getAdminAccessHist(params);
+		
+		return list;
+	}
+	
+	@Override
+	public int getAdminAccessHistCount(int tenantID, String offset, String keycode, String keyword, String keycodeForRoll, String lang, String startDate, String endDate, String companyId) throws Exception {
+		
+		logger.debug("getAdminAccessHistCount started. tenantID : {}", tenantID);
+
+		String companyOracleStr = "";
+		if (!"Top/organ".equals(companyId)) {
+			companyOracleStr = " AND C.COMPANYID ='" + companyId + "'";
+		}
+		
+		Map<String, Object> params = new HashMap<>();
+		params.put("v_tenantID", tenantID);
+		params.put("offset", offset);
+		params.put("search_keycode", keycode);
+		params.put("search_keyword", keyword);
+		params.put("search_keycodeForRoll", keycodeForRoll);
+		params.put("lang", lang);
+		params.put("startDate", startDate);
+		params.put("endDate", endDate);
+		params.put("companyId", companyId);
+		params.put("companyOracleStr", companyOracleStr);
+				
+		logger.debug("getAdminAccessHistCount ended.");
+		
+		return ezSystemAdminDAO.getAdminAccessHistCount(params);
+	}
 }
