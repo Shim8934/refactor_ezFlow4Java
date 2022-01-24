@@ -186,7 +186,7 @@ public interface EzEmailService {
 	
 	public JSONArray getUserMailTemplateList(String userEmail) throws Exception;
 	public JSONObject getUserMailTemplate(String userEmail, String templateId) throws Exception;
-	public int saveUserMailTemplate(String userEmail, String displayName, String content, String templateId, String editorType) throws Exception;
+	public int saveUserMailTemplate(String userEmail, String displayName, String content, String realPath, String editorType, int tenantId) throws Exception;
 	public int deleteUserMailTemplate(String userEmail, String templateId, String type, String realPath, int tenantId) throws Exception;
 	
 }

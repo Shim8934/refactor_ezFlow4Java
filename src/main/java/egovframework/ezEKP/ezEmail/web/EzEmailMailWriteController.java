@@ -7134,60 +7134,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String content = request.getParameter("content");
 		content = content == null ? "" : content;
 		String editorType = request.getParameter("editorType"); // 0:html, 1:plain
-		logger.debug("displayName=" + displayName + ", content=" + content, ", editorType=" + editorType);
+		logger.debug("displayName=" + displayName + ", editorType=" + editorType);
 		
 		String realPath = commonUtil.getRealPath(request);
-		String templateId = UUID.randomUUID().toString();
-		if (editorType.equals("0")) {
-			content = userMailTemplateContent(content, realPath, tenantId, userEmail, templateId);     
-		}
 		
-		int resultInt = ezEmailService.saveUserMailTemplate(userEmail, displayName, content, templateId, editorType);
+		int resultInt = ezEmailService.saveUserMailTemplate(userEmail, displayName, content, realPath, editorType, tenantId);
 		returnStr = resultInt == 0 ? "OK" : resultInt == -2 ? "DUPLICATE" : "ERROR";
 		
 		logger.debug("saveUserMailTemplate ended.");
 		return returnStr;
-	}
-	
-	public String userMailTemplateContent(String htmlContent, String realPath, int tenantId, String userEmail, String templateId) throws Exception {
-		logger.debug("userMailTemplateContent started.");
-		
-		String uploadMailTemplatePath = commonUtil.getUploadPath("upload_mail.MAILTEMPLATE", tenantId);
-		String mailTemplatePath = uploadMailTemplatePath + "/" + userEmail + "/" + templateId;
-		logger.debug("realPath=" + realPath + ", mailTemplatePath=" + mailTemplatePath);
-		
-		org.jsoup.nodes.Document doc = Jsoup.parseBodyFragment(htmlContent);
-		Elements imagesEle = doc.getElementsByTag("img");
-		
-		if (imagesEle != null && imagesEle.size() > 0) {
-			logger.debug("imagesEle size=" + imagesEle.size());
-			File mailTemplateFolder = new File(realPath + mailTemplatePath);
-			FileUtils.forceMkdir(mailTemplateFolder);
-			
-			for (org.jsoup.nodes.Element img : imagesEle) {
-				try {
-					String sourceFilePath = img.attr("src");
-					
-					Path sourceFile = Paths.get(sourceFilePath);
-					String fileType = Files.probeContentType(sourceFile).replace("\\", "/").split("/")[1];
-					String fileName = UUID.randomUUID() + "." + fileType;
-
-					String destFilePath = mailTemplatePath + "/" + fileName;
-					logger.debug("sourceFilePath=" + sourceFilePath + ", destFilePath=" + destFilePath);
-					
-					File srcFile = new File(realPath + "/" + sourceFilePath);
-					File destFile = new File(realPath + "/" + destFilePath);
-					FileUtils.copyFile(srcFile, destFile);
-					
-					img.attr("src", destFilePath);
-				} catch (Exception e) {
-					logger.debug("userMailTemplateContent Error.");
-					e.printStackTrace();
-				}
-			}
-		}
-		
-		logger.debug("userMailTemplateContent ended.");
-		return doc.body().toString();
 	}
 }

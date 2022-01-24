@@ -34,6 +34,8 @@ import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.jsoup.Jsoup;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -4732,10 +4734,51 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 
 	@Override
-	public int saveUserMailTemplate(String userEmail, String displayName, String content, String templateId, String editorType) throws Exception {
+	public int saveUserMailTemplate(String userEmail, String displayName, String content, String realPath, String editorType, int tenantId) throws Exception {
 		logger.debug("saveUserMailTemplate started.");
-		logger.debug("userEmail=" + userEmail + ", displayName=" + displayName + ", content=" + content, ", templateId=" + templateId
+		logger.debug("userEmail=" + userEmail + ", displayName=" + displayName + ", content=" + content, ", tenantId=" + tenantId
 				+ ", editorType=" + editorType);
+		
+		String templateId = UUID.randomUUID().toString();
+		
+		String uploadMailTemplatePath = commonUtil.getUploadPath("upload_mail.MAILTEMPLATE", tenantId);
+		String mailTemplatePath = uploadMailTemplatePath + "/" + userEmail + "/" + templateId;
+		
+		if (editorType.equals("0")) { // html mode
+			org.jsoup.nodes.Document doc = Jsoup.parseBodyFragment(content);
+			Elements imagesEle = doc.getElementsByTag("img");
+			
+			if (imagesEle != null && imagesEle.size() > 0) {
+				logger.debug("imagesEle size=" + imagesEle.size());
+
+				String templatePathTmp = mailTemplatePath + "/temp";
+				File mailTemplateFolder = new File(realPath + templatePathTmp);
+				FileUtils.forceMkdir(mailTemplateFolder);
+				
+				for (org.jsoup.nodes.Element img : imagesEle) {
+					try {
+						String sourceFilePath  = img.attr("src");
+						String fileType        = sourceFilePath.substring(sourceFilePath.lastIndexOf(".") + 1);
+						logger.debug("fileType={},  sourceFilePath={}", fileType, sourceFilePath);
+						
+						String fileName      = UUID.randomUUID() + "." + fileType;
+						String destFilePath  = templatePathTmp + "/" + fileName;
+						logger.debug("sourceFilePath=" + sourceFilePath + ", destFilePath=" + destFilePath);
+						
+						File srcFile  = new File(realPath + "/" + sourceFilePath);
+						File destFile = new File(realPath + "/" + destFilePath);
+						FileUtils.copyFile(srcFile, destFile);
+						
+						img.attr("src", mailTemplatePath + "/" + fileName);
+					} catch (Exception e) {
+						logger.debug("userMailTemplateContent Error.");
+						e.printStackTrace();
+					}
+				}
+				
+				content = doc.toString();
+			}
+		}
 		
 		int resultInt = -100; // 0:성공, -1:실패, -2:이름중복
 		
@@ -4758,7 +4801,31 @@ public class EzEmailServiceImpl implements EzEmailService {
 				resultInt = ((Long)responseObj.get("reasonCode")).intValue(); 
 			}			
 		}
-
+		
+		if (editorType.equals("0")) {
+			File mvFolder  = new File(realPath + "/" + mailTemplatePath);
+			File tmpFolder = new File(realPath + "/" + mailTemplatePath + "/temp");
+			
+			if (tmpFolder.exists()) {
+				File[] files = tmpFolder.listFiles();
+ 
+				for (File f : files) {
+					if (resultInt == 0) {
+						File mf = new File(mvFolder, f.getName());
+						f.renameTo(mf);
+					} else {
+						f.delete();
+					}
+				}
+				
+				boolean tmpDel = tmpFolder.delete();
+				if (resultInt != 0) {
+					mvFolder.delete();
+				}
+				logger.debug("tmpDel status={}", tmpDel);
+			}
+		}
+		
 		logger.debug("saveUserMailTemplate ended.");
 		return resultInt;
 	}
