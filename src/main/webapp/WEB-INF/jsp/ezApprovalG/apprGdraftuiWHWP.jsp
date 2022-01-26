@@ -778,6 +778,7 @@
 
                             UpdateLineHistory();
                             
+                            draftFlag = true;
                             pAlertContent = "<spring:message code='ezApprovalG.t146'/>";
                             OpenAlertUI(pAlertContent, Complete_Draft);
                             /* draftFlag = true;
@@ -868,6 +869,7 @@
 	                        pAlertContent = "<spring:message code='ezApprovalG.t146'/>";
                         }
                         
+                        draftFlag = true;
                         OpenAlertUI(pAlertContent, Complete_Draft2);
                         /* draftFlag = true;
 
