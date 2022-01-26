@@ -782,11 +782,11 @@
 			                    tempDelType = tempDelType + "=0";
 			                }
 			                
-			               
 			                strData = strData.replace(tempDelType, DelValue);
 			                
 			                extraInfo.data1 = strId;
 			                extraInfo.data2 = strData;
+			                extraInfo.data3 = DelValue; // 2022-01-20 이사라 - 변경하는 권한
 			                
 			                extraArry.push(extraInfo);
 			                
@@ -928,6 +928,7 @@
 			    var deleteInfo = new Object();
 			    deleteInfo.data1 = strId;
 			    deleteInfo.data2 = strData;
+			    deleteInfo.data3 = DelValue; // 2022-01-20 이사라 - 변경하는 권한
 			    
 			    deleteArry.push(deleteInfo);
 			    
@@ -1137,12 +1138,14 @@
 		    	var totalArry = new Array();
 		    	var data1 = new Array();
 		    	var data2 = new Array();
+				var data3 = new Array();
 		    	
 		    	totalArry = extraArry.concat(deleteArry);
 		    	
 		        for (var i=0; i<totalArry.length; i++){
 		        	data1.push(totalArry[i].data1);
 			        data2.push(totalArry[i].data2);
+			        data3.push(totalArry[i].data3);
 		        }
 
 				if(data1.length == 0 || data2.length == 0) {
@@ -1160,7 +1163,7 @@
 	            	dataType : "text",
 	            	url : "/admin/ezOrgan/saveStoreUserInfo.do",
 	            	async : false,
-	            	data : {parentCn : "", cn : data1, extensionAttribute1 : data2},
+					data : {parentCn : "", cn : data1, extensionAttribute1 : data2, permissionChType : data3},
 	            	success : function(result){
 	            		 alert(strLang14);
 	            	

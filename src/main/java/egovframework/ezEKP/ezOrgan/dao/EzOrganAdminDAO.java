@@ -36,6 +36,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganGroupVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezSystem.vo.PermissionInfoVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -2368,6 +2369,11 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<String> getAutoDeleteOfRetireUserList(Map<String, Object> map) throws Exception {
 		return (List<String>) list("EzOrganAdminDAO.getAutoDeleteOfRetireUserList", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public void insertPermissionChHist(PermissionInfoVO vo) throws Exception {
+		update("EzOrganAdminDAO.insertPermissionChHist", vo);
 	}
 
 }

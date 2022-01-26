@@ -9,8 +9,7 @@
 	<typeAlias alias="OrganJobVO" 	type="egovframework.ezEKP.ezOrgan.vo.OrganJobVO"/>
 	<typeAlias alias="OrganGroupVO" type="egovframework.ezEKP.ezOrgan.vo.OrganGroupVO"/>
 	<typeAlias alias="OrganLoginStopUserVO" type="egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO"/>
-	
-	
+	<typeAlias alias="PermissionInfoVO" type="egovframework.ezEKP.ezSystem.vo.PermissionInfoVO"/>
 	
 	<resultMap id="userAddJobList" class="OrganUserVO">
 		<result property="cn" 									column="CN" 							columnIndex="1"/>
@@ -5617,4 +5616,27 @@
 			ORDER BY      
 				PHYSICALDELIVERYOFFICENAME, DEPARTMENT, EXTENSIONATTRIBUTE15, DISPLAYNAME
 	</select>
+
+	<insert id="EzOrganAdminDAO.insertPermissionChHist"	parameterClass="PermissionInfoVO">
+		<![CDATA[
+			INSERT INTO
+				TBL_PERMISSION_CHANGE_INFO (
+					USERID,				USERNM,					USERNM2,				DEPTID,					DEPTNM,
+					DEPTNM2,			TITLE,       			TITLE2,					COMPANYID,				COMPANYNM,
+					COMPANYNM2,			AUTHORIZEDTIME,			ADMINTYPE,				STATUS,					AUTHORIZERID,
+					AUTHORIZERNM,		AUTHORIZERNM2,			AUTHORIZERIP
+                 )
+			SELECT
+				#userId#, 			u.displayName,			u.displayName2,			u.department,	  		u.DESCRIPTION,
+				 u.DESCRIPTION2,	u.TITLE,       			u.TITLE2,         		u.PHYSICALDELIVERYOFFICENAME,  u.COMPANY,
+				 u.COMPANY2,		#authorizedTime#,		#adminType#,			#status#,				#authorizerId#,
+				 (SELECT ua.DISPLAYNAME 	FROM TBL_USERMASTER ua WHERE CN = #authorizerId# AND TENANT_ID = #tenant_id#),
+				 (SELECT ua.DISPLAYNAME2 	FROM TBL_USERMASTER ua WHERE CN = #authorizerId# AND TENANT_ID = #tenant_id#),
+				 #authorizerIp#
+			FROM TBL_USERMASTER u
+			WHERE 	u.CN = #userId#
+			AND 	u.TENANT_ID = #tenant_id#
+		]]>
+	</insert>
+
 </sqlMap>

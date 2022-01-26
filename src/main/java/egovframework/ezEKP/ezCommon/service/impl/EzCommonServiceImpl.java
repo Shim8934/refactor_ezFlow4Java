@@ -2646,4 +2646,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.createUserMailTemplate();
 		logger.debug("createUserMailTemplate ended.");
 	}
+
+	@Override
+	public void createTblPermissionChangeInfo() throws Exception {
+		ezCommonDAO.createTblPermissionChangeInfo();
+	}
 }

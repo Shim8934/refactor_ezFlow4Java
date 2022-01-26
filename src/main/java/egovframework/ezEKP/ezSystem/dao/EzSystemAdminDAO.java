@@ -10,6 +10,7 @@ import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.PasswordPolicyVO;
+import egovframework.ezEKP.ezSystem.vo.PermissionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 import egovframework.let.main.vo.MainVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -204,4 +205,15 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 	public int getAdminAccessHistCount(Map<String, Object> map) throws Exception {
 		return (int) select("EzSystemAdminDAO.getAdminAccessHistCount", map); 
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<PermissionInfoVO> getPermissionChHist(Map<String, Object> map) throws Exception {
+		return (List<PermissionInfoVO>) list("EzSystemAdminDAO.getPermissionChHist", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public int getPermissionChHistCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzSystemAdminDAO.getPermissionChHistCount", map);
+	}
+
 }

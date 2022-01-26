@@ -472,11 +472,11 @@
 		    }
 
 			function Permissions_Del(mode) {			
- 
 				var dataList = new Array();
 				var dataList2 = new Array();
 				var dataList3 = new Array();
 				var dataList4 = new Array();
+				var dataList5 = new Array();
 
 				$("input[name='checks']:checked").each(function(){
 					dataList.push(this.parentElement.parentElement.getAttribute("DATA1"));
@@ -503,6 +503,7 @@
 				//if (confirm(cData)) {
 					for (var i =0; i< dataList.length; i++) {
 						if (mode == "ALL") {
+							dataList5.push(dataList2[i]);	// 2022-01-20 이사라 - 변경하는 권한을 추출하기 위해 값 전체 컨트롤러에 넘김
 							dataList2[i] = "";
 						} else {
 							var tempDelType = DelType;
@@ -514,6 +515,7 @@
 								tempDelType = tempDelType + "=0";
 							}
 							dataList2[i] = dataList2[i].replace(DelValue, tempDelType);
+							dataList5.push(tempDelType);	// 2022-01-20 이사라 - 변경하는 권한
 						}
 					}
 
@@ -526,7 +528,9 @@
 						async : false,
 						data : {
 							cn : dataList, 
-							extensionAttribute1: dataList2
+							extensionAttribute1: dataList2,
+							permissionChType : dataList5,
+							mode : mode
 						},
 						success : function(result){
 							if (mode == "ALL") {

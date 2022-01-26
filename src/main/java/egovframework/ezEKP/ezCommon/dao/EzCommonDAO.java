@@ -2276,4 +2276,9 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createUserMailTemplate");
 		}
 	}
+
+	public void createTblPermissionChangeInfo() {
+		logger.debug("If TBL_PERMISSION_CHANGE_INFO doesn't exist, creating the table...");
+		update("EzCommonDAO.createTblPermissionChangeInfo");
+	}
 }

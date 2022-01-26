@@ -9,6 +9,7 @@ import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.ModuleSizeVO;
+import egovframework.ezEKP.ezSystem.vo.PermissionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 import egovframework.let.main.vo.MainVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -57,4 +58,9 @@ public interface EzSystemAdminService {
 			String keyword, String keycode, String keycodeForRoll, String lang, String startDate, String endDate, String companyId) throws Exception;
 	int getAdminAccessHistCount(int tenantID, String offset, String keyword, String keycode, String keycodeForRoll,
 			String lang, String startDate, String endDate, String companyId) throws Exception;
+
+	List<PermissionInfoVO> getPermissionChHist(int tenantID, String offset, int startPage, int maxItemPerPage,	String keyword, String keycode, String keycodeForRoll, String lang, String startDate, String endDate, String companyId, boolean isMasterAdmin) throws Exception;
+
+	int getPermissionChHistCount(int tenantID, String offset, String keyword, String keycode, String keycodeForRoll, String lang, String startDate, String endDate, String companyId, boolean isMasterAdmin) throws Exception;
+
 }

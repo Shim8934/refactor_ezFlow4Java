@@ -43,6 +43,7 @@ import egovframework.ezEKP.ezSystem.vo.DataForModulesEnum;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.ModuleSizeVO;
 import egovframework.ezEKP.ezSystem.vo.PasswordPolicyVO;
+import egovframework.ezEKP.ezSystem.vo.PermissionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 import egovframework.let.main.vo.MainVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -1065,4 +1066,77 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		
 		logger.debug("deleteIPBand ended.");
 	}
+
+	@Override
+	public List<PermissionInfoVO> getPermissionChHist(int tenantID, String offset, int startPage,
+			int maxItemPerPage, String keycode, String keyword, String keycodeForRoll, String lang, String startDate,
+			String endDate, String companyId, boolean isMaster) throws Exception {
+		logger.debug("getPermissionChHist started. tenantID : {}", tenantID);
+
+		String companyOracleStr = "";
+		String isMasterAdmin = "";
+
+		if (!"Top/organ".equals(companyId)) {
+			companyOracleStr = " AND C.COMPANYID ='" + companyId + "'";
+		}
+
+		if (isMaster) {
+			isMasterAdmin = "Y";
+		}
+
+		Map<String, Object> params = new HashMap<>();
+		params.put("v_tenantID", tenantID);
+		params.put("offset", offset);
+		params.put("v_start", startPage);
+		params.put("pageCount", maxItemPerPage);
+		params.put("search_keycode", keycode);
+		params.put("search_keyword", keyword);
+		params.put("search_keycodeForRoll", keycodeForRoll);
+		params.put("lang", lang); // primary:기본명 / 1:영문명
+		params.put("startDate", startDate);
+		params.put("endDate", endDate);
+		params.put("companyId", companyId);
+		params.put("isMasterAdmin", isMasterAdmin);
+		params.put("companyOracleStr", companyOracleStr);
+
+		logger.debug("getPermissionChHist ended.");
+		List<PermissionInfoVO> list = ezSystemAdminDAO.getPermissionChHist(params);
+
+		return list;
+	}
+
+	@Override
+	public int getPermissionChHistCount(int tenantID, String offset, String keycode, String keyword,
+			String keycodeForRoll, String lang, String startDate, String endDate, String companyId, boolean isMaster) throws Exception {
+		logger.debug("getPermissionChHistCount started. tenantID : {}", tenantID);
+
+		String companyOracleStr = "";
+		String isMasterAdmin = "";
+
+		if (!"Top/organ".equals(companyId)) {
+			companyOracleStr = " AND C.COMPANYID ='" + companyId + "'";
+		}
+
+		if (isMaster) {
+			isMasterAdmin = "Y";
+		}
+
+		Map<String, Object> params = new HashMap<>();
+		params.put("v_tenantID", tenantID);
+		params.put("offset", offset);
+		params.put("search_keycode", keycode);
+		params.put("search_keyword", keyword);
+		params.put("search_keycodeForRoll", keycodeForRoll);
+		params.put("lang", lang);
+		params.put("startDate", startDate);
+		params.put("endDate", endDate);
+		params.put("companyId", companyId);
+		params.put("isMasterAdmin", isMasterAdmin);
+		params.put("companyOracleStr", companyOracleStr);
+
+		logger.debug("getPermissionChHistCount ended.");
+
+		return ezSystemAdminDAO.getPermissionChHistCount(params);
+	}
+
 }

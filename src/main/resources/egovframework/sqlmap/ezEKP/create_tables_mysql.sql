@@ -5805,6 +5805,38 @@ CREATE TABLE `tbl_admin_access_info` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_permission_change_info`
+--
+
+DROP TABLE IF EXISTS `tbl_permission_change_info`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_permission_change_info` (
+  `SEQUENCE` 			int(10) 	 NOT NULL 	   AUTO_INCREMENT,
+  `USERID` 				varchar(200) NOT NULL,
+  `USERNM` 				varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `USERNM2` 			varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `DEPTID` 			 	varchar(200) DEFAULT NULL,
+  `DEPTNM` 			 	varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `DEPTNM2` 			varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `TITLE` 				varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `TITLE2` 				varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `COMPANYID` 			varchar(200) DEFAULT NULL,
+  `COMPANYNM` 			varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `COMPANYNM2` 			varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `AUTHORIZEDTIME` 		datetime 	 DEFAULT NULL,
+  `ADMINTYPE` 			varchar(200) DEFAULT NULL,
+  `STATUS` 			 	varchar(40)  DEFAULT NULL,
+  `AUTHORIZERID` 		varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `AUTHORIZERNM` 		varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `AUTHORIZERNM2` 		varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `AUTHORIZERIP` 		varchar(200) DEFAULT NULL,
+  `TENANT_ID` 			decimal(22,0) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`SEQUENCE`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tbl_container`
 --
 
