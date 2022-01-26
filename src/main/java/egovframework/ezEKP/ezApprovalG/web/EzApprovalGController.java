@@ -1975,11 +1975,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String docID = request.getParameter("docID");
 
-        //원문정보공개 데이터 제거
-        if (config.getProperty("config.useOpenGov").equalsIgnoreCase("YES")) {
-            ezApprovalGService.deleteOpenGovDocInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
-        }
-
 		String result = ezApprovalGService.deleteDocInfo(docID, "CHECK", userInfo.getCompanyID(), userInfo.getTenantId());
 
 		logger.debug("undoDoc ended.");

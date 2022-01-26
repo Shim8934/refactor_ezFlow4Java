@@ -3729,6 +3729,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				ezApprovalGDAO.deleteGongRamSaveExpAprLine(map);
 				ezApprovalGDAO.delCirculation(map);
 			}
+
+	        //원문정보공개 데이터 제거
+	        if (config.getProperty("config.useOpenGov").equalsIgnoreCase("YES")) {
+	            deleteOpenGovDocInfo(docID, companyID, tenantID);
+	        }
 		} 
 
 		logger.debug("deleteDocInfo ended.");
