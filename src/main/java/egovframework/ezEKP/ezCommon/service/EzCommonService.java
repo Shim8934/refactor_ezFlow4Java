@@ -209,9 +209,9 @@ public interface EzCommonService {
 
 	public void createRsFavoriteTable();
 	
-	public void createUserDistributionTable();
+	public void insertTblTenantConfig() throws Exception;
 
-	public void insertTblTenantConfig(String configName) throws Exception;
+	public void createUserDistributionTable();
 
 	public void addThemeAndPorteltAuthInit() throws Exception;
 	
@@ -250,6 +250,8 @@ public interface EzCommonService {
 	public void insertUseExternalMailServerConfig() throws Exception;
 
 	public void insertReBebuOpinionCode() throws Exception;
+	
+	public void createAdminAccessIpTable() throws Exception;
 	
 	public void addFormAprOptionColumn() throws Exception;
 

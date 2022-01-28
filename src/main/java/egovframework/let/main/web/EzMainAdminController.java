@@ -1,10 +1,13 @@
 package egovframework.let.main.web;
 
+import java.util.Locale;
 import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,6 +43,8 @@ public class EzMainAdminController {
     @Resource(name="egovMessageSource")
     private EgovMessageSource egovMessageSource;    
     
+	private static final Logger logger = LoggerFactory.getLogger(EzMainAdminController.class);
+	
 	@RequestMapping(value="/admin/main.do")
 	public String adminMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
 		// 2022-01-07 이사라 - 관리자 메뉴 접속 내역 로그 입력
@@ -183,4 +188,17 @@ public class EzMainAdminController {
 		
 		return "admin/adminTop";
 	}	
+	
+	/* 2020-05-07 김수아 - 관리자 IP 제한 기능
+		접근 제한 화면
+	*/
+	@RequestMapping(value="/admin/accessBlockToAdmin.do")
+	public String accessBlockToAdmin(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("accessBlockToAdmin started.");
+		String blockMsg = egovMessageSource.getMessage("ezSystem.ksa10", locale);
+		
+		model.addAttribute("blockMsg", blockMsg);
+		
+		return "cmm/error/accessBlock";
+	}
 }

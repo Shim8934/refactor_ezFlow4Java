@@ -2924,6 +2924,15 @@
 				WORK_STATUS
 			FROM 
 				TBL_ATTITUDE
+		]]>
+	</select>
+
+	<select id="EzCommonDAO.checkTblAdminAccessIpTable" resultClass="String">
+		<![CDATA[
+			SELECT 
+				TENANT_ID
+			FROM 
+				TBL_ADMIN_ACCESS_IP
 			LIMIT 1
 		]]>
 	</select>
@@ -4287,4 +4296,16 @@
 		  PRIMARY KEY (`USER_ID`,`DISPLAYNAME`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
 	</statement>
+
+	<statement id="EzCommonDAO.createTblAdminAccessIpTable"> 
+		CREATE TABLE `tbl_admin_access_ip` (
+		  	`IPNO` int(11) NOT NULL AUTO_INCREMENT,
+		  	`TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
+		  	`IPADDRESS` varchar(100) NOT NULL,
+		  	`ALLOW_ACCESS` varchar(10) DEFAULT 'NO',
+		  	`EXPLANATION` varchar(200) DEFAULT NULL,
+		  	PRIMARY KEY (`IPNO`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+	
 </sqlMap>

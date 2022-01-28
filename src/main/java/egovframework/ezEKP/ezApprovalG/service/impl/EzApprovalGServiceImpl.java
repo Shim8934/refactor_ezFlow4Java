@@ -3729,6 +3729,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				ezApprovalGDAO.deleteGongRamSaveExpAprLine(map);
 				ezApprovalGDAO.delCirculation(map);
 			}
+
+	        //원문정보공개 데이터 제거
+	        if (config.getProperty("config.useOpenGov").equalsIgnoreCase("YES")) {
+	            deleteOpenGovDocInfo(docID, companyID, tenantID);
+	        }
 		} 
 
 		logger.debug("deleteDocInfo ended.");
@@ -29243,7 +29248,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					if(!domXML.getElementsByTagName("ATTACHURL").item(i).getTextContent().equals("")) {
 						strAttachName = domXML.getElementsByTagName("ATTACHNAME").item(i).getTextContent();
                         strAttachURL = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + strCompanyID + commonUtil.separator + "uploadFile" 
-						               + commonUtil.separator + nYear + commonUtil.separator + getDocDir(strNewID) + commonUtil.separator + strNewID.trim() + getNDigitNum(domXML.getElementsByTagName("ATTACHSN").item(i).getTextContent(), 4) + strAttachName;
+//						               + commonUtil.separator + nYear + commonUtil.separator + getDocDir(strNewID) + commonUtil.separator + strNewID.trim() + getNDigitNum(domXML.getElementsByTagName("ATTACHSN").item(i).getTextContent(), 4) + strAttachName;
+                        				+ commonUtil.separator + nYear + commonUtil.separator + getDocDir(strNewID) + commonUtil.separator + strNewID.trim() + getNDigitNum(domXML.getElementsByTagName("ATTACHSN").item(i).getTextContent(), 4) + (strAttachName.lastIndexOf(".") > -1 ? strAttachName.substring(strAttachName.lastIndexOf(".")) : "");
 						strAttachDisplayName = strAttachName;
 						String strFileSize = "0";
 
@@ -29257,7 +29263,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			    		
 						if(!domXML.getElementsByTagName("ATTACHURL").item(i).getTextContent().equals("") ) {
 							strSource = strXmlDirPath + commonUtil.separator + strCompanyID + commonUtil.separator + "ExDocDown" + commonUtil.separator + domXML.getElementsByTagName("ATTACHURL").item(i).getTextContent();
-                            strTarget = strXmlDirPath + commonUtil.separator + strCompanyID + commonUtil.separator + "uploadFile" + commonUtil.separator + nYear + commonUtil.separator  + getDocDir(strNewID) + commonUtil.separator  + strNewID.trim()  + getNDigitNum(domXML.getElementsByTagName("ATTACHSN").item(i).getTextContent(), 4) + strAttachName;
+//                            strTarget = strXmlDirPath + commonUtil.separator + strCompanyID + commonUtil.separator + "uploadFile" + commonUtil.separator + nYear + commonUtil.separator  + getDocDir(strNewID) + commonUtil.separator  + strNewID.trim()  + getNDigitNum(domXML.getElementsByTagName("ATTACHSN").item(i).getTextContent(), 4) + strAttachName;
+                            strTarget = strXmlDirPath + commonUtil.separator + strCompanyID + commonUtil.separator + "uploadFile" + commonUtil.separator + nYear + commonUtil.separator  + getDocDir(strNewID) + commonUtil.separator  + strNewID.trim()  + getNDigitNum(domXML.getElementsByTagName("ATTACHSN").item(i).getTextContent(), 4) + (strAttachName.lastIndexOf(".") > -1 ? strAttachName.substring(strAttachName.lastIndexOf(".")) : "");
                             
                             File dir = new File(commonUtil.detectPathTraversal(strXmlDirPath + commonUtil.separator + strCompanyID + commonUtil.separator + "uploadFile" + commonUtil.separator + nYear + commonUtil.separator  + getDocDir(strNewID)));
                             

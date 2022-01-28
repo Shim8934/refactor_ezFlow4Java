@@ -202,8 +202,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.createOpenGovTable(); // 2019-07-18 원문공개 테이블 추가
 	    	ezCommonService.addPassAprLineFlag(); // 2020-08-13 홍승비 - 양식옵션 > 기결재통과 플래그 추가
 	    	ezCommonService.addOpenGovFlag(); //2019-07-18 강민수 - 전자결재양식 테이블 원문공개 플래그 추가
+	    	ezCommonService.insertTblTenantConfig(); // 2020-01-28 useMailConfirm 컨피그 추가 >> 2020-04-28 tbl_tenant_config add
     		ezCommonService.createUserDistributionTable(); // 20200226 사용자 정의 공용배포그룹 테이블 생성
-	    	ezCommonService.insertTblTenantConfig("mailConfirm"); // 2020-01-28 useMailConfirm 컨피그 추가
 	    	ezCommonService.createResourcePortlet(); // 2019-06-28 황윤호 -자원관리 포틀릿 테이블 추가
 	    	ezCommonService.insertSurveyTenantConfig(); // 2019-06-25 이석화 전자설문 리뉴얼 테넌트 컨피그 추가
 	    	ezCommonService.insertPortletInfo(); // 2019-07-02 자원, 웹폴더, 전자설문 포틀릿 데이터 확인 후 없으면 추가
@@ -225,6 +225,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.addAprTmpAttachViewOrder(); // 2020-03-26 홍승비 - 전자결재 일반 첨부파일 순서조정용 칼럼 추가 (임시문서)
 	    	ezCommonService.createAprAttachLimit(); // 2020-05-15 홍승비 - 전자결재 일반 첨부파일 개수제한 테이블 추가 (회사별 데이터)
 	    	ezCommonService.insertUseExternalMailServerConfig();		// 2020-04-16 김민성 - 메일 기능 사용 관련 컨피그 추가(외부/내부)
+	    	ezCommonService.createAdminAccessIpTable(); // 2020-04-28 김수아 - 관리자 IP 제한 테이블
 	    	ezCommonService.insertReBebuOpinionCode();		// 2020-05-14 홍대표 - 재배부요청 의견 코드 추가
 	    	ezCommonService.addFormAprOptionColumn(); // 2020-05-14 홍승비 - 전자결재 양식 옵션 관련 칼럼 추가
 	    	ezCommonService.insertAnnualScheduleTenantConfig(); // 2020-02-24 김정언 - useAnnualScheduleYN 컨피그 추가

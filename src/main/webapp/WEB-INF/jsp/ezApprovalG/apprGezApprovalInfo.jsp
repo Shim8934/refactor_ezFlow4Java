@@ -1238,6 +1238,29 @@
 		    
 		    /* 2020-08-03 홍승비 - 결재자가 한 명인 경우(기안자 = 최종결재자), 수신처 회송 시 기결재기능 사용하지 못하도록 수정 */
 			function btn_OK() {
+				var chkReceivedDoc = 0;
+
+				//접수된 문서인지 확인하기
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezApprovalG/isReceivedDoc.do",
+					data : {
+						docID : pDocID
+					},
+					success : function(result) {
+						chkReceivedDoc = result;
+					}
+				});
+
+				if (chkReceivedDoc != 0) {
+					alert("<spring:message code='ezApprovalG.pjg04'/>");
+					opener.close();
+					window.close();
+					return;
+				}
+
 		    	var aprLineCnt = $("#lvAPRLINE").find("tr[data11='001']"); // 결재
 		    	var draftLineCnt = $("#lvAPRLINE").find("tr[data11='018']"); // 기안
 		    	var aprJLineCnt = $("#lvAPRLINE").find("tr[data11='004']"); // 전결

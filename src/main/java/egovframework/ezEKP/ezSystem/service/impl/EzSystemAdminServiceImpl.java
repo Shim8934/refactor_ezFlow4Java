@@ -32,6 +32,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
 import egovframework.ezEKP.ezSystem.dao.EzSystemAdminDAO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.util.EzSystemUtil;
@@ -54,6 +55,9 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 	
 	@Resource(name="EzSystemAdminDAO")
 	EzSystemAdminDAO ezSystemAdminDAO;
+	
+	@Resource(name="EzCommonDAO")
+	EzCommonDAO ezCommonDAO;
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
@@ -935,6 +939,44 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		
 		return list;
 	}
+
+	@Override
+	public void updateSystemAdminIPAllow(String allowResult, int tenantID) throws Exception {
+		logger.debug("updateSystemIPAllow started. tenantID=" + tenantID + ", allowResult=" + allowResult);
+		
+		SysParamVO sysParamVO = new SysParamVO();
+		sysParamVO.setTenantID(tenantID);
+		sysParamVO.setValue(allowResult);
+		sysParamVO.setName("useAdminIPAccess");
+		
+		int successChk = ezSystemAdminDAO.updateSystemAdminIPAllow(sysParamVO);
+		logger.debug("successChk=" + successChk);
+		if (successChk <= 0) {
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("tenantID", tenantID);
+			params.put("confName","useAdminIPAccess"); // property_name
+			params.put("property_value",allowResult);
+			params.put("config_name","관리자 IP 제한");
+			params.put("regdate","2020-04-27 00:00:00");
+			params.put("description","관리자 페이지 IP 제한(default: NO)");
+			params.put("config_type","시스템");
+			params.put("property","useAdminIPAccess"); // property_name
+
+			logger.debug("insert tbl_tenant_config. adminIpAccess");
+			ezCommonDAO.insertTblTenantConfig(params);
+		}
+		
+		logger.debug("updateSystemIPAllow ended");
+	}
+	
+	@Override
+	public List<IPBandVO> getAdminAccessIPBand(int tenantID) throws Exception {
+		logger.debug("getAdminAccessIPBand started. tenantID=" + tenantID);
+		List<IPBandVO> list = ezSystemAdminDAO.getAdminAccessIPBand(tenantID);
+		
+		logger.debug("getAdminAccessIPBand ended.");
+		return list;
+	}
 	
 	@Override
 	public int getAdminAccessHistCount(int tenantID, String offset, String keycode, String keyword, String keycodeForRoll, String lang, String startDate, String endDate, String companyId) throws Exception {
@@ -961,5 +1003,66 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		logger.debug("getAdminAccessHistCount ended.");
 		
 		return ezSystemAdminDAO.getAdminAccessHistCount(params);
+	}
+	
+	@Override
+	public void insertAdminIPBand(int tenantID, String ipAddress, String access, String explanation) throws Exception {
+		logger.debug("insertAdminIPBand started.");
+		logger.debug("tenantID=" + tenantID + ", ipAddress=" + ipAddress + ", access=" + access + ", explanation=" + explanation);
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("tenantID", tenantID);
+		params.put("ipAddress", ipAddress);
+		params.put("access", access);
+		params.put("explanation", explanation);
+		
+		ezSystemAdminDAO.insertAdminIPBand(params);
+		
+		logger.debug("insertAdminIPBand ended.");
+	}
+	
+	@Override
+	public IPBandVO getSystemAdminIPBand(String ipNo) throws Exception {
+		logger.debug("getSystemAdminIPBand started.");
+		logger.debug("ipNo=" + ipNo);
+		
+		IPBandVO ipBand = ezSystemAdminDAO.getSystemAdminIPBand(ipNo);
+		
+		logger.debug("getSystemAdminIPBand ended.");
+		
+		return ipBand;
+	}
+
+	@Override
+	public void updateAdminIPBand(String ipNo, String ipAddress, String access, String explanation) throws Exception {
+		logger.debug("updateAdminIPBand started.");
+		logger.debug("ipNo=" + ipNo + ", ipAddress=" + ipAddress + ", access=" + access + ", explanation=" + explanation);
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("ipNo", ipNo);
+		params.put("ipAddress", ipAddress);
+		params.put("access", access);
+		params.put("explanation", explanation);
+		
+		ezSystemAdminDAO.updateAdminIPBand(params);
+		
+		logger.debug("updateAdminIPBand ended.");
+	} 
+	
+	@Override
+	public void deleteAdminIPBand(String ipNo) throws Exception {
+		logger.debug("deleteIPBand started.");
+		logger.debug("ipNo=" + ipNo);
+		
+		String[] ipNoList = ipNo.split(",");
+		List<String> list = new ArrayList<String>();
+		
+		for (int i = 0; i < ipNoList.length; i++) {
+			list.add(ipNoList[i]);
+		}
+		
+		ezSystemAdminDAO.deleteAdminIPBand(list);
+		
+		logger.debug("deleteIPBand ended.");
 	}
 }

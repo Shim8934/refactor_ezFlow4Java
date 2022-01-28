@@ -1664,6 +1664,17 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"PROXY" VARCHAR2(200 BYTE), 
 	"MANUAL_FLAG" NVARCHAR2(2) DEFAULT NULL
    ) ;
+-------------------------------------------------------- 
+--  DDL for Table TBL_ADMIN_ACCESS_IP
+--------------------------------------------------------
+
+  CREATE TABLE "EZEKP2017"."TBL_ADMIN_ACCESS_IP" 
+   (	"IPNO" NUMBER(*,0), 
+	"TENANT_ID" NUMBER(5,0), 
+	"IPADDRESS" NVARCHAR2(100), 
+	"ALLOW_ACCESS" NVARCHAR2(10) DEFAULT 'NO', 
+	"EXPLANATION" NVARCHAR2(200) DEFAULT NULL
+   );
 --------------------------------------------------------
 --  DDL for Table TBL_ADMINRECEIPTGROUP_MAIN
 --------------------------------------------------------
@@ -8682,6 +8693,11 @@ CREATE TABLE "TBL_CAR_FORM" (
 --------------------------------------------------------
 
    CREATE SEQUENCE  "SEQ_TBL_ADMINRECEIPTGROUP_MAIN"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+-------------------------------------------------------- 
+--  DDL for Sequence TBL_ADMIN_ACCESS_IP_SEQ2
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "TBL_ADMIN_ACCESS_IP_SEQ2"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
 --------------------------------------------------------
 --  DDL for Sequence SEQ_TBL_ADMINRECEIPTGROUP_SUB
 --------------------------------------------------------
@@ -11286,6 +11302,12 @@ CREATE TABLE "TBL_CAR_FORM" (
 
   CREATE UNIQUE INDEX "TBL_ACCESS_IP_PK" ON "TBL_ACCESS_IP" ("IPNO") 
   ;
+-------------------------------------------------------- 
+--  DDL for Index PK2_TBL_ADMIN_ACCESS_IP
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK2_TBL_ADMIN_ACCESS_IP" ON "TBL_ADMIN_ACCESS_IP" ("IPNO")
+  ;
 --------------------------------------------------------
 --  DDL for Index TBL_ADMINRECEIPTGROUP_MAIN_PK
 --------------------------------------------------------
@@ -13885,6 +13907,14 @@ ALTER TRIGGER "TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX  ENABLE;
   ALTER TABLE "TBL_ADDJOBMASTER" MODIFY ("DEPTID" NOT NULL ENABLE);
   ALTER TABLE "TBL_ADDJOBMASTER" MODIFY ("CN" NOT NULL ENABLE);
+-------------------------------------------------------- 
+--  Constraints for Table TBL_ADMIN_ACCESS_IP
+--------------------------------------------------------
+
+  ALTER TABLE "TBL_ADMIN_ACCESS_IP" MODIFY ("IPNO" NOT NULL ENABLE);
+  ALTER TABLE "TBL_ADMIN_ACCESS_IP" MODIFY ("IPADDRESS" NOT NULL ENABLE);
+  ALTER TABLE "TBL_ADMIN_ACCESS_IP" ADD CONSTRAINT "PK2_TBL_ADMIN_ACCESS_IP" PRIMARY KEY ("IPNO")
+  USING INDEX ENABLE;  
 --------------------------------------------------------
 --  Constraints for Table TBL_ADMINRECEIPTGROUP_MAIN
 --------------------------------------------------------

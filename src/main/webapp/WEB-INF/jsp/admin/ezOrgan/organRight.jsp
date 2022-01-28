@@ -1333,14 +1333,8 @@
 	    		var mobileOwner = $(trIdx).children().eq(1).text();
 	    		var data = listview.GetSelectedRows()[0].getAttribute("DATA2");
 		    	document.getElementById("userSend").value = data;
-		    	
-		    	var agent = navigator.userAgent.toLowerCase();
-		    	
-		    	if (agent.indexOf("chrome") != -1) {
-		    		var OpenWin = window.open("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + encodeURIComponent(mobileOwner), "", GetOpenWindowfeature(460, 335));
-		    	} else {
-			    	var OpenWin = window.open("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + encodeURIComponent(mobileOwner), "", GetOpenWindowfeature(460, 335));
-		    	}
+
+				window.open("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + encodeURIComponent(mobileOwner), "", GetOpenWindowfeature(660, 370));
 		    }
 		   
 		    // POP3/IMAP 설정 함수
