@@ -132,7 +132,7 @@
 		    
 		    function event_GetDeptTreeInfo() {
 		    	if (xmlHTTP != null && xmlHTTP.readyState == 4) {
-		        	if (xmlHTTP.statusText == "OK") {
+		        	if (xmlHTTP.status == 200) {
 		            	var xmlTree = loadXMLString(xmlHTTP.responseText);
 		                var treeXML = loadXMLFile("/xml/common/organtree_config3.xml");
 		                var treeView = new TreeView();
@@ -147,7 +147,7 @@
 		                xmlHTTP = null;
 		                isfirst = false;
 		            } else {
-		                alert("<spring:message code='ezOrgan.t13' />" + xmlHTTP.statusText);
+		                alert("<spring:message code='ezOrgan.t13' />" + xmlHTTP.status);
 		                xmlHTTP = null;
 		            }
 		        }
@@ -1042,7 +1042,7 @@
 		    var bSearch = true;
 		    function event_getDeptFullTree() {
 		        if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
-		            if (g_xmlHTTP.statusText == "OK") {
+		            if (g_xmlHTTP.status == 200) {
 		                if (!bSearch) {
 		                    try {
 		                        if (CrossYN()) {
@@ -1065,7 +1065,7 @@
 		                treeView.DataSource(loadXMLString(g_xmlHTTP.responseText));
 		                treeView.DataBind("TreeView");
 		            } else {
-		                alert("<spring:message code='ezOrgan.t9' />" + g_xmlHTTP.statusText);
+		                alert("<spring:message code='ezOrgan.t9' />" + g_xmlHTTP.status);
 		                g_xmlHTTP = null;
 		            }
 		        }
