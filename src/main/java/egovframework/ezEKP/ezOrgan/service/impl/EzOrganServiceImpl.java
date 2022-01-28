@@ -2358,54 +2358,75 @@ public class EzOrganServiceImpl implements EzOrganService {
 	    logger.debug("type=" + type + ", pComID=" + pComID + ", pTopID=" + pTopID + ", pPropList=" + pPropList + ", primary=" + primary
 	    		+ ", tenantID=" + tenantID);
 	    
-		OrganDeptVO vo = null;
-		String prevDeptID = "";
-        String comInfo = "";
-        String comID = pComID;               
-        
-        String childNodeInfoStr = "";
-	        
-        if (pTopID.split("/").length > 1) { // Top/Organ : 전체회사 출력
-        	// 회사의 자식 회사 목록을 가져온다.
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("v_CN", comID);
-			map.put("v_LANGDATA", primary);
-			map.put("v_TENANT_ID", tenantID);
-			map.put("isCompanyTree", "Y");
-			
-			List<OrganDeptVO> list = ezOrganDAO.getDeptTreeInfo(map); 
-			
-			for (OrganDeptVO childObj : list) {
-				if (childObj.getType().equalsIgnoreCase("dept")) {
-					// 자식 회사의 상세 정보가져오기
-					Map<String, Object> map1 = new HashMap<String, Object>();	
-					map1.put("v_CN", childObj.getCn());
-					map1.put("v_LANGDATA", primary);
-					map1.put("v_TENANT_ID", tenantID);
-					map1.put("isCompanyTree", "Y");
-					
-					OrganDeptVO result = ezOrganDAO.getTBLDeptMaster(map1);
-					childNodeInfoStr += getCompanyJobTreeNodeInfo(result, pComID, prevDeptID, comInfo, pPropList, type, tenantID);
-				}
-			} 
-        }
-			
-		// 현재 부서의 자식 부서들의 정보를 XML String으로 생성한다.
-		StringBuilder comlist = new StringBuilder("<NODES>");
-		comlist.append(childNodeInfoStr);
-		comlist.append("</NODES>");	
-        comInfo = comlist.toString();	
-        prevDeptID = comID;
-        logger.debug("prevDeptID=" + prevDeptID);
-				        
-		// 지정된 부서 자체의 상세 정보를 가지고 온다
-        Map<String, Object> map2 = new HashMap<String, Object>();				
-		map2.put("v_CN", comID);
-		map2.put("v_LANGDATA", primary);
-		map2.put("v_TENANT_ID", tenantID);
-        vo = ezOrganDAO.getTBLDeptMaster(map2);
+	    String [] adminOrganChk = pTopID.split("/"); // 관리자 페이지  > 조직도, 겸직, 권한 관리에서 topId + "/organ" 붙임
+	    
+	    boolean allCompanies = false;
+	    if (adminOrganChk.length > 1) {
+	    	pTopID = adminOrganChk[0];
+	    	allCompanies = true;
+		} 
 		
-        comInfo = "<TREEVIEWDATA>" + getTreeNodeInfo(vo, comID, prevDeptID, comInfo, pPropList, "") + "</TREEVIEWDATA>";
+		OrganDeptVO vo = null; 
+		String prevComID = "";
+        String comInfo = ""; 
+        String comID = pComID;    
+         
+        do {
+			StringBuilder comlist = new StringBuilder("<NODES>");
+        	
+        	// 선택한 회사의 직위/직책 목록을 가져온다.
+			comlist.append(getJobMasterTreeNodeInfo(type, comID, primary, tenantID));
+        	
+			// 회사의 자식 회사 목록을 가져온다.
+			if (allCompanies) {
+    			Map<String, Object> map = new HashMap<String, Object>();
+    			map.put("v_CN", comID);
+    			map.put("v_LANGDATA", primary);
+    			map.put("v_TENANT_ID", tenantID);
+    			map.put("isCompanyTree", "Y");
+    			
+    			List<OrganDeptVO> list = ezOrganDAO.getDeptTreeInfo(map); 
+
+    			for (OrganDeptVO childObj : list) {
+    				if (childObj.getType().equalsIgnoreCase("dept")) {
+    					// 자식 회사의 상세 정보가져오기
+    					Map<String, Object> map1 = new HashMap<String, Object>();	
+    					map1.put("v_CN", childObj.getCn());
+    					map1.put("v_LANGDATA", primary);
+    					map1.put("v_TENANT_ID", tenantID);
+    					map1.put("isCompanyTree", "Y");
+    					
+    					OrganDeptVO result = ezOrganDAO.getTBLDeptMaster(map1);
+    					
+    					comlist.append(getCompanyJobTreeNodeInfo(result, pComID, prevComID, comInfo, pPropList, type, tenantID));
+    				}
+    			} 
+            }
+			
+	        comlist.append("</NODES>");	
+	        comInfo = comlist.toString();
+	        
+	        // 지정된 부서 자체의 상세 정보를 가지고 온다
+	        Map<String, Object> map2 = new HashMap<String, Object>();				
+			map2.put("v_CN", comID);
+			map2.put("v_LANGDATA", primary);
+			map2.put("v_TENANT_ID", tenantID);
+	        vo = ezOrganDAO.getTBLDeptMaster(map2);
+	    	
+	        prevComID = comID;
+	        // 지정된 부서의 부모 부서 ID를 구한다.
+	        if (!comID.toLowerCase().equals(pTopID.toLowerCase())) {
+	        	if (comID.toLowerCase().equals("top")) {
+	        		comID = "";
+	        	} else {
+	        		comID = getPropertyValue(comID, "extensionAttribute1", tenantID);         
+	        	}
+	        }
+	        logger.debug("prevComID={}, comID={}", prevComID, comID);
+	        
+        } while (allCompanies && !prevComID.toLowerCase().equals(pTopID.toLowerCase()) && !comID.equals(""));
+        
+        comInfo = "<TREEVIEWDATA>" + getCompanyJobTreeNodeInfo(vo, pComID, prevComID, comInfo, pPropList, type, tenantID) + "</TREEVIEWDATA>";
         
         logger.debug("comInfo=" + comInfo);
         logger.debug("getCompanyJobTreeInfo ended.");
@@ -2418,31 +2439,8 @@ public class EzOrganServiceImpl implements EzOrganService {
 		logger.debug("getJobMasterTreeInfo started.");
 	    logger.debug("type=" + type + ",companyID=" + companyID + ",lang=" + lang + ",tenantID=" + tenantID);
 	    
-	    String tenantDomain = ezCommonService.getTenantConfig("DomainName", tenantID);
-	    
-	    Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_TYPE", type);
-		map.put("v_COMPANYID", companyID);
-		map.put("v_TENANTID", tenantID);
-		
-		List<OrganJobVO> list = ezOrganAdminDao.getTitleList(map);
-
 		StringBuilder jobInfo = new StringBuilder("<NODES>");
-
-		for (OrganJobVO obj : list) {
-			String objDisplayName = lang.equals("1") ? obj.getDisplayName() : obj.getDisplayName2();
-			String jobMailAttr = "__" + obj.getJobID() + "@" + tenantDomain;
-			
-			jobInfo.append("<NODE>");
-				jobInfo.append("<VALUE>" + commonUtil.cleanValue(objDisplayName) + "</VALUE>");
-				jobInfo.append("<CN>" + commonUtil.cleanValue(obj.getJobID()) + "</CN>");
-				jobInfo.append("<COMID>" + commonUtil.cleanValue(obj.getCompanyID()) + "</COMID>");
-				jobInfo.append("<JOBTYPE>" + commonUtil.cleanValue(type) + "</JOBTYPE>");
-				jobInfo.append("<MAIL>" + commonUtil.cleanValue(jobMailAttr) + "</MAIL>"); // __직위아이디@테넌트 도메인
-				jobInfo.append("<ISJOB>true</ISJOB>");
-				jobInfo.append("<ISLEAF>TRUE</ISLEAF>");
-			jobInfo.append("</NODE>");
-		}
+		jobInfo.append(getJobMasterTreeNodeInfo(type, companyID, lang, tenantID));
 		jobInfo.append("</NODES>");   
 
         logger.debug("jobInfo=" + jobInfo);
@@ -2521,6 +2519,39 @@ public class EzOrganServiceImpl implements EzOrganService {
 		logger.debug("getJobMasterMemberList ended.");
 		return userInfo.toString();	
 	};
+	
+	private String getJobMasterTreeNodeInfo(String type, String companyID, String lang, int tenantID) throws Exception {
+		logger.debug("getJobMasterTreeNodeInfo started");
+
+		StringBuilder nodeInfo = new StringBuilder();
+		
+		String tenantDomain = ezCommonService.getTenantConfig("DomainName", tenantID);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TYPE", type);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		List<OrganJobVO> list = ezOrganAdminDao.getTitleList(map);
+		
+		for (OrganJobVO obj : list) {
+			String objDisplayName = lang.equals("1") ? obj.getDisplayName() : obj.getDisplayName2();
+			String jobMailAttr = "__" + obj.getJobID() + "@" + tenantDomain;
+			
+			nodeInfo.append("<NODE>");
+				nodeInfo.append("<VALUE>" + commonUtil.cleanValue(objDisplayName) + "</VALUE>");
+				nodeInfo.append("<CN>" + commonUtil.cleanValue(obj.getJobID()) + "</CN>");
+				nodeInfo.append("<COMID>" + commonUtil.cleanValue(obj.getCompanyID()) + "</COMID>");
+				nodeInfo.append("<JOBTYPE>" + commonUtil.cleanValue(type) + "</JOBTYPE>");
+				nodeInfo.append("<MAIL>" + commonUtil.cleanValue(jobMailAttr) + "</MAIL>"); // __직위아이디@테넌트 도메인
+				nodeInfo.append("<ISJOB>true</ISJOB>");
+				nodeInfo.append("<ISLEAF>TRUE</ISLEAF>");
+			nodeInfo.append("</NODE>");
+		}
+		
+		logger.debug("getJobMasterTreeNodeInfo ended");
+		return nodeInfo.toString();
+	}
 	
 	private String getCompanyJobTreeNodeInfo(OrganDeptVO vo, String pOrgComID, String pPrevDeptID, String pDeptInfo, String pPropList, String jobType, int tenantId) throws Exception {
 		logger.debug("getCompanyJobTreeNodeInfo started");
