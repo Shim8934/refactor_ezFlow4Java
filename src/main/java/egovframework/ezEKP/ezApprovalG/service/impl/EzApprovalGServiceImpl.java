@@ -2980,8 +2980,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
         if (commonUtil.getDatabaseType().equalsIgnoreCase("oracle") && StringUtils.defaultString(docState).isEmpty()) {
             docState = " ";
-        }
-                
+        } else if (StringUtils.defaultString(reDraftFlag).equals("SUSIN")) {
+			docState = "011";
+		}
+
 		StringBuilder resultXML = new StringBuilder();
 		String listString = getListHeader("013", companyID, lang, tenantID);
 		
