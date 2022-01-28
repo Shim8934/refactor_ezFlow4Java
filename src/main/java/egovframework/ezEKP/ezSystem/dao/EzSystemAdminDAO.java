@@ -137,7 +137,32 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 	public int updateAccessCountry(Map<String, Object> paramMap) throws Exception {
 		return update("EzSystemAdminDAO.updateAccessCountry", paramMap);
 	}
-
+	
+	public int updateSystemAdminIPAllow(SysParamVO sysParamVO) throws Exception {
+		return update("EzSystemAdminDAO.updateSysParam", sysParamVO);
+    }
+	
+	@SuppressWarnings("unchecked")
+	public List<IPBandVO> getAdminAccessIPBand(int tenantID) throws Exception {
+	    return (List<IPBandVO>) list("EzSystemAdminDAO.getAdminAccessIPBand", tenantID);
+    }
+	
+	public void insertAdminIPBand(Map<String, Object> map) throws Exception {
+		insert("EzSystemAdminDAO.insertAdminIPBand", map);
+	}
+ 
+	public IPBandVO getSystemAdminIPBand(String ipNo) throws Exception {
+		return (IPBandVO) select("EzSystemAdminDAO.getSystemAdminIPBand", ipNo);
+	}
+	
+	public void updateAdminIPBand(Map<String, Object> map) throws Exception {
+		update("EzSystemAdminDAO.updateAdminIPBand", map);
+	}
+	
+	public void deleteAdminIPBand(List<String> ipNoList) throws Exception {
+		delete ("EzSystemAdminDAO.deleteAdminIPBand", ipNoList);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public Map<String, String> getPwPolicy(Map<String, Object> paramMap) throws Exception {
 		return (Map<String, String>) select("EzSystemAdminDAO.getPwPolicy", paramMap);

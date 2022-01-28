@@ -1396,6 +1396,28 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
+	public void createAdminAccessIpTable() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblAdminAccessIpTable");
+		} catch (Exception e) {
+			logger.debug("tbl_admin_access_ip table doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblAdminAccessIpTable");
+			
+			if (dbType.equalsIgnoreCase("oracle")) {
+				try {
+					int cnt = (int) select("EzCommonDAO.checkTblAdminAccessIpSequence");
+					if (cnt < 1) {throw new Exception(); }
+				} catch (Exception ee) {
+					ee.printStackTrace();
+					logger.debug("TBL_ADMIN_ACCESS_IP Sequence doesn't exist. creating the Sequence...");
+					
+					update("EzCommonDAO.createTblAdminAccessIpSequence");
+				}
+			}
+		}
+	}
+
 	public void insertReBebuOpinionCode(Map<String, Object> map) {
 		String companyId = checkReBebuOpinionCode(map);
 		

@@ -1063,6 +1063,7 @@ public class EzSystemAdminController {
 		}
 
 		String useIPAccess = ezCommonService.getTenantConfig("useIPAccess", userInfo.getTenantId());
+
 		model.addAttribute("useIPAccess", useIPAccess);
 		logger.debug("systemIPManager ended");
 		 
@@ -1256,15 +1257,25 @@ public class EzSystemAdminController {
 	
 	
 	@RequestMapping(value="/ezSystem/systemIPBandEditPopup.do", method=RequestMethod.GET)
-	public String systemIPBandEditPopup(@CookieValue("loginCookie") String loginCookie, Model model, String type, @ModelAttribute IPBandVO ipBand) throws Exception {
+	public String systemIPBandEditPopup(@CookieValue("loginCookie") String loginCookie, Model model,
+			@ModelAttribute IPBandVO ipBand, HttpServletRequest request) throws Exception {
 		logger.debug("systemIPBandEditPopup started");
+		
+		String type = request.getParameter("type");
+		String pageType = request.getParameter("pageType"); // pageType=adminIpAccess
+		pageType = pageType == null ? "" : pageType;
 		
 		String ipAddress = "";
 		String access = "";
 		String explanation = "";
 		
 		if (type.equals("modify")) {
-			IPBandVO getIPBand = ezSystemAdminService.getSystemIPBand(ipBand.getIpNo());
+			IPBandVO getIPBand = null;
+			if (pageType.equals("adminIpAccess")) { // 관리자 IP 제한
+				getIPBand = ezSystemAdminService.getSystemAdminIPBand(ipBand.getIpNo());
+			} else {
+				getIPBand = ezSystemAdminService.getSystemIPBand(ipBand.getIpNo());
+			}
 			
 			ipAddress = getIPBand.getIpAddress();
 			access = getIPBand.getAccess();
@@ -1279,6 +1290,7 @@ public class EzSystemAdminController {
 		model.addAttribute("access", access);
 		model.addAttribute("explanation", explanation);
 		model.addAttribute("type", type);
+		model.addAttribute("pageType", pageType);
 				
 		logger.debug("systemIPBandEditPopup ended");
 		return "/ezSystem/systemIPBandEditPopup";
@@ -1573,6 +1585,150 @@ public class EzSystemAdminController {
 				.body("");
 	}
 	
+	// 관리자 ip제한 화면
+	@RequestMapping(value="/admin/ezSystem/systemAdminIPManager.do", method=RequestMethod.GET)
+	public String systemAdminIPManager(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("systemAdminIPManager started");
+		
+		//관리자 권한체크
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		String rollInfo = userInfo.getRollInfo();
+		boolean adminChk = rollInfo.indexOf("c=1") > -1;
+		
+		String useAdminIPAccess = ezCommonService.getTenantConfig("useAdminIPAccess", userInfo.getTenantId());
+		useAdminIPAccess = useAdminIPAccess.equals("") ? "NO" : useAdminIPAccess;
+		logger.debug("useAdminIPAccess=" + useAdminIPAccess);
+		
+		model.addAttribute("useAdminIPAccess", useAdminIPAccess); 
+		model.addAttribute("adminChk", adminChk);     
+		logger.debug("systemAdminIPManager ended");
+		 
+		return "/ezSystem/systemAdminIPManager";
+	}
+	
+	// 관리자 ip제한 사용여부 설정
+	@RequestMapping(value="/ezSystem/setUseAdminIPAccess.do", method=RequestMethod.POST)
+	@ResponseBody
+	public String setUseAdminIPAccess(@CookieValue("loginCookie") String loginCookie, Model model, String allowResult) throws Exception {
+		logger.debug("setUseAdminIPAccess started");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		String rollInfo = userInfo.getRollInfo();
+		boolean adminChk = rollInfo.indexOf("c=1") > -1;
+		String returnStr = "OK";
+
+		// input 체크된 값으로 전달되기 때문에 tbl_tenant_config value에 맞게 변경
+		allowResult = allowResult.equals("true") ? "YES" : "NO";
+		
+		if (adminChk) {
+			ezSystemAdminService.updateSystemAdminIPAllow(allowResult, userInfo.getTenantId());
+		} else {
+			returnStr = "adminFail";
+		}
+		
+		logger.debug("setUseAdminIPAccess ended");
+		return returnStr;
+	}
+	
+	// 관리자 IP 리스트 화면
+	@RequestMapping(value="/ezSystem/systemAdminIPBand.do", method=RequestMethod.GET)
+	public String systemAdminIPBand(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("systemAdminIPBand started");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		String useAdminIPAccess = ezCommonService.getTenantConfig("useAdminIPAccess", userInfo.getTenantId());
+		useAdminIPAccess = useAdminIPAccess.equals("") ? "NO" : useAdminIPAccess;
+		logger.debug("useAdminIPAccess=" + useAdminIPAccess);
+		
+		String rollInfo = userInfo.getRollInfo();
+		Boolean rollChk = rollInfo.indexOf("c=1") == -1 ? false : true;
+		logger.debug("rollChk=" + rollChk);
+		
+		model.addAttribute("useAdminIPAccess", useAdminIPAccess);
+		model.addAttribute("rollChk", rollChk);
+		model.addAttribute("rollInfo", rollInfo);
+		
+		logger.debug("systemAdminIPBand ended");
+		return "/ezSystem/systemAdminIPBand";
+	}
+	
+	// 관리자 IP 리스트
+	@ResponseBody
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/ezSystem/getAdminAccessIPBand.do", method=RequestMethod.POST)
+	public JSONArray getAdminAccessIPBand(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("getAdminAccessIPBand started");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		int tenantId = userInfo.getTenantId();
+		
+		List<IPBandVO> list = ezSystemAdminService.getAdminAccessIPBand(tenantId);
+		if (list == null) {
+			return null;
+		}
+		
+		JSONArray returnJsonArr = new JSONArray();
+
+		for (IPBandVO ipVo : list) {
+			JSONObject obj = new JSONObject();
+			
+			obj.put("ipNo", ipVo.getIpNo());
+			obj.put("ipAddress", ipVo.getIpAddress());
+			obj.put("access", ipVo.getAccess());
+			obj.put("explanation", ipVo.getExplanation());
+			
+			returnJsonArr.add(obj);
+		}
+		
+		logger.debug("returnJsonArr=" + returnJsonArr.toJSONString());
+		logger.debug("getAdminAccessIPBand ended");
+		return returnJsonArr;
+	}
+	
+	// 관리자 IP제한 - ip 추가
+	@ResponseBody
+	@RequestMapping(value="/ezSystem/insertAdminIPBand.do", method=RequestMethod.POST)
+	public void insertAdminIPBand(@CookieValue("loginCookie") String loginCookie, Model model, @ModelAttribute IPBandVO ipBand) throws Exception {
+		logger.debug("insertAdminIPBand started");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		String ipBandExplaination = ipBand.getExplanation() == null ? "" : ipBand.getExplanation();
+		
+		ezSystemAdminService.insertAdminIPBand(userInfo.getTenantId(), ipBand.getIpAddress(), ipBand.getAccess(), ipBandExplaination);
+		
+		logger.debug("insertAdminIPBand ended");
+	}
+
+	// 관리자 IP제한 - ip 수정
+	@ResponseBody
+	@RequestMapping(value="/ezSystem/updateAdminIPBand.do", method=RequestMethod.POST)
+	public void updateAdminIPBand(@CookieValue("loginCookie") String loginCookie, Model model, @ModelAttribute IPBandVO ipBand) throws Exception {
+		logger.debug("updateAdminIPBand started");
+		logger.debug("ipNo=" + ipBand.getIpNo() + ", ipAddress=" + ipBand.getIpAddress() + ", access=" + ipBand.getAccess() + ", explanation=" + ipBand.getExplanation());
+		
+		ezSystemAdminService.updateAdminIPBand(ipBand.getIpNo(), ipBand.getIpAddress(), ipBand.getAccess(), ipBand.getExplanation());
+		
+		logger.debug("updateAdminIPBand ended");
+	}
+
+	// 관리자 IP제한 - ip 삭제
+	@ResponseBody
+	@RequestMapping(value="/ezSystem/deleteAdminIPBand.do", method=RequestMethod.POST)
+	public void deleteAdminIPBand(@CookieValue("loginCookie") String loginCookie, Model model, String ipNo) throws Exception {
+		logger.debug("deleteAdminIPBand started");
+		logger.debug("ipNo=" + ipNo);
+		
+		ezSystemAdminService.deleteAdminIPBand(ipNo);
+		
+		logger.debug("deleteAdminIPBand ended");
+	}
+
 	/**
 	 * 암호 정책 관리 화면
 	 * */
