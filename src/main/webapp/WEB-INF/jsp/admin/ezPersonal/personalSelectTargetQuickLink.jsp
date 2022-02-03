@@ -30,6 +30,7 @@
 	        var strInitList = "";
 	        var topid = "<c:out value = '${topID}' />";
 	        var userLang = "<c:out value = '${strUserLang}' />";
+	        var strAddJob = "<spring:message code='ezOrgan.psb03'/> ";
 	        var ReturnFunction;
 	        var RetValue;
 	        
@@ -297,10 +298,10 @@
 		                var getlistview = new ListView();
 		                getlistview.LoadFromID("ListViewMsgToView");
 		                var existId = GetAttribute(arrRows[0], "data2");
-		                var existName = GetAttribute(arrRows[0], "data7");
+		                var existName = GetAttribute(arrRows[0], "data8");
 		                var strDeptNM = GetAttribute(arrRows[0], "data9");
-		                var existName2 = GetAttribute(arrRows[0], "data8");
-		                var strDeptNM2 = GetAttribute(arrRows[0], "data10");
+		                var existName2 = GetAttribute(arrRows[0], "data10");
+		                var strDeptNM2 = GetAttribute(arrRows[0], "data11");
 		                var bFlag = getlistview.ExistRow("DATA1", existId);
 		                if (bFlag) {
 		                    alert("<spring:message code = 'ezPersonal.t354' />");
@@ -520,7 +521,7 @@
 		    		dataType : "text",
 		    		data : {deptID : DeptID,
 		    				cell : 'displayName;description;title',
-		    				prop : 'mail;displayName;description;title',
+		    				prop : 'mail;displayName;description;title;userType',
 		    				type : 'user'},
 		    		success : function (result) {
 		    			document.getElementById("OrganListView").innerHTML = "";
