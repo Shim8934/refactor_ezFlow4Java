@@ -1584,9 +1584,10 @@
 
    							//2020-05-08 : 결재정보확인 시 문서정보 저장 후 문서 반영
    							setApprDocInfo();	
-   							//SaveFile();
+							// 2022-02-04 박기범 : 결재정보 > 확인 후에 한글문서는 저장되지 않던 문제 수정
+							GetHTML(before_SaveFile);
 
-   			                SummaryFlag = true;
+							SummaryFlag = true;
    			                savexmlhttp = null;
    			            }
    			            catch (e) {
