@@ -1668,7 +1668,7 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 --  DDL for Table TBL_ADMIN_ACCESS_IP
 --------------------------------------------------------
 
-  CREATE TABLE "EZEKP2017"."TBL_ADMIN_ACCESS_IP" 
+  CREATE TABLE "TBL_ADMIN_ACCESS_IP" 
    (	"IPNO" NUMBER(*,0), 
 	"TENANT_ID" NUMBER(5,0), 
 	"IPADDRESS" NVARCHAR2(100), 
