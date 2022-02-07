@@ -153,7 +153,9 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 	}
  
 	public IPBandVO getSystemAdminIPBand(String ipNo) throws Exception {
-		return (IPBandVO) select("EzSystemAdminDAO.getSystemAdminIPBand", ipNo);
+		int pIpNo = Integer.parseInt(ipNo);
+		
+		return (IPBandVO) select("EzSystemAdminDAO.getSystemAdminIPBand", pIpNo);
 	}
 	
 	public void updateAdminIPBand(Map<String, Object> map) throws Exception {

@@ -545,6 +545,7 @@
 	<select id="EzSystemAdminDAO.getAdminAccessIPBand" parameterClass="Integer" resultClass="IPBandVO">
 		<![CDATA[
 			SELECT
+				IPNO,
 				IPADDRESS,
 				ALLOW_ACCESS AS "ACCESS",
 				EXPLANATION
@@ -557,7 +558,7 @@
 	
 	<insert id="EzSystemAdminDAO.insertAdminIPBand" parameterClass="Map">
 		<selectKey resultClass="int" keyProperty="id">
-			SELECT TBL_ADMIN_ACCESS_IP_SEQ2.NEXTVAL FROM SYS.DUAL
+			SELECT TBL_ADMIN_ACCESS_IP_SEQ2.NEXTVAL FROM DUAL
 		</selectKey>
 		<![CDATA[
 			INSERT INTO 
@@ -579,7 +580,7 @@
 		]]>
 	</update>
 	
-	<select id="EzSystemAdminDAO.getSystemAdminIPBand" parameterClass="String" resultClass="IPBandVO">
+	<select id="EzSystemAdminDAO.getSystemAdminIPBand" parameterClass="Integer" resultClass="IPBandVO">
 		<![CDATA[
 			SELECT 
 				IPADDRESS,

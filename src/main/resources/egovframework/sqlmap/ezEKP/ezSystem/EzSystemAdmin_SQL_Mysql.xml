@@ -469,7 +469,7 @@
 		]]>
 	</update>
 	
-	<select id="EzSystemAdminDAO.getSystemAdminIPBand" parameterClass="String" resultClass="IPBandVO">
+	<select id="EzSystemAdminDAO.getSystemAdminIPBand" parameterClass="Integer" resultClass="IPBandVO">
 		<![CDATA[
 			SELECT 
 				IPADDRESS,
