@@ -1404,12 +1404,12 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			
 			update("EzCommonDAO.createTblAdminAccessIpTable");
 			
-			if (dbType.equalsIgnoreCase("oracle")) {
+			if (dbType.equalsIgnoreCase("oracle") || dbType.equalsIgnoreCase("tibero")) {
 				try {
 					int cnt = (int) select("EzCommonDAO.checkTblAdminAccessIpSequence");
 					if (cnt < 1) {throw new Exception(); }
 				} catch (Exception ee) {
-					ee.printStackTrace();
+					// ee.printStackTrace();
 					logger.debug("TBL_ADMIN_ACCESS_IP Sequence doesn't exist. creating the Sequence...");
 					
 					update("EzCommonDAO.createTblAdminAccessIpSequence");
