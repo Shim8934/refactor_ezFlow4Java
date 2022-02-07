@@ -286,12 +286,12 @@
 	<update id="loginDAO.updateLog" parameterClass="loginVO">
         <![CDATA[
             UPDATE 	TBL_CONNECTION_INFO
-    		SET    	DISCONNECTTIME 	= SYS_EXTRACT_UTC(SYSTIMESTAMP) 
-    		WHERE 	SESSIONCODE 	= #sessionCode#
-    		AND		TENANT_ID 		= #tenantId#
+				SET    	DISCONNECTTIME 	= SYS_EXTRACT_UTC(SYSTIMESTAMP)
+				WHERE 	SESSIONCODE 	= #sessionCode#
+				AND		TENANT_ID 		= #tenantId#
         ]]>
     </update>
-    
+
 	<update id="loginDAO.updateUser" parameterClass="loginVO">
 		<![CDATA[
 			UPDATE TBL_USERMASTER

@@ -7,6 +7,8 @@
 	<typeAlias alias="IPBandVO" type="egovframework.ezEKP.ezSystem.vo.IPBandVO"/>
 	<typeAlias alias="AccessIdVO" type="egovframework.ezEKP.ezSystem.vo.AccessIdVO"/>
 	<typeAlias alias="PasswordPolicyVO" type="egovframework.ezEKP.ezSystem.vo.PasswordPolicyVO"/>
+	<typeAlias alias="MainVO" type="egovframework.let.main.vo.MainVO"/>
+	<typeAlias alias="PermissionInfoVO" type="egovframework.ezEKP.ezSystem.vo.PermissionInfoVO"/>
 	
 	<select id="EzSystemAdminDAO.getSysParam" parameterClass="Integer" resultClass="SysParamVO">
 		<![CDATA[
@@ -63,6 +65,16 @@
 				</isEqual>
 			</isNotEmpty>
 		</isNotEmpty>
+		<isNotEmpty property="search_keycodeForStatus" prepend="and">
+			<isEqual property="search_keycodeForStatus" compareValue="Y">
+				(	STATUS LIKE 'Y'
+				OR 	STATUS LIKE ''
+				OR 	STATUS IS NULL	)
+			</isEqual>
+			<isEqual property="search_keycodeForStatus" compareValue="N">
+				STATUS LIKE 'N'
+			</isEqual>
+		</isNotEmpty>
 		<isNotEmpty property="startDate" prepend="and">
 			<![CDATA[
 			TO_CHAR((CONNECTTIME + #offset# / (24 * 60)),'YYYY-MM-DD') >= #startDate# 
@@ -75,10 +87,16 @@
 		</isNotEmpty>
 	</sql>
 	
+	<!-- 2021-12-22 이사라 : 로그아웃시간, 상태 추가 -->
 	<select id="EzSystemAdminDAO.getLoginHist" parameterClass="map" resultClass="ConnectionInfoVO">
 		 	SELECT
 		 	 	X.rnum, 
 			    TO_CHAR((X.CONNECTTIME + #offset# / (24 * 60)),'YYYY-MM-DD HH24:MI:SS') AS CONNECTTIME,
+	            CASE
+	            WHEN X.DISCONNECTTIME IS NOT NULL
+	            THEN TO_CHAR((X.DISCONNECTTIME + #offset# / (24 * 60)),'YYYY-MM-DD HH24:MI:SS')
+	            ELSE TO_CHAR(' ')
+	            END AS DISCONNECTTIME,
 	            X."SEQUENCE",
 	            X.USERNM,
 	            X.USERNM2,
@@ -90,11 +108,13 @@
 				X.COMPANYID,
 				X.COMPANYNM,
 				X.COMPANYNM2,
-				X.USERID
+				X.USERID,
+				X.STATUS
             FROM (
 				SELECT 
 			    	ROWNUM AS rnum,
-				    A.CONNECTTIME, 
+				    A.CONNECTTIME,
+				    A.DISCONNECTTIME,
 					A."SEQUENCE",
 					A.USERNM,
 					A.USERNM2,
@@ -106,11 +126,13 @@
 					A.COMPANYID,
 					A.COMPANYNM,
 					A.COMPANYNM2,
-					A.USERID
+					A.USERID,
+					A.STATUS
 				FROM 
 					(
 					SELECT  
 					    C.CONNECTTIME,
+					    C.DISCONNECTTIME,
 						C."SEQUENCE",
 						C.USERNM,
 						C.USERNM2,
@@ -122,13 +144,14 @@
 						C.COMPANYID,
 						C.COMPANYNM,
 						C.COMPANYNM2,
-						C.USERID
-					FROM 
-						TBL_CONNECTION_INFO C INNER JOIN TBL_USERLOCALINFO U
-					ON 
-						C.USERID = U.USERID
-					WHERE 
-						C.TENANT_ID=#v_tenantID# AND U.TENANT_ID=#v_tenantID#
+						C.USERID,
+						C.STATUS
+					FROM
+						TBL_CONNECTION_INFO C <!-- INNER JOIN TBL_USERLOCALINFO U
+					ON
+						C.USERID = U.USERID -->
+					WHERE
+						C.TENANT_ID=#v_tenantID# <!-- AND U.TENANT_ID=#v_tenantID# -->
 						$companyOracleStr$
 						<include refid="EzSystemAdminDAO.searchQuery"/>
 						<isEqual property="search_keycode" compareValue="6">
@@ -152,9 +175,9 @@
 	
 	<select id="EzSystemAdminDAO.getLoginHistCount" parameterClass="map" resultClass="int">
 		SELECT 	COUNT(SEQUENCE) 
-		FROM   	TBL_CONNECTION_INFO C INNER JOIN TBL_USERLOCALINFO U
-		ON 		C.USERID = U.USERID
-		WHERE	C.TENANT_ID = #v_tenantID# AND U.TENANT_ID = #v_tenantID# 
+		FROM   	TBL_CONNECTION_INFO C <!--INNER JOIN TBL_USERLOCALINFO U
+		ON 		C.USERID = U.USERID -->
+		WHERE	C.TENANT_ID = #v_tenantID# <!-- AND U.TENANT_ID = #v_tenantID# -->
 		$companyOracleStr$
 		<include refid="EzSystemAdminDAO.searchQuery"/>
 		<isEqual property="search_keycode" compareValue="6">
@@ -162,10 +185,16 @@
 		</isEqual>
 	</select>
 	
+	<!-- 2021-12-22 이사라 : 로그아웃시간, 상태 추가 -->
 	<select id="EzSystemAdminDAO.getLoginHistNotAdmin" parameterClass="map" resultClass="ConnectionInfoVO">
 		 	SELECT
 		 	 	X.rnum, 
 			    TO_CHAR((X.CONNECTTIME + #offset# / (24 * 60)),'YYYY-MM-DD HH24:MI:SS') AS CONNECTTIME,
+	            CASE
+	            WHEN X.DISCONNECTTIME IS NOT NULL
+	            THEN TO_CHAR((X.DISCONNECTTIME + #offset# / (24 * 60)),'YYYY-MM-DD HH24:MI:SS')
+	            ELSE TO_CHAR(' ')
+	            END AS DISCONNECTTIME,
 	            X."SEQUENCE",
 	            X.USERNM,
 	            X.USERNM2,
@@ -174,11 +203,13 @@
 	            X.CONNECTIP,
 	            X.CONNECTBROWSER,
 	            X.CONNECTOS,
-	            X.USERID
+	            X.USERID,
+	            X.STATUS
             FROM (
 				SELECT 
 			    	ROWNUM AS rnum,
-				    A.CONNECTTIME, 
+				    A.CONNECTTIME,
+				    A.DISCONNECTTIME,
 					A."SEQUENCE",
 					A.USERNM,
 					A.USERNM2,
@@ -187,11 +218,13 @@
 					A.CONNECTIP,
 					A.CONNECTBROWSER,
 					A.CONNECTOS,
-					A.USERID
+					A.USERID,
+					A.STATUS
 				FROM 
 					(
 					SELECT  
 					    C.CONNECTTIME,
+					    C.DISCONNECTTIME,
 						C."SEQUENCE",
 						C.USERNM,
 						C.USERNM2,
@@ -200,13 +233,14 @@
 						C.CONNECTIP,
 						C.CONNECTBROWSER,
 						C.CONNECTOS,
-						C.USERID
+						C.USERID,
+						C.STATUS
 					FROM 
-						TBL_CONNECTION_INFO C INNER JOIN TBL_USERLOCALINFO U
+						TBL_CONNECTION_INFO C <!-- INNER JOIN TBL_USERLOCALINFO U
 					ON 
-						C.USERID = U.USERID
+						C.USERID = U.USERID -->
 					WHERE 
-						C.TENANT_ID=#v_tenantID# AND U.TENANT_ID=#v_tenantID# AND C.USERID = #userId#
+						C.TENANT_ID=#v_tenantID# <!-- AND U.TENANT_ID=#v_tenantID# --> AND C.USERID = #userId#
 						$companyOracleStr$
 						<include refid="EzSystemAdminDAO.searchQuery"/>
 				    ORDER BY 
@@ -227,9 +261,9 @@
 	
 	<select id="EzSystemAdminDAO.getLoginHistCountNotAdmin" parameterClass="map" resultClass="int">
 		SELECT 	COUNT(SEQUENCE) 
-		FROM   	TBL_CONNECTION_INFO C INNER JOIN TBL_USERLOCALINFO U
-		ON 		C.USERID = U.USERID
-		WHERE	C.TENANT_ID = #v_tenantID# AND U.TENANT_ID = #v_tenantID# AND C.USERID = #userId#
+		FROM   	TBL_CONNECTION_INFO C <!-- INNER JOIN TBL_USERLOCALINFO U
+		ON 		C.USERID = U.USERID -->
+		WHERE	C.TENANT_ID = #v_tenantID# <!-- AND U.TENANT_ID = #v_tenantID# --> AND C.USERID = #userId#
 		$companyOracleStr$
 		<include refid="EzSystemAdminDAO.searchQuery"/>
 	</select>
@@ -649,5 +683,274 @@
 		WHERE TENANT_ID = #tenantId# AND COMPANY_ID=#companyId#
 		]]>
 	</delete>
+
+	<sql id="EzSystemAdminDAO.searchQuery2">
+		<isNotEmpty property="search_keycode" prepend="and">
+			<isNotEmpty property="search_keyword" >
+				<isEqual property="lang" compareValue="primary" >
+					<isEqual property="search_keycode" compareValue="1">
+						USERNM LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="2">
+						DEPTNM LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+					</isEqual>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="primary">
+					<isEqual property="search_keycode" compareValue="1">
+						USERNM2 LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="2">
+						DEPTNM2 LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+					</isEqual>
+				</isNotEqual>
+				<isEqual property="search_keycode" compareValue="3">
+					ACCESSIP LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+				</isEqual>
+				<isEqual property="search_keycode" compareValue="4">
+					ACCESSBROWSER LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+				</isEqual>
+				<isEqual property="search_keycode" compareValue="5">
+					ACCESSOS LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+				</isEqual>
+			</isNotEmpty>
+		</isNotEmpty>
+		<isNotEmpty property="search_keycodeForRoll" prepend="and">
+			<isEqual property="search_keycodeForRoll" compareValue="c=1">
+				ADMINTYPE LIKE '%c=1%'
+			</isEqual>
+			<isEqual property="search_keycodeForRoll" compareValue="k=1">
+				ADMINTYPE LIKE '%k=1%'
+			</isEqual>
+		</isNotEmpty>
+		<isNotEmpty property="startDate" prepend="and">
+			<![CDATA[
+			TO_CHAR((ACCESSTIME + #offset# / (24 * 60)),'YYYY-MM-DD') >= #startDate#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="endDate" prepend="and">
+			<![CDATA[
+			TO_CHAR((ACCESSTIME + #offset# / (24 * 60)),'YYYY-MM-DD') <= #endDate#
+			]]>
+		</isNotEmpty>
+	</sql>
+
+	<select id="EzSystemAdminDAO.getAdminAccessHist" parameterClass="map" resultClass="MainVO">
+			SELECT
+				X.rnum,
+			    TO_CHAR((X.ACCESSTIME + #offset# / (24 * 60)),'YYYY-MM-DD HH24:MI:SS') AS ACCESSTIME,
+	            X."SEQUENCE",
+	            X.USERNM,
+	            X.USERNM2,
+	            X.DEPTNM,
+	            X.DEPTNM2,
+	            X.ACCESSIP,
+	            X.ACCESSBROWSER,
+	            X.ACCESSOS,
+				X.COMPANYID,
+				X.COMPANYNM,
+				X.COMPANYNM2,
+				X.USERID,
+				X.ADMINTYPE
+            FROM (
+				SELECT
+					ROWNUM AS rnum,
+					A.ACCESSTIME,
+					A."SEQUENCE",
+					A.USERNM,
+					A.USERNM2,
+					A.DEPTNM,
+					A.DEPTNM2,
+					A.ACCESSIP,
+					A.ACCESSBROWSER,
+					A.ACCESSOS,
+					A.COMPANYID,
+					A.COMPANYNM,
+					A.COMPANYNM2,
+					A.USERID,
+					A.ADMINTYPE
+				FROM (
+					SELECT
+					    C.ACCESSTIME,
+						C."SEQUENCE",
+						C.USERNM,
+						C.USERNM2,
+						C.DEPTNM,
+						C.DEPTNM2,
+						C.ACCESSIP,
+						C.ACCESSBROWSER,
+						C.ACCESSOS,
+						C.COMPANYID,
+						C.COMPANYNM,
+						C.COMPANYNM2,
+						C.USERID,
+						C.ADMINTYPE
+					FROM
+						TBL_ADMIN_ACCESS_INFO C
+					WHERE
+						C.TENANT_ID=#v_tenantID#
+						$companyOracleStr$
+						<include refid="EzSystemAdminDAO.searchQuery2"/>
+						<isEqual property="search_keycode" compareValue="6">
+							AND C.USERID LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+						</isEqual>
+				    ORDER BY
+						C."SEQUENCE" DESC
+					) A
+		<isNotEqual property="v_start" compareValue="-1">
+			<![CDATA[
+				WHERE ROWNUM <= (#pageCount# + #v_start#)
+			]]>
+		</isNotEqual>
+				) X
+		<isNotEqual property="v_start" compareValue="-1">
+			<![CDATA[
+				WHERE X.rnum >= (#v_start# + 1)
+			]]>
+		</isNotEqual>
+	</select>
+
+	<select id="EzSystemAdminDAO.getAdminAccessHistCount" parameterClass="map" resultClass="int">
+		SELECT 	COUNT(SEQUENCE)
+		FROM   	TBL_ADMIN_ACCESS_INFO C
+		WHERE	C.TENANT_ID = #v_tenantID#
+		$companyOracleStr$
+		<include refid="EzSystemAdminDAO.searchQuery2"/>
+		<isEqual property="search_keycode" compareValue="6">
+			AND C.USERID LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+		</isEqual>
+	</select>
+
+	<!-- 회사관리자가 전체관리자 이력을 조회 할 수 있도록 주석 처리, 조회 못 하도록 하기 위해서는 아래 주석을 풀면 됨 -->
+	<sql id="EzSystemAdminDAO.searchQueryForPermissionChList">
+		<isNotEmpty property="search_keycode" prepend="and">
+			<isNotEmpty property="search_keyword" >
+				<isEqual property="lang" compareValue="primary" >
+					<isEqual property="search_keycode" compareValue="1">
+						USERNM LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="2">
+						DEPTNM LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+					</isEqual>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="primary">
+					<isEqual property="search_keycode" compareValue="1">
+						USERNM2 LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="2">
+						DEPTNM2 LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+					</isEqual>
+				</isNotEqual>
+			</isNotEmpty>
+		</isNotEmpty>
+		<!-- <isEmpty property="isMasterAdmin" prepend="and">
+			ADMINTYPE NOT LIKE 'c='||'%' ESCAPE '\'
+		</isEmpty> -->
+		<isNotEmpty property="search_keycodeForRoll" prepend="and">
+			ADMINTYPE LIKE '%'||#search_keycodeForRoll#||'%' ESCAPE '\'
+		</isNotEmpty>
+		<isNotEmpty property="startDate" prepend="and">
+			<![CDATA[
+			TO_CHAR((AUTHORIZEDTIME + #offset# / (24 * 60)),'YYYY-MM-DD') >= #startDate#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="endDate" prepend="and">
+			<![CDATA[
+			TO_CHAR((AUTHORIZEDTIME + #offset# / (24 * 60)),'YYYY-MM-DD') <= #endDate#
+			]]>
+		</isNotEmpty>
+	</sql>
+
+	<select id="EzSystemAdminDAO.getPermissionChHist" parameterClass="map" resultClass="PermissionInfoVO">
+		SELECT
+			X.rnum,
+		    TO_CHAR((X.AUTHORIZEDTIME + #offset# / (24 * 60)),'YYYY-MM-DD HH24:MI:SS') AS AUTHORIZEDTIME,
+            X."SEQUENCE",
+            X.USERID,
+            X.USERNM,
+            X.USERNM2,
+            X.DEPTNM,
+            X.DEPTNM2,
+			X.COMPANYID,
+			X.COMPANYNM,
+			X.COMPANYNM2,
+			X.ADMINTYPE,
+			X.STATUS,
+			X.AUTHORIZERID,
+			X.AUTHORIZERNM,
+			X.AUTHORIZERNM2,
+			X.AUTHORIZERIP
+		FROM (
+			SELECT
+				ROWNUM AS rnum,
+			    A.AUTHORIZEDTIME,
+				A."SEQUENCE",
+				A.USERID,
+				A.USERNM,
+				A.USERNM2,
+				A.DEPTNM,
+				A.DEPTNM2,
+				A.COMPANYID,
+				A.COMPANYNM,
+				A.COMPANYNM2,
+				A.ADMINTYPE,
+				A.STATUS,
+				A.AUTHORIZERID,
+				A.AUTHORIZERNM,
+				A.AUTHORIZERNM2,
+				A.AUTHORIZERIP
+			FROM
+				(
+				SELECT
+				    C.AUTHORIZEDTIME,
+					C."SEQUENCE",
+					C.USERID,
+					C.USERNM,
+					C.USERNM2,
+					C.DEPTNM,
+					C.DEPTNM2,
+					C.COMPANYID,
+					C.COMPANYNM,
+					C.COMPANYNM2,
+					C.ADMINTYPE,
+					C.STATUS,
+					C.AUTHORIZERID,
+					C.AUTHORIZERNM,
+					C.AUTHORIZERNM2,
+					C.AUTHORIZERIP
+				FROM
+					TBL_PERMISSION_CHANGE_INFO C
+				WHERE
+					C.TENANT_ID=#v_tenantID#
+					$companyOracleStr$
+					<include refid="EzSystemAdminDAO.searchQueryForPermissionChList"/>
+					<isEqual property="search_keycode" compareValue="6">
+						AND C.USERID LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+					</isEqual>
+			    ORDER BY
+					C."SEQUENCE" DESC
+				) A
+		<isNotEqual property="v_start" compareValue="-1">
+			<![CDATA[
+				WHERE ROWNUM <= (#pageCount# + #v_start#)
+			]]>
+		</isNotEqual>
+			) X
+		<isNotEqual property="v_start" compareValue="-1">
+			<![CDATA[
+				WHERE X.rnum >= (#v_start# + 1)
+			]]>
+		</isNotEqual>
+	</select>
+
+	<select id="EzSystemAdminDAO.getPermissionChHistCount" parameterClass="map" resultClass="int">
+		SELECT 	COUNT(SEQUENCE)
+		FROM   	TBL_PERMISSION_CHANGE_INFO C
+		WHERE	C.TENANT_ID = #v_tenantID#
+		$companyOracleStr$
+		<include refid="EzSystemAdminDAO.searchQueryForPermissionChList"/>
+		<isEqual property="search_keycode" compareValue="6">
+			AND C.USERID LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+		</isEqual>
+	</select>
 	
 </sqlMap>
