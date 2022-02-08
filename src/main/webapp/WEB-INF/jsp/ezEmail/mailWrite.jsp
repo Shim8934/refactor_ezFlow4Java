@@ -66,6 +66,10 @@
         	<script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
         </c:if>
 	    <script type="text/javascript">
+	    $(document).ready(function() {
+	    	window.resizeTo(990, window.outerHeight);
+        });
+	    
 	    var g_szAuthor = "";
 	    var g_szExchange = "exchange";
 	    var g_cmd = '<c:out value="${_cmd}"/>';
@@ -2376,6 +2380,13 @@
 	    	return;
 	    }
 	    
+	    function mailTemplateLoadBtn() {
+	    	DivPopUpShow(483, 495, "/ezEmail/userMailTemplateMain.do");
+	    }
+		
+	    function mailTemplateSaveBtn() {
+	    	DivPopUpShow(483, 145, "/ezEmail/saveUserMailTemplateMain.do");
+	    }
 	    </script>
         <c:if test="${isCrossBrowser != true}">
         <script language="javascript" for="EzHTTPTrans" event="AttachAddFile(filename)">  
@@ -2409,6 +2420,10 @@
 	                            <spring:message code='ezEmail.t353' /></span></li>
 	                        <li><span onclick="mailWritePreview()">
 	                            <spring:message code='ezEmail.t487' /></span></li>
+	                        <li><span onclick="mailTemplateLoadBtn()">
+	                            <spring:message code='ezEmail.kasMailTemplate01' /></span></li>
+	                        <li><span onclick="mailTemplateSaveBtn()">
+	                            <spring:message code='ezEmail.kasMailTemplate02' /></span></li>
 	                    </ul>
 	                    <ul style="float:right;margin-right:50px">
 	                    	<li class="sel securemail" style="background:none; border:none; padding:0px; padding-top:4px; display:none;">

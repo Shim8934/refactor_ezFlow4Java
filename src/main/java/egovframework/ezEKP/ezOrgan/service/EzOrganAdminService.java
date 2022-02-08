@@ -10,13 +10,14 @@ import egovframework.ezEKP.ezOrgan.vo.OrganGroupVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezSystem.vo.PermissionInfoVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzOrganAdminService {
 	
 	public List<OrganDeptVO> getCompanyList(String lang, int tenantID) throws Exception;
 	
-	public List<OrganUserVO> getAddJobList(String companyID, String strLang, int tenantID, int totalCount, int pageSize, int startRow, int endRow) throws Exception;
+	public List<OrganUserVO> getAddJobList(String companyID, String strLang, String searchType, String searchValue, int tenantID, int totalCount, int pageSize, int startRow, int endRow) throws Exception;
 	
 	public List<OrganUserVO> getUserAddJobList(String cn, String strLang, int tenantID) throws Exception;
 	
@@ -97,6 +98,8 @@ public interface EzOrganAdminService {
 	public void updateProperty(String cn, String column, String number, String pClass, int tenantID, String mCondition) throws Exception;
 	
 	public String setTitle(String type, String cn, String displayName, String displayName2, String useFlag, int sort, String companyID, int tenantID) throws Exception;
+
+	public OrganJobVO getTitleByJobID(String jobID, String lang, int tenantID) throws Exception;
 	
 	public String getTitleList(String type, String companyID, int tenantID) throws Exception;
 	
@@ -118,7 +121,7 @@ public interface EzOrganAdminService {
 
 	public void updateDBData_user_new(List<OrganUserVO> vo) throws Exception;
 
-	public int getAddJobCount(String companyID, int tenantId, String strLang) throws Exception;
+	public int getAddJobCount(String companyID, String searchType, String searchValue, int tenantId, String strLang) throws Exception;
 
 	public List<OrganUserVO> getAllUserCnList(int tenantID) throws Exception;
 
@@ -165,4 +168,7 @@ public interface EzOrganAdminService {
 	List<String> getNotUseMobileUserList(int tenantId) throws Exception;
 	
 	public List<String> getAutoDeleteOfRetireUserList(int tenantId, int days) throws Exception;
+
+	void insertPermissionChHist(List<PermissionInfoVO> vo) throws Exception;
+
 }

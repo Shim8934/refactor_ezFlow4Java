@@ -1151,6 +1151,37 @@ function item_View_New_Community(pBoardID, pItemID, pCommunityID) {
     }
 }
 
+/* 2021-11-16 홍승비 - 커뮤니티 게시알림, 수정알림, 댓글알림 메일 기능 추가 + 포토게시물 링크 추가 */
+function item_ViewPhoto_New_Community(pBoardID, pItemID, pCommunityID) {
+	var pheigth = window.screen.availHeight;
+	var pwidth = window.screen.availWidth;
+	pheigth = parseInt(pheigth) / 2;
+	pwidth = parseInt(pwidth) / 2;
+	pheigth = pheigth - 284;
+	pwidth = pwidth - 359;
+	
+	var xmlhttp = createXMLHttpRequest();
+	xmlhttp.open("GET", "/ezCommunity/getItemViewNew.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID), false);
+	xmlhttp.send();
+	
+	var xmlDoc = xmlhttp.responseXML;
+	
+	/* 2018-07-19 홍승비 - 삭제된 게시물 링크에 접근 시 alert 작동 */
+	if (xmlDoc == null) {
+		alert(strLang166);
+		return;
+	}
+	/* 2018-10-04 홍승비 - 커뮤니티 답변게시물 관련 companyID 다를 시 alert 작동 */
+	if (getNodeText(xmlDoc.getElementsByTagName("DATA1")[0]) == "FAIL") {
+		alert(strLangHSB01 + xmlDoc.getElementsByTagName("DATA2")[0].childNodes[0].nodeValue + strLangHSB02);
+	} else {
+		if (CrossYN())
+			window.open("/ezCommunity/boardItemViewPhoto.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID) + "&code=" + encodeURIComponent(pCommunityID), "", "height=721,width=750, status = no, toolbar=no, scrollbars=1, menubar=no, location=no, resizable=1, top=0, left=0", "");
+		else
+			window.open("/ezCommunity/boardItemViewPhoto.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID) + "&code=" + encodeURIComponent(pCommunityID), "", "height=721,width=750, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");
+	}
+}
+
 // 결재 보기
 function ViewDoc(pDocID, pURL, pWhat, pOpinionFlag, pdocState, pListSusin, podoc) {
     if (typeof (pWhat) == "undefined" || podoc == "") {
@@ -1283,3 +1314,27 @@ function mail_link(){
     }
     
 }
+
+function addIcalSchedule(pURL, shareId) {
+	if (confirm(strLangKSA03)) {
+		$.ajax({
+		  type : "post",
+		  url : "/ezSchedule/icsImportFromEmail.do",
+		  data : {
+			  "pURL" : encodeURIComponent(pURL),
+			  "shareId" : encodeURIComponent(shareId)
+		  },
+		  success : function(result){ 
+			  if (result != "OK") {
+				  alert(strLangKSA05 + " : " + result);
+			  } else {
+				  alert(strLangKSA04);
+			  }
+		  },
+		  error: function(error){
+			  alert(strLangKSA05);
+		  }
+	   });
+	}
+}
+

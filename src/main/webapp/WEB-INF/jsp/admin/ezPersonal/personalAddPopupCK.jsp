@@ -81,18 +81,19 @@
 					autoSize: true,
 					showOn: "both",
 					buttonImage: "/images/ImgIcon/calendar-month.png",
-					buttonImageOnly: true
+					buttonImageOnly: true,
+					minDate : 0
 				});
 				
 				
-
 				$("#Edatepicker").datepicker({
 					changeMonth: true,
 					changeYear: true,
 					autoSize: true,
 					showOn: "both",
 					buttonImage: "/images/ImgIcon/calendar-month.png",
-					buttonImageOnly: true
+					buttonImageOnly: true,
+					minDate : 0
 				});
 
 				var SDate;
@@ -437,7 +438,8 @@
 			}
 
 			function Editor_Complete() {
-				message.SetEditorContent("${personalPopupVO.content}");
+				<%--message.SetEditorContent("${personalPopupVO.content}");--%>
+				message.SetEditorContent(sigBody.innerHTML);
 			}
 			
 	        var eventSetting = function() {
@@ -526,7 +528,8 @@
 		</style>
 	</head>
 	<body class = "popup">
-		<xmp id="sigBody" style="display:none;"><c:out value = '${personalPopupVO.content}' /></xmp>
+<%--		<xmp id="sigBody" style="display:none;"><c:out value = '${personalPopupVO.content}' /></xmp>--%>
+		<xmp id="sigBody" style="display:none;">${personalPopupVO.content}</xmp>
 		<h1><spring:message code = 'ezPersonal.t258' /></h1>
 		<div id="close">
 			<ul>

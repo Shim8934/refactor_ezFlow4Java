@@ -276,7 +276,7 @@ function ezCabMunuCtl(MenuType, selRow) {
             if (document.getElementById("tdGongRam")) {
 //                if ((GetAttribute(selRow, "DATA15") == "011" || GetAttribute(selRow, "DATA15") == "001") && arr_userinfo[1] == GetAttribute(selRow, "DATA3") && GetAttribute(selRow, "DATA8") === "00")
 				// 2020-01-08 정주환 공람발송 기안자는 항상 on
-               	if (arr_userinfo[1] == GetAttribute(selRow, "DATA3") && GetAttribute(selRow, "DATA8") === "00")
+                if ((((GetAttribute(selRow, "DATA15") == "001" || GetAttribute(selRow, "DATA15") == "019") && arr_userinfo[1] == GetAttribute(selRow, "DATA3")) || (GetAttribute(selRow, "DATA15") == "011" && arr_userinfo[1] == GetAttribute(selRow, "DATA19"))) && GetAttribute(selRow, "DATA8") === "00")
                     document.getElementById("tdGongRam").style.display = "";
                 else
                     document.getElementById("tdGongRam").style.display = "none";
@@ -285,8 +285,16 @@ function ezCabMunuCtl(MenuType, selRow) {
             if (document.querySelector("#tdichange_Rec") && document.querySelector("#tdichangeS_Rec")) {
                 var seperateAttachNo = GetAttribute(selRow, "DATA8");
                 var rejectFlag = GetAttribute(selRow, "DATA13");
+                var docType = GetAttribute(selRow, "DATA17");
+                var docState = GetAttribute(selRow, "DATA15");
                 if (isDrafter(WriterID, WriterDeptID) && seperateAttachNo === "00" && rejectFlag === "0") {
-                    SendOfferCheckBtn(GetAttribute(selRow, "DATA1"), arr_userinfo[1]);
+                    if (docType === "003" && docState === "001") {
+                        SetMenuBtn("tdichange_Rec", "none");
+                        SetMenuBtn("tdichangeS_Rec", "none");
+                        SetMenuBtn("tdReSend", "");
+                    } else {
+                        SendOfferCheckBtn(GetAttribute(selRow, "DATA1"), arr_userinfo[1]);
+                    }
                 } else {
                     SetMenuBtn("tdichange_Rec", "none");
                     SetMenuBtn("tdichangeS_Rec", "none");
@@ -1056,7 +1064,7 @@ function btnViewRecInfo_onclick() {
 
         viewrecinfo_cross_dialogArguments[0] = para;
 
-        var OpenWin = window.open(url, "ViewRecInfo_Cross", GetOpenWindowfeature(640, 560));
+        var OpenWin = window.open(url, "ViewRecInfo_Cross", GetOpenWindowfeature(640, 562));
         try { OpenWin.focus(); } catch (e) { }
     }
     else {
@@ -1318,8 +1326,8 @@ function chk_Passwd(pUserID, CompleteFunction) {
 
     ezchkpasswd_cross_dialogArguments[2] = true;
     
-    var url = "/ezApprovalG/ezchkPasswd.do";
-    var OpenWin = window.open(url, "ezchkPasswd_Cross", GetOpenWindowfeature(350, 225));
+    var url = "/ezApprovalG/ezchkPasswd.do?mode=SEC";
+    var OpenWin = window.open(url, "ezchkPasswd_Cross", GetOpenWindowfeature(460, 225)); // 기록물대장 리스트에서 보안결재문서 접근
     try { OpenWin.focus(); } catch (e) { }
 }
 //END
@@ -1516,48 +1524,109 @@ function btnSearchRec_onclick_Complete(rtnVal) {
     }
 }
 
+// 열람권한 멀티지정 START 
+// 2020/11/13 박기범
+var SetRecUserRolePara = new Array();
 function btnSetRecUserRole_onclick() {
-    var DocList = new ListView();          
+    var DocList = new ListView();  
     DocList.LoadFromID("DocList");
     var selRow = DocList.GetSelectedRows();
-    if (selRow.length > 0) {
-        var tr = selRow[0];
-        if (DocList_Flag == "RECORD") {
-            if (tr.getAttribute("DATA8") != "00") 
-            {
-                OpenAlertUI(strLang590);
-                return;
-            }
-        }
+    var selDocIDs 	= [];
+    var pRecIDs		= [];
+    var pSepAttNos	= [];
 
-        if (DocID == "") {
-            OpenAlertUI(strLang590);
-            return;
-        }
-        else {
-            SetRecUserRole(tr.getAttribute("DATA6"), tr.getAttribute("DATA8"), DeptID);
-        }
-    }
-    else {
+    if (selRow.length > 0) {
+    	var strSepAttDocs = "";
+    	var strSelDocs = "";
+        var arrSelDocs = [];
+    	
+    	for (var i = 0; i < selRow.length; i++) {
+    		// 분리첨부등록, DocID여부 체크
+    		const sepAttTF = (DocList_Flag == "RECORD" && selRow[i].getAttribute("DATA8") != "00");
+    		const docIdTF = (selRow[i].getAttribute("DATA1") == "");
+    		
+    		if (sepAttTF || docIdTF) {
+    			strSepAttDocs += selRow[i].childNodes.item(4).getAttribute("title") + ", ";
+    		} else {
+    			selDocIDs	.push(selRow[i].getAttribute("DATA1"));
+    			pRecIDs		.push(selRow[i].getAttribute("DATA6"));
+    			pSepAttNos	.push(selRow[i].getAttribute("DATA8"));
+    			// 멀티지정일 경우 일괄 설정할건지 출력하는 허가창 출력 로직
+    			var rtnXml = GetRecViewerInfo(selRow[i].getAttribute("DATA6"), selRow[i].getAttribute("DATA8"));
+    			
+    			if (SelectSingleNode(SelectSingleNode(rtnXml.documentElement, "LISTVIEWDATA"), "ROWS") != null) {
+                    var tempDocNo = selRow[i].querySelector('[headername="DISPREGISTERNO"]');
+                    if(!!tempDocNo) {
+                        arrSelDocs.push(tempDocNo.innerText);
+                    }
+    			}
+    		}
+    		
+    	}
+    	
+    	if (strSepAttDocs != "") {
+    		strSepAttDocs = strSepAttDocs.substring(0,strSepAttDocs.length - 2);
+    		OpenAlertUI(strSepAttDocs + " : " + strLang590);
+    		return;
+    	}
+    	
+    	SetRecUserRolePara[0] = pRecIDs;	
+    	SetRecUserRolePara[1] = pSepAttNos;	
+    	SetRecUserRolePara[2] = DeptID;
+        var length = arrSelDocs.length;
+    	if (selRow.length > 1 && length > 0){
+            for (var j = 0; j < length; j++) {
+                strSelDocs += arrSelDocs[j] + ", ";
+                if(j === 1 && length > 2) strSelDocs += "<br>";
+                if(j === 3) break;
+            }
+            if(length > 4) strSelDocs += " ...";
+    		strSelDocs += "<br>" + strLangPgb01;
+    		OpenInformationUI(strSelDocs, btnSetRecUserRole_onclick_Complete);
+    	} else {
+    		SetRecUserRole(SetRecUserRolePara);
+    	}
+    } else {
         OpenAlertUI(strLang584);
         return;
     }
+    
 }
 
 var setrecuserrole_cross_dialogArguments = new Array();
-function SetRecUserRole(pRecID, pSepAttNo, pDeptCode) {
-    var para = new Array();
-    para[0] = pRecID;		
-    para[1] = pSepAttNo;	
-    para[2] = pDeptCode;	
-
+function SetRecUserRole(SetRecUserRolePara) {
     var url = "/ezApprovalG/setRecUserRole.do";
 
-    setrecuserrole_cross_dialogArguments[0] = para;
+    setrecuserrole_cross_dialogArguments[0] = SetRecUserRolePara;
 
     var OpenWin = window.open(url, "SetRecUserRole_Cross", GetOpenWindowfeature(909, 450));
     try { OpenWin.focus(); } catch (e) { }
 }
+
+// 일괄 설정 허가창 출력용 - 열람권한 설정된 유저 호출용 함수
+function GetRecViewerInfo(pRecID, pSepAttNo) {
+    var xmlhttp = createXMLHttpRequest();
+    var xmlpara = createXmlDom();
+
+    var objNode;
+    createNodeInsert(xmlpara, objNode, "PARAMETERS");
+    createNodeAndInsertText(xmlpara, objNode, "RECID", pRecID);
+    createNodeAndInsertText(xmlpara, objNode, "SEPATTNO", pSepAttNo);
+    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID);
+    createNodeAndInsertText(xmlpara, objNode, "LANGTYPE", UserLang);
+
+    xmlhttp.open("POST", "/ezApprovalG/getRecViewerInfo.do", false);
+    xmlhttp.send(xmlpara);
+    return  xmlhttp.responseXML;
+}
+
+function btnSetRecUserRole_onclick_Complete(Ans) {
+    DivPopUpHidden();
+    if (Ans) {
+    	SetRecUserRole(SetRecUserRolePara);
+    }
+}
+// 열람권한 멀티지정 (박기범) END
 
 function SaveToRecReadHist() {
     var xmlpara = createXmlDom();

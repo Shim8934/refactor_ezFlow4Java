@@ -357,6 +357,8 @@
 	        }
 	    	
 	    	function showRes(val01) {
+	    		event.stopPropagation();
+	    		
 	    		$.ajax({
 					type : "GET",
 					dataType : "json",

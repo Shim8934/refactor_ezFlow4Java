@@ -754,9 +754,14 @@
 			    					
 			    		        	attitude_annual_conn(pOrgDocID);
 			    		        }
+		                        
+		                        SendMailToDrafter();
 		                    } else {
+								/* 2021-10-14 홍승비 - 수신문서 접수(=수신부서 내부기안 시작) 시에도 다음 결재자에게 메일 발송 */
+								sendAlertMail("APR", "1", "RECEV_END");
 		                        pAlertContent = "<spring:message code='ezApprovalG.t1698'/>";
 		                    }
+		                    
 		                    OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
 		                    chkOK = true;
 		                }
@@ -813,7 +818,7 @@
 		                        return;
 		                    }
 		                }
-		
+		                
 		                pAlertContent = "<spring:message code='ezApprovalG.t1506'/>";
 		                OpenAlertUI(pAlertContent);
 		                chkOK = true;
@@ -1179,7 +1184,7 @@
 		        field.innerHTML = " ";
 		        if (NodeList.length > 0) {
 		            for (i = NodeList.length - 1; i >= 0; i--) {
-		        		var opinionsTable = '<p style="margin-top: 10px;margin-left: 3px;margin-bottom: 3px;">▶ ' + getNodeText(NodeList[i].childNodes[3]) + ' - ' + getNodeText(NodeList[i].childNodes[2]) + ' - ' + getNodeText(NodeList[i].childNodes[1]) + '</p><p style="margin-top: 0px;margin-left: 10px;margin-bottom: 0px;">' + getNodeText(NodeList[i].childNodes[6]) + '</p>';
+		        		var opinionsTable = '<p style="margin-top: 10px;margin-left: 3px;margin-bottom: 3px;">▶ ' + getNodeText(NodeList[i].childNodes[3]) + ' - ' + getNodeText(NodeList[i].childNodes[2]) + ' - ' + getNodeText(NodeList[i].childNodes[1]) + '</p><p style="margin-top: 0px;margin-left: 10px;margin-bottom: 0px;">' + MakeXMLString(getNodeText(NodeList[i].childNodes[6])) + '</p>';
 		        		$(field).append(opinionsTable);
 		            }
 		        	SaveFile();

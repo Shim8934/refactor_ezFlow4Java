@@ -161,7 +161,7 @@
  					AND
  						A.tenant_id = #tenantID#
  					ORDER BY
- 						A.treevieworder ASC
+ 						A.treevieworder*1 ASC
  				]]>
             </isEqual>
             
@@ -209,7 +209,7 @@
 					AND
  						A.tenant_id = #tenantID#
  					ORDER BY
- 						A.treevieworder ASC
+ 						A.treevieworder*1 ASC
  				]]>
             </isNotEqual>
 		</isEqual>
@@ -236,7 +236,7 @@
  	            AND
  	            	A.tenant_id = #tenantID#
  	            ORDER BY
- 	            	A.treevieworder ASC
+ 	            	A.treevieworder*1 ASC
  	        ]]>
    		</isNotEqual>
 	</select>
@@ -6400,7 +6400,7 @@
 				#v_BOARDNAME#,
 				#v_BOARDNAME2#,
 				(SELECT
-					CASE WHEN MAX(TCB.TREEVIEWORDER) IS NULL THEN 1 ELSE MAX(TCB.TREEVIEWORDER) + 1 END
+					CASE WHEN MAX(TCB.TREEVIEWORDER*1) IS NULL THEN 1 ELSE MAX(TCB.TREEVIEWORDER*1) + 1 END
 				FROM
 					TBL_COMM_BOARDINFO TCB
 				WHERE
@@ -6587,7 +6587,10 @@
 				deleteafter = #v_pDeleteAfter#,
 				boardcolor = #v_pBoardColor#,
 				versionuse = #v_pVersionUse#,
-				checkuse = #v_pCheckUse#
+				checkuse = #v_pCheckUse#,
+				MAILFG_POST = #v_pMailFG_Post#,
+				MAILFG_MOD = #v_pMailFG_Mod#,
+				MAILFG_COMMENT = #v_pMailFG_Comment#
 			WHERE
 				boardid = #v_pBoardID#
 			AND
@@ -7155,7 +7158,7 @@
 	<select id="EzCommunityDAO.brdGetBoardProperty"				parameterClass="MAP"		resultClass="CommunityBoardPropertyVO">
 		<![CDATA[
 			SELECT 
-				c_clubno,
+				B.c_clubno,
 				boardid,
 				boardname,
 				boardname2,
@@ -7177,13 +7180,23 @@
 				checkuse,
 				showposition,
 				sn,
-				tenant_id
+				B.tenant_id,
+				MAILFG_POST,
+				MAILFG_MOD,
+				MAILFG_COMMENT,
+				C_CLUBNAME
 			FROM
-	        	TBL_COMM_BOARDINFO
+	        	TBL_COMM_BOARDINFO B
+	        INNER JOIN
+	        	TBL_C_CLUB C
+	        ON
+	        	B.TENANT_ID = C.TENANT_ID
+	        AND
+	        	B.C_CLUBNO = C.C_CLUBNO
 			WHERE
-	       		boardid = #boardID#
+	       		B.boardid = #boardID#
 	       	AND
-	       		tenant_id = #tenantID#
+	       		B.tenant_id = #tenantID#
 		]]>
 	</select>
 	
@@ -7549,28 +7562,23 @@
 	<select id="EzCommunityDAO.sendReplyNoticeMail" parameterClass="Map" resultClass="OrganUserVO">
 		<![CDATA[
 			SELECT
-				writerID AS cn,
-				IFNULL((SELECT
-							mail
-						FROM
-							TBL_USERMASTER A
-						JOIN
-							TBL_COMM_ITEM B
-						ON
-							A.cn = B.writerID
-						WHERE
-							A.tenant_ID = #tenantID#
-						AND
-							B.itemID = #itemID#), '') AS mail,
-				writerName AS displayName
+				WRITERID AS CN,
+		        IFNULL(MAIL, '') AS MAIL,
+		        WRITERNAME AS DISPLAYNAME
 			FROM
-				TBL_COMM_ITEM
+				TBL_COMM_ITEM C
+			INNER JOIN
+				TBL_USERMASTER U
+			ON
+				C.WRITERID = U.CN
+			AND
+				C.TENANT_ID = U.TENANT_ID
 			WHERE
-				tenant_ID = #tenantID#
+				C.TENANT_ID = #tenantID#
 			AND
-				boardID = #boardID#
+				BOARDID = #boardID#
 			AND
-				itemID = #itemID#
+				ITEMID = #itemID#
 		]]>
 	</select>
 
@@ -7674,5 +7682,58 @@
  				C_CLUBNO = #v_CODE#
  		]]>
  	</select>
+ 	
+ 	<select id="EzCommunityDAO.getIsNewItemCnt" parameterClass="Map" resultClass="Integer">
+ 		<![CDATA[
+ 			SELECT
+ 				COUNT(ITEMID)
+ 			FROM
+ 				TBL_COMM_ITEM I
+ 			WHERE
+ 				TENANT_ID = #v_TENANTID#
+ 			AND
+ 				BOARDID = #v_BOARDID#
+ 			AND
+ 				NOT EXISTS (
+ 					SELECT
+ 						USERID
+ 					FROM
+ 						TBL_COMM_ITEM_READ R
+ 					WHERE 
+						I.TENANT_ID = R.TENANT_ID
+					AND
+						I.BOARDID = R.BOARDID
+					AND 
+						I.ITEMID = R.ITEMID
+ 					AND
+						TENANT_ID = #v_TENANTID#
+		 			AND
+		 				BOARDID = #v_BOARDID#
+		 			AND
+		 				R.USERID = #v_USERID#
+ 				)
+ 			AND
+ 				STARTDATE <= #nowDate#
+ 			AND
+ 				ENDDATE > #nowDate#
+ 		]]>
+ 	</select>
+ 	
+ 	<select id="EzCommunityDAO.checkUserInCommunity" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(C_ID)
+			FROM
+				TBL_C_CLUBUSER
+			WHERE
+				C_CLUBNO = #v_C_CLUBNO#
+			AND
+				C_ID = #v_C_ID#
+			AND
+				TENANT_ID = #v_TENANT_ID#
+			AND
+				PERMIT != 0
+		]]>
+	</select>
  	
 </sqlMap>

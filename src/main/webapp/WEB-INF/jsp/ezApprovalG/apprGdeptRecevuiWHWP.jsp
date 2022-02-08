@@ -276,6 +276,7 @@
 			        }
 			        form2.style.display = "none";
 			        message.EditMode(0);
+					message.SetViewProperties(2, 100);
 			        
 			        message.ScrollPosInfo(0, 0);
                     SetBody();
@@ -683,7 +684,10 @@
 		            }
 		        	
 		        	if(hesongok) {
-		            	SendMailToDrafter_Hesong();
+		        		var writerID = GetDocInfoData("APR", "writerid");
+						var writerName = GetDocInfoData("APR", "writername");
+						var docTitle = GetDocInfoData("APR", "doctitle");
+		            	SendMailToDrafter_Hesong(writerID, writerName, docTitle);
 		            	hesongok = setHeSongDocInfo();
 		        	}
 		        }

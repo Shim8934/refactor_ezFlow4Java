@@ -1232,6 +1232,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("Id", userInfo.getId());
 		model.addAttribute("memoFlag", memoFlag);
 		model.addAttribute("previewImageListHtml", bodyInfoList.get(5)); //이미지 미리보기 
+		model.addAttribute("isIcalMail", bodyInfoList.get(6)); // "" or "Y"
 		
 		model.addAttribute("previewMailImage", previewMailImage);
 		model.addAttribute("pReadFlag", pReadFlag);		
@@ -2875,6 +2876,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("previewImageListHtml", bodyInfoList.get(5)); //이미지 미리보기 
 		model.addAttribute("previewMailImage", previewMailImage);
 		model.addAttribute("unread", unread);
+		model.addAttribute("isIcalMail", bodyInfoList.get(6)); // "" or "Y"
 		
 		logger.debug("previewContent ended.");
 		
@@ -3056,6 +3058,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					extraMap.put("forPrint", true);
 					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, locale, extraMap);
 					pBody = bodyInfoList.get(0);
+					
+					// 아웃룩에서 메일 발송시 @page 태그로 인해 프린트화면 새로운 페이지로 넘어가버리는 문제 - 본문에서 class를 적용하지 않도록 수정 
+					// 회신이 한번이라도 된다면 class="WordSection1" 새로 만든 메일이면 class=WordSection1 이므로 둘다 수정 되도록 함.
+					pBody = pBody.replace("class=WordSection1", "class=WordSection1_escape");
+					pBody = pBody.replace("class=\"WordSection1\"", "class=\"WordSection1_escape\"");
+					
 					pAttachListHtml = bodyInfoList.get(1);
 					
 					if (bodyInfoList.get(4).equals("OK")) {

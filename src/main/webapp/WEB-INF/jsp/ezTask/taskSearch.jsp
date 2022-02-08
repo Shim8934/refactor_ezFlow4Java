@@ -104,14 +104,14 @@
 				// 체크 후 체크박스 눌러서 체크 해제할 때
 		        if (selectelem != null) {
 		        	selectelem.style.backgroundColor = "#ffffff";
-		        	$("input[taskid='" + $(selectelem).attr("taskid") + "']").prop("checked", false);
+		        	$("input[id='" + "inputID" + $(selectelem).attr("id") + "']").prop("checked", false);
 		            selectelem = null;
 		            return;
 		        }
 
 		        selectelem = elem;
 		        elem.style.backgroundColor = "#f1f8ff";
-		        $("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked", true);
+		        $("input[taskID='" + "inputID" + $(elem).attr("id") + "']").prop("checked", true);
 		    }
 		    
 		    function selectAll() {
@@ -297,7 +297,7 @@
 				    document.getElementById("tr_ing").style.display = "none";
 
 				    tr.style.display = "";
-			        tr.id = "taskID_" + SelectSingleNodeValue(node, "TASKID");
+			        tr.id = SelectSingleNodeValue(node, "TASKID") + "_" + i;
 
 			        tr.setAttribute("taskid", SelectSingleNodeValue(node, "TASKID"));
 			        tr.setAttribute("creatorid", SelectSingleNodeValue(node, "CREATORID"));
@@ -307,7 +307,7 @@
 
 			        tr.setAttribute("startdate", startdate);
 
-			        tr.cells[0].innerHTML += "<input name='myCheckbox' type='checkbox' taskID='" + SelectSingleNodeValue(node, "TASKID") + "' creatorID='" + SelectSingleNodeValue(node, "CREATORID") + "' style='width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle'>"
+			        tr.cells[0].innerHTML += "<input name='myCheckbox' type='checkbox' taskID='" + "inputID" + SelectSingleNodeValue(node, "TASKID") + "_" + i + "' creatorID='" + SelectSingleNodeValue(node, "CREATORID") + "' style='width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle'>"
 
 			        if (SelectSingleNodeValue(node, "IMPORTANCE") == "3")
 			            tr.cells[1].innerHTML += "<img src='/images/ImgIcon/icon-highimportance.gif'>";

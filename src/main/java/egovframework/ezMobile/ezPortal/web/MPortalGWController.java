@@ -280,7 +280,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 				LOGGER.debug("## 전자결재/게시판 소요시간(초.0f) : " + (System.currentTimeMillis() - startTime)/1000.0f + "초");
 				startTime = System.currentTimeMillis();
 				
-				if (mailAccess.equals("true") && useExternalMailServer.equalsIgnoreCase("NO")) {
+				if ("true".equalsIgnoreCase(mailAccess) && "NO".equalsIgnoreCase(useExternalMailServer)) {
 					//메일 조인
 					List<Map<String, String>> mailList = ezEmailService.getMailListT(userInfo, jspw, sessionDate, Integer.parseInt(listCnt));
 					boolean hasHighImportance = false;

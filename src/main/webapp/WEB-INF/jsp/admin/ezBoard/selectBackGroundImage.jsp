@@ -21,13 +21,18 @@
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery.form.js')}"></script>
 		<script type="text/javascript" language="javascript">
+			var pSaveFileData = new FormData(); // 저장버튼 클릭 시 전달할 파일 폼데이터
+			var pSaveFileName = "";
+			
 			$(document).ready(function(){				
-				if("<c:out value='${fileName}'/>" != ""){		
+				if("<c:out value='${fileName}'/>" != "") { // 등록된 이미지 수정 시 기본 설정 (type : UPT)
 					var path = "<c:out value='${filePath}'/>" + "/S_" + "<c:out value='${fileName}'/>";
 					document.getElementById("imagewidth").value = "720";
 		            document.getElementById("imageheight").value = "<c:out value='${height}'/>";
 					document.getElementById("UploadSliderImage").style.display = "";
 					document.getElementById("UploadSliderImage").src = path;
+					
+					pSaveFileData = new FormData(document.getElementById("form"));
 				}
 			});
 			
@@ -42,7 +47,7 @@
 			function SliderImage() {		     
 				document.getElementById("file1").click();
 			}
-
+			
 			function btn_AttachAdd_onclick() {
 				var file1val = document.getElementById("file1").value;
 		        var exIndex = file1val.lastIndexOf(".");
@@ -63,13 +68,21 @@
 		        	 alert("<spring:message code='main.t4000'/>");
 		        	 return false;
 		        }
+				/* 2021-12-08 홍승비 - 게시판 배경이미지 업로드 시 서버단에서도 이미지 확장자 체크 진행 (실제 파일 업로드 이전에 ajax로 체크) */
+				if (checkImgExtension(extension) == "UPLOAD_EXT_ERROR") {
+					document.getElementById("file1").value = "";
+					document.getElementById("saveFileName").value = "";
+					alert("<spring:message code ='ezAttitude.t260' />"); // 허용하지 않는 확장자입니다.
+					return false;
+				}
+				
 		        var guid = "{" + GetGUID() + "}";
-		        document.form.guid.value = guid;	       
+		        document.form.guid.value = guid;
 		        
 		        $('#form').ajaxSubmit({
 		        	type : 'POST',
 					dataType : 'text',
-		        	url : "/admin/ezBoard/uploadBackGroundImage.do",					
+		        	url : "/admin/ezBoard/uploadBackGroundImage.do",
 					success : function(result) {
 						var splitData = result.split(",");						
 						var filePath = splitData[0];
@@ -85,6 +98,10 @@
 			            document.getElementById("imageheight").value = height;
 			            document.getElementById("saveFileName").value = fileName;	
 			            document.getElementById("filetxt").value = filetxt;
+			            
+			            /* 2021-10-13 홍승비 - 배경이미지 업로드 성공 시, 실제로 저장 버튼을 눌렀을 때 서버로 전송할 파일 데이터를 저장 (현재의 form 데이터를 기록) */
+			            pSaveFileData = new FormData(document.getElementById("form"));
+			            pSaveFileName = fileName;
 					},
 					error : function(){
 						alert("upload error");		
@@ -104,23 +121,36 @@
 		    }
 			
 			function btnSave_click(){
+				// 신규 이미지 추가 > 파일 등록 취소 시 onchange가 동작하여 saveFileName값이 공백이 되므로, 업로드 성공 시 pSaveFileName에 저장한 값을 사용
+				if (pSaveFileName == "" && document.getElementById("type").value != "UPT") {
+					alert("<spring:message code='main.t4000'/>");
+		            return;
+		        }
 				if (document.getElementById("imagewidth").value < 1 || isNaN(document.getElementById("imagewidth").value) 
 						|| document.getElementById("imageheight").value < 1 || isNaN(document.getElementById("imageheight").value)) {
-		            return;
-		        }
-				if ((document.getElementById("saveFileName").value == "" || document.getElementById("saveFileName").value == null) && (document.getElementById("type").value != "UPT")) {
+					alert("<spring:message code='main.t4001'/>");
 		            return;
 		        }
 				
-				if($("#backgroundID").val() == ""){
+				 // 서버로 전달할 파일데이터의 가로, 세로값 최종 설정
+				pSaveFileData.append("pWidth", document.getElementById("imagewidth").value);
+				pSaveFileData.append("pHeight", document.getElementById("imageheight").value);
+				
+				// backgroundID 최종 설정
+				if ($("#backgroundID").val() == "") {
 					var guid = "{" + GetGUID() + "}";
 					$("#backgroundID").val(guid);
+					pSaveFileData.append("pBackgroundID", guid);
+				} else {
+					pSaveFileData.append("pBackgroundID", $("#backgroundID").val());
 				}
 				
-				$('#form').ajaxSubmit({
+				$.ajax({
 					type : "POST",
 					async : true,
-					dataType : "text",
+					data : pSaveFileData,
+					contentType : false, // 일반 텍스트로 구분할지 여부
+				    processData : false, // 데이터 객체 문자열 치환 여부
 					url : "/admin/ezBoard/saveBackGroundImage.do",					
 					success : function() {
 						 alert("<spring:message code='ezBoard.t79'/>");
@@ -135,8 +165,9 @@
 						 
 				         window.close();
 					}
-				}); 
+				});
 			}
+			
 	    </script>
 	</head>
 	<body class="popup" style="overflow:hidden">
@@ -172,7 +203,7 @@
 			<tr>
 				<th><spring:message code="ezBoard.t5001"/></th>
 				<td colspan="3">					
-					<input type="file" name="file1" id="file1" style="width:85%;margin-left:3px; display:none;" onchange="btn_AttachAdd_onclick()"/>
+					<input type="file" name="file1" id="file1" style="width:85%;margin-left:3px; display:none;" onchange="btn_AttachAdd_onclick()" accept="image/*"/>
 					<input type="text" name="filetxt" id="filetxt" style="width:78%;cursor:default;"
 					 readonly onclick="SliderImage()"/>
 					<a class="imgbtn imgbck" style="height:22px"><span onclick="SliderImage();"><spring:message code="ezBoard.t5010"/></span></a>

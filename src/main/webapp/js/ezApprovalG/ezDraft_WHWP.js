@@ -44,7 +44,7 @@ function GetDraftAprLineInfo(ret) {
 	if(xmlReDraft == "C") {
 		ApplyDocCellInfo();
 	} else if(xmlReDraft == "R")	{
-		ClearDocCellInfo();
+		ClearDocCellInfo(ret);
 	}
     
 	xmldom = loadXMLString(xmlKuljea);
@@ -52,10 +52,10 @@ function GetDraftAprLineInfo(ret) {
 	objNodes = SelectNodes(xmldom, "LISTVIEWDATA/ROWS/ROW");
 	count = objNodes.length;
 	
-	for(i=1;i<20;i++)
+	for(i=1;i<60;i++)
 	{
 	   	name = "habyuisign" + i;
-		if (message.FieldExist(name))
+		if (message.FieldExist(name) && ret[32] != "Y")
 		{
 	  		name = "habyui" + i;
 	  		if (message.FieldExist(name))
@@ -70,6 +70,10 @@ function GetDraftAprLineInfo(ret) {
 	  			message.PutFieldText(name, "");
 	  		
 	  		name = "habyuidate" + i;
+	  		if (message.FieldExist(name))
+	  			message.PutFieldText(name, "");
+	  		
+	  		name = "habyuija" + i;
 	  		if (message.FieldExist(name))
 	  			message.PutFieldText(name, "");
 	  	}
@@ -153,7 +157,7 @@ function GetDraftAprLineInfo(ret) {
 	
 	for(i=1;i < 20;i++) {
 	  	fieldname = "jikwe" + i
-		if (message.FieldExist(fieldname)) {
+		if (message.FieldExist(fieldname) && ret[32] != "Y") {
 			message.PutFieldText(fieldname, "");
 			fieldname = "sign" + i
 			if (message.FieldExist(fieldname))
@@ -315,7 +319,7 @@ function setRecevInfo(ret) {
 }
 
 
-function ClearDocCellInfo() {
+function ClearDocCellInfo(ret) {
 	try {
 		var i;
 		var j;
@@ -326,37 +330,37 @@ function ClearDocCellInfo() {
 			
 		for(i = 1; i <= SignCount ; i++) {
 			fieldname = susunSN + "sign" + i;
-			if (message.FieldExist(fieldname))
+			if (message.FieldExist(fieldname) && (typeof ret == "undefined" || ret[32] != "Y"))
 				message.PutFieldText(fieldname, "");
 					  		
 			fieldname = susunSN + "seumyung" + i;
-			if (message.FieldExist(fieldname))
+			if (message.FieldExist(fieldname) && (typeof ret == "undefined" || ret[32] != "Y"))
 				message.PutFieldText(fieldname, "");
 					  		
 			fieldname = susunSN + "seumyungdate" + i;
-			if (message.FieldExist(fieldname))
+			if (message.FieldExist(fieldname) && (typeof ret == "undefined" || ret[32] != "Y"))
 				message.PutFieldText(fieldname, "");
 				    
 			fieldname = susunSN + "jikwe" + i;
-			if (message.FieldExist(fieldname))
+			if (message.FieldExist(fieldname) && (typeof ret == "undefined" || ret[32] != "Y"))
 				message.PutFieldText(fieldname, "");
 		}
 
 		for(j = 1 ; j <= hapyuiCount ; j++) {
 			fieldname = susunSN + "habyui" + j;
-			if (message.FieldExist(fieldname))
+			if (message.FieldExist(fieldname) && (typeof ret == "undefined" || ret[32] != "Y"))
 				message.PutFieldText(fieldname, "");
 			    
 			fieldname = susunSN + "habyuipositon" + j;
-			if (message.FieldExist(fieldname))
+			if (message.FieldExist(fieldname) && (typeof ret == "undefined" || ret[32] != "Y"))
 				message.PutFieldText(fieldname, "");
 			
 	  		fieldname =  susunSN + "habyuidate" + j;
-			if (message.FieldExist(fieldname))
+			if (message.FieldExist(fieldname) && (typeof ret == "undefined" || ret[32] != "Y"))
 				message.PutFieldText(fieldname, "");
 	      
 			fieldname = susunSN + "habyuisign" + j;
-			if (message.FieldExist(fieldname))
+			if (message.FieldExist(fieldname) && (typeof ret == "undefined" || ret[32] != "Y"))
 				message.PutFieldText(fieldname, "");
 		}
 	    
@@ -468,8 +472,10 @@ function SendDraftMappingSign(ret) {
 	if (message.FieldExist(pseumyungcell))
 		message.PutFieldText(pseumyungcell, message.GetFieldText(pseumyungcell) + PositionText);
 
-	if (message.FieldExist(pseumyungdatecell))
+	if (message.FieldExist(pseumyungdatecell)) {
 		message.PutFieldText(pseumyungdatecell, s);
+        rtnSignInfo.push(pseumyungdatecell);
+    }
 		
 	if(CurAprType == strAprType16) {			
 		if (message.FieldExist(psigncell)) {
@@ -484,6 +490,7 @@ function SendDraftMappingSign(ret) {
 				SignType[signCnt] = "IMAGE";
 				SignName[signCnt] = psigncell;
 				SignContent[signCnt] = ret + "::" + strLang7 + OpinionText;
+                rtnSignInfo.push(psigncell);
 							  	
 			  	//SetDocumentElement(HwpCtrl, psigncell, ret);
 			  	signCnt = signCnt + 1
@@ -499,6 +506,7 @@ function SendDraftMappingSign(ret) {
 				SignType[signCnt] = "TEXT";
 				SignName[signCnt] = psigncell;
 				SignContent[signCnt] = arr_userinfo[2] + strLang7 + OpinionText;
+                rtnSignInfo.push(psigncell);
 		  		
 		  		signCnt = signCnt + 1
 		  		SingFlag = false; 
@@ -520,6 +528,7 @@ function SendDraftMappingSign(ret) {
 			SignType[signCnt] = "TEXT";
 			SignName[signCnt] = psigncell;
 			SignContent[signCnt] = strLang6;
+            rtnSignInfo.push(psigncell);
 			
 			signCnt = signCnt + 1
 			SingFlag = false; 
@@ -547,6 +556,7 @@ function SendDraftMappingSign(ret) {
 				SignType[signCnt] = "IMAGE";
 				SignName[signCnt] = psigncell;
 				SignContent[signCnt] = ret + "::" + OpinionText;
+                rtnSignInfo.push(psigncell);
 				
 			  	//SetDocumentElement(HwpCtrl, psigncell, ret);
 			  	signCnt = signCnt + 1
@@ -568,14 +578,13 @@ function SendDraftMappingSign(ret) {
 		        SignType[signCnt] = "TEXT";
 		        SignName[signCnt] = psigncell;
 		        SignContent[signCnt] = arr_userinfo[2] + OpinionText;
+                rtnSignInfo.push(psigncell);
 			        
 			  	signCnt = signCnt + 1
 			  	SingFlag = false; 
 			}
 		}
 	}	
-    //return signInfo;	
-	rtnSignInfo = signInfo;
 	if(ret == "NAME") {
 		GetHTML(saveDraftInfo);
 	}
@@ -1152,19 +1161,23 @@ function openOpinionUI_New(pOpinionType) {
 
 function openOpinionUI_New_Complete(ret) {
 	DivPopUpHidden();
-	if (ret != "cancel" && ret != undefined) {
-	    var objXML = loadXMLString(ret);
-	    
-	    var NodeList = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW");
-	    if (NodeList.length != 0) {
+	if(ret == "Clear"){
+		pHasOpinionYN = "N";
+		ret = "cancel";
+	} else if (ret == "cancel"){
+
+	} else {
+		var objXML = loadXMLString(ret);
+
+		var NodeList = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW");
+		if (NodeList.length != 0) {
 			pHasOpinionYN = "Y";
-	    } else {
+		} else {
 			pHasOpinionYN = "N";
 			ret = "cancel";
-	    }
-	    makeOpinionList(objXML);
-    }
-	
+		}
+		makeOpinionList(objXML);
+	}
     return ret;
 }
 
@@ -1365,6 +1378,8 @@ function SaveDraftDocInfo_ilban(pState)
 	createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", arr_userinfo[12]);
 	createNodeAndInsertText(xmlpara, objNode, "ITEMNAME2", tempItemName2);
 	
+	createNodeAndInsertText(xmlpara, objNode, "PASSAPRLINE", passAprLine);
+
 	/*
 	 * 2018-06-14 천성준
 	 * 비전자문서 데이터 세팅 메소드
@@ -1472,11 +1487,11 @@ function setDocNumFormat(pPrefix)
 
 			//2021-01-28 문서번호의 년도가 제대로 출력되지 않는 부분 해결
 			case "YY":
-				numHeader = numHeader + d.getFullYear() + Tail
+				numHeader = numHeader + getAccountingYear() + Tail
 				break;
 
 			case "yy":
-				var yyear = d.getYear()
+				var yyear = getAccountingYear()
 				numHeader = numHeader + yyear.toString().substr(2) + Tail
 				break;
 
@@ -1524,8 +1539,8 @@ function setDocNumFormat(pPrefix)
 	
     if (message.FieldExist("receiptnumber")) {
         if (message.GetFieldText("receiptnumber") != "") {
+            SetDocumentElement("receiptnumber", message.GetFieldText("receiptnumber"));
         }
-        //SetDocumentElement(message, "receiptnumber", message.GetFieldText("receiptnumber"));
 
         message.PutFieldText("receiptnumber", "");
     }

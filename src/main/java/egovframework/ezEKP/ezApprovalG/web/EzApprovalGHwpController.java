@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -437,7 +438,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 				
 				// KLIB 복호화
 				if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
-					byte[] orgBytes = Files.readAllBytes(orgFile.toPath());
+					byte[] orgBytes = commonUtil.readBytesFromFile(orgFile.toPath());
 					FileUtils.writeByteArrayToFile(newFile, klibUtil.decrypt(orgBytes));
 				} else {
 					FileUtils.copyFile(orgFile, newFile);
@@ -704,7 +705,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 
 		String accessInfo = ezCommonService.getTenantConfig("UserInfo_ApprovalG_VIEW", userInfo.getTenantId());
 		
-		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("ff=1")) {
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("ff=1")) {
 			pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId(), approvalFlag);
 		} else {
 			pass = "<RESULT>TRUE</RESULT>";
@@ -828,7 +829,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 
 				// 2018.06.21 - KLIB으로 암호화된 파일일 때는 복호화 하여 저장
 				if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
-					byte[] encryptedBytes = Files.readAllBytes(orgFile.toPath());
+					byte[] encryptedBytes = commonUtil.readBytesFromFile(orgFile.toPath());
 					orgFileInputStream = new ByteArrayInputStream(klibUtil.decrypt(encryptedBytes));
 				} else {
 					orgFileInputStream = new FileInputStream(orgFile);
@@ -1048,7 +1049,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 				saveFileName += "." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT;
 			}
 			
-			Files.write(Paths.get(commonUtil.detectPathTraversal(saveFileName)), documentBytes, StandardOpenOption.TRUNCATE_EXISTING);
+			commonUtil.writeBytesToFile(Paths.get(commonUtil.detectPathTraversal(saveFileName)), documentBytes);
 
 			result = "SUCCESS";
 		} catch (Exception e) {
@@ -1185,6 +1186,13 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		
 		String preSusinGroupStr = ezApprovalGService.getCode2Name("A53", "001", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 
+		String beforeUrl = "";
+		String beforeDocID = ObjectUtils.defaultIfNull(request.getParameter("beforeDocID"), "");
+		String isUsed = ObjectUtils.defaultIfNull(request.getParameter("isUsed"), "");
+		if (!beforeDocID.isEmpty()) {
+			beforeUrl = ezApprovalGService.getDocHref(beforeDocID, "END", "", "", userInfo.getCompanyID(), userInfo.getTenantId());
+		}
+		
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("hwpToolbar", hwpToolbar);
 		model.addAttribute("approvalPWD", approvalPWD);
@@ -1211,6 +1219,9 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
 		model.addAttribute("useOpenGov", config.getProperty("config.useOpenGov"));
 		model.addAttribute("useRedraftOpinionKeep", useRedraftOpinionKeep);
+		model.addAttribute("beforeUrl", beforeUrl);
+		model.addAttribute("beforeDocID", beforeDocID);
+		model.addAttribute("isUsed", isUsed);
 		//결재 세부정보
 		String formId = ezApprovalGService.getFormId(formURL);
 		String formAprOption = ezApprovalGService.getFormAprOptionInfo(formId, "FORM", userInfo.getCompanyID(), userInfo.getTenantId());
@@ -1458,7 +1469,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 
 		String accessInfo = ezCommonService.getTenantConfig("UserInfo_ApprovalG_VIEW", userInfo.getTenantId());
 		
-		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("ff=1")) {
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("ff=1")) {
 			pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId(), approvalFlag);
 		} else {
 			pass = "<RESULT>TRUE</RESULT>";
@@ -1607,7 +1618,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 				
 				// KLIB 복호화
 				if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
-					byte[] orgBytes = Files.readAllBytes(orgFile.toPath());
+					byte[] orgBytes = commonUtil.readBytesFromFile(orgFile.toPath());
 					FileUtils.writeByteArrayToFile(newFile, klibUtil.decrypt(orgBytes));
 				} else {
 					FileUtils.copyFile(orgFile, newFile);
@@ -1715,7 +1726,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 
 				// 2018.06.21 - KLIB으로 암호화된 파일일 때는 복호화 하여 저장
 				if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
-					byte[] encryptedBytes = Files.readAllBytes(orgFile.toPath());
+					byte[] encryptedBytes = commonUtil.readBytesFromFile(orgFile.toPath());
 					orgFileInputStream = new ByteArrayInputStream(klibUtil.decrypt(encryptedBytes));
 				} else {
 					orgFileInputStream = new FileInputStream(orgFile);
@@ -1767,6 +1778,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("useExternalMailServer", useExternalMailServer);
 		model.addAttribute("pSusinAdmin", pSusinAdmin);
 		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
+		model.addAttribute("useOpenGov", config.getProperty("config.useOpenGov"));
 		
 		// 대용량첨부 관련 정보
 		model.addAttribute("bigAttachDownloadPeriod", bigAttachDownloadPeriod); // 다운로드 기간

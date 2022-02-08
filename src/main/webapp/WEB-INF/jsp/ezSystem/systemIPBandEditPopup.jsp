@@ -20,6 +20,7 @@
 		var _ipAddress = "${ipAddress}";
 		var _access = "${access}";
 		var _explanation = "${explanation}";
+		var _pageType = "<c:out value = '${pageType}' />";
 	
 		window.onload = function () {
 			if (_type === 'modify') {
@@ -102,14 +103,17 @@
 				return;
 			}
 			
-			formData = "ipAddress=" + ipAddress + "&access=" + access + "&explanation=" + explanation;
+			formData = "ipAddress=" + ipAddress + "&access=" + access + "&explanation=" + encodeURIComponent(explanation);
 			
-			if (_type == "modify") {
+			if (_pageType == "adminIpAccess" && _type == "add") {
+				formUrl = "/ezSystem/insertAdminIPBand.do";
+			} else if (_pageType == "adminIpAccess" && _type == "modify") {
+				formUrl = "/ezSystem/updateAdminIPBand.do";
+				formData += "&ipNo=" + _ipNo;
+			} else if (_type == "modify") {
 				formUrl = "/ezSystem/updateIPBand.do";
-				formData = "ipNo=" + _ipNo + "&ipAddress=" + ipAddress + "&access=" + access + "&explanation=" + encodeURIComponent(explanation);
+				formData += "&ipNo=" + _ipNo;
 			}
-			
-			console.log(formData);
 			
 			$.ajax({
 				type : "POST",
@@ -161,7 +165,7 @@
 			    </tr>
 			    <tr>
 					<th><spring:message code='ezBoard.t155'/></th>
-					<td><input type="text" id="explanText" size="56"></td>
+					<td><input type="text" id="explanText" maxlength="50" style="width: 100%;"></td>
 					<!-- <td><textarea style="width:96%;resize:none;"id="explanText" rows="3"> </textarea></td> -->
 			    </tr>
 			</table>

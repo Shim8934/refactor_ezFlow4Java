@@ -331,6 +331,31 @@
 		    function Cancel_Click() {
 		        window.location.reload(true);
 		    }
+		    
+		    function selectOOOTemplate(selectObj) {
+		    	var objVal = selectObj.value;
+		    	var tbContentElement = selectObj.dataset.ele;
+		    	var editorIframe = document.getElementById(tbContentElement).contentWindow;
+		    	
+		    	var content = " ";
+		    	if (objVal === undefined) {
+		    		return;
+		    	} else if (objVal == "none") {
+		    		editorIframe.SetEditorContent(content);
+		    	} else {
+		    		$.ajax({
+		        		type : "POST",
+		        		url : "/ezEmail/getMailOutOfOfficeTemplate.do",
+		        		datatype : 'json',
+		        		data : {"displayName" : objVal},
+		        		error : function(data) {
+		        			alert("error.");
+		        		}, success : function(data) {
+		        			editorIframe.SetEditorContent(data.content);
+		        	    }
+		        	});
+		    	}
+		    }
 		</script>
 	</head>
 	<body style="margin-left:10px;margin-right:10px;">	
@@ -362,6 +387,17 @@
 	    </td>
 	  </tr>
 	</table>
+	<div style="width:768px; height:30px; line-height:35px;">
+		<div style="float:right; margin-right:5px;">
+	    	<span><b><spring:message code='ezEmail.jje16'/> : </b></span>
+	    	<select id="signatureSelect" onchange="selectOOOTemplate(this)" style="width:255px;" data-ele="tbContentElement1">
+	    		<option value="none"><spring:message code='ezEmail.jje15'/></option>
+        		<c:forEach var="item" items="${templateList}">
+        			<option value="<c:out value='${item.displayName}'/>"><c:out value='${item.displayName}'/></option>
+           		</c:forEach>
+	    	</select>
+	    </div>
+	</div>
 	<div class="nobox" style="width:768px; height:500px;margin-top:5px;">
 		<iframe id="tbContentElement1" class="viewbox" src="/ezEditor/selectEditor.do?type=MAILOUTOFOFFICE" name="tbContentElement1" style="padding:0; height:500px; width:100%; overflow:auto;"></iframe>
 	</div>
@@ -375,6 +411,17 @@
 	      <spring:message code='ezEmail.t220' /></td>
 	  </tr>
 	</table>
+	<div style="width:768px; height:30px; line-height:35px;">
+		<div style="float:right; margin-right:5px;">
+	    	<span><b><spring:message code='ezEmail.jje16'/> : </b></span>
+	    	<select id="signatureSelect" onchange="selectOOOTemplate(this)" style="width:255px;" data-ele="tbContentElement2">
+	    		<option value="none"><spring:message code='ezEmail.jje15'/></option>
+        		<c:forEach var="item" items="${templateList}">
+        			<option value="<c:out value='${item.displayName}'/>"><c:out value='${item.displayName}'/></option>
+           		</c:forEach>
+	    	</select>
+	    </div>
+	</div>
 	<div id="externalDiv" class="nobox" style="width:768px; height:500px;margin-top:5px;">
 		<iframe id="tbContentElement2" class="viewbox" src="/ezEditor/selectEditor.do?type=MAILOUTOFOFFICE" name="tbContentElement2" style="padding:0; height:500px; width:100%; overflow:auto;"></iframe>
 	</div> 

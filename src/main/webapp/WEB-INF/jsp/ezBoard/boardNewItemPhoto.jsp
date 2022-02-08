@@ -463,6 +463,16 @@
 		    }
 		    
 		    function returnvalue(strXML) {
+				/* 2021-12-08 홍승비 - 포토, 썸네일 게시물 이미지 업로드 시 서버단에서도 이미지 확장자 체크 진행 */
+				if (strXML.split(";")[0] == "UPLOAD_EXT_ERROR") {
+					if (parseInt(strXML.split(";")[1]) > 1) { // 업로드 파일이 2개 이상인 경우
+			        	alert("<spring:message code ='ezJournal.kms01' />"); // 업로드 제한 확장자 파일이 있습니다.
+			        } else {
+			        	alert("<spring:message code ='ezAttitude.t260' />"); // 허용하지 않는 확장자입니다.
+			        }
+					return;
+				}
+				
 		        ImgaeReturnXml = loadXMLString(strXML);
 		        var nodes = SelectNodes(ImgaeReturnXml, "ROOT/NODES/NODE");
 		        for (var i = 0; i < nodes.length ; i++) {

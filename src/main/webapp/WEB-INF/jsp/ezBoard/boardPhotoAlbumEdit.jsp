@@ -156,7 +156,7 @@
 	                <table class="content">
 	                    <tr>
 	                        <th style="width:80px"><spring:message code='ezBoard.t1014'/></th>
-	                        <td style="width:100%"><input type="text" id="title" value="" style="width:100%;"/></td>
+	                        <td style="width:100%"><input type="text" id="title" value="" style="width:100%;" maxlength="100" /></td>
 	                    </tr>
 	                    <tr>
 	                        <th style="width:80px"><spring:message code='ezBoard.t1008'/></th>

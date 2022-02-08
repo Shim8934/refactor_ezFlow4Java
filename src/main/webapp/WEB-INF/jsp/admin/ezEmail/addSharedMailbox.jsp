@@ -610,12 +610,16 @@
 			        			alert("<spring:message code='ezOrgan.t302' />");
 			        		} else if (result.resultCode === "DUPLICATE") {
 			        			alert("<spring:message code='ezEmail.sharedMailbox15' />");
-			        		} else if (result == "NO_LICENSE_KEY") {
+			        		} else if (result.resultCode == "NO_LICENSE_KEY") {
  								alert("<spring:message code='ezOrgan.x0010' />");
- 							} else if (result == "INVALID_LICENSE_KEY") {
+ 							} else if (result.resultCode == "INVALID_LICENSE_KEY") {
  								alert("<spring:message code='ezOrgan.x0011' />");
- 							} else if (result == "MAX_USER_REACHED") {
+ 							} else if (result.resultCode == "MAX_USER_REACHED") {
  								alert("<spring:message code='ezOrgan.x0012' />");
+			        		} else if (result.resultCode == "ALIAS_EMAIL_DUPLICATE") { 	// 2021-12-16 이사라 : 에러코드 추가
+			        			alert("<spring:message code='ezEmail.sharedMailbox15' />");
+			        		} else if (result.resultCode == "EMAIL_DUPLICATE") { 		// 2021-12-16 이사라 : 에러코드 추가
+			        			alert("<spring:message code='ezEmail.sharedMailbox15' />");
 			        		} else {
 			        			alert("<spring:message code='ezEmail.sharedMailbox07' />");
 			        		}

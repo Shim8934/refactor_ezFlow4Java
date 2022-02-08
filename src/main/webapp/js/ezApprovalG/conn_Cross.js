@@ -584,7 +584,7 @@ function setData(pobjXml) {
         rows = connRootXml.childNodes;
         if (rows.length > 0) {
             for (i = 0; i < rows.length; i++) {
-                row = rows[i].childNodes;
+                row = rows[i].children;
                 for (j = 0; j < row.length; j++) {
                     nfield = row[j];
                     fieldName = GetAttribute(nfield, "name");

@@ -654,7 +654,7 @@ function ListView() {
                             objTd.style.whiteSpace = "nowrap";                           
 
                         if (_titleIdx == j) {
-                            if (_UrgentFlag && oDatas[13].textContent == "Y") {   //DATA14값
+                            if (_UrgentFlag && oDatas[15].textContent == "Y") {   //DATA16값
                                 objTd.style.color = m_UrgentColor;
                             }
                             if (!new RegExp(/MSIE/).test(navigator.userAgent)) {
@@ -686,6 +686,9 @@ function ListView() {
                 }
                 
                 if (_thisID !== "ListViewMsgToView") {
+                	if(j == 2 && $(objTr).attr("data7") == "addJob"){
+                		oText = document.createTextNode(strAddJob + strValue);
+                	}
                 	objTd.appendChild(oText);
                 } else {
                 	if (j != 1) {
@@ -801,6 +804,9 @@ function ListView() {
             }
             
             if (_thisID !== "ListViewMsgToView") {
+            	if(j == 2 && $(objTr).attr("data7") == "addJob"){
+            		oText = document.createTextNode(strAddJob + strValue);
+            	}
             	objTd.appendChild(oText);
             } else {
             	if (j != 1) {

@@ -102,6 +102,24 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.17.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.17.1</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+			<version>2.17.1</version>
+		</dependency>		
+
+		<dependency>
 			<groupId>commons-dbcp</groupId>
 			<artifactId>commons-dbcp</artifactId>
 			<version>1.4</version>
@@ -492,6 +510,15 @@
 			<artifactId>servlet</artifactId>
 			<version>3.7.0</version>
 		</dependency>
+		
+		
+		<!-- https://mvnrepository.com/artifact/org.ehcache/jcache -->
+		<dependency>
+		    <groupId>org.ehcache</groupId>
+		    <artifactId>jcache</artifactId>
+		    <version>1.0.1</version>
+		</dependency>
+
 	</dependencies>
 
     <build>

@@ -144,7 +144,7 @@
 	                <table class="content">
 	                    <tr>
 	                        <th style="width:80px"><spring:message code='ezBoard.t291'/></th>
-	                        <td style="width:100%"><input type="text" id="title" value="" style="width:100%;"/></td>
+	                        <td style="width:100%"><input type="text" id="title" value="" style="width:100%;" maxlength="100" /></td>
 	                    </tr>
 	                    <tr>
 	                        <th style="width:80px"><spring:message code='ezQuestion.t180'/><spring:message code='ezCommunity.t18'/></th>

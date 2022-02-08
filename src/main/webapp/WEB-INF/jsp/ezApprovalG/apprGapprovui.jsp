@@ -141,6 +141,7 @@
 		    var pSignImage_Size = "<c:out value ='${signImageSize}'/>";
 		    var pADMIN = "N";
 		    var docNumZeroCnt = "<c:out value ='${docNumZeroCnt}'/>";
+		    var DeptSymbol; // 문서채번 시 사용되는 부서명 관련 변수
 		  	//회람
 			var type = "ING";
 			var pGongRamDocID = "";
@@ -415,6 +416,7 @@
 		            getDocInfo();
 		            setAttachInfo(pDocID, "APR", lstAttachLink);
 		            GetExchInfo();
+		            DeptSymbol = getDeptSymbol(arr_userinfo[4], replaceEntityCodeToStr(arr_userinfo[5]));
 		            
 			    	if (nonElecRec == "Y") {
 				        getNonElecInfoSusinInit();
@@ -425,9 +427,11 @@
 		            {
 		                message.Set_EditorContentURL(pDocHref);
 				        setInitOpinion();
-		                if (pDraftFlag != "SUSIN") {
-			                setDocNumFormat(""); // 결재할문서 오픈 시, docnumber 필드 다시 그리는 로직.. 수정 필요
-		                }
+						// 기안할때만 일련변호 전까지 세팅해주고 그 이후엔 할 필요가 없음.
+						// 오류때문에 한다고는 하지만 그렇게 할 필요가 있나 싶음. 그리고 웹한글도 그런 로직은 없음.
+						// if (pDraftFlag != "SUSIN") {
+						//     setDocNumFormat(""); // 결재할문서 오픈 시, docnumber 필드 다시 그리는 로직.. 수정 필요
+						// }
 		            }
 		        }
 		    }
@@ -475,7 +479,7 @@
 		                field.innerHTML = " ";
 		                if (NodeList.length > 0) {
 		                    for (i = NodeList.length - 1; i >= 0; i--) {
-		                		var opinionsTable = '<p style="margin-top: 10px;margin-left: 3px;margin-bottom: 3px;">▶ ' + getNodeText(NodeList[i].childNodes[0].childNodes[11]) + ' - ' + getNodeText(NodeList[i].childNodes[0].childNodes[9]) + ' - ' + getNodeText(NodeList[i].childNodes[0].childNodes[7]) + '</p><p style="margin-top: 0px;margin-left: 10px;margin-bottom: 0px;">' + getNodeText(NodeList[i].childNodes[0].childNodes[3]) + '</p>';
+		                		var opinionsTable = '<p style="margin-top: 10px;margin-left: 3px;margin-bottom: 3px;">▶ ' + getNodeText(NodeList[i].childNodes[0].childNodes[11]) + ' - ' + getNodeText(NodeList[i].childNodes[0].childNodes[9]) + ' - ' + getNodeText(NodeList[i].childNodes[0].childNodes[7]) + '</p><p style="margin-top: 0px;margin-left: 10px;margin-bottom: 0px;">' + MakeXMLString(getNodeText(NodeList[i].childNodes[0].childNodes[3])) + '</p>';
 		                		$(field).append(opinionsTable);
 		                    }
 		                }

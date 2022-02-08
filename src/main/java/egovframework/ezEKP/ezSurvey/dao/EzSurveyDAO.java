@@ -64,13 +64,21 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 	public List<SimpleUserVO> getSearchMemberList(Map<String, Object> map) {
 		return (List<SimpleUserVO>)list("EzSurveyDAO.getSearchMemberList", map);
 	}
-	
+
+	public List<SimpleUserVO> getSearchMemberListByAttr(Map<String, Object> map) {
+		return (List<SimpleUserVO>)list("EzSurveyDAO.getSearchMemberListByAttr", map);
+	}
+
 	public List<SurveyVO> getSurveyListForPermission(Map<String, Object> map) {
 		return (List<SurveyVO>)list("EzSurveyDAO.getSurveyListForPermission", map);
 	}
 	
 	public List<String> getUserDepartmentIdList(Map<String, Object> map) {
 		return (List<String>)list("EzSurveyDAO.getUserDepartmentIdList", map);
+	}
+	
+	public List<String> getUserAllDepartmentIdList(Map<String, Object> map) {
+		return (List<String>)list("EzSurveyDAO.getUserAllDepartmentIdList", map);
 	}
 	
 	public List<Long> getReceivedSurveyList(Map<String, Object> map) {
@@ -224,6 +232,16 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 		return (List<SurveyParticipantVO>) list("EzSurveyDAO.getSurveyParticipantListForMail", map);
 	}
 	
+	/* 2021-11-18 홍승비 - 대상자가 부서/회사인 경우, 하위부서 허용여부가 Y인 부서/회사ID를 리턴 */
+	public List<String> getSurveySubDeptListForMail(Map<String, Object> map) {
+		return (List<String>) list("EzSurveyDAO.getSurveySubDeptListForMail", map);
+	}
+	
+	/* 2021-11-18 홍승비 - 전달받은 부서/회사ID를 상위부서로 가지는 하위부서 소속원들을 리턴 */
+	public List<SurveyParticipantVO> getSurveyLowerDeptUsersForMail(Map<String, Object> map) {
+		return (List<SurveyParticipantVO>) list("EzSurveyDAO.getSurveyLowerDeptUsersForMail", map);
+	}
+	
 	public int getMailSentFlag(SurveyVO survey) {
 		return (int) select("EzSurveyDAO.getMailSentFlag", survey);
 	}
@@ -247,4 +265,10 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 	public void deleteRespondents(Map<String, Object> map) {
 		delete("EzSurveyDAO.deleteRespondents", map);
 	}
+
+	/* 2021-08-30 홍승비 - 전자설문 대상자가 사간겸직자인 경우, 해당 부서ID를 조건으로 레코드를 리턴 */
+	public SimpleUserVO getSurveyUserInfoAddJob(Map<String, Object> map) {
+		return (SimpleUserVO)select("EzSurveyDAO.getSurveyUserInfoAddJob", map);
+	}
+
 }

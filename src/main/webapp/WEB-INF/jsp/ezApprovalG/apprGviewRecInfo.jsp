@@ -20,7 +20,7 @@
     var OrderCell = "";
 </script>
 </head>
-<body class="popup" onload = "return window_onload()" style="overflow-y:hidden;">
+<body class="popup" onload = "return window_onload()" style="overflow-x:hidden; overflow-y:auto; margin-bottom:7px;">
 <div id="menu">
 	<ul>
 		<li style="margin:2px 0px 19px 0px;"><span class="icon16 popup_icon16_print" onClick="return btnPrint_onclick()"></span></li> 
@@ -48,9 +48,9 @@
 	</tr>
 	<tr> 
 		<th><spring:message code='ezApprovalG.t445'/></th>
-		<td id="tdDrafter" style="width:200px;white-space:nowrap">&nbsp;</td>
+		<td id="tdDrafter" style="width:200px;white-space:pre-wrap;">&nbsp;</td>
 		<th><spring:message code='ezApprovalG.t862'/></th>
-		<td id="tdApprover" style="width:200px;white-space:nowrap">&nbsp;</td>
+		<td id="tdApprover" style="width:200px;white-space:pre-wrap;">&nbsp;</td>
 	</tr>
 	<tr> 
 		<th><spring:message code='ezApprovalG.t831'/></th>

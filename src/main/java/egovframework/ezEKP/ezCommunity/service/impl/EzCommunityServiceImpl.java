@@ -904,19 +904,48 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 						File thumbnailFile = new File(pAttachPath);
 						file.transferTo(thumbnailFile);
 						
+						String extension = pFileName.substring(pFileName.lastIndexOf(".") + 1, pFileName.length());
 						BufferedImage inputImage = ImageIO.read(thumbnailFile);
 						BufferedImage outputImage = null;
+						BufferedImage outputImageS = null;
 						Graphics2D saveImage = null;
-						//썸네일 생성		
-						outputImage= new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
+						
+						// 기존 이미지가 파일 형태로 업로드되었으므로, 다시 이미지 형태로 저장
+						if (inputImage.getType() == 0 || extension.equals("png")) { // 일부 png 파일의 경우, type값이 0으로 넘어오거나 검은색으로 저장된다.
+							outputImage = new BufferedImage(inputImage.getWidth(), inputImage.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
+						} else {
+							outputImage = new BufferedImage(inputImage.getWidth(), inputImage.getHeight(), inputImage.getType());
+						}
 						saveImage = outputImage.createGraphics();
+						saveImage.drawImage(inputImage, 0, 0, inputImage.getWidth(), inputImage.getHeight(), null);
+						
+						String tempFilaPath = pDirPath + "tempUploadFile" + commonUtil.separator + pUploadSN + pFileName.substring(pFileName.lastIndexOf("."));
+						tempFilaPath = commonUtil.detectPathTraversal(tempFilaPath);
+						
+						File tempFile = new File(tempFilaPath);
+						ImageIO.write(outputImage, "png", tempFile);
+						
+						// 썸네일 생성
+						if (inputImage.getType() == 0 || extension.equals("png")) {
+							outputImageS = new BufferedImage(100, 100, BufferedImage.TYPE_4BYTE_ABGR);
+						} else {
+							outputImageS = new BufferedImage(100, 100, inputImage.getType());
+						}
+						saveImage = outputImageS.createGraphics();
 						saveImage.drawImage(inputImage, 0, 0, 100, 100, null);
 						
 						String tempThumbFilaPath = pDirPath + "tempUploadFile" + commonUtil.separator + "s_" + pUploadSN + pFileName.substring(pFileName.lastIndexOf("."));
 						tempThumbFilaPath = commonUtil.detectPathTraversal(tempThumbFilaPath);
 						
 						File tempTumbbail = new File(tempThumbFilaPath);
-						ImageIO.write(outputImage, "png", tempTumbbail);
+						ImageIO.write(outputImageS, "png", tempTumbbail);
+						
+						inputImage.flush();
+						inputImage = null;
+						outputImage.flush();
+						outputImage = null;
+						outputImageS.flush();
+						outputImageS = null;
 						
 						resultUpload = "true";
 					}
@@ -1237,7 +1266,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String mode = request.getParameter("mode");
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
-		String subject = request.getParameter("pollSubject").replaceAll("\r\n", " ");
+		String subject = request.getParameter("pollSubject");//.replaceAll("\r\n", " ");
 		/*String selRes = request.getParameter("selRes");
 		String sel = request.getParameter("sel");*/
 		String selType = request.getParameter("selType");
@@ -1630,8 +1659,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		/* 2020-05-26 홍승비 - 설문 등록자의 이름이 우측 하단으로 내려가는 경우, UI가 깨지지 않도록 이름 전체를 하단에 표출 */
 		//2018-07-03 김보미 - 제목th에 너비 추가
 		if (managerVO.getPollSubject().indexOf("\r\n") >= 0) {
-			strHTML.append("<th align=\"left\" class='pollTitle' title = \"" + commonUtil.cleanValue(managerVO.getPollSubject()) + "\">" + egovMessageSource.getMessage("ezCommunity.t686", userInfo.getLocale()) + "<br/>&nbsp;&nbsp;" + commonUtil.cleanValue(managerVO.getPollSubject().replaceAll("\r\n", "<br/>&nbsp;&nbsp;")) + "</th>");
-			strHTML.append("<th align=\"right\" class='pollWriter'><span>" + egovMessageSource.getMessage("ezCommunity.t687", userInfo.getLocale()) + "<br/>&nbsp;&nbsp;</span><div class='pollWriterName'>" + name + "</div></th>");
+			strHTML.append("<th align=\"left\" class='pollTitle' title = \"" + commonUtil.cleanValue(managerVO.getPollSubject()) + "\">" + egovMessageSource.getMessage("ezCommunity.t686", userInfo.getLocale()) + commonUtil.cleanValue(managerVO.getPollSubject()) + "</th>");
+			strHTML.append("<th align=\"right\" class='pollWriter'><span>" + egovMessageSource.getMessage("ezCommunity.t687", userInfo.getLocale()) + "</span><div class='pollWriterName'>" + name + "</div></th>");
 		} else {
 			strHTML.append("<th align=\"left\" class='pollTitle' title = \"" + commonUtil.cleanValue(managerVO.getPollSubject()) + "\">" + egovMessageSource.getMessage("ezCommunity.t686", userInfo.getLocale()) + commonUtil.cleanValue(managerVO.getPollSubject()) + "</th>");
 			strHTML.append("<th align=\"right\" class='pollWriter'><span>" + egovMessageSource.getMessage("ezCommunity.t687", userInfo.getLocale()) + "</span><div class='pollWriterName'>" + name + "</div></th>");
@@ -2656,7 +2685,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         
         return result.toString();
 	}
-
+	
 	@Override
 	public CommunityBoardPropertyVO getBoardInfo(LoginVO userInfo, String pBoardID) throws Exception {
 		CommunityBoardPropertyVO boardInfo = new CommunityBoardPropertyVO();
@@ -2733,6 +2762,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				boardInfo.setExpireDays(Integer.toString(strProp.getItemExpires()));
 			}
 			
+			boardInfo.setC_ClubNo(strProp.getC_ClubNo());
 	    	boardInfo.setAttachSizeLimit(strProp.getAttachSizeLimit());
 		    boardInfo.setBoardName(strProp.getBoardName());
 		    boardInfo.setBoardName2(strProp.getBoardName2());
@@ -2740,8 +2770,13 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			boardInfo.setGubun(strProp.getGubun());
 			boardInfo.setUrl(strProp.getUrl());
 			boardInfo.setReplyNotify(strProp.getReplyNotify());
+			/* 2021-11-15 홍승비 - 메일알림 옵션 추가 */
+			boardInfo.setMailFG_Post(strProp.getMailFG_Post());
+			boardInfo.setMailFG_Mod(strProp.getMailFG_Mod());
+			boardInfo.setMailFG_Comment(strProp.getMailFG_Comment());
 			/* 2019-01-10 홍승비 - 부모게시판ID 데이터 추가 */
 			boardInfo.setParentBoardID(strProp.getParentBoardID());
+			boardInfo.setC_ClubName(strProp.getC_ClubName());
 		}
 		
 		if (boardInfo.getGubun() != null && boardInfo.getGubun().equals("3")) {
@@ -3808,7 +3843,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	        	sb.append("<CONTENT><![CDATA[" + commonUtil.cleanValue(item.getContent()).replaceAll("\n", "<br>").replaceAll("\\\\", "&#92;") + "]]>" + "</CONTENT>");
 	        	sb.append("<CONTENTURL>" + commonUtil.cleanValue(item.getContentURL()) + "</CONTENTURL>");
 	        	sb.append("<READNUM>" + item.getReadNum() + "</READNUM>");
-	        	sb.append("<WRITEDAY>" + commonUtil.getDateStringInUTC(item.getWriteDay().substring(0, item.getWriteDay().lastIndexOf(".")), userInfo.getOffset(), false) + "</WRITEDAY>");
+	        	sb.append("<WRITEDAY>" + commonUtil.getDateStringInUTC(item.getWriteDay(), userInfo.getOffset(), false) + "</WRITEDAY>");
 	        	
 	        	if (EgovDateUtil.getDaysDiff(commonUtil.getTodayUTCTime("").substring(0, 10), item.getWriteDay().substring(0, 10)) >= 0 ) {
 	        		sb.append("<NEW>" + "NEW" + "</NEW>");
@@ -5020,6 +5055,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_pBoardColor", URLDecoder.decode(vo.getBoardColor(), "utf-8"));
 		map.put("v_pVersionUse", vo.getVersionUse());
 		map.put("v_pCheckUse", vo.getCheckUse());
+		map.put("v_pMailFG_Post", vo.getMailFG_Post());
+		map.put("v_pMailFG_Mod", vo.getMailFG_Mod());
+		map.put("v_pMailFG_Comment", vo.getMailFG_Comment());
 		map.put("tenantID", userInfo.getTenantId());
 		
 		try {
@@ -7659,19 +7697,28 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		CommunityBoardPropertyVO boardInfo = getBoardInfo(userInfo, boardID);
 		
 		if (boardInfo.getReplyNotify().equals("1")) {
-			CommunityBoardItemVO vo = getItemXML(boardID, itemID, userInfo);
+			CommunityBoardItemVO itemVO = getItemXML(boardID, itemID, userInfo);
+			String communityID = sendPostNoticeMailGet1(boardID);
 			StringBuilder bodyContent = new StringBuilder();
 			Locale locale = userInfo.getLocale();
+			String strURL = "";
 			
-			String communityID = sendPostNoticeMailGet1(boardID);
-			String subject = "[Community " + egovMessageSource.getMessage("ezCommunity.t127", locale) + boardInfo.getBoardName() + "] " + vo.getTitle();
+			// 포토게시물과 일반(그룹, 익명) 게시물 링크 분기처리
+			if (boardInfo.getGubun().equals("3")) {
+				strURL = "<a id='community_a' style='color:blue;text-decoration:underline;cursor:pointer;' onclick=\"" + "item_ViewPhoto_New_Community('" + boardID + "', '" + itemID + "', '" + communityID + "'); return false;" + "\" href=\"_blank\" target=\"_blank\">";
+			} else {
+				strURL = "<a id='community_a' style='color:blue;text-decoration:underline;cursor:pointer;' onclick=\"" + "item_View_New_Community('" + boardID + "', '" + itemID + "', '" + communityID + "'); return false;" + "\" href=\"_blank\" target=\"_blank\">";
+			}
+			
+			String subject = "[Community " + egovMessageSource.getMessage("ezCommunity.t127", locale) + boardInfo.getBoardName() + "] " + itemVO.getTitle();
 			bodyContent.append("<br>" + egovMessageSource.getMessage("ezCommunity.t126", locale) + "<br><br>");
-			bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t117", locale) + commonUtil.cleanValue(boardInfo.getBoardName()));
+			bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("main.t1006", userInfo.getLocale()) + " : " + commonUtil.cleanValue(boardInfo.getC_ClubName()));
+			bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t117", locale) + commonUtil.cleanValue(boardInfo.getBoardName()));
 			/* 2018-04-30 이소담 - 커뮤니티 > 답변 알림메일 송부 > 메일 > 게시일자, 게시자, 비정상적으로 표시되어서 수정 */
 //			bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t118", locale) + EgovDateUtil.getToday(""));
-			bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t118", locale) + vo.getWriteDate());
+			bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t118", locale) + itemVO.getWriteDate());
 			bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t119", locale) + userInfo.getDisplayName() + "(" + userInfo.getTitle() + ", "  + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
-			bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t120", locale) + "<a id='community_a' style='color:blue;text-decoration:underline;cursor:pointer;' onclick=\"" + "item_View_New_Community('" + boardID + "', '" + itemID + "', '" + communityID + "'); return false;" + "\" href=\"_blank\" target=\"_blank\">" + vo.getTitle() + "</a>");
+			bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t120", locale) + strURL + itemVO.getTitle() + "</a>");
     		
 			String content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), locale);
 			
@@ -7679,11 +7726,18 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
         	from.setAddress(userInfo.getEmail());
         	
+        	// 가장 첫번째 부모글을 작성한 사람에게 메일을 발송 (itemTreeID 잘라서 사용)
         	OrganUserVO uvo = sendReplyNoticeMail(boardID, itemTreeID.substring(0, 38), userInfo.getTenantId());
         	
+        	// 가입승인된 사용자에게만 메일을 발송하도록 작성자의 이메일로 체크 (커뮤니티 탈퇴했다면 게시물 접근권한 없으므로 메일 발송 안함)
         	InternetAddress to = new InternetAddress();
-        	to.setPersonal(uvo.getDisplayName(), "UTF-8");
-        	to.setAddress(uvo.getMail());
+        	boolean chkUser = checkUserInCommunity(boardInfo.getC_ClubNo(), uvo.getCn(), userInfo.getTenantId());
+			if (chkUser == true) {
+				to.setPersonal(uvo.getDisplayName(), "UTF-8");
+	        	to.setAddress(uvo.getMail());
+	        } else {
+	        	return;
+	        }
         	
         	//logger.debug("from = " + userInfo.getEmail());
         	//logger.debug("to = " + uvo.getMail());
@@ -7760,5 +7814,47 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		logger.debug("getClubConfirmType ended");
 		return ezCommunityDAO.getClubConfirmType(map);
+	}
+	
+	/* 2021-11-09 홍승비 - 주어진 커뮤니티 게시판 ID에 대해 자신이 읽지 않은 게시물이 있는지 반환 (Y/N) */
+	@Override
+	public String getIsNewItemExists(String boardID, String userID, int tenantID) throws Exception {
+		logger.debug("getIsNewItemExists started");
+		String isNewItemExists = "N";
+		int cnt = 0;
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_BOARDID", boardID);
+		map.put("v_USERID", userID);
+		map.put("v_TENANTID", tenantID);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		
+		cnt = ezCommunityDAO.getIsNewItemCnt(map);
+		
+		if (cnt > 0) { // 읽지 않은 게시물이 존재한다면 Y 반환
+			isNewItemExists = "Y";
+		}
+		
+		logger.debug("getIsNewItemExists ended");
+		return isNewItemExists;
+	}
+	
+	/* 2021-11-16 홍승비 - 특정 사용자가 해당 커뮤니티에 가입 승인된 상태(permit != 0)인지 체크 후 반환 */
+	public boolean checkUserInCommunity(String clubNo, String userID, int tenantID) throws Exception {
+		logger.debug("checkUserInCommunity started, clubNo/userID = " + clubNo + "/" + userID);
+		boolean result = false;
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_C_CLUBNO", clubNo);
+		map.put("v_C_ID", userID);
+		map.put("v_TENANT_ID", tenantID);
+		
+		int cnt = ezCommunityDAO.checkUserInCommunity(map);
+		if (cnt > 0) {
+			result = true;
+		}
+		
+		logger.debug("checkUserInCommunity ended, result = " + result);
+		return result;
 	}
 }

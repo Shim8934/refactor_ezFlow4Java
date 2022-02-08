@@ -43,7 +43,7 @@
     arr_userinfo[2]  = "<c:out value = '${userInfo.displayName}'/>";        
     arr_userinfo[3]  = "<c:out value = '${userInfo.title}'/>";
     arr_userinfo[4]  = "<c:out value = '${userInfo.deptID}'/>";
-    arr_userinfo[5]  = "<c:out value = '${userInfo.deptName}'/>";
+    arr_userinfo[5]  = "<c:out value = '${userInfo.deptName}' escapeXml='false'/>";
     arr_userinfo[6]  = "<c:out value = '${userInfo.jikChek}'/>";
     arr_userinfo[8]  = "<c:out value = '${userInfo.email}'/>";            
     arr_userinfo[9]  = CompanyID;
@@ -51,8 +51,8 @@
     arr_userinfo[12]  = "<c:out value = '${userInfo.displayName2}'/>";
     arr_userinfo[13]  = "<c:out value = '${userInfo.title1}'/>";
     arr_userinfo[14]  = "<c:out value = '${userInfo.title2}'/>";
-    arr_userinfo[15]  = "<c:out value = '${userInfo.deptName1}'/>";
-    arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2}'/>";		
+    arr_userinfo[15]  = "<c:out value = '${userInfo.deptName1}' escapeXml='false'/>";
+    arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2}' escapeXml='false'/>";		
     var UserLang = "<c:out value = '${userInfo.lang}'/>";
     var pUserID			= arr_userinfo[1];
     var pUserName		= arr_userinfo[2];

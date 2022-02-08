@@ -1311,6 +1311,11 @@
 			}
 			
 			function event_listContextMenuAndId(event){
+				// 가져오기 도중에 콘텍스트 메뉴 삭제 안되도록
+				if (psSetTimeFlag) {
+					return;
+				}
+
 		        if (currentMoverId != '') {
 		        	currentFixingId = document.getElementById(currentMoverId);
 		        } else {
@@ -1483,13 +1488,14 @@
 						dataType : "json", 
 		    			async : true,
 		    			success : function(data) {
+							if (!psSetTimeFlag) { return; }
 		    				var pg = data.progress;
 		    				
 		    				if (pg > -1 && pg <= 100) {
 		    					ShowPercent(pg);
 		    				}
 	    					if (pg < 100) { 
-	    						setTimeout(getMailboxProgress(), pgSetTime); 
+								setTimeout(getMailboxProgress, pgSetTime);
 	    					}
 		    			}, error : function(e) {
 		    				alert("error. " + e.status);
@@ -1739,6 +1745,12 @@
                     		<option VALUE="PREVIEW"><spring:message code="ezEmail.t843" /></option>
                     		<option VALUE="UNREAD"><spring:message code="ezEmail.t519" /></option>
                     		<option VALUE="RECEIV"><spring:message code="ezEmail.t66" /></option>
+						<c:if test="${isSentItems != true}">
+                    		<option VALUE="INTERNAL"><spring:message code="ezEmail.kes003" /></option>
+                    		<option VALUE="EXTERNAL"><spring:message code="ezEmail.kes004" /></option>
+						</c:if>
+                    		<option VALUE="SECUREMAIL"><spring:message code="ezEmail.lhm63" /></option>
+                    		<option VALUE="IMPORTANT"><spring:message code="ezEmail.kes047" /></option>
                     	</select>
 	                </td>
                   </tr>

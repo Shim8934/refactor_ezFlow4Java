@@ -294,7 +294,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String searchName = request.getParameter("searchName");
 		
 		//양식목록에 특수문자처리, 양식등록/수정 양식명1,2 둘다 넣어야 저장되는지 확인필요
-		String result = ezApprovalGService.getFormInfo(id.trim(), kind, searchType, searchName, userInfo.getId(), companyID, userInfo.getLang(), userInfo.getTenantId());
+		String result = ezApprovalGService.getFormInfo(id.trim(), kind, searchType, searchName, userInfo.getId(), userInfo.getDeptID(), companyID, userInfo.getLang(), userInfo.getTenantId());
 		
 		logger.debug("id : " + id + ", kind : " + kind + ", companyID : " + companyID);
 		
@@ -665,7 +665,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			Path reformMhtPath = reformDirectory.resolve(formID + "_FORMBuilder.mht");
 			
 			if (Files.exists(reformFunctionPath)) {
-				String reformFunctionStr = new String(Files.readAllBytes(reformFunctionPath));
+				String reformFunctionStr = new String(commonUtil.readBytesFromFile(reformFunctionPath));
 				
 				model.addAttribute("reformFunction", reformFunctionStr);
 			}
@@ -2537,6 +2537,16 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String currentDate = commonUtil.getTodayUTCTime("yyyyMMddHHmmss");
 		String fileExt = multiFile.getOriginalFilename().substring(multiFile.getOriginalFilename().lastIndexOf("."));
 		
+		/* 2021-12-08 홍승비 - 전자결재 관인대장, 부서직인대장 업로드 시 서버단에서도 이미지 확장자 체크 진행 */
+		String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
+		logger.debug("sealImageUpload file extension is : " + fileExt.substring(1));
+		if (commonUtil.checkImgExtension(fileExt.substring(1)) == false || (!useExtension.equals("*") && useExtension.toLowerCase().indexOf(fileExt.substring(1).toLowerCase()) < 0)) {
+			logger.debug("sealImageUpload failed, checkImgExtension return false");
+			
+			model.addAttribute("msg", "UPLOAD_EXT_ERROR");
+			return "json";
+		}
+		
 		File dir = new File(commonUtil.detectPathTraversal(realPath + dirPath));
 		
         if (!dir.exists()) {
@@ -2555,6 +2565,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("fileName", fileName);
 		model.addAttribute("path", dirPath + commonUtil.separator);
+		model.addAttribute("msg", "OK");
 		
 		logger.debug("sealImageUpload ended.");
 		
@@ -4463,14 +4474,14 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("resendOpenGov started.");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
-		String resendDate = request.getParameter("resendDate");
+		String resendStartDate = request.getParameter("resendStartDate");
+		String resendEndDate = request.getParameter("resendEndDate");
 		
-		String resendStartTime = resendDate + " 00:00:01";
-		String resendEndTime = resendDate + " 23:59:59";
+		String resendStartTime = resendStartDate + " 00:00:01";
+		String resendEndTime = resendEndDate + " 23:59:59";
 		
+		logger.debug("resend period : " + resendStartDate + " ~ " + resendEndDate);
 		ezApprovalGAdminService.resendOpenGov(resendStartTime, resendEndTime, userInfo.getTenantId(), userInfo.getCompanyID());
-		
-		logger.debug(resendEndTime);
 		
 		logger.debug("resendOpenGov ended.");
 	}

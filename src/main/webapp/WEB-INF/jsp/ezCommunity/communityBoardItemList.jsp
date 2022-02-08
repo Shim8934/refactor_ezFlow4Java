@@ -377,6 +377,11 @@
 					} catch(e) {}
 				}
     			refresh_onclick();
+    			
+    			/* 2021-11-10 홍승비 - 커뮤니티 팝업홈의 좌측 게시판 신규 게시물 아이콘 갱신 */
+				if (window.parent.location.href.indexOf("ezCommunity/commHome/popupCommHome.do") > -1 && typeof(window.parent.applyIsNewIconAll) == "function") {
+					window.parent.applyIsNewIconAll();
+				}
     		}
 
     		function ReplaceText( orgStr, findStr, replaceStr ) {
@@ -636,6 +641,11 @@
 					});
     				
     				refresh_onclick();
+    				
+        			/* 2021-11-10 홍승비 - 커뮤니티 팝업홈의 좌측 게시판 신규 게시물 아이콘 갱신 */
+    				if (window.parent.location.href.indexOf("ezCommunity/commHome/popupCommHome.do") > -1 && typeof(window.parent.applyIsNewIconAll) == "function") {
+    					window.parent.applyIsNewIconAll();
+    				}
     			}
     		}
 
@@ -702,7 +712,10 @@
 				<c:if test="${boardInfo.gubun != '2' && pBoardID != '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}'}">
 					<li><span onClick="CopyItem_onclick()"><spring:message code='ezCommunity.t911' /></span></li>
 				</c:if>
-				<li><span onClick="ReservationItem_onclick()"><spring:message code='ezCommunity.t913' /></span></li>
+				<%-- 2021-10-12 홍승비 - 예약게시 버튼은 익명게시판에서 표출하지 않도록 수정 (포토게시판처럼 예약게시 기능이 없는 게시판이라면 버튼도 표출하지 않도록 스펙 통일) --%>
+				<c:if test="${boardInfo.gubun != '2'}">
+					<li><span onClick="ReservationItem_onclick()"><spring:message code='ezCommunity.t913' /></span></li>
+				</c:if>
 				<c:if test="${boardInfo.read_FG == 'true' && pBoardID != '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}' }">
 					<li onClick="search_onclick()"><span class="icon16 icon16_search"></span></li>
 				</c:if>
@@ -774,28 +787,28 @@
 							</c:otherwise>
 						</c:choose>
 					</c:if>
-					
+
 					<c:choose>
 						<c:when test="${pSortBy == 'A.WriterName'}">
-							<th style="cursor:pointer"  width="80" onClick="SortPage('A.WriterName desc')"><spring:message code='ezCommunity.t445' /><img src="/images/view-sortup.gif" width="9" height="9"></th>
+							<th style="cursor:pointer"  width="120" onClick="SortPage('A.WriterName desc')"><spring:message code='ezCommunity.t445' /><img src="/images/view-sortup.gif" width="9" height="9"></th>
 						</c:when>
 						<c:when test="${pSortBy == 'A.WriterName desc'}">
-							<th style="cursor:pointer"  width="80" onClick="SortPage('A.WriterName')"><spring:message code='ezCommunity.t445' /><img src="/images/view-sortdown.gif" width="9" height="9"></th>
+							<th style="cursor:pointer"  width="120" onClick="SortPage('A.WriterName')"><spring:message code='ezCommunity.t445' /><img src="/images/view-sortdown.gif" width="9" height="9"></th>
 						</c:when>
 						<c:otherwise>
-							<th style="cursor:pointer"  width="80" onClick="SortPage('A.WriterName')"><spring:message code='ezCommunity.t445' /></th>
+							<th style="cursor:pointer"  width="120" onClick="SortPage('A.WriterName')"><spring:message code='ezCommunity.t445' /></th>
 						</c:otherwise>
 					</c:choose>
 					
 					<c:choose>
 						<c:when test="${pSortBy == 'A.WriteDate'}">
-							<th style="cursor:pointer"  width="80" onClick="SortPage('A.WriteDate desc')"><spring:message code='ezCommunity.t209' /><img src="/images/view-sortup.gif" width="9" height="9"></th>
+							<th style="cursor:pointer"  width="120" onClick="SortPage('A.WriteDate desc')"><spring:message code='ezCommunity.t209' /><img src="/images/view-sortup.gif" width="9" height="9"></th>
 						</c:when>
 						<c:when test="${pSortBy == 'A.WriteDate desc'}">
-							<th style="cursor:pointer"  width="80" onClick="SortPage('A.WriteDate')"><spring:message code='ezCommunity.t209' /><img src="/images/view-sortdown.gif" width="9" height="9"></th>
+							<th style="cursor:pointer"  width="120" onClick="SortPage('A.WriteDate')"><spring:message code='ezCommunity.t209' /><img src="/images/view-sortdown.gif" width="9" height="9"></th>
 						</c:when>
 						<c:otherwise>
-							<th style="cursor:pointer"  width="80" onClick="SortPage('A.WriteDate')"><spring:message code='ezCommunity.t209' /></th>
+							<th style="cursor:pointer"  width="120" onClick="SortPage('A.WriteDate')"><spring:message code='ezCommunity.t209' /></th>
 						</c:otherwise>
 					</c:choose>
 					

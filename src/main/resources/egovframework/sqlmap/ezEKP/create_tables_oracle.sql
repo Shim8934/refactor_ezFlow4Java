@@ -501,7 +501,7 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
   CREATE TABLE "JAMES_RECIPIENT_REWRITE" 
    (	"DOMAIN_NAME" NVARCHAR2(100), 
 	"USER_NAME" NVARCHAR2(100), 
-	"TARGET_ADDRESS" VARCHAR2(4000 BYTE)
+	"TARGET_ADDRESS" CLOB
    ) ;
 --------------------------------------------------------
 --  DDL for Table JAMES_SUBSCRIPTION
@@ -1168,6 +1168,16 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"REG_DATE" DATE DEFAULT NULL
    ) ;
 --------------------------------------------------------
+--  DDL for Table JMOCHA_USER_DIST_APPLY
+--------------------------------------------------------  
+
+   CREATE TABLE "JMOCHA_USER_DIST_APPLY" 
+   (	"DOMAIN_NAME" NVARCHAR2(100) NOT NULL ENABLE, 
+	"USER_NAME" NVARCHAR2(100) NOT NULL ENABLE, 
+	"APPLICANT_ID" NVARCHAR2(100) NOT NULL ENABLE, 
+	"APPLICANT_DATE" DATE DEFAULT NULL
+   ) ;
+--------------------------------------------------------
 --  DDL for Table JMOCHA_USER_LOCAL_INFO
 --------------------------------------------------------
 
@@ -1654,6 +1664,17 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"PROXY" VARCHAR2(200 BYTE), 
 	"MANUAL_FLAG" NVARCHAR2(2) DEFAULT NULL
    ) ;
+-------------------------------------------------------- 
+--  DDL for Table TBL_ADMIN_ACCESS_IP
+--------------------------------------------------------
+
+  CREATE TABLE "TBL_ADMIN_ACCESS_IP" 
+   (	"IPNO" NUMBER(*,0), 
+	"TENANT_ID" NUMBER(5,0), 
+	"IPADDRESS" NVARCHAR2(100), 
+	"ALLOW_ACCESS" NVARCHAR2(10) DEFAULT 'NO', 
+	"EXPLANATION" NVARCHAR2(200) DEFAULT NULL
+   );
 --------------------------------------------------------
 --  DDL for Table TBL_ADMINRECEIPTGROUP_MAIN
 --------------------------------------------------------
@@ -3366,11 +3387,67 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"CONNECTIP" VARCHAR2(50 CHAR), 
 	"CONNECTINFO" VARCHAR2(50 CHAR), 
 	"CONNECTTIME" DATE, 
+	"DISCONNECTTIME" DATE DEFAULT NULL,
 	"CONNECTBROWSER" CHAR(10 CHAR), 
 	"CONNECTOS" CHAR(20 CHAR), 
 	"CONNECTAGENT" NVARCHAR2(500), 
+	"STATUS" VARCHAR2(1) DEFAULT NULL,
+	"SESSIONCODE" VARCHAR2(80) DEFAULT NULL,
 	"TENANT_ID" NUMBER DEFAULT 0
    ) ;
+--------------------------------------------------------
+--  DDL for Table TBL_ADMIN_ACCESS_INFO
+--------------------------------------------------------
+
+  CREATE TABLE "TBL_ADMIN_ACCESS_INFO" 
+   (	"SEQUENCE" NUMBER(19,0), 
+	"USERID" NVARCHAR2(50), 
+	"USERNM" NVARCHAR2(100), 
+	"USERNM2" NVARCHAR2(100), 
+	"DEPTID" CHAR(50 CHAR), 
+	"DEPTNM" NVARCHAR2(100), 
+	"DEPTNM2" NVARCHAR2(100), 
+	"TITLE" NVARCHAR2(100), 
+	"TITLE2" NVARCHAR2(100), 
+	"COMPANYID" CHAR(50 CHAR), 
+	"COMPANYNM" NVARCHAR2(100), 
+	"COMPANYNM2" NVARCHAR2(100), 
+	"ACCESSIP" VARCHAR2(50 CHAR), 
+	"ACCESSINFO" VARCHAR2(50 CHAR), 
+	"ACCESSTIME" DATE, 
+	"ACCESSBROWSER" CHAR(10 CHAR), 
+	"ACCESSOS" CHAR(20 CHAR), 
+	"ACCESSAGENT" NVARCHAR2(500),
+	"ADMINTYPE" NVARCHAR2(200),
+	"TENANT_ID" NUMBER DEFAULT 0
+   ) ;
+--------------------------------------------------------
+--  DDL for Table TBL_PERMISSION_CHANGE_INFO
+--------------------------------------------------------
+
+  CREATE TABLE "TBL_PERMISSION_CHANGE_INFO"
+   (	"SEQUENCE" 		NUMBER(19,0),
+	"USERID" 			NVARCHAR2(50),
+	"USERNM" 			NVARCHAR2(100),
+	"USERNM2" 			NVARCHAR2(100),
+	"DEPTID" 			CHAR(50 CHAR),
+	"DEPTNM" 			NVARCHAR2(100),
+	"DEPTNM2" 			NVARCHAR2(100),
+	"TITLE" 			NVARCHAR2(100),
+	"TITLE2" 			NVARCHAR2(100),
+	"COMPANYID" 		CHAR(50 CHAR),
+	"COMPANYNM" 		NVARCHAR2(100),
+	"COMPANYNM2" 		NVARCHAR2(100),
+	"AUTHORIZEDTIME"	DATE,
+	"ADMINTYPE" 		NVARCHAR2(200),
+	"STATUS" 			NVARCHAR2(40),
+	"AUTHORIZERID" 		NVARCHAR2(50),
+	"AUTHORIZERNM" 		NVARCHAR2(100),
+	"AUTHORIZERNM2" 	NVARCHAR2(100),
+	"AUTHORIZERIP" 		VARCHAR2(50 CHAR),
+	"TENANT_ID" 		NUMBER DEFAULT 0
+   ) ;
+
 --------------------------------------------------------
 --  DDL for Table TBL_CONTAINER
 --------------------------------------------------------
@@ -5122,7 +5199,7 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 
   CREATE TABLE "TBL_OPENGOVDOCINFO" 
    (	"DOCID" NVARCHAR2(80), 
-	"OPENFLAG" CHAR(9 BYTE) DEFAULT NULL, 
+	"OPENFLAG" CHAR(1 BYTE) DEFAULT NULL, 
 	"BASIS" NVARCHAR2(200) DEFAULT NULL, 
 	"REASON" NVARCHAR2(1000) DEFAULT NULL, 
 	"OPENLIMITDATE" DATE DEFAULT NULL, 
@@ -5130,9 +5207,9 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"UPDATEDATE" DATE DEFAULT NULL, 
 	"TENANT_ID" NUMBER(5,0), 
 	"COMPANYID" NVARCHAR2(20), 
-	"LISTOPENFLAG" CHAR(2 BYTE) DEFAULT NULL,
+	"LISTOPENFLAG" CHAR(1 BYTE) DEFAULT NULL,
 	"DOCSIZE" NVARCHAR2(45) DEFAULT NULL,
-	"SENDFLAG" CHAR(5 BYTE) DEFAULT NULL
+	"SENDFLAG" CHAR(1 BYTE) DEFAULT NULL
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_OPENGOVFILEINFO
@@ -5144,6 +5221,23 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"FILEOPENFLAG" CHAR(1 BYTE) DEFAULT NULL, 
 	"COMPANYID" NVARCHAR2(20), 
 	"TENANT_ID" NUMBER(5,0)
+   ) ;
+   
+--------------------------------------------------------
+--  DDL for Table TBL_OPENGOVMODIFYHISTORY
+--------------------------------------------------------
+
+  CREATE TABLE "TBL_OPENGOVMODIFYHISTORY" 
+   (	"DOCID" NVARCHAR2(80), 
+	"MODIFIERNAME" NVARCHAR2(400) DEFAULT NULL, 
+	"SN" NUMBER(10,0), 
+	"MODIFIERDEPTNAME" NVARCHAR2(400) DEFAULT NULL, 
+	"MODIFYDATE" DATE DEFAULT NULL, 
+	"MODIFYREASON" NCLOB DEFAULT NULL, 
+	"TENANTID" NUMBER(5,0), 
+	"COMPANYID" NVARCHAR2(20), 
+	"MODIFIERID" NVARCHAR2(200) DEFAULT NULL, 
+	"MODIFIERDEPTID" NVARCHAR2(200) DEFAULT NULL
    ) ;
    
  --------------------------------------------------------
@@ -7919,7 +8013,8 @@ CREATE TABLE "TBL_CAR_FORM" (
 	"MAILBOXUSAGE" VARCHAR2(50 BYTE) DEFAULT NULL, 
 	"FURIGANA" VARCHAR2(120 CHAR), 
 	"EXTENSIONPHONE" VARCHAR2(100 CHAR), 
-	"OFFICEMOBILE" VARCHAR2(100 CHAR)
+	"OFFICEMOBILE" VARCHAR2(100 CHAR),
+	"PHOTO_UPDATEDT" DATE DEFAULT NULL
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_USERMASTER_DELETE
@@ -8481,6 +8576,13 @@ CREATE TABLE "TBL_CAR_FORM" (
 	"TENANT_ID" NUMBER(7,0), 
 	"TYPE" VARCHAR2(50 BYTE)
    ) ;
+   
+   CREATE TABLE "TBL_WEBFOLDER_NO_INHERIT"
+   (
+			"FOLDER_ID" VARCHAR2(100 BYTE) NOT NULL,
+			"TENANT_ID" NUMBER(7, 0) NOT NULL,
+			CONSTRAINT WEBFOLDER_NO_INHERIT_PK PRIMARY KEY ("FOLDER_ID", "TENANT_ID")
+	);
 -----------------------	---------------------------------
 --  DDL for Table TBL_WEBFOLDER_APPLY_HISTORY
 --------------------------------------------------------
@@ -8505,6 +8607,28 @@ CREATE TABLE "TBL_CAR_FORM" (
 	"MEMBER_NAME" NVARCHAR2(200), 
 	"MEMBER_TYPE" NVARCHAR2(10), 
 	"MEMBER_ITEM" NVARCHAR2(10)
+   ) ;
+-------------------------------------------------------- 
+--  DDL for Table JMOCHA_MAIL_OUTOFOFFICE_TEM
+--------------------------------------------------------
+
+  CREATE TABLE "JMOCHA_MAIL_OUTOFOFFICE_TEM" 
+   (	
+    "USER_ID" NVARCHAR2(100), 
+	"DISPLAYNAME" NVARCHAR2(40), 
+	"CONTENT" LONG
+   );   
+-------------------------------------------------------- 
+--  DDL for Table JMOCHA_USER_MAIL_TEMPLATE
+--------------------------------------------------------
+
+  CREATE TABLE "JMOCHA_USER_MAIL_TEMPLATE" 
+   (	"USER_ID" NVARCHAR2(100), 
+	"DISPLAYNAME" NVARCHAR2(100), 
+	"TEMPLATE_ID" NVARCHAR2(510), 
+	"REGDATE" DATE, 
+	"EDITORTYPE" NVARCHAR2(5), 
+	"CONTENT" LONG
    ) ;
 --------------------------------------------------------
 --  DDL for Sequence DBOBJECTID_SEQUENCE
@@ -8596,6 +8720,11 @@ CREATE TABLE "TBL_CAR_FORM" (
 --------------------------------------------------------
 
    CREATE SEQUENCE  "SEQ_TBL_ADMINRECEIPTGROUP_MAIN"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+-------------------------------------------------------- 
+--  DDL for Sequence TBL_ADMIN_ACCESS_IP_SEQ2
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "TBL_ADMIN_ACCESS_IP_SEQ2"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
 --------------------------------------------------------
 --  DDL for Sequence SEQ_TBL_ADMINRECEIPTGROUP_SUB
 --------------------------------------------------------
@@ -8652,6 +8781,16 @@ CREATE TABLE "TBL_CAR_FORM" (
 
    CREATE SEQUENCE  "SEQ_TBL_CONNECTION_INFO"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
 --------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_ADMIN_ACCESS_INFO
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_ADMIN_ACCESS_INFO"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_PERMISSION_CHANGE_INFO
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_PERMISSION_CHANGE_INFO"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+   --------------------------------------------------------
 --  DDL for Sequence SEQ_TBL_C_BOARD
 --------------------------------------------------------
 
@@ -8993,10 +9132,15 @@ CREATE TABLE "TBL_CAR_FORM" (
 
    CREATE SEQUENCE  "SEQ_JMOCHA_MAIL_SIGN_TEMP"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
 --------------------------------------------------------
+--  DDL for Sequence TBL_ACCESS_ID_SEQ2
+--------------------------------------------------------
+
+	CREATE SEQUENCE  "TBL_ACCESS_ID_SEQ2"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
 --  DDL for Index APPROVCONNKAMCO_PK
 --------------------------------------------------------
 
-   CREATE SEQUENCE "SEQ_FILEID" MINVALUE 10000000 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE;
+   CREATE SEQUENCE "SEQ_FILEID" MINVALUE 10000000 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 10000000 CACHE 20 NOORDER  NOCYCLE;
    CREATE SEQUENCE "SEQ_FOLDERID" MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE;
         
    CREATE SEQUENCE "SEQ_FILEUSER" MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE;
@@ -9581,10 +9725,16 @@ CREATE TABLE "TBL_CAR_FORM" (
   CREATE UNIQUE INDEX "PK_JMOCHA_USER_DISTRIBUTION" ON "JMOCHA_USER_DISTRIBUTION" ("DOMAIN_NAME", "USER_NAME") 
   ;
 --------------------------------------------------------
---  DDL for Index PK_JMOCHA_USER_DISTRIBUTION_MEM
+--  DDL for Index PK_JMOCHA_USER_DIST_MEM
 --------------------------------------------------------
 
-  CREATE UNIQUE INDEX "PK_JMOCHA_USER_DISTRIBUTION_MEM" ON "JMOCHA_USER_DISTRIBUTION_MEM" ("DOMAIN_NAME", "USER_NAME", "MEMBER_ID") 
+  CREATE UNIQUE INDEX "PK_JMOCHA_USER_DIST_MEM" ON "JMOCHA_USER_DISTRIBUTION_MEM" ("DOMAIN_NAME", "USER_NAME", "MEMBER_ID") 
+  ;
+--------------------------------------------------------
+--  DDL for Index PK_JMOCHA_USER_DIST_APPLY
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_JMOCHA_USER_DIST_APPLY" ON "JMOCHA_USER_DIST_APPLY" ("DOMAIN_NAME", "USER_NAME", "APPLICANT_ID") 
   ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_USER_LOCAL_INFO
@@ -9686,7 +9836,7 @@ CREATE TABLE "TBL_CAR_FORM" (
 --  DDL for Index PK_TBL_ADD_JOBMASTER
 --------------------------------------------------------
 
-  CREATE UNIQUE INDEX "PK_TBL_ADD_JOBMASTER" ON "TBL_ADDJOBMASTER" ("TENANT_ID", "CN", "DEPTID") 
+  CREATE UNIQUE INDEX "PK_TBL_ADD_JOBMASTER" ON "TBL_ADDJOBMASTER" ("TENANT_ID", "CN", "DEPTID", "JOBID") 
   ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_ADMINRECEIPTGROUP_SUB
@@ -9957,6 +10107,18 @@ CREATE TABLE "TBL_CAR_FORM" (
 --------------------------------------------------------
 
   CREATE UNIQUE INDEX "PK_TBL_CONNECTION_INFO" ON "TBL_CONNECTION_INFO" ("SEQUENCE") 
+  ;
+--------------------------------------------------------
+--  DDL for Index PK_TBL_ADMIN_ACCESS_INFO
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_TBL_ADMIN_ACCESS_INFO" ON "TBL_ADMIN_ACCESS_INFO" ("SEQUENCE") 
+  ;  
+--------------------------------------------------------
+--  DDL for Index PK_TBL_PERMISSION_CHANGE_INFO
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_TBL_PERMISSION_CHANGE_INFO" ON "TBL_PERMISSION_CHANGE_INFO" ("SEQUENCE")
   ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_C_BOARD
@@ -11178,6 +11340,12 @@ CREATE TABLE "TBL_CAR_FORM" (
 
   CREATE UNIQUE INDEX "TBL_ACCESS_IP_PK" ON "TBL_ACCESS_IP" ("IPNO") 
   ;
+-------------------------------------------------------- 
+--  DDL for Index PK2_TBL_ADMIN_ACCESS_IP
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK2_TBL_ADMIN_ACCESS_IP" ON "TBL_ADMIN_ACCESS_IP" ("IPNO")
+  ;
 --------------------------------------------------------
 --  DDL for Index TBL_ADMINRECEIPTGROUP_MAIN_PK
 --------------------------------------------------------
@@ -11652,6 +11820,13 @@ CREATE TABLE "TBL_CAR_FORM" (
 
   CREATE UNIQUE INDEX "TBL_OPENGOVFILEINFO_PK" ON "TBL_OPENGOVFILEINFO" ("DOCID", "SN", "COMPANYID", "TENANT_ID") 
   ;
+  
+--------------------------------------------------------
+--  DDL for Index TBL_OPENGOVMODIFYHISTORY_PK
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "TBL_OPENGOVMODIFYHISTORY_PK" ON "TBL_OPENGOVMODIFYHISTORY" ("DOCID", "SN", "COMPANYID", "TENANTID") 
+  ;
 
 --------------------------------------------------------
 --  DDL for Index TBL_GOVSENDDOCHISTORY_PK
@@ -12099,6 +12274,18 @@ CREATE TABLE "TBL_CAR_FORM" (
 --------------------------------------------------------
 
   CREATE INDEX "U_JMS_PTN_USER_NAME" ON "JAMES_SUBSCRIPTION" ("USER_NAME", "MAILBOX_NAME") 
+  ;
+-------------------------------------------------------- 
+--  DDL for Index JMOCHA_MAIL_OOO_TEM_PK
+--------------------------------------------------------
+
+  CREATE INDEX "JMOCHA_MAIL_OOO_TEM_PK" ON "JMOCHA_MAIL_OUTOFOFFICE_TEM" ("USER_ID", "DISPLAYNAME")
+  ;
+-------------------------------------------------------- 
+--  DDL for Index JMOCHA_USER_MAIL_TEMPLATE_PK
+--------------------------------------------------------
+
+  CREATE INDEX "JMOCHA_USER_MAIL_TEMPLATE_PK" ON "JMOCHA_USER_MAIL_TEMPLATE" ("USER_ID", "DISPLAYNAME") 
   ;
 --------------------------------------------------------
 --  DDL for Trigger TRG_TBL_ADMINRECEIPTGROUP_MAIN
@@ -13434,7 +13621,13 @@ ALTER TRIGGER "TRG_TBL_TASKCOMMENT" ENABLE;
   ALTER TABLE "JMOCHA_USER_DISTRIBUTION_MEM" MODIFY ("DOMAIN_NAME" NOT NULL ENABLE);
   ALTER TABLE "JMOCHA_USER_DISTRIBUTION_MEM" MODIFY ("USER_NAME" NOT NULL ENABLE);
   ALTER TABLE "JMOCHA_USER_DISTRIBUTION_MEM" MODIFY ("MEMBER_ID" NOT NULL ENABLE);
-  ALTER TABLE "JMOCHA_USER_DISTRIBUTION_MEM" ADD CONSTRAINT "PK_JMOCHA_USER_DISTRIBUTION_MEM" PRIMARY KEY ("DOMAIN_NAME", "USER_NAME", "MEMBER_ID")
+  ALTER TABLE "JMOCHA_USER_DISTRIBUTION_MEM" ADD CONSTRAINT "PK_JMOCHA_USER_DIST_MEM" PRIMARY KEY ("DOMAIN_NAME", "USER_NAME", "MEMBER_ID")
+  USING INDEX  ENABLE; 
+--------------------------------------------------------
+--  Constraints for Table JMOCHA_USER_DISTRIBUTION_MEM
+--------------------------------------------------------
+  
+  ALTER TABLE "JMOCHA_USER_DIST_APPLY" ADD CONSTRAINT "PK_JMOCHA_USER_DIST_APPLY" PRIMARY KEY ("DOMAIN_NAME", "USER_NAME", "APPLICANT_ID")
   USING INDEX  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table JMOCHA_USER_LOCAL_INFO
@@ -13748,10 +13941,18 @@ ALTER TRIGGER "TRG_TBL_TASKCOMMENT" ENABLE;
 --  Constraints for Table TBL_ADDJOBMASTER
 --------------------------------------------------------
 
-  ALTER TABLE "TBL_ADDJOBMASTER" ADD CONSTRAINT "PK_TBL_ADD_JOBMASTER" PRIMARY KEY ("TENANT_ID", "CN", "DEPTID")
+  ALTER TABLE "TBL_ADDJOBMASTER" ADD CONSTRAINT "PK_TBL_ADD_JOBMASTER" PRIMARY KEY ("TENANT_ID", "CN", "DEPTID", "JOBID")
   USING INDEX  ENABLE;
   ALTER TABLE "TBL_ADDJOBMASTER" MODIFY ("DEPTID" NOT NULL ENABLE);
   ALTER TABLE "TBL_ADDJOBMASTER" MODIFY ("CN" NOT NULL ENABLE);
+-------------------------------------------------------- 
+--  Constraints for Table TBL_ADMIN_ACCESS_IP
+--------------------------------------------------------
+
+  ALTER TABLE "TBL_ADMIN_ACCESS_IP" MODIFY ("IPNO" NOT NULL ENABLE);
+  ALTER TABLE "TBL_ADMIN_ACCESS_IP" MODIFY ("IPADDRESS" NOT NULL ENABLE);
+  ALTER TABLE "TBL_ADMIN_ACCESS_IP" ADD CONSTRAINT "PK2_TBL_ADMIN_ACCESS_IP" PRIMARY KEY ("IPNO")
+  USING INDEX ENABLE;  
 --------------------------------------------------------
 --  Constraints for Table TBL_ADMINRECEIPTGROUP_MAIN
 --------------------------------------------------------
@@ -14809,6 +15010,25 @@ ALTER TRIGGER "TRG_TBL_TASKCOMMENT" ENABLE;
   ALTER TABLE "TBL_CONNECTION_INFO" MODIFY ("USERID" NOT NULL ENABLE);
   ALTER TABLE "TBL_CONNECTION_INFO" MODIFY ("SEQUENCE" NOT NULL ENABLE);
 --------------------------------------------------------
+--  Constraints for Table TBL_ADMIN_ACCESS_INFO
+--------------------------------------------------------
+
+  ALTER TABLE "TBL_ADMIN_ACCESS_INFO" ADD CONSTRAINT "PK_TBL_ADMIN_ACCESS_INFO" PRIMARY KEY ("SEQUENCE")
+  USING INDEX  ENABLE;
+  ALTER TABLE "TBL_ADMIN_ACCESS_INFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
+  ALTER TABLE "TBL_ADMIN_ACCESS_INFO" MODIFY ("USERID" NOT NULL ENABLE);
+  ALTER TABLE "TBL_ADMIN_ACCESS_INFO" MODIFY ("SEQUENCE" NOT NULL ENABLE);  
+--------------------------------------------------------
+--  Constraints for Table TBL_PERMISSION_CHANGE_INFO
+--------------------------------------------------------
+
+  ALTER TABLE "TBL_PERMISSION_CHANGE_INFO" ADD CONSTRAINT "PK_TBL_PERMISSION_CHANGE_INFO" PRIMARY KEY ("SEQUENCE")
+  USING INDEX  ENABLE;
+  ALTER TABLE "TBL_PERMISSION_CHANGE_INFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
+  ALTER TABLE "TBL_PERMISSION_CHANGE_INFO" MODIFY ("USERID" NOT NULL ENABLE);
+  ALTER TABLE "TBL_PERMISSION_CHANGE_INFO" MODIFY ("AUTHORIZERID" NOT NULL ENABLE);
+  ALTER TABLE "TBL_PERMISSION_CHANGE_INFO" MODIFY ("SEQUENCE" NOT NULL ENABLE);
+--------------------------------------------------------
 --  Constraints for Table TBL_CONTAINER
 --------------------------------------------------------
 
@@ -15816,6 +16036,17 @@ ALTER TRIGGER "TRG_TBL_TASKCOMMENT" ENABLE;
   ALTER TABLE "TBL_OPENGOVFILEINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "TBL_OPENGOVFILEINFO" MODIFY ("SN" NOT NULL ENABLE);
   ALTER TABLE "TBL_OPENGOVFILEINFO" MODIFY ("DOCID" NOT NULL ENABLE);
+  
+--------------------------------------------------------
+--  Constraints for Table TBL_OPENGOVMODIFYHISTORY
+--------------------------------------------------------
+
+  ALTER TABLE "TBL_OPENGOVMODIFYHISTORY" ADD CONSTRAINT "TBL_OPENGOVMODIFYHISTORY_PK" PRIMARY KEY ("DOCID", "SN", "COMPANYID", "TENANTID")
+  USING INDEX  ENABLE;
+  ALTER TABLE "TBL_OPENGOVMODIFYHISTORY" MODIFY ("DOCID" NOT NULL ENABLE);
+  ALTER TABLE "TBL_OPENGOVMODIFYHISTORY" MODIFY ("SN" NOT NULL ENABLE);
+  ALTER TABLE "TBL_OPENGOVMODIFYHISTORY" MODIFY ("TENANTID" NOT NULL ENABLE);
+  ALTER TABLE "TBL_OPENGOVMODIFYHISTORY" MODIFY ("COMPANYID" NOT NULL ENABLE);
 
 --------------------------------------------------------
 --  Constraints for Table TBL_GOVSENDDOCHISTORY
@@ -17782,6 +18013,15 @@ ALTER TRIGGER "TRG_TBL_TASKCOMMENT" ENABLE;
   ALTER TABLE "TBL_WEBFOLDER_USER" MODIFY ("TYPE" NOT NULL ENABLE);
   ALTER TABLE "TBL_WEBFOLDER_USER" ADD PRIMARY KEY ("CN", "TENANT_ID", "TYPE")
   USING INDEX  ENABLE;
+-------------------------------------------------------- 
+--  Constraints for Table JMOCHA_USER_MAIL_TEMPLATE
+--------------------------------------------------------
+
+  ALTER TABLE "JMOCHA_USER_MAIL_TEMPLATE" MODIFY ("USER_ID" NOT NULL ENABLE);
+  ALTER TABLE "JMOCHA_USER_MAIL_TEMPLATE" MODIFY ("DISPLAYNAME" NOT NULL ENABLE);
+  ALTER TABLE "JMOCHA_USER_MAIL_TEMPLATE" MODIFY ("TEMPLATE_ID" NOT NULL ENABLE);
+  ALTER TABLE "JMOCHA_USER_MAIL_TEMPLATE" ADD CONSTRAINT "JMOCHA_USER_MAIL_TEMPLATE_PK" PRIMARY KEY ("USER_ID", "DISPLAYNAME")
+  USING INDEX ENABLE;  
 --------------------------------------------------------
 --  Ref Constraints for Table TBL_WEBFOLDER_SHARE_HIDE
 --------------------------------------------------------
@@ -18159,18 +18399,6 @@ ALTER TRIGGER "TRG_TBL_TASKCOMMENT" ENABLE;
 
   ALTER TABLE "TBL_TENANT_SERVERNAME" ADD CONSTRAINT "FK_TBLTENANT_SN_TENANT_ID" FOREIGN KEY ("TENANT_ID")
 	  REFERENCES "TBL_TENANT" ("TENANT_ID") ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table TBL_WEBFOLDER_SHARE_HIDE
---------------------------------------------------------
-
-  ALTER TABLE "TBL_WEBFOLDER_SHARE_HIDE" ADD CONSTRAINT "TBL_WEBFOLDER_SHARE_HIDE_FK1" FOREIGN KEY ("SHARE_ID", "TENANT_ID")
-	  REFERENCES "TBL_WEBFOLDER_SHARE" ("SHARE_ID", "TENANT_ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table TBL_WEBFOLDER_SHARE_SUB
---------------------------------------------------------
-
-  ALTER TABLE "TBL_WEBFOLDER_SHARE_SUB" ADD CONSTRAINT "TBL_WEBFOLDER_SHARE_SUB_FK1" FOREIGN KEY ("SHARE_ID", "TENANT_ID")
-	  REFERENCES "TBL_WEBFOLDER_SHARE" ("SHARE_ID", "TENANT_ID") ON DELETE CASCADE ENABLE;
 	  
 --------------------------------------------------------
 --  VIEW_EZAPPROVALG
@@ -18251,7 +18479,7 @@ SELECT
             AND d.COMPANYID = a.COMPANYID)) 
     WHERE 
         b.APRSTATE = '010' 
-            AND b.APRTYPE = '015'
+            AND b.APRTYPE = '015';
 
 --------------------------------------------------------
 --  VIEW_EZBOARDSTD
@@ -18343,12 +18571,13 @@ COMMENT ON COLUMN "TBL_YEARLYDOCCOUNT"."MONTH_TYPE" IS '1 ~ 12월, 작년-10(2) 
 --  TBL_SUSINSCHEDULE
 --------------------------------------------------------
 
-CREATE TABLE "tbl_susinschedule" (
+CREATE TABLE "TBL_SUSINSCHEDULE" (
   "DOCID" NVARCHAR2(80) NOT NULL,
   "DEPTID" NVARCHAR2(80) DEFAULT NULL,
   "DIRPATH" NVARCHAR2(1020) DEFAULT NULL,
   "DOCSTATE" NVARCHAR2(12) DEFAULT NULL,
   "COMPANYID" VARCHAR2(20) DEFAULT NULL,
   "LANG" NVARCHAR2(10) DEFAULT NULL,
-  "TENANTID" NUMBER DEFAULT NULL
+  "TENANTID" NUMBER DEFAULT NULL,
+  CONSTRAINT SUSINSCHEDULE_PK PRIMARY KEY ("DOCID", "COMPANYID", "TENANTID")
 ) ;

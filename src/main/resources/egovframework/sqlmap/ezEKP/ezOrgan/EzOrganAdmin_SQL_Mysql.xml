@@ -9,8 +9,7 @@
 	<typeAlias alias="OrganJobVO" 	type="egovframework.ezEKP.ezOrgan.vo.OrganJobVO"/>
 	<typeAlias alias="OrganGroupVO" type="egovframework.ezEKP.ezOrgan.vo.OrganGroupVO"/>
 	<typeAlias alias="OrganLoginStopUserVO" type="egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO"/>
-	
-	
+	<typeAlias alias="PermissionInfoVO" type="egovframework.ezEKP.ezSystem.vo.PermissionInfoVO"/>
 	
 	<resultMap id="userAddJobList" class="OrganUserVO">
 		<result property="cn" 									column="CN" 							columnIndex="1"/>
@@ -268,6 +267,18 @@
             	CN = #v_CN#
             AND
             	TENANT_ID = #v_TENANT_ID#	
+		]]>
+	</delete>
+
+	<!-- 2021-11-10 이사라 :  user 계정 삭제 시 TBL_USER_CONFIG에서 user 관련 정보 일괄삭제  -->
+	<delete id="EzOrganAdminDAO.deleteDBData_D6" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_USER_CONFIG
+            WHERE
+            	USER_ID = #v_CN#
+            AND
+            	TENANT_ID = #v_TENANT_ID#
 		]]>
 	</delete>
 		
@@ -1459,7 +1470,7 @@
                  ('A30','0  ','문서채번룰','1','문서채번시 적용되는 룰 정의','문서채번룰','문서채번룰','문서채번룰',#tenantID#, #companyID#),
                  ('A30','001','11S','1','x1 - 채번범위 (0:전체, 1:부서별, 2:양시함별) x2 - 분류기호 사용여부(0:사용안함, 1:사용함) x3 - 초기화 시점 (N: 초기화안함, M: 월별, Y:년별)','11S','11S','11S',#tenantID#, #companyID#),
                  ('A30','002','0000','1','문서번호 FORMAT','0000','0000','0000',#tenantID#, #companyID#),
-                 ('A30','003','2','1','회계종료월 (예: 2007.3~2008.2 이 회계년도이면 2를 넣는다. 1~12월이면 0을 넣는다)로 채번 및 기록물등록년도에 이용된다','2','2','2',#tenantID#, #companyID#),
+                 ('A30','003','0','1','회계종료월 (예: 2007.3~2008.2 이 회계년도이면 2를 넣는다. 1~12월이면 0을 넣는다)로 채번 및 기록물등록년도에 이용된다','0','0','0',#tenantID#, #companyID#),
                  ('A31','0  ','결재처리제한','0','결재처리 되지 않는 문서리스트 제한','결재처리제한','결재처리제한','결재처리제한',#tenantID#, #companyID#),
                  ('A31','001','3','0','N일 이상 지체되는 결재문서','3','3','3',#tenantID#, #companyID#),
                  ('A32','0  ','전결처리방법','0','전결처리방법 정의','전결처리방법','전결처리방법','전결처리방법',#tenantID#, #companyID#),
@@ -2201,7 +2212,19 @@
                ('007',4,'발신의뢰일자',150,'TBL_ENDAPRDOCINFO','EndDate',null,null,'발송대기문서','완료일자','Date(draft)','送信依頼日','日期的傳出請求',#tenantID#, #companyID#),
                ('007',5,'상태',100,'TBL_ENDRECEIPTPOINTINFO','ProcessYN',null,null,'발송대기문서','발송대기상태','Status','ステータス','状态',#tenantID#, #companyID#),
                ('007',6,'양식명',150,'TBL_ENDAPRDOCINFO','FormName',null,null,'발송대기문서','양식명','Form title','様式名','样式名',#tenantID#, #companyID#),
-               ('009',1,'제목',300,null,'DocTitle',null,null,'서버저장문서','제목','Title','タイトル','标题',#tenantID#, #companyID#)
+               ('009',1,'제목',300,null,'DocTitle',null,null,'서버저장문서','제목','Title','タイトル','标题',#tenantID#, #companyID#),
+               ('083',1,'문서번호',150,null,'DocNo',null,null,'원문공개문서함','문서번호','Doc. No.','文書番号','文件号',#tenantID#, #companyID#),
+				('083',2,'제목',400,null,'DocTitle',null,null,'원문공개문서함','제목','Title','見出し','标题',#tenantID#, #companyID#),
+				('083',3,'공개여부',50,null,'OpenFlag',null,null,'원문공개문서함','공개여부','공개여부','공개여부','공개여부',#tenantID#, #companyID#),
+				('083',4,'목록공개',50,null,'ListOpenFlag',null,null,'원문공개문서함','목록공개','목록공개','목록공개','목록공개',#tenantID#, #companyID#),
+				('083',5,'열람제한일자',100,null,'OpenLimitDate',null,null,'원문공개문서함','열람제한일자','열람제한일자','열람제한일자','열람제한일자',#tenantID#, #companyID#),
+				('083',6,'수정일자',140,null,'UpdateDate',null,null,'원문공개문서함','수정일자','수정일자','수정일자','수정일자',#tenantID#, #companyID#),
+				('083',7,'생성일자',140,null,'CreateDate',null,null,'원문공개문서함','생성일자','생성일자','생성일자','생성일자',#tenantID#, #companyID#),
+				('083',8,'작성자',100,null,'WriterName',null,null,'원문공개문서함','작성자','작성자','작성자','작성자',#tenantID#, #companyID#),
+				('083',9,'기안부서',140,null,'WriterDeptName',null,null,'원문공개문서함','기안부서','기안부서','기안부서','기안부서',#tenantID#, #companyID#),
+				('084',1,'변경자 부서',180,null,'ModifierDeptName',null,null,'원문공개문서함 수정이력','변경자 부서','변경자 부서','변경자 부서','변경자 부서',#tenantID#, #companyID#),
+				('084',2,'변경자',180,null,'ModifierName',null,null,'원문공개문서함 수정이력','변경자','변경자','변경자','변경자',#tenantID#, #companyID#),
+				('084',3,'변경일',100,null,'ModifyDate',null,null,'원문공개문서함 수정이력','변경일','변경일','변경일','변경일',#tenantID#, #companyID#)
                
       ]]>
     </insert>
@@ -2587,7 +2610,7 @@
                    ('001',1,'순번',40,null,null,'dtSerialNum','dtSerialNum','기록물 대장',null,'No.','順番','序号',#tenantID#, #companyID#),
                    ('001',2,'등록구분',120,'TBL_SEPERATEATTACH','TBL_SEPERATEATTACH.RegisterType','RegisterType','dtRegisterType','기록물 대장',null,'RegisterType','登録区分','招生区分',#tenantID#, #companyID#),
                    ('001',3,'등록일',100,'TBL_RECORD','TBL_RECORD.RegisterDate','RegisterDate','dtDateTime','기록물 대장',null,'RegisterDate','登録日','注册',#tenantID#, #companyID#),
-                   ('001',4,'문서번호',80,null,'CONCAT(CONCAT(TBL_RECORD.ProcessDeptName, ''-''), SUBSTR(TBL_RECORD.RegisterNo, -2))','DispRegisterNo','Default','기록물 대장',null,'Doc. No.','登録番号','註冊號',#tenantID#, #companyID#),
+                   ('001',4,'문서번호',100,null,'CONCAT(CONCAT(TBL_RECORD.ProcessDeptName, ''-''), SUBSTR(TBL_RECORD.RegisterNo, -6))','DispRegisterNo','Default','기록물 대장',null,'Doc. No.','登録番号','註冊號',#tenantID#, #companyID#),
                    ('001',5,'첨부번호',55,'TBL_SEPERATEATTACH','TBL_SEPERATEATTACH.SeperateAttachNo','SeperateAttachNo','Default','기록물 대장',null,'SepAttachNo','添付番号','附件编号',#tenantID#, #companyID#),
                    ('001',6,'제목',200,'TBL_SEPERATEATTACH','TBL_SEPERATEATTACH.Title','RecTitle','Default','기록물 대장',null,'Title','タイトル','标题',#tenantID#, #companyID#),
                    ('001',7,'분류번호',180,null,'CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(TRIM(TBL_CABINET.ProcessDeptCode),''-''),TBL_CABINET.TaskCode),''-''),ProductionYear),''-''),TRIM(LEADING''0'' FROM RegSerialNo)),''(''),TRIM(LEADING''0'' FROM VolumeNo)),'')'')','DispClassNo','Default','기록물 대장','기록물철 분류번호','DispClassNo','分類番号','分类编号',#tenantID#, #companyID#),
@@ -3350,8 +3373,21 @@
                 CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                      
        		AND
        			TENANT_ID = #v_TENANT_ID#	
+		]]>
+			<isNotEmpty property="searchValue" prepend="AND">
+				<isEqual property="searchType" compareValue="cn">
+					cn LIKE CONCAT('%', #searchValue#, '%')
+				</isEqual>
+				<isEqual property="searchType" compareValue="displayname">
+					CASE IFNULL(#v_LANGDATA#, '1') WHEN '1' THEN displayname ELSE displayname2 END LIKE CONCAT('%', #searchValue#, '%')
+				</isEqual>
+				<isEqual property="searchType" compareValue="description">
+					CASE IFNULL(#v_LANGDATA#, '1') WHEN '1' THEN description ELSE description2 END LIKE CONCAT('%', #searchValue#, '%')
+				</isEqual>
+			</isNotEmpty>
+		<![CDATA[
       		ORDER BY
-      			DISPLAYNAME
+      			DISPLAYNAME,CN
       		LIMIT
       			#v_STARTNUM#, #v_COUNT#
 		]]>
@@ -3366,7 +3402,7 @@
 	<select id="EzOrganAdminDAO.getAddJobCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
-				COUNT (CN) 
+				COUNT(CN) 
         	FROM
         		TBL_USERMASTER 
 			WHERE
@@ -3377,9 +3413,18 @@
                 CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                      
        		AND
        			TENANT_ID = #v_TENANT_ID#	
-      		ORDER BY
-      			DISPLAYNAME
 		]]>
+			<isNotEmpty property="searchValue" prepend="AND">
+				<isEqual property="searchType" compareValue="cn">
+					cn LIKE CONCAT('%', #searchValue#, '%')
+				</isEqual>
+				<isEqual property="searchType" compareValue="displayname">	<!-- NULLIF(1,2): 1,2가 같으면 null. / (oracle)NVL=IFNULL(1,2): 1이 null이면 2. -->
+					CASE IFNULL(#strLang#, '1') WHEN '1' THEN displayname ELSE displayname2 END LIKE CONCAT('%', #searchValue#, '%')
+				</isEqual>
+				<isEqual property="searchType" compareValue="description">
+					CASE IFNULL(#strLang#, '1') WHEN '1' THEN description ELSE description2 END LIKE CONCAT('%', #searchValue#, '%')
+				</isEqual>
+			</isNotEmpty>
 	</select>
 	
 	<select id="EzOrganDAO.getProxyUserInfo" parameterClass="Map" resultClass="OrganProxyVO">
@@ -4116,12 +4161,11 @@
 	</update>
 	
 	<update id="EzOrganAdminDAO.updateDBData_user" parameterClass="OrganUserVO">
-		<![CDATA[
 			UPDATE
 				TBL_USERMASTER
      		SET
-     			updatedt = #nowDate#
-     	]]>	
+     			<isEqual property="doUpdatePhoto" compareValue="false"> <![CDATA[updatedt = #nowDate#]]></isEqual> <!-- boolean이라 객체 생성하면 false로 기본값 -->
+     			<isEqual property="doUpdatePhoto" compareValue="true"> <![CDATA[photo_updatedt = #nowDate#]]></isEqual>
 		<dynamic>
 	  		<isNotNull property="displayName" prepend=","> <![CDATA[displayName = #displayName#]]></isNotNull>
 	  		<isNotNull property="displayName2" prepend=","> <![CDATA[displayName2 = #displayName2#]]></isNotNull>
@@ -4505,6 +4549,30 @@
 			(#v_TYPE#, #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_USEFLAG#, #v_SORT#, SYSDATE(), #v_COMPANYID#, #v_TENANTID#)
 	]]>
 	</insert>
+	<select id="EzOrganAdminDAO.selectTitleByJobID" parameterClass="Map" resultClass="OrganJobVO" remapResults="true">
+		SELECT 
+			JOBID,
+			TYPE, 
+			CN, 
+			CASE
+            	#v_LANGDATA#
+            WHEN '1'
+            THEN
+            	DISPLAYNAME
+            ELSE
+            	DISPLAYNAME2
+            END DISPLAYNAME,
+			USEFLAG, 
+			SORT, 
+			CREATEDATE,
+			COMPANYID
+		FROM 
+			TBL_USER_JOBMASTER
+		WHERE 
+			JOBID = #v_JOBID#
+		AND 
+			TENANT_ID = #v_TENANTID#
+	</select>
 	<select id="EzOrganAdminDAO.selectTitleList" parameterClass="Map" resultClass="OrganJobVO" remapResults="true">
 		SELECT 
 			JOBID,
@@ -5548,4 +5616,27 @@
 			ORDER BY      
 				PHYSICALDELIVERYOFFICENAME, DEPARTMENT, EXTENSIONATTRIBUTE15, DISPLAYNAME
 	</select>
+
+	<insert id="EzOrganAdminDAO.insertPermissionChHist"	parameterClass="PermissionInfoVO">
+		<![CDATA[
+			INSERT INTO
+				TBL_PERMISSION_CHANGE_INFO (
+					USERID,				USERNM,					USERNM2,				DEPTID,					DEPTNM,
+					DEPTNM2,			TITLE,       			TITLE2,					COMPANYID,				COMPANYNM,
+					COMPANYNM2,			AUTHORIZEDTIME,			ADMINTYPE,				STATUS,					AUTHORIZERID,
+					AUTHORIZERNM,		AUTHORIZERNM2,			AUTHORIZERIP
+                 )
+			SELECT
+				#userId#, 			u.displayName,			u.displayName2,			u.department,	  		u.DESCRIPTION,
+				 u.DESCRIPTION2,	u.TITLE,       			u.TITLE2,         		u.PHYSICALDELIVERYOFFICENAME,  u.COMPANY,
+				 u.COMPANY2,		#authorizedTime#,		#adminType#,			#status#,				#authorizerId#,
+				 (SELECT ua.DISPLAYNAME 	FROM TBL_USERMASTER ua WHERE CN = #authorizerId# AND TENANT_ID = #tenant_id#),
+				 (SELECT ua.DISPLAYNAME2 	FROM TBL_USERMASTER ua WHERE CN = #authorizerId# AND TENANT_ID = #tenant_id#),
+				 #authorizerIp#
+			FROM TBL_USERMASTER u
+			WHERE 	u.CN = #userId#
+			AND 	u.TENANT_ID = #tenant_id#
+		]]>
+	</insert>
+
 </sqlMap>

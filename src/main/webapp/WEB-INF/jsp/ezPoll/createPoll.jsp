@@ -979,7 +979,13 @@
             fd.append("fileToUpload", _file);			
 	        xhr.addEventListener("load", uploadOptImgComplete, false);
 	        
-	        if ( ext == "jpg" || ext == "png" || ext == "bmp") {
+	        if (ext == "jpg" || ext == "png" || ext == "bmp") {
+	        	/* 2021-12-09 홍승비 - 사원 이미지 업로드 시 서버단에서도 이미지 확장자 체크 진행 (실제 파일 업로드 이전에 ajax로 체크) */
+				if (checkImgExtension(ext) == "UPLOAD_EXT_ERROR") {
+					alert("<spring:message code ='ezAttitude.t260' />"); // 허용하지 않는 확장자입니다.
+					return false;
+				}
+				
 	    	    xhr.open("POST", "/ezPoll/uploadFile.do");
 	    	    xhr.send(fd); 
 	        }
@@ -1242,7 +1248,7 @@
 								<img src="/images/sortIcon.png" class="drag_drop">
 								<img src="/images/poll/attach_file_vote.png" onclick="optUploadBtn(this)" style="cursor: pointer;">
 							</li>
-								<input id="optionfile" type="file" onchange="optImgUpload()" style="display:none" />
+								<input id="optionfile" type="file" onchange="optImgUpload()" style="display:none" accept="image/*"/>
 						</ul>
 					</td>
 				</tr>

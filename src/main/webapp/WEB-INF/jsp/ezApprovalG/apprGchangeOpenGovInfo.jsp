@@ -62,7 +62,9 @@
     		$("#idDatepickerForOpenGov").attr('disabled',true);
     	}
     	
+    	var today = new Date();
     	$("#idDatepickerForOpenGov").datepicker({
+    		minDate: today,
             changeMonth: true,
             changeYear: true,
             autoSize: true,
@@ -238,9 +240,20 @@
     		modifyReason = $("#modifyReason").val();
     	}
         
+        if ($("input:checkbox[id='openGovLimitDate']").is(":checked")) {
+        	if($("#idDatepickerForOpenGov").val() == "") {
+        		OpenAlertUI("열람제한일을 입력해주세요");
+        	} else {
+        		openLimitDate = $("#idDatepickerForOpenGov").val();
+        	}
+        } else {
+        	openLimitDate = "";
+        }
+        
         if (updateOpenGovInfo() == "TRUE") {
 		    // OpenAlertUI("원문정보를 변경하였습니다.", window.close);
             alert("원문정보를 변경하였습니다.");
+            opener.location.reload();
             window.close();
         }
         

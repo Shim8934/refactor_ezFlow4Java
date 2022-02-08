@@ -22,10 +22,21 @@
 	    	document.getElementById("reloadLogin").submit();
 	    	
 	    }
+	    
+	    function bottomFrameLoad() {
+	    	var bottomFrame = window.frames["bottom"];
+	    	if (typeof bottomFrame != "undefined") {
+	    		var bottomFrameSrc = bottomFrame.location.href;
+		    
+		    	if (bottomFrameSrc.indexOf("admin/accessBlockToAdmin.do") != -1) {
+		    		window.location.reload();
+		    	}	    		
+	    	}
+	    }
 	</script>
 	<frameset rows="42,*" border="0" framespacing="0" frameborder="NO">
 		<frame src="/admin/top.do" id="topFrame" marginwidth="0" marginheight="0" frameborder="NO" name="top" noresize scrolling="no">
-		<frame src="" marginwidth="0" marginheight="0" frameborder="NO" name="bottom" scrolling="auto">
+		<frame src="" marginwidth="0" onload="bottomFrameLoad()" marginheight="0" frameborder="NO" name="bottom" scrolling="auto">
 	</frameset>
 	<noframes></noframes>
 </html>

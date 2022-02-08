@@ -89,7 +89,7 @@
 		    
 		    function event_GetDeptTreeInfo() {
 		    	if (xmlHTTP != null && xmlHTTP.readyState == 4) {
-		        	if (xmlHTTP.statusText == "OK") {
+		        	if (xmlHTTP.status == 200) {
 		            	var xmlTree = loadXMLString(xmlHTTP.responseText);
 		                var treeXML = loadXMLFile("/xml/common/organtree_config3.xml");
 		                var treeView = new TreeView();
@@ -104,7 +104,7 @@
 		                xmlHTTP = null;
 		                isfirst = false;
 		            } else {
-		                alert("<spring:message code='ezOrgan.t13' />" + xmlHTTP.statusText);
+		                alert("<spring:message code='ezOrgan.t13' />" + xmlHTTP.status);
 		                xmlHTTP = null;
 		            }
 		        }
@@ -704,7 +704,11 @@
 		    }
 		    
 		    function getDeptId(userId) {
-		        var ReceiveDocument = "";
+		        return getEntryInfo(userId, "department");
+		    }
+		    
+		    function getEntryInfo(userId, propStr) {
+		    	var ReceiveDocument = "";
 
 		        try {
 		        	var result = "";
@@ -715,14 +719,14 @@
 		        		url : "/admin/ezOrgan/getEntryInfo.do",
 		        		data : {
 		        			cn 	  : userId,
-		        			prop  : "department"
+		        			prop  : propStr
 		        		},
 		        		success: function(xml){
 		        			result = xml;
 		        		}        			
 		        	});
 		        	
-		            ReceiveDocument = SelectSingleNodeValueNew(loadXMLString(result), "DATA/DEPARTMENT");
+		            ReceiveDocument = SelectSingleNodeValueNew(loadXMLString(result), "DATA/" + propStr.toUpperCase());
 		        } catch (e) {
 		        } 
 		        
@@ -760,16 +764,29 @@
 		            listview.LoadFromID("lvUserList");
 		            var UserAddjoblistview = new ListView();
 		            UserAddjoblistview.LoadFromID("lvAddjobList");
-		            var bFlag = UserAddjoblistview.ExistRow("data1", dept[0]);
+		        	var bFlag = UserAddjoblistview.ExistRow2({"data1":dept[0], "data6":jobID});
+		        	
+		        	if (!bFlag) { // 원부서의 직위 체크
+		        		var cn = GetAttribute(p_ListOrderObject, "_data2");
+		        		var orgDeptId = getDeptId(cn);
+						var orgJobId = getEntryInfo(cn, "extensionAttribute7");
+    		            bFlag = ((dept[0] == orgDeptId) && (jobID == orgJobId)) ? true : false;
+		        	}
+		        	
+		            /* var bFlag = UserAddjoblistview.ExistRow("data1", dept[0]);
 		            
 		            if (!bFlag) {
     		            var cn = GetAttribute(p_ListOrderObject, "_data2");
     		            var orgDeptId = getDeptId(cn);
     		            bFlag = dept[0] == orgDeptId ? true : false;
-		        	}
-		            
+		        	} */
+		        	
+		        	// 중복겸직가능
+		        	bFlag = false;
+		        	
 		            if (bFlag) {
 		                alert(strLang25);
+		                return;
 		            } else {
 		            	var compName = new Array();
 				        $.ajax({
@@ -975,7 +992,7 @@
 		    var bSearch = true;
 		    function event_getDeptFullTree() {
 		        if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
-		            if (g_xmlHTTP.statusText == "OK") {
+		            if (g_xmlHTTP.status == 200) {
 		                if (!bSearch) {
 		                    try {
 		                        if (CrossYN()) {
@@ -998,7 +1015,7 @@
 		                treeView.DataSource(loadXMLString(g_xmlHTTP.responseText));
 		                treeView.DataBind("TreeView");
 		            } else {
-		                alert("<spring:message code='ezOrgan.t9' />" + g_xmlHTTP.statusText);
+		                alert("<spring:message code='ezOrgan.t9' />" + g_xmlHTTP.status);
 		                g_xmlHTTP = null;
 		            }
 		        }

@@ -110,7 +110,7 @@
 	                    document.getElementById("MailEnv_ifrm").src = requestUrl;
 	                    break;
 	                case "MailEnv_div8":
-	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailOutOfOffice.do";
+	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailOutOfOfficeMain.do";
 	                    break;
 	                case "MailEnv_div9":
 	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailAddressSearchOrder.do";

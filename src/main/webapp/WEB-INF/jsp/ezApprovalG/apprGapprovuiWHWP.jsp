@@ -273,6 +273,9 @@
 		            getDocInfo();
 		            setAttachInfo(pDocID, "APR", lstAttachLink);
 		            GetExchInfo();
+		            if(nonElecRec=="Y"){
+						getNonElecInfoSusinInit();
+					}
 		
 		            if (pDocHref != "") {
 		            	var URL;
@@ -334,10 +337,11 @@
 				    }
 		        }
 	
-		        window.onresize = function () {
-		        	var mHeight = document.documentElement.clientHeight - 172 - document.getElementById("message").offsetTop + "px";
-		       		message.Resize(mHeight);
-		        }
+		    window.onresize = function () {
+	       		document.getElementById("messageWHWPEditor").style.height = document.documentElement.clientHeight - 150 + "px";
+	       		var mHeight = document.documentElement.clientHeight - 110 - document.getElementById("messageWHWPEditor").offsetTop + "px";
+	       		message.Resize(mHeight);
+	        }
 	
 		        function window_onload() {
 		            if (allFlag == "2") {
@@ -395,6 +399,7 @@
 		                OpenAllApproveFlag();
 		
 		            message.EditMode(0);
+					message.SetViewProperties(2, 100);
 		            message.ScrollPosInfo(0, 0);
 		            
 		            window.onresize();
@@ -599,7 +604,12 @@
 	
 			// btnApprove_onclick 시작
 			var approveResult;
+            var ingFlag = false;
 			function btnApprove_onclick() {
+                if (ingFlag) {
+                    return;
+                }
+                
 		    	$.ajax({
 		    		type : "POST",
 		    		dataType : "text",
@@ -612,17 +622,19 @@
 		    			approveResult = text;
 		    		}        			
 		    	});
-		    	
+
 	    		GetHTML2(Approve);
 		    }
 			 // btnApprove_onclick 끝
 				 
 			 function GetHTML(callback) {
-			    message.GetTextFile("HWP", "", function (data) { callback(data) });
+                ingFlag = true;
+			    message.GetTextFile("HWP", "", function (data) { ingFlag = false; callback(data); });
 			 }
 			 
 			 function GetHTML2(callback) {
-			    message.GetTextFile("HWPML2X", "", function (data) { callback(data) });
+                ingFlag = true;
+			    message.GetTextFile("HWPML2X", "", function (data) { ingFlag = false; callback(data); });
 			 }
 			 
 			 function SetHTML(data, callback) {
@@ -636,7 +648,7 @@
                 var rtnAttachXML = loadXMLString(approveResult);
 	                
 	            var attachTotalSize = getNodeText(rtnAttachXML.getElementsByTagName("TOTALSIZE").item(0));
-	                
+
                 if(getNodeText(rtnAttachXML.getElementsByTagName("FLAG").item(0)) == "Y") {
                     OpenAlertUI("외부발송문서 총 첨부용량은 최대 6MB 입니다" + "<br>" + "첨부용량을 줄여주시기 바랍니다.");
                     return;
@@ -849,19 +861,22 @@
 		            
 		            if (rtnVal != "TRUE") {
 		                if (pDraftFlag != "SUSIN") {
-		                    if (docAccess) {
-		                        rollbackDocNumber(drafterDeptid, pDocID);
-		                        docAccess = false;
-		                        if (fractionsymbol == "") {
-		                            var pAlertContent = "[<spring:message code='ezApprovalG.t1385'/>";
-						            OpenAlertUI(pAlertContent);
-						            setMenuDisable("btnApprove", false);
-						            return;
-						        }
-		                    }
-		                }
+                            if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
+                                if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
+                                    rollbackDocNumber(drafterDeptid, "doc", pDocID);
+                                }
+                            }
+		                } else {
+                            if (useReceiveDocNo == 'NO') {
+                                if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
+                                    if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
+                                        rollbackDocNumber(drafterDeptid, "receipt", pDocID);
+                                    }
+                                }
+                            }
+                        }
 		
-		                UndoSignInfo(signInfo);
+		                UndoSignInfo(newSignInfo);
 		                if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 		                    if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
 		                        var rtnVal = ExcuteInfo("END_FAIL", "")
@@ -884,6 +899,7 @@
 		                var pAlertContent = "[<spring:message code='ezApprovalG.t34'/>";
 				        OpenAlertUI(pAlertContent);
 				        setMenuDisable("btnApprove", false);
+                        GetHTML(before_SaveFile);
 				        return;
 				    } else {
 				    	UpdateLineHistory();
@@ -1152,6 +1168,17 @@
 			            setNodeText(btnEdit.childNodes[0], "<spring:message code='ezApprovalG.t42'/>");
 			            GetHTML(beforeHWPBody);
 			        } else {
+						if (message.FieldExist("doctitle")) {
+							pDocTitle = trim(message.GetFieldText("doctitle"));
+						} else {
+							pDocTitle = "<spring:message code='ezApprovalG.t1394'/>";
+						}
+
+						if (pDocTitle == "") {
+							var pAlertContent = "<spring:message code='ezApprovalG.t1491'/>";
+							OpenAlertUI(pAlertContent);
+							return;
+						}
 			            var pInformationContent = "<spring:message code='ezApprovalG.t43'/>";
 				        var Ans = OpenInformationUI(pInformationContent, btnEdit_onclick_Complete);
 			        }
@@ -1439,6 +1466,8 @@
 
    			        if (tempItemCode != "")
    			            tempdocnumcode = tempItemCode;
+   			        
+   			     	parameter[61] = tempKeyword;
                        
                     ezapprovalinfo_dialogArguments[0] = parameter;
    		            ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
@@ -1555,9 +1584,10 @@
 
    							//2020-05-08 : 결재정보확인 시 문서정보 저장 후 문서 반영
    							setApprDocInfo();	
-   							//SaveFile();
+							// 2022-02-04 박기범 : 결재정보 > 확인 후에 한글문서는 저장되지 않던 문제 수정
+							GetHTML(before_SaveFile);
 
-   			                SummaryFlag = true;
+							SummaryFlag = true;
    			                savexmlhttp = null;
    			            }
    			            catch (e) {
@@ -1737,7 +1767,7 @@
 	
 	                </div>
 	            </td> -->
-	            <td style="padding-bottom:10px;height:800px;" >
+	            <td style="padding-bottom:10px;height:800px;" id="messageWHWPEditor" >
 		    		<iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="/ezApprovalG/WHWPEditor.do" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 	            </td>
 	        </tr>

@@ -138,7 +138,7 @@
 					        <c:forEach items="${userList}" var="user">
 						        <tr id="${user.userId }" name="${user.userName }" deptId="${user.deptId}" onclick="setUserAuthorDept(this);" ondblclick="setAuthorViewUser();" style="cursor: pointer;" class="hover">
 									<td style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"><c:out value="${user.userName }" /></td>
-									<td><c:out value="${user.jikwi }" /></td>
+									<td><c:if test="${user.userType eq 'addJob'}"><spring:message code='ezOrgan.psb03'/> </c:if><c:out value="${user.jikwi }" /></td>
 									<td><c:out value="${user.mail }" /></td>
 								</tr>
 					        </c:forEach>
@@ -154,7 +154,7 @@
 						        <tr id="${user.userId }" name="${user.userName }" deptId="${user.deptId}" onclick="setUserAuthorDept(this);" ondblclick="setAuthorViewUser();" style="cursor: pointer;" class="hover">
 									<td style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"><c:out value="${user.deptName }" /></td>
 									<td style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"><c:out value="${user.userName }" /></td>
-									<td style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"><c:out value="${user.jikwi }" /></td>
+									<td style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"><c:if test="${user.userType eq 'addJob'}"><spring:message code='ezOrgan.psb03'/> </c:if><c:out value="${user.jikwi }" /></td>
 									<td style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"><c:out value="${user.mail }" /></td>
 								</tr>
 					        </c:forEach>
@@ -202,7 +202,7 @@
 					        <c:forEach items="${userList}" var="user">
 						        <tr id="${user.userId }" name="${user.userName }" deptId="${user.deptId}" onclick="setUserAuthorDept(this);" ondblclick="setAuthorViewUser();" style="cursor: pointer;" class="hover">
 									<td style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"><c:out value="${user.userName }" /></td>
-									<td><c:out value="${user.jikwi }" /></td>
+									<td><c:if test="${user.userType eq 'addJob'}"><spring:message code='ezOrgan.psb03'/> </c:if><c:out value="${user.jikwi }" /></td>
 									<td><c:out value="${user.mail }" /></td>
 								</tr>
 					        </c:forEach>
@@ -218,7 +218,7 @@
 						        <tr id="${user.userId }" name="${user.userName }" deptId="${user.deptId}" onclick="setUserAuthorDept(this);" ondblclick="setAuthorViewUser();" style="cursor: pointer;" class="hover">
 									<td style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"><c:out value="${user.deptName }" /></td>
 									<td style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"><c:out value="${user.userName }" /></td>
-									<td style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"><c:out value="${user.jikwi }" /></td>
+									<td style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"><c:if test="${user.userType eq 'addJob'}"><spring:message code='ezOrgan.psb03'/> </c:if><c:out value="${user.jikwi }" /></td>
 									<td style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"><c:out value="${user.mail }" /></td>
 								</tr>
 					        </c:forEach>

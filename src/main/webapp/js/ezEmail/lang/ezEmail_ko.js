@@ -1,4 +1,4 @@
-﻿﻿var strLang1 = "이 보기에서 표시할 항목이 없습니다.";
+﻿var strLang1 = "이 보기에서 표시할 항목이 없습니다.";
 var strLang2 = "폴더를 표시할 수 없습니다. 서버 내부 오류가 발생했습니다.";
 var strLang3 = "보기종류를 가지고 있는 변수입니다.";
 var strLang4 = "지운편지함";
@@ -322,6 +322,10 @@ var strLangHDP01 = "회까지";
 var strLangHDP02 = "다운로드 가능";
 var strLangHDP03 = "대용량파일 첨부는 {0}개까지 가능합니다.";
 var strLangHDP04 = "드래그 앤 드롭으로 파일 추가 및 추가한 파일의 순서를 변경할 수 있습니다.";
+
+var strLangKSA03 = "그룹웨어 개인일정에 등록하시겠습니까?";
+var strLangKSA04 = "일정을 저장하였습니다.";
+var strLangKSA05 = "일정을 저장하는 도중 오류 발생.";
 
 function GetLocalTime(Offset , pDateTime)
 {

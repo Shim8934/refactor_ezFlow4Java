@@ -23,9 +23,11 @@ import java.beans.PropertyDescriptor;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -36,6 +38,7 @@ import java.net.URI;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.text.DecimalFormat;
 import java.text.Normalizer;
@@ -81,9 +84,12 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -294,6 +300,52 @@ public class CommonUtil {
 		return src;
 	}
     
+	public byte[] readBytesFromFile(Path path) throws IOException {
+		String pathStr = path.toString();
+
+		logger.debug("readBytesFromFile path=" + pathStr);
+
+		File file = new File(pathStr);
+		byte[] content = new byte[(int)file.length()];
+		FileInputStream fin = null;		
+
+		try {
+			fin = new FileInputStream(file);
+			fin.read(content);
+		} catch (IOException e) {		
+			throw e;
+		} finally {
+			if (fin != null) {
+				fin.close();
+			}
+		}
+
+		logger.debug("readBytesFromFile ended. path=" + pathStr);
+
+		return content;
+    }
+
+    public void writeBytesToFile(Path path, byte[] content) throws IOException {
+		String pathStr = path.toString();
+
+		logger.debug("writeBytesToFile path=" + pathStr);
+
+		FileOutputStream fout = null;
+
+		try {
+			fout = new FileOutputStream(pathStr);
+			fout.write(content);
+		} catch (IOException e) {		
+			throw e;
+		} finally {
+			if (fout != null) {
+				fout.close();
+			}
+		}
+
+		logger.debug("writeBytesToFile ended. path=" + pathStr);
+	}
+
 	public LoginVO userInfo(String loginCookie){
 		if (StringUtils.isEmpty(loginCookie)) {
 			return null;
@@ -1062,8 +1114,6 @@ public class CommonUtil {
 	 * @throws Exception
 	 */
 	public String getTodayUTCTime(String format) throws Exception {
-		logger.debug("getTodayUTCTime started");
-		
 		ZoneId utc = ZoneId.of("UTC");
 		ZonedDateTime getTime = ZonedDateTime.of(LocalDateTime.now(utc), utc);
 		
@@ -1081,8 +1131,6 @@ public class CommonUtil {
 		}
 		
 		String today = getTime.format(formatter);
-		
-		logger.debug("getTodayUTCTime ended");
 		
 		return today;
 	}
@@ -1600,12 +1648,24 @@ public class CommonUtil {
 	
 	/**
 	 * 레스트 API에서 제이슨 오브젝트 넘겨 받는 메서드
+	 * 
 	 * @param resteUrl
 	 * @param param
 	 * @param request
 	 * @return
 	 */
-	public JSONObject getJsonFromRestApi(String gwServerUrl, String restUrl, Map<String, Object> param, HttpServletRequest request, String methodType, JSONObject jsonParam){
+	public JSONObject getJsonFromRestApi(String gwServerUrl, String restUrl, Map<String, Object> param, HttpServletRequest request, String methodType, JSONObject jsonParam) {
+		return getJsonFromRestApi(gwServerUrl, restUrl, param, request, methodType, jsonParam, -1, -1);
+	}
+
+	/**
+	 * 레스트 API에서 제이슨 오브젝트 넘겨 받는 메서드
+	 * @param resteUrl
+	 * @param param
+	 * @param request
+	 * @return
+	 */
+	public JSONObject getJsonFromRestApi(String gwServerUrl, String restUrl, Map<String, Object> param, HttpServletRequest request, String methodType, JSONObject jsonParam, int connectionTimeout, int readTimeout) {
 		logger.debug("getJsonFromRestApi started.");
 		String url = gwServerUrl + restUrl ;
 		
@@ -1627,6 +1687,11 @@ public class CommonUtil {
 		
 		if (methodType.equals("patch")) {
 			ClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+			rest = new RestTemplate(httpRequestFactory);
+		} else if (connectionTimeout > 0 || readTimeout > 0) {
+			HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+			httpRequestFactory.setConnectTimeout(connectionTimeout);
+			httpRequestFactory.setReadTimeout(readTimeout);
 			rest = new RestTemplate(httpRequestFactory);
 		} else {
 			rest = new RestTemplate();
@@ -1668,7 +1733,7 @@ public class CommonUtil {
 		logger.debug("getJsonFromRestApi ended.");
 		return resultBody;
 	}
-	
+
 	public JSONObject getJsonFromMemoRestApi(String restUrl, Map<String, Object> param, HttpServletRequest request, String methodType, JSONObject jsonParam){
 		logger.debug("getJsonFromMemoRestApi started");
 		String gwServerUrl = config.getProperty("config.memoGwServerURL");
@@ -2506,7 +2571,7 @@ public class CommonUtil {
 			if ((filePathFlag.equals("webfolder") && ezWebFolderService.isEncryptedFilePath(filePath)) || (filePathFlag.equals("approval") && fileExtension.equals(EzApprovalGKlibService.ENCRYPTED_FILE_EXT))) {
 				logger.debug("fileOldPath=" + filePath);
 				logger.debug("pdfFilePath=" + pdfFilePath);
-				byte[] encryptedBytes = Files.readAllBytes(file.toPath());
+				byte[] encryptedBytes = readBytesFromFile(file.toPath());
 				byte[] decryptedBytes = kilbUtil.decrypt(encryptedBytes);
 				inputStream = new ByteArrayInputStream(decryptedBytes);
 				
@@ -2668,5 +2733,29 @@ public class CommonUtil {
 		} catch (Exception ex) {
 			logger.debug("ex: {}", ex);
 		}
+	}
+	
+	/** 2021-12-08 홍승비 - 이미지 파일 확장자 체크용 공통 메서드 추가 */
+	public boolean checkImgExtension(String fileExt) {
+		boolean result = false;
+		String[] imgExts = {"jpe", "jpg", "jpeg", "gif", "png", "bmp", "ico", "svg", "svgz", "tif", "tiff", "ai", "drw", "pct", "psp", "xcf", "psd", "raw"};
+		
+		if (fileExt != null && ArrayUtils.contains(imgExts, fileExt)) {
+			result = true;
+		}
+		
+		return result;
+	}
+	
+	/** 2021-12-08 홍승비 - HTML5 지원 웹 동영상 파일 확장자 체크용 공통 메서드 추가 */
+	public boolean checkMovExtension(String fileExt) {
+		boolean result = false;
+		String[] movExts = {"mp4", "ogg", "webm"};
+		
+		if (fileExt != null && ArrayUtils.contains(movExts, fileExt)) {
+			result = true;
+		}
+		
+		return result;
 	}
 }

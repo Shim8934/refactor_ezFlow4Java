@@ -102,7 +102,7 @@ dd {margin : 20px; padding: 0px; font-size: 13px; color: #c0c0c0; font-weight: b
 	</div>
 	
 	
-    <input type="file" name="imgFile" id="imgFile" onchange="btn_AttachAdd_onclick()" style="display: none;"/>
+    <input type="file" name="imgFile" id="imgFile" onchange="btn_AttachAdd_onclick()" style="display: none;" accept="image/*" />
 
 <script type="text/javascript">
 var g_xmlhttp; 
@@ -243,7 +243,13 @@ var btn_AttachAdd_onclick = function () {
 	
 	var request = new XMLHttpRequest();
 
-	if ( ext == "jpeg" || ext == "jpg" || ext == "png" || ext == "bmp" || ext == "gif") {
+	if (ext == "jpeg" || ext == "jpg" || ext == "png" || ext == "bmp" || ext == "gif") {
+		/* 2021-12-09 홍승비 - 슬라이드 이미지 업로드 시 서버단에서도 이미지 확장자 체크 진행 */
+		if (checkImgExtension(ext) == "UPLOAD_EXT_ERROR") {
+			alert("<spring:message code ='ezAttitude.t260' />"); // 허용하지 않는 확장자입니다.
+			return false;
+		}
+		
 		request.open("POST", "/admin/ezNewPortal/uploadSlideImage.do");
 		request.send(fd);
 
@@ -376,7 +382,7 @@ var slideImageDel = function(event) {
 	    var selectSlideId = selectImage[0].id; 
 	    
 		var request = new XMLHttpRequest();
-		request.open('DELETE', '/admin/ezNewPortal/delSlideImage.do', true);
+		request.open('POST', '/admin/ezNewPortal/delSlideImage.do', true);
 		request.setRequestHeader('Content-Type', 'application/json');
 	
 		request.onload = function() {
@@ -414,7 +420,7 @@ var updateSlideOrder = function() {
 	}
 	
 	var request = new XMLHttpRequest();
-	request.open('PATCH', '/admin/ezNewPortal/updateSlideOrder.do', true);
+	request.open('POST', '/admin/ezNewPortal/updateSlideOrder.do', true);
 	request.setRequestHeader('content-type', 'application/json');
 	
 	request.onload = function() {getSlideImage();}

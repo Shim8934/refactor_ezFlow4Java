@@ -370,7 +370,7 @@
 			}
 			
 			var request = new XMLHttpRequest();
-			request.open('PATCH', '/admin/ezNewPortal/updatePortlet.do', true);
+			request.open('POST', '/admin/ezNewPortal/updatePortlet.do', true);
 			request.setRequestHeader('content-type', 'application/json');
 			
 			request.onload = function() { 

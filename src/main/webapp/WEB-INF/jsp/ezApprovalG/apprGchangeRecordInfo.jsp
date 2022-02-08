@@ -646,11 +646,12 @@
     
     /* 2020-09-11 홍승비 - 숫자 이외의 값 입력 방지 함수 */
     function KeEventControl2(obj) {
-        if ((window.event.keyCode >= 48 && window.event.keyCode <= 57) || (window.event.keyCode >= 96 && window.event.keyCode <= 105)) {
+        if ((window.event.keyCode >= 49 && window.event.keyCode <= 57) || (window.event.keyCode >= 96 && window.event.keyCode <= 105)) {
             return true;
         }
         else {
         	obj.value = obj.value.replace(/[\a-zㄱ-ㅎㅏ-ㅣ가-힣]/g, '');
+        	obj.value = obj.value.replace(/^[0]+$/, '');
         }
     }
     

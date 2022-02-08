@@ -7,8 +7,28 @@ function btn_AttachAdd_onclick() {
     document.getElementById("maxSize").value = parseInt(AttachLimit) * 1024 * 1024;
     document.getElementById("cnt").value = document.getElementById("form").file1.files.length;
 			
-    if( document.getElementById("cnt").value > 0) {
+    if (document.getElementById("cnt").value > 0) {
     	var formData = new FormData();
+    	
+    	/* 2021-12-09 홍승비 - 포토게시판에 사진 첨부 시, 페이지 및 서버단의 확장자 체크 추가 */
+    	if (document.getElementById('mode').value == "PHOTO") {
+    		  var filename = document.getElementById("form").file1.files[0].name;
+              var extension = filename.substring(filename.lastIndexOf(".") + 1, filename.length);
+              var check = "false";
+              check = compareExtension(check, extension);
+              
+              if (check == "false") {
+            	  document.form.file1.value = "";
+                  alert(filename + strLang40);
+                  return;
+              }
+              
+              if (checkImgExtension(extension) == "UPLOAD_EXT_ERROR") {
+            	  document.form.file1.value = "";
+            	  alert(srtLangHSBEx01); // 허용하지 않는 확장자입니다.
+            	  return ;
+              }
+    	}
        	
     	// 특수문자 파싱 이후 파일명 길이를 기준으로 체크
        	$.each($('#file1')[0].files, function(i, file) {
@@ -36,7 +56,7 @@ function btn_AttachAdd_onclick() {
 				}
 			});
        	
-        document.form.file1.value = "";	
+        document.form.file1.value = "";
     }
 }
 

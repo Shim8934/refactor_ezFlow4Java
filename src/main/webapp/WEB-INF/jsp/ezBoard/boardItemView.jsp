@@ -141,10 +141,9 @@
 		    window.onload = function () {
 		        try {
 		        	// 수정 수아 재은
-		        	var html = "<div><img src='/images/minus.png' title='<spring:message code='ezEmail.t99000065' />' id='smaller' style='cursor:pointer;' />"
-						html += "<img src='/images/plus.png' title='<spring:message code='ezEmail.t99000064' />' id='bigger' style='cursor: pointer;' />";
-						html += "<span id='curZoomSize' style='display:none; float:right;'></span></div>"
-						html += "<br><br>";
+		        	var html = "<div><img src='/images/minus.png' title='<spring:message code='ezEmail.t99000065' />' id='smaller' style='cursor:pointer; margin-bottom: 5px;' />"
+						html += "<img src='/images/plus.png' title='<spring:message code='ezEmail.t99000064' />' id='bigger' style='cursor: pointer; margin-bottom: 5px;' />";
+						html += "<span id='curZoomSize' style='display:none; float:right;'></span></div>";
 						
 					$.ajax({
 						type : "POST",
@@ -156,7 +155,7 @@
 								 href   : strContentLocation 
 							   },
 						success: function(result){
-							html += "<div class='contentDiv'>" + result + "<div>";
+							html += "<div class='contentDiv' id='txtContent'>" + result + "<div>";
 						}        			
 					});
 					
@@ -179,7 +178,19 @@
 					cssLink.href = "${util.addVer('ezBoard.i1', 'msg')}";
 					cssLink.rel = "stylesheet";
 					cssLink.type = "text/css";
-					$("#message").contents().find("head").append(cssLink);
+					
+					/* 2021-09-02 홍승비 - 게시물 본문 내부의 헤딩 태그(h1, h2...)의 스타일은 default.css가 아닌 기본적인 브라우저의 user-agent 속성을 사용하도록 수정 (글자 자체의 인라인 속성이 있다면 해당 속성이 우선 적용됨) */
+					// chrome의 경우 각 속성 revert로 간단히 처리가 가능하나, IE에서 해당 속성을 지원하지 않아 각 폰트 사이즈와 마진을 명시함
+					var cssHeading = "<style type='text/css'>.contentDiv h1, .contentDiv h2, .contentDiv h3, .contentDiv h4, .contentDiv h5, .contentDiv h6 {margin-left:0px; margin-right:0px; color:#000000;}";
+					cssHeading += " .contentDiv h1 {font-size:2em; margin-top:0.67em; margin-bottom:0.67em;}";
+					cssHeading += " .contentDiv h2 {font-size:1.5em; margin-top:0.83em; margin-bottom:0.83em;}";
+					cssHeading += " .contentDiv h3 {font-size:1.17em; margin-top:1em; margin-bottom:1em;}";
+					cssHeading += " .contentDiv h4 {font-size:1em; margin-top:1.33em; margin-bottom:1.33em;}";
+					cssHeading += " .contentDiv h5 {font-size:0.83em; margin-top:1.67em; margin-bottom:1.67em;}";
+					cssHeading += " .contentDiv h6 {font-size:0.67em; margin-top:2.33em; margin-bottom:2.33em;}";
+					cssHeading += "</style>";
+					
+					$("#message").contents().find("head").append(cssLink).append(cssHeading);
 					$("#message").contents().find("body").css("word-wrap", "break-word");
 					
 					rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
@@ -448,6 +459,10 @@
 		                        window.opener.refresh_onclick();
 		                    } catch (e) {
 		                    }
+
+							if(parent.opener.search != undefined){
+								parent.opener.search('skip');
+							}
 		                    
 		                    window.close();
 		                }
@@ -482,7 +497,6 @@
 		                    window.opener.refresh_onclick();
 		                } catch (e) {
 		                }
-		                
 
 	                    //2019.03.04 유은정 - 게시판 적용
 	                    if (parent.opener != null && parent.opener.getNoticePortletList != undefined) {
@@ -511,6 +525,10 @@
 	                 	
 			            if (parent.opener.getBoardList_NewBoardSTD != undefined) {
 							parent.opener.getBoardList_NewBoardSTD();
+						}
+
+						if(parent.opener.search != undefined){
+							parent.opener.search('skip');
 						}
 			            
 		                window.close();
@@ -558,6 +576,9 @@
 		            window.opener.refresh_onclick();
 		        } catch (e) {
 		        }
+				if(parent.opener.search != undefined){
+					parent.opener.search('skip');
+				}
 		        window.close();
 		    }
 		 	 //강민수92

@@ -305,6 +305,10 @@
 											VAPRDOINGDOCLIST  
 										WHERE 
 											APRMEMBERID = #proxyList[].id#
+										AND
+											APRMEMBERDEPTID = #proxyList[].dept#
+                						AND
+                							APRMEMBERJOBTITLE = #proxyList[].title#
 										<![CDATA[
 										AND 
 											APRTYPE <> '015'
@@ -345,6 +349,8 @@
 												APRMEMBERID = #proxyList[].id#
 											AND
 												aprmemberdeptid = #proxyList[].dept#
+                							AND
+                								APRMEMBERJOBTITLE = #proxyList[].title#
 											AND
 												(aprstate = '002' OR aprstate = '005' OR aprstate = '000')
 											AND
@@ -384,6 +390,10 @@
 											VENDCHAMJODOCINFO 
 										WHERE 
 											APRMEMBERID = #proxyList[].id#
+										AND
+											APRMEMBERDEPTID = #proxyList[].dept#
+                						AND
+                							APRMEMBERJOBTITLE = #proxyList[].title#
 										AND 
 											APRTYPE <> '015'
 										AND
@@ -423,6 +433,8 @@
 															aprmemberid = #proxyList[].id#
 														AND
 															aprmemberdeptid = #proxyList[].dept#
+                										AND
+                											APRMEMBERJOBTITLE = #proxyList[].title#
 														AND	
 															APRTYPE = '007'
 														AND 
@@ -4262,13 +4274,15 @@
             AND 
             	(((TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# AND TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#)
             AND 
-            	(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'))
+            	(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '011'))
             ]]>	
             <isEqual property="v_USERFLAG" compareValue="admin">
-             OR 
-             	(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
+                OR
+                (TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
                 AND
-                    TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
+                TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
+                AND
+                PROCESSORID IS NULL)
             </isEqual>
             	 ) ORDER BY PROCESSDATE $v_BASICORDER$
 		</isEqual>
@@ -4422,6 +4436,30 @@
       				TBL_FORMINFO.COMPANYID = O.COMPANYID	     				
       			WHERE 
       				TBL_FORMUSERINFO.USERID = #v_USERID#
+                AND
+                    TBL_FORMINFO.FORMCONTID IN
+                    (SELECT
+                        FORMCONTID
+                    FROM
+                        TBL_FORMCONTUSERGROUP
+                    WHERE
+                        TENANT_ID = TBL_FORMINFO.TENANT_ID
+                    AND
+                        COMPANYID = TBL_FORMINFO.COMPANYID
+                    AND
+                        FORMCONTUSERDEPID = #deptId#
+                    UNION ALL
+                    SELECT
+                        FORMCONTID
+                    FROM
+                        TBL_FORMCONTAINER
+                    WHERE
+                        TENANT_ID = TBL_FORMINFO.TENANT_ID
+                    AND
+                        COMPANYID = TBL_FORMINFO.COMPANYID
+                    AND
+                        (FORMCONTOWNDEPID = 'ALL' or FORMCONTOWNDEPID = #deptId#)
+                    )
       			<isEqual property="v_FORMKIND" compareValue="000">
       			
       			</isEqual>
@@ -5126,6 +5164,8 @@
 		    		TENANT_ID = #tenantID#
 		    AND
 		    		COMPANYID = #companyID#
+		    AND
+		    		OLDFLAG_TOP IS NULL
 		    ORDER BY 
 		    		CATEGORYCODE
 		</isEmpty>
@@ -5148,13 +5188,17 @@
 					  AND
 					  	A.CATEGORYCODE = B.CATEGORYCODE 
 					  AND
-					  	A.MCATEGORYCODE != B.CATEGORYCODE ) as ISLEAF	
+					  	A.MCATEGORYCODE != B.CATEGORYCODE
+					 AND
+		    			A.OLDFLAG_MID IS NULL) as ISLEAF	
 		    FROM 
 		    		VTASKCLASS B
 		    WHERE  
 		    		B.TENANT_ID = #tenantID#
 		    AND
 		    		B.COMPANYID = #companyID#
+		    AND
+		    		B.OLDFLAG_TOP IS NULL
 		    ORDER BY 
 		    		CATEGORYCODE
 		</isNotEmpty>
@@ -5181,6 +5225,8 @@
             		TENANT_ID = #tenantID#
             AND
 		    		COMPANYID = #companyID#
+		    AND
+		    		OLDFLAG_MID IS NULL
         	ORDER BY 
         			MCATEGORYCODE
 		</isEmpty>
@@ -5203,7 +5249,9 @@
 					  AND
 					  	A.MCATEGORYCODE = B.MCATEGORYCODE 
 					  AND
-					  	A.SUBCATEGORYCODE != B.MCATEGORYCODE ) as ISLEAF
+					  	A.SUBCATEGORYCODE != B.MCATEGORYCODE
+					 AND
+		    			A.OLDFLAG IS NULL) as ISLEAF
         	FROM 
         			VTASKCLASS B
        		WHERE  
@@ -5214,6 +5262,8 @@
             		B.TENANT_ID = #tenantID#
             AND
 		    		B.COMPANYID = #companyID#
+		    AND
+		    		B.OLDFLAG_MID IS NULL
         	ORDER BY 
         			MCATEGORYCODE
 		</isNotEmpty>
@@ -5240,7 +5290,9 @@
 	            AND
 	            	TENANT_ID = #tenantID#    
 	            AND	
-	            	COMPANYID = #companyID#   	
+	            	COMPANYID = #companyID#
+	            AND
+		    		OLDFLAG_SUB IS NULL
 	            ORDER BY 
 	           		SUBCATEGORYCODE
 			</isEqual>
@@ -5261,7 +5313,9 @@
 	           AND
 	               TENANT_ID = #tenantID#  
 	           AND	
-	               COMPANYID = #companyID#  
+	               COMPANYID = #companyID#
+	          	AND
+		    		OLDFLAG_SUB IS NULL
 	           ORDER BY 
 	           	   SUBCATEGORYCODE
 			</isNotEqual>
@@ -5284,7 +5338,9 @@
             AND
             	TENANT_ID = #tenantID#    
             AND	
-            	COMPANYID = #companyID#   	
+            	COMPANYID = #companyID#
+            AND
+		    	OLDFLAG_SUB IS NULL
             ORDER BY 
            		SUBCATEGORYCODE
 		</isNotEmpty>		
@@ -6320,6 +6376,8 @@
 								OR 
 							  TBL_EXPENDAPRDOCINFO.SecurityCode IS NULL ) 
 					</isNotEqual>
+					AND
+						TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
 				</isEqual>
                 <isEqual property="listFlag" compareValue="23">
                     AND 
@@ -6639,6 +6697,18 @@
 				NOT ( TBL_CABINET.CabinetTransferFlag = '2' AND CONFIRMFLAG = '0' )
 		AND 
 				TBL_CABINETCLASS.TERMINATEFLAG = '0'
+		AND
+			((VTASKCLASS.CATEGORYCODE = VTASKCLASS.MCATEGORYCODE AND VTASKCLASS.MCATEGORYCODE = VTASKCLASS.SUBCATEGORYCODE
+				AND OLDFLAG_TOP IS NULL)
+			OR
+			(VTASKCLASS.CATEGORYCODE != VTASKCLASS.MCATEGORYCODE AND VTASKCLASS.MCATEGORYCODE = VTASKCLASS.SUBCATEGORYCODE
+				AND OLDFLAG_TOP IS NULL
+				AND OLDFLAG_MID IS NULL)
+			OR
+			(VTASKCLASS.CATEGORYCODE != VTASKCLASS.MCATEGORYCODE AND VTASKCLASS.MCATEGORYCODE != VTASKCLASS.SUBCATEGORYCODE
+				AND OLDFLAG_TOP IS NULL
+				AND OLDFLAG_MID IS NULL
+				AND OLDFLAG_SUB IS NULL))
 		AND 
 				TBL_MYTASKCODE.CN = #v_USERID#
 		AND
@@ -6700,6 +6770,18 @@
 				TBL_CABINETCLASS.DelFlag = '0'
 			AND 
 				NOT ( TBL_CABINET.CabinetTransferFlag = '2' AND CONFIRMFLAG = '0' )
+			AND
+				((SVTASKCLASS.CATEGORYCODE = SVTASKCLASS.MCATEGORYCODE AND SVTASKCLASS.MCATEGORYCODE = SVTASKCLASS.SUBCATEGORYCODE
+					AND OLDFLAG_TOP IS NULL)
+				OR
+				(SVTASKCLASS.CATEGORYCODE != SVTASKCLASS.MCATEGORYCODE AND SVTASKCLASS.MCATEGORYCODE = SVTASKCLASS.SUBCATEGORYCODE
+					AND OLDFLAG_TOP IS NULL
+					AND OLDFLAG_MID IS NULL)
+				OR
+				(SVTASKCLASS.CATEGORYCODE != SVTASKCLASS.MCATEGORYCODE AND SVTASKCLASS.MCATEGORYCODE != SVTASKCLASS.SUBCATEGORYCODE
+					AND OLDFLAG_TOP IS NULL
+					AND OLDFLAG_MID IS NULL
+					AND OLDFLAG_SUB IS NULL))
 			AND 
 				TBL_MYTASKCODE.CN = #v_USERID#
 			AND
@@ -8218,7 +8300,7 @@
 						SELECT 
 							TBL_APRDOCINFO.ORGDOCID,
 		      				TBL_APRDOCINFO.HREF, 
-		      				TBL_APRDOCINFO.HASOPINIONYN, 
+		      				TBL_APRDOCINFO.HASOPINIONYN,
 		      				TBL_APRDOCINFO.HASATTACHYN,
 		      				TBL_APRDOCINFO.ISPUBLIC,
 		      				TBL_APRDOCINFO.DOCTYPE, 
@@ -8345,7 +8427,7 @@
 	      		AND 
 	      			(((TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# AND TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#)
 	      		AND 
-	      			(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'))
+	      			(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '011'))
 	      		AND
 	      			TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
 	      		AND
@@ -8355,11 +8437,9 @@
 	      		OR 
 	      			(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
 	         	AND 
-	         		TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014'))
-	         	OR 
-	         		(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
-	         	AND 
-	         		 TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015')
+	         		TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
+	         	AND
+                    PROCESSORID IS NULL)
 	      	</isEqual>
 	      	<isEqual property="v_aprFlag" compareValue="G">
 		     	OR
@@ -8576,6 +8656,7 @@
 	FROM (
 		SELECT 
 			DOCID, 
+			ORGDOCID, 
 			APRMEMBERID, 
 			APRMEMBERNAME, 
 			APRMEMBERNAME2, 
@@ -8631,6 +8712,7 @@
   
 		SELECT     
 		  	DOCID,     
+		  	ORGDOCID,     
 		  	APRMEMBERID,     
 		  	APRMEMBERNAME,     
 		  	APRMEMBERNAME2,     
@@ -10896,11 +10978,11 @@
 	            	TBL_RECORD.COMPANYID = TBL_RECROLEINFO.COMPANYID	            	
 	            WHERE  
 	            	( TBL_RECROLEINFO.SeperateAttachNo = '00' )
-	            AND 
-	            	( TBL_RECROLEINFO.UserID = #v_USERID# )
-	            AND 
-	            	( TBL_RECROLEINFO.UserRight = '1' )
-	            AND 
+	           AND
+	            	(( TBL_RECROLEINFO.UserID = #v_USERID# AND TBL_RECROLEINFO.UserRight = '1' )
+	                OR
+	            	 (TBL_RECROLEINFO.UserID = 'All_User' AND TBL_RECROLEINFO.UserRight = '2'))
+	            AND
 	            	TBL_RECORD.DocID = #v_DOCID#
 	            AND
 					TBL_RECORD.TENANT_ID = #v_TENANTID#
@@ -11422,16 +11504,18 @@
 	   		AND 
 	   			(((TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# AND TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#)
 	   		AND 
-	   			(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'))
+	   			(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '011'))
 	   			
    		]]>
    		<isEqual property="v_USERFLAG" compareValue="admin">
-   			OR 
-   				(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
+            OR
+                (TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
+            AND
+             TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
                 AND
-                    TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015'))
-      		AND	
-		   		TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
+                    PROCESSORID IS NULL)
+            AND
+                TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
    		</isEqual>
    		<isEqual property="v_aprFlag" compareValue="G">
 	     	OR
@@ -13106,6 +13190,10 @@
 				VAPRDOINGDOCLIST  
 			WHERE 
 				APRMEMBERID = #proxyList[].id#
+			AND
+				APRMEMBERDEPTID = #proxyList[].dept#
+            AND
+            	APRMEMBERJOBTITLE = #proxyList[].title#
 			<![CDATA[
 			AND 
 				APRTYPE <> '015'
@@ -13144,7 +13232,10 @@
 					tbl_aprlineinfo
 				WHERE
 					APRMEMBERID = #proxyList[].id#
-                AND APRMEMBERDEPTID = #proxyList[].dept#
+                AND
+                	APRMEMBERDEPTID = #proxyList[].dept#
+            	AND
+            		APRMEMBERJOBTITLE = #proxyList[].title#
                 AND
 								(aprstate = '002' OR aprstate = '005' OR aprstate = '000')
 							AND
@@ -13183,6 +13274,10 @@
 				VENDCHAMJODOCINFO 
 			WHERE 
 				APRMEMBERID = #proxyList[].id#
+			AND
+				APRMEMBERDEPTID = #proxyList[].dept#
+            AND
+            	APRMEMBERJOBTITLE = #proxyList[].title#
 			AND 
 				APRTYPE <> '015'
 			AND
@@ -13222,6 +13317,8 @@
 								APRMEMBERID = #proxyList[].id#
 							AND
 								APRMEMBERDEPTID = #proxyList[].dept#
+            				AND
+            					APRMEMBERJOBTITLE = #proxyList[].title#
 							AND
 								APRTYPE = '007'
 							AND
@@ -14757,9 +14854,9 @@
 	     		COMPANYID = #companyID#
 	</delete>
 	<update id="EzApprovalG.updateSerialNo" parameterClass="Map">
-		 UPDATE 
+		 UPDATE
 		 		TBL_SERIALNUMGEN
-	     SET 
+	     SET
 	     		RegSerialNo = #v_CurSN# + 1
 	     WHERE  
 	     		Type1 = (
@@ -15031,17 +15128,21 @@
 	      			AND 
 	      				(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012'
 	      			OR 
-	      				 TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'))
+	      				 TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'
+	      			OR 
+	      				 TBL_APRRECEIPTPROCESSINFO.APRSTATE = '011'))
 	      	AND
 	      		TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
 			AND
 	      		TBL_APRRECEIPTPROCESSINFO.COMPANYID = #companyID#
 	      			]]>
 	     <isEqual property="v_SUSINADMIN" compareValue="Y">
-	     OR 
-	     	(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)  AND  TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014')) 
-          OR 
-          	(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$) AND   TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015')
+             OR
+             (TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
+             AND
+             TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
+             AND
+             PROCESSORID IS NULL)
 	     </isEqual>
 	     <isEqual property="v_aprFlag" compareValue="G">
 	     	OR
@@ -16892,7 +16993,9 @@
                 AND 
                 	(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012'
                 OR 
-                	TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'))
+                	TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'
+                OR
+                    TBL_APRRECEIPTPROCESSINFO.APRSTATE = '011'))
                 AND 
                 	TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
 				AND
@@ -16926,7 +17029,10 @@
 			 	OR
 			 		(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN (#v_DEPTIDS#)
                 AND
-                    TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015'))
+                    TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
+                AND
+                    PROCESSORID IS NULL
+                )
 			</isEqual>
 				)
 		</isEqual>
@@ -28795,9 +28901,12 @@
 		SELECT 
 			COUNT(CABINETID) 
 		FROM 
-			TBL_EXPAPRDOCINFO 
+			TBL_EXPAPRDOCINFO A
+			LEFT JOIN TBL_APRDOCINFO B
+			ON A.DOCID = B.DOCID 
 		WHERE 
-			CABINETID = #v_CABINETID#) cnt 
+			CABINETID = #v_CABINETID#
+			AND B.DOCSTATE != '015') cnt
 	</select>
 		
 	<select id="EzApprovalG.getLastDocDate" parameterClass="map" resultClass="String">
@@ -31243,7 +31352,8 @@
 		  SELECT 
 		  		cn as id,
 		  		department as dept,
-		  		extensionattribute5 as bujaeInfo
+		  		extensionattribute5 as bujaeInfo,
+		  		title
 		  FROM 
 		  		TBL_USERMASTER
 		  WHERE 
@@ -31255,7 +31365,8 @@
 		  SELECT 
 		  		cn as id,
 		  		deptid as dept,
-		  		proxy as bujaeInfo
+		  		proxy as bujaeInfo,
+		  		title
 		  FROM 
 		  		TBL_ADDJOBMASTER
 		  WHERE 
@@ -31638,6 +31749,21 @@
 			SN ASC
 		</select>
 		
+		<select id="EzApprovalG.getFileOpenSNList" parameterClass="Map" resultClass="String">
+		SELECT
+			SN
+		FROM
+			TBL_OPENGOVFILEINFO
+		WHERE
+			DOCID = #docID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+		ORDER BY
+			SN ASC
+		</select>
+		
 	
 	<delete id="EzApprovalG.deleteGongRamLineInfo" parameterClass="Map">
 		DELETE FROM
@@ -31847,7 +31973,7 @@
 			* 
 		FROM(
 				SELECT 
-					A.* 
+					row_number() over(ORDER BY NULL) as rnum, A.* 
 			  FROM (
 							SELECT 
 								DISTINCT TBL_ENDAPRDOCINFO.DOCID, 
@@ -31883,7 +32009,7 @@
 										 TBL_DEPTMASTER.COMPNM2 companyName2,
 										 TBL_OPENGOVDOCINFO.OPENFLAG,
 										 TBL_OPENGOVDOCINFO.LISTOPENFLAG,
-										 TBL_OPENGOVDOCINFO.OPENLIMITDATE,
+										 TO_CHAR(TBL_OPENGOVDOCINFO.OPENLIMITDATE, 'YYYY-MM-DD') AS OPENLIMITDATE,
 										 TBL_OPENGOVDOCINFO.UPDATEDATE,
 										 TBL_OPENGOVDOCINFO.CREATEDATE
 
@@ -32191,12 +32317,16 @@
 							   		ORDER BY 
 							   				ENDDATE DESC  , DOCNO DESC
 							   	</isEmpty>
-								<isNotEqual property="alFlag" compareValue="1">
-							   	LIMIT #v_PAGESIZE#
+								 ) A 
+							   	<isNotEqual property="alFlag" compareValue="1">
+							   	<![CDATA[
+						   		WHERE
+						   			ROWNUM <= #v_PAGESIZE#
+							    ]]>
 								</isNotEqual>
-							   	 ) A 
-							   	 LIMIT #v_PAGESIZE3#, #v_PAGESIZE2#
 							   	 	) B
+						   	 	WHERE
+						   	 		B.rnum >= #v_PAGESIZE3#+1
 <!-- 				<isEqual property="approvalFlag" compareValue="Y"> -->
 <!-- 				INNER JOIN TBL_CODELIST B   -->
 <!-- 				ON A.DOCTYPE = B.CODE2 -->
@@ -32225,8 +32355,10 @@
 	</select>
 	<select id ="EzApprovalG.getSearchDocListCountForOpenGov" parameterClass="Map" resultClass="int">
 	<![CDATA[
+		SELECT COUNT(*)
+		FROM (
 		SELECT 
-			COUNT(DISTINCT TBL_ENDAPRDOCINFO.DOCID,TBL_ENDAPRDOCINFO.COMPANYID)
+			DISTINCT TBL_ENDAPRDOCINFO.DOCID,TBL_ENDAPRDOCINFO.COMPANYID
    		FROM 
    			TBL_ENDAPRDOCINFO 
    		LEFT OUTER JOIN 
@@ -32459,6 +32591,7 @@
    		AND 
    			TBL_ENDAPRLINEINFO.APRMEMBERNAME = #v_APPROVUSER#
    		</isNotEmpty>
+   		)
 	</select>
 	<select id="EzApprovalG.getOpenGovInfoForUpdate" parameterClass="Map" resultClass="ApprGOpenGovInfoVO">
 		SELECT
@@ -32517,11 +32650,12 @@
 			TBL_OPENGOVDOCINFO
 		SET
 			OPENFLAG = #openFlag#,
+			LISTOPENFLAG = #openGovListFlag#,
 			BASIS = #basis#,
 			REASON = #reason#,
 			OPENLIMITDATE = #limitDate#,
 			SENDFLAG = 'N',
-			UPDATEDATE = TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+			UPDATEDATE = SYSDATE
 		WHERE
 			DOCID = #docID#
 		AND
@@ -32607,7 +32741,7 @@
 			#modifierName#,
 			#sn#,
 			#modifierDeptName#,
-			#modifyDate#,
+			TO_DATE(#modifyDate#, 'YYYY-MM-DD HH24:MI:SS'),
 			#modifyReason#,
 			#tenantID#,
 			#companyID#,
@@ -32733,6 +32867,11 @@
 								<iterate property="proxyList" open="(" close=")" conjunction=",">
 									#proxyList[].dept#
 								</iterate>
+							AND
+								L.aprmemberjobtitle IN
+								<iterate property="proxyList" open="(" close=")" conjunction=",">
+									#proxyList[].title#
+								</iterate>
 							)
 					</isNotEmpty>
 				)
@@ -32796,6 +32935,11 @@
 								L.APRMEMBERDEPTID IN
 								<iterate property="proxyList" open="(" close=")" conjunction=",">
 									#proxyList[].dept#
+								</iterate>
+							AND
+								L.aprmemberjobtitle IN
+								<iterate property="proxyList" open="(" close=")" conjunction=",">
+									#proxyList[].title#
 								</iterate>
 							)
 					</isNotEmpty>
@@ -32991,7 +33135,7 @@
 		   		AND 
 		   			(((TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# AND TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#)
 		   		AND 
-		   			(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'))
+		   			(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '011'))
 		   			
 	   		<isEqual property="v_USERFLAG" compareValue="admin">
 	   			OR 
@@ -33001,8 +33145,11 @@
 	   					<iterate property="v_DEPTIDS" open="(" close=")" conjunction=",">
 	   						#v_DEPTIDS[]#
 	   					</iterate>
-                        AND
-                            TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015'))
+	   				AND
+	   					TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
+                    AND
+                        PROCESSORID IS NULL
+	   				)
 	   		</isEqual>
 	   		<isEqual property="v_aprFlag" compareValue="G">
 		     	OR
@@ -33449,6 +33596,11 @@
 								<iterate property="proxyList" open="(" close=")" conjunction=",">
 									#proxyList[].dept#
 								</iterate>
+							AND
+								L.aprmemberjobtitle IN
+								<iterate property="proxyList" open="(" close=")" conjunction=",">
+									#proxyList[].title#
+								</iterate>
 							)
 					</isNotEmpty>
 				)
@@ -33512,6 +33664,11 @@
 								L.APRMEMBERDEPTID IN
 								<iterate property="proxyList" open="(" close=")" conjunction=",">
 									#proxyList[].dept#
+								</iterate>
+							AND
+								L.aprmemberjobtitle IN
+								<iterate property="proxyList" open="(" close=")" conjunction=",">
+									#proxyList[].title#
 								</iterate>
 							)
 					</isNotEmpty>
@@ -33857,7 +34014,7 @@
 					TBL_EXPENDAPRDOCINFO
 				SET		
 						DELFLAG	=	NULL, 
-						SUMMARY = 	#v_SUMMARY#
+						SUMMARY = 	NULL
 				 WHERE  
 		     		DOCID = #v_DOCID#
 		     AND
@@ -34355,4 +34512,103 @@
                 DUAL
         </iterate>
     </insert>
+    
+    <update id="EzApprovalG.updateHistoryAttachInfo" parameterClass="Map">
+	 	UPDATE 
+	 		TBL_HISTORYATTACHINFO
+        SET 
+        	ATTACHFILEDISPLAYNAME = #v_DISPLAYNAME#
+        WHERE  
+        	DOCID = #v_DOCID#
+        AND 
+        	ATTACHFILENAME = #v_ATTACHFILENAME#
+        AND
+        	ATTACHFILESN = #v_ATTACHFILESN#
+        AND
+           TENANT_ID = #v_TENANTID#
+   		AND
+   			COMPANYID = #companyID#
+	</update>
+
+    <update id="EzApprovalG.updateEndAprDocInfoCont" parameterClass="Map">
+        UPDATE
+            TBL_ENDAPRDOCINFO
+        SET
+            CONTAINERID = NULL
+        WHERE
+            TENANT_ID = #v_TENANTID#
+          AND
+            COMPANYID = #companyID#
+          AND
+            DOCID = #v_DOCID#
+    </update>
+
+    <delete id="EzApprovalG.deleteEndAprLineInfo" parameterClass="Map">
+        DELETE
+            TBL_ENDAPRLINEINFO
+        WHERE
+            TENANT_ID = #v_TENANTID#
+          AND
+            COMPANYID = #companyID#
+          AND
+            DOCID = #v_DOCID#
+    </delete>
+
+    <select id="EzApprovalG.getDocProcessState" parameterClass="Map" resultClass="HashMap">
+        SELECT
+            A.DOCSTATE, A.FUNCTIONTYPE, B.DOCSTATE AS PROCDOCSTATE, B.APRSTATE AS PROCAPRSTATE
+        FROM
+            TBL_APRDOCINFO A
+                JOIN
+            TBL_APRRECEIPTPROCESSINFO B
+            ON
+                    A.DOCID = B.DOCID
+                    AND
+                    A.COMPANYID = B.COMPANYID
+                    AND
+                    A.TENANT_ID = B.TENANT_ID
+        WHERE
+            B.DOCID = #v_DOCID#
+          AND
+            B.PARENTSDOCID = #v_ORGDOCID#
+          AND
+            A.TENANT_ID = #v_TENANTID#
+          AND
+            A.COMPANYID = #v_COMPANYID#
+    </select>
+    
+	<select id="EzApprovalG.getNextAprLineInfo" parameterClass="HashMap" resultClass="ApprGLineTempletVO">
+        SELECT 
+            APRMEMBERSN, 
+            APRTYPE, 
+            APRSTATE 
+        FROM 
+            TBL_APRLINEINFO
+        WHERE 
+            DOCID = #v_DOCID#
+        AND 
+            TENANT_ID = #v_TENANTID#
+        AND 
+            COMPANYID = #companyID#
+        AND 
+            APRMEMBERSN > #v_APRMEMBERSN#
+        ORDER BY 
+            APRMEMBERSN
+	</select>
+    
+    <update id="EzApprovalG.rollbackJubsuAprReceiptProcessInfo" parameterClass="Map">
+   		Update 
+   			TBL_APRRECEIPTPROCESSINFO 
+   		SET 
+   			ProcessDocID = #v_PROCESSDOCID# , 
+   			AprState = #v_APRSTATE#
+   		Where 
+   			DocID = #v_DOCID# 
+		AND 
+			ReceivedDeptID = #v_DEPTID#
+		AND 
+			TENANT_ID = #v_TENANTID#
+		AND 
+    		COMPANYID = #companyID#
+    </update>
 </sqlMap>

@@ -113,6 +113,7 @@
 		<result property="deptName2"        column="dept_name2"            columnIndex="12"/>
 		<result property="companyId"        column="company_id"            columnIndex="13"/>
 		<result property="tenantId"         column="tenant_id"             columnIndex="14"/>
+		<result property="subDeptYN"         column="SUBDEPTYN"             columnIndex="15"/>
 	</resultMap>
 	
 	<!-- QuestionVO resultMap -->
@@ -517,6 +518,35 @@
 			LIMIT #startPoint#, #listCount#
 		]]>
 	</select>
+
+	<select id="EzSurveyDAO.getSearchMemberListByAttr" resultMap="deptMemberInfo">
+		<![CDATA[
+			SELECT
+				CN                                                                                                                           AS CN,
+				CASE WHEN #primary# = '1'THEN TITLE ELSE TITLE2 END                                                                          AS POSITION,
+				CASE WHEN #primary# = '1'THEN DISPLAYNAME ELSE DISPLAYNAME2 END                                                              AS DISPLAYNAME,
+				DISPLAYNAME                                                                                                                  AS DISPLAYNAME1,
+				DISPLAYNAME2                                                                                                                 AS DISPLAYNAME2,
+				DEPARTMENT                                                                                                                   AS DEPARTMENT,
+				CASE WHEN #primary# = '1'THEN DESCRIPTION ELSE DESCRIPTION2 END                                                              AS DEPARTMENTNAME,
+				DESCRIPTION                                                                                                                  AS DEPARTMENTNAME1,
+				DESCRIPTION2                                                                                                                 AS DEPARTMENTNAME2,
+				TELEPHONENUMBER                                                                                                              AS TELEPHONENUMBER,
+				MAIL                                                                                                                         AS MAIL,
+				EXTENSIONATTRIBUTE2                                                                                                          AS USERIMAGE
+			FROM
+				TBL_USERMASTER
+			WHERE
+				CN != 'masteradmin'
+			AND
+				CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
+			AND
+				TENANT_ID = #tenantId#
+			AND
+				$srchOption$ IN
+		]]>
+		<iterate property="attrList" open="(" close=")" conjunction=",">#attrList[]#</iterate>
+	</select>
 	
 	<!--***********************************************************************************
 	**                                User config process                                **
@@ -567,9 +597,22 @@
 			) s2
 	</select>
 	
+	<!-- 2021-11-22 홍승비 - 전자설문 하위부서 허용여부 추가로 회사ID 가져오지 않도록 수정 -->
 	<select id="EzSurveyDAO.getUserDepartmentIdList" resultClass="String">
 		select
 			d4.cn
+		from
+			(
+				select * from tbl_deptmaster d1 where d1.cn = #deptId# and d1.tenant_id = #tenantId#
+				union
+				select d3.* from tbl_deptmaster d3 join tbl_addjobmaster a on d3.cn = a.deptid and a.cn = #userId# and d3.tenant_id = a.tenant_id
+				where d3.tenant_id = #tenantId#
+			) d4
+	</select>
+	
+	<select id="EzSurveyDAO.getUserAllDepartmentIdList" resultClass="String">
+		select
+			d4.DEPT_CD_PATH
 		from
 			(
 				select * from tbl_deptmaster d1 where d1.cn = #deptId# and d1.tenant_id = #tenantId#
@@ -599,6 +642,15 @@
 				<iterate property="deptList" open="(" close=")" conjunction=",">
 					#deptList[]#
 				</iterate> and (user_type = 'dept' OR user_type = 'comp')
+			)
+			OR
+			(user_id IN
+				<iterate property="allDeptList" open="(" close=")" conjunction=",">
+					#allDeptList[]#
+				</iterate>
+				and (user_type = 'dept' OR user_type = 'comp')
+				AND
+					 SUBDEPTYN = 'Y'
 			)
 			OR
 			(a.user_type = 'jikchek' and (b.extensionattribute8 = a.user_id
@@ -866,7 +918,9 @@
 				or
 					(a.user_type = 'jikwi' and b.extensionattribute7 = a.user_id)
 				or
-					(a.user_type = 'comp' and b.physicaldeliveryofficename = a.user_id)
+					(a.user_type = 'comp' and b.physicaldeliveryofficename = a.user_id AND SUBDEPTYN = 'Y')
+				OR
+					(a.user_type = 'comp' and b.DEPARTMENT = a.user_id AND SUBDEPTYN = 'N')
 				or
 					(a.user_type = 'user' and b.cn = a.user_id)
 				or
@@ -938,6 +992,7 @@
 				from tbl_addjobmaster ad 
 				where tenant_id = #tenantId# and 
 					(	(b.user_type = 'dept' 		and b.member_id = ad.deptid	) 
+					 OR (b.user_type = 'comp' 	and b.member_id = ad.deptid)
 					 or (b.user_type = 'jikwi' 		and b.member_id = ad.jobid	) 
 					 or (b.user_type = 'jikchek' 	and b.member_id = ad.jobid	) ))
 			where a.PHYSICALDELIVERYOFFICENAME = #companyId# and tenant_id = #tenantId#
@@ -960,6 +1015,7 @@
 						and s.tenant_id = #tenantId# 
 			    		and s.company_id = #companyId#
 				where  (s.user_type = 'dept' 	and s.user_id = ad.deptid )
+					OR (s.user_type = 'comp' 	and s.user_id = ad.deptid )
 					or (s.user_type = 'jikwi' 	and s.user_id = ad.jobid )
 			        or (s.user_type = 'jikchek' and s.user_id = ad.jobid )
 			    ) d
@@ -968,6 +1024,101 @@
 
 
 		) as plusaddjob
+ 		]]>
+	</select>
+	
+	<!-- 2021-11-18 홍승비 - 특정 전자설문의 대상자가 부서/회사이면서 하위부서 허용(Y)인 경우, 해당 부서의 ID를 전부 리턴하는 쿼리 -->
+	<select id="EzSurveyDAO.getSurveySubDeptListForMail" resultClass="String">
+		<![CDATA[
+			SELECT DISTINCT
+				D.CN
+			FROM
+				TBL_SURVEY_PARTICIPANT S
+			INNER JOIN
+				TBL_DEPTMASTER D
+			ON
+				S.TENANT_ID = D.TENANT_ID
+           	AND
+				(S.USER_TYPE = 'dept' OR S.USER_TYPE = 'comp')
+			AND
+				D.CN = S.USER_ID
+			WHERE
+				S.SURVEY_ID = #v_SURVEYID#
+			AND
+				S.TENANT_ID = #v_TENANTID#
+			AND
+				S.COMPANY_ID = #v_COMPANYID#
+			AND
+				SUBDEPTYN = 'Y'
+ 		]]>
+	</select>
+	
+	<!-- 2021-11-18 홍승비 - 특정 부서를 상위부서로 가지는 모든 하위부서 소속원들 리턴 쿼리 (겸직 포함)  -->
+	<select id="EzSurveyDAO.getSurveyLowerDeptUsersForMail" resultClass="ParticipantVO">
+		<![CDATA[
+			SELECT DISTINCT
+				#v_SURVEYID# AS SURVEYID,
+				U.CN AS USERID,
+				U.DISPLAYNAME AS USERNAME1,
+				U.DISPLAYNAME2 AS USERNAME2,
+				U.MAIL AS EMAIL,
+				D.EXTENSIONATTRIBUTE2 AS COMPANYID,
+				D.TENANT_ID AS TENANTID
+			FROM
+				TBL_DEPTMASTER D
+			INNER JOIN
+				TBL_USERMASTER U
+			ON
+				D.CN = U.DEPARTMENT
+			AND
+				D.EXTENSIONATTRIBUTE2 = U.PHYSICALDELIVERYOFFICENAME
+			AND
+				D.TENANT_ID = U.TENANT_ID
+			WHERE (
+				DEPT_CD_PATH LIKE CONCAT('%,', #v_UPPERDEPTID#)
+                OR
+                DEPT_CD_PATH LIKE CONCAT(CONCAT('%,', #v_UPPERDEPTID#), ',%')
+                OR
+                DEPT_CD_PATH LIKE CONCAT(#v_UPPERDEPTID#, ',%')
+                )
+			AND
+				D.TENANT_ID = #v_TENANTID#
+			AND
+				D.EXTENSIONATTRIBUTE2 = #v_COMPANYID#
+				
+			UNION
+			
+			SELECT DISTINCT
+				#v_SURVEYID# AS SURVEYID,
+				A.CN AS USERID,
+				U.DISPLAYNAME AS USERNAME1,
+				U.DISPLAYNAME2 AS USERNAME2,
+				U.MAIL AS EMAIL,
+				D.EXTENSIONATTRIBUTE2 AS COMPANYID,
+				D.TENANT_ID AS TENANTID
+			FROM
+				TBL_DEPTMASTER D
+			INNER JOIN
+				TBL_ADDJOBMASTER A
+			ON
+				D.CN = A.DEPTID
+			AND
+				D.TENANT_ID = A.TENANT_ID
+			INNER JOIN
+				TBL_USERMASTER U
+			ON
+				A.CN = U.CN
+			AND
+				A.TENANT_ID = U.TENANT_ID
+			WHERE (
+				DEPT_CD_PATH LIKE CONCAT('%,', #v_UPPERDEPTID#)
+                OR
+                DEPT_CD_PATH LIKE CONCAT(CONCAT('%,', #v_UPPERDEPTID#), ',%')
+                OR
+                DEPT_CD_PATH LIKE CONCAT(#v_UPPERDEPTID#, ',%')
+                )
+			AND
+				D.TENANT_ID = #v_TENANTID#
  		]]>
 	</select>
 	
@@ -1103,11 +1254,11 @@
 		<![CDATA[
 			insert into tbl_survey_participant (
 				survey_id,  user_type,   user_id,     user_name1,  user_name2,  email,
-				dept_id,    dept_name1,  dept_name2,  company_id,  tenant_id
+				dept_id,    dept_name1,  dept_name2,  company_id,  tenant_id, SUBDEPTYN
 			)
 			values (
 				#surveyId#, #userType#,  #userId#,    #userName1#, #userName2#, #email#,
-				#deptId#,   #deptName1#, #deptName2#, #companyId#, #tenantId#
+				#deptId#,   #deptName1#, #deptName2#, #companyId#, #tenantId#, #subDeptYN#
 			)
 		]]>
 	</insert>
@@ -1127,7 +1278,8 @@
 			dept_name1,
 			dept_name2,
 			company_id,
-			tenant_id
+			tenant_id,
+			SUBDEPTYN
 		from tbl_survey_participant 
 			where survey_id = #surveyId# and company_id = #companyId# and tenant_id = #tenantId#
 			and ( (user_type = 'user' and user_id in (select cn from tbl_usermaster where tenant_id = #tenantId#)) 
@@ -1161,6 +1313,44 @@
 			physicaldeliveryofficename = #companyId#
 		AND
 			tenant_id = #tenantId#
+	</select>
+	
+	<select id="EzSurveyDAO.getSurveyUserInfoAddJob" parameterClass="Map" resultMap="deptMemberInfo">
+		SELECT 
+			U.cn																	as cn
+			, case when #primary# = '1'then A.title else A.title2 end           	as position
+			, case when #primary# = '1' then U.displayname else U.displayname2 end	as displayName
+			, U.displayname														as displayName1
+			, U.displayname2														as displayName2
+			, A.DEPTID														as department
+			, case when #primary# = '1' then D.displayname else D.displayname2 end 	as departmentName
+			, D.displayname														as departmentName1
+			, D.displayname2														as departmentName2
+			, U.telephonenumber                                               	as telephonenumber
+			, U.mail																as mail
+			, U.extensionattribute2                                            	as userimage
+		FROM 
+			tbl_usermaster U
+		INNER JOIN
+			TBL_ADDJOBMASTER A
+		ON
+			U.CN = A.CN
+		AND
+			U.TENANT_ID = A.TENANT_ID
+		INNER JOIN
+			TBL_DEPTMASTER D
+		ON
+			A.DEPTID = D.CN
+		AND
+			A.TENANT_ID = D.TENANT_ID
+		WHERE
+			A.CN = #userId#
+		AND
+			A.DEPTID = #deptID#
+		AND
+			D.EXTENSIONATTRIBUTE2 = #companyId#
+		AND
+			U.TENANT_ID = #tenantId#
 	</select>
 	
 	<select id="EzSurveyDAO.getSurveyDeptInfo" parameterClass="Map" resultMap="simpleDeptVO">
@@ -1355,6 +1545,15 @@
 				</iterate>
 				and 
 				(P.user_type = 'dept' or P.user_type = 'comp')
+				)
+				OR
+				(P.user_id IN
+					<iterate property="allDeptList" open="(" close=")" conjunction=",">
+						#allDeptList[]#
+					</iterate>
+					AND (P.user_type = 'dept' OR P.user_type = 'comp')
+					AND
+						 SUBDEPTYN = 'Y'
 				)
 			)
 		and 

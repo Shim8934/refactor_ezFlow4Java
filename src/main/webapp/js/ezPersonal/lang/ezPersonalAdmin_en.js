@@ -44,3 +44,6 @@ var strLangkhj28 = "Please register.";
 var strLangkhj29 = "Duplicate registration or failure to register";
 var strLangkhj30 = "Successfully saved.";
 var strLangkhj31 = "Error occurred while deleting.";
+
+/* 2021-12-09 홍승비 - 확장자 관련 메세지 추가 */
+var srtLangHSBEx01 = "Unacceptable extension.";

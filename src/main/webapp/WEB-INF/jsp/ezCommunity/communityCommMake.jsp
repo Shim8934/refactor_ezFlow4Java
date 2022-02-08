@@ -120,9 +120,9 @@
 	            }
 	            if (fileval != "") {
 	                var filename = fileval.substring(fileval.lastIndexOf("\\") + 1, fileval.length);
-	                var extension = fileval.split(".");
+	                var extension = filename.substring(filename.lastIndexOf(".") + 1, filename.length);
 	                var check = "false";
-	                check = compareExtension(check, extension[extension.length - 1]);
+	                check = compareExtension(check, extension);
 	                
 	                if (check == "false") {
 	                    alert(filename + strLang40);
@@ -130,6 +130,14 @@
 	                    document.getElementById(printspanid).innerText = "";
 	                    return;
 	                }
+	                
+	                /* 2021-12-08 홍승비 - 커뮤니티 상단/썸네일 이미지 업로드 시 서버단에서도 이미지 확장자 체크 진행 */
+	                if (checkImgExtension(extension) == "UPLOAD_EXT_ERROR") {
+						document.getElementById(fileid).value = "";
+						document.getElementById(printspanid).innerText = "";
+						alert("<spring:message code ='ezAttitude.t260' />"); // 허용하지 않는 확장자입니다.
+						return ;
+					}
 	                
 	                document.getElementById(printspanid).innerText = filename;
 	            } else {
@@ -184,13 +192,13 @@
 	                <td colspan="2" style="padding: 0">
 	                    <table style="width:100%">
 	                        <tr class="primary">
-	                            <th><c:out value='${langPrimary }' /></th>
+	                            <th><c:out value='${langPrimary }' /><span style="color:red"> *</span></th>
 	                            <td>
 	                                <input type="text" class="inputText" name="clubName" size="80" maxlength="50" style="width: 100%;box-sizing:border-box;-moz-box-sizing:border-box;">
 								</td>
 	                        </tr>
 	                        <tr class="secondary">
-	                            <th><c:out value='${langSecondary} ' /></th>
+	                            <th><c:out value='${langSecondary} ' /><span style="color:red"> *</span></th>
 	                            <td>
 	                                <input type="text" class="inputText" name="clubName2" maxlength="50" style="WIDTH: 100%;box-sizing:border-box;-moz-box-sizing:border-box;">
 								</td>
@@ -199,7 +207,7 @@
 	                </td>
 	            </tr>
 	            <tr style="height:60px">
-	                <th style="height:40px;"><spring:message code='ezCommunity.t11' /></th>
+	                <th style="height:40px;"><spring:message code='ezCommunity.t11' /><span style="color:red"> *</span></th>
 	                <td style="white-space:nowrap;border-right:0px"><span id="idSpan">${idSpanValue }</span></td>
 	                <td style="padding: 5px;padding-right:25px;white-space:nowrap;border-left:0px">
 	                	<%-- <div><spring:message code='ezCommunity.t1013' /></div> --%>
@@ -267,7 +275,7 @@
 	                </td>
 	            </tr>
 	            <tr>
-	                <th><spring:message code='ezCommunity.t1529' /><spring:message code='ezCommunity.t18' /></th>
+	                <th style="padding-left: 5px; padding-right: 5px;"><spring:message code='ezCommunity.t1529' /><spring:message code='ezCommunity.t18' /><span style="color:red"> *</span></th>
 	                <td colspan="2">
 	                    <textarea name="intro" maxlength="2000" style="height: 120px; width: 99.5%;box-sizing:border-box;-moz-box-sizing:border-box;resize:none;margin:5px"></textarea>
 					</td>

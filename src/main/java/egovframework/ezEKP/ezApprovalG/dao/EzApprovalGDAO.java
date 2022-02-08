@@ -3434,6 +3434,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public List<String> getFileOpenFlagList(Map<String, Object> map) throws Exception {
 		return (List<String>) list("EzApprovalG.getFileOpenFlagList", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> getFileOpenSNList(Map<String, Object> map) throws Exception {
+		return (List<String>) list("EzApprovalG.getFileOpenSNList", map);
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<ApprGDocListForOpenGovVO> getSearchDocListForOpenGov(Map<String, Object> map) throws Exception {
@@ -3707,5 +3712,21 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
     
     public List<Map<String, Object>> getReceiptInfoIng(Map<String, Object> map) throws Exception {
         return (List<Map<String, Object>>) list("EzApprovalG.getReceiptInfoIng", map);
+    }
+
+	public void updateHistoryAttachInfo(Map<String, Object> map) {
+		update("EzApprovalG.updateHistoryAttachInfo", map);		
+	}
+
+    public void deleteEndAprLineInfo(Map<String, Object> map) throws Exception {
+        delete("EzApprovalG.deleteEndAprLineInfo", map);
+    }
+
+    public void updateEndAprDocInfoCont(Map<String, Object> map) throws Exception {
+	    update("EzApprovalG.updateEndAprDocInfoCont", map);
+    }
+    
+    public void rollbackJubsuAprReceiptProcessInfo(Map<String, Object> map) throws Exception {
+	    update("EzApprovalG.rollbackJubsuAprReceiptProcessInfo", map);
     }
 }

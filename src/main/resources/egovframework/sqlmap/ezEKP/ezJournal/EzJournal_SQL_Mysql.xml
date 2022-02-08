@@ -120,6 +120,7 @@
 		<result property="deptName" 			column="dept_name" />
 		<result property="userImg" 				column="user_img" />
 		<result property="extensionAttribute15" column="extensionAttribute15"	/>
+		<result property="userType" 			column="userType"	/>
 	</resultMap>
 
 	<resultMap class="journalAuthorVO" 		id="deptMap">
@@ -562,7 +563,8 @@
 				DEPARTMENT as dept_id,
 				DESCRIPTION$lang$ as dept_name,
 				EXTENSIONATTRIBUTE2 as user_img,
-				CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15
+				CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15,
+				'user' as userType
 			from 
 				tbl_usermaster
 			where
@@ -588,7 +590,8 @@
 				B.DEPTID as dept_id,
 				C.DISPLAYNAME$lang$ as dept_name,
 				A.EXTENSIONATTRIBUTE2 as user_img,
-				CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(A.EXTENSIONATTRIBUTE15, '0'))), IFNULL(A.EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15               	
+				CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(A.EXTENSIONATTRIBUTE15, '0'))), IFNULL(A.EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15,
+				'addJob' as userType
 			from
 				tbl_addjobmaster B
 			join

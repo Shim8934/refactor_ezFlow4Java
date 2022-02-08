@@ -1,4 +1,4 @@
-﻿﻿var wTable;
+﻿var wTable;
 var xmlhttp;
 
 var delFlag = false;
@@ -490,6 +490,12 @@ function tempInsert(objNodes, DataSDT, DataEDT) {
     pTempData.o_end = DataEDT;
     pTempData.endDiv = DataSDT.getFullYear() + "-" + leadingZeros((DataSDT.getMonth() + 1), 2) + "-" + leadingZeros(DataSDT.getDate(), 2) + "_" + endHour + ":" + endMin.toString().substring(0, 1);
 
+    /* 2021-11-26 홍승비 - 일정완료여부 데이터 추가 (html 태그 속성 부여 용도는 아님. 데이터 처리용도) */
+    pTempData.CompleteFG = SelectSingleNodeValue(objNodes, "COMPLETEFG");
+    pTempData.IsAllRep = SelectSingleNodeValue(objNodes, "ISALLREP");
+    pTempData.StartDateNoTZ = SelectSingleNodeValue(objNodes, "STARTDATE").substring(0, 19);
+    pTempData.RepStartDate = SelectSingleNodeValue(objNodes, "REPSTARTDATE");
+    
     return pTempData;
 }
 
@@ -744,6 +750,9 @@ function CalMonthDataBind(oAppointment) {
             oSpan.className = "department";
         }
         
+        /* 2021-09-07 홍승비 - 일정관리 월보기 시 각 일정제목에 말줄임표 적용 */
+        oTd.style.textOverflow = "ellipsis";
+        
         for (var i = 0; i < publicIds.length; i++) {
         	if (oAppointment.OwnerID == publicIds[i].id) {
         		oTd.className = "calendar_data_public_department";
@@ -820,6 +829,8 @@ function CalMonthDataBind(oAppointment) {
         oTd.setAttribute("command", "open");
         oTd.setAttribute("ptime", pTime);
         
+        /* 2021-11-26 홍승비 - 일정완료여부 데이터 추가 */
+        oTd.setAttribute("completefg", oAppointment.CompleteFG);
         
         // 2020-02-24 김정언 - 근태 현황일 경우에는 근태 상세보기로 이동 (DateType 4 : 근태 현황)
         if(oAppointment.DateType == 4) {
@@ -833,11 +844,19 @@ function CalMonthDataBind(oAppointment) {
         	oTd.onmouseover = function (event) { TooltipMouseOver(this, event); };
         	oTd.setAttribute("onmouseout", "hideTooltip(this)");
         }
-
+        
+        // 일정완료 시 취소선 표출하기 위해 span 추가
+        var oTextSpan = document.createElement("SPAN");
         var oText = document.createTextNode(pSubject);
+        
+        // 단일. 특정 반복일정, 전체 반복일정에 따라 분기처리
+        if (oAppointment.CompleteFG == "Y" && ((oAppointment.RepStartDate == oAppointment.StartDateNoTZ && oAppointment.IsAllRep == "N") || (oAppointment.IsAllRep == "Y"))) {
+        	oTextSpan.style.textDecoration = "line-through";
+        }
+        
         //oTd.innerHTML += pSubject;
-       	oTd.appendChild(oText); 
-
+        oTextSpan.appendChild(oText);
+       	oTd.appendChild(oTextSpan);
         
         oTr.appendChild(oTd);
         objElm.appendChild(oTr);
@@ -937,9 +956,16 @@ function CalWeekDataBind(oAppointment, order) {
             pSubject = oAppointment.Subject;
         }
 
+    	var oTextSpan = document.createElement("SPAN");
         var oText = document.createTextNode(pSubject);
+        
+    	if (oAppointment.CompleteFG == "Y" && ((oAppointment.RepStartDate == oAppointment.StartDateNoTZ && oAppointment.IsAllRep == "N") || (oAppointment.IsAllRep == "Y"))) {
+    		oTextSpan.style.textDecoration = "line-through";
+    	}
+    	
         //oTd.innerHTML += pSubject;
-        oTd.appendChild(oText);
+    	oTextSpan.appendChild(oText);
+    	oTd.appendChild(oTextSpan);
         
         oTr.appendChild(oTd);
         oTable.appendChild(oTr);
@@ -978,6 +1004,7 @@ function CalWeekDataBind(oAppointment, order) {
         oDiv.setAttribute("command", "open");
         oDiv.setAttribute("ptime", pTime);
         
+        oTd.setAttribute("completefg", oAppointment.CompleteFG);
         
         oDiv.onmouseover = function (event) { TooltipMouseOver(this, event); };
         oDiv.setAttribute("onmouseout", "hideTooltip(this)");
@@ -1083,10 +1110,17 @@ function CalWeekAllDataBind(oAppointment, order) {
             pSubject = oAppointment.Subject;
         }
 
+        var oTextSpan = document.createElement("SPAN");
         var oText = document.createTextNode(pSubject);
         
+    	if (oAppointment.CompleteFG == "Y" && ((oAppointment.RepStartDate == oAppointment.StartDateNoTZ && oAppointment.IsAllRep == "N") || (oAppointment.IsAllRep == "Y"))) {
+    		oTextSpan.style.textDecoration = "line-through";
+    	}
+        
         //oDiv.innerHTML += pSubject;
-        oDiv.appendChild(oText);
+    	oTextSpan.appendChild(oText);
+    	oDiv.appendChild(oTextSpan);
+        
         oDiv.setAttribute("ID", "div_" + oAppointment.trID + "_" + oAppointment.ScheduleID);
         oDiv.setAttribute("ScheduleID", oAppointment.ScheduleID);
         oDiv.setAttribute("ScheduleChangeKey", oAppointment.ScheduleChangeKey);
@@ -1118,6 +1152,7 @@ function CalWeekAllDataBind(oAppointment, order) {
         oDiv.setAttribute("command", "open");
         oDiv.setAttribute("ptime", pTime);
         
+        oDiv.setAttribute("completefg", oAppointment.CompleteFG);
         
         oDiv.onmouseover = function (event) { TooltipMouseOver(this, event); };
         oDiv.setAttribute("onmouseout", "hideTooltip(this)");
@@ -1211,9 +1246,16 @@ function CalDayDataBind(oAppointment, order) {
             pSubject = oAppointment.Subject;
         }
 
+        var oTextSpan = document.createElement("SPAN");
         var oText = document.createTextNode(pSubject);
+        
+        if (oAppointment.CompleteFG == "Y" && ((oAppointment.RepStartDate == oAppointment.StartDateNoTZ && oAppointment.IsAllRep == "N") || (oAppointment.IsAllRep == "Y"))) {
+    		oTextSpan.style.textDecoration = "line-through";
+    	}
+        
         //oTd.innerHTML += pSubject;
-        oTd.appendChild(oText);
+        oTextSpan.appendChild(oText);
+        oTd.appendChild(oTextSpan);
         
         oTr.appendChild(oTd);
         oTable.appendChild(oTr);
@@ -1253,6 +1295,8 @@ function CalDayDataBind(oAppointment, order) {
         oDiv.setAttribute("command", "open");
         oDiv.setAttribute("ptime", pTime);
         
+        /* 2021-11-26 홍승비 - 일정완료여부 데이터 추가 */
+        oDiv.setAttribute("completefg", oAppointment.CompleteFG)
         
         oDiv.onmouseover = function (event) { TooltipMouseOver(this, event); };
         oDiv.setAttribute("onmouseout", "hideTooltip(this)");
@@ -1357,10 +1401,16 @@ function CalDayAllDataBind(oAppointment, order) {
             pSubject = oAppointment.Subject;
         }
 
+        var oTextSpan = document.createElement("SPAN");
         var oText = document.createTextNode(pSubject);
         
+    	if (oAppointment.CompleteFG == "Y" && ((oAppointment.RepStartDate == oAppointment.StartDateNoTZ && oAppointment.IsAllRep == "N") || (oAppointment.IsAllRep == "Y"))) {
+    		oTextSpan.style.textDecoration = "line-through";
+    	}
+    	
         //oDiv.innerHTML += pSubject;
-        oDiv.appendChild(oText);
+    	oTextSpan.appendChild(oText);
+    	oDiv.appendChild(oTextSpan);
        
         oDiv.setAttribute("ID", "div_" + oAppointment.trID + "_" + oAppointment.ScheduleID);
         oDiv.setAttribute("ScheduleID", oAppointment.ScheduleID);
@@ -1393,6 +1443,7 @@ function CalDayAllDataBind(oAppointment, order) {
         oDiv.setAttribute("command", "open");
         oDiv.setAttribute("ptime", pTime);
         
+        oDiv.setAttribute("completefg", oAppointment.CompleteFG);
         
         oDiv.onmouseover = function (event) { TooltipMouseOver(this, event); };
         oDiv.setAttribute("onmouseout", "hideTooltip(this)");

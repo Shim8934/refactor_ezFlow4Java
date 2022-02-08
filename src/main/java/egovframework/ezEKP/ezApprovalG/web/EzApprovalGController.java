@@ -532,11 +532,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		Document doc = commonUtil.convertStringToDocument(result);
 		
 		String userRealDeptId = ezOrganService.getUserOrgDeptId(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+		List<OrganUserVO> orgUserInfolist = ezOrganService.getOrgUserInfo(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+		String userRealTitle = orgUserInfolist.get(0).getTitle();
 		
-		if (userInfo.getDeptID().equals(userRealDeptId)) {
+		if (userInfo.getDeptID().equals(userRealDeptId) && userInfo.getTitle().equals(userRealTitle)) {
 			buJaeInfo = doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent();
 		} else {
-			buJaeInfo = ezOrganService.getAddJobProxy(userInfo.getId(), userInfo.getDeptID(), userInfo.getTenantId());
+			//buJaeInfo = ezOrganService.getAddJobProxy(userInfo.getId(), userInfo.getDeptID(), userInfo.getTenantId());
+			buJaeInfo = ezOrganService.getAddJobProxy(userInfo.getId(), userInfo.getDeptID(), userInfo.getTitle(), userInfo.getTenantId());
 		}
 		
 		if(shareUserId != null && !shareUserId.equals("")){
@@ -881,7 +884,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
      
         logger.debug("docID = " + docID + ", mode =" + mode + ", tenantID=" + tenantID);       
 		// c=1 : 전체관리자, k=1 : 회사관리자, f=1 : 문서조회관리자
-		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("ff=1")) {
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("ff=1")) {
 			if (mode.toUpperCase().equals("APR") || mode.toUpperCase().equals("TMP")) {
 				if (docID != null && !docID.equals("")) {
 //					String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1", tenantID, userInfo.getOffset());
@@ -915,6 +918,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 									}
 								}
 							}
+						}
+					}
+
+					//해당문서가 우리 부서의 배부대장에 있는 문서인지 확인
+					if (checkPermission) {
+						int deliveryCount = ezApprovalGService.isMyDeptDeliveryDoc(userInfo.getDeptID(), docID, userInfo.getCompanyID(), userInfo.getTenantId());
+						if(deliveryCount > 0){
+							checkPermission = false;
 						}
 					}
 					
@@ -1075,7 +1086,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String kind = request.getParameter("kind");
 		String searchType = request.getParameter("searchType");
 		String searchName = request.getParameter("searchName");
-		String result = ezApprovalGService.getFormInfo(id.trim(), kind, searchType, searchName, userInfo.getId(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		String result = ezApprovalGService.getFormInfo(id.trim(), kind, searchType, searchName, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		
 		logger.debug("getForm ended.");
 		
@@ -1448,7 +1459,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		Path reformHtmlRelativePath = realPath.resolve("." + reformHtmlRelativePathStr);
 				
 		if (Files.exists(reformHtmlRelativePath)) {
-			reformBody = new String(Files.readAllBytes(reformHtmlRelativePath));
+			reformBody = new String(commonUtil.readBytesFromFile(reformHtmlRelativePath));
 		}
 		
 		if (Files.exists(realPath.resolve("." + reformFunctionRelativePathStr))) {
@@ -1963,11 +1974,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
-
-        //원문정보공개 데이터 제거
-        if (config.getProperty("config.useOpenGov").equalsIgnoreCase("YES")) {
-            ezApprovalGService.deleteOpenGovDocInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
-        }
 
 		String result = ezApprovalGService.deleteDocInfo(docID, "CHECK", userInfo.getCompanyID(), userInfo.getTenantId());
 
@@ -3209,7 +3215,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("fileName : " + fileName);
 
 		//관리자는 권한 제한없도록 추가
-		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+		if (userInfo.getRollInfo().indexOf("c=1") > -1) {
 			
 			result = "PERMISSION";
 		} else {
@@ -3248,6 +3254,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 			
 			logger.debug("docStatus = " + docStatus + "|| result = " + result);
+		}
+
+		//해당문서가 우리 부서의 배부대장에 있는 문서인지 확인
+		if (result.equals("NOTPERMISSION")) {
+			int deliveryCount = ezApprovalGService.isMyDeptDeliveryDoc(userInfo.getDeptID(), docID, userInfo.getCompanyID(), userInfo.getTenantId());
+			if(deliveryCount > 0){
+				result = "";
+			}
 		}
 		
 		/* 
@@ -3420,7 +3434,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					
 					try {
 						File sourceFile = new File(commonUtil.detectPathTraversal(realPath + filePathsArr[i])); // 다운받기 위한 원본 파일의 경로
-						byte[] fileBytes = Files.readAllBytes(sourceFile.toPath());
+						byte[] fileBytes = commonUtil.readBytesFromFile(sourceFile.toPath());
 						
 						// fileNamesArr는 확장자를 포함함
 						if (fileNamesArr[i].endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
@@ -4729,14 +4743,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 * 전자결재G 결재시 암호입력 호출 Method
 	 */
 	@RequestMapping(value = "/ezApprovalG/ezchkPasswd.do", method = RequestMethod.GET)
-	public String ezchkPasswd(Model model) throws Exception {
+	public String ezchkPasswd(Model model, HttpServletRequest request) throws Exception {
 		logger.debug("ezchkPasswd started");
 
 		String publicModulus = egovFileScrty.getPbm();
 		String publicExponent = "10001";
+		String mode = request.getParameter("mode") != null ? request.getParameter("mode") : "";
 		
 		model.addAttribute("publicModulus", publicModulus);
         model.addAttribute("publicExponent", publicExponent);
+        model.addAttribute("mode", mode);
         
         logger.debug("ezchkPasswd ended");
         
@@ -5537,8 +5553,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String realPath = commonUtil.getRealPath(request);
 		String docID = xmlDom.getElementsByTagName("PDOCID").item(0).getTextContent().trim();
 		String zipFileName = xmlDom.getElementsByTagName("PTITLE").item(0).getTextContent().replace("\\", "").replace("/", "").replace(":", "").replace("?", "").
-                replace('"' + "", "").replace("*", "").replace("<", "").replace(">", "").replace("|", "");
-		String path = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());;
+                replace('"' + "", "").replace("*", "").replace("<", "").replace(">", "").replace("|", "").replaceAll("\\t", " ");
+		String path = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
 		String path2 = realPath + commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
 		String separators = "\\|\\|\\|";
 		String[] fileTypes = xmlDom.getElementsByTagName("PTYPEINFO").item(0).getTextContent().split(separators);
@@ -5591,7 +5607,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			
 			//2019.04.01 천성준 - 기존에 있던 replace로직 통합 겸 중복검사한 첨부파일이름 재입력
 			for (int i = 0; i < tmpAry.size(); i++) {
-				fileNames[i] = tmpAry.get(i).replace("\\", "").replace("/", "").replace(":", "").replace("?", "").replace('"' + "", "").replace("*", "").replace("<", "").replace(">", "").replace("|", "");
+				fileNames[i] = tmpAry.get(i).replace("\\", "").replace("/", "").replace(":", "").replace("?", "").replace('"' + "", "").replace("*", "").replace("<", "").replace(">", "").replace("|", "").replaceAll("\\t", " ");
 			}
 			
 			for (int k = 0; k < filePaths.length; k++) {
@@ -5658,7 +5674,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					fileExt = filePaths[k].substring(0, filePaths[k].lastIndexOf("."));
 					fileExt = fileExt.substring(fileExt.lastIndexOf(".") + 1);
 					// 암호화된 파일의 바이트를 읽어온 후 복호화
-					byte[] encryptedFileBytes = Files.readAllBytes(new File(commonUtil.detectPathTraversal(realPath + filePaths[k])).toPath());
+					byte[] encryptedFileBytes = commonUtil.readBytesFromFile(new File(commonUtil.detectPathTraversal(realPath + filePaths[k])).toPath());
 					// 인풋스트림에서 복호화한 바이트 배열을 쓰도록 한다.
 					inpStream = new ByteArrayInputStream(klibUtil.decrypt(encryptedFileBytes));
 				} else {
@@ -5786,6 +5802,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
             
             if (tempQuery.indexOf("FORMID;") != -1) {
                 returnQuery += " AND TBL_APRDOCINFO.FormID = '" + xmlDomSub.getElementsByTagName("FORMID").item(0).getTextContent() + "' ";
+            }
+
+            if (tempQuery.indexOf("FORMNAME;") != -1) {
+                returnQuery += " AND TBL_EXPAPRDOCINFO.FORMNAME LIKE '%" + xmlDomSub.getElementsByTagName("FORMNAME").item(0).getTextContent() + "%' ";
             }
             
             if (tempQuery.indexOf("KAPR;") != -1) {
@@ -5932,7 +5952,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				
 				// KLIB 복호화
 				if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
-					byte[] orgBytes = Files.readAllBytes(orgFile.toPath());
+					byte[] orgBytes = commonUtil.readBytesFromFile(orgFile.toPath());
 					FileUtils.writeByteArrayToFile(newFile, klibUtil.decrypt(orgBytes));
 				} else {
 					FileUtils.copyFile(orgFile, newFile);
@@ -6505,7 +6525,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				
 				// KLIB 복호화
 				if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
-					byte[] orgBytes = Files.readAllBytes(orgFile.toPath());
+					byte[] orgBytes = commonUtil.readBytesFromFile(orgFile.toPath());
 					FileUtils.writeByteArrayToFile(newFile, klibUtil.decrypt(orgBytes));
 				} else {
 					FileUtils.copyFile(orgFile, newFile);
@@ -6513,7 +6533,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 		}
 		
-		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("ff=1")) {
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("ff=1")) {
 			if (docID != null && !docID.equals("")) {
 				String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1", userInfo.getTenantId(), userInfo.getOffset());
 				String[] proxyUserArray = proxyUser.split(",");
@@ -7372,7 +7392,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					containers.append(", '" + apprGLeftVOList.get(k).getContainerID() + "'");
 				}
 			}
-			contID = containers.toString();
+			//contID = containers.toString();
 			model.addAttribute("share", "share");
 		}
 		
@@ -9791,7 +9811,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				if (useKlibBackup) {
 					Path backupDir = Paths.get(realPath, uploadApprovalRoot, companyId, EzApprovalGKlibService.BACKUP_DIR_NAME, "doc", oldYear, docDirName, "history");
 					Files.createDirectories(backupDir);
-					Files.write(backupDir.resolve(fileName), fileBytes, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+					commonUtil.writeBytesToFile(backupDir.resolve(fileName), fileBytes);
 				}
 				
 				fileBytes = klibUtil.encrypt(fileBytes);
@@ -9799,7 +9819,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 			
 			Path outputFile = Paths.get(commonUtil.detectPathTraversal(realPath + dirPath + commonUtil.separator + fileName));
-			Files.write(outputFile, fileBytes, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+			commonUtil.writeBytesToFile(outputFile, fileBytes);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -10978,7 +10998,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			attachJson = new JSONObject();
 			attachJson.put("fileOpenFlag", attach.getFileOpenFlag());
 			attachJson.put("sn", attach.getAttachFileSN());
-			attachJson.put("fileName", attach.getAttachFileName());
+			attachJson.put("fileName", attach.getDisplayName());
 			
 			String fileSize = attach.getAttachFileSize();
 			
@@ -11321,5 +11341,47 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	    logger.debug("getBujaeInfo ended.");
 	    
 	    return result;
+	}
+	
+	/* 2021-08-25 홍승비 - 개인병렬협조/합의자의 반송 시 처리 타입을 리턴 (1:반송해도 다음 결재권자에게 진행문서로 전달      2:한 명이라도 반송한 경우 원 기안자에게 반송) */
+	@RequestMapping(value = "/ezApprovalG/getPersonalAgreeReturnType.do", method = RequestMethod.GET, produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getPersonalAgreeReturnType(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception{
+		logger.debug("getPersonalAgreeReturnType started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String result = ezCommonService.getTenantConfig("PersonalAgreeReturnType", userInfo.getTenantId());
+		
+		logger.debug("getPersonalAgreeReturnType ended, result = " + result);
+		return result;
+	}
+    
+	@RequestMapping(value = "/ezApprovalG/setSusinRollbackDocID.do", produces = "text/plain; charset=utf-8", method = RequestMethod.GET)
+    @ResponseBody
+	public String setSusinRollbackDocID(@CookieValue("loginCookie") String loginCookie, @RequestParam String beforeAprState, @RequestParam String docId, @RequestParam String orgDocId) throws Exception {
+        logger.debug("setSusinRollbackDocID started.");
+        
+        LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+        
+        String result = ezApprovalGService.setSusinRollbackDocID(beforeAprState, docId, orgDocId, userInfo);
+
+        logger.debug("setSusinRollbackDocID ended.");
+        
+	    return result;
+    }
+
+//	기산일 적용 년도 가져오기
+	@RequestMapping(value = "/ezApprovalG/getAccountingYear.do", produces = "text/plain; charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	public String getAccountingYear(@CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("getAccountingYear started.");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+
+		String result = ezApprovalGService.getAccountingYear(commonUtil.getTodayUTCTime(""), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+
+		logger.debug("getAccountingYear ended.");
+
+		return result;
 	}
 }

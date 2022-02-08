@@ -200,14 +200,17 @@
 	    		return check;
 			}
 		
+			/* 2021-12-08 홍승비 - 전자결재 서명 업로드 시 서버단에서도 이미지 확장자 체크 진행 */
 		    function returnvalue() {
-		        if (xhr.responseText != "UPLOAD_ERROR") {
-		            fileName = xhr.responseText;
-		        }
-		        else {
-		            alert(document.form.file1.value + " <spring:message code='ezPersonal.t3010'/>" + "\n\n");
+		    	if (xhr.responseText == "UPLOAD_ERROR") {
+					alert(document.form.file1.value + " <spring:message code='ezPersonal.t3010'/>" + "\n\n");
+					return;
+		    	} else if (xhr.responseText == "UPLOAD_EXT_ERROR") {
+		            alert("<spring:message code='ezAttitude.t260'/>");
 		            return;
-		        }
+		    	} else {
+					fileName = xhr.responseText;
+		    	}
 		        
 		        var imagelist = "";
 		        
@@ -271,7 +274,7 @@
 		</div>
 	    <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 		<form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm">
-			<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px; display: none;" />
+			<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px; display: none;" accept="image/*"/>
 		</form>
 	</body>
 </html>

@@ -413,7 +413,7 @@
 						}
 					}
 					
-					xhr.open('PATCH', '/ezNewPortal/updateUserFrameAndPortelt.do');
+					xhr.open('POST', '/ezNewPortal/updateUserFrameAndPortelt.do');
 					xhr.setRequestHeader('Content-Type', 'application/json');
 					xhr.send(JSON.stringify({param: param}));
 				});

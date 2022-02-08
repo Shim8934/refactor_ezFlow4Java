@@ -596,13 +596,14 @@ public class EzPersonalController extends EgovFileMngUtil {
 		if (list.size() == 0) {
 			isPollEmpty = true;
 		} else {
+			/* 2021-09-01 홍승비 - 빠른설문의 시작일, 종료일 시간단위는 처음 생성 시 UTC시간이 아니라 00:00:01, 23:59:59로 고정되어 저장되므로 UTC시간 변경하지 않음 */
 			for (int i=0; i<list.size(); i++) {
 				if (commonUtil.getDateStringInUTC(list.get(i).getEndDate(), userInfo.getOffset(), false).indexOf("1900-01-01") > -1) {
 					list.get(i).setEndDate(egovMessageSource.getMessage("ezPersonal.t244",locale));
 				} else {
-					list.get(i).setEndDate(commonUtil.getDateStringInUTC(list.get(i).getEndDate(), userInfo.getOffset(), false).substring(0, 10));
+					list.get(i).setEndDate(list.get(i).getEndDate().substring(0, 10));
 				}
-				list.get(i).setStartDate(commonUtil.getDateStringInUTC(list.get(i).getStartDate(), userInfo.getOffset(), false).substring(0, 10));
+				list.get(i).setStartDate(list.get(i).getStartDate().substring(0, 10));
 				
 				if (userInfo.getPrimary().equals("2") && list.get(i).getPollTitle2() != null && !list.get(i).getPollTitle2().equals("")) {
 					list.get(i).setPollTitle(list.get(i).getPollTitle2());
@@ -1345,7 +1346,7 @@ public class EzPersonalController extends EgovFileMngUtil {
         
         if (useBizmekaTalk.equals("YES")) {
         	try {
-        		ezOrganAdminController.invokeEzTalkSyncServer(userInfo.getTenantId());
+        		ezOrganAdminController.invokeEzTalkSyncServerForSingle(userInfo.getId(), userInfo.getTenantId());
         	} catch (Exception e) {
         		e.printStackTrace();
         	}
@@ -1383,7 +1384,7 @@ public class EzPersonalController extends EgovFileMngUtil {
         
         if (useBizmekaTalk.equals("YES")) {
         	try {
-        		ezOrganAdminController.invokeEzTalkSyncServer(userInfo.getTenantId());
+        		ezOrganAdminController.invokeEzTalkSyncServerForSingle(userInfo.getId(), userInfo.getTenantId());
         	} catch (Exception e) {
         		e.printStackTrace();
         	}
@@ -1402,7 +1403,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 		logger.debug("changePassword started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
-		int tenantID = userInfo.getTenantId();        
+		int tenantID = userInfo.getTenantId();
+		String companyID = userInfo.getCompanyID();
 		
 		logger.debug("tenantID=" + tenantID);       
 		
@@ -1415,10 +1417,23 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String oldPassword = xmlDom.getElementsByTagName("OLDPASSWORD").item(0).getTextContent();
 		String newPassword = xmlDom.getElementsByTagName("NEWPASSWORD").item(0).getTextContent();
 		
-		int checkResult = ezPersonalService.checkPassword(userInfo.getId(), EgovFileScrty.decryptRsa(pk, oldPassword), tenantID);
-		if (checkResult != 1) {
+		/* 2021-10-26 이사라 : prev비번과 새비번 비교 추가 */
+		// company option check 
+		boolean useCkhPrevPwd = false;
+		
+		if (ezCommonService.getCompanyConfig(tenantID, companyID, "useChkPrevPwd").equalsIgnoreCase("YES")) {
+			useCkhPrevPwd = true;
+    	}
+		
+		int checkResult = ezPersonalService.checkPassword(userInfo.getId(), EgovFileScrty.decryptRsa(pk, oldPassword), tenantID, companyID, EgovFileScrty.decryptRsa(pk, newPassword), useCkhPrevPwd);
+		
+		if (checkResult == 0) { // 0: 현비번과 db비번이 일치하지 않음(실패) 1 : 일치 (성공)
 			return "CHKERROR";
 		}
+		
+		if (checkResult == 2) { // 2 : prev비번이 새비번과 일치 (실패)
+			return "PREVERROR";
+		} 
 		
 		// dhlee
 		String domain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
@@ -1605,13 +1620,13 @@ public class EzPersonalController extends EgovFileMngUtil {
         String nowDate = date.format(new Date()); 
 
         // 비즈메카톡과의 프로필 사진 연동을 위해 updateDT 필드를 갱신한다.
-        ezOrganAdminService.updateProperty(userInfo.getId(), "updateDT", nowDate, "user", userInfo.getTenantId());
+        ezOrganAdminService.updateProperty(userInfo.getId(), "photo_updateDT", nowDate, "user", userInfo.getTenantId());
 		
         String useBizmekaTalk = ezCommonService.getTenantConfig("UseBizmekaTalk", userInfo.getTenantId());
         
         if (useBizmekaTalk.equals("YES")) {
         	try {
-        		ezOrganAdminController.invokeEzTalkSyncServer(userInfo.getTenantId());
+        		ezOrganAdminController.invokeEzTalkSyncServerForSingle(userInfo.getId(), userInfo.getTenantId());
         	} catch (Exception e) {
         		e.printStackTrace();
         	}

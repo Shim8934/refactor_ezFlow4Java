@@ -476,8 +476,17 @@
 		        return getXmlString(InfoXml);
 		    }
 		    function btnDelList_onclick() {
-		        DelListRow("pLvList");
-		        OrderList();
+		        var pLvList = new ListView();
+		        pLvList.LoadFromID("pLvList");
+		
+		        var selnode = pLvList.GetSelectedRows();
+		        
+		        if (selnode != "") {
+			        DelListRow("pLvList");
+			        OrderList();
+		        } else {
+		        	alert("<spring:message code='ezApprovalG.HSBSa01'/>");
+		        }
 		    }
 
 		    /**

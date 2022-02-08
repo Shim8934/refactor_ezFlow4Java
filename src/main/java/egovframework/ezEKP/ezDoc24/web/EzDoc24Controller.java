@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezDoc24.web;
 
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -43,14 +44,13 @@ public class EzDoc24Controller {
 		logger.debug("getDoc24Detail Started.");
         String jsonData = ezDoc24Service.getDoc24Detail(orgcn);
         if(jsonData == null || jsonData.equals("")) {
-        	jsonData = "{\"header\": {\"code\": \"LNK000000\",\"message\": \"성공\"},\"result\": {\"cmpnyNm\": \"문서24테스트_법인2\",    \"zip\": \"03171\",    \"senderNm\": \"문서24테스트_법인1\",    \"detailAdres\": \"문서24\",    \"adres\": \"서울특별시 종로구 세종대로 209 (세종로)\",    \"fxnum\": \"02-0000-0000\",    \"telnum\": \"02-6006-5024\",    \"jurirno\": \"\",    \"bizrno\": \"000-00-00000\",    \"orgCd\": \"M999999\"  }}";            
+        	jsonData = "{\"header\": {\"code\": \"LNK000000\",\"message\": \"성공\"},\"result\": [\"cmpnyNm\": \"문서24테스트_법인2\",    \"zip\": \"03171\",    \"senderNm\": \"문서24테스트_법인1\",    \"detailAdres\": \"문서24\",    \"adres\": \"서울특별시 종로구 세종대로 209 (세종로)\",    \"fxnum\": \"02-0000-0000\",    \"telnum\": \"02-6006-5024\",    \"jurirno\": \"\",    \"bizrno\": \"000-00-00000\",    \"orgCd\": \"M999999\"  ]}";            
         }
-        if (jsonData != null && !"".equals(jsonData.trim()))
-        {
+        if (jsonData != null && !"".equals(jsonData.trim())) {
         	Map<String,Object> map = JsonUtil.JsonToMap(jsonData);
-        	if (((Map<String, Object>)map.get("header")).get("code").toString().equals("LNK000000"))
-        	{
-				 Map<String, Object> data = (Map<String, Object>) map.get("result");
+        	if (((Map<String, Object>)map.get("header")).get("code").toString().equals("LNK000000")) {
+        		 List<Map<String, String>> dataTmp = (List<Map<String, String>>)map.get("result");
+        		 Map<String, String> data = dataTmp.get(0);
 				 
 				 if(data != null) {
 					model.addAttribute("cmpnyNm"	 ,data.get("cmpnyNm")    );      
@@ -65,8 +65,10 @@ public class EzDoc24Controller {
 					model.addAttribute("orgCd"       ,data.get("orgCd")      );
 				 }
 			 
-   			 }else {
-   				 logger.debug("********************  수신처 상세정보 가져오기 작업 실패 ********************" + ((Map<String, Object>) map.get("header")).get("code").toString());
+   			 } else {
+   				 logger.debug("********************  수신처 상세정보 가져오기 작업 실패 ********************");
+   				 logger.debug("err code : " + ((Map<String, Object>) map.get("header")).get("code").toString() + ", message : " + ((Map<String, Object>) map.get("header")).get("message").toString());
+				 logger.debug("********************  수신처 상세정보 가져오기 작업 실패 ********************"); 
    			 }
    		}else {
    			logger.debug("********************  수신처 상세정보 가져오기 작업 실패 ********************");

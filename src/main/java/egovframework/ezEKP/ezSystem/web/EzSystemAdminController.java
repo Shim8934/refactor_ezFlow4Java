@@ -47,6 +47,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.HandlerMapping;
+import org.stringtemplate.v4.compiler.CodeGenerator.region_return;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -60,7 +61,9 @@ import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.ModuleSizeVO;
 import egovframework.ezEKP.ezSystem.vo.PasswordPolicyVO;
+import egovframework.ezEKP.ezSystem.vo.PermissionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
+import egovframework.let.main.vo.MainVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -133,8 +136,11 @@ public class EzSystemAdminController {
 			useModuleUsage = "NO";
 		}
 		
+		String useSystemMonitor = ezCommonService.getTenantConfig("useSystemMonitor", userInfo.getTenantId());
+		
 		model.addAttribute("useIPAccessMenu", useIPAccessMenu);
 		model.addAttribute("useModuleUsage", useModuleUsage);
+		model.addAttribute("useSystemMonitor", useSystemMonitor);		
 		
 		logger.debug("useIPAccessMenu=" + useIPAccessMenu);
 		
@@ -156,6 +162,7 @@ public class EzSystemAdminController {
 		
 		Map<String, String> configMap = new HashMap<String, String>();
 		List<SysParamVO> configList = ezSystemAdminService.getSysParam(userInfo.getTenantId());
+		String systemDomain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		int licensedUserCount = 0;
 		
 		for (SysParamVO param : configList) {
@@ -163,23 +170,9 @@ public class EzSystemAdminController {
 			
 			if (param.getName().equals("LicenseKey")) {
 				String licenseKey = param.getValue();
-				
-				if (licenseKey != null && !licenseKey.equals("")) {
-					try {
-						// 라이센스키를 복호화한다.
-						licenseKey = egovFileScrty.decryptAES(licenseKey);
-						
-						String items[] = licenseKey.split(":");
-						
-						if (items.length >= 2) {
-							licensedUserCount = Integer.parseInt(items[1]);
-						}						
-					} catch (Exception e) {
-					}					
-				}
+				licensedUserCount = Integer.parseInt(getLicenseDomainAndCount(licenseKey).get(1));
 			}
 		}
-
 		if (configMap.get("useSession") == null || configMap.get("useSession").equals("")) {
 			configMap.put("useSession", "0");
 		}
@@ -224,30 +217,92 @@ public class EzSystemAdminController {
 		model.addAttribute("usePortalAutoRefreshInterval", usePortalAutoRefreshInterval);
 		model.addAttribute("useExternalMailServer", useExternalMailServer);
 		model.addAttribute("usePortal", usePortal);
+		model.addAttribute("systemDomain", systemDomain);
 		
 		logger.debug("systemMainMenu ended");
 		
 		return "/ezSystem/systemMainMenu";
 	}
 		
-	@RequestMapping(value="/admin/ezSystem/updateSysParam.do", method = RequestMethod.POST, produces="application/json;charset=utf-8")
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/admin/ezSystem/updateSysParam.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	@ResponseBody
-	public String updateSysParam(@CookieValue("loginCookie") String loginCookie, Model model, @RequestBody List<Map<String, String>> list) throws Exception {
+	public JSONObject updateSysParam(@CookieValue("loginCookie") String loginCookie, Model model,
+			@RequestBody List<Map<String, String>> list) throws Exception {
+		
 		logger.debug("started updateSysParam controller.");
+		
+		JSONObject obj = new JSONObject();
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
-		
-		if (userInfo == null) {
-			return "{\"msg\":\"fail\"}";
-		}
-		
-		try {
-			ezSystemAdminService.updateSysParam(userInfo.getTenantId(), list, userInfo.getLocale(), userInfo.getCompanyID());
-		} catch (Exception e) {
-			return "{\"msg\":\"fail\"}";			
+		int tenantId = (userInfo == null) ? -1 : userInfo.getTenantId();
+
+		if (tenantId == -1) {
+			obj.put("msg", "fail");
+			return obj;
+		} else {
+			String systemDomain = ezCommonService.getTenantConfig("DomainName", tenantId);
+			String msg = "";
+			String licenseDomain = "";
+
+			for (Map<String, String> param : list) {
+				if ("LicenseKey".equals(param.get("name"))) {
+					String licenseKey = param.get("value");
+					licenseDomain = getLicenseDomainAndCount(licenseKey).get(0);
+					break;
+				}
+			}
+			
+			if (!(licenseDomain.equals(systemDomain)) && !(licenseDomain.isEmpty())) {	//20211005 이희원 - 라이센스도메인과 시스템도메인 비교해서 유효성검사
+				obj.put("licenseDomain", licenseDomain);
+				obj.put("msg", "domainFail");
+				return obj;
+			} else {
+				try {
+					ezSystemAdminService.updateSysParam(userInfo.getTenantId(), list, userInfo.getLocale(),
+							userInfo.getCompanyID());
+					msg = "success";
+				} catch (Exception e) {
+					msg = "fail";
+				}
+			}
+
+			obj.put("msg", msg);
 		}
 		
 		logger.debug("ended updateSysParam controller.");
-		return "{\"msg\":\"success\"}";		
+		
+		return obj;
+	}
+
+	// 20211005 이희원 - 라이센스키를 복호화하여 도메인과 카운트 추출
+	public ArrayList<String> getLicenseDomainAndCount(String licenseKey) throws Exception {
+
+		logger.debug("getLicenseDomainAndCount started");
+
+		ArrayList<String> decryptResult = new ArrayList<>();
+		String licenseDomain = "";
+		String licensedUserCount = "0";
+		
+		if ((licenseKey != null) && !(licenseKey.equals(""))) {
+			try {
+				licenseKey = egovFileScrty.decryptAES(licenseKey);
+				String items[] = licenseKey.split(":");
+
+				if (items.length >= 2) {
+					licenseDomain = items[0];
+					licensedUserCount = items[1];
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		decryptResult.add(licenseDomain);
+		decryptResult.add(licensedUserCount);
+		
+		logger.debug("getLicenseDomainAndCount ended");
+
+		return decryptResult;
 	}
 	
 	/**
@@ -307,6 +362,7 @@ public class EzSystemAdminController {
 	@RequestMapping(value="/admin/ezSystem/systemLoginHistList.do", method = RequestMethod.POST)
 	public String systemLoginHistList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest req,
 			@RequestParam(required=false)String searchKeycode, @RequestParam(required=false)String searchKeyword,
+			@RequestParam(required=false)String searchKeycodeForStatus,
 			@RequestParam(required=false)String startDate, @RequestParam(required=false)String endDate) throws Exception {
 		
 		logger.debug("started systemLoginHistList controller.");
@@ -353,7 +409,7 @@ public class EzSystemAdminController {
 		
 		searchKeyword = searchKeyword.replace("%", "\\%").replace("_", "\\_");
 		List<ConnectionInfoVO> loginHistList = ezSystemAdminService.getLoginHist(Integer.valueOf(userInfo.getTenantId()), 
-				commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, sysLang, startDate, endDate, companyId);
+				commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, searchKeycodeForStatus, sysLang, startDate, endDate, companyId);
 		
 		// 로그인 ip의 국가를 표시하기 위함 
 		String systemLang = userInfo.getLang();
@@ -409,7 +465,7 @@ public class EzSystemAdminController {
 			
 		}
 			
-		int itemCnt = ezSystemAdminService.getLoginHistCount(userInfo.getTenantId(), commonUtil.getMinuteUTC(offset), searchKeycode, searchKeyword, sysLang, startDate, endDate, companyId);
+		int itemCnt = ezSystemAdminService.getLoginHistCount(userInfo.getTenantId(), commonUtil.getMinuteUTC(offset), searchKeycode, searchKeyword, searchKeycodeForStatus, sysLang, startDate, endDate, companyId);
 		
 		int totalPage = itemCnt / maxItemPerPage ;
 		
@@ -429,6 +485,7 @@ public class EzSystemAdminController {
 		model.addAttribute("itemCnt", itemCnt);
 		model.addAttribute("searchKeyword", searchKeyword);
 		model.addAttribute("searchKeycode", searchKeycode);
+		model.addAttribute("searchKeycodeForStatus", searchKeycodeForStatus);
 		model.addAttribute("startDate", startDate);
 		model.addAttribute("endDate", endDate);
 		
@@ -474,6 +531,7 @@ public class EzSystemAdminController {
 	@RequestMapping(value="/ezSystem/systemLoginHistList.do", method = RequestMethod.POST)
 	public String systemLoginHistListNotAdmin(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest req,
 			@RequestParam(required=false)String searchKeycode, @RequestParam(required=false)String searchKeyword,
+			@RequestParam(required=false)String searchKeycodeForStatus,
 			@RequestParam(required=false)String startDate, @RequestParam(required=false)String endDate) throws Exception {
 		
 		logger.debug("started systemLoginHistList controller.");
@@ -515,7 +573,7 @@ public class EzSystemAdminController {
 		}
 		searchKeyword = searchKeyword.replace("%", "\\%").replace("_", "\\_");
 		List<ConnectionInfoVO> loginHistList = ezSystemAdminService.getLoginHistNotAdmin(Integer.valueOf(userInfo.getTenantId()), 
-				commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, sysLang, 
+				commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, searchKeycodeForStatus, sysLang, 
 				startDate, endDate, companyId, userInfo.getId());
 		
 		// 로그인 ip의 국가를 표시하기 위함 
@@ -573,7 +631,7 @@ public class EzSystemAdminController {
 		}
 		
 		int itemCnt = ezSystemAdminService.getLoginHistCountNotAdmin(userInfo.getTenantId(), commonUtil.getMinuteUTC(offset), 
-				searchKeycode, searchKeyword, sysLang, startDate, endDate, companyId, userInfo.getId());
+				searchKeycode, searchKeyword, searchKeycodeForStatus, sysLang, startDate, endDate, companyId, userInfo.getId());
 		
 		int totalPage = itemCnt / maxItemPerPage ;
 		
@@ -593,6 +651,7 @@ public class EzSystemAdminController {
 		model.addAttribute("itemCnt", itemCnt);
 		model.addAttribute("searchKeyword", searchKeyword);
 		model.addAttribute("searchKeycode", searchKeycode);
+		model.addAttribute("searchKeycodeForStatus", searchKeycodeForStatus);
 		model.addAttribute("startDate", startDate);
 		model.addAttribute("endDate", endDate);
 		
@@ -603,10 +662,11 @@ public class EzSystemAdminController {
 	
 	/*
 	 * 엑셀 워크시트 생성 및 자동 다운로드 함수
+	 * 2021-12-30 이사라 : 로그아웃시간, 상태 추가
 	 */
 	@RequestMapping(value = "/admin/ezSystem/systemLoginHistExcelExport.do", method = RequestMethod.GET)
 	public void statisticsMailLogExcelExport(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request,
-			String searchKeycode, String searchKeyword, String startDate, String endDate, Locale locale, HttpServletResponse response)  throws Exception {
+			String searchKeycode, String searchKeyword, String searchKeycodeForStatus, String startDate, String endDate, Locale locale, HttpServletResponse response)  throws Exception {
 		logger.debug("systemLoginHistExcelExport controller started.");
 		
 		LoginVO userInfoUser = commonUtil.userInfo(loginCookie);
@@ -639,14 +699,14 @@ public class EzSystemAdminController {
 		int totalCount = 0;
 		if (config.equals("u")){
 			loginHistList = ezSystemAdminService.getLoginHistNotAdmin(Integer.valueOf(userInfoUser.getTenantId()), 
-					commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, sysLang, 
+					commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, searchKeycodeForStatus, sysLang, 
 					startDate, endDate, companyId, userInfoUser.getId());
 			totalCount = ezSystemAdminService.getLoginHistCountNotAdmin(userInfoUser.getTenantId(), commonUtil.getMinuteUTC(offset), 
-					searchKeycode, searchKeyword, sysLang, startDate, endDate, companyId, userInfoUser.getId());
+					searchKeycode, searchKeyword, searchKeycodeForStatus, sysLang, startDate, endDate, companyId, userInfoUser.getId());
 		} else {
 			loginHistList = ezSystemAdminService.getLoginHist(Integer.valueOf(userInfoUser.getTenantId()), 
-					commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, sysLang, startDate, endDate, companyId);
-			totalCount = ezSystemAdminService.getLoginHistCount(userInfoUser.getTenantId(), commonUtil.getMinuteUTC(offset), searchKeycode, searchKeyword, sysLang, startDate, endDate, companyId);
+					commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, searchKeycodeForStatus,sysLang, startDate, endDate, companyId);
+			totalCount = ezSystemAdminService.getLoginHistCount(userInfoUser.getTenantId(), commonUtil.getMinuteUTC(offset), searchKeycode, searchKeyword, searchKeycodeForStatus, sysLang, startDate, endDate, companyId);
 		}
 		
 		/* 엑셀 만들기 */
@@ -763,15 +823,23 @@ public class EzSystemAdminController {
 			
 			String userConnectIp = infoVo.getConnectip() + "(" + loginHistList.get(i-j).getConnectCountryName() + ")";
 			String userConnectTime = infoVo.getConnecttime();
+			String userDisconnectTime = infoVo.getDisconnecttime();
 			String userConnectBrowser = infoVo.getConnectbrowser();
 			String userConnectOS = infoVo.getConnectos();
+			String userStatus = infoVo.getStatus() == null ? "Y" : infoVo.getStatus();
+			
+			userStatus = userStatus.equals("Y") ? egovMessageSource.getMessage("ezSystem.ls04", locale) : egovMessageSource.getMessage("ezSystem.ls05", locale);
+			
+			//if (userStatus !) {
+				
+			//}
 			
 			String[] userHist = null;
 			
 			if (config.equals("u")){
-				userHist = new String [] {userName,userDeptName,userConnectIp,userConnectTime,userConnectBrowser,userConnectOS};
+				userHist = new String [] {userName,userDeptName,userConnectIp,userConnectTime,userDisconnectTime,userConnectBrowser,userConnectOS,userStatus};
 			} else {
-				userHist = new String [] {userName,userDeptName,userCompanyName,userConnectIp,userConnectTime,userConnectBrowser,userConnectOS};
+				userHist = new String [] {userName,userDeptName,userCompanyName,userConnectIp,userConnectTime,userDisconnectTime,userConnectBrowser,userConnectOS,userStatus};
 			}
 			
 			for (int k = 0; k < histHeaderLen; k ++) {
@@ -996,6 +1064,7 @@ public class EzSystemAdminController {
 		}
 
 		String useIPAccess = ezCommonService.getTenantConfig("useIPAccess", userInfo.getTenantId());
+
 		model.addAttribute("useIPAccess", useIPAccess);
 		logger.debug("systemIPManager ended");
 		 
@@ -1189,15 +1258,25 @@ public class EzSystemAdminController {
 	
 	
 	@RequestMapping(value="/ezSystem/systemIPBandEditPopup.do", method=RequestMethod.GET)
-	public String systemIPBandEditPopup(@CookieValue("loginCookie") String loginCookie, Model model, String type, @ModelAttribute IPBandVO ipBand) throws Exception {
+	public String systemIPBandEditPopup(@CookieValue("loginCookie") String loginCookie, Model model,
+			@ModelAttribute IPBandVO ipBand, HttpServletRequest request) throws Exception {
 		logger.debug("systemIPBandEditPopup started");
+		
+		String type = request.getParameter("type");
+		String pageType = request.getParameter("pageType"); // pageType=adminIpAccess
+		pageType = pageType == null ? "" : pageType;
 		
 		String ipAddress = "";
 		String access = "";
 		String explanation = "";
 		
 		if (type.equals("modify")) {
-			IPBandVO getIPBand = ezSystemAdminService.getSystemIPBand(ipBand.getIpNo());
+			IPBandVO getIPBand = null;
+			if (pageType.equals("adminIpAccess")) { // 관리자 IP 제한
+				getIPBand = ezSystemAdminService.getSystemAdminIPBand(ipBand.getIpNo());
+			} else {
+				getIPBand = ezSystemAdminService.getSystemIPBand(ipBand.getIpNo());
+			}
 			
 			ipAddress = getIPBand.getIpAddress();
 			access = getIPBand.getAccess();
@@ -1212,6 +1291,7 @@ public class EzSystemAdminController {
 		model.addAttribute("access", access);
 		model.addAttribute("explanation", explanation);
 		model.addAttribute("type", type);
+		model.addAttribute("pageType", pageType);
 				
 		logger.debug("systemIPBandEditPopup ended");
 		return "/ezSystem/systemIPBandEditPopup";
@@ -1506,6 +1586,150 @@ public class EzSystemAdminController {
 				.body("");
 	}
 	
+	// 관리자 ip제한 화면
+	@RequestMapping(value="/admin/ezSystem/systemAdminIPManager.do", method=RequestMethod.GET)
+	public String systemAdminIPManager(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("systemAdminIPManager started");
+		
+		//관리자 권한체크
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		String rollInfo = userInfo.getRollInfo();
+		boolean adminChk = rollInfo.indexOf("c=1") > -1;
+		
+		String useAdminIPAccess = ezCommonService.getTenantConfig("useAdminIPAccess", userInfo.getTenantId());
+		useAdminIPAccess = useAdminIPAccess.equals("") ? "NO" : useAdminIPAccess;
+		logger.debug("useAdminIPAccess=" + useAdminIPAccess);
+		
+		model.addAttribute("useAdminIPAccess", useAdminIPAccess); 
+		model.addAttribute("adminChk", adminChk);     
+		logger.debug("systemAdminIPManager ended");
+		 
+		return "/ezSystem/systemAdminIPManager";
+	}
+	
+	// 관리자 ip제한 사용여부 설정
+	@RequestMapping(value="/ezSystem/setUseAdminIPAccess.do", method=RequestMethod.POST)
+	@ResponseBody
+	public String setUseAdminIPAccess(@CookieValue("loginCookie") String loginCookie, Model model, String allowResult) throws Exception {
+		logger.debug("setUseAdminIPAccess started");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		String rollInfo = userInfo.getRollInfo();
+		boolean adminChk = rollInfo.indexOf("c=1") > -1;
+		String returnStr = "OK";
+
+		// input 체크된 값으로 전달되기 때문에 tbl_tenant_config value에 맞게 변경
+		allowResult = allowResult.equals("true") ? "YES" : "NO";
+		
+		if (adminChk) {
+			ezSystemAdminService.updateSystemAdminIPAllow(allowResult, userInfo.getTenantId());
+		} else {
+			returnStr = "adminFail";
+		}
+		
+		logger.debug("setUseAdminIPAccess ended");
+		return returnStr;
+	}
+	
+	// 관리자 IP 리스트 화면
+	@RequestMapping(value="/ezSystem/systemAdminIPBand.do", method=RequestMethod.GET)
+	public String systemAdminIPBand(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("systemAdminIPBand started");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		String useAdminIPAccess = ezCommonService.getTenantConfig("useAdminIPAccess", userInfo.getTenantId());
+		useAdminIPAccess = useAdminIPAccess.equals("") ? "NO" : useAdminIPAccess;
+		logger.debug("useAdminIPAccess=" + useAdminIPAccess);
+		
+		String rollInfo = userInfo.getRollInfo();
+		Boolean rollChk = rollInfo.indexOf("c=1") == -1 ? false : true;
+		logger.debug("rollChk=" + rollChk);
+		
+		model.addAttribute("useAdminIPAccess", useAdminIPAccess);
+		model.addAttribute("rollChk", rollChk);
+		model.addAttribute("rollInfo", rollInfo);
+		
+		logger.debug("systemAdminIPBand ended");
+		return "/ezSystem/systemAdminIPBand";
+	}
+	
+	// 관리자 IP 리스트
+	@ResponseBody
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/ezSystem/getAdminAccessIPBand.do", method=RequestMethod.POST)
+	public JSONArray getAdminAccessIPBand(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("getAdminAccessIPBand started");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		int tenantId = userInfo.getTenantId();
+		
+		List<IPBandVO> list = ezSystemAdminService.getAdminAccessIPBand(tenantId);
+		if (list == null) {
+			return null;
+		}
+		
+		JSONArray returnJsonArr = new JSONArray();
+
+		for (IPBandVO ipVo : list) {
+			JSONObject obj = new JSONObject();
+			
+			obj.put("ipNo", ipVo.getIpNo());
+			obj.put("ipAddress", ipVo.getIpAddress());
+			obj.put("access", ipVo.getAccess());
+			obj.put("explanation", ipVo.getExplanation());
+			
+			returnJsonArr.add(obj);
+		}
+		
+		logger.debug("returnJsonArr=" + returnJsonArr.toJSONString());
+		logger.debug("getAdminAccessIPBand ended");
+		return returnJsonArr;
+	}
+	
+	// 관리자 IP제한 - ip 추가
+	@ResponseBody
+	@RequestMapping(value="/ezSystem/insertAdminIPBand.do", method=RequestMethod.POST)
+	public void insertAdminIPBand(@CookieValue("loginCookie") String loginCookie, Model model, @ModelAttribute IPBandVO ipBand) throws Exception {
+		logger.debug("insertAdminIPBand started");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		String ipBandExplaination = ipBand.getExplanation() == null ? "" : ipBand.getExplanation();
+		
+		ezSystemAdminService.insertAdminIPBand(userInfo.getTenantId(), ipBand.getIpAddress(), ipBand.getAccess(), ipBandExplaination);
+		
+		logger.debug("insertAdminIPBand ended");
+	}
+
+	// 관리자 IP제한 - ip 수정
+	@ResponseBody
+	@RequestMapping(value="/ezSystem/updateAdminIPBand.do", method=RequestMethod.POST)
+	public void updateAdminIPBand(@CookieValue("loginCookie") String loginCookie, Model model, @ModelAttribute IPBandVO ipBand) throws Exception {
+		logger.debug("updateAdminIPBand started");
+		logger.debug("ipNo=" + ipBand.getIpNo() + ", ipAddress=" + ipBand.getIpAddress() + ", access=" + ipBand.getAccess() + ", explanation=" + ipBand.getExplanation());
+		
+		ezSystemAdminService.updateAdminIPBand(ipBand.getIpNo(), ipBand.getIpAddress(), ipBand.getAccess(), ipBand.getExplanation());
+		
+		logger.debug("updateAdminIPBand ended");
+	}
+
+	// 관리자 IP제한 - ip 삭제
+	@ResponseBody
+	@RequestMapping(value="/ezSystem/deleteAdminIPBand.do", method=RequestMethod.POST)
+	public void deleteAdminIPBand(@CookieValue("loginCookie") String loginCookie, Model model, String ipNo) throws Exception {
+		logger.debug("deleteAdminIPBand started");
+		logger.debug("ipNo=" + ipNo);
+		
+		ezSystemAdminService.deleteAdminIPBand(ipNo);
+		
+		logger.debug("deleteAdminIPBand ended");
+	}
+
 	/**
 	 * 암호 정책 관리 화면
 	 * */
@@ -1567,6 +1791,8 @@ public class EzSystemAdminController {
 		expirePassPeriod = expirePassPeriod.equals("") ? "0" : expirePassPeriod;
 		String maxAllowedCountOfLoginFail = ezCommonService.getCompanyConfig(tenantId, companyId, "MaxAllowedCountOfLoginFail"); // 암호 최대 오류 횟수
 		maxAllowedCountOfLoginFail = maxAllowedCountOfLoginFail.equals("") ? "0" : maxAllowedCountOfLoginFail;
+		String useChkPrevPwd = ezCommonService.getCompanyConfig(tenantId, companyId, "useChkPrevPwd"); // 2021-11-10 이사라 : 가장 최근 암호 사용 금지 여부
+		useChkPrevPwd = useChkPrevPwd.equals("") ? "NO" : useChkPrevPwd;
 		String usePasswordPatternPolicy = ezCommonService.getCompanyConfig(tenantId, companyId, "UsePasswordPatternPolicy"); // 암호 정책관리 사용여부
 		usePasswordPatternPolicy = usePasswordPatternPolicy.equals("") ? "NO" : usePasswordPatternPolicy;
 		logger.debug("expirePassPeriod=" + expirePassPeriod + ", maxAllowedCountOfLoginFail=" + maxAllowedCountOfLoginFail 
@@ -1576,6 +1802,7 @@ public class EzSystemAdminController {
 
 		returnMap.put("expirePassPeriod", expirePassPeriod);
 		returnMap.put("maxAllowedCountOfLoginFail", maxAllowedCountOfLoginFail);
+		returnMap.put("useChkPrevPwd", useChkPrevPwd); // 2021-11-10 이사라 : 추가
 		returnMap.put("usePasswordPatternPolicy", usePasswordPatternPolicy);
 		returnMap.put("pwPolicyMap", pwPolicyMap);
 		logger.debug("return :: " + returnMap.toString());
@@ -1675,6 +1902,787 @@ public class EzSystemAdminController {
 		
 		logger.debug("CountryVOList ended");
 		return countryList;
+	}
+
+	/**
+	 * 관리자메뉴 접속내역 메인 호출
+	 * 2022-01-11 이사라
+	 */
+	@RequestMapping(value="/admin/ezSystem/systemAdminAccessHist.do", method = RequestMethod.GET)
+	public String systemAdminAccessHist(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception {
+		
+		logger.debug("started systemAdminAccessHist controller.");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String companyId = userInfo.getCompanyID();
+		int tenantId = userInfo.getTenantId();
+		
+		String loginMailLogKeepPeriod = ezCommonService.getTenantConfig("LoginMailLogKeepPeriod", tenantId);
+		loginMailLogKeepPeriod = loginMailLogKeepPeriod.equals("") ? "3" : loginMailLogKeepPeriod;
+		
+		String mailLogKeepPeriodMessage = egovMessageSource.getMessage("ezStatistics.t1065", locale);
+		mailLogKeepPeriodMessage = String.format(mailLogKeepPeriodMessage, loginMailLogKeepPeriod);
+		
+		model.addAttribute("mailLogKeepPeriodMessage", mailLogKeepPeriodMessage);
+		
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), tenantId);
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		int j = 0;
+		boolean isMasterAdmin = userInfo.getRollInfo().contains("c=1");
+		
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);
+
+			if (isMasterAdmin || vo.getCn().equals(companyId)) {
+				resultList.add(j++, vo);
+			}
+		}
+		
+		model.addAttribute("list", resultList);
+		model.addAttribute("companyId", companyId);
+		model.addAttribute("isMasterAdmin", isMasterAdmin);
+		
+		logger.debug("ended systemAdminAccessHist controller.");
+		
+		return "/ezSystem/systemAdminAccessHist";
+		
+	}
+	
+	/**
+	 * 관리자메뉴 접속내역 데이터 리스트 호출
+	 * 2022-01-11 이사라
+	 */
+	@RequestMapping(value="/admin/ezSystem/systemAdminAccessHistList.do", method = RequestMethod.POST)
+	public String systemAdminAccessHistList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest req,
+			@RequestParam(required=false)String searchKeycode, @RequestParam(required=false)String searchKeyword, 
+			@RequestParam(required=false)String searchKeycodeForRoll,
+			@RequestParam(required=false)String startDate, @RequestParam(required=false)String endDate) throws Exception {
+		
+		logger.debug("started systemAdminAccessHistList controller.");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		int tenantId = userInfo.getTenantId();
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String offset = userInfo.getOffset();
+		String currPage = req.getParameter("pageNum");
+		
+		if (StringUtils.isBlank(currPage)) {
+			currPage = "1";
+		}
+		
+		int maxItemPerPage = 20; 
+		int currentPage = Integer.parseInt(currPage);
+		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
+		
+		if (currPage.equals("-1")) {
+			startRow = -1;
+		}
+		
+		/*
+		 * 2018.11.21 김수아
+		 * (전체관리자) 회사선택 후 선택한 회사의 로그인 히스토리가 나오도록 변경 
+		 */
+		String companyId = req.getParameter("companyId"); // 선택된 회사
+		
+		/*
+		 * 2017.07.26 강민석
+		 * 로그인 히스토리에는 자신의 회사만 나오도록 수정
+		 * */
+		//String companyId = userInfo.getCompanyID();
+		logger.debug("companyId : " + companyId);
+
+		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+
+		if (userInfo.getLang().equals(sysLang))  {
+			sysLang = "primary";
+		}
+		
+		searchKeyword = searchKeyword.replace("%", "\\%").replace("_", "\\_");
+		List<MainVO> adminAccessHistList = ezSystemAdminService.getAdminAccessHist(Integer.valueOf(tenantId),
+				commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, searchKeycodeForRoll, sysLang, startDate, endDate, companyId);
+		
+		// 로그인 ip의 국가를 표시하기 위함 
+		String systemLang = userInfo.getLang();
+		String systemCountryName = "";
+		String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", tenantId);
+		
+		for (MainVO vo : adminAccessHistList) {
+			String ip = vo.getAccessip();
+			String countryName = "";
+			String countryCode = "";
+			
+			if (ip.equals("0:0:0:0:0:0:0:1")) {
+				ip = "127.0.0.1";
+			}
+			
+			switch (systemLang){
+				case "1" :
+					systemCountryName = "ko";
+					break;
+				case "2" :
+					systemCountryName = "en";
+					break;
+				case "3" :
+					systemCountryName = "ja";
+					break;
+				default:
+					systemCountryName = "ko";
+					break;
+			}
+			
+			if (ip != null && !ip.equals("")) {
+				if (commonUtil.checkLocalIP(ip)) {
+					countryCode = systemCountryCode;
+				} else {
+					List<CountryVO> countryVo = commonUtil.getCountryInfo(ip);
+					if (countryVo.size() == 0 ) {
+						countryName = "?";
+					} else {
+						countryCode = countryVo.get(0).getCountryCode();
+					}
+				}
+			} else {
+				countryName = "?";
+			}
+			
+			if (countryName != "?") {
+				Locale localeCountry = new Locale(systemCountryName, countryCode);
+				countryName = localeCountry.getDisplayCountry(localeCountry);
+				countryName = countryName.replaceAll(" ", "");
+			}
+			vo.setCountryName(countryName);
+		}
+			
+		int itemCnt = ezSystemAdminService.getAdminAccessHistCount(tenantId, commonUtil.getMinuteUTC(offset), searchKeycode, searchKeyword, searchKeycodeForRoll, sysLang, startDate, endDate, companyId);
+		
+		int totalPage = itemCnt / maxItemPerPage ;
+		
+		if (itemCnt < 1) {
+			totalPage = 1;
+		} 
+		
+		if ((totalPage * maxItemPerPage) != itemCnt && (itemCnt % maxItemPerPage) != 0) {
+			totalPage = totalPage + 1 ;
+		}
+		
+		currentPage = Math.min(currentPage, totalPage);	
+		model.addAttribute("adminAccessHist", adminAccessHistList); 
+		model.addAttribute("lang", sysLang);
+		model.addAttribute("currPage", currentPage);
+		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("itemCnt", itemCnt);
+		model.addAttribute("searchKeyword", searchKeyword);
+		model.addAttribute("searchKeycode", searchKeycode);
+		model.addAttribute("startDate", startDate);
+		model.addAttribute("endDate", endDate);
+		
+		logger.debug("ended systemAdminAccessHistList controller.");
+		
+		return "json";
+	}
+	
+	/*
+	 * 엑셀 워크시트 생성 및 자동 다운로드 함수
+	 * 2022-01-11 이사라
+	 */
+	@RequestMapping(value = "/admin/ezSystem/systemAccessHistExcelExport.do", method = RequestMethod.GET)
+	public void statisticsAdminAccessLogExcelExport(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
+			String searchKeycode, String searchKeyword, String searchKeycodeForRoll, String startDate, String endDate, Locale locale, HttpServletResponse response)  throws Exception {
+		logger.debug("systemAccessHistExcelExport controller started.");
+		
+		LoginVO userInfoUser = commonUtil.userInfo(loginCookie);
+		
+		int tenantId = userInfoUser.getTenantId();
+		String offset = userInfoUser.getOffset();
+		String currPage = request.getParameter("pageNum");
+		
+		int maxItemPerPage = 20; 
+		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
+		
+		if (currPage.equals("-1")) {
+			startRow = -1;
+		}
+
+		String companyId = request.getParameter("companyId"); // 선택된 회사
+		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+
+		if (userInfoUser.getLang().equals(sysLang))  {
+			sysLang = "primary";
+		}
+		
+		searchKeyword = searchKeyword.replace("%", "\\%").replace("_", "\\_");
+		List<MainVO> accessHistList = new ArrayList<MainVO>();
+		int totalCount = 0;
+		
+		accessHistList = ezSystemAdminService.getAdminAccessHist(Integer.valueOf(tenantId), 
+				commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, searchKeycodeForRoll, sysLang, startDate, endDate, companyId);
+		totalCount = ezSystemAdminService.getAdminAccessHistCount(tenantId, commonUtil.getMinuteUTC(offset), searchKeycode, searchKeyword, searchKeycodeForRoll, sysLang, startDate, endDate, companyId);
+		
+		
+		/* 엑셀 만들기 */
+		HSSFWorkbook workbook = new HSSFWorkbook();
+		HSSFSheet sheet = workbook.createSheet("AccessAdminLogList");
+		
+		Row row = null;
+		Cell cell = null;
+		
+		String fileName = "";
+		fileName = startDate +"_"+ endDate + "_AdminAccessLogList";
+		
+		HSSFCellStyle headerStyle = workbook.createCellStyle();
+		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setVerticalAlignment((short)1);
+		
+		HSSFCellStyle bodyStyle = workbook.createCellStyle();
+		bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+
+		HSSFFont font = workbook.createFont();
+		font.setBoldweight((short)HSSFFont.BOLDWEIGHT_BOLD);
+		headerStyle.setFont(font);
+		
+		String histHeader = egovMessageSource.getMessage("ezSystem.lsAccessHistAdmin", locale);
+		String[] histHeaderArr = histHeader.split(";");
+		int histHeaderLen = histHeaderArr.length;
+		
+		row = sheet.createRow(0);
+		cell = row.createCell(0);	
+		cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0032", locale) + " : " + startDate + " ~ " + endDate);
+		cell = row.createCell(histHeaderLen-1);
+		cell.setCellValue(egovMessageSource.getMessage("main.t252", locale) + " " + totalCount + egovMessageSource.getMessage("ezSystem.kyj2", locale));
+		
+		row = sheet.createRow(1);
+		for (int i = 0; i < histHeaderLen; i ++) {
+			cell = row.createCell(i);	cell.setCellValue(histHeaderArr[i]); 
+			cell.setCellStyle(headerStyle);
+		}
+		
+		String systemLang = userInfoUser.getLang();
+		String systemCountryName = "";
+		String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", tenantId);
+		
+		for (int i = 2; i < totalCount + 2; i++) {
+			row = sheet.createRow(i);
+			row.setHeight((short)300);
+			int j = 2;
+			
+			MainVO infoVo = accessHistList.get(i-j);
+			String userName = infoVo.getUsernm() + "(" + infoVo.getUserid() + ")";
+			String userDeptName = infoVo.getDeptnm();
+			String userCompanyName = infoVo.getCompanynm();
+			if (!sysLang.equals("primary")) {
+				userName = infoVo.getUsernm2() + "(" + infoVo.getUserid() + ")";
+				userDeptName = infoVo.getDeptnm2();
+				userCompanyName = infoVo.getCompanynm2();
+			}
+			
+			// countryIP 관련 국가명 표시 위함 시작.
+			String ip = accessHistList.get(i-j).getAccessip();
+			String countryName = "";
+			String countryCode = "";
+			
+			if (ip.equals("0:0:0:0:0:0:0:1")) {
+				ip = "127.0.0.1";
+			}
+			
+			switch (systemLang){
+			case "1" :
+				systemCountryName = "ko";
+				break;
+			case "2" :
+				systemCountryName = "en";
+				break;
+			case "3" :
+				systemCountryName = "ja";
+				break;
+			default:
+				systemCountryName = "ko";
+				break;
+				
+			}
+			
+			if (ip != null && !ip.equals("")) {
+				if (commonUtil.checkLocalIP(ip)) {
+					countryCode = systemCountryCode;
+				} else {
+					List<CountryVO> countryVo = commonUtil.getCountryInfo(ip);
+					if (countryVo.size() == 0 ) {
+						countryName = "?";
+					} else {
+						countryCode = countryVo.get(0).getCountryCode();
+					}
+				}
+			} else {
+				countryName = "?";
+			}
+			
+			if (countryName != "?") {
+				Locale localeCountry = new Locale(systemCountryName, countryCode);
+				countryName = localeCountry.getDisplayCountry(localeCountry);
+				countryName = countryName.replaceAll(" ", "");
+			}
+			accessHistList.get(i-j).setCountryName(countryName);
+			// countryIP 관련 국가명 표시 위함 끝.
+			
+			String accessIp = infoVo.getAccessip() + "(" + accessHistList.get(i-j).getCountryName() + ")";
+			String accessTime = infoVo.getAccesstime();
+			String accessBrowser = infoVo.getAccessbrowser();
+			String accessOS = infoVo.getAccessos();
+			String adminType = infoVo.getAdmintype();
+			
+			if (adminType.indexOf("c=1") > -1 && adminType.indexOf("k=1") > -1) {
+				adminType = egovMessageSource.getMessage("ezSystem.ls10", locale);
+			} else if (adminType.indexOf("c=1") > -1) {
+				adminType = egovMessageSource.getMessage("ezOrgan.t291", locale);
+			} else {
+				adminType = egovMessageSource.getMessage("ezOrgan.t293", locale); 
+			}
+			
+			String[] accessHist = null;
+			accessHist = new String [] {userName, userDeptName, userCompanyName, accessIp, accessTime, accessBrowser, accessOS, adminType};
+			
+			for (int k = 0; k < histHeaderLen; k ++) {
+				cell = row.createCell(k);	cell.setCellValue((String) accessHist[k]); 
+				cell.setCellStyle(bodyStyle);
+			}
+			
+			sheet.autoSizeColumn(i-1);
+		}
+		
+		response.setCharacterEncoding("UTF-8");
+		response.setHeader("Content-Disposition", "attachment; fileName=" + fileName + ".xls");
+		response.setContentType("application/vnd.ms-excel");
+		
+		workbook.write(response.getOutputStream());
+		workbook.close();
+		
+		logger.debug("systemAccessHistExcelExport controller ended.");
+	}	
+
+	/**
+	 * 권한 변경 히스토리 메인 호출
+	 * 2022-01-18 이사라
+	 */
+	@RequestMapping(value = "/admin/ezSystem/permissionChangeHist.do", method = RequestMethod.GET)
+	public String permissionChangeHist(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model)
+			throws Exception {
+
+		logger.debug("started permissionChangeHist controller.");
+
+		LoginVO user = commonUtil.checkAdmin(loginCookie);
+
+		if (user == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		String companyId = user.getCompanyID();
+		int tenantId = user.getTenantId();
+
+		/*
+		 * 보존 기간이 있을 경우 아래 주석 해제 후 필요 시 수정 String loginMailLogKeepPeriod = ezCommonService.getTenantConfig("LoginMailLogKeepPeriod", tenantId);
+		 * loginMailLogKeepPeriod = loginMailLogKeepPeriod.equals("") ? "3" : loginMailLogKeepPeriod;
+		 *
+		 * String mailLogKeepPeriodMessage = egovMessageSource.getMessage("ezStatistics.t1065", locale);
+		 * mailLogKeepPeriodMessage = String.format(mailLogKeepPeriodMessage, loginMailLogKeepPeriod);
+		 *
+		 * model.addAttribute("mailLogKeepPeriodMessage", mailLogKeepPeriodMessage);
+		 */
+
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), tenantId);
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		int j = 0;
+		boolean isMasterAdmin = user.getRollInfo().contains("c=1");
+
+		for (OrganDeptVO vo : list) {
+			if (isMasterAdmin || vo.getCn().equals(companyId)) {
+				resultList.add(j++, vo);
+			}
+		}
+
+		// 관리자 구분 셀렉트박스 적용
+		String approvalFlag		= ezCommonService.getTenantConfig("ApprovalFlag" ,tenantId);
+		boolean approvalForDoc	= ezCommonService.getTenantConfig("approvalForDoc" ,tenantId).equalsIgnoreCase("Y");
+		boolean use_attitude	= !ezCommonService.getTenantConfig("use_attitude" ,tenantId).equalsIgnoreCase("NO");
+		boolean useWebfolder	= ezCommonService.getTenantConfig("useWebfolder" ,tenantId).equalsIgnoreCase("YES");
+		boolean useBoard		= !ezCommonService.getTenantConfig("useBoard" ,tenantId).equalsIgnoreCase("NO");
+		boolean useSurvey		= !ezCommonService.getTenantConfig("useSurvey" ,tenantId).equalsIgnoreCase("NO");
+		String packageType		= commonUtil.getPackageType(tenantId);
+
+		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("approvalForDoc", approvalForDoc);
+		model.addAttribute("use_attitude", use_attitude);
+		model.addAttribute("useWebfolder", useWebfolder);
+		model.addAttribute("packageType", packageType);
+		model.addAttribute("useBoard", useBoard);
+		model.addAttribute("useSurvey", useSurvey);
+		model.addAttribute("list", resultList);
+		model.addAttribute("companyId", companyId);
+		model.addAttribute("isMasterAdmin", isMasterAdmin);
+
+		logger.debug("ended permissionChangeHist controller.");
+
+		return "/ezSystem/permissionChangeHist";
+
+	}
+
+	/**
+	 * 권한 변경 히스토리 리스트 호출
+	 * 2022-01-18 이사라
+	 */
+	@RequestMapping(value = "/admin/ezSystem/permissionChangeHistList.do", method = RequestMethod.POST)
+	public String permissionChangeHistList(@CookieValue("loginCookie") String loginCookie, Model model,
+			HttpServletRequest req, @RequestParam(required = false) String searchKeycode,
+			@RequestParam(required = false) String searchKeyword,
+			@RequestParam(required = false) String searchKeycodeForRoll,
+			@RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate)
+			throws Exception {
+
+		logger.debug("started permissionChangeHistList controller.");
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		int tenantId = userInfo.getTenantId();
+		boolean isMasterAdmin = userInfo.getRollInfo().contains("c=1"); // 전체관리자
+		String offset = userInfo.getOffset();
+		String currPage = req.getParameter("pageNum");
+
+		if (StringUtils.isBlank(currPage)) {
+			currPage = "1";
+		}
+
+		int maxItemPerPage = 20;
+		int currentPage = Integer.parseInt(currPage);
+		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
+
+		if (currPage.equals("-1")) {
+			startRow = -1;
+		}
+
+		String companyId = req.getParameter("companyId"); // 선택된 회사
+		logger.debug("companyId : " + companyId);
+
+		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+
+		if (userInfo.getLang().equals(sysLang)) {
+			sysLang = "primary";
+		}
+
+		searchKeyword = searchKeyword.replace("%", "\\%").replace("_", "\\_");
+		List<PermissionInfoVO> permissionChHistList = ezSystemAdminService.getPermissionChHist(
+				Integer.valueOf(tenantId), commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode,
+				searchKeyword, searchKeycodeForRoll, sysLang, startDate, endDate, companyId, isMasterAdmin);
+
+		// 로그인 ip의 국가를 표시하기 위함
+		String systemLang = userInfo.getLang();
+		String systemCountryName = "";
+		String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", tenantId);
+
+		for (PermissionInfoVO vo : permissionChHistList) {
+			String ip = vo.getAuthorizerIp();
+			String countryName = "";
+			String countryCode = "";
+
+			if (ip.equals("0:0:0:0:0:0:0:1")) {
+				ip = "127.0.0.1";
+			}
+
+			switch (systemLang) {
+			case "1":
+				systemCountryName = "ko";
+				break;
+			case "2":
+				systemCountryName = "en";
+				break;
+			case "3":
+				systemCountryName = "ja";
+				break;
+			default:
+				systemCountryName = "ko";
+				break;
+			}
+
+			if (StringUtils.isNotBlank(ip)) {
+				if (commonUtil.checkLocalIP(ip)) {
+					countryCode = systemCountryCode;
+				} else {
+					List<CountryVO> countryVo = commonUtil.getCountryInfo(ip);
+					if (countryVo.size() == 0) {
+						countryName = "?";
+					} else {
+						countryCode = countryVo.get(0).getCountryCode();
+					}
+				}
+			} else {
+				countryName = "?";
+			}
+
+			if (countryName != "?") {
+				Locale localeCountry = new Locale(systemCountryName, countryCode);
+				countryName = localeCountry.getDisplayCountry(localeCountry);
+				countryName = countryName.replaceAll(" ", "");
+			}
+			vo.setCountryName(countryName);
+		}
+
+		int itemCnt = ezSystemAdminService.getPermissionChHistCount(tenantId, commonUtil.getMinuteUTC(offset),
+				searchKeycode, searchKeyword, searchKeycodeForRoll, sysLang, startDate, endDate, companyId, isMasterAdmin);
+		int totalPage = itemCnt / maxItemPerPage;
+
+		if (itemCnt < 1) {
+			totalPage = 1;
+		}
+
+		if ((totalPage * maxItemPerPage) != itemCnt && (itemCnt % maxItemPerPage) != 0) {
+			totalPage = totalPage + 1;
+		}
+
+		currentPage = Math.min(currentPage, totalPage);
+		model.addAttribute("permissionChHistList", permissionChHistList);
+		model.addAttribute("lang", sysLang);
+		model.addAttribute("currPage", currentPage);
+		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("itemCnt", itemCnt);
+		model.addAttribute("searchKeyword", searchKeyword);
+		model.addAttribute("searchKeycode", searchKeycode);
+		model.addAttribute("startDate", startDate);
+		model.addAttribute("endDate", endDate);
+
+		logger.debug("ended permissionChangeHistList controller.");
+
+		return "json";
+	}
+
+	/*
+	 * 엑셀 워크시트 생성 및 자동 다운로드 함수
+	 * 2022-01-24 이사라
+	 */
+	@RequestMapping(value = "/admin/ezSystem/permissionChHistExcelExport.do", method = RequestMethod.GET)
+	public void statisticsPermissionChHistExcelExportExcelExport(@CookieValue("loginCookie") String loginCookie,
+			HttpServletRequest request, String searchKeycode, String searchKeyword, String searchKeycodeForRoll,
+			String startDate, String endDate, Locale locale, HttpServletResponse response) throws Exception {
+		logger.debug("permissionChHistExcelExport controller started.");
+
+		LoginVO user = commonUtil.userInfo(loginCookie);
+
+		int tenantId = user.getTenantId();
+		boolean isMasterAdmin = user.getRollInfo().contains("c=1"); // 전체관리자
+		String offset = user.getOffset();
+		String currPage = request.getParameter("pageNum");
+
+		int maxItemPerPage = 20;
+		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
+
+		if (currPage.equals("-1")) {
+			startRow = -1;
+		}
+
+		String companyId = request.getParameter("companyId"); // 선택된 회사
+		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+
+		if (user.getLang().equals(sysLang)) {
+			sysLang = "primary";
+		}
+
+		searchKeyword = searchKeyword.replace("%", "\\%").replace("_", "\\_");
+		List<PermissionInfoVO> permissionChHist = new ArrayList<PermissionInfoVO>();
+		int totalCount = 0;
+
+		permissionChHist = ezSystemAdminService.getPermissionChHist(Integer.valueOf(tenantId),
+				commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword,
+				searchKeycodeForRoll, sysLang, startDate, endDate, companyId, isMasterAdmin);
+		totalCount = ezSystemAdminService.getPermissionChHistCount(tenantId, commonUtil.getMinuteUTC(offset),
+				searchKeycode, searchKeyword, searchKeycodeForRoll, sysLang, startDate, endDate, companyId, isMasterAdmin);
+
+		/* 엑셀 만들기 */
+		HSSFWorkbook workbook = new HSSFWorkbook();
+		HSSFSheet sheet = workbook.createSheet("permissionChangeHistory");
+
+		Row row = null;
+		Cell cell = null;
+
+		String fileName = "";
+		fileName = startDate + "_" + endDate + "_permissionChangeHistory";
+
+		HSSFCellStyle headerStyle = workbook.createCellStyle();
+		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setVerticalAlignment((short) 1);
+
+		HSSFCellStyle bodyStyle = workbook.createCellStyle();
+		bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+
+		HSSFFont font = workbook.createFont();
+		font.setBoldweight((short) HSSFFont.BOLDWEIGHT_BOLD);
+		headerStyle.setFont(font);
+
+		String histHeader = egovMessageSource.getMessage("ezOrgan.lsPermissionChHist", locale);
+		String[] histHeaderArr = histHeader.split(";");
+		int histHeaderLen = histHeaderArr.length;
+
+		row = sheet.createRow(0);
+		cell = row.createCell(0);
+		cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0032", locale) + " : " + startDate + " ~ " + endDate);
+		cell = row.createCell(histHeaderLen - 1);
+		cell.setCellValue(egovMessageSource.getMessage("main.t252", locale) + " " + totalCount
+				+ egovMessageSource.getMessage("ezSystem.kyj2", locale));
+
+		row = sheet.createRow(1);
+		for (int i = 0; i < histHeaderLen; i++) {
+			cell = row.createCell(i);
+			cell.setCellValue(histHeaderArr[i]);
+			cell.setCellStyle(headerStyle);
+		}
+
+		String systemLang = user.getLang();
+		String systemCountryName = "";
+		String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", tenantId);
+
+		for (int i = 2; i < totalCount + 2; i++) {
+			row = sheet.createRow(i);
+			row.setHeight((short) 300);
+			int j = 2;
+
+			// countryIP 관련 국가명 표시 위함 시작.
+			String ip = permissionChHist.get(i - j).getAuthorizerIp();
+			String countryName = "";
+			String countryCode = "";
+
+			if (ip.equals("0:0:0:0:0:0:0:1")) {
+				ip = "127.0.0.1";
+			}
+
+			switch (systemLang) {
+			case "1":
+				systemCountryName = "ko";
+				break;
+			case "2":
+				systemCountryName = "en";
+				break;
+			case "3":
+				systemCountryName = "ja";
+				break;
+			default:
+				systemCountryName = "ko";
+				break;
+			}
+
+			if (StringUtils.isNotBlank(ip)) {
+				if (commonUtil.checkLocalIP(ip)) {
+					countryCode = systemCountryCode;
+				} else {
+					List<CountryVO> countryVo = commonUtil.getCountryInfo(ip);
+					if (countryVo.size() == 0) {
+						countryName = "?";
+					} else {
+						countryCode = countryVo.get(0).getCountryCode();
+					}
+				}
+			} else {
+				countryName = "?";
+			}
+
+			if (countryName != "?") {
+				Locale localeCountry = new Locale(systemCountryName, countryCode);
+				countryName = localeCountry.getDisplayCountry(localeCountry);
+				countryName = countryName.replaceAll(" ", "");
+			}
+			permissionChHist.get(i - j).setCountryName(countryName);
+			// countryIP 관련 국가명 표시 위함 끝.
+
+			PermissionInfoVO infoVo = permissionChHist.get(i - j);
+
+			String userName = infoVo.getUserNm() + "(" + infoVo.getUserId() + ")";
+			String userDeptName = infoVo.getDeptNm();
+			String userCompanyName = infoVo.getCompanyNm();
+			String authorizedTime = infoVo.getAuthorizedTime();
+			String adminType = infoVo.getAdminType();
+			String status = infoVo.getStatus().equalsIgnoreCase("Y") ? egovMessageSource.getMessage("ezOrgan.ls07", locale) : egovMessageSource.getMessage("ezOrgan.ls08", locale);
+			String authorizer = infoVo.getAuthorizerNm() + "(" + infoVo.getAuthorizerId() + ")";
+			String authorizerIp = infoVo.getAuthorizerIp() + "(" + permissionChHist.get(i - j).getCountryName() + ")";
+
+			if (!sysLang.equals("primary")) {
+				userName = infoVo.getUserNm2() + "(" + infoVo.getUserId() + ")";
+				userDeptName = infoVo.getDeptNm2();
+				userCompanyName = infoVo.getCompanyNm2();
+				authorizer = infoVo.getAuthorizerNm2() + "(" + infoVo.getAuthorizerId() + ")";
+			}
+
+			if (adminType.contains("c=")) {
+				adminType = egovMessageSource.getMessage("ezOrgan.t291", locale);
+			} else if (adminType.contains("k=")) {
+				adminType = egovMessageSource.getMessage("ezOrgan.t293", locale);
+			} else if (adminType.contains("g=")) {
+				adminType = egovMessageSource.getMessage("ezOrgan.t295", locale);
+			} else if (adminType.contains("a=")) {
+				adminType = egovMessageSource.getMessage("ezOrgan.t292", locale);
+			} else if (adminType.contains("i=")) {
+				adminType = egovMessageSource.getMessage("ezOrgan.t294", locale);
+			} else if (adminType.contains("n=")) {
+				adminType = egovMessageSource.getMessage("ezOrgan.t297", locale);
+			} else if (adminType.contains("l=")) {
+				adminType = egovMessageSource.getMessage("ezOrgan.t296", locale);
+			} else if (adminType.contains("w=")) {
+				adminType = egovMessageSource.getMessage("ezOrgan.t301", locale);
+			} else if (adminType.contains("m=")) {
+				adminType = egovMessageSource.getMessage("ezOrgan.t300", locale);
+			} else if (adminType.contains("f=")) {
+				adminType = egovMessageSource.getMessage("ezOrgan.lhj1", locale);
+			} else if (adminType.contains("wf=")) {
+				adminType = egovMessageSource.getMessage("ezOrgan.t303", locale);
+			} else if (adminType.contains("e=")) {
+				adminType = egovMessageSource.getMessage("ezOrgan.kbm01", locale);
+			} else { // s
+				adminType = egovMessageSource.getMessage("ezOrgan.t9904", locale);
+			}
+
+			String[] permissionHist = null;
+			permissionHist = new String[] { userName, userDeptName, userCompanyName, authorizedTime, adminType, status,
+					authorizer, authorizerIp };
+
+			for (int k = 0; k < histHeaderLen; k++) {
+				cell = row.createCell(k);
+				cell.setCellValue((String) permissionHist[k]);
+				cell.setCellStyle(bodyStyle);
+			}
+
+			sheet.autoSizeColumn(i - 1);
+		}
+
+		response.setCharacterEncoding("UTF-8");
+		response.setHeader("Content-Disposition", "attachment; fileName=" + fileName + ".xls");
+		response.setContentType("application/vnd.ms-excel");
+
+		workbook.write(response.getOutputStream());
+		workbook.close();
+
+		logger.debug("permissionChHistExcelExport controller ended.");
 	}
 
 }

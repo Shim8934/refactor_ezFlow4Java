@@ -62,7 +62,12 @@
                     self.resizeTo(721, 750);
 				} else  {
                     self.resizeTo(746, 780);
-             }
+             	}
+				
+				/* 2021-11-10 홍승비 - 커뮤니티 팝업홈의 좌측 게시판 신규 게시물 아이콘 갱신 */
+				if (window.opener.parent.location.href.indexOf("ezCommunity/commHome/popupCommHome.do") > -1 && typeof(window.opener.parent.applyIsNewIconAll) == "function") {
+					window.opener.parent.applyIsNewIconAll(); // 리스트, 팝업홈 메인에서 읽기창 접근
+				}
 		    }
 
 		    function btn_Delete_Onclick() {
@@ -91,6 +96,12 @@
 					} catch(e) {}
 				}
 	            window.opener.refresh_onclick();
+	            
+	            /* 2021-11-10 홍승비 - 커뮤니티 팝업홈의 좌측 게시판 신규 게시물 아이콘 갱신 */
+				if (window.opener.parent.location.href.indexOf("ezCommunity/commHome/popupCommHome.do") > -1 && typeof(window.opener.parent.applyIsNewIconAll) == "function") {
+					window.opener.parent.applyIsNewIconAll();
+				}
+	            
 	            window.close();
 	        }
 

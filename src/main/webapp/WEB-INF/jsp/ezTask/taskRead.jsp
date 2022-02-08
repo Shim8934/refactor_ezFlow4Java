@@ -1000,9 +1000,10 @@
 				
 			}
 			
+			/* 2021-10-29 홍승비 - 반복업무현황 > 업무일 클릭 시 진행상태변경 동작하지 않고 날짜만 변경하도록 수정 */
 			function rowClicked(day) {
 				showResult(day);
-				update_status();
+				//update_status();
 			}
 			
 			/* progressBar 조회 */
@@ -1444,6 +1445,8 @@
 						
 						if (hasTaskAttach == 'Y') {
 							document.getElementById('attachedfileDIV').innerHTML = taskAttachList
+				    	} else {
+				    		document.getElementById('attachedfileDIV').innerHTML = "";
 				    	}
 					},
 					error : function(jqXHR, textStatus, errorThrown) {

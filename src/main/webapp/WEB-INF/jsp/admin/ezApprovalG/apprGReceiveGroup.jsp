@@ -449,7 +449,13 @@
 					            pGroupName2.innerText = "";
 					            pGroupName.value = "";
 					            lvtDeptSelect.DataSource("");
-					            lvtDept_SelChange();
+					            if (lvtDept.GetRowCount() == 1 && lvtDept.GetDataRows()[0].getAttribute("id") == "lvtDeptForm_TR_noItems") {
+					            	deleteAllCont_onclick();
+					            } else {
+						            lvtDept_SelChange();
+					            }
+					            
+					            
 					        } else {
 					        	//2016-05-13 장진혁과장 -- UI 팝업창 alert로 교체
 					            //OpenAlertUI("<spring:message code='ezApprovalG.t1564'/>");

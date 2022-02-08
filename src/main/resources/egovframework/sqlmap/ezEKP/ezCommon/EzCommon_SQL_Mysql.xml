@@ -577,6 +577,23 @@
 			PASSWORD_UPDATEDT DATETIME DEFAULT NULL
 	</statement>
 	
+	<select id="EzCommonDAO.checkUserMasterPhotoUpdateDT" resultClass="String">
+		<![CDATA[
+			SELECT 
+				PHOTO_UPDATEDT
+			FROM 
+				TBL_USERMASTER
+			LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.addUserMasterPhotoUpdateDT"> 
+		ALTER TABLE 
+			TBL_USERMASTER
+		ADD 
+			PHOTO_UPDATEDT DATETIME DEFAULT NULL
+	</statement>
+
 	<select id="EzCommonDAO.checkAddJobMasterJobID" resultClass="String">
 		<![CDATA[
 			SELECT 
@@ -2300,7 +2317,7 @@
 		SELECT 
 			USER_NAME
 		FROM 
-			JMOCHA_USER_DISTRIBUTION_APPLY
+			JMOCHA_USER_DIST_APPLY
 		LIMIT 1
 	</select>
 	
@@ -2328,7 +2345,7 @@
 	</statement>
 	
 	<statement id="EzCommonDAO.createUserDlApplyTable"> 
-		CREATE TABLE `jmocha_user_distribution_apply` (
+		CREATE TABLE `jmocha_user_dist_apply` (
 		  `DOMAIN_NAME` varchar(100) NOT NULL,
 		  `USER_NAME` varchar(100) NOT NULL,
 		  `APPLICANT_ID` varchar(100) NOT NULL,
@@ -2907,6 +2924,16 @@
 				WORK_STATUS
 			FROM 
 				TBL_ATTITUDE
+			LIMIT 1
+		]]>
+	</select>
+
+	<select id="EzCommonDAO.checkTblAdminAccessIpTable" resultClass="String">
+		<![CDATA[
+			SELECT 
+				TENANT_ID
+			FROM 
+				TBL_ADMIN_ACCESS_IP
 			LIMIT 1
 		]]>
 	</select>
@@ -3946,4 +3973,368 @@
 		  PRIMARY KEY (`CAR_FORM_ID`,`CAR_ID`,`COMPANYID`,`TENANT_ID`,`CAR_REGISTER_NO`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8
 	</statement>
+	
+	<select id="EzCommonDAO.checkViewTaskOldFlagTop" resultClass="Integer">
+		SELECT 
+			OLDFLAG_TOP
+		FROM 
+			VTASKCLASS
+		LIMIT 1
+	</select>
+	<select id="EzCommonDAO.checkSViewTaskOldFlagTop" resultClass="Integer">
+		SELECT 
+			OLDFLAG_TOP
+		FROM 
+			SVTASKCLASS
+		LIMIT 1
+	</select>
+
+	<statement id="EzCommonDAO.addViewTaskOldFlags">
+		<![CDATA[
+	       ALTER VIEW
+				`vtaskclass` AS
+		    SELECT 
+		        `tbl_taskcategory`.`CATEGORYCODE` AS `CATEGORYCODE`,
+		        `tbl_taskcategory`.`NAME` AS `CNAME`,
+		        `tbl_taskcategory`.`NAME2` AS `CNAME2`,
+		        `tbl_taskmiddlecategory`.`MCATEGORYCODE` AS `MCATEGORYCODE`,
+		        `tbl_taskmiddlecategory`.`NAME` AS `MCNAME`,
+		        `tbl_taskmiddlecategory`.`NAME2` AS `MCNAME2`,
+		        `tbl_tasksubcategory`.`SUBCATEGORYCODE` AS `SUBCATEGORYCODE`,
+		        `tbl_tasksubcategory`.`NAME` AS `SCNAME`,
+		        `tbl_tasksubcategory`.`NAME2` AS `SCNAME2`,
+		        `tbl_taskcode`.`TASKCODE` AS `TASKCODE`,
+		        `tbl_taskcode`.`TASKNAME` AS `TASKNAME`,
+		        `tbl_taskcode`.`TASKNAME2` AS `TASKNAME2`,
+		        `tbl_taskcode`.`KEEPINGPERIOD` AS `KEEPINGPERIOD`,
+		        `tbl_taskcode`.`DISPLAYRECFLAG` AS `DISPLAYRECFLAG`,
+		        `tbl_taskcode`.`SPECIALCATALOGFLAG` AS `SPECIALCATALOGFLAG`,
+		        `tbl_taskcode`.`SC1` AS `SC1`,
+		        `tbl_taskcode`.`SC2` AS `SC2`,
+		        `tbl_taskcode`.`SC3` AS `SC3`,
+		        `tbl_taskcode`.`TEMPFLAG` AS `TEMPFLAG`,
+		        `tbl_taskcode`.`COMPANYID` AS `COMPANYID`,
+		        `tbl_taskcode`.`TENANT_ID` AS `TENANT_ID`,
+		        `tbl_task_deptinfo`.`PROCESSDEPTCODE` AS `PROCESSDEPTCODE`,
+		        `tbl_task_deptinfo`.`PROCESSDEPTNAME` AS `PROCESSDEPTNAME`,
+		        `tbl_task_deptinfo`.`PROCESSDEPTNAME2` AS `PROCESSDEPTNAME2`,
+		        `tbl_taskcode`.`KEEPINGMETHOD` AS `KEEPINGMETHOD`,
+		        `tbl_taskcode`.`KEEPINGPLACE` AS `KEEPINGPLACE`,
+		        `tbl_taskcode`.`DISPLAYRECTRASTIME` AS `DISPLAYRECTRASTIME`,
+		        `tbl_task_deptinfo`.`DELFLAG` AS `DELFLAG`,
+		        `tbl_taskcategory`.`OLDFLAG` AS `OLDFLAG_TOP`,
+		        `tbl_taskmiddlecategory`.`OLDFLAG` AS `OLDFLAG_MID`,
+		        `tbl_tasksubcategory`.`OLDFLAG` AS `OLDFLAG_SUB`
+		    FROM
+		        ((((`tbl_taskcategory`
+		        JOIN `tbl_taskmiddlecategory` ON (`tbl_taskcategory`.`CATEGORYCODE` = `tbl_taskmiddlecategory`.`CATEGORYCODE`
+		            AND `tbl_taskcategory`.`TENANT_ID` = `tbl_taskmiddlecategory`.`TENANT_ID`
+		            AND `tbl_taskcategory`.`COMPANYID` = `tbl_taskmiddlecategory`.`COMPANYID`))
+		        JOIN `tbl_tasksubcategory` ON (`tbl_taskmiddlecategory`.`MCATEGORYCODE` = `tbl_tasksubcategory`.`MCATEGORYCODE`
+		            AND `tbl_taskmiddlecategory`.`TENANT_ID` = `tbl_tasksubcategory`.`TENANT_ID`
+		            AND `tbl_taskmiddlecategory`.`COMPANYID` = `tbl_tasksubcategory`.`COMPANYID`))
+		        JOIN `tbl_taskcode` ON (`tbl_tasksubcategory`.`SUBCATEGORYCODE` = `tbl_taskcode`.`SUBCATEGORYCODE`
+		            AND `tbl_tasksubcategory`.`TENANT_ID` = `tbl_taskcode`.`TENANT_ID`
+		            AND `tbl_tasksubcategory`.`COMPANYID` = `tbl_taskcode`.`COMPANYID`
+		            AND `tbl_taskcode`.`DELFLAG` = '0'))
+		        LEFT JOIN `tbl_task_deptinfo` ON (`tbl_taskcode`.`TASKCODE` = `tbl_task_deptinfo`.`TASKCODE`
+		            AND `tbl_taskcode`.`TENANT_ID` = `tbl_task_deptinfo`.`TENANT_ID`
+		            AND `tbl_taskcode`.`COMPANYID` = `tbl_task_deptinfo`.`COMPANYID`))
+		    WHERE
+		        `tbl_task_deptinfo`.`DELFLAG` = '0'
+		            OR `tbl_task_deptinfo`.`DELFLAG` IS NULL
+		            OR `tbl_task_deptinfo`.`DELFLAG` = '2'
+		]]>
+    </statement>
+    <statement id="EzCommonDAO.addSViewTaskOldFlags">
+	    <![CDATA[
+	        ALTER VIEW
+				`svtaskclass` AS
+		    SELECT 
+		        `tbl_taskcategory`.`CATEGORYCODE` AS `CATEGORYCODE`,
+		        `tbl_taskcategory`.`NAME` AS `CNAME`,
+		        `tbl_taskcategory`.`NAME2` AS `CNAME2`,
+		        `tbl_taskmiddlecategory`.`MCATEGORYCODE` AS `MCATEGORYCODE`,
+		        `tbl_taskmiddlecategory`.`NAME` AS `MCNAME`,
+		        `tbl_taskmiddlecategory`.`NAME2` AS `MCNAME2`,
+		        `tbl_tasksubcategory`.`SUBCATEGORYCODE` AS `SUBCATEGORYCODE`,
+		        `tbl_tasksubcategory`.`NAME` AS `SCNAME`,
+		        `tbl_tasksubcategory`.`NAME2` AS `SCNAME2`,
+		        `tbl_taskcode`.`TASKCODE` AS `TASKCODE`,
+		        `tbl_taskcode`.`TASKNAME` AS `TASKNAME`,
+		        `tbl_taskcode`.`TASKNAME2` AS `TASKNAME2`,
+		        `tbl_taskcode`.`KEEPINGPERIOD` AS `KEEPINGPERIOD`,
+		        `tbl_taskcode`.`DISPLAYRECFLAG` AS `DISPLAYRECFLAG`,
+		        `tbl_taskcode`.`SPECIALCATALOGFLAG` AS `SPECIALCATALOGFLAG`,
+		        `tbl_taskcode`.`TEMPFLAG` AS `TEMPFLAG`,
+		        `tbl_taskcode`.`COMPANYID` AS `COMPANYID`,
+		        `tbl_taskcode`.`TENANT_ID` AS `TENANT_ID`,
+		        `tbl_task_deptinfo`.`PROCESSDEPTCODE` AS `PROCESSDEPTCODE`,
+		        `tbl_task_deptinfo`.`PROCESSDEPTNAME` AS `PROCESSDEPTNAME`,
+		        `tbl_task_deptinfo`.`PROCESSDEPTNAME2` AS `PROCESSDEPTNAME2`,
+		        `tbl_taskcode`.`KEEPINGMETHOD` AS `KEEPINGMETHOD`,
+		        `tbl_taskcode`.`KEEPINGPLACE` AS `KEEPINGPLACE`,
+		        `tbl_taskcode`.`DISPLAYRECTRASTIME` AS `DISPLAYRECTRASTIME`,
+		        `tbl_taskcode`.`ISPUBLIC` AS `ISPUBLIC`,
+		        `tbl_taskcode`.`ITEMSECURITY` AS `ITEMSECURITY`,
+		        `tbl_task_deptinfo`.`DELFLAG` AS `DELFLAG`,
+		        `tbl_taskcategory`.`OLDFLAG` AS `OLDFLAG_TOP`,
+		        `tbl_taskmiddlecategory`.`OLDFLAG` AS `OLDFLAG_MID`,
+		        `tbl_tasksubcategory`.`OLDFLAG` AS `OLDFLAG_SUB`
+		    FROM
+		        ((((`tbl_taskcategory`
+		        JOIN `tbl_taskmiddlecategory` ON (`tbl_taskcategory`.`CATEGORYCODE` = `tbl_taskmiddlecategory`.`CATEGORYCODE`
+		            AND `tbl_taskcategory`.`TENANT_ID` = `tbl_taskmiddlecategory`.`TENANT_ID`
+		            AND `tbl_taskcategory`.`COMPANYID` = `tbl_taskmiddlecategory`.`COMPANYID`))
+		        JOIN `tbl_tasksubcategory` ON (`tbl_taskmiddlecategory`.`MCATEGORYCODE` = `tbl_tasksubcategory`.`MCATEGORYCODE`
+		            AND `tbl_taskmiddlecategory`.`TENANT_ID` = `tbl_tasksubcategory`.`TENANT_ID`
+		            AND `tbl_taskmiddlecategory`.`COMPANYID` = `tbl_tasksubcategory`.`COMPANYID`))
+		        JOIN `tbl_taskcode` ON (`tbl_tasksubcategory`.`SUBCATEGORYCODE` = `tbl_taskcode`.`SUBCATEGORYCODE`
+		            AND `tbl_tasksubcategory`.`TENANT_ID` = `tbl_taskcode`.`TENANT_ID`
+		            AND `tbl_tasksubcategory`.`COMPANYID` = `tbl_taskcode`.`COMPANYID`))
+		        LEFT JOIN `tbl_task_deptinfo` ON (`tbl_taskcode`.`TASKCODE` = `tbl_task_deptinfo`.`TASKCODE`
+		            AND `tbl_taskcode`.`TENANT_ID` = `tbl_task_deptinfo`.`TENANT_ID`
+		            AND `tbl_taskcode`.`COMPANYID` = `tbl_task_deptinfo`.`COMPANYID`))
+		    WHERE
+		        `tbl_task_deptinfo`.`DELFLAG` = '0'
+		            OR `tbl_task_deptinfo`.`DELFLAG` IS NULL
+		            OR `tbl_task_deptinfo`.`DELFLAG` = '2'
+		]]>
+    </statement>
+
+	<select id="EzCommonDAO.getTenantConfigList" parameterClass="map" resultClass="HashMap">
+		SELECT
+			property_name,
+			property_value
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			tenant_id = #tenantID#
+		AND
+			property_name
+		IN
+			<iterate property="property_names" open="(" close=")" conjunction=",">
+				#property_names[]#
+			</iterate>
+	</select>
+	
+	<select id="EzCommonDAO.chkAddjobMasterJobIdIsPrimary" resultClass="String">
+		SHOW INDEX 
+		FROM TBL_ADDJOBMASTER 
+		WHERE COLUMN_NAME = 'jobid' AND KEY_NAME = 'PRIMARY'
+	</select>
+	
+	<statement id="EzCommonDAO.dropAddjobMasterPrimary">
+		ALTER TABLE TBL_ADDJOBMASTER DROP PRIMARY KEY
+	</statement>
+	
+	<statement id="EzCommonDAO.addAddjobMasterPrimary">
+		ALTER TABLE TBL_ADDJOBMASTER ADD CONSTRAINT PRIMARY KEY (CN, DEPTID, TENANT_ID, JOBID)
+	</statement>
+	
+	<select id="EzCommonDAO.checkCommMailFG_PostColumn">
+        <![CDATA[
+            SELECT 
+                MAILFG_POST
+            FROM 
+                TBL_COMM_BOARDINFO
+            LIMIT 1
+        ]]>
+    </select>
+    <statement id="EzCommonDAO.addCommMailFG_PostColumn">
+        ALTER TABLE 
+        	TBL_COMM_BOARDINFO 
+		ADD (
+			MAILFG_POST VARCHAR(2) DEFAULT NULL
+		)
+    </statement>
+    <select id="EzCommonDAO.checkCommMailFG_ModColumn">
+        <![CDATA[
+            SELECT 
+                MAILFG_MOD
+            FROM 
+                TBL_COMM_BOARDINFO
+            LIMIT 1
+        ]]>
+    </select>
+    <statement id="EzCommonDAO.addCommMailFG_ModColumn">
+        ALTER TABLE 
+        	TBL_COMM_BOARDINFO 
+		ADD (
+			MAILFG_MOD VARCHAR(2) DEFAULT NULL
+		)
+    </statement>
+    <select id="EzCommonDAO.checkCommMailFG_CommentColumn">
+        <![CDATA[
+            SELECT 
+                MAILFG_COMMENT
+            FROM 
+                TBL_COMM_BOARDINFO
+            LIMIT 1
+        ]]>
+    </select>
+    <statement id="EzCommonDAO.addCommMailFG_CommentColumn">
+        ALTER TABLE 
+        	TBL_COMM_BOARDINFO 
+		ADD (
+			MAILFG_COMMENT VARCHAR(2) DEFAULT NULL
+		)
+    </statement>
+    
+    <select id="EzCommonDAO.checkSurveySubDeptYNColumn">
+        <![CDATA[
+            SELECT 
+                SUBDEPTYN
+            FROM 
+                TBL_SURVEY_PARTICIPANT
+            LIMIT 1
+        ]]>
+    </select>
+    <statement id="EzCommonDAO.addSurveySubDeptYNColumn">
+        ALTER TABLE 
+        	TBL_SURVEY_PARTICIPANT 
+		ADD (
+			SUBDEPTYN VARCHAR(2) DEFAULT 'N'
+		)
+    </statement>
+    
+    <select id="EzCommonDAO.checkTblScheduleComplete">
+		<![CDATA[
+			SELECT
+				SCHEDULEID
+			FROM
+				TBL_SCHEDULE_COMPLETE
+			LIMIT 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.createTblScheduleComplete"> 
+		CREATE TABLE TBL_SCHEDULE_COMPLETE (
+		    SCHEDULEID BIGINT(10) NOT NULL,
+		    REPEATCOUNT BIGINT(10) NOT NULL,
+		    ISALLREP VARCHAR(2) NOT NULL DEFAULT 'N',
+		    STARTDATE DATETIME NOT NULL,
+		    TENANT_ID MEDIUMINT(5),
+		    COMPANYID VARCHAR(40),
+		    PRIMARY KEY (`SCHEDULEID`, `REPEATCOUNT`, `ISALLREP`, `STARTDATE`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+	</statement>
+	
+    <statement id="EzCommonDAO.alterTblConnectionInfo">
+		ALTER TABLE 
+			TBL_CONNECTION_INFO
+		ADD 
+		IF NOT EXISTS
+		(
+			DISCONNECTTIME 		DATETIME 	DEFAULT NULL,
+			STATUS				VARCHAR(1)	DEFAULT NULL,
+			SESSIONCODE			VARCHAR(80)	DEFAULT NULL
+		)
+    </statement>
+
+	<statement id="EzCommonDAO.createTblAdminAccessInfo"> 
+		CREATE TABLE 
+		IF NOT EXISTS 
+			  TBL_ADMIN_ACCESS_INFO (
+			  SEQUENCE 		INT(10) 	  NOT NULL 		AUTO_INCREMENT,
+			  USERID 		VARCHAR(200)  NOT NULL,
+			  USERNM 		VARCHAR(200)  CHARACTER SET utf8mb4 DEFAULT NULL,
+			  USERNM2 		VARCHAR(200)  CHARACTER SET utf8mb4 DEFAULT NULL,
+			  DEPTID 		VARCHAR(200)  DEFAULT NULL,
+			  DEPTNM 		VARCHAR(200)  CHARACTER SET utf8mb4 DEFAULT NULL,
+			  DEPTNM2 		VARCHAR(200)  CHARACTER SET utf8mb4 DEFAULT NULL,
+			  TITLE 		VARCHAR(200)  CHARACTER SET utf8mb4 DEFAULT NULL,
+			  TITLE2 		VARCHAR(200)  CHARACTER SET utf8mb4 DEFAULT NULL,
+			  COMPANYID 	VARCHAR(200)  DEFAULT NULL,
+			  COMPANYNM 	VARCHAR(200)  CHARACTER SET utf8mb4 DEFAULT NULL,
+			  COMPANYNM2 	VARCHAR(200)  CHARACTER SET utf8mb4 DEFAULT NULL,
+			  ACCESSIP 		VARCHAR(200)  DEFAULT NULL,
+			  ACCESSINFO 	VARCHAR(200)  DEFAULT NULL,
+			  ACCESSTIME 	DATETIME 	  DEFAULT NULL,
+			  ACCESSBROWSER VARCHAR(40)   DEFAULT NULL,
+			  ACCESSOS 		VARCHAR(80)   DEFAULT NULL,
+			  ACCESSAGENT 	VARCHAR(1000) DEFAULT NULL,
+			  ADMINTYPE 	VARCHAR(200)   DEFAULT NULL,
+			  TENANT_ID 	DECIMAL(22,0) NOT NULL 		DEFAULT 0,
+			  PRIMARY KEY (`SEQUENCE`)
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+
+	<select id="EzCommonDAO.checkMailOutOfOfficeTemplate" resultClass="String">
+		<![CDATA[
+			SELECT 
+				USER_ID
+			FROM 
+				JMOCHA_MAIL_OUTOFOFFICE_TEM
+			LIMIT 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.createMailOutOfOfficeTemplate"> 
+		CREATE TABLE `jmocha_mail_outofoffice_tem` (
+		  `USER_ID` varchar(100) NOT NULL,
+		  `DISPLAYNAME` varchar(45) NOT NULL,
+		  `CONTENT` LONGTEXT NULL,
+		  PRIMARY KEY (`USER_ID`,`DISPLAYNAME`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+	</statement>
+	
+	<select id="EzCommonDAO.checkUserMailTemplate" resultClass="String">
+		<![CDATA[
+			SELECT 
+				USER_ID
+			FROM 
+				JMOCHA_USER_MAIL_TEMPLATE
+			LIMIT 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.createUserMailTemplate"> 
+		CREATE TABLE `JMOCHA_USER_MAIL_TEMPLATE` (
+		  `USER_ID` varchar(100) NOT NULL,
+		  `DISPLAYNAME` varchar(45) NOT NULL,
+		  `TEMPLATE_ID` varchar(510) NOT NULL,
+		  `REGDATE` datetime NOT NULL,
+		  `EDITORTYPE` varchar(5),
+		  `CONTENT` LONGTEXT NULL,
+		  PRIMARY KEY (`USER_ID`,`DISPLAYNAME`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+	</statement>
+
+	<statement id="EzCommonDAO.createTblAdminAccessIpTable"> 
+		CREATE TABLE `tbl_admin_access_ip` (
+		  	`IPNO` int(11) NOT NULL AUTO_INCREMENT,
+		  	`TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
+		  	`IPADDRESS` varchar(100) NOT NULL,
+		  	`ALLOW_ACCESS` varchar(10) DEFAULT 'NO',
+		  	`EXPLANATION` varchar(200) DEFAULT NULL,
+		  	PRIMARY KEY (`IPNO`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+	
+	<statement id="EzCommonDAO.createTblPermissionChangeInfo">
+		CREATE TABLE
+		IF NOT EXISTS
+			TBL_PERMISSION_CHANGE_INFO (
+			`SEQUENCE`		INT(10) 		NOT NULL AUTO_INCREMENT,
+			`USERID` 		VARCHAR(200) 	NOT NULL,
+			`USERNM` 		VARCHAR(200) 	CHARACTER SET utf8mb4 DEFAULT NULL,
+			`USERNM2` 		VARCHAR(200) 	CHARACTER SET utf8mb4 DEFAULT NULL,
+			`DEPTID` 		VARCHAR(200) 	DEFAULT NULL,
+			`DEPTNM` 		VARCHAR(200) 	CHARACTER SET utf8mb4 DEFAULT NULL,
+			`DEPTNM2` 		VARCHAR(200) 	CHARACTER SET utf8mb4 DEFAULT NULL,
+			`TITLE` 		VARCHAR(200) 	CHARACTER SET utf8mb4 DEFAULT NULL,
+			`TITLE2` 		VARCHAR(200) 	CHARACTER SET utf8mb4 DEFAULT NULL,
+			`COMPANYID` 	VARCHAR(200) 	DEFAULT NULL,
+			`COMPANYNM` 	VARCHAR(200) 	CHARACTER SET utf8mb4 DEFAULT NULL,
+			`COMPANYNM2` 	VARCHAR(200) 	CHARACTER SET utf8mb4 DEFAULT NULL,
+			`AUTHORIZEDTIME` DATETIME 		DEFAULT NULL,
+			`ADMINTYPE` 	VARCHAR(200) 	DEFAULT NULL,
+			`STATUS` 		VARCHAR(40) 	DEFAULT NULL,
+			`AUTHORIZERID` 	VARCHAR(200) 	CHARACTER SET utf8mb4 DEFAULT NULL,
+			`AUTHORIZERNM` 	VARCHAR(200) 	CHARACTER SET utf8mb4 DEFAULT NULL,
+			`AUTHORIZERNM2` VARCHAR(200) 	CHARACTER SET utf8mb4 DEFAULT NULL,
+			`AUTHORIZERIP` 	VARCHAR(200) 	DEFAULT NULL,
+			`TENANT_ID` 	DECIMAL(22,0) 	NOT NULL DEFAULT 0,
+			PRIMARY KEY (`SEQUENCE`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+	
 </sqlMap>

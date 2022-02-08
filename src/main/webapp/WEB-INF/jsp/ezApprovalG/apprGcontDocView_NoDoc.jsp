@@ -6,11 +6,14 @@
 	<HEAD>
 		<title><spring:message code='ezApprovalG.t9993'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<style> 
-			.IMG_BTN { behavior:url("/js/ezApprovalG/ImgBtn.htc") }
-		</style>
 		<meta http-equiv="Content-Type" content="text/html; charset=euc-kr">
 		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<style> 
+			.IMG_BTN { behavior:url("/js/ezApprovalG/ImgBtn.htc") }
+			<%-- 2021-10-26 홍승비 - 수기 기록물 정보창 내부에서 첨부파일의 체크박스 숨김처리 --%>
+			.content input[type=checkbox] { display:none; }
+			.content span { margin: 3px 3px 3px 4px; }
+		</style>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
@@ -156,7 +159,7 @@
 		}
 		</script>
 		</HEAD>
-		<body class="popup" style="OVERFLOW:hidden">
+		<body class="popup" style="overflow-x:hidden; overflow-y:auto;">
 		<h1><spring:message code='ezApprovalG.t9992'/></h1> 
 		
 		<div id="close"><ul><li id=btnClose ><span onClick="return btnClose_onclick()"></span></li></ul></div>
@@ -182,9 +185,9 @@
 		        </tr>
 		        <tr> 
 		            <th><spring:message code='ezApprovalG.t445'/></th>
-		            <td id="tdDrafter" style="padding-right:15px;width:200px;white-space:nowrap">&nbsp;</td>
+		            <td id="tdDrafter" style="padding-right:15px;width:200px;white-space:pre-wrap;">&nbsp;</td>
 		            <th><spring:message code='ezApprovalG.t862'/></th>
-		            <td id="tdApprover" style="padding-right:15px;width:200px;white-space:nowrap">&nbsp;</td>
+		            <td id="tdApprover" style="padding-right:15px;width:200px;white-space:pre-wrap;">&nbsp;</td>
 		        </tr>
 		        <tr> 
 		            <th><spring:message code='ezApprovalG.t831'/></th>

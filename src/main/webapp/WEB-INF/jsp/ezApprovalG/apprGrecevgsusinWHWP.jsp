@@ -76,7 +76,7 @@
 		    arr_userinfo[2]  = "<c:out value = '${userInfo.displayName1}'/>";
 		    arr_userinfo[3]  = "<c:out value = '${userInfo.title1}'/>";
 		    arr_userinfo[4]  = "<c:out value = '${userInfo.deptID}'/>";
-		    arr_userinfo[5]  = "<c:out value = '${userInfo.deptName1}'/>";
+		    arr_userinfo[5]  = "<c:out value = '${userInfo.deptName1}' escapeXml='false'/>";
 		    arr_userinfo[6]  = "<c:out value = '${userInfo.jikChek}'/>";
 		    arr_userinfo[8]  = "<c:out value = '${userInfo.email}'/>";             
 		    arr_userinfo[9]  = sCompanyID;
@@ -84,8 +84,8 @@
 		    arr_userinfo[12]  = "<c:out value = '${userInfo.displayName2}'/>";
 		    arr_userinfo[13]  = "<c:out value = '${userInfo.title1}'/>";
 		    arr_userinfo[14]  = "<c:out value = '${userInfo.title2}'/>";
-		    arr_userinfo[15]  = "<c:out value = '${userInfo.deptName1}'/>";
-		    arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2}'/>";		
+		    arr_userinfo[15]  = "<c:out value = '${userInfo.deptName1}' escapeXml='false'/>";
+		    arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2}' escapeXml='false'/>";		
 		    var pCompanyID = "<c:out value = '${userInfo.companyID}'/>";
 		    var companyID = "<c:out value = '${userInfo.companyID}'/>";
 		    var pSummery = "", pSpecialRecordCode = "", pPublicityCode = "", pPublicityYN = "", pLimitRange = "", pPageNum = "1";
@@ -121,11 +121,12 @@
 		    var useReceiveDocNo = "<c:out value = '${useReceiveDocNo}'/>";
 		    var orgCompanyID = "";
 		    var docNumZeroCnt = "<c:out value = '${docNumZeroCnt}'/>";
-		    var rtnSignInfo = "";
+		    var rtnSignInfo = [];
 		    var SaveHtml = "";
 		    var useWebHWP = "YES";
 		    var imgCheck = true;
 			//원문정보공개
+			var useOpenGov = "<c:out value='${useOpenGov}' />";
 			var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate="";
 			
 			var useRedraftOpinionKeep = "<c:out value='${useRedraftOpinionKeep}'/>";
@@ -266,7 +267,8 @@
 		    }
 		
 		    window.onresize = function () {
-	        	var mHeight = document.documentElement.clientHeight - 172 - document.getElementById("message").offsetTop + "px";
+	       		document.getElementById("messageWHWPEditor").style.height = document.documentElement.clientHeight - 150 + "px";
+	       		var mHeight = document.documentElement.clientHeight - 110 - document.getElementById("messageWHWPEditor").offsetTop + "px";
 	       		message.Resize(mHeight);
 	        }
 		    
@@ -472,10 +474,11 @@
 			    //HwpCtrl.SetImgReg();
 			    
 			    message.EditMode(0);
+				message.SetViewProperties(2, 100);
 				
 		        //2018-10-15 반송 후 배부된 문서의 접수번호 초기화
 				//2021-01-28 문서번호 초기화시 @dp-@YY-@nn으로 수정
-		        if (pDraftFlag == "REDRAFT" || pDraftFlag == "SUSIN") {
+		        if (pDraftFlag == "SUSIN" && nonElecRec == "Y" && !message.GetFieldText("receiptnumber")) {
 		        	message.PutFieldText("receiptnumber", "@dp-@YY-@nn");
 		        }
 		        
@@ -522,8 +525,13 @@
 			        alert("btnSetReceivLine_onclick : " + e.description);
 			    }
 			}
-		
+
+            var ingFlag = false;
 			function btnSendDraft_onclick() {
+                if (ingFlag) {
+                    return;
+                }
+                
 	        	var deptCheckFlag = checkDeptAndCabinetId();
 	        	
 				if (deptCheckFlag == "3") {
@@ -662,6 +670,8 @@
 	              //mht는 G일때만 수신채번하게 되잇는데
                 rtnval = getRecvDocNumber(arr_userinfo[4], docNumZeroCnt);
                 if (!rtnval) {
+                    UndoSignInfo(rtnSignInfo);
+                    
                     var pAlertContent = "[접수 문서번호]를 가져오지 못했습니다!";
                     OpenAlertUI(pAlertContent);
 
@@ -691,11 +701,16 @@
 	                      UndoSignInfo(rtnSignInfo);
 	
 	                      if (LastSignSN == 1) {
+	                          rollbackDocNumber(arr_userinfo[4], "receipt", pDocID);
+                              setSusinRollbackDocID();
+	                          
 	                          RtnVal = ExcuteInfo("END_FAIL")
 	                          if (!RtnVal) {
 	                              return;
 	                          }
 	                      }
+	                      
+	                      GetHTML(before_SaveFile);
 	
 	                    //   SetBtnStateTrue();
 	                      btnSendDraft.Enable = "true";
@@ -789,11 +804,17 @@
                     UndoSignInfo(rtnSignInfo);
                 	
                     if (LastSignSN == 1) {
+                        rollbackDocNumber(arr_userinfo[4], "receipt", pDocID);
+                        setSusinRollbackDocID();
+                        
                         RtnVal = ExcuteInfo("END_FAIL")
                         if (!RtnVal) {
                             return;
                         }
                     }
+                    
+                    GetHTML(before_SaveFile);
+                    
                     pAlertContent = "[<spring:message code='ezApprovalG.t1495'/>";
                     OpenAlertUI(pAlertContent);
                     return;
@@ -850,7 +871,7 @@
 					   }
 				   }
 
-                   rtnSignInfo = SendDraftMappingSign(ret);
+                   SendDraftMappingSign(ret);
 
 				   if (LastSignSN == 1) {
 					   var rtnVal = ExcuteInfo("LAST_SIGN_AFTER")
@@ -1527,15 +1548,19 @@
 			        parameter[51] = sepAttachCheckYN; // 분첨 확인여부
 		        }
 			    
-		        parameter[52] = basis;
-		        parameter[53] = reason;
-		        parameter[54] = listOpenFlag;
-		        parameter[55] = fileOpenFlagList;
-		        parameter[56] = limitDate;
+			    if (useOpenGov == "YES") {
+			        parameter[52] = basis;
+			        parameter[53] = reason;
+			        parameter[54] = listOpenFlag;
+			        parameter[55] = fileOpenFlagList;
+			        parameter[56] = limitDate;
+			    }
 			    
 			    if (tempItemCode != "") {
 			        tempdocnumcode = tempItemCode;
 			    }
+			    
+			    parameter[61] = tempKeyword;
 			    
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
@@ -1635,6 +1660,31 @@
 				            	sepAttachCheckYN = ret[26];
 				            	setNonElecRecInfo_whwp(nonElecRecInfoXml);
 				            }
+			                
+			             	// 접수문서의 경우 원문공개 대상은 아니지만 결재 진행시 오류 발생으로 데이터는 넣도록 수정
+			                if (useOpenGov == "YES") {
+	                            $.ajax({
+	                                type : "POST",
+	                                dataType : "text",
+	                                async : false,
+	                                url : "/ezApprovalG/openGovInfoSave.do",
+	                                data : {
+	                                    openGovListFlag : ret[27],
+	                                    fileOpenFlagList : ret[28],
+	                                    basis : ret[29],
+	                                    reason : ret[30],
+	                                    publicity : ret[11],
+	                                    docID : pDocID,
+	                                    limitDate : ret[31]
+	                                }
+	                            });
+
+	                            listOpenFlag = ret[27];
+	                            fileOpenFlagList = ret[28];
+	                            basis = ret[29];
+	                            reason = ret[30];
+	                            limitDate = ret[31];
+							}
 		                } else {
 		                	tempKeep = ret[16];
 		                	tempItemName = ret[17];
@@ -1768,7 +1818,8 @@
 	    	}
 	    	
 	    	function GetHTML(callback) {
-	            message.GetTextFile("HWP", "", function (data) { callback(data) });
+                ingFlag = true;
+	            message.GetTextFile("HWP", "", function (data) { ingFlag = false; callback(data); });
 	        }
 	    	
 	    	// 일반첨부, 대용량첨부파일 관련 가이드 메세지 추가
@@ -1801,7 +1852,7 @@
 				var keywordXml = loadXMLString(GetDocumentElement("CONNROOT", true));
 				var connNodes = SelectNodes(keywordXml, "CONNROOT/conn");
 
-				if (connNodes) {
+				if (connNodes.length>0) {
 					if (g_DraftFlag === "REDRAFT") {
 						OpenAlertUI("연동문서는 다시 접수할 수 없습니다.<br/>문서보기 창으로 이동합니다.", function() {
 							var url = "/ezApprovalG/ezviewAprWHWP.do" +
@@ -1870,6 +1921,7 @@
 	                        <c:choose>
 		                        <c:when test="${isNonElecRec eq 'Y'}">
 			                        <li id="btnDel"><span onclick="return btnDel_onclick()">삭제</span></li>
+			                        <li id="btnReturn" style="display: none"><span onclick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>
 		                        </c:when>
 		                        <c:otherwise>
 			                        <li id="btnReturn" style="display: none"><span onclick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>
@@ -1896,7 +1948,7 @@
 	            </td>
 	        </tr>
 	        <tr>
-	            <td style="padding-bottom:10px;height:800px;" >
+	            <td style="padding-bottom:10px;height:800px;" id="messageWHWPEditor" >
 		    		<iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="/ezApprovalG/WHWPEditor.do" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 	            </td>
 	        </tr>

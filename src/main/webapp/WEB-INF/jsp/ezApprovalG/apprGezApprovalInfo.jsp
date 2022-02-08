@@ -1238,6 +1238,29 @@
 		    
 		    /* 2020-08-03 홍승비 - 결재자가 한 명인 경우(기안자 = 최종결재자), 수신처 회송 시 기결재기능 사용하지 못하도록 수정 */
 			function btn_OK() {
+				var chkReceivedDoc = 0;
+
+				//접수된 문서인지 확인하기
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezApprovalG/isReceivedDoc.do",
+					data : {
+						docID : pDocID
+					},
+					success : function(result) {
+						chkReceivedDoc = result;
+					}
+				});
+
+				if (chkReceivedDoc != 0) {
+					alert("<spring:message code='ezApprovalG.pjg04'/>");
+					opener.close();
+					window.close();
+					return;
+				}
+
 		    	var aprLineCnt = $("#lvAPRLINE").find("tr[data11='001']"); // 결재
 		    	var draftLineCnt = $("#lvAPRLINE").find("tr[data11='018']"); // 기안
 		    	var aprJLineCnt = $("#lvAPRLINE").find("tr[data11='004']"); // 전결
@@ -1811,7 +1834,7 @@
 		        initdatepicker();
 		        document.getElementById("taSummery").value = "";
 
-		        if (vSecurity.trim() == "")
+		        if (vSecurity.trim() == "" || vSecurity.trim() == "999")
 		            document.getElementById("selSecLevel").options[0].selected = true;
 		        else
 		            document.getElementById("selSecLevel").value = vSecurity;
@@ -2875,6 +2898,7 @@
 	                                <td height="36px;" style="background-color: transparent; padding-top: 10px;vertical-align: top">
 	                                 	<input id="textUser2" style="width: 150px;height:22px" name="textUser" onkeypress="return textUser_onkeypress2()" maxlength="50">
                                         <a class="imgbtn imgbck2"><span name="btn_searchUser" id="Span2" onkeypress="return btn_searchUser_onclick2()" onclick="return btn_searchUser_onclick2()"><spring:message code='ezApproval.t175'/></span></a>
+                                        <a class="imgbtn imgbck2" style="vertical-align: middle; margin: auto; <c:if test="${isOuterForm}">display: none;</c:if>"><span onclick="return btnReceiptSearchDept_onClick()" ><spring:message code='ezApprovalG.t250'/></span></a>
 	                                	<a class="imgbtn imgbck2" id="AprDeptAdd"  onclick="AprDeptAdd_onclick('DEPT');"><span><spring:message code='ezApproval.t1101'/></span></a>
 	                                </td>
 	                            </tr>
@@ -2903,7 +2927,7 @@
 	                        <table style="margin-left: 0px;">
 	                            <tr>
 	                                <td style="vertical-align: top;">
-	                                    <div id="TreeView4" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 517px; width: 388px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
+	                                    <div id="TreeView4" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 517px; width: 436px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
 	                                    </div>
 	                                </td>
 	                            </tr>
@@ -3292,14 +3316,14 @@
 		                <th><spring:message code='ezApprovalG.t989'/></th>
 		                <td>
 		                    <div style="padding-top: 5px; padding-left: 3px;">
-		                        <input type="checkbox" name="selSecLevel1" id="selSecLevel1" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span onmouseover="showTooltip_MouseOver(this);" onmouseout="hideTooltip();"> 1<spring:message code='ezApprovalG.t991'/></span>
-		                        <input type="checkbox" name="selSecLevel2" id="selSecLevel2" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span onmouseover="showTooltip_MouseOver(this);" onmouseout="hideTooltip();"> 2<spring:message code='ezApprovalG.t991'/></span>
-		                        <input type="checkbox" name="selSecLevel3" id="selSecLevel3" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span onmouseover="showTooltip_MouseOver(this);" onmouseout="hideTooltip();"> 3<spring:message code='ezApprovalG.t991'/></span>
-		                        <input type="checkbox" name="selSecLevel4" id="selSecLevel4" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span onmouseover="showTooltip_MouseOver(this);" onmouseout="hideTooltip();"> 4<spring:message code='ezApprovalG.t991'/></span>
-		                        <input type="checkbox" name="selSecLevel5" id="selSecLevel5" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span onmouseover="showTooltip_MouseOver(this);" onmouseout="hideTooltip();"> 5<spring:message code='ezApprovalG.t991'/></span>
-		                        <input type="checkbox" name="selSecLevel6" id="selSecLevel6" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span onmouseover="showTooltip_MouseOver(this);" onmouseout="hideTooltip();"> 6<spring:message code='ezApprovalG.t991'/></span>
-		                        <input type="checkbox" name="selSecLevel7" id="selSecLevel7" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span onmouseover="showTooltip_MouseOver(this);" onmouseout="hideTooltip();"> 7<spring:message code='ezApprovalG.t991'/></span>
-		                        <input type="checkbox" name="selSecLevel8" id="selSecLevel8" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span onmouseover="showTooltip_MouseOver(this);" onmouseout="hideTooltip();"> 8<spring:message code='ezApprovalG.t991'/></span>
+		                        <input type="checkbox" name="selSecLevel1" id="selSecLevel1" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> 1호</span>
+		                        <input type="checkbox" name="selSecLevel2" id="selSecLevel2" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> 2호</span>
+		                        <input type="checkbox" name="selSecLevel3" id="selSecLevel3" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> 3호</span>
+		                        <input type="checkbox" name="selSecLevel4" id="selSecLevel4" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> 4호</span>
+		                        <input type="checkbox" name="selSecLevel5" id="selSecLevel5" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> 5호</span>
+		                        <input type="checkbox" name="selSecLevel6" id="selSecLevel6" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> 6호</span>
+		                        <input type="checkbox" name="selSecLevel7" id="selSecLevel7" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> 7호</span>
+		                        <input type="checkbox" name="selSecLevel8" id="selSecLevel8" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> 8호</span>
 		                    </div>
 		                    <div class="openGov">
 		                         <textarea id="txt_Reason" name="txt_Reason" style="height: 40px; width: 100%; box-sizing: border-box; -moz-box-sizing: border-box;"></textarea>

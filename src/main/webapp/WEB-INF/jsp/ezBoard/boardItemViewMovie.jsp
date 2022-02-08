@@ -224,6 +224,9 @@
 			                window.opener.refresh_onclick();
 			            } catch (e) {
 			            }
+						if(parent.opener.search != undefined){
+							parent.opener.search('skip');
+						}
 			            window.close();
 				    }
 				}
@@ -706,7 +709,7 @@
 		            <tr>
 		                <th><spring:message code='ezQuestion.t180'/><spring:message code='ezCommunity.t18'/></th>
 		                <td id="cimagecontent" colspan="3" style="padding-right:0px">
-		                    <div id="Div2" style="OVERFLOW-Y: auto; overflow-x:hidden; height:55px;WIDTH: 100%; padding-top:5px;padding-bottom:5px; vertical-align:middle; white-space:pre-wrap;"><c:out value="${boardItem.mainContent}"/></div>
+		                    <div id="Div2" style="OVERFLOW-Y: auto; overflow-x:hidden; height:55px;WIDTH: 100%; padding-top:5px;padding-bottom:5px; vertical-align:middle; white-space:pre-wrap; word-break:break-word;"><c:out value="${boardItem.mainContent}"/></div>
 		                </td>
 		            </tr>
 		          </table>

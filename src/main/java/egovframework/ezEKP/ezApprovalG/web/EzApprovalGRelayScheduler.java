@@ -1472,9 +1472,12 @@ public class EzApprovalGRelayScheduler {
                 ezApprovalGService.fieldUpdate("xmlURL", relayXML.getxDocID().replace("/", "_").replace("#", "_") + relayXML.getReceiveID() + ".xml", relayXML.getxDocID(), relayXML.getReceiveID(), relayXML.getCompanyID(), relayXML.getTenantID());
                 break;
             case "attach":
-                boolean WriteAttache = WriteFileFromBase64(relayXML.getCont(count), relayXML.getAprDocPath() + relayXML.getCompanyID() + commonUtil.separator + "ExDocDown" , relayXML.getxDocID().replace("/", "_").replace("#", "_") + relayXML.getContName(count));
-                logger.debug("#attach생성=" + WriteAttache);
-                ezApprovalGService.addAttachInfo(relayXML.getContName(count), relayXML.getxDocID().replace("/", "_").replace("#", "_") + relayXML.getContName(count), relayXML.getxDocID(), Integer.toString(count), "N", relayXML.getCompanyID(), relayXML.getTenantID());
+//              boolean WriteAttache = WriteFileFromBase64(relayXML.getCont(count), relayXML.getAprDocPath() + relayXML.getCompanyID() + commonUtil.separator + "ExDocDown" , relayXML.getxDocID().replace("/", "_").replace("#", "_") + relayXML.getContName(count));
+          	// 정주환 파일명 길이제한으로 저장시 파일 count만 저장
+              boolean WriteAttache = WriteFileFromBase64(relayXML.getCont(count), relayXML.getAprDocPath() + relayXML.getCompanyID() + commonUtil.separator + "ExDocDown" , relayXML.getxDocID().replace("/", "_").replace("#", "_") + count);
+              logger.debug("#attach생성=" + WriteAttache);
+//              ezApprovalGService.addAttachInfo(relayXML.getContName(count), relayXML.getxDocID().replace("/", "_").replace("#", "_") + relayXML.getContName(count), relayXML.getxDocID(), Integer.toString(count), "N", relayXML.getCompanyID(), relayXML.getTenantID());
+              ezApprovalGService.addAttachInfo(relayXML.getContName(count), relayXML.getxDocID().replace("/", "_").replace("#", "_") + count, relayXML.getxDocID(), Integer.toString(count), "N", relayXML.getCompanyID(), relayXML.getTenantID());
                 break;
             case "attach_body":
                 // 이 것 때문에 attach_body에서 오류남

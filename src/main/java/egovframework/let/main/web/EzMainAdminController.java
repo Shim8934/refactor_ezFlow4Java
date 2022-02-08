@@ -1,18 +1,26 @@
 package egovframework.let.main.web;
 
+import java.util.Locale;
 import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.let.main.service.MainService;
+import egovframework.let.main.vo.MainVO;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.user.login.service.LoginService;
+import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Controller
@@ -26,8 +34,49 @@ public class EzMainAdminController {
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
 	
+	@Resource(name="mainService")
+	private MainService mainService;
+
+	@Resource(name = "loginService")
+	private LoginService loginService;
+	
+    @Resource(name="egovMessageSource")
+    private EgovMessageSource egovMessageSource;    
+    
+	private static final Logger logger = LoggerFactory.getLogger(EzMainAdminController.class);
+	
 	@RequestMapping(value="/admin/main.do")
-	public String adminMain(HttpServletRequest request) throws Exception{		
+	public String adminMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
+		// 2022-01-07 이사라 - 관리자 메뉴 접속 내역 로그 입력
+		MainVO adminVO = new MainVO();
+		
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		String uid = user.getId();
+		int tenantId = user.getTenantId();
+
+		// 전체관리자와 회사관리자 외 다른 관리자는 제외
+		LoginVO loginVO = new LoginVO();
+
+		loginVO.setId(uid);
+		loginVO.setTenantId(tenantId);
+		loginVO.setDn("NOPASSWORD");
+
+		LoginVO resultVO = loginService.selectUser(loginVO);
+
+		boolean rollC = resultVO.getRollInfo().contains("c=1");
+		boolean rollK = resultVO.getRollInfo().contains("k=1");
+
+		if (rollC || rollK) {
+			adminVO.setUserid(uid);
+			adminVO.setTenant_id(tenantId);
+			adminVO.setAccessip(ClientUtil.getClientIP(request));
+			adminVO.setAccessagent(ClientUtil.getClientInfo(request, "agent"));
+			adminVO.setAccessos(ClientUtil.getClientInfo(request, "os"));
+			adminVO.setAccessbrowser(ClientUtil.getClientInfo(request, "browser"));
+
+			mainService.insertAdminLog(adminVO);
+		}
+		
 		return "admin/adminMain";
 	}
 	
@@ -139,4 +188,17 @@ public class EzMainAdminController {
 		
 		return "admin/adminTop";
 	}	
+	
+	/* 2020-05-07 김수아 - 관리자 IP 제한 기능
+		접근 제한 화면
+	*/
+	@RequestMapping(value="/admin/accessBlockToAdmin.do")
+	public String accessBlockToAdmin(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("accessBlockToAdmin started.");
+		String blockMsg = egovMessageSource.getMessage("ezSystem.ksa10", locale);
+		
+		model.addAttribute("blockMsg", blockMsg);
+		
+		return "cmm/error/accessBlock";
+	}
 }

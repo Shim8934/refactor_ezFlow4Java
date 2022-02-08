@@ -230,7 +230,11 @@
 		                hesongok = setCabinetHeSong(temppDocSN);
 		
 		            if (hesongok) {
-		            	 SendMailToDrafter_Hesong();
+		            	var docInfo = document.getElementById("DOCINFO").dataSource;
+						var writerID = SelectSingleNodeValueNew(docInfo, "DOCINFO/DATA/WRITERID");
+						var writerName = SelectSingleNodeValueNew(docInfo, "DOCINFO/DATA/WRITERNAME");
+						var docTitle = SelectSingleNodeValueNew(docInfo, "DOCINFO/DATA/DOCTITLE");
+		            	SendMailToDrafter_Hesong(writerID, writerName, docTitle);
 		                hesongok = setHeSongDocInfo();
 		            }
 		        }
@@ -1038,7 +1042,7 @@
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;		
 		
-		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType, "ezApprovalInfo", GetOpenWindowfeature(1144, 750));
+		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType, "ezApprovalInfo", GetOpenWindowfeature(1194, 750));
 
 		        try { OpenWin.focus(); } catch (e) { }
 		    }

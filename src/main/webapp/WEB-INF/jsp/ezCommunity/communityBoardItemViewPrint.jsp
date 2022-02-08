@@ -187,9 +187,9 @@
 						$.each(result["oneLineReplyList"], function(idx, item){
 		 	            	temp = temp+1;
 		 	            	if (gubun != "2") {
-		 	            		strHTML += "<font color=blue>" + temp.toString() + ". " + "<span style='cursor:pointer' onclick='OpenUserInfo(\"" + item.userID + "\")'><font color=blue>" + item.userName + "</font></span>(" + item.writeDate + ")" + " : </font>" + item.content + " <img src='/images/oneline_delete.gif' style='cursor:pointer' onclick='delete_onelinereply(\"" + item.replyID + "\")'><br>";
+		 	            		strHTML += "<font color=blue>" + temp.toString() + ". " + "<span style='cursor:pointer' onclick='OpenUserInfo(\"" + item.userID + "\")'><font color=blue>" + item.userName + "</font></span>(" + item.writeDate.substring(0, 16) + ")" + " : </font>" + item.content + "<br>";
 		 	            	} else if (gubun == "2") {
-		 	            		strHTML += "<font color=blue>" + temp.toString() + ". " + "<span style='cursor:pointer' onclick=''><font color=blue>" + item.userName + "</font></span>(" + item.writeDate + ")" + " : </font>" + item.content + " <img src='/images/oneline_delete.gif' style='cursor:pointer' onclick='delete_onelinereply(\"" + item.replyID + "\")'><br>";
+		 	            		strHTML += "<font color=blue>" + temp.toString() + ". " + "<span style='cursor:pointer' onclick=''><font color=blue>" + item.userName + "</font></span>(" + item.writeDate.substring(0, 16) + ")" + " : </font>" + item.content + "<br>";
 		 	            	}
 		 	           });
 		 	           
@@ -212,7 +212,7 @@
 			}
 			
 			function displaytable() {
-			    document.getElementById("contenttable").innerHTML = message.document.body.innerHTML;
+			 //   document.getElementById("contenttable").innerHTML = message.document.body.innerHTML;
 			}
 		</script>
 	</head>

@@ -81,12 +81,13 @@ function putBansongSign()
 	return signInfo;   
 }
 
+var signInfo = [];
+var newSignInfo = [];
 function AprrovMappingSign(ret)
 {
 	var SingFlag = true;
 	var DekyulFlag = false;
 	var habyui
-	var signInfo  = new Array();
 	var signCnt;
 	
 	signCnt = 0;
@@ -131,6 +132,7 @@ function AprrovMappingSign(ret)
 
 				signInfo[signCnt] = habyui;
 				SignName[signCnt] = habyui;
+                newSignInfo.push(habyui);
 				if (pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase())
 				{
 					SignType[signCnt] = "IMAGE";
@@ -165,6 +167,7 @@ function AprrovMappingSign(ret)
 				SignName[signCnt] = habyui;
 				signCnt = signCnt + 1
 				SingFlag = false; 
+				newSignInfo.push(habyui);
 			}
 		}
 	  
@@ -177,6 +180,7 @@ function AprrovMappingSign(ret)
 			SignName[signCnt] = habyuidateID;
 			SignContent[signCnt] = s;					
 			signCnt = signCnt + 1;
+            newSignInfo.push(habyuidateID);
 		}
 		
 		var phabyuijikweeID = phabyuijikwee + pAprMemberSN;
@@ -196,7 +200,7 @@ function AprrovMappingSign(ret)
 			SignName[signCnt] = signID;
 			SignType[signCnt] = "TEXT";
 			SignContent[signCnt] = arr_userinfo[2] + "\15" + s;
-			
+			newSignInfo.push(signID);
 			signCnt = signCnt + 1;
 		}
 	}
@@ -219,6 +223,7 @@ function AprrovMappingSign(ret)
 		
 		if (message.FieldExist(seumyungdateID)) {
 			message.PutFieldText(seumyungdateID, s);
+            newSignInfo.push(seumyungdateID);
 		}
 
 		if (message.FieldExist(seumyungID)) {
@@ -245,6 +250,7 @@ function AprrovMappingSign(ret)
 			        SignName[signCnt] = signID;
 			        SignType[signCnt] = "IMAGE";
 			        SignContent[signCnt] = ret +"::"+ arr_userinfo[2] + "\15" + s;
+			        newSignInfo.push(signID);
 			
 	  				signCnt = signCnt + 1
 	  				SingFlag = true;
@@ -273,6 +279,7 @@ function AprrovMappingSign(ret)
 			        SignContent[signCnt] = content;
 	  				signCnt = signCnt + 1
 	  				SingFlag = false;
+	  				newSignInfo.push(signID);
 	  			}
 	  		
 	  			DekyulFlag = true;
@@ -296,6 +303,7 @@ function AprrovMappingSign(ret)
 		        SignName[signCnt] = signID;
 		        SignType[signCnt] = "TEXT";
 		        SignContent[signCnt] = strLang6;
+		        newSignInfo.push(signID);
 			        
 	  			signCnt = signCnt + 1
 			} else if (DekyulFlag) {
@@ -333,6 +341,7 @@ function AprrovMappingSign(ret)
 		            SignName[signCnt] = signID;
 		            SignType[signCnt] = "IMAGE";
 		            SignContent[signCnt] = ret+"::"+contents;
+		            newSignInfo.push(signID);
 		        
 	  				signCnt = signCnt + 1
 	  				SingFlag = true;
@@ -368,6 +377,7 @@ function AprrovMappingSign(ret)
 		            SignContent[signCnt] = contents;
 	  				signCnt = signCnt + 1
 	  				SingFlag = false; 
+	  				newSignInfo.push(signID);
 	  			}
 	  		}
 		}
@@ -1482,10 +1492,10 @@ function UpdateDocHistory(pHtml) {
         createNodeAndInsertText(xmlpara, objNode, "pUserName", arr_userinfo[11]);
         createNodeAndInsertText(xmlpara, objNode, "pUserJobTitle", arr_userinfo[13]);
         createNodeAndInsertText(xmlpara, objNode, "pUserDeptID", arr_userinfo[4]);
-        createNodeAndInsertText(xmlpara, objNode, "pUserDeptName", arr_userinfo[15]);
+        createNodeAndInsertText(xmlpara, objNode, "pUserDeptName", ConvMakeXMLString(arr_userinfo[15]));
         createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", arr_userinfo[12]);
         createNodeAndInsertText(xmlpara, objNode, "PUSERJOBTITLE2", arr_userinfo[14]);
-        createNodeAndInsertText(xmlpara, objNode, "PUSERDEPTNAME2", arr_userinfo[16]);
+        createNodeAndInsertText(xmlpara, objNode, "PUSERDEPTNAME2", ConvMakeXMLString(arr_userinfo[16]));
         createNodeAndInsertText(xmlpara, objNode, "ORGCOMPANYID", orgCompanyID);
         createNodeAndInsertText(xmlpara, objNode, "ISBEFOREDOC", "");
         createNodeAndInsertText(xmlpara, objNode, "BEFOREDOCURL", "");

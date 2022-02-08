@@ -293,22 +293,24 @@
 		        }
 		    }
 		    function Tab1_NewTabIni(pTabNodeID) {
-		        for (var i = 0; i < document.getElementById(pTabNodeID).childNodes.length; i++) {
-		            if (document.getElementById(pTabNodeID).childNodes[i].nodeName == "P") {
-		                if (document.getElementById(pTabNodeID).childNodes[i].childNodes[0].nodeName == "SPAN") {
-		                    document.getElementById(pTabNodeID).childNodes[i].childNodes[0].onmouseover = function () { Tab1_MouserOver(this); };;
-		                    document.getElementById(pTabNodeID).childNodes[i].childNodes[0].onmouseout = function () { Tab1_MouserOut(this); };;
-		                    document.getElementById(pTabNodeID).childNodes[i].childNodes[0].onclick = function () { Tab1_MouseClick(this); };;
-
-		                    if (Tab1_flag) {
-		                        document.getElementById(pTabNodeID).childNodes[i].childNodes[0].className = "tabon";
-		                        Tab1_SelectID = document.getElementById(pTabNodeID).childNodes[i].childNodes[0].id;
-		                        Tab1_flag = false;
-		                    }
-
-		                }
-		            }
-		        }
+		    	if (document.getElementById(pTabNodeID) != null) {
+			        for (var i = 0; i < document.getElementById(pTabNodeID).childNodes.length; i++) {
+			            if (document.getElementById(pTabNodeID).childNodes[i].nodeName == "P") {
+			                if (document.getElementById(pTabNodeID).childNodes[i].childNodes[0].nodeName == "SPAN") {
+			                    document.getElementById(pTabNodeID).childNodes[i].childNodes[0].onmouseover = function () { Tab1_MouserOver(this); };;
+			                    document.getElementById(pTabNodeID).childNodes[i].childNodes[0].onmouseout = function () { Tab1_MouserOut(this); };;
+			                    document.getElementById(pTabNodeID).childNodes[i].childNodes[0].onclick = function () { Tab1_MouseClick(this); };;
+	
+			                    if (Tab1_flag) {
+			                        document.getElementById(pTabNodeID).childNodes[i].childNodes[0].className = "tabon";
+			                        Tab1_SelectID = document.getElementById(pTabNodeID).childNodes[i].childNodes[0].id;
+			                        Tab1_flag = false;
+			                    }
+	
+			                }
+			            }
+			        }
+		    	}
 		    }
 		    
 		    function Check_ID(pValue) {
@@ -551,13 +553,19 @@
 		            }
 		        } --%>
 		    }
-		    function btnPhoto_onclick_Complete(ret) {
+		    function btnPhoto_onclick_Complete(ret, viewTmp) {
 		        DivPopUpHidden();
 
 		        if (ret != undefined) {
 		            alert("<spring:message code='ezOrgan.t273' />");
 		            document.getElementById("userPhotoYN").value = ret;
-		            UserPhotoDiv.innerHTML = "<img style='width:119px; height:128px;' SRC='/admin/ezOrgan/getPersonalInfo.do?fileName=" + ret + "' />";		            
+
+		            // 2021-10-07 김은실 - (경기대학교) [QC149] 관리자>조직도>조직도관리>사진변경>기존이미지 남아있음 수정 (CrossYN()를 쓰기에는 IE전체가 그런 것 같음. + 11버전은 msie이 없어서 구분이 안됨.)
+		            if (/WOW|MSIE/i.test(navigator.userAgent)) {
+			            UserPhotoDiv.innerHTML = "<img style='width:119px; height:128px;' SRC='/admin/ezOrgan/getPersonalInfo.do?fileName=" + viewTmp + "' />";
+		            } else {
+			            UserPhotoDiv.innerHTML = "<img style='width:119px; height:128px;' SRC='/admin/ezOrgan/getPersonalInfo.do?fileName=" + ret + "' />";
+		            }
 		        }
 		    }
 		    function deleteImg() {	

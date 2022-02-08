@@ -55,6 +55,10 @@
 	        var startDate = "<c:out value='${scheduleInfo.startDate}' />";
 	        var endDate = "<c:out value='${scheduleInfo.endDate}' />";
 	        
+	        /* 2021-11-25 홍승비 - 일정완료 관련 데이터 추가 (반복일정 대응) */
+	        var repeatCount = "<c:out value='${repeatCount}' />";
+	        var repStartDate = "<c:out value='${repStartDate}' />";
+	        
 	        <%-- var parentid = "<%= _parentid %>"; --%>			
 			<%-- var admin = "<%= _admin %>"; --%>
 			<%-- var userid = "<%= userinfo.UserID %>"; --%>
@@ -101,17 +105,20 @@
 	            }
 	        }
 	
+	        /* 2021-09-12 홍승비 - 일정관리 보기창 본문 리사이즈 조정 */
 	        window.onresize = function () {
-	            if (document.all.message.style.width != document.body.clientWidth - 25)
-	                document.all.message.style.width = document.body.clientWidth - 25;
-	
-	            if ((scheduletype != "1" && scheduletype != "6" && scheduletype != "7") || (scheduletype != "7" && scheduletype != "1")) {
-	                if (document.getElementById('managespan') && (scheduletype != "1" && scheduletype != "6" && scheduletype != "9")) {
-	                    document.getElementById("messagetd").style.height = document.body.clientHeight - 250 + "PX";
-	                }
-	            } else {
-	                document.getElementById("messagetd").style.height = document.body.clientHeight - 298 + "PX";
-	            }
+	            // width 속성은 css의 calc로 처리함
+				var addHeight = 0;
+	        	var contentHeight = document.documentElement.clientHeight - 269; // 일정그룹명, 참석자 tr이 없는 기본 본문 높이
+	        	if (document.getElementById("scheduleGroupInfoTR") != null) { // 일정그룹명 tr
+	        		addHeight += 30
+	        	}
+	        	if (document.getElementById("LabelAttendant") != null) { // 참석자 tr
+	        		addHeight += 30;
+	        	}
+	            
+            	document.getElementById("message").style.height = (contentHeight - addHeight) + "PX";
+                document.getElementById("messagetd").style.height = (contentHeight - addHeight) + "PX";
 	        }
 	        
 		    window.onbeforeunload = function () {
@@ -270,7 +277,8 @@
 					data : { 
 						scheduleId : scheduleid,
 						selectDate : "${_date}",
-						startDate : "${scheduleInfo.startDate}"						
+						startDate : "${scheduleInfo.startDate}",
+						repeatCount : repeatCount
 					},
 					success: function() {
 						alert("<spring:message code='ezSchedule.t213' />");
@@ -296,12 +304,13 @@
 	            var pTop = (pheight - 760) / 2;
 	            var pLeft = (pwidth - 790) / 2;
 	            
+	            /* 2021-11-25 홍승비 - 일정 수정 시 반복일정의 repeatCount와 repStartDate를 전달 */
 	            if (CrossYN()) {
-	                win = window.open("/ezSchedule/scheduleWrite.do?id=" + encodeURIComponent(id) + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + pattern + "&pageFrom=" + pageFrom + "&otherid=" + _otherid, "",
-	                                    "height = 830px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+	                win = window.open("/ezSchedule/scheduleWrite.do?id=" + encodeURIComponent(id) + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + pattern + "&pageFrom=" + pageFrom + "&otherid=" + _otherid
+	                		+ "&repeatCount=" + repeatCount + "&repStartDate=" + encodeURIComponent(repStartDate), "", "height = 830px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	            } else {
-	            	win = window.open("/ezSchedule/scheduleWrite.do?id=" + encodeURIComponent(id) + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + pattern + "&pageFrom=" + pageFrom + "&otherid=" + _otherid, "",
-                            "height = 760px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+	            	win = window.open("/ezSchedule/scheduleWrite.do?id=" + encodeURIComponent(id) + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + pattern + "&pageFrom=" + pageFrom + "&otherid=" + _otherid
+	            			+ "&repeatCount=" + repeatCount + "&repStartDate=" + encodeURIComponent(repStartDate), "", "height = 760px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	            	/* if (pUse_Editor == "" || pUse_Editor == "CK") {
 	                    win = window.open("/ezSchedule/scheduleWrite.do?id=" + encodeURIComponent(id) + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + pattern + "&pageFrom=" + pageFrom + "&otherid=" + _otherid, "",
 	                                        "height = 760px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
@@ -401,9 +410,12 @@
 	        }
 	        
 	        function makeRepetitionScheduleString(startDate, endDate, repetitionInfo) {
-	        	var repeatinfo = strLang33;
+	        	var repeatinfo = '';
 				var info = repetitionInfo.split("|");
 				var repetitionType = info[2];
+				if(repetitionType){
+					repeatinfo = strLang33;
+				}
 				
 				switch (repetitionType) {
 					case "0":
@@ -693,7 +705,7 @@
 	                <td style="height:20px">
 	                    <table style="width:100%" class="popuplist">	                         
 	                        <c:if test="${scheduleInfo.scheduleType == '7'}">
-	                        	<tr>
+	                        	<tr id ="scheduleGroupInfoTR">
 		                            <th style="white-space:nowrap">
 		                                <spring:message code='ezSchedule.jjh04' />
 		                            </th>
@@ -813,7 +825,7 @@
 	            </tr>
 	            <tr>
 	                <td class="pad1" style="vertical-align: top; height: 100%" id="messagetd">
-	                    <iframe id="message" style="border: #ddd 1px solid; padding-left: 5px; overflow: auto;width: 99.1%; padding-top: 6px; height: 370px; background-color: white"></iframe>	                    
+	                    <iframe id="message" style="border: #ddd 1px solid; padding-left: 5px; overflow: auto;width: calc(100% - 7px); padding-top: 6px; height: 370px; background-color: white"></iframe>	                    
 	                </td>
 	            </tr>
 	            <tr>
@@ -826,7 +838,7 @@
 	                            <td class="pos1">
 	                                <div id="attachedfileDIV" style="margin-top: 0px; overflow: auto; padding-top: 0px;height: 50px;" align="left">
 	                                    <c:forEach var="item" items="${attachList}" varStatus="status">
-	                                    	<div style="margin-top:3px;height:20px">
+	                                    	<div style="margin-top:3px;height:auto;">
 	                                    		<c:set var="imagePath" value="/images/file.gif" />
 	                                    		<input type="checkbox" filename="${item.fileEncodeName}" filepath="${item.filePath}">
 	                                    		<c:if test="${item.fileType == 'jpg' || item.fileType == 'jpeg' || item.fileType == 'bmp' || item.fileType == 'gif' || item.fileType == 'png' || item.fileType == 'tif' || item.fileType == 'tiff'}">

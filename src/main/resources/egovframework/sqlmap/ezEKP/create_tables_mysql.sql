@@ -1311,6 +1311,23 @@ CREATE TABLE `jmocha_user_distribution_mem` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `jmocha_user_dist_apply`
+--
+
+DROP TABLE IF EXISTS `jmocha_user_dist_apply`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `jmocha_user_dist_apply` (
+  `DOMAIN_NAME` varchar(100) NOT NULL,
+  `USER_NAME` varchar(100) NOT NULL,
+  `APPLICANT_ID` varchar(100) NOT NULL,
+  `APPLICANT_DATE` date NOT NULL,
+  PRIMARY KEY (`DOMAIN_NAME`,`USER_NAME`,`APPLICANT_ID`),
+  KEY `foreign_keys_index` (`DOMAIN_NAME`,`USER_NAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `jmocha_user_local_info`
 --
 
@@ -2281,7 +2298,7 @@ CREATE TABLE `tbl_addjobmaster` (
   `JOBID` varchar(100) DEFAULT NULL,
   `PROXY` varchar(200) DEFAULT NULL,
   `MANUAL_FLAG` varchar(4) DEFAULT NULL,
-  PRIMARY KEY (`CN`,`DEPTID`,`TENANT_ID`)
+  PRIMARY KEY (`CN`,`DEPTID`,`TENANT_ID`,`JOBID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2320,7 +2337,7 @@ CREATE TABLE `tbl_admin_access_ip` (
   `IPNO` int(11) NOT NULL AUTO_INCREMENT,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `IPADDRESS` varchar(100) NOT NULL,
-  `ACCESS` varchar(10) DEFAULT 'NO',
+  `ALLOW_ACCESS` varchar(10) DEFAULT 'NO',
   `EXPLANATION` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`IPNO`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -5744,10 +5761,77 @@ CREATE TABLE `tbl_connection_info` (
   `CONNECTIP` varchar(200) DEFAULT NULL,
   `CONNECTINFO` varchar(200) DEFAULT NULL,
   `CONNECTTIME` datetime DEFAULT NULL,
+  `DISCONNECTTIME` datetime DEFAULT NULL,
   `CONNECTBROWSER` varchar(40) DEFAULT NULL,
   `CONNECTOS` varchar(80) DEFAULT NULL,
   `CONNECTAGENT` varchar(1000) DEFAULT NULL,
+  `STATUS` varchar(1) DEFAULT NULL,
+  `SESSIONCODE` varchar(80) DEFAULT NULL,
   `TENANT_ID` decimal(22,0) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`SEQUENCE`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_admin_access_info`
+--
+
+DROP TABLE IF EXISTS `tbl_admin_access_info`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_admin_access_info` (
+  `SEQUENCE` 	int(10) NOT NULL AUTO_INCREMENT,
+  `USERID` 		varchar(200) NOT NULL,
+  `USERNM` 		varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `USERNM2` 	varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `DEPTID` 		varchar(200) DEFAULT NULL,
+  `DEPTNM` 		varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `DEPTNM2` 	varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `TITLE` 		varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `TITLE2` 		varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `COMPANYID` 	varchar(200) DEFAULT NULL,
+  `COMPANYNM` 	varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `COMPANYNM2` 	varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `ACCESSIP` 	varchar(200) DEFAULT NULL,
+  `ACCESSINFO` 	varchar(200) DEFAULT NULL,
+  `ACCESSTIME` 	datetime 	 DEFAULT NULL,
+  `ACCESSBROWSER` varchar(40) DEFAULT NULL,
+  `ACCESSOS` 	varchar(80)  DEFAULT NULL,
+  `ACCESSAGENT` varchar(1000) DEFAULT NULL,
+  `ADMINTYPE` 	varchar(200)  DEFAULT NULL,
+  `TENANT_ID` 	decimal(22,0) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`SEQUENCE`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_permission_change_info`
+--
+
+DROP TABLE IF EXISTS `tbl_permission_change_info`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_permission_change_info` (
+  `SEQUENCE` 			int(10) 	 NOT NULL 	   AUTO_INCREMENT,
+  `USERID` 				varchar(200) NOT NULL,
+  `USERNM` 				varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `USERNM2` 			varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `DEPTID` 			 	varchar(200) DEFAULT NULL,
+  `DEPTNM` 			 	varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `DEPTNM2` 			varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `TITLE` 				varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `TITLE2` 				varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `COMPANYID` 			varchar(200) DEFAULT NULL,
+  `COMPANYNM` 			varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `COMPANYNM2` 			varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `AUTHORIZEDTIME` 		datetime 	 DEFAULT NULL,
+  `ADMINTYPE` 			varchar(200) DEFAULT NULL,
+  `STATUS` 			 	varchar(40)  DEFAULT NULL,
+  `AUTHORIZERID` 		varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `AUTHORIZERNM` 		varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `AUTHORIZERNM2` 		varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `AUTHORIZERIP` 		varchar(200) DEFAULT NULL,
+  `TENANT_ID` 			decimal(22,0) NOT NULL DEFAULT 0,
   PRIMARY KEY (`SEQUENCE`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -13626,6 +13710,7 @@ CREATE TABLE `tbl_usermaster` (
   `MAILBOXQUOTA` varchar(50) DEFAULT NULL,
   `MAILBOXUSAGE` varchar(50) DEFAULT NULL,
   `PASSWORD2` varchar(100) DEFAULT NULL,
+  `PHOTO_UPDATEDT` datetime DEFAULT NULL,
   PRIMARY KEY (`CN`,`TENANT_ID`),
   KEY `IDX_EMP_NO` (`EXTENSIONATTRIBUTE14`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -14190,6 +14275,12 @@ CREATE TABLE `tbl_webfolder_env` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='사용자 환경설정';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+DROP TABLE IF EXISTS `tbl_webfolder_no_inherit`;
+CREATE TABLE `tbl_webfolder_no_inherit` (
+  `FOLDER_ID` varchar(100) NOT NULL,
+  `TENANT_ID` int(7) NOT NULL,
+  PRIMARY KEY (`FOLDER_ID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 --
 -- Table structure for table `tbl_webfolder_favor`
 --
@@ -14489,6 +14580,31 @@ CREATE TABLE `tbl_webfolder_user` (
   PRIMARY KEY (`CN`,`TENANT_ID`,`TYPE`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='웹폴더 사용자';
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+-- 
+-- Table structure for table `jmocha_mail_outofoffice_tem`
+--
+DROP TABLE IF EXISTS `jmocha_mail_outofoffice_tem`;
+CREATE TABLE `jmocha_mail_outofoffice_tem` (
+  `USER_ID` varchar(100) NOT NULL,
+  `DISPLAYNAME` varchar(45) NOT NULL,
+  `CONTENT` longtext CHARACTER SET utf8mb4 NOT NULL,
+  PRIMARY KEY (`USER_ID`,`DISPLAYNAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 
+-- Table structure for table `jmocha_user_mail_template`
+--
+DROP TABLE IF EXISTS `jmocha_user_mail_template`;
+CREATE TABLE `jmocha_user_mail_template` (
+  `USER_ID` varchar(100) NOT NULL,
+  `DISPLAYNAME` varchar(45) NOT NULL,
+  `TEMPLATE_ID` varchar(510) NOT NULL,
+  `REGDATE` datetime NOT NULL,
+  `EDITORTYPE` varchar(5) DEFAULT NULL,
+  `CONTENT` longtext DEFAULT NULL,
+  PRIMARY KEY (`USER_ID`,`DISPLAYNAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Temporary view structure for view `vaprdoingdoclist`
@@ -15081,17 +15197,19 @@ CREATE TABLE `tbl_yearlydoccount`(
 
 -- Dump completed on 2020-05-12 16:36:39
 
-DROP TABLE IF EXISTS `tbl_susinschedule`;
+DROP TABLE IF EXISTS `TBL_SUSINSCHEDULE`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_susinschedule` (
+CREATE TABLE `TBL_SUSINSCHEDULE` (
   `DOCID` varchar(80) NOT NULL,
   `DEPTID` varchar(80) DEFAULT NULL,
   `DIRPATH` varchar(1020) DEFAULT NULL,
   `DOCSTATE` varchar(12) DEFAULT NULL,
   `COMPANYID` varchar(20) DEFAULT NULL,
   `LANG` varchar(10) DEFAULT NULL,
-  `TENANTID` mediumint(5) DEFAULT NULL
+  `TENANTID` mediumint(5) DEFAULT NULL,
+  PRIMARY KEY (`DOCID`,`COMPANYID`,`TENANTID`),
+  UNIQUE KEY `IDX_TBL_SUSINSCHEDULE` (`DOCID`,`TENANTID`,`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE OR REPLACE VIEW VIEW_EZWEBFOLDER AS

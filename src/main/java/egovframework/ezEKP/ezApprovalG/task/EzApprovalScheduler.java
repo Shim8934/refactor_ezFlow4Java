@@ -8,6 +8,7 @@ import java.nio.file.attribute.FileTime;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 
@@ -100,12 +101,29 @@ public class EzApprovalScheduler extends EgovFileMngUtil {
 	}
 	
 	@Scheduled(cron = "00 0/1 * * * *")
-	public void susinScheduler() throws Exception {
+	public void susinScheduler() throws Exception{
 		if(checkTimer()) {
+			int tryCnt = 0;
 			logger.debug("susinScheduler started.");
-			
-			ezApprovalGService.doSusinSchedule();
-			
+			List<HashMap<String, Object>> susinScheduleList = null;
+			susinScheduleList = ezApprovalGService.susinScheduleList();
+			int idx = 0;
+			while(tryCnt++ < 3 && susinScheduleList != null && susinScheduleList.size() > 0) {
+				try {
+					for(int i = idx; i < susinScheduleList.size();) {
+						ezApprovalGService.doSusinSchedule(susinScheduleList.get(i));
+						susinScheduleList.remove(i);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					idx = idx + 1 >= susinScheduleList.size() ? 0 : idx + 1;
+					if(tryCnt == 3) {
+						logger.debug("susinScheduler Retry 3 times failed!");
+						return;
+					}
+					Thread.sleep(300);
+				}
+			}
 			logger.debug("susinScheduler ended.");
 		}
 	}

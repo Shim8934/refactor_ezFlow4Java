@@ -1,0 +1,2551 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="ezResource">
+	<typeAlias  alias="ResGetAdmSubClsTreeVO" 					type="egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO"/>
+	<typeAlias  alias="ResGetAdminFlagVO" 						type="egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO"/>
+	<typeAlias  alias="ResGetItemListVO" 						type="egovframework.ezEKP.ezResource.vo.ResGetItemListVO"/>
+	<typeAlias  alias="ResGetScheduleVO" 						type="egovframework.ezEKP.ezResource.vo.ResGetScheduleVO"/>
+	<typeAlias  alias="ResGetScheduleRepetitionVO" 				type="egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO"/>
+	<typeAlias  alias="ResBrdListVO" 							type="egovframework.ezEKP.ezResource.vo.ResBrdListVO"/>
+	<typeAlias  alias="ResBrdVO" 								type="egovframework.ezEKP.ezResource.vo.ResBrdVO"/>
+	<typeAlias  alias="ResSelectFormIDVO" 						type="egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO"/>
+    <typeAlias  alias="ResGetSendMailToUserVO"         			type="egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO"/>
+    <typeAlias  alias="ResAdminVO"         						type="egovframework.ezEKP.ezResource.vo.ResAdminVO"/>
+    <typeAlias  alias="ResDateVO"         						type="egovframework.ezEKP.ezResource.vo.ResDateVO"/>
+	<typeAlias  alias="OrganUserVO"         						type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>
+	<typeAlias  alias="ResGetClsAclListVO" 					type="egovframework.ezEKP.ezResource.vo.ResGetClsAclListVO"/>
+	
+	<resultMap class="ResGetAdmSubClsTreeVO" id="resGetAdmSubClsTreeVO">
+		<result property="brdID"					column="BRD_ID"					columnIndex="1"/>
+		<result property="brdNm"					column="BRD_NM"					columnIndex="2"/>
+		<result property="brdNm2"				column="BRD_NM2"				columnIndex="3"/>
+		<result property="brdLevel"				column="BRD_LEVEL"				columnIndex="4" 		nullValue="0"/>
+		<result property="brdStep"				column="BRD_STEP"				columnIndex="5"/>
+		<result property="brdPostterm"			column="BRD_POSTTERM"		columnIndex="6"/>
+		<result property="brdUpper"				column="BRD_UPPER"				columnIndex="7"/>
+		<result property="brdGb"					column="BRD_GB"					columnIndex="8"/>
+		<result property="brdUrl"					column="BRD_URL"					columnIndex="9"/>
+		<result property="brdExplain"			column="BRD_EXPLAIN"			columnIndex="10"/>
+		<result property="brdAccess"				column="BRD_ACCESS"			columnIndex="11"/>
+		<result property="attachSize"				column="ATTACH_SIZE"			columnIndex="12"/>
+		<result property="subClsCnt"				column="SUB_CLSCNT"			columnIndex="13"/>
+		<result property="subResCnt"			column="SUB_RESCNT"			columnIndex="14"/>
+		<result property="accessLvl"				column="ACCESS_LVL"			columnIndex="15"/>
+		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="16"/>
+	</resultMap>
+	
+	<resultMap class="ResGetAdminFlagVO" 			id="resGetAdminFlagVO">
+		<result property="memberID"			column="MEMBER_ID"				columnIndex="1"/>
+		<result property="accessLvl"				column="ACCESS_LVL"			columnIndex="2"/>
+	</resultMap>
+	
+	<resultMap class="ResGetScheduleVO" 		id="resGetScheduleListVO">
+		<result property="num"					column="NUM"						columnIndex="1"/>
+		<result property="pNum"					column="PNUM"						columnIndex="2" 		nullValue="0"/>
+		<result property="ownerID"				column="OWNERID"				columnIndex="3"/>
+		<result property="title"						column="TITLE"						columnIndex="4"/>
+		<result property="location"				column="LOCATION"				columnIndex="5"/>
+		<result property="timeDisplay"			column="TIMEDISPLAY"			columnIndex="6"/>
+		<result property="startDate"				column="STARTDATE"				columnIndex="7"/>
+		<result property="endDate"				column="ENDDATE"				columnIndex="8"/>
+		<result property="alertTime"				column="ALERTTIME"				columnIndex="9"/>
+		<result property="reFlag"					column="REFLAG"					columnIndex="10"/>
+		<result property="gresFlag"				column="GRESFLAG"				columnIndex="11"/>
+		<result property="writerID"				column="WRITERID"					columnIndex="12"/>
+		<result property="importance"			column="IMPORTANCE"			columnIndex="13"/>
+		<result property="entryList"				column="ENTRYLIST"				columnIndex="14"		nullValue="0"/>
+		<result property="allDay"					column="ALLDAY"					columnIndex="15"/>
+		<result property="writeDay"				column="WRITEDAY"				columnIndex="16"/>
+		<result property="attachFlag"				column="ATTACHFLAG"			columnIndex="17"/>
+		<result property="characterID"			column="CHARACTERID"			columnIndex="18"/>
+		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="19"/>
+		<result property="returnFlag"			column="RETURNFLAG"			columnIndex="20"/>
+		<result property="ownerNm"				column="OWNERNM"				columnIndex="21"/>
+		<result property="deptNm"				column="DEPTNM"					columnIndex="22"/>
+	</resultMap>
+	
+	<resultMap class="ResGetScheduleVO" id="resGetScheduleListMainVO">
+		<result property="num"					column="NUM"						columnIndex="1"/>
+		<result property="pNum"					column="PNUM"						columnIndex="2" 		nullValue="0"/>
+		<result property="ownerID"				column="OWNERID"				columnIndex="3"/>
+		<result property="title"						column="TITLE"						columnIndex="4"/>
+		<result property="location"				column="LOCATION"				columnIndex="5"			nullValue=""/>
+		<result property="timeDisplay"			column="TIMEDISPLAY"			columnIndex="6"/>
+		<result property="startDate"				column="STARTDATE"				columnIndex="7"/>
+		<result property="endDate"				column="ENDDATE"				columnIndex="8"/>
+		<result property="alertTime"				column="ALERTTIME"				columnIndex="9"			nullValue=""/>
+		<result property="reFlag"					column="REFLAG"					columnIndex="10"/>
+		<result property="gresFlag"				column="GRESFLAG"				columnIndex="11"/>
+		<result property="writerID"				column="WRITERID"					columnIndex="12"/>
+		<result property="importance"			column="IMPORTANCE"			columnIndex="13"/>
+		<result property="entryList"				column="ENTRYLIST"				columnIndex="14"		nullValue="0"/>
+		<result property="allDay"					column="ALLDAY"					columnIndex="15"/>
+		<result property="writeDay"				column="WRITEDAY"				columnIndex="16"/>
+		<result property="attachFlag"				column="ATTACHFLAG"			columnIndex="17"/>
+		<result property="characterID"			column="CHARACTERID"			columnIndex="18"		nullValue="0"/>
+		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="19"/>
+		<result property="returnFlag"			column="RETURNFLAG"			columnIndex="20"/>
+		<result property="ownerNm"				column="OWNERNM"				columnIndex="21"/>
+		<result property="deptNm"				column="DEPTNM"					columnIndex="22"/>
+		<result property="companyID"			column="COMPANYID"			columnIndex="23"/>
+	</resultMap>
+	
+	<resultMap class="ResGetScheduleRepetitionVO" 	id="resGetRepDateTimesVO">
+		<result property="ownerID"				column="OWNERID"				columnIndex="1" />
+		<result property="num"					column="NUM"					columnIndex="2" />
+		<result property="companyID"			column="COMPANYID"				columnIndex="3" />
+		<result property="startDateTime"		column="STARTDATETIME"			columnIndex="4" />
+		<result property="endDateTime"			column="ENDDATETIME"			columnIndex="5" />
+		<result property="reWay"				column="REWAY"					columnIndex="6" />
+		<result property="reNum"				column="RENUM"					columnIndex="7" 		nullValue="" />
+		<result property="reDay"				column="REDAY"					columnIndex="8" 		nullValue="" />
+		<result property="reYoil"				column="REYOIL"					columnIndex="9" 		nullValue="" />
+		<result property="reMonth"				column="REMONTH"				columnIndex="10" 		nullValue="" />
+		<result property="reOrd"				column="REORD"					columnIndex="11"		nullValue="" />
+		<result property="endFlag"				column="ENDFLAG"				columnIndex="12" />
+		<result property="reCount"				column="RECOUNT"				columnIndex="13"		nullValue="" />
+	</resultMap>
+	
+	<resultMap class="ResBrdListVO" 				id="resBrdListVO">
+		<result property="attachSize"				column="ATTACH_SIZE"			columnIndex="1"/>
+		<result property="brdAccess"				column="BRD_ACCESS"			columnIndex="2" 		nullValue=""/>
+		<result property="brdCompany"			column="BRD_COMPANY"		columnIndex="3"/>
+		<result property="brdCount"				column="BRD_COUNT"				columnIndex="4"/>
+		<result property="brdExplain"			column="BRD_EXPLAIN"			columnIndex="5"			nullValue=""/>
+		<result property="brdGb"					column="BRD_GB"					columnIndex="6"/>
+		<result property="brdGroup"				column="BRD_GROUP"				columnIndex="7"/>
+		<result property="brdID"					column="BRD_ID"					columnIndex="8"/>
+		<result property="brdLevel"				column="BRD_LEVEL"				columnIndex="9"  		nullValue="0"/>
+		<result property="brdNm"					column="BRD_NM"					columnIndex="10"/>
+		<result property="brdPostterm"			column="BRD_POSTTERM"		columnIndex="11"/>
+		<result property="brdRef"					column="BRD_REF"					columnIndex="12" 		nullValue="0"/>
+		<result property="brdStep"				column="BRD_STEP"				columnIndex="13"/>
+		<result property="brdUpper"				column="BRD_UPPER"				columnIndex="14"/>
+		<result property="brdUrl"					column="BRD_URL"					columnIndex="15"		nullValue=""/>
+		<result property="makeDate"				column="MAKEDATE"				columnIndex="16"/>
+		<result property="ownDeptID"			column="OWNDEPTID"			columnIndex="17"/>
+		<result property="ownDeptNm"			column="OWNDEPTNM"			columnIndex="18"/>
+		<result property="ownerCall"				column="OWNERCALL"			columnIndex="19"		nullValue=""/>
+		<result property="ownerID"				column="OWNERID"				columnIndex="20"/>
+		<result property="ownerNm"				column="OWNERNM"				columnIndex="21"/>
+		<result property="ownerPosition"		column="OWNERPOSITION"		columnIndex="22"/>
+		<result property="replyMailFg"			column="REPLY_MAIL_FG"		columnIndex="23"		nullValue="0"/>
+		<result property="resLocation"			column="RESLOCATION"			columnIndex="24"		nullValue=""/>
+		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="25"/>
+	</resultMap>
+	
+	<resultMap class="ResBrdVO" 					id="resBrdVO">
+		<result property="brdID"					column="BRD_ID"					columnIndex="1"/>
+		<result property="brdNm"					column="BRD_NM"					columnIndex="2"/>
+		<result property="brdNm2"				column="BRD_NM2"				columnIndex="3"/>
+		<result property="brdExplain"			column="BRD_EXPLAIN"			columnIndex="4"/>
+		<result property="ownDeptID"			column="OWNDEPTID"			columnIndex="5"	/>
+		<result property="ownDeptNm"			column="OWNDEPTNM"			columnIndex="6"/>
+		<result property="ownDeptNm2"		column="OWNDEPTNM2"			columnIndex="7"/>
+		<result property="ownerID"				column="OWNERID"				columnIndex="8"/>
+		<result property="ownerNm"				column="OWNERNM"				columnIndex="9" />
+		<result property="ownerNm2"			column="OWNERNM2"			columnIndex="10"/>
+		<result property="ownerPosition"		column="OWNERPOSITION"		columnIndex="11"/>
+		<result property="ownerPosition2"		column="OWNERPOSITION2"	columnIndex="12" 		nullValue="NULL"/>
+		<result property="ownerCall"				column="OWNERCALL"			columnIndex="13"/>
+		<result property="resLocation"			column="RESLOCATION"			columnIndex="14"/>
+		<result property="makeDate"				column="MAKEDATE"				columnIndex="15"/>
+		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="16"/>
+		<result property="returnFlag"			column="RETURNFLAG"			columnIndex="17"/>
+		<result property="brdAccess"				column="BRD_ACCESS"			columnIndex="18"/>
+	</resultMap>
+	
+	<resultMap class="ResGetScheduleVO" 		id="resGetScheduleVO">
+		<result property="ownerID"				column="OWNERID"				columnIndex="1"/>
+		<result property="num"					column="NUM"						columnIndex="2"/>
+		<result property="pNum"					column="PNUM"						columnIndex="3"  		nullValue="0"/>
+		<result property="companyID"			column="COMPANYID"			columnIndex="4"/>
+		<result property="writerID"				column="WRITERID"					columnIndex="5"/>
+		<result property="deptNm"				column="DEPTNM"					columnIndex="6"/>
+		<result property="ownerNm"				column="OWNERNM"				columnIndex="7"/>
+		<result property="title"						column="TITLE"						columnIndex="8"/>
+		<result property="location"				column="LOCATION"				columnIndex="9" 		nullValue=""/>
+		<result property="timeDisplay"			column="TIMEDISPLAY"			columnIndex="10"/>
+		<result property="startDate"				column="STARTDATE"				columnIndex="11"/>
+		<result property="endDate"				column="ENDDATE"				columnIndex="12"/>
+		<result property="allDay"					column="ALLDAY"					columnIndex="13"/>
+		<result property="alertTime"				column="ALERTTIME"				columnIndex="14"		nullValue=""/>
+		<result property="content"				column="CONTENT"				columnIndex="15"		nullValue=""/>
+		<result property="importance"			column="IMPORTANCE"			columnIndex="16"/>
+		<result property="reFlag"					column="REFLAG"					columnIndex="17"		nullValue=""/>
+		<result property="gresFlag"				column="GRESFLAG"				columnIndex="18"		nullValue=""/>
+		<result property="writeDay"				column="WRITEDAY"				columnIndex="19"/>
+		<result property="entryList"				column="ENTRYLIST"				columnIndex="20"/>
+		<result property="characterID"			column="CHARACTERID"			columnIndex="21"		nullValue=""/>
+		<result property="attachFlag"				column="ATTACHFLAG"			columnIndex="22"/>
+		<result property="publicFlag"				column="PUBLICFLAG"				columnIndex="23"		nullValue=""/>
+		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="24"/>
+		<result property="returnFlag"			column="RETURNFLAG"			columnIndex="25"/>
+		<result property="scheduleID"			column="SCHEDULEID"			columnIndex="26"		nullValue=""/>
+	</resultMap>
+	
+	<resultMap class="ResGetScheduleRepetitionVO" 		id="resGetScheduleRepetitionVO">
+		<result property="ownerID"				column="OWNERID"				columnIndex="1"/>
+		<result property="num"					column="NUM"						columnIndex="2"/>
+		<result property="companyID"			column="COMPANYID"			columnIndex="3"/>
+		<result property="startDateTime"		column="STARTDATETIME"		columnIndex="4"/>
+		<result property="endDateTime"			column="ENDDATETIME"			columnIndex="5"/>
+		<result property="reWay"					column="REWAY"					columnIndex="6"/>
+		<result property="reNum"					column="RENUM"					columnIndex="7"/>
+		<result property="reDay"					column="REDAY"					columnIndex="8" 		nullValue=""/>
+		<result property="reYoil"					column="REYOIL"					columnIndex="9" 		nullValue=""/>
+		<result property="reMonth"				column="REMONTH"				columnIndex="10"		nullValue=""/>
+		<result property="reOrd"					column="REORD"					columnIndex="11"		nullValue=""/>
+		<result property="endFlag"				column="ENDFLAG"					columnIndex="12"/>
+		<result property="reCount"				column="RECOUNT"				columnIndex="13"		nullValue=""/>
+	</resultMap>
+	
+	<resultMap class="ResSelectFormIDVO" 		id="resSelectFormIDVO">
+		<result property="resID"					column="RESID"						columnIndex="1"/>
+		<result property="brdNm"					column="BRDNM"					columnIndex="2"			nullValue=""/>
+		<result property="formText"				column="FORMTEXT"				columnIndex="3"			nullValue=""   	jdbcType="CLOB" 		javaType="java.lang.String"/>
+	</resultMap>
+	
+	<resultMap class="ResGetScheduleVO" 		id="resGetScheduleListRepetitionVO">
+		<result property="num"					column="NUM"						columnIndex="1"/>
+		<result property="pNum"					column="PNUM"						columnIndex="2" 		nullValue="0"/>
+		<result property="ownerID"				column="OWNERID"				columnIndex="3"/>
+		<result property="title"						column="TITLE"						columnIndex="4"/>
+		<result property="location"				column="LOCATION"				columnIndex="5"/>
+		<result property="timeDisplay"			column="TIMEDISPLAY"			columnIndex="6"/>
+		<result property="startDate"				column="STARTDATE"				columnIndex="7"/>
+		<result property="endDate"				column="ENDDATE"				columnIndex="8"/>
+		<result property="alertTime"				column="ALERTTIME"				columnIndex="9"/>
+		<result property="reFlag"					column="REFLAG"					columnIndex="10"/>
+		<result property="gresFlag"				column="GRESFLAG"				columnIndex="11"/>
+		<result property="writerID"				column="WRITERID"					columnIndex="12"/>
+		<result property="importance"			column="IMPORTANCE"			columnIndex="13"/>
+		<result property="entryList"				column="ENTRYLIST"				columnIndex="14"		nullValue="0"/>
+		<result property="allDay"					column="ALLDAY"					columnIndex="15"/>
+		<result property="writeDay"				column="WRITEDAY"				columnIndex="16"/>
+		<result property="companyID"			column="COMPANYID"			columnIndex="17"/>
+		<result property="attachFlag"				column="ATTACHFLAG"			columnIndex="18"/>
+		<result property="characterID"			column="CHARACTERID"			columnIndex="19"/>
+		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="20"/>
+		<result property="returnFlag"			column="RETURNFLAG"			columnIndex="21"/>
+		<result property="ownerNm"				column="OWNERNM"				columnIndex="22"/>
+		<result property="deptNm"				column="DEPTNM"					columnIndex="23"/>
+	</resultMap>
+	
+	<resultMap class="ResGetScheduleVO" 		id="resGetRepResourceVO">
+		<result property="ownerID"				column="OWNERID"				columnIndex="1"/>
+		<result property="num"					column="NUM"						columnIndex="2"/>
+		<result property="pNum"					column="PNUM"						columnIndex="3"  		nullValue="0"/>
+		<result property="companyID"			column="COMPANYID"			columnIndex="4"/>
+		<result property="writerID"				column="WRITERID"					columnIndex="5"/>
+		<result property="deptNm"				column="DEPTNM"					columnIndex="6"/>
+		<result property="ownerNm"				column="OWNERNM"				columnIndex="7"/>
+		<result property="title"						column="TITLE"						columnIndex="8"/>
+		<result property="location"				column="LOCATION"				columnIndex="9" 		nullValue=""/>
+		<result property="timeDisplay"			column="TIMEDISPLAY"			columnIndex="10"/>
+		<result property="startDate"				column="STARTDATE"				columnIndex="11"/>
+		<result property="endDate"				column="ENDDATE"				columnIndex="12"/>
+		<result property="allDay"					column="ALLDAY"					columnIndex="13"/>
+		<result property="alertTime"				column="ALERTTIME"				columnIndex="14"		nullValue=""/>
+		<result property="content"				column="CONTENT"				columnIndex="15"		nullValue=""/>
+		<result property="importance"			column="IMPORTANCE"			columnIndex="16"/>
+		<result property="reFlag"					column="REFLAG"					columnIndex="17"		nullValue=""/>
+		<result property="gresFlag"				column="GRESFLAG"				columnIndex="18"		nullValue=""/>
+		<result property="writeDay"				column="WRITEDAY"				columnIndex="19"/>
+		<result property="entryList"				column="ENTRYLIST"				columnIndex="20"/>
+		<result property="characterID"			column="CHARACTERID"			columnIndex="21"		nullValue="0"/>
+		<result property="attachFlag"				column="ATTACHFLAG"			columnIndex="22"/>
+		<result property="publicFlag"				column="PUBLICFLAG"				columnIndex="23"		nullValue=""/>
+		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="24"/>
+	</resultMap>
+	
+	<resultMap class="ResGetScheduleRepetitionVO" 		id="resGetRepResourceRepeatVO">
+		<result property="ownerID"				column="OWNERID"				columnIndex="1"/>
+		<result property="num"					column="NUM"						columnIndex="2"/>
+		<result property="companyID"			column="COMPANYID"			columnIndex="3"/>
+		<result property="startDateTime"		column="STARTDATETIME"		columnIndex="4"/>
+		<result property="endDateTime"			column="ENDDATETIME"			columnIndex="5"/>
+		<result property="reWay"					column="REWAY"					columnIndex="6"/>
+		<result property="reNum"					column="RENUM"					columnIndex="7"/>
+		<result property="reDay"					column="REDAY"					columnIndex="8" 		nullValue=""/>
+		<result property="reYoil"					column="REYOIL"					columnIndex="9" 		nullValue=""/>
+		<result property="reMonth"				column="REMONTH"				columnIndex="10"		nullValue=""/>
+		<result property="reOrd"					column="REORD"					columnIndex="11"		nullValue=""/>
+		<result property="endFlag"				column="ENDFLAG"					columnIndex="12"/>
+		<result property="reCount"				column="RECOUNT"				columnIndex="13"		nullValue=""/>
+		<result property="allDay"					column="ALLDAY"					columnIndex="14"		nullValue=""/>
+	</resultMap>
+	
+	<resultMap class="ResGetClsAclListVO" 	id="resGetClsAclListVO">
+		<result property="deptYn"					column="DEPT_YN"				columnIndex="1" nullValue=""/>
+		<result property="sdaYn"					column="SDA_YN"					columnIndex="2" nullValue=""/>
+		<result property="memberNam"				column="MEMBER_NAM"			    columnIndex="3" nullValue=""/>
+		<result property="memberID"				    column="MEMBER_ID"				columnIndex="4" nullValue=""/>
+		<result property="accessLvl"				column="ACCESS_LVL"			    columnIndex="5" nullValue=""/>
+	</resultMap>
+	
+	<!-- <procedure id="EzResourceDAO.getAdmSubClsTree" parameterClass="Map" resultMap="resGetAdmSubClsTreeVO" >
+		{CALL EZSP_GETADMSUBCLSTREE(#v_P_ParentID#, #v_P_CompanyID#, #v_P_TreeType#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure> -->
+	
+	<select id="EzResourceDAO.getAdmSubClsTree" parameterClass="Map" resultMap="resGetAdmSubClsTreeVO">
+		<isEmpty property="v_P_ParentID">
+			<![CDATA[
+				SELECT 
+					A.BRD_ID brd_id ,
+					A.BRD_NM brd_nm ,
+					A.BRD_NM2 brd_nm2 ,
+					A.BRD_LEVEL brd_level ,
+					A.BRD_STEP brd_step ,
+					A.BRD_POSTTERM brd_postterm ,
+					A.BRD_UPPER brd_upper ,
+					A.BRD_GB brd_gb ,
+					A.BRD_URL brd_url ,
+					A.BRD_EXPLAIN brd_explain ,
+					A.BRD_ACCESS brd_access ,
+					A.ATTACH_SIZE attach_size ,
+					( SELECT NVL(COUNT(BRD_ID) , 0) 
+					  FROM TBL_RS_BRD 
+					  WHERE  BRD_UPPER = A.BRD_ID
+					  AND Brd_Company = #v_P_CompanyID#
+					  AND Brd_GB = N'1'
+					  AND TENANT_ID = #tenantID# ) sub_clscnt ,
+					( SELECT NVL(COUNT(BRD_ID) , 0) 
+					  FROM TBL_RS_BRD 
+					  WHERE  BRD_UPPER = A.BRD_ID
+					  AND Brd_Company = #v_P_CompanyID#
+					  AND Brd_GB = N'2'
+					  AND TENANT_ID = #tenantID# ) sub_rescnt ,
+					N'0' Access_Lvl ,
+					A.APPROVEFLAG 
+				FROM
+					TBL_RS_BRD A
+				WHERE
+					BRD_ID = 1
+				AND
+					Brd_Company = #v_P_CompanyID#
+				AND
+					TENANT_ID = #tenantID# 
+			]]>
+		</isEmpty>
+		<isNotEmpty property="v_P_ParentID">
+			<isEqual property="v_P_TreeType" compareValue="0">
+				<![CDATA[
+					SELECT
+						A.BRD_ID brd_id ,
+						A.BRD_NM brd_nm ,
+						A.BRD_NM2 brd_nm2 ,
+						A.BRD_LEVEL brd_level ,
+						A.BRD_STEP brd_step ,
+						A.BRD_POSTTERM brd_postterm ,
+						A.BRD_UPPER brd_upper ,
+						A.BRD_GB brd_gb ,
+						A.BRD_URL brd_url ,
+						A.BRD_EXPLAIN brd_explain ,
+						A.BRD_ACCESS brd_access ,
+						A.ATTACH_SIZE attach_size ,
+						( SELECT NVL(COUNT(BRD_ID) , 0) 
+						  FROM TBL_RS_BRD 
+						  WHERE BRD_UPPER = A.BRD_ID
+						  AND Brd_Company = #v_P_CompanyID#
+						  AND Brd_GB = N'1'
+						  AND TENANT_ID = #tenantID# ) sub_clscnt ,
+						( SELECT NVL(COUNT(BRD_ID) , 0) 
+						  FROM TBL_RS_BRD 
+						  WHERE BRD_UPPER = A.BRD_ID
+						  AND Brd_Company = #v_P_CompanyID#
+						  AND Brd_GB = N'2' 
+						  AND TENANT_ID = #tenantID# 
+						   ]]>
+						 <isEmpty property="adminType" >
+							<![CDATA[
+								AND APPROVEFLAG <> '2'
+							]]>
+						</isEmpty>
+						<![CDATA[
+						  ) sub_rescnt ,
+						N'0' Access_Lvl ,
+						A.APPROVEFLAG 
+					FROM
+						TBL_RS_BRD A
+					WHERE
+						Brd_Upper = NVL(#v_P_ParentID#,0)
+					AND
+						Brd_Company = #v_P_CompanyID#
+					AND
+						TENANT_ID = #tenantID#
+					ORDER BY
+						Brd_GB, Brd_Step 
+				]]>
+			</isEqual>
+			<isNotEqual property="v_P_TreeType" compareValue="0">
+				<![CDATA[
+					SELECT
+						A.BRD_ID brd_id ,
+						A.BRD_NM brd_nm ,
+						A.BRD_NM2 brd_nm2 ,
+						A.BRD_LEVEL brd_level ,
+						A.BRD_STEP brd_step ,
+						A.BRD_POSTTERM brd_postterm ,
+						A.BRD_UPPER brd_upper ,
+						A.BRD_GB brd_gb ,
+						A.BRD_URL brd_url ,
+						A.BRD_EXPLAIN brd_explain ,
+						A.BRD_ACCESS brd_access ,
+						A.ATTACH_SIZE attach_size ,
+						( SELECT NVL(COUNT(BRD_ID) , 0) 
+						  FROM TBL_RS_BRD 
+						  WHERE  BRD_UPPER = A.BRD_ID
+						  AND Brd_Company = #v_P_CompanyID#
+						  AND Brd_GB = '1' 
+						  AND TENANT_ID = #tenantID# ) sub_clscnt ,
+						( SELECT NVL(COUNT(BRD_ID) , 0) 
+						  FROM TBL_RS_BRD 
+						  WHERE  BRD_UPPER = A.BRD_ID
+						  AND Brd_Company = #v_P_CompanyID#
+						  AND Brd_GB = '1' 
+						  AND TENANT_ID = #tenantID# ) sub_rescnt ,
+						'0' Access_Lvl ,
+						A.APPROVEFLAG 
+					FROM
+						TBL_RS_BRD A
+					WHERE
+						Brd_Upper = NVL(#v_P_ParentID#,0)
+					AND
+						Brd_Company = #v_P_CompanyID#
+					AND
+						Brd_GB = '1'
+					AND
+						TENANT_ID = #tenantID#
+					ORDER BY
+						Brd_Step 
+				]]>
+			</isNotEqual>	
+		</isNotEmpty>
+	</select>
+	
+	<select id="EzResourceDAO.getSubClsTree" parameterClass="Map" resultMap="resGetAdmSubClsTreeVO">
+		<isEmpty property="v_P_ParentID">
+			<![CDATA[
+				SELECT
+					A.BRD_ID BRD_ID ,  
+					A.BRD_NM BRD_NM ,
+					A.BRD_NM2 BRD_NM2 ,
+					A.BRD_LEVEL BRD_LEVEL ,
+					A.BRD_STEP BRD_STEP ,
+					A.BRD_POSTTERM BRD_POSTTERM ,
+					A.BRD_UPPER BRD_UPPER ,
+					A.BRD_GB BRD_GB ,
+					A.BRD_URL BRD_URL ,
+					A.BRD_EXPLAIN BRD_EXPLAIN ,
+					A.BRD_ACCESS BRD_ACCESS ,
+					A.ATTACH_SIZE ATTACH_SIZE ,
+					( SELECT NVL(COUNT(BRD_ID) , 0) 
+					  FROM TBL_RS_BRD 
+					  WHERE BRD_UPPER = A.BRD_ID
+					  AND BRD_COMPANY = #v_P_COMPANYID#
+					  AND BRD_GB = '1'
+					  AND TENANT_ID = #tenantID# ) SUB_CLSCNT ,
+					( SELECT NVL(COUNT(BRD_ID) , 0) 
+					  FROM TBL_RS_BRD 
+					  WHERE BRD_UPPER = A.BRD_ID
+					  AND BRD_COMPANY = #v_P_COMPANYID#
+					  AND BRD_GB = '2'
+					  AND TENANT_ID = #tenantID# ) SUB_RESCNT ,
+					'0' ACCESS_LVL ,
+					A.APPROVEFLAG 
+				FROM
+					TBL_RS_BRD A
+				LEFT JOIN
+					TBL_RS_RESACL B
+				ON
+					A.BRD_ID = B.RESID
+				AND
+					A.TENANT_ID = B.TENANT_ID
+				WHERE
+					A.BRD_ID = 1
+				AND
+					A.BRD_COMPANY = #v_P_COMPANYID#
+				AND
+					( MEMBER_ID = #v_PCOMID# OR MEMBER_ID = #v_PDEPTID# OR MEMBER_ID = #v_PUSERID# OR MEMBER_ID = 'everyone' OR MEMBER_ID IS NULL )
+				AND
+					A.TENANT_ID = #tenantID#
+			]]>
+		</isEmpty>
+		<isNotEmpty property="v_P_ParentID">
+			<![CDATA[
+				SELECT
+					DISTINCT(BRD_ID),
+					A.BRD_NM AS BRD_NM, 
+					A.BRD_NM2 AS BRD_NM2,
+					A.BRD_LEVEL AS BRD_LEVEL,
+					A.BRD_STEP AS BRD_STEP,
+					A.BRD_POSTTERM AS BRD_POSTTERM,
+					A.BRD_UPPER AS BRD_UPPER,
+					A.BRD_GB AS BRD_GB,
+					A.BRD_URL AS BRD_URL,
+					A.BRD_EXPLAIN AS BRD_EXPLAIN, 
+					A.BRD_ACCESS AS BRD_ACCESS,
+					A.ATTACH_SIZE AS ATTACH_SIZE,
+					( SELECT NVL(COUNT(BRD_ID), 0)
+					  FROM TBL_RS_BRD  
+					  WHERE BRD_UPPER = A.BRD_ID
+					  AND BRD_COMPANY = #v_P_COMPANYID#
+					  AND BRD_GB = '1'
+					  AND TENANT_ID = #tenantID#) AS SUB_CLSCNT, 
+					( SELECT NVL(COUNT(BRD_ID), 0)
+					  FROM TBL_RS_BRD  
+					  WHERE BRD_UPPER = A.BRD_ID
+					  AND BRD_COMPANY = #v_P_COMPANYID#
+					  AND BRD_GB = '2'
+					  AND TENANT_ID = #tenantID# ) AS SUB_RESCNT, 
+					'' AS ACCESS_LVL,   
+					A.APPROVEFLAG
+				FROM
+					TBL_RS_BRD A
+				LEFT JOIN
+					TBL_RS_RESACL B
+				ON
+					A.BRD_ID = B.RESID
+				AND
+					A.TENANT_ID = B.TENANT_ID
+				WHERE
+					A.BRD_UPPER = #v_P_PARENTID#
+				AND
+					A.BRD_COMPANY = #v_P_COMPANYID#
+				AND
+					A.BRD_GB = '1'
+				AND
+					( MEMBER_ID = #v_PCOMID# OR MEMBER_ID= #v_PDEPTID# OR MEMBER_ID = #v_PUSERID# OR MEMBER_ID = 'everyone' OR MEMBER_ID IS NULL )
+				AND
+					A.TENANT_ID = #tenantID#
+                         
+				UNION
+				SELECT
+					DISTINCT(BRD_ID),
+					A.BRD_NM AS BRD_NM, 
+					A.BRD_NM2 AS BRD_NM2,
+					A.BRD_LEVEL AS BRD_LEVEL,
+					A.BRD_STEP AS BRD_STEP, 
+					A.BRD_POSTTERM AS BRD_POSTTERM,
+					A.BRD_UPPER AS BRD_UPPER,
+					A.BRD_GB AS BRD_GB, 
+					A.BRD_URL AS BRD_URL,
+					A.BRD_EXPLAIN AS BRD_EXPLAIN,
+					A.BRD_ACCESS AS BRD_ACCESS, 
+					A.ATTACH_SIZE AS ATTACH_SIZE,
+					0 AS SUB_CLSCNT, 
+					0 AS SUB_RESCNT, 
+					'' AS ACCESS_LVL, 
+					A.APPROVEFLAG
+				FROM
+					TBL_RS_BRD A
+				LEFT JOIN
+					TBL_RS_RESACL B
+				ON
+					A.BRD_ID = B.RESID
+				AND
+					A.TENANT_ID = B.TENANT_ID
+				WHERE
+					A.BRD_UPPER = #v_P_PARENTID#
+				AND
+					A.BRD_COMPANY = #v_P_COMPANYID#
+				AND
+					A.BRD_GB = '2'
+				AND
+					( MEMBER_ID = #v_PCOMID# OR MEMBER_ID= #v_PDEPTID# OR MEMBER_ID = #v_PUSERID# OR MEMBER_ID = 'everyone' OR MEMBER_ID IS NULL )
+				AND
+					A.TENANT_ID = #tenantID#
+				ORDER BY
+					BRD_GB,
+					BRD_STEP
+			]]>
+		</isNotEmpty>
+	</select>
+	
+	<select id="EzResourceDAO.getBrdMainList" parameterClass="Map" resultClass="ResGetItemListVO">
+		<![CDATA[
+			SELECT 
+				BRD_ID ,
+				CASE #v_LANG#
+					WHEN '1' THEN BRD_NM
+					ELSE BRD_NM2
+				END BRD_NM,
+				APPROVEFLAG 
+			FROM
+				TBL_RS_BRD 
+			WHERE
+				BRD_UPPER = #v_BRD_ID#
+			AND
+				BRD_COMPANY = #v_COMPANY#
+			AND 
+				BRD_GB = '2'
+			AND
+				TENANT_ID = #tenantID#	
+			AND
+				APPROVEFLAG <> '2'
+           	ORDER BY
+				BRD_GB,
+				BRD_STEP 
+		]]>
+	</select>
+	
+	<select id="EzResourceDAO.getScheduleList" parameterClass="Map" resultMap="resGetScheduleListVO">
+		<![CDATA[
+			SELECT 
+				NUM ,
+                PNUM ,
+                OWNERID ,
+                A.title title  ,
+                LOCATION ,
+                TIMEDISPLAY ,
+                TO_CHAR(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE ,
+                TO_CHAR(ENDDATE, 'YYYY-MM-DD HH24:MI:SS') ENDDATE ,
+                ALERTTIME ,
+                REFLAG ,
+                GRESFLAG ,
+                WRITERID ,
+                IMPORTANCE ,
+                ENTRYLIST ,
+                ALLDAY ,
+                TO_CHAR(WRITEDAY, 'YYYY-MM-DD HH24:MI:SS') WRITEDAY ,
+                ATTACHFLAG ,
+                CHARACTERID ,
+                APPROVEFLAG ,
+                RETURNFLAG,
+            	OWNERNM  ,
+                DEPTNM  
+           	FROM
+           		TBL_RS_SCHEDULE A
+           	WHERE
+				STARTDATE <= to_date(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
+			AND
+				to_date(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS') <= ENDDATE
+			AND
+				COMPANYID = #v_PCOMPANYID#
+			AND
+				A.OWNERID = #v_POWNERID# 
+			AND
+				REFLAG = '0'
+			]]>
+			<isNotEmpty property="v_TITLE">
+			AND 
+                ( A.TITLE LIKE '%' || #v_TITLE# || '%' )
+            </isNotEmpty>
+            <![CDATA[
+			AND
+                ( OWNERNM LIKE '%' || #v_WRITERNAME# || '%' )
+			AND
+				( DEPTNM LIKE '%' || #v_WRITERDEPT# || '%' )
+			AND
+				A.TENANT_ID = #tenantID#	
+			ORDER BY
+				STARTDATE ASC,
+				ENDDATE DESC
+		]]>
+	</select>
+	
+	<select id="EzResourceDAO.getScheduleDateList" parameterClass="Map" resultClass="ResDateVO">
+		<![CDATA[
+			SELECT 
+                TO_CHAR(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE,
+                TO_CHAR(ENDDATE, 'YYYY-MM-DD HH24:MI:SS') ENDDATE
+           	FROM 
+           		TBL_RS_SCHEDULE
+          	WHERE
+				STARTDATE <= to_date(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
+			AND
+				to_date(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS') <= ENDDATE
+			AND 
+				COMPANYID = #v_PCOMPANYID#
+			AND 
+				OWNERID = #v_POWNERID#
+			AND
+				ApproveFlag = '1' 
+			AND
+				num <> #v_P_NUM#
+			AND
+				REFLAG = '0'
+			AND
+				TENANT_ID = #tenantID#
+			ORDER BY
+				STARTDATE ASC,
+				ENDDATE DESC 
+		]]>
+	</select>
+	
+	<select id="EzResourceDAO.getScheduleListMain" parameterClass="Map" resultMap="resGetScheduleListMainVO">
+		<![CDATA[
+			SELECT
+				NUM ,
+            	PNUM ,
+            	SCH.OWNERID ,
+            	TITLE ,
+            	LOCATION ,
+            	TIMEDISPLAY ,
+            	TO_CHAR(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE ,
+            	TO_CHAR(ENDDATE, 'YYYY-MM-DD HH24:MI:SS') ENDDATE ,
+            	ALERTTIME ,
+            	REFLAG ,
+            	GRESFLAG ,
+            	WRITERID ,
+            	IMPORTANCE ,
+            	ENTRYLIST ,
+            	ALLDAY ,
+            	TO_CHAR(WRITEDAY, 'YYYY-MM-DD HH24:MI:SS') WRITEDAY ,
+            	ATTACHFLAG ,
+            	CHARACTERID ,
+            	SCH.APPROVEFLAG ,
+            	SCH.RETURNFLAG,
+            	SCH.OWNERNM ,
+            	DEPTNM ,
+            	SCH.COMPANYID 
+			FROM
+				TBL_RS_SCHEDULE SCH
+        	JOIN
+        		TBL_RS_BRD BRD
+			ON
+				SCH.OWNERID = BRD.BRD_ID 
+			AND
+				SCH.TENANT_ID = BRD.TENANT_ID
+			AND
+				SCH.COMPANYID = BRD.BRD_COMPANY
+			WHERE
+				STARTDATE <= TO_DATE(#v_pStartDate#, 'YYYY-MM-DD HH24:MI:SS')
+        	AND
+        		TO_DATE(#v_pEndDate#, 'YYYY-MM-DD HH24:MI:SS') <= ENDDATE
+        	AND
+        		COMPANYID = #v_pCompanyID#
+        	AND 
+        		REFLAG = '0'
+			AND
+				BRD.BRD_UPPER = #v_pOwnerID#
+			AND
+				SCH.TENANT_ID = #tenantID#	
+			AND
+				BRD.APPROVEFLAG <> '2'
+			ORDER BY
+				STARTDATE ASC,
+				ENDDATE DESC
+		]]>
+	</select>
+	
+	<select id="EzResourceDAO.getScheduleListRepetiti" parameterClass="Map" resultMap="resGetScheduleListRepetitionVO">
+		<![CDATA[
+			SELECT 
+				A.num ,
+            	PNUM ,
+            	A.ownerID ,
+            	A.title title  ,
+            	LOCATION ,
+            	TIMEDISPLAY ,
+            	TO_CHAR(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE ,
+            	TO_CHAR(ENDDATE, 'YYYY-MM-DD HH24:MI:SS') ENDDATE ,
+            	ALERTTIME ,
+            	REFLAG ,
+            	GRESFLAG ,
+            	WRITERID ,
+            	IMPORTANCE ,
+            	ENTRYLIST ,
+            	ALLDAY ,
+            	TO_CHAR(WRITEDAY, 'YYYY-MM-DD HH24:MI:SS') WRITEDAY ,
+            	ATTACHFLAG ,
+            	A.companyID ,
+            	CHARACTERID ,
+            	APPROVEFLAG ,
+            	RETURNFLAG ,
+            	OWNERNM , 
+                DEPTNM  
+			FROM
+				TBL_RS_SCHEDULE A
+			JOIN
+				TBL_RS_SCHEDULERepetition C 
+			ON 
+				A.ownerID = C.ownerID
+			AND
+				A.num = C.num
+			AND
+				A.TENANT_ID = C.TENANT_ID	
+			WHERE
+				STARTDATE <= to_date(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
+			AND
+				A.COMPANYID = #v_PCOMPANYID#
+			AND
+				A.OWNERID = #v_POWNERID#
+			AND
+				REFLAG = '1'
+			AND
+				( to_date(#v_PENDDATE#,'YYYY-MM-DD HH24:MI:SS') <= ENDDATETIME OR to_date(#v_PENDDATE#,'YYYY-MM-DD HH24:MI:SS') >= ENDDATETIME )
+			]]>
+			<isNotEmpty property="v_TITLE">
+			AND 
+                ( A.TITLE LIKE '%' || #v_TITLE# || '%' )
+            </isNotEmpty>
+            <![CDATA[
+			AND
+				( A.OWNERNM LIKE '%' || #v_WRITERNAME# || '%' )
+			AND
+				( A.DEPTNM LIKE '%' || #v_WRITERDEPT# || '%' )
+			AND 
+				A.TENANT_ID = #tenantID#	
+        	ORDER BY
+        		STARTDATE ASC,
+                ENDDATE DESC
+		]]>
+	</select>
+	
+	<select id="EzResourceDAO.getScheduleListRepetitim" parameterClass="Map" resultMap="resGetScheduleListMainVO">
+		<![CDATA[
+			SELECT
+				NUM ,
+             	PNUM ,
+             	SCH.ownerID ,
+             	TITLE ,
+             	LOCATION ,
+             	TIMEDISPLAY ,
+             	TO_CHAR(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE ,
+             	TO_CHAR(ENDDATE, 'YYYY-MM-DD HH24:MI:SS') ENDDATE ,
+             	ALERTTIME ,
+             	REFLAG ,
+             	GRESFLAG ,
+             	WRITERID ,
+             	IMPORTANCE ,
+             	ENTRYLIST ,
+             	ALLDAY ,
+             	TO_CHAR(WRITEDAY, 'YYYY-MM-DD HH24:MI:SS') WRITEDAY ,
+             	ATTACHFLAG ,
+             	CHARACTERID ,
+             	SCH.ApproveFlag ,
+             	SCH.returnFlag ,
+             	SCH.ownerNM ,
+             	DEPTNM ,
+             	SCH.companyID 
+        	FROM
+        		TBL_RS_SCHEDULE SCH
+        	JOIN
+        		TBL_RS_BRD BRD
+			ON
+				SCH.OWNERID = BRD.BRD_ID
+			AND
+				SCH.TENANT_ID = BRD.TENANT_ID	
+			AND
+				SCH.COMPANYID = BRD.BRD_COMPANY
+        	WHERE
+        		STARTDATE <= TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
+			AND 
+				COMPANYID = #v_PCOMPANYID#
+			AND
+				BRD.Brd_Upper = #v_POWNERID#
+			AND
+				REFLAG = '1'
+			AND
+				SCH.TENANT_ID = #tenantID#	
+			AND
+				BRD.APPROVEFLAG <> '2'
+        	ORDER BY
+        		STARTDATE ASC,
+                ENDDATE DESC 
+		]]>
+	</select>
+	
+	<select id="EzResourceDAO.getRepDateTimes" parameterClass="Map" resultMap="resGetRepDateTimesVO">
+		<![CDATA[
+			SELECT
+				OWNERID, 
+				NUM, 
+				COMPANYID, 
+				TO_CHAR(STARTDATETIME, 'YYYY-MM-DD HH24:MI:SS') STARTDATETIME, 
+				TO_CHAR(ENDDATETIME, 'YYYY-MM-DD HH24:MI:SS') ENDDATETIME, 
+				REWAY, 
+				RENUM, 
+				REDAY, 
+				REYOIL, 
+				REMONTH, 
+				REORD, 
+				ENDFLAG, 
+				RECOUNT, 
+				TENANT_ID
+			FROM
+				TBL_RS_SCHEDULEREPETITION 
+			WHERE
+				COMPANYID = #v_pCompanyID#
+			AND
+				OWNERID = #v_pOwnerID#
+			AND
+				NUM = #v_pNum#
+			AND
+				TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<select id="EzResourceDAO.getBrdList" parameterClass="Map" resultMap="resBrdListVO">
+		<![CDATA[
+			SELECT
+				ATTACH_SIZE, BRD_ACCESS, BRD_COMPANY, BRD_COUNT, 
+                BRD_EXPLAIN, BRD_GB, BRD_GROUP, BRD_ID, BRD_LEVEL, $v_PBRDNM$ AS BRD_NM, 
+                BRD_POSTTERM, BRD_REF, BRD_STEP, BRD_UPPER, BRD_URL, 
+                SUBSTR(MAKEDATE, 1, 4) || '-' || SUBSTR(MAKEDATE, 5, 2) || '-' || SUBSTR(MAKEDATE, 7, 2) MAKEDATE, OWNDEPTID,  $v_POWNDEPTNM$  AS OWNDEPTNM, OWNERCALL, 
+                OWNERID,  $v_POWNERNM$  AS OWNERNM,  $v_POWNERPOSITION$   AS OWNERPOSITION, 
+                REPLY_MAIL_FG, RESLOCATION, APPROVEFLAG 
+			FROM
+				TBL_RS_BRD  
+			WHERE
+				BRD_UPPER = #v_PBRDID#
+			AND
+				BRD_GB = '2' 
+			AND
+				ROWNUM <= #v_PTOPCNT#
+			AND
+				BRD_COMPANY = #v_PCOMPANYID#
+			AND
+				TENANT_ID = #tenantID#
+			ORDER BY BRD_STEP	
+		]]>
+	</select>
+	
+	<select id="EzResourceDAO.getBrdCnt" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(BRD_ID) cnt 
+			FROM
+				TBL_RS_BRD 
+			WHERE  
+				BRD_UPPER = #v_PBRDID#
+            AND
+            	BRD_GB = '2'
+            AND
+            	BRD_COMPANY = #v_PCOMPANYID#
+            AND
+            	TENANT_ID = #tenantID#	
+		]]>
+	</select>
+
+	<select id="EzResourceDAO.getBrd" parameterClass="Map" resultMap="resBrdVO">
+		<![CDATA[
+			SELECT
+				BRD_ID , 
+             	BRD_NM ,
+             	BRD_NM2 ,
+             	BRD_EXPLAIN ,
+             	OWNDEPTID ,
+             	OWNDEPTNM ,
+             	OWNDEPTNM2 ,
+             	OWNERID ,
+             	OWNERNM ,
+             	OWNERNM2 ,
+             	OWNERPOSITION ,
+             	OWNERPOSITION2 ,
+             	OWNERCALL ,
+             	NVL(RESLOCATION, ' ') RESLOCATION  ,
+             	SUBSTR(MAKEDATE, 1, 4) || '-' || SUBSTR(MAKEDATE, 5, 2) || '-' || SUBSTR(MAKEDATE, 7, 2) MAKEDATE  ,
+             	NVL(APPROVEFLAG, '0') APPROVEFLAG ,
+             	NVL(RETURNFLAG, '0') RETURNFLAG ,
+             	BRD_ACCESS 
+        	FROM
+        		TBL_RS_BRD 
+			WHERE
+				BRD_ID = #v_pBrdID#
+       		AND
+				BRD_COMPANY = #v_pCompanyID#
+       		AND
+       			BRD_GB = '2'
+       		AND
+       			TENANT_ID = #tenantID#	 
+		]]>
+	</select>
+	
+	<delete id="EzResourceDAO.delResData" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_RS_BRD
+			WHERE
+				BRD_ID = #v_P_Brd_ID#
+			AND
+				BRD_COMPANY = #v_P_CompanyID#
+			AND
+				TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<update id="EzResourceDAO.delResData_U" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_RS_BRD
+    		SET
+    			BRD_STEP = BRD_STEP - 1
+			WHERE
+				BRD_UPPER = ( SELECT
+							  	Brd_Upper 
+                         	  FROM
+                         		TBL_RS_BRD 
+                         	  WHERE
+                         		BRD_ID = #v_P_Brd_ID#
+                         	  AND
+                         		BRD_COMPANY = #v_P_CompanyID#
+                         	  AND
+								TENANT_ID = #tenantID# )
+    		AND
+    			BRD_STEP > ( SELECT
+								BRD_STEP 
+							 FROM
+								TBL_RS_BRD 
+                     		 WHERE
+                     			BRD_ID = #v_P_Brd_ID#
+							 AND
+								BRD_COMPANY = #v_P_CompanyID#
+							 AND
+								TENANT_ID = #tenantID# )
+			AND
+				TENANT_ID = #tenantID#					  		
+		]]>
+	</update>
+	
+	<delete id="EzResourceDAO.delResData1" parameterClass="Map">
+		<![CDATA[
+			DELETE 
+				TBL_RS_SCHEDULE
+   			WHERE  
+   				OWNERID = #v_P_Brd_ID#
+   			AND 
+   				COMPANYID = #v_P_CompanyID#
+   			AND
+   				TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<delete id="EzResourceDAO.delResData3" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_RS_SCHEDULEREPETITION
+   			WHERE  
+   				OWNERID = #v_P_Brd_ID#
+   			AND 
+				COMPANYID = #v_P_CompanyID#
+			AND
+				TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<update id="EzResourceDAO.modifyResData" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_RS_BRD
+      		SET 
+      			OWNDEPTID = RTRIM(#v_P_ODeptID#),
+          		OWNDEPTNM = RTRIM(#v_P_ODeptNm#),
+          		OWNERID = RTRIM(#v_P_OwnerID#),
+          		OWNERNM = RTRIM(#v_P_OwnerNm#),
+          		OWNERPOSITION = RTRIM(#v_P_OwnerPos#),
+          		OWNERCALL = RTRIM(#v_P_OwnerCall#),
+          		BRD_NM = RTRIM(#v_P_Brd_NM#),
+          		RESLOCATION = RTRIM(#v_P_ResLocation#),
+          		BRD_EXPLAIN = RTRIM(#v_P_Brd_Explain#),
+          		APPROVEFLAG = RTRIM(#v_P_Approve#),
+          		RETURNFLAG = RTRIM(#v_P_Return#),
+          		BRD_NM2 = RTRIM(#v_P_Brd_NM2#),
+          		OWNDEPTNM2 = RTRIM(#v_P_ODeptNm2#),
+          		OWNERNM2 = RTRIM(#v_P_OwnerNm2#),
+          		OWNERPOSITION2 = RTRIM(#v_P_OwnerPos2#)
+    		WHERE
+    			BRD_ID = #v_P_Brd_ID#
+    		AND
+    			BRD_COMPANY = #v_P_CompanyID#
+    		AND
+    			TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<select id="EzResourceDAO.addResData_S1" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				(NVL(MAX(BRD_ID) , 0) + 1)
+   			FROM
+   				TBL_RS_BRD
+   			WHERE
+   				TENANT_ID = #tenantID#
+		]]>
+	</select>
+	
+	<select id="EzResourceDAO.addResData_S2" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				(BRD_LEVEL + 1)
+    		FROM 
+    			TBL_RS_BRD 
+    		WHERE  
+    			BRD_ID = #v_P_ClassGB#
+    		AND 
+    			BRD_COMPANY = #v_P_CompanyID#
+    		AND
+    			TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<select id="EzResourceDAO.addResData_S3" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				(NVL(MAX(Brd_Step) , 0) + 1)
+    		FROM
+    			TBL_RS_BRD 
+    		WHERE
+    			BRD_COMPANY = #v_P_CompanyID#
+    		AND
+    			TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<insert id="EzResourceDAO.addResData" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_RS_BRD ( 
+				BRD_UPPER, OWNDEPTID, OWNDEPTNM, OWNERID, OWNERNM, OWNERPOSITION, OWNERCALL, BRD_NM, RESLOCATION, BRD_EXPLAIN, BRD_COMPANY
+      			, BRD_ID, BRD_GB, BRD_LEVEL, BRD_STEP, MAKEDATE, ATTACH_SIZE, BRD_GROUP, BRD_URL, BRD_ACCESS, BRD_POSTTERM, BRD_COUNT, BRD_REF, APPROVEFLAG
+      			, BRD_NM2, OWNDEPTNM2, OWNERNM2, OWNERPOSITION2, RETURNFLAG, TENANT_ID 
+      		)
+        	VALUES ( 
+        		#v_P_ClassGB#, RTRIM(#v_P_ODeptID#), RTRIM(#v_P_ODeptNm#), RTRIM(#v_P_OwnerID#), RTRIM(#v_P_OwnerNm#), RTRIM(#v_P_OwnerPos#)
+        		,RTRIM(#v_P_OwnerCall#), RTRIM(#v_P_Brd_NM#), RTRIM(#v_P_ResLocation#), RTRIM(#v_P_Brd_Explain#), RTRIM(#v_P_CompanyID#), #v_Brd_ID#
+        		,RTRIM(#v_Brd_GB#), RTRIM(#v_Brd_Level#), RTRIM(#v_Brd_Step#), TO_CHAR(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYYMMDD')
+        		,20, u'A00', u'', #v_Brd_Access#, 365, 0, 0, RTRIM(#v_P_Approve#)
+      			,RTRIM(#v_P_Brd_NM2#), RTRIM(#v_P_ODeptNm2#), RTRIM(#v_P_OwnerNm2#), RTRIM(#v_P_OwnerPos2#), RTRIM(#v_P_Return#), #tenantID# 
+      		)
+		]]>		
+	</insert>
+	
+	<insert id="EzResourceDAO.addAttachFile" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_RS_ATTACH ( 
+				ATTACHID, RESID, FILESIZE, FILENAME, FILEPATH, COMPANYID, TENANT_ID
+			)
+        	VALUES ( 
+        		SEQ_TBL_RS_ATTACH.NEXTVAL, #resID#, #fileSize#, #fileName#, #filePath#, #companyID#, #tenantID#
+			)
+		]]>		
+	</insert>
+	
+	<update id="EzResourceDAO.updateSchedule" parameterClass="Map">
+		<![CDATA[
+			UPDATE 
+				TBL_RS_SCHEDULE
+      		SET
+      			APPROVEFLAG = #v_PAPPROVE#
+    		WHERE  
+    			COMPANYID = #v_PCOMPANYID#
+     		AND 
+     			OWNERID = #v_POWNERID#
+     		AND 
+     			NUM = #v_PNUM#
+     		AND
+     			TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<update id="EzResourceDAO.updateSchedule2" parameterClass="Map">
+		<![CDATA[
+			UPDATE 
+				TBL_RS_SCHEDULE
+      		SET
+      			RETURNFLAG = #v_PRETURN#
+    		WHERE  
+    			COMPANYID = #v_PCOMPANYID#
+     		AND 
+     			OWNERID = #v_POWNERID#
+     		AND 
+     			NUM = #v_PNUM#
+     		AND
+     			TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<update id="EzResourceDAO.updateScheduleDateTime" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_RS_SCHEDULE
+      		SET 
+      			STARTDATE = TO_DATE(#v_pStartDate#, 'YYYY-MM-DD HH24:MI:SS'),
+          		ENDDATE = TO_DATE(#v_pEndDate#, 'YYYY-MM-DD HH24:MI:SS')
+    		WHERE
+    			COMPANYID = #v_pCompanyID#
+     		AND 
+     			OWNERID = #v_pOwnerID#
+     		AND 
+     			NUM = #v_pNum#
+     		AND
+     			TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<update id="EzResourceDAO.updateScheduleRepetition" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_RS_SCHEDULEREPETITION
+      		SET 
+      			STARTDATETIME = TO_DATE(#v_pStartDateTime#, 'YYYY-MM-DD HH24:MI:SS'),
+          		ENDDATETIME = TO_DATE(#v_pEndDateTime#, 'YYYY-MM-DD HH24:MI:SS'), 
+          		REWAY = #v_pReWay#,
+          		REDAY = #v_pReDay#,
+          		RENUM = #v_pReNum#,
+          		REYOIL = #v_pReYoil#,
+          		REMONTH = #v_pReMonth#,
+          		REORD = #v_pReOrd#,
+          		ENDFLAG = #v_pEndFlag#,
+          		RECOUNT = #v_pReCount#
+    		WHERE
+    			COMPANYID = #v_pCompanyID#
+     		AND
+     			NUM = #v_pNum#
+     		AND
+     			OWNERID = #v_pOwnerID#
+     		AND
+     			TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<select id="EzResourceDAO.getSchedule" parameterClass="Map" resultMap="resGetScheduleVO">
+		<![CDATA[
+			SELECT 
+				A.OWNERID, 
+				A.NUM, 
+				A.PNUM, 
+				A.COMPANYID, 
+				A.WRITERID, 
+				A.DEPTNM, 
+				A.OWNERNM, 
+				A.TITLE, 
+				A.LOCATION, 
+				A.TIMEDISPLAY, 
+				TO_CHAR(NVL(B.STARTDATETIME, A.STARTDATE), 'YYYY-MM-DD HH24:MI:SS') STARTDATE, 
+				TO_CHAR(NVL(B.ENDDATETIME, A.ENDDATE), 'YYYY-MM-DD HH24:MI:SS') ENDDATE, 
+				A.ALLDAY, 
+				A.ALERTTIME, 
+				A.CONTENT, 
+				A.IMPORTANCE, 
+				A.REFLAG, 
+				A.GRESFLAG, 
+				TO_CHAR(A.WRITEDAY, 'YYYY-MM-DD HH24:MI:SS') WRITEDAY, 
+				A.ENTRYLIST, 
+				A.CHARACTERID, 
+				A.ATTACHFLAG, 
+				A.PUBLICFLAG, 
+				A.APPROVEFLAG, 
+				A.RETURNFLAG,
+				A.SCHEDULEID, 
+				A.TENANT_ID
+      		FROM
+      			TBL_RS_SCHEDULE A 
+      		LEFT JOIN
+      			TBL_RS_SCHEDULEREPETITION B
+      			ON
+      				A.COMPANYID = B.COMPANYID
+      			AND 
+	      			A.OWNERID = B.OWNERID
+	      		AND
+	      			A.NUM = B.NUM
+	      		AND
+	      			A.TENANT_ID = B.TENANT_ID
+      		WHERE  
+      			A.COMPANYID = #v_pCompanyID#
+      		AND 
+      			A.OWNERID = #v_pOwnerID#
+      		AND 
+      			A.NUM = #v_pNum#
+      		AND
+      			A.TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<insert id="EzResourceDAO.insertScheduleRepetition" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_RS_SCHEDULEREPETITION (
+				NUM, OWNERID, STARTDATETIME, ENDDATETIME, REWAY, REDAY, RENUM, REYOIL, REMONTH, REORD, ENDFLAG, RECOUNT, COMPANYID, TENANT_ID
+			)
+     		VALUES ( 
+     			#v_pNum#, #v_pOwnerID#, TO_DATE(#v_pStartDateTime#, 'YYYY-MM-DD HH24:MI:SS'), TO_DATE(#v_pEndDateTime#, 'YYYY-MM-DD HH24:MI:SS')
+     			, #v_pReWay#, #v_pReDay#, #v_pReNum#, #v_pReYoil#, #v_pReMonth#
+     			, #v_pReOrd#, #v_pEndFlag#, #v_pReCount#, #v_pCompanyID#, #tenantID# 
+     		)
+		]]>
+	</insert>
+	
+	<select id="EzResourceDAO.getScheduleInfo" parameterClass="Map" resultMap="resGetScheduleVO">
+		<![CDATA[
+			SELECT
+				OWNERID, 
+				NUM, 
+				PNUM, 
+				COMPANYID, 
+				WRITERID, 
+				DEPTNM, 
+				OWNERNM, 
+				TITLE, 
+				LOCATION, 
+				TIMEDISPLAY, 
+				TO_CHAR(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE, 
+				TO_CHAR(ENDDATE, 'YYYY-MM-DD HH24:MI:SS') ENDDATE, 
+				ALLDAY, 
+				ALERTTIME, 
+				CONTENT, 
+				IMPORTANCE, 
+				REFLAG, 
+				GRESFLAG, 
+				TO_CHAR(WRITEDAY, 'YYYY-MM-DD HH24:MI:SS') WRITEDAY, 
+				ENTRYLIST, 
+				CHARACTERID, 
+				ATTACHFLAG, 
+				PUBLICFLAG, 
+				APPROVEFLAG, 
+				RETURNFLAG,
+				SCHEDULEID, 
+				TENANT_ID 
+        	FROM
+        		TBL_RS_SCHEDULE 
+       		WHERE  
+       			COMPANYID = #v_pCompanyID#
+			AND
+				PNUM = #v_pNum#
+			AND
+				OWNERID = #v_pEntryID#
+			AND
+				WRITERID = #v_pOwnerID#
+			AND
+				TENANT_ID = #tenantID#	 
+		]]>
+	</select>
+	
+	<delete id="EzResourceDAO.deleteRepetition" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_RS_SCHEDULEREPETITION 
+   			WHERE
+   				OWNERID = #v_pOwnerID#
+   			AND
+   				NUM = #v_pNum#
+   			AND
+   				COMPANYID = #companyID#
+   			AND
+   				TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<delete id="EzResourceDAO.delAttachFile" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_RS_ATTACH 
+   			WHERE
+   				RESID = #resID#
+   			AND
+   				COMPANYID = #companyID#
+   			AND
+   				TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<select id="EzResourceDAO.selectFormID" parameterClass="Map" resultMap="resSelectFormIDVO">
+		<![CDATA[
+			SELECT
+				RESID,
+				BRDNM,
+				FORMTEXT 
+        	FROM
+        		TBL_RS_SCHEDULEFORM 
+       		WHERE
+       			RESID = #v_pRESID#
+       		AND
+       			TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<select id="EzResourceDAO.getAclTblBrd_S1" parameterClass="Map" 	resultClass="String">
+		<![CDATA[
+			SELECT 
+				OWNERID
+			FROM
+				TBL_RS_BRD 
+			WHERE
+				BRD_COMPANY = #v_PCOMPANYID#
+			AND
+				BRD_ID = #v_PBRDID#
+			AND
+				TENANT_ID = #tenantID#	
+		]]>	
+	</select>
+	
+	<select id="EzResourceDAO.getAclTblBrd_S2" parameterClass="Map" 	resultClass="String">
+		<![CDATA[
+			SELECT
+				BRD_UPPER
+            FROM
+            	TBL_RS_BRD 
+            WHERE  
+            	BRD_COMPANY = #v_PCOMPANYID#
+            AND 
+            	BRD_ID = #v_PBRDID#
+            AND
+            	TENANT_ID = #tenantID#	
+		]]>	
+	</select>
+	
+		<select id="EzResourceDAO.getAclTblBrd_S3" parameterClass="Map" 	resultClass="String">
+		<![CDATA[
+			SELECT
+				ACCESS_LVL
+            FROM 
+            	TBL_RS_RESACL 
+            WHERE  
+            	COMPANYID = #v_PCOMPANYID#
+            AND 
+            	RESID = #v_BRD_UPPER#
+            AND
+            	MEMBER_ID = #v_PUSERID#
+            AND
+            	TENANT_ID = #tenantID#	
+		]]>	
+	</select>
+	
+	<select id="EzResourceDAO.getIsDept" parameterClass="Map" 	resultClass="String">
+		<![CDATA[
+			SELECT
+				DEPT_YN
+            FROM 
+            	TBL_RS_RESACL 
+            WHERE  
+            	COMPANYID = #v_PCOMPANYID#
+            AND 
+            	RESID = #v_PBRDID#
+            AND
+            	MEMBER_ID = #v_PUSERID#
+            AND
+            	TENANT_ID = #tenantID#	
+		]]>	
+	</select>
+	
+	<select id="EzResourceDAO.getBrdApproveFlag" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				NVL(APPROVEFLAG, '0') APPROVEFLAG  
+        	FROM
+        		TBL_RS_BRD 
+       		WHERE  
+       			BRD_ID = #v_PBRDID#
+			AND
+				BRD_COMPANY = #v_PCOMPANYID#
+			AND
+				BRD_GB = '2'
+			AND
+				TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<select id="EzResourceDAO.insertForm_S" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+    		FROM
+    			TBL_RS_SCHEDULEFORM 
+    		WHERE  
+    			RESID = #v_RESID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
+	
+	<select id="EzResourceDAO.getDeptID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				E.DEPARTMENT
+			FROM(
+				SELECT 
+					D.department
+				FROM 
+					TBL_USERMASTER D
+				WHERE 
+					D.TENANT_ID = #tenantID# AND D.PHYSICALDELIVERYOFFICENAME = #companyID# and d.cn = #writerID#
+				UNION ALL
+				SELECT 
+					C.cn as department
+				FROM 
+					TBL_USERMASTER B 
+				INNER JOIN 
+					TBL_ADDJOBMASTER A 
+				ON 
+					A.CN = B.CN 
+				AND 
+					A.TENANT_ID = B.TENANT_ID       
+				RIGHT JOIN 
+					TBL_DEPTMASTER C
+				ON 
+					A.DEPTID = C.CN
+				AND 
+					B.TENANT_ID = C.TENANT_ID   
+				WHERE 
+					A.TENANT_ID = #tenantID# AND C.EXTENSIONATTRIBUTE2 = #companyID# and C.displayname = #deptNm# AND B.CN = #writerID#
+			) E
+			WHERE
+				ROWNUM = 1
+		]]>
+	</select>
+	
+	<insert id="EzResourceDAO.insertForm_I" parameterClass="Map" >
+		<![CDATA[
+			INSERT INTO TBL_RS_SCHEDULEFORM (
+				RESID, BRDNM, FORMTEXT, TENANT_ID
+			)
+            VALUES (
+            	#v_RESID#, #v_BRDNM#, #v_FORMTEXT#, #tenantID#
+            )
+		]]>
+	</insert>
+	
+	<update id="EzResourceDAO.insertForm_U" parameterClass="Map">
+		<![CDATA[
+			UPDATE 
+				TBL_RS_SCHEDULEFORM
+			SET
+				BRDNM = #v_BRDNM#,
+				FORMTEXT = #v_FORMTEXT#
+			WHERE
+				RESID = #v_RESID#
+			AND
+				TENANT_ID = #tenantID#				
+		]]>
+	</update>
+	
+	<delete id="EzResourceDAO.delFormID" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_RS_SCHEDULEFORM
+   			WHERE 
+   				RESID = #v_DELCODE#
+   			AND
+   				TENANT_ID = #tenantID#	
+		]]>	
+	</delete>
+	
+	<select id="EzResourceDAO.delResSch_S1" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				1
+			FROM
+				DUAL
+			WHERE
+				EXISTS ( SELECT
+							* 
+						 FROM
+						 	TBL_RS_SCHEDULE 
+						 WHERE  
+						 	COMPANYID = #v_P_companyID#
+						 AND 
+						 	OWNERID = #v_P_ownerID#
+						 AND
+						 	NUM = #v_P_num#
+						 AND
+						 	TENANT_ID = #tenantID#
+					   ) 		
+		]]>
+	</select>
+	
+	<update id="EzResourceDAO.delResSch_U" parameterClass="Map" >
+		<![CDATA[
+			UPDATE
+				TBL_RS_SCHEDULE
+			SET
+				REFLAG = '4'
+			WHERE
+				COMPANYID = #v_P_companyID#
+			AND
+				OWNERID = #v_P_ownerID#
+			AND
+				NUM = #v_P_num#
+			AND
+				TENANT_ID = #tenantID#	
+		]]>			
+	</update>
+	
+	<select id="EzResourceDAO.delResSch_S2" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				NVL(MAX(num) , 0) + 1 
+			FROM
+				TBL_RS_SCHEDULE 
+			WHERE  
+				COMPANYID = #v_P_companyID#
+			AND
+				OWNERID = #v_P_ownerID#
+			AND
+				TENANT_ID = #tenantID#	
+		]]>			
+	</select>
+	
+	<insert id="EzResourceDAO.delResSch_I" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_RS_SCHEDULE ( 
+				num, pnum, ownerID, writerID, deptNM, ownerNM, title, location, timeDisplay, startDate, endDate, 
+				alertTime, CONTENT, importance, reFlag, gresFlag, entryList, allDay, writeDay, 
+				companyID, characterID, attachFlag, tenant_ID
+			)
+			SELECT
+				#v_MaxNum# num,
+				#v_P_pnum# pnum,
+				OWNERID ,
+				WRITERID ,
+				DEPTNM ,
+				OWNERNM ,
+				TITLE ,
+				LOCATION ,
+				TIMEDISPLAY ,
+				TO_DATE(#v_P_sDate#, 'YYYY-MM-DD HH24:MI:SS') startDate ,
+				TO_DATE(#v_P_eDate#, 'YYYY-MM-DD HH24:MI:SS') endDate ,
+				ALERTTIME ,
+				CONTENT ,
+				IMPORTANCE ,
+				'4' reFlag,
+				GRESFLAG ,
+				ENTRYLIST ,
+				ALLDAY ,
+				TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') writeDay ,
+				#v_P_companyID# companyID ,
+				CHARACTERID ,
+				ATTACHFLAG ,
+				tenant_ID
+			FROM 
+				TBL_RS_SCHEDULE 
+			WHERE
+				COMPANYID = #v_P_companyID#
+			AND
+				OWNERID = #v_P_ownerID#
+			AND
+				NUM = #v_P_pnum#
+			AND
+				REFLAG = '1'
+			AND
+				TENANT_ID = #tenantID#
+		]]>							
+	</insert>
+	
+	<delete id="EzResourceDAO.delResSch_D1" parameterClass="Map">
+		<![CDATA[
+			DELETE 
+				TBL_RS_SCHEDULE
+            WHERE  
+            	COMPANYID = #v_P_companyID#
+            AND
+            	OWNERID = #v_P_ownerID#
+            AND
+            	PNUM = #v_P_num#
+            AND
+            	TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<delete id="EzResourceDAO.delResSch_D2" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_RS_SCHEDULEREPETITION
+            WHERE  
+            	COMPANYID = #v_P_companyID#
+            AND 
+            	OWNERID = #v_P_ownerID#
+            AND
+            	NUM = #v_P_num#
+            AND
+            	TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<delete id="EzResourceDAO.delResSch_D3" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_RS_SCHEDULE
+            WHERE 
+            	COMPANYID = #v_P_companyID#
+            AND
+            	OWNERID = #v_P_ownerID#
+            AND 
+            	NUM = #v_P_num#
+            AND
+            	TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<select id="EzResourceDAO.modifyResSch_S1" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				OWNERNM
+          	FROM
+          		TBL_RS_SCHEDULE 
+          	WHERE
+          		COMPANYID = #v_P_companyID#
+          	AND
+          		OWNERID = #v_P_ownerID#
+          	AND
+          		NUM = #v_P_num#
+          	AND
+          		TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<select id="EzResourceDAO.modifyResSch_S2" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				DEPTNM
+          	FROM
+          		TBL_RS_SCHEDULE 
+          	WHERE
+          		COMPANYID = #v_P_companyID#
+          	AND
+          		OWNERID = #v_P_ownerID#
+          	AND
+          		NUM = #v_P_num#
+          	AND
+          		TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<select id="EzResourceDAO.getOwnerInfo" parameterClass="Map" resultClass="OrganUserVO">
+		<![CDATA[
+		  SELECT 
+		  		CC.CN, CC.DISPLAYNAME, CC.title, CC.DESCRIPTION, CC.DESCRIPTION2, CC.department
+		  FROM ( 
+				SELECT 
+					BB.*, ROW_NUMBER() OVER (PARTITION BY BB.CN ORDER BY ROWNUM) CNT
+				FROM ( 
+					SELECT  
+	    					D.CN, D.DISPLAYNAME, D.title, D.DESCRIPTION , D.DESCRIPTION2, D.department
+		            FROM  
+		                TBL_USERMASTER D 
+		            WHERE  
+		                D.TENANT_ID = #tenantID# AND D.PHYSICALDELIVERYOFFICENAME = #companyID#
+		        UNION ALL 
+		            SELECT  
+		                B.cn, B.DISPLAYNAME, A.title, C.DISPLAYNAME AS DESCRIPTION, C.DISPLAYNAME2 AS DESCRIPTION2, A.deptid 
+		            FROM  
+		                TBL_USERMASTER B  
+		            INNER JOIN  
+		                TBL_ADDJOBMASTER A  
+		            ON  
+		                A.CN = B.CN  
+		            AND  
+		                A.TENANT_ID = B.TENANT_ID        
+		            RIGHT JOIN  
+		                TBL_DEPTMASTER C 
+		            ON  
+		                A.DEPTID = C.CN 
+		            AND  
+		                B.TENANT_ID = C.TENANT_ID    
+		            WHERE  
+		                A.TENANT_ID = #tenantID# AND C.EXTENSIONATTRIBUTE2 = #companyID#
+		         ) BB
+		  ]]>
+		     <iterate prepend="WHERE BB.cn IN" property="ownerList" open="(" close=")" conjunction=",">
+					#ownerList[]#
+			 </iterate>
+		<![CDATA[
+		    ) CC
+		    WHERE 
+		    	CC.CNT = '1'
+		    ORDER BY 
+		        DECODE(CC.CN, #ownerID#, 1, 2)
+		 ]]>
+	</select>
+	
+	<delete id="EzResourceDAO.modifyResSch_D1" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_RS_SCHEDULE
+          	WHERE 
+				( COMPANYID = #v_P_companyID#
+					AND
+				  OWNERID = #v_P_ownerID#
+					AND
+				  NUM = #v_P_num#
+					AND
+				  TENANT_ID = #tenantID# )
+            OR 
+				( COMPANYID = #v_P_companyID#
+					AND
+				  OWNERID = #v_P_ownerID#
+					AND
+				  PNUM = #v_P_num#
+					AND
+				  REFLAG = '4'
+					AND
+				  TENANT_ID = #tenantID# )
+		]]>
+	</delete>
+	
+	<insert id="EzResourceDAO.modifyResSch_I1" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_RS_SCHEDULE (
+				num, ownerID, writerID, title, location, timeDisplay, startDate, endDate, 
+				alertTime, CONTENT, importance, reFlag, gresFlag, entryList, allDay, writeDay, attachFlag, 
+				companyID, characterID , ownerNM, deptNM, ApproveFlag, TENANT_ID 
+			)
+            VALUES ( 
+            	#v_P_num#, #v_P_ownerID#, #v_P_writerID#, #v_P_title#, #v_P_location#, #v_P_timeDisplay#, 
+            	TO_DATE(#v_P_startDate#, 'YYYY-MM-DD HH24:MI:SS'), TO_DATE(#v_P_endDate#, 'YYYY-MM-DD HH24:MI:SS'), 
+            	#v_P_alertTime#, #v_P_content#, #v_P_importance#, #v_P_reFlag#, #v_P_gresFlag#, #v_P_entryList#, #v_P_allDay#, 
+            	#nowDate#, #v_P_attachFlag#, #v_P_companyID#, #v_P_characterID#,
+            	#v_tmpOwnerNm#, #v_tmpDeptNm#, #v_P_Approve#, #tenantID#
+            )
+		]]>
+	</insert>
+	
+	<update id="EzResourceDAO.modifyResSch_U1" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_RS_SCHEDULE
+            SET 
+            	TITLE = #v_P_title#,
+				LOCATION = #v_P_location#,
+                TIMEDISPLAY = #v_P_timeDisplay#,
+                STARTDATE = TO_DATE(#v_P_startDate#, 'YYYY-MM-DD HH24:MI:SS'),
+                ENDDATE = TO_DATE(#v_P_endDate#, 'YYYY-MM-DD HH24:MI:SS'),
+                ALERTTIME = #v_P_alertTime#,
+                CONTENT = #v_P_content#,
+                IMPORTANCE = #v_P_importance#,
+                REFLAG = #v_P_reFlag#,
+                GRESFLAG = #v_P_gresFlag#,
+                ALLDAY = #v_P_allDay#,
+                WRITEDAY = #nowDate#,
+                ENTRYLIST = #v_P_entryList#,
+                ATTACHFLAG = #v_P_attachFlag#,
+                CHARACTERID = #v_P_characterID#
+           WHERE
+           		COMPANYID = #v_P_companyID#
+           AND
+           		NUM = #v_P_num#
+           AND
+           		OWNERID = #v_P_ownerID#
+           AND
+           		TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<insert id="EzResourceDAO.modifyResSch_I2" parameterClass="Map">
+		<selectKey keyProperty="maxNum" resultClass="Integer">
+			SELECT 
+				(NVL(MAX(num) , 0) + 1)
+			FROM
+				TBL_RS_SCHEDULE 
+			WHERE
+				COMPANYID = #v_P_companyID#
+			AND
+				OWNERID = #v_P_writerID#
+			AND
+           		TENANT_ID = #tenantID#
+		</selectKey>
+		<![CDATA[
+			INSERT INTO TBL_RS_SCHEDULE (
+				num, pnum, ownerID, writerID, title, location, timeDisplay, startDate, endDate, 
+				alertTime, CONTENT, importance, reFlag, gresFlag, entryList, allDay, writeDay, attachFlag, 
+				companyID, characterID, TENANT_ID 
+			)
+			VALUES ( 
+				#maxNum#, #v_P_pnum#, #v_P_ownerID#, #v_P_writerID#, #v_P_title#, #v_P_location#, #v_P_timeDisplay#, 
+				#v_P_startDate#, #v_P_endDate#, #v_P_alertTime#, #v_P_content#, #v_P_importance#, 3, #v_P_gresFlag#, 
+				#v_P_entryList#, #v_P_allDay#, #nowDate#, #v_P_attachFlag#, #v_P_companyID#, #v_P_characterID#, #tenantID#
+			)
+		]]>
+	</insert>
+	
+	<delete id="EzResourceDAO.modifyResSch_D2" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_RS_SCHEDULE
+            WHERE  
+            	COMPANYID = #v_P_companyID#
+            AND 
+            	OWNERID = #v_P_ownerID#
+            AND 
+            	PNUM = #v_P_num#
+            AND 
+            	REFLAG = '4'
+            AND
+            	TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<update id="EzResourceDAO.modifyResSch_U2" parameterClass="Map">
+		<![CDATA[
+			UPDATE 
+				TBL_RS_SCHEDULE
+			SET
+				TITLE = RTRIM(#v_P_title#),
+				LOCATION = RTRIM(#v_P_location#),
+                TIMEDISPLAY = RTRIM(#v_P_timeDisplay#),
+                STARTDATE = TO_DATE(RTRIM(#v_P_startDate#),'YYYY-MM-DD HH24:MI:SS'),
+                ENDDATE = TO_DATE(RTRIM(#v_P_endDate#), 'YYYY-MM-DD HH24:MI:SS'),
+                ALERTTIME = RTRIM(#v_P_alertTime#),
+                CONTENT = #v_P_content#,
+                IMPORTANCE = RTRIM(#v_P_importance#),
+                REFLAG = RTRIM(#v_P_reFlag#),
+                GRESFLAG = RTRIM(#v_P_gresFlag#),
+                ALLDAY = RTRIM(#v_P_allDay#),
+                WRITEDAY = to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'),
+                ENTRYLIST = RTRIM(#v_P_entryList#),
+                ATTACHFLAG = RTRIM(#v_P_attachFlag#),
+                CHARACTERID = RTRIM(#v_P_characterID#),
+                APPROVEFLAG = RTRIM(#v_P_Approve#)
+			WHERE 
+         		COMPANYID = #v_P_companyID#
+			AND
+         		NUM = #v_P_num#
+			AND
+         		OWNERID = #v_P_ownerID#
+			AND
+         		TENANT_ID = #tenantID#		
+		]]>
+	</update>
+	
+	<select id="EzResourceDAO.addRessch_S1" parameterClass="Map" resultClass="String">
+		SELECT
+			APPROVEFLAG 
+     	FROM
+     		TBL_RS_BRD 
+    	WHERE
+    		BRD_ID = #v_P_ownerID#
+    	AND
+    		TENANT_ID = #tenantID#	
+    	AND
+    		BRD_COMPANY = #v_P_companyID#
+	</select>
+	
+	<select id="EzResourceDAO.addRessch_S3" parameterClass="Map" resultClass="String">
+		SELECT
+			RETURNFLAG 
+     	FROM
+     		TBL_RS_BRD 
+    	WHERE
+    		BRD_ID = #v_P_ownerID#
+    	AND
+    		TENANT_ID = #tenantID#	
+    	AND
+    		BRD_COMPANY = #v_P_companyID#
+	</select>
+	
+	<insert id="EzResourceDAO.addRessch" parameterClass="Map">
+		<selectKey keyProperty="v_Num" resultClass="Integer">
+			SELECT
+				(NVL(MAX(num) , 0) + 1) 
+		    FROM
+		    	TBL_RS_SCHEDULE 
+    		WHERE  
+    			COMPANYID = #v_P_companyID#
+             AND 
+             	OWNERID = #v_P_ownerID#
+             AND
+             	TENANT_ID = #tenantID#	
+		</selectKey>
+			
+		<![CDATA[
+			INSERT INTO TBL_RS_SCHEDULE ( 
+				OWNERID, NUM, PNUM, COMPANYID, WRITERID, DEPTNM, OWNERNM, TITLE, LOCATION, TIMEDISPLAY, STARTDATE, ENDDATE, ALLDAY, ALERTTIME, CONTENT, IMPORTANCE
+     			, REFLAG, GRESFLAG, WRITEDAY, ENTRYLIST, CHARACTERID, ATTACHFLAG, APPROVEFLAG, RETURNFLAG, SCHEDULEID, TENANT_ID
+     		)
+     		VALUES ( 
+     			RTRIM(#v_P_ownerID#), RTRIM(#v_Num#), RTRIM(#v_P_pnum#), RTRIM(#v_P_companyID#), RTRIM(#v_P_writerID#), RTRIM(#v_P_deptNM#), RTRIM(#v_P_ownerNM#), RTRIM(#v_P_title#)
+     			, RTRIM(#v_P_location#), RTRIM(#v_P_timeDisplay#), TO_DATE(RTRIM(#v_P_startDate#),'YYYY-MM-DD HH24:MI:SS'), TO_DATE(RTRIM(#v_P_endDate#),'YYYY-MM-DD HH24:MI:SS')
+     			, RTRIM(#v_P_allDay#), RTRIM(#v_P_alertTime#), #v_P_content#, RTRIM(#v_P_importance#), NVL(#v_P_reFlag#,' '), NVL(#v_P_gresFlag#,' '), TO_DATE(#nowDate#, 'yyyy-MM-dd hh24:MI:ss')
+     			, RTRIM(#v_P_entryList#), NVL(#v_P_characterID#,0), RTRIM(#v_P_attachFlag#), RTRIM(#v_P_Approve#), RTRIM(#v_P_ReturnFlag#), RTRIM(#v_P_ScheduleID#), #tenantID#
+     		)
+		]]>
+	</insert>
+	
+	<select id="EzResourceDAO.addRessch_S2" parameterClass="Map"  resultClass="Integer">
+		SELECT
+			NVL(MAX(num), 0)
+     	FROM
+     		TBL_RS_SCHEDULE 
+    	WHERE  
+   			COMPANYID = #v_P_companyID#
+        AND 
+           	OWNERID = #v_P_ownerID#
+        AND
+           	TENANT_ID = #tenantID#
+	</select>
+	
+	<select id="EzResourceDAO.getScheduleRepetition" parameterClass="Map" resultMap="resGetScheduleRepetitionVO">
+		<![CDATA[
+			SELECT
+				OWNERID, 
+				NUM, 
+				COMPANYID, 
+				TO_CHAR(STARTDATETIME, 'YYYY-MM-DD HH24:MI:SS') STARTDATETIME, 
+				TO_CHAR(ENDDATETIME, 'YYYY-MM-DD HH24:MI:SS') ENDDATETIME, 
+				REWAY, 
+				RENUM, 
+				REDAY, 
+				REYOIL, 
+				REMONTH, 
+				REORD, 
+				ENDFLAG, 
+				RECOUNT, 
+				TENANT_ID
+      		FROM
+      			TBL_RS_SCHEDULEREPETITION 
+       		WHERE
+       			COMPANYID = #v_pCompanyID#
+       		AND
+       			OWNERID = #v_pOwnerID#
+       		AND
+       			NUM = #v_pNum#
+       		AND
+       			TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzResourceDAO.getRepResource" parameterClass="Map" resultMap="resGetRepResourceVO">
+		<![CDATA[
+			{CALL EZSP_GETREPRESOURCE(#v_p_ownerID#, #v_p_num#, #v_p_cmd#, #v_p_companyID#,#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	<select id="EzResourceDAO.getRepResource" parameterClass="Map" resultMap="resGetRepResourceVO">
+		<![CDATA[
+			SELECT
+				OWNERID ,
+             	NUM ,
+             	PNUM ,
+             	COMPANYID ,
+             	WRITERID ,
+             	DEPTNM ,
+             	OWNERNM ,
+             	TITLE ,
+             	LOCATION ,
+             	TIMEDISPLAY ,
+             	TO_CHAR(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE ,
+             	TO_CHAR(ENDDATE, 'YYYY-MM-DD HH24:MI:SS') ENDDATE ,
+             	ALLDAY  ,
+             	ALERTTIME ,
+             	CONTENT ,
+             	IMPORTANCE ,
+             	REFLAG ,
+             	GRESFLAG ,
+             	TO_CHAR(WRITEDAY, 'YYYY-MM-DD HH24:MI:SS') WRITEDAY ,
+             	ENTRYLIST ,
+             	CHARACTERID ,
+             	ATTACHFLAG ,
+             	PUBLICFLAG ,
+             	APPROVEFLAG 
+			FROM
+				TBL_RS_SCHEDULE 
+       		WHERE
+       			CompanyID = #v_p_companyID#
+			AND
+				OwnerID = #v_p_ownerID#
+			AND
+				reFlag = '0'
+			AND
+				Num <> ( CASE #v_p_cmd#
+						 	WHEN 'add' THEN -1
+						 	ELSE #v_p_num# 
+						 END )
+			AND
+				ApproveFlag = '1'
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select> -->
+	
+	<!-- <procedure id="EzResourceDAO.getRepResourceRepeat" parameterClass="Map" resultMap="resGetRepResourceRepeatVO">
+		<![CDATA[
+			{CALL EZSP_GETREPRESOURCEREPEAT(#v_rec_frequency#, #v_rec_selType#, #v_rec_endRecurType#, #v_rec_startDateTime#, #v_rec_endDateTime#, #v_rec_interval#, #v_rec_daysOfWeek#, #v_rec_instances#, #v_rec_byPosition#, #v_rec_daysOfMonth#, #v_p_ownerID#, #v_p_num#, #v_p_cmd#, #v_p_companyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
+	<select id="EzResourceDAO.getRepResourceRepeat" parameterClass="Map" resultMap="resGetRepResourceRepeatVO">
+		<![CDATA[
+			SELECT
+				C.ownerID as ownerID ,
+             	C.num as num ,
+             	C.companyID ,
+             	TO_CHAR(C.startDateTime, 'YYYY-MM-DD HH24:MI:SS') startDateTime ,
+             	TO_CHAR(C.endDateTime, 'YYYY-MM-DD HH24:MI:SS') endDateTime ,
+             	C.reWay as reWay,
+             	C.reNum as reNum,
+             	C.reDay as reDay,
+             	C.reYoil ,
+             	C.reMonth as reMonth,
+             	C.reOrd as reOrd,
+             	C.endFlag as endFlag,
+             	C.reCount as reCount,
+             	B.allDay  as allDay
+        	FROM
+        		TBL_RS_SCHEDULE B
+			JOIN
+				TBL_RS_SCHEDULEREPETITION C
+			ON
+				B.ownerID = C.ownerID
+			AND
+				B.num = C.num
+			AND
+				B.TENANT_ID = C.TENANT_ID	
+       		WHERE
+       			B.companyID = #v_p_companyID#
+			AND
+				B.ownerID = #v_p_ownerID# 
+			AND
+				B.ApproveFlag = '1' 
+			AND
+				B.num <> #v_p_num#
+			AND
+				B.TENANT_ID = #tenantID#
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzResourceDAO.chkDeletedRepResource" parameterClass="Map" resultMap="resGetRepResourceVO">
+		<![CDATA[
+			{CALL EZSP_CHKDELETEDREPRESOURCE(#v_p_ownerID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<select id="EzResourceDAO.chkDeletedRepResource" parameterClass="Map" resultMap="resGetRepResourceVO">
+		<![CDATA[
+			SELECT
+				B.ownerID ,
+             	B.num ,
+             	B.pnum ,
+             	B.companyID ,
+             	B.writerID ,
+             	B.deptNM ,
+             	B.ownerNM ,
+             	B.title ,
+             	B.location ,
+             	B.timeDisplay ,
+             	TO_CHAR(B.startDate, 'YYYY-MM-DD HH24:MI:SS') startDate ,
+             	TO_CHAR(B.endDate, 'YYYY-MM-DD HH24:MI:SS') endDate ,
+             	B.allDay ,
+             	B.alertTime ,
+             	B.content ,
+	            B.importance ,
+	            B.reFlag ,
+	            B.gresFlag ,
+	            TO_CHAR(B.writeDay, 'YYYY-MM-DD HH24:MI:SS') writeDay ,
+	            B.entryList ,
+	            B.characterID ,
+	            B.attachFlag ,
+	            B.publicFlag ,
+	            B.ApproveFlag 
+	        FROM
+	        	TBL_RS_SCHEDULE B
+			JOIN
+				TBL_RS_SCHEDULEREPETITION C 
+			ON
+				B.ownerID = C.ownerID
+			AND
+				B.TENANT_ID = C.TENANT_ID	
+			AND
+				( B.num = C.num OR ( B.pnum = C.num AND B.reFlag = '4' ) )
+			WHERE
+				B.ownerID = #v_p_ownerID#
+			AND
+				B.pnum <> 0
+			AND
+				B.TENANT_ID = #tenantID#				
+		]]>
+	</select> -->
+	
+	<select id="EzResourceDAO.getAdmFlag" parameterClass="Map" resultMap="resGetAdminFlagVO">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+			(	SELECT
+					member_id, access_lvl 
+	      		FROM
+	      			TBL_RS_RESACL 
+	      		WHERE
+	      			companyid = #companyID#
+	      		AND
+	      			resid = #resID#
+				AND
+					( MEMBER_ID = #memberID#
+				OR
+						MEMBER_ID = 'everyone' )
+	            AND
+	                TENANT_ID = #tenantID#
+	            ORDER BY
+	            	ACCESS_LVL	ASC)
+	         WHERE
+	         	ROWNUM = 1
+		]]>
+	</select>
+  
+    <select id="EzResourceDAO.getResourceAdminInfo" parameterClass="Map" resultClass="ResAdminVO">
+        <![CDATA[
+			SELECT
+				BRD_NM BRDNM ,
+				HR.DISPLAYNAME OWNERNM ,
+				HR.MAIL MAILADDRESS  
+			FROM
+				TBL_RS_BRD RES
+			JOIN
+				TBL_USERMASTER HR
+             ]]>
+			<iterate prepend="ON HR.CN IN" property="ownerList" open="(" close=")" conjunction=",">
+				  #ownerList[]#
+			</iterate>
+			<![CDATA[
+			AND
+				RES.TENANT_ID = HR.TENANT_ID    
+			WHERE
+				BRD_ID = #v_BRD_ID#
+			AND
+				RES.TENANT_ID = #tenantID#    
+		]]>
+    </select>
+    
+    <select id="EzResourceDAO.getSendMailToUser" parameterClass="Map" resultClass="ResGetSendMailToUserVO">
+        <![CDATA[
+			SELECT
+				S.WRITERID, 
+				S.OWNERNM, 
+				S.DEPTNM, 
+				S.TITLE, 
+				TO_CHAR(S.STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE, 
+				TO_CHAR(S.ENDDATE, 'YYYY-MM-DD HH24:MI:SS') ENDDATE, 
+				T.BRD_NM, 
+				HR.MAIL
+			FROM
+				TBL_RS_SCHEDULE S
+			INNER JOIN
+				TBL_RS_BRD T
+			ON
+				S.OWNERID = T.BRD_ID
+			AND
+				S.TENANT_ID = T.TENANT_ID       
+			INNER JOIN
+              TBL_USERMASTER HR
+			ON
+				S.WRITERID = HR.CN
+			AND
+				S.TENANT_ID = HR.TENANT_ID      
+			WHERE
+				S.OWNERID = #resID#
+			AND
+				S.NUM = #num#
+			AND
+				S.TENANT_ID = #tenantID#      
+		]]>
+    </select>
+    
+    <select id="EzResourceDAO.getDeletedRepScheduleDate" parameterClass="Map" resultClass="String">
+        <![CDATA[
+        	SELECT
+	        	TO_CHAR(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE
+	        FROM 
+	        	TBL_RS_SCHEDULE 
+			WHERE
+				PNUM = #v_P_pNum#
+			AND
+				COMPANYID = #v_P_companyID#
+			AND
+				OWNERID = #v_P_ownerID#
+			AND
+				REFLAG = '4'
+			AND
+				TENANT_ID = #tenantID# 
+        ]]>
+    </select>
+    
+    <select id="EzResourceDAO.getAttachList" parameterClass="Map" resultClass="String">
+        <![CDATA[
+        	SELECT
+	        	FILEPATH
+	        FROM 
+	        	TBL_RS_ATTACH 
+			WHERE
+				RESID = #resID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				TENANT_ID = #tenantID# 
+			ORDER BY 
+				ATTACHID ASC
+        ]]>
+    </select>
+    
+    <select id="EzResourceDAO.getResourceOrder" parameterClass="map" resultClass="String">
+		<![CDATA[
+			select 
+				brd_step
+            from 
+				tbl_rs_brd
+			where
+				brd_id = #resourceId#
+			and
+				tenant_id = #tenantId#
+			and
+				brd_company = #brd_company#	 		
+			and
+				brd_upper = #upperResourceId#
+			and
+				brd_gb = '2'
+		]]>
+	</select>
+	
+	<select id="EzResourceDAO.getTargetResourceOrder" parameterClass="map" resultClass="HashMap">
+			<isEqual property="status" compareValue="up">
+			<![CDATA[
+				select 
+					brd_id, brd_step
+				from 
+					tbl_rs_brd
+				where
+					brd_step = (select 
+									max(brd_step)
+								from
+									 tbl_rs_brd
+								where
+									tenant_id = #tenantId#
+								and
+									brd_company = #brd_company#
+								and
+									brd_upper = #upperResourceId#
+								and
+									brd_step < #brd_step#
+								and
+									brd_gb = '2'
+								)
+				and
+					tenant_id = #tenantId#
+				and
+					brd_company = #brd_company#	 		
+				and
+					brd_upper = #upperResourceId#
+				and
+					brd_gb = '2'
+			]]>
+			</isEqual>
+			<isEqual property="status" compareValue="down">
+			<![CDATA[
+				select 
+					brd_id, brd_step
+	            from 
+					tbl_rs_brd
+				where
+					brd_step = (select 
+									min(brd_step)
+								from
+									 tbl_rs_brd
+								where
+									tenant_id = #tenantId#
+								and
+									brd_company = #brd_company#
+								and
+									brd_upper = #upperResourceId#
+								and
+									brd_step > #brd_step#
+								and
+									brd_gb = '2'
+								)
+				and
+					tenant_id = #tenantId#
+				and
+					brd_company = #brd_company#	 		
+				and
+					brd_upper = #upperResourceId#
+				and
+					brd_gb = '2'
+			]]>
+			</isEqual>
+	</select>
+	
+	<update id="EzResourceDAO.ChangeResourceOrder" parameterClass="map">
+		<![CDATA[
+			update
+				tbl_rs_brd
+			set
+				brd_step = #resourceOrder#
+			where
+				brd_upper = #upperResourceId#
+			and
+				tenant_id = #tenantId#
+			and
+				brd_company = #brd_company#	
+			and 
+				brd_id = #resourceId#
+		]]>
+	</update>
+	
+	<select id="EzResourceDAO.getMaxBrdStepInSelectedResourceGroup" parameterClass="map" resultClass="String">
+		<![CDATA[
+			select 
+				max(brd_step)
+            from 
+				tbl_rs_brd
+			where
+				tenant_id = #tenantId#
+			and
+				brd_company = #brd_company#	 		
+			and
+				brd_upper = #upperResourceGroupId#
+			and
+				brd_gb = '2'
+			group by
+				brd_upper
+		]]>
+	</select>
+	
+	<update id="EzResourceDAO.moveResourceToOtherResourceGroup" parameterClass="map">
+		<![CDATA[
+			update
+				tbl_rs_brd
+			set
+				brd_upper = #selectedResourceGroupId#,
+				brd_step = #brd_step#
+			where				
+				tenant_id = #tenantId#
+			and
+				brd_company = #brd_company#	
+			and 
+				brd_id = #originResourceGroupId#
+		]]>
+	</update>
+	
+	<select id="EzResourceDAO.getDeptAcl" parameterClass="Map"  resultMap="resGetClsAclListVO">
+		<![CDATA[
+			SELECT
+				DEPT_YN , 
+				SDA_YN ,
+				MEMBER_NAM ,
+				MEMBER_ID ,
+				ACCESS_LVL 
+        	FROM
+        		TBL_RS_RESACL 
+       		WHERE
+       			RESID = #v_BRD_UPPER#
+       		AND
+       			COMPANYID = #v_PCOMPANYID#
+       		AND 
+       			TENANT_ID = #tenantID#	
+       		AND
+       			SDA_Yn = 'Y'
+       		AND
+       			MEMBER_ID in ( $v_PUSERID$ )
+		]]>
+	</select>
+	
+	<select id="EzResourceDAO.isResourceGroupManager" parameterClass="map" resultClass="String">
+		<![CDATA[
+			select 
+				case when count(*) >= 1 then 1 else 0 end as result
+            from 
+				tbl_rs_resacl a
+			where exists
+				(
+				 select 
+					1				 
+				 from 
+				 	tbl_rs_resacl b 
+				 where 
+				 	a.resid = b.resid 
+				 and 
+				 	a.companyid = b.companyid 
+				 and 
+				 	a.tenant_id = b.tenant_id 
+				 and 
+				 	a.member_id = b.member_id 
+				 and 
+				 	a.COMPANYID= #brd_company#
+				 and 
+				 	a.TENANT_ID= #tenantId#
+				 and 
+				 	a.resid=#selectedResourceGroupId# 
+				 and
+				 	a.access_lvl = '1'
+				 and 
+				 	(a.member_id=#userId# or a.member_id = 'everyone')
+				 )
+		]]>
+	</select>
+	
+	<select id="EzResourceDAO.getResourcePortlet" parameterClass="Map" resultMap="resBrdVO">
+		<![CDATA[
+			SELECT 
+				A.BRD_ID , 
+				A.BRD_NM ,
+				A.BRD_NM2 ,
+             	A.BRD_EXPLAIN ,
+             	A.OWNDEPTID ,
+             	A.OWNDEPTNM ,
+             	A.OWNDEPTNM2 ,
+             	A.OWNERID ,
+             	A.OWNERNM ,
+             	A.OWNERNM2 ,
+             	A.OWNERPOSITION ,
+             	A.OWNERPOSITION2 ,
+             	A.OWNERCALL ,
+             	NVL(A.RESLOCATION, ' ') RESLOCATION  ,
+             	SUBSTR(A.MAKEDATE, 1, 4) || '-' || SUBSTR(A.MAKEDATE, 5, 2) || '-' || SUBSTR(A.MAKEDATE, 7, 2) MAKEDATE  ,
+             	NVL(A.APPROVEFLAG, '0') APPROVEFLAG ,
+             	NVL(A.RETURNFLAG, '0') RETURNFLAG ,
+             	A.BRD_ACCESS
+			FROM 
+				TBL_RS_BRD A
+			JOIN
+				TBL_RS_PERSPORTLET B
+			ON
+				A.BRD_ID = B.BRD_ID
+			WHERE
+				B.CN = #cn#
+			AND
+				B.TENANT_ID = #tenant_id#
+			AND
+				B.BRD_COMPANY = #brd_company#
+			AND
+				A.BRD_COMPANY = B.BRD_COMPANY
+		]]>
+	</select>
+
+	<delete id="EzResourceDAO.cleanResourcePortlet" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_RS_PERSPORTLET
+			WHERE
+				CN = #cn#
+			AND
+				TENANT_ID = #tenant_id#	
+		]]>
+	</delete>
+	
+	<insert id="EzResourceDAO.insertResourcePortlet" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_RS_PERSPORTLET ( 
+				CN, BRD_ID, BRD_COMPANY, TENANT_ID
+			)
+			VALUES ( 
+				#cn#, #brd_id#, #brd_company#, #tenant_id#
+			)
+		]]>		
+	</insert>
+	
+	<select id="EzResourceDAO.userResPermissionCheck" parameterClass="map" resultClass="String">
+		<![CDATA[
+			select 
+				case when count(*) >= 1 then 1 else 0 end as result
+			from 
+				tbl_rs_resacl a
+			where exists
+				(
+				 select 
+					1				 
+				 from 
+					tbl_rs_resacl b 
+				 where 
+					a.resid = b.resid 
+				 and 
+					a.companyid = b.companyid 
+				 and 
+					a.tenant_id = b.tenant_id 
+				 and 
+					a.member_id = b.member_id 
+				 and 
+					a.COMPANYID= #companyID#
+				 and 
+					a.TENANT_ID= #tenantID#
+				 and 
+					a.resid = #brdID#
+				 and 
+				 	( a.member_id = #userID# or a.member_id = 'everyone' or a.member_id = #deptID#) )
+			 ]]>
+	</select>
+</sqlMap>

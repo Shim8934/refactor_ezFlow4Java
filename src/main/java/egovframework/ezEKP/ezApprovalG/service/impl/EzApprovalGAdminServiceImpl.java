@@ -2264,7 +2264,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			sb.append("<ID" + list.indexOf(vo) + ">");
 			sb.append(commonUtil.cleanValue(vo.getFormContUserDepID()));
 			sb.append("</ID" + list.indexOf(vo) + ">");
-			sb.append("<NAME" + list.indexOf(vo) + ">");
+			sb.append("<NAME" + list.indexOf(vo) + "><![CDATA[");
 			
 			if (!lang.equals("2")) {
 				sb.append(ezOrganService.getPropertyValue(vo.getFormContUserDepID(), "displayname", tenantID));
@@ -2272,7 +2272,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				sb.append(ezOrganService.getPropertyValue(vo.getFormContUserDepID(), "displayname2", tenantID));
 			}
 			
-			sb.append("</NAME" + list.indexOf(vo) + ">");
+			sb.append("]]></NAME" + list.indexOf(vo) + ">");
 		}
 		
 		sb.append("</PARAMETER>");
@@ -2925,15 +2925,13 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 					Path reformHtmlPath = Paths.get(reformFilePrefix + ".html");
 					Path reformFunctionPath = Paths.get(reformFilePrefix + ".js");
 
-					OpenOption[] openOptions = { StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING };
-
-					Files.write(reformMhtPath, reformMht.getBytes(), openOptions);
-					Files.write(reformHtmlPath, reformHtml.getBytes(), openOptions);
+					commonUtil.writeBytesToFile(reformMhtPath, reformMht.getBytes());
+					commonUtil.writeBytesToFile(reformHtmlPath, reformHtml.getBytes());
 
 					if (reformFunction == null || reformFunction.trim().isEmpty()) {
 						Files.deleteIfExists(reformFunctionPath);
 					} else {
-						Files.write(reformFunctionPath, reformFunction.getBytes(), openOptions);
+						commonUtil.writeBytesToFile(reformFunctionPath, reformFunction.getBytes());
 					}
 				}
 			} catch (Exception e) {
@@ -3064,6 +3062,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		String formDraftAllFlag = "";
 		String openGovFlag = "";
 		String formAprOption = "";
+		String passAprLineFlag = "";
 
 		String formName = doc.getElementsByTagName("FormName").item(0).getTextContent();
 		String formName2 = doc.getElementsByTagName("FormName2").item(0).getTextContent();
@@ -3097,6 +3096,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		}
 		formAprOption = doc.getElementsByTagName("APPROPTION").item(0).getTextContent();
 
+		passAprLineFlag = doc.getElementsByTagName("passAprLineFlag").item(0).getTextContent();
+		
 		String recevGroupXML = "";
 		if (formRecevGroup != null && !formRecevGroup.equals("")) {
 			recevGroupXML = formRecevGroup;
@@ -3145,6 +3146,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("v_PFORMDRAFTALLFLAG", formDraftAllFlag);
 		map.put("v_POPENGOVFLAG", openGovFlag);
 		map.put("v_FORMXSLT", formXslt);
+		map.put("v_PPASSAPRLINEFLAG", passAprLineFlag);
 		map.put("companyID", companyID);
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("v_formAprOption", formAprOption);
@@ -3192,7 +3194,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 					doc = commonUtil.convertStringToDocument(formAutoRule);
 					
 					map = new HashMap<String, Object>();
-					map.put("formID", formID);
+					map.put("formID", result);
 					map.put("companyID", companyID);
 					map.put("tenantID", userInfo.getTenantId());
 
@@ -3218,7 +3220,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 					doc = commonUtil.convertStringToDocument(formAutoRuleLine);
 					
 					map = new HashMap<String, Object>();
-					map.put("formID", formID);
+					map.put("formID", result);
 					map.put("companyID", companyID);
 					map.put("tenantID", userInfo.getTenantId());
 
@@ -3250,7 +3252,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			if (!recevGroupXML.equals("")) {
 				map = new HashMap<String, Object>();
-				map.put("v_PFORMID", formID);
+				map.put("v_PFORMID", result);
 				map.put("companyID", companyID);
 				map.put("tenantID", userInfo.getTenantId());
 				map.put("approvalFlag", approvalFlag);

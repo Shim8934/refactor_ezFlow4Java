@@ -9,19 +9,21 @@ import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.ModuleSizeVO;
+import egovframework.ezEKP.ezSystem.vo.PermissionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
+import egovframework.let.main.vo.MainVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzSystemAdminService {
 	public List<SysParamVO> getSysParam(int tenantID) throws Exception;
 	public void updateSysParam(int tenantId, List<Map<String, String>> list, Locale locale, String companyID) throws Exception;
 	public List<ConnectionInfoVO> getLoginHist(int tenantID, String offset, int startPage, int maxItemPerPage, 
-			String keyword, String keycode, String lang, String startDate, String endDate, String companyId) throws Exception;
+			String keyword, String keycode, String keycodeForStatus, String lang, String startDate, String endDate, String companyId) throws Exception;
 	public List<ConnectionInfoVO> getLoginHistNotAdmin(int tenantID, String offset, int startPage, int maxItemPerPage, 
-			String keyword, String keycode, String lang, String startDate, String endDate, String companyId, String userId) throws Exception;
-	public int getLoginHistCount(int tenantID, String offset, String keyword, String keycode, 
+			String keyword, String keycode, String keycodeForStatus, String lang, String startDate, String endDate, String companyId, String userId) throws Exception;
+	public int getLoginHistCount(int tenantID, String offset, String keyword, String keycode, String keycodeForStatus,
 			String lang, String startDate, String endDate, String companyId) throws Exception;
-	public int getLoginHistCountNotAdmin(int tenantID, String offset, String keyword, String keycode, 
+	public int getLoginHistCountNotAdmin(int tenantID, String offset, String keyword, String keycode, String keycodeForStatus,
 			String lang, String startDate, String endDate, String companyId, String userId) throws Exception;
 	public ArrayList<String> getServerInfo(String ip, String curServer, String serverName, ArrayList<String> getServerList) throws Exception;
 	public String getSysMonitorInfo(String ip, String serverName, String address, boolean chkServer) throws Exception;
@@ -43,7 +45,22 @@ public interface EzSystemAdminService {
 	public void updateNewPortalMenuByPackageType(String newPackageType, int tenantID, String companyID) throws Exception;
 	public String getAccessCountryList(int tenantId) throws Exception;
 	public void setAccessCountry(int tenantId, String countryCode) throws Exception;
+	public void updateSystemAdminIPAllow(String allowResult, int tenantID) throws Exception;
+	public List<IPBandVO> getAdminAccessIPBand(int tenantID) throws Exception;
+	public void insertAdminIPBand(int tenantID, String ipAddress, String access, String explanation) throws Exception;
+	public IPBandVO getSystemAdminIPBand(String ipNo) throws Exception;
+	public void updateAdminIPBand(String ipNo, String ipAddress, String access, String explanation) throws Exception;
+	public void deleteAdminIPBand(String ipNo) throws Exception;
 	public Map<String, Object> getPwPolicy(int tenantId, String companyId) throws Exception;
 	public void updateCompanyConfigParam(int tenantID, List<Map<String, String>> list, String companyID) throws Exception;
 	public int updatePwPolicy(int tenantId, String companyId, Map<String, String> patternTypeMap, List<Map<String, Object>> PwPolicyPatternList) throws Exception;
+	List<MainVO> getAdminAccessHist(int tenantID, String offset, int startPage, int maxItemPerPage,
+			String keyword, String keycode, String keycodeForRoll, String lang, String startDate, String endDate, String companyId) throws Exception;
+	int getAdminAccessHistCount(int tenantID, String offset, String keyword, String keycode, String keycodeForRoll,
+			String lang, String startDate, String endDate, String companyId) throws Exception;
+
+	List<PermissionInfoVO> getPermissionChHist(int tenantID, String offset, int startPage, int maxItemPerPage,	String keyword, String keycode, String keycodeForRoll, String lang, String startDate, String endDate, String companyId, boolean isMasterAdmin) throws Exception;
+
+	int getPermissionChHistCount(int tenantID, String offset, String keyword, String keycode, String keycodeForRoll, String lang, String startDate, String endDate, String companyId, boolean isMasterAdmin) throws Exception;
+
 }

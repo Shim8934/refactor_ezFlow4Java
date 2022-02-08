@@ -53,6 +53,7 @@
 			
 			// 화면 호출시 실행 함수
 			window.onload = function(){
+				document.getElementById("searchKeycodeForStatus").value = 'All';
 				companyID = document.getElementById("ListCompany").value;
 				getTime();
 				getLoginHist(1, searchStartTime, searchEndTime);
@@ -381,11 +382,15 @@
 				var selectOption = document.getElementById("searchKeycode");
 				var searchKeycode = selectOption.options[selectOption.selectedIndex].value;
 				var searchKeyword = document.getElementById("searchKeyword").value;
+				// 2021-12-27 이사라 : 상태 검색 추가
+				var selectOptionForStatus = document.getElementById("searchKeycodeForStatus");
+				var searchKeycodeForStatus = selectOptionForStatus.options[selectOptionForStatus.selectedIndex].value;
 
 				if (pageNum == "-1") {
 					var pageSize = "-1";
 					var params = 'startDate=' + searchStartTime	+ '&endDate=' + searchEndTime;
 					params += '&searchKeycode=' + searchKeycode + '&searchKeyword=' + searchKeyword;
+					params += '&searchKeycodeForStatus=' + searchKeycodeForStatus;
 					params += '&pageNum=' + pageNum + '&pageSize='	+ pageSize + '&companyId='	+ companyID +'&config=a';
 					var pURL = "/admin/ezSystem/systemLoginHistExcelExport.do" + "?" + params;
 					saveExcel.location.href = pURL;
@@ -402,6 +407,7 @@
 								'endDate' : searchEndTime,
 								'searchKeycode' : searchKeycode,
 								'searchKeyword' : searchKeyword,
+								'searchKeycodeForStatus' : searchKeycodeForStatus,
 								'pageNum' : pageNum,
 								'companyId' : companyID
 							},
@@ -409,13 +415,21 @@
 								var html = "";
 
 								if (res.itemCnt < 1) {
-									html += "<tr><td colspan=\"8\" style=\"text-align:center;\">" + strLang155 + "</td></tr>";
+									html += "<tr><td colspan=\"10\" style=\"text-align:center;\">" + strLang155 + "</td></tr>";
 								} else {
 									var j = ((pageNum - 1) * 20) + 1;
 
 									if (res.lang == "primary") {
 										
 										res.loginHistList.forEach(function(i, v) {
+											// 2021-12-23 이사라 : 로그아웃시간, 상태 추가
+											var iStatus = '';
+											switch (i.status) {
+											case 'Y' 	: iStatus = '<spring:message code="ezSystem.ls04"/>'; break;
+											case 'N' 	: iStatus = '<spring:message code="ezSystem.ls05"/>'; break;
+											case ''		: iStatus = '<spring:message code="ezSystem.ls04"/>'; break;  // 2021-12-25 이사라 :
+											case null 	: iStatus = '<spring:message code="ezSystem.ls04"/>'; break;  // 기존사이트의 경우 필요 시 '' 적용 but 상태 검색을 위해 Y와 같은 값 적용을 권함  
+											}
 											html += "<tr>";
 											html += "   <td>"	+ j 								+ "</td>";
 											html += "	<td title=\'" + i.usernm + "(" + i.userid	+ ")'>"	+ i.usernm + "(" + i.userid	+ ")" + "</td>";
@@ -423,8 +437,10 @@
 											html += "	<td>"	+ i.companynm						+ "</td>";
 											html += "	<td>"	+ i.connectip + " ( " + i.connectCountryName	+ " ) " + "</td>";
 											html += "	<td>"	+ i.connecttime						+ "</td>";
+											html += "	<td>"	+ i.disconnecttime					+ "</td>";
 											html += "	<td>"	+ i.connectbrowser					+ "</td>";
 											html += "	<td>"	+ i.connectos						+ "</td>";
+											html += "	<td>"	+ iStatus							+ "</td>";
 											html += "</tr>";
 											j++;
 										});
@@ -432,6 +448,14 @@
 									} else {
 										
 										res.loginHistList.forEach(function(i, v) {
+											// 2021-12-23 이사라 : 로그아웃시간, 상태 추가
+											var iStatus = '';
+											switch (i.status) {
+											case 'Y' 	: iStatus = '<spring:message code="ezSystem.ls04"/>'; break;
+											case 'N' 	: iStatus = '<spring:message code="ezSystem.ls05"/>'; break;
+											case ''		: iStatus = '<spring:message code="ezSystem.ls04"/>'; break;  // 2021-12-25 이사라 :
+											case null 	: iStatus = '<spring:message code="ezSystem.ls04"/>'; break;  // 기존사이트의 경우 필요 시 '' 적용 but 상태 검색을 위해 Y와 같은 값 적용을 권함 
+											}
 											html += "<tr>";
 											html += "   <td>"	+ j		+ "</td>";
 											html += "	<td title=\'" + i.usernm2 + "(" + i.userid	+ ")'>"  + i.usernm2 	+ "(" + i.userid	+ ")" + "</td>";
@@ -439,8 +463,10 @@
 											html += "	<td>"	+ i.companynm2							+ "</td>";
 											html += "	<td>"	+ i.connectip + " ( " + i.connectCountryName	+ " ) " + "</td>";
 											html += "	<td>"	+ i.connecttime							+ "</td>";
+											html += "	<td>"	+ i.disconnecttime						+ "</td>";
 											html += "	<td>"	+ i.connectbrowser						+ "</td>";
 											html += "	<td>"	+ i.connectos							+ "</td>";
+											html += "	<td>"	+ iStatus								+ "</td>";
 											html += "</tr>";
 											j++;
 										});
@@ -551,26 +577,33 @@
 						<input type="text" id="endDatepicker" class="hasDatapicker" style="width: 100px; text-align: center" readonly="readonly" />
 					</span> 
 					&nbsp;&nbsp;
-					<span id="topmenu" style="width: 500px"><spring:message code="ezStatistics.t1062"></spring:message> : &nbsp; 
-					<select id="searchKeycode"> 
-						<option value="1"><spring:message code="ezStatistics.t1068"></spring:message></option>
-						<option value="2"><spring:message code="ezSystem.x0023"></spring:message></option>
-						<option value="6"><spring:message code="ezOrgan.t218"></spring:message></option>
-						<option value="3"><spring:message code="ezSystem.x0024"></spring:message></option>
-						<option value="4"><spring:message code="ezSystem.x0026"></spring:message></option>
-						<option value="5"><spring:message code="ezSystem.x0027"></spring:message></option>
-					</select>
-						<input type="text" id="searchKeyword" style="width: 150px;" onKeyDown="return keyword_onkeydown(event)"/>
-					<a class="imgbtn" >
-						<span onclick="javascript:search();"><spring:message code="ezSystem.x0029"></spring:message></span>
-					</a>
-					<a class="imgbtn" >
-						<span onclick="javascript:reset();"><spring:message code="ezSystem.x0033"></spring:message></span>
-					</a>
-					<a class="imgbtn" >
-						<span onclick="javascript:reload();"><spring:message code="ezSystem.x0037"></spring:message></span>
-					</a>
-				</span> 
+					<span id="topmenu" style="width: 500px">
+						<spring:message code="ezSystem.ls03"></spring:message> : &nbsp;
+						<select id="searchKeycodeForStatus"> 
+							<option value="All"><spring:message code="ezSystem.ls06"></spring:message></option>
+							<option value="Y"><spring:message code="ezSystem.ls04"></spring:message></option>
+							<option value="N"><spring:message code="ezSystem.ls05"></spring:message></option>
+						</select>	&nbsp;
+						<spring:message code="ezStatistics.t1062"></spring:message> : &nbsp;
+						<select id="searchKeycode"> 
+							<option value="1"><spring:message code="ezStatistics.t1068"></spring:message></option>
+							<option value="2"><spring:message code="ezSystem.x0023"></spring:message></option>
+							<option value="6"><spring:message code="ezOrgan.t218"></spring:message></option>
+							<option value="3"><spring:message code="ezSystem.x0024"></spring:message></option>
+							<option value="4"><spring:message code="ezSystem.x0026"></spring:message></option>
+							<option value="5"><spring:message code="ezSystem.x0027"></spring:message></option>
+						</select>
+							<input type="text" id="searchKeyword" style="width: 150px;" onKeyDown="return keyword_onkeydown(event)"/>
+						<a class="imgbtn" >
+							<span onclick="javascript:search();"><spring:message code="ezSystem.x0029"></spring:message></span>
+						</a>
+						<a class="imgbtn" >
+							<span onclick="javascript:reset();"><spring:message code="ezSystem.x0033"></spring:message></span>
+						</a>
+						<a class="imgbtn" >
+							<span onclick="javascript:reload();"><spring:message code="ezSystem.x0037"></spring:message></span>
+						</a>
+					</span> 
 				</td>
 				<td width="5%">
 					<a class="imgbtn" style="margin-right: 5px">
@@ -600,8 +633,10 @@
 						<th><spring:message code="ezEmail.t712"></spring:message></th>
 						<th><spring:message code="ezSystem.x0039"></spring:message></th>
 						<th><spring:message code="ezSystem.x0025"></spring:message></th>
+						<th><spring:message code="ezSystem.ls02"></spring:message></th>
 						<th><spring:message code="ezSystem.x0026"></spring:message></th>
 						<th><spring:message code="ezSystem.x0027"></spring:message></th>
+						<th><spring:message code="ezSystem.ls03"></spring:message></th>
 					</tr>
 				</thead>
 				<tbody id="loginHistListBody" style="overflow: auto;"></tbody> 

@@ -214,15 +214,24 @@
 		                if (document.getElementById("form").file1.files.length > 1) {
 				            alert("<spring:message code='ezOrgan.x0001' />");
 				        }
-		            } 
-		            var extension = document.getElementById("file1").value.split('.');
+		            }
+		            var file1val = document.getElementById("file1").value;
+		            var exIndex = file1val.lastIndexOf(".");
+		            var extension = file1val.substring(exIndex+1, file1val.lenght);
 		            var check = false;
-		            check = compareExtension(check, extension[1]);
+		            check = compareExtension(check, extension);
 
 		            if (!check) {
 		                document.getElementById("file1").value = "";
+		                alert("<spring:message code='main.t4000'/>");
 		                return;
 		            }
+		            /* 2021-12-09 홍승비 - 서명 이미지 업로드 시 서버단에서도 이미지 확장자 체크 진행 (실제 파일 업로드 이전에 ajax로 체크) */
+					if (checkImgExtension(extension) == "UPLOAD_EXT_ERROR") {
+						document.getElementById("file1").value = "";
+						alert("<spring:message code ='ezAttitude.t260' />"); // 허용하지 않는 확장자입니다.
+						return;
+					}
 		            
 		            var fd = new FormData();
 		            
@@ -327,7 +336,7 @@
 		</table> 
 		<iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 		<form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm">
-			<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px; display: none;" multiple="false" />
+			<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px; display: none;" accept="image/*" />
 			<input type="hidden" name="mode" id="mode" />
 			<input type="hidden" name="tempFilePath" id="tempFilePath" />
 		</form>		

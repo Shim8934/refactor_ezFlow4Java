@@ -10,6 +10,7 @@
 		<link rel="stylesheet" href="${util.addVer('/css/ezMemo/jquery.mCustomScrollbar.css')}" type="text/css">
 		<script type="text/javascript">
 			var surveyId = -1;
+			var isInCreateSurvey = false;
 		</script>
 	</head>
 	
@@ -69,76 +70,105 @@
 					var mySurvey    = document.getElementById("mySurvey");
 					var createBttn  = document.getElementById("createBttn");
 					
+					/* 2021-08-27 홍승비 - 설문조사 신규작성 도중 메뉴클릭 시 취소여부 메세지 표출하도록 수정 (상태변경 동작은 수정 시에만 동작함) */
 					if (draftSurvey) {draftSurvey.onclick = function(e) {
 						// 2020.04.24 강승구 : 설문수정 도중 메뉴클릭시 modifyFlag수정 및 메시지처리 추가(모든 서브메뉴 적용)
-						if(surveyId != -1){
-							if(confirm(SurveyMessages.strCancelMsg)){
-								changeSurveyState();
+						if (surveyId != -1 || isInCreateSurvey == true) {
+							if (confirm(SurveyMessages.strCancelMsg)) {
+								if (surveyId != -1) {
+									changeSurveyState();
+								}
 								getDraftSurveyPage();
+								isInCreateSurvey = false;
 							}
 						} else {
-							getDraftSurveyPage();	
+							getDraftSurveyPage();
+							isInCreateSurvey = false;
 						}
 					};}
 					if (mySurvey)    {mySurvey.onclick    = function(e) {
-						if(surveyId != -1){
-							if(confirm(SurveyMessages.strCancelMsg)){
-								changeSurveyState();	
+						if (surveyId != -1 || isInCreateSurvey == true) {
+							if (confirm(SurveyMessages.strCancelMsg)) {
+								if (surveyId != -1) {
+									changeSurveyState();
+								}
 								getMySurveyPage();
+								isInCreateSurvey = false;
 							}
 						} else {
-							getMySurveyPage();	
+							getMySurveyPage();
+							isInCreateSurvey = false;
 						}
 					};}
 					if (createBttn)  {createBttn.onclick  = function(e) {
-						if(surveyId != -1){
-							if(confirm(SurveyMessages.strCancelMsg)){
-								changeSurveyState();
+						if (surveyId != -1 || isInCreateSurvey == true) {
+							if (confirm(SurveyMessages.strCancelMsg)) {
+								if (surveyId != -1) {
+									changeSurveyState();
+								}
 								createNewSurvey();
+								isInCreateSurvey = true;
 							}
 						} else {
-							createNewSurvey();	
+							createNewSurvey();
+							isInCreateSurvey = true;
 						}
 					};}
 					
-					document.getElementById("totalSurvey"     ).addEventListener("click", function(e) {
-						if(surveyId != -1){
-							if(confirm(SurveyMessages.strCancelMsg)){
-								changeSurveyState();	
-								getAllSurveyList();	
+					document.getElementById("totalSurvey").addEventListener("click", function(e) {
+						if (surveyId != -1 || isInCreateSurvey == true) {
+							if (confirm(SurveyMessages.strCancelMsg)){
+								if (surveyId != -1) {
+									changeSurveyState();
+								}
+								getAllSurveyList();
+								isInCreateSurvey = false;
 							}
 						} else {
-							getAllSurveyList();	
+							getAllSurveyList();
+							isInCreateSurvey = false;
 						}
 					});
-					document.getElementById("surveyConfig"    ).addEventListener("click", function(e) {
-						if(surveyId != -1){
-							if(confirm(SurveyMessages.strCancelMsg)){
-								changeSurveyState();	
+					document.getElementById("surveyConfig").addEventListener("click", function(e) {
+						if (surveyId != -1 || isInCreateSurvey == true) {
+							if (confirm(SurveyMessages.strCancelMsg)) {
+								if (surveyId != -1) {
+									changeSurveyState();
+								}
 								getConfigPage();
+								isInCreateSurvey = false;
 							}
 						} else {
-							getConfigPage();	
+							getConfigPage();
+							isInCreateSurvey = false;
 						}
 					});
 					document.getElementById("processingSurvey").addEventListener("click", function(e) {
-						if(surveyId != -1){
-							if(confirm(SurveyMessages.strCancelMsg)){
-								changeSurveyState();		
+						if (surveyId != -1 || isInCreateSurvey == true) {
+							if (confirm(SurveyMessages.strCancelMsg)) {
+								if (surveyId != -1) {
+									changeSurveyState();
+								}
 								getProcessingSurveyList();
+								isInCreateSurvey = false;
 							}
 						} else {
-							getProcessingSurveyList();	
+							getProcessingSurveyList();
+							isInCreateSurvey = false;
 						}
 					});
-					document.getElementById("finishedSurvey"  ).addEventListener("click", function(e) {
-						if(surveyId != -1){
-							if(confirm(SurveyMessages.strCancelMsg)){
-								changeSurveyState();		
+					document.getElementById("finishedSurvey").addEventListener("click", function(e) {
+						if (surveyId != -1 || isInCreateSurvey == true) {
+							if (confirm(SurveyMessages.strCancelMsg)) {
+								if (surveyId != -1) {
+									changeSurveyState();
+								}
 								getFinishedSurveyPage();
+								isInCreateSurvey = false;
 							}
 						} else {
 							getFinishedSurveyPage();
+							isInCreateSurvey = false;
 						}
 					});
 					window.addEventListener("resize", function(e) {windowResize();}, false);

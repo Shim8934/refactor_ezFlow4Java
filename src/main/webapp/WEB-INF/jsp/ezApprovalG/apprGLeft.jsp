@@ -83,6 +83,7 @@
 		    var hideSusin = "<c:out value = '${hideSusin}'/>";
 		    var whoKyulYN = "<c:out value = '${whoKyulYN}'/>";
 		    var useWebHWP = "<c:out value = '${useWebHWP}'/>";
+		    var userTitle = "<c:out value = '${userInfo.title}'/>";
 		    
 		    $(function () {
 		      	if(approvalFlag == "G") {
@@ -93,11 +94,20 @@
 	        		$(".approval").css("display","");
 	        	}
 		      	
-		        if ("<c:out value = '${isSubTitle}'/>" == "true")
-		            $("#country_id").selectbox();
-		            $(".sbHolder").each(function (index) {
-		                $(this).addClass('instance');
-		            });
+		        if ("<c:out value = '${isSubTitle}'/>" == "true") {
+		        	$("#country_id option").each(function (i) {
+		        		var optionVal = this.value.split("|");
+		        		if(pDeptID == optionVal[0] && userTitle == optionVal[2]) {
+		        			$(this).attr("selected", "selected");
+		        		} else {
+		        			$(this).removeAttr("selected");
+		        		}
+		        	});
+		        	$("#country_id").selectbox();
+		        }
+	            $(".sbHolder").each(function (index) {
+	                $(this).addClass('instance');
+	            });
 		         //19.08.05 김보미 - 마우스 클릭시 볼드체   
 		         $(document).on("click", "span.list_text", function(){
 		        	 $("#left li").removeClass("on");
@@ -121,7 +131,7 @@
 		        initUserRoleinfo();
 		        
 		        var idx = "4", navigation_info = "<spring:message code='ezApprovalG.t102'/>";
-		        if(approvalFlag == "S") {
+		        //if(approvalFlag == "S") {
 		        	Tree_setconfig();
 		            var xmlDom2 = createXmlDom();
 		            xmlDom2 = loadXMLString("${userCont}");
@@ -143,7 +153,7 @@
 						node[i].setAttribute("TITLE", node[i].innerText);
 					} 
 
-		        } 
+		       // } 
 			        if (parseInt(pListTypeValue) < 10) {
 			            window.open("/ezApprovalG/aprManage.do?listType=" + pListTypeValue + "&subQuery=", "right");
 			
@@ -216,7 +226,9 @@
 	            
 	            var node = document.getElementById(pNodeID);
 		        var title2 = node.getElementsByClassName("node_div");
+		        if(title2[0] !=null ){
 		        var nodeLevel = title2[0].getAttribute("nodelevel");
+		        }
 		        
 		        if(nodeLevel > 9) {
 		        	nodeLevel = 9;
@@ -224,9 +236,11 @@
 		        for(var i=0; i<title2.length; i++) {
 		        	var title3 = title2[i].getElementsByClassName("node_normal");
 		        	//title3[0].setAttribute("TITLE", title3[0].innerHTML); 
+		        	if(title3[0] !=null ){
 		        	title3[0].style.width = 145 - 16*(nodeLevel-1) +'px';
 		        	//title3[0].style.textOverflow = 'ellipsis';
 		        	//title3[0].style.overflow = 'hidden';
+		        	}
 		        }
 	        }
 		    
@@ -663,7 +677,9 @@
 		    function cmdOK_onclick(ContainerID, ContName, SubQuery, shareUserId) {
 		    	if(!shareUserId){
 		    		shareUserId = "";
-		    	}
+		    	}else{
+		    	    PresentOpen = "APPROVAL";
+		        }
 		        if (PresentOpen != "CONTAINER") {
 		            PresentOpen = "CONTAINER";
 	                window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURI(ContainerID) + "&sQuery="+ escape(SubQuery) + "&tmpValue=" + encodeURI(ContName) + "&ENDAPRTYPE=" + strAprType40 + "&ENDAPRSTATE=" + strAprState2 + "&shareUserId=" + shareUserId;
@@ -1075,7 +1091,7 @@
 		    var arr_userinfo = new Array();
 		    function ChangeSubtitle(obj) {
 		        var UseSelectTitle = obj.getAttribute("href").split("#")[1].split("|");
-		        if ("<c:out value = '${userInfo.deptID}'/>" != UseSelectTitle[0]) {
+		        if ("<c:out value = '${userInfo.deptID}'/>" != UseSelectTitle[0] || userTitle != UseSelectTitle[2]) {
 		            arr_userinfo[4] = UseSelectTitle[0];
 		            arr_userinfo[5] = UseSelectTitle[1];
 		            arr_userinfo[3] = UseSelectTitle[2];
@@ -1111,7 +1127,12 @@
 	        				companyName2 : CompanyName2
 	        		},
 	        		success: function(xml){
-	        		}        			
+	        			/* 2021-10-07 홍승비 - 부재자설정 후 겸직 셀렉트박스에서 겸직정보 변경 시 undefined 알러트 메세지 발생하지 않도록 수정 */
+	        			// 좌측 페이지가 먼저 갱신되므로, 우측 페이지가 갱신되기 전에 겸직정보 파라미터를 사용하지 않도록 공백으로 처리함
+	        			if (typeof(parent.frames["right"].arr_userinfo[7]) != "undefined") {
+	        				parent.frames["right"].arr_userinfo[7] = "";
+	        			}
+	        		}
 	        	});
 		    }
 		    
@@ -1161,6 +1182,14 @@
 	        $( window ).resize(function() {
 	        	leftResize();
         	});
+
+			function openergetDocInfo() {
+				try {
+					window.parent.frames.right.openergetDocInfo();
+				} catch (e) {
+					console.log(e);
+				}
+			}
 		</script>
 	</head>
 	<body ondragstart="return false" onselectstart="return false" class="newLeft">
@@ -1290,10 +1319,11 @@
 			        		<span class="h2Title" onclick="openFolder('USERSHARE');"><spring:message code='ezApprovalG.apprLeft02'/></span>
 			        	</h2>
 						<ul class="lnbUL off" id="USERSHAREUL">
+							<div id="UserShare_0">
 				          	<c:forEach var="userShare" items="${userShareList}" varStatus="status">				          	
 								<img id="imgNode_UserShare_${status.index}" border="0" src="/images/OrganTree_cross/plus.gif" onclick="treeicon_toggle('UserShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_UserShare_${status.index}');" style="width: 18px;height: 18px;cursor: pointer;margin-left: 10px;">
 								<img id="subImgNode_UserShare_${status.index}" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;" class="mCS_img_loaded">
-								<span id="spn_UserShare_${status.index}" class="node_normal" style="cursor: pointer; width: 135px;" title='<c:out value="${userShare.shareName }"></c:out>'><c:out value="${userShare.shareName }"></c:out></span>
+								<span id="spn_UserShare_${status.index}" class="node_normal" onclick="treeicon_toggle('UserShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_UserShare_${status.index}');" style="cursor: pointer; width: 135px;" title='<c:out value="${userShare.shareName }"></c:out>'><c:out value="${userShare.shareName }"></c:out></span>
 								<div id="UserShare_${status.index}_sub" style="display:none;">
 <%-- 					    			<div class="node_div" id="DeptShare_${status.index}_0" nodename="결재진행문서" nodelevel="1" endnode="true" value="결재진행문서" isleaf="TRUE" expanded="FALSE" style="white-space: nowrap;"> --%>
 <!-- 										<img border="0" class="DOT" src="/images/OrganTree/dot_end.gif" style="width: 18px; height: 18px;"> -->
@@ -1309,6 +1339,7 @@
 									</div>
 								</div>
 				          	</c:forEach>
+				          	</div>
 			          	</ul>
 		          	</c:if>
 		          	<c:if test="${fn:length(deptShareList) > 0 }">
@@ -1394,10 +1425,11 @@
 			        		<span class="h2Title" onclick="openFolder('USERSHARE');">개인공유함</span>
 			        	</h2>
 						<ul class="lnbUL off" id="USERSHAREUL">
+							<div id="UserShare_0">
 				          	<c:forEach var="userShare" items="${userShareList}" varStatus="status">				          	
 								<img id="imgNode_UserShare_${status.index}" border="0" src="/images/OrganTree_cross/plus.gif" onclick="treeicon_toggle('UserShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_UserShare_${status.index}');" style="width: 18px;height: 18px;cursor: pointer;margin-left: 10px;">
 								<img id="subImgNode_UserShare_${status.index}" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;" class="mCS_img_loaded">
-								<span id="spn_UserShare_${status.index}" class="node_normal" style="cursor: pointer; width: 135px;" title='<c:out value="${userShare.shareName }"></c:out>'><c:out value="${userShare.shareName }"></c:out></span>
+								<span id="spn_UserShare_${status.index}" class="node_normal" onclick="treeicon_toggle('UserShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_UserShare_${status.index}');" style="cursor: pointer; width: 135px;" title='<c:out value="${userShare.shareName }"></c:out>'><c:out value="${userShare.shareName }"></c:out></span>
 								<div id="UserShare_${status.index}_sub" style="display:none;">
 <%-- 					    			<div class="node_div" id="DeptShare_${status.index}_0" nodename="결재진행문서" nodelevel="1" endnode="true" value="결재진행문서" isleaf="TRUE" expanded="FALSE" style="white-space: nowrap;"> --%>
 <!-- 										<img border="0" class="DOT" src="/images/OrganTree/dot_end.gif" style="width: 18px; height: 18px;"> -->
@@ -1413,6 +1445,7 @@
 									</div>
 								</div>
 				          	</c:forEach>
+				          	</div>
 			          	</ul>
 		          	</c:if>
 		          	<c:if test="${fn:length(deptShareList) > 0 }">

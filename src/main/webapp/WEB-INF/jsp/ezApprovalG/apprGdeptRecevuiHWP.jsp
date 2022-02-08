@@ -27,6 +27,7 @@
 	        var pFormHref = new String("");
 	        var pFormID = new String();
 	        var pUserID = "<c:out value ='${userInfo.id}'/>";
+			var pCompanyID = "<c:out value = '${userInfo.companyID}' />";
 			var pHasAttachYN = new String("N");
 			var pHasOpinionYN = new String("N");
 			var CurrentDate
@@ -234,7 +235,7 @@
 			        } else {
 			            showProgress("<spring:message code='ezApprovalG.t1475'/>");
 			
-					    var URL = document.location.protocol + "//" + document.location.hostname + ":" + document.location.port + "/ezCommon/downloadAttach.do?filePath=" + dirPath + escape(pSusinDocURL.substr(pSusinDocURL.lastIndexOf("/") + 1, pSusinDocURL.length));
+					    var URL = document.location.protocol + "//" + document.location.hostname + ":" + document.location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(pSusinDocURL);
 					    var isTrue = HwpCtrl.LoadFile(URL, false);
 			
 					    if (isTrue) {

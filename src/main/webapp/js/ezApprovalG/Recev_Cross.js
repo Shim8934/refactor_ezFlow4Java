@@ -2258,11 +2258,11 @@ function SaveDraftDocInfo() {
 	                            break;
 
 	                        case "YY":
-	                            numHeader += d.getFullYear();
+	                            numHeader += getAccountingYear();
 	                            break;
 	                            
 	                        case "yy":
-	                            var yyear = d.getFullYear();
+	                            var yyear = getAccountingYear();
 	                            numHeader += yyear.toString().substr(2);
 	                            break;
 
@@ -2691,7 +2691,7 @@ function SaveDraftDocInfo() {
         field.innerHTML = " ";
         if (NodeList.length > 0) {
             for (i = NodeList.length - 1; i >= 0; i--) {
-        		var opinionsTable = '<p style="margin-top: 10px;margin-left: 3px;margin-bottom: 3px;">▶ ' + getNodeText(NodeList[i].childNodes[3]) + ' - ' + getNodeText(NodeList[i].childNodes[2]) + ' - ' + getNodeText(NodeList[i].childNodes[1]) + '</p><p style="margin-top: 0px;margin-left: 10px;margin-bottom: 0px;">' + getNodeText(NodeList[i].childNodes[6]) + '</p>';
+        		var opinionsTable = '<p style="margin-top: 10px;margin-left: 3px;margin-bottom: 3px;">▶ ' + getNodeText(NodeList[i].childNodes[3]) + ' - ' + getNodeText(NodeList[i].childNodes[2]) + ' - ' + getNodeText(NodeList[i].childNodes[1]) + '</p><p style="margin-top: 0px;margin-left: 10px;margin-bottom: 0px;">' + MakeXMLString(getNodeText(NodeList[i].childNodes[6])) + '</p>';
         		$(field).append(opinionsTable);
             }
         }

@@ -94,7 +94,8 @@
 			}
 	
 			window.onresize = function () {
-	        	var mHeight = document.documentElement.clientHeight - 172 - document.getElementById("message").offsetTop + "px";
+	       		document.getElementById("messageWHWPEditor").style.height = document.documentElement.clientHeight - 150 + "px";
+	       		var mHeight = document.documentElement.clientHeight - 110 - document.getElementById("messageWHWPEditor").offsetTop + "px";
 	       		message.Resize(mHeight);
 	        }
 	
@@ -149,6 +150,7 @@
 							message.Clear();
 				        }
 					    message.EditMode(0);
+						message.SetViewProperties(2, 100);
 					    message.ScrollPosInfo(0, 0);
 					    
 					    window.onresize();
@@ -298,7 +300,9 @@
 		    function btnforcecallback_onclick_Complete(ans) {
 		        if (ans) {
 		            doCancelForce();
-		        }
+		        } else {
+					DivPopUpHidden();
+				}
 			}
 			function doCancelForce() {
 				var retVal = ExcuteInfo("CALLBACK_BEFORE", "DRAFT"); // pdraftflag 정상적으로 가져오게 수정해야함
@@ -345,20 +349,34 @@
 	            var MemberList = loadXMLString(GetCurrentlinelist)
 	            var pDocTitle = message.GetFieldText("doctitle").trim();
 	            var objNodes = SelectNodes(MemberList, "LISTVIEWDATA/ROWS/ROW");
+	            var pDraftDate = GetDocInfoData("APR", "STARTDATE"); // 메일 발송 시 회수일시가 아닌 기안일시를 사용
 	            g_szUserID = pUserID;
 	            g_senderinfo = "";
+	            
 	            for (i = 0; i < objNodes.length; i++) {
 	                var nowstate = getNodeText(GetChildNodes(GetChildNodes(SelectNodes(MemberList, "LISTVIEWDATA/ROWS/ROW")[i])[0])[12]);
 	                var LineUserID = getNodeText(GetChildNodes(GetChildNodes(SelectNodes(MemberList, "LISTVIEWDATA/ROWS/ROW")[i])[0])[4]);
 	                var LineSN = getNodeText(GetChildNodes(GetChildNodes(SelectNodes(MemberList, "LISTVIEWDATA/ROWS/ROW")[i])[0])[0]);
 	                if (nowstate == "002" || nowstate == "003") {
 	                    if (LineSN != "1") {
-	                        sendmail(LineUserID, pDocTitle, arr_userinfo[2], js_yyyy_mm_dd_hh_mm_ss(), "callback", "", true)
+	                        sendmail(LineUserID, pDocTitle, arr_userinfo[2], pDraftDate, "callback", "", true)
 	                    }
 	                }
 
 	            }
 			}
+		    
+		    function js_yyyy_mm_dd_hh_mm_ss() {
+	            now = new Date();
+	            year = "" + now.getFullYear();
+	            month = "" + (now.getMonth() + 1); if (month.length == 1) { month = "0" + month; }
+	            day = "" + now.getDate(); if (day.length == 1) { day = "0" + day; }
+	            hour = "" + now.getHours(); if (hour.length == 1) { hour = "0" + hour; }
+	            minute = "" + now.getMinutes(); if (minute.length == 1) { minute = "0" + minute; }
+	            second = "" + now.getSeconds(); if (second.length == 1) { second = "0" + second; }
+	            return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
+	        }
+		    
 			//2019-05-03 김보미 - 근태관리 연동
 			function attitude_annual_conn(docId) {		 		
 				$.ajax({ 			
@@ -381,9 +399,12 @@
 		    function btncallback_onclick_Complete(ans) {
 				DivPopUpHidden();
 		        if (ans) {
-		            doCancel();
-		        }
-			}
+                    doCancel();
+                } else {
+                    DivPopUpHidden();
+                }
+
+            }
 			function doCancel() {
 				var retVal = ExcuteInfo("CALLBACK_BEFORE", "DRAFT"); // pdraftflag 정상적으로 가져오게 수정해야함
 				if (!retVal) {
@@ -676,7 +697,7 @@
 	            </td>
 	        </tr>
 	        <tr>
-	            <td style="padding-bottom:10px;height:800px;" >
+	            <td style="padding-bottom:10px;height:800px;" id="messageWHWPEditor">
 		    		<iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="/ezApprovalG/WHWPEditor.do" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 	            </td>
 	        </tr>

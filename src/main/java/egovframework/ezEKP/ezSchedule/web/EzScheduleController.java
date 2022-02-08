@@ -21,6 +21,10 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
+import javax.mail.Folder;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Part;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -47,11 +51,14 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
 import com.ibm.icu.util.Calendar;
+import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -82,15 +89,19 @@ import net.fortuna.ical4j.filter.PeriodRule;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.Recur;
 import net.fortuna.ical4j.model.WeekDay;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.property.Description;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
+import net.fortuna.ical4j.model.property.Location;
 import net.fortuna.ical4j.model.property.RRule;
+import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.util.MapTimeZoneCache;
 
 /** 
@@ -148,6 +159,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
+	
+	@Autowired
+	private EzEmailService ezEmailService;
 	
 	/**
 	 * 일정관리 인덱스화면 호출함수
@@ -536,6 +550,8 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, "",userInfo.getTenantId(), companyID, userInfo.getId(), userInfo.getDeptID(), useAnnualScheduleYN);		
 		
+		/* 2021-11-26 홍승비 - 일정 리스트 데이터를 전달받아 일정완료 데이터를 추가 가공하여 리턴 */
+		sList = ezScheduleService.applyScheduleCompleteData(sList, userInfo.getOffset(), userInfo.getTenantId(), companyID);
 		
 		return sList;
 	}
@@ -1788,7 +1804,11 @@ public class EzScheduleController extends EgovFileMngUtil {
          
 		String _pattern = request.getParameter("pattern");
 		if (_pattern == null) _pattern = "";
-         
+		
+		/* 2021-11-25 홍승비 - 일정완료 관련 데이터 추가 */
+		String repeatCount = request.getParameter("repeatCount") != null ? request.getParameter("repeatCount") : "0";
+		String repStartDate = request.getParameter("repStartDate") != null ? request.getParameter("repStartDate") : "";
+		
         String userId = loginVO.getId();            
         String userName  = loginVO.getDisplayName1();
         String userName2 = loginVO.getDisplayName2();
@@ -2003,6 +2023,16 @@ public class EzScheduleController extends EgovFileMngUtil {
 
         UploadSDate = startDateTime;
         UploadEDate = endDateTime;
+        
+        /* 2021-11-26 홍승비 - 일정 수정 시, 일정완료 체크박스 값 표출하기 위해 플래그 전달 */
+        String isAllRep = "";
+        String completeFG = "N";
+        if (!_scheduleid.equals("")) {
+        	isAllRep = ezScheduleService.getScheduleCompleteIsAllRep(_scheduleid, repeatCount, commonUtil.getDateStringInUTC(repStartDate, loginVO.getOffset(), true), _datetype, loginVO.getTenantId(), loginVO.getCompanyID());
+        	if (!isAllRep.equals("")) { // 해당 일정에 대한 완료여부 레코드가 존재한다면 completeFG 설정
+        		completeFG = "Y";
+        	}
+        }
 
         model.addAttribute("userId", userId);
         model.addAttribute("userName", userName);
@@ -2040,6 +2070,10 @@ public class EzScheduleController extends EgovFileMngUtil {
         model.addAttribute("scheduleInfo", scheduleInfo);
         model.addAttribute("useAnyoneEdit", useAnyoneEdit);
         model.addAttribute("checkResourceTab", checkResourceTab);
+        model.addAttribute("repeatCount", repeatCount);
+        model.addAttribute("repStartDate", repStartDate);
+        model.addAttribute("isAllRep", isAllRep); // 일정완료 레코드의 전체반복일정 완료여부
+        model.addAttribute("completeFG", completeFG); // 일정완료 레코드 존재여부
 
    		return "/ezSchedule/scheduleWrite";
 	}	
@@ -2112,7 +2146,12 @@ public class EzScheduleController extends EgovFileMngUtil {
         String scheduletype	= doc.getElementsByTagName("SCHEDULETYPE").item(0).getTextContent();
         String importance	= doc.getElementsByTagName("IMPORTANCE").item(0).getTextContent();
         String ispublic		= doc.getElementsByTagName("ISPUBLIC").item(0).getTextContent();
-        String datetype		= doc.getElementsByTagName("DATETYPE").item(0).getTextContent();	        
+        String datetype		= doc.getElementsByTagName("DATETYPE").item(0).getTextContent();
+        /* 2021-11-25 홍승비 - 일정 수정 시 일정완료 관련 데이터 추가 */
+        String completeFG	= "";
+        String repeatCount	= "";
+        String repStartDate	= "";
+        String isAllRep		= "";
 
         if (scheduleid.equals("")) {
 	        //Set ownername and ownername2
@@ -2135,9 +2174,14 @@ public class EzScheduleController extends EgovFileMngUtil {
         }
         
         String pattern = "";       
-
+        
         if (scheduleid != null && !scheduleid.equals("")) {
         	pattern = doc.getElementsByTagName("PATTERN").item(0).getTextContent();
+        	
+        	// 일정완료 관련 데이터
+        	completeFG = doc.getElementsByTagName("COMPLETEFG").item(0) != null ? doc.getElementsByTagName("COMPLETEFG").item(0).getTextContent() : "N";
+            repeatCount = doc.getElementsByTagName("REPEATCOUNT").item(0) != null ? doc.getElementsByTagName("REPEATCOUNT").item(0).getTextContent() : "0";
+            isAllRep = doc.getElementsByTagName("ISALLREP").item(0) != null ? doc.getElementsByTagName("ISALLREP").item(0).getTextContent() : "N";
         }        
 
         String startdate = doc.getElementsByTagName("STARTDATE").item(0).getTextContent();
@@ -2215,6 +2259,21 @@ public class EzScheduleController extends EgovFileMngUtil {
 	    } else {
         	//updateSchedule
         	result = ezScheduleService.updateSchedule(scheduleid, creatorid, creatorname, creatorname2, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attach, defaultPath, loginVO.getTenantId(), loginVO.getCompanyID());
+        	
+        	/* 2021-11-25 홍승비 - 일정 수정 시 일정완료 데이터 삽입 또는 삭제 */
+            if (doc.getElementsByTagName("REPSTARTDATE").item(0) != null) {
+            	repStartDate = doc.getElementsByTagName("REPSTARTDATE").item(0).getTextContent();
+            	repStartDate = sdf.format(sdf.parse(repStartDate));
+            	repStartDate = commonUtil.getDateStringInUTC(repStartDate, loginVO.getOffset(), true);
+            } else {
+            	repStartDate = startdate;
+            }
+            
+            if (completeFG.equals("Y")) { // 일정완료 삽입
+            	ezScheduleService.insertScheduleComplete(scheduleid, repeatCount, isAllRep, repStartDate, loginVO.getTenantId(), loginVO.getCompanyID());
+            } else { // 일정완료 해제
+            	ezScheduleService.deleteScheduleComplete(scheduleid, repeatCount, isAllRep, repStartDate, loginVO.getTenantId(), loginVO.getCompanyID());
+            }
         }
 	    
 	    //KT텔레캅 통합알람 푸쉬 코드
@@ -2512,6 +2571,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
         int tenantId = loginVO.getTenantId();
         String companyID = loginVO.getCompanyID();
+        String repStartDate = "";
         
         //baonk 추가 2018-08-08
         String use_cabinet = ezCommonService.getTenantConfig("useCabinet", loginVO.getTenantId());
@@ -2534,21 +2594,25 @@ public class EzScheduleController extends EgovFileMngUtil {
         	_repeatcount = request.getParameter("repeatcount");
         	_date = request.getParameter("date");
         	//일정관리 참석자 초대메세지에서 반복일정 걸려있는 일정 조회 시, 회차랑 시작일자를 null로 받아와서 null검사 추가 #14484
-        	if (_repeatcount == null)
+        	if (_repeatcount == null) {
         		_repeatcount = "1";
-        	if (_date == null)
+        	}
+        	if (_date == null) {
         		_date = vo.getStartDate().substring(0,10);
-        	
+        	}
         	if (vo.getRepetition().split("\\|")[1].equals("1")) {
         		dateString = msg.getMessage("ezSchedule.t343", locale) + " (" + _repeatcount + msg.getMessage("ezSchedule.t329", locale) + " " + _date + " (" + msg.getMessage("ezSchedule.t280", locale);
         	} else {
         		dateString = msg.getMessage("ezSchedule.t343", locale) + " (" + _repeatcount + msg.getMessage("ezSchedule.t329", locale) + " " + _date + " " 
         					+ vo.getStartDate().substring(11, 16) + " ~ " + vo.getEndDate().substring(11, 16);        		
-        	}        	
+        	}
+        	repStartDate = _date + " " + vo.getStartDate().substring(11, 16);
         } else if (vo.getDateType().equals("2")){
-        	dateString = vo.getStartDate().substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", locale) + " ~ " + vo.getEndDate().substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", locale);        	
+        	dateString = vo.getStartDate().substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", locale) + " ~ " + vo.getEndDate().substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", locale);
+        	repStartDate = vo.getStartDate().substring(0,16);
         } else {
         	dateString = vo.getStartDate().substring(0,16) + " ~ " + vo.getEndDate().substring(0,16);
+        	repStartDate = vo.getStartDate().substring(0,16);
         }
         
         //자원예약 정보
@@ -2649,6 +2713,8 @@ public class EzScheduleController extends EgovFileMngUtil {
         model.addAttribute("_editPosible", _editPosible);
         model.addAttribute("useCabinet", use_cabinet); // 캐비넷 추가 baonk 2018-08-08
         model.addAttribute("userInfo", loginVO);
+        model.addAttribute("repeatCount", _repeatcount); // 반복일정의 경우 반복횟수
+        model.addAttribute("repStartDate", repStartDate); // 반복일정의 경우 해당 반복의 시작날짜 + 시간 (YYYY-MM-DD HH:mm)
         
 		return "ezSchedule/scheduleRead";
 	}
@@ -2710,13 +2776,17 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		String scheduleId = request.getParameter("scheduleId");
 		String selectDate = request.getParameter("selectDate");
-		String startDate = request.getParameter("startDate");		
+		String startDate = request.getParameter("startDate");
 		String realStartDate = selectDate + "" + startDate.substring(10, 16);		
+		String repeatCount = request.getParameter("repeatCount");	
 
 		String realDate = commonUtil.getDateStringInUTC(realStartDate, loginSimpleVO.getOffset(), true);
 
 		//일정데이터 삭제
 		ezScheduleService.insertScheduleRepeDel(scheduleId, realDate, loginSimpleVO.getTenantId(), loginSimpleVO.getCompanyID());
+		
+		/* 2021-11-26 홍승비 - 해당 반복일정의 일정완료 레코드 삭제 (전체 반복완료의 경우 해당 일정 하나만 삭제되더라도 유지해야 하므로, isAllRep 조건은 'N'으로 고정) */
+		ezScheduleService.deleteScheduleCompleteOneRep(scheduleId, repeatCount, "N", realDate, loginSimpleVO.getTenantId());
 	}
 	
 	/**
@@ -3682,6 +3752,392 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		logger.debug("icsImport end");
 		return "/ezSchedule/scheduleImportComplete";
+	}
+	
+	/**
+	 * 메일 > ical 메일 > 그룹웨어 일정등록
+	 */
+	@RequestMapping(value = "/ezSchedule/icsImportFromEmail.do", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String icsImportFromEmail(HttpServletRequest request,HttpServletResponse response , @CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception {
+		logger.debug("icsImportFromEmail started");
+		String reMsg = "OK";
+		
+		String url      = URLDecoder.decode(request.getParameter("pURL"), "utf-8");
+		String shareId  = request.getParameter("shareId");
+		logger.debug("url={}, shareId={}", url, shareId);
+		
+		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
+		LoginVO loginVO       = commonUtil.userInfo(loginCookie);
+		String domainName     = ezCommonService.getTenantConfig("DomainName", loginVO.getTenantId());
+		String userEmail      = loginVO.getId() + "@" + domainName;
+		String password       = userInfo.get(1);
+		
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginVO.getTenantId());
+
+		if (useSharedMailbox.equals("YES") && (shareId != null && !shareId.equals(""))) {
+			if (!ezEmailService.checkUserShareId(loginVO.getId(), shareId, loginVO.getTenantId())) {
+				logger.debug("the user cannot access the shareId.");
+				logger.debug("downloadAttach ended.");
+				
+				return "ERROR_SHAREMAILBOX";
+			}
+			
+			userEmail = shareId + "@" + domainName;
+		}
+		logger.debug("userId={}, userEmail={}", loginVO.getId(), userEmail);
+
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+		
+		String defaultPath   = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_schedule.ROOT", loginVO.getTenantId());
+		String realPath      = commonUtil.getRealPath(request);
+		String scheme        = "http://";
+		
+		if (request.getHeader("HTTPS") != null && request.getHeader("HTTPS").toString().toLowerCase().equals("on")) {
+			scheme = "https://";
+		}
+
+		
+		long uid = 0;
+		String folderPath = null;
+		
+		if (url != null) {
+			int index = url.lastIndexOf("/");
+			
+			// separate the passed-in url into a folder path and a message uid
+			if (index != -1) {
+				folderPath = url.substring(0, index);
+				uid = Long.parseLong(url.substring(index + 1));
+			}
+		}
+		
+		IMAPAccess ia = null;
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
+	
+			Folder f = ia.getFolder(folderPath);
+			
+			if (f == null || !f.exists()) {
+				logger.error("Folder not found. folderPath=" + folderPath);
+				reMsg = "ERROR_FOLDER";
+			} else {
+				f.open(Folder.READ_ONLY);
+				Message message = null;
+				if(f.isOpen() && f instanceof IMAPFolder){
+					message = ((IMAPFolder)f).getMessageByUID(uid);
+				}
+				
+				Part icalPart = null;
+				if (message == null) {
+					logger.error("Message not found. uid=" + uid);
+				} else {
+					icalPart = ezEmailUtil.getIcalMailPart(message);
+				}
+					
+				if (icalPart != null && icalPart.isMimeType("text/calendar")) {
+					
+					// icsImport.do
+					InputStream fin = icalPart.getInputStream();
+					try {
+			        	
+			    		CalendarBuilder cb = new CalendarBuilder();
+			    		net.fortuna.ical4j.model.Calendar cal = cb.build(fin);
+			    		
+			            ComponentList<CalendarComponent> compVEVENT = cal.getComponents(Component.VEVENT);
+						
+						VEvent vEvent = null;
+					
+						for (Component c : compVEVENT) {
+							if (c instanceof VEvent) {
+								
+								vEvent = ((VEvent) c);
+								
+								Summary summary = vEvent.getSummary();
+								String title    = (summary == null || summary.getValue().isEmpty()) ? "no title"
+										        : substringData(summary.getValue().trim(), 100);
+								
+								Location lo     = vEvent.getLocation();
+								String location = (lo == null) ? "" : substringData(lo.getValue().trim(), 50);
+								
+								// 본문 =====================
+								String content       = "";
+								String altDescBody   = ""; 
+								
+								Property pp          = vEvent.getProperty("X-ALT-DESC");
+								if (pp != null) {
+									Parameter fmType = pp.getParameter(Parameter.FMTTYPE);
+									logger.debug("X-ALT-DESC;fmType={}", fmType.getValue());
+									
+									content = pp.getValue();
+								} else {
+									Description description = vEvent.getDescription();
+									
+									content = (description == null) ? "" : description.getValue();
+								}
+
+								String ispublic   = "";
+								String datetype   = "";
+								String repetition = "";
+								String sdate      = "";
+								String edate      = "";
+								
+								//content를 mht로 바꾸기 위해서
+								content = "<html><head><meta content=\"text/html; charset=utf-8\" http-equiv=\"Content-Type\"><style type=\"text/css\">P { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; } DIV { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }TD { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; } UL { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; } OL { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; } LI { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; } BODY { MARGIN-RIGHT: 10px; FONT-SIZE:10PT; LINE-HEIGHT:1.3; FONT-FAMILY:Malgun Gothic } TABLE TD { text-indent: 0px } BLOCKQUOTE { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px;}</style></head><body><div>" + contentSplit(content)  + "</div></body></html>";
+								content = contentToMHT(content, scheme, realPath, loginVO.getLocale());
+								
+								DtStart dtStart  = vEvent.getStartDate();
+								DtEnd dtEnd      = vEvent.getEndDate();
+								
+								Date dtStartDate = dtStart.getDate();
+								Date dtEndDate   = dtEnd.getDate();
+								
+								Calendar dtStartCal = Calendar.getInstance();
+								Calendar dtEndCal   = Calendar.getInstance();
+								Calendar tempEndCal = Calendar.getInstance();
+								
+								dtStartCal.setTime(dtStartDate);
+								dtEndCal.setTime(dtEndDate);
+								tempEndCal.setTime(dtEndDate);
+								
+								if (vEvent.getClassification() != null) {
+									String clazz = vEvent.getClassification().getValue();
+									
+									switch (clazz) {
+										case "PRIVATE" : ispublic = "N"; break;
+										case "PUBLIC"  : ispublic = "Y"; break;
+										default: ispublic = "N"; break;
+									}
+								}
+								else { //기본공개설정상태
+									ispublic = "Y";
+								}
+								
+								List<RRule> rrules = vEvent.getProperties(Property.RRULE);
+								if (rrules.size() == 0) { //반복일정이 없는 경우
+									if (dtStart.getParameter("VALUE") != null) {
+										if (dtStart.getParameter("VALUE").getValue().equals("DATE")) { //하루종일
+											datetype = "2";
+											
+											//시작시간 00시  설정
+											dtStartCal.set(Calendar.HOUR_OF_DAY, 0);
+											
+											//구글은 다음날로 나오므로 하루전 23시 59분으로 설정
+											dtEndCal.add(Calendar.DATE, -1);
+											dtEndCal.set(Calendar.HOUR_OF_DAY, 23);
+											dtEndCal.set(Calendar.MINUTE, 59);
+											
+										}
+									}
+									else {
+										datetype = "1";
+									}
+								}
+								else { //반복설정이 있는 경우
+									datetype = "3";
+									
+									String[] info = new String[7];
+									if (rrules.size() > 1) { //한개의 이벤트에 만약 여러개 반복일정이 있다면
+										continue;
+									}
+									else {
+										RRule rrule = rrules.get(0);
+										Recur recur = rrule.getRecur();
+										
+										//Setting info[0]
+										if (recur.getUntil() == null) { //종료일없음
+											if (recur.getCount() == -1) {
+												info[0] = "-1";
+											}
+											else {
+												info[0] = String.valueOf(recur.getCount());
+											}
+										}
+										else { //종료일있음
+											info[0] = "0";
+											
+											//시간정보는 가져와야함!
+											dtEndDate = recur.getUntil();
+											dtEndCal.setTime(dtEndDate);
+											dtEndCal.set(Calendar.HOUR_OF_DAY, tempEndCal.get(Calendar.HOUR_OF_DAY));
+											dtEndCal.set(Calendar.MINUTE, tempEndCal.get(Calendar.MINUTE));
+											dtEndCal.set(Calendar.SECOND, 0);
+										}
+										
+										//Setting info[1]
+										if (dtStart.getParameters().toString().indexOf("VALUE=DATE") > -1) { //하루종일
+											info[1] = "1";
+											
+											
+											//시작시간 00시
+											dtStartCal.set(Calendar.HOUR_OF_DAY, 0);
+											
+											//구글은 다음날로 나오므로 하루전 23시 59분으로 설정
+											dtEndCal.add(Calendar.DATE, -1);
+											dtEndCal.set(Calendar.HOUR_OF_DAY, 23);
+											dtEndCal.set(Calendar.MINUTE, 59);
+											
+										}
+										else { //시간지정
+											info[1] = "0";
+										}
+										
+										//Setting info[2]
+										if (recur.getFrequency() != null) {
+											switch (recur.getFrequency()) {
+												case "DAILY":
+													info[2] = "0";
+													
+													//Setting info[3]
+													info[3] = recur.getInterval() == -1 ? "1" : String.valueOf(recur.getInterval());
+													break;
+												case "WEEKLY": 
+													info[2] = "1";
+													
+													//Setting info[3]
+													info[3] = recur.getInterval() == -1 ? "1" : String.valueOf(recur.getInterval());
+													
+													//Setting info[4]
+													if (recur.getDayList() != null) {
+														info[4] = "";
+														for (WeekDay weekDay : recur.getDayList()) {
+															info[4] += changeInfo(weekDay.getDay().toString());
+														}
+													}
+													break;
+												case "MONTHLY":
+													info[2] = "2";
+													
+													if (recur.getDayList().size() == 0) {
+														//Setting info[3]
+														info[3] = "1";
+														
+														//Setting info[4]
+														info[4] = recur.getInterval() == -1 ? "1" : String.valueOf(recur.getInterval());
+														
+														//Setting info[5]
+														info[5] = String.valueOf(recur.getMonthDayList().get(0));
+													}
+													else {
+														//Setting info[3]
+														info[3] = "2";
+														
+														//Setting info[4]
+														info[4] = recur.getInterval() == -1 ? "1" : String.valueOf(recur.getInterval());
+														
+														//Setting info[5] + Setting info[6]
+														if (recur.getDayList().size() > 1) { //사이즈1이여야함
+															continue;
+														}
+														else {
+															WeekDay weedkDay = recur.getDayList().get(0);
+															info[5] = weedkDay.toString().substring(0, 1);
+															
+															if (info[5].equals("-")) { //매월마지막인지체크
+																info[5] = "5";
+																info[6] = changeInfo(weedkDay.toString().substring(2));
+															}
+															else {
+																info[6] = changeInfo(weedkDay.toString().substring(1));
+															}
+														}
+													}
+													break;
+												case "YEARLY":
+													info[2] = "3";
+													
+													//Setting info[4]
+													if (recur.getInterval() == -1 || recur.getInterval() == 1) {
+														info[4] = String.valueOf(dtStartCal.get(Calendar.MONTH) + 1);
+													} 
+													else { //반복주기가 1년보다 클 때
+														continue;
+													}
+													
+													if (recur.getSetPosList().size() == 0) {
+														//Setting info[3]
+														info[3] = "1";
+														
+														//Setting info[5]
+														info[5] = String.valueOf(dtStartCal.get(Calendar.DATE));
+													}
+													else {
+														//Setting info[3]
+														info[3] = "2";
+														
+														//Setting info[5]
+														if (recur.getSetPosList().size() > 1) { //사이즈1이여야함
+															continue;
+														}
+														else {
+															info[5] = recur.getSetPosList().get(0).toString();
+														}
+														
+														//Setting info[6]
+														if (recur.getDayList().size() > 1) { //사이즈1이여야함
+															continue;
+														}
+														else {
+															WeekDay weekday = recur.getDayList().get(0);
+															info[6] = changeInfo(weekday.getDay().toString());
+														}	
+													}
+													
+													break;
+												default: break;
+											}
+										}
+									}
+									
+									ArrayList<String> list = new ArrayList<String>(Arrays.asList(info));
+									repetition = list.stream().filter(StringUtils::isNotBlank).collect(Collectors.joining("|"));
+								}
+								
+								sdate = sdf.format(dtStartCal.getTime());
+								edate = sdf.format(dtEndCal.getTime());
+								
+								//scheduletype 개인일정, importance 중요도보통 설정
+								ezScheduleService.insertSchedule(loginVO.getId(), loginVO.getDisplayName(), loginVO.getDisplayName2(), loginVO.getId(), loginVO.getDisplayName(), loginVO.getDisplayName2(), "1", "2", ispublic, datetype, sdate, edate, repetition, title, location, content, null, 
+									null, null, null, null, null, defaultPath, loginVO.getTenantId(), loginVO.getCompanyID());
+								
+								/*for(Object sch : c.getProperties()) {
+									System.out.println(sch);
+								}*/
+								
+								vEvent = null;
+							} else{
+								logger.error("Check ics file format.");
+								reMsg = "ERROR_ICS";
+							}
+						}
+					} catch(ParserException e) {
+						reMsg = "ERROR";
+						logger.debug("Parse Error");
+						e.printStackTrace();
+					} catch(Exception e) {
+						reMsg = "ERROR";
+						logger.debug("Error");
+						e.printStackTrace();
+					} finally {
+						if (fin != null) { try { fin.close(); } catch (IOException e) {} }
+					}
+				} else {
+					reMsg = "ERROR_ICAL_PART";
+				}
+			}
+		} catch (MessagingException e) {
+			reMsg = "ERROR";
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+
+		logger.debug("icsImportFromEmail ended. reMsg={}", reMsg);
+		return reMsg;
 	}
 	
 	@RequestMapping(value = "/ezSchedule/scheduleDragSave.do", method = RequestMethod.POST)

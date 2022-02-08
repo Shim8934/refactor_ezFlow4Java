@@ -15,6 +15,8 @@ public class SurveyParticipantVO {
 	private String deptName2;
 	private String companyId;
 	private int    tenantId;
+	/** 2021-11-18 홍승비 - 전자설문 대상자 하위부서 플래그 추가 */
+	private String subDeptYN;
 	
 	public String getUserId() {
 		return userId;
@@ -126,5 +128,13 @@ public class SurveyParticipantVO {
 	
 	public void setDeptName(String deptName) {
 		this.deptName = deptName;
+	}
+
+	public String getSubDeptYN() {
+		return subDeptYN;
+	}
+
+	public void setSubDeptYN(String subDeptYN) {
+		this.subDeptYN = subDeptYN;
 	}
 }

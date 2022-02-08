@@ -216,6 +216,7 @@
 					//end
 				}
 	
+				// 부서 특수문자가 c:out으로 한번 파싱되었으므로, 표출 시에는 다시 특수문자를 변환함
 				if (personid != "" && personid != creatorid) {
 					document.getElementById("personlist").innerHTML = personname + " (" + persondept + ")";
 
@@ -225,8 +226,8 @@
 					g_person["name1"][0] = personname;
 					g_person["name2"][0] = personname2;
 					g_person["id"][0] = personid;
-					g_person["deptname"][0] = persondept;
-					g_person["deptname2"][0] = persondept2;
+					g_person["deptname"][0] = ConvMakeXMLString(persondept);
+					g_person["deptname2"][0] = ConvMakeXMLString(persondept2);
 					g_person["email"][0] = personemail;
 				}
 
@@ -529,23 +530,6 @@
 				}
 	
 				setNodeText(document.getElementById("printImportance"), importantname);
-	
-				switch (taskstatus) {
-					case "1":
-						taskstatus = "<spring:message code = 'ezTask.t97' />";
-						break;
-					case "2":
-						taskstatus = "<spring:message code = 'ezTask.t98' />";
-						break;
-					case "3":
-						taskstatus = "<spring:message code = 'ezTask.t99' />";
-						break;
-					case "4":
-						taskstatus = "<spring:message code = 'ezTask.t100' />";
-						break;
-				}
-
-				setNodeText(document.getElementById("printStatus"), taskstatus);
 				
 				var printdate;
 				
@@ -561,7 +545,36 @@
 				var nodes;
 				nodes = dadiframe.filelist.childNodes;
 				for (i = 1; i < nodes.length; i++) {
-					filehtml = filehtml + "<span><input type='checkbox'><img src='/images/email/mail_006.gif'> " + getNodeText(nodes[i].childNodes[1]) + "&nbsp;&nbsp;<br></span>";
+					var fileName = getNodeText(nodes[i].childNodes[1]);
+					var strFileExt = fileName.substr(fileName.lastIndexOf('.')).toLowerCase();
+			        if (strFileExt == ".xls" || strFileExt == ".doc" || strFileExt == ".ppt" ||
+			            strFileExt == ".eml" || strFileExt == ".pdf" || strFileExt == ".hwp" ||
+			            strFileExt == ".ppt" || strFileExt == ".docx" || strFileExt == ".pptx" ||
+			            strFileExt == ".xlsx" || strFileExt == ".rtf") {
+			        }
+					
+			        var fileImage = "";
+		            if (strFileExt.indexOf(".jpg") != -1 || strFileExt.indexOf(".jpeg") != -1 || strFileExt.indexOf(".bmp") != -1 || strFileExt.indexOf(".gif") != -1 || strFileExt.indexOf(".png") != -1 || strFileExt.indexOf(".tif") != -1 || strFileExt.indexOf(".tiff") != -1) {
+		                fileImage = "/images/image.png";
+		            } else if (strFileExt.indexOf(".doc") != -1 || strFileExt.indexOf(".docx") != -1) {
+		                fileImage = "/images/doc.png";
+		            } else if (strFileExt.indexOf(".xls") != -1 || strFileExt.indexOf(".xlsx") != -1) {
+		                fileImage = "/images/xls.png";
+		            } else if (strFileExt.indexOf(".ppt") != -1 || strFileExt.indexOf(".pptx") != -1 || strFileExt.indexOf(".pps") != -1 || strFileExt.indexOf(".ppsx") != -1) {
+		                fileImage = "/images/ppt.png";
+		            } else if (strFileExt.indexOf(".txt") != -1) {
+		                fileImage = "/images/txt.png";
+		            } else if (strFileExt.indexOf(".zip") != -1) {
+		                fileImage = "/images/zip.png";
+		            } else if (strFileExt.indexOf(".pdf") != -1) {
+		                fileImage = "/images/pdf.png";
+		            } else if (strFileExt.indexOf(".ecm") != -1) {
+		                fileImage = "/images/ecm.png";
+		            } else {
+		                fileImage = "/images/email/mail_006.gif";
+		            }
+		            
+					filehtml = filehtml + "<span><img src='" + fileImage + "'> " + getNodeText(nodes[i].childNodes[1]) + "&nbsp;&nbsp;<br></span>";
 				}
 				
 				document.getElementById("printAttach").innerHTML = filehtml;
@@ -616,6 +629,18 @@
 		        evt.stopPropagation();
 		        evt.preventDefault();
 		    }
+	        
+		    /* 2021-09-03 홍승비 - 부서명 특문처리 추가 */
+		    function ConvMakeXMLString(str) {
+		        str = ReplaceText(str, "&lt;", "<");
+		        str = ReplaceText(str, "&gt;", ">");
+		        str = ReplaceText(str, "&#039;", "'");
+		        str = ReplaceText(str, "&#034;", "\"");
+		  		str = ReplaceText(str, "&#92;", "\\");
+		  	    str = ReplaceText(str, "&amp;", "&");
+		        return str;
+		    }
+		    
 		</script>
 	</head>
 	<body class="popup" style="overflow: hidden;">
@@ -1116,14 +1141,6 @@
 				<tr>
 					<th><spring:message code='ezTask.t156' /></th>
 					<td><div id="printImportance"></div></td>
-				</tr>
-				<tr>
-					<th><spring:message code='ezTask.t217' /></th>
-					<td><div id="printStatus"></div></td>
-				</tr>
-				<tr>
-					<th><spring:message code='ezTask.t120' /></th>
-					<td><div id="printCompleteRate"></div></td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezTask.t218' /></th>

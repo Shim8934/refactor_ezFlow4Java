@@ -954,7 +954,7 @@ function makeOpinionList(OpinionXML) {
     field.innerHTML = " ";
     if (NodeList.length > 0) {
         for (i = NodeList.length - 1; i >= 0; i--) {
-    		var opinionsTable = '<p style="margin-top: 10px;margin-left: 3px;margin-bottom: 3px;">▶ ' + getNodeText(NodeList[i].childNodes[3]) + ' - ' + getNodeText(NodeList[i].childNodes[2]) + ' - ' + getNodeText(NodeList[i].childNodes[1]) + '</p><p style="margin-top: 0px;margin-left: 10px;margin-bottom: 0px;">' + getNodeText(NodeList[i].childNodes[6]) + '</p>';
+    		var opinionsTable = '<p style="margin-top: 10px;margin-left: 3px;margin-bottom: 3px;">▶ ' + getNodeText(NodeList[i].childNodes[3]) + ' - ' + getNodeText(NodeList[i].childNodes[2]) + ' - ' + getNodeText(NodeList[i].childNodes[1]) + '</p><p style="margin-top: 0px;margin-left: 10px;margin-bottom: 0px;">' + MakeXMLString(getNodeText(NodeList[i].childNodes[6])) + '</p>';
     		$(field).append(opinionsTable);
         }
     }
@@ -1232,11 +1232,11 @@ function getDocInfo() {
             */
 
             if (useOpenGov == "YES") {
-                basis = SelectSingleNodeValueNew(result, "DATA/BASIS");
-                reason = SelectSingleNodeValueNew(result, "DATA/REASON");
-                listOpenFlag = SelectSingleNodeValueNew(result, "DATA/LISTOPENFLAG");
-                fileOpenFlagList = SelectSingleNodeValueNew(result, "DATA/FILEOPENFLAGLIST");
-                limitDate = SelectSingleNodeValueNew(result, "DATA/LIMITDATE");
+                basis = SelectSingleNodeValueNew(xmldoc, "DATA/BASIS");
+                reason = SelectSingleNodeValueNew(xmldoc, "DATA/REASON");
+                listOpenFlag = SelectSingleNodeValueNew(xmldoc, "DATA/LISTOPENFLAG");
+                fileOpenFlagList = SelectSingleNodeValueNew(xmldoc, "DATA/FILEOPENFLAGLIST");
+                limitDate = SelectSingleNodeValueNew(xmldoc, "DATA/LIMITDATE");
             }
         }
     } catch (e) {
@@ -1566,7 +1566,7 @@ function SaveApproveInfo(pApproveFlag) {
     createNodeAndInsertText(xmlpara, objNode, "DOCSTATE", getNodeText(objNodes[4]));
     createNodeAndInsertText(xmlpara, objNode, "FUNCTIONTYPE", "002");
     createNodeAndInsertText(xmlpara, objNode, "HREF", getNodeText(objNodes[6]));
-
+    
     var field = message.GetListItem(fields, "doctitle");
     pDocTitle = field.textContent;
     createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", pDocTitle);
@@ -1610,8 +1610,16 @@ function SaveApproveInfo(pApproveFlag) {
     			var field = message.GetListItem(fields, "docnumber");
     			if (field) {
     				var forTest = getfieldValue(field).slice(-1);
+    				
+    				/* 2021-08-25 홍승비 - 개인병렬협조/합의자가 반송하는 경우, 테넌트 컨피그 PersonalAgreeReturnType를 체크하여 DOCNO 뒤의 '-' 문자를 지우거나 유지함 */
     				if (getfieldValue(field).slice(-1) == "-") {
-    					createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field).substring(0, getfieldValue(field).length - 1));
+    					// PersonalAgreeReturnType값이 1인 경우, 개인병렬협조/합의자가 반송해도 다음 결재권자에게 문서를 전달하며 결재가 가능하다.
+    					var personalAgreeReturnType = getPersonalAgreeReturnType();
+    					if (pAprLineType == "009" && personalAgreeReturnType.trim() == "1") {
+    						createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
+    					} else {
+    						createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field).substring(0, getfieldValue(field).length - 1));
+    					}
     				} else {
     					createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
     				}
@@ -4020,6 +4028,7 @@ function getNextDocInfo() {
             docNumZeroCnt = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "DOCNUMZEROCNT"));
             orgCompanyID = pCompanyID;
             wAprMemberSN = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "APRMEMBERSN"));
+            nonElecRec = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "NONELECREC"));
         }
     } catch (e) { }
 }
@@ -4188,7 +4197,7 @@ function setDocNumFormat(pPrefix) {
                 	break;
                 	
                 case "YM":
-                    var tempYear = d.getFullYear().substr(2);
+                    var tempYear = d.getFullYear().toString().substr(2);
                     numHeader += (org_Header[index] == tempYear ? tempYear : org_Header[index]);
                     
                 	var mmonth = d.getMonth() + 1;
@@ -4310,4 +4319,74 @@ function setFormAprOption(){
         setMenuBar("btnFileAttach", false);	
     if(formAprOption.indexOf("_a3_"))  //문서첨부
         setMenuBar("btnAprDocAttach", false);	
+}
+
+function getPersonalAgreeReturnType() {
+	var result = "";
+	
+   $.ajax({
+		type : "GET",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getPersonalAgreeReturnType.do",
+		data : {},
+		success: function(resultVal){
+			result = resultVal;
+		}        			
+	});
+   
+   return result;
+}
+
+// 문서번호의 @DP, @dp에서 필요한 부서명 리턴
+function getDeptSymbol(DeptID, DeptName) {
+	var result = "";
+	var dataNodes;
+	var RtnVal;
+	
+	if(approvalFlag == "S") {
+		$.ajax({
+			type : "POST",
+			dataType : "text",
+			async : false,
+			url : "/ezApprovalG/getChaebunDept.do",
+			data : {
+				deptID : DeptID,
+				orgCompanyID : orgCompanyID
+			},
+			success: function(xml){
+				result = xml;
+				if(result != null) {
+					dataNodes = GetChildNodes(loadXMLString(result).documentElement);
+					DeptName = getNodeText(dataNodes[0]);
+					RtnVal = getNodeText(dataNodes[1]);
+				}
+			}        			
+		});
+	} else {
+		$.ajax({
+			type : "POST",
+			dataType : "text",
+			async : false,
+			url : "/ezOrgan/getADInfos.do",
+			data : {
+				cn : DeptID,
+				prop : "extensionAttribute6",
+				cate  : "group"
+			},
+			success: function(xml){
+				result = xml;
+			}        			
+		});
+	
+		dataNodes = GetChildNodes(loadXMLString(result).documentElement);
+		RtnVal = getNodeText(dataNodes[0]);
+	}
+	
+    if (RtnVal == "") {
+        return DeptName;
+    }
+    else {
+        return RtnVal;
+    }
 }

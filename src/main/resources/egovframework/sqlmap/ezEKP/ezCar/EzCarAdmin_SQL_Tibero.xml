@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="ezCarAdmin">
+	<typeAlias  alias="CarGetSubClsListVO" 					type="egovframework.ezEKP.ezCar.vo.CarGetSubClsListVO"/>
+	<typeAlias  alias="CarGetClsAclListVO" 					type="egovframework.ezEKP.ezCar.vo.CarGetClsAclListVO"/>
+	
+	<resultMap class="CarGetSubClsListVO" 	id="carGetSubClsListVO">
+		<result property="brdID"					column="CAR_ID"					columnIndex="1"/>
+		<result property="brdCompany"				column="COMPANYID"		    columnIndex="2"/>
+		<result property="brdNm"					column="CAR_NAME"					columnIndex="3"/>
+		<result property="brdNm2"					column="CAR_NAME2"				columnIndex="4" 		nullValue="0"/>
+		<!-- <result property="brdGroup"					column="CAR_GROUP"				columnIndex="5"/> -->
+		<result property="brdGb"					column="CAR_GB"					columnIndex="6"/>
+		<!-- <result property="brdRef"					column="BRD_REF"				columnIndex="7"			nullValue="0"/> -->
+		<result property="brdLevel"					column="CAR_LEVEL"				columnIndex="8"			nullValue="0"/>
+		<result property="brdStep"					column="CAR_STEP"				columnIndex="9"/>
+		<!-- <result property="brdPostTerm"				column="BRD_POSTTERM"		    columnIndex="10"/> -->
+		<!-- <result property="brdExplain"				column="BRD_EXPLAIN"			columnIndex="11"/> -->
+		<result property="brdAccess"				column="CAR_ACCESS"			    columnIndex="12"/>
+		<result property="brdUpper"					column="CAR_UPPER"				columnIndex="13"/>
+		<!-- <result property="brdCount"					column="BRD_COUNT"				columnIndex="14"/> -->
+		<result property="brdURL"					column="CAR_URL"				columnIndex="15"/>
+		<!-- <result property="attachSize"				column="ATTACH_SIZE"			columnIndex="16"/> -->
+		<!-- <result property="replyMailFg"				column="REPLY_MAIL_FG"		    columnIndex="17"		nullValue="0"/> -->
+		<result property="ownDeptID"				column="OWNDEPTID"			    columnIndex="18"/>
+		<result property="ownDeptNm"				column="OWNDEPTNM"			    columnIndex="19"/>
+		<result property="ownDeptNm2"			    column="OWNDEPTNM2"			    columnIndex="20" 		nullValue="0"/>
+		<result property="ownerID"					column="OWNERID"				columnIndex="21"/>
+		<result property="ownerNm"					column="OWNERNM"				columnIndex="22"/>
+		<result property="ownerNm2"				    column="OWNERNM2"			    columnIndex="23"/>
+		<result property="ownerPosition"			column="OWNERPOSITION"		    columnIndex="24"/>
+		<result property="ownerPosition2"			column="OWNERPOSITION2"	        columnIndex="25"/>
+		<result property="ownerCall"				column="OWNERCALL"			    columnIndex="26"/>
+		<result property="makeDate"					column="CAR_REGISTER_DATE"				columnIndex="27"/>
+		<!-- <result property="resLocation"				column="RESLOCATION"			columnIndex="28"/> -->
+		<!-- <result property="brdUpper2"				column="BRD_UPPER2"			    columnIndex="29"/> -->
+		<!-- <result property="approveFlag"				column="APPROVEFLAG"			columnIndex="30"/> -->
+	</resultMap>
+	
+	<resultMap class="CarGetClsAclListVO" 	id="carGetClsAclListVO">
+		<result property="deptYn"					column="DEPT_YN"				columnIndex="1"/>
+		<result property="sdaYn"					column="SDA_YN"					columnIndex="1"/>
+		<result property="memberNam"				column="MEMBER_NAM"			    columnIndex="1"/>
+		<result property="memberID"				    column="MEMBER_ID"				columnIndex="1"/>
+		<result property="accessLvl"				column="ACCESS_LVL"			    columnIndex="1"/>
+	</resultMap>
+        
+    
+	<select id="EzCarAdminDAO.getBrdInfo" parameterClass="Map"  resultMap="carGetSubClsListVO">
+		<![CDATA[
+			SELECT 
+				* 
+      		FROM
+      			TBL_CAR
+      		WHERE  
+      			CAR_ID = #v_PBRDID#
+      		AND 
+      			COMPANYID = #v_PCOMPANYID#
+      		AND
+      			TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<insert id="EzCarAdminDAO.saveACL" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_CAR_ACL ( 
+				CAR_ID, DEPT_YN, SDA_YN, MEMBER_NAM, MEMBER_ID, ACCESS_LVL, COMPANYID, TENANT_ID 
+			)
+           	VALUES ( 
+           		#v_P_ResID#, #v_P_Dept_YN#, #v_P_SDA_YN#, #v_P_Member_nam#, #v_P_Member_ID#, #v_P_Access_lvl#, #v_P_CompanyID#, #tenantID# 
+           	)
+		]]>
+	</insert>
+	
+	<update id="EzCarAdminDAO.modifyClsData" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_CAR
+      		SET 
+      			OWNDEPTID = #v_P_ODeptID#,
+          		OWNDEPTNM = #v_P_ODeptNm#,
+          		OWNERID = #v_P_OwnerID#,
+          		OWNERNM = #v_P_OwnerNm#,
+          		OWNERPOSITION = #v_P_OwnerPos#,
+          		OWNERCALL = #v_P_OwnerCall#,
+          		CAR_NAME = #v_P_Brd_NM#,
+          		CAR_ACCESS = #v_P_AccessNoty#,
+          		CAR_NAME2 = #v_P_Brd_NM2#
+    		WHERE
+    			CAR_ID = #v_P_Brd_ID#
+    		AND
+    			COMPANYID = #v_P_CompanyID#
+    		AND
+    			TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<select id="EzCarAdminDAO.addClsData_S1" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				(NVL(MAX(car_ID) , 0) + 1)
+        	FROM 
+        		TBL_CAR
+        	WHERE
+        		TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	
+	<select id="EzCarAdminDAO.addClsData_S2" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				(CAR_LEVEL + 1)
+   			FROM 
+   				TBL_CAR
+   			WHERE  
+   				CAR_ID = #v_P_ClassGB#
+   			AND 
+   				COMPANYID = #v_P_CompanyID#
+   			WHERE
+   				TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<select id="EzCarAdminDAO.addClsData_S3" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				(NVL(MAX(Car_Step) , 0) + 1)
+   			FROM 
+   				TBL_CAR 
+   			WHERE  
+   				CAR_UPPER = #v_P_ClassGB#
+   			AND 
+   				COMPANYID = #v_P_CompanyID#
+   			AND
+   				TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<insert id="EzCarAdminDAO.addClsData_I1" parameterClass="Map">
+		<![CDATA[
+     		INSERT INTO TBL_CAR ( 
+				CAR_UPPER, OWNDEPTID, OWNDEPTNM, OWNERID, OWNERNM, 
+				OWNERPOSITION, OWNERCALL, 
+				CAR_NAME, COMPANYID, CAR_ID, CAR_GB, CAR_LEVEL, CAR_STEP, 
+				CAR_REGISTER_DATE,CAR_URL, CAR_ACCESS,   
+				CAR_NAME2, OWNDEPTNM2, OWNERNM2, OWNERPOSITION2, TENANT_ID, DELFLAG
+				
+			)
+        	VALUES ( 
+        		#v_P_ClassGB#, #v_P_ODeptID#, #v_P_ODeptNm#, #v_P_OwnerID#, #v_P_OwnerNm#, 
+        		#v_P_OwnerPos#, #v_P_OwnerCall#, 
+        		#v_P_Brd_NM#, #v_P_CompanyID#,#v_Brd_ID#, 1, #v_Brd_Level#, #v_Brd_Step#, 
+        		TO_CHAR(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYYMMDD'),'', #v_Brd_Access#, 
+      			#v_P_Brd_NM2#, #v_P_ODeptNm2#, #v_P_OwnerNm2#, #v_P_OwnerPos2#, #tenantID#, 0
+			)
+		]]>
+	</insert>
+	
+	<insert id="EzCarAdminDAO.addClsData_I2" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_CAR_ACL ( 
+				CAR_ID, DEPT_YN, SDA_YN, MEMBER_NAM, MEMBER_ID, ACCESS_LVL, COMPANYID, TENANT_ID 
+			)
+    		VALUES ( 
+    			#v_Brd_ID#, 'Y', 'Y', 'everyone', 'everyone', '2', #v_P_CompanyID#, #tenantID#
+    		)
+		]]>
+	</insert>
+	
+	<insert id="EzCarAdminDAO.addClsData_I3" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_CAR_ACL ( 
+				CAR_ID, DEPT_YN, SDA_YN, MEMBER_NAM, MEMBER_ID, ACCESS_LVL, COMPANYID, TENANT_ID 
+			)
+     		VALUES ( 
+     			#v_Brd_ID#, 'Y', 'Y', #v_P_OwnerNm#, #v_P_OwnerID#, '1', #v_P_CompanyID#, #tenantID# 
+     		)
+		]]>
+	</insert>
+	
+	
+	<select id="EzCarAdminDAO.getClsAclList" parameterClass="Map"  resultMap="carGetClsAclListVO">
+		<![CDATA[
+			SELECT
+				DEPT_YN , 
+            	SDA_YN ,
+             	MEMBER_NAM ,
+             	MEMBER_ID ,
+             	ACCESS_LVL 
+        	FROM
+        		TBL_CAR_ACL 
+       		WHERE
+       			CAR_ID = #v_P_Brd_ID#
+       		AND
+       			COMPANYID = #v_P_CompanyID#
+       		AND 
+       			TENANT_ID = #tenantID#	
+       		ORDER BY
+				DECODE(MEMBER_ID, 'everyone', 1, 2), ACCESS_LVL ASC, MEMBER_NAM ASC
+		]]>
+	</select>
+	
+	<select id="EzCarDAO.subResCnt" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				NVL(COUNT(CAR_ID) , 0)
+   			FROM 
+   				TBL_CAR
+   			WHERE
+   				CAR_UPPER = #resID#
+   			AND 
+   				COMPANYID = #companyID#
+   			AND 
+   				CAR_GB = '2'
+   			AND
+   				DELFLAG = 0
+            AND
+                TENANT_ID = #tenantID#      			
+		]]>
+	</select>
+	
+	<select id="EzCarDAO.subClsCnt" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				NVL(COUNT(CAR_ID) , 0)
+   			FROM 
+   				TBL_CAR 
+   			WHERE
+   				CAR_UPPER = #resID#
+   			AND 
+   				COMPANYID = #companyID#
+   			AND 
+   				CAR_GB = '1'
+   			AND
+   				DELFLAG = 0
+            AND
+                TENANT_ID = #tenantID#      			
+		]]>
+	</select>
+	
+	<delete id="EzCarAdminDAO.delClsData_D1" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_CAR
+   			WHERE  
+   				CAR_ID = #v_P_Brd_ID#
+   			AND 
+   				COMPANYID = #v_P_CompanyID#
+   			AND
+   				TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<update id="EzCarAdminDAO.delClsData_U1" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_CAR
+   			SET 
+   				CAR_STEP = CAR_STEP - 1
+   			WHERE  
+   				CAR_UPPER = ( SELECT S1.CAR_UPPER 
+   							  FROM ( SELECT * 
+									 FROM TBL_CAR 
+									 WHERE CAR_ID = #v_P_Brd_ID#
+									 AND COMPANYID = #v_P_CompanyID# 
+									 AND TENANT_ID = #tenantID# 
+								   ) AS S1
+							)
+			AND
+				CAR_STEP > ( SELECT S2.CAR_STEP 
+							 FROM ( SELECT *
+									FROM TBL_CAR 
+									WHERE CAR_ID = #v_P_Brd_ID#
+									AND COMPANYID = #v_P_CompanyID# 
+									AND TENANT_ID = #tenantID#
+								  ) AS S2
+                    	   )
+            AND
+            	TENANT_ID = #tenantID#        					
+		]]>
+	</update>
+	
+<!-- 	<delete id="EzCarAdminDAO.delClsData_D2" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+			 	TBL_RS_SCHEDULE
+   			WHERE
+   				OWNERID = #v_P_Brd_ID#
+   			AND 
+				COMPANYID = #v_P_CompanyID#
+			AND
+				TENANT_ID = #tenantID#	
+		]]>
+	</delete> -->
+	
+<!-- 	<delete id="EzCarAdminDAO.delClsData_D4" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+			 	TBL_RS_SCHEDULEREPETITION
+   			WHERE
+   				OWNERID = #v_P_Brd_ID#
+   			AND 
+				COMPANYID = #v_P_CompanyID#
+			AND
+				TENANT_ID = #tenantID#	
+		]]>
+	</delete> -->
+	
+	<delete id="EzCarAdminDAO.delClsData_D5" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+			 	TBL_CAR_ACL
+   			WHERE
+   				CAR_ID = #carID#
+   			AND 
+				COMPANYID = #companyID#
+			AND
+				TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<delete id="EzCarAdminDAO.delResAcll" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_CAR_ACL
+          	WHERE  
+          		CAR_ID = #v_P_RESID#
+			AND
+				COMPANYID = #v_P_COMPANYID#
+			AND
+				TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+		<update id="EzCarAdminDAO.deleteClass" parameterClass="map">
+		<![CDATA[
+			update
+				tbl_car
+			set
+				delflag = 1
+			where  
+	   			car_id = #carID#
+	   		and
+	   			tenant_id = #tenantID#
+	   		and 
+	   		    companyid = #companyID#
+		]]>
+	</update>
+	
+	
+	<update id="EzCarAdminDAO.saveACL_U" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_CAR_ACL
+      		SET
+      			DEPT_YN = #v_P_Dept_YN#,
+          		SDA_YN = #v_P_SDA_YN#,
+          		MEMBER_NAM = #v_P_Member_nam#,
+          		ACCESS_LVL = #v_P_Access_lvl#
+    		WHERE
+    			CAR_ID = #v_P_ResID#
+     		AND
+     			COMPANYID = #v_P_CompanyID#
+     		AND
+     			MEMBER_ID = #v_P_Member_ID#
+     		AND
+     			TENANT_ID = #tenantID#	
+		]]>
+	</update>
+</sqlMap>

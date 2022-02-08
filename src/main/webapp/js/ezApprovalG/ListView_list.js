@@ -1002,7 +1002,8 @@ function ListView() {
                     	oText = document.createTextNode(strValue);
                     	objTd.appendChild(oText);
                     }
-                    else if (colNameUpperCase == "DISPCLASSNO" || colNameUpperCase == "ATTACHUSERDEPTNAME") { // 분류번호, 첨부자의 부서명에 특수문자 포함되는 경우를 위한 분기
+                	 // 분류번호, 첨부자의 부서명, 배부과, 처리과에 특수문자 포함되는 경우를 위한 분기
+                    else if (colNameUpperCase == "DISPCLASSNO" || colNameUpperCase == "ATTACHUSERDEPTNAME" || colNameUpperCase == "ORGAN" || colNameUpperCase == "MANAGEDEPT") {
                     	objTd.title = ConvMakeXMLString(strValue);
                     	oText = document.createTextNode(ConvMakeXMLString(strValue));
                     	objTd.appendChild(oText);
@@ -1013,7 +1014,7 @@ function ListView() {
                     	objTd.appendChild(oText);
                     }
                     else {
-                    	oText = document.createTextNode(ConvMakeXMLString(strValue));
+                    	oText = document.createTextNode(strValue);
                         objTd.appendChild(oText);
                     }
                 }
@@ -1658,6 +1659,10 @@ function tr_selectBlock(pRowID, pTableID) {
         }
 
         objTr = null;
+        // 2020-11-13 : 체크박스 추가 -박기범-
+        var rowCheckBox = document.getElementById(strID.split("_")[0] + "_TD_CheckBox_" + strID.split("_")[2]);
+        if (rowCheckBox != null)
+            rowCheckBox.checked = true;
     }
 }
 
@@ -1893,6 +1898,7 @@ function checkboxBtnShowCtl() {
     		
     		// 모든 선택된 문서의 상태가 반송, 회수, 회송 타입인 경우 -> 재기안/삭제버튼을 표출(단, 재기안은 문서가 하나만 선택 된 경우)
     		if (pFunctionType == "004" || pFunctionType == "006" || pFunctionType == "015") {
+				document.getElementById("tbtnApprove1").style.display = "none";
     			// 내부결재가 아닌 수신문(011), 합의문(012)의 경우 삭제 불가능, 재기안 가능 (현재 체크박스가 결재할문서에만 존재하므로, 부서수신함 등의 다른 문서함은 고려하지 않음)
     			if (GetAttribute(oArrRows[i], "DATA9") == "0" && pDocState != "011" && pDocState != "012") {
     				isDelShow = isDelShow == true ? true : false;
@@ -1918,16 +1924,18 @@ function checkboxBtnShowCtl() {
     	}
     	
     	document.getElementById("tbtnApprove").style.display = "none";
-    	document.getElementById("tbtnApprove1").style.display = "";
+		//document.getElementById("tbtnApprove1").style.display = "";
     	if(oArrRows.length == 1) {
     		document.getElementById("tbtnViewDoc").style.display = "";
         	document.getElementById("tbtnTotalSave").style.display = "";
         	if (isDelShow == false && isRedraftShow == false) {
         		document.getElementById("tbtnApprove").style.display = "";
+				document.getElementById("tbtnApprove1").style.display = "";
         	}
     	} else {
     		document.getElementById("tbtnViewDoc").style.display = "none";
         	document.getElementById("tbtnTotalSave").style.display = "none";
+			document.getElementById("tbtnApprove1").style.display = "none";
     	}
     }
 }

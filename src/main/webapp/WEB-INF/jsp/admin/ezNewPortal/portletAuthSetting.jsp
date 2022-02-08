@@ -139,7 +139,7 @@
 			var companyValue = "<c:out value='${companyId}'/>";
 			var portletId = "<c:out value='${portletId}'/>";
 			var request = new XMLHttpRequest();
-			request.open('PATCH', '/admin/ezNewPortal/updatePortletAuth.do', true);
+			request.open('POST', '/admin/ezNewPortal/updatePortletAuth.do', true);
 			request.setRequestHeader('content-type', 'application/json');
 			
 			request.onload = function() { 

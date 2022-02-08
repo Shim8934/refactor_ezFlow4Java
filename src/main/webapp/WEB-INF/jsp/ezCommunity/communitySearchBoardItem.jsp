@@ -404,7 +404,7 @@
 		            return;
 		        }
 
-		        if (ret != "OK") {
+		        if (ret != "OK" && ret == "FALSE") {
                     alert("<spring:message code = 'ezCommunity.t921' />");
                     return;
                 } else if (ret == "cancel") {
@@ -993,6 +993,23 @@
 				    	</c:otherwise>
 				    </c:choose>					    
 				</tr>
+				
+				<c:set var="count" value="${totalCount}" />
+				    <c:if test="${count eq 0 }" >
+					    <tr>
+					    <c:choose>
+						<c:when test="${boardInfo.gubun == '1'}">
+					    	<td align="center" colspan="8"><spring:message code='ezBoard.t281'/></td>
+					    </c:when>
+					    <c:when test="${boardInfo.gubun == '2'}">
+					    	<td align="center" colspan="6"><spring:message code='ezBoard.t281'/></td>
+					    </c:when>
+					    <c:otherwise>
+					    	<td align="center" colspan="7"><spring:message code='ezBoard.t281'/></td>
+					    </c:otherwise>
+					    </c:choose>
+					    </tr>
+				    </c:if>
 			</table>
 		</table>
 		<div id="tblPageRayer" style="margin-top:10px"></div>

@@ -694,13 +694,13 @@ function callSearchController() {
 				console.log(res);
 				
 				if (res == null) {
-					alert("에러가 발생하였습니다.");
+					alert("서버 에러가 발생하였습니다.\n재시도 후 증상이 계속되면 관리자에게 문의하시기 바랍니다.");
 					return;
 				}
 				
 				if (res.error != null) {
 					console.log(res.error);
-					alert("에러가 발생하였습니다.");
+					alert("서버 에러가 발생하였습니다.\n재시도 후 증상이 계속되면 관리자에게 문의하시기 바랍니다.");
 					return;
 				}
 				
@@ -786,11 +786,22 @@ function callSearchController() {
 					pagenation(pageObj(listCnt));
 				}
 				
-				//전체 검색량
-				if(approvalList !== undefined && boardList !== undefined && webfolderList !== undefined) {
-					var totalCount = approvalList.totcnt*1 + boardList.totcnt*1 + webfolderList.totcnt*1;
-					$("#totalCnt").empty().append(totalCount);				
+				var totalCount = 0;
+
+				if (approvalList) {
+					totalCount += approvalList.totcnt;
 				}
+
+				if (boardList) {
+					totalCount += boardList.totcnt;
+				}
+
+				if (webfolderList) {
+					totalCount += webfolderList.totcnt;
+				}
+
+				//전체 검색량
+				$("#totalCnt").empty().append(totalCount);
 			},
 			beforeSend : function() {
 				setTimeout(function(){ //순식간에 나오는 데이터들은 딱히 보여줄 필요가 없을 것 같아서 settimeout 처리
@@ -804,6 +815,9 @@ function callSearchController() {
 				$(".wrap-loading").addClass('display_none');	
 				$(".wrap-loading", parent.frames['left'].document).addClass('display_none');
 				totalSearch.data.btnStart = undefined;
+			},
+			error: function() {
+				alert("서버 에러가 발생하였습니다.\n재시도 후 증상이 계속되면 관리자에게 문의하시기 바랍니다.");
 			}
 		});	
 	
@@ -828,6 +842,9 @@ function noData() {
  */
 function boardDataAssembler(data) {
 	var str = "";	
+	var offset = ("<c:out value='${userInfo.offset}'/>").split("|")[1];
+	var cal = offset.substring(0, 1); // 오프셋의 +, - 여부
+	var offsetMilliSec = cal + ((parseInt(offset.substring(1, 3)) * 60) + parseInt(offset.substring(4, 6))) * 60000; // 오프셋을 밀리세컨드 단위로 변경한 뒤 +, -를 세팅
 
 	str += "<tr boardid='"+ data.boardId +"' itemid='"+ data.itemId +"'>";
 	str += "<td>"+ data.boardName + "</td>";
@@ -835,10 +852,19 @@ function boardDataAssembler(data) {
 	str += "<td>"+ data.writerDeptName + "</td>";
 	str += "<td>"+ data.writerName + "</td>";
 	
-	var writeDate = data.writerDate;
-	var writeDateStr = writeDate.substring(0,4); //년도
-	writeDateStr += "-" + writeDate.substring(4,6); //월
-	writeDateStr += "-" + writeDate.substring(6,8); //일
+	var writeDateTmp = data.writerDate; // YYYYMMDDHHmmss
+	var writeDate = new Date(writeDateTmp.substring(0,4), parseInt(writeDateTmp.substring(4,6)) - 1, writeDateTmp.substring(6,8), writeDateTmp.substring(8,10), writeDateTmp.substring(10,12), writeDateTmp.substring(12,14));
+	var writeDateTime = writeDate.getTime(); // 게시일자를 밀리세컨드 단위로 반환
+	writeDate = new Date(writeDateTime + parseInt(offsetMilliSec)); // UTC시간 -> 사용자 그룹웨어 시간대로 변경
+	var writeDateStr = "";
+	var sYear = writeDate.getFullYear();
+    var sMonth = writeDate.getMonth() + 1;
+    var sDate = writeDate.getDate();
+
+    sMonth = sMonth > 9 ? sMonth : "0" + sMonth;
+    sDate  = sDate > 9 ? sDate : "0" + sDate;
+    writeDateStr = sYear + "-" + sMonth + "-" + sDate;
+    	
 	str += "<td>"+ writeDateStr + "</td>";
 	
 	if(data.attachments != 0) {
@@ -856,6 +882,9 @@ function boardDataAssembler(data) {
 */
 function approvalDataAssembler(data) {
 	var str = "";
+	var offset = ("<c:out value='${userInfo.offset}'/>").split("|")[1];
+	var cal = offset.substring(0, 1);
+	var offsetMilliSec = cal + ((parseInt(offset.substring(1, 3)) * 60) + parseInt(offset.substring(4, 6))) * 60000;
 
 	str += "<tr docid='"+ data.docId +"'>";
 	str += "<td>"+ data.docNo + "</td>";
@@ -863,10 +892,18 @@ function approvalDataAssembler(data) {
 	str += "<td>"+ data.writerDeptName + "</td>";
 	str += "<td>"+ data.writerName + "</td>";
 	
-	var endDate = data.endDate;
-	var endDateStr = endDate.substring(0,4); //년도
-	endDateStr += "-" + endDate.substring(4,6); //월
-	endDateStr += "-" + endDate.substring(6,8); //일
+	var endDateTmp = data.endDate;
+	var endDate = new Date(endDateTmp.substring(0,4), parseInt(endDateTmp.substring(4,6)) - 1, endDateTmp.substring(6,8), endDateTmp.substring(8,10), endDateTmp.substring(10,12), endDateTmp.substring(12,14));
+	var endDateTime = endDate.getTime();
+	endDate = new Date(endDateTime + parseInt(offsetMilliSec));
+	var endDateStr = "";
+	var sYear = endDate.getFullYear();
+    var sMonth = endDate.getMonth() + 1;
+    var sDate = endDate.getDate();
+    
+    sMonth = sMonth > 9 ? sMonth : "0" + sMonth;
+    sDate  = sDate > 9 ? sDate : "0" + sDate;
+    endDateStr = sYear + "-" + sMonth + "-" + sDate;
 	
 	str += "<td>"+ endDateStr + "</td>";
 	
@@ -885,6 +922,9 @@ function approvalDataAssembler(data) {
 */
 function webfolderDataAssembler(data) {
 	var str = "";
+	var offset = ("<c:out value='${userInfo.offset}'/>").split("|")[1];
+	var cal = offset.substring(0, 1);
+	var offsetMilliSec = cal + ((parseInt(offset.substring(1, 3)) * 60) + parseInt(offset.substring(4, 6))) * 60000;
 	
 	str += "<tr fileId='"+ data.fileId +"'>";
 	str += "<td>"+ data.folderName1 + "</td>";
@@ -892,12 +932,20 @@ function webfolderDataAssembler(data) {
 	str += "<td>"+ data.writerDeptName + "</td>";
 	str += "<td>"+ data.writerName + "</td>";
 	
-	var endDate = data.writeDate;
-	var endDateStr = endDate.substring(0,4); //년도
-	endDateStr += "-" + endDate.substring(4,6); //월
-	endDateStr += "-" + endDate.substring(6,8); //일
+	var writeDateTmp = data.writeDate;
+	var writeDate = new Date(writeDateTmp.substring(0,4), parseInt(writeDateTmp.substring(4,6)) - 1, writeDateTmp.substring(6,8), writeDateTmp.substring(8,10), writeDateTmp.substring(10,12), writeDateTmp.substring(12,14));
+	var writeDateTime = writeDate.getTime();
+	writeDate = new Date(writeDateTime + parseInt(offsetMilliSec));
+	var writeDateStr = "";
+	var sYear = writeDate.getFullYear();
+    var sMonth = writeDate.getMonth() + 1;
+    var sDate = writeDate.getDate();
+
+    sMonth = sMonth > 9 ? sMonth : "0" + sMonth;
+    sDate  = sDate > 9 ? sDate : "0" + sDate;
+    writeDateStr = sYear + "-" + sMonth + "-" + sDate;
 	
-	str += "<td>"+ endDateStr + "</td>";
+	str += "<td>"+ writeDateStr + "</td>";
 	str += "<td>"+ getfileSize(data.fileSize) + "</td>";
 
 	str += "</tr>";

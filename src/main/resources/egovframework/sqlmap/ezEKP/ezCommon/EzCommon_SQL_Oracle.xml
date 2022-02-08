@@ -562,6 +562,24 @@
 			PASSWORD_UPDATEDT DATE DEFAULT NULL
 	</statement>
 	
+	<select id="EzCommonDAO.checkUserMasterPhotoUpdateDT" resultClass="String">
+		<![CDATA[
+			SELECT 
+				PHOTO_UPDATEDT
+			FROM 
+				TBL_USERMASTER
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.addUserMasterPhotoUpdateDT"> 
+		ALTER TABLE 
+			TBL_USERMASTER
+		ADD 
+			PHOTO_UPDATEDT DATE DEFAULT NULL
+	</statement>
+
 	<insert id="EzCommonDAO.insertUseSession" parameterClass="Map">
 		INSERT INTO tbl_tenant_config
 		(tenant_id, property_name, property_value, description, config_name, regdate, config_type)
@@ -2263,7 +2281,7 @@
 			SELECT 
 				USER_NAME
 			FROM 
-				JMOCHA_USER_DISTRIBUTION_APPLY
+				JMOCHA_USER_DIST_APPLY
 			WHERE
 			    rownum = 1
 		]]>
@@ -2292,12 +2310,12 @@
 	</statement>
 	
 	<statement id="EzCommonDAO.createUserDlApplyTable">
-		CREATE TABLE JMOCHA_USER_DISTRIBUTION_APPLY (
+		CREATE TABLE JMOCHA_USER_DIST_APPLY (
 		   	"DOMAIN_NAME" NVARCHAR2(100) NOT NULL ENABLE, 
 			"USER_NAME" NVARCHAR2(100) NOT NULL ENABLE, 
 			"APPLICANT_ID" NVARCHAR2(100) NOT NULL ENABLE, 
 			"APPLICANT_DATE" DATE DEFAULT NULL, 
-			CONSTRAINT "PK_JMOCHA_USER_DISTRIBUTION_APPLY" PRIMARY KEY ("DOMAIN_NAME", "USER_NAME", "APPLICANT_ID")
+			CONSTRAINT "PK_JMOCHA_USER_DIST_APPLY" PRIMARY KEY ("DOMAIN_NAME", "USER_NAME", "APPLICANT_ID")
 		)
 	</statement>
 	
@@ -2696,6 +2714,42 @@
 			TBL_LASTDEPTLINE_PK2 PRIMARY KEY(TENANT_ID, COMPANYID, USERID, FORMID, RECEIPTPOINTID, DOCSTATE)
 	</statement>
 	
+	<select id="EzCommonDAO.checkTblAdminAccessIpTable" resultClass="String">
+		<![CDATA[
+			SELECT 
+				TENANT_ID
+			FROM 
+				TBL_ADMIN_ACCESS_IP
+			WHERE
+			    rownum <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblAdminAccessIpTable"> 
+		CREATE TABLE TBL_ADMIN_ACCESS_IP (
+			"IPNO" NUMBER(*,0) NOT NULL ENABLE, 
+		  	"TENANT_ID" NUMBER(5,0),
+		  	"IPADDRESS" NVARCHAR2(100) NOT NULL,
+		  	"ALLOW_ACCESS" NVARCHAR2(10) DEFAULT 'NO',
+		  	"EXPLANATION" NVARCHAR2(200) DEFAULT NULL,
+		  	CONSTRAINT "PK2_TBL_ADMIN_ACCESS_IP" PRIMARY KEY ("IPNO")
+		)
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblAdminAccessIpSequence" resultClass="int">
+		SELECT
+			COUNT(SEQUENCE_NAME)
+		FROM 
+			USER_SEQUENCES
+		WHERE 
+			SEQUENCE_NAME = 'TBL_ADMIN_ACCESS_IP_SEQ2'
+	</select>
+	
+	<statement id="EzCommonDAO.createTblAdminAccessIpSequence">
+		CREATE SEQUENCE "TBL_ADMIN_ACCESS_IP_SEQ2"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE
+
+	</statement>
+
 	<select id="EzCommonDAO.checkReBebuOpinionCode" parameterClass="Map" resultClass="String">
 	<![CDATA[
 		SELECT
@@ -3506,9 +3560,27 @@
 		  )  		
 	</statement>
 	
+	<statement id="EzCommonDAO.createWebfolderFolderIdSeq"> 
+		<![CDATA[
+		CREATE SEQUENCE SEQ_FOLDERID MINVALUE 1 MAXVALUE 9999999999999999999999999999
+		INCREMENT BY 1
+		START WITH 1000
+		NOORDER  NOCYCLE  NOKEEP  GLOBAL
+		]]>
+	</statement>
+	
+	<statement id="EzCommonDAO.createWebfolderFileIdSeq"> 
+		<![CDATA[
+		CREATE SEQUENCE SEQ_FILEID MINVALUE 10000000 MAXVALUE 9999999999999999999999999999
+		INCREMENT BY 1
+		START WITH 1000
+		NOORDER  NOCYCLE  NOKEEP  GLOBAL
+		]]>
+	</statement>
+	
 	<statement id="EzCommonDAO.createWebfolderFolderUserSeq"> 
 		<![CDATA[
-		CREATE SEQUENCE SEQ_FOLDERUSER MINVALUE 1000 MAXVALUE 9999999999999999999999999999
+		CREATE SEQUENCE SEQ_FOLDERUSER MINVALUE 1 MAXVALUE 9999999999999999999999999999
 		INCREMENT BY 1
 		START WITH 1000
 		NOORDER  NOCYCLE  NOKEEP  GLOBAL
@@ -3517,7 +3589,7 @@
 	
 	<statement id="EzCommonDAO.createWebfolderFileUserSeq"> 
 		<![CDATA[
-		CREATE SEQUENCE SEQ_FILEUSER MINVALUE 1000 MAXVALUE 9999999999999999999999999999
+		CREATE SEQUENCE SEQ_FILEUSER MINVALUE 1 MAXVALUE 9999999999999999999999999999
 		INCREMENT BY 1
 		START WITH 1000
 		NOORDER  NOCYCLE  NOKEEP  GLOBAL
@@ -4140,5 +4212,392 @@
 		  )
 	</statement>
 	
+	<select id="EzCommonDAO.checkViewTaskOldFlagTop" resultClass="Integer">
+		SELECT 
+			OLDFLAG_TOP
+		FROM 
+			VTASKCLASS
+		WHERE 
+		     ROWNUM = 1
+	</select>
+	<select id="EzCommonDAO.checkSViewTaskOldFlagTop" resultClass="Integer">
+		SELECT 
+			OLDFLAG_TOP
+		FROM 
+			SVTASKCLASS
+		WHERE 
+		     ROWNUM = 1
+	</select>
 	
+	<statement id="EzCommonDAO.addViewTaskOldFlags">
+		<![CDATA[
+	       CREATE OR REPLACE VIEW
+				vtaskclass AS
+		    SELECT 
+		        tbl_taskcategory.CATEGORYCODE AS CATEGORYCODE,
+		        tbl_taskcategory.NAME AS CNAME,
+		        tbl_taskcategory.NAME2 AS CNAME2,
+		        tbl_taskmiddlecategory.MCATEGORYCODE AS MCATEGORYCODE,
+		        tbl_taskmiddlecategory.NAME AS MCNAME,
+		        tbl_taskmiddlecategory.NAME2 AS MCNAME2,
+		        tbl_tasksubcategory.SUBCATEGORYCODE AS SUBCATEGORYCODE,
+		        tbl_tasksubcategory.NAME AS SCNAME,
+		        tbl_tasksubcategory.NAME2 AS SCNAME2,
+		        tbl_taskcode.TASKCODE AS TASKCODE,
+		        tbl_taskcode.TASKNAME AS TASKNAME,
+		        tbl_taskcode.TASKNAME2 AS TASKNAME2,
+		        tbl_taskcode.KEEPINGPERIOD AS KEEPINGPERIOD,
+		        tbl_taskcode.DISPLAYRECFLAG AS DISPLAYRECFLAG,
+		        tbl_taskcode.SPECIALCATALOGFLAG AS SPECIALCATALOGFLAG,
+		        tbl_taskcode.SC1 AS SC1,
+		        tbl_taskcode.SC2 AS SC2,
+		        tbl_taskcode.SC3 AS SC3,
+		        tbl_taskcode.TEMPFLAG AS TEMPFLAG,
+		        tbl_taskcode.COMPANYID AS COMPANYID,
+		        tbl_taskcode.TENANT_ID AS TENANT_ID,
+		        tbl_task_deptinfo.PROCESSDEPTCODE AS PROCESSDEPTCODE,
+		        tbl_task_deptinfo.PROCESSDEPTNAME AS PROCESSDEPTNAME,
+		        tbl_task_deptinfo.PROCESSDEPTNAME2 AS PROCESSDEPTNAME2,
+		        tbl_taskcode.KEEPINGMETHOD AS KEEPINGMETHOD,
+		        tbl_taskcode.KEEPINGPLACE AS KEEPINGPLACE,
+		        tbl_taskcode.DISPLAYRECTRASTIME AS DISPLAYRECTRASTIME,
+		        tbl_task_deptinfo.DELFLAG AS DELFLAG,
+		        tbl_taskcategory.OLDFLAG AS OLDFLAG_TOP,
+		        tbl_taskmiddlecategory.OLDFLAG AS OLDFLAG_MID,
+		        tbl_tasksubcategory.OLDFLAG AS OLDFLAG_SUB
+		    FROM
+		        ((((tbl_taskcategory
+		        JOIN tbl_taskmiddlecategory ON (tbl_taskcategory.CATEGORYCODE = tbl_taskmiddlecategory.CATEGORYCODE
+		            AND tbl_taskcategory.TENANT_ID = tbl_taskmiddlecategory.TENANT_ID
+		            AND tbl_taskcategory.COMPANYID = tbl_taskmiddlecategory.COMPANYID))
+		        JOIN tbl_tasksubcategory ON (tbl_taskmiddlecategory.MCATEGORYCODE = tbl_tasksubcategory.MCATEGORYCODE
+		            AND tbl_taskmiddlecategory.TENANT_ID = tbl_tasksubcategory.TENANT_ID
+		            AND tbl_taskmiddlecategory.COMPANYID = tbl_tasksubcategory.COMPANYID))
+		        JOIN tbl_taskcode ON (tbl_tasksubcategory.SUBCATEGORYCODE = tbl_taskcode.SUBCATEGORYCODE
+		            AND tbl_tasksubcategory.TENANT_ID = tbl_taskcode.TENANT_ID
+		            AND tbl_tasksubcategory.COMPANYID = tbl_taskcode.COMPANYID
+		            AND tbl_taskcode.DELFLAG = '0'))
+		        LEFT JOIN tbl_task_deptinfo ON (tbl_taskcode.TASKCODE = tbl_task_deptinfo.TASKCODE
+		            AND tbl_taskcode.TENANT_ID = tbl_task_deptinfo.TENANT_ID
+		            AND tbl_taskcode.COMPANYID = tbl_task_deptinfo.COMPANYID))
+		    WHERE
+		        tbl_task_deptinfo.DELFLAG = '0'
+		            OR tbl_task_deptinfo.DELFLAG IS NULL
+		            OR tbl_task_deptinfo.DELFLAG = '2'
+		]]>
+    </statement>
+    <statement id="EzCommonDAO.addSViewTaskOldFlags">
+	    <![CDATA[
+	        CREATE OR REPLACE VIEW
+				svtaskclass AS
+		    SELECT 
+		        tbl_taskcategory.CATEGORYCODE AS CATEGORYCODE,
+		        tbl_taskcategory.NAME AS CNAME,
+		        tbl_taskcategory.NAME2 AS CNAME2,
+		        tbl_taskmiddlecategory.MCATEGORYCODE AS MCATEGORYCODE,
+		        tbl_taskmiddlecategory.NAME AS MCNAME,
+		        tbl_taskmiddlecategory.NAME2 AS MCNAME2,
+		        tbl_tasksubcategory.SUBCATEGORYCODE AS SUBCATEGORYCODE,
+		        tbl_tasksubcategory.NAME AS SCNAME,
+		        tbl_tasksubcategory.NAME2 AS SCNAME2,
+		        tbl_taskcode.TASKCODE AS TASKCODE,
+		        tbl_taskcode.TASKNAME AS TASKNAME,
+		        tbl_taskcode.TASKNAME2 AS TASKNAME2,
+		        tbl_taskcode.KEEPINGPERIOD AS KEEPINGPERIOD,
+		        tbl_taskcode.DISPLAYRECFLAG AS DISPLAYRECFLAG,
+		        tbl_taskcode.SPECIALCATALOGFLAG AS SPECIALCATALOGFLAG,
+		        tbl_taskcode.TEMPFLAG AS TEMPFLAG,
+		        tbl_taskcode.COMPANYID AS COMPANYID,
+		        tbl_taskcode.TENANT_ID AS TENANT_ID,
+		        tbl_task_deptinfo.PROCESSDEPTCODE AS PROCESSDEPTCODE,
+		        tbl_task_deptinfo.PROCESSDEPTNAME AS PROCESSDEPTNAME,
+		        tbl_task_deptinfo.PROCESSDEPTNAME2 AS PROCESSDEPTNAME2,
+		        tbl_taskcode.KEEPINGMETHOD AS KEEPINGMETHOD,
+		        tbl_taskcode.KEEPINGPLACE AS KEEPINGPLACE,
+		        tbl_taskcode.DISPLAYRECTRASTIME AS DISPLAYRECTRASTIME,
+		        tbl_taskcode.ISPUBLIC AS ISPUBLIC,
+		        tbl_taskcode.ITEMSECURITY AS ITEMSECURITY,
+		        tbl_task_deptinfo.DELFLAG AS DELFLAG,
+		        tbl_taskcategory.OLDFLAG AS OLDFLAG_TOP,
+		        tbl_taskmiddlecategory.OLDFLAG AS OLDFLAG_MID,
+		        tbl_tasksubcategory.OLDFLAG AS OLDFLAG_SUB
+		    FROM
+		        ((((tbl_taskcategory
+		        JOIN tbl_taskmiddlecategory ON (tbl_taskcategory.CATEGORYCODE = tbl_taskmiddlecategory.CATEGORYCODE
+		            AND tbl_taskcategory.TENANT_ID = tbl_taskmiddlecategory.TENANT_ID
+		            AND tbl_taskcategory.COMPANYID = tbl_taskmiddlecategory.COMPANYID))
+		        JOIN tbl_tasksubcategory ON (tbl_taskmiddlecategory.MCATEGORYCODE = tbl_tasksubcategory.MCATEGORYCODE
+		            AND tbl_taskmiddlecategory.TENANT_ID = tbl_tasksubcategory.TENANT_ID
+		            AND tbl_taskmiddlecategory.COMPANYID = tbl_tasksubcategory.COMPANYID))
+		        JOIN tbl_taskcode ON (tbl_tasksubcategory.SUBCATEGORYCODE = tbl_taskcode.SUBCATEGORYCODE
+		            AND tbl_tasksubcategory.TENANT_ID = tbl_taskcode.TENANT_ID
+		            AND tbl_tasksubcategory.COMPANYID = tbl_taskcode.COMPANYID))
+		        LEFT JOIN tbl_task_deptinfo ON (tbl_taskcode.TASKCODE = tbl_task_deptinfo.TASKCODE
+		            AND tbl_taskcode.TENANT_ID = tbl_task_deptinfo.TENANT_ID
+		            AND tbl_taskcode.COMPANYID = tbl_task_deptinfo.COMPANYID))
+		    WHERE
+		        tbl_task_deptinfo.DELFLAG = '0'
+		            OR tbl_task_deptinfo.DELFLAG IS NULL
+		            OR tbl_task_deptinfo.DELFLAG = '2'
+		]]>
+    </statement>
+
+	<select id="EzCommonDAO.getTenantConfigList" parameterClass="map" resultClass="HashMap">
+		SELECT
+			property_name,
+			property_value
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			tenant_id = #tenantID#
+		AND
+			property_name
+		IN
+			<iterate property="property_names" open="(" close=")" conjunction=",">
+				#property_names[]#
+			</iterate>
+	</select>
+
+	<select id="EzCommonDAO.chkAddjobMasterJobIdIsPrimary" resultClass="String">
+		SELECT COLUMN_NAME
+		FROM USER_CONS_COLUMNS 
+		WHERE TABLE_NAME = 'TBL_ADDJOBMASTER' AND COLUMN_NAME = 'JOBID' AND CONSTRAINT_NAME = 
+		(SELECT CONSTRAINT_NAME FROM USER_CONSTRAINTS WHERE TABLE_NAME = 'TBL_ADDJOBMASTER' AND CONSTRAINT_TYPE = 'P')
+	</select>
+	
+	<statement id="EzCommonDAO.dropAddjobMasterPrimary">
+		ALTER TABLE TBL_ADDJOBMASTER DROP PRIMARY KEY
+	</statement>
+	
+	<statement id="EzCommonDAO.addAddjobMasterPrimary">
+		ALTER TABLE TBL_ADDJOBMASTER ADD PRIMARY KEY (CN, DEPTID, TENANT_ID, JOBID)
+	</statement>
+	
+	<select id="EzCommonDAO.checkCommMailFG_PostColumn">
+        <![CDATA[
+            SELECT 
+                MAILFG_POST
+            FROM 
+                TBL_COMM_BOARDINFO
+            WHERE
+				ROWNUM = 1
+        ]]>
+    </select>
+    <statement id="EzCommonDAO.addCommMailFG_PostColumn">
+        ALTER TABLE 
+        	TBL_COMM_BOARDINFO 
+		ADD (
+			MAILFG_POST CHAR(1 CHAR) DEFAULT NULL
+		)
+    </statement>
+    <select id="EzCommonDAO.checkCommMailFG_ModColumn">
+        <![CDATA[
+            SELECT 
+                MAILFG_MOD
+            FROM 
+                TBL_COMM_BOARDINFO
+            WHERE
+				ROWNUM = 1
+        ]]>
+    </select>
+    <statement id="EzCommonDAO.addCommMailFG_ModColumn">
+        ALTER TABLE 
+        	TBL_COMM_BOARDINFO 
+		ADD (
+			MAILFG_MOD CHAR(1 CHAR) DEFAULT NULL
+		)
+    </statement>
+    <select id="EzCommonDAO.checkCommMailFG_CommentColumn">
+        <![CDATA[
+            SELECT 
+                MAILFG_COMMENT
+            FROM 
+                TBL_COMM_BOARDINFO
+            WHERE
+				ROWNUM = 1
+        ]]>
+    </select>
+    <statement id="EzCommonDAO.addCommMailFG_CommentColumn">
+        ALTER TABLE 
+        	TBL_COMM_BOARDINFO 
+		ADD (
+			MAILFG_COMMENT CHAR(1 CHAR) DEFAULT NULL
+		)
+    </statement>
+    
+       <select id="EzCommonDAO.checkSurveySubDeptYNColumn">
+        <![CDATA[
+            SELECT 
+                SUBDEPTYN
+            FROM 
+                TBL_SURVEY_PARTICIPANT
+            WHERE
+				ROWNUM = 1
+        ]]>
+    </select>
+    <statement id="EzCommonDAO.addSurveySubDeptYNColumn">
+        ALTER TABLE 
+        	TBL_SURVEY_PARTICIPANT 
+		ADD (
+			SUBDEPTYN CHAR(1 CHAR) DEFAULT 'N'
+		)
+    </statement>
+    
+    <select id="EzCommonDAO.checkTblScheduleComplete">
+		<![CDATA[
+			SELECT
+				SCHEDULEID
+			FROM
+				TBL_SCHEDULE_COMPLETE
+			WHERE
+				ROWNUM = 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.createTblScheduleComplete"> 
+		CREATE TABLE TBL_SCHEDULE_COMPLETE (
+		    SCHEDULEID NUMBER(10) NOT NULL,
+		    REPEATCOUNT NUMBER(10) NOT NULL,
+			ISALLREP NCHAR(1) DEFAULT 'N',
+		    STARTDATE DATE NOT NULL,
+		    TENANT_ID NUMBER(5),
+		    COMPANYID VARCHAR2(40),
+		    CONSTRAINT TBL_SCHEDULE_COMPLETE_PK PRIMARY KEY (SCHEDULEID, REPEATCOUNT, ISALLREP, STARTDATE)
+		)
+	</statement>
+	
+    <statement id="EzCommonDAO.alterTblConnectionInfo">
+    {call	
+		DECLARE 
+    		column_exists EXCEPTION;
+    		pragma exception_init (column_exists , -01430);
+		BEGIN 
+    		EXECUTE IMMEDIATE  'ALTER TABLE TBL_CONNECTION_INFO	
+    							ADD	(
+    								STATUS			VARCHAR2(1)		DEFAULT	NULL, 
+    								DISCONNECTTIME	DATE			DEFAULT	NULL,
+    								SESSIONCODE		VARCHAR2(80)	DEFAULT NULL
+    								)';
+    		EXCEPTION WHEN column_exists THEN NULL;
+		END
+	}
+	</statement>
+    
+    <statement id="EzCommonDAO.createTblAdminAccessInfo">
+    {call
+		DECLARE
+			tbl_exists EXCEPTION;
+			pragma exception_init (tbl_exists , -00955);
+		BEGIN	 
+		   	EXECUTE IMMEDIATE 
+		    	  'CREATE TABLE TBL_ADMIN_ACCESS_INFO 
+				   (	
+				    SEQUENCE 		NUMBER(19,0) 	NOT NULL, 
+					USERID 			NVARCHAR2(50) 	NOT NULL, 
+					USERNM 			NVARCHAR2(100), 
+					USERNM2 		NVARCHAR2(100), 
+					DEPTID 			CHAR(50 CHAR), 
+					DEPTNM 			NVARCHAR2(100), 
+					DEPTNM2 		NVARCHAR2(100), 
+					TITLE 			NVARCHAR2(100), 
+					TITLE2 			NVARCHAR2(100), 
+					COMPANYID 		CHAR(50 CHAR), 
+					COMPANYNM 		NVARCHAR2(100), 
+					COMPANYNM2 		NVARCHAR2(100), 
+					ACCESSIP 		VARCHAR2(50 CHAR), 
+					ACCESSINFO 		VARCHAR2(50 CHAR), 
+					ACCESSTIME 		DATE, 
+					ACCESSBROWSER 	CHAR(10 CHAR), 
+					ACCESSOS 		CHAR(20 CHAR), 
+					ACCESSAGENT 	NVARCHAR2(500),
+					ADMINTYPE 		NVARCHAR2(200),
+					TENANT_ID 		NUMBER 	DEFAULT 0 NOT NULL,
+					CONSTRAINT PK_TBL_ADMIN_ACCESS_INFO PRIMARY KEY (SEQUENCE)
+				   )';
+			EXECUTE IMMEDIATE
+			   'CREATE SEQUENCE  "SEQ_TBL_ADMIN_ACCESS_INFO"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE';
+			EXCEPTION WHEN tbl_exists THEN NULL;
+		END
+	}
+    </statement>
+
+	<select id="EzCommonDAO.checkMailOutOfOfficeTemplate" resultClass="String">
+		<![CDATA[
+			SELECT 
+				USER_ID
+			FROM 
+				JMOCHA_MAIL_OUTOFOFFICE_TEM
+			WHERE
+			    rownum = 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.createMailOutOfOfficeTemplate"> 
+		CREATE TABLE JMOCHA_MAIL_OUTOFOFFICE_TEM (
+			USER_ID NVARCHAR2(100) NOT NULL,
+			DISPLAYNAME NVARCHAR2(40) NOT NULL,
+			CONTENT LONG,
+			CONSTRAINT "JMOCHA_MAIL_OOO_TEM_PK" PRIMARY KEY (USER_ID, DISPLAYNAME)
+		)
+	</statement>
+	
+	<select id="EzCommonDAO.checkUserMailTemplate" resultClass="String">
+		<![CDATA[
+			SELECT 
+				USER_ID
+			FROM 
+				JMOCHA_USER_MAIL_TEMPLATE
+			WHERE
+			    rownum = 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.createUserMailTemplate"> 
+		CREATE TABLE JMOCHA_USER_MAIL_TEMPLATE (
+			USER_ID NVARCHAR2(100) NOT NULL,
+			DISPLAYNAME NVARCHAR2(100) NOT NULL,
+			TEMPLATE_ID NVARCHAR2(510) NOT NULL,
+			REGDATE DATE,
+			EDITORTYPE NVARCHAR2(5),
+			CONTENT LONG,
+			CONSTRAINT "JMOCHA_USER_MAIL_TEMPLATE_PK" PRIMARY KEY (USER_ID, DISPLAYNAME)
+		)
+	</statement>
+
+	<statement id="EzCommonDAO.createTblPermissionChangeInfo">
+		{call
+			DECLARE
+				tbl_exists EXCEPTION;
+				pragma exception_init (tbl_exists , -00955);
+			BEGIN
+				EXECUTE IMMEDIATE
+					'CREATE TABLE TBL_PERMISSION_CHANGE_INFO
+					(
+					SEQUENCE NUMBER(19,0) NOT NULL,
+					USERID NVARCHAR2(50) NOT NULL,
+					USERNM NVARCHAR2(100),
+					USERNM2 NVARCHAR2(100),
+					DEPTID CHAR(50 CHAR),
+					DEPTNM NVARCHAR2(100),
+					DEPTNM2 NVARCHAR2(100),
+					TITLE NVARCHAR2(100),
+					TITLE2 NVARCHAR2(100),
+					COMPANYID CHAR(50 CHAR),
+					COMPANYNM NVARCHAR2(100),
+					COMPANYNM2 NVARCHAR2(100),
+					AUTHORIZEDTIME DATE,
+					ADMINTYPE NVARCHAR2(200),
+					STATUS NVARCHAR2(40),
+					AUTHORIZERID NVARCHAR2(50) NOT NULL,
+					AUTHORIZERNM NVARCHAR2(100),
+					AUTHORIZERNM2 NVARCHAR2(100),
+					AUTHORIZERIP VARCHAR2(50 CHAR),
+					TENANT_ID NUMBER DEFAULT 0 NOT NULL,
+					CONSTRAINT PK_TBL_PERMISSION_CHANGE_INFO PRIMARY KEY (SEQUENCE)
+					)';
+				EXECUTE IMMEDIATE
+					'CREATE SEQUENCE "SEQ_TBL_PERMISSION_CHANGE_INFO" MINVALUE 1 MAXVALUE
+					999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER NOCYCLE';
+				EXCEPTION WHEN tbl_exists THEN NULL;
+			END
+		}
+	</statement>
+
 </sqlMap>

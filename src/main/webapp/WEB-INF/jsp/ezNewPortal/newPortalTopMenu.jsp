@@ -323,10 +323,8 @@
 		
 		//2019-09-20 메신저 다운로드 추가
 		var talkDowmClick = function () {
-			if ("${talkFilePath}" != "") {
-				var DownloadUrl = "/ezCommon/talkDownloadAttach.do?filePath=" + "${talkFilePath}";
-				AttachDownFrame.location.href = DownloadUrl;				
-			}
+			// 20211102 조진호 - 경기대학교 웹취약점(모의해킹) 체크 결과에 따른 조치. 기존 filePath는 get parameter로 받아와 경로가 보였지만 이 부분을 서버에서 처리하는 방식으로 수정
+			AttachDownFrame.location.href = "/ezCommon/talkDownloadAttach.do";				
 		}
 		
 		/* 2019-01-04 김민성 - 웹도움말 팝업창으로 변경 */
@@ -345,10 +343,10 @@
 		var employeeSearch = function () {
 			var height = window.screen.availHeight;
 			var width = window.screen.availWidth;
-			var top = (height - 560) / 2;
+			var top = (height - 600) / 2;
 			var left = (width - 750) / 2;
 			var url = '/ezPersonal/personSearch.do';
-			var option = 'height=560px,width=750px,top=' + top + ',left = ' + left + ',status = no, toolbar=no, menubar=no, location=no, resizable=0';
+			var option = 'height=600px,width=750px,top=' + top + ',left = ' + left + ',status = no, toolbar=no, menubar=no, location=no, resizable=0';
 			
 			window.open(url, "", option);
 		}
@@ -588,10 +586,10 @@
 				
 				// 메뉴 순서 초기화 버튼인 경우 아닌 경우 
 				if (newPortalTopMenu.isInitOrder) {
-					xhr.open('DELETE', '/ezNewPortal/deleteUserMenuOrder.do');
+					xhr.open('POST', '/ezNewPortal/deleteUserMenuOrder.do');
 					xhr.send();
 				} else {
-					xhr.open('PATCH', '/ezNewPortal/updateUserMenuOrder.do');
+					xhr.open('POST', '/ezNewPortal/updateUserMenuOrder.do');
 					xhr.setRequestHeader('Content-Type', 'application/json');
 					xhr.send(JSON.stringify({
 						data: orderObj,

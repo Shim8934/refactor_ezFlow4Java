@@ -228,6 +228,8 @@ function GetDocSearch() {
 	    }
 	    xmlhttp.onreadystatechange = getsearchDocListS_after;		
 	    xmlhttp.send(xmlpara);
+	    
+	    listLoading(false);
 	} else {
 	        for (i = 0; i < condition.length - 1 ; i++) {
 	        if (typeof(condition[i]) == "undefined")
@@ -265,7 +267,7 @@ function GetDocSearch() {
 	    xmlhttp.onreadystatechange = getsearchDocList_after;		
 	    xmlhttp.send(xmlpara);
 		
-			listLoading(false);
+		listLoading(false);
 	}
 
     //ShowMailProgress();
@@ -664,14 +666,14 @@ function selFirstRow(Resultxml) {
 
         document.getElementById("tSearchCondi").style.display = "";
         document.getElementById("tViewDoc").style.display = "";
-        if((share || share == 'share') || DocListType == "UserContDocList"){
-        	document.getElementById("tbtnExcel").style.display = "none";
-        	document.getElementById("tbtnExcelAll").style.display = "none";
-        	document.getElementById("tbtnRegUserCont").style.display = "none";
-        	document.getElementById("tenforce").style.display = "none";
-            document.getElementById("tresend").style.display = "none";
-            document.getElementById("tbtnSelContainer").style.display = "none";
-        }
+        //if((share || share == 'share') || DocListType == "UserContDocList"){
+        //	document.getElementById("tbtnExcel").style.display = "none";
+        //	document.getElementById("tbtnExcelAll").style.display = "none";
+        //	document.getElementById("tbtnRegUserCont").style.display = "none";
+        //	document.getElementById("tenforce").style.display = "none";
+        //    document.getElementById("tresend").style.display = "none";
+        //    document.getElementById("tbtnSelContainer").style.display = "none";
+        //}
 
         if (approvalFlag == "G") {
 	        if (tr.getAttribute("DATA5").trim() != "")
@@ -1145,8 +1147,8 @@ function chk_Passwd(pUserID, CompleteFunction) {
     }
 
     ezchkpasswd_cross_dialogArguments[2] = true;
-    var url = "/ezApprovalG/ezchkPasswd.do";
-    var OpenWin = window.open(url, "ezchkPasswd_Cross", GetOpenWindowfeature(350, 225));
+    var url = "/ezApprovalG/ezchkPasswd.do?mode=SEC";
+    var OpenWin = window.open(url, "ezchkPasswd_Cross", GetOpenWindowfeature(460, 225)); // 결재완료문서/부서문서함 리스트에서 보안결재문서 접근
     try { OpenWin.focus(); } catch (e) { }
 }
 //END

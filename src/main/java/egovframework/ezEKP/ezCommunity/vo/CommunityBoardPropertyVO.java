@@ -79,6 +79,16 @@ public class CommunityBoardPropertyVO {
 	String gubun;
 	/** 링크를 건 경우 링크URL*/
 	String url;
+	
+	/** 2021-11-12 홍승비 - 커뮤니티 게시판 메일알림 추가 (게시/수정/댓글) */
+	String mailFG_Post;
+	String mailFG_Mod;
+	String mailFG_Comment;
+	
+	/** 2021-12-28 홍승비 - 커뮤니티 게시판 메일알림 관련 커뮤니티이름 추가 */
+	String c_ClubName;
+	
+	
 	public String getC_ClubNo() {
 		return c_ClubNo;
 	}
@@ -314,5 +324,30 @@ public class CommunityBoardPropertyVO {
 		this.url = url;
 	}
 
+	public String getMailFG_Post() {
+		return mailFG_Post;
+	}
+	public void setMailFG_Post(String mailFG_Post) {
+		this.mailFG_Post = mailFG_Post;
+	}
+	public String getMailFG_Mod() {
+		return mailFG_Mod;
+	}
+	public void setMailFG_Mod(String mailFG_Mod) {
+		this.mailFG_Mod = mailFG_Mod;
+	}
+	public String getMailFG_Comment() {
+		return mailFG_Comment;
+	}
+	public void setMailFG_Comment(String mailFG_Comment) {
+		this.mailFG_Comment = mailFG_Comment;
+	}
 	
+	public String getC_ClubName() {
+		return c_ClubName;
+	}
+	public void setC_ClubName(String c_ClubName) {
+		this.c_ClubName = c_ClubName;
+	}
+
 }

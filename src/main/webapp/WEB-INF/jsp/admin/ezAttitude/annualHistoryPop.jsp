@@ -135,7 +135,7 @@
 	         		<th class="borderLeft" style="width:19%;text-align:center;"><spring:message code='ezAttitude.t63' /></th>
 	            	<th class="borderLeft" style="width:14%;text-align:center;"><spring:message code='ezAttitude.t250' /></th>
 	            	<th class="borderLeft" style="width:14%;text-align:center;"><spring:message code='ezAttitude.t251' /></th>
-	            	<th class="borderLeft" style="width:43%;text-align:center;"><spring:message code='ezAttitude.t248' /></th>
+	            	<th class="borderLeft" style="width:43%;text-align:center;padding-left: 10px;"><spring:message code='ezAttitude.t248' /></th>
 	            	<th class="borderLeft borderRight" style="width:10%;text-align:center;"><spring:message code='ezAttitude.t62' /></th>
                 </tr>
             </table>

@@ -121,7 +121,29 @@
 				if (logoFile == null) {
 					return ;
 				}
-					
+				
+			 	/* 2020-01-13 홍승비 - 확장자 체크 부분 수정 */
+			 	var check = "false";
+		        var extension = logoFile.name.substring(logoFile.name.lastIndexOf(".") + 1, logoFile.name.length);
+		        check = compareExtension(check, extension);
+		        
+		        if (check == "false") {
+	                tempLogoPath = "";
+	                document.getElementById("filename1").innerText = "";
+					image.reset();
+	                alert("<spring:message code ='ezCommunity.lhj03' />");
+	                return;
+	            }
+		        
+		        /* 2021-12-08 홍승비 - 커뮤니티 상단/썸네일 이미지 업로드 시 서버단에서도 이미지 확장자 체크 진행 */
+                if (checkImgExtension(extension) == "UPLOAD_EXT_ERROR") {
+					tempLogoPath = "";
+ 	                document.getElementById("filename1").innerText = "";
+					image.reset();
+					alert("<spring:message code ='ezAttitude.t260' />"); // 허용하지 않는 확장자입니다.
+					return ;
+				}
+				
 				formData = new FormData();
 		       	formData.append('code', $("#code").val());
 		       	formData.append('type', $("#Type").val());
@@ -138,20 +160,8 @@
 		       		dataType : "json",
 		        	success : function (result) {
 		        		tempLogoPath = result["tempLogoPath"];
-		        		
-		        		var check = "false";
 					 	document.getElementById("filename1").innerText = logoFile.name;
 					 	
-					 	/* 2020-01-13 홍승비 - 확장자 체크 부분 수정 */
-				        var extension = logoFile.name.split('.');
-				        check = compareExtension(check, extension[extension.length - 1]);
-				            
-				        if (check == "false") {
-				            alert("<spring:message code ='ezCommunity.lhj03' />");
-			                tempLogoPath = "";
-			                document.getElementById("filename1").innerText = "";
-			            }
-				            
 			            if (tempLogoPath != "") { // 상단이미지 미리보기, 디폴트 로고값 해제
 			          		document.getElementById("logoprev").src = tempLogoPath;
 			          		document.getElementById("logoprev").style.display = "";
@@ -172,6 +182,28 @@
 					return ;
 				}
 				
+				/* 2020-01-13 홍승비 - 확장자 체크 부분 수정 */
+				var check = "false";
+	            var extension = thumbFile.name.substring(thumbFile.name.lastIndexOf(".") + 1, thumbFile.name.length);
+	            check = compareExtension(check, extension);
+	            
+	            if (check == "false") {
+					tempThumbPath = "";
+					document.getElementById("filename2").innerText = "";
+					image.reset();
+	                alert("<spring:message code ='ezCommunity.lhj03' />");
+	                return;
+	            }
+				
+				/* 2021-12-08 홍승비 - 커뮤니티 상단/썸네일 이미지 업로드 시 서버단에서도 이미지 확장자 체크 진행 */
+                if (checkImgExtension(extension) == "UPLOAD_EXT_ERROR") {
+					tempThumbPath = "";
+					document.getElementById("filename2").innerText = "";
+					image.reset();
+					alert("<spring:message code ='ezAttitude.t260' />"); // 허용하지 않는 확장자입니다.
+					return ;
+				}
+				
 				formData = new FormData();
 		       	formData.append('code', $("#code").val());
 		       	formData.append('type', $("#Type").val());
@@ -188,19 +220,7 @@
 		       		dataType : "json",
 		      		success : function (result) {
 		      			tempThumbPath = result["tempThumbPath"];
-		       			
-		       			var check = "false";
 			            document.getElementById("filename2").innerText = thumbFile.name;
-			            
-			            /* 2020-01-13 홍승비 - 확장자 체크 부분 수정 */
-			            var extension = thumbFile.name.split('.');
-			            check = compareExtension(check, extension[extension.length - 1]);
-			            
-			            if (check == "false") {
-			                alert("<spring:message code ='ezCommunity.lhj03' />");
-			                tempThumbPath = "";
-			                document.getElementById("filename2").innerText = "";
-			            }
 			            
 			            if (tempThumbPath != "") { // 썸네일 이미지 미리보기, 디폴트 썸네일값 해제
 			          		document.getElementById("thumbprev").src = tempThumbPath;

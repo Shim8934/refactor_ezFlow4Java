@@ -799,7 +799,7 @@
 		]]>
 	</select>
 	
-	<select id="EzBoardDAO.getItemInfo" parameterClass="Map" resultClass="BoardListVO">
+	<select id="EzBoardDAO.getItemInfo" parameterClass="Map" resultClass="BoardListVO" remapResults="true">
 		<isEmpty property="mode">
 			<isNotEmpty property="tempString">
 				<![CDATA[
@@ -810,7 +810,8 @@
 	                    CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
 	                    A.WRITERNAME$lang$ WRITERNAME,
 	                    A.CONTENTLOCATION,
-	                    C.MAIL
+	                    C.MAIL,
+	                    A.ITEMID
 	                FROM 
 	                	TBL_Board_Item A
 	                JOIN 
@@ -835,7 +836,9 @@
 				<![CDATA[
 					SELECT 
 						BOARDID, 
-	                    CONTENTLOCATION 
+	                    CONTENTLOCATION,
+	                    ITEMID,
+	                    TITLE
 	              	FROM 
 	              		TBL_Board_Item_temp 
 	              	WHERE  
@@ -854,7 +857,8 @@
 	                    A.BOARDID BOARDID  ,
 	                    CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
 	                    A.WRITERNAME$lang$ WRITERNAME,
-	                    A.CONTENTLOCATION
+	                    A.CONTENTLOCATION,
+	                    A.ITEMID
 	                FROM 
 	                	TBL_Board_Item A
 	                JOIN 
@@ -873,7 +877,9 @@
 				<![CDATA[
 					SELECT 
 						BOARDID, 
-	                    CONTENTLOCATION 
+	                    CONTENTLOCATION,
+	                    ITEMID,
+	                    TITLE
 	              	FROM 
 	              		TBL_Board_Item_temp 
 	              	WHERE  
@@ -1478,7 +1484,7 @@
              </isNotEmpty>
      		ORDER BY
      			A.NotiNo ASC,
-     			A.ParentWriteDate ASC,
+     			A.ParentWriteDate DESC,
      			A.WriteDate DESC
        		LIMIT
        			#limit#, #rowCount#
@@ -2112,7 +2118,7 @@
 				A.APPRFLAG IS NULL
 			)
            	ORDER BY 
-           		NOTINO DESC,
+           		NOTINO ASC,
                 A.ParentWriteDate DESC,
                 A.WriteDate DESC
 		]]>

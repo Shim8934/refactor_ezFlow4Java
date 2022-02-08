@@ -9,7 +9,7 @@
 <div class="attitudePtl">
 	<input type="hidden" id="useAttitude" value="${useAttitude}">
 	<dl class="portlet_title sortablePortlet" style="position: relative; width: 100%; bottom: 0px; z-index: 100; border-bottom:none; background:none;"></dl>
-	<div style="position:relative; bottom:46px; overflow:hidden;">
+	<div style="position:relative; bottom:46px;">
 		<div class="box_shadow info_left" style="margin:0px; margin-right:7px">
 	    	<div></div>
 		</div>

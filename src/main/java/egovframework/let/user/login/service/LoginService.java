@@ -59,6 +59,8 @@ public interface LoginService {
 	
 	public void insertLog(LoginVO vo) throws Exception;
 
+	public void updateLog(LoginVO vo) throws Exception;
+	
 	public List<String> getUserIDList() throws Exception;
 
 	public void updatePassword(String userID, String pwd) throws Exception;

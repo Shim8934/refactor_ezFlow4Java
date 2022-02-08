@@ -237,16 +237,24 @@
         var getcontname_dialogArgument = new Array();
         function getContName(tempName, type) {
             var windowName = "/ezApprovalG/getContName.do?Title=&TitleText=" + escape(encodeURIComponent(tempName));
+            var height = "";
+            
+            if (navigator.userAgent.toLowerCase().indexOf("msie") != -1 || (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1)) { // IE
+            	height = 211;
+            } else { // Chrome
+            	height = 205;
+            }
+            
             if (CrossYN()) {
                 var para = new Array();
                 para[0] = type;
                 getcontname_dialogArgument[0] = para;
                 getcontname_dialogArgument[1] = getContName_Complete;
-                DivPopUpShow(330, 205, windowName)
+                DivPopUpShow(330, height, windowName)
             }
             else {
-                var parameter = "status:no;dialogWidth:330px;dialogHeight:205px;scroll:no;edge:sunken";
-                parameter = parameter + GetShowModalPosition(330, 205);
+                var parameter = "status:no;dialogWidth:330px;dialogHeight:" + height + "px;scroll:no;edge:sunken";
+                parameter = parameter + GetShowModalPosition(330, height);
                 var ret = window.showModalDialog(windowName, "", parameter);
                 return ret;
             }
@@ -366,7 +374,7 @@
     </div>
     <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
     <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-    <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+    <iframe src="<spring:message code='main.kms4' />" style="border:none; overflow:hidden;" id="iFrameLayer"></iframe>
     </div>
 </body>
 </html>

@@ -213,16 +213,17 @@ function AddAttachFileInfoXmlParsing_Complete(retValue) {
     	pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(retValue) + "</VALUE>";
     	pAttachxml = pAttachxml + "</CELL><CELL>";
     	
+    	/* 2021-12-22 홍승비 - 전자결재 G버전 첨부파일도 일반버전과 동일하게 용량 단위 수정 */
     	var strSize;
     	if (temppFileSize > 1024 * 1024) {
     		temppFileSize = temppFileSize / 1024 / 1024;
-    		//strSize = parseInt(temppFileSize) + "MB";
-    		strSize = temppFileSize.toFixed(1) + " MB";
+    		strSize = parseInt(temppFileSize) + "MB";
+    		//strSize = temppFileSize.toFixed(1) + " MB";
     	}
     	else if (temppFileSize > 1024) {
     		temppFileSize = temppFileSize / 1024;
-    		//strSize = parseInt(temppFileSize) + "KB";
-    		strSize = temppFileSize.toFixed(1) + " KB";
+    		strSize = parseInt(temppFileSize) + "KB";
+    		//strSize = temppFileSize.toFixed(1) + " KB";
     	}
     	else
     		strSize = parseInt(temppFileSize) + "B";

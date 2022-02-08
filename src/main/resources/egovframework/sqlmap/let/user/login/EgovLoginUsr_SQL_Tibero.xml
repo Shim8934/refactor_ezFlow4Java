@@ -1,206 +1,561 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
 
-<sqlMap namespace="LoginUsr">
+<sqlMap namespace="Login">
 
-	<typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
-	<typeAlias  alias="loginVO" type="egovframework.let.user.login.vo.LoginVO"/>
+	<typeAlias  alias="egovMap" 				type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+	<typeAlias  alias="loginVO" 				type="egovframework.let.user.login.vo.LoginVO"/>
+	<typeAlias 	alias="CountryVO" 				type="egovframework.ezEKP.ezSystem.vo.CountryVO"/>
+	<typeAlias 	alias="findPwdInfo" 			type="egovframework.let.user.login.vo.FindPwdInfoVO"/>
 
 	<!-- 로그인 처리를 위한 resultMap -->
 	<resultMap id="login" class="egovframework.let.user.login.vo.LoginVO">
-		<result property="id" column="id" columnIndex="1"/>
-		<result property="name" column="name" columnIndex="2"/>
-		<result property="ihidNum" column="ihidNum" columnIndex="3"/>
-		<result property="email" column="email" columnIndex="4"/>
-		<result property="password" column="password" columnIndex="5"/>
-		<result property="userSe" column="userSe" columnIndex="6"/>
-		<result property="orgnztId" column="orgnztId" columnIndex="7"/>
-		<result property="uniqId" column="uniqId" columnIndex="8"/>		
-	</resultMap>
+		<result property="id"					column="cn"   						columnIndex="1"/>
+		<result property="password" 			column="password" 					columnIndex="2"/>
+		<result property="displayName1" 		column="displayname"				columnIndex="3"/>
+		<result property="displayName2" 		column="displayname2" 				columnIndex="4"      nullValue=""/>
+		<result property="deptID" 				column="department" 				columnIndex="5"/>
+		<result property="deptName1" 			column="description" 				columnIndex="6"/>
+		<result property="deptName2" 			column="description2" 				columnIndex="7"      nullValue=""/>
+		<result property="title1" 				column="title" 						columnIndex="8"/>
+		<result property="title2" 				column="title2" 					columnIndex="9"      nullValue=""/>
+		<result property="companyID" 			column="companyid" 					columnIndex="10"/>
+		<result property="companyName1" 		column="company" 					columnIndex="11"/>
+		<result property="companyName2" 		column="company2" 					columnIndex="12"     nullValue=""/>		
+		<result property="updateDT" 			column="updatedt"					columnIndex="13"/>
+		<result property="rollInfo" 			column="rollinfo"					columnIndex="14"/>
+		<result property="phone" 				column="telephonenumber"			columnIndex="15"/>
+		<result property="email"				column="mail"						columnIndex="16"/>
+		<result property="jikChek"				column="jikchek"					columnIndex="17"/>
+        <result property="tenantId"             column="tenant_id"                  columnIndex="18"/>
+        <result property="deptPathCode"         column="deptPathCode"               columnIndex="19"/>
+        <result property="primary"         		column="primary"              		columnIndex="20"/>
+        <result property="loginCnt"             column="loginCnt"                	columnIndex="21"/>
+        <result property="gyumJik"              column="gyumJik"                	columnIndex="22"/>
+        <result property="userFileUrl"          column="userFileUrl"                columnIndex="23"/>
+        <result property="sabun"              	column="sabun"                		columnIndex="24"/>
+		<result property="password_updatedt"    column="password_updatedt"			columnIndex="25"/>
+		<result property="extensionattribute5"	column="extensionattribute5"		columnIndex="26"/>
+	</resultMap>	
 	
-	<!-- 아이디 찾기를 위한 resultMap -->
-	<resultMap id="id" class="egovframework.let.user.login.vo.LoginVO">
-		<result property="id" column="id" columnIndex="1"/>
-	</resultMap>
-	
-	<!-- 비밀번호 처리를 위한 resultMap -->
-	<resultMap id="password" class="egovframework.let.user.login.vo.LoginVO">
-		<result property="password" column="password" columnIndex="1"/>
-	</resultMap>
-	
+    <resultMap id="tenantServerName" class="egovframework.let.user.login.vo.TenantServerNameVO">
+        <result property="serverName"           column="SERVER_NAME"                columnIndex="1"/>    
+        <result property="tenantId"             column="TENANT_ID"                  columnIndex="2"/>
+    </resultMap>   
+    
+    <resultMap id="CountryVO" class="CountryVO">
+        <result property="startIP"           		column="START_IP" />    
+        <result property="endIP"             		column="END_IP"   />
+        <result property="startIPNumber"           	column="START_IP_NUMBER" />    
+        <result property="endIPNumber"             	column="END_IP_NUMBER"   />
+        <result property="countryCode"           	column="COUNTRY_CODE" />    
+        <result property="countryName"             	column="COUNTRY_NAME"   />
+    </resultMap> 
+ 
 	<!-- 일반 로그인 -->
-	<select id="loginDAO.actionLogin" resultMap="login">
+	<select id="loginDAO.selectUser" resultMap="login">
 		<!-- 일반회원 -->
-		<isEqual property="userSe" compareValue="GNR">
+		<isEmpty property="deptID">
 			<![CDATA[
-			SELECT mber_id AS id
-			     , mber_nm AS name
-			     , ihidNum AS ihidNum
-			     , password AS password
-			     , mber_email_adres AS email
-			     , 'GNR' AS userSe
-			     , '-' AS orgnztId
-			     , esntl_id AS uniqId
-			  FROM LETTNGNRLMBER
-			 WHERE mber_id = #id#
-			   AND password = #password#
-			   AND mber_sttus = 'P'
-			]]>
-		</isEqual>
-		<!-- 기업회원 -->
-		<isEqual property="userSe" compareValue="ENT">
-			<![CDATA[
-			SELECT entrprsmber_id AS id
-			     , cmpny_nm AS name
-			     , entrprs_mber_password AS password
-			     , bizrno AS ihidNum
-			     , applcnt_email_adres AS email
-			     , 'ENT' AS userSe
-			     , '-' AS orgnztId
-			     , esntl_id AS uniqId
-			  FROM LETTNENTRPRSMBER
-			 WHERE entrprsmber_id = #id#
-			   AND entrprs_mber_password = #password#
-			   AND entrprs_mber_sttus = 'P'
-			]]>
-		</isEqual>
-		<!-- 업무사용자 -->
-		<isEqual property="userSe" compareValue="USR">
-			<![CDATA[
-			SELECT emplyr_id AS id
-			     , user_nm AS name
-			     , password AS password
-			     , ihidnum AS ihidNum
-			     , email_adres AS email
-			     , 'USR' AS userSe
-			     , orgnzt_id AS orgnztId
-			     , esntl_id AS uniqId
-			  FROM LETTNEMPLYRINFO
-			 WHERE emplyr_id = #id#
-			   AND password = #password#
-			   AND emplyr_sttus_code = 'P'
-			]]>
-		</isEqual>
+				SELECT 
+					cn,
+					password,				
+			     	displayname,
+			     	displayname2,
+			     	department,			     
+			     	description,
+			     	description2,
+			     	title,
+			     	title2,
+			     	physicaldeliveryofficename as companyid,
+			     	company,
+			     	company2,
+			     	updatedt,
+			     	extensionattribute1 as rollinfo,
+			     	telephonenumber,
+			     	mail,
+			     	extensionattribute10 as jikchek,
+	                tenant_id,
+	                (SELECT 'top,Top,' || dept_cd_path FROM	TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenantId#) AS deptPathCode,
+	                (SELECT property_value FROM TBL_TENANT_CONFIG	WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS "primary",
+	                loginCnt,
+	                extensionattribute4 as gyumJik,
+	                extensionattribute2 as userFileUrl,
+	                extensionattribute14 as sabun,
+	                password_updatedt,
+	                extensionattribute5
+			  	FROM 
+			  		TBL_USERMASTER a
+			 	WHERE 
+			 		(cn = #id# OR extensionattribute14 = #id#) AND tenant_id = #tenantId#
+	   			]]> 
+	        <isNotEqual prepend="AND" property="dn" compareValue="NOPASSWORD" >         
+	            password = #password#
+	        </isNotEqual>
+	    </isEmpty>
+	    <isNotEmpty property="deptID">
+	            SELECT 
+					u.cn,
+					u.password,               
+					u.displayname,
+					u.displayname2,
+					d.cn department,              
+					d.displayname description,
+					d.displayname2 description2,
+					case u.department
+				    when TO_NCHAR(#deptID#)
+				    then u.title
+				    else
+					(select title from tbl_addjobmaster where cn = #id# and deptid = #deptID# and tenant_id = #tenantId#)
+				    end
+				    as title,
+					case u.department
+				    when TO_NCHAR(#deptID#)
+				    then u.title2
+				    else
+					(select title2 from tbl_addjobmaster where cn = #id# and deptid = #deptID# and tenant_id = #tenantId#)
+				    end
+				    as title2,
+					d.EXTENSIONATTRIBUTE2 companyid,
+					d.EXTENSIONATTRIBUTE3 company,
+					d.COMPNM2 company2,
+					u.updatedt,
+					case u.department
+				    when TO_NCHAR(#deptID#)
+				    then u.extensionattribute1
+				    else
+					TO_NCHAR('c=0;k=0;g=0;a=0;i=0;n=0;l=0;w=0;m=0;')
+				    end
+				    as rollinfo,
+					u.telephonenumber,
+					u.mail,
+					u.extensionattribute10 as jikchek,
+					u.tenant_id,
+					concat('top,Top,', d.dept_cd_path) AS deptPathCode,
+					(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS "primary",
+					u.loginCnt,
+					u.extensionattribute4 as gyumJik,
+					u.extensionattribute2 as userFileUrl,
+					u.extensionattribute14 as sabun,
+					u.password_updatedt,
+					u.extensionattribute5
+				FROM 
+					TBL_USERMASTER u
+				inner join
+					tbl_deptMaster d
+				on (u.tenant_id = d.tenant_id)
+				WHERE 
+					(u.cn = #id# OR u.extensionattribute14 = #id#) 
+				    AND u.tenant_id = #tenantId#
+				    and d.cn = #deptID#
+	        <isNotEqual prepend="AND" property="dn" compareValue="NOPASSWORD" >         
+	            password = #password#
+	        </isNotEqual>
+	    </isNotEmpty>
 	</select>
 	
-	<!-- 인증서 로그인 -->
-	<select id="loginDAO.actionCrtfctLogin" resultMap="login">
+	<select id="loginDAO.selectUserWithCnOnly" resultMap="login">
+        <!-- 일반회원 -->
+        <isEmpty property="deptID">
+	        <![CDATA[
+	            SELECT 
+	                cn,
+	                password,               
+	                displayname,
+	                displayname2,
+	                department,              
+	                description,
+	                description2,
+	                title,
+	                title2,
+	                physicaldeliveryofficename as companyid,
+	                company,
+	                company2,
+	                updatedt,
+	                extensionattribute1 as rollinfo,
+	                telephonenumber,
+	                mail,
+	                extensionattribute10 as jikchek,
+	                tenant_id,
+	                (SELECT 'top,Top,' || dept_cd_path FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenantId#) AS deptPathCode,
+	                (SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS "primary",
+	                loginCnt,
+	                extensionattribute4 as gyumJik,
+	                extensionattribute2 as userFileUrl,
+	                extensionattribute14 as sabun,
+	                password_updatedt,
+	                extensionattribute5
+	            FROM 
+	                TBL_USERMASTER a
+	            WHERE 
+	                cn = #id# AND tenant_id = #tenantId#
+	        ]]>
+	        <isNotEqual prepend="AND" property="dn" compareValue="NOPASSWORD" >         
+	            password = #password#
+	        </isNotEqual>
+        </isEmpty>
+	    <isNotEmpty property="deptID">      
+            SELECT 
+					u.cn,
+					u.password,               
+					u.displayname,
+					u.displayname2,
+					d.cn department,              
+					d.displayname description,
+					d.displayname2 description2,
+					case u.department
+				    when TO_NCHAR(#deptID#)
+				    then u.title
+				    else
+					(select title from tbl_addjobmaster where cn = #id# and deptid = #deptID# and tenant_id = #tenantId#)
+				    end
+				    as title,
+					case u.department
+				    when TO_NCHAR(#deptID#)
+				    then u.title2
+				    else
+					(select title2 from tbl_addjobmaster where cn = #id# and deptid = #deptID# and tenant_id = #tenantId#)
+				    end
+				    as title2,
+					d.EXTENSIONATTRIBUTE2 companyid,
+					d.EXTENSIONATTRIBUTE3 company,
+					d.COMPNM2 company2,
+					u.updatedt,
+					case u.department
+				    when TO_NCHAR(#deptID#)
+				    then u.extensionattribute1
+				    else
+					TO_NCHAR('c=0;k=0;g=0;a=0;i=0;n=0;l=0;w=0;m=0;')
+				    end
+				    as rollinfo,
+					u.telephonenumber,
+					u.mail,
+					u.extensionattribute10 as jikchek,
+					u.tenant_id,
+					concat('top,Top,', d.dept_cd_path) AS deptPathCode,
+					(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS "primary",
+					u.loginCnt,
+					u.extensionattribute4 as gyumJik,
+					u.extensionattribute2 as userFileUrl,
+					u.extensionattribute14 as sabun,
+					u.password_updatedt,
+					u.extensionattribute5
+				FROM 
+					TBL_USERMASTER u
+				inner join
+					tbl_deptMaster d
+				on (u.tenant_id = d.tenant_id)
+				WHERE 
+					u.cn = #id# AND u.tenant_id = #tenantId#
+				    and d.cn = #deptID#
+	        <isNotEqual prepend="AND" property="dn" compareValue="NOPASSWORD" >         
+	            password = #password#
+	        </isNotEqual>
+	    </isNotEmpty>
+    </select>
+    
+	<select id="loginDAO.getUserIDList" resultClass="String">
+		<!-- 모든회원 -->		
 		<![CDATA[
-		SELECT emplyr_id AS id
-		     , user_nm AS name
-		     , password AS password
-		     , ihidnum AS ihidNum
-		     , email_adres AS email
-		     , 'USR' AS userSe
-		     , orgnzt_id AS orgnztId
-		     , esntl_id AS uniqId
-		  FROM LETTNEMPLYRINFO
-		 WHERE sub_dn = #dn#
+			SELECT 
+				cn
+		  	FROM 
+		  		TBL_USERMASTER
+		  	WHERE
+		  		cn != 'masteradmin'	 	
+		  	AND
+          		password IS NULL	 				 
 		]]>
 	</select>
 	
-	<!-- 아이디 찾기 -->
-	<select id="loginDAO.searchId" resultMap="id">
-		<!-- 일반회원 -->
-		<isEqual property="userSe" compareValue="GNR">
-			<![CDATA[
-			SELECT mber_id AS id
-			  FROM LETTNGNRLMBER
-			 WHERE mber_nm = #name#
-			   AND mber_email_adres = #email#
-			   AND mber_sttus = 'P'
-			]]>
-		</isEqual>
-		<!-- 기업회원 -->
-		<isEqual property="userSe" compareValue="ENT">
-			<![CDATA[
-			SELECT entrprsmber_id AS id
-			  FROM LETTNENTRPRSMBER
-			 WHERE cmpny_nm = #name#
-			   AND applcnt_email_adres = #email#
-			   AND entrprs_mber_sttus = 'P'
-			]]>
-		</isEqual>
-		<!-- 업무사용자 -->
-		<isEqual property="userSe" compareValue="USR">
-			<![CDATA[
-			SELECT emplyr_id AS id
-			  FROM LETTNEMPLYRINFO
-			 WHERE user_nm = #name#
-			   AND email_adres = #email#
-			   AND emplyr_sttus_code = 'P'
-			]]>
-		</isEqual>
-	</select>
+	<insert id="loginDAO.insertLog" parameterClass="loginVO">
+		<![CDATA[
+			INSERT INTO TBL_CONNECTION_INFO(
+				SEQUENCE, 							USERID, 	   		USERNM, 			USERNM2, 			DEPTID, 			DEPTNM, 			DEPTNM2, 
+				TITLE, 			TITLE2, 			COMPANYID, 			COMPANYNM, 			COMPANYNM2, 		CONNECTIP, 
+				CONNECTTIME, 	CONNECTBROWSER, 	CONNECTOS, 			CONNECTAGENT,      	TENANT_ID,			STATUS,				SESSIONCODE
+			)
+			VALUES(
+				SEQ_TBL_CONNECTION_INFO.NEXTVAL, 	#id#,				#displayName1#,		#displayName2#,		#deptID#,			#deptName1#,		#deptName2#,	
+				#title1#,		#title2#,			#companyID#,		#companyName1#,		#companyName2#,		#ip#,	
+				SYS_EXTRACT_UTC(SYSTIMESTAMP),		#browser#,			#os#,				#agent#,        	#tenantId#,			#status#,			#sessionCode#
+			)				
+		]]>
+	</insert>
 	
-	<!-- 비밀번호 찾기 -->
-	<select id="loginDAO.searchPassword" resultMap="password">
-		<!-- 일반회원 -->
-		<isEqual property="userSe" compareValue="GNR">
-			<![CDATA[
-			SELECT password AS password
-			  FROM LETTNGNRLMBER
-			 WHERE mber_id = #id#
-			   AND mber_nm = #name#
-			   AND mber_email_adres = #email#
-			   AND password_hint = #passwordHint#
-			   AND password_cnsr = #passwordCnsr#
-			   AND mber_sttus = 'P'
-			]]>
-		</isEqual>
-		<!-- 기업회원 -->
-		<isEqual property="userSe" compareValue="ENT">
-			<![CDATA[
-			SELECT entrprs_mber_password AS password
-			  FROM LETTNENTRPRSMBER
-			 WHERE entrprsmber_id = #id#
-			   AND cmpny_nm = #name#
-			   AND applcnt_email_adres = #email#
-			   AND entrprs_mber_password_hint = #passwordHint#
-			   AND entrprs_mber_password_cnsr = #passwordCnsr#
-			   AND entrprs_mber_sttus = 'P'
-			]]>
-		</isEqual>
-		<!-- 업무사용자 -->
-		<isEqual property="userSe" compareValue="USR">
-			<![CDATA[
-			SELECT password AS password
-			  FROM LETTNEMPLYRINFO
-			 WHERE emplyr_id = #id#
-			   AND user_nm = #name#
-			   AND email_adres = #email#
-			   AND password_hint = #passwordHint#
-			   AND password_cnsr = #passwordCnsr#
-			   AND emplyr_sttus_code = 'P'
-			]]>
-		</isEqual>
-	</select>
-	
-	<!-- 변경된 비밀번호를 저장 -->
-	<update id="loginDAO.updatePassword">
-		<!-- 일반회원 -->
-		<isEqual property="userSe" compareValue="GNR">
-			<![CDATA[
-			UPDATE LETTNGNRLMBER
-			   SET password = #password#
-			 WHERE mber_id = #id#
-			]]>
-		</isEqual>
-		<!-- 기업회원 -->
-		<isEqual property="userSe" compareValue="ENT">
-			<![CDATA[
-			UPDATE LETTNENTRPRSMBER
-			   SET entrprs_mber_password = #password#
-			 WHERE entrprsmber_id = #id#
-			]]>
-		</isEqual>
-		<!-- 업무사용자 -->
-		<isEqual property="userSe" compareValue="USR">
-			<![CDATA[
-			UPDATE LETTNEMPLYRINFO
-			   SET password = #password#
-			 WHERE emplyr_id = #id#
-			]]>
-		</isEqual>
+	<update id="loginDAO.updateLog" parameterClass="loginVO">
+        <![CDATA[
+            UPDATE 	TBL_CONNECTION_INFO
+				SET    	DISCONNECTTIME 	= SYS_EXTRACT_UTC(SYSTIMESTAMP)
+				WHERE 	SESSIONCODE 	= #sessionCode#
+				AND		TENANT_ID 		= #tenantId#
+        ]]>
+    </update>
+
+	<update id="loginDAO.updateUser" parameterClass="loginVO">
+		<![CDATA[
+			UPDATE TBL_USERMASTER
+			SET
+				ipaddress = #ip#,
+				lastlogin = SYS_EXTRACT_UTC(SYSTIMESTAMP),
+				logincnt = logincnt + 1
+			WHERE
+				cn = #id# AND tenant_id = #tenantId#
+		]]>
 	</update>
+	
+	<update id="loginDAO.updatePassword" parameterClass="loginVO">
+		<![CDATA[
+			UPDATE TBL_USERMASTER
+			SET
+				password = #password#,
+				updatedt = SYS_EXTRACT_UTC(SYSTIMESTAMP),
+				password_updatedt = SYS_EXTRACT_UTC(SYSTIMESTAMP)
+			WHERE
+				cn = #id# AND tenant_id = #tenantId#
+		]]>
+	</update>
+ 
+    <select id="loginDAO.selectTenantServerName" parameterClass="Map" resultMap="tenantServerName">
+        <![CDATA[
+            SELECT 
+                SERVER_NAME, TENANT_ID
+            FROM 
+                TBL_TENANT_SERVERNAME 
+            WHERE  
+                SERVER_NAME = #serverName#
+        ]]>
+    </select>
+    
+    <select id="loginDAO.selectReceiver" resultMap="login">
+        <!-- 일반회원 -->       
+        <![CDATA[
+            SELECT 
+                cn,
+                password,               
+                displayname,
+                displayname2,
+                department,              
+                description,
+                description2,
+                title,
+                title2,
+                physicaldeliveryofficename as companyid,
+                company,
+                company2,
+                updatedt,
+                extensionattribute1 as rollinfo,
+                telephonenumber,
+                mail,
+                extensionattribute10 as jikchek,
+                tenant_id,
+                (SELECT 'top,Top,'|| dept_cd_path FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenantId#) AS deptPathCode,
+                (SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS "primary",
+                loginCnt,
+                extensionattribute4 as gyumJik,
+                extensionattribute2 as userFileUrl,
+                extensionattribute14 as sabun,
+                password_updatedt,
+                extensionattribute5
+            FROM 
+                TBL_USERMASTER a
+            WHERE 
+                cn = #id# 
+            AND 
+                cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE)
+            AND 
+            	tenant_id = #tenantId#
+        ]]>
+    </select>
+    
+    <select id="loginDAO.selectAllReceivers" resultMap="login">
+        <!-- 일반회원 -->       
+        <![CDATA[
+            SELECT 
+                cn,
+                password,               
+                displayname,
+                displayname2,
+                department,              
+                description,
+                description2,
+                title,
+                title2,
+                physicaldeliveryofficename as companyid,
+                company,
+                company2,
+                updatedt,
+                extensionattribute1 as rollinfo,
+                telephonenumber,
+                mail,
+                extensionattribute10 as jikchek,
+                tenant_id,
+                (SELECT 'top,Top,'|| dept_cd_path FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenantId#) AS deptPathCode,
+				(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS "primary",
+                loginCnt,
+                extensionattribute4 as gyumJik,
+                extensionattribute2 as userFileUrl,
+                extensionattribute14 as sabun,
+                password_updatedt,
+                extensionattribute5
+            FROM 
+                TBL_USERMASTER a
+            WHERE 
+                (DEPARTMENT = #id# OR EXTENSIONATTRIBUTE4 LIKE '%' || #id# || '%')
+            AND 
+                cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
+            AND  
+            	tenant_id = #tenantId#
+        ]]>
+    </select> 
+ 	<select id="loginDAO.selectAllMemberOfCompany" resultMap="login">
+        <!-- 일반회원 -->       
+        <![CDATA[
+            SELECT 
+                cn,
+                password,               
+                displayname,
+                displayname2,
+                department,              
+                description,
+                description2,
+                title,
+                title2,
+                physicaldeliveryofficename as companyid,
+                company,
+                company2,
+                updatedt,
+                extensionattribute1 as rollinfo,
+                telephonenumber,
+                mail,
+                extensionattribute10 as jikchek,
+                tenant_id,
+                (SELECT 'top,Top,'|| dept_cd_path FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenantId#) AS deptPathCode,
+                (SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS "primary",
+                loginCnt,
+                extensionattribute4 as gyumJik,
+                extensionattribute2 as userFileUrl,
+                extensionattribute14 as sabun,
+                password_updatedt,
+                extensionattribute5
+            FROM 
+                TBL_USERMASTER a
+            WHERE 
+                PHYSICALDELIVERYOFFICENAME = #company_id#
+            AND 
+                cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)           
+            AND
+				tenant_id = #tenantId#
+        ]]>
+    </select>
+    
+   <select id="loginDAO.getLoginIPCountry" parameterClass="Map" resultMap="CountryVO">
+		SELECT 
+			START_IP, END_IP, START_IP_NUMBER, END_IP_NUMBER, 
+			COUNTRY_CODE, COUNTRY_NAME
+		FROM 
+			JMOCHA_MAIL_COUNTRYIP
+		WHERE 
+			#loginIP# BETWEEN START_IP_NUMBER AND END_IP_NUMBER;
+	</select>
+	
+	<!-- 비밀번호 초기화 기능 사용자 확인 -->
+	<select id="loginDAO.selectUserForChangePwd" resultMap="login">
+		<!-- 일반회원 -->
+		<![CDATA[
+			SELECT 
+				a.cn,
+				a.password,				
+			 	a.displayname,
+			 	a.displayname2,
+			 	a.department,			     
+			 	a.description,
+			 	a.description2,
+			 	a.title,
+			 	a.title2,
+			 	a.physicaldeliveryofficename as companyid,
+			 	a.company,
+			 	a.company2,
+			 	a.updatedt,
+			 	a.extensionattribute1 as rollinfo,
+			 	a.mobile,
+			 	a.mail,
+			 	a.extensionattribute10 as jikchek,
+			    a.tenant_id,
+			    (SELECT 'top,Top,' || dept_cd_path FROM	TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenantId#) AS deptPathCode,
+			    (SELECT property_value FROM TBL_TENANT_CONFIG	WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS "primary",
+			    a.loginCnt,
+			    a.extensionattribute4 as gyumJik,
+			    a.extensionattribute2 as userFileUrl,
+			    a.extensionattribute14 as sabun,
+			    password_updatedt,
+			    extensionattribute5
+			FROM 
+				TBL_USERMASTER a
+			LEFT JOIN
+				TBL_USERMASTER_RETIRE b
+			ON 
+				a.CN = b.CN 
+			AND 
+				a.TENANT_ID = b.TENANT_ID 
+			WHERE 
+				(a.cn = #id# OR LOWER(a.extensionattribute14) = #id#) AND a.tenant_id = #tenantId#
+			AND
+				b.cn IS NULL
+   			]]> 
+        <isNotEqual prepend="AND" property="dn" compareValue="NOPASSWORD" >         
+            password = #password#
+        </isNotEqual>
+	</select>
+	
+	<insert id="loginDAO.insertTblFindPwd" parameterClass="Map">
+		INSERT INTO TBL_FIND_PWD(SABUN,REQ_DATE,CERTIFICATION_NUM,CERTIFICATION,PHONE_NUM)
+		VALUES(#sabun#, #nowDate#, #certificationNum#, #certification#, #phoneNum#)
+	</insert>
+	
+	<update id="loginDAO.updateTblFindPwd" parameterClass="Map">
+		UPDATE 
+			TBL_FIND_PWD
+		SET
+			CERTIFICATION = #certification#
+		WHERE
+			SABUN = #sabun#
+		AND
+			CERTIFICATION_NUM = #certificationNum#
+	</update>
+	
+	<select id="loginDAO.getFindPwdInfo" parameterClass="Map" resultClass="findPwdInfo">
+		SELECT
+		 	sabun                 ,
+			reqDate               ,
+			certificationNum      ,
+			certification         ,
+			phoneNum               
+		FROM 
+			(SELECT 
+				ROW_NUMBER() OVER(ORDER BY REQ_DATE DESC) AS RNUM, 
+				A.SABUN                 as sabun                 ,
+				A.REQ_DATE              as reqDate               ,
+				A.CERTIFICATION_NUM     as certificationNum      ,
+				A.CERTIFICATION         as certification         ,
+				A.PHONE_NUM             as phoneNum
+			FROM
+				TBL_FIND_PWD A
+			WHERE
+				SABUN = #sabun#
+			)
+		WHERE
+			RNUM = 1
+	</select>
+	
+	<update id="loginDAO.updateLogincnt" parameterClass="loginVO">
+		<![CDATA[
+			UPDATE TBL_USERMASTER
+			SET
+				logincnt = logincnt + 1
+			WHERE
+				cn = #id# AND tenant_id = #tenantId#
+		]]>
+	</update>
+	
 </sqlMap>

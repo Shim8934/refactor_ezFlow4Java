@@ -69,7 +69,9 @@
 			</div>
 		</div>
 
-		<input id="imgFile" type="file" style="display:none" />
+		<input id="imgFile" type="file" style="display:none" accept="image/*"/>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript">
@@ -209,7 +211,13 @@
     			
     			var request = new XMLHttpRequest();
     
-    			if ( ext == "jpeg" || ext == "jpg" || ext == "png" || ext == "bmp" || ext == "gif") {
+    			if (ext == "jpeg" || ext == "jpg" || ext == "png" || ext == "bmp" || ext == "gif") {
+    				/* 2021-12-09 홍승비 - 로고 이미지 업로드 시 서버단에서도 이미지 확장자 체크 진행 */
+    				if (checkImgExtension(ext) == "UPLOAD_EXT_ERROR") {
+    					alert("<spring:message code ='ezAttitude.t260' />"); // 허용하지 않는 확장자입니다.
+    					return false;
+    				}
+    				
 	    			request.open("POST", "/admin/ezNewPortal/uploadLogo.do");
 	    			request.send(fd);
 	    
@@ -258,7 +266,7 @@
 					}
 					
 					var request = new XMLHttpRequest();
-					request.open("DELETE", "/admin/ezNewPortal/deleteLogo.do", true);
+					request.open("POST", "/admin/ezNewPortal/deleteLogo.do", true);
 					request.setRequestHeader('content-type', 'application/json');
 	    
 					request.onload = function() {

@@ -8,6 +8,8 @@
 	<typeAlias alias="AccessIdVO" type="egovframework.ezEKP.ezSystem.vo.AccessIdVO"/>
 	<typeAlias alias="CountryVO" type="egovframework.ezEKP.ezSystem.vo.CountryVO"/>
 	<typeAlias alias="PasswordPolicyVO" type="egovframework.ezEKP.ezSystem.vo.PasswordPolicyVO"/>
+	<typeAlias alias="MainVO" type="egovframework.let.main.vo.MainVO"/>
+	<typeAlias alias="PermissionInfoVO"	type="egovframework.ezEKP.ezSystem.vo.PermissionInfoVO" />
 	
 	<select id="EzSystemAdminDAO.getSysParam" parameterClass="Integer" resultClass="SysParamVO">
 		<![CDATA[
@@ -65,6 +67,16 @@
 				</isEqual>
 			</isNotEmpty>
 		</isNotEmpty>
+		<isNotEmpty property="search_keycodeForStatus" prepend="and">
+			<isEqual property="search_keycodeForStatus" compareValue="Y">
+				(	STATUS LIKE 'Y'
+				OR 	STATUS like ''
+				OR	STATUS IS NULL	)
+			</isEqual>
+			<isEqual property="search_keycodeForStatus" compareValue="N">
+				STATUS LIKE 'N'
+			</isEqual>
+		</isNotEmpty>
 		<isNotEmpty property="startDate" prepend="and">
 			<![CDATA[
 			DATE_FORMAT(DATE_ADD(DATE_FORMAT(CONNECTTIME,'%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d') >= #startDate# 
@@ -77,8 +89,10 @@
 		</isNotEmpty>
 	</sql>
 	
+	<!-- 2021-12-21 이사라 :  DISCONNECTTIME, STATUS 추가-->
 	<select id="EzSystemAdminDAO.getLoginHist" parameterClass="map" resultClass="ConnectionInfoVO">
 			SELECT  DATE_ADD(DATE_FORMAT(C.CONNECTTIME, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE) AS CONNECTTIME,
+					IFNULL(DATE_ADD(DATE_FORMAT(C.DISCONNECTTIME, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), "") AS DISCONNECTTIME,
 					C.SEQUENCE,
 					C.USERNM,
 					C.USERNM2,
@@ -90,13 +104,14 @@
 					C.COMPANYID,
 					C.COMPANYNM,
 					C.COMPANYNM2,
-					C.USERID
+					C.USERID,
+					C.STATUS
 			FROM 
-					TBL_CONNECTION_INFO C INNER JOIN TBL_USERLOCALINFO U
+					TBL_CONNECTION_INFO C <!-- INNER JOIN TBL_USERLOCALINFO U
 			ON 
-					C.USERID = U.USERID
+					C.USERID = U.USERID -->
 			WHERE 
-					C.TENANT_ID=#v_tenantID# AND U.TENANT_ID=#v_tenantID# 
+					C.TENANT_ID=#v_tenantID# <!--  AND U.TENANT_ID=#v_tenantID#  -->
 					<isNotEqual property="companyId" compareValue="Top/organ">
 						AND C.COMPANYID=#companyId#
 					</isNotEqual>
@@ -112,8 +127,10 @@
 		</isNotEqual>
 	</select>
 
+	<!-- 2021-12-21 이사라 :  DISCONNECTTIME, STATUS 추가-->
 	<select id="EzSystemAdminDAO.getLoginHistNotAdmin" parameterClass="map" resultClass="ConnectionInfoVO">
 			SELECT  DATE_ADD(DATE_FORMAT(C.CONNECTTIME, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE) AS CONNECTTIME,
+					IFNULL(DATE_ADD(DATE_FORMAT(C.DISCONNECTTIME, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), "") AS DISCONNECTTIME,
 					C.SEQUENCE,
 					C.USERNM,
 					C.USERNM2,
@@ -123,13 +140,14 @@
 					C.CONNECTBROWSER,
 					C.CONNECTOS,
 					C.COMPANYID,
-					C.USERID
+					C.USERID,
+					C.STATUS
 			FROM 
-					TBL_CONNECTION_INFO C INNER JOIN TBL_USERLOCALINFO U
+					TBL_CONNECTION_INFO C <!-- INNER JOIN TBL_USERLOCALINFO U
 			ON 
-					C.USERID = U.USERID
+					C.USERID = U.USERID -->
 			WHERE 
-					C.TENANT_ID=#v_tenantID# AND U.TENANT_ID=#v_tenantID# AND C.USERID=#userId# 
+					C.TENANT_ID=#v_tenantID# <!--  AND U.TENANT_ID=#v_tenantID# --> AND C.USERID=#userId# 
 					<isNotEqual property="companyId" compareValue="Top/organ">
 						AND C.COMPANYID=#companyId# 
 					</isNotEqual>
@@ -416,6 +434,61 @@
 		]]>
 	</update>
 	
+	<select id="EzSystemAdminDAO.getAdminAccessIPBand" parameterClass="Integer" resultClass="IPBandVO">
+		<![CDATA[
+			SELECT
+				IPNO, 
+				IPADDRESS,
+				ALLOW_ACCESS AS "ACCESS",
+				EXPLANATION
+			FROM 
+				TBL_ADMIN_ACCESS_IP
+			WHERE 
+				TENANT_ID=#tenantID#
+		]]>
+	</select>
+	
+	<insert id="EzSystemAdminDAO.insertAdminIPBand" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO 
+				TBL_ADMIN_ACCESS_IP (TENANT_ID, IPADDRESS, ALLOW_ACCESS, EXPLANATION) 
+			VALUES (#tenantID#, #ipAddress#, #access#, #explanation#)
+		]]>
+	</insert>
+	
+	<update id="EzSystemAdminDAO.updateAdminIPBand" parameterClass="Map">
+		<![CDATA[
+			UPDATE 
+				TBL_ADMIN_ACCESS_IP
+			SET 
+				IPADDRESS=#ipAddress#,
+				ALLOW_ACCESS=#access#,
+				EXPLANATION=#explanation#
+			WHERE 
+				IPNO=#ipNo#
+		]]>
+	</update>
+	
+	<select id="EzSystemAdminDAO.getSystemAdminIPBand" parameterClass="Integer" resultClass="IPBandVO">
+		<![CDATA[
+			SELECT 
+				IPADDRESS,
+				ALLOW_ACCESS AS "ACCESS",
+				EXPLANATION
+			FROM 
+				TBL_ADMIN_ACCESS_IP
+			WHERE 
+				IPNO=#ipNo#
+		]]>
+	</select>
+	<delete id="EzSystemAdminDAO.deleteAdminIPBand" parameterClass="java.util.List">
+		<![CDATA[
+			DELETE FROM
+				TBL_ADMIN_ACCESS_IP
+            ]]> <iterate prepend="WHERE IPNO IN" open="(" close=")" conjunction=",">#ipNoList[]#</iterate>
+       
+	</delete>
+
 	<insert id="EzSystemAdminDAO.insertCompanyConfigParam" parameterClass="SysParamVO">
 		<![CDATA[
 			INSERT INTO 
@@ -500,5 +573,192 @@
 		WHERE TENANT_ID = #tenantId# AND COMPANY_ID=#companyId#
 		]]>
 	</delete>
- 	
+	
+ 	<sql id="EzSystemAdminDAO.searchQuery2">
+		<isNotEmpty property="search_keycode" prepend="and">
+			<isNotEmpty property="search_keyword" >
+				<isEqual property="lang" compareValue="1" >
+					<isEqual property="search_keycode" compareValue="1">
+						USERNM2 LIKE CONCAT('%', #search_keyword#,'%')
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="2">
+						DEPTNM2 LIKE CONCAT('%', #search_keyword#,'%')
+					</isEqual>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<isEqual property="search_keycode" compareValue="1">
+						USERNM LIKE CONCAT('%', #search_keyword#,'%')
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="2">
+						DEPTNM LIKE CONCAT('%', #search_keyword#,'%')
+					</isEqual>
+				</isNotEqual>
+				<isEqual property="search_keycode" compareValue="3">
+					ACCESSIP LIKE CONCAT('%', #search_keyword#,'%')
+				</isEqual>
+				<isEqual property="search_keycode" compareValue="4">
+					ACCESSBROWSER LIKE CONCAT('%', #search_keyword#,'%')
+				</isEqual>
+				<isEqual property="search_keycode" compareValue="5">
+					ACCESSOS LIKE CONCAT('%', #search_keyword#,'%')
+				</isEqual>
+			</isNotEmpty>
+		</isNotEmpty>
+		<isNotEmpty property="search_keycodeForRoll" prepend="and">
+			<isEqual property="search_keycodeForRoll" compareValue="c=1">
+				ADMINTYPE LIKE '%c=1%'
+			</isEqual>
+			<isEqual property="search_keycodeForRoll" compareValue="k=1">
+				ADMINTYPE LIKE '%k=1%'
+			</isEqual>
+		</isNotEmpty>
+		<isNotEmpty property="startDate" prepend="and">
+			<![CDATA[
+			DATE_FORMAT(DATE_ADD(DATE_FORMAT(ACCESSTIME,'%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d') >= #startDate# 
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="endDate" prepend="and">
+			<![CDATA[
+			DATE_FORMAT(DATE_ADD(DATE_FORMAT(ACCESSTIME,'%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d') <= #endDate#
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+ 	<select id="EzSystemAdminDAO.getAdminAccessHist" parameterClass="map" resultClass="MainVO">
+			SELECT  DATE_ADD(DATE_FORMAT(C.ACCESSTIME, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE) AS ACCESSTIME,
+					C.SEQUENCE,
+					C.USERNM,
+					C.USERNM2,
+					C.DEPTNM,
+					C.DEPTNM2,
+					C.ACCESSIP,
+					C.ACCESSBROWSER,
+					C.ACCESSOS,
+					C.COMPANYID,
+					C.COMPANYNM,
+					C.COMPANYNM2,
+					C.USERID,
+					C.ADMINTYPE
+			FROM 
+					TBL_ADMIN_ACCESS_INFO C
+			WHERE 
+					C.TENANT_ID=#v_tenantID#
+					<isNotEqual property="companyId" compareValue="Top/organ">
+						AND C.COMPANYID=#companyId#
+					</isNotEqual>
+					<include refid="EzSystemAdminDAO.searchQuery2"/>
+					<isEqual property="search_keycode" compareValue="6">
+						AND C.USERID LIKE CONCAT('%', #search_keyword#,'%')
+					</isEqual>
+			ORDER BY 
+					SEQUENCE DESC
+		<isNotEqual property="v_start" compareValue="-1">
+			LIMIT
+				    #v_start#, #pageCount#
+		</isNotEqual>
+	</select>
+	
+	<select id="EzSystemAdminDAO.getAdminAccessHistCount" parameterClass="map" resultClass="int">
+		SELECT 	COUNT(SEQUENCE) 
+		FROM   	TBL_ADMIN_ACCESS_INFO
+		WHERE	TENANT_ID = #v_tenantID# 
+		<isNotEqual property="companyId" compareValue="Top/organ">
+			AND COMPANYID = #companyId#
+		</isNotEqual>	
+		<include refid="EzSystemAdminDAO.searchQuery2"/>
+		<isEqual property="search_keycode" compareValue="6">
+			AND USERID LIKE CONCAT('%', #search_keyword#,'%')
+		</isEqual>
+	</select>
+
+	<!-- 회사관리자가 전체관리자 이력을 조회 할 수 있도록 주석 처리, 조회 못 하도록 하기 위해서는 아래 주석을 풀면 됨 -->
+	<sql id="EzSystemAdminDAO.searchQueryForPermissionChList">
+		<isNotEmpty property="search_keycode" prepend="and">
+			<isNotEmpty property="search_keyword">
+				<isEqual property="lang" compareValue="1">
+					<isEqual property="search_keycode" compareValue="1">
+						USERNM2	LIKE CONCAT('%', #search_keyword#,'%')
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="2">
+						DEPTNM2	LIKE CONCAT('%', #search_keyword#,'%')
+					</isEqual>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<isEqual property="search_keycode" compareValue="1">
+						USERNM LIKE	CONCAT('%', #search_keyword#,'%')
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="2">
+						DEPTNM LIKE	CONCAT('%', #search_keyword#,'%')
+					</isEqual>
+				</isNotEqual>
+			</isNotEmpty>
+		</isNotEmpty>
+		<!-- <isEmpty property="isMasterAdmin" prepend="and">
+			ADMINTYPE NOT LIKE CONCAT('c=', '%')
+		</isEmpty> -->
+		<isNotEmpty property="search_keycodeForRoll" prepend="and">
+			ADMINTYPE LIKE CONCAT('%', #search_keycodeForRoll#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="startDate" prepend="and">
+			<![CDATA[
+			DATE_FORMAT(DATE_ADD(DATE_FORMAT(AUTHORIZEDTIME,'%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d') >= #startDate#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="endDate" prepend="and">
+			<![CDATA[
+			DATE_FORMAT(DATE_ADD(DATE_FORMAT(AUTHORIZEDTIME,'%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d') <= #endDate#
+			]]>
+		</isNotEmpty>
+	</sql>
+
+	<select id="EzSystemAdminDAO.getPermissionChHist" parameterClass="map" resultClass="PermissionInfoVO">
+		SELECT DATE_ADD(DATE_FORMAT(C.AUTHORIZEDTIME, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE) AS AUTHORIZEDTIME,
+			C.SEQUENCE,
+			C.USERID,
+			C.USERNM,
+			C.USERNM2,
+			C.DEPTNM,
+			C.DEPTNM2,
+			C.COMPANYID,
+			C.COMPANYNM,
+			C.COMPANYNM2,
+			C.AUTHORIZEDTIME,
+			C.ADMINTYPE,
+			C.STATUS,
+			C.AUTHORIZERID,
+			C.AUTHORIZERNM,
+			C.AUTHORIZERNM2,
+			C.AUTHORIZERIP
+		FROM
+			TBL_PERMISSION_CHANGE_INFO C
+		WHERE
+			C.TENANT_ID=#v_tenantID#
+		<isNotEqual property="companyId" compareValue="Top/organ">
+			AND C.COMPANYID=#companyId#
+		</isNotEqual>
+		<include
+			refid="EzSystemAdminDAO.searchQueryForPermissionChList" />
+		<isEqual property="search_keycode" compareValue="6">
+			AND C.USERID LIKE CONCAT('%', #search_keyword#,'%')
+		</isEqual>
+		ORDER BY	SEQUENCE DESC
+		<isNotEqual property="v_start" compareValue="-1">
+			LIMIT	#v_start#, #pageCount#
+		</isNotEqual>
+	</select>
+
+	<select id="EzSystemAdminDAO.getPermissionChHistCount" parameterClass="map" resultClass="int">
+		SELECT COUNT(SEQUENCE)
+		FROM TBL_PERMISSION_CHANGE_INFO
+		WHERE TENANT_ID = #v_tenantID#
+		<isNotEqual property="companyId" compareValue="Top/organ">
+			AND COMPANYID = #companyId#
+		</isNotEqual>
+		<include
+			refid="EzSystemAdminDAO.searchQueryForPermissionChList" />
+		<isEqual property="search_keycode" compareValue="6">
+			AND USERID LIKE CONCAT('%', #search_keyword#,'%')
+		</isEqual>
+	</select>
+
 </sqlMap>

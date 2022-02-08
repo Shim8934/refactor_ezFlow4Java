@@ -97,7 +97,7 @@
 				var WriterID = null;
 				var WriterDeptID = null;
 		        var shareDeptId = "${shareDeptId}";
-				
+
 		        document.onselectstart = function () { return false; };
 		
 		        window.onload = function () {
@@ -1447,6 +1447,7 @@
 		        idistbox_onclick();
 		    }
 		
+		    var pSaveDocID = ""; // 통합PC저장을 위한 전역변수
 		    function TotalSave_onclick() {
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
@@ -1468,9 +1469,39 @@
 		                    return "";
 		                }
 		            }
-		            pDocID = tr[0].getAttribute("DATA1");
+		            pSaveDocID = tr[0].getAttribute("DATA1");
 		        }
-		
+		        
+		        /* 2021-10-21 홍승비 - 결재완료문서 통합 PC 저장 시 보안결재 확인동작 추가 */
+				if (tr[0].getAttribute("DATA14") != "" && tr[0].getAttribute("DATA14") >= GetTodayDate()) {
+		            if (CheckAprLine(tr[0].getAttribute("DATA1")) == "TRUE") {
+		            	chk_Passwd(UserID, chk_Passwd_CompleteSave);
+		            } else {
+		                OpenAlertUI(strLang580,"OPEN","");
+		                return;
+		            }
+		        } else {
+		        	TotalSave_onclick_complete(pSaveDocID);
+		        }
+		    }
+		    
+		    // 통합 PC 저장 시 보안결재 > 패스워드 확인 후 동작
+			function chk_Passwd_CompleteSave(Rtn) {
+		        if (Rtn == "FALSE") {
+		            var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
+		            OpenAlertUI(pAlertContent);
+		        }
+		        else if (Rtn == "cancel") {
+		            var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
+		            OpenAlertUI(pAlertContent);
+		        }
+		        else {
+		        	TotalSave_onclick_complete(pSaveDocID);
+		        }
+		    }
+		    
+		    // 실제 통합 PC 저장 동작 분리 (기록물대장)
+		    function TotalSave_onclick_complete(pDocID) {
 		        var url = "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=END";
 		        var feature = "status=no,help=no,scroll=no,edge=sunken,width=580px,height=480px";
 		        feature = feature + GetOpenPosition(580, 480);
@@ -1501,7 +1532,8 @@
 		
 		    function search() {
 		        if (document.getElementById("txt_keyword").value != "") {
-		            pageNum = 1;
+					// 2021-09-27 기록물대장 검색시 페이지 변경되지 않는 버그 수정
+		            curpage = 1;
 		        }
 		        else {
 		            alert("<spring:message code='ezApprovalG.t1160'/>");
@@ -1517,9 +1549,9 @@
 					}
 		            
 		            if (radiosearch.value == "rad_Subject") {
-		                g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE>" + document.getElementById("txt_keyword").value + "</TITLE><REGTYPE></REGTYPE><SREGDATE></SREGDATE><EREGDATE></EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
+		                g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE><REGTYPE></REGTYPE><SREGDATE></SREGDATE><EREGDATE></EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
 		            } else if (radiosearch.value == "rad_Writer") {
-		                g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE></SREGDATE><EREGDATE></EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER>" + document.getElementById("txt_keyword").value + "</DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
+		                g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE></SREGDATE><EREGDATE></EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER><![CDATA[" + document.getElementById("txt_keyword").value + "]]></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
 		            }
 		            
 		            switch (ListTypeFlag) {
@@ -1543,10 +1575,10 @@
 		            var radiosearch = document.getElementById('selectType');
 		
 		            if (radiosearch.value == "rad_Subject") {
-		                g_CabSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE>" + document.getElementById("txt_keyword").value + "</TITLE><TASKCODE></TASKCODE><SPRODUCEY></SPRODUCEY><EPRODUCEY></EPRODUCEY><SENDY></SENDY><EENDY></EENDY><RECTYPECODE></RECTYPECODE><KEEPPERIOD></KEEPPERIOD><KEEPMETHOD></KEEPMETHOD><KEEPPLACE></KEEPPLACE><CHARGER></CHARGER><TRANSEXPIRE/><TRANSFLAG/><RECEIVEDCAB/><GIVECAB/></SEARCHPARAM>";
+		                g_CabSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE><TASKCODE></TASKCODE><SPRODUCEY></SPRODUCEY><EPRODUCEY></EPRODUCEY><SENDY></SENDY><EENDY></EENDY><RECTYPECODE></RECTYPECODE><KEEPPERIOD></KEEPPERIOD><KEEPMETHOD></KEEPMETHOD><KEEPPLACE></KEEPPLACE><CHARGER></CHARGER><TRANSEXPIRE/><TRANSFLAG/><RECEIVEDCAB/><GIVECAB/></SEARCHPARAM>";
 		            }
 		            else if (radiosearch.value == "rad_Writer") {
-		                g_CabSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE></TITLE><TASKCODE></TASKCODE><SPRODUCEY></SPRODUCEY><EPRODUCEY></EPRODUCEY><SENDY></SENDY><EENDY></EENDY><RECTYPECODE></RECTYPECODE><KEEPPERIOD></KEEPPERIOD><KEEPMETHOD></KEEPMETHOD><KEEPPLACE></KEEPPLACE><CHARGER>" + document.getElementById("txt_keyword").value + "</CHARGER><TRANSEXPIRE/><TRANSFLAG/><RECEIVEDCAB/><GIVECAB/></SEARCHPARAM>";
+		                g_CabSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE></TITLE><TASKCODE></TASKCODE><SPRODUCEY></SPRODUCEY><EPRODUCEY></EPRODUCEY><SENDY></SENDY><EENDY></EENDY><RECTYPECODE></RECTYPECODE><KEEPPERIOD></KEEPPERIOD><KEEPMETHOD></KEEPMETHOD><KEEPPLACE></KEEPPLACE><CHARGER><![CDATA[" + document.getElementById("txt_keyword").value + "]]></CHARGER><TRANSEXPIRE/><TRANSFLAG/><RECEIVEDCAB/><GIVECAB/></SEARCHPARAM>";
 		            }
 		
 		            switch (ListTypeFlag) {
@@ -1570,10 +1602,10 @@
 		            var radiosearch = document.getElementById('selectType');
 		
 		            if (radiosearch.value == "rad_Subject") {
-		                g_DeliverySearchParamXml = "<SEARCHPARAM><DEPTCODE></DEPTCODE><DEPTCODE2>" + DeptID + "</DEPTCODE2><TITLE>" + document.getElementById("txt_keyword").value + "</TITLE><SREGDATE></SREGDATE><EREGDATE></EREGDATE><DEBENTURER></DEBENTURER></SEARCHPARAM>";
+		                g_DeliverySearchParamXml = "<SEARCHPARAM><DEPTCODE></DEPTCODE><DEPTCODE2>" + DeptID + "</DEPTCODE2><TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE><SREGDATE></SREGDATE><EREGDATE></EREGDATE><DEBENTURER></DEBENTURER></SEARCHPARAM>";
 		            }
 		            else if (radiosearch.value == "rad_Writer") {
-		                g_DeliverySearchParamXml = "<SEARCHPARAM><DEPTCODE></DEPTCODE><DEPTCODE2>" + DeptID + "</DEPTCODE2><TITLE></TITLE><SREGDATE></SREGDATE><EREGDATE></EREGDATE><DEBENTURER>" + document.getElementById("txt_keyword").value + "</DEBENTURER></SEARCHPARAM>";
+		                g_DeliverySearchParamXml = "<SEARCHPARAM><DEPTCODE></DEPTCODE><DEPTCODE2>" + DeptID + "</DEPTCODE2><TITLE></TITLE><SREGDATE></SREGDATE><EREGDATE></EREGDATE><DEBENTURER><![CDATA[" + document.getElementById("txt_keyword").value + "]]></DEBENTURER></SEARCHPARAM>";
 		            }
 		
 		            GetDocDeliveryList(g_DeliverySearchParamXml);

@@ -82,7 +82,7 @@
 		        
 		        $("#datepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#datepicker").datepicker('setDate', SDate);
-
+		        
 		        $.datepicker.regional["<spring:message code='main.t0619' />"] = {
 			        	closeText: "<spring:message code='main.t3' />",
 			            prevText: "<spring:message code='main.t0604' />",
@@ -102,9 +102,10 @@
 			            showMonthAfterYear: true,
 			            onSelect: function (obj) {
 			                $('a.ui-state-default').removeClass('ui-state-click');
+			                $('a.ui-state-default').removeClass('ui-state-active');
 			                $('a.ui-state-hover').addClass('ui-state-click');
 			                $('a.ui-state-default').removeClass('ui-state-hover');
-			            	
+			                inst.preventDefault(); // onSelect의 중복 호출 방지
 			            }
 			        };
 		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);

@@ -151,7 +151,6 @@
 	        var g_senderinfo = "<c:out value ='${userInfo.companyName}'/>" + ", " + "<c:out value ='${userInfo.deptName}'/>" + ", " + "<c:out value ='${userInfo.title}'/>";
 	        var approvalFlag = "<c:out value ='${approvalFlag}'/>";
 	        var isHWP = "<c:out value ='${isHWP}'/>";
-	        var isUsed = "";
 	        var ext = "hwp";
 	        var nonElecRec = "<c:out value ='${nonElecRec}'/>";
 	        var nonElecRecInfoXml = "", nonSepAttachLVXml = "", sepAttachCheckYN = "";
@@ -168,7 +167,8 @@
 			var newpDocID = "";
 	        var useRedraftOpinionKeep = "<c:out value='${useRedraftOpinionKeep}'/>";
 	        var formAprOption = "<c:out value='${formAprOption}'/>";
-	        var rtnSignInfo;
+	        var passAprLine = "";
+	        var rtnSignInfo = [];
 	        var useWebHWP = "<c:out value ='${useWebHWP}'/>";
 	        var pConnKey = "<c:out value ='${connKey}'/>";
 	        var pConnFormCode = "<c:out value ='${connFormCode}'/>";
@@ -202,9 +202,13 @@
 	        }
 	
 	       	window.onresize = function () {
-	       		document.getElementById("messageWHWPEditor").style.height = document.documentElement.clientHeight - 150 + "px";
-	       		var mHeight = document.documentElement.clientHeight - 110 - document.getElementById("messageWHWPEditor").offsetTop + "px";
-	       	//	var mHeight = document.documentElement.clientHeight - 172 - document.getElementById("message").offsetTop + "px";
+	       		if(beforeUrl != "") {
+	       			document.getElementById("messageWHWPEditor").style.height = document.documentElement.clientHeight - 170 + "px";
+	       			var mHeight = document.documentElement.clientHeight - 180 - document.getElementById("messageWHWPEditor").offsetTop + "px";
+	       		} else {
+	       			document.getElementById("messageWHWPEditor").style.height = document.documentElement.clientHeight - 150 + "px";
+	       			var mHeight = document.documentElement.clientHeight - 110 - document.getElementById("messageWHWPEditor").offsetTop + "px";
+	       		}
 	       		message.Resize(mHeight);
 	        }
 	
@@ -296,6 +300,7 @@
 	                    }
 	                    
 	                    message.EditMode(2);
+						message.SetViewProperties(2, 100);
 	                    message.MoveToField("doctitle");
 	                    message.ScrollPosInfo(0, 0);
 	                } else {
@@ -327,6 +332,27 @@
 	            } catch (e) {
 	                alert("ezdraftui_whwp.FieldsAvailable()::" + e);
 	            }
+	        }
+	        
+	        function Insert_ReUse_Content() {
+	        	var URL;
+                URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(beforeUrl);
+                message2.Open(URL, "", "", function (res) { CopyAndPasteContent(res.result) }, null);
+	        }
+	        
+	        function CopyAndPasteContent(isTrue) {
+	        	try {
+		        	if(isTrue) {
+		        		message2.GetCloneData("doctitle", "JSON", function (tempContent) { message.SetCloneData(tempContent, "doctitle", "JSON") });
+		        		message2.GetCloneData("body", "JSON", function (tempContent) { message.SetCloneData(tempContent, "body", "JSON") });
+		        	} else {
+	                    var pAlertContent = "<spring:message code='ezApprovalG.t369'/>";
+	                    OpenAlertUI(pAlertContent);
+	                    message.Clear();
+	                }
+	        	} catch (e) {
+		            alert("CopyAndPasteContent ::" + e);
+		        }
 	        }
 	
 			function GetFormType(pFormID) {
@@ -518,7 +544,12 @@
 	        }
 	
 	        var sendDraftResult = "";
+	        var ingFlag = false;
 	        function btnSendDraft_onclick() {
+	            if (ingFlag) {
+                    return;
+                }
+	            
 	        	var deptCheckFlag = checkDeptAndCabinetId();
 	        	
 				if (deptCheckFlag == "3") {
@@ -553,7 +584,6 @@
 	        // sendDraft 시작
 	        function sendDraft(strClone) {
 	        	var strBytes = parseInt(getByteLength(strClone));
-		    	console.log(strBytes);
 		    	
 		    	var rtnAttachXML = loadXMLString(sendDraftResult);
 				
@@ -748,6 +778,7 @@
 
                             UpdateLineHistory();
                             
+                            draftFlag = true;
                             pAlertContent = "<spring:message code='ezApprovalG.t146'/>";
                             OpenAlertUI(pAlertContent, Complete_Draft);
                             /* draftFlag = true;
@@ -822,7 +853,12 @@
                         }
                         else {
                             Gyuljedate = GetDocInfoData("APR", "STARTDATE");
-                            sendAlertMail("APR", 1, "DRAFT");
+                            CurrentAprType = "001";
+	                        CurrentAprUserID = pUserID;
+	                        
+                            if (passAprLine != "Y") {	 //기결재통과 알림메일은 자바단에서 구현
+                            	sendAlertMail("APR", 1, "DRAFT");
+                            }
                         }
 
                         UpdateLineHistory();
@@ -833,6 +869,7 @@
 	                        pAlertContent = "<spring:message code='ezApprovalG.t146'/>";
                         }
                         
+                        draftFlag = true;
                         OpenAlertUI(pAlertContent, Complete_Draft2);
                         /* draftFlag = true;
 
@@ -868,11 +905,13 @@
 	        // saveDraftInfo 끝
 	        
 	        function GetHTML(callback) {
-	            message.GetTextFile("HWP", "", function (data) { callback(data) });
+                ingFlag = true;
+	            message.GetTextFile("HWP", "", function (data) { ingFlag = false; callback(data); });
 	        }
 	        
 	        function GetHTML2(callback) {
-	            message.GetTextFile("HWPML2X", "", function (data) { callback(data) });
+                ingFlag = true;
+	            message.GetTextFile("HWPML2X", "", function (data) { ingFlag = false; callback(data); });
 	        }
 	        
 		    function Complete_Draft() {
@@ -1310,6 +1349,9 @@
 			        if (pGubun == undefined)
 			            pGubun = CheckGubun;
 			        
+			        parameter[60] = passAprLine;
+			        parameter[61] = tempKeyword;
+			        
 			        ezapprovalinfo_dialogArguments[0] = parameter;
 	                ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 			
@@ -1385,6 +1427,8 @@
 		            setPublicFlag();
 		            SummaryFlag = true;
 		            
+		            passAprLine = ret[32];
+
 		            if (nonElecRec == "Y") {
 		            	nonElecRecInfoXml = ret[23];
 		            	nonSepAttachLVXml = ret[24];
@@ -1601,6 +1645,9 @@
                 }
 	    	}
 	    	
+	    	function Editor_Complete2() {
+	            setTimeout("Insert_ReUse_Content();", 1000);
+	        }
 	    	
 	    	// OpenInformationUI 팝업용 메서드
 	    	
@@ -1648,13 +1695,13 @@
                 }
 	    		
 	    		if (IsSkipDrafter == "FALSE") {
-                	if (nonElecRec != "Y") {
+                	//if (nonElecRec != "Y") {
 	                    //var ret;
 	                    var parameter = new Array();
 	
 	                    parameter[0] = pDocID;
 	                    openSignUI(parameter);
-                	}
+                	//}
                 } else {
                 	GetHTML(saveDraftInfo);
                 }
@@ -1716,7 +1763,7 @@
 				var keywordXml = loadXMLString(GetDocumentElement("CONNROOT", true));
 				var connNodes = SelectNodes(keywordXml, "CONNROOT/conn");
 
-				if (connNodes) {
+				if (connNodes.length>0) {
 					if (pDraftFlag === "REDRAFT") {
 						OpenAlertUI("연동문서는 다시 기안할 수 없습니다.<br/>문서보기 창으로 이동합니다.", function() {
 							var url = "/ezApprovalG/ezviewAprWHWP.do" +
@@ -1833,12 +1880,34 @@
 	                </script>
 	            </td>
 	        </tr>
+	        <c:if test="${empty beforeUrl}">
 	        <tr>
 	        	<td style="padding-bottom:10px;height:820px;" id="messageWHWPEditor">
 	        	<%--<td style="padding-bottom:10px;height:800px;" >--%>
 		    		<iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="/ezApprovalG/WHWPEditor.do" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 	            </td>
 	        </tr>
+	        </c:if>
+	        <c:if test="${not empty beforeUrl}">
+	        <tr>
+	            <td>
+	                <table width="100%" height="100%">
+	                    <tr>
+	                        <td style="padding-bottom:10px;height:800px;" id="messageWHWPEditor">
+					    		<iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="/ezApprovalG/WHWPEditor.do" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
+				            </td>
+	                    </tr>
+	                    <c:if test="${not empty beforeUrl}">
+	                    <tr>
+	                        <td style="vertical-align: top; height: 0%" id="form2">
+					            <iframe id="message2" name="message2" src="/ezApprovalG/WHWPEditor.do?type=copyAppr"  style="background-color: White; height: 0px; width: 0px;"></iframe>
+					        </td>
+	                    </tr>
+	                    </c:if>
+	                </table>
+	            </td>
+	        </tr>
+	        </c:if>
 	        <tr>
 	            <td height="20">
 	                <table class="file" style="height:80px; margin-top:-9px;">

@@ -265,7 +265,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	 * 사용자 메뉴 순서 변경
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/ezNewPortal/updateUserMenuOrder.do", method=RequestMethod.PATCH)
+	@RequestMapping(value = "/ezNewPortal/updateUserMenuOrder.do", method=RequestMethod.POST)
 	@ResponseBody
 	public JSONObject updateUserMenuOrder(@RequestBody JSONObject jObj, HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("updateUserMenuOrder Start");
@@ -292,7 +292,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	 * 사용자 메뉴 순서 초기화
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/ezNewPortal/deleteUserMenuOrder.do", method=RequestMethod.DELETE)
+	@RequestMapping(value = "/ezNewPortal/deleteUserMenuOrder.do", method=RequestMethod.POST)
 	@ResponseBody
 	public JSONObject deleteUserMenuOrder(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("deleteUserMenuOrder Start");
@@ -399,7 +399,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	/**
 	 * 사용자 프레임 변경 & 포틀릿 설정 변경 
 	 */
-	@RequestMapping(value = "/ezNewPortal/updateUserFrameAndPortelt.do", method=RequestMethod.PATCH)
+	@RequestMapping(value = "/ezNewPortal/updateUserFrameAndPortelt.do", method=RequestMethod.POST)
 	@ResponseBody
 	public String updateUserFrameAndPortlet(HttpServletRequest req, @RequestBody JSONObject jObj ,Model model, @CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("updateUserFrameAndPortlet Start");
@@ -477,6 +477,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			model.addAttribute("userId", userId);
 			model.addAttribute("usePortalAutoRefreshInterval", data.get("usePortalAutoRefreshInterval"));
 			model.addAttribute("userLang", userInfo.getPrimary());
+			model.addAttribute("userLang2", userInfo.getLang());
 			
 			//if (useEzWorkspace) {
 				model.addAttribute("workspaceHostUrl", data.get("workspaceHostUrl"));
@@ -511,7 +512,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/ezNewPortal/updatePortletOrderUser.do", method=RequestMethod.PATCH)
+	@RequestMapping(value = "/ezNewPortal/updatePortletOrderUser.do", method=RequestMethod.POST)
 	@ResponseBody
 	public String updatePortletOrderUser(@RequestBody JSONObject jsonParam, HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("updatePortletOrderUser Start");
@@ -750,7 +751,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	}
 	
 	//테마 초기화 실행 함수
-	@RequestMapping(value = "/ezNewPortal/deleteUserThemeSetting.do", method=RequestMethod.DELETE)
+	@RequestMapping(value = "/ezNewPortal/deleteUserThemeSetting.do", method=RequestMethod.POST)
 	public void deleteUserThemeSetting(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("deleteUserThemeSetting Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);

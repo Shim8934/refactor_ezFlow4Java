@@ -66,6 +66,11 @@ public class ScheduleInfoVO {
 	private int repeatCount;
 	
 	private String realEndDate;
+	
+	/** 2021-11-26 홍승비 - 일정완료 데이터 관련 필드 추가 */
+	private String completeFG; // 일정 완료된 경우 Y, 아닌 경우 N
+	private String isAllRep; // 단일 또는 특정 반복일정의 완료인 경우 N, 전체일정 완료인 경우 Y
+	private String repStartDate; // 일정완료 레코드의 일정 시작일 (YYYY-MM-DD HH:mm:SS)
 
 	public String getRealEndDate() {
 		return realEndDate;
@@ -505,6 +510,30 @@ public class ScheduleInfoVO {
 		this.companyid = companyid;
 	}
 
+	public String getCompleteFG() {
+		return completeFG;
+	}
+
+	public void setCompleteFG(String completeFG) {
+		this.completeFG = completeFG;
+	}
+
+	public String getIsAllRep() {
+		return isAllRep;
+	}
+
+	public void setIsAllRep(String isAllRep) {
+		this.isAllRep = isAllRep;
+	}
+
+	public String getRepStartDate() {
+		return repStartDate;
+	}
+
+	public void setRepStartDate(String repStartDate) {
+		this.repStartDate = repStartDate;
+	}
+	
 	@Override
 	public String toString() {
 		return "ScheduleInfoVO [scheduleId=" + scheduleId + ", parentId="
@@ -524,7 +553,8 @@ public class ScheduleInfoVO {
 				+ repetitionDel + ", title=" + title + ", location=" + location
 				+ ", content=" + content + ", contentPath=" + contentPath
 				+ ", groupName=" + groupName + ", companyid=" + companyid
-				+ ", repeatCount=" + repeatCount + "]";
+				+ ", repeatCount=" + repeatCount + ", completeFG=" + completeFG
+				+ ", isAllRep=" + isAllRep + ", repStartDate=" + repStartDate + "]";
 	}
-	
+
 }

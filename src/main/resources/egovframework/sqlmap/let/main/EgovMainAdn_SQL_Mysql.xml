@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Main">
+
+    <typeAlias  alias="mainVO"                 type="egovframework.let.main.vo.MainVO"/>
+
+    <insert id="mainDAO.insertAdminLog" parameterClass="mainVO">
+        <![CDATA[
+	        INSERT INTO TBL_ADMIN_ACCESS_INFO
+			(
+			     USERID,        		USERNM,             USERNM2,            DEPTID,             DEPTNM,             
+			     DEPTNM2, 		     	TITLE,          	TITLE2,             COMPANYID,          COMPANYNM,
+			     COMPANYNM2,         	ACCESSIP, 	     	ACCESSTIME,    		ACCESSBROWSER,     	ACCESSOS,
+			     ACCESSAGENT,      		ADMINTYPE,          TENANT_ID
+			)
+			SELECT
+				#userid#, 					u.displayName as USERNM,    u.displayName2 as USERNM2,	u.department as DEPTID,      				u.DESCRIPTION as DEPTNM,
+				u.DESCRIPTION2 as DEPTNM2,	u.TITLE as TITLE,       	u.TITLE2 as TITLE2,         u.PHYSICALDELIVERYOFFICENAME as COMPANYID,  u.COMPANY as COMPANYNM,
+				u.COMPANY2 as COMPANYNM2,	#accessip#,					utc_timestamp(), 			#accessbrowser#,          					#accessos#,
+				#accessagent#, 				u.EXTENSIONATTRIBUTE1 as ADMINTYPE, 					#tenant_id#
+			FROM TBL_USERMASTER u
+			WHERE 	u.CN = #userid#
+			AND 	u.TENANT_ID = #tenant_id#           
+        ]]>
+    </insert>
+</sqlMap>

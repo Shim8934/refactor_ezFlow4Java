@@ -296,6 +296,8 @@ public class EzCommonController extends EgovFileMngUtil{
 
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		String id = "", email = "", pDeptID = "";
+		String userType = "";
+		String userName = "";
 		
 		String literalEmail = "";
 		String literalDisplayName = "";
@@ -330,7 +332,15 @@ public class EzCommonController extends EgovFileMngUtil{
 			pDeptID = request.getParameter("dept");
 		}
 		
-		logger.debug("id=" + id + ",email=" + email + ",dept=" + pDeptID);
+		if (request.getParameter("userType") != null) {
+			userType = request.getParameter("userType");
+		}
+		
+		if (request.getParameter("userName") != null) {
+			userName = request.getParameter("userName");
+		}
+		
+		logger.debug("id=" + id + ", email=" + email + ", dept=" + pDeptID + ", userType=" + userType + ", userName=" + userName);
 		
 		OrganUserVO userCheckVO = ezOrganService.getUserInfo(id, "1", loginVO.getTenantId());
 		if (userCheckVO != null) {
@@ -346,236 +356,243 @@ public class EzCommonController extends EgovFileMngUtil{
 		
 		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", loginVO.getTenantId());
 		
-		if (dotNetIntegration.equals("YES")) {
-			String parameter = "";
-			String personId = "";
-			String useEmpNumberLogin = ezCommonService.getTenantConfig("UseEmpNumberLogin", loginVO.getTenantId());
-			String mailInnerDomain = ezCommonService.getTenantConfig("MailInnerDomain", loginVO.getTenantId());
-			String[] mailInnerDomains = mailInnerDomain.split(";");
-			boolean isInnerUser = false;
-			
-			if (!email.isEmpty()) {
-				int atSignPos = email.indexOf("@");
-				
-				if (atSignPos != -1) {
-					personId = email.substring(0, atSignPos);
-					String domain = email.substring(atSignPos + 1);
-					
-					for (String innerDomain : mailInnerDomains) {
-						if (domain.equals(innerDomain)) {
-							isInnerUser = true;
-						}
-					}
-				}
-			} else if (!id.isEmpty()) {
-				personId = id;
-				isInnerUser = true;
-			}
-			
-			logger.debug("personId=" + personId + ",isInnerUser=" + isInnerUser);
-			
-			LoginVO user = null;
-			
-			if (isInnerUser) {
-				LoginVO login = new LoginVO();
-				login.setId(personId);
-				login.setDn("NOPASSWORD");
-				login.setTenantId(loginVO.getTenantId());
-				
-				user = loginService.selectUser(login);
-			}
-			
-			if (useEmpNumberLogin.equals("YES")) {
-				if (user != null && user.getSabun() != null) {
-					personId = user.getSabun();
-				}
-			}
-			
-			if (user == null) {
-				parameter = "email=" + URLEncoder.encode(email, "utf-8");
-			} else {
-				parameter = "id=" + URLEncoder.encode(personId, "utf-8") + "&alias=" + URLEncoder.encode(user.getEmail(), "utf-8"); 
-			}
-			
-			logger.debug("parameter=" + parameter);
-			
-			return "redirect:" + dotNetUrl + "/myoffice/common/ShowPersonInfo.aspx?" + parameter; 
+		/* 2021-08-27 홍승비 - 직위/직책/권한그룹 클릭 시 전달받은 이름만을 표출하도록 수정 */
+		if (userType.equals("jikwi") || userType.equals("jikchek") || userType.equals("group")) {
+			literalDisplayName = userName;
+			literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("main.e14", locale) + "' width=119 height=128>";
 		}
-		
-		if (id.equals("")) {
-			if (!email.equals("")) {
-				id = ezOrganService.getCNByEmail(email, loginVO.getTenantId());
-			}
-		} 
-		
-		//email이 alias 메일이어서 id를 못가져왔을 경우
-		//alias mail인지 check후 원래 이메일 주소에서 id를 가져온다.
-		if (id == null || id.equals("")) {
-			if (email.contains("@")) {
-				List<String> aliasAddress = new ArrayList<String>();
-				aliasAddress.add(email);
-				Map<String, String> targetAddress = ezEmailService.getAliasAddressMap(aliasAddress, loginVO.getTenantId());
+		else {
+			if (dotNetIntegration.equals("YES")) {
+				String parameter = "";
+				String personId = "";
+				String useEmpNumberLogin = ezCommonService.getTenantConfig("UseEmpNumberLogin", loginVO.getTenantId());
+				String mailInnerDomain = ezCommonService.getTenantConfig("MailInnerDomain", loginVO.getTenantId());
+				String[] mailInnerDomains = mailInnerDomain.split(";");
+				boolean isInnerUser = false;
 				
-				if (targetAddress != null) {
-					String resultTargetAddress = targetAddress.get(email);
-					logger.debug("resultAddress=" + resultTargetAddress);
+				if (!email.isEmpty()) {
+					int atSignPos = email.indexOf("@");
 					
-					if (resultTargetAddress != null) {
-						aliasMailUse = true;
-						int atSignPos = resultTargetAddress.indexOf("@");
-						if (atSignPos != -1) {
-							id = resultTargetAddress.substring(0, atSignPos);
-							logger.debug("id=" + id);
-						}
-					}
-				}
-			}
-		}
-		
-		if (id != null && !id.equals("")) {
-			
-			MailDistributionVO mailDlVo = ezEmailService.getDistributionInfo(id, loginVO.getTenantId());
-			if (mailDlVo != null && mailDlVo.getName() != null) {
-				literalEmail = mailDlVo.getMail();
-				literalDisplayName = mailDlVo.getName();
-				logger.debug("Distribution(alias) info email=" + literalEmail + ", displayName=" + literalDisplayName);
-			} else {
-			
-				String infoXML = ezOrganService.getPropertyList(id, proplist, loginVO.getPrimary(), loginVO.getTenantId());
-				
-				Document xmldom = commonUtil.convertStringToDocument(infoXML);
-				if (xmldom.getElementsByTagName("MAIL") == null) {
-					literalEmail = email;
-					literalDisplayName = email;
-					literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("main.e14", locale) + "' width=119 height=128>";
-				} else {
-					if (!pDeptID.equals("") && !xmldom.getElementsByTagName("DEPARTMENT").item(0).getTextContent().equals(pDeptID)) {
-						String infoXML2 = ezOrganService.getUserAddjobInfo(id, pDeptID, loginVO.getPrimary(), loginVO.getTenantId());
+					if (atSignPos != -1) {
+						personId = email.substring(0, atSignPos);
+						String domain = email.substring(atSignPos + 1);
 						
-						if (infoXML2!=null && !infoXML2.equals("") && !infoXML2.equals("<DATA></DATA>")) {
-							Document xmldom2 = commonUtil.convertStringToDocument(infoXML2);
+						for (String innerDomain : mailInnerDomains) {
+							if (domain.equals(innerDomain)) {
+								isInnerUser = true;
+							}
+						}
+					}
+				} else if (!id.isEmpty()) {
+					personId = id;
+					isInnerUser = true;
+				}
+				
+				logger.debug("personId=" + personId + ",isInnerUser=" + isInnerUser);
+				
+				LoginVO user = null;
+				
+				if (isInnerUser) {
+					LoginVO login = new LoginVO();
+					login.setId(personId);
+					login.setDn("NOPASSWORD");
+					login.setTenantId(loginVO.getTenantId());
+					
+					user = loginService.selectUser(login);
+				}
+				
+				if (useEmpNumberLogin.equals("YES")) {
+					if (user != null && user.getSabun() != null) {
+						personId = user.getSabun();
+					}
+				}
+				
+				if (user == null) {
+					parameter = "email=" + URLEncoder.encode(email, "utf-8");
+				} else {
+					parameter = "id=" + URLEncoder.encode(personId, "utf-8") + "&alias=" + URLEncoder.encode(user.getEmail(), "utf-8"); 
+				}
+				
+				logger.debug("parameter=" + parameter);
+				
+				return "redirect:" + dotNetUrl + "/myoffice/common/ShowPersonInfo.aspx?" + parameter; 
+			}
+			
+			if (id.equals("")) {
+				if (!email.equals("")) {
+					id = ezOrganService.getCNByEmail(email, loginVO.getTenantId());
+				}
+			} 
+			
+			//email이 alias 메일이어서 id를 못가져왔을 경우
+			//alias mail인지 check후 원래 이메일 주소에서 id를 가져온다.
+			if (id == null || id.equals("")) {
+				if (email.contains("@")) {
+					List<String> aliasAddress = new ArrayList<String>();
+					aliasAddress.add(email);
+					Map<String, String> targetAddress = ezEmailService.getAliasAddressMap(aliasAddress, loginVO.getTenantId());
+					
+					if (targetAddress != null) {
+						String resultTargetAddress = targetAddress.get(email);
+						logger.debug("resultAddress=" + resultTargetAddress);
+						
+						if (resultTargetAddress != null) {
+							aliasMailUse = true;
+							int atSignPos = resultTargetAddress.indexOf("@");
+							if (atSignPos != -1) {
+								id = resultTargetAddress.substring(0, atSignPos);
+								logger.debug("id=" + id);
+							}
+						}
+					}
+				}
+			}
+			
+			if (id != null && !id.equals("")) {
+				
+				MailDistributionVO mailDlVo = ezEmailService.getDistributionInfo(id, loginVO.getTenantId());
+				if (mailDlVo != null && mailDlVo.getName() != null) {
+					literalEmail = mailDlVo.getMail();
+					literalDisplayName = mailDlVo.getName();
+					logger.debug("Distribution(alias) info email=" + literalEmail + ", displayName=" + literalDisplayName);
+				} else {
+				
+					String infoXML = ezOrganService.getPropertyList(id, proplist, loginVO.getPrimary(), loginVO.getTenantId());
+					
+					Document xmldom = commonUtil.convertStringToDocument(infoXML);
+					if (xmldom.getElementsByTagName("MAIL") == null) {
+						literalEmail = email;
+						literalDisplayName = email;
+						literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("main.e14", locale) + "' width=119 height=128>";
+					} else {
+						if (!pDeptID.equals("") && !xmldom.getElementsByTagName("DEPARTMENT").item(0).getTextContent().equals(pDeptID)) {
+							String infoXML2 = ezOrganService.getUserAddjobInfo(id, pDeptID, loginVO.getPrimary(), loginVO.getTenantId());
 							
-							literalDept = xmldom2.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
-							literalTitle= xmldom2.getElementsByTagName("TITLE").item(0).getTextContent();		
-							literalCompany = xmldom2.getElementsByTagName("COMPANY").item(0).getTextContent();
-							literalRole= xmldom2.getElementsByTagName("EXTENSIONATTRIBUTE10").item(0).getTextContent();		
+							if (infoXML2 != null && !infoXML2.equals("") && !infoXML2.equals("<DATA></DATA>")) {
+								Document xmldom2 = commonUtil.convertStringToDocument(infoXML2);
+								
+								literalDept = xmldom2.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
+								literalTitle= xmldom2.getElementsByTagName("TITLE").item(0).getTextContent();		
+								literalCompany = xmldom2.getElementsByTagName("COMPANY").item(0).getTextContent();
+								literalRole= xmldom2.getElementsByTagName("EXTENSIONATTRIBUTE10").item(0).getTextContent();		
+							} else {
+								literalDept = xmldom.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
+								literalTitle= xmldom.getElementsByTagName("TITLE").item(0).getTextContent();
+								literalCompany = xmldom.getElementsByTagName("COMPANY").item(0).getTextContent();
+								literalRole= xmldom.getElementsByTagName("EXTENSIONATTRIBUTE10").item(0).getTextContent();
+							}
+							
 						} else {
+							literalCompany = xmldom.getElementsByTagName("COMPANY").item(0).getTextContent();
 							literalDept = xmldom.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
 							literalTitle= xmldom.getElementsByTagName("TITLE").item(0).getTextContent();
-							literalCompany = xmldom.getElementsByTagName("COMPANY").item(0).getTextContent();
 							literalRole= xmldom.getElementsByTagName("EXTENSIONATTRIBUTE10").item(0).getTextContent();
 						}
 						
-					} else {
-						literalCompany = xmldom.getElementsByTagName("COMPANY").item(0).getTextContent();
-						literalDept = xmldom.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
-						literalTitle= xmldom.getElementsByTagName("TITLE").item(0).getTextContent();
-						literalRole= xmldom.getElementsByTagName("EXTENSIONATTRIBUTE10").item(0).getTextContent();
-					}
-					
-					if (!xmldom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().equals("") && xmldom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().contains(".")) {
-						literalPhoto = "<IMG SRC='/admin/ezOrgan/getPersonalInfo.do?fileName=" + xmldom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent() + "' width=119 height=128>";
-					} else {
-						literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("main.e14", locale) + "' width=119 height=128>";
-					}
-					
-					/* 2018-09-13 홍승비 - 사원 정보 보기 시 담당업무 자기소개 특수문자 처리 */
-	//				literalCompany = xmldom.getElementsByTagName("COMPANY").item(0).getTextContent();
-					literalDisplayName = xmldom.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
-					literalEmail = xmldom.getElementsByTagName("MAIL").item(0).getTextContent();
-					literalPhone = xmldom.getElementsByTagName("TELEPHONENUMBER").item(0).getTextContent();
-					literalMobile = xmldom.getElementsByTagName("MOBILE").item(0).getTextContent();
-					literalHomePhone = xmldom.getElementsByTagName("HOMEPHONE").item(0).getTextContent();
-					literalFax = xmldom.getElementsByTagName("FACSIMILETELEPHONENUMBER").item(0).getTextContent();
-					literalPostal = xmldom.getElementsByTagName("POSTALCODE").item(0).getTextContent();
-					literalAddress= xmldom.getElementsByTagName("STREETADDRESS").item(0).getTextContent();
-					literalInfo = commonUtil.cleanValue(xmldom.getElementsByTagName("INFO").item(0).getTextContent());
-					if (userCheckVO != null) { // 사용자 정보보기 일때만
-						literalFurigana = xmldom.getElementsByTagName("FURIGANA").item(0).getTextContent();
-						literalExtensionPhone = xmldom.getElementsByTagName("EXTENSIONPHONE").item(0).getTextContent();
-						literalOfficeMobile = xmldom.getElementsByTagName("OFFICEMOBILE").item(0).getTextContent();
-					}
-					OrganDeptVO deptVO = ezOrganService.getDeptInfo(id, loginVO.getPrimary(), loginVO.getTenantId());
-					
-					// 이메일 아이디에 match되는 부서가 있는 경우
-					if (deptVO != null) {
-						if (loginVO.getPrimary().equals("1")) {
-							literalCompany = deptVO.getExtensionAttribute3();
+						if (!xmldom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().equals("") && xmldom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().contains(".")) {
+							literalPhoto = "<IMG SRC='/admin/ezOrgan/getPersonalInfo.do?fileName=" + xmldom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent() + "' width=119 height=128>";
 						} else {
-							literalCompany = deptVO.getCompNm2();
+							literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("main.e14", locale) + "' width=119 height=128>";
 						}
 						
-						literalEmail = deptVO.getMail();
-						literalDisplayName = deptVO.getDisplayName();
-						
-						if (!deptVO.getExtensionAttribute2().equals(deptVO.getCn())){
-							literalDept = deptVO.getDisplayName();
+						/* 2018-09-13 홍승비 - 사원 정보 보기 시 담당업무 자기소개 특수문자 처리 */
+		//				literalCompany = xmldom.getElementsByTagName("COMPANY").item(0).getTextContent();
+						literalDisplayName = xmldom.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
+						literalEmail = xmldom.getElementsByTagName("MAIL").item(0).getTextContent();
+						literalPhone = xmldom.getElementsByTagName("TELEPHONENUMBER").item(0).getTextContent();
+						literalMobile = xmldom.getElementsByTagName("MOBILE").item(0).getTextContent();
+						literalHomePhone = xmldom.getElementsByTagName("HOMEPHONE").item(0).getTextContent();
+						literalFax = xmldom.getElementsByTagName("FACSIMILETELEPHONENUMBER").item(0).getTextContent();
+						literalPostal = xmldom.getElementsByTagName("POSTALCODE").item(0).getTextContent();
+						literalAddress= xmldom.getElementsByTagName("STREETADDRESS").item(0).getTextContent();
+						literalInfo = commonUtil.cleanValue(xmldom.getElementsByTagName("INFO").item(0).getTextContent());
+						if (userCheckVO != null) { // 사용자 정보보기 일때만
+							literalFurigana = xmldom.getElementsByTagName("FURIGANA").item(0).getTextContent();
+							literalExtensionPhone = xmldom.getElementsByTagName("EXTENSIONPHONE").item(0).getTextContent();
+							literalOfficeMobile = xmldom.getElementsByTagName("OFFICEMOBILE").item(0).getTextContent();
 						}
-					} 
-				}
-			} // mailDlVo if_Else End
-		} else {
-			String domainName = ezCommonService.getTenantConfig("DomainName", loginVO.getTenantId());
-			
-			int atSignIndex = email.indexOf("@");
-			
-			if (atSignIndex != -1) {
-				String searchId = email.substring(0, atSignIndex);
-				String searchDomain = email.substring(atSignIndex + 1);
+						OrganDeptVO deptVO = ezOrganService.getDeptInfo(id, loginVO.getPrimary(), loginVO.getTenantId());
+						
+						// 이메일 아이디에 match되는 부서가 있는 경우
+						if (deptVO != null) {
+							if (loginVO.getPrimary().equals("1")) {
+								literalCompany = deptVO.getExtensionAttribute3();
+							} else {
+								literalCompany = deptVO.getCompNm2();
+							}
+							
+							literalEmail = deptVO.getMail();
+							literalDisplayName = deptVO.getDisplayName();
+							
+							if (!deptVO.getExtensionAttribute2().equals(deptVO.getCn())){
+								literalDept = deptVO.getDisplayName();
+							}
+						} 
+					}
+				} // mailDlVo if_Else End
+			} else {
+				String domainName = ezCommonService.getTenantConfig("DomainName", loginVO.getTenantId());
 				
-				// 이메일 주소의 도메인이 시스템의 도메인과 동일하면 부서 혹은 공용배포그룹에
-				// 해당하는 이메일 주소인 지를 검사한다.
-				if (searchDomain.equalsIgnoreCase(domainName)) {
-					OrganDeptVO deptVO = ezOrganService.getDeptInfo(searchId, loginVO.getPrimary(), loginVO.getTenantId());
+				int atSignIndex = email.indexOf("@");
+				
+				if (atSignIndex != -1) {
+					String searchId = email.substring(0, atSignIndex);
+					String searchDomain = email.substring(atSignIndex + 1);
 					
-					// 이메일 아이디에 match되는 부서가 있는 경우
-					if (deptVO != null) {
-						if (loginVO.getPrimary().equals("1")) {
-							literalCompany = deptVO.getExtensionAttribute3();
+					// 이메일 주소의 도메인이 시스템의 도메인과 동일하면 부서 혹은 공용배포그룹에
+					// 해당하는 이메일 주소인 지를 검사한다.
+					if (searchDomain.equalsIgnoreCase(domainName)) {
+						OrganDeptVO deptVO = ezOrganService.getDeptInfo(searchId, loginVO.getPrimary(), loginVO.getTenantId());
+						
+						// 이메일 아이디에 match되는 부서가 있는 경우
+						if (deptVO != null) {
+							if (loginVO.getPrimary().equals("1")) {
+								literalCompany = deptVO.getExtensionAttribute3();
+							} else {
+								literalCompany = deptVO.getCompNm2();
+							}
+							
+							if (!deptVO.getExtensionAttribute2().equals(deptVO.getCn())){
+								literalDept = deptVO.getDisplayName();
+							}
+							
+							literalEmail = deptVO.getMail();
+							literalDisplayName = deptVO.getDisplayName();
+						// 이메일 아이디에 match되는 부서가 없는 경우 공용배포그룹에 match되는 항목이 있는 지 확인한다.
 						} else {
-							literalCompany = deptVO.getCompNm2();
+							MailDistributionVO mailDlVo = ezEmailService.getDistributionInfo(searchId, loginVO.getTenantId());
+							if (mailDlVo != null && mailDlVo.getName() != null) {
+								literalEmail = mailDlVo.getMail();
+								literalDisplayName = mailDlVo.getName();
+							}
+							/*List<MailDistributionVO> distributionList = ezEmailService.getDistributionList(loginVO.getCompanyID(), loginVO.getTenantId());
+							
+							if (distributionList != null && distributionList.size() > 0) {				
+								for (MailDistributionVO distribution : distributionList) {
+									if (distribution.getId().equalsIgnoreCase(searchId)) {
+										literalEmail = distribution.getMail();
+										literalDisplayName = distribution.getName();
+										break;
+									}
+								}				
+							}			*/	
 						}
-						
-						if (!deptVO.getExtensionAttribute2().equals(deptVO.getCn())){
-							literalDept = deptVO.getDisplayName();
-						}
-						
-						literalEmail = deptVO.getMail();
-						literalDisplayName = deptVO.getDisplayName();
-					// 이메일 아이디에 match되는 부서가 없는 경우 공용배포그룹에 match되는 항목이 있는 지 확인한다.
-					} else {
-						MailDistributionVO mailDlVo = ezEmailService.getDistributionInfo(searchId, loginVO.getTenantId());
-						if (mailDlVo != null && mailDlVo.getName() != null) {
-							literalEmail = mailDlVo.getMail();
-							literalDisplayName = mailDlVo.getName();
-						}
-						/*List<MailDistributionVO> distributionList = ezEmailService.getDistributionList(loginVO.getCompanyID(), loginVO.getTenantId());
-						
-						if (distributionList != null && distributionList.size() > 0) {				
-							for (MailDistributionVO distribution : distributionList) {
-								if (distribution.getId().equalsIgnoreCase(searchId)) {
-									literalEmail = distribution.getMail();
-									literalDisplayName = distribution.getName();
-									break;
-								}
-							}				
-						}			*/	
 					}
 				}
+				
+				// 부서 혹은 공용배포그룹에 match되는 항목이 없는 경우엔 지정된 이메일 주소를 그대로 사용한다.
+				if (literalEmail.isEmpty()) {
+					literalEmail = email;
+					literalDisplayName = email;
+				}
+				
+				literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("main.e14", locale) + "' width=119 height=128>";
 			}
 			
-			// 부서 혹은 공용배포그룹에 match되는 항목이 없는 경우엔 지정된 이메일 주소를 그대로 사용한다.
-			if (literalEmail.isEmpty()) {
+			//보낸사람이 alias mail로 보냈을 경우, 메일주소에 alias 주소로 입력
+			if (aliasMailUse == true) {
 				literalEmail = email;
-				literalDisplayName = email;
 			}
-			
-			literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("main.e14", locale) + "' width=119 height=128>";
-		}
-		
-		//보낸사람이 alias mail로 보냈을 경우, 메일주소에 alias 주소로 입력
-		if (aliasMailUse == true) {
-			literalEmail = email;
 		}
 		
 		model.addAttribute("LiteralEmail", literalEmail);
@@ -697,19 +714,16 @@ public class EzCommonController extends EgovFileMngUtil{
 	}
 	//2019-09-20 메신저 다운로드 추가
 	@RequestMapping(value = "/ezCommon/talkDownloadAttach.do", method = RequestMethod.GET)
-	public void talkDownloadAttach(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public void talkDownloadAttach(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("talkDownloadAttach started");
 
-		String filePath = request.getParameter("filePath");
-		String fileName = "";
+		// 20211102 조진호 - 경기대학교 웹취약점(모의해킹) 체크 결과에 따른 조치. 기존 filePath는 get parameter로 받아와 경로가 보였지만 이 부분을 서버에서 처리하는 방식으로 수정
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String filePath = ezCommonService.getTenantConfig("talkFilePath", userInfo.getTenantId());
+		String fileName = filePath.substring(filePath.lastIndexOf(commonUtil.separator) + 1); 
 		String realPath = commonUtil.getRealPath(request);
-		
-		if (request.getParameter("fileName") != null) {
-			fileName = request.getParameter("fileName");
-		} else {
-			fileName = filePath.substring(filePath.lastIndexOf(commonUtil.separator) + 1); 
-		}
-		
+
 		downFile(request, response, realPath + filePath, fileName);
 		
 		logger.debug("talkDownloadAttach ended");
@@ -757,5 +771,53 @@ public class EzCommonController extends EgovFileMngUtil{
 		result.put("fileList", jsonArr);
 		logger.debug("attachWebFolderFile ended.");
 		return result;
-	}	
+	}
+	
+	/**
+	 * 2021-12-09 홍승비 - 파일 업로드 시 확장자 체크 메서드 분리 (ajax 호출용, USE_FileExtension만 체크)
+	 * */
+	@RequestMapping(value = "/ezCommon/checkUseFileExtension.do", method = RequestMethod.GET)
+	@ResponseBody
+	public String checkUseFileExtension(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+		logger.debug("checkUseFileExtension started.");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
+		String fileExt = request.getParameter("fileExt");
+		String result = "";
+		
+		logger.debug("checkUseFileExtension file extension is : " + fileExt);
+		if (!useExtension.equals("*") && useExtension.toLowerCase().indexOf(fileExt.toLowerCase()) < 0) {
+			result = "UPLOAD_EXT_ERROR";
+		} else {
+			result = "OK";
+		}
+		
+		logger.debug("checkUseFileExtension ended, result = " + result);
+		return result;
+	}
+	
+	/**
+	 * 2021-12-09 홍승비 - 이미지 업로드 시 확장자 체크 메서드 분리 (ajax 호출용, USE_FileExtension을 포함)
+	 * */
+	@RequestMapping(value = "/ezCommon/checkImgExtension.do", method = RequestMethod.GET)
+	@ResponseBody
+	public String checkImgExtension(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+		logger.debug("checkImgExtension started.");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
+		String fileExt = request.getParameter("fileExt");
+		String result = "";
+		
+		logger.debug("checkImgExtension file extension is : " + fileExt);
+		if (commonUtil.checkImgExtension(fileExt) == false || (!useExtension.equals("*") && useExtension.toLowerCase().indexOf(fileExt.toLowerCase()) < 0)) {
+			result = "UPLOAD_EXT_ERROR";
+		} else {
+			result = "OK";
+		}
+		
+		logger.debug("checkImgExtension ended, result = " + result);
+		return result;
+	}
 }

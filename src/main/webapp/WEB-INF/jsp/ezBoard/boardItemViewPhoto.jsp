@@ -103,6 +103,7 @@
 		        var rsa = new RSAKey();
 		        var imageContentArray = new Array();
 		        var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
+		        var agent = navigator.userAgent.toLowerCase();
 
 		        window.onload = function () {
 		            imageViewInit();
@@ -321,6 +322,10 @@
 			            		}
 			            	}
 		            	}
+
+						if(parent.opener.search != undefined){
+							parent.opener.search('skip');
+						}
 						
 			            window.close();
 				    }
@@ -354,6 +359,9 @@
 		            window.opener.refresh_onclick();
 		        } catch (e) {
 		        }
+				if(parent.opener.search != undefined){
+					parent.opener.search('skip');
+				}
 		    }
 		
 				function btn_Reply_Onclick()
@@ -545,8 +553,8 @@
 		            document.getElementById("mainimages").style.display = "none";
 		            document.getElementById("mainimages").src = mainfilename;
 		            document.getElementById("mainimages").name = imagefilename.name;
-		            //document.getElementById("MainContent").innerHTML = MakeXMLString(imagefilename.title);
-		            document.getElementById("MainContent").innerHTML = MakeXMLString(imageContentArray[index].title);
+		            document.getElementById("MainContent").innerHTML = MakeXMLString(imagefilename.title);
+		            //document.getElementById("MainContent").innerHTML = MakeXMLString(imageContentArray[index].title);
 		
 		            imageloding();
 		        }
@@ -712,6 +720,10 @@
 		            else {
 		            	/* 2019-07-03 홍승비 - 포토/썸네일게시물 사진수정 시 팝업창 크기 조정 */
 						swidth = 460;
+		            	
+			            if(agent.indexOf("edg") > 0){
+			            	swidth = 550;
+			            }
 		            	
 						if (gubun == 3) { // 포토게시판 (메인이미지 사용 안함)
 							sheight = 475;
@@ -1054,6 +1066,10 @@
 		            var sheight;
 		
 		            swidth = 460;
+		            if(agent.indexOf("edg") > 0){
+		            	swidth = 550;
+		            }
+		            
 		            sheight = 500;
 		            
 		            var pwidth = window.screen.availWidth;
@@ -1593,7 +1609,7 @@
 		            <tr>
 		                <th><spring:message code='ezBoard.t1008'/></th>
 		                <td id="cimagecontent" colspan="3" style="padding-right:0px">
-		                    <div id="Div2" style="OVERFLOW-Y: auto; overflow-x:hidden; height:55px;WIDTH: 100%; padding-top:5px;padding-bottom:5px; vertical-align:middle; white-space:pre-wrap;"><c:out value="${boardItem.mainContent}"/></div>
+		                    <div id="Div2" style="OVERFLOW-Y: auto; overflow-x:hidden; height:55px;WIDTH: 100%; padding-top:5px;padding-bottom:5px; vertical-align:middle; white-space:pre-wrap; word-break:break-word;"><c:out value="${boardItem.mainContent}"/></div>
 		                </td>
 		            </tr>
 		          </table>

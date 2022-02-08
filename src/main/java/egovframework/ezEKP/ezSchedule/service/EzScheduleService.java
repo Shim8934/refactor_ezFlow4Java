@@ -128,4 +128,15 @@ public interface EzScheduleService {
 	public void scheduleSendMail(int scheduleId, String v_attendantId, String v_attendantName, String title, String period, String type, LoginVO userInfo, String loginCookie) throws Exception;
 
 	public void setScheduleMailNotiConfig(String userMailNoti, String userID, int tenantId) throws Exception;
+
+	/* 2021-11-25 홍승비 - 일정완료 데이터를 삽입하는 메서드 */
+	public void insertScheduleComplete(String scheduleId, String repeatCount, String isAllRep, String startdate, int tenantId, String companyID) throws Exception;
+	/* 2021-11-25 홍승비 - 일정완료 데이터를 삭제하는 메서드 */
+	public void deleteScheduleComplete(String scheduleId, String repeatCount, String isAllRep, String startdate, int tenantId, String companyID) throws Exception;
+	/* 2021-11-26 홍승비 - 해당 반복일정의 일정완료 레코드 삭제 (전체 반복완료 레코드는 유지해야 하므로 삭제조건의 isAllRep값은 'N'으로 고정) */
+	public void deleteScheduleCompleteOneRep(String scheduleId, String repeatCount, String isAllRep, String startdate, int tenantId) throws Exception;
+	/* 2021-11-26 홍승비 - 일정완료 레코드가 존재하는 경우, 해당 레코드의 ISALLREP 값을 리턴하는 메서드 */
+	public String getScheduleCompleteIsAllRep(String scheduleId, String repeatCount, String startdate, String dateType, int tenantId, String companyID) throws Exception;
+	/* 2021-11-26 홍승비 - 일정 리스트 데이터를 전달받아 일정완료 데이터를 추가 가공하여 리턴 */
+	public List<ScheduleInfoVO> applyScheduleCompleteData(List<ScheduleInfoVO> sList, String offset, int tenantId, String companyID) throws Exception;
 }

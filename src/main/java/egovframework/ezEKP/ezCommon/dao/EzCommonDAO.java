@@ -439,6 +439,17 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 
+	/* 2021-09-10 김은실 - 메신저/인사 연동 효율성을 위한: 프로필사진 업데이트시각(PHOTO_UPDATEDT) 컬럼 추가 */
+	public void addUserMasterPhotoUpdateDT() throws Exception {
+		try {
+			select("EzCommonDAO.checkUserMasterPhotoUpdateDT");
+		} catch (Exception e) {
+			logger.debug("tbl_usermaster PHOTO_UPDATEDT column doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addUserMasterPhotoUpdateDT");
+		}
+	}
+
 	public void addJobMasterJobID() throws Exception {
 		try {
 			select("EzCommonDAO.checkAddJobMasterJobID");
@@ -1385,6 +1396,28 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
+	public void createAdminAccessIpTable() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblAdminAccessIpTable");
+		} catch (Exception e) {
+			logger.debug("tbl_admin_access_ip table doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblAdminAccessIpTable");
+			
+			if (dbType.equalsIgnoreCase("oracle") || dbType.equalsIgnoreCase("tibero")) {
+				try {
+					int cnt = (int) select("EzCommonDAO.checkTblAdminAccessIpSequence");
+					if (cnt < 1) {throw new Exception(); }
+				} catch (Exception ee) {
+					// ee.printStackTrace();
+					logger.debug("TBL_ADMIN_ACCESS_IP Sequence doesn't exist. creating the Sequence...");
+					
+					update("EzCommonDAO.createTblAdminAccessIpSequence");
+				}
+			}
+		}
+	}
+
 	public void insertReBebuOpinionCode(Map<String, Object> map) {
 		String companyId = checkReBebuOpinionCode(map);
 		
@@ -1845,17 +1878,31 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createtWebfolderFileUserTable");
 		}
 		
-		try {
-			update("EzCommonDAO.createWebfolderFolderUserSeq");
-		} catch (Exception e) {
-			logger.debug("createtWebfolderFolderUserSeq sequence exist.");
-		} 
+		if (dbType.equalsIgnoreCase("oracle")) {
+			try {
+				update("EzCommonDAO.createWebfolderFolderUserSeq");
+			} catch (Exception e) {
+				logger.debug("createWebfolderFolderUserSeq sequence exist.");
+			} 
 			
-		try {
-			update("EzCommonDAO.createWebfolderFileUserSeq");
-		} catch (Exception e) {
-			logger.debug("createtWebfolderFileUserSeq sequence exist.");
-		} 
+			try {
+				update("EzCommonDAO.createWebfolderFileUserSeq");
+			} catch (Exception e) {
+				logger.debug("createWebfolderFileUserSeq sequence exist.");
+			} 
+			
+			try {
+				update("EzCommonDAO.createWebfolderFolderIdSeq");
+			} catch (Exception e) {
+				logger.debug("createWebfolderFolderIdSeq sequence exist.");
+			} 
+			
+			try {
+				update("EzCommonDAO.createWebfolderFileIdSeq");
+			} catch (Exception e) {
+				logger.debug("createWebfolderFileIdSeq sequence exist.");
+			} 
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -1957,9 +2004,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 
 	public void addWebfolderLogHistory() {
 		try {
-			logger.debug("여기 오나요 checkWebfolderFileHistoryColumn");
             select("EzCommonDAO.checkWebfolderFileHistoryColumn");
-            logger.debug("여기 오나요 checkWebfolderFileHistoryColumn");
         } catch (Exception e) {
             logger.debug("tbl_webfolder_history file_id column doesn't exist. creating the column...");
             update("EzCommonDAO.addWebfolderLogHistory");
@@ -2119,5 +2164,121 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblCarForm");
 		}
 	}
-    
+
+	// 분류코드체계 (대분류, 중분류, 소분류) 별 삭제여부 플래그 추가
+	public void addViewTaskOldFlag() { // vtaskclass
+		try {
+			select("EzCommonDAO.checkViewTaskOldFlagTop");
+		} catch (Exception e) {
+			logger.debug("vtaskclass OLDFLAG_TOP doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addViewTaskOldFlags");
+		}
+	}
+	
+	public void addSViewTaskOldFlag() { // svtaskclass
+		try {
+			select("EzCommonDAO.checkSViewTaskOldFlagTop");
+		} catch (Exception e) {
+			logger.debug("svtaskclass OLDFLAG_TOP doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addSViewTaskOldFlags");
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Map<String, String>> getTenantConfigList(Map<String, Object> map) throws Exception{
+		return (List<Map<String, String>>) list("EzCommonDAO.getTenantConfigList", map);
+	}
+	
+	public void alterTblAddjobMaster() {
+		try {
+			if(select("EzCommonDAO.chkAddjobMasterJobIdIsPrimary") == null) {
+				update("EzCommonDAO.dropAddjobMasterPrimary");
+				logger.debug("addjobMaster drop primary.");
+				update("EzCommonDAO.addAddjobMasterPrimary");
+				logger.debug("addjobMaster add primary.");
+			}
+		} catch (Exception e) {
+			logger.debug("alterTblAddjobMaster ERROR...");
+			e.printStackTrace();
+		}
+	}
+	
+	/* 2021-11-12 홍승비 - 커뮤니티 게시판 메일알림 옵션 추가 (게시/수정/댓글알림)  */
+	public void addCommMailFGColumn() {
+		try {
+			select("EzCommonDAO.checkCommMailFG_PostColumn");
+		} catch (Exception e) {
+			logger.debug("TBL_Comm_BoardInfo MailFG_Post column doesn't exist. creating the column...");
+			update("EzCommonDAO.addCommMailFG_PostColumn");
+		}
+		try {
+			select("EzCommonDAO.checkCommMailFG_ModColumn");
+		} catch (Exception e) {
+			logger.debug("TBL_Comm_BoardInfo MailFG_Mod column doesn't exist. creating the column...");
+			update("EzCommonDAO.addCommMailFG_ModColumn");
+		}
+		try {
+			select("EzCommonDAO.checkCommMailFG_CommentColumn");
+		} catch (Exception e) {
+			logger.debug("TBL_Comm_BoardInfo MailFG_Comment column doesn't exist. creating the column...");
+			update("EzCommonDAO.addCommMailFG_CommentColumn");
+		}
+	}
+
+	/* 2021-11-17 홍승비 - 전자설문 대상자 하위부서 허용여부 플래그 추가 (Y/N) */
+	public void addSurveySubDeptYNColumn() {
+		try {
+			select("EzCommonDAO.checkSurveySubDeptYNColumn");
+		} catch (Exception e) {
+			logger.debug("tbl_survey_participant SubDeptYN column doesn't exist. creating the column...");
+			update("EzCommonDAO.addSurveySubDeptYNColumn");
+		}
+	}
+
+	public void createTblScheduleComplete() {
+		try {
+			select("EzCommonDAO.checkTblScheduleComplete");
+		} catch (Exception e) {
+			logger.debug("TBL_SCHEDULE_COMPLETE doesn't exist. creating the table...");
+			update("EzCommonDAO.createTblScheduleComplete");
+		}
+	}
+	
+	/* 2021-12-22 이사라 : 로그아웃시간, 상태 컬럼 추가  */
+	public void alterTblConnectionInfo() {
+		logger.debug("If disconnecttime and status columns doesn't exist in TBL_CONNECTION_INFO, creating the columns...");
+		update("EzCommonDAO.alterTblConnectionInfo");
+	}
+
+	public void createTblAdminAccessInfo() {
+		logger.debug("If TBL_ADMIN_ACCESS_INFO doesn't exist, creating the table...");
+		update("EzCommonDAO.createTblAdminAccessInfo");
+	}
+
+	public void createMailOutOfOfficeTemplate() throws Exception {
+		try {
+			select("EzCommonDAO.checkMailOutOfOfficeTemplate");
+		} catch (Exception e) {
+			logger.debug("jmocha_mail_outofoffice_tem doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createMailOutOfOfficeTemplate");
+		}
+	}
+
+	public void createUserMailTemplate() throws Exception {
+		try {
+			select("EzCommonDAO.checkUserMailTemplate");
+		} catch (Exception e) {
+			logger.debug("jmocha_user_mail_template doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createUserMailTemplate");
+		}
+	}
+
+	public void createTblPermissionChangeInfo() {
+		logger.debug("If TBL_PERMISSION_CHANGE_INFO doesn't exist, creating the table...");
+		update("EzCommonDAO.createTblPermissionChangeInfo");
+	}
 }

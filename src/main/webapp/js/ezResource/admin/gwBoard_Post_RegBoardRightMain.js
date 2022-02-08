@@ -1,4 +1,4 @@
-﻿﻿var L_AclText = "";
+﻿var L_AclText = "";
 var L_AclValue = "";
 var L_ACLERRORMESSAGE = "" + strLang30 + "";
 
@@ -7,9 +7,9 @@ function cmdOk_onclick() {
 	var cnt = objSelected.options.length;
 	
 	
-	if (cnt <= 0 ) {
+/*	if (cnt <= 0 ) {
 		alert("" + strLang31 + "");
-	} else {
+	} else {*/
 		var xmldom = "";
 		var xmlhttp = "";
 
@@ -17,21 +17,28 @@ function cmdOk_onclick() {
 		    xmldom = createXmlDom();
 		    xmlhttp = createXMLHttpRequest();
 
-		    var objNode, objRow;
+		    var objNode, objRow, objRow2;
 		    createNodeInsert(xmldom, objNode, "DATA");
 
-		    for (i = 0; i < cnt; i++) {
-		        var objOptions = objSelected.options[i];
-
-		        objRow = createNodeAndInsertText(xmldom, objRow, "ROW_DATA", "");
-		        SetAttribute(objRow, "ResID", g_BrdID);
-		        SetAttribute(objRow, "Dept_YN", objOptions.getAttribute("Dept_YN"));
-		        SetAttribute(objRow, "SDA_YN", objOptions.getAttribute("SDA_YN"));
-		        SetAttribute(objRow, "Member_nam", objOptions.getAttribute("Member_nam"));
-		        SetAttribute(objRow, "Member_ID", objOptions.getAttribute("Member_ID"));
-		        SetAttribute(objRow, "Access_lvl", objOptions.getAttribute("Access_lvl"));
-		        SetAttribute(objRow, "CompanyID", pCompanyID);
-		    }
+		    if(cnt <= 0){
+				objRow = createNodeAndInsertText(xmldom, objRow, "ROW_DATA", "");
+				objRow2 = createNodeAndInsertText(xmldom, objRow, "ALL_DELETE", "YES");
+				SetAttribute(objRow, "ResID", g_BrdID);
+				SetAttribute(objRow, "CompanyID", pCompanyID);
+			} else {
+				objRow2 = createNodeAndInsertText(xmldom, objRow, "ALL_DELETE", "NO");
+				for (i = 0; i < cnt; i++) {
+					var objOptions = objSelected.options[i];
+					objRow = createNodeAndInsertText(xmldom, objRow, "ROW_DATA", "");
+					SetAttribute(objRow, "ResID", g_BrdID);
+					SetAttribute(objRow, "Dept_YN", objOptions.getAttribute("Dept_YN"));
+					SetAttribute(objRow, "SDA_YN", objOptions.getAttribute("SDA_YN"));
+					SetAttribute(objRow, "Member_nam", objOptions.getAttribute("Member_nam"));
+					SetAttribute(objRow, "Member_ID", objOptions.getAttribute("Member_ID"));
+					SetAttribute(objRow, "Access_lvl", objOptions.getAttribute("Access_lvl"));
+					SetAttribute(objRow, "CompanyID", pCompanyID);
+				}
+			}
 		} else {
 		    xmldom = new ActiveXObject("Microsoft.XMLDOM");
 		    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
@@ -39,30 +46,42 @@ function cmdOk_onclick() {
 		    var objRoot = xmldom.createNode(1, "DATA", "");
 		    xmldom.appendChild(objRoot);
 
-		    for (i = 0; i < cnt; i++) {
-		        var objOptions = objSelected.options[i];
+		    if(cnt <= 0){
+				var objRowData = xmldom.createNode(1, "ROW_DATA", "");
+				var objRowData2 =  xmldom.createNode(2, "ALL_DELETE", "YES");
+				objRowData.setAttribute("ResID", g_BrdID);
+				objRowData.setAttribute("CompanyID", pCompanyID);
+				objRoot.appendChild(objRowData);
+				objRoot.appendChild(objRowData2);
+			} else {
+				var objRowData2 =  xmldom.createNode(2, "ALL_DELETE", "NO");
+				for (i = 0; i < cnt; i++) {
+					var objOptions = objSelected.options[i];
 
-		        var objRowData = xmldom.createNode(1, "ROW_DATA", "");
+					var objRowData = xmldom.createNode(1, "ROW_DATA", "");
 
-		        objRowData.setAttribute("ResID", g_BrdID);
-		        if (objOptions.Dept_YN != null) {
-		            objRowData.setAttribute("Dept_YN", objOptions.Dept_YN);
-		            objRowData.setAttribute("SDA_YN", objOptions.SDA_YN);
-		            objRowData.setAttribute("Member_nam", objOptions.Member_nam);
-		            objRowData.setAttribute("Member_ID", objOptions.Member_ID);
-		            objRowData.setAttribute("Access_lvl", objOptions.Access_lvl);
-		        } else {
-		            objRowData.setAttribute("Dept_YN", objOptions.getAttribute("Dept_YN"));
-		            objRowData.setAttribute("SDA_YN", objOptions.getAttribute("SDA_YN"));
-		            objRowData.setAttribute("Member_nam", objOptions.getAttribute("Member_nam"));
-		            objRowData.setAttribute("Member_ID", objOptions.getAttribute("Member_ID"));
-		            objRowData.setAttribute("Access_lvl", objOptions.getAttribute("Access_lvl"));
-		        }
 
-		        objRowData.setAttribute("CompanyID", pCompanyID);
+					objRowData.setAttribute("ResID", g_BrdID);
+					if (objOptions.Dept_YN != null) {
+						objRowData.setAttribute("Dept_YN", objOptions.Dept_YN);
+						objRowData.setAttribute("SDA_YN", objOptions.SDA_YN);
+						objRowData.setAttribute("Member_nam", objOptions.Member_nam);
+						objRowData.setAttribute("Member_ID", objOptions.Member_ID);
+						objRowData.setAttribute("Access_lvl", objOptions.Access_lvl);
+					} else {
+						objRowData.setAttribute("Dept_YN", objOptions.getAttribute("Dept_YN"));
+						objRowData.setAttribute("SDA_YN", objOptions.getAttribute("SDA_YN"));
+						objRowData.setAttribute("Member_nam", objOptions.getAttribute("Member_nam"));
+						objRowData.setAttribute("Member_ID", objOptions.getAttribute("Member_ID"));
+						objRowData.setAttribute("Access_lvl", objOptions.getAttribute("Access_lvl"));
+					}
 
-		        objRoot.appendChild(objRowData);
-		    }
+					objRowData.setAttribute("CompanyID", pCompanyID);
+
+					objRoot.appendChild(objRowData);
+				}
+				objRoot.appendChild(objRowData2);
+			}
 		}
 	
 		xmlhttp.open("POST", "/admin/ezResource/callBrdMng.do", false);
@@ -85,7 +104,7 @@ function cmdOk_onclick() {
 		}
 		
 		location.reload();
-	}
+	//}
 }
 
 var gwboard_post_regboardright_dialogArguments = new Array();

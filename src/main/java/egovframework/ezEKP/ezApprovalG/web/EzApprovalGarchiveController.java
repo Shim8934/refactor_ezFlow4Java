@@ -661,7 +661,8 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		String cabClassID = oCXml.getElementsByTagName("CABCLASSID").item(0).getTextContent().trim(); 
 		String cabTitle = oCXml.getElementsByTagName("CABTITLE").item(0).getTextContent().trim();
 		String specialRecCode = oCXml.getElementsByTagName("SPECIALRECCODE").item(0).getTextContent().trim();
-		String publicCode = oCXml.getElementsByTagName("PUBLICCODE").item(0).getTextContent().trim();
+		String publicCode = oCXml.getElementsByTagName("PUBLICCODE").item(0).getTextContent().trim(); // 대민공개
+		String publicCode2 = oCXml.getElementsByTagName("PUBLICCODE2").item(0).getTextContent().trim(); // 공개여부
 		String limitRange = oCXml.getElementsByTagName("LIMITRANGE").item(0).getTextContent().trim();
 		String confirmFlag = oCXml.getElementsByTagName("CONFIRMFLAG").item(0).getTextContent().trim();
 		String catatransFlag = oCXml.getElementsByTagName("CATATRANSFLAG").item(0).getTextContent().trim();
@@ -695,6 +696,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		model.addAttribute("cabTitle", cabTitle);
 		model.addAttribute("specialRecCode", specialRecCode);
 		model.addAttribute("publicCode", publicCode);
+		model.addAttribute("publicCode2", publicCode2);
 		model.addAttribute("limitRange", limitRange);
 		model.addAttribute("confirmFlag", confirmFlag);
 		model.addAttribute("catatransFlag", catatransFlag);
@@ -1754,7 +1756,9 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
                 }
                 
                 if (TempQuery.indexOf("FORMID;") != -1) {
-                    ReturnQuery += " AND TBL_ENDAPRDOCINFO.FormID = '" + xmldomsub.getElementsByTagName("FORMID").item(0).getTextContent() + "' ";
+					//2021-08-26 김성준 개인문서함 폼양식명으로 검색하도록 수정
+					//ReturnQuery += " AND TBL_ENDAPRDOCINFO.FormID = '" + xmldomsub.getElementsByTagName("FORMID").item(0).getTextContent() + "' ";
+					ReturnQuery += " AND TBL_EXPENDAPRDOCINFO.FormName like '%" + xmldomsub.getElementsByTagName("FORMID").item(0).getTextContent() + "%' ";
                 }
                 if (p_UserLang.equals("2")) {
                     if (TempQuery.indexOf("WRITERDEPTNAME;") != -1) {

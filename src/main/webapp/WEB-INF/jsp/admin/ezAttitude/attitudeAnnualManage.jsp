@@ -268,6 +268,11 @@
 	    	function getAnnualList() {
 		    	var startDate = $("#Sdatepicker").val();
 		    	var endDate = $("#Edatepicker").val();
+	    		
+	    		if (startDate > endDate) {
+					alert("<spring:message code='ezAttitude.t131' />");
+		            return;
+				}
 		    	
 	    		$.ajax({
 	    			data : "GET",
@@ -396,7 +401,7 @@
 	    		});
 	    		
 	    		if (resultHtml == "") {
-	    			resultHtml = "<tr id='List_TR_noItems' class='tr_noItems'><td colspan='7' style='text-align:center'><spring:message code='ezAttitude.t130' /></td></tr>";	
+	    			resultHtml = "<tr id='List_TR_noItems' class='tr_noItems'><td colspan='10' style='text-align:center'><spring:message code='ezAttitude.t130' /></td></tr>";	
 	    		}
 	    		
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
@@ -481,7 +486,7 @@
 			//사용연차 수 팝업
 			function useAnnualHistory (userId) {
 				var url = "/admin/ezAttitude/useAnnualHistoryPop.do?userId=" + userId + "&companyId=" + pCompanyId;
-				window.open(url, "useAnnualHistoryPop", GetOpenWindowfeature(755, 560));
+				window.open(url, "useAnnualHistoryPop", GetOpenWindowfeature(755, 600));
 			}
 	    	
 			//로우의 총 연차수 링크 클릭 시

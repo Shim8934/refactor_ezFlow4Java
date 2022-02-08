@@ -1,4 +1,4 @@
-﻿﻿var strLang1 = "There are no items to show in this view.";
+﻿var strLang1 = "There are no items to show in this view.";
 var strLang2 = "Can not display folder. Internal server error occurred.";
 var strLang3 = "It is a variable that has a view type.";
 var strLang4 = "Deleted Items";
@@ -322,6 +322,10 @@ var strLangHDP01 = "Up to";
 var strLangHDP02 = "Downloadable";
 var strLangHDP03 = "Up to {0} files can be attached to a large file.";
 var strLangHDP04 = "You can drag and drop to add files and change the order of added files.";
+
+var strLangKSA03 = "Would you like to register for the groupware personal calendar?";
+var strLangKSA04 = "Successfully saved appointment.";
+var strLangKSA05 = "Error occured while saving appointment.";
 
 function GetLocalTime(Offset , pDateTime)
 {

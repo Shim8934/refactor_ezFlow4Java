@@ -39,7 +39,14 @@
 		</dl>
 		<div style="height:100%; background-color:#ffffff">
 			<div class="birthdayList" id="birthcount" style="display: none;">
-				<ul class="birthList" id="birthdayList" style="overflow-y:auto; overflow-x:hidden; width:100%; height:180px; padding-left: 25px; padding-right: 10px;"></ul>
+			<c:choose>
+				<c:when test="${usedTheme eq 1 }">
+					<ul class="birthList" id="birthdayList" style="overflow-y:auto; overflow-x:hidden; width:94%; height:180px; padding-left: 4%; padding-right: 10px;"></ul>
+				</c:when>
+				<c:otherwise>
+					<ul class="birthList" id="birthdayList" style="overflow-y:auto; overflow-x:hidden; width:100%; height:180px; padding-left: 25px; padding-right: 10px;"></ul>
+				</c:otherwise>
+			</c:choose>
 			</div>
 			<div id="nodata_NewBirthday" class="nodata_newBirthday" style="padding-top: 15px;display:none;">
 				<dl class='nodata'>

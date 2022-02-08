@@ -773,6 +773,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			}
 		}
 		
+		/* 2021-12-31 홍승비 - 홈페이지 게시판의 경우, 일반 게시판과 리스트 헤더를 동일하게 사용 */
+		if (ezBoardVO.getBoardType().equals("8")) {
+			ezBoardVO.setBoardType("1");
+			map.put("v_LISTCODE", "1");
+		}
+		
 		String tempString = ezBoardDAO.getListOptionBoardID(map);
 		
 		if (tempString != null && !tempString.equals("")) {
@@ -939,6 +945,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		} else {
 			if (globals.getProperty("Globals.DbType").equals("oracle")) {
 				orderOption1 = " TO_NUMBER(A.PARENTWRITEDATE) DESC, TO_CHAR(A.UPPERITEMIDTREE) ";
+			} else if (globals.getProperty("Globals.DbType").equals("tibero")) {
+				orderOption1 = " TO_NUMBER(A.PARENTWRITEDATE) DESC, TO_CHAR(A.UPPERITEMIDTREE) ";
 			} else {
 				orderOption1 = " A.PARENTWRITEDATE DESC, A.UPPERITEMIDTREE ";
 			}
@@ -968,7 +976,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("iv_PORDERBYSUB", orderOption1);
 		map.put("rowCount", endRow - (startRow - 1));
 		map.put("limit", startRow - 1);
-
+		
 		logger.debug("getBoardListItem ended");
 		return ezBoardDAO.getBoardListItem(map);
 	}
@@ -987,6 +995,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			}
 		} else {
 			if (globals.getProperty("Globals.DbType").equals("oracle")) {
+				orderOption1 = " TO_NUMBER(A.PARENTWRITEDATE) DESC, TO_CHAR(A.UPPERITEMIDTREE) ";
+			} else if (globals.getProperty("Globals.DbType").equals("tibero")) {
 				orderOption1 = " TO_NUMBER(A.PARENTWRITEDATE) DESC, TO_CHAR(A.UPPERITEMIDTREE) ";
 			} else {
 				orderOption1 = " A.PARENTWRITEDATE DESC, A.UPPERITEMIDTREE ";
@@ -1026,6 +1036,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		} else {
 			if (globals.getProperty("Globals.DbType").equals("oracle")) {
 				boardListVO.setOrderBySub(" TO_NUMBER(A.PARENTWRITEDATE) DESC, TO_CHAR(A.UPPERITEMIDTREE) "); 
+			} else if (globals.getProperty("Globals.DbType").equals("tibero")) {
+				boardListVO.setOrderBySub(" TO_NUMBER(A.PARENTWRITEDATE) DESC, TO_CHAR(A.UPPERITEMIDTREE) ");
 			} else {
 				boardListVO.setOrderBySub(" A.PARENTWRITEDATE DESC, A.UPPERITEMIDTREE ");
 			}
@@ -1086,6 +1098,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		} else {
 			if (globals.getProperty("Globals.DbType").equals("oracle")) {
 				boardListVO.setOrderBySub(" TO_NUMBER(A.PARENTWRITEDATE) DESC, TO_CHAR(A.UPPERITEMIDTREE) "); 
+			} else if (globals.getProperty("Globals.DbType").equals("tibero")) {
+				boardListVO.setOrderBySub(" TO_NUMBER(A.PARENTWRITEDATE) DESC, TO_CHAR(A.UPPERITEMIDTREE) ");
 			} else {
 				boardListVO.setOrderBySub(" A.PARENTWRITEDATE DESC, A.UPPERITEMIDTREE ");
 			}
@@ -1131,6 +1145,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		} else {
 			if (globals.getProperty("Globals.DbType").equals("oracle")) {
 				boardListVO.setOrderBySub(" TO_NUMBER(A.PARENTWRITEDATE) DESC, TO_CHAR(A.UPPERITEMIDTREE) "); 
+			} else if (globals.getProperty("Globals.DbType").equals("tibero")) {
+				boardListVO.setOrderBySub(" TO_NUMBER(A.PARENTWRITEDATE) DESC, TO_CHAR(A.UPPERITEMIDTREE) ");
 			} else {
 				boardListVO.setOrderBySub(" A.PARENTWRITEDATE DESC, A.UPPERITEMIDTREE ");
 			}
@@ -1398,7 +1414,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_pItemID", itemID);
 		map.put("lang", multiLang);
 		map.put("v_TENANTID", tenantID);
-
+		
 		logger.debug("getBrdGetItemInfo ended");
 		return ezBoardDAO.getBrdGetItemInfo(map);
 	}
@@ -3615,6 +3631,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				
 				String tempItem = itemListArray[i].split(",")[0];
 				
+				BoardListVO boardListTempVO = getItemInfo(mode, tempItem, userInfo.getLang(), userInfo.getTenantId());
+				if (boardListTempVO != null) {
+					logger.debug("deleteItem itemID = " + boardListTempVO.getItemID() + " / title = " + boardListTempVO.getTitle());
+				}
+				
 				if (mode != null && mode.equals("temp")) {
 					deleteTempItem(tempItem, boardID, realPath, userInfo.getTenantId());
 				} else {
@@ -4353,6 +4374,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		} else {
 			if (globals.getProperty("Globals.DbType").equals("oracle")) {
 				boardListVO.setOrderBySub(" TO_NUMBER(A.PARENTWRITEDATE) DESC, TO_CHAR(A.UPPERITEMIDTREE) "); 
+			} else if (globals.getProperty("Globals.DbType").equals("tibero")) {
+				boardListVO.setOrderBySub(" TO_NUMBER(A.PARENTWRITEDATE) DESC, TO_CHAR(A.UPPERITEMIDTREE) ");
 			} else {
 				boardListVO.setOrderBySub(" A.PARENTWRITEDATE DESC, A.UPPERITEMIDTREE ");
 			}

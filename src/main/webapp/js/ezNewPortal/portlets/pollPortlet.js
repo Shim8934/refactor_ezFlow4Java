@@ -71,7 +71,7 @@ var assemblePollList = function (poll) {
 			if (answerList[i].count) {
 				percentage = (answerList[i].count / poll.pollInfo.count * 1) * 100;	
 			}
-			str += '<li class="pollList_0'+ answerList[i].result +'">';
+			str += '<li class="pollListLi pollList_0'+ answerList[i].result +'">';
 			str += '<div class="pollT" style="width:22%"><span class="Vnum">'+ answerList[i].result +'</span><span class="Vtext">'+ answerList[i].answer +'</span></div>';
 			str += '<div class="percent" id="percent1">' + Math.round(percentage) + '%</div>';
 			str += '<div class="pollGraph" id="divGraph' + answerList[i].result + '" style="display: block;">';

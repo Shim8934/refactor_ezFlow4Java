@@ -63,8 +63,9 @@
 	        var bigAttachDownloadDay = "<c:out value ='${bigAttachDownloadDay}'/>";
 	        var bigSizeAttachDownloadLimitCount = "<c:out value ='${bigSizeAttachDownloadLimitCount}'/>";
 			
-			window.onresize = function () {
-	        	var mHeight = document.documentElement.clientHeight - 172 - document.getElementById("message").offsetTop + "px";
+	        window.onresize = function () {
+	       		document.getElementById("messageWHWPEditor").style.height = document.documentElement.clientHeight - 150 + "px";
+	       		var mHeight = document.documentElement.clientHeight - 110 - document.getElementById("messageWHWPEditor").offsetTop + "px";
 	       		message.Resize(mHeight);
 	        }
 	
@@ -132,7 +133,7 @@
 	
 			function QuitWindow() {
 			    menu.style.display = "none";
-			    OpenAlertUI("<spring:message code='ezApprovalG.t1443'/><br><spring:message code='ezApprovalG.t1444'/>");
+			    alert("<spring:message code='ezApprovalG.t1443'/>\n<spring:message code='ezApprovalG.t1444'/>");
 			    btnClose_onclick();
 			    window.close();
 			}
@@ -380,6 +381,7 @@
     	                    message.Clear();
     	                }
                     	message.EditMode(0);
+						message.SetViewProperties(2, 100);
                     }, null);
 	        	}
 	    	}
@@ -464,6 +466,109 @@
                  }
 	    	}
 		 
+		var editable = "";
+	 	function btnReuse_onclick(type) {
+	 		editable = type;
+	 		var parameter = new Array();
+	        parameter[0] = "sol2";
+	        parameter[1] = "A01000";
+	        
+	        url = "/ezApprovalG/getFormCont.do";
+	        
+	        if (CrossYN()) {
+	            getformcont_cross_dialogArguments[0] = parameter;
+	            getformcont_cross_dialogArguments[1] = btnReuse_onclick_complete;
+	            var getFormCont_Cross = window.open(url, "/ezApproval/getFormCont.do", GetOpenWindowfeature(713, 570));
+	            
+	            try { getFormCont_Cross.focus(); } catch (e) {}
+	        } else {
+	            var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no";
+	            var ret = window.showModalDialog(url, parameter, feature);
+	            formURL = ret[0];
+	            formDocType = ret[1];
+	            
+	            if (formURL != "cancel") {
+	                openDraftUI(formURL, formDocType);
+	            }
+	        }
+	 	}
+	 	
+	 	var editable = "";
+	 	var newFormURL = "";
+	 	var newFormDocType = "";
+		function btnReuse_onclick_complete(ret) {
+			if(ret[0] != "cancel") {
+				newFormURL = ret[0];
+		        newFormDocType = ret[1];
+		        newFormID = newFormURL.substring(newFormURL.lastIndexOf("/")+1);
+		        
+				var pAlertContent;
+				 $.ajax({
+			    		type : "POST",
+			    		dataType : "text",
+			    		data : {
+			    			formID : newFormID,
+			    			companyID : orgCompanyID
+			    		},
+			    		url : "/ezApprovalG/getFormDetail.do",
+			    		success: function(xml){
+							xml = loadXMLString(xml);
+							
+							var currConnflag = getNodeText(GetElementsByTagName(xml, 'FORMCONNFLAG')[0]);
+							var currVersion = getNodeText(GetElementsByTagName(xml, 'FORMVERSION')[0]);
+	
+							if(currConnflag === 'Y') {
+								pAlertContent = '연동양식은 재사용 할 수 없습니다.';
+								OpenAlertUI(pAlertContent);
+								return;
+							}
+							
+							openDraftUI("DRAFT", "");
+						},
+						error: function() {
+							pAlertContent = '문서 재사용에 실패하였습니다.';
+							OpenAlertUI(pAlertContent);
+						}        			
+		    	});
+			}
+	     }
+		 
+		function openDraftUI(pDraftFlag) {
+			var param = {
+				formURL : newFormURL,
+				draftFlag : pDraftFlag,
+				formDocType : newFormDocType,
+				susinSN : "0",
+				docstate : "",
+				listType : "1",
+				aprState : "",
+				isTmpDoc : "",
+				isUsed : editable,
+				beforeDocID : pDocID
+			}
+	        
+			var openLocation = "";
+			
+			if(useWebHWP == "YES")
+				openLocation = "/ezApprovalG/draftuiWHWP.do";
+			else 
+				openLocation = "/ezApprovalG/draftuiHWP.do";
+			
+			openLocation = openLocation
+				+ "?formURL=" + escape(param.formURL)
+				+ "&draftFlag=" + escape(param.draftFlag)
+				+ "&formDocType=" + escape(param.formDocType)
+				+ "&susinSN=" + escape(param.susinSN) 
+				+ "&docState=" + escape(param.docstate) 
+				+ "&listType=" + escape(param.listType) 
+				+ "&aprState=" + escape(param.aprState)
+				+ "&isTmpDoc=" + escape(param.isTmpDoc) 
+				+ "&isUsed=" +  escape(param.isUsed)
+				+ "&beforeDocID=" + escape(param.beforeDocID);
+	        
+	        var result = GetOpenWindow(openLocation, "", 1050, 970, "YES");
+	        window.close();
+	    }
 	    </script>
 	</head>
 	<body class="popup" style="overflow: hidden" onload="javascript:window_onload()">
@@ -478,6 +583,9 @@
 	                        <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 	                        <c:if test="${useBoard == 'YES' }">
 	                        <li id="btnBoard"><span onclick="return NewItem_onclick()"><spring:message code='ezApprovalG.t1514'/></span></li>
+	                        </c:if>
+	                        <c:if test="${formID != '2018000000'}">
+	                        <li id="btnReuse"><span onClick="return btnReuse_onclick('reuse')"><spring:message code='ezApprovalG.t990048'/></span></li>
 	                        </c:if>
 	                        <li id="btnPrint"><span class="icon16 popup_icon16_print" onclick="return btnPrint_onclick()"></span></li>
 	                    	<c:if test="${useExternalMailServer == 'NO' }">
@@ -500,7 +608,7 @@
 	            </td>
 	        </tr>
 	        <tr>
-	            <td style="padding-bottom:10px;height:800px;" >
+	            <td style="padding-bottom:10px;height:800px;" id="messageWHWPEditor">
 		    		<iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="/ezApprovalG/WHWPEditor.do" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 	            </td>
 	        </tr>

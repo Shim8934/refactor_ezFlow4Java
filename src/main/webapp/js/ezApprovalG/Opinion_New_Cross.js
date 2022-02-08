@@ -343,6 +343,11 @@ function saveOpinionInfo() {
             		ReturnVal = "cancel";
             	}
             	
+				// 2021.12.17 - 강승구 : (#89657) 결재문서 의견란 오류
+				if(typeof(parent.pHasOpinionYN) != 'undefined') {
+					parent.pHasOpinionYN = 'N';
+				}
+
             	if (ReturnFunction != null) {
             		ReturnFunction(ReturnVal);
             		window.close();

@@ -53,3 +53,6 @@ var strLang87 = "Join the Community";
 var strLang88 = "No communities open";
 
 var strLang89 = "Please select a file to delete.";
+
+/* 2021-12-09 홍승비 - 확장자 관련 메세지 추가 */
+var srtLangHSBEx01 = "Unacceptable extension.";

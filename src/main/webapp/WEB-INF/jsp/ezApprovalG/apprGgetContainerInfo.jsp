@@ -270,6 +270,7 @@
 	                    ContainerID = LoadContID;
 	                    subCondition = "";
 	                    GetDocSearch();
+	                    getDataInfo();
 	                }
 					
                     // 대리결재자 설정에 따른, 버튼 활성화
@@ -727,19 +728,23 @@
 	                                    var docID = tempStr[tempStr.length - 1].replace(AttachUrlA2, '');
 	                                    var openLocation;
 	                                    
-	                                    if (AttachUrlA2.lastIndexOf(".ezd") === AttachUrlA2.length - 5) {
+	                                    if (AttachUrlA2.lastIndexOf(".ezd")>0) {
 	                                    	docID = docID.substr(0, docID.lastIndexOf("."));
 	                                    	AttachUrlA2 = "." + getOriginalFileExtension(AttachUrlA1)
 	                                    }
 	                                    
 	                                    if (AttachUrlA2 == ".hwp") {
-	                                    	if (isIE()) {
-	                                    		openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
-	                                    	} else {
-	                                    		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-	                		                	alert(pAlertContent);
-	                		                	return;
-	                                    	}
+											if(useWebHWP == "NO") {
+												if (isIE()) {
+													openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
+												} else {
+													var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+													alert(pAlertContent);
+													return;
+												}
+											} else {
+												openLocation = "/ezApprovalG/ezViewEnd_WHWP.do";
+											}
 	                                    } else {
 	                                    	openLocation = "/ezApprovalG/contDocView.do";
 	                                    }
@@ -862,7 +867,6 @@
 		        }
 		    }
 		    //END
-		
 		    //기존 시행문변환 로직 주석처리
 	        /* function enforce_onclick() {
 	            var heigth = window.screen.availHeight;
@@ -943,6 +947,10 @@
 		        	} else {
 						alert("<spring:message code='ezApprovalG.t1519'/>");
 		        	}
+		        } else {
+		        	var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
+					alert(pAlertContent);
+		            return;
 		        }
 	        }
 	        var enforceDocID = "";
@@ -1513,12 +1521,13 @@
 		        }
 		    }
 		
+		    var pSaveDocID = ""; // 통합PC저장을 위한 전역변수
+		    var pSaveOrgCompanyID = "";
 		    function TotalSave_onclick() {
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
 		        var tr = DocList.GetSelectedRows();
-		        var orgCompanyID = "";
-		
+		        
 		        if (tr.length == 0) {
 		        	//팝업창에서 알럿창으로 변경
 // 		            OpenAlertUI("<spring:message code='ezApprovalG.t113'/>");
@@ -1526,11 +1535,41 @@
 					alert(pAlertContent);
 		            return;
 		        }
-		        else{
-		            pDocID = tr[0].getAttribute("DATA1");
-		            orgCompanyID = tr[0].getAttribute("orgCompanyID");
+		        else {
+		        	pSaveDocID = tr[0].getAttribute("DATA1");
+		        	pSaveOrgCompanyID = tr[0].getAttribute("orgCompanyID");
 		        }
-		
+		        
+		        /* 2021-10-21 홍승비 - 결재완료문서 통합 PC 저장 시 보안결재 확인동작 추가 */
+				if (tr[0].getAttribute("DATA10") != "" && tr[0].getAttribute("DATA10") >= GetTodayDate()) {
+		            if (CheckAprLine(tr[0].getAttribute("DATA1")) == "TRUE") {
+		            	chk_Passwd(UserID, chk_Passwd_CompleteSave);
+		            } else {
+		                OpenAlertUI(strLang580,"OPEN","");
+		                return;
+		            }
+		        } else {
+		        	TotalSave_onclick_complete(pSaveDocID, pSaveOrgCompanyID);
+		        }
+		    }
+		    
+		    // 통합 PC 저장 시 보안결재 > 패스워드 확인 후 동작
+			function chk_Passwd_CompleteSave(Rtn) {
+		        if (Rtn == "FALSE") {
+		            var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
+		            OpenAlertUI(pAlertContent);
+		        }
+		        else if (Rtn == "cancel") {
+		            var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
+		            OpenAlertUI(pAlertContent);
+		        }
+		        else {
+		        	TotalSave_onclick_complete(pSaveDocID, pSaveOrgCompanyID);
+		        }
+		    }
+		    
+		    // 실제 통합 PC 저장 동작 분리 (완료문서, 부서문서함)
+		    function TotalSave_onclick_complete(pDocID, orgCompanyID) {
 		        var url = "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=END&orgCompanyID="+orgCompanyID;
 		        var feature = "status=no,help=no,scroll=no,edge=sunken,width=580px,height=480px";
 		        feature = feature + GetOpenPosition(580, 480);

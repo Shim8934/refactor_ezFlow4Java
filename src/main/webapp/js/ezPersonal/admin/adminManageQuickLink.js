@@ -269,7 +269,7 @@ function openLinkDetail(item, itemId) {
 	linksHTML += "</tr>";
 	linksHTML += "<tr>";
 	linksHTML += "<th class='quickLinkTH'>" + strLangkhj14 + "</th>";
-	linksHTML += "<td class='menuInput'><span id='div_Size'>Width <input type='text' id='txt_Width' class='popInput' style='width:50px;' disabled> Height <input type='text' id='txt_Height' class='popInput' style='width:50px;' disabled></span></td>";
+	linksHTML += "<td class='menuInput'><span id='div_Size'>Width <input type='text' id='txt_Width' class='popInput' style='width:50px;' onKeyup='this.value=this.value.replace(/[^0-9]/g,\"\");' disabled> Height <input type='text' id='txt_Height' class='popInput' style='width:50px;' onKeyup='this.value=this.value.replace(/[^0-9]/g,\"\");' disabled></span></td>";
 	linksHTML += "</tr>";
 	linksHTML += "</table>";
 	linksHTML += "<table class='quickTable02' border='0' cellpadding='0' cellspacing='0'>";
@@ -430,6 +430,14 @@ function changeNormalImage_end() {
 function btn_AttachAdd_onclick() {
 	document.getElementById("cnt").value = document.getElementById("form").file1.files.length;
 	guid = "{" + GetGUID() + "}";
+	
+	/* 2021-12-09 홍승비 - 퀵링크 이미지 업로드 시 서버단에서도 이미지 확장자 체크 진행 */
+	var fileName = document.getElementById("form").file1.files[0].name;
+	var extension = fileName.substring(fileName.lastIndexOf('.') + 1, fileName.lenght);
+	if (checkImgExtension(extension) == "UPLOAD_EXT_ERROR") {
+		alert(srtLangHSBEx01); // 허용하지 않는 확장자입니다.
+		return false;
+	}
 	
 	var frm = document.getElementById('form');
 	frm.action = "/admin/ezPersonal/typeImageUpload.do?QId=" + encodeURIComponent(guid);

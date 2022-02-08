@@ -57,7 +57,7 @@
 					}     			
 				});
 		        
-		       	$(window.opener.parent.frames['left'].document.getElementById("applyCount")).text("(" + applyCount + ")");
+		       	$(window.opener.parent.frames['left'].document.getElementById("applyCount")).text(" " + applyCount);
                 
             }
         }

@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezCommon.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -114,6 +115,8 @@ public interface EzCommonService {
 
 	public void addUserMasterPasswordUpdateDT() throws Exception;
 	
+	public void addUserMasterPhotoUpdateDT() throws Exception;
+
 	public void addUserMasterMailBoxQuota() throws Exception;
 
 	public void addPortalThemePortletIsFixed() throws Exception;
@@ -206,9 +209,9 @@ public interface EzCommonService {
 
 	public void createRsFavoriteTable();
 	
-	public void createUserDistributionTable();
+	public void insertTblTenantConfig() throws Exception;
 
-	public void insertTblTenantConfig(String configName) throws Exception;
+	public void createUserDistributionTable();
 
 	public void addThemeAndPorteltAuthInit() throws Exception;
 	
@@ -247,6 +250,8 @@ public interface EzCommonService {
 	public void insertUseExternalMailServerConfig() throws Exception;
 
 	public void insertReBebuOpinionCode() throws Exception;
+	
+	public void createAdminAccessIpTable() throws Exception;
 	
 	public void addFormAprOptionColumn() throws Exception;
 
@@ -340,6 +345,30 @@ public interface EzCommonService {
     public void createTblCarAttach() throws Exception;
     
     public void createTblCarForm() throws Exception;
-    
+
+	public void addViewTaskOldFlag() throws Exception;
+
+	public HashMap<String, String> getTenantConfigList(int tenantID, String... propertyNames) throws Exception;
+
+	public void alterTblAddjobMaster() throws Exception;
 	
+	public String getPrevPwd(int tenantID, String pCN) throws Exception;
+	
+	public int setPrevPwd(int tenantID, String pCN, String propertyValue) throws Exception;
+	
+	public void addCommMailFGColumn() throws Exception;
+
+	public void addSurveySubDeptYNColumn() throws Exception;
+
+	public void createTblScheduleComplete() throws Exception;
+	
+	public void alterTblConnectionInfo() throws Exception;
+	
+	public void createTblAdminAccessInfo() throws Exception;
+	
+	public void createMailOutOfOfficeTemplate() throws Exception;
+	
+	public void createUserMailTemplate() throws Exception;
+
+	void createTblPermissionChangeInfo() throws Exception;
 }

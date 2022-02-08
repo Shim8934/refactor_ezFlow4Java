@@ -1313,13 +1313,17 @@ public class EzTaskController extends EgovFileMngUtil {
 				}   				
 			}
 			
-			if (pSelectTab.equals("") && (vo.getTaskType().equals("4") || vo.getTaskType().equals("5") || vo.getTaskType().equals("6"))) {
+			/* 2021-09-03 홍승비 - 반복업무의 경우 진행상태 정보 테이블(TBL_TASKINSTANCESTATUS)에 저장되는 시작일의 시간 단위는 반드시 00:00:00이다. */
+			if (pSelectTab.equals("") && (vo.getTaskType().equals("4") || vo.getTaskType().equals("5") || vo.getTaskType().equals("6"))) { // 일반업무 반복(4), 지시업무 반복(5), 협조업무 반복 (6)
 				//Set percentage and status
-				String realDate = commonUtil.getDateStringInUTC(vo.getStartDate(), userInfo.getOffset(), true);
+				String realDate = vo.getStartDate(); // 진행상태 테이블에 저장된 그대로 사용 (시간단위 00:00:00)
 				int status = ezTaskService.getStatusOfRepTask(vo.getTaskID(), realDate, tenantID);
 				vo.setTaskStatus(status);				
     			int completionPercentage = ezTaskService.selectCompletionOfRepTask(vo.getTaskID(), realDate, tenantID);
-    			vo.setCompleteRate(completionPercentage);  	
+    			//2021-09-28 남학선 해당로직이 서비스에서 반복업무 완료율을 가져오는 로직과 겹쳐서 덮어씌우는 문제가 생김 일단 분기를 만들되 필요하면 지우거나 수정
+    			if(vo.getCompleteRate() == 0){
+					vo.setCompleteRate(completionPercentage);
+				}
 			}
     		//end
     		

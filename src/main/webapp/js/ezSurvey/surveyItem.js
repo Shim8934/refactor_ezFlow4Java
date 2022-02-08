@@ -351,8 +351,9 @@ var SurveyItem = function() {
 		var frameElmt  = prevHElmt.parentElement.querySelector("iframe[class='pr-frame']");
 		var prevHeader = prevHElmt.querySelector(".prevHeaderWwrapper");
 
+		// IE에서는 remove() 함수 지원하지 않으므로 부모에 접근하여 미리보기 헤더 제거
 		if (prevHeader != null) {
-			prevHeader.remove();
+			prevHeader.parentNode.removeChild(prevHeader);
 		}
 		
 		var divElmt = document.createElement("div");

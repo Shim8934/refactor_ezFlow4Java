@@ -297,7 +297,7 @@
 		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
 		        	async : true,
-		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department", type : "user"},
+		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;userType", type : "user"},
 		        	success : function(result){
 		        		var resultXML = loadXMLString(result);
 		        		var headerData = createXmlDom();
@@ -426,7 +426,7 @@
 		        	data : {
 		        		search : document.all("search_type").value + "::" + encodeURIComponent(document.all("keyword").value), 
 		        		cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value, 
-		        		prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department", 
+		        		prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;userType",
 		        		type : "user"
 		        	},
 		        	success : function(result){	
@@ -771,7 +771,11 @@
 	                    if ("${useOcs}" == "YES") {
 	                        pDisplayName += "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'  onload='PresenceControl(\"" + M_TR.getAttribute("_DATA3") + "\",this);'/></span>";
 	                    }
-	                    
+
+                        if($(M_TR).attr("_DATA11") == "addJob"){
+	                        pDisplayName += "<spring:message code='ezOrgan.psb03'/> ";
+	                    }
+
 	                    pDisplayName += M_TR.getAttribute("_DATA4") == "" ? "" : M_TR.getAttribute("_DATA4");
 	                    pDisplayName += M_TR.getAttribute("_DATA6") == "" ? "" : "[" + M_TR.getAttribute("_DATA6") + "]";
 	                    Sub_TD1.innerHTML = pDisplayName;
@@ -857,7 +861,14 @@
 	                        }
 	
 	                        var M_TR_TD3 = document.createElement("TD");
-	                        M_TR_TD3.innerHTML = M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+
+	                        var jobName = "";
+	                        if($(M_TR).attr("_DATA11") == "addJob"){
+		                        jobName += "<spring:message code='ezOrgan.psb03'/> ";
+	                        }
+
+	                        jobName += M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+	                        M_TR_TD3.innerHTML = jobName;
 	                        M_TR_TD3.style.width = "80px";
 	
 	                        var M_TR_TD4 = document.createElement("TD");
@@ -884,7 +895,14 @@
 	
 	                        var M_TR_TD2 = document.createElement("TD");
 	                        M_TR_TD2.style.width = "80px";
-	                        M_TR_TD2.innerHTML = M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+
+	                        var jobName = "";
+	                        if($(M_TR).attr("_DATA11") == "addJob"){
+		                        jobName += "<spring:message code='ezOrgan.psb03'/> ";
+		                    }
+
+	                        jobName += M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+	                        M_TR_TD2.innerHTML = jobName;
 	
 	                        var M_TR_TD3 = document.createElement("TD");
 	                        M_TR_TD3.innerHTML = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");

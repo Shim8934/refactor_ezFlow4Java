@@ -29,8 +29,8 @@
 		var pUserTitle = "<c:out value='${userInfo.title1}'/>";
 		var pUserTitle2 = "<c:out value='${userInfo.title2}'/>";
 		var pUserDeptID = "<c:out value='${userInfo.deptID}'/>";
-		var pUserDeptName = "<c:out value='${userInfo.deptName1}'/>";
-		var pUserDeptName2 = "<c:out value='${userInfo.deptName2}'/>";
+		var pUserDeptName = "<c:out value='${userInfo.deptName1}' escapeXml='false'/>";
+		var pUserDeptName2 = "<c:out value='${userInfo.deptName2}' escapeXml='false'/>";
 		var pUserDisplayName = "<c:out value='${userInfo.displayName1}'/>";
 		var pUserDisplayName2 = "<c:out value='${userInfo.displayName2}'/>";
 		var pUserCompanyID = "<c:out value='${userInfo.companyID}'/>";
@@ -95,7 +95,7 @@
 		
 		//[작성], [수정], [삭제] 버튼 상황별 표출
 		function displayButtons() {
-			if (pMode == "END" || pDisplay == "Show" || pDocState == "017"){return;}
+			if (pMode == "END" || (pDisplay == "Show" && pDocState != "015") || pDocState == "017"){return;}
 			
 			var DisplayMode = pDisplay.toUpperCase();
 			
@@ -203,7 +203,7 @@
 		//[작성] 버튼 클릭
 		var opinionPopup_cross_dialogArguments = new Array();
 		function btn_OpinionAdd_onclick() {
-			if (pMode == "END" || pDisplay == "Show" || pDocState == "017"){return;}
+			if (pMode == "END" || (pDisplay == "Show" && pDocState != "015") || pDocState == "017"){return;}
 			
 			var parameter = new Array();
 	        parameter[0] = "ADD";
@@ -217,7 +217,7 @@
 		
 		//[수정] 버튼 클릭
 		function btn_OpinionMod_onclick() {
-			if (pMode == "END" || pDisplay == "Show" || pDocState == "017"){return;}
+			if (pMode == "END" || (pDisplay == "Show" && pDocState != "015") || pDocState == "017"){return;}
 			
 			var OpinionList = new ListView();
             OpinionList.LoadFromID("OpinionList");
@@ -239,7 +239,7 @@
 		
 		//[삭제] 버튼 클릭
 		function btn_OpinionDel_onclick() {
-			if (pMode == "END" || pDisplay == "Show" || pDocState == "017"){return;}
+			if (pMode == "END" || (pDisplay == "Show" && pDocState != "015") || pDocState == "017"){return;}
 			
 			var OpinionList = new ListView();
             OpinionList.LoadFromID("OpinionList");
