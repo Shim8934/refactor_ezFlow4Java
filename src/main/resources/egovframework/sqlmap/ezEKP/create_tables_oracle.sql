@@ -3392,7 +3392,7 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"CONNECTOS" CHAR(20 CHAR), 
 	"CONNECTAGENT" NVARCHAR2(500), 
 	"STATUS" VARCHAR2(1) DEFAULT NULL,
-	"SESSIONCODE" VARCHAR2(80) DEFAULT NULL,
+	"SESSIONCODE" VARCHAR2(200) DEFAULT NULL,
 	"TENANT_ID" NUMBER DEFAULT 0
    ) ;
 --------------------------------------------------------
