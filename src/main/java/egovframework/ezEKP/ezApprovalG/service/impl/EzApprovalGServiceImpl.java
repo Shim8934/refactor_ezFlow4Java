@@ -15059,7 +15059,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if (realDocType.equals("003")) { // docType 003 : 수신문
 					// 정주환 수신 문서 발송 분기
 					if ("Y".equals(ezCommonService.getTenantConfig("useSusinSchedulerYn", userInfo.getTenantId()))) {
-						subSQL = insertSendDocDB(docID, deptID, dirPath, staDSSuSin, companyID, lang, userInfo.getTenantId());
+						subSQL = insertSendDocDB(docID, deptID, dirPath, staDSSuSin, companyID, lang, userInfo.getTenantId(), userInfo.getOffset());
 					} else {
 						subSQL = doSendDoc(docID, deptID, dirPath, staDSSuSin, companyID, lang, userInfo.getTenantId());
 						if (!subSQL.toUpperCase().equals("FALSE")) {
@@ -15096,7 +15096,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			} else { // 일반버젼
 				if (!(realDocType.equals(staDTDraftDoc) && getIsUse("SA45", "001", orgCompanyID, lang, userInfo.getTenantId()).equals("1"))){
 					if ("Y".equals(ezCommonService.getTenantConfig("useSusinSchedulerYn", userInfo.getTenantId()))) {
-						subSQL = insertSendDocDB(docID, deptID, dirPath, staDSSuSin, companyID, lang, userInfo.getTenantId());
+						subSQL = insertSendDocDB(docID, deptID, dirPath, staDSSuSin, companyID, lang, userInfo.getTenantId(), userInfo.getOffset());
 					} else {
 						subSQL = doSendDoc(docID, deptID, dirPath, staDSSuSin, companyID, lang, userInfo.getTenantId());
 						if (!subSQL.toUpperCase().equals("FALSE")) {
@@ -17475,7 +17475,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	// 정주환 수신처 스케쥴러 DB
-	public String insertSendDocDB(String docID, String deptID, String dirPath, String docState, String companyID, String lang, int tenantID) throws Exception {
+	public String insertSendDocDB(String docID, String deptID, String dirPath, String docState, String companyID, String lang, int tenantID, String offset) throws Exception {
 		logger.debug("insertSendDocDB started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -17486,6 +17486,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DOCSTATE", docState);
 		map.put("v_LANG", lang);
 		map.put("v_TENANTID", tenantID);
+		map.put("v_OFFSET", offset);
 		
 		try {
 			ezApprovalGDAO.insertSendDocDB(map);
@@ -17531,6 +17532,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			tempLoginVO.setDn("NOPASSWORD");
 			
 			LoginVO userInfo = loginService.selectUser(tempLoginVO);
+			userInfo.setLang(map.get("LANG").toString()); // 수신알림메일 발송 시 필요한 데이터 추가 (다국어 지원)
+			userInfo.setOffset(map.get("OFFSET").toString());
+			
 			sendSusinMail(map, userInfo);
 			ezApprovalGDAO.deleteSendDocList(map);
 		}
@@ -33333,7 +33337,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			contentBuilder.append("</td></tr></table>");
 			
 			// String content = "<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td><span>제&nbsp;&nbsp;목: " + vo.getDocTitle() + "</span><br><span>기안자:" + vo.getWriterName() + "</span><br><span>기안일: " + vo.getStartDate() + "</span><br></td></tr></table>";
-			ezEmailService.sendMail(userAccount, password, userInfo.getLocale(), from, toArr, null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), userInfo.getTenantId(), locale), true, EmailImportance.NORMAL);
+			ezEmailService.sendMail(userAccount, password, locale, from, toArr, null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), userInfo.getTenantId(), locale), true, EmailImportance.NORMAL);
 		}
 		logger.debug("sendSusinMail ended.");
 	}

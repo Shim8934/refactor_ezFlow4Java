@@ -2651,4 +2651,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void createTblPermissionChangeInfo() throws Exception {
 		ezCommonDAO.createTblPermissionChangeInfo();
 	}
+	
+	@Override
+	public void addSusinScheduleOffsetColumn() throws Exception {
+		ezCommonDAO.addSusinScheduleOffsetColumn();
+	}
 }
