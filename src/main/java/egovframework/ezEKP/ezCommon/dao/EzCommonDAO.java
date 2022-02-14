@@ -2281,4 +2281,13 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		logger.debug("If TBL_PERMISSION_CHANGE_INFO doesn't exist, creating the table...");
 		update("EzCommonDAO.createTblPermissionChangeInfo");
 	}
+
+	public void addSusinScheduleOffsetColumn() throws Exception {
+		try {
+			select("EzCommonDAO.checkSusinScheduleOffsetColumn");
+		} catch (Exception e) {
+			logger.debug("TBL_SUSINSCHEDULE OFFSET column doesn't exist. creating the column...");
+			update("EzCommonDAO.addSusinScheduleOffsetColumn");
+		}
+	}
 }

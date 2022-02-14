@@ -4599,5 +4599,22 @@
 			END
 		}
 	</statement>
+	
+	<select id="EzCommonDAO.checkSusinScheduleOffsetColumn">
+        <![CDATA[
+            SELECT 
+                OFFSET
+            FROM 
+                TBL_SUSINSCHEDULE
+			WHERE
+				ROWNUM = 1
+        ]]>
+    </select>
+    <statement id="EzCommonDAO.addSusinScheduleOffsetColumn">
+        ALTER TABLE 
+        	TBL_SUSINSCHEDULE 
+		ADD
+			OFFSET CHAR(10 CHAR) DEFAULT ''
+    </statement>
 
 </sqlMap>
