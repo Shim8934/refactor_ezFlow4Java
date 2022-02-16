@@ -323,7 +323,7 @@
 		        }
 		        function lvtDetail_onclick() {
 		        }
-			    function lvtDetail_onSel_DBclick() {
+/*			    function lvtDetail_onSel_DBclick() {
 			        var DocList = new ListView();
 			        DocList.LoadFromID("SubDocList");
 			        var selRow = DocList.GetSelectedRows();
@@ -428,8 +428,8 @@
 		                    }
 			            }
 			        }
-			    }
-/* 		        function lvtDetail_onSel_DBclick() {
+			    }*/
+ 		        function lvtDetail_onSel_DBclick() {
 		            var DocList = new ListView();
 		            DocList.LoadFromID("SubDocList");
 		            var selRow = DocList.GetSelectedRows();
@@ -445,14 +445,34 @@
 		
 		                }
 		                else if (jobState == "RECIPENT") {
-		                    OpenReceiptHistory();
+		                	var heigth = window.screen.availHeight;
+			                var width = window.screen.availWidth;
+			                var left = (parseInt(width) - 540) / 2;
+			                var top = (parseInt(heigth) - 220) / 2;
+			
+			                var isExtYN = tr.getAttribute("DATA3");
+			                
+			                if (isExtYN.toUpperCase() == "Y") {
+			                	left = (parseInt(width) - 1155) / 2;
+						        top = (parseInt(heigth) - 460) / 2;
+			                    var url = "/ezApprovalG/ezReceiptHistoryInfo.do?docID=" + DocID + "&deptID=" + encodeURI(tr.getAttribute("DATA1"));
+// 			                    var feature = "status:no;dialogWidth:555px;dialogHeight:240px;help:no;scroll:no;edge:sunken";
+// 			                    feature = feature + GetShowModalPosition(555, 240);
+// 			                    var ret = window.showModalDialog(url, "", feature);
+			                    var ret = window.open(url, "", "height=300px,width=855px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+			                } else {
+			                	left = (parseInt(width) - 1155) / 2;
+						        top = (parseInt(heigth) - 460) / 2;
+			                    window.open("/ezApprovalG/ezLineInfo.do?docID=" + DocID + "&deptID=" + escape(tr.getAttribute("DATA1")) + "&docState=011" + "&aprState=" + escape(tr.getAttribute("DATA4")), "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+			                }
+// 		                    OpenReceiptHistory();
 		                }
 		                else if (jobState == "APPROVAL") {
 		                    openUserInfo();
 		                }
 		            }
 		        }
-		        */
+ 		        
 		    function idistbox_onclick() {
 		        document.getElementById("imgTitle").innerHTML = g_sFlag === "m03" ? "<spring:message code='ezApprovalG.t911'/>" : "<spring:message code='ezApprovalG.kbh08'/>";
 		        document.getElementById("imgTitle").style.display = "";
