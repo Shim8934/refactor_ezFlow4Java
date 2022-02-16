@@ -3024,7 +3024,7 @@ INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMP
 -- webfolder trigger
 DELIMITER //
 
-CREATE TRIGGER update_dept_webfolder_name
+CREATE OR REPLACE TRIGGER update_dept_webfolder_name
 AFTER UPDATE ON tbl_deptmaster
 FOR EACH ROW
 BEGIN
@@ -3033,7 +3033,7 @@ BEGIN
     END IF;
 END; //
 
-CREATE TRIGGER update_user_webfolder_name
+CREATE OR REPLACE TRIGGER update_user_webfolder_name
 AFTER UPDATE ON tbl_usermaster
 FOR EACH ROW
 BEGIN

@@ -3456,3 +3456,20 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE) VALUES(0, 'useSusinSchedulerTime', '5', '스케쥴러 동작주기 분 (default: 5)', '수신문서 전달 스케쥴러 주기', TO_DATE('2021-03-03 00:00:00','yyyy-mm-dd hh24:mi:ss'), '전자결재');
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('D24','001','','1','','문서24 URL','문서24 URL','문서24 URL','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('D24','002','','1','','문서24 API_KEY','문서24 API_KEY','문서24 API_KEY','Top',0);
+
+-- webfolder trigger
+CREATE OR REPLACE TRIGGER update_dept_webfolder_name
+AFTER UPDATE ON tbl_deptmaster
+FOR EACH ROW
+WHEN (NEW.displayname != OLD.displayname OR NEW.displayname2 != OLD.displayname2)
+BEGIN
+    UPDATE tbl_webfolder_folder SET folder_name1 = :NEW.displayname, folder_name2 = :NEW.displayname2 WHERE owner_id = :NEW.cn AND folder_upper = 'root' AND folder_type IN ('C', 'D');
+END;
+
+CREATE OR REPLACE TRIGGER update_user_webfolder_name
+AFTER UPDATE ON tbl_usermaster
+FOR EACH ROW
+WHEN (NEW.displayname != OLD.displayname OR NEW.displayname2 != OLD.displayname2)
+BEGIN
+    UPDATE tbl_webfolder_folder SET folder_name1 = :NEW.displayname, folder_name2 = :NEW.displayname2 WHERE owner_id = :NEW.cn AND folder_upper = 'root' AND folder_type IN ('U');
+END;

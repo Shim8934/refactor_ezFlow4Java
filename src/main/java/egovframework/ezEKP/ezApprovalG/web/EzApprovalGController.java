@@ -533,9 +533,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String userRealDeptId = ezOrganService.getUserOrgDeptId(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
 		List<OrganUserVO> orgUserInfolist = ezOrganService.getOrgUserInfo(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
-		String userRealTitle = orgUserInfolist.get(0).getTitle();
-		
-		if (userInfo.getDeptID().equals(userRealDeptId) && userInfo.getTitle().equals(userRealTitle)) {
+
+		// 2022-02-11 박기범 : 직책이 없을경우 null이 들어오는 경우 체크 추가
+		String userGetTitle = userInfo.getTitle() != null ? userInfo.getTitle() : "";
+		String userRealTitle = orgUserInfolist.get(0).getTitle() != null ? orgUserInfolist.get(0).getTitle() : "";
+
+		if (userInfo.getDeptID().equals(userRealDeptId) && userGetTitle.equals(userRealTitle)) {
 			buJaeInfo = doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent();
 		} else {
 			//buJaeInfo = ezOrganService.getAddJobProxy(userInfo.getId(), userInfo.getDeptID(), userInfo.getTenantId());
