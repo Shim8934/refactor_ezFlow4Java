@@ -217,6 +217,8 @@
         }
         
         function Editor_Complete() {
+        	showLoadingProgress();
+        	
         	if (pDocHref != "") { 
         		var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(pDocHref);
         		message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
@@ -290,7 +292,7 @@
                         attachxslName = attachxsl.replace(PackDocID, "");
                     }
 
-                    //hideProgress();
+                    hideLoadingProgress();
 
                     if (message.FieldExist("sealsign")) {
                         var tmpSUrl = GetDocumentElement("surl");
@@ -304,7 +306,7 @@
                     }
                     //HwpCtrl.SetImgReg();
                 } else {
-                    //hideProgress(); 
+                	hideLoadingProgress();
                     var pAlertContent = "<spring:message code='ezApprovalG.t369'/>";
                     OpenAlertUI(pAlertContent);
                     message.ClearDocument();
