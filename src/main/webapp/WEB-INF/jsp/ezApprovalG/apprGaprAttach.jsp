@@ -60,7 +60,7 @@
 			var pDeptID			= arr_userinfo[4];		// 부서ID  
 			var pDeptName		= arr_userinfo[5];		// 부서 이름 
 			var optExt = "<c:out value ='${poptExt}'/>";
-			var maxSize = "<c:out value ='${maxSize}'/>";
+			var maxSize = "<c:out value ='${apprTotalAttachLimit}'/>";
 			var isBody = "<c:out value ='${isBody}'/>";
 			var BodyAttach = "N";
 			var AttachDelFlag = false;
