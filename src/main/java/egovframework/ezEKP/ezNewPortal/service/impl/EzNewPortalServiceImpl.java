@@ -839,7 +839,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		List<PortalUserInfoVO> tempList = ezNewPortalDAO.getMonthlyBirthdayEmployees(map);
 		int birthdayListCount = tempList.size();
 		List<PortalUserInfoVO> birthdayList = new ArrayList<PortalUserInfoVO>();
-		
+		int lunarCount = 0;
+		String lastLunarId = "";
+		String lastLunarDate = "";
+		String lastSolarDate = "";
+
+		LOGGER.debug("convertLunarToSolar started.");
+
+
 		for (int i = 0; i < birthdayListCount; i++) {
 			PortalUserInfoVO portalUserInfo = tempList.get(i);
 			
@@ -849,11 +856,21 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				String toSolarDate = convertLunarToSolar(portalUserInfo.getUserBirthday(), month);
 				
 				if (!toSolarDate.equals("")) {
+					lastLunarId = portalUserInfo.getUserId();
+					lastLunarDate = portalUserInfo.getUserBirthday();
 					portalUserInfo.setUserBirthday(toSolarDate);
 					birthdayList.add(portalUserInfo);
+					lastSolarDate = toSolarDate;
+					lunarCount++;
 				}
 			}
 		}
+
+		if (lunarCount > 0) {
+			LOGGER.debug("lunarInThisMonthCount : " + lunarCount + " / last id : " + lastLunarId + " / date : " + lastLunarDate + " > " + lastSolarDate);
+		}
+
+		LOGGER.debug("convertLunarToSolar ended.");
 		
 		int birthCount = 0;
 		
@@ -945,7 +962,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	public String convertLunarToSolar (String birthday, int compMonth) {
-		LOGGER.debug("convertLunarToSolar started.");
 		/*
 		 * 20.05.29 강승구 : 음력변환 오류 수정
 		 * 아직 윤달, 평달에 대한 문제 해결 필요
@@ -978,7 +994,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
         String retDay   = (pad2Str + day  ).substring(day  .length());
 
         result = retYear + "-" + retMonth + "-" + retDay;
-        LOGGER.debug("convert lunar date to solar date : " + result);
 		
 		String monthComp = String.valueOf(compMonth);
 		
@@ -991,8 +1006,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		if (!chineseMonth.equals(monthComp)) {
 			result = "";
 		}
-		
-		LOGGER.debug("convertLunarToSolar ended.");
+
 		return result;
 	}
 	
