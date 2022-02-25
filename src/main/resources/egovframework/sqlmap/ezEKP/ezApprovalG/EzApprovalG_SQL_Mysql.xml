@@ -34278,9 +34278,9 @@
 	<insert id="EzApprovalG.insertSendDocDB" parameterClass="Map">
 		INSERT INTO 
 			TBL_SUSINSCHEDULE
-     	( DOCID , DEPTID , DIRPATH , DOCSTATE , COMPANYID , LANG , TENANTID )
+     	( DOCID , DEPTID , DIRPATH , DOCSTATE , COMPANYID , LANG , TENANTID, OFFSET )
      	VALUES 
-     	( #v_DOCID# , #v_DEPTID# , #v_DIRPATH# , #v_DOCSTATE# , #v_COMPANYID# , #v_LANG# , #v_TENANTID# )
+     	( #v_DOCID# , #v_DEPTID# , #v_DIRPATH# , #v_DOCSTATE# , #v_COMPANYID# , #v_LANG# , #v_TENANTID#, #v_OFFSET# )
 	</insert>
 	
 	<resultMap id="getSendDocList" class="java.util.LinkedHashMap">
@@ -34291,6 +34291,7 @@
 		<result property="COMPANYID"			column="COMPANYID" />
 		<result property="LANG"					column="LANG" />
 		<result property="TENANTID"				column="TENANTID" />
+		<result property="OFFSET"					column="OFFSET" />
 	</resultMap>
 	<select id="EzApprovalG.getSendDocList" resultMap="getSendDocList">
 		SELECT
@@ -34300,7 +34301,8 @@
 			DOCSTATE,
 			COMPANYID,
 			LANG,	
-			TENANTID
+			TENANTID,
+			OFFSET
 		FROM TBL_SUSINSCHEDULE
 	</select>
 	
@@ -34592,4 +34594,57 @@
           AND
             COMPANYID = #companyID#
     </update>
+    
+   	<select id="EzApprovalG.checkbtnReSend24Display" parameterClass="HashMap" resultClass="String">
+		SELECT  CASE WHEN SUBSTRING(XFROMCODE, 1, 1) = 'M' THEN  
+					CASE WHEN  SUBSTRING(XFROMCODE, 1, 2) = 'MA' THEN 'Y' ELSE 'N' END 
+				ELSE 'N' END 
+		FROM TBL_RECRELAYINFO
+        WHERE 
+            DOCID = #v_DOCID#
+            AND COMPANYID = #v_COMPANYID#
+            AND TENANT_ID = #v_TENANTID#
+	</select>
+    
+   	<select id="EzApprovalG.getDoc24Info" parameterClass="HashMap" resultClass="HashMap">
+		SELECT XFROMCODE AS DEPTCODE, MFROM AS DEPTNAME
+		FROM TBL_RECRELAYINFO
+		WHERE    	
+            DOCID = #v_DOCID#
+            AND COMPANYID = #v_COMPANYID#
+            AND TENANT_ID = #v_TENANTID#
+	</select>
+    
+    <insert id="EzApprovalG.insertReciptInfoDoc24" parameterClass="Map">
+		INSERT INTO TBL_RECEIPTPOINTINFO 
+			(DOCID, RECEIPTPOINTID, RECEIPTPOINTNAME, EXTRECEPTYN, PROCESSYN, PROCESSSN, CANEDITYN, EXTRECEPTEMAIL, RECEIPTMEMBERID, RECEIPTMEMBERNAME, PROCESSDATE, 
+			RECEIPTMEMBERJOBTITLE, DEPTMEMBERSN, RECEIPTPOINTNAME2, RECEIPTMEMBERJOBTITLE2, RECEIPTMEMBERNAME2, ROUTEYN, TENANT_ID, COMPANYID)
+		VALUES (#DOCID#, #DEPTCODE#,#DEPTNAME#, 'Y', 'N', '1', 'N',
+		'', '', '', NULL, '', '1', #DEPTNAME#,'','',null, #TENANT_ID#, #COMPANYID#)   
+	</insert>
+    
+   	<select id ="EzApprovalG.getReceiptHistoryInfo" parameterClass="Map" resultClass="HashMap" >
+		SELECT RECEIPTDEPTNAME, RECEIPTDEPTNAME2, STATUSDATE, 
+			CASE WHEN STATUS = 'A' THEN '도착'
+			WHEN STATUS = 'C' THEN '시스템삭제'
+			WHEN STATUS = 'E' THEN '전송실패' 
+			WHEN STATUS = 'H' THEN '회송' 
+			WHEN STATUS = 'I' THEN '접수' 
+			WHEN STATUS = 'N' THEN '대기' 
+			WHEN STATUS = 'O' THEN '발송의뢰' 
+			WHEN STATUS = 'R' THEN '수신' 
+			WHEN STATUS = 'S' THEN '발송' 
+			WHEN STATUS = 'T' THEN '재발송대기' 
+			WHEN STATUS = 'Y' THEN '수신완료' 
+			WHEN STATUS = 'V' THEN '도달' END STATUS
+		FROM TBL_HISTORYRECEIPTINFO
+		LEFT JOIN TBL_APRDOCINFO 
+		ON TBL_HISTORYRECEIPTINFO.DOCID = TBL_APRDOCINFO.DOCID  
+		WHERE    	
+            (TBL_HISTORYRECEIPTINFO.DOCID = #v_DOCID# OR TBL_APRDOCINFO.ORGDOCID = #v_DOCID#) 
+            AND RECEIPTDEPTID = #v_DEPTID#
+            AND TBL_HISTORYRECEIPTINFO.COMPANYID = #v_COMPANYID#
+            AND TBL_HISTORYRECEIPTINFO.TENANT_ID = #v_TENANTID#
+        ORDER BY STATUSDATE DESC
+	</select>
 </sqlMap>

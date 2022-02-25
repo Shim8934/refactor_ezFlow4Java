@@ -732,6 +732,8 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		JSONParser parser = new JSONParser();
 		
 		userInfo = commonUtil.userInfo(loginCookie);
+
+		logger.debug("user: " + userInfo.getId() + " / comp:" + userInfo.getCompanyID() + " / dept:" + userInfo.getDeptID());
 		
 		String result = "";
 
@@ -746,9 +748,13 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 			if(i == 0) {
 				jo = (JSONObject)ja.get(i);
 				result = ezOrganService.updateProperty(userInfo.getId(), "extensionAttribute5", jo.get("proxy").toString(), pClass, userInfo.getTenantId());
+
+				logger.debug("updateProperty proxy:" + jo.get("proxy").toString());
 			} else {
 				jo = (JSONObject)ja.get(i);
 				result = ezOrganService.updateAddJobProxy(userInfo.getId(), jo.get("proxy").toString(), userInfo.getTenantId(), jo.get("deptId").toString(), jo.get("jobId").toString());
+
+				logger.debug("updateAddJobProxy proxy:" + jo.get("proxy").toString() + " / deptId:" + jo.get("deptId").toString() + " / jobId:" + jo.get("jobId").toString());
 			}
 		}
 		

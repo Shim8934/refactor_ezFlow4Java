@@ -125,6 +125,8 @@
 	
 			// 웹 한글 기안기용
 	    	function Editor_Complete() {
+	    		showLoadingProgress();
+	    		
 	    		if (pDocHref != "") {
 				    var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(pDocHref);
 				    message.Open(URL, "", "", function (res) { 
@@ -136,7 +138,7 @@
 					    	}
 					        GetExchInfo();
 					        //SignCheck();
-					        //hideProgress();
+					        hideLoadingProgress();
 				
 					        if (pHasOpinion == "Y") {
 					            var pInformationContent = "<spring:message code='ezApprovalG.t9'/><br> <spring:message code='ezApprovalG.t170'/>";
@@ -144,7 +146,7 @@
 							}
 				        }
 				        else {
-				            //hideProgress();
+				        	hideLoadingProgress();
 				            var pAlertContent = "<spring:message code='ezApprovalG.t369'/>";
 							OpenAlertUI(pAlertContent);
 							message.Clear();
@@ -731,5 +733,8 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
+		<div style="width: 200px; height: 50px; border: 0px solid red; text-align: center; vertical-align: middle; display: none; z-index: 9000; position: absolute;" id="loadingLayer">
+	        <img src="/images/email/progress_img.gif" style="vertical-align: middle;" />
+	    </div>
 	</body>
 </html>

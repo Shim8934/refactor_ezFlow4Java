@@ -2322,7 +2322,7 @@ function InsertRecAll() {
     	}
     	if (isReceiverChk(deptid)) {
             
-	        if (CrossYN() && ext != 'hwp') {
+	        if (CrossYN()) {
 	            var pAlertContent = T1361andT1362;
 	            var Ans = OpenInformationUI(pAlertContent, InsertRecAll_Complete);
 	        } else {

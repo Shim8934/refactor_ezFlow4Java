@@ -3456,3 +3456,31 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE) VALUES(0, 'useSusinSchedulerTime', '5', '스케쥴러 동작주기 분 (default: 5)', '수신문서 전달 스케쥴러 주기', TO_DATE('2021-03-03 00:00:00','yyyy-mm-dd hh24:mi:ss'), '전자결재');
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('D24','001','','1','','문서24 URL','문서24 URL','문서24 URL','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('D24','002','','1','','문서24 API_KEY','문서24 API_KEY','문서24 API_KEY','Top',0);
+INSERT ALL
+    INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, DELFLAG, TENANT_ID, COMPANYID) 
+    VALUES ('112', 1, '수신자', 200, NULL, 'RECEIPTDEPTNAME', NULL, NULL, '수신자', NULL, 'Receiver', '受信者' , '受信者', NULL, 0, 'Top')
+    INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, DELFLAG, TENANT_ID, COMPANYID) 
+    VALUES ('112', 2, '상태', 100, NULL, 'STATUS', NULL, NULL, '상태', NULL, 'Status', 'ステータス', 'ステータス', NULL, 0, 'Top')
+    INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, DELFLAG, TENANT_ID, COMPANYID) 
+    VALUES ('112', 3, '일자', 300, NULL, 'STATUSDATE', NULL, NULL, '일자', NULL, 'Date', '日付', '日付', NULL, 0, 'Top')
+SELECT
+	*
+FROM DUAL;
+
+
+-- webfolder trigger
+CREATE OR REPLACE TRIGGER update_dept_webfolder_name
+AFTER UPDATE ON tbl_deptmaster
+FOR EACH ROW
+WHEN (NEW.displayname != OLD.displayname OR NEW.displayname2 != OLD.displayname2)
+BEGIN
+    UPDATE tbl_webfolder_folder SET folder_name1 = :NEW.displayname, folder_name2 = :NEW.displayname2 WHERE owner_id = :NEW.cn AND folder_upper = 'root' AND folder_type IN ('C', 'D');
+END;
+
+CREATE OR REPLACE TRIGGER update_user_webfolder_name
+AFTER UPDATE ON tbl_usermaster
+FOR EACH ROW
+WHEN (NEW.displayname != OLD.displayname OR NEW.displayname2 != OLD.displayname2)
+BEGIN
+    UPDATE tbl_webfolder_folder SET folder_name1 = :NEW.displayname, folder_name2 = :NEW.displayname2 WHERE owner_id = :NEW.cn AND folder_upper = 'root' AND folder_type IN ('U');
+END;

@@ -371,4 +371,8 @@ public interface EzCommonService {
 	public void createUserMailTemplate() throws Exception;
 
 	void createTblPermissionChangeInfo() throws Exception;
+
+	public void addSusinScheduleOffsetColumn() throws Exception;
+
+	public void insertReceiptHistoryListoption() throws Exception;
 }

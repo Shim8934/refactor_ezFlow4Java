@@ -38,6 +38,12 @@ import java.util.Locale;
 import java.util.Map; 
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Properties;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern; 
  
@@ -15059,7 +15065,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if (realDocType.equals("003")) { // docType 003 : 수신문
 					// 정주환 수신 문서 발송 분기
 					if ("Y".equals(ezCommonService.getTenantConfig("useSusinSchedulerYn", userInfo.getTenantId()))) {
-						subSQL = insertSendDocDB(docID, deptID, dirPath, staDSSuSin, companyID, lang, userInfo.getTenantId());
+						subSQL = insertSendDocDB(docID, deptID, dirPath, staDSSuSin, companyID, lang, userInfo.getTenantId(), userInfo.getOffset());
 					} else {
 						subSQL = doSendDoc(docID, deptID, dirPath, staDSSuSin, companyID, lang, userInfo.getTenantId());
 						if (!subSQL.toUpperCase().equals("FALSE")) {
@@ -15096,7 +15102,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			} else { // 일반버젼
 				if (!(realDocType.equals(staDTDraftDoc) && getIsUse("SA45", "001", orgCompanyID, lang, userInfo.getTenantId()).equals("1"))){
 					if ("Y".equals(ezCommonService.getTenantConfig("useSusinSchedulerYn", userInfo.getTenantId()))) {
-						subSQL = insertSendDocDB(docID, deptID, dirPath, staDSSuSin, companyID, lang, userInfo.getTenantId());
+						subSQL = insertSendDocDB(docID, deptID, dirPath, staDSSuSin, companyID, lang, userInfo.getTenantId(), userInfo.getOffset());
 					} else {
 						subSQL = doSendDoc(docID, deptID, dirPath, staDSSuSin, companyID, lang, userInfo.getTenantId());
 						if (!subSQL.toUpperCase().equals("FALSE")) {
@@ -17475,7 +17481,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	// 정주환 수신처 스케쥴러 DB
-	public String insertSendDocDB(String docID, String deptID, String dirPath, String docState, String companyID, String lang, int tenantID) throws Exception {
+	public String insertSendDocDB(String docID, String deptID, String dirPath, String docState, String companyID, String lang, int tenantID, String offset) throws Exception {
 		logger.debug("insertSendDocDB started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -17486,6 +17492,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DOCSTATE", docState);
 		map.put("v_LANG", lang);
 		map.put("v_TENANTID", tenantID);
+		map.put("v_OFFSET", offset);
 		
 		try {
 			ezApprovalGDAO.insertSendDocDB(map);
@@ -17531,6 +17538,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			tempLoginVO.setDn("NOPASSWORD");
 			
 			LoginVO userInfo = loginService.selectUser(tempLoginVO);
+			userInfo.setLang(map.get("LANG").toString()); // 수신알림메일 발송 시 필요한 데이터 추가 (다국어 지원)
+			userInfo.setOffset(map.get("OFFSET").toString());
+			
 			sendSusinMail(map, userInfo);
 			ezApprovalGDAO.deleteSendDocList(map);
 		}
@@ -33333,7 +33343,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			contentBuilder.append("</td></tr></table>");
 			
 			// String content = "<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td><span>제&nbsp;&nbsp;목: " + vo.getDocTitle() + "</span><br><span>기안자:" + vo.getWriterName() + "</span><br><span>기안일: " + vo.getStartDate() + "</span><br></td></tr></table>";
-			ezEmailService.sendMail(userAccount, password, userInfo.getLocale(), from, toArr, null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), userInfo.getTenantId(), locale), true, EmailImportance.NORMAL);
+			ezEmailService.sendMail(userAccount, password, locale, from, toArr, null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), userInfo.getTenantId(), locale), true, EmailImportance.NORMAL);
 		}
 		logger.debug("sendSusinMail ended.");
 	}
@@ -33440,4 +33450,182 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         
         return "TRUE";
     }
+    
+    @Override
+    public void saveFilterDataInfo(String docID, String resultXML) throws Exception {
+    	logger.debug("saveFilterDataInfo started");
+    	
+    	Map<String, Object> map = new HashMap<>();
+        map.put("v_DOCID", docID);
+        map.put("v_RESULTXML", resultXML);
+        
+        ezApprovalGDAO.saveFilterDataInfo(map);
+         
+        logger.debug("saveFilterDataInfo ended");
+    }
+
+	@Override
+	public String checkbtnReSend24Display(String docID, String companyID, int tenantID) throws Exception {
+		logger.debug("CheckbtnReSend24Display started");
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("v_DOCID", docID);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		String result = "N";
+		
+		result = ezApprovalGDAO.checkbtnReSend24Display(map);
+		logger.debug("CheckbtnReSend24Display ended");
+		
+		return result;
+	}
+
+	@Override
+	public Map<String, Object> getDoc24Info(String docID, String companyID, int tenantID) throws Exception {
+		logger.debug("GetDoc24Info started");
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("v_DOCID", docID);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		Map<String, Object> doc24Info = ezApprovalGDAO.getDoc24Info(map);
+		logger.debug("GetDoc24Info ended");
+		
+		return doc24Info;
+	}
+	
+	//문서24 회신
+	@Override
+	public void insertReciptInfoDoc24(String docID, String docDeptCode, String docDeptName, String companyId, int tenantId) throws Exception {
+		logger.debug("insertReciptInfoDoc24 started");
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("DOCID", docID);
+		map.put("DEPTCODE", docDeptCode);
+		map.put("DEPTNAME", docDeptName);
+		map.put("COMPANYID", companyId);
+		map.put("TENANT_ID", tenantId);
+		
+		ezApprovalGDAO.insertReciptInfoDoc24(map);
+		logger.debug("insertReciptInfoDoc24 ended");
+	}
+
+	// 외부발송 이력
+	@Override
+	public String getReceiptHistoryInfo(String docID, String deptID, String companyID, String lang, int tenantID, String offset) throws Exception {
+		logger.debug("getReceiptHistoryInfo started.");
+
+		String listString = "";
+		StringBuffer resultXML = new StringBuffer();
+		
+		listString = getListHeader("112", companyID, lang, tenantID);
+		
+		Document listXML = commonUtil.convertStringToDocument(listString);
+		
+		int hlength = listXML.getElementsByTagName("NAME").getLength();
+		
+		resultXML.append("<LISTVIEWDATA>");
+		resultXML.append("<HEADERS>");
+		
+		for (int k = 0; k < hlength; k++) {
+			resultXML.append("<HEADER>");
+			resultXML.append("<NAME>" + listXML.getElementsByTagName("NAME").item(k).getTextContent() + "</NAME>");
+			resultXML.append("<WIDTH>" + listXML.getElementsByTagName("WIDTH").item(k).getTextContent() + "</WIDTH>");
+			resultXML.append("<COLNAME>" + listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + "</COLNAME>");
+			resultXML.append("</HEADER>");
+		}
+		
+		resultXML.append("</HEADERS>");
+		
+		String docList = "";
+		if (docID != null && !docID.equals("")) {
+			docList = receiptHistoryInfo(docID, deptID, companyID, tenantID);
+		} else {
+			docList = "<DATA></DATA>";
+		}
+		
+		Document docXML = commonUtil.convertStringToDocument(docList);
+		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		
+		String fieldName = "";
+		String fieldValue = "";
+		String langData = commonUtil.getMultiData(lang, tenantID);
+		resultXML.append("<ROWS>");
+		
+		for (int k = 0; k < dlength; k++) {
+			resultXML.append("<ROW>");
+			
+			for (int p = 0; p < hlength; p++) {
+				resultXML.append("<CELL>");
+				
+				fieldName = listXML.getElementsByTagName("COLNAME").item(p).getTextContent().toUpperCase();
+				
+				if (fieldName.equals("RECEIPTDEPTNAME")) {
+					fieldName = fieldName + langData;
+				}
+				
+				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
+				
+				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
+				
+				if (p == 0) {
+					resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("RECEIPTDEPTNAME").item(k).getTextContent()) + "</DATA1>");
+					resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("STATUS").item(k).getTextContent()) + "</DATA2>");
+					resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("STATUSDATE").item(k).getTextContent()) + "</DATA3>");
+					resultXML.append("<DATA4>" + makeListField(docXML.getElementsByTagName("RECEIPTDEPTNAME2").item(k).getTextContent()) + "</DATA4>");
+				}
+				
+				resultXML.append("</CELL>");
+			}
+			
+			resultXML.append("</ROW>");
+		}
+		
+		resultXML.append("</ROWS>");
+		resultXML.append("</LISTVIEWDATA>");
+		
+		logger.debug("getReceiptHistoryInfo ended.");
+
+		return resultXML.toString();
+	}
+	
+	public String receiptHistoryInfo(String docID, String deptID, String companyID, int tenantID) throws Exception {
+		logger.debug("receiptHistoryInfo started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_DOCID", docID);
+		map.put("v_DEPTID", deptID);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		// 해당 문서 수신이력 정보 리스트 추출
+		List<Map<String, Object>> receiptHistoryList = ezApprovalGDAO.getReceiptHistoryInfo(map);
+		logger.debug("apprGAprLineVOList param : v_DOCID =" + docID + ", v_DEPTID =" + deptID + ", v_COMPANYID =" + companyID + ", v_TENANTID=" + tenantID);
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("<DATA>");
+		
+		for (int i = 0; i < receiptHistoryList.size(); i++) {
+			sb.append("<ROW>");
+			Map<String, Object> history = receiptHistoryList.get(i);
+			Set<Entry<String, Object>> set = history.entrySet();
+			Iterator<Entry<String, Object>> it = set.iterator();
+			while(it.hasNext()) {
+				Entry<String, Object> ent = it.next();
+				sb.append("<" + ent.getKey() + ">");
+				sb.append(ent.getValue());
+				sb.append("</" + ent.getKey() + ">");
+			}
+			sb.append("</ROW>");
+		}
+		
+		sb.append("</DATA>");
+
+		logger.debug("receiptHistoryInfo ended");
+		
+		return sb.toString();
+	}
+
 }

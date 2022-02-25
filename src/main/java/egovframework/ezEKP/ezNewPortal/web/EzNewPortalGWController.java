@@ -405,6 +405,9 @@ public class EzNewPortalGWController {
 				deptName = info.getDeptName2();
 			}
 			
+			// IP
+			String lastLoginIP = ezOrganService.getLoginIP(userId, info.getTenantId());
+			
 			// 유저이미지
 			String imgUrl = ezOrganService.getPropertyValue(userId, "extensionAttribute2", tenantId);
 
@@ -555,6 +558,7 @@ public class EzNewPortalGWController {
 			data.put("lastLogin", lastLogin);
 			data.put("userEmail", info.getEmail());
 			data.put("usePortalAutoRefreshInterval", usePortalAutoRefreshInterval);
+			data.put("lastLoginIP", lastLoginIP);
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -4340,6 +4344,9 @@ public class EzNewPortalGWController {
 				lastLogin = "";
 			}
 			
+			// IP
+			String lastLoginIP = ezOrganService.getLoginIP(userId, info.getTenantId());
+
 			JSONObject data = new JSONObject();
 			data.put("useAttitude", useAttitude);
 			data.put("userName", userName);
@@ -4348,6 +4355,7 @@ public class EzNewPortalGWController {
 			data.put("userPhoto", userPhoto);
 			data.put("userEmail", userEmail);
 			data.put("lastLogin", lastLogin);
+			data.put("lastLoginIP", lastLoginIP);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

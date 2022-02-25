@@ -4599,5 +4599,54 @@
 			END
 		}
 	</statement>
+	
+	<select id="EzCommonDAO.checkSusinScheduleOffsetColumn">
+        <![CDATA[
+            SELECT 
+                OFFSET
+            FROM 
+                TBL_SUSINSCHEDULE
+			WHERE
+				ROWNUM = 1
+        ]]>
+    </select>
+    <statement id="EzCommonDAO.addSusinScheduleOffsetColumn">
+        ALTER TABLE 
+        	TBL_SUSINSCHEDULE 
+		ADD
+			OFFSET CHAR(10 CHAR) DEFAULT ''
+    </statement>
+    
+   	<select id="EzCommonDAO.checkReceiptHistoryListoption" parameterClass="Map" resultClass="String">
+	<![CDATA[
+		SELECT
+			companyid
+		FROM
+			TBL_LISTOPTION
+		WHERE
+			LISTTYPE = '112'
+		AND
+			companyid = #companyId#
+		AND
+			tenant_id = #tenantId#
+		AND
+			ROWNUM = 1
+	]]>
+	</select>
+   
+	<insert id="EzCommonDAO.insertReceiptHistoryListoption">
+	<![CDATA[
+		INSERT ALL
+		    INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, DELFLAG, TENANT_ID, COMPANYID) 
+		    VALUES ('112', 1, '수신자', 200, NULL, 'RECEIPTDEPTNAME', NULL, NULL, '수신자', NULL, 'Receiver', '受信者' , '受信者', NULL, #tenantId#, #companyId#)
+		    INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, DELFLAG, TENANT_ID, COMPANYID) 
+		    VALUES ('112', 2, '상태', 100, NULL, 'STATUS', NULL, NULL, '상태', NULL, 'Status', 'ステータス', 'ステータス', NULL, #tenantId#, #companyId#)
+		    INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, DELFLAG, TENANT_ID, COMPANYID) 
+		    VALUES ('112', 3, '일자', 300, NULL, 'STATUSDATE', NULL, NULL, '일자', NULL, 'Date', '日付', '日付', NULL, #tenantId#, #companyId#)
+	    SELECT
+	    	*
+	    FROM DUAL
+	]]>
+   	</insert>
 
 </sqlMap>

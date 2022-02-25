@@ -1603,7 +1603,6 @@
 		</isEqual>
 		
 		<isEqual property="approvalFlag" compareValue="G">
-			<![CDATA[
 				SELECT
 					aprmemberdeptid,
 					aprmemberid,
@@ -1614,11 +1613,15 @@
 				FROM
 					TBL_ENDAPRLINEINFO
 				WHERE
+					aprtype IN 
+				<iterate property="v_APRTYPE" open="(" close=")" conjunction=",">
+					#v_APRTYPE[]#
+				</iterate>
+				<![CDATA[
+				AND
 					tenant_id = #tenantID#
 				AND
 					companyid = #companyID#
-				AND
-					aprtype = #v_APRTYPE#
 				AND
 					processdate >= DATE_FORMAT(#v_FROM#, '%Y-%m-%d %H:%i:%s')
 				AND
@@ -1632,7 +1635,7 @@
 				ORDER BY
 					aprmemberdeptname$v_STRLANG$,
 					aprmembername$v_STRLANG$
-			]]>
+				]]>
 		</isEqual>
 	</select>
 

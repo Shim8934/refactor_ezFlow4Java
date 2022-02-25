@@ -2281,4 +2281,30 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		logger.debug("If TBL_PERMISSION_CHANGE_INFO doesn't exist, creating the table...");
 		update("EzCommonDAO.createTblPermissionChangeInfo");
 	}
+
+	public void addSusinScheduleOffsetColumn() throws Exception {
+		try {
+			select("EzCommonDAO.checkSusinScheduleOffsetColumn");
+		} catch (Exception e) {
+			logger.debug("TBL_SUSINSCHEDULE OFFSET column doesn't exist. creating the column...");
+			update("EzCommonDAO.addSusinScheduleOffsetColumn");
+		}
+	}
+
+	public void insertReceiptHistoryListoption(Map<String, Object> map) throws Exception {
+		String companyId = checkReceiptHistoryListoption(map);
+		
+		try {
+			if (companyId == null) {
+				logger.debug("TBL_LISTOPTION data doesn't exist. insert the data of " + map.get("companyId") + "...");
+				insert("EzCommonDAO.insertReceiptHistoryListoption", map);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private String checkReceiptHistoryListoption(Map<String, Object> map) {
+		return (String) select("EzCommonDAO.checkReceiptHistoryListoption", map);
+	}
 }

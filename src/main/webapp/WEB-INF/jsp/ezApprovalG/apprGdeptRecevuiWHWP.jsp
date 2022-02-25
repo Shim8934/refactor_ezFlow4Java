@@ -280,13 +280,14 @@
 			        
 			        message.ScrollPosInfo(0, 0);
                     SetBody();
+                    hideLoadingProgress();
                     
 			        /* hideProgress();
 			        process_AfterOpen();
 			        HwpCtrl.SetImgReg(); */
 			    }
 			    else {
-			        //hideProgress();
+			    	hideLoadingProgress();
 			        var pAlertContent = "<spring:message code='ezApprovalG.t369'/>";
 			        OpenAlertUI(pAlertContent);
 			        message.Clear();
@@ -930,6 +931,7 @@
 		    var messageload = false;
 	        var messageload2 = false;
 		    function Editor_Complete() {
+		    	showLoadingProgress();
 		    	if (pSusinDocURL != "") {
 	                var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(pSusinDocURL);
 	                message.Open(URL, "", "", function (res) { messageload = res.result; }, null);
@@ -1079,5 +1081,8 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
+		<div style="width: 200px; height: 50px; border: 0px solid red; text-align: center; vertical-align: middle; display: none; z-index: 9000; position: absolute;" id="loadingLayer">
+	        <img src="/images/email/progress_img.gif" style="vertical-align: middle;" />
+	    </div>
 	</body>
 </html>
