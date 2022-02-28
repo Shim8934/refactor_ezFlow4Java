@@ -2134,7 +2134,6 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 				groupDocSN = ezApprovalGService.getGroupDocSN(isTmpDoc, userInfo.getTenantId(), userInfo.getCompanyID());
 				groupDocInfoList = ezApprovalGService.getGroupDocList(groupDocSN, "APR", userInfo.getTenantId(), userInfo.getCompanyID());
 			}
-			
 		}
 		
 		model.addAttribute("approvalFlag", approvalFlag);
@@ -2586,9 +2585,17 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String bigAttachFileMinSaveDate = ezApprovalGService.getAttachFileMinSaveDate(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		String bigAttachDownloadPeriod = bigAttachFileMinSaveDate + " ~ " + EgovDateUtil.addDay(bigAttachFileMinSaveDate, Integer.parseInt(bigAttachDownloadDay), "yyyy/MM/dd");
 		
-		// 1안의 docID를 GroupDocSN으로 전달한다.
+		// 1안의 docID를 GroupDocSN으로 전달한다. 임시저장된 문서도 문서보기가 가능하므로, listType을 체크한다.
 		List<ApprGGroupDocInfoVO> groupDocInfoList = new ArrayList<ApprGGroupDocInfoVO>();
-		groupDocInfoList = ezApprovalGService.getGroupDocList(docID, "APR", userInfo.getTenantId(), userInfo.getCompanyID());
+		String groupDocSN = "";
+		
+		if (listTypeValue.equals("21")) { // docID = 임시저장된 docSN (사용자ID@순번 형태)
+			// 웹한글기안기의 비동기 동작으로 1안이 늦게 저장되어 GROUPDOCSN값이 다를 수 있다. 따라서 정상적인 GROUPDOCSN값을 다시 가져오도록 한다.
+			groupDocSN = ezApprovalGService.getGroupDocSN(docID, userInfo.getTenantId(), userInfo.getCompanyID());
+			groupDocInfoList = ezApprovalGService.getGroupDocList(groupDocSN, "TMP", userInfo.getTenantId(), userInfo.getCompanyID());
+		} else {
+			groupDocInfoList = ezApprovalGService.getGroupDocList(docID, "APR", userInfo.getTenantId(), userInfo.getCompanyID());
+		}
 		
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("docID", docID);

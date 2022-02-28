@@ -84,6 +84,7 @@
 		    var whoKyulYN = "<c:out value = '${whoKyulYN}'/>";
 		    var useWebHWP = "<c:out value = '${useWebHWP}'/>";
 		    var userTitle = "<c:out value = '${userInfo.title}'/>";
+		    var useDraftAll = "<c:out value = '${useDraftAll}'/>";
 		    
 		    $(function () {
 		      	if(approvalFlag == "G") {
@@ -1219,7 +1220,7 @@
 	        <%-- 25022-01-11 홍승비 - 전자결재G 일괄기안 버튼 추가 (웹한글) --%>
 	        <div class="btn_writeBox">
 	        	<c:choose>
-	        	<c:when test="${approvalFlag == 'G' && useWebHWP == 'YES'}">
+	        	<c:when test="${approvalFlag == 'G' && useWebHWP == 'YES' && useDraftAll == 'YES'}">
 	        		<p class="btn_write01" onclick="btnDraft_onclick();" style="width:99px; display:inline-block; float:none;"><span class="sub_iconLNB tree_write"></span><spring:message code='main.t00031'/></p>
 	        		<p class="btn_write01" onclick="btnDraftAll_onclick();" style="width:99px; display:inline-block; float:right;"><span class="sub_iconLNB tree_write"></span><spring:message code='ezApprovalG.HSBDa01'/></p>
 	        	</c:when>

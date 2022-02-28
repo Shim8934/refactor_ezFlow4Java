@@ -250,6 +250,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		//원문공개사용여부
 		String useOpenGov = config.getProperty("config.useOpenGov");
 		String howToSendOffer = ezCommonService.getTenantConfig("howToSendOffer", userInfo.getTenantId());
+		// 일괄기안 사용여부
+		String useDraftAll = ezCommonService.getTenantConfig("useDraftAll", userInfo.getTenantId());
 		
 		model.addAttribute("useOpenGov", useOpenGov);
 		
@@ -370,6 +372,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("useWebHWP", useWebHWP);
 		model.addAttribute("autoSendOfferFlag", autoSendOfferFlag); // 전자결재G 미처리문서함 사용여부
 		model.addAttribute("howToSendOffer", howToSendOffer);
+		model.addAttribute("useDraftAll", useDraftAll);
 		
         logger.debug("apprGLeft Value : listType= " + listType + "containers= " + containers.toString() + "viewLeftCount= " + viewLeftCount);       
         logger.debug("apprGLeft Ended");
