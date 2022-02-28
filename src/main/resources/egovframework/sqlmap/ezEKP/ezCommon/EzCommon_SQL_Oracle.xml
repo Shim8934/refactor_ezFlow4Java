@@ -4519,7 +4519,7 @@
 		END
 	}
     </statement>
-
+    
 	<select id="EzCommonDAO.checkMailOutOfOfficeTemplate" resultClass="String">
 		<![CDATA[
 			SELECT 
@@ -4610,7 +4610,7 @@
 				ROWNUM = 1
         ]]>
     </select>
-    <statement id="EzCommonDAO.addSusinScheduleOffsetColumn">
+	<statement id="EzCommonDAO.addSusinScheduleOffsetColumn">
         ALTER TABLE 
         	TBL_SUSINSCHEDULE 
 		ADD
@@ -4649,4 +4649,21 @@
 	]]>
    	</insert>
 
+    <select id="EzCommonDAO.checkAprDocGroupInfoTypeColumn">
+        <![CDATA[
+            SELECT 
+                TYPE
+            FROM 
+                TBL_APRDOCGROUPINFO
+			WHERE
+				ROWNUM = 1
+        ]]>
+    </select>
+    <statement id="EzCommonDAO.addAprDocGroupInfoTypeColumn">
+        ALTER TABLE 
+        	TBL_APRDOCGROUPINFO 
+		ADD
+			TYPE CHAR(10 CHAR) NOT NULL
+    </statement>
+    
 </sqlMap>

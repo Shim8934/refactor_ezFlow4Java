@@ -91,6 +91,9 @@ public class ApprGFormVO {
 	/** 시행문 타입 */
 	private String sihangType;
 	
+	/** 2022-01-07 홍승비 - 전자결재G 일괄기안 옵션 추가 */
+	private String formDraftAllFlag;
+	
 	public String getPassAprLineFlag() {
 		return passAprLineFlag;
 	}
@@ -423,5 +426,13 @@ public class ApprGFormVO {
     public void setFormXslt(String formXslt) {
         this.formXslt = formXslt;
     }
+
+	public String getFormDraftAllFlag() {
+		return formDraftAllFlag;
+	}
+
+	public void setFormDraftAllFlag(String formDraftAllFlag) {
+		this.formDraftAllFlag = formDraftAllFlag;
+	}
 
 }

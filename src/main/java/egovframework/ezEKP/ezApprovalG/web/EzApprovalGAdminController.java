@@ -585,6 +585,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String usePassAprLine = ezCommonService.getTenantConfig("usePassAprLine", userInfo.getTenantId());
 		String passAprLineFlag = request.getParameter("passAprLineFlag");
 		String receptGubunYN = ezCommonService.getTenantConfig("receptGubunYN", userInfo.getTenantId());
+		String useDraftAll = ezCommonService.getTenantConfig("useDraftAll", userInfo.getTenantId());
 		
 		String title = (tCheck.equals("fIns") ? egovMessageSource.getMessage("ezApprovalG.t1667", userInfo.getLocale()) : egovMessageSource.getMessage("ezApprovalG.t1668", userInfo.getLocale()));
 		
@@ -680,6 +681,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		// 2021-01-21 심기영 오피스결재 여부 추가
 		model.addAttribute("useOfficeApproval", useOfficeApproval);
+		
+		/* 2022-01-07 홍승비 - 일괄기안 옵션 추가 */
+		model.addAttribute("useDraftAll", useDraftAll);
 		
 		logger.debug("formMainOther ended.");
 		

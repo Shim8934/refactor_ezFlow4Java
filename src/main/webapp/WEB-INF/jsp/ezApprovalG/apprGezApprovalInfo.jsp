@@ -226,6 +226,11 @@
 			/* 2021-04-19 홍승비 - 수신문서 회송여부를 판단하기 위한 변수 추가 */
 			var isSusinReset = false;
 			var preSusinGroupStr = "<c:out value ='${preSusinGroupStr}'/>";
+			
+			/* 2022-01-14 홍승비 - 일괄기안 관련 변수 추가 */
+			var curDocID = "";
+			var draftAllFlag = "<c:out value ='${draftAllFlag}'/>";
+			var pDocIDAry = new Array();
 	        
 	        $(function () {
 	        	if (document.getElementById("AprSecurity").checked){
@@ -263,7 +268,7 @@
 	        	initdatepicker();
 	        });
 	        
-	        window.onload = function () {        	
+	        window.onload = function () {
 	        	if(approvalFlag == "G") {
 	        		$(".approvalG").css("display","");
 	        		$(".approval").css("display","none");
@@ -283,7 +288,7 @@
 	                document.getElementById("orgbtnArea").style.display = "none";
 	                document.getElementById("btnArea").style.display = "inline";
 	            } */
-	
+	            
 	            GetDocInfo(); 
 	            AprTypeXML = loadXMLString(tempAprTypeXML);
 	            ChangeTab(document.getElementById("1tab1"));
@@ -624,6 +629,11 @@
              	if(useDoc24 == "YES"){
              		getDoc24List();
              	}
+             	
+             	/* 2022-02-21 홍승비 - 일괄기안문서의 경우, 부서합의는 사용 불가하므로 부서추가버튼 숨김처리 (개인병렬, 개인순차합의는 가능) */
+             	 if (draftAllFlag == "Y") {
+ 	                document.getElementById("deptaddbtn").style.display = "none";
+ 	            }
 	        };
 	        
 	        function KeEventControl(obj) {
@@ -721,6 +731,17 @@
 	            fileOpenFlagList = RetValue[55];
 	            limitDate = RetValue[56];
 	            passAprLine = RetValue[60];
+	            
+	            /* 2022-01-14 홍승비 - 일괄기안 관련 파라미터 추가 */
+	            if (RetValue[62] != undefined) { // 일괄기안 플래그
+		            draftAllFlag = RetValue[62];
+	            }
+	            if (RetValue[63] != undefined && RetValue[63].length > 1) { // 전체 문서ID 배열
+	            	pDocIDAry = RetValue[63];
+	            }
+	            if (RetValue[64] != undefined) { // 현재 선택한 탭의 문서ID
+	            	curDocID = RetValue[64]; 
+	            }
 	            
 				//기결재통과 버튼 표출 체크
 				showPassAprLineBtn();
@@ -1540,13 +1561,32 @@
                                 // 원문정보 첨부파일 공개/비공개
                                 ret[28] = "";
 
-                                for (var i = 0; i < document.getElementsByClassName('fileOpenFlagChk').length; i++) {
-                                    if (document.getElementsByClassName('fileOpenFlagChk')[i].checked) {
-                                        ret[28] += "Y";
-                                    } else {
-                                        ret[28] += "N";
-                                    }
-                                }
+                                // 일괄기안 시, 원문정보 첨부파일 공개/비공개 플래그를 배열 데이터로 삽입
+                                if (draftAllFlag != undefined && draftAllFlag == "Y") {
+    			                	var fileOpenFlagListArr = new Array();
+    			                	var fileOpenFlagListTemp = "";
+    			                	for (var i = 1; i < pDocIDAry.length; i++) { // 0번 인덱스는 제외하고 1안부터 확인
+    			                		fileOpenFlagListTemp = "";
+    			                		for (j = 0; j < $('input[anno="' + i + '"]').length; j++) { // 첨부파일 인덱스는 0부터 시작
+    				                		if ($('input[anno="' + i + '"]')[j].checked) {
+    				                			fileOpenFlagListTemp += "Y";
+    					                	} else {
+    					                		fileOpenFlagListTemp += "N";
+    					                	}
+    			                		}
+    			                		fileOpenFlagListArr[i] = fileOpenFlagListTemp;
+    			                	}
+    			                	ret[28] = fileOpenFlagListArr;
+    			                }
+                                else {
+	                                for (var i = 0; i < document.getElementsByClassName('fileOpenFlagChk').length; i++) {
+	                                    if (document.getElementsByClassName('fileOpenFlagChk')[i].checked) {
+	                                        ret[28] += "Y";
+	                                    } else {
+	                                        ret[28] += "N";
+	                                    }
+	                                }
+    			                }
 
                                 ret[29] = $("#txt_Basis").val();
                                 ret[30] = $("#txt_Reason").val();
@@ -2426,13 +2466,20 @@
 		    }
 		    
 		    function getAttachList() {
+		    	var url = "/ezApprovalG/getAttachListForOpenGov.do";
+		    	if (draftAllFlag == "Y") {
+		    		url = "/ezApprovalG/getAttachListForOpenGovDraftAll.do"
+		    	}
+		    	
             	$.ajax({
             		type : "POST",
             		dataType : "json",
             		async : false,
-            		url : "/ezApprovalG/getAttachListForOpenGov.do",
+            		url : url,
             		data : {
-            			docID : pDocID
+            			docID : pDocID,
+            			draftAllFlag : draftAllFlag, // 일괄기안 관련 변수
+            			pDocIDAry : pDocIDAry
             		},
             		success: function(xml){
             			result = xml;
@@ -2440,16 +2487,36 @@
            					var attachTr;
 	            			$.each(result, function(index, item) {
 	            				attachTr = "";
-	            				if (item.fileOpenFlag == "Y") {
-	            					attachTr = "<tr><td style='width:30px'><input onClick='fileOpenFlagChk_onClick(this)' class='fileOpenFlagChk' id='fileOpenFlagChk_" + item.sn + "' type='checkbox' checked /></td>"
-		            				+ "<td style='width:30px'>" + item.sn + "</td><td style='width:350px'>" + item.fileName + "</td>"
-		            				+ "<td style='width:70px'>" + item.fileSize + "</td>"
-		            				+ "<td class='fileOpenFlag' id='fileOpenFlag_" + item.sn + "' style='width:60px'>" + "공개" + "</td></tr>";
-	            				} else {
-	            					attachTr = "<tr><td style='width:30px'><input onClick='fileOpenFlagChk_onClick(this)' class='fileOpenFlagChk' id='fileOpenFlagChk_" + item.sn + "' type='checkbox'/></td>"
-		            				+ "<td style='width:30px'>" + item.sn + "</td><td style='width:350px'>" + item.fileName + "</td>"
-		            				+ "<td style='width:70px'>" + item.fileSize + "</td>"
-		            				+ "<td class='fileOpenFlag' id='fileOpenFlag_" + item.sn + "' style='width:60px'>" + "비공개" + "</td></tr>";
+	            				
+	            				// 일괄기안이 아닌 경우 (기존 코드)
+	            				if (draftAllFlag != "Y") {
+		            				if (item.fileOpenFlag == "Y") {
+		            					attachTr = "<tr><td style='width:30px'><input onClick='fileOpenFlagChk_onClick(this)' class='fileOpenFlagChk' id='fileOpenFlagChk_" + item.sn + "' type='checkbox' checked /></td>"
+			            				+ "<td style='width:30px'>" + item.sn + "</td><td style='width:350px'>" + item.fileName + "</td>"
+			            				+ "<td style='width:70px'>" + item.fileSize + "</td>"
+			            				+ "<td class='fileOpenFlag' id='fileOpenFlag_" + item.sn + "' style='width:60px'>" + "공개" + "</td></tr>";
+		            				} else {
+		            					attachTr = "<tr><td style='width:30px'><input onClick='fileOpenFlagChk_onClick(this)' class='fileOpenFlagChk' id='fileOpenFlagChk_" + item.sn + "' type='checkbox'/></td>"
+			            				+ "<td style='width:30px'>" + item.sn + "</td><td style='width:350px'>" + item.fileName + "</td>"
+			            				+ "<td style='width:70px'>" + item.fileSize + "</td>"
+			            				+ "<td class='fileOpenFlag' id='fileOpenFlag_" + item.sn + "' style='width:60px'>" + "비공개" + "</td></tr>";
+		            				}
+	            				}
+	            				// 일괄기안인 경우, 각 첨부파일 별 안번호를 표시
+	            				else {
+	            					if (item.fileOpenFlag == "Y") {
+		            					attachTr = "<tr><td style='width:30px'><input onClick='fileOpenFlagChk_onClick(this)' anNo='" + pDocIDAry.indexOf(item.docID) + "' class='fileOpenFlagChk' id='fileOpenFlagChk_" + item.sn + "' type='checkbox' checked /></td>"
+		            					+ "<td class='anNo' style='width:30px'>" + pDocIDAry.indexOf(item.docID) + "안</td>"
+			            				+ "<td style='width:30px'>" + item.sn + "</td><td style='width:350px'>" + item.fileName + "</td>"
+			            				+ "<td style='width:70px'>" + item.fileSize + "</td>"
+			            				+ "<td class='fileOpenFlag' id='fileOpenFlag_" + item.sn + "' style='width:60px'>" + strLang82 + "</td></tr>";
+		            				} else {
+		            					attachTr = "<tr><td style='width:30px'><input onClick='fileOpenFlagChk_onClick(this)' anNo='" + pDocIDAry.indexOf(item.docID) + "' class='fileOpenFlagChk' id='fileOpenFlagChk_" + item.sn + "' type='checkbox'/></td>"
+		            					+ "<td class='anNo' style='width:30px'>" + pDocIDAry.indexOf(item.docID) + "안</td>"
+			            				+ "<td style='width:30px'>" + item.sn + "</td><td style='width:350px'>" + item.fileName + "</td>"
+			            				+ "<td style='width:70px'>" + item.fileSize + "</td>"
+			            				+ "<td class='fileOpenFlag' id='fileOpenFlag_" + item.sn + "' style='width:60px'>" + strLang84 + "</td></tr>";
+		            				}
 	            				}
 	            				
 	            				$("#attachList").append(attachTr);	
@@ -3349,13 +3416,29 @@
 		                <div style="overflow: auto; width: 100%; height: 115px;">
 			               <table width="100%" class="popuplist" style="margin-top: 2px;">
 			               <thead>
+			               <%-- 2022-01-17 홍승비 - 일괄기안 사용 시 원문공개 첨부파일에 "안" 번호 데이터 추가 --%>
+					    	<c:choose>
+					    	<c:when test="${draftAllFlag == 'Y'}">
+					    	<tr>
+						    	<th id="lvAPRLINE_TH_0" class="h4_center" bgcolor="#CCCCCC" style="height:10px;width:30px"><spring:message code='ezApprovalG.t109'/></th>
+						    	<th id="lvAPRLINE_TH_1" class="h4_center" bgcolor="#CCCCCC" style="height:10px;width:30px">안</th>
+						    	<th id="lvAPRLINE_TH_2" class="h4_center" bgcolor="#CCCCCC" style="height:10px;width:30px"><spring:message code='ezApprovalG.t439'/></th>
+						    	<th id="lvAPRLINE_TH_3" class="h4_center" bgcolor="#CCCCCC" style="height:10px;width:350px"><spring:message code='ezApprovalG.t00010'/></th>
+						    	<th id="lvAPRLINE_TH_4" class="h4_center" bgcolor="#CCCCCC" style="height:10px;width:70px"><spring:message code='ezBoard.t376'/></th>
+						    	<th id="lvAPRLINE_TH_5" class="h4_center" bgcolor="#CCCCCC" style="height:10px;width:60px"><spring:message code='ezCommunity.t66'/>/<spring:message code='ezCommunity.t67'/></th>
+						    	<th id="lvAPRLINE_TH_6" class="h4_center" bgcolor="#CCCCCC" style="height:10px;width:60px;display:none;"></th>
+						    </tr>
+					    	</c:when>
+					    	<c:otherwise>
 					    	<tr>
 						    	<th id="lvAPRLINE_TH_0" class="h4_center" bgcolor="#CCCCCC" style="height:10px;width:30px">공개여부</th>
 						    	<th id="lvAPRLINE_TH_1" class="h4_center" bgcolor="#CCCCCC" style="height:10px;width:30px">순번</th>
 						    	<th id="lvAPRLINE_TH_2" class="h4_center" bgcolor="#CCCCCC" style="height:10px;width:350px">파일이름</th>
 						    	<th id="lvAPRLINE_TH_3" class="h4_center" bgcolor="#CCCCCC" style="height:10px;width:70px">파일크기</th>
 						    	<th id="lvAPRLINE_TH_4" class="h4_center" bgcolor="#CCCCCC" style="height:10px;width:60px">공개/비공개</th>
-						  	</tr>
+						    </tr>
+						    </c:otherwise>
+						    </c:choose>
 						  	</thead>
 						  	<tbody  id="attachList">
 						  	</tbody>

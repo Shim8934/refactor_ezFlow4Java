@@ -12,6 +12,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachOptionVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGCabCodeVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGCabinetListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGCabinetRecVO;
@@ -24,6 +25,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGDocInfoWebSrvVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListForOpenGovVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGGroupDocInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGHistoryAttachVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGHistoryDocVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGHistoryLineVO;
@@ -2394,7 +2396,7 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		update("EzApprovalG.updateCabinetClass2", map);
 	}
 	
-	public void updateAprDocOptionInfo(Map<String, Object> map) throws Exception{
+	public void updateAprDocOptionInfo(Map<String, Object> map) throws Exception {
 		update("EzApprovalG.updateAprDocOptionInfo", map);
 	}
 	
@@ -3752,4 +3754,73 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public List<Map<String, Object>> getReceiptHistoryInfo(Map<String, Object> map) throws Exception{
 		return (List<Map<String, Object>>) list("EzApprovalG.getReceiptHistoryInfo", map);
 	}
+
+    /* 2022-01-11 홍승비 - 일괄기안 > 표출할 양식 리스트 리턴 */
+	@SuppressWarnings("unchecked")
+	public List<ApprGFormVO> getDraftAllFormInfo(Map<String, Object> map) throws Exception { 
+		return (List<ApprGFormVO>) list("EzApprovalG.getDraftAllFormInfo", map);
+	}
+	/* 2022-01-11 홍승비 - 일괄기안 > 안으로 묶인 문서 리스트 리턴 (재기안 시 사용) */
+	@SuppressWarnings("unchecked")
+	public List<ApprGGroupDocInfoVO> getGroupDocList(Map<String, Object> map) throws Exception {
+		return (List<ApprGGroupDocInfoVO>) list("EzApprovalG.getGroupDocList", map);
+	}
+	/* 2022-01-11 홍승비 - 일괄기안 > 임시저장 또는 재기안을 위하여 그룹으로 묶인 일괄기안 문서의 GROUPDOCSN값 리턴 */
+	public String getGroupDocSN(Map<String, Object> map) {
+		return (String) select("EzApprovalG.getGroupDocSN", map);
+	}
+	/* 2022-01-17 홍승비 - 일괄기안 > 1안 이후 안 추가 시 결재선 복사 */
+	public void copyAprLine(ApprGAttachOptionVO apprGAttachOptionVO) throws Exception {
+		insert("EzApprovalG.copyAprLine", apprGAttachOptionVO);
+	}
+	/* 2022-01-17 홍승비 - 일괄기안 > 1안 이후 안 추가 시 EXP결재선 복사 */
+	public void copyExpAprLine(ApprGAttachOptionVO apprGAttachOptionVO) throws Exception {
+		insert("EzApprovalG.copyExpAprLine", apprGAttachOptionVO);
+	}
+	/* 2022-01-17 홍승비 - 일괄기안 > 1안 이후 안 추가 시 일반첨부 복사 */
+	public void copyAttachFile(ApprGAttachOptionVO apprGAttachOptionVO) throws Exception {
+		insert("EzApprovalG.copyAttachFile", apprGAttachOptionVO);
+	}
+	/* 2022-01-17 홍승비 - 일괄기안 > 1안 이후 안 추가 시 문서첨부 복사 */
+	public void copyAttachDoc(ApprGAttachOptionVO apprGAttachOptionVO) throws Exception {
+		insert("EzApprovalG.copyAttachDoc", apprGAttachOptionVO);
+	}
+	/* 2022-01-17 홍승비 - 일괄기안 > 1안 이후 안 추가 시 일반첨부 히스토리 복사 */
+	public void copyAttachHistory(ApprGAttachOptionVO apprGAttachOptionVO) throws Exception {
+		insert("EzApprovalG.copyAttachHistory", apprGAttachOptionVO);
+	}
+	/* 2022-01-17 홍승비 - 일괄기안 > 1안 이후 안 추가 시 의견정보 복사 */
+	public void copyOpinionInfo(ApprGAttachOptionVO apprGAttachOptionVO) throws Exception {
+		insert("EzApprovalG.copyOpinionInfo", apprGAttachOptionVO);
+	}
+	/* 2022-01-17 홍승비 - 일괄기안 > 1안 이후 안 추가 시 원문공개 첨부파일정보 복사 */
+	public void copyParentOpenGovFileInfo(Map<String, Object> map) throws Exception{
+		 insert("EzApprovalG.copyParentOpenGovFileInfo", map);
+	}
+	/* 2022-01-17 홍승비 - 일괄기안 > 결재정보 원문공개 첨부파일정보 리턴 */
+	@SuppressWarnings("unchecked")
+	public List<ApprGOpenGovAttachVO> getAttachListForOpenGovDraftAll(Map<String, Object> map) throws Exception {
+		return (List<ApprGOpenGovAttachVO>) list("EzApprovalG.getAttachListForOpenGovDraftAll", map);
+	}
+	/* 2022-01-18 홍승비 - 일괄기안 > 일괄기안문서의 그룹정보 삭제 */
+	public void deleteGroupDocList(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.deleteGroupDocList", map);
+	}
+	/* 2022-01-18 홍승비 - 일괄기안 > 일괄기안문서의 그룹정보 삽입 (임시저장) */
+	public void saveTmpGroup(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.saveTmpGroup", map);
+	}
+	/* 2022-02-10 홍승비 - 일괄기안 > 일괄기안문서의 그룹정보 삽입 (실제 기안 시) */
+	public void saveAprGroup(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.saveAprGroup", map);
+	}
+	/* 2022-01-27 홍승비 - 일괄기안 > 주어진 DOCID에 대해 일괄기안문서 그룹정보 카운트 리턴 */
+	public int cntGroupDocID(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.cntGroupDocID", map);
+	}
+	/* 2022-02-18 홍승비 - 일괄기안 > 그룹으로 묶인 1안의 보류의견 또는 반송의견을 각 안으로 복사 */
+	public void copyFirstTabOpinion(Map<String, Object> map) {
+		insert("EzApprovalG.copyFirstTabOpinion", map);
+	}
+
 }

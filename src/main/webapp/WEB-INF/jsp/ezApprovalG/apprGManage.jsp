@@ -134,6 +134,11 @@
 		    
 		    var selectcabinet_cross_dialogArguments = new Array();
 		    
+		    /* 2022-02-10 홍승비 - 일괄기안 기능을 위한 변수 추가 */
+            var isGroupDoc = "";
+        	var groupDocListCnt = 0;
+        	var groupDocDelCnt = 0;
+		    
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 		            return false;
@@ -921,7 +926,15 @@
 							alert("<spring:message code='ezApprovalG.bhs23'/>");
 							getDocList();
 							return;
+							
 						}
+		            	
+		            	/* 2022-02-23 홍승비 - 일괄기안된 문서는 모두결재에서 제외 */
+						var isGroupDoc = checkIsGroupDoc(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("ORGCOMPANYID")); // 일괄기안문서 여부 체크 (1안 기준의 DOCID 전달)
+		            	if (tempFlag == 1 && isGroupDoc == "Y") {
+		            		alert("<spring:message code='ezApprovalG.HSBDa05'/>");
+							return;
+		            	}
                 	}
 		            openApprovUI(tempFlag);
 		        }
@@ -1093,12 +1106,34 @@
 									return;
 								}
 							}
-					        
-				            if (pListTypeValue == "21") {  //[한양대] 추가 사항 (서버 임시저장하기)
-				                RemoveTmpDoc(pCurSelRow.getAttribute("DATA1"));
-				            } else {
-				                RemoveDoc(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("orgcompanyid"));
-				            }
+				            
+			            	/* 2022-02-10 홍승비 - 문서 삭제 시 일괄기안 그룹정보 레코드도 함께 삭제 (1안의 DOCID / DOCSN 기준으로 GROUPDOCSN 찾아서 삭제함)*/
+			                isGroupDoc = checkIsGroupDoc(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("ORGCOMPANYID"));
+			                if (isGroupDoc == "Y") {
+			                	// 해당 일괄기안그룹에 속한 문서들은 루프를 돌며 전부 삭제한다.
+			                	var groupDocList = getGroupDocListByDocID(pCurSelRow.getAttribute("DATA1"));
+			                	groupDocListCnt = groupDocList.length;
+			                	groupDocDelCnt = 0;
+			                	
+			                	for (var g = 0; g < groupDocList.length; g++) {
+			                		// 삭제완료 알러트는 한번만 표출하도록 내부 분기 추가함
+				                	 if (pListTypeValue == "21") {
+						                RemoveTmpDoc(groupDocList[g]);
+						            } else {
+						                RemoveDoc(groupDocList[g], pCurSelRow.getAttribute("orgcompanyid"));
+						            }
+			                	}
+			                	// 문서정보 삭제 루프 이후, 일괄기안 그룹 레코드는 전체적으로 삭제한다.(GROUPDOCSN조건으로 삭제)
+			                	delGroupDocInfoByDocID(pCurSelRow.getAttribute("DATA1"));
+			                }
+			                // 일괄기안 그룹이 아닌 경우, 기존 삭제 분기 동작
+			                else {
+					            if (pListTypeValue == "21") {  //[한양대] 추가 사항 (서버 임시저장하기)
+					                RemoveTmpDoc(pCurSelRow.getAttribute("DATA1"));
+					            } else {
+					                RemoveDoc(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("orgcompanyid"));
+					            }
+			                }
 				        }
 		        	}
 		            
@@ -1706,12 +1741,12 @@
 				}
 			}
 
-			function btnApproveALL_onclick_Complete(rtn){
+			function btnApproveALL_onclick_Complete(rtn) {
 				DivPopUpHidden();
-				if(rtn){
+				if (rtn) {
 					var aprAllType = document.getElementById("btnApproveALL").getAttribute("aprAllType");
 
-					if(aprAllType == "LIST"){
+					if (aprAllType == "LIST") {
 						if (CheckUsePassword()) {
 							chk_Passwd(arr_userinfo[1]);
 							return;
@@ -1719,8 +1754,8 @@
 						else {
 							chk_Passwd_Complete("TRUE");
 						}
-					}else{
-						btnApproveALL_popup_onclick()
+					} else {
+						btnApproveALL_popup_onclick();
 					}					
 				}
 			}
@@ -1782,6 +1817,7 @@
 		        TextReplace = pStr.replace(pStr1, pStr2);
 		        return;
 		    }
+		    
 		    function TotalSave_onclick() {
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
@@ -1796,8 +1832,17 @@
 	            pDocID = tr[0].getAttribute("DATA1");
 	            orgCompanyID = tr[0].getAttribute("orgCompanyID");
 		        
-	            if (orgCompanyID == null)
+	            if (orgCompanyID == null) {
 	            	orgCompanyID = companyID;
+	            }
+	            
+	            /* 2022-02-23 홍승비 - 일괄기안된 문서의 경우, 통합PC저장 불가능 */
+	            var isGroupDoc = checkIsGroupDoc(pDocID, orgCompanyID); // 일괄기안문서 여부 체크 (1안 기준의 DOCID 전달)
+	            if (isGroupDoc == "Y") {
+	            	var pAlertContent = "일괄기안된 문서는 결재완료 이전에 통합 PC 저장이 불가능합니다.";
+					alert(pAlertContent);
+		            return;
+	            }
 	            
 		        var mode = getDocMode(pDocID, orgCompanyID);
 				var url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=" + mode + "&orgCompanyID=" + orgCompanyID;
@@ -1806,6 +1851,7 @@
 		        feature = feature + GetOpenPosition(580, 480);
 		        window.open(url, "", feature);
 		    }
+		    
 		    function getDocMode(pDocID, pOrgCompanyID) {
 		    	var rtnVal = "APR";
 		    	try {

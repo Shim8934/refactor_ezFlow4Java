@@ -1868,7 +1868,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("regdate","2020-04-27 00:00:00");
 			put("description","관리자 페이지 IP 제한(default: NO)");
 			put("config_type","시스템");
-			put("property","useAdminIPAccess"); // property_name
+			put("property","USEADMINIPACCESS"); // property_name (UPPER 조건 처리를 위하여 대문자로 전달)
 		}});
 		
 		Iterator<String> keys = test.keySet().iterator();
@@ -2669,5 +2669,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 				ezCommonDAO.insertReceiptHistoryListoption(map);
 			}
 		}
+	}
+	
+	@Override
+	public void addAprDocGroupInfoTypeColumn() throws Exception {
+		ezCommonDAO.addAprDocGroupInfoTypeColumn();
 	}
 }

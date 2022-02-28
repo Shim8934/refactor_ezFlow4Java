@@ -281,6 +281,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     		ezCommonService.createTblAdminAccessInfo();	// 2022-01-06 이사라 - 관리자 메뉴 접속 히스토리 테이블 추가
     		ezCommonService.addSusinScheduleOffsetColumn();	// 2022-02-11 홍승비 - 수신스케줄러 알림메일 발송 시 다국어(시간대) 지원을 위해 OFFSET 칼럼 추가
     		ezCommonService.insertReceiptHistoryListoption();	// 2022-02-16 정주환 - 수신이력 확인 listoption 추가
+    		ezCommonService.addAprDocGroupInfoTypeColumn();	// 2022-02-09 홍승비 - 일괄기안 테이블에 임시저장/결재올림 구분용 타입 칼럼 추가
 	    	
 	    	// webfolder
 	    	ezCommonService.addWebfolderUserSubdeptPermittedColumn(); 	//2020-10-19 김은실 - 웹폴더 > 하위부서 허용 여부 추가

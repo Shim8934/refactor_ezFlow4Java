@@ -175,6 +175,7 @@ public class MApprovalGGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
+			e.printStackTrace();
 		}
 		
 		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/" + type + "/list/users/" + userId + "] ended.");
@@ -211,6 +212,7 @@ public class MApprovalGGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
+			e.printStackTrace();
 		}
 		
 		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/" + type + "/list-count/users/" + userId + "] ended.");
@@ -1176,6 +1178,37 @@ public class MApprovalGGWController {
 		}
 
 		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/checkProxyDoc] ended.");
+		
+		return result;
+	}
+	
+	/**
+	 * 2022-02-23 홍승비 - 모바일 G/W 전자결재 [GET] 전달받은 문서ID로 해당 문서가 일괄기안된 문서인지 확인하여 리턴 (Y/N)
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/mobile/ezapproval/docs/{docId}/checkIsGroupDoc", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject checkIsGroupDoc(@PathVariable String docId, HttpServletRequest request) {
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/checkIsGroupDoc] started.");
+
+		JSONObject result = new JSONObject();
+		
+		try {
+			String userID = request.getParameter("userID");
+			String docID = request.getParameter("docID");
+			String companyID = request.getParameter("companyID");
+			int tenantID = Integer.parseInt(request.getParameter("tenantID"));
+			
+			String chkResult = ezApprovalGService.checkIsGroupDoc(userID, docID, companyID, tenantID);
+			
+			result.put("status", "ok");
+			result.put("code", "0");
+			result.put("data", chkResult);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", "1");
+		}
+
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/checkIsGroupDoc] ended.");
 		
 		return result;
 	}

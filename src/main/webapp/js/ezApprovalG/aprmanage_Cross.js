@@ -836,7 +836,7 @@ function openDraftUI(pDraftFlag, pCurSelRow,officeFlag) {
 //            openLocation += "&reformflag=" + encodeURI(reformflag);
 //    	}
     } else {
-    	if(useWebHWP == "NO") {
+    	if (useWebHWP == "NO") {
 	    	if (!isIE()) {
 	            alert("한글양식은 IE에서만 기안 할 수 있습니다.");
 	            return;
@@ -846,7 +846,13 @@ function openDraftUI(pDraftFlag, pCurSelRow,officeFlag) {
 	            openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]);
 	        }
     	} else {
-    		openLocation = "/ezApprovalG/draftuiWHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+    		var isGroupDoc = checkIsGroupDoc(pArgument[7], ""); // 일괄기안문서 여부 체크 (1안 기준의 DOCID 전달)
+    		
+    		if (isGroupDoc == "Y") { // 반송된 일괄기안 문서를 여는 경우
+    			openLocation = "/ezApprovalG/draftuiAll_WHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+    		} else {
+    			openLocation = "/ezApprovalG/draftuiWHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+    		}
             openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
             openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]);
     	}
@@ -891,7 +897,7 @@ function openApprovUI(allFlag) {
             openLocation = openLocation + "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
             openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag);
         } else if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
-	        if(useWebHWP == "NO") {
+	        if (useWebHWP == "NO") {
         		if (isIE()) {
 	        		var openLocation = "/ezApprovalG/approvuiHWP.do?docID=" + encodeURI(pArgument[0]);
 	        		openLocation += "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
@@ -903,7 +909,14 @@ function openApprovUI(allFlag) {
 	                return;
 	        	}
         	} else {
-        		var openLocation = "/ezApprovalG/approvuiWHWP.do?docID=" + encodeURI(pArgument[0]);
+        		var isGroupDoc = checkIsGroupDoc(encodeURI(pArgument[0]), orgCompanyID);
+        		var openLocation = "";
+        		
+        		if (isGroupDoc == "Y") { // 일괄기안 문서를 여는 경우
+        			openLocation = "/ezApprovalG/approvuiAll_WHWP.do?docID=" + encodeURI(pArgument[0]);
+        		} else {
+            		openLocation = "/ezApprovalG/approvuiWHWP.do?docID=" + encodeURI(pArgument[0]);
+        		}
         		openLocation += "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
         		openLocation += "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgCompanyID=" + orgCompanyID + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2"));
         	}
@@ -1086,7 +1099,7 @@ function openViewDocInfo(type) {
     else {
     	// 2018.07.06 (KLIB) - ezd 확장자 처리
         if (formUrlExt === "hwp") {
-        	if(useWebHWP == "NO") {
+        	if (useWebHWP == "NO") {
 	            if (CrossYN() && isIE()) {
 	            	openLocation = "/ezApprovalG/ezviewAprHWP.do";
 	            } else {
@@ -1096,7 +1109,13 @@ function openViewDocInfo(type) {
 	                return;
 	            }
         	} else {
-        		openLocation = "/ezApprovalG/ezviewAprWHWP.do";
+        		var isGroupDoc = checkIsGroupDoc(encodeURI(DocID), orgCompanyID);
+        		
+        		if (isGroupDoc == "Y") { // 일괄기안 문서를 여는 경우 (결재진행문서, 기안한문서 메뉴에서 접근 시 지원)
+        			openLocation = "/ezApprovalG/ezviewAprAll_WHWP.do";
+        		} else {
+        			openLocation = "/ezApprovalG/ezviewAprWHWP.do";
+        		}
         	}
         }
         else {
@@ -1109,7 +1128,7 @@ function openViewDocInfo(type) {
         openLocation = openLocation + "&CallBackType=" + escape(trim_Cross(type));
         openLocation = openLocation + "&ext=" + escape(trim_Cross(ext));
         openLocation = openLocation + "&orgCompanyID=" + orgCompanyID;
-        if(shareUser = "shareUser"){
+        if (shareUser = "shareUser") {
         	openLocation += "&pageType=admin";
         }
     }
@@ -2066,8 +2085,9 @@ function setbuttonenable() {
             document.getElementById("tbtnRedraft").style.display = "";
             document.getElementById("tbtnRemoveDoc").style.display = "";
             document.getElementById("tbtnTotalSave").style.display = "none";
-        } else
+        } else {
             document.getElementById("tbtnTotalSave").style.display = "";
+        }
         
         if (pListTypeValue == "2") {
         	if (oArrRows.length > 0) {
@@ -2781,9 +2801,8 @@ function openServerDraftUI(pDraftFlag, pCurSelRow) {
     } else {
     	pArgument[3] = formDocType;
     }  
-
+    
     var pDocSN = pCurSelRow.getAttribute("DATA1");
-
     var newDocID = MakeTmp2Ing(pDocSN);
 
     if (pCurSelRow) {
@@ -2828,7 +2847,13 @@ function openServerDraftUI(pDraftFlag, pCurSelRow) {
 	            openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN);;
 	        }
     	} else {
-    		openLocation = "/ezApprovalG/draftuiWHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+    		var isGroupDoc = checkIsGroupDoc(pDocSN, "");
+    		
+    		if (isGroupDoc == "Y") { // 임시저장된 일괄기안 문서를 여는 경우
+    			openLocation = "/ezApprovalG/draftuiAll_WHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+    		} else {
+        		openLocation = "/ezApprovalG/draftuiWHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+    		}
             openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
             openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN);
     	}
@@ -2837,6 +2862,7 @@ function openServerDraftUI(pDraftFlag, pCurSelRow) {
     openwindow(openLocation, windowName, 890, 560);
 }
 
+/* 2022-02-10 홍승비 - 일괄기안문서 대응을 위해 알림메세지 및 갱신 분기 추가 */
 function RemoveTmpDoc(pDocID) {
 	var result = "";
 	
@@ -2852,8 +2878,20 @@ function RemoveTmpDoc(pDocID) {
 			result = text;	
 			var pAlertContent = strLang802;
 	        //OpenAlertUI(pAlertContent);
-	        alert(pAlertContent);
-	        openergetDocInfo();
+			
+			// 일괄기안 문서 삭제 분기 (일괄기안 관련 변수가 존재하며, 최종 안까지 삭제가 모두 끝난 경우에만 알러트 발생)
+			if (typeof(isGroupDoc) != "undefined" && isGroupDoc == "Y" && typeof(groupDocListCnt) != "undefined" && typeof(groupDocDelCnt) != "undefined") {
+				groupDocDelCnt ++; // 일괄기안 루프 내부 문서삭제완료 카운트 증가 
+				if (groupDocDelCnt == groupDocListCnt) {
+					alert(pAlertContent);
+					openergetDocInfo();
+				}
+			}
+			// 기존 일반문서 삭제 분기
+			else {
+				alert(pAlertContent);
+		        openergetDocInfo();
+			}
 		},
 		error : function() {
 			var pAlertContent = strLang872;
@@ -2986,8 +3024,15 @@ function chk_Passwd_Complete(chkpass) {
         var curAprType = "";
 
         //대결자 결재도 일괄결제 제외
-        if(useAdditionalRole == "YES" && curDeptId != arr_userinfo[4]) {
+        if (useAdditionalRole == "YES" && curDeptId != arr_userinfo[4]) {
             return false;
+        }
+        
+        /* 2022-02-23 홍승비 - 일괄기안된 문서는 일괄결재 제외 */
+        var isGroupDoc = checkIsGroupDoc($(this).attr("DATA1"), orgCompanyID); // 일괄기안문서 여부 체크 (1안 기준의 DOCID 전달)
+        if (isGroupDoc == "Y") {
+        	passCnt++;
+        	return true;
         }
         
         //결재타입 정보
@@ -3115,4 +3160,64 @@ function ConvMakeXMLString(str) {
 	str = ReplaceText(str, "&#92;", "\\");
 	str = ReplaceText(str, "&amp;", "&");
     return str;
+}
+
+/* 2022-01-27 홍승비 - 일괄기안된 문서인지 판별하는 ajax 함수 (Y/N) */
+function checkIsGroupDoc(pDocID, pOrgCompanyID) {
+    var res = "";
+    
+    $.ajax({
+        type : "GET",
+        dataType : "text",
+        async : false,
+        url : "/ezApprovalG/checkIsGroupDoc.do",
+        data : {
+            docID : pDocID,
+            orgCompanyID : pOrgCompanyID
+        },
+        success: function(result) {
+            res = result;
+        }        			
+    });
+    
+    return res;
+}
+
+/* 2022-02-10 홍승비 - 1안의 DOCID/DOCSN을 전달하여 일괄기안된 문서 리스트를 문자열 배열리스트로 리턴 */
+function getGroupDocListByDocID(pDocID) {
+	var result = new Array();
+	
+	$.ajax({
+		type : "GET",
+		async : false,
+		url : "/ezApprovalG/getGroupDocListByDocID.do",
+		data : {
+			docID : pDocID
+		},
+		success: function(resultAry){
+			result = resultAry;
+		},
+		error : function(e) {
+			console.log(e);
+		}
+	});
+	
+	return result;
+}
+
+/* 2022-02-10 홍승비 - 일괄기안된 문서 삭제 전용 ajax 함수 (전달받은 docID 또는 임시저장 docSN으로 GROUPDOCSN을 찾아, 일치하는 레코드를 전부 삭제) */
+function delGroupDocInfoByDocID(pDocID) {
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/delGroupDocInfoByDocID.do",
+		data : {
+			docID : pDocID
+		},
+		success: function(text){},
+		error : function(e) {
+			console.log(e);
+		}
+	});
 }

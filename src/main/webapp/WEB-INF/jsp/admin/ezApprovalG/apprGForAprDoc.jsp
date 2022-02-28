@@ -607,7 +607,7 @@
 	                    var openLocation = "/myoffice/ezApprovalG/ezViewWord/ezViewApr_Word.aspx?DocID=" + escape(DocID) + "&DocHref=" + escape(pURL);
 	                    openLocation = openLocation + "&OpinionFlag=&docState=&ListSusin=&odoc=&isOpinion=&ListType=&pageType=admin";
 	                } else if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") { //한글양식 읽기
-		                if(useWebHWP == "NO") {
+		                if (useWebHWP == "NO") {
 	                		if (isIE()) {
 			                    var openLocation = "/ezApprovalG/ezviewAprHWP.do?docID=" + escape(DocID) + "&docHref=" + escape(pURL);
 			                    openLocation = openLocation + "&opinionFlag=&docState=&listSusin=&oDoc=&isOpinion=&listType=&pageType=admin";
@@ -618,7 +618,15 @@
 		                        return;
 		                    }
 		                } else {
-		                	var openLocation = "/ezApprovalG/ezviewAprWHWP.do?docID=" + escape(DocID) + "&docHref=" + escape(pURL);
+		                	var isGroupDoc = checkIsGroupDoc(encodeURI(DocID), ""); // 현재 소속한 회사의 문서가 보이므로, companyID 전달 없어도 됨
+		                	var openLocation = "";
+		            		
+		            		if (isGroupDoc == "Y") { // 일괄기안 문서를 여는 경우 (결재진행문서, 기안한문서 메뉴에서 접근 시 지원)
+		            			openLocation = "/ezApprovalG/ezviewAprAll_WHWP.do?docID=" + escape(DocID) + "&docHref=" + escape(pURL);
+		            		} else {
+		            			openLocation = "/ezApprovalG/ezviewAprWHWP.do?docID=" + escape(DocID) + "&docHref=" + escape(pURL);
+		            		}
+		            		
 		                    openLocation = openLocation + "&opinionFlag=&docState=&listSusin=&oDoc=&isOpinion=&listType=&pageType=admin";
 		                }
 	                } else {
@@ -990,6 +998,28 @@
 	            
 	            GetDocList();
 	        }
+		    
+		    /* 2022-01-27 홍승비 - 일괄기안된 문서인지 판별하는 ajax 함수 (Y/N) */
+		    function checkIsGroupDoc(pDocID, pOrgCompanyID) {
+		        var res = "";
+		        
+		        $.ajax({
+		            type : "GET",
+		            dataType : "text",
+		            async : false,
+		            url : "/ezApprovalG/checkIsGroupDoc.do",
+		            data : {
+		                docID : pDocID,
+		                orgCompanyID : pOrgCompanyID
+		            },
+		            success: function(result) {
+		                res = result;
+		            }        			
+		        });
+		        
+		        return res;
+		    }
+		    
 		</script>
 	</head>
 	<body class = "mainbody">

@@ -358,6 +358,7 @@ function saveOpinionInfo() {
             }
 		}
 	} catch (e) {
+		console.log(e);
 		alert("saveOpinionInfo :: " + e.description);
 	}
 }

@@ -1108,4 +1108,7 @@ var strLang970 = "Please select a target department";
 var strLang971 = "Please select a sub-department";
 var strLang972 = "Duplicate assigned department exists";
 
-var strLang973 = "internal recipient, External recipient and address of petitioner can not be specified at the same time."
+var strLang973 = "internal recipient, External recipient and address of petitioner can not be specified at the same time.";
+
+/* 2022-01-12 홍승비 - 일괄기안 메세지 추가 */
+var strLangHSBRDa01 = "doc tab";

@@ -2256,7 +2256,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		logger.debug("If TBL_ADMIN_ACCESS_INFO doesn't exist, creating the table...");
 		update("EzCommonDAO.createTblAdminAccessInfo");
 	}
-
+	
 	public void createMailOutOfOfficeTemplate() throws Exception {
 		try {
 			select("EzCommonDAO.checkMailOutOfOfficeTemplate");
@@ -2290,7 +2290,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addSusinScheduleOffsetColumn");
 		}
 	}
-
+	
 	public void insertReceiptHistoryListoption(Map<String, Object> map) throws Exception {
 		String companyId = checkReceiptHistoryListoption(map);
 		
@@ -2306,5 +2306,15 @@ public class EzCommonDAO extends EgovAbstractDAO {
 
 	private String checkReceiptHistoryListoption(Map<String, Object> map) {
 		return (String) select("EzCommonDAO.checkReceiptHistoryListoption", map);
+	}
+	
+	/* 2022-02-09 홍승비 - 일괄기안 테이블에 임시저장/결재올림 구분용 타입 칼럼 추가 */
+	public void addAprDocGroupInfoTypeColumn() {
+		try {
+			select("EzCommonDAO.checkAprDocGroupInfoTypeColumn");
+		} catch (Exception e) {
+			logger.debug("TBL_APRDOCGROUPINFO TYPE column doesn't exist. creating the column...");
+			update("EzCommonDAO.addAprDocGroupInfoTypeColumn");
+		}
 	}
 }

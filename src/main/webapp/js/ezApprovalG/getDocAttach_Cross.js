@@ -65,17 +65,43 @@ function trim(str) {
  * */
 function setAttachInfo(tempDocID, INGFlag, attachTag) {
     attachTag.innerHTML = "";
-    var docAttachTag = document.getElementById(attachTag.id + "Doc"); // 문서첨부영역 분리
+    
+    /* 2022-01-17 홍승비 - 일괄기안 시 안별 iframe 내부에 접근해야 하므로 분기처리 */
+    var isDraftAllPage = "N";
+    var docAttachTag = ""; // 문서첨부영역 분리
+    var parentHasAttachAry = new Array(); // 부모창의 일반첨부여부 배열
+    var parentHasDocAttachAry = new Array(); // 부모창의 문서첨부여부 배열
+    var currIdx = 0; // 현재 선택된 안의 인덱스 (1안부터 시작, 최대 10)
+    
+    // 일괄기안 부모페이지에서 접근
+    var tempHref = document.location.href;
+    if (tempHref.indexOf("ezApprovalG/draftuiAll_WHWP.do") > -1 || tempHref.indexOf("ezApprovalG/approvuiAll_WHWP.do") > -1) {
+    	isDraftAllPage = "Y";
+    	attachTag = document.getElementById(attachTag.id);
+    	docAttachTag = document.getElementById(attachTag.id + "Doc");
+    	parentHasAttachAry = pHasAttachYNAry;
+    	parentHasDocAttachAry = pHasDocAttachYNAry;
+    	currIdx = currentTabNum;
+    }
+    // 일괄기안 자식페이지에서 접근
+    else if (tempHref.indexOf("ezApprovalG/draftContentAll_WHWP.do") > -1 || tempHref.indexOf("ezApprovalG/approvContentAll_WHWP.do") > -1) {
+    	isDraftAllPage = "Y";
+    	attachTag = parent.document.getElementById(attachTag.id);
+    	docAttachTag = parent.document.getElementById(attachTag.id + "Doc");
+    	parentHasAttachAry = parent.pHasAttachYNAry;
+    	parentHasDocAttachAry = parent.pHasDocAttachYNAry;
+    	currIdx = frameNum;
+    }
+    // 기본 접근
+    else {
+    	docAttachTag = document.getElementById(attachTag.id + "Doc");
+    }
 
-	if(docAttachTag != undefined){
+	if (docAttachTag != undefined && docAttachTag != null) {
 		docAttachTag.innerHTML = "";
 	}
-
-    if(docAttachTag != null){
-    	docAttachTag.innerHTML = "";
-    }
+	
     var url = "";
-    
 	var result = "";
 	
 	if (INGFlag != "TMP" && INGFlag != "END_RECORD" && INGFlag != "APR_RECORD") {
@@ -183,6 +209,11 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
                 
                 /* 2020-11-17 홍승비 - 일반첨부와 문서첨부 영역의 분리 */
                 attachTag.innerHTML = strAttach + "<iframe frameborder=\"0\" id=\"ifrmDownload\" name=\"ifrmDownload\" src=\"about:blank\" width=\"0\" height=\"0\"></iframe>";
+                
+                // 일괄기안용 일반첨부 플래그 부여
+                if (isDraftAllPage == "Y") {
+                	parentHasAttachAry[currIdx] = "Y";
+                }
             }
             // 문서첨부
             else {
@@ -210,8 +241,8 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
                         
                         return;
                     }*/ 
-                	if(useWebHWP == "NO") {
-	                	if(isIE()) {
+                	if (useWebHWP == "NO") {
+	                	if (isIE()) {
 		                	openLocation = "/ezApprovalG/ezViewEnd_HWP.do?docID=" + escapenew(FileDocID) + "&docHref=" + escapenew(FilePath) + "&formID=&orgDocid=";
 	                	} else {
 	                    	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
@@ -236,6 +267,11 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
                 
                 /* 2020-11-17 홍승비 - 일반첨부와 문서첨부 영역의 분리 */
                 docAttachTag.innerHTML = strDocAttach + "<iframe frameborder=\"0\" id=\"ifrmDownload\" name=\"ifrmDownload\" src=\"about:blank\" width=\"0\" height=\"0\"></iframe>";
+                
+                // 일괄기안용 문서첨부 플래그 부여
+                if (isDraftAllPage == "Y") {
+                	parentHasDocAttachAry[currIdx] = "Y";
+                }
             }
         }
         
@@ -246,6 +282,12 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
     else {
         try {
             pHasAttachYN = "N";
+            
+            // 일괄기안용 일반첨부, 문서첨부 플래그 부여
+            if (isDraftAllPage == "Y") {
+            	parentHasAttachAry[currIdx] = "N";
+            	parentHasDocAttachAry[currIdx] = "N";
+            }
         } catch (e) { }
     }
 }

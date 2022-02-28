@@ -2926,20 +2926,20 @@ CREATE TABLE `tbl_aprdocinfo` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tbl_aprdraftallgroup`
+-- Table structure for table `TBL_APRDRAFTALLGROUP`
 --
 
-DROP TABLE IF EXISTS `tbl_aprdraftallgroup`;
+DROP TABLE IF EXISTS `TBL_APRDRAFTALLGROUP`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_aprdraftallgroup` (
-  `mainDocID` varchar(80) DEFAULT NULL,
-  `subDocID` varchar(80) DEFAULT NULL,
-  `tenant_id` mediumint(5) DEFAULT NULL,
-  `companyID` varchar(20) DEFAULT NULL,
-  `orderNum` mediumint(5) DEFAULT NULL,
-  `createDate` datetime DEFAULT NULL,
-  `aprMemberID` varchar(400) DEFAULT NULL
+CREATE TABLE `TBL_APRDRAFTALLGROUP` (
+  `MAINDOCID` varchar(80) DEFAULT NULL,
+  `SUBDOCID` varchar(80) DEFAULT NULL,
+  `TENANT_ID` mediumint(5) DEFAULT NULL,
+  `COMPANYID` varchar(20) DEFAULT NULL,
+  `ORDERNUM` mediumint(5) DEFAULT NULL,
+  `CREATEDATE` datetime DEFAULT NULL,
+  `APRMEMBERID` varchar(400) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -7147,7 +7147,6 @@ CREATE TABLE `tbl_forminfo` (
   `INFORMALFLAG` int(11) DEFAULT 0,
   `FORMVERSION` int(11) DEFAULT 0,
   `OPENGOVFLAG` varchar(4) DEFAULT 'N',
-  `DRAFTALLFLAG` varchar(4) DEFAULT 'N',
   `FORMXSLT` longtext DEFAULT NULL COMMENT '연동에서 XML을 HTML로 변환하기 위해 필요한 XSLT정보',
   `PASSAPRLINEFLAG` varchar(4) DEFAULT 'N' COMMENT '기결재통과플래그',
   `FORMGUIDE` longtext DEFAULT NULL,

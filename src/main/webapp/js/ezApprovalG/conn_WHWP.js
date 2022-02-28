@@ -605,3 +605,84 @@ function setConnDefaultKey(pDraftFlag) {
         SetDocumentElement("c_susinid", pDocID);
     }
 }
+
+/* 2022-01-13 홍승비 - 일괄기안 전용 연동정보&분리첨부정보 설정 함수 (message iframe 접근 없음) */
+function SetDocumentElementForDraftAll(pCharName, pValue) {
+    try {
+        if (!pCharName) {
+            return true;
+        }
+        
+        var whwpInfo = loadXMLString(GetDocumentInfo());
+        var keywordStr = ConvertEntityReferenceToChar(getXmlString(SelectSingleNodeNew(whwpInfo, "DATA/KEYWORD")));
+        var keywordXml = loadXMLString(keywordStr);
+        
+        var connRoot = SelectSingleNodeNew(keywordXml, "KEYWORD/CONNROOT");
+        if (connRoot) {
+            var connData = GetElementsByTagName(connRoot, pCharName);
+            if (connData.length > 0) {
+                setNodeText(connData[0], pValue);
+            } else {
+                createNodeAndAppandNodeCDataText(keywordXml, connRoot, null, pCharName, pValue);
+            }
+
+        } else {
+            if (keywordXml.getElementsByTagName("connroot").length == 0){
+                objNode = document.createElement("CONNROOT");
+                setNodeText(objNode , "");
+                keywordXml.getElementsByTagName("KEYWORD")[0].appendChild(objNode);
+            }
+            if (keywordXml.getElementsByTagName(pCharName).length > 0) {
+                objNode = keywordXml.getElementsByTagName(pCharName)[0];
+                setNodeText(objNode , pValue);
+                keywordXml.documentElement.appendChild(objNode);
+            } else {
+                //createNodeAndAppandNodeCDataText(keywordXml, connRoot, null, pCharName, pValue);
+                objNode = document.createElement(pCharName);
+                setNodeText(objNode , pValue);
+                keywordXml.documentElement.appendChild(objNode);
+            }
+        }
+        keywordStr = getXmlString(keywordXml).replace(/<[/]?KEYWORD>/gi, "");
+        SetDocumentInfo("NULL", "NULL", "NULL", keywordStr, "NULL"); // 다른 정보는 저장하지 않고, keywordStr을 저장한다. (연동정보, 수신문서번호 정보 등을 세팅)
+    } catch (e) {
+    	parent.HiddenMailProgress();
+        console.log(e);
+        console.log(e.stack);
+        alert("연동정보를 저장하던 도중 오류가 발생했습니다.");
+        return false;
+    }
+    return true;
+}
+
+function GetDocumentElementForDraftAll(pCharName, pGubun) {
+    try {
+        if (!pCharName) {
+            return "";
+        }
+
+        var whwpInfo = loadXMLString(GetDocumentInfo());
+        var keywordStr = ConvertEntityReferenceToChar(getXmlString(SelectSingleNodeNew(whwpInfo, "DATA/KEYWORD")));
+        var keywordXml = loadXMLString(keywordStr);
+
+        var root = keywordXml.documentElement;
+        if (root) {
+            var connData = GetElementsByTagName(root, pCharName);
+            
+            if (connData.length > 0) {
+                if (pGubun) {
+                    return getXmlString(connData[0]);
+                } else {
+                    return getNodeText(connData[0]);
+                }
+            } else {
+                return "";
+            }
+        } else {
+            return "";
+        }
+    } catch (e) {
+        alert("연동정보를 불러오던 도중 오류가 발생했습니다.");
+        return "";
+    }
+}

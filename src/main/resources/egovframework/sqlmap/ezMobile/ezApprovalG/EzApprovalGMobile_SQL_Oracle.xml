@@ -18,7 +18,7 @@
 			SELECT A.* FROM (
 			SELECT LIST.* FROM (
 				SELECT 
-					DOCID,
+					VAPRDOINGDOCLIST.DOCID,
 					DOCTITLE,
 					TO_CHAR(STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE, 
 					WRITERNAME$lang$ WRITERNAME,
@@ -30,13 +30,21 @@
 					APRMEMBERSN,
 					URGENTAPPROVAL,
 					'APR' "MODE",
-					companyID
+					VAPRDOINGDOCLIST.companyID
 				FROM 
 					VAPRDOINGDOCLIST 
+				LEFT OUTER JOIN
+					TBL_APRDOCGROUPINFO GRP
+				ON
+					VAPRDOINGDOCLIST.TENANT_ID = GRP.TENANT_ID
+				AND
+					VAPRDOINGDOCLIST.COMPANYID = GRP.COMPANYID
+				AND
+					VAPRDOINGDOCLIST.DOCID = GRP.DOCID
 	   			WHERE
-	   				TENANT_ID = #tenantID#
+	   				VAPRDOINGDOCLIST.TENANT_ID = #tenantID#
 	   			AND
-					COMPANYID IN (
+					VAPRDOINGDOCLIST.COMPANYID IN (
 							SELECT 
 								EXTENSIONATTRIBUTE2 
 							FROM 
@@ -61,6 +69,8 @@
 							AND
 								TENANT_ID = #tenantID# 
 							)
+				AND
+					NVL(GRP.TABSN, 1) = 1
 	   			AND
 	   				STARTDATE < TO_DATE(#lastDate#, 'YYYY-MM-DD HH24:MI:SS')
 	   			AND
@@ -79,7 +89,7 @@
 				UNION ALL
 				
 				SELECT 
-					DOCID,
+					VENDCHAMJODOCINFO.DOCID,
 					DOCTITLE,
 					TO_CHAR(STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE,
 					WRITERNAME$lang$ WRITERNAME,
@@ -91,13 +101,21 @@
 					APRMEMBERSN,
 					URGENTAPPROVAL,
 					'END' "MODE",
-					companyID
+					VENDCHAMJODOCINFO.companyID
 				FROM 
-					VENDCHAMJODOCINFO 
+					VENDCHAMJODOCINFO
+				LEFT OUTER JOIN
+					TBL_APRDOCGROUPINFO GRP
+				ON
+					VENDCHAMJODOCINFO.TENANT_ID = GRP.TENANT_ID
+				AND
+					VENDCHAMJODOCINFO.COMPANYID = GRP.COMPANYID
+				AND
+					VENDCHAMJODOCINFO.DOCID = GRP.DOCID
 	   			WHERE
-	   				TENANT_ID = #tenantID#
+	   				VENDCHAMJODOCINFO.TENANT_ID = #tenantID#
 	   			AND
-					COMPANYID IN (
+					VENDCHAMJODOCINFO.COMPANYID IN (
 							SELECT 
 								EXTENSIONATTRIBUTE2 
 							FROM 
@@ -122,6 +140,8 @@
 							AND
 								TENANT_ID = #tenantID# 
 							)
+				AND
+					NVL(GRP.TABSN, 1) = 1
 	   			AND
 	   				STARTDATE < TO_DATE(#lastDate#, 'YYYY-MM-DD HH24:MI:SS')
 	   			AND
@@ -149,7 +169,7 @@
 			<![CDATA[
 			SELECT A.* FROM (
 				SELECT 
-					DOCID,
+					VAPRWILLDOCLIST.DOCID,
 					DOCTITLE,
 					TO_CHAR(STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE,
 					WRITERNAME$lang$ WRITERNAME,
@@ -158,13 +178,21 @@
 					HASOPINIONYN,
 					FUNCTIONTYPE,
 					URGENTAPPROVAL,
-					companyID
+					VAPRWILLDOCLIST.companyID
 				FROM 
 					VAPRWILLDOCLIST 
+				LEFT OUTER JOIN
+					TBL_APRDOCGROUPINFO GRP
+				ON
+					VAPRWILLDOCLIST.TENANT_ID = GRP.TENANT_ID
+				AND
+					VAPRWILLDOCLIST.COMPANYID = GRP.COMPANYID
+				AND
+					VAPRWILLDOCLIST.DOCID = GRP.DOCID
 	   			WHERE
-	   				TENANT_ID = #tenantID#
+	   				VAPRWILLDOCLIST.TENANT_ID = #tenantID#
 	   			AND
-					COMPANYID IN (
+					VAPRWILLDOCLIST.COMPANYID IN (
 							SELECT 
 								EXTENSIONATTRIBUTE2 
 							FROM 
@@ -189,6 +217,8 @@
 							AND
 								TENANT_ID = #tenantID# 
 							)
+				AND
+					NVL(GRP.TABSN, 1) = 1
 	   			AND
 	   				STARTDATE < TO_DATE(#lastDate#, 'YYYY-MM-DD HH24:MI:SS')
 	   			AND 
@@ -218,7 +248,7 @@
 			<![CDATA[
 			SELECT A.* FROM (
 				SELECT 
-					DISTINCT DOCID,
+					DISTINCT VAPRWILLDOCLIST.DOCID,
 					DOCTITLE,
 					TO_CHAR(STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE,
 					WRITERNAME$lang$ WRITERNAME,
@@ -228,13 +258,21 @@
 					APRTYPE,
 					FUNCTIONTYPE,
 					URGENTAPPROVAL,
-					companyID
+					VAPRWILLDOCLIST.companyID
 				FROM 
 					VAPRWILLDOCLIST 
+				LEFT OUTER JOIN
+					TBL_APRDOCGROUPINFO GRP
+				ON
+					VAPRWILLDOCLIST.TENANT_ID = GRP.TENANT_ID
+				AND
+					VAPRWILLDOCLIST.COMPANYID = GRP.COMPANYID
+				AND
+					VAPRWILLDOCLIST.DOCID = GRP.DOCID
 	   			WHERE
-	   				TENANT_ID = #tenantID#
+	   				VAPRWILLDOCLIST.TENANT_ID = #tenantID#
 	   			AND
-					COMPANYID IN (
+					VAPRWILLDOCLIST.COMPANYID IN (
 							SELECT 
 								EXTENSIONATTRIBUTE2 
 							FROM 
@@ -259,6 +297,8 @@
 							AND
 								TENANT_ID = #tenantID# 
 							)
+				AND
+					NVL(GRP.TABSN, 1) = 1
 	   			AND
 	   				STARTDATE < TO_DATE(#lastDate#, 'YYYY-MM-DD HH24:MI:SS')
 	   			AND
@@ -545,13 +585,21 @@
 					COUNT(*)
 				FROM ( 
 				SELECT 
-					DOCID
+					VAPRDOINGDOCLIST.DOCID
 				FROM 
 					VAPRDOINGDOCLIST 
+				LEFT OUTER JOIN
+					TBL_APRDOCGROUPINFO GRP
+				ON
+					VAPRDOINGDOCLIST.TENANT_ID = GRP.TENANT_ID
+				AND
+					VAPRDOINGDOCLIST.COMPANYID = GRP.COMPANYID
+				AND
+					VAPRDOINGDOCLIST.DOCID = GRP.DOCID
 	   			WHERE
-	   				TENANT_ID = #tenantID#
+	   				VAPRDOINGDOCLIST.TENANT_ID = #tenantID#
 	   			 AND
-					COMPANYID IN (
+					VAPRDOINGDOCLIST.COMPANYID IN (
 							SELECT 
 								EXTENSIONATTRIBUTE2 
 							FROM 
@@ -576,6 +624,8 @@
 							AND
 								TENANT_ID = #tenantID# 
 							)
+				AND
+					NVL(GRP.TABSN, 1) = 1
 	   			AND 
 	   				APRMEMBERID IN ($id$) 
 	   			AND 
@@ -594,13 +644,21 @@
 				UNION ALL
 				
 				SELECT 
-					DOCID
+					VENDCHAMJODOCINFO.DOCID
 				FROM 
 					VENDCHAMJODOCINFO 
+				LEFT OUTER JOIN
+					TBL_APRDOCGROUPINFO GRP
+				ON
+					VENDCHAMJODOCINFO.TENANT_ID = GRP.TENANT_ID
+				AND
+					VENDCHAMJODOCINFO.COMPANYID = GRP.COMPANYID
+				AND
+					VENDCHAMJODOCINFO.DOCID = GRP.DOCID
 	   			WHERE
-	   				TENANT_ID = #tenantID#
+	   				VENDCHAMJODOCINFO.TENANT_ID = #tenantID#
 	   			AND
-					COMPANYID IN (
+					VENDCHAMJODOCINFO.COMPANYID IN (
 							SELECT 
 								EXTENSIONATTRIBUTE2 
 							FROM 
@@ -625,6 +683,8 @@
 							AND
 								TENANT_ID = #tenantID# 
 							)
+				AND
+					NVL(GRP.TABSN, 1) = 1
 	   			AND
 	   				STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 	   			AND
@@ -644,13 +704,21 @@
 		<isEqual property="type" compareValue="DRAFT">
 			<![CDATA[
 				SELECT 
-					COUNT(DOCID)
+					COUNT(VAPRWILLDOCLIST.DOCID)
 				FROM 
 					VAPRWILLDOCLIST 
+				LEFT OUTER JOIN
+					TBL_APRDOCGROUPINFO GRP
+				ON
+					VAPRWILLDOCLIST.TENANT_ID = GRP.TENANT_ID
+				AND
+					VAPRWILLDOCLIST.COMPANYID = GRP.COMPANYID
+				AND
+					VAPRWILLDOCLIST.DOCID = GRP.DOCID
 	   			WHERE
-	   				TENANT_ID = #tenantID#
+	   				VAPRWILLDOCLIST.TENANT_ID = #tenantID#
 	   			AND
-					COMPANYID IN (
+					VAPRWILLDOCLIST.COMPANYID IN (
 							SELECT 
 								EXTENSIONATTRIBUTE2 
 							FROM 
@@ -675,6 +743,8 @@
 							AND
 								TENANT_ID = #tenantID# 
 							)
+				AND
+					NVL(GRP.TABSN, 1) = 1
 	   			AND 
 		         	APRMEMBERSN = 1 
 	   			AND
@@ -697,13 +767,21 @@
 			SELECT COUNT(*)
 			FROM (
 				SELECT 
-					DISTINCT DOCID, APRTYPE
+					DISTINCT VAPRWILLDOCLIST.DOCID, APRTYPE
 				FROM 
 					VAPRWILLDOCLIST 
+				LEFT OUTER JOIN
+					TBL_APRDOCGROUPINFO GRP
+				ON
+					VAPRWILLDOCLIST.TENANT_ID = GRP.TENANT_ID
+				AND
+					VAPRWILLDOCLIST.COMPANYID = GRP.COMPANYID
+				AND
+					VAPRWILLDOCLIST.DOCID = GRP.DOCID
 	   			WHERE
-	   				TENANT_ID = #tenantID#
+	   				VAPRWILLDOCLIST.TENANT_ID = #tenantID#
 	   			AND
-					COMPANYID IN (
+					VAPRWILLDOCLIST.COMPANYID IN (
 							SELECT 
 								EXTENSIONATTRIBUTE2 
 							FROM 
@@ -728,6 +806,8 @@
 							AND
 								TENANT_ID = #tenantID# 
 							)
+				AND
+					NVL(GRP.TABSN, 1) = 1
 	   			AND
 	   				APRMEMBERID = #userId# 
 	   			AND 
@@ -952,13 +1032,21 @@
 						COUNT(*)
 					FROM 
 					(SELECT
-						DOCID
+						VAPRDOINGDOCLIST.DOCID
 					FROM
 						VAPRDOINGDOCLIST 
+					LEFT OUTER JOIN
+						TBL_APRDOCGROUPINFO GRP
+					ON
+						VAPRDOINGDOCLIST.TENANT_ID = GRP.TENANT_ID
+					AND
+						VAPRDOINGDOCLIST.COMPANYID = GRP.COMPANYID
+					AND
+						VAPRDOINGDOCLIST.DOCID = GRP.DOCID
 		   			WHERE
-		   				TENANT_ID = #tenantID#
+		   				VAPRDOINGDOCLIST.TENANT_ID = #tenantID#
 		   			AND
-		   				COMPANYID = #companyID#
+		   				VAPRDOINGDOCLIST.COMPANYID = #companyID#
 		   			AND 
 		   				APRMEMBERID IN ($id$) 
 		   			AND 
@@ -967,17 +1055,27 @@
 		   				APRTYPE <> '015' 
 		   			AND
 		   				APRMEMBERSN <> 1
+		   			AND
+						NVL(GRP.TABSN, 1) = 1
 		   				
 		   			UNION ALL
 				
 					SELECT 
-						DOCID
+						VENDCHAMJODOCINFO.DOCID
 					FROM 
 						VENDCHAMJODOCINFO 
+					LEFT OUTER JOIN
+						TBL_APRDOCGROUPINFO GRP
+					ON
+						VENDCHAMJODOCINFO.TENANT_ID = GRP.TENANT_ID
+					AND
+						VENDCHAMJODOCINFO.COMPANYID = GRP.COMPANYID
+					AND
+						VENDCHAMJODOCINFO.DOCID = GRP.DOCID
 		   			WHERE
-		   				TENANT_ID = #tenantID#
+		   				VENDCHAMJODOCINFO.TENANT_ID = #tenantID#
 		   			AND
-		   				COMPANYID = #companyID#
+		   				VENDCHAMJODOCINFO.COMPANYID = #companyID#
 		   			AND
 	   					STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 		   			AND
@@ -985,15 +1083,25 @@
 		   			AND 
 		   				APRTYPE <> '015'
 		   			AND
-		   				APRMEMBERSN <> 1) LIST ) aprDoCount,
+		   				APRMEMBERSN <> 1
+		   			AND
+						NVL(GRP.TABSN, 1) = 1 ) LIST ) aprDoCount,
 				(SELECT 
-						COUNT(DOCID)
+						COUNT(VAPRWILLDOCLIST.DOCID)
 					FROM 
 						VAPRWILLDOCLIST 
+					LEFT OUTER JOIN
+						TBL_APRDOCGROUPINFO GRP
+					ON
+						VAPRWILLDOCLIST.TENANT_ID = GRP.TENANT_ID
+					AND
+						VAPRWILLDOCLIST.COMPANYID = GRP.COMPANYID
+					AND
+						VAPRWILLDOCLIST.DOCID = GRP.DOCID
 		   			WHERE
-		   				TENANT_ID = #tenantID#
+		   				VAPRWILLDOCLIST.TENANT_ID = #tenantID#
 		   			AND
-		   				COMPANYID = #companyID#
+		   				VAPRWILLDOCLIST.COMPANYID = #companyID#
 		   			AND 
 			         	APRMEMBERSN = 1 
 		   			AND
@@ -1003,24 +1111,36 @@
 		   			AND
 		   				APRTYPE <> '015'
 		   			AND 
-			         	DocState <> '017') aprDraftCount,
+			         	DocState <> '017'
+			        AND
+						NVL(GRP.TABSN, 1) = 1 ) aprDraftCount,
 			(
 				SELECT COUNT(*)
 				FROM (
 				SELECT 
-						DISTINCT DOCID, APRTYPE
+						DISTINCT VAPRWILLDOCLIST.DOCID, APRTYPE
 					FROM 
 						VAPRWILLDOCLIST 
+					LEFT OUTER JOIN
+						TBL_APRDOCGROUPINFO GRP
+					ON
+						VAPRWILLDOCLIST.TENANT_ID = GRP.TENANT_ID
+					AND
+						VAPRWILLDOCLIST.COMPANYID = GRP.COMPANYID
+					AND
+						VAPRWILLDOCLIST.DOCID = GRP.DOCID
 		   			WHERE
-		   				TENANT_ID = #tenantID#
+		   				VAPRWILLDOCLIST.TENANT_ID = #tenantID#
 		   			AND
-		   				COMPANYID = #companyID#
+		   				VAPRWILLDOCLIST.COMPANYID = #companyID#
 		   			AND
 		   				APRMEMBERID = #userId# 
 		   			AND 
 	   					STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 		   			AND
 		   				APRTYPE <> '015'
+		   			AND
+						NVL(GRP.TABSN, 1) = 1
 			]]>
 					<isEqual property="mainViewYN" compareValue="YES">
 						AND	    
