@@ -15376,3 +15376,26 @@ inner join (
 inner join tbl_webfolder_folder fld 
 on fld.folder_path regexp folder.folder_path ) as folderInfo 
 on f.folder_id = folderInfo.folder_id;
+
+-- webfolder trigger
+DELIMITER //
+
+CREATE OR REPLACE TRIGGER update_dept_webfolder_name
+AFTER UPDATE ON tbl_deptmaster
+FOR EACH ROW
+BEGIN
+    IF NEW.displayname != OLD.displayname OR NEW.displayname2 != OLD.displayname2 THEN
+        UPDATE tbl_webfolder_folder SET folder_name1 = NEW.displayname, folder_name2 = NEW.displayname2 WHERE owner_id = NEW.cn AND folder_upper = 'root' AND folder_type IN ('C', 'D');
+    END IF;
+END; //
+
+CREATE OR REPLACE TRIGGER update_user_webfolder_name
+AFTER UPDATE ON tbl_usermaster
+FOR EACH ROW
+BEGIN
+    IF NEW.displayname != OLD.displayname OR NEW.displayname2 != OLD.displayname2 THEN
+        UPDATE tbl_webfolder_folder SET folder_name1 = NEW.displayname, folder_name2 = NEW.displayname2 WHERE owner_id = NEW.cn AND folder_upper = 'root' AND folder_type IN ('U');
+    END IF;
+END; //
+
+DELIMITER ;
