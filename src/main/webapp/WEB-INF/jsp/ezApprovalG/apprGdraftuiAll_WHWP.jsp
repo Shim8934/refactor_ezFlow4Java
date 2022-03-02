@@ -1524,9 +1524,10 @@
 				var ret = "";
 				var param = "";
 				
-		//		if (tmpYN == "N") { // tmpYN 값은 "Y"로만 전달된다. 필요하지 않은 분기 주석처리
+				/*
+				if (tmpYN == "N") { // tmpYN 값은 "Y"로만 전달된다. 필요하지 않은 분기 주석처리
 					param = pDocIDAry[i];
-			//	}
+				}*/
 	            
 	            $.ajax({
 					type : "POST",
