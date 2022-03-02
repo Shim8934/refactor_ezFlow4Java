@@ -23,7 +23,7 @@
 	    var securityApproval 	= "<c:out value ='${securityApproval}'/>";	//보안결재
 	    var limitRange 			= "<c:out value ='${limitRange}'/>";			//공개제한부분
 	    var pageNum 			= "<c:out value ='${pageNum}'/>";				//쪽수
-    	var publicityYN			= "<c:out value ='${publicityYN}'/>";			//공개여부
+    	var publicityYN			= ("<c:out value ='${publicityYN}'/>").trim();			//공개여부
 	    //S버전 전용
 	    var storagePeriod 	= "<c:out value ='${storagePeriod}'/>";	//보존기간
 	    var taskCode 		= "<c:out value ='${taskCode}'/>";		//분류코드ID
