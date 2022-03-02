@@ -3029,26 +3029,3 @@ VALUES
 ('112', 2, '상태', 100, NULL, 'STATUS', NULL, NULL, '상태', NULL, 'Status', 'ステータス', 'ステータス', NULL, 0, 'Top'),
 ('112', 3, '일자', 300, NULL, 'STATUSDATE', NULL, NULL, '일자', NULL, 'Date', '日付', '日付', NULL, 0, 'Top');
 
-
--- webfolder trigger
-DELIMITER //
-
-CREATE OR REPLACE TRIGGER update_dept_webfolder_name
-AFTER UPDATE ON tbl_deptmaster
-FOR EACH ROW
-BEGIN
-    IF NEW.displayname != OLD.displayname OR NEW.displayname2 != OLD.displayname2 THEN
-        UPDATE tbl_webfolder_folder SET folder_name1 = NEW.displayname, folder_name2 = NEW.displayname2 WHERE owner_id = NEW.cn AND folder_upper = 'root' AND folder_type IN ('C', 'D');
-    END IF;
-END; //
-
-CREATE OR REPLACE TRIGGER update_user_webfolder_name
-AFTER UPDATE ON tbl_usermaster
-FOR EACH ROW
-BEGIN
-    IF NEW.displayname != OLD.displayname OR NEW.displayname2 != OLD.displayname2 THEN
-        UPDATE tbl_webfolder_folder SET folder_name1 = NEW.displayname, folder_name2 = NEW.displayname2 WHERE owner_id = NEW.cn AND folder_upper = 'root' AND folder_type IN ('U');
-    END IF;
-END; //
-
-DELIMITER ;

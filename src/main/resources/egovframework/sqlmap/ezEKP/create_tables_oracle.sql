@@ -4969,6 +4969,7 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"NAME2" NVARCHAR2(200), 
 	"NAME3" NVARCHAR2(200), 
 	"NAME4" NVARCHAR2(200), 
+	"DELFLAG" VARCHAR2(20) DEFAULT NULL, 
 	"TENANT_ID" NUMBER(5,0) DEFAULT 0, 
 	"COMPANYID" NVARCHAR2(20)
    ) ;
@@ -13063,6 +13064,24 @@ END;
 /
 ALTER TRIGGER "TRG_TBL_TASKCOMMENT" ENABLE;
 
+-- webfolder trigger
+CREATE OR REPLACE TRIGGER update_dept_webfolder_name
+AFTER UPDATE ON tbl_deptmaster
+FOR EACH ROW
+WHEN (NEW.displayname != OLD.displayname OR NEW.displayname2 != OLD.displayname2)
+BEGIN
+    UPDATE tbl_webfolder_folder SET folder_name1 = :NEW.displayname, folder_name2 = :NEW.displayname2 WHERE owner_id = :NEW.cn AND folder_upper = 'root' AND folder_type IN ('C', 'D');
+END;
+/
+
+CREATE OR REPLACE TRIGGER update_user_webfolder_name
+AFTER UPDATE ON tbl_usermaster
+FOR EACH ROW
+WHEN (NEW.displayname != OLD.displayname OR NEW.displayname2 != OLD.displayname2)
+BEGIN
+    UPDATE tbl_webfolder_folder SET folder_name1 = :NEW.displayname, folder_name2 = :NEW.displayname2 WHERE owner_id = :NEW.cn AND folder_upper = 'root' AND folder_type IN ('U');
+END;
+/
 
 --------------------------------------------------------
 --  Constraints for Table APPROVCONNKAMCO
