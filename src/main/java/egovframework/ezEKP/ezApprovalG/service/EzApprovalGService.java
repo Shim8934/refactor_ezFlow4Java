@@ -825,4 +825,7 @@ public interface EzApprovalGService {
 	/* 2022-02-18 홍승비 - 일괄기안 > 그룹으로 묶인 1안의 보류의견 또는 반송의견을 각 안으로 복사하는 메서드 */
 	public void copyFirstTabOpinion(String docID, String groupDocSN, String opinionType, String orgCompanyID, int tenantID) throws Exception;
 
+	/* 2022-03-02 홍승비 - 현재 문서가 가진 총 의견의 갯수를 체크하여 의견 존재 여부를 리턴 (Y/N) */
+	public String chkOpinionInfoExist(String docID, String orgCompanyID, int tenantID) throws Exception;
+
 }

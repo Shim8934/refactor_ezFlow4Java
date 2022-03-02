@@ -625,7 +625,8 @@
                 
                 /* 2020-03-31 홍승비 - 재기안 시 반송의견 유지여부 컨피그 추가 */
                 if (pDraftFlag == "REDRAFT" && useRedraftOpinionKeep != "YES") {
-                	delOpinionInfoForDraftAll();
+                	delOpinionInfoForDraftAll(currIdx);
+                	pHasOpinionYNAry[currIdx] = chkOpinionInfoExist(currIdx); // 의견삭제 후 의견갯수 카운트하여 플래그 변경
                 }
                 
                 // 각 결재문서 안별로 사전 체크 동작이 전부 완료된 경우, 암호체크와 서명동작을 단 한번만 실행시키도록 한다.

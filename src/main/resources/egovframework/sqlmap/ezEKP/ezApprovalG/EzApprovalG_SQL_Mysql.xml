@@ -35437,5 +35437,17 @@
       		)
        	)
 	</insert>
-	  
+	<select id="EzApprovalG.getAprDocOpinionCnt" parameterClass="Map" resultClass="Integer">
+	    SELECT
+    		COUNT(DOCID)
+	    FROM
+    		TBL_APROPINIONINFO
+    	WHERE
+    		DOCID = #v_DOCID#
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #v_COMPANYID#
+	</select>
+	
 </sqlMap>

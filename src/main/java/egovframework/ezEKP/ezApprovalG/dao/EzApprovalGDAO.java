@@ -3822,5 +3822,9 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void copyFirstTabOpinion(Map<String, Object> map) {
 		insert("EzApprovalG.copyFirstTabOpinion", map);
 	}
+	/* 2022-03-02 홍승비 > 결재문서가 가진 모든 타입의 의견 총 갯수를 리턴 */
+	public int getAprDocOpinionCnt(Map<String, Object> map) {
+		return (int) select("EzApprovalG.getAprDocOpinionCnt", map);
+	}
 
 }

@@ -11528,7 +11528,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 *  */
 	@RequestMapping(value = "/ezApprovalG/copyOpenGovAttachInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
-	public void copyOpenGovAttachInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+	public void copyOpenGovAttachInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
 		logger.debug("copyOpenGovAttachInfo started");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -11549,7 +11549,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getAttachListForOpenGovDraftAll.do", produces = "application/json;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public JSONArray getAttachListForOpenGovDraftAll(@CookieValue("loginCookie") String loginCookie,
-			@RequestParam(value = "pDocIDAry[]", required = false) List<String> docIDAry, HttpServletRequest request, Model model) throws Exception{
+			@RequestParam(value = "pDocIDAry[]", required = false) List<String> docIDAry, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getAttachListForOpenGovDraftAll started.");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -11596,7 +11596,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/saveTmpGroup.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
-	public String saveTmpGroup(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+	public String saveTmpGroup(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
 		logger.debug("saveTmpGroup started");
 		
 		String result="";
@@ -11627,7 +11627,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/getMaxTmpGroupDocSN.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
-	public String getMaxTmpGroupDocSN(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+	public String getMaxTmpGroupDocSN(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
 		logger.debug("getMaxTmpGroupDocSN started");
 		
 		String result = "";
@@ -11656,7 +11656,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/checkIsGroupDoc.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
-	public String checkIsGroupDoc(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+	public String checkIsGroupDoc(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
 		logger.debug("checkIsGroupDoc started");
 		
 		String result = "";
@@ -11687,7 +11687,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/getGroupDocListByDocID.do", method = RequestMethod.GET)
 	@ResponseBody
-	public ArrayList<String> getGroupDocListByDocID(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+	public ArrayList<String> getGroupDocListByDocID(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
 		logger.debug("getGroupDocListByDocID started");
 		
 		ArrayList<String> resultAry = new ArrayList<String>();
@@ -11719,7 +11719,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/delGroupDocInfoByDocID.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
-	public void delGroupDocInfoByDocID(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+	public void delGroupDocInfoByDocID(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
 		logger.debug("delGroupDocInfoByDocID started.");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -11741,7 +11741,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/saveAprGroupAndDelTmp.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
-	public void saveAprGroupAndDelTmp(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+	public void saveAprGroupAndDelTmp(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
 		logger.debug("saveAprGroupAndDelTmp started.");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -11768,7 +11768,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/getReceiptExists.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
-	public String getReceiptExists(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+	public String getReceiptExists(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
 		logger.debug("getReceiptExists started.");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -11793,7 +11793,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/copyFirstTabOpinion.do", method = RequestMethod.POST)
 	@ResponseBody
-	public void copyFirstTabOpinion(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+	public void copyFirstTabOpinion(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
 		logger.debug("copyFirstTabOpinion started.");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -11808,6 +11808,30 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * 2022-03-02 홍승비 - 현재 문서가 가진 총 의견의 갯수를 체크하여 의견 존재 여부를 리턴 (Y/N)
+	 */
+	@RequestMapping(value = "/ezApprovalG/chkOpinionInfoExist.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	public String chkOpinionInfoExist(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
+		logger.debug("chkOpinionInfoExist started.");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		int tenantID = userInfo.getTenantId();
+		String docID = request.getParameter("docID");
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String result = "N";
+		
+		try {
+			result = ezApprovalGService.chkOpinionInfoExist(docID, orgCompanyID, tenantID);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("chkOpinionInfoExist ended, result = " + result);
+		return result;
 	}
 	
 }

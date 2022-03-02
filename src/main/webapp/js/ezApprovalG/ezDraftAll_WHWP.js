@@ -2055,21 +2055,39 @@ function getReceiptExists(pDocID, mode) {
 	return res;
 }
 
-// 일괄기안된 문서의 반송의견 삭제 함수 오버라이드 (반송 시 의견작성은 1안 기준이므로 1안에서만 삭제함)
-function delOpinionInfoForDraftAll() {
+// 일괄기안된 문서의 반송의견 삭제 함수 오버라이드 (반송 시 의견작성은 1안 기준이나, 모든 안으로 복사되므로 각 안마다 삭제함)
+function delOpinionInfoForDraftAll(currIdx) {
 	$.ajax({
 		type : "POST",
 		dataType : "json",
 		async : false,
 		url : "/ezApprovalG/deleteOpinionTypeInfo.do",
 		data : {
-			docID : pDocIDAry[1],
+			docID : pDocIDAry[currIdx],
 			opinionType : "002",
 		},
+		success: function(result) {}
+	});
+}
+
+// 현재 문서가 가진 총 의견의 갯수를 체크하여 의견 존재 여부를 리턴하는 함수
+function chkOpinionInfoExist(currIdx) {
+	var res = "N";
+	
+	$.ajax({
+		type : "GET",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/chkOpinionInfoExist.do",
+		data : {
+			docID : pDocIDAry[currIdx],
+			orgCompanyID : orgCompanyID
+		},
 		success: function(result) {
-			
+			res = result;
 		}
 	});
 	
-	pHasOpinionYN = "";
+	return res;
 }
+
