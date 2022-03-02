@@ -52,7 +52,6 @@
 	    	var useOpenGov = parent.useOpenGov;
 	    	var orgCompanyID = parent.orgCompanyID;
 	    	var splitChar = "\x02";
-	      //  var type = "<c:out value='${type}'/>"; // 재사용 기능 자원을 위한 파라미터. 없어도 된다 (완료된 뒤에는 각 안별로 결재문서 분리됨)
 			var xmlhttp		= createXMLHttpRequest();	
 		    var xmldoc		= createXmlDom();
 		    var xmlaprline	= createXmlDom();
@@ -82,8 +81,6 @@
                 setAttachInfo(parent.pDocIDAry[frameNum], "APR", parent.document.getElementById("lstAttachLink")); // 첨부파일 정보를 UI로 표출하고, 첨부파일 플래그도 변경해준다.
                 
                 //GetExchInfo(); // 아무런 동작 없이 그냥 리턴된다.
-                
-	    		//dragNdrapNo();
                 parent.ShowMailProgress(); // 문서 로딩중 이미지 표출
                 
                 HwpCtrl = BuildWebHwpCtrl("hwpContent", "${webHWPUrl}", function () {Editor_Complete();});
@@ -127,11 +124,8 @@
 						SetViewProperties(2, 100);
 	                    ScrollPosInfo(0, 0);
 	                    
-	                    //  부모창의 문서로딩완료 카운트를 하나 증가시킨다.
-	                    //  모든 안이 순차적으로 로딩 완료되지 않으므로(비동기), 로딩 완료 카운트를 하나씩 증가시켜서 부모창의 파라미터에 부여한다.
+	                    // 부모창의 문서로딩완료 카운트를 하나 증가시킨다.
                     	parent.docLoadCompleteCnt ++;
-                    	
-                    	//console.log("parent.docLoadCompleteCnt in frameNum[" + frameNum + "]   ::   " + parent.docLoadCompleteCnt);
                     	
                     	// 로딩된 문서의 전체 갯수가 재기안 시작 시 가져온 전체 안의 갯수와 일치한다면, addFlag 등을 변경시킨다.
                     	if (parent.docLoadCompleteCnt == (parent.pDocIDAry.length - 1)) {
@@ -275,7 +269,7 @@
 			    }
 			    
 			    if (parent.document.getElementById(id) != null) {
-			    	parent.document.getElementById.style.display = display_Value;
+			    	parent.document.getElementById(id).style.display = display_Value;
 			    }
 			}
 			
@@ -417,8 +411,6 @@
 	            }
 	        }
 	  
-
-
 	        function MoveToField(field) { //선택한 필드로 캐럿 이동
 	            HwpCtrl.MoveToField(field, true, true, false);
 	        }
@@ -679,8 +671,6 @@
 					var rtnXml = createXmlDom();
 					var root = createNodeInsert(rtnXml, root, "SEPATTACHINFO");
 					
-				//	console.log("GetSepAttParamXml() 변환 이전의 g_SepAttachLVXml    ::    " + g_SepAttachLVXml);
-					
 					if (g_SepAttachLVXml != "") {
 						// 분리첨부 데이터가 중복된 sepattachlvxml 태그를 가지지 않도록 수정 (원인 분석이 어려워 하드코딩으로 수정함)
 						g_SepAttachLVXml = g_SepAttachLVXml.replace("<sepattachlvxml xmlns=\"http://www.w3.org/1999/xhtml\"><sepattachlvxml", "<sepattachlvxml");
@@ -719,7 +709,6 @@
 				} catch (e) {
 					alert("apprGdraftuiAllContent_WHWP.jsp > GetSepAttParamXml() : " + e.description);
 					console.log(e);
-					console.log(e.stack);
 				}
 			}
 	        
@@ -808,7 +797,7 @@
 			        var node = GetElementsByTagName(xmlpara, "DocHref");
 			        pDocHref = getNodeText(node[0]); // 이미 pDocHrefAry[]에는 값이 들어가있다. 이 페이지 내부에서 쓸 수있도록 지정해줌
 			        var node = GetElementsByTagName(xmlpara, "DocFlag");
-			        pDraftFlag = getNodeText(node[0]); // DRAFT로 고정?
+			        pDraftFlag = getNodeText(node[0]); // DRAFT로 고정
 			
 			        var doctitle = GetElementsByTagName(result, "DOCTITLE");
 			        parent.pDocTitleAry[frameNum] = doctitle[0].textContent;
@@ -884,7 +873,7 @@
 			        }
 			    } catch (e) {
 			    	console.log(e);
-			   //     alert("getApprovInfo :: " + e.description);
+			        alert("getApprovInfo :: " + e.description);
 			    }
 			}
 	        
@@ -893,7 +882,7 @@
 			    try {
 			        xmldoc = document.getElementById("DOCINFO").dataSource; // 결재 시 해당 전역변수를 같이 사용할 수 있도록 지정
 			        var APRSTATE = GetElementsByTagName(xmldoc, "FUNCTIONTYPE");
-			        if (getNodeText(APRSTATE[0]) == strAprState5) {
+			        if (getNodeText(APRSTATE[0]) == strAprState5) { // 보류된 문서인 경우, 보류버튼 숨김처리
 			            setMenuBar("btnStay", false);
 			        }
 			        
@@ -940,7 +929,7 @@
 			        }
 			    } catch (e) {
 			    	console.log(e);
-			    //    alert("getDocInfo :: " + e.description);
+			        alert("getDocInfo :: " + e.description);
 			    }
 			}
 	        

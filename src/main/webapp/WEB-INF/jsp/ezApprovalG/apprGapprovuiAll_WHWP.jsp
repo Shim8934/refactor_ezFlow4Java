@@ -216,7 +216,6 @@
 	        
 	        var useExternalMailServer = "<c:out value='${useExternalMailServer}'/>";
 			var formAprOption = "<c:out value='${formAprOption}'/>";
-			
 			var useWebHWP = "<c:out value='${useWebHWP}'/>";
 			
 	        // 대용량첨부 관련
@@ -229,10 +228,8 @@
 			var draftAllFlag = "Y";
 			var groupDocSN = "<c:out value ='${groupDocSN}'/>"; // 일괄기안된 문서가 가지는 TBL_APRDOCGROUPINFO의 GROUPDOCSN값 (1안의 DOCID)
 			var pDocHrefAry = new Array();
-	        //var pFormID = new String();
 	        var pFormIDAry = new Array();
 	        var pSuSinFlagAry = new Array();
-	        //var pDocID = new String();
 	        var pDocIDAry = new Array();
 	        var pOrgDocIDAry = new Array();
 	        var pDocTypeAry = new Array();
@@ -258,7 +255,6 @@
 	        var fileOpenFlagListArr = new Array(); // 원문정보공개 관련 첨부파일 별 공개여부 (별도 유지)
 	        
 			var htmlDataAry = new Array(""); // 웹한글기안기의 GetHTML 함수가 비동기로 동작하므로, 이 배열에 가져온 data를 넣어준다. 
-			// 1안부터 시작하기 위해 인덱스 0의 값을 임의로 부여
 			var pOrgHtmlAry = new Array(""); // 결재 중 오류 발생 시 원래 문서로 돌려주기 위한 데이터 저장 배열. 기본적으로 htmlDataAry값과 동일하다.
 			
 			// 일괄기안을 위하여 각 안마다 공통으로 사용되는 변수 부모창으로 이동함 (기존 ezDraftAll_WHWP.js 파일에 선언된 변수들)
@@ -266,9 +262,8 @@
 			var LastKyulSN;
 			var DraftLastFlag = false;
 	        
-			var currentTabIdx = 0; // 안별 탭 구분용 인덱스 (현재 선택됨)
-			var currentTabNum = "<c:out value ='${groupDocInfoListCnt}'/>"; //  현재 안의 갯수 (groupDocInfoListCnt)
-			//var newTabIdx = 0; // 현재 추가된 안의 인덱스 (결재창 온로드 시 사용)
+			var currentTabIdx = 0; // 안별 탭 구분용 인덱스 (selTab 함수로 현재 선택된 탭 인덱스)
+			var allTabNum = "<c:out value ='${groupDocInfoListCnt}'/>"; //  현재 안의 갯수 (groupDocInfoListCnt)
 			var wh = window.innerHeight - 100;
 			
 			var HwpCtrl = "";
@@ -378,8 +373,6 @@
 				        var pAlertContent = tempString + "<br><spring:message code='ezApprovalG.t3'/>";
 		            }
 			        OpenAlertUI(pAlertContent, btnClose_onclick); // 알림창 확인 시 문서창 닫도록 수정
-		            //window.parent.close();
-		            //btnClose_onclick();
 		        }
 		        else {
 		            if (NextDocExtended.substring(NextDocExtended.lastIndexOf(".") + 1).toLowerCase() != "hwp") {
@@ -388,9 +381,6 @@
 		            }
 		            
 		            DocNumCode = "";
-		            
-		            // 웹한글에서 지원하지 않는 함수 주석처리
-		          //  showProgress(tempString.replace("\n", ""));
 		            
 		            if (pDocID == NextDocID) {
 		                var pAlertContent = "<spring:message code='ezApprovalG.t3'/>";
@@ -479,8 +469,6 @@
 	       		getReSize();
 				// 자식 iframe은 자기 자신을 리사이즈 할수 없으므로, 부모창에서 대신 조절함
 					$(".tab_container").find("iframe").each(function(index, item) {
-					//	console.log($(item));
-					//	console.log(this);
 						this.contentWindow.Resize();
 					});
 	        }
@@ -510,18 +498,7 @@
         			// 각 안별 탭 생성 및 로딩 진행
         			makeTabs();
         			dragNdrapNo();
-	
-        			// 기존 문서의 정보를 전부 로딩한다. 필요한 데이터는 배열에 저장한다.
-        			// 해당 부분은 각 안 별 iframe 내부 ready 시점으로 이동함
         			
-        			/*
-	                getApprovInfo();
-	
-	                pUserID = pOrgAprUserID;
-	                getDocInfo();
-	                setAttachInfo(pDocID, "APR", lstAttachLink);
-	                GetExchInfo();
-	                */
 	                // 일괄기안창과 비전자문서 호환불가
 	                /*
 	                if (nonElecRec == "Y") {
@@ -559,40 +536,7 @@
 	                alert("apprGdraftuiAllContent_WHWP.jsp > dragNdrapNo()::" + e.description);
 	            }
 	        }
-	
-	        // FieldsAvailable, process_AfterOpen 모두 자식 프레임으로 이동
-	        /*
-		    function FieldsAvailable(isTrue) {
-		        if (isTrue) {
-		            var rtnVal = ExcuteInfo("MIDDLE_SIGN_INIT", "")
-		            if (!rtnVal) {
-		                var pAlertContent = "[<spring:message code='ezApprovalG.t69'/>";
-				        OpenAlertUI(pAlertContent);
-				        return;
-		            }
-		
-		            process_AfterOpen();
-		            //hideProgress();
-		            CheckOpinionYN();
-		
-		            AllApprove.style.display = "";
-		            if (allFlag == "1" || allFlag == "2")
-		                OpenAllApproveFlag();
-		
-		            message.EditMode(0);
-					message.SetViewProperties(2, 100);
-		            message.ScrollPosInfo(0, 0);
-		            
-		            window.onresize();
-		        }
-		        else {
-		            //hideProgress();
-		            var pAlertContent = "<spring:message code='ezApprovalG.t369'/>";
-			        OpenAlertUI(pAlertContent);
-			        message.Clear();
-		        }
-		    }
-	*/
+	        
 		    function CheckOpinionYN(currIdx) {
 		    	if (pDraftFlag == "SUSIN"){
 		            getSusinSNInfo();
@@ -616,7 +560,6 @@
 		    // 알러트 메세지의 경우, 최종 안까지 전부 결재완료한 경우에 단 한번만 표출하도록 한다.
 		    function process_AfterApprove(mode) {
 		    	// 일괄기안 결재문서는 편집모드의 사용이 불가능하므로, FirstHtml값은 항상 ""으로 유지된다. 따라서 UpdateDocHistory 함수는 호출되지 않는다.
-		    	// 일단 코드는 완전히 지우지 말고 주석처리해두었다.
 		    	/*
 		        if (FirstHtml != "") {
 		            UpdateDocHistory(FirstHtml);
@@ -707,73 +650,7 @@
 			function setbutton() {
 			    ChangeBtnState();
 			}
-	
-			// 자식 프레임으로 이동
-			/*
-			function process_AfterOpen() {
-			    getCurApproverAprLine();
-			    pGubun = "8";
-			    
-			    if (pAprLineType == strAprType2 || pAprLineType == strAprType7 || pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12) {
-			        setMenuBar("btntotaldocinfo", false);
-			        setMenuBar("btnJunKyul", false);
-			        setMenuBar("btnModAprLine", false);
-			        setMenuBar("btnEdit", false);
-			        setMenuBar("btnDocInfo", false);
-			        setMenuBar("btnFileAttach", false);
-			        setMenuBar("btnAprDocAttach", false);
-			        setMenuBar("btnModAprDept", false);
-			        setMenuBar("btnSetTaskCode", false);
-			        setMenuBar("btnAddSepAttach", false);
-			        pGubun = "10";
-			    }
-			    else if (pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
-			        setMenuBar("btnModAprLine", false);
-			        pGubun = "5";
-			    }
 			
-			    if (KuyjeType == "001")
-			        setBtnDisableAprLineType();
-			
-			    if (pDraftFlag == "SUSIN") {
-			        if (message.FieldExist("susinbody"))
-			            setMenuBar("btnEdit", true);
-			        else
-			            setMenuBar("btnEdit", false);
-			
-			
-			        setMenuBar("btnModAprDept", false);
-			        setMenuBar("btnFileAttach", false);
-			        setMenuBar("btnAprDocAttach", false);
-			        pGubun = "6";
-			    }
-			
-			    else {
-			        pSuSinFlag = "Y";
-			
-			        var RtnVal = message.FieldExist("recipient");
-			        if (RtnVal) {
-			            pSuSinFlag = "Y";
-			            setMenuBar("btnModAprDept", true);
-			        } else {
-			            pSuSinFlag = "N";
-			            setMenuBar("btnModAprDept", false);
-			            if (pGubun == "5") {
-			                pGubun = "7";
-			            }
-			            else {
-			                pGubun = "6";
-			            }
-			        }
-			
-			        if (pDraftFlag == "HABYUI") {
-			            setMenuBar("btntotaldocinfo", false);
-			        }
-				}
-			    //SignCheck();
-			}
-	*/
-			// btnApprove_onclick 시작
 			var approveResultAry = new Array();
             var ingFlag = false;
 			function btnApprove_onclick() {
@@ -782,6 +659,7 @@
                 }
                 
                 HiddenMailProgress();
+                
                 // 일괄기안을 위한 결재용 전역변수들 초기화
 				docMaxTabNumForApprov = pDocIDAry.length -1; // 0번 인덱스 제거, 1안부터 결재 진행하도록 전역변수 셋팅
 				docApprovInfoChkCnt = 0; // 각 안 별 결재정보 체크 카운트 전역변수 초기화
@@ -793,8 +671,6 @@
 				pDocNumCodeAry = [""]; // 각 안 별 문서번호 저장 배열 초기화
 				pDocNumSnAry = [""]; // 각 안 별 문서번호 숫자부분(tempNumString) 저장 배열 초기화
 				
-				  // 각 안 별로 루프를 돌며 결재를 진행한다.
-                // 웹한글함수의 비동기 동작에 대응하도록, 안 별 인덱스를 잘 사용해야 한다...
                 //  암호체크 및 서명선택 동작은 단 한번만 동작하도록 한다. (모든 체크가 끝난 뒤, 카운트를 확인하여 호출)
                 for (var i = 1; i <= docMaxTabNumForApprov; i++) {
                 	var pApprovDocID = pDocIDAry[i];
@@ -811,12 +687,9 @@
 			    			approveResultAry[i] = text; // 인덱스 접근을 위해 배열로 관리
 			    		}
 			    	});
-			    	//console.log("approveResultAry in loop[" + i + "]   ::   " + approveResultAry[i]);
-			    	
 		    		GetHTML2(Approve, i, docMaxTabNumForApprov); // 웹한글 비동기 함수에 호환되도록 반드시 인덱스 사용
 				}
 		    }
-			 // btnApprove_onclick 끝
 			
 			 // 웹한글함수로 문서 로딩 완료 후 비동기적으로 콜백함수를 호출한다. 따라서 인덱스와 전역변수를 사용하여 제어한다.
 			 // 결재인 경우 before_SaveFile, 반송인 경우 btnReject_option_Complete2, 보류인 경우 btnStay_option_Complete2 함수를 각각 콜백함수로 사용한다.
@@ -826,14 +699,12 @@
                 htmlDataAry = [""]; // 각 안 별 웹한글HTML 데이터 저장 배열 초기화
 				pOrgHtmlAry = [""]; // 오류발생 시 이전 문서로 되돌리기 위한 HTML 데이터 저장 배열 초기화 
 				
-                // 내부에서 각 안 별로 iframe을 찾아 each루프를 돌려준다. 웹한글 비동기문제땜에 인덱스를 진짜 정확하게 알아야 함
+                // 내부에서 각 안 별로 iframe을 찾아 each루프를 돌려준다.
                 var ifrms = $(".tab_container").find("iframe"); // == document.getElementById("ifrm" + i) 와 동일하다.
                 
                 ifrms.each(function(index, item) {
                 	item.contentWindow.GetTextFile("HWP", "", function (data) {
                 		ingFlag = false;
-                		
-                		//console.log("each로 바꾼 뒤의 GetHTML 내부 index 확인   ::   " + index);
                 		
                 		docGetHTMLCnt ++; // 웹한글 비동기함수 동작 정상 완료 시 카운트 증가
                 		htmlDataAry[index + 1] = data; // html data 리턴받은것을 배열에 저장 -> 콜백함수 내부에서 이걸 사용한다. 
@@ -861,9 +732,6 @@
 			 
 			 // btnApprove_onclick -> Approve 시작
 			 function Approve(html, currIdx, maxIdx) {
-				 
-				//console.log("Approve[" + currIdx + "]안 진입");
-
 				var currIfrm = document.getElementById("ifrm" + currIdx); // 각 안별 웹한글기안기 iframe을 사용
 				var strBytes = parseInt(getByteLength(html));
                 var rtnAttachXML = loadXMLString(approveResultAry[currIdx]);
@@ -871,14 +739,14 @@
 
                 if (getNodeText(rtnAttachXML.getElementsByTagName("FLAG").item(0)) == "Y") {
                 	HiddenMailProgress();
-                    OpenAlertUI("외부발송문서 총 첨부용량은 최대 6MB 입니다" + "<br>" + currIdx + "안의 " + "첨부용량을 줄여주시기 바랍니다.");
+                    OpenAlertUI("외부발송문서 총 첨부용량은 최대 6MB 입니다" + "<br>" + currIdx + "<spring:message code='ezApprovalG.HSBDa04_1'/> " + "첨부용량을 줄여주시기 바랍니다.");
                     return;
                 }
 
                 // 본문과 첨부파일의 총합이 7.4mb가 초과시 알러트 결재라인 수정시에도 2018-07-19 강민수92
                 if (getNodeText(rtnAttachXML.getElementsByTagName("EXTFLAG").item(0)) == "Y" && strBytes + parseInt(attachTotalSize) > 7400000) {
                 	HiddenMailProgress();
-                	OpenAlertUI("외부발송문서 총 용량은 최대 7.4MB 입니다" + "<br>" + currIdx + "안의 " + "첨부파일이나 본문용량을 줄여주시기 바랍니다.");
+                	OpenAlertUI("외부발송문서 총 용량은 최대 7.4MB 입니다" + "<br>" + currIdx + "<spring:message code='ezApprovalG.HSBDa04_1'/> " + "첨부파일이나 본문용량을 줄여주시기 바랍니다.");
                     return;
                 }
                 
@@ -914,8 +782,6 @@
 			    
 			    // 모든 안의 체크가 완료된 경우, 최종 안 하나만 암호를 체크 + 서명을 선택한다.
 			    if (docApprovInfoChkCnt == maxIdx) {
-			  //  	console.log("docApprovInfoChkCnt 완료! 모든 안의 결재정보가 정상입니다. 현재 안의 번호는   ::   " + currIdx);
-                	
 				    if (!isjunkyul) { // 전결이 아닌 경우 (전결버튼 클릭 시에만 isjunkyul값이 true가 된다.)
 				        if (CheckUsePassword()) {
 				            chk_Passwd(pingUserID, btnApprove_chkpassword_Complete);
@@ -934,7 +800,7 @@
 	            var ret = "NAME"
 	            
 	            if ((pAprLineType != strAprType2) && (pAprLineType != strAprType7) && (pAprLineType != strAprType15) && (pAprLineType != strAprType17)) {
-	                openSingUI(); // 파라미터 전달할 필요 없음, 서명선탹 레이어팝업 호출
+	                openSingUI(); // 파라미터 전달할 필요 없음, 서명선택 레이어팝업 호출
 	            }
 	            else { // 확인, 참조, 후열, 공람 등 결재서명을 부여하지 않는 분기
 	            	Approve_complete(ret);
@@ -1083,18 +949,13 @@
 			   // AprrovMappingSign() 함수로 서명 부여 후, GetHTML에서 비동기 웹한글함수의 동작 성공 시 콜백으로 이 함수를 부르게 된다.
 			   // Approve_complete -> Before_SaveApproveInfo 시작
 			   function Before_SaveApproveInfo() {
-				  // SaveHtml = html;
 				  // 각 안 별로 GetHTML에서 한글파일 data를 모두 가져오는 것에 성공한다면, 다음 단계로 넘어간다.
 				if (docGetHTMLCnt < docMaxTabNumForApprov) {
-					//console.log("현재 docGetHTMLCnt   ::   " + docGetHTMLCnt);
 					return;
 				}
 				// 최종 안에서 아래 동작이 단 한번만 동작하게 된다. 따라서 내부에서 루프를 돌린다.
 				else {
 					var rollBackFlag = false; // 결재진행 중 안이 하나라도 오류를 발생시키는지 체크하는 플래그
-					
-					//console.log("GetHTML함수로 모든 안의 html 데이터를 가져왔습니다. 현재 docGetHTMLCnt   : :  " + docGetHTMLCnt);
-					
 					for (var i = 1; i <= docMaxTabNumForApprov; i++) {
 						var currIfrm = document.getElementById("ifrm" + i); // 각 안별 웹한글기안기 iframe을 사용
 			        	
@@ -1107,7 +968,6 @@
 				            	rollBackFlag = true;
 	                    		break; // 현재 루프 빠져나가서 하단으로 이동
 						    } else {
-						    	//UpdateLineHistory();
 						    	// 일괄기안용 결재선 업데이트함수로 변경 (pDocIDAry에 접근)
 		                        UpdateLineHistoryForDraftAll(i);
 						    	
@@ -1236,7 +1096,6 @@
 			   }
 			   // Before_SaveApproveInfo 끝
 			   
-			   
 			   // 반송 btnReject_onclick 시작
 			    function btnReject_onclick() {
 			        var pInformationContent = "<spring:message code='ezApprovalG.t36'/>";
@@ -1323,7 +1182,6 @@
 			    function btnReject_option_Complete2() {
 			    	// GetHTML에 의해 모든 안의 문서 로딩이 끝난 경우에 다음으로 진행
 					if (docGetHTMLCnt < docMaxTabNumForApprov) {
-					//	console.log("현재 docGetHTMLCnt   ::   " + docGetHTMLCnt);
 						return;
 					} else {
 						// 최종 안까지 로딩된 후, 아래 동작 진행
@@ -1417,7 +1275,6 @@
 			    	
 					if (ret != "cancel" && ret != undefined) {
 			    		// 모든 안에 대하여 1안의 보류의견 복사 + 문서 상에 의견 맵핑 + 문서파일 저장동작 진행
-				        
 						for (var i = 1; i <= docMaxTabNumForApprov; i++) {
 						   var currIfrm = document.getElementById("ifrm" + i); // 각 안별 웹한글기안기 iframe을 사용
 						   
@@ -1444,7 +1301,6 @@
 			    function btnStay_option_Complete2() {
 			    	// GetHTML에 의해 모든 안의 문서 로딩이 끝난 경우에 다음으로 진행
 			    	if (docGetHTMLCnt < docMaxTabNumForApprov) {
-		        	//	console.log("현재 docGetHTMLCnt   ::   " + docGetHTMLCnt);
 		        		return;
 		        	} else {
 		        		// 최종 안까지 로딩된 후, 아래 동작 진행
@@ -1472,7 +1328,6 @@
 	
 			 	// 전결관련 로직 시작
 			    function btnJunKyul_onclick() {
-			    	//if ("${approvalPWD}" != "N") {
 			    	if (CheckUsePassword()) {
 				        chk_Passwd(pingUserID, btnJunKyul_onclick_complete);
 			    	} else {			    		
@@ -1682,7 +1537,7 @@
 				    }
 			        
 					// 안별 웹한글기안기 iframe 내부에 접근하여 분리첨부정보 가져오는 함수를 실행
-					var currIfrm = document.getElementById("ifrm" + currentTabNum);
+					var currIfrm = document.getElementById("ifrm" + allTabNum);
 			        var g_SepAttachLVXml = "";
 			        g_SepAttachLVXml = currIfrm.contentWindow.GetDocumentElementForDraftAll("sepattachlvxml", true);
 			        if (!g_SepAttachLVXml) {
@@ -1702,7 +1557,7 @@
 			    
 			    function btnAddSepAttach_onclick_Complete(rtn) {
 			        DivPopUpHidden();
-			        var currIfrm = document.getElementById("ifrm" + currentTabNum);
+			        var currIfrm = document.getElementById("ifrm" + allTabNum);
 			        
 			        if (rtn[0] == "TRUE") {
 			            g_SepAttachLVXml = rtn[1];
@@ -1981,8 +1836,6 @@
 	 	    	function Editor_Complete(iframeID, docHref) {
 		    		var iframe = document.getElementById(iframeID);
 		    		
-		    	//	console.log(iframe);
-		    		
 		    		if (iframe == null || typeof(iframe) == "undefined") {
 		    			return;
 		    		}
@@ -2085,8 +1938,6 @@
                     // 탭의 요소 길이 자체는 0부터 시작하게 되며, 루프를 진행하면서 1, 2... 로 증가한다.
                     var viewTabIdx = viewNewTabCnt; // 최초 루프 시 0 -> 1로 현재 탭 인덱스 증가
                     
-                  //  console.log("pDocIDAry[" + i + "] in makeTabs()   ::   " + pDocIDAry[i]);
-                    
 					var addString = "";
 					if (viewTabIdx == 1) { // 1안인 경우, 선택된 상태로 스타일 처리
                         $("dl.tab_menu").append("<dt class=\"on\" id=\"dt" + viewTabIdx + "\" style=\"cursor:pointer\"><span onclick=\"selTab('" + viewTabIdx + "')\"  id=\"sp" + viewTabIdx + "\">" + viewTabIdx + " " + strLangHSBRDa01 + "</span></dt>");
@@ -2162,12 +2013,11 @@
         		}
         	}
         	
-        	 // iframe 리사이즈 (1안이 존재하는 경우에만, 모든 안에 대하여 루프를 돌며 적용하므로 한번만 동작하게 할것!)
+        	 // iframe 리사이즈 (1안이 존재하는 경우에만, 모든 안에 대하여 루프를 돌며 적용하므로 한번만 호출됨)
 	        function getReSize() {
 	            var ifrm1 = document.getElementById("ifrm1");
-	        	// eval 지우고 1안 존재여부만 체크해주면 됨
 	            if (ifrm1 != null && typeof(ifrm1) != "undefined") {
-	                var viewTabCnt = Number(currentTabNum); // 모든 안의 갯수
+	                var viewTabCnt = Number(allTabNum); // 모든 안의 갯수
 	                
 	                for (var i = 0; i < viewTabCnt; i++) {
 	                    var viewTabNo = Number(i) + 1;

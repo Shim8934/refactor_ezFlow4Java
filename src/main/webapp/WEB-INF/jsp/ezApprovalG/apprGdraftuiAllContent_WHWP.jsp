@@ -32,7 +32,7 @@
 	    	var frameNum = "${frameNum}"; // 프레임 번호
 	    	var ListType = parent.ListType; // 임시저장 등 분기처리를 위한 ListType
 	    	var docID = "${docID}"; // 재기안시 문서 id
-	    	var docHref = "${docHref}"; // 사실상 양식의 formHref임
+	    	var docHref = "${docHref}"; // 문서경로
 	    	var formID = "${formID}"; // 양식 ID
 	    	var pUserID = parent.pUserID;
 	    	var pDocID = "";
@@ -43,7 +43,6 @@
 	    	var useOpenGov = parent.useOpenGov;
 	    	var orgCompanyID = parent.orgCompanyID;
 	    	var splitChar = "\x02";
-	      //  var type = "<c:out value='${type}'/>"; // 재사용 기능 자원을 위한 파라미터. 없어도 된다 (완료된 뒤에는 각 안별로 결재문서 분리됨)
 	      
 			var pFormHref = "";
 			var pDraftFlag = "";
@@ -58,8 +57,6 @@
  	    		if (frameNum == "1") {
 	    			parent.winOnload();
 	    		} 
-	    		
-	    		//console.log("parent.pDraftFlag in frameNum[" + frameNum + "] ready   ::   " +  parent.pDraftFlag);
 	    		
 	    		pFormHref = parent.pFormHrefAry[frameNum];
 	            pDraftFlag = parent.pDraftFlag;
@@ -101,17 +98,12 @@
 			}
 	    	
 	        function FieldsAvailable(isTrue) {
-	        	// 개발중 에러 라인을 찾기 위해 try~catch 잠시 주석처리
-	    //        try {
+	            try {
 	                if (isTrue) {
 	                	getDraftUserInfo();
 	                	SetAutoPropertyValue(frameNum);
-	                    //hideProgress();
-	                  //  window.focus();
-	                  //  HwpCtrl.focus();
 	
 	                    process_AfterOpen();
-	                    
 	                    // 현재 안 탭의 정보를 부모페이지에도 저장
 	                    parent.setTabInfo(frameNum);
 	                    
@@ -129,27 +121,20 @@
 	                    
 	                    // 1안 이후에 추가된 안에는 1안의 정보를 복사해준다.
 	                    // 반송문서 또는 임시저장문서 재기안 시, 전체 문서 로딩 완료 이후 안 추가시에만 1안의 정보를 복사해준다. 
-	                    //console.log("parent.addFlag in frameNum[" + frameNum + "]   ::   " + parent.addFlag);
 			    		 if (parent.addFlag == true) {
 			    			 CopyAndPasteContent(true);
 			    			 copyDoc();
 		                }
 	                    
-/* 	                    HwpCtrl.SetFieldFocus("doctitle");
-	                    HwpCtrl.ezSetScrollPosInfo(0);
-	                    HwpCtrl.SetImgReg(); */
 	                    EditMode(2);
 						SetViewProperties(2, 100);
 	                    MoveToField("doctitle");
 	                    ScrollPosInfo(0, 0);
 	                    
-	                    // 재기안인 경우, 부모창의 문서로딩완료 카운트를 하나 증가시킨다. 이 값이 현재 열려있는 탭의 값과 동일한 경우, addflag를 변경해주면 될듯???
 	                    //  모든 안이 순차적으로 로딩 완료되지 않으므로(비동기), 로딩 완료 카운트를 하나씩 증가시켜서 부모창의 파라미터에 부여한다.
 	                    // 재기안 상태이면서 addFlag가 아직 변경되지 않은 경우 (초기 로딩 상태 진행 중임)
 	                    if (pDraftFlag == "REDRAFT" && parent.addFlag == false) {
 	                    	parent.docLoadCompleteCnt ++;
-	                    	
-	                    //	console.log("parent.docLoadCompleteCnt in frameNum[" + frameNum + "]   ::   " + parent.docLoadCompleteCnt);
 	                    	
 	                    	// 로딩된 문서의 전체 갯수가 재기안 시작 시 가져온 전체 안의 갯수와 일치한다면, addFlag 등을 변경시킨다.
 	                    	if (parent.docLoadCompleteCnt == (parent.pDocIDAry.length - 1)) {
@@ -174,9 +159,9 @@
 	                    OpenAlertUI(pAlertContent);
 	                    Clear();
 	                }
-/* 	            } catch (e) {
+ 	            } catch (e) {
 	                alert("apprGdraftuiAllContent_WHWP.FieldsAvailable()  ::  " + e.description);
-	            } */
+	            }
 	        }
 	
 			function GetFormType(pFormID) {
@@ -254,7 +239,6 @@
 			                }
 			                
 			                parent.pDocIDAry[frameNum] = pDocID;
-			                //parent.cabinetIDAry[frameNum] = parent.cabinetIDAry[0];
 			                
 				            if (parent.listOpenFlag != undefined && parent.listOpenFlag != "") {
 					            $.ajax({
@@ -292,19 +276,18 @@
 				}
 			}
 			
+			// 부모창에 접근해서 display 스타일을 변경함
 			function setMenuBar(id, flag) {
-			    var strCmd, display_Value;
+			    var display_Value;
 
 			    if (flag) {
 			        display_Value = "";
 			    } else {
 			        display_Value = "none";
 			    }
-
-			    strCmd = "parent." + id + ".style.display='" + display_Value + "'";
 			    
-			    if (document.getElementById("parent." + id) != null) {
-			    	eval(strCmd);
+			    if (parent.document.getElementById(id) != null) {
+			    	parent.document.getElementById(id).style.display = display_Value;
 			    }
 			}
 			
@@ -329,7 +312,6 @@
 	            HwpCtrl.EditMode = option;
 	        }
 
-	        // 가져온 html이 어느 안의 데이터인지 알 수 있도록 ...
 	        function GetTextFile(format, option, callback) {
 	            HwpCtrl.GetTextFile(format, option, callback);
 	        }
@@ -445,9 +427,7 @@
 	                    HwpCtrl.PutFieldText(pFieldName, String.fromCharCode(2));
 	            }
 	        }
-	  
-
-
+	        
 	        function MoveToField(field) { //선택한 필드로 캐럿 이동
 	            HwpCtrl.MoveToField(field, true, true, false);
 	        }
@@ -698,15 +678,18 @@
 				vp.SetItem("ZoomRatio", zoomRatio);		// 	화면 확대 비율
 				HwpCtrl.ViewProperties = vp;
 			}
+////////// 웹한글기안기 함수 끝 //////////
 			 
-			 // 1안의 제목과 본문을 이후 추가된 안에도 복사하기 위한 함수
+			 // 1안의 본문을 이후 추가된 안에도 복사하기 위한 함수
 	        function CopyAndPasteContent(isTrue) {
 	        	try {
 	        		var ifrm1 = parent.document.getElementById("ifrm1");
 	        		
 		        	if (isTrue) {
-		        		ifrm1.contentWindow.GetCloneData("doctitle", "JSON", function (tempContent) { SetCloneData(tempContent, "doctitle", "JSON") });
-		        		ifrm1.contentWindow.GetCloneData("body", "JSON", function (tempContent) { SetCloneData(tempContent, "body", "JSON") });
+		        		if (parent.contentOptionFlag == true) {
+		        			// 본문 내부 이미지까지 전부 가져오기 위해 HWP 타입으로 받아온다.
+		        			ifrm1.contentWindow.GetCloneData("body", "HWP", function (tempContent) { SetCloneData(tempContent, "body", "HWP"); });
+		        		}
 		        	} else {
 	                    var pAlertContent = "<spring:message code='ezApprovalG.t369'/>";
 	                    OpenAlertUI(pAlertContent);
@@ -726,11 +709,6 @@
 	    		 if (parent.titleOptionFlag == true) { // 제목
 	    			var mainDocTitle = ifrm1.contentWindow.GetFieldText("doctitle");
 	    			PutFieldText("doctitle", mainDocTitle);
-	    		}
-	    		
-	    		if (parent.contentOptionFlag == true) { // 본문
-	    			var mainDocContent = ifrm1.contentWindow.GetFieldText("body");
-	    			PutFieldText("body", mainDocContent);
 	    		}
 	    		
 	    		if (parent.seperateAttachOptionFlag == true) { // 분리첨부
@@ -818,8 +796,6 @@
 					var rtnXml = createXmlDom();
 					var root = createNodeInsert(rtnXml, root, "SEPATTACHINFO");
 					
-				//	console.log("GetSepAttParamXml() 변환 이전의 g_SepAttachLVXml    ::    " + g_SepAttachLVXml);
-					
 					if (g_SepAttachLVXml != "") {
 						// 분리첨부 데이터가 중복된 sepattachlvxml 태그를 가지지 않도록 수정 (원인 분석이 어려워 하드코딩으로 수정함)
 						g_SepAttachLVXml = g_SepAttachLVXml.replace("<sepattachlvxml xmlns=\"http://www.w3.org/1999/xhtml\"><sepattachlvxml", "<sepattachlvxml");
@@ -866,18 +842,11 @@
 			function getDocInfo(currIdx) {
 				var result = "";
 				
-				// 일괄기안문서는 재사용 불가(완료 이후 각 안마다 완료문서로 나뉨)이므로 이 분기 필요없음
-/* 				if (isUsed == "reuse") {
-					url = "/ezApprovalG/getDocInfo.do?isUsed=" + isUsed + "&beforeDocID=" + beforeDocID;
-				} else { */
-					url = "/ezApprovalG/getDocInfo.do";
-//				}
-				
 				$.ajax({
 					type : "POST",
 					dataType : "text",
 					async : false,
-					url : url,
+					url : "/ezApprovalG/getDocInfo.do",
 					data : {
 						docID : pDocID
 					},
@@ -889,10 +858,6 @@
 			    xmldoc = result;
 			    var objNodes = xmldoc.documentElement.childNodes;
 			    if (objNodes) {
-			    	
-			    	// 원문서ID 사용처 없음
-			        //pOrgDocID = SelectSingleNodeValueNew(result, "DATA/ORGDOCID");
-			        
 			        if (SelectSingleNodeValueNew(result, "DATA/HASOPINIONYN") == "Y" || SelectSingleNodeValueNew(result, "DATA/HASOPINIONYN") == "O") {
 			        	parent.pHasOpinionYNAry[currIdx] = "Y";
 			        } else {

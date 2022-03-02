@@ -632,14 +632,13 @@ function SaveApproveInfo(pApproveFlag, currIdx) {
 
 	// 일반첨부 또는 문서첨부가 존재하는 경우를 고려
 	if (parent.pHasAttachYNAry[currIdx] == "Y" || parent.pHasDocAttachYNAry[currIdx] == "Y") {
-	    createNodeAndInsertText(xmlpara, objNode, "HASATTACHYN", getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[9]));
+	    createNodeAndInsertText(xmlpara, objNode, "HASATTACHYN", "Y");
 	} else {
 	    createNodeAndInsertText(xmlpara, objNode, "HASATTACHYN", "N");
 	}
-	var objNode;
-
+	
 	if (parent.pHasOpinionYNAry[currIdx] == "Y") {
-	    createNodeAndInsertText(xmlpara, objNode, "HASOPINIONYN", getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[10]));
+	    createNodeAndInsertText(xmlpara, objNode, "HASOPINIONYN", "Y");
 	} else {
 	    createNodeAndInsertText(xmlpara, objNode, "HASOPINIONYN", "N");
 	}
@@ -784,9 +783,6 @@ function SaveApproveInfo(pApproveFlag, currIdx) {
 		}
 	}
 	*/
-	
-	//console.log("================ " + currIdx + "안의 xmlpara ============");
-	//console.log(xmlpara);
 	
 	if (pApproveFlag == "1") {
         xmlhttp.open("POST", "/ezApprovalG/doApprov.do", false);

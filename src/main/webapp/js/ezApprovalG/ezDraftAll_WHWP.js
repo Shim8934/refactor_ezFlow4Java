@@ -1164,7 +1164,7 @@ function openOpinionUI_New_Complete(ret) {
 	DivPopUpHidden();
 	if (ret == "Clear") { // 의견 전부 삭제
 		pHasOpinionYN = "N";
-		pHasOpinionYNAry[currentTabNum] = "N";
+		pHasOpinionYNAry[currentTabIdx] = "N";
 		ret = "cancel";
 	} else if (ret == "cancel") {
 		// 취소시 동작 없음
@@ -1174,10 +1174,10 @@ function openOpinionUI_New_Complete(ret) {
 		var NodeList = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW");
 		if (NodeList.length != 0) {
 			pHasOpinionYN = "Y";
-			pHasOpinionYNAry[currentTabNum] = "Y";
+			pHasOpinionYNAry[currentTabIdx] = "Y";
 		} else {
 			pHasOpinionYN = "N";
-			pHasOpinionYNAry[currentTabNum] = "N";
+			pHasOpinionYNAry[currentTabIdx] = "N";
 			ret = "cancel";
 		}
 		makeOpinionList(objXML);
@@ -1186,7 +1186,7 @@ function openOpinionUI_New_Complete(ret) {
 }
 
 function makeOpinionList(OpinionXML) {
-	if (!document.getElementById("ifrm" + currentTabNum).contentWindow.FieldExist("opinions"))
+	if (!document.getElementById("ifrm" + currentTabIdx).contentWindow.FieldExist("opinions"))
 		return;
 
 	var firstFlag = true;
@@ -1212,17 +1212,17 @@ function makeOpinionList(OpinionXML) {
 			}
 				
 		}		
-		document.getElementById("ifrm" + currentTabNum).contentWindow.PutFieldText("opinions", strOpinion);
+		document.getElementById("ifrm" + currentTabIdx).contentWindow.PutFieldText("opinions", strOpinion);
 	}
 	else {
-		document.getElementById("ifrm" + currentTabNum).contentWindow.PutFieldText("opinions", " ");
+		document.getElementById("ifrm" + currentTabIdx).contentWindow.PutFieldText("opinions", " ");
 	}
 }
 
 // 일괄기안 플래그와 안 번호 전달
 function openFileAttachUI() {
   try {
-	  var url = "/ezApprovalG/aprAttach.do?formID=" + pFormID + "&docID=" + pDocID + "&draftFlag=" + pDraftFlag + "&orgCompanyID=" + orgCompanyID + "&ext=hwp&draftAllFlag=Y&anNo=" + currentTabNum;
+	  var url = "/ezApprovalG/aprAttach.do?formID=" + pFormID + "&docID=" + pDocID + "&draftFlag=" + pDraftFlag + "&orgCompanyID=" + orgCompanyID + "&ext=hwp&draftAllFlag=Y&anNo=" + currentTabIdx;
 	  DivPopUpShow(800, 610, url);
   } catch(e) {
 	  alert("openFileAttachUI() :: " + e);
@@ -1233,7 +1233,7 @@ var aprcabinetattach_cross_dialogArguments = new Array();
 function openAaprDocAttachUI() {
   try {
 	  var parameter = pDocID;
-	  var url = "/ezApprovalG/aprCabinetAttach.do?draftFlag=" + pDraftFlag + "&draftAllFlag=Y&anNo=" + currentTabNum;
+	  var url = "/ezApprovalG/aprCabinetAttach.do?draftFlag=" + pDraftFlag + "&draftAllFlag=Y&anNo=" + currentTabIdx;
 	  
 	  aprcabinetattach_cross_dialogArguments[0] = parameter;
       aprcabinetattach_cross_dialogArguments[1] = openAaprDocAttachUI_complete;
@@ -1247,7 +1247,7 @@ function openAaprDocAttachUI() {
 function openAaprDocAttachUI_complete(ret){
 	DivPopUpHidden();
 	if (ret != "cancel") {
-		document.getElementById("ifrm" + currentTabNum).contentWindow.setAttachInfo(pDocID, "APR", lstAttachLink);	// 각 안별 iframe 내부에 첨부파일 영역이 존재
+		document.getElementById("ifrm" + currentTabIdx).contentWindow.setAttachInfo(pDocID, "APR", lstAttachLink);	// 각 안별 iframe 내부에 첨부파일 영역이 존재
 	}
 }
 
@@ -1321,7 +1321,6 @@ function SaveDraftDocInfo_ilban(pState, currIdx)
     } else {
     	createNodeAndInsertText(xmlpara, objNode, "HASATTACHYN", "N");
     }
-	//createNodeAndInsertText(xmlpara, objNode, "HASATTACHYN", parent.pHasAttachYNAry[currIdx]);
 	createNodeAndInsertText(xmlpara, objNode, "HASOPINIONYN", undefined2EmptyString(parent.pHasOpinionYNAry[currIdx]));
 
 	var startdate;
@@ -1369,8 +1368,6 @@ function SaveDraftDocInfo_ilban(pState, currIdx)
 	// 각 안 별 분리첨부데이터 저장
 	var g_SepAttachLVXml = "";
 	g_SepAttachLVXml = GetDocumentElementForDraftAll("sepattachlvxml", true);
-	
-	//console.log(currIdx + "안의 g_SepAttachLVXml   ::   " + g_SepAttachLVXml);
 	
 	if (!g_SepAttachLVXml) {
 	    createNodeAndInsertText(xmlpara, objNode, "SEPERATEATTACHXML", "");
@@ -1443,9 +1440,6 @@ function SaveDraftDocInfo_ilban(pState, currIdx)
             createNodeAndInsertText(xmlpara, objNode, "NONELECREC_SEPERATEATTACH", getXmlString(rtnXml));
 		}
 	}*/
-	
-	//console.log("================ " + currIdx + "안의 xmlpara ============");
-	//console.log(xmlpara);
 	
 	xmlhttp.open("POST","/ezApprovalG/doDraftHWP.do",false);
 	xmlhttp.send(xmlpara);
@@ -1835,11 +1829,6 @@ function SaveTMPDocInfo(Saveflag, idx) {
         }
         
         createNodeAndInsertText(xmlpara, objNode, "DOCNO", pDocNO);
-
-        //console.log("현재 안의 번호   ::   " + idx);
-        //console.log("parent.pHasAttachYNAry[" + idx + "]   ::   " + parent.pHasAttachYNAry[idx]);
-        //console.log("parent.pHasDocAttachYNAry[" + idx + "]   ::   " + parent.pHasDocAttachYNAry[idx]);
-        //console.log("parent.pHasOpinionYNAry[" + idx + "]   ::   " + parent.pHasOpinionYNAry[idx]);
         
         // 일반첨부 또는 문서첨부가 존재하는 경우를 고려
         if (parent.pHasAttachYNAry[idx] == "Y" || parent.pHasDocAttachYNAry[idx] == "Y") {
@@ -1892,7 +1881,7 @@ function SaveTMPDocInfo(Saveflag, idx) {
         }
         
         createNodeAndInsertText(xmlpara, objNode, "SUMMARY", parent.pSummery);
-        createNodeAndInsertText(xmlpara, objNode, "SECURITYAPPROVAL", parent.tempSecurityDateAry);
+        createNodeAndInsertText(xmlpara, objNode, "SECURITYAPPROVAL", parent.tempSecurityDate);
         createNodeAndInsertText(xmlpara, objNode, "WRITERNAME2", arr_userinfo[12]);
         createNodeAndInsertText(xmlpara, objNode, "WRITERJOBTITLE2", arr_userinfo[14]);
         createNodeAndInsertText(xmlpara, objNode, "WRITERDEPTNAME2", arr_userinfo[16]);

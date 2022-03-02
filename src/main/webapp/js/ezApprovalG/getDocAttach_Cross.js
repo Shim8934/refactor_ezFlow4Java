@@ -81,7 +81,7 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
     	docAttachTag = document.getElementById(attachTag.id + "Doc");
     	parentHasAttachAry = pHasAttachYNAry;
     	parentHasDocAttachAry = pHasDocAttachYNAry;
-    	currIdx = currentTabNum;
+    	currIdx = currentTabIdx;
     }
     // 일괄기안 자식페이지에서 접근
     else if (tempHref.indexOf("ezApprovalG/draftContentAll_WHWP.do") > -1 || tempHref.indexOf("ezApprovalG/approvContentAll_WHWP.do") > -1) {

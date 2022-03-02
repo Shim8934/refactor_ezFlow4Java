@@ -151,7 +151,7 @@
 	        var pDocTypeAry = new Array();
 	        
 			var currentTabIdx = 0; // 안별 탭 구분용 인덱스 (현재 선택됨)
-			var currentTabNum = "<c:out value ='${groupDocInfoListCnt}'/>"; //  현재 안의 갯수 (groupDocInfoListCnt)
+			var allTabNum = "<c:out value ='${groupDocInfoListCnt}'/>"; //  현재 안의 갯수 (groupDocInfoListCnt)
 			var wh = window.innerHeight - 100;
 			
 			var HwpCtrl = "";
@@ -217,8 +217,7 @@
 				
 				// 각 안별 탭 생성 및 로딩 진행
     			makeTabs();
-    			//dragNdrapNo(); 필요없는듯?
-    					
+				
 				if (useExternalMailServer == "NO") {
 					$("#btnMail").css("display","");
 				}
@@ -424,7 +423,6 @@
 		        if (RtnVal == "TRUE") {
 					SendMailToCancel_Function(currentAprLineForMail); // 1안의 정보를 기준으로 회수알림메일 발송
 					//attitude_annual_conn(pDocID);
-					
 					//ExcuteInfo("CALLBACK_AFTER", "DRAFT");
 
 					HiddenMailProgress();
@@ -506,7 +504,7 @@
 		    
 			function doCancel() {
 				/*
-				var retVal = ExcuteInfo("CALLBACK_BEFORE", "DRAFT"); // 
+				var retVal = ExcuteInfo("CALLBACK_BEFORE", "DRAFT");
 				if (!retVal) {
 					return;
 				}*/
@@ -549,7 +547,6 @@
 					// 회수알림 메세지 발송 동작은 1안의 정보를 기준으로 한번만 진행한다.
 					SendMailToCancel(pDocIDAry[1], docTitle, drafterName, pDraftDate); 
 					//attitude_annual_conn(pDocID);
-
 					//ExcuteInfo("CALLBACK_AFTER", "DRAFT");
 
 					HiddenMailProgress();
@@ -893,9 +890,8 @@
         	 // iframe 리사이즈 (1안이 존재하는 경우에만, 모든 안에 대하여 루프를 돌며 적용하므로 한번만 동작하게 할것!)
 	        function getReSize() {
 	            var ifrm1 = document.getElementById("ifrm1");
-	        	// eval 지우고 1안 존재여부만 체크해주면 됨
 	            if (ifrm1 != null && typeof(ifrm1) != "undefined") {
-	                var viewTabCnt = Number(currentTabNum); // 모든 안의 갯수
+	                var viewTabCnt = Number(allTabNum); // 모든 안의 갯수
 	                
 	                for (var i = 0; i < viewTabCnt; i++) {
 	                    var viewTabNo = Number(i) + 1;
@@ -909,7 +905,6 @@
 	                }
 	            }                       
 	        }
-        	 
         	 
 	    </script>
 	</head>

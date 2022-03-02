@@ -84,10 +84,7 @@
 	                    ScrollPosInfo(0, 0);
 	                    
 	                    //  부모창의 문서로딩완료 카운트를 하나 증가시킨다.
-	                    //  모든 안이 순차적으로 로딩 완료되지 않으므로(비동기), 로딩 완료 카운트를 하나씩 증가시켜서 부모창의 파라미터에 부여한다.
                     	parent.docLoadCompleteCnt ++;
-                    	
-                    	//console.log("parent.docLoadCompleteCnt in frameNum[" + frameNum + "]   ::   " + parent.docLoadCompleteCnt);
                     	
                     	// 로딩된 문서의 전체 갯수가 재기안 시작 시 가져온 전체 안의 갯수와 일치하는 경우
                     	if (parent.docLoadCompleteCnt == (parent.pDocIDAry.length - 1)) {
@@ -105,6 +102,7 @@
 	                alert("apprGviewAprAllContent_WHWP.jsp.FieldsAvailable()  ::  " + e);
 	            }
 	        }
+	        
 /******************************* 웹한글기안기쪽 함수 ******************************/
 	        function Open(url, format, type, callback, name) {
 	            return HwpCtrl.Open(url, format, type, callback, name);
@@ -126,7 +124,6 @@
 	            HwpCtrl.EditMode = option;
 	        }
 
-	        // 가져온 html이 어느 안의 데이터인지 알 수 있도록 ...
 	        function GetTextFile(format, option, callback) {
 	            HwpCtrl.GetTextFile(format, option, callback);
 	        }
@@ -242,8 +239,6 @@
 	                    HwpCtrl.PutFieldText(pFieldName, String.fromCharCode(2));
 	            }
 	        }
-	  
-
 
 	        function MoveToField(field) { //선택한 필드로 캐럿 이동
 	            HwpCtrl.MoveToField(field, true, true, false);
