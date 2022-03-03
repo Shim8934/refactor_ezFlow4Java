@@ -34666,4 +34666,17 @@
             AND TBL_HISTORYRECEIPTINFO.TENANT_ID = #v_TENANTID#
         ORDER BY STATUSDATE DESC
 	</select>
+
+    <select id="EzApprovalG.getFormIdFromApr" parameterClass="Map" resultClass="String">
+        SELECT
+            FORMID
+        FROM
+            TBL_APRDOCINFO
+        WHERE
+            DOCID = #v_DOCID#
+          AND
+            TENANT_ID = #v_TENANTID#
+          AND
+            COMPANYID = #v_COMPANYID#
+    </select>
 </sqlMap>

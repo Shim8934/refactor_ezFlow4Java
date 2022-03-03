@@ -782,5 +782,6 @@ public interface EzApprovalGService {
     public void insertReciptInfoDoc24(String docID, String docDeptCode, String docDeptName, String companyId, int tenantId) throws Exception;
 
 	public String getReceiptHistoryInfo(String docID, String deptID, String companyID, String lang, int tenantID, String offset) throws Exception;
-    
+
+    String getFormIdFromApr(String docID, String companyID, int tenantID) throws Exception;
 }
