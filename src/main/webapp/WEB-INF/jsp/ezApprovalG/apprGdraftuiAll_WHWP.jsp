@@ -313,6 +313,10 @@
 			var docDraftCompleteCnt = 0; // 각 안의 결재올림 동작이 완료되었을때 카운트를 증가시킨다.
 			
 			var delTabDocIDAry = new Array(); // 반송/회수문서의 재기안 시, 안삭제하는 경우 해당 문서를 삭제하기 위한 정보 배열
+			var lowerSignCnt = 0; //  결재정보 호출 전, 모든 안의 양식을 체크하여 결재서명칸/합의서명칸의 갯수 중 가장 작은 값을 설정하기 위한 변수
+			var lowerSignTab = 0;
+			var lowerHapyuiCnt = 0;
+			var lowerHapyuiTab = 0;
 			
     		// 일괄기안문서를 재기안하는 경우, 기존 문서와 양식 등의 정보를 배열에 부여
     		$(document).ready(function() {
@@ -1208,13 +1212,17 @@
 			        var onlydocinfiview = false;
 			        var parameter = new Array();
 			        
+			        setLowerSignCount(); // 결재칸, 합의칸의 최소값과 각 안번호를 찾아 세팅
+			        
 			        // 현재 선택된 안의 정보를 기반으로 결재정보창을 호출한다. 따라서 내부결재문서, 수신문서 별로 탭이 다르게 나타나게 된다.
 			        // cabinetID나 tempSecurity등의 정보는 모든 안에서 동일하다.
 			        parameter[0] =  pDocIDAry[currentTabIdx];
 			        parameter[1] = pFormID;
-			        parameter[2] = SignCount; // 각 안별로 양식의 결재칸, 합의칸 갯수 등이 다를 수 있다. 이 부분 처리가 필요하다.
+//			        parameter[2] = SignCount; // 각 안별로 양식의 결재칸, 합의칸 갯수 등이 다를 수 있다. 모든 안 중에서 가장 적은 갯수를 전달한다.
+			        parameter[2] = lowerSignCnt;
 			        parameter[3] = SignInfo;
-			        parameter[4] = hapyuiCount; // 일괄기안 시 부서합의 기능을 사용하지 않으며, 개인병렬/순차합의는 사용 가능하다. 부서추가 버튼만 숨겨주자.
+//			        parameter[4] = hapyuiCount; // 일괄기안 시 부서합의 기능을 사용하지 않으며, 개인병렬/순차합의는 사용 가능하다. 부서추가 버튼만 숨겨주자. 모든 안 중에서 가장 적은 갯수를 전달한다.
+			        parameter[4] = lowerHapyuiCnt;
 			        parameter[5] = pDraftFlag;
 			        parameter[6] = pSuSinFlag;
 			        parameter[7] = pChamJoFlag;
@@ -2187,6 +2195,26 @@
 	        	for (var i = 0; i < delTabDocIDAry.length; i++) {
 	        		RemoveDoc(delTabDocIDAry[i], orgCompanyID);
 	        		//delGroupDocInfoByDocID(delTabDocIDAry[i], "ONE");
+	        	}
+	        }
+	        
+	        // 결재정보 호출 전, 모든 안의 양식을 체크하여 결재서명칸/합의서명칸의 갯수 중 가장 작은 값을 설정한다.
+	        function setLowerSignCount() {
+	        	lowerSignCnt = SignCountAry[1];
+	        	lowerSignTab = 1;
+	        	lowerHapyuiCnt = hapyuiCountAry[1];
+	        	lowerHapyuiTab = 1;
+	        	
+	        	for (var i = 1; i <= pDocIDAry.length; i++) {
+	        		if (SignCountAry[i] < lowerSignCnt) {
+	        			lowerSignCnt = SignCountAry[i];
+	        			lowerSignTab = i;
+	        		}
+	        		
+	        		if (hapyuiCountAry[i] < lowerSignCnt) {
+	        			lowerHapyuiCnt = hapyuiCountAry[i];
+	        			lowerHapyuiTab = i;
+	        		}
 	        	}
 	        }
 	        

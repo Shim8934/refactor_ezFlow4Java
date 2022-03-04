@@ -1119,3 +1119,4 @@ var strLangHSBRDa05 = "1案は削除できません。";
 var strLangHSBRDa06 = "現在選択した";
 var strLangHSBRDa07 = "を削除しますか？";
 var strLangHSBRDa08 = "追加された案がありません。<br/> [案追加]を先に実行してください。";
+var strLangHSBRDa09 = "案の";

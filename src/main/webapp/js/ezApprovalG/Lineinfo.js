@@ -3440,11 +3440,19 @@ function CheckLineUser() {
 
     var pAlertContent = "";
     if ((pCurDraft + pCurSign + pCurAprove + pCurDekyul + pCurJunkyul + pCurGamsa) > pSignCount) {
-        pAlertContent = pAlertContent + "" + strLang349 + "" + pSignCount + "" + strLang350 + "<br>";
+    	if (draftAllFlag != undefined && draftAllFlag == "Y") { // 일괄기안의 경우, "N안의 사인칸 수" 정보를 표출
+        	pAlertContent = pAlertContent + opener.lowerSignTab + strLangHSBRDa09 + "" + strLang349 + "" + pSignCount + "" + strLang350 + "<br>";
+        } else {
+        	pAlertContent = pAlertContent + "" + strLang349 + "" + pSignCount + "" + strLang350 + "<br>";
+        }
     }
-
-    if (pCurHapyui > pHapYuiCount) {
-        pAlertContent = pAlertContent + "" + strLang351 + "" + pHapYuiCount + "" + strLang350 + "<br> ";
+    
+	if (pCurHapyui > pHapYuiCount) {
+    	if (draftAllFlag != undefined && draftAllFlag == "Y") {
+    		pAlertContent = pAlertContent + opener.lowerHapyuiTab + strLangHSBRDa09 + strLang351 + "" + pHapYuiCount + "" + strLang350 + "<br> ";
+    	} else {
+    		pAlertContent = pAlertContent + "" + strLang351 + "" + pHapYuiCount + "" + strLang350 + "<br> ";
+    	}
     }
 
     if (pCurAprove >= 1 && (pCurDekyul >= 1 || pCurJunkyul >= 1)) {
