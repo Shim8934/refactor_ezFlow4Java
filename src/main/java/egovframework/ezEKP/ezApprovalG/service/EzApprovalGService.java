@@ -828,4 +828,6 @@ public interface EzApprovalGService {
 	/* 2022-03-02 홍승비 - 현재 문서가 가진 총 의견의 갯수를 체크하여 의견 존재 여부를 리턴 (Y/N) */
 	public String chkOpinionInfoExist(String docID, String orgCompanyID, int tenantID) throws Exception;
 
+    String getFormIdFromApr(String docID, String companyID, int tenantID) throws Exception;
+
 }

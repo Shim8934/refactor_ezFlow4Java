@@ -33723,7 +33723,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_COMPANYID", companyID);
 		
 		List<ApprGFormVO> apprGFormVOList = ezApprovalGDAO.getDraftAllFormInfo(map); 
-
+		
 		logger.debug("getDraftAllFormInfo ended.");
 		return apprGFormVOList;
 	}
@@ -34036,4 +34036,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return result;
 	}
 	
+	public String getFormIdFromApr(String docID, String companyID, int tenantID) throws Exception {
+		logger.debug("getFormIdFromApr started");
+
+		Map<String, Object> map = new HashMap<>();
+		map.put("v_DOCID", docID);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		String formID = ezApprovalGDAO.getFormIdFromApr(map);
+
+		logger.debug("getFormIdFromApr ended. get formID : " + formID);
+
+		return formID;
+	}
 }
