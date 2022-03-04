@@ -5806,7 +5806,12 @@ public class EzEmailUtil {
 						sb.append("<td>");
 							for (Attendee attendee : attendeeList) {
 								String mailto = attendee.getCalAddress().getSchemeSpecificPart().toString();
-								String cn = attendee.getParameter(Parameter.CN).getValue();
+								String cn = mailto;
+										
+								Parameter cnParam = attendee.getParameter(Parameter.CN);
+								if (cnParam != null) {
+									cn = cnParam.getValue();
+								}
 								
 								String spanTmp = String.format("<span title='%s'>%s</span>", mailto, cn);
 								sb.append(spanTmp);

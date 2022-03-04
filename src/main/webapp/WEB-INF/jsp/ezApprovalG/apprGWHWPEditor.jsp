@@ -24,9 +24,15 @@
 		    window.onload = function () {
 		    	if(type == "") {
 		    		HwpCtrl = BuildWebHwpCtrl("hwpctrl", "${webHWPUrl}", function () { Editor_Complete(); });
-		    	} else {
-		    		HwpCtrl = BuildWebHwpCtrl("hwpctrl", "${webHWPUrl}", function () { parent.Editor_Complete2(); });
-	    		}
+				} else if (type = "form") {
+					if(typeof (Editor_Form_Complete) != "undefined") {
+						HwpCtrl = BuildWebHwpCtrl("hwpctrl", "${webHWPUrl}", function () { Editor_Form_Complete(); });
+					} else if(typeof (parent.Editor_Form_Complete) != "undefined") {
+						HwpCtrl = BuildWebHwpCtrl("hwpctrl", "${webHWPUrl}", function () { parent.Editor_Form_Complete(); });
+					}
+				} else {
+					HwpCtrl = BuildWebHwpCtrl("hwpctrl", "${webHWPUrl}", function () { parent.Editor_Complete2(); });
+				}
 	    	}
 		    
 	        function Editor_Complete() {

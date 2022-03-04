@@ -36,8 +36,10 @@
 					return;
 				}
 				
-				var checkPw = type == "shared" ? sharedMailCheckPassword(NewPassword.value) : CheckPassword(NewPassword.value, companyID);
-		        if (!checkPw || checkPw != "OK"){
+				var checkPw = type == "shared" ? sharedMailCheckPassword(NewPassword.value) : 
+					(CheckPassword(NewPassword.value, companyID) == "OK") ? true : false;
+				
+		        if (!checkPw){
 		        	if (checkPw == "ERROR") {
 		        		alert("<spring:message code='ezSystem.ksaPwPolicy34'/>");
 		        	} else {

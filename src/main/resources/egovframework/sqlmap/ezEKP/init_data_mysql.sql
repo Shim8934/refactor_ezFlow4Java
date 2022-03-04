@@ -276,6 +276,9 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useOrgListCheckBox', '조직도 리스트 체크박스 표시', 'NO', '조직도 리스트 체크박스 표시 (메일,주소록) (default:NO)', '2021-11-10 00:00:00', '메일');
 
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'androidAppVersion', 'Mobile App Android Version', '1.0.0', 'Mobile App Android Version', '2021-11-10 00:00:00', '모바일');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'iosAppVersion', 'Mobile App IOS Version', '1.0.0', 'Mobile App IOS Version', '2021-11-10 00:00:00', '모바일');
+
 INSERT INTO TBL_COMPANY_CONFIG (TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE) VALUES (0, 'Top', 'useCopyright', 'NO');
 INSERT INTO TBL_COMPANY_CONFIG (TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE) VALUES (0, 'Top', 'ExpirePassPeriod', '0');
 INSERT INTO TBL_COMPANY_CONFIG (TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE) VALUES (0, 'Top', 'MaxAllowedCountOfLoginFail', '0');
@@ -3026,26 +3029,3 @@ VALUES
 ('112', 2, '상태', 100, NULL, 'STATUS', NULL, NULL, '상태', NULL, 'Status', 'ステータス', 'ステータス', NULL, 0, 'Top'),
 ('112', 3, '일자', 300, NULL, 'STATUSDATE', NULL, NULL, '일자', NULL, 'Date', '日付', '日付', NULL, 0, 'Top');
 
-
--- webfolder trigger
-DELIMITER //
-
-CREATE OR REPLACE TRIGGER update_dept_webfolder_name
-AFTER UPDATE ON tbl_deptmaster
-FOR EACH ROW
-BEGIN
-    IF NEW.displayname != OLD.displayname OR NEW.displayname2 != OLD.displayname2 THEN
-        UPDATE tbl_webfolder_folder SET folder_name1 = NEW.displayname, folder_name2 = NEW.displayname2 WHERE owner_id = NEW.cn AND folder_upper = 'root' AND folder_type IN ('C', 'D');
-    END IF;
-END; //
-
-CREATE OR REPLACE TRIGGER update_user_webfolder_name
-AFTER UPDATE ON tbl_usermaster
-FOR EACH ROW
-BEGIN
-    IF NEW.displayname != OLD.displayname OR NEW.displayname2 != OLD.displayname2 THEN
-        UPDATE tbl_webfolder_folder SET folder_name1 = NEW.displayname, folder_name2 = NEW.displayname2 WHERE owner_id = NEW.cn AND folder_upper = 'root' AND folder_type IN ('U');
-    END IF;
-END; //
-
-DELIMITER ;

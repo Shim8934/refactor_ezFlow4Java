@@ -1239,7 +1239,18 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
 		model.addAttribute("preSusinGroupStr", preSusinGroupStr);
 
-		LOGGER.debug("draftuiWHWP ended");
+		// 2022-03-03 박기범 : 양식파일 경로 추가
+		String formPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "form" + commonUtil.separator;
+
+		if (isTmpDoc != null && !isTmpDoc.isEmpty()) {
+			formPath += ezApprovalGService.getFormIdFromApr(isTmpDoc, userInfo.getCompanyID(), userInfo.getTenantId());
+		} else {
+			formPath += formId;
+		}
+
+		model.addAttribute("formPath", formPath + ".hwp");
+
+		LOGGER.debug("draftuiWHWP ended. formPath:" + formPath);
 		
 		return "ezApprovalG/apprGdraftuiWHWP";
 	}
