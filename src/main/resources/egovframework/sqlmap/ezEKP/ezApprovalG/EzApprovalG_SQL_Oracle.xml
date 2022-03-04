@@ -35309,6 +35309,10 @@
 			TENANT_ID = #v_TENANTID#
 		AND
 			COMPANYID = #v_COMPANYID#
+	<isEqual property="v_MODE" compareValue="ONE">
+		AND
+			DOCID = #v_DOCID#
+	</isEqual>
 	</delete>
 	
 	<!-- 일괄기안 그룹의 임시저장 및 실제 기안 시의 데이터를 구분 (TYPE => APR / TMP) -->

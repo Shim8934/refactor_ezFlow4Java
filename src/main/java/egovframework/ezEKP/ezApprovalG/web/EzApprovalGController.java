@@ -11726,9 +11726,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		int tenantID = userInfo.getTenantId();
 		String orgCompanyID = userInfo.getCompanyID();
 		String docID = request.getParameter("docID"); // 실제 DOCID 또는 임시저장된 DOCSN
+		String mode = request.getParameter("mode"); // 모든 일괄기안 레코드를 삭제 또는 현재 전달된 DOCID에 대한 레코드만 삭제에 대한 모드값 (ALL, ONE)
 		
 		try {
-			ezApprovalGService.delGroupDocInfoByDocID(docID, orgCompanyID, tenantID);
+			ezApprovalGService.delGroupDocInfoByDocID(docID, mode, orgCompanyID, tenantID);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

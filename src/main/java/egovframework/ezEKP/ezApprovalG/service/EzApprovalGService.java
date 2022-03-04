@@ -817,7 +817,7 @@ public interface EzApprovalGService {
 	public void saveAprGroupAndDelTmp(String docID, String tabSN, String newGroupDocSN, String tmpGroupDocSN, String orgCompanyID, int tenantID) throws Exception;
 	
 	/* 2022-02-10 홍승비 - 일괄기안 > 전달받은 DOCID 또는 DOCSN으로 GROUPDOCSN을 찾아 일괄기안그룹 레코드를 삭제하는 삭제 전용 메서드 */
-	public void delGroupDocInfoByDocID(String docID, String orgCompanyID, int tenantID) throws Exception;
+	public void delGroupDocInfoByDocID(String docID, String mode, String orgCompanyID, int tenantID) throws Exception;
 
 	/* 2022-02-11 홍승비 - 일괄기안 > 임시저장문서 또는 재기안문서 가져올 때 수신처 존재여부 체크 */
 	public String getReceiptExists(String docID, String mode, String orgCompanyID, int tenantID) throws Exception;

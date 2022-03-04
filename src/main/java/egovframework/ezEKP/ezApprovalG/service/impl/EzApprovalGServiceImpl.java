@@ -33947,14 +33947,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 	
 	/* 2022-02-10 홍승비 - 일괄기안 > 전달받은 DOCID 또는 DOCSN으로 GROUPDOCSN을 찾아 일괄기안그룹 레코드를 삭제하는 삭제 전용 메서드 */
-	public void delGroupDocInfoByDocID(String docID, String orgCompanyID, int tenantID) throws Exception {
-		logger.debug("delGroupDocInfoByDocID started. docID = " + docID);
+	public void delGroupDocInfoByDocID(String docID, String mode, String orgCompanyID, int tenantID) throws Exception {
+		logger.debug("delGroupDocInfoByDocID started. docID = " + docID + ", mode = " + mode);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		String groupDocSN = getGroupDocSN(docID, tenantID, orgCompanyID);
 		
+		map.put("v_DOCID", docID);
 		map.put("v_GROUPDOCSN", groupDocSN);
+		map.put("v_MODE", mode);
 		map.put("v_TENANTID", tenantID);
 		map.put("v_COMPANYID", orgCompanyID);
 		

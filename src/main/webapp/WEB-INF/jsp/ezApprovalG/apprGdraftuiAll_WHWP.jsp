@@ -312,6 +312,8 @@
     		
 			var docDraftCompleteCnt = 0; // 각 안의 결재올림 동작이 완료되었을때 카운트를 증가시킨다.
 			
+			var delTabDocIDAry = new Array(); // 반송/회수문서의 재기안 시, 안삭제하는 경우 해당 문서를 삭제하기 위한 정보 배열
+			
     		// 일괄기안문서를 재기안하는 경우, 기존 문서와 양식 등의 정보를 배열에 부여
     		$(document).ready(function() {
                 pDraftFlag = DraftFlag; // 모든 문서 공통이므로 ready 시 바로 부여
@@ -688,7 +690,7 @@
 	                            return false;
 	                        }
 	*/
-	                        if (LastSignSN == 1 || DraftLastFlag) {
+	                        if (LastSignSN == 1 || DraftLastFlag) { // 기안자 = 최종결재자
 	                        	/*
 	                            RtnVal = ExcuteInfo("DOCNUM_END");
 	                            if (!RtnVal) {
@@ -697,6 +699,11 @@
 	                            */
 	                            docDraftCompleteCnt ++; // 각 안의 기안이 정상적으로 완료된 경우, 전역변수 카운트 증가
 	                            
+	                            // 최종 안까지 전부 기안완료된 경우 안삭제된 문서를 삭제
+								if (docDraftCompleteCnt == docMaxTabNumForDraft && pDraftFlag == "REDRAFT" && ListType != "21") {
+									removeDelTabDoc();
+								}
+	                            
 	                            // 내부결재 완료 후 각 안 별 수신처로 알림메일을 보낸다.
 								Gyuljedate = GetDocInfoDataForDraftAll("END", "STARTDATE", i);
 								SendMailToReceiveDept(pDocTitleAry[i], arr_userinfo[2], Gyuljedate, pDocIDAry[i]);
@@ -704,8 +711,14 @@
 	                        else {
 								docDraftCompleteCnt ++; // 각 안의 기안이 정상적으로 완료된 경우, 전역변수 카운트 증가
 		                        
-		                        // 일괄기안과 기결재통과기능 함께 사용 못함, 최종 안까지 전부 기안완료된 경우 한번만 메일발송 진행 (데이터는 1안 기준)
+		                        // 일괄기안과 기결재통과기능 함께 사용 못함, 최종 안까지 전부 기안완료된 경우 한번만 메일발송 진행 (데이터는 1안 기준) + 안삭제된 문서를 삭제
 								if (docDraftCompleteCnt == docMaxTabNumForDraft) {
+									// 최종 안까지 전부 기안완료된 경우 안삭제된 문서를 삭제
+									if (pDraftFlag == "REDRAFT" && ListType != "21") {
+										removeDelTabDoc();
+									}
+									
+									// 메일발송
 									Gyuljedate = GetDocInfoDataForDraftAll("APR", "STARTDATE", i);
 		                            CurrentAprType = "001";
 			                        CurrentAprUserID = pUserID;
@@ -2142,6 +2155,7 @@
 	        // 안 삭제 시, 배열 데이터도 제거 (아예 배열 길이가 줄어들게 됨)
 	        function deleteAnAry(idx) { // (1안부터 시작) 안별 idx
 	        	idx = parseInt(idx);
+	        	delTabDocIDAry.push(pDocIDAry[idx]); // 안삭제 시, DB상에서도 삭제할 문서의 DOCID를 배열에 저장
 	        
 	        	pDocIDAry = pDocIDAry.slice(0, idx).concat(pDocIDAry.slice(idx + 1)); // 문서ID
 	        	newpDocIDAry = newpDocIDAry.slice(0, idx).concat(newpDocIDAry.slice(idx + 1)); // 임시저장 반복 시, 새로 부여되는 문서ID
@@ -2165,6 +2179,15 @@
 				btnReceivLineEnableAry = btnReceivLineEnableAry.slice(0, idx).concat(btnReceivLineEnableAry.slice(idx + 1)); // 수신처 존재 여부
 				SummaryOuterReceiverListAry = SummaryOuterReceiverListAry.slice(0, idx).concat(SummaryOuterReceiverListAry.slice(idx + 1)); // 외부수신자 리스트
 				fileOpenFlagListArr = fileOpenFlagListArr.slice(0, idx).concat(fileOpenFlagListArr.slice(idx + 1)); // 첨부파일 공개여부 플래그
+	        }
+	        
+	        // 반송 및 회수된 문서를 재기안하는 경우, 안삭제 -> 결재올림 완료 시 안삭제된 문서는 실제로 삭제한다. 
+	        // 기존 일괄기안그룹 데이터는 결재올림 시 saveAprGroupAndDelTmp()함수로 자동 제거되며, 전체적으로 새롭게 삽입된다.
+	        function removeDelTabDoc() {
+	        	for (var i = 0; i < delTabDocIDAry.length; i++) {
+	        		RemoveDoc(delTabDocIDAry[i], orgCompanyID);
+	        		//delGroupDocInfoByDocID(delTabDocIDAry[i], "ONE");
+	        	}
 	        }
 	        
 	    </script>

@@ -2091,3 +2091,28 @@ function chkOpinionInfoExist(currIdx) {
 	return res;
 }
 
+// 반송 및 회수된 문서를 재기안하는 경우, 안삭제 -> 결재올림 완료 시 안삭제된 문서는 실제로 삭제한다.
+function RemoveDoc(pDocID, orgCompanyID) {
+	var result = "";
+	
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/delDocInfo.do",
+		data : {
+				docID : pDocID,
+				field  : "MUST",
+				orgCompanyID : orgCompanyID 
+				},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+    
+    if (result == "FALSE") {
+        var pAlertContent = strLang872;
+        OpenAlertUI(pAlertContent);
+        //return;
+    }
+}
