@@ -5726,7 +5726,9 @@ public class EzEmailUtil {
     	Part rePart = null;
     	
     	try {
-    		if(part.isMimeType("multipart/alternative")){
+    		logger.debug("getIcalMailPart:{}", part.getContentType());
+    		
+    		if(part.isMimeType("multipart/alternative") || part.isMimeType("multipart/MIXED")){
     			Multipart mp = (Multipart)part.getContent();
     			int count = mp.getCount();
     			Part p = null;
