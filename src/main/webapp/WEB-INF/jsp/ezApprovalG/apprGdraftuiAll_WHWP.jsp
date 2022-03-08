@@ -406,10 +406,11 @@
 		    }
 		    
 			// 부모단에서 실제로 호출되는 부분은 없는 듯 하다. getDraftUserInfo()와 SetAutoPropertyValue()함수 모두 자식 iframe으로 이동시켰음
+			/*
 			function setAutoProperty() {
 			    getDraftUserInfo();
 			    SetAutoPropertyValue();
-			}
+			}*/
 	
 			function btnSelForm_onclick() {
 /* 				if(nonElecRec == "Y") {
@@ -634,6 +635,9 @@
                 	delOpinionInfoForDraftAll(currIdx);
                 	pHasOpinionYNAry[currIdx] = chkOpinionInfoExist(currIdx); // 의견삭제 후 의견갯수 카운트하여 플래그 변경
                 }
+                
+                // 각 안의 문서번호를 재설정한다. (기산일에 따라 년도 등을 재설정)
+                currIfrm.contentWindow.UpdateDocNum();
                 
                 // 각 결재문서 안별로 사전 체크 동작이 전부 완료된 경우, 암호체크와 서명동작을 단 한번만 실행시키도록 한다.
                 docDraftInfoChkCnt ++; // 각 안별로 모든 결재정보 체크가 정상적으로 완료되었음 -> 카운트 하나 증가

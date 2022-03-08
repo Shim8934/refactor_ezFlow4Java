@@ -11835,4 +11835,29 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return result;
 	}
 	
+	/**
+	 * 2022-03-08 홍승비 - 양식ID로 양식을 찾아 문서번호의 포맷을 문자열로 리턴하는 메서드 (.hwp 파일 전용)
+	 */
+	@RequestMapping(value = "/ezApprovalG/getDocNumFormatByFormID.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	public String getDocNumFormatByFormID(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
+		logger.debug("getDocNumFormatByFormID started.");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		int tenantID = userInfo.getTenantId();
+		String formID = request.getParameter("formID");
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String realPath = commonUtil.getRealPath(request);
+		String result = "";
+		
+		try {
+			result = ezApprovalGService.getHWPDocNumFormatByFormID(formID, realPath, orgCompanyID, tenantID);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("getDocNumFormatByFormID ended, result = " + result);
+		return result;
+	}
+	
 }

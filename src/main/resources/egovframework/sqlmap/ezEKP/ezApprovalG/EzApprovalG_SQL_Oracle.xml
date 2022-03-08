@@ -35110,6 +35110,8 @@
 	</isNotEmpty>
 		AND
 			TBL_FORMINFO.FORMDRAFTALLFLAG = 'Y'
+		ORDER BY
+			FORMORDER
     </select>
     
     <!-- 일괄기안 > 1안 이후 안 추가 시 결재선, 첨부, 원문공개정보 등을 복사 -->

@@ -1460,60 +1460,79 @@ function SaveDraftDocInfo_ilban(pState, currIdx)
   }
 }
 
-function setDocNumFormat(pPrefix)
-{
-	var Arr_Header = new Array()
-	var Header, Tail
-	var i
-	var d = new Date();
-		
+// 문서번호 리턴 부분은 getDocNumByFormat() 함수로 분리
+function setDocNumFormat(pPrefix) {
 	var numHeader = "";
 	
 	// 임시보관함에서는 안추가를 허용하므로, 분기 추가 (addFlag값이 true인 경우에만 추가적인 안추가로 체크)
-	if (pDraftFlag == "REDRAFT" && ((ListType != "21" && parent.addFlag == false))) {
+	if (pDraftFlag == "REDRAFT" && (ListType != "21" && parent.addFlag == false)) {
 		return;
 	}
-		
+	
 	if (!FieldExist(pPrefix + "docnumber")) {
 		return; 
 	}
 
-	//var fieldValue = getNodeText(DocumentInfo.getElementsByTagName("SUBJECT").item(0));
-	var fieldValue = GetFieldText(pPrefix + "docnumber");
-	Arr_Header = fieldValue.split("@")
-	    
-	for (i=1; i<Arr_Header.length; i++) {
+	var fieldValue = GetFieldText(pPrefix + "docnumber"); // 문서번호 필드의 문서번호 포맷
+	
+	numHeader = getDocNumByFormat(fieldValue);
+	
+	PutFieldText(pPrefix + "docnumber", numHeader);
+	
+	if (numHeader.indexOf(strLang107) > 0) {}
+	
+    if (FieldExist("receiptnumber")) {
+        if (GetFieldText("receiptnumber") != "") {
+        	SetDocumentElementForDraftAll("receiptnumber", GetFieldText("receiptnumber"));
+        }
+
+        PutFieldText("receiptnumber", "");
+    }
+}
+
+// 문서번호만 별도로 리턴하기 위한 함수 분리 파트
+function getDocNumByFormat(format) {
+	var Arr_Header = new Array();
+	var numHeader = "";
+	var Header, Tail;
+	var i;
+	var d = new Date();
+		
+	Arr_Header = format.split("@");
+    
+	for (i = 1; i < Arr_Header.length; i++) {
 		Header = Arr_Header[i].substr(0,2);
-		Tail   = Arr_Header[i].substr(2);
-				
-		switch(Header)
-		{
+		Tail = Arr_Header[i].substr(2);
+		
+		switch(Header) {
 			case "DP":
 				numHeader = numHeader + DeptSymbol + Tail;
 				break;			
 
 			case "dp":
-				numHeader = numHeader + DeptSymbol + Tail 
+				numHeader = numHeader + DeptSymbol + Tail;
 				break;
 
 			//2021-01-28 문서번호의 년도가 제대로 출력되지 않는 부분 해결
 			case "YY":
-				numHeader = numHeader + d.getFullYear() + Tail
+				numHeader = numHeader + d.getFullYear() + Tail;
 				break;
 
 			case "yy":
-				var yyear = d.getYear()
-				numHeader = numHeader + yyear.toString().substr(2) + Tail
+				var yyear = d.getYear();
+				numHeader = numHeader + yyear.toString().substr(2) + Tail;
 				break;
 
 			case "MM":
-				var mmonth = d.getMonth() + 1
-				if(parseInt(mmonth) < 10) mmonth = "0" + mmonth;
-					numHeader = numHeader + mmonth + Tail
+				var mmonth = d.getMonth() + 1;
+				if (parseInt(mmonth) < 10) {
+					mmonth = "0" + mmonth;
+				}
+				numHeader = numHeader + mmonth + Tail;
 				break;
 
 			case "mm":
-				numHeader = numHeader + (d.getMonth() + 1) + Tail
+				numHeader = numHeader + (d.getMonth() + 1) + Tail;
 				break;
 
 			case "NN":
@@ -1527,21 +1546,12 @@ function setDocNumFormat(pPrefix)
 				break;
 
 			default:
-				numHeader = numHeader + fieldValue;
+				numHeader = numHeader + format;
 				break;
 		}
 	}
-			
-	PutFieldText(pPrefix + "docnumber", numHeader);
-	if (numHeader.indexOf(strLang107) > 0) {}
 	
-    if (FieldExist("receiptnumber")) {
-        if (GetFieldText("receiptnumber") != "") {
-        	SetDocumentElementForDraftAll("receiptnumber", GetFieldText("receiptnumber"));
-        }
-
-        PutFieldText("receiptnumber", "");
-    }
+	return numHeader;
 }
 
 // 부모창에서 각 자식프레임에 접근해 호출하므로 docID 전달 시 배열을 사용
@@ -2101,11 +2111,11 @@ function RemoveDoc(pDocID, orgCompanyID) {
 		async : false,
 		url : "/ezApprovalG/delDocInfo.do",
 		data : {
-				docID : pDocID,
-				field  : "MUST",
-				orgCompanyID : orgCompanyID 
-				},
-		success: function(xml){
+			docID : pDocID,
+			field  : "MUST",
+			orgCompanyID : orgCompanyID 
+		},
+		success: function(xml) {
 			result = xml;
 		}        			
 	});
@@ -2115,4 +2125,25 @@ function RemoveDoc(pDocID, orgCompanyID) {
         OpenAlertUI(pAlertContent);
         //return;
     }
+}
+
+// 양식ID를 전달하면 해당 양식의 문서번호 포맷을 문자열로 리턴하는 함수
+function getDocNumFormatByFormID(pFormID, orgCompanyID) {
+	var result = "";
+	
+    $.ajax({
+		type : "GET",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getDocNumFormatByFormID.do",
+		data : {
+			formID : pFormID,
+			orgCompanyID : orgCompanyID 
+		},
+		success: function(text) {
+			result = text;
+		}
+	});
+    
+    return result;
 }

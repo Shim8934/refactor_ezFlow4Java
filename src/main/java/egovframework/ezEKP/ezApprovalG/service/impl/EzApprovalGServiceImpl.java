@@ -2410,7 +2410,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         //hwp일 경우 대장등록전 문서에 새로운 문서번호 박아주기 | 2019-02-22 천성준 - mht일 경우 추가
         if (docNo != null && !docNo.trim().equals("")) {
         	String docFilePath = dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false).substring(0,4) + commonUtil.separator + getDocDir(newDocID) + commonUtil.separator + newDocID + "." + extFileName;
-
         	if (extFileName.equals("hwp")) {
 		        HWPFile hwpFile = HWPReader.fromFile(docFilePath);
 		        setHwpText("docnumber", docNo, hwpFile);
@@ -6581,7 +6580,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			
 			formURL = realPath + fileForder1;
-			
 			//한글파일 리더
 			HWPFile hwpFile = HWPReader.fromFile(formURL);
 			
@@ -34051,4 +34049,19 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 		return formID;
 	}
+	
+	/* 2022-03-08 홍승비 - 한글 전자결재 양식파일을 읽어 문서번호 필드의 포맷을 리턴 */
+	public String getHWPDocNumFormatByFormID(String formID, String realPath, String orgCompanyID, int tenantID) throws Exception {
+		logger.debug("getHWPDocNumFormatByFormID started");
+		
+		String result = "";
+		String formPath = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + orgCompanyID + commonUtil.separator + "form" + commonUtil.separator + formID + ".hwp";
+		HWPFile hwpFile = HWPReader.fromFile(realPath + formPath);
+		
+		result = getHwpText("docnumber", hwpFile);
+		
+		logger.debug("getHWPDocNumFormatByFormID ended");
+		return result;
+	}
+	
 }

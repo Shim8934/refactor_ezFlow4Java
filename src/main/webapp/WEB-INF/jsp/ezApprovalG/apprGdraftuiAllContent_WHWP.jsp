@@ -891,6 +891,20 @@
 			        }
 			    }
 			}
+	        
+	        // 재기안 > 결재올림 시, 각 안의 문서번호 재설정 함수를 호출하는 함수
+			function UpdateDocNum() {
+				if (!FieldExist("docnumber")) {
+					console.log("hwpContent hasn't a docnumber field");
+					return false;
+				}
+				
+				// ajax로 현재 문서의 docnumber 형식을 리턴
+				var numberFormat = "";
+				numberFormat = getDocNumFormatByFormID(parent.pFormIDAry[frameNum], orgCompanyID);
+				
+				PutFieldText("docnumber", getDocNumByFormat(numberFormat));
+			}
 			 
 	    </script>
 	</head>

@@ -830,4 +830,7 @@ public interface EzApprovalGService {
 
     String getFormIdFromApr(String docID, String companyID, int tenantID) throws Exception;
 
+    /* 2022-03-08 홍승비 - 한글 전자결재 양식파일을 읽어 문서번호 필드의 포맷을 리턴 */
+	public String getHWPDocNumFormatByFormID(String formID, String realPath, String orgCompanyID, int tenantID) throws Exception;
+
 }
