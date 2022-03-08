@@ -1515,11 +1515,11 @@ function getDocNumByFormat(format) {
 
 			//2021-01-28 문서번호의 년도가 제대로 출력되지 않는 부분 해결
 			case "YY":
-				numHeader = numHeader + d.getFullYear() + Tail;
+				numHeader = numHeader + getAccountingYear() + Tail;
 				break;
 
 			case "yy":
-				var yyear = d.getYear();
+				var yyear = getAccountingYear();
 				numHeader = numHeader + yyear.toString().substr(2) + Tail;
 				break;
 
