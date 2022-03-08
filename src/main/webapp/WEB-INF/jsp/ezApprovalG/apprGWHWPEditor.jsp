@@ -25,13 +25,9 @@
 		    	if(type == "") {
 		    		HwpCtrl = BuildWebHwpCtrl("hwpctrl", "${webHWPUrl}", function () { Editor_Complete(); });
 				} else if (type == "form") {
-					if(typeof (Editor_Form_Complete) != "undefined") {
-						HwpCtrl = BuildWebHwpCtrl("hwpctrl", "${webHWPUrl}", function () { Editor_Form_Complete(); });
-					} else if(typeof (parent.Editor_Form_Complete) != "undefined") {
-						HwpCtrl = BuildWebHwpCtrl("hwpctrl", "${webHWPUrl}", function () { parent.Editor_Form_Complete(); });
-					}
+					HwpCtrl = BuildWebHwpCtrl("hwpctrl", "${webHWPUrl}", function () { Editor_Form_Complete(); });
 				} else {
-					HwpCtrl = BuildWebHwpCtrl("hwpctrl", "${webHWPUrl}", function () { parent.Editor_Complete2(); });
+					HwpCtrl = BuildWebHwpCtrl("hwpctrl", "${webHWPUrl}", function () { Editor_Complete2(); });
 				}
 	    	}
 		    
@@ -48,7 +44,43 @@
                        setTimeout(Editor_Complete, 100);
          	      }
            }
-		
+
+			function Editor_Form_Complete() {
+				if (typeof (parent.Editor_Form_Complete) != "undefined") {
+					parent.Editor_Form_Complete()
+				} else {
+
+					if (typeof (parent.Editor_Form_Complete) != "undefined") {
+						parent.Editor_Form_Complete();
+					}
+					else
+						setTimeout(Editor_Form_Complete, 100);
+				}
+			}
+
+			var ec2Count = 0
+			function Editor_Complete2() {
+				if (isLoadedEditor1) {
+					parent.Editor_Complete2()
+				} else {
+					if (isLoadedEditor1) {
+						parent.Editor_Complete2();
+					}
+					else
+					if(ec2Count > 100) {
+						console.log("재기안창 호출 실패");
+						return false;
+					}
+
+					setTimeout(Editor_Complete2, 100);
+					ec2Count++;
+				}
+			}
+
+			function isLoadedEditor1() {
+				return parent.Editor_Complete2 && parent.message.FieldExist && parent.message.FieldExist("doctitle") && parent.message.FieldExist("body");
+			}
+
 	        function Open(url, format, type, callback, name) {
 	            return HwpCtrl.Open(url, format, type, callback, name);
 	        }
