@@ -706,6 +706,8 @@ function setData(pobjXml, currTD) {
 }
 
 function removeEmptyTextNodes(node) {
+    if(typeof node == "undefined" || typeof node.childNodes == "undefined") return false;
+
     var cn = node.childNodes
     var arr = [];
 
