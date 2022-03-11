@@ -319,7 +319,7 @@
 			            } else if (xmlHTTP.responseText == "CHKERROR") {    
 			                alert("<spring:message code='ezPersonal.t946'/>");
 			            } else if (xmlHTTP.responseText == "PREVERROR") {    
-			                alert("<spring:message code='ezOrgan.ls01'/>"); // 2021-10-26 이사라 : 최근사용 비밀번호는 사용할 수 없는 로직 추가
+			                alert("<spring:message code='ezOrgan.ls001'/>"); // 2021-10-26 이사라 : 최근사용 비밀번호는 사용할 수 없는 로직 추가
 				        } else {
 				            alert("<spring:message code='ezPersonal.t198'/>");
 				        }
