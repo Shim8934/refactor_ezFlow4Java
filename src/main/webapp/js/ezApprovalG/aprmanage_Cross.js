@@ -2162,7 +2162,7 @@ function setbuttonenable() {
                 if (pListTypeValue == "11") {
                 	document.getElementById("tbtnApprove1").style.display = "none";
                 } else {
-                	document.getElementById("tbtnApprove1").style.display = "";
+//                	document.getElementById("tbtnApprove1").style.display = "";
                 }
                 //document.getElementById("tbtnApproveALL").style.display = "";
 
