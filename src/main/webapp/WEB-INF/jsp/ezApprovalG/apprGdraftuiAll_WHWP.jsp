@@ -1647,8 +1647,12 @@
 	    		}
 	    		
 	    		var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(formHref);
-                iframe.contentWindow.Open(URL, "", "", function (res) {iframe.contentWindow.FieldsAvailable(res.result);}, null);
+                iframe.contentWindow.Open(URL, "", "", function (res) {iframe.contentWindow.FieldsAvailable(res.result);Editor_focus(iframeID);}, null);
 	    	}
+	    	
+ 	    	function Editor_focus(iframeID){
+ 	    		document.getElementById(iframeID).contentDocument.getElementById("hwpctrl_frame").contentDocument.getElementById("ImeWrapper_Elm").focus();
+ 	    	}
 	    	
  	    	function Editor_Complete2() {
 	            setTimeout("Insert_ReUse_Content();", 1000);
@@ -2061,6 +2065,13 @@
 	            // 선택한 안의 첨부파일정보를 표출
 	            document.getElementById("attachFileTR").style.display = ""; // 숨겨둔 첨부파일영역 표출
 	            setAttachInfo(pDocIDAry[objNum], "APR", lstAttachLink);
+                tmp = document.getElementById("ifrm" + objNum).contentDocument.getElementById("hwpctrl_frame");
+                if(tmp){
+	                tmpVal = tmp.style.height;
+	                tmp.style.height = "100%";
+	                setTimeout(function(){tmp.style.height = tmpVal;},100);
+	                tmp.contentDocument.getElementById("ImeWrapper_Elm").focus();
+                }
 	        }
 	        
 	        // 안 추가 이후 부모창 배열에 해당 안의 정보를 저장 (안 별도로 관리하는 파라미터만 배열 사용, 나머지 파라미터는 공통 사용)
