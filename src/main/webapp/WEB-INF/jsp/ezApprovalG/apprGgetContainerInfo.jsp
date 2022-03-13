@@ -688,9 +688,10 @@
 		                
 		                if (isExtYN.toUpperCase() == "Y") {
 		                    var url = "/ezApprovalG/ezReceiptHistoryInfo.do?docID=" + DocID + "&deptID=" + encodeURI(tr.getAttribute("DATA1"));
-		                    var feature = "status:no;dialogWidth:555px;dialogHeight:240px;help:no;scroll:no;edge:sunken";
-		                    feature = feature + GetShowModalPosition(555, 240);
-		                    var ret = window.showModalDialog(url, "", feature);
+// 		                    var feature = "status:no;dialogWidth:555px;dialogHeight:240px;help:no;scroll:no;edge:sunken";
+// 		                    feature = feature + GetShowModalPosition(555, 240);
+// 		                    var ret = window.showModalDialog(url, "", feature);
+		                    var ret = window.open(url, "", "height=300px,width=855px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		                } else {
 		                	left = (parseInt(width) - 1155) / 2;
 					        top = (parseInt(heigth) - 460) / 2;

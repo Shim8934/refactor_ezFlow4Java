@@ -6833,6 +6833,11 @@
 				TBL_CABINETCLASS.COMPANYID = #companyID#
 		AND
 				TBL_MYTASKCODE.DEPTID = #v_DEPTID#
+		AND 
+			NOT (TO_CHAR(SYSDATE, 'YYYY') > TBL_CABINETCLASS.EXPIRATIONYEAR 
+				AND TO_NUMBER(TO_CHAR(SYSDATE, 'MM')) > (SELECT NAME FROM TBL_CODELIST 
+										WHERE CODE1 = 'A30' AND CODE2 = '003' AND COMPANYID = #companyID# AND TENANT_ID = #v_TENANTID#))				
+				
 <!-- 오라클에서 varchar 정렬이 안되기때문에 임시로 주석처리 -->
 <!-- 		ORDER BY 
 				TBL_CABINETCLASS.Title   -->
@@ -6906,6 +6911,10 @@
 				TBL_CABINETCLASS.COMPANYID = #companyID#
 			AND
 				TBL_MYTASKCODE.DEPTID = #v_DEPTID#
+			AND 
+				NOT (TO_CHAR(SYSDATE, 'YYYY') > TBL_CABINETCLASS.EXPIRATIONYEAR 
+					AND TO_NUMBER(TO_CHAR(SYSDATE, 'MM')) > (SELECT NAME FROM TBL_CODELIST 
+											WHERE CODE1 = 'A30' AND CODE2 = '003' AND COMPANYID = #companyID# AND TENANT_ID = #v_TENANTID#))				
 			<!-- ORDER BY 
 				TBL_CABINETCLASS.Title  -->
 		</isNotEmpty>		
@@ -35037,7 +35046,7 @@
 	</insert>
 	
 	<select id ="EzApprovalG.getReceiptHistoryInfo" parameterClass="Map" resultClass="HashMap" >
-		SELECT RECEIPTDEPTNAME, RECEIPTDEPTNAME2, STATUSDATE, 
+		SELECT DISTINCT RECEIPTPOINTNAME AS RECEIPTDEPTNAME, RECEIPTPOINTNAME2 AS RECEIPTDEPTNAME2, STATUSDATE,  
 			CASE WHEN STATUS = 'A' THEN '도착'
 			WHEN STATUS = 'C' THEN '시스템삭제'
 			WHEN STATUS = 'E' THEN '전송실패' 
@@ -35053,6 +35062,8 @@
 		FROM TBL_HISTORYRECEIPTINFO
 		LEFT JOIN TBL_APRDOCINFO 
 		ON TBL_HISTORYRECEIPTINFO.DOCID = TBL_APRDOCINFO.DOCID  
+		LEFT JOIN TBL_ENDRECEIPTPOINTINFO 
+		ON TBL_HISTORYRECEIPTINFO.RECEIPTDEPTID = TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTID
 		WHERE    	
             (TBL_HISTORYRECEIPTINFO.DOCID = #v_DOCID# OR TBL_APRDOCINFO.ORGDOCID = #v_DOCID#) 
             AND RECEIPTDEPTID = #v_DEPTID#
@@ -35099,6 +35110,8 @@
 	</isNotEmpty>
 		AND
 			TBL_FORMINFO.FORMDRAFTALLFLAG = 'Y'
+		ORDER BY
+			FORMORDER
     </select>
     
     <!-- 일괄기안 > 1안 이후 안 추가 시 결재선, 첨부, 원문공개정보 등을 복사 -->
@@ -35298,6 +35311,10 @@
 			TENANT_ID = #v_TENANTID#
 		AND
 			COMPANYID = #v_COMPANYID#
+	<isEqual property="v_MODE" compareValue="ONE">
+		AND
+			DOCID = #v_DOCID#
+	</isEqual>
 	</delete>
 	
 	<!-- 일괄기안 그룹의 임시저장 및 실제 기안 시의 데이터를 구분 (TYPE => APR / TMP) -->
@@ -35523,4 +35540,17 @@
 			COMPANYID = #v_COMPANYID#
 	</select>
 	  
+    <select id="EzApprovalG.getFormIdFromApr" parameterClass="Map" resultClass="String">
+        SELECT
+            FORMID
+        FROM
+            TBL_APRDOCINFO
+        WHERE
+            DOCID = #v_DOCID#
+          AND
+            TENANT_ID = #v_TENANTID#
+          AND
+            COMPANYID = #v_COMPANYID#
+    </select>
+    
 </sqlMap>

@@ -3206,14 +3206,16 @@ function getGroupDocListByDocID(pDocID) {
 }
 
 /* 2022-02-10 홍승비 - 일괄기안된 문서 삭제 전용 ajax 함수 (전달받은 docID 또는 임시저장 docSN으로 GROUPDOCSN을 찾아, 일치하는 레코드를 전부 삭제) */
-function delGroupDocInfoByDocID(pDocID) {
+// mode에 따라 모든 일괄기안 레코드를 삭제할지, 현재 전달된 DOCID에 대한 레코드만 삭제할지 모드값 추가 (ALL, ONE)
+function delGroupDocInfoByDocID(pDocID, pMode) {
 	$.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/delGroupDocInfoByDocID.do",
 		data : {
-			docID : pDocID
+			docID : pDocID,
+			mode : pMode
 		},
 		success: function(text){},
 		error : function(e) {

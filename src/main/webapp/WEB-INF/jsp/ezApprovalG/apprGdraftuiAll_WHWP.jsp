@@ -312,6 +312,12 @@
     		
 			var docDraftCompleteCnt = 0; // 각 안의 결재올림 동작이 완료되었을때 카운트를 증가시킨다.
 			
+			var delTabDocIDAry = new Array(); // 반송/회수문서의 재기안 시, 안삭제하는 경우 해당 문서를 삭제하기 위한 정보 배열
+			var lowerSignCnt = 0; //  결재정보 호출 전, 모든 안의 양식을 체크하여 결재서명칸/합의서명칸의 갯수 중 가장 작은 값을 설정하기 위한 변수
+			var lowerSignTab = 0;
+			var lowerHapyuiCnt = 0;
+			var lowerHapyuiTab = 0;
+			
     		// 일괄기안문서를 재기안하는 경우, 기존 문서와 양식 등의 정보를 배열에 부여
     		$(document).ready(function() {
                 pDraftFlag = DraftFlag; // 모든 문서 공통이므로 ready 시 바로 부여
@@ -400,10 +406,11 @@
 		    }
 		    
 			// 부모단에서 실제로 호출되는 부분은 없는 듯 하다. getDraftUserInfo()와 SetAutoPropertyValue()함수 모두 자식 iframe으로 이동시켰음
+			/*
 			function setAutoProperty() {
 			    getDraftUserInfo();
 			    SetAutoPropertyValue();
-			}
+			}*/
 	
 			function btnSelForm_onclick() {
 /* 				if(nonElecRec == "Y") {
@@ -629,6 +636,9 @@
                 	pHasOpinionYNAry[currIdx] = chkOpinionInfoExist(currIdx); // 의견삭제 후 의견갯수 카운트하여 플래그 변경
                 }
                 
+                // 각 안의 문서번호를 재설정한다. (기산일에 따라 년도 등을 재설정)
+                currIfrm.contentWindow.UpdateDocNum();
+                
                 // 각 결재문서 안별로 사전 체크 동작이 전부 완료된 경우, 암호체크와 서명동작을 단 한번만 실행시키도록 한다.
                 docDraftInfoChkCnt ++; // 각 안별로 모든 결재정보 체크가 정상적으로 완료되었음 -> 카운트 하나 증가
 
@@ -688,7 +698,7 @@
 	                            return false;
 	                        }
 	*/
-	                        if (LastSignSN == 1 || DraftLastFlag) {
+	                        if (LastSignSN == 1 || DraftLastFlag) { // 기안자 = 최종결재자
 	                        	/*
 	                            RtnVal = ExcuteInfo("DOCNUM_END");
 	                            if (!RtnVal) {
@@ -697,6 +707,11 @@
 	                            */
 	                            docDraftCompleteCnt ++; // 각 안의 기안이 정상적으로 완료된 경우, 전역변수 카운트 증가
 	                            
+	                            // 최종 안까지 전부 기안완료된 경우 안삭제된 문서를 삭제
+								if (docDraftCompleteCnt == docMaxTabNumForDraft && pDraftFlag == "REDRAFT" && ListType != "21") {
+									removeDelTabDoc();
+								}
+	                            
 	                            // 내부결재 완료 후 각 안 별 수신처로 알림메일을 보낸다.
 								Gyuljedate = GetDocInfoDataForDraftAll("END", "STARTDATE", i);
 								SendMailToReceiveDept(pDocTitleAry[i], arr_userinfo[2], Gyuljedate, pDocIDAry[i]);
@@ -704,8 +719,14 @@
 	                        else {
 								docDraftCompleteCnt ++; // 각 안의 기안이 정상적으로 완료된 경우, 전역변수 카운트 증가
 		                        
-		                        // 일괄기안과 기결재통과기능 함께 사용 못함, 최종 안까지 전부 기안완료된 경우 한번만 메일발송 진행 (데이터는 1안 기준)
+		                        // 일괄기안과 기결재통과기능 함께 사용 못함, 최종 안까지 전부 기안완료된 경우 한번만 메일발송 진행 (데이터는 1안 기준) + 안삭제된 문서를 삭제
 								if (docDraftCompleteCnt == docMaxTabNumForDraft) {
+									// 최종 안까지 전부 기안완료된 경우 안삭제된 문서를 삭제
+									if (pDraftFlag == "REDRAFT" && ListType != "21") {
+										removeDelTabDoc();
+									}
+									
+									// 메일발송
 									Gyuljedate = GetDocInfoDataForDraftAll("APR", "STARTDATE", i);
 		                            CurrentAprType = "001";
 			                        CurrentAprUserID = pUserID;
@@ -1195,13 +1216,17 @@
 			        var onlydocinfiview = false;
 			        var parameter = new Array();
 			        
+			        setLowerSignCount(); // 결재칸, 합의칸의 최소값과 각 안번호를 찾아 세팅
+			        
 			        // 현재 선택된 안의 정보를 기반으로 결재정보창을 호출한다. 따라서 내부결재문서, 수신문서 별로 탭이 다르게 나타나게 된다.
 			        // cabinetID나 tempSecurity등의 정보는 모든 안에서 동일하다.
 			        parameter[0] =  pDocIDAry[currentTabIdx];
 			        parameter[1] = pFormID;
-			        parameter[2] = SignCount; // 각 안별로 양식의 결재칸, 합의칸 갯수 등이 다를 수 있다. 이 부분 처리가 필요하다.
+//			        parameter[2] = SignCount; // 각 안별로 양식의 결재칸, 합의칸 갯수 등이 다를 수 있다. 모든 안 중에서 가장 적은 갯수를 전달한다.
+			        parameter[2] = lowerSignCnt;
 			        parameter[3] = SignInfo;
-			        parameter[4] = hapyuiCount; // 일괄기안 시 부서합의 기능을 사용하지 않으며, 개인병렬/순차합의는 사용 가능하다. 부서추가 버튼만 숨겨주자.
+//			        parameter[4] = hapyuiCount; // 일괄기안 시 부서합의 기능을 사용하지 않으며, 개인병렬/순차합의는 사용 가능하다. 부서추가 버튼만 숨겨주자. 모든 안 중에서 가장 적은 갯수를 전달한다.
+			        parameter[4] = lowerHapyuiCnt;
 			        parameter[5] = pDraftFlag;
 			        parameter[6] = pSuSinFlag;
 			        parameter[7] = pChamJoFlag;
@@ -2153,6 +2178,7 @@
 	        // 안 삭제 시, 배열 데이터도 제거 (아예 배열 길이가 줄어들게 됨)
 	        function deleteAnAry(idx) { // (1안부터 시작) 안별 idx
 	        	idx = parseInt(idx);
+	        	delTabDocIDAry.push(pDocIDAry[idx]); // 안삭제 시, DB상에서도 삭제할 문서의 DOCID를 배열에 저장
 	        
 	        	pDocIDAry = pDocIDAry.slice(0, idx).concat(pDocIDAry.slice(idx + 1)); // 문서ID
 	        	newpDocIDAry = newpDocIDAry.slice(0, idx).concat(newpDocIDAry.slice(idx + 1)); // 임시저장 반복 시, 새로 부여되는 문서ID
@@ -2176,6 +2202,35 @@
 				btnReceivLineEnableAry = btnReceivLineEnableAry.slice(0, idx).concat(btnReceivLineEnableAry.slice(idx + 1)); // 수신처 존재 여부
 				SummaryOuterReceiverListAry = SummaryOuterReceiverListAry.slice(0, idx).concat(SummaryOuterReceiverListAry.slice(idx + 1)); // 외부수신자 리스트
 				fileOpenFlagListArr = fileOpenFlagListArr.slice(0, idx).concat(fileOpenFlagListArr.slice(idx + 1)); // 첨부파일 공개여부 플래그
+	        }
+	        
+	        // 반송 및 회수된 문서를 재기안하는 경우, 안삭제 -> 결재올림 완료 시 안삭제된 문서는 실제로 삭제한다. 
+	        // 기존 일괄기안그룹 데이터는 결재올림 시 saveAprGroupAndDelTmp()함수로 자동 제거되며, 전체적으로 새롭게 삽입된다.
+	        function removeDelTabDoc() {
+	        	for (var i = 0; i < delTabDocIDAry.length; i++) {
+	        		RemoveDoc(delTabDocIDAry[i], orgCompanyID);
+	        		//delGroupDocInfoByDocID(delTabDocIDAry[i], "ONE");
+	        	}
+	        }
+	        
+	        // 결재정보 호출 전, 모든 안의 양식을 체크하여 결재서명칸/합의서명칸의 갯수 중 가장 작은 값을 설정한다.
+	        function setLowerSignCount() {
+	        	lowerSignCnt = SignCountAry[1];
+	        	lowerSignTab = 1;
+	        	lowerHapyuiCnt = hapyuiCountAry[1];
+	        	lowerHapyuiTab = 1;
+	        	
+	        	for (var i = 1; i <= pDocIDAry.length; i++) {
+	        		if (SignCountAry[i] < lowerSignCnt) {
+	        			lowerSignCnt = SignCountAry[i];
+	        			lowerSignTab = i;
+	        		}
+	        		
+	        		if (hapyuiCountAry[i] < lowerSignCnt) {
+	        			lowerHapyuiCnt = hapyuiCountAry[i];
+	        			lowerHapyuiTab = i;
+	        		}
+	        	}
 	        }
 	        
 	    </script>

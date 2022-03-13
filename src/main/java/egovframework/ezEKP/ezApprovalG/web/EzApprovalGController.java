@@ -9347,7 +9347,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/removeDocCabinetInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
-	public String removeDocCabinetInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+	public String removeDocCabinetInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
 		logger.debug("removeDocCabinetInfo Started");
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
@@ -9358,15 +9358,38 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String flag = request.getParameter("flag");
 		String realPath = commonUtil.getRealPath(request);
 		String dirPath = realPath +  commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		String result = "";
 		
-		String result = ezApprovalGService.setCabinetReject(docID, deptID, deptName, deptName2, dirPath, realPath, flag, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
+		/* 2022-03-11 홍승비 - 일괄기안된 문서의 경우, 모든 안에 대하여 대장등록 진행 */
+		List<ApprGGroupDocInfoVO> groupDocInfoList = new ArrayList<ApprGGroupDocInfoVO>();
+		String groupDocSN = ezApprovalGService.getGroupDocSN(docID, userInfo.getTenantId(), userInfo.getCompanyID());
 		
-		if (result.indexOf("FALSE") > -1) {
-			String[] resultArr = result.split(",");
-			if (resultArr.length > 1 && resultArr[1] != null && !resultArr[1].trim().equals("")) {
-        		ezApprovalGService.rollbackCabinetNum(deptID, "", resultArr[1], userInfo.getCompanyID(), "", userInfo.getLang(), userInfo.getTenantId());
-        	}
+		if (groupDocSN != null && !groupDocSN.equals("")) {
+			groupDocInfoList = ezApprovalGService.getGroupDocList(groupDocSN, "TMP", userInfo.getTenantId(), userInfo.getCompanyID());
+			for (ApprGGroupDocInfoVO tempVO : groupDocInfoList) {
+				result = ezApprovalGService.setCabinetReject(tempVO.getDocID(), deptID, deptName, deptName2, dirPath, realPath, flag, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
+				
+				// 일괄기안 문서의 경우, 대장등록이 하나라도 실패하면 동작을 중지하고 바로 리턴시킨다.
+				if (result.indexOf("FALSE") > -1) {
+					String[] resultArr = result.split(","); // 대장등록 실패 시, 해당 문서번호를 롤백
+					if (resultArr.length > 1 && resultArr[1] != null && !resultArr[1].trim().equals("")) {
+		        		ezApprovalGService.rollbackCabinetNum(deptID, "", resultArr[1], userInfo.getCompanyID(), "", userInfo.getLang(), userInfo.getTenantId());
+		        	}
+					return result.split(",")[0];
+				}
+			}
 		}
+		else { // 기존 단일기안문서 대장등록 진행 분기
+			result = ezApprovalGService.setCabinetReject(docID, deptID, deptName, deptName2, dirPath, realPath, flag, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
+			
+			if (result.indexOf("FALSE") > -1) {
+				String[] resultArr = result.split(",");
+				if (resultArr.length > 1 && resultArr[1] != null && !resultArr[1].trim().equals("")) {
+	        		ezApprovalGService.rollbackCabinetNum(deptID, "", resultArr[1], userInfo.getCompanyID(), "", userInfo.getLang(), userInfo.getTenantId());
+	        	}
+			}
+		}
+		
 		logger.debug("removeDocCabinetInfo ended");
 
 		return result.split(",")[0];
@@ -10829,7 +10852,19 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			throw Exception;
 		}
 		
-		ezApprovalGService.setHesongBansongCabinetID(docID, cabinetID, taskCode, userInfo.getCompanyID(), userInfo.getTenantId());
+		/* 2022-03-11 홍승비 - 일괄기안된 문서의 경우, 모든 안에 대하여 철변경 진행 */
+		List<ApprGGroupDocInfoVO> groupDocInfoList = new ArrayList<ApprGGroupDocInfoVO>();
+		String groupDocSN = ezApprovalGService.getGroupDocSN(docID, userInfo.getTenantId(), userInfo.getCompanyID());
+		
+		if (groupDocSN != null && !groupDocSN.equals("")) {
+			groupDocInfoList = ezApprovalGService.getGroupDocList(groupDocSN, "TMP", userInfo.getTenantId(), userInfo.getCompanyID());
+			for (ApprGGroupDocInfoVO tempVO : groupDocInfoList) {
+				ezApprovalGService.setHesongBansongCabinetID(tempVO.getDocID(), cabinetID, taskCode, userInfo.getCompanyID(), userInfo.getTenantId());
+			}
+		}
+		else { // 기존 단일기안문서 철변경 진행 분기
+			ezApprovalGService.setHesongBansongCabinetID(docID, cabinetID, taskCode, userInfo.getCompanyID(), userInfo.getTenantId());
+		}
 		
 		logger.debug("setHesongBansongCabinetInfo ended.");
 	}
@@ -11726,9 +11761,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		int tenantID = userInfo.getTenantId();
 		String orgCompanyID = userInfo.getCompanyID();
 		String docID = request.getParameter("docID"); // 실제 DOCID 또는 임시저장된 DOCSN
+		String mode = request.getParameter("mode"); // 모든 일괄기안 레코드를 삭제 또는 현재 전달된 DOCID에 대한 레코드만 삭제에 대한 모드값 (ALL, ONE)
 		
 		try {
-			ezApprovalGService.delGroupDocInfoByDocID(docID, orgCompanyID, tenantID);
+			ezApprovalGService.delGroupDocInfoByDocID(docID, mode, orgCompanyID, tenantID);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -11831,6 +11867,31 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		logger.debug("chkOpinionInfoExist ended, result = " + result);
+		return result;
+	}
+	
+	/**
+	 * 2022-03-08 홍승비 - 양식ID로 양식을 찾아 문서번호의 포맷을 문자열로 리턴하는 메서드 (.hwp 파일 전용)
+	 */
+	@RequestMapping(value = "/ezApprovalG/getDocNumFormatByFormID.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	public String getDocNumFormatByFormID(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
+		logger.debug("getDocNumFormatByFormID started.");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		int tenantID = userInfo.getTenantId();
+		String formID = request.getParameter("formID");
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String realPath = commonUtil.getRealPath(request);
+		String result = "";
+		
+		try {
+			result = ezApprovalGService.getHWPDocNumFormatByFormID(formID, realPath, orgCompanyID, tenantID);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("getDocNumFormatByFormID ended, result = " + result);
 		return result;
 	}
 	

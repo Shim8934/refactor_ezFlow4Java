@@ -2410,7 +2410,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         //hwp일 경우 대장등록전 문서에 새로운 문서번호 박아주기 | 2019-02-22 천성준 - mht일 경우 추가
         if (docNo != null && !docNo.trim().equals("")) {
         	String docFilePath = dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false).substring(0,4) + commonUtil.separator + getDocDir(newDocID) + commonUtil.separator + newDocID + "." + extFileName;
-
         	if (extFileName.equals("hwp")) {
 		        HWPFile hwpFile = HWPReader.fromFile(docFilePath);
 		        setHwpText("docnumber", docNo, hwpFile);
@@ -6581,7 +6580,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			
 			formURL = realPath + fileForder1;
-			
 			//한글파일 리더
 			HWPFile hwpFile = HWPReader.fromFile(formURL);
 			
@@ -33723,7 +33721,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_COMPANYID", companyID);
 		
 		List<ApprGFormVO> apprGFormVOList = ezApprovalGDAO.getDraftAllFormInfo(map); 
-
+		
 		logger.debug("getDraftAllFormInfo ended.");
 		return apprGFormVOList;
 	}
@@ -33947,14 +33945,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 	
 	/* 2022-02-10 홍승비 - 일괄기안 > 전달받은 DOCID 또는 DOCSN으로 GROUPDOCSN을 찾아 일괄기안그룹 레코드를 삭제하는 삭제 전용 메서드 */
-	public void delGroupDocInfoByDocID(String docID, String orgCompanyID, int tenantID) throws Exception {
-		logger.debug("delGroupDocInfoByDocID started. docID = " + docID);
+	public void delGroupDocInfoByDocID(String docID, String mode, String orgCompanyID, int tenantID) throws Exception {
+		logger.debug("delGroupDocInfoByDocID started. docID = " + docID + ", mode = " + mode);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		String groupDocSN = getGroupDocSN(docID, tenantID, orgCompanyID);
 		
+		map.put("v_DOCID", docID);
 		map.put("v_GROUPDOCSN", groupDocSN);
+		map.put("v_MODE", mode);
 		map.put("v_TENANTID", tenantID);
 		map.put("v_COMPANYID", orgCompanyID);
 		
@@ -34033,6 +34033,34 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		logger.debug("chkOpinionInfoExist ended, opinionCnt = " + opinionCnt);
+		return result;
+	}
+	
+	public String getFormIdFromApr(String docID, String companyID, int tenantID) throws Exception {
+		logger.debug("getFormIdFromApr started");
+
+		Map<String, Object> map = new HashMap<>();
+		map.put("v_DOCID", docID);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		String formID = ezApprovalGDAO.getFormIdFromApr(map);
+
+		logger.debug("getFormIdFromApr ended. get formID : " + formID);
+
+		return formID;
+	}
+	
+	/* 2022-03-08 홍승비 - 한글 전자결재 양식파일을 읽어 문서번호 필드의 포맷을 리턴 */
+	public String getHWPDocNumFormatByFormID(String formID, String realPath, String orgCompanyID, int tenantID) throws Exception {
+		logger.debug("getHWPDocNumFormatByFormID started");
+		
+		String result = "";
+		String formPath = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + orgCompanyID + commonUtil.separator + "form" + commonUtil.separator + formID + ".hwp";
+		HWPFile hwpFile = HWPReader.fromFile(realPath + formPath);
+		
+		result = getHwpText("docnumber", hwpFile);
+		
+		logger.debug("getHWPDocNumFormatByFormID ended");
 		return result;
 	}
 	

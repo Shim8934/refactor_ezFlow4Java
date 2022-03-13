@@ -1123,8 +1123,8 @@
 						                RemoveDoc(groupDocList[g], pCurSelRow.getAttribute("orgcompanyid"));
 						            }
 			                	}
-			                	// 문서정보 삭제 루프 이후, 일괄기안 그룹 레코드는 전체적으로 삭제한다.(GROUPDOCSN조건으로 삭제)
-			                	delGroupDocInfoByDocID(pCurSelRow.getAttribute("DATA1"));
+			                	// 문서정보 삭제 루프 이후, 일괄기안 그룹 레코드는 전체적으로 삭제한다.(GROUPDOCSN조건으로 삭제, mode = ALL)
+			                	delGroupDocInfoByDocID(pCurSelRow.getAttribute("DATA1"), "ALL");
 			                }
 			                // 일괄기안 그룹이 아닌 경우, 기존 삭제 분기 동작
 			                else {

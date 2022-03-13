@@ -1116,3 +1116,4 @@ var strLangHSBRDa05 = "Doc tab 1 cannot be deleted.";
 var strLangHSBRDa06 = "Are you sure you want to delete the currently selected ";
 var strLangHSBRDa07 = "doc tab?";
 var strLangHSBRDa08 = "No doc tab have been added.<br/> please do the [add doc tab] first.";
+var strLangHSBRDa09 = "doc tab : ";

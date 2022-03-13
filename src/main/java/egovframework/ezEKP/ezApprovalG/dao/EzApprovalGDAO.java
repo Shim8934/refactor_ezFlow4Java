@@ -3754,7 +3754,7 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public List<Map<String, Object>> getReceiptHistoryInfo(Map<String, Object> map) throws Exception{
 		return (List<Map<String, Object>>) list("EzApprovalG.getReceiptHistoryInfo", map);
 	}
-
+	
     /* 2022-01-11 홍승비 - 일괄기안 > 표출할 양식 리스트 리턴 */
 	@SuppressWarnings("unchecked")
 	public List<ApprGFormVO> getDraftAllFormInfo(Map<String, Object> map) throws Exception { 
@@ -3826,5 +3826,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public int getAprDocOpinionCnt(Map<String, Object> map) {
 		return (int) select("EzApprovalG.getAprDocOpinionCnt", map);
 	}
-
+	
+	public String getFormIdFromApr(Map<String, Object> map) throws Exception{
+		return (String) select("EzApprovalG.getFormIdFromApr", map);
+	}
 }
