@@ -119,6 +119,8 @@ function ExcuteInfo(pprocessIdx, currTD) {
             break;
         }
     }
+
+    removeEmptyTextNodes(connNode);
     
     if (findFlag) {
         connFlag = GetAttribute(connNode.childNodes[0],"flag");
@@ -701,4 +703,19 @@ function setData(pobjXml, currTD) {
         }
     }
     return true;
+}
+
+function removeEmptyTextNodes(node) {
+    if(typeof node == "undefined" || typeof node.childNodes == "undefined") return false;
+
+    var cn = node.childNodes
+    var arr = [];
+
+    for (i = 0; i < cn.length; i++) {
+        if(cn[i].nodeType === 3 && cn[i].nodeValue.trim() === "") arr.push(i);
+    }
+
+    while(!!arr.length) {
+        node.removeChild(node.childNodes[arr.pop()])
+    }
 }
