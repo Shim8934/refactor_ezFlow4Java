@@ -337,11 +337,11 @@
 	                lastRowIdx = 0;
 	        }
 	
-	        if (MakeXMLString(treeView.GetSelectNode().GetNodeData("CN")) == arr_userinfo[4]) {
-	            var pAlertContent = "<spring:message code='ezApprovalG.t2000'/>";
-	            OpenAlertUI(pAlertContent);
-	            return;
-	        }
+// 	        if (MakeXMLString(treeView.GetSelectNode().GetNodeData("CN")) == arr_userinfo[4]) {
+// 	            var pAlertContent = "<spring:message code='ezApprovalG.t2000'/>";
+// 	            OpenAlertUI(pAlertContent);
+// 	            return;
+// 	        }
 	        if (lastRowIdx != 0) {
 	            for (var i = 0; i < lastRowIdx; i++) {
 	                if (listview.GetDataRows()[i].getAttribute("DATA1") == MakeXMLString(treeView.GetSelectNode().GetNodeData("CN"))) {
