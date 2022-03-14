@@ -2090,11 +2090,18 @@
 	            // 선택한 안의 첨부파일정보를 표출
 	            document.getElementById("attachFileTR").style.display = ""; // 숨겨둔 첨부파일영역 표출
 	            setAttachInfo(pDocIDAry[objNum], "APR", lstAttachLink);
-                tmp = document.getElementById("ifrm" + objNum).contentDocument.getElementById("hwpctrl_frame");
-                if(tmp){
-	                tmpVal = tmp.style.height;
-	                tmp.style.height = "100%";
-	                setTimeout(function(){tmp.style.height = tmpVal;},100);
+	            
+	            // 자식창 내부 iframe 영역 리사이즈 (자식창의 함수가 로딩된 경우에만 동작)
+	            var currIfrm = document.getElementById("ifrm" + objNum);
+	            if (typeof(currIfrm.contentWindow.Resize) == "function") {
+	            	currIfrm.contentWindow.Resize();
+	            }
+	            
+                var tmp = currIfrm.contentDocument.getElementById("hwpctrl_frame");
+                if (tmp) {
+	               // tmpVal = tmp.style.height;
+	               // tmp.style.height = "100%";
+	               // setTimeout(function(){tmp.style.height = tmpVal;},100);
 	                tmp.contentDocument.getElementById("ImeWrapper_Elm").focus();
                 }
 	        }

@@ -76,10 +76,41 @@
 	      
 	    	window.onresize = function () {Resize()};
 	    	function Resize() {
-	    		if (document.getElementById("hwpctrl_frame") != null && typeof(document.getElementById("hwpctrl_frame")) != "undefined") {
+	    		var hwpCtrlIfrm = document.getElementById("hwpctrl_frame");
+	    		if (hwpCtrlIfrm != null && typeof(hwpCtrlIfrm) != "undefined") {
 		    		var pHeight = (window.innerHeight - 20) + "px";
-		            document.getElementById("hwpctrl_frame").style.width = "100%";
-		            document.getElementById("hwpctrl_frame").style.height = pHeight;
+		    		
+		    		hwpCtrlIfrm.style.width = "100%";
+		    		hwpCtrlIfrm.style.height = pHeight;
+		            
+		            /* 2022-03-14 홍승비 - 기안창이 축소된 상태에서 결재올림 실패 > 알러트 확인 후 탭 클릭(selTab) > iframe 내부 크기 style값이 0이 되는 오류 수정*/
+		            var paperCanvas = hwpCtrlIfrm.contentWindow.document.getElementById("PaperCanvas");
+					if (paperCanvas != null && typeof(paperCanvas) != "undefined") {
+			    		var pWidth1 = paperCanvas.width + "px";
+			    		var pHeight1 = paperCanvas.height + "px";
+			    		
+			    		paperCanvas.style.width = pWidth1;
+			    		paperCanvas.style.height = pHeight1;
+	    			}
+		            
+					var editCanvas = hwpCtrlIfrm.contentWindow.document.getElementById("EditCanvas");
+					if (editCanvas != null && typeof(editCanvas) != "undefined") {
+			    		var pWidth2 = editCanvas.width + "px";
+			    		var pHeight2 = editCanvas.height + "px";
+			    		
+			    		editCanvas.style.width = pWidth2;
+			    		editCanvas.style.height = pHeight2;
+	    			}
+					
+					// 스크롤바 영역의 넓이는 hwpctrl_frame과 동일 (100%), 높이는 캔버스 영역과 동일
+					var scrollDiv = hwpCtrlIfrm.contentWindow.document.getElementById("hcwoViewScroll");
+					if (scrollDiv != null && typeof(scrollDiv) != "undefined" && paperCanvas != null && typeof(paperCanvas) != "undefined") {
+			    		var pWidth3 = "100%";
+			    		var pHeight3 = paperCanvas.height + "px";
+			    		
+			    		scrollDiv.style.width = pWidth3;
+			    		scrollDiv.style.height = pHeight3;
+	    			}
 	    		}
 	        }
 	      
