@@ -1530,5 +1530,8 @@
 	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 		<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 	</div>
+	<div style="width: 200px; height: 50px; border: 0px solid red; text-align: center; vertical-align: middle; display: none; z-index: 9000; position: absolute;" id="loadingLayer">
+        <img src="/images/email/progress_img.gif" style="vertical-align: middle;" />
+    </div>
 </body>
 </html>
