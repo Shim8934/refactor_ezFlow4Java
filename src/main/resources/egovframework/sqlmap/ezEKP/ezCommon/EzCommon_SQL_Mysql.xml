@@ -4378,4 +4378,17 @@
 		('112', 3, '일자', 300, NULL, 'STATUSDATE', NULL, NULL, '일자', NULL, 'Date', '日付', '日付', NULL, #tenantId#, #companyId#)
 	</insert>
 	
+	<statement id="EzCommonDAO.alterTblDevMaster">
+	<![CDATA[
+		ALTER TABLE 
+			TBL_DEV_MASTER
+		ADD 
+		IF NOT EXISTS
+		(
+			PIN 				VARCHAR(1000) 	DEFAULT NULL,
+			PINSTATE			CHAR(1)			DEFAULT 'N',
+			BIOMETRIC			CHAR(1)			DEFAULT 'N'
+		)
+	]]>
+    </statement>
 </sqlMap>

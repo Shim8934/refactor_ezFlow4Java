@@ -4649,4 +4649,23 @@
 	]]>
    	</insert>
 
+
+	<statement id="EzCommonDAO.alterTblDevMaster">
+    <![CDATA[
+    {call	
+		DECLARE 
+    		column_exists EXCEPTION;
+    		pragma exception_init (column_exists , -01430);
+		BEGIN 
+    		EXECUTE IMMEDIATE  'ALTER TABLE TBL_DEV_MASTER	
+    							ADD	(
+    								PIN 				VARCHAR(1000) 	DEFAULT NULL,
+									PINSTATE			CHAR(1)			DEFAULT 'N',
+									BIOMETRIC			CHAR(1)			DEFAULT 'N'
+    								)';
+    		EXCEPTION WHEN column_exists THEN NULL;
+		END
+	}
+	]]>
+	</statement>
 </sqlMap>
