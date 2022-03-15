@@ -59,7 +59,7 @@ public class BoardAttributeVO {
 		return value;
 	}
 	public void setValue(String value) {
-		this.value = value;
+		this.value = value != null ? value : "";
 	}
 	public String getColType() {
 		return colType;
