@@ -17,6 +17,12 @@ public class MOptionVO {
 	private String usePrimaryLangOnly; /** 개인환경설정 타언어 사용여부  */
 		
 	private int tenantId;			/** 계열사 Id */
+	
+	private String pin;				/** pin 로그인 사용 유무 */
+	
+	private String pinState;		/** pin 값 */
+	
+	private String biometric;		/** 생체인식 사용 유무 */
 
 	public String getUserId() {
 		return userId;
@@ -80,6 +86,30 @@ public class MOptionVO {
 
 	public void setTenantId(int tenantId) {
 		this.tenantId = tenantId;
+	}
+
+	public String getPin() {
+		return pin;
+	}
+
+	public void setPin(String pin) {
+		this.pin = pin;
+	}
+
+	public String getPinState() {
+		return pinState;
+	}
+
+	public void setPinState(String pinState) {
+		this.pinState = pinState;
+	}
+
+	public String getBiometric() {
+		return biometric;
+	}
+
+	public void setBiometric(String biometric) {
+		this.biometric = biometric;
 	}	
 	
 }

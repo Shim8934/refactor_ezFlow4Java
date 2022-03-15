@@ -79,11 +79,9 @@ private static final Logger logger = LoggerFactory.getLogger(MOptionController.c
 			userId = userInfo.getId();
 		}
 
-		//로컬테스트용
-		//gwServerUrl = "http://localhost:8080";
 		String url = gwServerUrl + "/mobile/ezoption/option/users/" + userId;
-		logger.debug("userId: " + userId);
 		logger.debug(url);
+		
 		RestTemplate rest = new RestTemplate();	
 		ResponseEntity<JSONObject> result = null;
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);		
@@ -95,16 +93,12 @@ private static final Logger logger = LoggerFactory.getLogger(MOptionController.c
 
 		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
 
-		logger.debug("result: " + result);
-		
 		JSONObject resultBody = result.getBody();
 				
 		@SuppressWarnings("unused")
 		String status = resultBody.get("status").toString();
-		//Map<String, Object> scheduleDetail = (Map<String, Object>) resultBody.get("data");
         JSONObject Detail = gson.fromJson((String)resultBody.get("data"), JSONObject.class);
-        //logger.debug("scheduleDetail" + scheduleDetail);
-			//jsonobject ???
+
 		model.addAttribute("Detail", Detail);
 		logger.debug("searchOption ended.");
 		
