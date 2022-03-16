@@ -375,4 +375,6 @@ public interface EzCommonService {
 	public void addSusinScheduleOffsetColumn() throws Exception;
 
 	public void insertReceiptHistoryListoption() throws Exception;
+	
+	public void alterTblDevMaster() throws Exception;
 }

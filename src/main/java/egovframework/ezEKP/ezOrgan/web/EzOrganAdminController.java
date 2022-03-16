@@ -293,6 +293,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.addWebfolderLogHistory(); 					// 2020-01-20 웹폴더 파일 이력관리 컬럼추가 
 	    	ezCommonService.createWebfolderNoInherit(); 				// 권한비상속			
     		ezCommonService.alterWebfolderApplyHistoryAddColumn();
+    		ezCommonService.alterTblDevMaster();						//20220315 조진호 - mobile Pin 사용 관련 여부 컬럼 추가 (원래는 Talk에서 관리하는 테이블이나 Talk이 없는 경우 ezEKP DB의 테이블을 사용하기 떄문에 추가)
     	} catch (Exception e) {
     		e.printStackTrace();
     	}

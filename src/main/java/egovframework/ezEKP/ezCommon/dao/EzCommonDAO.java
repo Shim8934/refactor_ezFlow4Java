@@ -2307,4 +2307,13 @@ public class EzCommonDAO extends EgovAbstractDAO {
 	private String checkReceiptHistoryListoption(Map<String, Object> map) {
 		return (String) select("EzCommonDAO.checkReceiptHistoryListoption", map);
 	}
+	
+	public void alterTblDevMaster() {
+		try {
+			update("EzCommonDAO.alterTblDevMaster");
+		} catch (Exception e) {
+			logger.debug("alterTblDevMaster() ERROR...");
+			e.printStackTrace();
+		}
+	}
 }
