@@ -270,7 +270,7 @@
     				return;
     			}
     					
-    			if(strListInfo == "") {
+    			if (strListInfo == "") {
     				alert("<spring:message code='ezCommunity.t424' />");
     				return;
     			}
@@ -310,11 +310,10 @@
     		            return;
     		        }
     		    } else {
-
-   	    		        var ret = confirm("<spring:message code='ezCommunity.t426' />");
-   	    		        if (ret) {
-   	    		        	DeleteItem();
-   	    		        }
+					var ret = confirm("<spring:message code='ezCommunity.t426' />");
+					if (ret) {
+						DeleteItem();
+					}
     		    }
     		}
     		
