@@ -397,6 +397,17 @@
 	                    ifrmPreViewH_photo.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022'/>";
 	                firstFlag = true;
 	            }
+	            
+	            /* 2021-08-12 김성준 썸네일, 영상 미독 게시물 게시일 내려쓰기 되는 현상 수정 */
+				for (i=0; i<document.getElementById("BoardList_BODY").childNodes.length; i++) {
+					for (j=0; j<document.getElementById("BoardList_BODY").childNodes.item(i).childNodes.length; j++) {
+						if (document.getElementById("BoardList_BODY").childNodes.item(i).childNodes.item(j).textContent.length > 15
+								&& document.getElementById("BoardList_BODY").childNodes.item(i).childNodes.item(j).offsetWidth <= 108) {
+							document.getElementById("BoardList_BODY").childNodes.item(i).childNodes.item(j).style.paddingRight = "3px";
+						}
+					}
+				}
+	            
 	            endtime = new Date().getTime();
 	            document.getElementById("runtime").innerHTML = "RunTime : <span style='color:black;font-weight:bold'>" + (endtime - starttime) / 1000 + "</span> Sec";
 		    }
