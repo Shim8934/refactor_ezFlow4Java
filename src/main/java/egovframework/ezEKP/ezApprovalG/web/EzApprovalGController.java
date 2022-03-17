@@ -2786,7 +2786,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 			String saveFileName = docID + fileAttachFormatSN + fileName;
 			
-			if (fileSize > maxSize) {
+			/* 2022-03-17 홍승비 - maxSize가 0인 경우, 전자결재 첨부파일 총용량제한은 무제한으로 취급 */
+			if (maxSize != 0 && fileSize > maxSize) {
 				resultUploadArray[i] = "overflow";
 			} else {
 				// 첨부파일의 확장자가 useExtension에 포함되지 않은경우
