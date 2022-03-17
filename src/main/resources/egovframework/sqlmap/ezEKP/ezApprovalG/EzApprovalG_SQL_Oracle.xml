@@ -4439,7 +4439,7 @@
                 AND
                     TBL_FORMINFO.FORMCONTID IN
                     (SELECT
-                        FORMCONTID
+                        TO_CHAR(FORMCONTID)
                     FROM
                         TBL_FORMCONTUSERGROUP
                     WHERE
@@ -4450,13 +4450,13 @@
                         FORMCONTUSERDEPID = #deptId#
                     UNION ALL
                     SELECT
-                        FORMCONTID
+                        TO_CHAR(FORMCONTID)
                     FROM
                         TBL_FORMCONTAINER
                     WHERE
                         TENANT_ID = TBL_FORMINFO.TENANT_ID
                     AND
-                        COMPANYID = TBL_FORMINFO.COMPANYID
+                        TO_CHAR(COMPANYID) = TO_CHAR(TBL_FORMINFO.COMPANYID)
                     AND
                         (FORMCONTOWNDEPID = 'ALL' or FORMCONTOWNDEPID = #deptId#)
                     )
@@ -4515,11 +4515,11 @@
          	LEFT OUTER JOIN 
          		TBL_FORMCONTAINER
          	ON 
-         		TBL_FORMINFO.FORMCONTID = TBL_FORMCONTAINER.FORMCONTID 
+         		TO_CHAR(TBL_FORMINFO.FORMCONTID) = TO_CHAR(TBL_FORMCONTAINER.FORMCONTID) 
          	AND
          		TBL_FORMINFO.TENANT_ID = TBL_FORMCONTAINER.TENANT_ID
          	AND
-         		TBL_FORMINFO.COMPANYID = TBL_FORMCONTAINER.COMPANYID
+         		TO_CHAR(TBL_FORMINFO.COMPANYID) = TO_CHAR(TBL_FORMCONTAINER.COMPANYID)
        		LEFT JOIN
    				TBL_FORM_OFFICE O
    			ON 
