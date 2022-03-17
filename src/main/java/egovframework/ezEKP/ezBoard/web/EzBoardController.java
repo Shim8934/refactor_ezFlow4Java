@@ -6138,7 +6138,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			fileExt = orgName.substring(orgName.lastIndexOf(".") + 1, orgName.length());
 			logger.debug("imageUpload file extension is : " + fileExt);
 			
-			if (commonUtil.checkImgExtension(fileExt) == false || (!useExtension.equals("*") && useExtension.toLowerCase().indexOf(fileExt.toLowerCase()) < 0)) {
+			if (commonUtil.checkImgExtension(fileExt.toLowerCase()) == false || (!useExtension.equals("*") && useExtension.toLowerCase().indexOf(fileExt.toLowerCase()) < 0)) {
 				isExtOK = false;
 				break;
 			}

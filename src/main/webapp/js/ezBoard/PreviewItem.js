@@ -1,4 +1,4 @@
-﻿function MailOptionView(obj, flag) {
+﻿﻿function MailOptionView(obj, flag) {
     if (obj.getAttribute("mode") == "off") {
         if (flag=='N') {
         	document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 160 + "px";
@@ -227,9 +227,6 @@ function PreviewRayerChange_photo(pGubun) {
             document.getElementById("MailListRayer").style.width = "100%";
             /* 2018-04-25 홍승비 - 크로스 브라우징 중복 코드 삭제 */
             document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
-
-
-
             /* 2019-04-11 홍승비 - 앨범형식 보기 시 사용하지 않는 div 분기처리 */
             // if (document.getElementById("BoardList_BODY") != null) {
             // 	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
@@ -1068,7 +1065,11 @@ function Window_resize_photo() {
                 document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
                 
                 document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
-            	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
+                
+                /* 2022-03-17 홍승비 - 리사이즈 시 포토게시판에만 스크롤이 발생하도록 분기처리 (썸네일, 동영상게시판은 다른 방식으로 스크롤이 발생함) */
+                if (window.location.href.indexOf("/ezBoard/boardItemListPhoto.do") > -1) {
+                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
+                }
                 document.getElementById("ifrmPreViewH_photo").style.height = (CurrentHeight - 77) + "px";
                 
                 pPreviewShow_HOW = "H";
@@ -1081,12 +1082,11 @@ function Window_resize_photo() {
                 CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
                 document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
                 document.getElementById("MailListRayer").style.width = "100%";
-                if (navigator.userAgent.indexOf('Firefox') != -1) {
-                    document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
+                document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
+                
+                if (window.location.href.indexOf("/ezBoard/boardItemListPhoto.do") > -1) {
                 	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
-                } else
-                    document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
-                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
+                }
             }
         }
         scroll();

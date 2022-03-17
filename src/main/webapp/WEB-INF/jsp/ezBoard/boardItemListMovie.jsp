@@ -1065,7 +1065,7 @@
 					</div>
 				</div>
 		        <c:if test="${boardInfo.boardAdmin_FG == true}">
-			        <li><span onClick="SetBoardAcl()"><spring:message code='ezBoard.t63' /></span></li>
+			        <li id="btn_acl"><span onClick="SetBoardAcl()"><spring:message code='ezBoard.t63' /></span></li>
 		        </c:if>
 		        
 				<%-- 2020-06-15 홍승비 - 즐겨찾기 여부에 따라 별모양 아이콘 스타일 수정 --%>
