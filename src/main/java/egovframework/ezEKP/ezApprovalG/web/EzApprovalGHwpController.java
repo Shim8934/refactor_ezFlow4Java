@@ -1903,6 +1903,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	    String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
 	    String approvalRoot = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator;
 	    String orgCompanyID = request.getParameter("orgCompanyID");
+	    String recordID = request.getParameter("recordID") != null ? request.getParameter("recordID") : ""; // 시행문의 반송을 위한 recordID 추가
 
         boolean isConvSihang = false;
         if (request.getRequestURI().endsWith("ezConvSihang_WHWP.do")) {
@@ -1937,6 +1938,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	    model.addAttribute("orgCompanyID", orgCompanyID);
 	    model.addAttribute("docTitle", docTitle);
 	    model.addAttribute("isConvSihang", isConvSihang);
+	    model.addAttribute("recordID", recordID);
 	    model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
 		// 대용량첨부 관련 정보
 		model.addAttribute("bigAttachDownloadPeriod", bigAttachDownloadPeriod); // 다운로드 기간

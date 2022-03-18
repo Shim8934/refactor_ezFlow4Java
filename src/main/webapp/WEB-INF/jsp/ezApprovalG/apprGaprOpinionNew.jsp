@@ -39,6 +39,8 @@
 		
 		var primary = "<c:out value='${primary}'/>"; // 의견 작성 시 다국어 대응을 위한 변수 (1:기본언어, 2:다국어)
 		
+		var isSihangReject = "N"; // 시행문의 반송기능을 위한 구분값
+		
 		window.onload = function () {
 			if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1) {
 			    KeEventControl(document.getElementById("txt_OpinionContent"));
@@ -47,15 +49,18 @@
 			try {
 			    RetValue = parent.apropinion_cross_dialogArguments[0];
 			    ReturnFunction = parent.apropinion_cross_dialogArguments[1];
+			    isSihangReject = parent.isSihangReject;
 			    
 			    if (typeof(RetValue) == "undefined") {
 			    	RetValue = opener.apropinion_cross_dialogArguments[0];
                     ReturnFunction = opener.apropinion_cross_dialogArguments[1];
+                    isSihangReject = opener.isSihangReject;
 			    }
 			} catch (e) {
 			    try {
 			        RetValue = opener.apropinion_cross_dialogArguments[0];
 			        ReturnFunction = opener.apropinion_cross_dialogArguments[1];
+			        isSihangReject = opener.isSihangReject;
 			    } catch (e) {
 			        RetValue = window.dialogArguments;
 			    }
@@ -67,6 +72,10 @@
 			pDocState = RetValue[3];  	//회람공람때 사용해야할듯
 			pOrgCompanyID = RetValue[4];
 			pExt = RetValue[99];		//mht, hwp
+			
+			if (typeof(isSihangReject) == "undefined" || isSihangReject == null) {
+				isSihangReject = "N";
+			}
 
 			validatePara();
 			
@@ -95,7 +104,7 @@
 		
 		//[작성], [수정], [삭제] 버튼 상황별 표출
 		function displayButtons() {
-			if (pMode == "END" || (pDisplay == "Show" && pDocState != "015") || pDocState == "017"){return;}
+			if ((pMode == "END" && isSihangReject == "N") || (pDisplay == "Show" && pDocState != "015") || pDocState == "017"){return;}
 			
 			var DisplayMode = pDisplay.toUpperCase();
 			
@@ -108,8 +117,9 @@
            	
             var pSelectedRow = OpinionList.GetSelectedRows();
             if (pSelectedRow.length > 0) {
-            	//[수정],[삭제] 버튼
-	            if (GetAttribute(pSelectedRow[0], "DATA2") == pUserID) {
+            	// [수정],[삭제] 버튼
+            	/* 2022-03-17 홍승비 - 시행문변환으로 접근한 경우, 자신의 반송의견 이외에는 수정 및 삭제를 금지 */
+	            if (GetAttribute(pSelectedRow[0], "DATA2") == pUserID && (isSihangReject == "N" || (isSihangReject == "Y" && GetAttribute(pSelectedRow[0], "DATA6") == "002"))) {
 	            	ModButton.display = "";
 	            	DelButton.display = "";
 	        	} else {
@@ -203,7 +213,7 @@
 		//[작성] 버튼 클릭
 		var opinionPopup_cross_dialogArguments = new Array();
 		function btn_OpinionAdd_onclick() {
-			if (pMode == "END" || (pDisplay == "Show" && pDocState != "015") || pDocState == "017"){return;}
+			if ((pMode == "END" && isSihangReject == "N") || (pDisplay == "Show" && pDocState != "015") || pDocState == "017"){return;}
 			
 			var parameter = new Array();
 	        parameter[0] = "ADD";
@@ -217,7 +227,7 @@
 		
 		//[수정] 버튼 클릭
 		function btn_OpinionMod_onclick() {
-			if (pMode == "END" || (pDisplay == "Show" && pDocState != "015") || pDocState == "017"){return;}
+			if ((pMode == "END" && isSihangReject == "N") || (pDisplay == "Show" && pDocState != "015") || pDocState == "017"){return;}
 			
 			var OpinionList = new ListView();
             OpinionList.LoadFromID("OpinionList");
@@ -239,7 +249,7 @@
 		
 		//[삭제] 버튼 클릭
 		function btn_OpinionDel_onclick() {
-			if (pMode == "END" || (pDisplay == "Show" && pDocState != "015") || pDocState == "017"){return;}
+			if ((pMode == "END" && isSihangReject == "N") || (pDisplay == "Show" && pDocState != "015") || pDocState == "017"){return;}
 			
 			var OpinionList = new ListView();
             OpinionList.LoadFromID("OpinionList");

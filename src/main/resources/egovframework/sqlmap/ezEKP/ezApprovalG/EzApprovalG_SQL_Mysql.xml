@@ -6642,6 +6642,8 @@
                        TBL_ENDAPRDOCINFO.WRITERDEPTID = #deptCode#
                     AND
                        TBL_SEPERATEATTACH.SEPERATEATTACHNO = '00'
+					AND
+						TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
                 </isEqual>
 			<isNotEmpty property="isDocPrint">
 				<isEqual property="isDocPrint" compareValue="TRUE">
@@ -14505,6 +14507,8 @@
 	        TBL_ENDAPRDOCINFO.WRITERDEPTID = #deptCode#
         AND
            TBL_SEPERATEATTACH.SEPERATEATTACHNO = '00'
+		AND
+			TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
 	</isEqual>
 	
 	</select>
@@ -33512,11 +33516,7 @@
 			AND 
 			    A.ENDDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s') 
 			AND 
-			    (
-			        B.DELFLAG IS NULL 
-			    OR 
-			        B.DELFLAG <> '1'
-			    )
+				B.DELFLAG IS NULL 
 			AND 
 			    C.PROCESSYN = 'N' 
 			]]>
@@ -34670,4 +34670,31 @@
           AND
             COMPANYID = #v_COMPANYID#
     </select>
+    
+    <delete id="EzApprovalG.deleteEndOpinionInfo" parameterClass="Map">
+	  	DELETE FROM
+	  		TBL_ENDAPROPINIONINFO
+    	WHERE  
+    		DOCID = #v_DOCID#
+    	AND
+    		TENANT_ID = #v_TENANTID#
+    	AND
+    		COMPANYID = #companyID#
+	</delete>
+	
+	<update id="EzApprovalG.updateRecInfoRejectFlag" parameterClass="Map">
+    	UPDATE
+    		TBL_RECORD
+    	SET
+    		REJECTFLAG = #v_REJECTFLAG#
+    	WHERE
+    		DOCID = #v_DOCID#
+    	AND
+    		RECORDID = #v_RECORDID#
+    	AND
+    		COMPANYID = #companyID#
+    	AND
+    		TENANT_ID = #v_TENANTID#
+    </update>
+	
 </sqlMap>

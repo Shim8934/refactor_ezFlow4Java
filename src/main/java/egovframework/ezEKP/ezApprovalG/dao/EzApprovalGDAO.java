@@ -3756,4 +3756,16 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public String getFormIdFromApr(Map<String, Object> map) throws Exception{
 		return (String) select("EzApprovalG.getFormIdFromApr", map);
 	}
+	
+	public void deleteEndOpinionInfo(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.deleteEndOpinionInfo", map);
+	}
+
+	public ApprGDocListVO doSendOfferRejectEndDoc(Map<String, Object> map) throws Exception {
+		return (ApprGDocListVO) select("EzApprovalG.doSendOfferRejectEndDoc", map);
+	}
+
+	public void updateRecInfoRejectFlag(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateRecInfoRejectFlag", map);
+	}
 }

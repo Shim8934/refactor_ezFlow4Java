@@ -309,7 +309,7 @@ function saveOpinionInfo() {
 			objXML = getOpinionListInfo();
 			
 			var xmlhttp = new createXMLHttpRequest();
-	        xmlhttp.open("POST", "/ezApprovalG/opinionSave.do?orgCompanyID=" + pOrgCompanyID, false);
+	        xmlhttp.open("POST", "/ezApprovalG/opinionSave.do?orgCompanyID=" + pOrgCompanyID + "&isSihangReject=" + isSihangReject, false);
 	        xmlhttp.send(objXML);
 	        
 	        var RtnVal = xmlhttp.responseText;
@@ -376,7 +376,8 @@ function removeOpinionInfo() {
 		async : false,
 		url : "/ezApprovalG/opinionDel.do",
 		data : {
-			docID : pDocID
+			docID : pDocID,
+			isSihangReject : isSihangReject
 		},
 		success: function(text){
 			result = text;
