@@ -376,7 +376,7 @@
 			        xmlhttp.open("Post", "aspx/GetFormDetail.aspx", false);
 			        xmlhttp.send(xmlpara);
 			
-			        if (xmlhttp.statusText == "OK") {
+			        if (xmlhttp.status == 200) {
 			            if (loadXMLString(xmlhttp.responseText).getElementsByTagName("FORMDOCTYPE").length > 0) {
 			                Result = getNodeText(loadXMLString(xmlhttp.responseText).getElementsByTagName("FORMDOCTYPE").item(0));
 			            }

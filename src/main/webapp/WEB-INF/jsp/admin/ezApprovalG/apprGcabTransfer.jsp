@@ -134,7 +134,7 @@
 	        XmlHttp.send(xmlpara);
 
 	        if (XmlHttp != null && XmlHttp.readyState == 4) {
-	        	 if (XmlHttp.statusText == "OK") {
+	        	 if (XmlHttp.status == 200) {
 	        		 var rtnVal = getNodeText(XmlHttp.responseXML.documentElement);
 	        		  if (rtnVal == "NODEPTADMIN") {
 	      	            alert("<spring:message code='ezApprovalG.t567'/>");

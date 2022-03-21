@@ -1390,7 +1390,7 @@ function setHeSongHapyuiDocInfo(pSelectedRow) {
         xmlhttp.send(xmlpara);
         
         if (xmlhttp != null && xmlhttp.readyState == 4) {
-       	 if (xmlhttp.statusText == "OK") {
+       	 if (xmlhttp.status == 200) {
        		 var pAlertContent = strLang878;
              OpenAlertUI(pAlertContent, "", "OPEN");
              openergetDocInfo();

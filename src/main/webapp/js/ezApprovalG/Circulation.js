@@ -9,7 +9,7 @@ function SaveAprLineInfoCC(pstrXML) {
         xmlhttp.send(pstrXML);
 
         if (xmlhttp != null && xmlhttp.readyState == 4) {
-          	 if (xmlhttp.statusText == "OK") {
+          	 if (xmlhttp.status == 200) {
           		var dataNodes = GetChildNodes(xmlhttp.responseXML);
                 var ret = getNodeText(dataNodes[0]);
                 

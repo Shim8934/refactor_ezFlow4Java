@@ -279,7 +279,7 @@
                     xmlhttp.open("POST", "/ezApprovalG/insertUserCont.do", false);
                     xmlhttp.send(xmlpara);
                     if (xmlhttp != null && xmlhttp.readyState == 4) {
-    		            if (xmlhttp.statusText == "OK") {
+    		            if (xmlhttp.status == 200) {
     		            	var ResultXML = "";
     	                    ResultXML = loadXMLString(xmlhttp.responseText);
     	                    var dataNodes = GetChildNodes(ResultXML);
@@ -311,7 +311,7 @@
                     xmlhttp.send(xmlpara);
                     
                     if (xmlhttp != null && xmlhttp.readyState == 4) {
-    		            if (xmlhttp.statusText == "OK") {
+    		            if (xmlhttp.status == 200) {
     		            	var ResultXML = "";
     	                    ResultXML = loadXMLString(xmlhttp.responseText);
     	                    var dataNodes = GetChildNodes(ResultXML);
@@ -345,7 +345,7 @@
             xmlhttp.open("POST", "/ezApprovalG/deleteUserCont.do", false);
             xmlhttp.send(xmlpara);
             
-            if (xmlhttp.statusText == "OK") {
+            if (xmlhttp.status == 200) {
             	 var ResultXML = "";
                  ResultXML = loadXMLString(xmlhttp.responseText);
                  var dataNodes = GetChildNodes(ResultXML);

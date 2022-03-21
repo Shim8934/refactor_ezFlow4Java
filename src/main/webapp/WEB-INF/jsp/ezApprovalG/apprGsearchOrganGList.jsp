@@ -69,7 +69,7 @@
         
         function event_SearchList() {
             if (xmlhttpSearch != null && xmlhttpSearch.readyState == 4) {
-                if (xmlhttpSearch.statusText == "OK") {
+                if (xmlhttpSearch.status == 200) {
                     var listNode = SelectSingleNodeNew(loadXMLString(xmlhttpSearch.responseText), "LISTVIEWDATA");
 
                     var xmlDoc = createXmlDom();
@@ -260,7 +260,7 @@
         
         function event_SearchDeptTreeViewMove() {
             if (xmlhttpSearch != null && xmlhttpSearch.readyState == 4) {
-                if (xmlhttpSearch.statusText == "OK") {
+                if (xmlhttpSearch.status == 200) {
                     reParam["ret"] = "SEARCH";
                     reParam["search"] = xmlhttpSearch.responseText;
                     

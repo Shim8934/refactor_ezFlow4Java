@@ -314,7 +314,7 @@ function saveOpinionInfo() {
 	        
 	        var RtnVal = xmlhttp.responseText;
 	        if (xmlhttp != null && xmlhttp.readyState == 4) {
-	        	if (xmlhttp.statusText == "OK" && RtnVal == "TRUE") {
+	        	if (xmlhttp.status == 200 && RtnVal == "TRUE") {
 	        		if (ReturnFunction != null) {
 	        			ReturnFunction(getXmlString(objXML));
 	                    window.close();

@@ -444,7 +444,7 @@
 		
 		        var rtnXml = oXmlhttp.responseText
 		        if (oXmlhttp != null && oXmlhttp.readyState == 4) {
-					if (oXmlhttp.statusText == "OK") {
+					if (oXmlhttp.status == 200) {
 						return true;
 					} else {
 						alert("<spring:message code='ezApprovalG.t1085'/>");

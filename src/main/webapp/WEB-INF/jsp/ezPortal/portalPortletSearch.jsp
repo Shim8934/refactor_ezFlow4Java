@@ -68,7 +68,7 @@
 			    xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 			    xmlhttp.send();
 
-			    if (xmlhttp.statusText == "OK") {
+			    if (xmlhttp.status == 200) {
 			        xmldom = loadXMLString(xmlhttp.responseText);
 			        
 			        var portletHTML = "<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" style=\"TABLE-LAYOUT:fixed\">";

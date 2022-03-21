@@ -4720,7 +4720,7 @@ function btnAprLineSearchDept_onClick_Complete2(rgParams) {
 
 function event_getAprLineDeptFullTree() {
     if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
-        if (g_xmlHTTP.statusText == "OK") {
+        if (g_xmlHTTP.status == 200) {
         	document.getElementById('TreeView').innerHTML = "";
         	var treeView = new TreeView();
         	treeView.SetID("FromTreeView");
@@ -4851,7 +4851,7 @@ function btnReceiptSearchDept_onClick_Complete2(rgParams) {
 
 function event_getReceiptDeptFullTree() {
     if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
-        if (g_xmlHTTP.statusText == "OK") {
+        if (g_xmlHTTP.status == 200) {
             document.getElementById('TreeView2').innerHTML = "";
             var treeView = new TreeView();
             treeView.SetID("tvTreeView2");

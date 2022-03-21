@@ -1856,7 +1856,7 @@ function SaveApproveInfo(pApproveFlag) {
     }
     xmlhttp.send(xmlpara);
     if (xmlhttp != null && xmlhttp.readyState == 4) {
-     	 if (xmlhttp.statusText == "OK") {
+     	 if (xmlhttp.status == 200) {
      	    var dataNodes = GetChildNodes(xmlhttp.responseXML);
      	    return getNodeText(dataNodes[0]);
      	 } else {
@@ -3686,7 +3686,7 @@ function UpdateDocHistory(pHtml, isBeforeDoc, beforeDocURL) {
         xmlhttp.send(xmlpara);
         
         if (xmlhttp != null && xmlhttp.readyState == 4) {
-          	 if (xmlhttp.statusText == "OK") {
+          	 if (xmlhttp.status == 200) {
           		returnURL = xmlhttp.responseText;
           	 } else {
           		 var pAlertContent = strLang89;

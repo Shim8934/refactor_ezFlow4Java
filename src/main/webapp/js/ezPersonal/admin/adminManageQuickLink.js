@@ -668,7 +668,7 @@ function SaveQuickLink(itemId) {
 	xmlhttp.send(xmlpara);
 	
 	if (xmlhttp != null && xmlhttp.readyState == 4) {
-		if (xmlhttp.statusText == "OK") {
+		if (xmlhttp.status == 200) {
 			alert(strLangkhj22);
 			window.location.reload();
 		} else {

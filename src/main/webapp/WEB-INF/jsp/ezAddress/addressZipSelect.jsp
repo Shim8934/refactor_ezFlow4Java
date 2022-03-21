@@ -94,7 +94,7 @@
 		    
 		    function event_AddressList() {
 	            if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
-	                if (g_xmlHTTP.statusText == "OK") {
+	                if (g_xmlHTTP.status == 200) {
 	                    document.getElementById("ProgressBar").style.display = "none";
 	                    document.getElementById("AddressListTr").style.display = "";
 

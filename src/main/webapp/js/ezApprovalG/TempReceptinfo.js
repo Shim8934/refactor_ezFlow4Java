@@ -582,7 +582,7 @@ function CreateNewAprDeptTemplet(p_AprDeptTempletName) {
     var RtnVal = xmlhttp.responseText;
     
     if (xmlhttp != null && xmlhttp.readyState == 4) {
-		if (xmlhttp.statusText == "OK" && RtnVal == "TRUE") {
+		if (xmlhttp.status == 200 && RtnVal == "TRUE") {
 			OpenAlertUI(strLang814, CreateNewAprDeptTemplet_Complete);
 	        if (!CrossYN())
 	            InitReceptTemplet();

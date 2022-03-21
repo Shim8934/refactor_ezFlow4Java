@@ -1017,7 +1017,7 @@ function RegisterRecord() {
 
     var rtnXml = xmlhttp.responseXML;
     if (xmlhttp != null && xmlhttp.readyState == 4) {
-		if (xmlhttp.statusText == "OK" && getNodeText(GetChildNodes(rtnXml)[0]) == "TRUE") {
+		if (xmlhttp.status == 200 && getNodeText(GetChildNodes(rtnXml)[0]) == "TRUE") {
 			return true;
 		} else {
 			alert(strLang677);

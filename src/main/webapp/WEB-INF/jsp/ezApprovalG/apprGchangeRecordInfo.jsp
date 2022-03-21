@@ -542,7 +542,7 @@
         oXmlhttp.send(xmlpara);
 
         if (oXmlhttp != null && oXmlhttp.readyState == 4) {
-         	 if (oXmlhttp.statusText == "OK") {
+         	 if (oXmlhttp.status == 200) {
          			OpenAlertUI("<spring:message code='ezApprovalG.t962'/>");
          		   return true;
          	 } else {

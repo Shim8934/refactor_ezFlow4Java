@@ -182,7 +182,7 @@
 				/* 2018-12-27 홍승비 - 퀵링크 아이콘과 텍스트 세로 중앙정렬 수정 */
 			    function event_GetQuickLink() {
 			        if (xmlhttp != null && xmlhttp.readyState == 4) {
-			            if (xmlhttp.statusText == "OK") {
+			            if (xmlhttp.status == 200) {
 			                var xmldomNode = SelectNodes(xmlhttp.responseXML, "DATA/ROW");
 			                for (i = 0; i < xmldomNode.length; i++) {
 	

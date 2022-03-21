@@ -939,7 +939,7 @@ function MoveRecord(pRecID, pSepAttNo, pNewCabID, pFlag) {
     XmlHttp.send(xmlpara);
 
     if (XmlHttp != null && XmlHttp.readyState == 4) {
-     	 if (XmlHttp.statusText == "OK") {
+     	 if (XmlHttp.status == 200) {
      		return true;
      	 } else {
      		 return false;

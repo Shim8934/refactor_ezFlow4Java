@@ -201,7 +201,7 @@ function UpdateReceiptOffer(pDocID, pOrgDocID)
 	xmlhttp.send(xmlpara);
 	
     if (xmlhttp != null && xmlhttp.readyState == 4) {
-     	 if (xmlhttp.statusText == "OK") {
+     	 if (xmlhttp.status == 200) {
      		var dataNodes = GetChildNodes(xmlhttp.responseXML); 
      		var rtnVal = getNodeText(dataNodes[0]);	
      		
@@ -249,7 +249,7 @@ function doSendOfferAjax(newDocID, pDocID, array, pHref) {
 	xmlhttp.send(xmlpara);
 
 	if (xmlhttp != null && xmlhttp.readyState == 4) {
-		if (xmlhttp.statusText == "OK") {
+		if (xmlhttp.status == 200) {
 			var dataNodes = GetChildNodes(xmlhttp.responseXML); 
 			return getNodeText(dataNodes[0]) === "TRUE";
 		} else {
@@ -556,7 +556,7 @@ function UpdateProcessYN(pDocID, tempDeptID, tempProcessYN, tempDeptName, tempDe
 		xmlhttp.open("POST","/ezApprovalG/UpdateProcessYN.do",false);
 		xmlhttp.send(xmlpara);
 		
-		if (xmlhttp.statusText == "OK") {
+		if (xmlhttp.status == 200) {
 			var dataNodes = GetChildNodes(xmlhttp.responseXML); 
 			return getNodeText(dataNodes[0]);
 		} else {
