@@ -298,9 +298,13 @@ function ezCabMunuCtl(MenuType, selRow) {
                 }
                 /* 2022-03-18 홍승비 - 미처리문서함 > 내부시행문 시행문변환 팝업창 내부에서 반송 시 삭제 가능 + 다시 시행문변환하여 발송도 가능 (rejectFlag == 1이라도 시행문변환 가능) */
                 else if (ListTypeFlag == "23" && isDrafter(WriterID, WriterDeptID) && seperateAttachNo === "00" && rejectFlag === "1") {
-                	SetMenuBtn("tdichange_Rec", "none");
-                	SetMenuBtn("tdichangeS_Rec", "");
-                	SetMenuBtn("tdReSend", "none");
+                    if (docType === "003" && docState === "001") {
+                        SetMenuBtn("tdichange_Rec", "none");
+                        SetMenuBtn("tdichangeS_Rec", "none");
+                        SetMenuBtn("tdReSend", "");
+                    } else {
+                        SendOfferCheckBtn(GetAttribute(selRow, "DATA1"), arr_userinfo[1]); // 내부시행문, 외부시행문 판별
+                    }
                 } else {
                     SetMenuBtn("tdichange_Rec", "none");
                     SetMenuBtn("tdichangeS_Rec", "none");
