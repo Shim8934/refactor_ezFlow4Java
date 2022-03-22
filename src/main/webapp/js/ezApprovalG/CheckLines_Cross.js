@@ -88,7 +88,7 @@ function getFormInfo(pCode1, pCode2) {
     xmlHTTP3.open("POST", "/myoffice/ezApprovalG/ezaprline/aspx/getCodeInfo.aspx", false);
     xmlHTTP3.send(xmlDOM);
 
-    if (xmlHTTP3.statusText == "OK")
+    if (xmlHTTP3.status == 200)
         Result = xmlHTTP3.responseText;
     else
         alert("ezViewEnd_HWP.aspx, getFormInfo() - " + xmlHTTP3.statusText);

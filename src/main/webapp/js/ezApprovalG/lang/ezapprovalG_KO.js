@@ -1125,3 +1125,6 @@ var strLangHSBRDa06 = "현재 선택된 ";
 var strLangHSBRDa07 = "을 삭제하시겠습니까?";
 var strLangHSBRDa08 = "추가된 안이 없습니다.<br/> [안추가]를 먼저 실행해 주세요.";
 var strLangHSBRDa09 = "안의 ";
+
+/* 2022-03-18 홍승비 - 내부시행문 반송 시 메일알림 */
+var strLangHSBSH01 = "[시행문반송알림]";

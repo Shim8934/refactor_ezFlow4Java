@@ -1120,3 +1120,6 @@ var strLangHSBRDa06 = "現在選択した";
 var strLangHSBRDa07 = "を削除しますか？";
 var strLangHSBRDa08 = "追加された案がありません。<br/> [案追加]を先に実行してください。";
 var strLangHSBRDa09 = "案の";
+
+/* 2022-03-18 홍승비 - 내부시행문 반송 시 메일알림 */
+var strLangHSBSH01 = "[施行文の差し戻し通知]";

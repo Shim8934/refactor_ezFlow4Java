@@ -170,6 +170,7 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck, Method)
     else if (type == "approve_complete" && pDraftFlag == "DRAFT") Subject = strLang1116;
     else if (type == "approve_complete" && pDraftFlag == "SUSIN") Subject = strLang1117;
     else if (type == "SIHANG") Subject = strLang1118;
+    else if (type == "SIHANGBANSONG") Subject = strLangHSBSH01; // 시행문 반송알림
     else if (type == "SIMSABANSONG") Subject = strLang1119;
     else if (type == "SIMSAALERT") Subject = strLang1120;
     else if (type == "hukyul") Subject = strLang1121;
@@ -214,7 +215,7 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck, Method)
         }
     }
 
-    if (type == "hesong" || type == "SIMSABANSONG") {
+    if (type == "hesong" || type == "SIMSABANSONG" || type == "SIHANGBANSONG") {
         if (valueOpinion != "") {
             Content = Content + "<br>" + valueOpinion;
         } 
@@ -314,7 +315,7 @@ function GetNoticeMail(UserID, type) {
             return true;
         else
             return false;
-    } else if (type == "bansong" || type == "SIMSABANSONG" || type == "opinion") {
+    } else if (type == "bansong" || type == "SIMSABANSONG" || type == "opinion" || type == "SIHANGBANSONG") {
         if (s_bansongMail == 1)
             return true;
         else
@@ -885,11 +886,19 @@ function getreceiveDeptIDlist(DocID) {
 function SendSimsaBansong(title) {
     var _DrafterID = GetDocInfoData("APR", "WRITERID");
     getOpinionInfo(pDocID, "APR");
-    if (_DrafterID != "")
-        sendmail(_DrafterID, title, arr_userinfo[2], "", "SIMSABANSONG", "");
+    if (_DrafterID != "") {
+    	sendmail(_DrafterID, title, arr_userinfo[2], "", "SIMSABANSONG", "");
+    }
 }
 
-
+function SendSihangBansong(title) {
+    var _DrafterID = GetDocInfoData("END", "WRITERID");
+    var _DrafterName = GetDocInfoData("END", "WRITERNAME");
+    getOpinionInfo(pDocID, "END");
+    if (_DrafterID != "") {
+    	sendmail(_DrafterID, title, _DrafterName, "", "SIHANGBANSONG", "");
+    }
+}
 
 function SendMailHesong(CurSelRow) {
    

@@ -312,7 +312,7 @@ function DocDel() {
     Flag = xmlhttp.responseText;
 
     if (xmlhttp != null && xmlhttp.readyState == 4) {
-		if (xmlhttp.statusText == "OK" && Flag == "<PARAMETER><RESULT>TRUE</RESULT></PARAMETER>") {
+		if (xmlhttp.status == 200 && Flag == "<PARAMETER><RESULT>TRUE</RESULT></PARAMETER>") {
 			alert(strLang802);
 	        for (count1 = length - 1 ; count1 > -1 ; count1--) {
 	            listview2.DeleteRow(GetAttribute(listview2.GetDataRows()[count1], "id"));

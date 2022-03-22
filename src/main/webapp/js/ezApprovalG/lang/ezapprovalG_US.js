@@ -1120,3 +1120,6 @@ var strLangHSBRDa06 = "Are you sure you want to delete the currently selected ";
 var strLangHSBRDa07 = "doc tab?";
 var strLangHSBRDa08 = "No doc tab have been added.<br/> please do the [add doc tab] first.";
 var strLangHSBRDa09 = "doc tab : ";
+
+/* 2022-03-18 홍승비 - 내부시행문 반송 시 메일알림 */
+var strLangHSBSH01 = "[Notice of Return Enforced Doc]";

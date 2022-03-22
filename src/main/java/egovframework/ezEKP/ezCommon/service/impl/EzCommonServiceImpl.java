@@ -2675,4 +2675,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addAprDocGroupInfoTypeColumn() throws Exception {
 		ezCommonDAO.addAprDocGroupInfoTypeColumn();
 	}
+
+	@Override
+	public void alterTblDevMaster() throws Exception {
+		ezCommonDAO.alterTblDevMaster();
+	}
+	
 }

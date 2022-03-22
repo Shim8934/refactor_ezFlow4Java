@@ -60,6 +60,8 @@ public class MScheduleInfoVO {
 	private String contentPath;					/** mht 파일 경로 */
 	
 	private int repeatCount;					/** 반복횟순 */
+	
+	private String scheduleFlag;				/** 일정 구분값 */
 
 	public String getScheduleId() {
 		return scheduleId;
@@ -299,6 +301,14 @@ public class MScheduleInfoVO {
 
 	public void setRepeatCount(int repeatCount) {
 		this.repeatCount = repeatCount;
+	}
+
+	public String getScheduleFlag() {
+		return scheduleFlag;
+	}
+
+	public void setScheduleFlag(String scheduleFlag) {
+		this.scheduleFlag = scheduleFlag;
 	}
 	
 }

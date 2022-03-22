@@ -1254,7 +1254,7 @@ function SaveDraftDocInfo_ilban()
 	xmlhttp.send(xmlpara);
 
 	if (xmlhttp != null && xmlhttp.readyState == 4) {
-    	 if (xmlhttp.statusText == "OK") {
+    	 if (xmlhttp.status == 200) {
     		SetBtnStateFalse();
     		 return getNodeText(GetChildNodes(xmlhttp.responseXML)[0]);
     	 } else {
@@ -1347,7 +1347,7 @@ function SaveDraftDocInfo_susin()
 	xmlhttp.send(xmlpara);
 	
 	if (xmlhttp != null && xmlhttp.readyState == 4) {
-    	 if (xmlhttp.statusText == "OK") {
+    	 if (xmlhttp.status == 200) {
     		SetBtnStateFalse();
     		return xmlhttp.responseText;
     	 } else {
@@ -1740,7 +1740,7 @@ function setHeSongDocInfo() {
         xmlhttp.send(xmlpara);
     
         if (xmlhttp != null && xmlhttp.readyState == 4) {
-   	 		if (xmlhttp.statusText == "OK") {
+   	 		if (xmlhttp.status == 200) {
    	 			var pAlertContent = strLang878;
    	 			OpenAlertUI(pAlertContent, "", "OPEN");
    	 		} else {

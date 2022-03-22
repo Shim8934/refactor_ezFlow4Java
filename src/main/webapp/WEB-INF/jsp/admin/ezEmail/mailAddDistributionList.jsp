@@ -221,7 +221,7 @@
 	
 	        function event_GetDistributionList() {
 	            if (xmlHTTP2 != null && xmlHTTP2.readyState == 4) {
-	                if (xmlHTTP2.statusText == "OK") {
+	                if (xmlHTTP2.status == 200) {
 	                    var result = loadXMLString(xmlHTTP2.responseText);
 	                    
 	                    document.getElementById("TextId").disabled = true;
@@ -447,7 +447,7 @@
 	
 	        function event_displayUserList2() {
 	            if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
-	                if (g_xmlHTTP.statusText == "OK") {
+	                if (g_xmlHTTP.status == 200) {
 	                    var headerData = createXmlDom();
 	                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
 	
@@ -656,7 +656,7 @@
 	
 	        function event_getDeptFullTree() {
 	            if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
-	                if (g_xmlHTTP.statusText == "OK") {
+	                if (g_xmlHTTP.status == 200) {
 	                    if (!bSearch) {
 	                        try {
 	                            if (CrossYN())

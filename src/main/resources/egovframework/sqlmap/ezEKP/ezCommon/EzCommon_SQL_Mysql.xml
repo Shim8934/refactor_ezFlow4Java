@@ -4393,5 +4393,19 @@
 		ADD 
 			TYPE VARCHAR(10) NOT NULL
     </statement>
-
+    
+	<statement id="EzCommonDAO.alterTblDevMaster">
+	<![CDATA[
+		ALTER TABLE 
+			TBL_DEV_MASTER
+		ADD 
+		IF NOT EXISTS
+		(
+			PIN 				VARCHAR(1000) 	DEFAULT NULL,
+			PINSTATE			CHAR(1)			DEFAULT 'N',
+			BIOMETRIC			CHAR(1)			DEFAULT 'N'
+		)
+	]]>
+    </statement>
+    
 </sqlMap>

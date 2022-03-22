@@ -312,6 +312,7 @@
 					return;
 				}
 
+				var GetCurrentlinelist = getAprLinefor("APR", pDocID);
 				var result = "";
 				
 	        	$.ajax({
@@ -333,8 +334,9 @@
 	        	//2018-07-10 배현상, OpenAlertUI에서 브라우저alert으로 변경 및 로직 수정
 	        	var RtnVal = getNodeText(loadXMLString(result).documentElement);
 	        	
+	        	/* 2022-03-15 홍승비 - 회수메일 발송 시 회수동작 이전의 결재선 정보를 전달하도록 수정 */
 		        if (RtnVal == "TRUE") {
-					SendMailToCancel_Function(getAprLinefor("APR", pDocID));
+					SendMailToCancel_Function(GetCurrentlinelist);
 					attitude_annual_conn(pDocID);
 					
 					ExcuteInfo("CALLBACK_AFTER", "DRAFT");
@@ -434,15 +436,16 @@
 				var RtnVal = getNodeText(loadXMLString(result).documentElement);
 
 				if (RtnVal == "TRUE") {
-					var rows = GetElementsByTagName(loadXMLString(getAprLinefor("APR", pDocID)), "ROW");
+					var rows = GetElementsByTagName(loadXMLString(getAprLinefor("APR", pDocID)), "ROW"); // SendMailToCancel 함수 내부에서 다시 한번 결재선을 가져온다.
 					var drafterRow = rows[rows.length - 1];
 					var cell = drafterRow.firstElementChild;
 
 					var docTitle = message.GetFieldText("doctitle").trim();
 					var drafterName = SelectSingleNodeValue(cell, "DATA13");
-					var draftDate = SelectSingleNodeValue(cell, "DATA2");
+					//var draftDate = SelectSingleNodeValue(cell, "DATA2");
+					var pDraftDate = GetDocInfoData("APR", "STARTDATE"); // 메일 발송 시 회수일시가 아닌 기안일시를 사용
 
-					SendMailToCancel(pDocID, docTitle, drafterName, draftDate); 
+					SendMailToCancel(pDocID, docTitle, drafterName, pDraftDate); 
 					attitude_annual_conn(pDocID);
 
 					ExcuteInfo("CALLBACK_AFTER", "DRAFT");

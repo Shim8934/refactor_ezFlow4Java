@@ -2558,7 +2558,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
-		String result = ezApprovalGService.deleteOpinionInfo(docID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		String isSihangReject = request.getParameter("isSihangReject") != null ? request.getParameter("isSihangReject") : ""; // 시행문의 반송을 위한 플래그 추가
+		String result = "";
+		
+		if (isSihangReject.equals("Y")) { // 미처리문서함에 들어온 내부시행문의 의견 삭제 분기 (완료된 문서의 의견테이블에 접근)
+			result = ezApprovalGService.deleteEndOpinionInfo(docID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		} else { // 기존 의견 삭제 분기
+			result = ezApprovalGService.deleteOpinionInfo(docID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		}
 		
 		logger.debug("result = " + result);
 		
@@ -2579,12 +2586,20 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		Document docXML = commonUtil.convertStringToDocument(xmlDom);
 		
 		String orgCompanyID = request.getParameter("orgCompanyID");
+		String isSihangReject = request.getParameter("isSihangReject") != null ? request.getParameter("isSihangReject") : ""; // 시행문의 반송을 위한 플래그 추가
 		
 		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
 			userInfo.setCompanyID(orgCompanyID);
 		}
 		
-		String result = ezApprovalGService.updateOpinionInfo(docXML, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		String result = "";
+		
+		if (isSihangReject.equals("Y")) { // 미처리문서함에 들어온 내부시행문의 반송의견 저장 분기 (완료된 문서의 의견테이블에 접근)
+			result = ezApprovalGService.updateOpinionSihangReject(docXML, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		} else { // 기존 의견 저장 분기
+			result = ezApprovalGService.updateOpinionInfo(docXML, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		}
+		
 		logger.debug("opinionSave End");
 		return result;
 	}
@@ -2807,7 +2822,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 			String saveFileName = docID + fileAttachFormatSN + fileName;
 			
-			if (fileSize > maxSize) {
+			/* 2022-03-17 홍승비 - maxSize가 0인 경우, 전자결재 첨부파일 총용량제한은 무제한으로 취급 */
+			if (maxSize != 0 && fileSize > maxSize) {
 				resultUploadArray[i] = "overflow";
 			} else {
 				// 첨부파일의 확장자가 useExtension에 포함되지 않은경우
@@ -9038,6 +9054,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String recordID = request.getParameter("recordID") != null ? request.getParameter("recordID") : ""; // 시행문의 반송을 위한 recordID 추가
 
 		String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
 		
@@ -9090,6 +9107,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("approvalPWD", approvalPWD);
 		model.addAttribute("docTitle", docTitle);
 		model.addAttribute("isConvSihang", isConvSihang);
+		model.addAttribute("recordID", recordID);
 		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
 		
 		// 대용량첨부 관련 정보
@@ -9262,7 +9280,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String docID = request.getParameter("docID");
 		String userID = request.getParameter("userID");
-		String result = ezApprovalGService.doSendOfferReject(docID, userID, userInfo.getCompanyID(), userInfo.getTenantId());
+		String deptID = request.getParameter("deptID");
+		String isSihangReject = request.getParameter("isSihangReject") != null ? request.getParameter("isSihangReject") : ""; // 시행문의 반송을 위한 플래그 추가
+		String recordID = request.getParameter("recordID") != null ? request.getParameter("recordID") : ""; // 시행문의 반송을 위한 recordID 추가
+		String result = "";
+		
+		if (isSihangReject.equals("Y")) { // 미처리문서함에 들어온 내부시행문의 반송 분기 (완료된 문서의 테이블에 접근)
+			result = ezApprovalGService.doSihangConvReject(docID, recordID, userID, deptID, userInfo.getCompanyID(), userInfo.getTenantId());
+		} else { // 기존 반송 분기
+			result = ezApprovalGService.doSendOfferReject(docID, userID, userInfo.getCompanyID(), userInfo.getTenantId());
+		}
 		
 		logger.debug("sendOfferReject ended");
 		

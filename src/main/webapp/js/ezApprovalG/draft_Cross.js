@@ -3085,7 +3085,7 @@ function SaveDraftDocInfo_ilban(pState) {
         xmlhttp.open("POST", "/ezApprovalG/doDraft.do", false);
         xmlhttp.send(xmlpara);
 
-    	if (xmlhttp.statusText == "OK") {
+    	if (xmlhttp.status == 200) {
     		 if (pState != "000")
     	            SetBtnStateFalse();
     	        var dataNodes = GetChildNodes(xmlhttp.responseXML);
@@ -4425,7 +4425,7 @@ function SaveTMPDocInfo(AutoSave) {
         xmlhttp.open("POST", "/ezApprovalG/doDraft.do", false);
         xmlhttp.send(xmlpara);
         
-     	if (xmlhttp.statusText == "OK") {
+     	if (xmlhttp.status == 200) {
      		return xmlhttp.responseText;
      	} else {
      		return "FALSE";

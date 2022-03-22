@@ -2317,4 +2317,13 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addAprDocGroupInfoTypeColumn");
 		}
 	}
+	
+	public void alterTblDevMaster() {
+		try {
+			update("EzCommonDAO.alterTblDevMaster");
+		} catch (Exception e) {
+			logger.debug("alterTblDevMaster() ERROR...");
+			e.printStackTrace();
+		}
+	}
 }

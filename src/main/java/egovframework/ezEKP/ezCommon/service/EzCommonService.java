@@ -378,4 +378,5 @@ public interface EzCommonService {
 	
 	public void addAprDocGroupInfoTypeColumn() throws Exception;
 
+	public void alterTblDevMaster() throws Exception;
 }

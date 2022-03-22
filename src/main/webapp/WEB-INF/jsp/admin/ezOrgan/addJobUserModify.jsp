@@ -92,7 +92,7 @@
 		    
 		    function event_GetDeptTreeInfo() {
 		    	if (xmlHTTP != null && xmlHTTP.readyState == 4) {
-		        	if (xmlHTTP.statusText == "OK") {
+		        	if (xmlHTTP.status == 200) {
 		            	var xmlTree = loadXMLString(xmlHTTP.responseText);
 		                var treeXML = loadXMLFile("/xml/common/organtree_config3.xml");
 		                var treeView = new TreeView();
@@ -982,7 +982,7 @@
 		    var bSearch = true;
 		    function event_getDeptFullTree() {
 		        if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
-		            if (g_xmlHTTP.statusText == "OK") {
+		            if (g_xmlHTTP.status == 200) {
 		                if (!bSearch) {
 		                    try {
 		                        if (CrossYN()) {

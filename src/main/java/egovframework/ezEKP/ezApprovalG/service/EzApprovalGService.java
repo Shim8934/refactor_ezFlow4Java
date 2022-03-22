@@ -829,8 +829,17 @@ public interface EzApprovalGService {
 	public String chkOpinionInfoExist(String docID, String orgCompanyID, int tenantID) throws Exception;
 
     String getFormIdFromApr(String docID, String companyID, int tenantID) throws Exception;
-
+    
     /* 2022-03-08 홍승비 - 한글 전자결재 양식파일을 읽어 문서번호 필드의 포맷을 리턴 */
 	public String getHWPDocNumFormatByFormID(String formID, String realPath, String orgCompanyID, int tenantID) throws Exception;
-
+	
+    /* 2022-03-17 홍승비 - 미처리문서함에 들어온 내부시행문의 반송 메서드 (완료된 문서의 의견테이블에 접근) */
+	public String updateOpinionSihangReject(Document docXML, String companyID, String lang, int tenantId) throws Exception;
+	
+	/* 2022-03-17 홍승비 - 미처리문서함에 들어온 내부시행문 반송 시 완료문서의 기존 의견을 전부 삭제 */
+	public String deleteEndOpinionInfo(String docID, String companyID, String lang, int tenantID) throws Exception;
+	
+	/* 2022-03-17 홍승비 - 결재완료된 내부시행문 미처리문서함에서 반송 동작 추가 (완료문서 테이블에 접근) */
+	public String doSihangConvReject(String docID, String recordID, String userID, String deptID, String companyID, int tenantID) throws Exception;
+	
 }

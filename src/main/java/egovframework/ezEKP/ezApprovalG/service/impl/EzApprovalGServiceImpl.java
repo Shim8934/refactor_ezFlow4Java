@@ -6237,7 +6237,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 		    ezApprovalGDAO.updateRejectAprReceiptProcessInfo(map);
 	    	
-			logger.debug("doSendOfferReject Param : v_DOCID =" + docID + "v_TENANTID=" + tenantID);
+			logger.debug("doSendOfferReject Param : v_DOCID =" + docID + ", v_TENANTID=" + tenantID);
 	
 			ApprGDocListVO signList = ezApprovalGDAO.doSendOfferRejectAprDoc(map);
 			
@@ -18085,7 +18085,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	 * 완료문서에 대한 수신처 상태 정보 업데이트(진행여부, 진행일자)
 	 * TBL_ENDRECEIPTPOINTINFO 
 	 * - prcessYN 종류 
-	 *   A, B, E, H(회송), I(진행), N(대기), O, R, S, T, V, Y(완료)
+	 *   A(도착), B(발송의뢰반송), E(전송실패), H(회송), I(진행), N(대기), O(발송의뢰), R(수신), S(발송), T(재발송대기), V(도달), Y(완료)
 	 * */
 	public String updateProcessYN(String docID, String deptID, String processYN, String mode, String companyID, String lang, int tenantID) throws Exception {
 		logger.debug("updateProcessYN started");
@@ -34062,6 +34062,104 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		logger.debug("getHWPDocNumFormatByFormID ended");
 		return result;
+	}
+	
+	@Override
+	public String updateOpinionSihangReject(Document docXML, String companyID, String lang, int tenantID) throws Exception {
+		logger.debug("updateOpinionSihangReject started");
+		String docID = docXML.getElementsByTagName("ROW").item(0).getChildNodes().item(4).getTextContent();
+		
+		logger.debug("updateOpinionSihangReject param : docID = " + docID);
+
+		// 완료문서의 기존 의견을 전부 삭제
+		String rtnVal = deleteEndOpinionInfo(docID, companyID, lang, tenantID);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		if (rtnVal.equals("TRUE")) {
+			for (int k = 0; k < docXML.getElementsByTagName("ROW").getLength(); k++) {
+				map.put("v_DOCID", docID);
+				map.put("v_USERID", docXML.getElementsByTagName("ROW").item(k).getChildNodes().item(5).getTextContent());
+				map.put("v_OPINIONGB", docXML.getElementsByTagName("ROW").item(k).getChildNodes().item(9).getTextContent());
+				map.put("v_CONTENT", docXML.getElementsByTagName("ROW").item(k).getChildNodes().item(6).getTextContent());
+				map.put("v_USERNAME", docXML.getElementsByTagName("ROW").item(k).getChildNodes().item(10).getTextContent());
+				map.put("v_USERNAME2", docXML.getElementsByTagName("ROW").item(k).getChildNodes().item(11).getTextContent());
+				map.put("v_USERJOBTITLE", docXML.getElementsByTagName("ROW").item(k).getChildNodes().item(12).getTextContent());
+				map.put("v_USERJOBTITLE2", docXML.getElementsByTagName("ROW").item(k).getChildNodes().item(13).getTextContent());
+				map.put("v_USERDEPTID", docXML.getElementsByTagName("ROW").item(k).getChildNodes().item(7).getTextContent());
+				map.put("v_USERDEPTNAME", docXML.getElementsByTagName("ROW").item(k).getChildNodes().item(14).getTextContent());
+				map.put("v_USERDEPTNAME2", docXML.getElementsByTagName("ROW").item(k).getChildNodes().item(15).getTextContent());
+				map.put("v_OPINIONSN", (docXML.getElementsByTagName("ROW").getLength() - k));
+				map.put("v_ORGOPINIONSN", (docXML.getElementsByTagName("ROW").getLength() - k));
+				map.put("companyID", companyID);
+				map.put("v_TENANTID", tenantID);
+				map.put("v_ORGDOCID", docID);
+				
+				ezApprovalGDAO.insertHesongOpinion(map); // TBL_ENDAPROPINIONINFO에 차례대로 의견 삽입
+			}
+			map.put("v_DOCID", docID);
+			map.put("v_OpinionYN", "Y");
+			map.put("v_TENANTID", tenantID);
+			map.put("companyID", companyID);
+
+			ezApprovalGDAO.updateEndAprDocOptionInfo(map); // 완료문서의 의견존재여부를 Y로 변경
+		}
+		
+		logger.debug("updateOpinionSihangReject ended");
+
+		return rtnVal;
+	}
+	
+	/* 2022-03-17 홍승비 - 결재완료된 내부시행문 미처리문서함에서 반송 시 완료문서의 기존 의견을 전부 삭제 */
+	@Override
+	public String deleteEndOpinionInfo(String docID, String companyID, String lang, int tenantID) throws Exception {
+		logger.debug("deleteEndOpinionInfo started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_DOCID", docID);
+		map.put("v_OpinionYN", "N");
+		map.put("companyID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		ezApprovalGDAO.deleteEndOpinionInfo(map);
+		ezApprovalGDAO.updateEndAprDocOptionInfo(map); // 완료문서의 의견존재여부를 N으로 변경
+		
+		logger.debug("deleteEndOpinionInfo ended");
+		return "TRUE";
+	}
+	
+	/* 2022-03-17 홍승비 - 결재완료된 내부시행문 미처리문서함에서 반송 동작 추가 (완료문서 테이블에 접근) */
+	@Override
+	public String doSihangConvReject(String docID, String recordID, String userID, String deptID, String companyID, int tenantID) throws Exception {
+		logger.debug("doSihangConvReject started, Param : docID = " + docID + ", recordID = " + recordID + ", userID = " + userID + ", deptID = " + deptID + ", companyID = " + companyID);
+		
+		String retValue = "";
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_DOCID", docID);
+		map.put("v_TENANTID", tenantID);
+		map.put("companyID", companyID);
+    	
+		// TBL_ENDAPRDOCINFO 테이블에 해당 문서의 레코드가 존재하는지 확인
+		List<ApprGDocListVO> writer = ezApprovalGDAO.sendoffercheck_enddocinfo(map);
+		
+		if (writer == null) {
+			retValue = "<RESULT>FALSE</RESULT>";
+		} else {
+			// 사실상 수신부서로는 아직 문서가 발송되지 않은 상태이며, 해당 수신부서에서 반려가 된 것도 아님
+			// 기안자가 비처리문서함에서 자신의 완료문서를 반려처리한 것이므로, TBL_ENDRECEIPTPOINTINFO의 수신처 정보를 갱신할 필요도 없음
+			// 결재완료된 문서를 반려처리하는 행위이므로, TBL_RECORD 테이블의 REJECTFLAG를 1로 갱신한다.
+			// 사실상 반송문서를 대장등록하여 완료시키는 행위와 비슷함. 이미 대장등록된 완료문서의 반송여부 플래그만 변경하는 것이기 때문
+			map.put("v_RECORDID", recordID);
+			map.put("v_REJECTFLAG", "1");
+			
+			ezApprovalGDAO.updateRecInfoRejectFlag(map);
+			
+			retValue = "<RESULT>TRUE</RESULT>";
+		}
+		
+		logger.debug("doSihangConvReject ended, retValue = " + retValue);
+
+		return retValue;
 	}
 	
 }

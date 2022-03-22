@@ -4555,7 +4555,7 @@
                 AND
                     TBL_FORMINFO.FORMCONTID IN
                     (SELECT
-                        FORMCONTID
+                        TO_CHAR(FORMCONTID)
                     FROM
                         TBL_FORMCONTUSERGROUP
                     WHERE
@@ -4572,7 +4572,7 @@
                     WHERE
                         TENANT_ID = TBL_FORMINFO.TENANT_ID
                     AND
-                        TO_CHAR(COMPANYID) = TBL_FORMINFO.COMPANYID
+                        TO_CHAR(COMPANYID) = TO_CHAR(TBL_FORMINFO.COMPANYID)
                     AND
                         (FORMCONTOWNDEPID = 'ALL' or FORMCONTOWNDEPID = #deptId#)
                     )
@@ -4631,11 +4631,11 @@
          	LEFT OUTER JOIN 
          		TBL_FORMCONTAINER
          	ON 
-         		TBL_FORMINFO.FORMCONTID = TO_CHAR(TBL_FORMCONTAINER.FORMCONTID)
+         		TO_CHAR(TBL_FORMINFO.FORMCONTID) = TO_CHAR(TBL_FORMCONTAINER.FORMCONTID) 
          	AND
          		TBL_FORMINFO.TENANT_ID = TBL_FORMCONTAINER.TENANT_ID
          	AND
-         		TBL_FORMINFO.COMPANYID = TO_CHAR(TBL_FORMCONTAINER.COMPANYID)
+         		TO_CHAR(TBL_FORMINFO.COMPANYID) = TO_CHAR(TBL_FORMCONTAINER.COMPANYID)
        		LEFT JOIN
    				TBL_FORM_OFFICE O
    			ON 
@@ -14525,6 +14525,8 @@
 	            TBL_ENDAPRDOCINFO.WRITERDEPTID = #deptCode#
 	        AND
 	           TBL_SEPERATEATTACH.SEPERATEATTACHNO = '00'
+			AND
+				TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
 	    </isEqual>
 		)
 	</select>
@@ -34201,11 +34203,7 @@
             AND 
                 A.ENDDATE <= TO_TIMESTAMP(#v_ENDDATE#, 'YYYY-MM-DD HH24:MI:SS') 
             AND 
-                (
-                    B.DELFLAG IS NULL 
-                OR 
-                    B.DELFLAG <> '1'
-                )
+				B.DELFLAG IS NULL 
             AND 
                 C.PROCESSYN = 'N' 
             ]]>
@@ -34918,6 +34916,53 @@
         </iterate>
     </insert>
     
+	<select id="EzApprovalG.getReceiptInfoIng" parameterClass="Map" resultClass="HashMap">
+        <isEqual property="v_TYPE" compareValue="one">
+            SELECT 
+                ROWNUM AS SN, 
+                RECEIPTPOINTID, 
+                RECEIPTPOINTNAME$v_LANG$ AS DISPLAYRECEIPTPOINTNAME,
+                RECEIPTPOINTNAME, 
+                RECEIPTPOINTNAME2,
+                RECEIPTMEMBERNAME$v_LANG$ AS DISPLAYRECEIPTMEMBERNAME,
+                RECEIPTMEMBERNAME,
+                RECEIPTMEMBERNAME2
+            FROM 
+                TBL_RECEIPTPOINTINFO 
+            WHERE 
+                DOCID = #v_DOCID# 
+            AND 
+                RECEIPTPOINTID = #v_RECEIPTID# 
+            AND 
+                TENANT_ID = #v_TENANTID# 
+            AND 
+                COMPANYID = #companyID# 
+            ORDER BY 
+                DEPTMEMBERSN
+        </isEqual>
+        <isEqual property="v_TYPE" compareValue="group">
+            SELECT 
+                ROWNUM AS SN, 
+                DEPTID AS RECEIPTPOINTID, 
+                DEPTNAME$v_LANG$ AS DISPLAYRECEIPTPOINTNAME,
+                DEPTNAME AS RECEIPTPOINTNAME, 
+                DEPTNAME2 AS RECEIPTPOINTNAME2,
+                '' AS DISPLAYRECEIPTMEMBERNAME,
+                '' AS RECEIPTMEMBERNAME,
+                '' AS RECEIPTMEMBERNAME2
+            FROM 
+                TBL_ADMINRECEIPTGROUP_SUB 
+            WHERE 
+                MAINID = #v_MAINID# 
+            AND 
+                TENANT_ID = #v_TENANTID# 
+            AND 
+                COMPANYID = #companyID# 
+            ORDER BY 
+                SUBID
+        </isEqual>
+    </select>
+    
     <update id="EzApprovalG.updateHistoryAttachInfo" parameterClass="Map">
 	 	UPDATE 
 	 		TBL_HISTORYATTACHINFO
@@ -35552,5 +35597,31 @@
           AND
             COMPANYID = #v_COMPANYID#
     </select>
-    
+     
+	<delete id="EzApprovalG.deleteEndOpinionInfo" parameterClass="Map">
+	  	DELETE 
+	  		TBL_ENDAPROPINIONINFO
+    	WHERE  
+    		DOCID = #v_DOCID#
+    	AND
+    		TENANT_ID = #v_TENANTID#
+    	AND
+    		COMPANYID = #companyID#
+	</delete>
+	
+	<update id="EzApprovalG.updateRecInfoRejectFlag" parameterClass="Map">
+    	UPDATE
+    		TBL_RECORD
+    	SET
+    		REJECTFLAG = #v_REJECTFLAG#
+    	WHERE
+    		DOCID = #v_DOCID#
+    	AND
+    		RECORDID = #v_RECORDID#
+    	AND
+    		COMPANYID = #companyID#
+    	AND
+    		TENANT_ID = #v_TENANTID#
+    </update>
+	
 </sqlMap>

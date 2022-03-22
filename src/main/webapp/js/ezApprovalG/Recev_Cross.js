@@ -1063,7 +1063,7 @@ function createNewDoc()
 	
     var rtnXml = xmlhttp.responseXML;
     if (xmlhttp != null && xmlhttp.readyState == 4) {
-    	 if (xmlhttp.statusText == "OK") {
+    	 if (xmlhttp.status == 200) {
     		 return xmlhttp.responseText;
     	 } else {
     		 var pAlertContent = strLang344 + "<br> " + strLang345;
@@ -1507,7 +1507,7 @@ function SaveDraftDocInfo() {
             xmlhttp.send(xmlpara);
             
             if (xmlhttp != null && xmlhttp.readyState == 4) {
-             	 if (xmlhttp.statusText == "OK") {
+             	 if (xmlhttp.status == 200) {
              		SetBtnStateFalse();
              		 return getNodeText(GetChildNodes(xmlhttp.responseXML)[0]);
              	 } else {
@@ -1599,7 +1599,7 @@ function SaveDraftDocInfo() {
             xmlhttp.send(xmlpara);
             
             if (xmlhttp != null && xmlhttp.readyState == 4) {
-             	 if (xmlhttp.statusText == "OK") {
+             	 if (xmlhttp.status == 200) {
              		SetBtnStateFalse();
                     return xmlhttp.responseText;
              	 } else {
@@ -2613,7 +2613,7 @@ function SaveDraftDocInfo() {
         xmlhttp.send(xmlpara);
         
         if (xmlhttp != null && xmlhttp.readyState == 4) {
-       	 if (xmlhttp.statusText == "OK") {
+       	 if (xmlhttp.status == 200) {
        		 var pAlertContent = strLang878;
              OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
              return true;

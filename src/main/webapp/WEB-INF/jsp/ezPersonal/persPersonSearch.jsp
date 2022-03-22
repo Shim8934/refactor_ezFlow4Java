@@ -805,7 +805,7 @@
 	    	
 	    	function event_getDeptFullTree() {
 		        if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
-		            if (g_xmlHTTP.statusText == "OK") {
+		            if (g_xmlHTTP.status == 200) {
 	    	            if (!bSearch) {
             	            if (CrossYN())
                     	        opener.opener.top.organview = g_xmlHTTP.responseXML;

@@ -16,6 +16,7 @@
 	<typeAlias  alias="ResGetScheduleVO" 	type="egovframework.ezEKP.ezResource.vo.ResGetScheduleVO"/>
 	<typeAlias  alias="ScheduleGroupVO" 	type="egovframework.ezEKP.ezSchedule.vo.ScheduleGroupVO"/>
 	<typeAlias  alias="ScheduleMailConfigVO" 	type="egovframework.ezEKP.ezSchedule.vo.ScheduleMailConfigVO"/>
+	<typeAlias  alias="ScheduleTokenInfoVO" type="egovframework.ezEKP.ezSchedule.vo.ScheduleTokenInfoVO"/>
 	
 	<resultMap class="ScheGetHolidayVO" id="scheGetHolidayVO">
 		<result property="holidayID"		column="HOLIDAYID"			columnIndex="1"/>
@@ -162,6 +163,16 @@
 		<result property="cancellationMail"			column="CANCELLATIONMAIL"			columnIndex="2"/>
 		<result property="attendanceMail"		column="ATTENDANCEMAIL"			columnIndex="3"/>
 		<result property="rejectedMail"			column="REJECTEDMAIL"			columnIndex="4"/>
+	</resultMap>
+	
+	<resultMap class="ScheduleTokenInfoVO"         id="scheduleTokenInfoVO">
+		<result property="userID"                  column="USERID"/>
+		<result property="googleAccessToken"       column="GOOGLEACCESSTOKEN"/>
+		<result property="googleRefreshToken"      column="GOOGLEREFRESHTOKEN"/>
+		<result property="googleCreateDate"        column="GOOGLECREATEDATE"/>
+		<result property="googleUpdateDate"        column="GOOGLEUPDATEDATE"/>
+		<result property="companyID"               column="COMPANYID"/>
+		<result property="tenantID"                column="TENANT_ID"/>
 	</resultMap>
 	
 	<!-- checked -->			
@@ -1844,6 +1855,125 @@
 				)
    		]]>
 	</insert>
+
+	<select id="EzScheduleDAO.getIsSync" parameterClass="loginVO" resultClass="String">
+		select
+			GOOGLEACCESSTOKEN
+		from	
+			tbl_schedule_oauthinfo
+		where
+			companyid = #companyID#
+   		and
+   			tenant_id = #tenantId#
+   		and
+   			userid = #id#
+	</select>
+	
+	<select id="EzScheduleDAO.getScheduleTokenInfo" parameterClass="Map" resultMap="scheduleTokenInfoVO">
+		<![CDATA[
+			select
+				*
+			from
+				tbl_schedule_oauthinfo
+			where
+				userid = #v_USERID#
+			and
+				companyid = #v_COMPANYID#
+			and
+				tenant_id = #v_TENANTID#
+		]]>
+	</select>
+	
+	<insert id="EzScheduleDAO.insertScheduleTokenInfo" parameterClass="Map">
+		<![CDATA[
+			insert into tbl_schedule_oauthinfo(
+				USERID,
+				GOOGLEACCESSTOKEN,
+				GOOGLEREFRESHTOKEN,
+				GOOGLECREATEDATE,
+				GOOGLEUPDATEDATE,
+				COMPANYID,
+				TENANT_ID
+			) values (
+				#v_USERID#,
+				#v_GOOGLEACCESSTOKEN#,
+				#v_GOOGLEREFRESHTOKEN#,
+				case when #v_GOOGLEACCESSTOKEN# is null then null else #v_TODAYUTCTIME# end,
+				case when #v_GOOGLEACCESSTOKEN# is null then null else #v_TODAYUTCTIME# end,
+				#v_COMPANYID#,
+				#v_TENANTID#
+			)
+		]]>
+	</insert>
+	
+	<update id="EzScheduleDAO.updateScheduleTokenInfo" parameterClass="map">
+		update
+			tbl_schedule_oauthinfo
+		set
+			USERID = #v_USERID#,
+			GOOGLEACCESSTOKEN  = #v_GOOGLEACCESSTOKEN#,
+			GOOGLEREFRESHTOKEN = #v_GOOGLEREFRESHTOKEN#,
+			GOOGLECREATEDATE   = case when #v_GOOGLEACCESSTOKEN# is null then GOOGLECREATEDATE else case when GOOGLECREATEDATE is null then #v_TODAYUTCTIME# else GOOGLECREATEDATE end end,
+			GOOGLEUPDATEDATE   = case when #v_GOOGLEACCESSTOKEN# is null then null             else case when GOOGLEUPDATEDATE is null then #v_TODAYUTCTIME# else GOOGLEUPDATEDATE end end
+		where
+			userid = #v_USERID#
+		and
+			companyid = #v_COMPANYID#
+		and
+			tenant_id = #v_TENANTID#
+	</update>
+	
+	<select id="EzScheduleDAO.getAllGoogleToken" parameterClass="map" resultClass="ScheduleTokenInfoVO">
+	<![CDATA[
+		select
+			USERID,
+			COMPANYID,
+			TENANT_ID,
+			GOOGLEACCESSTOKEN,
+			GOOGLEREFRESHTOKEN
+		from
+			tbl_schedule_oauthinfo
+		where
+			GOOGLEACCESSTOKEN IS NOT NULL
+		and
+			GOOGLEREFRESHTOKEN IS NOT NULL
+	]]>
+	</select>
+	
+	<select id="EzScheduleDAO.getExpiredGoogleToken" parameterClass="map" resultClass="ScheduleTokenInfoVO">
+	<![CDATA[
+		select
+			USERID,
+			COMPANYID,
+			TENANT_ID,
+			GOOGLEACCESSTOKEN,
+			GOOGLEREFRESHTOKEN
+		from
+			tbl_schedule_oauthinfo
+		where
+			DATE_ADD(GOOGLEUPDATEDATE, INTERVAL + 50 MINUTE) < #v_TODAYUTCTIME#
+		and
+			GOOGLEACCESSTOKEN IS NOT NULL
+		and
+			GOOGLEREFRESHTOKEN IS NOT NULL
+	]]>
+	</select>
+	
+	<update id="EzScheduleDAO.updateGoogleTokenInfo" parameterClass="map">
+		<![CDATA[
+			update
+				tbl_schedule_oauthinfo
+			set
+				GOOGLEACCESSTOKEN  = #v_GOOGLEACCESSTOKEN#,
+				GOOGLEUPDATEDATE   = #v_TODAYUTCTIME#
+			where
+				userid = #v_USERID#
+			and
+				tenant_id = #v_TENANTID#
+			and
+				companyid = #v_COMPANYID#
+		]]>
+	</update>
 
 </sqlMap>
 

@@ -54,6 +54,7 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleReceiveListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleTokenInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleMailConfigVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -2191,6 +2192,45 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		
 		logger.debug("applyScheduleCompleteData ended.");
 		return result;
+	}
+	
+	@Override
+	public ScheduleTokenInfoVO scheduleGetTokenInfo(String userID, int tenantID, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", userID);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		ScheduleTokenInfoVO tokenData = ezScheduleDAO.getScheduleTokenInfo(map);
+		
+		if (tokenData == null) {
+			tokenData = new ScheduleTokenInfoVO();
+			tokenData.setUserID(userID);
+			tokenData.setTenantID(tenantID);
+			tokenData.setCompanyID(companyID);
+		}
+		
+		return tokenData;
+	}
+	
+	@Override
+	public void scheduleSaveTokenInfo(String userID, String googleAccessToken, String googleRefreshToken, String todayUtcTime, int tenantID, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", userID);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_TODAYUTCTIME", todayUtcTime);
+		
+		ScheduleTokenInfoVO syncData = ezScheduleDAO.getScheduleTokenInfo(map);
+		
+		map.put("v_GOOGLEACCESSTOKEN", googleAccessToken);
+		map.put("v_GOOGLEREFRESHTOKEN", googleRefreshToken);
+		
+		if (syncData == null) {
+			ezScheduleDAO.insertScheduleTokenInfo(map);
+		} else {
+			ezScheduleDAO.updateScheduleTokenInfo(map);
+		}
 	}
 }
 

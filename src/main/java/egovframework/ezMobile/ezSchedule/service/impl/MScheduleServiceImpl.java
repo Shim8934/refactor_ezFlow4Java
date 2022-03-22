@@ -25,6 +25,7 @@ import com.ibm.icu.util.Calendar;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezSchedule.dao.EzScheduleDAO;
+import egovframework.ezEKP.ezSchedule.service.EzScheduleGoogleService;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
 import egovframework.ezEKP.ezSchedule.service.impl.EzScheduleCompareUtilPublic;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleCumulerVO;
@@ -36,6 +37,8 @@ import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezSchedule.dao.MScheduleDAO;
 import egovframework.ezMobile.ezSchedule.service.MScheduleService;
 import egovframework.ezMobile.ezSchedule.vo.MScheduleInfoVO;
+import egovframework.let.user.login.service.LoginService;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
@@ -53,6 +56,12 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 	
 	@Resource(name="EzScheduleDAO")
 	private EzScheduleDAO ezScheduleDAO;
+	
+	@Resource(name="loginService")
+	private LoginService loginService;
+	
+	@Autowired
+	private EzScheduleGoogleService googleService;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -506,6 +515,25 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 		String endDate = sdf.format(cal.getTime()) + " 23:59:59";
 		
 		List<ScheduleInfoVO> sList = scheduleList(info, startDate, endDate, "", "", "");
+		
+		String useGoogleCalendar = ezCommonService.getTenantConfig("useGoogleCalendar", info.getTenantId());
+		if(useGoogleCalendar.equals("YES")) {
+			LoginVO login = new LoginVO();
+			login.setId(info.getUserId());
+			login.setDn("NOPASSWORD");
+			login.setTenantId(info.getTenantId());
+			
+			LoginVO userInfo = loginService.selectUser(login);
+			userInfo.setDisplayName(info.getUserName());
+			userInfo.setDisplayName1(info.getUserName2());
+			userInfo.setDisplayName2(info.getUserName2());
+			
+			List<ScheduleInfoVO> googleList = googleService.getGoogleScheduleList(startDate, endDate, "", userInfo, info.getUserId(), "", "");
+			sList.addAll(googleList);
+			
+			Collections.sort(sList, new EzScheduleCompareUtilPublic());
+		}
+		
 		int listSize = sList.size();
 		
 		jo.put("cnt", listSize);
