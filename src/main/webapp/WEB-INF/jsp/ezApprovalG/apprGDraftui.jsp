@@ -879,6 +879,11 @@
 			            	delOpinionsExceptDrafters();
 			            }
 
+			            /* 2022-03-23 홍승비 - 비전자문서가 아닌 경우, 결재올림 시 문서번호 재설정 진행 */
+			        	if (nonElecRec != "Y") {
+							UpdateDocNum();
+			        	}
+			        	
 			            if (nonElecRec != "Y" && (LastSignSN == 1 || DraftLastFlag)) {
 				            if (LastSignSN == 1 || DraftLastFlag) {
 				                var pInformationContent = "<spring:message code='ezApprovalG.t143'/>" + "<br>" + "<spring:message code='ezApprovalG.t144'/>";
@@ -2223,6 +2228,30 @@
 	    		btnApprovalInfo("1");
 	    		DivPopUpHidden();
 	    	}
+	    	
+	    	/* 2022-03-23 홍승비 - 결재올림 시 일반버전, G버전에서 모두 동작하는 문서번호 재설정 함수 */
+	    	// MHT양식은 body 필드에 orgdocnum 속성으로 문서번호 형식을 설정함 (SetAutoPropertyValue 참고)
+			function UpdateDocNum() {
+				if (!message.DocumentBodyGetAttribute("orgdocnum")) {
+					console.log("message body hasn't a orgdocnum attribute");
+					return false;
+				} else if (typeof getDocNumByFormat === "undefined" || getDocNumByFormat == null) {
+					console.log("function getDocNumByFormat is undefined");
+					return false;
+				}
+				
+				var numberFormat = message.DocumentBodyGetAttribute("orgdocnum");
+				var fields = message.GetFieldsList();
+				if (!fields) {
+					return false;
+				} else {
+					var field = message.GetListItem(fields, "docnumber");
+					if (field) {
+						field.textContent = getDocNumByFormat(numberFormat);
+					}
+				}
+			}
+	    	
 		</script>
 	</head>
 	<body class="popup" onbeforeunload="return window_onbeforeunload()" style="height:100%;">

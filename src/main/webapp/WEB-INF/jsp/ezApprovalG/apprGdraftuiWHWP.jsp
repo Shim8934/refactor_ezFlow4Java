@@ -1844,17 +1844,17 @@
 	    	}
 
 			function UpdateDocNum() {
-				if(!message.FieldExist("docnumber")) {
-					log.console("message hasn't a docnumber field")
+				if (!message.FieldExist("docnumber")) {
+					console.log("message hasn't a docnumber field");
 					return false;
-				} else if(typeof message3 === "undefined" || message3 == null) {
-					log.console("message3 is undefined")
+				} else if (typeof message3 === "undefined" || message3 == null) {
+					console.log("message3 is undefined");
 					return false;
-				} else if(!message3.FieldExist("docnumber")) {
-					log.console("message3's docnumer property isn't exist")
+				} else if (!message3.FieldExist("docnumber")) {
+					console.log("message3's docnumer property isn't exist");
 					return false;
-				} else if(typeof getDocNumByFormat === "undefined" || getDocNumByFormat == null) {
-					log.console("function getDocNumByFormat is undefined")
+				} else if (typeof getDocNumByFormat === "undefined" || getDocNumByFormat == null) {
+					console.log("function getDocNumByFormat is undefined");
 					return false;
 				}
 
