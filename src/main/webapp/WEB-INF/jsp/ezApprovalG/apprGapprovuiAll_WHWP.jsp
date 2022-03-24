@@ -579,7 +579,7 @@
 					    }
 			        }
 			        else if (mode == "2") {
-			        	// 1안을 기준으로 반송알림메일 발송 (표준모듈 웹한글에 구현 안된 상태)
+			        	// 1안을 기준으로 반송알림메일 발송
 			        	document.getElementById("ifrm1").contentWindow.SendMailBansongtoDrafter();
 			        	
 			            if (allFlag == "1" || allFlag == "2") {

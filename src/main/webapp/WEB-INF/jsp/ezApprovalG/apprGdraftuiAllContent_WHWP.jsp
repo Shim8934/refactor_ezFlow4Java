@@ -43,6 +43,8 @@
 	    	var useOpenGov = parent.useOpenGov;
 	    	var orgCompanyID = parent.orgCompanyID;
 	    	var splitChar = "\x02";
+	    	var draftAllFlag = "Y";
+			var ext = "hwp";
 	      
 			var pFormHref = "";
 			var pDraftFlag = "";

@@ -57,6 +57,8 @@
 		    var xmlaprline	= createXmlDom();
 		    var xmlattach	= createXmlDom();
 		    var Resultxml   = createXmlDom();
+		    var draftAllFlag = "Y";
+		    var ext = "hwp";
 	      
 			var pDocHref = "";
 			var pDraftFlag = "";

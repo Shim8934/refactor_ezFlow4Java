@@ -37,6 +37,8 @@
 	    	var splitChar = "\x02";
 			var pDocHref = "";
 			var pDocType = "";
+			var draftAllFlag = "Y";
+			var ext = "hwp";
 	    
 	    	$(document).ready(function() {
 	    		pDocHref = parent.pDocHrefAry[frameNum];

@@ -454,6 +454,9 @@
 				    }
 		        }
 		        else if (mode == "2") {
+		        	/* 2022-03-24 홍승비 - 웹한글문서 반송 시에도 반송알림메일 발송 */
+		        	SendMailBansongtoDrafter();
+		        	
 		            if (allFlag == "1" || allFlag == "2") {
 		                LoadNextDocument("\n<spring:message code='ezApprovalG.t1377'/>");
 				    }

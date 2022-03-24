@@ -74,9 +74,10 @@ function sendAlertMail(mode, sn, ui) {
 	        	pwriterID = getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[13]);
 		        Drafter = getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[14]);
 		        pstartdate = getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[11]);
-		        DocTitle = getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[7]);
+		        //DocTitle = getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[7]);
+		        DocTitle = getDocTitleForMail();
 	        }
-	
+	        
 	        SendMailApproveMember(MemberList, _pAprMemberSN, DocTitle, Drafter, pstartdate);
     	}
     }
@@ -536,7 +537,8 @@ function SendMailToReceiveDept_Approv() {
     var pwriterID = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[13]));
     var Drafter = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[14]));
     var pstartdate = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[11]));
-    var pDocTitle = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[7]));
+//    var pDocTitle = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[7]));
+    var pDocTitle = getDocTitleForMail();
 
     SendMailToReceiveDept(pDocTitle, Drafter, pstartdate, pDocID);
 }
@@ -684,7 +686,8 @@ function SendMailBansongtoDrafter() {
             DocTitle = pDocTitle;
         }
         else {
-            DocTitle = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[7]));
+            //DocTitle = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[7]));
+        	DocTitle = getDocTitleForMail();
         }
         var NextUser = pwriterID;
 
@@ -705,7 +708,8 @@ function SendMailBansongtoDrafter() {
             DocTitle = pDocTitle;
         }
         else {
-            DocTitle = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[7]));
+            //DocTitle = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[7]));
+        	DocTitle = getDocTitleForMail();
         }
 
         sendmail(NextUser, DocTitle, Drafter, pstartdate, "bansong", "");
@@ -751,7 +755,8 @@ function getSameOrgHAPYUIDoc(orgID) {
 function SendMailToDrafter() {
     var pwriterID   = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[13]));
     var Drafter     = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[14]));
-    var pDocTitle   = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[7]));    
+//    var pDocTitle   = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[7]));    
+    var pDocTitle   = getDocTitleForMail();    
     var NextUser = pwriterID;
     var startDate = GetDocInfoData("END", "STARTDATE");
     getOpinionInfo(pDocID, "END");
@@ -762,7 +767,7 @@ function SendMailToDrafterForDraftAll() {
 	var ifrm1 = document.getElementById("ifrm1");
 	var pwriterID   = trim(getNodeText(GetChildNodes(GetElementsByTagName(ifrm1.contentWindow.document.getElementById("DOCINFO").dataSource, "DATA")[0])[13]));
 	var Drafter     = trim(getNodeText(GetChildNodes(GetElementsByTagName(ifrm1.contentWindow.document.getElementById("DOCINFO").dataSource, "DATA")[0])[14]));
-	var pDocTitle   = trim(getNodeText(GetChildNodes(GetElementsByTagName(ifrm1.contentWindow.document.getElementById("DOCINFO").dataSource, "DATA")[0])[7]));    
+	var pDocTitle   = trim(getNodeText(GetChildNodes(GetElementsByTagName(ifrm1.contentWindow.document.getElementById("DOCINFO").dataSource, "DATA")[0])[7]));
 	var NextUser = pwriterID;
 	var startDate = GetDocInfoDataForDraftAll("END", "STARTDATE");
 	//getOpinionInfo(pDocIDAry[currIdx], "END"); // 이미 SendMailToDrafterForDraftAll 함수 호출 이전에 1안의 의견정보를 대표로 가져온 상태임
@@ -1469,3 +1474,38 @@ function checkHWP(pDocID) {
     
     return docExt;
 }
+
+/* 2022-03-23 홍승비 - 메일발송을 위한 제목을 DOCINFO가 아닌 문서에 직접 접근하여 리턴하는 함수 (편집모드 등에 대응) */
+function getDocTitleForMail() {
+	var result = "";
+	
+	try {
+		var docExt = checkHWP(pDocID);
+		
+		if (docExt == "mht") { // 일반 MHT 문서
+			result = message.document.getElementById("doctitle").textContent.trim();
+		}
+		else if (docExt == "hwp") {
+			if (useWebHWP == "YES") { // 웹한글 문서
+				if (typeof(draftAllFlag) != "undefined" && draftAllFlag != null && draftAllFlag == "Y") { // 일괄기안 (1안의 문서제목)
+					if (typeof(pDocTitleAry) != "undefined" && pDocTitleAry != null) { // 부모프레임에서 접근
+						result = pDocTitleAry[1];
+					} else { // 자식프레임 내부에서 접근
+						result = parent.pDocTitleAry[1];
+					}
+				} else { // 단일기안
+					result = message.GetFieldText("doctitle").trim();
+				}
+			} else { // 일반 한글 문서
+				result = trim(HwpCtrl.GetFieldText("doctitle"));
+			}
+		}
+	} catch (e) { // 에러 발생 시, 기존처럼 DOCINFO에 접근하여 제목을 리턴
+		console.log(e);
+		result = getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[7]);
+	}
+	
+	return result;
+}
+
+
