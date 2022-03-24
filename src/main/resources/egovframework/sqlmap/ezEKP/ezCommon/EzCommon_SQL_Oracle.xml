@@ -2677,6 +2677,8 @@
 			TBL_LASTAPRLINE
 		DROP 
 			PRIMARY KEY
+		DROP
+			INDEX
 	</statement>
 	<statement id="EzCommonDAO.addLastAprLinePrimaryKey"> 
 		ALTER TABLE 
@@ -2706,6 +2708,8 @@
 			TBL_LASTDEPTLINE
 		DROP 
 			PRIMARY KEY
+		DROP
+			INDEX
 	</statement>
 	<statement id="EzCommonDAO.addLastDeptLinePrimaryKey"> 
 		ALTER TABLE 
