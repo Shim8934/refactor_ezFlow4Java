@@ -573,6 +573,8 @@
 				            nowDate2.setMonth(nowDate2.getMonth());
 				            $("#Sdatepicker").datepicker('setDate', nowDate);
 				            $("#Edatepicker").datepicker('setDate', nowDate2);
+							$("#Stimepicker").timepicker('setTime', nowDate);
+							$("#Etimepicker").timepicker('setTime', nowDate2);
 				            document.getElementById("absentreason").value = BReason;            
 				            $("#TextName").val(text.textName);     
 				            gIsAppoint = "1";
