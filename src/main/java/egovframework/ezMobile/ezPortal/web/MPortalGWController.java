@@ -552,7 +552,8 @@ public class MPortalGWController extends EgovFileMngUtil {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			
-			result.put("data", "");		
+			result.put("data", "");	
+			e.printStackTrace();
 		}		
 		
 		LOGGER.debug("portalUserInfo End");
@@ -626,7 +627,8 @@ public class MPortalGWController extends EgovFileMngUtil {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			
-			result.put("data", "");		
+			result.put("data", "");	
+			e.printStackTrace();
 		}		
 		
 		LOGGER.debug("portalMainList End");
@@ -713,7 +715,8 @@ public class MPortalGWController extends EgovFileMngUtil {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			
-			result.put("data", "");		
+			result.put("data", "");	
+			e.printStackTrace();
 		}		
 		
 		LOGGER.debug("checkMenuAuth End");
@@ -757,7 +760,8 @@ public class MPortalGWController extends EgovFileMngUtil {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			
-			result.put("data", "");		
+			result.put("data", "");	
+			e.printStackTrace();
 		}		
 		
 		LOGGER.debug("getAddJobList End");
@@ -807,6 +811,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");		
+			e.printStackTrace();
 		}		
 		
 		LOGGER.debug("getAddJobFlag End");
