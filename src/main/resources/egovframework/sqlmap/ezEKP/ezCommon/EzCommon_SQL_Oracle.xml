@@ -4680,8 +4680,8 @@
     		EXECUTE IMMEDIATE  'ALTER TABLE TBL_DEV_MASTER	
     							ADD	(
     								PIN 				VARCHAR(1000) 	DEFAULT NULL,
-									PINSTATE			CHAR(1)			DEFAULT 'N',
-									BIOMETRIC			CHAR(1)			DEFAULT 'N'
+									PINSTATE			CHAR(1)			DEFAULT ''N'',
+									BIOMETRIC			CHAR(1)			DEFAULT ''N''
     								)';
     		EXCEPTION WHEN column_exists THEN NULL;
 		END
