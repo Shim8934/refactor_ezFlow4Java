@@ -7161,10 +7161,9 @@
 <!-- 		{CALL EZSP_GETHISTORYFORATTACH(#v_DOCID#, #v_ORDEROPTION#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getHistoryForAttach" parameterClass="Map" resultClass="ApprGHistoryAttachVO">
-		SELECT * FROM (
-		(SELECT 
+		SELECT 
                 DISTINCT
-                    APR.DISPLAYNAME as DISPLAYNAME,
+					HIS.ATTACHUSERNAME as DISPLAYNAME,
                     HIS.DOCID, 
                     HIS.ATTACHFILESN, 
                     HIS.ATTACHFILENAME, 
@@ -7185,56 +7184,13 @@
                     HIS.PAGENUM, 
                     HIS.CHKFLAG
         FROM 
-                TBL_HISTORYATTACHINFO HIS
-        JOIN
-                TBL_APRATTACHINFO APR
-        ON
-                HIS.DOCID = APR.DOCID AND HIS.COMPANYID = APR.COMPANYID AND HIS.ATTACHFILEDISPLAYNAME = APR.ATTACHFILENAME                
+                TBL_HISTORYATTACHINFO HIS           
         WHERE 
                 HIS.DOCID = #v_DOCID#
         AND
                 HIS.TENANT_ID = #v_TENANTID#
         AND
                 HIS.COMPANYID = #companyID#
-   		)
-   		
-   		UNION
-   		
-   		(SELECT 
-                DISTINCT
-                    APR.DISPLAYNAME as DISPLAYNAME,
-                    HIS.DOCID, 
-                    HIS.ATTACHFILESN, 
-                    HIS.ATTACHFILENAME, 
-                    HIS.ATTACHFILEDISPLAYNAME,
-                    HIS.ATTACHFILEHREF, 
-                    HIS.ATTACHFILESIZE, 
-                    HIS.ATTACHUSERID, 
-                    HIS.ATTACHUSERNAME, 
-                    HIS.ATTACHUSERNAME2,
-                    HIS.ATTACHUSERJOBTITLE, 
-                    HIS.ATTACHUSERJOBTITLE2, 
-                    HIS.ATTACHUSERDEPTID, 
-                    HIS.ATTACHUSERDEPTNAME, 
-                    HIS.ATTACHUSERDEPTNAME2, 
-                    HIS.MODIFYDATE,
-                    HIS.MODIFYSN, 
-                    HIS.MODIFYFLAG, 
-                    HIS.PAGENUM, 
-                    HIS.CHKFLAG
-        FROM 
-                TBL_HISTORYATTACHINFO HIS
-        JOIN
-                TBL_ENDATTACHINFO APR
-        ON
-                HIS.DOCID = APR.DOCID AND HIS.COMPANYID = APR.COMPANYID AND HIS.ATTACHFILEDISPLAYNAME = APR.ATTACHFILENAME                
-        WHERE 
-                HIS.DOCID = #v_DOCID#
-        AND
-                HIS.TENANT_ID = #v_TENANTID#
-        AND
-                HIS.COMPANYID = #companyID#
-   		)
 		<isGreaterThan property="v_ORDEROPTIONLENGTH" compareValue="0">
    		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="10">
    		<isEqual property="v_ORDEROPTIONVALUE" compareValue="modifydate">
@@ -7255,7 +7211,6 @@
    			ORDER BY 
    				MODIFYDATE DESC
    		</isLessEqual>
-   		)
 	</select>
 <!-- 	<procedure id="EzApprovalG.doApproveLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO"> -->
 <!-- 		{CALL EZSP_DOAPPROVE_LINEINFO(#v_DOCID#, #v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
