@@ -113,6 +113,7 @@ public class MCommonGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
+			e.printStackTrace();
 			
 			return result;
 		}

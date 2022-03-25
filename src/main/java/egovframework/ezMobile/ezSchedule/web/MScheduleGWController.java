@@ -229,6 +229,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
+			e.printStackTrace();
 		}
 		
 		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/list-count/users/{userId}] ended.");
@@ -390,6 +391,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
+			e.printStackTrace();
 		}				
 		
 		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}] ended.");
@@ -431,6 +433,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
+			e.printStackTrace();
 		} 
 		
 		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}/attach-list] ended.");
@@ -531,6 +534,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
+			e.printStackTrace();
 		}    	
 		
 		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}/type-List] ended.");
@@ -562,6 +566,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
+			e.printStackTrace();
 		}
 		
 		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}/attendance-List] ended.");
@@ -630,6 +635,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
+			e.printStackTrace();
 		}	   			
 
 		LOGGER.debug("MOBILE G/W SCHEDULE [POST /ezschedule/schedules] ended.");
@@ -714,6 +720,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
+			e.printStackTrace();
 		}
 		
 		LOGGER.debug("MOBILE G/W SCHEDULE [PUT /ezschedule/schedules/{scheduleId}] ended.");
@@ -750,6 +757,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
+			e.printStackTrace();
 		}
 		
 		LOGGER.debug("MOBILE G/W SCHEDULE [DELETE /ezschedule/schedules/{scheduleId}] ended.");
@@ -942,6 +950,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
+			e.printStackTrace();
 		}
 		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/week-list/users/{userId}] ended.");
 		
@@ -995,6 +1004,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
+			e.printStackTrace();
 		}
 		
 		LOGGER.debug("MOBILE G/W SCHEDULE [POST /mobile/ezschedule/board-schedules] ended.");

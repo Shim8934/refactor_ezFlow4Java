@@ -171,6 +171,7 @@ public class MOrganGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
+			e.printStackTrace();
 		}
 
 		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/dept-info/users/" + userId + "] ended.");
@@ -204,6 +205,7 @@ public class MOrganGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
+			e.printStackTrace();
 		}
 		
 		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/low-dept-info/users/" + userId + "] ended.");
@@ -239,6 +241,7 @@ public class MOrganGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
+			e.printStackTrace();
 		}
 		
 		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/high-dept-info/users/" + userId + "] ended.");
