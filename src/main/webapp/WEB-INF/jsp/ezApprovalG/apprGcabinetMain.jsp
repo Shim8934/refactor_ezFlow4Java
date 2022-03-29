@@ -1928,62 +1928,30 @@
 		        
 		        var Ans = confirm("<spring:message code='ezApprovalG.t1728'/>");
 		        if (Ans) {
-		        	var pDocID = "";
-		        	var pDocNo = "";
-		        	var pDocTitle = "";
-		        	var pWriterName = "";
-		        	var pDeptName = "";
-		        	
-		        	var now = new Date();
-					var DeleteDay = now.getFullYear();
-					DeleteDay += '-' + (now.getMonth() + 1);
-					DeleteDay += '-' + now.getDate();
-					DeleteDay += ' ' + now.getHours();
-					DeleteDay += ':' + now.getMinutes();
-					DeleteDay += ':' + now.getSeconds();
-					
 					pCurSelRow = oArrRows[0];
-					
-					var recordListHeader = $("#DocList").find("tr[id='DocList_TH']");
-					if (recordListHeader.length > 0) {
-						var docTitleIdx = recordListHeader.find("th[colname='RECTITLE']").index();
-						var docNoIdx = recordListHeader.find("th[colname='DISPREGISTERNO']").index();
-						   
-						if (docTitleIdx >= 0) {
-							pDocTitle = pCurSelRow.cells[docTitleIdx].innerText;
-						}
-						if (docNoIdx >= 0) {
-							pDocNo = pCurSelRow.cells[docNoIdx].innerText;
-						}
-					}
-		        	 
-					// 미처리문서함에 표출되는 문서는 기안자의 결재완료문서이므로, 기안자명이나 기안부서명은 현재 사용자를 기준으로 가져온다.
-	        		pDocID = GetAttribute(pCurSelRow, "DATA1");
-	        		pWriterName = arr_userinfo[2];
-	        		pDeptName = deptName;
+	        		var pDocID = GetAttribute(pCurSelRow, "DATA1");
 	        		
-	        		$.ajax({
-	        			type : "POST",
-						dataType : "text",
-						async : false,
-						url : "/admin/ezApprovalG/delDocListjson.do",
-						data : {
-							docIDList      : pDocID,
-							docNoList      : pDocNo,
-							docTitleList   : pDocTitle,
-							WriterNameList : pWriterName,
-							DeptNameList   : pDeptName,
-							deleteDay      : DeleteDay,
-							companyID      : CompanyID
-						},
-	    	    		success: function(xml) { },
-	    	    		error: function() {
-							var pAlertContent = "<spring:message code='ezApprovalG.t131'/>";
+	        		var xmlhttp = createXMLHttpRequest();
+	        		var xmlpara = createXmlDom();
+	        		var objNode;
+	        		
+	        		createNodeInsert(xmlpara, objNode, "PARAMETER");
+	        		createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID); // 현재 회사의 문서만 표출하므로, companyID 그대로 사용
+	        		createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
+	        		createNodeAndInsertText(xmlpara, objNode, "DELFLAG", "Y");
+	        		createNodeAndInsertText(xmlpara, objNode, "DELINFO", "사용자[" + arr_userinfo[1] + "]에 의해 삭제된 내부시행문서입니다."); // 삭제사유 자동삽입
+	        		
+	        		xmlhttp.open("POST","/admin/ezApprovalG/setDelDocInfo.do",false);
+	        		xmlhttp.send(xmlpara);
+	        		
+					if (xmlhttp != null && xmlhttp.readyState == 4) {
+						if (xmlhttp.status == 200) {
+							openergetDocInfo();
+	  	                } else {
+	  	                	var pAlertContent = "<spring:message code='ezApprovalG.t131'/>";
 							OpenAlertUI(pAlertContent);
-	    	    		}        			
-	    	    	});
-	        		
-	        		openergetDocInfo();
+	  	                }
+					}
 		        }
 		    }
 		    
