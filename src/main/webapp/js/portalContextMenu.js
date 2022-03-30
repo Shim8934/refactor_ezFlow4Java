@@ -235,9 +235,9 @@ var handleQuickMenuOpen = function (menu) {
 			break;
 		case 'organ':
 			url = '/ezPersonal/personSearch.do';
-			pTop = (pheight - 659) / 2;
-			pLeft = (pwidth - 715) / 2;	
-			option = 'top='+pTop+', left='+pLeft+ ',height=560px,width=750px, status = no, toolbar=no, menubar=no,location=no, resizable=0';			
+			pTop = (pheight - 600) / 2;
+			pLeft = (pwidth - 750) / 2;	
+			option = 'top='+pTop+', left='+pLeft+ ',height=600px,width=750px, status = no, toolbar=no, menubar=no,location=no, resizable=0';			
 			break;
 	}
 	
