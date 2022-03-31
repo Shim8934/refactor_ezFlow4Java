@@ -235,7 +235,7 @@ function OpenUserInfo(pUserID) {
 	var width = window.screen.availWidth;
 	var left = (width - 500) / 2;
 	var top = (heigth - 400) / 2;
-	window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+	window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 }
 
 var selectperson_cross_dialogArguments = new Array();

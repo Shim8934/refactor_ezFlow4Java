@@ -1880,7 +1880,7 @@
 	            //var dept = p_ListOrderObject.getAttribute("_DATA13");
 	            var dept = p_ListOrderObject.getAttribute("_DATA10");
 	            var rtn
-	            var width = 450, height = 480;
+	            var width = 420, height = 450;
 	            var leftPosition, topPosition;
 	            leftPosition = (window.screen.width / 2) - ((width / 2) + 10);
 	            topPosition = (window.screen.height / 2) - ((height / 2) + 50);

@@ -718,8 +718,8 @@
 			
 			/* 2018-10-02 홍승비 - 커뮤니티 게시물 리스트 > 게시자 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정 */
 			function MemberInfo_onclick(pUserID, pDeptID) {
-			    var feature = "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
-			    feature = feature + GetOpenPosition(420, 438);
+			    var feature = "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+			    feature = feature + GetOpenPosition(420, 450);
 			    window.open("/ezCommon/showPersonInfo.do?id=" + pUserID + "&dept=" + pDeptID, "", feature);
 			}
 

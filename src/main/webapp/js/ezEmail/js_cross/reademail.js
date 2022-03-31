@@ -764,16 +764,16 @@ function show_senderprofile() {
     if (g_notiSSO == "1")
         return;
 
-    var feature = "height=500px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
-    feature = feature + GetOpenPosition(420, 500);
+    var feature = "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+    feature = feature + GetOpenPosition(420, 450);
     window.open("/ezCommon/showPersonInfo.do?email=" + g_fromEmail, "", feature);
 }
 function show_personinfo(email) {
     if (g_notiSSO == "1")
         return;
 
-    var feature = "height=500px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
-    feature = feature + GetOpenPosition(420, 500);
+    var feature = "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+    feature = feature + GetOpenPosition(420, 450);
     window.open("/ezCommon/showPersonInfo.do?email=" + encodeURIComponent(email), "", feature);
 }
 function attach_SelectAll() {

@@ -79,9 +79,9 @@
 	        
 	        function openUserInfo(tempUserID) {
 	            if (CrossYN()) {
-	                window.open("/ezCommon/showPersonInfo.do?id=" + tempUserID, "ShowPersonInfo", GetOpenWindowfeature(438, 420));
+	                window.open("/ezCommon/showPersonInfo.do?id=" + tempUserID, "ShowPersonInfo", GetOpenWindowfeature(450, 420));
 	            } else {
-	                dialogArguments.window.open("/ezCommon/showPersonInfo.do?id=" + tempUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(420, 438));
+	                dialogArguments.window.open("/ezCommon/showPersonInfo.do?id=" + tempUserID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(420, 450));
 	            }
 	        }
 	        

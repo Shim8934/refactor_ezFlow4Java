@@ -1580,7 +1580,7 @@ function onmouse_out_Week(td) {
 
 function MemberInfo_onClick(pSelUserID) {
     var c_Width = 420;
-    var c_Height = 438;
+    var c_Height = 450;
 
     //스크린의 크기
     var s_Width = screen.availWidth;

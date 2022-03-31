@@ -658,8 +658,8 @@
     		    if (gubun == "2") {
     		    	return;
     		    }
-    		    var feature = "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
-			    feature = feature + GetOpenPosition(420, 438);
+    		    var feature = "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+			    feature = feature + GetOpenPosition(420, 450);
 			    window.open("/ezCommon/showPersonInfo.do?id=" + pUserID + "&dept=" + pDeptID, "", feature);
 			}
 

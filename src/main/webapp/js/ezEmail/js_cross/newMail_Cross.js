@@ -37,8 +37,8 @@ function MailToMe_Onclick() {
 var BigSizeAttach = false;
 var pBigFileUpload = "N";
 function open_userinfo(cn) {
-    var feature = "height=500px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
-    feature = feature + GetOpenPosition(420, 500);
+    var feature = "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+    feature = feature + GetOpenPosition(420, 450);
     window.open("/ezCommon/showPersonInfo.do?id=" + cn, "", feature);
 }
 
