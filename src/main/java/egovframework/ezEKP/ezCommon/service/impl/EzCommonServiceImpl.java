@@ -36,6 +36,9 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -2680,5 +2683,118 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void alterTblDevMaster() throws Exception {
 		ezCommonDAO.alterTblDevMaster();
 	}
-	
+
+	// List<List<Object>> 를 이용 엑셀 생성
+	// (0,0)부터 차례대로 넣으면 됨. 여백 가능.
+	@Override
+	public String createExcelByList(String fileName, String dirPath, String sheetName, List<List<Object>> data) throws Exception {
+		logger.debug("createExcelByList start. fileName: " + fileName + " / sheetName:" + sheetName);
+
+		String filePath = dirPath + commonUtil.separator + fileName + ".xlsx";
+		File folder = new File(dirPath);
+		File file = new File(filePath);
+
+		// 폴더가 존재하는경우 clean
+		try {
+			if (!folder.mkdirs()) FileUtils.cleanDirectory(folder);
+		} catch (Exception e) {
+			// 폴더 아래 파일들의 삭제가 안될경우에도 그냥 진행
+			logger.debug("cleanDirectory Error : " + e.getMessage());
+			logger.debug("cleanDirectory dirPath : " + dirPath);
+		}
+
+		// 같은 이름의 파일이 있을 경우: "파일(2).xlsx"으로 만든다.
+		if (file.exists()) {
+			int pos         = fileName.lastIndexOf('.');
+			String extend   = fileName.substring(pos + 1);
+			String mainName = fileName.substring(0, pos);
+			int k           = 1;
+			fileName        = mainName + "(" + k + ")." + extend;
+			filePath        = dirPath + fileName;
+			file           = new File(filePath);
+
+			while (file.exists()) {
+				filePath = dirPath + mainName + "(" + ++k + ")." + extend;
+			}
+		}
+
+
+		FileOutputStream fileOut = null;
+		Workbook workbook = new XSSFWorkbook();
+
+		Sheet sheet = workbook.createSheet(sheetName);
+		sheet.setDefaultRowHeight((short)500);
+
+		//Set style
+		CellStyle styleHead = workbook.createCellStyle();
+		styleHead.setWrapText(false);
+		styleHead.setAlignment(CellStyle.ALIGN_CENTER);
+		styleHead.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+		styleHead.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+		styleHead.setFillPattern(CellStyle.SOLID_FOREGROUND);
+
+
+		CellStyle styleData = workbook.createCellStyle();
+		styleData.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+
+		int rowNum = 0;
+		int rowSize = data.size();
+		boolean appearedHead = false;
+		int colRangeStart = 0;
+		int colRangeEnd = 0;
+
+		while(rowNum < rowSize) {
+			List<Object> dataList = data.get(rowNum);
+			int colSize = dataList.size();
+
+			if (colSize > 0) {
+				Row row = sheet.createRow(rowNum);
+
+				if (!appearedHead) {
+					for (int colNum = 0; colNum < colSize; colNum++) {
+						Object value = dataList.get(colNum);
+						String strValue = String.valueOf(value).trim();
+
+						if (value != null && !strValue.isEmpty()) {
+							row.createCell(colNum).setCellValue(strValue);
+							row.getCell(colNum).setCellStyle(styleHead);
+							appearedHead = true;
+							if(colRangeStart == 0) colRangeStart = colNum;
+							colRangeEnd = colNum;
+						}
+					}
+				} else {
+					for (int colNum = 0; colNum < colSize; colNum++) {
+						Object value = dataList.get(colNum);
+						String strValue = String.valueOf(value).trim();
+
+						if (value != null && !strValue.isEmpty()) {
+							row.createCell(colNum).setCellValue(strValue);
+							row.getCell(colNum).setCellStyle(styleData);
+						}
+					}
+				}
+			}
+			rowNum++;
+		}
+
+		for (int i = colRangeStart; i <= colRangeEnd; i++) {
+			sheet.setColumnWidth(i, ((int)(15 * 1.14388)) * 256);
+		}
+
+		try {
+			fileOut = new FileOutputStream(filePath);
+			workbook.write(fileOut);
+			fileOut.close();
+		}
+		catch (Exception e) {
+			throw e;
+		}
+		finally {
+			if (fileOut != null) fileOut.close();
+			workbook.close();
+		}
+		logger.debug("createExcelByList end. list size:" + rowSize);
+		return fileName;
+	}
 }
