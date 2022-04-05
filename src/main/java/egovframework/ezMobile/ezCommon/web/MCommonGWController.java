@@ -203,63 +203,62 @@ public class MCommonGWController {
 	}
 	
 	// 20201211 조진호 : KLIB를 사용하는 경우, 통합검색 업체를 포함한 타 기간계 시스템에서 그룹웨어의 전자결재 문서의 파일을 필요로 할 때 복호화하여 파일을 전달하는 API 목적으로 개발
-	@RequestMapping(value = "/mobile/ezcommon/encrptyFiledown", method=RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezcommon/decryptFiledown", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	@ResponseBody
 	public void mFileDown_decrypt(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezcommon/encrptyFiledown] started.");
-		
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezcommon/decryptFiledown] started.");
+
 		String filePath = request.getParameter("filePath");
 		LOGGER.debug("filePath = " + filePath);
 		String fileName = (request.getParameter("fileName") == null) ? "" : request.getParameter("fileName");
 		LOGGER.debug("fileName = " + fileName);
 		String realPath = commonUtil.getRealPath(request);
-		
+
 		filePath = realPath + filePath;
 
-		
 		try {
 			File file = new File(filePath);
-			
+
 			if (!file.exists()) {
-			    throw new FileNotFoundException(filePath);
+				throw new FileNotFoundException(filePath);
 			}
-		
+
 			if (!file.isFile()) {
-			    throw new FileNotFoundException(filePath);
+				throw new FileNotFoundException(filePath);
 			}
-			
-			int fSize = (int)file.length();
-			
+
+			int fSize = (int) file.length();
+
 			if (fSize > 0) {
 				byte[] bytes = commonUtil.readBytesFromFile(Paths.get(filePath));
-				
+
 				if (filePath.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
 					bytes = klibUtil.decrypt(bytes);
 				}
-				
+
 				try (ByteArrayInputStream in = new ByteArrayInputStream(bytes)) {
-		    	    String mimetype = "application/octet-stream";
-		    	    
-		    	    String nfcFilename = commonUtil.normalizeFileName(fileName);
-		    	    
-		    	    response.setBufferSize(2048);	    	    
+					String mimetype = "application/octet-stream";
+
+					String nfcFilename = commonUtil.normalizeFileName(fileName);
+
+					response.setBufferSize(2048);
 					response.setContentType(mimetype);
-					response.setHeader("Content-Disposition", "attachment; filename=\"" + nfcFilename + "\"");				
+					response.setHeader("Content-Disposition", "attachment; filename=\"" + nfcFilename + "\"");
 					response.setHeader("Content-Length", Long.toString(fSize));
 					FileCopyUtils.copy(in, response.getOutputStream());
-			    } catch (Exception ex) {
-			    	ex.printStackTrace();
-			    }
-			    
-			    response.getOutputStream().flush();
-			    response.getOutputStream().close();
-				
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+
+				response.getOutputStream().flush();
+				response.getOutputStream().close();
+
 			}
 		} catch (Exception e) {
-			
+
 		}
-		
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezcommon/filedown] ended.");
+
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezcommon/decryptFiledown] ended.");
 
 	}
 	
