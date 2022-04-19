@@ -3477,7 +3477,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 						byte[] fileBytes = commonUtil.readBytesFromFile(sourceFile.toPath());
 						
 						// fileNamesArr는 확장자를 포함함
-						if (fileNamesArr[i].endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+						if (filePathsArr[i].endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
 							fileBytes = klibUtil.decrypt(fileBytes);
 						}
 						
