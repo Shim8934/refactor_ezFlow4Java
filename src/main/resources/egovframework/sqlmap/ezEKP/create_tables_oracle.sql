@@ -13085,6 +13085,41 @@ BEGIN
 END;
 /
 
+CREATE OR REPLACE TRIGGER tbl_webfolder_file_insert
+AFTER INSERT ON TBL_WEBFOLDER_FILE
+FOR EACH ROW
+BEGIN
+	INSERT INTO search_index_webfolder (ID, FILEID, GUBUN, INSERTDATE, STATUS, TENANT_ID) VALUES(SEQ_SEARCH_INDEX_WEBFOLDER.NEXTVAL, :NEW.FILE_ID, 'I', SYSDATE, 'N', :NEW.TENANT_ID );
+END;
+/
+
+CREATE OR REPLACE TRIGGER tbl_webfolder_file_update
+AFTER UPDATE ON TBL_WEBFOLDER_FILE
+FOR EACH ROW
+WHEN (OLD.USE_STATUS != 'T')
+BEGIN
+	INSERT INTO search_index_webfolder(ID, FILEID, GUBUN, INSERTDATE, STATUS, tenant_id) VALUES(SEQ_SEARCH_INDEX_WEBFOLDER.NEXTVAL, :NEW.FILE_ID, 'U', SYSDATE, 'N', :NEW.TENANT_ID );
+END;
+/
+
+CREATE OR REPLACE TRIGGER tbl_webfolder_file_delete
+AFTER UPDATE ON TBL_WEBFOLDER_FILE
+FOR EACH ROW
+WHEN (OLD.USE_STATUS != 'T' AND NEW.USE_STATUS = 'T')
+BEGIN
+	INSERT INTO search_index_webfolder(ID, FILEID, GUBUN, INSERTDATE, STATUS, TENANT_ID) VALUES(SEQ_SEARCH_INDEX_WEBFOLDER.NEXTVAL, :OLD.FILE_ID, 'D', SYSDATE, 'N', :OLD.TENANT_ID );
+END;
+/
+
+CREATE OR REPLACE TRIGGER tbl_webfolder_file_restore
+AFTER UPDATE ON TBL_WEBFOLDER_FILE
+FOR EACH ROW
+WHEN (OLD.USE_STATUS = 'T' AND NEW.USE_STATUS != 'T')
+BEGIN
+	INSERT INTO search_index_webfolder (ID, FILEID, GUBUN, INSERTDATE, STATUS, TENANT_ID) VALUES(SEQ_SEARCH_INDEX_WEBFOLDER.NEXTVAL, :NEW.FILE_ID, 'I', SYSDATE, 'N', :NEW.TENANT_ID );
+END;
+/
+
 --------------------------------------------------------
 --  Constraints for Table APPROVCONNKAMCO
 --------------------------------------------------------
@@ -18602,6 +18637,192 @@ CREATE TABLE "TBL_SUSINSCHEDULE" (
   CONSTRAINT SUSINSCHEDULE_PK PRIMARY KEY ("DOCID", "COMPANYID", "TENANTID")
 ) ;
 
+--------------------------------------------------------
+--  VIEW_EZWEBFOLDER
+--------------------------------------------------------
+
+CREATE OR REPLACE VIEW VIEW_EZWEBFOLDER AS
+	SELECT
+	F.FILE_ID 										AS FILEID,
+	F.FILE_NAME 									AS FILENAME,
+	CONCAT('/volumes/shared/ezFlow',F.FILE_PATH) 	AS FILEPATH,
+	F.FILE_SIZE 									AS FILESIZE,
+
+	F.CREATE_ID 									AS WRITERID,
+	F.CREATE_NAME1 									AS WRITERNAME,
+	F.CREATE_NAME2 									AS WRITERNAME2,
+	fld.COMPANY_ID 									AS COMPANYID,
+
+	DEPT.CN											AS WRITERDEPTID,
+	DEPT.DISPLAYNAME								AS WRITERDEPTNAME,
+	DEPT.DISPLAYNAME2								AS WRITERDEPTNAME2,
+	F.CREATE_DATE 									AS WRITERDATE,
+	F.FOLDER_ID 									AS FOLDERID,
+	F.TENANT_ID 									AS TENANTID,
+	FLD.FOLDER_TYPE									AS FOLDERTYPE,
+	FLD.FOLDER_NAME1								AS FOLDERNAME1,
+	FLD.FOLDER_NAME2								AS FOLDERNAME2
+
+	FROM TBL_WEBFOLDER_FILE F
+	INNER JOIN TBL_WEBFOLDER_FOLDER FLD ON FLD.FOLDER_ID = F.FOLDER_ID AND FLD.TENANT_ID = F.TENANT_ID
+	INNER JOIN TBL_USERMASTER USR ON USR.CN = F.CREATE_ID AND USR.TENANT_ID = F.TENANT_ID
+	INNER JOIN TBL_DEPTMASTER DEPT ON DEPT.CN = USR.DEPARTMENT AND USR.TENANT_ID = DEPT.TENANT_ID
+	WHERE FLD.USE_STATUS = 'Y' AND F.USE_STATUS = 'Y';
+
+--------------------------------------------------------
+--  SEARCH_INDEX_WEBFOLDER
+--------------------------------------------------------
+/*웹폴더 통합검색  증분색인쿼리*/
+CREATE TABLE "SEARCH_INDEX_WEBFOLDER"
+   ("ID" NUMBER(*,0) NOT NULL PRIMARY KEY,
+	"FILEID" NUMBER(11,0) NOT NULL,
+	"GUBUN" NVARCHAR2(4) NOT NULL,
+	"INSERTDATE" DATE NOT NULL,
+	"STATUS" NVARCHAR2(4) NOT NULL,
+	"TENANT_ID" NUMBER(5,0) NOT NULL
+   ) ;
+
+--------------------------------------------------------
+--  DDL for Sequence SEQ_SEARCH_INDEX_WEBFOLDER
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_SEARCH_INDEX_WEBFOLDER"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+
+--------------------------------------------------------
+--  VIEW_WEBFOLDERPERMISSIONS
+--------------------------------------------------------
+/*웹폴더 통합검색  권한쿼리*/
+CREATE OR REPLACE VIEW VIEW_WEBFOLDERPERMISSIONS AS
+select  fi.file_id as file_id, NVL(user_id, owner_id) as cn
+from tbl_webfolder_file fi inner join tbl_webfolder_folder folder on fi.folder_id = folder.folder_id
+left outer join tbl_webfolder_fileuser usr on fi.file_id = usr.file_id where (folder.folder_type = 'U' or (folder.folder_type ='C' and user_type = 'user'))
+
+UNION
+select  usr.file_id as file_id, TO_CHAR(u.cn) as cn
+from tbl_webfolder_file fi inner join tbl_webfolder_fileuser usr on fi.file_id = usr.file_id
+inner join tbl_usermaster u on u.department = usr.user_id
+where user_type = 'dept'
+
+UNION
+select  usr.file_id as file_id, TO_CHAR(addjob.cn) as cn from tbl_webfolder_file fi inner join tbl_webfolder_fileuser usr
+on fi.file_id = usr.file_id
+inner join tbl_addjobmaster addjob on addjob.deptid = usr.user_id
+where user_type = 'dept'
+
+UNION
+select  usr.file_id as file_id, TO_CHAR(u.cn) as cn from tbl_webfolder_file fi inner join tbl_webfolder_fileuser usr
+on fi.file_id = usr.file_id
+inner join tbl_usermaster u on u.PHYSICALDELIVERYOFFICENAME = usr.user_id
+where user_type = 'dept'
+
+UNION
+select f.file_id as file_id, TO_CHAR(addjob.cn) as cn
+from tbl_addjobmaster addjob inner join tbl_webfolder_fileuser fu on fu.user_id = addjob.jobid 
+and fu.user_type = 'JIKWI'
+inner join tbl_webfolder_file f on fu.file_id = f.file_id
+
+UNION
+select f.file_id as file_id, TO_CHAR(u.cn) as cn
+from tbl_usermaster u inner join tbl_webfolder_fileuser fu on fu.user_id = u.extensionattribute7
+and fu.user_type = 'JIKWI'
+inner join tbl_webfolder_file f on fu.file_id = f.file_id
+
+UNION
+select f.file_id as file_id, TO_CHAR(u.cn) as cn
+from tbl_usermaster u inner join tbl_webfolder_fileuser fu on fu.user_id = u.extensionattribute8
+and fu.user_type = 'JIKCHEK'
+inner join tbl_webfolder_file f on fu.file_id = f.file_id
+
+UNION
+select file_id as file_id, member_id as cn  FROM tbl_permissiongroupinfo p inner join tbl_webfolder_fileuser fu 
+on fu.user_id = p.group_id where fu.user_type = 'group'
+and p.member_type = 'user' 
+
+UNION
+select file_id, TO_CHAR(u.cn) as cn FROM tbl_permissiongroupinfo p inner join tbl_webfolder_fileuser fu 
+on fu.user_id = p.group_id inner join tbl_usermaster u on u.extensionattribute8 = member_id 
+where fu.user_type = 'group' and p.member_type = 'JIKCHEK'  
+
+UNION
+select file_id, TO_CHAR(u.cn) as cn FROM tbl_permissiongroupinfo p inner join tbl_webfolder_fileuser fu 
+on fu.user_id = p.group_id inner join tbl_usermaster u on u.extensionattribute7 = member_id 
+where fu.user_type = 'group' and p.member_type = 'JIKWI'  
+
+UNION
+select file_id, TO_CHAR(u.cn) as cn FROM tbl_permissiongroupinfo p inner join tbl_webfolder_fileuser fu 
+on fu.user_id = p.group_id inner join tbl_addjobmaster u on u.jobid = member_id 
+where fu.user_type = 'group' and p.member_type = 'JIKWI'  
+
+UNION
+select file_id, TO_CHAR(u.cn) as cn from tbl_webfolder_fileuser fu inner join tbl_permissiongroupinfo p
+on p.group_id = fu.user_id inner join tbl_usermaster u
+on u.department = p.member_id
+where p.member_type = 'dept' and user_type = 'group' and sub_dept_yn = 'N'  
+
+UNION
+select file_id, TO_CHAR(u.cn) as cn from tbl_webfolder_fileuser fu inner join tbl_permissiongroupinfo p
+on p.group_id = fu.user_id inner join tbl_addjobmaster u
+on u.deptid = p.member_id
+where p.member_type = 'dept' and user_type = 'group' and sub_dept_yn = 'N'  
+
+UNION
+select deptlist.file_id as file_id, TO_CHAR(u.cn) as cn from tbl_usermaster u inner join (
+	select cn, dept_cd_path, tenant_id , deptInfo.file_id as file_id 
+    from 
+	(
+		select group_id, file_id, LISTAGG(dept_cd_path, '|') WITHIN GROUP(ORDER BY dept_cd_path) as deptpath from tbl_deptmaster dept 
+        inner join(
+			select member_id, group_id, file_id, user_id from 
+			(select member_id, group_id from tbl_permissiongroupinfo where member_type = 'dept' and SUB_DEPT_YN = 'Y') p 
+			inner join tbl_webfolder_fileuser fu on fu.user_id = p.group_id and fu.user_type = 'group'
+		) pandd
+		on dept.cn = pandd.member_id group by group_id, file_id
+	) deptInfo
+
+	inner join tbl_deptmaster on REGEXP_LIKE (UPPER(dept_cd_path), UPPER(deptInfo.deptpath))
+) deptlist
+on deptlist.cn = u.department 
+
+union
+select deptlist.file_id as file_id, TO_CHAR(u.cn) as cn from tbl_addjobmaster u inner join (
+	select cn, dept_cd_path, tenant_id , deptInfo.file_id as file_id 
+    from 
+	(
+		select group_id, file_id, LISTAGG(dept_cd_path, '|') WITHIN GROUP(ORDER BY dept_cd_path) as deptpath from tbl_deptmaster dept 
+        inner join(
+			select member_id, group_id, file_id, user_id from 
+			(select member_id, group_id from tbl_permissiongroupinfo where member_type = 'dept' and SUB_DEPT_YN = 'Y') p 
+			inner join tbl_webfolder_fileuser fu on fu.user_id = p.group_id and fu.user_type = 'group'
+		) pandd
+		on dept.cn = pandd.member_id group by group_id, file_id
+	) deptInfo
+
+	inner join tbl_deptmaster on REGEXP_LIKE (UPPER(dept_cd_path), UPPER(deptInfo.deptpath))
+) deptlist
+on deptlist.cn = u.deptid
+
+union
+select distinct f.file_id as file_id ,folderInfo.user_id as cn
+ from tbl_webfolder_file f 
+inner join (
+ select fld.folder_id as folder_id, folder.folder_path as folder_path3, folder.user_id as user_id
+ from (
+  select fldu.folder_id as folder_id, fldu.user_id  as user_id,  replace(folder_path ,'|','\\|') as folder_path 
+  from tbl_webfolder_folder fld inner join tbl_webfolder_folderuser fldu 
+  on fld.folder_id = fldu.folder_id and fldu.FOLDER_MANAGER = 1 AND FOLDER_TYPE = 'C'
+  and fldu.tenant_id = fld.tenant_id 
+ ) folder
+inner join tbl_webfolder_folder fld 
+on REGEXP_LIKE (UPPER(fld.folder_path), UPPER(folder.folder_path)) ) folderInfo 
+on f.folder_id = folderInfo.folder_id;
+
+-- webfolder trigger
+-- 13070: update_dept_webfolder_name
+-- 13079: update_user_webfolder_name
+-- 13088: tbl_webfolder_file_insert
+-- 13096: tbl_webfolder_file_update
+-- 13105: tbl_webfolder_file_delete
+-- 13114: tbl_webfolder_file_restore
 
 -- ezEKP <-> ezTalk 간 인사연동 뷰 테이블(V_USERMASTER, V_DEPTMASTER, V_ADDJOBMASTER)
 -- V_USERMASTER
