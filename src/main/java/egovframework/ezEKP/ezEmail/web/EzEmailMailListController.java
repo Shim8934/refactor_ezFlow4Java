@@ -2415,7 +2415,7 @@ public class EzEmailMailListController {
 
 			mailbox.open(Folder.READ_WRITE);
 			Message message = ((IMAPFolder) mailbox).getMessageByUID(mailUid);
-			tagName = tagName.trim().replaceAll("\s", "_");
+			tagName = tagName.trim().replaceAll("\\s", "_");
 			ezEmailUtil.setTagFlag(message, userAccount, tagName, true);
 			mailbox.close(true);
 			result = Result.success();
