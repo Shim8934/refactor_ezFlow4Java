@@ -58,6 +58,7 @@
 	        
 	        window.onload = function () {
 	        	detailView();
+				attachTagClickEvent();
 		    	
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                document.body.style.MozUserSelect = 'none';
@@ -355,7 +356,9 @@
 	                PostTreeView.select(1);
 	            }
 	            
+	            <c:if test="${not withoutNodeSelect}">
                 selectnode();
+                </c:if>
                 previewSubTreeCall();
 	        }
 	        function requestdata(event) {
@@ -1367,6 +1370,45 @@
 	            window.open(requestUrl, "", feature);
 			}
 			
+
+			function openTagFolder() {
+				if ($("#tagtitle").attr("class") == "on") {
+					$("#tagtitle").attr("class", "off");
+					$("#tagcontent").attr("class", "lnbUL off");
+				} else {
+					$("#tagtitle").attr("class", "on")
+					$("#tagcontent").attr("class", "lnbUL");
+					reloadTags();
+				}
+			}
+
+			function attachTagClickEvent() {
+				$("#tagcontent a").on("click", function() {
+					window.open("/ezEmail/mailTagView.do?idx=" + this.getAttribute("data-idx"), "right");
+				});
+			}
+
+			function reloadTags() {
+				$.ajax({
+					method: "get",
+					url: "/ezEmail/getUserTagList.do",
+					success: function(result) {
+						if (result.status == "error") {
+							alert(strLang321);
+							return;
+						}
+
+						var tags = result.data;
+						var tagContentLi = $("#tagcontent > li");
+						tagContentLi.find("a").remove();
+						tags.forEach(function(tag) {
+							tagContentLi.append("<a data-idx='" + tag.idx + "'>" + tag.name + "</a>");
+						});
+						attachTagClickEvent();
+					},
+					error: function() { alert(strLang321); }
+				});
+			}
 	    </script>
 		<style type="text/css">
 			.myBar_red {
@@ -1388,6 +1430,9 @@
 			#mCSB_1_container {
 				margin-right: 0px;
 			}
+			#tagcontent { word-break: break-all; line-height: 215%; }
+			#tagcontent a { padding: 4px; border-radius: 4px; }
+			#tagcontent a:hover { background: #c0ccd5; font-weight: bold; color: #0470e4; }
 		</style>
 	</head>
 	<body class="newLeft">
@@ -1454,6 +1499,19 @@
 			        	</script>
 			        </c:forEach>
 		        </c:if>
+				<c:if test="${useMailTag}">
+					<h2 class="on" id="tagtitle" onclick='openTagFolder();'>
+						<span class="sub_iconLNB tree_arrow_up"></span>
+						<span class="h2Title" style="display:inline-block"><spring:message code="ezEmail.tag" /></span>
+					</h2>
+					<ul class="lnbUL" id="tagcontent">
+						<li>
+							<c:forEach items="${tags}" var="tag">
+								<a data-idx="${tag.idx}"><c:out value="${tag.name}" /></a>
+							</c:forEach>
+						</li>
+					</ul>
+				</c:if>
 	        </div>
 	        <div class="mail_space">
 	        	<span class="mail_spaceText"><spring:message code="main.t00045" />&nbsp;<span class="userPer" id="usePer"></span></span><span  id="myBar" class="mailBar"></span>

@@ -125,6 +125,9 @@
 	                case "MailEnv_div11":
 	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailUserDistribution.do";
 	                    break;
+	                case "tag":
+	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailTagConfig.do";
+	                    break;
 	            }
 	        }
 	        var Tab1_SelectID = "";
@@ -663,6 +666,9 @@
 							<p id = "MailEnv_sub2"><span divname="MailEnv_div2" id="1tab1"><spring:message code='ezPersonal.yej01' /></span></p>
 					    </c:otherwise>
 				    </c:choose>	
+					<c:if test="${useMailTag}">
+						<p><span divname="tag" id="1tab12"><spring:message code='ezEmail.tag.config' /></span></p>
+					</c:if>
 	            </div>
 	        </div>
 	        <iframe id = "MailEnv_ifrm" style ="width:100%;height:100%;" frameborder="0" ></iframe>

@@ -1834,7 +1834,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 			folder.open(Folder.READ_ONLY);
 			
 	        Message[] messages = ezEmailUtil.searchFolder(ia, userEmail, folder, "", "", null, sdf.parse(dateTime), false, 
-	        		true, false, "receivedDate", false, 0, 30, true, null, userInfo.getTenantId());
+	        		true, false, "receivedDate", false, 0, 30, true, null, userInfo.getTenantId(), "");
 	        
 	        for (int i=0; i<messages.length; i++) {
 	        	Message message = messages[i];

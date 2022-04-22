@@ -108,15 +108,17 @@ import egovframework.ezEKP.ezEmail.vo.IcalVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
+import egovframework.let.utl.rest.JgwResult;
+import egovframework.let.utl.rest.Rest;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.Recur;
-import net.fortuna.ical4j.model.component.*;
+import net.fortuna.ical4j.model.component.CalendarComponent;
+import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.Attendee;
-import net.fortuna.ical4j.model.property.Description;
 import net.fortuna.ical4j.model.property.RRule;
 //import egovframework.let.utl.fcc.service.MyException;
 import net.lingala.zip4j.core.ZipFile;
@@ -159,7 +161,10 @@ public class EzEmailUtil {
 	
 	@Value("#{cryptos['EzEmailUtil.apb']}")
 	private String apb;
-	
+
+	@Autowired
+	Rest rest;
+
 	public String getMailHeaderPath(long mailboxId, long mailUid) {
 		String realPath = config.getProperty("data_root");
 		String mailboxParentFolderName = String.valueOf(mailboxId % 100);
@@ -2149,19 +2154,19 @@ public class EzEmailUtil {
     
     public Message[] searchFolder(IMAPAccess ia, String userAccount, Folder folder, String searchField, String searchValue, 
     		Date startDate, Date endDate, boolean searchSubFolder, boolean isUnreadOnly, boolean isImportantOnly, String sortType, boolean isAscending, 
-    		int startIndex, int listCount, boolean isFromMobile, Map<String, Object> extraMap, int tenantId) throws Exception {
+    		int startIndex, int listCount, boolean isFromMobile, Map<String, Object> extraMap, int tenantId, String tagName) throws Exception {
 
-    	return searchFolder(ia, userAccount, folder, new String[]{searchField}, new String[]{searchValue}, startDate, endDate, searchSubFolder, isUnreadOnly, isImportantOnly, sortType, isAscending, startIndex, listCount, isFromMobile, extraMap, tenantId);
+    	return searchFolder(ia, userAccount, folder, new String[]{searchField}, new String[]{searchValue}, startDate, endDate, searchSubFolder, isUnreadOnly, isImportantOnly, sortType, isAscending, startIndex, listCount, isFromMobile, extraMap, tenantId, tagName);
     	
     }
     
     public Message[] searchFolder(IMAPAccess ia, String userAccount, Folder folder, String[] searchField, String[] searchValue, 
     		Date startDate, Date endDate, boolean searchSubFolder, boolean isUnreadOnly, boolean isImportantOnly, String sortType, boolean isAscending, 
-    		int startIndex, int listCount, boolean isFromMobile, Map<String, Object> extraMap, int tenantId) throws Exception {
+    		int startIndex, int listCount, boolean isFromMobile, Map<String, Object> extraMap, int tenantId, String tagName) throws Exception {
     	logger.debug("userAccount=" + userAccount + ",folder=" + folder + ",searchField=" + searchField + ",searchValue=" + searchValue
     			+ ",startDate=" + startDate + ",endDate=" + endDate + ",searchSubFolder=" + searchSubFolder + ",isUnreadOnly=" + isUnreadOnly
     			+ ",isImportantOnly=" + isImportantOnly + ",sortType=" + sortType + ",isAscending=" + isAscending + ",startIndex=" + startIndex
-    			+ ",listCount=" + listCount + ",isFromMobile=" + isFromMobile + ",extraMap=" + extraMap + ",tenantId=" + tenantId);
+    			+ ",listCount=" + listCount + ",isFromMobile=" + isFromMobile + ",extraMap=" + extraMap + ",tenantId=" + tenantId + ",tagName=" + tagName);
     	
     	String useAdvancedMailSearch = ezCommonService.getTenantConfig("useAdvancedMailSearch", tenantId);
     	logger.debug("useAdvancedMailSearch=" + useAdvancedMailSearch);
@@ -2179,7 +2184,7 @@ public class EzEmailUtil {
     		logger.debug("folderPath=" + folderPath);
     		
     		messages = advancedSearchFolder(ia, userAccount, folder, folderPath, searchField, searchValue, startDate, endDate, 
-    				searchSubFolder, isUnreadOnly, isImportantOnly, sortType, isAscending, startIndex, listCount, extraMap);
+    				searchSubFolder, isUnreadOnly, isImportantOnly, sortType, isAscending, startIndex, listCount, extraMap, tagName);
     		
     		// pre-fetch
     		if (messages.length > 0) {
@@ -2336,14 +2341,14 @@ public class EzEmailUtil {
     
     public List<Map<String, String>> searchFolderUsingRDBOnly(String userAccount, String folderPath, String[] searchField, String[] searchValue, 
     		Date startDate, Date endDate, boolean searchSubFolder, boolean isUnreadOnly, boolean isImportantOnly, String sortType, boolean isAscending, 
-    		int startIndex, int listCount, boolean isFromMobile, Map<String, Object> extraMap, int tenantId, boolean includeContent) throws Exception {    	
+    		int startIndex, int listCount, boolean isFromMobile, Map<String, Object> extraMap, int tenantId, boolean includeContent, String tagName) throws Exception {    	
     	logger.debug("searchFolderUsingRDBOnly started. userAccount=" + userAccount + ",folderPath=" + folderPath + ",searchField=" + searchField + ",searchValue=" + searchValue
     			+ ",startDate=" + startDate + ",endDate=" + endDate + ",searchSubFolder=" + searchSubFolder + ",isUnreadOnly=" + isUnreadOnly
     			+ ",isImportantOnly=" + isImportantOnly + ",sortType=" + sortType + ",isAscending=" + isAscending + ",startIndex=" + startIndex
-    			+ ",listCount=" + listCount + ",isFromMobile=" + isFromMobile + ",extraMap=" + extraMap + ",tenantId=" + tenantId + ",includeContent=" + includeContent);
+    			+ ",listCount=" + listCount + ",isFromMobile=" + isFromMobile + ",extraMap=" + extraMap + ",tenantId=" + tenantId + ",includeContent=" + includeContent + ",tagName=" + tagName);
     	    	
 		Map<String, Object> resultMap = getMailListUsingRDBOnlyFromJGw(userAccount, folderPath, searchField, searchValue, startDate, endDate, 
-				isUnreadOnly, isImportantOnly, searchSubFolder, sortType, isAscending, startIndex, listCount, extraMap, includeContent);
+				isUnreadOnly, isImportantOnly, searchSubFolder, sortType, isAscending, startIndex, listCount, extraMap, includeContent, tagName);
 		
 		List<Map<String, String>> mailList = (List<Map<String, String>>)resultMap.get("mailList");
 		
@@ -2715,18 +2720,19 @@ public class EzEmailUtil {
 			boolean isAscending,
 			int startIndex,
 			int listCount,
-			Map<String, Object> extraMap
+			Map<String, Object> extraMap,
+			String tagName
 			) throws Exception {
 		logger.debug("advancedSearchFolder started.");
 		logger.debug("userAccount=" + userAccount + ",folderPath=" + folderPath + ",searchField=" + searchField + "searchValue=" + searchValue 
 				+ ",startDate=" + startDate + ",endDate=" + endDate + ",searchSubFolder=" + searchSubFolder + ",isUnreadOnly=" + isUnreadOnly 
 				+ ",isImportantOnly=" + isImportantOnly + ",sortType=" + sortType + ",isAscending=" + isAscending + ",startIndex=" + startIndex
-				+ ",listCount=" + listCount + ",extraMap=" + extraMap);
+				+ ",listCount=" + listCount + ",extraMap=" + extraMap + ",tagName=" + tagName);
 		
 		boolean useSecureMailFilter = extraMap != null && (boolean) extraMap.getOrDefault("useSecureMailFilter", false);
 
 		Map<String, Object> resultMap = getMailListFromJGw(userAccount, folderPath, searchField, searchValue, startDate, endDate, 
-				isUnreadOnly, isImportantOnly, searchSubFolder, sortType, isAscending, startIndex, listCount, extraMap, useSecureMailFilter);
+				isUnreadOnly, isImportantOnly, searchSubFolder, sortType, isAscending, startIndex, listCount, extraMap, useSecureMailFilter, tagName);
 		
 		List<String> mailList = (List<String>) resultMap.get("mailList");
 		
@@ -2805,14 +2811,15 @@ public class EzEmailUtil {
 			int startIndex,
 			int listCount,
 			Map<String, Object> extraMap,
-			boolean useSecureMailFilter
+			boolean useSecureMailFilter,
+			String tagName
 			) throws Exception {
 		logger.debug("getMailUidListFromJGw started.");
 		logger.debug("userAccount=" + userAccount + ",folderPath=" + folderPath + ",searchField=" + searchField 
 				+ ",searchValue=" + searchValue + ",startDate=" + startDate + ",endDate=" + endDate 
 				+ ",isUnreadOnly=" + isUnreadOnly + ",isImportantOnly=" + isImportantOnly + ",searchSubFolder=" + searchSubFolder
 				+ ",sortType=" + sortType + ",isAscending=" + isAscending + ",startIndex=" + startIndex + ",listCount=" + listCount
-				+ ",extraMap=" + extraMap);
+				+ ",extraMap=" + extraMap + ",tagName" + tagName);
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
@@ -2834,6 +2841,7 @@ public class EzEmailUtil {
 		
 		String mailInnerDomainParam = "&inexternalFilter=&mailInnerDomainStr=";
 		String isSecureMail = "&isSecureMail=" + useSecureMailFilter;
+		String tagNameParam = "&tagName=" + URLEncoder.encode(tagName, "UTF-8");
 
 		if(extraMap != null){
 			logger.debug("extraMAP is not null.extraMap:" + extraMap);
@@ -2869,7 +2877,7 @@ public class EzEmailUtil {
 				+ searchValueParam + "&" + startDateParam + "&" + endDateParam 
 				+ "&" + isUnreadOnlyParam + "&" + isImportantOnlyParam + "&" + searchSubFolderParam
 				+ "&" + sortTypeParam + "&" + isAscendingParam + "&" + startIndexParam + "&" + listCountParam
-				+ "&" + attachStatus + "&" + andorStatus + mailInnerDomainParam + isSecureMail;
+				+ "&" + attachStatus + "&" + andorStatus + mailInnerDomainParam + isSecureMail + tagNameParam;
 		
 		logger.debug("inputParams=" + inputParams);
 
@@ -2918,14 +2926,16 @@ public class EzEmailUtil {
 			int startIndex,
 			int listCount,
 			Map<String, Object> extraMap,
-			boolean includeContent
+			boolean includeContent,
+			String tagName
 			) throws Exception {
 		logger.debug("getMailListUsingRDBOnlyFromJGw started.");
 		logger.debug("userAccount=" + userAccount + ",folderPath=" + folderPath + ",searchField=" + searchField 
 				+ ",searchValue=" + searchValue + ",startDate=" + startDate + ",endDate=" + endDate 
 				+ ",isUnreadOnly=" + isUnreadOnly + ",isImportantOnly=" + isImportantOnly + ",searchSubFolder=" + searchSubFolder
 				+ ",sortType=" + sortType + ",isAscending=" + isAscending + ",startIndex=" + startIndex + ",listCount=" + listCount
-				+ ",extraMap=" + extraMap + ",includeContent=" + includeContent);
+				+ ",extraMap=" + extraMap + ",includeContent=" + includeContent
+				+ ",tagName=" + tagName);
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
@@ -2947,7 +2957,8 @@ public class EzEmailUtil {
 
 		String mailInnerDomainParam = "&inexternalFilter=&mailInnerDomainStr=";
 		String isSecureMail = "&isSecureMail=";
-		
+		String tagNameParam = "&tagName=" + URLEncoder.encode(tagName, "utf-8");
+
 		if(extraMap != null){
 			logger.debug("extraMAP is not null.extraMap:" + extraMap);
 			andorStatus += extraMap.get("andorStatus") == "" ? "and" : extraMap.get("andorStatus");
@@ -2985,7 +2996,7 @@ public class EzEmailUtil {
 				+ searchValueParam + "&" + startDateParam + "&" + endDateParam 
 				+ "&" + isUnreadOnlyParam + "&" + isImportantOnlyParam + "&" + searchSubFolderParam
 				+ "&" + sortTypeParam + "&" + isAscendingParam + "&" + startIndexParam + "&" + listCountParam
-				+ "&" + attachStatus + "&" + andorStatus + "&" + includeContentParam + mailInnerDomainParam + isSecureMail;
+				+ "&" + attachStatus + "&" + andorStatus + "&" + includeContentParam + mailInnerDomainParam + isSecureMail + tagNameParam;
 		
 		logger.debug("inputParams=" + inputParams);
 
@@ -3788,7 +3799,33 @@ public class EzEmailUtil {
 
 		return sentDate;
 	}
-	
+
+	public void setTagFlag(Message message, String userAccount, String tagName, boolean isSet) throws Exception {
+		logger.debug("setTagFlag");
+
+		try {
+			JgwResult result = rest.jgw().url("/jMochaEzEmail/getTagIdx")
+					.formParam("userAccount", userAccount)
+					.formParam("tagName", tagName)
+					.formParam("isAutoGenerate", isSet)
+					.exchangeJgwResult();
+			logger.debug("jgw getTagIdx result: {}", result);
+
+			if (result.failed()) {
+				throw new RuntimeException("jgw getTagIdx failed.");
+			}
+
+			// resultCode가 1일 경우엔 삭제할 때 존재하지 않는 태그를 조회한 경우이므로 아무런 처리를 하지 않음
+			if (result.getReasonCode() == 0) {
+				int tagIdx = result.getResult(Integer.class);
+				Flags setTagFlag = new Flags("$Tag-" + tagIdx);
+				message.setFlags(setTagFlag, isSet);
+			}
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
 	public List<String> getInnerDomain(int tenantId) throws Exception {
 		List<String> innerDomainList = new ArrayList<String>();
 		

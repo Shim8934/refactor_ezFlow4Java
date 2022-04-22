@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
@@ -20,6 +21,7 @@ import javax.annotation.Resource;
 import javax.mail.Address;
 import javax.mail.Flags;
 import javax.mail.Folder;
+import javax.mail.FolderNotFoundException;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.UIDFolder;
@@ -28,6 +30,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -36,12 +39,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.sun.mail.imap.IMAPFolder;
@@ -59,9 +65,13 @@ import egovframework.ezEKP.ezEmail.vo.MailReadVO;
 import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxUserVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
+import egovframework.let.utl.rest.JgwResult;
+import egovframework.let.utl.rest.Rest;
+import egovframework.let.utl.rest.Result;
 
 /** 
  * @Description [Controller] 메일 리스트
@@ -79,7 +89,9 @@ import egovframework.let.utl.fcc.service.EgovStringUtil;
 public class EzEmailMailListController {
 	
     private static final Logger logger = LoggerFactory.getLogger(EzEmailMailListController.class);
-    
+
+	private static final Pattern NOT_ALLOWED_TAG_NAME_REGEXP = Pattern.compile("[!@#$%^&()\\\\/:*?\"<>|'`]");
+
 	@Autowired
 	private CommonUtil commonUtil;
 
@@ -100,7 +112,13 @@ public class EzEmailMailListController {
     
 	@Autowired
 	private EzOrganService ezOrganService;
-	
+
+	@Autowired
+	private Rest rest;
+
+	@Autowired
+	private String jspw;
+
     /**
 	 * 메일 리스트화면 호출 함수
 	 */
@@ -217,7 +235,15 @@ public class EzEmailMailListController {
 		if (mailColor != null && mailColor.getImportanceColor() != null) {
 			importanceColor = mailColor.getImportanceColor();
 		}
-		
+
+		// get tag config
+		String userEmail = userInfo.getId() + "@" + domainName;
+		JgwResult jgwResult = rest.jgw().url("/jMochaEzEmail/getTagConfig").formParam("userAccount", userEmail).exchangeJgwResult();
+		logger.debug("jgw getTagConfig ended, success={}", jgwResult.succeeded());
+
+		boolean useMailTag = jgwResult.succeeded() && jgwResult.getResultAsJsonObject().get("enable").getAsBoolean();
+		model.addAttribute("useMailTag", useMailTag);
+
 		// set model
 		model.addAttribute("folderName", folderName);
 		model.addAttribute("url", url);
@@ -394,7 +420,7 @@ public class EzEmailMailListController {
 			extraMap.put("useSecureMailFilter", useSecureMailFilter.equals("1"));
 			
 			messages = ezEmailUtil.searchFolder(ia, userEmail, folder, categoryArray, keywordArray, startDateObj, endDateObj, false, 
-					isUnreadOnly, isImportantOnly, sortTypeSpecifier, isAscending, startNo, listCount, false, extraMap, userInfo.getTenantId());
+					isUnreadOnly, isImportantOnly, sortTypeSpecifier, isAscending, startNo, listCount, false, extraMap, userInfo.getTenantId(), "");
 			
 			totalCount = (int)extraMap.get("totalCount");
 			logger.debug("totalCount=" + totalCount);
@@ -725,6 +751,8 @@ public class EzEmailMailListController {
 		
 		String andorStatus = doc.getElementsByTagName("ANDORSTATUS").item(0).getTextContent();
 		String attachStatus = doc.getElementsByTagName("ATTACHSTATUS").item(0).getTextContent();
+		String tagName = Optional.ofNullable(doc.getElementsByTagName("TAGNAME").item(0)).map(Node::getTextContent).orElse("");
+		boolean isRequireMailboxPath = !tagName.isEmpty();
 		
 		NodeList  nListCategory = doc.getElementsByTagName("CATEGORY");
 		NodeList  nListKeyword = doc.getElementsByTagName("KEYWORD");
@@ -744,7 +772,7 @@ public class EzEmailMailListController {
 		
 		Date startDateObj = startDate.equals("") ? null : sdfForParsing.parse(startDate);
 		Date endDateObj = endDate.equals("") ? null : new Date(sdfForParsing.parse(endDate).getTime() + 60*60*24*1000);
-		
+
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = request.getParameter("shareId");
 			logger.debug("shareId=" + shareId);
@@ -878,7 +906,7 @@ public class EzEmailMailListController {
 				}
 				
 				List<Map<String, String>> mailList = ezEmailUtil.searchFolderUsingRDBOnly(userEmail, folderId, categoryArray, keywordArray, startDateObj, endDateObj, false, 
-						isUnreadOnly, isImportantOnly, sortTypeSpecifier, isAscending, startNo, listCount, false, extraMap, userInfo.getTenantId(), includeContent);
+						isUnreadOnly, isImportantOnly, sortTypeSpecifier, isAscending, startNo, listCount, false, extraMap, userInfo.getTenantId(), includeContent, tagName);
 				
 				totalCount = (int)extraMap.get("totalCount");
 				mailboxMailCount = (int)extraMap.get("mailboxMailCount");
@@ -897,7 +925,14 @@ public class EzEmailMailListController {
 					
 					// attachment
 					sb.append(String.format("<attach><![CDATA[%s]]></attach>", mailInfo.get("HAS_ATTACH")));
-					
+
+					// mailbox path
+					if (isRequireMailboxPath) {
+						String folderPath = mailInfo.get("MAIL_ID").split("/")[0];
+						String folderPathName = ezEmailUtil.getDisplayNameFromFolderId(folderPath, locale).replaceAll("\\.", "/");
+						sb.append("<parentName><![CDATA[").append(folderPathName).append("]]></parentName>");
+					}
+
 					String msgto = "";
 					Address[] addresses = null;
 	
@@ -1057,7 +1092,7 @@ public class EzEmailMailListController {
 				folder.open(Folder.READ_ONLY);
 								
 				messages = ezEmailUtil.searchFolder(ia, userEmail, folder, categoryArray, keywordArray, startDateObj, endDateObj, false, 
-						isUnreadOnly, isImportantOnly, sortTypeSpecifier, isAscending, startNo, listCount, false, extraMap, userInfo.getTenantId());
+						isUnreadOnly, isImportantOnly, sortTypeSpecifier, isAscending, startNo, listCount, false, extraMap, userInfo.getTenantId(), tagName);
 				
 				totalCount = (int)extraMap.get("totalCount");
 				logger.debug("totalCount=" + totalCount);
@@ -2039,7 +2074,7 @@ public class EzEmailMailListController {
  			int mailCount = 7;
  			
 	        messages = ezEmailUtil.searchFolder(ia, userAccount, folder, "", "", null, new Date(), false, 
-	        		false, false, "receivedDate", false, 0, mailCount, false, null, userInfo.getTenantId());
+	        		false, false, "receivedDate", false, 0, mailCount, false, null, userInfo.getTenantId(), "");
 	        
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -2350,4 +2385,103 @@ public class EzEmailMailListController {
 		
 		return returnValue;
 	}
+
+	@PostMapping("ezEmail/addMailTag.do")
+	@ResponseBody
+	public Result addMailTag(@CookieValue String loginCookie, @RequestParam String folderPath, @RequestParam int mailUid, @RequestParam String tagName) {
+		logger.debug("addMailTag started. folderPath: {}, mailUid: {}, tagName: {}", folderPath, mailUid, tagName);
+
+		if (StringUtils.isBlank(tagName)) {
+			logger.debug("addMailTag ended. tagName must not be blank.");
+			return Result.failure();
+		}
+
+		if (NOT_ALLOWED_TAG_NAME_REGEXP.matcher(tagName).find()) {
+			logger.debug("addMailTag ended. tagName must not be contains \"!@#$%^&()\\\\/:*?\"<>|'`\"");
+			return Result.failure();
+		}
+
+		Result result = null;
+
+		try {
+			LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+			String userAccount = user.getId() + "@" + ezCommonService.getTenantConfig("DomainName", user.getTenantId());
+			IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), userAccount, jspw, egovMessageSource, Locale.KOREAN, ezEmailUtil);
+			Folder mailbox = ia.getFolder(folderPath);
+
+			if (!mailbox.exists()) {
+				throw new FolderNotFoundException(mailbox, "not exists folder: " + folderPath);
+			}
+
+			mailbox.open(Folder.READ_WRITE);
+			Message message = ((IMAPFolder) mailbox).getMessageByUID(mailUid);
+			tagName = tagName.trim().replaceAll("\s", "_");
+			ezEmailUtil.setTagFlag(message, userAccount, tagName, true);
+			mailbox.close(true);
+			result = Result.success();
+		} catch (Exception e) {
+			e.printStackTrace();
+			result = Result.failure();
+		}
+
+		logger.debug("addMailTag ended. result: {}", result);
+		return result;
+	}
+
+	@PostMapping("ezEmail/deleteMailTag.do")
+	@ResponseBody
+	public Result deleteMailTag(@CookieValue String loginCookie, @RequestParam String folderPath, @RequestParam int mailUid, @RequestParam String tagName) {
+		logger.debug("deleteMailTag started. folderPath: {}, mailUid: {}, tagName: {}", folderPath, mailUid, tagName);
+		Result result = null;
+
+		try {
+			LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+			String userAccount = user.getId() + "@" + ezCommonService.getTenantConfig("DomainName", user.getTenantId());
+			JgwResult deleteResult = rest.jgw().url("/jMochaEzEmail/deleteTagFromMail")
+					.formParam("userAccount", userAccount)
+					.formParam("folderPath", folderPath)
+					.formParam("mailUid", mailUid)
+					.formParam("tagName", tagName)
+					.exchangeJgwResult();
+			logger.debug("jgw deleteTagFromMail result: {}", deleteResult);
+			result = deleteResult.succeeded() ? Result.success() : Result.failure();
+		} catch (Exception e) {
+			e.printStackTrace();
+			result = Result.failure();
+		}
+
+		logger.debug("deleteMailTag ended. result: {}", result);
+		return result;
+	}
+
+	@GetMapping("ezEmail/getUserTagList.do")
+	@ResponseBody
+	public Result getUserTagList(@CookieValue String loginCookie, @RequestParam(required = false) String orderBy) {
+		logger.debug("getUserTagList started. orderBy: {}", orderBy);
+		Result result = null;
+
+		try {
+			// count, date, 빈 값 또는 null이 아니라면 에러
+			if (orderBy != null && !orderBy.matches("count|date|")) {
+				throw new IllegalArgumentException("orderBy accepts only 'count', 'date', '' or null");
+			}
+
+			LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+			String userAccount = user.getId() + "@" + ezCommonService.getTenantConfig("DomainName", user.getTenantId());
+			Rest.RestBuilder jgwRestBuilder = rest.jgw().url("/jMochaEzEmail/getUserTagList").formParam("userAccount", userAccount);
+			if (orderBy != null) {
+				jgwRestBuilder.formParam("orderBy", orderBy);
+			}
+			JgwResult jgwResult = jgwRestBuilder.exchangeJgwResult();
+			logger.debug("jgw getUserTagFromMail result: {}", jgwResult);
+			result = jgwResult.succeeded() ? Result.success(jgwResult.getResult()) : Result.failure();
+		} catch (Exception e) {
+			e.printStackTrace();
+			result = Result.failure();
+		}
+
+		logger.debug("getUserTagList ended. result: {}", result);
+		return result;
+	}
+
 }

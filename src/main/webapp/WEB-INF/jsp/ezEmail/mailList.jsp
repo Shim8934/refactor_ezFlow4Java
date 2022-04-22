@@ -10,10 +10,12 @@
 		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/previewmail.css')}">
 		<link href="${util.addVer('/js/jquery/jquery.modal.css')}" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/jquery-ui.css')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/input-util.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/search_mail.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/NewMailList.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/Newemail.js')}"></script>
@@ -27,8 +29,9 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
-		
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/leftmenu-util.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
 		<script type="text/javascript">
 		    var g_bdraft = false;
 		    var g_moveUrl = "<c:out value='${url}'/>";
@@ -125,6 +128,7 @@
 			var startDate = "";
 			var endDate = "";
 			var listType = "mailList";
+			var useMailTag = ${useMailTag};
 		    
 		    function defineHost(protocol){
 	    		var host = "";
@@ -398,6 +402,40 @@
 		        $("#Sdatepicker").datepicker('disable');
 			    $(".ui-datepicker-trigger").style="opacity: 0.5; cursor: default;";
 			    $("#Edatepicker").datepicker('disable');
+
+				// 미리보기에서 태그 인풋 엔터시 추가
+				$("#pre_h_tag_add, #pre_w_tag_add").on("keydown", function(e) {
+					if (e.keyCode == 13) onEnterPreviewTagInput();
+				}).each(function(i, element) {
+					inputUtil.makeNotAllowTyping(element, /[!@#$%^&()\\\/:*?"<>|'`]/g);
+					inputUtil.makeReplaceTyping(element, /\s/g, '_');
+				}).autocomplete({
+					source: function(request, response) {
+						if (!window.cacheTags) {
+							$.ajax({
+								async: false,
+								url: "/ezEmail/getUserTagList.do",
+								success: function(result) {
+									if (result.status == "error") {
+										alert(strLang321);
+										return;
+									}
+									var tags = result.data;
+									window.cacheTags = $.map(tags, function(ul, item) { return ul.name; });
+								}
+							});
+						}
+
+						response($.grep(window.cacheTags, function(tag) {
+							return tag.indexOf(request.term) > -1;
+						}));
+					},
+					minLength: 2,
+					selectFirst: true,
+					autoFocus: false,
+				});
+
+				$("#pre_h_tag_add + .imgbtn, #pre_w_tag_add + .imgbtn").on("click", onEnterPreviewTagInput);
 		    }
 		    
 		    $(document).ready(function() {
@@ -1513,6 +1551,12 @@
 		    }
 		    
 		</script>	
+		<style>
+			.tagli > span:first-child { width: 55px; display: inline-block; }
+			.tagli > input { height: 22px; vertical-align: middle; }
+			.tagli > input + .imgbtn { margin: 0px; vertical-align: middle; }
+			#pre_h_tag_view > img, #pre_w_tag_view > img { width: 11px; height: 11px; cursor: pointer; margin: 0 7px 0 4px; }
+		</style>
 	</head>
 	<body style="overflow:hidden;margin-bottom:0px;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);"  onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
 		<h1><c:out value='${folderName}'/><span id="mailBoxInfo"></span><span id ="resultCount" style="display:none;"></span>
@@ -1831,6 +1875,13 @@
 				                    	<span class="icon_graydown" onclick="CCDetail_view(this);" id="PreH_CCDetail" style="display:none;"></span>
 				                    	<p class="hidden_area" id="PreH_MailCC_Rayer" style="display:none;"><span id="PreH_MailCCDetail"></span></p>
 				                    </li>
+									<c:if test="${useMailTag}">
+										<li class="preT_list tagli"><span class="cblack"><spring:message code="ezEmail.tag" /></span>
+											<input id="pre_h_tag_add" type="text" />
+											<a class="imgbtn"><span><spring:message code="ezEmail.tag.user.addbtn" /></span></a>
+											<div id="pre_h_tag_view" style="padding-left: 60px;"></div>
+										</li>
+									</c:if>
 			                    </ul>
 			                </dd>
 			            </dl>
@@ -1893,6 +1944,13 @@
 				                    	<span class="icon_graydown" onclick="CCDetail_view(this);" id="PreW_CCDetail" style="display:none;"></span>
 				                    	<p class="hidden_area" id="PreW_MailCCDetail_Rayer" style="display:none;"><span id="PreW_MailCCDetail"></span></p>
 				                    </li>
+									<c:if test="${useMailTag}">
+										<li class="preT_list tagli"><span class="cblack"><spring:message code="ezEmail.tag" /></span>
+											<input id="pre_w_tag_add" type="text" />
+											<a class="imgbtn"><span><spring:message code="ezEmail.tag.user.addbtn" /></span></a>
+											<div id="pre_w_tag_view" style="padding-left: 60px;"></div>
+										</li>
+									</c:if>
 			                    </ul>
 			                </dd>
 			            </dl>

@@ -41,6 +41,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -74,6 +76,9 @@ import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
+import egovframework.let.utl.rest.JgwResult;
+import egovframework.let.utl.rest.Rest;
+import egovframework.let.utl.rest.Result;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 import egovframework.rte.fdl.string.EgovStringUtil;
 
@@ -117,7 +122,10 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	
 	@Autowired
 	private EzOrganService ezOrganService;
-	
+
+	@Autowired
+	private Rest rest;
+
 	/**
 	 * 메일 기본 환경설정 화면 호출 함수
 	 */
@@ -174,6 +182,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("dotnetFlag", dotnetFlag);
 		model.addAttribute("userEditor", userEditor);
 		model.addAttribute("useUserDefinedDL", useUserDefinedDL);
+		model.addAttribute("useMailTag", "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useMailTag", userInfo.getTenantId())));
 		
 		logger.debug("mailConfig ended.");
 		return "ezEmail/mailConfig";
@@ -3025,5 +3034,84 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		logger.debug("deleteMailOutOfOfficeTemplate started.");
 		return returnValue;
 	}
-	
+
+	@GetMapping("/ezEmail/mailTagConfig.do")
+	public String mailTagConfig(@CookieValue String loginCookie, Model model) throws Exception {
+		logger.debug("getMailTag started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domain = ezCommonService.getTenantConfig("domainName", userInfo.getTenantId());
+		String userEmail = userInfo.getId() + "@" + domain;
+
+		// 콘피그 가져오기
+		JgwResult jgwResult = rest.jgw().url("/jMochaEzEmail/getTagConfig")
+				.formParam("userAccount", userEmail)
+				.exchangeJgwResult();
+		logger.debug("jgw getTagConfig ended, success={}", jgwResult.succeeded());
+
+		if (jgwResult.succeeded()) {
+			model.addAttribute("config", jgwResult.getResult());
+		}
+
+		// 태그 목록 가져오기
+		jgwResult = rest.jgw().url("/jMochaEzEmail/getUserTagList")
+				.formParam("userAccount", userEmail)
+				.exchangeJgwResult();
+		logger.debug("jgw getUserTagList ended, success={}", jgwResult.succeeded());
+
+		if (jgwResult.succeeded()) {
+			model.addAttribute("tags", jgwResult.getResult());
+		}
+
+		logger.debug("getMailTag ended.");
+		return "ezEmail/mailTagConfig";
+	}
+
+	@PostMapping("/ezEmail/setTagConfig.do")
+	@ResponseBody
+	public Result setTagConfig(@CookieValue String loginCookie, @RequestParam boolean enable, @RequestParam String orderBy) throws Exception {
+		logger.debug("setTagConfig started. enable: {}, orderBy: {}", enable, orderBy);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domain = ezCommonService.getTenantConfig("domainName", userInfo.getTenantId());
+		String userEmail = userInfo.getId() + "@" + domain;
+		JgwResult jgwResult = rest.jgw().url("/jMochaEzEmail/setTagConfig")
+				.formParam("userAccount", userEmail)
+				.formParam("enable", enable)
+				.formParam("orderBy", orderBy)
+				.exchangeJgwResult();
+		logger.debug("jgw setTagConfig ended, success={}", jgwResult.succeeded());
+		logger.debug("setTagConfig ended.");
+		return jgwResult.succeeded() ? Result.success() : Result.failure();
+	}
+
+	@PostMapping("/ezEmail/setTagName.do")
+	@ResponseBody
+	public Result setTagName(@RequestParam int tagIdx, @RequestParam String name) throws Exception {
+		logger.debug("setTagName started. tagIdx: {}, name: {}", tagIdx, name);
+		JgwResult jgwResult = rest.jgw().url("/jMochaEzEmail/setTagName")
+				.formParam("tagIdx", tagIdx)
+				.formParam("name", name)
+				.exchangeJgwResult();
+		logger.debug("jgw setTagName ended, success={}", jgwResult.succeeded());
+		logger.debug("setTagName ended.", tagIdx, name);
+		return jgwResult.succeeded() ? Result.success() : Result.failure();
+	}
+
+	@PostMapping("/ezEmail/deleteTag.do")
+	@ResponseBody
+	public Result deleteTag(@CookieValue String loginCookie, @RequestParam int tagIdx) throws Exception {
+		logger.debug("deleteTag started. tagIdx: {}", tagIdx);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domain = ezCommonService.getTenantConfig("domainName", userInfo.getTenantId());
+		String userEmail = userInfo.getId() + "@" + domain;
+		JgwResult jgwResult = rest.jgw().url("/jMochaEzEmail/deleteTag")
+				// deleteTag.do를 직접 호출해서 다른 유저의 태그를 삭제하는 불법 행위를 방지하는 목적으로 로그인 된 계정에 해당되는 태그만 삭제하도록 함
+				.formParam("userAccount", userEmail)
+				.formParam("tagIdx", tagIdx)
+				.exchangeJgwResult();
+		logger.debug("jgw deleteTag ended, success={}", jgwResult.succeeded());
+		logger.debug("deleteTag ended.");
+		return jgwResult.succeeded() ? Result.success() : Result.failure();
+	}
+
 }

@@ -240,7 +240,11 @@ function searchRecurMail(sMailFolder, startDate, endDate) {
     createNodeAndInsertText(xmlDOM, objNode, "ORDERBY", p_ListOrderObject.getAttribute("orderoption"));
     createNodeAndInsertText(xmlDOM, objNode, "STARTINDEX", startIndex);
     createNodeAndInsertText(xmlDOM, objNode, "LISTCOUNT", listSize);
-    
+
+	if (window.tagName) {
+		createNodeAndInsertText(xmlDOM, objNode, "TAGNAME", tagName);
+	}
+
     var requestUrl = "/ezEmail/mailSearch.do";
     
     if (shareId != "") {

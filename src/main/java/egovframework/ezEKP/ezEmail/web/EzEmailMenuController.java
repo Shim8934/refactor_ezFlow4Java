@@ -42,11 +42,13 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
 
+import com.google.gson.reflect.TypeToken;
 import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -63,6 +65,8 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.rest.JgwResult;
+import egovframework.let.utl.rest.Rest;
 import net.lingala.zip4j.core.ZipFile;
 /** 
  * @Description [Controller] 메일 메뉴
@@ -109,12 +113,14 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 
 	@Autowired
 	private EzOrganService ezOrganService;
-			
+
+	@Autowired
+	private Rest rest;
 	/**
 	 * 메일 왼쪽화면 호출 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailLeft.do", method = RequestMethod.GET)
-	public String showMailLeft(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception {
+	public String showMailLeft(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, @RequestParam(name = "withoutnodeselect", defaultValue = "false") boolean withoutNodeSelect) throws Exception {
 		logger.debug("showMailLeft started.");
 		
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
@@ -297,6 +303,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		model.addAttribute("useMailBoxBackUp", useMailBoxBackUp);
 		model.addAttribute("useSharedMailbox", useSharedMailbox);
 		model.addAttribute("refreshInterval", mailGeneralVO.getRefreshInterval());
+		model.addAttribute("withoutNodeSelect", withoutNodeSelect);
 		
 		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", loginInfo.getTenantId());
 		
@@ -352,6 +359,22 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			logger.debug("userEmail {}, base64: {}, url encoded: {}", userEmail, userEmailBase64, userParameter);
 			logger.debug("spam uri: {}", spamOutLoginURI);
 			model.addAttribute("spamOutLoginURI", spamOutLoginURI);
+		}
+
+		JgwResult jgwResult = rest.jgw().url("/jMochaEzEmail/getTagConfig").formParam("userAccount", userEmail).exchangeJgwResult();
+		logger.debug("jgw getTagConfig ended, success={}", jgwResult.succeeded());
+
+		boolean useMailTag = jgwResult.succeeded() && jgwResult.getResultAsJsonObject().get("enable").getAsBoolean();
+		model.addAttribute("useMailTag", useMailTag);
+
+		if (useMailTag) {
+			logger.debug("getMailTag started.");
+			JgwResult result = rest.jgw().url("/jMochaEzEmail/getUserTagList").formParam("userAccount", userEmail).exchangeJgwResult();
+			logger.debug("jgw getUserTagList ended, success={}", result.succeeded());
+
+			if (result.succeeded()) {
+				model.addAttribute("tags", result.getResult());
+			}
 		}
 
 		logger.debug("showMailLeft ended.");

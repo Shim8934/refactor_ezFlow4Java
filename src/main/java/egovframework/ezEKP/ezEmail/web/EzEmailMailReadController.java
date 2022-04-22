@@ -14,6 +14,7 @@ import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Base64.Decoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +23,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.UUID;
-import java.util.Base64.Decoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -50,6 +50,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.filefilter.PrefixFileFilter;
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -96,6 +97,8 @@ import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
+import egovframework.let.utl.rest.JgwResult;
+import egovframework.let.utl.rest.Rest;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /** 
@@ -150,7 +153,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 
 	@Resource(name = "EzOrganService")
 	private EzOrganService ezOrganService;
-	
+
+	@Autowired
+	private Rest rest;
+
 	/**
 	 * 메일 읽기화면 호출 함수
 	 */
@@ -255,6 +261,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String countryName = "";
 		String countryIP = "";
 		String countryCode = "";
+		String[] tags = null;
 		String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", loginInfo.getTenantId());
 		String useCountryIP = ezCommonService.getTenantConfig("useCountryIP", loginInfo.getTenantId());
 		String useShowSystemCountry = ezCommonService.getTenantConfig("useShowSystemCountry", loginInfo.getTenantId());
@@ -525,6 +532,13 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					dateStr = "";
 					logger.debug("mailWritePreview=" + mailWritePreview + ", dateStr=" + dateStr);
 				}								
+
+				String tagsStr = commonUtil.cleanValue(mailInfo.get("TAGS"));
+				if (StringUtils.isBlank(tagsStr)) {
+					tags = new String[0];
+				} else {
+					tags = tagsStr.split("\\|");
+				}
 			} else {
 				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 						userEmail, password, egovMessageSource, locale, ezEmailUtil);
@@ -953,6 +967,15 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					}
 					
 					f.close(true);
+
+					JgwResult tagResult = rest.jgw().url("/jMochaEzEmail/getTagList")
+							.formParam("userAccount", userEmail)
+							.formParam("folderPath", folderPath)
+							.formParam("mailUid", uid)
+							.exchangeJgwResult();
+					logger.debug("jgw getTagList result: {}", tagResult);
+					// tagResult.getResult()
+					// tags = tagResult.succeeded() ? tagResult.getResultAsJsonObject().getAsJsonArray().iterator(). : null;
 				}
 			}
 		} catch (MessagingException e) {
@@ -1006,6 +1029,14 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("useCountryIP", useCountryIP); 
 		model.addAttribute("useShowSystemCountry", useShowSystemCountry); 
 		model.addAttribute("useMailToCommunity", useMailToCommunity); 
+		model.addAttribute("tags", tags);
+
+		// get tag config
+		JgwResult jgwResult = rest.jgw().url("/jMochaEzEmail/getTagConfig").formParam("userAccount", userEmail).exchangeJgwResult();
+		logger.debug("jgw getTagConfig ended, success={}", jgwResult.succeeded());
+
+		boolean useMailTag = jgwResult.succeeded() && jgwResult.getResultAsJsonObject().get("enable").getAsBoolean();
+		model.addAttribute("useMailTag", useMailTag);
 		
 		logger.debug("readMail ended.");
 		
@@ -2132,6 +2163,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String countryName = "";
 		String countryIP = "";
 		String countryCode = "";
+		String tags = "";
 		String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", loginInfo.getTenantId());
 		String useCountryIP = ezCommonService.getTenantConfig("useCountryIP", loginInfo.getTenantId());
 		String useShowSystemCountry = ezCommonService.getTenantConfig("useShowSystemCountry", loginInfo.getTenantId());
@@ -2255,6 +2287,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				if (!"1".equals(mailInfo.get("MAIL_IS_SEEN"))) {
 					unread = 1;
 				}									
+
+				tags = commonUtil.cleanValue(mailInfo.get("TAGS"));
 			} else {
 				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 						userEmail, password, egovMessageSource, locale, ezEmailUtil);
@@ -2570,6 +2604,14 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							message.setFlag(Flag.SEEN, true);
 							logger.debug("Message's seen flag changed to true.");
 						}
+
+						JgwResult tagResult = rest.jgw().url("/jMochaEzEmail/getTagList")
+								.formParam("userAccount", userEmail)
+								.formParam("folderPath", folderPath)
+								.formParam("mailUid", uid)
+								.exchangeJgwResult();
+						logger.debug("jgw getTagList result: {}", tagResult);
+						tags = tagResult.succeeded() ? tagResult.getResult(String.class) : "";
 					}
 					f.close(true);
 				}
@@ -2651,6 +2693,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		sb.append("<SYSTEMCOUNTRYCODE><![CDATA[" + systemCountryCode.toLowerCase() + "]]></SYSTEMCOUNTRYCODE>");
 		sb.append("<USECOUNTRYIP><![CDATA[" + useCountryIP + "]]></USECOUNTRYIP>");
 		sb.append("<USESHOWSYSTEMCOUNTRY><![CDATA[" + useShowSystemCountry + "]]></USESHOWSYSTEMCOUNTRY>");
+		sb.append("<TAGS><![CDATA[" + tags + "]]></TAGS>");
+		sb.append("<MAIL_ID><![CDATA[" + tags + "]]></MAIL_ID>");
 		sb.append("</DATA>");
 
 		response.setContentType("text/xml; charset=utf-8");

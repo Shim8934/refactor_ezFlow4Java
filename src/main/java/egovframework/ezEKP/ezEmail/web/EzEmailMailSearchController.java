@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.TimeZone;
 
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.sun.mail.imap.IMAPFolder;
@@ -39,10 +41,14 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezEmail.vo.MailColorVO;
+import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
+import egovframework.let.utl.rest.JgwResult;
+import egovframework.let.utl.rest.Rest;
 
 /** 
  * @Description [Controller] 메일 검색
@@ -78,8 +84,11 @@ public class EzEmailMailSearchController {
     
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
-	
-    /**
+
+	@Autowired
+	private Rest rest;
+
+	/**
 	 * 메일 검색 화면 표시 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailSearchView.do", method=RequestMethod.GET)
@@ -242,6 +251,7 @@ public class EzEmailMailSearchController {
 			keywordArray[i] = EgovStringUtil.getHtmlStrCnvr(doc.getElementsByTagName("KEYWORD").item(i).getTextContent());
 		}
 		
+		String tagName = Optional.ofNullable(doc.getElementsByTagName("TAGNAME").item(0)).map(Node::getTextContent).orElse("");
 		String startDate = doc.getElementsByTagName("STARTDATE").item(0).getTextContent();
 		String endDate = doc.getElementsByTagName("ENDDATE").item(0).getTextContent();
 		String prop = doc.getElementsByTagName("PORP").item(0).getTextContent();
@@ -315,7 +325,7 @@ public class EzEmailMailSearchController {
 				}
 				
 				List<Map<String, String>> mailList = ezEmailUtil.searchFolderUsingRDBOnly(userEmail, folderPath, categoryArray, keywordArray, startDateObj, endDateObj, true, 
-						false, false, sortTypeSpecifier, isAscending, startIndex, listCount, false, extraMap, userInfo.getTenantId(), false);
+						false, false, sortTypeSpecifier, isAscending, startIndex, listCount, false, extraMap, userInfo.getTenantId(), false, tagName);
 								
 				totalCount = (int) extraMap.get("totalCount");
 				logger.debug("totalCount=" + totalCount);
@@ -406,7 +416,7 @@ public class EzEmailMailSearchController {
 				}
 				
 				messages = ezEmailUtil.searchFolder(ia, userEmail, folder, categoryArray, keywordArray, startDateObj, endDateObj, true, 
-						false, false, sortTypeSpecifier, isAscending, startIndex, listCount, false, extraMap, userInfo.getTenantId());
+						false, false, sortTypeSpecifier, isAscending, startIndex, listCount, false, extraMap, userInfo.getTenantId(), tagName);
 				
 				totalCount = (int) extraMap.get("totalCount");
 				logger.debug("totalCount=" + totalCount);
@@ -519,7 +529,141 @@ public class EzEmailMailSearchController {
 		
 		return returnData;
 	}
-	
+
+	/**
+	 * 메일 태그 화면 표시 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailTagView.do", method=RequestMethod.GET)
+	public String mailTagView(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model, @RequestParam int idx) throws Exception {
+		logger.debug("mailTagView started. idx={}", idx);
+		String url = request.getParameter("url");
+		url = (url != null) ? url : "INBOX";
+		url = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(url));
+		logger.debug("url={}", url);
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		String folderType = "";
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String useOcs = config.getProperty("config.USE_OCS");
+		boolean isSentItems = false;
+		String useEncryptZipForEmail = ezCommonService.getTenantConfig("UseEncryptZipForEmail", userInfo.getTenantId());
+		String useMailBoxBackUp = ezCommonService.getTenantConfig("UseMailBoxBackUp", userInfo.getTenantId());
+		String useReSend = ezCommonService.getTenantConfig("useReSend", userInfo.getTenantId());
+		String useMailWriteSenderClick = ezCommonService.getTenantConfig("useMailWriteSenderClick", userInfo.getTenantId()); // 수아 수정(useMailWriteSenderClick 추가)
+		String useSearchContent = ezCommonService.getTenantConfig("useSearchContent", userInfo.getTenantId());
+		String useMailNewWindow = ezCommonService.getTenantConfig("useMailNewWindow", userInfo.getTenantId());
+		String useCountryIP = ezCommonService.getTenantConfig("useCountryIP", userInfo.getTenantId());
+		String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", userInfo.getTenantId());
+		String useShowSystemCountry = ezCommonService.getTenantConfig("useShowSystemCountry", userInfo.getTenantId());
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		String useMailConfirm = ezCommonService.getTenantConfig("useMailConfirm", userInfo.getTenantId());
+		String useHackingMailReport = ezCommonService.getTenantConfig("useHackingMailReport", userInfo.getTenantId());
+		String userTimeSet = userInfo.getOffset();
+		String offsetMin = commonUtil.getMinuteUTC(userTimeSet);
+		String serverName = userInfo.getServerName();
+
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("showMailList ended.");
+
+					return "ezCommon/error";
+				} else {
+					MailSharedMailboxUserVO shareVO = ezEmailService.getSharedMailboxPermissionInfo(shareId, userInfo.getTenantId(), userInfo.getId());
+
+					model.addAttribute("shareId", shareId);
+					model.addAttribute("deletePermission", shareVO.getDeletePermission());
+					model.addAttribute("sendPermission", shareVO.getSendPermission());
+					model.addAttribute("managePermission", shareVO.getManagePermission());
+				}
+			}
+		}
+
+		if (useEncryptZipForEmail.equals("")) {
+			useEncryptZipForEmail = "NO";
+		}
+
+		if (useMailBoxBackUp.equals("")) {
+			useMailBoxBackUp = "NO";
+		}
+
+		//수아 수정
+		if (useMailWriteSenderClick.equals("")) {
+			useMailWriteSenderClick = "NO";
+		}
+
+		if (useSearchContent.equals("")) {
+			useSearchContent = "NO";
+		}
+
+		if (useMailNewWindow.equals("")) {
+			useMailNewWindow = "NO";
+		}
+
+		if (useMailConfirm.equals("")) {
+			useMailConfirm = "NO";
+		}
+
+		// retrieve the mail general settings from DB.
+		MailGeneralVO mailGeneral = ezEmailService.getMailGeneral(userInfo.getTenantId(), userInfo.getId()).get(0);
+
+		// set importanceColor
+		String importanceColor = "#ff0000";
+		MailColorVO mailColor = ezEmailService.getMailColor(userInfo.getTenantId());
+
+		if (mailColor != null && mailColor.getImportanceColor() != null) {
+			importanceColor = mailColor.getImportanceColor();
+		}
+
+		// set model
+		model.addAttribute("url", url);
+		model.addAttribute("folderType", folderType);
+		model.addAttribute("isSentItems", isSentItems);
+		model.addAttribute("userLang", userInfo.getLang());
+		model.addAttribute("userId", userInfo.getId());
+		model.addAttribute("domainName", domainName);
+		model.addAttribute("mailGeneral", mailGeneral);
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("useOcs", useOcs);
+		model.addAttribute("importanceColor", importanceColor);
+		model.addAttribute("useEncryptZipForEmail", useEncryptZipForEmail);
+		model.addAttribute("useMailBoxBackUp", useMailBoxBackUp);
+		model.addAttribute("useReSend", useReSend);
+		model.addAttribute("useMailWriteSenderClick", useMailWriteSenderClick); // 수아 수정 (useMailWriteSenderClick 추가)
+		model.addAttribute("useSearchContent", useSearchContent);
+		model.addAttribute("useMailNewWindow", useMailNewWindow);
+		model.addAttribute("sentFolderId", ezEmailUtil.getSentFolderId(locale));
+		model.addAttribute("useCountryIP", useCountryIP);
+		model.addAttribute("systemCountryCode", systemCountryCode.toLowerCase());
+		model.addAttribute("useShowSystemCountry", useShowSystemCountry);
+		model.addAttribute("useMailConfirm", useMailConfirm);
+		model.addAttribute("useHackingMailReport", useHackingMailReport);
+		model.addAttribute("offsetMin", offsetMin);
+		model.addAttribute("serverName", serverName);
+
+		JgwResult result = rest.jgw().url("/jMochaEzEmail/getTag").formParam("idx", idx).exchangeJgwResult();
+		logger.debug("jgw getTag result: {}", result);
+		model.addAttribute("tag", result.getResult());
+
+		logger.debug(",url=" + url + ",folderType=" + folderType + ",isSentItems=" + isSentItems
+				+ ",userLang=" + userInfo.getLang() + ",userId=" + userInfo.getId() + ",domainName=" + domainName + ",useEditor=" + useEditor
+				+ ",useOcs=" + useOcs + ",importanceColor=" + importanceColor + ",UseEncryptZipForEmail=" + useEncryptZipForEmail
+				+ ",useMailBoxBackUp=" + useMailBoxBackUp + ",useCountryIP=" + useCountryIP + ", useMailConfirm=" + useMailConfirm
+				+ ",useHackingMailReport=" + useHackingMailReport + ",offsetMin=" + offsetMin);
+		logger.debug("mailGeneral=" + mailGeneral);
+		logger.debug("mailTagView ended.");
+
+		return "ezEmail/mailTagView";
+	}
+
 	/**
 	 * 메일 삭제 실행 함수(메일 검색)
 	 */
