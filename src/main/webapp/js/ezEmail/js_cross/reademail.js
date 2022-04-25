@@ -1357,8 +1357,8 @@ function removeTag(span) {
 				leftMenu.reloadTags();
 			}
 
-			span.nextElementSibling.remove();
-			span.remove();
+			$(span.nextElementSibling).remove();
+			$(span).remove();
 		},
 		error: function() {
 			alert(strLang321);
@@ -1381,11 +1381,16 @@ function onEnterPreviewTagInput() {
 	var tagInput = document.getElementById("tag_add");
 	var tagName = tagInput.value.trim();
 	if (tagName.length <= 0) return;
+	if ($.grep(document.querySelectorAll("#tag_view > span"), function(span) { return span.innerText == tagName }).length > 0) {
+		alert(strLangTagAlreadyUse);
+		return;
+	}
 
 	var mailId = g_paramURL.split("/");
 	var folderPath = mailId[0];
 	var mailUid = mailId[1];
 	$.ajax({
+		cache: false,
 		async: false,
 		method: 'post',
 		url: "/ezEmail/addMailTag.do",

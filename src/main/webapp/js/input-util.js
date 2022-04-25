@@ -23,7 +23,7 @@ var inputUtil = (function() {
 		attachCaptureSelection(inputElement);
 		inputElement.addEventListener("input", function() {
 			if (regexp.test(this.value)) {
-				this.value = this.value.replaceAll(regexp, '');
+				this.value = this.value.replace(regexp, '');
 				this.setSelectionRange(this.previousSelection.start, this.previousSelection.end);
 			}/* else {
 				captureSelection(this);
@@ -42,7 +42,7 @@ var inputUtil = (function() {
 			if (regexp.test(this.value)) {
 				var startPos = this.selectionStart;
 				var endPos = this.selectionEnd;
-				this.value = this.value.replaceAll(regexp, newChar);
+				this.value = this.value.replace(regexp, newChar);
 				this.setSelectionRange(startPos, endPos);
 			}
 		});

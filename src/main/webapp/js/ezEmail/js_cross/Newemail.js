@@ -2151,6 +2151,7 @@ function appendTagToPreview(tagName) {
 		var folderPath = mailId[0];
 		var mailUid = mailId[1];
 		$.ajax({
+			cache: false,
 			method: "post",
 			url: "/ezEmail/deleteMailTag.do",
 			data: { folderPath: folderPath, mailUid: mailUid, tagName: tagName },
@@ -2161,8 +2162,8 @@ function appendTagToPreview(tagName) {
 				}
 
 				onChangeTagList();
-				tagSpan.remove();
-				deleteImg.remove();
+				$(tagSpan).remove();
+				$(deleteImg).remove();
 			},
 			error: function() {
 				alert(strLang321);
@@ -2174,14 +2175,20 @@ function appendTagToPreview(tagName) {
 }
 
 function onEnterPreviewTagInput() {
-	var tagInput = pPreviewShow_HOW == "H" ? document.getElementById("pre_h_tag_add") : document.getElementById("pre_w_tag_add");
+	var idPrefix = pPreviewShow_HOW == "H" ? "pre_h_tag_" : "pre_w_tag_";
+	var tagInput = document.getElementById(idPrefix + "add");
 	var tagName = tagInput.value.trim();
 	if (tagName.length <= 0) return;
+	if ($.grep(document.querySelectorAll("#" + idPrefix + "view > span"), function(span) { return span.innerText == tagName }).length > 0) {
+		alert(strLangTagAlreadyUse);
+		return;
+	}
 
 	var mailId = Old_Preview_Href.split("/");
 	var folderPath = mailId[0];
 	var mailUid = mailId[1];
 	$.ajax({
+		cache: false,
 		async: false,
 		method: 'post',
 		url: "/ezEmail/addMailTag.do",

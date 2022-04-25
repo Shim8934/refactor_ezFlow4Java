@@ -1,6 +1,12 @@
 var leftWindow = (function() {
 	var parentWindow = self;
-	while (!parentWindow.left && (parentWindow != top || parentWindow.opener != null)) {
+	var i;
+	while (parentWindow != top || parentWindow.opener != null) {
+		for (i = 0; i < parentWindow.frames.length; i++) {
+			if (parentWindow.frames[i].name == 'left') {
+				return parentWindow.frames[i];
+			}
+		}
 		parentWindow = parentWindow.opener || parentWindow.parent;
 	}
 	return parentWindow;

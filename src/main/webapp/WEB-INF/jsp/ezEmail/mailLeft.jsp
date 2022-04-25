@@ -1390,6 +1390,7 @@
 
 			function reloadTags() {
 				$.ajax({
+					cache: false,
 					method: "get",
 					url: "/ezEmail/getUserTagList.do",
 					success: function(result) {

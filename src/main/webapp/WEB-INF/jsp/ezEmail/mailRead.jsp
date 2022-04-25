@@ -178,6 +178,7 @@
 						source: function(request, response) {
 							if (!window.cacheTags) {
 								$.ajax({
+									cache: false,
 									async: false,
 									url: "/ezEmail/getUserTagList.do",
 									success: function(result) {

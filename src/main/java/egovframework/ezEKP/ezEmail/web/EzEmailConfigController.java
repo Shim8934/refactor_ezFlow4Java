@@ -3086,15 +3086,19 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 
 	@PostMapping("/ezEmail/setTagName.do")
 	@ResponseBody
-	public Result setTagName(@RequestParam int tagIdx, @RequestParam String name) throws Exception {
+	public Result setTagName(@CookieValue String loginCookie, @RequestParam int tagIdx, @RequestParam String name) throws Exception {
 		logger.debug("setTagName started. tagIdx: {}, name: {}", tagIdx, name);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domain = ezCommonService.getTenantConfig("domainName", userInfo.getTenantId());
+		String userEmail = userInfo.getId() + "@" + domain;
 		JgwResult jgwResult = rest.jgw().url("/jMochaEzEmail/setTagName")
+				.formParam("userAccount", userEmail)
 				.formParam("tagIdx", tagIdx)
 				.formParam("name", name)
 				.exchangeJgwResult();
 		logger.debug("jgw setTagName ended, success={}", jgwResult.succeeded());
 		logger.debug("setTagName ended.", tagIdx, name);
-		return jgwResult.succeeded() ? Result.success() : Result.failure();
+		return jgwResult.succeeded() ? Result.successWithCode(jgwResult.getReasonCode()) : Result.failure();
 	}
 
 	@PostMapping("/ezEmail/deleteTag.do")

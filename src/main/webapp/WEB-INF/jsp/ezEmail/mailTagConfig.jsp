@@ -112,7 +112,8 @@
 		function onComplete() {
 			var newName = session.input.value.trim();
 
-			if (newName.trim().length == 0) {
+			if (newName.trim().length == 0 || session.previousName == newName) {
+				rollback();
 				return;
 			}
 
@@ -128,7 +129,14 @@
 				data: { tagIdx: session.tagIdx, name: newName },
 				success: function(result) {
 					if (result.status == "ok") {
-						commit();
+						// 이미 존재하는 이름의 태그가 있을 때 구분
+						if (result.code == 1) {
+							alert(strLangTagAlreadyUse);
+							rollback();
+						} else {
+							commit();
+						}
+
 						return;
 					}
 
@@ -151,7 +159,7 @@
 		}
 
 		function close() {
-			session.input.remove();
+			$(session.input).remove();
 			session = {};
 			isStarted = false;
 			rowContext.setLock(false);
@@ -192,7 +200,7 @@
 		save(leftMenu.reloadWithoutSelectNode);
 
 		if (getEnable()) {
-			document.head.querySelector("#disable_style").remove();
+			$(document.head.querySelector("#disable_style")).remove();
 		} else {
 			var disableStyle = document.createElement("style");
 			disableStyle.id = "disable_style";
@@ -219,6 +227,7 @@
 		}
 
 		$.ajax({
+			cache: false,
 			method: "post",
 			url: "/ezEmail/deleteTag.do",
 			data: { tagIdx: tagIdx },
@@ -240,6 +249,7 @@
 		contentDiv.append("<tr class='non_data'><td colspan='2'><img src='/images/email/progress_img.gif' /></td></tr>");
 
 		$.ajax({
+			cache: false,
 			method: "get",
 			url: "/ezEmail/getUserTagList.do",
 			data: { orderBy: getOrderBy() },
@@ -267,6 +277,7 @@
 
 	function save(successCallback) {
 		$.ajax({
+			cache: false,
 			method: "post",
 			url: "/ezEmail/setTagConfig.do",
 			data: { enable: getEnable(), orderBy: getOrderBy() },
