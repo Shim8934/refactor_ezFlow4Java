@@ -195,7 +195,7 @@
 			var pSignImage_Size = "<c:out value ='${signImageSize}'/>";
 			var pAdmin = "N";
 			var pGongRamDocID;
-			//기안(DRAFT), 접수(RECV), 합의(HABYUI) 여부
+			// 기안(DRAFT), 접수(RECV), 합의(HABYUI), 접수기안된 수신문서(SUSIN) 여부
 			var approvalType;
 			var chamjoAfterYN = "<c:out value ='${chamjoAfterYN}'/>";
 			var isUsed = "<c:out value ='${isUsed}'/>";
@@ -1261,25 +1261,28 @@
 			function btn_OK() {
 				var chkReceivedDoc = 0;
 
-				//접수된 문서인지 확인하기
-				$.ajax({
-					type : "POST",
-					dataType : "text",
-					async : false,
-					url : "/ezApprovalG/isReceivedDoc.do",
-					data : {
-						docID : pDocID
-					},
-					success : function(result) {
-						chkReceivedDoc = result;
+				/* 2022-04-26 홍승비 - 중복 접수 방지 로직은 접수창(approvalType="RECV")에서만 동작하도록 분기처리 추가 */
+				if (approvalType == "RECV") {
+					// 이미 접수된 문서인지 확인하기
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezApprovalG/isReceivedDoc.do",
+						data : {
+							docID : pDocID
+						},
+						success : function(result) {
+							chkReceivedDoc = result;
+						}
+					});
+	
+					if (chkReceivedDoc != 0) {
+						alert("<spring:message code='ezApprovalG.pjg04'/>");
+						opener.close();
+						window.close();
+						return;
 					}
-				});
-
-				if (chkReceivedDoc != 0) {
-					alert("<spring:message code='ezApprovalG.pjg04'/>");
-					opener.close();
-					window.close();
-					return;
 				}
 
 		    	var aprLineCnt = $("#lvAPRLINE").find("tr[data11='001']"); // 결재
