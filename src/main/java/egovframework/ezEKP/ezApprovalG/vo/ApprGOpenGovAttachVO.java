@@ -60,6 +60,9 @@ public class ApprGOpenGovAttachVO {
 	/** */
 	private String fileOpenFlag;
 	
+	/** 2022-01-27 홍승비 - 일괄기안 관련 안번호 추가 */
+	private int tabSN;
+	
 	public String getAttachType() {
 		return attachType;
 	}
@@ -233,5 +236,11 @@ public class ApprGOpenGovAttachVO {
 	}
 	public void setFileOpenFlag(String fileOpenFlag) {
 		this.fileOpenFlag = fileOpenFlag;
+	}
+	public int getTabSN() {
+		return tabSN;
+	}
+	public void setTabSN(int tabSN) {
+		this.tabSN = tabSN;
 	}
 }

@@ -345,8 +345,8 @@
 
 	    	function MemberInfo_onClick(pSelUserID, deptID) {
 	        	if (pSelUserID != "") {
-		            var feature = GetOpenPosition(420, 438);
-		            window.open("/ezCommon/showPersonInfo.do?id=" + pSelUserID +"&dept=" + deptID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		            var feature = GetOpenPosition(420, 450);
+		            window.open("/ezCommon/showPersonInfo.do?id=" + pSelUserID +"&dept=" + deptID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	    	    }
 	    	}	
 

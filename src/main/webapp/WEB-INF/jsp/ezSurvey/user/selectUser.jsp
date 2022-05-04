@@ -47,6 +47,10 @@
 	    	.countColor {
 	    		color:#017BEC;
 	    	}
+	    	/* 2022-03-30 홍승비 - MsgToList 테이블 내부의 직위, 직책명이 긴 경우 하단 border 잘리지 않도록 수정 */
+	    	#MsgToList {
+	    		table-layout : auto;
+	    	}
 	    </style>
 	    <script>
 	        var cn = "${cn}";
@@ -112,7 +116,7 @@
 	            ListTypeChangeIcon();
 	            
 	            if (xmlHTTP != null && xmlHTTP.readyState == 4) {
-	                if (xmlHTTP.statusText == "OK") {
+	                if (xmlHTTP.status == 200) {
 	                    var xmlTree = loadXMLString(xmlHTTP.responseText);
 	                    var treeXML = loadXMLFile("/xml/common/organtree_config3.xml");
 	                    var treeView = new TreeView();
@@ -308,7 +312,7 @@
 	
 	        function event_GetDistributionList() {
 	            if (xmlHTTP2 != null && xmlHTTP2.readyState == 4) {
-	                if (xmlHTTP2.statusText == "OK") {
+	                if (xmlHTTP2.status == 200) {
 	                    var result = loadXMLString(xmlHTTP2.responseText);
  
 	                    var groupNameNode = SelectNodes(result, "DATA/GROUPNAME")[0];
@@ -490,7 +494,7 @@
 	
 	        function event_displayUserList2() {
 	            if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
-	                if (g_xmlHTTP.statusText == "OK") {
+	                if (g_xmlHTTP.status == 200) {
 	                    var headerData = createXmlDom();
 	                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
 	
@@ -689,7 +693,7 @@
 	
 	        function event_getDeptFullTree() {
 	            if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
-	                if (g_xmlHTTP.statusText == "OK") {
+	                if (g_xmlHTTP.status == 200) {
 	                    if (!bSearch) {
 	                        try {
 	                            if (CrossYN())

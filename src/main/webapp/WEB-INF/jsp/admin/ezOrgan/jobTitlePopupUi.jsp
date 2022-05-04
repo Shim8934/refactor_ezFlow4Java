@@ -221,22 +221,22 @@
 				<tr>
 					<th rowspan="2"><spring:message code='ezOrgan.csj04' /><span style="color:red"> *</span></th>
 					<th>${primary}</th>
-					<td><input type="text" id="displayName1"/></td>
+					<td><input type="text" id="displayName1" maxlength="50"/></td>
 				</tr>
 				<tr>
 					<th>${secondary}</th>
-					<td><input type="text" id="displayName2"/></td>
+					<td><input type="text" id="displayName2" maxlength="50"/></td>
 				</tr>
 			</c:when>
 			<c:when test="${type eq '002'}">
 				<tr>
 					<th rowspan="2"><spring:message code='ezOrgan.csj17' /><span style="color:red"> *</span></th>
 					<th>${primary}</th>
-					<td><input type="text" id="displayName1"/></td>
+					<td><input type="text" id="displayName1" maxlength="50"/></td>
 				</tr>
 				<tr>
 					<th>${secondary}</th>
-					<td><input type="text" id="displayName2"/></td>
+					<td><input type="text" id="displayName2" maxlength="50"/></td>
 				</tr>
 			</c:when>
 		</c:choose>

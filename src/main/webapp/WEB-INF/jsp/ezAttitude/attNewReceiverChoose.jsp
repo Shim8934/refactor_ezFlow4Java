@@ -847,7 +847,7 @@
 	            window.open("/ezCommon/showPersonInfo.do?id=" + id + "&dept=" + dept, "", "height=" + height + ",width=" + width + ", left=" + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" + topPosition + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	        }
 	        function open_userinfo(cn) {
-	            window.showModalDialog("/ezCommon/showPersonInfo.do?id=" + cn, "", "dialogHeight=500px;dialogWidth=420px;status:no;scroll:auto; help:no; edge:sunken");
+	            window.showModalDialog("/ezCommon/showPersonInfo.do?id=" + cn, "", "dialogHeight=450px;dialogWidth=420px;status:no;scroll:auto; help:no; edge:sunken");
 	        }
 	      
 	        function MakeXMLString(pOrgString) {

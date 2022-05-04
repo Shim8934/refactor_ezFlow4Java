@@ -326,7 +326,7 @@
     	}
     	function event_displayUserList() {
 	        if (xmlHttp_UserList != null && xmlHttp_UserList.readyState == 4) {
-    	        if (xmlHttp_UserList.statusText == "OK") {
+    	        if (xmlHttp_UserList.status == 200) {
                 	document.getElementById("OrganListView").innerHTML = "";
                 	var listview = new ListView();
                 	listview.SetID("Organ");
@@ -433,7 +433,7 @@
     	}
 	    function event_getDeptFullTree() {
     	    if (xmlHttp_Depttree != null && xmlHttp_Depttree.readyState == 4) {
-        	    if (xmlHttp_Depttree.statusText == "OK") {
+        	    if (xmlHttp_Depttree.status == 200) {
             	    if (!bSearch) {
                 	    try {
                     	    window.dialogArguments["window"].opener.top.organview = getXmlString(xmlHttp_Depttree.responseXML);

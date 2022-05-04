@@ -164,16 +164,6 @@ function check_presence() {
     } catch (e) { }
 }
 
-function lvtDoclist_SelChange() {
-    var DocList = new ListView();
-    DocList.LoadFromID("DocList");
-    var tr = DocList.GetSelectedRows();
-    ext = tr[0].getAttribute("DATA2").substr(tr[0].getAttribute("DATA2").lastIndexOf(".")+1);
-    if (tr.length > 0) {
-        processRowClick(tr[0]);
-    }
-}
-
 function OpenConfirmUI(pInformationContent) {
     var parameter = pInformationContent;
     var url = "/myoffice/ezApprovalG/ezAPRQuestion_Cross.aspx";
@@ -424,7 +414,7 @@ function processRowClick(tr) {
         WriterDeptID = GetAttribute(tr, "DATA11");
         WriterID = GetAttribute(tr,"DATA3");
         publicityYN = GetAttribute(tr,"DATA16");
-
+        
         ChkCabRoleInfo(tr);
         
         //기록물등록대장에서 재발송버튼 보이기위해 추가 2018-07-27 강민수92
@@ -482,6 +472,17 @@ function processRowClick(tr) {
         //         document.getElementById("tdReSend").style.display = "none";
         //     }
         // }
+        
+        /* 2022-03-18 홍승비 - 미처리문서함 > 반송처리된 내부시행문 TR 클릭 시 삭제버튼 활성화 */
+        if (ListTypeFlag == "23") { // 미처리문서함
+        	var rejectFG = GetAttribute(tr,"DATA13"); // TBL_RECORD의 REJECTFLAG(반송플래그)
+        	var pDocType = GetAttribute(tr,"DATA17"); // DOCTYPE (001 = 시행문)
+        	if (rejectFG == "1" && pDocType == "001") {
+        		document.getElementById("tbtnRemoveDoc").style.display = "";
+        	} else {
+        		document.getElementById("tbtnRemoveDoc").style.display = "none";
+        	}
+        }
 
         switch (jobState) {
             case "ATTACH":

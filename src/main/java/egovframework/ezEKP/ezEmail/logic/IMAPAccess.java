@@ -302,19 +302,23 @@ public class IMAPAccess {
 					if (folder.exists()) {
 						String folderName = folder.getName();
 						
-						if (!isUseDefaultFoldersForLangOnly) {
-							if (!folderName.equalsIgnoreCase(ezEmailUtil.getInboxFolderId())
-									&& !folderName.equalsIgnoreCase(ezEmailUtil.getSentFolderId(locale))
-									&& !folderName.equalsIgnoreCase(ezEmailUtil.getDraftsFolderId(locale))
-									&& !folderName.equalsIgnoreCase(ezEmailUtil.getTrashFolderId(locale))
-									&& !folderName.equalsIgnoreCase(ezEmailUtil.getPersonalFolderId(locale))
-									&& !folderName.equalsIgnoreCase(ezEmailUtil.getJunkFolderId(locale))
-									) {
-								topLevelFolders.add(folder);
-							}
-						} else {						
-							if (!DEFAULT_FOLDER_NAME_SET.contains(folderName)) {
-								topLevelFolders.add(folder);
+						// 어떤 원인에 의해 편지함명이 empty string인 레코드가 james_subscription 테이블에 
+						// 생성되는 경우가 발생해 empty string이 아닌 경우만 처리하도록 수정함.
+						if (!folderName.isEmpty()) {
+							if (!isUseDefaultFoldersForLangOnly) {
+								if (!folderName.equalsIgnoreCase(ezEmailUtil.getInboxFolderId())
+										&& !folderName.equalsIgnoreCase(ezEmailUtil.getSentFolderId(locale))
+										&& !folderName.equalsIgnoreCase(ezEmailUtil.getDraftsFolderId(locale))
+										&& !folderName.equalsIgnoreCase(ezEmailUtil.getTrashFolderId(locale))
+										&& !folderName.equalsIgnoreCase(ezEmailUtil.getPersonalFolderId(locale))
+										&& !folderName.equalsIgnoreCase(ezEmailUtil.getJunkFolderId(locale))
+										) {
+									topLevelFolders.add(folder);
+								}
+							} else {						
+								if (!DEFAULT_FOLDER_NAME_SET.contains(folderName)) {
+									topLevelFolders.add(folder);
+								}
 							}
 						}
 					} else {

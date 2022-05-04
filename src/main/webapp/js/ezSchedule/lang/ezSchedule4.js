@@ -187,3 +187,13 @@ var strLangKHJ8 = "권한이 없습니다.";
 var strLangHSB1 = "MHT 파일을 저장하는데 실패하였습니다.";
 /* 2020-05-19 */
 var strLang131_1 = "협업일정";
+var strLang141_1 = "Google";
+
+var googleSyncMessages = {
+		strConfirmSync : "동기화를 진행하시겠습니까?",
+		strSyncSuccess : "구글캘린더와 동기화에 성공하였습니다.",
+		strSyncFail : "동기화에 실패하였습니다.",
+		strNoSync : "동기를 위한 인증정보가 없습니다. 수정,삭제를 할 수 없습니다",
+		strOnlyGoogle : "구글캘린더에서만 제공하는 기능입니다.\n 수정,삭제 및 드래그엔드롭을 할수 없습니다.",
+		strConfirmDelete : "동기화를 취소하시겠습니까?"
+	}

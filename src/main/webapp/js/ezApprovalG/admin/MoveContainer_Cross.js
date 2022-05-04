@@ -320,7 +320,7 @@ function DocMoveParser() {
 //    Flag = xmlRtn.getElementsByTagName("RESULT")[0].childNodes[0].nodeValue;
 //    
 //    if (xmlhttp != null && xmlhttp.readyState == 4) {
-//		if (xmlhttp.statusText == "OK" && Flag == "TRUE") {
+//		if (xmlhttp.status == 200 && Flag == "TRUE") {
 //			alert(strLang818);
 //	        lvTDoc.DataSource = FORMLIST;
 //		} else {

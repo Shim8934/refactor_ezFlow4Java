@@ -271,7 +271,10 @@
 			}
 			
 			function search(type) {
+				
 				if (type == "basic") {
+					if(usepostDate == false){
+
 			        if (document.getElementById("txtWriterName").value == "" && document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == "" && document.getElementById("txtContent").value == "") {
 			            alert("<spring:message code='ezBoard.t192' />");
 			            return;
@@ -288,6 +291,23 @@
 			            alert("<spring:message code='ezBoard.t191' />");
 			            return;
 			        }
+					}
+					
+					if(usepostDate == true){
+						
+						if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
+				    		alert("<spring:message code='ezSystem.x0035' />");	
+				            return;
+				        }
+				        if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "") {
+				            alert("<spring:message code='ezSystem.x0036' />");
+				            return;
+				        }
+				        if (new Date($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val()) > new Date($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val())) {
+				            alert("<spring:message code='ezBoard.t191' />");
+				            return;
+				        }	
+					}
 			    }
 			    
 			    CurPage = "1";

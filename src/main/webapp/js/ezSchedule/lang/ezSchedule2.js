@@ -196,3 +196,13 @@ var strLangGHA1 = ", ";
 var strLangHSB1 = "MHT files to store failed.";
 /* 2020-05-19 */
 var strLang131_1 = "협업일정";
+var strLang141_1 = "Google";
+
+var googleSyncMessages = {
+		strConfirmSync : "Do you want to proceed with synchronization?",
+		strSyncSuccess : "Successfully synchronized with Google Calendar.",
+		strSyncFail : "Synchronization failed.",
+		strNoSync : "No credentials for Sync. Cannot modify, delete",
+		strOnlyGoogle : "It's only available on Google Calendar.\n Unable to the modification, removal and drag, drop.",
+		strConfirmDelete : "Do you want to cancel the synchronization?"
+	}

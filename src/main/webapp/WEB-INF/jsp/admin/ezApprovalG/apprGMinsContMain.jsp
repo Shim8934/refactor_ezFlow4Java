@@ -237,7 +237,7 @@
 		        xmlhttp.send(xmlpara);
 
 		        if (xmlhttp != null && xmlhttp.readyState == 4) {
-					if (xmlhttp.statusText == "OK" && xmlhttp.responseText == "TRUE") {
+					if (xmlhttp.status == 200 && xmlhttp.responseText == "TRUE") {
 						return true;
 					} else {
 						if (xmlhttp.responseText == "DUPLICATE") {
@@ -283,7 +283,7 @@
 		        xmlhttp.send(xmlpara);
 		        
 		        if (xmlhttp != null && xmlhttp.readyState == 4) {
-					if (xmlhttp.statusText == "OK" && xmlhttp.responseText == "TRUE") {
+					if (xmlhttp.status == 200 && xmlhttp.responseText == "TRUE") {
 						return true;
 					} else {
 						if (xmlhttp.responseText == "DUPLICATE") {

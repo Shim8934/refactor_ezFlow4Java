@@ -1,11 +1,15 @@
 package egovframework.ezMobile.ezOption.service.impl;
 
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.annotation.Resource;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezMobile.ezOption.dao.MOptionDAO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
@@ -27,6 +32,12 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Autowired
+    private Properties config;
+	
+	@Autowired
+    private EzEmailUtil ezEmailUtil;
 	
 	@Resource(name = "MOptionDAO")
 	private MOptionDAO mOptionDAO;	
@@ -83,7 +94,7 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 		map.put("tenantId", tenantId);
 		
 		MOptionVO info = mOptionDAO.optionInfo(map);
-				
+
 		LOGGER.debug("optionInfo ended");
 		
 		return info;
@@ -108,7 +119,7 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 	}
 
 	@Override
-	public void updateOption(String userId, String timeZone, String lang, String mainType, String listCnt, String useSecurity, int tenantId) throws Exception {
+	public void updateOption(String userId, String timeZone, String lang, String mainType, String listCnt, String useSecurity, int tenantId, String deviceId, String pinState, String pin, String biometric) throws Exception {
 		LOGGER.debug("updateOption started");	
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -121,6 +132,11 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 		map.put("tenantId", tenantId);
 		
 		mOptionDAO.updateOption(map);
+		
+		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", tenantId);
+		if (dotNetIntegration.equalsIgnoreCase("NO")) {
+			updateDevicePinfInfo(deviceId, pinState, pin, biometric, tenantId, userId);
+		}
 		
 		LOGGER.debug("updateOption ended");	
 	}
@@ -185,6 +201,67 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 		LOGGER.debug("commonInfoWeb ended");
 		
 		return info;
+	}
+
+	public void updateDevicePinfInfo(String deviceId, String pinState, String pin, String biometric, int tenantId, String userId) throws Exception {
+		LOGGER.debug("updateDevicePinfInfo started.");
+		LOGGER.debug("deviceId=" + deviceId + ", userId=" + userId + ", pinState=" + pinState + ", biometric=" + biometric);
+
+		String tenantIdParam = "tenantId=" + tenantId;
+		String deviceIdParam = "deviceId=" + URLEncoder.encode(deviceId, "UTF-8");
+		String userIdParam = "userId=" + URLEncoder.encode(userId, "UTF-8");
+		String pinStateParam = "pinState=" + URLEncoder.encode(pinState, "UTF-8");
+		String pinParam = "pin=" + URLEncoder.encode(pin, "UTF-8");
+		String biometricParam = "biometric=" + URLEncoder.encode(biometric, "UTF-8");
+		String inputParams = tenantIdParam + "&" + deviceIdParam + "&" + pinStateParam + "&" + pinParam + "&" + biometricParam + "&" + userIdParam;
+		LOGGER.debug("inputParams=" + inputParams);
+		
+		try {
+			String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/ezTalkGate/updateDevicePinfInfo", inputParams);
+			LOGGER.debug("strJson=" + strJson);
+			
+			JSONParser parser = new JSONParser();
+			JSONObject object = (JSONObject)parser.parse(strJson);
+	        
+	        if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
+	        	throw new Exception("JGwServer ERROR");
+	        }
+		} catch (Exception e) {
+			LOGGER.debug("[JGW-SERVER ERROR] updateDevicePinfInfo.");
+		}
+
+		LOGGER.debug("updateDevicePinfInfo ended.");
+	}
+	
+	@Override
+	public String getDevicePinfInfo(String deviceId, String userId) throws Exception {
+		LOGGER.debug("getDevicePinfInfo started.");
+		LOGGER.debug("deviceId=" + deviceId + ", userId=" + userId);
+
+		String deviceIdParam = "deviceId=" + URLEncoder.encode(deviceId, "UTF-8");
+		String userIdParam = "userId=" + URLEncoder.encode(userId, "UTF-8");
+		String inputParams = deviceIdParam + "&" + userIdParam;
+		LOGGER.debug("inputParams=" + inputParams);
+		
+		JSONObject jsonObject = new JSONObject();
+		
+		try {
+			String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/ezTalkGate/getUserMobileDevicePinInfo", inputParams);
+			LOGGER.debug("strJson=" + strJson);
+			
+			JSONParser parser = new JSONParser();
+			jsonObject = (JSONObject)parser.parse(strJson);
+	        
+	        if (!jsonObject.get("resultCode").equals("OK")) {
+	        	throw new Exception("JGwServer ERROR");
+	        }
+		} catch (Exception e) {
+			LOGGER.debug("[JGW-SERVER ERROR] getDevicePinfInfo.");
+		}
+
+		LOGGER.debug("getDevicePinfInfo ended.");
+
+		return jsonObject.toJSONString();
 	}
 	
 }

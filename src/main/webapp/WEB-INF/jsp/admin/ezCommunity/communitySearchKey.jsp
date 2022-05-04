@@ -98,8 +98,8 @@
 			
 			/* 2018-07-18 홍승비 - 관리자단 커뮤니티 마스터 사원정보 겸직에 대응 가능하도록 수정, 스크립트 오류 수정(.js import) */
 			function openinfo_userinfo(obj) {
-				var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,width=420,height=438";
-			    feature = feature + GetOpenPosition(420, 438);
+				var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,width=420,height=450";
+			    feature = feature + GetOpenPosition(420, 450);
 			    window.open("/ezCommon/showPersonInfo.do?id=" + obj.getAttribute("sysId") + "&dept=" + obj.getAttribute("deptId"), "", feature);
 			}
 			

@@ -567,12 +567,14 @@
 				            D2_Temp = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 				        }
 				        if (startdate != "") {
-				        	var nowDate = new Date(startdate.substring(0, 4), startdate.substring(5, 7)-1, startdate.substring(8, 10), startdate.substring(11, 13), startdate.substring(14, 15));
-				            var nowDate2 = new Date(enddate.substring(0, 4), enddate.substring(5, 7)-1, enddate.substring(8, 10), enddate.substring(11, 13), enddate.substring(14, 15));
+				        	var nowDate = new Date(startdate.substring(0, 4), startdate.substring(5, 7)-1, startdate.substring(8, 10), startdate.substring(11, 13), startdate.substring(14, 16));
+				            var nowDate2 = new Date(enddate.substring(0, 4), enddate.substring(5, 7)-1, enddate.substring(8, 10), enddate.substring(11, 13), enddate.substring(14, 16));
 				            nowDate.setMonth(nowDate.getMonth());
 				            nowDate2.setMonth(nowDate2.getMonth());
 				            $("#Sdatepicker").datepicker('setDate', nowDate);
 				            $("#Edatepicker").datepicker('setDate', nowDate2);
+							$("#Stimepicker").timepicker('setTime', nowDate);
+							$("#Etimepicker").timepicker('setTime', nowDate2);
 				            document.getElementById("absentreason").value = BReason;            
 				            $("#TextName").val(text.textName);     
 				            gIsAppoint = "1";

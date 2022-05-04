@@ -175,7 +175,7 @@ function DocMoveParser() {
     var rtnXML;
     
     if (xmlhttp != null && xmlhttp.readyState == 4) {
-		if (xmlhttp.statusText == "OK" && rtnval == "TRUE") {
+		if (xmlhttp.status == 200 && rtnval == "TRUE") {
 			rtnXML = getXmlString(xmlpara);
 		} else {
 			rtnXML = "<ROWS></ROWS>";

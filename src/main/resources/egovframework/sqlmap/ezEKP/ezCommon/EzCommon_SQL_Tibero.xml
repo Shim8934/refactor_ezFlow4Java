@@ -4583,4 +4583,26 @@
 	]]>
    	</insert>
 
+	<statement id="EzCommonDAO.alterTblConnectionInfo">
+    <![CDATA[
+    {call
+		DECLARE
+			column_exists NUMBER;
+		BEGIN
+			SELECT COUNT(*) cnt INTO column_exists
+			FROM ALL_TAB_COLUMNS
+			WHERE TABLE_NAME = 'TBL_DEV_MASTER'
+			AND COLUMN_NAME = 'PINSTATE' AND OWNER = 'EZEKP2017';
+			IF column_exists = 0 THEN
+				EXECUTE IMMEDIATE  'ALTER TABLE TBL_DEV_MASTER
+									ADD	(
+										PIN 				VARCHAR(1000) 	DEFAULT NULL,
+										PINSTATE			CHAR(1)			DEFAULT ''N'',
+										BIOMETRIC			CHAR(1)			DEFAULT ''N''
+										)';
+			END IF;
+		END;
+	}
+	]]>
+	</statement>
 </sqlMap>

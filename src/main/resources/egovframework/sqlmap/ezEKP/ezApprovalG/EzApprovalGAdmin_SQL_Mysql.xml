@@ -707,6 +707,14 @@
 						TBL_APRDOCINFO.tenant_id
 					FROM
 						TBL_APRDOCINFO
+					LEFT OUTER JOIN
+						TBL_APRDOCGROUPINFO GRP
+					ON
+						TBL_APRDOCINFO.TENANT_ID = GRP.TENANT_ID
+					AND
+						TBL_APRDOCINFO.COMPANYID = GRP.COMPANYID
+					AND
+						TBL_APRDOCINFO.DOCID = GRP.DOCID
 					RIGHT OUTER JOIN
 						(SELECT
 							DISTINCT docid,
@@ -749,6 +757,8 @@
 				 functiontype != '010'
 			AND
 				(startdate IS NOT NULL)
+			AND
+				IFNULL(GRP.TABSN, 1) = 1
 		]]>
 
 		<isNotEqual property="v_DOCNUMBER" compareValue="">
@@ -991,6 +1001,7 @@
 					formdescription,
 					formfilelocation,
 					formconnflag,
+					FORMDRAFTALLFLAG,
 					opengovflag,
 					aproption ,
 					passaprlineflag,
@@ -1734,6 +1745,7 @@
 				formdescription,
 				formfilelocation,
 				formconnflag,
+				FORMDRAFTALLFLAG,
 				reformflag,
 				passaprlineflag,
 				companyid,
@@ -1751,6 +1763,7 @@
 				#v_PFORMDESCRIPT#,
 				#v_PURL#,
 				#v_PFORMCONNFLAG#,
+				#v_PFORMDRAFTALLFLAG#,
 				#v_PREFORMFLAG#,
 				#v_PPASSAPRLINEFLAG#,
 				#companyID#,
@@ -1774,6 +1787,7 @@
 				formdescription = #v_PFORMDESCRIPT#,
 				formfilelocation = #v_PURL#,
 				formconnflag = #v_PFORMCONNFLAG#,
+				FORMDRAFTALLFLAG = #v_PFORMDRAFTALLFLAG#,
 				reformflag = #v_PREFORMFLAG#,
 				formversion = formversion + 1,
 				opengovflag = #v_POPENGOVFLAG#,
@@ -2250,6 +2264,14 @@
 				IFNULL(COUNT(DISTINCT TBL_APRDOCINFO.docid), 0)
 			FROM
 				TBL_APRDOCINFO
+			LEFT OUTER JOIN
+				TBL_APRDOCGROUPINFO GRP
+			ON
+				TBL_APRDOCINFO.TENANT_ID = GRP.TENANT_ID
+			AND
+				TBL_APRDOCINFO.COMPANYID = GRP.COMPANYID
+			AND
+				TBL_APRDOCINFO.DOCID = GRP.DOCID
 			RIGHT OUTER JOIN
 				(SELECT
 					DISTINCT docid,
@@ -2296,6 +2318,8 @@
 				 functiontype != '010'
 			AND
 				(startdate IS NOT NULL)
+			AND
+				IFNULL(GRP.TABSN, 1) = 1
 		]]>
 
 		<isNotEqual property="v_DOCNUMBER" compareValue="">

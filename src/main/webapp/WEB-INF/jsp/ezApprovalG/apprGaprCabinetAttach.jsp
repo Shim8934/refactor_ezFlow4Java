@@ -53,6 +53,9 @@
 	        var approvalFlag = "<c:out value ='${approvalFlag}'/>";
 			//페이징이 달라 구분값 추가
 			var diffPaging = "attachDoc";
+			// 일괄기안 관련 변수 추가
+			var draftAllFlag = "<c:out value ='${draftAllFlag}'/>";
+			var anNo = "<c:out value ='${anNo}'/>";
 	        
 	        window.onload = function () {
 	            var ua = navigator.userAgent;
@@ -188,13 +191,22 @@
 	                    OpenAlertUI("<spring:message code='ezApprovalG.t360'/>");
 	            }
 	        }
+	        
 			function bt_OK_onclick() {
 			    var listview = new ListView();
 			    listview.LoadFromID("lvTDocLV");
 			    var TotalList = listview.GetDataRows();
 			    var length = TotalList.length;
-			    if (length > 0) {
+			    
+			    if (length > 0) { // 문서첨부가 존재
 			        var AprDocAttachxml = DocMoveParser();
+			    
+			    	/* 2022-01-20 홍승비 - 일괄기안 문서 내에서 문서첨부하는 경우, 부모창과 각 안별 문서첨부 플래그를 변경 */
+			    	if (draftAllFlag == "Y") {
+			    		parent.pHasDocAttachYN = "Y";
+			    		parent.pHasDocAttachYNAry[anNo] = "Y";
+			    	}
+			    
 			        if (ReturnFunction != null) {
 			            ReturnFunction(AprDocAttachxml);
 			        }
@@ -203,9 +215,15 @@
 			            window.close();
 			        }
 			    }
-			    else {
+			    else { // 문서첨부가 없음
 			        delAttachDoc();
 			        var AprDocAttachxml = DocMoveParser();
+			        
+			    	if (draftAllFlag == "Y") {
+			    		parent.pHasDocAttachYN = "N";
+			    		parent.pHasDocAttachYNAry[anNo] = "N";
+			    	}
+			    	
 			        if (ReturnFunction != null) {
 			            ReturnFunction(AprDocAttachxml);
 			        }

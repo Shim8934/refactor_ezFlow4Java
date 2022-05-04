@@ -1086,7 +1086,7 @@ function SaveDraftDocInfo_susin() {
 	xmlhttp.send(xmlpara);
 
     if (xmlhttp != null && xmlhttp.readyState == 4) {
-    	 if (xmlhttp.statusText == "OK") {
+    	 if (xmlhttp.status == 200) {
     		 if (nonElecRec == "Y") {
     			 nonElecRecTempCabSwitch(nonElecRecInfoXml);
     		 }

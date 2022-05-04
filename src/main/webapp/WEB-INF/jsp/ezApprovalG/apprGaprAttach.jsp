@@ -88,6 +88,10 @@
 	        
 	        // 웹폴더첨부용 변수
 	        var pickerData = "";
+	        
+	        /* 2022-01-20 홍승비 - 일괄기안용 변수 추가 */
+	        var draftAllFlag = "<c:out value ='${draftAllFlag}'/>"; // 일괄기안 여부 플래그 (Y/M)
+	        var anNo = "<c:out value ='${anNo}'/>"; // 일괄기안인 경우, 첨부파일을 첨부할 안의 번호
 			
 			// 문서정보를 가져오는 함수
 			function getDocInfo()
@@ -462,17 +466,23 @@
 			    var Listlen =listview.GetDataRows();
 			    var tr = Listlen[0];
 				chkFlag = true;
-				// 리스트에 리스트 목록이 있는 경우 그리고 파일추가 flag > 0 인경우 
+
+				// 첨부파일이 전부 삭제되었거나, 추가하지 않은 경우
 				if (Listlen.length == 0 || tr.getAttribute("DATA1") == null) {
 					CheckHistory(0);
 					var RtnVal = AttachRemoveAll();
-					if(RtnVal == "FALSE") {
+					if (RtnVal == "FALSE") {
 						var pAlertContent = "<spring:message code='ezApprovalG.t280'/>";
 						OpenAlertUI(pAlertContent);
 					}
 					
 					for (i=0 ; i < pDeleteFile.length ; i++) {
 						DeleteFileAtServer_true(pDeleteFile[i]);
+					}
+					
+					// 일괄기안창에서 접근한 경우, 각 안별 첨부파일 플래그 변경
+					if (draftAllFlag == "Y") {
+						modDraftAllHasAttachYN(anNo, "N");
 					}
 					
 					if (CrossYN()) {
@@ -487,10 +497,16 @@
 					    window.returnValue = "Clear";
 					    window.close();
 					}
-				} else {
+				}
+				// 리스트에 리스트 목록이 있는 경우 그리고 파일추가 flag > 0 인경우 
+				else {
 					CheckHistory(0);
 					var Attachxml = APRAttachXMLParsing(ATTACH,pDocID);
 					SaveAttachListInfo(Attachxml);
+					
+					if (draftAllFlag == "Y") {
+						modDraftAllHasAttachYN(anNo, "Y");
+					}
 					
 					for (i=0 ; i < pDeleteFile.length ; i++) {
 						DeleteFileAtServer_true(pDeleteFile[i]);
@@ -1225,6 +1241,12 @@
 		    // 웹폴더첨부 취소 시 동작. 필요하다면 input file 부분을 초기화한다.
 		    function webFolderCancelBT() {
 		    	return;
+		    }
+		    
+		    // 일괄기안 사용 시 부모창의 첨부파일 플래그를 변경해준다. (Y/N)
+		    function modDraftAllHasAttachYN(anNo, flag) {
+		    	parent.pHasAttachYN = flag;
+		    	parent.pHasAttachYNAry[anNo] = flag;
 		    }
 		    
 		</script>

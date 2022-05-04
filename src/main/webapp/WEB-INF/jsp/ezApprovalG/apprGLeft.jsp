@@ -84,6 +84,7 @@
 		    var whoKyulYN = "<c:out value = '${whoKyulYN}'/>";
 		    var useWebHWP = "<c:out value = '${useWebHWP}'/>";
 		    var userTitle = "<c:out value = '${userInfo.title}'/>";
+		    var useDraftAll = "<c:out value = '${useDraftAll}'/>";
 		    
 		    $(function () {
 		      	if(approvalFlag == "G") {
@@ -570,6 +571,19 @@
 		            }
 		        }
 		    }
+		    
+		    /* 2022-01-11 홍승비 - 전자결재G 일괄기안 기능 추가 (웹한글) */
+		    function btnDraftAll_onclick() {
+		    	var parameter = new Array();
+	            getformcont_cross_dialogArguments[0] = parameter; // 일괄기안창으로 전달할 파라미터 있다면 배열에 추가
+	            getformcont_cross_dialogArguments[1] = draftAll_Complete;
+	            
+	            // 양식 선택창 없이 바로 일괄기안창을 호출한다.
+	            var getFormCont_Cross = window.open("/ezApprovalG/draftuiAll_WHWP.do", "/ezApproval/draftuiAll_WHWP.do", GetOpenWindowfeature(1150, 950));
+	            try { getFormCont_Cross.focus(); } catch (e) {}
+		    }
+		    
+		    function draftAll_Complete(ret) {}
 		    
 		    function openForm_Complete(ret) {
 		        formURL = ret[0];
@@ -1202,9 +1216,20 @@
 	    		<spring:message code='ezApprovalG.t102'/>
 	        	<span class="sub_iconLNB tree_leftconfig" id="ApprovalConfig" onClick="Open_Func(this)" title="<spring:message code='ezApprovalG.t1800'/>"></span>
 	        </div>
+	        
+	        <%-- 25022-01-11 홍승비 - 전자결재G 일괄기안 버튼 추가 (웹한글) --%>
 	        <div class="btn_writeBox">
-	        	<p class="btn_write01" onclick="btnDraft_onclick();"><span class="sub_iconLNB tree_write"></span><spring:message code='main.t00031'/></p>
+	        	<c:choose>
+	        	<c:when test="${approvalFlag == 'G' && useWebHWP == 'YES' && useDraftAll == 'YES'}">
+	        		<p class="btn_write01" onclick="btnDraft_onclick();" style="width:99px; display:inline-block; float:none;"><span class="sub_iconLNB tree_write"></span><spring:message code='main.t00031'/></p>
+	        		<p class="btn_write01" onclick="btnDraftAll_onclick();" style="width:99px; display:inline-block; float:right;"><span class="sub_iconLNB tree_write"></span><spring:message code='ezApprovalG.HSBDa01'/></p>
+	        	</c:when>
+	        	<c:otherwise>
+	        		<p class="btn_write01" onclick="btnDraft_onclick();"><span class="sub_iconLNB tree_write"></span><spring:message code='main.t00031'/></p>
+	        	</c:otherwise>
+	        	</c:choose>
 	        </div>
+	        
 	        <c:if test="${isSubTitle}">
 		        <select name="country_id" id="country_id" tabindex="1">
 		            ${subTitleString}

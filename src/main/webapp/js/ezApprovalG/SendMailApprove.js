@@ -31,13 +31,24 @@ function getAprLinefor(mode, docid) {
 var CurrentAprType;
 var CurrentAprUserID;
 function sendAlertMail(mode, sn, ui) {
-    var linelist = getAprLinefor(mode, pDocID)
+    var linelist = "";
     var MemberList = createXmlDom();
+    
+    /* 2022-02-08 홍승비 - 일괄기안문서의 경우, 알림메일발송 시 1안의 데이터를 기준으로 한다. */
+    if (ui == "DRAFTALL" || ui == "DRAFTALL_APPROV") {
+    	linelist = getAprLinefor(mode, pDocIDAry[1]);
+    } else {
+    	linelist = getAprLinefor(mode, pDocID);
+    }
+    
     MemberList = loadXMLString(linelist);
 
-    if (ui == "DRAFT")
+    if (ui == "DRAFT") {
         SendMailApproveMember(MemberList, sn, pDocTitle, arr_userinfo[2], Gyuljedate);
-    else {       
+    } else if (ui == "DRAFTALL") {
+    	SendMailApproveMember(MemberList, sn, pDocTitleAry[1], arr_userinfo[2], Gyuljedate);
+    }
+    else {
     	if (CurrentAprType != "007") {
 	        var _pAprMemberSN = sn;
 	        var objNodes = SelectNodes(MemberList, "LISTVIEWDATA/ROWS/ROW");
@@ -47,11 +58,26 @@ function sendAlertMail(mode, sn, ui) {
 	                _pAprMemberSN = trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[0])); break;
 	            }
 	        }
-	        var pwriterID   = getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[13]);
-	        var Drafter     = getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[14]);
-	        var pstartdate  = getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[11]);
-	        var DocTitle    = getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[7]);
-	
+	        
+	        var pwriterID = "";
+	        var Drafter = "";
+	        var pstartdate = "";
+	        var DocTitle = "";
+	        
+	        if (ui == "DRAFTALL_APPROV") { // 일괄기안된 문서 결재 시 분기 추가 (1안의 정보를 전달)
+	        	var ifrm1 = document.getElementById("ifrm1");
+	        	pwriterID = getNodeText(GetChildNodes(GetElementsByTagName(ifrm1.contentWindow.document.getElementById("DOCINFO").dataSource, "DATA")[0])[13]);
+		        Drafter = getNodeText(GetChildNodes(GetElementsByTagName(ifrm1.contentWindow.document.getElementById("DOCINFO").dataSource, "DATA")[0])[14]);
+		        pstartdate = getNodeText(GetChildNodes(GetElementsByTagName(ifrm1.contentWindow.document.getElementById("DOCINFO").dataSource, "DATA")[0])[11]);
+		        DocTitle = getNodeText(GetChildNodes(GetElementsByTagName(ifrm1.contentWindow.document.getElementById("DOCINFO").dataSource, "DATA")[0])[7]);
+	        } else { // 기존 일반 결재 분기
+	        	pwriterID = getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[13]);
+		        Drafter = getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[14]);
+		        pstartdate = getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[11]);
+		        //DocTitle = getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[7]);
+		        DocTitle = getDocTitleForMail();
+	        }
+	        
 	        SendMailApproveMember(MemberList, _pAprMemberSN, DocTitle, Drafter, pstartdate);
     	}
     }
@@ -145,20 +171,33 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck, Method)
     else if (type == "approve_complete" && pDraftFlag == "DRAFT") Subject = strLang1116;
     else if (type == "approve_complete" && pDraftFlag == "SUSIN") Subject = strLang1117;
     else if (type == "SIHANG") Subject = strLang1118;
+    else if (type == "SIHANGBANSONG") Subject = strLangHSBSH01; // 시행문 반송알림
     else if (type == "SIMSABANSONG") Subject = strLang1119;
     else if (type == "SIMSAALERT") Subject = strLang1120;
     else if (type == "hukyul") Subject = strLang1121;
     else Subject = strLang1122;
     
-    if(Subject == strLang1122) {
+    /* 2022-02-11 홍승비 - 일괄기안의 경우, 1안의 문서정보를 삽입하도록 pDocID 변경 분기 추가 */
+    var mailDocID = pDocID;
+    if (typeof(draftAllFlag) != "undefined" && draftAllFlag == "Y") {
+    	mailDocID = pDocIDAry[1];
+    }
+    
+    if (Subject == strLang1122) {
     	if (Method != "007") {
     		if (docExt == "hwp") {
-    			if(useWebHWP == "YES")
-    				Approv_a += "<span style='font-weight:bold;'>" + Drafter + "</span>"+ "<span>" + strLangSpjj34 + "</span>" + "<a id='approv_a' href ='"+window.location.protocol + "//" + window.location.host+"/ezApprovalG/approvuiWHWP.do?docID="+pDocID+"&id="+id+"&name="+javaURLEncode(to.split(",")[0])+"&deptID="+deptid+"&allFlag=0&mailchk=Y" + (orgCompanyID == undefined ? "" : "&orgCompanyID=" + orgCompanyID) + "'"+ "data-id='" + pDocID + "'"+ "data-comp='" + orgCompanyID + "' onclick ='javascript:mail_link();' style='cursor: pointer; color: blue;' target='_blank'><br>"+ strLangSpjj33 + "</a><br><br><span style='font-weight:bold;'>" + strLangjjh04 + "</span><br>";
+    			if (useWebHWP == "YES") {
+    				/* 2022-02-23 홍승비 - 일괄기안문서 대응용 분기 추가 */
+    				if (typeof(draftAllFlag) != "undefined" && draftAllFlag == "Y") { // 일괄기안문서
+    					Approv_a += "<span style='font-weight:bold;'>" + Drafter + "</span>"+ "<span>" + strLangSpjj34 + "</span>" + "<a id='approv_a' href ='"+window.location.protocol + "//" + window.location.host+"/ezApprovalG/approvuiAll_WHWP.do?docID="+mailDocID+"&id="+id+"&name="+javaURLEncode(to.split(",")[0])+"&deptID="+deptid+"&allFlag=0&mailchk=Y" + (orgCompanyID == undefined ? "" : "&orgCompanyID=" + orgCompanyID) + "'"+ "data-id='" + mailDocID + "'"+ "data-comp='" + orgCompanyID + "' onclick ='javascript:mail_link();' style='cursor: pointer; color: blue;' target='_blank'><br>"+ strLangSpjj33 + "</a><br><br><span style='font-weight:bold;'>" + strLangjjh04 + "</span><br>";
+    				} else { // 기존 단일기안문서
+    					Approv_a += "<span style='font-weight:bold;'>" + Drafter + "</span>"+ "<span>" + strLangSpjj34 + "</span>" + "<a id='approv_a' href ='"+window.location.protocol + "//" + window.location.host+"/ezApprovalG/approvuiWHWP.do?docID="+mailDocID+"&id="+id+"&name="+javaURLEncode(to.split(",")[0])+"&deptID="+deptid+"&allFlag=0&mailchk=Y" + (orgCompanyID == undefined ? "" : "&orgCompanyID=" + orgCompanyID) + "'"+ "data-id='" + mailDocID + "'"+ "data-comp='" + orgCompanyID + "' onclick ='javascript:mail_link();' style='cursor: pointer; color: blue;' target='_blank'><br>"+ strLangSpjj33 + "</a><br><br><span style='font-weight:bold;'>" + strLangjjh04 + "</span><br>";
+    				}
+    			}
     			else
-    				Approv_a += "<span style='font-weight:bold;'>" + Drafter + "</span>"+ "<span>" + strLangSpjj34 + "</span>" + "<a id='approv_a' href ='"+window.location.protocol + "//" + window.location.host+"/ezApprovalG/approvuiHWP.do?docID="+pDocID+"&id="+id+"&name="+javaURLEncode(to.split(",")[0])+"&deptID="+deptid+"&allFlag=0&mailchk=Y" + (orgCompanyID == undefined ? "" : "&orgCompanyID=" + orgCompanyID) + "'"+ "data-id='" + pDocID + "'"+ "data-comp='" + orgCompanyID + "' onclick ='javascript:mail_link();' style='cursor: pointer; color: blue;' target='_blank'><br>"+ strLangSpjj33 + "</a><br><br><span style='font-weight:bold;'>" + strLangjjh04 + "</span><br>";
+    				Approv_a += "<span style='font-weight:bold;'>" + Drafter + "</span>"+ "<span>" + strLangSpjj34 + "</span>" + "<a id='approv_a' href ='"+window.location.protocol + "//" + window.location.host+"/ezApprovalG/approvuiHWP.do?docID="+mailDocID+"&id="+id+"&name="+javaURLEncode(to.split(",")[0])+"&deptID="+deptid+"&allFlag=0&mailchk=Y" + (orgCompanyID == undefined ? "" : "&orgCompanyID=" + orgCompanyID) + "'"+ "data-id='" + mailDocID + "'"+ "data-comp='" + orgCompanyID + "' onclick ='javascript:mail_link();' style='cursor: pointer; color: blue;' target='_blank'><br>"+ strLangSpjj33 + "</a><br><br><span style='font-weight:bold;'>" + strLangjjh04 + "</span><br>";
     		} else {
-    			Approv_a += "<span style='font-weight:bold;'>" + Drafter + "</span>"+ "<span>" + strLangSpjj34 + "</span>" + "<a id='approv_a' href ='"+window.location.protocol + "//" + window.location.host+"/ezApprovalG/approvui.do?docID="+pDocID+"&id="+id+"&name="+javaURLEncode(to.split(",")[0])+"&deptID="+deptid+"&allFlag=0&mailchk=Y" + (orgCompanyID == undefined ? "" : "&orgCompanyID=" + orgCompanyID) + "'"+ "data-id='" + pDocID + "'"+ "data-comp='" + orgCompanyID + "' onclick ='javascript:mail_link();' style='cursor: pointer; color: blue;' target='_blank'><br>"+ strLangSpjj33 + "</a><br><br><span style='font-weight:bold;'>" + strLangjjh04 + "</span><br>";
+    			Approv_a += "<span style='font-weight:bold;'>" + Drafter + "</span>"+ "<span>" + strLangSpjj34 + "</span>" + "<a id='approv_a' href ='"+window.location.protocol + "//" + window.location.host+"/ezApprovalG/approvui.do?docID="+mailDocID+"&id="+id+"&name="+javaURLEncode(to.split(",")[0])+"&deptID="+deptid+"&allFlag=0&mailchk=Y" + (orgCompanyID == undefined ? "" : "&orgCompanyID=" + orgCompanyID) + "'"+ "data-id='" + mailDocID + "'"+ "data-comp='" + orgCompanyID + "' onclick ='javascript:mail_link();' style='cursor: pointer; color: blue;' target='_blank'><br>"+ strLangSpjj33 + "</a><br><br><span style='font-weight:bold;'>" + strLangjjh04 + "</span><br>";
     		}
     	}
     }
@@ -177,14 +216,14 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck, Method)
         }
     }
 
-    if (type == "hesong" || type == "SIMSABANSONG") {
+    if (type == "hesong" || type == "SIMSABANSONG" || type == "SIHANGBANSONG") {
         if (valueOpinion != "") {
             Content = Content + "<br>" + valueOpinion;
         } 
     }
     Content = "<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td>" + Approv_a + Content +"</td></tr></table>";
     
-    console.log("Approv_a  : "+Approv_a)
+    console.log("Approv_a  : "+Approv_a);
     
     // 메일 발송 이후 동기적인 추가 동작이 존재하지 않으므로 비동기처리 (async = true)
     try {
@@ -277,7 +316,7 @@ function GetNoticeMail(UserID, type) {
             return true;
         else
             return false;
-    } else if (type == "bansong" || type == "SIMSABANSONG" || type == "opinion") {
+    } else if (type == "bansong" || type == "SIMSABANSONG" || type == "opinion" || type == "SIHANGBANSONG") {
         if (s_bansongMail == 1)
             return true;
         else
@@ -498,7 +537,8 @@ function SendMailToReceiveDept_Approv() {
     var pwriterID = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[13]));
     var Drafter = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[14]));
     var pstartdate = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[11]));
-    var pDocTitle = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[7]));
+//    var pDocTitle = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[7]));
+    var pDocTitle = getDocTitleForMail();
 
     SendMailToReceiveDept(pDocTitle, Drafter, pstartdate, pDocID);
 }
@@ -592,6 +632,47 @@ function GetDocInfoData(mode, field) {
     }
 }
 
+/* 2022-02-17 홍승비 - 일괄기안 대응용 함수 분리 */
+function GetDocInfoDataForDraftAll(mode, field) {
+	try {
+		var value = "";
+		var xmlpara = createXmlDom();
+		var objNode;
+		createNodeInsert(xmlpara, objNode, "PARAMETER"); 
+		createNodeAndInsertText(xmlpara, objNode, "DocID", pDocIDAry[1]);
+		createNodeAndInsertText(xmlpara, objNode, "mode", mode);
+		createNodeAndInsertText(xmlpara, objNode, "fields", field);
+		
+		var xmlhttp = createXMLHttpRequest();
+		xmlhttp.open("Post", "/ezApprovalG/GetDocInfoMode.do", false);
+		xmlhttp.send(xmlpara);
+		
+		var xmlDocument = createXmlDom();
+		xmlDocument = loadXMLString(xmlhttp.responseText);
+		
+		var objNodes = GetChildNodes(xmlDocument.documentElement);
+		
+		if (objNodes) {
+			if (objNodes.length > 0) {
+				value = getNodeText(objNodes[0]);
+			}
+			else { // 사용되지 않는 분기로 보이는데...
+				if (flag == "END") {
+					Gyuljedate = GetDocInfoDataForDraftAll("APR", "ENDDATE");
+					sendAlertMail();
+					return "";
+				}
+			}
+		}
+		
+		return value;
+	}
+	catch (e) {
+		alert(e.description);
+		return "";
+	}
+}
+
 function SendMailBansongtoDrafter() {
     getOpinionInfo(pDocID, "APR");
     if (pDraftFlag == "DRAFT") {
@@ -605,7 +686,8 @@ function SendMailBansongtoDrafter() {
             DocTitle = pDocTitle;
         }
         else {
-            DocTitle = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[7]));
+            //DocTitle = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[7]));
+        	DocTitle = getDocTitleForMail();
         }
         var NextUser = pwriterID;
 
@@ -626,7 +708,8 @@ function SendMailBansongtoDrafter() {
             DocTitle = pDocTitle;
         }
         else {
-            DocTitle = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[7]));
+            //DocTitle = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[7]));
+        	DocTitle = getDocTitleForMail();
         }
 
         sendmail(NextUser, DocTitle, Drafter, pstartdate, "bansong", "");
@@ -672,11 +755,23 @@ function getSameOrgHAPYUIDoc(orgID) {
 function SendMailToDrafter() {
     var pwriterID   = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[13]));
     var Drafter     = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[14]));
-    var pDocTitle   = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[7]));    
+//    var pDocTitle   = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[7]));    
+    var pDocTitle   = getDocTitleForMail();    
     var NextUser = pwriterID;
     var startDate = GetDocInfoData("END", "STARTDATE");
     getOpinionInfo(pDocID, "END");
     sendmail(NextUser, pDocTitle, Drafter, startDate, "approve_complete", "");
+}
+/* 2022-02-17 홍승비 - 일괄기안 대응을 위한 함수 분리 (1안의 정보에 접근) */
+function SendMailToDrafterForDraftAll() {
+	var ifrm1 = document.getElementById("ifrm1");
+	var pwriterID   = trim(getNodeText(GetChildNodes(GetElementsByTagName(ifrm1.contentWindow.document.getElementById("DOCINFO").dataSource, "DATA")[0])[13]));
+	var Drafter     = trim(getNodeText(GetChildNodes(GetElementsByTagName(ifrm1.contentWindow.document.getElementById("DOCINFO").dataSource, "DATA")[0])[14]));
+	var pDocTitle   = trim(getNodeText(GetChildNodes(GetElementsByTagName(ifrm1.contentWindow.document.getElementById("DOCINFO").dataSource, "DATA")[0])[7]));
+	var NextUser = pwriterID;
+	var startDate = GetDocInfoDataForDraftAll("END", "STARTDATE");
+	//getOpinionInfo(pDocIDAry[currIdx], "END"); // 이미 SendMailToDrafterForDraftAll 함수 호출 이전에 1안의 의견정보를 대표로 가져온 상태임
+	sendmail(NextUser, pDocTitle, Drafter, startDate, "approve_complete", "");
 }
 
 function SendMailToDrafter_Hesong(pWriterID, pWirterName, pDocTitle) {
@@ -796,11 +891,19 @@ function getreceiveDeptIDlist(DocID) {
 function SendSimsaBansong(title) {
     var _DrafterID = GetDocInfoData("APR", "WRITERID");
     getOpinionInfo(pDocID, "APR");
-    if (_DrafterID != "")
-        sendmail(_DrafterID, title, arr_userinfo[2], "", "SIMSABANSONG", "");
+    if (_DrafterID != "") {
+    	sendmail(_DrafterID, title, arr_userinfo[2], "", "SIMSABANSONG", "");
+    }
 }
 
-
+function SendSihangBansong(title) {
+    var _DrafterID = GetDocInfoData("END", "WRITERID");
+    var _DrafterName = GetDocInfoData("END", "WRITERNAME");
+    getOpinionInfo(pDocID, "END");
+    if (_DrafterID != "") {
+    	sendmail(_DrafterID, title, _DrafterName, "", "SIHANGBANSONG", "");
+    }
+}
 
 function SendMailHesong(CurSelRow) {
    
@@ -1371,3 +1474,38 @@ function checkHWP(pDocID) {
     
     return docExt;
 }
+
+/* 2022-03-23 홍승비 - 메일발송을 위한 제목을 DOCINFO가 아닌 문서에 직접 접근하여 리턴하는 함수 (편집모드 등에 대응) */
+function getDocTitleForMail() {
+	var result = "";
+	
+	try {
+		var docExt = checkHWP(pDocID);
+		
+		if (docExt == "mht") { // 일반 MHT 문서
+			result = message.document.getElementById("doctitle").textContent.trim();
+		}
+		else if (docExt == "hwp") {
+			if (useWebHWP == "YES") { // 웹한글 문서
+				if (typeof(draftAllFlag) != "undefined" && draftAllFlag != null && draftAllFlag == "Y") { // 일괄기안 (1안의 문서제목)
+					if (typeof(pDocTitleAry) != "undefined" && pDocTitleAry != null) { // 부모프레임에서 접근
+						result = pDocTitleAry[1];
+					} else { // 자식프레임 내부에서 접근
+						result = parent.pDocTitleAry[1];
+					}
+				} else { // 단일기안
+					result = message.GetFieldText("doctitle").trim();
+				}
+			} else { // 일반 한글 문서
+				result = trim(HwpCtrl.GetFieldText("doctitle"));
+			}
+		}
+	} catch (e) { // 에러 발생 시, 기존처럼 DOCINFO에 접근하여 제목을 리턴
+		console.log(e);
+		result = getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[7]);
+	}
+	
+	return result;
+}
+
+

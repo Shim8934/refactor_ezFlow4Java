@@ -270,7 +270,7 @@
     				return;
     			}
     					
-    			if(strListInfo == "") {
+    			if (strListInfo == "") {
     				alert("<spring:message code='ezCommunity.t424' />");
     				return;
     			}
@@ -310,11 +310,10 @@
     		            return;
     		        }
     		    } else {
-
-   	    		        var ret = confirm("<spring:message code='ezCommunity.t426' />");
-   	    		        if (ret) {
-   	    		        	DeleteItem();
-   	    		        }
+					var ret = confirm("<spring:message code='ezCommunity.t426' />");
+					if (ret) {
+						DeleteItem();
+					}
     		    }
     		}
     		
@@ -659,8 +658,8 @@
     		    if (gubun == "2") {
     		    	return;
     		    }
-    		    var feature = "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
-			    feature = feature + GetOpenPosition(420, 438);
+    		    var feature = "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+			    feature = feature + GetOpenPosition(420, 450);
 			    window.open("/ezCommon/showPersonInfo.do?id=" + pUserID + "&dept=" + pDeptID, "", feature);
 			}
 

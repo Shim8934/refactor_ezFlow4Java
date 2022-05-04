@@ -1113,4 +1113,18 @@ var strLang970 = "채번부서를 선택해주세요.";
 var strLang971 = "채번부서의 하위 부서를 선택해주세요.";
 var strLang972 = "채번부서가 중복지정된 부서가 있습니다";
 
-var strLang973 = "내부수신자, 외부수신자, 민원인주소는 같이 지정될 수 없습니다."
+var strLang973 = "내부수신자, 외부수신자, 민원인주소는 같이 지정될 수 없습니다.";
+
+/* 2022-01-12 홍승비 - 일괄기안 메세지 추가 */
+var strLangHSBRDa01 = "안";
+var strLangHSBRDa02 = "양식을 먼저 선택해 주세요.";
+var strLangHSBRDa03 = "안 추가 탭은 ";
+var strLangHSBRDa04 = "개까지만 가능합니다.";
+var strLangHSBRDa05 = "1안은 삭제 불가능합니다.";
+var strLangHSBRDa06 = "현재 선택된 ";
+var strLangHSBRDa07 = "을 삭제하시겠습니까?";
+var strLangHSBRDa08 = "추가된 안이 없습니다.<br/> [안추가]를 먼저 실행해 주세요.";
+var strLangHSBRDa09 = "안의 ";
+
+/* 2022-03-18 홍승비 - 내부시행문 반송 시 메일알림 */
+var strLangHSBSH01 = "[시행문반송알림]";

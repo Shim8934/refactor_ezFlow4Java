@@ -26,11 +26,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.api.services.calendar.model.Event;
 import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezSchedule.service.EzScheduleGoogleService;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
 import egovframework.ezEKP.ezSchedule.vo.AttachListVO;
 import egovframework.ezEKP.ezSchedule.vo.AttendantListVO;
@@ -42,6 +44,7 @@ import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezSchedule.service.MScheduleService;
 import egovframework.ezMobile.ezSchedule.vo.MScheduleInfoVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 /** 
@@ -78,6 +81,9 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	
 	@Resource(name = "EzCommonService")
 	private EzCommonService ezCommonService;
+	
+	@Autowired
+	private EzScheduleGoogleService googleService;
 		
 	/**
 	 * 모바일 G/W 일정관리 [GET] 일정 리스트 (월간,주간,일정검색)
@@ -136,6 +142,14 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	        	String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrlForMobile", info.getTenantId());
 	        	result.put("workspaceHostUrl", workspaceHostUrl);
 	        }
+	        
+	        String useGoogleCalendar = ezCommonService.getTenantConfig("useGoogleCalendar", info.getTenantId());
+			if(useGoogleCalendar.equals("YES")) {
+				LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+				userInfo.setDisplayName(info.getUserName());	// 오늘의 일정 > 데이터가 없어서 추가
+				List<ScheduleInfoVO> googleList = googleService.getGoogleScheduleList(startDate, endDate, searchTitle, userInfo, userInfo.getId(), "member", userInfo.getDisplayName());		
+				sList.addAll(googleList);
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -200,7 +214,14 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			
 			/* 2018-02-01 장진혁 모바일에서 검색을 다양하게 하기 위한 요소 추가 */
 			List<ScheduleInfoVO> sList = mScheduleService.scheduleList(info, startDate, endDate, searchTitle, searchColumn, searchData);
-						
+
+			String useGoogleCalendar = ezCommonService.getTenantConfig("useGoogleCalendar", info.getTenantId());
+			if(useGoogleCalendar.equals("YES")) {
+				LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+				List<ScheduleInfoVO> googleList = googleService.getGoogleScheduleList(startDate, endDate, "", userInfo, userInfo.getId(), "member", userInfo.getDisplayName());		
+				sList.addAll(googleList);
+			}
+			
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", sList.size());
@@ -208,6 +229,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
+			e.printStackTrace();
 		}
 		
 		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/list-count/users/{userId}] ended.");
@@ -233,8 +255,69 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			int tenantId = info.getTenantId();
 			String offSetMin = commonUtil.getMinuteUTC(info.getOffSet());
 			
+			LoginVO userInfo = commonUtil.getUserForGw(request.getParameter("userId"), serverName);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			
+			MScheduleInfoVO vo = new MScheduleInfoVO();
+			String flag = request.getParameter("flag");
+			if(flag != null && flag.equals("google")) {
+				String s_date = request.getParameter("startDate");
+				String e_date = request.getParameter("endDate");
+				String googleContent = "";
+		        
+				Event event = googleService.getGoogleScheduleInfo(scheduleId, userInfo, "", "");
+			
+				if (event != null) {
+					vo.setScheduleId(event.getId());
+		    		vo.setOwnerId(userInfo.getId());
+		    		vo.setCreatorId(userInfo.getId());
+		    		vo.setModifierId(userInfo.getId());
+		    		vo.setOwnerName(userInfo.getDisplayName1());
+					vo.setCreatorName(userInfo.getDisplayName1());
+					vo.setModifierName(userInfo.getDisplayName1());
+					vo.setOwnerName2(userInfo.getDisplayName2());
+					vo.setCreatorName2(userInfo.getDisplayName2());
+					vo.setModifierName2(userInfo.getDisplayName2());
+		    		vo.setScheduleType("9");
+		    		vo.setScheduleFlag("google");
+		    		//vo.setCompanyid(userInfo.getCompanyID());
+		    		vo.setTitle(event.getSummary() != null ? event.getSummary() : "No Title");
+		    		vo.setImportance("2");
+		    		vo.setLocation(event.getLocation());
+		    		
+		    		vo.setCreateDate(sdf.format(event.getCreated().getValue()));
+		    		vo.setModifyDate(sdf.format(event.getUpdated().getValue()));
+
+		    		vo.setIsPublic(event.getVisibility() != null && (event.getVisibility().equals("private") || event.getVisibility().equals("confidential")) ? "N" : "Y");
+		    		
+		    		vo.setStartDate(s_date);
+					vo.setEndDate(e_date);
+					
+		    		boolean isAllday = (event.getStart().getDateTime() == null) ? true : false;
+		    		// 반복일정인 경우
+		    		if (event.getRecurrence() != null){
+		    			vo.setDateType("3");
+		    		} else {
+		    			if (isAllday) {
+		    				vo.setDateType("2");
+		    			}
+		    			else {
+		    				vo.setDateType("1");
+		    			}
+		    		}
+		    		
+		    		googleContent = event.getDescription() != null ? event.getDescription() : "";
+		    		vo.setContent(googleContent);
+				} else {
+					result.put("status", "error");
+					result.put("code", 1);			
+					result.put("data", "");
+				}
+				
+				dataObject.put("scheduleInfo", vo);
+			} else {
 			//일정 정보
-			MScheduleInfoVO vo = mScheduleService.scheduleInfo(scheduleId, offSetMin, tenantId);
+			vo = mScheduleService.scheduleInfo(scheduleId, offSetMin, tenantId);
 			dataObject.put("scheduleInfo", vo);
 		
 			String itemID = vo.getContentPath();
@@ -298,6 +381,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	        	String useMobileViewer = ezCommonService.getTenantConfig("useMobileViewer", info.getTenantId());
 		        dataObject.put("useMobileViewer", useMobileViewer);
 	        }
+			}
 	        
 
 			result.put("status", "ok");
@@ -307,6 +391,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
+			e.printStackTrace();
 		}				
 		
 		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}] ended.");
@@ -348,6 +433,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
+			e.printStackTrace();
 		} 
 		
 		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}/attach-list] ended.");
@@ -448,6 +534,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
+			e.printStackTrace();
 		}    	
 		
 		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}/type-List] ended.");
@@ -479,6 +566,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
+			e.printStackTrace();
 		}
 		
 		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}/attendance-List] ended.");
@@ -547,6 +635,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
+			e.printStackTrace();
 		}	   			
 
 		LOGGER.debug("MOBILE G/W SCHEDULE [POST /ezschedule/schedules] ended.");
@@ -631,6 +720,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
+			e.printStackTrace();
 		}
 		
 		LOGGER.debug("MOBILE G/W SCHEDULE [PUT /ezschedule/schedules/{scheduleId}] ended.");
@@ -667,6 +757,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
+			e.printStackTrace();
 		}
 		
 		LOGGER.debug("MOBILE G/W SCHEDULE [DELETE /ezschedule/schedules/{scheduleId}] ended.");
@@ -789,6 +880,13 @@ public class MScheduleGWController extends EgovFileMngUtil {
 				info.setLang(langStr);
 				
 				List<ScheduleInfoVO> sList = mScheduleService.scheduleList(info, startDate, endDate, searchTitle, "", "");
+				
+				String useGoogleCalendar = ezCommonService.getTenantConfig("useGoogleCalendar", info.getTenantId());
+				if(useGoogleCalendar.equals("YES")) {
+					LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+					List<ScheduleInfoVO> googleList = googleService.getGoogleScheduleList(startDate, endDate, "", userInfo, userInfo.getId(), "member", userInfo.getDisplayName());		
+					sList.addAll(googleList);
+				}
 					
 				Map<String, Object> dayMap = new HashMap<String, Object>();
 				
@@ -852,6 +950,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
+			e.printStackTrace();
 		}
 		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/week-list/users/{userId}] ended.");
 		
@@ -905,6 +1004,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
+			e.printStackTrace();
 		}
 		
 		LOGGER.debug("MOBILE G/W SCHEDULE [POST /mobile/ezschedule/board-schedules] ended.");

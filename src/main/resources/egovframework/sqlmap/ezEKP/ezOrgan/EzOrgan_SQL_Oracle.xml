@@ -2491,7 +2491,7 @@
 		SELECT 
 			CN
 			,DEPARTMENT
-			,NVL(TITLE, ' ')
+			,NVL(TITLE, ' ') AS TITLE
         FROM TBL_USERMASTER 
        	WHERE 1=1
         AND CN = #userID#

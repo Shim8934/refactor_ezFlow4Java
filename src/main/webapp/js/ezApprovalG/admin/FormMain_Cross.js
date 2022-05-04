@@ -570,7 +570,14 @@ function MakeFormInfoXML_Detail() {
     } else {
     	createNodeAndInsertText(xmlpara, objNode, "passAprLineFlag", "N");
     }
-
+    
+    /* 2022-01-07 홍승비 - 전자결재G 일괄결재 옵션 추가 */
+    if (approvalFlag == "G" && document.getElementById("setDraftAllFlag").checked) {
+    	createNodeAndInsertText(xmlpara, objNode, "draftAllFlag", "Y");
+    } else {
+    	createNodeAndInsertText(xmlpara, objNode, "draftAllFlag", "N");
+    }
+    
     createNodeAndInsertText(xmlpara, objNode, "KEEPPERIOD", getNodeText(document.getElementById("keepperiod").options[document.getElementById("keepperiod").selectedIndex]));
     createNodeAndInsertText(xmlpara, objNode, "KEEPPERIODCODE", document.getElementById("keepperiod").value);
     createNodeAndInsertText(xmlpara, objNode, "SECURITYLEVEL", document.getElementById("securitylevel").value);
@@ -944,8 +951,8 @@ function btnClose_onclick() {
 }
 
 function btnSave_onclick() {
-    if(useEditor == "WebHWP") {
-    	if(formID != "") {
+    if (useEditor == "WebHWP") {
+    	if (formID != "") {
             SaveConnWHWPXML_Detail(); // 한글연동/워크플로우 정보 저장
     		GetHTML(SaveHWPFormInfo);
     	} else {

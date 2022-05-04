@@ -133,7 +133,7 @@
 		    
 		</script>
 	</head>
-	<body id="body" style="width:100%; height:100%;">
+	<body id="body" style="width:100%; height:100%; overflow:hidden;">
 		<table class="layout">
 		  <tr>
 		    <td class="pad1" id="pad1" style="vertical-align: top;">

@@ -7020,101 +7020,55 @@
 <!-- 		{CALL EZSP_GETHISTORYFORATTACH(#v_DOCID#, #v_ORDEROPTION#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getHistoryForAttach" parameterClass="Map" resultClass="ApprGHistoryAttachVO">
-		SELECT * FROM (
-		(SELECT 
-                DISTINCT
-                    APR.DISPLAYNAME as DISPLAYNAME,
-                    HIS.DOCID, 
-                    HIS.ATTACHFILESN, 
-                    HIS.ATTACHFILENAME, 
-                    HIS.ATTACHFILEDISPLAYNAME,
-                    HIS.ATTACHFILEHREF, 
-                    HIS.ATTACHFILESIZE, 
-                    HIS.ATTACHUSERID, 
-                    HIS.ATTACHUSERNAME, 
-                    HIS.ATTACHUSERNAME2,
-                    HIS.ATTACHUSERJOBTITLE, 
-                    HIS.ATTACHUSERJOBTITLE2, 
-                    HIS.ATTACHUSERDEPTID, 
-                    HIS.ATTACHUSERDEPTNAME, 
-                    HIS.ATTACHUSERDEPTNAME2, 
-                    HIS.MODIFYDATE,
-                    HIS.MODIFYSN, 
-                    HIS.MODIFYFLAG, 
-                    HIS.PAGENUM, 
-                    HIS.CHKFLAG
-        FROM 
-                TBL_HISTORYATTACHINFO HIS
-        JOIN
-                TBL_APRATTACHINFO APR
-        ON
-                HIS.DOCID = APR.DOCID AND HIS.COMPANYID = APR.COMPANYID AND HIS.ATTACHFILEDISPLAYNAME = APR.ATTACHFILENAME                
-        WHERE 
-                HIS.DOCID = #v_DOCID#
+        SELECT DISTINCT
+            HIS.ATTACHUSERNAME as DISPLAYNAME,
+            HIS.DOCID,
+            HIS.ATTACHFILESN,
+            HIS.ATTACHFILENAME,
+            HIS.ATTACHFILEDISPLAYNAME,
+            HIS.ATTACHFILEHREF,
+            HIS.ATTACHFILESIZE,
+            HIS.ATTACHUSERID,
+            HIS.ATTACHUSERNAME,
+            HIS.ATTACHUSERNAME2,
+            HIS.ATTACHUSERJOBTITLE,
+            HIS.ATTACHUSERJOBTITLE2,
+            HIS.ATTACHUSERDEPTID,
+            HIS.ATTACHUSERDEPTNAME,
+            HIS.ATTACHUSERDEPTNAME2,
+            HIS.MODIFYDATE,
+            HIS.MODIFYSN,
+            HIS.MODIFYFLAG,
+            HIS.PAGENUM,
+            HIS.CHKFLAG
+        FROM
+            TBL_HISTORYATTACHINFO HIS
+        WHERE
+            HIS.DOCID = #v_DOCID#
         AND
-                HIS.TENANT_ID = #v_TENANTID#
+            HIS.TENANT_ID = #v_TENANTID#
         AND
-                HIS.COMPANYID = #companyID#
-   		)
-   		
-   		UNION
-   		
-   		(SELECT 
-                DISTINCT
-                    APR.DISPLAYNAME as DISPLAYNAME,
-                    HIS.DOCID, 
-                    HIS.ATTACHFILESN, 
-                    HIS.ATTACHFILENAME, 
-                    HIS.ATTACHFILEDISPLAYNAME,
-                    HIS.ATTACHFILEHREF, 
-                    HIS.ATTACHFILESIZE, 
-                    HIS.ATTACHUSERID, 
-                    HIS.ATTACHUSERNAME, 
-                    HIS.ATTACHUSERNAME2,
-                    HIS.ATTACHUSERJOBTITLE, 
-                    HIS.ATTACHUSERJOBTITLE2, 
-                    HIS.ATTACHUSERDEPTID, 
-                    HIS.ATTACHUSERDEPTNAME, 
-                    HIS.ATTACHUSERDEPTNAME2, 
-                    HIS.MODIFYDATE,
-                    HIS.MODIFYSN, 
-                    HIS.MODIFYFLAG, 
-                    HIS.PAGENUM, 
-                    HIS.CHKFLAG
-        FROM 
-                TBL_HISTORYATTACHINFO HIS
-        JOIN
-                TBL_ENDATTACHINFO APR
-        ON
-                HIS.DOCID = APR.DOCID AND HIS.COMPANYID = APR.COMPANYID AND HIS.ATTACHFILEDISPLAYNAME = APR.ATTACHFILENAME                
-        WHERE 
-                HIS.DOCID = #v_DOCID#
-        AND
-                HIS.TENANT_ID = #v_TENANTID#
-        AND
-                HIS.COMPANYID = #companyID#
-   		)
-		<isGreaterThan property="v_ORDEROPTIONLENGTH" compareValue="0">
-   		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="10">
-   		<isEqual property="v_ORDEROPTIONVALUE" compareValue="modifydate">
-	   		 ORDER BY 
-	   		 	$v_ORDEROPTION$ 
-   		</isEqual>
-   		<isNotEqual property="v_ORDEROPTIONVALUE" compareValue="aprmembersn">
-	   		ORDER BY 
-	   			$v_ORDEROPTION$, MODIFYDATE DESC 
-   		</isNotEqual>
-   		</isGreaterEqual>
-   		<isLessThan property="v_ORDEROPTIONLENGTH" compareValue="10">
-   		 ORDER BY 
-	   		 	$v_ORDEROPTION$, MODIFYDATE DESC
-   		</isLessThan>
-   		</isGreaterThan>
-   		<isLessEqual property="v_ORDEROPTIONLENGTH" compareValue="0">
-   			ORDER BY 
-   				MODIFYDATE DESC
-   		</isLessEqual>
-   		)
+            HIS.COMPANYID = #companyID#
+        <isGreaterThan property="v_ORDEROPTIONLENGTH" compareValue="0">
+            <isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="10">
+                <isEqual property="v_ORDEROPTIONVALUE" compareValue="modifydate">
+                    ORDER BY
+                        $v_ORDEROPTION$
+                </isEqual>
+                <isNotEqual property="v_ORDEROPTIONVALUE" compareValue="aprmembersn">
+                    ORDER BY
+                     $v_ORDEROPTION$, MODIFYDATE DESC
+                </isNotEqual>
+            </isGreaterEqual>
+            <isLessThan property="v_ORDEROPTIONLENGTH" compareValue="10">
+                ORDER BY
+                    $v_ORDEROPTION$, MODIFYDATE DESC
+            </isLessThan>
+        </isGreaterThan>
+        <isLessEqual property="v_ORDEROPTIONLENGTH" compareValue="0">
+            ORDER BY
+            MODIFYDATE DESC
+        </isLessEqual>
 	</select>
 <!-- 	<procedure id="EzApprovalG.doApproveLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO"> -->
 <!-- 		{CALL EZSP_DOAPPROVE_LINEINFO(#v_DOCID#, #v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -14235,6 +14189,8 @@
 	            TBL_ENDAPRDOCINFO.WRITERDEPTID = #deptCode#
 	        AND
 	           TBL_SEPERATEATTACH.SEPERATEATTACHNO = '00'
+			AND
+				TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
 	    </isEqual>
 		)
 	</select>
@@ -33781,11 +33737,7 @@
             AND 
                 A.ENDDATE <= TO_TIMESTAMP(#v_ENDDATE#, 'YYYY-MM-DD HH24:MI:SS') 
             AND 
-                (
-                    B.DELFLAG IS NULL 
-                OR 
-                    B.DELFLAG <> '1'
-                )
+				B.DELFLAG IS NULL 
             AND 
                 C.PROCESSYN = 'N' 
             ]]>
@@ -33808,11 +33760,11 @@
 	
 	<insert id="EzApprovalG.copyOpinionsFromOrgDoc2" parameterClass="map">
 		INSERT INTO tbl_apropinioninfo
-		(`DOCID`, `USERID`, `OPINIONGB`, `CONTENT`, `USERNAME`, `USERJOBTITLE`, `USERDEPTID`, `USERDEPTNAME`, `OPINIONSN`, `USERNAME2`, `USERJOBTITLE2`, `USERDEPTNAME2`, `TENANT_ID`, `COMPANYID`)
-		SELECT #v_NEWID#, `USERID`, `OPINIONGB`, `CONTENT`, `USERNAME`, `USERJOBTITLE`, `USERDEPTID`, `USERDEPTNAME`, `OPINIONSN`, `USERNAME2`, `USERJOBTITLE2`, `USERDEPTNAME2`, `TENANT_ID`, #receiptCompanyID#
+		(DOCID, USERID, OPINIONGB, CONTENT, USERNAME, USERJOBTITLE, USERDEPTID, USERDEPTNAME, OPINIONSN, USERNAME2, USERJOBTITLE2, USERDEPTNAME2, TENANT_ID, COMPANYID)
+		SELECT #v_NEWID#, USERID, OPINIONGB, CONTENT, USERNAME, USERJOBTITLE, USERDEPTID, USERDEPTNAME, OPINIONSN, USERNAME2, USERJOBTITLE2, USERDEPTNAME2, TENANT_ID, #receiptCompanyID#
 		FROM tbl_endapropinioninfo
 		WHERE
-			`DOCID` = #v_orgDocID#
+			DOCID = #v_orgDocID#
 		AND
 			TENANT_ID = #v_TENANTID#
 		AND
@@ -34576,4 +34528,31 @@
           AND
             COMPANYID = #v_COMPANYID#
     </select>
+    
+    <delete id="EzApprovalG.deleteEndOpinionInfo" parameterClass="Map">
+	  	DELETE 
+	  		TBL_ENDAPROPINIONINFO
+    	WHERE  
+    		DOCID = #v_DOCID#
+    	AND
+    		TENANT_ID = #v_TENANTID#
+    	AND
+    		COMPANYID = #companyID#
+	</delete>
+	
+	<update id="EzApprovalG.updateRecInfoRejectFlag" parameterClass="Map">
+    	UPDATE
+    		TBL_RECORD
+    	SET
+    		REJECTFLAG = #v_REJECTFLAG#
+    	WHERE
+    		DOCID = #v_DOCID#
+    	AND
+    		RECORDID = #v_RECORDID#
+    	AND
+    		COMPANYID = #companyID#
+    	AND
+    		TENANT_ID = #v_TENANTID#
+    </update>
+    
 </sqlMap>

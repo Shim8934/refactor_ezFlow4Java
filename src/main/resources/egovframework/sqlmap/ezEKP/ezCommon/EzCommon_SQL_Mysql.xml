@@ -4258,7 +4258,7 @@
 			  PRIMARY KEY (`SEQUENCE`)
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 	</statement>
-
+	
 	<select id="EzCommonDAO.checkMailOutOfOfficeTemplate" resultClass="String">
 		<![CDATA[
 			SELECT 
@@ -4378,4 +4378,34 @@
 		('112', 3, '일자', 300, NULL, 'STATUSDATE', NULL, NULL, '일자', NULL, 'Date', '日付', '日付', NULL, #tenantId#, #companyId#)
 	</insert>
 	
+	<select id="EzCommonDAO.checkAprDocGroupInfoTypeColumn">
+        <![CDATA[
+            SELECT
+                TYPE
+            FROM
+                TBL_APRDOCGROUPINFO
+            LIMIT 1
+        ]]>
+    </select>
+    <statement id="EzCommonDAO.addAprDocGroupInfoTypeColumn">
+        ALTER TABLE
+        	TBL_APRDOCGROUPINFO 
+		ADD 
+			TYPE VARCHAR(10) NOT NULL
+    </statement>
+    
+	<statement id="EzCommonDAO.alterTblDevMaster">
+	<![CDATA[
+		ALTER TABLE 
+			TBL_DEV_MASTER
+		ADD 
+		IF NOT EXISTS
+		(
+			PIN 				VARCHAR(1000) 	DEFAULT NULL,
+			PINSTATE			CHAR(1)			DEFAULT 'N',
+			BIOMETRIC			CHAR(1)			DEFAULT 'N'
+		)
+	]]>
+    </statement>
+    
 </sqlMap>

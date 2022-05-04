@@ -2926,20 +2926,20 @@ CREATE TABLE `tbl_aprdocinfo` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tbl_aprdraftallgroup`
+-- Table structure for table `TBL_APRDRAFTALLGROUP`
 --
 
-DROP TABLE IF EXISTS `tbl_aprdraftallgroup`;
+DROP TABLE IF EXISTS `TBL_APRDRAFTALLGROUP`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_aprdraftallgroup` (
-  `mainDocID` varchar(80) DEFAULT NULL,
-  `subDocID` varchar(80) DEFAULT NULL,
-  `tenant_id` mediumint(5) DEFAULT NULL,
-  `companyID` varchar(20) DEFAULT NULL,
-  `orderNum` mediumint(5) DEFAULT NULL,
-  `createDate` datetime DEFAULT NULL,
-  `aprMemberID` varchar(400) DEFAULT NULL
+CREATE TABLE `TBL_APRDRAFTALLGROUP` (
+  `MAINDOCID` varchar(80) DEFAULT NULL,
+  `SUBDOCID` varchar(80) DEFAULT NULL,
+  `TENANT_ID` mediumint(5) DEFAULT NULL,
+  `COMPANYID` varchar(20) DEFAULT NULL,
+  `ORDERNUM` mediumint(5) DEFAULT NULL,
+  `CREATEDATE` datetime DEFAULT NULL,
+  `APRMEMBERID` varchar(400) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -6258,6 +6258,9 @@ CREATE TABLE `tbl_dev_master` (
   `EXTENSION1` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
   `EXTENSION2` varchar(256) CHARACTER SET utf8 DEFAULT NULL,
   `NOTUSED` int(11) DEFAULT 0,
+  `PIN` varchar(100) DEFAULT NULL,
+  `PINSTATE` char(1) DEFAULT 'N',
+  `BIOMETRIC` char(1) DEFAULT 'N',
   PRIMARY KEY (`DEVSEQ`),
   UNIQUE KEY `DEVID_UNIQUE` (`DEVID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -7147,7 +7150,6 @@ CREATE TABLE `tbl_forminfo` (
   `INFORMALFLAG` int(11) DEFAULT 0,
   `FORMVERSION` int(11) DEFAULT 0,
   `OPENGOVFLAG` varchar(4) DEFAULT 'N',
-  `DRAFTALLFLAG` varchar(4) DEFAULT 'N',
   `FORMXSLT` longtext DEFAULT NULL COMMENT '연동에서 XML을 HTML로 변환하기 위해 필요한 XSLT정보',
   `PASSAPRLINEFLAG` varchar(4) DEFAULT 'N' COMMENT '기결재통과플래그',
   `FORMGUIDE` longtext DEFAULT NULL,
@@ -15395,6 +15397,40 @@ FOR EACH ROW
 BEGIN
     IF NEW.displayname != OLD.displayname OR NEW.displayname2 != OLD.displayname2 THEN
         UPDATE tbl_webfolder_folder SET folder_name1 = NEW.displayname, folder_name2 = NEW.displayname2 WHERE owner_id = NEW.cn AND folder_upper = 'root' AND folder_type IN ('U');
+    END IF;
+END; //
+
+CREATE OR REPLACE TRIGGER tbl_webfolder_file_insert
+AFTER INSERT ON TBL_WEBFOLDER_FILE
+FOR EACH ROW
+BEGIN
+	INSERT INTO search_index_webfolder(FILEID, GUBUN, INSERTDATE, STATUS, TENANT_ID) VALUES(NEW.FILE_ID, 'I', now(), 'N', NEW.TENANT_ID );
+END; //
+
+CREATE OR REPLACE TRIGGER tbl_webfolder_file_update
+AFTER UPDATE ON TBL_WEBFOLDER_FILE
+FOR EACH ROW
+BEGIN
+	IF OLD.USE_STATUS != 'T' OR NEW.USE_STATUS != 'T' THEN
+		INSERT INTO search_index_webfolder(FILEID, GUBUN, INSERTDATE, STATUS, tenant_id) VALUES(NEW.FILE_ID, 'U', now(), 'N', NEW.TENANT_ID );
+    END IF;
+END; //
+
+CREATE OR REPLACE TRIGGER tbl_webfolder_file_delete
+AFTER UPDATE ON TBL_WEBFOLDER_FILE
+FOR EACH ROW
+BEGIN
+	IF OLD.USE_STATUS != 'T' AND NEW.USE_STATUS = 'T' THEN
+		INSERT INTO search_index_webfolder(FILEID, GUBUN, INSERTDATE, STATUS, TENANT_ID) VALUES(OLD.FILE_ID, 'D', now(), 'N', OLD.TENANT_ID );
+    END IF;
+END; //
+
+CREATE OR REPLACE TRIGGER tbl_webfolder_file_restore
+AFTER UPDATE ON TBL_WEBFOLDER_FILE
+FOR EACH ROW
+BEGIN
+	IF OLD.USE_STATUS = 'T' AND NEW.USE_STATUS != 'T' THEN
+		INSERT INTO search_index_webfolder(FILEID, GUBUN, INSERTDATE, STATUS, TENANT_ID) VALUES(NEW.FILE_ID, 'I', now(), 'N', NEW.TENANT_ID );
     END IF;
 END; //
 

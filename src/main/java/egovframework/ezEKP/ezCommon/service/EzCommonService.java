@@ -369,10 +369,16 @@ public interface EzCommonService {
 	public void createMailOutOfOfficeTemplate() throws Exception;
 	
 	public void createUserMailTemplate() throws Exception;
-
+	
 	void createTblPermissionChangeInfo() throws Exception;
-
+	
 	public void addSusinScheduleOffsetColumn() throws Exception;
 
 	public void insertReceiptHistoryListoption() throws Exception;
+	
+	public void addAprDocGroupInfoTypeColumn() throws Exception;
+
+	public void alterTblDevMaster() throws Exception;
+
+	String createExcelByList (String fileName, String dirPath, String sheetName, List<List<Object>> data) throws Exception;
 }

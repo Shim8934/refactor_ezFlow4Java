@@ -1421,7 +1421,7 @@ function btnSearchDept_onClick_Complete_New(reParam) {
 
 function event_getDeptFullTree() {
     if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
-        if (g_xmlHTTP.statusText == "OK") {
+        if (g_xmlHTTP.status == 200) {
             var xmlDom = createXmlDom();
             xmlDom.async = false;
             xmlDom = loadXMLFile("/xml/organtree_config.xml");

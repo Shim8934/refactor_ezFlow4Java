@@ -33,6 +33,8 @@ public class MPortalTimeLineVO {
 	private String mode;
 	/** 일정 반복카운트*/
 	private int repeatCount;
+	/** 일정 타입*/
+	private String schFlag;
 	
 	public String getTitle() {
 		return title;
@@ -129,6 +131,12 @@ public class MPortalTimeLineVO {
 	}
 	public void setRepeatCount(int repeatCount) {
 		this.repeatCount = repeatCount;
+	}
+	public String getSchFlag() {
+		return schFlag;
+	}
+	public void setSchFlag(String schFlag) {
+		this.schFlag = schFlag;
 	}
 }
 

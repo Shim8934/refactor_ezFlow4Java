@@ -30,7 +30,7 @@
 		    
 		    function btn_SaveAprLineTempletName_onclick() {
 		        var p_AprLineTempletName = document.getElementById("TxtAprLineTempletName").value;
-		        if (p_AprLineTempletName == "") {
+		        if (p_AprLineTempletName.trim() == "") {
 		        	var pAlertContent;
 		        	if (type == "") {
 	                    alert("<spring:message code='ezApprovalG.t387'/>");

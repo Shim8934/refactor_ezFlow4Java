@@ -1,10 +1,12 @@
 package egovframework.ezEKP.ezApprovalG.service;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachOptionVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocInfoWebSrvVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGGroupDocInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovAttachVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovInfoVO;
@@ -89,7 +91,7 @@ public interface EzApprovalGService {
 
     public String getTempList(String userID, String formID, String companyID, String lang, int tenantID) throws Exception;
 
-    public String updateLineInfo(String ret, String companyID, String lang, LoginVO userInfo) throws Exception;
+    public String updateLineInfo(String ret, String companyID, String lang, LoginVO userInfo, String docIDForDraftAll) throws Exception;
 
     public String updateReceiptInfo(String ret2, String companyID, String lang, int tenantID, String approvalFlag) throws Exception;
 
@@ -782,6 +784,62 @@ public interface EzApprovalGService {
     public void insertReciptInfoDoc24(String docID, String docDeptCode, String docDeptName, String companyId, int tenantId) throws Exception;
 
 	public String getReceiptHistoryInfo(String docID, String deptID, String companyID, String lang, int tenantID, String offset) throws Exception;
+    
+    /* 2022-01-11 홍승비 - 일괄기안 시 표출할 양식 리스트 리턴 (deptID 파라미터를 전달하는 경우, 현재 사용자의 부서에서 접근 가능한 양식만 표출함) */
+    public List<ApprGFormVO> getDraftAllFormInfo(String deptID, String companyID, int tenantID) throws Exception;
+    
+    /* 2022-01-17 홍승비 - 임시저장 또는 재기안을 위하여 그룹으로 묶인 일괄기안 문서정보 리턴 */
+	public List<ApprGGroupDocInfoVO> getGroupDocList(String docID, String mode, int tenantId, String companyID) throws Exception;
+	
+	/* 2022-01-17 홍승비 - 임시저장 또는 재기안을 위하여 그룹으로 묶인 일괄기안 문서의 GROUPDOCSN값 리턴 */
+	public String getGroupDocSN(String docID, int tenantId, String companyID) throws Exception;
+	
+	/* 2022-01-17 홍승비 - 일괄기안 > 1안의 일반첨부, 문서첨부 정보를 이후 추가된 안으로 복사 */
+	public void copyDocAttach(ApprGAttachOptionVO apprGAttachOptionVO, String realPath) throws Exception;
+	
+	/* 2022-01-17 홍승비 - 일괄기안 > 1안의 결재선 정보를 이후 추가된 안으로 복사(덮어쓰기)함 */
+	public void copyAprLine(ApprGAttachOptionVO apprGAttachOptionVO) throws Exception;
+	
+	/* 2022-01-17 홍승비 - 일괄기안 > 1안 이후 추가 시 원문공개 첨부파일 정보를 복사 */
+	public void copyParentOpenGovFileInfo(String docID, String parentDocID, int tenantID, String companyID) throws Exception;
+	
+	public List<ApprGOpenGovAttachVO> getAttachListForOpenGovDraftAll(List<String> docIDAry, String companyID, int tenantId) throws Exception;
+	
+	public String saveTmpGroup(String docID, String tabSN, String groupDocSN, String userID, String lang, String companyID, int tenantID) throws Exception;
+	
+	// 임시저장용 순번 리턴 함수
+	public String getMaxTMPDocSN(String userID, String companyID, String lang, int tenantID) throws Exception;
+	
+	/* 2022-01-27 홍승비 - 일괄기안 > 주어진 docID에 대해 일괄기안 데이터가 존재하는지 여부를 리턴 (Y/N) */
+	public String checkIsGroupDoc(String userID, String docID, String companyID, int tenantID) throws Exception;
+	
+	/* 2022-02-10 홍승비 - 일괄기안 > 기존 임시저장된 일괄기안 레코드 삭제 및 새롭게 기안된 일괄기안 레코드 삽입 서비스 */
+	public void saveAprGroupAndDelTmp(String docID, String tabSN, String newGroupDocSN, String tmpGroupDocSN, String orgCompanyID, int tenantID) throws Exception;
+	
+	/* 2022-02-10 홍승비 - 일괄기안 > 전달받은 DOCID 또는 DOCSN으로 GROUPDOCSN을 찾아 일괄기안그룹 레코드를 삭제하는 삭제 전용 메서드 */
+	public void delGroupDocInfoByDocID(String docID, String mode, String orgCompanyID, int tenantID) throws Exception;
+
+	/* 2022-02-11 홍승비 - 일괄기안 > 임시저장문서 또는 재기안문서 가져올 때 수신처 존재여부 체크 */
+	public String getReceiptExists(String docID, String mode, String orgCompanyID, int tenantID) throws Exception;
+
+	/* 2022-02-18 홍승비 - 일괄기안 > 그룹으로 묶인 1안의 보류의견 또는 반송의견을 각 안으로 복사하는 메서드 */
+	public void copyFirstTabOpinion(String docID, String groupDocSN, String opinionType, String orgCompanyID, int tenantID) throws Exception;
+
+	/* 2022-03-02 홍승비 - 현재 문서가 가진 총 의견의 갯수를 체크하여 의견 존재 여부를 리턴 (Y/N) */
+	public String chkOpinionInfoExist(String docID, String orgCompanyID, int tenantID) throws Exception;
 
     String getFormIdFromApr(String docID, String companyID, int tenantID) throws Exception;
+    
+    /* 2022-03-08 홍승비 - 한글 전자결재 양식파일을 읽어 문서번호 필드의 포맷을 리턴 */
+	public String getHWPDocNumFormatByFormID(String formID, String realPath, String orgCompanyID, int tenantID) throws Exception;
+	
+    /* 2022-03-17 홍승비 - 미처리문서함에 들어온 내부시행문의 반송 메서드 (완료된 문서의 의견테이블에 접근) */
+	public String updateOpinionSihangReject(Document docXML, String companyID, String lang, int tenantId) throws Exception;
+	
+	/* 2022-03-17 홍승비 - 미처리문서함에 들어온 내부시행문 반송 시 완료문서의 기존 의견을 전부 삭제 */
+	public String deleteEndOpinionInfo(String docID, String companyID, String lang, int tenantID) throws Exception;
+	
+	/* 2022-03-17 홍승비 - 결재완료된 내부시행문 미처리문서함에서 반송 동작 추가 (완료문서 테이블에 접근) */
+	public String doSihangConvReject(String docID, String recordID, String userID, String deptID, String companyID, int tenantID) throws Exception;
+	
 }

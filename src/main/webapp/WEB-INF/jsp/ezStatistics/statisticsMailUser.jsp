@@ -654,7 +654,7 @@
     
     function event_getDeptFullTree() {
         if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
-            if (g_xmlHTTP.statusText == "OK") {
+            if (g_xmlHTTP.status == 200) {
                 if (!bSearch) {
                     try {
                         if (CrossYN())
@@ -736,7 +736,7 @@
     }
     function event_displayUserList2() {
         if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
-            if (g_xmlHTTP.statusText == "OK") {
+            if (g_xmlHTTP.status == 200) {
                 if (g_xmlHTTP.responseXML.getElementsByTagName("ROW").length == 0)
                     alert("<spring:message code='ezStatistics.t1016' />");
                 else {

@@ -31,6 +31,7 @@ import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezSchedule.service.EzScheduleGoogleService;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
 import egovframework.ezMobile.ezApprovalG.service.MApprovalGService;
@@ -107,6 +108,9 @@ public class MPortalGWController extends EgovFileMngUtil {
 	
 	@Resource(name = "jspw")
     private String jspw;
+	
+	@Autowired
+	private EzScheduleGoogleService googleService;
 		
 	/**
 	 * 모바일 G/W 포탈 [GET] 메인 리스트 (일반/폴더/포탈/타임라인)
@@ -359,6 +363,16 @@ public class MPortalGWController extends EgovFileMngUtil {
 					String tempEDate = nowDate.substring(0, 10) + " 23:59:59";
 					List<ScheduleInfoVO> schList = mScheduleService.scheduleList(info, tempSDate, tempEDate, "", "", "");
 					
+					String useGoogleCalendar = ezCommonService.getTenantConfig("useGoogleCalendar", info.getTenantId());
+					if(useGoogleCalendar.equals("YES")) {
+						userInfo = commonUtil.getUserForGw(userId, serverName);
+						userInfo.setDisplayName(info.getUserName());
+						userInfo.setDisplayName1(info.getUserName2());
+						userInfo.setDisplayName2(info.getUserName2());
+						List<ScheduleInfoVO> googleList = googleService.getGoogleScheduleList(tempSDate, tempEDate, "", userInfo, userInfo.getId(), "member", userInfo.getDisplayName());		
+						schList.addAll(googleList);
+					}
+					
 					for (ScheduleInfoVO scheduleInfoVO : schList) {
 						MPortalTimeLineVO mPortalTimeLineVO = new MPortalTimeLineVO();
 						mPortalTimeLineVO.setTitle(scheduleInfoVO.getTitle());
@@ -368,6 +382,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 						mPortalTimeLineVO.setWriterName((primary.equals("1") ? scheduleInfoVO.getCreatorName() : scheduleInfoVO.getCreatorName2()));
 						mPortalTimeLineVO.setSchID(scheduleInfoVO.getScheduleId());
 						mPortalTimeLineVO.setRepeatCount(scheduleInfoVO.getRepeatCount());
+						mPortalTimeLineVO.setSchFlag(scheduleInfoVO.getScheduleFlag());
 						
 						if (shotDF.parse(scheduleInfoVO.getStartDate()).compareTo(shotDF.parse(nowDate)) == 0) {
 							if (longDF.parse(scheduleInfoVO.getStartDate()).compareTo(longDF.parse(sessionDate)) == 1) {
@@ -537,7 +552,8 @@ public class MPortalGWController extends EgovFileMngUtil {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			
-			result.put("data", "");		
+			result.put("data", "");	
+			e.printStackTrace();
 		}		
 		
 		LOGGER.debug("portalUserInfo End");
@@ -611,7 +627,8 @@ public class MPortalGWController extends EgovFileMngUtil {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			
-			result.put("data", "");		
+			result.put("data", "");	
+			e.printStackTrace();
 		}		
 		
 		LOGGER.debug("portalMainList End");
@@ -698,7 +715,8 @@ public class MPortalGWController extends EgovFileMngUtil {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			
-			result.put("data", "");		
+			result.put("data", "");	
+			e.printStackTrace();
 		}		
 		
 		LOGGER.debug("checkMenuAuth End");
@@ -742,7 +760,8 @@ public class MPortalGWController extends EgovFileMngUtil {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			
-			result.put("data", "");		
+			result.put("data", "");	
+			e.printStackTrace();
 		}		
 		
 		LOGGER.debug("getAddJobList End");
@@ -792,6 +811,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");		
+			e.printStackTrace();
 		}		
 		
 		LOGGER.debug("getAddJobFlag End");

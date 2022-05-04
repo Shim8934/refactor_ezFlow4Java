@@ -82,6 +82,10 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -2757,5 +2761,32 @@ public class CommonUtil {
 		}
 		
 		return result;
+	}
+
+	public Map<String, Object> convertVoToMap(Object voObject) throws IllegalArgumentException, IllegalAccessException {
+
+		Map<String, Object> result = new HashMap<String, Object>();
+
+		for (Field field : voObject.getClass().getDeclaredFields()) {
+			field.setAccessible(true);
+			Object value = field.get(voObject);
+			if (value != null) {
+				result.put(field.getName(), value);
+			}
+		}
+		
+		return result;
+	}
+
+	public JsonObject convertVoToJson(Object VO) throws IllegalArgumentException {
+		Gson gson = new Gson();
+		JsonParser jsonParser = new JsonParser();
+		return jsonParser.parse(gson.toJson(VO)).getAsJsonObject();
+	}
+
+	public JsonArray convertVoListToJsonArray(List<?> voList) throws IllegalArgumentException {
+		Gson gson = new Gson();
+		JsonParser jsonParser = new JsonParser();
+		return jsonParser.parse(gson.toJson(voList)).getAsJsonArray();
 	}
 }

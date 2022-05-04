@@ -376,7 +376,7 @@
 			        xmlhttp.open("Post", "aspx/GetFormDetail.aspx", false);
 			        xmlhttp.send(xmlpara);
 			
-			        if (xmlhttp.statusText == "OK") {
+			        if (xmlhttp.status == 200) {
 			            if (loadXMLString(xmlhttp.responseText).getElementsByTagName("FORMDOCTYPE").length > 0) {
 			                Result = getNodeText(loadXMLString(xmlhttp.responseText).getElementsByTagName("FORMDOCTYPE").item(0));
 			            }
@@ -1647,13 +1647,17 @@
 	        	if (pFormHref != "") {
                     var URL;
                     URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(FormHref);
-                    message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
+                    message.Open(URL, "", "", function (res) { FieldsAvailable(res.result); Editor_focus(); }, null);
 	        	} else {
                     DraftFlag = "DRAFT";
                     pDraftFlag = "DRAFT";
                     var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(sihangURL.replace(".mht", ".hwp"));
-		        	message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
+		        	message.Open(URL, "", "", function (res) { FieldsAvailable(res.result); Editor_focus(); }, null);
                 }
+	    	}
+	    	
+	    	function Editor_focus(){
+	    		document.getElementById("message").contentDocument.getElementById("hwpctrl_frame").contentDocument.getElementById("ImeWrapper_Elm").focus();
 	    	}
 	    	
 	    	function Editor_Complete2() {
@@ -1840,17 +1844,17 @@
 	    	}
 
 			function UpdateDocNum() {
-				if(!message.FieldExist("docnumber")) {
-					log.console("message hasn't a docnumber field")
+				if (!message.FieldExist("docnumber")) {
+					console.log("message hasn't a docnumber field");
 					return false;
-				} else if(typeof message3 === "undefined" || message3 == null) {
-					log.console("message3 is undefined")
+				} else if (typeof message3 === "undefined" || message3 == null) {
+					console.log("message3 is undefined");
 					return false;
-				} else if(!message3.FieldExist("docnumber")) {
-					log.console("message3's docnumer property isn't exist")
+				} else if (!message3.FieldExist("docnumber")) {
+					console.log("message3's docnumer property isn't exist");
 					return false;
-				} else if(typeof getDocNumByFormat === "undefined" || getDocNumByFormat == null) {
-					log.console("function getDocNumByFormat is undefined")
+				} else if (typeof getDocNumByFormat === "undefined" || getDocNumByFormat == null) {
+					console.log("function getDocNumByFormat is undefined");
 					return false;
 				}
 

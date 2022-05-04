@@ -1105,4 +1105,18 @@ var strLang970 = "请选择采编部门.";
 var strLang971 = "请选择采编部门的下级部门.";
 var strLang972 = "有复核部门";
 
-var strLang973 = "내부수신자, 외부수신자, 민원인주소는 같이 지정될 수 없습니다."
+var strLang973 = "내부수신자, 외부수신자, 민원인주소는 같이 지정될 수 없습니다.";
+
+/* 2022-01-12 홍승비 - 일괄기안 메세지 추가 */
+var strLangHSBRDa01 = "doc tab";
+var strLangHSBRDa02 = "Please choose the form first.";
+var strLangHSBRDa03 = "Up to";
+var strLangHSBRDa04 = "tabs are available.";
+var strLangHSBRDa05 = "Doc tab 1 cannot be deleted.";
+var strLangHSBRDa06 = "Are you sure you want to delete the currently selected ";
+var strLangHSBRDa07 = "doc tab?";
+var strLangHSBRDa08 = "No doc tab have been added.<br/> please do the [add doc tab] first.";
+var strLangHSBRDa09 = "doc tab : ";
+
+/* 2022-03-18 홍승비 - 내부시행문 반송 시 메일알림 */
+var strLangHSBSH01 = "[시행문반송알림]";

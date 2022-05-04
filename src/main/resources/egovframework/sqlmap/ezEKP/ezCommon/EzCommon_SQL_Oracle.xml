@@ -2677,6 +2677,8 @@
 			TBL_LASTAPRLINE
 		DROP 
 			PRIMARY KEY
+		DROP
+			INDEX
 	</statement>
 	<statement id="EzCommonDAO.addLastAprLinePrimaryKey"> 
 		ALTER TABLE 
@@ -2706,6 +2708,8 @@
 			TBL_LASTDEPTLINE
 		DROP 
 			PRIMARY KEY
+		DROP
+			INDEX
 	</statement>
 	<statement id="EzCommonDAO.addLastDeptLinePrimaryKey"> 
 		ALTER TABLE 
@@ -4519,7 +4523,7 @@
 		END
 	}
     </statement>
-
+    
 	<select id="EzCommonDAO.checkMailOutOfOfficeTemplate" resultClass="String">
 		<![CDATA[
 			SELECT 
@@ -4610,7 +4614,7 @@
 				ROWNUM = 1
         ]]>
     </select>
-    <statement id="EzCommonDAO.addSusinScheduleOffsetColumn">
+	<statement id="EzCommonDAO.addSusinScheduleOffsetColumn">
         ALTER TABLE 
         	TBL_SUSINSCHEDULE 
 		ADD
@@ -4649,4 +4653,40 @@
 	]]>
    	</insert>
 
+    <select id="EzCommonDAO.checkAprDocGroupInfoTypeColumn">
+        <![CDATA[
+            SELECT 
+                TYPE
+            FROM 
+                TBL_APRDOCGROUPINFO
+			WHERE
+				ROWNUM = 1
+        ]]>
+    </select>
+    <statement id="EzCommonDAO.addAprDocGroupInfoTypeColumn">
+        ALTER TABLE 
+        	TBL_APRDOCGROUPINFO 
+		ADD
+			TYPE CHAR(10 CHAR) NOT NULL
+    </statement>
+
+	<statement id="EzCommonDAO.alterTblDevMaster">
+    <![CDATA[
+    {call	
+		DECLARE 
+    		column_exists EXCEPTION;
+    		pragma exception_init (column_exists , -01430);
+		BEGIN 
+    		EXECUTE IMMEDIATE  'ALTER TABLE TBL_DEV_MASTER	
+    							ADD	(
+    								PIN 				VARCHAR(1000) 	DEFAULT NULL,
+									PINSTATE			CHAR(1)			DEFAULT ''N'',
+									BIOMETRIC			CHAR(1)			DEFAULT ''N''
+    								)';
+    		EXCEPTION WHEN column_exists THEN NULL;
+		END
+	}
+	]]>
+	</statement>
+	
 </sqlMap>

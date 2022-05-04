@@ -522,13 +522,15 @@
 				var docID = GetAttribute(selRow, "DATA1");
 				var docHref = GetAttribute(selRow, "DATA2");
 				var ext = docHref.substr(docHref.lastIndexOf(".") + 1);
+				var recordID = GetAttribute(selRow, "DATA6");
 
                 var url = null;
                 if (ext === "mht") {
                     url = "/ezApprovalG/ezConvSihang.do" +
                         "?docID=" + encodeURIComponent(docID) +
                         "&docHref=" + encodeURIComponent(docHref) +
-                        "&orgCompanyID=" + CompanyID;
+                        "&orgCompanyID=" + CompanyID +
+                        "&recordID=" + recordID;
                 } else if (ext === "hwp") {
                     if (useWebHWP === "NO") {
                         if (!isIE()) {
@@ -540,12 +542,14 @@
                         url = "/ezApprovalG/ezConvSihang_HWP.do" +
                             "?docID=" + encodeURIComponent(docID) +
                             "&docHref=" + encodeURIComponent(docHref) +
-                            "&orgCompanyID=" + CompanyID;
+                            "&orgCompanyID=" + CompanyID +
+                            "&recordID=" + recordID;
                     } else {
                         url = "/ezApprovalG/ezConvSihang_WHWP.do" +
                             "?docID=" + encodeURIComponent(docID) +
                             "&docHref=" + encodeURIComponent(docHref) +
-                            "&orgCompanyID=" + CompanyID;
+                            "&orgCompanyID=" + CompanyID +
+                            "&recordID=" + recordID;
                     }
                 }
 					
@@ -1507,7 +1511,7 @@
 		            xmlhttp.open("POST", "/ezApprovalG/resendEndDoc.do", false);
 		            xmlhttp.send(rtn[1]);
 		        }
-		    	if (xmlhttp.statusText == "OK") {
+		    	if (xmlhttp.status == 200) {
 		    		OpenAlertUI("<spring:message code='ezApproval.t157'/> <spring:message code='ezApproval.t854'/>");		    		
 		    		return;
 		    	} else {
@@ -1909,6 +1913,48 @@
 			            GetRecordList();
 			        }
 			    }
+			    
+			    /* 2022-03-18 홍승비 - 미처리문서함의 내부시행문 반송문서 삭제 함수 추가 (물리적인 삭제가 아니며, 관리자단의 DELFLAG 변경 함수 그대로 사용함) */
+				function btnRemoveDoc_onclick() {
+		        var DocList = new ListView();
+		        DocList.LoadFromID("DocList");
+		
+		        var oArrRows = DocList.GetSelectedRows();
+		        if (oArrRows == 0) {
+		            var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
+		            alert(pAlertContent);
+		            return;
+		        }
+		        
+		        var Ans = confirm("<spring:message code='ezApprovalG.t1728'/>");
+		        if (Ans) {
+					pCurSelRow = oArrRows[0];
+	        		var pDocID = GetAttribute(pCurSelRow, "DATA1");
+	        		
+	        		var xmlhttp = createXMLHttpRequest();
+	        		var xmlpara = createXmlDom();
+	        		var objNode;
+	        		
+	        		createNodeInsert(xmlpara, objNode, "PARAMETER");
+	        		createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID); // 현재 회사의 문서만 표출하므로, companyID 그대로 사용
+	        		createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
+	        		createNodeAndInsertText(xmlpara, objNode, "DELFLAG", "Y");
+	        		createNodeAndInsertText(xmlpara, objNode, "DELINFO", "사용자[" + arr_userinfo[1] + "]에 의해 삭제된 내부시행문서입니다."); // 삭제사유 자동삽입
+	        		
+	        		xmlhttp.open("POST","/admin/ezApprovalG/setDelDocInfo.do",false);
+	        		xmlhttp.send(xmlpara);
+	        		
+					if (xmlhttp != null && xmlhttp.readyState == 4) {
+						if (xmlhttp.status == 200) {
+							openergetDocInfo();
+	  	                } else {
+	  	                	var pAlertContent = "<spring:message code='ezApprovalG.t131'/>";
+							OpenAlertUI(pAlertContent);
+	  	                }
+					}
+		        }
+		    }
+		    
 	    </script>
 	</head>
 	<body class="mainbody" style="margin-top: 0px">
@@ -1977,6 +2023,8 @@
 <%-- 		            <li id="tdModifyOpenGov" style="<c:if test="${useOpenGov != 'YES'}">display:none;</c:if>"><span id="ModifyOpenGov" onclick="return btnChangeOpenGovInfo_onclick()">원문공개수정</span></li> --%>
 <%-- 	            </c:if> --%>
 	            <li id="tdSearchRec"><span class="icon16 icon16_search" id="SearchRec" onclick="return btnSearchRec_onclick(0,'OPEN')"></span></li>
+	            <%-- 2022-03-18 홍승비 - 미처리문서함 > 내부시행문의 반송 시 문서삭제 기능 추가 --%>
+	            <li id="tbtnRemoveDoc" style="display:none;"><span class="icon16 icon16_delete" id="btnRemoveDoc" onclick="return btnRemoveDoc_onclick()"></span></li>
 	            <li id="tdViewCabList" style="display:none"><span onclick="return GetEndYConfirmList()"><spring:message code='ezApprovalG.t525'/></span></li>
 	            <li style="vertical-align: middle; float:right"> <select id="rec_year" name="rec_year" style="width:75px;" onchange="onSelect_Year(this);">    
 	                <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>

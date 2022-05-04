@@ -746,8 +746,8 @@ var SurveyCreate     = function() {
 	
 	/* 2021-08-27 홍승비 - 직위/직책/권한그룹인 경우 이름만 표출하도록 수정 (함수에서 이름을 그대로 전달하여 표출), 사간겸직 대응 추가 */
 	function showUserInfoFromId(userId, userType, userName, deptId) {
-		var feature = "height=500px, width=420px, status=no, toolbar=no, menubar=no,location=no, resizable=1";
-		feature = feature + getOpenWindowfeature(420, 500);
+		var feature = "height=450px, width=420px, status=no, toolbar=no, menubar=no,location=no, resizable=1";
+		feature = feature + getOpenWindowfeature(420, 450);
 		userWindow = window.open("/ezCommon/showPersonInfo.do?id=" + userId + "&userType=" + userType + "&userName=" + userName + "&dept=" + deptId, "userInfo", feature);
 	}
 	

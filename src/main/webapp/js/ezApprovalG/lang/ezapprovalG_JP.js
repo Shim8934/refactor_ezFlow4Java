@@ -1108,4 +1108,18 @@ var strLang970 = "採番部署を選択してください。";
 var strLang971 = "採番部署の下位部署を選択してください。";
 var strLang972 = "採番部署が重複指定された部署があります。";
 
-var strLang973 = "내부수신자, 외부수신자, 민원인주소는 같이 지정될 수 없습니다."
+var strLang973 = "내부수신자, 외부수신자, 민원인주소는 같이 지정될 수 없습니다.";
+
+/* 2022-01-12 홍승비 - 일괄기안 메세지 추가 */
+var strLangHSBRDa01 = "案";
+var strLangHSBRDa02 = "様式を先に選択してください。";
+var strLangHSBRDa03 = "案追加タブは";
+var strLangHSBRDa04 = "個までだけ可能です。";
+var strLangHSBRDa05 = "1案は削除できません。";
+var strLangHSBRDa06 = "現在選択した";
+var strLangHSBRDa07 = "を削除しますか？";
+var strLangHSBRDa08 = "追加された案がありません。<br/> [案追加]を先に実行してください。";
+var strLangHSBRDa09 = "案の";
+
+/* 2022-03-18 홍승비 - 내부시행문 반송 시 메일알림 */
+var strLangHSBSH01 = "[施行文の差し戻し通知]";

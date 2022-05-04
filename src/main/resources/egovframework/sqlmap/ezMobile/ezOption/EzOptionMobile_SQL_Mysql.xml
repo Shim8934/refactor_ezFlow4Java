@@ -36,7 +36,7 @@
       <result property="mainType"	      	column="mainType"        					columnIndex="4"/>
       <result property="listCnt"	     	column="listCnt"        					columnIndex="5"/>      
       <result property="useSecurity"       	column="useSecurity"        				columnIndex="6"/>
-      <result property="tenantId"       	column="tenant_id"        					columnIndex="7"/>     
+      <result property="tenantId"       	column="tenant_id"        					columnIndex="7"/>        
     </resultMap>
     
     <select id="EzOptionDAO.commonInfo" parameterClass="Map" resultMap="MCommonVO">
@@ -81,7 +81,7 @@
 			    useSecurity,
 			    tenant_id
 			FROM
-				TBL_USERMOBILEINFO
+				TBL_USERMOBILEINFO 
 			WHERE
 				userid = #userId#
 			AND
@@ -100,7 +100,7 @@
 				<isEqual property="primary" compareValue="1"> WRITERNAME, </isEqual>
 				<isNotEqual property="primary" compareValue="1"> WRITERNAME2 as WRITERNAME, </isNotEqual>
 		<![CDATA[
-				DOCID as APPRID,
+				VAPRDOINGDOCLIST.DOCID as APPRID,
 				APRMEMBERSN as APRMEMBERSN,
 				'' as BOARDID,
 				'' as BOARDITEMID,
@@ -108,10 +108,18 @@
 				'APR' as MODE
 			FROM 
 				VAPRDOINGDOCLIST
-			WHERE
-				TENANT_ID = #tenantID#
+			LEFT OUTER JOIN
+				TBL_APRDOCGROUPINFO GRP
+			ON
+				VAPRDOINGDOCLIST.TENANT_ID = GRP.TENANT_ID
 			AND
-				COMPANYID IN (
+				VAPRDOINGDOCLIST.COMPANYID = GRP.COMPANYID
+			AND
+				VAPRDOINGDOCLIST.DOCID = GRP.DOCID
+			WHERE
+				VAPRDOINGDOCLIST.TENANT_ID = #tenantID#
+			AND
+				VAPRDOINGDOCLIST.COMPANYID IN (
 							SELECT 
 								EXTENSIONATTRIBUTE2 
 							FROM 
@@ -136,6 +144,8 @@
 							AND
 								TENANT_ID = #tenantID# 
 							)
+			AND
+				NVL(GRP.TABSN, 1) = 1
 			AND 
 				APRMEMBERID IN ($userIDS$)
 			AND 
@@ -155,7 +165,7 @@
 				<isEqual property="primary" compareValue="1"> WRITERNAME, </isEqual>
 				<isNotEqual property="primary" compareValue="1"> WRITERNAME2 as WRITERNAME, </isNotEqual>
 		<![CDATA[
-				DOCID as APPRID,
+				VENDCHAMJODOCINFO.DOCID as APPRID,
 				APRMEMBERSN as APRMEMBERSN,
 				'' as BOARDID,
 				'' as BOARDITEMID,
@@ -163,10 +173,18 @@
 				'END' as MODE
 			FROM 
 				VENDCHAMJODOCINFO
-			WHERE
-				TENANT_ID = #tenantID#
+			LEFT OUTER JOIN
+				TBL_APRDOCGROUPINFO GRP
+			ON
+				VENDCHAMJODOCINFO.TENANT_ID = GRP.TENANT_ID
 			AND
-				COMPANYID IN (
+				VENDCHAMJODOCINFO.COMPANYID = GRP.COMPANYID
+			AND
+				VENDCHAMJODOCINFO.DOCID = GRP.DOCID
+			WHERE
+				VENDCHAMJODOCINFO.TENANT_ID = #tenantID#
+			AND
+				VENDCHAMJODOCINFO.COMPANYID IN (
 							SELECT 
 								EXTENSIONATTRIBUTE2 
 							FROM 
@@ -191,6 +209,8 @@
 							AND
 								TENANT_ID = #tenantID# 
 							)
+			AND
+				NVL(GRP.TABSN, 1) = 1
 			AND 
 				APRMEMBERID IN ($userIDS$)
 			AND 

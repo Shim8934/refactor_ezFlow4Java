@@ -352,8 +352,8 @@
 		    }
 		    
 		    function openInfo(userid) {
-		        var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,width=420,height=440";
-		        feature = feature + GetOpenPosition(420, 440);
+		        var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,width=420,height=450";
+		        feature = feature + GetOpenPosition(420, 450);
 				window.open("/ezCommon/showPersonInfo.do?id=" + userid, "", feature);
 		    }
 		    

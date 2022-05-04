@@ -197,6 +197,12 @@
 			        }		        	
 		        }
 		    }
+		    
+		    function open_google_schedule(scheduleid, repeatcount, startdate, enddate, scheduletype, datetype) {
+		    	var feature = GetOpenPosition(770, 650);
+		    	window.open("/ezSchedule/googleScheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&repeatcount=" + repeatcount + "&type=" + scheduletype + "&startdate=" + startdate + "&enddate=" + enddate + "&datetype=" + datetype, "",
+			            "height = 670px, width = 770px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		    }
 			
 		    function RefreshView() {
 		    	keyword = document.getElementById("keyword").value;
@@ -288,7 +294,12 @@
 		      		<th style="width:140px"><spring:message code='ezSchedule.t275'/></th> 
 		    	</tr>
 		    	<c:forEach var="item" items="${scheduleList}">
+		    	<c:if test="${item.scheduleType == '9'}">
+		    	<tr style="cursor:pointer;padding:0" onClick="open_google_schedule('${item.scheduleId}','${item.repeatCount}','${item.startDate}','${item.endDate}','${item.scheduleType}','${item.dateType}')" bgcolor=#ffffff>
+		    	</c:if>
+		    	<c:if test="${item.scheduleType != '9'}">
 		    	<tr style="cursor:pointer;padding:0" onClick="open_schedule('${item.scheduleId}','${item.repeatCount}','${item.startDate}','${item.scheduleType}','${item.dateType}','','${item.parentId}')" bgcolor=#ffffff>
+		    	</c:if>
 		    		<td colspan=2 style="padding:0 2px;width:30px;text-align:center;">
 		    			<c:if test="${item.importance == '1'}"><img src='/images/calendar/i_l.png' width='13' height='13'/></c:if>
 		    			<c:if test="${item.importance == '2'}">&nbsp;</c:if>
@@ -303,6 +314,7 @@
 		    			<c:if test="${item.scheduleType == '6'}"><spring:message code='ezSchedule.t281'/></c:if>
 		    			<c:if test="${item.scheduleType == '7'}"><spring:message code='ezSchedule.t282'/></c:if>
 		    			<c:if test="${item.scheduleType == '8'}"><spring:message code='ezSchedule.t12'/></c:if>
+		    			<c:if test="${item.scheduleType == '9'}"><spring:message code='ezSchedule.google12'/></c:if>
 		    		</td>
 		    		<c:if test="${primary == '1'}">
 		    			<td style="width:80px">${item.ownerName}</td> 
