@@ -1403,7 +1403,7 @@
 						var tagContentLi = $("#tagcontent > li");
 						tagContentLi.find("a").remove();
 						tags.forEach(function(tag) {
-							tagContentLi.append("<a data-idx='" + tag.idx + "'>" + tag.name + "</a>");
+							tagContentLi.append("<a data-idx='" + tag.idx + "'>" + tag.name + "</a> ");
 						});
 						attachTagClickEvent();
 					},
