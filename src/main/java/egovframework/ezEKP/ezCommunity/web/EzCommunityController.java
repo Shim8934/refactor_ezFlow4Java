@@ -21,6 +21,7 @@ import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1577,18 +1578,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String ret = "";
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
-		
-		if (boardInfo.getGubun() != null) {
-			if (boardInfo.getGubun().equals("2") || boardInfo.getUrl() != null || boardInfo.getGubun().equals("3")){
-				//게시판 정보를 수정하고 나면 URL은 ""(empty string)으로 db에 업데이트 되기 때문에 이를 수정해줘야함
-				if (boardInfo.getUrl().equals("") && !boardInfo.getGubun().equals("2") && !boardInfo.getGubun().equals("3")) {
-					ret = "normalboard";
-				} else {
-					ret = "anonyboard";
-				}
-			} else {
-				ret = "normalboard";
-			}
+
+		if (StringUtils.isNotBlank(boardInfo.getUrl()) || "2".equals(boardInfo.getGubun()) || "3".equals(boardInfo.getGubun())) {
+			ret = "anonyboard";
 		} else {
 			ret = "normalboard";
 		}
