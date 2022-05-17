@@ -3332,8 +3332,7 @@ input::-ms-clear {display: none;}
 .dd-option-text, .dd-selected-text {cursor: pointer;}
 
 /* attach file ul list */
-.survey_atchBtn{overflow:hidden; padding:0; margin:0; height:40px;}
-.survey_atchBtn{overflow:hidden; padding:0; margin:0; height:40px;}
+.survey_atchBtn{padding:0; margin:0; height:40px;}
 .survey_atchBtn li.atchLiImg{ margin:9px 3px 0px 0px !important;}
 .survey_atchBtn li.atchLiUrl{ margin:9px 0px 0px 0px !important;}
 .survey_atchBtn li.modifyBtnLi{margin:7px 3px 0px 0px !important;}
@@ -3384,11 +3383,11 @@ input::-ms-clear {display: none;}
 
 /* question header panel */
 .question-panel{background:#f1f6fb; padding: 10px;}
-.question-header {display:block; height:40px; line-height:40px; padding:10px 0px;}
-.question-header .question-content {float:left; padding:0px 20px; cursor: default; font-size:14px; font-family:Malgun Gothic, "맑은 고딕";}
-.question-header .tooltip-bttns {float:right; padding: 0px 10px;}
+.question-header {display:flex; line-height:40px; padding:10px 0px;}
+.question-header .question-content {padding:0px 20px; cursor: default; font-size:14px; font-family:Malgun Gothic, "맑은 고딕";}
+.question-header .tooltip-bttns {padding: 0px 10px;}
 
-.question-header .imptt {color: rgba(255, 0, 0, 1); padding-left: 20px; margin-right: -15px; font-size: 16px; float: left;}
+.question-header .imptt {color: rgba(255, 0, 0, 1); padding-left: 20px; margin-right: -15px; font-size: 16px;}
 .question-panel .question-attach {max-height: 80px; padding: 10px 35px; display: flex; align-items: center;}
 .question-attach .qstnImg {width: auto; height: auto; max-height: 80px; cursor: pointer;}
 .question-attach >span {padding-left: 10px; overflow: hidden;}
