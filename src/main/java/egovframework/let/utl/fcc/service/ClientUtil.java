@@ -68,9 +68,9 @@ public class ClientUtil {
 	    	 
 	    	 if (splitLength == 1) {
 	    		 ip = ip.substring(0, ip.lastIndexOf(":"));
-				} else if (splitLength > 1 && ipColonSplit[splitLength].contains(".")) { // 2022-05-11 이사라 - Iv6 ip 값을 받았을 때 Iv4만 추출
-					ip = ipColonSplit[splitLength];
-				}
+			} else if (splitLength > 1 && ipColonSplit[splitLength].contains(".")) { // 2022-05-11 이사라 - Iv6 ip 값을 받았을 때 Iv4만 추출
+				 ip = ipColonSplit[splitLength];
+			}
 	     }
 	     
 	     return ip;
