@@ -59,7 +59,7 @@ public class MTalkDevice {
 	}
 
 	public String getPushState() {
-		return pushState;
+		return pushState == null ? "" : pushState;
 	}
 
 	public void setPushState(String pushState) {

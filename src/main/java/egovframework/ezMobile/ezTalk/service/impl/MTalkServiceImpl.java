@@ -20,9 +20,11 @@ public class MTalkServiceImpl implements MTalkService {
 	}
 
 	@Override
-	public List<MTalkNotification> getNotificationsAndDelete() {
-		List<MTalkNotification> result = mTalkDao.getNotifications();
-		mTalkDao.deleteNotifications();
+	public List<MTalkNotification> getNotificationsAndDelete(Integer limit) {
+		List<MTalkNotification> result = mTalkDao.getNotifications(limit);
+		if (!result.isEmpty()) {
+			mTalkDao.deleteNotifications(result.stream().mapToInt(MTalkNotification::getId).toArray());
+		}
 		return result;
 	}
 

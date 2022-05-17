@@ -1,5 +1,7 @@
 package egovframework.ezMobile.ezTalk.vo;
 
+import java.util.Collections;
+
 public class MTalkNotification {
 
 	private int id;
@@ -9,7 +11,7 @@ public class MTalkNotification {
 	private String type;
 	private String etcData;
 	private String link;
-	private MTalkDevice mgwDeviceInfo;
+	private Object mgwDeviceInfo;
 
 	public int getId() {
 		return id;
@@ -60,18 +62,19 @@ public class MTalkNotification {
 	}
 
 	public String getLink() {
-		return link;
+		return link == null ? "" : link;
 	}
 
 	public void setLink(String link) {
 		this.link = link;
 	}
 
-	public MTalkDevice getMgwDeviceInfo() {
-		return mgwDeviceInfo;
+	public Object getMgwDeviceInfo() {
+		// 기기 정보가 비어있으면 {} 으로 표시해주기 위해 빈 맵을 리턴
+		return mgwDeviceInfo == null ? Collections.emptyMap() : mgwDeviceInfo;
 	}
 
-	public void setMgwDeviceInfo(MTalkDevice mgwDeviceInfo) {
+	public void setMgwDeviceInfo(Object mgwDeviceInfo) {
 		this.mgwDeviceInfo = mgwDeviceInfo;
 	}
 

@@ -6,6 +6,6 @@ import egovframework.ezMobile.ezTalk.vo.MTalkNotification;
 
 public interface MTalkService {
 
-	List<MTalkNotification> getNotificationsAndDelete();
+	List<MTalkNotification> getNotificationsAndDelete(Integer limit);
 
 }

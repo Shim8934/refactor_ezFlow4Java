@@ -8,7 +8,7 @@
 		<result property="userId" column="userid" />
 		<result property="senderName" column="sender" />
 		<result property="subject" column="subject" />
-		<result property="type" column="type" />
+		<result property="type" column="Type" />
 		<result property="etcData" column="etcdata" />
 		<result property="link" column="linkurl" />
 		<result property="mgwDeviceInfo" resultMap="ezTalkMobile.MTalkDevice" />
@@ -29,14 +29,22 @@
 			ttn.itemseq, ttn.userid, ttn.sender, ttn.subject, ttn."Type", ttn.etcdata, ttn.linkurl,
 			tdm.devseq AS tdm_devseq, tdm.devid AS tdm_devid, tdm.devtype AS tdm_devtype, tdm.userid AS tdm_userid, tdm.badge AS tdm_badge, tdm.token AS tdm_token, tdm.pushstate AS tdm_pushstate
 		FROM
-			talk_tblnotification ttn,
-			tbl_dev_master tdm
-		WHERE
-			ttn.userid = tdm.userid
+			(
+				SELECT * FROM (
+					SELECT * FROM talk_tblnotification
+					ORDER BY itemseq
+				)
+				<isNotNull property="limit">
+				<![CDATA[WHERE ROWNUM <= #limit#]]>
+				</isNotNull>
+			) ttn
+		LEFT JOIN tbl_dev_master tdm
+		ON ttn.userid = tdm.userid
 	</select>
 
 	<delete id="MTalkDao.deleteNotifications">
 		DELETE FROM talk_tblnotification
+		WHERE itemseq IN <iterate property="itemSeqArray" open="(" close=")" conjunction="," >#itemSeqArray[]#</iterate>
 	</delete>
 
 </sqlMap>
