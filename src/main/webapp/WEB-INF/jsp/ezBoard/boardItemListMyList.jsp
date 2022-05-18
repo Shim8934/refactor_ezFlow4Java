@@ -882,9 +882,22 @@
 	            var strBoardItemList = "";
 	            var guBun = "";
 	            var i = 0;
+	            var boardnodes = document.getElementById("BoardListDiv").childNodes;
 	            arrList = strListInfo.split(";");
 	            arrListSetForMove.clear();
 	            arrListStrForMove = "";
+	          //전체 테이블에서 선택된 id값을 비교해서 일치하는 값 중 확장컬럼 여부 체크
+	        	for (i=0; i < arrList.length -1; i++){
+	        		var chkTrId = arrList[i].split(",")[0];
+	        		for(j=0; j < boardnodes.length; j++){
+	        			if(boardnodes[j].getAttribute("data2")==chkTrId){
+	        				if(boardnodes[j].getAttribute("data12")=="Y"){
+	        					alert("<spring:message code='ezBoard.t999071' />");
+	        					return; 
+	        				}
+	        			}
+	        		}
+	        	}
 	            
 	            for (i = 0; i < arrList.length - 1; i++) {
 	                strItemList += arrList[i].split(",")[0] + ";";

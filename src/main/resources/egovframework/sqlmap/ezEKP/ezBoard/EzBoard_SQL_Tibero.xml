@@ -1762,6 +1762,7 @@
 		   				A.WRITERNAME2,
 		   				A.WRITERDEPTNAME2,
 		   				A.WRITERCOMPANYNAME2,
+		   				B.ATTRIBUTEYN,
 		   				(SELECT 
 		                	COUNT(*)  
 	     				FROM 
