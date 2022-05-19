@@ -5766,7 +5766,8 @@ public class EzEmailUtil {
     	String period      = getIcalPeriodStr(vo);
     	String location    = vo.getLocationStr();
     	String descBody    = vo.getAltDescStr();
-    	       descBody    = (descBody == null || descBody.equals("")) ? vo.getDescriptionStr() : descBody;
+		descBody = addTargetBlank(descBody);
+    	descBody = (descBody == null || descBody.equals("")) ? vo.getDescriptionStr() : descBody;
     	       
 		PropertyList<Attendee> attendeeList = vo.getAttendee();
     	
