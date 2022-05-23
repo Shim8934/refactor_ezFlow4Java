@@ -3962,7 +3962,8 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"EXTENSION2" VARCHAR2(256 BYTE), 
 	"PIN" VARCHAR2(100 BYTE),
 	"PINSTATE" VARCHAR2(4 BYTE) DEFAULT 'N',
-	"BIOMETRIC" VARCHAR2(4 BYTE) DEFAULT 'N'
+	"BIOMETRIC" VARCHAR2(4 BYTE) DEFAULT 'N',
+	"NOTUSED" NUMBER DEFAULT 0
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_DOCDELETEHISTORY
