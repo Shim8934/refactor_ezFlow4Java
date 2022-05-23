@@ -67,6 +67,11 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import kr.dogfoot.hwplib.object.HWPFile;
+import kr.dogfoot.hwplib.reader.HWPReader;
+import kr.dogfoot.hwplib.tool.objectfinder.CellFinder;
+import kr.dogfoot.hwplib.tool.objectfinder.FieldFinder;
+import kr.dogfoot.hwplib.tool.textextractor.TextExtractMethod;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -4712,15 +4717,44 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				stream = new ByteArrayInputStream(formText.getBytes("UTF-8"));
 			}
 
-			bos = new FileOutputStream(commonUtil.detectPathTraversal(saveFileName));
-			
+			String tmpPath = commonUtil.detectPathTraversal(saveFileName);
+			if (extension.equals(".hwp")) {
+				tmpPath += "_tmp";
+			}
+			bos = new FileOutputStream(tmpPath);
+
 			int bytesRead = 0;
 			byte[] buffer = new byte[BUFF_SIZE];
 			
 			while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
 				bos.write(buffer, 0, bytesRead);
 			}
-			
+
+			if (extension.equals(".hwp")) {
+				try {
+					HWPFile hwpFile = HWPReader.fromFile(tmpPath);
+					File tmpFile = new File(tmpPath);
+					File targetFile = new File(commonUtil.detectPathTraversal(saveFileName));
+					if (hwpFile != null) {
+						String clickTitle = FieldFinder.getClickHereText(hwpFile,
+								"doctitle", TextExtractMethod.OnlyMainParagraph);
+						ArrayList<kr.dogfoot.hwplib.object.bodytext.control.table.Cell> cellTitle = CellFinder.findAll(hwpFile, "doctitle");
+						if(clickTitle == null && cellTitle.size() == 0) {
+							tmpFile.delete();
+							return "FALSE";
+						}else {
+							FileUtils.copyFile(tmpFile, targetFile);
+							tmpFile.delete();
+						}
+					}
+				} catch (Exception e) {
+					File tmpFile = new File(tmpPath);
+					File targetFile = new File(commonUtil.detectPathTraversal(saveFileName));
+					FileUtils.copyFile(tmpFile, targetFile);
+					tmpFile.delete();
+				}
+			}
+
 			ret = "TRUE";
 		} catch (Exception e) {
 			e.printStackTrace();
