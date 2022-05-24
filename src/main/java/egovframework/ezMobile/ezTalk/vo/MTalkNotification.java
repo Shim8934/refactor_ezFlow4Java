@@ -70,8 +70,8 @@ public class MTalkNotification {
 	}
 
 	public Object getMgwDeviceInfo() {
-		// 기기 정보가 비어있으면 {} 으로 표시해주기 위해 빈 맵을 리턴
-		return mgwDeviceInfo == null ? Collections.emptyMap() : mgwDeviceInfo;
+		// 기기 정보가 비어있으면 "" 으로 표시해주기 위해 빈 문자열을 리턴
+		return mgwDeviceInfo == null ? "" : mgwDeviceInfo;
 	}
 
 	public void setMgwDeviceInfo(Object mgwDeviceInfo) {
