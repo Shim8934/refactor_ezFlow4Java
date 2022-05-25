@@ -328,8 +328,7 @@ public class MLoginGWController {
 
 								// 20210426 조진호 - pin login 처리 부분. 사용자가 입력한 pin과 DB에 저장된 pin 값이 일치하면
 								// pinLoginAuth를 true로 전환
-								String encryptPin = request.getParameter("encryptPin") == null ? ""
-										: request.getParameter("encryptPin");
+								String encryptPin = request.getParameter("encryptPin") == null ? "" : request.getParameter("encryptPin");
 								if (!"".equals(encryptPin)) {
 									String userInputPin = EgovFileScrty.decryptRsa(pk, encryptPin);
 
@@ -342,9 +341,12 @@ public class MLoginGWController {
 
 									String authPin = String.valueOf(resultObj.get("pin"));
 
-									if (!userInputPin.equals("") && !authPin.equals("")
-											&& authPin.equals(userInputPin)) {
+									if (!userInputPin.equals("") && !authPin.equals("") && authPin.equals(userInputPin)) {
 										pinLoginAuth = true;
+										LOGGER.debug("pin Login Auth Successed.");
+									}
+									else {
+										LOGGER.debug("pin Login Auth Failed.");
 									}
 								}
 
@@ -368,8 +370,7 @@ public class MLoginGWController {
 
 						// 20210426 조진호 - pin login 처리 부분. 사용자가 입력한 pin과 DB에 저장된 pin 값이 일치하면
 						// pinLoginAuth를 true로 전환
-						String encryptPin = request.getParameter("encryptPin") == null ? ""
-								: request.getParameter("encryptPin");
+						String encryptPin = request.getParameter("encryptPin") == null ? "" : request.getParameter("encryptPin");
 						if (!"".equals(encryptPin)) {
 							String userInputPin = EgovFileScrty.decryptRsa(pk, encryptPin);
 
@@ -380,10 +381,20 @@ public class MLoginGWController {
 								userInputPin = EgovFileScrty.encryptPassword(userInputPin, uid);
 							}
 
+							String pinState = String.valueOf(resultObj.get("pinState"));
 							String authPin = String.valueOf(resultObj.get("pin"));
-
-							if (!userInputPin.equals("") && !authPin.equals("") && authPin.equals(userInputPin)) {
-								pinLoginAuth = true;
+							
+							if (pinState.equalsIgnoreCase("Y")) {
+								if (!userInputPin.equals("") && !authPin.equals("") && authPin.equals(userInputPin)) {
+									pinLoginAuth = true;
+									LOGGER.debug("pin Login Auth Successed.");
+								}
+								else {
+									LOGGER.debug("pin Login Auth Failed.");
+								}
+							}
+							else {
+								LOGGER.debug("pin Login not useded.");
 							}
 						}
 					}
