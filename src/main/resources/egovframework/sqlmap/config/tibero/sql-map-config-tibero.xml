@@ -110,6 +110,8 @@
 	<sqlMap resource="egovframework/sqlmap/ezMobile/ezSchedule/EzScheduleMobile_SQL_Tibero.xml"/>
 	<!-- 조직도,직원조회 -->
     <sqlMap resource="egovframework/sqlmap/ezMobile/ezOrgan/EzOrganMobile_SQL_Tibero.xml"/>
+    <!-- 하이브리드 앱 노티 발송용 -->
+    <sqlMap resource="egovframework/sqlmap/ezMobile/ezTalk/EzTalkMobile_SQL_Tibero.xml" />
     <!-- 차량관리 관리자 -->
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezCar/EzCarAdmin_SQL_Tibero.xml"/>
     <!-- 관리자 main xml -->

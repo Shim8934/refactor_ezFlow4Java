@@ -2300,10 +2300,20 @@
              				<tr>
              					<c:choose>
              						<c:when test="${extenLang == 1}">
-		             					<th>${boardAttributeVO.colName1}</th>
+		             					<th>
+											${boardAttributeVO.colName1}
+											<c:if test="${boardAttributeVO.must == 'Y'}">
+												<span style="color:red"> *</span>
+											</c:if>
+										</th>
              						</c:when>
              						<c:otherwise>
-             							<th>${boardAttributeVO.colName2}</th>
+             							<th>
+											${boardAttributeVO.colName2}
+											<c:if test="${boardAttributeVO.must == 'Y'}">
+												<span style="color:red"> *</span>
+											</c:if>
+										</th>
              						</c:otherwise>
              					</c:choose>
              					<c:choose>

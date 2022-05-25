@@ -180,7 +180,9 @@ public class MOptionGWController extends EgovFileMngUtil {
 			// 20210426 조진호 - pin번호 SHA-256으로 암호화 하여 저장
 			PrivateKey pk = EgovFileScrty.getPrivateKey(egovFileScrty.getPrm(), egovFileScrty.getPre());
 			String pin = EgovFileScrty.decryptRsa(pk, jsonObject.get("pin").toString());
-			pin = EgovFileScrty.encryptPassword(pin, userId);
+			if (!"".equals(pin)) {
+				pin = EgovFileScrty.encryptPassword(pin, userId);
+			}
 
 			String deviceId = (request.getParameter("deviceID") == null) ? "" : request.getParameter("deviceID");
 
