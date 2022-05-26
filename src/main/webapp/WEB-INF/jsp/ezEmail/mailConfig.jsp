@@ -666,7 +666,7 @@
 							<p id = "MailEnv_sub2"><span divname="MailEnv_div2" id="1tab1"><spring:message code='ezPersonal.yej01' /></span></p>
 					    </c:otherwise>
 				    </c:choose>	
-					<c:if test="${useMailTag}">
+					<c:if test="${useMailTag and flag ne 'address'}">
 						<p><span divname="tag" id="1tab12"><spring:message code='ezEmail.tag.config' /></span></p>
 					</c:if>
 	            </div>
