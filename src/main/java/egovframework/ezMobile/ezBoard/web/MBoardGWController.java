@@ -908,7 +908,10 @@ public class MBoardGWController {
 	            if (fileSize[i] > maxSize) {
 	                resultUpload[i] = "overflow";
 	            } else {
-                    if (useExtension.toLowerCase().indexOf(pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1).toString().toLowerCase()) == -1 && !useExtension.equals("*")) {
+					// dhlee : 20220527 - 파일 업로드 시 .으로 끝나는 파일(예: .jsp.)이 무조건 업로드 허용되는 문제 수정
+					String extStr = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1).toString().toLowerCase();
+
+                    if ((extStr.isEmpty() || useExtension.toLowerCase().indexOf(extStr) == -1) && !useExtension.equals("*")) {
                         resultUpload[i] = "denied";
                     } else {
                         String pAttachPath = realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", info.getTenantId()) + commonUtil.separator;

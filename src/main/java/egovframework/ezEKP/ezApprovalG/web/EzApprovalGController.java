@@ -2831,8 +2831,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			if (maxSize != 0 && fileSize > maxSize) {
 				resultUploadArray[i] = "overflow";
 			} else {
+				// dhlee : 20220527 - 파일 업로드 시 .으로 끝나는 파일(예: .jsp.)이 무조건 업로드 허용되는 문제 수정
+				String extStr = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+
 				// 첨부파일의 확장자가 useExtension에 포함되지 않은경우
-				if (useExtension.toLowerCase().indexOf(fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase()) == -1 && !useExtension.equals("*")) {
+				if ((extStr.isEmpty() || useExtension.toLowerCase().indexOf(extStr) == -1) && !useExtension.equals("*")) {
 					resultUploadArray[i] = "denied";
 				} else {
 					// tempUploadFile에 파일 생성
@@ -2924,8 +2927,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			if (fileSize > maxSize) {
 				resultUploadArray[i] = "overflow";
 			} else {
+				// dhlee : 20220527 - 파일 업로드 시 .으로 끝나는 파일(예: .jsp.)이 무조건 업로드 허용되는 문제 수정
+				String extStr = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+
 				// 첨부파일의 확장자가 useExtension에 포함되지 않은경우
-				if (useExtension.toLowerCase().indexOf(fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase()) == -1 && !useExtension.equals("*")) {
+				if ((extStr.isEmpty() || useExtension.toLowerCase().indexOf(extStr) == -1) && !useExtension.equals("*")) {
 					resultUploadArray[i] = "denied";
 				} else {
 					// 웹폴더 파일 경로의 해당 파일이 존재한다면, 새로운 전자결재 첨부파일 경로에 파일 카피를 진행 (실제 파일이 없다면 다음 루프 진행)
@@ -3013,8 +3019,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		if (fileSize > maxSize) {
 			resultUpload = "overflow";
 		} else {
+			// dhlee : 20220527 - 파일 업로드 시 .으로 끝나는 파일(예: .jsp.)이 무조건 업로드 허용되는 문제 수정
+			String extStr = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+
 			// 첨부파일의 확장자가 useExtension에 포함되지 않은경우 (확장자 대소문자 무시하도록 수정)
-			if (useExtension.toLowerCase().indexOf(fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase()) == -1 && !useExtension.equals("*")) {
+			if ((extStr.isEmpty() || useExtension.toLowerCase().indexOf(extStr) == -1) && !useExtension.equals("*")) {
 				resultUpload = "denied";
 			} else {
 				// tempUploadFile에 파일 생성

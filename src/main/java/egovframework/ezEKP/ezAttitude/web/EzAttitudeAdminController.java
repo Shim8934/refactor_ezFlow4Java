@@ -2381,7 +2381,8 @@ public class EzAttitudeAdminController {
 		String fileExt = tempFile.getOriginalFilename().substring(tempFile.getOriginalFilename().lastIndexOf(".") + 1);
 		String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
 		
-		if (!fileExt.equals("xls") || (!useExtension.equals("*") && useExtension.toLowerCase().indexOf(fileExt.toLowerCase()) < 0)) {
+		// dhlee : 20220527 - 파일 업로드 시 .으로 끝나는 파일(예: .jsp.)이 무조건 업로드 허용되는 문제 수정
+		if (!fileExt.equals("xls") || (!useExtension.equals("*") && (fileExt.isEmpty() || useExtension.toLowerCase().indexOf(fileExt.toLowerCase()) < 0))) {
 			LOGGER.debug("annualExcelUpload ended, xls check failed");
 			
 			String resultStr = "{\"status\":\"UPLOAD_EXT_ERROR\"}";

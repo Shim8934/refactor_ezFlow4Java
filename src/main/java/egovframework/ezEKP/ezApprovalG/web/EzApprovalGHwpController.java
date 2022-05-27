@@ -555,7 +555,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String saveLocalPath = pDirTempPath + commonUtil.separator + newfilename;
 		String orgFileName = sFileTitle + "." + sExt;            
 		//long fileSize = 0; //2019.03.25 천성준 - 사용안해서 일단 주석
-		if (useExtension.toLowerCase().indexOf(sExt.toLowerCase()) == -1 && !useExtension.equals("*")) {
+		// dhlee : 20220527 - 파일 업로드 시 .으로 끝나는 파일(예: .jsp.)이 무조건 업로드 허용되는 문제 수정
+		if ((sExt.isEmpty() || useExtension.toLowerCase().indexOf(sExt.toLowerCase()) == -1) && !useExtension.equals("*")) {
 			extResult = "denied";
 		} else {
 			// 대용량 첨부파일의 경우에는 후에 다운로드 받을 때 파일명을 내려보내기 위해 원 파일명을 저장한다.                

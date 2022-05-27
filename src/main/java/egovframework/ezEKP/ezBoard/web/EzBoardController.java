@@ -4300,7 +4300,10 @@ public class EzBoardController extends EgovFileMngUtil{
 				resultUpload[i] = "overflow";
 			} else {
 				if (pMode.equals("ATT")) {
-					if (useExtension.toLowerCase().indexOf(pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1).toString().toLowerCase()) == -1 && !useExtension.equals("*")) {
+					// dhlee : 20220527 - 파일 업로드 시 .으로 끝나는 파일(예: .jsp.)이 무조건 업로드 허용되는 문제 수정
+					String extStr = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1).toString().toLowerCase();
+
+					if ((extStr.isEmpty() || useExtension.toLowerCase().indexOf(extStr) == -1) && !useExtension.equals("*")) {
 						resultUpload[i] = "denied";
 					} else {
 						String pAttachPath = realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId()) + commonUtil.separator;
@@ -4392,7 +4395,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		String dirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		
-		if (useExtension.toLowerCase().indexOf(fileName.substring(fileName.lastIndexOf(".") + 1).toString().toLowerCase()) == -1 && !useExtension.equals("*")) {
+		// dhlee : 20220527 - 파일 업로드 시 .으로 끝나는 파일(예: .jsp.)이 무조건 업로드 허용되는 문제 수정
+		String extStr = fileName.substring(fileName.lastIndexOf(".") + 1).toString().toLowerCase();
+
+		if ((extStr.isEmpty() || useExtension.toLowerCase().indexOf(extStr) == -1) && !useExtension.equals("*")) {
 			returnVal = "denied";
 		} else {
 			if (!new File(dirPath + "tempUploadFile").exists()) {

@@ -1084,7 +1084,8 @@ public class EzTaskController extends EgovFileMngUtil {
             
             String newFileName = "{" + UUID.randomUUID().toString() + "}";
 
-            if (useExtension.toLowerCase().indexOf(extend[i].toLowerCase()) == -1 && !useExtension.equals("*")) {           	
+			// dhlee : 20220527 - 파일 업로드 시 .으로 끝나는 파일(예: .jsp.)이 무조건 업로드 허용되는 문제 수정
+            if ((extend[i].isEmpty() || useExtension.toLowerCase().indexOf(extend[i].toLowerCase()) == -1) && !useExtension.equals("*")) {           	
 				strXML.append("<DATA><![CDATA[" + newFileName + "]]></DATA>");
 				strXML.append("<DATA2><![CDATA[" + pFileName[i] + "]]></DATA2>");
 				strXML.append("<DATA3><![CDATA[" + multiFile.get(i).getSize() + "]]></DATA3>");

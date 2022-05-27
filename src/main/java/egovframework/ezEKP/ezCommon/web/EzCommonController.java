@@ -787,7 +787,8 @@ public class EzCommonController extends EgovFileMngUtil{
 		String result = "";
 		
 		logger.debug("checkUseFileExtension file extension is : " + fileExt);
-		if (!useExtension.equals("*") && useExtension.toLowerCase().indexOf(fileExt.toLowerCase()) < 0) {
+		// dhlee : 20220527 - 파일 업로드 시 .으로 끝나는 파일(예: .jsp.)이 무조건 업로드 허용되는 문제 수정
+		if (!useExtension.equals("*") && (fileExt.isEmpty() || useExtension.toLowerCase().indexOf(fileExt.toLowerCase()) < 0)) {
 			result = "UPLOAD_EXT_ERROR";
 		} else {
 			result = "OK";

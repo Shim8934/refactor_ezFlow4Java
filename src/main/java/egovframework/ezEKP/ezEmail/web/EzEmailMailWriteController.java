@@ -1700,7 +1700,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			if (fileSize[i] > bigMaxSize && bigMaxSize != 0) {
                 resultUpload[i] = "overflow";
             } else {
-                if (useExtension.toLowerCase().indexOf(sExt[i].toLowerCase()) == -1 && !useExtension.equals("*")) {
+				// dhlee : 20220527 - 파일 업로드 시 .으로 끝나는 파일(예: .jsp.)이 무조건 업로드 허용되는 문제 수정
+                if ((sExt[i].isEmpty() || useExtension.toLowerCase().indexOf(sExt[i].toLowerCase()) == -1) && !useExtension.equals("*")) {
                     resultUpload[i] = "denied";
                 } else {
                     writeUploadedFile(multiFile.get(i), sGUID[i], pDirTempPath);
@@ -2022,7 +2023,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
                 	//첨부파일 정보를 XML data로 만든다.
                     String resultUpload = "";
                     
-    				if (useExtension.toLowerCase().indexOf(fileExt[i].toLowerCase()) == -1 && !useExtension.equals("*")) {
+					// dhlee : 20220527 - 파일 업로드 시 .으로 끝나는 파일(예: .jsp.)이 무조건 업로드 허용되는 문제 수정
+    				if ((fileExt[i].isEmpty() || useExtension.toLowerCase().indexOf(fileExt[i].toLowerCase()) == -1) && !useExtension.equals("*")) {
                         resultUpload = "denied";
                     } else {
                         resultUpload = "true";
@@ -2376,7 +2378,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					//첨부파일 정보를 XML data로 만든다.
 					String resultUpload = "";
 					
-					if (useExtension.toLowerCase().indexOf(fileExt[i].toLowerCase()) == -1 && !useExtension.equals("*")) {
+					// dhlee : 20220527 - 파일 업로드 시 .으로 끝나는 파일(예: .jsp.)이 무조건 업로드 허용되는 문제 수정
+					if ((fileExt[i].isEmpty() || useExtension.toLowerCase().indexOf(fileExt[i].toLowerCase()) == -1) && !useExtension.equals("*")) {
 						resultUpload = "denied";
 					} else {
 						resultUpload = "true";
@@ -2733,7 +2736,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					//첨부파일 정보를 XML data로 만든다.
 					String resultUpload = "";
 					
-					if (useExtension.toLowerCase().indexOf(fileExt[i].toLowerCase()) == -1 && !useExtension.equals("*")) {
+					// dhlee : 20220527 - 파일 업로드 시 .으로 끝나는 파일(예: .jsp.)이 무조건 업로드 허용되는 문제 수정
+					if ((fileExt[i].isEmpty() || useExtension.toLowerCase().indexOf(fileExt[i].toLowerCase()) == -1) && !useExtension.equals("*")) {
 						resultUpload = "denied";
 					} else {
 						resultUpload = "true";
