@@ -14609,6 +14609,20 @@ CREATE TABLE `jmocha_user_mail_template` (
   PRIMARY KEY (`USER_ID`,`DISPLAYNAME`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- 
+-- Table structure for table `jmocha_mailbox_progress`
+--
+DROP TABLE IF EXISTS `jmocha_mailbox_progress`;
+CREATE TABLE `jmocha_mailbox_progress` (
+  `USER_KEY` varchar(80) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `USER_ID` varchar(80) NOT NULL,
+  `ACT` varchar(15) NOT NULL,
+  `PERCENT` mediumint(100) NOT NULL,
+  `UPDATEDT` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`USER_KEY`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --
 -- Temporary view structure for view `vaprdoingdoclist`
 --

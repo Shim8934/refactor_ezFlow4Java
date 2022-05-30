@@ -5249,6 +5249,29 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"MODIFIERDEPTID" NVARCHAR2(200) DEFAULT NULL
    ) ;
    
+--------------------------------------------------------
+--  DDL for Table TBL_PASSWORD_POLICY
+--------------------------------------------------------   
+   CREATE TABLE "TBL_PASSWORD_POLICY" 
+   (	"TENANT_ID" NUMBER NOT NULL, 
+	"COMPANY_ID" NVARCHAR2(100) NOT NULL, 
+	"ENG_CHAR_TYPE" NVARCHAR2(10) DEFAULT 'N', 
+	"USE_ENG_CAPITAL_LETTER" NVARCHAR2(10) DEFAULT 'N', 
+	"USE_ENG_SMALL_LETTER" NVARCHAR2(10) DEFAULT 'N', 
+	"USE_NUMBER" NVARCHAR2(10) DEFAULT 'N', 
+	"USE_SPECIAL_CHAR" NVARCHAR2(10) DEFAULT 'N'
+   ) ;
+   
+--------------------------------------------------------
+--  DDL for Table TBL_PASSWORD_POLICY_PATTERN
+--------------------------------------------------------   
+   CREATE TABLE "TBL_PASSWORD_POLICY_PATTERN" 
+   (	"TENANT_ID" NUMBER NOT NULL, 
+	"COMPANY_ID" NVARCHAR2(100) NOT NULL, 
+	"USE_PATTERN_COUNT" NUMBER(*,0) NOT NULL, 
+	"NUMBER_OF_CHAR" NUMBER(*,0) NOT NULL
+  ) ;
+   
  --------------------------------------------------------
 --  DDL for Table TBL_GOVSENDDOCHISTORY
 --------------------------------------------------------  
@@ -8660,6 +8683,18 @@ CREATE TABLE "TBL_CAR_FORM" (
 	"EDITORTYPE" NVARCHAR2(5), 
 	"CONTENT" LONG
    ) ;
+-------------------------------------------------------- 
+--  DDL for Table JMOCHA_MAILBOX_PROGRESS
+--------------------------------------------------------
+
+  CREATE TABLE "JMOCHA_MAILBOX_PROGRESS" 
+   (	"USER_KEY" NVARCHAR2(80) NOT NULL, 
+	"TENANT_ID" NUMBER(5,0) NOT NULL, 
+	"USER_ID" NVARCHAR2(80) NOT NULL, 
+	"ACT" NVARCHAR2(15) NOT NULL, 
+	"PERCENT" NUMBER(5,0) NOT NULL, 
+	"UPDATEDT" DATE DEFAULT SYSDATE
+   ) ;
 --------------------------------------------------------
 --  DDL for Sequence DBOBJECTID_SEQUENCE
 --------------------------------------------------------
@@ -11858,6 +11893,19 @@ CREATE TABLE "TBL_CAR_FORM" (
   CREATE UNIQUE INDEX "TBL_OPENGOVMODIFYHISTORY_PK" ON "TBL_OPENGOVMODIFYHISTORY" ("DOCID", "SN", "COMPANYID", "TENANTID") 
   ;
 
+-------------------------------------------------------- 
+--  DDL for Index PK2_TBL_PASSWORD_POLICY
+--------------------------------------------------------
+  CREATE UNIQUE INDEX "PK2_TBL_PASSWORD_POLICY" ON "TBL_PASSWORD_POLICY" ("TENANT_ID", "COMPANY_ID") 
+  ;
+
+--------------------------------------------------------
+--  DDL for Index PK2_TBL_PASSWORD_POLICY_PATTERN
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK2_TBL_PASSWORD_POLICY_PATTERN" ON "TBL_PASSWORD_POLICY_PATTERN" ("TENANT_ID", "COMPANY_ID", "USE_PATTERN_COUNT") 
+  ;
+  
 --------------------------------------------------------
 --  DDL for Index TBL_GOVSENDDOCHISTORY_PK
 --------------------------------------------------------
@@ -12316,6 +12364,12 @@ CREATE TABLE "TBL_CAR_FORM" (
 --------------------------------------------------------
 
   CREATE INDEX "JMOCHA_USER_MAIL_TEMPLATE_PK" ON "JMOCHA_USER_MAIL_TEMPLATE" ("USER_ID", "DISPLAYNAME") 
+  ;
+-------------------------------------------------------- 
+--  DDL for Index JMOCHA_MAILBOX_PROGRESS_PK
+--------------------------------------------------------
+
+  CREATE INDEX "JMOCHA_MAILBOX_PROGRESS_PK" ON "JMOCHA_MAILBOX_PROGRESS" ("USER_KEY", "TENANT_ID") 
   ;
 --------------------------------------------------------
 --  DDL for Trigger TRG_TBL_ADMINRECEIPTGROUP_MAIN
@@ -16131,6 +16185,20 @@ END;
   ALTER TABLE "TBL_OPENGOVMODIFYHISTORY" MODIFY ("TENANTID" NOT NULL ENABLE);
   ALTER TABLE "TBL_OPENGOVMODIFYHISTORY" MODIFY ("COMPANYID" NOT NULL ENABLE);
 
+-------------------------------------------------------- 
+--  Constraints for Table TBL_PASSWORD_POLICY
+-------------------------------------------------------- 
+
+  ALTER TABLE "TBL_PASSWORD_POLICY" ADD CONSTRAINT "PK2_TBL_PASSWORD_POLICY" PRIMARY KEY ("TENANT_ID", "COMPANY_ID")
+  USING INDEX;
+  
+--------------------------------------------------------
+--  Constraints for Table TBL_PASSWORD_POLICY_PATTERN
+--------------------------------------------------------
+
+  ALTER TABLE "TBL_PASSWORD_POLICY_PATTERN" ADD CONSTRAINT "PK2_TBL_PASSWORD_POLICY_PATTERN" PRIMARY KEY ("TENANT_ID", "COMPANY_ID", "USE_PATTERN_COUNT")
+  USING INDEX;
+  
 --------------------------------------------------------
 --  Constraints for Table TBL_GOVSENDDOCHISTORY
 --------------------------------------------------------
@@ -18105,6 +18173,12 @@ END;
   ALTER TABLE "JMOCHA_USER_MAIL_TEMPLATE" MODIFY ("TEMPLATE_ID" NOT NULL ENABLE);
   ALTER TABLE "JMOCHA_USER_MAIL_TEMPLATE" ADD CONSTRAINT "JMOCHA_USER_MAIL_TEMPLATE_PK" PRIMARY KEY ("USER_ID", "DISPLAYNAME")
   USING INDEX;  
+-------------------------------------------------------- 
+--  Constraints for Table JMOCHA_USER_MAIL_TEMPLATE
+--------------------------------------------------------
+
+  ALTER TABLE "JMOCHA_MAILBOX_PROGRESS" ADD CONSTRAINT "JMOCHA_MAILBOX_PROGRESS_PK" PRIMARY KEY ("USER_KEY", "TENANT_ID")
+  USING INDEX; 
 --------------------------------------------------------
 --  Ref Constraints for Table TBL_WEBFOLDER_SHARE_HIDE
 --------------------------------------------------------
