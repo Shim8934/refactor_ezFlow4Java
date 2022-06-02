@@ -270,7 +270,9 @@
 					    null as EXTENSIONATTRIBUTE15,
 					    TO_CHAR('deptImage.hyj') as imageName,
 					    TENANT_ID,
-					    'dept' as TYPE
+					    'dept' as TYPE,
+						'' as mobile,
+						'' as telephoneNumber
 					FROM
 						TBL_DEPTMASTER
 					WHERE
@@ -304,7 +306,9 @@
 				    CONCAT(SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))), NVL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15,
 				    TO_CHAR(EXTENSIONATTRIBUTE2) as imageName,
 				    TENANT_ID,
-					'user' as TYPE
+					'user' as TYPE,
+					mobile,
+					telephoneNumber
 				FROM
 					TBL_USERMASTER
 				WHERE
@@ -353,7 +357,9 @@
 				    CONCAT(SUBSTR('0000000000', 1, 10 -LENGTH(NVL(A.ORDERBY, '0'))), NVL(A.ORDERBY, '0')) EXTENSIONATTRIBUTE15,
 				    TO_CHAR(B.EXTENSIONATTRIBUTE2) as imageName,
 				    B.TENANT_ID,
-					'addJobUser' as TYPE
+					'addJobUser' as TYPE,
+					B.mobile,
+					B.telephoneNumber
 				FROM
 					TBL_ADDJOBMASTER A
 				JOIN
@@ -399,7 +405,9 @@
 					    null as EXTENSIONATTRIBUTE15,
 					    TO_CHAR('deptImage.hyj') as imageName,
 					    TENANT_ID,
-					    'dept' as TYPE
+					    'dept' as TYPE,
+						'' as mobile,
+						'' as telephoneNumber
 					FROM
 						TBL_DEPTMASTER
 					WHERE
@@ -427,7 +435,9 @@
 				    CONCAT(SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))), NVL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15,
 				    TO_CHAR(EXTENSIONATTRIBUTE2) as imageName,
 				    TENANT_ID,
-					'user' as TYPE
+					'user' as TYPE,
+					mobile,
+					telephoneNumber
 				FROM
 					TBL_USERMASTER
 				WHERE
@@ -462,7 +472,9 @@
 				    CONCAT(SUBSTR('0000000000', 1, 10 - LENGTH(NVL(A.ORDERBY, '0'))), NVL(A.ORDERBY, '0')) EXTENSIONATTRIBUTE15,
 				    TO_CHAR(B.EXTENSIONATTRIBUTE2) as imageName,
 				    B.TENANT_ID,
-					'addJobUser' as TYPE
+					'addJobUser' as TYPE,
+					B.mobile,
+					B.telephoneNumber
 				FROM
 					TBL_ADDJOBMASTER A
 				JOIN
