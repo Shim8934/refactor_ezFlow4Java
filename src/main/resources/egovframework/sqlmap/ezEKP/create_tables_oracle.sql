@@ -9202,6 +9202,11 @@ CREATE TABLE "TBL_CAR_FORM" (
 
 	CREATE SEQUENCE  "TBL_ACCESS_ID_SEQ2"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
 --------------------------------------------------------
+--  DDL for Sequence TBL_DEV_MASTER
+--------------------------------------------------------
+
+	CREATE SEQUENCE  "SEQ_TBL_DEV_MASTER"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
 --  DDL for Index APPROVCONNKAMCO_PK
 --------------------------------------------------------
 
