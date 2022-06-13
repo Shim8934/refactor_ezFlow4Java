@@ -3950,7 +3950,7 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
   CREATE TABLE "TBL_DEV_MASTER" 
    (	"DEVSEQ" NUMBER, 
 	"DEVID" VARCHAR2(64 BYTE), 
-	"DEVTYPE" VARCHAR2(4 BYTE), 
+	"DEVTYPE" VARCHAR2(10 BYTE), 
 	"SUBTYPE" VARCHAR2(64 BYTE), 
 	"USERID" VARCHAR2(100 BYTE), 
 	"TOKEN" VARCHAR2(256 BYTE), 
@@ -9201,6 +9201,11 @@ CREATE TABLE "TBL_CAR_FORM" (
 --------------------------------------------------------
 
 	CREATE SEQUENCE  "TBL_ACCESS_ID_SEQ2"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence TBL_DEV_MASTER
+--------------------------------------------------------
+
+	CREATE SEQUENCE  "SEQ_TBL_DEV_MASTER"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
 --------------------------------------------------------
 --  DDL for Index APPROVCONNKAMCO_PK
 --------------------------------------------------------
