@@ -2384,7 +2384,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         		hasAttach = "1";
         	}
         	
-        	String seperateAttachXML = makeListField(apprGDocListVO2.getSeperateAttachXML().trim());
+        	String seperateAttachXML = makeListField(apprGDocListVO2.getSeperateAttachXML()).trim();
         	String numOfPage = makeListField(apprGDocListVO2.getPageNum().trim());
         	
         	if (numOfPage.equals("")) {
