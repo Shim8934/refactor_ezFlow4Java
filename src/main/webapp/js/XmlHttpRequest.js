@@ -96,8 +96,11 @@ function appendChildText(targetNode, node, value) {
 
 function appendChildCDataText(targetNode, node, value, xmlDoc) {
     if (CrossYN()) {
-        var newText = document.createTextNode(value);
+/*        var newText = document.createTextNode(value);
         node.appendChild(newText);
+        targetNode.appendChild(node);*/
+        var CDATA = xmlDoc.createCDATASection(value);
+        node.appendChild(CDATA);
         targetNode.appendChild(node);
     }
     else {

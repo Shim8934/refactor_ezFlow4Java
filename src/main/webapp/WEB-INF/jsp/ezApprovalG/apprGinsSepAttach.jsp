@@ -458,22 +458,22 @@
 		            createNodeAndAppandNodeText(InfoXml, Cell, node, "DATA3", GetAttribute(selRow, "DATA3"));
 		
 		            Cell = createNodeAndAppandNode(InfoXml, Row, Cell, "CELL");
-		            createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", "<![CDATA[" + ReplaceText(selRow.cells[1].innerHTML, "&nbsp;", " ") + "]]>");
+		            createNodeAndAppandNodeCDataText(InfoXml, Cell, node, "VALUE", ReplaceText(selRow.cells[1].innerHTML, "&nbsp;", " "));
 		
 		            Cell = createNodeAndAppandNode(InfoXml, Row, Cell, "CELL");
-		            createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", "<![CDATA[" + selRow.cells[2].innerHTML + "]]>");
+		            createNodeAndAppandNodeCDataText(InfoXml, Cell, node, "VALUE", selRow.cells[2].innerHTML);
 		
 		            Cell = createNodeAndAppandNode(InfoXml, Row, Cell, "CELL");
-		            createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", "<![CDATA[" + selRow.cells[3].innerHTML + "]]>");
+		            createNodeAndAppandNodeCDataText(InfoXml, Cell, node, "VALUE", selRow.cells[3].innerHTML);
 		
 		            Cell = createNodeAndAppandNode(InfoXml, Row, Cell, "CELL");
-		            createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", "<![CDATA[" + selRow.cells[4].innerHTML + "]]>");
+		            createNodeAndAppandNodeCDataText(InfoXml, Cell, node, "VALUE", selRow.cells[4].innerHTML);
 		
 		            Cell = createNodeAndAppandNode(InfoXml, Row, Cell, "CELL");
-		            createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", "<![CDATA[" + selRow.cells[5].innerHTML + "]]>");
+		            createNodeAndAppandNodeCDataText(InfoXml, Cell, node, "VALUE", selRow.cells[5].innerHTML);
 		
 		            Cell = createNodeAndAppandNode(InfoXml, Row, Cell, "CELL");
-		            createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", "<![CDATA[" + selRow.cells[6].innerHTML + "]]>");
+		            createNodeAndAppandNodeCDataText(InfoXml, Cell, node, "VALUE", selRow.cells[6].innerHTML);
 		        }
 		        return getXmlString(InfoXml);
 		    }
