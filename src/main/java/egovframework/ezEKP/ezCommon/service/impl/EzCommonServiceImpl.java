@@ -1886,6 +1886,24 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         }
 	}
 
+	@SuppressWarnings("serial")
+	@Override
+	public void alter_AnyTbl_AnyColumns() throws Exception {
+		logger.debug("alter_AnyTbl_AnyColumns started");
+		List<Map<String, Object>> test = new ArrayList<Map<String, Object>>();
+		// TBL_USERMASTER
+		test.add(new HashMap<String, Object>(){{ put("TBL_NAME","TBL_USERMASTER"); put("COLUMN_NAME", "CREATEDT"); put("ALTER", "ADD"); 
+												 put("TYPE_MYSQL", "DATETIME"); put("TYPE_ORACLE", "DATE"); put("AFTER", "DEFAULT NULL"); }});
+
+		// TBL_DEPTMASTER
+		test.add(new HashMap<String, Object>(){{ put("TBL_NAME","TBL_DEPTMASTER"); put("COLUMN_NAME", "CREATEDT"); put("ALTER", "ADD"); 
+												 put("TYPE_MYSQL", "DATETIME"); put("TYPE_ORACLE", "DATE"); put("AFTER", "DEFAULT NULL"); }});
+
+		for (Map<String, Object> map : test) {
+			ezCommonDAO.alter_AnyTbl_AnyColumns(map);
+        }
+	}
+
 	@Override
 	public void addThemeAndPorteltAuthInit() throws Exception {
 		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();

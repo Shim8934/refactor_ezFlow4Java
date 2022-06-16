@@ -89,6 +89,10 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		return (String) select("EzCommonDAO.getTenantConfig", map);
 	}
 
+	public String getAnyTblAnyColumns(Map<String, Object> map) throws Exception{
+		return (String) select("EzCommonDAO.getAnyTblAnyColumns", map);
+	}
+
     private void insertTblUserLocalInfoForJMocha(Map<String, Object> map) throws Exception {
         int tenantId = (Integer)map.get("v_TENANT_ID");        
         String userId = (String)map.get("userID");
@@ -447,6 +451,17 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("tbl_usermaster PHOTO_UPDATEDT column doesn't exist. creating the column...");
 
 			update("EzCommonDAO.addUserMasterPhotoUpdateDT");
+		}
+	}
+
+	/* 2022-01-19 김은실 - alter 재사용 모듈 추가 */
+	public void alter_AnyTbl_AnyColumns(Map<String, Object> map) throws Exception {
+		try {
+			select("EzCommonDAO.check_AnyTbl_AnyColumns", map);
+		} catch (Exception e) {
+			logger.debug("{} {} column doesn't exist. creating the column...", map.get("TBL_NAME"), map.get("COLUMN_NAME"));
+
+			update("EzCommonDAO.add_AnyTbl_AnyColumns", map);
 		}
 	}
 

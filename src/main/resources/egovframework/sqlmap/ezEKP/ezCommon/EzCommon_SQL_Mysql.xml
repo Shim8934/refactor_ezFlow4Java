@@ -594,6 +594,25 @@
 			PHOTO_UPDATEDT DATETIME DEFAULT NULL
 	</statement>
 
+	<select id="EzCommonDAO.check_AnyTbl_AnyColumns" parameterClass="Map" resultClass="String">
+	<!-- resultSet이 재사용이 안되는 건지.. 쿼리에 문제가 없는데도, 출력 값이 바뀌면 에러가 나는 현상이 있어서 select 1로 고정 result를 생성하도록 함. (flushCache 같은 속성은 알지 못한다고 에러남) --> 
+		SELECT 1 FROM DUAL 
+		WHERE EXISTS (
+			SELECT 
+				$COLUMN_NAME$
+			FROM 
+				$TBL_NAME$
+			LIMIT 1 
+		)
+	</select>
+
+	<statement id="EzCommonDAO.add_AnyTbl_AnyColumns" parameterClass="Map">
+		ALTER TABLE
+			$TBL_NAME$
+		$ALTER$ 
+			$COLUMN_NAME$ $TYPE_MYSQL$ $AFTER$
+	</statement>
+
 	<select id="EzCommonDAO.checkAddJobMasterJobID" resultClass="String">
 		<![CDATA[
 			SELECT 

@@ -6134,6 +6134,7 @@ CREATE TABLE `tbl_deptmaster` (
   `ADFLAG` varchar(4) DEFAULT NULL,
   `ADSPATH` varchar(400) DEFAULT NULL,
   `UPDATEDT` datetime DEFAULT NULL,
+  `CREATEDT` datetime DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `MANUAL_FLAG` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`TENANT_ID`,`CN`)
@@ -13693,6 +13694,7 @@ CREATE TABLE `tbl_usermaster` (
   `ADSPATH` varchar(200) DEFAULT NULL,
   `SIPURI` varchar(100) DEFAULT NULL,
   `UPDATEDT` datetime NOT NULL,
+  `CREATEDT` datetime NOT NULL,
   `MOBILE_ENABLE` varchar(4) DEFAULT NULL,
   `MOBILE_NOTUSE` varchar(4) DEFAULT 'N',
   `MOBILE_PIN` varchar(4) DEFAULT NULL,

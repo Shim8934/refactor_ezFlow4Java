@@ -170,6 +170,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.createJobMasterTable();
 	    	ezCommonService.addUserMasterPasswordUpdateDT();
 	    	ezCommonService.addUserMasterPhotoUpdateDT(); // 2021-09-10 김은실 - 메신저/인사 연동 효율성을 위한: 프로필사진 업데이트시각(PHOTO_UPDATEDT) 컬럼 추가
+	    	ezCommonService.alter_AnyTbl_AnyColumns(); // 2022-01-19 김은실 - alter 재사용 모듈 추가
 	    	ezCommonService.addJobMasterJobID();
 	    	ezCommonService.createWebfolderToken();
 	    	ezCommonService.addJmochaMailGenenalPreviewMailImage();

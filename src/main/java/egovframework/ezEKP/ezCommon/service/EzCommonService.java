@@ -213,6 +213,8 @@ public interface EzCommonService {
 
 	public void createUserDistributionTable();
 
+	public void alter_AnyTbl_AnyColumns() throws Exception;
+
 	public void addThemeAndPorteltAuthInit() throws Exception;
 	
 	public void createJmochaBigAttachDownloadLimit() throws Exception;
