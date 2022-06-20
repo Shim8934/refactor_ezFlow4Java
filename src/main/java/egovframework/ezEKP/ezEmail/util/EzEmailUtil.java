@@ -83,6 +83,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.util.encoders.Hex;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -5765,7 +5766,7 @@ public class EzEmailUtil {
     	String summary     = vo.getSummaryStr().isEmpty() ? untitledMsg : vo.getSummaryStr();
     	String period      = getIcalPeriodStr(vo);
     	String location    = vo.getLocationStr();
-    	String descBody    = vo.getAltDescStr();
+    	String descBody    = StringUtils.defaultString(vo.getAltDescStr());
 		descBody = addTargetBlank(descBody);
     	descBody = (descBody == null || descBody.equals("")) ? vo.getDescriptionStr() : descBody;
     	       
