@@ -50,7 +50,12 @@
 		        $('#Sdatepicker').datepicker("option", "minDate", NowDate);
 		        $('#Stimepicker').timepicker();
 		        $('#Stimepicker').timepicker('setTime', utcDate2(offsetMin));
-		        $('#Stimepicker').timepicker({ 'timeFormat': 'H:i' });
+		        $('#Stimepicker').timepicker({ 'timeFormat': 'H:i', 'disableTextInput': true});
+		        
+				// timepicker input 요소에 키보드 입력할 수 없도록 수정
+				$("#Stimepicker").on("focus", function() {
+					$(this).trigger("blur");
+				});
 		    });
 		    
 		    $(function () {
@@ -255,7 +260,7 @@
 		  <tr>
 		  	<th><spring:message code='ezEmail.lhm66' /></th>
 		  	<td>
-		  		<input type="text" id="Sdatepicker" style="width:80px;text-align:center" disabled />
+		  		<input type="text" id="Sdatepicker" style="width:80px;text-align:center" disabled readonly />
 		  		<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" disabled /> <spring:message code='ezEmail.lhm37' />
 		  		<input type="checkbox" id="dateUnlimit" onclick="chkMaxReadDate()" checked /><label for="dateUnlimit"><spring:message code='ezEmail.lhm67' /></label>
 		  	</td>
