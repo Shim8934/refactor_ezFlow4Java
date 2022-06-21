@@ -271,8 +271,8 @@
 					    TO_CHAR('deptImage.hyj') as imageName,
 					    TENANT_ID,
 					    'dept' as TYPE,
-						'' as mobile,
-						'' as telephoneNumber
+						null as mobile,
+						null as telephoneNumber
 					FROM
 						TBL_DEPTMASTER
 					WHERE
@@ -406,8 +406,8 @@
 					    TO_CHAR('deptImage.hyj') as imageName,
 					    TENANT_ID,
 					    'dept' as TYPE,
-						'' as mobile,
-						'' as telephoneNumber
+						null as mobile,
+						null as telephoneNumber
 					FROM
 						TBL_DEPTMASTER
 					WHERE
