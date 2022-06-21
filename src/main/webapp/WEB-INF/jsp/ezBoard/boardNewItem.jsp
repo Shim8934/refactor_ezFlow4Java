@@ -240,6 +240,14 @@
 			        //    }
 				    //}
 			    }
+			    
+			    /* 2022-06-21 홍승비 - 홈페이지게시판의 게시물 등록 시, 첨부파일 및 게시만료일 사용하지 않으므로 해당 영역 숨김처리 */
+			    if (gubun == "8") {
+			    	document.getElementById("attachIframeTR").style.display = "none";
+			    	document.getElementById("tdEndDate").style.display = "none"; // 영구 게시로 고정되어 숨김
+			    	resizeMessageFrame();
+			    }
+			    
 			    FirstFlag = true;
 			    ChkPermanent();
 			    FirstFlag = false;
@@ -250,15 +258,24 @@
 			    }
 			    catch (e) { }
 		    };
+		    
+		    /* 2022-06-21 홍승비 - 에디터 영역 리사이즈 함수 분리 */
 		    window.onresize = function () {
+				resizeMessageFrame();
+		    };
+		    
+		    function resizeMessageFrame () {
 		        switch (pSelectTab) {
 		            case "MailEnv_div1":
-		                if ("${boardInfo.guBun}" == "2")
+		                if ("${boardInfo.guBun}" == "2") { // 익명게시판
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
-		                else if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0)
+		                } else if ("${boardInfo.guBun}" == "8") { // 홈페이지 게시판
+		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 160 + "PX";
+		                } else if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0) { // 전자결재문서 게시 (mht)
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 500 + "PX";
-		                else if (pUrl.toLowerCase().indexOf(".hwp") < 0) 
+		                } else if (pUrl.toLowerCase().indexOf(".hwp") < 0) { 
 		        	        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
+		                }
 		                break;
 		            case "MailEnv_div3":
 		                {
@@ -270,6 +287,8 @@
 		                    else {
 		                    	if ("${boardInfo.guBun}" == "2") {
 				                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
+		                    	} else if ("${boardInfo.guBun}" == "8") {
+				                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 160 + "PX";
 		                    	} else if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0) {
 				                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 500 + "PX";
 		                    	} else if (pUrl.toLowerCase().indexOf(".hwp") < 0) { 
@@ -286,7 +305,7 @@
 		      
 		        var editorW = (document.documentElement.clientWidth - 20) + "PX";
 		        document.getElementById("tab02").style.width = editorW;
-	            document.getElementById("message").style.width = editorW;	            
+	            document.getElementById("message").style.width = editorW;
 	            //iframe 내부 에디터의 body width 조절
 	            $("iframe").ready(function(){ $("iframe[name='message']").contents().find("body").css("width" , editorW); });
 		        
@@ -1647,6 +1666,7 @@
 		                    if (firstnode) {
 		                        document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).className = "tabon";
 		                        Tab1_SelectID = document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).id;
+		                        pSelectTab = document.getElementById(Tab1_SelectID).getAttribute("divname"); // 초기에 선택된 탭의 divname을 설정
 		                        firstnode = false;
 		                    }
 		
@@ -1675,7 +1695,6 @@
 		    }
 		    var pSelectTab;
 		    function ChangeTab(obj) {
-		        
 		        pSelectTab = obj.getAttribute("divname");
 		        switch (pSelectTab) {
 		            case "MailEnv_div1":
@@ -1683,6 +1702,8 @@
 		                document.getElementById("tab02").style.display = "none";
 		                if ("${boardInfo.guBun}" == "2") {
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
+		                } else if ("${boardInfo.guBun}" == "8") { // 홈페이지 게시판
+		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 160 + "PX";
 		                } else if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0) {
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 500 + "PX";
 		                } else if (pUrl.toLowerCase().indexOf(".hwp") < 0) { 
@@ -1701,7 +1722,9 @@
 		                else {
 		                	 if ("${boardInfo.guBun}" == "2") {
 		                    	document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
-		                    } else if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0) {
+		                    } else if ("${boardInfo.guBun}" == "8") { // 홈페이지 게시판
+			                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 160 + "PX";
+			                } else if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0) {
 			                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 500 + "PX";
 		                    } else if (pUrl.toLowerCase().indexOf(".hwp") < 0) { 
 			                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
@@ -2574,7 +2597,7 @@
 	    	<c:if test="${isCrossBrowser}">
 				<c:choose>
 					<c:when test="${boardInfo.guBun != '3'}">
-				        <tr>
+				        <tr id="attachIframeTR">
 				            <td style="height: 145px">
 				                <br />
 				                <iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezBoard/dragAndDrop.do"></iframe>
