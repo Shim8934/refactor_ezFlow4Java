@@ -1205,7 +1205,7 @@ function CCDetail_view(obj) {
     mailPrevIframeSize();
 }
 function show_personinfo(email) {
-    var feature = "height=500px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+    var feature = "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
     feature = feature + GetOpenPosition(420, 450);
     window.open("/ezCommon/showPersonInfo.do?email=" + encodeURIComponent(email), "", feature);
 }
