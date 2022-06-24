@@ -202,7 +202,10 @@
 		    */
 		    function OpenAllApproveFlag_Complete(RtnVal) {
 		    	DivPopUpHidden();
-		    	AllApprove.style.display = "";
+		    	
+		    	if ("<c:out value ='${isPreview}'/>" != "Y") {
+		    		AllApprove.style.display = "";
+		    	}
 				
 		        if (RtnVal == "0") {
 		            btnApprove_onclick();
@@ -393,10 +396,13 @@
 		            hideLoadingProgress();
 		            CheckOpinionYN();
 		
-		            AllApprove.style.display = "";
-		            if (allFlag == "1" || allFlag == "2")
+		            if ("<c:out value ='${isPreview}'/>" != "Y") {
+		            	AllApprove.style.display = "";
+		            }
+		            
+		            if (allFlag == "1" || allFlag == "2") {
 		                OpenAllApproveFlag();
-		
+		            }
 		            message.EditMode(0);
 					message.SetViewProperties(2, 100);
 		            message.ScrollPosInfo(0, 0);
@@ -1724,7 +1730,8 @@
 	        <tr>
 	            <td height="20">
 	                <div id="menu">
-	                    <ul id="AllApprove">
+	                	<%-- 2022-06-23 홍승비 - 전자결재 미리보기 영역에서 문서보기 페이지 접근 시, 모든 버튼을 ul 태그부터 숨김처리 --%>
+	                    <ul id="AllApprove" <c:if test="${isPreview == 'Y'}">style="display:none"</c:if>>
 	                        <li id="btnApprove"><span onclick="return btnApprove_onclick()"><spring:message code='ezApprovalG.t1'/></span></li>
 	                        <li id="btnReject"><span onclick="return btnReject_onclick()"><spring:message code='ezApprovalG.t49'/></span></li>
 	                        <li id="btnStay"><span onclick="return btnStay_onclick()"><spring:message code='ezApprovalG.t50'/></span></li>
@@ -1754,8 +1761,11 @@
 	                        <li id="btnPrint"><span class="icon16 popup_icon16_print" onclick="return btnPrint_onclick()"></span></li>
 	                        <li id="btnMail" style="display:none"><span class="icon16 popup_icon16_mail_gray" onclick="return btnMail_onclick()"></span></li>
 	                    </ul>
+						<ul <c:if test="${isPreview != 'Y'}">style="display:none"</c:if>>
+				        	<li><img src='/images/kr/cm/btn_newpopup.gif' title=<spring:message code='ezEmail.t99000001'/> alt=<spring:message code='ezEmail.t99000001'/> onclick='return parent.btn_newpopup()'></li>
+				        </ul>
 	                </div>
-	                <div id="close">
+	                <div id="close" <c:if test="${isPreview == 'Y'}">style="display:none"</c:if>>
 	                    <ul>
 	                        <li id="btnClose"><span onclick="return btnClose_onclick()"></span></li>
 	                    </ul>

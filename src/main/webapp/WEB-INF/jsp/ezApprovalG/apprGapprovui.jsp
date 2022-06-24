@@ -304,7 +304,11 @@
 		    */
 		    function OpenAllApproveFlag_Complete(RtnVal) {
 		        DivPopUpHidden();
-		        AllApprove.style.display = "";
+		        
+		        if ("<c:out value ='${isPreview}'/>" != "Y") {
+		        	AllApprove.style.display = "";
+		        }
+		        
 		        if (RtnVal == "0") {
 		            btnApprove_onclick();
 		        }
@@ -503,10 +507,14 @@
 		                setMenuBar("btnConn", true);
 		                btnConn.childNodes(0).innerText = "<spring:message code='ezApprovalG.t9'/>";
 		            }
-		            else
+		            else {
 		                setMenuBar("btnConn", false);
-		
-		            AllApprove.style.display = "";
+		            }
+		            
+		            if ("<c:out value ='${isPreview}'/>" != "Y") {
+		            	AllApprove.style.display = "";
+		            }
+		            
 		            if (allFlag == "1" || allFlag == "2") {
 		                OpenAllApproveFlag();
 		            }
@@ -514,26 +522,30 @@
 		    }
 		    function CheckOpinionYN_Complete(Ans) {
 		        DivPopUpHidden();
-		        if (Ans)
+		        if (Ans) {
 		            //openOpinionUI("", CheckOpinionYN_Complete_Complete);
 		        	openOpinionUI_New("", CheckOpinionYN_Complete_Complete);
-		        else {
-		            if (pDraftFlag == "SUSIN")
+		        } else {
+		            if (pDraftFlag == "SUSIN") {
 		                getSusinSNInfo();
-		            else
+		            } else {
 		                pSusinSN = "0";
-		
+		            }
 		            if (message.DocumentBodyGetAttribute(("KP_YGubun"))) {
 		                setMenuBar("btnConn", true);
 		                btnConn.childNodes(0).innerText = "<spring:message code='ezApprovalG.t9'/>";
-		        }
-		        else
-		            setMenuBar("btnConn", false);
-		
-		        AllApprove.style.display = "";
-		        if (allFlag == "1" || allFlag == "2") {
-		            OpenAllApproveFlag();
-		        }
+		        	}
+			        else {
+			            setMenuBar("btnConn", false);
+			        }
+		            
+					if ("<c:out value ='${isPreview}'/>" != "Y") {
+			        	AllApprove.style.display = "";
+					}
+					
+			        if (allFlag == "1" || allFlag == "2") {
+			            OpenAllApproveFlag();
+			        }
 		        }
 		    }
 		
@@ -564,10 +576,14 @@
 		            setMenuBar("btnConn", true);
 		            btnConn.childNodes(0).innerText = "<spring:message code='ezApprovalG.t9'/>";
 		        }
-		        else
+		        else {
 		            setMenuBar("btnConn", false);
-		
-		        AllApprove.style.display = "";
+		        }
+		        
+		        if ("<c:out value ='${isPreview}'/>" != "Y") {
+		        	AllApprove.style.display = "";
+		        }
+		        
 		        if (allFlag == "1" || allFlag == "2") {
 		            OpenAllApproveFlag();
 		        }
@@ -2313,35 +2329,41 @@
 		  <tr>
 		    <td style="height:20px;">
 			<div id="menu">
-		        <ul id="AllApprove">
-		                  <li id="btnApprove"><span onClick="return btnApprove_onclick()"><spring:message code='ezApprovalG.t1'/></span></li>
-		                  <li id="btnReject"><span onClick="return btnReject_onclick()"><spring:message code='ezApprovalG.t49'/></span></li>
-		                  <li id="btnStay"><span onClick="return btnStay_onclick()"><spring:message code='ezApprovalG.t50'/></span></li>
-		                  <span style="display:none"><li id="btnSetTaskCode" style="display:none"><span onClick="btnSetTaskCode_onclick()" ><spring:message code='ezApprovalG.t9994'/></span></li></span>
-		                  <li id="btntotaldocinfo"><span onClick="return btnApprovalInfo()" ><spring:message code='ezApprovalG.t1742'/></span></li>        
-		                  <li id="btnJunKyul" style="display:none"><span onClick="return btnJunKyul_onclick()"  ><spring:message code='ezApprovalG.t25'/></span></li>
-		                  <span style="display:none"><li id="btnModAprLine"><span onClick="return btnModAprLine_onclick()" ><spring:message code='ezApprovalG.t52'/></span></li></span>
-		                  <span style="display:none"><li id="btnModAprDept"><span onClick="return btnModAprDept_onclick()" ><spring:message code='ezApprovalG.t154'/></span></li></span>                 
-		                  <li id="btnEdit"><span onClick="return btnEdit_onclick()"><spring:message code='ezApprovalG.t44'/></span></li>
-		                  <%-- 2020-02-24 홍승비 - 편집모드 내부 취소버튼 구현 --%>
-		                  <li id="btnEditCancle" style="display:none"><span onClick="btnEditCancle_onclick()"><spring:message code='ezApprovalG.t1761'/></span></li>
-		                  <span style="display:none"><li id="btnDocInfo"><span onClick="return btnDocInfo_onclick()"  ><spring:message code='ezApprovalG.t54'/></span></li></span>            
-		                  <li id="btnOpinion"><span onClick="return btnOpinion_onclick()"  ><spring:message code='ezApprovalG.t55'/></span></li>
-		                  <li id="btnFileAttach"><span onClick="return btnFileAttach_onclick()" ><spring:message code='ezApprovalG.t56'/></span></li>
-		                  <li id="btnAprDocAttach"><span onClick="return btnAprDocAttach_onclick()" ><spring:message code='ezApprovalG.t57'/></span></li>
-			              <li id="btnAddSepAttach" style="display:none"><span onClick="btnAddSepAttach_onclick()" ><spring:message code='ezApprovalG.t58'/></span></li>
-		                  <li id="btnSave" style="display:none"><span onClick="return btnSave_onclick()"  ><spring:message code='ezApprovalG.t1767'/></span></li>
-		                  <li id="btnhistory"><span onClick="btnhistory_onclick()" ><spring:message code='ezApprovalG.t61'/></span></li>
-		                  <li id="btnConn" style="display:none"><span onClick="return btnConn_onclick()"><spring:message code='ezApprovalG.t63'/></span></li>
-		                  <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
-						  <li id="btnPrint"><span class="icon16 popup_icon16_print" onClick="return btnPrint_onclick()"></span></li>
-		                  <li id="btnMail" style="display:none"><span class="icon16 popup_icon16_mail_gray" onClick="return btnMail_onclick()"></span></li>
-		                  <c:if test="${useCabinet == 'YES'}">
-								<li id="btnAddRelatedCabinet"><span onclick = "return addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
-						  </c:if>
-		              </ul>
-				</div>
-			<div id="close"><ul><li><span id="btnClose" onClick="return btnClose_onclick()" ></span></li></ul></div>
+				<%-- 2022-06-23 홍승비 - 전자결재 미리보기 영역에서 문서보기 페이지 접근 시, 모든 버튼을 ul 태그부터 숨김처리 --%>
+		        <ul id="AllApprove" <c:if test="${isPreview == 'Y'}">style="display:none"</c:if>>
+					  <li id="btnApprove"><span onClick="return btnApprove_onclick()"><spring:message code='ezApprovalG.t1'/></span></li>
+	                  <li id="btnReject"><span onClick="return btnReject_onclick()"><spring:message code='ezApprovalG.t49'/></span></li>
+	                  <li id="btnStay"><span onClick="return btnStay_onclick()"><spring:message code='ezApprovalG.t50'/></span></li>
+	                  <span style="display:none"><li id="btnSetTaskCode" style="display:none"><span onClick="btnSetTaskCode_onclick()" ><spring:message code='ezApprovalG.t9994'/></span></li></span>
+	                  <li id="btntotaldocinfo"><span onClick="return btnApprovalInfo()" ><spring:message code='ezApprovalG.t1742'/></span></li>        
+	                  <li id="btnJunKyul" style="display:none"><span onClick="return btnJunKyul_onclick()"  ><spring:message code='ezApprovalG.t25'/></span></li>
+	                  <span style="display:none"><li id="btnModAprLine"><span onClick="return btnModAprLine_onclick()" ><spring:message code='ezApprovalG.t52'/></span></li></span>
+	                  <span style="display:none"><li id="btnModAprDept"><span onClick="return btnModAprDept_onclick()" ><spring:message code='ezApprovalG.t154'/></span></li></span>                 
+	                  <li id="btnEdit"><span onClick="return btnEdit_onclick()"><spring:message code='ezApprovalG.t44'/></span></li>
+	                  <%-- 2020-02-24 홍승비 - 편집모드 내부 취소버튼 구현 --%>
+	                  <li id="btnEditCancle" style="display:none"><span onClick="btnEditCancle_onclick()"><spring:message code='ezApprovalG.t1761'/></span></li>
+	                  <span style="display:none"><li id="btnDocInfo"><span onClick="return btnDocInfo_onclick()"  ><spring:message code='ezApprovalG.t54'/></span></li></span>            
+	                  <li id="btnOpinion"><span onClick="return btnOpinion_onclick()"  ><spring:message code='ezApprovalG.t55'/></span></li>
+	                  <li id="btnFileAttach"><span onClick="return btnFileAttach_onclick()" ><spring:message code='ezApprovalG.t56'/></span></li>
+	                  <li id="btnAprDocAttach"><span onClick="return btnAprDocAttach_onclick()" ><spring:message code='ezApprovalG.t57'/></span></li>
+		              <li id="btnAddSepAttach" style="display:none"><span onClick="btnAddSepAttach_onclick()" ><spring:message code='ezApprovalG.t58'/></span></li>
+	                  <li id="btnSave" style="display:none"><span onClick="return btnSave_onclick()"  ><spring:message code='ezApprovalG.t1767'/></span></li>
+	                  <li id="btnhistory"><span onClick="btnhistory_onclick()" ><spring:message code='ezApprovalG.t61'/></span></li>
+	                  <li id="btnConn" style="display:none"><span onClick="return btnConn_onclick()"><spring:message code='ezApprovalG.t63'/></span></li>
+	                  <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
+					  <li id="btnPrint"><span class="icon16 popup_icon16_print" onClick="return btnPrint_onclick()"></span></li>
+	                  <li id="btnMail" style="display:none"><span class="icon16 popup_icon16_mail_gray" onClick="return btnMail_onclick()"></span></li>
+	                  <c:if test="${useCabinet == 'YES'}">
+							<li id="btnAddRelatedCabinet"><span onclick = "return addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
+					  </c:if>
+	              </ul>
+				<ul <c:if test="${isPreview != 'Y'}">style="display:none"</c:if>>
+		        	<li><img src='/images/kr/cm/btn_newpopup.gif' title=<spring:message code='ezEmail.t99000001'/> alt=<spring:message code='ezEmail.t99000001'/> onclick='return parent.btn_newpopup()'></li>
+		        </ul>
+			</div>
+			<div id="close" <c:if test="${isPreview == 'Y'}">style="display:none"</c:if>>
+				<ul><li><span id="btnClose" onClick="return btnClose_onclick()" ></span></li></ul>
+			</div>
 		</td> 
 		  </tr>
 		  <tr>

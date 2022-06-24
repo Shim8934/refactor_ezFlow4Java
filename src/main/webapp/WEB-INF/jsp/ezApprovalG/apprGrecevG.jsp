@@ -1488,23 +1488,27 @@
 		  <tr> 
 		    <td style="height:20px"> 
 			<div id="menu">
-			<ul>
-		        <li id="btntotaldocinfo"><span onClick="return btnApprovalInfo()" ><spring:message code='ezApprovalG.t1742'/></span></li>        
-		        <li id="btnSendDraft"><span onClick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t156'/></span></li>
-		        <li id="btnRJunkyul" ><span  onClick="return btnRJunkyul_onclick()"><spring:message code='ezApprovalG.t1427'/></span></li>
-			    <li id=btnCabinet style="display:none"><span  onClick="return btnCabinet_onclick()" ><spring:message code='ezApprovalG.t1406'/></span></li>
-			    <li id=btnAssign><span  onClick="return btnAssign_onclick()" ><spring:message code='ezApprovalG.t1430'/></span></li>
-			    <li id=btnReAssign style="display:none"><span  onClick="return btnReAssign_onclick()" ><spring:message code='ezApprovalG.t1431'/></span></li>
-			    <li id=btnDistribute><span  onClick="return btnDistribute_onclick()" ><spring:message code='ezApprovalG.t1432'/></span></li>
-			    <li id=btnReDistribute style="display:none"><span  onClick="return btnReDistribute_onclick()" ><spring:message code='ezApprovalG.t1433'/></span></li>
-			    <li id=btnOpinion><span  onClick="return btnOpinion_onclick()" ><spring:message code='ezApprovalG.t55'/></span></li>
-			    <li id="btnReqReSend" style="display:none"><span  onClick="return btnReqReSend_onclick()" ><spring:message code='ezApprovalG.t1435'/></span></li>
-			    <li id=btnBoard><span  onClick="return btnBoard_onclick()" ><spring:message code='ezApprovalG.t215'/></span></li>
-			    <li id=btnPrint><span  onClick="return btnPrint_onclick()" ><spring:message code='ezApprovalG.t60'/></span></li>
-		        <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
-			</ul>
+				<%-- 2022-06-23 홍승비 - 전자결재 미리보기 영역에서 문서보기 페이지 접근 시, 모든 버튼을 ul 태그부터 숨김처리 --%>
+				<ul <c:if test="${isPreview == 'Y'}">style="display:none"</c:if>>
+			        <li id="btntotaldocinfo"><span onClick="return btnApprovalInfo()" ><spring:message code='ezApprovalG.t1742'/></span></li>        
+			        <li id="btnSendDraft"><span onClick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t156'/></span></li>
+			        <li id="btnRJunkyul" ><span  onClick="return btnRJunkyul_onclick()"><spring:message code='ezApprovalG.t1427'/></span></li>
+				    <li id=btnCabinet style="display:none"><span  onClick="return btnCabinet_onclick()" ><spring:message code='ezApprovalG.t1406'/></span></li>
+				    <li id=btnAssign><span  onClick="return btnAssign_onclick()" ><spring:message code='ezApprovalG.t1430'/></span></li>
+				    <li id=btnReAssign style="display:none"><span  onClick="return btnReAssign_onclick()" ><spring:message code='ezApprovalG.t1431'/></span></li>
+				    <li id=btnDistribute><span  onClick="return btnDistribute_onclick()" ><spring:message code='ezApprovalG.t1432'/></span></li>
+				    <li id=btnReDistribute style="display:none"><span  onClick="return btnReDistribute_onclick()" ><spring:message code='ezApprovalG.t1433'/></span></li>
+				    <li id=btnOpinion><span  onClick="return btnOpinion_onclick()" ><spring:message code='ezApprovalG.t55'/></span></li>
+				    <li id="btnReqReSend" style="display:none"><span  onClick="return btnReqReSend_onclick()" ><spring:message code='ezApprovalG.t1435'/></span></li>
+				    <li id=btnBoard><span  onClick="return btnBoard_onclick()" ><spring:message code='ezApprovalG.t215'/></span></li>
+				    <li id=btnPrint><span  onClick="return btnPrint_onclick()" ><spring:message code='ezApprovalG.t60'/></span></li>
+			        <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
+				</ul>
+				<ul <c:if test="${isPreview != 'Y'}">style="display:none"</c:if>>
+		        	<li><img src='/images/kr/cm/btn_newpopup.gif' title=<spring:message code='ezEmail.t99000001'/> alt=<spring:message code='ezEmail.t99000001'/> onclick='return parent.btn_newpopup()'></li>
+		        </ul>
 			</div>
-			<div id="close">
+			<div id="close" <c:if test="${isPreview == 'Y'}">style="display:none"</c:if>>
 		        <ul>
 		          <li id="btnClose" ><span onClick="return btnClose_onclick()"></span></li>
 		        </ul>

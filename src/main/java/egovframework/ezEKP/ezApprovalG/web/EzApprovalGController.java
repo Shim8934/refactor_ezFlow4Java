@@ -1204,6 +1204,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String connFormCode = request.getParameter("connFormCode");
 		// FormBuilder
 		// String reformflag = request.getParameter("reformflag");
+		String isPreview = request.getParameter("isPreview") != null ? request.getParameter("isPreview") : ""; // 미리보기 영역에서 열렸는지 여부 플래그
 		
 		if (nonElecRec == null) {
 			nonElecRec = "";
@@ -1315,7 +1316,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String sihangURL = ezApprovalGService.getOptionInfo("A36", "004", userInfo, "CODE");
 		
 		
-	//재사용 추가
+		//재사용 추가
 		if (approvalFlag.equals("S")) {
 			if (!beforeDocID.equals("")) {
 				beforeUrl = ezApprovalGService.getDocHref(beforeDocID, "END", "", "", userInfo.getCompanyID(), userInfo.getTenantId());
@@ -1401,9 +1402,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("bigAttachDownloadPeriod", bigAttachDownloadPeriod); // 다운로드 기간
 		model.addAttribute("bigAttachDownloadDay", bigAttachDownloadDay); // 보관되는 일수
 		model.addAttribute("bigSizeAttachDownloadLimitCount", bigSizeAttachDownloadLimitCount); // 다운로드 횟수
+		
 		model.addAttribute("preSusinGroupStr", preSusinGroupStr);
 		model.addAttribute("connKey", connKey);
 		model.addAttribute("connFormCode", connFormCode);
+		model.addAttribute("isPreview", isPreview);
 		
 		logger.debug("draftui ended.");
 
@@ -3843,6 +3846,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String formDocType = "";
 		String formVersion = "";
 		String sendType = request.getParameter("sendType");
+		String isPreview = request.getParameter("isPreview") != null ? request.getParameter("isPreview") : ""; // 미리보기 영역에서 열렸는지 여부 플래그
+		
 		if (orgDocID != null  && !orgDocID.equals("")) {
 			endDir = String.valueOf(Integer.parseInt(orgDocID) % 1000);
 		}
@@ -3958,6 +3963,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("bigAttachDownloadPeriod", bigAttachDownloadPeriod); // 다운로드 기간
 		model.addAttribute("bigAttachDownloadDay", bigAttachDownloadDay); // 보관되는 일수
 		model.addAttribute("bigSizeAttachDownloadLimitCount", bigSizeAttachDownloadLimitCount); // 다운로드 횟수
+		
+		// 전자결재 미리보기 영역에서 열렸는지 여부 플래그
+		model.addAttribute("isPreview", isPreview);
 		
 		logger.debug("contDocView ended.");
 		
@@ -4989,6 +4997,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String orgCompanyID = request.getParameter("orgCompanyID");
 		String companyID = userInfo.getCompanyID();
 		String functionType = request.getParameter("functionType");
+		String isPreview = request.getParameter("isPreview") != null ? request.getParameter("isPreview") : ""; // 미리보기 영역에서 열렸는지 여부 플래그
 		
 		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
 			userInfo.setCompanyID(orgCompanyID);
@@ -5186,13 +5195,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		//결재 세부정보
 		String formAprOption = ezApprovalGService.getFormAprOptionInfo(docID, "DOC", userInfo.getCompanyID(), userInfo.getTenantId());
 		model.addAttribute("formAprOption", formAprOption);
-		//
 		
 		// 대용량첨부 관련 정보
 		model.addAttribute("bigAttachDownloadPeriod", bigAttachDownloadPeriod); // 다운로드 기간
 		model.addAttribute("bigAttachDownloadDay", bigAttachDownloadDay); // 보관되는 일수
 		model.addAttribute("bigSizeAttachDownloadLimitCount", bigSizeAttachDownloadLimitCount); // 다운로드 횟수
+		
 		model.addAttribute("preSusinGroupStr", preSusinGroupStr);
+		model.addAttribute("isPreview", isPreview);
 		
 		logger.debug("approvui ended");
 		
@@ -6310,6 +6320,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String orgDocID = request.getParameter("uOrgID");
 		String isReDraft = request.getParameter("isReDraft");
 		String draftFlag = request.getParameter("draftFlag");
+		String isPreview = request.getParameter("isPreview") != null ? request.getParameter("isPreview") : ""; // 미리보기 영역에서 열렸는지 여부 플래그
 		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
 		String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId());
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
@@ -6411,6 +6422,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("isNonElecRec", isNonElecRec);
 		model.addAttribute("useRedraftOpinionKeep", useRedraftOpinionKeep);
 		model.addAttribute("susinAdmin", susinAdmin);
+		model.addAttribute("isPreview", isPreview);
 		
 		logger.debug("recevG ended.");
 		
@@ -6563,9 +6575,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String mode = "VIE";
 		String callBackType = request.getParameter("CallBackType");
 		String ext = request.getParameter("ext");
-		
 		String orgCompanyID = request.getParameter("orgCompanyID");
 		String pageType = request.getParameter("pageType");
+		String isPreview = request.getParameter("isPreview") != null ? request.getParameter("isPreview") : ""; // 미리보기 영역에서 열렸는지 여부 플래그
 		
 		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", userInfo.getTenantId());
 		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
@@ -6715,6 +6727,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("bigAttachDownloadPeriod", bigAttachDownloadPeriod); // 다운로드 기간
 		model.addAttribute("bigAttachDownloadDay", bigAttachDownloadDay); // 보관되는 일수
 		model.addAttribute("bigSizeAttachDownloadLimitCount", bigSizeAttachDownloadLimitCount); // 다운로드 횟수
+		
+		model.addAttribute("isPreview", isPreview);
 		
 		logger.debug("aprDocView ended.");
 		
@@ -10835,6 +10849,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
 		String draftDeptID = ezApprovalGService.getOrgDraftDeptID(docID, userInfo.getTenantId(), userInfo.getCompanyID());
 		String isReDraft = request.getParameter("isReDraft");
+		String isPreview = request.getParameter("isPreview") != null ? request.getParameter("isPreview") : ""; // 미리보기 영역에서 열렸는지 여부 플래그
 		
 		//부서합의문에서 채번하기 위해 수정 2019-02-08 홍대표
 		String useReceiveDocNo = ezCommonService.getTenantConfig("useReceiveDocNo", userInfo.getTenantId());
@@ -10904,6 +10919,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("bigAttachDownloadPeriod", bigAttachDownloadPeriod); // 다운로드 기간
 		model.addAttribute("bigAttachDownloadDay", bigAttachDownloadDay); // 보관되는 일수
 		model.addAttribute("bigSizeAttachDownloadLimitCount", bigSizeAttachDownloadLimitCount); // 다운로드 횟수
+		
+		model.addAttribute("isPreview", isPreview);
 		
 		logger.debug("recevGDeptHapyui ended");
 

@@ -1261,7 +1261,8 @@
 		<table class="layout" >
 		  <tr>
 		    <td style="height:20px"><div id="menu">
-		        <ul>
+				<%-- 2022-06-23 홍승비 - 전자결재 미리보기 영역에서 문서보기 페이지 접근 시, 모든 버튼을 ul 태그부터 숨김처리 --%>
+		        <ul <c:if test="${isPreview == 'Y'}">style="display:none"</c:if>>
 		          <li id="btntotaldocinfo"><span onClick="return btnApprovalInfo('14')" ><spring:message code="ezApprovalG.t1742"/></span></li>
 		          <span style ="display:none" ><li id="btnSetAprLine"> <span onclick="return btnSetAprLine_onclick()" ><spring:message code='ezApprovalG.t153'/></span></li></span>
 		          <li id="btnSendDraft"> <span onclick="return btnSendDraft_onclick()" ><spring:message code='ezApprovalG.t156'/></span></li>
@@ -1273,8 +1274,11 @@
 		          <li id="btnPrint"> <span onclick="return btnPrint_onclick()" ><spring:message code='ezApprovalG.t60'/></span></li>
 		          <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 		        </ul>
+				<ul <c:if test="${isPreview != 'Y'}">style="display:none"</c:if>>
+		        	<li><img src='/images/kr/cm/btn_newpopup.gif' title=<spring:message code='ezEmail.t99000001'/> alt=<spring:message code='ezEmail.t99000001'/> onclick='return parent.btn_newpopup()'></li>
+		        </ul>
 		      </div>
-		      <div id="close">
+		      <div id="close" <c:if test="${isPreview == 'Y'}">style="display:none"</c:if>>
 		        <ul>
 		          <li id="btnClose" ><span onclick="return btnClose_onclick()"></span></li>
 		        </ul>

@@ -693,6 +693,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String susinAdmin = "";
         String pass = "";
         String orgCompanyID = request.getParameter("orgCompanyID");
+        String isPreview = request.getParameter("isPreview") != null ? request.getParameter("isPreview") : ""; // 미리보기 영역에서 열렸는지 여부 플래그
         
         userInfo = commonUtil.aprUserInfo(loginCookie);
 
@@ -770,6 +771,9 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("pass", pass);
 		model.addAttribute("orgCompanyID", orgCompanyID);
 		model.addAttribute("useExternalMailServer", useExternalMailServer);
+		
+		// 전자결재 미리보기 영역에서 열렸는지 여부 플래그
+		model.addAttribute("isPreview", isPreview);
 		
 		LOGGER.debug("ezViewEnd_HWP ended");
 		
@@ -1154,6 +1158,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String connKey = StringUtils.defaultString(request.getParameter("connKey"));
 		String connFormCode = StringUtils.defaultString(request.getParameter("connFormCode"));
 		String docSN = "";
+		String isPreview = request.getParameter("isPreview") != null ? request.getParameter("isPreview") : ""; // 미리보기 영역에서 열렸는지 여부 플래그
 		
 		if (nonElecRec == null) {
 			nonElecRec = "";
@@ -1256,6 +1261,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		}
 
 		model.addAttribute("formPath", formPath + ".hwp");
+		
+		model.addAttribute("isPreview", isPreview);
 
 		LOGGER.debug("draftuiWHWP ended. formPath:" + formPath);
 		
@@ -1294,6 +1301,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String mode = request.getParameter("mode");
 		String orgCompanyID = request.getParameter("orgCompanyID");
 		String companyID = userInfo.getCompanyID();
+		String isPreview = request.getParameter("isPreview") != null ? request.getParameter("isPreview") : ""; // 미리보기 영역에서 열렸는지 여부 플래그
 		
 		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
 			userInfo.setCompanyID(orgCompanyID);
@@ -1443,7 +1451,9 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("bigAttachDownloadPeriod", bigAttachDownloadPeriod); // 다운로드 기간
 		model.addAttribute("bigAttachDownloadDay", bigAttachDownloadDay); // 보관되는 일수
 		model.addAttribute("bigSizeAttachDownloadLimitCount", bigSizeAttachDownloadLimitCount); // 다운로드 횟수
+		
 		model.addAttribute("preSusinGroupStr", preSusinGroupStr);
+		model.addAttribute("isPreview", isPreview);
 		
 		LOGGER.debug("approvuiWHWP ended");
 		
@@ -1468,6 +1478,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String susinAdmin = "";
         String pass = "";
         String orgCompanyID = request.getParameter("orgCompanyID");
+        String isPreview = request.getParameter("isPreview") != null ? request.getParameter("isPreview") : ""; // 미리보기 영역에서 열렸는지 여부 플래그
         
         userInfo = commonUtil.aprUserInfo(loginCookie);
 
@@ -1559,6 +1570,9 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("bigAttachDownloadDay", bigAttachDownloadDay); // 보관되는 일수
 		model.addAttribute("bigSizeAttachDownloadLimitCount", bigSizeAttachDownloadLimitCount); // 다운로드 횟수
 		
+		// 전자결재 미리보기 영역에서 열렸는지 여부 플래그
+		model.addAttribute("isPreview", isPreview);
+		
 		LOGGER.debug("ezViewEnd_WHWP ended");
 		
 		return "ezApprovalG/apprGviewEndWHWP";
@@ -1587,6 +1601,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String orgCompanyID = request.getParameter("orgCompanyID");
+		String isPreview = request.getParameter("isPreview") != null ? request.getParameter("isPreview") : ""; // 미리보기 영역에서 열렸는지 여부 플래그
 		
 		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
 			userInfo.setCompanyID(orgCompanyID);
@@ -1681,6 +1696,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("bigAttachDownloadDay", bigAttachDownloadDay); // 보관되는 일수
 		model.addAttribute("bigSizeAttachDownloadLimitCount", bigSizeAttachDownloadLimitCount); // 다운로드 횟수
 		
+		model.addAttribute("isPreview", isPreview);
+		
 		LOGGER.debug("ezviewAprWHWP ended");
 		
 		return "ezApprovalG/apprGviewAprWHWP";
@@ -1708,6 +1725,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String draftFlag = request.getParameter("draftFlag");
 		String retFlag = request.getParameter("retFlag");
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String isPreview = request.getParameter("isPreview") != null ? request.getParameter("isPreview") : ""; // 미리보기 영역에서 열렸는지 여부 플래그
 		
 		String approvalRoot = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		String dirPath = commonUtil.getRealPath(request) + approvalRoot;
@@ -1803,6 +1821,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("bigAttachDownloadDay", bigAttachDownloadDay); // 보관되는 일수
 		model.addAttribute("bigSizeAttachDownloadLimitCount", bigSizeAttachDownloadLimitCount); // 다운로드 횟수
 		
+		model.addAttribute("isPreview", isPreview);
+		
 		LOGGER.debug("ezRecevGSusinWHWP ended");
 		
 		return "ezApprovalG/apprGrecevgsusinWHWP";
@@ -1836,6 +1856,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String useReceiveDocNo = ezCommonService.getTenantConfig("useReceiveDocNo", userInfo.getTenantId());
 		String orgCompanyID = request.getParameter("orgCompanyID");
 		String companyID = userInfo.getCompanyID();
+		String isPreview = request.getParameter("isPreview") != null ? request.getParameter("isPreview") : ""; // 미리보기 영역에서 열렸는지 여부 플래그
 		
 		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
 			userInfo.setCompanyID(orgCompanyID);
@@ -1889,6 +1910,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("bigAttachDownloadPeriod", bigAttachDownloadPeriod); // 다운로드 기간
 		model.addAttribute("bigAttachDownloadDay", bigAttachDownloadDay); // 보관되는 일수
 		model.addAttribute("bigSizeAttachDownloadLimitCount", bigSizeAttachDownloadLimitCount); // 다운로드 횟수
+		
+		model.addAttribute("isPreview", isPreview);
 		
 		LOGGER.debug("ezDeptRecevUI_WHWP ended");
 		return "ezApprovalG/apprGdeptRecevuiWHWP";

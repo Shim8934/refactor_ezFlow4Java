@@ -8,26 +8,28 @@
     var DocList = new ListView();
     DocList.LoadFromID("DocList");
     selobj = DocList.GetSelectedRows()[0];
+    
     if (selobj != null && pGubun != "OFF" && selobj.childNodes.length != 0) {
     	ItemPreviewRead(selobj, pPage);   
     	$(document).ready(function () {
-    		$("#ifrmPreViewH").load(function(){
-    			$("#ifrmPreViewH").contents().find("tr:eq(0) #close").css("display", "none");
+    		$("#ifrmPreViewH").load(function() {
+    			// 상단 버튼 표출제어 부분 각 결재문서 보기 팝업창 내부로 이동 (화면에 잠시 나타났다가 사라지는 현상 방지)
+/*    			$("#ifrmPreViewH").contents().find("tr:eq(0) #close").css("display", "none");
+    			$("#ifrmPreViewH").contents().find("tr:eq(0) #menu li").css("display", "none");*/
     			$("#ifrmPreViewH").css("height", $("#PreviewRayerH").css("height"));
-    			var btn_popup = "<ul><li><img src='/images/kr/cm/btn_newpopup.gif' title='새창으로열기' alt='새창으로열기' onclick='return parent.btn_newpopup()'></li></ul>";
-    			$("#ifrmPreViewH").contents().find("tr:eq(0) #menu li").css("display", "none");
-    			$("#ifrmPreViewH").contents().find("tr:eq(0) #menu").append(btn_popup);
+    		/*	var btn_popup = "<ul><li><img src='/images/kr/cm/btn_newpopup.gif' title='새창으로열기' alt='새창으로열기' onclick='return parent.btn_newpopup()'></li></ul>";
+    			$("#ifrmPreViewH").contents().find("tr:eq(0) #menu").append(btn_popup);*/
     		});
     	});
     } else {
     	document.getElementById("ifrmPreViewH").src = "/blank_kr.htm";  
-    	document.getElementById("ifrmPreViewH").onload = function(){
+    	document.getElementById("ifrmPreViewH").onload = function() {
     		if (CrossYN()) {
-    			if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null){
+    			if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null) {
     				ifrmPreViewH.document.getElementById("ifrmviewEmptyText").textContent = strLang930;	        			
     			}
     		} else {
-    			if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null){
+    			if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null) {
     				ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = strLang930;		            		
     			}
     		}    		
@@ -231,6 +233,8 @@ function ItemPreviewRead(obj, page) {
 				openLocation = "/ezApprovalG/contDocView.do";
 				openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL) + "&listSusin=" +"&orgCompanyID=" + orgCompanyID;
 			}
+			/* 2022-06-23 홍승비 - 전자결재 문서보기 페이지가 미리보기로 열린 경우, 기존 버튼 영역을 로딩 시점부터 표출하지 않도록 하기 위한 플래그 추가 */
+			openLocation +=  "&isPreview=Y";
 			
 			document.getElementById("ifrmPreViewH").src = openLocation;
 		}	
@@ -295,6 +299,8 @@ function pre_openApprovUI(allFlag) {
 	        openLocation = openLocation + "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
 	        openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgCompanyID=" + orgCompanyID + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2")) + "&aprMemberSN=" + pArgument[4];
 	    }
+	    
+	    openLocation +=  "&isPreview=Y";
 	    
 	    document.getElementById("ifrmPreViewH").src = openLocation;
 	}
@@ -392,10 +398,13 @@ function pre_openViewDocInfo(type) {
        	openLocation = openLocation + "&CallBackType=" + escape(trim_Cross(type));
        	openLocation = openLocation + "&ext=" + escape(trim_Cross(ext));
        	openLocation = openLocation + "&orgCompanyID=" + orgCompanyID;
-       	if(shareUser = "shareUser"){
+       	if (shareUser = "shareUser") {
        		openLocation += "&pageType=admin";
        	}
     }
+    
+    openLocation +=  "&isPreview=Y";
+    
     document.getElementById("ifrmPreViewH").src = openLocation;
 }
 
@@ -433,6 +442,9 @@ function pre_OpenReceiveDraftUI(selobj, pDraftFlag) {
             		openLocation = "/ezApprovalG/ezRecevGSusinWHWP.do?docID=" + escape(pDocID) + "&draftFlag=" + escape(pDraftFlag) + "&uOrgID=" + encodeURI(GetAttribute(selobj, "DATA7"));
             	}
             }
+            
+            openLocation +=  "&isPreview=Y";
+            
             document.getElementById("ifrmPreViewH").src = openLocation;
         } else {
             var pURL = GetAttribute(selobj, "DATA3");
@@ -456,6 +468,8 @@ function pre_OpenReceiveDraftUI(selobj, pDraftFlag) {
             	openLocation = "/ezApprovalG/recev.do";
             }
             openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&draftFlag=" + encodeURI(pDraftFlag) + "&orgCompanyID=" + encodeURI(orgCompanyID);
+            openLocation +=  "&isPreview=Y";
+            
             document.getElementById("ifrmPreViewH").src = openLocation;
         }
     } else {
@@ -594,6 +608,8 @@ function pre_OpenReceiveENDDraftUI(pCurSelRow, pDraftFlag) {
             openLocation = openLocation + "&RetFlag=" + g_selReturn;
             g_selReturn = "N";
         }
+        
+        openLocation +=  "&isPreview=Y";
 
         document.getElementById("ifrmPreViewH").src = openLocation;
     }
@@ -663,7 +679,7 @@ function pre_openServerDraftUI(pDraftFlag, pCurSelRow) {
 	        } else {
 	        	openLocation = "/ezApprovalG/draftuiHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
 	            openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
-	            openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN);;
+	            openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN);
 	        }
     	} else {
     		openLocation = "/ezApprovalG/draftuiWHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
@@ -671,6 +687,8 @@ function pre_openServerDraftUI(pDraftFlag, pCurSelRow) {
             openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN);
     	}
     }
+    
+    openLocation +=  "&isPreview=Y";
     
     document.getElementById("ifrmPreViewH").src = openLocation;
 }
@@ -749,6 +767,8 @@ function pre_openDraftUI(pDraftFlag, pCurSelRow) {
     	}
     }
 
+    openLocation +=  "&isPreview=Y";
+    
     document.getElementById("ifrmPreViewH").src = openLocation;
 }
 
@@ -1081,9 +1101,12 @@ function pre_chk_Passwd_Complete(Rtn)
             openLocation = "/ezApprovalG/contDocView.do";
         }
         openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(formid) + "&orgDocID=" + encodeURI(orgdocid) + "&docState=" + docState + "&orgCompanyID=" + encodeURI(orgCompanyID);
-        if(share && share == 'share'){
+        if (share && share == 'share') {
         	openLocation += "&share=Y";
         }
+        
+        openLocation +=  "&isPreview=Y";
+        
         document.getElementById("ifrmPreViewH").src = openLocation;
     }
 }

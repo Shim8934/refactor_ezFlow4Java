@@ -258,7 +258,7 @@ function PreviewRayerChange_photo(pGubun) {
                     pMailPreWidthH = pMailPreWidthH - ((pMailListWidthH + pMailPreWidthH) - CurrenWidth);
                 }
             }
-            document.getElementById("PreviewRayerH").style.width = "740px";
+            document.getElementById("PreviewRayerH").style.width = "752px";
             if ($("body").attr("class") == "tabbody") {
             	document.getElementById("MailListRayer").style.width = (CurrenWidth - 780) + "px";
             } else{
@@ -1051,7 +1051,7 @@ function Window_resize_photo() {
                     }
                 }
                 
-                document.getElementById("PreviewRayerH").style.width = "740px";
+                document.getElementById("PreviewRayerH").style.width = "752px";
             	if ($("body").attr("class") == "tabbody") {
                 	document.getElementById("MailListRayer").style.width = (CurrenWidth - 780) + "px";
                 } else {

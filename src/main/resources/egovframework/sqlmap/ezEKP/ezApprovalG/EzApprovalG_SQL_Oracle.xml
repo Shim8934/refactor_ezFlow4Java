@@ -17132,8 +17132,7 @@
               UserJobTitle2 ,
               UserDeptName2 ,
 	          TENANT_ID ,
-	          COMPANYID ,
-	          null
+	          COMPANYID 
           FROM 
           	  TBL_TMPAPROPINIONINFO 
           WHERE
