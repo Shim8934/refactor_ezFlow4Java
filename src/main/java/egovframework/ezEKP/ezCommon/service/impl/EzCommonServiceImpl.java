@@ -1891,17 +1891,22 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void alter_AnyTbl_AnyColumns() throws Exception {
 		logger.debug("alter_AnyTbl_AnyColumns started");
 		List<Map<String, Object>> test = new ArrayList<Map<String, Object>>();
+		// JAMES_MAIL_SEARCH
+		test.add(new HashMap<String, Object>(){{ put("TBL_NAME","JAMES_MAIL_SEARCH"); put("COLUMN_NAME", "SECURE_FLAG"); put("ALTER", "ADD");
+												 put("TYPE_MYSQL", "int(1)"); put("TYPE_ORACLE", "NUMBER"); put("TYPE_TIBERO", "NUMBER"); put("AFTER", "DEFAULT 0"); }});
+
 		// TBL_USERMASTER
 		test.add(new HashMap<String, Object>(){{ put("TBL_NAME","TBL_USERMASTER"); put("COLUMN_NAME", "CREATEDT"); put("ALTER", "ADD"); 
-												 put("TYPE_MYSQL", "DATETIME"); put("TYPE_ORACLE", "DATE"); put("AFTER", "DEFAULT NULL"); }});
+												 put("TYPE_MYSQL", "DATETIME"); put("TYPE_ORACLE", "DATE"); put("TYPE_TIBERO", "DATE"); put("AFTER", "DEFAULT NULL"); }});
 
 		// TBL_DEPTMASTER
 		test.add(new HashMap<String, Object>(){{ put("TBL_NAME","TBL_DEPTMASTER"); put("COLUMN_NAME", "CREATEDT"); put("ALTER", "ADD"); 
-												 put("TYPE_MYSQL", "DATETIME"); put("TYPE_ORACLE", "DATE"); put("AFTER", "DEFAULT NULL"); }});
+												 put("TYPE_MYSQL", "DATETIME"); put("TYPE_ORACLE", "DATE"); put("TYPE_TIBERO", "DATE"); put("AFTER", "DEFAULT NULL"); }});
 
 		for (Map<String, Object> map : test) {
 			ezCommonDAO.alter_AnyTbl_AnyColumns(map);
         }
+		logger.debug("alter_AnyTbl_AnyColumns ended");
 	}
 
 	@Override
