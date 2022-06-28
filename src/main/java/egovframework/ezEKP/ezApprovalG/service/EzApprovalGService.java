@@ -842,4 +842,6 @@ public interface EzApprovalGService {
 	/* 2022-03-17 홍승비 - 결재완료된 내부시행문 미처리문서함에서 반송 동작 추가 (완료문서 테이블에 접근) */
 	public String doSihangConvReject(String docID, String recordID, String userID, String deptID, String companyID, int tenantID) throws Exception;
 	
+    /* 2022-06-28 홍승비 - 전달한 DOCID로 진행중문서(APR) 또는 완료문서(END) 여부를 문자열로 리턴 */
+	public String getAprOrEndStr(String docID, String companyID, int tenantID) throws Exception;
 }

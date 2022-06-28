@@ -3842,4 +3842,9 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void updateRecInfoRejectFlag(Map<String, Object> map) throws Exception {
 		update("EzApprovalG.updateRecInfoRejectFlag", map);
 	}
+	
+	/* 2022-06-17 홍승비 - DOCID를 전달하면 해당 문서가 진행문서(APR)인지, 완료문서(END)인지 문자열로 리턴함 */
+	public String getAprOrEndStr(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getAprOrEndStr", map);
+	}
 }

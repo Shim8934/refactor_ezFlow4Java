@@ -7934,7 +7934,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	
 	@RequestMapping(value = "/ezApprovalG/aprEndOpinion.do", method = RequestMethod.GET)
 	public String aprEndOpinion() throws Exception{
-		logger.debug("aprEndOpinion started");  
+		logger.debug("aprEndOpinion started");
 		logger.debug("aprEndOpinion ended");  
 		return "ezApprovalG/apprGaprEndOpinion";
 	}
@@ -11965,4 +11965,31 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return result;
 	}
 	
+	/**
+	 * 2022-06-28 홍승비 - 전달한 DOCID로 진행중문서(APR) 또는 완료문서(END) 여부를 문자열로 리턴
+	 */
+	@RequestMapping(value = "/ezApprovalG/getAprOrEndStr.do", produces = "text/plain;charset=utf8", method = RequestMethod.GET)
+	@ResponseBody
+	public String getAprOrEndStr(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
+		logger.debug("getAprOrEndStr started.");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		int tenantID = userInfo.getTenantId();
+		String docID = request.getParameter("docID");
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
+		String result = "";
+		
+		try {
+			result = ezApprovalGService.getAprOrEndStr(docID, userInfo.getCompanyID(), tenantID);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("getAprOrEndStr ended, docID = " + docID + " / result = " + result);
+		return result;
+	}
 }

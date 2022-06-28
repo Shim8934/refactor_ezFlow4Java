@@ -34162,4 +34162,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return retValue;
 	}
 	
+    /* 2022-06-28 홍승비 - 전달한 DOCID로 진행중문서(APR) 또는 완료문서(END) 여부를 문자열로 리턴 */
+	public String getAprOrEndStr(String docID, String companyID, int tenantID) throws Exception {
+		logger.debug("getAprOrEndStr started.");
+		
+		String result = "";
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_DOCID", docID);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		result = ezApprovalGDAO.getAprOrEndStr(map);
+		
+		logger.debug("getAprOrEndStr ended.");
+		return result;
+	}
 }
