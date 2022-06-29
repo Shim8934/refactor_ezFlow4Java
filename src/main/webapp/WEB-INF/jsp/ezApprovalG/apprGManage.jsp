@@ -2448,9 +2448,23 @@
 				return ext;
 			}
 			
+			/* 2022-06-29 홍승비 - 결재할문서에서 체크박스를 해제하는 경우, 미리보기 iframe 영역에서 정보를 얻도록 분기처리 */
 			function btn_newpopup() {
-				lvDocList_DBSelChange();	
+				var SelList = new ListView();
+		        SelList.LoadFromID("DocList");
+		        var oArrRows = SelList.GetSelectedRows();
+		        
+				if (oArrRows > 0) {
+					lvDocList_DBSelChange();
+				} else {
+					var iframePrev = document.getElementById("ifrmPreViewH");
+					if (iframePrev != null) {
+						var openLocation = iframePrev.src.replace("&isPreview=Y", ""); // 미리보기가 아닌 팝업으로 열게 되므로, url 수정
+						openwindow(openLocation, "", 880, 570);
+					}
+				}
 			}
+			
 		</script>
 	</head>
 	<body class="mainbody" style="margin-top:0px; overflow:auto;" marginwidth="0" marginheight="0" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">	
@@ -2532,7 +2546,8 @@
 			</ul>
 		</div>
 		
-		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id="mailPanel"></div>
+		<%-- 리사이즈 바 클릭 시의 음영을 위한 부분 --%>
+ 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id="ResizeBarPanel"></div>
 	    <div style="width: 8px; height: 100%; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarH"></div>
 		<span id="MailListRayer" style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">
 			<div class="div_scroll" style="width:100%;HEIGHT:395px; overflow-y:hidden; overflow-x:auto; margin-bottom:10px" id="divList">

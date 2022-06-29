@@ -775,7 +775,7 @@ function pre_openDraftUI(pDraftFlag, pCurSelRow) {
 function MailPreviewEnd(e) {
     if (PreviewH_Move) {
         document.getElementById("ResizeBarH").style.display = "none";
-        document.getElementById("mailPanel").style.display = "none";
+        document.getElementById("ResizeBarPanel").style.display = "none";
         if (PreviewH_Move) {
         	 var newPos_H = parseInt(document.getElementById("ResizeBarH").style.left) - 10;
              if (pMailListWidthH >= newPos_H) {
@@ -862,7 +862,7 @@ function PreviewH_onMouserDown(e) {
 
     document.getElementById("ResizeBarH").style.left = newPos_H + "px";
     document.getElementById("ResizeBarH").style.display = "";
-    document.getElementById("mailPanel").style.display = "";
+    document.getElementById("ResizeBarPanel").style.display = "";
     PreviewH_Move = true;
 }
 
