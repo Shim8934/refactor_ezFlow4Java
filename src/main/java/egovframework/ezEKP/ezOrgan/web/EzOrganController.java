@@ -596,7 +596,7 @@ public class EzOrganController {
 	        String type = doc.getElementsByTagName("TYPE").item(0).getTextContent(); // pos(직위), tit(직책)
 	        type = type.equalsIgnoreCase("pos") ? "001" : "002";
 
-	        comID = (topID.split("/").length > 1) ? topID.split("/")[0] : comID.equals("") ? companyId : comID;
+	        comID = comID.equals("") ? companyId : comID;
 	        logger.debug("comID=" + comID + ",topID=" + topID + ",propList=" + propList + ",type=" + type);
 
 	        comInfo = ezOrganService.getCompanyJobTreeInfo(type, comID, topID, propList, primary, tenantID);

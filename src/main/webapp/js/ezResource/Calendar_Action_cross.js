@@ -1130,7 +1130,7 @@ function tableListControl_today() {
             _TD.align = "left";
             _TD.onselectstart = function () { return false; };
 
-            if (title_name[k].split("/")[2] == "1")
+            if (title_name[k].split("/")[2].substring(0,1) == "1")
                 //_TD.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/calendar/icon_resource_ok.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1];
             	_TD.innerHTML = "<span class='sub_iconLNB tree_resource_ok' style='margin-top:0px' onclick='showRes(" + title_name[k].split("/")[0] + ")'></span>&nbsp;" + title_name[k].split("/")[1];
             else
@@ -1327,7 +1327,7 @@ function tableListControl_today() {
                         _TD.align = "left";
                         _TD.onselectstart = function () { return false; };
 
-                        if (title_name[k].split("/")[2] == "1")
+                        if (title_name[k].split("/")[2].substring(0,1) == "1")
                             //_TD.innerHTML = "<img src='/images/calendar/icon_resource_no.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1] + "[ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + " ]";
                         	_TD.innerHTML = "<span class='sub_iconLNB tree_resource_no' style='margin-top:0px'></span>&nbsp;" + title_name[k].split("/")[1] + "[ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + " ]";
                         else
@@ -1580,7 +1580,7 @@ function onmouse_out_Week(td) {
 
 function MemberInfo_onClick(pSelUserID) {
     var c_Width = 420;
-    var c_Height = 438;
+    var c_Height = 450;
 
     //스크린의 크기
     var s_Width = screen.availWidth;

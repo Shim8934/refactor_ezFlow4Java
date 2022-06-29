@@ -1930,7 +1930,7 @@ function checkboxBtnShowCtl() {
         	document.getElementById("tbtnTotalSave").style.display = "";
         	if (isDelShow == false && isRedraftShow == false) {
         		document.getElementById("tbtnApprove").style.display = "";
-				document.getElementById("tbtnApprove1").style.display = "";
+//				document.getElementById("tbtnApprove1").style.display = "";
         	}
     	} else {
     		document.getElementById("tbtnViewDoc").style.display = "none";

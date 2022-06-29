@@ -96,8 +96,11 @@ function appendChildText(targetNode, node, value) {
 
 function appendChildCDataText(targetNode, node, value, xmlDoc) {
     if (CrossYN()) {
-        var newText = document.createTextNode(value);
+/*        var newText = document.createTextNode(value);
         node.appendChild(newText);
+        targetNode.appendChild(node);*/
+        var CDATA = xmlDoc.createCDATASection(value);
+        node.appendChild(CDATA);
         targetNode.appendChild(node);
     }
     else {
@@ -2018,4 +2021,25 @@ function getAccountingYear() {
         error : function(){}
     });
     return res;
+}
+
+function showLoadingProgress() {
+	document.querySelector("#mailPanel").style.display = "";
+
+    var loadingLayer = document.querySelector("#loadingLayer");
+
+    loadingLayer.style.display = "";
+
+    var llWidth = loadingLayer.clientWidth;
+    var llHeight = loadingLayer.clientHeight;
+    var winWidth = window.innerWidth;
+    var winHeight = window.innerHeight;
+
+    loadingLayer.style.left = ((winWidth / 2) - (llWidth / 2)) + "px";
+    loadingLayer.style.top = ((winHeight / 2) - (llHeight / 2)) + "px";
+}
+
+function hideLoadingProgress() {
+    document.querySelector("#loadingLayer").style.display = "none";
+    document.querySelector("#mailPanel").style.display = "none";
 }

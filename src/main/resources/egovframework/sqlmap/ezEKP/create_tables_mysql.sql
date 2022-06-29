@@ -200,6 +200,7 @@ CREATE TABLE `james_mail_search` (
   `MESSAGE_ID` varchar(500) DEFAULT NULL,
   `MAIL_IP` varchar(200) DEFAULT NULL,
   `COUNTRY_CODE` varchar(200) DEFAULT NULL,
+  `SECURE_FLAG` int(1) DEFAULT 0,
   PRIMARY KEY (`MAIL_SEARCH_ID`),
   KEY `MAILBOX_ID` (`MAILBOX_ID`,`MAIL_UID`),
   KEY `MESSAGE_ID` (`MESSAGE_ID`(191)),
@@ -2337,7 +2338,7 @@ CREATE TABLE `tbl_admin_access_ip` (
   `IPNO` int(11) NOT NULL AUTO_INCREMENT,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `IPADDRESS` varchar(100) NOT NULL,
-  `ACCESS` varchar(10) DEFAULT 'NO',
+  `ALLOW_ACCESS` varchar(10) DEFAULT 'NO',
   `EXPLANATION` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`IPNO`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -2926,20 +2927,20 @@ CREATE TABLE `tbl_aprdocinfo` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tbl_aprdraftallgroup`
+-- Table structure for table `TBL_APRDRAFTALLGROUP`
 --
 
-DROP TABLE IF EXISTS `tbl_aprdraftallgroup`;
+DROP TABLE IF EXISTS `TBL_APRDRAFTALLGROUP`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_aprdraftallgroup` (
-  `mainDocID` varchar(80) DEFAULT NULL,
-  `subDocID` varchar(80) DEFAULT NULL,
-  `tenant_id` mediumint(5) DEFAULT NULL,
-  `companyID` varchar(20) DEFAULT NULL,
-  `orderNum` mediumint(5) DEFAULT NULL,
-  `createDate` datetime DEFAULT NULL,
-  `aprMemberID` varchar(400) DEFAULT NULL
+CREATE TABLE `TBL_APRDRAFTALLGROUP` (
+  `MAINDOCID` varchar(80) DEFAULT NULL,
+  `SUBDOCID` varchar(80) DEFAULT NULL,
+  `TENANT_ID` mediumint(5) DEFAULT NULL,
+  `COMPANYID` varchar(20) DEFAULT NULL,
+  `ORDERNUM` mediumint(5) DEFAULT NULL,
+  `CREATEDATE` datetime DEFAULT NULL,
+  `APRMEMBERID` varchar(400) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -5766,7 +5767,7 @@ CREATE TABLE `tbl_connection_info` (
   `CONNECTOS` varchar(80) DEFAULT NULL,
   `CONNECTAGENT` varchar(1000) DEFAULT NULL,
   `STATUS` varchar(1) DEFAULT NULL,
-  `SESSIONCODE` varchar(80) DEFAULT NULL,
+  `SESSIONCODE` varchar(200) DEFAULT NULL,
   `TENANT_ID` decimal(22,0) NOT NULL DEFAULT 0,
   PRIMARY KEY (`SEQUENCE`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -5800,6 +5801,38 @@ CREATE TABLE `tbl_admin_access_info` (
   `ACCESSAGENT` varchar(1000) DEFAULT NULL,
   `ADMINTYPE` 	varchar(200)  DEFAULT NULL,
   `TENANT_ID` 	decimal(22,0) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`SEQUENCE`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_permission_change_info`
+--
+
+DROP TABLE IF EXISTS `tbl_permission_change_info`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_permission_change_info` (
+  `SEQUENCE` 			int(10) 	 NOT NULL 	   AUTO_INCREMENT,
+  `USERID` 				varchar(200) NOT NULL,
+  `USERNM` 				varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `USERNM2` 			varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `DEPTID` 			 	varchar(200) DEFAULT NULL,
+  `DEPTNM` 			 	varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `DEPTNM2` 			varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `TITLE` 				varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `TITLE2` 				varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `COMPANYID` 			varchar(200) DEFAULT NULL,
+  `COMPANYNM` 			varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `COMPANYNM2` 			varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `AUTHORIZEDTIME` 		datetime 	 DEFAULT NULL,
+  `ADMINTYPE` 			varchar(200) DEFAULT NULL,
+  `STATUS` 			 	varchar(40)  DEFAULT NULL,
+  `AUTHORIZERID` 		varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `AUTHORIZERNM` 		varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `AUTHORIZERNM2` 		varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `AUTHORIZERIP` 		varchar(200) DEFAULT NULL,
+  `TENANT_ID` 			decimal(22,0) NOT NULL DEFAULT 0,
   PRIMARY KEY (`SEQUENCE`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -6102,6 +6135,7 @@ CREATE TABLE `tbl_deptmaster` (
   `ADFLAG` varchar(4) DEFAULT NULL,
   `ADSPATH` varchar(400) DEFAULT NULL,
   `UPDATEDT` datetime DEFAULT NULL,
+  `CREATEDT` datetime DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `MANUAL_FLAG` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`TENANT_ID`,`CN`)
@@ -6226,6 +6260,9 @@ CREATE TABLE `tbl_dev_master` (
   `EXTENSION1` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
   `EXTENSION2` varchar(256) CHARACTER SET utf8 DEFAULT NULL,
   `NOTUSED` int(11) DEFAULT 0,
+  `PIN` varchar(100) DEFAULT NULL,
+  `PINSTATE` char(1) DEFAULT 'N',
+  `BIOMETRIC` char(1) DEFAULT 'N',
   PRIMARY KEY (`DEVSEQ`),
   UNIQUE KEY `DEVID_UNIQUE` (`DEVID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -7115,7 +7152,6 @@ CREATE TABLE `tbl_forminfo` (
   `INFORMALFLAG` int(11) DEFAULT 0,
   `FORMVERSION` int(11) DEFAULT 0,
   `OPENGOVFLAG` varchar(4) DEFAULT 'N',
-  `DRAFTALLFLAG` varchar(4) DEFAULT 'N',
   `FORMXSLT` longtext DEFAULT NULL COMMENT '연동에서 XML을 HTML로 변환하기 위해 필요한 XSLT정보',
   `PASSAPRLINEFLAG` varchar(4) DEFAULT 'N' COMMENT '기결재통과플래그',
   `FORMGUIDE` longtext DEFAULT NULL,
@@ -13658,6 +13694,7 @@ CREATE TABLE `tbl_usermaster` (
   `ADSPATH` varchar(200) DEFAULT NULL,
   `SIPURI` varchar(100) DEFAULT NULL,
   `UPDATEDT` datetime NOT NULL,
+  `CREATEDT` datetime NOT NULL,
   `MOBILE_ENABLE` varchar(4) DEFAULT NULL,
   `MOBILE_NOTUSE` varchar(4) DEFAULT 'N',
   `MOBILE_PIN` varchar(4) DEFAULT NULL,
@@ -14549,6 +14586,45 @@ CREATE TABLE `tbl_webfolder_user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='웹폴더 사용자';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+-- 
+-- Table structure for table `jmocha_mail_outofoffice_tem`
+--
+DROP TABLE IF EXISTS `jmocha_mail_outofoffice_tem`;
+CREATE TABLE `jmocha_mail_outofoffice_tem` (
+  `USER_ID` varchar(100) NOT NULL,
+  `DISPLAYNAME` varchar(45) NOT NULL,
+  `CONTENT` longtext CHARACTER SET utf8mb4 NOT NULL,
+  PRIMARY KEY (`USER_ID`,`DISPLAYNAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 
+-- Table structure for table `jmocha_user_mail_template`
+--
+DROP TABLE IF EXISTS `jmocha_user_mail_template`;
+CREATE TABLE `jmocha_user_mail_template` (
+  `USER_ID` varchar(100) NOT NULL,
+  `DISPLAYNAME` varchar(45) NOT NULL,
+  `TEMPLATE_ID` varchar(510) NOT NULL,
+  `REGDATE` datetime NOT NULL,
+  `EDITORTYPE` varchar(5) DEFAULT NULL,
+  `CONTENT` longtext DEFAULT NULL,
+  PRIMARY KEY (`USER_ID`,`DISPLAYNAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 
+-- Table structure for table `jmocha_mailbox_progress`
+--
+DROP TABLE IF EXISTS `jmocha_mailbox_progress`;
+CREATE TABLE `jmocha_mailbox_progress` (
+  `USER_KEY` varchar(80) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `USER_ID` varchar(80) NOT NULL,
+  `ACT` varchar(15) NOT NULL,
+  `PERCENT` mediumint(100) NOT NULL,
+  `UPDATEDT` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`USER_KEY`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --
 -- Temporary view structure for view `vaprdoingdoclist`
 --
@@ -15319,3 +15395,282 @@ inner join (
 inner join tbl_webfolder_folder fld 
 on fld.folder_path regexp folder.folder_path ) as folderInfo 
 on f.folder_id = folderInfo.folder_id;
+
+-- webfolder trigger
+DELIMITER //
+
+CREATE OR REPLACE TRIGGER update_dept_webfolder_name
+AFTER UPDATE ON tbl_deptmaster
+FOR EACH ROW
+BEGIN
+    IF NEW.displayname != OLD.displayname OR NEW.displayname2 != OLD.displayname2 THEN
+        UPDATE tbl_webfolder_folder SET folder_name1 = NEW.displayname, folder_name2 = NEW.displayname2 WHERE owner_id = NEW.cn AND folder_upper = 'root' AND folder_type IN ('C', 'D');
+    END IF;
+END; //
+
+CREATE OR REPLACE TRIGGER update_user_webfolder_name
+AFTER UPDATE ON tbl_usermaster
+FOR EACH ROW
+BEGIN
+    IF NEW.displayname != OLD.displayname OR NEW.displayname2 != OLD.displayname2 THEN
+        UPDATE tbl_webfolder_folder SET folder_name1 = NEW.displayname, folder_name2 = NEW.displayname2 WHERE owner_id = NEW.cn AND folder_upper = 'root' AND folder_type IN ('U');
+    END IF;
+END; //
+
+CREATE OR REPLACE TRIGGER tbl_webfolder_file_insert
+AFTER INSERT ON TBL_WEBFOLDER_FILE
+FOR EACH ROW
+BEGIN
+	INSERT INTO search_index_webfolder(FILEID, GUBUN, INSERTDATE, STATUS, TENANT_ID) VALUES(NEW.FILE_ID, 'I', now(), 'N', NEW.TENANT_ID );
+END; //
+
+CREATE OR REPLACE TRIGGER tbl_webfolder_file_update
+AFTER UPDATE ON TBL_WEBFOLDER_FILE
+FOR EACH ROW
+BEGIN
+	IF OLD.USE_STATUS != 'T' OR NEW.USE_STATUS != 'T' THEN
+		INSERT INTO search_index_webfolder(FILEID, GUBUN, INSERTDATE, STATUS, tenant_id) VALUES(NEW.FILE_ID, 'U', now(), 'N', NEW.TENANT_ID );
+    END IF;
+END; //
+
+CREATE OR REPLACE TRIGGER tbl_webfolder_file_delete
+AFTER UPDATE ON TBL_WEBFOLDER_FILE
+FOR EACH ROW
+BEGIN
+	IF OLD.USE_STATUS != 'T' AND NEW.USE_STATUS = 'T' THEN
+		INSERT INTO search_index_webfolder(FILEID, GUBUN, INSERTDATE, STATUS, TENANT_ID) VALUES(OLD.FILE_ID, 'D', now(), 'N', OLD.TENANT_ID );
+    END IF;
+END; //
+
+CREATE OR REPLACE TRIGGER tbl_webfolder_file_restore
+AFTER UPDATE ON TBL_WEBFOLDER_FILE
+FOR EACH ROW
+BEGIN
+	IF OLD.USE_STATUS = 'T' AND NEW.USE_STATUS != 'T' THEN
+		INSERT INTO search_index_webfolder(FILEID, GUBUN, INSERTDATE, STATUS, TENANT_ID) VALUES(NEW.FILE_ID, 'I', now(), 'N', NEW.TENANT_ID );
+    END IF;
+END; //
+
+DELIMITER ;
+
+-- ezEKP <-> ezTalk 간 인사연동 뷰 테이블(V_USERMASTER, V_DEPTMASTER, V_ADDJOBMASTER)
+-- V_USERMASTER
+CREATE OR REPLACE VIEW V_USERMASTER AS
+SELECT
+	v.USER_ID AS USER_ID,
+	v.NAME AS NAME,
+	v.NAME2 AS NAME2,
+	v.EMAIL AS EMAIL,
+	v.DEPT_ID AS DEPT_ID,
+	v.DEPT_NAME AS DEPT_NAME,
+	v.DEPT_NAME2 AS DEPT_NAME2,
+	v.TITLE AS TITLE,
+	v.TITLE2 AS TITLE2,
+	v.POSITION AS POSITION,
+	v.POSITION2 AS POSITION2,
+	v.TEL AS TEL,
+	v.MOBILE AS MOBILE,
+	v.PROFILE_IMAGE AS PROFILE_IMAGE,
+	v.JOB AS JOB,
+	v.COMP_NAME AS COMP_NAME,
+	v.COMP_NAME2 AS COMP_NAME2,
+	v.ORDER_BY AS ORDER_BY,
+	v.UPDATE_DATE AS UPDATE_DATE,
+	v.PHOTO_UPDATEDT AS PHOTO_UPDATEDT,
+	v.TENANT_ID AS TENANT_ID,
+	v.TYPE AS TYPE,
+	v.SORT_NUM AS SORT_NUM
+FROM
+	(
+	SELECT
+		USER.USER_ID AS USER_ID,
+		USER.NAME AS NAME,
+		USER.NAME2 AS NAME2,
+		USER.EMAIL AS EMAIL,
+		USER.DEPT_ID AS DEPT_ID,
+		USER.DEPT_NAME AS DEPT_NAME,
+		USER.DEPT_NAME2 AS DEPT_NAME2,
+		USER.TITLE AS TITLE,
+		USER.TITLE2 AS TITLE2,
+		USER.POSITION AS POSITION,
+		USER.POSITION2 AS POSITION2,
+		USER.TEL AS TEL,
+		USER.MOBILE AS MOBILE,
+		USER.PROFILE_IMAGE AS PROFILE_IMAGE,
+		USER.JOB AS JOB,
+		USER.COMP_NAME AS COMP_NAME,
+		USER.COMP_NAME2 AS COMP_NAME2,
+		USER.ORDER_BY AS ORDER_BY,
+		USER.UPDATE_DATE AS UPDATE_DATE,
+		USER.PHOTO_UPDATEDT AS PHOTO_UPDATEDT,
+		USER.TENANT_ID AS TENANT_ID,
+		USER.TYPE AS TYPE,
+		ROW_NUMBER() OVER ( PARTITION BY USER.DEPT_ID
+	ORDER BY
+		USER.ORDER_BY,
+		USER.NAME) - 1 AS SORT_NUM
+	FROM
+		(
+		SELECT
+			a.CN AS USER_ID,
+			a.DISPLAYNAME AS NAME,
+			a.DISPLAYNAME2 AS NAME2,
+			a.MAIL AS EMAIL,
+			a.DEPARTMENT AS DEPT_ID,
+			a.DESCRIPTION AS DEPT_NAME,
+			a.DESCRIPTION2 AS DEPT_NAME2,
+			a.EXTENSIONATTRIBUTE10 AS TITLE,
+			a.EXTENSIONATTRIBUTE102 AS TITLE2,
+			a.TITLE AS POSITION,
+			a.TITLE2 AS POSITION2,
+			a.TELEPHONENUMBER AS TEL,
+			a.MOBILE AS MOBILE,
+			a.EXTENSIONATTRIBUTE2 AS PROFILE_IMAGE,
+			a.INFO AS JOB,
+			a.COMPANY AS COMP_NAME,
+			a.COMPANY2 AS COMP_NAME2,
+			IF(a.EXTENSIONATTRIBUTE15 <> '',
+			CAST(a.EXTENSIONATTRIBUTE15 AS unsigned),
+			0) AS ORDER_BY,
+			a.UPDATEDT AS UPDATE_DATE,
+			a.PHOTO_UPDATEDT AS PHOTO_UPDATEDT,
+			a.TENANT_ID AS TENANT_ID,
+			'USER' AS TYPE
+		FROM
+			(jmocha.tbl_usermaster a
+		LEFT JOIN jmocha.tbl_usermaster_retire b ON
+			(a.CN = b.CN))
+		WHERE
+			b.CN IS NULL
+			AND a.DEPARTMENT NOT LIKE '%shared_mailbox_%'
+			AND a.CN <> 'masteradmin'
+	UNION ALL
+		SELECT
+			a.CN AS USER_ID,
+			b.DISPLAYNAME AS NAME,
+			b.DISPLAYNAME2 AS NAME2,
+			b.MAIL AS EMAIL,
+			a.DEPTID AS DEPT_ID,
+			b.DESCRIPTION AS DEPT_NAME,
+			b.DESCRIPTION2 AS DEPT_NAME2,
+			a.POSITIONCD AS TITLE,
+			a.POSITIONCD AS TITLE2,
+			a.TITLE AS POSITION,
+			a.TITLE2 AS POSITION2,
+			b.TELEPHONENUMBER AS TEL,
+			b.MOBILE AS MOBILE,
+			b.EXTENSIONATTRIBUTE2 AS PROFILE_IMAGE,
+			b.INFO AS JOB,
+			b.COMPANY AS COMP_NAME,
+			b.COMPANY2 AS COMP_NAME2,
+			IF(a.ORDERBY <> '',
+			CAST(a.ORDERBY AS unsigned),
+			0) AS ORDER_BY,
+			b.UPDATEDT AS UPDATE_DATE,
+			b.PHOTO_UPDATEDT AS PHOTO_UPDATEDT,
+			b.TENANT_ID AS TENANT_ID,
+			'ADDJOB' AS TYPE
+		FROM
+			(jmocha.tbl_addjobmaster a
+		JOIN jmocha.tbl_usermaster b ON
+			(a.CN = b.CN))) USER) v
+WHERE
+	v.TYPE = 'USER';
+	
+-- V_DEPTMASTER
+CREATE OR REPLACE VIEW V_DEPTMASTER AS
+    SELECT 
+        tbl_deptmaster.CN AS DEPT_ID,
+        tbl_deptmaster.DISPLAYNAME AS NAME,
+        tbl_deptmaster.DISPLAYNAME2 AS NAME2,
+        tbl_deptmaster.MAIL AS EMAIL,
+        tbl_deptmaster.EXTENSIONATTRIBUTE1 AS PARENT_ID,
+        tbl_deptmaster.DEPT_CD_PATH AS DEPT_CD_PATH,
+        tbl_deptmaster.EXTENSIONATTRIBUTE2 AS COMP_ID,
+        tbl_deptmaster.EXTENSIONATTRIBUTE3 AS COMP_NAME,
+        tbl_deptmaster.COMPNM2 AS COMP_NAME2,
+        IF(tbl_deptmaster.EXTENSIONATTRIBUTE15 <> '',
+            CAST(tbl_deptmaster.EXTENSIONATTRIBUTE15 AS UNSIGNED),
+            0) AS ORDER_BY,
+        tbl_deptmaster.USEFLAG AS USEFLAG,
+        tbl_deptmaster.UPDATEDT AS UPDATEDT,
+        tbl_deptmaster.TENANT_ID AS TENANT_ID
+    FROM
+        tbl_deptmaster
+    WHERE
+        tbl_deptmaster.CN NOT LIKE '%shared_mailbox_%'
+            AND tbl_deptmaster.CN NOT LIKE '%trash_dept_%'
+            AND tbl_deptmaster.CN <> 'Top'
+            AND tbl_deptmaster.DEPT_CD_PATH NOT LIKE '%trash_dept_%';
+            
+
+-- V_ADDJOBMASTER
+CREATE OR REPLACE VIEW V_ADDJOBMASTER AS            
+SELECT
+	v.USER_ID AS USER_ID,
+	v.NAME AS NAME,
+	v.DEPT_ID AS DEPT_ID,
+	v.POSITION AS POSITION,
+	v.POSITION2 AS POSITION2,
+	v.ORDER_BY AS ORDER_BY,
+	v.UPDATEDT AS UPDATEDT,
+	v.TENANT_ID AS TENANT_ID,
+	v.TYPE AS TYPE,
+	v.SORT_NUM AS SORT_NUM
+FROM
+	(
+	SELECT
+		USER.USER_ID AS USER_ID,
+		USER.NAME AS NAME,
+		USER.DEPT_ID AS DEPT_ID,
+		USER.POSITION AS POSITION,
+		USER.POSITION2 AS POSITION2,
+		USER.ORDER_BY AS ORDER_BY,
+		USER.UPDATEDT AS UPDATEDT,
+		USER.TENANT_ID AS TENANT_ID,
+		USER.TYPE AS TYPE,
+		ROW_NUMBER() OVER ( PARTITION BY USER.DEPT_ID
+	ORDER BY
+		USER.ORDER_BY,
+		USER.NAME) - 1 AS SORT_NUM
+	FROM
+		(
+		SELECT
+			a.CN AS USER_ID,
+			a.DISPLAYNAME AS NAME,
+			a.DEPARTMENT AS DEPT_ID,
+			a.TITLE AS POSITION,
+			a.TITLE2 AS POSITION2,
+			IF(a.EXTENSIONATTRIBUTE15 <> '',
+			CAST(a.EXTENSIONATTRIBUTE15 AS unsigned),
+			0) AS ORDER_BY,
+			a.UPDATEDT AS UPDATEDT,
+			a.TENANT_ID AS TENANT_ID,
+			'USER' AS TYPE
+		FROM
+			(jmocha.tbl_usermaster a
+		LEFT JOIN jmocha.tbl_usermaster_retire b ON
+			(a.CN = b.CN))
+		WHERE
+			b.CN IS NULL
+			AND a.DEPARTMENT NOT LIKE '%shared_mailbox_%'
+			AND a.CN <> 'masteradmin'
+	UNION ALL
+		SELECT
+			a.CN AS USER_ID,
+			b.DISPLAYNAME AS NAME,
+			a.DEPTID AS DEPT_ID,
+			a.TITLE AS POSITION,
+			a.TITLE2 AS POSITION2,
+			IF(a.ORDERBY <> '',
+			CAST(a.ORDERBY AS unsigned),
+			0) AS ORDER_BY,
+			current_timestamp() AS UPDATEDT,
+			a.TENANT_ID AS TENANT_ID,
+			'ADDJOB' AS TYPE
+		FROM
+			(jmocha.tbl_addjobmaster a
+		JOIN jmocha.tbl_usermaster b ON
+			(a.CN = b.CN))) USER) v
+WHERE
+	v.TYPE = 'ADDJOB';

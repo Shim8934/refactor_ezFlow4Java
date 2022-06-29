@@ -51,6 +51,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPersonal.dao.EzPersonalDAO;
 import egovframework.ezEKP.ezResource.dao.EzResourceAdminDAO;
+import egovframework.ezEKP.ezSystem.vo.PermissionInfoVO;
 import egovframework.let.user.login.dao.LoginDAO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -2614,6 +2615,17 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 
 		logger.debug("getAutoDeleteOfRetireUserList ended.");
 		return result;
+	}
+
+	@Override
+	public void insertPermissionChHist(List<PermissionInfoVO> vo) throws Exception {
+		logger.debug("insertPermissionChHist started");
+
+		for (PermissionInfoVO userVO : vo) {
+			ezOrganAdminDao.insertPermissionChHist(userVO);
+		}
+
+		logger.debug("insertPermissionChHist ended");
 	}
 
 }

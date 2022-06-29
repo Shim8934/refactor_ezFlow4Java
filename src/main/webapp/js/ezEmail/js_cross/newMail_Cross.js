@@ -37,8 +37,8 @@ function MailToMe_Onclick() {
 var BigSizeAttach = false;
 var pBigFileUpload = "N";
 function open_userinfo(cn) {
-    var feature = "height=500px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
-    feature = feature + GetOpenPosition(420, 500);
+    var feature = "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+    feature = feature + GetOpenPosition(420, 450);
     window.open("/ezCommon/showPersonInfo.do?id=" + cn, "", feature);
 }
 
@@ -2535,7 +2535,7 @@ function ConvertEmbedImagToXml(xmlDoc, rootNode) {
     var imgColl = tempDiv.getElementsByTagName("IMG");
     for (var i = 0; i < imgColl.length; i++) {
         if (imgColl.item(i).src.toLowerCase().indexOf("upload_common") > 0 || imgColl.item(i).src.toLowerCase().indexOf("mailsignimage") > 0
-        	|| imgColl.item(i).src.toLowerCase().indexOf("letterboxupload") > 0 ) {
+        	|| imgColl.item(i).src.toLowerCase().indexOf("letterboxupload") > 0 || imgColl.item(i).src.toLowerCase().indexOf("mailtemplate") > 0) {
             var imagePath = imgColl.item(i).src;            
         	var srcValue = imgColl.item(i).getAttribute("src");
 

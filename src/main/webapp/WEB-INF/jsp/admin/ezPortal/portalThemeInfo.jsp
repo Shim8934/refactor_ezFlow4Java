@@ -125,7 +125,7 @@
 	            xmlhttp.open("POST", "/admin/ezPortal/saveThemeInfo.do", false);
 	            xmlhttp.send(xmlpara);
 	            if (xmlhttp != null && xmlhttp.readyState == 4) {
-	                if (xmlhttp.statusText == "OK") {
+	                if (xmlhttp.status == 200) {
 	                    alert("<spring:message code='ezPortal.t121'/>"); 
 	
 	                    if (ReturnFunction != null)

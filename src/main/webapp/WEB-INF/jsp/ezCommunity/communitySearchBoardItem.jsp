@@ -109,9 +109,9 @@
 					}
 					
 					if (gubun == "2") {
-						listXML += "<td class='"+ urgency +"'><div style='cursor:pointer'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterName").trim() + "</div></td>";
+						listXML += "<td class='"+ urgency +"'><div style='cursor:pointer'>" + MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterName").trim()) + "</div></td>";
 					} else {
-						listXML += "<td class='"+ urgency +"'><div style='cursor:pointer' onclick='MemberInfo_onclick(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterDeptID").trim() + "\")'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterName").trim() + "</div></td>";
+						listXML += "<td class='"+ urgency +"'><div style='cursor:pointer' onclick='MemberInfo_onclick(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterDeptID").trim() + "\")'>" + MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterName").trim()) + "</div></td>";
 					}
 
 					listXML += "<td class='"+ urgency +"'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriteDate").split(' ')[0] + "</td>";
@@ -325,7 +325,7 @@
 			
 			var checkpassword_dialogArguments = new Array();   		
     		function DeleteItem_onclick() {	
-    			if(strListInfo == "") {
+    			if (strListInfo == "") {
     				alert("<spring:message code='ezCommunity.t424' />");
     				return;
     			}
@@ -339,7 +339,7 @@
     				}
     			}
 
-    			if(Delete_FG != "true") {
+    			if (Delete_FG != "true") {
     				alert("<spring:message code='ezCommunity.t901' />");
     				return;
     			}
@@ -370,27 +370,6 @@
     		            return;
     		        }
     		    } else {
-    		    	if (gubun == "2") {
-    		    		if (gubun == "2") {
-        		            var pItemInfo = strListInfo.split(";")[0];
-        		            var pItemID = pItemInfo.split(",")[0];
-
-        		            if (pItemID != "") {
-       		                    checkpassword_dialogArguments[1] = DeleteItem_onclick_Complete;
-       		                    var OpenWin = window.open("/ezCommunity/checkPassword.do?itemID=" + encodeURIComponent(pItemID), "checkPassword", GetOpenWindowfeature(470, 200));
-       		                    
-       		                    try {
-       		                    	OpenWin.focus();
-       		                    	
-       		                    } catch (e) {
-       		                    	
-       		                    }
-        		            }
-    		    		}
-    		    	}
-    		    }
-    		    
-    		    if(gubun != "2"){
     		        var ret = confirm("<spring:message code='ezCommunity.t426' />");
     		        if (ret) {
     		        	DeleteItem();
@@ -739,8 +718,8 @@
 			
 			/* 2018-10-02 홍승비 - 커뮤니티 게시물 리스트 > 게시자 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정 */
 			function MemberInfo_onclick(pUserID, pDeptID) {
-			    var feature = "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
-			    feature = feature + GetOpenPosition(420, 438);
+			    var feature = "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+			    feature = feature + GetOpenPosition(420, 450);
 			    window.open("/ezCommon/showPersonInfo.do?id=" + pUserID + "&dept=" + pDeptID, "", feature);
 			}
 

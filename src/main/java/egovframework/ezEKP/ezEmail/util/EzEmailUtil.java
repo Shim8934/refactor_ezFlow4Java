@@ -83,6 +83,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.util.encoders.Hex;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -5726,7 +5727,9 @@ public class EzEmailUtil {
     	Part rePart = null;
     	
     	try {
-    		if(part.isMimeType("multipart/alternative")){
+    		logger.debug("getIcalMailPart:{}", part.getContentType());
+    		
+    		if(part.isMimeType("multipart/alternative") || part.isMimeType("multipart/MIXED")){
     			Multipart mp = (Multipart)part.getContent();
     			int count = mp.getCount();
     			Part p = null;
@@ -5763,8 +5766,9 @@ public class EzEmailUtil {
     	String summary     = vo.getSummaryStr().isEmpty() ? untitledMsg : vo.getSummaryStr();
     	String period      = getIcalPeriodStr(vo);
     	String location    = vo.getLocationStr();
-    	String descBody    = vo.getAltDescStr();
-    	       descBody    = (descBody == null || descBody.equals("")) ? vo.getDescriptionStr() : descBody;
+    	String descBody    = StringUtils.defaultString(vo.getAltDescStr());
+		descBody = addTargetBlank(descBody);
+    	descBody = (descBody == null || descBody.equals("")) ? vo.getDescriptionStr() : descBody;
     	       
 		PropertyList<Attendee> attendeeList = vo.getAttendee();
     	
@@ -5806,7 +5810,12 @@ public class EzEmailUtil {
 						sb.append("<td>");
 							for (Attendee attendee : attendeeList) {
 								String mailto = attendee.getCalAddress().getSchemeSpecificPart().toString();
-								String cn = attendee.getParameter(Parameter.CN).getValue();
+								String cn = mailto;
+										
+								Parameter cnParam = attendee.getParameter(Parameter.CN);
+								if (cnParam != null) {
+									cn = cnParam.getValue();
+								}
 								
 								String spanTmp = String.format("<span title='%s'>%s</span>", mailto, cn);
 								sb.append(spanTmp);

@@ -364,7 +364,7 @@
 		    }
 		    function event_getDeptFullTree() {
 		        if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
-		            if (g_xmlHTTP.statusText == "OK") {
+		            if (g_xmlHTTP.status == 200) {
 		                if (!bSearch) {
 		                    try {
 		                        if (CrossYN())
@@ -2611,7 +2611,7 @@
 	            window.open("/ezCommon/showPersonInfo.do?id=" + id + "&dept=" + dept, "", "height=" + height + ",width=" + width + ", left=" + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" + topPosition + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	        }
 	        function open_userinfo(cn) {
-	            window.showModalDialog("/ezCommon/showPersonInfo.do?id=" + cn, "", "dialogHeight=500px;dialogWidth=420px;status:no;scroll:auto; help:no; edge:sunken");
+	            window.showModalDialog("/ezCommon/showPersonInfo.do?id=" + cn, "", "dialogHeight=450px;dialogWidth=420px;status:no;scroll:auto; help:no; edge:sunken");
 	        }
 	        var mail_select_dlmember_cross_dialogArguments = new Array();
 	        function dlmember_click() {

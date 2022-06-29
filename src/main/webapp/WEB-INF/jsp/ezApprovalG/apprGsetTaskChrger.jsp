@@ -268,7 +268,7 @@
         oXmlhttp.send(xmlpara);
         
         if (oXmlhttp != null && oXmlhttp.readyState == 4) {
-         	 if (oXmlhttp.statusText == "OK") {
+         	 if (oXmlhttp.status == 200) {
          	     var rtnXml = oXmlhttp.responseXML;
                  var DataNodes = GetChildNodes(rtnXml);
                  if (getNodeText(DataNodes[0]) == "TRUE")

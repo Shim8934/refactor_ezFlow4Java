@@ -8,6 +8,7 @@
 	<typeAlias alias="AccessIdVO" type="egovframework.ezEKP.ezSystem.vo.AccessIdVO"/>
 	<typeAlias alias="PasswordPolicyVO" type="egovframework.ezEKP.ezSystem.vo.PasswordPolicyVO"/>
 	<typeAlias alias="MainVO" type="egovframework.let.main.vo.MainVO"/>
+	<typeAlias alias="PermissionInfoVO" type="egovframework.ezEKP.ezSystem.vo.PermissionInfoVO"/>
 	
 	<select id="EzSystemAdminDAO.getSysParam" parameterClass="Integer" resultClass="SysParamVO">
 		<![CDATA[
@@ -541,6 +542,64 @@
 		]]>
 	</update>
 	
+	<select id="EzSystemAdminDAO.getAdminAccessIPBand" parameterClass="Integer" resultClass="IPBandVO">
+		<![CDATA[
+			SELECT
+				IPNO, 
+				IPADDRESS,
+				ALLOW_ACCESS AS "ACCESS",
+				EXPLANATION
+			FROM 
+				TBL_ADMIN_ACCESS_IP
+			WHERE 
+				TENANT_ID=#tenantID#
+		]]>
+	</select>
+	
+	<insert id="EzSystemAdminDAO.insertAdminIPBand" parameterClass="Map">
+		<selectKey resultClass="int" keyProperty="id">
+			SELECT TBL_ADMIN_ACCESS_IP_SEQ2.NEXTVAL FROM SYS.DUAL
+		</selectKey>
+		<![CDATA[
+			INSERT INTO 
+				TBL_ADMIN_ACCESS_IP (IPNO, TENANT_ID, IPADDRESS, ALLOW_ACCESS, EXPLANATION) 
+			VALUES (#id#, #tenantID#, #ipAddress#, #access#, #explanation#)
+		]]>
+	</insert>
+	
+	<update id="EzSystemAdminDAO.updateAdminIPBand" parameterClass="Map">
+		<![CDATA[
+			UPDATE 
+				TBL_ADMIN_ACCESS_IP
+			SET 
+				IPADDRESS=#ipAddress#,
+				ALLOW_ACCESS=#access#,
+				EXPLANATION=#explanation#
+			WHERE 
+				IPNO=#ipNo#
+		]]>
+	</update>
+	
+	<select id="EzSystemAdminDAO.getSystemAdminIPBand" parameterClass="Integer" resultClass="IPBandVO">
+		<![CDATA[
+			SELECT 
+				IPADDRESS,
+				ALLOW_ACCESS AS "ACCESS",
+				EXPLANATION
+			FROM 
+				TBL_ADMIN_ACCESS_IP
+			WHERE 
+				IPNO=#ipNo#
+		]]>
+	</select>
+	<delete id="EzSystemAdminDAO.deleteAdminIPBand" parameterClass="java.util.List">
+		<![CDATA[
+			DELETE FROM
+				TBL_ADMIN_ACCESS_IP
+            ]]> <iterate prepend="WHERE IPNO IN" open="(" close=")" conjunction=",">#ipNoList[]#</iterate>
+       
+	</delete>
+
 	<insert id="EzSystemAdminDAO.insertCompanyConfigParam" parameterClass="SysParamVO">
 		<![CDATA[
 			INSERT INTO 
@@ -762,5 +821,138 @@
 			AND C.USERID LIKE '%'||#search_keyword#||'%' ESCAPE '\'
 		</isEqual>
 	</select>
-	
+
+	<!-- 회사관리자가 전체관리자 이력을 조회 할 수 있도록 주석 처리, 조회 못 하도록 하기 위해서는 아래 주석을 풀면 됨 -->
+	<sql id="EzSystemAdminDAO.searchQueryForPermissionChList">
+		<isNotEmpty property="search_keycode" prepend="and">
+			<isNotEmpty property="search_keyword" >
+				<isEqual property="lang" compareValue="primary" >
+					<isEqual property="search_keycode" compareValue="1">
+						USERNM LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="2">
+						DEPTNM LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+					</isEqual>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="primary">
+					<isEqual property="search_keycode" compareValue="1">
+						USERNM2 LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="2">
+						DEPTNM2 LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+					</isEqual>
+				</isNotEqual>
+			</isNotEmpty>
+		</isNotEmpty>
+		<!-- <isEmpty property="isMasterAdmin" prepend="and">
+			ADMINTYPE NOT LIKE 'c='||'%' ESCAPE '\'
+		</isEmpty> -->
+		<isNotEmpty property="search_keycodeForRoll" prepend="and">
+			ADMINTYPE LIKE '%'||#search_keycodeForRoll#||'%' ESCAPE '\'
+		</isNotEmpty>
+		<isNotEmpty property="startDate" prepend="and">
+			<![CDATA[
+			TO_CHAR((AUTHORIZEDTIME + #offset# / (24 * 60)),'YYYY-MM-DD') >= #startDate#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="endDate" prepend="and">
+			<![CDATA[
+			TO_CHAR((AUTHORIZEDTIME + #offset# / (24 * 60)),'YYYY-MM-DD') <= #endDate#
+			]]>
+		</isNotEmpty>
+	</sql>
+
+	<select id="EzSystemAdminDAO.getPermissionChHist" parameterClass="map" resultClass="PermissionInfoVO">
+		SELECT
+			X.rnum,
+		    TO_CHAR((X.AUTHORIZEDTIME + #offset# / (24 * 60)),'YYYY-MM-DD HH24:MI:SS') AS AUTHORIZEDTIME,
+            X."SEQUENCE",
+            X.USERID,
+            X.USERNM,
+            X.USERNM2,
+            X.DEPTNM,
+            X.DEPTNM2,
+			X.COMPANYID,
+			X.COMPANYNM,
+			X.COMPANYNM2,
+			X.ADMINTYPE,
+			X.STATUS,
+			X.AUTHORIZERID,
+			X.AUTHORIZERNM,
+			X.AUTHORIZERNM2,
+			X.AUTHORIZERIP
+		FROM (
+			SELECT
+				ROWNUM AS rnum,
+			    A.AUTHORIZEDTIME,
+				A."SEQUENCE",
+				A.USERID,
+				A.USERNM,
+				A.USERNM2,
+				A.DEPTNM,
+				A.DEPTNM2,
+				A.COMPANYID,
+				A.COMPANYNM,
+				A.COMPANYNM2,
+				A.ADMINTYPE,
+				A.STATUS,
+				A.AUTHORIZERID,
+				A.AUTHORIZERNM,
+				A.AUTHORIZERNM2,
+				A.AUTHORIZERIP
+			FROM
+				(
+				SELECT
+				    C.AUTHORIZEDTIME,
+					C."SEQUENCE",
+					C.USERID,
+					C.USERNM,
+					C.USERNM2,
+					C.DEPTNM,
+					C.DEPTNM2,
+					C.COMPANYID,
+					C.COMPANYNM,
+					C.COMPANYNM2,
+					C.ADMINTYPE,
+					C.STATUS,
+					C.AUTHORIZERID,
+					C.AUTHORIZERNM,
+					C.AUTHORIZERNM2,
+					C.AUTHORIZERIP
+				FROM
+					TBL_PERMISSION_CHANGE_INFO C
+				WHERE
+					C.TENANT_ID=#v_tenantID#
+					$companyOracleStr$
+					<include refid="EzSystemAdminDAO.searchQueryForPermissionChList"/>
+					<isEqual property="search_keycode" compareValue="6">
+						AND C.USERID LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+					</isEqual>
+			    ORDER BY
+					C."SEQUENCE" DESC
+				) A
+		<isNotEqual property="v_start" compareValue="-1">
+			<![CDATA[
+				WHERE ROWNUM <= (#pageCount# + #v_start#)
+			]]>
+		</isNotEqual>
+			) X
+		<isNotEqual property="v_start" compareValue="-1">
+			<![CDATA[
+				WHERE X.rnum >= (#v_start# + 1)
+			]]>
+		</isNotEqual>
+	</select>
+
+	<select id="EzSystemAdminDAO.getPermissionChHistCount" parameterClass="map" resultClass="int">
+		SELECT 	COUNT(SEQUENCE)
+		FROM   	TBL_PERMISSION_CHANGE_INFO C
+		WHERE	C.TENANT_ID = #v_tenantID#
+		$companyOracleStr$
+		<include refid="EzSystemAdminDAO.searchQueryForPermissionChList"/>
+		<isEqual property="search_keycode" compareValue="6">
+			AND C.USERID LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+		</isEqual>
+	</select>
+
 </sqlMap>

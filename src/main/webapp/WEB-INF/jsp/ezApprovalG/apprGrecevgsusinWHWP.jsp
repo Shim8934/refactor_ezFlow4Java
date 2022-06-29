@@ -322,6 +322,8 @@
 			}
 			
 			function Editor_Complete() {
+				showLoadingProgress();
+				
 				if (pSusinDocURL != "") {
 		            if (pSusinDocURL == "PC") {
 		                //HwpCtrl.LoadFile("", false);
@@ -366,7 +368,7 @@
 			            if (isRelay) {
 			                try {
 			                    if (getNodeText(pRelayDocInfo.getElementsByTagName("isPKI").item(0)) == "Y") {
-			                        //hideProgress();
+			                        hideLoadingProgress();
 			
 			                        if (!getPasswdEnd()) {
 			                            var pAlertContent = "<spring:message code='ezApprovalG.t27'/><br> <spring:message code='ezApprovalG.t237'/>";
@@ -407,7 +409,7 @@
 			                }
 			            }
 			            else {
-			                //hideProgress();
+			                hideLoadingProgress();
 			                chkBtnConfirm("1");
 			                document.getElementById("btnRefresh").style.display = "";
 			                return;
@@ -423,7 +425,7 @@
 			    if (isTrue) {
 			
 			        SetReceiptNumber();
-			        //hideProgress();
+			        hideLoadingProgress();
 			        setMenuBar("btnEdit", false);
 			
 			        setAutoProperty();
@@ -466,7 +468,7 @@
 			        }
 			    }
 			    else {
-			        //hideProgress();
+			    	hideLoadingProgress();
 			        var pAlertContent = "<spring:message code='ezApprovalG.t369'/>";
 			        OpenAlertUI(pAlertContent);
 			        message.Clear();
@@ -1521,7 +1523,7 @@
 			    parameter[9] = false;
 			    parameter[10] = pDocType;
 			    parameter[11] = "";
-			    parameter[12] = "DRAFT";
+			    parameter[12] = "RECV";
 			    parameter[28] = onlydocinfiview;
 			    parameter[30] = cabinetID;
 			    parameter[31] = tempSecurity;
@@ -1990,5 +1992,8 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
+		<div style="width: 200px; height: 50px; border: 0px solid red; text-align: center; vertical-align: middle; display: none; z-index: 9000; position: absolute;" id="loadingLayer">
+	        <img src="/images/email/progress_img.gif" style="vertical-align: middle;" />
+	    </div>
 	</body>
 </html>

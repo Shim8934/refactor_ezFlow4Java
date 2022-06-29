@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
@@ -40,7 +42,11 @@ import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.service.impl.EzApprovalGKlibServiceImpl;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachOptionVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocInfoWebSrvVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGGroupDocInfoVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
@@ -549,7 +555,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String saveLocalPath = pDirTempPath + commonUtil.separator + newfilename;
 		String orgFileName = sFileTitle + "." + sExt;            
 		//long fileSize = 0; //2019.03.25 천성준 - 사용안해서 일단 주석
-		if (useExtension.toLowerCase().indexOf(sExt.toLowerCase()) == -1 && !useExtension.equals("*")) {
+		// dhlee : 20220527 - 파일 업로드 시 .으로 끝나는 파일(예: .jsp.)이 무조건 업로드 허용되는 문제 수정
+		if ((sExt.isEmpty() || useExtension.toLowerCase().indexOf(sExt.toLowerCase()) == -1) && !useExtension.equals("*")) {
 			extResult = "denied";
 		} else {
 			// 대용량 첨부파일의 경우에는 후에 다운로드 받을 때 파일명을 내려보내기 위해 원 파일명을 저장한다.                
@@ -1192,7 +1199,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		if (!beforeDocID.isEmpty()) {
 			beforeUrl = ezApprovalGService.getDocHref(beforeDocID, "END", "", "", userInfo.getCompanyID(), userInfo.getTenantId());
 		}
-		
+				
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("hwpToolbar", hwpToolbar);
 		model.addAttribute("approvalPWD", approvalPWD);
@@ -1239,7 +1246,18 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
 		model.addAttribute("preSusinGroupStr", preSusinGroupStr);
 
-		LOGGER.debug("draftuiWHWP ended");
+		// 2022-03-03 박기범 : 양식파일 경로 추가
+		String formPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "form" + commonUtil.separator;
+
+		if (isTmpDoc != null && !isTmpDoc.isEmpty()) {
+			formPath += ezApprovalGService.getFormIdFromApr(isTmpDoc, userInfo.getCompanyID(), userInfo.getTenantId());
+		} else {
+			formPath += formId;
+		}
+
+		model.addAttribute("formPath", formPath + ".hwp");
+
+		LOGGER.debug("draftuiWHWP ended. formPath:" + formPath);
 		
 		return "ezApprovalG/apprGdraftuiWHWP";
 	}
@@ -1892,6 +1910,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	    String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
 	    String approvalRoot = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator;
 	    String orgCompanyID = request.getParameter("orgCompanyID");
+	    String recordID = request.getParameter("recordID") != null ? request.getParameter("recordID") : ""; // 시행문의 반송을 위한 recordID 추가
 
         boolean isConvSihang = false;
         if (request.getRequestURI().endsWith("ezConvSihang_WHWP.do")) {
@@ -1926,6 +1945,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	    model.addAttribute("orgCompanyID", orgCompanyID);
 	    model.addAttribute("docTitle", docTitle);
 	    model.addAttribute("isConvSihang", isConvSihang);
+	    model.addAttribute("recordID", recordID);
 	    model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
 		// 대용량첨부 관련 정보
 		model.addAttribute("bigAttachDownloadPeriod", bigAttachDownloadPeriod); // 다운로드 기간
@@ -2053,4 +2073,602 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		LOGGER.debug("hwpctrlmain ended.");
 		return "ezApprovalG/hwpctrlmain";
 	}
+	
+	/* 2022-01-11 홍승비 - 전자결재G 웹한글기안기 일괄기안 기능 추가 */
+	/**
+	 * 전자결재 웹한글기안기 일괄기안 페이지 호출
+	 */
+	@RequestMapping(value = "/ezApprovalG/draftuiAll_WHWP.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
+	public String draftuiAll_WHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("draftuiAll_WHWP started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String susinAdmin = "";
+		String formURL = request.getParameter("formURL") != null ? request.getParameter("formURL") : ""; // 필수는 아니다. 
+		String draftFlag = request.getParameter("draftFlag") != null ? request.getParameter("draftFlag") : "DRAFT"; // 임시저장이나 재기안이 아닌 경우, draftFlag를 기안으로 고정
+		String formDocType = request.getParameter("formDocType") != null ? request.getParameter("formDocType") : "";
+		String susinSN = request.getParameter("susinSN") != null ? request.getParameter("susinSN") : "";
+		String docState = request.getParameter("docState") != null ? request.getParameter("docState") : "";
+		String listType = request.getParameter("listType") != null ? request.getParameter("listType") : "";
+		String aprState = request.getParameter("aprState") != null ? request.getParameter("aprState") : "";
+		String isTmpDoc = request.getParameter("isTmpDoc") != null ? request.getParameter("isTmpDoc") : ""; // 반송문서 재기안 시 docID, 임시보관문서 재기안 시 docSN이 전달됨
+		String nonElecRec = ""; // 일괄기안 기능은 비전자기록물 등록을 지원하지 않음
+		String docSN = "";
+		
+		if (listType.equals("21")) {
+			if (request.getParameter("docSN") != null) {
+				docSN = request.getParameter("docSN");
+			}
+		}
+		
+		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) { // 수발신담당자
+			susinAdmin = "YES";
+		} else {
+			susinAdmin = "NO";
+		}
+		
+		String dirPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0,4) + commonUtil.separator;
+		
+		String optSignDateFormat = ezApprovalGService.getOptionInfo("A15", "002", userInfo, "CODE");
+		String optIsSplit = ezApprovalGService.getOptionInfo("A33", "001", userInfo, "CODE");
+		String optSplitKind = ezApprovalGService.getOptionInfo("A33", "002", userInfo, "CODE");
+		String sihangURL = ezApprovalGService.getOptionInfo("A36", "004", userInfo, "CODE");
+		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+		String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String useReceiveDocNo = ezCommonService.getTenantConfig("useReceiveDocNo", userInfo.getTenantId());
+		String docNumZeroCnt = ezApprovalGService.getDocNumZeroCnt(userInfo.getCompanyID(), userInfo.getTenantId());
+		/* 2020-03-31 홍승비 - 재기안 시 반송의견 유지여부 컨피그 추가 */
+		String useRedraftOpinionKeep = ezCommonService.getTenantConfig("useRedraftOpinionKeep", userInfo.getTenantId());
+		
+		/* 2020-11-13 홍승비 - 대용량첨부 관련 파라미터 추가 */
+		String bigSizeAttachDownloadLimitCount = ezCommonService.getTenantConfig("ApprBigSizeAttachDownloadLimitCount", userInfo.getTenantId()); // 전자결재 대용량 첨부파일 다운로드 횟수제한
+		String bigAttachDownloadDay = ezCommonService.getTenantConfig("BigSizeApprAttachDelDay", userInfo.getTenantId()); // 전자결재 대용량 첨부파일 보존기간
+		String bigAttachDownloadPeriod = EgovDateUtil.getToday("/") + " ~ " + EgovDateUtil.addDay(EgovDateUtil.getToday("/"), Integer.parseInt(bigAttachDownloadDay), "yyyy/MM/dd");
+		
+		String preSusinGroupStr = ezApprovalGService.getCode2Name("A53", "001", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		
+		// 일괄기안 가능 양식 리스트
+		List<ApprGFormVO> apprGFormVOList = ezApprovalGService.getDraftAllFormInfo(userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId());
+		String groupDocSN = ""; // 임시저장 또는 재기안된 문서의 일괄기안그룹 DOCID
+		List<ApprGGroupDocInfoVO> groupDocInfoList = new ArrayList<ApprGGroupDocInfoVO>();
+		
+		/* 2022-01-21 홍승비 - 일괄기안된 문서의 재기안인 경우, request 데이터를 그대로 가져가 일괄기안창으로 포워드 */
+		if (draftFlag != null && draftFlag.equals("REDRAFT")) {
+			
+			if (listType.equals("21")) { // 임시보관함
+				// 임시저장된 문서의 경우, docSN에 해당 문서의 임시저장용 DOCID가 들어있다. (사용자ID@순번 형태)
+				// 웹한글기안기의 비동기 동작으로 1안이 늦게 저장되어 GROUPDOCSN값이 다를 수 있다. 따라서 정상적인 GROUPDOCSN값을 다시 가져오도록 한다.
+				groupDocSN = ezApprovalGService.getGroupDocSN(docSN, userInfo.getTenantId(), userInfo.getCompanyID());
+				groupDocInfoList = ezApprovalGService.getGroupDocList(groupDocSN, "TMP", userInfo.getTenantId(), userInfo.getCompanyID());
+			}
+			else { // 반송문서 재기안 (isTmpDoc = docID)
+				groupDocSN = ezApprovalGService.getGroupDocSN(isTmpDoc, userInfo.getTenantId(), userInfo.getCompanyID());
+				groupDocInfoList = ezApprovalGService.getGroupDocList(groupDocSN, "APR", userInfo.getTenantId(), userInfo.getCompanyID());
+			}
+		}
+		
+		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("hwpToolbar", hwpToolbar);
+		model.addAttribute("approvalPWD", approvalPWD);
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("dirPath", dirPath);
+		model.addAttribute("susinAdmin", susinAdmin);
+		model.addAttribute("formURL", formURL);
+		model.addAttribute("draftFlag", draftFlag);
+		model.addAttribute("formDocType", formDocType);
+		model.addAttribute("susinSN", susinSN);
+		model.addAttribute("docState", docState);
+		model.addAttribute("listType", listType);
+		model.addAttribute("aprState", aprState);
+		model.addAttribute("isTmpDoc", isTmpDoc);
+		model.addAttribute("optSignDateFormat", optSignDateFormat);
+		model.addAttribute("optIsSplit", optIsSplit);
+		model.addAttribute("optSplitKind", optSplitKind);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("sihangURL", sihangURL);
+		model.addAttribute("docSN", docSN);
+		model.addAttribute("isHWP", "Y");
+		model.addAttribute("nonElecRec", nonElecRec);
+		model.addAttribute("useReceiveDocNo", useReceiveDocNo);
+		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
+		model.addAttribute("useOpenGov", config.getProperty("config.useOpenGov"));
+		model.addAttribute("useRedraftOpinionKeep", useRedraftOpinionKeep);
+		//결재 세부정보
+		String formId = ezApprovalGService.getFormId(formURL);
+		String formAprOption = ezApprovalGService.getFormAprOptionInfo(formId, "FORM", userInfo.getCompanyID(), userInfo.getTenantId());
+		model.addAttribute("formAprOption", formAprOption);
+		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
+		
+		// 대용량첨부 관련 정보
+		model.addAttribute("bigAttachDownloadPeriod", bigAttachDownloadPeriod); // 다운로드 기간
+		model.addAttribute("bigAttachDownloadDay", bigAttachDownloadDay); // 보관되는 일수
+		model.addAttribute("bigSizeAttachDownloadLimitCount", bigSizeAttachDownloadLimitCount); // 다운로드 횟수
+		
+		// 비전자문서의 기안 시 파라미터 오류 방지
+		model.addAttribute("preSusinGroupStr", preSusinGroupStr);
+		
+		// 일괄기안 관련 데이터
+		model.addAttribute("apprGFormVOList", apprGFormVOList);
+		model.addAttribute("groupDocInfoList", groupDocInfoList); // 임시저장 또는 반송된 문서 리스트 데이터 
+		model.addAttribute("groupDocSN", groupDocSN); // 임시저장 또는 반송된 문서의 일괄기안그룹 DOCID (GROOUPDOCSN)
+		
+		LOGGER.debug("draftuiAll_WHWP ended");
+		
+		return "ezApprovalG/apprGdraftuiAll_WHWP";
+	}
+	
+	/**
+	 * 전자결재G 한글 웹 기안기 일괄기안 전용 양식화면 호출
+	 */
+	@RequestMapping(value="/ezApprovalG/draftContentAll_WHWP.do", method = RequestMethod.GET)
+	public String draftContentAll_WHWP(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		LOGGER.debug("draftContentAll_WHWP started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String type = request.getParameter("type") != null ? request.getParameter("type") : "";
+		String frameNum = request.getParameter("frameNum") != null ? request.getParameter("frameNum") : "";
+		String docID = request.getParameter("docID") != null ? request.getParameter("docID") : "";
+		String docHref = request.getParameter("docHref") != null ? request.getParameter("docHref") : "";
+		String formID = request.getParameter("formID") != null ? request.getParameter("formID") : "";
+		String webHWPUrl = ezCommonService.getTenantConfig("webHWPUrl", userInfo.getTenantId());
+		
+		model.addAttribute("type", type);
+		model.addAttribute("formID", formID); // 사실상 iframe 내부에서 GetAprDocFormID()를 호출하여 가져오므로, 필요없는 파라미터임
+		model.addAttribute("frameNum", frameNum);
+		model.addAttribute("docID", docID);
+		model.addAttribute("docHref", docHref);
+		model.addAttribute("webHWPUrl", webHWPUrl);
+		
+		LOGGER.debug("draftContentAll_WHWP ended.");
+		return "ezApprovalG/apprGdraftuiAllContent_WHWP";
+	}
+	
+	
+	/**
+	 * 일괄기안 안추가시 파일첨부, 문서첨부, 의견, 분리첨부 복제
+	 */
+	@RequestMapping(value = "/ezApprovalG/copyDocAttachHwp.do", produces = "text/xml;charset=utf-8")
+	public void copyDocAttachHwp(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, ApprGAttachOptionVO apprGAttachOptionVO) throws Exception {
+		LOGGER.debug("copyDocAttachHwp started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String realPath = commonUtil.getRealPath(request);
+		String dirPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		String oldYear = ezApprovalGService.getDocHrefYear(apprGAttachOptionVO.getCurrentDocID(), userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		dirPath += userInfo.getCompanyID() + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(apprGAttachOptionVO.getCurrentDocID()) + commonUtil.separator;
+		
+		apprGAttachOptionVO.setTenantID(userInfo.getTenantId());
+		apprGAttachOptionVO.setCompanyID(userInfo.getCompanyID());
+		apprGAttachOptionVO.setDirPath(dirPath);
+		
+		ezApprovalGService.copyDocAttach(apprGAttachOptionVO, realPath);
+
+		LOGGER.debug("copyDocAttachHwp ended");
+	}
+	
+	/**
+	 * 일괄기안 안추가시 결재선 복제
+	 */
+	@RequestMapping(value = "/ezApprovalG/copyAprLine.do", produces = "text/xml;charset=utf-8")
+	public void copyAprLine(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, ApprGAttachOptionVO apprGAttachOptionVO) throws Exception {
+		LOGGER.debug("copyAprLine started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		apprGAttachOptionVO.setTenantID(userInfo.getTenantId());
+		apprGAttachOptionVO.setCompanyID(userInfo.getCompanyID());
+		
+		//LOGGER.debug("userID : " + userInfo.getId() + " / userName : " + userInfo.getDisplayName() + " / mainDocID : " + apprGAttachOptionVO.getMainDocID() + " / currentDocID : " + apprGAttachOptionVO.getCurrentDocID());
+		
+		ezApprovalGService.copyAprLine(apprGAttachOptionVO);
+		
+		LOGGER.debug("copyAprLine ended");
+	}
+	
+	/**
+	 * 전자결재G 웹한글기안기 일괄기안 결재할문서 페이지 호출
+	 */
+	@RequestMapping(value = "/ezApprovalG/approvuiAll_WHWP.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
+	public String approvuiAll_WHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("approvuiAll_WHWP started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String susinAdmin = "";
+		String orgAprUserID = request.getParameter("id");
+		String orgAprUserName = request.getParameter("name");
+		String orgAprUserDeptID = request.getParameter("deptID");
+		String docID = request.getParameter("docID") != null ? request.getParameter("docID") : "";
+		String tempUserID = userInfo.getId();
+		String orgDocID = request.getParameter("orgDocID") != null ? request.getParameter("orgDocID") : "";
+		String useOpenGov = config.getProperty("config.useOpenGov");
+		String allFlag = request.getParameter("allFlag");
+		//hwp 툴바가 6줄인데 맨윗줄 부터 '1' 이면 사용 '0' 이면 사용하지 않는다. ex)'100001' 맨위랑 맨아래 툴바만 표시
+        String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
+        String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+        String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+        String useReceiveDocNo = ezCommonService.getTenantConfig("useReceiveDocNo", userInfo.getTenantId());
+		String docState = request.getParameter("docState");
+		String mailChk = request.getParameter("mailchk") != null ? request.getParameter("mailchk") : ""; // 메일에서 전저결재 열람 여부('Y'일때는 메일 그 외에는 전자결재)
+		String mode = request.getParameter("mode");
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String companyID = userInfo.getCompanyID();
+		String docDir = docID.substring(docID.length() - 3);
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
+		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) { // 수발신담당자
+			susinAdmin = "YES";
+		} else {
+			susinAdmin = "NO";
+		}
+		
+		if (docDir.substring(0, 1).equals("0")) {
+        	docDir = docDir.substring(docDir.length() - 2, 2);
+        } else if (docDir.substring(0, 2).equals("00")) {
+        	docDir = docDir.substring(docDir.length() - 1, 1);
+        } else if (docDir.equals("000")) {
+        	docDir = "0";
+        }
+		
+		String oldYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+        String dirPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + docDir + "." + docID + ".hwp" ;
+
+        // 일괄기안된 문서는 모두결재(연속결재)를 지원하지 않으므로, allFlag는 항상 0으로 고정된다.
+        if (!allFlag.equals("1") && !allFlag.equals("2")) {
+        	allFlag = "0";
+        }
+        
+        // 일괄기안된 문서는 각 안 별 결재선이 전부 동일하므로, 대표로 1안에 대해서만 접근권한을 확인한다.
+        if (!docID.equals("")) {
+        	String proxyUser = ezApprovalGService.getProxyUser2(userInfo.getId(), "1", userInfo.getTenantId(), userInfo.getOffset());
+			String[] proxyUserArray = proxyUser.split(",");
+			boolean checkPermission = true;
+			
+			if (proxyUserArray.length > 1) {
+				if (mode == null) {
+					mode = "APR";
+				}
+				String docList = ezApprovalGService.getAprLineInfoDB(docID, "1", "", "", userInfo.getCompanyID(), userInfo.getTenantId(), "", "", mode, "");
+
+				Document docXML = commonUtil.convertStringToDocument(docList);
+				
+				for (int k = 0; k < docXML.getDocumentElement().getChildNodes().getLength(); k++) {
+					if (docXML.getElementsByTagName("APRSTATE").item(k).getTextContent().equals("002") || docXML.getElementsByTagName("APRSTATE").item(k).getTextContent().equals("005") || docXML.getElementsByTagName("APRSTATE").item(k).getTextContent().equals("000")) {
+						String curAprUserID = docXML.getElementsByTagName("ORGUSERID").item(k).getTextContent();
+						
+						for (int j = 0; j < proxyUserArray.length; j++) {
+							if (curAprUserID.equals(proxyUserArray[j].trim().substring(1, proxyUserArray[j].trim().length() - 1))) {
+								checkPermission = false;
+								break;
+							}
+						}
+					}
+				}
+			}
+			
+			if (checkPermission) {
+				Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), "APR", userInfo.getCompanyID(), userInfo.getTenantId(), docState);
+				
+				if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
+					if (mailChk != null && mailChk.equals("Y")) {
+						model.addAttribute("chk", "no");
+						
+						// 진행문서인 경우
+						ApprGDocListVO apprGIngDocVO = ezApprovalGService.getIngDocInfo(userInfo.getId(), docID.trim(), orgCompanyID, userInfo.getTenantId());
+						if (apprGIngDocVO != null && apprGIngDocVO.getHref() != null && !apprGIngDocVO.getHref().trim().equals("")) {
+							model.addAttribute("docID", docID.trim());
+							model.addAttribute("docHref", apprGIngDocVO.getHref().trim());
+							model.addAttribute("orgCompanyID", orgCompanyID); // 결재문서 기안 당시의 회사ID
+							model.addAttribute("listType", "3"); // 진행중문서 listType
+							
+							return "redirect:/ezApprovalG/ezviewAprAll_WHWP.do";
+						} else {
+							// 완료문서인 경우 (1안 기준으로 단일 완료문서 보기창 표출)
+							ApprGDocListVO apprGEndDocVO = ezApprovalGService.getEndDocInfo(docID.trim(), orgCompanyID, userInfo.getTenantId());
+							if (apprGEndDocVO != null && apprGEndDocVO.getHref() != null && !apprGEndDocVO.getHref().trim().equals("")) {
+								model.addAttribute("docID", docID.trim());
+								model.addAttribute("docHref", apprGEndDocVO.getHref().trim());
+								model.addAttribute("orgCompanyID", orgCompanyID); // 결재문서 기안 당시의 회사ID(문서 재사용에 필요)
+								model.addAttribute("formID", apprGEndDocVO.getFormID());
+								
+								return "redirect:/ezApprovalG/ezViewEnd_WHWP.do";
+							} else {
+								return "main/warning";
+							}
+						}
+					}
+					return "main/warning";
+				}
+			}
+		}
+		
+        String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+        String optSignDateFormat = ezApprovalGService.getOptionInfo("A15", "002", userInfo, "CODE");
+        String optisSplit = ezApprovalGService.getOptionInfo("A33", "001", userInfo, "CODE");
+        String optSplitKind = ezApprovalGService.getOptionInfo("A33", "002", userInfo, "CODE");
+        String optjunKyukInfo = ezApprovalGService.getOptionInfo("A32", "001", userInfo, "CODE");
+        String docNumZeroCnt = ezApprovalGService.getDocNumZeroCnt(userInfo.getCompanyID(), userInfo.getTenantId());
+        
+        String nonElecRec = ezApprovalGService.checkNonElecRec(orgDocID, userInfo.getCompanyID(), userInfo.getTenantId());
+        if (!nonElecRec.equals("")) {
+        	model.addAttribute("nonElecRec", nonElecRec);
+        }
+        
+        String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", userInfo.getTenantId());
+		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+			useExternalMailServer = "NO";
+		}
+		
+		/* 2020-11-13 홍승비 - 대용량첨부 관련 파라미터 추가 */
+		String bigSizeAttachDownloadLimitCount = ezCommonService.getTenantConfig("ApprBigSizeAttachDownloadLimitCount", userInfo.getTenantId()); // 전자결재 대용량 첨부파일 다운로드 횟수제한
+		String bigAttachDownloadDay = ezCommonService.getTenantConfig("BigSizeApprAttachDelDay", userInfo.getTenantId()); // 전자결재 대용량 첨부파일 보존기간
+		String bigAttachFileMinSaveDate = ezApprovalGService.getAttachFileMinSaveDate(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		String bigAttachDownloadPeriod = bigAttachFileMinSaveDate + " ~ " + EgovDateUtil.addDay(bigAttachFileMinSaveDate, Integer.parseInt(bigAttachDownloadDay), "yyyy/MM/dd");
+		
+		String preSusinGroupStr = ezApprovalGService.getCode2Name("A53", "001", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		
+		// 1안의 docID를 GroupDocSN으로 전달한다.
+		List<ApprGGroupDocInfoVO> groupDocInfoList = new ArrayList<ApprGGroupDocInfoVO>();
+		groupDocInfoList = ezApprovalGService.getGroupDocList(docID, "APR", userInfo.getTenantId(), userInfo.getCompanyID());
+		
+		model.addAttribute("approvalFlag", approvalFlag);
+        model.addAttribute("approvalPWD", approvalPWD);
+        model.addAttribute("useEditor", useEditor);
+		model.addAttribute("orgAprUserID", orgAprUserID);
+		model.addAttribute("orgAprUserName", orgAprUserName);
+		model.addAttribute("orgAprUserDeptID", orgAprUserDeptID);
+		model.addAttribute("docID", docID);
+        model.addAttribute("tempUserID", tempUserID);
+        model.addAttribute("optSignDateFormat", optSignDateFormat);
+        model.addAttribute("optisSplit", optisSplit);
+        model.addAttribute("optSplitKind", optSplitKind);
+        model.addAttribute("optjunKyukInfo", optjunKyukInfo);
+        model.addAttribute("userInfo", userInfo);
+        model.addAttribute("allFlag", allFlag);
+        model.addAttribute("oldYear", oldYear);
+        model.addAttribute("dirPath", dirPath);
+        model.addAttribute("hwpToolbar", hwpToolbar);
+        model.addAttribute("susinAdmin", susinAdmin);
+        model.addAttribute("docState", docState);
+        model.addAttribute("isHWP", "Y");
+        model.addAttribute("useReceiveDocNo", useReceiveDocNo);
+        model.addAttribute("orgCompanyID", orgCompanyID);
+        model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
+		
+		// 원문정보공개 관련
+		if (useOpenGov.equalsIgnoreCase("YES") && approvalFlag.equalsIgnoreCase("G")) {
+			Map<String, Object> openGovMap = ezApprovalGService.getOpenGovInfo(docID, userInfo.getTenantId(), userInfo.getCompanyID());
+
+			model.addAttribute("basis", openGovMap.get("basis"));
+			model.addAttribute("reason", openGovMap.get("reason"));
+			model.addAttribute("listOpenFlag", openGovMap.get("listOpenFlag"));
+			model.addAttribute("fileOpenFlagList", openGovMap.get("fileOpenFlagList"));
+		}
+		model.addAttribute("useOpenGov", useOpenGov);
+		model.addAttribute("useExternalMailServer", useExternalMailServer);
+		
+		//결재 세부정보
+		String formAprOption = ezApprovalGService.getFormAprOptionInfo(docID, "DOC", userInfo.getCompanyID(), userInfo.getTenantId());
+		model.addAttribute("formAprOption", formAprOption);
+		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
+		
+		// 대용량첨부 관련 정보
+		model.addAttribute("bigAttachDownloadPeriod", bigAttachDownloadPeriod); // 다운로드 기간
+		model.addAttribute("bigAttachDownloadDay", bigAttachDownloadDay); // 보관되는 일수
+		model.addAttribute("bigSizeAttachDownloadLimitCount", bigSizeAttachDownloadLimitCount); // 다운로드 횟수
+		
+		// 비전자문서의 기안 시 파라미터 오류 방지
+		model.addAttribute("preSusinGroupStr", preSusinGroupStr);
+		
+		// 일괄기안 관련 데이터
+		model.addAttribute("groupDocInfoList", groupDocInfoList); // 문서 리스트 데이터 
+		model.addAttribute("groupDocInfoListCnt", groupDocInfoList.size()); // 문서 리스트 데이터 카운트 (안의 갯수)
+		model.addAttribute("groupDocSN", docID); // 일괄기안그룹 DOCID (GROOUPDOCSN)
+		
+		LOGGER.debug("approvuiAll_WHWP ended");
+		
+		return "ezApprovalG/apprGapprovuiAll_WHWP";
+	}
+	
+	/**
+	 * 전자결재G 웹한글기안기 일괄기안 결재할문서 양식부분 호출
+	 */
+	@RequestMapping(value="/ezApprovalG/approvContentAll_WHWP.do", method = RequestMethod.GET)
+	public String approvContentAll_WHWP(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		LOGGER.debug("approvContentAll_WHWP started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String type = request.getParameter("type") != null ? request.getParameter("type") : "";
+		String frameNum = request.getParameter("frameNum") != null ? request.getParameter("frameNum") : "";
+		String docID = request.getParameter("docID") != null ? request.getParameter("docID") : "";
+		String docHref = request.getParameter("docHref") != null ? request.getParameter("docHref") : "";
+		String webHWPUrl = ezCommonService.getTenantConfig("webHWPUrl", userInfo.getTenantId());
+		
+		model.addAttribute("type", type);
+		model.addAttribute("frameNum", frameNum);
+		model.addAttribute("docID", docID);
+		model.addAttribute("docHref", docHref);
+		model.addAttribute("webHWPUrl", webHWPUrl);
+		
+		LOGGER.debug("approvContentAll_WHWP ended.");
+		return "ezApprovalG/apprGapprovuiAllContent_WHWP";
+	}
+
+	/**
+	 * 전자결재G 웹한글기안기 일괄기안 기안한문서, 결재진행문서 문서보기 전용창 페이지 호출
+	 */	
+	@RequestMapping(value = "/ezApprovalG/ezviewAprAll_WHWP.do", method = RequestMethod.GET)
+	public String ezviewAprAll_WHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("ezviewAprAll_WHWP started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String susinAdmin = "";
+		String docID = request.getParameter("docID");
+		String docHref = request.getParameter("docHref");
+		String opinionFlag = request.getParameter("opinionFlag");
+		String docState = request.getParameter("docState");
+		String listSusin = request.getParameter("listSusin");
+		String orgDocID = request.getParameter("oDoc");
+		String showOpinion = request.getParameter("isOpinion");
+		String listTypeValue = request.getParameter("listType");
+		String hasOpinionYN = "";
+		String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+
+		if (userInfo.getRollInfo().indexOf("a=1") > -1 ) {
+			susinAdmin = "YES";
+		} else {
+			susinAdmin = "NO";
+		}
+
+		// 1안의 정보를 기준으로 의견존재 여부 플래그를 전달
+		String strXML = ezApprovalGService.getDocInfo(docID, "APR", "HasOpinionYN", userInfo, userInfo.getCompanyID(), userInfo.getTenantId(), "", "");
+		Document resultXML = commonUtil.convertStringToDocument(strXML);
+		
+		if (resultXML.getElementsByTagName("HASOPINIONYN").getLength() > 0) {
+			if (resultXML.getElementsByTagName("HASOPINIONYN").item(0) != null && !resultXML.getElementsByTagName("HASOPINIONYN").item(0).getTextContent().trim().equals("")) {
+				hasOpinionYN = resultXML.getDocumentElement().getTextContent();
+			}
+		}
+		
+		/* 해당 부분은 부서수신함에서의 문서보기 관련이므로, 일괄기안용 결재진행문서 보기창에서는 지원하지 않는 부분임. 코드 주석처리함 */
+		// 일괄기안용 결재진행문서 보기창은 일괄기안된 문서인 경우에만 동작함 (결재진행문서, 기안한문서에서만 접근 가능)
+		//2018-08-29 천성준 - 부서수신함에 들어온 접수문서를 최초 접수창으로 열지않고 문서보기로 열었을경우 문서파일이 생성되지 않아서 에러터지는것 수정 
+		/*
+		String approvalRoot = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		String dirPath = commonUtil.getRealPath(request) + approvalRoot;
+		String rtnVal = ezApprovalGService.getOrgDocInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		Document xmlDom = commonUtil.convertStringToDocument(rtnVal);
+		
+		if (xmlDom.getElementsByTagName("ORGHREF").getLength() > 0) {
+			String orgDocFile = xmlDom.getElementsByTagName("ORGHREF").item(0).getTextContent();
+			String docFile = xmlDom.getElementsByTagName("HREF").item(0).getTextContent();
+			
+			orgDocFile = dirPath + orgDocFile.replace( commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
+			docFile = dirPath + docFile.replace( commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
+			
+			String dir = docFile.substring(0, docFile.lastIndexOf(commonUtil.separator) + 1);
+			File file = new File(commonUtil.detectPathTraversal(dir));
+			
+			if (!file.exists()) {
+				file.mkdirs();
+			}
+			
+			File newFile = new File(commonUtil.detectPathTraversal(docFile));
+			
+			if (!newFile.exists()) {
+				File orgFile = new File(commonUtil.detectPathTraversal(orgDocFile));
+				
+				// KLIB 복호화
+				if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
+					byte[] orgBytes = commonUtil.readBytesFromFile(orgFile.toPath());
+					FileUtils.writeByteArrayToFile(newFile, klibUtil.decrypt(orgBytes));
+				} else {
+					FileUtils.copyFile(orgFile, newFile);
+				}
+			}
+		}
+		*/
+		
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", userInfo.getTenantId());
+		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+			useExternalMailServer = "NO";
+		}
+		
+		String forceCallBackYN = ezCommonService.getTenantConfig("forceCallBack_YN", userInfo.getTenantId()); // 강제회수 옵션
+		
+		/* 2020-11-13 홍승비 - 대용량첨부 관련 파라미터 추가 */
+		String bigSizeAttachDownloadLimitCount = ezCommonService.getTenantConfig("ApprBigSizeAttachDownloadLimitCount", userInfo.getTenantId()); // 전자결재 대용량 첨부파일 다운로드 횟수제한
+		String bigAttachDownloadDay = ezCommonService.getTenantConfig("BigSizeApprAttachDelDay", userInfo.getTenantId()); // 전자결재 대용량 첨부파일 보존기간
+		String bigAttachFileMinSaveDate = ezApprovalGService.getAttachFileMinSaveDate(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		String bigAttachDownloadPeriod = bigAttachFileMinSaveDate + " ~ " + EgovDateUtil.addDay(bigAttachFileMinSaveDate, Integer.parseInt(bigAttachDownloadDay), "yyyy/MM/dd");
+		
+		// 1안의 docID를 GroupDocSN으로 전달한다. 임시저장된 문서도 문서보기가 가능하므로, listType을 체크한다.
+		List<ApprGGroupDocInfoVO> groupDocInfoList = new ArrayList<ApprGGroupDocInfoVO>();
+		String groupDocSN = "";
+		
+		if (listTypeValue.equals("21")) { // docID = 임시저장된 docSN (사용자ID@순번 형태)
+			// 웹한글기안기의 비동기 동작으로 1안이 늦게 저장되어 GROUPDOCSN값이 다를 수 있다. 따라서 정상적인 GROUPDOCSN값을 다시 가져오도록 한다.
+			groupDocSN = ezApprovalGService.getGroupDocSN(docID, userInfo.getTenantId(), userInfo.getCompanyID());
+			groupDocInfoList = ezApprovalGService.getGroupDocList(groupDocSN, "TMP", userInfo.getTenantId(), userInfo.getCompanyID());
+		} else {
+			groupDocInfoList = ezApprovalGService.getGroupDocList(docID, "APR", userInfo.getTenantId(), userInfo.getCompanyID());
+		}
+		
+		model.addAttribute("susinAdmin", susinAdmin);
+		model.addAttribute("docID", docID);
+		model.addAttribute("docHref", docHref);
+		model.addAttribute("opinionFlag", opinionFlag);
+		model.addAttribute("docState", docState);
+		model.addAttribute("listSusin", listSusin);
+		model.addAttribute("orgDocID", orgDocID);
+		model.addAttribute("showOpinion", showOpinion);
+		model.addAttribute("listTypeValue", listTypeValue);
+		model.addAttribute("hasOpinionYN", hasOpinionYN);
+		model.addAttribute("hwpToolbar", hwpToolbar);
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("orgCompanyID", orgCompanyID);
+		model.addAttribute("useExternalMailServer", useExternalMailServer);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("forceCallBackYN", forceCallBackYN);
+		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
+		
+		// 대용량첨부 관련 정보
+		model.addAttribute("bigAttachDownloadPeriod", bigAttachDownloadPeriod); // 다운로드 기간
+		model.addAttribute("bigAttachDownloadDay", bigAttachDownloadDay); // 보관되는 일수
+		model.addAttribute("bigSizeAttachDownloadLimitCount", bigSizeAttachDownloadLimitCount); // 다운로드 횟수
+		
+		// 일괄기안 관련 데이터
+		model.addAttribute("groupDocInfoList", groupDocInfoList); // 문서 리스트 데이터 
+		model.addAttribute("groupDocInfoListCnt", groupDocInfoList.size()); // 문서 리스트 데이터 카운트 (안의 갯수)
+		model.addAttribute("groupDocSN", docID); // 일괄기안그룹 DOCID (GROOUPDOCSN)
+		
+		LOGGER.debug("ezviewAprAll_WHWP ended");
+		
+		return "ezApprovalG/apprGviewAprAll_WHWP";
+	}
+	
+	/**
+	 * 전자결재G 웹한글기안기 일괄기안 기안한문서, 결재진행문서 문서보기 전용창 양식부분 호출
+	 */
+	@RequestMapping(value="/ezApprovalG/apprViewContentAll_WHWP.do", method = RequestMethod.GET)
+	public String apprViewContentAll_WHWP(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		LOGGER.debug("apprViewContentAll_WHWP started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String type = request.getParameter("type") != null ? request.getParameter("type") : "";
+		String frameNum = request.getParameter("frameNum") != null ? request.getParameter("frameNum") : "";
+		String docID = request.getParameter("docID") != null ? request.getParameter("docID") : "";
+		String docHref = request.getParameter("docHref") != null ? request.getParameter("docHref") : "";
+		String webHWPUrl = ezCommonService.getTenantConfig("webHWPUrl", userInfo.getTenantId());
+		
+		model.addAttribute("type", type);
+		model.addAttribute("frameNum", frameNum);
+		model.addAttribute("docID", docID);
+		model.addAttribute("docHref", docHref);
+		model.addAttribute("webHWPUrl", webHWPUrl);
+		
+		LOGGER.debug("apprViewContentAll_WHWP ended.");
+		return "ezApprovalG/apprGviewAprAllContent_WHWP";
+	}
+////////////////////// 일괄기안 코드 끝 ///////////////////////
+	
 }

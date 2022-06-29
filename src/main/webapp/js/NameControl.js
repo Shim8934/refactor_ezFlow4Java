@@ -2679,7 +2679,7 @@ function getxmlPresenceDom(pUserIDs) {
             p_xmlHTTP.open("POST",  "/myoffice/Common/GetPresenceState_GroupWare.aspx", false);
             p_xmlHTTP.send(xmldom);
             if (p_xmlHTTP != null && p_xmlHTTP.readyState == 4) {
-                if (p_xmlHTTP.statusText == "OK") {
+                if (p_xmlHTTP.status == 200) {
                     try {
                         xmlPresenceDom = p_xmlHTTP.responseXML;
                         //xmlPresenceDom.load(p_xmlHTTP.responseXML);
@@ -2692,7 +2692,7 @@ function getxmlPresenceDom(pUserIDs) {
             p_xmlHTTP.open("POST", "/myoffice/ezOCS/Remote/GetPresenceState.aspx", false);
             p_xmlHTTP.send(xmldom);
             if (p_xmlHTTP != null && p_xmlHTTP.readyState == 4) {
-                if (p_xmlHTTP.statusText == "OK") {
+                if (p_xmlHTTP.status == 200) {
                     try {
                         xmlPresenceDom = p_xmlHTTP.responseXML;
                         //xmlPresenceDom.load(p_xmlHTTP.responseXML);

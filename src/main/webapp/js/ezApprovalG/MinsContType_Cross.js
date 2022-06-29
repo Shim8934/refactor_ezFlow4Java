@@ -149,7 +149,7 @@ function ContSave() {
     Flag = xmlhttp.responseText;
     
     if (xmlhttp != null && xmlhttp.readyState == 4) {
-		if (xmlhttp.statusText == "OK" && Flag == "TRUE") {
+		if (xmlhttp.status == 200 && Flag == "TRUE") {
 			alert(strLang814);
 	        InitlvContTypeList();
 		} else {

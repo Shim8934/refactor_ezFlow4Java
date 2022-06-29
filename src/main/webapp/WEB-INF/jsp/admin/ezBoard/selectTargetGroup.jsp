@@ -47,6 +47,10 @@
 	    	.countColor {
 	    		color:#017BEC;
 	    	}
+	    	/* 2022-03-30 홍승비 - MsgToList 테이블 내부의 직위, 직책명이 긴 경우 하단 border 잘리지 않도록 수정 */
+	    	#MsgToList {
+	    		table-layout : auto;
+	    	}
 	    </style>
 	    <script>
 	        var ua = navigator.userAgent.toLowerCase();
@@ -117,7 +121,7 @@
 	            ListTypeChangeIcon();
 	            
 	            if (xmlHTTP != null && xmlHTTP.readyState == 4) {
-	                if (xmlHTTP.statusText == "OK") {
+	                if (xmlHTTP.status == 200) {
 	                    var xmlTree = loadXMLString(xmlHTTP.responseText);
 	                    var treeXML = loadXMLFile("/xml/common/organtree_config3.xml");
 	                    var treeView = new TreeView();

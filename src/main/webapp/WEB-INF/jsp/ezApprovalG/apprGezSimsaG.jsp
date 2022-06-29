@@ -104,6 +104,9 @@
 	        var bigAttachDownloadDay = "<c:out value ='${bigAttachDownloadDay}'/>";
 	        var bigSizeAttachDownloadLimitCount = "<c:out value ='${bigSizeAttachDownloadLimitCount}'/>";
 	        
+	        var isSihangReject = "N"; // 시행문변환 시 반송을 위한 구분값 전달
+	        var pRecordID = "<c:out value = '${recordID}'/>";
+	        
 		    function btnPrint_onclick() {
 		        PrintClick("Cross", pDocID, "");
 		    }
@@ -113,6 +116,8 @@
 					
 					if (isConvSihang) {
 						setMenuDisable("btnOpinion", true);
+						setMenuDisable("btnReject", true); // 시행문변환으로 접근해도 반송이 가능하도록 수정
+	                    isSihangReject = "Y"; // 시행문변환으로 접근 시 반송 관련 플래그 설정
 					} else {
 						setMenuDisable("btnReject", true);
 					}
@@ -538,11 +543,11 @@
 		        DivPopUpHidden();
 		
 		        if (ret != "cancel") {
-		        	 var fields = message.GetFieldsList();
-		                field = message.GetListItem(fields, "sealsign");
-		                if (field) 
-		                    field.innerHTML = " ";
-		                
+					var fields = message.GetFieldsList();
+	                field = message.GetListItem(fields, "sealsign");
+	                if (field) {
+	                    field.innerHTML = " ";
+	                }
 		            SaveFile();
 		            
 			    	var result = "";
@@ -554,7 +559,10 @@
 			    		url : "/ezApprovalG/sendOfferReject.do",
 			    		data : {
 			    			docID : pDocID,
-			    			userID : pUserID
+			    			deptID : arr_userinfo[4],
+			    			userID : pUserID,
+			    			isSihangReject : isSihangReject,
+			    			recordID : pRecordID
 			    		},
 			    		success: function(xml){
 			    			result = loadXMLString(xml);
@@ -573,8 +581,12 @@
 		            		docTitle = field.textContent;
 		            	}
 		            	
-		                //여기다 발송의뢰반송 메일알람 추가
-		                SendSimsaBansong(docTitle);
+						// 발송의뢰반송 메일알람 추가
+		            	if (isSihangReject == "Y") { // 미처리문서함 > 내부시행문의 반송 (완료문서 접근)
+		            		SendSihangBansong(docTitle);
+		            	} else { // 대외발송함 > 심사자의 반송
+							SendSimsaBansong(docTitle);
+		            	}
 		            	var pAlertContent = "<spring:message code='ezApprovalG.t256'/>";
 		                OpenAlertUI(pAlertContent);
 		                setBtnDisable();

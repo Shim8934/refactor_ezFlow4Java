@@ -35,6 +35,7 @@
 			var PageSize = 15;
 			var exportingExcel = false;
 			var pageListCnt = 50; // 한페이지에 보여질 리스트 개수
+			var moveMultiUserlist = "";
 			
 		    document.onselectstart = function(){
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA"){
@@ -1333,14 +1334,8 @@
 	    		var mobileOwner = $(trIdx).children().eq(1).text();
 	    		var data = listview.GetSelectedRows()[0].getAttribute("DATA2");
 		    	document.getElementById("userSend").value = data;
-		    	
-		    	var agent = navigator.userAgent.toLowerCase();
-		    	
-		    	if (agent.indexOf("chrome") != -1) {
-		    		var OpenWin = window.open("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + encodeURIComponent(mobileOwner), "", GetOpenWindowfeature(460, 335));
-		    	} else {
-			    	var OpenWin = window.open("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + encodeURIComponent(mobileOwner), "", GetOpenWindowfeature(460, 335));
-		    	}
+
+				window.open("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + encodeURIComponent(mobileOwner), "", GetOpenWindowfeature(660, 370));
 		    }
 		   
 		    // POP3/IMAP 설정 함수
@@ -1564,7 +1559,14 @@
 						return;
 					}
 
-					var data = userID;
+					// 2022-02-04 이사라 - 다수 or 한명의 사원이동 데이터를 입력 받음
+					var data = "";
+
+					if (userID == undefined || userID == "" || userID == null) {
+						data = moveMultiUserlist;
+					} else {
+						data = userID;
+					}
 
 					$.ajax({
 						type : "POST",
@@ -1590,6 +1592,59 @@
 
 					// 이동 후 tree 재 호출
 					curTreeNodeReload()
+
+					moveMultiUserlist = "";
+					userID = "";
+				}
+			}
+
+			// 2022-02-04 이사라 - 다수의 사원이동 호출
+			function moveMultiUser(){
+				var listview = new ListView();
+		        var isAddJob = false;
+
+		        listview.LoadFromID("lvUserList");
+		        var len = listview.GetSelectedRows().length;
+
+		        if (len == 0) {
+		            alert("<spring:message code='ezOrgan.t12' />");
+		            return;
+		        } else if (listview.GetSelectedRows()[0].getAttribute("DATA1") != 'user') {
+                    alert(strLang13);
+                    return;
+		        }
+
+				// 겸직자가 한명이라도 있으면 return
+				for (i = 0; i < len; i++) {
+					isAddJob = listview.GetSelectedRows()[i].getAttribute("DATA3") == 'addJob' ? true : false;
+					if (isAddJob) {
+						alert("<spring:message code='ezOrgan.psb02' />");
+						return;
+					}
+				}
+
+				for (i = 0; i < len; i++) {
+					moveMultiUserlist += listview.GetSelectedRows()[i]
+							.getAttribute("DATA2").concat(",");
+				}
+
+				// 조직도 load
+				var treeView = new TreeView();
+				treeView.LoadFromID("FromTreeView");
+
+				var nodeIdx = treeView.GetSelectNode();
+				var treeNode = new TreeNode();
+				treeNode.LoadFromID(nodeIdx.NodeID);
+				document.getElementById("selectedCN").value = treeNode
+						.GetNodeData("CN");
+
+				selectdept_cross_dialogArguments[0] = "<spring:message code='ezOrgan.t13' />";
+				selectdept_cross_dialogArguments[1] = move_user_CompleteWithTimeout;
+				var OpenWin = window.open("/admin/ezOrgan/selectDept.do",
+						"SelectDept_Cross", GetOpenWindowfeature(302, 390));
+				try {
+					OpenWin.focus();
+				} catch (e) {
 				}
 			}
 
@@ -2049,6 +2104,7 @@
 					<li id="companybutton2"><span onClick="del_company()"><spring:message code='ezOrgan.t78' /></span></li>
 					<li id="usermenu10"><span onClick="del_dept()"><spring:message code='ezOrgan.t81' /></span></li>
 					<li id="usermenu8"><span onClick="mov_dept()"><spring:message code='ezOrgan.t82' /></span></li>
+					<li id="usermenu8"><span onClick="moveMultiUser()"><spring:message code='ezOrgan.t86' /></span></li>
 					<li id="usermenu4"><span onClick="mod_sign()"><spring:message code='ezOrgan.t89' /></span></li>
 				</c:if>
 				<c:if test="${useExternalMailServer == 'NO' }">

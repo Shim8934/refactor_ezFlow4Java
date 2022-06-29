@@ -594,6 +594,25 @@
 			PHOTO_UPDATEDT DATETIME DEFAULT NULL
 	</statement>
 
+	<select id="EzCommonDAO.check_AnyTbl_AnyColumns" parameterClass="Map" resultClass="String">
+	<!-- resultSet이 재사용이 안되는 건지.. 쿼리에 문제가 없는데도, 출력 값이 바뀌면 에러가 나는 현상이 있어서 select 1로 고정 result를 생성하도록 함. (flushCache 같은 속성은 알지 못한다고 에러남) --> 
+		SELECT 1 FROM DUAL 
+		WHERE EXISTS (
+			SELECT 
+				$COLUMN_NAME$
+			FROM 
+				$TBL_NAME$
+			LIMIT 1 
+		)
+	</select>
+
+	<statement id="EzCommonDAO.add_AnyTbl_AnyColumns" parameterClass="Map">
+		ALTER TABLE
+			$TBL_NAME$
+		$ALTER$ 
+			$COLUMN_NAME$ $TYPE_MYSQL$ $AFTER$
+	</statement>
+
 	<select id="EzCommonDAO.checkAddJobMasterJobID" resultClass="String">
 		<![CDATA[
 			SELECT 
@@ -2927,6 +2946,16 @@
 			LIMIT 1
 		]]>
 	</select>
+
+	<select id="EzCommonDAO.checkTblAdminAccessIpTable" resultClass="String">
+		<![CDATA[
+			SELECT 
+				TENANT_ID
+			FROM 
+				TBL_ADMIN_ACCESS_IP
+			LIMIT 1
+		]]>
+	</select>
 	
 	<statement id="EzCommonDAO.createDailyWorkAttitudeColumn">
 		ALTER TABLE 
@@ -4217,7 +4246,7 @@
 		(
 			DISCONNECTTIME 		DATETIME 	DEFAULT NULL,
 			STATUS				VARCHAR(1)	DEFAULT NULL,
-			SESSIONCODE			VARCHAR(80)	DEFAULT NULL
+			SESSIONCODE			VARCHAR(200)	DEFAULT NULL
 		)
     </statement>
 
@@ -4248,4 +4277,154 @@
 			  PRIMARY KEY (`SEQUENCE`)
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 	</statement>
+	
+	<select id="EzCommonDAO.checkMailOutOfOfficeTemplate" resultClass="String">
+		<![CDATA[
+			SELECT 
+				USER_ID
+			FROM 
+				JMOCHA_MAIL_OUTOFOFFICE_TEM
+			LIMIT 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.createMailOutOfOfficeTemplate"> 
+		CREATE TABLE `jmocha_mail_outofoffice_tem` (
+		  `USER_ID` varchar(100) NOT NULL,
+		  `DISPLAYNAME` varchar(45) NOT NULL,
+		  `CONTENT` LONGTEXT NULL,
+		  PRIMARY KEY (`USER_ID`,`DISPLAYNAME`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+	</statement>
+	
+	<select id="EzCommonDAO.checkUserMailTemplate" resultClass="String">
+		<![CDATA[
+			SELECT 
+				USER_ID
+			FROM 
+				JMOCHA_USER_MAIL_TEMPLATE
+			LIMIT 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.createUserMailTemplate"> 
+		CREATE TABLE `JMOCHA_USER_MAIL_TEMPLATE` (
+		  `USER_ID` varchar(100) NOT NULL,
+		  `DISPLAYNAME` varchar(45) NOT NULL,
+		  `TEMPLATE_ID` varchar(510) NOT NULL,
+		  `REGDATE` datetime NOT NULL,
+		  `EDITORTYPE` varchar(5),
+		  `CONTENT` LONGTEXT NULL,
+		  PRIMARY KEY (`USER_ID`,`DISPLAYNAME`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+	</statement>
+
+	<statement id="EzCommonDAO.createTblAdminAccessIpTable"> 
+		CREATE TABLE `tbl_admin_access_ip` (
+		  	`IPNO` int(11) NOT NULL AUTO_INCREMENT,
+		  	`TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
+		  	`IPADDRESS` varchar(100) NOT NULL,
+		  	`ALLOW_ACCESS` varchar(10) DEFAULT 'NO',
+		  	`EXPLANATION` varchar(200) DEFAULT NULL,
+		  	PRIMARY KEY (`IPNO`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+	
+	<statement id="EzCommonDAO.createTblPermissionChangeInfo">
+		CREATE TABLE
+		IF NOT EXISTS
+			TBL_PERMISSION_CHANGE_INFO (
+			`SEQUENCE`		INT(10) 		NOT NULL AUTO_INCREMENT,
+			`USERID` 		VARCHAR(200) 	NOT NULL,
+			`USERNM` 		VARCHAR(200) 	CHARACTER SET utf8mb4 DEFAULT NULL,
+			`USERNM2` 		VARCHAR(200) 	CHARACTER SET utf8mb4 DEFAULT NULL,
+			`DEPTID` 		VARCHAR(200) 	DEFAULT NULL,
+			`DEPTNM` 		VARCHAR(200) 	CHARACTER SET utf8mb4 DEFAULT NULL,
+			`DEPTNM2` 		VARCHAR(200) 	CHARACTER SET utf8mb4 DEFAULT NULL,
+			`TITLE` 		VARCHAR(200) 	CHARACTER SET utf8mb4 DEFAULT NULL,
+			`TITLE2` 		VARCHAR(200) 	CHARACTER SET utf8mb4 DEFAULT NULL,
+			`COMPANYID` 	VARCHAR(200) 	DEFAULT NULL,
+			`COMPANYNM` 	VARCHAR(200) 	CHARACTER SET utf8mb4 DEFAULT NULL,
+			`COMPANYNM2` 	VARCHAR(200) 	CHARACTER SET utf8mb4 DEFAULT NULL,
+			`AUTHORIZEDTIME` DATETIME 		DEFAULT NULL,
+			`ADMINTYPE` 	VARCHAR(200) 	DEFAULT NULL,
+			`STATUS` 		VARCHAR(40) 	DEFAULT NULL,
+			`AUTHORIZERID` 	VARCHAR(200) 	CHARACTER SET utf8mb4 DEFAULT NULL,
+			`AUTHORIZERNM` 	VARCHAR(200) 	CHARACTER SET utf8mb4 DEFAULT NULL,
+			`AUTHORIZERNM2` VARCHAR(200) 	CHARACTER SET utf8mb4 DEFAULT NULL,
+			`AUTHORIZERIP` 	VARCHAR(200) 	DEFAULT NULL,
+			`TENANT_ID` 	DECIMAL(22,0) 	NOT NULL DEFAULT 0,
+			PRIMARY KEY (`SEQUENCE`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+	
+	<select id="EzCommonDAO.checkSusinScheduleOffsetColumn">
+        <![CDATA[
+            SELECT 
+                OFFSET
+            FROM 
+                TBL_SUSINSCHEDULE
+            LIMIT 1
+        ]]>
+    </select>
+    <statement id="EzCommonDAO.addSusinScheduleOffsetColumn">
+        ALTER TABLE 
+        	TBL_SUSINSCHEDULE 
+		ADD
+			OFFSET VARCHAR(40) DEFAULT ''
+    </statement>
+
+	<select id="EzCommonDAO.checkReceiptHistoryListoption" parameterClass="Map" resultClass="String">
+	<![CDATA[
+		SELECT
+			companyid
+		FROM
+			TBL_LISTOPTION
+		WHERE
+			LISTTYPE = '112'
+		AND
+			companyid = #companyId#
+		AND
+			tenant_id = #tenantId#
+		LIMIT 1
+	]]>
+	</select>
+
+	<insert id="EzCommonDAO.insertReceiptHistoryListoption">
+		INSERT INTO TBL_LISTOPTION
+		(LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, DELFLAG, TENANT_ID, COMPANYID)
+		VALUES
+		('112', 1, '수신자', 200, NULL, 'RECEIPTDEPTNAME', NULL, NULL, '수신자', NULL, 'Receiver', '受信者' , '受信者', NULL, #tenantId#, #companyId#),
+		('112', 2, '상태', 100, NULL, 'STATUS', NULL, NULL, '상태', NULL, 'Status', 'ステータス', 'ステータス', NULL, #tenantId#, #companyId#),
+		('112', 3, '일자', 300, NULL, 'STATUSDATE', NULL, NULL, '일자', NULL, 'Date', '日付', '日付', NULL, #tenantId#, #companyId#)
+	</insert>
+	
+	<select id="EzCommonDAO.checkAprDocGroupInfoTypeColumn">
+        <![CDATA[
+            SELECT
+                TYPE
+            FROM
+                TBL_APRDOCGROUPINFO
+            LIMIT 1
+        ]]>
+    </select>
+    <statement id="EzCommonDAO.addAprDocGroupInfoTypeColumn">
+        ALTER TABLE
+        	TBL_APRDOCGROUPINFO 
+		ADD 
+			TYPE VARCHAR(10) NOT NULL
+    </statement>
+    
+	<statement id="EzCommonDAO.alterTblDevMaster">
+	<![CDATA[
+		ALTER TABLE 
+			TBL_DEV_MASTER
+		ADD 
+		IF NOT EXISTS
+		(
+			PIN 				VARCHAR(1000) 	DEFAULT NULL,
+			PINSTATE			CHAR(1)			DEFAULT 'N',
+			BIOMETRIC			CHAR(1)			DEFAULT 'N'
+		)
+	]]>
+    </statement>
+    
 </sqlMap>

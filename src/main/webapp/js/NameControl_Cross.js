@@ -1653,7 +1653,7 @@ function getSIPUri(strCNList, strEMailList) {
     }
     xmlhttp.send(xmlpara);
 
-    if (xmlhttp.statusText == "OK")
+    if (xmlhttp.status == 200)
         return xmlhttp.responseText;
     else
         return "";

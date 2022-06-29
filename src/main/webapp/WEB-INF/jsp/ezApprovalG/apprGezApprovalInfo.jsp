@@ -195,7 +195,7 @@
 			var pSignImage_Size = "<c:out value ='${signImageSize}'/>";
 			var pAdmin = "N";
 			var pGongRamDocID;
-			//기안(DRAFT), 접수(RECV), 합의(HABYUI) 여부
+			// 기안(DRAFT), 접수(RECV), 합의(HABYUI), 접수기안된 수신문서(SUSIN) 여부
 			var approvalType;
 			var chamjoAfterYN = "<c:out value ='${chamjoAfterYN}'/>";
 			var isUsed = "<c:out value ='${isUsed}'/>";
@@ -226,6 +226,11 @@
 			/* 2021-04-19 홍승비 - 수신문서 회송여부를 판단하기 위한 변수 추가 */
 			var isSusinReset = false;
 			var preSusinGroupStr = "<c:out value ='${preSusinGroupStr}'/>";
+			
+			/* 2022-01-14 홍승비 - 일괄기안 관련 변수 추가 */
+			var curDocID = "";
+			var draftAllFlag = "<c:out value ='${draftAllFlag}'/>";
+			var pDocIDAry = new Array();
 	        
 	        $(function () {
 	        	if (document.getElementById("AprSecurity").checked){
@@ -263,7 +268,7 @@
 	        	initdatepicker();
 	        });
 	        
-	        window.onload = function () {        	
+	        window.onload = function () {
 	        	if(approvalFlag == "G") {
 	        		$(".approvalG").css("display","");
 	        		$(".approval").css("display","none");
@@ -283,7 +288,7 @@
 	                document.getElementById("orgbtnArea").style.display = "none";
 	                document.getElementById("btnArea").style.display = "inline";
 	            } */
-	
+	            
 	            GetDocInfo(); 
 	            AprTypeXML = loadXMLString(tempAprTypeXML);
 	            ChangeTab(document.getElementById("1tab1"));
@@ -624,6 +629,11 @@
              	if(useDoc24 == "YES"){
              		getDoc24List();
              	}
+             	
+             	/* 2022-02-21 홍승비 - 일괄기안문서의 경우, 부서합의는 사용 불가하므로 부서추가버튼 숨김처리 (개인병렬, 개인순차합의는 가능) */
+             	 if (draftAllFlag == "Y") {
+ 	                document.getElementById("deptaddbtn").style.display = "none";
+ 	            }
 	        };
 	        
 	        function KeEventControl(obj) {
@@ -721,6 +731,17 @@
 	            fileOpenFlagList = RetValue[55];
 	            limitDate = RetValue[56];
 	            passAprLine = RetValue[60];
+	            
+	            /* 2022-01-14 홍승비 - 일괄기안 관련 파라미터 추가 */
+	            if (RetValue[62] != undefined) { // 일괄기안 플래그
+		            draftAllFlag = RetValue[62];
+	            }
+	            if (RetValue[63] != undefined && RetValue[63].length > 1) { // 전체 문서ID 배열
+	            	pDocIDAry = RetValue[63];
+	            }
+	            if (RetValue[64] != undefined) { // 현재 선택한 탭의 문서ID
+	            	curDocID = RetValue[64]; 
+	            }
 	            
 				//기결재통과 버튼 표출 체크
 				showPassAprLineBtn();
@@ -1240,25 +1261,28 @@
 			function btn_OK() {
 				var chkReceivedDoc = 0;
 
-				//접수된 문서인지 확인하기
-				$.ajax({
-					type : "POST",
-					dataType : "text",
-					async : false,
-					url : "/ezApprovalG/isReceivedDoc.do",
-					data : {
-						docID : pDocID
-					},
-					success : function(result) {
-						chkReceivedDoc = result;
+				/* 2022-04-26 홍승비 - 중복 접수 방지 로직은 접수창(approvalType="RECV")에서만 동작하도록 분기처리 추가 */
+				if (approvalType == "RECV") {
+					// 이미 접수된 문서인지 확인하기
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezApprovalG/isReceivedDoc.do",
+						data : {
+							docID : pDocID
+						},
+						success : function(result) {
+							chkReceivedDoc = result;
+						}
+					});
+	
+					if (chkReceivedDoc != 0) {
+						alert("<spring:message code='ezApprovalG.pjg04'/>");
+						opener.close();
+						window.close();
+						return;
 					}
-				});
-
-				if (chkReceivedDoc != 0) {
-					alert("<spring:message code='ezApprovalG.pjg04'/>");
-					opener.close();
-					window.close();
-					return;
 				}
 
 		    	var aprLineCnt = $("#lvAPRLINE").find("tr[data11='001']"); // 결재
@@ -1540,13 +1564,32 @@
                                 // 원문정보 첨부파일 공개/비공개
                                 ret[28] = "";
 
-                                for (var i = 0; i < document.getElementsByClassName('fileOpenFlagChk').length; i++) {
-                                    if (document.getElementsByClassName('fileOpenFlagChk')[i].checked) {
-                                        ret[28] += "Y";
-                                    } else {
-                                        ret[28] += "N";
-                                    }
-                                }
+                                // 일괄기안 시, 원문정보 첨부파일 공개/비공개 플래그를 배열 데이터로 삽입
+                                if (draftAllFlag != undefined && draftAllFlag == "Y") {
+    			                	var fileOpenFlagListArr = new Array();
+    			                	var fileOpenFlagListTemp = "";
+    			                	for (var i = 1; i < pDocIDAry.length; i++) { // 0번 인덱스는 제외하고 1안부터 확인
+    			                		fileOpenFlagListTemp = "";
+    			                		for (j = 0; j < $('input[anno="' + i + '"]').length; j++) { // 첨부파일 인덱스는 0부터 시작
+    				                		if ($('input[anno="' + i + '"]')[j].checked) {
+    				                			fileOpenFlagListTemp += "Y";
+    					                	} else {
+    					                		fileOpenFlagListTemp += "N";
+    					                	}
+    			                		}
+    			                		fileOpenFlagListArr[i] = fileOpenFlagListTemp;
+    			                	}
+    			                	ret[28] = fileOpenFlagListArr;
+    			                }
+                                else {
+	                                for (var i = 0; i < document.getElementsByClassName('fileOpenFlagChk').length; i++) {
+	                                    if (document.getElementsByClassName('fileOpenFlagChk')[i].checked) {
+	                                        ret[28] += "Y";
+	                                    } else {
+	                                        ret[28] += "N";
+	                                    }
+	                                }
+    			                }
 
                                 ret[29] = $("#txt_Basis").val();
                                 ret[30] = $("#txt_Reason").val();
@@ -2426,13 +2469,20 @@
 		    }
 		    
 		    function getAttachList() {
+		    	var url = "/ezApprovalG/getAttachListForOpenGov.do";
+		    	if (draftAllFlag == "Y") {
+		    		url = "/ezApprovalG/getAttachListForOpenGovDraftAll.do"
+		    	}
+		    	
             	$.ajax({
             		type : "POST",
             		dataType : "json",
             		async : false,
-            		url : "/ezApprovalG/getAttachListForOpenGov.do",
+            		url : url,
             		data : {
-            			docID : pDocID
+            			docID : pDocID,
+            			draftAllFlag : draftAllFlag, // 일괄기안 관련 변수
+            			pDocIDAry : pDocIDAry
             		},
             		success: function(xml){
             			result = xml;
@@ -2440,16 +2490,36 @@
            					var attachTr;
 	            			$.each(result, function(index, item) {
 	            				attachTr = "";
-	            				if (item.fileOpenFlag == "Y") {
-	            					attachTr = "<tr><td style='width:30px'><input onClick='fileOpenFlagChk_onClick(this)' class='fileOpenFlagChk' id='fileOpenFlagChk_" + item.sn + "' type='checkbox' checked /></td>"
-		            				+ "<td style='width:30px'>" + item.sn + "</td><td style='width:350px'>" + item.fileName + "</td>"
-		            				+ "<td style='width:70px'>" + item.fileSize + "</td>"
-		            				+ "<td class='fileOpenFlag' id='fileOpenFlag_" + item.sn + "' style='width:60px'>" + "공개" + "</td></tr>";
-	            				} else {
-	            					attachTr = "<tr><td style='width:30px'><input onClick='fileOpenFlagChk_onClick(this)' class='fileOpenFlagChk' id='fileOpenFlagChk_" + item.sn + "' type='checkbox'/></td>"
-		            				+ "<td style='width:30px'>" + item.sn + "</td><td style='width:350px'>" + item.fileName + "</td>"
-		            				+ "<td style='width:70px'>" + item.fileSize + "</td>"
-		            				+ "<td class='fileOpenFlag' id='fileOpenFlag_" + item.sn + "' style='width:60px'>" + "비공개" + "</td></tr>";
+	            				
+	            				// 일괄기안이 아닌 경우 (기존 코드)
+	            				if (draftAllFlag != "Y") {
+		            				if (item.fileOpenFlag == "Y") {
+		            					attachTr = "<tr><td style='width:30px'><input onClick='fileOpenFlagChk_onClick(this)' class='fileOpenFlagChk' id='fileOpenFlagChk_" + item.sn + "' type='checkbox' checked /></td>"
+			            				+ "<td style='width:30px'>" + item.sn + "</td><td style='width:350px'>" + item.fileName + "</td>"
+			            				+ "<td style='width:70px'>" + item.fileSize + "</td>"
+			            				+ "<td class='fileOpenFlag' id='fileOpenFlag_" + item.sn + "' style='width:60px'>" + "공개" + "</td></tr>";
+		            				} else {
+		            					attachTr = "<tr><td style='width:30px'><input onClick='fileOpenFlagChk_onClick(this)' class='fileOpenFlagChk' id='fileOpenFlagChk_" + item.sn + "' type='checkbox'/></td>"
+			            				+ "<td style='width:30px'>" + item.sn + "</td><td style='width:350px'>" + item.fileName + "</td>"
+			            				+ "<td style='width:70px'>" + item.fileSize + "</td>"
+			            				+ "<td class='fileOpenFlag' id='fileOpenFlag_" + item.sn + "' style='width:60px'>" + "비공개" + "</td></tr>";
+		            				}
+	            				}
+	            				// 일괄기안인 경우, 각 첨부파일 별 안번호를 표시
+	            				else {
+	            					if (item.fileOpenFlag == "Y") {
+		            					attachTr = "<tr><td style='width:30px'><input onClick='fileOpenFlagChk_onClick(this)' anNo='" + pDocIDAry.indexOf(item.docID) + "' class='fileOpenFlagChk' id='fileOpenFlagChk_" + item.sn + "' type='checkbox' checked /></td>"
+		            					+ "<td class='anNo' style='width:30px'>" + pDocIDAry.indexOf(item.docID) + "안</td>"
+			            				+ "<td style='width:30px'>" + item.sn + "</td><td style='width:350px'>" + item.fileName + "</td>"
+			            				+ "<td style='width:70px'>" + item.fileSize + "</td>"
+			            				+ "<td class='fileOpenFlag' id='fileOpenFlag_" + item.sn + "' style='width:60px'>" + strLang82 + "</td></tr>";
+		            				} else {
+		            					attachTr = "<tr><td style='width:30px'><input onClick='fileOpenFlagChk_onClick(this)' anNo='" + pDocIDAry.indexOf(item.docID) + "' class='fileOpenFlagChk' id='fileOpenFlagChk_" + item.sn + "' type='checkbox'/></td>"
+		            					+ "<td class='anNo' style='width:30px'>" + pDocIDAry.indexOf(item.docID) + "안</td>"
+			            				+ "<td style='width:30px'>" + item.sn + "</td><td style='width:350px'>" + item.fileName + "</td>"
+			            				+ "<td style='width:70px'>" + item.fileSize + "</td>"
+			            				+ "<td class='fileOpenFlag' id='fileOpenFlag_" + item.sn + "' style='width:60px'>" + strLang84 + "</td></tr>";
+		            				}
 	            				}
 	            				
 	            				$("#attachList").append(attachTr);	
@@ -2536,14 +2606,17 @@
 	    		if (tooltipLevelFlag != "Y"){
 	    			return;
 	    		}
-	    		document.querySelector('input[name=selSecLevel1]').nextSibling.setAttribute('title','법률 또는 명령에 의하여 비밀로 유지되거나 비공개사항으로 규정된 항목'														);
-	    		document.querySelector('input[name=selSecLevel2]').nextSibling.setAttribute('title','공개될 경우 국가안보,국방,통일 외교관계 등 국익을 해할 우려가 있는 정보'													);
-	    		document.querySelector('input[name=selSecLevel3]').nextSibling.setAttribute('title','공개될 경우 국민의 생명,신체,재산 등 공공안전 및 이익을 해할 우려가 있는 정보'													);
-	    		document.querySelector('input[name=selSecLevel4]').nextSibling.setAttribute('title','수사,재판,범죄예방 등의 관련정보로서 공개될 경우 직무수행이 곤란하거나 형사피고인의 공정한 재판받을 권리를 침해할 우려가 있는 정보'					);
-	    		document.querySelector('input[name=selSecLevel5]').nextSibling.setAttribute('title','감사,감독,검사,시험,규제,입찰계약,기술개발,인사관리,의사결정 또는 내부검토과정에\n있는 사항으로서 공개될 경우 업무수행 등에 지장을 초래할 우려가 있는 정보'	);
-	    		document.querySelector('input[name=selSecLevel6]').nextSibling.setAttribute('title','이름,주민등록번호 등에 의해 특정인을 식별할 수 있는 개인에 관한 정보'														);
-	    		document.querySelector('input[name=selSecLevel7]').nextSibling.setAttribute('title','법인,단체 또는 개인의 영업상 비밀에 관한 정보로서 공개될 경우 법인 등의 정당한 이익을 해할 우려가 있는 정보'								);
-	    		document.querySelector('input[name=selSecLevel8]').nextSibling.setAttribute('title','공개될 경우 부동산투기,매점매석 등으로 특정인에게 이익 보는 불이익을 줄 우려가 있는 정보'											);
+	    		// 일반버전에서 스크립트 오류 발생하지 않도록 수정
+	    		if (document.querySelector('input[name=selSecLevel1]') != null) {
+		    		document.querySelector('input[name=selSecLevel1]').nextSibling.setAttribute('title','법률 또는 명령에 의하여 비밀로 유지되거나 비공개사항으로 규정된 항목'														);
+		    		document.querySelector('input[name=selSecLevel2]').nextSibling.setAttribute('title','공개될 경우 국가안보,국방,통일 외교관계 등 국익을 해할 우려가 있는 정보'													);
+		    		document.querySelector('input[name=selSecLevel3]').nextSibling.setAttribute('title','공개될 경우 국민의 생명,신체,재산 등 공공안전 및 이익을 해할 우려가 있는 정보'													);
+		    		document.querySelector('input[name=selSecLevel4]').nextSibling.setAttribute('title','수사,재판,범죄예방 등의 관련정보로서 공개될 경우 직무수행이 곤란하거나 형사피고인의 공정한 재판받을 권리를 침해할 우려가 있는 정보'					);
+		    		document.querySelector('input[name=selSecLevel5]').nextSibling.setAttribute('title','감사,감독,검사,시험,규제,입찰계약,기술개발,인사관리,의사결정 또는 내부검토과정에\n있는 사항으로서 공개될 경우 업무수행 등에 지장을 초래할 우려가 있는 정보'	);
+		    		document.querySelector('input[name=selSecLevel6]').nextSibling.setAttribute('title','이름,주민등록번호 등에 의해 특정인을 식별할 수 있는 개인에 관한 정보'														);
+		    		document.querySelector('input[name=selSecLevel7]').nextSibling.setAttribute('title','법인,단체 또는 개인의 영업상 비밀에 관한 정보로서 공개될 경우 법인 등의 정당한 이익을 해할 우려가 있는 정보'								);
+		    		document.querySelector('input[name=selSecLevel8]').nextSibling.setAttribute('title','공개될 경우 부동산투기,매점매석 등으로 특정인에게 이익 보는 불이익을 줄 우려가 있는 정보'											);
+	    		}
 	    	}
 
 		    
@@ -3107,7 +3180,7 @@
 		                                        	</c:if>
 		                                        </span>
 		                                <span id="trCreateCabDummy" style="display: none"></span>
-		                                <span  style="vertical-align: middle; margin-left: 375px;">
+		                                <span  style="vertical-align: middle; float: right;">
 		                                    <select id="selSearchOption" style="vertical-align: top;height:22px;margin-top:3px">
 		                                        <option>
 		                                            <spring:message code='ezApprovalG.t10026'/>
@@ -3349,13 +3422,29 @@
 		                <div style="overflow: auto; width: 100%; height: 115px;">
 			               <table width="100%" class="popuplist" style="margin-top: 2px;">
 			               <thead>
+			               <%-- 2022-01-17 홍승비 - 일괄기안 사용 시 원문공개 첨부파일에 "안" 번호 데이터 추가 --%>
+					    	<c:choose>
+					    	<c:when test="${draftAllFlag == 'Y'}">
+					    	<tr>
+						    	<th id="lvAPRLINE_TH_0" class="h4_center" bgcolor="#CCCCCC" style="height:10px;width:30px"><spring:message code='ezApprovalG.t109'/></th>
+						    	<th id="lvAPRLINE_TH_1" class="h4_center" bgcolor="#CCCCCC" style="height:10px;width:30px">안</th>
+						    	<th id="lvAPRLINE_TH_2" class="h4_center" bgcolor="#CCCCCC" style="height:10px;width:30px"><spring:message code='ezApprovalG.t439'/></th>
+						    	<th id="lvAPRLINE_TH_3" class="h4_center" bgcolor="#CCCCCC" style="height:10px;width:350px"><spring:message code='ezApprovalG.t00010'/></th>
+						    	<th id="lvAPRLINE_TH_4" class="h4_center" bgcolor="#CCCCCC" style="height:10px;width:70px"><spring:message code='ezBoard.t376'/></th>
+						    	<th id="lvAPRLINE_TH_5" class="h4_center" bgcolor="#CCCCCC" style="height:10px;width:60px"><spring:message code='ezCommunity.t66'/>/<spring:message code='ezCommunity.t67'/></th>
+						    	<th id="lvAPRLINE_TH_6" class="h4_center" bgcolor="#CCCCCC" style="height:10px;width:60px;display:none;"></th>
+						    </tr>
+					    	</c:when>
+					    	<c:otherwise>
 					    	<tr>
 						    	<th id="lvAPRLINE_TH_0" class="h4_center" bgcolor="#CCCCCC" style="height:10px;width:30px">공개여부</th>
 						    	<th id="lvAPRLINE_TH_1" class="h4_center" bgcolor="#CCCCCC" style="height:10px;width:30px">순번</th>
 						    	<th id="lvAPRLINE_TH_2" class="h4_center" bgcolor="#CCCCCC" style="height:10px;width:350px">파일이름</th>
 						    	<th id="lvAPRLINE_TH_3" class="h4_center" bgcolor="#CCCCCC" style="height:10px;width:70px">파일크기</th>
 						    	<th id="lvAPRLINE_TH_4" class="h4_center" bgcolor="#CCCCCC" style="height:10px;width:60px">공개/비공개</th>
-						  	</tr>
+						    </tr>
+						    </c:otherwise>
+						    </c:choose>
 						  	</thead>
 						  	<tbody  id="attachList">
 						  	</tbody>

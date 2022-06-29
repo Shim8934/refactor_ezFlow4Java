@@ -580,6 +580,26 @@
 			PHOTO_UPDATEDT DATE DEFAULT NULL
 	</statement>
 
+	<select id="EzCommonDAO.check_AnyTbl_AnyColumns" parameterClass="Map" resultClass="String">
+	<!-- resultSet이 재사용이 안되는 건지.. 쿼리에 문제가 없는데도, 출력 값이 바뀌면 에러가 나는 현상이 있어서 select 1로 고정 result를 생성하도록 함. (flushCache 같은 속성은 알지 못한다고 에러남) --> 
+		SELECT 1 FROM DUAL 
+		WHERE EXISTS (
+			SELECT 
+				$COLUMN_NAME$
+			FROM 
+				$TBL_NAME$
+			WHERE 
+				ROWNUM = 1 
+		)
+	</select>
+
+	<statement id="EzCommonDAO.add_AnyTbl_AnyColumns" parameterClass="Map">
+		ALTER TABLE
+			$TBL_NAME$
+		$ALTER$ 
+			$COLUMN_NAME$ $TYPE_TIBERO$ $AFTER$
+	</statement>
+
 	<insert id="EzCommonDAO.insertUseSession" parameterClass="Map">
 		INSERT INTO tbl_tenant_config
 		(tenant_id, property_name, property_value, description, config_name, regdate, config_type)
@@ -2714,6 +2734,42 @@
 			TBL_LASTDEPTLINE_PK2 PRIMARY KEY(TENANT_ID, COMPANYID, USERID, FORMID, RECEIPTPOINTID, DOCSTATE)
 	</statement>
 	
+	<select id="EzCommonDAO.checkTblAdminAccessIpTable" resultClass="String">
+		<![CDATA[
+			SELECT 
+				TENANT_ID
+			FROM 
+				TBL_ADMIN_ACCESS_IP
+			WHERE
+			    rownum <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblAdminAccessIpTable"> 
+		CREATE TABLE TBL_ADMIN_ACCESS_IP (
+			"IPNO" NUMBER(*,0) NOT NULL ENABLE, 
+		  	"TENANT_ID" NUMBER(5,0),
+		  	"IPADDRESS" NVARCHAR2(100) NOT NULL,
+		  	"ALLOW_ACCESS" NVARCHAR2(10) DEFAULT 'NO',
+		  	"EXPLANATION" NVARCHAR2(200) DEFAULT NULL,
+		  	CONSTRAINT "PK2_TBL_ADMIN_ACCESS_IP" PRIMARY KEY ("IPNO")
+		)
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblAdminAccessIpSequence" resultClass="int">
+		SELECT
+			COUNT(SEQUENCE_NAME)
+		FROM 
+			USER_SEQUENCES
+		WHERE 
+			SEQUENCE_NAME = 'TBL_ADMIN_ACCESS_IP_SEQ2'
+	</select>
+	
+	<statement id="EzCommonDAO.createTblAdminAccessIpSequence">
+		CREATE SEQUENCE "TBL_ADMIN_ACCESS_IP_SEQ2"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE
+
+	</statement>
+	
 	<select id="EzCommonDAO.checkReBebuOpinionCode" parameterClass="Map" resultClass="String">
 	<![CDATA[
 		SELECT
@@ -4371,4 +4427,202 @@
 		)
     </statement>
     
+	<select id="EzCommonDAO.checkMailOutOfOfficeTemplate" resultClass="String">
+		<![CDATA[
+			SELECT 
+				USER_ID
+			FROM 
+				JMOCHA_MAIL_OUTOFOFFICE_TEM
+			WHERE
+			    rownum = 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.createMailOutOfOfficeTemplate"> 
+		CREATE TABLE JMOCHA_MAIL_OUTOFOFFICE_TEM (
+			USER_ID NVARCHAR2(100) NOT NULL,
+			DISPLAYNAME NVARCHAR2(40) NOT NULL,
+			CONTENT LONG,
+			CONSTRAINT "JMOCHA_MAIL_OOO_TEM_PK" PRIMARY KEY (USER_ID, DISPLAYNAME)
+		)
+	</statement>
+	
+	<select id="EzCommonDAO.checkUserMailTemplate" resultClass="String">
+		<![CDATA[
+			SELECT 
+				USER_ID
+			FROM 
+				JMOCHA_USER_MAIL_TEMPLATE
+			WHERE
+			    rownum = 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.createUserMailTemplate"> 
+		CREATE TABLE JMOCHA_USER_MAIL_TEMPLATE (
+			USER_ID NVARCHAR2(100) NOT NULL,
+			DISPLAYNAME NVARCHAR2(100) NOT NULL,
+			TEMPLATE_ID NVARCHAR2(510) NOT NULL,
+			REGDATE DATE,
+			EDITORTYPE NVARCHAR2(5),
+			CONTENT LONG,
+			CONSTRAINT "JMOCHA_USER_MAIL_TEMPLATE_PK" PRIMARY KEY (USER_ID, DISPLAYNAME)
+		)
+	</statement>
+	
+    <statement id="EzCommonDAO.alterTblConnectionInfo">
+    {call
+		DECLARE
+			column_exists NUMBER;
+		BEGIN
+			SELECT COUNT(*) cnt INTO column_exists
+			FROM ALL_TAB_COLUMNS
+			WHERE TABLE_NAME = 'TBL_CONNECTION_INFO'
+			AND COLUMN_NAME = 'STATUS' AND OWNER = 'EZEKP2017';
+			IF column_exists = 0 THEN
+				EXECUTE IMMEDIATE  'ALTER TABLE TBL_CONNECTION_INFO
+									ADD	(
+										STATUS			VARCHAR2(1)		DEFAULT	NULL,
+										DISCONNECTTIME	DATE			DEFAULT	NULL,
+										SESSIONCODE		VARCHAR2(200)	DEFAULT NULL
+										)';
+			END IF;
+		END;
+	}
+	</statement>
+
+    <statement id="EzCommonDAO.createTblAdminAccessInfo">
+    {call
+		DECLARE
+			tbl_exists NUMBER;
+		BEGIN
+			SELECT COUNT(*) cnt INTO tbl_exists
+			FROM ALL_TABLES
+			WHERE TABLE_NAME = 'TBL_ADMIN_ACCESS_INFO';
+			IF tbl_exists = 0 THEN
+				EXECUTE IMMEDIATE
+					'CREATE TABLE TBL_ADMIN_ACCESS_INFO
+					   (
+					    SEQUENCE 		NUMBER(19,0) 	NOT NULL,
+						USERID 			NVARCHAR2(50) 	NOT NULL,
+						USERNM 			NVARCHAR2(100),
+						USERNM2 		NVARCHAR2(100),
+						DEPTID 			CHAR(50 CHAR),
+						DEPTNM 			NVARCHAR2(100),
+						DEPTNM2 		NVARCHAR2(100),
+						TITLE 			NVARCHAR2(100),
+						TITLE2 			NVARCHAR2(100),
+						COMPANYID 		CHAR(50 CHAR),
+						COMPANYNM 		NVARCHAR2(100),
+						COMPANYNM2 		NVARCHAR2(100),
+						ACCESSIP 		VARCHAR2(50 CHAR),
+						ACCESSINFO 		VARCHAR2(50 CHAR),
+						ACCESSTIME 		DATE,
+						ACCESSBROWSER 	CHAR(10 CHAR),
+						ACCESSOS 		CHAR(20 CHAR),
+						ACCESSAGENT 	NVARCHAR2(500),
+						ADMINTYPE 		NVARCHAR2(200),
+						TENANT_ID 		NUMBER 	DEFAULT 0 NOT NULL,
+						CONSTRAINT PK_TBL_ADMIN_ACCESS_INFO PRIMARY KEY (SEQUENCE)
+					   )';
+					EXECUTE IMMEDIATE
+					   'CREATE SEQUENCE  "SEQ_TBL_ADMIN_ACCESS_INFO"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE';
+			END IF;
+		END;
+	}
+    </statement>
+
+	<statement id="EzCommonDAO.createTblPermissionChangeInfo">
+    {call
+		DECLARE
+			tbl_exists NUMBER;
+		BEGIN
+			SELECT COUNT(*) cnt INTO tbl_exists
+			FROM ALL_TABLES
+			WHERE TABLE_NAME = 'TBL_PERMISSION_CHANGE_INFO';
+			IF tbl_exists = 0 THEN
+				EXECUTE IMMEDIATE
+					'CREATE TABLE TBL_PERMISSION_CHANGE_INFO
+					   (
+						SEQUENCE NUMBER(19,0) NOT NULL,
+						USERID NVARCHAR2(50) NOT NULL,
+						USERNM NVARCHAR2(100),
+						USERNM2 NVARCHAR2(100),
+						DEPTID CHAR(50 CHAR),
+						DEPTNM NVARCHAR2(100),
+						DEPTNM2 NVARCHAR2(100),
+						TITLE NVARCHAR2(100),
+						TITLE2 NVARCHAR2(100),
+						COMPANYID CHAR(50 CHAR),
+						COMPANYNM NVARCHAR2(100),
+						COMPANYNM2 NVARCHAR2(100),
+						AUTHORIZEDTIME DATE,
+						ADMINTYPE NVARCHAR2(200),
+						STATUS NVARCHAR2(40),
+						AUTHORIZERID NVARCHAR2(50) NOT NULL,
+						AUTHORIZERNM NVARCHAR2(100),
+						AUTHORIZERNM2 NVARCHAR2(100),
+						AUTHORIZERIP VARCHAR2(50 CHAR),
+						TENANT_ID NUMBER DEFAULT 0 NOT NULL,
+						CONSTRAINT PK_TBL_PERMISSION_CHANGE_INFO PRIMARY KEY (SEQUENCE)
+					   )';
+					EXECUTE IMMEDIATE
+					   'CREATE SEQUENCE  "SEQ_TBL_PERMISSION_CHANGE_INFO"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE';
+			END IF;
+		END;
+	}
+    </statement>
+
+   	<select id="EzCommonDAO.checkReceiptHistoryListoption" parameterClass="Map" resultClass="String">
+	<![CDATA[
+		SELECT
+			companyid
+		FROM
+			TBL_LISTOPTION
+		WHERE
+			LISTTYPE = '112'
+		AND
+			companyid = #companyId#
+		AND
+			tenant_id = #tenantId#
+		AND
+			ROWNUM = 1
+	]]>
+	</select>
+   
+	<insert id="EzCommonDAO.insertReceiptHistoryListoption">
+	<![CDATA[
+		INSERT ALL
+		    INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID) 
+		    VALUES ('112', 1, '수신자', 200, NULL, 'RECEIPTDEPTNAME', NULL, NULL, '수신자', NULL, 'Receiver', '受信者' , '受信者', #tenantId#, #companyId#)
+		    INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID) 
+		    VALUES ('112', 2, '상태', 100, NULL, 'STATUS', NULL, NULL, '상태', NULL, 'Status', 'ステータス', 'ステータス', #tenantId#, #companyId#)
+		    INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID) 
+		    VALUES ('112', 3, '일자', 300, NULL, 'STATUSDATE', NULL, NULL, '일자', NULL, 'Date', '日付', '日付', #tenantId#, #companyId#)
+	    SELECT
+	    	*
+	    FROM DUAL
+	]]>
+   	</insert>
+
+	<statement id="EzCommonDAO.alterTblConnectionInfo">
+    <![CDATA[
+    {call
+		DECLARE
+			column_exists NUMBER;
+		BEGIN
+			SELECT COUNT(*) cnt INTO column_exists
+			FROM ALL_TAB_COLUMNS
+			WHERE TABLE_NAME = 'TBL_DEV_MASTER'
+			AND COLUMN_NAME = 'PINSTATE' AND OWNER = 'EZEKP2017';
+			IF column_exists = 0 THEN
+				EXECUTE IMMEDIATE  'ALTER TABLE TBL_DEV_MASTER
+									ADD	(
+										PIN 				VARCHAR(1000) 	DEFAULT NULL,
+										PINSTATE			CHAR(1)			DEFAULT ''N'',
+										BIOMETRIC			CHAR(1)			DEFAULT ''N''
+										)';
+			END IF;
+		END;
+	}
+	]]>
+	</statement>
 </sqlMap>

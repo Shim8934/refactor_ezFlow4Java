@@ -53,7 +53,7 @@
 				var popupX = Math.ceil((window.screen.width - 500)/2);
 				var popupY = Math.ceil((window.screen.height - 500)/2);
 
-				window.open("/ezCommon/showPersonInfo.do?id=" + userid, "", "height=500px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1, left=" + popupX + ",top=" + popupY);
+				window.open("/ezCommon/showPersonInfo.do?id=" + userid, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1, left=" + popupX + ",top=" + popupY);
 			}
 			function open_homepage()
 			{

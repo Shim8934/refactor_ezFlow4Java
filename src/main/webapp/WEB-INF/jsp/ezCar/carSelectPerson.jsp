@@ -332,7 +332,7 @@
 
 		    function event_displayUserList() {
 		        if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
-		            if (g_xmlHTTP.statusText == "OK") {
+		            if (g_xmlHTTP.status == 200) {
 		                pListXML_Info = g_xmlHTTP.responseXML;
 		                g_xmlHTTP = null;
 		                pSeach = false;
@@ -409,7 +409,7 @@
 
 		    function event_displayUserList2() {
 		        if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
-		            if (g_xmlHTTP.statusText == "OK") {
+		            if (g_xmlHTTP.status == 200) {
 		                if (g_xmlHTTP.responseXML.getElementsByTagName("ROW").length == 0) {
 		                	alert("<spring:message code="ezResource.t5"/>");
 		                } else {
@@ -510,7 +510,7 @@
 			
 		    function event_getDeptFullTree() {
 		        if(g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
-		            if (g_xmlHTTP.statusText == "OK") {
+		            if (g_xmlHTTP.status == 200) {
 		                var xmlDom = createXmlDom();
 		                xmlDom.async = false;
 		                xmlDom = loadXMLFile("/xml/organtree_config.xml");

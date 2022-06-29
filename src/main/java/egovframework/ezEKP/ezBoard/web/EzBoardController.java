@@ -1845,6 +1845,7 @@ public class EzBoardController extends EgovFileMngUtil{
     				resultXML.append("<DATA9>" + boardListItem.get(j).get("NOTICE") + "</DATA9>");
     				resultXML.append("<DATA10>" + boardListItem.get(j).get("GUBUN") + "</DATA10>");
     				resultXML.append("<DATA11>" + boardListItem.get(j).get("ONELINECNT") + "</DATA11>");
+    				resultXML.append("<DATA12>" + boardListItem.get(j).get("ATTRIBUTEYN") + "</DATA12>");
     			}
     			
     			resultXML.append("</CELL>");
@@ -4299,7 +4300,10 @@ public class EzBoardController extends EgovFileMngUtil{
 				resultUpload[i] = "overflow";
 			} else {
 				if (pMode.equals("ATT")) {
-					if (useExtension.toLowerCase().indexOf(pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1).toString().toLowerCase()) == -1 && !useExtension.equals("*")) {
+					// dhlee : 20220527 - 파일 업로드 시 .으로 끝나는 파일(예: .jsp.)이 무조건 업로드 허용되는 문제 수정
+					String extStr = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1).toString().toLowerCase();
+
+					if ((extStr.isEmpty() || useExtension.toLowerCase().indexOf(extStr) == -1) && !useExtension.equals("*")) {
 						resultUpload[i] = "denied";
 					} else {
 						String pAttachPath = realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId()) + commonUtil.separator;
@@ -4391,7 +4395,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		String dirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		
-		if (useExtension.toLowerCase().indexOf(fileName.substring(fileName.lastIndexOf(".") + 1).toString().toLowerCase()) == -1 && !useExtension.equals("*")) {
+		// dhlee : 20220527 - 파일 업로드 시 .으로 끝나는 파일(예: .jsp.)이 무조건 업로드 허용되는 문제 수정
+		String extStr = fileName.substring(fileName.lastIndexOf(".") + 1).toString().toLowerCase();
+
+		if ((extStr.isEmpty() || useExtension.toLowerCase().indexOf(extStr) == -1) && !useExtension.equals("*")) {
 			returnVal = "denied";
 		} else {
 			if (!new File(dirPath + "tempUploadFile").exists()) {
@@ -6138,7 +6145,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			fileExt = orgName.substring(orgName.lastIndexOf(".") + 1, orgName.length());
 			logger.debug("imageUpload file extension is : " + fileExt);
 			
-			if (commonUtil.checkImgExtension(fileExt) == false || (!useExtension.equals("*") && useExtension.toLowerCase().indexOf(fileExt.toLowerCase()) < 0)) {
+			if (commonUtil.checkImgExtension(fileExt.toLowerCase()) == false || (!useExtension.equals("*") && useExtension.toLowerCase().indexOf(fileExt.toLowerCase()) < 0)) {
 				isExtOK = false;
 				break;
 			}

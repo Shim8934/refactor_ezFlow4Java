@@ -1856,7 +1856,7 @@ function SaveApproveInfo(pApproveFlag) {
     }
     xmlhttp.send(xmlpara);
     if (xmlhttp != null && xmlhttp.readyState == 4) {
-     	 if (xmlhttp.statusText == "OK") {
+     	 if (xmlhttp.status == 200) {
      	    var dataNodes = GetChildNodes(xmlhttp.responseXML);
      	    return getNodeText(dataNodes[0]);
      	 } else {
@@ -3294,6 +3294,34 @@ function getLastOpinon() {
     if (field)
         field.textContent = content;
 }
+/* 2022-02-17 홍승비 - 일괄기안용 함수 분리 */
+function getLastOpinonForDraftAll(currIdx) {
+	var result = "";
+	var content = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getLastOpinonCotent.do",
+		data : {
+			docID : parent.pDocIDAry[currIdx]
+		},
+		success: function(xml){
+			result = xml;
+		}
+	});
+	
+	var objNodes = GetChildNodes(loadXMLString(result).documentElement);
+	if (objNodes.length > 0) {
+		content = getNodeText(objNodes[0]);
+	}
+	var fields = GetFieldsList();
+	var field = GetListItem(fields, "memo");
+	if (field) {
+		field.textContent = content;
+	}
+}
 function setMenuBar(id, flag) {
     var strCmd, display_Value
 
@@ -3686,7 +3714,7 @@ function UpdateDocHistory(pHtml, isBeforeDoc, beforeDocURL) {
         xmlhttp.send(xmlpara);
         
         if (xmlhttp != null && xmlhttp.readyState == 4) {
-          	 if (xmlhttp.statusText == "OK") {
+          	 if (xmlhttp.status == 200) {
           		returnURL = xmlhttp.responseText;
           	 } else {
           		 var pAlertContent = strLang89;

@@ -683,14 +683,14 @@
 	              ON 
 	                A.TENANT_ID = P.TENANT_ID
 	              AND
-	     			(A.WRITERCOMPANYID = P.COMPANYID OR TRIM(A.WRITERCOMPANYID) = ''
+	     			(A.WRITERCOMPANYID = P.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL
 						OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
 	              AND
 	                A.BOARDID = P.BOARDID
 	              AND 
 	                A.TENANT_ID = #tenantID#
 	              AND
-	              	(A.WRITERCOMPANYID = #companyID# OR TRIM(A.WRITERCOMPANYID) = ''
+	              	(A.WRITERCOMPANYID = #companyID# OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL
 						OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
 	              AND
 	                (A.APPRFLAG = 'Y' 

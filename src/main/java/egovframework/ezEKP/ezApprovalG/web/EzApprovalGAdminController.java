@@ -585,6 +585,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String usePassAprLine = ezCommonService.getTenantConfig("usePassAprLine", userInfo.getTenantId());
 		String passAprLineFlag = request.getParameter("passAprLineFlag");
 		String receptGubunYN = ezCommonService.getTenantConfig("receptGubunYN", userInfo.getTenantId());
+		String useDraftAll = ezCommonService.getTenantConfig("useDraftAll", userInfo.getTenantId());
 		
 		String title = (tCheck.equals("fIns") ? egovMessageSource.getMessage("ezApprovalG.t1667", userInfo.getLocale()) : egovMessageSource.getMessage("ezApprovalG.t1668", userInfo.getLocale()));
 		
@@ -680,6 +681,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		// 2021-01-21 심기영 오피스결재 여부 추가
 		model.addAttribute("useOfficeApproval", useOfficeApproval);
+		
+		/* 2022-01-07 홍승비 - 일괄기안 옵션 추가 */
+		model.addAttribute("useDraftAll", useDraftAll);
 		
 		logger.debug("formMainOther ended.");
 		
@@ -4028,6 +4032,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String buJaeInfo2 = "";
 		String proxyInfo = request.getParameter("proxy");
 		String dept = request.getParameter("dept");
+
 //		String proxyInfo2 = "";
 		//TODO: 원래는 user를 ad에서 정보 가져오는데 임시로 하드코딩함 전자결재외에 다른 부분 발견하면 수정요망(전자결재만 존재하면 그냥 박아도됨)
 		String pClass = "user";
@@ -4042,12 +4047,15 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		}
 		String result = "";
 		String userRealDeptId = "";
-		
+
+
 		userRealDeptId = ezOrganService.getUserOrgDeptId(buJaeId, userInfo.getTenantId(), userInfo.getCompanyID());
 		if (dept == null || dept.equals("") || dept.equals(userRealDeptId)) {
 			result = ezOrganService.updateProperty(buJaeId, "extensionAttribute5", buJaeInfo2, pClass, userInfo.getTenantId());
+			logger.debug("updateProperty buJaeId:" + buJaeId + " / buJaeInfo2:" + buJaeInfo2);
 		} else {
 			result = ezOrganService.updateAddJobProxy(buJaeId, buJaeInfo2, userInfo.getTenantId(), dept);
+			logger.debug("updateAddJobProxy buJaeId:" + buJaeId + " / buJaeInfo2:" +buJaeInfo2 + " / dept:" + dept);
 		}
 		
 		if (result.equals("OK")) {
@@ -4057,8 +4065,10 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 						
 			if (proxyInfo.split("\\|")[0].trim().equals("")) {
 				result = ezOrganService.delProxyUserInfo(buJaeId, userInfo.getTenantId());
+				logger.debug("delProxyUserInfo buJaeId:" + buJaeId);
 			} else {
 				result = ezOrganService.setProxyUserInfo(buJaeId, proxyInfo.split("\\|")[0], proxyInfo.split("\\|")[1], proxyInfo.split("\\|")[2], proxyInfo.split("\\|")[3], proxyInfo.split("\\|")[4], userInfo.getTenantId(), userInfo.getOffset());
+				logger.debug("setProxyUserInfo buJaeId:" + buJaeId + "proxyInfo:" + proxyInfo);
 			}
 		}
 

@@ -49,7 +49,13 @@
 	            pDisplay = dialogArguments[1];
 	            orgCompanyID = dialogArguments[2];
 	
-	            getEndOpinionInfo();
+	            /* 2022-06-28 홍승비 - 진행중문서를 완료문서 보기창으로 접근하는 경우가 있으므로, 진행중/완료문서를 체크하도록 분기처리 추가 */
+	            if (getAprOrEndStr() == "APR") {
+	            	getAPROpinionInfo();
+	            } else {
+	            	getEndOpinionInfo();
+	            }
+	            
 	            DisplayFirstOpinionInfo();
 	
 	            document.getElementById("txt_OpinionContent").readOnly = true;
@@ -134,6 +140,57 @@
 	            }
 	        }
 	        function txt_OpinionContent_onchange() { }
+			
+			/* 2022-06-28 홍승비 - 완료문서 의견창이지만 진행중문서 접근 시에 대응하도록 의견 함수 추가 */
+			function getAPROpinionInfo() {
+				document.getElementById("OPINION").innerText = "";
+
+		    	var result = "";
+		    	
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/opinionRequest.do",
+		    		data : {
+		    			docID : pDocID,
+		    			orgCompanyID : orgCompanyID
+		    		},
+		    		success: function(xml){
+		    			result = loadXMLString(xml);
+		    		}
+		    	});
+		    	
+	            Resultxml = result;
+	            var listview = new ListView();
+	            listview.SetID("optionForm");
+	            listview.SetMulSelectable(false);
+	            listview.SetRowOnClick("OPINIONOnSelChange_onclick");
+	            listview.DataSource(Resultxml);
+	            listview.DataBind("OPINION");
+	        }
+			
+			/* 2022-06-28 홍승비 - 전달한 DOCID로 진행중문서(APR) 또는 완료문서(END) 여부를 문자열로 리턴 */
+			function getAprOrEndStr() {
+				var result = "";
+		    	
+		    	$.ajax({
+		    		type : "GET",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/getAprOrEndStr.do",
+		    		data : {
+		    			docID : pDocID,
+		    			orgCompanyID : orgCompanyID
+		    		},
+		    		success: function(text){
+		    			result = text;
+		    		}
+		    	});
+		    	
+		    	return result;
+			}
+			
 	    </script>
 	    
 	</head>

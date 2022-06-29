@@ -1839,7 +1839,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	                resultUpload[i] = "overflow";
 	            } else {
 	            	// 허용하는 확장자가 아닌 경우 저장하지 않는다.
-	                if (useExtension.toLowerCase().indexOf(sExt[i].toLowerCase()) == -1 && !useExtension.equals("*")) {
+					// dhlee : 20220527 - 파일 업로드 시 .으로 끝나는 파일(예: .jsp.)이 무조건 업로드 허용되는 문제 수정
+	                if ((sExt[i].isEmpty() || useExtension.toLowerCase().indexOf(sExt[i].toLowerCase()) == -1) && !useExtension.equals("*")) {
 	                    resultUpload[i] = "denied";
 	                } else {
 	                	// 업로드된 파일 데이터를 위에서 할당한 UUID를 이름으로 하는 파일로 저장한다.

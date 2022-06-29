@@ -33,7 +33,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezResource/CalendarView_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/common.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 		<style type="text/css">
 			.warningbox{margin:240px auto 0px auto; padding:40px 20px 0px 20px; font-family:Malgun Gothic; width:625px; height:184px; border:1px solid #d6d6d6; box-sizing:border-box;}
 			.warningbox .warningimg{margin:0px; padding:0px 0px 0px 40px; float:left;}
@@ -175,8 +175,8 @@
 			
 			// 18-10-19 김민성 - 작성자 이름 클릭 시 사원정보보기 팝업
 			function OpenUserInfo(userID, deptID) {
-	        	var feature = "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
-	            feature = feature + GetOpenPosition(420, 438);
+	        	var feature = "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+	            feature = feature + GetOpenPosition(420, 450);
 	            window.open("/ezCommon/showPersonInfo.do?id=" + userID + "&dept=" + deptID, "", feature);
 	        }
 			

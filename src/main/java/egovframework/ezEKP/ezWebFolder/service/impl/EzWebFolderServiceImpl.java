@@ -926,7 +926,8 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				extend = "etc";
 			}
 			
-			if (useExtension.toLowerCase().contains(extend.toLowerCase()) || useExtension.equals("*")) {
+			// dhlee : 20220527 - 파일 업로드 시 .으로 끝나는 파일(예: .jsp.)이 무조건 업로드 허용되는 문제 수정
+			if ((!extend.isEmpty() && useExtension.toLowerCase().contains(extend.toLowerCase())) || useExtension.equals("*")) {
 				uploadConsumer.accept(multiFileLists.get(i), pDirPath + newName);
 				FileTypeVO fileType = getFileTypeByFileExt(extend.toLowerCase(), tenantId);
 				

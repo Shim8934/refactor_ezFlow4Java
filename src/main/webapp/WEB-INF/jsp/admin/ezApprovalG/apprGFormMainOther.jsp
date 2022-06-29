@@ -73,6 +73,9 @@
 		    var usePassAprLine = "<c:out value = '${usePassAprLine}'/>";
 			var passAprLineFlag = "<c:out value='${passAprLineFlag}'/>";
 			var receptGubunYN = "<c:out value='${receptGubunYN}'/>";
+			
+			/* 2022-01-07 홍승비 - 일괄기안 옵션 추가 */
+			var useDraftAll = "<c:out value='${useDraftAll}'/>";
 		
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -307,9 +310,11 @@
 		        			
 		        			if (result.vo.formConnFlag == "Y") {
 			                    document.getElementById("setConnFlag").checked = true;
+			                    $("input:checkbox[id='setPassAprLineFlag']").attr("disabled", true);
+			                    $("input:checkbox[id='setDraftAllFlag']").attr("disabled", true);
 			                }
 			                
-		        			if(result.vo.officeFlag == "Y") {
+		        			if (result.vo.officeFlag == "Y") {
 		        				document.getElementById("officeFlag").checked = true;
 		        			}
 		        			
@@ -328,6 +333,13 @@
 								if (useOpenGov == "YES" && result.vo.openGovFlag == "Y") {
 									document.getElementById("setOpenGovFlag").checked = true;	
 								}
+								
+								/* 2022-01-07 홍승비 - 전자결재G 일괄기안 옵션 추가 */
+								if (result.vo.formDraftAllFlag == "Y") {
+		        					document.getElementById("setDraftAllFlag").checked = true;
+		        					$("input:checkbox[id='setConnFlag']").attr("disabled", true);
+		        					$("input:checkbox[id='setPassAprLineFlag']").attr("disabled", true);
+		        				}
 							}
 
 							var formXslt = result.vo.formXslt;
@@ -365,6 +377,8 @@
 						
 						if (usePassAprLine == "YES" && result.vo.passAprLineFlag == "Y") {
 							document.getElementById("setPassAprLineFlag").checked = true;
+        					$("input:checkbox[id='setConnFlag']").attr("disabled", true);
+        					$("input:checkbox[id='setDraftAllFlag']").attr("disabled", true);
 						}
 						
 						<c:if test="${isReform}">
@@ -1104,19 +1118,20 @@
 		    	if ($("input:checkbox[id='setConnFlag']").is(":checked")) {
 			    	$("input:checkbox[id='setPassAprLineFlag']").attr("checked", false);
 			    	$("input:checkbox[id='setPassAprLineFlag']").attr("disabled", true);
-/* 			    	if(useDraftAll == "YES") {
+			    	
+ 			    	if (approvalFlag === "G" && useDraftAll == "YES") {
 				    	$("input:checkbox[id='setDraftAllFlag']").attr("checked", false);
 				    	$("input:checkbox[id='setDraftAllFlag']").attr("disabled", true);
-			    	} */
+			    	}
 		    	} else {
 		    		$("input:checkbox[id='setPassAprLineFlag']").attr("disabled", false);
-/* 		    		if(useDraftAll == "YES") {
+		    		
+ 		    		if (approvalFlag === "G" && useDraftAll == "YES") {
 		    			$("input:checkbox[id='setDraftAllFlag']").attr("disabled", false);
-		    		} */
+		    		}
 		    	}
 		    }
 		    
-		    // 기존의 changePassAprFlag()함수와 관련있음
 		    function changeDraftAllFlag() {
 		    	if ($("input:checkbox[id='setDraftAllFlag']").is(":checked")) {
 			    	$("input:checkbox[id='setPassAprLineFlag']").attr("checked", false);
@@ -1131,16 +1146,17 @@
 		    
 		    function changePassAprLineFlag() {
 		    	if ($("input:checkbox[id='setPassAprLineFlag']").is(":checked")) {
-/* 		    		if(useDraftAll == "YES") {
+ 		    		
+		    		if (approvalFlag === "G" && useDraftAll == "YES") {
 			    		$("input:checkbox[id='setDraftAllFlag']").attr("checked", false);
 				    	$("input:checkbox[id='setDraftAllFlag']").attr("disabled", true);
-		    		} */
+		    		}
 			    	$("input:checkbox[id='setConnFlag']").attr("checked", false);
 			    	$("input:checkbox[id='setConnFlag']").attr("disabled", true);
 		    	} else {
-/* 		    		if(useDraftAll == "YES") {
+ 		    		if (approvalFlag === "G" && useDraftAll == "YES") {
 			    		$("input:checkbox[id='setDraftAllFlag']").attr("disabled", false);
-		    		} */
+		    		}
 		    		$("input:checkbox[id='setConnFlag']").attr("disabled", false);
 		    	}
 		    }
@@ -1194,17 +1210,7 @@
 				$(aprtypeCheckBoxInt).each(function () {
 					$("#" + this).prop("checked", true);
 				});
-			}		
-		    
-		    //G버전 연동양식 및 일괄기안 체크박스 있을때 쓰는놈
-		    /* function changePassAprFlag() {
-				if ($("input:checkbox[id='setConnFlag']").is(":checked") || $("input:checkbox[id='setDraftAllFlag']").is(":checked")) {
-					$("input:checkbox[id='setPassAprLineFlag']").attr("checked", false);
-					$("input:checkbox[id='setPassAprLineFlag']").attr("disabled", true);
-				} else {
-					$("input:checkbox[id='setPassAprLineFlag']").attr("disabled", false);
-				}
-			} */
+			}
 			
 			function btnfileup() { document.getElementById("hwpFile").click(); }
 			
@@ -1380,7 +1386,8 @@
 							<label for="officeFlag"><span><spring:message code='ezApproval.t933'/></span></label>
 						</c:if>
                         <span style="<c:if test="${useOpenGov != 'YES' || approvalFlag != 'G'}">display:none;</c:if>"><input type="checkbox" id="setOpenGovFlag" /> 원문정보공개</span>
-<%--                         <span style="<c:if test="${useDraftAll != 'YES' && approvalFlag != 'G'}">display:none;</c:if>"><input type="checkbox" id="setDraftAllFlag" onclick="changeDraftAllFlag()" /> 일괄기안</span> --%>
+                        <%-- 2022-01-07 홍승비 - 전자결재G 웹한글 일괄기안 기능 표준모듈 반영 --%>
+                         <span style="<c:if test="${useEditor != 'WebHWP' || useDraftAll != 'YES' || approvalFlag != 'G'}">display:none;</c:if>"><input type="checkbox" id="setDraftAllFlag" onclick="changeDraftAllFlag()" /> 일괄기안</span> 
 						<span style="<c:if test="${usePassAprLine != 'YES'}">display:none;</c:if>"><input type="checkbox" id="setPassAprLineFlag" onclick="changePassAprLineFlag()"/> <spring:message code='ezApprovalG.garm09'/></span>
 					</td>
 				</tr>

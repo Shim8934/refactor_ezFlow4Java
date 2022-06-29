@@ -10,6 +10,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganGroupVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezSystem.vo.PermissionInfoVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzOrganAdminService {
@@ -167,4 +168,7 @@ public interface EzOrganAdminService {
 	List<String> getNotUseMobileUserList(int tenantId) throws Exception;
 	
 	public List<String> getAutoDeleteOfRetireUserList(int tenantId, int days) throws Exception;
+
+	void insertPermissionChHist(List<PermissionInfoVO> vo) throws Exception;
+
 }

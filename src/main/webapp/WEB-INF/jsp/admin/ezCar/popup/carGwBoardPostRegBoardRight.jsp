@@ -1113,7 +1113,7 @@
 	    	
 	    	function event_getDeptFullTree() {
 		        if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
-	            	if (g_xmlHTTP.statusText == "OK") {
+	            	if (g_xmlHTTP.status == 200) {
 	            		var treeXML = loadXMLFile("/xml/organtree_config.xml");
 	                	document.getElementById('TreeView').innerHTML = "";
 
@@ -1142,7 +1142,7 @@
 		    //2018-07-23 이효진 미사용
 	    	/* function event_displayUserList2() {
 	        	if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
-	            	if (g_xmlHTTP.statusText == "OK") {
+	            	if (g_xmlHTTP.status == 200) {
 		                if (g_xmlHTTP.responseXML.getElementsByTagName("ROW").length == 0) {
 		                    alert("<spring:message code='ezResource.t9900006' />");
 	    	            } else {

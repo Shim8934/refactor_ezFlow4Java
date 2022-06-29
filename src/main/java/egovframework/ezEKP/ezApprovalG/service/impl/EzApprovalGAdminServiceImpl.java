@@ -1923,6 +1923,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			break;
 		}
 		
+		String[] aprTypeList = aprType.split(", ");
+		
 		Calendar cal = Calendar.getInstance();
 		
 		cal.set(Calendar.YEAR, Integer.parseInt(eYear));
@@ -1938,7 +1940,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		/* 2018-09-07 홍승비 - 결재방법 다국어 데이터(v_LANG) 수정 */
 		Map<String, Object> map1 = new HashMap<String, Object>();
-		map1.put("v_APRTYPE", aprType);
+		map1.put("v_APRTYPE", aprTypeList);
 		map1.put("v_FROM", szFrom);
 		map1.put("v_TO", szTo);
 		map1.put("v_STRLANG", commonUtil.getMultiData(lang, tenantID));
@@ -3059,7 +3061,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		String tbItemName2 = "";
 		String useFlag = "";
 		String formConnFlag = "";
-		String formDraftAllFlag = "";
+		String formDraftAllFlag = "N";
 		String openGovFlag = "";
 		String formAprOption = "";
 		String passAprLineFlag = "";
@@ -3093,6 +3095,9 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		} else {
 			formConnFlag = doc.getElementsByTagName("ConnFlag").item(0).getTextContent();
 			openGovFlag = doc.getElementsByTagName("openGovFlag").item(0).getTextContent();
+			
+			/* 2022-01-07 홍승비 - 전자결재G 일괄결재 옵션 추가 */
+			formDraftAllFlag = doc.getElementsByTagName("draftAllFlag").item(0).getTextContent();
 		}
 		formAprOption = doc.getElementsByTagName("APPROPTION").item(0).getTextContent();
 

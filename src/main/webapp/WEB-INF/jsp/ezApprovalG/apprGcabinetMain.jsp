@@ -323,7 +323,113 @@
 		        }
 		        function lvtDetail_onclick() {
 		        }
-		        function lvtDetail_onSel_DBclick() {
+/*			    function lvtDetail_onSel_DBclick() {
+			        var DocList = new ListView();
+			        DocList.LoadFromID("SubDocList");
+			        var selRow = DocList.GetSelectedRows();
+			        var tr = selRow[0];
+			        if (tr != null && typeof (selRow.length) != "undefined" && selRow.length > 0) {
+			            if (jobState == "APPROVAL" || jobState == "CIRCUL") {
+			                if (tr.getAttribute("DATA5") == "Y") {
+			                    var heigth = window.screen.availHeight;
+			                    var width = window.screen.availWidth;
+			                    var left = (parseInt(width) - 1155) / 2;
+			                    var top = (parseInt(heigth) - 460) / 2;
+			                    window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA3") + "&deptID=" + encodeURI(tr.getAttribute("DATA4")) + "&docState=012", "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+			                } else {
+			                	var heigth = window.screen.availHeight;
+					            var width = window.screen.availWidth;
+					            var left = (parseInt(width) - 600) / 2;
+					            var top = (parseInt(heigth) - 450) / 2;
+					            window.open("/ezCommon/showPersonInfo.do?id=" + GetAttribute(tr, "DATA4") + "&dept=" + GetAttribute(tr, "DATA6"), "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1, left=" + left + "px, top=" + top);
+			                }
+			            } else if (jobState == "RECIPENT") {
+			                var heigth = window.screen.availHeight;
+			                var width = window.screen.availWidth;
+			                var left = (parseInt(width) - 540) / 2;
+			                var top = (parseInt(heigth) - 220) / 2;
+			
+			                var isExtYN = tr.getAttribute("DATA3");
+			                
+			                if (isExtYN.toUpperCase() == "Y") {
+			                	left = (parseInt(width) - 1155) / 2;
+						        top = (parseInt(heigth) - 460) / 2;
+			                    var url = "/ezApprovalG/ezReceiptHistoryInfo.do?docID=" + DocID + "&deptID=" + encodeURI(tr.getAttribute("DATA1"));
+// 			                    var feature = "status:no;dialogWidth:555px;dialogHeight:240px;help:no;scroll:no;edge:sunken";
+// 			                    feature = feature + GetShowModalPosition(555, 240);
+// 			                    var ret = window.showModalDialog(url, "", feature);
+			                    var ret = window.open(url, "", "height=460px,width=855px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+			                } else {
+			                	left = (parseInt(width) - 1155) / 2;
+						        top = (parseInt(heigth) - 460) / 2;
+			                    window.open("/ezApprovalG/ezLineInfo.do?docID=" + DocID + "&deptID=" + escape(tr.getAttribute("DATA1")) + "&docState=011" + "&aprState=" + escape(tr.getAttribute("DATA4")), "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+			                }
+			            } else if (jobState == "ATTACH") {
+			            	var AttachfilenameA1 = tr.cells[1].innerHTML;
+			            	
+		                    if (AttachfilenameA1 != null) {
+		                        var AttachfilenameN1 = AttachfilenameA1.lastIndexOf(".");
+		                        var AttachfilenameA2 = AttachfilenameA1.substr(AttachfilenameN1, AttachfilenameA1.length);
+		                        var AttachUrlA1 = GetAttribute(tr,"DATA1");
+		                        var AttachUrlN1 = AttachUrlA1.lastIndexOf(".");
+		                        var AttachUrlA2 = AttachUrlA1.substr(AttachUrlN1, AttachUrlA1.length);
+		                        AttachUrl = encodeURIComponent(GetAttribute(tr,"DATA1"));
+		                     
+		                        if (AttachfilenameN1 < 0) {
+		                            Attachfilename = encodeURIComponent(tr.cells[1].innerText + AttachUrlA2);
+		                        } else {
+		                        	if (AttachUrlA2 == ".mht") {
+			                            Attachfilename = encodeURIComponent(tr.cells[1].innerText + AttachUrlA2);
+		                        	} else {
+			                            Attachfilename = encodeURIComponent(tr.cells[1].innerText);
+		                        	}
+		                        }
+
+		                        if (AttachUrl != "null") {
+//		                             if (GetAttribute(tr,"data4") == "file")
+//		                                 window.open(document.location.protocol + "//" + document.location.hostname + "/approvalG/downloadAttach.do?type=APPROVAL&docID=" + GetAttribute(tr, "data3") + "&docStatus=" + tempINGFlag + "&docAttachSn=" + GetAttribute(tr,"data2"));
+//		                             else
+									//2018-09-12 천성준 - 전자결재 결재문서리스트 하단 첨부탭에서 첨부파일이 문서첨부일경우 문서보기로 열수있게
+									try {
+										if (GetAttribute(tr,"data4") == strLangCSJ01 || GetAttribute(tr,"data4") == "Document") {
+		                                	var tempStr = AttachUrlA1.split("/");
+		                                    var docID = tempStr[tempStr.length - 1].replace(AttachUrlA2, '');
+		                                    var openLocation;
+		                                    
+		                                    if (AttachUrlA2.lastIndexOf(".ezd") === AttachUrlA2.length - 5) {
+		                                    	docID = docID.substr(0, docID.lastIndexOf("."));
+		                                    	AttachUrlA2 = "." + getOriginalFileExtension(AttachUrlA1)
+		                                    }
+		                                    
+		                                    if (AttachUrlA2 == ".hwp") {
+												if(useWebHWP == "NO") {
+													if (isIE()) {
+														openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
+													} else {
+														var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+														alert(pAlertContent);
+														return;
+													}
+												} else {
+													openLocation = "/ezApprovalG/ezViewEnd_WHWP.do";
+												}
+		                                    } else {
+		                                    	openLocation = "/ezApprovalG/contDocView.do";
+		                                    }
+		                                    openLocation += "?docID=" + docID + "&docHref=" + AttachUrl + "&formID=&orgDocID=";
+		                                    openwindow(openLocation, "", 880, 570);
+										} else {
+		                                    window.open("/ezApprovalG/downloadAttach.do?fileName=" + Attachfilename + "&filePath=" + AttachUrl, "_self");
+		                                }
+									} catch(e) {
+										console.log(e);
+									}
+		                        }
+		                    }
+			            }
+			        }
+			    }*/
+ 		        function lvtDetail_onSel_DBclick() {
 		            var DocList = new ListView();
 		            DocList.LoadFromID("SubDocList");
 		            var selRow = DocList.GetSelectedRows();
@@ -339,13 +445,34 @@
 		
 		                }
 		                else if (jobState == "RECIPENT") {
-		                    OpenReceiptHistory();
+		                	var heigth = window.screen.availHeight;
+			                var width = window.screen.availWidth;
+			                var left = (parseInt(width) - 540) / 2;
+			                var top = (parseInt(heigth) - 220) / 2;
+			
+			                var isExtYN = tr.getAttribute("DATA3");
+			                
+			                if (isExtYN.toUpperCase() == "Y") {
+			                	left = (parseInt(width) - 1155) / 2;
+						        top = (parseInt(heigth) - 460) / 2;
+			                    var url = "/ezApprovalG/ezReceiptHistoryInfo.do?docID=" + DocID + "&deptID=" + encodeURI(tr.getAttribute("DATA1"));
+// 			                    var feature = "status:no;dialogWidth:555px;dialogHeight:240px;help:no;scroll:no;edge:sunken";
+// 			                    feature = feature + GetShowModalPosition(555, 240);
+// 			                    var ret = window.showModalDialog(url, "", feature);
+			                    var ret = window.open(url, "", "height=300px,width=855px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+			                } else {
+			                	left = (parseInt(width) - 1155) / 2;
+						        top = (parseInt(heigth) - 460) / 2;
+			                    window.open("/ezApprovalG/ezLineInfo.do?docID=" + DocID + "&deptID=" + escape(tr.getAttribute("DATA1")) + "&docState=011" + "&aprState=" + escape(tr.getAttribute("DATA4")), "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+			                }
+// 		                    OpenReceiptHistory();
 		                }
 		                else if (jobState == "APPROVAL") {
 		                    openUserInfo();
 		                }
 		            }
 		        }
+ 		        
 		    function idistbox_onclick() {
 		        document.getElementById("imgTitle").innerHTML = g_sFlag === "m03" ? "<spring:message code='ezApprovalG.t911'/>" : "<spring:message code='ezApprovalG.kbh08'/>";
 		        document.getElementById("imgTitle").style.display = "";
@@ -395,13 +522,15 @@
 				var docID = GetAttribute(selRow, "DATA1");
 				var docHref = GetAttribute(selRow, "DATA2");
 				var ext = docHref.substr(docHref.lastIndexOf(".") + 1);
+				var recordID = GetAttribute(selRow, "DATA6");
 
                 var url = null;
                 if (ext === "mht") {
                     url = "/ezApprovalG/ezConvSihang.do" +
                         "?docID=" + encodeURIComponent(docID) +
                         "&docHref=" + encodeURIComponent(docHref) +
-                        "&orgCompanyID=" + CompanyID;
+                        "&orgCompanyID=" + CompanyID +
+                        "&recordID=" + recordID;
                 } else if (ext === "hwp") {
                     if (useWebHWP === "NO") {
                         if (!isIE()) {
@@ -413,12 +542,14 @@
                         url = "/ezApprovalG/ezConvSihang_HWP.do" +
                             "?docID=" + encodeURIComponent(docID) +
                             "&docHref=" + encodeURIComponent(docHref) +
-                            "&orgCompanyID=" + CompanyID;
+                            "&orgCompanyID=" + CompanyID +
+                            "&recordID=" + recordID;
                     } else {
                         url = "/ezApprovalG/ezConvSihang_WHWP.do" +
                             "?docID=" + encodeURIComponent(docID) +
                             "&docHref=" + encodeURIComponent(docHref) +
-                            "&orgCompanyID=" + CompanyID;
+                            "&orgCompanyID=" + CompanyID +
+                            "&recordID=" + recordID;
                     }
                 }
 					
@@ -997,12 +1128,12 @@
 		
 		                if ("${userInfo.lang}" == "1") { 
 			                wWeight = 1015;
-			                wHeight = 670;
+			                wHeight = 690;
 			                left = (width - wWeight) / 2;
 			                top = (heigth - wHeight) / 2;
 		                } else { 
 			                wWeight = 1015;
-			                wHeight = 670;
+			                wHeight = 690;
 			                left = (width - wWeight) / 2;
 			                top = (heigth - wHeight) / 2;
 		                } 
@@ -1380,7 +1511,7 @@
 		            xmlhttp.open("POST", "/ezApprovalG/resendEndDoc.do", false);
 		            xmlhttp.send(rtn[1]);
 		        }
-		    	if (xmlhttp.statusText == "OK") {
+		    	if (xmlhttp.status == 200) {
 		    		OpenAlertUI("<spring:message code='ezApproval.t157'/> <spring:message code='ezApproval.t854'/>");		    		
 		    		return;
 		    	} else {
@@ -1782,6 +1913,48 @@
 			            GetRecordList();
 			        }
 			    }
+			    
+			    /* 2022-03-18 홍승비 - 미처리문서함의 내부시행문 반송문서 삭제 함수 추가 (물리적인 삭제가 아니며, 관리자단의 DELFLAG 변경 함수 그대로 사용함) */
+				function btnRemoveDoc_onclick() {
+		        var DocList = new ListView();
+		        DocList.LoadFromID("DocList");
+		
+		        var oArrRows = DocList.GetSelectedRows();
+		        if (oArrRows == 0) {
+		            var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
+		            alert(pAlertContent);
+		            return;
+		        }
+		        
+		        var Ans = confirm("<spring:message code='ezApprovalG.t1728'/>");
+		        if (Ans) {
+					pCurSelRow = oArrRows[0];
+	        		var pDocID = GetAttribute(pCurSelRow, "DATA1");
+	        		
+	        		var xmlhttp = createXMLHttpRequest();
+	        		var xmlpara = createXmlDom();
+	        		var objNode;
+	        		
+	        		createNodeInsert(xmlpara, objNode, "PARAMETER");
+	        		createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID); // 현재 회사의 문서만 표출하므로, companyID 그대로 사용
+	        		createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
+	        		createNodeAndInsertText(xmlpara, objNode, "DELFLAG", "Y");
+	        		createNodeAndInsertText(xmlpara, objNode, "DELINFO", "사용자[" + arr_userinfo[1] + "]에 의해 삭제된 내부시행문서입니다."); // 삭제사유 자동삽입
+	        		
+	        		xmlhttp.open("POST","/admin/ezApprovalG/setDelDocInfo.do",false);
+	        		xmlhttp.send(xmlpara);
+	        		
+					if (xmlhttp != null && xmlhttp.readyState == 4) {
+						if (xmlhttp.status == 200) {
+							openergetDocInfo();
+	  	                } else {
+	  	                	var pAlertContent = "<spring:message code='ezApprovalG.t131'/>";
+							OpenAlertUI(pAlertContent);
+	  	                }
+					}
+		        }
+		    }
+		    
 	    </script>
 	</head>
 	<body class="mainbody" style="margin-top: 0px">
@@ -1850,6 +2023,8 @@
 <%-- 		            <li id="tdModifyOpenGov" style="<c:if test="${useOpenGov != 'YES'}">display:none;</c:if>"><span id="ModifyOpenGov" onclick="return btnChangeOpenGovInfo_onclick()">원문공개수정</span></li> --%>
 <%-- 	            </c:if> --%>
 	            <li id="tdSearchRec"><span class="icon16 icon16_search" id="SearchRec" onclick="return btnSearchRec_onclick(0,'OPEN')"></span></li>
+	            <%-- 2022-03-18 홍승비 - 미처리문서함 > 내부시행문의 반송 시 문서삭제 기능 추가 --%>
+	            <li id="tbtnRemoveDoc" style="display:none;"><span class="icon16 icon16_delete" id="btnRemoveDoc" onclick="return btnRemoveDoc_onclick()"></span></li>
 	            <li id="tdViewCabList" style="display:none"><span onclick="return GetEndYConfirmList()"><spring:message code='ezApprovalG.t525'/></span></li>
 	            <li style="vertical-align: middle; float:right"> <select id="rec_year" name="rec_year" style="width:75px;" onchange="onSelect_Year(this);">    
 	                <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>

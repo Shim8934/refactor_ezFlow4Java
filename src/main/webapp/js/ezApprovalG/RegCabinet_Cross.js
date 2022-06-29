@@ -192,7 +192,7 @@ function RegisterCabinet() {
     
     var rtnXml = xmlhttp.responseXML;
     if (xmlhttp != null && xmlhttp.readyState == 4) {
-    	 if (xmlhttp.statusText == "OK") {
+    	 if (xmlhttp.status == 200) {
     		 g_CabID = SelectSingleNodeValue(xmlhttp.responseXML, "RESULT");
     	        return true;
     	 } else {

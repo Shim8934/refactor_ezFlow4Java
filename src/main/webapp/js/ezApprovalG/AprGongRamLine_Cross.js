@@ -579,7 +579,7 @@ function SaveAprLineInfo() {
         xmlhttp.send(pstrXML);
 
         if (xmlhttp != null && xmlhttp.readyState == 4) {
-          	 if (xmlhttp.statusText == "OK") {
+          	 if (xmlhttp.status == 200) {
           		  var dataNodes = GetChildNodes(xmlhttp.responseXML);
                   var ret = getNodeText(dataNodes[0]);
                   if (ret != "FALSE") {
@@ -1002,7 +1002,7 @@ function btnAprLineSearchDept_onClick_Complete2(rgParams) {
 
 function event_getAprLineDeptFullTree() {
     if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
-        if (g_xmlHTTP.statusText == "OK") {
+        if (g_xmlHTTP.status == 200) {
             debugger;
         	document.getElementById('TreeView').innerHTML = "";
         	var treeView = new TreeView();

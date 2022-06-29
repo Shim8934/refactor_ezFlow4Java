@@ -1,5 +1,54 @@
 package egovframework.ezEKP.ezCommon.service.impl;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import javax.annotation.Resource;
+import javax.net.ssl.*;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DeadlockLoserDataAccessException;
+import org.springframework.stereotype.Service;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
@@ -1703,6 +1752,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.createRsFavoriteTable();
 	}
 
+	@SuppressWarnings("serial")
 	@Override
 	public void createUserDistributionTable() {
 		ezCommonDAO.createUserDistributionTable();
@@ -1710,7 +1760,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	
 	@SuppressWarnings("serial")
 	@Override
-	public void insertTblTenantConfig(String configName) throws Exception {
+	public void insertTblTenantConfig() throws Exception {
 		logger.debug("insertTest started");
 		Map<String, Map<String, Object>> test = new HashMap<String,  Map<String, Object>>();
 		test.put("mailConfirm", new HashMap<String, Object>(){{
@@ -1813,6 +1863,16 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("config_type","메일");
 			put("property","USEORGLISTCHECKBOX"); // property_name
 		}});
+		test.put("adminIpAccess", new HashMap<String, Object>(){{
+			put("tenantID", 0);
+			put("confName","useAdminIPAccess"); // property_name
+			put("property_value","NO");
+			put("config_name","관리자 IP 제한");
+			put("regdate","2020-04-27 00:00:00");
+			put("description","관리자 페이지 IP 제한(default: NO)");
+			put("config_type","시스템");
+			put("property","USEADMINIPACCESS"); // property_name (UPPER 조건 처리를 위하여 대문자로 전달)
+		}});
 		
 		Iterator<String> keys = test.keySet().iterator();
         while( keys.hasNext() ){
@@ -1824,6 +1884,29 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			}
            
         }
+	}
+
+	@SuppressWarnings("serial")
+	@Override
+	public void alter_AnyTbl_AnyColumns() throws Exception {
+		logger.debug("alter_AnyTbl_AnyColumns started");
+		List<Map<String, Object>> test = new ArrayList<Map<String, Object>>();
+		// JAMES_MAIL_SEARCH
+		test.add(new HashMap<String, Object>(){{ put("TBL_NAME","JAMES_MAIL_SEARCH"); put("COLUMN_NAME", "SECURE_FLAG"); put("ALTER", "ADD");
+												 put("TYPE_MYSQL", "int(1)"); put("TYPE_ORACLE", "NUMBER"); put("TYPE_TIBERO", "NUMBER"); put("AFTER", "DEFAULT 0"); }});
+
+		// TBL_USERMASTER
+		test.add(new HashMap<String, Object>(){{ put("TBL_NAME","TBL_USERMASTER"); put("COLUMN_NAME", "CREATEDT"); put("ALTER", "ADD"); 
+												 put("TYPE_MYSQL", "DATETIME"); put("TYPE_ORACLE", "DATE"); put("TYPE_TIBERO", "DATE"); put("AFTER", "DEFAULT NULL"); }});
+
+		// TBL_DEPTMASTER
+		test.add(new HashMap<String, Object>(){{ put("TBL_NAME","TBL_DEPTMASTER"); put("COLUMN_NAME", "CREATEDT"); put("ALTER", "ADD"); 
+												 put("TYPE_MYSQL", "DATETIME"); put("TYPE_ORACLE", "DATE"); put("TYPE_TIBERO", "DATE"); put("AFTER", "DEFAULT NULL"); }});
+
+		for (Map<String, Object> map : test) {
+			ezCommonDAO.alter_AnyTbl_AnyColumns(map);
+        }
+		logger.debug("alter_AnyTbl_AnyColumns ended");
 	}
 
 	@Override
@@ -1945,6 +2028,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 	
 	@Override
+	public void createAdminAccessIpTable() throws Exception {
+		ezCommonDAO.createAdminAccessIpTable();
+	}
+
+	@Override
 	public void insertReBebuOpinionCode() throws Exception {
 		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -2038,7 +2126,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void addDocStateIntoLastDeptLines() throws Exception {
 	    ezCommonDAO.addDocStateIntoLastDeptLines();
     }
-    
+
+    @Override
 	public void insertAlternateHolidayAttitudeType() {
 		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();		
 
@@ -2568,5 +2657,167 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	@Override
 	public void createTblAdminAccessInfo() throws Exception {
 		ezCommonDAO.createTblAdminAccessInfo();	
+	}
+	
+	@Override
+	public void createMailOutOfOfficeTemplate()  throws Exception {
+		logger.debug("createMailOutOfOfficeTemplate started.");
+		ezCommonDAO.createMailOutOfOfficeTemplate();
+		logger.debug("createMailOutOfOfficeTemplate ended.");
+	}
+
+	@Override
+	public void createUserMailTemplate() throws Exception {
+		logger.debug("createUserMailTemplate started.");
+		ezCommonDAO.createUserMailTemplate();
+		logger.debug("createUserMailTemplate ended.");
+	}
+
+	@Override
+	public void createTblPermissionChangeInfo() throws Exception {
+		ezCommonDAO.createTblPermissionChangeInfo();
+	}
+	
+	@Override
+	public void addSusinScheduleOffsetColumn() throws Exception {
+		ezCommonDAO.addSusinScheduleOffsetColumn();
+	}
+	
+	@Override
+	public void insertReceiptHistoryListoption() throws Exception {
+		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		for (CompanyInfoVO company : companyList) {
+			if (company.getCompanyId() != null) {
+				map.put("companyId", company.getCompanyId());
+				map.put("tenantId", company.getTenantId());
+				ezCommonDAO.insertReceiptHistoryListoption(map);
+			}
+		}
+	}
+	
+	@Override
+	public void addAprDocGroupInfoTypeColumn() throws Exception {
+		ezCommonDAO.addAprDocGroupInfoTypeColumn();
+	}
+
+	@Override
+	public void alterTblDevMaster() throws Exception {
+		ezCommonDAO.alterTblDevMaster();
+	}
+
+	// List<List<Object>> 를 이용 엑셀 생성
+	// (0,0)부터 차례대로 넣으면 됨. 여백 가능.
+	@Override
+	public String createExcelByList(String fileName, String dirPath, String sheetName, List<List<Object>> data) throws Exception {
+		logger.debug("createExcelByList start. fileName: " + fileName + " / sheetName:" + sheetName);
+
+		String filePath = dirPath + commonUtil.separator + fileName + ".xlsx";
+		File folder = new File(dirPath);
+		File file = new File(filePath);
+
+		// 폴더가 존재하는경우 clean
+		try {
+			if (!folder.mkdirs()) FileUtils.cleanDirectory(folder);
+		} catch (Exception e) {
+			// 폴더 아래 파일들의 삭제가 안될경우에도 그냥 진행
+			logger.debug("cleanDirectory Error : " + e.getMessage());
+			logger.debug("cleanDirectory dirPath : " + dirPath);
+		}
+
+		// 같은 이름의 파일이 있을 경우: "파일(2).xlsx"으로 만든다.
+		if (file.exists()) {
+			int pos         = fileName.lastIndexOf('.');
+			String extend   = fileName.substring(pos + 1);
+			String mainName = fileName.substring(0, pos);
+			int k           = 1;
+			fileName        = mainName + "(" + k + ")." + extend;
+			filePath        = dirPath + fileName;
+			file           = new File(filePath);
+
+			while (file.exists()) {
+				filePath = dirPath + mainName + "(" + ++k + ")." + extend;
+			}
+		}
+
+
+		FileOutputStream fileOut = null;
+		Workbook workbook = new XSSFWorkbook();
+
+		Sheet sheet = workbook.createSheet(sheetName);
+		sheet.setDefaultRowHeight((short)500);
+
+		//Set style
+		CellStyle styleHead = workbook.createCellStyle();
+		styleHead.setWrapText(false);
+		styleHead.setAlignment(CellStyle.ALIGN_CENTER);
+		styleHead.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+		styleHead.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+		styleHead.setFillPattern(CellStyle.SOLID_FOREGROUND);
+
+
+		CellStyle styleData = workbook.createCellStyle();
+		styleData.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+
+		int rowNum = 0;
+		int rowSize = data.size();
+		boolean appearedHead = false;
+		int colRangeStart = 0;
+		int colRangeEnd = 0;
+
+		while(rowNum < rowSize) {
+			List<Object> dataList = data.get(rowNum);
+			int colSize = dataList.size();
+
+			if (colSize > 0) {
+				Row row = sheet.createRow(rowNum);
+
+				if (!appearedHead) {
+					for (int colNum = 0; colNum < colSize; colNum++) {
+						Object value = dataList.get(colNum);
+						String strValue = String.valueOf(value).trim();
+
+						if (value != null && !strValue.isEmpty()) {
+							row.createCell(colNum).setCellValue(strValue);
+							row.getCell(colNum).setCellStyle(styleHead);
+							appearedHead = true;
+							if(colRangeStart == 0) colRangeStart = colNum;
+							colRangeEnd = colNum;
+						}
+					}
+				} else {
+					for (int colNum = 0; colNum < colSize; colNum++) {
+						Object value = dataList.get(colNum);
+						String strValue = String.valueOf(value).trim();
+
+						if (value != null && !strValue.isEmpty()) {
+							row.createCell(colNum).setCellValue(strValue);
+							row.getCell(colNum).setCellStyle(styleData);
+						}
+					}
+				}
+			}
+			rowNum++;
+		}
+
+		for (int i = colRangeStart; i <= colRangeEnd; i++) {
+			sheet.setColumnWidth(i, ((int)(15 * 1.14388)) * 256);
+		}
+
+		try {
+			fileOut = new FileOutputStream(filePath);
+			workbook.write(fileOut);
+			fileOut.close();
+		}
+		catch (Exception e) {
+			throw e;
+		}
+		finally {
+			if (fileOut != null) fileOut.close();
+			workbook.close();
+		}
+		logger.debug("createExcelByList end. list size:" + rowSize);
+		return fileName;
 	}
 }

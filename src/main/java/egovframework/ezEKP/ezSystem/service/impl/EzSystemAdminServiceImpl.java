@@ -32,6 +32,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
 import egovframework.ezEKP.ezSystem.dao.EzSystemAdminDAO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.util.EzSystemUtil;
@@ -42,6 +43,7 @@ import egovframework.ezEKP.ezSystem.vo.DataForModulesEnum;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.ModuleSizeVO;
 import egovframework.ezEKP.ezSystem.vo.PasswordPolicyVO;
+import egovframework.ezEKP.ezSystem.vo.PermissionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 import egovframework.let.main.vo.MainVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -54,6 +56,9 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 	
 	@Resource(name="EzSystemAdminDAO")
 	EzSystemAdminDAO ezSystemAdminDAO;
+	
+	@Resource(name="EzCommonDAO")
+	EzCommonDAO ezCommonDAO;
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
@@ -935,6 +940,44 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		
 		return list;
 	}
+
+	@Override
+	public void updateSystemAdminIPAllow(String allowResult, int tenantID) throws Exception {
+		logger.debug("updateSystemIPAllow started. tenantID=" + tenantID + ", allowResult=" + allowResult);
+		
+		SysParamVO sysParamVO = new SysParamVO();
+		sysParamVO.setTenantID(tenantID);
+		sysParamVO.setValue(allowResult);
+		sysParamVO.setName("useAdminIPAccess");
+		
+		int successChk = ezSystemAdminDAO.updateSystemAdminIPAllow(sysParamVO);
+		logger.debug("successChk=" + successChk);
+		if (successChk <= 0) {
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("tenantID", tenantID);
+			params.put("confName","useAdminIPAccess"); // property_name
+			params.put("property_value",allowResult);
+			params.put("config_name","관리자 IP 제한");
+			params.put("regdate","2020-04-27 00:00:00");
+			params.put("description","관리자 페이지 IP 제한(default: NO)");
+			params.put("config_type","시스템");
+			params.put("property","useAdminIPAccess"); // property_name
+
+			logger.debug("insert tbl_tenant_config. adminIpAccess");
+			ezCommonDAO.insertTblTenantConfig(params);
+		}
+		
+		logger.debug("updateSystemIPAllow ended");
+	}
+	
+	@Override
+	public List<IPBandVO> getAdminAccessIPBand(int tenantID) throws Exception {
+		logger.debug("getAdminAccessIPBand started. tenantID=" + tenantID);
+		List<IPBandVO> list = ezSystemAdminDAO.getAdminAccessIPBand(tenantID);
+		
+		logger.debug("getAdminAccessIPBand ended.");
+		return list;
+	}
 	
 	@Override
 	public int getAdminAccessHistCount(int tenantID, String offset, String keycode, String keyword, String keycodeForRoll, String lang, String startDate, String endDate, String companyId) throws Exception {
@@ -962,4 +1005,138 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		
 		return ezSystemAdminDAO.getAdminAccessHistCount(params);
 	}
+	
+	@Override
+	public void insertAdminIPBand(int tenantID, String ipAddress, String access, String explanation) throws Exception {
+		logger.debug("insertAdminIPBand started.");
+		logger.debug("tenantID=" + tenantID + ", ipAddress=" + ipAddress + ", access=" + access + ", explanation=" + explanation);
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("tenantID", tenantID);
+		params.put("ipAddress", ipAddress);
+		params.put("access", access);
+		params.put("explanation", explanation);
+		
+		ezSystemAdminDAO.insertAdminIPBand(params);
+		
+		logger.debug("insertAdminIPBand ended.");
+	}
+	
+	@Override
+	public IPBandVO getSystemAdminIPBand(String ipNo) throws Exception {
+		logger.debug("getSystemAdminIPBand started.");
+		logger.debug("ipNo=" + ipNo);
+		
+		IPBandVO ipBand = ezSystemAdminDAO.getSystemAdminIPBand(ipNo);
+		
+		logger.debug("getSystemAdminIPBand ended.");
+		
+		return ipBand;
+	}
+
+	@Override
+	public void updateAdminIPBand(String ipNo, String ipAddress, String access, String explanation) throws Exception {
+		logger.debug("updateAdminIPBand started.");
+		logger.debug("ipNo=" + ipNo + ", ipAddress=" + ipAddress + ", access=" + access + ", explanation=" + explanation);
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("ipNo", ipNo);
+		params.put("ipAddress", ipAddress);
+		params.put("access", access);
+		params.put("explanation", explanation);
+		
+		ezSystemAdminDAO.updateAdminIPBand(params);
+		
+		logger.debug("updateAdminIPBand ended.");
+	} 
+	
+	@Override
+	public void deleteAdminIPBand(String ipNo) throws Exception {
+		logger.debug("deleteIPBand started.");
+		logger.debug("ipNo=" + ipNo);
+		
+		String[] ipNoList = ipNo.split(",");
+		List<String> list = new ArrayList<String>();
+		
+		for (int i = 0; i < ipNoList.length; i++) {
+			list.add(ipNoList[i]);
+		}
+		
+		ezSystemAdminDAO.deleteAdminIPBand(list);
+		
+		logger.debug("deleteIPBand ended.");
+	}
+
+	@Override
+	public List<PermissionInfoVO> getPermissionChHist(int tenantID, String offset, int startPage,
+			int maxItemPerPage, String keycode, String keyword, String keycodeForRoll, String lang, String startDate,
+			String endDate, String companyId, boolean isMaster) throws Exception {
+		logger.debug("getPermissionChHist started. tenantID : {}", tenantID);
+
+		String companyOracleStr = "";
+		String isMasterAdmin = "";
+
+		if (!"Top/organ".equals(companyId)) {
+			companyOracleStr = " AND C.COMPANYID ='" + companyId + "'";
+		}
+
+		if (isMaster) {
+			isMasterAdmin = "Y";
+		}
+
+		Map<String, Object> params = new HashMap<>();
+		params.put("v_tenantID", tenantID);
+		params.put("offset", offset);
+		params.put("v_start", startPage);
+		params.put("pageCount", maxItemPerPage);
+		params.put("search_keycode", keycode);
+		params.put("search_keyword", keyword);
+		params.put("search_keycodeForRoll", keycodeForRoll);
+		params.put("lang", lang); // primary:기본명 / 1:영문명
+		params.put("startDate", startDate);
+		params.put("endDate", endDate);
+		params.put("companyId", companyId);
+		params.put("isMasterAdmin", isMasterAdmin);
+		params.put("companyOracleStr", companyOracleStr);
+
+		logger.debug("getPermissionChHist ended.");
+		List<PermissionInfoVO> list = ezSystemAdminDAO.getPermissionChHist(params);
+
+		return list;
+	}
+
+	@Override
+	public int getPermissionChHistCount(int tenantID, String offset, String keycode, String keyword,
+			String keycodeForRoll, String lang, String startDate, String endDate, String companyId, boolean isMaster) throws Exception {
+		logger.debug("getPermissionChHistCount started. tenantID : {}", tenantID);
+
+		String companyOracleStr = "";
+		String isMasterAdmin = "";
+
+		if (!"Top/organ".equals(companyId)) {
+			companyOracleStr = " AND C.COMPANYID ='" + companyId + "'";
+		}
+
+		if (isMaster) {
+			isMasterAdmin = "Y";
+		}
+
+		Map<String, Object> params = new HashMap<>();
+		params.put("v_tenantID", tenantID);
+		params.put("offset", offset);
+		params.put("search_keycode", keycode);
+		params.put("search_keyword", keyword);
+		params.put("search_keycodeForRoll", keycodeForRoll);
+		params.put("lang", lang);
+		params.put("startDate", startDate);
+		params.put("endDate", endDate);
+		params.put("companyId", companyId);
+		params.put("isMasterAdmin", isMasterAdmin);
+		params.put("companyOracleStr", companyOracleStr);
+
+		logger.debug("getPermissionChHistCount ended.");
+
+		return ezSystemAdminDAO.getPermissionChHistCount(params);
+	}
+
 }

@@ -206,6 +206,7 @@ public class MLoginGWController {
     			
     			// 모바일 사용 설정 확인 
     			String useMobileManagemant = ezCommonService.getTenantConfig("useMobileManagemant", tenantId);
+    			boolean pinLoginAuth = false;
     			
     			if (useMobileManagemant.equals("YES")) {
     				String notUseAllMobileLogin = ezCommonService.getUserConfigInfo(tenantId, uid, "notUseMobileLogin");
@@ -304,19 +305,94 @@ public class MLoginGWController {
     		    					
     		    					return result;
     		    				}
+    		    				
+    		    				// 20210426 조진호 - pin login 처리 부분. 사용자가 입력한 pin과 DB에 저장된 pin 값이 일치하면
+								// pinLoginAuth를 true로 전환
+								String encryptPin = request.getParameter("encryptPin") == null ? "" : request.getParameter("encryptPin");
+								if (!"".equals(encryptPin)) {
+									String userInputPin = EgovFileScrty.decryptRsa(pk, encryptPin);
+
+									// 20210715 조진호 = input Pin이 OK 인 것은 생체인식에 성공한 것으로 처리
+									if (userInputPin.equalsIgnoreCase("OK")) {
+										userInputPin = String.valueOf(resultObj.get("pin"));
+									} else {
+										userInputPin = EgovFileScrty.encryptPassword(userInputPin, uid);
+									}
+
+									String authPin = String.valueOf(resultObj.get("pin"));
+
+									if (!userInputPin.equals("") && !authPin.equals("") && authPin.equals(userInputPin)) {
+										pinLoginAuth = true;
+										LOGGER.debug("pin Login Auth Successed.");
+									}
+									else {
+										LOGGER.debug("pin Login Auth Failed.");
+									}
+								}
     						}
     					}
     				}
     			}
+    			else {
+    				String deviceId = request.getParameter("deviceID") == null ? "" : request.getParameter("deviceID");
+					
+					if (!deviceId.equals("")) {
+						String inputParams = "userId=" + uid + "&deviceId=" + deviceId;
+						LOGGER.debug("userId=" + uid + ",deviceId=" + deviceId);
+						
+						String requestURL = "/ezTalkGate/getUserMobileDeviceUsedInfo";
+						String getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
+						LOGGER.debug("getResult=" + getResult);
+						
+						JSONParser parser = new JSONParser();
+						JSONObject resultObj = (JSONObject) parser.parse(getResult);
+
+						// 20210426 조진호 - pin login 처리 부분. 사용자가 입력한 pin과 DB에 저장된 pin 값이 일치하면
+						// pinLoginAuth를 true로 전환
+						String encryptPin = request.getParameter("encryptPin") == null ? "" : request.getParameter("encryptPin");
+						if (!"".equals(encryptPin)) {
+							String userInputPin = EgovFileScrty.decryptRsa(pk, encryptPin);
+
+							// 20210715 조진호 = input Pin이 OK 인 것은 생체인식에 성공한 것으로 처리
+							if (userInputPin.equalsIgnoreCase("OK")) {
+								userInputPin = String.valueOf(resultObj.get("pin"));
+							} else {
+								userInputPin = EgovFileScrty.encryptPassword(userInputPin, uid);
+							}
+
+							String pinState = String.valueOf(resultObj.get("pinState"));
+							String authPin = String.valueOf(resultObj.get("pin"));
+							
+							if (pinState.equalsIgnoreCase("Y")) {
+								if (!userInputPin.equals("") && !authPin.equals("") && authPin.equals(userInputPin)) {
+									pinLoginAuth = true;
+									LOGGER.debug("pin Login Auth Successed.");
+								}
+								else {
+									LOGGER.debug("pin Login Auth Failed.");
+								}
+							}
+							else {
+								LOGGER.debug("pin Login not useded.");
+							}
+						}
+					}
+    			}
+    			
     			
     			// 사용자 ID를 사용해 로그인하는 경우
     			if (uid.equals(resultVO.getId())) {
     				loginVO.setId(uid);
-					pwd = EgovFileScrty.encryptPassword(rpwd, uid);
-		        	loginVO.setPassword(pwd);
-		            loginVO.setDn("PASSWORD");
+    				if (pinLoginAuth) { // pinLogin 인증 통과
+    					loginVO.setDn("NOPASSWORD");
+    				}
+    				else {
+    					pwd = EgovFileScrty.encryptPassword(rpwd, uid);
+    		        	loginVO.setPassword(pwd);
+    		            loginVO.setDn("PASSWORD");
+    				}
+
 		            String chkADpass = "";
-		            
 		            // AD를 사용하는 경우 AD의 암호화 비교한 값을 구한다.
 		            if (ezCommonService.getTenantConfig("USE_AD", tenantId).equalsIgnoreCase("YES")) {
 		            	// true 이면 그룹웨어 암호 변경
@@ -666,9 +742,10 @@ public class MLoginGWController {
         					// LoginCookieSSO는 모바일용 쿠키가 아니라 웹버전 연동 쿠키임
         					Map<String, Object> mapSSO = new HashMap<String, Object>();
         					if (!useSSOCookie.trim().isEmpty() && !"NO".equalsIgnoreCase(useSSOCookie)) {
-        						pwd = EgovFileScrty.encryptPassword(rpwd, uid);
-        						mapSSO.put("userPw", rpwd);
-        						mapSSO.put("encryptedUserPw", pwd);
+        						// 20210521 조진호 - loginCookieSSO에서 사용자의 패스워드를 사용 할 이유가 없어 WEB과 동일하게 문자열로 처리
+        						//pwd = EgovFileScrty.encryptPassword(rpwd, uid);
+        						mapSSO.put("userPw","userPw");
+        						mapSSO.put("encryptedUserPw", "encryptedUserPw");
         						mapSSO.put("deptID", resultVO.getDeptID());
         						mapSSO.put("companyID", resultVO.getCompanyID());
         					}
@@ -1296,11 +1373,14 @@ public class MLoginGWController {
     		String extension1 = "extension1=" + (String) jsonObj.get("extension1");
     		String extension2 = "extension2=" + (String) jsonObj.get("extension2");
     		String tenantIdParmas = "tenantId=" + tenantId;
+    		String pin = "pin=" + (String) jsonObj.get("pin");
+    		String pinState = "pinState=" + (String) jsonObj.get("pinState");
+    		String biometric = "biometric=" + (String) jsonObj.get("biometric");
     		
     		String inputParams = devId + "&"+ devType + "&" + subType + "&" + userId + "&" + token +
     				"&" + badge + "&" + state + "&" + pushState + "&" + isLogin + "&" + startMenu + 
     				"&" + loginLock + "&" + isPasswordChange + "&" + extension1 + "&" + extension2 + 
-    				"&" + tenantIdParmas;
+    				"&" + tenantIdParmas + "&" + pin + "&" + pinState + "&" + biometric;
     		LOGGER.debug("inputParams=" + inputParams);
     		
     		String requestURL = "/ezTalkGate/updateLoginDeviceInfo";
@@ -1448,6 +1528,104 @@ public class MLoginGWController {
 		return result;
 	}
 
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/mobile/ezUser/pinLogin", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getPinLoginInfo(HttpServletRequest request, Locale locale) throws Exception {
+		LOGGER.debug("pinLogin started.");
+
+		JSONObject result = new JSONObject();
+    	String deviceId = request.getParameter("deviceId");
+    	
+    	try {
+    		
+    		String strJson = mOptionService.getDevicePinfInfo(deviceId, "");
+
+    		JSONParser parser = new JSONParser();
+			JSONObject pinInfo = (JSONObject)parser.parse(strJson);
+			JSONObject data = (JSONObject) pinInfo.get("data");
+			//String pinState = data.get("pinState").toString();
+			
+			result.put("status", "ok");
+    		result.put("code", "0");
+    		result.put("data", data);
+    		
+    	} catch (Exception e) {
+    		result.put("status", "error");
+			result.put("code", "-1");
+			result.put("data", "fail");
+			
+			e.printStackTrace();
+    	}
+    	
+    	LOGGER.debug("pinLogin ended.");
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/mobile/ezUser/pinLogin/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject pinLogin(@PathVariable String userId, HttpServletRequest request, Locale locale) throws Exception {
+		LOGGER.debug("pinLogin started.");
+
+		JSONObject result = new JSONObject();
+    	String deviceId = request.getParameter("deviceId");
+    	
+    	try {
+    		
+    		PrivateKey pk = EgovFileScrty.getPrivateKey(egovFileScrty.getPrm(), egovFileScrty.getPre());
+    		
+    		String uid = EgovFileScrty.decryptRsa(pk, userId);
+    		
+    		if (uid == null || uid.equals("")) {
+    			LOGGER.debug("invalid uid=" + uid);
+    			
+    			result.put("status", "error");
+    			result.put("code", "2");			
+    			result.put("data", "invalid uid");
+    			
+    		    return result;
+    		}
+    		
+    		String rpwd = EgovFileScrty.decryptRsa(pk, request.getParameter("pw"));
+    		String pwd = "";
+    		
+    		String serverName = request.getHeader("x-user-host");
+    		int tenantId = loginService.getTenantId(serverName);
+    		
+    		LoginVO loginVO = new LoginVO();
+    		
+    		loginVO.setId(uid);
+    		loginVO.setDn("NOPASSWORD");
+    		loginVO.setTenantId(tenantId);
+    		
+    		LoginVO resultVO = loginService.selectUser(loginVO);
+    		String companyId = resultVO.getCompanyID();
+    		
+    		
+    		
+    		String strJson = mOptionService.getDevicePinfInfo(deviceId, "");
+
+    		JSONParser parser = new JSONParser();
+			JSONObject pinInfo = (JSONObject)parser.parse(strJson);
+			JSONObject data = (JSONObject) pinInfo.get("data");
+			//String pinState = data.get("pinState").toString();
+			
+			result.put("status", "ok");
+    		result.put("code", "0");
+    		result.put("data", data);
+    		
+    	} catch (Exception e) {
+    		result.put("status", "error");
+			result.put("code", "-1");
+			result.put("data", "fail");
+			
+			e.printStackTrace();
+    	}
+    	
+    	LOGGER.debug("pinLogin ended.");
+		return result;
+	}
+	
+	
     private int checkState(int tenantID, String userId, int numberOfLoginFailPermit) throws Exception {        
         if (numberOfLoginFailPermit <= 0) {        	
         	//Users will never be blocked

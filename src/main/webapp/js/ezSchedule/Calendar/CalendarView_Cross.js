@@ -627,7 +627,7 @@ function GetMonthBodyObj() {
         oTbody.appendChild(objTr);
     }
     
-    oThisDate.setDate(oThisDate.getDate());
+    oThisDate.setDate(oThisDate.getDate()-1);
     sEndDate = oThisDate.getFullYear() + "-" + (oThisDate.getMonth() + 1) + "-" + oThisDate.getDate();
     objTr = null;
 
@@ -1265,9 +1265,7 @@ function GetDayBodyObj() {
 
     objTr = null;
     sStartDate = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2)
-    sDate.setDate(sDate.getDate() + 1);
     sEndDate = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2)
-    sDate.setDate(sDate.getDate() - 1);
     return oTbody;
 }
 

@@ -351,16 +351,27 @@
 							RtnVal[24] = "KEND;" + document.getElementById("keyword").value;
 						}
 					}
-					 RtnVal[26] = recvto;
-					 RtnVal[27] = document.getElementById("sendDept").value;
-					 RtnVal[28] = document.getElementById("recDept").value;
-			       
-			        for (i = 0; i < 29; i++) {
-			            if (RtnVal[i] != "" && typeof (RtnVal[i]) != "undefined") {
-			                chkVal = true;
-			                break;
-			            }
-			        }
+					
+					if (window.opener && opener.pListTypeValue == '4') {
+						 RtnVal[25] = recvfrom;
+						 RtnVal[26] = recvto;
+						 RtnVal[27] = document.getElementById("sendDept").value;
+						 RtnVal[28] = document.getElementById("recDept").value;
+						 
+						 for (i = 0; i < RtnVal.length; i++) {
+							 if (RtnVal[i] != "" && typeof (RtnVal[i]) != "undefined") {
+								 chkVal = true;
+								 break;
+							 }
+						 }
+					 } else {
+						 for (i = 0; i < 25; i++) {
+							 if (RtnVal[i] != "" && typeof (RtnVal[i]) != "undefined") {
+								 chkVal = true;
+								 break;
+							 }
+						 }
+					 }
 		        } else {
 		        	if (draftfrom != "")
 		                draftfrom = draftfrom ;

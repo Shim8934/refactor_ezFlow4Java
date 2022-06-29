@@ -89,6 +89,10 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		return (String) select("EzCommonDAO.getTenantConfig", map);
 	}
 
+	public String getAnyTblAnyColumns(Map<String, Object> map) throws Exception{
+		return (String) select("EzCommonDAO.getAnyTblAnyColumns", map);
+	}
+
     private void insertTblUserLocalInfoForJMocha(Map<String, Object> map) throws Exception {
         int tenantId = (Integer)map.get("v_TENANT_ID");        
         String userId = (String)map.get("userID");
@@ -447,6 +451,17 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("tbl_usermaster PHOTO_UPDATEDT column doesn't exist. creating the column...");
 
 			update("EzCommonDAO.addUserMasterPhotoUpdateDT");
+		}
+	}
+
+	/* 2022-01-19 김은실 - alter 재사용 모듈 추가 */
+	public void alter_AnyTbl_AnyColumns(Map<String, Object> map) throws Exception {
+		try {
+			select("EzCommonDAO.check_AnyTbl_AnyColumns", map);
+		} catch (Exception e) {
+			logger.debug("{} {} column doesn't exist. creating the column...", map.get("TBL_NAME"), map.get("COLUMN_NAME"));
+
+			update("EzCommonDAO.add_AnyTbl_AnyColumns", map);
 		}
 	}
 
@@ -1396,6 +1411,28 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
+	public void createAdminAccessIpTable() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblAdminAccessIpTable");
+		} catch (Exception e) {
+			logger.debug("tbl_admin_access_ip table doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblAdminAccessIpTable");
+			
+			if (dbType.equalsIgnoreCase("oracle") || dbType.equalsIgnoreCase("tibero")) {
+				try {
+					int cnt = (int) select("EzCommonDAO.checkTblAdminAccessIpSequence");
+					if (cnt < 1) {throw new Exception(); }
+				} catch (Exception ee) {
+					// ee.printStackTrace();
+					logger.debug("TBL_ADMIN_ACCESS_IP Sequence doesn't exist. creating the Sequence...");
+					
+					update("EzCommonDAO.createTblAdminAccessIpSequence");
+				}
+			}
+		}
+	}
+
 	public void insertReBebuOpinionCode(Map<String, Object> map) {
 		String companyId = checkReBebuOpinionCode(map);
 		
@@ -2233,5 +2270,75 @@ public class EzCommonDAO extends EgovAbstractDAO {
 	public void createTblAdminAccessInfo() {
 		logger.debug("If TBL_ADMIN_ACCESS_INFO doesn't exist, creating the table...");
 		update("EzCommonDAO.createTblAdminAccessInfo");
+	}
+	
+	public void createMailOutOfOfficeTemplate() throws Exception {
+		try {
+			select("EzCommonDAO.checkMailOutOfOfficeTemplate");
+		} catch (Exception e) {
+			logger.debug("jmocha_mail_outofoffice_tem doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createMailOutOfOfficeTemplate");
+		}
+	}
+
+	public void createUserMailTemplate() throws Exception {
+		try {
+			select("EzCommonDAO.checkUserMailTemplate");
+		} catch (Exception e) {
+			logger.debug("jmocha_user_mail_template doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createUserMailTemplate");
+		}
+	}
+
+	public void createTblPermissionChangeInfo() {
+		logger.debug("If TBL_PERMISSION_CHANGE_INFO doesn't exist, creating the table...");
+		update("EzCommonDAO.createTblPermissionChangeInfo");
+	}
+
+	public void addSusinScheduleOffsetColumn() throws Exception {
+		try {
+			select("EzCommonDAO.checkSusinScheduleOffsetColumn");
+		} catch (Exception e) {
+			logger.debug("TBL_SUSINSCHEDULE OFFSET column doesn't exist. creating the column...");
+			update("EzCommonDAO.addSusinScheduleOffsetColumn");
+		}
+	}
+	
+	public void insertReceiptHistoryListoption(Map<String, Object> map) throws Exception {
+		String companyId = checkReceiptHistoryListoption(map);
+		
+		try {
+			if (companyId == null) {
+				logger.debug("TBL_LISTOPTION data doesn't exist. insert the data of " + map.get("companyId") + "...");
+				insert("EzCommonDAO.insertReceiptHistoryListoption", map);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private String checkReceiptHistoryListoption(Map<String, Object> map) {
+		return (String) select("EzCommonDAO.checkReceiptHistoryListoption", map);
+	}
+	
+	/* 2022-02-09 홍승비 - 일괄기안 테이블에 임시저장/결재올림 구분용 타입 칼럼 추가 */
+	public void addAprDocGroupInfoTypeColumn() {
+		try {
+			select("EzCommonDAO.checkAprDocGroupInfoTypeColumn");
+		} catch (Exception e) {
+			logger.debug("TBL_APRDOCGROUPINFO TYPE column doesn't exist. creating the column...");
+			update("EzCommonDAO.addAprDocGroupInfoTypeColumn");
+		}
+	}
+	
+	public void alterTblDevMaster() {
+		try {
+			update("EzCommonDAO.alterTblDevMaster");
+		} catch (Exception e) {
+			logger.debug("alterTblDevMaster() ERROR...");
+			e.printStackTrace();
+		}
 	}
 }

@@ -3085,7 +3085,7 @@ function SaveDraftDocInfo_ilban(pState) {
         xmlhttp.open("POST", "/ezApprovalG/doDraft.do", false);
         xmlhttp.send(xmlpara);
 
-    	if (xmlhttp.statusText == "OK") {
+    	if (xmlhttp.status == 200) {
     		 if (pState != "000")
     	            SetBtnStateFalse();
     	        var dataNodes = GetChildNodes(xmlhttp.responseXML);
@@ -3563,11 +3563,6 @@ function HabyuiResultOpinion() {
     }
 }
 function setDocNumFormat(pPrefix) {
-    var Arr_Header = new Array();
-    var Header, Tail;
-    var i;
-    var d = new Date();
-
     var numHeader = "";
 
     var fields = message.GetFieldsList();
@@ -3586,12 +3581,32 @@ function setDocNumFormat(pPrefix) {
     
     var fieldValue = message.DocumentBodyGetAttribute("orgdocnum", 0);
 
-    Arr_Header = fieldValue.split("-");
+    numHeader = getDocNumByFormat(fieldValue);
     
+    field.textContent = numHeader;
+    if (numHeader.indexOf(strLang107) > 0)
+        message.DocumentBodySetAttribute("docnum", numHeader);
+
+    var field = message.GetListItem(fields, "receiptnumber");
+    if (field) {
+        field.setAttribute("Format", field.textContent.trim());
+        message.DocumentBodySetAttribute("receiptnumber", field.textContent.trim());
+        field.textContent = "";
+        if (new RegExp(/Firefox/).test(navigator.userAgent))
+            field.innerHTML = "<br type='_moz'>";
+    }
+}
+
+function getDocNumByFormat(format) {
+    var Arr_Header = new Array();
+    var numHeader = "";
+    var d = new Date();
+    Arr_Header = format.split("-");
+
     Arr_Header.forEach(function(item, index) {
-    	if (!item.indexOf('@')) {
-    		//@ exist
-    		Header = item.replace("@", "");
+        if (!item.indexOf('@')) {
+            //@ exist
+            Header = item.replace("@", "");
 
             switch (Header) {
                 case "DP":
@@ -3605,10 +3620,10 @@ function setDocNumFormat(pPrefix) {
                 case "YY":
                     numHeader += getAccountingYear();
                     break;
-                    
+
                 case "yy":
                     var yyear = getAccountingYear();
-                    numHeader += yyear.toString().substr(2);
+                    numHeader += yyear.toString().substring(2);
                     break;
 
                 case "MM":
@@ -3630,101 +3645,90 @@ function setDocNumFormat(pPrefix) {
                 case "cs":
                     numHeader += strLang107;
                     break;
-                    
+
                 case "FT":
-                	numHeader += "FT";
-                	break;
-                	
+                    numHeader += "FT";
+                    break;
+
                 case "MV":
-                	numHeader += "MV";
-                	break;
-                	
+                    numHeader += "MV";
+                    break;
+
                 case "YM":
-                	var yyear = d.getFullYear();
+                    var yyear = d.getFullYear();
                     numHeader += yyear.toString().substr(2);
-                    
-                	var mmonth = d.getMonth() + 1;
+
+                    var mmonth = d.getMonth() + 1;
                     if (parseInt(mmonth) < 10) mmonth = "0" + mmonth;
                     numHeader += mmonth;
-                    
+
                     var mdate = d.getDate();
                     if (parseInt(mdate) < 10) mdate = "0" + mdate;
                     numHeader += mdate;
-                    
+
                     break;
-                    
+
                 /*단암 양식*/
                 case "D1":
-                	numHeader += "계약";
-            		break;
+                    numHeader += "계약";
+                    break;
                 case "D2":
-                	numHeader += "교육기안";
-            		break;
+                    numHeader += "교육기안";
+                    break;
                 case "D3":
-                	numHeader += "교육";
-            		break;
+                    numHeader += "교육";
+                    break;
                 case "D4":
-                	numHeader += "구매";
-            		break;
+                    numHeader += "구매";
+                    break;
                 case "D5":
-                	numHeader += "제";
-            		break;
+                    numHeader += "제";
+                    break;
                 case "D6":
-                	numHeader += "기구";
-            		break;
+                    numHeader += "기구";
+                    break;
                 case "D7":
-                	numHeader += "기안";
-            		break;
+                    numHeader += "기안";
+                    break;
                 case "D8":
-                	numHeader += "제 문서 신청";
-            		break;
+                    numHeader += "제 문서 신청";
+                    break;
                 case "D9":
-                	numHeader += "보고";
-            		break;
+                    numHeader += "보고";
+                    break;
                 case "DA":
-                	numHeader += "제조-보고";
-            		break;
+                    numHeader += "제조-보고";
+                    break;
                 case "DB":
-                	numHeader += "연장근무보고서";
-            		break;
+                    numHeader += "연장근무보고서";
+                    break;
                 case "DC":
-                	numHeader += "출장";
-            		break;
+                    numHeader += "출장";
+                    break;
                 case "DD":
-                	numHeader += "해외출장";
-            		break;
+                    numHeader += "해외출장";
+                    break;
                 case "DE":
-                	numHeader += "품질검사";
-            		break;
+                    numHeader += "품질검사";
+                    break;
                 case "DF":
-                	numHeader += "휴가";
-                	break;
+                    numHeader += "휴가";
+                    break;
 
                 default:
-                    numHeader += fieldValue;
+                    numHeader += format;
                     break;
             }
-    	} else {
-    		numHeader += item;
-    	}
-    	
-    	if (!(index == Arr_Header.length - 1)) {
-    		numHeader += "-";
-    	}
-    });
-    
-    field.textContent = numHeader;
-    if (numHeader.indexOf(strLang107) > 0)
-        message.DocumentBodySetAttribute("docnum", numHeader);
+        } else {
+            numHeader += item;
+        }
 
-    var field = message.GetListItem(fields, "receiptnumber");
-    if (field) {
-        field.setAttribute("Format", field.textContent.trim());
-        message.DocumentBodySetAttribute("receiptnumber", field.textContent.trim());
-        field.textContent = "";
-        if (new RegExp(/Firefox/).test(navigator.userAgent))
-            field.innerHTML = "<br type='_moz'>";
-    }
+        if (!(index == Arr_Header.length - 1)) {
+            numHeader += "-";
+        }
+    });
+
+    return numHeader;
 }
 
 var ezchkpasswd_cross_dialogArguments = new Array();
@@ -4421,7 +4425,7 @@ function SaveTMPDocInfo(AutoSave) {
         xmlhttp.open("POST", "/ezApprovalG/doDraft.do", false);
         xmlhttp.send(xmlpara);
         
-     	if (xmlhttp.statusText == "OK") {
+     	if (xmlhttp.status == 200) {
      		return xmlhttp.responseText;
      	} else {
      		return "FALSE";

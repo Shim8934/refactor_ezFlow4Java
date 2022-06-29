@@ -370,7 +370,7 @@
         	xmlhttp.open("POST", "/ezApprovalG/saveRecUserRole.do", false);
 	        xmlhttp.send(xmlpara);
 	        if (xmlhttp != null && xmlhttp.readyState == 4) {
-				if (xmlhttp.statusText == "OK") {
+				if (xmlhttp.status == 200) {
 					xmlhttpSuccess++;
 				} else {
 					alert("<spring:message code='ezApprovalG.t1159'/>");
@@ -459,7 +459,7 @@
     }
     function event_displayUserList() {
         if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
-            if (g_xmlHTTP.statusText == "OK") {
+            if (g_xmlHTTP.status == 200) {
                 if (g_xmlHTTP.responseXML.getElementsByTagName("ROW").length == 0)
                     alert("<spring:message code='ezApprovalG.t1161'/>");
                 else {

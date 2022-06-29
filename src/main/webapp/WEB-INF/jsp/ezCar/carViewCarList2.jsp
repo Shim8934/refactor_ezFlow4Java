@@ -274,8 +274,8 @@
 	    	
 	    	// 2018-10-19 김민성 - 작성자 이름 클릭 시 사원정보보기 팝업
 			function OpenUserInfo(userID, deptID) {
-	        	var feature = "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
-	            feature = feature + GetOpenPosition(420, 438);
+	        	var feature = "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+	            feature = feature + GetOpenPosition(420, 450);
 	            window.open("/ezCommon/showPersonInfo.do?id=" + userID + "&dept=" + deptID, "", feature);
 	        }
 	    	

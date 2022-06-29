@@ -209,9 +209,11 @@ public interface EzCommonService {
 
 	public void createRsFavoriteTable();
 	
+	public void insertTblTenantConfig() throws Exception;
+
 	public void createUserDistributionTable();
 
-	public void insertTblTenantConfig(String configName) throws Exception;
+	public void alter_AnyTbl_AnyColumns() throws Exception;
 
 	public void addThemeAndPorteltAuthInit() throws Exception;
 	
@@ -250,6 +252,8 @@ public interface EzCommonService {
 	public void insertUseExternalMailServerConfig() throws Exception;
 
 	public void insertReBebuOpinionCode() throws Exception;
+	
+	public void createAdminAccessIpTable() throws Exception;
 	
 	public void addFormAprOptionColumn() throws Exception;
 
@@ -363,4 +367,20 @@ public interface EzCommonService {
 	public void alterTblConnectionInfo() throws Exception;
 	
 	public void createTblAdminAccessInfo() throws Exception;
+	
+	public void createMailOutOfOfficeTemplate() throws Exception;
+	
+	public void createUserMailTemplate() throws Exception;
+	
+	void createTblPermissionChangeInfo() throws Exception;
+	
+	public void addSusinScheduleOffsetColumn() throws Exception;
+
+	public void insertReceiptHistoryListoption() throws Exception;
+	
+	public void addAprDocGroupInfoTypeColumn() throws Exception;
+
+	public void alterTblDevMaster() throws Exception;
+
+	String createExcelByList (String fileName, String dirPath, String sheetName, List<List<Object>> data) throws Exception;
 }

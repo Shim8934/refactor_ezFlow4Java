@@ -273,16 +273,25 @@
 			INSERT INTO TBL_CONNECTION_INFO(
 				SEQUENCE, 							USERID, 	   		USERNM, 			USERNM2, 			DEPTID, 			DEPTNM, 			DEPTNM2, 
 				TITLE, 			TITLE2, 			COMPANYID, 			COMPANYNM, 			COMPANYNM2, 		CONNECTIP, 
-				CONNECTTIME, 	CONNECTBROWSER, 	CONNECTOS, 			CONNECTAGENT,      TENANT_ID
+				CONNECTTIME, 	CONNECTBROWSER, 	CONNECTOS, 			CONNECTAGENT,      	TENANT_ID,			STATUS,				SESSIONCODE
 			)
 			VALUES(
 				SEQ_TBL_CONNECTION_INFO.NEXTVAL, 	#id#,				#displayName1#,		#displayName2#,		#deptID#,			#deptName1#,		#deptName2#,	
 				#title1#,		#title2#,			#companyID#,		#companyName1#,		#companyName2#,		#ip#,	
-				SYS_EXTRACT_UTC(SYSTIMESTAMP),		#browser#,			#os#,				#agent#,        #tenantId#	
+				SYS_EXTRACT_UTC(SYSTIMESTAMP),		#browser#,			#os#,				#agent#,        	#tenantId#,			#status#,			#sessionCode#
 			)				
 		]]>
 	</insert>
 	
+	<update id="loginDAO.updateLog" parameterClass="loginVO">
+        <![CDATA[
+            UPDATE 	TBL_CONNECTION_INFO
+				SET    	DISCONNECTTIME 	= SYS_EXTRACT_UTC(SYSTIMESTAMP)
+				WHERE 	SESSIONCODE 	= #sessionCode#
+				AND		TENANT_ID 		= #tenantId#
+        ]]>
+    </update>
+
 	<update id="loginDAO.updateUser" parameterClass="loginVO">
 		<![CDATA[
 			UPDATE TBL_USERMASTER

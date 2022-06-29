@@ -426,7 +426,7 @@
 	            xmlhttp.send(xmlpara);
 	
 	            if (xmlhttp != null && xmlhttp.readyState == 4) {
-	                if (xmlhttp.statusText == "OK") {
+	                if (xmlhttp.status == 200) {
 	                    alert("<spring:message code = 'ezPersonal.s2' />");
 	                    if (ReturnFunction != null)
 	                        ReturnFunction();

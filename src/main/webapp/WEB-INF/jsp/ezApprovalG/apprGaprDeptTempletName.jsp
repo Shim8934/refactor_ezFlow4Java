@@ -28,10 +28,10 @@
 		    function btn_SaveAprDeptTempletName_onclick() {
 		        var p_AprDeptTempletName = TxtAprDeptTempletName.value;
 		
-		        if (p_AprDeptTempletName == "") {
+		        if (p_AprDeptTempletName.trim() == "") {
 		            //var pAlertContent = "<spring:message code='ezApprovalG.t309'/>";
 		            //parent.OpenAlertUI(pAlertContent);	
-		           if(approvalFlag == "S") {
+		           if (approvalFlag == "S") {
 		            	alert("<spring:message code='ezApprovalG.t309'/>");
 		           } else {
 		        	   alert("<spring:message code='ezApprovalG.t311'/>");

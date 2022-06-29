@@ -61,7 +61,10 @@ function getScheduleList_after(resultList, mode, date) {
 				if (DATETYPE == "4") {
 					listHTML += "<li class='scheduleLi' onClick=\"open_schedule('" + SCHEDULEID + "','" + PARENTID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "','" + pageFrom + "')\">";
 					listHTML += "<p class='scheduleTime'>";					
-				}else{
+				} else if(SCHEDULETYPE == "9") {
+					listHTML += "<li class='scheduleLi' onClick=\"open_google_schedule('" + SCHEDULEID + "','" + PARENTID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "','" + ENDDATE + "')\">";
+					listHTML += "<p class='scheduleTime'>";
+				} else{
 					listHTML += "<li class='scheduleLi' onClick=\"open_schedule('" + SCHEDULEID + "','" + PARENTID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "','" + pageFrom + "')\">";
 					listHTML += "<p class='scheduleTime'>";
 				}
@@ -82,7 +85,10 @@ function getScheduleList_after(resultList, mode, date) {
 				} else if (SCHEDULETYPE == 4) {
 					timeClass = "Tcollaborate";
 					listHTML += "<span class='Tcollaborate'>" + strLang131_1 + "</span>";
-				}else {
+				} else if (SCHEDULETYPE == 9) {
+					timeClass = "Tindividual";
+					listHTML += "<span class='Tindividual'>" + strLang141_1 + "</span>";
+				} else {
 					listHTML += "";
 				}
 				
@@ -119,7 +125,7 @@ function getScheduleList_after(resultList, mode, date) {
 		
 		document.getElementById("scheduleList").innerHTML = listHTML;
 		
-	} catch (e) {}
+	} catch (e) { alert(e) }
 }
 
 function scheduleWrite() {
@@ -173,6 +179,18 @@ function open_schedule(scheduleid, parentid, scheduletype, datetype, repeatcount
     }
 }
 
+function open_google_schedule(scheduleid, parentid, scheduletype, datetype, repeatcount, startdate, enddate) {
+    var wWeight = "760";
+    var wHeight = "650";
+    var heigth = window.screen.availHeight;
+    var width = window.screen.availWidth;
+    var left = (width - wWeight) / 2;
+    var top = (heigth - wHeight) / 2;
+    
+    window.open("/ezSchedule/googleScheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&repeatcount=" + repeatcount + "&startdate=" + startdate + "&enddate=" + enddate + "&datetype=" + datetype, "",
+    		"top = " + top + ", left = " + left + ",height = " + wHeight + "px, width = " + wWeight + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1 scrollbars=0");
+    
+}
 function goSchedule() {
 	window.open("/ezSchedule/scheduleIndex.do?funCode=2", "main", "");
 }

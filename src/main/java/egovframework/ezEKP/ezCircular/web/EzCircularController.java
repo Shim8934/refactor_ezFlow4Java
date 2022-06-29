@@ -1620,7 +1620,8 @@ public class EzCircularController extends EgovFileMngUtil {
             String extend = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);
             String newFileName = pUploadSN[i];
             
-            if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) == -1 && !useExtension.equals("*")) {
+			// dhlee : 20220527 - 파일 업로드 시 .으로 끝나는 파일(예: .jsp.)이 무조건 업로드 허용되는 문제 수정
+            if ((extend.isEmpty() || useExtension.toLowerCase().indexOf(extend.toLowerCase()) == -1) && !useExtension.equals("*")) {
             	//2018-07-06 김보미
 				//strXML.append("<DATA><![CDATA[" + newFileName + ";" + pFileName[i] + "]]></DATA>");
 				strXML.append("<DATA><![CDATA[" + newFileName + "]]></DATA>");//UUID

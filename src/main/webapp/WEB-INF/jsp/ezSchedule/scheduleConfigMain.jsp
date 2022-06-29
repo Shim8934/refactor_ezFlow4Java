@@ -105,7 +105,7 @@
 		    }
 		    
 		    function Google_ini() {
-	            document.getElementById("mainframe").src = "schedule_google.aspx";
+	            document.getElementById("mainframe").src = "/ezSchedule/scheduleSyncConfig.do";
 		    }
 		    
 		    function schedule_noti() {
@@ -134,9 +134,9 @@
        				</c:otherwise>
        			</c:choose>
            		<%-- 구글캘린더 --%>
-           		<%-- <%if(pUseGoogleCalrendar == "YES"){ %>
-           				<p><span id="1tab2" divname="googleTab"><%=RM.GetString("t401")%></span></p><%
-           		} %> --%>
+           		<c:if test="${useGoogleCalendar == 'YES'}">
+           				<p><span id="1tab2" divname="googleTab"><spring:message code='ezSchedule.t401'/></span></p>
+           		</c:if>
            		<%-- <p><span id="1tab4" divname="taskGeneral"><spring:message code='ezTask.jsh12' /></span></p> --%>
        		</div>
    		</div>    

@@ -18,6 +18,8 @@ import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -70,6 +72,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.jsoup.Jsoup;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1696,7 +1700,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			if (fileSize[i] > bigMaxSize && bigMaxSize != 0) {
                 resultUpload[i] = "overflow";
             } else {
-                if (useExtension.toLowerCase().indexOf(sExt[i].toLowerCase()) == -1 && !useExtension.equals("*")) {
+				// dhlee : 20220527 - 파일 업로드 시 .으로 끝나는 파일(예: .jsp.)이 무조건 업로드 허용되는 문제 수정
+                if ((sExt[i].isEmpty() || useExtension.toLowerCase().indexOf(sExt[i].toLowerCase()) == -1) && !useExtension.equals("*")) {
                     resultUpload[i] = "denied";
                 } else {
                     writeUploadedFile(multiFile.get(i), sGUID[i], pDirTempPath);
@@ -2018,7 +2023,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
                 	//첨부파일 정보를 XML data로 만든다.
                     String resultUpload = "";
                     
-    				if (useExtension.toLowerCase().indexOf(fileExt[i].toLowerCase()) == -1 && !useExtension.equals("*")) {
+					// dhlee : 20220527 - 파일 업로드 시 .으로 끝나는 파일(예: .jsp.)이 무조건 업로드 허용되는 문제 수정
+    				if ((fileExt[i].isEmpty() || useExtension.toLowerCase().indexOf(fileExt[i].toLowerCase()) == -1) && !useExtension.equals("*")) {
                         resultUpload = "denied";
                     } else {
                         resultUpload = "true";
@@ -2372,7 +2378,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					//첨부파일 정보를 XML data로 만든다.
 					String resultUpload = "";
 					
-					if (useExtension.toLowerCase().indexOf(fileExt[i].toLowerCase()) == -1 && !useExtension.equals("*")) {
+					// dhlee : 20220527 - 파일 업로드 시 .으로 끝나는 파일(예: .jsp.)이 무조건 업로드 허용되는 문제 수정
+					if ((fileExt[i].isEmpty() || useExtension.toLowerCase().indexOf(fileExt[i].toLowerCase()) == -1) && !useExtension.equals("*")) {
 						resultUpload = "denied";
 					} else {
 						resultUpload = "true";
@@ -2729,7 +2736,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					//첨부파일 정보를 XML data로 만든다.
 					String resultUpload = "";
 					
-					if (useExtension.toLowerCase().indexOf(fileExt[i].toLowerCase()) == -1 && !useExtension.equals("*")) {
+					// dhlee : 20220527 - 파일 업로드 시 .으로 끝나는 파일(예: .jsp.)이 무조건 업로드 허용되는 문제 수정
+					if ((fileExt[i].isEmpty() || useExtension.toLowerCase().indexOf(fileExt[i].toLowerCase()) == -1) && !useExtension.equals("*")) {
 						resultUpload = "denied";
 					} else {
 						resultUpload = "true";
@@ -6993,5 +7001,151 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         logger.debug("setBigAttachCountInfo ended.");
         
 		return "";
+	}
+	
+	/**
+	 * 메일 템플릿 팝업
+	 */
+	@RequestMapping(value="/ezEmail/userMailTemplateMain.do", method = RequestMethod.GET)
+	public String userMailTemplateMain() throws Exception{
+		logger.debug("userMailTemplateMain start-ended");
+		return "ezEmail/mailTemplateMain";
+	}
+
+	/**
+	 * 메일 템플릿 저장 팝업
+	 */
+	@RequestMapping(value="/ezEmail/saveUserMailTemplateMain.do", method = RequestMethod.GET)
+	public String saveUserMailTemplateMain() throws Exception{
+		logger.debug("saveUserMailTemplateMain start-ended");
+		return "ezEmail/mailTemplateAdd";
+	}
+
+	/**
+	 * 메일 템플릿 리스트 가져오기
+	 */
+	@RequestMapping(value="/ezEmail/getUserMailTemplateList.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@ResponseBody
+	public String getUserMailTemplateList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
+		logger.debug("getUserMailTemplateList started.");
+		
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		int tenantId = loginInfo.getTenantId();
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userEmail = loginInfo.getId() + "@" + domainName;
+		logger.debug("tenantId=" + tenantId + ", domainName=" + domainName + ", userEmail=" + userEmail);
+		
+		JSONArray jsonArr = ezEmailService.getUserMailTemplateList(userEmail);
+		
+		logger.debug("getUserMailTemplateList ended.");
+		return jsonArr.toString();
+	}
+
+	/**
+	 * 메일 템플릿 개별 가져오기
+	 */
+	@RequestMapping(value="/ezEmail/getUserMailTemplate.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@ResponseBody
+	public String getUserMailTemplate(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
+		logger.debug("getUserMailTemplate started.");
+		
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		int tenantId = loginInfo.getTenantId();
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userEmail = loginInfo.getId() + "@" + domainName;
+		logger.debug("tenantId=" + tenantId + ", domainName=" + domainName + ", userEmail=" + userEmail);
+		
+		String templateId = request.getParameter("templateId");
+		templateId = templateId == null ? "" : templateId;
+		logger.debug("templateId=" + templateId);
+		
+		JSONObject jsonObj = ezEmailService.getUserMailTemplate(userEmail, templateId);
+		
+		logger.debug("getUserMailTemplate ended.");
+		return jsonObj.toJSONString();
+	}
+	
+	/**
+	 * 메일 템플릿 미리보기
+	 */
+	@RequestMapping(value="/ezEmail/userMailTemplatePreview.do", method = RequestMethod.GET)
+	public String userMailTemplatePreview(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("userMailTemplatePreview started.");
+		
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		int tenantId = loginInfo.getTenantId();
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userEmail = loginInfo.getId() + "@" + domainName;
+		logger.debug("tenantId=" + tenantId + ", domainName=" + domainName + ", userEmail=" + userEmail);
+		
+		String templateId = request.getParameter("templateId");
+		templateId = templateId == null ? "" : templateId;
+		logger.debug("templateId=" + templateId);
+		
+		JSONObject jsonObj = ezEmailService.getUserMailTemplate(userEmail, templateId);
+		
+		model.addAttribute("templateObj", jsonObj);
+		
+		logger.debug("userMailTemplatePreview ended.");
+		return "ezEmail/mailTemplatePreview";
+	}
+	
+	/**
+	 * 메일 템플릿 삭제
+	 */
+	@RequestMapping(value="/ezEmail/deleteUserMailTemplate.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String deleteUserMailTemplate(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
+		logger.debug("deleteUserMailTemplate started.");
+
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		int tenantId = loginInfo.getTenantId();
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userEmail = loginInfo.getId() + "@" + domainName;
+		logger.debug("tenantId=" + tenantId + ", domainName=" + domainName + ", userEmail=" + userEmail);
+		
+		String templateId = request.getParameter("templateId");
+		templateId = templateId == null ? "" : templateId;
+		logger.debug("templateId=" + templateId);
+		
+		String realPath = commonUtil.getRealPath(request);
+		
+		int resultInt = ezEmailService.deleteUserMailTemplate(userEmail, templateId, "indiviaul", realPath, tenantId);
+		String returnStr = resultInt == 0 ? "OK" : "ERROR";
+		
+		logger.debug("deleteUserMailTemplate ended.");
+		return returnStr;
+	}
+	
+	/**
+	 * 메일 템플릿 저장
+	 */
+	@RequestMapping(value="/ezEmail/saveUserMailTemplate.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String saveUserMailTemplate(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
+		logger.debug("saveUserMailTemplate started.");
+		
+		String returnStr = "ERROR";
+		
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		int tenantId = loginInfo.getTenantId();
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userEmail = loginInfo.getId() + "@" + domainName;
+		logger.debug("tenantId=" + tenantId + ", domainName=" + domainName + ", userEmail=" + userEmail);
+
+		String displayName = request.getParameter("displayName");
+		displayName = displayName == null ? "" : displayName;
+		String content = request.getParameter("content");
+		content = content == null ? "" : content;
+		String editorType = request.getParameter("editorType"); // 0:html, 1:plain
+		logger.debug("displayName=" + displayName + ", editorType=" + editorType);
+		
+		String realPath = commonUtil.getRealPath(request);
+		
+		int resultInt = ezEmailService.saveUserMailTemplate(userEmail, displayName, content, realPath, editorType, tenantId);
+		returnStr = resultInt == 0 ? "OK" : resultInt == -2 ? "DUPLICATE" : "ERROR";
+		
+		logger.debug("saveUserMailTemplate ended.");
+		return returnStr;
 	}
 }

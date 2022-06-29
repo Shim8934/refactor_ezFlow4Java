@@ -45,21 +45,26 @@
     result = loadXMLString(result);
     var NodeList = SelectNodes(result, "LISTVIEWDATA/ROWS/ROW");
     if (NodeList.length > 0) {
-    	var Resultxml = APRLINEXMLParsing(result);
-    	$.ajax({
-    		type : "POST",
-    		dataType : "text",
-    		async : false,
-    		url : "/ezApprovalG/aprLineSave.do",
-    		data : {
-    				ret : Resultxml
-    				},
-    		success : function(result){
-    			if (result == "TRUE") {
-                    retvalue[0] = Resultxml;
+        // 2022-01-27 박기범 - 수신문서일 경우 창이 열리자마자 결재선 불러오면서 저장하는것 방지
+        if (pDraftFlag !== "SUSIN") {
+            var Resultxml = APRLINEXMLParsing(result);
+            $.ajax({
+                type : "POST",
+                dataType : "text",
+                async : false,
+                url : "/ezApprovalG/aprLineSave.do",
+                data : {
+                        ret : Resultxml
+                        },
+                success : function(result){
+                    if (result == "TRUE") {
+                        retvalue[0] = Resultxml;
+                    }
                 }
-    		}
-    	});
+            });
+        } else {
+            retvalue[0] = APRLINEXMLParsing(result);
+        }
     }
     
     return retvalue;

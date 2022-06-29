@@ -1,68 +1,82 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezApprovalG.t1217'/></title>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
-		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <title><spring:message code='ezJournal.t204'/></title>
+	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	    <link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+	    <style>
+	    	.mainlist tr th {
+	    		border-top:0px;
+	    	}
+			.listview {
+				width: 100%; height: 180px; overflow-x:hidden; overflow-y: AUTO;
+			}
+	    </style>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
-		<script language="JavaScript">
-		    var pDocID = "<c:out value ='${docID}'/>";
-		    var pDeptID = "<c:out value ='${deptID}'/>";
-		    window.onload = function () {
-		        try {
-		            var xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-		            var RtnVal = new ActiveXObject("Microsoft.XMLDOM");
-		
-		            var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
-		            var objRoot = xmlpara.createNode(1, "ASSIGN", "");
-		            xmlpara.appendChild(objRoot);
-		
-		            var objNode = xmlpara.createNode(1, "pDocID", "");
-		            objNode.text = pDocID;
-		            xmlpara.documentElement.appendChild(objNode);
-		
-		            var objNode = xmlpara.createNode(1, "pDeptID", "");
-		            objNode.text = pDeptID;
-		            xmlpara.documentElement.appendChild(objNode);
-		
-		            xmlhttp.open("POST", "../ezAPRHISTORY/aspx/getDeptHistory.aspx", false);
-		            xmlhttp.send(xmlpara);
-		
-		            RtnVal = xmlhttp.responseXML;
-		            lvAprLine.dataSource = RtnVal;
-		        } catch (e) {
-		            alert("window_onload : " + e.description);
-		        }
-		    };
-		    function OpenAlertUI(pAlertContent) {
-		        var parameter = pAlertContent;
-		        var url = "../ezAPRALERT.aspx";
-		        var feature = "status:no;dialogWidth:300px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
-		        var RtnVal = window.showModalDialog(url, parameter, feature);
-		    }
-		    function lvAprLine_DBSelChange() {
-		    }
-		    function lvAprLine_SelChange() {
-		    }
-		</script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
+	    <script type="text/javascript" id="clientEventHandlersJS">
+	        var pDocID;
+	        var pDeptID;
+	        var OrderCell = "";
+	        var Resultxml = createXmlDom();
+	        var xmlhttp = createXMLHttpRequest();
+// 	        if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
+// 	            window.onblur = function () {
+// 	                window.focus();
+// 	            };
+// 	        }
+	        var orgCompanyID;
+	        window.onload = function () {
+	            pDocID = "${docID}";
+	            pDeptID = "${deptID}";
+	
+	            getReceiptHistoryInfo();
+	        };
+	        function getReceiptHistoryInfo() {
+	            document.getElementById("RECEIPTHISTORY").innerText = "";
+	            
+		    	var result = "";
+		    	
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/getReceiptHistoryInfo.do",
+		    		data : {
+		    			docID : pDocID,
+		    			deptID : pDeptID
+		    		},
+		    		success: function(xml){
+		    			result = loadXMLString(xml);
+		    		}
+		    	});
+		    	
+	            Resultxml = result;
+	            var listview = new ListView();
+	            listview.SetID("receiptHistory");
+	            listview.SetMulSelectable(false);
+	            listview.DataSource(Resultxml);
+	            listview.DataBind("RECEIPTHISTORY");
+	        }
+	        function btn_exit_onclick() {
+                window.close();
+	        }
+	    </script>
+	    
 	</head>
 	<body class="popup">
-		<OBJECT classid=clsid:F8E93A35-2D04-4E2C-A04D-87947594C674 height=0 id=behave1 width=0 style="DISPLAY: none"></OBJECT> 
-		<h1><spring:message code='ezApprovalG.t1217'/></h1>
-		<div id="close">
-		  <ul>
-		    <li><span onClick="window.close()"></span></li>
-		  </ul>
-		</div>
-		
-		<div class="listview">
-			<div ID="lvAprLine" STYLE="BEHAVIOR:url('#behave1#ListView'); border:0;HEIGHT: 120px; WIDTH: 517px" onRowDblClick="return lvAprLine_DBSelChange()" OnSelChanged="return lvAprLine_SelChange()">
-			</div>
-		</div>					
+	    <h1><spring:message code='ezJournal.t204'/></h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="return btn_exit_onclick()"></span></li>
+            </ul>
+        </div>
+	    <div class="listview">
+	        <div id="RECEIPTHISTORY" style="border: 0; Height: 150px;"></div>
+	    </div>
 	</body>
 </html>

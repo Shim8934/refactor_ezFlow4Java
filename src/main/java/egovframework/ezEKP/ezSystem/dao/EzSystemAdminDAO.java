@@ -10,6 +10,7 @@ import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.PasswordPolicyVO;
+import egovframework.ezEKP.ezSystem.vo.PermissionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 import egovframework.let.main.vo.MainVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -137,7 +138,34 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 	public int updateAccessCountry(Map<String, Object> paramMap) throws Exception {
 		return update("EzSystemAdminDAO.updateAccessCountry", paramMap);
 	}
-
+	
+	public int updateSystemAdminIPAllow(SysParamVO sysParamVO) throws Exception {
+		return update("EzSystemAdminDAO.updateSysParam", sysParamVO);
+    }
+	
+	@SuppressWarnings("unchecked")
+	public List<IPBandVO> getAdminAccessIPBand(int tenantID) throws Exception {
+	    return (List<IPBandVO>) list("EzSystemAdminDAO.getAdminAccessIPBand", tenantID);
+    }
+	
+	public void insertAdminIPBand(Map<String, Object> map) throws Exception {
+		insert("EzSystemAdminDAO.insertAdminIPBand", map);
+	}
+ 
+	public IPBandVO getSystemAdminIPBand(String ipNo) throws Exception {
+		int pIpNo = Integer.parseInt(ipNo);
+		
+		return (IPBandVO) select("EzSystemAdminDAO.getSystemAdminIPBand", pIpNo);
+	}
+	
+	public void updateAdminIPBand(Map<String, Object> map) throws Exception {
+		update("EzSystemAdminDAO.updateAdminIPBand", map);
+	}
+	
+	public void deleteAdminIPBand(List<String> ipNoList) throws Exception {
+		delete ("EzSystemAdminDAO.deleteAdminIPBand", ipNoList);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public Map<String, String> getPwPolicy(Map<String, Object> paramMap) throws Exception {
 		return (Map<String, String>) select("EzSystemAdminDAO.getPwPolicy", paramMap);
@@ -179,4 +207,15 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 	public int getAdminAccessHistCount(Map<String, Object> map) throws Exception {
 		return (int) select("EzSystemAdminDAO.getAdminAccessHistCount", map); 
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<PermissionInfoVO> getPermissionChHist(Map<String, Object> map) throws Exception {
+		return (List<PermissionInfoVO>) list("EzSystemAdminDAO.getPermissionChHist", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public int getPermissionChHistCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzSystemAdminDAO.getPermissionChHistCount", map);
+	}
+
 }

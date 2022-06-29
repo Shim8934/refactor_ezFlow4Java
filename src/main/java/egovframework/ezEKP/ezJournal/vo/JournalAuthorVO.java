@@ -14,6 +14,8 @@ public class JournalAuthorVO {
 	private String userImg;
 	/** 정렬순서값*/
 	private String extensionAttribute15;
+	/** 겸직 여부 (user,addJob)*/
+	private String userType;
 	
 	public String getUserImg() {
 		return userImg;
@@ -74,6 +76,12 @@ public class JournalAuthorVO {
 	}
 	public void setExtensionAttribute15(String extensionAttribute15) {
 		this.extensionAttribute15 = extensionAttribute15;
+	}
+	public String getUserType() {
+		return userType;
+	}
+	public void setUserType(String userType) {
+		this.userType = userType;
 	}
 	
 }

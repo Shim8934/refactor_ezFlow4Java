@@ -251,8 +251,7 @@
 		            
 		            DocNumCode = "";
 		            
-		            // 웹한글에서 지원하지 않는 함수 주석처리
-		          //  showProgress(tempString.replace("\n", ""));
+		            showLoadingProgress();
 		            
 		            if (pDocID == NextDocID) {
 		                var pAlertContent = "<spring:message code='ezApprovalG.t3'/>";
@@ -391,7 +390,7 @@
 		            }
 		
 		            process_AfterOpen();
-		            //hideProgress();
+		            hideLoadingProgress();
 		            CheckOpinionYN();
 		
 		            AllApprove.style.display = "";
@@ -405,7 +404,7 @@
 		            window.onresize();
 		        }
 		        else {
-		            //hideProgress();
+		        	hideLoadingProgress();
 		            var pAlertContent = "<spring:message code='ezApprovalG.t369'/>";
 			        OpenAlertUI(pAlertContent);
 			        message.Clear();
@@ -455,6 +454,9 @@
 				    }
 		        }
 		        else if (mode == "2") {
+		        	/* 2022-03-24 홍승비 - 웹한글문서 반송 시에도 반송알림메일 발송 */
+		        	SendMailBansongtoDrafter();
+		        	
 		            if (allFlag == "1" || allFlag == "2") {
 		                LoadNextDocument("\n<spring:message code='ezApprovalG.t1377'/>");
 				    }
@@ -1584,9 +1586,10 @@
 
    							//2020-05-08 : 결재정보확인 시 문서정보 저장 후 문서 반영
    							setApprDocInfo();	
-   							//SaveFile();
+							// 2022-02-04 박기범 : 결재정보 > 확인 후에 한글문서는 저장되지 않던 문제 수정
+							GetHTML(before_SaveFile);
 
-   			                SummaryFlag = true;
+							SummaryFlag = true;
    			                savexmlhttp = null;
    			            }
    			            catch (e) {
@@ -1637,7 +1640,9 @@
 		    	
 		    	// 웹 한글 기안기용
 		    	function Editor_Complete() {
-		        	if (pDocHref != "") {
+		    		showLoadingProgress();
+
+		    		if (pDocHref != "") {
 	                    var URL;
 	                    URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(pDocHref);
 	                    message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
@@ -1808,5 +1813,8 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
+		<div style="width: 200px; height: 50px; border: 0px solid red; text-align: center; vertical-align: middle; display: none; z-index: 9000; position: absolute;" id="loadingLayer">
+	        <img src="/images/email/progress_img.gif" style="vertical-align: middle;" />
+	    </div>
 	</body>
 </html>

@@ -178,6 +178,8 @@
 	        var bigAttachDownloadDay = "<c:out value ='${bigAttachDownloadDay}'/>";
 	        var bigSizeAttachDownloadLimitCount = "<c:out value ='${bigSizeAttachDownloadLimitCount}'/>";
 			var preSusinGroupStr = "<c:out value ='${preSusinGroupStr}'/>";
+
+			var formPath = "<c:out value ='${formPath}'/>";
 	        
 	        window.onload = function () {
 	            try {
@@ -233,6 +235,7 @@
 	                    SetBtnStateTrue();
 	                    setAutoProperty();
 	                    setMenuBar("btntotaldocinfo", true);
+	                    hideLoadingProgress();
 	                    
 	                    //window.focus();
 	                    //HwpCtrl.focus();
@@ -339,7 +342,12 @@
                 URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(beforeUrl);
                 message2.Open(URL, "", "", function (res) { CopyAndPasteContent(res.result) }, null);
 	        }
-	        
+
+			function Editor_Form_Complete() {
+				var URL =  "http://" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(formPath);
+				message3.Open(URL, "", "", function (res) { res.result }, null);
+			}
+
 	        function CopyAndPasteContent(isTrue) {
 	        	try {
 		        	if(isTrue) {
@@ -368,7 +376,7 @@
 			        xmlhttp.open("Post", "aspx/GetFormDetail.aspx", false);
 			        xmlhttp.send(xmlpara);
 			
-			        if (xmlhttp.statusText == "OK") {
+			        if (xmlhttp.status == 200) {
 			            if (loadXMLString(xmlhttp.responseText).getElementsByTagName("FORMDOCTYPE").length > 0) {
 			                Result = getNodeText(loadXMLString(xmlhttp.responseText).getElementsByTagName("FORMDOCTYPE").item(0));
 			            }
@@ -691,6 +699,8 @@
                 }
 
               	if (nonElecRec != "Y") {
+					UpdateDocNum();
+
 	                if (LastSignSN == 1 || DraftLastFlag) {
 	                    var pInformationContent = "<spring:message code='ezApprovalG.t143'/><br> <spring:message code='ezApprovalG.t144'/>";
 	                    OpenInformationUI(pInformationContent, check_btnSendDraft4);
@@ -778,6 +788,7 @@
 
                             UpdateLineHistory();
                             
+                            draftFlag = true;
                             pAlertContent = "<spring:message code='ezApprovalG.t146'/>";
                             OpenAlertUI(pAlertContent, Complete_Draft);
                             /* draftFlag = true;
@@ -868,6 +879,7 @@
 	                        pAlertContent = "<spring:message code='ezApprovalG.t146'/>";
                         }
                         
+                        draftFlag = true;
                         OpenAlertUI(pAlertContent, Complete_Draft2);
                         /* draftFlag = true;
 
@@ -1631,16 +1643,21 @@
 	    	
 	    	// 웹 한글 기안기용
 	    	function Editor_Complete() {
+	    		showLoadingProgress();
 	        	if (pFormHref != "") {
                     var URL;
                     URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(FormHref);
-                    message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
+                    message.Open(URL, "", "", function (res) { FieldsAvailable(res.result); Editor_focus(); }, null);
 	        	} else {
                     DraftFlag = "DRAFT";
                     pDraftFlag = "DRAFT";
                     var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(sihangURL.replace(".mht", ".hwp"));
-		        	message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
+		        	message.Open(URL, "", "", function (res) { FieldsAvailable(res.result); Editor_focus(); }, null);
                 }
+	    	}
+	    	
+	    	function Editor_focus(){
+	    		document.getElementById("message").contentDocument.getElementById("hwpctrl_frame").contentDocument.getElementById("ImeWrapper_Elm").focus();
 	    	}
 	    	
 	    	function Editor_Complete2() {
@@ -1825,7 +1842,25 @@
                 	 document.getElementById("apprAttachGuideTR").style.display = "none";
                  }
 	    	}
-	    	
+
+			function UpdateDocNum() {
+				if (!message.FieldExist("docnumber")) {
+					console.log("message hasn't a docnumber field");
+					return false;
+				} else if (typeof message3 === "undefined" || message3 == null) {
+					console.log("message3 is undefined");
+					return false;
+				} else if (!message3.FieldExist("docnumber")) {
+					console.log("message3's docnumer property isn't exist");
+					return false;
+				} else if (typeof getDocNumByFormat === "undefined" || getDocNumByFormat == null) {
+					console.log("function getDocNumByFormat is undefined");
+					return false;
+				}
+
+				var numberFormat = message3.GetFieldText("docnumber");
+				message.PutFieldText("docnumber", getDocNumByFormat(numberFormat));
+			}
 	    </script>
 	</head>
 	<body class="popup">
@@ -1906,6 +1941,13 @@
 	            </td>
 	        </tr>
 	        </c:if>
+			<c:if test="${not empty formPath}">
+			<tr style="display: none">
+				<td style="vertical-align: top; height: 0%" id="form3">
+					<iframe id="message3" name="message3" src="/ezApprovalG/WHWPEditor.do?type=form"  style="background-color: White; height: 0px; width: 0px;"></iframe>
+				</td>
+			</tr>
+			</c:if>
 	        <tr>
 	            <td height="20">
 	                <table class="file" style="height:80px; margin-top:-9px;">
@@ -1938,5 +1980,8 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
+		<div style="width: 200px; height: 50px; border: 0px solid red; text-align: center; vertical-align: middle; display: none; z-index: 9000; position: absolute;" id="loadingLayer">
+	        <img src="/images/email/progress_img.gif" style="vertical-align: middle;" />
+	    </div>
 	</body>
 </html>

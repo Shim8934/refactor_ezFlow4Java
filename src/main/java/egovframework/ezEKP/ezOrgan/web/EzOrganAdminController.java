@@ -32,6 +32,14 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -71,6 +79,8 @@ import egovframework.ezEKP.ezOrgan.vo.OrganGroupVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezSystem.vo.PermissionInfoVO;
+import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
@@ -144,6 +154,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.createMailTemplateSequence();
     		ezCommonService.createJmochaMailboxProgress();
 	    	ezCommonService.alterTblAddjobMaster();
+	    	ezCommonService.createUserMailTemplate(); // 2020-07-27 김수아 - 메일 템플릿 테이블 생성
+	    	ezCommonService.createMailOutOfOfficeTemplate(); // 2020-07-17 김수아 - 부재중 설정 템플릿 테이블 생성
 	    	ezCommonService.createTblCompanyConfig();
 	    	ezCommonService.createReformFlagColumn();
 	    	ezCommonService.addMailToJMochaDistribution();
@@ -158,6 +170,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.createJobMasterTable();
 	    	ezCommonService.addUserMasterPasswordUpdateDT();
 	    	ezCommonService.addUserMasterPhotoUpdateDT(); // 2021-09-10 김은실 - 메신저/인사 연동 효율성을 위한: 프로필사진 업데이트시각(PHOTO_UPDATEDT) 컬럼 추가
+	    	ezCommonService.alter_AnyTbl_AnyColumns(); // 2022-01-19 김은실 - alter 재사용 모듈 추가
 	    	ezCommonService.addJobMasterJobID();
 	    	ezCommonService.createWebfolderToken();
 	    	ezCommonService.addJmochaMailGenenalPreviewMailImage();
@@ -200,8 +213,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.createOpenGovTable(); // 2019-07-18 원문공개 테이블 추가
 	    	ezCommonService.addPassAprLineFlag(); // 2020-08-13 홍승비 - 양식옵션 > 기결재통과 플래그 추가
 	    	ezCommonService.addOpenGovFlag(); //2019-07-18 강민수 - 전자결재양식 테이블 원문공개 플래그 추가
+	    	ezCommonService.insertTblTenantConfig(); // 2020-01-28 useMailConfirm 컨피그 추가 >> 2020-04-28 tbl_tenant_config add
     		ezCommonService.createUserDistributionTable(); // 20200226 사용자 정의 공용배포그룹 테이블 생성
-	    	ezCommonService.insertTblTenantConfig("mailConfirm"); // 2020-01-28 useMailConfirm 컨피그 추가
 	    	ezCommonService.createResourcePortlet(); // 2019-06-28 황윤호 -자원관리 포틀릿 테이블 추가
 	    	ezCommonService.insertSurveyTenantConfig(); // 2019-06-25 이석화 전자설문 리뉴얼 테넌트 컨피그 추가
 	    	ezCommonService.insertPortletInfo(); // 2019-07-02 자원, 웹폴더, 전자설문 포틀릿 데이터 확인 후 없으면 추가
@@ -223,6 +236,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.addAprTmpAttachViewOrder(); // 2020-03-26 홍승비 - 전자결재 일반 첨부파일 순서조정용 칼럼 추가 (임시문서)
 	    	ezCommonService.createAprAttachLimit(); // 2020-05-15 홍승비 - 전자결재 일반 첨부파일 개수제한 테이블 추가 (회사별 데이터)
 	    	ezCommonService.insertUseExternalMailServerConfig();		// 2020-04-16 김민성 - 메일 기능 사용 관련 컨피그 추가(외부/내부)
+	    	ezCommonService.createAdminAccessIpTable(); // 2020-04-28 김수아 - 관리자 IP 제한 테이블
+			ezCommonService.createTblPermissionChangeInfo(); // 2022-01-18 이사라 - 권한 변경 히스토리 테이블 추가
 	    	ezCommonService.insertReBebuOpinionCode();		// 2020-05-14 홍대표 - 재배부요청 의견 코드 추가
 	    	ezCommonService.addFormAprOptionColumn(); // 2020-05-14 홍승비 - 전자결재 양식 옵션 관련 칼럼 추가
 	    	ezCommonService.insertAnnualScheduleTenantConfig(); // 2020-02-24 김정언 - useAnnualScheduleYN 컨피그 추가
@@ -265,6 +280,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     		ezCommonService.createTblScheduleComplete(); // 2021-11-23 홍승비 - 일정 완료여부 레코드 저장 테이블 추가
     		ezCommonService.alterTblConnectionInfo();	// 2021-12-22 이사라 : 로그아웃시간, 상태 컬럼 추가
     		ezCommonService.createTblAdminAccessInfo();	// 2022-01-06 이사라 - 관리자 메뉴 접속 히스토리 테이블 추가
+    		ezCommonService.addSusinScheduleOffsetColumn();	// 2022-02-11 홍승비 - 수신스케줄러 알림메일 발송 시 다국어(시간대) 지원을 위해 OFFSET 칼럼 추가
+    		ezCommonService.insertReceiptHistoryListoption();	// 2022-02-16 정주환 - 수신이력 확인 listoption 추가
+    		ezCommonService.addAprDocGroupInfoTypeColumn();	// 2022-02-09 홍승비 - 일괄기안 테이블에 임시저장/결재올림 구분용 타입 칼럼 추가
 	    	
 	    	// webfolder
 	    	ezCommonService.addWebfolderUserSubdeptPermittedColumn(); 	//2020-10-19 김은실 - 웹폴더 > 하위부서 허용 여부 추가
@@ -277,6 +295,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.addWebfolderLogHistory(); 					// 2020-01-20 웹폴더 파일 이력관리 컬럼추가 
 	    	ezCommonService.createWebfolderNoInherit(); 				// 권한비상속			
     		ezCommonService.alterWebfolderApplyHistoryAddColumn();
+    		ezCommonService.alterTblDevMaster();						//20220315 조진호 - mobile Pin 사용 관련 여부 컬럼 추가 (원래는 Talk에서 관리하는 테이블이나 Talk이 없는 경우 ezEKP DB의 테이블을 사용하기 떄문에 추가)
     	} catch (Exception e) {
     		e.printStackTrace();
     	}
@@ -1524,6 +1543,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         
         logger.debug("tenantID=" + tenantID + ",cnList=" + cnList);
 	    
+        String realPath = commonUtil.getRealPath(request);
+        
 		String cn[] = cnList.split(",");
 		String result = "OK";
 		
@@ -1686,6 +1707,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				// 해당 사용자의 메일자동삭제 설정을 모두 제거한다. -1 = error
 	    		rc = ezEmailService.deleteMailDeleteForUser(mailAddr);
 	    		logger.debug("deleteMailDeleteForUser rc=" + rc);
+	    		
+				// 해당 사용자의 메일 템플릿을 모두 제거한다
+	    		rc = ezEmailService.deleteUserMailTemplate(mailAddr, "", "all", realPath, tenantID);
+	    		logger.debug("deleteMailUserTemplate rc=" + rc);
 			}
 			// dhlee - end
 		}		
@@ -4122,10 +4147,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/saveUserPermissionInfo.do", method = RequestMethod.POST, produces = "text/plain; charset=UTF-8")
 	@ResponseBody
-	public String saveUserPermissionInfo(@CookieValue("loginCookie") String loginCookie, String[] cn, String[] extensionAttribute1) throws Exception{
+	public String saveUserPermissionInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, String[] cn, String[] extensionAttribute1, String[] permissionChType, String mode) throws Exception{
 		logger.debug("saveUserPermissionInfo started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		int tenantId = userInfo.getTenantId();
+		String id = userInfo.getId();
+		String ip = ClientUtil.getClientIP(request);
+		boolean modeCkh = "mode".equalsIgnoreCase(mode); // 권한 모두 삭제를 제외한 경우
 
 		// 관리자 권한 체크
 		if (userInfo == null) {
@@ -4135,7 +4164,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		// 권한 널체크
 		if(extensionAttribute1.length == 0) {
 			extensionAttribute1 = new String[1];
-			extensionAttribute1[0] = "c=0;k=0;g=0;a=0;i=0;n=0;l=0;w=0;m=0;e=0";
+			extensionAttribute1[0] = "c=0;k=0;g=0;a=0;i=0;n=0;l=0;w=0;m=0;e=0;"; // 2022-01-25 이사라 - e권한 다음에 ";" 추가
 		}
 
 		// 아이디, 권한, 날짜, 테턴트 셋
@@ -4149,14 +4178,59 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			OrganUserVO tempVO = new OrganUserVO();
 			tempVO.setCn(cn[i].toLowerCase());
 			tempVO.setExtensionAttribute1(extensionAttribute1[i]);
-			tempVO.setTenantId(userInfo.getTenantId());
+			tempVO.setTenantId(tenantId);
 			tempVO.setNowDate(nowDate);
 			vo.add(tempVO);
+		}
+
+		// 2022-01-19 이사라 - 권한 변경 히스토리 insert 추가
+		List<PermissionInfoVO> pvo = new ArrayList<>();
+
+		if (modeCkh) { // 등록 및 해당권한만 삭제
+			for (int i = 0; i < cn.length; i++) {
+				String statusFromType = permissionChType[i].contains("=1") ? "Y" : "N";
+				PermissionInfoVO tmpvo = new PermissionInfoVO();
+				tmpvo.setUserId(cn[i].toLowerCase());
+				tmpvo.setAdminType(permissionChType[i]);
+				tmpvo.setAuthorizedTime(nowDate);
+				tmpvo.setStatus(statusFromType);
+				tmpvo.setTenant_id(tenantId);
+				tmpvo.setAuthorizerId(id);
+				tmpvo.setAuthorizerIp(ip);
+				pvo.add(tmpvo);
+			}
+		} else { // 모든권한 삭제
+			String[] rollList = {};
+
+			for (int i = 0; i < cn.length; i++) {
+				rollList = permissionChType[i].split(";");
+				List<String> permissionRelList = new ArrayList<String>();
+
+				for (String list : rollList) {
+					if (list.contains("1")) { // 부여 된 권한만 추출하여 해제 함
+						String roll = list.replace("1", "0");
+						permissionRelList.add(roll);
+					}
+				}
+
+				for (String type : permissionRelList) {
+					PermissionInfoVO tmpvo = new PermissionInfoVO();
+					tmpvo.setUserId(cn[i].toLowerCase());
+					tmpvo.setAdminType(type);
+					tmpvo.setAuthorizedTime(nowDate);
+					tmpvo.setStatus("N");
+					tmpvo.setTenant_id(tenantId);
+					tmpvo.setAuthorizerId(id);
+					tmpvo.setAuthorizerIp(ip);
+					pvo.add(tmpvo);
+				}
+			}
 		}
 
 		String result = "";		
 
 		try {
+			ezOrganAdminService.insertPermissionChHist(pvo);
 			ezOrganAdminService.updateDBData_user_new(vo);
 			result = "OK";
 		} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
@@ -4168,14 +4242,16 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 조직도관리 권한 추가/수정/삭제
+	 * 조직도관리 권한 추가/수정/삭제 (팝업)
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/saveStoreUserInfo.do", method = RequestMethod.POST, produces = "text/plain; charset=UTF-8")
 	@ResponseBody
-	public String saveStoreUserPermissionInfo(@CookieValue("loginCookie") String loginCookie, String parentCn, String[] cn, String[] extensionAttribute1) throws Exception{
+	public String saveStoreUserPermissionInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, String parentCn, String[] cn, String[] extensionAttribute1, String[] permissionChType) throws Exception{
 		logger.debug("saveStoreUserPermissionInfo started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		int tenantId = userInfo.getTenantId();
+		String id = userInfo.getId();
 
 		// 관리자 권한 체크
 		if (userInfo == null) {
@@ -4186,6 +4262,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		if(extensionAttribute1.length == 0) {
 			extensionAttribute1 = new String[1];
 			extensionAttribute1[0] = "";
+		} else { // 2022-01-25 이사라 - ApprovalFlag G 사용 시 추가권한은 ";"없이 입력되어 오류 발생으로 ";" 추가 함
+			for (int i = 0; i < extensionAttribute1.length; i++) {
+				String lastChk = extensionAttribute1[i];
+				String fullChk = lastChk.substring(lastChk.length() - 1).equals(";") ? lastChk : (lastChk + ";");
+				extensionAttribute1[i] = fullChk;
+			}
 		}
 
 		// 아이디, 권한, 날짜, 테턴트 셋
@@ -4199,16 +4281,31 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			OrganUserVO tempVO = new OrganUserVO();
 			tempVO.setCn(cn[i].toLowerCase());
 			tempVO.setExtensionAttribute1(extensionAttribute1[i]);
-			tempVO.setTenantId(userInfo.getTenantId());
+			tempVO.setTenantId(tenantId);
 			tempVO.setNowDate(nowDate);
 			vo.add(tempVO);
 		}
 
+		// 2022-01-19 이사라 - 권한 변경 히스토리 insert 추가
+		List<PermissionInfoVO> pvo = new ArrayList<>();
+
+		for (int i = 0; i < cn.length; i++) {
+			String statusFromType = permissionChType[i].contains("=1") ? "Y" : "N";
+			PermissionInfoVO tmpvo = new PermissionInfoVO();
+			tmpvo.setUserId(cn[i].toLowerCase());
+			tmpvo.setAdminType(permissionChType[i]);
+			tmpvo.setAuthorizedTime(nowDate);
+			tmpvo.setStatus(statusFromType);
+			tmpvo.setTenant_id(tenantId);
+			tmpvo.setAuthorizerId(id);
+			tmpvo.setAuthorizerIp(ClientUtil.getClientIP(request));
+			pvo.add(tmpvo);
+		}
+
 		String result = "";
-		
 
 		try {
-			
+			ezOrganAdminService.insertPermissionChHist(pvo);
 			ezOrganAdminService.updateDBData_user_new(vo);
 			result = "OK";
 		} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.

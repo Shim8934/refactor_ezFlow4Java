@@ -612,7 +612,7 @@
 		pScheduleList = [];
 		dScheduleList = [];
 		list.forEach(function(item, index) {
-			if(item.scheduleType === '1') {
+			if(item.scheduleType === '1' || item.scheduleType === '9') {
 				pScheduleList.push(item);	
 			} else if (item.scheduleType === '2') {
 				dScheduleList.push(item);
@@ -690,8 +690,21 @@
     					    "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
     				}   		
             	});
-        	}
-        	else {        		
+        	} else if(item.scheduleType == '9') {
+        		li.textContent = '['+ item.startDate.substring(11, 16) + ' ~ ' + item.endDate.substring(11, 16) + '] ' + item.title;
+	        	li.style.cursor = "pointer";
+	        	li.addEventListener('click', function() {
+				    var wWeight = "760";
+				    var wHeight = "650";
+				    var heigth = window.screen.availHeight;
+				    var width = window.screen.availWidth;
+				    var left = (width - wWeight) / 2;
+				    var top = (heigth - wHeight) / 2;
+				
+			        window.open("/ezSchedule/googleScheduleRead.do" + "?id=" + encodeURIComponent(item.googleId) + "&type=" + item.scheduleType + "&datetype=" + item.dateType + "&repeatcount=" + item.repeatCount + "&startdate=" + item.startDate + "&enddate=" + item.endDate + "&pattern=0","",
+				        "top = " + top + ", left = " + left + ",height = " + wHeight + "px, width = " + wWeight + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1 scrollbars=0");        		
+	        	});
+        	} else {        		
 	        	li.textContent = '['+ item.startDate.substring(11, 16) + ' ~ ' + item.endDate.substring(11, 16) + '] ' + item.title;
 	        	li.style.cursor = "pointer";
 	        	li.addEventListener('click', function() {

@@ -993,7 +993,8 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
         String extend = pFileName.substring(pFileName.lastIndexOf(".") + 1);
         String newFileName = pUploadSN + "." + extend;
         
-        if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) != -1 || useExtension.equals("*")) {           	
+		// dhlee : 20220527 - 파일 업로드 시 .으로 끝나는 파일(예: .jsp.)이 무조건 업로드 허용되는 문제 수정
+        if ((!extend.isEmpty() && useExtension.toLowerCase().indexOf(extend.toLowerCase()) != -1) || useExtension.equals("*")) {           	
 			writeUploadedFile(multiFile, newFileName, pDirPath + "uploadFile");
 			
 			String originUrl = "/rest/admin/ezPortal/logos/companies/" + companyId;
@@ -1457,7 +1458,8 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
         String extend = pFileName.substring(pFileName.lastIndexOf(".") + 1);
         String newFileName = pUploadSN + "." + extend;
         
-        if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) != -1 || useExtension.equals("*")) {           	
+		// dhlee : 20220527 - 파일 업로드 시 .으로 끝나는 파일(예: .jsp.)이 무조건 업로드 허용되는 문제 수정
+        if ((!extend.isEmpty() && useExtension.toLowerCase().indexOf(extend.toLowerCase()) != -1) || useExtension.equals("*")) {           	
 			writeUploadedFile(multiFile, newFileName, realPath + pDirPath);
 			
 			imagePath = commonUtil.detectPathTraversal(realPath + pDirPath + newFileName);

@@ -175,14 +175,14 @@ var CabinetFileHelper = function() {
 		}
 		
 		function showUserInfoFromId(userId) {
-			var feature = "height=500px, width=420px, status=no, toolbar=no, menubar=no,location=no, resizable=1";
-			feature     = feature + getOpenWindowfeature(420, 500);
+			var feature = "height=450px, width=420px, status=no, toolbar=no, menubar=no,location=no, resizable=1";
+			feature     = feature + getOpenWindowfeature(420, 450);
 			userWindow  = window.open("/ezCommon/showPersonInfo.do?id=" + userId, "userInfo", feature);
 		}
 		
 		function showUserInfoFromEmail(userMail) {
-			var feature = "height=500px, width=420px, status=no, toolbar=no, menubar=no,location=no, resizable=1";
-			feature     = feature + getOpenWindowfeature(420, 500);
+			var feature = "height=450px, width=420px, status=no, toolbar=no, menubar=no,location=no, resizable=1";
+			feature     = feature + getOpenWindowfeature(420, 450);
 			userWindow  = window.open("/ezCommon/showPersonInfo.do?email=" + encodeURIComponent(userMail), "userInfo", feature);
 		}
 		

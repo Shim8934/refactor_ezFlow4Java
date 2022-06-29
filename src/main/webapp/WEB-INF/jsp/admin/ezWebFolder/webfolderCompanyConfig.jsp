@@ -201,7 +201,7 @@
 							<span><spring:message code='ezWebFolder.t132' /></span>
 						</th>
 					</tr>
-					<tr style="height: 40px; display: none;">
+					<tr style="height: 40px;">
 						<th><spring:message code='ezWebFolder.t131.2'/></th>
 						<th style="background : #ffff;">
 							<input id="departmentLimit" type="text" style="height: 30px; padding: 0px 5px;" onKeyup="this.value=this.value.replace(/[^\.0-9]/g,'');" />

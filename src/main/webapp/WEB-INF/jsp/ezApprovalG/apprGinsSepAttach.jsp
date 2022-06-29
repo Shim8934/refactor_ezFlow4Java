@@ -94,7 +94,7 @@
 		        }  */
 		        oList = createXmlDom();
 		        oList = loadXMLString(lvXml);
-		
+		        
 		        var pLvList = new ListView();      
 		        pLvList.SetID("pLvList");
 		        pLvList.SetMulSelectable(false);    
@@ -434,6 +434,8 @@
 		        createNodeAndInsertText(xmlpara, objNode, "CABINETNAME", selRow[0].cells[2].innerHTML);
 		        return getXmlString(xmlpara);
 		    }
+		    
+		    /* 2022-02-09 홍승비 - 문서 내부의 sepattachlvxml 속성 KEYWORD 부여 시 XML 파싱이 제대로 되도록 CDATA 태그 추가함 */
 		    function GetListXml() {
 		        var InfoXml = loadXMLString(GetLVHearderXml());
 		        var Rows = InfoXml.childNodes[0].childNodes[1];
@@ -456,22 +458,22 @@
 		            createNodeAndAppandNodeText(InfoXml, Cell, node, "DATA3", GetAttribute(selRow, "DATA3"));
 		
 		            Cell = createNodeAndAppandNode(InfoXml, Row, Cell, "CELL");
-		            createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", ReplaceText(selRow.cells[1].innerHTML, "&nbsp;", " "));
+		            createNodeAndAppandNodeCDataText(InfoXml, Cell, node, "VALUE", ReplaceText(selRow.cells[1].innerHTML, "&nbsp;", " "));
 		
 		            Cell = createNodeAndAppandNode(InfoXml, Row, Cell, "CELL");
-		            createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", selRow.cells[2].innerHTML);
+		            createNodeAndAppandNodeCDataText(InfoXml, Cell, node, "VALUE", selRow.cells[2].innerHTML);
 		
 		            Cell = createNodeAndAppandNode(InfoXml, Row, Cell, "CELL");
-		            createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", selRow.cells[3].innerHTML);
+		            createNodeAndAppandNodeCDataText(InfoXml, Cell, node, "VALUE", selRow.cells[3].innerHTML);
 		
 		            Cell = createNodeAndAppandNode(InfoXml, Row, Cell, "CELL");
-		            createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", selRow.cells[4].innerHTML);
+		            createNodeAndAppandNodeCDataText(InfoXml, Cell, node, "VALUE", selRow.cells[4].innerHTML);
 		
 		            Cell = createNodeAndAppandNode(InfoXml, Row, Cell, "CELL");
-		            createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", selRow.cells[5].innerHTML);
+		            createNodeAndAppandNodeCDataText(InfoXml, Cell, node, "VALUE", selRow.cells[5].innerHTML);
 		
 		            Cell = createNodeAndAppandNode(InfoXml, Row, Cell, "CELL");
-		            createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", selRow.cells[6].innerHTML);
+		            createNodeAndAppandNodeCDataText(InfoXml, Cell, node, "VALUE", selRow.cells[6].innerHTML);
 		        }
 		        return getXmlString(InfoXml);
 		    }

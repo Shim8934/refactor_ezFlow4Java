@@ -330,7 +330,7 @@
 	            xmlhttp.send(xmlpara);
 	            
 	            if (xmlhttp != null && xmlhttp.readyState == 4) {
-	           	 if (xmlhttp.statusText == "OK") {
+	           	 if (xmlhttp.status == 200) {
 	           		 var dataNodes = GetChildNodes(loadXMLString(xmlhttp.responseText));
 	 	            if (getNodeText(dataNodes[0]) == "TRUE") {
 	 	                var rtnVal = SetContainer();

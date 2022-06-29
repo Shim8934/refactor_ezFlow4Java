@@ -432,9 +432,7 @@
 	        	        Sub_TD1.setAttribute("class", "name");
 	            	    var pDisplayName = "";
 	            	    
-	            	    if( !pSeach && $(M_TR).attr("_DATA11" ) == "addJob"){
-		            		pDisplayName += "<spring:message code='ezOrgan.psb03'/> ";
-		            	} else if( pSeach && $(M_TR).attr("_DATA10") == "addJob" ){
+	                    if($(M_TR).attr("_DATA11") == "addJob"){
 		            		pDisplayName += "<spring:message code='ezOrgan.psb03'/> ";
 		            	}
 		                
@@ -524,7 +522,7 @@
 	                    	var M_TR_TD3 = document.createElement("TD");
 	                    	
 	                    	var jobName = "";
-	                        if($(M_TR).attr("_DATA10") == "addJob"){
+	                        if($(M_TR).attr("_DATA11") == "addJob"){
 			            		jobName += "<spring:message code='ezOrgan.psb03'/> ";
 			            	}	      
 	                        
@@ -807,7 +805,7 @@
 	    	
 	    	function event_getDeptFullTree() {
 		        if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
-		            if (g_xmlHTTP.statusText == "OK") {
+		            if (g_xmlHTTP.status == 200) {
 	    	            if (!bSearch) {
             	            if (CrossYN())
                     	        opener.opener.top.organview = g_xmlHTTP.responseXML;

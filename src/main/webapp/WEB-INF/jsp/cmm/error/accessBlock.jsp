@@ -13,7 +13,16 @@
 	<div class="block_wrap">
 	    <dl class="block_box">
 	    	<dt><img src="/images/block_content_img.png"></dt>
-	        <dd><spring:message code='ezWebFolder.t300'/></dd>
+	    	<dd>
+		    	<c:choose>
+		    		<c:when test="${not empty blockMsg && blockMsg != ''}">
+		    			${blockMsg }
+		    		</c:when>
+		    		<c:otherwise>
+				        <spring:message code='ezWebFolder.t300'/>
+		    		</c:otherwise>
+				</c:choose>
+			</dd>
 	    </dl>
 	</div>
 </body>

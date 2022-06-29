@@ -1062,7 +1062,7 @@ function searchUserListCC(search)
 				url : "/ezOrgan/getSearchList.do",
 				data : {
 					search : "displayName::" + strSearch + ";;PhysicalDeliveryOfficeName::" + companyID,
-					cell   : "displayName;description;title;telephoneNumber",
+					cell   : "displayName;description;title;telephoneNumber;extensionattribute5",
 					prop   : "department;displayName;description;title",
 					type   : "user"
 				},

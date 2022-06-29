@@ -977,7 +977,8 @@ public class EzJournalGWController {
 	                resultUpload[i] = "overflow";
 	            } else {
 	            	// 허용하는 확장자가 아닌경우 저장하지 않는다.
-                    if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) == -1 && !useExtension.equals("*")) {
+					// dhlee : 20220527 - 파일 업로드 시 .으로 끝나는 파일(예: .jsp.)이 무조건 업로드 허용되는 문제 수정
+                    if ((extend.isEmpty() || useExtension.toLowerCase().indexOf(extend.toLowerCase()) == -1) && !useExtension.equals("*")) {
                         resultUpload[i] = "denied";
                     } else {
                         String pAttachPath = pDirPath + "tempUploadFile" + commonUtil.separator;

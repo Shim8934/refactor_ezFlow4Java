@@ -886,7 +886,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				resultUpload = "overflow";
 			} else {
 				if (pMode.equals("ATT")) {
-					if (userExtension.toLowerCase().indexOf(pFileName.substring(pFileName.lastIndexOf(".") + 1).toString().toLowerCase()) == -1 && !userExtension.equals("*")) {
+					// dhlee : 20220527 - 파일 업로드 시 .으로 끝나는 파일(예: .jsp.)이 무조건 업로드 허용되는 문제 수정
+					String extStr = pFileName.substring(pFileName.lastIndexOf(".") + 1).toString().toLowerCase();
+
+					if ((extStr.isEmpty() || userExtension.toLowerCase().indexOf(extStr) == -1) && !userExtension.equals("*")) {
 						resultUpload = "denied";
 					} else {
 						pAttachPath = pDirPath + "tempUploadFile" + commonUtil.separator + pUploadSN + "_" + pFileName;
