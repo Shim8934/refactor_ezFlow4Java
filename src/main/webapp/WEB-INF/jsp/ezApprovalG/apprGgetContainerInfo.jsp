@@ -307,6 +307,7 @@
 		            AddOption(sel_status, '<spring:message code="ezApproval.t854"/>', 'Y');
 	            }
 	            
+	            // 미리보기 영역 관련 온로드 설정
 	            if (pPreviewShow_HOW == "") {
 					if (previewInfo != null && previewInfo.trim() != "") {
 						pPreviewShow_HOW = previewInfo;
@@ -315,6 +316,8 @@
 					}
 				}
 				PreviewRayerChange(pPreviewShow_HOW, 'Container');
+				/* 2022-06-29 홍승비 - 우측 미리보기 영역을 위한 온로드 시 리사이즈 동작 추가 */
+		    	Window_resize();
 	        };
 			
 	        // 부재자정보 체크
@@ -1610,6 +1613,9 @@
 		            reheight = 0;
 		        }
 		        //document.getElementById('div_AprLine').style.height = reheight + "px";
+		        
+		        /* 2022-06-24 홍승비 - 우측 미리보기 영역을 위한 리사이즈 동작 추가 */
+		    	Window_resize();
 		    };
 		
 		    function ShowMailProgress() {

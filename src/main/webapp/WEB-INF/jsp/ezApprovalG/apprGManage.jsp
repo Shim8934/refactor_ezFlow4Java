@@ -470,12 +470,12 @@
 		  
 		    function window_onload() {
 		        CurrentHeight = document.documentElement.clientHeight;
-		        CurrenWidth = document.documentElement.clientWidth;
+		        CurrentWidth = document.documentElement.clientWidth;
 		        var height = parseInt(divList.style.height.replace('px', '')) + 200;
 		        var reheight = document.documentElement.offsetHeight - parseInt(height);
 		
 		        //document.getElementById('div_AprLine').style.height = reheight + "px";
-		
+		        
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
 		            document.body.style.MozUserSelect = 'none';
 		            document.body.style.WebkitUserSelect = 'none';
@@ -535,6 +535,7 @@
 					}
 				}		
 				
+				// 미리보기 영역 관련 온로드 설정
 				if (pPreviewShow_HOW == "") {
 					if (previewInfo != null && previewInfo.trim() != "") {
 						pPreviewShow_HOW = previewInfo;
@@ -543,6 +544,8 @@
 					}
 				}
 				PreviewRayerChange(pPreviewShow_HOW, 'Manage');
+				/* 2022-06-29 홍승비 - 우측 미리보기 영역을 위한 온로드 시 리사이즈 동작 추가 */
+		    	Window_resize();
 		    }
 			
 		    function change_statusCell() {
@@ -2133,12 +2136,15 @@
 // 		        }
 		
 // 		        document.getElementById('div_AprLine').style.height = reheight + "px";
+
+				/* 2022-06-24 홍승비 - 우측 미리보기 영역을 위한 리사이즈 동작 추가 */
+		    	Window_resize();
 		    };
 		
 		    function ShowMailProgress() {
 		        document.getElementById("loadingPanel").style.display = "";
 		        document.getElementById("loadingProgress").style.top = "400px";
-		        document.getElementById("loadingProgress").style.left = (CurrenWidth / 2) - 100 + "px";
+		        document.getElementById("loadingProgress").style.left = (CurrentWidth / 2) - 100 + "px";
 		        document.getElementById("loadingProgress").style.display = "";
 		    }
 		    function HiddenMailProgress() {
@@ -2447,7 +2453,7 @@
 			}
 		</script>
 	</head>
-	<body class="mainbody" style="margin-top:0px; overflow:hidden;" marginwidth="0" marginheight="0" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">	
+	<body class="mainbody" style="margin-top:0px; overflow:auto;" marginwidth="0" marginheight="0" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">	
 		<h1 class="title_h1">
 			<span id="presentcell"></span><span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
 		    <span class="searchForm">
@@ -2529,7 +2535,7 @@
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id="mailPanel"></div>
 	    <div style="width: 8px; height: 100%; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarH"></div>
 		<span id="MailListRayer" style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">
-			<div class="div_scroll" style="width:100%;HEIGHT:395px; overflow:AUTO; margin-bottom:10px" id="divList">
+			<div class="div_scroll" style="width:100%;HEIGHT:395px; overflow-y:hidden; overflow-x:auto; margin-bottom:10px" id="divList">
 				<div id="lvDocList"></div>
 			</div>
 			
@@ -2552,7 +2558,7 @@
 			  	</div>	
 			</div>
 			
-			<div style="WIDTH:100%;HEIGHT:290px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
+			<div style="WIDTH:100%;HEIGHT:260px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
 				<div id="lvAprLine" ></div>
 			</div>
 			<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
