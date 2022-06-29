@@ -26496,7 +26496,12 @@
    			ProcessDate = TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), 
    			ReceivedDeptID = #v_ReceivedDeptID#, 
    			ReceivedDeptName = #v_ReceivedDeptName#, 
-   			ReceivedDeptName2 = #v_ReceivedDeptName2# 
+   			ReceivedDeptName2 = #v_ReceivedDeptName2# ,
+            PROCESSORID = NULL,
+   		    PROCESSORNAME = NULL,
+   		    PROCESSORJOBTITLE = NULL,
+   		    PROCESSORNAME2 = NULL,
+   		    PROCESSORJOBTITLE2 = NULL
    		WHERE 
    			DocID = #v_DOCID#  
    		AND 
