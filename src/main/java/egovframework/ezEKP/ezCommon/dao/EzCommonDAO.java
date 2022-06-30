@@ -2341,4 +2341,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			e.printStackTrace();
 		}
 	}
+
+	public void createTblDisableNotiItem() {
+		try {
+			select("EzCommonDAO.checkTblDisableNotiItem");
+		} catch (Exception e) {
+			logger.debug("tbl_user_noti_disable_item doesn't exist. creating the table...");
+			update("EzCommonDAO.createTblDisableNotiItem");
+		}
+	}
+
 }

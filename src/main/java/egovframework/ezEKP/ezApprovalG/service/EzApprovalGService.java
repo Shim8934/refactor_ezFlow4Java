@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezApprovalG.service;
 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachOptionVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
@@ -62,6 +63,8 @@ public interface EzApprovalGService {
     public String getAccessYNG(String docID, String userID, String mode, String companyID, String lang, int tenantID, String approvalFlag) throws Exception;
 
     public String getLineInfo(String docID, String mode, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset) throws Exception;
+
+	public List<ApprGAprLineVO> getLineList(String docId, String mode, String companyId, String offset, String lang, int tenantId) throws Exception;
 
     public String getAttachInfo(String docID, String flag, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset) throws Exception;
 

@@ -426,4 +426,12 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	public List<OrganUserVO> getOrgUserInfo(Map<String, Object> map) {
 		 return (List<OrganUserVO>) list("EzOrganDAO.getOrgUserInfo", map);
 	}
+
+	public String getCompanyId(String userId, int tenantId) {
+		Map<String, Object> parameter = new HashMap<>();
+		parameter.put("userId", userId);
+		parameter.put("tenantId", tenantId);
+		return (String) select("EzOrganDAO.getCompanyId", parameter);
+	}
+
 }

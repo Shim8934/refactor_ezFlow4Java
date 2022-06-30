@@ -1,6 +1,9 @@
 package egovframework.ezEKP.ezPersonal.service.impl;
 
 import java.text.SimpleDateFormat;
+import java.time.OffsetDateTime;
+import java.time.OffsetTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -8,6 +11,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -30,6 +34,8 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPersonal.dao.EzPersonalDAO;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
+import egovframework.ezEKP.ezPersonal.type.NotiPlatform;
+import egovframework.ezEKP.ezPersonal.type.NotiType;
 import egovframework.ezEKP.ezPersonal.vo.PersonalApprovMailVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO;
@@ -37,11 +43,16 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalGetQuickLinkMenuVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalNotiDisableItemVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalNotiPreferencesVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalShareApprovalVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
+import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
+import egovframework.ezEKP.ezSchedule.vo.ScheGetHolidayVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.KoreanLunarCalendar;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
@@ -64,7 +75,10 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 	
 	@Resource(name="EzOrganService")
 	private EzOrganService ezOrganService;
-	
+
+	@Autowired
+	private EzScheduleService ezScheduleService;
+
 	@Autowired
 	private CommonUtil commonUtil;
 	
@@ -761,4 +775,155 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		logger.debug("saveBujaeUser ended");
 		return result;
 	}
+
+	@Override
+	public List<PersonalNotiDisableItemVO> getAllNotiDisableItem(String userId, int tenantId) {
+		logger.debug("getAllNotiDisableItems started. userId={}, tenantId={}", userId, tenantId);
+		List<PersonalNotiDisableItemVO> result = ezPersonalDAO.getAllNotiDisableItem(userId, tenantId);
+		logger.debug("getAllNotiDisableItems ended. result={}", result);
+		return result;
+	}
+
+	@Override
+	public List<Integer> getAllPlatformFromNotiDisableItem(String userId, NotiType type, int tenantId) {
+		logger.debug("getAllPlatformFromNotiDisableItem started. userId={}, type={} tenantId={}", userId, type, tenantId);
+		List<Integer> result = ezPersonalDAO.getAllNotiDisableItem(userId, tenantId).stream()
+				.filter(it -> it.getMainType() == type.mainType() && it.getSubType() == type.subType())
+				.map(PersonalNotiDisableItemVO::getPlatform).collect(Collectors.toList());
+		logger.debug("getAllPlatformFromNotiDisableItem ended. result={}", result);
+		return result;
+	}
+
+	@Override
+	public boolean hasNotiDiableItem(String userId, NotiType type, NotiPlatform platform, int tenantId) {
+		logger.debug("hasNotiDiableItem started. userId={}, type={}, platform={}, tenantId={}", userId, type, platform, tenantId);
+		boolean exists = ezPersonalDAO.findNotiDisableItem(userId, type, platform, tenantId) != null;
+		logger.debug("hasNotiDiableItem ended. result={}", exists);
+		return exists;
+	}
+
+	@Override
+	public void setNotiDisableItems(String userId, int tenantId, List<PersonalNotiDisableItemVO> items) {
+		logger.debug("setNotiDisabledItems started. userId={}, tenantId={}, items={}", userId, tenantId, items);
+		ezPersonalDAO.clearNotiDisableItems(userId, tenantId);
+		if (!items.isEmpty()) {
+			ezPersonalDAO.insertNotiDisableItems(userId, tenantId, items);
+		}
+		logger.debug("setNotiDisabledItems ended.");
+	}
+
+	@Override
+	public PersonalNotiPreferencesVO getNotiPreferences(String userId, int tenantId) {
+		try {
+			String value = ezCommonService.getUserConfigInfo(tenantId, userId, "notiPreferences");
+			return PersonalNotiPreferencesVO.byConfigValue(value);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new PersonalNotiPreferencesVO();
+		}
+	}
+
+	@Override
+	public void setNotiPreferences(String userId, int tenantId, PersonalNotiPreferencesVO vo) throws Exception {
+		logger.debug("setNotiPreferences started. userId={}, tenantId={}, vo={}", userId, tenantId, vo);
+
+		if (vo.isFixedTimeReceive() && vo.getStartTime() >= vo.getEndTime()) {
+			throw new IllegalArgumentException("startTime must not be greater than or equal to the endTime.");
+		}
+
+		if (ezCommonService.getUserConfigInfo(tenantId, userId, "notiPreferences").isEmpty()) {
+			ezCommonService.insertUserConfigInfo(tenantId, userId, "notiPreferences", vo.toConfigValue());
+		} else {
+			ezCommonService.updateUserConfigInfo(tenantId, userId, "notiPreferences", vo.toConfigValue());
+		}
+
+		logger.debug("setNotiPreferences ended.");
+	}
+
+	@Override
+	public boolean canReceiveNotification(String userId, int tenantId) {
+		logger.debug("canReceiveNotification started. userId={}, tenantId={}", userId, tenantId);
+
+		try {
+			PersonalNotiPreferencesVO preferencesVO = getNotiPreferences(userId, tenantId);
+
+			if (preferencesVO.isNotReceive()) {
+				logger.debug("always not receive");
+				return false;
+			}
+
+			if (preferencesVO.canReceiveHoliday() && preferencesVO.isAlwaysReceive()) {
+				logger.debug("always receive");
+				return true;
+			}
+
+			String timeZone = ezCommonService.selectUserGetTimeZone(userId, tenantId);
+			int offsetMinute = Integer.parseInt(commonUtil.getMinuteUTC(timeZone));
+			ZoneOffset offset = ZoneOffset.ofTotalSeconds(offsetMinute * 60);
+
+			if (preferencesVO.isFixedTimeReceive()) {
+				OffsetTime currentTime = OffsetTime.now(offset);
+				OffsetTime receiveStartTime = OffsetTime.of(preferencesVO.getStartTime() / 100, preferencesVO.getStartTime() % 100, 0, 0, offset);
+				OffsetTime receiveEndTime = OffsetTime.of(preferencesVO.getEndTime() / 100, preferencesVO.getEndTime() % 100, 0, 0, offset);//59, 999_999_999, offset);
+
+				logger.debug("fixed time receive");
+				logger.debug("current: {}, start: {}, end: {}", currentTime, receiveStartTime, receiveEndTime);
+
+				if (currentTime.isBefore(receiveStartTime)) {
+					logger.debug("can't receive before start time");
+					return false;
+				}
+
+				if (currentTime.isAfter(receiveEndTime)) {
+					logger.debug("can't receive after end time");
+					return false;
+				}
+			} else {
+				logger.debug("always receive");
+			}
+
+			if (preferencesVO.canReceiveHoliday()) {
+				return true;
+			}
+
+			// 공휴일 체크
+			logger.debug("check holiday");
+			String companyId = ezOrganDAO.getCompanyId(userId, tenantId);
+			// 사용하는 것만 필터링
+			// all(휴일모두), rest(휴무일만)
+			List<ScheGetHolidayVO> holidays = ezScheduleService.getTholiday("VIEW", companyId, tenantId, "all").stream().filter(holiday -> holiday.getIsUse() == 1).collect(Collectors.toList());
+
+			OffsetDateTime currentDate = OffsetDateTime.now(offset);
+			int year = currentDate.getYear(), month = currentDate.getMonthValue(), day = currentDate.getDayOfMonth();
+
+			// 음력처리
+			KoreanLunarCalendar lunarCalendar = KoreanLunarCalendar.newInstance();
+			lunarCalendar.setSolarDate(year, month, day);
+
+			for (ScheGetHolidayVO holiday : holidays) {
+				int yyyymmdd = Integer.parseInt(holiday.getHolidayDate().substring(0, 10).replace("-", ""));
+				int holidayYear = yyyymmdd / 10000, holidayMonth = yyyymmdd % 10000 / 100, holidayDay = yyyymmdd % 100;
+
+				if (holiday.getIsSolar() == 1) {
+					if (holidayYear == year && holidayMonth == month && holidayDay == day) {
+						logger.debug("can't receive solar holiday: {}", holiday.getHolidayName());
+						return false;
+					}
+				} else {
+					if (holidayYear == lunarCalendar.getLunarYear() && holidayMonth == lunarCalendar.getLunarMonth() && holidayDay == lunarCalendar.getLunarDay()) {
+						logger.debug("can't receive lunar holiday: {}", holiday.getHolidayName());
+						return false;
+					}
+				}
+			}
+
+			return true;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return false;
+		} finally {
+			logger.debug("canReceiveNotification ended.");
+		}
+	}
+
 }

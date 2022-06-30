@@ -20,9 +20,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Properties;
+import java.util.Set;
 import java.util.TimeZone;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
@@ -40,6 +43,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -70,11 +75,15 @@ import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalNotiDisableItemVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalNotiPreferencesVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
 import egovframework.ezEKP.ezPortal.service.EzPortalAdminService;
 import egovframework.ezEKP.ezPortal.service.EzPortalService;
+import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.rest.Result;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /** 
@@ -246,11 +255,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String useShareApproval = ezCommonService.getTenantConfig("useShareApproval", userInfo.getTenantId());
-		String useMailApprNoti = ezCommonService.getTenantConfig("useMailApprNoti", userInfo.getTenantId());
 		
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("useShareApproval", useShareApproval);
-		model.addAttribute("useMailApprNoti", useMailApprNoti);
 		
 		logger.debug("ezApprovalConfig ended");
 		return "ezPersonal/persEzApprovalConfig";
@@ -485,8 +492,10 @@ public class EzPersonalController extends EgovFileMngUtil {
 	
 	/**
 	 * 전자결재 결재환경설정 알림메일설정 호출 Method
+	 * @deprecated 알림환경설정 도입에 의해 사용되지 않음
 	 */
 	@RequestMapping(value = "/ezPersonal/setApprovNoticeMail.do", method = RequestMethod.GET)
+	@Deprecated
 	public String setApprovNoticeMail(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
 		logger.debug("setApprovNoticeMail started");
 
@@ -530,9 +539,11 @@ public class EzPersonalController extends EgovFileMngUtil {
 	
 	/**
 	 * 전자결재 결재환경설정 알림메일설정 표출 Method
+	 * @deprecated 알림환경설정 도입에 의해 사용되지 않음
 	 */
 	@RequestMapping(value = "/ezPersonal/setPersonalNotiMail.do", method = RequestMethod.POST, produces = "text/xml;charset=utf-8")
 	@ResponseBody
+	@Deprecated
 	public String setPersonalNotiMail(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("setPersonalNotiMail started");
 
@@ -1159,6 +1170,7 @@ public class EzPersonalController extends EgovFileMngUtil {
         model.addAttribute("packageType", packageType);
         model.addAttribute("portalEnv", portalEnv);
         model.addAttribute("usePortal", usePortal);
+        model.addAttribute("useEzTalkNotification", "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useEzTalkNotification", tenantId)));
         
 		logger.debug("leftEnvironment ended");
 		return "/ezPersonal/persLeftEnvirionment";
@@ -1739,9 +1751,11 @@ public class EzPersonalController extends EgovFileMngUtil {
 	 
 	/**
 	 * 전자결재G 결재 문서 알림 메일 
+	 * @deprecated 알림환경설정 도입에 의해 사용되지 않음
 	 */
 	@RequestMapping(value = "/ezPersonal/getApprovNoticeMail.do", method = RequestMethod.POST)
 	@ResponseBody
+	@Deprecated
 	public String getApprovNoticeMail(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception {
 		logger.debug("getApprovNoticeMail started");
 
@@ -2462,4 +2476,73 @@ public class EzPersonalController extends EgovFileMngUtil {
 		response.setHeader("Cache-Control", "no-cache");
 		response.getWriter().write(ezPersonalService.saveBujaeUser(loginCookie, userInfo, request, response, model).toString());
 	}
+
+	@GetMapping("/ezPersonal/notificationSetting.do")
+	public String notificationSetting() {
+		// 사용자가 전자결재를 사용하거나 톡 푸시를 사용한다면 PUSH 환경설정 탭을 활성화함
+		// 메일만 사용하면서 톡 푸시를 사용하지 않는다면 PUSH 환경설정이 필요 없기 때문임
+		return "/ezPersonal/noti/notificationSetting";
+	}
+
+	@GetMapping("/ezPersonal/notificationItemTab.do")
+	public String notificationItemTab(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("notificationItemTab started.");
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		Set<String> menuCodeList = ezNewPortalService.getUserMenuList(user.getCompanyID(), user.getTenantId(), user.getLang(), user.getId(), user.getDeptID())
+				.stream().map(MenuInfoVO::getMenuCode).filter(Objects::nonNull).map(String::toLowerCase).collect(Collectors.toSet());
+		model.addAttribute("useMail", menuCodeList.contains("mail"));
+		model.addAttribute("useApproval", menuCodeList.contains("approval"));
+		model.addAttribute("useEzTalkNotification", "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useEzTalkNotification", user.getTenantId())));
+		model.addAttribute("disableItemFinder", new PersonalNotiDisableItemVO.Finder(ezPersonalService.getAllNotiDisableItem(user.getId(), user.getTenantId())));
+		logger.debug("notificationItemTab ended.");
+		return "/ezPersonal/noti/notificationItemTab";
+	}
+
+	@GetMapping("/ezPersonal/notificationPreferenceTab.do")
+	public String notificationPreferenceTab(@CookieValue("loginCookie") String loginCookie, Model model) {
+		logger.debug("notificationPreferenceTab started.");
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		model.addAttribute("notiPreferences", ezPersonalService.getNotiPreferences(user.getId(), user.getTenantId()));
+		logger.debug("notificationPreferenceTab ended.");
+		return "/ezPersonal/noti/notificationPreferenceTab";
+	}
+
+	@PostMapping(value = "/ezPersonal/saveNotificationDisableItems.do", produces = "application/json;charset=utf-8")
+	@ResponseBody
+	public Result saveNotificationDisableItems(@CookieValue("loginCookie") String loginCookie, @RequestBody List<PersonalNotiDisableItemVO> disableItems) {
+		logger.debug("saveNotificationDisableItems started.");
+		Result result;
+
+		try {
+			LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+			ezPersonalService.setNotiDisableItems(user.getId(), user.getTenantId(), disableItems);
+			result = Result.success();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			result = Result.failure();
+		}
+
+		logger.debug("saveNotificationDisableItems ended.");
+		return result;
+	}
+
+	@PostMapping("/ezPersonal/saveNotificationPreferences.do")
+	@ResponseBody
+	public Result saveNotificationPreferences(@CookieValue("loginCookie") String loginCookie, @RequestBody PersonalNotiPreferencesVO preferencesVO) {
+		logger.debug("saveNotificationPreferences started.");
+		Result result;
+
+		try {
+			LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+			ezPersonalService.setNotiPreferences(user.getId(), user.getTenantId(), preferencesVO);
+			result = Result.success();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			result = Result.failure();
+		}
+
+		logger.debug("saveNotificationPreferences ended.");
+		return result;
+	}
+
 }

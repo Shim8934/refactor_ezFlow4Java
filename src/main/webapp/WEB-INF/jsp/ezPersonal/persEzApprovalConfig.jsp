@@ -76,7 +76,6 @@
 		            case "passTab": Approval_config_ini(); break;
 		            case "bujaeTab": ManageBujae_ini(); break;
 		            case "bujaeGTab": ManageBujaeG_ini(); break;
-		            case "noticeTab": SetApprovNoticeMail_ini(); break;
 		            case "signTab": sign_ini(); break;
 		            case "shareTab": ManageShare_ini(); break;
 		        }
@@ -92,10 +91,6 @@
 		     
 		     function ManageBujaeG_ini() {
 		         document.getElementById("mainframe").src = "/ezPersonal/manageBujaeG.do";
-		    }
-		     
-		    function SetApprovNoticeMail_ini() {
-		    	document.getElementById("mainframe").src = "/ezPersonal/setApprovNoticeMail.do";
 		    }
 		    
 		    function sign_ini() {
@@ -114,9 +109,6 @@
 	        <div class="portlet_tabpart01_top" id="tab1">
 	            <p><span id="1tab1" divname="passTab"><spring:message code='ezPersonal.t999900024'/></span></p>
 		        <p><span id="1tab3" divname="bujaeGTab"><spring:message code='ezPersonal.t999900025'/></span></p>
-		        <c:if test="${useMailApprNoti == 'YES'}">
-		        <p><span id="1tab4" divname="noticeTab"><spring:message code='ezPersonal.t999900027'/></span></p>
-		        </c:if>
 	            <p><span id="1tab5" divname="signTab"><spring:message code='ezPersonal.t3000'/></span></p>
 	            <c:if test="${useShareApproval == 'YES' && approvalFlag == 'S'}">
 		            <p><span id="1tab6" divname="shareTab"><spring:message code='ezApprovalG.bhs19'/></span></p>

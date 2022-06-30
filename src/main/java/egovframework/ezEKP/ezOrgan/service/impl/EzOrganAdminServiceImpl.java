@@ -1185,6 +1185,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	        ezOrganAdminDao.deleteDBData_D4(map); // TBL_ADDJOBMASTER
 	        ezOrganAdminDao.deleteDBData_D5(map); // TBL_USERMASTER_RETIRE
 	        ezOrganAdminDao.deleteDBData_D6(map); // 2021-11-10 이사라 : TBL_USER_CONFIG
+			ezPersonalDAO.clearNotiDisableItems(cn, tenantID); // TBL_USER_NOTI_DISABLE_ITEM
 	        
 		    /**
 		     * Active Directory

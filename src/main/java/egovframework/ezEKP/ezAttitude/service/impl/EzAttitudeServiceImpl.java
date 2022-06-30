@@ -1318,7 +1318,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		AttitudeConfigVO attitudeConfig = getAttitudeConfig(tenantId, companyId);
 		String checkDay[] = attitudeConfig.getClosedDay().split(",");
 		//국가공휴일
-		KoreanLunarCalendar koreaCalendar = KoreanLunarCalendar.getInstance();
+		KoreanLunarCalendar koreaCalendar = KoreanLunarCalendar.newInstance();
 		
 		//2019-01-15 일정관리 법정공휴일 기능 추가로 주석처리.
 		/*
@@ -3426,19 +3426,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
     	bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezAttitude.t147", userInfo.getLocale()) + ": " + userInfo.getDisplayName() + "</span><br>");
     	bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezAttitude.t108", userInfo.getLocale()) + ": " + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false) + "</span><br>");
     	bodyContent.append("</td></tr></table></DIV>");
-    	
-		String xmlApprovNotiConfig = ezPersonalService.getApprovNotiConfig(userInfo.getId(), userInfo.getId(), userInfo.getTenantId());
-    	Document notiDoc = commonUtil.convertStringToDocument(xmlApprovNotiConfig);
-		String saveSendBoxFlag = notiDoc.getElementsByTagName("SAVEMAILFLAG").item(0).getTextContent().trim();
-		
-		boolean flag;
-    	if (saveSendBoxFlag.equals("Y")) {
-    		flag = true;
-    	} else {
-    		flag = false;
-    	}
-    	
-    	ezEmailService.sendMail(loginCookie, from, to, null, null, Subject, bodyContent.toString(), flag);
+
+    	ezEmailService.sendMail(loginCookie, from, to, null, null, Subject, bodyContent.toString(), false);
 		
     	LOGGER.debug("sendMailToReference ended.");
 		return result;
@@ -3916,7 +3905,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		AttitudeConfigVO attitudeConfig = getAttitudeConfig(tenantId, companyId);
 		String checkDay[] = attitudeConfig.getClosedDay().split(",");
 		//음력을 위한
-		KoreanLunarCalendar koreaCalendar = KoreanLunarCalendar.getInstance();
+		KoreanLunarCalendar koreaCalendar = KoreanLunarCalendar.newInstance();
 		
 		
 		//음력 -> 양력변환

@@ -383,4 +383,7 @@ public interface EzCommonService {
 	public void alterTblDevMaster() throws Exception;
 
 	String createExcelByList (String fileName, String dirPath, String sheetName, List<List<Object>> data) throws Exception;
+
+	void createTblDisableNotiItem();
+
 }

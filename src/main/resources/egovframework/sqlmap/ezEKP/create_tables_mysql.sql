@@ -13571,6 +13571,24 @@ CREATE TABLE `tbl_user_multilogin` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_user_noti_disable_item`
+--
+
+DROP TABLE IF EXISTS `tbl_user_noti_disable_item`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_user_noti_disable_item` (
+  `user_id` varchar(80) NOT NULL,
+  `main_type` tinyint(2) NOT NULL,
+  `sub_type` tinyint(2) NOT NULL,
+  `platform` tinyint(1) NOT NULL,
+  `tenant_id` mediumint(5) NOT NULL,
+  PRIMARY KEY (`user_id`,`main_type`,`sub_type`,`platform`,`tenant_id`),
+  CONSTRAINT `tbl_user_noti_disable_item_fk` FOREIGN KEY (`user_id`, `tenant_id`) REFERENCES `tbl_usermaster` (`cn`, `tenant_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tbl_usercont`
 --
 

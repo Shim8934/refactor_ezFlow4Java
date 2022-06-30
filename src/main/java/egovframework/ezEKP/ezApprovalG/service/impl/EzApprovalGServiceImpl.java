@@ -202,13 +202,16 @@ import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService; 
 import egovframework.ezEKP.ezOrgan.service.EzOrganService; 
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO; 
-import egovframework.ezEKP.ezPersonal.service.EzPersonalService; 
+import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
+import egovframework.ezEKP.ezPersonal.type.NotiPlatform;
+import egovframework.ezEKP.ezPersonal.type.NotiType;
 import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO; 
 import egovframework.let.user.login.service.LoginService; 
 import egovframework.let.user.login.vo.LoginVO; 
 import egovframework.let.utl.fcc.service.CommonUtil; 
 import egovframework.let.utl.fcc.service.EgovDateUtil; 
-import egovframework.let.utl.fcc.service.KlibUtil; 
+import egovframework.let.utl.fcc.service.KlibUtil;
+import egovframework.let.utl.fcc.service.Offset;
 import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.CharPositionShapeIdPair; 
  
 
@@ -1498,6 +1501,27 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("getLineInfo ended.");
 
 		return resultXML.toString();
+	}
+
+	@Override
+	public List<ApprGAprLineVO> getLineList(String docId, String mode, String companyId, String offset, String lang, int tenantId) throws Exception {
+		logger.debug("getLineList started. docId: {}, mode: {}, tenantId: {}", docId, mode, tenantId);
+
+		if (mode.equals("CHAMJOEND")) {
+			mode = "END";
+		} else if (mode.equals("CHAMJOAPR")) {
+			mode = "APR";
+		}
+
+		Map<String, Object> map = new HashMap<>();
+		map.put("v_DOCID", docId);
+		map.put("v_MODE", mode);
+		map.put("companyID", companyId);
+		map.put("v_TENANTID", tenantId);
+
+		List<ApprGAprLineVO> apprGAprLineVOList = ezApprovalGDAO.getLineInfo(map);
+		logger.debug("getLineList ended.");
+		return apprGAprLineVOList;
 	}
 
 	public String getLineInfo(String docID, String mode, String orderOption1, String companyID, int tenantID) throws Exception {
@@ -18614,6 +18638,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		if (notiFlag) {
+
 			String docTitle = "";
 			
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -18659,71 +18684,77 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					nextUserID = makeListField(ezApprovalGDAO.getDraftUserID(map3));
 				}
 			}
-			
+
+			if (!ezPersonalService.canReceiveNotification(nextUserID, tenantID)) {
+				logger.debug("sendMsg ended");
+				return "TRUE";
+			}
+
 			String notyStr = "";
+			NotiType notiType;
 			
 			switch (mode.toUpperCase()) {
 			case "ING" :
                 notyStr = getCode2Name("L06", "002", companyID, lang, tenantID); //"문서도착";
-    			
+                notiType = NotiType.APPROVAL_ARRIVE;
 				break;
 			case "END" :
                 notyStr = getCode2Name("L06", "003", companyID, lang, tenantID); //"문서완료";
-                
+                notiType = NotiType.APPROVAL_COMPLETE;
 				break;
 			case "BAN" :
                 notyStr = getCode2Name("L06", "004", companyID, lang, tenantID); //"문서반송";
-                
+                notiType = NotiType.APPROVAL_REJECT;
 				break;
 			case "BOR" :
                 notyStr = getCode2Name("L06", "005", companyID, lang, tenantID); //"문서보류";
-                
+                notiType = NotiType.APPROVAL_ARRIVE;
 				break;
 			case "BAL" :
                 notyStr = getCode2Name("L06", "006", companyID, lang, tenantID); //"문서발송";
-                
+                notiType = NotiType.APPROVAL_ARRIVE;
 				break;
 			case "SUSIN" :
                 notyStr = getCode2Name("L06", "007", companyID, lang, tenantID); //"수신문서";
-                
+                notiType = NotiType.APPROVAL_ARRIVE;
 				break;
 			case "JIJUNG" :
                 notyStr = getCode2Name("L06", "008", companyID, lang, tenantID); //"지정문서";
-                
+                notiType = NotiType.APPROVAL_ARRIVE;
 				break;
 			case "BEBU" :
                 notyStr = getCode2Name("L06", "012", companyID, lang, tenantID); //"배부문서"; //012
-                
+                notiType = NotiType.APPROVAL_ARRIVE;
 				break;
 			case "HESONG" :
                 notyStr = getCode2Name("L06", "009", companyID, lang, tenantID); //"회송문서";
-                
+                notiType = NotiType.APPROVAL_RECEIPT_REJECT;
 				break;
 			case "HESU" :
                 notyStr = getCode2Name("L06", "010", companyID, lang, tenantID); //"문서회수";
-                
+                notiType = NotiType.APPROVAL_RETURN;
 				break;
 			case "REJIJUNG" :
                 notyStr = getCode2Name("L06", "013", companyID, lang, tenantID); //"재지정요청"; //013
-                
+                notiType = NotiType.APPROVAL_ARRIVE;
 				break;
 			case "REBEBU" :
                 notyStr = getCode2Name("L06", "014", companyID, lang, tenantID); //"재배부요청"; //014
-                
+                notiType = NotiType.APPROVAL_ARRIVE;
 				break;
 			default :
                 notyStr = getCode2Name("L06", "011", companyID, lang, tenantID); //"결재노티";
-                
+                notiType = NotiType.APPROVAL_ARRIVE;
 				break;
 			}
 			
 			insertNotifyItem(nextUserID, notyStr, docTitle, "2", docID, tenantID, companyID);
-			
+
 			String useEzTalkNotification = ezCommonService.getTenantConfig("useEzTalkNotification", tenantID);
-			
+
 			// useEzTalkNotification이 YES일 때는 ezTalk으로 결재 알림을 보낸다.
 			if (useEzTalkNotification.equals("YES")) {
-				ezEmailService.addEzTalkNotification(nextUserID, notyStr, docTitle, "2", null);
+				ezEmailService.addEzTalkNotification(nextUserID, notyStr, docTitle, String.valueOf(notiType.mainType()), String.valueOf(notiType.subType()), null);
 			}
 		}
 		logger.debug("sendMsg ended");
@@ -20639,6 +20670,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		if (rtnVal) {
+			// 톡 서버로 알림 전송
+			for (ApprGAprLineVO line : getLineList(docID, "APR", companyID, Offset.KST, "1", tenantID)) {
+				if (("002".equals(line.getAprState()) || "003".equals(line.getAprState())) && !"1".equals(line.getAprMemberSN())) {
+					String lang = ezCommonService.selectUserGetLang(line.getOrgUserID(), tenantID);
+					sendMsg(docID, line.getOrgUserID(), "HESU", companyID, lang, tenantID);
+				}
+			}
+
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("companyID", companyID);
 			map.put("v_DOCID", docID);
@@ -25602,6 +25641,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		if (rtnVal.equals("OK")) {
+			// 톡 서버로 알림 전송
+			for (ApprGAprLineVO line : getLineList(docID, "APR", companyID, Offset.KST, "1", tenantId)) {
+				if (("002".equals(line.getAprState()) || "003".equals(line.getAprState())) && !"1".equals(line.getAprMemberSN())) {
+					String lang = ezCommonService.selectUserGetLang(line.getOrgUserID(), tenantId);
+					sendMsg(docID, line.getOrgUserID(), "HESU", companyID, lang, tenantId);
+				}
+			}
+
 			int aprMemberSn = ezApprovalGDAO.selectDoCallBack(map);
 			map.put("v_curAprSN", aprMemberSn);
 			logger.debug("doCancelForce = aprMemberSn =" + aprMemberSn);
@@ -31019,18 +31066,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			targetUserName = xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent();
 		}
 		
-		String notiXml = ezPersonalService.getApprovNotiConfig(targetUserID, targetUserID, tenantID);
-		Document notiDom = commonUtil.convertStringToDocument(notiXml);
-		String notiYN = "";
-		
 		if (mode.equalsIgnoreCase("APR")) {
-			notiYN = notiDom.getElementsByTagName("ALERT").item(0).getTextContent();
-		} else {
-			notiYN = notiDom.getElementsByTagName("COMPLETE").item(0).getTextContent();
-		}
-		
-		if (!notiYN.equalsIgnoreCase("1")) {
-			return result;
+			// 진행문서도착 메일 보내지 않음
+			if (ezPersonalService.hasNotiDiableItem(targetUserID, NotiType.APPROVAL_ARRIVE, NotiPlatform.MAIL, tenantID)
+					|| !ezPersonalService.canReceiveNotification(targetUserID, tenantID)) {
+				logger.debug("sendMail skip");
+				logger.debug("sendMailToNextAprMember ended.");
+				return result;
+			}
 		}
 		
 		targetUserEmail = ezOrganService.getPropertyValue(targetUserID, "mail", tenantID);
@@ -31067,10 +31110,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
     		bodyContent.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj18", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "</span><br>");
     		bodyContent.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj19", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("STARTDATE").item(0).getTextContent() + "</span><br>");
     	} else { // 결재문서 완료알림
-    		Subject = messageSource.getMessage("ezEmail.csj06", userInfo.getLocale()) + " " + xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent(); //[결재완료알림] + DOCTITLE
-    		bodyContent.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj17", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent() + "</span><br>");
-    		bodyContent.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj18", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "</span><br>");
-    		bodyContent.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj19", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("STARTDATE").item(0).getTextContent() + "</span><br>");
     		
     		/* 2021-05-17 홍승비 - 일괄결재로 내부결재 완료 시 수신부서로 수신문서 도착알림메일 발송하도록 수정 */
     		Map<String, Object> map = new HashMap<String, Object>();
@@ -31081,24 +31120,26 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
     		map.put("LANG", commonUtil.getPrimaryData(userInfo.getLang(), tenantID)); // LANG값을 전달하면 완료문서로 처리함
     		// 수신문서 알림메일 스케줄러는 사용하지 않도록 구현함 (메일발송뿐만이 아니라 결재동작에 관련된 코드가 섞여있음 / 수신자 전체를 수신인으로 지정하므로 메일은 한번만 발송됨)
 			sendSusinMail(map, userInfo);
+
+			// 완료문서도착 메일 보내지 않음
+			if (ezPersonalService.hasNotiDiableItem(targetUserID, NotiType.APPROVAL_COMPLETE, NotiPlatform.MAIL, tenantID)
+					|| !ezPersonalService.canReceiveNotification(targetUserID, tenantID)) {
+				logger.debug("sendMail skip");
+				logger.debug("sendMailToNextAprMember ended.");
+				return result;
+			}
+
+			Subject = messageSource.getMessage("ezEmail.csj06", userInfo.getLocale()) + " " + xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent(); //[결재완료알림] + DOCTITLE
+			bodyContent.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj17", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent() + "</span><br>");
+			bodyContent.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj18", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "</span><br>");
+			bodyContent.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj19", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("STARTDATE").item(0).getTextContent() + "</span><br>");
     	}
     	
     	bodyContent.append("</td></tr></table>");
     	
     	String content = commonUtil.createNotiMailContent(bodyContent.toString(), tenantID, userInfo.getLocale());
-    	
-		String xmlApprovNotiConfig = ezPersonalService.getApprovNotiConfig(userInfo.getId(), userInfo.getId(), userInfo.getTenantId());
-    	Document notiDoc = commonUtil.convertStringToDocument(xmlApprovNotiConfig);
-		String saveSendBoxFlag = notiDoc.getElementsByTagName("SAVEMAILFLAG").item(0).getTextContent().trim();
-		
-		boolean flag;
-    	if (saveSendBoxFlag.equals("Y")) {
-    		flag = true;
-    	} else {
-    		flag = false;
-    	}
-    	
-    	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, Subject, content, flag);
+
+    	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, Subject, content, false);
 		
 		logger.debug("sendMailToNextAprMember ended.");
 		return result;
@@ -32643,16 +32684,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		Document xmlDom2 = commonUtil.convertStringToDocument(aprLineInfo);
 		int lineCnt = xmlDom2.getElementsByTagName("ROWS").item(0).getChildNodes().getLength();
 
-		String xmlApprovNotiConfig = ezPersonalService.getApprovNotiConfig(userInfo.getId(), userInfo.getId(), userInfo.getTenantId());
-		Document notiDoc = commonUtil.convertStringToDocument(xmlApprovNotiConfig);
-		String saveSendBoxFlag = notiDoc.getElementsByTagName("SAVEMAILFLAG").item(0).getTextContent().trim();
-		
-		boolean flag;
-		if (saveSendBoxFlag.equals("Y")) {
-			flag = true;
-		} else {
-			flag = false;
-		}
+		boolean useEzTalkNotification = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useEzTalkNotification", tenantID));
 
 		for (int k = 0; k < lineCnt; k++) {
 			String aprState = xmlDom2.getElementsByTagName("ROWS").item(0).getChildNodes().item(k).getChildNodes().item(0).getChildNodes().item(12).getTextContent();
@@ -32660,15 +32692,39 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (!aprSn.equals("1") && (aprState.equals("003") || aprState.equals("002"))) {
 				targetUserID = xmlDom2.getElementsByTagName("ROWS").item(0).getChildNodes().item(k).getChildNodes().item(0).getChildNodes().item(4).getTextContent();
+
+				if (!ezPersonalService.canReceiveNotification(targetUserID, tenantID)) {
+					logger.debug("can't receive notification: {}", targetUserID);
+					continue;
+				}
+
 				targetUserName = xmlDom2.getElementsByTagName("ROWS").item(0).getChildNodes().item(k).getChildNodes().item(0).getChildNodes().item(13).getTextContent();
 				targetUserDeptID = xmlDom2.getElementsByTagName("ROWS").item(0).getChildNodes().item(k).getChildNodes().item(0).getChildNodes().item(6).getTextContent();
 				targetUserCompanyID = xmlDom2.getElementsByTagName("ROWS").item(0).getChildNodes().item(k).getChildNodes().item(0).getChildNodes().item(10).getTextContent();
 				targetUserEmail = ezOrganService.getPropertyValue(targetUserID, "mail", tenantID);
 				
-				xmlApprovNotiConfig = ezPersonalService.getApprovNotiConfig(targetUserID, targetUserID, tenantID);
-				notiDoc = commonUtil.convertStringToDocument(xmlApprovNotiConfig);
+				boolean isPassLine = !aprState.equals("002");
+				String doctitle = xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent();
 
 				logger.debug("target : " + targetUserID + "/" + targetUserName + "/" + targetUserEmail);
+
+				// useEzTalkNotification이 YES일 때는 ezTalk으로 결재 알림을 보낸다.
+				if (useEzTalkNotification) {
+					NotiType notiType = NotiType.APPROVAL_PASS;
+					String subject = isPassLine
+							? messageSource.getMessage("ezApprovalG.garm09", userInfo.getLocale()) // 기결재통과
+							: getCode2Name("L06", "002", userInfo.getCompanyID(), userInfo.getLang(), tenantID); // 문서도착
+					boolean result = ezEmailService.addEzTalkNotification(targetUserID, subject, doctitle, String.valueOf(notiType.mainType()), String.valueOf(notiType.subType()), null);
+					logger.debug("noti send result: {}", result);
+				}
+
+				List<Integer> disableNotiPlatforms = ezPersonalService.getAllPlatformFromNotiDisableItem(targetUserID, isPassLine ? NotiType.APPROVAL_PASS : NotiType.APPROVAL_ARRIVE, tenantID);
+
+				// 결재문서통과 또는 도착알림 메일&알림 보내지 않음
+				if (disableNotiPlatforms.contains(NotiPlatform.MAIL.intValue())) {
+					logger.debug("mail send skip: {}", targetUserID);
+					continue;
+				}
 
 				InternetAddress from = new InternetAddress();
 				from.setPersonal(userInfo.getDisplayName(), "UTF-8");
@@ -32678,16 +32734,24 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				to.setPersonal(targetUserName, "UTF-8");
 				to.setAddress(targetUserEmail);
 
-				String Subject = "";
 				StringBuffer bodyContent = new StringBuffer();
 
 				bodyContent.append("<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td>");
 
-				if (aprState.equals("002")) {
-					if (notiDoc.getElementsByTagName("ALERT").item(0).getTextContent().equals("0")) {
-						continue;
-					}
-					Subject = messageSource.getMessage("ezEmail.csj12", userInfo.getLocale()) + " " + xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent(); //[결재문서도착알림] + DOCTITLE
+				if (isPassLine) {
+					bodyContent.append("<span style='font-size:13px; font-weight:bold;'>" + messageSource.getMessage("ezEmail.csj16", userInfo.getLocale()) + "</span><br>");
+					bodyContent.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj17", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent() + "</span><br>");
+					bodyContent.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj18", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "</span><br>");
+					bodyContent.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj19", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("STARTDATE").item(0).getTextContent() + "</span><br>");
+					bodyContent.append("<a id='approv_a' href ='" + (request.isSecure() ? "https:" : "http:") + "//" + request.getServerName() + (request.getServerPort() == 80 ? "" : ":" + request.getServerPort()) + "/ezApprovalG/approvui.do?");
+					bodyContent.append("docID=" + xmlDom.getElementsByTagName("DOCID").item(0).getTextContent());
+					bodyContent.append("&id=" + targetUserID + "&name=" + targetUserName + "&deptID=" + targetUserDeptID);
+					bodyContent.append("&allFlag=0&mailchk=Y&orgCompanyID=" + targetUserCompanyID);
+					bodyContent.append("' data-id='" + xmlDom.getElementsByTagName("DOCID").item(0).getTextContent() + "'"+ "data-comp='" + targetUserCompanyID);
+					bodyContent.append("' onclick ='javascript:mail_link();' style='cursor: pointer; font-size: 15px; color: blue;' target='_blank'><br>");
+					bodyContent.append(messageSource.getMessage("ezEmail.csj15", userInfo.getLocale())); //결재 문서 바로가기 링크
+					bodyContent.append("</a><br>");
+				} else {
 					bodyContent.append("<span style='font-size:13px; font-weight:bold;'>" + xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "</span>");
 					bodyContent.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj14", userInfo.getLocale()) + "</span>");
 					bodyContent.append("<a id='approv_a' href ='" + (request.isSecure() ? "https:" : "http:") + "//" + request.getServerName() + (request.getServerPort() == 80 ? "" : ":" + request.getServerPort()) + "/ezApprovalG/approvui.do?");
@@ -32702,29 +32766,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					bodyContent.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj17", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent() + "</span><br>");
 					bodyContent.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj18", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "</span><br>");
 					bodyContent.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj19", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("STARTDATE").item(0).getTextContent() + "</span><br>");
-				} else {
-					if (notiDoc.getElementsByTagName("LINEPASS").item(0).getTextContent().equals("0")) {
-						continue;
-					}
-					Subject = "[" + messageSource.getMessage("ezApprovalG.garm09", userInfo.getLocale()) + "] " + xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent(); //[결재문서도착알림] + DOCTITLE
-					bodyContent.append("<span style='font-size:13px; font-weight:bold;'>" + messageSource.getMessage("ezEmail.csj16", userInfo.getLocale()) + "</span><br>");
-					bodyContent.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj17", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent() + "</span><br>");
-					bodyContent.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj18", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "</span><br>");
-					bodyContent.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj19", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("STARTDATE").item(0).getTextContent() + "</span><br>");
-					bodyContent.append("<a id='approv_a' href ='" + (request.isSecure() ? "https:" : "http:") + "//" + request.getServerName() + (request.getServerPort() == 80 ? "" : ":" + request.getServerPort()) + "/ezApprovalG/approvui.do?");
-					bodyContent.append("docID=" + xmlDom.getElementsByTagName("DOCID").item(0).getTextContent());
-					bodyContent.append("&id=" + targetUserID + "&name=" + targetUserName + "&deptID=" + targetUserDeptID);
-					bodyContent.append("&allFlag=0&mailchk=Y&orgCompanyID=" + targetUserCompanyID);
-					bodyContent.append("' data-id='" + xmlDom.getElementsByTagName("DOCID").item(0).getTextContent() + "'"+ "data-comp='" + targetUserCompanyID);
-					bodyContent.append("' onclick ='javascript:mail_link();' style='cursor: pointer; font-size: 15px; color: blue;' target='_blank'><br>");
-					bodyContent.append(messageSource.getMessage("ezEmail.csj15", userInfo.getLocale())); //결재 문서 바로가기 링크
-					bodyContent.append("</a><br>");
 				}
 				bodyContent.append("</td></tr></table>");
 
 				String content = commonUtil.createNotiMailContent(bodyContent.toString(), tenantID, userInfo.getLocale());
 
-				ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, Subject, content, flag);
+				String subject = isPassLine
+						? "[" + messageSource.getMessage("ezApprovalG.garm09", userInfo.getLocale()) + "] " + doctitle // [기결재통과] 문서제목
+						: messageSource.getMessage("ezEmail.csj12", userInfo.getLocale()) + " " + doctitle; // [결재문서도착알림] 문서제목
+				ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
 			}
 		}
 		logger.debug("sendMailToPassAprMember ended.");
@@ -33371,8 +33421,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			for (int i = 0; i < apprGReceiptVOList.size(); i++) {
 				
 				// 수신자 개인이 지정된 경우
-				if (apprGReceiptVOList.get(i).getReceiptMemberID() != null && !apprGReceiptVOList.get(i).getReceiptMemberID().trim().equals("")) {
-					String infoXML = ezOrganService.getPropertyList(apprGReceiptVOList.get(i).getReceiptMemberID(), "displayName;mail;department", userInfo.getLang(), userInfo.getTenantId());
+				String receiptMemberId = apprGReceiptVOList.get(i).getReceiptMemberID();
+
+				if (StringUtils.isNotBlank(receiptMemberId)) {
+					// 완료문서도착 메일 보내지 않음
+					if (ezPersonalService.hasNotiDiableItem(receiptMemberId, NotiType.APPROVAL_ARRIVE, NotiPlatform.MAIL, userInfo.getTenantId())
+							|| !ezPersonalService.canReceiveNotification(receiptMemberId, userInfo.getTenantId())) {
+						logger.debug("sendSusinMail skip: {}", receiptMemberId);
+						continue;
+					}
+
+					String infoXML = ezOrganService.getPropertyList(receiptMemberId, "displayName;mail;department", userInfo.getLang(), userInfo.getTenantId());
 					Document doc = commonUtil.convertStringToDocument(infoXML);
 					String toName = doc.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
 					String to = doc.getElementsByTagName("MAIL").item(0).getTextContent();
@@ -33386,8 +33445,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					map.put("v_DEPTID", apprGReceiptVOList.get(i).getReceiptPointID());
 					List<OrganUserVO> organProxyVOList = ezOrganDAO.getDeptReceipterIDs(map);
 					
-					for (int l = 0; l < organProxyVOList.size(); l++) {
-						String infoXML = ezOrganService.getPropertyList(organProxyVOList.get(l).getCn(), "displayName;mail;department", userInfo.getLang(), userInfo.getTenantId());
+					for (OrganUserVO receiptUser : organProxyVOList) {
+						// 완료문서도착 메일 보내지 않음
+						if (ezPersonalService.hasNotiDiableItem(receiptUser.getCn(), NotiType.APPROVAL_ARRIVE, NotiPlatform.MAIL, userInfo.getTenantId())
+								|| !ezPersonalService.canReceiveNotification(receiptUser.getCn(), userInfo.getTenantId())) {
+							logger.debug("sendSusinMail skip: {}", receiptUser.getCn());
+							continue;
+						}
+
+						String infoXML = ezOrganService.getPropertyList(receiptUser.getCn(), "displayName;mail;department", userInfo.getLang(), userInfo.getTenantId());
 						Document doc = commonUtil.convertStringToDocument(infoXML);
 						String toName = doc.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
 						String to = doc.getElementsByTagName("MAIL").item(0).getTextContent();
@@ -33425,7 +33491,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			contentBuilder.append("</td></tr></table>");
 			
 			// String content = "<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td><span>제&nbsp;&nbsp;목: " + vo.getDocTitle() + "</span><br><span>기안자:" + vo.getWriterName() + "</span><br><span>기안일: " + vo.getStartDate() + "</span><br></td></tr></table>";
-			ezEmailService.sendMail(userAccount, password, locale, from, toArr, null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), userInfo.getTenantId(), locale), true, EmailImportance.NORMAL);
+			ezEmailService.sendMail(userAccount, password, locale, from, toArr, null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), userInfo.getTenantId(), locale), false, EmailImportance.NORMAL);
 		}
 		logger.debug("sendSusinMail ended.");
 	}

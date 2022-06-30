@@ -31,6 +31,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -2064,8 +2065,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 	
 	@Override
-	public boolean addEzTalkNotification(String userId, String senderName, String subject, String type, String linkURL) {
-		logger.debug("addEzTalkNotification started. userId=" + userId + ",senderName=" + senderName + ",type=" + type);
+	public boolean addEzTalkNotification(String userId, String senderName, String subject, String mainType, String subType, String linkURL) {
+		logger.debug("addEzTalkNotification started. userId={}, senderName={}, mainType={}, subType={}, linkURL", userId, senderName, mainType, subType, linkURL);
 		
 		boolean returnValue = false;
 		
@@ -2074,15 +2075,17 @@ public class EzEmailServiceImpl implements EzEmailService {
 			userId = userId != null ? userId : "";
 			senderName = senderName != null ? senderName : "";
 			subject = subject != null ? subject : "";
-			type = type != null ? type : "";
+			mainType = StringUtils.defaultString(mainType);
+			subType = StringUtils.defaultString(subType);
 			linkURL = linkURL != null ? linkURL : "";
 			
 			String userIdParam = "userId=" + userId;
 			String senderNameParam = "senderName=" + URLEncoder.encode(senderName, "UTF-8");
 			String subjectParam = "subject=" + URLEncoder.encode(subject, "UTF-8");
-			String typeParam = "type=" + type;
+			String typeParam = "type=" + mainType;
+			String subParam = "subType=" + subType;
 			
-			String inputParams = userIdParam + "&" + senderNameParam + "&" + subjectParam + "&" + typeParam;
+			String inputParams = userIdParam + "&" + senderNameParam + "&" + subjectParam + "&" + typeParam + "&" + subParam;
 
 			if (!linkURL.isEmpty()) {
 				String linkURLParam = "linkURL=" + URLEncoder.encode(linkURL, "UTF-8");

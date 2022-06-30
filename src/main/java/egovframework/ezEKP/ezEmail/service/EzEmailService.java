@@ -84,7 +84,7 @@ public interface EzEmailService {
 	public List<MailDistributionVO> getDistributionSearchList(String companyId, int tenantId, String searchValue) throws Exception;
 	public List<MailDistributionVO> getDistributionSearchListByItem(String companyId, int tenantId, String searchValue, String searchType) throws Exception;
 	public MailSignatureVO getInitMailSignature(int tenantId) throws Exception;
-	public boolean addEzTalkNotification(String userId, String senderName, String subject, String type, String linkUrl);
+	public boolean addEzTalkNotification(String userId, String senderName, String subject, String type, String subType, String linkUrl);
 	public boolean setInitInboxRule(int tenantId, String userId) throws Exception;
 	public List<String> getInitInboxRuleMailbox(int tenantId) throws Exception;
 	public int setMailSecure(int tenantId, String userId, String password, int maxReadCount, String maxReadDate) throws Exception;
