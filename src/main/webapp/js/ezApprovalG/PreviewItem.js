@@ -289,7 +289,15 @@ function pre_openApprovUI(allFlag) {
 	                return;
 	        	}
 	    	} else {
-	    		var openLocation = "/ezApprovalG/approvuiWHWP.do?docID=" + encodeURI(pArgument[0]);
+	    		var isGroupDoc = checkIsGroupDoc(encodeURI(pArgument[0]), orgCompanyID);
+	    		var openLocation = "";
+	    		
+	    		if (isGroupDoc == "Y") { // 일괄기안 문서를 여는 경우
+        			openLocation = "/ezApprovalG/approvuiAll_WHWP.do?docID=" + encodeURI(pArgument[0]);
+        		} else {
+            		openLocation = "/ezApprovalG/approvuiWHWP.do?docID=" + encodeURI(pArgument[0]);
+        		}
+	    		
 	    		openLocation += "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
 	    		openLocation += "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgCompanyID=" + orgCompanyID + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2"));
 	    	}
@@ -385,7 +393,13 @@ function pre_openViewDocInfo(type) {
 	            		return;
 	            	}
     		} else {
-    			openLocation = "/ezApprovalG/ezviewAprWHWP.do";
+    			var isGroupDoc = checkIsGroupDoc(encodeURI(DocID), orgCompanyID);
+        		
+        		if (isGroupDoc == "Y") { // 일괄기안 문서를 여는 경우 (결재진행문서, 기안한문서 메뉴에서 접근 시 지원)
+        			openLocation = "/ezApprovalG/ezviewAprAll_WHWP.do";
+        		} else {
+        			openLocation = "/ezApprovalG/ezviewAprWHWP.do";
+        		}
     		}
     	}
     	else {
@@ -682,7 +696,15 @@ function pre_openServerDraftUI(pDraftFlag, pCurSelRow) {
 	            openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN);
 	        }
     	} else {
-    		openLocation = "/ezApprovalG/draftuiWHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+    		/* 2022-06-30 홍승비 - 전자결재 미리보기 기능 일괄기안문서에도 대응 */
+    		var isGroupDoc = checkIsGroupDoc(pDocSN, ""); // 일괄기안문서 여부 체크 (임시저장문서의 pDocSN 전달)
+    		
+    		if (isGroupDoc == "Y") { // 임시저장된 일괄기안 문서를 여는 경우
+    			openLocation = "/ezApprovalG/draftuiAll_WHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+    		} else {
+    			openLocation = "/ezApprovalG/draftuiWHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+    		}
+    		
             openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
             openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN);
     	}
@@ -761,7 +783,14 @@ function pre_openDraftUI(pDraftFlag, pCurSelRow) {
 	            openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]);
 	        }
     	} else {
-    		openLocation = "/ezApprovalG/draftuiWHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+    		var isGroupDoc = checkIsGroupDoc(pArgument[7], ""); // 일괄기안문서 여부 체크 (1안 기준의 DOCID 전달)
+    		
+    		if (isGroupDoc == "Y") { // 반송된 일괄기안 문서를 여는 경우
+    			openLocation = "/ezApprovalG/draftuiAll_WHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+    		} else {
+    			openLocation = "/ezApprovalG/draftuiWHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+    		}
+    		
             openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
             openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]);
     	}
@@ -1173,3 +1202,24 @@ function scroll() {
 	}
 }
 */
+
+/* 2022-06-30 홍승비 - 일괄기안된 문서인지 판별하는 ajax 함수 (Y/N) */
+function checkIsGroupDoc(pDocID, pOrgCompanyID) {
+    var res = "";
+    
+    $.ajax({
+        type : "GET",
+        dataType : "text",
+        async : false,
+        url : "/ezApprovalG/checkIsGroupDoc.do",
+        data : {
+            docID : pDocID,
+            orgCompanyID : pOrgCompanyID
+        },
+        success: function(result) {
+            res = result;
+        }        			
+    });
+    
+    return res;
+}

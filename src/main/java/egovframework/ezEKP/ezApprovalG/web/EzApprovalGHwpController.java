@@ -2116,6 +2116,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String listType = request.getParameter("listType") != null ? request.getParameter("listType") : "";
 		String aprState = request.getParameter("aprState") != null ? request.getParameter("aprState") : "";
 		String isTmpDoc = request.getParameter("isTmpDoc") != null ? request.getParameter("isTmpDoc") : ""; // 반송문서 재기안 시 docID, 임시보관문서 재기안 시 docSN이 전달됨
+		String isPreview = request.getParameter("isPreview") != null ? request.getParameter("isPreview") : ""; // 미리보기 영역에서 열렸는지 여부 플래그
 		String nonElecRec = ""; // 일괄기안 기능은 비전자기록물 등록을 지원하지 않음
 		String docSN = "";
 		
@@ -2217,6 +2218,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("apprGFormVOList", apprGFormVOList);
 		model.addAttribute("groupDocInfoList", groupDocInfoList); // 임시저장 또는 반송된 문서 리스트 데이터 
 		model.addAttribute("groupDocSN", groupDocSN); // 임시저장 또는 반송된 문서의 일괄기안그룹 DOCID (GROOUPDOCSN)
+		
+		model.addAttribute("isPreview", isPreview); // 미리보기 영역 관련 
 		
 		LOGGER.debug("draftuiAll_WHWP ended");
 		
@@ -2322,6 +2325,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String orgCompanyID = request.getParameter("orgCompanyID");
 		String companyID = userInfo.getCompanyID();
 		String docDir = docID.substring(docID.length() - 3);
+		String isPreview = request.getParameter("isPreview") != null ? request.getParameter("isPreview") : ""; // 미리보기 영역에서 열렸는지 여부 플래그
 		
 		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
 			userInfo.setCompanyID(orgCompanyID);
@@ -2496,6 +2500,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("groupDocInfoListCnt", groupDocInfoList.size()); // 문서 리스트 데이터 카운트 (안의 갯수)
 		model.addAttribute("groupDocSN", docID); // 일괄기안그룹 DOCID (GROOUPDOCSN)
 		
+		model.addAttribute("isPreview", isPreview);
+		
 		LOGGER.debug("approvuiAll_WHWP ended");
 		
 		return "ezApprovalG/apprGapprovuiAll_WHWP";
@@ -2549,6 +2555,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String orgCompanyID = request.getParameter("orgCompanyID");
+		String isPreview = request.getParameter("isPreview") != null ? request.getParameter("isPreview") : ""; // 미리보기 영역에서 열렸는지 여부 플래그
 		
 		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
 			userInfo.setCompanyID(orgCompanyID);
@@ -2662,6 +2669,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("groupDocInfoList", groupDocInfoList); // 문서 리스트 데이터 
 		model.addAttribute("groupDocInfoListCnt", groupDocInfoList.size()); // 문서 리스트 데이터 카운트 (안의 갯수)
 		model.addAttribute("groupDocSN", docID); // 일괄기안그룹 DOCID (GROOUPDOCSN)
+		
+		model.addAttribute("isPreview", isPreview);
 		
 		LOGGER.debug("ezviewAprAll_WHWP ended");
 		
