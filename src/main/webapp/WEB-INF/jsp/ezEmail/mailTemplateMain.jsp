@@ -102,9 +102,9 @@
 				var listHtml = "";
 				
 				if (data.length >= 1) {
-					var listHtmlFrame = "<tr data-displayName=\"$_displayName\" data-id=\"$_id\" data-ediType=\"$_editype\">"
-					+ "<td>$_displayName</td>"
-					+ "<td>$_regDate</td>"
+					var listHtmlFrame = "<tr data-displayName=\"@_displayName\" data-id=\"@_id\" data-ediType=\"@_editype\">"
+					+ "<td>@_displayName</td>"
+					+ "<td>@_regDate</td>"
 					+ "<td><a onClick=\"btn_delete(this)\"><spring:message code='ezEmail.kasMailTemplate05'/></a></td>"
 					+ "</tr>";
 					
@@ -116,8 +116,8 @@
 						var editorType = nowData.EDITORTYPE;
 						
 						var tempHtml = listHtmlFrame;
-						tempHtml = tempHtml.replace(/\\$_regDate/g, regDate).replace(/\\$_displayName/g, displayName)
-							.replace(/\\$_id/g, templateId).replace(/\\$_editype/g, editorType);
+						tempHtml = tempHtml.replace(/@_regDate/g, regDate).replace(/@_displayName/g, displayName)
+							.replace(/@_id/g, templateId).replace(/@_editype/g, editorType);
 						
 						listHtml += tempHtml;
 					}

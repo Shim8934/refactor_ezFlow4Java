@@ -597,7 +597,7 @@
 		ALTER TABLE
 			$TBL_NAME$
 		$ALTER$ 
-			$COLUMN_NAME$ $TYPE_ORACLE$ $AFTER$
+			$COLUMN_NAME$ $TYPE_TIBERO$ $AFTER$
 	</statement>
 
 	<insert id="EzCommonDAO.insertUseSession" parameterClass="Map">

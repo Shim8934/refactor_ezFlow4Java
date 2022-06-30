@@ -26374,7 +26374,12 @@
    			ProcessDate = #v_SYSDATE#, 
    			ReceivedDeptID = #v_ReceivedDeptID#, 
    			ReceivedDeptName = #v_ReceivedDeptName#, 
-   			ReceivedDeptName2 = #v_ReceivedDeptName2# 
+   			ReceivedDeptName2 = #v_ReceivedDeptName2# ,
+            PROCESSORID = NULL,
+            PROCESSORNAME = NULL,
+            PROCESSORJOBTITLE = NULL,
+            PROCESSORNAME2 = NULL,
+            PROCESSORJOBTITLE2 = NULL
    		WHERE 
    			DocID = #v_DOCID#  
    		AND 
@@ -34922,5 +34927,37 @@
     	AND
     		TENANT_ID = #v_TENANTID#
     </update>
+    
+    <!-- 2022-06-17 홍승비 - 해당DOCID에 해당하는 문서가 진행중인지, 완료문서인지 문자열으로 리턴  -->
+	<select id="EzApprovalG.getAprOrEndStr" parameterClass="Map" resultClass="String">
+		SELECT
+			*
+		FROM (
+	        SELECT
+	            'APR' AS FLAG
+	        FROM
+	            TBL_APRDOCINFO
+	        WHERE 
+	       		TENANT_ID = #v_TENANTID#
+	       	AND
+				COMPANYID = #v_COMPANYID#
+	       	AND
+	       		DOCID = #v_DOCID#
+       		
+       		UNION ALL
+       		
+			SELECT
+	            'END' AS FLAG
+	        FROM
+	            TBL_ENDAPRDOCINFO
+	        WHERE 
+	       		TENANT_ID = #v_TENANTID#
+	       	AND
+				COMPANYID = #v_COMPANYID#
+	       	AND
+	       		DOCID = #v_DOCID#
+		)
+		LIMIT 1
+    </select>
 	
 </sqlMap>
