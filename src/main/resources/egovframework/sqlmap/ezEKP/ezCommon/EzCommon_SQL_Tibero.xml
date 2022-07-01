@@ -91,7 +91,7 @@
 			WHERE
 				tenant_id = #tenantID#
 			AND
-				UPPER(property_name) = #property#
+				UPPER(property_name) = UPPER(#property#)
 		]]>
 	</select>
 	
@@ -4711,6 +4711,9 @@
 			CONSTRAINT "tbl_user_noti_disable_item_pk" PRIMARY KEY (user_id, main_type, sub_type, platform, tenant_id),
 			CONSTRAINT "tbl_user_noti_disable_item_fk" FOREIGN KEY (user_id, tenant_id) REFERENCES tbl_usermaster (cn, tenant_id) ON DELETE CASCADE
 		)
+	</statement>
+	<statement id="EzCommonDAO.createTblDisableNotiItem_exception_try">
+		ALTER TABLE TBL_USERMASTER ADD CONSTRAINT PK_TBL_USERMASTER PRIMARY KEY (TENANT_ID,CN) USING INDEX
 	</statement>
 
 </sqlMap>
