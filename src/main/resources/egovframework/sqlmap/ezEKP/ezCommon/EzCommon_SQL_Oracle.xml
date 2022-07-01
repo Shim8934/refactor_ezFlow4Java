@@ -4727,4 +4727,18 @@
 				ROWNUM <= 1
 		]]>
 	</select>	
+	
+	<select id="EzCommonDAO.checkTblDisableNotiItem">SELECT user_id FROM tbl_user_noti_disable_item WHERE ROWNUM = 1</select>
+	<statement id="EzCommonDAO.createTblDisableNotiItem">
+		CREATE TABLE tbl_user_noti_disable_item (
+			user_id NVARCHAR2(80) NOT NULL,
+			main_type NUMBER(2) NOT NULL,
+			sub_type NUMBER(2) NOT NULL,
+			platform NUMBER(1) NOT NULL,
+			tenant_id NUMBER(5) NOT NULL,
+			CONSTRAINT "tbl_user_noti_disable_item_pk" PRIMARY KEY (user_id, main_type, sub_type, platform, tenant_id),
+			CONSTRAINT "tbl_user_noti_disable_item_fk" FOREIGN KEY (user_id, tenant_id) REFERENCES tbl_usermaster (cn, tenant_id) ON DELETE CASCADE
+		)
+	</statement>
+
 </sqlMap>

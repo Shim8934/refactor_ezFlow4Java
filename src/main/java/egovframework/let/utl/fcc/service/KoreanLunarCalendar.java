@@ -158,12 +158,17 @@ public class KoreanLunarCalendar {
     
     private KoreanLunarCalendar(){}
     
-    public static KoreanLunarCalendar getInstance(){
-        if(mCalendar == null){
-            mCalendar = new KoreanLunarCalendar();
-        }
-        return mCalendar;
-    }
+	// 멀티 스레드에서 굉장히 좋지 않은 케이스
+	/*public static KoreanLunarCalendar getInstance(){
+	    if(mCalendar == null){
+	        mCalendar = new KoreanLunarCalendar();
+	    }
+	    return mCalendar;
+	}*/
+
+	public static KoreanLunarCalendar newInstance() {
+		return new KoreanLunarCalendar();
+	}
     
     private int getLunarData(int year){
         return KOREAN_LUNAR_DATA[year - KOREAN_LUNAR_BASE_YEAR];

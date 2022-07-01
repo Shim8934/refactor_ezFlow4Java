@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -49,6 +50,8 @@ import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
+import egovframework.ezEKP.ezPersonal.type.NotiPlatform;
+import egovframework.ezEKP.ezPersonal.type.NotiType;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -1428,16 +1431,20 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	
 	/** 전자결재 G 자동 알림 메일 */
 	@RequestMapping(value = "/ezApprovalG/mail_intersend.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
-	public void mailInterSend(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse res, Model model,Locale locale) throws Exception{
-		logger.debug("mail_intersend started");
+	public void mailInterSend(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, @RequestParam String targetUserId, @RequestParam int subType) throws Exception{
+		logger.debug("mail_intersend started. subType: {}", subType);
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
-		
-//		String from = request.getParameter("from");
-		String to[] = request.getParameter("to").split(",");
+
+		// 받는 사람 알림환경설정 체크
+		if (!ezPersonalService.canReceiveNotification(targetUserId, userInfo.getTenantId())
+				|| ezPersonalService.hasNotiDiableItem(targetUserId, NotiType.valueOf(2, subType), NotiPlatform.MAIL, userInfo.getTenantId())) {
+			logger.debug("mail_intersend ended");
+			return;
+		}
+
 		String Subject = request.getParameter("Subject");
 		String Content = request.getParameter("Content");
-        boolean flag;
         
         String content = commonUtil.createNotiMailContent(Content, userInfo.getTenantId(), userInfo.getLocale()); 
         
@@ -1446,21 +1453,11 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
     	from.setAddress(userInfo.getEmail());
     	
     	InternetAddress to1 = new InternetAddress();
+    	String to[] = request.getParameter("to").split(",");
     	to1.setPersonal(to[0], "UTF-8");
     	to1.setAddress(to[1]);
     	
-    	String xmlApprovNotiConfig = ezPersonalService.getApprovNotiConfig(userInfo.getId(), userInfo.getId(), userInfo.getTenantId());
-    	Document doc = commonUtil.convertStringToDocument(xmlApprovNotiConfig);
-		String saveSendBoxFlag = doc.getElementsByTagName("SAVEMAILFLAG").item(0).getTextContent().trim();
-		logger.debug("saveSendBoxFlag= " + saveSendBoxFlag);
-		
-    	if (saveSendBoxFlag.equals("Y")) {
-    		flag = true;
-    	} else {
-    		flag = false;
-    	}
-    	
-    	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to1}, null, null, Subject, content, flag);
+    	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to1}, null, null, Subject, content, false);
     	
     	logger.debug("mail_intersend ended");
 	}

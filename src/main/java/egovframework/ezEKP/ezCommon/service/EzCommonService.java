@@ -385,4 +385,7 @@ public interface EzCommonService {
 	String createExcelByList (String fileName, String dirPath, String sheetName, List<List<Object>> data) throws Exception;
 	
 	public void createTblAprpreview() throws Exception;
+	
+	void createTblDisableNotiItem();
+	
 }

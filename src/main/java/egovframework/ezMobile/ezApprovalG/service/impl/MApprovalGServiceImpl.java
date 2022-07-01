@@ -9,6 +9,8 @@ import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EmailImportance;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
+import egovframework.ezEKP.ezPersonal.type.NotiPlatform;
+import egovframework.ezEKP.ezPersonal.type.NotiType;
 import egovframework.ezMobile.ezApprovalG.dao.MApprovalGDAO;
 import egovframework.ezMobile.ezApprovalG.service.MApprovalGService;
 import egovframework.ezMobile.ezApprovalG.vo.*;
@@ -539,8 +541,6 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 
 		InternetAddress to;
 
-		boolean saveSendBoxFlag = ("Y".equals(commonUtil.convertStringToDocument(ezPersonalService.getApprovNotiConfig(userId, userId, tenantId)).getElementsByTagName("SAVEMAILFLAG").item(0).getTextContent().trim())) ? true : false;
-
 		List<MApprovalGAprLineInfoVO> approvalGAprLineInfoVOs = getAprLineInfo(docId, type, userInfo);
 
 		//"BO", "CHECK" 필요시 추가
@@ -553,16 +553,16 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 
 						MApprovalGAprLineInfoVO targetVo = approvalGAprLineInfoVOs.get(approvalGAprLineInfoVOs.size() - 1);
 						targetUserId = targetVo.getAprMemberId();
-						targetUserName = targetVo.getAprMemberName();
 
-						if ("0".equals(commonUtil.convertStringToDocument(ezPersonalService.getApprovNotiConfig(targetUserId, userId, tenantId)).getElementsByTagName("COMPLETE").item(0).getTextContent().trim())) {
-							return;
+						if (!ezPersonalService.canReceiveNotification(targetUserId, tenantId)
+								|| ezPersonalService.hasNotiDiableItem(targetUserId, NotiType.APPROVAL_COMPLETE, NotiPlatform.MAIL, tenantId)) {
+							break;
 						}
 
+						targetUserName = targetVo.getAprMemberName();
 						LOGGER.debug("END REC : targetUserId = " + targetUserId + ", targetUserName = " + targetUserName);
 
 						to = new InternetAddress();
-
 						to.setAddress(ezOrganService.getPropertyValue(targetUserId, "mail", tenantId));
 						to.setPersonal(targetUserName, "UTF-8");
 
@@ -575,22 +575,22 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 						contentBuilder.append("<span style='font-size:13px;'>" + egovMessageSource.getMessage("ezEmail.csj19", locale) + ": " + approvalGDocInfoVO.getStartDate() + "</span><br>");
 						contentBuilder.append("</td></tr></table>");
 
-						ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), tenantId, locale), saveSendBoxFlag, EmailImportance.NORMAL);
+						ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), tenantId, locale), false, EmailImportance.NORMAL);
 					} else {
 						approvalGAprLineInfoVOs = getAprLineInfo(docId, "END", userInfo);
 
 						MApprovalGAprLineInfoVO targetVo = approvalGAprLineInfoVOs.get(approvalGAprLineInfoVOs.size() - 1);
 						targetUserId = targetVo.getAprMemberId();
-						targetUserName = targetVo.getAprMemberName();
 
-						if ("0".equals(commonUtil.convertStringToDocument(ezPersonalService.getApprovNotiConfig(targetUserId, userId, tenantId)).getElementsByTagName("COMPLETE").item(0).getTextContent().trim())) {
-							return;
+						if (!ezPersonalService.canReceiveNotification(targetUserId, tenantId)
+								|| ezPersonalService.hasNotiDiableItem(targetUserId, NotiType.APPROVAL_COMPLETE, NotiPlatform.MAIL, tenantId)) {
+							break;
 						}
 
+						targetUserName = targetVo.getAprMemberName();
 						LOGGER.debug("END : targetUserId = " + targetUserId + ", targetUserName = " + targetUserName);
 
 						to = new InternetAddress();
-
 						to.setAddress(ezOrganService.getPropertyValue(targetUserId, "mail", tenantId));
 						to.setPersonal(targetUserName, "UTF-8");
 
@@ -602,7 +602,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 						contentBuilder.append("<span style='font-size:13px;'>" + egovMessageSource.getMessage("ezEmail.csj18", locale) + ": " + approvalGDocInfoVO.getWriterName() + "</span><br>");
 						contentBuilder.append("<span style='font-size:13px;'>" + egovMessageSource.getMessage("ezEmail.csj19", locale) + ": " + approvalGDocInfoVO.getStartDate() + "</span><br>");
 						contentBuilder.append("</td></tr></table>");
-						ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), tenantId, locale), saveSendBoxFlag, EmailImportance.NORMAL);
+						ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), tenantId, locale), false, EmailImportance.NORMAL);
 					}
 
 					/* 수신문서도착알림메일이 두번 발송되는현상 수정
@@ -676,17 +676,18 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 				} else { //apr
 					for (MApprovalGAprLineInfoVO vo : approvalGAprLineInfoVOs) {
 						targetUserId = vo.getAprMemberId();
-						targetUserName = vo.getAprMemberName();
 
 						// 결재유형이 참조인 경우에만 메일을 보내는 오류 분기 수정 (!"007".equalsIgnoreCase(vo.getAprType()) OR조건에서 제거)
-						if (!"002".equals(vo.getAprState()) || "0".equals(commonUtil.convertStringToDocument(ezPersonalService.getApprovNotiConfig(vo.getAprMemberId(), userId, tenantId)).getElementsByTagName("ALERT").item(0).getTextContent().trim())) {
+						if (!"002".equals(vo.getAprState())
+								|| !ezPersonalService.canReceiveNotification(targetUserId, tenantId)
+								|| ezPersonalService.hasNotiDiableItem(targetUserId, NotiType.APPROVAL_ARRIVE, NotiPlatform.MAIL, tenantId)) {
 							continue;
 						}
 
+						targetUserName = vo.getAprMemberName();
 						LOGGER.debug("APR NEXT : targetUserId = " + targetUserId + ", targetUserName = " + targetUserName + ", aprState = " + vo.getAprState() + ", aprType = " + vo.getAprType());
 
 						to = new InternetAddress();
-
 						to.setAddress(ezOrganService.getPropertyValue(targetUserId, "mail", tenantId));
 						to.setPersonal(targetUserName, "UTF-8");
 
@@ -727,13 +728,13 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 						
 						// 참조자가 아닌 경우, 개별로 결재에 관련된 속성(targetUserId, targetUserName 등)을 부여한 결재알림메일을 루프 내부에서 발송한다.
 						if (toList.size() > 0) {
-							ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), tenantId, locale), saveSendBoxFlag, EmailImportance.NORMAL);
+							ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), tenantId, locale), false, EmailImportance.NORMAL);
 							toList.clear(); // 결재자에게 메일 발송 후 리스트 초기화 -> 다음 루프에서 참조자가 아닌 결재자가 존재한다면 다시 메일 발송하도록 add() 후 초기화를 반복함
 						}
 					}
 					// 참조자인 경우, 메일 내부에 결재 관련 속성이 없으므로 한꺼번에 참조메일을 발송한다.
 					if (toListCham.size() > 0) {
-						ezEmailService.sendMail(userEmail, password, locale, from, toListCham.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilderCham.toString(), tenantId, locale), saveSendBoxFlag, EmailImportance.NORMAL);
+						ezEmailService.sendMail(userEmail, password, locale, from, toListCham.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilderCham.toString(), tenantId, locale), false, EmailImportance.NORMAL);
 					}
 				}
 
@@ -742,12 +743,13 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 			case "BAN" :
 				MApprovalGAprLineInfoVO targetVo = approvalGAprLineInfoVOs.get(approvalGAprLineInfoVOs.size() - 1);
 				targetUserId = targetVo.getAprMemberId();
-				targetUserName = targetVo.getAprMemberName();
 
-				if ("0".equals(commonUtil.convertStringToDocument(ezPersonalService.getApprovNotiConfig(targetUserId, userId, tenantId)).getElementsByTagName("BANSONG").item(0).getTextContent().trim())) {
-					return;
+				if (!ezPersonalService.canReceiveNotification(targetUserId, tenantId)
+						|| ezPersonalService.hasNotiDiableItem(targetUserId, NotiType.APPROVAL_REJECT, NotiPlatform.MAIL, tenantId)) {
+					break;
 				}
 
+				targetUserName = targetVo.getAprMemberName();
 				LOGGER.debug("BAN : targetUserId = " + targetUserId + ", targetUserName = " + targetUserName);
 
 				to = new InternetAddress();
@@ -818,21 +820,23 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 				}
 
 				contentBuilder.append("</td></tr></table>");
-				ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), tenantId, locale), saveSendBoxFlag, EmailImportance.NORMAL);
+				ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), tenantId, locale), false, EmailImportance.NORMAL);
 
 				break;
 
 			case "HWE" :
 				for (MApprovalGAprLineInfoVO vo : approvalGAprLineInfoVOs) {
 					targetUserId = vo.getAprMemberId();
-					targetUserName = vo.getAprMemberName();
 					
 					// 회수알림 발송 대상자에서 기안자(회수자)를 제외하고, 현재 결재진행/승인상태가 아닌 경우도 제외함
-					if (!"002".equals(vo.getAprState()) && !"003".equals(vo.getAprState()) || "0".equals(commonUtil.convertStringToDocument(ezPersonalService.getApprovNotiConfig(vo.getAprMemberId(), userId, tenantId)).getElementsByTagName("CALLBACK").item(0).getTextContent().trim())
-							|| (approvalGAprLineInfoVOs.indexOf(vo) == approvalGAprLineInfoVOs.size() - 1)) {
+					if ((!"002".equals(vo.getAprState()) && !"003".equals(vo.getAprState()))
+							|| approvalGAprLineInfoVOs.indexOf(vo) == approvalGAprLineInfoVOs.size() - 1
+							|| !ezPersonalService.canReceiveNotification(targetUserId, tenantId)
+							|| ezPersonalService.hasNotiDiableItem(targetUserId, NotiType.APPROVAL_RETURN, NotiPlatform.MAIL, tenantId)) {
 						continue;
 					}
 
+					targetUserName = vo.getAprMemberName();
 					LOGGER.debug("HWE : targetUserId = " + targetUserId + ", targetUserName = " + targetUserName + ", aprState = " + vo.getAprState() + ", aprType = " + vo.getAprType());
 
 					to = new InternetAddress();
@@ -850,7 +854,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 					contentBuilder.append("</td></tr></table>");
 				}
 				
-				ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), tenantId, locale), saveSendBoxFlag, EmailImportance.NORMAL);
+				ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), tenantId, locale), false, EmailImportance.NORMAL);
 
 				break;
 

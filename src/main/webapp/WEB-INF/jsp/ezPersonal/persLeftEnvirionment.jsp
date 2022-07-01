@@ -161,9 +161,6 @@
 					case "AbsenceEnvG":
 						window.parent.frames.right.document.location.href="/myoffice/ezPersonal/BujaeConf/ManageBujaeG_cross.aspx";
 						break;
-					case "Noti":
-						window.parent.frames.right.document.location.href="/myoffice/ezNotification/NotiEnviron.aspx";
-						break;
 					case "TimeZone":
 						window.parent.frames.right.document.location.href="/ezPersonal/timeZone.do";
 						break;
@@ -184,6 +181,9 @@
 						break;
 					case "ezPMSEnv":
 						window.parent.frames.right.document.location.href = "/ezPMS/pmsSetting.do";
+						break;
+					case "noti":
+						window.parent.frames.right.document.location.href="/ezPersonal/notificationSetting.do";
 						break;
 					default: 
 						break;
@@ -255,6 +255,12 @@
 		            <c:if test="${usePortal eq 'YES' }">
                    	<li><span class="sub_iconLNB tree_env_myPortal"></span><span class="list_text" id="UserInfo" name="UserInfo" onClick="Open_Func(this)"><spring:message code='ezPersonal.t172' /></span></li>
                    	</c:if>
+					<%-- 아래 2가지 상황 중 하나 이상 해당되어야 알림환경설정을 보여줌
+						1. 사용자에게 결재 메뉴가 표출되는 권한이 있을 때
+						2. 사용자에게 메일 메뉴가 표출되는 권한이 있으면서 서버 내에서 톡 푸시를 사용할 때 --%>
+					<c:if test="${isApprUsed == 'Y' or (isMailUsed == 'Y' and useEzTalkNotification)}">
+					<li><span class="sub_iconLNB tree_env_myPortal"></span><span class="list_text" id="noti" onclick="Open_Func(this)"><spring:message code='ezPersonal.noti.title' /></span></li>
+					</c:if>
                    	<li><span class="sub_iconLNB tree_env_myPortal"></span><span class="list_text" id="TimeZone" name="TimeZone" onClick="Open_Func(this)"><spring:message code='ezPersonal.s3' /></span></li>
 		        </ul>
 		        <h2 class="on">

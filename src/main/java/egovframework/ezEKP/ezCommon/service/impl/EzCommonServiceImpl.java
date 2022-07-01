@@ -2825,4 +2825,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void createTblAprpreview() throws Exception {
 		ezCommonDAO.createTblAprpreview();
 	}
+	
+	@Override
+	public void createTblDisableNotiItem() {
+		ezCommonDAO.createTblDisableNotiItem();
+	}
+	
 }

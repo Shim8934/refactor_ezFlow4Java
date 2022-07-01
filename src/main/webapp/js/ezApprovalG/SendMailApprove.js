@@ -131,9 +131,9 @@ function isNextBujea(aprLineList, sn) {
 }
 
 function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck, Method) {
-    var dosend = GetNoticeMail(to, type);  
+    /*var dosend = GetNoticeMail(to, type);  
         if (!dosend && isCheck == undefined)
-        return;
+        return;*/
     var id = to;
     var to = getmailaddress(id);
     var docExt = checkHWP(pDocID);
@@ -236,7 +236,9 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck, Method)
     			Content : Content,
     			Subject : Subject,
     			to  : to,
-    			from : from
+    			from : from,
+				targetUserId: id,
+				subType: getNotiSubType(type)
     		},
     		url : "/ezApprovalG/mail_intersend.do",
     		success: function(xml){
@@ -327,6 +329,36 @@ function GetNoticeMail(UserID, type) {
         else
             return false;
     }
+}
+
+/** @param type [susin, SIHANG, SIMSAALERT, hukyul] = 도착(1)
+ * [approve_complete] = 완료(2)
+ * [bansong, SIMSABANSONG, opinion] = 반송(3)
+ * [callback] = 회수(4)
+ * [hesong] = 수신문서 회송(5)
+ */
+function getNotiSubType(type) {
+	if (!type) {
+		return 1;
+	}
+
+	switch (type.toLowerCase()) {
+		case "susin":
+		case "sihang":
+		case "simsaalert":
+		case "hukyul":
+			return 1;
+		case "approve_complete":
+			return 2;
+		case "bansong":
+		case "simsabansong":
+		case "opinion":
+			return 3;
+		case "callback":
+			return 4;
+		case "hesong":
+			return 5;
+	}
 }
 
 function getmailaddress(id) {

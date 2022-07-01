@@ -2498,4 +2498,11 @@
         AND TENANT_ID = #tenantID#
         AND PHYSICALDELIVERYOFFICENAME = #companyID# 
 	</select>
+
+	<select id="EzOrganDAO.getCompanyId" parameterClass="Map" resultClass="String">
+		SELECT physicaldeliveryofficename
+		FROM tbl_usermaster
+		WHERE cn = #userId# AND tenantid = #tenantId#
+	</select>
+
 </sqlMap>

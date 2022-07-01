@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezPersonal.type.NotiPlatform;
+import egovframework.ezEKP.ezPersonal.type.NotiType;
 import egovframework.ezEKP.ezPersonal.vo.PersonalApprovMailVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO;
@@ -13,6 +15,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalGetQuickLinkMenuVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalNotiDisableItemVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalShareApprovalVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
@@ -212,4 +215,42 @@ public class EzPersonalDAO extends EgovAbstractDAO {
 	public List<String> getPopupUserGroupList(Map<String, Object> map) throws Exception {
 		return (List<String>) list("EzPersonalDAO.getPopupUserGroupList", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<PersonalNotiDisableItemVO> getAllNotiDisableItem(String userId, int tenantId) {
+		Map<String, Object> parameter = new HashMap<>();
+		parameter.put("userId", userId);
+		parameter.put("tenantId", tenantId);
+
+		return (List<PersonalNotiDisableItemVO>) list("EzPersonalDAO.getAllNotiDisableItem", parameter);
+	}
+
+	public PersonalNotiDisableItemVO findNotiDisableItem(String userId, NotiType type, NotiPlatform platform, int tenantId) {
+		Map<String, Object> parameter = new HashMap<>();
+		parameter.put("userId", userId);
+		parameter.put("mainType", type.mainType());
+		parameter.put("subType", type.subType());
+		parameter.put("platform", platform.intValue());
+		parameter.put("tenantId", tenantId);
+
+		return (PersonalNotiDisableItemVO) select("EzPersonalDAO.findNotiDisableItem", parameter);
+	}
+
+	public void clearNotiDisableItems(String userId, int tenantId) {
+		Map<String, Object> parameter = new HashMap<>();
+		parameter.put("userId", userId);
+		parameter.put("tenantId", tenantId);
+
+		delete("EzPersonalDAO.clearNotiDisableItems", parameter);
+	}
+
+	public void insertNotiDisableItems(String userId, int tenantId, List<PersonalNotiDisableItemVO> items) {
+		Map<String, Object> parameter = new HashMap<>();
+		parameter.put("userId", userId);
+		parameter.put("tenantId", tenantId);
+		parameter.put("items", items);
+
+		insert("EzPersonalDAO.insertNotiDisableItems", parameter);
+	}
+
 }
