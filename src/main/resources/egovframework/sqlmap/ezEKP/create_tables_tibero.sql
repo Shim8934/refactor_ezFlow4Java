@@ -8200,6 +8200,18 @@ CREATE TABLE "TBL_CAR_FORM" (
 	"MOBILE_FLAG" NUMBER(1, 0) DEFAULT 0
    ) ;
 --------------------------------------------------------
+--  DDL for Table TBL_USER_NOTI_DISABLE_ITEM
+--------------------------------------------------------
+
+  CREATE TABLE "TBL_USER_NOTI_DISABLE_ITEM"
+   (	"USER_ID" NVARCHAR2(80) NOT NULL,
+	"MAIN_TYPE" NUMBER(2) NOT NULL,
+	"SUB_TYPE" NUMBER(2) NOT NULL,
+	"PLATFORM" NUMBER(1) NOT NULL,
+	"TENANT_ID" NUMBER(5) NOT NULL,
+	CONSTRAINT "TBL_USER_NOTI_DISABLE_ITEM_PK" PRIMARY KEY (user_id, main_type, sub_type, platform, tenant_id)
+   ) ;
+--------------------------------------------------------
 --  DDL for Table TBL_VOTE_ANSWER
 --------------------------------------------------------
 
@@ -18460,6 +18472,13 @@ END;
 
   ALTER TABLE "TBL_WEBFOLDER_SHARE_SUB" ADD CONSTRAINT "TBL_WEBFOLDER_SHARE_SUB_FK1" FOREIGN KEY ("SHARE_ID", "TENANT_ID")
 	  REFERENCES "TBL_WEBFOLDER_SHARE" ("SHARE_ID", "TENANT_ID") ON DELETE CASCADE ENABLE;
+
+--------------------------------------------------------
+--  Ref Constraints for Table TBL_USER_NOTI_DISABLE_ITEM
+--------------------------------------------------------
+
+  ALTER TABLE "TBL_USER_NOTI_DISABLE_ITEM" ADD CONSTRAINT "FK_TBL_USER_NOTI_DISABLE_ITEM" FOREIGN KEY ("USER_ID", "TENANT_ID")
+	  REFERENCES "TBL_USERMASTER" ("CN", "TENANT_ID") ON DELETE CASCADE ENABLE;
 	  
 --------------------------------------------------------
 --  VIEW_EZAPPROVALG
@@ -18639,7 +18658,8 @@ CREATE TABLE "tbl_susinschedule" (
   "DOCSTATE" NVARCHAR2(12) DEFAULT NULL,
   "COMPANYID" VARCHAR2(20) DEFAULT NULL,
   "LANG" NVARCHAR2(10) DEFAULT NULL,
-  "TENANTID" NUMBER DEFAULT NULL
+  "TENANTID" NUMBER DEFAULT NULL,
+  CONSTRAINT SUSINSCHEDULE_PK PRIMARY KEY ("DOCID", "COMPANYID", "TENANTID")
 ) ;
 
 --------------------------------------------------------

@@ -1040,5 +1040,46 @@
 			user_type = 'GROUP'
 		]]>
      </select>
+
+	<select id="EzPersonalDAO.getAllNotiDisableItem" parameterClass="Map" resultClass="egovframework.ezEKP.ezPersonal.vo.PersonalNotiDisableItemVO">
+		SELECT
+			main_type as mainType, sub_type as subType, platform
+		FROM
+			tbl_user_noti_disable_item
+		WHERE
+			user_id = #userId#
+			AND tenant_id = #tenantId#
+	</select>
+
+	<select id="EzPersonalDAO.findNotiDisableItem" parameterClass="Map" resultClass="egovframework.ezEKP.ezPersonal.vo.PersonalNotiDisableItemVO">
+		SELECT
+			main_type as mainType, sub_type as subType, platform
+		FROM
+			tbl_user_noti_disable_item
+		WHERE
+			user_id = #userId#
+			AND main_type = #mainType#
+			AND sub_type = #subType#
+			AND platform = #platform#
+			AND tenant_id = #tenantId#
+	</select>
+
+	<delete id="EzPersonalDAO.clearNotiDisableItems" parameterClass="Map">
+		DELETE FROM
+			tbl_user_noti_disable_item
+		WHERE
+			user_id = #userId#
+			AND tenant_id = #tenantId#
+	</delete>
+
+	<insert id="EzPersonalDAO.insertNotiDisableItems" parameterClass="Map">
+		INSERT ALL
+		<iterate property="items">
+			INTO tbl_user_noti_disable_item (user_id, main_type, sub_type, platform, tenant_id)
+			values (#userId#, #items[].mainType#, #items[].subType#, #items[].platform#, #tenantId#)
+		</iterate>
+		SELECT 1 FROM DUAL
+	</insert>
+
 </sqlMap>
 

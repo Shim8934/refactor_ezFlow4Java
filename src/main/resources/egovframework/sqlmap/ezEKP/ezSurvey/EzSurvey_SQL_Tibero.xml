@@ -632,6 +632,20 @@
 			) d4
 	</select>
 	
+	<select id="EzSurveyDAO.getUserAllDepartmentIdList" resultClass="String">
+		select
+			d4.DEPT_CD_PATH
+		from
+			(
+				select * from tbl_deptmaster d1 where d1.cn = #deptId# and d1.tenant_id = #tenantId#
+				union
+				select * from tbl_deptmaster d2 where d2.cn = #companyId# and d2.tenant_id = #tenantId#
+				union
+				select d3.* from tbl_deptmaster d3 join tbl_addjobmaster a on d3.cn = a.deptid and a.cn = #userId# and d3.tenant_id = a.tenant_id
+				where d3.tenant_id = #tenantId#
+			) d4
+	</select>
+
 	<select id="EzSurveyDAO.getReceivedSurveyList" resultClass="Long">
 		select distinct(survey_id) from tbl_survey_participant a
 			join tbl_usermaster b

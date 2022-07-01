@@ -4427,6 +4427,46 @@
 		)
     </statement>
     
+    <select id="EzCommonDAO.checkSurveySubDeptYNColumn">
+        <![CDATA[
+            SELECT 
+                SUBDEPTYN
+            FROM 
+                TBL_SURVEY_PARTICIPANT
+            WHERE
+				ROWNUM = 1
+        ]]>
+    </select>
+    <statement id="EzCommonDAO.addSurveySubDeptYNColumn">
+        ALTER TABLE 
+        	TBL_SURVEY_PARTICIPANT 
+		ADD (
+			SUBDEPTYN CHAR(1 CHAR) DEFAULT 'N'
+		)
+    </statement>
+    
+    <select id="EzCommonDAO.checkTblScheduleComplete">
+		<![CDATA[
+			SELECT
+				SCHEDULEID
+			FROM
+				TBL_SCHEDULE_COMPLETE
+			WHERE
+				ROWNUM = 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.createTblScheduleComplete"> 
+		CREATE TABLE TBL_SCHEDULE_COMPLETE (
+		    SCHEDULEID NUMBER(10) NOT NULL,
+		    REPEATCOUNT NUMBER(10) NOT NULL,
+			ISALLREP NCHAR(1) DEFAULT 'N',
+		    STARTDATE DATE NOT NULL,
+		    TENANT_ID NUMBER(5),
+		    COMPANYID VARCHAR2(40),
+		    CONSTRAINT TBL_SCHEDULE_COMPLETE_PK PRIMARY KEY (SCHEDULEID, REPEATCOUNT, ISALLREP, STARTDATE)
+		)
+	</statement>
+
 	<select id="EzCommonDAO.checkMailOutOfOfficeTemplate" resultClass="String">
 		<![CDATA[
 			SELECT 
@@ -4571,6 +4611,23 @@
 	}
     </statement>
 
+	<select id="EzCommonDAO.checkSusinScheduleOffsetColumn">
+        <![CDATA[
+            SELECT 
+                OFFSET
+            FROM 
+                TBL_SUSINSCHEDULE
+			WHERE
+				ROWNUM = 1
+        ]]>
+    </select>
+	<statement id="EzCommonDAO.addSusinScheduleOffsetColumn">
+        ALTER TABLE 
+        	TBL_SUSINSCHEDULE 
+		ADD
+			OFFSET CHAR(10 CHAR) DEFAULT ''
+    </statement>
+
    	<select id="EzCommonDAO.checkReceiptHistoryListoption" parameterClass="Map" resultClass="String">
 	<![CDATA[
 		SELECT
@@ -4603,6 +4660,23 @@
 	]]>
    	</insert>
 
+    <select id="EzCommonDAO.checkAprDocGroupInfoTypeColumn">
+        <![CDATA[
+            SELECT 
+                TYPE
+            FROM 
+                TBL_APRDOCGROUPINFO
+			WHERE
+				ROWNUM = 1
+        ]]>
+    </select>
+    <statement id="EzCommonDAO.addAprDocGroupInfoTypeColumn">
+        ALTER TABLE 
+        	TBL_APRDOCGROUPINFO 
+		ADD
+			TYPE CHAR(10 CHAR) NOT NULL
+    </statement>
+
 	<statement id="EzCommonDAO.alterTblDevMaster">
     <![CDATA[
     {call
@@ -4625,4 +4699,18 @@
 	}
 	]]>
 	</statement>
+
+	<select id="EzCommonDAO.checkTblDisableNotiItem">SELECT user_id FROM tbl_user_noti_disable_item WHERE ROWNUM = 1</select>
+	<statement id="EzCommonDAO.createTblDisableNotiItem">
+		CREATE TABLE tbl_user_noti_disable_item (
+			user_id NVARCHAR2(80) NOT NULL,
+			main_type NUMBER(2) NOT NULL,
+			sub_type NUMBER(2) NOT NULL,
+			platform NUMBER(1) NOT NULL,
+			tenant_id NUMBER(5) NOT NULL,
+			CONSTRAINT "tbl_user_noti_disable_item_pk" PRIMARY KEY (user_id, main_type, sub_type, platform, tenant_id),
+			CONSTRAINT "tbl_user_noti_disable_item_fk" FOREIGN KEY (user_id, tenant_id) REFERENCES tbl_usermaster (cn, tenant_id) ON DELETE CASCADE
+		)
+	</statement>
+
 </sqlMap>
