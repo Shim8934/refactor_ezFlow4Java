@@ -4427,4 +4427,22 @@
 	]]>
     </statement>
     
+    <statement id="EzCommonDAO.createTblAprpreview"> 
+    	CREATE TABLE TBL_APRPREVIEW (
+           	USERID VARCHAR(80) NOT NULL,
+           	PREVIEW VARCHAR(50),
+			TENANT_ID MEDIUMINT(5) NOT NULL, 
+			PRIMARY KEY (USERID , TENANT_ID)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+	</statement>
+	<select id="EzCommonDAO.checkTblAprpreview">
+		<![CDATA[
+		SELECT 
+			USERID
+		FROM 
+			TBL_APRPREVIEW
+		LIMIT 1
+		]]>
+	</select>	
+    
 </sqlMap>

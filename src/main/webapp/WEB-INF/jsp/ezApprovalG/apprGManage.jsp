@@ -128,6 +128,7 @@
 		    var PreviewH_Move = false;
 		    var selobj = null;
 		    var previewInfo = "<c:out value = '${previewInfo}'/>";
+		    var useAprPreview = "<c:out value = '${useAprPreview}'/>";
 		    var extensionattribute4 = "<c:out value = '${userInfo.gyumJik}'/>";
 		    var extensionattribute5 = "<c:out value = '${userInfo.extensionattribute5}'/>";
 		    var absenceAllClear = "<c:out value = '${absenceAllClear}'/>";
@@ -140,7 +141,7 @@
             var isGroupDoc = "";
         	var groupDocListCnt = 0;
         	var groupDocDelCnt = 0;
-		    
+        	
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 		            return false;
@@ -535,17 +536,22 @@
 					}
 				}		
 				
-				// 미리보기 영역 관련 온로드 설정
-				if (pPreviewShow_HOW == "") {
-					if (previewInfo != null && previewInfo.trim() != "") {
-						pPreviewShow_HOW = previewInfo;
-					} else {
-						pPreviewShow_HOW = "OFF";
+				// 미리보기 영역 관련 온로드 설정, 테넌트 컨피그에 따라 제어
+				if (useAprPreview == "YES") { // 전자결재 미리보기 영역 활성화 시
+					if (pPreviewShow_HOW == "") {
+						if (previewInfo != null && previewInfo.trim() != "") {
+							pPreviewShow_HOW = previewInfo;
+						} else {
+							pPreviewShow_HOW = "OFF";
+						}
 					}
+					PreviewRayerChange(pPreviewShow_HOW, 'Manage');
+					/* 2022-06-29 홍승비 - 우측 미리보기 영역을 위한 온로드 시 리사이즈 동작 추가 */
+			    	Window_resize();
+				} else {
+					pPreviewShow_HOW = "OFF";
+					PreviewRayerChange(pPreviewShow_HOW, 'Manage');
 				}
-				PreviewRayerChange(pPreviewShow_HOW, 'Manage');
-				/* 2022-06-29 홍승비 - 우측 미리보기 영역을 위한 온로드 시 리사이즈 동작 추가 */
-		    	Window_resize();
 		    }
 			
 		    function change_statusCell() {
@@ -2510,7 +2516,7 @@
 		        <!-- <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li> -->
 		       
 		       <%-- 전자결재 우측 미리보기 상단 아이콘 --%>
-		        <div id="right" class="sub_frameIcon" style="float:right;">	
+		        <div id="right" class="sub_frameIcon" <c:if test="${useAprPreview != 'YES'}">style="display:none;"</c:if>>	
 					<div class="sub_frameIconUL" style="width:auto !important;">
 					   	<p class="frameIconLI"><span class="icon16 btn_noframe" id="PreViewNone" onclick="PreviewRayerChange('NONE', 'Manage')"></span></p>
 					    <p class="frameIconLI"><span class="icon16 btn_leftframe" id="PreViewleft" onclick="PreviewRayerChange('H', 'Manage')"></span></p>

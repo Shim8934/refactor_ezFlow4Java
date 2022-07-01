@@ -115,6 +115,7 @@
 		    var PreviewH_Move = false;
 		    var selobj = null;
 		    var previewInfo = "<c:out value = '${previewInfo}'/>";
+		    var useAprPreview = "<c:out value = '${useAprPreview}'/>";
  	        
 	        document.onselectstart = function () { return false; };
 	
@@ -307,17 +308,22 @@
 		            AddOption(sel_status, '<spring:message code="ezApproval.t854"/>', 'Y');
 	            }
 	            
-	            // 미리보기 영역 관련 온로드 설정
-	            if (pPreviewShow_HOW == "") {
-					if (previewInfo != null && previewInfo.trim() != "") {
-						pPreviewShow_HOW = previewInfo;
-					} else {
-						pPreviewShow_HOW = "OFF";
+	            // 미리보기 영역 관련 온로드 설정, 테넌트 컨피그에 따라 제어
+	            if (useAprPreview == "YES") { // 전자결재 미리보기 영역 활성화 시
+		            if (pPreviewShow_HOW == "") {
+						if (previewInfo != null && previewInfo.trim() != "") {
+							pPreviewShow_HOW = previewInfo;
+						} else {
+							pPreviewShow_HOW = "OFF";
+						}
 					}
+					PreviewRayerChange(pPreviewShow_HOW, 'Container');
+					/* 2022-06-29 홍승비 - 우측 미리보기 영역을 위한 온로드 시 리사이즈 동작 추가 */
+			    	Window_resize();
+	            } else {
+					pPreviewShow_HOW = "OFF";
+					PreviewRayerChange(pPreviewShow_HOW, 'Container');
 				}
-				PreviewRayerChange(pPreviewShow_HOW, 'Container');
-				/* 2022-06-29 홍승비 - 우측 미리보기 영역을 위한 온로드 시 리사이즈 동작 추가 */
-		    	Window_resize();
 	        };
 			
 	        // 부재자정보 체크
@@ -1928,7 +1934,7 @@
 	            </c:if>
 
 				<%-- 전자결재 우측 미리보기 영역 상단 아이콘 --%>
-			    <div id="right" class="sub_frameIcon" style="float:right;">	
+			    <div id="right" class="sub_frameIcon" <c:if test="${useAprPreview != 'YES'}">style="display:none;"</c:if>>	
 					<div class="sub_frameIconUL" style="width:auto !important;">
 					   	<p class="frameIconLI"><span class="icon16 btn_noframe" id="PreViewNone" onclick="PreviewRayerChange('NONE', 'Container')"></span></p>
 					    <p class="frameIconLI"><span class="icon16 btn_leftframe" id="PreViewleft" onclick="PreviewRayerChange('H', 'Container')"></span></p>

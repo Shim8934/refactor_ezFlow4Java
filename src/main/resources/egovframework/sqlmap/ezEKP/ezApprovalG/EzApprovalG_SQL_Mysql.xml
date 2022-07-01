@@ -34959,5 +34959,41 @@
 		)
 		LIMIT 1
     </select>
+    
+    <!--2020-11-17 정소미 : 전자결재 미리보기 설정-->
+	<select id="EzApprovalG.getApprovConfig" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				PreView
+			FROM 
+				tbl_aprpreview
+			WHERE  
+				TENANT_ID = #v_TENANTID#
+			AND
+				USERID = #v_USERID#
+		]]>
+	</select>
+	<update id="EzApprovalG.setApprovConfig" parameterClass="Map">
+		<![CDATA[
+			UPDATE tbl_aprpreview
+        	SET 
+              	PreView = #v_PREVIEW#
+        	WHERE  
+        		tenant_id = #v_TENANTID#
+        	AND
+        		UserID = #v_USERID#
+		]]>
+	</update>
+	
+	<insert id="EzApprovalG.setApprovConfig2" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO tbl_aprpreview ( 
+				UserID,		PreView, 	tenant_id
+			)
+      		VALUES ( 
+      			#v_USERID#, #v_PREVIEW#, #v_TENANTID# 
+      		)
+		]]>
+	</insert>
 	
 </sqlMap>

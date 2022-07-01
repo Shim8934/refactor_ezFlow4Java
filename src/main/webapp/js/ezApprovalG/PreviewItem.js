@@ -913,7 +913,9 @@ function Window_resize() {
                 PreviewMode_ChangeBtn();
             }
             else {
-                document.getElementById("right").style.display = "";
+            	if (useAprPreview == "YES") {
+            		document.getElementById("right").style.display = "";
+            	}
             }
             if (pPreviewShow_HOW.trim() == "H") {
                 if (pMailListDiv_H == 0 || pMailPreVDiv_H == 0) {
@@ -968,96 +970,6 @@ function Window_resize() {
     	console.log(e);
     }
 }
-
-/* 2019-07-08 홍승비 - 게시물 등록, 삭제, 복사, 이동시 좌측메뉴의 선택된 하위게시판 확장 닫히지 않도록 수정 */
-//레프트 메뉴카운트 업뎃용
-function leftCountRf(pDestBoardIDs) {
-	// 기존 코드 주석처리
-/*	var pDiv, pId, pValue, pNodeID, pTreeID;
-
-	if (window.parent.frames["left"] != undefined) {
-	    var h2 = window.parent.frames["left"].document.getElementsByTagName("h2");
-	    var span = window.parent.frames["left"].document.getElementsByTagName("span");
-	    
-	    
-	    // 2018-02-23 천성준 
-	     게시판  게시물 등록, 삭제, 복사, 이동시 왼쪽 게시판 폴더 볼드 해제되는 버그 수정 
-	    for (var j = 0; j < span.length; j++) {
-	    	if (span[j].className == "node_selected") {
-	    		pNodeID = span[j].id.replace("spn_","");
-	    		pTreeID = pNodeID.split("_")[0];
-	    	}
-	    }
-	    
-	    // 2018-12-31 홍승비 - 게시판명의 변경된 태그(div -> span)로 id 찾기 + 게시판 클릭 동작 변경
-	    for (var i = 0; i < h2.length; i++) {
-	        if (h2[i].className == "on") {
-	            pId = h2[i].getElementsByClassName("h2Title")[0].id;
-	            pId = pId.replace("TreeCtr", "TreeCtrl");
-	            pValue = h2[i].getElementsByClassName("h2Title")[0].getAttribute("value");
-	            window.parent.frames["left"].treeViewRefresh(pId, pValue);
-	            window.parent.frames["left"].node_select(pNodeID, "", pTreeID, "");
-	            break;
-	        }
-	    }
-	}*/
-	var pNodeID = "";
-	var leftFrame;
-	
-	// 즐겨찾기탭, 관리자단탭에서 좌측메뉴 접근
-	if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1) {
-		leftFrame = window.parent.parent.frames["left"];
-    } else if (window.parent.location.href.indexOf("/admin/ezBoard") > -1) {
-    	leftFrame = window.parent.parent.frames["board_menu"];
-    } else {
-    	leftFrame = window.parent.frames["left"];
-    }
-	
-	if (leftFrame != undefined) {
-	    var h2 = leftFrame.document.getElementsByTagName("h2");
-	    var span = leftFrame.document.getElementsByTagName("span");
-	    
-	    // 현재 선택된 하위게시판명 div의 id 저장
-	    for (var j = 0; j < span.length; j++) {
-	    	if (span[j].className == "node_selected") {
-	    		pNodeID = span[j].id.replace("spn_","");
-	    	}
-	    }
-	    
-	    if (pNodeID != "") {
-	    	leftFrame.refreshItemCnt(pNodeID);
-	    }
-	    
-	    // 게시판을 선택하여 등록, 복사, 이동 시의 목표게시판 게시물 카운트 갱신 (해당 게시판트리가 확장된 경우에만 게시물 개수 갱신 확인 가능)
-	    if (pDestBoardIDs != null && pDestBoardIDs != "") {
-	    	var destBoardIDs = pDestBoardIDs.split(";"); // 갱신 대상 게시판이 여러개인 경우 ';' 기호로 잘라서 루프
-	    	var destBoardLength = destBoardIDs.length;
-	    	var tempDestBoardDiv = leftFrame.document.getElementsByClassName("node_div");
-	    	var tempLength = tempDestBoardDiv.length;
-	    	
-	    	for (var d = 0; d < destBoardLength; d++) {
-	    		if (destBoardIDs[d] != null && destBoardIDs[d].trim() != "") {
-			    	for (var i = 0; i < tempLength; i++) {
-			    		if (tempDestBoardDiv[i].id.indexOf("FromTreeView") > -1) { // 마이게시판에 등록된 하위게시판 
-			    		    if (tempDestBoardDiv[i].getAttribute("data3") == destBoardIDs[d]) { 
-			    		    	leftFrame.refreshItemCnt(tempDestBoardDiv[i].id); 
-			    		    	break; 
-			    		    	} 
-		    		    } else { // 일반 하위게시판 
-		    		    	if (tempDestBoardDiv[i].getAttribute("data1") == destBoardIDs[d]) { 
-		    		    		leftFrame.refreshItemCnt(tempDestBoardDiv[i].id); 
-		    		    		break; 
-		    		    	} 
-		    		    } 
-			    	}
-	    		} else {
-	    			break;
-	    		}
-	    	}
-	    }
-	}
-}
-
 
 //무적의 자바 인코더
 function javaURLEncode(str) {
@@ -1176,32 +1088,6 @@ function pre_chk_Passwd_Complete(Rtn)
         document.getElementById("ifrmPreViewH").src = openLocation;
     }
 }
-/*
-function scroll() {
-	var BoardList_BODYHeight = document.getElementById("BoardList_BODY").clientHeight;
-	var BoardListDivHeight = document.getElementById("BoardListDiv").clientHeight;
-	
-	 if (BoardList_BODYHeight > BoardListDivHeight) {
-		if ($("#BoardList_THEAD tr th#forScroll").length > 0) {
-			$("#BoardList_THEAD tr th#forScroll").remove();
-		}
-	} else {
-		if ($("#BoardList_THEAD tr th#forScroll").length < 1) {
-			
-			$("#BoardList_THEAD tr").append("<th></th>");
-			
-				var lastTh = $("#BoardList_THEAD tr th").last();
-				lastTh.attr("id", "forScroll");
-				lastTh.css("width", "7px");
-		}
-	}
-	 
-	var lastTh = $("#BoardList_TH th").last();
-	if (lastTh.attr("id") == null) {
-		lastTh.css("display", "none");
-	}
-}
-*/
 
 /* 2022-06-30 홍승비 - 일괄기안된 문서인지 판별하는 ajax 함수 (Y/N) */
 function checkIsGroupDoc(pDocID, pOrgCompanyID) {
