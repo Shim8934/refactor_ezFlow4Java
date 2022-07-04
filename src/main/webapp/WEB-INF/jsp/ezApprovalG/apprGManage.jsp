@@ -484,30 +484,36 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
+		        
+		        /* 2022-07-04 홍승비 - 우측 미리보기 영역의 표출여부 스타일 속성을 온로드 초기에 제어 */
+	        	if (useAprPreview == "YES" && previewInfo == "H") {
+	        		document.getElementById("PreviewRayerH").style.display = "";
+	        	}
+		        
 		        try {
-		        var toDay = new Date();
-		        var toDayYear = parseInt(nowDate.substring(0,4));
-		        var minusYear = parseInt(nowDate.substring(0,4)) - parseInt(pOpenYaer);
-				
-		        var cell = document.getElementById("sel_year");
-
-		        var selectedCell = $("#sel_year option:selected").val();
-		        
-		        while(cell.hasChildNodes()) {
-		        	cell.removeChild(cell.firstChild);	
-		        }
-		        
-		        var defaultCell = '<spring:message code="ezApprovalG.kmsg01"/>';
-		        
-		        AddOption(sel_year, defaultCell, "ALL");
-		        
-		        for (var i = toDayYear; i >= toDayYear - minusYear ; i--) {
-		            AddOption(sel_year, i, i);
-		        }
-		        if(selectedCell !== undefined) {
-		        	document.getElementById("sel_year").value = selectedCell;
-		        }
-		        checkBujaeInfo();
+			        var toDay = new Date();
+			        var toDayYear = parseInt(nowDate.substring(0,4));
+			        var minusYear = parseInt(nowDate.substring(0,4)) - parseInt(pOpenYaer);
+					
+			        var cell = document.getElementById("sel_year");
+	
+			        var selectedCell = $("#sel_year option:selected").val();
+			        
+			        while(cell.hasChildNodes()) {
+			        	cell.removeChild(cell.firstChild);	
+			        }
+			        
+			        var defaultCell = '<spring:message code="ezApprovalG.kmsg01"/>';
+			        
+			        AddOption(sel_year, defaultCell, "ALL");
+			        
+			        for (var i = toDayYear; i >= toDayYear - minusYear ; i--) {
+			            AddOption(sel_year, i, i);
+			        }
+			        if(selectedCell !== undefined) {
+			        	document.getElementById("sel_year").value = selectedCell;
+			        }
+			        checkBujaeInfo();
 		        } catch (e) {
 		            hideProgress();
 		        }

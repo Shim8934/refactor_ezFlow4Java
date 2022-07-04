@@ -157,6 +157,11 @@
 	                document.body.style.UserSelect = 'none';
 	            }
 	            
+	            /* 2022-07-04 홍승비 - 우측 미리보기 영역의 표출여부 스타일 속성을 온로드 초기에 제어 */
+	        	if (useAprPreview == "YES" && previewInfo == "H") {
+	        		document.getElementById("PreviewRayerH").style.display = "";
+	        	}
+	            
 	            var toDayYear = parseInt(nowDate.substring(0,4));
 	            var minusYear = parseInt(nowDate.substring(0,4)) - parseInt(pOpenYaer);
 	            for (var i = toDayYear; i >= toDayYear - minusYear ; i--)
