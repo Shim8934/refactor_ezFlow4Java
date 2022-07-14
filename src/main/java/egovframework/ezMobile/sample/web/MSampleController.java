@@ -12,12 +12,14 @@ import javax.servlet.http.HttpServletResponse;
 import egovframework.ezMobile.ezApprovalG.dao.MApprovalGDAO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAbsenteeAddJobInfoVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -98,6 +100,7 @@ public class MSampleController extends EgovFileMngUtil {
 	}
 
 	@RequestMapping(value = "/ezConn/gbptest.do")
+	@ResponseBody
 	public void testtest(HttpServletRequest request,  HttpServletResponse response) throws Exception {
 
 		Map<String, Object> map = new HashMap<>();

@@ -739,6 +739,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	
 	//사용자 초기화면 설정 실행 함수
 	@RequestMapping(value = "/ezNewPortal/updateUserStartPage.do", method=RequestMethod.POST)
+	@ResponseBody
 	public void updateUserStartPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("updateUserStartPage Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -753,6 +754,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	
 	//테마 초기화 실행 함수
 	@RequestMapping(value = "/ezNewPortal/deleteUserThemeSetting.do", method=RequestMethod.POST)
+	@ResponseBody
 	public void deleteUserThemeSetting(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("deleteUserThemeSetting Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -766,6 +768,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	
 	//사용자 기본 테마 설정 실행 함수
 	@RequestMapping(value = "/ezNewPortal/updateUserThemeSetting.do", method=RequestMethod.POST)
+	@ResponseBody
 	public void updateUserThemeSetting(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("updateUserThemeSetting Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);

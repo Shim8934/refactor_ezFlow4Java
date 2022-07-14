@@ -2033,6 +2033,7 @@ public class EzAddressController{
 	 * 주소록 내보내기 실행 함수
 	 */
 	@RequestMapping(value = "/ezAddress/excelExport.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void addressExport(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model, HttpServletResponse response) throws Exception {		
 		logger.debug("addressExport started.");
 		
@@ -2413,6 +2414,7 @@ public class EzAddressController{
 	 * 주소록 양식 다운로드 함수
 	 */
 	@RequestMapping(value = "/ezAddress/addressFormatDownload.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void addressFormatDownload(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model, HttpServletResponse response) throws Exception {		
 		logger.debug("addressFormatDownload started.");
 		

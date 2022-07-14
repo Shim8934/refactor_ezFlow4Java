@@ -419,6 +419,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	}
 
 	@RequestMapping(value="/ezWebFolder/downloadAttach.do", method = RequestMethod.GET, produces="application/zip")
+	@ResponseBody
 	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("downloadAttach start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
@@ -1012,6 +1013,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	}
 
 	@RequestMapping(value="/ezWebFolder/downloadVersion.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void downloadVersion(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("downloadAttach start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);

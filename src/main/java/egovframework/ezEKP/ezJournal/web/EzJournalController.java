@@ -1172,6 +1172,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * 업무일지 첨부파일 다운로드
 	 */
 	@RequestMapping(value = "/ezJournal/journalAttachDown.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void journalAttachDown(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("journalAttachDown started");
 		
@@ -1225,6 +1226,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * 업무일지 모든 첨부파일 다운로드
 	 */
 	@RequestMapping(value = "/ezJournal/journalAllAttachDown.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void journalAllAttachDown(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("journalAllAttachDown started");
 		
@@ -1908,6 +1910,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * @param loginCookie
 	 */
 	@RequestMapping(value="/ezJournal/sendJournalRecvMail.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void sendJournalRecvMail(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
 		logger.debug("sendJournalRecvMail started");
 		

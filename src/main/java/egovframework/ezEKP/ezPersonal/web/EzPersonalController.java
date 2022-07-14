@@ -2021,6 +2021,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 	 * 포탈 환경설정 개인정보관리 모바일설정 전체 사용/사용안함 업데이트 메서드 - 2018.10.22 (yjks)
 	 */
 	@RequestMapping(value = "/ezPersonal/setMobileManaged.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void setMobileManaged(@CookieValue("loginCookie") String loginCookie,
 			HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("setMobileManaged started");
@@ -2058,6 +2059,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 	 * 포탈 환경설정 개인정보관리 모바일설정 모바일 기기 삭제 메서드 - 2018.10.22 (yjks)
 	 */
 	@RequestMapping(value = "/ezPersonal/deleteMobileDeviceManaged.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void deleteMobileDeviceManaged(@CookieValue("loginCookie") String loginCookie,
 			HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("deleteMobileDeviceManaged started");
@@ -2088,6 +2090,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 	 *  포탈 환경설정 개인정보관리 모바일설정 모바일 기기 사용여부 저장 메서드 - 2018.10.22 (yjks)
 	 */
 	@RequestMapping(value= "/ezPersonal/setMobileDeviceInfo.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void setMobileDeviceInfo(@CookieValue("loginCookie") String loginCookie,
 			HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("setMobileDeviceInfo started");

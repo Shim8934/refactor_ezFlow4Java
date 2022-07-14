@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -301,6 +302,7 @@ public class EzSurveyGWController {
 	}
 	
 	@RequestMapping(value = "/rest/ezsurvey/attachfile/file-download", method=RequestMethod.GET, produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
+	@ResponseBody
 	public void getFileDownload(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String filePath   = request.getParameter("filePath")   != null ? request.getParameter("filePath")  : "";
 		String fileName   = request.getParameter("fileName")   != null ? request.getParameter("fileName")  : "";

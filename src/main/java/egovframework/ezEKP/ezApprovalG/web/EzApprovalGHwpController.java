@@ -1108,6 +1108,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	 * 결재문서 > 저장버튼 다운로드
 	 */
 	@RequestMapping(value = "/ezApprovalG/downloadHWPdoc.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		
 		LOGGER.debug("============ downloadHWPdoc started ============");
@@ -1981,6 +1982,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	}	
 	
 	@RequestMapping(value = "/ezApprovalG/downloadAttachForHwp.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void downloadAttach(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LOGGER.debug("downloadAttachForHwp started");
 		
@@ -2258,6 +2260,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	 * 일괄기안 안추가시 파일첨부, 문서첨부, 의견, 분리첨부 복제
 	 */
 	@RequestMapping(value = "/ezApprovalG/copyDocAttachHwp.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
 	public void copyDocAttachHwp(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, ApprGAttachOptionVO apprGAttachOptionVO) throws Exception {
 		LOGGER.debug("copyDocAttachHwp started");
 
@@ -2281,6 +2284,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	 * 일괄기안 안추가시 결재선 복제
 	 */
 	@RequestMapping(value = "/ezApprovalG/copyAprLine.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
 	public void copyAprLine(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, ApprGAttachOptionVO apprGAttachOptionVO) throws Exception {
 		LOGGER.debug("copyAprLine started");
 		

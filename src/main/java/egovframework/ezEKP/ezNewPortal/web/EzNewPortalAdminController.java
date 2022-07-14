@@ -487,6 +487,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezNewPortal/updateMenu.do", method=RequestMethod.POST)
+	@ResponseBody
 	public void updateMenu(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("updateMenu started.");
 		
@@ -521,6 +522,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezNewPortal/insertMenu.do", method=RequestMethod.POST)
+	@ResponseBody
 	public void insertMenu(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("insertMenu started.");
 		
@@ -547,6 +549,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	 * 관리자 메뉴 삭제
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/deleteMenu.do", method=RequestMethod.POST)
+	@ResponseBody
 	public void deleteMenu(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("deleteMenu started.");
 		

@@ -949,6 +949,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	 * 모바일 G/W 이메일 [GET] 메일 쓰기에 필요한 옵션 정보 조회
 	 */
 	@RequestMapping(value="/mobile/ezemail/mail-write/option", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@ResponseBody
 	public void mMailWriteOption(HttpServletRequest request) throws Exception {
 		LOGGER.debug("MOBILE G/W MAIL mMailWriteOption started.");
 //		String serverName = request.getHeader("x-user-host");

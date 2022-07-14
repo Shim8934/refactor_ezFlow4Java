@@ -1117,6 +1117,7 @@ public class EzPollController extends EgovFileMngUtil {
 	}	
 
 	@RequestMapping(value="/ezPoll/downloadAttach.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("Download attach is running!");	
 		LoginSimpleVO loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
@@ -1478,7 +1479,7 @@ public class EzPollController extends EgovFileMngUtil {
 	}	
 	
 	@RequestMapping(value="/ezPoll/undoModifyVote.do", method = RequestMethod.POST)
-	//@ResponseBody
+	@ResponseBody
 	public void undoModifyVote(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("Undo modify vote is running!");
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);

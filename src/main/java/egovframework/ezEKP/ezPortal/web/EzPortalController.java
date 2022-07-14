@@ -898,6 +898,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	 * 포탈 - 마이포탈 호출 함수
 	 */
 	@RequestMapping(value = "/ezPortal/myPortal.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void myPortal (HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("myPortal started");
 		
@@ -1054,6 +1055,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	 * 포탈 - urlPortlet 호출 함수
 	 */
 	@RequestMapping(value = "/ezPortal/urlPortlet.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void urlPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("urlPortlet started");
 
@@ -3991,6 +3993,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	 * 포탈 - boardPortlet 실행 함수
 	 */
 	@RequestMapping(value = "/ezPortal/boardPortlet.do", method=RequestMethod.GET)
+	@ResponseBody
 	public void boardPortlet(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, Locale locale, HttpServletRequest req, HttpServletResponse resp) throws Exception {
 		logger.debug("boardPortlet started");
 		
@@ -4079,6 +4082,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	 * 공지사항 쿠키 생성
 	 * */
 	@RequestMapping(value="/ezPortal/setPopupCookie.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void setPopupCookie(HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 		logger.debug("setPopupCookie is started.");
 		String cookieName = request.getParameter("cookieName");

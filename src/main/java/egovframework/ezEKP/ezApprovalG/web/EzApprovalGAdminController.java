@@ -1298,6 +1298,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G관리 문서함관리 문서함타입 등록 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGInsertContType.do", method = RequestMethod.POST)	
+	@ResponseBody
 	public void apprGInsertContType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("apprGInsertContType started.");
 		
@@ -3001,6 +3002,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G관리 결재건수조회 엑셀저장 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/ezStatistics/excelExportOut.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void excelExportOut(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("excelExportOut started.");
 		

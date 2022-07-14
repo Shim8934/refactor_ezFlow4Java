@@ -665,6 +665,7 @@ public class EzSystemAdminController {
 	 * 2021-12-30 이사라 : 로그아웃시간, 상태 추가
 	 */
 	@RequestMapping(value = "/admin/ezSystem/systemLoginHistExcelExport.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void statisticsMailLogExcelExport(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request,
 			String searchKeycode, String searchKeyword, String searchKeycodeForStatus, String startDate, String endDate, Locale locale, HttpServletResponse response)  throws Exception {
 		logger.debug("systemLoginHistExcelExport controller started.");
@@ -2095,6 +2096,7 @@ public class EzSystemAdminController {
 	 * 2022-01-11 이사라
 	 */
 	@RequestMapping(value = "/admin/ezSystem/systemAccessHistExcelExport.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void statisticsAdminAccessLogExcelExport(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			String searchKeycode, String searchKeyword, String searchKeycodeForRoll, String startDate, String endDate, Locale locale, HttpServletResponse response)  throws Exception {
 		logger.debug("systemAccessHistExcelExport controller started.");
@@ -2477,6 +2479,7 @@ public class EzSystemAdminController {
 	 * 2022-01-24 이사라
 	 */
 	@RequestMapping(value = "/admin/ezSystem/permissionChHistExcelExport.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void statisticsPermissionChHistExcelExportExcelExport(@CookieValue("loginCookie") String loginCookie,
 			HttpServletRequest request, String searchKeycode, String searchKeyword, String searchKeycodeForRoll,
 			String startDate, String endDate, Locale locale, HttpServletResponse response) throws Exception {

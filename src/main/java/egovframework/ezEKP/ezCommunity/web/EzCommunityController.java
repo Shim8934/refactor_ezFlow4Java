@@ -207,6 +207,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 * 커뮤니티 이미지 출력함수(ezCommon_Interface)
 	 */
 	@RequestMapping(value="/ezCommunity/getCommunityThumInfo.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void getCommunityThumInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
         String pType = request.getParameter("type");
@@ -1408,6 +1409,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 * 게시판 첨부파일 다운로드 실행함수
 	 */
 	@RequestMapping(value = "/ezCommunity/getCommunityAttachInfo.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void getCommunityAttachInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("getCommunityAttachInfo started.");
 		
@@ -2227,6 +2229,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 * 설문조사 등록 실행함수
 	 */
 	@RequestMapping(value = "/ezCommunity/pollAddOkGo.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void pollAddOkGo(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -2237,6 +2240,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 * 설문조사 삭제 실행함수
 	 */
 	@RequestMapping(value = "/ezCommunity/pollDelete.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void pollDelete(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -2271,6 +2275,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 * 설문조사 응답 실행 함수
 	 */
 	@RequestMapping(value = "/ezCommunity/pollResOk.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void pollResOk(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -2324,6 +2329,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 * 설문조사 날짜변경 실행함수
 	 */
 	@RequestMapping(value = "/ezCommunity/pollEditOk.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void pollEditOk(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String offset = userInfo.getOffset();
@@ -2968,6 +2974,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 * 그룹생성화면 실행함수
 	 */
 	@RequestMapping(value = "/ezCommunity/createBoardGroup.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void createBoardGroup(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -3097,6 +3104,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 * 하위게시판 생성 실행함수
 	 */
 	@RequestMapping(value = "/ezCommunity/createBoard.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void createBoard(@CookieValue("loginCookie") String loginCookie , HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -4749,6 +4757,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 * 커뮤니티 답변메일발송
 	 */
 	@RequestMapping(value = "/ezCommunity/sendReplyNoticeMail.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void sendReplyNoticeMail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("sendReplyNoticeMail started.");
 		

@@ -619,6 +619,7 @@ public class EzCommonController extends EgovFileMngUtil{
 	}
 	
 	@RequestMapping(value = "/ezCommon/downloadAttach.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void downloadAttach(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("downloadAttach started");
 
@@ -654,6 +655,7 @@ public class EzCommonController extends EgovFileMngUtil{
 	 * image파일용량 줄여주는 함수
 	 */
 	@RequestMapping(value = "/ezCommon/convertSaveImage.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void convertSaveImage(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("convertSaveImage started");
 
@@ -714,6 +716,7 @@ public class EzCommonController extends EgovFileMngUtil{
 	}
 	//2019-09-20 메신저 다운로드 추가
 	@RequestMapping(value = "/ezCommon/talkDownloadAttach.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void talkDownloadAttach(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("talkDownloadAttach started");
 

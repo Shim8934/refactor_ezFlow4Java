@@ -820,6 +820,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	 * 첨부파일 다운로드
 	 */
 	@RequestMapping(value = "/ezTask/downloadAttach.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void downloadAttach(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("downloadAttach started.");
 

@@ -199,6 +199,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 * 게시판관리 게시판그룹생성 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezBoard/createBoardGroup.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void createBoardGroup(@CookieValue("loginCookie") String loginCookie, HttpServletResponse response, BoardPropertyVO boardPropertyVO)	throws Exception {
 		logger.debug("createBoardGroup started");
 
@@ -266,6 +267,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 * 게시판관리 하위게시판등록 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezBoard/createBoard.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void createBoard(@CookieValue("loginCookie") String loginCookie,	HttpServletResponse response, BoardPropertyVO boardPropertyVO) throws Exception {
 		logger.debug("createBoard started");
 
@@ -325,6 +327,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 * 게시판관리 게시판순서조정 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezBoard/saveBoardOrder.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void saveBoardOrder(HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		logger.debug("saveBoardOrder started");
 
@@ -405,6 +408,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 * 게시판관리 그룹 및 게시판삭제 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezBoard/deleteBoard.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void deleteBoard(HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("deleteBoard started");
 
@@ -485,6 +489,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 * 게시판관리 배경이미지 상태값 변경 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezBoard/statusChangeBackGroundImage.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void statusChangeBackGroundImage(HttpServletRequest request,	HttpServletResponse response, BoardBackgroundVO boardBackgroundVO, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("statusChangeBackGroundImage started");
 
@@ -553,6 +558,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 * 게시판관리 배경이미지 파일 업로드 함수
 	 */
 	@RequestMapping(value = "/admin/ezBoard/uploadBackGroundImage.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void uploadBackGroundImage(MultipartHttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("uploadBackGroundImage started");
 
@@ -592,6 +598,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 * 게시판관리 배경이미지 정보 저장 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezBoard/saveBackGroundImage.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void saveBackGroundImage(@CookieValue("loginCookie") String loginCookie,	HttpServletResponse response, MultipartHttpServletRequest request, BoardBackgroundVO boardBackgroundVO) throws Exception {
 		logger.debug("saveBackGroundImage started");
 
@@ -638,6 +645,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 * 게시판관리 배경이미지 삭제 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezBoard/deleteBackGroundImage.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void deleteBackGroundImage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, BoardBackgroundVO boardBackgroundVO) throws Exception {
 		logger.debug("deleteBackGroundImage started");
 
@@ -716,6 +724,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 * 게시판관리 게시판 이동 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezBoard/moveBoard.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void moveBoard(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("moveBoard started");
 
@@ -884,6 +893,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 * 게시판관리 게시판그룹이름변경 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezBoard/saveBoardProperty.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void saveBoardProperty(@CookieValue("loginCookie") String loginCookie, HttpServletResponse response,	HttpServletRequest request, BoardPropertyVO boardPropertyVO) throws Exception {
 		logger.debug("saveBoardProperty started");
 
@@ -1377,6 +1387,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 * 게시판관리 게시판 권한설정 권한전파 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezBoard/setUnderBoardAcl.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void setUnderBoardAcl(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("setUnderBoardAcl started");
 

@@ -1493,7 +1493,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	 * 관리자 포탈 포틀릿관리 파라미터제거 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezPortal/removeParameter.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
-	
+	@ResponseBody
 	public void removeParameter(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("removeParameter started");
 

@@ -3254,6 +3254,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 * 전자결재G 기안 첨부다운 표출 Method
 	 */
 	@RequestMapping(value = "/ezApprovalG/downloadAttach.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("downloadAttach started.");
 		
@@ -3451,6 +3452,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 * 2020-11-18 홍승비 - 모두저장(압축파일 내려받기)
 	 * */
 	@RequestMapping(value="/ezApprovalG/downloadAttachAll.do", method = RequestMethod.POST, produces="text/plain; charset=UTF-8")
+	@ResponseBody
 	public void downloadAttachAll(@CookieValue("loginCookie") String loginCookie, Locale locale, 
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("downloadAttachAll started.");
@@ -3555,6 +3557,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 * 전자결재G 통합pc 저장 리스트 더블클릭 다운
 	 */
 	@RequestMapping(value = "/ezApprovalG/downloadAttachDbClick.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void downloadAttachDbClick(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("downloadAttachDbClick started.");
 		
@@ -4612,6 +4615,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 * 전자결재G 서명저장 표출 Method
 	 */
 	@RequestMapping(value = "/ezApprovalG/approvalGSign.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void approvalGSign(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo,HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("approvalGSign started");
 
@@ -8048,6 +8052,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 * 전자결재G 내보내기, 전체내보내기 호출 Method
 	 */
 	@RequestMapping(value = "/ezApprovalG/excelExportOut.do", method = {RequestMethod.POST, RequestMethod.GET})
+	@ResponseBody
 	/*
 	public void excelExportOut(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception{
 		logger.debug("excelExportOut started"); 
@@ -9393,6 +9398,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 * 전자결재G 겸직 쿠키 생성 Method
 	 */
 	@RequestMapping(value = "/ezApprovalG/ChangeUserInfo.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void changeUserInfo(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		
 		logger.debug("ChangeUserInfo started");
@@ -10389,6 +10395,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	}
 	
 	@RequestMapping(value = "/ezApprovalG/delCirculation.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void delCirculation(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("delCirculation started");
 

@@ -6618,6 +6618,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	}
 	
 	@RequestMapping(value="/ezEmail/downloadAttachInWriter.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void downloadAttachInWriter(@CookieValue("loginCookie") String loginCookie,
 			HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 		logger.debug("downloadAttachInWriter started");

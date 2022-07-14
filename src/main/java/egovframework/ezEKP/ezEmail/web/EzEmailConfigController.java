@@ -1879,6 +1879,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	 * 외부메일 확인 실행 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailGetPop3.do", method=RequestMethod.GET)
+	@ResponseBody
 	public void mailGetPop3(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletResponse response) throws Exception{
 		logger.debug("mailGetPop3 started.");
 		

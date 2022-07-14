@@ -2289,6 +2289,7 @@ public class EzAttitudeAdminController {
 	 * 엑셀 출력
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/excelAnnualFormatDownload.do")
+	@ResponseBody
 	public void excelAnnualFormatDownload(@CookieValue("loginCookie")String loginCookie, HttpServletResponse response, HttpServletRequest request) throws Exception{
 		LOGGER.debug("excelAnnualFormatDownload started."); 
 		
@@ -2687,6 +2688,7 @@ public class EzAttitudeAdminController {
 	 * 엑셀 출력
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/excelAnnualListExport.do")
+	@ResponseBody
 	public void excelAnnualListExport(@CookieValue("loginCookie")String loginCookie, HttpServletResponse response, HttpServletRequest request) throws Exception{
 		LOGGER.debug("excelAnnualListExport started."); 
 		

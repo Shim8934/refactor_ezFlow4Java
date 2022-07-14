@@ -3588,6 +3588,7 @@ public class EzPMSController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/ezPMS/downloadFile.do")
+	@ResponseBody
 	public void downloadFile(HttpServletRequest request, HttpServletResponse response,
 			@CookieValue("loginCookie") String loginCookie) throws Exception {
 		LOGGER.debug("ezPMS downloadFile started");

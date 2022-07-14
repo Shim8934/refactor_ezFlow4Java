@@ -1341,6 +1341,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	 * 일반 첨부파일시 모두저장 클릭시 호출되는 메서드 (압축파일 내려받기) 
 	 */
 	@RequestMapping(value="/ezEmail/downloadAttachAll.do", method=RequestMethod.POST, produces="text/plain; charset=UTF-8")
+	@ResponseBody
 	public void downloadAttachAll(@CookieValue("loginCookie") String loginCookie, Locale locale, 
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("downloadAttachAll started.");
@@ -1580,6 +1581,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	 * 메일 첨부파일 다운로드 실행 함수
 	 */
 	@RequestMapping(value="/ezEmail/downloadAttach.do", method=RequestMethod.GET)
+	@ResponseBody
 	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("downloadAttach started.");
 		
@@ -1743,6 +1745,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	 * 메일 대용량 첨부파일 다운로드 실행 함수
 	 */
 	@RequestMapping(value="/ezEmail/downloadAttachCommon.do", method=RequestMethod.GET, produces = "text/xml; charset=utf-8")
+	@ResponseBody
 	public void downloadAttachCommon(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("downloadAttachCommon started.");
 		
@@ -1849,6 +1852,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	 * 메일 인라인 이미지 읽어오기 실행 함수
 	 */
 	@RequestMapping(value="/ezEmail/downloadInline.do", method=RequestMethod.GET)
+	@ResponseBody
 	public void downloadInline(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("downloadInline started.");
 		
@@ -1961,6 +1965,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	}
 	
 	@RequestMapping(value="/ezEmail/downloadInlineDotNet.do", method=RequestMethod.GET)
+	@ResponseBody
 	public void downloadInlineDotNet(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("downloadInlineDotNet started.");
 		
@@ -2059,6 +2064,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	 * 미리보기 메일 정보 호출 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailPrevShow.do", method=RequestMethod.POST)
+	@ResponseBody
 	public void mailPrevShow(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("mailPrevShow started.");
 		
@@ -4035,6 +4041,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	 * 보안메일 첨부파일 다운로드 실행 함수
 	 */
 	@RequestMapping(value="/ezEmail/downloadSecureAttach.do", method=RequestMethod.GET)
+	@ResponseBody
 	public void downloadSecureAttach(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("downloadSecureAttach started.");
 		
@@ -4189,6 +4196,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	 * 보안메일 인라인 이미지 읽어오기 실행 함수
 	 */
 	@RequestMapping(value="/ezEmail/downloadSecureInline.do", method=RequestMethod.GET)
+	@ResponseBody
 	public void downloadSecureInline(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("downloadSecureInline started.");
 		
@@ -4948,6 +4956,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	 * 메일 첨부파일 브라우저로 읽기
 	 */
 	@RequestMapping(value="/ezEmail/readAttachIamge.do")
+	@ResponseBody
 	public void readAttachIamge(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("readAttachIamge started.");
 		

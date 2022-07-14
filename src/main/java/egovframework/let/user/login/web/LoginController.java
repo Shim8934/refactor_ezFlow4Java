@@ -1067,6 +1067,7 @@ public class LoginController {
     }
     
     @RequestMapping(value = "/user/login/setPassword.do", method=RequestMethod.POST)
+	@ResponseBody
     public void setPassword(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse response) throws Exception{
     	userInfo = commonUtil.userInfo(loginCookie);
 

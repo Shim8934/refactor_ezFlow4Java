@@ -1267,6 +1267,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	 * 조직도관리 전자결재 서명 이미지 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/getApprovalSignInfo.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void getSignImage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
@@ -1315,6 +1316,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	 * 조직도관리 새로운 비밀번호 설정 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/changePassword.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void changePassword(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 	    logger.debug("changePassword started.");
 	    
@@ -2033,6 +2035,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	 * 조직도관리 사원정보 사진이미지 파일 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/getPersonalInfo.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void getPersonalInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 	    logger.debug("getPersonalInfo started");
 	    
@@ -3779,6 +3782,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	 * 관리자가 유저별 모바일 설정을 한 뒤 확인 버튼을 눌렀을 때 호출되는 메서드 
 	 */
 	@RequestMapping(value="/admin/ezOrgan/setUserMobileManaged.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void setUserMobileManaged(@CookieValue("loginCookie") String loginCookie,
 			HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("setUserMobileManaged started");
@@ -5380,6 +5384,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	}
 	
 	@RequestMapping(value="/admin/ezOrgan/downloadExcel.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void downloadExcelReport(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("downloadExcelReport start");
 		String fileName     = request.getParameter("fileName") != null ? request.getParameter("fileName") : "";
