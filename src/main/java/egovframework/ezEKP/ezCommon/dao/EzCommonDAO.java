@@ -2358,7 +2358,15 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			select("EzCommonDAO.checkTblDisableNotiItem");
 		} catch (Exception e) {
 			logger.debug("tbl_user_noti_disable_item doesn't exist. creating the table...");
-			update("EzCommonDAO.createTblDisableNotiItem");
+			try {
+				update("EzCommonDAO.createTblDisableNotiItem");
+			} catch (Exception ex) {
+				logger.debug("pk_tbl_usermaster doesn't primary key of tbl_usermaster...");
+				update("EzCommonDAO.createTblDisableNotiItem_exception_try");
+
+				logger.debug("try one more creating the table...");
+				update("EzCommonDAO.createTblDisableNotiItem");
+			}
 		}
 	}
 	

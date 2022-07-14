@@ -1094,8 +1094,7 @@ public class EzEmailUtil {
 	    //    Content-ID: <f_kfxpw01d0>				 
 		boolean isAttachmentWithUnreferencedContentID = false;
 		
-		if (part.getDisposition() != null && part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)
-				&& ((MimePart)part).getContentID() != null) {
+		if (part.isMimeType("application/*") && ((MimePart)part).getContentID() != null) {
 			String htmlBodyContent = (String)extraMap.get("htmlBody");
 			String contentID = ((MimePart) part).getContentID();
 			
@@ -1887,8 +1886,7 @@ public class EzEmailUtil {
 						isAttach = "OK";
 					}
 				// 료비에서 온 메일 중에 related 파트안에 인라인으로 첨부파일이 있는 메일이 있어 추가함.
-				// ContentID가 있는 경우에는 내부에서 참조되는 인라인 이미지일 수 있으므로 제외함.
-				} else if (p.isMimeType("application/*") && ((MimePart)p).getContentID() == null) { 
+				} else if (p.isMimeType("application/*")) { 
 					List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap, order, depth);
 					htmlBody += tempList.get(0);
 					pAttachListHtml += tempList.get(1);
