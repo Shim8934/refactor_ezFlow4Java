@@ -11462,10 +11462,22 @@ CREATE TABLE "TBL_CAR_FORM" (
   CREATE UNIQUE INDEX "TBL_APRDOCINFO_PK" ON "TBL_APRDOCINFO" ("TENANT_ID", "COMPANYID", "DOCID") 
   ;
 --------------------------------------------------------
+--  DDL for Index TBL_APRDOCINFO_DOCSTATE_IDX
+--------------------------------------------------------
+
+  CREATE INDEX "TBL_APRDOCINFO_DOCSTATE_IDX" ON "TBL_APRDOCINFO" ("DOCSTATE")
+  ;
+--------------------------------------------------------
 --  DDL for Index TBL_APRLINEINFO_PK
 --------------------------------------------------------
 
   CREATE UNIQUE INDEX "TBL_APRLINEINFO_PK" ON "TBL_APRLINEINFO" ("TENANT_ID", "COMPANYID", "DOCID", "APRMEMBERSN") 
+  ;
+--------------------------------------------------------
+--  DDL for Index TBL_APRLINEINFO_IDX
+--------------------------------------------------------
+
+  CREATE INDEX "TBL_APRLINEINFO_IDX" ON "TBL_APRLINEINFO" ("APRMEMBERID", "APRTYPE", "APRSTATE")
   ;
 --------------------------------------------------------
 --  DDL for Index TBL_APROPINIONINFO_PK
