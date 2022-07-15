@@ -109,6 +109,7 @@ public class EzStatisticsApprController {
 	 * 액셀저장
 	 */
 	@RequestMapping(value = "/ezStatistics/excelExportOut.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void excelExportOut(@CookieValue("loginCookie") String loginCookie, HttpServletResponse response, HttpServletRequest request) throws IOException {
 		logger.debug("excelExportOut started");
 

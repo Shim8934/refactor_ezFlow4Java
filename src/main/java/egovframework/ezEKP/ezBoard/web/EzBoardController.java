@@ -475,6 +475,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 게시판 사용자환경설정 저장 Method
 	 */
 	@RequestMapping(value="/ezBoard/board_generallist_save.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void boardGeneralListSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse response, BoardConfigVO boardConfigVO) throws Exception {
 		logger.debug("boardGeneralListSave started");
 
@@ -605,6 +606,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	}
 	
 	@RequestMapping(value="/ezBoard/boardPollConfigSave.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void boardPollConfigSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
 		int pDeptCnt = 0;
@@ -3341,6 +3343,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 게시판 서브게시판 표출 Method
 	 */
 	@RequestMapping(value = "/ezBoard/getSubBoards.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void getSubBoards(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, BoardPropertyVO boardInfo, HttpServletRequest req, HttpServletResponse res) throws Exception {
 		logger.debug("getSubBoards started");
 
@@ -3447,6 +3450,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 게시판 환경설정 순서  표출 Method
 	 */
 	@RequestMapping(value="/ezBoard/saveListOrder.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void saveListOrder(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("saveListOrder started");
 
@@ -3464,6 +3468,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 게시판 환경설정 탭 표출 Method
 	 */
 	@RequestMapping(value="/ezBoard/set_TabUse.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void set_TabUse(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("set_TabUse started");
 
@@ -3829,6 +3834,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 게시판 읽음표시 실행 Method
 	 */
 	@RequestMapping(value="/ezBoard/setRead.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void setAsRead(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, LoginVO userInfo) throws Exception {
 		logger.debug("setAsRead started");
 
@@ -3857,6 +3863,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 게시판 읽음표시 실행 // 새게시물 전용
 	 */
 	@RequestMapping(value="/ezBoard/setReadNew.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void setAsReadNew(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, LoginVO userInfo) throws Exception {
 		logger.debug("setAsReadNew started");
 
@@ -4726,6 +4733,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 게시판 첨부파일다운 실행 Method
 	 */
 	@RequestMapping(value = "/ezBoard/boardAttachDown.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void boardAttachDown(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("boardAttachDown started");
 
@@ -6288,6 +6296,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 게시판 섬네일정보 실행 Method
 	 */
 	@RequestMapping(value = "/ezBoard/getBoardThumbnailInfo.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void getBoardThumbnailInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("getBoardThumbnailInfo started");
 
@@ -7190,6 +7199,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 게시판 첨부관련정보 표출 Method
 	 */
 	@RequestMapping(value = "/ezBoard/getBoardAttachInfo.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void getBoardAttachInfo(HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("getBoardAttachInfo started");
 
@@ -7305,6 +7315,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 게시판 한줄댓글저장 실행 Method
 	 */
 	@RequestMapping(value = "/ezBoard/saveOneLineReply.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void saveOneLineReply(HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		logger.debug("saveOneLineReply started");
 
@@ -7677,6 +7688,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 게시판 게시알림 메일전송 실행 Method (관리자 권한자에게 발송하는 게시알림 메일)
 	 */
 	@RequestMapping(value = "/ezBoard/sendPostNotiMail.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void sendPostNotiMail(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("sendPostNotiMail started.");
 		
@@ -7809,6 +7821,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 게시판 답변알림 메일전송 실행 Method
 	 */
 	@RequestMapping(value = "/ezBoard/sendReplyNoticeMail.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void sendReplyNoticeMail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("sendReplyNoticeMail started");
 
@@ -7867,6 +7880,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 게시판 게시물승인관련 메일전송 실행 Method
 	 */
 	@RequestMapping(value = "/ezBoard/sendApprNoticeMail.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void sendApprnoticeMail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("sendApprnoticemail started");
 
@@ -7924,6 +7938,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 게시판 게시물반려관련 메일전송 실행 Method
 	 */
 	@RequestMapping(value = "/ezBoard/sendReturnNoticeMail.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void sendReturnNoticemail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("sendReturnNoticemail started");
 
@@ -8063,6 +8078,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	}
 	
 	@RequestMapping(value = "/ezBoard/uploadBackImage.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void uploadBackImage(MultipartHttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("uploadBackImage started");
 
@@ -8272,6 +8288,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 2018-04-16 홍승비 게시판 환경설정 탭 표출 수정
 	 */
 	@RequestMapping(value="/ezBoard/set_TabUse2.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void set_TabUse2(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("set_TabUse2 started");
 
@@ -8825,6 +8842,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 2018-10-11 홍승비 - 모두저장(압축파일 내려받기)
 	 */
 	@RequestMapping(value="/ezBoard/downloadAttachAll.do", method = RequestMethod.POST, produces="text/plain; charset=UTF-8")
+	@ResponseBody
 	public void downloadAttachAll(@CookieValue("loginCookie") String loginCookie, Locale locale, 
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("downloadAttachAll started.");
@@ -9368,6 +9386,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 동영상게시판 동영상정보 가져오기
 	 */
 	@RequestMapping(value = "/ezBoard/getBoardMovieInfo.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void getBoardMovieInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("getBoardMovieInfo started");
 

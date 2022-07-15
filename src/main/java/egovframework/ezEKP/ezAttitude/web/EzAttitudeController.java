@@ -1595,6 +1595,7 @@ public class EzAttitudeController {
 	}
 	
 	@RequestMapping(value = "/ezAttitude/saticGetXlsAtt.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void qstResultsaticGetXlsAtt(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		LOGGER.debug("qstResultsaticGetXlsAtt started");
 		
@@ -2945,6 +2946,7 @@ public class EzAttitudeController {
 	 * 근태입력관리, 미입력자관리, 관리내역 엑셀 출력
 	 */
 	@RequestMapping(value = {"/ezAttitude/excelAttitudeListExport.do", "/ezAttitude/excelAbsentedListExport.do", "/ezAttitude/excelHistoryListExport.do"}, method = RequestMethod.GET)
+	@ResponseBody
 	public void excelFileExport(@CookieValue("loginCookie")String loginCookie, HttpServletResponse response, HttpServletRequest request) throws Exception{
 		LOGGER.debug("excelFileExport started."); 
 		
@@ -3799,6 +3801,7 @@ public class EzAttitudeController {
 	 * 엑셀 출력
 	 */
 	@RequestMapping(value = "/ezAttitude/excelUserAnnualExport.do")
+	@ResponseBody
 	public void excelUserAnnualExport(@CookieValue("loginCookie")String loginCookie, HttpServletResponse response, HttpServletRequest request) throws Exception{
 		LOGGER.debug("excelAnnualListExport started."); 
 		

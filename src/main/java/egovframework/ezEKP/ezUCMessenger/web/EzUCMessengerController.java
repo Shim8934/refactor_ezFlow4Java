@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezUCMessenger.util.EzUCMessengerUtil;
@@ -45,6 +46,7 @@ public class EzUCMessengerController {
 	private LoginController loginController;
 	
     @RequestMapping("/ezUCMessenger/loginCheck.do")
+	@ResponseBody
 	public void loginCheck(
 					@RequestParam String id,
 					HttpServletRequest request,

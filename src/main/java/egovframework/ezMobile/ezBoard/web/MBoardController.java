@@ -22,10 +22,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 //import com.google.gson.Gson;
+
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
@@ -367,6 +369,7 @@ public class MBoardController {
 	 * 모바일 게시판 글 쓰기/수정 저장
 	 */
 	@RequestMapping(value = "/mobile/ezBoard/saveBoardItem.do")
+	@ResponseBody
 	public void saveBoardItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response,MBoardListVO boardListVO) throws Exception {
 		LOGGER.debug("saveBoardItem started.");
 		
@@ -428,6 +431,7 @@ public class MBoardController {
 	 * 모바일 게시판 글 삭제
 	 */
 	@RequestMapping(value = "/mobile/ezBoard/deleteBoardItem.do")
+	@ResponseBody
 	public void deleteBoardItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LOGGER.debug("deleteBoardItem started.");
 		

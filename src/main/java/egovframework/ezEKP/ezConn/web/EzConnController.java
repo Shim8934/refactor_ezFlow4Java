@@ -61,6 +61,7 @@ public class EzConnController {
 						"/ezConn/scheduleReceiveAttendant.do", "/ezConn/scheduleReceiveMember.do",
 						"/ezConn/portalMain.do", "/ezConn/admin/mailMain.do"
 						})
+	@ResponseBody
 	public void mailMain(
 					@RequestParam String id,
 					HttpServletRequest request,

@@ -1311,6 +1311,7 @@ public class EzEmailAdminController {
 	 * 엑셀 워크시트 생성 및 자동 다운로드 함수
 	 */
 	@RequestMapping(value = "/admin/ezEmail/statisticsListExcelExport.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void mailQuotaExcelExport(@CookieValue("loginCookie") String loginCookie, Model model,
 			HttpServletRequest request,
 			@RequestParam(required = false) String searchKeycode,

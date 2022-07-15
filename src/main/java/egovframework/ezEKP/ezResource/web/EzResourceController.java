@@ -2463,6 +2463,7 @@ public class EzResourceController extends EgovFileMngUtil {
 	 * 자원관리 승인 후 알림 발송 실행 함수
 	 */
 	@RequestMapping(value = "/ezResource/sendMailToUser.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void sendMailToUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, @RequestBody String xmlStr) throws Exception {
 		logger.debug("sendMailToUser started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -2892,6 +2893,7 @@ public class EzResourceController extends EgovFileMngUtil {
 	 *  썸네일정보 실행 Method
 	 */
 	@RequestMapping(value = "/ezResource/getResourceThumbnailInfo.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void getBoardThumbnailInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("getResourceThumbnailInfo started");
 		

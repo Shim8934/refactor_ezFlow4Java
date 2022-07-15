@@ -264,6 +264,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	 * 전자설문 설문리스트 설문 정보 호출, 그에 따른 화면 호출 함수
 	 */
 	@RequestMapping(value="/ezQuestion/pollOpen.do", produces="text/xml; charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
 	public void pollOpen(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response, QstUserPollItemVO qstUserPollItemVO, QstUserPermissionVO qstUserPermissionVO) throws Exception{
 		logger.debug("pollOpen started");
 
@@ -644,6 +645,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	 */
 	@SuppressWarnings("unused")
 	@RequestMapping(value="/ezQuestion/qstResponseOk.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void qstResponseOk(@CookieValue("loginCookie") String loginCookie, QstUserPermissionVO qstUserPermissionVO, HttpServletRequest request, HttpServletResponse response, QstResponseVO qstResponseVO) throws Exception{
 		logger.debug("qstResponseOk started");
 
@@ -1426,6 +1428,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	 * 전자설문 설문생성 임시저장 실행 함수
 	 */
 	@RequestMapping(value="/ezQuestion/qstTempSave.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void qstTempSave(HttpServletRequest req, HttpServletResponse resp) throws Exception {
 		logger.debug("qstTempSave started");
 
@@ -1452,6 +1455,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	 * 전자설문 설문생성 불러오기 실행 함수
 	 */
 	@RequestMapping(value="/ezQuestion/formTempLoadSafari.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void formTempLoadSafari(MultipartHttpServletRequest req,Model model, HttpServletResponse resp) throws Exception {
 		logger.debug("formTempLoadSafari started");
 
@@ -1472,6 +1476,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	 * 전자설문 설문생성 질문취소 실행 함수
 	 */
 	@RequestMapping(value="/ezQuestion/qstCancel.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void qstCancel(HttpServletRequest req, Model model, HttpServletResponse resp) throws Exception {
 		
 	}
@@ -1552,6 +1557,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	 * 전자설문 설문리스트 첨부파일 호출 실행함수
 	 */
 	@RequestMapping(value="/ezQuestion/getPollAttachInfo.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void getPollAttachInfo(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request, HttpServletResponse response, ModelMap model, QstAttachVO qstAttachVO) throws Exception{
 		logger.debug("getPollAttachInfo started.");
 		
@@ -1601,6 +1607,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	 * 전자설문 설문리스트 미리보기 첨부파일 호출 실행함수
 	 */
 	@RequestMapping(value="/ezQuestion/getPollAttachInfo2.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void getPollAttachInfo2(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request, HttpServletResponse response, ModelMap model, QstAttachVO qstAttachVO) throws Exception{
 		logger.debug("getPollAttachInfo started.");
 		
@@ -3010,6 +3017,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	 * 전자설문 설문리스트 상세분석 분석결과 저장 실행 함수
 	 */
 	@RequestMapping(value = "/ezQuestion/qstResultAnalysisSave.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void qstResultAnalysisSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("qstResultAnalysisSave started");
 
@@ -3130,6 +3138,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	 */
 	@SuppressWarnings({ "unused", "resource" })
 	@RequestMapping(value = "/ezQuestion/resultTotalSave.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void resultTotalSave(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("resultTotalSave started");
 
@@ -3653,6 +3662,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	 * 전자설문 설문리스트 정보수정 실행 함수
 	 */
 	@RequestMapping(value = "/ezQuestion/callChangePermission.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void callChangePermission(@CookieValue("loginCookie") String loginCookie,Model model,HttpServletRequest req, HttpServletResponse resp) throws Exception {
 		logger.debug("callChangePermission started");
 

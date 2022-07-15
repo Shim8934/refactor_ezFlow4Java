@@ -1224,6 +1224,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	 * PC에 메일파일 저장하기 실행 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailExport.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void mailExport(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("mailExport started.");
 		
@@ -1687,6 +1688,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	 * 메일 zip파일 다운로드 실행 함수
 	 */
 	@RequestMapping(value="/ezEmail/downloadMailZip.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void downloadMailZip(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("downloadMailZip started.");
 		
@@ -1753,6 +1755,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezEmail/downloadMailboxZip.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void downloadMailboxZip(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("downloadMailboxZip started.");
 		

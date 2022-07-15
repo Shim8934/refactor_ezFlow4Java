@@ -21,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -181,6 +182,7 @@ public class MScheduleController extends EgovFileMngUtil {
 	 * 모바일 client 일정관리 등록
 	 */
 	@RequestMapping(value="/mobile/ezSchedule/mScheduleInsert.do")
+	@ResponseBody
 	public void mScheduleInsert(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, ScheduleInfoVO scheduleInfoVO) throws Exception {
 		LOGGER.debug("mScheduleInsert started.");
 		
@@ -214,6 +216,7 @@ public class MScheduleController extends EgovFileMngUtil {
 	 * 모바일 client 일정관리 수정
 	 */
 	@RequestMapping(value="/mobile/ezSchedule/mScheduleUpdate.do")
+	@ResponseBody
 	public void mScheduleUpdate(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, ScheduleInfoVO scheduleInfoVO) throws Exception {
 		LOGGER.debug("mScheduleUpdate started.");
 		
@@ -247,6 +250,7 @@ public class MScheduleController extends EgovFileMngUtil {
 	 * 모바일 client 일정관리 삭제(반복포함)
 	 */
 	@RequestMapping(value="/mobile/ezSchedule/mScheduleDelete.do")
+	@ResponseBody
 	public void mScheduleDelete(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LOGGER.debug("mScheduleDelete started.");
 		

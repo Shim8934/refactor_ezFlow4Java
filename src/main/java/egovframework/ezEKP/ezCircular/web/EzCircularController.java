@@ -286,6 +286,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	 * 회람판 첨부파일 다운로드
 	 */
 	@RequestMapping(value = "/ezCircular/downloadAttach.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("downloadAttach started");
 		
@@ -2707,6 +2708,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	 * 2018-07-12 김보미 - 모두저장(압축파일 내려받기)
 	 */
 	@RequestMapping(value="/ezCircular/downloadAttachAll.do", produces="text/plain; charset=UTF-8", method = RequestMethod.POST)
+	@ResponseBody
 	public void downloadAttachAll(@CookieValue("loginCookie") String loginCookie, Locale locale, 
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("downloadAttachAll started.");

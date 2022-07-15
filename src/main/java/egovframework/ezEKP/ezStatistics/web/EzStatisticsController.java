@@ -66,6 +66,7 @@ public class EzStatisticsController {
 	 * 사용자 통계 Excel 내려받기 호출 함수
 	 */
 	@RequestMapping(value = {"/ezStatistics/saticGetXls.do", "/ezStatistics/UserOSsaticXls.do"}, method = RequestMethod.POST)
+	@ResponseBody
 	public void qstResultAnalysisSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("qstResultAnalysisSave started");
 		
@@ -193,6 +194,7 @@ public class EzStatisticsController {
 	 * 메일 통계 Excel 내려받기 호출 함수
 	 */
 	@RequestMapping(value = "/ezStatistics/saticGetXlsM.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void qstResultAnalysisSaveM(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("qstResultAnalysisSaveM started");
 		
@@ -294,6 +296,7 @@ public class EzStatisticsController {
 	 * 양식별, 부서별, 개인별 통계 현황
 	 */
 	@RequestMapping(value = "/ezStatistics/saticGetXlsA.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void qstResultAnalysisSaveA(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("qstResultAnalysisSaveA started");
 		
@@ -428,6 +431,7 @@ public class EzStatisticsController {
     * 결재 통계 - 양식별/부서별/개인별 Excel 내려받기 호출 함수
     */
    @RequestMapping(value = "/ezStatistics/saticGetXlsApproval.do", method = RequestMethod.POST)
+   @ResponseBody
    public void qstResultAnalysisSaveApproval(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
       logger.debug("qstResultAnalysisSaveApproval started");
       
@@ -495,6 +499,7 @@ public class EzStatisticsController {
     * 결재 통계 - 양식별/부서별/개인별 결재처리 시간 Excel 내려받기 호출 함수
     */
    @RequestMapping(value = "/ezStatistics/saticGetXlsApprovalTime.do", method = RequestMethod.POST)
+   @ResponseBody
    public void qstResultAnalysisSaveApprovalTime(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
       logger.debug("qstResultAnalysisSaveApprovalTime started");
       
@@ -580,6 +585,7 @@ public class EzStatisticsController {
 	 * 양식별, 부서별, 개인별 통계 현황
 	 */
 	@RequestMapping(value = "/ezStatistics/saticGetXlsTotalA.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void qstResultAnalysisSaveTotalA(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("qstResultAnalysisSaveTotalA started");
 	
@@ -680,6 +686,7 @@ public class EzStatisticsController {
 	 * 근태 통계 Excel 내려받기 호출 함수
 	 */
 	@RequestMapping(value = "/ezStatistics/saticGetXlsWA.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void qstResultAnalysisSaveWA(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("qstResultAnalysisSaveM started");
 		

@@ -1648,6 +1648,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	}
 	
 	@RequestMapping(value="/admin/ezWebFolder/downloadExcel.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void downloadExcelReport(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("downloadExcelReport start");
 		String fileName    = request.getParameter("fileName");

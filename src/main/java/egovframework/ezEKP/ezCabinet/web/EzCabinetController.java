@@ -256,6 +256,7 @@ public class EzCabinetController {
 	}
 	
 	@RequestMapping(value="/ezCabinet/downloadAttachFile", method = RequestMethod.GET, produces="application/zip")
+	@ResponseBody
 	public void responeDownloadFile(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("responeDownloadFile is running!");
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);

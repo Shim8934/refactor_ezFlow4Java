@@ -872,6 +872,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 * 일정그룹관리 리스트 삭제
 	 */
 	@RequestMapping(value="/ezSchedule/scheduleDelGroup.do", method = RequestMethod.POST)	
+	@ResponseBody
 	public void scheduleDelGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, LoginSimpleVO loginSimpleVO) throws Exception {
 		
 		logger.debug("============ scheduleDelGroup started ============");
@@ -3186,6 +3187,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 * 일정보기 > 첨부파일 다운로드
 	 */
 	@RequestMapping(value = "/ezSchedule/downloadAttach.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		
 		logger.debug("============ downloadAttach started ============");
@@ -4730,6 +4732,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 * @throws IOException 
 	 */
 	@RequestMapping(value = "/ezSchedule/returnFromCallBack.do", method = RequestMethod.GET, params = "code")
+	@ResponseBody
 	public void oauth2Callback(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestParam(value = "code") String code, HttpServletResponse response) throws IOException {
 		logger.debug("============ oauth2Callback started ============");
 		

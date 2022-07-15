@@ -575,6 +575,7 @@ public class EzCarController extends EgovFileMngUtil {
        * 차량 리스트 삭제
        */
       @RequestMapping(value="/ezCar/deleteCar.do", method = RequestMethod.POST)   
+  	  @ResponseBody
       public void scheduleDelGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, LoginSimpleVO loginSimpleVO) throws Exception {
          
          logger.debug("============ scheduleDelGroup started ============");
@@ -721,6 +722,7 @@ public class EzCarController extends EgovFileMngUtil {
        *  썸네일정보 실행 Method
        */
       @RequestMapping(value = "/ezCar/getCarThumbnailInfo.do", method = RequestMethod.GET)
+      @ResponseBody
       public void getCarThumbnailInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
          logger.debug("getCarThumbnailInfo started");
          
@@ -1488,6 +1490,7 @@ public class EzCarController extends EgovFileMngUtil {
 		 * 차량 일지 삭제
 		 */
 		@RequestMapping(value="/ezCar/deleteCarForm.do", method = RequestMethod.POST)   
+		@ResponseBody
 		public void deleteCarForm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, LoginSimpleVO loginSimpleVO) throws Exception {
 			
 			logger.debug("============ scheduleDelGroup started ============");
@@ -1510,6 +1513,7 @@ public class EzCarController extends EgovFileMngUtil {
 		@SuppressWarnings("deprecation")
 		@RequestMapping(value = "/ezCar/excelExportOut.do", method = {RequestMethod.POST, RequestMethod.GET})
 		//2018-10-16 김보미 - 전자결재 엑셀출력 workBook 이용해서 출력하도록 변경
+		@ResponseBody
 		public void excelExportOut(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception{
 			logger.debug("excelExportOut started"); 
 			userInfo = commonUtil.aprUserInfo(loginCookie);

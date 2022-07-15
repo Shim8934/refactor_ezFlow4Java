@@ -1431,6 +1431,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	
 	/** 전자결재 G 자동 알림 메일 */
 	@RequestMapping(value = "/ezApprovalG/mail_intersend.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
 	public void mailInterSend(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, @RequestParam String targetUserId, @RequestParam int subType) throws Exception{
 		logger.debug("mail_intersend started. subType: {}", subType);
 		
@@ -1811,6 +1812,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	
 	/** 전자결재 개인 문서함 리스트*/
 	@RequestMapping(value = "/ezApprovalG/getUserContListSave.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
 	public void getUserContListSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, Model model, @RequestBody String xmlPara) throws Exception{
 		logger.debug("getUserContListSave started");
 		

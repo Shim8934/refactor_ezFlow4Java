@@ -26,6 +26,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -322,6 +323,7 @@ public class EzStatisticsMailLogController {
 	 * 엑셀 내려받기 함수 
 	 */
 	@RequestMapping(value = "/ezStatistics/statisticsMailLogExcelExport.do", method = RequestMethod.GET)
+	@ResponseBody
 	public void statisticsMailLogExcelExport(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Locale locale)  throws Exception {
 		logger.debug("statisticsMailLogExcelExport started.");
 		

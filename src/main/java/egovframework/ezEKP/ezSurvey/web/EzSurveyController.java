@@ -684,6 +684,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 	}
 	
 	@RequestMapping(value="/ezSurvey/downloadAttachFile", produces="application/zip", method=RequestMethod.GET)
+	@ResponseBody
 	public void responeDownloadFile(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("responeDownloadFile is running!");
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);

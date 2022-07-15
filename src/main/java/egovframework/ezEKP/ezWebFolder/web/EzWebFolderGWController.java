@@ -1078,6 +1078,7 @@ public class EzWebFolderGWController {
 	}
 
 	@RequestMapping(value = "/rest/ezwebfolder/filemanage/file-download", method=RequestMethod.GET, produces = { MediaType.APPLICATION_OCTET_STREAM_VALUE})
+	@ResponseBody
 	public void getFileDownload(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("getFileDownload start");
 		String listFileId   = request.getParameter("fileList")   != null ? request.getParameter("fileList")   : "";
@@ -3446,6 +3447,7 @@ public class EzWebFolderGWController {
 	}
 	
 	@RequestMapping(value = "/rest/ezwebfolder/download-excel", method=RequestMethod.GET, produces = { MediaType.APPLICATION_OCTET_STREAM_VALUE})
+	@ResponseBody
 	public void getFileExcel(HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("getFileExcel start");
 		String fileName     = request.getParameter("fileName")   != null ? request.getParameter("fileName")   : "";
@@ -3713,6 +3715,7 @@ public class EzWebFolderGWController {
 	}
 
 	@RequestMapping(value = "/rest/ezwebfolder/filemanage/version-download", method=RequestMethod.GET, produces = { MediaType.APPLICATION_OCTET_STREAM_VALUE})
+	@ResponseBody
 	public void getVersionDownload(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("getVersionDownload start");
 		String serverName = orElse(request.getHeader("x-user-host"), "");
@@ -3929,6 +3932,7 @@ public class EzWebFolderGWController {
 	}
 
 	@RequestMapping(value = "/rest/ezwebfolder/file/sat", method = RequestMethod.GET)
+	@ResponseBody
 	public void downloadFileFromSat(@RequestParam String key, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("G/W WEBFOLDER [GET {}] started.", request.getRequestURI());
 
