@@ -1,15 +1,21 @@
 var leftWindow = (function() {
+	function filterOnlyMailLeftFrame(frame) {
+		return frame.location.href.indexOf("mailLeft") > -1 ? frame : null;
+	}
+
 	var parentWindow = self;
 	var i;
+
 	while (parentWindow != top || parentWindow.opener != null) {
 		for (i = 0; i < parentWindow.frames.length; i++) {
 			if (parentWindow.frames[i].name == 'left') {
-				return parentWindow.frames[i];
+				return filterOnlyMailLeftFrame(parentWindow.frames[i]);
 			}
 		}
 		parentWindow = parentWindow.opener || parentWindow.parent;
 	}
-	return parentWindow;
+
+	return filterOnlyMailLeftFrame(parentWindow);
 })();
 
 var leftMenu = (function() {
