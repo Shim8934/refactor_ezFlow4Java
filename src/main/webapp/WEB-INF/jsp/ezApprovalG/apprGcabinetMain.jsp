@@ -1067,7 +1067,13 @@
 			        InitGlobals("RECORD", "0", "1");
 			            
 		        	g_SelCabXml = "<CABINETINFO><CABINET>";
-		        			        	
+		        	
+		        	/* 2022-07-22 홍승비 - 선택한 기록물철의 생산년도를 체크 */
+		        	if (typeof(isCabinetToRecordFirst) != "undefined" && isCabinetToRecordFirst == true && typeof(g_sFlag) != "undefined" && g_sFlag == "m02") {
+			        	var cabinetClassNo = selRow[0].getAttribute("DATA2");
+			        	cabProduceY = getProduceYear(cabinetClassNo); // 전역변수인 cabProduceY에 생산년도를 저장
+		        	}
+		        	
 		        	for(var i = 0; i < selRow.length; i++) {
 		        		g_SelCabXml += "<CABINETID><![CDATA[" + selRow[i].getAttribute("DATA1") + "]]></CABINETID>";
 		        	}

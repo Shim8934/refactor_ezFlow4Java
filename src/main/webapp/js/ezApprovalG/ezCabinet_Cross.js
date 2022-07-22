@@ -584,16 +584,8 @@ function GetRecordList() {
         
         /* 2022-07-20 홍승비 - 기록물철등록부 > 기록물철 선택 후 기록물보기로 진입한 경우, 선택한 기록물철의 생산 년도를 기준으로 표출 (검색조건 없을 시의 기본 표출) */
         if (typeof(isCabinetToRecordFirst) != "undefined" && isCabinetToRecordFirst == true && typeof(g_sFlag) != "undefined" && g_sFlag == "m02") { // 기록물철등록부의 g_sFlag는 'm02'
-        	var DocList = new ListView();          
-        	DocList.LoadFromID("DocList");
-        	var selRow = DocList.GetSelectedRows();
-        	if (selRow.length > 0) {
-        		var cabinetClassNo = selRow[0].getAttribute("DATA2");
-        		nowyear = getProduceYear(cabinetClassNo);
-        	}
-        	
         	// 생산년도의 01월 01일부터 12월 31일까지를 검색 범위로 설정
-        	g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + nowyear + "-01-01 00:00:00.001</SREGDATE><EREGDATE>" + nowyear + "-12-31 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
+        	g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + cabProduceY + "-01-01 00:00:00.001</SREGDATE><EREGDATE>" + cabProduceY + "-12-31 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
         }
         else {
         	g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00.001</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";        	
@@ -2102,7 +2094,6 @@ function getProduceYear(cabinetClassNo) {
 		}
 	});
 	
-	cabProduceY = resY; // 기록물보기 내부에서 년도 선택을 위한 전역변수 설정
 	return resY;
 }
 
