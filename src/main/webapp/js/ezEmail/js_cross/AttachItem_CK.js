@@ -115,7 +115,7 @@ function DelList(resultXML) {
     }
 }
 
-function AddAttachFileInfoXmlParsing(resultXML) {
+function AddAttachFileInfoXmlParsing(resultXML, reuseAttach) {
     try {
         var xml = loadXMLString(resultXML);
         var nodes = SelectNodes(xml, "ROOT/NODES/NODE");
@@ -165,7 +165,7 @@ function AddAttachFileInfoXmlParsing(resultXML) {
         //    }
         //    pAttachListXml = Rtnxml;
         //}
-        AppendFileAttachInfo(pAttachListXml);
+        AppendFileAttachInfo(pAttachListXml, reuseAttach);
         return;
 
     } catch (ErrMsg) {

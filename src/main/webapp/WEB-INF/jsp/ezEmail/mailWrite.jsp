@@ -302,7 +302,7 @@
 	        }        
 	        
 	        if ((g_cmd == "FORWARD" || g_cmd == "EDIT" || g_ReSendFlag == "Y") && document.getElementById("AttachXmlList").innerHTML.trim() != "") {
-	            AddAttachFileInfoXmlParsing(document.getElementById("AttachXmlList").innerHTML);
+	            AddAttachFileInfoXmlParsing(document.getElementById("AttachXmlList").innerHTML, true);
 	        }
 	        
 	        SelMailSign.value = "${mailSignSel}";

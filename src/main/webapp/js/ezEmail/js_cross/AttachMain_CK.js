@@ -186,7 +186,7 @@ function chkFileNMFilter(cur_ExtName) {
     return chkflag;
 }
 
-function AppendFileAttachInfo(ret) {
+function AppendFileAttachInfo(ret, reuseAttach) {
     try {
         if (typeof (ret) == "string")
             pAttachListXml = loadXMLString(ret);
@@ -268,6 +268,9 @@ function AppendFileAttachInfo(ret) {
                         objTr.appendChild(objTd2);
 
                         if (fileSize != strLang116) {
+                            if (reuseAttach == true) {
+                                dadiframe.filesize += parseInt(parseFloat(fileSize));
+                            }
                             
                         	if (fileSize / 1024 / 1024 > 1) {
                                 fileSize = (Math.floor(parseFloat(fileSize / 1024 / 1024 * 10)) / 10).toFixed(1) + "MB";
@@ -377,6 +380,9 @@ function AppendFileAttachInfo(ret) {
                             objTr.appendChild(objTd2);
 
                             if (fileSize != strLang116) {
+                                if (reuseAttach == true) {
+                                    dadiframe.filesize += parseInt(parseFloat(fileSize));
+                                }    
                                 
                             	if (fileSize / 1024 / 1024 > 1) {
                                     fileSize = (Math.floor(parseFloat(fileSize / 1024 / 1024 * 10)) / 10).toFixed(1) + "MB";
