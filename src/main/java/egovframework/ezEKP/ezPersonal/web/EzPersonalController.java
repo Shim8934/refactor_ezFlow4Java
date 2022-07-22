@@ -2496,6 +2496,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("useMail", menuCodeList.contains("mail"));
 		model.addAttribute("useApproval", menuCodeList.contains("approval"));
 		model.addAttribute("useEzTalkNotification", "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useEzTalkNotification", user.getTenantId())));
+		model.addAttribute("useExternalMailServer", "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useExternalMailServer", user.getTenantId())));
 		model.addAttribute("disableItemFinder", new PersonalNotiDisableItemVO.Finder(ezPersonalService.getAllNotiDisableItem(user.getId(), user.getTenantId())));
 		logger.debug("notificationItemTab ended.");
 		return "/ezPersonal/noti/notificationItemTab";
