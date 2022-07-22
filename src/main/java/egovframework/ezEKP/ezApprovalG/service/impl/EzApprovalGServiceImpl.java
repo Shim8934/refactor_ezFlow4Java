@@ -34233,4 +34233,22 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("getAprOrEndStr ended.");
 		return result;
 	}
+	
+	/* 2022-07-20 홍승비 - 기록물철등록부 > 기록물보기로 진입 시 해당 기록물철의 생산년도를 가져오기 위한 메서드 */
+	@Override
+	public String getCabProduceYear(String cabinetClassNo, String companyID, int tenantID) throws Exception {
+		logger.debug("getCabProduceYear started.");
+		
+		String result = "";
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CABINETCLASSNO", cabinetClassNo);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		result = ezApprovalGDAO.getCabProduceYear(map);
+		
+		logger.debug("getCabProduceYear ended.");
+		return result;	
+	}
 }

@@ -2923,4 +2923,21 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
         
 		return result;
 	}
+	
+	/** 2022-07-20 홍승비 - 기록물철등록부 > 기록물보기로 진입 시 해당 기록물철의 생산년도를 가져오기 위한 AJAX용 메서드 */
+	@RequestMapping(value = "/ezApprovalG/getCabProduceYear.do", method = RequestMethod.GET)
+	@ResponseBody
+	public String getCabProduceYear(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
+		logger.debug("getCabProduceYear started");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String companyID = request.getParameter("companyID");
+		String cabinetClassNo = request.getParameter("cabinetClassNo");
+		
+		String result = ezApprovalGService.getCabProduceYear(cabinetClassNo, companyID, userInfo.getTenantId());
+		
+		logger.debug("getCabProduceYear ended, result = " + result);
+		
+		return result;
+	}
 }

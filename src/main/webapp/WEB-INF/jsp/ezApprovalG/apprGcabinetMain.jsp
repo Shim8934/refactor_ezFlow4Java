@@ -97,7 +97,8 @@
 				var WriterID = null;
 				var WriterDeptID = null;
 		        var shareDeptId = "${shareDeptId}";
-
+		        var isCabinetToRecordFirst = true; // 기록물철등록부에서 기록물보기 메뉴로 최초 진입했는지 판단하기 위한 변수
+		        
 		        document.onselectstart = function () { return false; };
 		
 		        window.onload = function () {
@@ -1057,6 +1058,10 @@
 		        DocList.LoadFromID("DocList");
 		        var selRow = DocList.GetSelectedRows();
 		        
+		        /* 2022-07-20 홍승비 - 기록물보기 버튼 클릭 시, 이전 기록물의 검색조건이 남아있는 오류 수정 (검색조건 초기화) */
+				g_RecSearchParamXml = "";
+				isCabinetToRecordFirst = true; // 최초 진입 플래그 true로 변경
+		        
 		        if (selRow.length != 0) {
 		        	SwapSubMenuDisplay("1");
 			        InitGlobals("RECORD", "0", "1");
@@ -1859,6 +1864,10 @@
 			    }
 		     
 			    function GetEndYConfirmList() {
+			    	/* 2022-07-22 홍승비 -  기록물보기 화면에서 다시 기록물철보기 버튼 클릭 시, 우측 상단의 년도 선택 셀렉트박스 ALL(최근 1년)으로 초기화 */
+			    	$("#rec_year").val("ALL");
+			    	resetRecYearSel();// 기록물보기 시의 생산년도 체크로 추가된 년도 부분 초기화
+			    	
 			    	switch (g_sFlag) {
 				    	case "m02":
 				    		isPeriodYear = false;
@@ -1954,6 +1963,19 @@
 					}
 		        }
 		    }
+			    
+			/* 2022-07-22 홍승비 - 기록물보기 시의 년도 셀렉트박스를 초기화하는 함수 추가 */
+			function resetRecYearSel() {
+	            var toDay = new Date();
+	            var toDayYear = parseInt(toDay.getFullYear());
+	            var minusYear = parseInt(toDay.getFullYear()) - parseInt(pOpenYaer);
+	            
+	            $("#rec_year option[value != 'ALL']").remove(); // ALL 제외하고 모든 옵션 제거
+	            
+	            for (var i = toDayYear; i >= toDayYear - minusYear ; i--) {
+	                AddOption(rec_year, i, i);
+	            }
+			}
 		    
 	    </script>
 	</head>
