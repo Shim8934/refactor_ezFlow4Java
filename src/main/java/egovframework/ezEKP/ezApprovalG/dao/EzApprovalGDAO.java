@@ -3859,4 +3859,9 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public String getAprOrEndStr(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalG.getAprOrEndStr", map);
 	}
+	
+	/* 2022-07-20 홍승비 - CABINETCLASSNO를 전달하면 해당 기록물철분류의 생산년도를 리턴 */
+	public String getCabProduceYear(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getCabProduceYear", map);
+	}
 }

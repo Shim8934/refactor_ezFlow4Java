@@ -852,4 +852,7 @@ public interface EzApprovalGService {
 	
     /* 2022-06-28 홍승비 - 전달한 DOCID로 진행중문서(APR) 또는 완료문서(END) 여부를 문자열로 리턴 */
 	public String getAprOrEndStr(String docID, String companyID, int tenantID) throws Exception;
+
+	/* 2022-07-20 홍승비 - 기록물철등록부 > 기록물보기로 진입 시 해당 기록물철의 생산년도를 가져오기 위한 메서드 */
+	public String getCabProduceYear(String cabinetClassNo, String companyID, int tenantID) throws Exception;
 }

@@ -34996,4 +34996,20 @@
 		]]>
 	</insert>
 	
+	<!-- 2022-07-22 홍승비 - 기록물철 분류번호를 조건으로 해당 기록물철의 생산년도를 리턴하는 쿼리 -->
+	<select id="EzApprovalG.getCabProduceYear" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				PRODUCTIONYEAR
+			FROM 
+				TBL_CABINETCLASS
+			WHERE  
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #v_COMPANYID#
+			AND
+				CABINETCLASSNO = #v_CABINETCLASSNO#
+		]]>
+	</select>
+	
 </sqlMap>
