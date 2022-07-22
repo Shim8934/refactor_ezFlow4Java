@@ -285,7 +285,7 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'iosAppVersion', 'Mobile App IOS Version', '1.0.0', 'Mobile App IOS Version', TO_DATE('2021-11-10 00:00:00','yyyy-mm-dd hh24:mi:ss'), '모바일');
 
 -- 전자결재 리스트 우측 미리보기 테넌트 컨피그 추가
-INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)  VALUES (0, 'useAprPreview', 'YES', '전자결재 리스트 우측에 미리보기 영역을 표출한다. YES: 사용  NO: 사용안함 (default: NO)', '전재결재 리스트 우측 미리보기 사용여부', TO_DATE('2022-07-01 09:00:00', 'yyyy-mm-dd hh24:mi:ss'), '전자결재');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)  VALUES (0, 'useAprPreview', '전자결재 리스트 우측 미리보기 사용여부', 'YES', '전자결재 리스트 우측에 미리보기 영역을 표출한다. YES: 사용  NO: 사용안함 (default: NO)', TO_DATE('2022-07-01 09:00:00','yyyy-mm-dd hh24:mi:ss'), '전자결재');
 
 INSERT INTO TBL_COMPANY_CONFIG (TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE) VALUES (0, 'Top', 'useCopyright', 'NO');
 INSERT INTO TBL_COMPANY_CONFIG (TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE) VALUES (0, 'Top', 'ExpirePassPeriod', '0');
