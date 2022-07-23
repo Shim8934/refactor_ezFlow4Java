@@ -1031,12 +1031,16 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("useMailToCommunity", useMailToCommunity); 
 		model.addAttribute("tags", tags);
 
-		// get tag config
-		JgwResult jgwResult = rest.jgw().url("/jMochaEzEmail/getTagConfig").formParam("userAccount", userEmail).exchangeJgwResult();
-		logger.debug("jgw getTagConfig ended, success={}", jgwResult.succeeded());
+		if (mailWritePreview) {
+			model.addAttribute("useMailTag", false);
+		} else {
+			// get tag config
+			JgwResult jgwResult = rest.jgw().url("/jMochaEzEmail/getTagConfig").formParam("userAccount", userEmail).exchangeJgwResult();
+			logger.debug("jgw getTagConfig ended, success={}", jgwResult.succeeded());
 
-		boolean useMailTag = jgwResult.succeeded() && jgwResult.getResultAsJsonObject().get("enable").getAsBoolean();
-		model.addAttribute("useMailTag", useMailTag);
+			boolean useMailTag = jgwResult.succeeded() && jgwResult.getResultAsJsonObject().get("enable").getAsBoolean();
+			model.addAttribute("useMailTag", useMailTag);
+		}
 		
 		logger.debug("readMail ended.");
 		
