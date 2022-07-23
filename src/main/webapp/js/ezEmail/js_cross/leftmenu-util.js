@@ -6,7 +6,7 @@ var leftWindow = (function() {
 	var parentWindow = self;
 	var i;
 
-	while (parentWindow != top || parentWindow.opener != null) {
+	while (parentWindow != parentWindow.top || parentWindow.opener != null) {
 		for (i = 0; i < parentWindow.frames.length; i++) {
 			if (parentWindow.frames[i].name == 'left') {
 				return filterOnlyMailLeftFrame(parentWindow.frames[i]);
