@@ -146,7 +146,7 @@ function ItemPreviewRead(obj, page) {
         var selRow = DocList.GetSelectedRows();
 
         if (selRow.length <= 0) {
-        	var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
+        	var pAlertContent = strLang870; // 문서를 선택해주십시오.
         	alert(pAlertContent);
             return;
         }
@@ -172,7 +172,7 @@ function ItemPreviewRead(obj, page) {
 	} else {
 		if (pListTypeValue == "1" || pListTypeValue == "11") { //listTypeValue = 11(공유결재문서)
 			if (checkAprState(selobj.getAttribute("DATA1"), selobj.getAttribute("DATA12"), selobj.getAttribute("DATA4"), selobj.getAttribute("APRMEMBERSN"), selobj.getAttribute("ORGCOMPANYID"))){
-				alert("<spring:message code='ezApprovalG.bhs23'/>");
+				alert(strLangHSBAP01); // 해당 문서는 다른 공유결재자에 의해 이미 결재되었습니다.
 				getDocList(setting);
 				return;
 			}
@@ -313,7 +313,7 @@ function pre_openApprovUI(allFlag) {
 	    document.getElementById("ifrmPreViewH").src = openLocation;
 	}
 	else {
-	    var pAlertContent = strLang870;
+	    var pAlertContent = strLang870; // 문서를 선택해주십시오.
 	    alert(pAlertContent);
 	}
 }
@@ -500,7 +500,7 @@ function pre_btnRedraft_onclick() {
     var oArrRows = DocList.GetSelectedRows();
     
     if (oArrRows.length <= 0) {
-    	var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
+    	var pAlertContent = strLang870; // 문서를 선택해주십시오.
     	alert(pAlertContent);
         return;
     }
@@ -517,28 +517,27 @@ function pre_btnRedraft_onclick() {
     }
     
     if (pCurSelRow.getAttribute("orgcompanyid") != "" && pCurSelRow.getAttribute("orgcompanyid") != companyID) {
-    	var pAlertContent = "<spring:message code='ezApprovalG.csj01'/>";
+    	var pAlertContent = strLangHSBAP02; // 다른 회사에서 기안한 문서는 재기안 할 수 없습니다.
     	alert(pAlertContent);
         return;
     }
     
     if (CheckFormConnFlag(pCurSelRow.getAttribute("DATA1"))) {
-        var pAlertContent = "<spring:message code='ezApprovalG.t1726'/>";
+        var pAlertContent = strLangHSBAP03; // 연동 양식은 재기안하실 수 없습니다.
         alert(pAlertContent);
         return;
     }
     if (pCurSelRow) {
         var ret = CheckAprLineInfo(pCurSelRow);
         if (ret != "OK") {
-            var pAlertContent = "<spring:message code='ezApprovalG.t1727'/>" + "\n" +
-                        "<spring:message code='ezApprovalG.t1712'/>" + ret + "<spring:message code='ezApprovalG.t1713'/>";
+            var pAlertContent = strLang863 + "\n" + strLang864 + ret + strLang865; // 기안 당시 부서정보와 현재의 부서정보가 일치하지 않습니다.
             alert(pAlertContent);
             return;
         }
     }
     
     if ((pListTypeValue == "1" || pListTypeValue == "11") && checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"), pCurSelRow.getAttribute("ORGCOMPANYID"))){
-    	alert("<spring:message code='ezApprovalG.bhs23'/>");
+    	alert(strLangHSBAP01); // 해당 문서는 다른 공유결재자에 의해 이미 결재되었습니다.
 		getDocList(setting);
 		return;
 	}
@@ -1032,12 +1031,12 @@ function window_onbeforeunload() {
 function pre_chk_Passwd_Complete(Rtn)
 {
     if (Rtn == "FALSE") {
-        var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
+        var pAlertContent = strLang581; // 암호가 맞지 않습니다.
         OpenAlertUI(pAlertContent);
         return "";
     }
     else if (Rtn == "cancel") {
-        var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
+        var pAlertContent = strLang582; // 취소하셨습니다.
         OpenAlertUI(pAlertContent);
         return "";
     }

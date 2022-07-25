@@ -1123,3 +1123,8 @@ var strLangHSBRDa09 = "doc tab : ";
 
 /* 2022-03-18 홍승비 - 내부시행문 반송 시 메일알림 */
 var strLangHSBSH01 = "[Notice of Return Enforced Doc]";
+
+/* 2022-07-25 홍승비 - 전자결재 미리보기 관련 메세지 추가 */
+var strLangHSBAP01 = "The document has already been signed by another shared approver.";
+var strLangHSBAP02 = "Documents made by another company can not be recovered.";
+var strLangHSBAP03 = "The linked form can not be re-drafted.";
