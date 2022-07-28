@@ -16712,8 +16712,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String regYear = getAccountingYear(processDate, companyID, langType, tenantID);
 		String title = objParam.getElementsByTagName("TITLE").item(0).getTextContent();
 		String numOfPage = objParam.getElementsByTagName("NUMOFPAGE").item(0).getTextContent();
-//    	String aprMemberTitle = objParam.getElementsByTagName("APRMEMBERTITLE").item(0).getTextContent();
-//    	String aprMemberTitle2 = objParam.getElementsByTagName("APRMEMBERTITLE2").item(0).getTextContent();
+    	String aprMemberTitle = objParam.getElementsByTagName("APRMEMBERTITLE").item(0).getTextContent();
+    	String aprMemberTitle2 = objParam.getElementsByTagName("APRMEMBERTITLE2").item(0).getTextContent();
 		String aprMemberName = objParam.getElementsByTagName("APRMEMBERNAME").item(0).getTextContent();
 		String aprMemberName2 = objParam.getElementsByTagName("APRMEMBERNAME2").item(0).getTextContent();
 		String drafterName = objParam.getElementsByTagName("DRAFTERNAME").item(0).getTextContent();
@@ -16744,8 +16744,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_REGYEAR", regYear);
 		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 		map.put("v_REGISTERSN", registerSN);
-		map.put("v_APRMEMBERTITLE", aprMemberName);
-		map.put("v_APRMEMBERTITLE2", aprMemberName2);
+		
+		/* 2022-07-27 홍승비 - 전자결재G의 경우, 기록물 등록 시 결재권자(APRMEMBERTITLE) 칼럼에 결재자명 또는 직위가 들어갈 수 있도록 옵션처리 */
+		if (ezCommonService.getTenantConfig("recordAprMemberTitleType", tenantID).equals("TITLE")) { // 최종결재자의 직위
+			map.put("v_APRMEMBERTITLE", aprMemberTitle);
+			map.put("v_APRMEMBERTITLE2", aprMemberTitle2);
+		} else { // 최종결재자의 결재자명 (default)
+			map.put("v_APRMEMBERTITLE", aprMemberName);
+			map.put("v_APRMEMBERTITLE2", aprMemberName2);
+		}
+		
 		map.put("v_DRAFTERNAME", drafterName);
 		map.put("v_DRAFTERNAME2", drafterName2);
 		map.put("v_EXECUTEDATE", executeDate);
