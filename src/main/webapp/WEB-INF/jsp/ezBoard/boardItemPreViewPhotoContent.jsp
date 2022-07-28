@@ -384,7 +384,14 @@
 	            document.getElementById("mainimages").src = mainfilename;
 	            document.getElementById("mainimages").name = imagefilename.name;
 	            //document.getElementById("MainContent").innerHTML = MakeXMLString(imagefilename.title);
-	            document.getElementById("MainContent").innerHTML = MakeXMLString(imageContentArray[index].title);
+	            
+	            /* 2022-07-28 홍승비 - 포토/썸네일 미리보기 > 사진소개가 10개 단위로 반복되는 오류 수정 (페이지를 활용) */
+	            var strPage = "";
+	            if (pPage > 1) { // 첫번째 페이지 이후에 1, 2,... 의 페이지 숫자를 문자열로 붙여 사진소개에 접근
+	            	strPage = (parseInt(pPage) - 1).toString();
+	            }
+	            
+	            document.getElementById("MainContent").innerHTML = MakeXMLString(imageContentArray[strPage + index.toString()].title);
 	
 	            imageloding();
 	        }
