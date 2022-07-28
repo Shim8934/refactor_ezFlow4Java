@@ -721,7 +721,7 @@
 		            	/* 2019-07-03 홍승비 - 포토/썸네일게시물 사진수정 시 팝업창 크기 조정 */
 						swidth = 460;
 		            	
-			            if(agent.indexOf("edg") > 0){
+			            if (agent.indexOf("edg") > 0) {
 			            	swidth = 550;
 			            }
 		            	

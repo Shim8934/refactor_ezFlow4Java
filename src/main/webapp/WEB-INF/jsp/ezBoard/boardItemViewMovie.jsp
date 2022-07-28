@@ -490,7 +490,12 @@
 		            var ptop = (pheight - sheight) / 2;
 		 	
                		swidth = 460;
-                	sheight = 380;	                
+               		
+		            if (navigator.userAgent.toLowerCase().indexOf("edg") > 0) {
+		            	swidth = 550;
+		            }
+		            
+                	sheight = 380;
 		            pleft = (pwidth - swidth) / 2;
 		            ptop = (pheight - sheight) / 2;
 		            
