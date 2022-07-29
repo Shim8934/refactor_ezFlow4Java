@@ -1670,17 +1670,7 @@ public class EzResourceController extends EgovFileMngUtil {
 				ownerNm = xmlDom2.getElementsByTagName("DISPLAYNAME" + userInfo.getPrimary()).item(0).getTextContent();
 			}
 			title = getSchedule.getTitle();
-			
-			if (title != null) {
-				 title = title.replace("'", "&#39;");
-                 title = title.replace("\"", "&quot;");
-			}
 			loc = getSchedule.getLocation();
-
-			if (loc != null) {
-				loc = title.replace("'", "&#39;");
-                loc = title.replace("\"", "&quot;");
-			}
 			timeDisplay = getSchedule.getTimeDisplay();
 			
 			startDateTime = commonUtil.getDateStringInUTC(getSchedule.getStartDate(), userInfo.getOffset(), false);
