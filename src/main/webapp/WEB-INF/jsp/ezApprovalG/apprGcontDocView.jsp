@@ -186,6 +186,13 @@
 				alert(strLang1139);
 		        btnClose_onclick();
 		        window.close();
+		        
+		        /* 2022-07-29 홍승비 - 미리보기 영역으로 열린 경우, iframe src 자체를 공백으로 변경 */
+		        var ifrmPreViewH = window.parent.document.getElementById("ifrmPreViewH");
+		        if (ifrmPreViewH != null) {
+		        	ifrmPreViewH.src = "<spring:message code='main.kms4'/>";
+		        	ifrmPreViewH.contentDocument.getElementById("ifrmviewEmptyText").textContent = strLang930;	
+		        }
 		    }
 		    function CheckOpinionInfo() {
 		    	var result = "";
