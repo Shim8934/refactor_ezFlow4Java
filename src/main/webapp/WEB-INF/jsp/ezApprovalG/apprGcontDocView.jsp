@@ -79,7 +79,8 @@
 	        var bigSizeAttachDownloadLimitCount = "<c:out value ='${bigSizeAttachDownloadLimitCount}'/>";
 	        
 		    $(function () {
-			    if ("${pass}" != "<RESULT>TRUE</RESULT>") {
+		    	/* 2022-07-29 홍승비 - 열람권한 체크는 초기 진입 시 한번만 진행 (관리자 > 전체 완료문서조회 > 관리자는 모든 문서 열람 가능) */
+			    if ("${pass}" != "<RESULT>TRUE</RESULT>" && admin != 'Y') {
 		    		QuitWindow();
 			    }
 			    
@@ -171,14 +172,10 @@
 		                document.getElementById("btnWhoKyul").style.display = "none";
 		            }
 		            
-		            if ("${pass}" != "<RESULT>TRUE</RESULT>" && admin != 'Y') {
-	                	QuitWindow();
-		            }
-		            else {
-		                if (pDocHref != "") {
-		                    message.Set_EditorContentURL(pDocHref);
-		                }
-		            }
+		            // ready()에서 열람권한 체크를 진행하므로, 그 이후의 열람권한 체크는 제거
+	                if (pDocHref != "") {
+	                    message.Set_EditorContentURL(pDocHref);
+	                }
 		            if (pFormID == "") {
 		                document.getElementById("btnSave").style.display = "none";
 		            }
