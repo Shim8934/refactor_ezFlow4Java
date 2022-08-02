@@ -2482,8 +2482,8 @@ public class EzResourceController extends EgovFileMngUtil {
         }
         
         bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900004", userInfo.getLocale()) + " : " 
-        		+ commonUtil.getDateStringInUTC(resInfo.getStartDate(), userInfo.getOffset(), false) + "&nbsp;~&nbsp;" 
-        		+ commonUtil.getDateStringInUTC(resInfo.getEndDate(), userInfo.getOffset(), false));
+        		+ commonUtil.getDateStringInUTC(resInfo.getStartDate().substring(0, 16), userInfo.getOffset(), false) + "&nbsp;~&nbsp;" 
+        		+ commonUtil.getDateStringInUTC(resInfo.getEndDate().substring(0, 16), userInfo.getOffset(), false));
         
         String subject = "";
         if (approve.equals("1")) {
