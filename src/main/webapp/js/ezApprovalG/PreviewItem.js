@@ -359,8 +359,11 @@ function pre_openViewDocInfo(type) {
     var openLocation;
     // 20191210 ezd 확장자 빼기
     var formUrlExt = getOriginalFileExtension(formURL);
-
-    if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9") {
+    
+    /* 2022-08-02 홍승비 - 미리보기 시 완료문서보기로 접근해야 하는 페이지를 추가로 확인 (getContainerInfo) */
+    var locationHref = window.location.href;
+    
+    if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9" || locationHref.indexOf("ezApprovalG/getContainerInfo.do") > -1) {
         if (formUrlExt === "hwp") {
         	if(useWebHWP == "NO") {
 	             if (CrossYN() && isIE()) {
