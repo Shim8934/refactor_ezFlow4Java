@@ -2010,7 +2010,7 @@
 				  	</div>	
 				</div>
 		
-		        <div style="WIDTH:100%;HEIGHT:290px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
+		        <div style="WIDTH:100%;HEIGHT:240px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
 		            <div id="lvtDetail" style="border: 0;"></div>
 		        </div>
 		    </div>
