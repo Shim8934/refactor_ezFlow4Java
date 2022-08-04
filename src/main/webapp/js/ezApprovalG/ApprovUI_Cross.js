@@ -2359,9 +2359,9 @@ function SReAprLineSingMapping(ret) {
                 idx = LastSignNo1;
             }
             
-            if (junGyulFlag == "1") {
-    			//아무것도 안함
-    		} else if (junGyulFlag == "4") {
+            if (junGyulFlag == "1") { // 전결 이후 결재안함(003) 결재자들도 서명칸에 표출함
+    			// 아무것도 안함
+    		} else if (junGyulFlag == "4") { // 전결 이후 결재안함(003) 결재자들은 서명칸에 표출하지 않음
     			if (OrderType[i] == "003") {
     				continue;
     			}
@@ -2370,7 +2370,7 @@ function SReAprLineSingMapping(ret) {
             if (OrderType[i] == strAprType3) {
                 chkflag = false;
                 for (j = startOrder; j < i; j++) {
-                    if (OrderType[j] == strAprType4) {
+                    if (OrderType[j] == strAprType4) { // 004 전결
                         chkflag = true;
                         break;
                     }
@@ -2415,7 +2415,12 @@ function SReAprLineSingMapping(ret) {
             if (field) {
             	// 서명필드만 존재
             	if (message.GetListItem(fields, (susinSN + "sign" + idx)) != null && message.GetListItem(fields, (susinSN + "seumyung" + idx)) == null) {
-            		setNodeText(field , OrderName[i]);
+            		/* 2022-08-04 홍승비 - 전결인 경우 전결 표시를 함께 부여 (단, draftJunGyulFlag를 체크하여 기안 시점에 '전결' 텍스트를 표출한 경우에만 동일하게 표출함) */
+            		if (draftJunGyulFlag == '1' && OrderType[i] == strAprType4) {
+            			field.innerHTML = (strLang6 + "<br>" + OrderName[i]);
+            		} else {
+            			setNodeText(field , OrderName[i]);
+            		}
             	}
             	// 서명필드 + 결재자명 필드가 함께 존재
             	else if (message.GetListItem(fields, (susinSN + "sign" + idx)) != null && message.GetListItem(fields, (susinSN + "seumyung" + idx)) != null) {
@@ -2519,7 +2524,6 @@ function SReAprLineSingMapping(ret) {
 }
 
 function ReAprLineSingMapping(ret) {
-	console.log("결재선 다시 ?")
     var xmlKuljea, chamjo, hapyuiCnt, SignCnt, referCnt, xmlReDraft;
     var OrderType = new Array();
     var OrderTypeName = new Array();

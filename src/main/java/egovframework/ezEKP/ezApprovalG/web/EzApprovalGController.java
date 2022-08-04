@@ -5209,7 +5209,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		model.addAttribute("preSusinGroupStr", preSusinGroupStr);
 		model.addAttribute("isPreview", isPreview);
-		model.addAttribute("useReceiveInfoName", ezCommonService.getTenantConfig("useReceiveInfoName", userInfo.getTenantId()));
+		model.addAttribute("useReceiveInfoName", ezCommonService.getTenantConfig("useReceiveInfoName", userInfo.getTenantId())); // 수신처에 "장" 붙이는 옵션
+		model.addAttribute("draftJunGyulFlag", ezCommonService.getTenantConfig("draftJunGyulFlag", userInfo.getTenantId())); // 일반버전 서명 remapping 시 전결문자 표출 확인용
 		
 		logger.debug("approvui ended");
 		
