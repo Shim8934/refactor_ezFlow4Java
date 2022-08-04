@@ -5209,6 +5209,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		model.addAttribute("preSusinGroupStr", preSusinGroupStr);
 		model.addAttribute("isPreview", isPreview);
+		model.addAttribute("useReceiveInfoName", ezCommonService.getTenantConfig("useReceiveInfoName", userInfo.getTenantId()));
 		
 		logger.debug("approvui ended");
 		

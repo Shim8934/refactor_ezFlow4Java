@@ -192,7 +192,9 @@
 	        var bigAttachDownloadPeriod = "<c:out value ='${bigAttachDownloadPeriod}'/>";
 	        var bigAttachDownloadDay = "<c:out value ='${bigAttachDownloadDay}'/>";
 	        var bigSizeAttachDownloadLimitCount = "<c:out value ='${bigSizeAttachDownloadLimitCount}'/>";
+	        
 			var preSusinGroupStr = "<c:out value ='${preSusinGroupStr}'/>";
+			var useReceiveInfoName = "<c:out value ='${useReceiveInfoName}'/>"; // 수신처 뒤에 "장"을 붙이는지 여부 (0 : 안붙임 / 1 : 붙임)
 	        
 		    window.onload = function () {
 		        if (allFlag == "2") {
@@ -2221,7 +2223,9 @@
 		        for (var i = 0; i < rows.length; i++) {
 		        	var dataNodes = GetChildNodes(rows[i]);
 			        objRow = createNodeAndAppandNode(xmlpara, objRoot, objRow, "ROW");
-					if (getNodeText(dataNodes[1]).indexOf(preSusinGroupStr) == 0) {
+			        
+			        /* 2022-08-03 홍승비 - 수신처그룹에는 "장"을 붙이지 않으며, 수신자에 "장" 붙이는 컨피그 옵션 미사용 분기 추가 */
+					if (getNodeText(dataNodes[1]).indexOf(preSusinGroupStr) == 0 || useReceiveInfoName == 0) {
 						createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "NAME", SelectSingleNodeValue(dataNodes[1], "VALUE").trim());
 					} else {
 						createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "NAME", SelectSingleNodeValue(dataNodes[1], "VALUE").trim() + (SelectSingleNodeValue(dataNodes[2], "VALUE").trim() == "" ? "<spring:message code='ezApprovalG.lhj18'/>" : ""));
