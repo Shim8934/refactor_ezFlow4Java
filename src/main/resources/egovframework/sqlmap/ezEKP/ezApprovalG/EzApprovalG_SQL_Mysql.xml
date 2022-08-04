@@ -4336,7 +4336,7 @@
                 AND
                 TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
                 AND
-                PROCESSORID = '' OR PROCESSORID IS NULL)
+                (PROCESSORID = '' OR PROCESSORID IS NULL))
             </isEqual>
             	 ) 
              ORDER BY PROCESSDATE $v_BASICORDER$
@@ -8508,7 +8508,7 @@
 	         	AND 
 					TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
 				AND
-					PROCESSORID = '' OR PROCESSORID IS NULL)
+					(PROCESSORID = '' OR PROCESSORID IS NULL))
             </isEqual>
 	      	<isEqual property="v_aprFlag" compareValue="G">
 		     	OR
@@ -11577,7 +11577,7 @@
             AND
             TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
             AND
-            PROCESSORID = '' OR PROCESSORID IS NULL)
+            (PROCESSORID = '' OR PROCESSORID IS NULL))
             AND
                 TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
    		</isEqual>
@@ -15098,7 +15098,7 @@
              AND
              TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
              AND
-             PROCESSORID = '' OR PROCESSORID IS NULL)
+             (PROCESSORID = '' OR PROCESSORID IS NULL))
 	     </isEqual>
 	     <isEqual property="v_aprFlag" compareValue="G">
 	     	OR
@@ -17002,7 +17002,7 @@
                 AND 
                 	TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
                 AND
-                    PROCESSORID = '' OR PROCESSORID IS NULL)
+                    (PROCESSORID = '' OR PROCESSORID IS NULL))
 			</isEqual>
 				)
 		</isEqual>
@@ -32854,7 +32854,7 @@
 	   				AND 
 	   					TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
                     AND
-                        PROCESSORID = '' OR PROCESSORID IS NULL)
+                        (PROCESSORID = '' OR PROCESSORID IS NULL))
 	   		</isEqual>
 	   		<isEqual property="v_aprFlag" compareValue="G">
 		     	OR
