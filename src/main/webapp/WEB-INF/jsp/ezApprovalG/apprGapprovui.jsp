@@ -2225,7 +2225,7 @@
 			        objRow = createNodeAndAppandNode(xmlpara, objRoot, objRow, "ROW");
 			        
 			        /* 2022-08-03 홍승비 - 수신처그룹에는 "장"을 붙이지 않으며, 수신자에 "장" 붙이는 컨피그 옵션 미사용 분기 추가 */
-					if (getNodeText(dataNodes[1]).indexOf(preSusinGroupStr) == 0 || useReceiveInfoName == 0) {
+					if (getNodeText(dataNodes[1]).indexOf(preSusinGroupStr) == 0 || useReceiveInfoName == "0") {
 						createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "NAME", SelectSingleNodeValue(dataNodes[1], "VALUE").trim());
 					} else {
 						createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "NAME", SelectSingleNodeValue(dataNodes[1], "VALUE").trim() + (SelectSingleNodeValue(dataNodes[2], "VALUE").trim() == "" ? "<spring:message code='ezApprovalG.lhj18'/>" : ""));
