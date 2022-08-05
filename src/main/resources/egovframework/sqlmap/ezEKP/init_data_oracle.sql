@@ -2368,7 +2368,7 @@ to_clob('<td width="520" height="38" style="width: 520px; height: 38px; vertical
                            </p>
                         </td>
                         <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
-                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
                         </td>
                      </tr>
                      <tr>
@@ -2378,7 +2378,7 @@ to_clob('<td width="520" height="38" style="width: 520px; height: 38px; vertical
                            </p>
                         </td>
                         <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
-                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
                         </td>
                      </tr>
                   </tbody>
@@ -2491,7 +2491,7 @@ to_clob('<td width="520" height="38" style="width: 520px; height: 38px; vertical
                            </p>
                         </td>
                         <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
-                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
                         </td>
                      </tr>
                      <tr>
@@ -2501,7 +2501,7 @@ to_clob('<td width="520" height="38" style="width: 520px; height: 38px; vertical
                            </p>
                         </td>
                         <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
-                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
                         </td>
                      </tr>
                   </tbody>
@@ -2614,7 +2614,7 @@ to_clob('<td width="520" height="38" style="width: 520px; height: 38px; vertical
                            </p>
                         </td>
                         <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
-                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
                         </td>
                      </tr>
                      <tr>
@@ -2624,7 +2624,7 @@ to_clob('<td width="520" height="38" style="width: 520px; height: 38px; vertical
                            </p>
                         </td>
                         <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
-                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
                         </td>
                      </tr>
                   </tbody>
@@ -2737,7 +2737,7 @@ to_clob('<td width="520" height="38" style="width: 520px; height: 38px; vertical
                            </p>
                         </td>
                         <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
-                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
                         </td>
                      </tr>
                      <tr>
@@ -2747,7 +2747,7 @@ to_clob('<td width="520" height="38" style="width: 520px; height: 38px; vertical
                            </p>
                         </td>
                         <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
-                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
                         </td>
                      </tr>
                   </tbody>
@@ -2860,7 +2860,7 @@ to_clob('<td width="520" height="38" style="width: 520px; height: 38px; vertical
                            </p>
                         </td>
                         <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
-                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
                         </td>
                      </tr>
                      <tr>
@@ -2870,7 +2870,7 @@ to_clob('<td width="520" height="38" style="width: 520px; height: 38px; vertical
                            </p>
                         </td>
                         <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
-                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
                         </td>
                      </tr>
                   </tbody>
@@ -2983,7 +2983,7 @@ to_clob('<td width="520" height="38" style="width: 520px; height: 38px; vertical
                            </p>
                         </td>
                         <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
-                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
                         </td>
                      </tr>
                      <tr>
@@ -2993,7 +2993,7 @@ to_clob('<td width="520" height="38" style="width: 520px; height: 38px; vertical
                            </p>
                         </td>
                         <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
-                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
                         </td>
                      </tr>
                   </tbody>
