@@ -60,10 +60,11 @@
 		    	}
 		    }
 		    
-		    window.onload = function () {		
+		    window.onload = function () {
 		    	
 		    	if (parent.type == "mod") {
 		    		$("h1").text("<spring:message code='ezJournal.t167'/>");
+		    		$("#receiverFavoriteName").val(parent.favoriteNameForMod);
 		    	}
 		    	
 		    	$("#receiverFavoriteName").focus();
