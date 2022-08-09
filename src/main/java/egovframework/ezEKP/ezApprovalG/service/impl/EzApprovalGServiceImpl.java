@@ -12242,12 +12242,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		//수신문 반송시 지정하면 결재라인 및 의견을 지워주기 위해 추가
 		map.put("v_DocID", docID);
 		
-		ezApprovalGDAO.deleteOpinionInfo(map);
+		/*ezApprovalGDAO.deleteOpinionInfo(map);
 		ezApprovalGDAO.updateOpinionInfo(map);
 		
 		ezApprovalGDAO.aprDeleteDocInfo(map);
-		ezApprovalGDAO.aprDeleteDocInfo2(map);
-		
+		ezApprovalGDAO.aprDeleteDocInfo2(map);*/
+
 		sendMsg(docID, processorID, "JIJUNG", companyID, lang, tenantID);
 		
 		logger.debug("setJijung ended");
