@@ -496,6 +496,7 @@ function pre_OpenReceiveDraftUI(selobj, pDraftFlag) {
     }
 }
 
+/* 2022-08-10 홍승비 - 미리보기 영역에서는 기안 및 결재정보 접근 동작이 불가능하므로, 재기안 시의 알러트를 일부 사용하지 않도록 주석처리함 */
 function pre_btnRedraft_onclick() {
     var DocList = new ListView();
     DocList.LoadFromID("DocList");
@@ -519,12 +520,13 @@ function pre_btnRedraft_onclick() {
     	}
     }
     
+    // 문서보기에 영향을 미치지 않는 알러트 메세지 주석처리 (해당 알러트는 미리보기 영역 및 팝업창 내부에서 표출됨)
+    /*
     if (pCurSelRow.getAttribute("orgcompanyid") != "" && pCurSelRow.getAttribute("orgcompanyid") != companyID) {
     	var pAlertContent = strLangHSBAP02; // 다른 회사에서 기안한 문서는 재기안 할 수 없습니다.
     	alert(pAlertContent);
         return;
     }
-    
     if (CheckFormConnFlag(pCurSelRow.getAttribute("DATA1"))) {
         var pAlertContent = strLangHSBAP03; // 연동 양식은 재기안하실 수 없습니다.
         alert(pAlertContent);
@@ -538,7 +540,7 @@ function pre_btnRedraft_onclick() {
             return;
         }
     }
-    
+    */
     if ((pListTypeValue == "1" || pListTypeValue == "11") && checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"), pCurSelRow.getAttribute("ORGCOMPANYID"))){
     	alert(strLangHSBAP01); // 해당 문서는 다른 공유결재자에 의해 이미 결재되었습니다.
 		getDocList(setting);
