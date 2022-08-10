@@ -1877,14 +1877,14 @@ public class EzJournalController extends EgovFileMngUtil {
 				toArr[0] = new InternetAddress((String) journalEnv.get("mail"));
 				toArr[0].setPersonal((String) journalEnv.get("name"));
 				
-				String subject = egovMessageSource.getMessage("ezJournal.t151") + journalTitle;
+				String subject = egovMessageSource.getMessage("ezJournal.t151", userInfo.getLocale()) + journalTitle;
 				
-				String content = "<p>" + egovMessageSource.getMessage("ezJournal.t152") + "</p>";
+				String content = "<p>" + egovMessageSource.getMessage("ezJournal.t152", userInfo.getLocale()) + "</p>";
 				
 				content += "<p></p>";
 				content += "<a id='journal_a' href='#' target='' onclick='journalMailLink(" + journalId + ",1);'>" + journalTitle + "</a>";
-				content += "<p>" + egovMessageSource.getMessage("ezJournal.t153") + userInfo.getDisplayName() + "</p>";
-				content += "<p>" + egovMessageSource.getMessage("ezJournal.t154") + journalTitle + "</p>";
+				content += "<p>" + egovMessageSource.getMessage("ezJournal.t153", userInfo.getLocale()) + userInfo.getDisplayName() + "</p>";
+				content += "<p>" + egovMessageSource.getMessage("ezJournal.t154", userInfo.getLocale()) + journalTitle + "</p>";
 				content += "<p>" + replyContent + "</p>";
 				
 				content = commonUtil.createNotiMailContent(content, userInfo.getTenantId(), userInfo.getLocale());
@@ -1956,13 +1956,13 @@ public class EzJournalController extends EgovFileMngUtil {
 					toArr[i] = toArrList.get(i);
 				}
 				
-				String subject = egovMessageSource.getMessage("ezJournal.t155") +journalTitle;
+				String subject = egovMessageSource.getMessage("ezJournal.t155", userInfo.getLocale()) +journalTitle;
 				
-				String content = "<p>" + egovMessageSource.getMessage("ezJournal.t156") + "</p>";
+				String content = "<p>" + egovMessageSource.getMessage("ezJournal.t156", userInfo.getLocale()) + "</p>";
 				content += "<p></p>";
 				content += "<a id='journal_a' href='#' target='' onclick='journalMailLink(" + journalId + ");'>" + journalTitle + "</a>";
-				content += "<p>" + egovMessageSource.getMessage("ezJournal.t157") + userInfo.getDisplayName() + "</p>";
-				content += "<p>" + egovMessageSource.getMessage("ezJournal.t154") + journalTitle + "</p>";
+				content += "<p>" + egovMessageSource.getMessage("ezJournal.t157", userInfo.getLocale()) + userInfo.getDisplayName() + "</p>";
+				content += "<p>" + egovMessageSource.getMessage("ezJournal.t154", userInfo.getLocale()) + journalTitle + "</p>";
 				
 				content = commonUtil.createNotiMailContent(content, userInfo.getTenantId(), userInfo.getLocale());
 				
