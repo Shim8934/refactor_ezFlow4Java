@@ -14580,23 +14580,25 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							ezApprovalGDAO.updateAprLineInfo(map3);
 							
 							if (approvalFlag.equals("G")) {
-								absentReason = getBujaeInfo(docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), userInfo.getTenantId(), userInfo.getOffset(), companyID);
-								if (absentReason.trim().equals("")) {
-									sendMsg(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), "ING", companyID, lang, userInfo.getTenantId());
-									whileFlag = false;
-								} else {
-									subSQL = setBujaeInfo(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), absentReason, "AST", companyID, lang, userInfo.getTenantId(), userInfo.getLocale(), userInfo.getRealPath());
-									
-									if (subSQL.toUpperCase().equals("FALSE")) {
-										rtnVal = false;
-									} else {
-										map3.put("v_APRSTATE", staASSungIn);
-										map3.put("v_REASONDONOTAPPROV", makeXMLString(absentReason));
-										ezApprovalGDAO.updateAprLineInfo3(map3);
-										
-				                        k += 1;
-									}
-								}
+							    whileFlag = true;
+							    break;
+//								absentReason = getBujaeInfo(docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), userInfo.getTenantId(), userInfo.getOffset(), companyID);
+//								if (absentReason.trim().equals("")) {
+//									sendMsg(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), "ING", companyID, lang, userInfo.getTenantId());
+//									whileFlag = false;
+//								} else {
+//									subSQL = setBujaeInfo(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), absentReason, "AST", companyID, lang, userInfo.getTenantId(), userInfo.getLocale(), userInfo.getRealPath());
+//
+//									if (subSQL.toUpperCase().equals("FALSE")) {
+//										rtnVal = false;
+//									} else {
+//										map3.put("v_APRSTATE", staASSungIn);
+//										map3.put("v_REASONDONOTAPPROV", makeXMLString(absentReason));
+//										ezApprovalGDAO.updateAprLineInfo3(map3);
+//
+//				                        k += 1;
+//									}
+//								}
 							} else {
 								sendMsg(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), "ING", companyID, lang, userInfo.getTenantId());
 								k += 1;
