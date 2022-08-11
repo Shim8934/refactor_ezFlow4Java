@@ -1670,17 +1670,7 @@ public class EzResourceController extends EgovFileMngUtil {
 				ownerNm = xmlDom2.getElementsByTagName("DISPLAYNAME" + userInfo.getPrimary()).item(0).getTextContent();
 			}
 			title = getSchedule.getTitle();
-			
-			if (title != null) {
-				 title = title.replace("'", "&#39;");
-                 title = title.replace("\"", "&quot;");
-			}
 			loc = getSchedule.getLocation();
-
-			if (loc != null) {
-				loc = title.replace("'", "&#39;");
-                loc = title.replace("\"", "&quot;");
-			}
 			timeDisplay = getSchedule.getTimeDisplay();
 			
 			startDateTime = commonUtil.getDateStringInUTC(getSchedule.getStartDate(), userInfo.getOffset(), false);
@@ -2492,8 +2482,8 @@ public class EzResourceController extends EgovFileMngUtil {
         }
         
         bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900004", userInfo.getLocale()) + " : " 
-        		+ commonUtil.getDateStringInUTC(resInfo.getStartDate(), userInfo.getOffset(), false) + "&nbsp;~&nbsp;" 
-        		+ commonUtil.getDateStringInUTC(resInfo.getEndDate(), userInfo.getOffset(), false));
+        		+ commonUtil.getDateStringInUTC(resInfo.getStartDate().substring(0, 16), userInfo.getOffset(), false) + "&nbsp;~&nbsp;" 
+        		+ commonUtil.getDateStringInUTC(resInfo.getEndDate().substring(0, 16), userInfo.getOffset(), false));
         
         String subject = "";
         if (approve.equals("1")) {

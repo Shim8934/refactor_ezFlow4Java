@@ -2897,7 +2897,9 @@ var SurveyCreate     = function() {
 	function mkOptions(type, order, content) {
 		var options   = $("<div class='" + type + "-select'></div>");
 		var span      = $("<span class='" + type + "-order'>" + order + "</span>");
-		var contents  = $("<input class='textInput' type='text' value='" + content + "' maxlength='115' placeholder='" + SurveyMessages.strContent + "'/>");
+		
+		/* 2022-08-02 홍승비 - 설문조사 순위, 드롭다운 수정 시 작은따옴표 ''가 포함될 때의 오류 및 특수문자 파싱되는 오류 수정 */
+		var contents  = $("<input class='textInput' type='text' value='" + MakeXMLString(content) + "' maxlength='115' placeholder='" + SurveyMessages.strContent + "'/>");
 		var delOption = $("<ul class='survey_atchBtn'><li class='off delOption'><span class='survey_icon srvyDel'></span></li></ul>");
 		options.append(span);
 		options.append(contents);
@@ -2986,9 +2988,10 @@ var SurveyCreate     = function() {
 		var level   = "";
 		var elClass = type == "row" ? "delRow" : "delCol";
 		
+		/* 2022-08-02 홍승비 - 설문조사 행렬 수정 시 작은따옴표 ''가 포함될 때의 오류 및 특수문자 파싱되는 오류 수정 */
 		if (elment) {
 			level   = elment["level"];
-			content = elment["content"];
+			content = MakeXMLString(elment["content"]);
 		}
 		
 		var html  = "<div class='" + type + "' level='" + level + "'>";

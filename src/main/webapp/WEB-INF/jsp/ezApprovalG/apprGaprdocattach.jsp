@@ -97,13 +97,17 @@
 	            else
 	                arrow_left.Enable = "true";
 	        }
+	        
 	        function bt_selSContName_onclick() {
 	            ScontID = selSContName.value;
 	            if (DocListType == "GetDocSearch") {
-	                for (var i = 0; i < 14; i++) {
+	            	
+					/* 2022-08-05 홍승비 - 문서함 선택 시, 검색조건 배열 길이에 따라 동적으로 초기화시키도록 수정 + 검색조건 생성 함수도 한번만 동작하도록 수정 */
+					var conLength = condition.length;
+					for (var i = 0; i < conLength; i++) {
 	                    condition[i] = "";
-	                    MakeSubCondition();
-	                }
+					}
+	                MakeSubCondition();
 	                GetDocSearch();
 	            }
 	            else

@@ -439,7 +439,6 @@
             UPDATE TBL_USERMASTER
             SET
                 password = #password#,
-                updatedt = utc_timestamp(),
                 password_updatedt = utc_timestamp()
             WHERE
                 cn = #id# AND tenant_id = #tenantId#                                  

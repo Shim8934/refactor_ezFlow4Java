@@ -49,6 +49,9 @@
 	   		/* 2019-12-04 홍승비 - 다국어 스타일 적용을 위한 lang 변수 */
 	   		var lang = "<c:out value='${lang}'/>";
 	   		
+	   		/* 2022-08-05 홍승비 - 현재 선택된 즐겨찾기 리스트의 이름을 담는 변수 (즐겨찾기 수정 시 사용) */
+	   		var favoriteNameForMod = "";
+	   		
 	   		document.onselectstart = function () { return false; };
 	   		function close_Click(){
 	   			window.close();
@@ -481,6 +484,12 @@
 	   		function modifyFavorite() {
 	   			if (favoriteId != undefined) {
 		   			type = "mod";
+		   			
+					// 현재 선택된 즐겨찾기의 이름을 변수에 저장
+					if ($("tr .selectTR").length > 0) {
+						favoriteNameForMod = $("tr .selectTR").children(":eq(1)").text();
+					}
+					
 		   			saveFavoriteLine();
 	   			} else {
 	   				alert("<spring:message code='ezJournal.t173'/>");

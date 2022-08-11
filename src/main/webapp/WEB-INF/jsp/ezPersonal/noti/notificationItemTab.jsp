@@ -57,7 +57,7 @@ th:nth-child(n+2) > div, td:nth-child(n+2) > div { width: 100px; height: 100%; p
 <%-- 톡 서버를 사용하지 않더라도 체크박스는 다 만들고나서 display: none으로 웹 렌더링 시에 숨기도록 개발함 --%>
 td:nth-child(n+3), th:nth-child(n+3), col:nth-child(n+3) { display: none; }
 </c:if>
-<c:if test="${not useMail or not useEzTalkNotification}">
+<c:if test="${not useMail or not useEzTalkNotification or useExternalMailServer}">
 <%-- 메일을 사용하지 않거나 톡 푸시를 사용하지 않는다면 메일 tr을 숨김 --%>
 tr.mail { display: none; }
 </c:if>

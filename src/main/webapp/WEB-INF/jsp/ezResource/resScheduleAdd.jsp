@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html style="height:100%">
@@ -113,6 +114,8 @@
 	        	if (cmd == "mod") {
 	        		/* 2018-07-10 김민성 - 자원 수정시 특수문자 처리 */
 	            	document.getElementById("importance1").value = "${importance}";
+	            	document.getElementById("title").value = ConvMakeXMLString("<c:out value='${title}'/>");
+	            	document.getElementById("loc").value = ConvMakeXMLString("<c:out value='${loc}'/>");
 	            	
 	            	if(allDay == "1") {
 	            		document.getElementById("AllDay").checked = true;
@@ -688,6 +691,18 @@
 	            }
 	            else obj.value = obj.value.replace(/[\a-zㄱ-ㅎㅏ-ㅣ가-힣]/g, '');
 	        }
+	        
+		    /* 2022-07-29 홍승비 - 자원예약 수정 시 특수문자 처리 */
+		    function ConvMakeXMLString(str) {
+		        str = ReplaceText(str, "&lt;", "<");
+		        str = ReplaceText(str, "&gt;", ">");
+		        str = ReplaceText(str, "&#039;", "'");
+		        str = ReplaceText(str, "&#034;", "\"");
+		        str = ReplaceText(str, "&#92;", "\\");
+		  	    str = ReplaceText(str, "&amp;", "&");	    
+		        return str;
+		    }
+	        
 		</script>
 	</head>
 	<xmp id="sigBody" style="display: none;">${content}</xmp>
@@ -801,7 +816,7 @@
 			     		</tr>
 	       				<tr style="display: none">
 	         				<th> <spring:message code="ezResource.t222"/></th>
-	         				<td colspan="3"><input type="text" id="loc" name="loc" value="${loc}" style="width: 100%" /></td>
+	         				<td colspan="3"><input type="text" id="loc" name="loc" value="" style="width: 100%" /></td>
 	       				</tr>
 	       				<tr style="display: none">
 	         				<td><input type="checkbox" id="alertCheck" d  /><spring:message code="ezResource.t223"/></td>
@@ -823,7 +838,7 @@
 						</tr>
 						<tr>
 	         				<th> <spring:message code="ezResource.t224"/></th>
-	         				<td colspan="3"><input type="text" id="title" name="title" maxlength="100"  style="width: 100%" value="<c:out value='${title}' />" />          </td>		<!-- 2018-07-13 김민성 - 자원예약 이름 글자수 제한 25->100자로 변경 -->
+	         				<td colspan="3"><input type="text" id="title" name="title" maxlength="100"  style="width: 100%" value="" /></td>		<!-- 2018-07-13 김민성 - 자원예약 이름 글자수 제한 25->100자로 변경 -->
 	       				</tr>
 	       				<c:if test="${useSchedule && cmdStr eq 'add'}">
 	       				<tr>

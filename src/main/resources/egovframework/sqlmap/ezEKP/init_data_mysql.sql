@@ -283,7 +283,10 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'iosAppVersion', 'Mobile App IOS Version', '1.0.0', 'Mobile App IOS Version', '2021-11-10 00:00:00', '모바일');
 
 -- 전자결재 리스트 우측 미리보기 테넌트 컨피그 추가
-INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)  VALUES (0, 'useAprPreview', 'YES', '전자결재 리스트 우측에 미리보기 영역을 표출한다. YES: 사용  NO: 사용안함 (default: NO)', '전재결재 리스트 우측 미리보기 사용여부', '2022-07-01 09:00:00', '전자결재');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)  VALUES (0, 'useAprPreview', '전자결재 리스트 우측 미리보기 사용여부', 'YES', '전자결재 리스트 우측에 미리보기 영역을 표출한다. YES: 사용  NO: 사용안함 (default: NO)', '2022-07-01 09:00:00', '전자결재');
+
+-- 전자결재 기록물 등록 시 결재권자 칼럼(APRMEMBERTITLE)에 최종결재자명 또는 최종결재자 직위를 삽입하는 옵션 추가
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)  VALUES (0, 'recordAprMemberTitleType', '전자결재 기록물등록 시 결재권자 칼럼에 결재자명 또는 직위를 삽입', 'TITLE', '전자결재 기록물등록 시 결재권자 칼럼에 결재자명 또는 직위를 삽입한다. NAME: 최종결재자명  TITLE: 최종결재자직위 (default: NAME)', '2022-07-26 09:00:00', '전자결재');
 
 INSERT INTO TBL_COMPANY_CONFIG (TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE) VALUES (0, 'Top', 'useCopyright', 'NO');
 INSERT INTO TBL_COMPANY_CONFIG (TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE) VALUES (0, 'Top', 'ExpirePassPeriod', '0');
@@ -1902,7 +1905,7 @@ Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date
                            </p>
                         </td>
                         <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
-                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
                         </td>
                      </tr>
                      <tr>
@@ -1912,7 +1915,7 @@ Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date
                            </p>
                         </td>
                         <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
-                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
                         </td>
                      </tr>
                   </tbody>
@@ -2024,7 +2027,7 @@ Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date
                            </p>
                         </td>
                         <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
-                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
                         </td>
                      </tr>
                      <tr>
@@ -2034,7 +2037,7 @@ Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date
                            </p>
                         </td>
                         <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
-                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
                         </td>
                      </tr>
                   </tbody>
@@ -2146,7 +2149,7 @@ Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date
                            </p>
                         </td>
                         <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
-                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
                         </td>
                      </tr>
                      <tr>
@@ -2156,7 +2159,7 @@ Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date
                            </p>
                         </td>
                         <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
-                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
                         </td>
                      </tr>
                   </tbody>
@@ -2268,7 +2271,7 @@ Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date
                            </p>
                         </td>
                         <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
-                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
                         </td>
                      </tr>
                      <tr>
@@ -2278,7 +2281,7 @@ Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date
                            </p>
                         </td>
                         <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
-                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
                         </td>
                      </tr>
                   </tbody>
@@ -2390,7 +2393,7 @@ Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date
                            </p>
                         </td>
                         <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
-                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
                         </td>
                      </tr>
                      <tr>
@@ -2400,7 +2403,7 @@ Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date
                            </p>
                         </td>
                         <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
-                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
                         </td>
                      </tr>
                   </tbody>
@@ -2512,7 +2515,7 @@ Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date
                            </p>
                         </td>
                         <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
-                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
                         </td>
                      </tr>
                      <tr>
@@ -2522,7 +2525,7 @@ Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date
                            </p>
                         </td>
                         <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
-                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
                         </td>
                      </tr>
                   </tbody>

@@ -28,6 +28,8 @@ var g_searchDate = {
 	endDate: null
 }
 
+var cabProduceY = ""; // 기록물철등록부에서 기록물보기로 진입한 경우, 선택된 기록물철분류의 생산년도를 담는 변수
+
 function ChkCabRoleInfo(selRow) {
     var ConfirmFlag;
     var CabClassNo;
@@ -579,8 +581,15 @@ function GetRecordList() {
         if (checkRecordAll()) {
             tempDeptID = "ALL";
         }
-
-        g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00.001</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
+        
+        /* 2022-07-20 홍승비 - 기록물철등록부 > 기록물철 선택 후 기록물보기로 진입한 경우, 선택한 기록물철의 생산 년도를 기준으로 표출 (검색조건 없을 시의 기본 표출) */
+        if (typeof(isCabinetToRecordFirst) != "undefined" && isCabinetToRecordFirst == true && typeof(g_sFlag) != "undefined" && g_sFlag == "m02") { // 기록물철등록부의 g_sFlag는 'm02'
+        	// 생산년도의 01월 01일부터 12월 31일까지를 검색 범위로 설정
+        	g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + cabProduceY + "-01-01 00:00:00.001</SREGDATE><EREGDATE>" + cabProduceY + "-12-31 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
+        }
+        else {
+        	g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00.001</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";        	
+        }
     } else if (g_isSearching) {
     	var searchParamXml = loadXMLString(g_RecSearchParamXml);
         var startDate = SelectSingleNodeValue(searchParamXml.firstChild, "SREGDATE");
@@ -830,11 +839,11 @@ function InsertToRecListView(Resultxml) {
         ListViewData = SelectSingleNodeNew(Resultxml, "DOCLIST/LISTVIEWDATA");
         NodeList2 = SelectSingleNodeNew(Resultxml, "DOCLIST/TOTALDOCCOUNT");
 
-        if (ListViewData == null)
+        if (ListViewData == null) {
             return;
-
+        }
+        
         NodeListLen = 0;
-
         
         if (NodeList2 != null) {
             var cnt = getNodeText(NodeList2);
@@ -842,6 +851,24 @@ function InsertToRecListView(Resultxml) {
                 NodeListLen = cnt;
             else
                 NodeListLen = 0;
+        }
+        
+        /* 2022-07-20 홍승비 - 기록물철등록부에서 기록물보기로 진입한 경우, 년도 확장 및 생산년도를 셀렉트 */
+        if (typeof(isCabinetToRecordFirst) != "undefined" && isCabinetToRecordFirst == true && typeof(g_sFlag) != "undefined" && g_sFlag == "m02") {
+        	var recYearSelect = $("#rec_year");
+        	var todayYear = parseInt(new Date().getFullYear());
+            cabProduceY = parseInt(cabProduceY);
+            
+            // 선택 가능 년도를 확장 (생산년도 ~ 현재년도)
+            for (var i = todayYear; i >= cabProduceY; i--) {
+            	// 년도 옵션이 셀렉트박스에 존재하지 않는 경우에만 아래쪽으로 어펜드 (최상단이 ALL, 위에서 아래쪽으로 년도가 감소하므로)
+            	if (recYearSelect.find("option[value='" + i + "']").length <= 0) {
+            		AddOption(rec_year, i, i);
+            	}
+            }
+            
+            recYearSelect.val(cabProduceY); // 기본 표출 년도를 생산년도로 셋팅 (onchange 이벤트는 동작하지 않음)
+            isCabinetToRecordFirst = false; // 기록물보기 버튼 클릭으로 최초 진입했는지 판단하는 플래그 false로 변경 (이후의 GetRecordList ~ InsertToRecListView 부터는 생산년도 관련 코드가 동작하지 않도록)
         }
 
         var xmlDoc;
@@ -883,7 +910,9 @@ function InsertToRecListView(Resultxml) {
         
         DisplayLineCnt_ezCab(NodeListLen);
         selFirstRow(Resultxml);
-    } catch (e) { }
+    } catch (e) {
+    	console.log(e);
+    }
 }
 
 function onreadystatechange_RecList() {
@@ -2047,3 +2076,24 @@ function getDateStrByLang(userLang, year, month, date) {
 		return year + strLang1028 + " " + month + strLang1029 + " " + date + strLang1030
 	}
 }
+
+/* 2022-07-20 홍승비 - 선택한 기록물철의 생산년도를 리턴하는 AJAX 함수 추가 */
+function getProduceYear(cabinetClassNo) {
+	var resY = new Date().getFullYear();
+	
+	$.ajax({
+		type : "GET",
+		async : false,
+		url : "/ezApprovalG/getCabProduceYear.do",
+		data : {
+				companyID : CompanyID,
+				cabinetClassNo : cabinetClassNo
+		},
+		success : function(result) {
+			resY = result;
+		}
+	});
+	
+	return resY;
+}
+

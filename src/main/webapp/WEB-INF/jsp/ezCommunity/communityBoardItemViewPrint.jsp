@@ -202,6 +202,7 @@
 		 	               document.getElementById('onelinereplylist').innerHTML = strHTML;
 		 	           }
 		 	           catch (e) {
+		 	        	   console.log(e);
 		 	           }
 					}
 				});
@@ -211,8 +212,10 @@
 			    window.print();
 			}
 			
+			// window onload 시 message 프레임에 본문을 로딩한 다음, 화면에 표출하기 위한 contenttable 영역에 본문 html을 복사하는 함수
+			// 관리자도구의 콘솔창에서 스크립트 에러가 발생하나, 정상 동작함.
 			function displaytable() {
-			 //   document.getElementById("contenttable").innerHTML = message.document.body.innerHTML;
+				document.getElementById("contenttable").innerHTML = message.document.body.innerHTML;
 			}
 		</script>
 	</head>
@@ -331,28 +334,19 @@
 		    	</td> 
 		  	</tr>
 		  	</table>
-		    <tr id ="onelinereply">
-		    	<td style="height:20px">
-		    		<table class="content">
-					    <tr>
-					        <th class="boardItemViewPrint_cssThEn" style="border-bottom: none; font-weight: bold;"><spring:message code = 'ezBoard.jjh06' /></th>
-					        <td class="boardItemViewPrint_cssTdEn" style="height:50px;border-bottom: none;"><div id="onelinereplylist" style="height:auto; background-color:white;text-align:left"></div></td>
-					    </tr>
-				    </table>
-				</td>
-	        </tr>
-		  	<tr>
-		    	<td style="height:20px;" >
-		    		<table class="file">
-				        <tr>
-				        	<th class="boardItemViewPrint_cssThEn" style="border-top: none;"><spring:message code = 'ezCommunity.t141' /></th>
-					        <td class="boardItemViewPrint_cssTdEn" style="width:100%;height:100%;border-top: none;"><div id="lstAttachLink" style="margin-top:0px;padding-top:0px;background-color:white;height:auto;text-align:left "></div></td>
-				          	<td id="ItemLevel" style="display:none"></td>
-				        </tr>
-					</table>
-				</td>
-		  	</tr>
-		  	
+    		<table class="content" id ="onelinereply" style="border-bottom:none;">
+			    <tr>
+			        <th class="boardItemViewPrint_cssThEn" style="border-bottom: none; font-weight: bold;"><spring:message code = 'ezBoard.jjh06' /></th>
+			        <td class="boardItemViewPrint_cssTdEn" style="height:50px;border-bottom: none;"><div id="onelinereplylist" style="height:auto; background-color:white;text-align:left"></div></td>
+			    </tr>
+		    </table>
+    		<table class="file">
+		        <tr>
+		        	<th class="boardItemViewPrint_cssThEn"><spring:message code = 'ezCommunity.t141' /></th>
+			        <td class="boardItemViewPrint_cssTdEn" style="width:100%;height:100%;"><div id="lstAttachLink" style="margin-top:0px;padding-top:0px;background-color:white;height:auto;text-align:left "></div></td>
+		          	<td id="ItemLevel" style="display:none"></td>
+		        </tr>
+			</table>
 		</table>
 	</body>
 </html>
