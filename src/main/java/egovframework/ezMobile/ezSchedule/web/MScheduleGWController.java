@@ -516,8 +516,8 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(userId, info.getTenantId(), info.getCompanyId());
 			
 			for (ScheduleGroupListVO vo : gList) {
-        		//그룹 일정
-				sb.append("<option value='7;;" + vo.getGroupId() + "'" + ">" + egovMessageSource.getMessage("ezSchedule.t375", locale) + " " + vo.getGroupName() + "</option>");        		
+        		//그룹 일정 (특수문자 파싱 추가)
+				sb.append("<option value='7;;" + vo.getGroupId() + "'" + ">" + egovMessageSource.getMessage("ezSchedule.t375", locale) + " " + commonUtil.cleanValue(vo.getGroupName()) + "</option>");
         	}
 			
 			String chkSchedulePublic = ezCommonService.getTenantConfig("chkSchedulePublic", info.getTenantId());
