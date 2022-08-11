@@ -227,20 +227,22 @@
 	            
 	            var node = document.getElementById(pNodeID);
 		        var title2 = node.getElementsByClassName("node_div");
-		        if(title2[0] !=null ){
-		        var nodeLevel = title2[0].getAttribute("nodelevel");
+		        if (title2[0] !=null ) {
+		        	var nodeLevel = title2[0].getAttribute("nodelevel");
 		        }
 		        
-		        if(nodeLevel > 9) {
+		        if (nodeLevel > 9) {
 		        	nodeLevel = 9;
 		        }
-		        for(var i=0; i<title2.length; i++) {
+		        for (var i = 0; i < title2.length; i++) {
 		        	var title3 = title2[i].getElementsByClassName("node_normal");
 		        	//title3[0].setAttribute("TITLE", title3[0].innerHTML); 
-		        	if(title3[0] !=null ){
-		        	title3[0].style.width = 145 - 16*(nodeLevel-1) +'px';
+		        	if (title3[0] != null) {
+		        		title3[0].style.width = 145 - 16*(nodeLevel-1) +'px';
 		        	//title3[0].style.textOverflow = 'ellipsis';
 		        	//title3[0].style.overflow = 'hidden';
+		        	// 개인문서함 하위폴더 확장 시, title 속성 부여
+		        		title3[0].title = title3[0].innerText;
 		        	}
 		        }
 	        }
