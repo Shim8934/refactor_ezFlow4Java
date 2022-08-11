@@ -147,8 +147,11 @@
 	            var height = parseInt(divList.style.height.replace('px', '')) + 200;
 	            var reheight = document.documentElement.offsetHeight - parseInt(height);
 	
-	            //document.getElementById('div_AprLine').style.height = reheight + "px";
-	
+	            /* 2022-08-11 홍승비 - edge 브라우저 대응을 위한 하단 결재선 탭 영역 높이 조정 */
+	            if (navigator.userAgent.toLowerCase().indexOf("edg") > -1) {
+	            	document.getElementById('div_AprLine').style.height = "250px";
+	            }
+	            
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                document.body.style.MozUserSelect = 'none';
 	                document.body.style.WebkitUserSelect = 'none';
@@ -2010,7 +2013,7 @@
 				  	</div>	
 				</div>
 		
-		        <div style="WIDTH:100%;HEIGHT:240px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
+		        <div style="WIDTH:100%;HEIGHT:236px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
 		            <div id="lvtDetail" style="border: 0;"></div>
 		        </div>
 		    </div>
