@@ -2327,7 +2327,7 @@ var SurveyCreate     = function() {
 			}
 		}
 		
-		// 기타
+		// 기타 (하나만 존재 가능)
 		if (other) {
 			var optionId = "";
 			
@@ -2338,11 +2338,11 @@ var SurveyCreate     = function() {
 			opt = $("<div class='opt'></div>");
 			
 			if (qstnType == 2) {
-				optChb = $("<input class='optChb' type='checkbox' name='qstn" + qstnId + "opt' value='" + other.level + "' logic='" + option.logic + "' otherFlag='" + other.otherFlag +"' optionId='" + optionId + "'/>");
+				optChb = $("<input class='optChb' type='checkbox' name='qstn" + qstnId + "opt' value='" + other.level + "' logic='" + other.logic + "' otherFlag='" + other.otherFlag +"' optionId='" + optionId + "'/>");
 				opt.append(optChb);
 			}
 			else {
-				optRdo = $("<input class='optRdo' type='radio' name='qstn" + qstnId + "opt' value='" + other.level + "' logic='" + option.logic + "' otherFlag='" + other.otherFlag +"' optionId='" + optionId + "'/>");
+				optRdo = $("<input class='optRdo' type='radio' name='qstn" + qstnId + "opt' value='" + other.level + "' logic='" + other.logic + "' otherFlag='" + other.otherFlag +"' optionId='" + optionId + "'/>");
 				opt.append(optRdo);
 			}
 			
