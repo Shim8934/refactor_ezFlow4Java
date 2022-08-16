@@ -762,6 +762,9 @@
 		                        pAlertContent = "<spring:message code='ezApprovalG.t1698'/>";
 		                    }
 		                    
+		                    /* 2022-08-16 홍승비 - 부서수신함에서 수신문 접수기안(또는 전결) 시, 기안 시와 동일하게 결재선 변경이력 남기도록 수정 */
+		                    UpdateLineHistory();
+		                    
 		                    OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
 		                    chkOK = true;
 		                }
@@ -818,6 +821,8 @@
 		                        return;
 		                    }
 		                }
+		                
+	                    UpdateLineHistory();
 		                
 		                pAlertContent = "<spring:message code='ezApprovalG.t1506'/>";
 		                OpenAlertUI(pAlertContent);

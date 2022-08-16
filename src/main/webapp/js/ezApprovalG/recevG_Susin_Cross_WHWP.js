@@ -3219,3 +3219,43 @@ function SignSave() {
         xmlhttp.send(xmlpara);
     }
 }
+
+/* 2022-08-16 홍승비 - 부서수신함에서 수신문 접수기안(또는 전결) 시, 결재선 변경이력 남기도록 수정 */
+function UpdateLineHistory() {
+	var result = "";
+    
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/updateLineHistory.do",
+		data : {
+			docID : pDocID,
+			userID : arr_userinfo[1],
+			userName : arr_userinfo[11],
+			userJobTitle : arr_userinfo[13],
+			userDeptID : arr_userinfo[4],
+			userDeptName : arr_userinfo[15],
+			chkFlag : "MUST",
+			userName2 : arr_userinfo[12],
+			userJobTitle2 : arr_userinfo[14],
+			userDeptName2 : arr_userinfo[16]
+		},
+		success: function(xml){
+			result = xml;
+			
+			var DataNodes = GetChildNodes(loadXMLString(result));
+		    var rtnVal = getNodeText(DataNodes[0]);
+		    if (rtnVal == "TRUE") {
+		    }
+		    else {
+		        var pAlertContent = strLang91;
+		        OpenAlertUI(pAlertContent);
+		    }
+		},
+		error : function() {
+			var pAlertContent = strLang91;
+	        OpenAlertUI(pAlertContent);
+		}
+	});
+}

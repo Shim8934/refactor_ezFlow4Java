@@ -743,6 +743,9 @@
 	                              return;
 	                          }
 	                      }
+	                      
+							/* 2022-08-16 홍승비 - 부서수신함에서 수신문 접수기안(또는 전결) 시, 기안 시와 동일하게 결재선 변경이력 남기도록 수정 */
+							UpdateLineHistory();
 	
 	                      pAlertContent = "<spring:message code='ezApprovalG.t1698'/>";
 	                      OpenAlertUI(pAlertContent);
@@ -792,13 +795,16 @@
                       sendAlertMail("APR", "1", "RECEV_END");
                     }
 
-                  if (LastSignSN == 1)
+                  if (LastSignSN == 1) {
                      pAlertContent = "<spring:message code='ezApprovalG.t1697'/>";
-                  else
+                  } else {
                      pAlertContent = "<spring:message code='ezApprovalG.t1698'/>";
-                    
+                  }
+                  
 	                //중계문서 접수 시 재배부의견은 삭제처리 2020-05-15 홍대표
 	                delOpinionInfoAll3();
+	                
+	                UpdateLineHistory();
 	                
                     OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
                     chkOK = true;
