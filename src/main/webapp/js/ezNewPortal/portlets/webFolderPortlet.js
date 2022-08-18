@@ -145,6 +145,10 @@ function setFileTypeTag(type) {
 		case "":
 			imgEl.src = '/images/kr/main/noData_sIcon.png';
 			break;
+		/* 2022-08-18 홍승비 - 기타 확장자에 대한 디폴트 아이콘 이미지 추가 */
+		default :
+			imgEl.src = '/images/ezNewPortal/etc.png';
+			break;
 	}
 	return imgEl;
 }

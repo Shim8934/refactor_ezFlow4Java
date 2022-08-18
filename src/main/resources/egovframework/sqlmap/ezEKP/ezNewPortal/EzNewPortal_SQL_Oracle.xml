@@ -3084,8 +3084,6 @@ ORDER BY
 				WHERE
 					FOLDER_ID = #folderId#
 				AND
-					TYPE_ID NOT IN ('21')
-				AND
 					USE_STATUS = 'Y'
 				AND
 					TENANT_ID = #tenantId#
