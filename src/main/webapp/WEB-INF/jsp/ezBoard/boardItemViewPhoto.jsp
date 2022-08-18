@@ -138,6 +138,15 @@
  		            }
 		        };
 		        
+		        window.onresize = function () {
+		            /* 2022-08-18 홍승비 - 화면 리사이즈 시, 화면 높이만큼 레이어 팝업의 배경 회색 영역을 확장 */
+		            if (document.body.scrollHeight > window.innerHeight) {
+		            	document.getElementById("mailPanel").style.height = (document.body.scrollHeight + 17) + "px";
+		            } else {
+		            	document.getElementById("mailPanel").style.height = (window.innerHeight) + "px";
+		            }
+		        };
+		        
 		        $(document).ready(function() {
 					/* 2019-04-05 홍승비 - 좋아요 버튼이 존재한다면 본문 패딩과 height 조절 */
 		            if (likeFlag != null && likeFlag == "Y") {
@@ -466,7 +475,7 @@
 		
 					var szHref = "/ezBoard/itemReadList.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID);			
 					var strFeature = "status:no;dialogHeight: 425px;dialogWidth: 620px;help: no;resizable:yes";
-		
+					
 					if (CrossYN()) {
 					    item_readlist_cross_dialogArguments[0] = "";
 					    item_readlist_cross_dialogArguments[1] = ReaderList_Complete;
@@ -961,7 +970,7 @@
 		                var swidth = 400;
 		                var sheight = 200;
 		                var feature = "status:no;dialogWidth:" + swidth + "px;dialogHeight:" + sheight + "px;help:no;scroll:no;edge:sunken";
-		
+		                
 		                var ret = window.showModalDialog("/ezBoard/photoAlbumEdit.do", params, feature);
 		                if (ret == "OK") {
 		                	//2019.03.04 유은정 - 포토갤러리 포틀릿에도 리스트 업데이트 되도록 수정

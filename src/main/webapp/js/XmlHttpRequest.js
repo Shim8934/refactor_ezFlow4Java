@@ -1041,10 +1041,12 @@ function DivPopUpShow(popUpW, popUpH, URL) {
         document.getElementById("iFrameLayer").style.width = popUpW + "px";
         document.getElementById("iFrameLayer").style.height = popUpH + "px";
         //2020-05-06 : right frame 리스트에서 divPopup 사용 시 left frame 영역도 적용
-        try{
-            if(typeof(window.parent.frames.left) == "object")
+        try {
+            if (typeof(window.parent.frames.left) == "object") {
                 window.parent.frames.left.document.getElementById("mailPanel_left").style.display = "";
-        }catch(e){}
+            }
+        } catch(e) {}
+        
         document.getElementById("mailPanel").style.display = "";
         document.getElementById("iFramePanel").style.display = "";
     } catch (e) {}

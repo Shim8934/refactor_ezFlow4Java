@@ -314,6 +314,13 @@
 		
 		    window.onresize = function () {
 				resizeMessageFrame();
+				
+	            /* 2022-08-18 홍승비 - 화면 리사이즈 시, 화면 높이만큼 레이어 팝업의 배경 회색 영역을 확장 */
+				if (document.body.scrollHeight > window.innerHeight) {
+	            	document.getElementById("mailPanel").style.height = (document.body.scrollHeight + 5) + "px";
+	            } else {
+	            	document.getElementById("mailPanel").style.height = (window.innerHeight) + "px";
+	            }
 		    };
 		    
 		    /* 2019-04-12 홍승비 - 댓글 갯수 갱신 시 게시물리스트 갱신 */

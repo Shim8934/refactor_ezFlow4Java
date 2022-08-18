@@ -114,6 +114,15 @@
  		            }
 		        };
 		        
+		        window.onresize = function () {
+		            /* 2022-08-18 홍승비 - 화면 리사이즈 시, 화면 높이만큼 레이어 팝업의 배경 회색 영역을 확장 */
+					if (document.body.scrollHeight > window.innerHeight) {
+		            	document.getElementById("mailPanel").style.height = (document.body.scrollHeight + 17) + "px";
+		            } else {
+		            	document.getElementById("mailPanel").style.height = (window.innerHeight) + "px";
+		            }
+		        };
+		        
 		        $(document).ready(function() {
 					/* 2019-04-05 홍승비 - 좋아요 버튼이 존재한다면 본문 패딩 조절 */
 		            if (likeFlag != null && likeFlag == "Y") {
@@ -267,7 +276,7 @@
 		
 					var szHref = "/ezBoard/itemReadList.do?boardID=" + encodeURI(pBoardID) + "&itemID=" + encodeURI(pItemID);			
 					var strFeature = "status:no;dialogHeight: 425px;dialogWidth: 620px;help: no;resizable:yes";
-		
+					
 					if (CrossYN()) {
 					    item_readlist_cross_dialogArguments[0] = "";
 					    item_readlist_cross_dialogArguments[1] = ReaderList_Complete;
