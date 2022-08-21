@@ -211,9 +211,9 @@
 				folder.OWNER_ID 	AS OWNER_ID,
 				0 as ENCRYPTED,
 				1 as DEPTH,
-				folder.FOLDER_ID as ROOT_ID,
-				folder.FOLDER_ID as PARENT_ID,
-				folder.FOLDER_ID as HIERARCHICAL_PATH
+				TO_CHAR(folder.FOLDER_ID) as ROOT_ID,
+				TO_CHAR(folder.FOLDER_ID) as PARENT_ID,
+				TO_CHAR(folder.FOLDER_ID) as HIERARCHICAL_PATH
 		]]>			      
     </sql>
     

@@ -35,6 +35,7 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 		if (map.get("fileId").equals("")){
 			fileId = (int) insert("EzWebFolderDAO.insertFile", map);
 		} else {
+			map.put("fileId",    Integer.parseInt((String) map.get("fileId")));
 			update("EzWebFolderDAO.updateFile", map);
 			fileId = (int) map.get("fileId"); 
 		}
