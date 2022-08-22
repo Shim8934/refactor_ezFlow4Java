@@ -198,10 +198,21 @@ function getDocNumberNew(pDeptID, pPrefix, docNumZeroCnt) {
 		if (approvalFlag == "G") {
 			if (pDraftFlag == "SUSIN" && useReceiveDocNo == "NO") {
 				name = "receiptnumber";
+				
+				/* 2022-08-19 홍승비 - 접수문서가 아닌 경우, 문서번호 필드가 없으면 문서번호 부여 로직이 스킵되어 결재가 정상 진행되는 분기 오류 수정 (파일 백지화 현상과도 관련있음) */
+				if (!message.FieldExist(name)) {
+					return true;
+				}
 			}
-			
-			if (!message.FieldExist(name)) {
-				return true;
+			else {
+				// 일반적인 문서번호 필드가 없는 경우, 결재를 중단 (문서번호 부여 이전이므로, 롤백 함수 실행 없이 바로 false를 리턴)
+				if (!message.FieldExist(name)) {
+					if (name == "bedocnumber") { // 기안 시 사용할 수 있는 bedocnumber 필드의 경우, 없으면 그대로 기안 진행
+						return true;
+					} else {
+						return false;
+					}
+				}
 			}
 			
 			fractionsymbol = message.GetFieldText(name);
@@ -290,11 +301,19 @@ function getDocNumberNew(pDeptID, pPrefix, docNumZeroCnt) {
 				return true;
 			}
 		} else {
+			/* 2022-08-22 홍승비 - 문서번호 필드가 없으면 문서번호 부여 로직이 스킵되어 결재가 정상 진행되는 분기 오류 수정 (파일 백지화 현상과도 관련있음) */
 			fields = message.GetFieldsList();
         	var field = message.GetListItem(fields, name);
-        	if (!field) {return true;}
+        	if (!field) {
+				if (name == "bedocnumber") { // 기안 시 사용할 수 있는 bedocnumber 필드의 경우, 없으면 그대로 기안 진행
+					return true;
+				} else {
+					return false; // 문서번호 부여 로직 이전이므로, 롤백 함수 실행 없이 바로 false를 리턴
+				}
+        	}
         	
         	fractionsymbol = field.textContent;
+        	
 			if (pDraftFlag == "HABYUI" || pDraftFlag == "HAPYUI") {
 				fractionsymbol = arr_userinfo[5] + "-";
 			}

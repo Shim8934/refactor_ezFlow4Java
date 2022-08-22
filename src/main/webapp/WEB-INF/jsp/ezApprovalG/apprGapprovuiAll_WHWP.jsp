@@ -857,6 +857,7 @@
 			                        rtnval = currIfrm.contentWindow.getDocNumberNew(drafterDeptid, "", docNumZeroCnt, i);
 			                        
 			                        if (!rtnval) {
+			                        	HiddenMailProgress();
 			                            var pAlertContent = "[<spring:message code='ezApprovalG.t1384'/>";
 								        OpenAlertUI(pAlertContent);
 								        setMenuDisable("btnApprove", false);
@@ -874,6 +875,7 @@
 						                    rtnval = currIfrm.contentWindow.getDocNumberNew(drafterDeptid, "", docNumZeroCnt, i);
 						                    
 						                    if (!rtnval) {
+						                    	HiddenMailProgress();
 						                        var pAlertContent = "[" + "<spring:message code='ezApprovalG.t32'/>";
 						                        OpenAlertUI(pAlertContent);
 						                        setMenuDisable("btnApprove", false);
