@@ -211,9 +211,9 @@
 				folder.OWNER_ID 	AS OWNER_ID,
 				0 as ENCRYPTED,
 				1 as DEPTH,
-				folder.FOLDER_ID as ROOT_ID,
-				folder.FOLDER_ID as PARENT_ID,
-				folder.FOLDER_ID as HIERARCHICAL_PATH
+				TO_CHAR(folder.FOLDER_ID) as ROOT_ID,
+				TO_CHAR(folder.FOLDER_ID) as PARENT_ID,
+				TO_CHAR(folder.FOLDER_ID) as HIERARCHICAL_PATH
 		]]>			      
     </sql>
     
@@ -1651,9 +1651,9 @@
 				folder.OWNER_ID 	AS OWNER_ID,
 				0 AS ENCRYPTED,
 				1 AS DEPTH,
-				folder.FOLDER_ID AS ROOT_ID,
-				folder.FOLDER_ID AS PARENT_ID,
-				folder.FOLDER_ID AS HIERARCHICAL_PATH
+				TO_CHAR(folder.FOLDER_ID) AS ROOT_ID,
+				TO_CHAR(folder.FOLDER_ID) AS PARENT_ID,
+				TO_CHAR(folder.FOLDER_ID) AS HIERARCHICAL_PATH
 			FROM TBL_WEBFOLDER_FOLDER folder left outer join tbl_webfolder_filetype type on  'folder' = type.FILE_EXT and folder.TENANT_ID = type.TENANT_ID
 				WHERE folder.FOLDER_ID = #fldFileId# and folder.TENANT_ID =#tenantId# 
 		]]>

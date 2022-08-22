@@ -143,7 +143,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		map.put("typeId",      fileVO.getTypeId());
 		map.put("downloadCnt", fileVO.getDownloadCnt());
 		map.put("fileExt",     fileVO.getFileExt());
-		map.put("folderId",    fileVO.getFolderId());
+		map.put("folderId",    Integer.parseInt(fileVO.getFolderId()));
 		map.put("useStatus",   fileVO.getUseStatus());
 		map.put("createId",    fileVO.getCreateId());
 		map.put("createName1", fileVO.getCreateName1());
@@ -162,9 +162,9 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		
 		if (fileVO.getFileId().equals("")){
 			map.put("fileId", 	  fileId);
-			map.put("rootId",     fileId);
-			map.put("parentId",   fileId);
-			map.put("hierarchicalPath",   fileId);
+			map.put("rootId",     String.valueOf(fileId));
+			map.put("parentId",   String.valueOf(fileId));
+			map.put("hierarchicalPath",   String.valueOf(fileId));
 			ezWebFolderDAO.updateFileRoot(map);
 		}
 		
